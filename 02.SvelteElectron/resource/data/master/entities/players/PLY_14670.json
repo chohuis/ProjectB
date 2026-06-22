@@ -1,6 +1,6 @@
 {
   "id": "PLY_14670",
-  "name": "클라크 헌터",
+  "name": "Clark Hunter",
   "nameEn": "Clark Hunter",
   "role": "player",
   "age": 31,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 49,
   "popularity": 40,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 68,
       "proServiceYears": 9,
       "pitching": {
-        "ovr": 72,
-        "stamina": 68,
-        "velocity": 73,
-        "command": 61,
-        "control": 68,
-        "movement": 68,
-        "mentality": 71,
-        "recovery": 73,
-        "clutch": 68,
-        "holdRunners": 61
+        "ovr": 66,
+        "stamina": 62,
+        "velocity": 67,
+        "command": 56,
+        "control": 62,
+        "movement": 62,
+        "mentality": 65,
+        "recovery": 67,
+        "clutch": 62,
+        "holdRunners": 56
       },
       "batting": {
         "ovr": 66,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,9 +1,9 @@
 {
   "id": "PLY_11407",
-  "name": "로드리게스 다니엘",
-  "nameEn": "Rodriguez Daniel",
+  "name": "Young Connor",
+  "nameEn": "Young Connor",
   "role": "player",
-  "age": 22,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 84,
-  "popularity": 40,
+  "notes": "국적:일본",
+  "diligence": 58,
+  "popularity": 32,
   "militaryStatus": "군필",
   "entryYear": 2035,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 22,
+  "entryAge": 21,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 50,
+      "jerseyNumber": 98,
       "primaryPosition": "SP",
       "developmentRate": 73,
-      "potentialHidden": 68,
+      "potentialHidden": 83,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 58,
-        "stamina": 54,
-        "velocity": 61,
-        "command": 51,
-        "control": 54,
-        "movement": 56,
-        "mentality": 57,
-        "recovery": 52,
-        "clutch": 56,
-        "holdRunners": 51
+        "ovr": 66,
+        "stamina": 67,
+        "velocity": 65,
+        "command": 62,
+        "control": 65,
+        "movement": 62,
+        "mentality": 68,
+        "recovery": 64,
+        "clutch": 65,
+        "holdRunners": 59
       },
       "batting": {
-        "ovr": 62,
-        "contact": 56,
-        "power": 65,
-        "eye": 59,
-        "discipline": 64,
-        "speed": 62,
-        "baseInstinct": 52,
-        "bunting": 47,
+        "ovr": 66,
+        "contact": 64,
+        "power": 63,
+        "eye": 67,
+        "discipline": 63,
+        "speed": 63,
+        "baseInstinct": 66,
+        "bunting": 61,
         "platoon": 50,
-        "fielding": 62,
-        "arm": 57,
-        "battingClutch": 60
+        "fielding": 58,
+        "arm": 60,
+        "battingClutch": 59
       },
       "positionRatings": {
-        "SP": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 66
+      }
     },
     "coach": null,
     "manager": null,

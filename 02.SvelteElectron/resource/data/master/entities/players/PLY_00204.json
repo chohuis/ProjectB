@@ -1,7 +1,7 @@
 {
   "id": "PLY_00204",
   "name": "백하준",
-  "nameEn": "Baek Hajun",
+  "nameEn": "Yang Ha-jun",
   "role": "player",
   "age": 22,
   "status": "active",
@@ -19,43 +19,28 @@
       "position": "SP",
       "jerseyNumber": 4,
       "pitching": {
-        "ovr": 52,
-        "stamina": 52,
-        "velocity": 57,
-        "command": 50,
-        "control": 50,
-        "movement": 53,
-        "mentality": 54,
-        "recovery": 48,
-        "clutch": 46,
-        "holdRunners": 47
+        "ovr": 55,
+        "stamina": 59,
+        "velocity": 53,
+        "command": 52,
+        "control": 57,
+        "movement": 54,
+        "mentality": 55,
+        "recovery": 52
       },
       "batting": {
-        "ovr": 34,
-        "contact": 31,
-        "power": 30,
-        "eye": 32,
-        "discipline": 32,
-        "speed": 37,
-        "fielding": 38,
-        "arm": 31,
-        "battingClutch": 40,
-        "baseInstinct": 44,
-        "bunting": 36,
-        "platoon": 33
+        "ovr": 36,
+        "contact": 30,
+        "power": 31,
+        "eye": 28,
+        "discipline": 29,
+        "speed": 33,
+        "fielding": 32,
+        "arm": 30,
+        "battingClutch": 35
       },
       "developmentRate": 48,
-      "potentialHidden": 59,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 52
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        }
-      ]
+      "potentialHidden": 59
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

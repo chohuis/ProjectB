@@ -1,61 +1,46 @@
 {
   "id": "PLY_01616",
-  "name": "홍주원",
-  "nameEn": "Hong Juwon",
+  "name": "오타 켄타",
+  "nameEn": "Ota Kenta",
   "role": "player",
-  "age": 17,
+  "age": 24,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_SUWON_EDGE",
-  "teamId": "TEAM_HS_SUWON_EDGE",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_SUWON_EDGE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TEMPOSTINGS",
+  "teamId": "TEAM_JBL_CL_TEMPOSTINGS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
-      "handedness": "L",
-      "position": "1B",
-      "jerseyNumber": 25,
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 36,
       "pitching": {
-        "ovr": 27,
-        "stamina": 28,
-        "velocity": 22,
-        "command": 25,
-        "control": 24,
-        "movement": 28,
-        "mentality": 25,
-        "recovery": 23,
-        "clutch": 38,
-        "holdRunners": 35
+        "ovr": 65,
+        "stamina": 50,
+        "velocity": 70,
+        "command": 62,
+        "control": 58,
+        "movement": 58,
+        "mentality": 60,
+        "recovery": 59
       },
       "batting": {
-        "ovr": 47,
-        "contact": 49,
-        "power": 48,
-        "eye": 49,
-        "discipline": 47,
-        "speed": 46,
-        "fielding": 45,
-        "arm": 48,
-        "battingClutch": 46,
-        "baseInstinct": 39,
-        "bunting": 43,
-        "platoon": 43
+        "ovr": 29,
+        "contact": 30,
+        "power": 34,
+        "eye": 33,
+        "discipline": 28,
+        "speed": 30,
+        "fielding": 28,
+        "arm": 28,
+        "battingClutch": 33
       },
-      "developmentRate": 52,
-      "potentialHidden": 62,
-      "primaryPosition": "1B",
-      "positionRatings": {
-        "1B": 47
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 46,
+      "potentialHidden": 73
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 54,
-  "popularity": 47
+  }
 }

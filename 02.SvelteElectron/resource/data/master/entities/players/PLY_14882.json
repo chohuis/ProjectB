@@ -1,6 +1,6 @@
 {
   "id": "PLY_14882",
-  "name": "테일러 헌터",
+  "name": "Taylor Hunter",
   "nameEn": "Taylor Hunter",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 53,
   "popularity": 15,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 60
       },
       "batting": {
-        "ovr": 84,
-        "contact": 75,
-        "power": 87,
-        "eye": 78,
-        "discipline": 83,
-        "speed": 93,
-        "baseInstinct": 74,
-        "bunting": 69,
-        "platoon": 64,
-        "fielding": 79,
-        "arm": 78,
-        "battingClutch": 81
+        "ovr": 66,
+        "contact": 59,
+        "power": 68,
+        "eye": 61,
+        "discipline": 65,
+        "speed": 73,
+        "baseInstinct": 58,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 61,
+        "battingClutch": 64
       },
       "positionRatings": {
         "LF": 66

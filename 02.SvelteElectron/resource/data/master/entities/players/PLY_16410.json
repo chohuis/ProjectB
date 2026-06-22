@@ -1,6 +1,6 @@
 {
   "id": "PLY_16410",
-  "name": "미첼 라이언",
+  "name": "Mitchell Ryan",
   "nameEn": "Mitchell Ryan",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 46,
   "popularity": 42,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 52
       },
       "batting": {
-        "ovr": 57,
-        "contact": 50,
-        "power": 53,
-        "eye": 56,
-        "discipline": 60,
-        "speed": 58,
-        "baseInstinct": 46,
-        "bunting": 41,
-        "platoon": 49,
-        "fielding": 55,
-        "arm": 48,
-        "battingClutch": 51
+        "ovr": 58,
+        "contact": 51,
+        "power": 54,
+        "eye": 57,
+        "discipline": 61,
+        "speed": 59,
+        "baseInstinct": 47,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 49,
+        "battingClutch": 52
       },
       "positionRatings": {
         "LF": 58

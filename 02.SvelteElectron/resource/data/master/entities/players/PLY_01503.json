@@ -1,14 +1,14 @@
 {
   "id": "PLY_01503",
   "name": "앨런 하비에르",
-  "nameEn": "Ael 런 하비에르",
+  "nameEn": "Allen Javier",
   "role": "player",
   "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_RIVERCARDINALS",
-  "teamId": "TEAM_ABL_RIVERCARDINALS_1",
+  "clubId": "CLUB_ABL_BAL",
+  "teamId": "TEAM_ABL_BAL",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:베네수엘라",
@@ -19,62 +19,28 @@
       "position": "RP",
       "jerseyNumber": 8,
       "pitching": {
-        "ovr": 68,
-        "stamina": 68,
-        "velocity": 74,
+        "ovr": 77,
+        "stamina": 62,
+        "velocity": 81,
         "command": 70,
-        "control": 71,
-        "movement": 64,
-        "mentality": 70,
-        "recovery": 69,
-        "clutch": 62,
-        "holdRunners": 61
+        "control": 77,
+        "movement": 68,
+        "mentality": 75,
+        "recovery": 76
       },
       "batting": {
-        "ovr": 50,
-        "contact": 50,
-        "power": 48,
-        "eye": 45,
-        "discipline": 53,
-        "speed": 52,
-        "fielding": 49,
-        "arm": 48,
-        "battingClutch": 48,
-        "baseInstinct": 42,
-        "bunting": 40,
-        "platoon": 43
+        "ovr": 45,
+        "contact": 41,
+        "power": 38,
+        "eye": 38,
+        "discipline": 41,
+        "speed": 43,
+        "fielding": 39,
+        "arm": 37,
+        "battingClutch": 39
       },
       "developmentRate": 50,
-      "potentialHidden": 76,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_FORKBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 20200,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 76
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

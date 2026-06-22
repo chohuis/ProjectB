@@ -1,9 +1,9 @@
 {
   "id": "PLY_00095",
   "name": "조승민",
-  "nameEn": "Jo Seungmin",
+  "nameEn": "Han Seong-woo",
   "role": "player",
-  "age": 17,
+  "age": 18,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "SS",
       "jerseyNumber": 15,
       "pitching": {
-        "ovr": 20,
-        "stamina": 24,
-        "velocity": 20,
-        "command": 20,
-        "control": 22,
-        "movement": 23,
-        "mentality": 20,
-        "recovery": 24,
-        "clutch": 38,
-        "holdRunners": 43
+        "ovr": 37,
+        "stamina": 52,
+        "velocity": 46,
+        "command": 44,
+        "control": 56,
+        "movement": 43,
+        "mentality": 47,
+        "recovery": 54
       },
       "batting": {
-        "ovr": 30,
-        "contact": 35,
-        "power": 27,
-        "eye": 26,
-        "discipline": 31,
-        "speed": 34,
-        "fielding": 27,
-        "arm": 32,
-        "battingClutch": 37,
-        "baseInstinct": 39,
-        "bunting": 28,
-        "platoon": 42
+        "ovr": 53,
+        "contact": 44,
+        "power": 43,
+        "eye": 48,
+        "discipline": 49,
+        "speed": 48,
+        "fielding": 42,
+        "arm": 55,
+        "battingClutch": 42
       },
       "developmentRate": 59,
-      "potentialHidden": 60,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 30
-      }
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

@@ -1,9 +1,9 @@
 {
   "id": "PLY_00003",
   "name": "문찬우",
-  "nameEn": "Moon Chanu",
+  "nameEn": "You Seong-woo",
   "role": "player",
-  "age": 18,
+  "age": 17,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,47 +19,28 @@
       "position": "SP",
       "jerseyNumber": 3,
       "pitching": {
-        "ovr": 57,
-        "stamina": 63,
-        "velocity": 60,
-        "command": 62,
-        "control": 59,
-        "movement": 58,
-        "mentality": 56,
-        "recovery": 53,
-        "clutch": 45,
-        "holdRunners": 46
+        "ovr": 63,
+        "stamina": 58,
+        "velocity": 67,
+        "command": 55,
+        "control": 58,
+        "movement": 63,
+        "mentality": 60,
+        "recovery": 64
       },
       "batting": {
         "ovr": 39,
-        "contact": 44,
-        "power": 45,
-        "eye": 41,
-        "discipline": 42,
-        "speed": 41,
-        "fielding": 45,
-        "arm": 44,
-        "battingClutch": 41,
-        "baseInstinct": 38,
-        "bunting": 36,
-        "platoon": 38
+        "contact": 65,
+        "power": 53,
+        "eye": 50,
+        "discipline": 64,
+        "speed": 72,
+        "fielding": 57,
+        "arm": 70,
+        "battingClutch": 52
       },
       "developmentRate": 71,
-      "potentialHidden": 75,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 75
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

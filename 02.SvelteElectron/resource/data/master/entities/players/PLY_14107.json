@@ -1,6 +1,6 @@
 {
   "id": "PLY_14107",
-  "name": "앨런 칼렙",
+  "name": "Allen Caleb",
   "nameEn": "Allen Caleb",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 53,
   "popularity": 34,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 66
       },
       "batting": {
-        "ovr": 67,
-        "contact": 60,
-        "power": 63,
-        "eye": 62,
-        "discipline": 69,
-        "speed": 65,
-        "baseInstinct": 63,
-        "bunting": 61,
-        "platoon": 49,
-        "fielding": 66,
-        "arm": 67,
-        "battingClutch": 59
+        "ovr": 69,
+        "contact": 62,
+        "power": 65,
+        "eye": 64,
+        "discipline": 71,
+        "speed": 67,
+        "baseInstinct": 65,
+        "bunting": 63,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 69,
+        "battingClutch": 61
       },
       "positionRatings": {
         "3B": 69

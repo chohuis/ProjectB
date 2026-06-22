@@ -1,9 +1,9 @@
 {
   "id": "PLY_12450",
-  "name": "무어 숀",
-  "nameEn": "Moore Sean",
+  "name": "Thomas Tyler",
+  "nameEn": "Thomas Tyler",
   "role": "player",
-  "age": 21,
+  "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 71,
-  "popularity": 14,
+  "notes": "국적:도미니카",
+  "diligence": 54,
+  "popularity": 37,
   "militaryStatus": "군필",
   "entryYear": 2041,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 21,
+  "entryAge": 27,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 92,
-      "primaryPosition": "SP",
+      "position": "CF",
+      "jerseyNumber": 88,
+      "primaryPosition": "CF",
       "developmentRate": 57,
-      "potentialHidden": 88,
-      "proServiceYears": 0,
+      "potentialHidden": 56,
+      "proServiceYears": 5,
       "pitching": {
-        "ovr": 57,
-        "stamina": 59,
-        "velocity": 56,
-        "command": 49,
-        "control": 58,
-        "movement": 61,
-        "mentality": 60,
-        "recovery": 53,
-        "clutch": 50,
-        "holdRunners": 47
+        "ovr": 80,
+        "stamina": 82,
+        "velocity": 80,
+        "command": 75,
+        "control": 81,
+        "movement": 72,
+        "mentality": 79,
+        "recovery": 74,
+        "clutch": 77,
+        "holdRunners": 77
       },
       "batting": {
-        "ovr": 61,
-        "contact": 60,
-        "power": 62,
-        "eye": 57,
-        "discipline": 62,
-        "speed": 58,
-        "baseInstinct": 56,
-        "bunting": 56,
+        "ovr": 80,
+        "contact": 74,
+        "power": 81,
+        "eye": 77,
+        "discipline": 77,
+        "speed": 85,
+        "baseInstinct": 75,
+        "bunting": 68,
         "platoon": 50,
-        "fielding": 60,
-        "arm": 57,
-        "battingClutch": 56
+        "fielding": 81,
+        "arm": 75,
+        "battingClutch": 73
       },
       "positionRatings": {
-        "SP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 1
-        }
-      ]
+        "CF": 80
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,7 +1,7 @@
 {
   "id": "PLY_00186",
   "name": "양상민",
-  "nameEn": "Yang Sangmin",
+  "nameEn": "Son Do-yun",
   "role": "player",
   "age": 21,
   "status": "active",
@@ -19,43 +19,28 @@
       "position": "RP",
       "jerseyNumber": 6,
       "pitching": {
-        "ovr": 52,
-        "stamina": 49,
-        "velocity": 49,
-        "command": 56,
-        "control": 49,
-        "movement": 54,
-        "mentality": 48,
-        "recovery": 56,
-        "clutch": 47,
-        "holdRunners": 40
+        "ovr": 54,
+        "stamina": 48,
+        "velocity": 57,
+        "command": 54,
+        "control": 55,
+        "movement": 57,
+        "mentality": 59,
+        "recovery": 53
       },
       "batting": {
-        "ovr": 34,
-        "contact": 35,
-        "power": 30,
-        "eye": 30,
-        "discipline": 39,
-        "speed": 32,
-        "fielding": 35,
-        "arm": 39,
-        "battingClutch": 40,
-        "baseInstinct": 45,
-        "bunting": 37,
-        "platoon": 37
+        "ovr": 27,
+        "contact": 30,
+        "power": 27,
+        "eye": 31,
+        "discipline": 29,
+        "speed": 30,
+        "fielding": 27,
+        "arm": 29,
+        "battingClutch": 26
       },
       "developmentRate": 52,
-      "potentialHidden": 75,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 52
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 75
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

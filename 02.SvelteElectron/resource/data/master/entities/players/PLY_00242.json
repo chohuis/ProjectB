@@ -1,7 +1,7 @@
 {
   "id": "PLY_00242",
   "name": "우우진",
-  "nameEn": "Woo Ujin",
+  "nameEn": "Moon Seong-jun",
   "role": "player",
   "age": 20,
   "status": "active",
@@ -19,43 +19,28 @@
       "position": "SP",
       "jerseyNumber": 2,
       "pitching": {
-        "ovr": 49,
-        "stamina": 45,
-        "velocity": 51,
-        "command": 46,
-        "control": 46,
-        "movement": 45,
-        "mentality": 53,
-        "recovery": 53,
-        "clutch": 42,
-        "holdRunners": 44
+        "ovr": 54,
+        "stamina": 55,
+        "velocity": 56,
+        "command": 52,
+        "control": 55,
+        "movement": 52,
+        "mentality": 52,
+        "recovery": 50
       },
       "batting": {
         "ovr": 31,
-        "contact": 29,
-        "power": 33,
-        "eye": 34,
+        "contact": 32,
+        "power": 28,
+        "eye": 29,
         "discipline": 30,
-        "speed": 32,
-        "fielding": 33,
-        "arm": 37,
-        "battingClutch": 35,
-        "baseInstinct": 41,
-        "bunting": 35,
-        "platoon": 43
+        "speed": 27,
+        "fielding": 24,
+        "arm": 26,
+        "battingClutch": 33
       },
       "developmentRate": 46,
-      "potentialHidden": 72,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 49
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        }
-      ]
+      "potentialHidden": 72
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

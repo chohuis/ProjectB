@@ -1,6 +1,6 @@
 {
   "id": "PLY_15502",
-  "name": "존스 그랜트",
+  "name": "Jones Grant",
   "nameEn": "Jones Grant",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 60,
   "popularity": 22,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 44
       },
       "batting": {
-        "ovr": 55,
-        "contact": 57,
-        "power": 58,
-        "eye": 52,
-        "discipline": 58,
-        "speed": 57,
-        "baseInstinct": 58,
-        "bunting": 45,
-        "platoon": 49,
-        "fielding": 48,
-        "arm": 52,
-        "battingClutch": 54
+        "ovr": 56,
+        "contact": 58,
+        "power": 59,
+        "eye": 53,
+        "discipline": 59,
+        "speed": 58,
+        "baseInstinct": 59,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 53,
+        "battingClutch": 55
       },
       "positionRatings": {
         "C": 56

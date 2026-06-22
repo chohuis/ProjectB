@@ -1,6 +1,6 @@
 {
   "id": "PLY_15879",
-  "name": "베이커 헌터",
+  "name": "Baker Hunter",
   "nameEn": "Baker Hunter",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 51,
   "popularity": 22,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 83,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 70,
-        "stamina": 67,
-        "velocity": 80,
-        "command": 67,
-        "control": 73,
-        "movement": 64,
-        "mentality": 64,
-        "recovery": 63,
-        "clutch": 69,
-        "holdRunners": 58
+        "ovr": 63,
+        "stamina": 60,
+        "velocity": 72,
+        "command": 60,
+        "control": 66,
+        "movement": 58,
+        "mentality": 58,
+        "recovery": 57,
+        "clutch": 62,
+        "holdRunners": 52
       },
       "batting": {
         "ovr": 63,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

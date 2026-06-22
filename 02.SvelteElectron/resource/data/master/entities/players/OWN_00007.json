@@ -1,7 +1,7 @@
 {
   "id": "OWN_00007",
   "name": "백연우",
-  "nameEn": "Baek Yeonu",
+  "nameEn": "Cha Dong-hyun",
   "role": "owner",
   "age": 57,
   "status": "active",
@@ -79,12 +79,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
   }
 }

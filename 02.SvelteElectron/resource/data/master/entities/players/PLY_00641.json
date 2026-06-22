@@ -1,14 +1,14 @@
 {
   "id": "PLY_00641",
   "name": "백건우",
-  "nameEn": "Baek Geonu",
+  "nameEn": "Han Sang-min",
   "role": "player",
   "age": 33,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_EMBERTIGERS",
-  "teamId": "TEAM_KBL_EMBERTIGERS_1",
+  "clubId": "CLUB_KBL_KT",
+  "teamId": "TEAM_KBL_KT_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 1,
       "pitching": {
-        "ovr": 71,
-        "stamina": 76,
-        "velocity": 74,
-        "command": 67,
-        "control": 73,
-        "movement": 69,
-        "mentality": 75,
-        "recovery": 76,
-        "clutch": 69,
-        "holdRunners": 60
+        "ovr": 79,
+        "stamina": 79,
+        "velocity": 79,
+        "command": 78,
+        "control": 76,
+        "movement": 76,
+        "mentality": 78,
+        "recovery": 75
       },
       "batting": {
-        "ovr": 53,
-        "contact": 59,
-        "power": 51,
-        "eye": 57,
-        "discipline": 56,
-        "speed": 52,
-        "fielding": 55,
-        "arm": 56,
-        "battingClutch": 53,
-        "baseInstinct": 47,
-        "bunting": 44,
-        "platoon": 40
+        "ovr": 55,
+        "contact": 55,
+        "power": 56,
+        "eye": 51,
+        "discipline": 58,
+        "speed": 53,
+        "fielding": 54,
+        "arm": 52,
+        "battingClutch": 53
       },
       "developmentRate": 53,
-      "potentialHidden": 85,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 71
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 11,
-      "contract": {
-        "salary": 6400,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 85
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

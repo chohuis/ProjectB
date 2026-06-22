@@ -1,7 +1,7 @@
 {
   "id": "PLY_11901",
-  "name": "스미스 조던",
-  "nameEn": "Smith Jordan",
+  "name": "Mitchell Connor",
+  "nameEn": "Mitchell Connor",
   "role": "player",
   "age": 22,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 52,
-  "popularity": 41,
+  "notes": "국적:일본",
+  "diligence": 73,
+  "popularity": 14,
   "militaryStatus": "군필",
   "entryYear": 2038,
   "entryLeague": "LEAGUE_ABL",
@@ -21,57 +21,43 @@
   "entryAge": 22,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 38,
-      "primaryPosition": "SP",
-      "developmentRate": 60,
-      "potentialHidden": 71,
+      "position": "1B",
+      "jerseyNumber": 3,
+      "primaryPosition": "1B",
+      "developmentRate": 75,
+      "potentialHidden": 81,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 59,
-        "stamina": 62,
-        "velocity": 65,
-        "command": 55,
-        "control": 62,
-        "movement": 63,
-        "mentality": 65,
-        "recovery": 49,
-        "clutch": 53,
-        "holdRunners": 52
+        "ovr": 51,
+        "stamina": 45,
+        "velocity": 59,
+        "command": 48,
+        "control": 44,
+        "movement": 42,
+        "mentality": 52,
+        "recovery": 41,
+        "clutch": 50,
+        "holdRunners": 41
       },
       "batting": {
-        "ovr": 64,
-        "contact": 65,
-        "power": 60,
-        "eye": 60,
-        "discipline": 57,
-        "speed": 70,
-        "baseInstinct": 56,
-        "bunting": 58,
+        "ovr": 51,
+        "contact": 44,
+        "power": 53,
+        "eye": 52,
+        "discipline": 49,
+        "speed": 52,
+        "baseInstinct": 46,
+        "bunting": 34,
         "platoon": 50,
-        "fielding": 62,
-        "arm": 59,
-        "battingClutch": 63
+        "fielding": 44,
+        "arm": 52,
+        "battingClutch": 46
       },
       "positionRatings": {
-        "SP": 64
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "1B": 51
+      }
     },
     "coach": null,
     "manager": null,

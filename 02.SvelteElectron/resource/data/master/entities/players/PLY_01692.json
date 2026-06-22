@@ -1,61 +1,46 @@
 {
   "id": "PLY_01692",
-  "name": "차재원",
-  "nameEn": "Cha Jaewon",
+  "name": "와타나베 마나부",
+  "nameEn": "Watanabe Manabu",
   "role": "player",
-  "age": 17,
+  "age": 29,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_JEJU_WIND",
-  "teamId": "TEAM_HS_JEJU_WIND",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_JEJU_WIND",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TIDERAVES",
+  "teamId": "TEAM_JBL_CL_TIDERAVES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "C",
-      "jerseyNumber": 11,
+      "position": "2B",
+      "jerseyNumber": 17,
       "pitching": {
-        "ovr": 29,
-        "stamina": 32,
-        "velocity": 26,
-        "command": 29,
-        "control": 28,
-        "movement": 30,
-        "mentality": 26,
-        "recovery": 27,
-        "clutch": 34,
-        "holdRunners": 32
+        "ovr": 56,
+        "stamina": 55,
+        "velocity": 60,
+        "command": 52,
+        "control": 59,
+        "movement": 57,
+        "mentality": 54,
+        "recovery": 56
       },
       "batting": {
-        "ovr": 49,
-        "contact": 55,
-        "power": 46,
-        "eye": 46,
-        "discipline": 48,
-        "speed": 46,
-        "fielding": 45,
-        "arm": 46,
-        "battingClutch": 41,
-        "baseInstinct": 41,
-        "bunting": 43,
-        "platoon": 44
+        "ovr": 81,
+        "contact": 79,
+        "power": 80,
+        "eye": 82,
+        "discipline": 86,
+        "speed": 89,
+        "fielding": 88,
+        "arm": 83,
+        "battingClutch": 81
       },
-      "developmentRate": 71,
-      "potentialHidden": 89,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 49
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 32,
+      "potentialHidden": 86
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 74,
-  "popularity": 25
+  }
 }

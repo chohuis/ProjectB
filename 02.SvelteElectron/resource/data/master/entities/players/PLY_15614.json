@@ -1,6 +1,6 @@
 {
   "id": "PLY_15614",
-  "name": "데이비스 에릭",
+  "name": "Davis Eric",
   "nameEn": "Davis Eric",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 48,
   "popularity": 23,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 62
       },
       "batting": {
-        "ovr": 72,
-        "contact": 70,
-        "power": 72,
-        "eye": 67,
-        "discipline": 62,
-        "speed": 79,
-        "baseInstinct": 61,
-        "bunting": 61,
-        "platoon": 48,
-        "fielding": 74,
-        "arm": 66,
-        "battingClutch": 62
+        "ovr": 75,
+        "contact": 73,
+        "power": 75,
+        "eye": 70,
+        "discipline": 65,
+        "speed": 82,
+        "baseInstinct": 64,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 77,
+        "arm": 69,
+        "battingClutch": 65
       },
       "positionRatings": {
         "3B": 75

@@ -1,6 +1,6 @@
 {
   "id": "PLY_16438",
-  "name": "루이스 루이스",
+  "name": "Lewis Luis",
   "nameEn": "Lewis Luis",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 57,
   "popularity": 35,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 58,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 58,
-        "stamina": 59,
-        "velocity": 62,
-        "command": 58,
-        "control": 57,
-        "movement": 53,
-        "mentality": 57,
-        "recovery": 51,
-        "clutch": 57,
-        "holdRunners": 50
+        "ovr": 59,
+        "stamina": 60,
+        "velocity": 63,
+        "command": 59,
+        "control": 58,
+        "movement": 54,
+        "mentality": 58,
+        "recovery": 52,
+        "clutch": 58,
+        "holdRunners": 51
       },
       "batting": {
         "ovr": 59,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

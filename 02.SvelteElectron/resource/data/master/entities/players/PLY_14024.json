@@ -1,6 +1,6 @@
 {
   "id": "PLY_14024",
-  "name": "가르시아 오스틴",
+  "name": "Garcia Austin",
   "nameEn": "Garcia Austin",
   "role": "player",
   "age": 34,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 56,
   "popularity": 27,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 53
       },
       "batting": {
-        "ovr": 77,
-        "contact": 73,
-        "power": 69,
-        "eye": 80,
-        "discipline": 64,
-        "speed": 80,
-        "baseInstinct": 77,
-        "bunting": 66,
-        "platoon": 63,
-        "fielding": 63,
-        "arm": 67,
-        "battingClutch": 61
+        "ovr": 61,
+        "contact": 58,
+        "power": 55,
+        "eye": 63,
+        "discipline": 51,
+        "speed": 63,
+        "baseInstinct": 61,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 53,
+        "battingClutch": 48
       },
       "positionRatings": {
         "C": 61

@@ -1,9 +1,9 @@
 {
   "id": "PLY_11389",
-  "name": "홀 다니엘",
-  "nameEn": "Hall Daniel",
+  "name": "Moore Carlos",
+  "nameEn": "Moore Carlos",
   "role": "player",
-  "age": 21,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 49,
-  "popularity": 29,
+  "notes": "국적:미국",
+  "diligence": 74,
+  "popularity": 22,
   "militaryStatus": "군필",
   "entryYear": 2035,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 21,
+  "entryAge": 28,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 75,
+      "jerseyNumber": 27,
       "primaryPosition": "SP",
-      "developmentRate": 76,
-      "potentialHidden": 71,
-      "proServiceYears": 0,
+      "developmentRate": 62,
+      "potentialHidden": 88,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 55,
-        "stamina": 52,
-        "velocity": 62,
-        "command": 52,
-        "control": 48,
-        "movement": 57,
-        "mentality": 55,
-        "recovery": 49,
-        "clutch": 47,
-        "holdRunners": 53
+        "ovr": 74,
+        "stamina": 76,
+        "velocity": 79,
+        "command": 77,
+        "control": 72,
+        "movement": 68,
+        "mentality": 74,
+        "recovery": 63,
+        "clutch": 74,
+        "holdRunners": 62
       },
       "batting": {
-        "ovr": 59,
-        "contact": 60,
-        "power": 54,
-        "eye": 64,
-        "discipline": 57,
-        "speed": 52,
-        "baseInstinct": 60,
-        "bunting": 52,
+        "ovr": 74,
+        "contact": 72,
+        "power": 73,
+        "eye": 79,
+        "discipline": 74,
+        "speed": 68,
+        "baseInstinct": 69,
+        "bunting": 67,
         "platoon": 50,
-        "fielding": 59,
-        "arm": 60,
-        "battingClutch": 56
+        "fielding": 66,
+        "arm": 75,
+        "battingClutch": 68
       },
       "positionRatings": {
-        "SP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 74
+      }
     },
     "coach": null,
     "manager": null,

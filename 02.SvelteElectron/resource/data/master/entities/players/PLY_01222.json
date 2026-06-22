@@ -1,14 +1,14 @@
 {
   "id": "PLY_01222",
   "name": "앤더슨 다니엘",
-  "nameEn": "Aen 더슨 다니엘",
+  "nameEn": "Anderson Daniel",
   "role": "player",
   "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_BAYSEALS",
-  "teamId": "TEAM_ABL_BAYSEALS_2",
+  "clubId": "CLUB_ABL_PHI",
+  "teamId": "TEAM_ABL_PHI_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:쿠바",
@@ -19,48 +19,28 @@
       "position": "LF",
       "jerseyNumber": 57,
       "pitching": {
-        "ovr": 48,
-        "stamina": 52,
-        "velocity": 49,
-        "command": 49,
-        "control": 46,
-        "movement": 46,
-        "mentality": 48,
-        "recovery": 47,
-        "clutch": 42,
-        "holdRunners": 37
+        "ovr": 35,
+        "stamina": 29,
+        "velocity": 36,
+        "command": 30,
+        "control": 34,
+        "movement": 28,
+        "mentality": 33,
+        "recovery": 36
       },
       "batting": {
-        "ovr": 68,
-        "contact": 71,
-        "power": 72,
-        "eye": 66,
-        "discipline": 73,
-        "speed": 74,
-        "fielding": 73,
-        "arm": 66,
-        "battingClutch": 67,
-        "baseInstinct": 63,
-        "bunting": 63,
-        "platoon": 60
+        "ovr": 71,
+        "contact": 64,
+        "power": 73,
+        "eye": 69,
+        "discipline": 66,
+        "speed": 64,
+        "fielding": 61,
+        "arm": 70,
+        "battingClutch": 68
       },
       "developmentRate": 46,
-      "potentialHidden": 58,
-      "primaryPosition": "LF",
-      "positionRatings": {
-        "LF": 68
-      },
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 6300,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 58
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

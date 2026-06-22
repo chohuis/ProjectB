@@ -1,6 +1,6 @@
 {
   "id": "PLY_15302",
-  "name": "스콧 다니엘",
+  "name": "Scott Daniel",
   "nameEn": "Scott Daniel",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 58,
   "popularity": 44,
   "militaryStatus": "군필",
@@ -57,13 +57,7 @@
       },
       "positionRatings": {
         "SP": 47
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

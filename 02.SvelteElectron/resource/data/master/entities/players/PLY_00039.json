@@ -1,9 +1,9 @@
 {
   "id": "PLY_00039",
   "name": "하민재",
-  "nameEn": "Ha Minjae",
+  "nameEn": "Shin Min-jae",
   "role": "player",
-  "age": 17,
+  "age": 18,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "RF",
       "jerseyNumber": 19,
       "pitching": {
-        "ovr": 30,
-        "stamina": 33,
-        "velocity": 34,
-        "command": 31,
-        "control": 33,
-        "movement": 31,
-        "mentality": 35,
-        "recovery": 33,
-        "clutch": 44,
-        "holdRunners": 37
+        "ovr": 43,
+        "stamina": 64,
+        "velocity": 58,
+        "command": 53,
+        "control": 51,
+        "movement": 51,
+        "mentality": 57,
+        "recovery": 65
       },
       "batting": {
-        "ovr": 50,
-        "contact": 45,
-        "power": 53,
-        "eye": 48,
-        "discipline": 53,
-        "speed": 49,
-        "fielding": 45,
-        "arm": 56,
-        "battingClutch": 51,
-        "baseInstinct": 48,
-        "bunting": 47,
-        "platoon": 46
+        "ovr": 48,
+        "contact": 59,
+        "power": 42,
+        "eye": 56,
+        "discipline": 42,
+        "speed": 59,
+        "fielding": 48,
+        "arm": 63,
+        "battingClutch": 53
       },
       "developmentRate": 45,
-      "potentialHidden": 66,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 50
-      }
+      "potentialHidden": 66
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

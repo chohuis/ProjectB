@@ -1,14 +1,14 @@
 {
   "id": "PLY_00899",
   "name": "스미스 저스틴",
-  "nameEn": "Seu 미스 저스틴",
+  "nameEn": "Smith Justin",
   "role": "player",
   "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_HARBORHAWKS",
-  "teamId": "TEAM_ABL_HARBORHAWKS_2",
+  "clubId": "CLUB_ABL_NYY",
+  "teamId": "TEAM_ABL_NYY_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,58 +19,28 @@
       "position": "CP",
       "jerseyNumber": 49,
       "pitching": {
-        "ovr": 60,
-        "stamina": 64,
-        "velocity": 66,
-        "command": 61,
-        "control": 56,
-        "movement": 62,
-        "mentality": 60,
-        "recovery": 61,
-        "clutch": 57,
-        "holdRunners": 57
+        "ovr": 71,
+        "stamina": 54,
+        "velocity": 71,
+        "command": 71,
+        "control": 74,
+        "movement": 65,
+        "mentality": 68,
+        "recovery": 63
       },
       "batting": {
-        "ovr": 42,
-        "contact": 43,
+        "ovr": 37,
+        "contact": 41,
         "power": 42,
-        "eye": 48,
-        "discipline": 41,
+        "eye": 37,
+        "discipline": 39,
         "speed": 41,
-        "fielding": 37,
-        "arm": 43,
-        "battingClutch": 39,
-        "baseInstinct": 38,
-        "bunting": 31,
-        "platoon": 38
+        "fielding": 36,
+        "arm": 38,
+        "battingClutch": 38
       },
       "developmentRate": 50,
-      "potentialHidden": 68,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 14000,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 68
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

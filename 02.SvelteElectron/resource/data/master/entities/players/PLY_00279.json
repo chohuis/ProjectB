@@ -1,7 +1,7 @@
 {
   "id": "PLY_00279",
   "name": "강성우",
-  "nameEn": "Kang Seongu",
+  "nameEn": "You Hyun-seo",
   "role": "player",
   "age": 21,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "RF",
       "jerseyNumber": 19,
       "pitching": {
-        "ovr": 41,
-        "stamina": 42,
-        "velocity": 44,
-        "command": 43,
-        "control": 37,
-        "movement": 42,
-        "mentality": 44,
-        "recovery": 42,
-        "clutch": 35,
-        "holdRunners": 43
+        "ovr": 32,
+        "stamina": 33,
+        "velocity": 35,
+        "command": 32,
+        "control": 33,
+        "movement": 30,
+        "mentality": 33,
+        "recovery": 30
       },
       "batting": {
-        "ovr": 61,
-        "contact": 57,
-        "power": 66,
-        "eye": 59,
-        "discipline": 67,
-        "speed": 66,
-        "fielding": 66,
+        "ovr": 62,
+        "contact": 59,
+        "power": 62,
+        "eye": 58,
+        "discipline": 64,
+        "speed": 60,
+        "fielding": 60,
         "arm": 56,
-        "battingClutch": 61,
-        "baseInstinct": 56,
-        "bunting": 54,
-        "platoon": 54
+        "battingClutch": 64
       },
       "developmentRate": 45,
-      "potentialHidden": 88,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 61
-      }
+      "potentialHidden": 88
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

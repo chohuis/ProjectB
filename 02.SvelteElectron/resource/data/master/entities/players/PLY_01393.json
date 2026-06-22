@@ -1,14 +1,14 @@
 {
   "id": "PLY_01393",
   "name": "윌슨 앤서니",
-  "nameEn": "Wil 슨 앤서니",
+  "nameEn": "Wilson Anthony",
   "role": "player",
   "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_LAKESPIRITS",
-  "teamId": "TEAM_ABL_LAKESPIRITS_2",
+  "clubId": "CLUB_ABL_SD",
+  "teamId": "TEAM_ABL_SD_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -19,62 +19,28 @@
       "position": "RP",
       "jerseyNumber": 48,
       "pitching": {
-        "ovr": 71,
-        "stamina": 74,
-        "velocity": 66,
+        "ovr": 82,
+        "stamina": 75,
+        "velocity": 79,
         "command": 75,
-        "control": 68,
-        "movement": 70,
-        "mentality": 69,
-        "recovery": 70,
-        "clutch": 66,
-        "holdRunners": 67
+        "control": 76,
+        "movement": 74,
+        "mentality": 82,
+        "recovery": 77
       },
       "batting": {
-        "ovr": 53,
-        "contact": 55,
-        "power": 59,
-        "eye": 49,
-        "discipline": 50,
-        "speed": 51,
+        "ovr": 51,
+        "contact": 51,
+        "power": 53,
+        "eye": 48,
+        "discipline": 51,
+        "speed": 55,
         "fielding": 48,
-        "arm": 48,
-        "battingClutch": 47,
-        "baseInstinct": 44,
-        "bunting": 42,
-        "platoon": 50
+        "arm": 53,
+        "battingClutch": 56
       },
       "developmentRate": 47,
-      "potentialHidden": 82,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 71
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 3,
-      "contract": {
-        "salary": 22500,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 82
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

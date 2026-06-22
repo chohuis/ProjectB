@@ -1,14 +1,14 @@
 {
   "id": "PLY_00712",
   "name": "오도윤",
-  "nameEn": "Oh Doyun",
+  "nameEn": "Kang Dong-jun",
   "role": "player",
   "age": 29,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_ROYALLIONS",
-  "teamId": "TEAM_KBL_ROYALLIONS_2",
+  "clubId": "CLUB_KBL_SSG",
+  "teamId": "TEAM_KBL_SSG_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 32,
       "pitching": {
-        "ovr": 66,
-        "stamina": 68,
-        "velocity": 65,
-        "command": 65,
-        "control": 66,
+        "ovr": 75,
+        "stamina": 80,
+        "velocity": 73,
+        "command": 74,
+        "control": 69,
         "movement": 68,
-        "mentality": 66,
-        "recovery": 69,
-        "clutch": 62,
-        "holdRunners": 54
+        "mentality": 75,
+        "recovery": 68
       },
       "batting": {
-        "ovr": 48,
-        "contact": 44,
-        "power": 53,
-        "eye": 45,
-        "discipline": 47,
-        "speed": 48,
-        "fielding": 45,
-        "arm": 48,
-        "battingClutch": 49,
-        "baseInstinct": 45,
-        "bunting": 32,
-        "platoon": 39
+        "ovr": 47,
+        "contact": 53,
+        "power": 50,
+        "eye": 50,
+        "discipline": 54,
+        "speed": 54,
+        "fielding": 53,
+        "arm": 49,
+        "battingClutch": 52
       },
       "developmentRate": 55,
-      "potentialHidden": 62,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_KNUCKLEBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 7,
-      "contract": {
-        "salary": 5300,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 62
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

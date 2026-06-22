@@ -1,14 +1,14 @@
 {
   "id": "PLY_00609",
   "name": "한하준",
-  "nameEn": "Han Hajun",
+  "nameEn": "Song Dong-hyun",
   "role": "player",
   "age": 33,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_SOARINGEAGLES",
-  "teamId": "TEAM_KBL_SOARINGEAGLES_1",
+  "clubId": "CLUB_KBL_DOOSAN",
+  "teamId": "TEAM_KBL_DOOSAN_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,48 +19,28 @@
       "position": "C",
       "jerseyNumber": 14,
       "pitching": {
-        "ovr": 53,
-        "stamina": 52,
-        "velocity": 49,
-        "command": 51,
-        "control": 56,
-        "movement": 56,
-        "mentality": 54,
-        "recovery": 57,
-        "clutch": 43,
-        "holdRunners": 50
+        "ovr": 52,
+        "stamina": 47,
+        "velocity": 47,
+        "command": 49,
+        "control": 51,
+        "movement": 51,
+        "mentality": 48,
+        "recovery": 43
       },
       "batting": {
-        "ovr": 73,
-        "contact": 78,
-        "power": 78,
-        "eye": 73,
-        "discipline": 79,
-        "speed": 69,
-        "fielding": 68,
-        "arm": 72,
-        "battingClutch": 71,
-        "baseInstinct": 71,
-        "bunting": 69,
-        "platoon": 69
+        "ovr": 76,
+        "contact": 75,
+        "power": 70,
+        "eye": 72,
+        "discipline": 72,
+        "speed": 73,
+        "fielding": 78,
+        "arm": 77,
+        "battingClutch": 69
       },
       "developmentRate": 45,
-      "potentialHidden": 65,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 73
-      },
-      "proServiceYears": 11,
-      "contract": {
-        "salary": 2500,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 65
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

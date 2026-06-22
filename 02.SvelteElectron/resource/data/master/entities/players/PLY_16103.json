@@ -1,6 +1,6 @@
 {
   "id": "PLY_16103",
-  "name": "존슨 블레이크",
+  "name": "Johnson Blake",
   "nameEn": "Johnson Blake",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 71,
   "popularity": 27,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 54
       },
       "batting": {
-        "ovr": 60,
-        "contact": 58,
-        "power": 52,
-        "eye": 59,
-        "discipline": 53,
-        "speed": 65,
-        "baseInstinct": 63,
-        "bunting": 50,
-        "platoon": 49,
-        "fielding": 62,
-        "arm": 50,
-        "battingClutch": 59
+        "ovr": 61,
+        "contact": 59,
+        "power": 53,
+        "eye": 60,
+        "discipline": 54,
+        "speed": 66,
+        "baseInstinct": 64,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 51,
+        "battingClutch": 60
       },
       "positionRatings": {
         "C": 61

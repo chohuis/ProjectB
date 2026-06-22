@@ -1,6 +1,6 @@
 {
   "id": "PLY_14727",
-  "name": "스미스 케빈",
+  "name": "Smith Kevin",
   "nameEn": "Smith Kevin",
   "role": "player",
   "age": 34,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 64,
   "popularity": 33,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 61
       },
       "batting": {
-        "ovr": 81,
-        "contact": 76,
-        "power": 78,
-        "eye": 75,
-        "discipline": 81,
-        "speed": 81,
-        "baseInstinct": 73,
-        "bunting": 63,
-        "platoon": 63,
-        "fielding": 68,
-        "arm": 67,
-        "battingClutch": 80
+        "ovr": 64,
+        "contact": 60,
+        "power": 62,
+        "eye": 59,
+        "discipline": 64,
+        "speed": 64,
+        "baseInstinct": 58,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 53,
+        "battingClutch": 63
       },
       "positionRatings": {
         "RF": 64

@@ -1,7 +1,7 @@
 {
   "id": "PLY_00353",
   "name": "박찬우",
-  "nameEn": "Park Chanu",
+  "nameEn": "Han Jae-hyun",
   "role": "player",
   "age": 24,
   "status": "active",
@@ -20,47 +20,27 @@
       "jerseyNumber": 13,
       "pitching": {
         "ovr": 37,
-        "stamina": 38,
-        "velocity": 33,
-        "command": 34,
-        "control": 42,
-        "movement": 36,
-        "mentality": 33,
-        "recovery": 38,
-        "clutch": 35,
-        "holdRunners": 39
+        "stamina": 34,
+        "velocity": 43,
+        "command": 35,
+        "control": 40,
+        "movement": 39,
+        "mentality": 37,
+        "recovery": 32
       },
       "batting": {
-        "ovr": 57,
-        "contact": 56,
-        "power": 59,
-        "eye": 62,
+        "ovr": 58,
+        "contact": 57,
+        "power": 64,
+        "eye": 61,
         "discipline": 54,
-        "speed": 61,
-        "fielding": 58,
-        "arm": 61,
-        "battingClutch": 50,
-        "baseInstinct": 48,
-        "bunting": 50,
-        "platoon": 48
+        "speed": 52,
+        "fielding": 59,
+        "arm": 57,
+        "battingClutch": 55
       },
       "developmentRate": 47,
-      "potentialHidden": 84,
-      "primaryPosition": "1B",
-      "positionRatings": {
-        "1B": 57
-      },
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 84
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

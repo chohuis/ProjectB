@@ -1,9 +1,9 @@
 {
   "id": "PLY_10268",
-  "name": "로드리게스 에릭",
-  "nameEn": "Rodriguez Eric",
+  "name": "White Miguel",
+  "nameEn": "White Miguel",
   "role": "player",
-  "age": 20,
+  "age": 19,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 55,
-  "popularity": 42,
+  "notes": "국적:쿠바",
+  "diligence": 66,
+  "popularity": 27,
   "militaryStatus": "군필",
   "entryYear": 2028,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 20,
+  "entryAge": 19,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 74,
-      "primaryPosition": "SP",
-      "developmentRate": 69,
-      "potentialHidden": 88,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 20,
+      "primaryPosition": "C",
+      "developmentRate": 68,
+      "potentialHidden": 68,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 53,
-        "stamina": 45,
-        "velocity": 62,
-        "command": 44,
-        "control": 54,
-        "movement": 44,
-        "mentality": 60,
-        "recovery": 45,
-        "clutch": 45,
-        "holdRunners": 46
+        "ovr": 67,
+        "stamina": 70,
+        "velocity": 66,
+        "command": 63,
+        "control": 65,
+        "movement": 69,
+        "mentality": 66,
+        "recovery": 55,
+        "clutch": 54,
+        "holdRunners": 53
       },
       "batting": {
-        "ovr": 56,
-        "contact": 55,
-        "power": 56,
-        "eye": 61,
-        "discipline": 47,
-        "speed": 60,
-        "baseInstinct": 59,
-        "bunting": 40,
+        "ovr": 67,
+        "contact": 58,
+        "power": 62,
+        "eye": 64,
+        "discipline": 64,
+        "speed": 71,
+        "baseInstinct": 68,
+        "bunting": 54,
         "platoon": 50,
-        "fielding": 50,
-        "arm": 46,
-        "battingClutch": 44
+        "fielding": 65,
+        "arm": 66,
+        "battingClutch": 59
       },
       "positionRatings": {
-        "SP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "C": 67
+      }
     },
     "coach": null,
     "manager": null,

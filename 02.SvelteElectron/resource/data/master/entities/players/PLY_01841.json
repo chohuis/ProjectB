@@ -1,65 +1,46 @@
 {
   "id": "PLY_01841",
-  "name": "김재윤",
-  "nameEn": "Kim Jaeyun",
+  "name": "타나카 다이키",
+  "nameEn": "Tanaka Daiki",
   "role": "player",
-  "age": 16,
+  "age": 30,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_SUNCHEON_BAY",
-  "teamId": "TEAM_HS_SUNCHEON_BAY",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_SUNCHEON_BAY",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
+  "teamId": "TEAM_JBL_PL_THUNDERFALCONS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
-      "position": "CP",
-      "jerseyNumber": 10,
+      "position": "RP",
+      "jerseyNumber": 36,
       "pitching": {
-        "ovr": 48,
-        "stamina": 52,
-        "velocity": 45,
-        "command": 54,
-        "control": 44,
-        "movement": 49,
-        "mentality": 45,
-        "recovery": 46,
-        "clutch": 38,
-        "holdRunners": 37
+        "ovr": 66,
+        "stamina": 59,
+        "velocity": 68,
+        "command": 63,
+        "control": 61,
+        "movement": 61,
+        "mentality": 65,
+        "recovery": 58
       },
       "batting": {
-        "ovr": 30,
-        "contact": 30,
-        "power": 24,
-        "eye": 32,
-        "discipline": 28,
-        "speed": 34,
-        "fielding": 34,
-        "arm": 34,
-        "battingClutch": 42,
-        "baseInstinct": 37,
-        "bunting": 40,
-        "platoon": 37
+        "ovr": 36,
+        "contact": 36,
+        "power": 38,
+        "eye": 36,
+        "discipline": 36,
+        "speed": 36,
+        "fielding": 37,
+        "arm": 31,
+        "battingClutch": 40
       },
-      "developmentRate": 60,
-      "potentialHidden": 79,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 48
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        }
-      ]
+      "developmentRate": 39,
+      "potentialHidden": 73
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 79,
-  "popularity": 23
+  }
 }

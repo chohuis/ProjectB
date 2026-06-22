@@ -1,6 +1,6 @@
 {
   "id": "PLY_10510",
-  "name": "테일러 브랜던",
+  "name": "Taylor Brandon",
   "nameEn": "Taylor Brandon",
   "role": "player",
   "age": 32,
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 46,
-  "popularity": 18,
+  "notes": "국적:미국",
+  "diligence": 53,
+  "popularity": 19,
   "militaryStatus": "군필",
   "entryYear": 2030,
   "entryLeague": "LEAGUE_ABL",
@@ -22,52 +22,42 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 72,
+      "jerseyNumber": 19,
       "primaryPosition": "SP",
       "developmentRate": 49,
       "potentialHidden": 74,
       "proServiceYears": 10,
       "pitching": {
-        "ovr": 79,
-        "stamina": 72,
-        "velocity": 88,
-        "command": 73,
-        "control": 83,
-        "movement": 75,
-        "mentality": 78,
-        "recovery": 78,
-        "clutch": 70,
-        "holdRunners": 64
+        "ovr": 67,
+        "stamina": 69,
+        "velocity": 70,
+        "command": 68,
+        "control": 65,
+        "movement": 63,
+        "mentality": 71,
+        "recovery": 60,
+        "clutch": 56,
+        "holdRunners": 60
       },
       "batting": {
         "ovr": 67,
-        "contact": 66,
-        "power": 60,
-        "eye": 71,
-        "discipline": 62,
-        "speed": 68,
-        "baseInstinct": 65,
-        "bunting": 54,
+        "contact": 62,
+        "power": 69,
+        "eye": 63,
+        "discipline": 65,
+        "speed": 69,
+        "baseInstinct": 62,
+        "bunting": 61,
         "platoon": 50,
-        "fielding": 69,
-        "arm": 58,
-        "battingClutch": 57
+        "fielding": 58,
+        "arm": 59,
+        "battingClutch": 61
       },
       "positionRatings": {
         "SP": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,14 +1,14 @@
 {
   "id": "PLY_01189",
   "name": "윌리엄스 마르코",
-  "nameEn": "Wil 리엄스 마르코",
+  "nameEn": "Williams Marco",
   "role": "player",
   "age": 36,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_BAYSEALS",
-  "teamId": "TEAM_ABL_BAYSEALS_1",
+  "clubId": "CLUB_ABL_PHI",
+  "teamId": "TEAM_ABL_PHI",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 9,
       "pitching": {
-        "ovr": 77,
-        "stamina": 81,
-        "velocity": 80,
-        "command": 74,
-        "control": 81,
-        "movement": 73,
-        "mentality": 77,
-        "recovery": 80,
-        "clutch": 76,
-        "holdRunners": 72
+        "ovr": 85,
+        "stamina": 79,
+        "velocity": 86,
+        "command": 81,
+        "control": 84,
+        "movement": 82,
+        "mentality": 86,
+        "recovery": 85
       },
       "batting": {
-        "ovr": 59,
+        "ovr": 52,
         "contact": 56,
-        "power": 59,
-        "eye": 59,
-        "discipline": 61,
-        "speed": 66,
-        "fielding": 59,
-        "arm": 58,
-        "battingClutch": 52,
-        "baseInstinct": 54,
-        "bunting": 53,
-        "platoon": 49
+        "power": 55,
+        "eye": 54,
+        "discipline": 51,
+        "speed": 56,
+        "fielding": 55,
+        "arm": 59,
+        "battingClutch": 60
       },
       "developmentRate": 32,
-      "potentialHidden": 71,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 77
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SCREWBALL",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 14,
-      "contract": {
-        "salary": 27100,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 71
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

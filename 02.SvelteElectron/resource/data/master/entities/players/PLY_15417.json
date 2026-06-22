@@ -1,6 +1,6 @@
 {
   "id": "PLY_15417",
-  "name": "워커 코너",
+  "name": "Walker Connor",
   "nameEn": "Walker Connor",
   "role": "player",
   "age": 33,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 75,
   "popularity": 32,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 51
       },
       "batting": {
-        "ovr": 78,
-        "contact": 77,
-        "power": 65,
-        "eye": 73,
-        "discipline": 68,
-        "speed": 81,
-        "baseInstinct": 73,
-        "bunting": 59,
-        "platoon": 63,
-        "fielding": 74,
-        "arm": 74,
-        "battingClutch": 67
+        "ovr": 62,
+        "contact": 61,
+        "power": 52,
+        "eye": 58,
+        "discipline": 54,
+        "speed": 64,
+        "baseInstinct": 58,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 59,
+        "battingClutch": 53
       },
       "positionRatings": {
         "2B": 62

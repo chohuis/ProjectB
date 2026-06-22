@@ -1,6 +1,6 @@
 {
   "id": "PLY_14336",
-  "name": "애덤스 조던",
+  "name": "Adams Jordan",
   "nameEn": "Adams Jordan",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 79,
   "popularity": 13,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 46
       },
       "batting": {
-        "ovr": 52,
-        "contact": 57,
-        "power": 47,
-        "eye": 44,
-        "discipline": 47,
-        "speed": 49,
-        "baseInstinct": 47,
-        "bunting": 35,
-        "platoon": 49,
-        "fielding": 49,
-        "arm": 44,
-        "battingClutch": 48
+        "ovr": 53,
+        "contact": 58,
+        "power": 48,
+        "eye": 45,
+        "discipline": 48,
+        "speed": 50,
+        "baseInstinct": 48,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 45,
+        "battingClutch": 49
       },
       "positionRatings": {
         "3B": 53

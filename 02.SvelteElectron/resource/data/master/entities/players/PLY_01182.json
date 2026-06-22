@@ -1,14 +1,14 @@
 {
   "id": "PLY_01182",
   "name": "넬슨 로건",
-  "nameEn": "Nel 슨 로건",
+  "nameEn": "Nelson Logan",
   "role": "player",
   "age": 36,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_BAYSEALS",
-  "teamId": "TEAM_ABL_BAYSEALS_1",
+  "clubId": "CLUB_ABL_PHI",
+  "teamId": "TEAM_ABL_PHI",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 2,
       "pitching": {
-        "ovr": 79,
-        "stamina": 85,
-        "velocity": 81,
-        "command": 82,
-        "control": 74,
-        "movement": 79,
-        "mentality": 77,
-        "recovery": 81,
-        "clutch": 77,
-        "holdRunners": 74
+        "ovr": 90,
+        "stamina": 86,
+        "velocity": 94,
+        "command": 88,
+        "control": 88,
+        "movement": 88,
+        "mentality": 83,
+        "recovery": 88
       },
       "batting": {
         "ovr": 61,
-        "contact": 61,
-        "power": 65,
-        "eye": 57,
-        "discipline": 63,
+        "contact": 65,
+        "power": 63,
+        "eye": 63,
+        "discipline": 67,
         "speed": 63,
-        "fielding": 59,
-        "arm": 57,
-        "battingClutch": 57,
-        "baseInstinct": 59,
-        "bunting": 49,
-        "platoon": 55
+        "fielding": 61,
+        "arm": 62,
+        "battingClutch": 64
       },
       "developmentRate": 42,
-      "potentialHidden": 69,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 79
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 14,
-      "contract": {
-        "salary": 28600,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 69
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

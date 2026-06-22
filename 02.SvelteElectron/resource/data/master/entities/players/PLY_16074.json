@@ -1,6 +1,6 @@
 {
   "id": "PLY_16074",
-  "name": "마르티네스 조던",
+  "name": "Martinez Jordan",
   "nameEn": "Martinez Jordan",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 60,
   "popularity": 45,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 56
       },
       "batting": {
-        "ovr": 69,
-        "contact": 59,
-        "power": 59,
-        "eye": 62,
-        "discipline": 70,
-        "speed": 76,
-        "baseInstinct": 58,
-        "bunting": 59,
-        "platoon": 56,
-        "fielding": 63,
-        "arm": 62,
-        "battingClutch": 57
+        "ovr": 62,
+        "contact": 53,
+        "power": 53,
+        "eye": 56,
+        "discipline": 63,
+        "speed": 68,
+        "baseInstinct": 52,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 56,
+        "battingClutch": 51
       },
       "positionRatings": {
         "3B": 62

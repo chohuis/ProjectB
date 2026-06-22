@@ -1,14 +1,14 @@
 {
   "id": "PLY_00962",
   "name": "무어 노아",
-  "nameEn": "Mu 어 노아",
+  "nameEn": "Moore Noah",
   "role": "player",
   "age": 35,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_WINDBEARS",
-  "teamId": "TEAM_ABL_WINDBEARS_1",
+  "clubId": "CLUB_ABL_TOR",
+  "teamId": "TEAM_ABL_TOR",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 7,
       "pitching": {
-        "ovr": 69,
-        "stamina": 71,
-        "velocity": 74,
-        "command": 69,
-        "control": 68,
-        "movement": 67,
-        "mentality": 68,
-        "recovery": 70,
-        "clutch": 60,
-        "holdRunners": 60
+        "ovr": 78,
+        "stamina": 68,
+        "velocity": 85,
+        "command": 76,
+        "control": 77,
+        "movement": 72,
+        "mentality": 73,
+        "recovery": 75
       },
       "batting": {
-        "ovr": 51,
-        "contact": 51,
-        "power": 48,
-        "eye": 53,
-        "discipline": 50,
-        "speed": 55,
-        "fielding": 46,
-        "arm": 52,
-        "battingClutch": 40,
-        "baseInstinct": 49,
-        "bunting": 41,
-        "platoon": 45
+        "ovr": 45,
+        "contact": 48,
+        "power": 43,
+        "eye": 48,
+        "discipline": 43,
+        "speed": 48,
+        "fielding": 44,
+        "arm": 42,
+        "battingClutch": 48
       },
       "developmentRate": 48,
-      "potentialHidden": 76,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 69
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SCREWBALL",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 13,
-      "contract": {
-        "salary": 20900,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 76
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

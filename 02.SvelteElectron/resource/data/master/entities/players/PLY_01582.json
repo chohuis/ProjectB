@@ -1,69 +1,46 @@
 {
   "id": "PLY_01582",
-  "name": "민서준",
-  "nameEn": "Min Seojun",
+  "name": "야마모토 마나부",
+  "nameEn": "Yamamoto Manabu",
   "role": "player",
-  "age": 16,
+  "age": 28,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_DAEJEON_RISE",
-  "teamId": "TEAM_HS_DAEJEON_RISE",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_DAEJEON_RISE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_NEONCRANES",
+  "teamId": "TEAM_JBL_CL_NEONCRANES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 21,
+      "position": "LF",
+      "jerseyNumber": 47,
       "pitching": {
-        "ovr": 46,
-        "stamina": 48,
-        "velocity": 42,
-        "command": 46,
-        "control": 42,
-        "movement": 42,
-        "mentality": 51,
-        "recovery": 44,
-        "clutch": 42,
-        "holdRunners": 44
+        "ovr": 35,
+        "stamina": 36,
+        "velocity": 43,
+        "command": 40,
+        "control": 34,
+        "movement": 37,
+        "mentality": 34,
+        "recovery": 32
       },
       "batting": {
-        "ovr": 28,
-        "contact": 34,
-        "power": 28,
-        "eye": 24,
-        "discipline": 34,
-        "speed": 29,
-        "fielding": 31,
-        "arm": 32,
-        "battingClutch": 42,
-        "baseInstinct": 46,
-        "bunting": 30,
-        "platoon": 36
+        "ovr": 74,
+        "contact": 73,
+        "power": 72,
+        "eye": 74,
+        "discipline": 74,
+        "speed": 69,
+        "fielding": 69,
+        "arm": 74,
+        "battingClutch": 75
       },
-      "developmentRate": 71,
-      "potentialHidden": 62,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 46
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 4
-        }
-      ]
+      "developmentRate": 50,
+      "potentialHidden": 79
     },
     "coach": {
       "specialty": "-",
@@ -103,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 72,
-  "popularity": 41
+  }
 }

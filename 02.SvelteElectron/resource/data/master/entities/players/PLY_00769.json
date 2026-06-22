@@ -1,14 +1,14 @@
 {
   "id": "PLY_00769",
   "name": "신재윤",
-  "nameEn": "Shin Jaeyun",
+  "nameEn": "Lim Ji-won",
   "role": "player",
   "age": 29,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_STEELDINOS",
-  "teamId": "TEAM_KBL_STEELDINOS_2",
+  "clubId": "CLUB_KBL_LOTTE",
+  "teamId": "TEAM_KBL_LOTTE_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,48 +19,28 @@
       "position": "2B",
       "jerseyNumber": 44,
       "pitching": {
-        "ovr": 41,
-        "stamina": 40,
-        "velocity": 39,
+        "ovr": 35,
+        "stamina": 32,
+        "velocity": 37,
         "command": 38,
-        "control": 41,
-        "movement": 41,
+        "control": 34,
+        "movement": 34,
         "mentality": 40,
-        "recovery": 37,
-        "clutch": 36,
-        "holdRunners": 40
+        "recovery": 34
       },
       "batting": {
-        "ovr": 61,
-        "contact": 62,
-        "power": 57,
-        "eye": 61,
-        "discipline": 64,
-        "speed": 56,
-        "fielding": 59,
-        "arm": 60,
-        "battingClutch": 61,
-        "baseInstinct": 52,
-        "bunting": 57,
-        "platoon": 56
+        "ovr": 63,
+        "contact": 59,
+        "power": 63,
+        "eye": 60,
+        "discipline": 61,
+        "speed": 61,
+        "fielding": 61,
+        "arm": 61,
+        "battingClutch": 64
       },
       "developmentRate": 48,
-      "potentialHidden": 58,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 61
-      },
-      "proServiceYears": 7,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 58
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

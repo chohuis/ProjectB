@@ -1,7 +1,7 @@
 {
   "id": "PLY_00404",
   "name": "차현준",
-  "nameEn": "Cha Hyeonjun",
+  "nameEn": "Hwang Seo-jun",
   "role": "player",
   "age": 26,
   "status": "active",
@@ -19,54 +19,28 @@
       "position": "SP",
       "jerseyNumber": 4,
       "pitching": {
-        "ovr": 49,
-        "stamina": 54,
-        "velocity": 48,
+        "ovr": 58,
+        "stamina": 58,
+        "velocity": 55,
         "command": 52,
-        "control": 50,
-        "movement": 51,
-        "mentality": 46,
-        "recovery": 51,
-        "clutch": 45,
-        "holdRunners": 41
+        "control": 51,
+        "movement": 52,
+        "mentality": 53,
+        "recovery": 53
       },
       "batting": {
-        "ovr": 31,
-        "contact": 37,
-        "power": 37,
-        "eye": 36,
-        "discipline": 35,
-        "speed": 26,
-        "fielding": 28,
-        "arm": 26,
-        "battingClutch": 39,
-        "baseInstinct": 39,
-        "bunting": 40,
-        "platoon": 44
+        "ovr": 24,
+        "contact": 21,
+        "power": 24,
+        "eye": 23,
+        "discipline": 24,
+        "speed": 19,
+        "fielding": 19,
+        "arm": 17,
+        "battingClutch": 18
       },
       "developmentRate": 49,
-      "potentialHidden": 81,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 49
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 6,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 81
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

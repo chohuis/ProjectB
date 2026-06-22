@@ -1,61 +1,46 @@
 {
   "id": "PLY_01655",
-  "name": "송도윤",
-  "nameEn": "Song Doyun",
+  "name": "후쿠다 오사무",
+  "nameEn": "Fukuda Osamu",
   "role": "player",
-  "age": 16,
+  "age": 33,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
-  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_CHUNCHEON_HIGHLAND",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONDRAKES",
+  "teamId": "TEAM_JBL_CL_IRONDRAKES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 4,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 25,
       "pitching": {
-        "ovr": 53,
-        "stamina": 53,
-        "velocity": 52,
-        "command": 58,
-        "control": 51,
-        "movement": 53,
-        "mentality": 53,
-        "recovery": 51,
-        "clutch": 50,
-        "holdRunners": 50
+        "ovr": 44,
+        "stamina": 46,
+        "velocity": 48,
+        "command": 51,
+        "control": 43,
+        "movement": 45,
+        "mentality": 49,
+        "recovery": 42
       },
       "batting": {
-        "ovr": 35,
-        "contact": 38,
-        "power": 30,
-        "eye": 32,
-        "discipline": 40,
-        "speed": 34,
-        "fielding": 35,
-        "arm": 34,
-        "battingClutch": 39,
-        "baseInstinct": 39,
-        "bunting": 40,
-        "platoon": 34
+        "ovr": 80,
+        "contact": 85,
+        "power": 77,
+        "eye": 76,
+        "discipline": 79,
+        "speed": 84,
+        "fielding": 84,
+        "arm": 78,
+        "battingClutch": 79
       },
-      "developmentRate": 67,
-      "potentialHidden": 60,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 53
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        }
-      ]
+      "developmentRate": 53,
+      "potentialHidden": 74
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 78,
-  "popularity": 20
+  }
 }

@@ -1,9 +1,9 @@
 {
   "id": "PLY_11977",
-  "name": "카터 알렉스",
-  "nameEn": "Carter Alex",
+  "name": "Lewis Kyle",
+  "nameEn": "Lewis Kyle",
   "role": "player",
-  "age": 22,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:도미니카",
   "diligence": 70,
-  "popularity": 37,
+  "popularity": 18,
   "militaryStatus": "군필",
   "entryYear": 2038,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 22,
+  "entryAge": 28,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "SP",
-      "jerseyNumber": 67,
+      "jerseyNumber": 78,
       "primaryPosition": "SP",
-      "developmentRate": 59,
-      "potentialHidden": 81,
-      "proServiceYears": 0,
+      "developmentRate": 49,
+      "potentialHidden": 57,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 56,
-        "stamina": 56,
-        "velocity": 64,
-        "command": 57,
-        "control": 57,
-        "movement": 55,
-        "mentality": 53,
-        "recovery": 51,
-        "clutch": 49,
-        "holdRunners": 47
+        "ovr": 80,
+        "stamina": 81,
+        "velocity": 87,
+        "command": 77,
+        "control": 84,
+        "movement": 83,
+        "mentality": 74,
+        "recovery": 76,
+        "clutch": 70,
+        "holdRunners": 65
       },
       "batting": {
-        "ovr": 60,
-        "contact": 55,
-        "power": 52,
-        "eye": 55,
-        "discipline": 56,
-        "speed": 67,
-        "baseInstinct": 51,
-        "bunting": 50,
+        "ovr": 80,
+        "contact": 82,
+        "power": 78,
+        "eye": 75,
+        "discipline": 77,
+        "speed": 80,
+        "baseInstinct": 71,
+        "bunting": 72,
         "platoon": 50,
-        "fielding": 51,
-        "arm": 60,
-        "battingClutch": 48
+        "fielding": 73,
+        "arm": 79,
+        "battingClutch": 71
       },
       "positionRatings": {
-        "SP": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 80
+      }
     },
     "coach": null,
     "manager": null,

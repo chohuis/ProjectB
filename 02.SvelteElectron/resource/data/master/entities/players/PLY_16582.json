@@ -1,6 +1,6 @@
 {
   "id": "PLY_16582",
-  "name": "클라크 크리스",
+  "name": "Clark Chris",
   "nameEn": "Clark Chris",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 63,
   "popularity": 46,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 57,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 77,
-        "stamina": 68,
-        "velocity": 86,
-        "command": 74,
-        "control": 75,
-        "movement": 77,
-        "mentality": 80,
-        "recovery": 78,
-        "clutch": 67,
-        "holdRunners": 62
+        "ovr": 71,
+        "stamina": 63,
+        "velocity": 79,
+        "command": 68,
+        "control": 69,
+        "movement": 71,
+        "mentality": 74,
+        "recovery": 72,
+        "clutch": 62,
+        "holdRunners": 57
       },
       "batting": {
         "ovr": 71,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 71
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

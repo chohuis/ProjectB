@@ -1,6 +1,6 @@
 {
   "id": "PLY_15472",
-  "name": "에르난데스 네이선",
+  "name": "Hernandez Nathan",
   "nameEn": "Hernandez Nathan",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 72,
   "popularity": 46,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 56
       },
       "batting": {
-        "ovr": 58,
-        "contact": 52,
-        "power": 51,
-        "eye": 51,
-        "discipline": 60,
-        "speed": 55,
-        "baseInstinct": 60,
-        "bunting": 42,
-        "platoon": 49,
-        "fielding": 61,
-        "arm": 60,
-        "battingClutch": 56
+        "ovr": 59,
+        "contact": 53,
+        "power": 52,
+        "eye": 52,
+        "discipline": 61,
+        "speed": 56,
+        "baseInstinct": 61,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 61,
+        "battingClutch": 57
       },
       "positionRatings": {
         "SS": 59

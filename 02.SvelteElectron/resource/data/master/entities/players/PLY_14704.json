@@ -1,6 +1,6 @@
 {
   "id": "PLY_14704",
-  "name": "존슨 알렉스",
+  "name": "Johnson Alex",
   "nameEn": "Johnson Alex",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 54,
   "popularity": 13,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 59,
       "proServiceYears": 2,
       "pitching": {
-        "ovr": 63,
-        "stamina": 55,
-        "velocity": 68,
-        "command": 54,
-        "control": 60,
-        "movement": 60,
-        "mentality": 61,
-        "recovery": 52,
-        "clutch": 56,
-        "holdRunners": 56
+        "ovr": 65,
+        "stamina": 57,
+        "velocity": 70,
+        "command": 56,
+        "control": 62,
+        "movement": 62,
+        "mentality": 63,
+        "recovery": 54,
+        "clutch": 58,
+        "holdRunners": 58
       },
       "batting": {
         "ovr": 65,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

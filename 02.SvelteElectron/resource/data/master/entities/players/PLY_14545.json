@@ -1,6 +1,6 @@
 {
   "id": "PLY_14545",
-  "name": "에르난데스 그랜트",
+  "name": "Hernandez Grant",
   "nameEn": "Hernandez Grant",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 85,
   "popularity": 16,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 57
       },
       "batting": {
-        "ovr": 68,
-        "contact": 64,
-        "power": 66,
-        "eye": 67,
-        "discipline": 70,
-        "speed": 67,
-        "baseInstinct": 65,
-        "bunting": 62,
-        "platoon": 49,
-        "fielding": 65,
-        "arm": 59,
-        "battingClutch": 67
+        "ovr": 70,
+        "contact": 66,
+        "power": 68,
+        "eye": 69,
+        "discipline": 72,
+        "speed": 69,
+        "baseInstinct": 67,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 61,
+        "battingClutch": 69
       },
       "positionRatings": {
         "2B": 70

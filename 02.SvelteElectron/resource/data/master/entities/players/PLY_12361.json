@@ -1,9 +1,9 @@
 {
   "id": "PLY_12361",
-  "name": "에르난데스 코디",
-  "nameEn": "Hernandez Cody",
+  "name": "Martin Luis",
+  "nameEn": "Martin Luis",
   "role": "player",
-  "age": 18,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 76,
-  "popularity": 47,
+  "notes": "국적:쿠바",
+  "diligence": 75,
+  "popularity": 49,
   "militaryStatus": "군필",
   "entryYear": 2041,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 18,
+  "entryAge": 20,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 68,
+      "jerseyNumber": 81,
       "primaryPosition": "SP",
-      "developmentRate": 71,
-      "potentialHidden": 73,
+      "developmentRate": 67,
+      "potentialHidden": 76,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 59,
-        "stamina": 62,
-        "velocity": 61,
-        "command": 52,
-        "control": 56,
+        "ovr": 60,
+        "stamina": 53,
+        "velocity": 59,
+        "command": 54,
+        "control": 54,
         "movement": 55,
-        "mentality": 65,
-        "recovery": 52,
-        "clutch": 47,
-        "holdRunners": 53
+        "mentality": 56,
+        "recovery": 55,
+        "clutch": 53,
+        "holdRunners": 45
       },
       "batting": {
-        "ovr": 63,
-        "contact": 66,
-        "power": 63,
-        "eye": 61,
-        "discipline": 64,
-        "speed": 57,
+        "ovr": 60,
+        "contact": 59,
+        "power": 58,
+        "eye": 52,
+        "discipline": 54,
+        "speed": 60,
         "baseInstinct": 58,
-        "bunting": 50,
+        "bunting": 48,
         "platoon": 50,
-        "fielding": 58,
+        "fielding": 61,
         "arm": 60,
-        "battingClutch": 54
+        "battingClutch": 59
       },
       "positionRatings": {
-        "SP": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 60
+      }
     },
     "coach": null,
     "manager": null,

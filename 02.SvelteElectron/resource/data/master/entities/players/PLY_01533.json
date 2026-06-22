@@ -1,14 +1,14 @@
 {
   "id": "PLY_01533",
   "name": "톰프슨 노아",
-  "nameEn": "Tom 프슨 노아",
+  "nameEn": "Thompson Noah",
   "role": "player",
   "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_RIVERCARDINALS",
-  "teamId": "TEAM_ABL_RIVERCARDINALS_2",
+  "clubId": "CLUB_ABL_BAL",
+  "teamId": "TEAM_ABL_BAL_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:쿠바",
@@ -19,48 +19,28 @@
       "position": "1B",
       "jerseyNumber": 53,
       "pitching": {
-        "ovr": 47,
-        "stamina": 44,
-        "velocity": 48,
-        "command": 51,
-        "control": 44,
-        "movement": 45,
-        "mentality": 45,
-        "recovery": 49,
-        "clutch": 37,
-        "holdRunners": 36
+        "ovr": 35,
+        "stamina": 37,
+        "velocity": 36,
+        "command": 36,
+        "control": 39,
+        "movement": 33,
+        "mentality": 31,
+        "recovery": 30
       },
       "batting": {
-        "ovr": 67,
-        "contact": 64,
-        "power": 63,
-        "eye": 73,
-        "discipline": 73,
-        "speed": 60,
-        "fielding": 68,
-        "arm": 65,
-        "battingClutch": 60,
-        "baseInstinct": 60,
-        "bunting": 63,
-        "platoon": 59
+        "ovr": 63,
+        "contact": 65,
+        "power": 72,
+        "eye": 62,
+        "discipline": 67,
+        "speed": 63,
+        "fielding": 61,
+        "arm": 67,
+        "battingClutch": 64
       },
       "developmentRate": 46,
-      "potentialHidden": 70,
-      "primaryPosition": "1B",
-      "positionRatings": {
-        "1B": 67
-      },
-      "proServiceYears": 3,
-      "contract": {
-        "salary": 6300,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 70
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

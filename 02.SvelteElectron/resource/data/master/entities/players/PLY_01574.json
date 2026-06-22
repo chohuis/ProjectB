@@ -1,61 +1,46 @@
 {
   "id": "PLY_01574",
-  "name": "서민우",
-  "nameEn": "Seo Minwoo",
+  "name": "고토 히카루",
+  "nameEn": "Goto Hikaru",
   "role": "player",
-  "age": 16,
+  "age": 19,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_GWANGJU_VISION",
-  "teamId": "TEAM_HS_GWANGJU_VISION",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_GWANGJU_VISION",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_NEONCRANES",
+  "teamId": "TEAM_JBL_CL_NEONCRANES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "CP",
-      "jerseyNumber": 23,
+      "jerseyNumber": 39,
       "pitching": {
-        "ovr": 36,
-        "stamina": 35,
-        "velocity": 33,
-        "command": 37,
-        "control": 33,
-        "movement": 38,
-        "mentality": 36,
-        "recovery": 38,
-        "clutch": 35,
-        "holdRunners": 40
+        "ovr": 59,
+        "stamina": 47,
+        "velocity": 65,
+        "command": 61,
+        "control": 63,
+        "movement": 60,
+        "mentality": 56,
+        "recovery": 60
       },
       "batting": {
-        "ovr": 22,
-        "contact": 28,
-        "power": 21,
-        "eye": 28,
+        "ovr": 28,
+        "contact": 27,
+        "power": 35,
+        "eye": 32,
         "discipline": 27,
-        "speed": 21,
-        "fielding": 25,
-        "arm": 25,
-        "battingClutch": 38,
-        "baseInstinct": 46,
-        "bunting": 29,
-        "platoon": 44
+        "speed": 27,
+        "fielding": 29,
+        "arm": 31,
+        "battingClutch": 28
       },
-      "developmentRate": 73,
-      "potentialHidden": 84,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 36
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 55,
+      "potentialHidden": 69
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 78,
-  "popularity": 29
+  }
 }

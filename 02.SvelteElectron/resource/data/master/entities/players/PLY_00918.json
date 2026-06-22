@@ -1,14 +1,14 @@
 {
   "id": "PLY_00918",
   "name": "테일러 조너선",
-  "nameEn": "Te 일러 조너선",
+  "nameEn": "Taylor Jonathan",
   "role": "player",
   "age": 39,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_SUNDRAGONS",
-  "teamId": "TEAM_ABL_SUNDRAGONS_1",
+  "clubId": "CLUB_ABL_BOS",
+  "teamId": "TEAM_ABL_BOS",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 8,
       "pitching": {
-        "ovr": 80,
-        "stamina": 80,
-        "velocity": 82,
-        "command": 86,
-        "control": 80,
-        "movement": 82,
-        "mentality": 82,
-        "recovery": 77,
-        "clutch": 73,
-        "holdRunners": 69
+        "ovr": 94,
+        "stamina": 85,
+        "velocity": 98,
+        "command": 94,
+        "control": 91,
+        "movement": 90,
+        "mentality": 85,
+        "recovery": 85
       },
       "batting": {
-        "ovr": 62,
-        "contact": 64,
-        "power": 67,
+        "ovr": 58,
+        "contact": 59,
+        "power": 66,
         "eye": 63,
-        "discipline": 65,
-        "speed": 68,
-        "fielding": 62,
-        "arm": 62,
-        "battingClutch": 58,
-        "baseInstinct": 56,
-        "bunting": 48,
-        "platoon": 56
+        "discipline": 59,
+        "speed": 63,
+        "fielding": 64,
+        "arm": 59,
+        "battingClutch": 65
       },
       "developmentRate": 33,
-      "potentialHidden": 84,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 80
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 17,
-      "contract": {
-        "salary": 29400,
-        "durationYears": 4,
-        "remainingYears": 4,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 84
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,6 +1,6 @@
 {
   "id": "PLY_16597",
-  "name": "데이비스 코너",
+  "name": "Davis Connor",
   "nameEn": "Davis Connor",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 50,
   "popularity": 18,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 50
       },
       "batting": {
-        "ovr": 54,
-        "contact": 48,
-        "power": 47,
-        "eye": 51,
-        "discipline": 51,
-        "speed": 55,
-        "baseInstinct": 47,
-        "bunting": 49,
-        "platoon": 49,
-        "fielding": 53,
-        "arm": 52,
-        "battingClutch": 42
+        "ovr": 55,
+        "contact": 49,
+        "power": 48,
+        "eye": 52,
+        "discipline": 52,
+        "speed": 56,
+        "baseInstinct": 48,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 53,
+        "battingClutch": 43
       },
       "positionRatings": {
         "2B": 55

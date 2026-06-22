@@ -1,9 +1,9 @@
 {
   "id": "PLY_11149",
-  "name": "애덤스 로건",
-  "nameEn": "Adams Logan",
+  "name": "Martin Derek",
+  "nameEn": "Martin Derek",
   "role": "player",
-  "age": 25,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 84,
-  "popularity": 33,
+  "notes": "국적:도미니카",
+  "diligence": 62,
+  "popularity": 35,
   "militaryStatus": "군필",
   "entryYear": 2033,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 25,
+  "entryAge": 28,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 77,
-      "primaryPosition": "SP",
-      "developmentRate": 68,
-      "potentialHidden": 85,
-      "proServiceYears": 3,
+      "position": "2B",
+      "jerseyNumber": 48,
+      "primaryPosition": "2B",
+      "developmentRate": 53,
+      "potentialHidden": 62,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 65,
-        "stamina": 68,
-        "velocity": 69,
-        "command": 59,
-        "control": 66,
-        "movement": 60,
-        "mentality": 70,
-        "recovery": 67,
-        "clutch": 62,
-        "holdRunners": 53
+        "ovr": 81,
+        "stamina": 75,
+        "velocity": 85,
+        "command": 70,
+        "control": 73,
+        "movement": 80,
+        "mentality": 75,
+        "recovery": 71,
+        "clutch": 78,
+        "holdRunners": 72
       },
       "batting": {
-        "ovr": 72,
-        "contact": 73,
-        "power": 74,
-        "eye": 71,
-        "discipline": 74,
-        "speed": 67,
-        "baseInstinct": 74,
-        "bunting": 60,
+        "ovr": 81,
+        "contact": 76,
+        "power": 73,
+        "eye": 82,
+        "discipline": 76,
+        "speed": 86,
+        "baseInstinct": 82,
+        "bunting": 73,
         "platoon": 50,
-        "fielding": 62,
-        "arm": 72,
-        "battingClutch": 72
+        "fielding": 72,
+        "arm": 77,
+        "battingClutch": 75
       },
       "positionRatings": {
-        "SP": 72
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "2B": 81
+      }
     },
     "coach": null,
     "manager": null,

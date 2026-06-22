@@ -1,6 +1,6 @@
 {
   "id": "PLY_15952",
-  "name": "스미스 헌터",
+  "name": "Smith Hunter",
   "nameEn": "Smith Hunter",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 82,
   "popularity": 49,
   "militaryStatus": "군필",

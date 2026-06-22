@@ -1,9 +1,9 @@
 {
   "id": "PLY_10573",
-  "name": "존스 코디",
-  "nameEn": "Jones Cody",
+  "name": "Clark Dylan",
+  "nameEn": "Clark Dylan",
   "role": "player",
-  "age": 24,
+  "age": 19,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 80,
-  "popularity": 16,
+  "notes": "국적:미국",
+  "diligence": 74,
+  "popularity": 31,
   "militaryStatus": "군필",
   "entryYear": 2030,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 24,
+  "entryAge": 19,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 56,
-      "primaryPosition": "SP",
-      "developmentRate": 45,
-      "potentialHidden": 60,
-      "proServiceYears": 2,
+      "position": "LF",
+      "jerseyNumber": 67,
+      "primaryPosition": "LF",
+      "developmentRate": 67,
+      "potentialHidden": 89,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 72,
-        "stamina": 65,
-        "velocity": 77,
-        "command": 68,
-        "control": 68,
-        "movement": 68,
-        "mentality": 66,
-        "recovery": 66,
-        "clutch": 63,
-        "holdRunners": 60
+        "ovr": 57,
+        "stamina": 61,
+        "velocity": 63,
+        "command": 60,
+        "control": 53,
+        "movement": 55,
+        "mentality": 61,
+        "recovery": 57,
+        "clutch": 54,
+        "holdRunners": 53
       },
       "batting": {
-        "ovr": 80,
-        "contact": 76,
-        "power": 81,
-        "eye": 72,
-        "discipline": 76,
-        "speed": 74,
-        "baseInstinct": 75,
-        "bunting": 73,
+        "ovr": 57,
+        "contact": 61,
+        "power": 47,
+        "eye": 58,
+        "discipline": 47,
+        "speed": 57,
+        "baseInstinct": 50,
+        "bunting": 48,
         "platoon": 50,
-        "fielding": 76,
-        "arm": 69,
-        "battingClutch": 80
+        "fielding": 52,
+        "arm": 53,
+        "battingClutch": 48
       },
       "positionRatings": {
-        "SP": 80
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "LF": 57
+      }
     },
     "coach": null,
     "manager": null,

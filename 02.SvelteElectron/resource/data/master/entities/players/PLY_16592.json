@@ -1,6 +1,6 @@
 {
   "id": "PLY_16592",
-  "name": "넬슨 제이슨",
+  "name": "Nelson Jason",
   "nameEn": "Nelson Jason",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 52,
   "popularity": 28,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 52
       },
       "batting": {
-        "ovr": 70,
-        "contact": 61,
-        "power": 64,
-        "eye": 64,
-        "discipline": 68,
-        "speed": 65,
-        "baseInstinct": 68,
-        "bunting": 61,
-        "platoon": 63,
-        "fielding": 65,
-        "arm": 73,
-        "battingClutch": 65
+        "ovr": 56,
+        "contact": 49,
+        "power": 51,
+        "eye": 51,
+        "discipline": 54,
+        "speed": 52,
+        "baseInstinct": 54,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 58,
+        "battingClutch": 52
       },
       "positionRatings": {
         "1B": 56

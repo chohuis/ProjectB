@@ -1,9 +1,9 @@
 {
   "id": "PLY_12534",
-  "name": "존스 오스틴",
-  "nameEn": "Jones Austin",
+  "name": "Smith Nathan",
+  "nameEn": "Smith Nathan",
   "role": "player",
-  "age": 25,
+  "age": 35,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 75,
-  "popularity": 23,
+  "notes": "국적:베네수엘라",
+  "diligence": 76,
+  "popularity": 24,
   "militaryStatus": "군필",
   "entryYear": 2042,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 25,
+  "entryAge": 35,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 25,
+      "jerseyNumber": 29,
       "primaryPosition": "SP",
-      "developmentRate": 67,
-      "potentialHidden": 70,
-      "proServiceYears": 3,
+      "developmentRate": 46,
+      "potentialHidden": 66,
+      "proServiceYears": 13,
       "pitching": {
-        "ovr": 57,
-        "stamina": 50,
-        "velocity": 61,
-        "command": 52,
-        "control": 50,
-        "movement": 58,
-        "mentality": 54,
-        "recovery": 51,
-        "clutch": 53,
-        "holdRunners": 45
+        "ovr": 66,
+        "stamina": 68,
+        "velocity": 64,
+        "command": 62,
+        "control": 63,
+        "movement": 68,
+        "mentality": 66,
+        "recovery": 54,
+        "clutch": 55,
+        "holdRunners": 51
       },
       "batting": {
-        "ovr": 67,
-        "contact": 58,
-        "power": 57,
-        "eye": 65,
-        "discipline": 60,
-        "speed": 69,
-        "baseInstinct": 68,
-        "bunting": 50,
+        "ovr": 66,
+        "contact": 65,
+        "power": 61,
+        "eye": 68,
+        "discipline": 66,
+        "speed": 61,
+        "baseInstinct": 57,
+        "bunting": 54,
         "platoon": 50,
-        "fielding": 60,
-        "arm": 57,
+        "fielding": 68,
+        "arm": 56,
         "battingClutch": 60
       },
       "positionRatings": {
-        "SP": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        }
-      ]
+        "SP": 66
+      }
     },
     "coach": null,
     "manager": null,

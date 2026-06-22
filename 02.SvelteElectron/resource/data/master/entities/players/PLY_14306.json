@@ -1,6 +1,6 @@
 {
   "id": "PLY_14306",
-  "name": "클라크 콜",
+  "name": "Clark Cole",
   "nameEn": "Clark Cole",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 55,
   "popularity": 30,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 64,
       "proServiceYears": 5,
       "pitching": {
-        "ovr": 61,
-        "stamina": 62,
-        "velocity": 61,
-        "command": 62,
-        "control": 64,
-        "movement": 58,
-        "mentality": 63,
-        "recovery": 59,
-        "clutch": 55,
-        "holdRunners": 53
+        "ovr": 65,
+        "stamina": 66,
+        "velocity": 65,
+        "command": 66,
+        "control": 68,
+        "movement": 62,
+        "mentality": 67,
+        "recovery": 63,
+        "clutch": 59,
+        "holdRunners": 56
       },
       "batting": {
         "ovr": 65,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

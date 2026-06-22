@@ -1,7 +1,7 @@
 {
   "id": "PLY_00349",
   "name": "조승우",
-  "nameEn": "Jo Seungu",
+  "nameEn": "Kwon Ji-sung",
   "role": "player",
   "age": 24,
   "status": "active",
@@ -19,58 +19,28 @@
       "position": "CP",
       "jerseyNumber": 9,
       "pitching": {
-        "ovr": 63,
-        "stamina": 65,
-        "velocity": 66,
-        "command": 59,
-        "control": 65,
-        "movement": 60,
-        "mentality": 64,
-        "recovery": 66,
-        "clutch": 57,
-        "holdRunners": 57
+        "ovr": 73,
+        "stamina": 55,
+        "velocity": 76,
+        "command": 75,
+        "control": 68,
+        "movement": 68,
+        "mentality": 69,
+        "recovery": 69
       },
       "batting": {
-        "ovr": 45,
-        "contact": 46,
-        "power": 42,
+        "ovr": 46,
+        "contact": 38,
+        "power": 41,
         "eye": 40,
-        "discipline": 51,
-        "speed": 48,
-        "fielding": 49,
-        "arm": 51,
-        "battingClutch": 41,
-        "baseInstinct": 37,
-        "bunting": 29,
-        "platoon": 36
+        "discipline": 42,
+        "speed": 42,
+        "fielding": 42,
+        "arm": 43,
+        "battingClutch": 39
       },
       "developmentRate": 58,
-      "potentialHidden": 59,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 1600,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 59
     },
     "coach": {
       "specialty": "-",
@@ -110,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

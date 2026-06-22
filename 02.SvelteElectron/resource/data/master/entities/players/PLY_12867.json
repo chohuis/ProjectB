@@ -1,7 +1,7 @@
 {
   "id": "PLY_12867",
-  "name": "로드리게스 에반",
-  "nameEn": "Rodriguez Evan",
+  "name": "Davis Derek",
+  "nameEn": "Davis Derek",
   "role": "player",
   "age": 28,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 48,
-  "popularity": 20,
+  "notes": "국적:도미니카",
+  "diligence": 74,
+  "popularity": 39,
   "militaryStatus": "군필",
   "entryYear": 2044,
   "entryLeague": "LEAGUE_ABL",
@@ -24,54 +24,40 @@
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 32,
+      "jerseyNumber": 56,
       "primaryPosition": "SP",
-      "developmentRate": 50,
-      "potentialHidden": 56,
+      "developmentRate": 67,
+      "potentialHidden": 66,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 73,
-        "stamina": 72,
-        "velocity": 73,
-        "command": 70,
-        "control": 71,
-        "movement": 74,
-        "mentality": 76,
-        "recovery": 68,
-        "clutch": 70,
-        "holdRunners": 62
+        "ovr": 78,
+        "stamina": 77,
+        "velocity": 76,
+        "command": 71,
+        "control": 69,
+        "movement": 72,
+        "mentality": 81,
+        "recovery": 74,
+        "clutch": 77,
+        "holdRunners": 76
       },
       "batting": {
-        "ovr": 70,
-        "contact": 69,
-        "power": 69,
-        "eye": 66,
-        "discipline": 65,
-        "speed": 67,
-        "baseInstinct": 64,
-        "bunting": 53,
+        "ovr": 78,
+        "contact": 73,
+        "power": 70,
+        "eye": 76,
+        "discipline": 69,
+        "speed": 80,
+        "baseInstinct": 75,
+        "bunting": 66,
         "platoon": 50,
-        "fielding": 67,
-        "arm": 71,
-        "battingClutch": 60
+        "fielding": 79,
+        "arm": 80,
+        "battingClutch": 70
       },
       "positionRatings": {
-        "SP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "SP": 78
+      }
     },
     "coach": null,
     "manager": null,

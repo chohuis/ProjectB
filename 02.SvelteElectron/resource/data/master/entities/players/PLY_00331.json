@@ -1,7 +1,7 @@
 {
   "id": "PLY_00331",
   "name": "박준혁",
-  "nameEn": "Park Junhyeok",
+  "nameEn": "Kwak Woo-jin",
   "role": "player",
   "age": 30,
   "status": "active",
@@ -19,48 +19,28 @@
       "position": "C",
       "jerseyNumber": 11,
       "pitching": {
-        "ovr": 40,
-        "stamina": 43,
-        "velocity": 41,
-        "command": 40,
-        "control": 44,
-        "movement": 37,
-        "mentality": 46,
-        "recovery": 38,
-        "clutch": 44,
-        "holdRunners": 33
+        "ovr": 37,
+        "stamina": 37,
+        "velocity": 36,
+        "command": 32,
+        "control": 33,
+        "movement": 30,
+        "mentality": 32,
+        "recovery": 33
       },
       "batting": {
-        "ovr": 60,
-        "contact": 64,
-        "power": 59,
-        "eye": 60,
-        "discipline": 64,
-        "speed": 65,
-        "fielding": 55,
-        "arm": 65,
-        "battingClutch": 61,
-        "baseInstinct": 50,
-        "bunting": 55,
-        "platoon": 54
+        "ovr": 61,
+        "contact": 60,
+        "power": 64,
+        "eye": 56,
+        "discipline": 62,
+        "speed": 55,
+        "fielding": 65,
+        "arm": 67,
+        "battingClutch": 57
       },
       "developmentRate": 49,
-      "potentialHidden": 62,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 60
-      },
-      "proServiceYears": 10,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 62
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

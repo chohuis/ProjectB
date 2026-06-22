@@ -1,61 +1,46 @@
 {
   "id": "PLY_01785",
-  "name": "고하준",
-  "nameEn": "Go Hajun",
+  "name": "이케다 기요시",
+  "nameEn": "Ikeda Kiyoshi",
   "role": "player",
-  "age": 17,
+  "age": 31,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_JECHEON_RIDGE",
-  "teamId": "TEAM_HS_JECHEON_RIDGE",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_JECHEON_RIDGE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONSTORMS",
+  "teamId": "TEAM_JBL_CL_IRONSTORMS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "L",
-      "position": "1B",
-      "jerseyNumber": 14,
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 20,
       "pitching": {
-        "ovr": 35,
-        "stamina": 35,
-        "velocity": 34,
-        "command": 33,
-        "control": 40,
-        "movement": 38,
-        "mentality": 40,
-        "recovery": 39,
-        "clutch": 39,
-        "holdRunners": 43
+        "ovr": 63,
+        "stamina": 61,
+        "velocity": 61,
+        "command": 57,
+        "control": 59,
+        "movement": 59,
+        "mentality": 62,
+        "recovery": 57
       },
       "batting": {
-        "ovr": 55,
-        "contact": 54,
-        "power": 54,
-        "eye": 57,
-        "discipline": 60,
-        "speed": 51,
-        "fielding": 54,
-        "arm": 55,
-        "battingClutch": 54,
-        "baseInstinct": 50,
-        "bunting": 40,
-        "platoon": 45
+        "ovr": 89,
+        "contact": 85,
+        "power": 89,
+        "eye": 87,
+        "discipline": 89,
+        "speed": 84,
+        "fielding": 83,
+        "arm": 81,
+        "battingClutch": 87
       },
-      "developmentRate": 90,
-      "potentialHidden": 63,
-      "primaryPosition": "1B",
-      "positionRatings": {
-        "1B": 55
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 45,
+      "potentialHidden": 72
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 50,
-  "popularity": 23
+  }
 }

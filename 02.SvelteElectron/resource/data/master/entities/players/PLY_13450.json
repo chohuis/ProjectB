@@ -1,7 +1,7 @@
 {
   "id": "PLY_13450",
-  "name": "앤더슨 에반",
-  "nameEn": "Anderson Evan",
+  "name": "Moore Daniel",
+  "nameEn": "Moore Daniel",
   "role": "player",
   "age": 27,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 53,
-  "popularity": 15,
+  "notes": "국적:미국",
+  "diligence": 60,
+  "popularity": 22,
   "militaryStatus": "군필",
   "entryYear": 2047,
   "entryLeague": "LEAGUE_ABL",
@@ -21,57 +21,43 @@
   "entryAge": 27,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 22,
-      "primaryPosition": "SP",
-      "developmentRate": 62,
-      "potentialHidden": 74,
+      "position": "1B",
+      "jerseyNumber": 48,
+      "primaryPosition": "1B",
+      "developmentRate": 65,
+      "potentialHidden": 71,
       "proServiceYears": 5,
       "pitching": {
-        "ovr": 60,
-        "stamina": 60,
-        "velocity": 68,
-        "command": 57,
-        "control": 61,
-        "movement": 57,
-        "mentality": 60,
-        "recovery": 51,
-        "clutch": 55,
-        "holdRunners": 57
+        "ovr": 73,
+        "stamina": 68,
+        "velocity": 76,
+        "command": 69,
+        "control": 67,
+        "movement": 64,
+        "mentality": 76,
+        "recovery": 73,
+        "clutch": 72,
+        "holdRunners": 69
       },
       "batting": {
-        "ovr": 69,
-        "contact": 61,
-        "power": 70,
-        "eye": 64,
-        "discipline": 73,
-        "speed": 69,
-        "baseInstinct": 64,
-        "bunting": 61,
+        "ovr": 73,
+        "contact": 69,
+        "power": 64,
+        "eye": 77,
+        "discipline": 65,
+        "speed": 78,
+        "baseInstinct": 68,
+        "bunting": 60,
         "platoon": 50,
-        "fielding": 66,
-        "arm": 65,
-        "battingClutch": 68
+        "fielding": 76,
+        "arm": 68,
+        "battingClutch": 72
       },
       "positionRatings": {
-        "SP": 69
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "1B": 73
+      }
     },
     "coach": null,
     "manager": null,

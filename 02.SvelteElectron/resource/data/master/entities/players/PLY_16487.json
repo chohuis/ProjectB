@@ -1,6 +1,6 @@
 {
   "id": "PLY_16487",
-  "name": "애덤스 다니엘",
+  "name": "Adams Daniel",
   "nameEn": "Adams Daniel",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 68,
   "popularity": 17,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 63
       },
       "batting": {
-        "ovr": 61,
-        "contact": 53,
-        "power": 61,
-        "eye": 54,
-        "discipline": 53,
-        "speed": 59,
-        "baseInstinct": 53,
-        "bunting": 53,
-        "platoon": 47,
-        "fielding": 57,
-        "arm": 54,
-        "battingClutch": 50
+        "ovr": 65,
+        "contact": 57,
+        "power": 65,
+        "eye": 58,
+        "discipline": 57,
+        "speed": 63,
+        "baseInstinct": 57,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 58,
+        "battingClutch": 53
       },
       "positionRatings": {
         "C": 65

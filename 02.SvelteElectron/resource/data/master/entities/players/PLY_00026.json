@@ -1,9 +1,9 @@
 {
   "id": "PLY_00026",
   "name": "조기준",
-  "nameEn": "Jo Gijun",
+  "nameEn": "Jung Jeong-woo",
   "role": "player",
-  "age": 17,
+  "age": 18,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,51 +19,28 @@
       "position": "RP",
       "jerseyNumber": 6,
       "pitching": {
-        "ovr": 52,
-        "stamina": 57,
+        "ovr": 53,
+        "stamina": 63,
         "velocity": 57,
-        "command": 57,
-        "control": 53,
-        "movement": 53,
-        "mentality": 50,
-        "recovery": 53,
-        "clutch": 40,
-        "holdRunners": 44
+        "command": 59,
+        "control": 60,
+        "movement": 48,
+        "mentality": 52,
+        "recovery": 60
       },
       "batting": {
-        "ovr": 34,
-        "contact": 32,
-        "power": 29,
-        "eye": 37,
-        "discipline": 37,
-        "speed": 36,
-        "fielding": 30,
-        "arm": 39,
-        "battingClutch": 41,
-        "baseInstinct": 39,
-        "bunting": 35,
-        "platoon": 42
+        "ovr": 44,
+        "contact": 60,
+        "power": 41,
+        "eye": 52,
+        "discipline": 40,
+        "speed": 57,
+        "fielding": 60,
+        "arm": 62,
+        "battingClutch": 51
       },
       "developmentRate": 57,
-      "potentialHidden": 89,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 52
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 2
-        }
-      ]
+      "potentialHidden": 89
     },
     "coach": {
       "specialty": "-",
@@ -103,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

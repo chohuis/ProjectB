@@ -1,72 +1,46 @@
 {
   "id": "PLY_01917",
-  "name": "주도윤",
-  "nameEn": "Joo Doyun",
+  "name": "고토 켄타",
+  "nameEn": "Goto Kenta",
   "role": "player",
   "age": 23,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_SKYGULLS",
-  "teamId": "TEAM_KBL_SKYGULLS_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
+  "teamId": "TEAM_JBL_PL_SPIRITBUFFALOS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
       "position": "2B",
-      "jerseyNumber": 5,
+      "jerseyNumber": 17,
       "pitching": {
-        "ovr": 42,
-        "stamina": 43,
-        "velocity": 46,
-        "command": 43,
-        "control": 43,
-        "movement": 39,
-        "mentality": 43,
-        "recovery": 46,
-        "clutch": 39,
-        "holdRunners": 39
+        "ovr": 52,
+        "stamina": 56,
+        "velocity": 58,
+        "command": 53,
+        "control": 53,
+        "movement": 53,
+        "mentality": 52,
+        "recovery": 53
       },
       "batting": {
-        "ovr": 62,
-        "contact": 68,
-        "power": 58,
-        "eye": 59,
-        "discipline": 67,
-        "speed": 61,
-        "fielding": 65,
-        "arm": 57,
-        "battingClutch": 54,
-        "baseInstinct": 53,
-        "bunting": 55,
-        "platoon": 54
+        "ovr": 82,
+        "contact": 84,
+        "power": 85,
+        "eye": 85,
+        "discipline": 86,
+        "speed": 86,
+        "fielding": 86,
+        "arm": 80,
+        "battingClutch": 83
       },
-      "developmentRate": 33,
-      "potentialHidden": 76,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 1,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 46,
+      "potentialHidden": 61
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 23,
-  "militaryStatus": "군필"
+  }
 }

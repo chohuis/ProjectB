@@ -1,9 +1,9 @@
 {
   "id": "PLY_13100",
-  "name": "앨런 트레버",
-  "nameEn": "Allen Trevor",
+  "name": "Davis Kyle",
+  "nameEn": "Davis Kyle",
   "role": "player",
-  "age": 28,
+  "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 67,
-  "popularity": 49,
+  "notes": "국적:쿠바",
+  "diligence": 70,
+  "popularity": 44,
   "militaryStatus": "군필",
   "entryYear": 2045,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 28,
+  "entryAge": 24,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 24,
-      "primaryPosition": "SP",
+      "position": "1B",
+      "jerseyNumber": 64,
+      "primaryPosition": "1B",
       "developmentRate": 60,
-      "potentialHidden": 79,
-      "proServiceYears": 6,
+      "potentialHidden": 84,
+      "proServiceYears": 2,
       "pitching": {
-        "ovr": 73,
-        "stamina": 64,
-        "velocity": 81,
-        "command": 65,
-        "control": 68,
-        "movement": 74,
-        "mentality": 69,
-        "recovery": 73,
-        "clutch": 70,
-        "holdRunners": 70
+        "ovr": 74,
+        "stamina": 72,
+        "velocity": 73,
+        "command": 73,
+        "control": 67,
+        "movement": 67,
+        "mentality": 72,
+        "recovery": 75,
+        "clutch": 68,
+        "holdRunners": 64
       },
       "batting": {
-        "ovr": 70,
-        "contact": 67,
-        "power": 67,
-        "eye": 64,
-        "discipline": 67,
-        "speed": 66,
-        "baseInstinct": 69,
-        "bunting": 58,
+        "ovr": 74,
+        "contact": 69,
+        "power": 68,
+        "eye": 78,
+        "discipline": 72,
+        "speed": 80,
+        "baseInstinct": 64,
+        "bunting": 61,
         "platoon": 50,
-        "fielding": 67,
-        "arm": 61,
-        "battingClutch": 57
+        "fielding": 64,
+        "arm": 72,
+        "battingClutch": 74
       },
       "positionRatings": {
-        "SP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "1B": 74
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,14 +1,14 @@
 {
   "id": "PLY_01536",
   "name": "리 알레한드로",
-  "nameEn": "Ri  알레한드로",
+  "nameEn": "Lee Alejandro",
   "role": "player",
   "age": 34,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_RIVERCARDINALS",
-  "teamId": "TEAM_ABL_RIVERCARDINALS_2",
+  "clubId": "CLUB_ABL_BAL",
+  "teamId": "TEAM_ABL_BAL_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
@@ -19,48 +19,28 @@
       "position": "SS",
       "jerseyNumber": 56,
       "pitching": {
-        "ovr": 47,
-        "stamina": 46,
-        "velocity": 48,
-        "command": 46,
-        "control": 46,
-        "movement": 44,
-        "mentality": 51,
-        "recovery": 47,
-        "clutch": 42,
-        "holdRunners": 40
+        "ovr": 36,
+        "stamina": 32,
+        "velocity": 41,
+        "command": 38,
+        "control": 30,
+        "movement": 33,
+        "mentality": 34,
+        "recovery": 34
       },
       "batting": {
-        "ovr": 67,
-        "contact": 65,
-        "power": 67,
-        "eye": 73,
-        "discipline": 64,
-        "speed": 63,
+        "ovr": 66,
+        "contact": 68,
+        "power": 63,
+        "eye": 68,
+        "discipline": 62,
+        "speed": 68,
         "fielding": 69,
-        "arm": 66,
-        "battingClutch": 64,
-        "baseInstinct": 56,
-        "bunting": 55,
-        "platoon": 56
+        "arm": 69,
+        "battingClutch": 63
       },
       "developmentRate": 45,
-      "potentialHidden": 77,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 67
-      },
-      "proServiceYears": 12,
-      "contract": {
-        "salary": 6300,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 77
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

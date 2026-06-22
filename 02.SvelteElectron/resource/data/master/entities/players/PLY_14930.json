@@ -1,6 +1,6 @@
 {
   "id": "PLY_14930",
-  "name": "앨런 딜런",
+  "name": "Allen Dylan",
   "nameEn": "Allen Dylan",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 75,
   "popularity": 10,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 63,
       "proServiceYears": 2,
       "pitching": {
-        "ovr": 69,
-        "stamina": 71,
-        "velocity": 69,
-        "command": 67,
-        "control": 60,
-        "movement": 71,
-        "mentality": 68,
-        "recovery": 65,
-        "clutch": 59,
-        "holdRunners": 65
+        "ovr": 71,
+        "stamina": 73,
+        "velocity": 71,
+        "command": 69,
+        "control": 62,
+        "movement": 73,
+        "mentality": 70,
+        "recovery": 67,
+        "clutch": 61,
+        "holdRunners": 67
       },
       "batting": {
         "ovr": 71,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 71
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

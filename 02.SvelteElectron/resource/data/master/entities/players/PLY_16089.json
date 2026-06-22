@@ -1,6 +1,6 @@
 {
   "id": "PLY_16089",
-  "name": "로드리게스 타일러",
+  "name": "Rodriguez Tyler",
   "nameEn": "Rodriguez Tyler",
   "role": "player",
   "age": 23,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 49,
   "popularity": 11,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 71
       },
       "batting": {
-        "ovr": 70,
-        "contact": 62,
-        "power": 69,
-        "eye": 73,
-        "discipline": 63,
-        "speed": 66,
-        "baseInstinct": 68,
-        "bunting": 58,
-        "platoon": 48,
-        "fielding": 63,
-        "arm": 69,
-        "battingClutch": 68
+        "ovr": 73,
+        "contact": 65,
+        "power": 72,
+        "eye": 76,
+        "discipline": 66,
+        "speed": 69,
+        "baseInstinct": 71,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 72,
+        "battingClutch": 71
       },
       "positionRatings": {
         "CF": 73

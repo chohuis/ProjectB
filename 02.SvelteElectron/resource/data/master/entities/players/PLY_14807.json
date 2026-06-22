@@ -1,6 +1,6 @@
 {
   "id": "PLY_14807",
-  "name": "앤더슨 카를로스",
+  "name": "Anderson Carlos",
   "nameEn": "Anderson Carlos",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 61,
   "popularity": 19,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 47
       },
       "batting": {
-        "ovr": 59,
-        "contact": 56,
-        "power": 50,
-        "eye": 51,
-        "discipline": 55,
-        "speed": 63,
-        "baseInstinct": 61,
-        "bunting": 42,
-        "platoon": 49,
-        "fielding": 50,
-        "arm": 58,
-        "battingClutch": 58
+        "ovr": 60,
+        "contact": 57,
+        "power": 51,
+        "eye": 52,
+        "discipline": 56,
+        "speed": 64,
+        "baseInstinct": 62,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 59,
+        "battingClutch": 59
       },
       "positionRatings": {
         "2B": 60

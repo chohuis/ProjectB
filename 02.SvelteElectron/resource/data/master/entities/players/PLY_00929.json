@@ -1,14 +1,14 @@
 {
   "id": "PLY_00929",
   "name": "브라운 제임스",
-  "nameEn": "Beu 라운 제임스",
+  "nameEn": "Brown James",
   "role": "player",
-  "age": 40,
+  "age": 42,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_SUNDRAGONS",
-  "teamId": "TEAM_ABL_SUNDRAGONS_1",
+  "clubId": "CLUB_ABL_BOS",
+  "teamId": "TEAM_ABL_BOS",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
@@ -19,48 +19,28 @@
       "position": "SS",
       "jerseyNumber": 19,
       "pitching": {
-        "ovr": 65,
-        "stamina": 63,
-        "velocity": 65,
-        "command": 63,
-        "control": 64,
-        "movement": 64,
-        "mentality": 62,
-        "recovery": 63,
-        "clutch": 58,
-        "holdRunners": 59
+        "ovr": 66,
+        "stamina": 65,
+        "velocity": 66,
+        "command": 61,
+        "control": 63,
+        "movement": 66,
+        "mentality": 65,
+        "recovery": 58
       },
       "batting": {
-        "ovr": 85,
-        "contact": 80,
-        "power": 91,
-        "eye": 90,
-        "discipline": 91,
-        "speed": 88,
-        "fielding": 90,
-        "arm": 81,
-        "battingClutch": 82,
-        "baseInstinct": 79,
-        "bunting": 79,
-        "platoon": 80
+        "ovr": 84,
+        "contact": 90,
+        "power": 88,
+        "eye": 83,
+        "discipline": 84,
+        "speed": 93,
+        "fielding": 85,
+        "arm": 86,
+        "battingClutch": 86
       },
       "developmentRate": 41,
-      "potentialHidden": 78,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 85
-      },
-      "proServiceYears": 18,
-      "contract": {
-        "salary": 17800,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 78
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

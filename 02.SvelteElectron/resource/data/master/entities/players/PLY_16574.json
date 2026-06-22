@@ -1,6 +1,6 @@
 {
   "id": "PLY_16574",
-  "name": "스미스 제이슨",
+  "name": "Smith Jason",
   "nameEn": "Smith Jason",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 67,
   "popularity": 17,
   "militaryStatus": "군필",
@@ -57,13 +57,7 @@
       },
       "positionRatings": {
         "SP": 45
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

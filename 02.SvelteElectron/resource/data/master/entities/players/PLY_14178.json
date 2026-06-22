@@ -1,6 +1,6 @@
 {
   "id": "PLY_14178",
-  "name": "앤더슨 다니엘",
+  "name": "Anderson Daniel",
   "nameEn": "Anderson Daniel",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 64,
   "popularity": 18,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 50
       },
       "batting": {
-        "ovr": 57,
-        "contact": 61,
-        "power": 55,
-        "eye": 62,
-        "discipline": 58,
-        "speed": 57,
-        "baseInstinct": 52,
-        "bunting": 49,
-        "platoon": 49,
-        "fielding": 46,
-        "arm": 53,
-        "battingClutch": 44
+        "ovr": 58,
+        "contact": 62,
+        "power": 56,
+        "eye": 63,
+        "discipline": 59,
+        "speed": 58,
+        "baseInstinct": 53,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 54,
+        "battingClutch": 45
       },
       "positionRatings": {
         "3B": 58

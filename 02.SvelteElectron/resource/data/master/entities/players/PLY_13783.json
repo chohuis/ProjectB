@@ -1,9 +1,9 @@
 {
   "id": "PLY_13783",
-  "name": "영 콜",
-  "nameEn": "Young Cole",
+  "name": "Smith Jordan",
+  "nameEn": "Smith Jordan",
   "role": "player",
-  "age": 19,
+  "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 63,
-  "popularity": 20,
+  "notes": "국적:미국",
+  "diligence": 53,
+  "popularity": 14,
   "militaryStatus": "군필",
   "entryYear": 2049,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 19,
+  "entryAge": 32,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 15,
-      "primaryPosition": "SP",
-      "developmentRate": 59,
-      "potentialHidden": 83,
-      "proServiceYears": 0,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 88,
+      "primaryPosition": "2B",
+      "developmentRate": 46,
+      "potentialHidden": 66,
+      "proServiceYears": 10,
       "pitching": {
-        "ovr": 58,
-        "stamina": 57,
-        "velocity": 61,
-        "command": 49,
-        "control": 51,
-        "movement": 62,
-        "mentality": 62,
-        "recovery": 49,
-        "clutch": 54,
-        "holdRunners": 51
+        "ovr": 76,
+        "stamina": 80,
+        "velocity": 83,
+        "command": 69,
+        "control": 74,
+        "movement": 70,
+        "mentality": 70,
+        "recovery": 71,
+        "clutch": 65,
+        "holdRunners": 75
       },
       "batting": {
-        "ovr": 62,
-        "contact": 60,
-        "power": 57,
-        "eye": 58,
-        "discipline": 56,
-        "speed": 60,
-        "baseInstinct": 54,
-        "bunting": 46,
+        "ovr": 76,
+        "contact": 69,
+        "power": 78,
+        "eye": 69,
+        "discipline": 70,
+        "speed": 70,
+        "baseInstinct": 66,
+        "bunting": 68,
         "platoon": 50,
-        "fielding": 53,
-        "arm": 65,
-        "battingClutch": 53
+        "fielding": 75,
+        "arm": 72,
+        "battingClutch": 71
       },
       "positionRatings": {
-        "SP": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 1
-        }
-      ]
+        "2B": 76
+      }
     },
     "coach": null,
     "manager": null,

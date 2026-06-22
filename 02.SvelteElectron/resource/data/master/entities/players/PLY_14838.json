@@ -1,6 +1,6 @@
 {
   "id": "PLY_14838",
-  "name": "앤더슨 콜",
+  "name": "Anderson Cole",
   "nameEn": "Anderson Cole",
   "role": "player",
   "age": 32,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 56,
   "popularity": 33,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 44
       },
       "batting": {
-        "ovr": 71,
-        "contact": 60,
-        "power": 66,
-        "eye": 67,
-        "discipline": 60,
-        "speed": 65,
-        "baseInstinct": 71,
-        "bunting": 51,
-        "platoon": 62,
-        "fielding": 75,
-        "arm": 72,
-        "battingClutch": 70
+        "ovr": 57,
+        "contact": 48,
+        "power": 53,
+        "eye": 54,
+        "discipline": 48,
+        "speed": 52,
+        "baseInstinct": 57,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 58,
+        "battingClutch": 56
       },
       "positionRatings": {
         "1B": 57

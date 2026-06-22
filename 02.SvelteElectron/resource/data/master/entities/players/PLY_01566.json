@@ -1,61 +1,46 @@
 {
   "id": "PLY_01566",
-  "name": "조지후",
-  "nameEn": "Jo Jihu",
+  "name": "타카하시 료",
+  "nameEn": "Takahashi Ryo",
   "role": "player",
-  "age": 17,
+  "age": 19,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_DAEGU_HEAT",
-  "teamId": "TEAM_HS_DAEGU_HEAT",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_DAEGU_HEAT",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_NEONCRANES",
+  "teamId": "TEAM_JBL_CL_NEONCRANES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "1B",
-      "jerseyNumber": 25,
+      "position": "SP",
+      "jerseyNumber": 31,
       "pitching": {
-        "ovr": 34,
-        "stamina": 38,
-        "velocity": 40,
-        "command": 34,
-        "control": 39,
-        "movement": 38,
-        "mentality": 32,
-        "recovery": 30,
-        "clutch": 37,
-        "holdRunners": 32
+        "ovr": 80,
+        "stamina": 80,
+        "velocity": 82,
+        "command": 75,
+        "control": 80,
+        "movement": 71,
+        "mentality": 80,
+        "recovery": 71
       },
       "batting": {
-        "ovr": 54,
-        "contact": 60,
-        "power": 58,
+        "ovr": 58,
+        "contact": 59,
+        "power": 53,
         "eye": 54,
-        "discipline": 54,
-        "speed": 51,
-        "fielding": 51,
-        "arm": 51,
-        "battingClutch": 52,
-        "baseInstinct": 50,
-        "bunting": 38,
-        "platoon": 50
+        "discipline": 58,
+        "speed": 59,
+        "fielding": 54,
+        "arm": 59,
+        "battingClutch": 58
       },
-      "developmentRate": 50,
-      "potentialHidden": 86,
-      "primaryPosition": "1B",
-      "positionRatings": {
-        "1B": 54
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 39,
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 75,
-  "popularity": 35
+  }
 }

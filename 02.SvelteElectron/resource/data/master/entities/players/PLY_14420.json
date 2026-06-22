@@ -1,6 +1,6 @@
 {
   "id": "PLY_14420",
-  "name": "마르티네스 트레버",
+  "name": "Martinez Trevor",
   "nameEn": "Martinez Trevor",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 46,
   "popularity": 36,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 80,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 69,
-        "stamina": 73,
-        "velocity": 71,
-        "command": 62,
-        "control": 62,
-        "movement": 60,
-        "mentality": 66,
-        "recovery": 70,
-        "clutch": 68,
-        "holdRunners": 59
+        "ovr": 62,
+        "stamina": 66,
+        "velocity": 64,
+        "command": 56,
+        "control": 56,
+        "movement": 54,
+        "mentality": 59,
+        "recovery": 63,
+        "clutch": 61,
+        "holdRunners": 53
       },
       "batting": {
         "ovr": 62,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

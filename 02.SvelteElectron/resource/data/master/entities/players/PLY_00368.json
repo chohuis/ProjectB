@@ -1,7 +1,7 @@
 {
   "id": "PLY_00368",
   "name": "성기훈",
-  "nameEn": "Seong Gihun",
+  "nameEn": "Hwang Min-jun",
   "role": "player",
   "age": 24,
   "status": "active",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 8,
       "pitching": {
-        "ovr": 52,
-        "stamina": 50,
-        "velocity": 56,
-        "command": 57,
-        "control": 53,
-        "movement": 47,
-        "mentality": 56,
-        "recovery": 53,
-        "clutch": 44,
-        "holdRunners": 43
+        "ovr": 59,
+        "stamina": 48,
+        "velocity": 61,
+        "command": 53,
+        "control": 57,
+        "movement": 53,
+        "mentality": 59,
+        "recovery": 53
       },
       "batting": {
-        "ovr": 34,
-        "contact": 37,
-        "power": 34,
-        "eye": 32,
-        "discipline": 38,
-        "speed": 33,
-        "fielding": 37,
-        "arm": 29,
-        "battingClutch": 44,
-        "baseInstinct": 36,
-        "bunting": 36,
-        "platoon": 37
+        "ovr": 37,
+        "contact": 31,
+        "power": 32,
+        "eye": 38,
+        "discipline": 33,
+        "speed": 37,
+        "fielding": 34,
+        "arm": 35,
+        "battingClutch": 32
       },
       "developmentRate": 44,
-      "potentialHidden": 81,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 52
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 800,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 81
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

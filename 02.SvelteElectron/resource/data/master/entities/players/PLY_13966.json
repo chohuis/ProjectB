@@ -1,9 +1,9 @@
 {
   "id": "PLY_13966",
-  "name": "로드리게스 알렉스",
-  "nameEn": "Rodriguez Alex",
+  "name": "Baker Grant",
+  "nameEn": "Baker Grant",
   "role": "player",
-  "age": 33,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 81,
-  "popularity": 13,
+  "notes": "국적:쿠바",
+  "diligence": 49,
+  "popularity": 34,
   "militaryStatus": "군필",
   "entryYear": 2050,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 33,
+  "entryAge": 21,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 14,
-      "primaryPosition": "SP",
-      "developmentRate": 45,
-      "potentialHidden": 56,
-      "proServiceYears": 11,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 51,
+      "primaryPosition": "C",
+      "developmentRate": 80,
+      "potentialHidden": 60,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 79,
-        "stamina": 78,
-        "velocity": 87,
-        "command": 67,
-        "control": 85,
-        "movement": 83,
-        "mentality": 77,
-        "recovery": 68,
-        "clutch": 74,
-        "holdRunners": 68
+        "ovr": 66,
+        "stamina": 67,
+        "velocity": 74,
+        "command": 56,
+        "control": 64,
+        "movement": 63,
+        "mentality": 68,
+        "recovery": 62,
+        "clutch": 62,
+        "holdRunners": 56
       },
       "batting": {
-        "ovr": 67,
-        "contact": 64,
-        "power": 66,
-        "eye": 60,
-        "discipline": 60,
-        "speed": 67,
-        "baseInstinct": 66,
-        "bunting": 57,
+        "ovr": 66,
+        "contact": 61,
+        "power": 63,
+        "eye": 67,
+        "discipline": 58,
+        "speed": 68,
+        "baseInstinct": 62,
+        "bunting": 61,
         "platoon": 50,
-        "fielding": 68,
-        "arm": 57,
-        "battingClutch": 63
+        "fielding": 60,
+        "arm": 62,
+        "battingClutch": 66
       },
       "positionRatings": {
-        "SP": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "C": 66
+      }
     },
     "coach": null,
     "manager": null,

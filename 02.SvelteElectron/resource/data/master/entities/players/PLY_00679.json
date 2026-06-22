@@ -1,14 +1,14 @@
 {
   "id": "PLY_00679",
   "name": "김동준",
-  "nameEn": "Kim Dongjun",
+  "nameEn": "Yoon Dong-jun",
   "role": "player",
   "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_EMBERTIGERS",
-  "teamId": "TEAM_KBL_EMBERTIGERS_2",
+  "clubId": "CLUB_KBL_KT",
+  "teamId": "TEAM_KBL_KT_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,48 +19,28 @@
       "position": "2B",
       "jerseyNumber": 44,
       "pitching": {
-        "ovr": 49,
-        "stamina": 46,
+        "ovr": 44,
+        "stamina": 42,
         "velocity": 47,
-        "command": 52,
-        "control": 47,
-        "movement": 53,
-        "mentality": 46,
-        "recovery": 45,
-        "clutch": 41,
-        "holdRunners": 45
+        "command": 45,
+        "control": 45,
+        "movement": 37,
+        "mentality": 44,
+        "recovery": 39
       },
       "batting": {
-        "ovr": 69,
+        "ovr": 68,
         "contact": 68,
-        "power": 71,
-        "eye": 71,
-        "discipline": 67,
-        "speed": 67,
-        "fielding": 71,
-        "arm": 74,
-        "battingClutch": 64,
-        "baseInstinct": 63,
-        "bunting": 53,
-        "platoon": 57
+        "power": 70,
+        "eye": 69,
+        "discipline": 69,
+        "speed": 73,
+        "fielding": 72,
+        "arm": 67,
+        "battingClutch": 75
       },
       "developmentRate": 43,
-      "potentialHidden": 83,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 69
-      },
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 83
     },
     "coach": {
       "specialty": "-",
@@ -100,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

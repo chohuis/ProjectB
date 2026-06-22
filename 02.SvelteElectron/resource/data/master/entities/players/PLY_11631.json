@@ -1,9 +1,9 @@
 {
   "id": "PLY_11631",
-  "name": "라이트 브랜던",
-  "nameEn": "Wright Brandon",
+  "name": "Adams Jason",
+  "nameEn": "Adams Jason",
   "role": "player",
-  "age": 23,
+  "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 50,
-  "popularity": 13,
+  "notes": "국적:파나마",
+  "diligence": 80,
+  "popularity": 42,
   "militaryStatus": "군필",
   "entryYear": 2036,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 23,
+  "entryAge": 24,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 61,
-      "primaryPosition": "SP",
-      "developmentRate": 46,
-      "potentialHidden": 61,
-      "proServiceYears": 1,
+      "position": "C",
+      "jerseyNumber": 87,
+      "primaryPosition": "C",
+      "developmentRate": 69,
+      "potentialHidden": 55,
+      "proServiceYears": 2,
       "pitching": {
-        "ovr": 65,
-        "stamina": 59,
-        "velocity": 62,
-        "command": 63,
-        "control": 60,
-        "movement": 63,
-        "mentality": 65,
-        "recovery": 63,
-        "clutch": 61,
-        "holdRunners": 61
+        "ovr": 77,
+        "stamina": 70,
+        "velocity": 80,
+        "command": 76,
+        "control": 78,
+        "movement": 79,
+        "mentality": 81,
+        "recovery": 73,
+        "clutch": 72,
+        "holdRunners": 66
       },
       "batting": {
-        "ovr": 71,
+        "ovr": 77,
         "contact": 75,
-        "power": 67,
-        "eye": 72,
-        "discipline": 70,
-        "speed": 73,
-        "baseInstinct": 66,
-        "bunting": 60,
+        "power": 76,
+        "eye": 73,
+        "discipline": 71,
+        "speed": 82,
+        "baseInstinct": 75,
+        "bunting": 63,
         "platoon": 50,
-        "fielding": 63,
-        "arm": 69,
-        "battingClutch": 62
+        "fielding": 66,
+        "arm": 68,
+        "battingClutch": 70
       },
       "positionRatings": {
-        "SP": 71
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 1
-        }
-      ]
+        "C": 77
+      }
     },
     "coach": null,
     "manager": null,

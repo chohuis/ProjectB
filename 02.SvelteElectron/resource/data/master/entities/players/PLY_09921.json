@@ -1,9 +1,9 @@
 {
   "id": "PLY_09921",
-  "name": "넬슨 코너",
-  "nameEn": "Nelson Connor",
+  "name": "Walker Nathan",
+  "nameEn": "Walker Nathan",
   "role": "player",
-  "age": 30,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 77,
-  "popularity": 21,
+  "notes": "국적:도미니카",
+  "diligence": 65,
+  "popularity": 47,
   "militaryStatus": "군필",
   "entryYear": 2026,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 30,
+  "entryAge": 28,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 45,
+      "jerseyNumber": 42,
       "primaryPosition": "SP",
-      "developmentRate": 55,
-      "potentialHidden": 71,
-      "proServiceYears": 8,
+      "developmentRate": 50,
+      "potentialHidden": 87,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 63,
-        "stamina": 65,
-        "velocity": 72,
-        "command": 63,
-        "control": 56,
-        "movement": 58,
-        "mentality": 68,
-        "recovery": 64,
-        "clutch": 52,
-        "holdRunners": 58
+        "ovr": 75,
+        "stamina": 75,
+        "velocity": 73,
+        "command": 70,
+        "control": 69,
+        "movement": 73,
+        "mentality": 69,
+        "recovery": 72,
+        "clutch": 72,
+        "holdRunners": 61
       },
       "batting": {
-        "ovr": 61,
-        "contact": 55,
-        "power": 51,
-        "eye": 54,
-        "discipline": 55,
-        "speed": 65,
-        "baseInstinct": 62,
-        "bunting": 55,
+        "ovr": 75,
+        "contact": 75,
+        "power": 69,
+        "eye": 69,
+        "discipline": 75,
+        "speed": 71,
+        "baseInstinct": 71,
+        "bunting": 65,
         "platoon": 50,
-        "fielding": 60,
-        "arm": 59,
-        "battingClutch": 50
+        "fielding": 72,
+        "arm": 76,
+        "battingClutch": 63
       },
       "positionRatings": {
-        "SP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 75
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_15913",
-  "name": "앤더슨 칼렙",
+  "name": "Anderson Caleb",
   "nameEn": "Anderson Caleb",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 79,
   "popularity": 12,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 54
       },
       "batting": {
-        "ovr": 69,
-        "contact": 73,
-        "power": 61,
-        "eye": 66,
-        "discipline": 63,
-        "speed": 66,
-        "baseInstinct": 59,
-        "bunting": 59,
-        "platoon": 56,
-        "fielding": 59,
-        "arm": 68,
-        "battingClutch": 57
+        "ovr": 62,
+        "contact": 66,
+        "power": 55,
+        "eye": 59,
+        "discipline": 57,
+        "speed": 59,
+        "baseInstinct": 53,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 61,
+        "battingClutch": 51
       },
       "positionRatings": {
         "RF": 62

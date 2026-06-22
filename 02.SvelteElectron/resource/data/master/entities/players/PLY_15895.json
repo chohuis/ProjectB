@@ -1,6 +1,6 @@
 {
   "id": "PLY_15895",
-  "name": "스콧 카를로스",
+  "name": "Scott Carlos",
   "nameEn": "Scott Carlos",
   "role": "player",
   "age": 18,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 69,
   "popularity": 34,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 52
       },
       "batting": {
-        "ovr": 55,
-        "contact": 50,
-        "power": 53,
-        "eye": 56,
-        "discipline": 51,
-        "speed": 49,
-        "baseInstinct": 46,
-        "bunting": 42,
-        "platoon": 49,
-        "fielding": 45,
-        "arm": 54,
-        "battingClutch": 55
+        "ovr": 56,
+        "contact": 51,
+        "power": 54,
+        "eye": 57,
+        "discipline": 52,
+        "speed": 50,
+        "baseInstinct": 47,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 55,
+        "battingClutch": 56
       },
       "positionRatings": {
         "1B": 56

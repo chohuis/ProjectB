@@ -1,7 +1,7 @@
 {
   "id": "PLY_10205",
-  "name": "존슨 딜런",
-  "nameEn": "Johnson Dylan",
+  "name": "Williams Miguel",
+  "nameEn": "Williams Miguel",
   "role": "player",
   "age": 22,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 46,
-  "popularity": 42,
+  "notes": "국적:멕시코",
+  "diligence": 79,
+  "popularity": 46,
   "militaryStatus": "군필",
   "entryYear": 2028,
   "entryLeague": "LEAGUE_ABL",
@@ -21,53 +21,43 @@
   "entryAge": 22,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 18,
-      "primaryPosition": "SP",
-      "developmentRate": 80,
-      "potentialHidden": 77,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 61,
+      "primaryPosition": "SS",
+      "developmentRate": 72,
+      "potentialHidden": 66,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 55,
-        "stamina": 55,
-        "velocity": 63,
-        "command": 46,
-        "control": 59,
-        "movement": 54,
-        "mentality": 57,
-        "recovery": 46,
+        "ovr": 67,
+        "stamina": 71,
+        "velocity": 76,
+        "command": 66,
+        "control": 67,
+        "movement": 65,
+        "mentality": 69,
+        "recovery": 63,
         "clutch": 55,
-        "holdRunners": 49
+        "holdRunners": 57
       },
       "batting": {
-        "ovr": 58,
-        "contact": 60,
-        "power": 48,
-        "eye": 62,
-        "discipline": 53,
-        "speed": 58,
-        "baseInstinct": 59,
-        "bunting": 41,
+        "ovr": 67,
+        "contact": 70,
+        "power": 65,
+        "eye": 68,
+        "discipline": 70,
+        "speed": 65,
+        "baseInstinct": 60,
+        "bunting": 60,
         "platoon": 50,
-        "fielding": 48,
-        "arm": 52,
-        "battingClutch": 57
+        "fielding": 57,
+        "arm": 60,
+        "battingClutch": 64
       },
       "positionRatings": {
-        "SP": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SS": 67
+      }
     },
     "coach": null,
     "manager": null,

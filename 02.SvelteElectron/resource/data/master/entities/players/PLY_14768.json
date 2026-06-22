@@ -1,6 +1,6 @@
 {
   "id": "PLY_14768",
-  "name": "토마스 다니엘",
+  "name": "Thomas Daniel",
   "nameEn": "Thomas Daniel",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 82,
   "popularity": 13,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 62,
       "proServiceYears": 5,
       "pitching": {
-        "ovr": 61,
-        "stamina": 53,
-        "velocity": 59,
-        "command": 60,
-        "control": 57,
-        "movement": 53,
-        "mentality": 68,
-        "recovery": 60,
-        "clutch": 61,
-        "holdRunners": 47
+        "ovr": 65,
+        "stamina": 57,
+        "velocity": 63,
+        "command": 64,
+        "control": 61,
+        "movement": 56,
+        "mentality": 72,
+        "recovery": 64,
+        "clutch": 65,
+        "holdRunners": 50
       },
       "batting": {
         "ovr": 65,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

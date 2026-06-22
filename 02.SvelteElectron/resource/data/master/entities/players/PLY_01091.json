@@ -1,14 +1,14 @@
 {
   "id": "PLY_01091",
   "name": "존스 크리스토퍼",
-  "nameEn": "Jon 스 크리스토퍼",
+  "nameEn": "Jones Christopher",
   "role": "player",
   "age": 33,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_LONESTARS",
-  "teamId": "TEAM_ABL_LONESTARS_1",
+  "clubId": "CLUB_ABL_TEX",
+  "teamId": "TEAM_ABL_TEX",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 1,
       "pitching": {
-        "ovr": 82,
-        "stamina": 82,
-        "velocity": 77,
-        "command": 79,
-        "control": 78,
-        "movement": 80,
-        "mentality": 86,
-        "recovery": 78,
-        "clutch": 72,
-        "holdRunners": 81
+        "ovr": 89,
+        "stamina": 94,
+        "velocity": 99,
+        "command": 96,
+        "control": 96,
+        "movement": 91,
+        "mentality": 89,
+        "recovery": 89
       },
       "batting": {
-        "ovr": 64,
-        "contact": 60,
-        "power": 58,
-        "eye": 62,
-        "discipline": 59,
-        "speed": 60,
-        "fielding": 60,
-        "arm": 64,
-        "battingClutch": 56,
-        "baseInstinct": 56,
-        "bunting": 60,
-        "platoon": 59
+        "ovr": 65,
+        "contact": 69,
+        "power": 73,
+        "eye": 71,
+        "discipline": 67,
+        "speed": 68,
+        "fielding": 70,
+        "arm": 69,
+        "battingClutch": 72
       },
       "developmentRate": 32,
-      "potentialHidden": 75,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 82
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 11,
-      "contract": {
-        "salary": 30900,
-        "durationYears": 4,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 75
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

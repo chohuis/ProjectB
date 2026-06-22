@@ -1,17 +1,17 @@
 {
   "id": "COA_00222",
-  "name": "후지타 요스케",
-  "nameEn": "Fujita Yosuke",
+  "name": "야마구치 아키라",
+  "nameEn": "Yamaguchi Akira",
   "role": "coach",
-  "age": 39,
+  "age": 34,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
-  "clubId": "CLUB_JBL_PL_POLARBEARS",
-  "teamId": "TEAM_JBL_PL_POLARBEARS_2",
+  "clubId": "CLUB_JBL_PL_SUNS",
+  "teamId": "TEAM_JBL_PL_SUNS_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
@@ -44,13 +44,13 @@
     },
     "coach": {
       "specialty": "투수",
-      "experienceYears": 14,
+      "experienceYears": 4,
       "stats": {
-        "teaching": 72,
-        "analysis": 55,
-        "communication": 67,
-        "discipline": 54,
-        "leadership": 78
+        "teaching": 59,
+        "analysis": 71,
+        "communication": 75,
+        "discipline": 64,
+        "leadership": 60
       },
       "trainingBuffs": "체력 훈련 +2%"
     },

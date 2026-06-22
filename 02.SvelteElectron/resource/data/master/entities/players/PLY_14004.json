@@ -1,6 +1,6 @@
 {
   "id": "PLY_14004",
-  "name": "애덤스 로건",
+  "name": "Adams Logan",
   "nameEn": "Adams Logan",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 66,
   "popularity": 17,
   "militaryStatus": "군필",

@@ -1,6 +1,6 @@
 {
   "id": "PLY_16189",
-  "name": "로빈슨 콜",
+  "name": "Robinson Cole",
   "nameEn": "Robinson Cole",
   "role": "player",
   "age": 18,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 76,
   "popularity": 22,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 44
       },
       "batting": {
-        "ovr": 57,
-        "contact": 53,
-        "power": 53,
-        "eye": 61,
-        "discipline": 57,
-        "speed": 62,
-        "baseInstinct": 59,
-        "bunting": 51,
-        "platoon": 49,
-        "fielding": 55,
-        "arm": 51,
-        "battingClutch": 49
+        "ovr": 58,
+        "contact": 54,
+        "power": 54,
+        "eye": 62,
+        "discipline": 58,
+        "speed": 63,
+        "baseInstinct": 60,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 52,
+        "battingClutch": 50
       },
       "positionRatings": {
         "C": 58

@@ -1,9 +1,9 @@
 {
   "id": "PLY_10999",
-  "name": "에르난데스 딜런",
-  "nameEn": "Hernandez Dylan",
+  "name": "Young Eric",
+  "nameEn": "Young Eric",
   "role": "player",
-  "age": 22,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 70,
-  "popularity": 48,
+  "notes": "국적:미국",
+  "diligence": 76,
+  "popularity": 18,
   "militaryStatus": "군필",
   "entryYear": 2032,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 22,
+  "entryAge": 28,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 40,
-      "primaryPosition": "SP",
-      "developmentRate": 69,
-      "potentialHidden": 91,
-      "proServiceYears": 0,
+      "position": "C",
+      "jerseyNumber": 26,
+      "primaryPosition": "C",
+      "developmentRate": 61,
+      "potentialHidden": 62,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 53,
-        "stamina": 57,
-        "velocity": 59,
-        "command": 46,
-        "control": 46,
-        "movement": 46,
-        "mentality": 56,
-        "recovery": 43,
-        "clutch": 52,
-        "holdRunners": 51
+        "ovr": 78,
+        "stamina": 79,
+        "velocity": 89,
+        "command": 69,
+        "control": 80,
+        "movement": 74,
+        "mentality": 72,
+        "recovery": 68,
+        "clutch": 66,
+        "holdRunners": 71
       },
       "batting": {
-        "ovr": 56,
-        "contact": 52,
-        "power": 53,
-        "eye": 53,
-        "discipline": 58,
-        "speed": 51,
-        "baseInstinct": 51,
-        "bunting": 48,
+        "ovr": 78,
+        "contact": 82,
+        "power": 72,
+        "eye": 73,
+        "discipline": 72,
+        "speed": 80,
+        "baseInstinct": 77,
+        "bunting": 65,
         "platoon": 50,
-        "fielding": 54,
-        "arm": 57,
-        "battingClutch": 44
+        "fielding": 77,
+        "arm": 70,
+        "battingClutch": 78
       },
       "positionRatings": {
-        "SP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "C": 78
+      }
     },
     "coach": null,
     "manager": null,

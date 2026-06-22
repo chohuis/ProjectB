@@ -1,9 +1,9 @@
 {
   "id": "PLY_11465",
-  "name": "테일러 제이슨",
-  "nameEn": "Taylor Jason",
+  "name": "Rodriguez Jake",
+  "nameEn": "Rodriguez Jake",
   "role": "player",
-  "age": 27,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 64,
+  "notes": "국적:베네수엘라",
+  "diligence": 55,
   "popularity": 49,
   "militaryStatus": "군필",
   "entryYear": 2035,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 27,
+  "entryAge": 20,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 36,
+      "jerseyNumber": 42,
       "primaryPosition": "SP",
-      "developmentRate": 56,
-      "potentialHidden": 83,
-      "proServiceYears": 5,
+      "developmentRate": 58,
+      "potentialHidden": 84,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 57,
-        "stamina": 50,
+        "ovr": 61,
+        "stamina": 61,
         "velocity": 63,
-        "command": 53,
-        "control": 49,
-        "movement": 55,
-        "mentality": 60,
-        "recovery": 48,
-        "clutch": 48,
-        "holdRunners": 55
+        "command": 51,
+        "control": 63,
+        "movement": 54,
+        "mentality": 63,
+        "recovery": 50,
+        "clutch": 55,
+        "holdRunners": 50
       },
       "batting": {
-        "ovr": 67,
-        "contact": 61,
-        "power": 68,
-        "eye": 62,
-        "discipline": 65,
-        "speed": 69,
+        "ovr": 61,
+        "contact": 59,
+        "power": 54,
+        "eye": 61,
+        "discipline": 54,
+        "speed": 56,
         "baseInstinct": 59,
-        "bunting": 50,
+        "bunting": 54,
         "platoon": 50,
-        "fielding": 56,
-        "arm": 66,
-        "battingClutch": 67
+        "fielding": 53,
+        "arm": 63,
+        "battingClutch": 52
       },
       "positionRatings": {
-        "SP": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        }
-      ]
+        "SP": 61
+      }
     },
     "coach": null,
     "manager": null,

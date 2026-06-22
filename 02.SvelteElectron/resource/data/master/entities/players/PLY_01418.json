@@ -1,14 +1,14 @@
 {
   "id": "PLY_01418",
   "name": "그린 앤서니",
-  "nameEn": "Geu 린 앤서니",
+  "nameEn": "Green Anthony",
   "role": "player",
   "age": 39,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_COASTALRAYS",
-  "teamId": "TEAM_ABL_COASTALRAYS_1",
+  "clubId": "CLUB_ABL_SF",
+  "teamId": "TEAM_ABL_SF",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,58 +19,28 @@
       "position": "CP",
       "jerseyNumber": 13,
       "pitching": {
-        "ovr": 68,
-        "stamina": 74,
-        "velocity": 73,
-        "command": 66,
-        "control": 67,
-        "movement": 63,
-        "mentality": 72,
-        "recovery": 69,
-        "clutch": 57,
-        "holdRunners": 64
+        "ovr": 76,
+        "stamina": 66,
+        "velocity": 83,
+        "command": 71,
+        "control": 76,
+        "movement": 75,
+        "mentality": 71,
+        "recovery": 74
       },
       "batting": {
-        "ovr": 50,
-        "contact": 52,
-        "power": 47,
-        "eye": 56,
-        "discipline": 52,
-        "speed": 50,
-        "fielding": 56,
-        "arm": 46,
-        "battingClutch": 42,
-        "baseInstinct": 45,
-        "bunting": 39,
-        "platoon": 42
+        "ovr": 43,
+        "contact": 38,
+        "power": 38,
+        "eye": 40,
+        "discipline": 40,
+        "speed": 44,
+        "fielding": 39,
+        "arm": 44,
+        "battingClutch": 43
       },
       "developmentRate": 44,
-      "potentialHidden": 77,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_FORKBALL",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 17,
-      "contract": {
-        "salary": 20200,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 77
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

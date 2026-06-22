@@ -1,61 +1,46 @@
 {
   "id": "PLY_01680",
-  "name": "김현준",
-  "nameEn": "Kim Hyeonjun",
+  "name": "와타나베 히라쿠",
+  "nameEn": "Watanabe Hiraku",
   "role": "player",
-  "age": 18,
+  "age": 23,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
-  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_CHUNCHEON_HIGHLAND",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TIDERAVES",
+  "teamId": "TEAM_JBL_CL_TIDERAVES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "UT",
-      "jerseyNumber": 29,
+      "position": "SP",
+      "jerseyNumber": 5,
       "pitching": {
-        "ovr": 37,
-        "stamina": 42,
-        "velocity": 32,
-        "command": 34,
-        "control": 40,
-        "movement": 38,
-        "mentality": 38,
-        "recovery": 34,
-        "clutch": 35,
-        "holdRunners": 35
+        "ovr": 65,
+        "stamina": 70,
+        "velocity": 69,
+        "command": 73,
+        "control": 65,
+        "movement": 66,
+        "mentality": 68,
+        "recovery": 63
       },
       "batting": {
-        "ovr": 57,
-        "contact": 55,
-        "power": 55,
-        "eye": 55,
-        "discipline": 59,
-        "speed": 64,
-        "fielding": 63,
-        "arm": 53,
-        "battingClutch": 49,
-        "baseInstinct": 53,
-        "bunting": 44,
-        "platoon": 46
+        "ovr": 47,
+        "contact": 45,
+        "power": 49,
+        "eye": 43,
+        "discipline": 48,
+        "speed": 41,
+        "fielding": 45,
+        "arm": 47,
+        "battingClutch": 44
       },
-      "developmentRate": 77,
-      "potentialHidden": 73,
-      "primaryPosition": "UT",
-      "positionRatings": {
-        "UT": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 49,
+      "potentialHidden": 91
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 56,
-  "popularity": 11
+  }
 }

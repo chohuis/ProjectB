@@ -1,65 +1,46 @@
 {
   "id": "PLY_01684",
-  "name": "곽재민",
-  "nameEn": "Kwak Jaemin",
+  "name": "야마다 료",
+  "nameEn": "Yamada Ryo",
   "role": "player",
-  "age": 16,
+  "age": 31,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_JEJU_WIND",
-  "teamId": "TEAM_HS_JEJU_WIND",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_JEJU_WIND",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TIDERAVES",
+  "teamId": "TEAM_JBL_CL_TIDERAVES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 3,
+      "position": "RP",
+      "jerseyNumber": 9,
       "pitching": {
-        "ovr": 38,
-        "stamina": 43,
-        "velocity": 35,
-        "command": 35,
-        "control": 42,
-        "movement": 36,
-        "mentality": 35,
-        "recovery": 35,
-        "clutch": 37,
-        "holdRunners": 35
+        "ovr": 73,
+        "stamina": 66,
+        "velocity": 78,
+        "command": 73,
+        "control": 67,
+        "movement": 65,
+        "mentality": 69,
+        "recovery": 73
       },
       "batting": {
-        "ovr": 22,
-        "contact": 20,
-        "power": 22,
-        "eye": 20,
-        "discipline": 24,
-        "speed": 20,
-        "fielding": 25,
-        "arm": 20,
-        "battingClutch": 38,
-        "baseInstinct": 44,
-        "bunting": 29,
-        "platoon": 43
+        "ovr": 44,
+        "contact": 44,
+        "power": 44,
+        "eye": 43,
+        "discipline": 37,
+        "speed": 39,
+        "fielding": 35,
+        "arm": 37,
+        "battingClutch": 37
       },
-      "developmentRate": 51,
-      "potentialHidden": 73,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 38
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 4
-        }
-      ]
+      "developmentRate": 45,
+      "potentialHidden": 72
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 69,
-  "popularity": 49
+  }
 }

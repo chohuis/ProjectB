@@ -1,9 +1,9 @@
 {
   "id": "PLY_13019",
-  "name": "로드리게스 루이스",
-  "nameEn": "Rodriguez Luis",
+  "name": "Moore Jake",
+  "nameEn": "Moore Jake",
   "role": "player",
-  "age": 20,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 57,
-  "popularity": 43,
+  "notes": "국적:일본",
+  "diligence": 75,
+  "popularity": 41,
   "militaryStatus": "군필",
   "entryYear": 2045,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 20,
+  "entryAge": 21,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 68,
-      "primaryPosition": "SP",
-      "developmentRate": 78,
-      "potentialHidden": 87,
+      "position": "RF",
+      "jerseyNumber": 15,
+      "primaryPosition": "RF",
+      "developmentRate": 69,
+      "potentialHidden": 75,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 58,
-        "stamina": 58,
-        "velocity": 64,
-        "command": 59,
+        "ovr": 54,
+        "stamina": 45,
+        "velocity": 62,
+        "command": 44,
         "control": 58,
-        "movement": 52,
-        "mentality": 53,
-        "recovery": 55,
-        "clutch": 49,
-        "holdRunners": 46
+        "movement": 45,
+        "mentality": 51,
+        "recovery": 45,
+        "clutch": 44,
+        "holdRunners": 41
       },
       "batting": {
-        "ovr": 62,
-        "contact": 67,
-        "power": 51,
-        "eye": 64,
-        "discipline": 55,
-        "speed": 63,
-        "baseInstinct": 51,
-        "bunting": 54,
+        "ovr": 54,
+        "contact": 53,
+        "power": 44,
+        "eye": 49,
+        "discipline": 48,
+        "speed": 48,
+        "baseInstinct": 49,
+        "bunting": 49,
         "platoon": 50,
-        "fielding": 62,
-        "arm": 63,
-        "battingClutch": 57
+        "fielding": 49,
+        "arm": 54,
+        "battingClutch": 55
       },
       "positionRatings": {
-        "SP": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "RF": 54
+      }
     },
     "coach": null,
     "manager": null,

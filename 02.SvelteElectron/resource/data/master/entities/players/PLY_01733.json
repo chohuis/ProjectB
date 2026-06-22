@@ -1,61 +1,46 @@
 {
   "id": "PLY_01733",
-  "name": "민기훈",
-  "nameEn": "Min Gihun",
+  "name": "후쿠다 코지",
+  "nameEn": "Fukuda Koji",
   "role": "player",
-  "age": 18,
+  "age": 22,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_GANGWON_PEAK",
-  "teamId": "TEAM_HS_GANGWON_PEAK",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_GANGWON_PEAK",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+  "teamId": "TEAM_JBL_CL_SILVERWOLVES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
-      "handedness": "R",
-      "position": "LF",
-      "jerseyNumber": 22,
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "CP",
+      "jerseyNumber": 13,
       "pitching": {
-        "ovr": 38,
-        "stamina": 35,
-        "velocity": 34,
-        "command": 43,
-        "control": 39,
-        "movement": 35,
-        "mentality": 39,
-        "recovery": 37,
-        "clutch": 42,
-        "holdRunners": 42
+        "ovr": 73,
+        "stamina": 58,
+        "velocity": 73,
+        "command": 71,
+        "control": 73,
+        "movement": 64,
+        "mentality": 71,
+        "recovery": 67
       },
       "batting": {
-        "ovr": 58,
-        "contact": 60,
-        "power": 54,
-        "eye": 57,
-        "discipline": 55,
-        "speed": 65,
-        "fielding": 53,
-        "arm": 62,
-        "battingClutch": 48,
-        "baseInstinct": 49,
-        "bunting": 43,
-        "platoon": 52
+        "ovr": 41,
+        "contact": 42,
+        "power": 38,
+        "eye": 39,
+        "discipline": 41,
+        "speed": 36,
+        "fielding": 34,
+        "arm": 42,
+        "battingClutch": 42
       },
-      "developmentRate": 83,
-      "potentialHidden": 77,
-      "primaryPosition": "LF",
-      "positionRatings": {
-        "LF": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 37,
+      "potentialHidden": 84
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 78,
-  "popularity": 10
+  }
 }

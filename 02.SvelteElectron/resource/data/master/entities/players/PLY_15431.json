@@ -1,6 +1,6 @@
 {
   "id": "PLY_15431",
-  "name": "브라운 제이크",
+  "name": "Brown Jake",
   "nameEn": "Brown Jake",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 69,
   "popularity": 33,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 59
       },
       "batting": {
-        "ovr": 60,
-        "contact": 62,
-        "power": 50,
-        "eye": 52,
-        "discipline": 59,
-        "speed": 62,
-        "baseInstinct": 57,
-        "bunting": 43,
-        "platoon": 48,
-        "fielding": 57,
-        "arm": 54,
-        "battingClutch": 47
+        "ovr": 62,
+        "contact": 64,
+        "power": 52,
+        "eye": 54,
+        "discipline": 61,
+        "speed": 64,
+        "baseInstinct": 59,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 56,
+        "battingClutch": 49
       },
       "positionRatings": {
         "SS": 62

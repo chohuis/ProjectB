@@ -1,6 +1,6 @@
 {
   "id": "PLY_16679",
-  "name": "화이트 라이언",
+  "name": "White Ryan",
   "nameEn": "White Ryan",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 64,
   "popularity": 17,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 58
       },
       "batting": {
-        "ovr": 65,
-        "contact": 63,
-        "power": 61,
-        "eye": 66,
-        "discipline": 62,
-        "speed": 68,
-        "baseInstinct": 59,
-        "bunting": 53,
-        "platoon": 48,
-        "fielding": 54,
-        "arm": 64,
-        "battingClutch": 56
+        "ovr": 68,
+        "contact": 66,
+        "power": 64,
+        "eye": 69,
+        "discipline": 65,
+        "speed": 71,
+        "baseInstinct": 62,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 67,
+        "battingClutch": 59
       },
       "positionRatings": {
         "1B": 68

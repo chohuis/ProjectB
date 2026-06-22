@@ -1,9 +1,9 @@
 {
   "id": "PLY_10191",
-  "name": "마틴 오스틴",
-  "nameEn": "Martin Austin",
+  "name": "Adams Connor",
+  "nameEn": "Adams Connor",
   "role": "player",
-  "age": 24,
+  "age": 33,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 72,
-  "popularity": 32,
+  "notes": "국적:일본",
+  "diligence": 58,
+  "popularity": 34,
   "militaryStatus": "군필",
   "entryYear": 2028,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 24,
+  "entryAge": 33,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 9,
+      "jerseyNumber": 74,
       "primaryPosition": "SP",
-      "developmentRate": 51,
-      "potentialHidden": 86,
-      "proServiceYears": 2,
+      "developmentRate": 43,
+      "potentialHidden": 48,
+      "proServiceYears": 11,
       "pitching": {
-        "ovr": 61,
-        "stamina": 61,
-        "velocity": 67,
-        "command": 62,
-        "control": 65,
-        "movement": 58,
-        "mentality": 58,
+        "ovr": 67,
+        "stamina": 60,
+        "velocity": 77,
+        "command": 61,
+        "control": 64,
+        "movement": 62,
+        "mentality": 62,
         "recovery": 57,
-        "clutch": 54,
-        "holdRunners": 48
+        "clutch": 62,
+        "holdRunners": 56
       },
       "batting": {
-        "ovr": 66,
-        "contact": 70,
+        "ovr": 67,
+        "contact": 64,
         "power": 59,
-        "eye": 65,
-        "discipline": 67,
-        "speed": 69,
-        "baseInstinct": 56,
-        "bunting": 60,
+        "eye": 60,
+        "discipline": 66,
+        "speed": 63,
+        "baseInstinct": 69,
+        "bunting": 52,
         "platoon": 50,
-        "fielding": 59,
-        "arm": 60,
-        "battingClutch": 57
+        "fielding": 60,
+        "arm": 65,
+        "battingClutch": 59
       },
       "positionRatings": {
-        "SP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+        "SP": 67
+      }
     },
     "coach": null,
     "manager": null,

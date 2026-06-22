@@ -1,6 +1,6 @@
 {
   "id": "PLY_14820",
-  "name": "데이비스 제이크",
+  "name": "Davis Jake",
   "nameEn": "Davis Jake",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 55,
   "popularity": 49,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 67,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 57,
-        "stamina": 51,
-        "velocity": 64,
-        "command": 52,
-        "control": 61,
-        "movement": 49,
-        "mentality": 55,
-        "recovery": 46,
-        "clutch": 53,
-        "holdRunners": 46
+        "ovr": 58,
+        "stamina": 52,
+        "velocity": 65,
+        "command": 53,
+        "control": 62,
+        "movement": 50,
+        "mentality": 56,
+        "recovery": 47,
+        "clutch": 54,
+        "holdRunners": 47
       },
       "batting": {
         "ovr": 58,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

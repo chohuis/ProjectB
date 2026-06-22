@@ -1,7 +1,7 @@
 {
   "id": "PLY_00181",
   "name": "황용준",
-  "nameEn": "Hwang Yongjun",
+  "nameEn": "Baek Seong-hyun",
   "role": "player",
   "age": 21,
   "status": "active",
@@ -20,46 +20,27 @@
       "jerseyNumber": 1,
       "pitching": {
         "ovr": 59,
-        "stamina": 58,
-        "velocity": 55,
-        "command": 63,
-        "control": 60,
-        "movement": 57,
-        "mentality": 64,
-        "recovery": 63,
-        "clutch": 49,
-        "holdRunners": 47
+        "stamina": 62,
+        "velocity": 69,
+        "command": 62,
+        "control": 65,
+        "movement": 58,
+        "mentality": 60,
+        "recovery": 58
       },
       "batting": {
-        "ovr": 41,
-        "contact": 38,
-        "power": 47,
-        "eye": 41,
-        "discipline": 36,
-        "speed": 43,
-        "fielding": 39,
-        "arm": 40,
-        "battingClutch": 39,
-        "baseInstinct": 39,
-        "bunting": 29,
-        "platoon": 40
+        "ovr": 34,
+        "contact": 34,
+        "power": 40,
+        "eye": 34,
+        "discipline": 38,
+        "speed": 35,
+        "fielding": 35,
+        "arm": 37,
+        "battingClutch": 36
       },
       "developmentRate": 51,
-      "potentialHidden": 62,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 62
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

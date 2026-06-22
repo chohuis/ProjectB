@@ -1,6 +1,6 @@
 {
   "id": "PLY_15433",
-  "name": "클라크 오스틴",
+  "name": "Clark Austin",
   "nameEn": "Clark Austin",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 56,
   "popularity": 12,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 51,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 75,
-        "stamina": 74,
-        "velocity": 76,
-        "command": 72,
-        "control": 79,
-        "movement": 75,
-        "mentality": 67,
-        "recovery": 72,
-        "clutch": 64,
-        "holdRunners": 72
+        "ovr": 69,
+        "stamina": 68,
+        "velocity": 70,
+        "command": 66,
+        "control": 73,
+        "movement": 69,
+        "mentality": 62,
+        "recovery": 66,
+        "clutch": 59,
+        "holdRunners": 66
       },
       "batting": {
         "ovr": 69,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 69
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

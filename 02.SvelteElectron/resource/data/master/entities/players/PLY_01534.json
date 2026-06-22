@@ -1,14 +1,14 @@
 {
   "id": "PLY_01534",
   "name": "리 라이언",
-  "nameEn": "Ri  라이언",
+  "nameEn": "Lee Ryan",
   "role": "player",
   "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_RIVERCARDINALS",
-  "teamId": "TEAM_ABL_RIVERCARDINALS_2",
+  "clubId": "CLUB_ABL_BAL",
+  "teamId": "TEAM_ABL_BAL_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,48 +19,28 @@
       "position": "2B",
       "jerseyNumber": 54,
       "pitching": {
-        "ovr": 50,
-        "stamina": 48,
-        "velocity": 56,
-        "command": 53,
-        "control": 51,
-        "movement": 50,
-        "mentality": 47,
-        "recovery": 46,
-        "clutch": 42,
-        "holdRunners": 45
+        "ovr": 36,
+        "stamina": 40,
+        "velocity": 39,
+        "command": 34,
+        "control": 41,
+        "movement": 36,
+        "mentality": 34,
+        "recovery": 37
       },
       "batting": {
         "ovr": 70,
-        "contact": 75,
-        "power": 71,
-        "eye": 71,
-        "discipline": 75,
-        "speed": 74,
-        "fielding": 65,
+        "contact": 66,
+        "power": 69,
+        "eye": 69,
+        "discipline": 71,
+        "speed": 72,
+        "fielding": 69,
         "arm": 66,
-        "battingClutch": 66,
-        "baseInstinct": 66,
-        "bunting": 56,
-        "platoon": 65
+        "battingClutch": 69
       },
       "developmentRate": 34,
-      "potentialHidden": 62,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 70
-      },
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 6300,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 62
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

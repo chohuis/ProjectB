@@ -1,7 +1,7 @@
 {
   "id": "PLY_00316",
   "name": "남성준",
-  "nameEn": "Nam Seongjun",
+  "nameEn": "Kang Jun-seo",
   "role": "player",
   "age": 26,
   "status": "active",
@@ -19,48 +19,28 @@
       "position": "SS",
       "jerseyNumber": 16,
       "pitching": {
-        "ovr": 35,
-        "stamina": 33,
-        "velocity": 40,
-        "command": 39,
-        "control": 34,
-        "movement": 35,
-        "mentality": 39,
-        "recovery": 37,
-        "clutch": 41,
-        "holdRunners": 37
+        "ovr": 24,
+        "stamina": 22,
+        "velocity": 27,
+        "command": 26,
+        "control": 24,
+        "movement": 21,
+        "mentality": 25,
+        "recovery": 27
       },
       "batting": {
-        "ovr": 55,
-        "contact": 51,
-        "power": 56,
+        "ovr": 60,
+        "contact": 62,
+        "power": 51,
         "eye": 53,
-        "discipline": 60,
-        "speed": 51,
-        "fielding": 61,
-        "arm": 61,
-        "battingClutch": 55,
-        "baseInstinct": 46,
-        "bunting": 49,
-        "platoon": 52
+        "discipline": 57,
+        "speed": 56,
+        "fielding": 58,
+        "arm": 59,
+        "battingClutch": 57
       },
       "developmentRate": 55,
-      "potentialHidden": 59,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 55
-      },
-      "proServiceYears": 6,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 59
     },
     "coach": {
       "specialty": "-",
@@ -100,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

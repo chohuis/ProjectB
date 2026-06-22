@@ -1,14 +1,14 @@
 {
   "id": "PLY_01445",
   "name": "카스티요 루카스",
-  "nameEn": "Ka 스티요 루카스",
+  "nameEn": "Castillo Lucas",
   "role": "player",
   "age": 29,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_COASTALRAYS",
-  "teamId": "TEAM_ABL_COASTALRAYS_2",
+  "clubId": "CLUB_ABL_SF",
+  "teamId": "TEAM_ABL_SF_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
@@ -19,48 +19,28 @@
       "position": "3B",
       "jerseyNumber": 55,
       "pitching": {
-        "ovr": 61,
-        "stamina": 64,
-        "velocity": 63,
-        "command": 58,
-        "control": 58,
-        "movement": 65,
-        "mentality": 60,
-        "recovery": 63,
-        "clutch": 53,
-        "holdRunners": 49
+        "ovr": 56,
+        "stamina": 53,
+        "velocity": 56,
+        "command": 55,
+        "control": 51,
+        "movement": 49,
+        "mentality": 50,
+        "recovery": 49
       },
       "batting": {
-        "ovr": 81,
-        "contact": 76,
-        "power": 77,
-        "eye": 84,
-        "discipline": 84,
-        "speed": 75,
-        "fielding": 77,
-        "arm": 82,
-        "battingClutch": 82,
-        "baseInstinct": 73,
-        "bunting": 74,
-        "platoon": 71
+        "ovr": 86,
+        "contact": 86,
+        "power": 83,
+        "eye": 83,
+        "discipline": 86,
+        "speed": 76,
+        "fielding": 84,
+        "arm": 81,
+        "battingClutch": 86
       },
       "developmentRate": 49,
-      "potentialHidden": 60,
-      "primaryPosition": "3B",
-      "positionRatings": {
-        "3B": 81
-      },
-      "proServiceYears": 7,
-      "contract": {
-        "salary": 14800,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

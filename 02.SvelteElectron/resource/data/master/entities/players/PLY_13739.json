@@ -1,9 +1,9 @@
 {
   "id": "PLY_13739",
-  "name": "카터 다니엘",
-  "nameEn": "Carter Daniel",
+  "name": "Young Brandon",
+  "nameEn": "Young Brandon",
   "role": "player",
-  "age": 30,
+  "age": 18,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,14 +11,14 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 51,
-  "popularity": 31,
+  "notes": "국적:일본",
+  "diligence": 71,
+  "popularity": 15,
   "militaryStatus": "군필",
   "entryYear": 2049,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 30,
+  "entryAge": 18,
   "details": {
     "player": {
       "playerType": "pitcher",
@@ -26,48 +26,38 @@
       "position": "SP",
       "jerseyNumber": 31,
       "primaryPosition": "SP",
-      "developmentRate": 50,
-      "potentialHidden": 65,
-      "proServiceYears": 8,
+      "developmentRate": 75,
+      "potentialHidden": 91,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 67,
-        "stamina": 69,
-        "velocity": 68,
-        "command": 63,
-        "control": 65,
-        "movement": 66,
-        "mentality": 73,
-        "recovery": 61,
-        "clutch": 57,
-        "holdRunners": 64
+        "ovr": 58,
+        "stamina": 53,
+        "velocity": 61,
+        "command": 58,
+        "control": 61,
+        "movement": 59,
+        "mentality": 56,
+        "recovery": 47,
+        "clutch": 47,
+        "holdRunners": 47
       },
       "batting": {
-        "ovr": 65,
-        "contact": 59,
-        "power": 56,
-        "eye": 63,
-        "discipline": 56,
-        "speed": 61,
-        "baseInstinct": 64,
-        "bunting": 56,
+        "ovr": 58,
+        "contact": 61,
+        "power": 52,
+        "eye": 58,
+        "discipline": 52,
+        "speed": 56,
+        "baseInstinct": 47,
+        "bunting": 47,
         "platoon": 50,
-        "fielding": 56,
-        "arm": 58,
-        "battingClutch": 59
+        "fielding": 54,
+        "arm": 52,
+        "battingClutch": 51
       },
       "positionRatings": {
-        "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 58
+      }
     },
     "coach": null,
     "manager": null,

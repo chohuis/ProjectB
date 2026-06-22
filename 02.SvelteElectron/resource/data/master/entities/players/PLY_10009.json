@@ -1,9 +1,9 @@
 {
   "id": "PLY_10009",
-  "name": "루이스 에릭",
-  "nameEn": "Lewis Eric",
+  "name": "Baker Daniel",
+  "nameEn": "Baker Daniel",
   "role": "player",
-  "age": 21,
+  "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 59,
-  "popularity": 29,
+  "notes": "국적:일본",
+  "diligence": 62,
+  "popularity": 37,
   "militaryStatus": "군필",
   "entryYear": 2026,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 21,
+  "entryAge": 26,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 75,
+      "jerseyNumber": 20,
       "primaryPosition": "SP",
-      "developmentRate": 74,
-      "potentialHidden": 67,
-      "proServiceYears": 0,
+      "developmentRate": 50,
+      "potentialHidden": 86,
+      "proServiceYears": 4,
       "pitching": {
-        "ovr": 60,
-        "stamina": 61,
-        "velocity": 61,
-        "command": 54,
-        "control": 61,
-        "movement": 53,
-        "mentality": 58,
-        "recovery": 50,
-        "clutch": 51,
-        "holdRunners": 48
+        "ovr": 75,
+        "stamina": 67,
+        "velocity": 85,
+        "command": 70,
+        "control": 77,
+        "movement": 77,
+        "mentality": 75,
+        "recovery": 76,
+        "clutch": 64,
+        "holdRunners": 70
       },
       "batting": {
-        "ovr": 65,
-        "contact": 58,
-        "power": 55,
-        "eye": 65,
-        "discipline": 68,
-        "speed": 58,
-        "baseInstinct": 65,
-        "bunting": 54,
+        "ovr": 75,
+        "contact": 72,
+        "power": 66,
+        "eye": 67,
+        "discipline": 70,
+        "speed": 77,
+        "baseInstinct": 70,
+        "bunting": 56,
         "platoon": 50,
-        "fielding": 67,
-        "arm": 55,
-        "battingClutch": 52
+        "fielding": 66,
+        "arm": 75,
+        "battingClutch": 69
       },
       "positionRatings": {
-        "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 75
+      }
     },
     "coach": null,
     "manager": null,

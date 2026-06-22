@@ -1,7 +1,7 @@
 {
   "id": "PLY_00330",
   "name": "최예준",
-  "nameEn": "Choi Yejun",
+  "nameEn": "Ko Min-hyuk",
   "role": "player",
   "age": 25,
   "status": "active",
@@ -19,58 +19,28 @@
       "position": "CP",
       "jerseyNumber": 10,
       "pitching": {
-        "ovr": 60,
-        "stamina": 61,
-        "velocity": 65,
-        "command": 66,
-        "control": 58,
-        "movement": 64,
-        "mentality": 57,
-        "recovery": 65,
-        "clutch": 57,
-        "holdRunners": 48
+        "ovr": 64,
+        "stamina": 51,
+        "velocity": 69,
+        "command": 64,
+        "control": 69,
+        "movement": 63,
+        "mentality": 61,
+        "recovery": 63
       },
       "batting": {
         "ovr": 42,
-        "contact": 45,
-        "power": 42,
-        "eye": 42,
-        "discipline": 40,
-        "speed": 46,
-        "fielding": 44,
-        "arm": 41,
-        "battingClutch": 37,
-        "baseInstinct": 37,
-        "bunting": 39,
-        "platoon": 34
+        "contact": 48,
+        "power": 49,
+        "eye": 48,
+        "discipline": 41,
+        "speed": 47,
+        "fielding": 47,
+        "arm": 48,
+        "battingClutch": 44
       },
       "developmentRate": 47,
-      "potentialHidden": 79,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 5,
-      "contract": {
-        "salary": 1400,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 79
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

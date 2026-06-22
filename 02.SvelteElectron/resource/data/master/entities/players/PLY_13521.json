@@ -1,9 +1,9 @@
 {
   "id": "PLY_13521",
-  "name": "해리스 다니엘",
-  "nameEn": "Harris Daniel",
+  "name": "Jackson Dylan",
+  "nameEn": "Jackson Dylan",
   "role": "player",
-  "age": 35,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 75,
-  "popularity": 21,
+  "notes": "국적:미국",
+  "diligence": 71,
+  "popularity": 47,
   "militaryStatus": "군필",
   "entryYear": 2048,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 35,
+  "entryAge": 20,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 23,
+      "jerseyNumber": 76,
       "primaryPosition": "SP",
-      "developmentRate": 43,
-      "potentialHidden": 70,
-      "proServiceYears": 13,
+      "developmentRate": 77,
+      "potentialHidden": 78,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 65,
-        "stamina": 70,
-        "velocity": 76,
-        "command": 64,
-        "control": 67,
-        "movement": 58,
-        "mentality": 68,
-        "recovery": 52,
-        "clutch": 62,
-        "holdRunners": 48
+        "ovr": 57,
+        "stamina": 53,
+        "velocity": 63,
+        "command": 54,
+        "control": 52,
+        "movement": 55,
+        "mentality": 51,
+        "recovery": 45,
+        "clutch": 53,
+        "holdRunners": 53
       },
       "batting": {
         "ovr": 57,
-        "contact": 58,
-        "power": 51,
-        "eye": 52,
+        "contact": 48,
+        "power": 54,
+        "eye": 55,
         "discipline": 58,
-        "speed": 54,
-        "baseInstinct": 50,
-        "bunting": 43,
+        "speed": 55,
+        "baseInstinct": 59,
+        "bunting": 39,
         "platoon": 50,
-        "fielding": 50,
-        "arm": 49,
-        "battingClutch": 55
+        "fielding": 55,
+        "arm": 48,
+        "battingClutch": 53
       },
       "positionRatings": {
         "SP": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_15792",
-  "name": "리 미겔",
+  "name": "Lee Miguel",
   "nameEn": "Lee Miguel",
   "role": "player",
   "age": 29,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 78,
   "popularity": 11,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 70,
       "proServiceYears": 7,
       "pitching": {
-        "ovr": 75,
-        "stamina": 73,
-        "velocity": 87,
-        "command": 76,
-        "control": 78,
-        "movement": 65,
-        "mentality": 75,
-        "recovery": 71,
-        "clutch": 75,
-        "holdRunners": 70
+        "ovr": 69,
+        "stamina": 67,
+        "velocity": 80,
+        "command": 70,
+        "control": 72,
+        "movement": 60,
+        "mentality": 69,
+        "recovery": 65,
+        "clutch": 69,
+        "holdRunners": 64
       },
       "batting": {
         "ovr": 69,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 69
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

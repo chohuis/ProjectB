@@ -1,72 +1,46 @@
 {
   "id": "PLY_01877",
-  "name": "곽동준",
-  "nameEn": "Kwak Dongjun",
+  "name": "야마다 시게루",
+  "nameEn": "Yamada Shigeru",
   "role": "player",
-  "age": 25,
+  "age": 36,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_TWINWOLVES",
-  "teamId": "TEAM_KBL_TWINWOLVES_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_POLARBEARS",
+  "teamId": "TEAM_JBL_PL_POLARBEARS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "L",
-      "position": "C",
+      "handedness": "R",
+      "position": "RF",
       "jerseyNumber": 22,
       "pitching": {
-        "ovr": 48,
-        "stamina": 52,
-        "velocity": 51,
-        "command": 48,
-        "control": 51,
-        "movement": 50,
-        "mentality": 46,
-        "recovery": 45,
-        "clutch": 42,
-        "holdRunners": 47
+        "ovr": 66,
+        "stamina": 68,
+        "velocity": 73,
+        "command": 71,
+        "control": 64,
+        "movement": 69,
+        "mentality": 67,
+        "recovery": 68
       },
       "batting": {
-        "ovr": 68,
-        "contact": 68,
-        "power": 72,
-        "eye": 66,
-        "discipline": 67,
-        "speed": 74,
-        "fielding": 65,
-        "arm": 66,
-        "battingClutch": 67,
-        "baseInstinct": 58,
-        "bunting": 58,
-        "platoon": 63
+        "ovr": 83,
+        "contact": 89,
+        "power": 92,
+        "eye": 83,
+        "discipline": 90,
+        "speed": 85,
+        "fielding": 85,
+        "arm": 87,
+        "battingClutch": 85
       },
-      "developmentRate": 53,
-      "potentialHidden": 75,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 3,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 38,
+      "potentialHidden": 57
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 77,
-  "popularity": 36,
-  "militaryStatus": "군필"
+  }
 }

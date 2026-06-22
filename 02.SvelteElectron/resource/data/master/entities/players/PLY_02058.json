@@ -1,72 +1,46 @@
 {
   "id": "PLY_02058",
-  "name": "브랜던 밀러",
-  "nameEn": "Brandon Miller",
+  "name": "마쓰모토 이사무",
+  "nameEn": "Matsumoto Isamu",
   "role": "player",
-  "age": 21,
+  "age": 32,
   "status": "active",
-  "originLeagueId": "LEAGUE_ABL",
-  "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_HARBORHAWKS",
-  "teamId": "TEAM_ABL_HARBORHAWKS_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SUNS",
+  "teamId": "TEAM_JBL_PL_SUNS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "1B",
-      "jerseyNumber": 57,
+      "position": "DH",
+      "jerseyNumber": 23,
       "pitching": {
-        "ovr": 58,
-        "stamina": 58,
-        "velocity": 56,
-        "command": 55,
-        "control": 55,
-        "movement": 59,
-        "mentality": 61,
-        "recovery": 61,
-        "clutch": 46,
-        "holdRunners": 55
+        "ovr": 65,
+        "stamina": 59,
+        "velocity": 62,
+        "command": 63,
+        "control": 59,
+        "movement": 56,
+        "mentality": 63,
+        "recovery": 58
       },
       "batting": {
-        "ovr": 78,
-        "contact": 84,
-        "power": 80,
-        "eye": 83,
-        "discipline": 79,
-        "speed": 82,
-        "fielding": 84,
-        "arm": 82,
-        "battingClutch": 76,
-        "baseInstinct": 72,
-        "bunting": 64,
-        "platoon": 75
+        "ovr": 94,
+        "contact": 91,
+        "power": 92,
+        "eye": 88,
+        "discipline": 90,
+        "speed": 81,
+        "fielding": 85,
+        "arm": 85,
+        "battingClutch": 90
       },
-      "developmentRate": 33,
-      "potentialHidden": 78,
-      "primaryPosition": "1B",
-      "positionRatings": {
-        "1B": 78
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 12500,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 47,
+      "potentialHidden": 85
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 68,
-  "popularity": 22,
-  "militaryStatus": "군필"
+  }
 }

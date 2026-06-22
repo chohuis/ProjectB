@@ -1,72 +1,46 @@
 {
   "id": "PLY_01960",
-  "name": "유태우",
-  "nameEn": "Yoo Taewoo",
+  "name": "하시모토 쓰요시",
+  "nameEn": "Hashimoto Tsuyoshi",
   "role": "player",
-  "age": 27,
+  "age": 37,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_EMBERTIGERS",
-  "teamId": "TEAM_KBL_EMBERTIGERS_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
+  "teamId": "TEAM_JBL_PL_MARINESOLDIERS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "2B",
-      "jerseyNumber": 52,
+      "position": "C",
+      "jerseyNumber": 15,
       "pitching": {
-        "ovr": 48,
-        "stamina": 51,
-        "velocity": 51,
-        "command": 46,
-        "control": 49,
-        "movement": 44,
-        "mentality": 44,
-        "recovery": 44,
-        "clutch": 42,
-        "holdRunners": 45
+        "ovr": 38,
+        "stamina": 39,
+        "velocity": 42,
+        "command": 44,
+        "control": 45,
+        "movement": 41,
+        "mentality": 40,
+        "recovery": 42
       },
       "batting": {
-        "ovr": 68,
-        "contact": 74,
-        "power": 71,
-        "eye": 71,
-        "discipline": 67,
-        "speed": 71,
+        "ovr": 65,
+        "contact": 67,
+        "power": 66,
+        "eye": 72,
+        "discipline": 64,
+        "speed": 68,
         "fielding": 70,
-        "arm": 66,
-        "battingClutch": 61,
-        "baseInstinct": 67,
-        "bunting": 60,
-        "platoon": 61
+        "arm": 74,
+        "battingClutch": 72
       },
-      "developmentRate": 58,
-      "potentialHidden": 63,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 5,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 34,
+      "potentialHidden": 62
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 48,
-  "popularity": 59,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,6 +1,6 @@
 {
   "id": "PLY_15636",
-  "name": "브라운 브랜던",
+  "name": "Brown Brandon",
   "nameEn": "Brown Brandon",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 77,
   "popularity": 17,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 48
       },
       "batting": {
-        "ovr": 60,
-        "contact": 63,
-        "power": 58,
-        "eye": 55,
-        "discipline": 63,
-        "speed": 60,
-        "baseInstinct": 60,
-        "bunting": 50,
-        "platoon": 48,
-        "fielding": 62,
-        "arm": 51,
-        "battingClutch": 59
+        "ovr": 62,
+        "contact": 65,
+        "power": 60,
+        "eye": 57,
+        "discipline": 65,
+        "speed": 62,
+        "baseInstinct": 62,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 53,
+        "battingClutch": 61
       },
       "positionRatings": {
         "SS": 62

@@ -1,9 +1,9 @@
 {
   "id": "PLY_12972",
-  "name": "데이비스 알렉스",
-  "nameEn": "Davis Alex",
+  "name": "Harris Grant",
+  "nameEn": "Harris Grant",
   "role": "player",
-  "age": 24,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 70,
-  "popularity": 32,
+  "notes": "국적:베네수엘라",
+  "diligence": 47,
+  "popularity": 39,
   "militaryStatus": "군필",
   "entryYear": 2044,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 24,
+  "entryAge": 28,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 8,
-      "primaryPosition": "SP",
-      "developmentRate": 52,
-      "potentialHidden": 70,
-      "proServiceYears": 2,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 60,
+      "primaryPosition": "2B",
+      "developmentRate": 66,
+      "potentialHidden": 57,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 63,
-        "stamina": 64,
-        "velocity": 70,
-        "command": 57,
-        "control": 58,
-        "movement": 56,
-        "mentality": 68,
-        "recovery": 54,
-        "clutch": 59,
-        "holdRunners": 58
+        "ovr": 79,
+        "stamina": 82,
+        "velocity": 81,
+        "command": 76,
+        "control": 83,
+        "movement": 74,
+        "mentality": 80,
+        "recovery": 73,
+        "clutch": 71,
+        "holdRunners": 69
       },
       "batting": {
-        "ovr": 68,
-        "contact": 71,
-        "power": 64,
-        "eye": 60,
-        "discipline": 71,
-        "speed": 66,
-        "baseInstinct": 65,
-        "bunting": 53,
+        "ovr": 79,
+        "contact": 77,
+        "power": 76,
+        "eye": 83,
+        "discipline": 83,
+        "speed": 81,
+        "baseInstinct": 81,
+        "bunting": 68,
         "platoon": 50,
-        "fielding": 60,
-        "arm": 63,
-        "battingClutch": 56
+        "fielding": 81,
+        "arm": 74,
+        "battingClutch": 75
       },
       "positionRatings": {
-        "SP": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "2B": 79
+      }
     },
     "coach": null,
     "manager": null,

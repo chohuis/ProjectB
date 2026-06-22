@@ -1,9 +1,9 @@
 {
   "id": "PLY_11492",
-  "name": "그린 코너",
-  "nameEn": "Green Connor",
+  "name": "Walker Blake",
+  "nameEn": "Walker Blake",
   "role": "player",
-  "age": 28,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 57,
-  "popularity": 37,
+  "notes": "국적:도미니카",
+  "diligence": 70,
+  "popularity": 19,
   "militaryStatus": "군필",
   "entryYear": 2035,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 28,
+  "entryAge": 22,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 21,
-      "primaryPosition": "SP",
-      "developmentRate": 69,
-      "potentialHidden": 65,
-      "proServiceYears": 6,
+      "position": "CF",
+      "jerseyNumber": 89,
+      "primaryPosition": "CF",
+      "developmentRate": 60,
+      "potentialHidden": 75,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 70,
-        "stamina": 68,
-        "velocity": 71,
-        "command": 64,
-        "control": 70,
-        "movement": 60,
-        "mentality": 73,
-        "recovery": 61,
-        "clutch": 69,
-        "holdRunners": 60
+        "ovr": 60,
+        "stamina": 64,
+        "velocity": 59,
+        "command": 52,
+        "control": 52,
+        "movement": 56,
+        "mentality": 61,
+        "recovery": 57,
+        "clutch": 53,
+        "holdRunners": 49
       },
       "batting": {
-        "ovr": 68,
-        "contact": 72,
-        "power": 63,
-        "eye": 64,
-        "discipline": 71,
-        "speed": 67,
-        "baseInstinct": 62,
-        "bunting": 56,
+        "ovr": 60,
+        "contact": 53,
+        "power": 61,
+        "eye": 52,
+        "discipline": 54,
+        "speed": 63,
+        "baseInstinct": 50,
+        "bunting": 46,
         "platoon": 50,
-        "fielding": 65,
-        "arm": 67,
-        "battingClutch": 65
+        "fielding": 51,
+        "arm": 52,
+        "battingClutch": 55
       },
       "positionRatings": {
-        "SP": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "CF": 60
+      }
     },
     "coach": null,
     "manager": null,

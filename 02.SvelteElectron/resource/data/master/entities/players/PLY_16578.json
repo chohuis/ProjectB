@@ -1,6 +1,6 @@
 {
   "id": "PLY_16578",
-  "name": "톰슨 트레버",
+  "name": "Thompson Trevor",
   "nameEn": "Thompson Trevor",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 49,
   "popularity": 32,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 53,
       "proServiceYears": 4,
       "pitching": {
-        "ovr": 71,
-        "stamina": 64,
-        "velocity": 76,
-        "command": 61,
-        "control": 67,
-        "movement": 74,
-        "mentality": 69,
-        "recovery": 64,
-        "clutch": 64,
-        "holdRunners": 58
+        "ovr": 72,
+        "stamina": 65,
+        "velocity": 77,
+        "command": 62,
+        "control": 68,
+        "movement": 75,
+        "mentality": 70,
+        "recovery": 65,
+        "clutch": 65,
+        "holdRunners": 59
       },
       "batting": {
         "ovr": 72,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 72
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

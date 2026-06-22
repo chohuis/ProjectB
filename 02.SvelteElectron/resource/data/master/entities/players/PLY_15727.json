@@ -1,6 +1,6 @@
 {
   "id": "PLY_15727",
-  "name": "로빈슨 에릭",
+  "name": "Robinson Eric",
   "nameEn": "Robinson Eric",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 67,
   "popularity": 18,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 53
       },
       "batting": {
-        "ovr": 58,
-        "contact": 57,
-        "power": 57,
-        "eye": 62,
-        "discipline": 49,
-        "speed": 63,
-        "baseInstinct": 57,
-        "bunting": 42,
-        "platoon": 49,
-        "fielding": 54,
-        "arm": 57,
-        "battingClutch": 59
+        "ovr": 59,
+        "contact": 58,
+        "power": 58,
+        "eye": 63,
+        "discipline": 50,
+        "speed": 64,
+        "baseInstinct": 58,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 58,
+        "battingClutch": 60
       },
       "positionRatings": {
         "3B": 59

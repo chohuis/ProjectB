@@ -1,6 +1,6 @@
 {
   "id": "PLY_16695",
-  "name": "토마스 미겔",
+  "name": "Thomas Miguel",
   "nameEn": "Thomas Miguel",
   "role": "player",
   "age": 32,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 66,
   "popularity": 48,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 64,
       "proServiceYears": 10,
       "pitching": {
-        "ovr": 89,
-        "stamina": 83,
-        "velocity": 90,
-        "command": 90,
-        "control": 92,
-        "movement": 90,
-        "mentality": 94,
-        "recovery": 78,
-        "clutch": 80,
-        "holdRunners": 71
+        "ovr": 70,
+        "stamina": 65,
+        "velocity": 71,
+        "command": 71,
+        "control": 72,
+        "movement": 71,
+        "mentality": 74,
+        "recovery": 61,
+        "clutch": 63,
+        "holdRunners": 56
       },
       "batting": {
         "ovr": 70,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

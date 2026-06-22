@@ -1,9 +1,9 @@
 {
   "id": "PLY_11332",
-  "name": "로빈슨 코디",
-  "nameEn": "Robinson Cody",
+  "name": "Garcia Jason",
+  "nameEn": "Garcia Jason",
   "role": "player",
-  "age": 24,
+  "age": 19,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 82,
-  "popularity": 44,
+  "notes": "국적:도미니카",
+  "diligence": 62,
+  "popularity": 28,
   "militaryStatus": "군필",
   "entryYear": 2034,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 24,
+  "entryAge": 19,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 96,
-      "primaryPosition": "SP",
-      "developmentRate": 50,
-      "potentialHidden": 56,
-      "proServiceYears": 2,
+      "position": "SS",
+      "jerseyNumber": 95,
+      "primaryPosition": "SS",
+      "developmentRate": 77,
+      "potentialHidden": 88,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 69,
-        "stamina": 64,
-        "velocity": 68,
-        "command": 71,
-        "control": 72,
-        "movement": 72,
-        "mentality": 65,
-        "recovery": 70,
-        "clutch": 69,
-        "holdRunners": 60
+        "ovr": 65,
+        "stamina": 62,
+        "velocity": 71,
+        "command": 68,
+        "control": 69,
+        "movement": 60,
+        "mentality": 64,
+        "recovery": 66,
+        "clutch": 66,
+        "holdRunners": 51
       },
       "batting": {
-        "ovr": 76,
-        "contact": 76,
-        "power": 69,
-        "eye": 71,
-        "discipline": 69,
-        "speed": 71,
-        "baseInstinct": 75,
-        "bunting": 69,
+        "ovr": 65,
+        "contact": 66,
+        "power": 65,
+        "eye": 60,
+        "discipline": 61,
+        "speed": 59,
+        "baseInstinct": 62,
+        "bunting": 55,
         "platoon": 50,
         "fielding": 67,
-        "arm": 67,
-        "battingClutch": 69
+        "arm": 62,
+        "battingClutch": 61
       },
       "positionRatings": {
-        "SP": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 2
-        }
-      ]
+        "SS": 65
+      }
     },
     "coach": null,
     "manager": null,

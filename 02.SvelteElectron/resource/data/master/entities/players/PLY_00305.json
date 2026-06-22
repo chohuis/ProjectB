@@ -1,7 +1,7 @@
 {
   "id": "PLY_00305",
   "name": "배재민",
-  "nameEn": "Bae Jaemin",
+  "nameEn": "Son Won-jun",
   "role": "player",
   "age": 21,
   "status": "active",
@@ -19,62 +19,28 @@
       "position": "RP",
       "jerseyNumber": 5,
       "pitching": {
-        "ovr": 57,
-        "stamina": 60,
-        "velocity": 60,
-        "command": 58,
-        "control": 61,
-        "movement": 57,
-        "mentality": 63,
-        "recovery": 59,
-        "clutch": 45,
-        "holdRunners": 54
+        "ovr": 63,
+        "stamina": 53,
+        "velocity": 65,
+        "command": 62,
+        "control": 64,
+        "movement": 61,
+        "mentality": 62,
+        "recovery": 59
       },
       "batting": {
-        "ovr": 39,
-        "contact": 44,
-        "power": 34,
-        "eye": 37,
-        "discipline": 41,
-        "speed": 40,
-        "fielding": 35,
-        "arm": 34,
-        "battingClutch": 34,
-        "baseInstinct": 37,
-        "bunting": 33,
-        "platoon": 33
+        "ovr": 41,
+        "contact": 40,
+        "power": 37,
+        "eye": 36,
+        "discipline": 39,
+        "speed": 42,
+        "fielding": 36,
+        "arm": 38,
+        "battingClutch": 35
       },
       "developmentRate": 55,
-      "potentialHidden": 72,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 1,
-      "contract": {
-        "salary": 1200,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 72
     },
     "coach": {
       "specialty": "-",
@@ -114,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

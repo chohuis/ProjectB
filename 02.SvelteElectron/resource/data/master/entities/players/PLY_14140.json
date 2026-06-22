@@ -1,6 +1,6 @@
 {
   "id": "PLY_14140",
-  "name": "로빈슨 재크",
+  "name": "Robinson Zach",
   "nameEn": "Robinson Zach",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 60,
   "popularity": 26,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 59
       },
       "batting": {
-        "ovr": 62,
-        "contact": 61,
-        "power": 61,
-        "eye": 58,
-        "discipline": 54,
-        "speed": 57,
-        "baseInstinct": 57,
-        "bunting": 49,
-        "platoon": 48,
-        "fielding": 51,
-        "arm": 61,
-        "battingClutch": 63
+        "ovr": 64,
+        "contact": 63,
+        "power": 63,
+        "eye": 60,
+        "discipline": 56,
+        "speed": 59,
+        "baseInstinct": 59,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 63,
+        "battingClutch": 65
       },
       "positionRatings": {
         "C": 64

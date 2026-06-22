@@ -1,6 +1,6 @@
 {
   "id": "PLY_16184",
-  "name": "해리스 데릭",
+  "name": "Harris Derek",
   "nameEn": "Harris Derek",
   "role": "player",
   "age": 31,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 55,
   "popularity": 31,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 51,
       "proServiceYears": 9,
       "pitching": {
-        "ovr": 66,
-        "stamina": 64,
-        "velocity": 75,
-        "command": 64,
-        "control": 63,
-        "movement": 60,
-        "mentality": 72,
-        "recovery": 66,
-        "clutch": 53,
-        "holdRunners": 50
+        "ovr": 59,
+        "stamina": 57,
+        "velocity": 67,
+        "command": 57,
+        "control": 56,
+        "movement": 54,
+        "mentality": 64,
+        "recovery": 59,
+        "clutch": 47,
+        "holdRunners": 45
       },
       "batting": {
         "ovr": 59,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

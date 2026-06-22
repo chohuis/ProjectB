@@ -1,6 +1,6 @@
 {
   "id": "PLY_14285",
-  "name": "테일러 마커스",
+  "name": "Taylor Marcus",
   "nameEn": "Taylor Marcus",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 51,
   "popularity": 21,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 70
       },
       "batting": {
-        "ovr": 78,
-        "contact": 73,
-        "power": 68,
-        "eye": 74,
-        "discipline": 67,
-        "speed": 74,
-        "baseInstinct": 80,
-        "bunting": 72,
-        "platoon": 54,
-        "fielding": 74,
-        "arm": 69,
-        "battingClutch": 64
+        "ovr": 72,
+        "contact": 67,
+        "power": 63,
+        "eye": 68,
+        "discipline": 62,
+        "speed": 68,
+        "baseInstinct": 74,
+        "bunting": 66,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 64,
+        "battingClutch": 59
       },
       "positionRatings": {
         "RF": 72

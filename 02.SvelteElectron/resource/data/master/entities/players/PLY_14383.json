@@ -1,6 +1,6 @@
 {
   "id": "PLY_14383",
-  "name": "마르티네스 카일",
+  "name": "Martinez Kyle",
   "nameEn": "Martinez Kyle",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 48,
   "popularity": 38,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 57,
       "proServiceYears": 13,
       "pitching": {
-        "ovr": 81,
-        "stamina": 81,
-        "velocity": 84,
-        "command": 84,
-        "control": 77,
-        "movement": 73,
-        "mentality": 75,
-        "recovery": 77,
-        "clutch": 65,
-        "holdRunners": 72
+        "ovr": 64,
+        "stamina": 64,
+        "velocity": 66,
+        "command": 66,
+        "control": 61,
+        "movement": 58,
+        "mentality": 59,
+        "recovery": 61,
+        "clutch": 51,
+        "holdRunners": 57
       },
       "batting": {
         "ovr": 64,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 64
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

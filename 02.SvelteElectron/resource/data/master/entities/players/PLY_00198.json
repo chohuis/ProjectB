@@ -1,7 +1,7 @@
 {
   "id": "PLY_00198",
   "name": "신지후",
-  "nameEn": "Shin Jihu",
+  "nameEn": "Nam Seung-woo",
   "role": "player",
   "age": 19,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "CF",
       "jerseyNumber": 18,
       "pitching": {
-        "ovr": 37,
-        "stamina": 36,
-        "velocity": 41,
-        "command": 40,
-        "control": 35,
-        "movement": 42,
-        "mentality": 34,
-        "recovery": 33,
-        "clutch": 43,
-        "holdRunners": 32
+        "ovr": 30,
+        "stamina": 29,
+        "velocity": 35,
+        "command": 32,
+        "control": 32,
+        "movement": 34,
+        "mentality": 29,
+        "recovery": 32
       },
       "batting": {
-        "ovr": 57,
-        "contact": 54,
-        "power": 61,
-        "eye": 56,
-        "discipline": 55,
+        "ovr": 56,
+        "contact": 62,
+        "power": 54,
+        "eye": 60,
+        "discipline": 58,
         "speed": 59,
-        "fielding": 60,
-        "arm": 56,
-        "battingClutch": 51,
-        "baseInstinct": 50,
-        "bunting": 41,
-        "platoon": 48
+        "fielding": 61,
+        "arm": 53,
+        "battingClutch": 57
       },
       "developmentRate": 52,
-      "potentialHidden": 71,
-      "primaryPosition": "CF",
-      "positionRatings": {
-        "CF": 57
-      }
+      "potentialHidden": 71
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

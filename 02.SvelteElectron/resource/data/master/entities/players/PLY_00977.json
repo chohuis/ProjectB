@@ -1,14 +1,14 @@
 {
   "id": "PLY_00977",
   "name": "클라크 제임스",
-  "nameEn": "Keul 라크 제임스",
+  "nameEn": "Clark James",
   "role": "player",
   "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_WINDBEARS",
-  "teamId": "TEAM_ABL_WINDBEARS_1",
+  "clubId": "CLUB_ABL_TOR",
+  "teamId": "TEAM_ABL_TOR",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -19,48 +19,28 @@
       "position": "RF",
       "jerseyNumber": 22,
       "pitching": {
-        "ovr": 57,
-        "stamina": 62,
-        "velocity": 54,
-        "command": 53,
-        "control": 59,
-        "movement": 53,
-        "mentality": 62,
-        "recovery": 62,
-        "clutch": 52,
-        "holdRunners": 53
+        "ovr": 50,
+        "stamina": 50,
+        "velocity": 58,
+        "command": 51,
+        "control": 53,
+        "movement": 48,
+        "mentality": 49,
+        "recovery": 47
       },
       "batting": {
-        "ovr": 77,
-        "contact": 73,
-        "power": 80,
-        "eye": 75,
-        "discipline": 72,
-        "speed": 83,
-        "fielding": 77,
-        "arm": 75,
-        "battingClutch": 68,
-        "baseInstinct": 75,
-        "bunting": 62,
-        "platoon": 75
+        "ovr": 73,
+        "contact": 75,
+        "power": 78,
+        "eye": 80,
+        "discipline": 78,
+        "speed": 74,
+        "fielding": 76,
+        "arm": 80,
+        "battingClutch": 80
       },
       "developmentRate": 34,
-      "potentialHidden": 88,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 77
-      },
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 11700,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 88
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

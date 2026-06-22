@@ -1,6 +1,6 @@
 {
   "id": "PLY_15621",
-  "name": "로빈슨 제이크",
+  "name": "Robinson Jake",
   "nameEn": "Robinson Jake",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 82,
   "popularity": 50,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 58
       },
       "batting": {
-        "ovr": 69,
-        "contact": 60,
-        "power": 67,
-        "eye": 65,
-        "discipline": 65,
-        "speed": 71,
-        "baseInstinct": 67,
-        "bunting": 60,
-        "platoon": 56,
-        "fielding": 69,
-        "arm": 69,
-        "battingClutch": 58
+        "ovr": 62,
+        "contact": 54,
+        "power": 60,
+        "eye": 58,
+        "discipline": 58,
+        "speed": 64,
+        "baseInstinct": 60,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 62,
+        "battingClutch": 52
       },
       "positionRatings": {
         "CF": 62

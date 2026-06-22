@@ -1,6 +1,6 @@
 {
   "id": "PLY_15028",
-  "name": "워커 미겔",
+  "name": "Walker Miguel",
   "nameEn": "Walker Miguel",
   "role": "player",
   "age": 23,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 73,
   "popularity": 48,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 52,
       "proServiceYears": 1,
       "pitching": {
-        "ovr": 72,
-        "stamina": 73,
-        "velocity": 74,
-        "command": 66,
-        "control": 67,
-        "movement": 65,
-        "mentality": 65,
-        "recovery": 63,
-        "clutch": 60,
-        "holdRunners": 67
+        "ovr": 75,
+        "stamina": 76,
+        "velocity": 77,
+        "command": 69,
+        "control": 70,
+        "movement": 68,
+        "mentality": 68,
+        "recovery": 66,
+        "clutch": 63,
+        "holdRunners": 70
       },
       "batting": {
         "ovr": 75,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 75
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_16097",
-  "name": "루이스 그랜트",
+  "name": "Lewis Grant",
   "nameEn": "Lewis Grant",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 61,
   "popularity": 37,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 83,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 57,
-        "stamina": 49,
-        "velocity": 59,
-        "command": 57,
-        "control": 50,
-        "movement": 55,
-        "mentality": 56,
-        "recovery": 49,
-        "clutch": 48,
-        "holdRunners": 51
+        "ovr": 58,
+        "stamina": 50,
+        "velocity": 60,
+        "command": 58,
+        "control": 51,
+        "movement": 56,
+        "mentality": 57,
+        "recovery": 50,
+        "clutch": 49,
+        "holdRunners": 52
       },
       "batting": {
         "ovr": 58,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

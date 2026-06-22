@@ -1,61 +1,46 @@
 {
   "id": "PLY_01825",
-  "name": "박민석",
-  "nameEn": "Park Minseok",
+  "name": "고토 토루",
+  "nameEn": "Goto Toru",
   "role": "player",
-  "age": 18,
+  "age": 35,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_GOYANG_ARROW",
-  "teamId": "TEAM_HS_GOYANG_ARROW",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_GOYANG_ARROW",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
+  "teamId": "TEAM_JBL_PL_THUNDERFALCONS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "CF",
-      "jerseyNumber": 24,
+      "position": "C",
+      "jerseyNumber": 15,
       "pitching": {
-        "ovr": 40,
-        "stamina": 44,
-        "velocity": 41,
-        "command": 44,
-        "control": 37,
-        "movement": 37,
-        "mentality": 38,
-        "recovery": 44,
-        "clutch": 39,
-        "holdRunners": 32
+        "ovr": 75,
+        "stamina": 72,
+        "velocity": 69,
+        "command": 68,
+        "control": 73,
+        "movement": 66,
+        "mentality": 71,
+        "recovery": 67
       },
       "batting": {
-        "ovr": 60,
-        "contact": 59,
-        "power": 57,
-        "eye": 65,
-        "discipline": 58,
-        "speed": 55,
-        "fielding": 55,
-        "arm": 64,
-        "battingClutch": 59,
-        "baseInstinct": 57,
-        "bunting": 44,
-        "platoon": 57
+        "ovr": 89,
+        "contact": 88,
+        "power": 90,
+        "eye": 89,
+        "discipline": 89,
+        "speed": 84,
+        "fielding": 92,
+        "arm": 94,
+        "battingClutch": 89
       },
-      "developmentRate": 82,
-      "potentialHidden": 87,
-      "primaryPosition": "CF",
-      "positionRatings": {
-        "CF": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 40,
+      "potentialHidden": 92
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 51,
-  "popularity": 30
+  }
 }

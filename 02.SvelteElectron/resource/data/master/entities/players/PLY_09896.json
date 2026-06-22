@@ -1,9 +1,9 @@
 {
   "id": "PLY_09896",
-  "name": "스콧 카를로스",
-  "nameEn": "Scott Carlos",
+  "name": "Young Daniel",
+  "nameEn": "Young Daniel",
   "role": "player",
-  "age": 22,
+  "age": 33,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:도미니카",
   "diligence": 82,
-  "popularity": 11,
+  "popularity": 46,
   "militaryStatus": "군필",
   "entryYear": 2026,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 22,
+  "entryAge": 33,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 90,
+      "jerseyNumber": 62,
       "primaryPosition": "SP",
-      "developmentRate": 64,
-      "potentialHidden": 85,
-      "proServiceYears": 0,
+      "developmentRate": 38,
+      "potentialHidden": 60,
+      "proServiceYears": 11,
       "pitching": {
-        "ovr": 54,
-        "stamina": 59,
-        "velocity": 56,
-        "command": 51,
-        "control": 48,
-        "movement": 46,
-        "mentality": 59,
-        "recovery": 50,
-        "clutch": 54,
-        "holdRunners": 49
+        "ovr": 64,
+        "stamina": 65,
+        "velocity": 64,
+        "command": 61,
+        "control": 64,
+        "movement": 67,
+        "mentality": 61,
+        "recovery": 63,
+        "clutch": 56,
+        "holdRunners": 63
       },
       "batting": {
-        "ovr": 57,
-        "contact": 59,
-        "power": 56,
-        "eye": 49,
-        "discipline": 51,
-        "speed": 61,
-        "baseInstinct": 47,
-        "bunting": 49,
+        "ovr": 64,
+        "contact": 60,
+        "power": 64,
+        "eye": 63,
+        "discipline": 66,
+        "speed": 64,
+        "baseInstinct": 63,
+        "bunting": 47,
         "platoon": 50,
-        "fielding": 56,
-        "arm": 54,
-        "battingClutch": 56
+        "fielding": 53,
+        "arm": 61,
+        "battingClutch": 54
       },
       "positionRatings": {
-        "SP": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 64
+      }
     },
     "coach": null,
     "manager": null,

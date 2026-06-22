@@ -1,6 +1,6 @@
 {
   "id": "PLY_15822",
-  "name": "마르티네스 데릭",
+  "name": "Martinez Derek",
   "nameEn": "Martinez Derek",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 51,
   "popularity": 15,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 47
       },
       "batting": {
-        "ovr": 56,
-        "contact": 51,
-        "power": 58,
-        "eye": 49,
-        "discipline": 58,
-        "speed": 54,
-        "baseInstinct": 53,
-        "bunting": 40,
-        "platoon": 49,
-        "fielding": 46,
-        "arm": 57,
-        "battingClutch": 53
+        "ovr": 57,
+        "contact": 52,
+        "power": 59,
+        "eye": 50,
+        "discipline": 59,
+        "speed": 55,
+        "baseInstinct": 54,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 58,
+        "battingClutch": 54
       },
       "positionRatings": {
         "C": 57

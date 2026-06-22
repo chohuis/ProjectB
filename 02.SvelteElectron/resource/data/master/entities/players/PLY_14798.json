@@ -1,6 +1,6 @@
 {
   "id": "PLY_14798",
-  "name": "토마스 에릭",
+  "name": "Thomas Eric",
   "nameEn": "Thomas Eric",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 48,
   "popularity": 15,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 82,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 56,
-        "stamina": 53,
-        "velocity": 60,
-        "command": 46,
-        "control": 61,
-        "movement": 53,
-        "mentality": 53,
-        "recovery": 46,
-        "clutch": 57,
-        "holdRunners": 43
+        "ovr": 57,
+        "stamina": 54,
+        "velocity": 61,
+        "command": 47,
+        "control": 62,
+        "movement": 54,
+        "mentality": 54,
+        "recovery": 47,
+        "clutch": 58,
+        "holdRunners": 44
       },
       "batting": {
         "ovr": 57,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

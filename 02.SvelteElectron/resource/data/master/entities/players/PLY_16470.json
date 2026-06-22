@@ -1,6 +1,6 @@
 {
   "id": "PLY_16470",
-  "name": "에르난데스 콜",
+  "name": "Hernandez Cole",
   "nameEn": "Hernandez Cole",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 54,
   "popularity": 34,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 68
       },
       "batting": {
-        "ovr": 79,
-        "contact": 82,
-        "power": 70,
-        "eye": 79,
-        "discipline": 79,
-        "speed": 73,
-        "baseInstinct": 75,
-        "bunting": 64,
-        "platoon": 54,
-        "fielding": 69,
-        "arm": 79,
-        "battingClutch": 68
+        "ovr": 73,
+        "contact": 76,
+        "power": 65,
+        "eye": 73,
+        "discipline": 73,
+        "speed": 67,
+        "baseInstinct": 69,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 73,
+        "battingClutch": 63
       },
       "positionRatings": {
         "CF": 73

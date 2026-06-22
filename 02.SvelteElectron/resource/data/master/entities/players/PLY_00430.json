@@ -1,7 +1,7 @@
 {
   "id": "PLY_00430",
   "name": "성준서",
-  "nameEn": "Seong Junseo",
+  "nameEn": "Na Hyun-woo",
   "role": "player",
   "age": 29,
   "status": "active",
@@ -19,58 +19,28 @@
       "position": "CP",
       "jerseyNumber": 10,
       "pitching": {
-        "ovr": 57,
-        "stamina": 58,
-        "velocity": 62,
-        "command": 60,
-        "control": 54,
-        "movement": 53,
-        "mentality": 62,
-        "recovery": 54,
-        "clutch": 56,
-        "holdRunners": 53
+        "ovr": 64,
+        "stamina": 49,
+        "velocity": 65,
+        "command": 62,
+        "control": 61,
+        "movement": 59,
+        "mentality": 59,
+        "recovery": 56
       },
       "batting": {
-        "ovr": 39,
-        "contact": 39,
-        "power": 44,
-        "eye": 42,
-        "discipline": 43,
-        "speed": 35,
-        "fielding": 40,
-        "arm": 44,
-        "battingClutch": 35,
-        "baseInstinct": 40,
-        "bunting": 32,
-        "platoon": 37
+        "ovr": 40,
+        "contact": 41,
+        "power": 39,
+        "eye": 32,
+        "discipline": 39,
+        "speed": 38,
+        "fielding": 34,
+        "arm": 33,
+        "battingClutch": 36
       },
       "developmentRate": 52,
-      "potentialHidden": 85,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 9,
-      "contract": {
-        "salary": 1200,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 85
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

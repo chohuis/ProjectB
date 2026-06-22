@@ -1,9 +1,9 @@
 {
   "id": "PLY_00127",
   "name": "오예준",
-  "nameEn": "Oh Yejun",
+  "nameEn": "Seo Jun-young",
   "role": "player",
-  "age": 19,
+  "age": 15,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,47 +19,28 @@
       "position": "CP",
       "jerseyNumber": 7,
       "pitching": {
-        "ovr": 56,
-        "stamina": 57,
-        "velocity": 52,
-        "command": 57,
-        "control": 57,
-        "movement": 56,
-        "mentality": 54,
-        "recovery": 59,
-        "clutch": 46,
-        "holdRunners": 48
+        "ovr": 64,
+        "stamina": 59,
+        "velocity": 59,
+        "command": 65,
+        "control": 45,
+        "movement": 55,
+        "mentality": 63,
+        "recovery": 54
       },
       "batting": {
-        "ovr": 38,
-        "contact": 42,
-        "power": 41,
-        "eye": 35,
-        "discipline": 37,
-        "speed": 45,
-        "fielding": 42,
-        "arm": 33,
-        "battingClutch": 42,
-        "baseInstinct": 35,
-        "bunting": 42,
-        "platoon": 40
+        "ovr": 33,
+        "contact": 63,
+        "power": 43,
+        "eye": 52,
+        "discipline": 61,
+        "speed": 62,
+        "fielding": 67,
+        "arm": 65,
+        "battingClutch": 52
       },
       "developmentRate": 60,
-      "potentialHidden": 70,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 4
-        }
-      ]
+      "potentialHidden": 70
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

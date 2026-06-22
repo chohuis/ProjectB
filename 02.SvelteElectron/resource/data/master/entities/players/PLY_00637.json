@@ -1,14 +1,14 @@
 {
   "id": "PLY_00637",
   "name": "안정우",
-  "nameEn": "Ahn Jeongu",
+  "nameEn": "Moon Chan-woo",
   "role": "player",
   "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_SOARINGEAGLES",
-  "teamId": "TEAM_KBL_SOARINGEAGLES_2",
+  "clubId": "CLUB_KBL_DOOSAN",
+  "teamId": "TEAM_KBL_DOOSAN_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,48 +19,28 @@
       "position": "LF",
       "jerseyNumber": 47,
       "pitching": {
-        "ovr": 49,
-        "stamina": 49,
-        "velocity": 53,
-        "command": 46,
-        "control": 47,
-        "movement": 46,
-        "mentality": 47,
-        "recovery": 51,
-        "clutch": 39,
-        "holdRunners": 47
+        "ovr": 37,
+        "stamina": 34,
+        "velocity": 36,
+        "command": 39,
+        "control": 36,
+        "movement": 37,
+        "mentality": 31,
+        "recovery": 33
       },
       "batting": {
-        "ovr": 69,
-        "contact": 66,
-        "power": 72,
-        "eye": 65,
-        "discipline": 67,
-        "speed": 73,
-        "fielding": 65,
-        "arm": 73,
-        "battingClutch": 63,
-        "baseInstinct": 69,
-        "bunting": 57,
-        "platoon": 66
+        "ovr": 71,
+        "contact": 70,
+        "power": 74,
+        "eye": 72,
+        "discipline": 65,
+        "speed": 71,
+        "fielding": 68,
+        "arm": 66,
+        "battingClutch": 70
       },
       "developmentRate": 45,
-      "potentialHidden": 90,
-      "primaryPosition": "LF",
-      "positionRatings": {
-        "LF": 69
-      },
-      "proServiceYears": 6,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 90
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

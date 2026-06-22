@@ -1,14 +1,14 @@
 {
   "id": "PLY_01228",
   "name": "로드리게스 로버트",
-  "nameEn": "Ro 드리게스 로버트",
+  "nameEn": "Rodriguez Robert",
   "role": "player",
   "age": 33,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_WAVERIDERS",
-  "teamId": "TEAM_ABL_WAVERIDERS_1",
+  "clubId": "CLUB_ABL_NYM",
+  "teamId": "TEAM_ABL_NYM",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 3,
       "pitching": {
-        "ovr": 76,
-        "stamina": 78,
+        "ovr": 81,
+        "stamina": 86,
         "velocity": 82,
-        "command": 77,
-        "control": 74,
-        "movement": 75,
-        "mentality": 72,
-        "recovery": 75,
-        "clutch": 67,
-        "holdRunners": 64
+        "command": 87,
+        "control": 79,
+        "movement": 78,
+        "mentality": 83,
+        "recovery": 80
       },
       "batting": {
-        "ovr": 58,
-        "contact": 58,
-        "power": 55,
-        "eye": 60,
-        "discipline": 54,
+        "ovr": 64,
+        "contact": 60,
+        "power": 65,
+        "eye": 57,
+        "discipline": 57,
         "speed": 64,
-        "fielding": 62,
-        "arm": 64,
-        "battingClutch": 49,
-        "baseInstinct": 58,
-        "bunting": 41,
-        "platoon": 54
+        "fielding": 55,
+        "arm": 60,
+        "battingClutch": 57
       },
       "developmentRate": 43,
-      "potentialHidden": 58,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SCREWBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 11,
-      "contract": {
-        "salary": 26300,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 58
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

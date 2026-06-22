@@ -1,9 +1,9 @@
 {
   "id": "PLY_10404",
-  "name": "베이커 에릭",
-  "nameEn": "Baker Eric",
+  "name": "Scott Derek",
+  "nameEn": "Scott Derek",
   "role": "player",
-  "age": 21,
+  "age": 18,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 81,
+  "notes": "국적:파나마",
+  "diligence": 56,
   "popularity": 22,
   "militaryStatus": "군필",
   "entryYear": 2029,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 21,
+  "entryAge": 18,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 37,
+      "jerseyNumber": 54,
       "primaryPosition": "SP",
-      "developmentRate": 79,
-      "potentialHidden": 80,
+      "developmentRate": 71,
+      "potentialHidden": 74,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 60,
-        "stamina": 53,
-        "velocity": 60,
-        "command": 63,
-        "control": 64,
-        "movement": 53,
-        "mentality": 56,
-        "recovery": 50,
-        "clutch": 53,
-        "holdRunners": 56
+        "ovr": 65,
+        "stamina": 70,
+        "velocity": 70,
+        "command": 61,
+        "control": 67,
+        "movement": 61,
+        "mentality": 64,
+        "recovery": 61,
+        "clutch": 62,
+        "holdRunners": 63
       },
       "batting": {
         "ovr": 65,
-        "contact": 63,
-        "power": 65,
-        "eye": 58,
-        "discipline": 58,
-        "speed": 70,
-        "baseInstinct": 66,
-        "bunting": 59,
+        "contact": 69,
+        "power": 68,
+        "eye": 64,
+        "discipline": 59,
+        "speed": 64,
+        "baseInstinct": 65,
+        "bunting": 55,
         "platoon": 50,
-        "fielding": 67,
-        "arm": 55,
-        "battingClutch": 55
+        "fielding": 66,
+        "arm": 58,
+        "battingClutch": 62
       },
       "positionRatings": {
         "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

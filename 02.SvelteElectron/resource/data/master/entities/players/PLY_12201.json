@@ -1,9 +1,9 @@
 {
   "id": "PLY_12201",
-  "name": "스콧 숀",
-  "nameEn": "Scott Sean",
+  "name": "Adams Kyle",
+  "nameEn": "Adams Kyle",
   "role": "player",
-  "age": 22,
+  "age": 19,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 80,
-  "popularity": 47,
+  "notes": "국적:쿠바",
+  "diligence": 68,
+  "popularity": 48,
   "militaryStatus": "군필",
   "entryYear": 2040,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 22,
+  "entryAge": 19,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 41,
+      "jerseyNumber": 10,
       "primaryPosition": "SP",
-      "developmentRate": 56,
-      "potentialHidden": 68,
+      "developmentRate": 72,
+      "potentialHidden": 73,
       "proServiceYears": 0,
       "pitching": {
         "ovr": 55,
-        "stamina": 49,
-        "velocity": 64,
-        "command": 56,
-        "control": 54,
-        "movement": 48,
-        "mentality": 55,
-        "recovery": 50,
-        "clutch": 50,
-        "holdRunners": 52
+        "stamina": 60,
+        "velocity": 54,
+        "command": 44,
+        "control": 58,
+        "movement": 45,
+        "mentality": 56,
+        "recovery": 52,
+        "clutch": 45,
+        "holdRunners": 44
       },
       "batting": {
-        "ovr": 59,
-        "contact": 57,
-        "power": 59,
-        "eye": 52,
-        "discipline": 54,
-        "speed": 61,
-        "baseInstinct": 54,
-        "bunting": 41,
+        "ovr": 55,
+        "contact": 56,
+        "power": 53,
+        "eye": 55,
+        "discipline": 56,
+        "speed": 49,
+        "baseInstinct": 56,
+        "bunting": 47,
         "platoon": 50,
-        "fielding": 57,
-        "arm": 59,
-        "battingClutch": 51
+        "fielding": 44,
+        "arm": 52,
+        "battingClutch": 43
       },
       "positionRatings": {
-        "SP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 55
+      }
     },
     "coach": null,
     "manager": null,

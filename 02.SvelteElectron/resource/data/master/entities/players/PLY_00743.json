@@ -1,14 +1,14 @@
 {
   "id": "PLY_00743",
   "name": "박진우",
-  "nameEn": "Park Jinu",
+  "nameEn": "You Seung-hyun",
   "role": "player",
   "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_STEELDINOS",
-  "teamId": "TEAM_KBL_STEELDINOS_1",
+  "clubId": "CLUB_KBL_LOTTE",
+  "teamId": "TEAM_KBL_LOTTE_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,58 +19,28 @@
       "position": "CP",
       "jerseyNumber": 13,
       "pitching": {
-        "ovr": 77,
-        "stamina": 82,
-        "velocity": 79,
-        "command": 75,
-        "control": 72,
-        "movement": 76,
-        "mentality": 76,
-        "recovery": 81,
-        "clutch": 67,
-        "holdRunners": 73
+        "ovr": 84,
+        "stamina": 76,
+        "velocity": 93,
+        "command": 90,
+        "control": 85,
+        "movement": 82,
+        "mentality": 82,
+        "recovery": 89
       },
       "batting": {
-        "ovr": 59,
-        "contact": 59,
-        "power": 60,
-        "eye": 58,
-        "discipline": 59,
-        "speed": 60,
-        "fielding": 65,
-        "arm": 54,
-        "battingClutch": 59,
-        "baseInstinct": 59,
-        "bunting": 47,
-        "platoon": 49
+        "ovr": 54,
+        "contact": 51,
+        "power": 50,
+        "eye": 54,
+        "discipline": 50,
+        "speed": 49,
+        "fielding": 48,
+        "arm": 53,
+        "battingClutch": 53
       },
       "developmentRate": 45,
-      "potentialHidden": 60,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 77
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 7700,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

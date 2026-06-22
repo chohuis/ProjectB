@@ -1,14 +1,14 @@
 {
   "id": "PLY_00939",
   "name": "가르시아 에이든",
-  "nameEn": "Ga 르시아 에이든",
+  "nameEn": "Garcia Aiden",
   "role": "player",
   "age": 31,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_SUNDRAGONS",
-  "teamId": "TEAM_ABL_SUNDRAGONS_2",
+  "clubId": "CLUB_ABL_BOS",
+  "teamId": "TEAM_ABL_BOS_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,58 +19,28 @@
       "position": "SP",
       "jerseyNumber": 44,
       "pitching": {
-        "ovr": 60,
-        "stamina": 59,
-        "velocity": 57,
-        "command": 61,
-        "control": 60,
-        "movement": 58,
-        "mentality": 59,
-        "recovery": 57,
-        "clutch": 54,
-        "holdRunners": 54
+        "ovr": 66,
+        "stamina": 69,
+        "velocity": 67,
+        "command": 68,
+        "control": 67,
+        "movement": 68,
+        "mentality": 67,
+        "recovery": 62
       },
       "batting": {
-        "ovr": 42,
-        "contact": 45,
-        "power": 43,
-        "eye": 37,
-        "discipline": 48,
-        "speed": 47,
-        "fielding": 39,
-        "arm": 44,
-        "battingClutch": 38,
-        "baseInstinct": 38,
-        "bunting": 33,
-        "platoon": 40
+        "ovr": 43,
+        "contact": 41,
+        "power": 38,
+        "eye": 40,
+        "discipline": 44,
+        "speed": 39,
+        "fielding": 44,
+        "arm": 37,
+        "battingClutch": 43
       },
       "developmentRate": 39,
-      "potentialHidden": 80,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 9,
-      "contract": {
-        "salary": 14000,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 80
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

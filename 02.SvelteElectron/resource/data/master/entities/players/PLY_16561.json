@@ -1,6 +1,6 @@
 {
   "id": "PLY_16561",
-  "name": "존스 라이언",
+  "name": "Jones Ryan",
   "nameEn": "Jones Ryan",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 82,
   "popularity": 20,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 72,
       "proServiceYears": 2,
       "pitching": {
-        "ovr": 60,
-        "stamina": 54,
-        "velocity": 70,
-        "command": 53,
-        "control": 54,
-        "movement": 58,
-        "mentality": 62,
-        "recovery": 55,
-        "clutch": 56,
-        "holdRunners": 49
+        "ovr": 62,
+        "stamina": 56,
+        "velocity": 72,
+        "command": 55,
+        "control": 56,
+        "movement": 60,
+        "mentality": 64,
+        "recovery": 57,
+        "clutch": 58,
+        "holdRunners": 51
       },
       "batting": {
         "ovr": 62,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_14604",
-  "name": "존스 코너",
+  "name": "Jones Connor",
   "nameEn": "Jones Connor",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 60,
   "popularity": 18,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 71,
       "proServiceYears": 2,
       "pitching": {
-        "ovr": 69,
-        "stamina": 74,
-        "velocity": 75,
-        "command": 69,
-        "control": 70,
-        "movement": 60,
-        "mentality": 74,
-        "recovery": 70,
-        "clutch": 58,
-        "holdRunners": 65
+        "ovr": 71,
+        "stamina": 76,
+        "velocity": 77,
+        "command": 71,
+        "control": 72,
+        "movement": 62,
+        "mentality": 76,
+        "recovery": 72,
+        "clutch": 60,
+        "holdRunners": 67
       },
       "batting": {
         "ovr": 71,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 71
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

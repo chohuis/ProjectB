@@ -1,6 +1,6 @@
 {
   "id": "PLY_16224",
-  "name": "스콧 케빈",
+  "name": "Scott Kevin",
   "nameEn": "Scott Kevin",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 60,
   "popularity": 13,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 55,
       "proServiceYears": 4,
       "pitching": {
-        "ovr": 57,
-        "stamina": 50,
-        "velocity": 63,
-        "command": 50,
-        "control": 50,
-        "movement": 49,
-        "mentality": 52,
-        "recovery": 53,
-        "clutch": 46,
-        "holdRunners": 47
+        "ovr": 62,
+        "stamina": 54,
+        "velocity": 69,
+        "command": 54,
+        "control": 54,
+        "movement": 53,
+        "mentality": 57,
+        "recovery": 58,
+        "clutch": 50,
+        "holdRunners": 51
       },
       "batting": {
         "ovr": 62,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

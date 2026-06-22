@@ -1,7 +1,7 @@
 {
   "id": "PLY_11321",
-  "name": "해리스 알렉스",
-  "nameEn": "Harris Alex",
+  "name": "Carter Blake",
+  "nameEn": "Carter Blake",
   "role": "player",
   "age": 20,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 51,
-  "popularity": 33,
+  "notes": "국적:도미니카",
+  "diligence": 60,
+  "popularity": 16,
   "militaryStatus": "군필",
   "entryYear": 2034,
   "entryLeague": "LEAGUE_ABL",
@@ -21,53 +21,43 @@
   "entryAge": 20,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 74,
-      "primaryPosition": "SP",
-      "developmentRate": 74,
-      "potentialHidden": 79,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 49,
+      "primaryPosition": "3B",
+      "developmentRate": 79,
+      "potentialHidden": 74,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 59,
-        "stamina": 52,
-        "velocity": 56,
-        "command": 54,
-        "control": 57,
-        "movement": 61,
-        "mentality": 56,
-        "recovery": 51,
-        "clutch": 58,
-        "holdRunners": 54
+        "ovr": 52,
+        "stamina": 44,
+        "velocity": 52,
+        "command": 44,
+        "control": 51,
+        "movement": 52,
+        "mentality": 58,
+        "recovery": 45,
+        "clutch": 40,
+        "holdRunners": 39
       },
       "batting": {
-        "ovr": 64,
-        "contact": 63,
+        "ovr": 52,
+        "contact": 45,
         "power": 53,
-        "eye": 61,
-        "discipline": 61,
-        "speed": 69,
-        "baseInstinct": 54,
-        "bunting": 48,
+        "eye": 45,
+        "discipline": 45,
+        "speed": 49,
+        "baseInstinct": 45,
+        "bunting": 34,
         "platoon": 50,
-        "fielding": 57,
-        "arm": 63,
-        "battingClutch": 63
+        "fielding": 53,
+        "arm": 51,
+        "battingClutch": 42
       },
       "positionRatings": {
-        "SP": 64
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 1
-        }
-      ]
+        "3B": 52
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_14574",
-  "name": "브라운 크리스",
+  "name": "Brown Chris",
   "nameEn": "Brown Chris",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 63,
   "popularity": 40,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 69
       },
       "batting": {
-        "ovr": 81,
-        "contact": 77,
-        "power": 72,
-        "eye": 76,
-        "discipline": 83,
-        "speed": 86,
-        "baseInstinct": 78,
-        "bunting": 69,
-        "platoon": 54,
-        "fielding": 80,
-        "arm": 83,
-        "battingClutch": 81
+        "ovr": 75,
+        "contact": 71,
+        "power": 67,
+        "eye": 70,
+        "discipline": 77,
+        "speed": 80,
+        "baseInstinct": 72,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 74,
+        "arm": 77,
+        "battingClutch": 75
       },
       "positionRatings": {
         "LF": 75

@@ -1,6 +1,6 @@
 {
   "id": "PLY_15873",
-  "name": "애덤스 크리스",
+  "name": "Adams Chris",
   "nameEn": "Adams Chris",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 52,
   "popularity": 23,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 46
       },
       "batting": {
-        "ovr": 58,
-        "contact": 51,
-        "power": 56,
-        "eye": 60,
-        "discipline": 55,
-        "speed": 52,
-        "baseInstinct": 50,
-        "bunting": 48,
-        "platoon": 49,
-        "fielding": 56,
-        "arm": 54,
-        "battingClutch": 46
+        "ovr": 59,
+        "contact": 52,
+        "power": 57,
+        "eye": 61,
+        "discipline": 56,
+        "speed": 53,
+        "baseInstinct": 51,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 55,
+        "battingClutch": 47
       },
       "positionRatings": {
         "LF": 59

@@ -1,9 +1,9 @@
 {
   "id": "PLY_00112",
   "name": "박기훈",
-  "nameEn": "Park Gihun",
+  "nameEn": "Song Do-hyun",
   "role": "player",
-  "age": 19,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "SS",
       "jerseyNumber": 12,
       "pitching": {
-        "ovr": 41,
-        "stamina": 37,
-        "velocity": 37,
-        "command": 41,
-        "control": 39,
-        "movement": 39,
-        "mentality": 44,
-        "recovery": 46,
-        "clutch": 42,
-        "holdRunners": 38
+        "ovr": 42,
+        "stamina": 73,
+        "velocity": 65,
+        "command": 64,
+        "control": 58,
+        "movement": 64,
+        "mentality": 61,
+        "recovery": 68
       },
       "batting": {
-        "ovr": 61,
-        "contact": 64,
-        "power": 66,
-        "eye": 62,
-        "discipline": 67,
-        "speed": 55,
-        "fielding": 66,
-        "arm": 65,
-        "battingClutch": 55,
-        "baseInstinct": 51,
-        "bunting": 49,
-        "platoon": 54
+        "ovr": 58,
+        "contact": 63,
+        "power": 61,
+        "eye": 55,
+        "discipline": 57,
+        "speed": 69,
+        "fielding": 54,
+        "arm": 70,
+        "battingClutch": 63
       },
       "developmentRate": 66,
-      "potentialHidden": 71,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 61
-      }
+      "potentialHidden": 71
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

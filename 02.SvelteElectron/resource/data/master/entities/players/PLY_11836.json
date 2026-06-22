@@ -1,9 +1,9 @@
 {
   "id": "PLY_11836",
-  "name": "윌리엄스 네이선",
-  "nameEn": "Williams Nathan",
+  "name": "Clark Cody",
+  "nameEn": "Clark Cody",
   "role": "player",
-  "age": 35,
+  "age": 31,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 78,
-  "popularity": 22,
+  "notes": "국적:베네수엘라",
+  "diligence": 53,
+  "popularity": 33,
   "militaryStatus": "군필",
   "entryYear": 2038,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 35,
+  "entryAge": 31,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 66,
+      "jerseyNumber": 86,
       "primaryPosition": "SP",
-      "developmentRate": 48,
-      "potentialHidden": 64,
-      "proServiceYears": 13,
+      "developmentRate": 53,
+      "potentialHidden": 46,
+      "proServiceYears": 9,
       "pitching": {
-        "ovr": 73,
-        "stamina": 76,
-        "velocity": 70,
-        "command": 66,
-        "control": 66,
-        "movement": 71,
-        "mentality": 73,
-        "recovery": 73,
-        "clutch": 68,
-        "holdRunners": 66
+        "ovr": 69,
+        "stamina": 69,
+        "velocity": 76,
+        "command": 62,
+        "control": 61,
+        "movement": 62,
+        "mentality": 68,
+        "recovery": 62,
+        "clutch": 60,
+        "holdRunners": 61
       },
       "batting": {
-        "ovr": 63,
-        "contact": 58,
-        "power": 53,
-        "eye": 57,
-        "discipline": 59,
-        "speed": 60,
-        "baseInstinct": 56,
-        "bunting": 51,
+        "ovr": 69,
+        "contact": 70,
+        "power": 71,
+        "eye": 63,
+        "discipline": 64,
+        "speed": 74,
+        "baseInstinct": 59,
+        "bunting": 63,
         "platoon": 50,
-        "fielding": 62,
-        "arm": 65,
-        "battingClutch": 53
+        "fielding": 63,
+        "arm": 60,
+        "battingClutch": 63
       },
       "positionRatings": {
-        "SP": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 69
+      }
     },
     "coach": null,
     "manager": null,

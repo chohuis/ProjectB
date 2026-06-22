@@ -1,6 +1,6 @@
 {
   "id": "PLY_14924",
-  "name": "스미스 에반",
+  "name": "Smith Evan",
   "nameEn": "Smith Evan",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 79,
   "popularity": 29,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 39
       },
       "batting": {
-        "ovr": 53,
-        "contact": 48,
-        "power": 47,
-        "eye": 51,
-        "discipline": 51,
-        "speed": 53,
-        "baseInstinct": 44,
-        "bunting": 46,
-        "platoon": 49,
-        "fielding": 44,
-        "arm": 46,
-        "battingClutch": 49
+        "ovr": 54,
+        "contact": 49,
+        "power": 48,
+        "eye": 52,
+        "discipline": 52,
+        "speed": 54,
+        "baseInstinct": 45,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 47,
+        "battingClutch": 50
       },
       "positionRatings": {
         "SS": 54

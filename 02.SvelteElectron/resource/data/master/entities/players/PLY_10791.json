@@ -1,9 +1,9 @@
 {
   "id": "PLY_10791",
-  "name": "애덤스 마커스",
-  "nameEn": "Adams Marcus",
+  "name": "Johnson Carlos",
+  "nameEn": "Johnson Carlos",
   "role": "player",
-  "age": 26,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 74,
-  "popularity": 16,
+  "notes": "국적:멕시코",
+  "diligence": 56,
+  "popularity": 12,
   "militaryStatus": "군필",
   "entryYear": 2031,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 26,
+  "entryAge": 28,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 3,
+      "jerseyNumber": 92,
       "primaryPosition": "SP",
-      "developmentRate": 63,
-      "potentialHidden": 65,
-      "proServiceYears": 4,
+      "developmentRate": 57,
+      "potentialHidden": 81,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 62,
-        "stamina": 65,
-        "velocity": 59,
-        "command": 59,
-        "control": 64,
+        "ovr": 67,
+        "stamina": 71,
+        "velocity": 78,
+        "command": 66,
+        "control": 61,
         "movement": 58,
-        "mentality": 59,
-        "recovery": 63,
-        "clutch": 52,
-        "holdRunners": 52
+        "mentality": 73,
+        "recovery": 56,
+        "clutch": 61,
+        "holdRunners": 63
       },
       "batting": {
-        "ovr": 70,
-        "contact": 66,
-        "power": 60,
-        "eye": 63,
-        "discipline": 61,
-        "speed": 64,
-        "baseInstinct": 69,
-        "bunting": 63,
+        "ovr": 67,
+        "contact": 60,
+        "power": 58,
+        "eye": 65,
+        "discipline": 57,
+        "speed": 70,
+        "baseInstinct": 61,
+        "bunting": 60,
         "platoon": 50,
-        "fielding": 71,
-        "arm": 66,
+        "fielding": 70,
+        "arm": 68,
         "battingClutch": 60
       },
       "positionRatings": {
-        "SP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 1
-        }
-      ]
+        "SP": 67
+      }
     },
     "coach": null,
     "manager": null,

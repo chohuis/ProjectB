@@ -1,7 +1,7 @@
 {
   "id": "PLY_13892",
-  "name": "브라운 조던",
-  "nameEn": "Brown Jordan",
+  "name": "Clark Ryan",
+  "nameEn": "Clark Ryan",
   "role": "player",
   "age": 25,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 71,
-  "popularity": 49,
+  "notes": "국적:미국",
+  "diligence": 79,
+  "popularity": 37,
   "militaryStatus": "군필",
   "entryYear": 2050,
   "entryLeague": "LEAGUE_ABL",
@@ -24,54 +24,40 @@
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 23,
+      "jerseyNumber": 31,
       "primaryPosition": "SP",
-      "developmentRate": 52,
-      "potentialHidden": 87,
+      "developmentRate": 47,
+      "potentialHidden": 79,
       "proServiceYears": 3,
       "pitching": {
-        "ovr": 66,
-        "stamina": 60,
-        "velocity": 74,
-        "command": 61,
-        "control": 62,
-        "movement": 59,
-        "mentality": 65,
-        "recovery": 65,
-        "clutch": 61,
-        "holdRunners": 57
+        "ovr": 77,
+        "stamina": 79,
+        "velocity": 85,
+        "command": 78,
+        "control": 76,
+        "movement": 78,
+        "mentality": 79,
+        "recovery": 69,
+        "clutch": 66,
+        "holdRunners": 72
       },
       "batting": {
-        "ovr": 73,
-        "contact": 72,
-        "power": 70,
-        "eye": 67,
-        "discipline": 69,
-        "speed": 77,
-        "baseInstinct": 70,
-        "bunting": 63,
+        "ovr": 77,
+        "contact": 79,
+        "power": 73,
+        "eye": 78,
+        "discipline": 77,
+        "speed": 76,
+        "baseInstinct": 68,
+        "bunting": 59,
         "platoon": 50,
-        "fielding": 63,
-        "arm": 73,
-        "battingClutch": 67
+        "fielding": 77,
+        "arm": 69,
+        "battingClutch": 69
       },
       "positionRatings": {
-        "SP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "SP": 77
+      }
     },
     "coach": null,
     "manager": null,

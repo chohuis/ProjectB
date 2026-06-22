@@ -1,14 +1,14 @@
 {
   "id": "PLY_00624",
   "name": "오태양",
-  "nameEn": "Oh Taeyang",
+  "nameEn": "Cha Tae-hyun",
   "role": "player",
   "age": 30,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_SOARINGEAGLES",
-  "teamId": "TEAM_KBL_SOARINGEAGLES_2",
+  "clubId": "CLUB_KBL_DOOSAN",
+  "teamId": "TEAM_KBL_DOOSAN_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 34,
       "pitching": {
-        "ovr": 66,
-        "stamina": 66,
-        "velocity": 71,
-        "command": 67,
-        "control": 68,
-        "movement": 68,
-        "mentality": 66,
-        "recovery": 70,
-        "clutch": 65,
-        "holdRunners": 56
+        "ovr": 74,
+        "stamina": 73,
+        "velocity": 78,
+        "command": 70,
+        "control": 70,
+        "movement": 67,
+        "mentality": 75,
+        "recovery": 72
       },
       "batting": {
-        "ovr": 48,
-        "contact": 46,
-        "power": 44,
-        "eye": 52,
-        "discipline": 50,
-        "speed": 49,
-        "fielding": 48,
-        "arm": 53,
-        "battingClutch": 42,
-        "baseInstinct": 37,
-        "bunting": 40,
-        "platoon": 37
+        "ovr": 41,
+        "contact": 41,
+        "power": 42,
+        "eye": 39,
+        "discipline": 46,
+        "speed": 41,
+        "fielding": 40,
+        "arm": 44,
+        "battingClutch": 41
       },
       "developmentRate": 51,
-      "potentialHidden": 90,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_FORKBALL",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 8,
-      "contract": {
-        "salary": 5300,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 90
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,80 +1,46 @@
 {
   "id": "PLY_01920",
-  "name": "안성준",
-  "nameEn": "An Seongjun",
+  "name": "아베 히로시",
+  "nameEn": "Abe Hiroshi",
   "role": "player",
-  "age": 22,
+  "age": 24,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_SKYGULLS",
-  "teamId": "TEAM_KBL_SKYGULLS_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
+  "teamId": "TEAM_JBL_PL_SPIRITBUFFALOS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "RP",
-      "jerseyNumber": 71,
+      "position": "LF",
+      "jerseyNumber": 20,
       "pitching": {
-        "ovr": 68,
-        "stamina": 73,
-        "velocity": 70,
-        "command": 70,
-        "control": 67,
-        "movement": 71,
-        "mentality": 68,
-        "recovery": 70,
-        "clutch": 64,
-        "holdRunners": 55
+        "ovr": 62,
+        "stamina": 62,
+        "velocity": 59,
+        "command": 59,
+        "control": 57,
+        "movement": 61,
+        "mentality": 62,
+        "recovery": 62
       },
       "batting": {
-        "ovr": 50,
-        "contact": 52,
-        "power": 48,
-        "eye": 52,
-        "discipline": 50,
-        "speed": 55,
-        "fielding": 51,
-        "arm": 49,
-        "battingClutch": 40,
-        "baseInstinct": 40,
-        "bunting": 35,
-        "platoon": 37
+        "ovr": 88,
+        "contact": 87,
+        "power": 83,
+        "eye": 81,
+        "discipline": 83,
+        "speed": 80,
+        "fielding": 84,
+        "arm": 84,
+        "battingClutch": 84
       },
-      "developmentRate": 35,
-      "potentialHidden": 75,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 5800,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 45,
+      "potentialHidden": 77
     },
     "coach": {
       "specialty": "-",
@@ -114,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 63,
-  "popularity": 56
+  }
 }

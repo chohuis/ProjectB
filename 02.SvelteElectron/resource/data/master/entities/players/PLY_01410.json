@@ -1,14 +1,14 @@
 {
   "id": "PLY_01410",
   "name": "무어 이선",
-  "nameEn": "Mu 어 이선",
+  "nameEn": "Moore Ethan",
   "role": "player",
   "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_COASTALRAYS",
-  "teamId": "TEAM_ABL_COASTALRAYS_1",
+  "clubId": "CLUB_ABL_SF",
+  "teamId": "TEAM_ABL_SF",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 5,
       "pitching": {
-        "ovr": 69,
-        "stamina": 67,
-        "velocity": 73,
-        "command": 68,
-        "control": 67,
-        "movement": 66,
-        "mentality": 67,
-        "recovery": 68,
-        "clutch": 62,
-        "holdRunners": 64
+        "ovr": 75,
+        "stamina": 79,
+        "velocity": 80,
+        "command": 73,
+        "control": 73,
+        "movement": 70,
+        "mentality": 73,
+        "recovery": 76
       },
       "batting": {
         "ovr": 51,
-        "contact": 58,
-        "power": 53,
+        "contact": 47,
+        "power": 54,
         "eye": 51,
-        "discipline": 56,
-        "speed": 56,
+        "discipline": 46,
+        "speed": 47,
         "fielding": 53,
-        "arm": 49,
-        "battingClutch": 44,
-        "baseInstinct": 46,
-        "bunting": 41,
-        "platoon": 39
+        "arm": 46,
+        "battingClutch": 49
       },
       "developmentRate": 43,
-      "potentialHidden": 77,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 69
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_FORKBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 2,
-      "contract": {
-        "salary": 20900,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 77
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

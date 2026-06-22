@@ -1,9 +1,9 @@
 {
   "id": "PLY_13923",
-  "name": "마르티네스 블레이크",
-  "nameEn": "Martinez Blake",
+  "name": "Brown Cody",
+  "nameEn": "Brown Cody",
   "role": "player",
-  "age": 31,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 80,
-  "popularity": 35,
+  "notes": "국적:베네수엘라",
+  "diligence": 84,
+  "popularity": 29,
   "militaryStatus": "군필",
   "entryYear": 2050,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 31,
+  "entryAge": 28,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 62,
-      "primaryPosition": "SP",
-      "developmentRate": 41,
-      "potentialHidden": 67,
-      "proServiceYears": 9,
+      "position": "LF",
+      "jerseyNumber": 38,
+      "primaryPosition": "LF",
+      "developmentRate": 55,
+      "potentialHidden": 69,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 76,
-        "stamina": 78,
-        "velocity": 83,
-        "command": 78,
-        "control": 78,
-        "movement": 72,
-        "mentality": 72,
-        "recovery": 76,
-        "clutch": 76,
+        "ovr": 77,
+        "stamina": 72,
+        "velocity": 79,
+        "command": 79,
+        "control": 73,
+        "movement": 75,
+        "mentality": 74,
+        "recovery": 72,
+        "clutch": 68,
         "holdRunners": 67
       },
       "batting": {
-        "ovr": 73,
-        "contact": 73,
-        "power": 69,
-        "eye": 73,
-        "discipline": 68,
-        "speed": 67,
-        "baseInstinct": 75,
-        "bunting": 65,
+        "ovr": 77,
+        "contact": 74,
+        "power": 73,
+        "eye": 74,
+        "discipline": 74,
+        "speed": 74,
+        "baseInstinct": 77,
+        "bunting": 68,
         "platoon": 50,
-        "fielding": 76,
-        "arm": 73,
-        "battingClutch": 67
+        "fielding": 72,
+        "arm": 79,
+        "battingClutch": 71
       },
       "positionRatings": {
-        "SP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "LF": 77
+      }
     },
     "coach": null,
     "manager": null,

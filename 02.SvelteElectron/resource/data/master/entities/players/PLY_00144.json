@@ -1,9 +1,9 @@
 {
   "id": "PLY_00144",
   "name": "권서준",
-  "nameEn": "Kwon Seojun",
+  "nameEn": "Kim Jae-min",
   "role": "player",
-  "age": 18,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,43 +19,28 @@
       "position": "SP",
       "jerseyNumber": 4,
       "pitching": {
-        "ovr": 41,
-        "stamina": 38,
-        "velocity": 44,
+        "ovr": 48,
+        "stamina": 56,
+        "velocity": 57,
         "command": 41,
-        "control": 42,
-        "movement": 46,
-        "mentality": 39,
-        "recovery": 45,
-        "clutch": 42,
-        "holdRunners": 38
+        "control": 50,
+        "movement": 38,
+        "mentality": 45,
+        "recovery": 42
       },
       "batting": {
-        "ovr": 23,
-        "contact": 27,
-        "power": 24,
-        "eye": 22,
-        "discipline": 20,
-        "speed": 26,
-        "fielding": 27,
-        "arm": 25,
-        "battingClutch": 35,
-        "baseInstinct": 46,
-        "bunting": 28,
-        "platoon": 41
+        "ovr": 26,
+        "contact": 41,
+        "power": 43,
+        "eye": 51,
+        "discipline": 38,
+        "speed": 47,
+        "fielding": 53,
+        "arm": 50,
+        "battingClutch": 41
       },
       "developmentRate": 73,
-      "potentialHidden": 60,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 41
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        }
-      ]
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

@@ -1,9 +1,9 @@
 {
   "id": "PLY_00149",
   "name": "신민재",
-  "nameEn": "Shin Minjae",
+  "nameEn": "Lim Min-woo",
   "role": "player",
-  "age": 18,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "C",
       "jerseyNumber": 9,
       "pitching": {
-        "ovr": 28,
-        "stamina": 28,
-        "velocity": 29,
-        "command": 25,
-        "control": 25,
-        "movement": 30,
-        "mentality": 28,
-        "recovery": 27,
-        "clutch": 44,
-        "holdRunners": 38
+        "ovr": 38,
+        "stamina": 49,
+        "velocity": 45,
+        "command": 43,
+        "control": 50,
+        "movement": 51,
+        "mentality": 47,
+        "recovery": 57
       },
       "batting": {
         "ovr": 48,
-        "contact": 53,
-        "power": 48,
-        "eye": 49,
-        "discipline": 44,
-        "speed": 49,
-        "fielding": 53,
-        "arm": 48,
-        "battingClutch": 38,
-        "baseInstinct": 44,
-        "bunting": 36,
-        "platoon": 44
+        "contact": 56,
+        "power": 40,
+        "eye": 44,
+        "discipline": 52,
+        "speed": 60,
+        "fielding": 49,
+        "arm": 51,
+        "battingClutch": 54
       },
       "developmentRate": 66,
-      "potentialHidden": 82,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 48
-      }
+      "potentialHidden": 82
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

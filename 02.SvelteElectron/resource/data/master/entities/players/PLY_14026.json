@@ -1,6 +1,6 @@
 {
   "id": "PLY_14026",
-  "name": "영 에릭",
+  "name": "Young Eric",
   "nameEn": "Young Eric",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 80,
   "popularity": 12,
   "militaryStatus": "군필",

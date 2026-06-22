@@ -1,6 +1,6 @@
 {
   "id": "PLY_14875",
-  "name": "해리스 오스틴",
+  "name": "Harris Austin",
   "nameEn": "Harris Austin",
   "role": "player",
   "age": 29,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 72,
   "popularity": 24,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 50
       },
       "batting": {
-        "ovr": 67,
-        "contact": 69,
-        "power": 69,
-        "eye": 67,
-        "discipline": 61,
-        "speed": 66,
-        "baseInstinct": 69,
-        "bunting": 50,
-        "platoon": 56,
-        "fielding": 65,
-        "arm": 66,
-        "battingClutch": 57
+        "ovr": 60,
+        "contact": 62,
+        "power": 62,
+        "eye": 60,
+        "discipline": 55,
+        "speed": 59,
+        "baseInstinct": 62,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 59,
+        "battingClutch": 51
       },
       "positionRatings": {
         "LF": 60

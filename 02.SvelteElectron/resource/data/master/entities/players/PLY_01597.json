@@ -1,61 +1,46 @@
 {
   "id": "PLY_01597",
-  "name": "강승우",
-  "nameEn": "Kang Seungwoo",
+  "name": "야마다 유타",
+  "nameEn": "Yamada Yuta",
   "role": "player",
-  "age": 17,
+  "age": 21,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_INCHEON_HARBOR",
-  "teamId": "TEAM_HS_INCHEON_HARBOR",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_INCHEON_HARBOR",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TEMPOSTINGS",
+  "teamId": "TEAM_JBL_CL_TEMPOSTINGS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
-      "handedness": "L",
-      "position": "2B",
-      "jerseyNumber": 26,
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "CP",
+      "jerseyNumber": 12,
       "pitching": {
-        "ovr": 41,
-        "stamina": 43,
-        "velocity": 47,
-        "command": 46,
-        "control": 46,
-        "movement": 40,
-        "mentality": 44,
-        "recovery": 42,
-        "clutch": 42,
-        "holdRunners": 34
+        "ovr": 86,
+        "stamina": 73,
+        "velocity": 88,
+        "command": 81,
+        "control": 84,
+        "movement": 83,
+        "mentality": 87,
+        "recovery": 84
       },
       "batting": {
-        "ovr": 61,
-        "contact": 58,
-        "power": 65,
-        "eye": 57,
-        "discipline": 56,
+        "ovr": 62,
+        "contact": 63,
+        "power": 60,
+        "eye": 59,
+        "discipline": 63,
         "speed": 65,
-        "fielding": 64,
-        "arm": 66,
-        "battingClutch": 58,
-        "baseInstinct": 53,
-        "bunting": 51,
-        "platoon": 59
+        "fielding": 65,
+        "arm": 59,
+        "battingClutch": 61
       },
       "developmentRate": 51,
-      "potentialHidden": 88,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 90
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 77,
-  "popularity": 31
+  }
 }

@@ -1,9 +1,9 @@
 {
   "id": "PLY_10747",
-  "name": "넬슨 콜",
-  "nameEn": "Nelson Cole",
+  "name": "White Grant",
+  "nameEn": "White Grant",
   "role": "player",
-  "age": 23,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 56,
-  "popularity": 44,
+  "notes": "국적:쿠바",
+  "diligence": 59,
+  "popularity": 17,
   "militaryStatus": "군필",
   "entryYear": 2031,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 23,
+  "entryAge": 21,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 15,
-      "primaryPosition": "SP",
-      "developmentRate": 56,
-      "potentialHidden": 61,
-      "proServiceYears": 1,
+      "position": "C",
+      "jerseyNumber": 66,
+      "primaryPosition": "C",
+      "developmentRate": 79,
+      "potentialHidden": 75,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 73,
-        "stamina": 76,
-        "velocity": 80,
-        "command": 68,
-        "control": 68,
-        "movement": 68,
-        "mentality": 69,
-        "recovery": 73,
-        "clutch": 71,
-        "holdRunners": 67
+        "ovr": 61,
+        "stamina": 63,
+        "velocity": 66,
+        "command": 63,
+        "control": 60,
+        "movement": 56,
+        "mentality": 61,
+        "recovery": 58,
+        "clutch": 59,
+        "holdRunners": 59
       },
       "batting": {
-        "ovr": 81,
-        "contact": 83,
-        "power": 72,
-        "eye": 84,
-        "discipline": 72,
-        "speed": 75,
-        "baseInstinct": 83,
-        "bunting": 70,
+        "ovr": 61,
+        "contact": 62,
+        "power": 60,
+        "eye": 66,
+        "discipline": 58,
+        "speed": 68,
+        "baseInstinct": 59,
+        "bunting": 43,
         "platoon": 50,
-        "fielding": 81,
-        "arm": 83,
-        "battingClutch": 72
+        "fielding": 64,
+        "arm": 58,
+        "battingClutch": 54
       },
       "positionRatings": {
-        "SP": 81
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "C": 61
+      }
     },
     "coach": null,
     "manager": null,

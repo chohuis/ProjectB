@@ -1,6 +1,6 @@
 {
   "id": "PLY_14061",
-  "name": "데이비스 마커스",
+  "name": "Davis Marcus",
   "nameEn": "Davis Marcus",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 81,
   "popularity": 10,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 70,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 75,
-        "stamina": 65,
-        "velocity": 86,
-        "command": 68,
-        "control": 79,
-        "movement": 72,
-        "mentality": 77,
-        "recovery": 71,
-        "clutch": 64,
-        "holdRunners": 67
+        "ovr": 69,
+        "stamina": 60,
+        "velocity": 79,
+        "command": 63,
+        "control": 73,
+        "movement": 66,
+        "mentality": 71,
+        "recovery": 65,
+        "clutch": 59,
+        "holdRunners": 62
       },
       "batting": {
         "ovr": 69,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 69
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

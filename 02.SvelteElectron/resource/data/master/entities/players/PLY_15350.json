@@ -1,6 +1,6 @@
 {
   "id": "PLY_15350",
-  "name": "베이커 카를로스",
+  "name": "Baker Carlos",
   "nameEn": "Baker Carlos",
   "role": "player",
   "age": 23,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 54,
   "popularity": 35,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 69
       },
       "batting": {
-        "ovr": 69,
-        "contact": 71,
-        "power": 68,
-        "eye": 63,
-        "discipline": 64,
-        "speed": 72,
-        "baseInstinct": 71,
-        "bunting": 52,
-        "platoon": 48,
-        "fielding": 60,
-        "arm": 69,
-        "battingClutch": 64
+        "ovr": 72,
+        "contact": 74,
+        "power": 71,
+        "eye": 66,
+        "discipline": 67,
+        "speed": 75,
+        "baseInstinct": 74,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 72,
+        "battingClutch": 67
       },
       "positionRatings": {
         "RF": 72

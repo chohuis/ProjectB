@@ -1,61 +1,46 @@
 {
   "id": "PLY_01790",
-  "name": "장지원",
-  "nameEn": "Jang Jiwon",
+  "name": "후쿠다 토루",
+  "nameEn": "Fukuda Toru",
   "role": "player",
-  "age": 17,
+  "age": 29,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_JECHEON_RIDGE",
-  "teamId": "TEAM_HS_JECHEON_RIDGE",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_JECHEON_RIDGE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONSTORMS",
+  "teamId": "TEAM_JBL_CL_IRONSTORMS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "L",
-      "position": "3B",
-      "jerseyNumber": 19,
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 25,
       "pitching": {
-        "ovr": 38,
-        "stamina": 36,
-        "velocity": 39,
-        "command": 35,
-        "control": 40,
-        "movement": 35,
-        "mentality": 36,
-        "recovery": 36,
-        "clutch": 39,
-        "holdRunners": 40
+        "ovr": 62,
+        "stamina": 61,
+        "velocity": 67,
+        "command": 67,
+        "control": 63,
+        "movement": 68,
+        "mentality": 66,
+        "recovery": 66
       },
       "batting": {
-        "ovr": 58,
-        "contact": 61,
-        "power": 57,
-        "eye": 60,
-        "discipline": 58,
-        "speed": 61,
-        "fielding": 54,
-        "arm": 62,
-        "battingClutch": 59,
-        "baseInstinct": 51,
-        "bunting": 48,
-        "platoon": 48
+        "ovr": 89,
+        "contact": 90,
+        "power": 89,
+        "eye": 87,
+        "discipline": 83,
+        "speed": 84,
+        "fielding": 87,
+        "arm": 84,
+        "battingClutch": 83
       },
-      "developmentRate": 56,
-      "potentialHidden": 64,
-      "primaryPosition": "3B",
-      "positionRatings": {
-        "3B": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 32,
+      "potentialHidden": 92
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 51,
-  "popularity": 49
+  }
 }

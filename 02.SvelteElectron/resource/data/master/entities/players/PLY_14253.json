@@ -1,6 +1,6 @@
 {
   "id": "PLY_14253",
-  "name": "톰슨 숀",
+  "name": "Thompson Sean",
   "nameEn": "Thompson Sean",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 67,
   "popularity": 10,
   "militaryStatus": "군필",
@@ -57,13 +57,7 @@
       },
       "positionRatings": {
         "SP": 49
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

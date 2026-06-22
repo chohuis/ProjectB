@@ -1,6 +1,6 @@
 {
   "id": "PLY_14900",
-  "name": "스미스 제이슨",
+  "name": "Smith Jason",
   "nameEn": "Smith Jason",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 59,
   "popularity": 18,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 62
       },
       "batting": {
-        "ovr": 72,
-        "contact": 69,
-        "power": 65,
-        "eye": 70,
-        "discipline": 69,
-        "speed": 80,
-        "baseInstinct": 74,
-        "bunting": 55,
-        "platoon": 55,
-        "fielding": 68,
-        "arm": 61,
-        "battingClutch": 58
+        "ovr": 66,
+        "contact": 63,
+        "power": 60,
+        "eye": 64,
+        "discipline": 63,
+        "speed": 73,
+        "baseInstinct": 68,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 56,
+        "battingClutch": 53
       },
       "positionRatings": {
         "3B": 66

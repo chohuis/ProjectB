@@ -1,7 +1,7 @@
 {
   "id": "PLY_12779",
-  "name": "테일러 데릭",
-  "nameEn": "Taylor Derek",
+  "name": "Thomas Brandon",
+  "nameEn": "Thomas Brandon",
   "role": "player",
   "age": 26,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 83,
-  "popularity": 12,
+  "notes": "국적:베네수엘라",
+  "diligence": 74,
+  "popularity": 46,
   "militaryStatus": "군필",
   "entryYear": 2043,
   "entryLeague": "LEAGUE_ABL",
@@ -21,53 +21,43 @@
   "entryAge": 26,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 43,
-      "primaryPosition": "SP",
-      "developmentRate": 68,
-      "potentialHidden": 62,
+      "position": "2B",
+      "jerseyNumber": 68,
+      "primaryPosition": "2B",
+      "developmentRate": 46,
+      "potentialHidden": 81,
       "proServiceYears": 4,
       "pitching": {
-        "ovr": 56,
-        "stamina": 59,
-        "velocity": 54,
-        "command": 56,
-        "control": 60,
-        "movement": 51,
-        "mentality": 52,
-        "recovery": 48,
-        "clutch": 50,
-        "holdRunners": 48
+        "ovr": 80,
+        "stamina": 83,
+        "velocity": 83,
+        "command": 73,
+        "control": 74,
+        "movement": 80,
+        "mentality": 83,
+        "recovery": 79,
+        "clutch": 80,
+        "holdRunners": 70
       },
       "batting": {
-        "ovr": 66,
-        "contact": 59,
-        "power": 67,
-        "eye": 71,
-        "discipline": 68,
-        "speed": 66,
-        "baseInstinct": 66,
-        "bunting": 58,
+        "ovr": 80,
+        "contact": 74,
+        "power": 80,
+        "eye": 81,
+        "discipline": 81,
+        "speed": 84,
+        "baseInstinct": 71,
+        "bunting": 70,
         "platoon": 50,
-        "fielding": 60,
-        "arm": 58,
-        "battingClutch": 62
+        "fielding": 72,
+        "arm": 82,
+        "battingClutch": 74
       },
       "positionRatings": {
-        "SP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "2B": 80
+      }
     },
     "coach": null,
     "manager": null,

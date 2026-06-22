@@ -1,6 +1,6 @@
 {
   "id": "PLY_14637",
-  "name": "로드리게스 마커스",
+  "name": "Rodriguez Marcus",
   "nameEn": "Rodriguez Marcus",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 80,
   "popularity": 18,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 60,
       "proServiceYears": 5,
       "pitching": {
-        "ovr": 71,
-        "stamina": 66,
-        "velocity": 71,
-        "command": 68,
-        "control": 66,
-        "movement": 66,
-        "mentality": 64,
-        "recovery": 69,
-        "clutch": 67,
-        "holdRunners": 57
+        "ovr": 72,
+        "stamina": 67,
+        "velocity": 72,
+        "command": 69,
+        "control": 67,
+        "movement": 67,
+        "mentality": 65,
+        "recovery": 70,
+        "clutch": 68,
+        "holdRunners": 58
       },
       "batting": {
         "ovr": 72,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 72
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

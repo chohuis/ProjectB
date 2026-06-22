@@ -1,6 +1,6 @@
 {
   "id": "PLY_14808",
-  "name": "라이트 숀",
+  "name": "Wright Sean",
   "nameEn": "Wright Sean",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 57,
   "popularity": 39,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 78,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 79,
-        "stamina": 69,
-        "velocity": 82,
-        "command": 76,
-        "control": 75,
-        "movement": 77,
-        "mentality": 82,
-        "recovery": 73,
-        "clutch": 71,
-        "holdRunners": 65
+        "ovr": 73,
+        "stamina": 64,
+        "velocity": 76,
+        "command": 70,
+        "control": 69,
+        "movement": 71,
+        "mentality": 76,
+        "recovery": 67,
+        "clutch": 66,
+        "holdRunners": 60
       },
       "batting": {
         "ovr": 73,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

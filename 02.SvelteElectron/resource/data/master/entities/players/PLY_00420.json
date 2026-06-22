@@ -1,7 +1,7 @@
 {
   "id": "PLY_00420",
   "name": "신지후",
-  "nameEn": "Shin Jihu",
+  "nameEn": "Nam Jae-min",
   "role": "player",
   "age": 30,
   "status": "active",
@@ -19,48 +19,28 @@
       "position": "DH",
       "jerseyNumber": 20,
       "pitching": {
-        "ovr": 49,
-        "stamina": 50,
-        "velocity": 45,
-        "command": 48,
-        "control": 46,
-        "movement": 50,
-        "mentality": 52,
-        "recovery": 45,
-        "clutch": 47,
-        "holdRunners": 45
+        "ovr": 47,
+        "stamina": 47,
+        "velocity": 52,
+        "command": 46,
+        "control": 45,
+        "movement": 44,
+        "mentality": 48,
+        "recovery": 42
       },
       "batting": {
-        "ovr": 69,
-        "contact": 71,
-        "power": 70,
-        "eye": 69,
-        "discipline": 73,
-        "speed": 72,
-        "fielding": 69,
-        "arm": 63,
-        "battingClutch": 63,
-        "baseInstinct": 62,
-        "bunting": 61,
-        "platoon": 61
+        "ovr": 71,
+        "contact": 78,
+        "power": 75,
+        "eye": 75,
+        "discipline": 69,
+        "speed": 66,
+        "fielding": 66,
+        "arm": 73,
+        "battingClutch": 74
       },
       "developmentRate": 48,
-      "potentialHidden": 61,
-      "primaryPosition": "DH",
-      "positionRatings": {
-        "DH": 69
-      },
-      "proServiceYears": 10,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 61
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

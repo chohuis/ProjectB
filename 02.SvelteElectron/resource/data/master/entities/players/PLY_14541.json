@@ -1,6 +1,6 @@
 {
   "id": "PLY_14541",
-  "name": "에르난데스 제이크",
+  "name": "Hernandez Jake",
   "nameEn": "Hernandez Jake",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 69,
   "popularity": 28,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 59
       },
       "batting": {
-        "ovr": 67,
-        "contact": 71,
-        "power": 68,
-        "eye": 60,
-        "discipline": 70,
-        "speed": 69,
-        "baseInstinct": 64,
-        "bunting": 50,
-        "platoon": 49,
-        "fielding": 58,
-        "arm": 68,
-        "battingClutch": 62
+        "ovr": 69,
+        "contact": 73,
+        "power": 70,
+        "eye": 62,
+        "discipline": 72,
+        "speed": 71,
+        "baseInstinct": 66,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 70,
+        "battingClutch": 64
       },
       "positionRatings": {
         "CF": 69

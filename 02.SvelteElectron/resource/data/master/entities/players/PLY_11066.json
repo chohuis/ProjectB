@@ -1,9 +1,9 @@
 {
   "id": "PLY_11066",
-  "name": "화이트 트레버",
-  "nameEn": "White Trevor",
+  "name": "Martinez Kyle",
+  "nameEn": "Martinez Kyle",
   "role": "player",
-  "age": 26,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 77,
-  "popularity": 35,
+  "notes": "국적:일본",
+  "diligence": 67,
+  "popularity": 42,
   "militaryStatus": "군필",
   "entryYear": 2033,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 26,
+  "entryAge": 20,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 13,
-      "primaryPosition": "SP",
-      "developmentRate": 49,
-      "potentialHidden": 55,
-      "proServiceYears": 4,
+      "position": "LF",
+      "jerseyNumber": 79,
+      "primaryPosition": "LF",
+      "developmentRate": 60,
+      "potentialHidden": 66,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 71,
-        "stamina": 71,
-        "velocity": 72,
-        "command": 74,
-        "control": 72,
-        "movement": 66,
-        "mentality": 65,
-        "recovery": 63,
+        "ovr": 67,
+        "stamina": 59,
+        "velocity": 75,
+        "command": 62,
+        "control": 70,
+        "movement": 61,
+        "mentality": 70,
+        "recovery": 61,
         "clutch": 66,
-        "holdRunners": 59
+        "holdRunners": 52
       },
       "batting": {
-        "ovr": 76,
-        "contact": 81,
-        "power": 73,
-        "eye": 81,
-        "discipline": 69,
-        "speed": 72,
-        "baseInstinct": 66,
-        "bunting": 61,
+        "ovr": 67,
+        "contact": 64,
+        "power": 64,
+        "eye": 63,
+        "discipline": 65,
+        "speed": 71,
+        "baseInstinct": 62,
+        "bunting": 54,
         "platoon": 50,
-        "fielding": 71,
-        "arm": 66,
-        "battingClutch": 68
+        "fielding": 58,
+        "arm": 62,
+        "battingClutch": 58
       },
       "positionRatings": {
-        "SP": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "LF": 67
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_14328",
-  "name": "테일러 타일러",
+  "name": "Taylor Tyler",
   "nameEn": "Taylor Tyler",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 56,
   "popularity": 41,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 51
       },
       "batting": {
-        "ovr": 53,
-        "contact": 48,
-        "power": 54,
-        "eye": 50,
-        "discipline": 46,
-        "speed": 54,
-        "baseInstinct": 43,
-        "bunting": 37,
-        "platoon": 49,
-        "fielding": 50,
-        "arm": 47,
-        "battingClutch": 45
+        "ovr": 54,
+        "contact": 49,
+        "power": 55,
+        "eye": 51,
+        "discipline": 47,
+        "speed": 55,
+        "baseInstinct": 44,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 48,
+        "battingClutch": 46
       },
       "positionRatings": {
         "CF": 54

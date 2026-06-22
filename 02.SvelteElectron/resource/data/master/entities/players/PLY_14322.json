@@ -1,6 +1,6 @@
 {
   "id": "PLY_14322",
-  "name": "앨런 헌터",
+  "name": "Allen Hunter",
   "nameEn": "Allen Hunter",
   "role": "player",
   "age": 18,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 65,
   "popularity": 20,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 81,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 55,
-        "stamina": 57,
-        "velocity": 57,
-        "command": 49,
-        "control": 52,
-        "movement": 57,
-        "mentality": 59,
-        "recovery": 46,
-        "clutch": 54,
-        "holdRunners": 51
+        "ovr": 56,
+        "stamina": 58,
+        "velocity": 58,
+        "command": 50,
+        "control": 53,
+        "movement": 58,
+        "mentality": 60,
+        "recovery": 47,
+        "clutch": 55,
+        "holdRunners": 52
       },
       "batting": {
         "ovr": 56,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

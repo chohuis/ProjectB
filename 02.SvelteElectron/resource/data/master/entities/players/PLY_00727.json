@@ -1,14 +1,14 @@
 {
   "id": "PLY_00727",
   "name": "최지호",
-  "nameEn": "Choi Jiho",
+  "nameEn": "Hong Ji-sung",
   "role": "player",
   "age": 30,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_ROYALLIONS",
-  "teamId": "TEAM_KBL_ROYALLIONS_2",
+  "clubId": "CLUB_KBL_SSG",
+  "teamId": "TEAM_KBL_SSG_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,48 +19,28 @@
       "position": "LF",
       "jerseyNumber": 47,
       "pitching": {
-        "ovr": 43,
-        "stamina": 47,
-        "velocity": 40,
-        "command": 41,
-        "control": 39,
-        "movement": 43,
-        "mentality": 42,
-        "recovery": 48,
-        "clutch": 35,
-        "holdRunners": 37
+        "ovr": 36,
+        "stamina": 28,
+        "velocity": 30,
+        "command": 33,
+        "control": 30,
+        "movement": 31,
+        "mentality": 30,
+        "recovery": 33
       },
       "batting": {
-        "ovr": 63,
+        "ovr": 67,
         "contact": 66,
-        "power": 62,
-        "eye": 67,
-        "discipline": 63,
-        "speed": 59,
-        "fielding": 61,
-        "arm": 67,
-        "battingClutch": 57,
-        "baseInstinct": 59,
-        "bunting": 55,
-        "platoon": 51
+        "power": 65,
+        "eye": 69,
+        "discipline": 64,
+        "speed": 65,
+        "fielding": 60,
+        "arm": 61,
+        "battingClutch": 63
       },
       "developmentRate": 42,
-      "potentialHidden": 60,
-      "primaryPosition": "LF",
-      "positionRatings": {
-        "LF": 63
-      },
-      "proServiceYears": 8,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

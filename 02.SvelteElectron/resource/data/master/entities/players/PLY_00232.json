@@ -1,7 +1,7 @@
 {
   "id": "PLY_00232",
   "name": "황승현",
-  "nameEn": "Hwang Seunghyeon",
+  "nameEn": "Choi Ju-won",
   "role": "player",
   "age": 19,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "C",
       "jerseyNumber": 12,
       "pitching": {
-        "ovr": 45,
-        "stamina": 46,
-        "velocity": 47,
-        "command": 47,
-        "control": 41,
-        "movement": 44,
-        "mentality": 42,
-        "recovery": 42,
-        "clutch": 45,
-        "holdRunners": 40
+        "ovr": 30,
+        "stamina": 34,
+        "velocity": 33,
+        "command": 38,
+        "control": 29,
+        "movement": 28,
+        "mentality": 34,
+        "recovery": 36
       },
       "batting": {
-        "ovr": 65,
-        "contact": 60,
-        "power": 61,
-        "eye": 66,
-        "discipline": 67,
-        "speed": 59,
+        "ovr": 63,
+        "contact": 69,
+        "power": 68,
+        "eye": 69,
+        "discipline": 63,
+        "speed": 63,
         "fielding": 66,
-        "arm": 62,
-        "battingClutch": 58,
-        "baseInstinct": 59,
-        "bunting": 57,
-        "platoon": 61
+        "arm": 66,
+        "battingClutch": 66
       },
       "developmentRate": 65,
-      "potentialHidden": 77,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 65
-      }
+      "potentialHidden": 77
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

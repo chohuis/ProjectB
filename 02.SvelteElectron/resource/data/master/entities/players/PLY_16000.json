@@ -1,6 +1,6 @@
 {
   "id": "PLY_16000",
-  "name": "무어 네이선",
+  "name": "Moore Nathan",
   "nameEn": "Moore Nathan",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 60,
   "popularity": 35,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 79,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 53,
-        "stamina": 45,
-        "velocity": 61,
-        "command": 47,
-        "control": 53,
-        "movement": 54,
-        "mentality": 52,
-        "recovery": 45,
-        "clutch": 49,
-        "holdRunners": 42
+        "ovr": 54,
+        "stamina": 46,
+        "velocity": 62,
+        "command": 48,
+        "control": 54,
+        "movement": 55,
+        "mentality": 53,
+        "recovery": 46,
+        "clutch": 50,
+        "holdRunners": 43
       },
       "batting": {
         "ovr": 54,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 54
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

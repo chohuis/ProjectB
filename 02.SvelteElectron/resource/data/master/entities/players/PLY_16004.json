@@ -1,6 +1,6 @@
 {
   "id": "PLY_16004",
-  "name": "잭슨 카를로스",
+  "name": "Jackson Carlos",
   "nameEn": "Jackson Carlos",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 54,
   "popularity": 31,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 47
       },
       "batting": {
-        "ovr": 55,
-        "contact": 52,
-        "power": 52,
-        "eye": 49,
-        "discipline": 48,
-        "speed": 55,
-        "baseInstinct": 56,
-        "bunting": 42,
-        "platoon": 49,
-        "fielding": 45,
-        "arm": 48,
-        "battingClutch": 51
+        "ovr": 56,
+        "contact": 53,
+        "power": 53,
+        "eye": 50,
+        "discipline": 49,
+        "speed": 56,
+        "baseInstinct": 57,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 49,
+        "battingClutch": 52
       },
       "positionRatings": {
         "2B": 56

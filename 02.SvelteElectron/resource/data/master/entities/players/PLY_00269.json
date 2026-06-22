@@ -1,7 +1,7 @@
 {
   "id": "PLY_00269",
   "name": "남용준",
-  "nameEn": "Nam Yongjun",
+  "nameEn": "Heo Jun-young",
   "role": "player",
   "age": 21,
   "status": "active",
@@ -19,43 +19,28 @@
       "position": "CP",
       "jerseyNumber": 9,
       "pitching": {
-        "ovr": 42,
-        "stamina": 46,
-        "velocity": 40,
-        "command": 48,
-        "control": 42,
-        "movement": 39,
-        "mentality": 47,
-        "recovery": 39,
-        "clutch": 45,
-        "holdRunners": 43
+        "ovr": 51,
+        "stamina": 39,
+        "velocity": 58,
+        "command": 49,
+        "control": 58,
+        "movement": 51,
+        "mentality": 50,
+        "recovery": 50
       },
       "batting": {
-        "ovr": 24,
-        "contact": 21,
-        "power": 26,
-        "eye": 20,
-        "discipline": 23,
-        "speed": 20,
-        "fielding": 28,
-        "arm": 30,
-        "battingClutch": 36,
-        "baseInstinct": 39,
-        "bunting": 31,
-        "platoon": 43
+        "ovr": 35,
+        "contact": 33,
+        "power": 33,
+        "eye": 31,
+        "discipline": 30,
+        "speed": 36,
+        "fielding": 29,
+        "arm": 35,
+        "battingClutch": 29
       },
       "developmentRate": 57,
-      "potentialHidden": 69,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 42
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 69
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

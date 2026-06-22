@@ -1,6 +1,6 @@
 {
   "id": "PLY_15973",
-  "name": "데이비스 블레이크",
+  "name": "Davis Blake",
   "nameEn": "Davis Blake",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 51,
   "popularity": 39,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 66,
       "proServiceYears": 5,
       "pitching": {
-        "ovr": 54,
-        "stamina": 47,
-        "velocity": 59,
-        "command": 54,
-        "control": 51,
-        "movement": 47,
-        "mentality": 49,
-        "recovery": 49,
-        "clutch": 45,
-        "holdRunners": 44
+        "ovr": 60,
+        "stamina": 52,
+        "velocity": 66,
+        "command": 60,
+        "control": 57,
+        "movement": 52,
+        "mentality": 54,
+        "recovery": 54,
+        "clutch": 50,
+        "holdRunners": 49
       },
       "batting": {
         "ovr": 60,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

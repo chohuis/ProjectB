@@ -1,7 +1,7 @@
 {
   "id": "PLY_00169",
   "name": "차우진",
-  "nameEn": "Cha Ujin",
+  "nameEn": "Heo Seong-hyun",
   "role": "player",
   "age": 22,
   "status": "active",
@@ -19,47 +19,28 @@
       "position": "CP",
       "jerseyNumber": 9,
       "pitching": {
-        "ovr": 58,
-        "stamina": 62,
-        "velocity": 56,
-        "command": 62,
-        "control": 54,
-        "movement": 63,
-        "mentality": 59,
-        "recovery": 55,
-        "clutch": 53,
-        "holdRunners": 47
+        "ovr": 61,
+        "stamina": 52,
+        "velocity": 67,
+        "command": 68,
+        "control": 62,
+        "movement": 66,
+        "mentality": 63,
+        "recovery": 63
       },
       "batting": {
-        "ovr": 40,
+        "ovr": 44,
         "contact": 37,
-        "power": 36,
-        "eye": 40,
-        "discipline": 44,
-        "speed": 34,
-        "fielding": 36,
-        "arm": 40,
-        "battingClutch": 39,
-        "baseInstinct": 42,
-        "bunting": 36,
-        "platoon": 36
+        "power": 45,
+        "eye": 36,
+        "discipline": 38,
+        "speed": 44,
+        "fielding": 35,
+        "arm": 39,
+        "battingClutch": 40
       },
       "developmentRate": 52,
-      "potentialHidden": 78,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        }
-      ]
+      "potentialHidden": 78
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

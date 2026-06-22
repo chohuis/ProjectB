@@ -1,6 +1,6 @@
 {
   "id": "PLY_16315",
-  "name": "앤더슨 브랜던",
+  "name": "Anderson Brandon",
   "nameEn": "Anderson Brandon",
   "role": "player",
   "age": 31,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 46,
   "popularity": 38,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 51
       },
       "batting": {
-        "ovr": 62,
-        "contact": 54,
-        "power": 65,
-        "eye": 59,
-        "discipline": 61,
-        "speed": 59,
-        "baseInstinct": 63,
-        "bunting": 54,
-        "platoon": 56,
-        "fielding": 63,
-        "arm": 57,
-        "battingClutch": 61
+        "ovr": 55,
+        "contact": 48,
+        "power": 58,
+        "eye": 52,
+        "discipline": 54,
+        "speed": 52,
+        "baseInstinct": 56,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 51,
+        "battingClutch": 54
       },
       "positionRatings": {
         "RF": 55

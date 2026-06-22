@@ -1,6 +1,6 @@
 {
   "id": "PLY_15205",
-  "name": "리 타일러",
+  "name": "Lee Tyler",
   "nameEn": "Lee Tyler",
   "role": "player",
   "age": 18,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 81,
   "popularity": 12,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 45
       },
       "batting": {
-        "ovr": 51,
-        "contact": 52,
-        "power": 45,
-        "eye": 46,
-        "discipline": 46,
-        "speed": 48,
-        "baseInstinct": 44,
-        "bunting": 43,
-        "platoon": 49,
-        "fielding": 53,
-        "arm": 53,
-        "battingClutch": 47
+        "ovr": 52,
+        "contact": 53,
+        "power": 46,
+        "eye": 47,
+        "discipline": 47,
+        "speed": 49,
+        "baseInstinct": 45,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 54,
+        "battingClutch": 48
       },
       "positionRatings": {
         "CF": 52

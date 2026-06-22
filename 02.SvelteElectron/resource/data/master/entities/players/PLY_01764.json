@@ -1,61 +1,46 @@
 {
   "id": "PLY_01764",
-  "name": "손현서",
-  "nameEn": "Son Hyeonseo",
+  "name": "시미즈 료",
+  "nameEn": "Shimizu Ryo",
   "role": "player",
-  "age": 18,
+  "age": 20,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_MASAN_HARBOR",
-  "teamId": "TEAM_HS_MASAN_HARBOR",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_MASAN_HARBOR",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+  "teamId": "TEAM_JBL_CL_SILVERWOLVES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "LF",
-      "jerseyNumber": 23,
+      "position": "RF",
+      "jerseyNumber": 49,
       "pitching": {
-        "ovr": 45,
-        "stamina": 48,
-        "velocity": 51,
-        "command": 46,
-        "control": 44,
-        "movement": 48,
-        "mentality": 48,
-        "recovery": 49,
-        "clutch": 41,
-        "holdRunners": 35
+        "ovr": 59,
+        "stamina": 54,
+        "velocity": 63,
+        "command": 61,
+        "control": 61,
+        "movement": 54,
+        "mentality": 60,
+        "recovery": 55
       },
       "batting": {
-        "ovr": 65,
-        "contact": 64,
-        "power": 68,
-        "eye": 67,
-        "discipline": 61,
-        "speed": 71,
-        "fielding": 65,
-        "arm": 65,
-        "battingClutch": 65,
-        "baseInstinct": 64,
-        "bunting": 53,
-        "platoon": 54
+        "ovr": 82,
+        "contact": 78,
+        "power": 81,
+        "eye": 76,
+        "discipline": 81,
+        "speed": 80,
+        "fielding": 78,
+        "arm": 77,
+        "battingClutch": 80
       },
-      "developmentRate": 87,
-      "potentialHidden": 76,
-      "primaryPosition": "LF",
-      "positionRatings": {
-        "LF": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 45,
+      "potentialHidden": 59
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 51,
-  "popularity": 35
+  }
 }

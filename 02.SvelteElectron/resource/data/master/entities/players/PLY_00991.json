@@ -1,14 +1,14 @@
 {
   "id": "PLY_00991",
   "name": "로드리게스 마이클",
-  "nameEn": "Ro 드리게스 마이클",
+  "nameEn": "Rodriguez Michael",
   "role": "player",
   "age": 30,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_WINDBEARS",
-  "teamId": "TEAM_ABL_WINDBEARS_2",
+  "clubId": "CLUB_ABL_TOR",
+  "teamId": "TEAM_ABL_TOR_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -19,48 +19,28 @@
       "position": "C",
       "jerseyNumber": 51,
       "pitching": {
-        "ovr": 45,
-        "stamina": 44,
-        "velocity": 42,
-        "command": 46,
-        "control": 47,
-        "movement": 41,
-        "mentality": 48,
-        "recovery": 49,
-        "clutch": 41,
-        "holdRunners": 38
+        "ovr": 42,
+        "stamina": 37,
+        "velocity": 40,
+        "command": 34,
+        "control": 33,
+        "movement": 32,
+        "mentality": 40,
+        "recovery": 35
       },
       "batting": {
-        "ovr": 65,
-        "contact": 71,
-        "power": 61,
-        "eye": 68,
-        "discipline": 60,
-        "speed": 66,
+        "ovr": 64,
+        "contact": 69,
+        "power": 63,
+        "eye": 64,
+        "discipline": 62,
+        "speed": 61,
         "fielding": 65,
-        "arm": 67,
-        "battingClutch": 66,
-        "baseInstinct": 57,
-        "bunting": 53,
-        "platoon": 59
+        "arm": 68,
+        "battingClutch": 69
       },
       "developmentRate": 32,
-      "potentialHidden": 78,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 65
-      },
-      "proServiceYears": 8,
-      "contract": {
-        "salary": 6300,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 78
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

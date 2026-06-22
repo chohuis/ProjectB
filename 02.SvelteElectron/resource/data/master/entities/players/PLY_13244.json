@@ -1,9 +1,9 @@
 {
   "id": "PLY_13244",
-  "name": "클라크 제이슨",
-  "nameEn": "Clark Jason",
+  "name": "Wright Hunter",
+  "nameEn": "Wright Hunter",
   "role": "player",
-  "age": 21,
+  "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 69,
-  "popularity": 26,
+  "notes": "국적:일본",
+  "diligence": 59,
+  "popularity": 37,
   "militaryStatus": "군필",
   "entryYear": 2046,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 21,
+  "entryAge": 26,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 6,
-      "primaryPosition": "SP",
-      "developmentRate": 70,
-      "potentialHidden": 72,
-      "proServiceYears": 0,
+      "position": "SS",
+      "jerseyNumber": 15,
+      "primaryPosition": "SS",
+      "developmentRate": 62,
+      "potentialHidden": 70,
+      "proServiceYears": 4,
       "pitching": {
-        "ovr": 63,
-        "stamina": 64,
-        "velocity": 68,
-        "command": 62,
-        "control": 66,
-        "movement": 57,
-        "mentality": 62,
-        "recovery": 55,
-        "clutch": 57,
-        "holdRunners": 59
+        "ovr": 71,
+        "stamina": 72,
+        "velocity": 76,
+        "command": 71,
+        "control": 64,
+        "movement": 67,
+        "mentality": 67,
+        "recovery": 72,
+        "clutch": 61,
+        "holdRunners": 64
       },
       "batting": {
-        "ovr": 68,
-        "contact": 69,
-        "power": 62,
-        "eye": 65,
-        "discipline": 66,
-        "speed": 67,
-        "baseInstinct": 64,
-        "bunting": 55,
+        "ovr": 71,
+        "contact": 64,
+        "power": 66,
+        "eye": 67,
+        "discipline": 67,
+        "speed": 65,
+        "baseInstinct": 67,
+        "bunting": 64,
         "platoon": 50,
-        "fielding": 65,
-        "arm": 62,
-        "battingClutch": 66
+        "fielding": 69,
+        "arm": 72,
+        "battingClutch": 65
       },
       "positionRatings": {
-        "SP": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+        "SS": 71
+      }
     },
     "coach": null,
     "manager": null,

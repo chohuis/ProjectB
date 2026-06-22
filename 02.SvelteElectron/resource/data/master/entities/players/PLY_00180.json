@@ -1,7 +1,7 @@
 {
   "id": "PLY_00180",
   "name": "양현진",
-  "nameEn": "Yang Hyeonjin",
+  "nameEn": "Na Jun-hyuk",
   "role": "player",
   "age": 20,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "DH",
       "jerseyNumber": 20,
       "pitching": {
-        "ovr": 51,
-        "stamina": 52,
-        "velocity": 47,
-        "command": 52,
-        "control": 47,
-        "movement": 54,
-        "mentality": 48,
-        "recovery": 48,
-        "clutch": 39,
-        "holdRunners": 41
+        "ovr": 48,
+        "stamina": 47,
+        "velocity": 55,
+        "command": 49,
+        "control": 45,
+        "movement": 50,
+        "mentality": 45,
+        "recovery": 52
       },
       "batting": {
-        "ovr": 71,
-        "contact": 67,
-        "power": 67,
-        "eye": 71,
-        "discipline": 68,
-        "speed": 70,
-        "fielding": 70,
-        "arm": 73,
-        "battingClutch": 63,
-        "baseInstinct": 60,
-        "bunting": 58,
-        "platoon": 58
+        "ovr": 77,
+        "contact": 78,
+        "power": 80,
+        "eye": 76,
+        "discipline": 75,
+        "speed": 73,
+        "fielding": 68,
+        "arm": 72,
+        "battingClutch": 78
       },
       "developmentRate": 65,
-      "potentialHidden": 82,
-      "primaryPosition": "DH",
-      "positionRatings": {
-        "DH": 71
-      }
+      "potentialHidden": 82
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

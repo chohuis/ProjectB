@@ -1,6 +1,6 @@
 {
   "id": "PLY_14175",
-  "name": "워커 칼렙",
+  "name": "Walker Caleb",
   "nameEn": "Walker Caleb",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 61,
   "popularity": 37,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 73
       },
       "batting": {
-        "ovr": 72,
-        "contact": 71,
-        "power": 71,
-        "eye": 76,
-        "discipline": 72,
-        "speed": 77,
-        "baseInstinct": 64,
-        "bunting": 61,
-        "platoon": 48,
-        "fielding": 65,
-        "arm": 66,
-        "battingClutch": 63
+        "ovr": 75,
+        "contact": 74,
+        "power": 74,
+        "eye": 79,
+        "discipline": 75,
+        "speed": 80,
+        "baseInstinct": 67,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 69,
+        "battingClutch": 66
       },
       "positionRatings": {
         "C": 75

@@ -1,9 +1,9 @@
 {
   "id": "PLY_11297",
-  "name": "화이트 네이선",
-  "nameEn": "White Nathan",
+  "name": "Green Alex",
+  "nameEn": "Green Alex",
   "role": "player",
-  "age": 31,
+  "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 54,
-  "popularity": 18,
+  "notes": "국적:일본",
+  "diligence": 69,
+  "popularity": 49,
   "militaryStatus": "군필",
   "entryYear": 2034,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 31,
+  "entryAge": 32,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 78,
-      "primaryPosition": "SP",
-      "developmentRate": 44,
-      "potentialHidden": 60,
-      "proServiceYears": 9,
+      "position": "C",
+      "jerseyNumber": 7,
+      "primaryPosition": "C",
+      "developmentRate": 45,
+      "potentialHidden": 63,
+      "proServiceYears": 10,
       "pitching": {
-        "ovr": 67,
-        "stamina": 69,
-        "velocity": 68,
-        "command": 57,
-        "control": 68,
-        "movement": 59,
-        "mentality": 72,
-        "recovery": 63,
-        "clutch": 56,
-        "holdRunners": 53
+        "ovr": 64,
+        "stamina": 67,
+        "velocity": 61,
+        "command": 65,
+        "control": 64,
+        "movement": 64,
+        "mentality": 70,
+        "recovery": 54,
+        "clutch": 59,
+        "holdRunners": 62
       },
       "batting": {
-        "ovr": 65,
-        "contact": 69,
+        "ovr": 64,
+        "contact": 64,
         "power": 55,
-        "eye": 57,
-        "discipline": 61,
-        "speed": 59,
-        "baseInstinct": 61,
+        "eye": 60,
+        "discipline": 67,
+        "speed": 61,
+        "baseInstinct": 66,
         "bunting": 55,
         "platoon": 50,
-        "fielding": 63,
-        "arm": 64,
-        "battingClutch": 56
+        "fielding": 64,
+        "arm": 58,
+        "battingClutch": 61
       },
       "positionRatings": {
-        "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "C": 64
+      }
     },
     "coach": null,
     "manager": null,

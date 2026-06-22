@@ -1,7 +1,7 @@
 {
   "id": "PLY_00284",
   "name": "우지훈",
-  "nameEn": "Woo Jihun",
+  "nameEn": "Lee Hyun-jin",
   "role": "player",
   "age": 22,
   "status": "active",
@@ -19,47 +19,28 @@
       "position": "SP",
       "jerseyNumber": 4,
       "pitching": {
-        "ovr": 61,
-        "stamina": 61,
-        "velocity": 57,
-        "command": 62,
-        "control": 65,
+        "ovr": 60,
+        "stamina": 68,
+        "velocity": 68,
+        "command": 60,
+        "control": 60,
         "movement": 61,
         "mentality": 63,
-        "recovery": 64,
-        "clutch": 55,
-        "holdRunners": 55
+        "recovery": 65
       },
       "batting": {
-        "ovr": 43,
-        "contact": 48,
-        "power": 38,
-        "eye": 40,
-        "discipline": 49,
-        "speed": 43,
-        "fielding": 41,
-        "arm": 42,
-        "battingClutch": 36,
-        "baseInstinct": 36,
-        "bunting": 29,
-        "platoon": 38
+        "ovr": 40,
+        "contact": 39,
+        "power": 35,
+        "eye": 34,
+        "discipline": 35,
+        "speed": 38,
+        "fielding": 35,
+        "arm": 39,
+        "battingClutch": 38
       },
       "developmentRate": 63,
-      "potentialHidden": 81,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 81
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

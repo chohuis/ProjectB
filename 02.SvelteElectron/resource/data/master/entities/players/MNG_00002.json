@@ -1,106 +1,83 @@
-﻿{
-    "id":  "MNG_00002",
-    "name":  "양정우",
-    "nameEn":  "Yang Jeongu",
-    "role":  "manager",
-    "age":  48,
-    "status":  "active",
-    "originLeagueId":  "LEAGUE_HIGHSCHOOL",
-    "leagueId":  "LEAGUE_HIGHSCHOOL",
-    "clubId":  "TEAM_HS_BUSAN_WAVE",
-    "teamId":  "TEAM_HS_BUSAN_WAVE",
-    "schoolId":  "SCHOOL_HS_BUSAN_WAVE",
-    "notes":  "",
-    "details":  {
-                    "player":  {
-                                   "playerType":  "pitcher",
-                                   "handedness":  "R",
-                                   "position":  "SP",
-                                   "jerseyNumber":  0,
-                                   "pitching":  {
-                                                    "ovr":  50,
-                                                    "stamina":  50,
-                                                    "velocity":  50,
-                                                    "command":  50,
-                                                    "control":  50,
-                                                    "movement":  50,
-                                                    "mentality":  50,
-                                                    "recovery":  50,
-                                                    "clutch":  50,
-                                                    "holdRunners":  50
-                                                },
-                                   "batting":  {
-                                                   "ovr":  50,
-                                                   "contact":  50,
-                                                   "power":  50,
-                                                   "eye":  50,
-                                                   "discipline":  50,
-                                                   "speed":  50,
-                                                   "fielding":  50,
-                                                   "arm":  50,
-                                                   "battingClutch":  50,
-                                                   "baseInstinct":  50,
-                                                   "bunting":  45,
-                                                   "platoon":  50
-                                               },
-                                   "developmentRate":  50,
-                                   "potentialHidden":  65,
-                                   "primaryPosition":  "SP",
-                                   "positionRatings":  {
-                                                           "SP":  50
-                                                       }
-                               },
-                    "coach":  {
-                                  "specialty":  "-",
-                                  "experienceYears":  0,
-                                  "stats":  {
-                                                "teaching":  50,
-                                                "analysis":  50,
-                                                "communication":  50,
-                                                "discipline":  50,
-                                                "leadership":  50
-                                            },
-                                  "trainingBuffs":  ""
-                              },
-                    "manager":  {
-                                    "style":  "베테랑 중심",
-                                    "experienceYears":  14,
-                                    "stats":  {
-                                                  "motivation":  72,
-                                                  "development":  50,
-                                                  "strategy":  65,
-                                                  "handlePressure":  58,
-                                                  "handlePersonnel":  75,
-                                                  "injuryMgmt":  50
-                                              },
-                                    "gamePlanBias":  "",
-                                    "riskTolerance":  50
-                                },
-                    "owner":  {
-                                  "ownershipStyle":  "안정 운영",
-                                  "tenureYears":  0,
-                                  "stats":  {
-                                                "budgetSupport":  50,
-                                                "patience":  50,
-                                                "prInfluence":  50,
-                                                "facilityInvestment":  50,
-                                                "staffTrust":  50
-                                            },
-                                  "budgetPolicy":  "",
-                                  "hiringPolicy":  ""
-                              }
-                },
-    "contact":  {
-                    "category":  "",
-                    "relation":  "",
-                    "initialAffinity":  0,
-                    "arcs":  [
-
-                             ],
-                    "chat":  {
-
-                             }
-                },
-    "diligence":  60,
-    "popularity":  30
+{
+  "id": "MNG_00002",
+  "name": "양정우",
+  "nameEn": "You Dong-woo",
+  "role": "manager",
+  "age": 48,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_BUSAN_WAVE",
+  "teamId": "TEAM_HS_BUSAN_WAVE",
+  "schoolId": "SCHOOL_HS_BUSAN_WAVE",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 0,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 50,
+        "velocity": 50,
+        "command": 50,
+        "control": 50,
+        "movement": 50,
+        "mentality": 50,
+        "recovery": 50
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 50,
+        "power": 50,
+        "eye": 50,
+        "discipline": 50,
+        "speed": 50,
+        "fielding": 50,
+        "arm": 50,
+        "battingClutch": 50
+      },
+      "developmentRate": 50,
+      "potentialHidden": 65
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "베테랑 중심",
+      "experienceYears": 14,
+      "stats": {
+        "tactics": 65,
+        "decision": 58,
+        "rotationMgmt": 75,
+        "bullpenMgmt": 68,
+        "moraleMgmt": 72
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
 }

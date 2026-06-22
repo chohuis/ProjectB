@@ -1,6 +1,6 @@
 {
   "id": "PLY_15875",
-  "name": "미첼 제이슨",
+  "name": "Mitchell Jason",
   "nameEn": "Mitchell Jason",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 77,
   "popularity": 47,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 61
       },
       "batting": {
-        "ovr": 65,
-        "contact": 68,
-        "power": 56,
-        "eye": 59,
-        "discipline": 68,
-        "speed": 61,
-        "baseInstinct": 64,
-        "bunting": 56,
-        "platoon": 48,
-        "fielding": 67,
-        "arm": 65,
-        "battingClutch": 56
+        "ovr": 68,
+        "contact": 71,
+        "power": 59,
+        "eye": 62,
+        "discipline": 71,
+        "speed": 64,
+        "baseInstinct": 67,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 70,
+        "arm": 68,
+        "battingClutch": 59
       },
       "positionRatings": {
         "RF": 68

@@ -1,7 +1,7 @@
 {
   "id": "PLY_00453",
   "name": "김지성",
-  "nameEn": "Kim Jiseong",
+  "nameEn": "Sung Min-jae",
   "role": "player",
   "age": 22,
   "status": "active",
@@ -19,48 +19,28 @@
       "position": "1B",
       "jerseyNumber": 13,
       "pitching": {
-        "ovr": 49,
-        "stamina": 45,
-        "velocity": 53,
-        "command": 55,
-        "control": 54,
-        "movement": 45,
+        "ovr": 55,
+        "stamina": 54,
+        "velocity": 54,
+        "command": 49,
+        "control": 53,
+        "movement": 55,
         "mentality": 53,
-        "recovery": 52,
-        "clutch": 39,
-        "holdRunners": 44
+        "recovery": 54
       },
       "batting": {
-        "ovr": 69,
-        "contact": 67,
-        "power": 67,
-        "eye": 65,
-        "discipline": 68,
-        "speed": 75,
-        "fielding": 75,
-        "arm": 65,
-        "battingClutch": 63,
-        "baseInstinct": 61,
-        "bunting": 56,
-        "platoon": 60
+        "ovr": 75,
+        "contact": 72,
+        "power": 75,
+        "eye": 72,
+        "discipline": 69,
+        "speed": 69,
+        "fielding": 71,
+        "arm": 75,
+        "battingClutch": 71
       },
       "developmentRate": 42,
-      "potentialHidden": 78,
-      "primaryPosition": "1B",
-      "positionRatings": {
-        "1B": 69
-      },
-      "proServiceYears": 2,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 78
     },
     "coach": {
       "specialty": "-",
@@ -100,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

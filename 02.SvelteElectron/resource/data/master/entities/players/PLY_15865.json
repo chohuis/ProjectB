@@ -1,6 +1,6 @@
 {
   "id": "PLY_15865",
-  "name": "애덤스 헌터",
+  "name": "Adams Hunter",
   "nameEn": "Adams Hunter",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 57,
   "popularity": 20,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 56,
       "proServiceYears": 2,
       "pitching": {
-        "ovr": 60,
-        "stamina": 58,
-        "velocity": 59,
-        "command": 62,
-        "control": 65,
-        "movement": 63,
-        "mentality": 67,
-        "recovery": 55,
-        "clutch": 61,
-        "holdRunners": 49
+        "ovr": 61,
+        "stamina": 59,
+        "velocity": 60,
+        "command": 63,
+        "control": 66,
+        "movement": 64,
+        "mentality": 68,
+        "recovery": 56,
+        "clutch": 62,
+        "holdRunners": 50
       },
       "batting": {
         "ovr": 61,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

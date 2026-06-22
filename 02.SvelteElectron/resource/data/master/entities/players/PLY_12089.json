@@ -1,9 +1,9 @@
 {
   "id": "PLY_12089",
-  "name": "윌리엄스 타일러",
-  "nameEn": "Williams Tyler",
+  "name": "Walker Kevin",
+  "nameEn": "Walker Kevin",
   "role": "player",
-  "age": 26,
+  "age": 30,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 60,
-  "popularity": 36,
+  "notes": "국적:일본",
+  "diligence": 46,
+  "popularity": 11,
   "militaryStatus": "군필",
   "entryYear": 2039,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 26,
+  "entryAge": 30,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 97,
+      "jerseyNumber": 29,
       "primaryPosition": "SP",
-      "developmentRate": 46,
-      "potentialHidden": 59,
-      "proServiceYears": 4,
+      "developmentRate": 53,
+      "potentialHidden": 66,
+      "proServiceYears": 8,
       "pitching": {
-        "ovr": 72,
-        "stamina": 67,
-        "velocity": 72,
-        "command": 64,
-        "control": 64,
-        "movement": 66,
-        "mentality": 68,
-        "recovery": 63,
-        "clutch": 62,
-        "holdRunners": 64
+        "ovr": 74,
+        "stamina": 75,
+        "velocity": 75,
+        "command": 76,
+        "control": 68,
+        "movement": 70,
+        "mentality": 74,
+        "recovery": 64,
+        "clutch": 63,
+        "holdRunners": 68
       },
       "batting": {
-        "ovr": 77,
-        "contact": 72,
-        "power": 76,
-        "eye": 71,
-        "discipline": 72,
-        "speed": 78,
+        "ovr": 74,
+        "contact": 75,
+        "power": 66,
+        "eye": 75,
+        "discipline": 78,
+        "speed": 72,
         "baseInstinct": 76,
         "bunting": 64,
         "platoon": 50,
-        "fielding": 80,
-        "arm": 68,
-        "battingClutch": 67
+        "fielding": 77,
+        "arm": 72,
+        "battingClutch": 65
       },
       "positionRatings": {
-        "SP": 77
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "SP": 74
+      }
     },
     "coach": null,
     "manager": null,

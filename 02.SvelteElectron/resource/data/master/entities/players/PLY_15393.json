@@ -1,6 +1,6 @@
 {
   "id": "PLY_15393",
-  "name": "가르시아 조던",
+  "name": "Garcia Jordan",
   "nameEn": "Garcia Jordan",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 46,
   "popularity": 12,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 61
       },
       "batting": {
-        "ovr": 70,
-        "contact": 71,
-        "power": 72,
-        "eye": 61,
-        "discipline": 63,
-        "speed": 67,
-        "baseInstinct": 66,
-        "bunting": 58,
-        "platoon": 56,
-        "fielding": 69,
-        "arm": 63,
-        "battingClutch": 60
+        "ovr": 63,
+        "contact": 64,
+        "power": 65,
+        "eye": 55,
+        "discipline": 57,
+        "speed": 60,
+        "baseInstinct": 59,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 57,
+        "battingClutch": 54
       },
       "positionRatings": {
         "1B": 63

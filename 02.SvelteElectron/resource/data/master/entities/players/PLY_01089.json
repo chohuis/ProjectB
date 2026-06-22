@@ -1,14 +1,14 @@
 {
   "id": "PLY_01089",
   "name": "카터 제임스",
-  "nameEn": "Ka 터 제임스",
+  "nameEn": "Carter James",
   "role": "player",
   "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_PEACHTREEFALCONS",
-  "teamId": "TEAM_ABL_PEACHTREEFALCONS_2",
+  "clubId": "CLUB_ABL_HOU",
+  "teamId": "TEAM_ABL_HOU_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:쿠바",
@@ -20,47 +20,27 @@
       "jerseyNumber": 59,
       "pitching": {
         "ovr": 45,
-        "stamina": 47,
-        "velocity": 40,
-        "command": 43,
-        "control": 49,
-        "movement": 49,
-        "mentality": 41,
-        "recovery": 45,
-        "clutch": 45,
-        "holdRunners": 37
+        "stamina": 41,
+        "velocity": 45,
+        "command": 47,
+        "control": 43,
+        "movement": 41,
+        "mentality": 42,
+        "recovery": 39
       },
       "batting": {
-        "ovr": 65,
-        "contact": 61,
-        "power": 65,
-        "eye": 63,
-        "discipline": 70,
-        "speed": 59,
-        "fielding": 63,
-        "arm": 65,
-        "battingClutch": 60,
-        "baseInstinct": 54,
-        "bunting": 50,
-        "platoon": 52
+        "ovr": 62,
+        "contact": 68,
+        "power": 64,
+        "eye": 68,
+        "discipline": 62,
+        "speed": 61,
+        "fielding": 66,
+        "arm": 67,
+        "battingClutch": 64
       },
       "developmentRate": 37,
-      "potentialHidden": 88,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 65
-      },
-      "proServiceYears": 2,
-      "contract": {
-        "salary": 6300,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 88
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

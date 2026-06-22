@@ -1,7 +1,7 @@
 {
   "id": "PLY_10790",
-  "name": "스미스 네이선",
-  "nameEn": "Smith Nathan",
+  "name": "Adams Miguel",
+  "nameEn": "Adams Miguel",
   "role": "player",
   "age": 25,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 74,
-  "popularity": 14,
+  "notes": "국적:파나마",
+  "diligence": 73,
+  "popularity": 23,
   "militaryStatus": "군필",
   "entryYear": 2031,
   "entryLeague": "LEAGUE_ABL",
@@ -24,50 +24,40 @@
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 3,
+      "jerseyNumber": 21,
       "primaryPosition": "SP",
-      "developmentRate": 55,
-      "potentialHidden": 74,
+      "developmentRate": 48,
+      "potentialHidden": 87,
       "proServiceYears": 3,
       "pitching": {
-        "ovr": 59,
-        "stamina": 55,
-        "velocity": 60,
-        "command": 55,
-        "control": 54,
-        "movement": 53,
-        "mentality": 54,
-        "recovery": 52,
+        "ovr": 66,
+        "stamina": 67,
+        "velocity": 72,
+        "command": 60,
+        "control": 63,
+        "movement": 63,
+        "mentality": 62,
+        "recovery": 62,
         "clutch": 56,
-        "holdRunners": 49
+        "holdRunners": 53
       },
       "batting": {
-        "ovr": 68,
-        "contact": 62,
-        "power": 70,
-        "eye": 62,
-        "discipline": 68,
-        "speed": 71,
-        "baseInstinct": 59,
+        "ovr": 66,
+        "contact": 68,
+        "power": 57,
+        "eye": 70,
+        "discipline": 61,
+        "speed": 64,
+        "baseInstinct": 60,
         "bunting": 50,
         "platoon": 50,
-        "fielding": 58,
-        "arm": 58,
-        "battingClutch": 68
+        "fielding": 56,
+        "arm": 69,
+        "battingClutch": 59
       },
       "positionRatings": {
-        "SP": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 66
+      }
     },
     "coach": null,
     "manager": null,

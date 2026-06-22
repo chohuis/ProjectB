@@ -1,9 +1,9 @@
 {
   "id": "PLY_10493",
-  "name": "무어 콜",
-  "nameEn": "Moore Cole",
+  "name": "Garcia Brandon",
+  "nameEn": "Garcia Brandon",
   "role": "player",
-  "age": 18,
+  "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 71,
-  "popularity": 27,
+  "notes": "국적:도미니카",
+  "diligence": 83,
+  "popularity": 44,
   "militaryStatus": "군필",
   "entryYear": 2029,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 18,
+  "entryAge": 26,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 16,
-      "primaryPosition": "SP",
-      "developmentRate": 62,
-      "potentialHidden": 70,
-      "proServiceYears": 0,
+      "position": "C",
+      "jerseyNumber": 85,
+      "primaryPosition": "C",
+      "developmentRate": 50,
+      "potentialHidden": 80,
+      "proServiceYears": 4,
       "pitching": {
-        "ovr": 52,
-        "stamina": 50,
-        "velocity": 55,
-        "command": 42,
-        "control": 46,
-        "movement": 48,
-        "mentality": 53,
-        "recovery": 48,
-        "clutch": 44,
-        "holdRunners": 40
+        "ovr": 81,
+        "stamina": 74,
+        "velocity": 81,
+        "command": 81,
+        "control": 85,
+        "movement": 81,
+        "mentality": 88,
+        "recovery": 75,
+        "clutch": 73,
+        "holdRunners": 68
       },
       "batting": {
-        "ovr": 55,
-        "contact": 52,
-        "power": 56,
-        "eye": 46,
-        "discipline": 45,
-        "speed": 52,
-        "baseInstinct": 57,
-        "bunting": 48,
+        "ovr": 81,
+        "contact": 75,
+        "power": 77,
+        "eye": 78,
+        "discipline": 75,
+        "speed": 81,
+        "baseInstinct": 74,
+        "bunting": 70,
         "platoon": 50,
-        "fielding": 53,
-        "arm": 49,
-        "battingClutch": 50
+        "fielding": 77,
+        "arm": 76,
+        "battingClutch": 71
       },
       "positionRatings": {
-        "SP": 55
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "C": 81
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_16284",
-  "name": "홀 코디",
+  "name": "Hall Cody",
   "nameEn": "Hall Cody",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 85,
   "popularity": 20,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 55
       },
       "batting": {
-        "ovr": 61,
-        "contact": 56,
-        "power": 53,
-        "eye": 60,
-        "discipline": 57,
-        "speed": 58,
-        "baseInstinct": 57,
-        "bunting": 46,
-        "platoon": 47,
-        "fielding": 52,
-        "arm": 56,
-        "battingClutch": 58
+        "ovr": 65,
+        "contact": 60,
+        "power": 56,
+        "eye": 64,
+        "discipline": 61,
+        "speed": 62,
+        "baseInstinct": 61,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 60,
+        "battingClutch": 62
       },
       "positionRatings": {
         "2B": 65

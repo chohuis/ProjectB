@@ -1,61 +1,46 @@
 {
   "id": "PLY_01575",
-  "name": "안동현",
-  "nameEn": "An Donghyeon",
+  "name": "야마모토 소타",
+  "nameEn": "Yamamoto Sota",
   "role": "player",
-  "age": 17,
+  "age": 20,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_GWANGJU_VISION",
-  "teamId": "TEAM_HS_GWANGJU_VISION",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_GWANGJU_VISION",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_NEONCRANES",
+  "teamId": "TEAM_JBL_CL_NEONCRANES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
-      "handedness": "R",
-      "position": "C",
-      "jerseyNumber": 24,
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "CP",
+      "jerseyNumber": 40,
       "pitching": {
-        "ovr": 40,
-        "stamina": 37,
-        "velocity": 38,
-        "command": 40,
-        "control": 42,
-        "movement": 37,
-        "mentality": 40,
-        "recovery": 45,
-        "clutch": 41,
-        "holdRunners": 43
+        "ovr": 64,
+        "stamina": 52,
+        "velocity": 72,
+        "command": 64,
+        "control": 62,
+        "movement": 58,
+        "mentality": 66,
+        "recovery": 62
       },
       "batting": {
-        "ovr": 60,
-        "contact": 66,
-        "power": 55,
-        "eye": 64,
-        "discipline": 59,
-        "speed": 65,
-        "fielding": 59,
-        "arm": 62,
-        "battingClutch": 57,
-        "baseInstinct": 59,
-        "bunting": 43,
-        "platoon": 47
+        "ovr": 41,
+        "contact": 39,
+        "power": 40,
+        "eye": 39,
+        "discipline": 41,
+        "speed": 41,
+        "fielding": 36,
+        "arm": 38,
+        "battingClutch": 43
       },
-      "developmentRate": 87,
-      "potentialHidden": 68,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 40,
+      "potentialHidden": 65
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 78,
-  "popularity": 30
+  }
 }

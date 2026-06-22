@@ -1,9 +1,9 @@
 {
   "id": "PLY_00075",
   "name": "곽기훈",
-  "nameEn": "Kwak Gihun",
+  "nameEn": "Kim Jae-min",
   "role": "player",
-  "age": 17,
+  "age": 18,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "SS",
       "jerseyNumber": 15,
       "pitching": {
-        "ovr": 20,
-        "stamina": 21,
-        "velocity": 20,
-        "command": 23,
-        "control": 24,
-        "movement": 20,
-        "mentality": 20,
-        "recovery": 25,
-        "clutch": 45,
-        "holdRunners": 35
+        "ovr": 36,
+        "stamina": 54,
+        "velocity": 42,
+        "command": 59,
+        "control": 50,
+        "movement": 46,
+        "mentality": 51,
+        "recovery": 57
       },
       "batting": {
-        "ovr": 38,
-        "contact": 39,
+        "ovr": 51,
+        "contact": 55,
         "power": 42,
-        "eye": 39,
-        "discipline": 38,
-        "speed": 35,
-        "fielding": 37,
-        "arm": 38,
-        "battingClutch": 44,
-        "baseInstinct": 36,
-        "bunting": 40,
-        "platoon": 39
+        "eye": 48,
+        "discipline": 46,
+        "speed": 59,
+        "fielding": 43,
+        "arm": 53,
+        "battingClutch": 40
       },
       "developmentRate": 72,
-      "potentialHidden": 80,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 38
-      }
+      "potentialHidden": 80
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

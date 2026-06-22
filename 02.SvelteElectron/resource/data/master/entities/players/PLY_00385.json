@@ -1,7 +1,7 @@
 {
   "id": "PLY_00385",
   "name": "홍민준",
-  "nameEn": "Hong Minjun",
+  "nameEn": "Noh Tae-hyun",
   "role": "player",
   "age": 24,
   "status": "active",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 5,
       "pitching": {
-        "ovr": 58,
+        "ovr": 63,
         "stamina": 56,
-        "velocity": 64,
-        "command": 55,
-        "control": 61,
-        "movement": 54,
-        "mentality": 62,
-        "recovery": 59,
-        "clutch": 55,
-        "holdRunners": 53
+        "velocity": 67,
+        "command": 58,
+        "control": 57,
+        "movement": 59,
+        "mentality": 64,
+        "recovery": 62
       },
       "batting": {
-        "ovr": 40,
-        "contact": 45,
-        "power": 37,
-        "eye": 36,
-        "discipline": 41,
+        "ovr": 38,
+        "contact": 33,
+        "power": 32,
+        "eye": 37,
+        "discipline": 36,
         "speed": 38,
-        "fielding": 35,
-        "arm": 36,
-        "battingClutch": 42,
-        "baseInstinct": 38,
-        "bunting": 38,
-        "platoon": 40
+        "fielding": 33,
+        "arm": 34,
+        "battingClutch": 39
       },
       "developmentRate": 50,
-      "potentialHidden": 59,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 1200,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 59
     },
     "coach": {
       "specialty": "-",
@@ -110,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

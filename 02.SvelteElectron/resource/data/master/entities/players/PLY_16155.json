@@ -1,6 +1,6 @@
 {
   "id": "PLY_16155",
-  "name": "앤더슨 루이스",
+  "name": "Anderson Luis",
   "nameEn": "Anderson Luis",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 60,
   "popularity": 37,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 45
       },
       "batting": {
-        "ovr": 55,
-        "contact": 51,
-        "power": 55,
-        "eye": 60,
-        "discipline": 48,
-        "speed": 54,
-        "baseInstinct": 48,
-        "bunting": 37,
-        "platoon": 49,
-        "fielding": 53,
-        "arm": 55,
-        "battingClutch": 43
+        "ovr": 56,
+        "contact": 52,
+        "power": 56,
+        "eye": 61,
+        "discipline": 49,
+        "speed": 55,
+        "baseInstinct": 49,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 56,
+        "battingClutch": 44
       },
       "positionRatings": {
         "LF": 56

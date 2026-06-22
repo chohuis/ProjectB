@@ -1,7 +1,7 @@
 {
   "id": "PLY_00408",
   "name": "우재훈",
-  "nameEn": "Woo Jaehun",
+  "nameEn": "Seo Sang-hyun",
   "role": "player",
   "age": 29,
   "status": "active",
@@ -19,54 +19,28 @@
       "position": "RP",
       "jerseyNumber": 8,
       "pitching": {
-        "ovr": 50,
-        "stamina": 49,
-        "velocity": 51,
-        "command": 55,
-        "control": 52,
-        "movement": 53,
-        "mentality": 46,
-        "recovery": 52,
-        "clutch": 39,
-        "holdRunners": 49
+        "ovr": 59,
+        "stamina": 50,
+        "velocity": 60,
+        "command": 52,
+        "control": 55,
+        "movement": 56,
+        "mentality": 54,
+        "recovery": 52
       },
       "batting": {
-        "ovr": 32,
-        "contact": 29,
-        "power": 32,
-        "eye": 29,
-        "discipline": 27,
-        "speed": 29,
-        "fielding": 34,
-        "arm": 26,
-        "battingClutch": 44,
-        "baseInstinct": 45,
-        "bunting": 39,
-        "platoon": 40
+        "ovr": 19,
+        "contact": 19,
+        "power": 22,
+        "eye": 21,
+        "discipline": 20,
+        "speed": 18,
+        "fielding": 22,
+        "arm": 23,
+        "battingClutch": 20
       },
       "developmentRate": 45,
-      "potentialHidden": 75,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 50
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 9,
-      "contract": {
-        "salary": 600,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 75
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

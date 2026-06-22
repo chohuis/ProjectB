@@ -1,6 +1,6 @@
 {
   "id": "PLY_14909",
-  "name": "루이스 데릭",
+  "name": "Lewis Derek",
   "nameEn": "Lewis Derek",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 55,
   "popularity": 45,
   "militaryStatus": "군필",

@@ -1,9 +1,9 @@
 {
   "id": "PLY_11754",
-  "name": "화이트 조던",
-  "nameEn": "White Jordan",
+  "name": "Green Jordan",
+  "nameEn": "Green Jordan",
   "role": "player",
-  "age": 30,
+  "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 52,
-  "popularity": 48,
+  "notes": "국적:파나마",
+  "diligence": 57,
+  "popularity": 33,
   "militaryStatus": "군필",
   "entryYear": 2037,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 30,
+  "entryAge": 27,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 34,
-      "primaryPosition": "SP",
-      "developmentRate": 38,
-      "potentialHidden": 75,
-      "proServiceYears": 8,
+      "position": "1B",
+      "jerseyNumber": 7,
+      "primaryPosition": "1B",
+      "developmentRate": 62,
+      "potentialHidden": 73,
+      "proServiceYears": 5,
       "pitching": {
-        "ovr": 78,
-        "stamina": 71,
-        "velocity": 89,
-        "command": 70,
-        "control": 70,
-        "movement": 77,
+        "ovr": 80,
+        "stamina": 72,
+        "velocity": 81,
+        "command": 74,
+        "control": 77,
+        "movement": 71,
         "mentality": 74,
-        "recovery": 79,
-        "clutch": 73,
-        "holdRunners": 69
+        "recovery": 75,
+        "clutch": 74,
+        "holdRunners": 75
       },
       "batting": {
-        "ovr": 75,
-        "contact": 71,
-        "power": 71,
-        "eye": 70,
-        "discipline": 69,
-        "speed": 82,
-        "baseInstinct": 69,
-        "bunting": 59,
+        "ovr": 80,
+        "contact": 75,
+        "power": 72,
+        "eye": 78,
+        "discipline": 76,
+        "speed": 77,
+        "baseInstinct": 73,
+        "bunting": 65,
         "platoon": 50,
-        "fielding": 77,
-        "arm": 74,
-        "battingClutch": 63
+        "fielding": 71,
+        "arm": 76,
+        "battingClutch": 67
       },
       "positionRatings": {
-        "SP": 75
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "1B": 80
+      }
     },
     "coach": null,
     "manager": null,

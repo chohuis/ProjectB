@@ -1,6 +1,6 @@
 {
   "id": "PLY_15750",
-  "name": "미첼 제이크",
+  "name": "Mitchell Jake",
   "nameEn": "Mitchell Jake",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 69,
   "popularity": 28,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 50
       },
       "batting": {
-        "ovr": 58,
-        "contact": 59,
-        "power": 59,
-        "eye": 52,
-        "discipline": 55,
-        "speed": 55,
-        "baseInstinct": 53,
-        "bunting": 52,
-        "platoon": 49,
-        "fielding": 58,
-        "arm": 56,
-        "battingClutch": 47
+        "ovr": 59,
+        "contact": 60,
+        "power": 60,
+        "eye": 53,
+        "discipline": 56,
+        "speed": 56,
+        "baseInstinct": 54,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 57,
+        "battingClutch": 48
       },
       "positionRatings": {
         "1B": 59

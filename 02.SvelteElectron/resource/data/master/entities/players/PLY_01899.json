@@ -1,72 +1,46 @@
 {
   "id": "PLY_01899",
-  "name": "이태우",
-  "nameEn": "Lee Taewoo",
+  "name": "사카모토 기요시",
+  "nameEn": "Sakamoto Kiyoshi",
   "role": "player",
-  "age": 20,
+  "age": 24,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_BEARGUARDIANS",
-  "teamId": "TEAM_KBL_BEARGUARDIANS_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_POLARBEARS",
+  "teamId": "TEAM_JBL_PL_POLARBEARS_2",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "C",
+      "position": "RF",
       "jerseyNumber": 49,
       "pitching": {
-        "ovr": 43,
-        "stamina": 41,
-        "velocity": 41,
-        "command": 39,
-        "control": 47,
-        "movement": 45,
-        "mentality": 47,
-        "recovery": 44,
-        "clutch": 43,
-        "holdRunners": 39
+        "ovr": 27,
+        "stamina": 27,
+        "velocity": 32,
+        "command": 28,
+        "control": 27,
+        "movement": 29,
+        "mentality": 30,
+        "recovery": 26
       },
       "batting": {
         "ovr": 63,
-        "contact": 70,
-        "power": 65,
-        "eye": 69,
-        "discipline": 60,
-        "speed": 63,
-        "fielding": 60,
-        "arm": 58,
-        "battingClutch": 63,
-        "baseInstinct": 54,
-        "bunting": 58,
-        "platoon": 58
+        "contact": 58,
+        "power": 62,
+        "eye": 61,
+        "discipline": 59,
+        "speed": 55,
+        "fielding": 59,
+        "arm": 63,
+        "battingClutch": 60
       },
-      "developmentRate": 31,
-      "potentialHidden": 73,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 54,
+      "potentialHidden": 58
     },
     "coach": {
       "specialty": "-",
@@ -106,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 68,
-  "popularity": 18
+  }
 }

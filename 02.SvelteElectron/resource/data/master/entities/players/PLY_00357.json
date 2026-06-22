@@ -1,7 +1,7 @@
 {
   "id": "PLY_00357",
   "name": "백서준",
-  "nameEn": "Baek Seojun",
+  "nameEn": "Choi Seong-min",
   "role": "player",
   "age": 26,
   "status": "active",
@@ -19,48 +19,28 @@
       "position": "LF",
       "jerseyNumber": 17,
       "pitching": {
-        "ovr": 31,
-        "stamina": 33,
-        "velocity": 27,
-        "command": 33,
-        "control": 36,
-        "movement": 28,
-        "mentality": 29,
-        "recovery": 33,
-        "clutch": 40,
-        "holdRunners": 37
+        "ovr": 27,
+        "stamina": 25,
+        "velocity": 26,
+        "command": 22,
+        "control": 22,
+        "movement": 25,
+        "mentality": 26,
+        "recovery": 20
       },
       "batting": {
-        "ovr": 51,
-        "contact": 49,
-        "power": 57,
+        "ovr": 53,
+        "contact": 60,
+        "power": 54,
         "eye": 54,
         "discipline": 51,
-        "speed": 45,
-        "fielding": 55,
-        "arm": 53,
-        "battingClutch": 45,
-        "baseInstinct": 42,
-        "bunting": 41,
-        "platoon": 40
+        "speed": 53,
+        "fielding": 49,
+        "arm": 54,
+        "battingClutch": 58
       },
       "developmentRate": 55,
-      "potentialHidden": 75,
-      "primaryPosition": "LF",
-      "positionRatings": {
-        "LF": 51
-      },
-      "proServiceYears": 6,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 75
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

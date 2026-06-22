@@ -1,9 +1,9 @@
 {
   "id": "PLY_12658",
-  "name": "넬슨 제이크",
-  "nameEn": "Nelson Jake",
+  "name": "Green Evan",
+  "nameEn": "Green Evan",
   "role": "player",
-  "age": 32,
+  "age": 23,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 64,
-  "popularity": 28,
+  "notes": "국적:일본",
+  "diligence": 63,
+  "popularity": 42,
   "militaryStatus": "군필",
   "entryYear": 2043,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 32,
+  "entryAge": 23,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 44,
-      "primaryPosition": "SP",
-      "developmentRate": 38,
-      "potentialHidden": 73,
-      "proServiceYears": 10,
+      "position": "3B",
+      "jerseyNumber": 25,
+      "primaryPosition": "3B",
+      "developmentRate": 66,
+      "potentialHidden": 71,
+      "proServiceYears": 1,
       "pitching": {
-        "ovr": 83,
-        "stamina": 85,
-        "velocity": 92,
-        "command": 75,
-        "control": 75,
-        "movement": 74,
-        "mentality": 88,
-        "recovery": 71,
-        "clutch": 70,
-        "holdRunners": 76
+        "ovr": 68,
+        "stamina": 60,
+        "velocity": 67,
+        "command": 67,
+        "control": 60,
+        "movement": 59,
+        "mentality": 70,
+        "recovery": 59,
+        "clutch": 65,
+        "holdRunners": 62
       },
       "batting": {
-        "ovr": 70,
-        "contact": 65,
-        "power": 70,
-        "eye": 70,
-        "discipline": 69,
-        "speed": 66,
+        "ovr": 68,
+        "contact": 67,
+        "power": 60,
+        "eye": 69,
+        "discipline": 71,
+        "speed": 68,
         "baseInstinct": 69,
-        "bunting": 65,
+        "bunting": 54,
         "platoon": 50,
         "fielding": 66,
-        "arm": 72,
-        "battingClutch": 62
+        "arm": 68,
+        "battingClutch": 57
       },
       "positionRatings": {
-        "SP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ]
+        "3B": 68
+      }
     },
     "coach": null,
     "manager": null,

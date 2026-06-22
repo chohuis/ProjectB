@@ -1,6 +1,6 @@
 {
   "id": "PLY_14360",
-  "name": "톰슨 마커스",
+  "name": "Thompson Marcus",
   "nameEn": "Thompson Marcus",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 52,
   "popularity": 34,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 69,
       "proServiceYears": 13,
       "pitching": {
-        "ovr": 62,
-        "stamina": 58,
-        "velocity": 69,
-        "command": 60,
-        "control": 51,
-        "movement": 55,
-        "mentality": 58,
-        "recovery": 51,
-        "clutch": 53,
-        "holdRunners": 53
+        "ovr": 50,
+        "stamina": 47,
+        "velocity": 56,
+        "command": 48,
+        "control": 41,
+        "movement": 44,
+        "mentality": 47,
+        "recovery": 41,
+        "clutch": 43,
+        "holdRunners": 43
       },
       "batting": {
         "ovr": 50,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 50
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_14584",
-  "name": "토마스 재크",
+  "name": "Thomas Zach",
   "nameEn": "Thomas Zach",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 46,
   "popularity": 44,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 72
       },
       "batting": {
-        "ovr": 79,
-        "contact": 80,
-        "power": 77,
-        "eye": 83,
-        "discipline": 70,
-        "speed": 79,
-        "baseInstinct": 77,
-        "bunting": 66,
-        "platoon": 54,
-        "fielding": 75,
-        "arm": 82,
-        "battingClutch": 78
+        "ovr": 73,
+        "contact": 74,
+        "power": 71,
+        "eye": 77,
+        "discipline": 65,
+        "speed": 73,
+        "baseInstinct": 71,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 76,
+        "battingClutch": 72
       },
       "positionRatings": {
         "CF": 73

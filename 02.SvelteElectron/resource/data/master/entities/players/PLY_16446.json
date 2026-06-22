@@ -1,6 +1,6 @@
 {
   "id": "PLY_16446",
-  "name": "스미스 알렉스",
+  "name": "Smith Alex",
   "nameEn": "Smith Alex",
   "role": "player",
   "age": 18,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 72,
   "popularity": 46,
   "militaryStatus": "군필",

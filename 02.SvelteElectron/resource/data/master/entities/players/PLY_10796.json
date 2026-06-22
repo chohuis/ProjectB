@@ -1,9 +1,9 @@
 {
   "id": "PLY_10796",
-  "name": "베이커 헌터",
-  "nameEn": "Baker Hunter",
+  "name": "Thomas Derek",
+  "nameEn": "Thomas Derek",
   "role": "player",
-  "age": 27,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 59,
-  "popularity": 29,
+  "notes": "국적:도미니카",
+  "diligence": 58,
+  "popularity": 31,
   "militaryStatus": "군필",
   "entryYear": 2031,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 27,
+  "entryAge": 22,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 97,
+      "jerseyNumber": 22,
       "primaryPosition": "SP",
-      "developmentRate": 56,
-      "potentialHidden": 82,
-      "proServiceYears": 5,
+      "developmentRate": 69,
+      "potentialHidden": 68,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 62,
-        "stamina": 60,
-        "velocity": 68,
-        "command": 52,
-        "control": 65,
-        "movement": 62,
-        "mentality": 66,
-        "recovery": 58,
-        "clutch": 61,
-        "holdRunners": 54
+        "ovr": 60,
+        "stamina": 53,
+        "velocity": 57,
+        "command": 51,
+        "control": 61,
+        "movement": 51,
+        "mentality": 63,
+        "recovery": 54,
+        "clutch": 50,
+        "holdRunners": 57
       },
       "batting": {
-        "ovr": 70,
-        "contact": 69,
-        "power": 70,
-        "eye": 75,
-        "discipline": 74,
-        "speed": 73,
-        "baseInstinct": 70,
+        "ovr": 60,
+        "contact": 61,
+        "power": 58,
+        "eye": 63,
+        "discipline": 51,
+        "speed": 58,
+        "baseInstinct": 58,
         "bunting": 53,
         "platoon": 50,
-        "fielding": 62,
-        "arm": 64,
-        "battingClutch": 66
+        "fielding": 57,
+        "arm": 49,
+        "battingClutch": 52
       },
       "positionRatings": {
-        "SP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "SP": 60
+      }
     },
     "coach": null,
     "manager": null,

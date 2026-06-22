@@ -1,6 +1,6 @@
 {
   "id": "PLY_15687",
-  "name": "데이비스 브랜던",
+  "name": "Davis Brandon",
   "nameEn": "Davis Brandon",
   "role": "player",
   "age": 23,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 48,
   "popularity": 47,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 50
       },
       "batting": {
-        "ovr": 62,
-        "contact": 62,
-        "power": 58,
-        "eye": 59,
-        "discipline": 57,
-        "speed": 62,
-        "baseInstinct": 57,
-        "bunting": 52,
-        "platoon": 48,
-        "fielding": 64,
-        "arm": 60,
-        "battingClutch": 54
+        "ovr": 64,
+        "contact": 64,
+        "power": 60,
+        "eye": 61,
+        "discipline": 59,
+        "speed": 64,
+        "baseInstinct": 59,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 62,
+        "battingClutch": 56
       },
       "positionRatings": {
         "2B": 64

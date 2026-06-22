@@ -1,6 +1,6 @@
 {
   "id": "PLY_14188",
-  "name": "카터 타일러",
+  "name": "Carter Tyler",
   "nameEn": "Carter Tyler",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 67,
   "popularity": 12,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 82,
       "proServiceYears": 3,
       "pitching": {
-        "ovr": 60,
-        "stamina": 64,
-        "velocity": 59,
-        "command": 53,
-        "control": 57,
-        "movement": 52,
-        "mentality": 58,
-        "recovery": 59,
-        "clutch": 54,
-        "holdRunners": 54
+        "ovr": 64,
+        "stamina": 68,
+        "velocity": 63,
+        "command": 56,
+        "control": 61,
+        "movement": 55,
+        "mentality": 62,
+        "recovery": 63,
+        "clutch": 58,
+        "holdRunners": 58
       },
       "batting": {
         "ovr": 64,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 64
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

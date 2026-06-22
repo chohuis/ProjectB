@@ -1,9 +1,9 @@
 {
   "id": "PLY_11941",
-  "name": "데이비스 케빈",
-  "nameEn": "Davis Kevin",
+  "name": "Hernandez Jordan",
+  "nameEn": "Hernandez Jordan",
   "role": "player",
-  "age": 28,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 53,
-  "popularity": 18,
+  "notes": "국적:멕시코",
+  "diligence": 55,
+  "popularity": 17,
   "militaryStatus": "군필",
   "entryYear": 2038,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 28,
+  "entryAge": 20,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 53,
+      "jerseyNumber": 8,
       "primaryPosition": "SP",
-      "developmentRate": 57,
-      "potentialHidden": 73,
-      "proServiceYears": 6,
+      "developmentRate": 61,
+      "potentialHidden": 83,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 84,
-        "stamina": 75,
-        "velocity": 92,
-        "command": 77,
-        "control": 75,
-        "movement": 80,
-        "mentality": 81,
-        "recovery": 82,
-        "clutch": 77,
-        "holdRunners": 73
+        "ovr": 61,
+        "stamina": 58,
+        "velocity": 70,
+        "command": 56,
+        "control": 54,
+        "movement": 55,
+        "mentality": 64,
+        "recovery": 61,
+        "clutch": 57,
+        "holdRunners": 54
       },
       "batting": {
-        "ovr": 81,
-        "contact": 77,
-        "power": 77,
-        "eye": 83,
-        "discipline": 79,
-        "speed": 79,
-        "baseInstinct": 72,
-        "bunting": 68,
+        "ovr": 61,
+        "contact": 64,
+        "power": 51,
+        "eye": 62,
+        "discipline": 62,
+        "speed": 60,
+        "baseInstinct": 64,
+        "bunting": 46,
         "platoon": 50,
-        "fielding": 83,
-        "arm": 83,
-        "battingClutch": 69
+        "fielding": 52,
+        "arm": 52,
+        "battingClutch": 58
       },
       "positionRatings": {
-        "SP": 81
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "SP": 61
+      }
     },
     "coach": null,
     "manager": null,

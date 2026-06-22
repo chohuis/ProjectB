@@ -1,61 +1,46 @@
 {
   "id": "PLY_01732",
-  "name": "구태준",
-  "nameEn": "Gu Taejun",
+  "name": "와타나베 코지",
+  "nameEn": "Watanabe Koji",
   "role": "player",
-  "age": 18,
+  "age": 27,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_GANGWON_PEAK",
-  "teamId": "TEAM_HS_GANGWON_PEAK",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_GANGWON_PEAK",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+  "teamId": "TEAM_JBL_CL_SILVERWOLVES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "SS",
-      "jerseyNumber": 21,
+      "position": "CP",
+      "jerseyNumber": 12,
       "pitching": {
-        "ovr": 46,
-        "stamina": 52,
-        "velocity": 50,
-        "command": 45,
-        "control": 48,
-        "movement": 48,
-        "mentality": 48,
-        "recovery": 46,
-        "clutch": 45,
-        "holdRunners": 33
+        "ovr": 73,
+        "stamina": 54,
+        "velocity": 78,
+        "command": 73,
+        "control": 67,
+        "movement": 66,
+        "mentality": 65,
+        "recovery": 68
       },
       "batting": {
-        "ovr": 66,
-        "contact": 69,
-        "power": 71,
-        "eye": 62,
-        "discipline": 68,
-        "speed": 68,
-        "fielding": 72,
-        "arm": 60,
-        "battingClutch": 59,
-        "baseInstinct": 64,
-        "bunting": 60,
-        "platoon": 63
+        "ovr": 39,
+        "contact": 37,
+        "power": 40,
+        "eye": 38,
+        "discipline": 41,
+        "speed": 37,
+        "fielding": 43,
+        "arm": 36,
+        "battingClutch": 41
       },
-      "developmentRate": 77,
-      "potentialHidden": 74,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 32,
+      "potentialHidden": 90
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 63,
-  "popularity": 18
+  }
 }

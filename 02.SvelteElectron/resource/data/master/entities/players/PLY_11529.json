@@ -1,9 +1,9 @@
 {
   "id": "PLY_11529",
-  "name": "라이트 제이크",
-  "nameEn": "Wright Jake",
+  "name": "Adams Daniel",
+  "nameEn": "Adams Daniel",
   "role": "player",
-  "age": 21,
+  "age": 19,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 83,
-  "popularity": 13,
+  "notes": "국적:베네수엘라",
+  "diligence": 57,
+  "popularity": 37,
   "militaryStatus": "군필",
   "entryYear": 2036,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 21,
+  "entryAge": 19,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 27,
+      "jerseyNumber": 67,
       "primaryPosition": "SP",
-      "developmentRate": 55,
-      "potentialHidden": 70,
+      "developmentRate": 60,
+      "potentialHidden": 76,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 55,
-        "stamina": 46,
-        "velocity": 60,
-        "command": 49,
-        "control": 51,
-        "movement": 54,
-        "mentality": 58,
-        "recovery": 54,
-        "clutch": 53,
-        "holdRunners": 41
+        "ovr": 68,
+        "stamina": 67,
+        "velocity": 73,
+        "command": 65,
+        "control": 64,
+        "movement": 66,
+        "mentality": 65,
+        "recovery": 68,
+        "clutch": 57,
+        "holdRunners": 56
       },
       "batting": {
-        "ovr": 58,
-        "contact": 58,
-        "power": 60,
-        "eye": 50,
-        "discipline": 60,
-        "speed": 51,
-        "baseInstinct": 47,
-        "bunting": 40,
+        "ovr": 68,
+        "contact": 67,
+        "power": 57,
+        "eye": 60,
+        "discipline": 63,
+        "speed": 70,
+        "baseInstinct": 67,
+        "bunting": 50,
         "platoon": 50,
-        "fielding": 47,
-        "arm": 56,
-        "battingClutch": 51
+        "fielding": 61,
+        "arm": 69,
+        "battingClutch": 68
       },
       "positionRatings": {
-        "SP": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 68
+      }
     },
     "coach": null,
     "manager": null,

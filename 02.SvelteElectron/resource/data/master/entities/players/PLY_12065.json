@@ -1,9 +1,9 @@
 {
   "id": "PLY_12065",
-  "name": "워커 카일",
-  "nameEn": "Walker Kyle",
+  "name": "Young Dylan",
+  "nameEn": "Young Dylan",
   "role": "player",
-  "age": 35,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 81,
-  "popularity": 22,
+  "notes": "국적:쿠바",
+  "diligence": 67,
+  "popularity": 31,
   "militaryStatus": "군필",
   "entryYear": 2039,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 35,
+  "entryAge": 20,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 1,
-      "primaryPosition": "SP",
-      "developmentRate": 54,
-      "potentialHidden": 54,
-      "proServiceYears": 13,
+      "position": "SS",
+      "jerseyNumber": 72,
+      "primaryPosition": "SS",
+      "developmentRate": 79,
+      "potentialHidden": 77,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 63,
-        "stamina": 54,
-        "velocity": 75,
-        "command": 57,
-        "control": 59,
-        "movement": 56,
-        "mentality": 70,
-        "recovery": 65,
-        "clutch": 51,
-        "holdRunners": 57
+        "ovr": 51,
+        "stamina": 56,
+        "velocity": 62,
+        "command": 42,
+        "control": 45,
+        "movement": 51,
+        "mentality": 58,
+        "recovery": 50,
+        "clutch": 52,
+        "holdRunners": 48
       },
       "batting": {
-        "ovr": 56,
-        "contact": 57,
-        "power": 52,
-        "eye": 60,
-        "discipline": 58,
-        "speed": 53,
-        "baseInstinct": 48,
-        "bunting": 44,
+        "ovr": 51,
+        "contact": 48,
+        "power": 44,
+        "eye": 48,
+        "discipline": 52,
+        "speed": 54,
+        "baseInstinct": 47,
+        "bunting": 38,
         "platoon": 50,
-        "fielding": 58,
-        "arm": 50,
-        "battingClutch": 56
+        "fielding": 52,
+        "arm": 52,
+        "battingClutch": 50
       },
       "positionRatings": {
-        "SP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SS": 51
+      }
     },
     "coach": null,
     "manager": null,

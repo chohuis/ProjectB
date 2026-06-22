@@ -1,9 +1,9 @@
 {
   "id": "PLY_12236",
-  "name": "애덤스 딜런",
-  "nameEn": "Adams Dylan",
+  "name": "Moore Caleb",
+  "nameEn": "Moore Caleb",
   "role": "player",
-  "age": 33,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 74,
-  "popularity": 30,
+  "notes": "국적:일본",
+  "diligence": 64,
+  "popularity": 16,
   "militaryStatus": "군필",
   "entryYear": 2040,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 33,
+  "entryAge": 22,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 67,
-      "primaryPosition": "SP",
-      "developmentRate": 39,
-      "potentialHidden": 65,
-      "proServiceYears": 11,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 45,
+      "primaryPosition": "C",
+      "developmentRate": 77,
+      "potentialHidden": 82,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 68,
-        "stamina": 63,
-        "velocity": 75,
-        "command": 70,
-        "control": 67,
-        "movement": 62,
-        "mentality": 67,
-        "recovery": 61,
-        "clutch": 56,
-        "holdRunners": 58
+        "ovr": 50,
+        "stamina": 47,
+        "velocity": 60,
+        "command": 52,
+        "control": 52,
+        "movement": 47,
+        "mentality": 53,
+        "recovery": 49,
+        "clutch": 38,
+        "holdRunners": 46
       },
       "batting": {
-        "ovr": 59,
-        "contact": 60,
-        "power": 59,
-        "eye": 60,
-        "discipline": 58,
-        "speed": 63,
-        "baseInstinct": 53,
-        "bunting": 47,
+        "ovr": 50,
+        "contact": 44,
+        "power": 43,
+        "eye": 44,
+        "discipline": 47,
+        "speed": 46,
+        "baseInstinct": 50,
+        "bunting": 32,
         "platoon": 50,
         "fielding": 50,
-        "arm": 57,
-        "battingClutch": 50
+        "arm": 51,
+        "battingClutch": 47
       },
       "positionRatings": {
-        "SP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "C": 50
+      }
     },
     "coach": null,
     "manager": null,

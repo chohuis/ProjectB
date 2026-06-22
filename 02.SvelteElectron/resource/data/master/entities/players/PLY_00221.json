@@ -1,7 +1,7 @@
 {
   "id": "PLY_00221",
   "name": "황승우",
-  "nameEn": "Hwang Seungu",
+  "nameEn": "Min Sang-min",
   "role": "player",
   "age": 22,
   "status": "active",
@@ -19,47 +19,28 @@
       "position": "SP",
       "jerseyNumber": 1,
       "pitching": {
-        "ovr": 63,
-        "stamina": 60,
-        "velocity": 62,
-        "command": 61,
-        "control": 60,
+        "ovr": 74,
+        "stamina": 70,
+        "velocity": 69,
+        "command": 70,
+        "control": 68,
         "movement": 66,
-        "mentality": 60,
-        "recovery": 68,
-        "clutch": 55,
-        "holdRunners": 53
+        "mentality": 67,
+        "recovery": 71
       },
       "batting": {
-        "ovr": 45,
-        "contact": 46,
-        "power": 45,
-        "eye": 40,
-        "discipline": 41,
-        "speed": 48,
-        "fielding": 51,
-        "arm": 50,
-        "battingClutch": 41,
-        "baseInstinct": 44,
-        "bunting": 38,
-        "platoon": 37
+        "ovr": 34,
+        "contact": 38,
+        "power": 41,
+        "eye": 32,
+        "discipline": 37,
+        "speed": 39,
+        "fielding": 37,
+        "arm": 32,
+        "battingClutch": 38
       },
       "developmentRate": 56,
-      "potentialHidden": 58,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_FORKBALL",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 58
     },
     "coach": {
       "specialty": "-",
@@ -99,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

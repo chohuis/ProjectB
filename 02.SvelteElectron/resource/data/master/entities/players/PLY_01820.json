@@ -1,61 +1,46 @@
 {
   "id": "PLY_01820",
-  "name": "오현우",
-  "nameEn": "Oh Hyeonwoo",
+  "name": "이시카와 료",
+  "nameEn": "Ishikawa Ryo",
   "role": "player",
-  "age": 17,
+  "age": 25,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_GOYANG_ARROW",
-  "teamId": "TEAM_HS_GOYANG_ARROW",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_GOYANG_ARROW",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
+  "teamId": "TEAM_JBL_PL_THUNDERFALCONS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
-      "handedness": "R",
-      "position": "3B",
-      "jerseyNumber": 19,
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "RP",
+      "jerseyNumber": 10,
       "pitching": {
-        "ovr": 32,
-        "stamina": 36,
-        "velocity": 31,
-        "command": 33,
-        "control": 30,
-        "movement": 32,
-        "mentality": 36,
-        "recovery": 29,
-        "clutch": 35,
-        "holdRunners": 36
+        "ovr": 82,
+        "stamina": 75,
+        "velocity": 87,
+        "command": 85,
+        "control": 77,
+        "movement": 82,
+        "mentality": 83,
+        "recovery": 79
       },
       "batting": {
-        "ovr": 52,
-        "contact": 50,
-        "power": 54,
-        "eye": 56,
-        "discipline": 50,
-        "speed": 55,
-        "fielding": 51,
-        "arm": 55,
-        "battingClutch": 43,
-        "baseInstinct": 44,
-        "bunting": 41,
-        "platoon": 49
+        "ovr": 60,
+        "contact": 58,
+        "power": 61,
+        "eye": 52,
+        "discipline": 56,
+        "speed": 60,
+        "fielding": 56,
+        "arm": 57,
+        "battingClutch": 59
       },
-      "developmentRate": 78,
-      "potentialHidden": 62,
-      "primaryPosition": "3B",
-      "positionRatings": {
-        "3B": 52
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 51,
+      "potentialHidden": 68
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 71,
-  "popularity": 21
+  }
 }

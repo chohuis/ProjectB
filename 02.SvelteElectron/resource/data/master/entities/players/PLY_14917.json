@@ -1,6 +1,6 @@
 {
   "id": "PLY_14917",
-  "name": "에르난데스 숀",
+  "name": "Hernandez Sean",
   "nameEn": "Hernandez Sean",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 64,
   "popularity": 30,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 53
       },
       "batting": {
-        "ovr": 61,
-        "contact": 64,
-        "power": 52,
-        "eye": 62,
-        "discipline": 54,
-        "speed": 67,
-        "baseInstinct": 61,
-        "bunting": 53,
-        "platoon": 47,
-        "fielding": 53,
-        "arm": 59,
-        "battingClutch": 56
+        "ovr": 65,
+        "contact": 68,
+        "power": 55,
+        "eye": 66,
+        "discipline": 58,
+        "speed": 71,
+        "baseInstinct": 65,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 63,
+        "battingClutch": 60
       },
       "positionRatings": {
         "CF": 65

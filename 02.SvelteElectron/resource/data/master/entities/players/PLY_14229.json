@@ -1,6 +1,6 @@
 {
   "id": "PLY_14229",
-  "name": "토마스 오스틴",
+  "name": "Thomas Austin",
   "nameEn": "Thomas Austin",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 78,
   "popularity": 42,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 56
       },
       "batting": {
-        "ovr": 60,
-        "contact": 54,
-        "power": 52,
-        "eye": 62,
-        "discipline": 59,
-        "speed": 55,
-        "baseInstinct": 61,
-        "bunting": 43,
-        "platoon": 48,
-        "fielding": 57,
-        "arm": 57,
-        "battingClutch": 59
+        "ovr": 62,
+        "contact": 56,
+        "power": 54,
+        "eye": 64,
+        "discipline": 61,
+        "speed": 57,
+        "baseInstinct": 63,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 59,
+        "battingClutch": 61
       },
       "positionRatings": {
         "LF": 62

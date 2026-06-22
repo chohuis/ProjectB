@@ -1,6 +1,6 @@
 {
   "id": "PLY_15153",
-  "name": "윌리엄스 다니엘",
+  "name": "Williams Daniel",
   "nameEn": "Williams Daniel",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 52,
   "popularity": 26,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 53,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 78,
-        "stamina": 77,
-        "velocity": 82,
-        "command": 79,
-        "control": 75,
-        "movement": 80,
-        "mentality": 73,
-        "recovery": 72,
-        "clutch": 77,
-        "holdRunners": 68
+        "ovr": 72,
+        "stamina": 71,
+        "velocity": 76,
+        "command": 73,
+        "control": 69,
+        "movement": 74,
+        "mentality": 67,
+        "recovery": 66,
+        "clutch": 71,
+        "holdRunners": 63
       },
       "batting": {
         "ovr": 72,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 72
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,9 +1,9 @@
 {
   "id": "PLY_12784",
-  "name": "화이트 네이선",
-  "nameEn": "White Nathan",
+  "name": "Young Luis",
+  "nameEn": "Young Luis",
   "role": "player",
-  "age": 30,
+  "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 56,
-  "popularity": 21,
+  "notes": "국적:미국",
+  "diligence": 51,
+  "popularity": 25,
   "militaryStatus": "군필",
   "entryYear": 2043,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 30,
+  "entryAge": 24,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 8,
-      "primaryPosition": "SP",
-      "developmentRate": 49,
-      "potentialHidden": 65,
-      "proServiceYears": 8,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 41,
+      "primaryPosition": "3B",
+      "developmentRate": 47,
+      "potentialHidden": 78,
+      "proServiceYears": 2,
       "pitching": {
-        "ovr": 76,
-        "stamina": 75,
-        "velocity": 79,
-        "command": 73,
-        "control": 78,
-        "movement": 72,
-        "mentality": 81,
-        "recovery": 66,
-        "clutch": 68,
-        "holdRunners": 75
+        "ovr": 67,
+        "stamina": 64,
+        "velocity": 76,
+        "command": 63,
+        "control": 68,
+        "movement": 58,
+        "mentality": 73,
+        "recovery": 60,
+        "clutch": 63,
+        "holdRunners": 59
       },
       "batting": {
-        "ovr": 73,
-        "contact": 73,
-        "power": 73,
-        "eye": 72,
-        "discipline": 66,
-        "speed": 71,
-        "baseInstinct": 65,
-        "bunting": 61,
+        "ovr": 67,
+        "contact": 62,
+        "power": 65,
+        "eye": 69,
+        "discipline": 63,
+        "speed": 69,
+        "baseInstinct": 68,
+        "bunting": 51,
         "platoon": 50,
-        "fielding": 64,
-        "arm": 73,
-        "battingClutch": 66
+        "fielding": 60,
+        "arm": 70,
+        "battingClutch": 56
       },
       "positionRatings": {
-        "SP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "3B": 67
+      }
     },
     "coach": null,
     "manager": null,

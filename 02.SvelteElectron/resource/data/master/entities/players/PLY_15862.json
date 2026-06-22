@@ -1,6 +1,6 @@
 {
   "id": "PLY_15862",
-  "name": "브라운 미겔",
+  "name": "Brown Miguel",
   "nameEn": "Brown Miguel",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 52,
   "popularity": 24,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 61
       },
       "batting": {
-        "ovr": 75,
-        "contact": 72,
-        "power": 73,
-        "eye": 75,
-        "discipline": 77,
-        "speed": 74,
-        "baseInstinct": 67,
-        "bunting": 66,
-        "platoon": 54,
-        "fielding": 66,
-        "arm": 75,
-        "battingClutch": 67
+        "ovr": 69,
+        "contact": 66,
+        "power": 67,
+        "eye": 69,
+        "discipline": 71,
+        "speed": 68,
+        "baseInstinct": 62,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 69,
+        "battingClutch": 62
       },
       "positionRatings": {
         "LF": 69

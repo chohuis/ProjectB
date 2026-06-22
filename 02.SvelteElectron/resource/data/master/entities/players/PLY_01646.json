@@ -1,61 +1,46 @@
 {
   "id": "PLY_01646",
-  "name": "안동준",
-  "nameEn": "An Dongjun",
+  "name": "야마모토 스스무",
+  "nameEn": "Yamamoto Susumu",
   "role": "player",
-  "age": 18,
+  "age": 29,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_YEOSU_SHORE",
-  "teamId": "TEAM_HS_YEOSU_SHORE",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_YEOSU_SHORE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONDRAKES",
+  "teamId": "TEAM_JBL_CL_IRONDRAKES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "CF",
-      "jerseyNumber": 25,
+      "position": "1B",
+      "jerseyNumber": 16,
       "pitching": {
-        "ovr": 45,
-        "stamina": 45,
-        "velocity": 44,
-        "command": 44,
-        "control": 45,
-        "movement": 43,
-        "mentality": 49,
-        "recovery": 42,
-        "clutch": 45,
-        "holdRunners": 39
+        "ovr": 42,
+        "stamina": 41,
+        "velocity": 41,
+        "command": 42,
+        "control": 39,
+        "movement": 42,
+        "mentality": 42,
+        "recovery": 41
       },
       "batting": {
-        "ovr": 65,
-        "contact": 61,
-        "power": 69,
-        "eye": 64,
-        "discipline": 70,
-        "speed": 66,
-        "fielding": 70,
-        "arm": 67,
-        "battingClutch": 58,
-        "baseInstinct": 55,
-        "bunting": 60,
-        "platoon": 61
+        "ovr": 75,
+        "contact": 71,
+        "power": 81,
+        "eye": 71,
+        "discipline": 72,
+        "speed": 72,
+        "fielding": 73,
+        "arm": 73,
+        "battingClutch": 78
       },
-      "developmentRate": 66,
-      "potentialHidden": 87,
-      "primaryPosition": "CF",
-      "positionRatings": {
-        "CF": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 43,
+      "potentialHidden": 67
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 55,
-  "popularity": 39
+  }
 }

@@ -1,61 +1,46 @@
 {
   "id": "PLY_01599",
-  "name": "이찬영",
-  "nameEn": "Lee Chanyeong",
+  "name": "요시다 진",
+  "nameEn": "Yoshida Jin",
   "role": "player",
-  "age": 18,
+  "age": 35,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_INCHEON_HARBOR",
-  "teamId": "TEAM_HS_INCHEON_HARBOR",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_INCHEON_HARBOR",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TEMPOSTINGS",
+  "teamId": "TEAM_JBL_CL_TEMPOSTINGS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "LF",
-      "jerseyNumber": 28,
+      "position": "C",
+      "jerseyNumber": 14,
       "pitching": {
-        "ovr": 43,
-        "stamina": 49,
-        "velocity": 45,
-        "command": 47,
-        "control": 40,
-        "movement": 39,
-        "mentality": 40,
-        "recovery": 40,
-        "clutch": 37,
-        "holdRunners": 41
+        "ovr": 72,
+        "stamina": 64,
+        "velocity": 72,
+        "command": 72,
+        "control": 66,
+        "movement": 71,
+        "mentality": 68,
+        "recovery": 63
       },
       "batting": {
-        "ovr": 63,
-        "contact": 67,
-        "power": 61,
-        "eye": 58,
-        "discipline": 66,
-        "speed": 59,
-        "fielding": 62,
-        "arm": 61,
-        "battingClutch": 63,
-        "baseInstinct": 61,
-        "bunting": 51,
-        "platoon": 56
+        "ovr": 92,
+        "contact": 94,
+        "power": 90,
+        "eye": 93,
+        "discipline": 93,
+        "speed": 84,
+        "fielding": 88,
+        "arm": 96,
+        "battingClutch": 90
       },
-      "developmentRate": 80,
-      "potentialHidden": 86,
-      "primaryPosition": "LF",
-      "positionRatings": {
-        "LF": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 48,
+      "potentialHidden": 87
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 58,
-  "popularity": 36
+  }
 }

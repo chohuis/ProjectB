@@ -1,6 +1,6 @@
 {
   "id": "PLY_15324",
-  "name": "잭슨 다니엘",
+  "name": "Jackson Daniel",
   "nameEn": "Jackson Daniel",
   "role": "player",
   "age": 33,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 69,
   "popularity": 25,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 37
       },
       "batting": {
-        "ovr": 63,
-        "contact": 53,
-        "power": 56,
-        "eye": 64,
-        "discipline": 54,
-        "speed": 59,
-        "baseInstinct": 59,
-        "bunting": 54,
-        "platoon": 62,
-        "fielding": 62,
-        "arm": 53,
-        "battingClutch": 49
+        "ovr": 51,
+        "contact": 43,
+        "power": 45,
+        "eye": 52,
+        "discipline": 44,
+        "speed": 48,
+        "baseInstinct": 48,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 43,
+        "battingClutch": 40
       },
       "positionRatings": {
         "2B": 51

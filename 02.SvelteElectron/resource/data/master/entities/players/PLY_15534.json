@@ -1,6 +1,6 @@
 {
   "id": "PLY_15534",
-  "name": "미첼 카일",
+  "name": "Mitchell Kyle",
   "nameEn": "Mitchell Kyle",
   "role": "player",
   "age": 33,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 66,
   "popularity": 27,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 74,
       "proServiceYears": 11,
       "pitching": {
-        "ovr": 80,
-        "stamina": 75,
-        "velocity": 84,
-        "command": 76,
-        "control": 71,
-        "movement": 76,
-        "mentality": 72,
-        "recovery": 66,
-        "clutch": 76,
-        "holdRunners": 66
+        "ovr": 63,
+        "stamina": 59,
+        "velocity": 66,
+        "command": 60,
+        "control": 56,
+        "movement": 60,
+        "mentality": 57,
+        "recovery": 52,
+        "clutch": 60,
+        "holdRunners": 52
       },
       "batting": {
         "ovr": 63,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

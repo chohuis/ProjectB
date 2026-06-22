@@ -1,6 +1,6 @@
 {
   "id": "PLY_15420",
-  "name": "데이비스 오스틴",
+  "name": "Davis Austin",
   "nameEn": "Davis Austin",
   "role": "player",
   "age": 30,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 84,
   "popularity": 17,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 57,
       "proServiceYears": 8,
       "pitching": {
-        "ovr": 59,
-        "stamina": 54,
-        "velocity": 64,
-        "command": 50,
-        "control": 57,
-        "movement": 56,
-        "mentality": 67,
-        "recovery": 58,
-        "clutch": 47,
-        "holdRunners": 47
+        "ovr": 52,
+        "stamina": 48,
+        "velocity": 56,
+        "command": 44,
+        "control": 50,
+        "movement": 49,
+        "mentality": 59,
+        "recovery": 51,
+        "clutch": 41,
+        "holdRunners": 41
       },
       "batting": {
         "ovr": 52,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 52
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

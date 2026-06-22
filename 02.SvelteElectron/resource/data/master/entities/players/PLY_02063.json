@@ -1,84 +1,46 @@
 {
   "id": "PLY_02063",
-  "name": "제임스 윌리엄스",
-  "nameEn": "James Williams",
+  "name": "후지타 야마토",
+  "nameEn": "Fujita Yamato",
   "role": "player",
-  "age": 35,
+  "age": 21,
   "status": "active",
-  "originLeagueId": "LEAGUE_ABL",
-  "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_SUNDRAGONS",
-  "teamId": "TEAM_ABL_SUNDRAGONS_1",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SUNS",
+  "teamId": "TEAM_JBL_PL_SUNS_2",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
-      "position": "RP",
-      "jerseyNumber": 50,
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 33,
       "pitching": {
-        "ovr": 88,
-        "stamina": 91,
-        "velocity": 85,
-        "command": 85,
-        "control": 86,
-        "movement": 85,
-        "mentality": 87,
-        "recovery": 88,
-        "clutch": 77,
-        "holdRunners": 77
+        "ovr": 65,
+        "stamina": 67,
+        "velocity": 67,
+        "command": 59,
+        "control": 63,
+        "movement": 62,
+        "mentality": 60,
+        "recovery": 64
       },
       "batting": {
-        "ovr": 70,
-        "contact": 75,
-        "power": 67,
-        "eye": 70,
-        "discipline": 68,
-        "speed": 71,
-        "fielding": 64,
-        "arm": 65,
-        "battingClutch": 60,
-        "baseInstinct": 60,
-        "bunting": 53,
-        "platoon": 67
+        "ovr": 33,
+        "contact": 29,
+        "power": 32,
+        "eye": 29,
+        "discipline": 27,
+        "speed": 30,
+        "fielding": 25,
+        "arm": 34,
+        "battingClutch": 32
       },
-      "developmentRate": 62,
-      "potentialHidden": 86,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 88
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 13,
-      "contract": {
-        "salary": 35600,
-        "durationYears": 4,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 47,
+      "potentialHidden": 77
     },
     "coach": {
       "specialty": "-",
@@ -118,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 62,
-  "popularity": 39,
-  "militaryStatus": "군필"
+  }
 }

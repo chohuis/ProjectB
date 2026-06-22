@@ -1,6 +1,6 @@
 {
   "id": "PLY_15989",
-  "name": "존슨 카를로스",
+  "name": "Johnson Carlos",
   "nameEn": "Johnson Carlos",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 82,
   "popularity": 37,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 45
       },
       "batting": {
-        "ovr": 53,
-        "contact": 56,
-        "power": 55,
-        "eye": 53,
-        "discipline": 48,
-        "speed": 59,
-        "baseInstinct": 51,
-        "bunting": 42,
-        "platoon": 49,
-        "fielding": 52,
-        "arm": 50,
-        "battingClutch": 44
+        "ovr": 54,
+        "contact": 57,
+        "power": 56,
+        "eye": 54,
+        "discipline": 49,
+        "speed": 60,
+        "baseInstinct": 52,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 51,
+        "battingClutch": 45
       },
       "positionRatings": {
         "C": 54

@@ -1,6 +1,6 @@
 {
   "id": "PLY_14151",
-  "name": "윌리엄스 헌터",
+  "name": "Williams Hunter",
   "nameEn": "Williams Hunter",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 81,
   "popularity": 27,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 64,
       "proServiceYears": 2,
       "pitching": {
-        "ovr": 69,
-        "stamina": 61,
-        "velocity": 79,
-        "command": 61,
-        "control": 67,
-        "movement": 67,
-        "mentality": 75,
-        "recovery": 68,
-        "clutch": 61,
-        "holdRunners": 59
+        "ovr": 72,
+        "stamina": 64,
+        "velocity": 82,
+        "command": 64,
+        "control": 70,
+        "movement": 70,
+        "mentality": 78,
+        "recovery": 71,
+        "clutch": 64,
+        "holdRunners": 62
       },
       "batting": {
         "ovr": 72,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 72
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

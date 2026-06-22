@@ -1,6 +1,6 @@
 {
   "id": "PLY_14850",
-  "name": "마틴 에릭",
+  "name": "Martin Eric",
   "nameEn": "Martin Eric",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 83,
   "popularity": 39,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 61
       },
       "batting": {
-        "ovr": 80,
-        "contact": 72,
-        "power": 76,
-        "eye": 72,
-        "discipline": 78,
-        "speed": 76,
-        "baseInstinct": 77,
-        "bunting": 63,
-        "platoon": 54,
-        "fielding": 71,
-        "arm": 69,
-        "battingClutch": 81
+        "ovr": 74,
+        "contact": 67,
+        "power": 70,
+        "eye": 67,
+        "discipline": 72,
+        "speed": 70,
+        "baseInstinct": 71,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 64,
+        "battingClutch": 75
       },
       "positionRatings": {
         "2B": 74

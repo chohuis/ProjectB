@@ -1,61 +1,46 @@
 {
   "id": "PLY_01601",
-  "name": "송성현",
-  "nameEn": "Song Seonghyeon",
+  "name": "하야시 류",
+  "nameEn": "Hayashi Ryu",
   "role": "player",
-  "age": 18,
+  "age": 28,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_INCHEON_HARBOR",
-  "teamId": "TEAM_HS_INCHEON_HARBOR",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_INCHEON_HARBOR",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TEMPOSTINGS",
+  "teamId": "TEAM_JBL_CL_TEMPOSTINGS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "UT",
-      "jerseyNumber": 30,
+      "position": "1B",
+      "jerseyNumber": 16,
       "pitching": {
-        "ovr": 47,
-        "stamina": 51,
-        "velocity": 48,
-        "command": 47,
-        "control": 50,
-        "movement": 47,
-        "mentality": 51,
-        "recovery": 44,
-        "clutch": 35,
-        "holdRunners": 44
+        "ovr": 67,
+        "stamina": 62,
+        "velocity": 69,
+        "command": 70,
+        "control": 62,
+        "movement": 64,
+        "mentality": 63,
+        "recovery": 67
       },
       "batting": {
-        "ovr": 67,
-        "contact": 67,
-        "power": 68,
-        "eye": 71,
-        "discipline": 65,
-        "speed": 67,
-        "fielding": 73,
-        "arm": 62,
-        "battingClutch": 64,
-        "baseInstinct": 64,
-        "bunting": 59,
-        "platoon": 56
+        "ovr": 87,
+        "contact": 85,
+        "power": 90,
+        "eye": 90,
+        "discipline": 87,
+        "speed": 84,
+        "fielding": 88,
+        "arm": 86,
+        "battingClutch": 89
       },
-      "developmentRate": 55,
-      "potentialHidden": 95,
-      "primaryPosition": "UT",
-      "positionRatings": {
-        "UT": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 36,
+      "potentialHidden": 68
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 59,
-  "popularity": 18
+  }
 }

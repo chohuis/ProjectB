@@ -1,6 +1,6 @@
 {
   "id": "PLY_15633",
-  "name": "로드리게스 제이크",
+  "name": "Rodriguez Jake",
   "nameEn": "Rodriguez Jake",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 68,
   "popularity": 16,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 57
       },
       "batting": {
-        "ovr": 60,
-        "contact": 57,
-        "power": 50,
-        "eye": 55,
-        "discipline": 58,
-        "speed": 57,
-        "baseInstinct": 62,
-        "bunting": 51,
-        "platoon": 48,
-        "fielding": 56,
-        "arm": 62,
-        "battingClutch": 60
+        "ovr": 62,
+        "contact": 59,
+        "power": 52,
+        "eye": 57,
+        "discipline": 60,
+        "speed": 59,
+        "baseInstinct": 64,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 64,
+        "battingClutch": 62
       },
       "positionRatings": {
         "2B": 62

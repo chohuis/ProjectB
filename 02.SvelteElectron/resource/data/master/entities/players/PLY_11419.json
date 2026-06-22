@@ -1,9 +1,9 @@
 {
   "id": "PLY_11419",
-  "name": "존슨 칼렙",
-  "nameEn": "Johnson Caleb",
+  "name": "Martin Nathan",
+  "nameEn": "Martin Nathan",
   "role": "player",
-  "age": 21,
+  "age": 34,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 48,
-  "popularity": 35,
+  "notes": "국적:미국",
+  "diligence": 75,
+  "popularity": 48,
   "militaryStatus": "군필",
   "entryYear": 2035,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 21,
+  "entryAge": 34,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 42,
+      "jerseyNumber": 38,
       "primaryPosition": "SP",
-      "developmentRate": 66,
+      "developmentRate": 43,
       "potentialHidden": 73,
-      "proServiceYears": 0,
+      "proServiceYears": 12,
       "pitching": {
-        "ovr": 54,
-        "stamina": 51,
-        "velocity": 55,
-        "command": 52,
-        "control": 53,
-        "movement": 48,
-        "mentality": 51,
-        "recovery": 54,
-        "clutch": 54,
-        "holdRunners": 48
+        "ovr": 68,
+        "stamina": 65,
+        "velocity": 78,
+        "command": 69,
+        "control": 73,
+        "movement": 69,
+        "mentality": 66,
+        "recovery": 60,
+        "clutch": 63,
+        "holdRunners": 66
       },
       "batting": {
-        "ovr": 57,
-        "contact": 53,
-        "power": 49,
-        "eye": 51,
-        "discipline": 48,
-        "speed": 56,
-        "baseInstinct": 53,
-        "bunting": 44,
+        "ovr": 68,
+        "contact": 67,
+        "power": 68,
+        "eye": 72,
+        "discipline": 60,
+        "speed": 64,
+        "baseInstinct": 69,
+        "bunting": 55,
         "platoon": 50,
-        "fielding": 50,
-        "arm": 50,
-        "battingClutch": 57
+        "fielding": 70,
+        "arm": 60,
+        "battingClutch": 58
       },
       "positionRatings": {
-        "SP": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 68
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_16182",
-  "name": "화이트 트레버",
+  "name": "White Trevor",
   "nameEn": "White Trevor",
   "role": "player",
   "age": 29,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 67,
   "popularity": 15,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 54,
       "proServiceYears": 7,
       "pitching": {
-        "ovr": 70,
-        "stamina": 74,
-        "velocity": 69,
-        "command": 73,
-        "control": 61,
-        "movement": 63,
-        "mentality": 74,
-        "recovery": 58,
-        "clutch": 67,
-        "holdRunners": 65
+        "ovr": 64,
+        "stamina": 68,
+        "velocity": 63,
+        "command": 67,
+        "control": 56,
+        "movement": 58,
+        "mentality": 68,
+        "recovery": 53,
+        "clutch": 61,
+        "holdRunners": 59
       },
       "batting": {
         "ovr": 64,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 64
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

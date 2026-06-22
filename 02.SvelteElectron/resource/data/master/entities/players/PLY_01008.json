@@ -1,14 +1,14 @@
 {
   "id": "PLY_01008",
   "name": "그린 타일러",
-  "nameEn": "Geu 린 타일러",
+  "nameEn": "Green Tyler",
   "role": "player",
   "age": 33,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_SPACECOMETS",
-  "teamId": "TEAM_ABL_SPACECOMETS_1",
+  "clubId": "CLUB_ABL_SEA",
+  "teamId": "TEAM_ABL_SEA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -19,62 +19,28 @@
       "position": "RP",
       "jerseyNumber": 8,
       "pitching": {
-        "ovr": 75,
-        "stamina": 73,
-        "velocity": 72,
-        "command": 71,
-        "control": 80,
-        "movement": 74,
-        "mentality": 78,
-        "recovery": 73,
-        "clutch": 66,
-        "holdRunners": 73
+        "ovr": 84,
+        "stamina": 76,
+        "velocity": 89,
+        "command": 79,
+        "control": 78,
+        "movement": 78,
+        "mentality": 85,
+        "recovery": 82
       },
       "batting": {
-        "ovr": 57,
-        "contact": 58,
+        "ovr": 54,
+        "contact": 56,
         "power": 55,
-        "eye": 62,
-        "discipline": 53,
-        "speed": 57,
-        "fielding": 58,
-        "arm": 60,
-        "battingClutch": 49,
-        "baseInstinct": 49,
-        "bunting": 45,
-        "platoon": 44
+        "eye": 55,
+        "discipline": 49,
+        "speed": 54,
+        "fielding": 55,
+        "arm": 53,
+        "battingClutch": 56
       },
       "developmentRate": 51,
-      "potentialHidden": 86,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 75
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_FORKBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SCREWBALL",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 11,
-      "contract": {
-        "salary": 25600,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 86
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

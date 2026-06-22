@@ -1,6 +1,6 @@
 {
   "id": "PLY_15777",
-  "name": "홀 카일",
+  "name": "Hall Kyle",
   "nameEn": "Hall Kyle",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 57,
   "popularity": 34,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 63
       },
       "batting": {
-        "ovr": 71,
-        "contact": 63,
-        "power": 64,
-        "eye": 72,
-        "discipline": 69,
-        "speed": 71,
-        "baseInstinct": 69,
-        "bunting": 66,
-        "platoon": 55,
-        "fielding": 68,
-        "arm": 73,
-        "battingClutch": 58
+        "ovr": 65,
+        "contact": 58,
+        "power": 59,
+        "eye": 66,
+        "discipline": 63,
+        "speed": 65,
+        "baseInstinct": 63,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 67,
+        "battingClutch": 53
       },
       "positionRatings": {
         "SS": 65

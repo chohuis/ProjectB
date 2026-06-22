@@ -1,14 +1,14 @@
 {
   "id": "PLY_00585",
   "name": "백준호",
-  "nameEn": "Baek Junho",
+  "nameEn": "Lee Chan-woo",
   "role": "player",
   "age": 29,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_SKYGULLS",
-  "teamId": "TEAM_KBL_SKYGULLS_2",
+  "clubId": "CLUB_KBL_LG",
+  "teamId": "TEAM_KBL_LG_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,58 +19,28 @@
       "position": "CP",
       "jerseyNumber": 40,
       "pitching": {
-        "ovr": 64,
-        "stamina": 63,
-        "velocity": 69,
-        "command": 69,
-        "control": 60,
-        "movement": 64,
-        "mentality": 66,
-        "recovery": 60,
-        "clutch": 62,
-        "holdRunners": 54
+        "ovr": 72,
+        "stamina": 65,
+        "velocity": 77,
+        "command": 76,
+        "control": 74,
+        "movement": 70,
+        "mentality": 68,
+        "recovery": 67
       },
       "batting": {
-        "ovr": 46,
-        "contact": 48,
-        "power": 49,
-        "eye": 51,
-        "discipline": 41,
-        "speed": 43,
-        "fielding": 41,
-        "arm": 50,
-        "battingClutch": 39,
-        "baseInstinct": 40,
-        "bunting": 37,
-        "platoon": 35
+        "ovr": 36,
+        "contact": 39,
+        "power": 39,
+        "eye": 42,
+        "discipline": 36,
+        "speed": 41,
+        "fielding": 35,
+        "arm": 41,
+        "battingClutch": 44
       },
       "developmentRate": 58,
-      "potentialHidden": 84,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 64
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 7,
-      "contract": {
-        "salary": 4900,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 84
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

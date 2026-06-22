@@ -1,6 +1,6 @@
 {
   "id": "PLY_16134",
-  "name": "애덤스 데릭",
+  "name": "Adams Derek",
   "nameEn": "Adams Derek",
   "role": "player",
   "age": 23,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 48,
   "popularity": 12,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 80,
       "proServiceYears": 1,
       "pitching": {
-        "ovr": 73,
-        "stamina": 66,
-        "velocity": 71,
-        "command": 64,
-        "control": 71,
-        "movement": 65,
-        "mentality": 68,
-        "recovery": 69,
-        "clutch": 62,
-        "holdRunners": 69
+        "ovr": 76,
+        "stamina": 69,
+        "velocity": 74,
+        "command": 67,
+        "control": 74,
+        "movement": 68,
+        "mentality": 71,
+        "recovery": 72,
+        "clutch": 65,
+        "holdRunners": 72
       },
       "batting": {
         "ovr": 76,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

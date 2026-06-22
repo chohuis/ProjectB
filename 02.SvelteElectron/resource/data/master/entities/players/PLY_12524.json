@@ -1,9 +1,9 @@
 {
   "id": "PLY_12524",
-  "name": "베이커 칼렙",
-  "nameEn": "Baker Caleb",
+  "name": "Carter Carlos",
+  "nameEn": "Carter Carlos",
   "role": "player",
-  "age": 24,
+  "age": 34,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 79,
-  "popularity": 28,
+  "notes": "국적:파나마",
+  "diligence": 64,
+  "popularity": 42,
   "militaryStatus": "군필",
   "entryYear": 2042,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 24,
+  "entryAge": 34,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 97,
-      "primaryPosition": "SP",
-      "developmentRate": 65,
-      "potentialHidden": 77,
-      "proServiceYears": 2,
+      "position": "3B",
+      "jerseyNumber": 13,
+      "primaryPosition": "3B",
+      "developmentRate": 49,
+      "potentialHidden": 45,
+      "proServiceYears": 12,
       "pitching": {
-        "ovr": 72,
-        "stamina": 70,
-        "velocity": 72,
-        "command": 67,
-        "control": 65,
-        "movement": 70,
-        "mentality": 73,
-        "recovery": 65,
-        "clutch": 71,
-        "holdRunners": 64
+        "ovr": 58,
+        "stamina": 59,
+        "velocity": 65,
+        "command": 57,
+        "control": 57,
+        "movement": 57,
+        "mentality": 59,
+        "recovery": 56,
+        "clutch": 56,
+        "holdRunners": 43
       },
       "batting": {
-        "ovr": 79,
-        "contact": 80,
-        "power": 75,
-        "eye": 84,
-        "discipline": 81,
-        "speed": 85,
-        "baseInstinct": 78,
-        "bunting": 72,
+        "ovr": 58,
+        "contact": 49,
+        "power": 50,
+        "eye": 60,
+        "discipline": 53,
+        "speed": 57,
+        "baseInstinct": 58,
+        "bunting": 50,
         "platoon": 50,
-        "fielding": 72,
-        "arm": 79,
-        "battingClutch": 76
+        "fielding": 56,
+        "arm": 57,
+        "battingClutch": 51
       },
       "positionRatings": {
-        "SP": 79
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "3B": 58
+      }
     },
     "coach": null,
     "manager": null,

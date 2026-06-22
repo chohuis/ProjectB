@@ -1,9 +1,9 @@
 {
   "id": "PLY_12163",
-  "name": "스콧 미겔",
-  "nameEn": "Scott Miguel",
+  "name": "Harris Dylan",
+  "nameEn": "Harris Dylan",
   "role": "player",
-  "age": 32,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 55,
-  "popularity": 16,
+  "notes": "국적:도미니카",
+  "diligence": 85,
+  "popularity": 38,
   "militaryStatus": "군필",
   "entryYear": 2040,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 32,
+  "entryAge": 20,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 24,
-      "primaryPosition": "SP",
-      "developmentRate": 46,
-      "potentialHidden": 76,
-      "proServiceYears": 10,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 28,
+      "primaryPosition": "C",
+      "developmentRate": 62,
+      "potentialHidden": 65,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 70,
-        "stamina": 76,
-        "velocity": 78,
-        "command": 62,
-        "control": 64,
-        "movement": 67,
-        "mentality": 73,
-        "recovery": 71,
-        "clutch": 69,
-        "holdRunners": 67
+        "ovr": 67,
+        "stamina": 64,
+        "velocity": 74,
+        "command": 69,
+        "control": 70,
+        "movement": 69,
+        "mentality": 62,
+        "recovery": 63,
+        "clutch": 59,
+        "holdRunners": 60
       },
       "batting": {
-        "ovr": 61,
-        "contact": 54,
-        "power": 58,
-        "eye": 57,
-        "discipline": 59,
-        "speed": 58,
-        "baseInstinct": 59,
-        "bunting": 42,
+        "ovr": 67,
+        "contact": 61,
+        "power": 64,
+        "eye": 58,
+        "discipline": 65,
+        "speed": 66,
+        "baseInstinct": 69,
+        "bunting": 49,
         "platoon": 50,
-        "fielding": 58,
-        "arm": 56,
-        "battingClutch": 61
+        "fielding": 64,
+        "arm": 64,
+        "battingClutch": 64
       },
       "positionRatings": {
-        "SP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "C": 67
+      }
     },
     "coach": null,
     "manager": null,

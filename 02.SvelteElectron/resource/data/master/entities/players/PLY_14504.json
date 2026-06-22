@@ -1,6 +1,6 @@
 {
   "id": "PLY_14504",
-  "name": "로드리게스 브랜던",
+  "name": "Rodriguez Brandon",
   "nameEn": "Rodriguez Brandon",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 73,
   "popularity": 24,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 77,
       "proServiceYears": 5,
       "pitching": {
-        "ovr": 55,
-        "stamina": 55,
-        "velocity": 53,
-        "command": 53,
-        "control": 59,
-        "movement": 54,
-        "mentality": 57,
-        "recovery": 53,
-        "clutch": 48,
-        "holdRunners": 44
+        "ovr": 61,
+        "stamina": 61,
+        "velocity": 59,
+        "command": 59,
+        "control": 65,
+        "movement": 60,
+        "mentality": 63,
+        "recovery": 59,
+        "clutch": 53,
+        "holdRunners": 49
       },
       "batting": {
         "ovr": 61,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

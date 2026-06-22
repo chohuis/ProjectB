@@ -1,6 +1,6 @@
 {
   "id": "PLY_14488",
-  "name": "가르시아 마커스",
+  "name": "Garcia Marcus",
   "nameEn": "Garcia Marcus",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 45,
   "popularity": 11,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 63,
       "proServiceYears": 3,
       "pitching": {
-        "ovr": 68,
-        "stamina": 67,
-        "velocity": 71,
-        "command": 66,
-        "control": 60,
-        "movement": 62,
-        "mentality": 67,
-        "recovery": 57,
-        "clutch": 55,
-        "holdRunners": 58
+        "ovr": 70,
+        "stamina": 69,
+        "velocity": 73,
+        "command": 68,
+        "control": 62,
+        "movement": 64,
+        "mentality": 69,
+        "recovery": 59,
+        "clutch": 57,
+        "holdRunners": 60
       },
       "batting": {
         "ovr": 70,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

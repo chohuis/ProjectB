@@ -1,9 +1,9 @@
 {
   "id": "PLY_00125",
   "name": "문지원",
-  "nameEn": "Moon Jiwon",
+  "nameEn": "Hwang Jun-seo",
   "role": "player",
-  "age": 18,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -20,46 +20,27 @@
       "jerseyNumber": 5,
       "pitching": {
         "ovr": 46,
-        "stamina": 48,
-        "velocity": 45,
-        "command": 50,
-        "control": 50,
-        "movement": 49,
-        "mentality": 49,
-        "recovery": 45,
-        "clutch": 38,
-        "holdRunners": 39
+        "stamina": 60,
+        "velocity": 43,
+        "command": 43,
+        "control": 57,
+        "movement": 43,
+        "mentality": 50,
+        "recovery": 52
       },
       "batting": {
         "ovr": 28,
-        "contact": 26,
-        "power": 28,
-        "eye": 34,
-        "discipline": 25,
-        "speed": 35,
-        "fielding": 33,
-        "arm": 33,
-        "battingClutch": 46,
-        "baseInstinct": 45,
-        "bunting": 40,
-        "platoon": 36
+        "contact": 59,
+        "power": 53,
+        "eye": 43,
+        "discipline": 58,
+        "speed": 44,
+        "fielding": 56,
+        "arm": 49,
+        "battingClutch": 45
       },
       "developmentRate": 71,
-      "potentialHidden": 64,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 46
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        }
-      ]
+      "potentialHidden": 64
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

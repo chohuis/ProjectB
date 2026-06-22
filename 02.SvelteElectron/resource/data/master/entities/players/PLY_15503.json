@@ -1,6 +1,6 @@
 {
   "id": "PLY_15503",
-  "name": "루이스 카를로스",
+  "name": "Lewis Carlos",
   "nameEn": "Lewis Carlos",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 59,
   "popularity": 14,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 57
       },
       "batting": {
-        "ovr": 70,
-        "contact": 74,
-        "power": 60,
-        "eye": 74,
-        "discipline": 73,
-        "speed": 77,
-        "baseInstinct": 66,
-        "bunting": 50,
-        "platoon": 56,
-        "fielding": 68,
-        "arm": 59,
-        "battingClutch": 57
+        "ovr": 63,
+        "contact": 67,
+        "power": 54,
+        "eye": 67,
+        "discipline": 66,
+        "speed": 69,
+        "baseInstinct": 59,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 53,
+        "battingClutch": 51
       },
       "positionRatings": {
         "1B": 63

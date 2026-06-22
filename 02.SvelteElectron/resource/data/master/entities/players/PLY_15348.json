@@ -1,6 +1,6 @@
 {
   "id": "PLY_15348",
-  "name": "그린 로건",
+  "name": "Green Logan",
   "nameEn": "Green Logan",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 71,
   "popularity": 36,
   "militaryStatus": "군필",

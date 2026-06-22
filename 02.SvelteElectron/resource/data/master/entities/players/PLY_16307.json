@@ -1,6 +1,6 @@
 {
   "id": "PLY_16307",
-  "name": "잭슨 마커스",
+  "name": "Jackson Marcus",
   "nameEn": "Jackson Marcus",
   "role": "player",
   "age": 29,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 46,
   "popularity": 19,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 53
       },
       "batting": {
-        "ovr": 67,
-        "contact": 64,
-        "power": 63,
-        "eye": 63,
-        "discipline": 63,
-        "speed": 64,
-        "baseInstinct": 66,
-        "bunting": 56,
-        "platoon": 56,
-        "fielding": 59,
-        "arm": 70,
-        "battingClutch": 56
+        "ovr": 60,
+        "contact": 57,
+        "power": 56,
+        "eye": 56,
+        "discipline": 56,
+        "speed": 57,
+        "baseInstinct": 59,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 63,
+        "battingClutch": 50
       },
       "positionRatings": {
         "RF": 60

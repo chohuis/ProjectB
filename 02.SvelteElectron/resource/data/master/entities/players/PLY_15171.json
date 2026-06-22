@@ -1,6 +1,6 @@
 {
   "id": "PLY_15171",
-  "name": "윌리엄스 루이스",
+  "name": "Williams Luis",
   "nameEn": "Williams Luis",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 50,
   "popularity": 31,
   "militaryStatus": "군필",
@@ -57,13 +57,7 @@
       },
       "positionRatings": {
         "SP": 47
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

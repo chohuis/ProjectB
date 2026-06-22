@@ -1,7 +1,7 @@
 {
   "id": "PLY_00135",
   "name": "성도윤",
-  "nameEn": "Seong Doyun",
+  "nameEn": "Sim Ju-won",
   "role": "player",
   "age": 17,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "SS",
       "jerseyNumber": 15,
       "pitching": {
-        "ovr": 20,
-        "stamina": 20,
-        "velocity": 20,
-        "command": 23,
-        "control": 20,
-        "movement": 21,
-        "mentality": 20,
-        "recovery": 20,
-        "clutch": 38,
-        "holdRunners": 42
+        "ovr": 40,
+        "stamina": 51,
+        "velocity": 55,
+        "command": 38,
+        "control": 50,
+        "movement": 38,
+        "mentality": 41,
+        "recovery": 49
       },
       "batting": {
-        "ovr": 28,
-        "contact": 24,
-        "power": 24,
-        "eye": 26,
-        "discipline": 26,
-        "speed": 29,
-        "fielding": 32,
-        "arm": 25,
-        "battingClutch": 39,
-        "baseInstinct": 37,
-        "bunting": 37,
-        "platoon": 40
+        "ovr": 42,
+        "contact": 42,
+        "power": 48,
+        "eye": 48,
+        "discipline": 35,
+        "speed": 50,
+        "fielding": 41,
+        "arm": 42,
+        "battingClutch": 50
       },
       "developmentRate": 63,
-      "potentialHidden": 64,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 28
-      }
+      "potentialHidden": 64
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

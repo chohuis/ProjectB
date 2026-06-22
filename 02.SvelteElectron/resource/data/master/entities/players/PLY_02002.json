@@ -1,72 +1,46 @@
 {
   "id": "PLY_02002",
-  "name": "배태양",
-  "nameEn": "Bae Taeyang",
+  "name": "니시무라 이사무",
+  "nameEn": "Nishimura Isamu",
   "role": "player",
-  "age": 35,
+  "age": 29,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_GIANTWHALES",
-  "teamId": "TEAM_KBL_GIANTWHALES_1",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SEAGULLS",
+  "teamId": "TEAM_JBL_PL_SEAGULLS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "C",
-      "jerseyNumber": 17,
+      "position": "CP",
+      "jerseyNumber": 12,
       "pitching": {
-        "ovr": 66,
-        "stamina": 66,
-        "velocity": 63,
-        "command": 69,
-        "control": 62,
+        "ovr": 65,
+        "stamina": 59,
+        "velocity": 71,
+        "command": 65,
+        "control": 67,
         "movement": 68,
-        "mentality": 70,
-        "recovery": 62,
-        "clutch": 63,
-        "holdRunners": 57
+        "mentality": 69,
+        "recovery": 71
       },
       "batting": {
-        "ovr": 86,
-        "contact": 91,
-        "power": 82,
-        "eye": 91,
-        "discipline": 81,
-        "speed": 83,
-        "fielding": 92,
-        "arm": 88,
-        "battingClutch": 86,
-        "baseInstinct": 83,
-        "bunting": 75,
-        "platoon": 75
+        "ovr": 43,
+        "contact": 45,
+        "power": 47,
+        "eye": 47,
+        "discipline": 43,
+        "speed": 45,
+        "fielding": 46,
+        "arm": 48,
+        "battingClutch": 46
       },
-      "developmentRate": 35,
-      "potentialHidden": 85,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 86
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 13,
-      "contract": {
-        "salary": 5300,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 45,
+      "potentialHidden": 86
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 44,
-  "popularity": 57,
-  "militaryStatus": "군필"
+  }
 }

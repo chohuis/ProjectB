@@ -1,6 +1,6 @@
 {
   "id": "PLY_15166",
-  "name": "홀 타일러",
+  "name": "Hall Tyler",
   "nameEn": "Hall Tyler",
   "role": "player",
   "age": 33,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 59,
   "popularity": 13,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 64,
       "proServiceYears": 11,
       "pitching": {
-        "ovr": 82,
-        "stamina": 85,
-        "velocity": 92,
-        "command": 76,
-        "control": 74,
-        "movement": 82,
-        "mentality": 78,
-        "recovery": 81,
-        "clutch": 68,
-        "holdRunners": 77
+        "ovr": 65,
+        "stamina": 67,
+        "velocity": 73,
+        "command": 60,
+        "control": 59,
+        "movement": 65,
+        "mentality": 62,
+        "recovery": 64,
+        "clutch": 54,
+        "holdRunners": 61
       },
       "batting": {
         "ovr": 65,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

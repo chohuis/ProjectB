@@ -1,14 +1,14 @@
 {
   "id": "PLY_01219",
   "name": "영 데이비드",
-  "nameEn": "Yeong  데이비드",
+  "nameEn": "Young David",
   "role": "player",
   "age": 33,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_BAYSEALS",
-  "teamId": "TEAM_ABL_BAYSEALS_2",
+  "clubId": "CLUB_ABL_PHI",
+  "teamId": "TEAM_ABL_PHI_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,48 +19,28 @@
       "position": "2B",
       "jerseyNumber": 54,
       "pitching": {
-        "ovr": 45,
-        "stamina": 49,
-        "velocity": 43,
-        "command": 42,
-        "control": 45,
-        "movement": 49,
-        "mentality": 47,
-        "recovery": 45,
-        "clutch": 40,
-        "holdRunners": 44
+        "ovr": 46,
+        "stamina": 36,
+        "velocity": 42,
+        "command": 46,
+        "control": 44,
+        "movement": 40,
+        "mentality": 44,
+        "recovery": 42
       },
       "batting": {
         "ovr": 65,
         "contact": 69,
-        "power": 67,
-        "eye": 68,
-        "discipline": 67,
-        "speed": 64,
-        "fielding": 67,
-        "arm": 65,
-        "battingClutch": 65,
-        "baseInstinct": 58,
-        "bunting": 53,
-        "platoon": 54
+        "power": 59,
+        "eye": 63,
+        "discipline": 64,
+        "speed": 68,
+        "fielding": 66,
+        "arm": 66,
+        "battingClutch": 64
       },
       "developmentRate": 43,
-      "potentialHidden": 80,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 65
-      },
-      "proServiceYears": 11,
-      "contract": {
-        "salary": 6300,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 80
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

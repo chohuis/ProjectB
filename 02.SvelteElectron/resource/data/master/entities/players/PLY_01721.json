@@ -1,69 +1,46 @@
 {
   "id": "PLY_01721",
-  "name": "나원준",
-  "nameEn": "Na Wonjun",
+  "name": "나카무라 유토",
+  "nameEn": "Nakamura Yuto",
   "role": "player",
-  "age": 16,
+  "age": 29,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_GANGWON_PEAK",
-  "teamId": "TEAM_HS_GANGWON_PEAK",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_GANGWON_PEAK",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+  "teamId": "TEAM_JBL_CL_SILVERWOLVES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
-      "position": "CP",
-      "jerseyNumber": 10,
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 1,
       "pitching": {
-        "ovr": 43,
-        "stamina": 43,
-        "velocity": 44,
-        "command": 44,
-        "control": 41,
-        "movement": 42,
-        "mentality": 45,
-        "recovery": 41,
-        "clutch": 37,
-        "holdRunners": 32
+        "ovr": 68,
+        "stamina": 71,
+        "velocity": 69,
+        "command": 68,
+        "control": 66,
+        "movement": 67,
+        "mentality": 70,
+        "recovery": 72
       },
       "batting": {
-        "ovr": 25,
-        "contact": 26,
-        "power": 26,
-        "eye": 24,
-        "discipline": 20,
-        "speed": 20,
-        "fielding": 27,
-        "arm": 29,
-        "battingClutch": 41,
-        "baseInstinct": 45,
-        "bunting": 39,
-        "platoon": 39
+        "ovr": 41,
+        "contact": 38,
+        "power": 41,
+        "eye": 33,
+        "discipline": 36,
+        "speed": 37,
+        "fielding": 32,
+        "arm": 39,
+        "battingClutch": 42
       },
-      "developmentRate": 50,
-      "potentialHidden": 77,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 43
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SCREWBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 2
-        }
-      ]
+      "developmentRate": 37,
+      "potentialHidden": 59
     },
     "coach": {
       "specialty": "-",
@@ -103,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 70,
-  "popularity": 21
+  }
 }

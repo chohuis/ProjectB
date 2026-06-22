@@ -1,14 +1,14 @@
 {
   "id": "PLY_01048",
   "name": "라미레스 케빈",
-  "nameEn": "Ra 미레스 케빈",
+  "nameEn": "Ramirez Kevin",
   "role": "player",
   "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_PEACHTREEFALCONS",
-  "teamId": "TEAM_ABL_PEACHTREEFALCONS_1",
+  "clubId": "CLUB_ABL_HOU",
+  "teamId": "TEAM_ABL_HOU",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 3,
       "pitching": {
-        "ovr": 73,
-        "stamina": 75,
-        "velocity": 75,
-        "command": 73,
-        "control": 72,
-        "movement": 71,
-        "mentality": 74,
-        "recovery": 77,
-        "clutch": 62,
-        "holdRunners": 65
+        "ovr": 79,
+        "stamina": 78,
+        "velocity": 80,
+        "command": 84,
+        "control": 77,
+        "movement": 74,
+        "mentality": 77,
+        "recovery": 79
       },
       "batting": {
-        "ovr": 55,
-        "contact": 51,
-        "power": 54,
-        "eye": 57,
-        "discipline": 61,
-        "speed": 50,
-        "fielding": 60,
-        "arm": 53,
-        "battingClutch": 46,
-        "baseInstinct": 49,
-        "bunting": 41,
-        "platoon": 43
+        "ovr": 48,
+        "contact": 48,
+        "power": 53,
+        "eye": 52,
+        "discipline": 53,
+        "speed": 49,
+        "fielding": 46,
+        "arm": 55,
+        "battingClutch": 54
       },
       "developmentRate": 52,
-      "potentialHidden": 85,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SCREWBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_KNUCKLEBALL",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 24000,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 85
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

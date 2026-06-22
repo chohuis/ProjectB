@@ -1,6 +1,6 @@
 {
   "id": "PLY_16073",
-  "name": "앤더슨 코디",
+  "name": "Anderson Cody",
   "nameEn": "Anderson Cody",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 60,
   "popularity": 49,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 68,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 57,
-        "stamina": 53,
-        "velocity": 64,
-        "command": 59,
-        "control": 55,
-        "movement": 55,
-        "mentality": 51,
-        "recovery": 58,
-        "clutch": 54,
-        "holdRunners": 44
+        "ovr": 58,
+        "stamina": 54,
+        "velocity": 65,
+        "command": 60,
+        "control": 56,
+        "movement": 56,
+        "mentality": 52,
+        "recovery": 59,
+        "clutch": 55,
+        "holdRunners": 45
       },
       "batting": {
         "ovr": 58,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

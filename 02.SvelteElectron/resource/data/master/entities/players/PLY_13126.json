@@ -1,9 +1,9 @@
 {
   "id": "PLY_13126",
-  "name": "앨런 코디",
-  "nameEn": "Allen Cody",
+  "name": "Carter Alex",
+  "nameEn": "Carter Alex",
   "role": "player",
-  "age": 24,
+  "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 73,
-  "popularity": 10,
+  "notes": "국적:베네수엘라",
+  "diligence": 59,
+  "popularity": 36,
   "militaryStatus": "군필",
   "entryYear": 2045,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 24,
+  "entryAge": 25,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 36,
+      "jerseyNumber": 59,
       "primaryPosition": "SP",
-      "developmentRate": 66,
-      "potentialHidden": 83,
-      "proServiceYears": 2,
+      "developmentRate": 65,
+      "potentialHidden": 80,
+      "proServiceYears": 3,
       "pitching": {
-        "ovr": 66,
-        "stamina": 62,
-        "velocity": 64,
-        "command": 58,
-        "control": 61,
-        "movement": 59,
-        "mentality": 67,
-        "recovery": 59,
-        "clutch": 61,
-        "holdRunners": 53
+        "ovr": 81,
+        "stamina": 85,
+        "velocity": 91,
+        "command": 75,
+        "control": 84,
+        "movement": 77,
+        "mentality": 78,
+        "recovery": 76,
+        "clutch": 77,
+        "holdRunners": 73
       },
       "batting": {
-        "ovr": 72,
-        "contact": 65,
-        "power": 61,
-        "eye": 70,
-        "discipline": 73,
-        "speed": 65,
-        "baseInstinct": 63,
-        "bunting": 66,
+        "ovr": 81,
+        "contact": 83,
+        "power": 73,
+        "eye": 85,
+        "discipline": 78,
+        "speed": 74,
+        "baseInstinct": 76,
+        "bunting": 65,
         "platoon": 50,
-        "fielding": 74,
-        "arm": 64,
-        "battingClutch": 65
+        "fielding": 75,
+        "arm": 80,
+        "battingClutch": 79
       },
       "positionRatings": {
-        "SP": 72
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ]
+        "SP": 81
+      }
     },
     "coach": null,
     "manager": null,

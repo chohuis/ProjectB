@@ -1,14 +1,14 @@
 {
   "id": "PLY_01427",
   "name": "킹 벤자민",
-  "nameEn": "King  벤자민",
+  "nameEn": "King Benjamin",
   "role": "player",
   "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_COASTALRAYS",
-  "teamId": "TEAM_ABL_COASTALRAYS_1",
+  "clubId": "CLUB_ABL_SF",
+  "teamId": "TEAM_ABL_SF",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,48 +19,28 @@
       "position": "RF",
       "jerseyNumber": 22,
       "pitching": {
-        "ovr": 67,
-        "stamina": 73,
-        "velocity": 69,
-        "command": 72,
-        "control": 64,
-        "movement": 72,
-        "mentality": 68,
-        "recovery": 69,
-        "clutch": 66,
-        "holdRunners": 66
+        "ovr": 61,
+        "stamina": 64,
+        "velocity": 62,
+        "command": 65,
+        "control": 59,
+        "movement": 58,
+        "mentality": 60,
+        "recovery": 63
       },
       "batting": {
-        "ovr": 87,
+        "ovr": 91,
         "contact": 91,
-        "power": 91,
-        "eye": 87,
-        "discipline": 83,
-        "speed": 85,
-        "fielding": 92,
-        "arm": 86,
-        "battingClutch": 80,
-        "baseInstinct": 86,
-        "bunting": 74,
-        "platoon": 83
+        "power": 90,
+        "eye": 89,
+        "discipline": 91,
+        "speed": 89,
+        "fielding": 89,
+        "arm": 91,
+        "battingClutch": 91
       },
       "developmentRate": 45,
-      "potentialHidden": 78,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 87
-      },
-      "proServiceYears": 10,
-      "contract": {
-        "salary": 19400,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 78
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

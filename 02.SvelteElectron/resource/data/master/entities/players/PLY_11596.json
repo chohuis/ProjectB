@@ -1,7 +1,7 @@
 {
   "id": "PLY_11596",
-  "name": "윌리엄스 루이스",
-  "nameEn": "Williams Luis",
+  "name": "Mitchell Luis",
+  "nameEn": "Mitchell Luis",
   "role": "player",
   "age": 19,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 50,
-  "popularity": 31,
+  "notes": "국적:파나마",
+  "diligence": 73,
+  "popularity": 14,
   "militaryStatus": "군필",
   "entryYear": 2036,
   "entryLeague": "LEAGUE_ABL",
@@ -21,53 +21,43 @@
   "entryAge": 19,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 58,
-      "primaryPosition": "SP",
-      "developmentRate": 55,
-      "potentialHidden": 81,
+      "position": "SS",
+      "jerseyNumber": 35,
+      "primaryPosition": "SS",
+      "developmentRate": 60,
+      "potentialHidden": 94,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 50,
-        "stamina": 53,
-        "velocity": 48,
+        "ovr": 54,
+        "stamina": 54,
+        "velocity": 56,
         "command": 50,
         "control": 52,
         "movement": 47,
-        "mentality": 46,
-        "recovery": 44,
-        "clutch": 39,
-        "holdRunners": 38
+        "mentality": 52,
+        "recovery": 47,
+        "clutch": 47,
+        "holdRunners": 48
       },
       "batting": {
-        "ovr": 52,
-        "contact": 43,
-        "power": 54,
-        "eye": 44,
-        "discipline": 43,
-        "speed": 57,
-        "baseInstinct": 46,
+        "ovr": 54,
+        "contact": 49,
+        "power": 50,
+        "eye": 58,
+        "discipline": 53,
+        "speed": 49,
+        "baseInstinct": 52,
         "bunting": 44,
         "platoon": 50,
-        "fielding": 48,
+        "fielding": 56,
         "arm": 43,
-        "battingClutch": 47
+        "battingClutch": 52
       },
       "positionRatings": {
-        "SP": 52
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SS": 54
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,9 +1,9 @@
 {
   "id": "PLY_12831",
-  "name": "루이스 타일러",
-  "nameEn": "Lewis Tyler",
+  "name": "Hernandez Tyler",
+  "nameEn": "Hernandez Tyler",
   "role": "player",
-  "age": 25,
+  "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 76,
-  "popularity": 25,
+  "notes": "국적:쿠바",
+  "diligence": 75,
+  "popularity": 17,
   "militaryStatus": "군필",
   "entryYear": 2044,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 25,
+  "entryAge": 24,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 30,
-      "primaryPosition": "SP",
-      "developmentRate": 52,
-      "potentialHidden": 86,
-      "proServiceYears": 3,
+      "position": "SS",
+      "jerseyNumber": 58,
+      "primaryPosition": "SS",
+      "developmentRate": 61,
+      "potentialHidden": 82,
+      "proServiceYears": 2,
       "pitching": {
-        "ovr": 56,
-        "stamina": 56,
-        "velocity": 56,
-        "command": 57,
-        "control": 58,
-        "movement": 55,
-        "mentality": 59,
-        "recovery": 53,
-        "clutch": 50,
-        "holdRunners": 53
+        "ovr": 78,
+        "stamina": 76,
+        "velocity": 87,
+        "command": 72,
+        "control": 75,
+        "movement": 82,
+        "mentality": 78,
+        "recovery": 76,
+        "clutch": 68,
+        "holdRunners": 70
       },
       "batting": {
-        "ovr": 66,
-        "contact": 59,
-        "power": 55,
-        "eye": 65,
-        "discipline": 63,
-        "speed": 71,
-        "baseInstinct": 60,
-        "bunting": 54,
+        "ovr": 78,
+        "contact": 74,
+        "power": 69,
+        "eye": 71,
+        "discipline": 71,
+        "speed": 82,
+        "baseInstinct": 68,
+        "bunting": 60,
         "platoon": 50,
-        "fielding": 69,
-        "arm": 62,
-        "battingClutch": 63
+        "fielding": 76,
+        "arm": 67,
+        "battingClutch": 77
       },
       "positionRatings": {
-        "SP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 1
-        }
-      ]
+        "SS": 78
+      }
     },
     "coach": null,
     "manager": null,

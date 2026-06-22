@@ -1,61 +1,46 @@
 {
   "id": "PLY_01842",
-  "name": "김동현",
-  "nameEn": "Kim Donghyeon",
+  "name": "카토 렌",
+  "nameEn": "Kato Ren",
   "role": "player",
-  "age": 17,
+  "age": 32,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_SUNCHEON_BAY",
-  "teamId": "TEAM_HS_SUNCHEON_BAY",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_SUNCHEON_BAY",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
+  "teamId": "TEAM_JBL_PL_THUNDERFALCONS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "C",
-      "jerseyNumber": 11,
+      "position": "RP",
+      "jerseyNumber": 37,
       "pitching": {
-        "ovr": 41,
-        "stamina": 38,
-        "velocity": 37,
-        "command": 39,
-        "control": 43,
-        "movement": 43,
-        "mentality": 42,
-        "recovery": 41,
-        "clutch": 35,
-        "holdRunners": 44
+        "ovr": 70,
+        "stamina": 58,
+        "velocity": 71,
+        "command": 68,
+        "control": 66,
+        "movement": 62,
+        "mentality": 69,
+        "recovery": 64
       },
       "batting": {
-        "ovr": 61,
-        "contact": 56,
-        "power": 65,
-        "eye": 64,
-        "discipline": 66,
-        "speed": 58,
-        "fielding": 65,
-        "arm": 60,
-        "battingClutch": 56,
-        "baseInstinct": 53,
-        "bunting": 49,
-        "platoon": 48
+        "ovr": 49,
+        "contact": 42,
+        "power": 42,
+        "eye": 43,
+        "discipline": 48,
+        "speed": 44,
+        "fielding": 46,
+        "arm": 45,
+        "battingClutch": 47
       },
-      "developmentRate": 56,
-      "potentialHidden": 65,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 40,
+      "potentialHidden": 75
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 78,
-  "popularity": 19
+  }
 }

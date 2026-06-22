@@ -1,6 +1,6 @@
 {
   "id": "PLY_15888",
-  "name": "에르난데스 제이크",
+  "name": "Hernandez Jake",
   "nameEn": "Hernandez Jake",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 80,
   "popularity": 30,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 55,
       "proServiceYears": 2,
       "pitching": {
-        "ovr": 63,
-        "stamina": 66,
-        "velocity": 68,
-        "command": 57,
-        "control": 63,
-        "movement": 62,
-        "mentality": 58,
-        "recovery": 53,
-        "clutch": 52,
-        "holdRunners": 51
+        "ovr": 65,
+        "stamina": 68,
+        "velocity": 70,
+        "command": 59,
+        "control": 65,
+        "movement": 64,
+        "mentality": 60,
+        "recovery": 55,
+        "clutch": 54,
+        "holdRunners": 53
       },
       "batting": {
         "ovr": 65,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

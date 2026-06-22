@@ -1,6 +1,6 @@
 {
   "id": "PLY_15079",
-  "name": "로드리게스 코디",
+  "name": "Rodriguez Cody",
   "nameEn": "Rodriguez Cody",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 65,
   "popularity": 26,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 67
       },
       "batting": {
-        "ovr": 77,
-        "contact": 81,
-        "power": 70,
-        "eye": 67,
-        "discipline": 69,
-        "speed": 72,
-        "baseInstinct": 74,
-        "bunting": 66,
-        "platoon": 54,
-        "fielding": 68,
-        "arm": 72,
-        "battingClutch": 73
+        "ovr": 71,
+        "contact": 75,
+        "power": 65,
+        "eye": 62,
+        "discipline": 64,
+        "speed": 66,
+        "baseInstinct": 68,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 66,
+        "battingClutch": 67
       },
       "positionRatings": {
         "1B": 71

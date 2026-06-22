@@ -1,9 +1,9 @@
 {
   "id": "PLY_00122",
   "name": "배지호",
-  "nameEn": "Bae Jiho",
+  "nameEn": "Sim Ji-won",
   "role": "player",
-  "age": 19,
+  "age": 15,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,47 +19,28 @@
       "position": "SP",
       "jerseyNumber": 2,
       "pitching": {
-        "ovr": 56,
-        "stamina": 55,
-        "velocity": 54,
-        "command": 54,
-        "control": 60,
-        "movement": 52,
-        "mentality": 53,
-        "recovery": 53,
-        "clutch": 55,
-        "holdRunners": 50
+        "ovr": 52,
+        "stamina": 68,
+        "velocity": 65,
+        "command": 49,
+        "control": 64,
+        "movement": 46,
+        "mentality": 56,
+        "recovery": 66
       },
       "batting": {
-        "ovr": 38,
-        "contact": 34,
-        "power": 37,
-        "eye": 35,
-        "discipline": 36,
-        "speed": 38,
-        "fielding": 35,
-        "arm": 42,
-        "battingClutch": 41,
-        "baseInstinct": 34,
-        "bunting": 28,
-        "platoon": 33
+        "ovr": 37,
+        "contact": 62,
+        "power": 48,
+        "eye": 54,
+        "discipline": 61,
+        "speed": 62,
+        "fielding": 49,
+        "arm": 65,
+        "battingClutch": 57
       },
       "developmentRate": 71,
-      "potentialHidden": 75,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 75
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

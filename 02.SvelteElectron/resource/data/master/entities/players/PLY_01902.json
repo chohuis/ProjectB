@@ -1,72 +1,46 @@
 {
   "id": "PLY_01902",
-  "name": "구태우",
-  "nameEn": "Gu Taewoo",
+  "name": "마에다 렌",
+  "nameEn": "Maeda Ren",
   "role": "player",
-  "age": 28,
+  "age": 36,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_SKYGULLS",
-  "teamId": "TEAM_KBL_SKYGULLS_1",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
+  "teamId": "TEAM_JBL_PL_SPIRITBUFFALOS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
-      "handedness": "R",
-      "position": "RF",
-      "jerseyNumber": 59,
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 2,
       "pitching": {
-        "ovr": 46,
-        "stamina": 48,
-        "velocity": 48,
-        "command": 50,
-        "control": 47,
-        "movement": 45,
-        "mentality": 52,
-        "recovery": 49,
-        "clutch": 40,
-        "holdRunners": 33
+        "ovr": 85,
+        "stamina": 93,
+        "velocity": 89,
+        "command": 91,
+        "control": 87,
+        "movement": 85,
+        "mentality": 89,
+        "recovery": 86
       },
       "batting": {
-        "ovr": 66,
-        "contact": 70,
-        "power": 72,
-        "eye": 68,
-        "discipline": 65,
-        "speed": 72,
-        "fielding": 68,
-        "arm": 64,
-        "battingClutch": 67,
-        "baseInstinct": 64,
-        "bunting": 54,
-        "platoon": 63
+        "ovr": 64,
+        "contact": 57,
+        "power": 61,
+        "eye": 61,
+        "discipline": 56,
+        "speed": 55,
+        "fielding": 54,
+        "arm": 62,
+        "battingClutch": 58
       },
-      "developmentRate": 59,
-      "potentialHidden": 61,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 6,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 35,
+      "potentialHidden": 75
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 51,
-  "popularity": 23,
-  "militaryStatus": "군필"
+  }
 }

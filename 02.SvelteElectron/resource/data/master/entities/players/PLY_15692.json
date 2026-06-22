@@ -1,6 +1,6 @@
 {
   "id": "PLY_15692",
-  "name": "테일러 크리스",
+  "name": "Taylor Chris",
   "nameEn": "Taylor Chris",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 84,
   "popularity": 18,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 52
       },
       "batting": {
-        "ovr": 60,
-        "contact": 60,
-        "power": 56,
-        "eye": 52,
-        "discipline": 60,
-        "speed": 64,
-        "baseInstinct": 51,
-        "bunting": 45,
-        "platoon": 48,
-        "fielding": 52,
-        "arm": 53,
-        "battingClutch": 50
+        "ovr": 62,
+        "contact": 62,
+        "power": 58,
+        "eye": 54,
+        "discipline": 62,
+        "speed": 66,
+        "baseInstinct": 53,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 55,
+        "battingClutch": 52
       },
       "positionRatings": {
         "3B": 62

@@ -1,7 +1,7 @@
 {
   "id": "PLY_00411",
   "name": "남민재",
-  "nameEn": "Nam Minjae",
+  "nameEn": "Ko Ji-hoo",
   "role": "player",
   "age": 19,
   "status": "active",
@@ -19,48 +19,28 @@
       "position": "C",
       "jerseyNumber": 11,
       "pitching": {
-        "ovr": 37,
-        "stamina": 35,
-        "velocity": 39,
-        "command": 42,
-        "control": 41,
-        "movement": 42,
-        "mentality": 42,
-        "recovery": 39,
-        "clutch": 41,
-        "holdRunners": 35
+        "ovr": 34,
+        "stamina": 30,
+        "velocity": 36,
+        "command": 34,
+        "control": 26,
+        "movement": 26,
+        "mentality": 29,
+        "recovery": 28
       },
       "batting": {
-        "ovr": 57,
-        "contact": 54,
-        "power": 53,
-        "eye": 60,
-        "discipline": 55,
-        "speed": 53,
-        "fielding": 60,
-        "arm": 61,
-        "battingClutch": 47,
-        "baseInstinct": 46,
-        "bunting": 53,
-        "platoon": 54
+        "ovr": 52,
+        "contact": 57,
+        "power": 56,
+        "eye": 58,
+        "discipline": 56,
+        "speed": 52,
+        "fielding": 56,
+        "arm": 62,
+        "battingClutch": 58
       },
       "developmentRate": 53,
-      "potentialHidden": 75,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 57
-      },
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 75
     },
     "coach": {
       "specialty": "-",
@@ -100,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

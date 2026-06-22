@@ -1,6 +1,6 @@
 {
   "id": "PLY_14166",
-  "name": "그린 코디",
+  "name": "Green Cody",
   "nameEn": "Green Cody",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 63,
   "popularity": 28,
   "militaryStatus": "군필",

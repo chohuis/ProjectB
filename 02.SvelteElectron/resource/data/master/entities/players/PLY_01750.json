@@ -1,65 +1,46 @@
 {
   "id": "PLY_01750",
-  "name": "노재훈",
-  "nameEn": "No Jaehun",
+  "name": "후지타 슌",
+  "nameEn": "Fujita Shun",
   "role": "player",
-  "age": 16,
+  "age": 19,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_MASAN_HARBOR",
-  "teamId": "TEAM_HS_MASAN_HARBOR",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_MASAN_HARBOR",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+  "teamId": "TEAM_JBL_CL_SILVERWOLVES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
-      "position": "CP",
-      "jerseyNumber": 9,
+      "position": "RP",
+      "jerseyNumber": 35,
       "pitching": {
-        "ovr": 53,
-        "stamina": 52,
-        "velocity": 55,
-        "command": 50,
-        "control": 57,
-        "movement": 56,
-        "mentality": 51,
-        "recovery": 51,
-        "clutch": 53,
-        "holdRunners": 50
+        "ovr": 62,
+        "stamina": 54,
+        "velocity": 61,
+        "command": 60,
+        "control": 61,
+        "movement": 61,
+        "mentality": 59,
+        "recovery": 54
       },
       "batting": {
-        "ovr": 35,
-        "contact": 30,
-        "power": 29,
-        "eye": 41,
-        "discipline": 35,
-        "speed": 35,
-        "fielding": 30,
-        "arm": 41,
-        "battingClutch": 43,
-        "baseInstinct": 42,
-        "bunting": 40,
-        "platoon": 38
+        "ovr": 29,
+        "contact": 24,
+        "power": 25,
+        "eye": 22,
+        "discipline": 26,
+        "speed": 21,
+        "fielding": 22,
+        "arm": 21,
+        "battingClutch": 26
       },
-      "developmentRate": 60,
-      "potentialHidden": 88,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 53
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 4
-        }
-      ]
+      "developmentRate": 50,
+      "potentialHidden": 76
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 54,
-  "popularity": 43
+  }
 }

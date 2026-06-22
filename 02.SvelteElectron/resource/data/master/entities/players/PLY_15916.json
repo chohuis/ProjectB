@@ -1,6 +1,6 @@
 {
   "id": "PLY_15916",
-  "name": "가르시아 로건",
+  "name": "Garcia Logan",
   "nameEn": "Garcia Logan",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 50,
   "popularity": 49,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 64
       },
       "batting": {
-        "ovr": 75,
-        "contact": 75,
-        "power": 72,
-        "eye": 72,
-        "discipline": 78,
-        "speed": 78,
-        "baseInstinct": 73,
-        "bunting": 67,
-        "platoon": 54,
-        "fielding": 77,
-        "arm": 71,
-        "battingClutch": 71
+        "ovr": 69,
+        "contact": 69,
+        "power": 66,
+        "eye": 66,
+        "discipline": 72,
+        "speed": 72,
+        "baseInstinct": 67,
+        "bunting": 62,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 65,
+        "battingClutch": 65
       },
       "positionRatings": {
         "RF": 69

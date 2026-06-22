@@ -1,6 +1,6 @@
 {
   "id": "PLY_14968",
-  "name": "마르티네스 크리스",
+  "name": "Martinez Chris",
   "nameEn": "Martinez Chris",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 82,
   "popularity": 21,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 47
       },
       "batting": {
-        "ovr": 54,
-        "contact": 54,
-        "power": 44,
-        "eye": 52,
-        "discipline": 49,
-        "speed": 59,
-        "baseInstinct": 47,
-        "bunting": 35,
-        "platoon": 49,
-        "fielding": 56,
-        "arm": 56,
-        "battingClutch": 52
+        "ovr": 55,
+        "contact": 55,
+        "power": 45,
+        "eye": 53,
+        "discipline": 50,
+        "speed": 60,
+        "baseInstinct": 48,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 57,
+        "battingClutch": 53
       },
       "positionRatings": {
         "CF": 55

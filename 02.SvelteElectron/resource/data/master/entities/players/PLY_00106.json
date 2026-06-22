@@ -1,7 +1,7 @@
 {
   "id": "PLY_00106",
   "name": "안지원",
-  "nameEn": "Ahn Jiwon",
+  "nameEn": "Jung Dong-hyun",
   "role": "player",
   "age": 17,
   "status": "active",
@@ -19,43 +19,28 @@
       "position": "RP",
       "jerseyNumber": 6,
       "pitching": {
-        "ovr": 45,
-        "stamina": 49,
-        "velocity": 46,
-        "command": 51,
-        "control": 48,
-        "movement": 46,
-        "mentality": 48,
-        "recovery": 42,
-        "clutch": 35,
-        "holdRunners": 39
+        "ovr": 52,
+        "stamina": 51,
+        "velocity": 51,
+        "command": 50,
+        "control": 54,
+        "movement": 40,
+        "mentality": 45,
+        "recovery": 53
       },
       "batting": {
-        "ovr": 27,
-        "contact": 28,
-        "power": 29,
-        "eye": 26,
-        "discipline": 25,
-        "speed": 28,
-        "fielding": 28,
-        "arm": 25,
-        "battingClutch": 38,
-        "baseInstinct": 44,
-        "bunting": 34,
-        "platoon": 35
+        "ovr": 33,
+        "contact": 55,
+        "power": 38,
+        "eye": 49,
+        "discipline": 37,
+        "speed": 43,
+        "fielding": 48,
+        "arm": 60,
+        "battingClutch": 56
       },
       "developmentRate": 74,
-      "potentialHidden": 70,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 45
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 70
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

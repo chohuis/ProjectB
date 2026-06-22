@@ -1,72 +1,46 @@
 {
   "id": "PLY_01992",
-  "name": "노현진",
-  "nameEn": "No Hyeonjin",
+  "name": "무라카미 마나부",
+  "nameEn": "Murakami Manabu",
   "role": "player",
-  "age": 22,
+  "age": 29,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_STEELDINOS",
-  "teamId": "TEAM_KBL_STEELDINOS_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SEAGULLS",
+  "teamId": "TEAM_JBL_PL_SEAGULLS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "2B",
-      "jerseyNumber": 76,
+      "position": "SP",
+      "jerseyNumber": 2,
       "pitching": {
-        "ovr": 47,
-        "stamina": 49,
-        "velocity": 42,
-        "command": 43,
-        "control": 48,
-        "movement": 50,
-        "mentality": 45,
-        "recovery": 50,
-        "clutch": 38,
-        "holdRunners": 38
+        "ovr": 82,
+        "stamina": 83,
+        "velocity": 87,
+        "command": 83,
+        "control": 86,
+        "movement": 83,
+        "mentality": 79,
+        "recovery": 81
       },
       "batting": {
-        "ovr": 67,
-        "contact": 72,
-        "power": 66,
-        "eye": 63,
-        "discipline": 64,
-        "speed": 73,
-        "fielding": 62,
-        "arm": 61,
-        "battingClutch": 59,
-        "baseInstinct": 57,
-        "bunting": 50,
-        "platoon": 63
+        "ovr": 49,
+        "contact": 53,
+        "power": 48,
+        "eye": 48,
+        "discipline": 48,
+        "speed": 49,
+        "fielding": 53,
+        "arm": 53,
+        "battingClutch": 48
       },
-      "developmentRate": 35,
-      "potentialHidden": 69,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 44,
+      "potentialHidden": 78
     },
     "coach": {
       "specialty": "-",
@@ -106,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 63,
-  "popularity": 18
+  }
 }

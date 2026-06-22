@@ -1,69 +1,46 @@
 {
   "id": "PLY_01691",
-  "name": "백현진",
-  "nameEn": "Baek Hyeonjin",
+  "name": "사사키 쇼",
+  "nameEn": "Sasaki Sho",
   "role": "player",
-  "age": 16,
+  "age": 34,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_JEJU_WIND",
-  "teamId": "TEAM_HS_JEJU_WIND",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_JEJU_WIND",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TIDERAVES",
+  "teamId": "TEAM_JBL_CL_TIDERAVES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "CP",
-      "jerseyNumber": 10,
+      "position": "1B",
+      "jerseyNumber": 16,
       "pitching": {
-        "ovr": 33,
-        "stamina": 35,
-        "velocity": 34,
-        "command": 38,
-        "control": 32,
-        "movement": 31,
-        "mentality": 33,
-        "recovery": 32,
-        "clutch": 35,
-        "holdRunners": 38
+        "ovr": 54,
+        "stamina": 48,
+        "velocity": 57,
+        "command": 54,
+        "control": 52,
+        "movement": 53,
+        "mentality": 49,
+        "recovery": 53
       },
       "batting": {
-        "ovr": 22,
-        "contact": 20,
-        "power": 23,
-        "eye": 26,
-        "discipline": 20,
-        "speed": 27,
-        "fielding": 20,
-        "arm": 26,
-        "battingClutch": 39,
-        "baseInstinct": 42,
-        "bunting": 41,
-        "platoon": 42
+        "ovr": 80,
+        "contact": 83,
+        "power": 88,
+        "eye": 77,
+        "discipline": 79,
+        "speed": 77,
+        "fielding": 76,
+        "arm": 77,
+        "battingClutch": 83
       },
-      "developmentRate": 86,
-      "potentialHidden": 67,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 33
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ]
+      "developmentRate": 47,
+      "potentialHidden": 69
     },
     "coach": {
       "specialty": "-",
@@ -103,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 52,
-  "popularity": 24
+  }
 }

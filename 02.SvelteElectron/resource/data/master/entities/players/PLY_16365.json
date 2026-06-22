@@ -1,6 +1,6 @@
 {
   "id": "PLY_16365",
-  "name": "해리스 데릭",
+  "name": "Harris Derek",
   "nameEn": "Harris Derek",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 51,
   "popularity": 19,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 50
       },
       "batting": {
-        "ovr": 61,
-        "contact": 62,
-        "power": 59,
-        "eye": 59,
-        "discipline": 59,
-        "speed": 58,
-        "baseInstinct": 59,
-        "bunting": 51,
-        "platoon": 47,
-        "fielding": 53,
-        "arm": 57,
-        "battingClutch": 50
+        "ovr": 65,
+        "contact": 66,
+        "power": 63,
+        "eye": 63,
+        "discipline": 63,
+        "speed": 62,
+        "baseInstinct": 63,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 61,
+        "battingClutch": 53
       },
       "positionRatings": {
         "3B": 65

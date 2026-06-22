@@ -1,9 +1,9 @@
 {
   "id": "PLY_13331",
-  "name": "윌리엄스 미겔",
-  "nameEn": "Williams Miguel",
+  "name": "Robinson Hunter",
+  "nameEn": "Robinson Hunter",
   "role": "player",
-  "age": 22,
+  "age": 33,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 82,
-  "popularity": 46,
+  "notes": "국적:멕시코",
+  "diligence": 53,
+  "popularity": 38,
   "militaryStatus": "군필",
   "entryYear": 2047,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 22,
+  "entryAge": 33,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 76,
-      "primaryPosition": "SP",
-      "developmentRate": 69,
-      "potentialHidden": 64,
-      "proServiceYears": 0,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 9,
+      "primaryPosition": "1B",
+      "developmentRate": 46,
+      "potentialHidden": 72,
+      "proServiceYears": 11,
       "pitching": {
-        "ovr": 49,
-        "stamina": 42,
-        "velocity": 56,
-        "command": 45,
-        "control": 53,
-        "movement": 48,
-        "mentality": 56,
-        "recovery": 47,
-        "clutch": 44,
-        "holdRunners": 45
+        "ovr": 70,
+        "stamina": 71,
+        "velocity": 73,
+        "command": 71,
+        "control": 62,
+        "movement": 61,
+        "mentality": 73,
+        "recovery": 68,
+        "clutch": 61,
+        "holdRunners": 60
       },
       "batting": {
-        "ovr": 51,
-        "contact": 44,
-        "power": 51,
-        "eye": 45,
-        "discipline": 51,
-        "speed": 45,
-        "baseInstinct": 41,
-        "bunting": 42,
+        "ovr": 70,
+        "contact": 67,
+        "power": 63,
+        "eye": 68,
+        "discipline": 68,
+        "speed": 77,
+        "baseInstinct": 72,
+        "bunting": 52,
         "platoon": 50,
-        "fielding": 46,
-        "arm": 52,
-        "battingClutch": 39
+        "fielding": 62,
+        "arm": 62,
+        "battingClutch": 58
       },
       "positionRatings": {
-        "SP": 51
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "1B": 70
+      }
     },
     "coach": null,
     "manager": null,

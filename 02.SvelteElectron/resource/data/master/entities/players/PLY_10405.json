@@ -1,9 +1,9 @@
 {
   "id": "PLY_10405",
-  "name": "잭슨 블레이크",
-  "nameEn": "Jackson Blake",
+  "name": "Davis Dylan",
+  "nameEn": "Davis Dylan",
   "role": "player",
-  "age": 24,
+  "age": 18,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 66,
-  "popularity": 31,
+  "notes": "국적:일본",
+  "diligence": 55,
+  "popularity": 42,
   "militaryStatus": "군필",
   "entryYear": 2029,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 24,
+  "entryAge": 18,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 95,
+      "jerseyNumber": 35,
       "primaryPosition": "SP",
-      "developmentRate": 61,
-      "potentialHidden": 60,
-      "proServiceYears": 2,
+      "developmentRate": 60,
+      "potentialHidden": 76,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 71,
-        "stamina": 76,
-        "velocity": 77,
+        "ovr": 67,
+        "stamina": 60,
+        "velocity": 65,
         "command": 62,
-        "control": 70,
-        "movement": 66,
-        "mentality": 66,
-        "recovery": 72,
-        "clutch": 69,
-        "holdRunners": 60
+        "control": 69,
+        "movement": 63,
+        "mentality": 69,
+        "recovery": 59,
+        "clutch": 64,
+        "holdRunners": 58
       },
       "batting": {
-        "ovr": 78,
-        "contact": 72,
-        "power": 75,
-        "eye": 74,
-        "discipline": 80,
-        "speed": 71,
-        "baseInstinct": 70,
-        "bunting": 70,
+        "ovr": 67,
+        "contact": 67,
+        "power": 62,
+        "eye": 68,
+        "discipline": 64,
+        "speed": 65,
+        "baseInstinct": 58,
+        "bunting": 60,
         "platoon": 50,
-        "fielding": 81,
-        "arm": 70,
-        "battingClutch": 76
+        "fielding": 68,
+        "arm": 61,
+        "battingClutch": 56
       },
       "positionRatings": {
-        "SP": 78
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "SP": 67
+      }
     },
     "coach": null,
     "manager": null,

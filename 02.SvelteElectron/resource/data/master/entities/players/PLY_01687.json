@@ -1,65 +1,46 @@
 {
   "id": "PLY_01687",
-  "name": "노진우",
-  "nameEn": "No Jinwoo",
+  "name": "고토 아키라",
+  "nameEn": "Goto Akira",
   "role": "player",
-  "age": 16,
+  "age": 30,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_JEJU_WIND",
-  "teamId": "TEAM_HS_JEJU_WIND",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_JEJU_WIND",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TIDERAVES",
+  "teamId": "TEAM_JBL_CL_TIDERAVES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "L",
-      "position": "RP",
-      "jerseyNumber": 6,
+      "position": "CP",
+      "jerseyNumber": 12,
       "pitching": {
-        "ovr": 54,
-        "stamina": 60,
-        "velocity": 57,
-        "command": 57,
-        "control": 54,
-        "movement": 56,
-        "mentality": 58,
-        "recovery": 59,
-        "clutch": 53,
-        "holdRunners": 45
+        "ovr": 81,
+        "stamina": 67,
+        "velocity": 87,
+        "command": 83,
+        "control": 81,
+        "movement": 79,
+        "mentality": 78,
+        "recovery": 76
       },
       "batting": {
-        "ovr": 36,
-        "contact": 41,
-        "power": 38,
-        "eye": 33,
-        "discipline": 31,
-        "speed": 36,
-        "fielding": 42,
-        "arm": 36,
-        "battingClutch": 37,
-        "baseInstinct": 44,
-        "bunting": 42,
-        "platoon": 38
+        "ovr": 49,
+        "contact": 50,
+        "power": 46,
+        "eye": 45,
+        "discipline": 52,
+        "speed": 46,
+        "fielding": 46,
+        "arm": 53,
+        "battingClutch": 51
       },
-      "developmentRate": 54,
-      "potentialHidden": 73,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 54
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 39,
+      "potentialHidden": 92
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 80,
-  "popularity": 25
+  }
 }

@@ -1,6 +1,6 @@
 {
   "id": "PLY_15737",
-  "name": "홀 네이선",
+  "name": "Hall Nathan",
   "nameEn": "Hall Nathan",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 67,
   "popularity": 22,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 56
       },
       "batting": {
-        "ovr": 60,
-        "contact": 51,
-        "power": 52,
-        "eye": 64,
-        "discipline": 64,
-        "speed": 66,
-        "baseInstinct": 50,
-        "bunting": 54,
-        "platoon": 49,
-        "fielding": 52,
-        "arm": 62,
-        "battingClutch": 48
+        "ovr": 61,
+        "contact": 52,
+        "power": 53,
+        "eye": 65,
+        "discipline": 65,
+        "speed": 67,
+        "baseInstinct": 51,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 63,
+        "battingClutch": 49
       },
       "positionRatings": {
         "3B": 61

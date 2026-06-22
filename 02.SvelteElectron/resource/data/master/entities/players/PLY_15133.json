@@ -1,6 +1,6 @@
 {
   "id": "PLY_15133",
-  "name": "화이트 제이크",
+  "name": "White Jake",
   "nameEn": "White Jake",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 63,
   "popularity": 42,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 51
       },
       "batting": {
-        "ovr": 73,
-        "contact": 70,
-        "power": 60,
-        "eye": 63,
-        "discipline": 67,
-        "speed": 81,
-        "baseInstinct": 65,
-        "bunting": 50,
-        "platoon": 63,
-        "fielding": 70,
-        "arm": 76,
-        "battingClutch": 60
+        "ovr": 58,
+        "contact": 56,
+        "power": 48,
+        "eye": 50,
+        "discipline": 53,
+        "speed": 64,
+        "baseInstinct": 52,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 60,
+        "battingClutch": 48
       },
       "positionRatings": {
         "SS": 58

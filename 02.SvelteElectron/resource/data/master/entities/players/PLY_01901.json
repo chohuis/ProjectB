@@ -1,72 +1,46 @@
 {
   "id": "PLY_01901",
-  "name": "홍용준",
-  "nameEn": "Hong Yongjun",
+  "name": "나카무라 히로시",
+  "nameEn": "Nakamura Hiroshi",
   "role": "player",
-  "age": 23,
+  "age": 37,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_BEARGUARDIANS",
-  "teamId": "TEAM_KBL_BEARGUARDIANS_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
+  "teamId": "TEAM_JBL_PL_SPIRITBUFFALOS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
-      "handedness": "R",
-      "position": "1B",
-      "jerseyNumber": 33,
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 1,
       "pitching": {
-        "ovr": 34,
-        "stamina": 31,
-        "velocity": 30,
-        "command": 37,
-        "control": 38,
-        "movement": 37,
-        "mentality": 38,
-        "recovery": 31,
-        "clutch": 40,
-        "holdRunners": 41
+        "ovr": 85,
+        "stamina": 94,
+        "velocity": 92,
+        "command": 85,
+        "control": 85,
+        "movement": 82,
+        "mentality": 85,
+        "recovery": 88
       },
       "batting": {
-        "ovr": 54,
-        "contact": 50,
-        "power": 54,
-        "eye": 50,
-        "discipline": 55,
-        "speed": 50,
-        "fielding": 57,
-        "arm": 59,
-        "battingClutch": 47,
-        "baseInstinct": 43,
-        "bunting": 49,
-        "platoon": 40
+        "ovr": 69,
+        "contact": 68,
+        "power": 70,
+        "eye": 69,
+        "discipline": 66,
+        "speed": 69,
+        "fielding": 67,
+        "arm": 67,
+        "battingClutch": 65
       },
-      "developmentRate": 54,
-      "potentialHidden": 70,
-      "primaryPosition": "1B",
-      "positionRatings": {
-        "1B": 54
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 1,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 52,
+      "potentialHidden": 70
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 53,
-  "popularity": 60,
-  "militaryStatus": "군필"
+  }
 }

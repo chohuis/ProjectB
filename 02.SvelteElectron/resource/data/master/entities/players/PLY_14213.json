@@ -1,6 +1,6 @@
 {
   "id": "PLY_14213",
-  "name": "해리스 다니엘",
+  "name": "Harris Daniel",
   "nameEn": "Harris Daniel",
   "role": "player",
   "age": 29,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 65,
   "popularity": 32,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 60
       },
       "batting": {
-        "ovr": 72,
-        "contact": 69,
-        "power": 70,
-        "eye": 64,
-        "discipline": 62,
-        "speed": 65,
-        "baseInstinct": 73,
-        "bunting": 56,
-        "platoon": 55,
-        "fielding": 65,
-        "arm": 67,
-        "battingClutch": 62
+        "ovr": 66,
+        "contact": 63,
+        "power": 64,
+        "eye": 59,
+        "discipline": 57,
+        "speed": 60,
+        "baseInstinct": 67,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 61,
+        "battingClutch": 57
       },
       "positionRatings": {
         "SS": 66

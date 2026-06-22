@@ -1,6 +1,6 @@
 {
   "id": "PLY_16152",
-  "name": "그린 카일",
+  "name": "Green Kyle",
   "nameEn": "Green Kyle",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 53,
   "popularity": 34,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 61
       },
       "batting": {
-        "ovr": 69,
-        "contact": 73,
-        "power": 64,
-        "eye": 64,
-        "discipline": 59,
-        "speed": 62,
-        "baseInstinct": 65,
-        "bunting": 53,
-        "platoon": 49,
-        "fielding": 60,
-        "arm": 69,
-        "battingClutch": 64
+        "ovr": 71,
+        "contact": 75,
+        "power": 66,
+        "eye": 66,
+        "discipline": 61,
+        "speed": 64,
+        "baseInstinct": 67,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 71,
+        "battingClutch": 66
       },
       "positionRatings": {
         "RF": 71

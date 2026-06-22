@@ -1,6 +1,6 @@
 {
   "id": "PLY_14803",
-  "name": "브라운 조던",
+  "name": "Brown Jordan",
   "nameEn": "Brown Jordan",
   "role": "player",
   "age": 33,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 72,
   "popularity": 33,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 54
       },
       "batting": {
-        "ovr": 77,
-        "contact": 78,
-        "power": 68,
-        "eye": 71,
-        "discipline": 67,
-        "speed": 74,
-        "baseInstinct": 71,
-        "bunting": 62,
-        "platoon": 63,
-        "fielding": 72,
-        "arm": 78,
-        "battingClutch": 69
+        "ovr": 61,
+        "contact": 62,
+        "power": 54,
+        "eye": 56,
+        "discipline": 53,
+        "speed": 59,
+        "baseInstinct": 56,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 62,
+        "battingClutch": 55
       },
       "positionRatings": {
         "CF": 61

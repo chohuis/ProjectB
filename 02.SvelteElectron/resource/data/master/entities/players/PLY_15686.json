@@ -1,6 +1,6 @@
 {
   "id": "PLY_15686",
-  "name": "카터 칼렙",
+  "name": "Carter Caleb",
   "nameEn": "Carter Caleb",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 56,
   "popularity": 31,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 80,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 80,
-        "stamina": 82,
-        "velocity": 90,
-        "command": 77,
-        "control": 77,
-        "movement": 77,
-        "mentality": 88,
-        "recovery": 72,
-        "clutch": 80,
-        "holdRunners": 79
+        "ovr": 74,
+        "stamina": 76,
+        "velocity": 83,
+        "command": 71,
+        "control": 71,
+        "movement": 71,
+        "mentality": 81,
+        "recovery": 67,
+        "clutch": 74,
+        "holdRunners": 73
       },
       "batting": {
         "ovr": 74,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 74
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_14294",
-  "name": "애덤스 에릭",
+  "name": "Adams Eric",
   "nameEn": "Adams Eric",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 75,
   "popularity": 12,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 69
       },
       "batting": {
-        "ovr": 70,
-        "contact": 62,
-        "power": 69,
-        "eye": 66,
-        "discipline": 71,
-        "speed": 71,
-        "baseInstinct": 70,
-        "bunting": 63,
-        "platoon": 49,
-        "fielding": 66,
-        "arm": 63,
-        "battingClutch": 64
+        "ovr": 71,
+        "contact": 63,
+        "power": 70,
+        "eye": 67,
+        "discipline": 72,
+        "speed": 72,
+        "baseInstinct": 71,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 64,
+        "battingClutch": 65
       },
       "positionRatings": {
         "CF": 71

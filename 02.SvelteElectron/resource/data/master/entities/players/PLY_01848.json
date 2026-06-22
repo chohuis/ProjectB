@@ -1,61 +1,46 @@
 {
   "id": "PLY_01848",
-  "name": "김서준",
-  "nameEn": "Kim Seojun",
+  "name": "나카무라 켄타",
+  "nameEn": "Nakamura Kenta",
   "role": "player",
-  "age": 17,
+  "age": 31,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_SUNCHEON_BAY",
-  "teamId": "TEAM_HS_SUNCHEON_BAY",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_SUNCHEON_BAY",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
+  "teamId": "TEAM_JBL_PL_THUNDERFALCONS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "2B",
-      "jerseyNumber": 17,
+      "position": "1B",
+      "jerseyNumber": 43,
       "pitching": {
-        "ovr": 33,
-        "stamina": 32,
-        "velocity": 31,
-        "command": 32,
-        "control": 30,
-        "movement": 29,
-        "mentality": 33,
-        "recovery": 30,
-        "clutch": 43,
-        "holdRunners": 32
+        "ovr": 37,
+        "stamina": 33,
+        "velocity": 43,
+        "command": 35,
+        "control": 38,
+        "movement": 37,
+        "mentality": 38,
+        "recovery": 33
       },
       "batting": {
-        "ovr": 53,
-        "contact": 53,
-        "power": 58,
-        "eye": 49,
-        "discipline": 48,
-        "speed": 58,
-        "fielding": 48,
-        "arm": 49,
-        "battingClutch": 44,
-        "baseInstinct": 46,
-        "bunting": 48,
-        "platoon": 47
+        "ovr": 60,
+        "contact": 63,
+        "power": 65,
+        "eye": 60,
+        "discipline": 56,
+        "speed": 50,
+        "fielding": 57,
+        "arm": 57,
+        "battingClutch": 63
       },
-      "developmentRate": 79,
-      "potentialHidden": 91,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 53
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 41,
+      "potentialHidden": 72
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 72,
-  "popularity": 36
+  }
 }

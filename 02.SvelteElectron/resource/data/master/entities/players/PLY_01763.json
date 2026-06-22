@@ -1,61 +1,46 @@
 {
   "id": "PLY_01763",
-  "name": "구성민",
-  "nameEn": "Gu Seongmin",
+  "name": "사토 스스무",
+  "nameEn": "Sato Susumu",
   "role": "player",
-  "age": 18,
+  "age": 23,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_MASAN_HARBOR",
-  "teamId": "TEAM_HS_MASAN_HARBOR",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_MASAN_HARBOR",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+  "teamId": "TEAM_JBL_CL_SILVERWOLVES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "L",
-      "position": "LF",
-      "jerseyNumber": 22,
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 48,
       "pitching": {
-        "ovr": 46,
-        "stamina": 45,
-        "velocity": 50,
-        "command": 43,
-        "control": 49,
-        "movement": 44,
-        "mentality": 45,
-        "recovery": 51,
-        "clutch": 45,
-        "holdRunners": 41
+        "ovr": 35,
+        "stamina": 37,
+        "velocity": 42,
+        "command": 36,
+        "control": 36,
+        "movement": 34,
+        "mentality": 39,
+        "recovery": 35
       },
       "batting": {
         "ovr": 66,
-        "contact": 65,
-        "power": 64,
-        "eye": 70,
-        "discipline": 72,
-        "speed": 68,
+        "contact": 69,
+        "power": 69,
+        "eye": 72,
+        "discipline": 69,
+        "speed": 77,
         "fielding": 68,
-        "arm": 62,
-        "battingClutch": 60,
-        "baseInstinct": 57,
-        "bunting": 57,
-        "platoon": 55
+        "arm": 71,
+        "battingClutch": 72
       },
-      "developmentRate": 82,
-      "potentialHidden": 71,
-      "primaryPosition": "LF",
-      "positionRatings": {
-        "LF": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 57,
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 61,
-  "popularity": 26
+  }
 }

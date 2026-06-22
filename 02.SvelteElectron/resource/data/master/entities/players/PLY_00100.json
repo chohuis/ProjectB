@@ -1,9 +1,9 @@
 {
   "id": "PLY_00100",
   "name": "안동우",
-  "nameEn": "Ahn Dongu",
+  "nameEn": "Choi Jae-hoon",
   "role": "player",
-  "age": 19,
+  "age": 15,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "DH",
       "jerseyNumber": 20,
       "pitching": {
-        "ovr": 32,
-        "stamina": 33,
-        "velocity": 31,
-        "command": 33,
-        "control": 37,
-        "movement": 30,
-        "mentality": 35,
-        "recovery": 28,
-        "clutch": 42,
-        "holdRunners": 37
+        "ovr": 42,
+        "stamina": 56,
+        "velocity": 59,
+        "command": 51,
+        "control": 61,
+        "movement": 59,
+        "mentality": 57,
+        "recovery": 67
       },
       "batting": {
-        "ovr": 52,
-        "contact": 54,
-        "power": 54,
+        "ovr": 67,
+        "contact": 60,
+        "power": 51,
         "eye": 48,
-        "discipline": 51,
-        "speed": 46,
-        "fielding": 55,
-        "arm": 50,
-        "battingClutch": 50,
-        "baseInstinct": 50,
-        "bunting": 42,
-        "platoon": 49
+        "discipline": 53,
+        "speed": 53,
+        "fielding": 51,
+        "arm": 67,
+        "battingClutch": 48
       },
       "developmentRate": 51,
-      "potentialHidden": 68,
-      "primaryPosition": "DH",
-      "positionRatings": {
-        "DH": 52
-      }
+      "potentialHidden": 68
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

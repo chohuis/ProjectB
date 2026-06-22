@@ -1,6 +1,6 @@
 {
   "id": "PLY_15349",
-  "name": "가르시아 트레버",
+  "name": "Garcia Trevor",
   "nameEn": "Garcia Trevor",
   "role": "player",
   "age": 23,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 56,
   "popularity": 32,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 72,
       "proServiceYears": 1,
       "pitching": {
-        "ovr": 68,
-        "stamina": 67,
-        "velocity": 79,
-        "command": 70,
-        "control": 62,
-        "movement": 69,
-        "mentality": 69,
-        "recovery": 57,
-        "clutch": 58,
-        "holdRunners": 58
+        "ovr": 70,
+        "stamina": 69,
+        "velocity": 81,
+        "command": 72,
+        "control": 64,
+        "movement": 71,
+        "mentality": 71,
+        "recovery": 59,
+        "clutch": 60,
+        "holdRunners": 60
       },
       "batting": {
         "ovr": 70,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

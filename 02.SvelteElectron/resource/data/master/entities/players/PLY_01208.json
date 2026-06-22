@@ -1,14 +1,14 @@
 {
   "id": "PLY_01208",
   "name": "넬슨 마르코",
-  "nameEn": "Nel 슨 마르코",
+  "nameEn": "Nelson Marco",
   "role": "player",
   "age": 34,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_BAYSEALS",
-  "teamId": "TEAM_ABL_BAYSEALS_2",
+  "clubId": "CLUB_ABL_PHI",
+  "teamId": "TEAM_ABL_PHI_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
@@ -19,58 +19,28 @@
       "position": "SP",
       "jerseyNumber": 43,
       "pitching": {
-        "ovr": 61,
-        "stamina": 63,
-        "velocity": 57,
-        "command": 63,
-        "control": 65,
-        "movement": 57,
-        "mentality": 60,
-        "recovery": 58,
-        "clutch": 54,
-        "holdRunners": 50
+        "ovr": 68,
+        "stamina": 67,
+        "velocity": 65,
+        "command": 65,
+        "control": 64,
+        "movement": 68,
+        "mentality": 66,
+        "recovery": 69
       },
       "batting": {
-        "ovr": 43,
-        "contact": 39,
-        "power": 38,
-        "eye": 47,
-        "discipline": 40,
-        "speed": 38,
-        "fielding": 37,
+        "ovr": 42,
+        "contact": 48,
+        "power": 42,
+        "eye": 43,
+        "discipline": 42,
+        "speed": 48,
+        "fielding": 47,
         "arm": 47,
-        "battingClutch": 43,
-        "baseInstinct": 38,
-        "bunting": 38,
-        "platoon": 38
+        "battingClutch": 47
       },
       "developmentRate": 35,
-      "potentialHidden": 89,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_KNUCKLEBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 12,
-      "contract": {
-        "salary": 14800,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 89
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

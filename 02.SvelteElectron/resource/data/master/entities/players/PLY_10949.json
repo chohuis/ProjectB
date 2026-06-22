@@ -1,7 +1,7 @@
 {
   "id": "PLY_10949",
-  "name": "라이트 재크",
-  "nameEn": "Wright Zach",
+  "name": "Baker Hunter",
+  "nameEn": "Baker Hunter",
   "role": "player",
   "age": 21,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 76,
-  "popularity": 32,
+  "notes": "국적:도미니카",
+  "diligence": 47,
+  "popularity": 13,
   "militaryStatus": "군필",
   "entryYear": 2032,
   "entryLeague": "LEAGUE_ABL",
@@ -21,53 +21,43 @@
   "entryAge": 21,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 42,
-      "primaryPosition": "SP",
-      "developmentRate": 64,
-      "potentialHidden": 62,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 76,
+      "primaryPosition": "LF",
+      "developmentRate": 58,
+      "potentialHidden": 94,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 51,
-        "stamina": 52,
-        "velocity": 55,
-        "command": 41,
-        "control": 49,
-        "movement": 43,
-        "mentality": 44,
-        "recovery": 40,
-        "clutch": 44,
-        "holdRunners": 41
+        "ovr": 62,
+        "stamina": 54,
+        "velocity": 73,
+        "command": 65,
+        "control": 62,
+        "movement": 60,
+        "mentality": 64,
+        "recovery": 63,
+        "clutch": 51,
+        "holdRunners": 57
       },
       "batting": {
-        "ovr": 54,
-        "contact": 51,
-        "power": 47,
-        "eye": 57,
-        "discipline": 48,
-        "speed": 48,
-        "baseInstinct": 43,
-        "bunting": 44,
+        "ovr": 62,
+        "contact": 60,
+        "power": 61,
+        "eye": 56,
+        "discipline": 57,
+        "speed": 64,
+        "baseInstinct": 58,
+        "bunting": 53,
         "platoon": 50,
-        "fielding": 53,
-        "arm": 53,
-        "battingClutch": 46
+        "fielding": 58,
+        "arm": 59,
+        "battingClutch": 55
       },
       "positionRatings": {
-        "SP": 54
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "LF": 62
+      }
     },
     "coach": null,
     "manager": null,

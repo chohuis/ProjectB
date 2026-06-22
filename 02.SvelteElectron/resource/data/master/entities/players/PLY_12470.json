@@ -1,9 +1,9 @@
 {
   "id": "PLY_12470",
-  "name": "앨런 오스틴",
-  "nameEn": "Allen Austin",
+  "name": "Lee Jake",
+  "nameEn": "Lee Jake",
   "role": "player",
-  "age": 20,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 56,
-  "popularity": 25,
+  "notes": "국적:베네수엘라",
+  "diligence": 76,
+  "popularity": 42,
   "militaryStatus": "군필",
   "entryYear": 2041,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 20,
+  "entryAge": 22,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 94,
-      "primaryPosition": "SP",
-      "developmentRate": 68,
-      "potentialHidden": 91,
+      "position": "1B",
+      "jerseyNumber": 88,
+      "primaryPosition": "1B",
+      "developmentRate": 78,
+      "potentialHidden": 92,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 57,
-        "stamina": 49,
-        "velocity": 66,
-        "command": 53,
-        "control": 50,
-        "movement": 56,
-        "mentality": 64,
-        "recovery": 50,
-        "clutch": 47,
-        "holdRunners": 54
+        "ovr": 55,
+        "stamina": 53,
+        "velocity": 60,
+        "command": 54,
+        "control": 51,
+        "movement": 54,
+        "mentality": 61,
+        "recovery": 46,
+        "clutch": 44,
+        "holdRunners": 52
       },
       "batting": {
-        "ovr": 61,
-        "contact": 54,
-        "power": 55,
-        "eye": 62,
-        "discipline": 62,
-        "speed": 64,
-        "baseInstinct": 50,
-        "bunting": 46,
+        "ovr": 55,
+        "contact": 49,
+        "power": 54,
+        "eye": 55,
+        "discipline": 58,
+        "speed": 59,
+        "baseInstinct": 49,
+        "bunting": 41,
         "platoon": 50,
-        "fielding": 64,
-        "arm": 56,
-        "battingClutch": 59
+        "fielding": 50,
+        "arm": 49,
+        "battingClutch": 55
       },
       "positionRatings": {
-        "SP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "1B": 55
+      }
     },
     "coach": null,
     "manager": null,

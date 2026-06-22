@@ -1,6 +1,6 @@
 {
   "id": "PLY_15471",
-  "name": "루이스 콜",
+  "name": "Lewis Cole",
   "nameEn": "Lewis Cole",
   "role": "player",
   "age": 34,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 84,
   "popularity": 23,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 56
       },
       "batting": {
-        "ovr": 74,
-        "contact": 69,
-        "power": 69,
-        "eye": 73,
-        "discipline": 66,
-        "speed": 82,
-        "baseInstinct": 73,
-        "bunting": 56,
-        "platoon": 63,
-        "fielding": 64,
-        "arm": 66,
-        "battingClutch": 73
+        "ovr": 59,
+        "contact": 55,
+        "power": 55,
+        "eye": 58,
+        "discipline": 53,
+        "speed": 65,
+        "baseInstinct": 58,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 53,
+        "battingClutch": 58
       },
       "positionRatings": {
         "CF": 59

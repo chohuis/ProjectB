@@ -1,7 +1,7 @@
 {
   "id": "PLY_00400",
   "name": "서예준",
-  "nameEn": "Seo Yejun",
+  "nameEn": "Noh Jae-min",
   "role": "player",
   "age": 22,
   "status": "active",
@@ -19,48 +19,28 @@
       "position": "DH",
       "jerseyNumber": 20,
       "pitching": {
-        "ovr": 39,
-        "stamina": 44,
-        "velocity": 37,
-        "command": 40,
-        "control": 41,
-        "movement": 40,
-        "mentality": 38,
-        "recovery": 38,
-        "clutch": 42,
-        "holdRunners": 42
+        "ovr": 32,
+        "stamina": 30,
+        "velocity": 31,
+        "command": 33,
+        "control": 29,
+        "movement": 28,
+        "mentality": 28,
+        "recovery": 26
       },
       "batting": {
-        "ovr": 59,
-        "contact": 65,
-        "power": 57,
-        "eye": 64,
-        "discipline": 61,
-        "speed": 54,
-        "fielding": 54,
-        "arm": 61,
-        "battingClutch": 54,
-        "baseInstinct": 49,
-        "bunting": 43,
-        "platoon": 51
+        "ovr": 62,
+        "contact": 64,
+        "power": 65,
+        "eye": 60,
+        "discipline": 58,
+        "speed": 53,
+        "fielding": 51,
+        "arm": 55,
+        "battingClutch": 58
       },
       "developmentRate": 45,
-      "potentialHidden": 56,
-      "primaryPosition": "DH",
-      "positionRatings": {
-        "DH": 59
-      },
-      "proServiceYears": 2,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 56
     },
     "coach": {
       "specialty": "-",
@@ -100,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

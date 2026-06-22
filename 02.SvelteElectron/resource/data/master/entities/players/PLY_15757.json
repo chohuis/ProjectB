@@ -1,6 +1,6 @@
 {
   "id": "PLY_15757",
-  "name": "앨런 크리스",
+  "name": "Allen Chris",
   "nameEn": "Allen Chris",
   "role": "player",
   "age": 30,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 49,
   "popularity": 15,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 46,
       "proServiceYears": 8,
       "pitching": {
-        "ovr": 60,
-        "stamina": 65,
-        "velocity": 71,
-        "command": 57,
-        "control": 59,
-        "movement": 52,
-        "mentality": 60,
-        "recovery": 57,
-        "clutch": 55,
-        "holdRunners": 45
+        "ovr": 53,
+        "stamina": 57,
+        "velocity": 63,
+        "command": 50,
+        "control": 52,
+        "movement": 46,
+        "mentality": 53,
+        "recovery": 50,
+        "clutch": 49,
+        "holdRunners": 40
       },
       "batting": {
         "ovr": 53,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 53
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

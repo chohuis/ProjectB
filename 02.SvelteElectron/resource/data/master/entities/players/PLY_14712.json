@@ -1,6 +1,6 @@
 {
   "id": "PLY_14712",
-  "name": "로드리게스 숀",
+  "name": "Rodriguez Sean",
   "nameEn": "Rodriguez Sean",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 65,
   "popularity": 41,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 79,
       "proServiceYears": 2,
       "pitching": {
-        "ovr": 64,
-        "stamina": 65,
-        "velocity": 65,
-        "command": 66,
-        "control": 55,
-        "movement": 67,
-        "mentality": 58,
-        "recovery": 62,
-        "clutch": 57,
-        "holdRunners": 58
+        "ovr": 66,
+        "stamina": 67,
+        "velocity": 67,
+        "command": 68,
+        "control": 57,
+        "movement": 69,
+        "mentality": 60,
+        "recovery": 64,
+        "clutch": 59,
+        "holdRunners": 60
       },
       "batting": {
         "ovr": 66,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

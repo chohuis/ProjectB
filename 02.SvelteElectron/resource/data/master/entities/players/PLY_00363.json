@@ -1,7 +1,7 @@
 {
   "id": "PLY_00363",
   "name": "황준혁",
-  "nameEn": "Hwang Junhyeok",
+  "nameEn": "Min Seong-min",
   "role": "player",
   "age": 25,
   "status": "active",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 3,
       "pitching": {
-        "ovr": 65,
-        "stamina": 68,
-        "velocity": 68,
-        "command": 65,
-        "control": 68,
-        "movement": 67,
-        "mentality": 67,
-        "recovery": 62,
-        "clutch": 55,
-        "holdRunners": 60
+        "ovr": 72,
+        "stamina": 75,
+        "velocity": 74,
+        "command": 77,
+        "control": 71,
+        "movement": 70,
+        "mentality": 76,
+        "recovery": 72
       },
       "batting": {
-        "ovr": 47,
-        "contact": 49,
-        "power": 53,
-        "eye": 53,
-        "discipline": 42,
-        "speed": 45,
-        "fielding": 52,
+        "ovr": 53,
+        "contact": 55,
+        "power": 56,
+        "eye": 55,
+        "discipline": 54,
+        "speed": 56,
+        "fielding": 56,
         "arm": 51,
-        "battingClutch": 42,
-        "baseInstinct": 45,
-        "bunting": 35,
-        "platoon": 41
+        "battingClutch": 56
       },
       "developmentRate": 52,
-      "potentialHidden": 65,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_KNUCKLEBALL",
-          "grade": 5
-        }
-      ],
-      "proServiceYears": 5,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 65
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

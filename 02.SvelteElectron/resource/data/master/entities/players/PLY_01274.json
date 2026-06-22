@@ -1,14 +1,14 @@
 {
   "id": "PLY_01274",
   "name": "토머스 에이든",
-  "nameEn": "To 머스 에이든",
+  "nameEn": "Thomas Aiden",
   "role": "player",
   "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_MOTORWOLVES",
-  "teamId": "TEAM_ABL_MOTORWOLVES_1",
+  "clubId": "CLUB_ABL_CHC",
+  "teamId": "TEAM_ABL_CHC",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 4,
       "pitching": {
-        "ovr": 74,
-        "stamina": 79,
-        "velocity": 70,
-        "command": 74,
-        "control": 74,
-        "movement": 69,
-        "mentality": 74,
-        "recovery": 75,
-        "clutch": 69,
-        "holdRunners": 62
+        "ovr": 76,
+        "stamina": 80,
+        "velocity": 80,
+        "command": 79,
+        "control": 81,
+        "movement": 77,
+        "mentality": 75,
+        "recovery": 75
       },
       "batting": {
-        "ovr": 56,
-        "contact": 62,
-        "power": 53,
-        "eye": 55,
-        "discipline": 57,
-        "speed": 55,
-        "fielding": 59,
-        "arm": 59,
-        "battingClutch": 51,
-        "baseInstinct": 45,
-        "bunting": 53,
-        "platoon": 43
+        "ovr": 46,
+        "contact": 54,
+        "power": 50,
+        "eye": 49,
+        "discipline": 46,
+        "speed": 53,
+        "fielding": 52,
+        "arm": 50,
+        "battingClutch": 53
       },
       "developmentRate": 44,
-      "potentialHidden": 59,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 74
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 10,
-      "contract": {
-        "salary": 24800,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 59
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

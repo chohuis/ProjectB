@@ -1,9 +1,9 @@
 {
   "id": "PLY_10284",
-  "name": "가르시아 숀",
-  "nameEn": "Garcia Sean",
+  "name": "Walker Evan",
+  "nameEn": "Walker Evan",
   "role": "player",
-  "age": 34,
+  "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 48,
-  "popularity": 10,
+  "notes": "국적:파나마",
+  "diligence": 56,
+  "popularity": 23,
   "militaryStatus": "군필",
   "entryYear": 2028,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 34,
+  "entryAge": 26,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 93,
-      "primaryPosition": "SP",
-      "developmentRate": 49,
-      "potentialHidden": 55,
-      "proServiceYears": 12,
+      "position": "2B",
+      "jerseyNumber": 71,
+      "primaryPosition": "2B",
+      "developmentRate": 58,
+      "potentialHidden": 77,
+      "proServiceYears": 4,
       "pitching": {
-        "ovr": 68,
-        "stamina": 71,
-        "velocity": 81,
-        "command": 70,
-        "control": 73,
-        "movement": 66,
-        "mentality": 71,
-        "recovery": 61,
-        "clutch": 66,
-        "holdRunners": 59
+        "ovr": 74,
+        "stamina": 79,
+        "velocity": 77,
+        "command": 73,
+        "control": 66,
+        "movement": 67,
+        "mentality": 78,
+        "recovery": 65,
+        "clutch": 65,
+        "holdRunners": 67
       },
       "batting": {
-        "ovr": 59,
-        "contact": 57,
-        "power": 57,
-        "eye": 62,
-        "discipline": 51,
-        "speed": 57,
-        "baseInstinct": 61,
-        "bunting": 49,
+        "ovr": 74,
+        "contact": 69,
+        "power": 67,
+        "eye": 74,
+        "discipline": 73,
+        "speed": 69,
+        "baseInstinct": 67,
+        "bunting": 62,
         "platoon": 50,
-        "fielding": 49,
-        "arm": 61,
-        "battingClutch": 54
+        "fielding": 69,
+        "arm": 77,
+        "battingClutch": 71
       },
       "positionRatings": {
-        "SP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "2B": 74
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_15518",
-  "name": "스콧 미겔",
+  "name": "Scott Miguel",
   "nameEn": "Scott Miguel",
   "role": "player",
   "age": 32,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 55,
   "popularity": 16,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 73,
       "proServiceYears": 10,
       "pitching": {
-        "ovr": 70,
-        "stamina": 76,
-        "velocity": 79,
-        "command": 61,
-        "control": 64,
-        "movement": 65,
-        "mentality": 74,
-        "recovery": 71,
-        "clutch": 68,
-        "holdRunners": 66
+        "ovr": 56,
+        "stamina": 61,
+        "velocity": 63,
+        "command": 49,
+        "control": 51,
+        "movement": 52,
+        "mentality": 59,
+        "recovery": 57,
+        "clutch": 54,
+        "holdRunners": 53
       },
       "batting": {
         "ovr": 56,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

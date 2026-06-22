@@ -1,6 +1,6 @@
 {
   "id": "PLY_14600",
-  "name": "해리스 숀",
+  "name": "Harris Sean",
   "nameEn": "Harris Sean",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 52,
   "popularity": 14,
   "militaryStatus": "군필",
@@ -57,13 +57,7 @@
       },
       "positionRatings": {
         "SP": 47
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

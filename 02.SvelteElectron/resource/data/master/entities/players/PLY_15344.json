@@ -1,6 +1,6 @@
 {
   "id": "PLY_15344",
-  "name": "존스 트레버",
+  "name": "Jones Trevor",
   "nameEn": "Jones Trevor",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 84,
   "popularity": 49,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 67
       },
       "batting": {
-        "ovr": 79,
-        "contact": 81,
-        "power": 80,
-        "eye": 78,
-        "discipline": 77,
-        "speed": 79,
-        "baseInstinct": 69,
-        "bunting": 69,
-        "platoon": 54,
-        "fielding": 76,
-        "arm": 67,
-        "battingClutch": 75
+        "ovr": 73,
+        "contact": 75,
+        "power": 74,
+        "eye": 72,
+        "discipline": 71,
+        "speed": 73,
+        "baseInstinct": 64,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 70,
+        "arm": 62,
+        "battingClutch": 69
       },
       "positionRatings": {
         "2B": 73

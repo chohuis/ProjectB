@@ -1,6 +1,6 @@
 {
   "id": "PLY_14102",
-  "name": "가르시아 다니엘",
+  "name": "Garcia Daniel",
   "nameEn": "Garcia Daniel",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 82,
   "popularity": 31,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 41
       },
       "batting": {
-        "ovr": 52,
-        "contact": 54,
-        "power": 51,
-        "eye": 55,
-        "discipline": 43,
-        "speed": 47,
-        "baseInstinct": 50,
-        "bunting": 43,
-        "platoon": 49,
-        "fielding": 43,
-        "arm": 48,
-        "battingClutch": 51
+        "ovr": 53,
+        "contact": 55,
+        "power": 52,
+        "eye": 56,
+        "discipline": 44,
+        "speed": 48,
+        "baseInstinct": 51,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 49,
+        "battingClutch": 52
       },
       "positionRatings": {
         "RF": 53

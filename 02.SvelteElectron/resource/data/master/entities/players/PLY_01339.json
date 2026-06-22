@@ -1,14 +1,14 @@
 {
   "id": "PLY_01339",
   "name": "스미스 프란시스코",
-  "nameEn": "Seu 미스 프란시스코",
+  "nameEn": "Smith Francisco",
   "role": "player",
   "age": 30,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_MOUNTAINPEAKS",
-  "teamId": "TEAM_ABL_MOUNTAINPEAKS_1",
+  "clubId": "CLUB_ABL_STL",
+  "teamId": "TEAM_ABL_STL",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -20,47 +20,27 @@
       "jerseyNumber": 24,
       "pitching": {
         "ovr": 67,
-        "stamina": 65,
-        "velocity": 64,
-        "command": 69,
-        "control": 69,
-        "movement": 71,
-        "mentality": 67,
-        "recovery": 68,
-        "clutch": 66,
-        "holdRunners": 63
+        "stamina": 66,
+        "velocity": 65,
+        "command": 60,
+        "control": 65,
+        "movement": 66,
+        "mentality": 63,
+        "recovery": 60
       },
       "batting": {
-        "ovr": 87,
-        "contact": 93,
-        "power": 86,
-        "eye": 92,
-        "discipline": 88,
-        "speed": 91,
-        "fielding": 93,
-        "arm": 91,
-        "battingClutch": 77,
-        "baseInstinct": 76,
-        "bunting": 79,
-        "platoon": 81
+        "ovr": 93,
+        "contact": 96,
+        "power": 95,
+        "eye": 95,
+        "discipline": 91,
+        "speed": 90,
+        "fielding": 82,
+        "arm": 85,
+        "battingClutch": 88
       },
       "developmentRate": 38,
-      "potentialHidden": 59,
-      "primaryPosition": "DH",
-      "positionRatings": {
-        "DH": 87
-      },
-      "proServiceYears": 8,
-      "contract": {
-        "salary": 19400,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 59
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

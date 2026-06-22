@@ -1,76 +1,46 @@
 {
   "id": "PLY_02000",
-  "name": "노지호",
-  "nameEn": "No Jiho",
+  "name": "마에다 츠바사",
+  "nameEn": "Maeda Tsubasa",
   "role": "player",
-  "age": 19,
+  "age": 35,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_STEELDINOS",
-  "teamId": "TEAM_KBL_STEELDINOS_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SEAGULLS",
+  "teamId": "TEAM_JBL_PL_SEAGULLS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "RP",
-      "jerseyNumber": 92,
+      "jerseyNumber": 10,
       "pitching": {
-        "ovr": 72,
-        "stamina": 77,
-        "velocity": 74,
-        "command": 71,
-        "control": 69,
-        "movement": 74,
-        "mentality": 73,
-        "recovery": 70,
-        "clutch": 71,
-        "holdRunners": 66
+        "ovr": 88,
+        "stamina": 83,
+        "velocity": 92,
+        "command": 88,
+        "control": 88,
+        "movement": 83,
+        "mentality": 89,
+        "recovery": 89
       },
       "batting": {
-        "ovr": 54,
-        "contact": 59,
-        "power": 56,
-        "eye": 59,
+        "ovr": 56,
+        "contact": 61,
+        "power": 61,
+        "eye": 57,
         "discipline": 57,
-        "speed": 55,
-        "fielding": 52,
-        "arm": 57,
-        "battingClutch": 43,
-        "baseInstinct": 49,
-        "bunting": 44,
-        "platoon": 46
+        "speed": 54,
+        "fielding": 54,
+        "arm": 52,
+        "battingClutch": 55
       },
-      "developmentRate": 63,
-      "potentialHidden": 72,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 72
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 6600,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 33,
+      "potentialHidden": 76
     },
     "coach": {
       "specialty": "-",
@@ -110,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 79,
-  "popularity": 10
+  }
 }

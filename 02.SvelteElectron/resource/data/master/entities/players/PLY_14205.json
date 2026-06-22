@@ -1,6 +1,6 @@
 {
   "id": "PLY_14205",
-  "name": "앤더슨 에릭",
+  "name": "Anderson Eric",
   "nameEn": "Anderson Eric",
   "role": "player",
   "age": 18,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 75,
   "popularity": 42,
   "militaryStatus": "군필",
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 45
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,9 +1,9 @@
 {
   "id": "PLY_10783",
-  "name": "가르시아 트레버",
-  "nameEn": "Garcia Trevor",
+  "name": "Garcia Alex",
+  "nameEn": "Garcia Alex",
   "role": "player",
-  "age": 27,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 56,
-  "popularity": 19,
+  "notes": "국적:미국",
+  "diligence": 46,
+  "popularity": 32,
   "militaryStatus": "군필",
   "entryYear": 2031,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 27,
+  "entryAge": 28,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 53,
+      "jerseyNumber": 28,
       "primaryPosition": "SP",
-      "developmentRate": 60,
-      "potentialHidden": 81,
-      "proServiceYears": 5,
+      "developmentRate": 54,
+      "potentialHidden": 82,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 75,
-        "stamina": 72,
-        "velocity": 76,
-        "command": 71,
-        "control": 72,
-        "movement": 72,
-        "mentality": 77,
-        "recovery": 74,
-        "clutch": 76,
-        "holdRunners": 74
+        "ovr": 66,
+        "stamina": 67,
+        "velocity": 71,
+        "command": 66,
+        "control": 59,
+        "movement": 61,
+        "mentality": 69,
+        "recovery": 66,
+        "clutch": 59,
+        "holdRunners": 51
       },
       "batting": {
-        "ovr": 79,
-        "contact": 80,
-        "power": 77,
-        "eye": 71,
-        "discipline": 83,
-        "speed": 74,
-        "baseInstinct": 71,
-        "bunting": 65,
+        "ovr": 66,
+        "contact": 66,
+        "power": 64,
+        "eye": 61,
+        "discipline": 66,
+        "speed": 68,
+        "baseInstinct": 57,
+        "bunting": 61,
         "platoon": 50,
-        "fielding": 75,
-        "arm": 77,
-        "battingClutch": 80
+        "fielding": 57,
+        "arm": 56,
+        "battingClutch": 57
       },
       "positionRatings": {
-        "SP": 79
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "SP": 66
+      }
     },
     "coach": null,
     "manager": null,

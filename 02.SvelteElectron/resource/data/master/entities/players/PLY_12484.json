@@ -1,9 +1,9 @@
 {
   "id": "PLY_12484",
-  "name": "잭슨 마커스",
-  "nameEn": "Jackson Marcus",
+  "name": "Hall Ryan",
+  "nameEn": "Hall Ryan",
   "role": "player",
-  "age": 22,
+  "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 46,
-  "popularity": 31,
+  "notes": "국적:도미니카",
+  "diligence": 82,
+  "popularity": 21,
   "militaryStatus": "군필",
   "entryYear": 2041,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 22,
+  "entryAge": 25,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 95,
+      "jerseyNumber": 81,
       "primaryPosition": "SP",
-      "developmentRate": 77,
-      "potentialHidden": 93,
-      "proServiceYears": 0,
+      "developmentRate": 54,
+      "potentialHidden": 63,
+      "proServiceYears": 3,
       "pitching": {
-        "ovr": 58,
-        "stamina": 51,
-        "velocity": 58,
-        "command": 56,
-        "control": 57,
-        "movement": 52,
-        "mentality": 60,
-        "recovery": 57,
-        "clutch": 53,
-        "holdRunners": 50
+        "ovr": 81,
+        "stamina": 74,
+        "velocity": 87,
+        "command": 77,
+        "control": 75,
+        "movement": 83,
+        "mentality": 80,
+        "recovery": 79,
+        "clutch": 76,
+        "holdRunners": 76
       },
       "batting": {
-        "ovr": 62,
-        "contact": 60,
-        "power": 64,
-        "eye": 67,
-        "discipline": 60,
-        "speed": 57,
-        "baseInstinct": 62,
-        "bunting": 51,
+        "ovr": 81,
+        "contact": 84,
+        "power": 72,
+        "eye": 81,
+        "discipline": 83,
+        "speed": 81,
+        "baseInstinct": 79,
+        "bunting": 67,
         "platoon": 50,
-        "fielding": 59,
-        "arm": 61,
-        "battingClutch": 59
+        "fielding": 74,
+        "arm": 84,
+        "battingClutch": 82
       },
       "positionRatings": {
-        "SP": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 81
+      }
     },
     "coach": null,
     "manager": null,

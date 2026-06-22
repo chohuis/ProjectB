@@ -1,7 +1,7 @@
 {
   "id": "PLY_00344",
   "name": "백지성",
-  "nameEn": "Baek Jiseong",
+  "nameEn": "Ko Jae-yun",
   "role": "player",
   "age": 29,
   "status": "active",
@@ -20,57 +20,27 @@
       "jerseyNumber": 4,
       "pitching": {
         "ovr": 56,
-        "stamina": 59,
-        "velocity": 61,
+        "stamina": 63,
+        "velocity": 62,
         "command": 56,
-        "control": 60,
-        "movement": 59,
+        "control": 54,
+        "movement": 53,
         "mentality": 61,
-        "recovery": 53,
-        "clutch": 55,
-        "holdRunners": 50
+        "recovery": 60
       },
       "batting": {
-        "ovr": 38,
-        "contact": 34,
-        "power": 41,
-        "eye": 37,
-        "discipline": 44,
-        "speed": 40,
-        "fielding": 41,
-        "arm": 38,
-        "battingClutch": 39,
-        "baseInstinct": 36,
-        "bunting": 39,
-        "platoon": 37
+        "ovr": 30,
+        "contact": 32,
+        "power": 28,
+        "eye": 32,
+        "discipline": 32,
+        "speed": 32,
+        "fielding": 26,
+        "arm": 29,
+        "battingClutch": 30
       },
       "developmentRate": 52,
-      "potentialHidden": 82,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 9,
-      "contract": {
-        "salary": 1100,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 82
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,6 +1,6 @@
 {
   "id": "PLY_16020",
-  "name": "앨런 미겔",
+  "name": "Allen Miguel",
   "nameEn": "Allen Miguel",
   "role": "player",
   "age": 33,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 64,
   "popularity": 47,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 52,
       "proServiceYears": 11,
       "pitching": {
-        "ovr": 71,
-        "stamina": 71,
-        "velocity": 76,
-        "command": 61,
-        "control": 60,
-        "movement": 64,
-        "mentality": 73,
-        "recovery": 70,
-        "clutch": 66,
-        "holdRunners": 59
+        "ovr": 57,
+        "stamina": 57,
+        "velocity": 61,
+        "command": 49,
+        "control": 48,
+        "movement": 51,
+        "mentality": 59,
+        "recovery": 56,
+        "clutch": 53,
+        "holdRunners": 47
       },
       "batting": {
         "ovr": 57,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

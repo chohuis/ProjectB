@@ -1,7 +1,7 @@
 {
   "id": "PLY_13956",
-  "name": "에르난데스 카를로스",
-  "nameEn": "Hernandez Carlos",
+  "name": "Scott Luis",
+  "nameEn": "Scott Luis",
   "role": "player",
   "age": 22,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 47,
-  "popularity": 14,
+  "notes": "국적:일본",
+  "diligence": 75,
+  "popularity": 21,
   "militaryStatus": "군필",
   "entryYear": 2050,
   "entryLeague": "LEAGUE_ABL",
@@ -21,53 +21,43 @@
   "entryAge": 22,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 39,
-      "primaryPosition": "SP",
-      "developmentRate": 66,
-      "potentialHidden": 77,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 36,
+      "primaryPosition": "3B",
+      "developmentRate": 57,
+      "potentialHidden": 94,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 57,
-        "stamina": 50,
-        "velocity": 62,
-        "command": 52,
-        "control": 61,
-        "movement": 61,
-        "mentality": 51,
-        "recovery": 51,
-        "clutch": 45,
-        "holdRunners": 44
+        "ovr": 54,
+        "stamina": 46,
+        "velocity": 52,
+        "command": 48,
+        "control": 49,
+        "movement": 46,
+        "mentality": 50,
+        "recovery": 44,
+        "clutch": 53,
+        "holdRunners": 40
       },
       "batting": {
-        "ovr": 61,
-        "contact": 54,
-        "power": 53,
-        "eye": 61,
-        "discipline": 64,
-        "speed": 56,
-        "baseInstinct": 57,
-        "bunting": 50,
+        "ovr": 54,
+        "contact": 52,
+        "power": 44,
+        "eye": 47,
+        "discipline": 49,
+        "speed": 50,
+        "baseInstinct": 44,
+        "bunting": 40,
         "platoon": 50,
-        "fielding": 53,
-        "arm": 52,
-        "battingClutch": 52
+        "fielding": 46,
+        "arm": 45,
+        "battingClutch": 43
       },
       "positionRatings": {
-        "SP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 1
-        }
-      ]
+        "3B": 54
+      }
     },
     "coach": null,
     "manager": null,

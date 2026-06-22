@@ -1,14 +1,14 @@
 {
   "id": "PLY_01323",
   "name": "로드리게스 저스틴",
-  "nameEn": "Ro 드리게스 저스틴",
+  "nameEn": "Rodriguez Justin",
   "role": "player",
-  "age": 40,
+  "age": 41,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_MOUNTAINPEAKS",
-  "teamId": "TEAM_ABL_MOUNTAINPEAKS_1",
+  "clubId": "CLUB_ABL_STL",
+  "teamId": "TEAM_ABL_STL",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 8,
       "pitching": {
-        "ovr": 76,
-        "stamina": 78,
-        "velocity": 80,
-        "command": 82,
-        "control": 75,
-        "movement": 74,
+        "ovr": 79,
+        "stamina": 74,
+        "velocity": 88,
+        "command": 85,
+        "control": 78,
+        "movement": 77,
         "mentality": 80,
-        "recovery": 80,
-        "clutch": 73,
-        "holdRunners": 73
+        "recovery": 82
       },
       "batting": {
-        "ovr": 58,
-        "contact": 53,
-        "power": 64,
-        "eye": 55,
-        "discipline": 63,
-        "speed": 60,
-        "fielding": 53,
-        "arm": 64,
-        "battingClutch": 50,
-        "baseInstinct": 54,
-        "bunting": 49,
-        "platoon": 53
+        "ovr": 62,
+        "contact": 63,
+        "power": 61,
+        "eye": 56,
+        "discipline": 57,
+        "speed": 58,
+        "fielding": 58,
+        "arm": 55,
+        "battingClutch": 60
       },
       "developmentRate": 34,
-      "potentialHidden": 70,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 18,
-      "contract": {
-        "salary": 26300,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 70
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,9 +1,9 @@
 {
   "id": "PLY_11118",
-  "name": "카터 재크",
-  "nameEn": "Carter Zach",
+  "name": "Jones Chris",
+  "nameEn": "Jones Chris",
   "role": "player",
-  "age": 30,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 81,
-  "popularity": 19,
+  "notes": "국적:미국",
+  "diligence": 70,
+  "popularity": 24,
   "militaryStatus": "군필",
   "entryYear": 2033,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 30,
+  "entryAge": 28,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 52,
-      "primaryPosition": "SP",
-      "developmentRate": 36,
-      "potentialHidden": 62,
-      "proServiceYears": 8,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 59,
+      "primaryPosition": "2B",
+      "developmentRate": 55,
+      "potentialHidden": 69,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 61,
-        "stamina": 64,
-        "velocity": 58,
-        "command": 52,
-        "control": 56,
-        "movement": 55,
-        "mentality": 55,
-        "recovery": 50,
-        "clutch": 58,
-        "holdRunners": 48
+        "ovr": 81,
+        "stamina": 81,
+        "velocity": 81,
+        "command": 82,
+        "control": 82,
+        "movement": 75,
+        "mentality": 86,
+        "recovery": 72,
+        "clutch": 73,
+        "holdRunners": 78
       },
       "batting": {
-        "ovr": 59,
-        "contact": 52,
-        "power": 59,
-        "eye": 59,
-        "discipline": 63,
-        "speed": 53,
-        "baseInstinct": 54,
-        "bunting": 48,
+        "ovr": 81,
+        "contact": 85,
+        "power": 79,
+        "eye": 81,
+        "discipline": 80,
+        "speed": 86,
+        "baseInstinct": 75,
+        "bunting": 68,
         "platoon": 50,
-        "fielding": 49,
-        "arm": 60,
-        "battingClutch": 56
+        "fielding": 83,
+        "arm": 83,
+        "battingClutch": 70
       },
       "positionRatings": {
-        "SP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "2B": 81
+      }
     },
     "coach": null,
     "manager": null,

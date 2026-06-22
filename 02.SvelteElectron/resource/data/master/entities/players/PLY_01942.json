@@ -1,72 +1,46 @@
 {
   "id": "PLY_01942",
-  "name": "나원준",
-  "nameEn": "Na Wonjun",
+  "name": "마쓰모토 아키라",
+  "nameEn": "Matsumoto Akira",
   "role": "player",
-  "age": 33,
+  "age": 27,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_EMBERTIGERS",
-  "teamId": "TEAM_KBL_EMBERTIGERS_1",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
+  "teamId": "TEAM_JBL_PL_SPIRITBUFFALOS_2",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "L",
-      "position": "C",
-      "jerseyNumber": 93,
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 47,
       "pitching": {
-        "ovr": 48,
-        "stamina": 49,
-        "velocity": 47,
-        "command": 50,
-        "control": 48,
-        "movement": 46,
-        "mentality": 52,
-        "recovery": 51,
-        "clutch": 46,
-        "holdRunners": 36
+        "ovr": 45,
+        "stamina": 40,
+        "velocity": 49,
+        "command": 48,
+        "control": 41,
+        "movement": 45,
+        "mentality": 46,
+        "recovery": 39
       },
       "batting": {
-        "ovr": 68,
-        "contact": 71,
-        "power": 65,
-        "eye": 64,
-        "discipline": 67,
-        "speed": 61,
-        "fielding": 72,
+        "ovr": 75,
+        "contact": 74,
+        "power": 79,
+        "eye": 71,
+        "discipline": 70,
+        "speed": 74,
+        "fielding": 73,
         "arm": 73,
-        "battingClutch": 65,
-        "baseInstinct": 60,
-        "bunting": 64,
-        "platoon": 56
+        "battingClutch": 70
       },
-      "developmentRate": 39,
-      "potentialHidden": 78,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 11,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 50,
+      "potentialHidden": 65
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 80,
-  "popularity": 13,
-  "militaryStatus": "군필"
+  }
 }

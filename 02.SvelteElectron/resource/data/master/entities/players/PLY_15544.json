@@ -1,6 +1,6 @@
 {
   "id": "PLY_15544",
-  "name": "브라운 알렉스",
+  "name": "Brown Alex",
   "nameEn": "Brown Alex",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 78,
   "popularity": 34,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 56
       },
       "batting": {
-        "ovr": 60,
-        "contact": 56,
-        "power": 54,
-        "eye": 64,
-        "discipline": 59,
-        "speed": 59,
-        "baseInstinct": 49,
-        "bunting": 48,
-        "platoon": 48,
-        "fielding": 51,
-        "arm": 56,
-        "battingClutch": 55
+        "ovr": 62,
+        "contact": 58,
+        "power": 56,
+        "eye": 66,
+        "discipline": 61,
+        "speed": 61,
+        "baseInstinct": 51,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 58,
+        "battingClutch": 57
       },
       "positionRatings": {
         "1B": 62

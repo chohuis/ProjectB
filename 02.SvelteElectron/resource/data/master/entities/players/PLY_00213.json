@@ -1,7 +1,7 @@
 {
   "id": "PLY_00213",
   "name": "김태현",
-  "nameEn": "Kim Taehyeon",
+  "nameEn": "Choi Woo-jin",
   "role": "player",
   "age": 20,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "1B",
       "jerseyNumber": 13,
       "pitching": {
-        "ovr": 40,
-        "stamina": 46,
-        "velocity": 44,
-        "command": 45,
-        "control": 45,
-        "movement": 38,
-        "mentality": 43,
-        "recovery": 42,
-        "clutch": 41,
-        "holdRunners": 34
+        "ovr": 31,
+        "stamina": 28,
+        "velocity": 32,
+        "command": 29,
+        "control": 35,
+        "movement": 31,
+        "mentality": 34,
+        "recovery": 28
       },
       "batting": {
-        "ovr": 60,
-        "contact": 56,
-        "power": 63,
-        "eye": 57,
-        "discipline": 63,
-        "speed": 56,
-        "fielding": 65,
-        "arm": 63,
-        "battingClutch": 55,
-        "baseInstinct": 53,
-        "bunting": 43,
-        "platoon": 51
+        "ovr": 67,
+        "contact": 64,
+        "power": 71,
+        "eye": 64,
+        "discipline": 59,
+        "speed": 57,
+        "fielding": 60,
+        "arm": 61,
+        "battingClutch": 60
       },
       "developmentRate": 51,
-      "potentialHidden": 64,
-      "primaryPosition": "1B",
-      "positionRatings": {
-        "1B": 60
-      }
+      "potentialHidden": 64
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

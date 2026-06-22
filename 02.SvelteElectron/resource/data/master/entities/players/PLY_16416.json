@@ -1,6 +1,6 @@
 {
   "id": "PLY_16416",
-  "name": "토마스 케빈",
+  "name": "Thomas Kevin",
   "nameEn": "Thomas Kevin",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 50,
   "popularity": 44,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 65
       },
       "batting": {
-        "ovr": 75,
-        "contact": 71,
-        "power": 65,
-        "eye": 79,
-        "discipline": 76,
-        "speed": 73,
-        "baseInstinct": 76,
-        "bunting": 58,
-        "platoon": 54,
-        "fielding": 76,
-        "arm": 70,
-        "battingClutch": 65
+        "ovr": 69,
+        "contact": 65,
+        "power": 60,
+        "eye": 73,
+        "discipline": 70,
+        "speed": 67,
+        "baseInstinct": 70,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 70,
+        "arm": 64,
+        "battingClutch": 60
       },
       "positionRatings": {
         "CF": 69

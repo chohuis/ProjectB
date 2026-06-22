@@ -1,6 +1,6 @@
 {
   "id": "PLY_16471",
-  "name": "존슨 블레이크",
+  "name": "Johnson Blake",
   "nameEn": "Johnson Blake",
   "role": "player",
   "age": 30,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 74,
   "popularity": 21,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 58,
       "proServiceYears": 8,
       "pitching": {
-        "ovr": 66,
-        "stamina": 69,
-        "velocity": 66,
-        "command": 56,
-        "control": 62,
-        "movement": 69,
-        "mentality": 72,
-        "recovery": 58,
-        "clutch": 55,
-        "holdRunners": 54
+        "ovr": 59,
+        "stamina": 62,
+        "velocity": 59,
+        "command": 50,
+        "control": 55,
+        "movement": 62,
+        "mentality": 64,
+        "recovery": 52,
+        "clutch": 49,
+        "holdRunners": 48
       },
       "batting": {
         "ovr": 59,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

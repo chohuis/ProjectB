@@ -1,6 +1,6 @@
 {
   "id": "PLY_14726",
-  "name": "스미스 콜",
+  "name": "Smith Cole",
   "nameEn": "Smith Cole",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 48,
   "popularity": 48,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 61,
       "proServiceYears": 4,
       "pitching": {
-        "ovr": 62,
-        "stamina": 59,
-        "velocity": 63,
-        "command": 58,
-        "control": 54,
-        "movement": 64,
-        "mentality": 66,
-        "recovery": 61,
-        "clutch": 61,
-        "holdRunners": 55
+        "ovr": 66,
+        "stamina": 63,
+        "velocity": 67,
+        "command": 62,
+        "control": 57,
+        "movement": 68,
+        "mentality": 70,
+        "recovery": 65,
+        "clutch": 65,
+        "holdRunners": 59
       },
       "batting": {
         "ovr": 66,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

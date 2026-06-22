@@ -1,14 +1,14 @@
 {
   "id": "PLY_01239",
   "name": "플로레스 크리스토퍼",
-  "nameEn": "Peul 로레스 크리스토퍼",
+  "nameEn": "Flores Christopher",
   "role": "player",
   "age": 39,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_WAVERIDERS",
-  "teamId": "TEAM_ABL_WAVERIDERS_1",
+  "clubId": "CLUB_ABL_NYM",
+  "teamId": "TEAM_ABL_NYM",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,48 +19,28 @@
       "position": "C",
       "jerseyNumber": 14,
       "pitching": {
-        "ovr": 59,
-        "stamina": 64,
-        "velocity": 58,
-        "command": 58,
-        "control": 55,
-        "movement": 62,
-        "mentality": 65,
-        "recovery": 63,
-        "clutch": 50,
-        "holdRunners": 57
+        "ovr": 47,
+        "stamina": 43,
+        "velocity": 51,
+        "command": 47,
+        "control": 44,
+        "movement": 39,
+        "mentality": 48,
+        "recovery": 44
       },
       "batting": {
-        "ovr": 79,
-        "contact": 76,
-        "power": 75,
-        "eye": 78,
-        "discipline": 77,
-        "speed": 85,
-        "fielding": 80,
-        "arm": 80,
-        "battingClutch": 79,
-        "baseInstinct": 68,
-        "bunting": 72,
-        "platoon": 67
+        "ovr": 74,
+        "contact": 74,
+        "power": 80,
+        "eye": 74,
+        "discipline": 75,
+        "speed": 77,
+        "fielding": 83,
+        "arm": 81,
+        "battingClutch": 77
       },
       "developmentRate": 42,
-      "potentialHidden": 73,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 79
-      },
-      "proServiceYears": 17,
-      "contract": {
-        "salary": 13200,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 73
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

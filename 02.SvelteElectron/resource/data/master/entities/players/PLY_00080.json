@@ -1,9 +1,9 @@
 {
   "id": "PLY_00080",
   "name": "강건우",
-  "nameEn": "Kang Geonu",
+  "nameEn": "Ha Tae-yang",
   "role": "player",
-  "age": 19,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "DH",
       "jerseyNumber": 20,
       "pitching": {
-        "ovr": 41,
-        "stamina": 39,
-        "velocity": 44,
-        "command": 37,
-        "control": 37,
-        "movement": 45,
-        "mentality": 44,
-        "recovery": 45,
-        "clutch": 39,
-        "holdRunners": 39
+        "ovr": 50,
+        "stamina": 61,
+        "velocity": 63,
+        "command": 66,
+        "control": 54,
+        "movement": 57,
+        "mentality": 54,
+        "recovery": 67
       },
       "batting": {
-        "ovr": 61,
-        "contact": 65,
-        "power": 57,
-        "eye": 62,
-        "discipline": 65,
-        "speed": 55,
-        "fielding": 57,
-        "arm": 61,
-        "battingClutch": 55,
-        "baseInstinct": 52,
-        "bunting": 57,
-        "platoon": 50
+        "ovr": 68,
+        "contact": 51,
+        "power": 63,
+        "eye": 60,
+        "discipline": 63,
+        "speed": 61,
+        "fielding": 67,
+        "arm": 66,
+        "battingClutch": 66
       },
       "developmentRate": 66,
-      "potentialHidden": 66,
-      "primaryPosition": "DH",
-      "positionRatings": {
-        "DH": 61
-      }
+      "potentialHidden": 66
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

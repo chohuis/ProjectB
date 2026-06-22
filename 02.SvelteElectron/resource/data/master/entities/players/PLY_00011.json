@@ -1,9 +1,9 @@
 {
   "id": "PLY_00011",
   "name": "오상민",
-  "nameEn": "Oh Sangmin",
+  "nameEn": "Seo Ji-hoon",
   "role": "player",
-  "age": 19,
+  "age": 15,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "2B",
       "jerseyNumber": 11,
       "pitching": {
-        "ovr": 43,
-        "stamina": 45,
-        "velocity": 40,
-        "command": 41,
-        "control": 42,
-        "movement": 42,
-        "mentality": 48,
-        "recovery": 39,
-        "clutch": 37,
-        "holdRunners": 35
+        "ovr": 46,
+        "stamina": 63,
+        "velocity": 71,
+        "command": 64,
+        "control": 75,
+        "movement": 69,
+        "mentality": 61,
+        "recovery": 70
       },
       "batting": {
-        "ovr": 63,
-        "contact": 60,
-        "power": 64,
-        "eye": 58,
-        "discipline": 58,
-        "speed": 59,
-        "fielding": 68,
-        "arm": 64,
-        "battingClutch": 61,
-        "baseInstinct": 59,
-        "bunting": 60,
-        "platoon": 57
+        "ovr": 64,
+        "contact": 71,
+        "power": 62,
+        "eye": 57,
+        "discipline": 69,
+        "speed": 62,
+        "fielding": 67,
+        "arm": 62,
+        "battingClutch": 65
       },
       "developmentRate": 68,
-      "potentialHidden": 89,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 63
-      }
+      "potentialHidden": 89
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

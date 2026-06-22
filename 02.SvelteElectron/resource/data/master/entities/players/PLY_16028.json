@@ -1,6 +1,6 @@
 {
   "id": "PLY_16028",
-  "name": "홀 다니엘",
+  "name": "Hall Daniel",
   "nameEn": "Hall Daniel",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 77,
   "popularity": 12,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 59
       },
       "batting": {
-        "ovr": 58,
-        "contact": 52,
-        "power": 50,
-        "eye": 57,
-        "discipline": 56,
-        "speed": 64,
-        "baseInstinct": 59,
-        "bunting": 48,
-        "platoon": 46,
-        "fielding": 54,
-        "arm": 53,
-        "battingClutch": 58
+        "ovr": 63,
+        "contact": 56,
+        "power": 54,
+        "eye": 62,
+        "discipline": 61,
+        "speed": 70,
+        "baseInstinct": 64,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 58,
+        "battingClutch": 63
       },
       "positionRatings": {
         "2B": 63

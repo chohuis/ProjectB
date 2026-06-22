@@ -1,61 +1,46 @@
 {
   "id": "PLY_01545",
-  "name": "조성우",
-  "nameEn": "Jo Seongwoo",
+  "name": "고토 다이키",
+  "nameEn": "Goto Daiki",
   "role": "player",
-  "age": 17,
+  "age": 34,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_SEOUL_INNOVATION",
-  "teamId": "TEAM_HS_SEOUL_INNOVATION",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_SEOUL_INNOVATION",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_NEONCRANES",
+  "teamId": "TEAM_JBL_CL_NEONCRANES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "C",
-      "jerseyNumber": 24,
+      "position": "SP",
+      "jerseyNumber": 5,
       "pitching": {
-        "ovr": 37,
-        "stamina": 41,
-        "velocity": 37,
-        "command": 35,
-        "control": 34,
-        "movement": 39,
-        "mentality": 41,
-        "recovery": 37,
-        "clutch": 43,
-        "holdRunners": 36
+        "ovr": 76,
+        "stamina": 70,
+        "velocity": 74,
+        "command": 68,
+        "control": 70,
+        "movement": 72,
+        "mentality": 68,
+        "recovery": 74
       },
       "batting": {
-        "ovr": 57,
-        "contact": 55,
-        "power": 52,
-        "eye": 53,
-        "discipline": 54,
-        "speed": 50,
-        "fielding": 60,
-        "arm": 54,
-        "battingClutch": 58,
-        "baseInstinct": 49,
-        "bunting": 44,
-        "platoon": 54
+        "ovr": 50,
+        "contact": 49,
+        "power": 46,
+        "eye": 45,
+        "discipline": 47,
+        "speed": 44,
+        "fielding": 50,
+        "arm": 46,
+        "battingClutch": 44
       },
-      "developmentRate": 71,
-      "potentialHidden": 83,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 45,
+      "potentialHidden": 75
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 71,
-  "popularity": 26
+  }
 }

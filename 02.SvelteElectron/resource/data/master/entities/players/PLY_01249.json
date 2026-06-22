@@ -1,14 +1,14 @@
 {
   "id": "PLY_01249",
   "name": "로빈슨 로버트",
-  "nameEn": "Ro 빈슨 로버트",
+  "nameEn": "Robinson Robert",
   "role": "player",
   "age": 40,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_WAVERIDERS",
-  "teamId": "TEAM_ABL_WAVERIDERS_1",
+  "clubId": "CLUB_ABL_NYM",
+  "teamId": "TEAM_ABL_NYM",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
@@ -19,48 +19,28 @@
       "position": "DH",
       "jerseyNumber": 24,
       "pitching": {
-        "ovr": 69,
-        "stamina": 70,
-        "velocity": 73,
-        "command": 74,
-        "control": 65,
-        "movement": 65,
-        "mentality": 74,
-        "recovery": 72,
-        "clutch": 58,
-        "holdRunners": 61
+        "ovr": 58,
+        "stamina": 56,
+        "velocity": 62,
+        "command": 62,
+        "control": 56,
+        "movement": 59,
+        "mentality": 60,
+        "recovery": 62
       },
       "batting": {
         "ovr": 89,
-        "contact": 84,
-        "power": 85,
-        "eye": 84,
+        "contact": 98,
+        "power": 100,
+        "eye": 91,
         "discipline": 89,
-        "speed": 86,
-        "fielding": 95,
-        "arm": 87,
-        "battingClutch": 82,
-        "baseInstinct": 82,
-        "bunting": 76,
-        "platoon": 80
+        "speed": 83,
+        "fielding": 89,
+        "arm": 90,
+        "battingClutch": 93
       },
       "developmentRate": 32,
-      "potentialHidden": 89,
-      "primaryPosition": "DH",
-      "positionRatings": {
-        "DH": 89
-      },
-      "proServiceYears": 18,
-      "contract": {
-        "salary": 20900,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 89
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

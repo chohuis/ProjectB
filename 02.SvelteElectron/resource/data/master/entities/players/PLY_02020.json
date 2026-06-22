@@ -1,72 +1,46 @@
 {
   "id": "PLY_02020",
-  "name": "유우진",
-  "nameEn": "Yoo Woojin",
+  "name": "하시모토 진",
+  "nameEn": "Hashimoto Jin",
   "role": "player",
-  "age": 20,
+  "age": 27,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_GIANTWHALES",
-  "teamId": "TEAM_KBL_GIANTWHALES_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SEAGULLS",
+  "teamId": "TEAM_JBL_PL_SEAGULLS_2",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
-      "handedness": "L",
-      "position": "2B",
-      "jerseyNumber": 61,
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 35,
       "pitching": {
-        "ovr": 45,
-        "stamina": 42,
-        "velocity": 50,
-        "command": 44,
-        "control": 45,
-        "movement": 49,
-        "mentality": 41,
-        "recovery": 44,
-        "clutch": 37,
-        "holdRunners": 42
+        "ovr": 81,
+        "stamina": 73,
+        "velocity": 81,
+        "command": 80,
+        "control": 82,
+        "movement": 76,
+        "mentality": 76,
+        "recovery": 81
       },
       "batting": {
-        "ovr": 65,
+        "ovr": 55,
         "contact": 63,
-        "power": 69,
-        "eye": 69,
+        "power": 57,
+        "eye": 61,
         "discipline": 62,
-        "speed": 62,
-        "fielding": 63,
-        "arm": 67,
-        "battingClutch": 60,
-        "baseInstinct": 63,
-        "bunting": 52,
-        "platoon": 51
+        "speed": 58,
+        "fielding": 58,
+        "arm": 57,
+        "battingClutch": 58
       },
-      "developmentRate": 45,
-      "potentialHidden": 64,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 54,
+      "potentialHidden": 66
     },
     "coach": {
       "specialty": "-",
@@ -106,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 48,
-  "popularity": 20
+  }
 }

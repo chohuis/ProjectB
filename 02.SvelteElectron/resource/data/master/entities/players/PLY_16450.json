@@ -1,6 +1,6 @@
 {
   "id": "PLY_16450",
-  "name": "테일러 코디",
+  "name": "Taylor Cody",
   "nameEn": "Taylor Cody",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 58,
   "popularity": 36,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 38
       },
       "batting": {
-        "ovr": 50,
-        "contact": 48,
-        "power": 43,
-        "eye": 46,
-        "discipline": 46,
-        "speed": 56,
-        "baseInstinct": 45,
-        "bunting": 43,
-        "platoon": 49,
-        "fielding": 48,
-        "arm": 46,
-        "battingClutch": 40
+        "ovr": 51,
+        "contact": 49,
+        "power": 44,
+        "eye": 47,
+        "discipline": 47,
+        "speed": 57,
+        "baseInstinct": 46,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 47,
+        "battingClutch": 41
       },
       "positionRatings": {
         "C": 51

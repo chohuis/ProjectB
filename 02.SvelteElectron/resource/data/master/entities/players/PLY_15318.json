@@ -1,6 +1,6 @@
 {
   "id": "PLY_15318",
-  "name": "브라운 트레버",
+  "name": "Brown Trevor",
   "nameEn": "Brown Trevor",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 61,
   "popularity": 25,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 40
       },
       "batting": {
-        "ovr": 52,
-        "contact": 45,
-        "power": 54,
-        "eye": 56,
-        "discipline": 54,
-        "speed": 48,
-        "baseInstinct": 45,
-        "bunting": 34,
-        "platoon": 49,
-        "fielding": 55,
-        "arm": 50,
-        "battingClutch": 41
+        "ovr": 53,
+        "contact": 46,
+        "power": 55,
+        "eye": 57,
+        "discipline": 55,
+        "speed": 49,
+        "baseInstinct": 46,
+        "bunting": 35,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 51,
+        "battingClutch": 42
       },
       "positionRatings": {
         "3B": 53

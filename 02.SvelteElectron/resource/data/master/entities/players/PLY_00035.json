@@ -1,7 +1,7 @@
 {
   "id": "PLY_00035",
   "name": "강기준",
-  "nameEn": "Kang Gijun",
+  "nameEn": "Ko Jae-won",
   "role": "player",
   "age": 17,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "SS",
       "jerseyNumber": 15,
       "pitching": {
-        "ovr": 32,
-        "stamina": 35,
-        "velocity": 38,
-        "command": 30,
-        "control": 36,
-        "movement": 30,
-        "mentality": 29,
-        "recovery": 36,
-        "clutch": 41,
-        "holdRunners": 40
+        "ovr": 33,
+        "stamina": 56,
+        "velocity": 54,
+        "command": 46,
+        "control": 57,
+        "movement": 52,
+        "mentality": 59,
+        "recovery": 62
       },
       "batting": {
-        "ovr": 52,
-        "contact": 49,
-        "power": 55,
-        "eye": 56,
-        "discipline": 54,
-        "speed": 49,
-        "fielding": 52,
-        "arm": 50,
-        "battingClutch": 41,
-        "baseInstinct": 47,
-        "bunting": 44,
-        "platoon": 39
+        "ovr": 47,
+        "contact": 58,
+        "power": 58,
+        "eye": 49,
+        "discipline": 41,
+        "speed": 59,
+        "fielding": 65,
+        "arm": 48,
+        "battingClutch": 53
       },
       "developmentRate": 68,
-      "potentialHidden": 76,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 52
-      }
+      "potentialHidden": 76
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

@@ -1,72 +1,46 @@
 {
   "id": "PLY_01970",
-  "name": "유동혁",
-  "nameEn": "Yoo Donghyeok",
+  "name": "후지타 기요시",
+  "nameEn": "Fujita Kiyoshi",
   "role": "player",
-  "age": 28,
+  "age": 26,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_ROYALLIONS",
-  "teamId": "TEAM_KBL_ROYALLIONS_1",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
+  "teamId": "TEAM_JBL_PL_MARINESOLDIERS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "SS",
-      "jerseyNumber": 28,
+      "position": "2B",
+      "jerseyNumber": 25,
       "pitching": {
-        "ovr": 54,
-        "stamina": 56,
-        "velocity": 53,
-        "command": 59,
-        "control": 56,
-        "movement": 54,
-        "mentality": 50,
-        "recovery": 59,
-        "clutch": 45,
-        "holdRunners": 49
+        "ovr": 38,
+        "stamina": 39,
+        "velocity": 44,
+        "command": 44,
+        "control": 38,
+        "movement": 43,
+        "mentality": 39,
+        "recovery": 40
       },
       "batting": {
-        "ovr": 74,
-        "contact": 78,
-        "power": 73,
-        "eye": 72,
-        "discipline": 79,
-        "speed": 68,
-        "fielding": 70,
-        "arm": 79,
-        "battingClutch": 70,
-        "baseInstinct": 74,
-        "bunting": 71,
-        "platoon": 62
+        "ovr": 65,
+        "contact": 73,
+        "power": 71,
+        "eye": 68,
+        "discipline": 71,
+        "speed": 64,
+        "fielding": 68,
+        "arm": 69,
+        "battingClutch": 69
       },
-      "developmentRate": 61,
-      "potentialHidden": 69,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 74
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 6,
-      "contract": {
-        "salary": 2700,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 39,
+      "potentialHidden": 79
     },
     "coach": {
       "specialty": "-",
@@ -106,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 59,
-  "popularity": 37
+  }
 }

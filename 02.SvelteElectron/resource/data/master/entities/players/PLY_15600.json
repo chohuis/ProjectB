@@ -1,6 +1,6 @@
 {
   "id": "PLY_15600",
-  "name": "홀 미겔",
+  "name": "Hall Miguel",
   "nameEn": "Hall Miguel",
   "role": "player",
   "age": 34,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 81,
   "popularity": 15,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 57
       },
       "batting": {
-        "ovr": 81,
-        "contact": 84,
-        "power": 68,
-        "eye": 86,
-        "discipline": 72,
-        "speed": 84,
-        "baseInstinct": 84,
-        "bunting": 72,
-        "platoon": 63,
-        "fielding": 80,
-        "arm": 71,
-        "battingClutch": 70
+        "ovr": 64,
+        "contact": 66,
+        "power": 54,
+        "eye": 68,
+        "discipline": 57,
+        "speed": 66,
+        "baseInstinct": 66,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 56,
+        "battingClutch": 55
       },
       "positionRatings": {
         "RF": 64

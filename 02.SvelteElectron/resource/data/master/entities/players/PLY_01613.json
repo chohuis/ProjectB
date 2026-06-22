@@ -1,65 +1,46 @@
 {
   "id": "PLY_01613",
-  "name": "심현진",
-  "nameEn": "Shim Hyeonjin",
+  "name": "이시다 쓰요시",
+  "nameEn": "Ishida Tsuyoshi",
   "role": "player",
-  "age": 16,
+  "age": 26,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_SUWON_EDGE",
-  "teamId": "TEAM_HS_SUWON_EDGE",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_SUWON_EDGE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TEMPOSTINGS",
+  "teamId": "TEAM_JBL_CL_TEMPOSTINGS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
-      "position": "RP",
-      "jerseyNumber": 22,
+      "position": "SP",
+      "jerseyNumber": 33,
       "pitching": {
-        "ovr": 56,
-        "stamina": 57,
-        "velocity": 60,
-        "command": 60,
-        "control": 53,
-        "movement": 52,
-        "mentality": 58,
-        "recovery": 59,
-        "clutch": 47,
-        "holdRunners": 49
+        "ovr": 68,
+        "stamina": 69,
+        "velocity": 65,
+        "command": 67,
+        "control": 70,
+        "movement": 68,
+        "mentality": 68,
+        "recovery": 63
       },
       "batting": {
         "ovr": 38,
-        "contact": 34,
-        "power": 42,
-        "eye": 34,
-        "discipline": 43,
-        "speed": 39,
+        "contact": 43,
+        "power": 41,
+        "eye": 40,
+        "discipline": 39,
+        "speed": 43,
         "fielding": 36,
-        "arm": 33,
-        "battingClutch": 44,
-        "baseInstinct": 37,
-        "bunting": 31,
-        "platoon": 36
+        "arm": 38,
+        "battingClutch": 37
       },
-      "developmentRate": 73,
-      "potentialHidden": 76,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 44,
+      "potentialHidden": 63
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 52,
-  "popularity": 32
+  }
 }

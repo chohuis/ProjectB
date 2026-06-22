@@ -1,14 +1,14 @@
 {
   "id": "PLY_01035",
   "name": "톰프슨 메이슨",
-  "nameEn": "Tom 프슨 메이슨",
+  "nameEn": "Thompson Mason",
   "role": "player",
   "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_SPACECOMETS",
-  "teamId": "TEAM_ABL_SPACECOMETS_2",
+  "clubId": "CLUB_ABL_SEA",
+  "teamId": "TEAM_ABL_SEA_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -19,58 +19,28 @@
       "position": "CP",
       "jerseyNumber": 50,
       "pitching": {
-        "ovr": 67,
-        "stamina": 72,
-        "velocity": 71,
-        "command": 67,
-        "control": 64,
-        "movement": 62,
-        "mentality": 64,
-        "recovery": 68,
-        "clutch": 61,
-        "holdRunners": 64
+        "ovr": 76,
+        "stamina": 62,
+        "velocity": 80,
+        "command": 75,
+        "control": 77,
+        "movement": 74,
+        "mentality": 71,
+        "recovery": 74
       },
       "batting": {
         "ovr": 49,
-        "contact": 51,
-        "power": 52,
-        "eye": 50,
-        "discipline": 50,
-        "speed": 54,
-        "fielding": 55,
-        "arm": 50,
-        "battingClutch": 41,
-        "baseInstinct": 37,
-        "bunting": 32,
-        "platoon": 44
+        "contact": 46,
+        "power": 51,
+        "eye": 51,
+        "discipline": 43,
+        "speed": 44,
+        "fielding": 46,
+        "arm": 47,
+        "battingClutch": 52
       },
       "developmentRate": 42,
-      "potentialHidden": 85,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_KNUCKLEBALL",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 19400,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 85
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

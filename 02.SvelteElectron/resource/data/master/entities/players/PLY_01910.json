@@ -1,72 +1,46 @@
 {
   "id": "PLY_01910",
-  "name": "홍찬우",
-  "nameEn": "Hong Chanwoo",
+  "name": "와타나베 켄타",
+  "nameEn": "Watanabe Kenta",
   "role": "player",
-  "age": 28,
+  "age": 35,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_SKYGULLS",
-  "teamId": "TEAM_KBL_SKYGULLS_1",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
+  "teamId": "TEAM_JBL_PL_SPIRITBUFFALOS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
-      "handedness": "L",
-      "position": "RF",
-      "jerseyNumber": 4,
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 10,
       "pitching": {
-        "ovr": 32,
-        "stamina": 36,
-        "velocity": 35,
-        "command": 29,
-        "control": 36,
-        "movement": 32,
-        "mentality": 36,
-        "recovery": 37,
-        "clutch": 39,
-        "holdRunners": 41
+        "ovr": 80,
+        "stamina": 70,
+        "velocity": 84,
+        "command": 78,
+        "control": 78,
+        "movement": 76,
+        "mentality": 79,
+        "recovery": 80
       },
       "batting": {
-        "ovr": 52,
-        "contact": 57,
-        "power": 55,
-        "eye": 50,
-        "discipline": 49,
-        "speed": 57,
-        "fielding": 57,
-        "arm": 49,
-        "battingClutch": 43,
-        "baseInstinct": 51,
-        "bunting": 39,
-        "platoon": 46
+        "ovr": 50,
+        "contact": 50,
+        "power": 45,
+        "eye": 49,
+        "discipline": 52,
+        "speed": 48,
+        "fielding": 44,
+        "arm": 51,
+        "battingClutch": 52
       },
-      "developmentRate": 41,
-      "potentialHidden": 65,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 52
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 6,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 43,
+      "potentialHidden": 78
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 76,
-  "popularity": 33,
-  "militaryStatus": "군필"
+  }
 }

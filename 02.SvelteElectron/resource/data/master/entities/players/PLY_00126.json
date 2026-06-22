@@ -1,9 +1,9 @@
 {
   "id": "PLY_00126",
   "name": "민민재",
-  "nameEn": "Min Minjae",
+  "nameEn": "Son Dong-hyuk",
   "role": "player",
-  "age": 17,
+  "age": 18,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,51 +19,28 @@
       "position": "RP",
       "jerseyNumber": 6,
       "pitching": {
-        "ovr": 39,
+        "ovr": 41,
         "stamina": 41,
-        "velocity": 34,
-        "command": 42,
-        "control": 36,
-        "movement": 43,
-        "mentality": 38,
-        "recovery": 43,
-        "clutch": 45,
-        "holdRunners": 37
+        "velocity": 42,
+        "command": 46,
+        "control": 45,
+        "movement": 51,
+        "mentality": 56,
+        "recovery": 54
       },
       "batting": {
-        "ovr": 22,
-        "contact": 23,
-        "power": 21,
-        "eye": 27,
-        "discipline": 22,
-        "speed": 28,
-        "fielding": 24,
-        "arm": 26,
-        "battingClutch": 43,
-        "baseInstinct": 37,
-        "bunting": 36,
-        "platoon": 36
+        "ovr": 24,
+        "contact": 37,
+        "power": 41,
+        "eye": 46,
+        "discipline": 34,
+        "speed": 57,
+        "fielding": 43,
+        "arm": 53,
+        "battingClutch": 50
       },
       "developmentRate": 63,
-      "potentialHidden": 64,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 39
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 2
-        }
-      ]
+      "potentialHidden": 64
     },
     "coach": {
       "specialty": "-",
@@ -103,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

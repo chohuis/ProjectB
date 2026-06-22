@@ -1,7 +1,7 @@
 {
   "id": "PLY_00175",
   "name": "임지원",
-  "nameEn": "Lim Jiwon",
+  "nameEn": "Kwak Seong-hyun",
   "role": "player",
   "age": 21,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "3B",
       "jerseyNumber": 15,
       "pitching": {
-        "ovr": 39,
-        "stamina": 37,
-        "velocity": 42,
-        "command": 38,
+        "ovr": 36,
+        "stamina": 39,
+        "velocity": 38,
+        "command": 40,
         "control": 39,
-        "movement": 42,
-        "mentality": 41,
-        "recovery": 43,
-        "clutch": 35,
-        "holdRunners": 33
+        "movement": 33,
+        "mentality": 37,
+        "recovery": 36
       },
       "batting": {
-        "ovr": 59,
-        "contact": 62,
-        "power": 65,
-        "eye": 63,
-        "discipline": 57,
-        "speed": 65,
-        "fielding": 56,
+        "ovr": 62,
+        "contact": 63,
+        "power": 62,
+        "eye": 58,
+        "discipline": 59,
+        "speed": 58,
+        "fielding": 62,
         "arm": 61,
-        "battingClutch": 54,
-        "baseInstinct": 48,
-        "bunting": 55,
-        "platoon": 52
+        "battingClutch": 60
       },
       "developmentRate": 62,
-      "potentialHidden": 73,
-      "primaryPosition": "3B",
-      "positionRatings": {
-        "3B": 59
-      }
+      "potentialHidden": 73
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

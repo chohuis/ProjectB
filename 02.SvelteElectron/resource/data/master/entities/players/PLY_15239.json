@@ -1,6 +1,6 @@
 {
   "id": "PLY_15239",
-  "name": "브라운 콜",
+  "name": "Brown Cole",
   "nameEn": "Brown Cole",
   "role": "player",
   "age": 34,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 54,
   "popularity": 42,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 49
       },
       "batting": {
-        "ovr": 78,
-        "contact": 81,
-        "power": 73,
-        "eye": 68,
-        "discipline": 73,
-        "speed": 77,
-        "baseInstinct": 75,
-        "bunting": 60,
-        "platoon": 63,
-        "fielding": 72,
-        "arm": 78,
-        "battingClutch": 72
+        "ovr": 62,
+        "contact": 64,
+        "power": 58,
+        "eye": 54,
+        "discipline": 58,
+        "speed": 61,
+        "baseInstinct": 60,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 62,
+        "battingClutch": 57
       },
       "positionRatings": {
         "LF": 62

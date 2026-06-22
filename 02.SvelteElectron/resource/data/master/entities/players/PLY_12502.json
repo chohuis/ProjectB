@@ -1,9 +1,9 @@
 {
   "id": "PLY_12502",
-  "name": "화이트 딜런",
-  "nameEn": "White Dylan",
+  "name": "Brown Ryan",
+  "nameEn": "Brown Ryan",
   "role": "player",
-  "age": 35,
+  "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 51,
-  "popularity": 31,
+  "notes": "국적:파나마",
+  "diligence": 84,
+  "popularity": 15,
   "militaryStatus": "군필",
   "entryYear": 2042,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 35,
+  "entryAge": 24,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 21,
-      "primaryPosition": "SP",
-      "developmentRate": 50,
-      "potentialHidden": 69,
-      "proServiceYears": 13,
+      "position": "LF",
+      "jerseyNumber": 76,
+      "primaryPosition": "LF",
+      "developmentRate": 52,
+      "potentialHidden": 70,
+      "proServiceYears": 2,
       "pitching": {
-        "ovr": 91,
-        "stamina": 81,
-        "velocity": 98,
-        "command": 80,
-        "control": 95,
-        "movement": 83,
-        "mentality": 87,
-        "recovery": 84,
-        "clutch": 87,
-        "holdRunners": 83
+        "ovr": 69,
+        "stamina": 60,
+        "velocity": 77,
+        "command": 70,
+        "control": 63,
+        "movement": 70,
+        "mentality": 67,
+        "recovery": 68,
+        "clutch": 62,
+        "holdRunners": 63
       },
       "batting": {
-        "ovr": 76,
-        "contact": 81,
-        "power": 67,
-        "eye": 73,
-        "discipline": 77,
-        "speed": 70,
-        "baseInstinct": 77,
-        "bunting": 69,
+        "ovr": 69,
+        "contact": 72,
+        "power": 66,
+        "eye": 62,
+        "discipline": 68,
+        "speed": 63,
+        "baseInstinct": 67,
+        "bunting": 56,
         "platoon": 50,
-        "fielding": 68,
-        "arm": 77,
-        "battingClutch": 68
+        "fielding": 69,
+        "arm": 66,
+        "battingClutch": 60
       },
       "positionRatings": {
-        "SP": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "LF": 69
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,14 +1,14 @@
 {
   "id": "PLY_00760",
   "name": "홍지호",
-  "nameEn": "Hong Jiho",
+  "nameEn": "You Chan-woo",
   "role": "player",
   "age": 29,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_STEELDINOS",
-  "teamId": "TEAM_KBL_STEELDINOS_2",
+  "clubId": "CLUB_KBL_LOTTE",
+  "teamId": "TEAM_KBL_LOTTE_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 35,
       "pitching": {
-        "ovr": 70,
-        "stamina": 68,
-        "velocity": 76,
-        "command": 72,
-        "control": 66,
-        "movement": 70,
-        "mentality": 73,
-        "recovery": 70,
-        "clutch": 63,
-        "holdRunners": 60
+        "ovr": 81,
+        "stamina": 71,
+        "velocity": 82,
+        "command": 80,
+        "control": 72,
+        "movement": 71,
+        "mentality": 79,
+        "recovery": 74
       },
       "batting": {
         "ovr": 52,
-        "contact": 51,
-        "power": 52,
-        "eye": 57,
-        "discipline": 51,
-        "speed": 54,
-        "fielding": 55,
-        "arm": 52,
-        "battingClutch": 42,
-        "baseInstinct": 40,
-        "bunting": 49,
-        "platoon": 49
+        "contact": 60,
+        "power": 56,
+        "eye": 54,
+        "discipline": 55,
+        "speed": 56,
+        "fielding": 53,
+        "arm": 51,
+        "battingClutch": 60
       },
       "developmentRate": 48,
-      "potentialHidden": 85,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 7,
-      "contract": {
-        "salary": 6200,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 85
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

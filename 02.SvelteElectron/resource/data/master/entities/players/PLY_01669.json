@@ -1,61 +1,46 @@
 {
   "id": "PLY_01669",
-  "name": "강민재",
-  "nameEn": "Kang Minjae",
+  "name": "야마자키 료",
+  "nameEn": "Yamazaki Ryo",
   "role": "player",
-  "age": 17,
+  "age": 20,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
-  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_CHUNCHEON_HIGHLAND",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONDRAKES",
+  "teamId": "TEAM_JBL_CL_IRONDRAKES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "3B",
-      "jerseyNumber": 18,
+      "position": "2B",
+      "jerseyNumber": 44,
       "pitching": {
-        "ovr": 42,
-        "stamina": 40,
-        "velocity": 43,
-        "command": 45,
-        "control": 40,
-        "movement": 43,
-        "mentality": 40,
-        "recovery": 39,
-        "clutch": 46,
-        "holdRunners": 37
+        "ovr": 36,
+        "stamina": 29,
+        "velocity": 34,
+        "command": 33,
+        "control": 30,
+        "movement": 26,
+        "mentality": 27,
+        "recovery": 30
       },
       "batting": {
-        "ovr": 62,
-        "contact": 63,
-        "power": 56,
-        "eye": 65,
-        "discipline": 60,
-        "speed": 63,
-        "fielding": 66,
-        "arm": 60,
-        "battingClutch": 58,
-        "baseInstinct": 55,
-        "bunting": 58,
-        "platoon": 53
+        "ovr": 61,
+        "contact": 58,
+        "power": 59,
+        "eye": 59,
+        "discipline": 57,
+        "speed": 61,
+        "fielding": 59,
+        "arm": 62,
+        "battingClutch": 60
       },
-      "developmentRate": 71,
-      "potentialHidden": 84,
-      "primaryPosition": "3B",
-      "positionRatings": {
-        "3B": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 47,
+      "potentialHidden": 75
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 80,
-  "popularity": 25
+  }
 }

@@ -1,6 +1,6 @@
 {
   "id": "PLY_14070",
-  "name": "데이비스 에반",
+  "name": "Davis Evan",
   "nameEn": "Davis Evan",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 49,
   "popularity": 33,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 49
       },
       "batting": {
-        "ovr": 60,
-        "contact": 51,
-        "power": 63,
-        "eye": 61,
-        "discipline": 56,
-        "speed": 61,
-        "baseInstinct": 63,
-        "bunting": 48,
-        "platoon": 49,
-        "fielding": 54,
-        "arm": 57,
-        "battingClutch": 59
+        "ovr": 61,
+        "contact": 52,
+        "power": 64,
+        "eye": 62,
+        "discipline": 57,
+        "speed": 62,
+        "baseInstinct": 64,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 58,
+        "battingClutch": 60
       },
       "positionRatings": {
         "RF": 61

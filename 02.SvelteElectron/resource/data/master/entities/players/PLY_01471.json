@@ -1,14 +1,14 @@
 {
   "id": "PLY_01471",
   "name": "카터 하비에르",
-  "nameEn": "Ka 터 하비에르",
+  "nameEn": "Carter Javier",
   "role": "player",
   "age": 35,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_DESERTSERPENTS",
-  "teamId": "TEAM_ABL_DESERTSERPENTS_1",
+  "clubId": "CLUB_ABL_ARI",
+  "teamId": "TEAM_ABL_ARI",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,48 +19,28 @@
       "position": "CF",
       "jerseyNumber": 21,
       "pitching": {
-        "ovr": 65,
-        "stamina": 67,
-        "velocity": 63,
-        "command": 64,
-        "control": 62,
-        "movement": 64,
-        "mentality": 62,
-        "recovery": 69,
-        "clutch": 56,
-        "holdRunners": 54
+        "ovr": 58,
+        "stamina": 64,
+        "velocity": 65,
+        "command": 58,
+        "control": 61,
+        "movement": 58,
+        "mentality": 63,
+        "recovery": 64
       },
       "batting": {
         "ovr": 85,
-        "contact": 82,
-        "power": 88,
-        "eye": 82,
-        "discipline": 87,
-        "speed": 81,
-        "fielding": 81,
-        "arm": 89,
-        "battingClutch": 74,
-        "baseInstinct": 73,
-        "bunting": 68,
-        "platoon": 82
+        "contact": 89,
+        "power": 86,
+        "eye": 87,
+        "discipline": 89,
+        "speed": 94,
+        "fielding": 88,
+        "arm": 84,
+        "battingClutch": 85
       },
       "developmentRate": 37,
-      "potentialHidden": 72,
-      "primaryPosition": "CF",
-      "positionRatings": {
-        "CF": 85
-      },
-      "proServiceYears": 13,
-      "contract": {
-        "salary": 17800,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 72
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

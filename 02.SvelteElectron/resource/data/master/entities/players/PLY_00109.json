@@ -1,9 +1,9 @@
 {
   "id": "PLY_00109",
   "name": "노상민",
-  "nameEn": "No Sangmin",
+  "nameEn": "Son Ju-won",
   "role": "player",
-  "age": 18,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "C",
       "jerseyNumber": 9,
       "pitching": {
-        "ovr": 31,
-        "stamina": 28,
-        "velocity": 33,
-        "command": 32,
-        "control": 34,
-        "movement": 26,
-        "mentality": 29,
-        "recovery": 36,
-        "clutch": 43,
-        "holdRunners": 32
+        "ovr": 45,
+        "stamina": 54,
+        "velocity": 54,
+        "command": 55,
+        "control": 52,
+        "movement": 57,
+        "mentality": 51,
+        "recovery": 49
       },
       "batting": {
-        "ovr": 51,
-        "contact": 55,
-        "power": 57,
-        "eye": 52,
+        "ovr": 48,
+        "contact": 51,
+        "power": 44,
+        "eye": 50,
         "discipline": 52,
-        "speed": 52,
-        "fielding": 54,
-        "arm": 54,
-        "battingClutch": 47,
-        "baseInstinct": 48,
-        "bunting": 45,
-        "platoon": 49
+        "speed": 55,
+        "fielding": 61,
+        "arm": 60,
+        "battingClutch": 53
       },
       "developmentRate": 57,
-      "potentialHidden": 63,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 51
-      }
+      "potentialHidden": 63
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

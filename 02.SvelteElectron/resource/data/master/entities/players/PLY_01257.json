@@ -1,14 +1,14 @@
 {
   "id": "PLY_01257",
   "name": "스미스 타일러",
-  "nameEn": "Seu 미스 타일러",
+  "nameEn": "Smith Tyler",
   "role": "player",
   "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_WAVERIDERS",
-  "teamId": "TEAM_ABL_WAVERIDERS_2",
+  "clubId": "CLUB_ABL_NYM",
+  "teamId": "TEAM_ABL_NYM_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 47,
       "pitching": {
-        "ovr": 69,
-        "stamina": 69,
-        "velocity": 67,
-        "command": 71,
-        "control": 74,
-        "movement": 71,
-        "mentality": 67,
-        "recovery": 68,
-        "clutch": 62,
-        "holdRunners": 65
+        "ovr": 73,
+        "stamina": 64,
+        "velocity": 83,
+        "command": 79,
+        "control": 77,
+        "movement": 73,
+        "mentality": 75,
+        "recovery": 70
       },
       "batting": {
-        "ovr": 51,
-        "contact": 50,
-        "power": 54,
-        "eye": 56,
-        "discipline": 46,
-        "speed": 51,
-        "fielding": 45,
-        "arm": 46,
-        "battingClutch": 48,
-        "baseInstinct": 40,
-        "bunting": 46,
-        "platoon": 37
+        "ovr": 47,
+        "contact": 47,
+        "power": 50,
+        "eye": 50,
+        "discipline": 49,
+        "speed": 50,
+        "fielding": 46,
+        "arm": 44,
+        "battingClutch": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 76,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 69
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 20900,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 76
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

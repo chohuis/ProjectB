@@ -1,7 +1,7 @@
 {
   "id": "PLY_00298",
   "name": "손현준",
-  "nameEn": "Son Hyeonjun",
+  "nameEn": "Ku Ju-won",
   "role": "player",
   "age": 19,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "CF",
       "jerseyNumber": 18,
       "pitching": {
-        "ovr": 37,
-        "stamina": 35,
-        "velocity": 38,
-        "command": 41,
-        "control": 38,
-        "movement": 40,
-        "mentality": 39,
-        "recovery": 34,
-        "clutch": 39,
-        "holdRunners": 39
+        "ovr": 27,
+        "stamina": 25,
+        "velocity": 33,
+        "command": 33,
+        "control": 27,
+        "movement": 30,
+        "mentality": 31,
+        "recovery": 28
       },
       "batting": {
-        "ovr": 57,
+        "ovr": 54,
         "contact": 57,
         "power": 54,
-        "eye": 58,
-        "discipline": 55,
-        "speed": 58,
-        "fielding": 57,
-        "arm": 53,
-        "battingClutch": 47,
-        "baseInstinct": 50,
-        "bunting": 41,
-        "platoon": 48
+        "eye": 57,
+        "discipline": 52,
+        "speed": 54,
+        "fielding": 56,
+        "arm": 55,
+        "battingClutch": 53
       },
       "developmentRate": 50,
-      "potentialHidden": 65,
-      "primaryPosition": "CF",
-      "positionRatings": {
-        "CF": 57
-      }
+      "potentialHidden": 65
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

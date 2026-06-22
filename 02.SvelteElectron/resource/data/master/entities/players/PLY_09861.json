@@ -1,9 +1,9 @@
 {
   "id": "PLY_09861",
-  "name": "영 다니엘",
-  "nameEn": "Young Daniel",
+  "name": "Hernandez Zach",
+  "nameEn": "Hernandez Zach",
   "role": "player",
-  "age": 28,
+  "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 51,
-  "popularity": 36,
+  "notes": "국적:베네수엘라",
+  "diligence": 81,
+  "popularity": 32,
   "militaryStatus": "군필",
   "entryYear": 2026,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 28,
+  "entryAge": 27,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 59,
-      "primaryPosition": "SP",
-      "developmentRate": 45,
-      "potentialHidden": 68,
-      "proServiceYears": 6,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 45,
+      "primaryPosition": "LF",
+      "developmentRate": 50,
+      "potentialHidden": 84,
+      "proServiceYears": 5,
       "pitching": {
         "ovr": 79,
-        "stamina": 79,
-        "velocity": 87,
-        "command": 80,
-        "control": 73,
-        "movement": 81,
-        "mentality": 81,
-        "recovery": 73,
-        "clutch": 79,
+        "stamina": 75,
+        "velocity": 90,
+        "command": 71,
+        "control": 76,
+        "movement": 78,
+        "mentality": 77,
+        "recovery": 76,
+        "clutch": 67,
         "holdRunners": 72
       },
       "batting": {
-        "ovr": 76,
-        "contact": 69,
-        "power": 71,
-        "eye": 71,
-        "discipline": 79,
-        "speed": 71,
-        "baseInstinct": 71,
-        "bunting": 66,
+        "ovr": 79,
+        "contact": 81,
+        "power": 75,
+        "eye": 83,
+        "discipline": 73,
+        "speed": 77,
+        "baseInstinct": 81,
+        "bunting": 69,
         "platoon": 50,
-        "fielding": 69,
-        "arm": 73,
-        "battingClutch": 64
+        "fielding": 81,
+        "arm": 69,
+        "battingClutch": 68
       },
       "positionRatings": {
-        "SP": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "LF": 79
+      }
     },
     "coach": null,
     "manager": null,

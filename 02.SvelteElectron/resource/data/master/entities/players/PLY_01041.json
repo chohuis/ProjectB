@@ -1,14 +1,14 @@
 {
   "id": "PLY_01041",
   "name": "워커 마르코",
-  "nameEn": "Wo 커 마르코",
+  "nameEn": "Walker Marco",
   "role": "player",
   "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_SPACECOMETS",
-  "teamId": "TEAM_ABL_SPACECOMETS_2",
+  "clubId": "CLUB_ABL_SEA",
+  "teamId": "TEAM_ABL_SEA_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:쿠바",
@@ -19,48 +19,28 @@
       "position": "SS",
       "jerseyNumber": 56,
       "pitching": {
-        "ovr": 56,
-        "stamina": 58,
-        "velocity": 55,
-        "command": 52,
-        "control": 54,
-        "movement": 59,
-        "mentality": 58,
-        "recovery": 61,
-        "clutch": 50,
-        "holdRunners": 45
+        "ovr": 55,
+        "stamina": 51,
+        "velocity": 53,
+        "command": 55,
+        "control": 48,
+        "movement": 46,
+        "mentality": 49,
+        "recovery": 53
       },
       "batting": {
-        "ovr": 76,
-        "contact": 71,
-        "power": 74,
-        "eye": 71,
-        "discipline": 78,
-        "speed": 75,
-        "fielding": 82,
-        "arm": 72,
-        "battingClutch": 70,
-        "baseInstinct": 73,
-        "bunting": 69,
-        "platoon": 71
+        "ovr": 71,
+        "contact": 73,
+        "power": 73,
+        "eye": 76,
+        "discipline": 75,
+        "speed": 80,
+        "fielding": 75,
+        "arm": 76,
+        "battingClutch": 76
       },
       "developmentRate": 31,
-      "potentialHidden": 89,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 76
-      },
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 10900,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 89
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,6 +1,6 @@
 {
   "id": "PLY_15708",
-  "name": "그린 트레버",
+  "name": "Green Trevor",
   "nameEn": "Green Trevor",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 68,
   "popularity": 45,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 60,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 52,
-        "stamina": 57,
-        "velocity": 52,
-        "command": 45,
-        "control": 54,
-        "movement": 47,
-        "mentality": 49,
-        "recovery": 50,
-        "clutch": 42,
-        "holdRunners": 41
+        "ovr": 53,
+        "stamina": 58,
+        "velocity": 53,
+        "command": 46,
+        "control": 55,
+        "movement": 48,
+        "mentality": 50,
+        "recovery": 51,
+        "clutch": 43,
+        "holdRunners": 42
       },
       "batting": {
         "ovr": 53,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 53
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

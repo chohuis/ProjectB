@@ -1,61 +1,46 @@
 {
   "id": "PLY_01619",
-  "name": "차준서",
-  "nameEn": "Cha Junseo",
+  "name": "요시다 쇼",
+  "nameEn": "Yoshida Sho",
   "role": "player",
-  "age": 18,
+  "age": 24,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_SUWON_EDGE",
-  "teamId": "TEAM_HS_SUWON_EDGE",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_SUWON_EDGE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TEMPOSTINGS",
+  "teamId": "TEAM_JBL_CL_TEMPOSTINGS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
-      "handedness": "L",
-      "position": "LF",
-      "jerseyNumber": 28,
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "CP",
+      "jerseyNumber": 39,
       "pitching": {
-        "ovr": 43,
-        "stamina": 43,
-        "velocity": 40,
-        "command": 48,
-        "control": 44,
-        "movement": 41,
-        "mentality": 39,
-        "recovery": 43,
-        "clutch": 39,
-        "holdRunners": 42
+        "ovr": 59,
+        "stamina": 48,
+        "velocity": 63,
+        "command": 58,
+        "control": 57,
+        "movement": 53,
+        "mentality": 54,
+        "recovery": 53
       },
       "batting": {
-        "ovr": 63,
-        "contact": 61,
-        "power": 68,
-        "eye": 62,
-        "discipline": 68,
-        "speed": 56,
-        "fielding": 68,
-        "arm": 66,
-        "battingClutch": 56,
-        "baseInstinct": 53,
-        "bunting": 57,
-        "platoon": 53
+        "ovr": 38,
+        "contact": 38,
+        "power": 41,
+        "eye": 39,
+        "discipline": 41,
+        "speed": 41,
+        "fielding": 39,
+        "arm": 41,
+        "battingClutch": 34
       },
-      "developmentRate": 81,
-      "potentialHidden": 92,
-      "primaryPosition": "LF",
-      "positionRatings": {
-        "LF": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 45,
+      "potentialHidden": 77
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 64,
-  "popularity": 37
+  }
 }

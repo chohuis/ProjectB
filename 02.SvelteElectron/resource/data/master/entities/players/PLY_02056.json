@@ -1,80 +1,46 @@
 {
   "id": "PLY_02056",
-  "name": "로건 카터",
-  "nameEn": "Logan Carter",
+  "name": "야마모토 쇼",
+  "nameEn": "Yamamoto Sho",
   "role": "player",
-  "age": 23,
+  "age": 26,
   "status": "active",
-  "originLeagueId": "LEAGUE_ABL",
-  "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_HARBORHAWKS",
-  "teamId": "TEAM_ABL_HARBORHAWKS_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SUNS",
+  "teamId": "TEAM_JBL_PL_SUNS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "RP",
-      "jerseyNumber": 56,
+      "position": "CF",
+      "jerseyNumber": 21,
       "pitching": {
-        "ovr": 70,
-        "stamina": 76,
-        "velocity": 68,
-        "command": 74,
-        "control": 70,
-        "movement": 72,
-        "mentality": 66,
-        "recovery": 74,
-        "clutch": 62,
-        "holdRunners": 66
+        "ovr": 52,
+        "stamina": 47,
+        "velocity": 55,
+        "command": 55,
+        "control": 53,
+        "movement": 48,
+        "mentality": 52,
+        "recovery": 50
       },
       "batting": {
-        "ovr": 52,
-        "contact": 58,
-        "power": 50,
-        "eye": 55,
-        "discipline": 51,
-        "speed": 49,
-        "fielding": 58,
-        "arm": 50,
-        "battingClutch": 46,
-        "baseInstinct": 51,
-        "bunting": 37,
-        "platoon": 42
+        "ovr": 80,
+        "contact": 85,
+        "power": 78,
+        "eye": 79,
+        "discipline": 83,
+        "speed": 89,
+        "fielding": 81,
+        "arm": 80,
+        "battingClutch": 82
       },
-      "developmentRate": 32,
-      "potentialHidden": 66,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_SCREWBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 1,
-      "contract": {
-        "salary": 21700,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 35,
+      "potentialHidden": 87
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 74,
-  "popularity": 58,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,14 +1,14 @@
 {
   "id": "PLY_00774",
   "name": "한동우",
-  "nameEn": "Han Dongu",
+  "nameEn": "Yang Dong-hyun",
   "role": "player",
   "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_STEELDINOS",
-  "teamId": "TEAM_KBL_STEELDINOS_2",
+  "clubId": "CLUB_KBL_LOTTE",
+  "teamId": "TEAM_KBL_LOTTE_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,48 +19,28 @@
       "position": "RF",
       "jerseyNumber": 49,
       "pitching": {
-        "ovr": 46,
-        "stamina": 50,
-        "velocity": 52,
-        "command": 45,
-        "control": 44,
-        "movement": 51,
-        "mentality": 44,
-        "recovery": 43,
-        "clutch": 34,
-        "holdRunners": 34
+        "ovr": 38,
+        "stamina": 33,
+        "velocity": 40,
+        "command": 36,
+        "control": 39,
+        "movement": 36,
+        "mentality": 31,
+        "recovery": 35
       },
       "batting": {
-        "ovr": 66,
-        "contact": 66,
-        "power": 62,
-        "eye": 71,
-        "discipline": 65,
-        "speed": 63,
-        "fielding": 71,
-        "arm": 63,
-        "battingClutch": 61,
-        "baseInstinct": 60,
-        "bunting": 62,
-        "platoon": 58
+        "ovr": 69,
+        "contact": 67,
+        "power": 65,
+        "eye": 67,
+        "discipline": 69,
+        "speed": 68,
+        "fielding": 59,
+        "arm": 70,
+        "battingClutch": 70
       },
       "developmentRate": 42,
-      "potentialHidden": 86,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 66
-      },
-      "proServiceYears": 2,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 86
     },
     "coach": {
       "specialty": "-",
@@ -100,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

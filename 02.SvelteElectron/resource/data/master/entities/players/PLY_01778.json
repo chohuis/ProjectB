@@ -1,65 +1,46 @@
 {
   "id": "PLY_01778",
-  "name": "차승민",
-  "nameEn": "Cha Seungmin",
+  "name": "사카모토 소타",
+  "nameEn": "Sakamoto Sota",
   "role": "player",
-  "age": 16,
+  "age": 32,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_JECHEON_RIDGE",
-  "teamId": "TEAM_HS_JECHEON_RIDGE",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_JECHEON_RIDGE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONSTORMS",
+  "teamId": "TEAM_JBL_CL_IRONSTORMS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
-      "position": "RP",
-      "jerseyNumber": 7,
+      "position": "CP",
+      "jerseyNumber": 13,
       "pitching": {
-        "ovr": 56,
-        "stamina": 54,
-        "velocity": 62,
-        "command": 58,
-        "control": 53,
-        "movement": 60,
-        "mentality": 52,
-        "recovery": 55,
-        "clutch": 55,
-        "holdRunners": 46
+        "ovr": 76,
+        "stamina": 59,
+        "velocity": 76,
+        "command": 73,
+        "control": 77,
+        "movement": 69,
+        "mentality": 71,
+        "recovery": 72
       },
       "batting": {
-        "ovr": 38,
-        "contact": 33,
-        "power": 40,
-        "eye": 42,
-        "discipline": 34,
+        "ovr": 46,
+        "contact": 51,
+        "power": 48,
+        "eye": 47,
+        "discipline": 49,
         "speed": 44,
-        "fielding": 43,
-        "arm": 39,
-        "battingClutch": 45,
-        "baseInstinct": 40,
-        "bunting": 33,
-        "platoon": 37
+        "fielding": 46,
+        "arm": 47,
+        "battingClutch": 48
       },
-      "developmentRate": 79,
-      "potentialHidden": 89,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+      "developmentRate": 36,
+      "potentialHidden": 66
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 79,
-  "popularity": 12
+  }
 }

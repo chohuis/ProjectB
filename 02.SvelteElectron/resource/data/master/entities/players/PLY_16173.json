@@ -1,6 +1,6 @@
 {
   "id": "PLY_16173",
-  "name": "존슨 에반",
+  "name": "Johnson Evan",
   "nameEn": "Johnson Evan",
   "role": "player",
   "age": 32,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 61,
   "popularity": 21,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 45
       },
       "batting": {
-        "ovr": 76,
-        "contact": 70,
-        "power": 68,
-        "eye": 66,
-        "discipline": 67,
-        "speed": 75,
-        "baseInstinct": 70,
-        "bunting": 63,
-        "platoon": 63,
-        "fielding": 63,
-        "arm": 63,
-        "battingClutch": 70
+        "ovr": 60,
+        "contact": 55,
+        "power": 54,
+        "eye": 52,
+        "discipline": 53,
+        "speed": 59,
+        "baseInstinct": 55,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 50,
+        "battingClutch": 55
       },
       "positionRatings": {
         "CF": 60

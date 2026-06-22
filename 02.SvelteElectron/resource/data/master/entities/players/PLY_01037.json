@@ -1,14 +1,14 @@
 {
   "id": "PLY_01037",
   "name": "워커 제임스",
-  "nameEn": "Wo 커 제임스",
+  "nameEn": "Walker James",
   "role": "player",
   "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_SPACECOMETS",
-  "teamId": "TEAM_ABL_SPACECOMETS_2",
+  "clubId": "CLUB_ABL_SEA",
+  "teamId": "TEAM_ABL_SEA_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
@@ -19,48 +19,28 @@
       "position": "C",
       "jerseyNumber": 52,
       "pitching": {
-        "ovr": 49,
-        "stamina": 49,
-        "velocity": 45,
-        "command": 53,
-        "control": 48,
-        "movement": 48,
-        "mentality": 49,
-        "recovery": 53,
-        "clutch": 38,
-        "holdRunners": 40
+        "ovr": 44,
+        "stamina": 38,
+        "velocity": 49,
+        "command": 44,
+        "control": 46,
+        "movement": 38,
+        "mentality": 39,
+        "recovery": 44
       },
       "batting": {
-        "ovr": 69,
-        "contact": 66,
-        "power": 69,
-        "eye": 74,
-        "discipline": 66,
-        "speed": 75,
+        "ovr": 65,
+        "contact": 68,
+        "power": 66,
+        "eye": 70,
+        "discipline": 72,
+        "speed": 63,
         "fielding": 74,
-        "arm": 69,
-        "battingClutch": 63,
-        "baseInstinct": 63,
-        "bunting": 53,
-        "platoon": 56
+        "arm": 73,
+        "battingClutch": 72
       },
       "developmentRate": 39,
-      "potentialHidden": 81,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 69
-      },
-      "proServiceYears": 6,
-      "contract": {
-        "salary": 6300,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 81
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,61 +1,46 @@
 {
   "id": "PLY_01800",
-  "name": "손원준",
-  "nameEn": "Son Wonjun",
+  "name": "니시무라 렌",
+  "nameEn": "Nishimura Ren",
   "role": "player",
-  "age": 18,
+  "age": 29,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_JECHEON_RIDGE",
-  "teamId": "TEAM_HS_JECHEON_RIDGE",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_JECHEON_RIDGE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONSTORMS",
+  "teamId": "TEAM_JBL_CL_IRONSTORMS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
-      "handedness": "L",
-      "position": "UT",
-      "jerseyNumber": 29,
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "CP",
+      "jerseyNumber": 40,
       "pitching": {
-        "ovr": 35,
-        "stamina": 37,
-        "velocity": 34,
-        "command": 35,
-        "control": 37,
-        "movement": 33,
-        "mentality": 37,
-        "recovery": 36,
-        "clutch": 43,
-        "holdRunners": 33
+        "ovr": 72,
+        "stamina": 59,
+        "velocity": 80,
+        "command": 71,
+        "control": 76,
+        "movement": 66,
+        "mentality": 70,
+        "recovery": 72
       },
       "batting": {
-        "ovr": 55,
-        "contact": 60,
-        "power": 53,
-        "eye": 59,
-        "discipline": 51,
-        "speed": 60,
-        "fielding": 51,
-        "arm": 49,
-        "battingClutch": 48,
-        "baseInstinct": 46,
-        "bunting": 40,
-        "platoon": 42
+        "ovr": 40,
+        "contact": 43,
+        "power": 44,
+        "eye": 44,
+        "discipline": 41,
+        "speed": 43,
+        "fielding": 36,
+        "arm": 44,
+        "battingClutch": 42
       },
-      "developmentRate": 84,
-      "potentialHidden": 81,
-      "primaryPosition": "UT",
-      "positionRatings": {
-        "UT": 55
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 45,
+      "potentialHidden": 70
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 19
+  }
 }

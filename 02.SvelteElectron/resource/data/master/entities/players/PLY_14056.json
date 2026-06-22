@@ -1,6 +1,6 @@
 {
   "id": "PLY_14056",
-  "name": "톰슨 알렉스",
+  "name": "Thompson Alex",
   "nameEn": "Thompson Alex",
   "role": "player",
   "age": 33,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 62,
   "popularity": 28,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 74,
       "proServiceYears": 11,
       "pitching": {
-        "ovr": 76,
-        "stamina": 73,
-        "velocity": 80,
-        "command": 77,
-        "control": 80,
-        "movement": 67,
-        "mentality": 70,
-        "recovery": 62,
-        "clutch": 60,
-        "holdRunners": 66
+        "ovr": 60,
+        "stamina": 58,
+        "velocity": 63,
+        "command": 61,
+        "control": 63,
+        "movement": 53,
+        "mentality": 55,
+        "recovery": 49,
+        "clutch": 47,
+        "holdRunners": 52
       },
       "batting": {
         "ovr": 60,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

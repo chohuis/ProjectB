@@ -1,6 +1,6 @@
 {
   "id": "PLY_15699",
-  "name": "토마스 브랜던",
+  "name": "Thomas Brandon",
   "nameEn": "Thomas Brandon",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 55,
   "popularity": 23,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 51,
       "proServiceYears": 13,
       "pitching": {
-        "ovr": 86,
-        "stamina": 78,
-        "velocity": 83,
-        "command": 86,
-        "control": 78,
-        "movement": 87,
-        "mentality": 92,
-        "recovery": 80,
-        "clutch": 77,
-        "holdRunners": 70
+        "ovr": 68,
+        "stamina": 62,
+        "velocity": 66,
+        "command": 68,
+        "control": 62,
+        "movement": 69,
+        "mentality": 73,
+        "recovery": 63,
+        "clutch": 61,
+        "holdRunners": 55
       },
       "batting": {
         "ovr": 68,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,14 +1,14 @@
 {
   "id": "PLY_01191",
   "name": "루이스 조셉",
-  "nameEn": "Ru 이스 조셉",
+  "nameEn": "Lewis Joseph",
   "role": "player",
   "age": 39,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_BAYSEALS",
-  "teamId": "TEAM_ABL_BAYSEALS_1",
+  "clubId": "CLUB_ABL_PHI",
+  "teamId": "TEAM_ABL_PHI",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 11,
       "pitching": {
-        "ovr": 79,
-        "stamina": 80,
-        "velocity": 86,
-        "command": 76,
-        "control": 80,
-        "movement": 81,
-        "mentality": 76,
-        "recovery": 82,
-        "clutch": 76,
-        "holdRunners": 76
+        "ovr": 89,
+        "stamina": 81,
+        "velocity": 91,
+        "command": 91,
+        "control": 88,
+        "movement": 90,
+        "mentality": 89,
+        "recovery": 90
       },
       "batting": {
-        "ovr": 61,
-        "contact": 58,
-        "power": 56,
-        "eye": 60,
-        "discipline": 63,
-        "speed": 64,
-        "fielding": 60,
-        "arm": 61,
-        "battingClutch": 50,
-        "baseInstinct": 60,
-        "bunting": 48,
-        "platoon": 55
+        "ovr": 62,
+        "contact": 57,
+        "power": 61,
+        "eye": 57,
+        "discipline": 56,
+        "speed": 54,
+        "fielding": 59,
+        "arm": 57,
+        "battingClutch": 59
       },
       "developmentRate": 46,
-      "potentialHidden": 88,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 79
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 17,
-      "contract": {
-        "salary": 28600,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 88
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

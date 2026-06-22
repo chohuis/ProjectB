@@ -1,9 +1,9 @@
 {
   "id": "PLY_12585",
-  "name": "마틴 에반",
-  "nameEn": "Martin Evan",
+  "name": "Adams Marcus",
+  "nameEn": "Adams Marcus",
   "role": "player",
-  "age": 30,
+  "age": 19,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 59,
-  "popularity": 43,
+  "notes": "국적:일본",
+  "diligence": 82,
+  "popularity": 42,
   "militaryStatus": "군필",
   "entryYear": 2042,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 30,
+  "entryAge": 19,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 69,
+      "jerseyNumber": 13,
       "primaryPosition": "SP",
-      "developmentRate": 41,
-      "potentialHidden": 53,
-      "proServiceYears": 8,
+      "developmentRate": 58,
+      "potentialHidden": 73,
+      "proServiceYears": 0,
       "pitching": {
         "ovr": 60,
-        "stamina": 59,
-        "velocity": 60,
-        "command": 55,
-        "control": 58,
-        "movement": 51,
+        "stamina": 58,
+        "velocity": 58,
+        "command": 57,
+        "control": 64,
+        "movement": 59,
         "mentality": 58,
-        "recovery": 48,
-        "clutch": 55,
-        "holdRunners": 52
+        "recovery": 52,
+        "clutch": 59,
+        "holdRunners": 51
       },
       "batting": {
-        "ovr": 58,
-        "contact": 50,
-        "power": 48,
-        "eye": 61,
-        "discipline": 52,
-        "speed": 63,
-        "baseInstinct": 58,
-        "bunting": 42,
+        "ovr": 60,
+        "contact": 62,
+        "power": 62,
+        "eye": 52,
+        "discipline": 59,
+        "speed": 57,
+        "baseInstinct": 57,
+        "bunting": 43,
         "platoon": 50,
-        "fielding": 58,
-        "arm": 55,
-        "battingClutch": 58
+        "fielding": 63,
+        "arm": 54,
+        "battingClutch": 50
       },
       "positionRatings": {
-        "SP": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 60
+      }
     },
     "coach": null,
     "manager": null,

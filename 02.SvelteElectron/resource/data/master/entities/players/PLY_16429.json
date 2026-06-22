@@ -1,6 +1,6 @@
 {
   "id": "PLY_16429",
-  "name": "톰슨 트레버",
+  "name": "Thompson Trevor",
   "nameEn": "Thompson Trevor",
   "role": "player",
   "age": 29,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 46,
   "popularity": 42,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 48
       },
       "batting": {
-        "ovr": 64,
-        "contact": 57,
-        "power": 60,
-        "eye": 68,
-        "discipline": 67,
-        "speed": 63,
-        "baseInstinct": 62,
-        "bunting": 46,
-        "platoon": 56,
-        "fielding": 64,
-        "arm": 60,
-        "battingClutch": 55
+        "ovr": 57,
+        "contact": 51,
+        "power": 53,
+        "eye": 61,
+        "discipline": 60,
+        "speed": 56,
+        "baseInstinct": 55,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 53,
+        "battingClutch": 49
       },
       "positionRatings": {
         "LF": 57

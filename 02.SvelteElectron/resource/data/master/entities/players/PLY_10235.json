@@ -1,9 +1,9 @@
 {
   "id": "PLY_10235",
-  "name": "존스 다니엘",
-  "nameEn": "Jones Daniel",
+  "name": "Rodriguez Ryan",
+  "nameEn": "Rodriguez Ryan",
   "role": "player",
-  "age": 21,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 64,
-  "popularity": 48,
+  "notes": "국적:일본",
+  "diligence": 56,
+  "popularity": 27,
   "militaryStatus": "군필",
   "entryYear": 2028,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 21,
+  "entryAge": 22,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 91,
-      "primaryPosition": "SP",
-      "developmentRate": 73,
-      "potentialHidden": 80,
+      "position": "CF",
+      "jerseyNumber": 9,
+      "primaryPosition": "CF",
+      "developmentRate": 78,
+      "potentialHidden": 86,
       "proServiceYears": 0,
       "pitching": {
         "ovr": 53,
-        "stamina": 44,
-        "velocity": 60,
-        "command": 43,
-        "control": 48,
-        "movement": 56,
+        "stamina": 53,
+        "velocity": 54,
+        "command": 42,
+        "control": 51,
+        "movement": 43,
         "mentality": 46,
-        "recovery": 53,
-        "clutch": 46,
-        "holdRunners": 50
+        "recovery": 47,
+        "clutch": 42,
+        "holdRunners": 40
       },
       "batting": {
-        "ovr": 56,
-        "contact": 58,
-        "power": 55,
-        "eye": 53,
-        "discipline": 59,
-        "speed": 50,
-        "baseInstinct": 50,
-        "bunting": 50,
+        "ovr": 53,
+        "contact": 57,
+        "power": 43,
+        "eye": 49,
+        "discipline": 52,
+        "speed": 51,
+        "baseInstinct": 55,
+        "bunting": 34,
         "platoon": 50,
-        "fielding": 57,
-        "arm": 54,
-        "battingClutch": 47
+        "fielding": 54,
+        "arm": 43,
+        "battingClutch": 51
       },
       "positionRatings": {
-        "SP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "CF": 53
+      }
     },
     "coach": null,
     "manager": null,

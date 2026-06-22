@@ -1,6 +1,6 @@
 {
   "id": "PLY_14583",
-  "name": "워커 루이스",
+  "name": "Walker Luis",
   "nameEn": "Walker Luis",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 79,
   "popularity": 21,
   "militaryStatus": "군필",

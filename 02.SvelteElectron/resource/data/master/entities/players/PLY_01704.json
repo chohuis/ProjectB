@@ -1,61 +1,46 @@
 {
   "id": "PLY_01704",
-  "name": "문지후",
-  "nameEn": "Moon Jihu",
+  "name": "오카다 켄타",
+  "nameEn": "Okada Kenta",
   "role": "player",
-  "age": 18,
+  "age": 27,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_JEJU_WIND",
-  "teamId": "TEAM_HS_JEJU_WIND",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_JEJU_WIND",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TIDERAVES",
+  "teamId": "TEAM_JBL_CL_TIDERAVES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "LF",
-      "jerseyNumber": 23,
+      "position": "SP",
+      "jerseyNumber": 34,
       "pitching": {
-        "ovr": 38,
-        "stamina": 37,
-        "velocity": 35,
-        "command": 34,
-        "control": 40,
-        "movement": 37,
-        "mentality": 42,
-        "recovery": 43,
-        "clutch": 43,
-        "holdRunners": 41
+        "ovr": 70,
+        "stamina": 75,
+        "velocity": 74,
+        "command": 75,
+        "control": 69,
+        "movement": 71,
+        "mentality": 73,
+        "recovery": 71
       },
       "batting": {
-        "ovr": 58,
-        "contact": 56,
-        "power": 53,
-        "eye": 64,
-        "discipline": 58,
-        "speed": 51,
-        "fielding": 55,
-        "arm": 56,
-        "battingClutch": 55,
-        "baseInstinct": 52,
-        "bunting": 50,
-        "platoon": 50
+        "ovr": 47,
+        "contact": 45,
+        "power": 48,
+        "eye": 49,
+        "discipline": 52,
+        "speed": 45,
+        "fielding": 44,
+        "arm": 49,
+        "battingClutch": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 79,
-      "primaryPosition": "LF",
-      "positionRatings": {
-        "LF": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 68
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 61,
-  "popularity": 29
+  }
 }

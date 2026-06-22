@@ -1,14 +1,14 @@
 {
   "id": "COA_00060",
   "name": "심하준",
-  "nameEn": "Sim Hajun",
+  "nameEn": "Heo Yong-jun",
   "role": "coach",
-  "age": 40,
+  "age": 50,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_SKYGULLS",
-  "teamId": "TEAM_KBL_SKYGULLS_2",
+  "clubId": "CLUB_KBL_LG",
+  "teamId": "TEAM_KBL_LG_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -26,9 +26,7 @@
         "control": 50,
         "movement": 50,
         "mentality": 50,
-        "recovery": 50,
-        "clutch": 50,
-        "holdRunners": 50
+        "recovery": 50
       },
       "batting": {
         "ovr": 50,
@@ -39,25 +37,20 @@
         "speed": 50,
         "fielding": 50,
         "arm": 50,
-        "battingClutch": 50,
-        "baseInstinct": 50,
-        "bunting": 45,
-        "platoon": 50
+        "battingClutch": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 70,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 50
-      }
+      "potentialHidden": 70
     },
     "coach": {
-      "specialty": "-",
+      "specialty": "투수",
       "experienceYears": 8,
       "stats": {
         "teaching": 80,
-        "analytics": 71,
-        "experience": 2
+        "analysis": 71,
+        "communication": 57,
+        "discipline": 56,
+        "leadership": 84
       },
       "trainingBuffs": "컨택 훈련 +2%"
     },
@@ -87,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

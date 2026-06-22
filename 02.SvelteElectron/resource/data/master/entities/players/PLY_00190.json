@@ -1,7 +1,7 @@
 {
   "id": "PLY_00190",
   "name": "민용준",
-  "nameEn": "Min Yongjun",
+  "nameEn": "Yang Gi-hoon",
   "role": "player",
   "age": 21,
   "status": "active",
@@ -19,47 +19,28 @@
       "position": "CP",
       "jerseyNumber": 10,
       "pitching": {
-        "ovr": 66,
-        "stamina": 66,
-        "velocity": 62,
-        "command": 67,
-        "control": 63,
-        "movement": 62,
-        "mentality": 72,
-        "recovery": 70,
-        "clutch": 62,
-        "holdRunners": 65
+        "ovr": 72,
+        "stamina": 61,
+        "velocity": 81,
+        "command": 70,
+        "control": 79,
+        "movement": 75,
+        "mentality": 70,
+        "recovery": 76
       },
       "batting": {
-        "ovr": 48,
-        "contact": 47,
-        "power": 53,
-        "eye": 53,
-        "discipline": 51,
-        "speed": 50,
-        "fielding": 52,
-        "arm": 53,
-        "battingClutch": 42,
-        "baseInstinct": 47,
-        "bunting": 42,
-        "platoon": 37
+        "ovr": 51,
+        "contact": 52,
+        "power": 50,
+        "eye": 46,
+        "discipline": 47,
+        "speed": 48,
+        "fielding": 46,
+        "arm": 50,
+        "battingClutch": 50
       },
       "developmentRate": 63,
-      "potentialHidden": 62,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_KNUCKLEBALL",
-          "grade": 4
-        }
-      ]
+      "potentialHidden": 62
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

@@ -1,14 +1,14 @@
 {
   "id": "PLY_00545",
   "name": "민상민",
-  "nameEn": "Min Sangmin",
+  "nameEn": "Sim Hyun-jun",
   "role": "player",
   "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_BEARGUARDIANS",
-  "teamId": "TEAM_KBL_BEARGUARDIANS_2",
+  "clubId": "CLUB_KBL_SAMSUNG",
+  "teamId": "TEAM_KBL_SAMSUNG_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,48 +19,28 @@
       "position": "3B",
       "jerseyNumber": 45,
       "pitching": {
-        "ovr": 49,
-        "stamina": 55,
-        "velocity": 49,
-        "command": 53,
-        "control": 47,
-        "movement": 51,
-        "mentality": 53,
-        "recovery": 45,
-        "clutch": 49,
-        "holdRunners": 43
+        "ovr": 50,
+        "stamina": 45,
+        "velocity": 51,
+        "command": 46,
+        "control": 42,
+        "movement": 47,
+        "mentality": 42,
+        "recovery": 41
       },
       "batting": {
         "ovr": 69,
-        "contact": 72,
-        "power": 74,
-        "eye": 73,
-        "discipline": 66,
-        "speed": 68,
-        "fielding": 73,
-        "arm": 72,
-        "battingClutch": 70,
-        "baseInstinct": 59,
-        "bunting": 56,
-        "platoon": 60
+        "contact": 70,
+        "power": 77,
+        "eye": 68,
+        "discipline": 68,
+        "speed": 65,
+        "fielding": 72,
+        "arm": 71,
+        "battingClutch": 68
       },
       "developmentRate": 45,
-      "potentialHidden": 89,
-      "primaryPosition": "3B",
-      "positionRatings": {
-        "3B": 69
-      },
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 89
     },
     "coach": {
       "specialty": "-",
@@ -100,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

@@ -1,6 +1,6 @@
 {
   "id": "PLY_16232",
-  "name": "킹 코디",
+  "name": "King Cody",
   "nameEn": "King Cody",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 46,
   "popularity": 23,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 52
       },
       "batting": {
-        "ovr": 55,
-        "contact": 50,
-        "power": 50,
-        "eye": 56,
-        "discipline": 59,
-        "speed": 53,
-        "baseInstinct": 46,
-        "bunting": 39,
-        "platoon": 45,
-        "fielding": 52,
-        "arm": 49,
-        "battingClutch": 47
+        "ovr": 61,
+        "contact": 56,
+        "power": 56,
+        "eye": 62,
+        "discipline": 65,
+        "speed": 59,
+        "baseInstinct": 51,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 54,
+        "battingClutch": 52
       },
       "positionRatings": {
         "CF": 61

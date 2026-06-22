@@ -1,61 +1,46 @@
 {
   "id": "PLY_01565",
-  "name": "허민재",
-  "nameEn": "Heo Minjae",
+  "name": "스즈키 료",
+  "nameEn": "Suzuki Ryo",
   "role": "player",
-  "age": 17,
+  "age": 25,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_DAEGU_HEAT",
-  "teamId": "TEAM_HS_DAEGU_HEAT",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_DAEGU_HEAT",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_NEONCRANES",
+  "teamId": "TEAM_JBL_CL_NEONCRANES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "R",
-      "position": "C",
-      "jerseyNumber": 24,
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 25,
       "pitching": {
-        "ovr": 40,
-        "stamina": 38,
-        "velocity": 40,
-        "command": 46,
-        "control": 44,
-        "movement": 44,
-        "mentality": 36,
-        "recovery": 43,
-        "clutch": 36,
-        "holdRunners": 43
+        "ovr": 50,
+        "stamina": 48,
+        "velocity": 50,
+        "command": 45,
+        "control": 48,
+        "movement": 45,
+        "mentality": 47,
+        "recovery": 49
       },
       "batting": {
-        "ovr": 60,
-        "contact": 63,
-        "power": 66,
-        "eye": 65,
-        "discipline": 59,
-        "speed": 64,
-        "fielding": 58,
-        "arm": 54,
-        "battingClutch": 54,
-        "baseInstinct": 58,
-        "bunting": 56,
-        "platoon": 51
+        "ovr": 72,
+        "contact": 76,
+        "power": 73,
+        "eye": 76,
+        "discipline": 77,
+        "speed": 72,
+        "fielding": 75,
+        "arm": 73,
+        "battingClutch": 76
       },
-      "developmentRate": 65,
-      "potentialHidden": 72,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 40,
+      "potentialHidden": 57
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 74,
-  "popularity": 10
+  }
 }

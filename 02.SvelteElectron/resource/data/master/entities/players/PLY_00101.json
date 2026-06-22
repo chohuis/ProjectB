@@ -1,9 +1,9 @@
 {
   "id": "PLY_00101",
   "name": "최현서",
-  "nameEn": "Choi Hyeonseo",
+  "nameEn": "Bae Do-hyun",
   "role": "player",
-  "age": 19,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,43 +19,28 @@
       "position": "SP",
       "jerseyNumber": 1,
       "pitching": {
-        "ovr": 54,
-        "stamina": 51,
+        "ovr": 57,
+        "stamina": 62,
         "velocity": 56,
-        "command": 53,
-        "control": 57,
-        "movement": 58,
-        "mentality": 51,
-        "recovery": 53,
-        "clutch": 44,
-        "holdRunners": 41
+        "command": 61,
+        "control": 49,
+        "movement": 51,
+        "mentality": 69,
+        "recovery": 58
       },
       "batting": {
-        "ovr": 36,
-        "contact": 36,
-        "power": 40,
-        "eye": 41,
-        "discipline": 35,
-        "speed": 33,
-        "fielding": 31,
-        "arm": 41,
-        "battingClutch": 42,
-        "baseInstinct": 41,
-        "bunting": 39,
-        "platoon": 43
+        "ovr": 46,
+        "contact": 67,
+        "power": 55,
+        "eye": 52,
+        "discipline": 48,
+        "speed": 66,
+        "fielding": 58,
+        "arm": 58,
+        "battingClutch": 58
       },
       "developmentRate": 66,
-      "potentialHidden": 81,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 54
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        }
-      ]
+      "potentialHidden": 81
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

@@ -1,14 +1,14 @@
 {
   "id": "PLY_00867",
   "name": "화이트 빅터",
-  "nameEn": "Hwa 이트 빅터",
+  "nameEn": "White Victor",
   "role": "player",
   "age": 36,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_HARBORHAWKS",
-  "teamId": "TEAM_ABL_HARBORHAWKS_1",
+  "clubId": "CLUB_ABL_NYY",
+  "teamId": "TEAM_ABL_NYY",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 2,
       "pitching": {
-        "ovr": 75,
-        "stamina": 77,
-        "velocity": 75,
+        "ovr": 84,
+        "stamina": 84,
+        "velocity": 79,
         "command": 76,
         "control": 80,
-        "movement": 77,
-        "mentality": 71,
-        "recovery": 72,
-        "clutch": 70,
-        "holdRunners": 72
+        "movement": 82,
+        "mentality": 81,
+        "recovery": 80
       },
       "batting": {
-        "ovr": 57,
-        "contact": 59,
-        "power": 54,
-        "eye": 53,
-        "discipline": 58,
-        "speed": 60,
-        "fielding": 63,
-        "arm": 54,
-        "battingClutch": 47,
-        "baseInstinct": 45,
-        "bunting": 44,
-        "platoon": 44
+        "ovr": 62,
+        "contact": 56,
+        "power": 56,
+        "eye": 57,
+        "discipline": 57,
+        "speed": 56,
+        "fielding": 56,
+        "arm": 53,
+        "battingClutch": 56
       },
       "developmentRate": 31,
-      "potentialHidden": 91,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 75
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 14,
-      "contract": {
-        "salary": 25600,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 91
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

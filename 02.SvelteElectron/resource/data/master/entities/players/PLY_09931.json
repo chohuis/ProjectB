@@ -1,9 +1,9 @@
 {
   "id": "PLY_09931",
-  "name": "톰슨 알렉스",
-  "nameEn": "Thompson Alex",
+  "name": "Carter Zach",
+  "nameEn": "Carter Zach",
   "role": "player",
-  "age": 33,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 62,
-  "popularity": 28,
+  "notes": "국적:베네수엘라",
+  "diligence": 67,
+  "popularity": 11,
   "militaryStatus": "군필",
   "entryYear": 2026,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 33,
+  "entryAge": 22,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 53,
-      "primaryPosition": "SP",
-      "developmentRate": 37,
-      "potentialHidden": 78,
-      "proServiceYears": 11,
+      "position": "SS",
+      "jerseyNumber": 54,
+      "primaryPosition": "SS",
+      "developmentRate": 79,
+      "potentialHidden": 81,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 76,
-        "stamina": 74,
-        "velocity": 80,
-        "command": 77,
-        "control": 80,
-        "movement": 69,
-        "mentality": 71,
-        "recovery": 64,
-        "clutch": 62,
-        "holdRunners": 67
+        "ovr": 54,
+        "stamina": 52,
+        "velocity": 54,
+        "command": 55,
+        "control": 46,
+        "movement": 57,
+        "mentality": 56,
+        "recovery": 44,
+        "clutch": 45,
+        "holdRunners": 46
       },
       "batting": {
-        "ovr": 65,
-        "contact": 59,
-        "power": 67,
-        "eye": 65,
-        "discipline": 60,
-        "speed": 69,
-        "baseInstinct": 59,
-        "bunting": 47,
+        "ovr": 54,
+        "contact": 45,
+        "power": 54,
+        "eye": 45,
+        "discipline": 56,
+        "speed": 49,
+        "baseInstinct": 50,
+        "bunting": 40,
         "platoon": 50,
-        "fielding": 62,
-        "arm": 58,
-        "battingClutch": 62
+        "fielding": 51,
+        "arm": 43,
+        "battingClutch": 42
       },
       "positionRatings": {
-        "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SS": 54
+      }
     },
     "coach": null,
     "manager": null,

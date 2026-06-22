@@ -1,6 +1,6 @@
 {
   "id": "PLY_15953",
-  "name": "마틴 그랜트",
+  "name": "Martin Grant",
   "nameEn": "Martin Grant",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 60,
   "popularity": 29,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 51
       },
       "batting": {
-        "ovr": 53,
-        "contact": 50,
-        "power": 43,
-        "eye": 50,
-        "discipline": 56,
-        "speed": 49,
-        "baseInstinct": 46,
-        "bunting": 46,
-        "platoon": 49,
-        "fielding": 54,
-        "arm": 45,
-        "battingClutch": 44
+        "ovr": 54,
+        "contact": 51,
+        "power": 44,
+        "eye": 51,
+        "discipline": 57,
+        "speed": 50,
+        "baseInstinct": 47,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 46,
+        "battingClutch": 45
       },
       "positionRatings": {
         "SS": 54

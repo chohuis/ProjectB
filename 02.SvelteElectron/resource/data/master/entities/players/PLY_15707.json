@@ -1,6 +1,6 @@
 {
   "id": "PLY_15707",
-  "name": "그린 루이스",
+  "name": "Green Luis",
   "nameEn": "Green Luis",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 68,
   "popularity": 14,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 62
       },
       "batting": {
-        "ovr": 69,
-        "contact": 64,
-        "power": 71,
-        "eye": 67,
-        "discipline": 61,
-        "speed": 75,
-        "baseInstinct": 58,
-        "bunting": 57,
-        "platoon": 48,
-        "fielding": 62,
-        "arm": 71,
-        "battingClutch": 69
+        "ovr": 72,
+        "contact": 67,
+        "power": 74,
+        "eye": 70,
+        "discipline": 64,
+        "speed": 78,
+        "baseInstinct": 61,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 74,
+        "battingClutch": 72
       },
       "positionRatings": {
         "SS": 72

@@ -1,9 +1,9 @@
 {
   "id": "PLY_00032",
   "name": "조준혁",
-  "nameEn": "Jo Junhyeok",
+  "nameEn": "Bae Si-woo",
   "role": "player",
-  "age": 19,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "SS",
       "jerseyNumber": 12,
       "pitching": {
-        "ovr": 41,
-        "stamina": 39,
-        "velocity": 41,
-        "command": 37,
-        "control": 46,
-        "movement": 38,
-        "mentality": 44,
-        "recovery": 38,
-        "clutch": 35,
-        "holdRunners": 38
+        "ovr": 48,
+        "stamina": 64,
+        "velocity": 65,
+        "command": 58,
+        "control": 69,
+        "movement": 65,
+        "mentality": 75,
+        "recovery": 65
       },
       "batting": {
-        "ovr": 61,
+        "ovr": 70,
         "contact": 66,
-        "power": 56,
-        "eye": 58,
-        "discipline": 62,
-        "speed": 54,
-        "fielding": 56,
-        "arm": 65,
-        "battingClutch": 57,
-        "baseInstinct": 55,
-        "bunting": 53,
-        "platoon": 53
+        "power": 67,
+        "eye": 69,
+        "discipline": 58,
+        "speed": 59,
+        "fielding": 63,
+        "arm": 55,
+        "battingClutch": 62
       },
       "developmentRate": 45,
-      "potentialHidden": 60,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 61
-      }
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

@@ -1,6 +1,6 @@
 {
   "id": "PLY_16157",
-  "name": "미첼 트레버",
+  "name": "Mitchell Trevor",
   "nameEn": "Mitchell Trevor",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 54,
   "popularity": 25,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 47
       },
       "batting": {
-        "ovr": 74,
-        "contact": 77,
-        "power": 74,
-        "eye": 78,
-        "discipline": 71,
-        "speed": 66,
-        "baseInstinct": 69,
-        "bunting": 60,
-        "platoon": 63,
-        "fielding": 60,
-        "arm": 66,
-        "battingClutch": 74
+        "ovr": 59,
+        "contact": 61,
+        "power": 59,
+        "eye": 62,
+        "discipline": 57,
+        "speed": 53,
+        "baseInstinct": 55,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 53,
+        "battingClutch": 59
       },
       "positionRatings": {
         "LF": 59

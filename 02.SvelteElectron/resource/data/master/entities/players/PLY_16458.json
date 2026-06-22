@@ -1,6 +1,6 @@
 {
   "id": "PLY_16458",
-  "name": "넬슨 브랜던",
+  "name": "Nelson Brandon",
   "nameEn": "Nelson Brandon",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 57,
   "popularity": 40,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 59
       },
       "batting": {
-        "ovr": 58,
-        "contact": 54,
-        "power": 59,
-        "eye": 53,
-        "discipline": 57,
-        "speed": 63,
-        "baseInstinct": 58,
-        "bunting": 52,
-        "platoon": 46,
-        "fielding": 52,
-        "arm": 52,
-        "battingClutch": 53
+        "ovr": 63,
+        "contact": 59,
+        "power": 64,
+        "eye": 58,
+        "discipline": 62,
+        "speed": 68,
+        "baseInstinct": 63,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 56,
+        "battingClutch": 58
       },
       "positionRatings": {
         "1B": 63

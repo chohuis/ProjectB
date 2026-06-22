@@ -1,6 +1,6 @@
 {
   "id": "PLY_15283",
-  "name": "스미스 카를로스",
+  "name": "Smith Carlos",
   "nameEn": "Smith Carlos",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 46,
   "popularity": 38,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 63,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 51,
-        "stamina": 50,
-        "velocity": 50,
-        "command": 48,
-        "control": 42,
-        "movement": 53,
-        "mentality": 52,
-        "recovery": 50,
-        "clutch": 50,
-        "holdRunners": 41
+        "ovr": 52,
+        "stamina": 51,
+        "velocity": 51,
+        "command": 49,
+        "control": 43,
+        "movement": 54,
+        "mentality": 53,
+        "recovery": 51,
+        "clutch": 51,
+        "holdRunners": 42
       },
       "batting": {
         "ovr": 52,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 52
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,9 +1,9 @@
 {
   "id": "PLY_00030",
   "name": "신성우",
-  "nameEn": "Shin Seongu",
+  "nameEn": "Kwon Jae-hyun",
   "role": "player",
-  "age": 19,
+  "age": 15,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "1B",
       "jerseyNumber": 10,
       "pitching": {
-        "ovr": 43,
-        "stamina": 42,
-        "velocity": 44,
-        "command": 39,
-        "control": 40,
-        "movement": 44,
-        "mentality": 46,
-        "recovery": 47,
-        "clutch": 36,
-        "holdRunners": 42
+        "ovr": 56,
+        "stamina": 63,
+        "velocity": 71,
+        "command": 68,
+        "control": 64,
+        "movement": 50,
+        "mentality": 75,
+        "recovery": 59
       },
       "batting": {
-        "ovr": 63,
-        "contact": 63,
-        "power": 59,
+        "ovr": 73,
+        "contact": 53,
+        "power": 65,
         "eye": 69,
-        "discipline": 65,
-        "speed": 65,
-        "fielding": 60,
-        "arm": 62,
-        "battingClutch": 56,
-        "baseInstinct": 54,
-        "bunting": 53,
-        "platoon": 56
+        "discipline": 53,
+        "speed": 62,
+        "fielding": 72,
+        "arm": 75,
+        "battingClutch": 61
       },
       "developmentRate": 72,
-      "potentialHidden": 91,
-      "primaryPosition": "1B",
-      "positionRatings": {
-        "1B": 63
-      }
+      "potentialHidden": 91
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

@@ -1,6 +1,6 @@
 {
   "id": "PLY_14445",
-  "name": "브라운 에반",
+  "name": "Brown Evan",
   "nameEn": "Brown Evan",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 65,
   "popularity": 19,
   "militaryStatus": "군필",

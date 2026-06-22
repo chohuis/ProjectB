@@ -1,6 +1,6 @@
 {
   "id": "PLY_16244",
-  "name": "존스 조던",
+  "name": "Jones Jordan",
   "nameEn": "Jones Jordan",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 63,
   "popularity": 28,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 71,
       "proServiceYears": 5,
       "pitching": {
-        "ovr": 62,
-        "stamina": 56,
-        "velocity": 64,
-        "command": 65,
-        "control": 63,
-        "movement": 56,
-        "mentality": 65,
-        "recovery": 63,
-        "clutch": 54,
-        "holdRunners": 54
+        "ovr": 66,
+        "stamina": 60,
+        "velocity": 68,
+        "command": 69,
+        "control": 67,
+        "movement": 60,
+        "mentality": 69,
+        "recovery": 67,
+        "clutch": 58,
+        "holdRunners": 57
       },
       "batting": {
         "ovr": 66,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

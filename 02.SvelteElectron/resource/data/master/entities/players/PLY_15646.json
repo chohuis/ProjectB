@@ -1,6 +1,6 @@
 {
   "id": "PLY_15646",
-  "name": "스콧 블레이크",
+  "name": "Scott Blake",
   "nameEn": "Scott Blake",
   "role": "player",
   "age": 30,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 67,
   "popularity": 12,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 52
       },
       "batting": {
-        "ovr": 61,
-        "contact": 62,
-        "power": 58,
-        "eye": 67,
-        "discipline": 66,
-        "speed": 62,
-        "baseInstinct": 50,
-        "bunting": 54,
-        "platoon": 56,
-        "fielding": 62,
-        "arm": 58,
-        "battingClutch": 59
+        "ovr": 54,
+        "contact": 55,
+        "power": 51,
+        "eye": 59,
+        "discipline": 58,
+        "speed": 55,
+        "baseInstinct": 44,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 51,
+        "battingClutch": 52
       },
       "positionRatings": {
         "CF": 54

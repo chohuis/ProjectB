@@ -1,9 +1,9 @@
 {
   "id": "PLY_12801",
-  "name": "가르시아 헌터",
-  "nameEn": "Garcia Hunter",
+  "name": "Lewis Dylan",
+  "nameEn": "Lewis Dylan",
   "role": "player",
-  "age": 22,
+  "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:쿠바",
   "diligence": 47,
-  "popularity": 34,
+  "popularity": 33,
   "militaryStatus": "군필",
   "entryYear": 2043,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 22,
+  "entryAge": 32,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 89,
-      "primaryPosition": "SP",
-      "developmentRate": 57,
-      "potentialHidden": 74,
-      "proServiceYears": 0,
+      "position": "CF",
+      "jerseyNumber": 77,
+      "primaryPosition": "CF",
+      "developmentRate": 45,
+      "potentialHidden": 66,
+      "proServiceYears": 10,
       "pitching": {
-        "ovr": 58,
-        "stamina": 62,
-        "velocity": 58,
+        "ovr": 62,
+        "stamina": 64,
+        "velocity": 64,
         "command": 57,
-        "control": 56,
-        "movement": 53,
-        "mentality": 65,
-        "recovery": 52,
-        "clutch": 49,
-        "holdRunners": 47
+        "control": 64,
+        "movement": 61,
+        "mentality": 56,
+        "recovery": 61,
+        "clutch": 52,
+        "holdRunners": 51
       },
       "batting": {
         "ovr": 62,
-        "contact": 53,
-        "power": 52,
-        "eye": 57,
-        "discipline": 63,
-        "speed": 59,
-        "baseInstinct": 54,
-        "bunting": 51,
+        "contact": 67,
+        "power": 65,
+        "eye": 58,
+        "discipline": 61,
+        "speed": 69,
+        "baseInstinct": 56,
+        "bunting": 52,
         "platoon": 50,
-        "fielding": 60,
-        "arm": 61,
-        "battingClutch": 60
+        "fielding": 64,
+        "arm": 58,
+        "battingClutch": 62
       },
       "positionRatings": {
-        "SP": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "CF": 62
+      }
     },
     "coach": null,
     "manager": null,

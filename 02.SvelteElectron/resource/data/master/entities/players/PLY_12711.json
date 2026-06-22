@@ -1,7 +1,7 @@
 {
   "id": "PLY_12711",
-  "name": "그린 헌터",
-  "nameEn": "Green Hunter",
+  "name": "Thomas Brandon",
+  "nameEn": "Thomas Brandon",
   "role": "player",
   "age": 28,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 84,
-  "popularity": 46,
+  "notes": "국적:도미니카",
+  "diligence": 66,
+  "popularity": 15,
   "militaryStatus": "군필",
   "entryYear": 2043,
   "entryLeague": "LEAGUE_ABL",
@@ -21,57 +21,43 @@
   "entryAge": 28,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 20,
-      "primaryPosition": "SP",
-      "developmentRate": 63,
-      "potentialHidden": 57,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 85,
+      "primaryPosition": "2B",
+      "developmentRate": 46,
+      "potentialHidden": 72,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 76,
-        "stamina": 74,
-        "velocity": 78,
-        "command": 72,
-        "control": 75,
-        "movement": 67,
-        "mentality": 80,
-        "recovery": 69,
-        "clutch": 70,
-        "holdRunners": 61
+        "ovr": 65,
+        "stamina": 65,
+        "velocity": 67,
+        "command": 62,
+        "control": 62,
+        "movement": 62,
+        "mentality": 68,
+        "recovery": 54,
+        "clutch": 59,
+        "holdRunners": 53
       },
       "batting": {
-        "ovr": 73,
-        "contact": 67,
-        "power": 72,
-        "eye": 75,
-        "discipline": 64,
-        "speed": 78,
-        "baseInstinct": 69,
+        "ovr": 65,
+        "contact": 64,
+        "power": 67,
+        "eye": 63,
+        "discipline": 69,
+        "speed": 61,
+        "baseInstinct": 57,
         "bunting": 57,
         "platoon": 50,
-        "fielding": 70,
-        "arm": 76,
-        "battingClutch": 63
+        "fielding": 58,
+        "arm": 64,
+        "battingClutch": 52
       },
       "positionRatings": {
-        "SP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ]
+        "2B": 65
+      }
     },
     "coach": null,
     "manager": null,

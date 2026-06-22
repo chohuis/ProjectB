@@ -1,6 +1,6 @@
 {
   "id": "PLY_14201",
-  "name": "로드리게스 제이슨",
+  "name": "Rodriguez Jason",
   "nameEn": "Rodriguez Jason",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 67,
   "popularity": 33,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 60
       },
       "batting": {
-        "ovr": 68,
-        "contact": 59,
-        "power": 64,
-        "eye": 63,
-        "discipline": 69,
-        "speed": 70,
-        "baseInstinct": 60,
-        "bunting": 53,
-        "platoon": 49,
-        "fielding": 60,
-        "arm": 63,
-        "battingClutch": 64
+        "ovr": 70,
+        "contact": 61,
+        "power": 66,
+        "eye": 65,
+        "discipline": 71,
+        "speed": 72,
+        "baseInstinct": 62,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 65,
+        "battingClutch": 66
       },
       "positionRatings": {
         "LF": 70

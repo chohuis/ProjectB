@@ -1,7 +1,7 @@
 {
   "id": "PLY_00425",
   "name": "구재훈",
-  "nameEn": "Koo Jaehun",
+  "nameEn": "Sung Jun-seo",
   "role": "player",
   "age": 26,
   "status": "active",
@@ -19,62 +19,28 @@
       "position": "RP",
       "jerseyNumber": 5,
       "pitching": {
-        "ovr": 59,
-        "stamina": 62,
-        "velocity": 57,
-        "command": 60,
-        "control": 57,
+        "ovr": 58,
+        "stamina": 57,
+        "velocity": 67,
+        "command": 65,
+        "control": 62,
         "movement": 58,
-        "mentality": 58,
-        "recovery": 63,
-        "clutch": 59,
-        "holdRunners": 46
+        "mentality": 60,
+        "recovery": 58
       },
       "batting": {
-        "ovr": 41,
+        "ovr": 45,
         "contact": 42,
         "power": 37,
-        "eye": 44,
-        "discipline": 42,
-        "speed": 42,
-        "fielding": 37,
-        "arm": 44,
-        "battingClutch": 39,
-        "baseInstinct": 41,
-        "bunting": 33,
-        "platoon": 44
+        "eye": 41,
+        "discipline": 43,
+        "speed": 39,
+        "fielding": 35,
+        "arm": 36,
+        "battingClutch": 40
       },
       "developmentRate": 48,
-      "potentialHidden": 68,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 6,
-      "contract": {
-        "salary": 1300,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 68
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

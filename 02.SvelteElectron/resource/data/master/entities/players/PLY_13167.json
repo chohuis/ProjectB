@@ -1,9 +1,9 @@
 {
   "id": "PLY_13167",
-  "name": "로드리게스 미겔",
-  "nameEn": "Rodriguez Miguel",
+  "name": "Nelson Kevin",
+  "nameEn": "Nelson Kevin",
   "role": "player",
-  "age": 21,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 51,
-  "popularity": 17,
+  "notes": "국적:베네수엘라",
+  "diligence": 74,
+  "popularity": 23,
   "militaryStatus": "군필",
   "entryYear": 2046,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 21,
+  "entryAge": 20,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 21,
+      "jerseyNumber": 39,
       "primaryPosition": "SP",
-      "developmentRate": 77,
-      "potentialHidden": 69,
+      "developmentRate": 64,
+      "potentialHidden": 71,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 50,
-        "stamina": 54,
-        "velocity": 57,
-        "command": 51,
-        "control": 45,
-        "movement": 53,
-        "mentality": 43,
-        "recovery": 44,
-        "clutch": 42,
-        "holdRunners": 46
+        "ovr": 64,
+        "stamina": 60,
+        "velocity": 62,
+        "command": 59,
+        "control": 66,
+        "movement": 62,
+        "mentality": 63,
+        "recovery": 53,
+        "clutch": 62,
+        "holdRunners": 57
       },
       "batting": {
-        "ovr": 53,
-        "contact": 48,
-        "power": 46,
-        "eye": 49,
-        "discipline": 53,
-        "speed": 50,
-        "baseInstinct": 53,
-        "bunting": 39,
+        "ovr": 64,
+        "contact": 68,
+        "power": 67,
+        "eye": 60,
+        "discipline": 67,
+        "speed": 66,
+        "baseInstinct": 62,
+        "bunting": 48,
         "platoon": 50,
-        "fielding": 46,
-        "arm": 42,
-        "battingClutch": 46
+        "fielding": 55,
+        "arm": 56,
+        "battingClutch": 55
       },
       "positionRatings": {
-        "SP": 53
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 64
+      }
     },
     "coach": null,
     "manager": null,

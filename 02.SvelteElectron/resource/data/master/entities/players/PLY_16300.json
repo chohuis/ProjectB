@@ -1,6 +1,6 @@
 {
   "id": "PLY_16300",
-  "name": "베이커 트레버",
+  "name": "Baker Trevor",
   "nameEn": "Baker Trevor",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 46,
   "popularity": 30,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 60
       },
       "batting": {
-        "ovr": 67,
-        "contact": 66,
-        "power": 59,
-        "eye": 63,
-        "discipline": 60,
-        "speed": 73,
-        "baseInstinct": 64,
-        "bunting": 54,
-        "platoon": 49,
-        "fielding": 59,
-        "arm": 65,
-        "battingClutch": 61
+        "ovr": 69,
+        "contact": 68,
+        "power": 61,
+        "eye": 65,
+        "discipline": 62,
+        "speed": 75,
+        "baseInstinct": 66,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 67,
+        "battingClutch": 63
       },
       "positionRatings": {
         "2B": 69

@@ -1,9 +1,9 @@
 {
   "id": "PLY_10908",
-  "name": "그린 에릭",
-  "nameEn": "Green Eric",
+  "name": "Taylor Caleb",
+  "nameEn": "Taylor Caleb",
   "role": "player",
-  "age": 25,
+  "age": 29,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 73,
-  "popularity": 37,
+  "notes": "국적:멕시코",
+  "diligence": 57,
+  "popularity": 31,
   "militaryStatus": "군필",
   "entryYear": 2032,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 25,
+  "entryAge": 29,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 59,
+      "jerseyNumber": 34,
       "primaryPosition": "SP",
-      "developmentRate": 65,
-      "potentialHidden": 59,
-      "proServiceYears": 3,
+      "developmentRate": 42,
+      "potentialHidden": 61,
+      "proServiceYears": 7,
       "pitching": {
-        "ovr": 62,
-        "stamina": 64,
-        "velocity": 68,
-        "command": 53,
-        "control": 58,
-        "movement": 65,
-        "mentality": 57,
-        "recovery": 62,
-        "clutch": 56,
-        "holdRunners": 57
+        "ovr": 76,
+        "stamina": 79,
+        "velocity": 77,
+        "command": 68,
+        "control": 67,
+        "movement": 76,
+        "mentality": 72,
+        "recovery": 75,
+        "clutch": 73,
+        "holdRunners": 71
       },
       "batting": {
-        "ovr": 70,
-        "contact": 67,
-        "power": 65,
-        "eye": 67,
-        "discipline": 64,
-        "speed": 72,
-        "baseInstinct": 64,
-        "bunting": 55,
+        "ovr": 76,
+        "contact": 74,
+        "power": 71,
+        "eye": 70,
+        "discipline": 71,
+        "speed": 80,
+        "baseInstinct": 70,
+        "bunting": 71,
         "platoon": 50,
-        "fielding": 61,
-        "arm": 62,
-        "battingClutch": 69
+        "fielding": 72,
+        "arm": 68,
+        "battingClutch": 75
       },
       "positionRatings": {
-        "SP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "SP": 76
+      }
     },
     "coach": null,
     "manager": null,

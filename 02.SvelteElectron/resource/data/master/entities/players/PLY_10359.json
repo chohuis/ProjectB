@@ -1,9 +1,9 @@
 {
   "id": "PLY_10359",
-  "name": "라이트 데릭",
-  "nameEn": "Wright Derek",
+  "name": "Lee Ryan",
+  "nameEn": "Lee Ryan",
   "role": "player",
-  "age": 20,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:미국",
   "diligence": 61,
-  "popularity": 18,
+  "popularity": 41,
   "militaryStatus": "군필",
   "entryYear": 2029,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 20,
+  "entryAge": 22,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 79,
-      "primaryPosition": "SP",
-      "developmentRate": 66,
-      "potentialHidden": 76,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 20,
+      "primaryPosition": "LF",
+      "developmentRate": 60,
+      "potentialHidden": 81,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 57,
-        "stamina": 51,
-        "velocity": 60,
-        "command": 57,
-        "control": 51,
-        "movement": 56,
-        "mentality": 52,
-        "recovery": 56,
-        "clutch": 57,
-        "holdRunners": 55
+        "ovr": 67,
+        "stamina": 66,
+        "velocity": 74,
+        "command": 67,
+        "control": 60,
+        "movement": 64,
+        "mentality": 62,
+        "recovery": 67,
+        "clutch": 56,
+        "holdRunners": 56
       },
       "batting": {
-        "ovr": 61,
-        "contact": 55,
-        "power": 58,
-        "eye": 61,
-        "discipline": 52,
-        "speed": 59,
-        "baseInstinct": 61,
-        "bunting": 43,
+        "ovr": 67,
+        "contact": 66,
+        "power": 62,
+        "eye": 65,
+        "discipline": 59,
+        "speed": 61,
+        "baseInstinct": 66,
+        "bunting": 49,
         "platoon": 50,
-        "fielding": 53,
-        "arm": 58,
-        "battingClutch": 58
+        "fielding": 61,
+        "arm": 63,
+        "battingClutch": 61
       },
       "positionRatings": {
-        "SP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "LF": 67
+      }
     },
     "coach": null,
     "manager": null,

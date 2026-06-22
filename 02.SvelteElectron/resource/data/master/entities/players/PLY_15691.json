@@ -1,6 +1,6 @@
 {
   "id": "PLY_15691",
-  "name": "토마스 숀",
+  "name": "Thomas Sean",
   "nameEn": "Thomas Sean",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 80,
   "popularity": 42,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 81,
       "proServiceYears": 4,
       "pitching": {
-        "ovr": 77,
-        "stamina": 80,
-        "velocity": 81,
-        "command": 71,
-        "control": 72,
-        "movement": 74,
-        "mentality": 75,
-        "recovery": 77,
-        "clutch": 77,
-        "holdRunners": 72
+        "ovr": 76,
+        "stamina": 79,
+        "velocity": 80,
+        "command": 70,
+        "control": 71,
+        "movement": 73,
+        "mentality": 74,
+        "recovery": 76,
+        "clutch": 76,
+        "holdRunners": 71
       },
       "batting": {
         "ovr": 76,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

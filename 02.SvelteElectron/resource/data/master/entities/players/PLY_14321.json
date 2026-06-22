@@ -1,6 +1,6 @@
 {
   "id": "PLY_14321",
-  "name": "로드리게스 콜",
+  "name": "Rodriguez Cole",
   "nameEn": "Rodriguez Cole",
   "role": "player",
   "age": 18,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 48,
   "popularity": 41,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 66,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 56,
-        "stamina": 61,
-        "velocity": 67,
-        "command": 48,
-        "control": 49,
-        "movement": 50,
-        "mentality": 58,
-        "recovery": 55,
-        "clutch": 52,
-        "holdRunners": 53
+        "ovr": 57,
+        "stamina": 62,
+        "velocity": 68,
+        "command": 49,
+        "control": 50,
+        "movement": 51,
+        "mentality": 59,
+        "recovery": 56,
+        "clutch": 53,
+        "holdRunners": 54
       },
       "batting": {
         "ovr": 57,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_16113",
-  "name": "넬슨 타일러",
+  "name": "Nelson Tyler",
   "nameEn": "Nelson Tyler",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 55,
   "popularity": 30,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 48
       },
       "batting": {
-        "ovr": 57,
-        "contact": 61,
-        "power": 52,
-        "eye": 59,
-        "discipline": 48,
-        "speed": 62,
-        "baseInstinct": 51,
-        "bunting": 47,
-        "platoon": 49,
-        "fielding": 55,
-        "arm": 58,
-        "battingClutch": 47
+        "ovr": 58,
+        "contact": 62,
+        "power": 53,
+        "eye": 60,
+        "discipline": 49,
+        "speed": 63,
+        "baseInstinct": 52,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 59,
+        "battingClutch": 48
       },
       "positionRatings": {
         "RF": 58

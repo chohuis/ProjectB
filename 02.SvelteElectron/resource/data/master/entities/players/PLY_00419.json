@@ -1,7 +1,7 @@
 {
   "id": "PLY_00419",
   "name": "임태양",
-  "nameEn": "Lim Taeyang",
+  "nameEn": "Jang Dong-jun",
   "role": "player",
   "age": 26,
   "status": "active",
@@ -20,47 +20,27 @@
       "jerseyNumber": 19,
       "pitching": {
         "ovr": 48,
-        "stamina": 47,
-        "velocity": 51,
-        "command": 44,
-        "control": 49,
-        "movement": 52,
-        "mentality": 50,
-        "recovery": 52,
-        "clutch": 47,
-        "holdRunners": 36
+        "stamina": 40,
+        "velocity": 45,
+        "command": 43,
+        "control": 43,
+        "movement": 48,
+        "mentality": 42,
+        "recovery": 47
       },
       "batting": {
-        "ovr": 68,
-        "contact": 68,
-        "power": 74,
-        "eye": 63,
-        "discipline": 71,
-        "speed": 70,
-        "fielding": 73,
-        "arm": 64,
-        "battingClutch": 66,
-        "baseInstinct": 67,
-        "bunting": 60,
-        "platoon": 61
+        "ovr": 73,
+        "contact": 69,
+        "power": 78,
+        "eye": 72,
+        "discipline": 72,
+        "speed": 68,
+        "fielding": 70,
+        "arm": 69,
+        "battingClutch": 71
       },
       "developmentRate": 51,
-      "potentialHidden": 70,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 68
-      },
-      "proServiceYears": 6,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 70
     },
     "coach": {
       "specialty": "-",
@@ -100,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

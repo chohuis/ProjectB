@@ -1,7 +1,7 @@
 {
   "id": "PLY_00294",
   "name": "구준호",
-  "nameEn": "Koo Junho",
+  "nameEn": "Shin Yong-jun",
   "role": "player",
   "age": 20,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "2B",
       "jerseyNumber": 14,
       "pitching": {
-        "ovr": 44,
-        "stamina": 49,
-        "velocity": 42,
-        "command": 43,
-        "control": 47,
-        "movement": 48,
-        "mentality": 42,
-        "recovery": 48,
-        "clutch": 40,
-        "holdRunners": 39
+        "ovr": 34,
+        "stamina": 29,
+        "velocity": 35,
+        "command": 31,
+        "control": 37,
+        "movement": 32,
+        "mentality": 36,
+        "recovery": 30
       },
       "batting": {
-        "ovr": 64,
-        "contact": 65,
-        "power": 59,
-        "eye": 68,
-        "discipline": 66,
-        "speed": 67,
-        "fielding": 67,
-        "arm": 62,
-        "battingClutch": 57,
-        "baseInstinct": 54,
-        "bunting": 58,
-        "platoon": 54
+        "ovr": 62,
+        "contact": 68,
+        "power": 63,
+        "eye": 61,
+        "discipline": 65,
+        "speed": 66,
+        "fielding": 65,
+        "arm": 65,
+        "battingClutch": 63
       },
       "developmentRate": 62,
-      "potentialHidden": 65,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 64
-      }
+      "potentialHidden": 65
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

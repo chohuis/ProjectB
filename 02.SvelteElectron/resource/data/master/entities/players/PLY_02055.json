@@ -1,76 +1,46 @@
 {
   "id": "PLY_02055",
-  "name": "이선 브라운",
-  "nameEn": "Ethan Brown",
+  "name": "아베 카이토",
+  "nameEn": "Abe Kaito",
   "role": "player",
-  "age": 23,
+  "age": 32,
   "status": "active",
-  "originLeagueId": "LEAGUE_ABL",
-  "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_HARBORHAWKS",
-  "teamId": "TEAM_ABL_HARBORHAWKS_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SUNS",
+  "teamId": "TEAM_JBL_PL_SUNS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 25,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 20,
       "pitching": {
-        "ovr": 72,
-        "stamina": 73,
-        "velocity": 78,
-        "command": 68,
-        "control": 73,
-        "movement": 73,
-        "mentality": 74,
-        "recovery": 68,
-        "clutch": 65,
-        "holdRunners": 68
+        "ovr": 54,
+        "stamina": 55,
+        "velocity": 62,
+        "command": 53,
+        "control": 59,
+        "movement": 52,
+        "mentality": 54,
+        "recovery": 55
       },
       "batting": {
-        "ovr": 54,
-        "contact": 59,
-        "power": 58,
-        "eye": 50,
-        "discipline": 57,
-        "speed": 61,
-        "fielding": 51,
-        "arm": 49,
-        "battingClutch": 51,
-        "baseInstinct": 45,
-        "bunting": 38,
-        "platoon": 48
+        "ovr": 72,
+        "contact": 77,
+        "power": 81,
+        "eye": 75,
+        "discipline": 73,
+        "speed": 72,
+        "fielding": 74,
+        "arm": 75,
+        "battingClutch": 79
       },
-      "developmentRate": 43,
-      "potentialHidden": 80,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 72
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 1,
-      "contract": {
-        "salary": 23200,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 38,
+      "potentialHidden": 58
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 53,
-  "popularity": 44,
-  "militaryStatus": "군필"
+  }
 }

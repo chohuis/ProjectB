@@ -1,9 +1,9 @@
 {
   "id": "PLY_13679",
-  "name": "홀 마커스",
-  "nameEn": "Hall Marcus",
+  "name": "King Zach",
+  "nameEn": "King Zach",
   "role": "player",
-  "age": 22,
+  "age": 33,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 60,
-  "popularity": 45,
+  "notes": "국적:베네수엘라",
+  "diligence": 67,
+  "popularity": 46,
   "militaryStatus": "군필",
   "entryYear": 2049,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 22,
+  "entryAge": 33,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 15,
-      "primaryPosition": "SP",
-      "developmentRate": 76,
-      "potentialHidden": 79,
-      "proServiceYears": 0,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 74,
+      "primaryPosition": "LF",
+      "developmentRate": 36,
+      "potentialHidden": 54,
+      "proServiceYears": 11,
       "pitching": {
-        "ovr": 60,
-        "stamina": 53,
-        "velocity": 58,
-        "command": 50,
-        "control": 62,
+        "ovr": 63,
+        "stamina": 55,
+        "velocity": 73,
+        "command": 64,
+        "control": 66,
         "movement": 58,
-        "mentality": 59,
-        "recovery": 52,
+        "mentality": 65,
+        "recovery": 59,
         "clutch": 53,
         "holdRunners": 50
       },
       "batting": {
-        "ovr": 65,
-        "contact": 64,
-        "power": 61,
-        "eye": 56,
+        "ovr": 63,
+        "contact": 59,
+        "power": 52,
+        "eye": 54,
         "discipline": 64,
-        "speed": 69,
-        "baseInstinct": 54,
-        "bunting": 50,
+        "speed": 68,
+        "baseInstinct": 61,
+        "bunting": 48,
         "platoon": 50,
-        "fielding": 63,
-        "arm": 65,
-        "battingClutch": 65
+        "fielding": 56,
+        "arm": 60,
+        "battingClutch": 59
       },
       "positionRatings": {
-        "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "LF": 63
+      }
     },
     "coach": null,
     "manager": null,

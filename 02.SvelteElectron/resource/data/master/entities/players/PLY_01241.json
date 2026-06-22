@@ -1,14 +1,14 @@
 {
   "id": "PLY_01241",
   "name": "존스 노아",
-  "nameEn": "Jon 스 노아",
+  "nameEn": "Jones Noah",
   "role": "player",
   "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_WAVERIDERS",
-  "teamId": "TEAM_ABL_WAVERIDERS_1",
+  "clubId": "CLUB_ABL_NYM",
+  "teamId": "TEAM_ABL_NYM",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,48 +19,28 @@
       "position": "1B",
       "jerseyNumber": 16,
       "pitching": {
-        "ovr": 54,
-        "stamina": 57,
-        "velocity": 56,
-        "command": 51,
-        "control": 54,
-        "movement": 55,
-        "mentality": 57,
-        "recovery": 50,
-        "clutch": 53,
-        "holdRunners": 42
+        "ovr": 46,
+        "stamina": 43,
+        "velocity": 52,
+        "command": 45,
+        "control": 51,
+        "movement": 43,
+        "mentality": 50,
+        "recovery": 45
       },
       "batting": {
-        "ovr": 74,
-        "contact": 78,
-        "power": 70,
-        "eye": 77,
-        "discipline": 69,
-        "speed": 72,
-        "fielding": 71,
-        "arm": 77,
-        "battingClutch": 64,
-        "baseInstinct": 71,
-        "bunting": 69,
-        "platoon": 68
+        "ovr": 76,
+        "contact": 76,
+        "power": 78,
+        "eye": 75,
+        "discipline": 72,
+        "speed": 71,
+        "fielding": 69,
+        "arm": 70,
+        "battingClutch": 75
       },
       "developmentRate": 52,
-      "potentialHidden": 75,
-      "primaryPosition": "1B",
-      "positionRatings": {
-        "1B": 74
-      },
-      "proServiceYears": 2,
-      "contract": {
-        "salary": 9400,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 75
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

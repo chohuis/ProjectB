@@ -1,9 +1,9 @@
 {
   "id": "PLY_12543",
-  "name": "토마스 제이크",
-  "nameEn": "Thomas Jake",
+  "name": "Harris Brandon",
+  "nameEn": "Harris Brandon",
   "role": "player",
-  "age": 19,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 46,
+  "notes": "국적:멕시코",
+  "diligence": 57,
   "popularity": 28,
   "militaryStatus": "군필",
   "entryYear": 2042,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 19,
+  "entryAge": 28,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 43,
-      "primaryPosition": "SP",
-      "developmentRate": 70,
-      "potentialHidden": 60,
-      "proServiceYears": 0,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 22,
+      "primaryPosition": "CF",
+      "developmentRate": 69,
+      "potentialHidden": 77,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 57,
-        "stamina": 55,
-        "velocity": 65,
-        "command": 56,
-        "control": 53,
-        "movement": 51,
-        "mentality": 55,
-        "recovery": 51,
-        "clutch": 46,
-        "holdRunners": 43
+        "ovr": 66,
+        "stamina": 66,
+        "velocity": 73,
+        "command": 60,
+        "control": 64,
+        "movement": 64,
+        "mentality": 61,
+        "recovery": 66,
+        "clutch": 67,
+        "holdRunners": 60
       },
       "batting": {
-        "ovr": 61,
-        "contact": 58,
-        "power": 59,
-        "eye": 54,
-        "discipline": 62,
-        "speed": 59,
-        "baseInstinct": 63,
+        "ovr": 66,
+        "contact": 68,
+        "power": 68,
+        "eye": 67,
+        "discipline": 64,
+        "speed": 68,
+        "baseInstinct": 57,
         "bunting": 51,
         "platoon": 50,
-        "fielding": 64,
-        "arm": 54,
-        "battingClutch": 54
+        "fielding": 56,
+        "arm": 67,
+        "battingClutch": 63
       },
       "positionRatings": {
-        "SP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "CF": 66
+      }
     },
     "coach": null,
     "manager": null,

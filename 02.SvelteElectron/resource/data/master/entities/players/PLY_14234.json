@@ -1,6 +1,6 @@
 {
   "id": "PLY_14234",
-  "name": "카터 코너",
+  "name": "Carter Connor",
   "nameEn": "Carter Connor",
   "role": "player",
   "age": 30,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 77,
   "popularity": 24,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 64
       },
       "batting": {
-        "ovr": 72,
-        "contact": 67,
-        "power": 62,
-        "eye": 76,
-        "discipline": 74,
-        "speed": 67,
-        "baseInstinct": 72,
-        "bunting": 62,
-        "platoon": 55,
-        "fielding": 68,
-        "arm": 63,
-        "battingClutch": 70
+        "ovr": 66,
+        "contact": 61,
+        "power": 57,
+        "eye": 70,
+        "discipline": 68,
+        "speed": 61,
+        "baseInstinct": 66,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 58,
+        "battingClutch": 64
       },
       "positionRatings": {
         "C": 66

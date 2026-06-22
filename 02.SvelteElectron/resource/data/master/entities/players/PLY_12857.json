@@ -1,9 +1,9 @@
 {
   "id": "PLY_12857",
-  "name": "베이커 마커스",
-  "nameEn": "Baker Marcus",
+  "name": "Anderson Jordan",
+  "nameEn": "Anderson Jordan",
   "role": "player",
-  "age": 22,
+  "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 84,
-  "popularity": 23,
+  "notes": "국적:도미니카",
+  "diligence": 47,
+  "popularity": 21,
   "militaryStatus": "군필",
   "entryYear": 2044,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 22,
+  "entryAge": 25,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 18,
-      "primaryPosition": "SP",
-      "developmentRate": 63,
-      "potentialHidden": 93,
-      "proServiceYears": 0,
+      "position": "2B",
+      "jerseyNumber": 32,
+      "primaryPosition": "2B",
+      "developmentRate": 59,
+      "potentialHidden": 75,
+      "proServiceYears": 3,
       "pitching": {
-        "ovr": 57,
-        "stamina": 50,
-        "velocity": 56,
-        "command": 50,
-        "control": 52,
-        "movement": 61,
-        "mentality": 57,
-        "recovery": 55,
-        "clutch": 48,
-        "holdRunners": 44
+        "ovr": 67,
+        "stamina": 69,
+        "velocity": 66,
+        "command": 64,
+        "control": 61,
+        "movement": 62,
+        "mentality": 72,
+        "recovery": 67,
+        "clutch": 55,
+        "holdRunners": 65
       },
       "batting": {
-        "ovr": 61,
-        "contact": 65,
-        "power": 53,
-        "eye": 54,
-        "discipline": 64,
-        "speed": 62,
-        "baseInstinct": 57,
-        "bunting": 44,
+        "ovr": 67,
+        "contact": 71,
+        "power": 66,
+        "eye": 66,
+        "discipline": 58,
+        "speed": 69,
+        "baseInstinct": 61,
+        "bunting": 62,
         "platoon": 50,
-        "fielding": 60,
-        "arm": 51,
-        "battingClutch": 53
+        "fielding": 67,
+        "arm": 60,
+        "battingClutch": 56
       },
       "positionRatings": {
-        "SP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 1
-        }
-      ]
+        "2B": 67
+      }
     },
     "coach": null,
     "manager": null,

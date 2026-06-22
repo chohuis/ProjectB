@@ -1,17 +1,17 @@
 {
   "id": "COA_00215",
-  "name": "타카하시 사토시",
-  "nameEn": "Takahashi Satoshi",
+  "name": "미우라 카이토",
+  "nameEn": "Miura Kaito",
   "role": "coach",
-  "age": 54,
+  "age": 34,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
-  "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
-  "teamId": "TEAM_JBL_PL_THUNDERFALCONS_1",
+  "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
+  "teamId": "TEAM_JBL_PL_MARINESOLDIERS_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
@@ -43,16 +43,16 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "타격",
-      "experienceYears": 12,
+      "specialty": "멘탈",
+      "experienceYears": 13,
       "stats": {
-        "teaching": 61,
-        "analysis": 74,
-        "communication": 71,
-        "discipline": 76,
+        "teaching": 77,
+        "analysis": 68,
+        "communication": 57,
+        "discipline": 63,
         "leadership": 79
       },
-      "trainingBuffs": "제구 훈련 +2%"
+      "trainingBuffs": ""
     },
     "manager": {
       "style": "균형",

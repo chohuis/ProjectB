@@ -1,9 +1,9 @@
 {
   "id": "PLY_11819",
-  "name": "그린 다니엘",
-  "nameEn": "Green Daniel",
+  "name": "Hall Sean",
+  "nameEn": "Hall Sean",
   "role": "player",
-  "age": 31,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 46,
-  "popularity": 11,
+  "notes": "국적:쿠바",
+  "diligence": 61,
+  "popularity": 35,
   "militaryStatus": "군필",
   "entryYear": 2037,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 31,
+  "entryAge": 28,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 52,
-      "primaryPosition": "SP",
-      "developmentRate": 36,
-      "potentialHidden": 72,
-      "proServiceYears": 9,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 19,
+      "primaryPosition": "3B",
+      "developmentRate": 50,
+      "potentialHidden": 64,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 61,
-        "stamina": 56,
-        "velocity": 64,
-        "command": 53,
-        "control": 54,
-        "movement": 63,
-        "mentality": 61,
-        "recovery": 60,
-        "clutch": 62,
-        "holdRunners": 52
+        "ovr": 76,
+        "stamina": 68,
+        "velocity": 82,
+        "command": 78,
+        "control": 73,
+        "movement": 77,
+        "mentality": 70,
+        "recovery": 68,
+        "clutch": 63,
+        "holdRunners": 69
       },
       "batting": {
-        "ovr": 59,
-        "contact": 53,
-        "power": 59,
-        "eye": 59,
-        "discipline": 52,
-        "speed": 64,
-        "baseInstinct": 58,
-        "bunting": 45,
+        "ovr": 76,
+        "contact": 71,
+        "power": 72,
+        "eye": 69,
+        "discipline": 79,
+        "speed": 82,
+        "baseInstinct": 69,
+        "bunting": 59,
         "platoon": 50,
-        "fielding": 51,
-        "arm": 55,
-        "battingClutch": 52
+        "fielding": 71,
+        "arm": 74,
+        "battingClutch": 66
       },
       "positionRatings": {
-        "SP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "3B": 76
+      }
     },
     "coach": null,
     "manager": null,

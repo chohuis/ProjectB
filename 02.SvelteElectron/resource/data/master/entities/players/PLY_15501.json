@@ -1,6 +1,6 @@
 {
   "id": "PLY_15501",
-  "name": "로빈슨 알렉스",
+  "name": "Robinson Alex",
   "nameEn": "Robinson Alex",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 70,
   "popularity": 31,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 50
       },
       "batting": {
-        "ovr": 59,
-        "contact": 59,
-        "power": 59,
-        "eye": 58,
-        "discipline": 53,
-        "speed": 63,
-        "baseInstinct": 59,
-        "bunting": 49,
-        "platoon": 49,
-        "fielding": 60,
-        "arm": 52,
-        "battingClutch": 56
+        "ovr": 60,
+        "contact": 60,
+        "power": 60,
+        "eye": 59,
+        "discipline": 54,
+        "speed": 64,
+        "baseInstinct": 60,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 53,
+        "battingClutch": 57
       },
       "positionRatings": {
         "LF": 60

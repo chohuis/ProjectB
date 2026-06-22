@@ -1,6 +1,6 @@
 {
   "id": "PLY_14379",
-  "name": "루이스 알렉스",
+  "name": "Lewis Alex",
   "nameEn": "Lewis Alex",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 72,
   "popularity": 27,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 66
       },
       "batting": {
-        "ovr": 83,
-        "contact": 74,
-        "power": 78,
-        "eye": 73,
-        "discipline": 74,
-        "speed": 80,
-        "baseInstinct": 74,
-        "bunting": 74,
-        "platoon": 54,
-        "fielding": 85,
-        "arm": 84,
-        "battingClutch": 82
+        "ovr": 77,
+        "contact": 69,
+        "power": 72,
+        "eye": 68,
+        "discipline": 69,
+        "speed": 74,
+        "baseInstinct": 69,
+        "bunting": 69,
+        "platoon": 50,
+        "fielding": 79,
+        "arm": 78,
+        "battingClutch": 76
       },
       "positionRatings": {
         "C": 77

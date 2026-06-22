@@ -1,9 +1,9 @@
 {
   "id": "PLY_13734",
-  "name": "존슨 미겔",
-  "nameEn": "Johnson Miguel",
+  "name": "Jones Jordan",
+  "nameEn": "Jones Jordan",
   "role": "player",
-  "age": 27,
+  "age": 18,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 71,
-  "popularity": 35,
+  "notes": "국적:도미니카",
+  "diligence": 60,
+  "popularity": 25,
   "militaryStatus": "군필",
   "entryYear": 2049,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 27,
+  "entryAge": 18,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 30,
+      "jerseyNumber": 76,
       "primaryPosition": "SP",
-      "developmentRate": 49,
-      "potentialHidden": 65,
-      "proServiceYears": 5,
+      "developmentRate": 78,
+      "potentialHidden": 61,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 69,
-        "stamina": 73,
-        "velocity": 71,
-        "command": 72,
-        "control": 63,
-        "movement": 63,
-        "mentality": 63,
-        "recovery": 62,
-        "clutch": 57,
-        "holdRunners": 65
+        "ovr": 52,
+        "stamina": 50,
+        "velocity": 50,
+        "command": 51,
+        "control": 49,
+        "movement": 50,
+        "mentality": 49,
+        "recovery": 47,
+        "clutch": 43,
+        "holdRunners": 39
       },
       "batting": {
-        "ovr": 75,
-        "contact": 77,
-        "power": 76,
-        "eye": 71,
-        "discipline": 74,
-        "speed": 71,
-        "baseInstinct": 72,
-        "bunting": 64,
+        "ovr": 52,
+        "contact": 45,
+        "power": 41,
+        "eye": 50,
+        "discipline": 50,
+        "speed": 52,
+        "baseInstinct": 52,
+        "bunting": 36,
         "platoon": 50,
-        "fielding": 74,
-        "arm": 65,
-        "battingClutch": 62
+        "fielding": 48,
+        "arm": 42,
+        "battingClutch": 44
       },
       "positionRatings": {
-        "SP": 75
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "SP": 52
+      }
     },
     "coach": null,
     "manager": null,

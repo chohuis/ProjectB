@@ -1,14 +1,14 @@
 {
   "id": "PLY_00892",
   "name": "잭슨 니콜라스",
-  "nameEn": "Jaek 슨 니콜라스",
+  "nameEn": "Jackson Nicholas",
   "role": "player",
   "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_HARBORHAWKS",
-  "teamId": "TEAM_ABL_HARBORHAWKS_2",
+  "clubId": "CLUB_ABL_NYY",
+  "teamId": "TEAM_ABL_NYY_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 42,
       "pitching": {
-        "ovr": 75,
-        "stamina": 75,
-        "velocity": 80,
-        "command": 75,
-        "control": 78,
-        "movement": 73,
-        "mentality": 74,
-        "recovery": 78,
-        "clutch": 67,
-        "holdRunners": 66
+        "ovr": 87,
+        "stamina": 86,
+        "velocity": 82,
+        "command": 82,
+        "control": 82,
+        "movement": 78,
+        "mentality": 80,
+        "recovery": 86
       },
       "batting": {
-        "ovr": 57,
+        "ovr": 55,
         "contact": 57,
-        "power": 52,
-        "eye": 61,
-        "discipline": 58,
-        "speed": 52,
-        "fielding": 57,
-        "arm": 61,
-        "battingClutch": 48,
-        "baseInstinct": 57,
-        "bunting": 48,
-        "platoon": 54
+        "power": 57,
+        "eye": 51,
+        "discipline": 53,
+        "speed": 54,
+        "fielding": 47,
+        "arm": 50,
+        "battingClutch": 49
       },
       "developmentRate": 40,
-      "potentialHidden": 66,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 75
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_FORKBALL",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 25600,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 66
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

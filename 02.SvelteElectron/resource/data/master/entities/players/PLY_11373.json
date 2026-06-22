@@ -1,7 +1,7 @@
 {
   "id": "PLY_11373",
-  "name": "가르시아 카일",
-  "nameEn": "Garcia Kyle",
+  "name": "Davis Eric",
+  "nameEn": "Davis Eric",
   "role": "player",
   "age": 25,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 76,
-  "popularity": 23,
+  "notes": "국적:쿠바",
+  "diligence": 75,
+  "popularity": 38,
   "militaryStatus": "군필",
   "entryYear": 2035,
   "entryLeague": "LEAGUE_ABL",
@@ -24,50 +24,40 @@
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 77,
+      "jerseyNumber": 19,
       "primaryPosition": "SP",
-      "developmentRate": 52,
-      "potentialHidden": 82,
+      "developmentRate": 50,
+      "potentialHidden": 74,
       "proServiceYears": 3,
       "pitching": {
-        "ovr": 56,
-        "stamina": 57,
-        "velocity": 59,
-        "command": 54,
-        "control": 60,
-        "movement": 53,
-        "mentality": 53,
-        "recovery": 50,
-        "clutch": 48,
-        "holdRunners": 55
+        "ovr": 70,
+        "stamina": 71,
+        "velocity": 69,
+        "command": 64,
+        "control": 62,
+        "movement": 62,
+        "mentality": 76,
+        "recovery": 61,
+        "clutch": 64,
+        "holdRunners": 60
       },
       "batting": {
-        "ovr": 66,
-        "contact": 61,
-        "power": 68,
+        "ovr": 70,
+        "contact": 70,
+        "power": 69,
         "eye": 70,
-        "discipline": 68,
-        "speed": 68,
+        "discipline": 66,
+        "speed": 71,
         "baseInstinct": 59,
-        "bunting": 55,
+        "bunting": 56,
         "platoon": 50,
-        "fielding": 61,
-        "arm": 65,
-        "battingClutch": 64
+        "fielding": 59,
+        "arm": 66,
+        "battingClutch": 57
       },
       "positionRatings": {
-        "SP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+        "SP": 70
+      }
     },
     "coach": null,
     "manager": null,

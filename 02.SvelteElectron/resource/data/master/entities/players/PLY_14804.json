@@ -1,6 +1,6 @@
 {
   "id": "PLY_14804",
-  "name": "클라크 칼렙",
+  "name": "Clark Caleb",
   "nameEn": "Clark Caleb",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 64,
   "popularity": 35,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 59
       },
       "batting": {
-        "ovr": 74,
-        "contact": 64,
-        "power": 67,
-        "eye": 79,
-        "discipline": 74,
-        "speed": 69,
-        "baseInstinct": 67,
-        "bunting": 54,
-        "platoon": 54,
-        "fielding": 66,
-        "arm": 76,
-        "battingClutch": 62
+        "ovr": 68,
+        "contact": 59,
+        "power": 62,
+        "eye": 73,
+        "discipline": 68,
+        "speed": 63,
+        "baseInstinct": 62,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 70,
+        "battingClutch": 57
       },
       "positionRatings": {
         "SS": 68

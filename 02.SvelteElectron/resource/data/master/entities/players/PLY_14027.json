@@ -1,6 +1,6 @@
 {
   "id": "PLY_14027",
-  "name": "톰슨 브랜던",
+  "name": "Thompson Brandon",
   "nameEn": "Thompson Brandon",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 78,
   "popularity": 19,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 62,
       "proServiceYears": 13,
       "pitching": {
-        "ovr": 82,
-        "stamina": 72,
-        "velocity": 92,
-        "command": 73,
-        "control": 77,
-        "movement": 76,
-        "mentality": 90,
-        "recovery": 73,
-        "clutch": 68,
-        "holdRunners": 66
+        "ovr": 65,
+        "stamina": 57,
+        "velocity": 73,
+        "command": 58,
+        "control": 61,
+        "movement": 60,
+        "mentality": 71,
+        "recovery": 58,
+        "clutch": 54,
+        "holdRunners": 52
       },
       "batting": {
         "ovr": 65,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

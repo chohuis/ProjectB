@@ -1,6 +1,6 @@
 {
   "id": "PLY_15447",
-  "name": "잭슨 크리스",
+  "name": "Jackson Chris",
   "nameEn": "Jackson Chris",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 57,
   "popularity": 39,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 71
       },
       "batting": {
-        "ovr": 71,
-        "contact": 64,
-        "power": 61,
-        "eye": 74,
-        "discipline": 73,
-        "speed": 64,
-        "baseInstinct": 70,
-        "bunting": 54,
-        "platoon": 49,
-        "fielding": 64,
-        "arm": 72,
-        "battingClutch": 68
+        "ovr": 72,
+        "contact": 65,
+        "power": 62,
+        "eye": 75,
+        "discipline": 74,
+        "speed": 65,
+        "baseInstinct": 71,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 73,
+        "battingClutch": 69
       },
       "positionRatings": {
         "C": 72

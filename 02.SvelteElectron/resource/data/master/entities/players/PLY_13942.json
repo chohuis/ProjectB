@@ -1,7 +1,7 @@
 {
   "id": "PLY_13942",
-  "name": "로드리게스 제이크",
-  "nameEn": "Rodriguez Jake",
+  "name": "Adams Cody",
+  "nameEn": "Adams Cody",
   "role": "player",
   "age": 26,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 77,
-  "popularity": 30,
+  "notes": "국적:미국",
+  "diligence": 71,
+  "popularity": 45,
   "militaryStatus": "군필",
   "entryYear": 2050,
   "entryLeague": "LEAGUE_ABL",
@@ -21,57 +21,43 @@
   "entryAge": 26,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 67,
-      "primaryPosition": "SP",
-      "developmentRate": 56,
-      "potentialHidden": 63,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 27,
+      "primaryPosition": "3B",
+      "developmentRate": 55,
+      "potentialHidden": 75,
       "proServiceYears": 4,
       "pitching": {
-        "ovr": 71,
-        "stamina": 70,
-        "velocity": 70,
-        "command": 61,
-        "control": 73,
-        "movement": 67,
-        "mentality": 70,
-        "recovery": 60,
-        "clutch": 66,
-        "holdRunners": 64
+        "ovr": 82,
+        "stamina": 85,
+        "velocity": 79,
+        "command": 72,
+        "control": 75,
+        "movement": 84,
+        "mentality": 77,
+        "recovery": 74,
+        "clutch": 70,
+        "holdRunners": 72
       },
       "batting": {
-        "ovr": 76,
-        "contact": 72,
-        "power": 69,
-        "eye": 68,
-        "discipline": 74,
-        "speed": 73,
-        "baseInstinct": 67,
-        "bunting": 60,
+        "ovr": 82,
+        "contact": 76,
+        "power": 73,
+        "eye": 84,
+        "discipline": 73,
+        "speed": 79,
+        "baseInstinct": 84,
+        "bunting": 70,
         "platoon": 50,
-        "fielding": 68,
-        "arm": 78,
-        "battingClutch": 65
+        "fielding": 83,
+        "arm": 77,
+        "battingClutch": 81
       },
       "positionRatings": {
-        "SP": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "3B": 82
+      }
     },
     "coach": null,
     "manager": null,

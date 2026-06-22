@@ -1,61 +1,46 @@
 {
   "id": "PLY_01823",
-  "name": "민상민",
-  "nameEn": "Min Sangmin",
+  "name": "타카하시 쇼",
+  "nameEn": "Takahashi Sho",
   "role": "player",
-  "age": 18,
+  "age": 27,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_GOYANG_ARROW",
-  "teamId": "TEAM_HS_GOYANG_ARROW",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_GOYANG_ARROW",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
+  "teamId": "TEAM_JBL_PL_THUNDERFALCONS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "LF",
-      "jerseyNumber": 22,
+      "position": "CP",
+      "jerseyNumber": 13,
       "pitching": {
-        "ovr": 48,
-        "stamina": 48,
-        "velocity": 52,
-        "command": 52,
-        "control": 47,
-        "movement": 44,
-        "mentality": 46,
-        "recovery": 49,
-        "clutch": 37,
-        "holdRunners": 43
+        "ovr": 84,
+        "stamina": 69,
+        "velocity": 89,
+        "command": 83,
+        "control": 83,
+        "movement": 82,
+        "mentality": 78,
+        "recovery": 78
       },
       "batting": {
-        "ovr": 68,
-        "contact": 71,
-        "power": 67,
-        "eye": 69,
-        "discipline": 68,
-        "speed": 73,
-        "fielding": 67,
-        "arm": 68,
-        "battingClutch": 60,
-        "baseInstinct": 58,
-        "bunting": 55,
-        "platoon": 61
+        "ovr": 49,
+        "contact": 54,
+        "power": 52,
+        "eye": 55,
+        "discipline": 48,
+        "speed": 56,
+        "fielding": 55,
+        "arm": 54,
+        "battingClutch": 53
       },
-      "developmentRate": 73,
-      "potentialHidden": 79,
-      "primaryPosition": "LF",
-      "positionRatings": {
-        "LF": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 37,
+      "potentialHidden": 74
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 61,
-  "popularity": 29
+  }
 }

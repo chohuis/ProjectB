@@ -1,9 +1,9 @@
 {
   "id": "PLY_12400",
-  "name": "톰슨 에반",
-  "nameEn": "Thompson Evan",
+  "name": "Hall Grant",
+  "nameEn": "Hall Grant",
   "role": "player",
-  "age": 23,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 69,
-  "popularity": 18,
+  "notes": "국적:파나마",
+  "diligence": 63,
+  "popularity": 25,
   "militaryStatus": "군필",
   "entryYear": 2041,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 23,
+  "entryAge": 21,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 74,
+      "jerseyNumber": 5,
       "primaryPosition": "SP",
-      "developmentRate": 59,
-      "potentialHidden": 70,
-      "proServiceYears": 1,
+      "developmentRate": 66,
+      "potentialHidden": 81,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 67,
-        "stamina": 71,
-        "velocity": 74,
-        "command": 67,
-        "control": 61,
-        "movement": 59,
-        "mentality": 63,
-        "recovery": 58,
-        "clutch": 58,
-        "holdRunners": 56
+        "ovr": 60,
+        "stamina": 57,
+        "velocity": 70,
+        "command": 57,
+        "control": 62,
+        "movement": 58,
+        "mentality": 64,
+        "recovery": 48,
+        "clutch": 53,
+        "holdRunners": 50
       },
       "batting": {
-        "ovr": 73,
-        "contact": 73,
-        "power": 67,
-        "eye": 65,
-        "discipline": 76,
-        "speed": 67,
-        "baseInstinct": 75,
-        "bunting": 56,
+        "ovr": 60,
+        "contact": 62,
+        "power": 62,
+        "eye": 63,
+        "discipline": 62,
+        "speed": 64,
+        "baseInstinct": 58,
+        "bunting": 46,
         "platoon": 50,
-        "fielding": 68,
-        "arm": 62,
-        "battingClutch": 69
+        "fielding": 50,
+        "arm": 50,
+        "battingClutch": 47
       },
       "positionRatings": {
-        "SP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ]
+        "SP": 60
+      }
     },
     "coach": null,
     "manager": null,

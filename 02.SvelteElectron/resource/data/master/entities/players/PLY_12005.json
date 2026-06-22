@@ -1,9 +1,9 @@
 {
   "id": "PLY_12005",
-  "name": "해리스 미겔",
-  "nameEn": "Harris Miguel",
+  "name": "Nelson Trevor",
+  "nameEn": "Nelson Trevor",
   "role": "player",
-  "age": 26,
+  "age": 30,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 69,
-  "popularity": 47,
+  "notes": "국적:쿠바",
+  "diligence": 56,
+  "popularity": 27,
   "militaryStatus": "군필",
   "entryYear": 2039,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 26,
+  "entryAge": 30,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "SP",
-      "jerseyNumber": 9,
+      "jerseyNumber": 38,
       "primaryPosition": "SP",
-      "developmentRate": 55,
-      "potentialHidden": 82,
-      "proServiceYears": 4,
+      "developmentRate": 39,
+      "potentialHidden": 57,
+      "proServiceYears": 8,
       "pitching": {
-        "ovr": 60,
-        "stamina": 55,
-        "velocity": 60,
-        "command": 53,
-        "control": 57,
-        "movement": 57,
-        "mentality": 57,
-        "recovery": 55,
-        "clutch": 50,
-        "holdRunners": 52
+        "ovr": 59,
+        "stamina": 54,
+        "velocity": 63,
+        "command": 49,
+        "control": 59,
+        "movement": 52,
+        "mentality": 64,
+        "recovery": 58,
+        "clutch": 49,
+        "holdRunners": 54
       },
       "batting": {
-        "ovr": 69,
-        "contact": 64,
-        "power": 65,
-        "eye": 61,
-        "discipline": 68,
-        "speed": 65,
-        "baseInstinct": 70,
-        "bunting": 61,
+        "ovr": 59,
+        "contact": 58,
+        "power": 58,
+        "eye": 56,
+        "discipline": 60,
+        "speed": 54,
+        "baseInstinct": 50,
+        "bunting": 47,
         "platoon": 50,
-        "fielding": 62,
-        "arm": 68,
-        "battingClutch": 64
+        "fielding": 54,
+        "arm": 57,
+        "battingClutch": 53
       },
       "positionRatings": {
-        "SP": 69
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 1
-        }
-      ]
+        "SP": 59
+      }
     },
     "coach": null,
     "manager": null,

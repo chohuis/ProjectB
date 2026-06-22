@@ -1,14 +1,14 @@
 {
   "id": "PLY_01336",
   "name": "테일러 앤서니",
-  "nameEn": "Te 일러 앤서니",
+  "nameEn": "Taylor Anthony",
   "role": "player",
-  "age": 40,
+  "age": 41,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_MOUNTAINPEAKS",
-  "teamId": "TEAM_ABL_MOUNTAINPEAKS_1",
+  "clubId": "CLUB_ABL_STL",
+  "teamId": "TEAM_ABL_STL",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -19,48 +19,28 @@
       "position": "CF",
       "jerseyNumber": 21,
       "pitching": {
-        "ovr": 69,
+        "ovr": 67,
         "stamina": 71,
-        "velocity": 71,
-        "command": 74,
-        "control": 67,
-        "movement": 69,
-        "mentality": 66,
-        "recovery": 67,
-        "clutch": 67,
-        "holdRunners": 65
+        "velocity": 67,
+        "command": 67,
+        "control": 64,
+        "movement": 71,
+        "mentality": 71,
+        "recovery": 71
       },
       "batting": {
         "ovr": 89,
-        "contact": 92,
-        "power": 84,
-        "eye": 90,
-        "discipline": 92,
+        "contact": 96,
+        "power": 91,
+        "eye": 92,
+        "discipline": 89,
         "speed": 93,
-        "fielding": 87,
-        "arm": 88,
-        "battingClutch": 82,
-        "baseInstinct": 80,
-        "bunting": 83,
-        "platoon": 81
+        "fielding": 91,
+        "arm": 89,
+        "battingClutch": 92
       },
       "developmentRate": 42,
-      "potentialHidden": 63,
-      "primaryPosition": "CF",
-      "positionRatings": {
-        "CF": 89
-      },
-      "proServiceYears": 18,
-      "contract": {
-        "salary": 20900,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 63
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

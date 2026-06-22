@@ -1,14 +1,14 @@
 {
   "id": "PLY_00631",
   "name": "이지훈",
-  "nameEn": "Lee Jihun",
+  "nameEn": "Son Hyun-seo",
   "role": "player",
   "age": 19,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_SOARINGEAGLES",
-  "teamId": "TEAM_KBL_SOARINGEAGLES_2",
+  "clubId": "CLUB_KBL_DOOSAN",
+  "teamId": "TEAM_KBL_DOOSAN_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,48 +19,28 @@
       "position": "C",
       "jerseyNumber": 41,
       "pitching": {
-        "ovr": 40,
-        "stamina": 43,
-        "velocity": 40,
-        "command": 39,
-        "control": 43,
-        "movement": 45,
-        "mentality": 45,
-        "recovery": 36,
-        "clutch": 40,
-        "holdRunners": 40
+        "ovr": 28,
+        "stamina": 25,
+        "velocity": 33,
+        "command": 28,
+        "control": 27,
+        "movement": 32,
+        "mentality": 27,
+        "recovery": 27
       },
       "batting": {
-        "ovr": 60,
-        "contact": 58,
-        "power": 55,
-        "eye": 65,
-        "discipline": 56,
-        "speed": 58,
+        "ovr": 56,
+        "contact": 60,
+        "power": 63,
+        "eye": 62,
+        "discipline": 58,
+        "speed": 53,
         "fielding": 58,
-        "arm": 55,
-        "battingClutch": 54,
-        "baseInstinct": 50,
-        "bunting": 49,
-        "platoon": 55
+        "arm": 65,
+        "battingClutch": 57
       },
       "developmentRate": 50,
-      "potentialHidden": 75,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 60
-      },
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 75
     },
     "coach": {
       "specialty": "-",
@@ -100,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

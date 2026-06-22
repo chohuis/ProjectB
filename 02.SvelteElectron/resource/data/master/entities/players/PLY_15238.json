@@ -1,6 +1,6 @@
 {
   "id": "PLY_15238",
-  "name": "스미스 다니엘",
+  "name": "Smith Daniel",
   "nameEn": "Smith Daniel",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 60,
   "popularity": 35,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 56
       },
       "batting": {
-        "ovr": 82,
-        "contact": 88,
-        "power": 83,
-        "eye": 87,
-        "discipline": 78,
-        "speed": 88,
-        "baseInstinct": 76,
-        "bunting": 73,
-        "platoon": 63,
-        "fielding": 78,
-        "arm": 72,
-        "battingClutch": 66
+        "ovr": 65,
+        "contact": 70,
+        "power": 66,
+        "eye": 69,
+        "discipline": 62,
+        "speed": 70,
+        "baseInstinct": 60,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 57,
+        "battingClutch": 52
       },
       "positionRatings": {
         "1B": 65

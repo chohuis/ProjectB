@@ -1,7 +1,7 @@
 {
   "id": "PLY_00335",
   "name": "박태양",
-  "nameEn": "Park Taeyang",
+  "nameEn": "Shin Seung-hyun",
   "role": "player",
   "age": 27,
   "status": "active",
@@ -20,47 +20,27 @@
       "jerseyNumber": 15,
       "pitching": {
         "ovr": 49,
-        "stamina": 46,
+        "stamina": 40,
         "velocity": 52,
-        "command": 53,
-        "control": 54,
-        "movement": 49,
-        "mentality": 54,
-        "recovery": 54,
-        "clutch": 42,
-        "holdRunners": 42
+        "command": 47,
+        "control": 41,
+        "movement": 47,
+        "mentality": 48,
+        "recovery": 41
       },
       "batting": {
-        "ovr": 69,
-        "contact": 72,
-        "power": 67,
+        "ovr": 75,
+        "contact": 71,
+        "power": 74,
         "eye": 74,
-        "discipline": 66,
-        "speed": 68,
-        "fielding": 72,
-        "arm": 73,
-        "battingClutch": 65,
-        "baseInstinct": 68,
-        "bunting": 57,
-        "platoon": 65
+        "discipline": 71,
+        "speed": 65,
+        "fielding": 67,
+        "arm": 76,
+        "battingClutch": 75
       },
       "developmentRate": 41,
-      "potentialHidden": 63,
-      "primaryPosition": "3B",
-      "positionRatings": {
-        "3B": 69
-      },
-      "proServiceYears": 7,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 63
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

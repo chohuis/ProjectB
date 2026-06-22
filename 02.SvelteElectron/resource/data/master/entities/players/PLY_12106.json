@@ -1,9 +1,9 @@
 {
   "id": "PLY_12106",
-  "name": "해리스 칼렙",
-  "nameEn": "Harris Caleb",
+  "name": "Brown Daniel",
+  "nameEn": "Brown Daniel",
   "role": "player",
-  "age": 20,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 64,
-  "popularity": 26,
+  "notes": "국적:도미니카",
+  "diligence": 57,
+  "popularity": 21,
   "militaryStatus": "군필",
   "entryYear": 2039,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 20,
+  "entryAge": 28,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 54,
+      "jerseyNumber": 7,
       "primaryPosition": "SP",
-      "developmentRate": 75,
-      "potentialHidden": 70,
-      "proServiceYears": 0,
+      "developmentRate": 56,
+      "potentialHidden": 84,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 56,
-        "stamina": 58,
-        "velocity": 59,
-        "command": 57,
-        "control": 58,
-        "movement": 57,
-        "mentality": 57,
-        "recovery": 50,
-        "clutch": 49,
-        "holdRunners": 47
+        "ovr": 80,
+        "stamina": 73,
+        "velocity": 84,
+        "command": 80,
+        "control": 82,
+        "movement": 74,
+        "mentality": 78,
+        "recovery": 69,
+        "clutch": 76,
+        "holdRunners": 71
       },
       "batting": {
-        "ovr": 60,
-        "contact": 64,
-        "power": 51,
-        "eye": 57,
-        "discipline": 56,
-        "speed": 57,
-        "baseInstinct": 57,
-        "bunting": 54,
+        "ovr": 80,
+        "contact": 78,
+        "power": 78,
+        "eye": 71,
+        "discipline": 73,
+        "speed": 86,
+        "baseInstinct": 82,
+        "bunting": 71,
         "platoon": 50,
-        "fielding": 57,
-        "arm": 62,
-        "battingClutch": 59
+        "fielding": 71,
+        "arm": 71,
+        "battingClutch": 78
       },
       "positionRatings": {
-        "SP": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 80
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_15297",
-  "name": "워커 알렉스",
+  "name": "Walker Alex",
   "nameEn": "Walker Alex",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 61,
   "popularity": 43,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 44
       },
       "batting": {
-        "ovr": 73,
-        "contact": 74,
-        "power": 72,
-        "eye": 78,
-        "discipline": 64,
-        "speed": 81,
-        "baseInstinct": 63,
-        "bunting": 57,
-        "platoon": 63,
-        "fielding": 67,
-        "arm": 63,
-        "battingClutch": 58
+        "ovr": 58,
+        "contact": 59,
+        "power": 57,
+        "eye": 62,
+        "discipline": 51,
+        "speed": 64,
+        "baseInstinct": 50,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 50,
+        "battingClutch": 46
       },
       "positionRatings": {
         "1B": 58

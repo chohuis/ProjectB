@@ -1,6 +1,6 @@
 {
   "id": "PLY_14016",
-  "name": "애덤스 재크",
+  "name": "Adams Zach",
   "nameEn": "Adams Zach",
   "role": "player",
   "age": 18,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 57,
   "popularity": 25,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 51
       },
       "batting": {
-        "ovr": 58,
-        "contact": 63,
-        "power": 51,
-        "eye": 49,
-        "discipline": 50,
-        "speed": 54,
-        "baseInstinct": 57,
-        "bunting": 42,
-        "platoon": 49,
-        "fielding": 60,
-        "arm": 51,
-        "battingClutch": 49
+        "ovr": 59,
+        "contact": 64,
+        "power": 52,
+        "eye": 50,
+        "discipline": 51,
+        "speed": 55,
+        "baseInstinct": 58,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 52,
+        "battingClutch": 50
       },
       "positionRatings": {
         "2B": 59

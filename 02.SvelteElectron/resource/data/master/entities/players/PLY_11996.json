@@ -1,9 +1,9 @@
 {
   "id": "PLY_11996",
-  "name": "화이트 카를로스",
-  "nameEn": "White Carlos",
+  "name": "Nelson Chris",
+  "nameEn": "Nelson Chris",
   "role": "player",
-  "age": 33,
+  "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 70,
-  "popularity": 21,
+  "notes": "국적:파나마",
+  "diligence": 67,
+  "popularity": 42,
   "militaryStatus": "군필",
   "entryYear": 2039,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 33,
+  "entryAge": 24,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 54,
-      "primaryPosition": "SP",
-      "developmentRate": 43,
-      "potentialHidden": 72,
-      "proServiceYears": 11,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 91,
+      "primaryPosition": "2B",
+      "developmentRate": 66,
+      "potentialHidden": 76,
+      "proServiceYears": 2,
       "pitching": {
-        "ovr": 90,
-        "stamina": 92,
-        "velocity": 90,
-        "command": 92,
-        "control": 92,
-        "movement": 84,
-        "mentality": 94,
-        "recovery": 86,
-        "clutch": 89,
-        "holdRunners": 83
+        "ovr": 72,
+        "stamina": 74,
+        "velocity": 74,
+        "command": 71,
+        "control": 72,
+        "movement": 74,
+        "mentality": 74,
+        "recovery": 62,
+        "clutch": 62,
+        "holdRunners": 66
       },
       "batting": {
-        "ovr": 75,
-        "contact": 68,
+        "ovr": 72,
+        "contact": 65,
         "power": 67,
-        "eye": 75,
-        "discipline": 67,
-        "speed": 74,
-        "baseInstinct": 76,
-        "bunting": 69,
+        "eye": 76,
+        "discipline": 75,
+        "speed": 68,
+        "baseInstinct": 63,
+        "bunting": 62,
         "platoon": 50,
-        "fielding": 66,
-        "arm": 66,
-        "battingClutch": 71
+        "fielding": 71,
+        "arm": 65,
+        "battingClutch": 69
       },
       "positionRatings": {
-        "SP": 75
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "2B": 72
+      }
     },
     "coach": null,
     "manager": null,

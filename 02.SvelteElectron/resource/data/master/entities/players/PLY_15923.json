@@ -1,6 +1,6 @@
 {
   "id": "PLY_15923",
-  "name": "카터 크리스",
+  "name": "Carter Chris",
   "nameEn": "Carter Chris",
   "role": "player",
   "age": 29,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 47,
   "popularity": 21,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 58
       },
       "batting": {
-        "ovr": 74,
-        "contact": 73,
-        "power": 63,
-        "eye": 76,
-        "discipline": 74,
-        "speed": 74,
-        "baseInstinct": 75,
-        "bunting": 59,
-        "platoon": 54,
-        "fielding": 62,
-        "arm": 70,
-        "battingClutch": 72
+        "ovr": 68,
+        "contact": 67,
+        "power": 58,
+        "eye": 70,
+        "discipline": 68,
+        "speed": 68,
+        "baseInstinct": 69,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 64,
+        "battingClutch": 66
       },
       "positionRatings": {
         "CF": 68

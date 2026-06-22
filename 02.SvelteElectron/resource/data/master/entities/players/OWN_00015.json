@@ -1,14 +1,14 @@
 {
   "id": "OWN_00015",
   "name": "홍태현",
-  "nameEn": "Hong Taehyeon",
+  "nameEn": "Cha Dong-woo",
   "role": "owner",
-  "age": 40,
+  "age": 54,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_STEELDINOS",
-  "teamId": "TEAM_KBL_STEELDINOS_1",
+  "clubId": "CLUB_KBL_LOTTE",
+  "teamId": "TEAM_KBL_LOTTE_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -80,12 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
   }
 }

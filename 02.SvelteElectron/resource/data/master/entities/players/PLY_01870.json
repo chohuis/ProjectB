@@ -1,72 +1,46 @@
 {
   "id": "PLY_01870",
-  "name": "허준호",
-  "nameEn": "Heo Junho",
+  "name": "이케다 스스무",
+  "nameEn": "Ikeda Susumu",
   "role": "player",
-  "age": 23,
+  "age": 29,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_TWINWOLVES",
-  "teamId": "TEAM_KBL_TWINWOLVES_1",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_POLARBEARS",
+  "teamId": "TEAM_JBL_PL_POLARBEARS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "L",
-      "position": "2B",
-      "jerseyNumber": 1,
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 15,
       "pitching": {
-        "ovr": 47,
-        "stamina": 48,
-        "velocity": 47,
-        "command": 49,
-        "control": 43,
-        "movement": 49,
-        "mentality": 53,
-        "recovery": 46,
-        "clutch": 40,
-        "holdRunners": 35
+        "ovr": 63,
+        "stamina": 61,
+        "velocity": 67,
+        "command": 66,
+        "control": 60,
+        "movement": 57,
+        "mentality": 63,
+        "recovery": 58
       },
       "batting": {
-        "ovr": 67,
-        "contact": 62,
-        "power": 71,
-        "eye": 66,
-        "discipline": 70,
-        "speed": 71,
-        "fielding": 68,
-        "arm": 63,
-        "battingClutch": 66,
-        "baseInstinct": 64,
-        "bunting": 59,
-        "platoon": 55
+        "ovr": 87,
+        "contact": 81,
+        "power": 87,
+        "eye": 87,
+        "discipline": 87,
+        "speed": 85,
+        "fielding": 88,
+        "arm": 86,
+        "battingClutch": 82
       },
-      "developmentRate": 60,
-      "potentialHidden": 69,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 1,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 32,
+      "potentialHidden": 65
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 43,
-  "popularity": 56,
-  "militaryStatus": "군필"
+  }
 }

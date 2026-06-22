@@ -1,9 +1,9 @@
 {
   "id": "PLY_13558",
-  "name": "토마스 카를로스",
-  "nameEn": "Thomas Carlos",
+  "name": "Williams Sean",
+  "nameEn": "Williams Sean",
   "role": "player",
-  "age": 27,
+  "age": 33,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 81,
-  "popularity": 36,
+  "notes": "국적:파나마",
+  "diligence": 68,
+  "popularity": 25,
   "militaryStatus": "군필",
   "entryYear": 2048,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 27,
+  "entryAge": 33,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 30,
+      "jerseyNumber": 48,
       "primaryPosition": "SP",
-      "developmentRate": 65,
-      "potentialHidden": 58,
-      "proServiceYears": 5,
+      "developmentRate": 46,
+      "potentialHidden": 48,
+      "proServiceYears": 11,
       "pitching": {
-        "ovr": 77,
-        "stamina": 80,
-        "velocity": 76,
-        "command": 78,
-        "control": 75,
-        "movement": 74,
-        "mentality": 76,
-        "recovery": 77,
-        "clutch": 65,
-        "holdRunners": 64
+        "ovr": 56,
+        "stamina": 51,
+        "velocity": 59,
+        "command": 59,
+        "control": 56,
+        "movement": 54,
+        "mentality": 54,
+        "recovery": 55,
+        "clutch": 48,
+        "holdRunners": 49
       },
       "batting": {
-        "ovr": 80,
-        "contact": 81,
-        "power": 77,
-        "eye": 74,
-        "discipline": 76,
-        "speed": 83,
-        "baseInstinct": 80,
-        "bunting": 72,
+        "ovr": 56,
+        "contact": 48,
+        "power": 58,
+        "eye": 54,
+        "discipline": 49,
+        "speed": 50,
+        "baseInstinct": 55,
+        "bunting": 41,
         "platoon": 50,
-        "fielding": 72,
-        "arm": 72,
-        "battingClutch": 78
+        "fielding": 50,
+        "arm": 57,
+        "battingClutch": 52
       },
       "positionRatings": {
-        "SP": 80
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 2
-        }
-      ]
+        "SP": 56
+      }
     },
     "coach": null,
     "manager": null,

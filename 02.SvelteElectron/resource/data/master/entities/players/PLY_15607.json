@@ -1,6 +1,6 @@
 {
   "id": "PLY_15607",
-  "name": "라이트 헌터",
+  "name": "Wright Hunter",
   "nameEn": "Wright Hunter",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 67,
   "popularity": 30,
   "militaryStatus": "군필",

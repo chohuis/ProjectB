@@ -1,14 +1,14 @@
 {
   "id": "PLY_00558",
   "name": "이원준",
-  "nameEn": "Lee Wonjun",
+  "nameEn": "Sung Min-woo",
   "role": "player",
   "age": 35,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_SKYGULLS",
-  "teamId": "TEAM_KBL_SKYGULLS_1",
+  "clubId": "CLUB_KBL_LG",
+  "teamId": "TEAM_KBL_LG_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 8,
       "pitching": {
-        "ovr": 70,
-        "stamina": 73,
-        "velocity": 69,
-        "command": 67,
-        "control": 71,
-        "movement": 67,
-        "mentality": 72,
-        "recovery": 73,
-        "clutch": 69,
-        "holdRunners": 69
+        "ovr": 78,
+        "stamina": 66,
+        "velocity": 81,
+        "command": 72,
+        "control": 77,
+        "movement": 72,
+        "mentality": 74,
+        "recovery": 76
       },
       "batting": {
-        "ovr": 52,
-        "contact": 54,
-        "power": 48,
-        "eye": 53,
-        "discipline": 55,
-        "speed": 55,
-        "fielding": 47,
-        "arm": 54,
-        "battingClutch": 44,
-        "baseInstinct": 49,
-        "bunting": 37,
-        "platoon": 41
+        "ovr": 51,
+        "contact": 43,
+        "power": 50,
+        "eye": 48,
+        "discipline": 42,
+        "speed": 43,
+        "fielding": 46,
+        "arm": 48,
+        "battingClutch": 43
       },
       "developmentRate": 54,
-      "potentialHidden": 65,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_KNUCKLEBALL",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 13,
-      "contract": {
-        "salary": 6200,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 65
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

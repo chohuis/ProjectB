@@ -1,6 +1,6 @@
 {
   "id": "PLY_16108",
-  "name": "마르티네스 에반",
+  "name": "Martinez Evan",
   "nameEn": "Martinez Evan",
   "role": "player",
   "age": 18,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 66,
   "popularity": 11,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 64,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 60,
-        "stamina": 62,
-        "velocity": 70,
-        "command": 50,
-        "control": 59,
-        "movement": 59,
-        "mentality": 56,
-        "recovery": 54,
-        "clutch": 57,
-        "holdRunners": 52
+        "ovr": 62,
+        "stamina": 64,
+        "velocity": 72,
+        "command": 52,
+        "control": 61,
+        "movement": 61,
+        "mentality": 58,
+        "recovery": 56,
+        "clutch": 59,
+        "holdRunners": 54
       },
       "batting": {
         "ovr": 62,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

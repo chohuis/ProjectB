@@ -1,6 +1,6 @@
 {
   "id": "PLY_16133",
-  "name": "스콧 트레버",
+  "name": "Scott Trevor",
   "nameEn": "Scott Trevor",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 46,
   "popularity": 26,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 50
       },
       "batting": {
-        "ovr": 68,
-        "contact": 69,
-        "power": 67,
-        "eye": 60,
-        "discipline": 72,
-        "speed": 67,
-        "baseInstinct": 67,
-        "bunting": 60,
-        "platoon": 56,
-        "fielding": 68,
-        "arm": 62,
-        "battingClutch": 60
+        "ovr": 61,
+        "contact": 62,
+        "power": 60,
+        "eye": 54,
+        "discipline": 65,
+        "speed": 60,
+        "baseInstinct": 60,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 56,
+        "battingClutch": 54
       },
       "positionRatings": {
         "RF": 61

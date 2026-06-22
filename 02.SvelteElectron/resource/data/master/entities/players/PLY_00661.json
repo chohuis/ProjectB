@@ -1,14 +1,14 @@
 {
   "id": "PLY_00661",
   "name": "배현우",
-  "nameEn": "Bae Hyeonu",
+  "nameEn": "Jung Ji-hoon",
   "role": "player",
   "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_EMBERTIGERS",
-  "teamId": "TEAM_KBL_EMBERTIGERS_1",
+  "clubId": "CLUB_KBL_KT",
+  "teamId": "TEAM_KBL_KT_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,48 +19,28 @@
       "position": "CF",
       "jerseyNumber": 21,
       "pitching": {
-        "ovr": 54,
-        "stamina": 57,
-        "velocity": 51,
-        "command": 54,
-        "control": 55,
-        "movement": 58,
-        "mentality": 57,
-        "recovery": 51,
-        "clutch": 44,
-        "holdRunners": 45
+        "ovr": 47,
+        "stamina": 47,
+        "velocity": 49,
+        "command": 43,
+        "control": 46,
+        "movement": 48,
+        "mentality": 43,
+        "recovery": 43
       },
       "batting": {
-        "ovr": 74,
-        "contact": 69,
-        "power": 77,
-        "eye": 76,
-        "discipline": 71,
-        "speed": 73,
-        "fielding": 72,
-        "arm": 80,
-        "battingClutch": 73,
-        "baseInstinct": 73,
-        "bunting": 70,
-        "platoon": 69
+        "ovr": 78,
+        "contact": 75,
+        "power": 75,
+        "eye": 71,
+        "discipline": 74,
+        "speed": 76,
+        "fielding": 71,
+        "arm": 77,
+        "battingClutch": 74
       },
       "developmentRate": 40,
-      "potentialHidden": 77,
-      "primaryPosition": "CF",
-      "positionRatings": {
-        "CF": 74
-      },
-      "proServiceYears": 5,
-      "contract": {
-        "salary": 2700,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 77
     },
     "coach": {
       "specialty": "-",
@@ -100,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

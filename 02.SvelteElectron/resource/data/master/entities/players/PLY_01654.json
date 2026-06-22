@@ -1,69 +1,46 @@
 {
   "id": "PLY_01654",
-  "name": "손재현",
-  "nameEn": "Son Jaehyeon",
+  "name": "이케다 료",
+  "nameEn": "Ikeda Ryo",
   "role": "player",
-  "age": 16,
+  "age": 26,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
-  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_CHUNCHEON_HIGHLAND",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONDRAKES",
+  "teamId": "TEAM_JBL_CL_IRONDRAKES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 3,
+      "position": "DH",
+      "jerseyNumber": 24,
       "pitching": {
-        "ovr": 33,
-        "stamina": 30,
-        "velocity": 33,
-        "command": 30,
-        "control": 33,
-        "movement": 33,
-        "mentality": 29,
-        "recovery": 38,
-        "clutch": 45,
-        "holdRunners": 42
+        "ovr": 46,
+        "stamina": 47,
+        "velocity": 49,
+        "command": 47,
+        "control": 43,
+        "movement": 47,
+        "mentality": 43,
+        "recovery": 42
       },
       "batting": {
-        "ovr": 22,
-        "contact": 20,
-        "power": 20,
-        "eye": 20,
-        "discipline": 26,
-        "speed": 20,
-        "fielding": 26,
-        "arm": 20,
-        "battingClutch": 37,
-        "baseInstinct": 35,
-        "bunting": 38,
-        "platoon": 33
+        "ovr": 66,
+        "contact": 76,
+        "power": 71,
+        "eye": 73,
+        "discipline": 68,
+        "speed": 66,
+        "fielding": 65,
+        "arm": 66,
+        "battingClutch": 73
       },
-      "developmentRate": 84,
-      "potentialHidden": 64,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 33
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+      "developmentRate": 47,
+      "potentialHidden": 69
     },
     "coach": {
       "specialty": "-",
@@ -103,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 57,
-  "popularity": 12
+  }
 }

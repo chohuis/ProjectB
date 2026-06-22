@@ -1,61 +1,46 @@
 {
   "id": "PLY_01735",
-  "name": "양원준",
-  "nameEn": "Yang Wonjun",
+  "name": "오카모토 진",
+  "nameEn": "Okamoto Jin",
   "role": "player",
-  "age": 18,
+  "age": 32,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_GANGWON_PEAK",
-  "teamId": "TEAM_HS_GANGWON_PEAK",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_GANGWON_PEAK",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+  "teamId": "TEAM_JBL_CL_SILVERWOLVES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "CF",
-      "jerseyNumber": 24,
+      "position": "C",
+      "jerseyNumber": 15,
       "pitching": {
-        "ovr": 42,
-        "stamina": 40,
-        "velocity": 45,
-        "command": 48,
-        "control": 38,
-        "movement": 42,
-        "mentality": 38,
-        "recovery": 43,
-        "clutch": 38,
-        "holdRunners": 33
+        "ovr": 49,
+        "stamina": 49,
+        "velocity": 51,
+        "command": 56,
+        "control": 47,
+        "movement": 46,
+        "mentality": 52,
+        "recovery": 49
       },
       "batting": {
-        "ovr": 62,
-        "contact": 66,
-        "power": 63,
-        "eye": 63,
-        "discipline": 60,
-        "speed": 65,
-        "fielding": 67,
-        "arm": 61,
-        "battingClutch": 56,
-        "baseInstinct": 61,
-        "bunting": 57,
-        "platoon": 56
+        "ovr": 82,
+        "contact": 82,
+        "power": 89,
+        "eye": 84,
+        "discipline": 81,
+        "speed": 84,
+        "fielding": 87,
+        "arm": 90,
+        "battingClutch": 87
       },
-      "developmentRate": 78,
-      "potentialHidden": 74,
-      "primaryPosition": "CF",
-      "positionRatings": {
-        "CF": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 44,
+      "potentialHidden": 73
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 73,
-  "popularity": 14
+  }
 }

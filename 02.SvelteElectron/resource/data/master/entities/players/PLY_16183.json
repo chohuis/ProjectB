@@ -1,6 +1,6 @@
 {
   "id": "PLY_16183",
-  "name": "리 콜",
+  "name": "Lee Cole",
   "nameEn": "Lee Cole",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 68,
   "popularity": 37,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 70
       },
       "batting": {
-        "ovr": 82,
-        "contact": 74,
-        "power": 72,
-        "eye": 82,
-        "discipline": 81,
-        "speed": 86,
-        "baseInstinct": 78,
-        "bunting": 62,
-        "platoon": 54,
-        "fielding": 81,
-        "arm": 82,
-        "battingClutch": 71
+        "ovr": 76,
+        "contact": 69,
+        "power": 67,
+        "eye": 76,
+        "discipline": 75,
+        "speed": 80,
+        "baseInstinct": 72,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 75,
+        "arm": 76,
+        "battingClutch": 66
       },
       "positionRatings": {
         "LF": 76

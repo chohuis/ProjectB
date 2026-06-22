@@ -1,6 +1,6 @@
 {
   "id": "PLY_16375",
-  "name": "에르난데스 라이언",
+  "name": "Hernandez Ryan",
   "nameEn": "Hernandez Ryan",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 73,
   "popularity": 25,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 60,
       "proServiceYears": 2,
       "pitching": {
-        "ovr": 68,
-        "stamina": 69,
-        "velocity": 75,
-        "command": 70,
-        "control": 67,
-        "movement": 70,
-        "mentality": 74,
-        "recovery": 67,
-        "clutch": 60,
-        "holdRunners": 65
+        "ovr": 70,
+        "stamina": 71,
+        "velocity": 77,
+        "command": 72,
+        "control": 69,
+        "movement": 72,
+        "mentality": 76,
+        "recovery": 69,
+        "clutch": 62,
+        "holdRunners": 67
       },
       "batting": {
         "ovr": 70,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

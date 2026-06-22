@@ -1,72 +1,46 @@
 {
   "id": "PLY_01995",
-  "name": "구준호",
-  "nameEn": "Gu Junho",
+  "name": "사이토 히카루",
+  "nameEn": "Saito Hikaru",
   "role": "player",
-  "age": 19,
+  "age": 26,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_STEELDINOS",
-  "teamId": "TEAM_KBL_STEELDINOS_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SEAGULLS",
+  "teamId": "TEAM_JBL_PL_SEAGULLS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
-      "handedness": "R",
-      "position": "LF",
-      "jerseyNumber": 59,
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 5,
       "pitching": {
-        "ovr": 44,
-        "stamina": 49,
-        "velocity": 48,
-        "command": 44,
-        "control": 46,
-        "movement": 39,
-        "mentality": 47,
-        "recovery": 47,
-        "clutch": 36,
-        "holdRunners": 37
+        "ovr": 71,
+        "stamina": 75,
+        "velocity": 81,
+        "command": 73,
+        "control": 71,
+        "movement": 70,
+        "mentality": 71,
+        "recovery": 77
       },
       "batting": {
-        "ovr": 64,
-        "contact": 69,
-        "power": 65,
-        "eye": 64,
-        "discipline": 60,
-        "speed": 58,
-        "fielding": 65,
-        "arm": 69,
-        "battingClutch": 62,
-        "baseInstinct": 57,
-        "bunting": 57,
-        "platoon": 51
+        "ovr": 49,
+        "contact": 50,
+        "power": 47,
+        "eye": 41,
+        "discipline": 49,
+        "speed": 41,
+        "fielding": 47,
+        "arm": 49,
+        "battingClutch": 50
       },
-      "developmentRate": 66,
-      "potentialHidden": 72,
-      "primaryPosition": "LF",
-      "positionRatings": {
-        "LF": 64
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 48,
+      "potentialHidden": 84
     },
     "coach": {
       "specialty": "-",
@@ -106,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 58,
-  "popularity": 14
+  }
 }

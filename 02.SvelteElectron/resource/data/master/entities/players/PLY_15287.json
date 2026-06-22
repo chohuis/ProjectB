@@ -1,6 +1,6 @@
 {
   "id": "PLY_15287",
-  "name": "에르난데스 그랜트",
+  "name": "Hernandez Grant",
   "nameEn": "Hernandez Grant",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 72,
   "popularity": 23,
   "militaryStatus": "군필",

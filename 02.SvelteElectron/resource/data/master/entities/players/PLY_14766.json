@@ -1,6 +1,6 @@
 {
   "id": "PLY_14766",
-  "name": "리 크리스",
+  "name": "Lee Chris",
   "nameEn": "Lee Chris",
   "role": "player",
   "age": 30,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 74,
   "popularity": 30,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 65,
       "proServiceYears": 8,
       "pitching": {
-        "ovr": 75,
-        "stamina": 75,
-        "velocity": 84,
-        "command": 72,
-        "control": 68,
-        "movement": 77,
-        "mentality": 73,
-        "recovery": 72,
-        "clutch": 67,
-        "holdRunners": 72
+        "ovr": 69,
+        "stamina": 69,
+        "velocity": 77,
+        "command": 66,
+        "control": 63,
+        "movement": 71,
+        "mentality": 67,
+        "recovery": 66,
+        "clutch": 62,
+        "holdRunners": 66
       },
       "batting": {
         "ovr": 69,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 69
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

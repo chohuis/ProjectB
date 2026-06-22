@@ -1,6 +1,6 @@
 {
   "id": "PLY_16203",
-  "name": "라이트 라이언",
+  "name": "Wright Ryan",
   "nameEn": "Wright Ryan",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 60,
   "popularity": 31,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 83,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 52,
-        "stamina": 46,
-        "velocity": 54,
-        "command": 50,
-        "control": 51,
-        "movement": 48,
-        "mentality": 48,
-        "recovery": 53,
-        "clutch": 41,
-        "holdRunners": 47
+        "ovr": 53,
+        "stamina": 47,
+        "velocity": 55,
+        "command": 51,
+        "control": 52,
+        "movement": 49,
+        "mentality": 49,
+        "recovery": 54,
+        "clutch": 42,
+        "holdRunners": 48
       },
       "batting": {
         "ovr": 53,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 53
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

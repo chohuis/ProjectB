@@ -1,6 +1,6 @@
 {
   "id": "PLY_16001",
-  "name": "데이비스 그랜트",
+  "name": "Davis Grant",
   "nameEn": "Davis Grant",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 72,
   "popularity": 38,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 48,
       "proServiceYears": 13,
       "pitching": {
-        "ovr": 69,
-        "stamina": 68,
-        "velocity": 77,
-        "command": 56,
-        "control": 74,
-        "movement": 73,
-        "mentality": 77,
-        "recovery": 70,
-        "clutch": 61,
-        "holdRunners": 65
+        "ovr": 55,
+        "stamina": 54,
+        "velocity": 61,
+        "command": 45,
+        "control": 59,
+        "movement": 58,
+        "mentality": 61,
+        "recovery": 56,
+        "clutch": 49,
+        "holdRunners": 52
       },
       "batting": {
         "ovr": 55,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 55
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

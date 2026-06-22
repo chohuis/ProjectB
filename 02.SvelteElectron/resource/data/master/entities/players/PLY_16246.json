@@ -1,6 +1,6 @@
 {
   "id": "PLY_16246",
-  "name": "톰슨 카일",
+  "name": "Thompson Kyle",
   "nameEn": "Thompson Kyle",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 68,
   "popularity": 17,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 65,
       "proServiceYears": 2,
       "pitching": {
-        "ovr": 66,
-        "stamina": 69,
-        "velocity": 73,
-        "command": 67,
-        "control": 63,
-        "movement": 60,
-        "mentality": 68,
-        "recovery": 62,
-        "clutch": 57,
-        "holdRunners": 62
+        "ovr": 68,
+        "stamina": 71,
+        "velocity": 75,
+        "command": 69,
+        "control": 65,
+        "movement": 62,
+        "mentality": 70,
+        "recovery": 64,
+        "clutch": 59,
+        "holdRunners": 64
       },
       "batting": {
         "ovr": 68,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

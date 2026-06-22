@@ -1,6 +1,6 @@
 {
   "id": "PLY_15097",
-  "name": "루이스 코디",
+  "name": "Lewis Cody",
   "nameEn": "Lewis Cody",
   "role": "player",
   "age": 23,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 60,
   "popularity": 16,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 61
       },
       "batting": {
-        "ovr": 70,
-        "contact": 68,
-        "power": 71,
-        "eye": 69,
-        "discipline": 62,
-        "speed": 70,
-        "baseInstinct": 72,
-        "bunting": 61,
-        "platoon": 48,
-        "fielding": 72,
-        "arm": 68,
-        "battingClutch": 62
+        "ovr": 73,
+        "contact": 71,
+        "power": 74,
+        "eye": 72,
+        "discipline": 65,
+        "speed": 73,
+        "baseInstinct": 75,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 75,
+        "arm": 71,
+        "battingClutch": 65
       },
       "positionRatings": {
         "2B": 73

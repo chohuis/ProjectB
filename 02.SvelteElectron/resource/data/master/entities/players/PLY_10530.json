@@ -1,7 +1,7 @@
 {
   "id": "PLY_10530",
-  "name": "토마스 제이크",
-  "nameEn": "Thomas Jake",
+  "name": "Martinez Cody",
+  "nameEn": "Martinez Cody",
   "role": "player",
   "age": 28,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 57,
-  "popularity": 28,
+  "notes": "국적:미국",
+  "diligence": 72,
+  "popularity": 10,
   "militaryStatus": "군필",
   "entryYear": 2030,
   "entryLeague": "LEAGUE_ABL",
@@ -22,56 +22,42 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 54,
+      "jerseyNumber": 48,
       "primaryPosition": "SP",
-      "developmentRate": 61,
-      "potentialHidden": 73,
+      "developmentRate": 63,
+      "potentialHidden": 67,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 73,
-        "stamina": 69,
-        "velocity": 75,
-        "command": 74,
-        "control": 66,
-        "movement": 70,
-        "mentality": 73,
-        "recovery": 74,
+        "ovr": 81,
+        "stamina": 73,
+        "velocity": 82,
+        "command": 75,
+        "control": 78,
+        "movement": 84,
+        "mentality": 79,
+        "recovery": 75,
         "clutch": 70,
-        "holdRunners": 71
+        "holdRunners": 72
       },
       "batting": {
-        "ovr": 70,
-        "contact": 68,
-        "power": 68,
-        "eye": 63,
-        "discipline": 66,
-        "speed": 76,
-        "baseInstinct": 59,
-        "bunting": 63,
+        "ovr": 81,
+        "contact": 81,
+        "power": 79,
+        "eye": 75,
+        "discipline": 72,
+        "speed": 86,
+        "baseInstinct": 76,
+        "bunting": 71,
         "platoon": 50,
-        "fielding": 68,
-        "arm": 64,
-        "battingClutch": 58
+        "fielding": 71,
+        "arm": 78,
+        "battingClutch": 76
       },
       "positionRatings": {
-        "SP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ]
+        "SP": 81
+      }
     },
     "coach": null,
     "manager": null,

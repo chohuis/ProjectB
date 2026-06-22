@@ -1,9 +1,9 @@
 {
   "id": "PLY_09929",
-  "name": "그린 숀",
-  "nameEn": "Green Sean",
+  "name": "Baker Blake",
+  "nameEn": "Baker Blake",
   "role": "player",
-  "age": 27,
+  "age": 19,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 75,
-  "popularity": 23,
+  "notes": "국적:일본",
+  "diligence": 69,
+  "popularity": 24,
   "militaryStatus": "군필",
   "entryYear": 2026,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 27,
+  "entryAge": 19,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 26,
+      "jerseyNumber": 36,
       "primaryPosition": "SP",
-      "developmentRate": 47,
-      "potentialHidden": 62,
-      "proServiceYears": 5,
+      "developmentRate": 67,
+      "potentialHidden": 68,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 78,
-        "stamina": 78,
-        "velocity": 87,
-        "command": 70,
-        "control": 76,
-        "movement": 81,
-        "mentality": 75,
-        "recovery": 76,
-        "clutch": 66,
-        "holdRunners": 76
+        "ovr": 51,
+        "stamina": 43,
+        "velocity": 55,
+        "command": 43,
+        "control": 52,
+        "movement": 53,
+        "mentality": 53,
+        "recovery": 43,
+        "clutch": 49,
+        "holdRunners": 42
       },
       "batting": {
-        "ovr": 81,
-        "contact": 73,
-        "power": 84,
-        "eye": 81,
-        "discipline": 84,
-        "speed": 77,
-        "baseInstinct": 82,
-        "bunting": 66,
+        "ovr": 51,
+        "contact": 50,
+        "power": 53,
+        "eye": 49,
+        "discipline": 50,
+        "speed": 49,
+        "baseInstinct": 50,
+        "bunting": 45,
         "platoon": 50,
-        "fielding": 80,
-        "arm": 78,
-        "battingClutch": 79
+        "fielding": 48,
+        "arm": 41,
+        "battingClutch": 40
       },
       "positionRatings": {
-        "SP": 81
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "SP": 51
+      }
     },
     "coach": null,
     "manager": null,

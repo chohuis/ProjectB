@@ -1,6 +1,6 @@
 {
   "id": "PLY_15800",
-  "name": "잭슨 코디",
+  "name": "Jackson Cody",
   "nameEn": "Jackson Cody",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 46,
   "popularity": 26,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 78,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 54,
-        "stamina": 50,
-        "velocity": 57,
-        "command": 47,
-        "control": 51,
-        "movement": 45,
-        "mentality": 50,
-        "recovery": 47,
-        "clutch": 50,
-        "holdRunners": 52
+        "ovr": 55,
+        "stamina": 51,
+        "velocity": 58,
+        "command": 48,
+        "control": 52,
+        "movement": 46,
+        "mentality": 51,
+        "recovery": 48,
+        "clutch": 51,
+        "holdRunners": 53
       },
       "batting": {
         "ovr": 55,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 55
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

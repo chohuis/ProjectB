@@ -1,6 +1,6 @@
 {
   "id": "PLY_14220",
-  "name": "존슨 딜런",
+  "name": "Johnson Dylan",
   "nameEn": "Johnson Dylan",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 46,
   "popularity": 42,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 72,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 52,
-        "stamina": 52,
-        "velocity": 60,
-        "command": 43,
-        "control": 56,
-        "movement": 51,
-        "mentality": 54,
-        "recovery": 43,
-        "clutch": 52,
-        "holdRunners": 46
+        "ovr": 53,
+        "stamina": 53,
+        "velocity": 61,
+        "command": 44,
+        "control": 57,
+        "movement": 52,
+        "mentality": 55,
+        "recovery": 44,
+        "clutch": 53,
+        "holdRunners": 47
       },
       "batting": {
         "ovr": 53,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 53
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

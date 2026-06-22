@@ -1,14 +1,14 @@
 {
   "id": "PLY_00851",
   "name": "무어 로버트",
-  "nameEn": "Mu 어 로버트",
+  "nameEn": "Moore Robert",
   "role": "player",
   "age": 30,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_EMPIRE",
-  "teamId": "TEAM_ABL_EMPIRE_2",
+  "clubId": "CLUB_ABL_LAD",
+  "teamId": "TEAM_ABL_LAD_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -19,62 +19,28 @@
       "position": "RP",
       "jerseyNumber": 46,
       "pitching": {
-        "ovr": 66,
-        "stamina": 68,
-        "velocity": 66,
-        "command": 69,
-        "control": 63,
-        "movement": 63,
-        "mentality": 67,
-        "recovery": 71,
-        "clutch": 62,
-        "holdRunners": 57
+        "ovr": 74,
+        "stamina": 65,
+        "velocity": 74,
+        "command": 77,
+        "control": 72,
+        "movement": 70,
+        "mentality": 75,
+        "recovery": 74
       },
       "batting": {
-        "ovr": 48,
-        "contact": 50,
-        "power": 47,
-        "eye": 45,
-        "discipline": 46,
-        "speed": 46,
-        "fielding": 47,
-        "arm": 53,
-        "battingClutch": 46,
-        "baseInstinct": 46,
-        "bunting": 44,
-        "platoon": 39
+        "ovr": 39,
+        "contact": 45,
+        "power": 43,
+        "eye": 38,
+        "discipline": 37,
+        "speed": 44,
+        "fielding": 42,
+        "arm": 44,
+        "battingClutch": 42
       },
       "developmentRate": 44,
-      "potentialHidden": 60,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_FORKBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 5
-        }
-      ],
-      "proServiceYears": 8,
-      "contract": {
-        "salary": 18600,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

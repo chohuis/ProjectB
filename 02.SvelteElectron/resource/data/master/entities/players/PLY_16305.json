@@ -1,6 +1,6 @@
 {
   "id": "PLY_16305",
-  "name": "카터 알렉스",
+  "name": "Carter Alex",
   "nameEn": "Carter Alex",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 64,
   "popularity": 12,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 53
       },
       "batting": {
-        "ovr": 60,
-        "contact": 54,
-        "power": 52,
-        "eye": 53,
-        "discipline": 51,
-        "speed": 66,
-        "baseInstinct": 55,
-        "bunting": 43,
-        "platoon": 47,
-        "fielding": 55,
-        "arm": 53,
-        "battingClutch": 49
+        "ovr": 64,
+        "contact": 58,
+        "power": 55,
+        "eye": 56,
+        "discipline": 54,
+        "speed": 70,
+        "baseInstinct": 59,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 56,
+        "battingClutch": 52
       },
       "positionRatings": {
         "LF": 64

@@ -1,6 +1,6 @@
 {
   "id": "PLY_16144",
-  "name": "로드리게스 미겔",
+  "name": "Rodriguez Miguel",
   "nameEn": "Rodriguez Miguel",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 48,
   "popularity": 41,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 51
       },
       "batting": {
-        "ovr": 60,
-        "contact": 65,
-        "power": 55,
-        "eye": 61,
-        "discipline": 61,
-        "speed": 62,
-        "baseInstinct": 55,
-        "bunting": 52,
-        "platoon": 47,
-        "fielding": 54,
-        "arm": 60,
-        "battingClutch": 58
+        "ovr": 64,
+        "contact": 69,
+        "power": 59,
+        "eye": 65,
+        "discipline": 65,
+        "speed": 66,
+        "baseInstinct": 59,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 64,
+        "battingClutch": 62
       },
       "positionRatings": {
         "CF": 64

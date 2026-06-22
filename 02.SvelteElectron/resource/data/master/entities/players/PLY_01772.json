@@ -1,65 +1,46 @@
 {
   "id": "PLY_01772",
-  "name": "민민우",
-  "nameEn": "Min Minwoo",
+  "name": "하시모토 준",
+  "nameEn": "Hashimoto Jun",
   "role": "player",
-  "age": 16,
+  "age": 38,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_JECHEON_RIDGE",
-  "teamId": "TEAM_HS_JECHEON_RIDGE",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_JECHEON_RIDGE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONSTORMS",
+  "teamId": "TEAM_JBL_CL_IRONSTORMS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 1,
+      "position": "RP",
+      "jerseyNumber": 7,
       "pitching": {
-        "ovr": 58,
-        "stamina": 63,
-        "velocity": 53,
-        "command": 59,
-        "control": 54,
-        "movement": 62,
-        "mentality": 58,
-        "recovery": 56,
-        "clutch": 56,
-        "holdRunners": 52
+        "ovr": 78,
+        "stamina": 69,
+        "velocity": 74,
+        "command": 73,
+        "control": 73,
+        "movement": 70,
+        "mentality": 76,
+        "recovery": 74
       },
       "batting": {
-        "ovr": 40,
-        "contact": 47,
-        "power": 35,
-        "eye": 39,
-        "discipline": 35,
-        "speed": 35,
-        "fielding": 37,
-        "arm": 46,
-        "battingClutch": 40,
-        "baseInstinct": 41,
-        "bunting": 40,
-        "platoon": 44
+        "ovr": 44,
+        "contact": 42,
+        "power": 43,
+        "eye": 38,
+        "discipline": 42,
+        "speed": 38,
+        "fielding": 41,
+        "arm": 37,
+        "battingClutch": 38
       },
-      "developmentRate": 61,
-      "potentialHidden": 81,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 49,
+      "potentialHidden": 58
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 66,
-  "popularity": 34
+  }
 }

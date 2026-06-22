@@ -1,9 +1,9 @@
 {
   "id": "PLY_13422",
-  "name": "윌리엄스 오스틴",
-  "nameEn": "Williams Austin",
+  "name": "Scott Hunter",
+  "nameEn": "Scott Hunter",
   "role": "player",
-  "age": 24,
+  "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 65,
-  "popularity": 44,
+  "notes": "국적:미국",
+  "diligence": 74,
+  "popularity": 24,
   "militaryStatus": "군필",
   "entryYear": 2047,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 24,
+  "entryAge": 27,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 24,
-      "primaryPosition": "SP",
-      "developmentRate": 69,
-      "potentialHidden": 60,
-      "proServiceYears": 2,
+      "position": "LF",
+      "jerseyNumber": 98,
+      "primaryPosition": "LF",
+      "developmentRate": 47,
+      "potentialHidden": 68,
+      "proServiceYears": 5,
       "pitching": {
-        "ovr": 68,
-        "stamina": 68,
-        "velocity": 73,
-        "command": 60,
-        "control": 65,
-        "movement": 65,
-        "mentality": 71,
-        "recovery": 63,
-        "clutch": 60,
-        "holdRunners": 62
+        "ovr": 77,
+        "stamina": 73,
+        "velocity": 88,
+        "command": 68,
+        "control": 82,
+        "movement": 75,
+        "mentality": 80,
+        "recovery": 76,
+        "clutch": 73,
+        "holdRunners": 75
       },
       "batting": {
-        "ovr": 74,
-        "contact": 68,
-        "power": 70,
-        "eye": 68,
-        "discipline": 72,
-        "speed": 74,
-        "baseInstinct": 64,
-        "bunting": 64,
+        "ovr": 77,
+        "contact": 80,
+        "power": 78,
+        "eye": 72,
+        "discipline": 76,
+        "speed": 71,
+        "baseInstinct": 68,
+        "bunting": 68,
         "platoon": 50,
-        "fielding": 76,
-        "arm": 66,
-        "battingClutch": 61
+        "fielding": 77,
+        "arm": 77,
+        "battingClutch": 78
       },
       "positionRatings": {
-        "SP": 74
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "LF": 77
+      }
     },
     "coach": null,
     "manager": null,

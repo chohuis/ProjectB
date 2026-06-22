@@ -1,6 +1,6 @@
 {
   "id": "PLY_15335",
-  "name": "홀 케빈",
+  "name": "Hall Kevin",
   "nameEn": "Hall Kevin",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 49,
   "popularity": 43,
   "militaryStatus": "군필",

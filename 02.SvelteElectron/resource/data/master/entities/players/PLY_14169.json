@@ -1,6 +1,6 @@
 {
   "id": "PLY_14169",
-  "name": "스미스 로건",
+  "name": "Smith Logan",
   "nameEn": "Smith Logan",
   "role": "player",
   "age": 34,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 75,
   "popularity": 40,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 63
       },
       "batting": {
-        "ovr": 85,
-        "contact": 80,
-        "power": 86,
-        "eye": 85,
-        "discipline": 86,
-        "speed": 79,
-        "baseInstinct": 79,
-        "bunting": 71,
-        "platoon": 63,
-        "fielding": 89,
-        "arm": 80,
-        "battingClutch": 72
+        "ovr": 67,
+        "contact": 63,
+        "power": 68,
+        "eye": 67,
+        "discipline": 68,
+        "speed": 62,
+        "baseInstinct": 62,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 70,
+        "arm": 63,
+        "battingClutch": 57
       },
       "positionRatings": {
         "LF": 67

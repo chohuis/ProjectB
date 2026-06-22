@@ -1,6 +1,6 @@
 {
   "id": "PLY_14563",
-  "name": "리 다니엘",
+  "name": "Lee Daniel",
   "nameEn": "Lee Daniel",
   "role": "player",
   "age": 18,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 58,
   "popularity": 16,
   "militaryStatus": "군필",

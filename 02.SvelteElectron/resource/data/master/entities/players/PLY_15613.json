@@ -1,6 +1,6 @@
 {
   "id": "PLY_15613",
-  "name": "영 에릭",
+  "name": "Young Eric",
   "nameEn": "Young Eric",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 46,
   "popularity": 46,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 64
       },
       "batting": {
-        "ovr": 79,
-        "contact": 75,
-        "power": 71,
-        "eye": 83,
-        "discipline": 81,
-        "speed": 82,
-        "baseInstinct": 81,
-        "bunting": 70,
-        "platoon": 54,
-        "fielding": 78,
-        "arm": 75,
-        "battingClutch": 76
+        "ovr": 73,
+        "contact": 69,
+        "power": 66,
+        "eye": 77,
+        "discipline": 75,
+        "speed": 76,
+        "baseInstinct": 75,
+        "bunting": 65,
+        "platoon": 50,
+        "fielding": 72,
+        "arm": 69,
+        "battingClutch": 70
       },
       "positionRatings": {
         "1B": 73

@@ -1,7 +1,7 @@
 {
   "id": "PLY_10325",
-  "name": "해리스 마커스",
-  "nameEn": "Harris Marcus",
+  "name": "Nelson Blake",
+  "nameEn": "Nelson Blake",
   "role": "player",
   "age": 25,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 82,
-  "popularity": 25,
+  "notes": "국적:도미니카",
+  "diligence": 50,
+  "popularity": 45,
   "militaryStatus": "군필",
   "entryYear": 2028,
   "entryLeague": "LEAGUE_ABL",
@@ -21,57 +21,43 @@
   "entryAge": 25,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 57,
-      "primaryPosition": "SP",
-      "developmentRate": 56,
-      "potentialHidden": 85,
+      "position": "3B",
+      "jerseyNumber": 24,
+      "primaryPosition": "3B",
+      "developmentRate": 55,
+      "potentialHidden": 63,
       "proServiceYears": 3,
       "pitching": {
         "ovr": 77,
-        "stamina": 81,
-        "velocity": 77,
-        "command": 74,
-        "control": 77,
-        "movement": 69,
-        "mentality": 77,
-        "recovery": 66,
-        "clutch": 67,
-        "holdRunners": 68
+        "stamina": 76,
+        "velocity": 85,
+        "command": 67,
+        "control": 71,
+        "movement": 80,
+        "mentality": 79,
+        "recovery": 67,
+        "clutch": 68,
+        "holdRunners": 64
       },
       "batting": {
-        "ovr": 80,
-        "contact": 83,
-        "power": 81,
-        "eye": 76,
-        "discipline": 82,
-        "speed": 78,
-        "baseInstinct": 71,
-        "bunting": 62,
+        "ovr": 77,
+        "contact": 75,
+        "power": 67,
+        "eye": 72,
+        "discipline": 80,
+        "speed": 82,
+        "baseInstinct": 73,
+        "bunting": 70,
         "platoon": 50,
-        "fielding": 80,
-        "arm": 72,
-        "battingClutch": 80
+        "fielding": 73,
+        "arm": 71,
+        "battingClutch": 73
       },
       "positionRatings": {
-        "SP": 80
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "3B": 77
+      }
     },
     "coach": null,
     "manager": null,

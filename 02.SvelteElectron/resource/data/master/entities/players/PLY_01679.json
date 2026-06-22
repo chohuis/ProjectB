@@ -1,61 +1,46 @@
 {
   "id": "PLY_01679",
-  "name": "정민준",
-  "nameEn": "Jeong Minjun",
+  "name": "사사키 유타카",
+  "nameEn": "Sasaki Yutaka",
   "role": "player",
-  "age": 18,
+  "age": 38,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
-  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_CHUNCHEON_HIGHLAND",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TIDERAVES",
+  "teamId": "TEAM_JBL_CL_TIDERAVES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
-      "handedness": "R",
-      "position": "UT",
-      "jerseyNumber": 28,
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 4,
       "pitching": {
-        "ovr": 43,
-        "stamina": 43,
-        "velocity": 50,
-        "command": 48,
-        "control": 40,
-        "movement": 42,
-        "mentality": 46,
-        "recovery": 41,
-        "clutch": 40,
-        "holdRunners": 37
+        "ovr": 81,
+        "stamina": 87,
+        "velocity": 91,
+        "command": 82,
+        "control": 84,
+        "movement": 82,
+        "mentality": 86,
+        "recovery": 81
       },
       "batting": {
-        "ovr": 63,
-        "contact": 69,
-        "power": 63,
-        "eye": 66,
-        "discipline": 59,
-        "speed": 60,
-        "fielding": 58,
-        "arm": 63,
-        "battingClutch": 56,
-        "baseInstinct": 56,
-        "bunting": 48,
-        "platoon": 49
+        "ovr": 50,
+        "contact": 51,
+        "power": 54,
+        "eye": 49,
+        "discipline": 50,
+        "speed": 56,
+        "fielding": 47,
+        "arm": 54,
+        "battingClutch": 56
       },
-      "developmentRate": 90,
-      "potentialHidden": 67,
-      "primaryPosition": "UT",
-      "positionRatings": {
-        "UT": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 45,
+      "potentialHidden": 71
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 63,
-  "popularity": 45
+  }
 }

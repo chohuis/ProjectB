@@ -1,9 +1,9 @@
 {
   "id": "COA_00034",
   "name": "권동현",
-  "nameEn": "Kwon Donghyeon",
+  "nameEn": "Kang Seung-hyun",
   "role": "coach",
-  "age": 40,
+  "age": 52,
   "status": "active",
   "originLeagueId": "LEAGUE_INDEPENDENT",
   "leagueId": "LEAGUE_INDEPENDENT",
@@ -26,9 +26,7 @@
         "control": 50,
         "movement": 50,
         "mentality": 50,
-        "recovery": 50,
-        "clutch": 50,
-        "holdRunners": 50
+        "recovery": 50
       },
       "batting": {
         "ovr": 50,
@@ -39,25 +37,20 @@
         "speed": 50,
         "fielding": 50,
         "arm": 50,
-        "battingClutch": 50,
-        "baseInstinct": 50,
-        "bunting": 45,
-        "platoon": 50
+        "battingClutch": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 70,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 50
-      }
+      "potentialHidden": 70
     },
     "coach": {
-      "specialty": "-",
+      "specialty": "투수",
       "experienceYears": 14,
       "stats": {
         "teaching": 71,
-        "analytics": 54,
-        "experience": 3
+        "analysis": 54,
+        "communication": 69,
+        "discipline": 55,
+        "leadership": 70
       },
       "trainingBuffs": "컨택 훈련 +2%"
     },
@@ -87,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

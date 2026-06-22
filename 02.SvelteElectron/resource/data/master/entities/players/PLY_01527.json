@@ -1,14 +1,14 @@
 {
   "id": "PLY_01527",
   "name": "무어 케빈",
-  "nameEn": "Mu 어 케빈",
+  "nameEn": "Moore Kevin",
   "role": "player",
   "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_RIVERCARDINALS",
-  "teamId": "TEAM_ABL_RIVERCARDINALS_2",
+  "clubId": "CLUB_ABL_BAL",
+  "teamId": "TEAM_ABL_BAL_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 47,
       "pitching": {
-        "ovr": 63,
+        "ovr": 71,
         "stamina": 60,
-        "velocity": 60,
-        "command": 64,
-        "control": 64,
-        "movement": 61,
-        "mentality": 60,
-        "recovery": 59,
-        "clutch": 55,
-        "holdRunners": 54
+        "velocity": 74,
+        "command": 68,
+        "control": 66,
+        "movement": 69,
+        "mentality": 72,
+        "recovery": 65
       },
       "batting": {
-        "ovr": 45,
+        "ovr": 48,
         "contact": 47,
-        "power": 42,
+        "power": 41,
         "eye": 40,
-        "discipline": 47,
-        "speed": 40,
-        "fielding": 41,
-        "arm": 44,
-        "battingClutch": 35,
-        "baseInstinct": 38,
-        "bunting": 31,
-        "platoon": 39
+        "discipline": 44,
+        "speed": 47,
+        "fielding": 38,
+        "arm": 42,
+        "battingClutch": 46
       },
       "developmentRate": 31,
-      "potentialHidden": 88,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 10,
-      "contract": {
-        "salary": 16300,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 88
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

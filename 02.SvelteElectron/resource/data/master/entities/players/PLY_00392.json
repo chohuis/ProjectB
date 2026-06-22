@@ -1,7 +1,7 @@
 {
   "id": "PLY_00392",
   "name": "하찬영",
-  "nameEn": "Ha Chanyeong",
+  "nameEn": "Kwon Tae-jun",
   "role": "player",
   "age": 24,
   "status": "active",
@@ -19,48 +19,28 @@
       "position": "C",
       "jerseyNumber": 12,
       "pitching": {
-        "ovr": 41,
-        "stamina": 46,
-        "velocity": 48,
+        "ovr": 40,
+        "stamina": 42,
+        "velocity": 41,
         "command": 42,
-        "control": 43,
-        "movement": 38,
-        "mentality": 46,
-        "recovery": 38,
-        "clutch": 44,
-        "holdRunners": 42
+        "control": 40,
+        "movement": 37,
+        "mentality": 39,
+        "recovery": 42
       },
       "batting": {
-        "ovr": 61,
-        "contact": 58,
+        "ovr": 64,
+        "contact": 64,
         "power": 59,
-        "eye": 64,
-        "discipline": 66,
-        "speed": 54,
-        "fielding": 56,
-        "arm": 63,
-        "battingClutch": 56,
-        "baseInstinct": 54,
-        "bunting": 44,
-        "platoon": 55
+        "eye": 66,
+        "discipline": 61,
+        "speed": 57,
+        "fielding": 65,
+        "arm": 70,
+        "battingClutch": 60
       },
       "developmentRate": 42,
-      "potentialHidden": 77,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 61
-      },
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 77
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

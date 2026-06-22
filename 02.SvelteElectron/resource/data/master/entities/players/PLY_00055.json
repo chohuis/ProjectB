@@ -1,7 +1,7 @@
 {
   "id": "PLY_00055",
   "name": "전상현",
-  "nameEn": "Jeon Sanghyeon",
+  "nameEn": "Noh Ji-sung",
   "role": "player",
   "age": 17,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "SS",
       "jerseyNumber": 15,
       "pitching": {
-        "ovr": 20,
-        "stamina": 26,
-        "velocity": 24,
-        "command": 25,
-        "control": 20,
-        "movement": 23,
-        "mentality": 20,
-        "recovery": 25,
-        "clutch": 35,
-        "holdRunners": 35
+        "ovr": 34,
+        "stamina": 54,
+        "velocity": 58,
+        "command": 52,
+        "control": 43,
+        "movement": 49,
+        "mentality": 55,
+        "recovery": 59
       },
       "batting": {
-        "ovr": 34,
-        "contact": 37,
-        "power": 32,
-        "eye": 33,
-        "discipline": 39,
-        "speed": 29,
-        "fielding": 36,
-        "arm": 32,
-        "battingClutch": 34,
-        "baseInstinct": 42,
-        "bunting": 29,
-        "platoon": 32
+        "ovr": 49,
+        "contact": 46,
+        "power": 39,
+        "eye": 48,
+        "discipline": 43,
+        "speed": 48,
+        "fielding": 44,
+        "arm": 50,
+        "battingClutch": 56
       },
       "developmentRate": 55,
-      "potentialHidden": 78,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 34
-      }
+      "potentialHidden": 78
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

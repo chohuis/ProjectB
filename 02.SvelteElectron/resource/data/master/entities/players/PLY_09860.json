@@ -1,9 +1,9 @@
 {
   "id": "PLY_09860",
-  "name": "워커 재크",
-  "nameEn": "Walker Zach",
+  "name": "Thompson Sean",
+  "nameEn": "Thompson Sean",
   "role": "player",
-  "age": 20,
+  "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 67,
-  "popularity": 29,
+  "notes": "국적:쿠바",
+  "diligence": 66,
+  "popularity": 22,
   "militaryStatus": "군필",
   "entryYear": 2026,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 20,
+  "entryAge": 25,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 28,
+      "jerseyNumber": 49,
       "primaryPosition": "SP",
-      "developmentRate": 75,
-      "potentialHidden": 79,
-      "proServiceYears": 0,
+      "developmentRate": 64,
+      "potentialHidden": 61,
+      "proServiceYears": 3,
       "pitching": {
-        "ovr": 53,
-        "stamina": 48,
-        "velocity": 62,
-        "command": 53,
-        "control": 47,
-        "movement": 49,
-        "mentality": 53,
-        "recovery": 45,
-        "clutch": 47,
-        "holdRunners": 45
+        "ovr": 81,
+        "stamina": 79,
+        "velocity": 80,
+        "command": 70,
+        "control": 74,
+        "movement": 82,
+        "mentality": 84,
+        "recovery": 69,
+        "clutch": 70,
+        "holdRunners": 76
       },
       "batting": {
-        "ovr": 56,
-        "contact": 54,
-        "power": 47,
-        "eye": 47,
-        "discipline": 48,
-        "speed": 60,
-        "baseInstinct": 56,
-        "bunting": 37,
+        "ovr": 81,
+        "contact": 76,
+        "power": 75,
+        "eye": 78,
+        "discipline": 79,
+        "speed": 86,
+        "baseInstinct": 74,
+        "bunting": 71,
         "platoon": 50,
-        "fielding": 48,
-        "arm": 55,
-        "battingClutch": 47
+        "fielding": 70,
+        "arm": 75,
+        "battingClutch": 70
       },
       "positionRatings": {
-        "SP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 81
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_15488",
-  "name": "존스 에반",
+  "name": "Jones Evan",
   "nameEn": "Jones Evan",
   "role": "player",
   "age": 34,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 83,
   "popularity": 34,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 45,
       "proServiceYears": 12,
       "pitching": {
-        "ovr": 67,
-        "stamina": 57,
-        "velocity": 73,
-        "command": 71,
-        "control": 67,
-        "movement": 61,
-        "mentality": 65,
-        "recovery": 66,
-        "clutch": 60,
-        "holdRunners": 51
+        "ovr": 54,
+        "stamina": 46,
+        "velocity": 59,
+        "command": 57,
+        "control": 54,
+        "movement": 49,
+        "mentality": 52,
+        "recovery": 53,
+        "clutch": 48,
+        "holdRunners": 41
       },
       "batting": {
         "ovr": 54,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 54
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

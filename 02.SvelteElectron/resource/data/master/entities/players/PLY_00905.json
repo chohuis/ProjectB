@@ -1,14 +1,14 @@
 {
   "id": "PLY_00905",
   "name": "잭슨 윌리엄",
-  "nameEn": "Jaek 슨 윌리엄",
+  "nameEn": "Jackson William",
   "role": "player",
   "age": 30,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_HARBORHAWKS",
-  "teamId": "TEAM_ABL_HARBORHAWKS_2",
+  "clubId": "CLUB_ABL_NYY",
+  "teamId": "TEAM_ABL_NYY_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:쿠바",
@@ -19,48 +19,28 @@
       "position": "3B",
       "jerseyNumber": 55,
       "pitching": {
-        "ovr": 46,
-        "stamina": 43,
-        "velocity": 42,
-        "command": 49,
-        "control": 43,
-        "movement": 42,
-        "mentality": 43,
-        "recovery": 49,
-        "clutch": 39,
-        "holdRunners": 44
+        "ovr": 45,
+        "stamina": 49,
+        "velocity": 50,
+        "command": 45,
+        "control": 49,
+        "movement": 46,
+        "mentality": 50,
+        "recovery": 41
       },
       "batting": {
-        "ovr": 66,
-        "contact": 68,
-        "power": 71,
-        "eye": 69,
-        "discipline": 68,
-        "speed": 66,
-        "fielding": 71,
-        "arm": 72,
-        "battingClutch": 66,
-        "baseInstinct": 63,
-        "bunting": 56,
-        "platoon": 57
+        "ovr": 67,
+        "contact": 71,
+        "power": 73,
+        "eye": 63,
+        "discipline": 67,
+        "speed": 62,
+        "fielding": 61,
+        "arm": 71,
+        "battingClutch": 69
       },
       "developmentRate": 41,
-      "potentialHidden": 83,
-      "primaryPosition": "3B",
-      "positionRatings": {
-        "3B": 66
-      },
-      "proServiceYears": 8,
-      "contract": {
-        "salary": 6300,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 83
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

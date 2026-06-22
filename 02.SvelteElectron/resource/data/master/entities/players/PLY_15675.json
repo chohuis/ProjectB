@@ -1,6 +1,6 @@
 {
   "id": "PLY_15675",
-  "name": "마르티네스 케빈",
+  "name": "Martinez Kevin",
   "nameEn": "Martinez Kevin",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 79,
   "popularity": 25,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 89,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 60,
-        "stamina": 52,
-        "velocity": 62,
-        "command": 51,
-        "control": 62,
-        "movement": 62,
-        "mentality": 55,
-        "recovery": 52,
-        "clutch": 49,
-        "holdRunners": 49
+        "ovr": 62,
+        "stamina": 54,
+        "velocity": 64,
+        "command": 53,
+        "control": 64,
+        "movement": 64,
+        "mentality": 57,
+        "recovery": 54,
+        "clutch": 51,
+        "holdRunners": 51
       },
       "batting": {
         "ovr": 62,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

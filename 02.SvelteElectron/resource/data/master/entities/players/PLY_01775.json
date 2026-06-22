@@ -1,69 +1,46 @@
 {
   "id": "PLY_01775",
-  "name": "강재윤",
-  "nameEn": "Kang Jaeyun",
+  "name": "사사키 요스케",
+  "nameEn": "Sasaki Yosuke",
   "role": "player",
-  "age": 16,
+  "age": 24,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_JECHEON_RIDGE",
-  "teamId": "TEAM_HS_JECHEON_RIDGE",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_JECHEON_RIDGE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONSTORMS",
+  "teamId": "TEAM_JBL_CL_IRONSTORMS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 4,
+      "position": "RP",
+      "jerseyNumber": 10,
       "pitching": {
-        "ovr": 53,
-        "stamina": 56,
-        "velocity": 52,
-        "command": 51,
-        "control": 55,
-        "movement": 52,
-        "mentality": 49,
-        "recovery": 52,
-        "clutch": 51,
-        "holdRunners": 52
+        "ovr": 85,
+        "stamina": 74,
+        "velocity": 88,
+        "command": 84,
+        "control": 87,
+        "movement": 84,
+        "mentality": 83,
+        "recovery": 81
       },
       "batting": {
-        "ovr": 35,
-        "contact": 40,
-        "power": 34,
-        "eye": 39,
-        "discipline": 30,
-        "speed": 33,
-        "fielding": 41,
-        "arm": 31,
-        "battingClutch": 41,
-        "baseInstinct": 35,
-        "bunting": 39,
-        "platoon": 39
+        "ovr": 63,
+        "contact": 66,
+        "power": 66,
+        "eye": 65,
+        "discipline": 63,
+        "speed": 61,
+        "fielding": 66,
+        "arm": 61,
+        "battingClutch": 60
       },
-      "developmentRate": 73,
-      "potentialHidden": 73,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 53
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 48,
+      "potentialHidden": 88
     },
     "coach": {
       "specialty": "-",
@@ -103,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 64,
-  "popularity": 21
+  }
 }

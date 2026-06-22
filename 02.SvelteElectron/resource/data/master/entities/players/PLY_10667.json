@@ -1,9 +1,9 @@
 {
   "id": "PLY_10667",
-  "name": "토마스 타일러",
-  "nameEn": "Thomas Tyler",
+  "name": "Thompson Nathan",
+  "nameEn": "Thompson Nathan",
   "role": "player",
-  "age": 26,
+  "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 60,
-  "popularity": 35,
+  "notes": "국적:멕시코",
+  "diligence": 79,
+  "popularity": 21,
   "militaryStatus": "군필",
   "entryYear": 2030,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 26,
+  "entryAge": 25,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 24,
-      "primaryPosition": "SP",
-      "developmentRate": 66,
-      "potentialHidden": 62,
-      "proServiceYears": 4,
+      "position": "1B",
+      "jerseyNumber": 4,
+      "primaryPosition": "1B",
+      "developmentRate": 57,
+      "potentialHidden": 88,
+      "proServiceYears": 3,
       "pitching": {
-        "ovr": 62,
-        "stamina": 55,
-        "velocity": 67,
-        "command": 56,
-        "control": 66,
-        "movement": 61,
-        "mentality": 63,
-        "recovery": 63,
-        "clutch": 62,
-        "holdRunners": 60
+        "ovr": 80,
+        "stamina": 74,
+        "velocity": 82,
+        "command": 75,
+        "control": 80,
+        "movement": 83,
+        "mentality": 83,
+        "recovery": 81,
+        "clutch": 72,
+        "holdRunners": 69
       },
       "batting": {
-        "ovr": 70,
-        "contact": 70,
-        "power": 64,
-        "eye": 73,
-        "discipline": 67,
-        "speed": 65,
-        "baseInstinct": 66,
-        "bunting": 59,
+        "ovr": 80,
+        "contact": 82,
+        "power": 74,
+        "eye": 76,
+        "discipline": 70,
+        "speed": 85,
+        "baseInstinct": 70,
+        "bunting": 73,
         "platoon": 50,
-        "fielding": 61,
-        "arm": 63,
-        "battingClutch": 68
+        "fielding": 72,
+        "arm": 81,
+        "battingClutch": 73
       },
       "positionRatings": {
-        "SP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "1B": 80
+      }
     },
     "coach": null,
     "manager": null,

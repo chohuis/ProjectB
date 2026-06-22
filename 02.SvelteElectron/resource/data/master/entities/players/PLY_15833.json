@@ -1,6 +1,6 @@
 {
   "id": "PLY_15833",
-  "name": "무어 카일",
+  "name": "Moore Kyle",
   "nameEn": "Moore Kyle",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 53,
   "popularity": 22,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 59,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 67,
-        "stamina": 63,
-        "velocity": 77,
-        "command": 69,
-        "control": 69,
-        "movement": 71,
-        "mentality": 61,
-        "recovery": 63,
-        "clutch": 54,
-        "holdRunners": 59
+        "ovr": 60,
+        "stamina": 56,
+        "velocity": 69,
+        "command": 62,
+        "control": 62,
+        "movement": 64,
+        "mentality": 55,
+        "recovery": 56,
+        "clutch": 48,
+        "holdRunners": 53
       },
       "batting": {
         "ovr": 60,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

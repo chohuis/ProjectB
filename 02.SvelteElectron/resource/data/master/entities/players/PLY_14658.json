@@ -1,6 +1,6 @@
 {
   "id": "PLY_14658",
-  "name": "그린 알렉스",
+  "name": "Green Alex",
   "nameEn": "Green Alex",
   "role": "player",
   "age": 33,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 78,
   "popularity": 37,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 47
       },
       "batting": {
-        "ovr": 71,
-        "contact": 73,
-        "power": 71,
-        "eye": 73,
-        "discipline": 62,
-        "speed": 80,
-        "baseInstinct": 66,
-        "bunting": 54,
-        "platoon": 62,
-        "fielding": 69,
-        "arm": 59,
-        "battingClutch": 56
+        "ovr": 57,
+        "contact": 59,
+        "power": 57,
+        "eye": 59,
+        "discipline": 50,
+        "speed": 64,
+        "baseInstinct": 53,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 47,
+        "battingClutch": 45
       },
       "positionRatings": {
         "2B": 57

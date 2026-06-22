@@ -1,72 +1,46 @@
 {
   "id": "PLY_02059",
-  "name": "매튜 해리스",
-  "nameEn": "Matthew Harris",
+  "name": "오카다 슌",
+  "nameEn": "Okada Shun",
   "role": "player",
-  "age": 26,
+  "age": 34,
   "status": "active",
-  "originLeagueId": "LEAGUE_ABL",
-  "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_HARBORHAWKS",
-  "teamId": "TEAM_ABL_HARBORHAWKS_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SUNS",
+  "teamId": "TEAM_JBL_PL_SUNS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "C",
-      "jerseyNumber": 4,
+      "position": "DH",
+      "jerseyNumber": 24,
       "pitching": {
-        "ovr": 50,
-        "stamina": 52,
-        "velocity": 46,
-        "command": 51,
-        "control": 51,
-        "movement": 50,
-        "mentality": 54,
-        "recovery": 50,
-        "clutch": 38,
-        "holdRunners": 38
+        "ovr": 52,
+        "stamina": 53,
+        "velocity": 59,
+        "command": 57,
+        "control": 50,
+        "movement": 51,
+        "mentality": 56,
+        "recovery": 53
       },
       "batting": {
-        "ovr": 70,
-        "contact": 67,
-        "power": 70,
-        "eye": 72,
-        "discipline": 66,
-        "speed": 64,
-        "fielding": 66,
-        "arm": 67,
-        "battingClutch": 71,
-        "baseInstinct": 69,
-        "bunting": 56,
-        "platoon": 57
+        "ovr": 83,
+        "contact": 83,
+        "power": 89,
+        "eye": 81,
+        "discipline": 87,
+        "speed": 78,
+        "fielding": 77,
+        "arm": 78,
+        "battingClutch": 84
       },
-      "developmentRate": 62,
-      "potentialHidden": 64,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 6300,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 45,
+      "potentialHidden": 68
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 46,
-  "popularity": 23,
-  "militaryStatus": "군필"
+  }
 }

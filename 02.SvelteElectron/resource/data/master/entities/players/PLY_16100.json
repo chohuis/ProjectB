@@ -1,6 +1,6 @@
 {
   "id": "PLY_16100",
-  "name": "스미스 케빈",
+  "name": "Smith Kevin",
   "nameEn": "Smith Kevin",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 82,
   "popularity": 40,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 84,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 76,
-        "stamina": 68,
-        "velocity": 73,
-        "command": 76,
-        "control": 67,
-        "movement": 79,
-        "mentality": 69,
-        "recovery": 67,
-        "clutch": 65,
-        "holdRunners": 63
+        "ovr": 70,
+        "stamina": 63,
+        "velocity": 67,
+        "command": 70,
+        "control": 62,
+        "movement": 73,
+        "mentality": 64,
+        "recovery": 62,
+        "clutch": 60,
+        "holdRunners": 58
       },
       "batting": {
         "ovr": 70,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

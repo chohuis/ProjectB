@@ -1,6 +1,6 @@
 {
   "id": "PLY_16604",
-  "name": "에르난데스 마커스",
+  "name": "Hernandez Marcus",
   "nameEn": "Hernandez Marcus",
   "role": "player",
   "age": 23,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 49,
   "popularity": 32,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 54
       },
       "batting": {
-        "ovr": 59,
-        "contact": 58,
-        "power": 58,
-        "eye": 51,
-        "discipline": 59,
-        "speed": 57,
-        "baseInstinct": 56,
-        "bunting": 53,
-        "platoon": 49,
-        "fielding": 56,
-        "arm": 54,
-        "battingClutch": 50
+        "ovr": 60,
+        "contact": 59,
+        "power": 59,
+        "eye": 52,
+        "discipline": 60,
+        "speed": 58,
+        "baseInstinct": 57,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 55,
+        "battingClutch": 51
       },
       "positionRatings": {
         "2B": 60

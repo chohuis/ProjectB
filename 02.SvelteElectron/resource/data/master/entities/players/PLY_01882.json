@@ -1,80 +1,46 @@
 {
   "id": "PLY_01882",
-  "name": "정지성",
-  "nameEn": "Jeong Jiseong",
+  "name": "콘도 쇼",
+  "nameEn": "Kondo Sho",
   "role": "player",
-  "age": 35,
+  "age": 31,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_BEARGUARDIANS",
-  "teamId": "TEAM_KBL_BEARGUARDIANS_1",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_POLARBEARS",
+  "teamId": "TEAM_JBL_PL_POLARBEARS_2",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
-      "position": "RP",
-      "jerseyNumber": 89,
+      "position": "SP",
+      "jerseyNumber": 32,
       "pitching": {
-        "ovr": 74,
-        "stamina": 73,
-        "velocity": 71,
-        "command": 77,
-        "control": 72,
-        "movement": 74,
-        "mentality": 72,
-        "recovery": 75,
-        "clutch": 63,
-        "holdRunners": 71
+        "ovr": 61,
+        "stamina": 63,
+        "velocity": 68,
+        "command": 67,
+        "control": 62,
+        "movement": 64,
+        "mentality": 64,
+        "recovery": 59
       },
       "batting": {
-        "ovr": 56,
-        "contact": 60,
-        "power": 56,
-        "eye": 52,
-        "discipline": 62,
-        "speed": 51,
-        "fielding": 62,
-        "arm": 55,
-        "battingClutch": 47,
-        "baseInstinct": 45,
-        "bunting": 49,
-        "platoon": 51
+        "ovr": 37,
+        "contact": 37,
+        "power": 32,
+        "eye": 32,
+        "discipline": 36,
+        "speed": 36,
+        "fielding": 29,
+        "arm": 37,
+        "battingClutch": 35
       },
-      "developmentRate": 50,
-      "potentialHidden": 88,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 74
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 13,
-      "contract": {
-        "salary": 7100,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 39,
+      "potentialHidden": 89
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 73,
-  "popularity": 53,
-  "militaryStatus": "군필"
+  }
 }

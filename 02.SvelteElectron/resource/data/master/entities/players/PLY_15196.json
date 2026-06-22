@@ -1,6 +1,6 @@
 {
   "id": "PLY_15196",
-  "name": "영 헌터",
+  "name": "Young Hunter",
   "nameEn": "Young Hunter",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 74,
   "popularity": 42,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 59
       },
       "batting": {
-        "ovr": 62,
-        "contact": 60,
-        "power": 53,
-        "eye": 60,
-        "discipline": 64,
-        "speed": 60,
-        "baseInstinct": 57,
-        "bunting": 46,
-        "platoon": 48,
-        "fielding": 52,
-        "arm": 62,
-        "battingClutch": 55
+        "ovr": 64,
+        "contact": 62,
+        "power": 55,
+        "eye": 62,
+        "discipline": 66,
+        "speed": 62,
+        "baseInstinct": 59,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 64,
+        "battingClutch": 57
       },
       "positionRatings": {
         "SS": 64

@@ -1,7 +1,7 @@
 {
   "id": "PLY_00459",
   "name": "서동준",
-  "nameEn": "Seo Dongjun",
+  "nameEn": "Hong Tae-yang",
   "role": "player",
   "age": 25,
   "status": "active",
@@ -19,48 +19,28 @@
       "position": "RF",
       "jerseyNumber": 19,
       "pitching": {
-        "ovr": 45,
-        "stamina": 45,
+        "ovr": 44,
+        "stamina": 41,
         "velocity": 45,
-        "command": 43,
-        "control": 45,
-        "movement": 47,
-        "mentality": 50,
-        "recovery": 50,
-        "clutch": 46,
-        "holdRunners": 36
+        "command": 49,
+        "control": 46,
+        "movement": 45,
+        "mentality": 42,
+        "recovery": 48
       },
       "batting": {
-        "ovr": 65,
-        "contact": 62,
-        "power": 60,
-        "eye": 67,
-        "discipline": 63,
-        "speed": 63,
-        "fielding": 68,
-        "arm": 67,
-        "battingClutch": 63,
-        "baseInstinct": 58,
-        "bunting": 54,
-        "platoon": 61
+        "ovr": 69,
+        "contact": 73,
+        "power": 69,
+        "eye": 63,
+        "discipline": 66,
+        "speed": 67,
+        "fielding": 64,
+        "arm": 68,
+        "battingClutch": 68
       },
       "developmentRate": 50,
-      "potentialHidden": 66,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 65
-      },
-      "proServiceYears": 5,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 66
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

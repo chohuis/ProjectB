@@ -1,6 +1,6 @@
 {
   "id": "PLY_14518",
-  "name": "넬슨 에반",
+  "name": "Nelson Evan",
   "nameEn": "Nelson Evan",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 52,
   "popularity": 25,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 73,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 56,
-        "stamina": 56,
-        "velocity": 61,
-        "command": 57,
-        "control": 58,
-        "movement": 51,
-        "mentality": 50,
-        "recovery": 58,
-        "clutch": 50,
-        "holdRunners": 51
+        "ovr": 57,
+        "stamina": 57,
+        "velocity": 62,
+        "command": 58,
+        "control": 59,
+        "movement": 52,
+        "mentality": 51,
+        "recovery": 59,
+        "clutch": 51,
+        "holdRunners": 52
       },
       "batting": {
         "ovr": 57,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

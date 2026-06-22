@@ -1,7 +1,7 @@
 {
   "id": "PLY_13473",
-  "name": "로빈슨 크리스",
-  "nameEn": "Robinson Chris",
+  "name": "Brown Carlos",
+  "nameEn": "Brown Carlos",
   "role": "player",
   "age": 24,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 51,
-  "popularity": 40,
+  "notes": "국적:미국",
+  "diligence": 73,
+  "popularity": 23,
   "militaryStatus": "군필",
   "entryYear": 2047,
   "entryLeague": "LEAGUE_ABL",
@@ -21,57 +21,43 @@
   "entryAge": 24,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 74,
-      "primaryPosition": "SP",
-      "developmentRate": 70,
-      "potentialHidden": 66,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 21,
+      "primaryPosition": "3B",
+      "developmentRate": 59,
+      "potentialHidden": 79,
       "proServiceYears": 2,
       "pitching": {
-        "ovr": 71,
-        "stamina": 63,
-        "velocity": 72,
-        "command": 70,
-        "control": 66,
-        "movement": 67,
-        "mentality": 66,
-        "recovery": 66,
-        "clutch": 62,
-        "holdRunners": 63
+        "ovr": 70,
+        "stamina": 67,
+        "velocity": 80,
+        "command": 65,
+        "control": 68,
+        "movement": 69,
+        "mentality": 72,
+        "recovery": 70,
+        "clutch": 67,
+        "holdRunners": 66
       },
       "batting": {
-        "ovr": 78,
-        "contact": 77,
-        "power": 74,
+        "ovr": 70,
+        "contact": 71,
+        "power": 67,
         "eye": 74,
-        "discipline": 81,
-        "speed": 78,
-        "baseInstinct": 68,
-        "bunting": 63,
+        "discipline": 68,
+        "speed": 68,
+        "baseInstinct": 60,
+        "bunting": 59,
         "platoon": 50,
-        "fielding": 70,
-        "arm": 71,
-        "battingClutch": 76
+        "fielding": 64,
+        "arm": 72,
+        "battingClutch": 67
       },
       "positionRatings": {
-        "SP": 78
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "3B": 70
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_15537",
-  "name": "해리스 블레이크",
+  "name": "Harris Blake",
   "nameEn": "Harris Blake",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 56,
   "popularity": 12,
   "militaryStatus": "군필",

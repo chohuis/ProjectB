@@ -1,6 +1,6 @@
 {
   "id": "PLY_14323",
-  "name": "그린 브랜던",
+  "name": "Green Brandon",
   "nameEn": "Green Brandon",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 60,
   "popularity": 15,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 60,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 74,
-        "stamina": 71,
-        "velocity": 86,
-        "command": 71,
-        "control": 72,
-        "movement": 77,
-        "mentality": 75,
-        "recovery": 71,
-        "clutch": 63,
-        "holdRunners": 58
+        "ovr": 68,
+        "stamina": 65,
+        "velocity": 79,
+        "command": 65,
+        "control": 66,
+        "movement": 71,
+        "mentality": 69,
+        "recovery": 65,
+        "clutch": 58,
+        "holdRunners": 53
       },
       "batting": {
         "ovr": 68,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

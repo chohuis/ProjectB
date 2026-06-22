@@ -1,72 +1,46 @@
 {
   "id": "PLY_01924",
-  "name": "황태민",
-  "nameEn": "Hwang Taemin",
+  "name": "콘도 아키라",
+  "nameEn": "Kondo Akira",
   "role": "player",
-  "age": 29,
+  "age": 26,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_SOARINGEAGLES",
-  "teamId": "TEAM_KBL_SOARINGEAGLES_1",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
+  "teamId": "TEAM_JBL_PL_SPIRITBUFFALOS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "L",
-      "position": "1B",
-      "jerseyNumber": 91,
+      "handedness": "R",
+      "position": "DH",
+      "jerseyNumber": 24,
       "pitching": {
-        "ovr": 60,
-        "stamina": 61,
-        "velocity": 58,
-        "command": 58,
-        "control": 57,
-        "movement": 64,
-        "mentality": 59,
-        "recovery": 65,
-        "clutch": 58,
-        "holdRunners": 57
+        "ovr": 37,
+        "stamina": 41,
+        "velocity": 43,
+        "command": 39,
+        "control": 40,
+        "movement": 40,
+        "mentality": 41,
+        "recovery": 39
       },
       "batting": {
-        "ovr": 80,
-        "contact": 82,
-        "power": 80,
-        "eye": 78,
-        "discipline": 85,
-        "speed": 78,
-        "fielding": 80,
-        "arm": 77,
-        "battingClutch": 75,
-        "baseInstinct": 79,
-        "bunting": 75,
-        "platoon": 76
+        "ovr": 73,
+        "contact": 74,
+        "power": 76,
+        "eye": 70,
+        "discipline": 67,
+        "speed": 65,
+        "fielding": 64,
+        "arm": 66,
+        "battingClutch": 68
       },
-      "developmentRate": 67,
-      "potentialHidden": 77,
-      "primaryPosition": "1B",
-      "positionRatings": {
-        "1B": 80
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 7,
-      "contract": {
-        "salary": 4000,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 51,
+      "potentialHidden": 87
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 80,
-  "popularity": 25,
-  "militaryStatus": "군필"
+  }
 }

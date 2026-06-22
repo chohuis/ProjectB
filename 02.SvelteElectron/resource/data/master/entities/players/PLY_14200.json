@@ -1,6 +1,6 @@
 {
   "id": "PLY_14200",
-  "name": "미첼 데릭",
+  "name": "Mitchell Derek",
   "nameEn": "Mitchell Derek",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 54,
   "popularity": 31,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 64
       },
       "batting": {
-        "ovr": 75,
-        "contact": 74,
-        "power": 73,
-        "eye": 76,
-        "discipline": 67,
-        "speed": 71,
-        "baseInstinct": 64,
-        "bunting": 66,
-        "platoon": 54,
-        "fielding": 77,
-        "arm": 68,
-        "battingClutch": 63
+        "ovr": 69,
+        "contact": 68,
+        "power": 67,
+        "eye": 70,
+        "discipline": 62,
+        "speed": 65,
+        "baseInstinct": 59,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 63,
+        "battingClutch": 58
       },
       "positionRatings": {
         "RF": 69

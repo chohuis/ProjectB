@@ -1,17 +1,17 @@
 {
   "id": "COA_00208",
-  "name": "이토 슌",
-  "nameEn": "Ito Shun",
+  "name": "이토 카이토",
+  "nameEn": "Ito Kaito",
   "role": "coach",
-  "age": 53,
+  "age": 37,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
-  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
-  "teamId": "TEAM_JBL_CL_SILVERWOLVES_2",
+  "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
+  "teamId": "TEAM_JBL_PL_SPIRITBUFFALOS_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
@@ -43,16 +43,16 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "투수",
-      "experienceYears": 7,
+      "specialty": "멘탈",
+      "experienceYears": 16,
       "stats": {
-        "teaching": 74,
-        "analysis": 84,
-        "communication": 63,
-        "discipline": 52,
-        "leadership": 78
+        "teaching": 60,
+        "analysis": 73,
+        "communication": 71,
+        "discipline": 62,
+        "leadership": 53
       },
-      "trainingBuffs": "체력 훈련 +2%"
+      "trainingBuffs": ""
     },
     "manager": {
       "style": "균형",

@@ -1,7 +1,7 @@
 {
   "id": "PLY_00238",
   "name": "안우진",
-  "nameEn": "Ahn Ujin",
+  "nameEn": "Jung Min-seok",
   "role": "player",
   "age": 19,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "CF",
       "jerseyNumber": 18,
       "pitching": {
-        "ovr": 49,
-        "stamina": 55,
-        "velocity": 53,
-        "command": 47,
-        "control": 52,
-        "movement": 54,
-        "mentality": 49,
-        "recovery": 54,
-        "clutch": 45,
-        "holdRunners": 44
+        "ovr": 46,
+        "stamina": 48,
+        "velocity": 47,
+        "command": 45,
+        "control": 45,
+        "movement": 48,
+        "mentality": 50,
+        "recovery": 49
       },
       "batting": {
-        "ovr": 69,
+        "ovr": 73,
         "contact": 75,
-        "power": 75,
-        "eye": 67,
-        "discipline": 67,
-        "speed": 67,
-        "fielding": 64,
-        "arm": 74,
-        "battingClutch": 63,
-        "baseInstinct": 65,
-        "bunting": 58,
-        "platoon": 60
+        "power": 68,
+        "eye": 74,
+        "discipline": 70,
+        "speed": 77,
+        "fielding": 75,
+        "arm": 72,
+        "battingClutch": 71
       },
       "developmentRate": 59,
-      "potentialHidden": 68,
-      "primaryPosition": "CF",
-      "positionRatings": {
-        "CF": 69
-      }
+      "potentialHidden": 68
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

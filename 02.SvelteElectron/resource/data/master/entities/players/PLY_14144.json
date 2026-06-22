@@ -1,6 +1,6 @@
 {
   "id": "PLY_14144",
-  "name": "가르시아 라이언",
+  "name": "Garcia Ryan",
   "nameEn": "Garcia Ryan",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 67,
   "popularity": 33,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 40
       },
       "batting": {
-        "ovr": 53,
-        "contact": 58,
-        "power": 52,
-        "eye": 53,
-        "discipline": 45,
-        "speed": 53,
-        "baseInstinct": 43,
-        "bunting": 41,
-        "platoon": 49,
-        "fielding": 49,
-        "arm": 52,
-        "battingClutch": 50
+        "ovr": 54,
+        "contact": 59,
+        "power": 53,
+        "eye": 54,
+        "discipline": 46,
+        "speed": 54,
+        "baseInstinct": 44,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 53,
+        "battingClutch": 51
       },
       "positionRatings": {
         "CF": 54

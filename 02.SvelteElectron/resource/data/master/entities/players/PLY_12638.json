@@ -1,9 +1,9 @@
 {
   "id": "PLY_12638",
-  "name": "윌리엄스 트레버",
-  "nameEn": "Williams Trevor",
+  "name": "Thompson Kevin",
+  "nameEn": "Thompson Kevin",
   "role": "player",
-  "age": 28,
+  "age": 18,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 72,
-  "popularity": 48,
+  "notes": "국적:베네수엘라",
+  "diligence": 61,
+  "popularity": 17,
   "militaryStatus": "군필",
   "entryYear": 2042,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 28,
+  "entryAge": 18,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 52,
+      "jerseyNumber": 33,
       "primaryPosition": "SP",
-      "developmentRate": 56,
-      "potentialHidden": 70,
-      "proServiceYears": 6,
+      "developmentRate": 57,
+      "potentialHidden": 62,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 74,
-        "stamina": 76,
-        "velocity": 73,
-        "command": 73,
-        "control": 68,
-        "movement": 66,
-        "mentality": 79,
-        "recovery": 74,
-        "clutch": 71,
-        "holdRunners": 63
+        "ovr": 56,
+        "stamina": 55,
+        "velocity": 56,
+        "command": 49,
+        "control": 58,
+        "movement": 49,
+        "mentality": 53,
+        "recovery": 53,
+        "clutch": 50,
+        "holdRunners": 50
       },
       "batting": {
-        "ovr": 71,
-        "contact": 62,
-        "power": 66,
-        "eye": 73,
-        "discipline": 74,
-        "speed": 68,
-        "baseInstinct": 67,
-        "bunting": 55,
+        "ovr": 56,
+        "contact": 52,
+        "power": 56,
+        "eye": 53,
+        "discipline": 57,
+        "speed": 52,
+        "baseInstinct": 48,
+        "bunting": 39,
         "platoon": 50,
-        "fielding": 74,
-        "arm": 64,
-        "battingClutch": 61
+        "fielding": 51,
+        "arm": 45,
+        "battingClutch": 54
       },
       "positionRatings": {
-        "SP": 71
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ]
+        "SP": 56
+      }
     },
     "coach": null,
     "manager": null,

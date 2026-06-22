@@ -1,6 +1,6 @@
 {
   "id": "PLY_16572",
-  "name": "스미스 라이언",
+  "name": "Smith Ryan",
   "nameEn": "Smith Ryan",
   "role": "player",
   "age": 33,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 60,
   "popularity": 26,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 46
       },
       "batting": {
-        "ovr": 62,
-        "contact": 60,
-        "power": 55,
-        "eye": 64,
-        "discipline": 57,
-        "speed": 61,
-        "baseInstinct": 63,
-        "bunting": 40,
-        "platoon": 62,
-        "fielding": 60,
-        "arm": 51,
-        "battingClutch": 58
+        "ovr": 50,
+        "contact": 48,
+        "power": 44,
+        "eye": 52,
+        "discipline": 46,
+        "speed": 49,
+        "baseInstinct": 51,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 41,
+        "battingClutch": 47
       },
       "positionRatings": {
         "SS": 50

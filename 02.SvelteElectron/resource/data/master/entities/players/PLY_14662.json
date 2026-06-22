@@ -1,6 +1,6 @@
 {
   "id": "PLY_14662",
-  "name": "가르시아 다니엘",
+  "name": "Garcia Daniel",
   "nameEn": "Garcia Daniel",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 61,
   "popularity": 24,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 55,
       "proServiceYears": 13,
       "pitching": {
-        "ovr": 82,
-        "stamina": 74,
-        "velocity": 90,
-        "command": 68,
-        "control": 76,
-        "movement": 78,
-        "mentality": 91,
-        "recovery": 82,
-        "clutch": 74,
-        "holdRunners": 64
+        "ovr": 65,
+        "stamina": 59,
+        "velocity": 71,
+        "command": 54,
+        "control": 60,
+        "movement": 62,
+        "mentality": 72,
+        "recovery": 65,
+        "clutch": 59,
+        "holdRunners": 51
       },
       "batting": {
         "ovr": 65,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

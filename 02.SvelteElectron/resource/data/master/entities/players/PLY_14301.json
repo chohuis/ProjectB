@@ -1,6 +1,6 @@
 {
   "id": "PLY_14301",
-  "name": "애덤스 네이선",
+  "name": "Adams Nathan",
   "nameEn": "Adams Nathan",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 66,
   "popularity": 20,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 58
       },
       "batting": {
-        "ovr": 73,
-        "contact": 66,
-        "power": 72,
-        "eye": 69,
-        "discipline": 64,
-        "speed": 69,
-        "baseInstinct": 64,
-        "bunting": 52,
-        "platoon": 54,
-        "fielding": 64,
-        "arm": 63,
-        "battingClutch": 69
+        "ovr": 67,
+        "contact": 61,
+        "power": 66,
+        "eye": 63,
+        "discipline": 59,
+        "speed": 63,
+        "baseInstinct": 59,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 58,
+        "battingClutch": 63
       },
       "positionRatings": {
         "1B": 67

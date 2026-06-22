@@ -1,6 +1,6 @@
 {
   "id": "PLY_14647",
-  "name": "그린 타일러",
+  "name": "Green Tyler",
   "nameEn": "Green Tyler",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 73,
   "popularity": 47,
   "militaryStatus": "군필",

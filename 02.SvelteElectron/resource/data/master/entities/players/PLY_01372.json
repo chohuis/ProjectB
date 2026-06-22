@@ -1,14 +1,14 @@
 {
   "id": "PLY_01372",
   "name": "밀러 프란시스코",
-  "nameEn": "Mil 러 프란시스코",
+  "nameEn": "Miller Francisco",
   "role": "player",
-  "age": 40,
+  "age": 42,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_LAKESPIRITS",
-  "teamId": "TEAM_ABL_LAKESPIRITS_1",
+  "clubId": "CLUB_ABL_SD",
+  "teamId": "TEAM_ABL_SD",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:베네수엘라",
@@ -19,58 +19,28 @@
       "position": "CP",
       "jerseyNumber": 12,
       "pitching": {
-        "ovr": 76,
-        "stamina": 74,
-        "velocity": 81,
-        "command": 79,
-        "control": 80,
-        "movement": 75,
-        "mentality": 81,
-        "recovery": 74,
-        "clutch": 68,
-        "holdRunners": 66
+        "ovr": 83,
+        "stamina": 71,
+        "velocity": 85,
+        "command": 82,
+        "control": 84,
+        "movement": 82,
+        "mentality": 84,
+        "recovery": 81
       },
       "batting": {
-        "ovr": 58,
-        "contact": 59,
-        "power": 57,
-        "eye": 58,
-        "discipline": 53,
-        "speed": 59,
-        "fielding": 58,
-        "arm": 57,
-        "battingClutch": 52,
-        "baseInstinct": 51,
-        "bunting": 52,
-        "platoon": 56
+        "ovr": 53,
+        "contact": 53,
+        "power": 55,
+        "eye": 55,
+        "discipline": 57,
+        "speed": 58,
+        "fielding": 56,
+        "arm": 52,
+        "battingClutch": 52
       },
       "developmentRate": 49,
-      "potentialHidden": 64,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 18,
-      "contract": {
-        "salary": 26300,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 64
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

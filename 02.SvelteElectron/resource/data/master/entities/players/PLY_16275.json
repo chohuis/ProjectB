@@ -1,6 +1,6 @@
 {
   "id": "PLY_16275",
-  "name": "존스 재크",
+  "name": "Jones Zach",
   "nameEn": "Jones Zach",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 75,
   "popularity": 47,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 47
       },
       "batting": {
-        "ovr": 57,
-        "contact": 51,
-        "power": 52,
-        "eye": 49,
-        "discipline": 51,
-        "speed": 59,
-        "baseInstinct": 53,
-        "bunting": 43,
-        "platoon": 46,
-        "fielding": 50,
-        "arm": 49,
-        "battingClutch": 57
+        "ovr": 62,
+        "contact": 55,
+        "power": 57,
+        "eye": 53,
+        "discipline": 55,
+        "speed": 64,
+        "baseInstinct": 58,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 53,
+        "battingClutch": 62
       },
       "positionRatings": {
         "LF": 62

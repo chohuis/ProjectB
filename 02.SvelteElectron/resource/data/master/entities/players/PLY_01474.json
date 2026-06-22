@@ -1,14 +1,14 @@
 {
   "id": "PLY_01474",
   "name": "가르시아 매튜",
-  "nameEn": "Ga 르시아 매튜",
+  "nameEn": "Garcia Matthew",
   "role": "player",
   "age": 38,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_DESERTSERPENTS",
-  "teamId": "TEAM_ABL_DESERTSERPENTS_1",
+  "clubId": "CLUB_ABL_ARI",
+  "teamId": "TEAM_ABL_ARI",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,48 +19,28 @@
       "position": "DH",
       "jerseyNumber": 24,
       "pitching": {
-        "ovr": 66,
-        "stamina": 70,
-        "velocity": 70,
-        "command": 63,
-        "control": 67,
-        "movement": 64,
-        "mentality": 62,
-        "recovery": 68,
-        "clutch": 61,
-        "holdRunners": 64
+        "ovr": 60,
+        "stamina": 63,
+        "velocity": 62,
+        "command": 62,
+        "control": 62,
+        "movement": 59,
+        "mentality": 59,
+        "recovery": 55
       },
       "batting": {
-        "ovr": 86,
-        "contact": 83,
-        "power": 84,
-        "eye": 90,
-        "discipline": 85,
-        "speed": 93,
-        "fielding": 84,
-        "arm": 89,
-        "battingClutch": 84,
-        "baseInstinct": 80,
-        "bunting": 82,
-        "platoon": 76
+        "ovr": 91,
+        "contact": 95,
+        "power": 92,
+        "eye": 86,
+        "discipline": 92,
+        "speed": 82,
+        "fielding": 82,
+        "arm": 88,
+        "battingClutch": 91
       },
       "developmentRate": 46,
-      "potentialHidden": 77,
-      "primaryPosition": "DH",
-      "positionRatings": {
-        "DH": 86
-      },
-      "proServiceYears": 16,
-      "contract": {
-        "salary": 18600,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 77
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,14 +1,14 @@
 {
   "id": "PLY_00951",
   "name": "윌슨 에이든",
-  "nameEn": "Wil 슨 에이든",
+  "nameEn": "Wilson Aiden",
   "role": "player",
   "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_SUNDRAGONS",
-  "teamId": "TEAM_ABL_SUNDRAGONS_2",
+  "clubId": "CLUB_ABL_BOS",
+  "teamId": "TEAM_ABL_BOS_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:쿠바",
@@ -19,48 +19,28 @@
       "position": "SS",
       "jerseyNumber": 56,
       "pitching": {
-        "ovr": 58,
-        "stamina": 57,
-        "velocity": 54,
-        "command": 54,
-        "control": 63,
-        "movement": 54,
-        "mentality": 56,
-        "recovery": 55,
-        "clutch": 52,
-        "holdRunners": 47
+        "ovr": 60,
+        "stamina": 58,
+        "velocity": 65,
+        "command": 58,
+        "control": 56,
+        "movement": 53,
+        "mentality": 61,
+        "recovery": 53
       },
       "batting": {
-        "ovr": 78,
-        "contact": 79,
-        "power": 79,
-        "eye": 74,
-        "discipline": 74,
-        "speed": 81,
-        "fielding": 79,
-        "arm": 73,
-        "battingClutch": 77,
-        "baseInstinct": 70,
-        "bunting": 72,
-        "platoon": 73
+        "ovr": 76,
+        "contact": 83,
+        "power": 80,
+        "eye": 76,
+        "discipline": 76,
+        "speed": 79,
+        "fielding": 81,
+        "arm": 79,
+        "battingClutch": 75
       },
       "developmentRate": 52,
-      "potentialHidden": 68,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 78
-      },
-      "proServiceYears": 10,
-      "contract": {
-        "salary": 12500,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 68
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

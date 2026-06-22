@@ -1,6 +1,6 @@
 {
   "id": "PLY_14374",
-  "name": "애덤스 코너",
+  "name": "Adams Connor",
   "nameEn": "Adams Connor",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 84,
   "popularity": 36,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 77,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 70,
-        "stamina": 64,
-        "velocity": 78,
-        "command": 70,
-        "control": 68,
-        "movement": 69,
-        "mentality": 76,
-        "recovery": 71,
-        "clutch": 58,
-        "holdRunners": 63
+        "ovr": 63,
+        "stamina": 58,
+        "velocity": 70,
+        "command": 63,
+        "control": 61,
+        "movement": 62,
+        "mentality": 68,
+        "recovery": 64,
+        "clutch": 52,
+        "holdRunners": 57
       },
       "batting": {
         "ovr": 63,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

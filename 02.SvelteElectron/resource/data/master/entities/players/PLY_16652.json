@@ -1,6 +1,6 @@
 {
   "id": "PLY_16652",
-  "name": "무어 콜",
+  "name": "Moore Cole",
   "nameEn": "Moore Cole",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 77,
   "popularity": 32,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 72,
       "proServiceYears": 4,
       "pitching": {
-        "ovr": 68,
-        "stamina": 64,
-        "velocity": 79,
-        "command": 61,
-        "control": 70,
-        "movement": 69,
-        "mentality": 65,
-        "recovery": 62,
-        "clutch": 59,
-        "holdRunners": 66
+        "ovr": 70,
+        "stamina": 66,
+        "velocity": 81,
+        "command": 63,
+        "control": 72,
+        "movement": 71,
+        "mentality": 67,
+        "recovery": 64,
+        "clutch": 61,
+        "holdRunners": 68
       },
       "batting": {
         "ovr": 70,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

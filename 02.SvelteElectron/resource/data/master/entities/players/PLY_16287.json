@@ -1,6 +1,6 @@
 {
   "id": "PLY_16287",
-  "name": "윌리엄스 코너",
+  "name": "Williams Connor",
   "nameEn": "Williams Connor",
   "role": "player",
   "age": 32,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 60,
   "popularity": 33,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 44
       },
       "batting": {
-        "ovr": 71,
-        "contact": 76,
-        "power": 61,
-        "eye": 64,
-        "discipline": 76,
-        "speed": 66,
-        "baseInstinct": 59,
-        "bunting": 61,
-        "platoon": 62,
-        "fielding": 59,
-        "arm": 69,
-        "battingClutch": 65
+        "ovr": 57,
+        "contact": 61,
+        "power": 49,
+        "eye": 51,
+        "discipline": 61,
+        "speed": 53,
+        "baseInstinct": 47,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 55,
+        "battingClutch": 52
       },
       "positionRatings": {
         "LF": 57

@@ -1,6 +1,6 @@
 {
   "id": "PLY_15676",
-  "name": "앨런 에반",
+  "name": "Allen Evan",
   "nameEn": "Allen Evan",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 54,
   "popularity": 19,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 67,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 54,
-        "stamina": 54,
-        "velocity": 60,
-        "command": 54,
-        "control": 46,
-        "movement": 54,
-        "mentality": 55,
-        "recovery": 55,
-        "clutch": 55,
-        "holdRunners": 43
+        "ovr": 55,
+        "stamina": 55,
+        "velocity": 61,
+        "command": 55,
+        "control": 47,
+        "movement": 55,
+        "mentality": 56,
+        "recovery": 56,
+        "clutch": 56,
+        "holdRunners": 44
       },
       "batting": {
         "ovr": 55,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 55
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

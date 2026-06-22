@@ -1,6 +1,6 @@
 {
   "id": "PLY_16721",
-  "name": "넬슨 에릭",
+  "name": "Nelson Eric",
   "nameEn": "Nelson Eric",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 50,
   "popularity": 37,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 72,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 56,
-        "stamina": 61,
-        "velocity": 63,
-        "command": 55,
-        "control": 55,
-        "movement": 54,
-        "mentality": 52,
-        "recovery": 47,
-        "clutch": 51,
-        "holdRunners": 49
+        "ovr": 57,
+        "stamina": 62,
+        "velocity": 64,
+        "command": 56,
+        "control": 56,
+        "movement": 55,
+        "mentality": 53,
+        "recovery": 48,
+        "clutch": 52,
+        "holdRunners": 50
       },
       "batting": {
         "ovr": 57,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,9 +1,9 @@
 {
   "id": "PLY_00097",
   "name": "백찬영",
-  "nameEn": "Baek Chanyeong",
+  "nameEn": "Cha Gi-hoon",
   "role": "player",
-  "age": 18,
+  "age": 17,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "CF",
       "jerseyNumber": 17,
       "pitching": {
-        "ovr": 35,
-        "stamina": 32,
-        "velocity": 35,
-        "command": 38,
-        "control": 35,
-        "movement": 34,
-        "mentality": 39,
-        "recovery": 38,
-        "clutch": 36,
-        "holdRunners": 42
+        "ovr": 48,
+        "stamina": 67,
+        "velocity": 62,
+        "command": 44,
+        "control": 52,
+        "movement": 46,
+        "mentality": 47,
+        "recovery": 61
       },
       "batting": {
-        "ovr": 55,
-        "contact": 61,
+        "ovr": 63,
+        "contact": 53,
         "power": 50,
-        "eye": 51,
-        "discipline": 61,
-        "speed": 53,
-        "fielding": 56,
+        "eye": 59,
+        "discipline": 52,
+        "speed": 61,
+        "fielding": 63,
         "arm": 58,
-        "battingClutch": 55,
-        "baseInstinct": 45,
-        "bunting": 45,
-        "platoon": 45
+        "battingClutch": 62
       },
       "developmentRate": 50,
-      "potentialHidden": 95,
-      "primaryPosition": "CF",
-      "positionRatings": {
-        "CF": 55
-      }
+      "potentialHidden": 95
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

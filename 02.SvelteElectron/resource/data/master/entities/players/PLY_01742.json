@@ -1,69 +1,46 @@
 {
   "id": "PLY_01742",
-  "name": "손도현",
-  "nameEn": "Son Dohyeon",
+  "name": "후쿠다 류",
+  "nameEn": "Fukuda Ryu",
   "role": "player",
-  "age": 16,
+  "age": 27,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_MASAN_HARBOR",
-  "teamId": "TEAM_HS_MASAN_HARBOR",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_MASAN_HARBOR",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+  "teamId": "TEAM_JBL_CL_SILVERWOLVES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 1,
+      "position": "RF",
+      "jerseyNumber": 22,
       "pitching": {
-        "ovr": 47,
-        "stamina": 47,
-        "velocity": 45,
-        "command": 48,
-        "control": 45,
-        "movement": 43,
-        "mentality": 49,
-        "recovery": 51,
-        "clutch": 43,
-        "holdRunners": 44
+        "ovr": 59,
+        "stamina": 58,
+        "velocity": 63,
+        "command": 55,
+        "control": 61,
+        "movement": 53,
+        "mentality": 58,
+        "recovery": 53
       },
       "batting": {
-        "ovr": 29,
-        "contact": 32,
-        "power": 32,
-        "eye": 32,
-        "discipline": 34,
-        "speed": 32,
-        "fielding": 33,
-        "arm": 28,
-        "battingClutch": 39,
-        "baseInstinct": 44,
-        "bunting": 32,
-        "platoon": 42
+        "ovr": 84,
+        "contact": 87,
+        "power": 93,
+        "eye": 91,
+        "discipline": 88,
+        "speed": 90,
+        "fielding": 82,
+        "arm": 85,
+        "battingClutch": 91
       },
-      "developmentRate": 73,
-      "potentialHidden": 78,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 47
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_SCREWBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 2
-        }
-      ]
+      "developmentRate": 39,
+      "potentialHidden": 74
     },
     "coach": {
       "specialty": "-",
@@ -103,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 66,
-  "popularity": 44
+  }
 }

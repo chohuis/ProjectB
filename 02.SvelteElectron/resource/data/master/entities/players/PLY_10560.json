@@ -1,9 +1,9 @@
 {
   "id": "PLY_10560",
-  "name": "톰슨 에릭",
-  "nameEn": "Thompson Eric",
+  "name": "Smith Sean",
+  "nameEn": "Smith Sean",
   "role": "player",
-  "age": 21,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 76,
-  "popularity": 43,
+  "notes": "국적:파나마",
+  "diligence": 54,
+  "popularity": 49,
   "militaryStatus": "군필",
   "entryYear": 2030,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 21,
+  "entryAge": 22,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 30,
-      "primaryPosition": "SP",
-      "developmentRate": 74,
-      "potentialHidden": 88,
+      "position": "1B",
+      "jerseyNumber": 17,
+      "primaryPosition": "1B",
+      "developmentRate": 60,
+      "potentialHidden": 76,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 55,
-        "stamina": 48,
-        "velocity": 54,
-        "command": 46,
-        "control": 49,
-        "movement": 55,
-        "mentality": 56,
-        "recovery": 53,
-        "clutch": 47,
-        "holdRunners": 49
+        "ovr": 52,
+        "stamina": 44,
+        "velocity": 53,
+        "command": 47,
+        "control": 47,
+        "movement": 45,
+        "mentality": 47,
+        "recovery": 49,
+        "clutch": 45,
+        "holdRunners": 40
       },
       "batting": {
-        "ovr": 59,
-        "contact": 59,
-        "power": 55,
-        "eye": 61,
-        "discipline": 55,
-        "speed": 62,
-        "baseInstinct": 54,
-        "bunting": 42,
+        "ovr": 52,
+        "contact": 46,
+        "power": 46,
+        "eye": 53,
+        "discipline": 53,
+        "speed": 58,
+        "baseInstinct": 50,
+        "bunting": 47,
         "platoon": 50,
-        "fielding": 54,
-        "arm": 49,
-        "battingClutch": 54
+        "fielding": 52,
+        "arm": 55,
+        "battingClutch": 42
       },
       "positionRatings": {
-        "SP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "1B": 52
+      }
     },
     "coach": null,
     "manager": null,

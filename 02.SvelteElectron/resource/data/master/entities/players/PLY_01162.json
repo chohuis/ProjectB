@@ -1,14 +1,14 @@
 {
   "id": "PLY_01162",
   "name": "스미스 케빈",
-  "nameEn": "Seu 미스 케빈",
+  "nameEn": "Smith Kevin",
   "role": "player",
   "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_RAINARROWS",
-  "teamId": "TEAM_ABL_RAINARROWS_2",
+  "clubId": "CLUB_ABL_ATL",
+  "teamId": "TEAM_ABL_ATL_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:쿠바",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 42,
       "pitching": {
-        "ovr": 72,
-        "stamina": 76,
-        "velocity": 78,
-        "command": 76,
-        "control": 76,
-        "movement": 76,
-        "mentality": 76,
-        "recovery": 75,
-        "clutch": 63,
-        "holdRunners": 60
+        "ovr": 79,
+        "stamina": 85,
+        "velocity": 85,
+        "command": 81,
+        "control": 82,
+        "movement": 73,
+        "mentality": 74,
+        "recovery": 73
       },
       "batting": {
-        "ovr": 54,
-        "contact": 57,
-        "power": 50,
-        "eye": 49,
-        "discipline": 60,
-        "speed": 49,
-        "fielding": 53,
-        "arm": 56,
-        "battingClutch": 54,
-        "baseInstinct": 53,
-        "bunting": 43,
-        "platoon": 48
+        "ovr": 42,
+        "contact": 42,
+        "power": 49,
+        "eye": 44,
+        "discipline": 46,
+        "speed": 40,
+        "fielding": 46,
+        "arm": 40,
+        "battingClutch": 45
       },
       "developmentRate": 33,
-      "potentialHidden": 80,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 72
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_FORKBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 23200,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 80
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

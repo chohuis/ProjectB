@@ -1,6 +1,6 @@
 {
   "id": "PLY_15139",
-  "name": "에르난데스 코디",
+  "name": "Hernandez Cody",
   "nameEn": "Hernandez Cody",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 56,
   "popularity": 46,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 53,
       "proServiceYears": 3,
       "pitching": {
-        "ovr": 62,
-        "stamina": 57,
-        "velocity": 61,
-        "command": 55,
-        "control": 65,
-        "movement": 65,
-        "mentality": 67,
-        "recovery": 54,
-        "clutch": 57,
-        "holdRunners": 59
+        "ovr": 66,
+        "stamina": 61,
+        "velocity": 65,
+        "command": 59,
+        "control": 69,
+        "movement": 69,
+        "mentality": 71,
+        "recovery": 57,
+        "clutch": 61,
+        "holdRunners": 63
       },
       "batting": {
         "ovr": 66,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

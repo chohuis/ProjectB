@@ -1,6 +1,6 @@
 {
   "id": "PLY_16221",
-  "name": "에르난데스 조던",
+  "name": "Hernandez Jordan",
   "nameEn": "Hernandez Jordan",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 81,
   "popularity": 46,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 51
       },
       "batting": {
-        "ovr": 70,
-        "contact": 62,
-        "power": 66,
-        "eye": 66,
-        "discipline": 72,
-        "speed": 67,
-        "baseInstinct": 59,
-        "bunting": 59,
-        "platoon": 55,
-        "fielding": 72,
-        "arm": 70,
-        "battingClutch": 65
+        "ovr": 64,
+        "contact": 57,
+        "power": 60,
+        "eye": 60,
+        "discipline": 66,
+        "speed": 61,
+        "baseInstinct": 54,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 64,
+        "battingClutch": 59
       },
       "positionRatings": {
         "2B": 64

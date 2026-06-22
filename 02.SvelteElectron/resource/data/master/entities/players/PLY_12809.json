@@ -1,7 +1,7 @@
 {
   "id": "PLY_12809",
-  "name": "넬슨 루이스",
-  "nameEn": "Nelson Luis",
+  "name": "Lewis Grant",
+  "nameEn": "Lewis Grant",
   "role": "player",
   "age": 28,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 63,
-  "popularity": 39,
+  "notes": "국적:도미니카",
+  "diligence": 82,
+  "popularity": 34,
   "militaryStatus": "군필",
   "entryYear": 2043,
   "entryLeague": "LEAGUE_ABL",
@@ -24,50 +24,40 @@
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 81,
+      "jerseyNumber": 64,
       "primaryPosition": "SP",
-      "developmentRate": 54,
-      "potentialHidden": 70,
+      "developmentRate": 47,
+      "potentialHidden": 59,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 68,
-        "stamina": 67,
-        "velocity": 76,
-        "command": 64,
-        "control": 69,
-        "movement": 64,
-        "mentality": 61,
-        "recovery": 60,
-        "clutch": 64,
-        "holdRunners": 62
+        "ovr": 66,
+        "stamina": 66,
+        "velocity": 71,
+        "command": 56,
+        "control": 70,
+        "movement": 61,
+        "mentality": 66,
+        "recovery": 56,
+        "clutch": 55,
+        "holdRunners": 55
       },
       "batting": {
         "ovr": 66,
-        "contact": 64,
-        "power": 68,
-        "eye": 67,
-        "discipline": 57,
-        "speed": 63,
-        "baseInstinct": 58,
-        "bunting": 55,
+        "contact": 57,
+        "power": 60,
+        "eye": 66,
+        "discipline": 67,
+        "speed": 68,
+        "baseInstinct": 63,
+        "bunting": 52,
         "platoon": 50,
-        "fielding": 60,
-        "arm": 66,
-        "battingClutch": 66
+        "fielding": 58,
+        "arm": 61,
+        "battingClutch": 62
       },
       "positionRatings": {
         "SP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

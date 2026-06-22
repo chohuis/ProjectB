@@ -1,7 +1,7 @@
 {
   "id": "PLY_00439",
   "name": "황태준",
-  "nameEn": "Hwang Taejun",
+  "nameEn": "Park Jun-young",
   "role": "player",
   "age": 22,
   "status": "active",
@@ -19,48 +19,28 @@
       "position": "RF",
       "jerseyNumber": 19,
       "pitching": {
-        "ovr": 20,
-        "stamina": 20,
-        "velocity": 21,
-        "command": 23,
-        "control": 25,
-        "movement": 22,
-        "mentality": 24,
-        "recovery": 23,
-        "clutch": 43,
-        "holdRunners": 41
+        "ovr": 22,
+        "stamina": 23,
+        "velocity": 24,
+        "command": 24,
+        "control": 17,
+        "movement": 20,
+        "mentality": 17,
+        "recovery": 21
       },
       "batting": {
-        "ovr": 32,
-        "contact": 33,
-        "power": 33,
-        "eye": 34,
-        "discipline": 27,
-        "speed": 33,
-        "fielding": 35,
-        "arm": 27,
-        "battingClutch": 34,
-        "baseInstinct": 35,
-        "bunting": 32,
-        "platoon": 37
+        "ovr": 49,
+        "contact": 47,
+        "power": 56,
+        "eye": 50,
+        "discipline": 53,
+        "speed": 48,
+        "fielding": 42,
+        "arm": 45,
+        "battingClutch": 52
       },
       "developmentRate": 52,
-      "potentialHidden": 58,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 32
-      },
-      "proServiceYears": 2,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 58
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,65 +1,46 @@
 {
   "id": "PLY_01805",
-  "name": "정현우",
-  "nameEn": "Jeong Hyeonwoo",
+  "name": "야마모토 토루",
+  "nameEn": "Yamamoto Toru",
   "role": "player",
-  "age": 16,
+  "age": 24,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_GOYANG_ARROW",
-  "teamId": "TEAM_HS_GOYANG_ARROW",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_GOYANG_ARROW",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONSTORMS",
+  "teamId": "TEAM_JBL_CL_IRONSTORMS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 4,
+      "position": "3B",
+      "jerseyNumber": 45,
       "pitching": {
-        "ovr": 58,
-        "stamina": 57,
-        "velocity": 54,
-        "command": 56,
-        "control": 59,
-        "movement": 54,
-        "mentality": 58,
-        "recovery": 60,
-        "clutch": 52,
-        "holdRunners": 49
+        "ovr": 41,
+        "stamina": 42,
+        "velocity": 45,
+        "command": 45,
+        "control": 38,
+        "movement": 43,
+        "mentality": 38,
+        "recovery": 44
       },
       "batting": {
-        "ovr": 40,
-        "contact": 38,
-        "power": 35,
-        "eye": 45,
-        "discipline": 38,
-        "speed": 46,
-        "fielding": 37,
-        "arm": 42,
-        "battingClutch": 41,
-        "baseInstinct": 35,
-        "bunting": 30,
-        "platoon": 44
+        "ovr": 76,
+        "contact": 77,
+        "power": 78,
+        "eye": 76,
+        "discipline": 80,
+        "speed": 70,
+        "fielding": 75,
+        "arm": 83,
+        "battingClutch": 73
       },
-      "developmentRate": 69,
-      "potentialHidden": 88,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 46,
+      "potentialHidden": 67
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 69,
-  "popularity": 44
+  }
 }

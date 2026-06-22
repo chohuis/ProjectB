@@ -1,14 +1,14 @@
 {
   "id": "PLY_00932",
   "name": "잭슨 데이비드",
-  "nameEn": "Jaek 슨 데이비드",
+  "nameEn": "Jackson David",
   "role": "player",
   "age": 34,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_SUNDRAGONS",
-  "teamId": "TEAM_ABL_SUNDRAGONS_1",
+  "clubId": "CLUB_ABL_BOS",
+  "teamId": "TEAM_ABL_BOS",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
@@ -19,48 +19,28 @@
       "position": "RF",
       "jerseyNumber": 22,
       "pitching": {
-        "ovr": 65,
-        "stamina": 61,
-        "velocity": 70,
-        "command": 62,
-        "control": 62,
-        "movement": 63,
-        "mentality": 67,
-        "recovery": 68,
-        "clutch": 58,
-        "holdRunners": 54
+        "ovr": 63,
+        "stamina": 58,
+        "velocity": 63,
+        "command": 58,
+        "control": 57,
+        "movement": 56,
+        "mentality": 58,
+        "recovery": 56
       },
       "batting": {
-        "ovr": 85,
-        "contact": 90,
-        "power": 81,
-        "eye": 82,
-        "discipline": 81,
-        "speed": 87,
-        "fielding": 91,
-        "arm": 85,
-        "battingClutch": 74,
-        "baseInstinct": 78,
-        "bunting": 74,
-        "platoon": 73
+        "ovr": 87,
+        "contact": 94,
+        "power": 88,
+        "eye": 85,
+        "discipline": 86,
+        "speed": 85,
+        "fielding": 85,
+        "arm": 87,
+        "battingClutch": 88
       },
       "developmentRate": 41,
-      "potentialHidden": 63,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 85
-      },
-      "proServiceYears": 12,
-      "contract": {
-        "salary": 17800,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 63
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

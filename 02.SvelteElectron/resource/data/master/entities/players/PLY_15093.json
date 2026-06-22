@@ -1,6 +1,6 @@
 {
   "id": "PLY_15093",
-  "name": "데이비스 딜런",
+  "name": "Davis Dylan",
   "nameEn": "Davis Dylan",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 67,
   "popularity": 24,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 52
       },
       "batting": {
-        "ovr": 59,
-        "contact": 59,
-        "power": 56,
-        "eye": 60,
-        "discipline": 50,
-        "speed": 63,
-        "baseInstinct": 52,
-        "bunting": 40,
-        "platoon": 49,
-        "fielding": 49,
-        "arm": 57,
-        "battingClutch": 47
+        "ovr": 60,
+        "contact": 60,
+        "power": 57,
+        "eye": 61,
+        "discipline": 51,
+        "speed": 64,
+        "baseInstinct": 53,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 58,
+        "battingClutch": 48
       },
       "positionRatings": {
         "1B": 60

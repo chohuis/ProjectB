@@ -1,14 +1,14 @@
 {
   "id": "PLY_01463",
   "name": "마틴 알레한드로",
-  "nameEn": "Ma 틴 알레한드로",
+  "nameEn": "Martin Alejandro",
   "role": "player",
   "age": 29,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_DESERTSERPENTS",
-  "teamId": "TEAM_ABL_DESERTSERPENTS_1",
+  "clubId": "CLUB_ABL_ARI",
+  "teamId": "TEAM_ABL_ARI",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
@@ -19,58 +19,28 @@
       "position": "CP",
       "jerseyNumber": 13,
       "pitching": {
-        "ovr": 82,
+        "ovr": 89,
         "stamina": 82,
-        "velocity": 77,
-        "command": 86,
-        "control": 80,
-        "movement": 85,
-        "mentality": 84,
-        "recovery": 84,
-        "clutch": 71,
-        "holdRunners": 71
+        "velocity": 94,
+        "command": 95,
+        "control": 90,
+        "movement": 91,
+        "mentality": 91,
+        "recovery": 92
       },
       "batting": {
-        "ovr": 64,
-        "contact": 61,
-        "power": 70,
-        "eye": 64,
+        "ovr": 63,
+        "contact": 68,
+        "power": 64,
+        "eye": 66,
         "discipline": 67,
-        "speed": 66,
-        "fielding": 61,
-        "arm": 67,
-        "battingClutch": 58,
-        "baseInstinct": 63,
-        "bunting": 61,
-        "platoon": 62
+        "speed": 61,
+        "fielding": 63,
+        "arm": 66,
+        "battingClutch": 66
       },
       "developmentRate": 39,
-      "potentialHidden": 72,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 82
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 7,
-      "contract": {
-        "salary": 30900,
-        "durationYears": 4,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 72
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

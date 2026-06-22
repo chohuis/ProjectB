@@ -1,9 +1,9 @@
 {
   "id": "PLY_00057",
   "name": "양동준",
-  "nameEn": "Yang Dongjun",
+  "nameEn": "Yang Seong-hyun",
   "role": "player",
-  "age": 18,
+  "age": 17,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "CF",
       "jerseyNumber": 17,
       "pitching": {
-        "ovr": 31,
-        "stamina": 35,
-        "velocity": 31,
-        "command": 35,
-        "control": 29,
-        "movement": 29,
-        "mentality": 35,
-        "recovery": 27,
-        "clutch": 40,
-        "holdRunners": 40
+        "ovr": 37,
+        "stamina": 56,
+        "velocity": 58,
+        "command": 54,
+        "control": 56,
+        "movement": 60,
+        "mentality": 51,
+        "recovery": 54
       },
       "batting": {
         "ovr": 51,
-        "contact": 56,
-        "power": 56,
-        "eye": 47,
-        "discipline": 49,
-        "speed": 46,
-        "fielding": 54,
-        "arm": 56,
-        "battingClutch": 51,
-        "baseInstinct": 46,
-        "bunting": 35,
-        "platoon": 43
+        "contact": 50,
+        "power": 53,
+        "eye": 58,
+        "discipline": 46,
+        "speed": 49,
+        "fielding": 59,
+        "arm": 53,
+        "battingClutch": 58
       },
       "developmentRate": 72,
-      "potentialHidden": 61,
-      "primaryPosition": "CF",
-      "positionRatings": {
-        "CF": 51
-      }
+      "potentialHidden": 61
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

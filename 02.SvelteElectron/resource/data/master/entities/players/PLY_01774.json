@@ -1,69 +1,46 @@
 {
   "id": "PLY_01774",
-  "name": "서원준",
-  "nameEn": "Seo Wonjun",
+  "name": "니시무라 진",
+  "nameEn": "Nishimura Jin",
   "role": "player",
-  "age": 16,
+  "age": 35,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_JECHEON_RIDGE",
-  "teamId": "TEAM_HS_JECHEON_RIDGE",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_JECHEON_RIDGE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONSTORMS",
+  "teamId": "TEAM_JBL_CL_IRONSTORMS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 3,
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 9,
       "pitching": {
-        "ovr": 53,
-        "stamina": 56,
-        "velocity": 54,
-        "command": 50,
-        "control": 56,
-        "movement": 58,
-        "mentality": 50,
-        "recovery": 55,
-        "clutch": 50,
-        "holdRunners": 43
+        "ovr": 72,
+        "stamina": 62,
+        "velocity": 77,
+        "command": 66,
+        "control": 65,
+        "movement": 70,
+        "mentality": 71,
+        "recovery": 71
       },
       "batting": {
-        "ovr": 35,
-        "contact": 31,
-        "power": 37,
-        "eye": 39,
-        "discipline": 34,
-        "speed": 30,
+        "ovr": 46,
+        "contact": 43,
+        "power": 43,
+        "eye": 45,
+        "discipline": 44,
+        "speed": 39,
         "fielding": 37,
-        "arm": 38,
-        "battingClutch": 43,
-        "baseInstinct": 37,
-        "bunting": 36,
-        "platoon": 42
+        "arm": 41,
+        "battingClutch": 47
       },
-      "developmentRate": 82,
-      "potentialHidden": 86,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 53
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+      "developmentRate": 34,
+      "potentialHidden": 76
     },
     "coach": {
       "specialty": "-",
@@ -103,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 58,
-  "popularity": 11
+  }
 }

@@ -1,6 +1,6 @@
 {
   "id": "PLY_15786",
-  "name": "앨런 루이스",
+  "name": "Allen Luis",
   "nameEn": "Allen Luis",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 58,
   "popularity": 29,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 56
       },
       "batting": {
-        "ovr": 88,
-        "contact": 78,
-        "power": 89,
-        "eye": 91,
-        "discipline": 82,
-        "speed": 91,
-        "baseInstinct": 83,
-        "bunting": 71,
-        "platoon": 64,
-        "fielding": 82,
-        "arm": 75,
-        "battingClutch": 88
+        "ovr": 69,
+        "contact": 61,
+        "power": 70,
+        "eye": 71,
+        "discipline": 64,
+        "speed": 71,
+        "baseInstinct": 65,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 59,
+        "battingClutch": 69
       },
       "positionRatings": {
         "RF": 69

@@ -1,61 +1,46 @@
 {
   "id": "PLY_01722",
-  "name": "백도현",
-  "nameEn": "Baek Dohyeon",
+  "name": "타카하시 츠바사",
+  "nameEn": "Takahashi Tsubasa",
   "role": "player",
-  "age": 17,
+  "age": 27,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_GANGWON_PEAK",
-  "teamId": "TEAM_HS_GANGWON_PEAK",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_GANGWON_PEAK",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+  "teamId": "TEAM_JBL_CL_SILVERWOLVES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
-      "handedness": "R",
-      "position": "C",
-      "jerseyNumber": 11,
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 2,
       "pitching": {
-        "ovr": 41,
-        "stamina": 46,
-        "velocity": 47,
-        "command": 44,
-        "control": 43,
-        "movement": 36,
-        "mentality": 43,
-        "recovery": 43,
-        "clutch": 41,
-        "holdRunners": 37
+        "ovr": 72,
+        "stamina": 70,
+        "velocity": 75,
+        "command": 72,
+        "control": 69,
+        "movement": 64,
+        "mentality": 73,
+        "recovery": 68
       },
       "batting": {
-        "ovr": 61,
-        "contact": 56,
-        "power": 65,
-        "eye": 65,
-        "discipline": 63,
-        "speed": 67,
-        "fielding": 59,
-        "arm": 61,
-        "battingClutch": 60,
-        "baseInstinct": 49,
-        "bunting": 56,
-        "platoon": 57
+        "ovr": 39,
+        "contact": 38,
+        "power": 37,
+        "eye": 38,
+        "discipline": 37,
+        "speed": 38,
+        "fielding": 31,
+        "arm": 37,
+        "battingClutch": 37
       },
-      "developmentRate": 51,
-      "potentialHidden": 86,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 34,
+      "potentialHidden": 86
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 66,
-  "popularity": 17
+  }
 }

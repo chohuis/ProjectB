@@ -1,6 +1,6 @@
 {
   "id": "PLY_14732",
-  "name": "리 마커스",
+  "name": "Lee Marcus",
   "nameEn": "Lee Marcus",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 64,
   "popularity": 33,
   "militaryStatus": "군필",

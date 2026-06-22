@@ -1,14 +1,14 @@
 {
   "id": "PLY_01530",
   "name": "라미레스 하비에르",
-  "nameEn": "Ra 미레스 하비에르",
+  "nameEn": "Ramirez Javier",
   "role": "player",
   "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_RIVERCARDINALS",
-  "teamId": "TEAM_ABL_RIVERCARDINALS_2",
+  "clubId": "CLUB_ABL_BAL",
+  "teamId": "TEAM_ABL_BAL_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
@@ -19,58 +19,28 @@
       "position": "CP",
       "jerseyNumber": 50,
       "pitching": {
-        "ovr": 76,
-        "stamina": 75,
-        "velocity": 77,
-        "command": 75,
-        "control": 74,
-        "movement": 79,
-        "mentality": 74,
-        "recovery": 73,
-        "clutch": 73,
-        "holdRunners": 75
+        "ovr": 82,
+        "stamina": 70,
+        "velocity": 92,
+        "command": 89,
+        "control": 84,
+        "movement": 80,
+        "mentality": 88,
+        "recovery": 82
       },
       "batting": {
-        "ovr": 58,
-        "contact": 59,
+        "ovr": 51,
+        "contact": 57,
         "power": 54,
-        "eye": 58,
-        "discipline": 61,
-        "speed": 61,
-        "fielding": 56,
-        "arm": 57,
-        "battingClutch": 49,
-        "baseInstinct": 54,
-        "bunting": 43,
-        "platoon": 55
+        "eye": 56,
+        "discipline": 56,
+        "speed": 55,
+        "fielding": 52,
+        "arm": 49,
+        "battingClutch": 51
       },
       "developmentRate": 38,
-      "potentialHidden": 86,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 2,
-      "contract": {
-        "salary": 26300,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 86
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

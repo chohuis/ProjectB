@@ -1,6 +1,6 @@
 {
   "id": "PLY_15836",
-  "name": "넬슨 카일",
+  "name": "Nelson Kyle",
   "nameEn": "Nelson Kyle",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 76,
   "popularity": 22,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 51,
       "proServiceYears": 4,
       "pitching": {
-        "ovr": 72,
-        "stamina": 71,
-        "velocity": 80,
-        "command": 71,
-        "control": 69,
-        "movement": 63,
-        "mentality": 67,
-        "recovery": 74,
-        "clutch": 64,
-        "holdRunners": 58
+        "ovr": 73,
+        "stamina": 72,
+        "velocity": 81,
+        "command": 72,
+        "control": 70,
+        "movement": 64,
+        "mentality": 68,
+        "recovery": 75,
+        "clutch": 65,
+        "holdRunners": 59
       },
       "batting": {
         "ovr": 73,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

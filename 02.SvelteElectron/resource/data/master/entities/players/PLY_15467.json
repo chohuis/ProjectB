@@ -1,6 +1,6 @@
 {
   "id": "PLY_15467",
-  "name": "스미스 미겔",
+  "name": "Smith Miguel",
   "nameEn": "Smith Miguel",
   "role": "player",
   "age": 23,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 74,
   "popularity": 29,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 65
       },
       "batting": {
-        "ovr": 71,
-        "contact": 62,
-        "power": 74,
-        "eye": 72,
-        "discipline": 63,
-        "speed": 69,
-        "baseInstinct": 60,
-        "bunting": 62,
-        "platoon": 48,
-        "fielding": 61,
-        "arm": 65,
-        "battingClutch": 62
+        "ovr": 74,
+        "contact": 65,
+        "power": 77,
+        "eye": 75,
+        "discipline": 66,
+        "speed": 72,
+        "baseInstinct": 63,
+        "bunting": 65,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 68,
+        "battingClutch": 65
       },
       "positionRatings": {
         "SS": 74

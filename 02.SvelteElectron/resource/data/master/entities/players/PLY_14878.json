@@ -1,6 +1,6 @@
 {
   "id": "PLY_14878",
-  "name": "스콧 에릭",
+  "name": "Scott Eric",
   "nameEn": "Scott Eric",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 74,
   "popularity": 22,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 47
       },
       "batting": {
-        "ovr": 60,
-        "contact": 61,
-        "power": 56,
-        "eye": 52,
-        "discipline": 59,
-        "speed": 54,
-        "baseInstinct": 54,
-        "bunting": 44,
-        "platoon": 48,
-        "fielding": 60,
-        "arm": 50,
-        "battingClutch": 53
+        "ovr": 62,
+        "contact": 63,
+        "power": 58,
+        "eye": 54,
+        "discipline": 61,
+        "speed": 56,
+        "baseInstinct": 56,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 52,
+        "battingClutch": 55
       },
       "positionRatings": {
         "LF": 62

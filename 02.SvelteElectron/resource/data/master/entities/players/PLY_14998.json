@@ -1,6 +1,6 @@
 {
   "id": "PLY_14998",
-  "name": "애덤스 트레버",
+  "name": "Adams Trevor",
   "nameEn": "Adams Trevor",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 50,
   "popularity": 16,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 47
       },
       "batting": {
-        "ovr": 54,
-        "contact": 59,
-        "power": 54,
-        "eye": 47,
-        "discipline": 53,
-        "speed": 53,
-        "baseInstinct": 55,
-        "bunting": 39,
-        "platoon": 49,
-        "fielding": 49,
-        "arm": 50,
-        "battingClutch": 51
+        "ovr": 55,
+        "contact": 60,
+        "power": 55,
+        "eye": 48,
+        "discipline": 54,
+        "speed": 54,
+        "baseInstinct": 56,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 51,
+        "battingClutch": 52
       },
       "positionRatings": {
         "C": 55

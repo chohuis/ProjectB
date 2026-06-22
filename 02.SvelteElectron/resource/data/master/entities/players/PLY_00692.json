@@ -1,14 +1,14 @@
 {
   "id": "PLY_00692",
   "name": "권도현",
-  "nameEn": "Kwon Dohyeon",
+  "nameEn": "Kwon Seong-min",
   "role": "player",
   "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_ROYALLIONS",
-  "teamId": "TEAM_KBL_ROYALLIONS_1",
+  "clubId": "CLUB_KBL_SSG",
+  "teamId": "TEAM_KBL_SSG_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 7,
       "pitching": {
-        "ovr": 76,
-        "stamina": 73,
-        "velocity": 75,
-        "command": 75,
-        "control": 81,
-        "movement": 80,
-        "mentality": 79,
-        "recovery": 80,
-        "clutch": 70,
-        "holdRunners": 64
+        "ovr": 86,
+        "stamina": 72,
+        "velocity": 90,
+        "command": 87,
+        "control": 80,
+        "movement": 85,
+        "mentality": 86,
+        "recovery": 80
       },
       "batting": {
-        "ovr": 58,
-        "contact": 54,
-        "power": 58,
-        "eye": 53,
-        "discipline": 61,
-        "speed": 62,
-        "fielding": 57,
-        "arm": 62,
-        "battingClutch": 57,
-        "baseInstinct": 48,
-        "bunting": 49,
-        "platoon": 46
+        "ovr": 53,
+        "contact": 55,
+        "power": 52,
+        "eye": 55,
+        "discipline": 56,
+        "speed": 54,
+        "fielding": 49,
+        "arm": 48,
+        "battingClutch": 54
       },
       "developmentRate": 53,
-      "potentialHidden": 63,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 5,
-      "contract": {
-        "salary": 7500,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 63
     },
     "coach": {
       "specialty": "-",
@@ -110,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

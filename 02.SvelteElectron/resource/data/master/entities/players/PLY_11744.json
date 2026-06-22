@@ -1,9 +1,9 @@
 {
   "id": "PLY_11744",
-  "name": "킹 루이스",
-  "nameEn": "King Luis",
+  "name": "Nelson Logan",
+  "nameEn": "Nelson Logan",
   "role": "player",
-  "age": 30,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 72,
-  "popularity": 27,
+  "notes": "국적:파나마",
+  "diligence": 45,
+  "popularity": 30,
   "militaryStatus": "군필",
   "entryYear": 2037,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 30,
+  "entryAge": 28,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 63,
+      "jerseyNumber": 91,
       "primaryPosition": "SP",
-      "developmentRate": 38,
-      "potentialHidden": 57,
-      "proServiceYears": 8,
+      "developmentRate": 57,
+      "potentialHidden": 79,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 57,
-        "stamina": 57,
-        "velocity": 60,
-        "command": 48,
-        "control": 49,
-        "movement": 54,
-        "mentality": 58,
-        "recovery": 49,
-        "clutch": 49,
-        "holdRunners": 51
+        "ovr": 69,
+        "stamina": 72,
+        "velocity": 77,
+        "command": 61,
+        "control": 72,
+        "movement": 59,
+        "mentality": 73,
+        "recovery": 65,
+        "clutch": 63,
+        "holdRunners": 68
       },
       "batting": {
-        "ovr": 55,
-        "contact": 59,
-        "power": 50,
-        "eye": 47,
-        "discipline": 56,
-        "speed": 51,
-        "baseInstinct": 53,
-        "bunting": 44,
+        "ovr": 69,
+        "contact": 69,
+        "power": 59,
+        "eye": 72,
+        "discipline": 62,
+        "speed": 73,
+        "baseInstinct": 61,
+        "bunting": 57,
         "platoon": 50,
-        "fielding": 50,
-        "arm": 55,
-        "battingClutch": 54
+        "fielding": 65,
+        "arm": 65,
+        "battingClutch": 59
       },
       "positionRatings": {
-        "SP": 55
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 69
+      }
     },
     "coach": null,
     "manager": null,

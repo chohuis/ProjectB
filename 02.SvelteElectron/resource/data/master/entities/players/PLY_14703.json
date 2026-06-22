@@ -1,6 +1,6 @@
 {
   "id": "PLY_14703",
-  "name": "그린 에릭",
+  "name": "Green Eric",
   "nameEn": "Green Eric",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 73,
   "popularity": 37,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 55,
       "proServiceYears": 3,
       "pitching": {
-        "ovr": 61,
-        "stamina": 63,
-        "velocity": 68,
-        "command": 52,
-        "control": 57,
-        "movement": 64,
-        "mentality": 55,
-        "recovery": 61,
-        "clutch": 54,
-        "holdRunners": 55
+        "ovr": 65,
+        "stamina": 67,
+        "velocity": 72,
+        "command": 55,
+        "control": 61,
+        "movement": 68,
+        "mentality": 59,
+        "recovery": 65,
+        "clutch": 58,
+        "holdRunners": 59
       },
       "batting": {
         "ovr": 65,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

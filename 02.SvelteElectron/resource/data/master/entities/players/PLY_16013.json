@@ -1,6 +1,6 @@
 {
   "id": "PLY_16013",
-  "name": "마르티네스 오스틴",
+  "name": "Martinez Austin",
   "nameEn": "Martinez Austin",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 51,
   "popularity": 30,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 48
       },
       "batting": {
-        "ovr": 52,
-        "contact": 48,
-        "power": 48,
-        "eye": 48,
-        "discipline": 53,
-        "speed": 47,
-        "baseInstinct": 50,
-        "bunting": 39,
-        "platoon": 49,
-        "fielding": 52,
-        "arm": 49,
-        "battingClutch": 40
+        "ovr": 53,
+        "contact": 49,
+        "power": 49,
+        "eye": 49,
+        "discipline": 54,
+        "speed": 48,
+        "baseInstinct": 51,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 50,
+        "battingClutch": 41
       },
       "positionRatings": {
         "C": 53

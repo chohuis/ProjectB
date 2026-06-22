@@ -1,7 +1,7 @@
 {
   "id": "PLY_00272",
   "name": "송준혁",
-  "nameEn": "Song Junhyeok",
+  "nameEn": "Sim Chan-woo",
   "role": "player",
   "age": 19,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "C",
       "jerseyNumber": 12,
       "pitching": {
-        "ovr": 49,
-        "stamina": 53,
-        "velocity": 48,
-        "command": 50,
+        "ovr": 52,
+        "stamina": 48,
+        "velocity": 51,
+        "command": 53,
         "control": 51,
         "movement": 52,
-        "mentality": 47,
-        "recovery": 50,
-        "clutch": 42,
-        "holdRunners": 45
+        "mentality": 50,
+        "recovery": 45
       },
       "batting": {
-        "ovr": 69,
-        "contact": 75,
-        "power": 72,
-        "eye": 74,
-        "discipline": 74,
-        "speed": 74,
-        "fielding": 68,
-        "arm": 74,
-        "battingClutch": 58,
-        "baseInstinct": 60,
-        "bunting": 56,
-        "platoon": 55
+        "ovr": 73,
+        "contact": 68,
+        "power": 73,
+        "eye": 70,
+        "discipline": 72,
+        "speed": 69,
+        "fielding": 74,
+        "arm": 78,
+        "battingClutch": 68
       },
       "developmentRate": 55,
-      "potentialHidden": 68,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 69
-      }
+      "potentialHidden": 68
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

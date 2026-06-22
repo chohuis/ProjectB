@@ -1,9 +1,9 @@
 {
   "id": "PLY_11616",
-  "name": "스콧 라이언",
-  "nameEn": "Scott Ryan",
+  "name": "Allen Jake",
+  "nameEn": "Allen Jake",
   "role": "player",
-  "age": 21,
+  "age": 19,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 58,
-  "popularity": 42,
+  "notes": "국적:일본",
+  "diligence": 50,
+  "popularity": 21,
   "militaryStatus": "군필",
   "entryYear": 2036,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 21,
+  "entryAge": 19,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 3,
+      "jerseyNumber": 33,
       "primaryPosition": "SP",
-      "developmentRate": 76,
-      "potentialHidden": 93,
+      "developmentRate": 58,
+      "potentialHidden": 84,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 50,
-        "stamina": 52,
-        "velocity": 53,
-        "command": 48,
-        "control": 43,
-        "movement": 49,
-        "mentality": 55,
-        "recovery": 47,
-        "clutch": 50,
-        "holdRunners": 45
+        "ovr": 59,
+        "stamina": 54,
+        "velocity": 56,
+        "command": 53,
+        "control": 50,
+        "movement": 53,
+        "mentality": 53,
+        "recovery": 49,
+        "clutch": 55,
+        "holdRunners": 46
       },
       "batting": {
-        "ovr": 53,
-        "contact": 56,
-        "power": 43,
-        "eye": 45,
-        "discipline": 50,
-        "speed": 47,
-        "baseInstinct": 54,
-        "bunting": 41,
+        "ovr": 59,
+        "contact": 51,
+        "power": 57,
+        "eye": 53,
+        "discipline": 56,
+        "speed": 56,
+        "baseInstinct": 52,
+        "bunting": 44,
         "platoon": 50,
-        "fielding": 47,
-        "arm": 47,
-        "battingClutch": 43
+        "fielding": 51,
+        "arm": 53,
+        "battingClutch": 52
       },
       "positionRatings": {
-        "SP": 53
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 59
+      }
     },
     "coach": null,
     "manager": null,

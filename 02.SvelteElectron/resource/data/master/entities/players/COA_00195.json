@@ -1,17 +1,17 @@
 {
   "id": "COA_00195",
-  "name": "사토 류",
-  "nameEn": "Sato Ryu",
+  "name": "고토 소타",
+  "nameEn": "Goto Sota",
   "role": "coach",
   "age": 43,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
-  "clubId": "CLUB_JBL_CL_IRONDRAKES",
-  "teamId": "TEAM_JBL_CL_IRONDRAKES_1",
+  "clubId": "CLUB_JBL_CL_IRONSTORMS",
+  "teamId": "TEAM_JBL_CL_IRONSTORMS_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
@@ -44,13 +44,13 @@
     },
     "coach": {
       "specialty": "타격",
-      "experienceYears": 4,
+      "experienceYears": 12,
       "stats": {
-        "teaching": 82,
-        "analysis": 83,
-        "communication": 75,
-        "discipline": 69,
-        "leadership": 63
+        "teaching": 83,
+        "analysis": 64,
+        "communication": 56,
+        "discipline": 70,
+        "leadership": 82
       },
       "trainingBuffs": ""
     },

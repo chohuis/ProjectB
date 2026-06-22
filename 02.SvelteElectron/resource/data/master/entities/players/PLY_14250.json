@@ -1,6 +1,6 @@
 {
   "id": "PLY_14250",
-  "name": "존스 다니엘",
+  "name": "Jones Daniel",
   "nameEn": "Jones Daniel",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 64,
   "popularity": 48,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 75,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 50,
-        "stamina": 41,
-        "velocity": 57,
-        "command": 39,
-        "control": 45,
-        "movement": 53,
-        "mentality": 43,
-        "recovery": 50,
-        "clutch": 43,
-        "holdRunners": 47
+        "ovr": 51,
+        "stamina": 42,
+        "velocity": 58,
+        "command": 40,
+        "control": 46,
+        "movement": 54,
+        "mentality": 44,
+        "recovery": 51,
+        "clutch": 44,
+        "holdRunners": 48
       },
       "batting": {
         "ovr": 51,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 51
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

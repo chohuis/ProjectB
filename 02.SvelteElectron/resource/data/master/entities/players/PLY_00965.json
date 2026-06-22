@@ -1,14 +1,14 @@
 {
   "id": "PLY_00965",
   "name": "윌슨 호세",
-  "nameEn": "Wil 슨 호세",
+  "nameEn": "Wilson Jose",
   "role": "player",
   "age": 33,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_WINDBEARS",
-  "teamId": "TEAM_ABL_WINDBEARS_1",
+  "clubId": "CLUB_ABL_TOR",
+  "teamId": "TEAM_ABL_TOR",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,62 +19,28 @@
       "position": "RP",
       "jerseyNumber": 10,
       "pitching": {
-        "ovr": 78,
-        "stamina": 75,
-        "velocity": 74,
-        "command": 83,
-        "control": 82,
-        "movement": 82,
-        "mentality": 82,
-        "recovery": 82,
-        "clutch": 67,
-        "holdRunners": 70
+        "ovr": 88,
+        "stamina": 84,
+        "velocity": 91,
+        "command": 89,
+        "control": 92,
+        "movement": 84,
+        "mentality": 85,
+        "recovery": 91
       },
       "batting": {
-        "ovr": 60,
-        "contact": 67,
-        "power": 65,
-        "eye": 58,
-        "discipline": 56,
-        "speed": 54,
-        "fielding": 54,
-        "arm": 57,
-        "battingClutch": 50,
-        "baseInstinct": 53,
-        "bunting": 44,
-        "platoon": 50
+        "ovr": 68,
+        "contact": 64,
+        "power": 66,
+        "eye": 71,
+        "discipline": 71,
+        "speed": 64,
+        "fielding": 65,
+        "arm": 70,
+        "battingClutch": 70
       },
       "developmentRate": 46,
-      "potentialHidden": 67,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 78
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_FORKBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 11,
-      "contract": {
-        "salary": 27900,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 67
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,14 +1,14 @@
 {
   "id": "PLY_00497",
   "name": "윤태준",
-  "nameEn": "Yoon Taejun",
+  "nameEn": "Moon Do-hyun",
   "role": "player",
   "age": 19,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_TWINWOLVES",
-  "teamId": "TEAM_KBL_TWINWOLVES_2",
+  "clubId": "CLUB_KBL_KIA",
+  "teamId": "TEAM_KBL_KIA_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,48 +19,28 @@
       "position": "C",
       "jerseyNumber": 42,
       "pitching": {
-        "ovr": 49,
-        "stamina": 48,
-        "velocity": 55,
-        "command": 50,
-        "control": 48,
-        "movement": 53,
-        "mentality": 51,
-        "recovery": 46,
-        "clutch": 49,
-        "holdRunners": 45
+        "ovr": 46,
+        "stamina": 44,
+        "velocity": 47,
+        "command": 48,
+        "control": 40,
+        "movement": 43,
+        "mentality": 46,
+        "recovery": 41
       },
       "batting": {
-        "ovr": 69,
-        "contact": 72,
-        "power": 66,
-        "eye": 72,
-        "discipline": 74,
-        "speed": 73,
-        "fielding": 65,
-        "arm": 70,
-        "battingClutch": 61,
-        "baseInstinct": 57,
-        "bunting": 57,
-        "platoon": 59
+        "ovr": 70,
+        "contact": 71,
+        "power": 67,
+        "eye": 67,
+        "discipline": 72,
+        "speed": 68,
+        "fielding": 70,
+        "arm": 73,
+        "battingClutch": 75
       },
       "developmentRate": 52,
-      "potentialHidden": 59,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 69
-      },
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 59
     },
     "coach": {
       "specialty": "-",
@@ -100,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

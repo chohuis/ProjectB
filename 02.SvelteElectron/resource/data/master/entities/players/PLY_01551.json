@@ -1,61 +1,46 @@
 {
   "id": "PLY_01551",
-  "name": "심도현",
-  "nameEn": "Shim Dohyeon",
+  "name": "엔도 슌",
+  "nameEn": "Endo Shun",
   "role": "player",
-  "age": 18,
+  "age": 35,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_SEOUL_INNOVATION",
-  "teamId": "TEAM_HS_SEOUL_INNOVATION",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_SEOUL_INNOVATION",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_NEONCRANES",
+  "teamId": "TEAM_JBL_CL_NEONCRANES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "UT",
-      "jerseyNumber": 30,
+      "position": "RP",
+      "jerseyNumber": 11,
       "pitching": {
-        "ovr": 38,
-        "stamina": 39,
-        "velocity": 37,
-        "command": 43,
-        "control": 40,
-        "movement": 41,
-        "mentality": 40,
-        "recovery": 39,
-        "clutch": 41,
-        "holdRunners": 38
+        "ovr": 81,
+        "stamina": 75,
+        "velocity": 81,
+        "command": 83,
+        "control": 77,
+        "movement": 80,
+        "mentality": 77,
+        "recovery": 78
       },
       "batting": {
-        "ovr": 58,
-        "contact": 60,
-        "power": 59,
-        "eye": 53,
-        "discipline": 58,
-        "speed": 52,
-        "fielding": 60,
-        "arm": 56,
-        "battingClutch": 51,
-        "baseInstinct": 57,
-        "bunting": 44,
-        "platoon": 55
+        "ovr": 52,
+        "contact": 59,
+        "power": 54,
+        "eye": 58,
+        "discipline": 52,
+        "speed": 59,
+        "fielding": 57,
+        "arm": 51,
+        "battingClutch": 60
       },
-      "developmentRate": 72,
-      "potentialHidden": 76,
-      "primaryPosition": "UT",
-      "positionRatings": {
-        "UT": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 41,
+      "potentialHidden": 57
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 80,
-  "popularity": 46
+  }
 }

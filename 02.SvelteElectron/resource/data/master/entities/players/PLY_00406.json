@@ -1,7 +1,7 @@
 {
   "id": "PLY_00406",
   "name": "하진우",
-  "nameEn": "Ha Jinu",
+  "nameEn": "Seo Gi-hoon",
   "role": "player",
   "age": 21,
   "status": "active",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 6,
       "pitching": {
-        "ovr": 63,
-        "stamina": 62,
-        "velocity": 67,
-        "command": 65,
+        "ovr": 70,
+        "stamina": 60,
+        "velocity": 72,
+        "command": 72,
         "control": 66,
-        "movement": 59,
-        "mentality": 63,
-        "recovery": 68,
-        "clutch": 57,
-        "holdRunners": 56
+        "movement": 67,
+        "mentality": 71,
+        "recovery": 69
       },
       "batting": {
-        "ovr": 45,
-        "contact": 46,
-        "power": 47,
-        "eye": 47,
-        "discipline": 45,
-        "speed": 49,
-        "fielding": 46,
-        "arm": 51,
-        "battingClutch": 38,
-        "baseInstinct": 35,
-        "bunting": 40,
-        "platoon": 39
+        "ovr": 49,
+        "contact": 42,
+        "power": 46,
+        "eye": 46,
+        "discipline": 47,
+        "speed": 42,
+        "fielding": 45,
+        "arm": 43,
+        "battingClutch": 41
       },
       "developmentRate": 48,
-      "potentialHidden": 54,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 1,
-      "contract": {
-        "salary": 1600,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 54
     },
     "coach": {
       "specialty": "-",
@@ -110,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

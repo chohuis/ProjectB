@@ -1,6 +1,6 @@
 {
   "id": "PLY_15103",
-  "name": "라이트 로건",
+  "name": "Wright Logan",
   "nameEn": "Wright Logan",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 61,
   "popularity": 20,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 68,
       "proServiceYears": 5,
       "pitching": {
-        "ovr": 70,
-        "stamina": 72,
-        "velocity": 76,
-        "command": 73,
-        "control": 62,
-        "movement": 60,
-        "mentality": 71,
-        "recovery": 72,
-        "clutch": 71,
-        "holdRunners": 59
+        "ovr": 71,
+        "stamina": 73,
+        "velocity": 77,
+        "command": 74,
+        "control": 63,
+        "movement": 61,
+        "mentality": 72,
+        "recovery": 73,
+        "clutch": 72,
+        "holdRunners": 60
       },
       "batting": {
         "ovr": 71,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 71
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

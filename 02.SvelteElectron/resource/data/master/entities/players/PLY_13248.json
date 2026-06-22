@@ -1,9 +1,9 @@
 {
   "id": "PLY_13248",
-  "name": "홀 블레이크",
-  "nameEn": "Hall Blake",
+  "name": "Jones Brandon",
+  "nameEn": "Jones Brandon",
   "role": "player",
-  "age": 33,
+  "age": 18,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 81,
-  "popularity": 43,
+  "notes": "국적:베네수엘라",
+  "diligence": 79,
+  "popularity": 46,
   "militaryStatus": "군필",
   "entryYear": 2046,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 33,
+  "entryAge": 18,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 5,
-      "primaryPosition": "SP",
-      "developmentRate": 50,
-      "potentialHidden": 56,
-      "proServiceYears": 11,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 63,
+      "primaryPosition": "C",
+      "developmentRate": 79,
+      "potentialHidden": 84,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 69,
-        "stamina": 69,
-        "velocity": 68,
-        "command": 67,
-        "control": 67,
-        "movement": 70,
-        "mentality": 62,
-        "recovery": 60,
-        "clutch": 62,
-        "holdRunners": 53
+        "ovr": 62,
+        "stamina": 56,
+        "velocity": 66,
+        "command": 55,
+        "control": 62,
+        "movement": 55,
+        "mentality": 60,
+        "recovery": 51,
+        "clutch": 54,
+        "holdRunners": 58
       },
       "batting": {
-        "ovr": 60,
-        "contact": 61,
-        "power": 50,
-        "eye": 64,
-        "discipline": 56,
-        "speed": 65,
-        "baseInstinct": 55,
-        "bunting": 50,
+        "ovr": 62,
+        "contact": 55,
+        "power": 63,
+        "eye": 62,
+        "discipline": 57,
+        "speed": 56,
+        "baseInstinct": 54,
+        "bunting": 54,
         "platoon": 50,
-        "fielding": 50,
-        "arm": 52,
-        "battingClutch": 50
+        "fielding": 55,
+        "arm": 60,
+        "battingClutch": 58
       },
       "positionRatings": {
-        "SP": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "C": 62
+      }
     },
     "coach": null,
     "manager": null,

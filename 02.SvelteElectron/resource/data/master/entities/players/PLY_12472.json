@@ -1,9 +1,9 @@
 {
   "id": "PLY_12472",
-  "name": "로드리게스 재크",
-  "nameEn": "Rodriguez Zach",
+  "name": "Green Jason",
+  "nameEn": "Green Jason",
   "role": "player",
-  "age": 34,
+  "age": 33,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 58,
-  "popularity": 45,
+  "notes": "국적:파나마",
+  "diligence": 68,
+  "popularity": 44,
   "militaryStatus": "군필",
   "entryYear": 2041,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 34,
+  "entryAge": 33,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 54,
-      "primaryPosition": "SP",
-      "developmentRate": 46,
-      "potentialHidden": 57,
-      "proServiceYears": 12,
+      "position": "2B",
+      "jerseyNumber": 42,
+      "primaryPosition": "2B",
+      "developmentRate": 53,
+      "potentialHidden": 58,
+      "proServiceYears": 11,
       "pitching": {
-        "ovr": 88,
-        "stamina": 89,
-        "velocity": 98,
-        "command": 80,
-        "control": 81,
-        "movement": 86,
-        "mentality": 96,
-        "recovery": 76,
-        "clutch": 89,
-        "holdRunners": 76
+        "ovr": 69,
+        "stamina": 61,
+        "velocity": 70,
+        "command": 67,
+        "control": 65,
+        "movement": 67,
+        "mentality": 65,
+        "recovery": 61,
+        "clutch": 58,
+        "holdRunners": 57
       },
       "batting": {
-        "ovr": 74,
-        "contact": 77,
-        "power": 65,
-        "eye": 69,
-        "discipline": 67,
-        "speed": 74,
-        "baseInstinct": 65,
-        "bunting": 66,
+        "ovr": 69,
+        "contact": 65,
+        "power": 64,
+        "eye": 70,
+        "discipline": 72,
+        "speed": 72,
+        "baseInstinct": 69,
+        "bunting": 59,
         "platoon": 50,
-        "fielding": 66,
+        "fielding": 67,
         "arm": 67,
-        "battingClutch": 64
+        "battingClutch": 59
       },
       "positionRatings": {
-        "SP": 74
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "2B": 69
+      }
     },
     "coach": null,
     "manager": null,

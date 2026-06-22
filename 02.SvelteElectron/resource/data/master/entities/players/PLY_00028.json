@@ -1,9 +1,9 @@
 {
   "id": "PLY_00028",
   "name": "심성준",
-  "nameEn": "Sim Seongjun",
+  "nameEn": "Bae Seung-hyun",
   "role": "player",
-  "age": 19,
+  "age": 15,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "C",
       "jerseyNumber": 8,
       "pitching": {
-        "ovr": 41,
-        "stamina": 43,
-        "velocity": 44,
-        "command": 42,
-        "control": 42,
-        "movement": 43,
-        "mentality": 38,
-        "recovery": 40,
-        "clutch": 39,
-        "holdRunners": 39
+        "ovr": 49,
+        "stamina": 63,
+        "velocity": 60,
+        "command": 61,
+        "control": 55,
+        "movement": 53,
+        "mentality": 67,
+        "recovery": 73
       },
       "batting": {
-        "ovr": 61,
-        "contact": 65,
-        "power": 56,
-        "eye": 59,
-        "discipline": 58,
-        "speed": 64,
-        "fielding": 67,
-        "arm": 62,
-        "battingClutch": 59,
-        "baseInstinct": 53,
-        "bunting": 52,
-        "platoon": 54
+        "ovr": 64,
+        "contact": 59,
+        "power": 64,
+        "eye": 52,
+        "discipline": 63,
+        "speed": 67,
+        "fielding": 58,
+        "arm": 68,
+        "battingClutch": 63
       },
       "developmentRate": 46,
-      "potentialHidden": 82,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 61
-      }
+      "potentialHidden": 82
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

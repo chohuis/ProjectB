@@ -1,14 +1,14 @@
 {
   "id": "PLY_01240",
   "name": "윌리엄스 저스틴",
-  "nameEn": "Wil 리엄스 저스틴",
+  "nameEn": "Williams Justin",
   "role": "player",
   "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_WAVERIDERS",
-  "teamId": "TEAM_ABL_WAVERIDERS_1",
+  "clubId": "CLUB_ABL_NYM",
+  "teamId": "TEAM_ABL_NYM",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
@@ -19,48 +19,28 @@
       "position": "C",
       "jerseyNumber": 15,
       "pitching": {
-        "ovr": 65,
-        "stamina": 62,
-        "velocity": 71,
-        "command": 65,
-        "control": 69,
-        "movement": 68,
-        "mentality": 70,
-        "recovery": 63,
-        "clutch": 62,
-        "holdRunners": 53
+        "ovr": 53,
+        "stamina": 55,
+        "velocity": 51,
+        "command": 50,
+        "control": 48,
+        "movement": 55,
+        "mentality": 49,
+        "recovery": 50
       },
       "batting": {
-        "ovr": 85,
-        "contact": 80,
-        "power": 87,
-        "eye": 83,
+        "ovr": 84,
+        "contact": 84,
+        "power": 90,
+        "eye": 88,
         "discipline": 89,
-        "speed": 84,
-        "fielding": 83,
-        "arm": 86,
-        "battingClutch": 81,
-        "baseInstinct": 75,
-        "bunting": 75,
-        "platoon": 73
+        "speed": 81,
+        "fielding": 88,
+        "arm": 93,
+        "battingClutch": 87
       },
       "developmentRate": 30,
-      "potentialHidden": 76,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 85
-      },
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 17800,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 76
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,14 +1,14 @@
 {
   "id": "PLY_01524",
   "name": "화이트 리엄",
-  "nameEn": "Hwa 이트 리엄",
+  "nameEn": "White Liam",
   "role": "player",
   "age": 35,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_RIVERCARDINALS",
-  "teamId": "TEAM_ABL_RIVERCARDINALS_2",
+  "clubId": "CLUB_ABL_BAL",
+  "teamId": "TEAM_ABL_BAL_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 44,
       "pitching": {
-        "ovr": 71,
-        "stamina": 72,
-        "velocity": 68,
-        "command": 70,
-        "control": 73,
-        "movement": 66,
-        "mentality": 68,
-        "recovery": 73,
-        "clutch": 69,
-        "holdRunners": 64
+        "ovr": 72,
+        "stamina": 80,
+        "velocity": 76,
+        "command": 72,
+        "control": 78,
+        "movement": 77,
+        "mentality": 77,
+        "recovery": 76
       },
       "batting": {
-        "ovr": 53,
-        "contact": 49,
-        "power": 49,
-        "eye": 56,
-        "discipline": 58,
-        "speed": 59,
-        "fielding": 59,
-        "arm": 52,
-        "battingClutch": 51,
-        "baseInstinct": 44,
-        "bunting": 46,
-        "platoon": 46
+        "ovr": 49,
+        "contact": 47,
+        "power": 51,
+        "eye": 49,
+        "discipline": 48,
+        "speed": 48,
+        "fielding": 49,
+        "arm": 46,
+        "battingClutch": 47
       },
       "developmentRate": 31,
-      "potentialHidden": 61,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 71
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 13,
-      "contract": {
-        "salary": 22500,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 61
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

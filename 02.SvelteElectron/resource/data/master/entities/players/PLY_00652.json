@@ -1,14 +1,14 @@
 {
   "id": "PLY_00652",
   "name": "강민재",
-  "nameEn": "Kang Minjae",
+  "nameEn": "Jung Jae-won",
   "role": "player",
   "age": 30,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_EMBERTIGERS",
-  "teamId": "TEAM_KBL_EMBERTIGERS_1",
+  "clubId": "CLUB_KBL_KT",
+  "teamId": "TEAM_KBL_KT_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,58 +19,28 @@
       "position": "CP",
       "jerseyNumber": 12,
       "pitching": {
-        "ovr": 79,
-        "stamina": 84,
-        "velocity": 84,
-        "command": 79,
-        "control": 78,
-        "movement": 83,
-        "mentality": 78,
-        "recovery": 75,
-        "clutch": 79,
-        "holdRunners": 72
+        "ovr": 91,
+        "stamina": 73,
+        "velocity": 92,
+        "command": 90,
+        "control": 91,
+        "movement": 90,
+        "mentality": 91,
+        "recovery": 89
       },
       "batting": {
-        "ovr": 61,
-        "contact": 65,
-        "power": 63,
-        "eye": 65,
-        "discipline": 67,
-        "speed": 63,
+        "ovr": 55,
+        "contact": 56,
+        "power": 59,
+        "eye": 54,
+        "discipline": 60,
+        "speed": 53,
         "fielding": 58,
         "arm": 61,
-        "battingClutch": 56,
-        "baseInstinct": 58,
-        "bunting": 58,
-        "platoon": 49
+        "battingClutch": 59
       },
       "developmentRate": 43,
-      "potentialHidden": 85,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 79
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 8,
-      "contract": {
-        "salary": 8200,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 85
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

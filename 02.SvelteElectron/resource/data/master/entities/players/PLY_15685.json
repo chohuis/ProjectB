@@ -1,6 +1,6 @@
 {
   "id": "PLY_15685",
-  "name": "앨런 블레이크",
+  "name": "Allen Blake",
   "nameEn": "Allen Blake",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 69,
   "popularity": 15,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 63
       },
       "batting": {
-        "ovr": 65,
-        "contact": 64,
-        "power": 57,
-        "eye": 70,
-        "discipline": 56,
-        "speed": 60,
-        "baseInstinct": 65,
-        "bunting": 55,
-        "platoon": 48,
-        "fielding": 61,
-        "arm": 56,
-        "battingClutch": 64
+        "ovr": 68,
+        "contact": 67,
+        "power": 60,
+        "eye": 73,
+        "discipline": 59,
+        "speed": 63,
+        "baseInstinct": 68,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 59,
+        "battingClutch": 67
       },
       "positionRatings": {
         "RF": 68

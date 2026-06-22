@@ -1,9 +1,9 @@
 {
   "id": "PLY_10095",
-  "name": "클라크 칼렙",
-  "nameEn": "Clark Caleb",
+  "name": "Green Evan",
+  "nameEn": "Green Evan",
   "role": "player",
-  "age": 19,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 65,
-  "popularity": 46,
+  "notes": "국적:일본",
+  "diligence": 66,
+  "popularity": 27,
   "militaryStatus": "군필",
   "entryYear": 2027,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 19,
+  "entryAge": 21,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 77,
+      "jerseyNumber": 29,
       "primaryPosition": "SP",
-      "developmentRate": 64,
-      "potentialHidden": 74,
+      "developmentRate": 79,
+      "potentialHidden": 70,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 56,
-        "stamina": 58,
-        "velocity": 62,
-        "command": 53,
-        "control": 53,
-        "movement": 59,
+        "ovr": 59,
+        "stamina": 63,
+        "velocity": 63,
+        "command": 58,
+        "control": 50,
+        "movement": 53,
         "mentality": 63,
         "recovery": 58,
-        "clutch": 48,
-        "holdRunners": 54
+        "clutch": 46,
+        "holdRunners": 56
       },
       "batting": {
-        "ovr": 60,
-        "contact": 60,
-        "power": 61,
-        "eye": 56,
-        "discipline": 62,
-        "speed": 64,
-        "baseInstinct": 62,
-        "bunting": 51,
+        "ovr": 59,
+        "contact": 50,
+        "power": 57,
+        "eye": 61,
+        "discipline": 60,
+        "speed": 54,
+        "baseInstinct": 53,
+        "bunting": 50,
         "platoon": 50,
-        "fielding": 55,
-        "arm": 50,
-        "battingClutch": 57
+        "fielding": 53,
+        "arm": 61,
+        "battingClutch": 49
       },
       "positionRatings": {
-        "SP": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 59
+      }
     },
     "coach": null,
     "manager": null,

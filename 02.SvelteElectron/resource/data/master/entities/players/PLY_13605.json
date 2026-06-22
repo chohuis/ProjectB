@@ -1,9 +1,9 @@
 {
   "id": "PLY_13605",
-  "name": "넬슨 코너",
-  "nameEn": "Nelson Connor",
+  "name": "Lee Cole",
+  "nameEn": "Lee Cole",
   "role": "player",
-  "age": 26,
+  "age": 34,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 52,
-  "popularity": 36,
+  "notes": "국적:미국",
+  "diligence": 73,
+  "popularity": 39,
   "militaryStatus": "군필",
   "entryYear": 2048,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 26,
+  "entryAge": 34,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 69,
+      "jerseyNumber": 68,
       "primaryPosition": "SP",
-      "developmentRate": 48,
-      "potentialHidden": 71,
-      "proServiceYears": 4,
+      "developmentRate": 45,
+      "potentialHidden": 62,
+      "proServiceYears": 12,
       "pitching": {
-        "ovr": 60,
-        "stamina": 54,
-        "velocity": 61,
-        "command": 57,
-        "control": 56,
-        "movement": 59,
-        "mentality": 62,
-        "recovery": 60,
-        "clutch": 57,
-        "holdRunners": 50
+        "ovr": 61,
+        "stamina": 62,
+        "velocity": 63,
+        "command": 56,
+        "control": 60,
+        "movement": 54,
+        "mentality": 68,
+        "recovery": 51,
+        "clutch": 49,
+        "holdRunners": 58
       },
       "batting": {
-        "ovr": 69,
-        "contact": 70,
-        "power": 61,
-        "eye": 68,
-        "discipline": 64,
-        "speed": 66,
-        "baseInstinct": 70,
-        "bunting": 56,
+        "ovr": 61,
+        "contact": 58,
+        "power": 55,
+        "eye": 58,
+        "discipline": 52,
+        "speed": 64,
+        "baseInstinct": 59,
+        "bunting": 46,
         "platoon": 50,
-        "fielding": 67,
-        "arm": 61,
-        "battingClutch": 66
+        "fielding": 54,
+        "arm": 56,
+        "battingClutch": 61
       },
       "positionRatings": {
-        "SP": 69
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        }
-      ]
+        "SP": 61
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_15418",
-  "name": "무어 제이크",
+  "name": "Moore Jake",
   "nameEn": "Moore Jake",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 53,
   "popularity": 43,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 50
       },
       "batting": {
-        "ovr": 50,
-        "contact": 43,
-        "power": 52,
-        "eye": 54,
-        "discipline": 42,
-        "speed": 50,
-        "baseInstinct": 52,
-        "bunting": 31,
-        "platoon": 49,
-        "fielding": 42,
-        "arm": 45,
-        "battingClutch": 39
+        "ovr": 51,
+        "contact": 44,
+        "power": 53,
+        "eye": 55,
+        "discipline": 43,
+        "speed": 51,
+        "baseInstinct": 53,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 46,
+        "battingClutch": 40
       },
       "positionRatings": {
         "C": 51

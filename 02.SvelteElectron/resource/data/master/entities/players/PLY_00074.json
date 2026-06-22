@@ -1,9 +1,9 @@
 {
   "id": "PLY_00074",
   "name": "나우진",
-  "nameEn": "Na Ujin",
+  "nameEn": "Ko Min-jun",
   "role": "player",
-  "age": 18,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "2B",
       "jerseyNumber": 14,
       "pitching": {
-        "ovr": 31,
-        "stamina": 29,
-        "velocity": 37,
-        "command": 36,
-        "control": 35,
-        "movement": 27,
-        "mentality": 35,
-        "recovery": 33,
-        "clutch": 37,
-        "holdRunners": 40
+        "ovr": 44,
+        "stamina": 59,
+        "velocity": 58,
+        "command": 61,
+        "control": 57,
+        "movement": 44,
+        "mentality": 52,
+        "recovery": 59
       },
       "batting": {
-        "ovr": 51,
-        "contact": 52,
-        "power": 47,
-        "eye": 47,
-        "discipline": 52,
-        "speed": 48,
-        "fielding": 46,
-        "arm": 55,
-        "battingClutch": 46,
-        "baseInstinct": 48,
-        "bunting": 38,
-        "platoon": 41
+        "ovr": 56,
+        "contact": 63,
+        "power": 53,
+        "eye": 44,
+        "discipline": 49,
+        "speed": 62,
+        "fielding": 49,
+        "arm": 56,
+        "battingClutch": 44
       },
       "developmentRate": 63,
-      "potentialHidden": 84,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 51
-      }
+      "potentialHidden": 84
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

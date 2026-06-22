@@ -1,14 +1,14 @@
 {
   "id": "PLY_01001",
   "name": "스미스 빅터",
-  "nameEn": "Seu 미스 빅터",
+  "nameEn": "Smith Victor",
   "role": "player",
   "age": 35,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_SPACECOMETS",
-  "teamId": "TEAM_ABL_SPACECOMETS_1",
+  "clubId": "CLUB_ABL_SEA",
+  "teamId": "TEAM_ABL_SEA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 1,
       "pitching": {
-        "ovr": 80,
-        "stamina": 84,
-        "velocity": 83,
-        "command": 84,
-        "control": 81,
-        "movement": 79,
-        "mentality": 82,
-        "recovery": 83,
-        "clutch": 77,
-        "holdRunners": 76
+        "ovr": 88,
+        "stamina": 94,
+        "velocity": 97,
+        "command": 93,
+        "control": 86,
+        "movement": 85,
+        "mentality": 88,
+        "recovery": 87
       },
       "batting": {
-        "ovr": 62,
-        "contact": 57,
-        "power": 64,
-        "eye": 64,
-        "discipline": 61,
-        "speed": 61,
-        "fielding": 65,
-        "arm": 60,
-        "battingClutch": 57,
-        "baseInstinct": 51,
-        "bunting": 47,
-        "platoon": 54
+        "ovr": 58,
+        "contact": 58,
+        "power": 58,
+        "eye": 58,
+        "discipline": 58,
+        "speed": 58,
+        "fielding": 55,
+        "arm": 56,
+        "battingClutch": 57
       },
       "developmentRate": 51,
-      "potentialHidden": 67,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 80
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_FORKBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SCREWBALL",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 13,
-      "contract": {
-        "salary": 29400,
-        "durationYears": 4,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 67
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

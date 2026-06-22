@@ -1,6 +1,6 @@
 {
   "id": "PLY_16370",
-  "name": "로빈슨 루이스",
+  "name": "Robinson Luis",
   "nameEn": "Robinson Luis",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 49,
   "popularity": 22,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 61
       },
       "batting": {
-        "ovr": 73,
-        "contact": 72,
-        "power": 71,
-        "eye": 71,
-        "discipline": 65,
-        "speed": 68,
-        "baseInstinct": 75,
-        "bunting": 67,
-        "platoon": 48,
-        "fielding": 66,
-        "arm": 76,
-        "battingClutch": 66
+        "ovr": 76,
+        "contact": 75,
+        "power": 74,
+        "eye": 74,
+        "discipline": 68,
+        "speed": 71,
+        "baseInstinct": 78,
+        "bunting": 70,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 79,
+        "battingClutch": 69
       },
       "positionRatings": {
         "C": 76

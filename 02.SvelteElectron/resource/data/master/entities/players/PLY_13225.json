@@ -1,9 +1,9 @@
 {
   "id": "PLY_13225",
-  "name": "미첼 블레이크",
-  "nameEn": "Mitchell Blake",
+  "name": "Brown Evan",
+  "nameEn": "Brown Evan",
   "role": "player",
-  "age": 20,
+  "age": 19,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 75,
-  "popularity": 34,
+  "notes": "국적:일본",
+  "diligence": 55,
+  "popularity": 36,
   "militaryStatus": "군필",
   "entryYear": 2046,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 20,
+  "entryAge": 19,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 34,
+      "jerseyNumber": 19,
       "primaryPosition": "SP",
-      "developmentRate": 68,
-      "potentialHidden": 69,
+      "developmentRate": 72,
+      "potentialHidden": 67,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 52,
-        "stamina": 52,
+        "ovr": 63,
+        "stamina": 58,
         "velocity": 61,
-        "command": 50,
-        "control": 48,
-        "movement": 51,
-        "mentality": 54,
-        "recovery": 45,
-        "clutch": 47,
-        "holdRunners": 43
+        "command": 59,
+        "control": 64,
+        "movement": 65,
+        "mentality": 70,
+        "recovery": 61,
+        "clutch": 63,
+        "holdRunners": 62
       },
       "batting": {
-        "ovr": 55,
-        "contact": 59,
-        "power": 46,
-        "eye": 59,
-        "discipline": 57,
-        "speed": 56,
+        "ovr": 63,
+        "contact": 64,
+        "power": 59,
+        "eye": 57,
+        "discipline": 59,
+        "speed": 61,
         "baseInstinct": 57,
-        "bunting": 49,
+        "bunting": 52,
         "platoon": 50,
-        "fielding": 44,
-        "arm": 51,
-        "battingClutch": 49
+        "fielding": 63,
+        "arm": 60,
+        "battingClutch": 52
       },
       "positionRatings": {
-        "SP": 55
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 63
+      }
     },
     "coach": null,
     "manager": null,

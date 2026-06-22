@@ -1,6 +1,6 @@
 {
   "id": "PLY_15788",
-  "name": "토마스 제이크",
+  "name": "Thomas Jake",
   "nameEn": "Thomas Jake",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 46,
   "popularity": 28,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 55,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 55,
-        "stamina": 53,
-        "velocity": 64,
-        "command": 54,
-        "control": 51,
-        "movement": 49,
-        "mentality": 53,
-        "recovery": 49,
-        "clutch": 43,
-        "holdRunners": 40
+        "ovr": 56,
+        "stamina": 54,
+        "velocity": 65,
+        "command": 55,
+        "control": 52,
+        "movement": 50,
+        "mentality": 54,
+        "recovery": 50,
+        "clutch": 44,
+        "holdRunners": 41
       },
       "batting": {
         "ovr": 56,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

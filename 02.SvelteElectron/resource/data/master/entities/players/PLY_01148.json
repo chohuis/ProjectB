@@ -1,14 +1,14 @@
 {
   "id": "PLY_01148",
   "name": "라이트 메이슨",
-  "nameEn": "Ra 이트 메이슨",
+  "nameEn": "Wright Mason",
   "role": "player",
   "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_RAINARROWS",
-  "teamId": "TEAM_ABL_RAINARROWS_1",
+  "clubId": "CLUB_ABL_ATL",
+  "teamId": "TEAM_ABL_ATL",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
@@ -19,58 +19,28 @@
       "position": "CP",
       "jerseyNumber": 13,
       "pitching": {
-        "ovr": 77,
-        "stamina": 79,
-        "velocity": 83,
-        "command": 79,
-        "control": 73,
-        "movement": 77,
-        "mentality": 82,
-        "recovery": 74,
-        "clutch": 74,
-        "holdRunners": 76
+        "ovr": 87,
+        "stamina": 76,
+        "velocity": 91,
+        "command": 88,
+        "control": 86,
+        "movement": 89,
+        "mentality": 87,
+        "recovery": 86
       },
       "batting": {
         "ovr": 59,
-        "contact": 61,
-        "power": 58,
-        "eye": 55,
-        "discipline": 54,
-        "speed": 57,
-        "fielding": 56,
+        "contact": 56,
+        "power": 55,
+        "eye": 53,
+        "discipline": 53,
+        "speed": 58,
+        "fielding": 54,
         "arm": 56,
-        "battingClutch": 50,
-        "baseInstinct": 52,
-        "bunting": 46,
-        "platoon": 56
+        "battingClutch": 60
       },
       "developmentRate": 49,
-      "potentialHidden": 63,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 77
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 2,
-      "contract": {
-        "salary": 27100,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 63
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

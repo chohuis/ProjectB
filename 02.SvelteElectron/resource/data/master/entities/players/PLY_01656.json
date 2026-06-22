@@ -1,69 +1,46 @@
 {
   "id": "PLY_01656",
-  "name": "우재훈",
-  "nameEn": "Woo Jaehun",
+  "name": "사토 쇼",
+  "nameEn": "Sato Sho",
   "role": "player",
-  "age": 16,
+  "age": 30,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
-  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_CHUNCHEON_HIGHLAND",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONDRAKES",
+  "teamId": "TEAM_JBL_CL_IRONDRAKES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 5,
+      "jerseyNumber": 31,
       "pitching": {
-        "ovr": 29,
-        "stamina": 32,
-        "velocity": 33,
-        "command": 33,
-        "control": 27,
-        "movement": 26,
-        "mentality": 33,
-        "recovery": 34,
-        "clutch": 40,
-        "holdRunners": 32
+        "ovr": 66,
+        "stamina": 69,
+        "velocity": 67,
+        "command": 63,
+        "control": 64,
+        "movement": 63,
+        "mentality": 67,
+        "recovery": 66
       },
       "batting": {
-        "ovr": 22,
-        "contact": 20,
-        "power": 26,
-        "eye": 20,
-        "discipline": 26,
-        "speed": 27,
-        "fielding": 20,
-        "arm": 26,
-        "battingClutch": 34,
-        "baseInstinct": 45,
-        "bunting": 38,
-        "platoon": 43
+        "ovr": 37,
+        "contact": 41,
+        "power": 41,
+        "eye": 36,
+        "discipline": 39,
+        "speed": 41,
+        "fielding": 35,
+        "arm": 39,
+        "battingClutch": 40
       },
-      "developmentRate": 65,
-      "potentialHidden": 70,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 29
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        }
-      ]
+      "developmentRate": 53,
+      "potentialHidden": 69
     },
     "coach": {
       "specialty": "-",
@@ -103,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 63,
-  "popularity": 12
+  }
 }

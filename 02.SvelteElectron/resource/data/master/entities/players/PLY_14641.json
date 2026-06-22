@@ -1,6 +1,6 @@
 {
   "id": "PLY_14641",
-  "name": "마르티네스 알렉스",
+  "name": "Martinez Alex",
   "nameEn": "Martinez Alex",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 70,
   "popularity": 31,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 46
       },
       "batting": {
-        "ovr": 69,
-        "contact": 61,
-        "power": 72,
-        "eye": 63,
-        "discipline": 64,
-        "speed": 70,
-        "baseInstinct": 55,
-        "bunting": 61,
-        "platoon": 63,
-        "fielding": 61,
-        "arm": 70,
-        "battingClutch": 69
+        "ovr": 55,
+        "contact": 49,
+        "power": 57,
+        "eye": 50,
+        "discipline": 51,
+        "speed": 56,
+        "baseInstinct": 44,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 56,
+        "battingClutch": 55
       },
       "positionRatings": {
         "SS": 55

@@ -1,6 +1,6 @@
 {
   "id": "PLY_15860",
-  "name": "로빈슨 케빈",
+  "name": "Robinson Kevin",
   "nameEn": "Robinson Kevin",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 84,
   "popularity": 26,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 71
       },
       "batting": {
-        "ovr": 77,
-        "contact": 78,
-        "power": 72,
-        "eye": 79,
-        "discipline": 71,
-        "speed": 76,
-        "baseInstinct": 73,
-        "bunting": 69,
-        "platoon": 51,
-        "fielding": 79,
-        "arm": 77,
-        "battingClutch": 67
+        "ovr": 76,
+        "contact": 77,
+        "power": 71,
+        "eye": 78,
+        "discipline": 70,
+        "speed": 75,
+        "baseInstinct": 72,
+        "bunting": 68,
+        "platoon": 50,
+        "fielding": 78,
+        "arm": 76,
+        "battingClutch": 66
       },
       "positionRatings": {
         "SS": 76

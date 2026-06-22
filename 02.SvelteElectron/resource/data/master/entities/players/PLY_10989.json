@@ -1,9 +1,9 @@
 {
   "id": "PLY_10989",
-  "name": "로빈슨 조던",
-  "nameEn": "Robinson Jordan",
+  "name": "Jones Eric",
+  "nameEn": "Jones Eric",
   "role": "player",
-  "age": 22,
+  "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 59,
-  "popularity": 21,
+  "notes": "국적:도미니카",
+  "diligence": 64,
+  "popularity": 32,
   "militaryStatus": "군필",
   "entryYear": 2032,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 22,
+  "entryAge": 24,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 48,
-      "primaryPosition": "SP",
-      "developmentRate": 66,
-      "potentialHidden": 74,
-      "proServiceYears": 0,
+      "position": "CF",
+      "jerseyNumber": 93,
+      "primaryPosition": "CF",
+      "developmentRate": 55,
+      "potentialHidden": 83,
+      "proServiceYears": 2,
       "pitching": {
-        "ovr": 60,
-        "stamina": 54,
-        "velocity": 64,
-        "command": 60,
-        "control": 62,
-        "movement": 54,
-        "mentality": 58,
-        "recovery": 60,
-        "clutch": 59,
-        "holdRunners": 50
+        "ovr": 72,
+        "stamina": 76,
+        "velocity": 79,
+        "command": 74,
+        "control": 64,
+        "movement": 73,
+        "mentality": 70,
+        "recovery": 66,
+        "clutch": 62,
+        "holdRunners": 61
       },
       "batting": {
-        "ovr": 65,
-        "contact": 61,
-        "power": 56,
+        "ovr": 72,
+        "contact": 65,
+        "power": 62,
         "eye": 65,
-        "discipline": 66,
-        "speed": 67,
-        "baseInstinct": 54,
-        "bunting": 58,
+        "discipline": 75,
+        "speed": 75,
+        "baseInstinct": 69,
+        "bunting": 55,
         "platoon": 50,
         "fielding": 65,
-        "arm": 64,
-        "battingClutch": 65
+        "arm": 72,
+        "battingClutch": 64
       },
       "positionRatings": {
-        "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "CF": 72
+      }
     },
     "coach": null,
     "manager": null,

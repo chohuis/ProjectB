@@ -1,14 +1,14 @@
 {
   "id": "PLY_01376",
   "name": "톰프슨 루카스",
-  "nameEn": "Tom 프슨 루카스",
+  "nameEn": "Thompson Lucas",
   "role": "player",
   "age": 40,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_LAKESPIRITS",
-  "teamId": "TEAM_ABL_LAKESPIRITS_1",
+  "clubId": "CLUB_ABL_SD",
+  "teamId": "TEAM_ABL_SD",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
@@ -19,48 +19,28 @@
       "position": "1B",
       "jerseyNumber": 16,
       "pitching": {
-        "ovr": 65,
-        "stamina": 70,
-        "velocity": 69,
-        "command": 67,
+        "ovr": 61,
+        "stamina": 63,
+        "velocity": 68,
+        "command": 62,
         "control": 64,
-        "movement": 68,
-        "mentality": 62,
-        "recovery": 64,
-        "clutch": 57,
-        "holdRunners": 62
+        "movement": 59,
+        "mentality": 60,
+        "recovery": 62
       },
       "batting": {
         "ovr": 85,
-        "contact": 87,
-        "power": 83,
-        "eye": 81,
-        "discipline": 85,
-        "speed": 80,
+        "contact": 88,
+        "power": 90,
+        "eye": 90,
+        "discipline": 89,
+        "speed": 83,
         "fielding": 83,
-        "arm": 91,
-        "battingClutch": 79,
-        "baseInstinct": 79,
-        "bunting": 76,
-        "platoon": 79
+        "arm": 86,
+        "battingClutch": 87
       },
       "developmentRate": 33,
-      "potentialHidden": 74,
-      "primaryPosition": "1B",
-      "positionRatings": {
-        "1B": 85
-      },
-      "proServiceYears": 18,
-      "contract": {
-        "salary": 17800,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 74
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

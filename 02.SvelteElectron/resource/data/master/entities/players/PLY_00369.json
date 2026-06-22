@@ -1,7 +1,7 @@
 {
   "id": "PLY_00369",
   "name": "문건우",
-  "nameEn": "Moon Geonu",
+  "nameEn": "Hong Tae-woo",
   "role": "player",
   "age": 29,
   "status": "active",
@@ -19,58 +19,28 @@
       "position": "CP",
       "jerseyNumber": 9,
       "pitching": {
-        "ovr": 37,
-        "stamina": 35,
-        "velocity": 34,
-        "command": 42,
-        "control": 40,
-        "movement": 38,
-        "mentality": 41,
-        "recovery": 40,
-        "clutch": 44,
-        "holdRunners": 43
+        "ovr": 55,
+        "stamina": 37,
+        "velocity": 53,
+        "command": 53,
+        "control": 56,
+        "movement": 51,
+        "mentality": 50,
+        "recovery": 49
       },
       "batting": {
-        "ovr": 22,
-        "contact": 26,
-        "power": 22,
+        "ovr": 27,
+        "contact": 22,
+        "power": 26,
         "eye": 21,
-        "discipline": 20,
-        "speed": 20,
-        "fielding": 20,
-        "arm": 26,
-        "battingClutch": 34,
-        "baseInstinct": 35,
-        "bunting": 30,
-        "platoon": 36
+        "discipline": 19,
+        "speed": 23,
+        "fielding": 21,
+        "arm": 18,
+        "battingClutch": 27
       },
       "developmentRate": 42,
-      "potentialHidden": 57,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 37
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 9,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 57
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

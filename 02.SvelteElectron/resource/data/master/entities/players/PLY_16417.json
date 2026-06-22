@@ -1,6 +1,6 @@
 {
   "id": "PLY_16417",
-  "name": "미첼 블레이크",
+  "name": "Mitchell Blake",
   "nameEn": "Mitchell Blake",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 52,
   "popularity": 15,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 60,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 59,
-        "stamina": 62,
-        "velocity": 61,
-        "command": 61,
-        "control": 59,
-        "movement": 62,
-        "mentality": 56,
-        "recovery": 57,
-        "clutch": 50,
-        "holdRunners": 44
+        "ovr": 60,
+        "stamina": 63,
+        "velocity": 62,
+        "command": 62,
+        "control": 60,
+        "movement": 63,
+        "mentality": 57,
+        "recovery": 58,
+        "clutch": 51,
+        "holdRunners": 45
       },
       "batting": {
         "ovr": 60,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

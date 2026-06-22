@@ -1,9 +1,9 @@
 {
   "id": "PLY_11400",
-  "name": "에르난데스 칼렙",
-  "nameEn": "Hernandez Caleb",
+  "name": "White Jason",
+  "nameEn": "White Jason",
   "role": "player",
-  "age": 20,
+  "age": 18,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 68,
-  "popularity": 17,
+  "notes": "국적:쿠바",
+  "diligence": 50,
+  "popularity": 20,
   "militaryStatus": "군필",
   "entryYear": 2035,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 20,
+  "entryAge": 18,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
+      "position": "3B",
       "jerseyNumber": 8,
-      "primaryPosition": "SP",
-      "developmentRate": 61,
-      "potentialHidden": 90,
+      "primaryPosition": "3B",
+      "developmentRate": 56,
+      "potentialHidden": 60,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 62,
-        "stamina": 59,
-        "velocity": 71,
-        "command": 57,
-        "control": 56,
-        "movement": 60,
-        "mentality": 61,
-        "recovery": 55,
-        "clutch": 59,
-        "holdRunners": 54
+        "ovr": 57,
+        "stamina": 53,
+        "velocity": 66,
+        "command": 54,
+        "control": 58,
+        "movement": 56,
+        "mentality": 63,
+        "recovery": 46,
+        "clutch": 47,
+        "holdRunners": 44
       },
       "batting": {
-        "ovr": 67,
-        "contact": 61,
-        "power": 63,
-        "eye": 67,
-        "discipline": 64,
-        "speed": 65,
-        "baseInstinct": 59,
-        "bunting": 58,
+        "ovr": 57,
+        "contact": 57,
+        "power": 59,
+        "eye": 53,
+        "discipline": 61,
+        "speed": 57,
+        "baseInstinct": 50,
+        "bunting": 48,
         "platoon": 50,
-        "fielding": 56,
-        "arm": 67,
-        "battingClutch": 68
+        "fielding": 55,
+        "arm": 48,
+        "battingClutch": 45
       },
       "positionRatings": {
-        "SP": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        }
-      ]
+        "3B": 57
+      }
     },
     "coach": null,
     "manager": null,

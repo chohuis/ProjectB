@@ -1,14 +1,14 @@
 {
   "id": "PLY_00852",
   "name": "가르시아 프란시스코",
-  "nameEn": "Ga 르시아 프란시스코",
+  "nameEn": "Garcia Francisco",
   "role": "player",
   "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_EMPIRE",
-  "teamId": "TEAM_ABL_EMPIRE_2",
+  "clubId": "CLUB_ABL_LAD",
+  "teamId": "TEAM_ABL_LAD_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 47,
       "pitching": {
-        "ovr": 76,
-        "stamina": 81,
-        "velocity": 74,
-        "command": 78,
-        "control": 78,
-        "movement": 76,
-        "mentality": 72,
-        "recovery": 74,
-        "clutch": 65,
-        "holdRunners": 67
+        "ovr": 82,
+        "stamina": 80,
+        "velocity": 91,
+        "command": 83,
+        "control": 80,
+        "movement": 84,
+        "mentality": 85,
+        "recovery": 85
       },
       "batting": {
-        "ovr": 58,
-        "contact": 53,
-        "power": 62,
-        "eye": 61,
-        "discipline": 61,
-        "speed": 52,
-        "fielding": 54,
-        "arm": 59,
-        "battingClutch": 49,
-        "baseInstinct": 55,
-        "bunting": 54,
-        "platoon": 52
+        "ovr": 65,
+        "contact": 61,
+        "power": 65,
+        "eye": 67,
+        "discipline": 68,
+        "speed": 64,
+        "fielding": 61,
+        "arm": 62,
+        "battingClutch": 61
       },
       "developmentRate": 46,
-      "potentialHidden": 81,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_FORKBALL",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 6,
-      "contract": {
-        "salary": 26300,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 81
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

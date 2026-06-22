@@ -1,6 +1,6 @@
 {
   "id": "PLY_15492",
-  "name": "데이비스 에릭",
+  "name": "Davis Eric",
   "nameEn": "Davis Eric",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 74,
   "popularity": 23,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 63,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 60,
-        "stamina": 59,
-        "velocity": 63,
-        "command": 57,
-        "control": 53,
-        "movement": 63,
-        "mentality": 63,
-        "recovery": 50,
-        "clutch": 58,
-        "holdRunners": 56
+        "ovr": 62,
+        "stamina": 61,
+        "velocity": 65,
+        "command": 59,
+        "control": 55,
+        "movement": 65,
+        "mentality": 65,
+        "recovery": 52,
+        "clutch": 60,
+        "holdRunners": 58
       },
       "batting": {
         "ovr": 62,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

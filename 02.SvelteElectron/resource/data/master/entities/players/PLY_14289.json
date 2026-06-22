@@ -1,6 +1,6 @@
 {
   "id": "PLY_14289",
-  "name": "클라크 다니엘",
+  "name": "Clark Daniel",
   "nameEn": "Clark Daniel",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 61,
   "popularity": 22,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 49
       },
       "batting": {
-        "ovr": 59,
-        "contact": 59,
-        "power": 51,
-        "eye": 54,
-        "discipline": 54,
-        "speed": 59,
-        "baseInstinct": 60,
-        "bunting": 46,
-        "platoon": 49,
-        "fielding": 60,
-        "arm": 57,
-        "battingClutch": 57
+        "ovr": 60,
+        "contact": 60,
+        "power": 52,
+        "eye": 55,
+        "discipline": 55,
+        "speed": 60,
+        "baseInstinct": 61,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 58,
+        "battingClutch": 58
       },
       "positionRatings": {
         "CF": 60

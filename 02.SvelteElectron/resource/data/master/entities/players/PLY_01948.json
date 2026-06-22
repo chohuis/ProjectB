@@ -1,72 +1,46 @@
 {
   "id": "PLY_01948",
-  "name": "남지성",
-  "nameEn": "Nam Jiseong",
+  "name": "사이토 다이키",
+  "nameEn": "Saito Daiki",
   "role": "player",
-  "age": 31,
+  "age": 30,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_EMBERTIGERS",
-  "teamId": "TEAM_KBL_EMBERTIGERS_1",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
+  "teamId": "TEAM_JBL_PL_MARINESOLDIERS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "RF",
-      "jerseyNumber": 97,
+      "position": "SP",
+      "jerseyNumber": 3,
       "pitching": {
-        "ovr": 33,
-        "stamina": 34,
-        "velocity": 33,
-        "command": 35,
-        "control": 32,
-        "movement": 31,
-        "mentality": 38,
-        "recovery": 36,
-        "clutch": 43,
-        "holdRunners": 41
+        "ovr": 77,
+        "stamina": 87,
+        "velocity": 81,
+        "command": 79,
+        "control": 76,
+        "movement": 83,
+        "mentality": 79,
+        "recovery": 83
       },
       "batting": {
-        "ovr": 53,
-        "contact": 53,
-        "power": 53,
-        "eye": 53,
-        "discipline": 59,
-        "speed": 58,
-        "fielding": 47,
-        "arm": 48,
-        "battingClutch": 51,
-        "baseInstinct": 51,
-        "bunting": 47,
-        "platoon": 45
+        "ovr": 52,
+        "contact": 50,
+        "power": 50,
+        "eye": 48,
+        "discipline": 50,
+        "speed": 51,
+        "fielding": 46,
+        "arm": 49,
+        "battingClutch": 54
       },
-      "developmentRate": 63,
-      "potentialHidden": 60,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 53
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 9,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 35,
+      "potentialHidden": 89
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 62,
-  "popularity": 10,
-  "militaryStatus": "군필"
+  }
 }

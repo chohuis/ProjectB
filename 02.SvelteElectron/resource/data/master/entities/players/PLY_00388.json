@@ -1,7 +1,7 @@
 {
   "id": "PLY_00388",
   "name": "노동준",
-  "nameEn": "No Dongjun",
+  "nameEn": "Kwon Jae-yun",
   "role": "player",
   "age": 30,
   "status": "active",
@@ -19,54 +19,28 @@
       "position": "RP",
       "jerseyNumber": 8,
       "pitching": {
-        "ovr": 41,
-        "stamina": 47,
-        "velocity": 39,
-        "command": 41,
-        "control": 46,
-        "movement": 38,
-        "mentality": 45,
-        "recovery": 37,
-        "clutch": 40,
-        "holdRunners": 34
+        "ovr": 54,
+        "stamina": 45,
+        "velocity": 58,
+        "command": 56,
+        "control": 51,
+        "movement": 48,
+        "mentality": 51,
+        "recovery": 53
       },
       "batting": {
-        "ovr": 23,
-        "contact": 27,
-        "power": 25,
-        "eye": 28,
-        "discipline": 20,
-        "speed": 21,
-        "fielding": 25,
-        "arm": 21,
-        "battingClutch": 41,
-        "baseInstinct": 41,
-        "bunting": 38,
-        "platoon": 42
+        "ovr": 32,
+        "contact": 33,
+        "power": 30,
+        "eye": 29,
+        "discipline": 29,
+        "speed": 34,
+        "fielding": 33,
+        "arm": 29,
+        "battingClutch": 37
       },
       "developmentRate": 40,
-      "potentialHidden": 74,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 41
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 10,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 74
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

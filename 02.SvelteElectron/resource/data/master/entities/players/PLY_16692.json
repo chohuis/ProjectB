@@ -1,6 +1,6 @@
 {
   "id": "PLY_16692",
-  "name": "윌리엄스 타일러",
+  "name": "Williams Tyler",
   "nameEn": "Williams Tyler",
   "role": "player",
   "age": 23,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 65,
   "popularity": 35,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 60,
       "proServiceYears": 1,
       "pitching": {
-        "ovr": 65,
-        "stamina": 68,
-        "velocity": 65,
-        "command": 58,
-        "control": 64,
-        "movement": 63,
-        "mentality": 64,
-        "recovery": 59,
-        "clutch": 58,
-        "holdRunners": 63
+        "ovr": 67,
+        "stamina": 70,
+        "velocity": 67,
+        "command": 60,
+        "control": 66,
+        "movement": 65,
+        "mentality": 66,
+        "recovery": 61,
+        "clutch": 60,
+        "holdRunners": 65
       },
       "batting": {
         "ovr": 67,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

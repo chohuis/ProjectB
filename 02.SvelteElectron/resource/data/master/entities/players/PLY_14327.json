@@ -1,6 +1,6 @@
 {
   "id": "PLY_14327",
-  "name": "에르난데스 딜런",
+  "name": "Hernandez Dylan",
   "nameEn": "Hernandez Dylan",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 50,
   "popularity": 11,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 70
       },
       "batting": {
-        "ovr": 72,
-        "contact": 76,
-        "power": 64,
-        "eye": 70,
-        "discipline": 70,
-        "speed": 66,
-        "baseInstinct": 63,
-        "bunting": 63,
-        "platoon": 48,
-        "fielding": 66,
-        "arm": 74,
-        "battingClutch": 72
+        "ovr": 75,
+        "contact": 79,
+        "power": 67,
+        "eye": 73,
+        "discipline": 73,
+        "speed": 69,
+        "baseInstinct": 66,
+        "bunting": 66,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 77,
+        "battingClutch": 75
       },
       "positionRatings": {
         "3B": 75

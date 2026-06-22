@@ -1,6 +1,6 @@
 {
   "id": "PLY_14855",
-  "name": "리 제이슨",
+  "name": "Lee Jason",
   "nameEn": "Lee Jason",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 73,
   "popularity": 25,
   "militaryStatus": "군필",

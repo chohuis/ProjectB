@@ -1,9 +1,9 @@
 {
   "id": "PLY_13943",
-  "name": "해리스 로건",
-  "nameEn": "Harris Logan",
+  "name": "Nelson Zach",
+  "nameEn": "Nelson Zach",
   "role": "player",
-  "age": 35,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 60,
-  "popularity": 23,
+  "notes": "국적:일본",
+  "diligence": 69,
+  "popularity": 13,
   "militaryStatus": "군필",
   "entryYear": 2050,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 35,
+  "entryAge": 22,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 42,
-      "primaryPosition": "SP",
-      "developmentRate": 53,
-      "potentialHidden": 55,
-      "proServiceYears": 13,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 4,
+      "primaryPosition": "C",
+      "developmentRate": 75,
+      "potentialHidden": 95,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 70,
-        "stamina": 68,
-        "velocity": 68,
-        "command": 57,
-        "control": 73,
-        "movement": 61,
-        "mentality": 63,
-        "recovery": 59,
-        "clutch": 57,
-        "holdRunners": 68
+        "ovr": 56,
+        "stamina": 59,
+        "velocity": 64,
+        "command": 56,
+        "control": 51,
+        "movement": 56,
+        "mentality": 57,
+        "recovery": 44,
+        "clutch": 49,
+        "holdRunners": 53
       },
       "batting": {
-        "ovr": 61,
-        "contact": 53,
-        "power": 62,
-        "eye": 56,
-        "discipline": 57,
-        "speed": 59,
-        "baseInstinct": 62,
-        "bunting": 43,
+        "ovr": 56,
+        "contact": 56,
+        "power": 45,
+        "eye": 50,
+        "discipline": 48,
+        "speed": 49,
+        "baseInstinct": 46,
+        "bunting": 50,
         "platoon": 50,
-        "fielding": 56,
-        "arm": 58,
-        "battingClutch": 59
+        "fielding": 45,
+        "arm": 54,
+        "battingClutch": 56
       },
       "positionRatings": {
-        "SP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "C": 56
+      }
     },
     "coach": null,
     "manager": null,

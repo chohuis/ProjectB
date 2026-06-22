@@ -1,14 +1,14 @@
 {
   "id": "PLY_01416",
   "name": "앨런 제임스",
-  "nameEn": "Ael 런 제임스",
+  "nameEn": "Allen James",
   "role": "player",
   "age": 34,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_COASTALRAYS",
-  "teamId": "TEAM_ABL_COASTALRAYS_1",
+  "clubId": "CLUB_ABL_SF",
+  "teamId": "TEAM_ABL_SF",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 11,
       "pitching": {
-        "ovr": 79,
-        "stamina": 79,
-        "velocity": 76,
-        "command": 76,
-        "control": 80,
-        "movement": 81,
-        "mentality": 84,
-        "recovery": 82,
-        "clutch": 70,
-        "holdRunners": 72
+        "ovr": 89,
+        "stamina": 77,
+        "velocity": 89,
+        "command": 93,
+        "control": 91,
+        "movement": 83,
+        "mentality": 85,
+        "recovery": 88
       },
       "batting": {
-        "ovr": 61,
-        "contact": 64,
-        "power": 63,
-        "eye": 67,
-        "discipline": 63,
-        "speed": 68,
-        "fielding": 61,
-        "arm": 66,
-        "battingClutch": 54,
-        "baseInstinct": 54,
-        "bunting": 50,
-        "platoon": 52
+        "ovr": 59,
+        "contact": 58,
+        "power": 58,
+        "eye": 59,
+        "discipline": 58,
+        "speed": 56,
+        "fielding": 59,
+        "arm": 57,
+        "battingClutch": 59
       },
       "developmentRate": 42,
-      "potentialHidden": 91,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 79
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_FORKBALL",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 12,
-      "contract": {
-        "salary": 28600,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 91
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

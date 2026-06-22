@@ -1,14 +1,14 @@
 {
   "id": "PLY_01278",
   "name": "밀러 브랜던",
-  "nameEn": "Mil 러 브랜던",
+  "nameEn": "Miller Brandon",
   "role": "player",
   "age": 35,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_MOTORWOLVES",
-  "teamId": "TEAM_ABL_MOTORWOLVES_1",
+  "clubId": "CLUB_ABL_CHC",
+  "teamId": "TEAM_ABL_CHC",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 8,
       "pitching": {
-        "ovr": 62,
-        "stamina": 60,
-        "velocity": 62,
-        "command": 63,
-        "control": 61,
-        "movement": 64,
-        "mentality": 67,
-        "recovery": 60,
-        "clutch": 53,
-        "holdRunners": 53
+        "ovr": 71,
+        "stamina": 65,
+        "velocity": 75,
+        "command": 78,
+        "control": 71,
+        "movement": 71,
+        "mentality": 70,
+        "recovery": 74
       },
       "batting": {
-        "ovr": 44,
-        "contact": 49,
-        "power": 45,
-        "eye": 49,
-        "discipline": 43,
-        "speed": 46,
-        "fielding": 49,
-        "arm": 40,
-        "battingClutch": 39,
-        "baseInstinct": 43,
-        "bunting": 30,
-        "platoon": 43
+        "ovr": 43,
+        "contact": 39,
+        "power": 41,
+        "eye": 39,
+        "discipline": 42,
+        "speed": 39,
+        "fielding": 37,
+        "arm": 41,
+        "battingClutch": 47
       },
       "developmentRate": 51,
-      "potentialHidden": 69,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 13,
-      "contract": {
-        "salary": 15500,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 69
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

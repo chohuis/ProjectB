@@ -1,9 +1,9 @@
 {
   "id": "PLY_11649",
-  "name": "킹 블레이크",
-  "nameEn": "King Blake",
+  "name": "Thomas Connor",
+  "nameEn": "Thomas Connor",
   "role": "player",
-  "age": 24,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 72,
-  "popularity": 46,
+  "notes": "국적:베네수엘라",
+  "diligence": 74,
+  "popularity": 32,
   "militaryStatus": "군필",
   "entryYear": 2036,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 24,
+  "entryAge": 21,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 37,
-      "primaryPosition": "SP",
-      "developmentRate": 49,
-      "potentialHidden": 70,
-      "proServiceYears": 2,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 67,
+      "primaryPosition": "2B",
+      "developmentRate": 71,
+      "potentialHidden": 67,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 63,
-        "stamina": 58,
-        "velocity": 71,
-        "command": 53,
-        "control": 62,
-        "movement": 58,
-        "mentality": 65,
-        "recovery": 54,
-        "clutch": 61,
-        "holdRunners": 62
+        "ovr": 64,
+        "stamina": 62,
+        "velocity": 69,
+        "command": 66,
+        "control": 60,
+        "movement": 63,
+        "mentality": 60,
+        "recovery": 64,
+        "clutch": 54,
+        "holdRunners": 53
       },
       "batting": {
-        "ovr": 69,
-        "contact": 60,
-        "power": 68,
-        "eye": 63,
-        "discipline": 62,
-        "speed": 66,
-        "baseInstinct": 65,
-        "bunting": 52,
+        "ovr": 64,
+        "contact": 58,
+        "power": 60,
+        "eye": 57,
+        "discipline": 68,
+        "speed": 63,
+        "baseInstinct": 64,
+        "bunting": 58,
         "platoon": 50,
-        "fielding": 71,
-        "arm": 69,
-        "battingClutch": 66
+        "fielding": 58,
+        "arm": 59,
+        "battingClutch": 65
       },
       "positionRatings": {
-        "SP": 69
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+        "2B": 64
+      }
     },
     "coach": null,
     "manager": null,

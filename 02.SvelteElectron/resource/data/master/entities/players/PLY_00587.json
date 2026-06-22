@@ -1,14 +1,14 @@
 {
   "id": "PLY_00587",
   "name": "박성우",
-  "nameEn": "Park Seongu",
+  "nameEn": "Han Seong-hyun",
   "role": "player",
   "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_SKYGULLS",
-  "teamId": "TEAM_KBL_SKYGULLS_2",
+  "clubId": "CLUB_KBL_LG",
+  "teamId": "TEAM_KBL_LG_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,48 +19,28 @@
       "position": "C",
       "jerseyNumber": 42,
       "pitching": {
-        "ovr": 46,
-        "stamina": 43,
-        "velocity": 43,
-        "command": 47,
-        "control": 49,
+        "ovr": 48,
+        "stamina": 45,
+        "velocity": 48,
+        "command": 52,
+        "control": 50,
         "movement": 45,
-        "mentality": 47,
-        "recovery": 44,
-        "clutch": 44,
-        "holdRunners": 39
+        "mentality": 43,
+        "recovery": 46
       },
       "batting": {
-        "ovr": 66,
-        "contact": 69,
-        "power": 62,
-        "eye": 69,
-        "discipline": 67,
-        "speed": 63,
-        "fielding": 63,
-        "arm": 69,
-        "battingClutch": 63,
-        "baseInstinct": 56,
-        "bunting": 60,
-        "platoon": 62
+        "ovr": 67,
+        "contact": 72,
+        "power": 66,
+        "eye": 64,
+        "discipline": 64,
+        "speed": 65,
+        "fielding": 74,
+        "arm": 71,
+        "battingClutch": 65
       },
       "developmentRate": 46,
-      "potentialHidden": 84,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 66
-      },
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 84
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

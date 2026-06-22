@@ -1,7 +1,7 @@
 {
   "id": "PLY_00220",
   "name": "배민우",
-  "nameEn": "Bae Minu",
+  "nameEn": "Ku Jae-won",
   "role": "player",
   "age": 19,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "DH",
       "jerseyNumber": 20,
       "pitching": {
-        "ovr": 30,
-        "stamina": 32,
-        "velocity": 25,
-        "command": 34,
-        "control": 30,
-        "movement": 31,
-        "mentality": 32,
-        "recovery": 33,
-        "clutch": 41,
-        "holdRunners": 40
+        "ovr": 21,
+        "stamina": 23,
+        "velocity": 22,
+        "command": 25,
+        "control": 25,
+        "movement": 17,
+        "mentality": 17,
+        "recovery": 24
       },
       "batting": {
-        "ovr": 50,
-        "contact": 54,
-        "power": 55,
+        "ovr": 56,
+        "contact": 59,
+        "power": 63,
         "eye": 51,
-        "discipline": 55,
-        "speed": 52,
-        "fielding": 52,
-        "arm": 55,
-        "battingClutch": 46,
-        "baseInstinct": 38,
-        "bunting": 40,
-        "platoon": 43
+        "discipline": 56,
+        "speed": 46,
+        "fielding": 44,
+        "arm": 51,
+        "battingClutch": 54
       },
       "developmentRate": 50,
-      "potentialHidden": 78,
-      "primaryPosition": "DH",
-      "positionRatings": {
-        "DH": 50
-      }
+      "potentialHidden": 78
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

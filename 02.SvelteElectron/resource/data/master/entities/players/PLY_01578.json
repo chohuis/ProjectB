@@ -1,61 +1,46 @@
 {
   "id": "PLY_01578",
-  "name": "전지호",
-  "nameEn": "Jeon Jiho",
+  "name": "니시무라 마나부",
+  "nameEn": "Nishimura Manabu",
   "role": "player",
-  "age": 18,
+  "age": 31,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_GWANGJU_VISION",
-  "teamId": "TEAM_HS_GWANGJU_VISION",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_GWANGJU_VISION",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_NEONCRANES",
+  "teamId": "TEAM_JBL_CL_NEONCRANES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "L",
-      "position": "SS",
-      "jerseyNumber": 27,
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 43,
       "pitching": {
-        "ovr": 43,
-        "stamina": 42,
-        "velocity": 49,
-        "command": 43,
-        "control": 41,
-        "movement": 39,
-        "mentality": 46,
-        "recovery": 41,
-        "clutch": 43,
-        "holdRunners": 38
+        "ovr": 34,
+        "stamina": 27,
+        "velocity": 35,
+        "command": 36,
+        "control": 31,
+        "movement": 27,
+        "mentality": 29,
+        "recovery": 32
       },
       "batting": {
         "ovr": 63,
-        "contact": 68,
-        "power": 60,
-        "eye": 63,
-        "discipline": 63,
-        "speed": 66,
-        "fielding": 62,
-        "arm": 60,
-        "battingClutch": 60,
-        "baseInstinct": 61,
-        "bunting": 52,
-        "platoon": 52
+        "contact": 66,
+        "power": 72,
+        "eye": 69,
+        "discipline": 68,
+        "speed": 63,
+        "fielding": 68,
+        "arm": 67,
+        "battingClutch": 68
       },
-      "developmentRate": 65,
-      "potentialHidden": 95,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 56,
+      "potentialHidden": 62
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 71,
-  "popularity": 47
+  }
 }

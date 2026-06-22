@@ -1,9 +1,9 @@
 {
   "id": "PLY_11439",
-  "name": "그린 헌터",
-  "nameEn": "Green Hunter",
+  "name": "Walker Ryan",
+  "nameEn": "Walker Ryan",
   "role": "player",
-  "age": 27,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 63,
-  "popularity": 19,
+  "notes": "국적:도미니카",
+  "diligence": 48,
+  "popularity": 34,
   "militaryStatus": "군필",
   "entryYear": 2035,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 27,
+  "entryAge": 28,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 69,
-      "primaryPosition": "SP",
-      "developmentRate": 52,
-      "potentialHidden": 86,
-      "proServiceYears": 5,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 35,
+      "primaryPosition": "2B",
+      "developmentRate": 55,
+      "potentialHidden": 76,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 77,
-        "stamina": 70,
-        "velocity": 85,
-        "command": 80,
-        "control": 75,
-        "movement": 80,
-        "mentality": 77,
-        "recovery": 70,
-        "clutch": 70,
-        "holdRunners": 64
+        "ovr": 80,
+        "stamina": 75,
+        "velocity": 80,
+        "command": 82,
+        "control": 82,
+        "movement": 78,
+        "mentality": 82,
+        "recovery": 68,
+        "clutch": 77,
+        "holdRunners": 78
       },
       "batting": {
         "ovr": 80,
-        "contact": 77,
-        "power": 82,
-        "eye": 83,
-        "discipline": 79,
-        "speed": 86,
-        "baseInstinct": 79,
-        "bunting": 67,
+        "contact": 83,
+        "power": 80,
+        "eye": 76,
+        "discipline": 81,
+        "speed": 87,
+        "baseInstinct": 69,
+        "bunting": 61,
         "platoon": 50,
-        "fielding": 81,
-        "arm": 71,
-        "battingClutch": 72
+        "fielding": 77,
+        "arm": 77,
+        "battingClutch": 68
       },
       "positionRatings": {
-        "SP": 80
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "2B": 80
+      }
     },
     "coach": null,
     "manager": null,

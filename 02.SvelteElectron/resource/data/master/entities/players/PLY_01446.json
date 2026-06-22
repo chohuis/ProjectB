@@ -1,14 +1,14 @@
 {
   "id": "PLY_01446",
   "name": "라이트 오스틴",
-  "nameEn": "Ra 이트 오스틴",
+  "nameEn": "Wright Austin",
   "role": "player",
   "age": 23,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_COASTALRAYS",
-  "teamId": "TEAM_ABL_COASTALRAYS_2",
+  "clubId": "CLUB_ABL_SF",
+  "teamId": "TEAM_ABL_SF_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
@@ -19,48 +19,28 @@
       "position": "SS",
       "jerseyNumber": 56,
       "pitching": {
-        "ovr": 48,
+        "ovr": 43,
         "stamina": 44,
-        "velocity": 43,
-        "command": 51,
-        "control": 51,
-        "movement": 46,
-        "mentality": 49,
-        "recovery": 52,
-        "clutch": 41,
-        "holdRunners": 40
+        "velocity": 41,
+        "command": 41,
+        "control": 45,
+        "movement": 42,
+        "mentality": 42,
+        "recovery": 37
       },
       "batting": {
-        "ovr": 68,
+        "ovr": 70,
         "contact": 64,
-        "power": 74,
-        "eye": 66,
-        "discipline": 74,
-        "speed": 70,
-        "fielding": 66,
-        "arm": 70,
-        "battingClutch": 69,
-        "baseInstinct": 63,
-        "bunting": 63,
-        "platoon": 64
+        "power": 62,
+        "eye": 67,
+        "discipline": 63,
+        "speed": 73,
+        "fielding": 71,
+        "arm": 69,
+        "battingClutch": 66
       },
       "developmentRate": 39,
-      "potentialHidden": 68,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 68
-      },
-      "proServiceYears": 1,
-      "contract": {
-        "salary": 6300,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 68
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

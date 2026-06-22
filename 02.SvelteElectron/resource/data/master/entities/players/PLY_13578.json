@@ -1,9 +1,9 @@
 {
   "id": "PLY_13578",
-  "name": "클라크 블레이크",
-  "nameEn": "Clark Blake",
+  "name": "Green Kevin",
+  "nameEn": "Green Kevin",
   "role": "player",
-  "age": 28,
+  "age": 19,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 73,
-  "popularity": 45,
+  "notes": "국적:도미니카",
+  "diligence": 75,
+  "popularity": 36,
   "militaryStatus": "군필",
   "entryYear": 2048,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 28,
+  "entryAge": 19,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 6,
+      "jerseyNumber": 95,
       "primaryPosition": "SP",
-      "developmentRate": 64,
-      "potentialHidden": 68,
-      "proServiceYears": 6,
+      "developmentRate": 66,
+      "potentialHidden": 81,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 79,
-        "stamina": 76,
-        "velocity": 83,
-        "command": 70,
-        "control": 80,
-        "movement": 74,
-        "mentality": 73,
-        "recovery": 80,
-        "clutch": 75,
-        "holdRunners": 65
+        "ovr": 63,
+        "stamina": 62,
+        "velocity": 61,
+        "command": 61,
+        "control": 59,
+        "movement": 60,
+        "mentality": 67,
+        "recovery": 58,
+        "clutch": 58,
+        "holdRunners": 55
       },
       "batting": {
-        "ovr": 76,
-        "contact": 77,
-        "power": 76,
-        "eye": 75,
-        "discipline": 68,
-        "speed": 73,
-        "baseInstinct": 68,
-        "bunting": 68,
+        "ovr": 63,
+        "contact": 62,
+        "power": 61,
+        "eye": 63,
+        "discipline": 58,
+        "speed": 69,
+        "baseInstinct": 58,
+        "bunting": 53,
         "platoon": 50,
-        "fielding": 70,
-        "arm": 71,
-        "battingClutch": 70
+        "fielding": 58,
+        "arm": 56,
+        "battingClutch": 63
       },
       "positionRatings": {
-        "SP": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "SP": 63
+      }
     },
     "coach": null,
     "manager": null,

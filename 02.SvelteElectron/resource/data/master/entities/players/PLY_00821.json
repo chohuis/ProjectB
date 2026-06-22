@@ -1,14 +1,14 @@
 {
   "id": "PLY_00821",
   "name": "클라크 다니엘",
-  "nameEn": "Keul 라크 다니엘",
+  "nameEn": "Clark Daniel",
   "role": "player",
   "age": 40,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_EMPIRE",
-  "teamId": "TEAM_ABL_EMPIRE_1",
+  "clubId": "CLUB_ABL_LAD",
+  "teamId": "TEAM_ABL_LAD",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 1,
       "pitching": {
-        "ovr": 78,
-        "stamina": 78,
-        "velocity": 78,
-        "command": 76,
-        "control": 82,
-        "movement": 78,
-        "mentality": 82,
-        "recovery": 75,
-        "clutch": 78,
-        "holdRunners": 70
+        "ovr": 87,
+        "stamina": 94,
+        "velocity": 94,
+        "command": 88,
+        "control": 85,
+        "movement": 85,
+        "mentality": 86,
+        "recovery": 86
       },
       "batting": {
-        "ovr": 60,
-        "contact": 55,
-        "power": 65,
-        "eye": 58,
-        "discipline": 58,
-        "speed": 58,
-        "fielding": 60,
+        "ovr": 65,
+        "contact": 66,
+        "power": 60,
+        "eye": 65,
+        "discipline": 63,
+        "speed": 60,
+        "fielding": 64,
         "arm": 60,
-        "battingClutch": 53,
-        "baseInstinct": 55,
-        "bunting": 51,
-        "platoon": 47
+        "battingClutch": 67
       },
       "developmentRate": 45,
-      "potentialHidden": 86,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 78
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 18,
-      "contract": {
-        "salary": 27900,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 86
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

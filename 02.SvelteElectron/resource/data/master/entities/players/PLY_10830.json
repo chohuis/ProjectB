@@ -1,9 +1,9 @@
 {
   "id": "PLY_10830",
-  "name": "로드리게스 트레버",
-  "nameEn": "Rodriguez Trevor",
+  "name": "Anderson Derek",
+  "nameEn": "Anderson Derek",
   "role": "player",
-  "age": 28,
+  "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 48,
-  "popularity": 41,
+  "notes": "국적:일본",
+  "diligence": 55,
+  "popularity": 34,
   "militaryStatus": "군필",
   "entryYear": 2031,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 28,
+  "entryAge": 25,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 40,
-      "primaryPosition": "SP",
-      "developmentRate": 49,
-      "potentialHidden": 83,
-      "proServiceYears": 6,
+      "position": "CF",
+      "jerseyNumber": 8,
+      "primaryPosition": "CF",
+      "developmentRate": 59,
+      "potentialHidden": 67,
+      "proServiceYears": 3,
       "pitching": {
-        "ovr": 74,
-        "stamina": 76,
-        "velocity": 77,
-        "command": 73,
-        "control": 69,
-        "movement": 77,
-        "mentality": 78,
-        "recovery": 69,
-        "clutch": 68,
-        "holdRunners": 73
+        "ovr": 71,
+        "stamina": 70,
+        "velocity": 80,
+        "command": 66,
+        "control": 73,
+        "movement": 68,
+        "mentality": 69,
+        "recovery": 71,
+        "clutch": 60,
+        "holdRunners": 62
       },
       "batting": {
         "ovr": 71,
-        "contact": 73,
-        "power": 63,
-        "eye": 65,
-        "discipline": 63,
-        "speed": 73,
-        "baseInstinct": 74,
-        "bunting": 64,
+        "contact": 68,
+        "power": 70,
+        "eye": 73,
+        "discipline": 64,
+        "speed": 77,
+        "baseInstinct": 72,
+        "bunting": 60,
         "platoon": 50,
-        "fielding": 61,
-        "arm": 66,
-        "battingClutch": 65
+        "fielding": 67,
+        "arm": 65,
+        "battingClutch": 67
       },
       "positionRatings": {
-        "SP": 71
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "CF": 71
+      }
     },
     "coach": null,
     "manager": null,

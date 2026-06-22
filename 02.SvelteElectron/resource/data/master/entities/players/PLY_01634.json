@@ -1,61 +1,46 @@
 {
   "id": "PLY_01634",
-  "name": "차태준",
-  "nameEn": "Cha Taejun",
+  "name": "사토 토루",
+  "nameEn": "Sato Toru",
   "role": "player",
-  "age": 17,
+  "age": 22,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_YEOSU_SHORE",
-  "teamId": "TEAM_HS_YEOSU_SHORE",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_YEOSU_SHORE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONDRAKES",
+  "teamId": "TEAM_JBL_CL_IRONDRAKES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "C",
-      "jerseyNumber": 13,
+      "position": "SP",
+      "jerseyNumber": 4,
       "pitching": {
-        "ovr": 31,
-        "stamina": 28,
-        "velocity": 32,
-        "command": 32,
-        "control": 36,
-        "movement": 27,
-        "mentality": 36,
-        "recovery": 27,
-        "clutch": 39,
-        "holdRunners": 33
+        "ovr": 82,
+        "stamina": 82,
+        "velocity": 83,
+        "command": 81,
+        "control": 76,
+        "movement": 77,
+        "mentality": 82,
+        "recovery": 79
       },
       "batting": {
-        "ovr": 51,
-        "contact": 46,
-        "power": 54,
-        "eye": 53,
-        "discipline": 52,
-        "speed": 58,
-        "fielding": 53,
-        "arm": 56,
-        "battingClutch": 51,
-        "baseInstinct": 44,
-        "bunting": 37,
-        "platoon": 46
+        "ovr": 45,
+        "contact": 45,
+        "power": 45,
+        "eye": 47,
+        "discipline": 43,
+        "speed": 45,
+        "fielding": 43,
+        "arm": 46,
+        "battingClutch": 46
       },
-      "developmentRate": 83,
-      "potentialHidden": 90,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 51
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 48,
+      "potentialHidden": 73
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 62,
-  "popularity": 31
+  }
 }

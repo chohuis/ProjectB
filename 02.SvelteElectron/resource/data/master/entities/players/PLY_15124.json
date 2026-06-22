@@ -1,6 +1,6 @@
 {
   "id": "PLY_15124",
-  "name": "스미스 타일러",
+  "name": "Smith Tyler",
   "nameEn": "Smith Tyler",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 53,
   "popularity": 36,
   "militaryStatus": "군필",

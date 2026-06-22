@@ -1,61 +1,46 @@
 {
   "id": "PLY_01596",
-  "name": "고재훈",
-  "nameEn": "Go Jaehun",
+  "name": "기무라 다이키",
+  "nameEn": "Kimura Daiki",
   "role": "player",
-  "age": 17,
+  "age": 34,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_INCHEON_HARBOR",
-  "teamId": "TEAM_HS_INCHEON_HARBOR",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_INCHEON_HARBOR",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TEMPOSTINGS",
+  "teamId": "TEAM_JBL_CL_TEMPOSTINGS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
-      "handedness": "L",
-      "position": "1B",
-      "jerseyNumber": 25,
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 11,
       "pitching": {
-        "ovr": 36,
-        "stamina": 33,
-        "velocity": 39,
-        "command": 35,
-        "control": 36,
-        "movement": 32,
-        "mentality": 35,
-        "recovery": 38,
-        "clutch": 35,
-        "holdRunners": 36
+        "ovr": 92,
+        "stamina": 77,
+        "velocity": 96,
+        "command": 86,
+        "control": 88,
+        "movement": 90,
+        "mentality": 86,
+        "recovery": 88
       },
       "batting": {
-        "ovr": 56,
-        "contact": 56,
-        "power": 50,
-        "eye": 56,
-        "discipline": 62,
-        "speed": 49,
-        "fielding": 56,
-        "arm": 57,
-        "battingClutch": 52,
-        "baseInstinct": 53,
-        "bunting": 42,
-        "platoon": 53
+        "ovr": 67,
+        "contact": 59,
+        "power": 65,
+        "eye": 66,
+        "discipline": 65,
+        "speed": 61,
+        "fielding": 61,
+        "arm": 64,
+        "battingClutch": 62
       },
-      "developmentRate": 69,
-      "potentialHidden": 67,
-      "primaryPosition": "1B",
-      "positionRatings": {
-        "1B": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 50,
+      "potentialHidden": 83
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 20
+  }
 }

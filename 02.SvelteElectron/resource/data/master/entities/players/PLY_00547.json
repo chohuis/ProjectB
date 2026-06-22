@@ -1,14 +1,14 @@
 {
   "id": "PLY_00547",
   "name": "정용준",
-  "nameEn": "Jeong Yongjun",
+  "nameEn": "Na Jae-hoon",
   "role": "player",
   "age": 19,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_BEARGUARDIANS",
-  "teamId": "TEAM_KBL_BEARGUARDIANS_2",
+  "clubId": "CLUB_KBL_SAMSUNG",
+  "teamId": "TEAM_KBL_SAMSUNG_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,48 +19,28 @@
       "position": "LF",
       "jerseyNumber": 47,
       "pitching": {
-        "ovr": 41,
-        "stamina": 43,
-        "velocity": 42,
-        "command": 40,
-        "control": 41,
-        "movement": 36,
-        "mentality": 43,
-        "recovery": 45,
-        "clutch": 43,
-        "holdRunners": 35
+        "ovr": 46,
+        "stamina": 42,
+        "velocity": 45,
+        "command": 41,
+        "control": 43,
+        "movement": 44,
+        "mentality": 40,
+        "recovery": 39
       },
       "batting": {
-        "ovr": 61,
-        "contact": 65,
-        "power": 56,
-        "eye": 62,
-        "discipline": 66,
+        "ovr": 59,
+        "contact": 62,
+        "power": 67,
+        "eye": 61,
+        "discipline": 60,
         "speed": 60,
-        "fielding": 67,
-        "arm": 57,
-        "battingClutch": 55,
-        "baseInstinct": 59,
-        "bunting": 45,
-        "platoon": 57
+        "fielding": 56,
+        "arm": 66,
+        "battingClutch": 65
       },
       "developmentRate": 45,
-      "potentialHidden": 60,
-      "primaryPosition": "LF",
-      "positionRatings": {
-        "LF": 61
-      },
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",
@@ -100,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

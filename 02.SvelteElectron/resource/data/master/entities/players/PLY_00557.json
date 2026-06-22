@@ -1,14 +1,14 @@
 {
   "id": "PLY_00557",
   "name": "고승현",
-  "nameEn": "Ko Seunghyeon",
+  "nameEn": "Jung Ji-hoo",
   "role": "player",
   "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_SKYGULLS",
-  "teamId": "TEAM_KBL_SKYGULLS_1",
+  "clubId": "CLUB_KBL_LG",
+  "teamId": "TEAM_KBL_LG_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 7,
       "pitching": {
-        "ovr": 73,
-        "stamina": 75,
-        "velocity": 70,
-        "command": 72,
-        "control": 69,
-        "movement": 70,
-        "mentality": 76,
-        "recovery": 75,
-        "clutch": 68,
-        "holdRunners": 67
+        "ovr": 77,
+        "stamina": 73,
+        "velocity": 86,
+        "command": 85,
+        "control": 80,
+        "movement": 79,
+        "mentality": 81,
+        "recovery": 83
       },
       "batting": {
-        "ovr": 55,
-        "contact": 60,
-        "power": 56,
+        "ovr": 52,
+        "contact": 55,
+        "power": 51,
         "eye": 50,
         "discipline": 54,
-        "speed": 48,
-        "fielding": 59,
-        "arm": 58,
-        "battingClutch": 55,
-        "baseInstinct": 45,
-        "bunting": 45,
-        "platoon": 48
+        "speed": 53,
+        "fielding": 49,
+        "arm": 53,
+        "battingClutch": 52
       },
       "developmentRate": 46,
-      "potentialHidden": 69,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 2,
-      "contract": {
-        "salary": 6900,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 69
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,7 +1,7 @@
 {
   "id": "PLY_11502",
-  "name": "리 마커스",
-  "nameEn": "Lee Marcus",
+  "name": "Martinez Miguel",
+  "nameEn": "Martinez Miguel",
   "role": "player",
   "age": 19,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 49,
-  "popularity": 24,
+  "notes": "국적:파나마",
+  "diligence": 72,
+  "popularity": 13,
   "militaryStatus": "군필",
   "entryYear": 2036,
   "entryLeague": "LEAGUE_ABL",
@@ -22,52 +22,42 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "SP",
-      "jerseyNumber": 65,
+      "jerseyNumber": 12,
       "primaryPosition": "SP",
-      "developmentRate": 63,
-      "potentialHidden": 66,
+      "developmentRate": 58,
+      "potentialHidden": 72,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 50,
-        "stamina": 42,
-        "velocity": 48,
-        "command": 42,
-        "control": 47,
-        "movement": 53,
-        "mentality": 55,
+        "ovr": 53,
+        "stamina": 50,
+        "velocity": 62,
+        "command": 53,
+        "control": 50,
+        "movement": 47,
+        "mentality": 48,
         "recovery": 44,
-        "clutch": 42,
-        "holdRunners": 38
+        "clutch": 41,
+        "holdRunners": 44
       },
       "batting": {
         "ovr": 53,
-        "contact": 47,
-        "power": 43,
-        "eye": 50,
-        "discipline": 48,
-        "speed": 50,
-        "baseInstinct": 54,
-        "bunting": 45,
+        "contact": 49,
+        "power": 46,
+        "eye": 56,
+        "discipline": 54,
+        "speed": 48,
+        "baseInstinct": 42,
+        "bunting": 39,
         "platoon": 50,
-        "fielding": 44,
-        "arm": 42,
-        "battingClutch": 45
+        "fielding": 43,
+        "arm": 47,
+        "battingClutch": 54
       },
       "positionRatings": {
         "SP": 53
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

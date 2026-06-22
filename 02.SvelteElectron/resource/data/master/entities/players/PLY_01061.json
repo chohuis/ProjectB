@@ -1,14 +1,14 @@
 {
   "id": "PLY_01061",
   "name": "무어 조너선",
-  "nameEn": "Mu 어 조너선",
+  "nameEn": "Moore Jonathan",
   "role": "player",
   "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_PEACHTREEFALCONS",
-  "teamId": "TEAM_ABL_PEACHTREEFALCONS_1",
+  "clubId": "CLUB_ABL_HOU",
+  "teamId": "TEAM_ABL_HOU",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:베네수엘라",
@@ -19,48 +19,28 @@
       "position": "1B",
       "jerseyNumber": 16,
       "pitching": {
-        "ovr": 70,
-        "stamina": 76,
-        "velocity": 67,
-        "command": 74,
-        "control": 66,
-        "movement": 70,
-        "mentality": 66,
-        "recovery": 73,
-        "clutch": 61,
-        "holdRunners": 66
+        "ovr": 75,
+        "stamina": 72,
+        "velocity": 74,
+        "command": 69,
+        "control": 69,
+        "movement": 74,
+        "mentality": 71,
+        "recovery": 72
       },
       "batting": {
-        "ovr": 90,
-        "contact": 96,
-        "power": 93,
-        "eye": 95,
-        "discipline": 90,
-        "speed": 83,
-        "fielding": 85,
-        "arm": 91,
-        "battingClutch": 81,
-        "baseInstinct": 85,
-        "bunting": 75,
-        "platoon": 83
+        "ovr": 94,
+        "contact": 93,
+        "power": 100,
+        "eye": 88,
+        "discipline": 92,
+        "speed": 88,
+        "fielding": 94,
+        "arm": 92,
+        "battingClutch": 93
       },
       "developmentRate": 34,
-      "potentialHidden": 85,
-      "primaryPosition": "1B",
-      "positionRatings": {
-        "1B": 90
-      },
-      "proServiceYears": 3,
-      "contract": {
-        "salary": 21700,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 85
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,14 +1,14 @@
 {
   "id": "PLY_00877",
   "name": "존스 라이언",
-  "nameEn": "Jon 스 라이언",
+  "nameEn": "Jones Ryan",
   "role": "player",
   "age": 34,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_HARBORHAWKS",
-  "teamId": "TEAM_ABL_HARBORHAWKS_1",
+  "clubId": "CLUB_ABL_NYY",
+  "teamId": "TEAM_ABL_NYY",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,58 +19,28 @@
       "position": "CP",
       "jerseyNumber": 12,
       "pitching": {
-        "ovr": 61,
-        "stamina": 67,
-        "velocity": 64,
-        "command": 64,
-        "control": 66,
-        "movement": 66,
-        "mentality": 66,
-        "recovery": 61,
-        "clutch": 56,
-        "holdRunners": 49
+        "ovr": 71,
+        "stamina": 60,
+        "velocity": 80,
+        "command": 72,
+        "control": 71,
+        "movement": 74,
+        "mentality": 75,
+        "recovery": 67
       },
       "batting": {
-        "ovr": 43,
-        "contact": 42,
-        "power": 38,
-        "eye": 43,
-        "discipline": 41,
+        "ovr": 48,
+        "contact": 47,
+        "power": 49,
+        "eye": 50,
+        "discipline": 45,
         "speed": 49,
-        "fielding": 45,
-        "arm": 45,
-        "battingClutch": 43,
-        "baseInstinct": 44,
-        "bunting": 38,
-        "platoon": 40
+        "fielding": 46,
+        "arm": 50,
+        "battingClutch": 49
       },
       "developmentRate": 49,
-      "potentialHidden": 83,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 12,
-      "contract": {
-        "salary": 14800,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 83
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

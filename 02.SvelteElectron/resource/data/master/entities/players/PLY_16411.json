@@ -1,6 +1,6 @@
 {
   "id": "PLY_16411",
-  "name": "카터 라이언",
+  "name": "Carter Ryan",
   "nameEn": "Carter Ryan",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 85,
   "popularity": 47,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 43
       },
       "batting": {
-        "ovr": 52,
-        "contact": 44,
-        "power": 53,
-        "eye": 53,
-        "discipline": 54,
-        "speed": 46,
-        "baseInstinct": 52,
-        "bunting": 40,
-        "platoon": 49,
-        "fielding": 49,
-        "arm": 54,
-        "battingClutch": 51
+        "ovr": 53,
+        "contact": 45,
+        "power": 54,
+        "eye": 54,
+        "discipline": 55,
+        "speed": 47,
+        "baseInstinct": 53,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 55,
+        "battingClutch": 52
       },
       "positionRatings": {
         "CF": 53

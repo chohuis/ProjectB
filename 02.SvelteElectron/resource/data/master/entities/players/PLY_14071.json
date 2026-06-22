@@ -1,6 +1,6 @@
 {
   "id": "PLY_14071",
-  "name": "스미스 네이선",
+  "name": "Smith Nathan",
   "nameEn": "Smith Nathan",
   "role": "player",
   "age": 18,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 75,
   "popularity": 25,
   "militaryStatus": "군필",
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 47
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,9 +1,9 @@
 {
   "id": "PLY_11746",
-  "name": "화이트 코너",
-  "nameEn": "White Connor",
+  "name": "Allen Ryan",
+  "nameEn": "Allen Ryan",
   "role": "player",
-  "age": 19,
+  "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 51,
-  "popularity": 42,
+  "notes": "국적:멕시코",
+  "diligence": 67,
+  "popularity": 16,
   "militaryStatus": "군필",
   "entryYear": 2037,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 19,
+  "entryAge": 27,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 21,
-      "primaryPosition": "SP",
-      "developmentRate": 71,
-      "potentialHidden": 91,
-      "proServiceYears": 0,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 77,
+      "primaryPosition": "CF",
+      "developmentRate": 53,
+      "potentialHidden": 83,
+      "proServiceYears": 5,
       "pitching": {
-        "ovr": 61,
-        "stamina": 54,
-        "velocity": 65,
-        "command": 53,
-        "control": 64,
-        "movement": 55,
-        "mentality": 63,
-        "recovery": 55,
-        "clutch": 52,
-        "holdRunners": 47
+        "ovr": 76,
+        "stamina": 81,
+        "velocity": 77,
+        "command": 77,
+        "control": 80,
+        "movement": 79,
+        "mentality": 83,
+        "recovery": 69,
+        "clutch": 73,
+        "holdRunners": 75
       },
       "batting": {
-        "ovr": 66,
-        "contact": 69,
-        "power": 66,
-        "eye": 70,
-        "discipline": 66,
+        "ovr": 76,
+        "contact": 72,
+        "power": 76,
+        "eye": 73,
+        "discipline": 72,
         "speed": 71,
-        "baseInstinct": 60,
-        "bunting": 50,
+        "baseInstinct": 67,
+        "bunting": 69,
         "platoon": 50,
-        "fielding": 62,
-        "arm": 65,
-        "battingClutch": 61
+        "fielding": 70,
+        "arm": 73,
+        "battingClutch": 74
       },
       "positionRatings": {
-        "SP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+        "CF": 76
+      }
     },
     "coach": null,
     "manager": null,

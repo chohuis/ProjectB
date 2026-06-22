@@ -1,6 +1,6 @@
 {
   "id": "PLY_16117",
-  "name": "라이트 칼렙",
+  "name": "Wright Caleb",
   "nameEn": "Wright Caleb",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 83,
   "popularity": 38,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 49
       },
       "batting": {
-        "ovr": 53,
-        "contact": 47,
-        "power": 55,
-        "eye": 45,
-        "discipline": 44,
-        "speed": 52,
-        "baseInstinct": 42,
-        "bunting": 39,
-        "platoon": 49,
-        "fielding": 48,
-        "arm": 54,
-        "battingClutch": 51
+        "ovr": 54,
+        "contact": 48,
+        "power": 56,
+        "eye": 46,
+        "discipline": 45,
+        "speed": 53,
+        "baseInstinct": 43,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 55,
+        "battingClutch": 52
       },
       "positionRatings": {
         "CF": 54

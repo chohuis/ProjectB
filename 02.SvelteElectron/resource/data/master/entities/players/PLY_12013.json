@@ -1,9 +1,9 @@
 {
   "id": "PLY_12013",
-  "name": "클라크 네이선",
-  "nameEn": "Clark Nathan",
+  "name": "Jones Grant",
+  "nameEn": "Jones Grant",
   "role": "player",
-  "age": 25,
+  "age": 19,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 59,
-  "popularity": 45,
+  "notes": "국적:도미니카",
+  "diligence": 47,
+  "popularity": 18,
   "militaryStatus": "군필",
   "entryYear": 2039,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 25,
+  "entryAge": 19,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "SP",
-      "jerseyNumber": 68,
+      "jerseyNumber": 33,
       "primaryPosition": "SP",
-      "developmentRate": 64,
-      "potentialHidden": 60,
-      "proServiceYears": 3,
+      "developmentRate": 69,
+      "potentialHidden": 74,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 80,
-        "stamina": 74,
-        "velocity": 86,
-        "command": 82,
-        "control": 79,
-        "movement": 78,
-        "mentality": 87,
-        "recovery": 70,
-        "clutch": 72,
-        "holdRunners": 67
+        "ovr": 63,
+        "stamina": 59,
+        "velocity": 72,
+        "command": 56,
+        "control": 67,
+        "movement": 65,
+        "mentality": 61,
+        "recovery": 65,
+        "clutch": 59,
+        "holdRunners": 56
       },
       "batting": {
-        "ovr": 82,
-        "contact": 74,
-        "power": 81,
-        "eye": 81,
-        "discipline": 77,
-        "speed": 78,
-        "baseInstinct": 71,
-        "bunting": 66,
+        "ovr": 63,
+        "contact": 58,
+        "power": 65,
+        "eye": 59,
+        "discipline": 61,
+        "speed": 64,
+        "baseInstinct": 59,
+        "bunting": 52,
         "platoon": 50,
-        "fielding": 73,
-        "arm": 75,
-        "battingClutch": 73
+        "fielding": 55,
+        "arm": 65,
+        "battingClutch": 59
       },
       "positionRatings": {
-        "SP": 82
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "SP": 63
+      }
     },
     "coach": null,
     "manager": null,

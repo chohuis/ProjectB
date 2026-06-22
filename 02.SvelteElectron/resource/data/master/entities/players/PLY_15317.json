@@ -1,6 +1,6 @@
 {
   "id": "PLY_15317",
-  "name": "마틴 오스틴",
+  "name": "Martin Austin",
   "nameEn": "Martin Austin",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 67,
   "popularity": 31,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 83,
       "proServiceYears": 3,
       "pitching": {
-        "ovr": 54,
-        "stamina": 53,
-        "velocity": 62,
-        "command": 47,
-        "control": 59,
-        "movement": 58,
-        "mentality": 55,
-        "recovery": 54,
-        "clutch": 47,
-        "holdRunners": 41
+        "ovr": 60,
+        "stamina": 59,
+        "velocity": 69,
+        "command": 52,
+        "control": 65,
+        "movement": 64,
+        "mentality": 61,
+        "recovery": 60,
+        "clutch": 52,
+        "holdRunners": 46
       },
       "batting": {
         "ovr": 60,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

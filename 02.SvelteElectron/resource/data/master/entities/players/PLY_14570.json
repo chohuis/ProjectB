@@ -1,6 +1,6 @@
 {
   "id": "PLY_14570",
-  "name": "존스 카일",
+  "name": "Jones Kyle",
   "nameEn": "Jones Kyle",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 82,
   "popularity": 18,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 61,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 70,
-        "stamina": 64,
-        "velocity": 81,
-        "command": 69,
-        "control": 62,
-        "movement": 73,
-        "mentality": 70,
-        "recovery": 62,
-        "clutch": 69,
-        "holdRunners": 61
+        "ovr": 63,
+        "stamina": 58,
+        "velocity": 73,
+        "command": 62,
+        "control": 56,
+        "movement": 66,
+        "mentality": 63,
+        "recovery": 56,
+        "clutch": 62,
+        "holdRunners": 55
       },
       "batting": {
         "ovr": 63,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

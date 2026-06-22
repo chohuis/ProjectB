@@ -1,6 +1,6 @@
 {
   "id": "PLY_14134",
-  "name": "클라크 알렉스",
+  "name": "Clark Alex",
   "nameEn": "Clark Alex",
   "role": "player",
   "age": 31,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 52,
   "popularity": 10,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 57,
       "proServiceYears": 9,
       "pitching": {
-        "ovr": 66,
-        "stamina": 67,
-        "velocity": 65,
-        "command": 63,
-        "control": 69,
-        "movement": 56,
-        "mentality": 58,
-        "recovery": 64,
-        "clutch": 58,
-        "holdRunners": 54
+        "ovr": 59,
+        "stamina": 60,
+        "velocity": 58,
+        "command": 56,
+        "control": 62,
+        "movement": 50,
+        "mentality": 52,
+        "recovery": 57,
+        "clutch": 52,
+        "holdRunners": 48
       },
       "batting": {
         "ovr": 59,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

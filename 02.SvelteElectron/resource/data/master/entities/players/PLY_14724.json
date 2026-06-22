@@ -1,6 +1,6 @@
 {
   "id": "PLY_14724",
-  "name": "스콧 콜",
+  "name": "Scott Cole",
   "nameEn": "Scott Cole",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 69,
   "popularity": 25,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 72,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 60,
-        "stamina": 56,
-        "velocity": 69,
-        "command": 56,
-        "control": 56,
-        "movement": 52,
-        "mentality": 62,
-        "recovery": 57,
-        "clutch": 51,
-        "holdRunners": 47
+        "ovr": 61,
+        "stamina": 57,
+        "velocity": 70,
+        "command": 57,
+        "control": 57,
+        "movement": 53,
+        "mentality": 63,
+        "recovery": 58,
+        "clutch": 52,
+        "holdRunners": 48
       },
       "batting": {
         "ovr": 61,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

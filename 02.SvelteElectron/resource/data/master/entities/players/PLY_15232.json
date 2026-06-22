@@ -1,6 +1,6 @@
 {
   "id": "PLY_15232",
-  "name": "브라운 다니엘",
+  "name": "Brown Daniel",
   "nameEn": "Brown Daniel",
   "role": "player",
   "age": 23,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 73,
   "popularity": 23,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 71,
       "proServiceYears": 1,
       "pitching": {
-        "ovr": 69,
-        "stamina": 66,
-        "velocity": 68,
-        "command": 60,
-        "control": 73,
-        "movement": 68,
-        "mentality": 66,
-        "recovery": 64,
-        "clutch": 64,
-        "holdRunners": 58
+        "ovr": 71,
+        "stamina": 68,
+        "velocity": 70,
+        "command": 62,
+        "control": 75,
+        "movement": 70,
+        "mentality": 68,
+        "recovery": 66,
+        "clutch": 66,
+        "holdRunners": 60
       },
       "batting": {
         "ovr": 71,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 71
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

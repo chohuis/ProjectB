@@ -1,6 +1,6 @@
 {
   "id": "PLY_15849",
-  "name": "그린 코디",
+  "name": "Green Cody",
   "nameEn": "Green Cody",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 60,
   "popularity": 44,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 52
       },
       "batting": {
-        "ovr": 60,
-        "contact": 52,
-        "power": 52,
-        "eye": 57,
-        "discipline": 52,
-        "speed": 66,
-        "baseInstinct": 63,
-        "bunting": 47,
-        "platoon": 49,
-        "fielding": 57,
-        "arm": 61,
-        "battingClutch": 59
+        "ovr": 61,
+        "contact": 53,
+        "power": 53,
+        "eye": 58,
+        "discipline": 53,
+        "speed": 67,
+        "baseInstinct": 64,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 62,
+        "battingClutch": 60
       },
       "positionRatings": {
         "3B": 61

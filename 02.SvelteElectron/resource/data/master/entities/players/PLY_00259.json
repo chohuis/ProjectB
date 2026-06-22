@@ -1,7 +1,7 @@
 {
   "id": "PLY_00259",
   "name": "한용준",
-  "nameEn": "Han Yongjun",
+  "nameEn": "Moon Min-jae",
   "role": "player",
   "age": 19,
   "status": "active",
@@ -20,36 +20,27 @@
       "jerseyNumber": 19,
       "pitching": {
         "ovr": 50,
-        "stamina": 53,
-        "velocity": 50,
-        "command": 50,
-        "control": 49,
+        "stamina": 45,
+        "velocity": 47,
+        "command": 46,
+        "control": 48,
         "movement": 50,
-        "mentality": 47,
-        "recovery": 47,
-        "clutch": 42,
-        "holdRunners": 47
+        "mentality": 48,
+        "recovery": 49
       },
       "batting": {
-        "ovr": 70,
-        "contact": 75,
-        "power": 66,
-        "eye": 69,
-        "discipline": 70,
-        "speed": 66,
-        "fielding": 72,
-        "arm": 66,
-        "battingClutch": 62,
-        "baseInstinct": 63,
-        "bunting": 62,
-        "platoon": 60
+        "ovr": 72,
+        "contact": 74,
+        "power": 75,
+        "eye": 73,
+        "discipline": 76,
+        "speed": 72,
+        "fielding": 68,
+        "arm": 75,
+        "battingClutch": 73
       },
       "developmentRate": 51,
-      "potentialHidden": 75,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 70
-      }
+      "potentialHidden": 75
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

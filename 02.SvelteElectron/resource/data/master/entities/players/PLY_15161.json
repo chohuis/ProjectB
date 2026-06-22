@@ -1,6 +1,6 @@
 {
   "id": "PLY_15161",
-  "name": "미첼 미겔",
+  "name": "Mitchell Miguel",
   "nameEn": "Mitchell Miguel",
   "role": "player",
   "age": 31,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 59,
   "popularity": 42,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 52,
       "proServiceYears": 9,
       "pitching": {
-        "ovr": 58,
-        "stamina": 57,
-        "velocity": 58,
-        "command": 51,
-        "control": 56,
-        "movement": 59,
-        "mentality": 55,
-        "recovery": 49,
-        "clutch": 45,
-        "holdRunners": 52
+        "ovr": 51,
+        "stamina": 50,
+        "velocity": 51,
+        "command": 45,
+        "control": 49,
+        "movement": 52,
+        "mentality": 48,
+        "recovery": 43,
+        "clutch": 40,
+        "holdRunners": 46
       },
       "batting": {
         "ovr": 51,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 51
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,9 +1,9 @@
 {
   "id": "PLY_13307",
-  "name": "가르시아 블레이크",
-  "nameEn": "Garcia Blake",
+  "name": "Clark Sean",
+  "nameEn": "Clark Sean",
   "role": "player",
-  "age": 21,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 65,
-  "popularity": 37,
+  "notes": "국적:베네수엘라",
+  "diligence": 80,
+  "popularity": 49,
   "militaryStatus": "군필",
   "entryYear": 2046,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 21,
+  "entryAge": 22,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
+      "position": "C",
       "jerseyNumber": 12,
-      "primaryPosition": "SP",
-      "developmentRate": 68,
-      "potentialHidden": 89,
+      "primaryPosition": "C",
+      "developmentRate": 74,
+      "potentialHidden": 61,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 59,
-        "stamina": 64,
-        "velocity": 56,
-        "command": 58,
-        "control": 63,
-        "movement": 55,
-        "mentality": 62,
-        "recovery": 59,
-        "clutch": 58,
-        "holdRunners": 46
+        "ovr": 55,
+        "stamina": 55,
+        "velocity": 62,
+        "command": 47,
+        "control": 49,
+        "movement": 51,
+        "mentality": 52,
+        "recovery": 55,
+        "clutch": 50,
+        "holdRunners": 44
       },
       "batting": {
-        "ovr": 63,
-        "contact": 61,
-        "power": 62,
-        "eye": 62,
-        "discipline": 54,
-        "speed": 69,
-        "baseInstinct": 62,
-        "bunting": 58,
+        "ovr": 55,
+        "contact": 47,
+        "power": 57,
+        "eye": 49,
+        "discipline": 52,
+        "speed": 62,
+        "baseInstinct": 51,
+        "bunting": 48,
         "platoon": 50,
-        "fielding": 58,
-        "arm": 61,
-        "battingClutch": 53
+        "fielding": 49,
+        "arm": 50,
+        "battingClutch": 44
       },
       "positionRatings": {
-        "SP": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "C": 55
+      }
     },
     "coach": null,
     "manager": null,

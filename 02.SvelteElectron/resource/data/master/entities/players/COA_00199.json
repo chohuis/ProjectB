@@ -1,17 +1,17 @@
 {
   "id": "COA_00199",
-  "name": "와타나베 카이토",
-  "nameEn": "Watanabe Kaito",
+  "name": "하야시 츠바사",
+  "nameEn": "Hayashi Tsubasa",
   "role": "coach",
-  "age": 47,
+  "age": 55,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
-  "clubId": "CLUB_JBL_CL_TIDERAVES",
-  "teamId": "TEAM_JBL_CL_TIDERAVES_1",
+  "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
+  "teamId": "TEAM_JBL_PL_THUNDERFALCONS_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
@@ -44,15 +44,15 @@
     },
     "coach": {
       "specialty": "투수",
-      "experienceYears": 15,
+      "experienceYears": 6,
       "stats": {
-        "teaching": 79,
-        "analysis": 55,
-        "communication": 75,
-        "discipline": 73,
-        "leadership": 58
+        "teaching": 84,
+        "analysis": 73,
+        "communication": 62,
+        "discipline": 66,
+        "leadership": 60
       },
-      "trainingBuffs": "컨택 훈련 +2%"
+      "trainingBuffs": "구속 훈련 +2%"
     },
     "manager": {
       "style": "균형",

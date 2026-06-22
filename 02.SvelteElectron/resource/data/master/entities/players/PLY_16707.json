@@ -1,6 +1,6 @@
 {
   "id": "PLY_16707",
-  "name": "그린 미겔",
+  "name": "Green Miguel",
   "nameEn": "Green Miguel",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 56,
   "popularity": 35,
   "militaryStatus": "군필",

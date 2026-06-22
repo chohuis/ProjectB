@@ -1,7 +1,7 @@
 {
   "id": "PLY_00119",
   "name": "권성준",
-  "nameEn": "Kwon Seongjun",
+  "nameEn": "You Chan-young",
   "role": "player",
   "age": 17,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "RF",
       "jerseyNumber": 19,
       "pitching": {
-        "ovr": 20,
-        "stamina": 22,
-        "velocity": 23,
-        "command": 20,
-        "control": 20,
-        "movement": 21,
-        "mentality": 20,
-        "recovery": 20,
-        "clutch": 37,
-        "holdRunners": 37
+        "ovr": 34,
+        "stamina": 58,
+        "velocity": 48,
+        "command": 40,
+        "control": 46,
+        "movement": 49,
+        "mentality": 49,
+        "recovery": 44
       },
       "batting": {
-        "ovr": 38,
-        "contact": 42,
-        "power": 44,
-        "eye": 33,
-        "discipline": 43,
-        "speed": 33,
-        "fielding": 40,
-        "arm": 37,
-        "battingClutch": 44,
-        "baseInstinct": 38,
-        "bunting": 41,
-        "platoon": 42
+        "ovr": 55,
+        "contact": 53,
+        "power": 51,
+        "eye": 46,
+        "discipline": 46,
+        "speed": 42,
+        "fielding": 51,
+        "arm": 54,
+        "battingClutch": 44
       },
       "developmentRate": 64,
-      "potentialHidden": 72,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 38
-      }
+      "potentialHidden": 72
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

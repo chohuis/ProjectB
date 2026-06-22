@@ -1,14 +1,14 @@
 {
   "id": "PLY_00534",
   "name": "황승민",
-  "nameEn": "Hwang Seungmin",
+  "nameEn": "Oh Tae-min",
   "role": "player",
   "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_BEARGUARDIANS",
-  "teamId": "TEAM_KBL_BEARGUARDIANS_2",
+  "clubId": "CLUB_KBL_SAMSUNG",
+  "teamId": "TEAM_KBL_SAMSUNG_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 34,
       "pitching": {
-        "ovr": 72,
-        "stamina": 71,
-        "velocity": 68,
-        "command": 75,
-        "control": 70,
-        "movement": 68,
-        "mentality": 71,
-        "recovery": 73,
-        "clutch": 71,
-        "holdRunners": 67
+        "ovr": 79,
+        "stamina": 82,
+        "velocity": 83,
+        "command": 81,
+        "control": 74,
+        "movement": 79,
+        "mentality": 75,
+        "recovery": 80
       },
       "batting": {
-        "ovr": 54,
-        "contact": 49,
-        "power": 58,
-        "eye": 59,
+        "ovr": 62,
+        "contact": 58,
+        "power": 59,
+        "eye": 56,
         "discipline": 57,
-        "speed": 53,
-        "fielding": 58,
-        "arm": 52,
-        "battingClutch": 52,
-        "baseInstinct": 42,
-        "bunting": 41,
-        "platoon": 45
+        "speed": 60,
+        "fielding": 53,
+        "arm": 55,
+        "battingClutch": 54
       },
       "developmentRate": 43,
-      "potentialHidden": 79,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 72
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 6,
-      "contract": {
-        "salary": 6600,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 79
     },
     "coach": {
       "specialty": "-",
@@ -114,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

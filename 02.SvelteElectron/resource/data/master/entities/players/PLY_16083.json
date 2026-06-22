@@ -1,6 +1,6 @@
 {
   "id": "PLY_16083",
-  "name": "그린 에릭",
+  "name": "Green Eric",
   "nameEn": "Green Eric",
   "role": "player",
   "age": 34,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 57,
   "popularity": 14,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 40
       },
       "batting": {
-        "ovr": 67,
-        "contact": 57,
-        "power": 63,
-        "eye": 68,
-        "discipline": 72,
-        "speed": 63,
-        "baseInstinct": 57,
-        "bunting": 57,
-        "platoon": 62,
-        "fielding": 67,
-        "arm": 66,
-        "battingClutch": 63
+        "ovr": 54,
+        "contact": 46,
+        "power": 51,
+        "eye": 55,
+        "discipline": 58,
+        "speed": 51,
+        "baseInstinct": 46,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 53,
+        "battingClutch": 51
       },
       "positionRatings": {
         "1B": 54

@@ -1,14 +1,14 @@
 {
   "id": "PLY_00917",
   "name": "브라운 루카스",
-  "nameEn": "Beu 라운 루카스",
+  "nameEn": "Brown Lucas",
   "role": "player",
   "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_SUNDRAGONS",
-  "teamId": "TEAM_ABL_SUNDRAGONS_1",
+  "clubId": "CLUB_ABL_BOS",
+  "teamId": "TEAM_ABL_BOS",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 7,
       "pitching": {
-        "ovr": 55,
-        "stamina": 55,
-        "velocity": 51,
-        "command": 60,
-        "control": 56,
-        "movement": 56,
-        "mentality": 56,
-        "recovery": 56,
-        "clutch": 51,
-        "holdRunners": 53
+        "ovr": 73,
+        "stamina": 62,
+        "velocity": 76,
+        "command": 74,
+        "control": 71,
+        "movement": 73,
+        "mentality": 68,
+        "recovery": 68
       },
       "batting": {
-        "ovr": 37,
-        "contact": 32,
-        "power": 35,
-        "eye": 38,
-        "discipline": 40,
-        "speed": 39,
-        "fielding": 41,
-        "arm": 39,
-        "battingClutch": 44,
-        "baseInstinct": 35,
-        "bunting": 30,
-        "platoon": 33
+        "ovr": 49,
+        "contact": 52,
+        "power": 52,
+        "eye": 48,
+        "discipline": 50,
+        "speed": 46,
+        "fielding": 47,
+        "arm": 50,
+        "battingClutch": 49
       },
       "developmentRate": 36,
-      "potentialHidden": 84,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 55
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SCREWBALL",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 3,
-      "contract": {
-        "salary": 10200,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 84
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

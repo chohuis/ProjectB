@@ -1,6 +1,6 @@
 {
   "id": "PLY_14976",
-  "name": "앤더슨 트레버",
+  "name": "Anderson Trevor",
   "nameEn": "Anderson Trevor",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 78,
   "popularity": 23,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 80,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 50,
-        "stamina": 49,
-        "velocity": 48,
-        "command": 44,
-        "control": 50,
-        "movement": 42,
-        "mentality": 47,
-        "recovery": 45,
-        "clutch": 43,
-        "holdRunners": 47
+        "ovr": 51,
+        "stamina": 50,
+        "velocity": 49,
+        "command": 45,
+        "control": 51,
+        "movement": 43,
+        "mentality": 48,
+        "recovery": 46,
+        "clutch": 44,
+        "holdRunners": 48
       },
       "batting": {
         "ovr": 51,
@@ -57,13 +57,7 @@
       },
       "positionRatings": {
         "SP": 51
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

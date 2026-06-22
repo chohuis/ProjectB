@@ -1,14 +1,14 @@
 {
   "id": "PLY_00628",
   "name": "곽지후",
-  "nameEn": "Kwak Jihu",
+  "nameEn": "Hwang Min-jae",
   "role": "player",
   "age": 23,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_SOARINGEAGLES",
-  "teamId": "TEAM_KBL_SOARINGEAGLES_2",
+  "clubId": "CLUB_KBL_DOOSAN",
+  "teamId": "TEAM_KBL_DOOSAN_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,54 +19,28 @@
       "position": "RP",
       "jerseyNumber": 38,
       "pitching": {
-        "ovr": 41,
-        "stamina": 46,
-        "velocity": 42,
-        "command": 45,
-        "control": 46,
-        "movement": 41,
-        "mentality": 38,
-        "recovery": 43,
-        "clutch": 41,
-        "holdRunners": 35
+        "ovr": 55,
+        "stamina": 47,
+        "velocity": 64,
+        "command": 55,
+        "control": 53,
+        "movement": 55,
+        "mentality": 60,
+        "recovery": 54
       },
       "batting": {
-        "ovr": 23,
-        "contact": 29,
-        "power": 20,
-        "eye": 21,
-        "discipline": 20,
-        "speed": 20,
-        "fielding": 28,
-        "arm": 21,
-        "battingClutch": 39,
-        "baseInstinct": 39,
-        "bunting": 38,
-        "platoon": 37
+        "ovr": 34,
+        "contact": 37,
+        "power": 33,
+        "eye": 36,
+        "discipline": 33,
+        "speed": 33,
+        "fielding": 33,
+        "arm": 32,
+        "battingClutch": 40
       },
       "developmentRate": 59,
-      "potentialHidden": 72,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 41
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 1,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 72
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

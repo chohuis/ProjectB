@@ -1,9 +1,9 @@
 {
   "id": "PLY_00016",
   "name": "전재윤",
-  "nameEn": "Jeon Jaeyun",
+  "nameEn": "Cho Yong-jun",
   "role": "player",
-  "age": 19,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "LF",
       "jerseyNumber": 16,
       "pitching": {
-        "ovr": 44,
-        "stamina": 50,
-        "velocity": 46,
-        "command": 44,
-        "control": 49,
-        "movement": 49,
-        "mentality": 49,
-        "recovery": 41,
-        "clutch": 38,
-        "holdRunners": 38
+        "ovr": 49,
+        "stamina": 80,
+        "velocity": 68,
+        "command": 57,
+        "control": 70,
+        "movement": 58,
+        "mentality": 76,
+        "recovery": 73
       },
       "batting": {
-        "ovr": 64,
-        "contact": 60,
-        "power": 67,
-        "eye": 64,
-        "discipline": 63,
-        "speed": 68,
-        "fielding": 63,
-        "arm": 63,
-        "battingClutch": 63,
-        "baseInstinct": 53,
-        "bunting": 56,
-        "platoon": 62
+        "ovr": 65,
+        "contact": 63,
+        "power": 66,
+        "eye": 73,
+        "discipline": 61,
+        "speed": 61,
+        "fielding": 59,
+        "arm": 77,
+        "battingClutch": 74
       },
       "developmentRate": 52,
-      "potentialHidden": 67,
-      "primaryPosition": "LF",
-      "positionRatings": {
-        "LF": 64
-      }
+      "potentialHidden": 67
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

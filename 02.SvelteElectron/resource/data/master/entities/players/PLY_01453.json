@@ -1,14 +1,14 @@
 {
   "id": "PLY_01453",
   "name": "로빈슨 매튜",
-  "nameEn": "Ro 빈슨 매튜",
+  "nameEn": "Robinson Matthew",
   "role": "player",
   "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_DESERTSERPENTS",
-  "teamId": "TEAM_ABL_DESERTSERPENTS_1",
+  "clubId": "CLUB_ABL_ARI",
+  "teamId": "TEAM_ABL_ARI",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 3,
       "pitching": {
-        "ovr": 76,
-        "stamina": 78,
-        "velocity": 77,
-        "command": 72,
-        "control": 79,
-        "movement": 77,
-        "mentality": 76,
-        "recovery": 79,
-        "clutch": 75,
-        "holdRunners": 74
+        "ovr": 80,
+        "stamina": 80,
+        "velocity": 82,
+        "command": 80,
+        "control": 78,
+        "movement": 84,
+        "mentality": 84,
+        "recovery": 81
       },
       "batting": {
-        "ovr": 58,
-        "contact": 62,
+        "ovr": 54,
+        "contact": 55,
         "power": 59,
-        "eye": 54,
-        "discipline": 55,
-        "speed": 60,
-        "fielding": 61,
-        "arm": 61,
-        "battingClutch": 56,
-        "baseInstinct": 47,
-        "bunting": 41,
-        "platoon": 46
+        "eye": 55,
+        "discipline": 61,
+        "speed": 55,
+        "fielding": 56,
+        "arm": 53,
+        "battingClutch": 62
       },
       "developmentRate": 45,
-      "potentialHidden": 88,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 10,
-      "contract": {
-        "salary": 26300,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 88
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

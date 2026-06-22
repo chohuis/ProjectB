@@ -1,14 +1,14 @@
 {
   "id": "PLY_00952",
   "name": "앤더슨 매튜",
-  "nameEn": "Aen 더슨 매튜",
+  "nameEn": "Anderson Matthew",
   "role": "player",
   "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_SUNDRAGONS",
-  "teamId": "TEAM_ABL_SUNDRAGONS_2",
+  "clubId": "CLUB_ABL_BOS",
+  "teamId": "TEAM_ABL_BOS_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,48 +19,28 @@
       "position": "LF",
       "jerseyNumber": 57,
       "pitching": {
-        "ovr": 47,
-        "stamina": 47,
-        "velocity": 43,
-        "command": 45,
-        "control": 49,
-        "movement": 46,
-        "mentality": 49,
-        "recovery": 50,
-        "clutch": 38,
-        "holdRunners": 44
+        "ovr": 51,
+        "stamina": 50,
+        "velocity": 54,
+        "command": 53,
+        "control": 51,
+        "movement": 45,
+        "mentality": 50,
+        "recovery": 49
       },
       "batting": {
-        "ovr": 67,
-        "contact": 68,
-        "power": 73,
-        "eye": 74,
-        "discipline": 62,
-        "speed": 71,
-        "fielding": 68,
-        "arm": 73,
-        "battingClutch": 65,
-        "baseInstinct": 61,
-        "bunting": 51,
-        "platoon": 60
+        "ovr": 69,
+        "contact": 70,
+        "power": 69,
+        "eye": 65,
+        "discipline": 73,
+        "speed": 66,
+        "fielding": 63,
+        "arm": 70,
+        "battingClutch": 70
       },
       "developmentRate": 45,
-      "potentialHidden": 60,
-      "primaryPosition": "LF",
-      "positionRatings": {
-        "LF": 67
-      },
-      "proServiceYears": 5,
-      "contract": {
-        "salary": 6300,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

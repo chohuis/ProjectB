@@ -1,6 +1,6 @@
 {
   "id": "PLY_14104",
-  "name": "해리스 조던",
+  "name": "Harris Jordan",
   "nameEn": "Harris Jordan",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 68,
   "popularity": 26,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 55
       },
       "batting": {
-        "ovr": 64,
-        "contact": 57,
-        "power": 56,
-        "eye": 64,
-        "discipline": 66,
-        "speed": 68,
-        "baseInstinct": 63,
-        "bunting": 49,
-        "platoon": 48,
-        "fielding": 65,
-        "arm": 61,
-        "battingClutch": 63
+        "ovr": 67,
+        "contact": 60,
+        "power": 59,
+        "eye": 67,
+        "discipline": 69,
+        "speed": 71,
+        "baseInstinct": 66,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 64,
+        "battingClutch": 66
       },
       "positionRatings": {
         "SS": 67

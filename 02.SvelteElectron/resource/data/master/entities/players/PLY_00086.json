@@ -1,7 +1,7 @@
 {
   "id": "PLY_00086",
   "name": "성재원",
-  "nameEn": "Seong Jaewon",
+  "nameEn": "Bae Ye-jun",
   "role": "player",
   "age": 17,
   "status": "active",
@@ -19,43 +19,28 @@
       "position": "RP",
       "jerseyNumber": 6,
       "pitching": {
-        "ovr": 45,
-        "stamina": 44,
-        "velocity": 43,
-        "command": 43,
-        "control": 45,
-        "movement": 43,
-        "mentality": 41,
-        "recovery": 42,
-        "clutch": 45,
-        "holdRunners": 40
+        "ovr": 42,
+        "stamina": 57,
+        "velocity": 55,
+        "command": 51,
+        "control": 38,
+        "movement": 45,
+        "mentality": 49,
+        "recovery": 48
       },
       "batting": {
-        "ovr": 27,
-        "contact": 23,
-        "power": 28,
-        "eye": 22,
-        "discipline": 31,
-        "speed": 28,
-        "fielding": 23,
-        "arm": 25,
-        "battingClutch": 43,
-        "baseInstinct": 44,
-        "bunting": 39,
-        "platoon": 36
+        "ovr": 38,
+        "contact": 50,
+        "power": 52,
+        "eye": 48,
+        "discipline": 36,
+        "speed": 44,
+        "fielding": 49,
+        "arm": 44,
+        "battingClutch": 38
       },
       "developmentRate": 54,
-      "potentialHidden": 77,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 45
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        }
-      ]
+      "potentialHidden": 77
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

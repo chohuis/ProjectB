@@ -1,6 +1,6 @@
 {
   "id": "PLY_15039",
-  "name": "에르난데스 네이선",
+  "name": "Hernandez Nathan",
   "nameEn": "Hernandez Nathan",
   "role": "player",
   "age": 34,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 68,
   "popularity": 15,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 54,
       "proServiceYears": 12,
       "pitching": {
-        "ovr": 82,
-        "stamina": 83,
-        "velocity": 96,
-        "command": 74,
-        "control": 81,
-        "movement": 76,
-        "mentality": 91,
-        "recovery": 79,
-        "clutch": 68,
-        "holdRunners": 72
+        "ovr": 65,
+        "stamina": 66,
+        "velocity": 76,
+        "command": 59,
+        "control": 64,
+        "movement": 60,
+        "mentality": 72,
+        "recovery": 63,
+        "clutch": 54,
+        "holdRunners": 57
       },
       "batting": {
         "ovr": 65,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_15224",
-  "name": "라이트 오스틴",
+  "name": "Wright Austin",
   "nameEn": "Wright Austin",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 60,
   "popularity": 33,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 74,
       "proServiceYears": 5,
       "pitching": {
-        "ovr": 54,
-        "stamina": 46,
-        "velocity": 51,
-        "command": 45,
-        "control": 53,
-        "movement": 55,
-        "mentality": 57,
-        "recovery": 50,
-        "clutch": 44,
-        "holdRunners": 43
+        "ovr": 60,
+        "stamina": 51,
+        "velocity": 57,
+        "command": 50,
+        "control": 59,
+        "movement": 61,
+        "mentality": 63,
+        "recovery": 55,
+        "clutch": 49,
+        "holdRunners": 48
       },
       "batting": {
         "ovr": 60,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

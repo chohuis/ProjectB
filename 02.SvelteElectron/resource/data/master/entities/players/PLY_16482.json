@@ -1,6 +1,6 @@
 {
   "id": "PLY_16482",
-  "name": "화이트 크리스",
+  "name": "White Chris",
   "nameEn": "White Chris",
   "role": "player",
   "age": 23,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 77,
   "popularity": 46,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 84,
       "proServiceYears": 1,
       "pitching": {
-        "ovr": 63,
-        "stamina": 54,
-        "velocity": 66,
-        "command": 52,
-        "control": 63,
-        "movement": 62,
-        "mentality": 69,
-        "recovery": 63,
-        "clutch": 54,
-        "holdRunners": 60
+        "ovr": 65,
+        "stamina": 56,
+        "velocity": 68,
+        "command": 54,
+        "control": 65,
+        "movement": 64,
+        "mentality": 71,
+        "recovery": 65,
+        "clutch": 56,
+        "holdRunners": 62
       },
       "batting": {
         "ovr": 65,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

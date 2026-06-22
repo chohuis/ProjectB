@@ -1,7 +1,7 @@
 {
   "id": "PLY_13654",
-  "name": "가르시아 헌터",
-  "nameEn": "Garcia Hunter",
+  "name": "Walker Marcus",
+  "nameEn": "Walker Marcus",
   "role": "player",
   "age": 25,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 71,
-  "popularity": 10,
+  "notes": "국적:멕시코",
+  "diligence": 49,
+  "popularity": 33,
   "militaryStatus": "군필",
   "entryYear": 2049,
   "entryLeague": "LEAGUE_ABL",
@@ -24,54 +24,40 @@
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 60,
+      "jerseyNumber": 81,
       "primaryPosition": "SP",
-      "developmentRate": 55,
-      "potentialHidden": 60,
+      "developmentRate": 51,
+      "potentialHidden": 67,
       "proServiceYears": 3,
       "pitching": {
-        "ovr": 66,
-        "stamina": 62,
-        "velocity": 66,
-        "command": 59,
-        "control": 61,
-        "movement": 61,
-        "mentality": 70,
-        "recovery": 56,
-        "clutch": 61,
-        "holdRunners": 61
+        "ovr": 69,
+        "stamina": 65,
+        "velocity": 72,
+        "command": 68,
+        "control": 72,
+        "movement": 65,
+        "mentality": 74,
+        "recovery": 70,
+        "clutch": 56,
+        "holdRunners": 65
       },
       "batting": {
-        "ovr": 73,
-        "contact": 75,
-        "power": 67,
-        "eye": 70,
-        "discipline": 73,
-        "speed": 78,
-        "baseInstinct": 68,
-        "bunting": 66,
+        "ovr": 69,
+        "contact": 69,
+        "power": 70,
+        "eye": 60,
+        "discipline": 70,
+        "speed": 67,
+        "baseInstinct": 69,
+        "bunting": 62,
         "platoon": 50,
-        "fielding": 74,
-        "arm": 62,
-        "battingClutch": 70
+        "fielding": 63,
+        "arm": 69,
+        "battingClutch": 59
       },
       "positionRatings": {
-        "SP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "SP": 69
+      }
     },
     "coach": null,
     "manager": null,

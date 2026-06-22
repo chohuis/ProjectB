@@ -1,6 +1,6 @@
 {
   "id": "PLY_15361",
-  "name": "그린 마커스",
+  "name": "Green Marcus",
   "nameEn": "Green Marcus",
   "role": "player",
   "age": 34,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 55,
   "popularity": 40,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 43,
       "proServiceYears": 12,
       "pitching": {
-        "ovr": 85,
-        "stamina": 77,
-        "velocity": 86,
-        "command": 86,
-        "control": 80,
-        "movement": 81,
-        "mentality": 86,
-        "recovery": 70,
-        "clutch": 75,
-        "holdRunners": 67
+        "ovr": 67,
+        "stamina": 61,
+        "velocity": 68,
+        "command": 68,
+        "control": 63,
+        "movement": 64,
+        "mentality": 68,
+        "recovery": 55,
+        "clutch": 59,
+        "holdRunners": 53
       },
       "batting": {
         "ovr": 67,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_16717",
-  "name": "로드리게스 헌터",
+  "name": "Rodriguez Hunter",
   "nameEn": "Rodriguez Hunter",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 56,
   "popularity": 25,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 59
       },
       "batting": {
-        "ovr": 65,
-        "contact": 63,
-        "power": 55,
-        "eye": 66,
-        "discipline": 55,
-        "speed": 66,
-        "baseInstinct": 58,
-        "bunting": 60,
-        "platoon": 49,
-        "fielding": 64,
-        "arm": 61,
-        "battingClutch": 58
+        "ovr": 67,
+        "contact": 65,
+        "power": 57,
+        "eye": 68,
+        "discipline": 57,
+        "speed": 68,
+        "baseInstinct": 60,
+        "bunting": 62,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 63,
+        "battingClutch": 60
       },
       "positionRatings": {
         "CF": 67

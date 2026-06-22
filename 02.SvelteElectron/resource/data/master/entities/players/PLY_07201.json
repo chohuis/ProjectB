@@ -29,16 +29,16 @@
       "developmentRate": 48,
       "potentialHidden": 71,
       "pitching": {
-        "ovr": 42,
-        "stamina": 39,
-        "velocity": 47,
-        "command": 43,
-        "control": 41,
-        "movement": 38,
-        "mentality": 47,
-        "recovery": 34,
-        "clutch": 40,
-        "holdRunners": 32
+        "ovr": 51,
+        "stamina": 47,
+        "velocity": 57,
+        "command": 52,
+        "control": 50,
+        "movement": 46,
+        "mentality": 57,
+        "recovery": 41,
+        "clutch": 49,
+        "holdRunners": 39
       },
       "batting": {
         "ovr": 56,
@@ -56,17 +56,7 @@
       },
       "positionRatings": {
         "SP": 51
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

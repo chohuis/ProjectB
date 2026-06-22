@@ -1,6 +1,6 @@
 {
   "id": "PLY_15044",
-  "name": "브라운 카를로스",
+  "name": "Brown Carlos",
   "nameEn": "Brown Carlos",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 50,
   "popularity": 45,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 83,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 79,
-        "stamina": 69,
-        "velocity": 79,
-        "command": 67,
-        "control": 73,
-        "movement": 80,
-        "mentality": 75,
-        "recovery": 77,
-        "clutch": 70,
-        "holdRunners": 70
+        "ovr": 73,
+        "stamina": 64,
+        "velocity": 73,
+        "command": 62,
+        "control": 67,
+        "movement": 74,
+        "mentality": 69,
+        "recovery": 71,
+        "clutch": 65,
+        "holdRunners": 65
       },
       "batting": {
         "ovr": 73,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

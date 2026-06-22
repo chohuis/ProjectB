@@ -1,7 +1,7 @@
 {
   "id": "PLY_12297",
-  "name": "존슨 타일러",
-  "nameEn": "Johnson Tyler",
+  "name": "Taylor Luis",
+  "nameEn": "Taylor Luis",
   "role": "player",
   "age": 27,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:파나마",
   "diligence": 80,
-  "popularity": 47,
+  "popularity": 39,
   "militaryStatus": "군필",
   "entryYear": 2040,
   "entryLeague": "LEAGUE_ABL",
@@ -21,57 +21,43 @@
   "entryAge": 27,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 5,
-      "primaryPosition": "SP",
-      "developmentRate": 57,
-      "potentialHidden": 72,
+      "position": "1B",
+      "jerseyNumber": 62,
+      "primaryPosition": "1B",
+      "developmentRate": 67,
+      "potentialHidden": 75,
       "proServiceYears": 5,
       "pitching": {
-        "ovr": 66,
-        "stamina": 62,
-        "velocity": 73,
-        "command": 61,
-        "control": 58,
-        "movement": 58,
-        "mentality": 68,
-        "recovery": 67,
-        "clutch": 62,
-        "holdRunners": 60
+        "ovr": 71,
+        "stamina": 66,
+        "velocity": 68,
+        "command": 63,
+        "control": 73,
+        "movement": 65,
+        "mentality": 75,
+        "recovery": 63,
+        "clutch": 69,
+        "holdRunners": 68
       },
       "batting": {
-        "ovr": 73,
-        "contact": 71,
-        "power": 68,
-        "eye": 71,
-        "discipline": 64,
-        "speed": 67,
-        "baseInstinct": 62,
+        "ovr": 71,
+        "contact": 69,
+        "power": 71,
+        "eye": 64,
+        "discipline": 63,
+        "speed": 71,
+        "baseInstinct": 73,
         "bunting": 56,
         "platoon": 50,
-        "fielding": 74,
-        "arm": 72,
-        "battingClutch": 60
+        "fielding": 73,
+        "arm": 64,
+        "battingClutch": 70
       },
       "positionRatings": {
-        "SP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ]
+        "1B": 71
+      }
     },
     "coach": null,
     "manager": null,

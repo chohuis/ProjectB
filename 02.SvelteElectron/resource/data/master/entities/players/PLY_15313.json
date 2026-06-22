@@ -1,6 +1,6 @@
 {
   "id": "PLY_15313",
-  "name": "토마스 트레버",
+  "name": "Thomas Trevor",
   "nameEn": "Thomas Trevor",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 51,
   "popularity": 35,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 48
       },
       "batting": {
-        "ovr": 55,
-        "contact": 59,
-        "power": 50,
-        "eye": 53,
-        "discipline": 50,
-        "speed": 49,
-        "baseInstinct": 55,
-        "bunting": 41,
-        "platoon": 45,
-        "fielding": 50,
-        "arm": 45,
-        "battingClutch": 51
+        "ovr": 61,
+        "contact": 65,
+        "power": 55,
+        "eye": 59,
+        "discipline": 56,
+        "speed": 54,
+        "baseInstinct": 61,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 50,
+        "battingClutch": 57
       },
       "positionRatings": {
         "3B": 61

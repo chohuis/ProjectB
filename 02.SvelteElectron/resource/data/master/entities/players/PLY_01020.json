@@ -1,14 +1,14 @@
 {
   "id": "PLY_01020",
   "name": "킹 루카스",
-  "nameEn": "King  루카스",
+  "nameEn": "King Lucas",
   "role": "player",
   "age": 36,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_SPACECOMETS",
-  "teamId": "TEAM_ABL_SPACECOMETS_1",
+  "clubId": "CLUB_ABL_SEA",
+  "teamId": "TEAM_ABL_SEA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
@@ -19,48 +19,28 @@
       "position": "LF",
       "jerseyNumber": 20,
       "pitching": {
-        "ovr": 65,
-        "stamina": 68,
-        "velocity": 65,
-        "command": 69,
-        "control": 70,
-        "movement": 63,
+        "ovr": 67,
+        "stamina": 65,
+        "velocity": 70,
+        "command": 66,
+        "control": 65,
+        "movement": 68,
         "mentality": 63,
-        "recovery": 65,
-        "clutch": 63,
-        "holdRunners": 62
+        "recovery": 66
       },
       "batting": {
-        "ovr": 85,
-        "contact": 90,
-        "power": 86,
-        "eye": 91,
-        "discipline": 81,
-        "speed": 91,
-        "fielding": 80,
-        "arm": 79,
-        "battingClutch": 80,
-        "baseInstinct": 85,
-        "bunting": 71,
-        "platoon": 82
+        "ovr": 84,
+        "contact": 93,
+        "power": 92,
+        "eye": 88,
+        "discipline": 91,
+        "speed": 83,
+        "fielding": 83,
+        "arm": 88,
+        "battingClutch": 85
       },
       "developmentRate": 50,
-      "potentialHidden": 68,
-      "primaryPosition": "LF",
-      "positionRatings": {
-        "LF": 85
-      },
-      "proServiceYears": 14,
-      "contract": {
-        "salary": 17800,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 68
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

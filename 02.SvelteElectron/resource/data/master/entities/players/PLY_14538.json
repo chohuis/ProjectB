@@ -1,6 +1,6 @@
 {
   "id": "PLY_14538",
-  "name": "영 알렉스",
+  "name": "Young Alex",
   "nameEn": "Young Alex",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 64,
   "popularity": 17,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 44
       },
       "batting": {
-        "ovr": 58,
-        "contact": 62,
-        "power": 55,
-        "eye": 51,
-        "discipline": 52,
-        "speed": 63,
-        "baseInstinct": 55,
-        "bunting": 39,
-        "platoon": 49,
-        "fielding": 58,
-        "arm": 48,
-        "battingClutch": 54
+        "ovr": 59,
+        "contact": 63,
+        "power": 56,
+        "eye": 52,
+        "discipline": 53,
+        "speed": 64,
+        "baseInstinct": 56,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 49,
+        "battingClutch": 55
       },
       "positionRatings": {
         "3B": 59

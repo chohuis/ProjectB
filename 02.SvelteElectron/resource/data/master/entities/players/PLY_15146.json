@@ -1,6 +1,6 @@
 {
   "id": "PLY_15146",
-  "name": "클라크 그랜트",
+  "name": "Clark Grant",
   "nameEn": "Clark Grant",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 58,
   "popularity": 47,
   "militaryStatus": "군필",

@@ -1,61 +1,46 @@
 {
   "id": "PLY_01580",
-  "name": "전재원",
-  "nameEn": "Jeon Jaewon",
+  "name": "사이토 슌",
+  "nameEn": "Saito Shun",
   "role": "player",
-  "age": 18,
+  "age": 31,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_GWANGJU_VISION",
-  "teamId": "TEAM_HS_GWANGJU_VISION",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_GWANGJU_VISION",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_NEONCRANES",
+  "teamId": "TEAM_JBL_CL_NEONCRANES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "RF",
-      "jerseyNumber": 29,
+      "position": "3B",
+      "jerseyNumber": 45,
       "pitching": {
-        "ovr": 37,
-        "stamina": 42,
-        "velocity": 32,
-        "command": 39,
-        "control": 40,
-        "movement": 36,
-        "mentality": 34,
-        "recovery": 37,
-        "clutch": 38,
-        "holdRunners": 40
+        "ovr": 35,
+        "stamina": 25,
+        "velocity": 34,
+        "command": 29,
+        "control": 30,
+        "movement": 26,
+        "mentality": 29,
+        "recovery": 33
       },
       "batting": {
-        "ovr": 57,
-        "contact": 61,
-        "power": 58,
-        "eye": 57,
-        "discipline": 60,
-        "speed": 62,
-        "fielding": 59,
-        "arm": 60,
-        "battingClutch": 51,
-        "baseInstinct": 45,
-        "bunting": 51,
-        "platoon": 53
+        "ovr": 65,
+        "contact": 63,
+        "power": 64,
+        "eye": 68,
+        "discipline": 61,
+        "speed": 64,
+        "fielding": 60,
+        "arm": 67,
+        "battingClutch": 61
       },
-      "developmentRate": 71,
-      "potentialHidden": 80,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 51,
+      "potentialHidden": 81
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 55,
-  "popularity": 33
+  }
 }

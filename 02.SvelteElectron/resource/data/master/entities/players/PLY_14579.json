@@ -1,6 +1,6 @@
 {
   "id": "PLY_14579",
-  "name": "톰슨 네이선",
+  "name": "Thompson Nathan",
   "nameEn": "Thompson Nathan",
   "role": "player",
   "age": 18,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 59,
   "popularity": 28,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 57,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 53,
-        "stamina": 53,
-        "velocity": 55,
-        "command": 47,
-        "control": 44,
-        "movement": 50,
-        "mentality": 54,
-        "recovery": 43,
-        "clutch": 42,
-        "holdRunners": 41
+        "ovr": 54,
+        "stamina": 54,
+        "velocity": 56,
+        "command": 48,
+        "control": 45,
+        "movement": 51,
+        "mentality": 55,
+        "recovery": 44,
+        "clutch": 43,
+        "holdRunners": 42
       },
       "batting": {
         "ovr": 54,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 54
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

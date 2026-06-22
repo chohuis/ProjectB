@@ -1,6 +1,6 @@
 {
   "id": "PLY_15917",
-  "name": "앤더슨 코디",
+  "name": "Anderson Cody",
   "nameEn": "Anderson Cody",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 51,
   "popularity": 20,
   "militaryStatus": "군필",

@@ -1,6 +1,6 @@
 {
   "id": "PLY_14659",
-  "name": "토마스 콜",
+  "name": "Thomas Cole",
   "nameEn": "Thomas Cole",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 67,
   "popularity": 34,
   "militaryStatus": "군필",

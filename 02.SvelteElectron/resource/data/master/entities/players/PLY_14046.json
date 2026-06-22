@@ -1,6 +1,6 @@
 {
   "id": "PLY_14046",
-  "name": "넬슨 코너",
+  "name": "Nelson Connor",
   "nameEn": "Nelson Connor",
   "role": "player",
   "age": 30,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 77,
   "popularity": 21,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 67,
       "proServiceYears": 8,
       "pitching": {
-        "ovr": 63,
-        "stamina": 65,
-        "velocity": 72,
-        "command": 62,
-        "control": 54,
-        "movement": 57,
-        "mentality": 69,
-        "recovery": 64,
-        "clutch": 51,
-        "holdRunners": 57
+        "ovr": 56,
+        "stamina": 58,
+        "velocity": 64,
+        "command": 55,
+        "control": 48,
+        "movement": 51,
+        "mentality": 61,
+        "recovery": 57,
+        "clutch": 45,
+        "holdRunners": 51
       },
       "batting": {
         "ovr": 56,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

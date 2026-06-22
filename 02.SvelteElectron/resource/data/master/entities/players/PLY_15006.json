@@ -1,6 +1,6 @@
 {
   "id": "PLY_15006",
-  "name": "애덤스 루이스",
+  "name": "Adams Luis",
   "nameEn": "Adams Luis",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 73,
   "popularity": 25,
   "militaryStatus": "군필",

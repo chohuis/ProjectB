@@ -1,7 +1,7 @@
 {
   "id": "PLY_00296",
   "name": "고성민",
-  "nameEn": "Ko Seongmin",
+  "nameEn": "Ahn Tae-min",
   "role": "player",
   "age": 20,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "SS",
       "jerseyNumber": 16,
       "pitching": {
-        "ovr": 48,
-        "stamina": 45,
-        "velocity": 47,
-        "command": 49,
-        "control": 51,
-        "movement": 47,
-        "mentality": 46,
-        "recovery": 50,
-        "clutch": 39,
-        "holdRunners": 42
+        "ovr": 41,
+        "stamina": 39,
+        "velocity": 43,
+        "command": 41,
+        "control": 34,
+        "movement": 38,
+        "mentality": 34,
+        "recovery": 34
       },
       "batting": {
-        "ovr": 68,
-        "contact": 64,
-        "power": 71,
-        "eye": 64,
-        "discipline": 73,
-        "speed": 66,
-        "fielding": 71,
-        "arm": 71,
-        "battingClutch": 62,
-        "baseInstinct": 57,
-        "bunting": 55,
-        "platoon": 61
+        "ovr": 69,
+        "contact": 67,
+        "power": 66,
+        "eye": 67,
+        "discipline": 68,
+        "speed": 73,
+        "fielding": 75,
+        "arm": 67,
+        "battingClutch": 71
       },
       "developmentRate": 59,
-      "potentialHidden": 82,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 68
-      }
+      "potentialHidden": 82
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

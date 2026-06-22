@@ -1,6 +1,6 @@
 {
   "id": "PLY_14286",
-  "name": "로빈슨 카일",
+  "name": "Robinson Kyle",
   "nameEn": "Robinson Kyle",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 65,
   "popularity": 47,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 68,
       "proServiceYears": 2,
       "pitching": {
-        "ovr": 72,
-        "stamina": 63,
-        "velocity": 70,
-        "command": 62,
-        "control": 69,
-        "movement": 68,
-        "mentality": 72,
-        "recovery": 71,
-        "clutch": 72,
-        "holdRunners": 63
+        "ovr": 75,
+        "stamina": 66,
+        "velocity": 73,
+        "command": 65,
+        "control": 72,
+        "movement": 71,
+        "mentality": 75,
+        "recovery": 74,
+        "clutch": 75,
+        "holdRunners": 66
       },
       "batting": {
         "ovr": 75,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 75
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

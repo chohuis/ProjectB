@@ -1,14 +1,14 @@
 {
   "id": "PLY_01510",
   "name": "존슨 리엄",
-  "nameEn": "Jon 슨 리엄",
+  "nameEn": "Johnson Liam",
   "role": "player",
-  "age": 40,
+  "age": 41,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_RIVERCARDINALS",
-  "teamId": "TEAM_ABL_RIVERCARDINALS_1",
+  "clubId": "CLUB_ABL_BAL",
+  "teamId": "TEAM_ABL_BAL",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
@@ -19,48 +19,28 @@
       "position": "C",
       "jerseyNumber": 15,
       "pitching": {
-        "ovr": 55,
-        "stamina": 52,
-        "velocity": 51,
-        "command": 56,
-        "control": 51,
-        "movement": 58,
-        "mentality": 55,
-        "recovery": 54,
-        "clutch": 54,
-        "holdRunners": 43
+        "ovr": 37,
+        "stamina": 39,
+        "velocity": 43,
+        "command": 38,
+        "control": 36,
+        "movement": 33,
+        "mentality": 36,
+        "recovery": 40
       },
       "batting": {
-        "ovr": 75,
-        "contact": 78,
-        "power": 78,
+        "ovr": 68,
+        "contact": 76,
+        "power": 68,
         "eye": 70,
-        "discipline": 73,
-        "speed": 73,
+        "discipline": 67,
+        "speed": 64,
         "fielding": 74,
-        "arm": 79,
-        "battingClutch": 67,
-        "baseInstinct": 66,
-        "bunting": 58,
-        "platoon": 62
+        "arm": 78,
+        "battingClutch": 76
       },
       "developmentRate": 31,
-      "potentialHidden": 86,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 75
-      },
-      "proServiceYears": 18,
-      "contract": {
-        "salary": 10200,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 86
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

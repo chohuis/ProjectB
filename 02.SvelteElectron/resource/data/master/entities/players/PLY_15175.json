@@ -1,6 +1,6 @@
 {
   "id": "PLY_15175",
-  "name": "넬슨 알렉스",
+  "name": "Nelson Alex",
   "nameEn": "Nelson Alex",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 80,
   "popularity": 22,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 66
       },
       "batting": {
-        "ovr": 69,
-        "contact": 65,
-        "power": 60,
-        "eye": 69,
-        "discipline": 73,
-        "speed": 67,
-        "baseInstinct": 65,
-        "bunting": 62,
-        "platoon": 49,
-        "fielding": 69,
-        "arm": 70,
-        "battingClutch": 67
+        "ovr": 71,
+        "contact": 67,
+        "power": 62,
+        "eye": 71,
+        "discipline": 75,
+        "speed": 69,
+        "baseInstinct": 67,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 72,
+        "battingClutch": 69
       },
       "positionRatings": {
         "CF": 71

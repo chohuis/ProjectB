@@ -1,6 +1,6 @@
 {
   "id": "PLY_15009",
-  "name": "영 제이슨",
+  "name": "Young Jason",
   "nameEn": "Young Jason",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 52,
   "popularity": 22,
   "militaryStatus": "군필",

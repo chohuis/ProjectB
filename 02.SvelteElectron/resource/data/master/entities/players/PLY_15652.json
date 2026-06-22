@@ -1,6 +1,6 @@
 {
   "id": "PLY_15652",
-  "name": "킹 딜런",
+  "name": "King Dylan",
   "nameEn": "King Dylan",
   "role": "player",
   "age": 29,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 76,
   "popularity": 32,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 58,
       "proServiceYears": 7,
       "pitching": {
-        "ovr": 59,
-        "stamina": 53,
-        "velocity": 70,
-        "command": 50,
-        "control": 53,
-        "movement": 62,
-        "mentality": 59,
-        "recovery": 60,
-        "clutch": 48,
-        "holdRunners": 58
+        "ovr": 52,
+        "stamina": 47,
+        "velocity": 62,
+        "command": 44,
+        "control": 47,
+        "movement": 55,
+        "mentality": 52,
+        "recovery": 53,
+        "clutch": 42,
+        "holdRunners": 51
       },
       "batting": {
         "ovr": 52,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 52
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

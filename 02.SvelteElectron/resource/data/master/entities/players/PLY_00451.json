@@ -1,7 +1,7 @@
 {
   "id": "PLY_00451",
   "name": "조건우",
-  "nameEn": "Jo Geonu",
+  "nameEn": "Kim Jun-hyuk",
   "role": "player",
   "age": 28,
   "status": "active",
@@ -19,48 +19,28 @@
       "position": "C",
       "jerseyNumber": 11,
       "pitching": {
-        "ovr": 39,
-        "stamina": 37,
-        "velocity": 40,
-        "command": 41,
-        "control": 36,
-        "movement": 42,
-        "mentality": 36,
-        "recovery": 38,
-        "clutch": 44,
-        "holdRunners": 34
+        "ovr": 28,
+        "stamina": 28,
+        "velocity": 35,
+        "command": 33,
+        "control": 32,
+        "movement": 25,
+        "mentality": 30,
+        "recovery": 25
       },
       "batting": {
         "ovr": 59,
-        "contact": 65,
+        "contact": 55,
         "power": 55,
-        "eye": 56,
-        "discipline": 59,
-        "speed": 60,
-        "fielding": 54,
-        "arm": 55,
-        "battingClutch": 52,
-        "baseInstinct": 52,
-        "bunting": 50,
-        "platoon": 55
+        "eye": 61,
+        "discipline": 57,
+        "speed": 52,
+        "fielding": 62,
+        "arm": 58,
+        "battingClutch": 59
       },
       "developmentRate": 40,
-      "potentialHidden": 60,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 59
-      },
-      "proServiceYears": 8,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",
@@ -100,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

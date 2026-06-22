@@ -1,6 +1,6 @@
 {
   "id": "PLY_15131",
-  "name": "미첼 코너",
+  "name": "Mitchell Connor",
   "nameEn": "Mitchell Connor",
   "role": "player",
   "age": 34,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 53,
   "popularity": 48,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 56,
       "proServiceYears": 12,
       "pitching": {
-        "ovr": 62,
-        "stamina": 57,
-        "velocity": 63,
-        "command": 64,
-        "control": 61,
-        "movement": 61,
-        "mentality": 64,
-        "recovery": 64,
-        "clutch": 61,
-        "holdRunners": 48
+        "ovr": 50,
+        "stamina": 46,
+        "velocity": 51,
+        "command": 52,
+        "control": 49,
+        "movement": 49,
+        "mentality": 52,
+        "recovery": 52,
+        "clutch": 49,
+        "holdRunners": 39
       },
       "batting": {
         "ovr": 50,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 50
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

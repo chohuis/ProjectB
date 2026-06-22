@@ -1,6 +1,6 @@
 {
   "id": "PLY_16238",
-  "name": "가르시아 에반",
+  "name": "Garcia Evan",
   "nameEn": "Garcia Evan",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 61,
   "popularity": 18,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 47
       },
       "batting": {
-        "ovr": 51,
-        "contact": 49,
-        "power": 49,
-        "eye": 50,
-        "discipline": 43,
-        "speed": 45,
-        "baseInstinct": 41,
-        "bunting": 38,
-        "platoon": 49,
-        "fielding": 44,
-        "arm": 47,
-        "battingClutch": 40
+        "ovr": 52,
+        "contact": 50,
+        "power": 50,
+        "eye": 51,
+        "discipline": 44,
+        "speed": 46,
+        "baseInstinct": 42,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 48,
+        "battingClutch": 41
       },
       "positionRatings": {
         "CF": 52

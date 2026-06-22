@@ -1,6 +1,6 @@
 {
   "id": "PLY_14257",
-  "name": "킹 제이슨",
+  "name": "King Jason",
   "nameEn": "King Jason",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 53,
   "popularity": 36,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 58
       },
       "batting": {
-        "ovr": 78,
-        "contact": 79,
-        "power": 74,
-        "eye": 72,
-        "discipline": 77,
-        "speed": 72,
-        "baseInstinct": 67,
-        "bunting": 62,
-        "platoon": 54,
-        "fielding": 68,
-        "arm": 67,
-        "battingClutch": 70
+        "ovr": 72,
+        "contact": 73,
+        "power": 68,
+        "eye": 66,
+        "discipline": 71,
+        "speed": 66,
+        "baseInstinct": 62,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 62,
+        "battingClutch": 65
       },
       "positionRatings": {
         "C": 72

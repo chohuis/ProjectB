@@ -1,6 +1,6 @@
 {
   "id": "PLY_15539",
-  "name": "클라크 로건",
+  "name": "Clark Logan",
   "nameEn": "Clark Logan",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 80,
   "popularity": 46,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 60
       },
       "batting": {
-        "ovr": 80,
-        "contact": 84,
-        "power": 79,
-        "eye": 80,
-        "discipline": 81,
-        "speed": 84,
-        "baseInstinct": 79,
-        "bunting": 72,
-        "platoon": 63,
-        "fielding": 76,
-        "arm": 76,
-        "battingClutch": 65
+        "ovr": 63,
+        "contact": 66,
+        "power": 62,
+        "eye": 63,
+        "discipline": 64,
+        "speed": 66,
+        "baseInstinct": 62,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 60,
+        "battingClutch": 51
       },
       "positionRatings": {
         "LF": 63

@@ -1,14 +1,14 @@
 {
   "id": "PLY_00771",
   "name": "장태우",
-  "nameEn": "Jang Taeu",
+  "nameEn": "Shin Ha-jun",
   "role": "player",
   "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_STEELDINOS",
-  "teamId": "TEAM_KBL_STEELDINOS_2",
+  "clubId": "CLUB_KBL_LOTTE",
+  "teamId": "TEAM_KBL_LOTTE_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,48 +19,28 @@
       "position": "SS",
       "jerseyNumber": 46,
       "pitching": {
-        "ovr": 50,
-        "stamina": 55,
-        "velocity": 50,
-        "command": 53,
-        "control": 55,
-        "movement": 53,
-        "mentality": 54,
-        "recovery": 53,
-        "clutch": 46,
-        "holdRunners": 49
+        "ovr": 49,
+        "stamina": 47,
+        "velocity": 51,
+        "command": 49,
+        "control": 45,
+        "movement": 50,
+        "mentality": 46,
+        "recovery": 43
       },
       "batting": {
-        "ovr": 70,
-        "contact": 69,
-        "power": 66,
-        "eye": 71,
-        "discipline": 73,
-        "speed": 63,
-        "fielding": 71,
-        "arm": 68,
-        "battingClutch": 61,
-        "baseInstinct": 64,
-        "bunting": 56,
-        "platoon": 57
+        "ovr": 76,
+        "contact": 70,
+        "power": 72,
+        "eye": 67,
+        "discipline": 67,
+        "speed": 77,
+        "fielding": 69,
+        "arm": 73,
+        "battingClutch": 71
       },
       "developmentRate": 53,
-      "potentialHidden": 59,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 70
-      },
-      "proServiceYears": 5,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 59
     },
     "coach": {
       "specialty": "-",
@@ -100,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

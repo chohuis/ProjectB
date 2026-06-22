@@ -1,6 +1,6 @@
 {
   "id": "PLY_16478",
-  "name": "그린 브랜던",
+  "name": "Green Brandon",
   "nameEn": "Green Brandon",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 72,
   "popularity": 33,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 51
       },
       "batting": {
-        "ovr": 53,
-        "contact": 50,
-        "power": 53,
-        "eye": 49,
-        "discipline": 50,
-        "speed": 52,
-        "baseInstinct": 44,
-        "bunting": 37,
-        "platoon": 49,
-        "fielding": 43,
-        "arm": 56,
-        "battingClutch": 51
+        "ovr": 54,
+        "contact": 51,
+        "power": 54,
+        "eye": 50,
+        "discipline": 51,
+        "speed": 53,
+        "baseInstinct": 45,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 57,
+        "battingClutch": 52
       },
       "positionRatings": {
         "CF": 54

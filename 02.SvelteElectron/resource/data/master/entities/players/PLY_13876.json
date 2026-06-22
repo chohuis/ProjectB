@@ -1,9 +1,9 @@
 {
   "id": "PLY_13876",
-  "name": "토마스 블레이크",
-  "nameEn": "Thomas Blake",
+  "name": "Moore Sean",
+  "nameEn": "Moore Sean",
   "role": "player",
-  "age": 27,
+  "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 49,
-  "popularity": 46,
+  "notes": "국적:일본",
+  "diligence": 73,
+  "popularity": 32,
   "militaryStatus": "군필",
   "entryYear": 2050,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 27,
+  "entryAge": 25,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 31,
-      "primaryPosition": "SP",
-      "developmentRate": 63,
-      "potentialHidden": 60,
-      "proServiceYears": 5,
+      "position": "1B",
+      "jerseyNumber": 5,
+      "primaryPosition": "1B",
+      "developmentRate": 65,
+      "potentialHidden": 81,
+      "proServiceYears": 3,
       "pitching": {
-        "ovr": 75,
-        "stamina": 69,
-        "velocity": 82,
-        "command": 66,
+        "ovr": 79,
+        "stamina": 74,
+        "velocity": 85,
+        "command": 72,
         "control": 75,
-        "movement": 72,
-        "mentality": 72,
-        "recovery": 69,
-        "clutch": 64,
-        "holdRunners": 73
+        "movement": 78,
+        "mentality": 81,
+        "recovery": 74,
+        "clutch": 79,
+        "holdRunners": 71
       },
       "batting": {
         "ovr": 79,
-        "contact": 80,
-        "power": 80,
-        "eye": 73,
-        "discipline": 79,
-        "speed": 78,
-        "baseInstinct": 78,
-        "bunting": 70,
+        "contact": 81,
+        "power": 69,
+        "eye": 70,
+        "discipline": 75,
+        "speed": 85,
+        "baseInstinct": 80,
+        "bunting": 63,
         "platoon": 50,
-        "fielding": 78,
-        "arm": 80,
-        "battingClutch": 76
+        "fielding": 69,
+        "arm": 74,
+        "battingClutch": 75
       },
       "positionRatings": {
-        "SP": 79
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "1B": 79
+      }
     },
     "coach": null,
     "manager": null,

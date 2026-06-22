@@ -1,9 +1,9 @@
 {
   "id": "PLY_00139",
   "name": "민찬영",
-  "nameEn": "Min Chanyeong",
+  "nameEn": "Moon Hyun-woo",
   "role": "player",
-  "age": 17,
+  "age": 18,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "RF",
       "jerseyNumber": 19,
       "pitching": {
-        "ovr": 20,
-        "stamina": 21,
-        "velocity": 22,
-        "command": 23,
-        "control": 20,
-        "movement": 23,
-        "mentality": 20,
-        "recovery": 20,
-        "clutch": 42,
-        "holdRunners": 43
+        "ovr": 30,
+        "stamina": 45,
+        "velocity": 48,
+        "command": 55,
+        "control": 37,
+        "movement": 37,
+        "mentality": 40,
+        "recovery": 47
       },
       "batting": {
-        "ovr": 40,
-        "contact": 42,
-        "power": 42,
-        "eye": 35,
-        "discipline": 42,
-        "speed": 38,
-        "fielding": 44,
-        "arm": 41,
-        "battingClutch": 37,
-        "baseInstinct": 44,
-        "bunting": 41,
-        "platoon": 37
+        "ovr": 46,
+        "contact": 54,
+        "power": 41,
+        "eye": 41,
+        "discipline": 45,
+        "speed": 56,
+        "fielding": 45,
+        "arm": 54,
+        "battingClutch": 45
       },
       "developmentRate": 46,
-      "potentialHidden": 73,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 40
-      }
+      "potentialHidden": 73
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

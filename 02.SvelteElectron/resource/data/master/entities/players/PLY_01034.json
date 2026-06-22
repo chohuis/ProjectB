@@ -1,14 +1,14 @@
 {
   "id": "PLY_01034",
   "name": "테일러 라이언",
-  "nameEn": "Te 일러 라이언",
+  "nameEn": "Taylor Ryan",
   "role": "player",
   "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_SPACECOMETS",
-  "teamId": "TEAM_ABL_SPACECOMETS_2",
+  "clubId": "CLUB_ABL_SEA",
+  "teamId": "TEAM_ABL_SEA_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,58 +19,28 @@
       "position": "CP",
       "jerseyNumber": 49,
       "pitching": {
-        "ovr": 71,
-        "stamina": 70,
-        "velocity": 67,
-        "command": 69,
-        "control": 75,
-        "movement": 68,
-        "mentality": 69,
-        "recovery": 73,
-        "clutch": 63,
-        "holdRunners": 62
+        "ovr": 76,
+        "stamina": 67,
+        "velocity": 82,
+        "command": 77,
+        "control": 84,
+        "movement": 76,
+        "mentality": 74,
+        "recovery": 78
       },
       "batting": {
-        "ovr": 53,
-        "contact": 56,
-        "power": 56,
-        "eye": 54,
-        "discipline": 54,
-        "speed": 58,
-        "fielding": 48,
-        "arm": 51,
-        "battingClutch": 46,
-        "baseInstinct": 53,
-        "bunting": 43,
-        "platoon": 44
+        "ovr": 63,
+        "contact": 61,
+        "power": 60,
+        "eye": 58,
+        "discipline": 58,
+        "speed": 61,
+        "fielding": 59,
+        "arm": 57,
+        "battingClutch": 59
       },
       "developmentRate": 51,
-      "potentialHidden": 72,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 71
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 6,
-      "contract": {
-        "salary": 22500,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 72
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

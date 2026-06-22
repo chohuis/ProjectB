@@ -1,7 +1,7 @@
 {
   "id": "PLY_13212",
-  "name": "무어 조던",
-  "nameEn": "Moore Jordan",
+  "name": "Martinez Trevor",
+  "nameEn": "Martinez Trevor",
   "role": "player",
   "age": 18,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 81,
-  "popularity": 14,
+  "notes": "국적:도미니카",
+  "diligence": 67,
+  "popularity": 40,
   "militaryStatus": "군필",
   "entryYear": 2046,
   "entryLeague": "LEAGUE_ABL",
@@ -21,57 +21,43 @@
   "entryAge": 18,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 23,
-      "primaryPosition": "SP",
-      "developmentRate": 55,
-      "potentialHidden": 69,
+      "position": "1B",
+      "jerseyNumber": 45,
+      "primaryPosition": "1B",
+      "developmentRate": 67,
+      "potentialHidden": 65,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 61,
-        "stamina": 58,
-        "velocity": 66,
-        "command": 59,
-        "control": 65,
-        "movement": 61,
-        "mentality": 66,
-        "recovery": 57,
-        "clutch": 53,
-        "holdRunners": 55
+        "ovr": 55,
+        "stamina": 53,
+        "velocity": 62,
+        "command": 46,
+        "control": 48,
+        "movement": 49,
+        "mentality": 50,
+        "recovery": 47,
+        "clutch": 46,
+        "holdRunners": 50
       },
       "batting": {
-        "ovr": 66,
-        "contact": 62,
-        "power": 63,
-        "eye": 70,
-        "discipline": 69,
-        "speed": 67,
-        "baseInstinct": 66,
-        "bunting": 59,
+        "ovr": 55,
+        "contact": 53,
+        "power": 47,
+        "eye": 54,
+        "discipline": 59,
+        "speed": 59,
+        "baseInstinct": 51,
+        "bunting": 45,
         "platoon": 50,
-        "fielding": 69,
-        "arm": 62,
-        "battingClutch": 54
+        "fielding": 47,
+        "arm": 50,
+        "battingClutch": 52
       },
       "positionRatings": {
-        "SP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "1B": 55
+      }
     },
     "coach": null,
     "manager": null,

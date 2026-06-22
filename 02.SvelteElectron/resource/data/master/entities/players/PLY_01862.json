@@ -1,72 +1,46 @@
 {
   "id": "PLY_01862",
-  "name": "서현우",
-  "nameEn": "Seo Hyeonwoo",
+  "name": "마에다 사토시",
+  "nameEn": "Maeda Satoshi",
   "role": "player",
-  "age": 23,
+  "age": 34,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_TWINWOLVES",
-  "teamId": "TEAM_KBL_TWINWOLVES_1",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_POLARBEARS",
+  "teamId": "TEAM_JBL_PL_POLARBEARS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "SS",
-      "jerseyNumber": 78,
+      "position": "RP",
+      "jerseyNumber": 7,
       "pitching": {
-        "ovr": 38,
-        "stamina": 38,
-        "velocity": 44,
-        "command": 39,
-        "control": 39,
-        "movement": 41,
-        "mentality": 42,
-        "recovery": 36,
-        "clutch": 36,
-        "holdRunners": 33
+        "ovr": 87,
+        "stamina": 75,
+        "velocity": 89,
+        "command": 89,
+        "control": 83,
+        "movement": 80,
+        "mentality": 88,
+        "recovery": 84
       },
       "batting": {
-        "ovr": 58,
-        "contact": 54,
-        "power": 64,
-        "eye": 59,
-        "discipline": 57,
-        "speed": 52,
-        "fielding": 57,
-        "arm": 59,
-        "battingClutch": 53,
-        "baseInstinct": 46,
-        "bunting": 47,
-        "platoon": 54
+        "ovr": 59,
+        "contact": 63,
+        "power": 58,
+        "eye": 58,
+        "discipline": 55,
+        "speed": 55,
+        "fielding": 54,
+        "arm": 54,
+        "battingClutch": 59
       },
-      "developmentRate": 39,
-      "potentialHidden": 71,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 1,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 46,
+      "potentialHidden": 77
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 45,
-  "popularity": 46,
-  "militaryStatus": "군필"
+  }
 }

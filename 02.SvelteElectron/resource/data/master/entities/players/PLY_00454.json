@@ -1,7 +1,7 @@
 {
   "id": "PLY_00454",
   "name": "차지호",
-  "nameEn": "Cha Jiho",
+  "nameEn": "Kim Jun-woo",
   "role": "player",
   "age": 27,
   "status": "active",
@@ -19,48 +19,28 @@
       "position": "2B",
       "jerseyNumber": 14,
       "pitching": {
-        "ovr": 23,
-        "stamina": 20,
-        "velocity": 26,
-        "command": 25,
-        "control": 20,
-        "movement": 25,
-        "mentality": 20,
-        "recovery": 20,
-        "clutch": 37,
-        "holdRunners": 35
+        "ovr": 27,
+        "stamina": 27,
+        "velocity": 33,
+        "command": 31,
+        "control": 26,
+        "movement": 33,
+        "mentality": 30,
+        "recovery": 26
       },
       "batting": {
-        "ovr": 43,
-        "contact": 42,
-        "power": 46,
-        "eye": 44,
-        "discipline": 44,
-        "speed": 49,
-        "fielding": 43,
-        "arm": 44,
-        "battingClutch": 42,
-        "baseInstinct": 35,
-        "bunting": 34,
-        "platoon": 35
+        "ovr": 49,
+        "contact": 54,
+        "power": 49,
+        "eye": 48,
+        "discipline": 46,
+        "speed": 56,
+        "fielding": 54,
+        "arm": 54,
+        "battingClutch": 49
       },
       "developmentRate": 44,
-      "potentialHidden": 84,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 43
-      },
-      "proServiceYears": 7,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 84
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

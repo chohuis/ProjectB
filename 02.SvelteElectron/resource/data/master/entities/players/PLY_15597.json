@@ -1,6 +1,6 @@
 {
   "id": "PLY_15597",
-  "name": "홀 칼렙",
+  "name": "Hall Caleb",
   "nameEn": "Hall Caleb",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 61,
   "popularity": 34,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 58,
       "proServiceYears": 3,
       "pitching": {
-        "ovr": 70,
-        "stamina": 64,
-        "velocity": 80,
-        "command": 67,
-        "control": 71,
-        "movement": 61,
-        "mentality": 71,
-        "recovery": 67,
-        "clutch": 61,
-        "holdRunners": 65
+        "ovr": 71,
+        "stamina": 65,
+        "velocity": 81,
+        "command": 68,
+        "control": 72,
+        "movement": 62,
+        "mentality": 72,
+        "recovery": 68,
+        "clutch": 62,
+        "holdRunners": 66
       },
       "batting": {
         "ovr": 71,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 71
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

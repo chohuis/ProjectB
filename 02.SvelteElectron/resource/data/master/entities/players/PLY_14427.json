@@ -1,6 +1,6 @@
 {
   "id": "PLY_14427",
-  "name": "워커 제이크",
+  "name": "Walker Jake",
   "nameEn": "Walker Jake",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 68,
   "popularity": 42,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 67
       },
       "batting": {
-        "ovr": 70,
-        "contact": 65,
-        "power": 63,
-        "eye": 73,
-        "discipline": 62,
-        "speed": 67,
-        "baseInstinct": 67,
-        "bunting": 54,
-        "platoon": 49,
-        "fielding": 64,
-        "arm": 65,
-        "battingClutch": 69
+        "ovr": 71,
+        "contact": 66,
+        "power": 64,
+        "eye": 74,
+        "discipline": 63,
+        "speed": 68,
+        "baseInstinct": 68,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 66,
+        "battingClutch": 70
       },
       "positionRatings": {
         "LF": 71

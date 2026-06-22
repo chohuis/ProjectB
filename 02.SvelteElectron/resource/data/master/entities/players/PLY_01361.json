@@ -1,14 +1,14 @@
 {
   "id": "PLY_01361",
   "name": "홀 라이언",
-  "nameEn": "Hol  라이언",
+  "nameEn": "Hall Ryan",
   "role": "player",
   "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_LAKESPIRITS",
-  "teamId": "TEAM_ABL_LAKESPIRITS_1",
+  "clubId": "CLUB_ABL_SD",
+  "teamId": "TEAM_ABL_SD",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 1,
       "pitching": {
-        "ovr": 69,
-        "stamina": 66,
-        "velocity": 70,
-        "command": 71,
-        "control": 74,
-        "movement": 71,
-        "mentality": 69,
-        "recovery": 68,
-        "clutch": 61,
-        "holdRunners": 65
+        "ovr": 76,
+        "stamina": 81,
+        "velocity": 73,
+        "command": 72,
+        "control": 76,
+        "movement": 74,
+        "mentality": 70,
+        "recovery": 77
       },
       "batting": {
-        "ovr": 51,
-        "contact": 48,
-        "power": 56,
-        "eye": 58,
-        "discipline": 48,
-        "speed": 49,
-        "fielding": 55,
-        "arm": 46,
-        "battingClutch": 50,
-        "baseInstinct": 42,
-        "bunting": 45,
-        "platoon": 45
+        "ovr": 50,
+        "contact": 49,
+        "power": 54,
+        "eye": 54,
+        "discipline": 47,
+        "speed": 53,
+        "fielding": 53,
+        "arm": 54,
+        "battingClutch": 55
       },
       "developmentRate": 42,
-      "potentialHidden": 65,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 69
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 3,
-      "contract": {
-        "salary": 20900,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 65
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

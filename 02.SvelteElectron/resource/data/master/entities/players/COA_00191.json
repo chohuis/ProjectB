@@ -1,17 +1,17 @@
 {
   "id": "COA_00191",
-  "name": "야마모토 카이토",
-  "nameEn": "Yamamoto Kaito",
+  "name": "이토 슌",
+  "nameEn": "Ito Shun",
   "role": "coach",
-  "age": 42,
+  "age": 53,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
-  "clubId": "CLUB_JBL_CL_TEMPOSTINGS",
-  "teamId": "TEAM_JBL_CL_TEMPOSTINGS_1",
+  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+  "teamId": "TEAM_JBL_CL_SILVERWOLVES_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
@@ -44,15 +44,15 @@
     },
     "coach": {
       "specialty": "투수",
-      "experienceYears": 18,
+      "experienceYears": 7,
       "stats": {
-        "teaching": 57,
-        "analysis": 53,
-        "communication": 62,
-        "discipline": 54,
-        "leadership": 54
+        "teaching": 74,
+        "analysis": 84,
+        "communication": 63,
+        "discipline": 52,
+        "leadership": 78
       },
-      "trainingBuffs": "제구 훈련 +2%"
+      "trainingBuffs": "체력 훈련 +2%"
     },
     "manager": {
       "style": "균형",

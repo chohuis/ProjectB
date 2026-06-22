@@ -1,9 +1,9 @@
 {
   "id": "PLY_11211",
-  "name": "토마스 루이스",
-  "nameEn": "Thomas Luis",
+  "name": "Jones Sean",
+  "nameEn": "Jones Sean",
   "role": "player",
-  "age": 24,
+  "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 46,
-  "popularity": 43,
+  "notes": "국적:파나마",
+  "diligence": 72,
+  "popularity": 28,
   "militaryStatus": "군필",
   "entryYear": 2034,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 24,
+  "entryAge": 25,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 88,
-      "primaryPosition": "SP",
-      "developmentRate": 48,
-      "potentialHidden": 55,
-      "proServiceYears": 2,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 81,
+      "primaryPosition": "3B",
+      "developmentRate": 56,
+      "potentialHidden": 66,
+      "proServiceYears": 3,
       "pitching": {
-        "ovr": 63,
-        "stamina": 59,
-        "velocity": 71,
-        "command": 63,
-        "control": 58,
-        "movement": 58,
-        "mentality": 63,
-        "recovery": 60,
-        "clutch": 54,
-        "holdRunners": 60
+        "ovr": 70,
+        "stamina": 74,
+        "velocity": 69,
+        "command": 69,
+        "control": 65,
+        "movement": 67,
+        "mentality": 74,
+        "recovery": 64,
+        "clutch": 71,
+        "holdRunners": 58
       },
       "batting": {
-        "ovr": 69,
-        "contact": 61,
+        "ovr": 70,
+        "contact": 74,
         "power": 62,
-        "eye": 65,
-        "discipline": 62,
-        "speed": 67,
-        "baseInstinct": 63,
-        "bunting": 63,
+        "eye": 69,
+        "discipline": 69,
+        "speed": 71,
+        "baseInstinct": 69,
+        "bunting": 60,
         "platoon": 50,
-        "fielding": 59,
-        "arm": 65,
-        "battingClutch": 66
+        "fielding": 63,
+        "arm": 70,
+        "battingClutch": 62
       },
       "positionRatings": {
-        "SP": 69
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "3B": 70
+      }
     },
     "coach": null,
     "manager": null,

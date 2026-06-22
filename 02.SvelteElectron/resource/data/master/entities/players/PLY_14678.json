@@ -1,6 +1,6 @@
 {
   "id": "PLY_14678",
-  "name": "해리스 라이언",
+  "name": "Harris Ryan",
   "nameEn": "Harris Ryan",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 67,
   "popularity": 34,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 83,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 76,
-        "stamina": 77,
-        "velocity": 81,
-        "command": 69,
-        "control": 73,
-        "movement": 78,
-        "mentality": 72,
-        "recovery": 64,
-        "clutch": 76,
-        "holdRunners": 74
+        "ovr": 70,
+        "stamina": 71,
+        "velocity": 75,
+        "command": 64,
+        "control": 67,
+        "movement": 72,
+        "mentality": 66,
+        "recovery": 59,
+        "clutch": 70,
+        "holdRunners": 68
       },
       "batting": {
         "ovr": 70,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

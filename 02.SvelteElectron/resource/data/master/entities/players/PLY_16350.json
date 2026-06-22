@@ -1,6 +1,6 @@
 {
   "id": "PLY_16350",
-  "name": "워커 마커스",
+  "name": "Walker Marcus",
   "nameEn": "Walker Marcus",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 59,
   "popularity": 40,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 66
       },
       "batting": {
-        "ovr": 75,
-        "contact": 78,
-        "power": 68,
-        "eye": 71,
-        "discipline": 67,
-        "speed": 73,
-        "baseInstinct": 73,
-        "bunting": 60,
-        "platoon": 54,
-        "fielding": 66,
-        "arm": 63,
-        "battingClutch": 70
+        "ovr": 69,
+        "contact": 72,
+        "power": 63,
+        "eye": 65,
+        "discipline": 62,
+        "speed": 67,
+        "baseInstinct": 67,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 58,
+        "battingClutch": 64
       },
       "positionRatings": {
         "SS": 69

@@ -1,7 +1,7 @@
 {
   "id": "PLY_11398",
-  "name": "워커 미겔",
-  "nameEn": "Walker Miguel",
+  "name": "Wright Brandon",
+  "nameEn": "Wright Brandon",
   "role": "player",
   "age": 23,
   "status": "active",
@@ -11,8 +11,8 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 73,
+  "notes": "국적:베네수엘라",
+  "diligence": 49,
   "popularity": 48,
   "militaryStatus": "군필",
   "entryYear": 2035,
@@ -21,57 +21,43 @@
   "entryAge": 23,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 62,
-      "primaryPosition": "SP",
-      "developmentRate": 52,
-      "potentialHidden": 57,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 85,
+      "primaryPosition": "1B",
+      "developmentRate": 68,
+      "potentialHidden": 65,
       "proServiceYears": 1,
       "pitching": {
-        "ovr": 72,
-        "stamina": 73,
-        "velocity": 74,
-        "command": 67,
-        "control": 68,
+        "ovr": 71,
+        "stamina": 70,
+        "velocity": 70,
+        "command": 66,
+        "control": 63,
         "movement": 66,
-        "mentality": 66,
-        "recovery": 64,
+        "mentality": 77,
+        "recovery": 65,
         "clutch": 61,
-        "holdRunners": 68
+        "holdRunners": 64
       },
       "batting": {
-        "ovr": 80,
-        "contact": 75,
-        "power": 82,
-        "eye": 78,
-        "discipline": 83,
-        "speed": 77,
-        "baseInstinct": 82,
-        "bunting": 70,
+        "ovr": 71,
+        "contact": 68,
+        "power": 64,
+        "eye": 71,
+        "discipline": 67,
+        "speed": 67,
+        "baseInstinct": 67,
+        "bunting": 61,
         "platoon": 50,
-        "fielding": 81,
-        "arm": 72,
-        "battingClutch": 76
+        "fielding": 66,
+        "arm": 65,
+        "battingClutch": 60
       },
       "positionRatings": {
-        "SP": 80
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "1B": 71
+      }
     },
     "coach": null,
     "manager": null,

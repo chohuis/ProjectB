@@ -1,7 +1,7 @@
 {
   "id": "PLY_00223",
   "name": "백태양",
-  "nameEn": "Baek Taeyang",
+  "nameEn": "Sung Jae-hoon",
   "role": "player",
   "age": 20,
   "status": "active",
@@ -19,47 +19,28 @@
       "position": "SP",
       "jerseyNumber": 3,
       "pitching": {
-        "ovr": 61,
-        "stamina": 66,
-        "velocity": 60,
-        "command": 64,
-        "control": 63,
-        "movement": 59,
-        "mentality": 65,
-        "recovery": 61,
-        "clutch": 56,
-        "holdRunners": 50
+        "ovr": 64,
+        "stamina": 68,
+        "velocity": 69,
+        "command": 61,
+        "control": 66,
+        "movement": 61,
+        "mentality": 62,
+        "recovery": 65
       },
       "batting": {
-        "ovr": 43,
-        "contact": 41,
-        "power": 40,
-        "eye": 49,
-        "discipline": 41,
-        "speed": 37,
-        "fielding": 45,
-        "arm": 40,
-        "battingClutch": 40,
-        "baseInstinct": 36,
-        "bunting": 30,
-        "platoon": 37
+        "ovr": 30,
+        "contact": 34,
+        "power": 31,
+        "eye": 28,
+        "discipline": 27,
+        "speed": 30,
+        "fielding": 31,
+        "arm": 25,
+        "battingClutch": 30
       },
       "developmentRate": 59,
-      "potentialHidden": 70,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 70
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

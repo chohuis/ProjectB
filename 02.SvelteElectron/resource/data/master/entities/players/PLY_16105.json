@@ -1,6 +1,6 @@
 {
   "id": "PLY_16105",
-  "name": "앨런 에릭",
+  "name": "Allen Eric",
   "nameEn": "Allen Eric",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 72,
   "popularity": 31,
   "militaryStatus": "군필",
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 49
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

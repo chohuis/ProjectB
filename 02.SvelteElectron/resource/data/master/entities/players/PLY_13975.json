@@ -1,6 +1,6 @@
 {
   "id": "PLY_13975",
-  "name": "스콧 라이언",
+  "name": "Scott Ryan",
   "nameEn": "Scott Ryan",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 73,
   "popularity": 13,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 64
       },
       "batting": {
-        "ovr": 82,
-        "contact": 72,
-        "power": 74,
-        "eye": 86,
-        "discipline": 73,
-        "speed": 88,
-        "baseInstinct": 83,
-        "bunting": 63,
-        "platoon": 54,
-        "fielding": 82,
-        "arm": 73,
-        "battingClutch": 76
+        "ovr": 76,
+        "contact": 67,
+        "power": 69,
+        "eye": 80,
+        "discipline": 68,
+        "speed": 82,
+        "baseInstinct": 77,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 76,
+        "arm": 68,
+        "battingClutch": 70
       },
       "positionRatings": {
         "LF": 76

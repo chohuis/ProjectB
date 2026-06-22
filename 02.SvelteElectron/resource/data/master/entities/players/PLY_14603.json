@@ -1,6 +1,6 @@
 {
   "id": "PLY_14603",
-  "name": "루이스 헌터",
+  "name": "Lewis Hunter",
   "nameEn": "Lewis Hunter",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 51,
   "popularity": 45,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 47
       },
       "batting": {
-        "ovr": 55,
-        "contact": 55,
-        "power": 46,
-        "eye": 48,
-        "discipline": 55,
-        "speed": 51,
-        "baseInstinct": 52,
-        "bunting": 42,
-        "platoon": 49,
-        "fielding": 45,
-        "arm": 54,
-        "battingClutch": 50
+        "ovr": 56,
+        "contact": 56,
+        "power": 47,
+        "eye": 49,
+        "discipline": 56,
+        "speed": 52,
+        "baseInstinct": 53,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 55,
+        "battingClutch": 51
       },
       "positionRatings": {
         "LF": 56

@@ -1,6 +1,6 @@
 {
   "id": "PLY_16237",
-  "name": "무어 조던",
+  "name": "Moore Jordan",
   "nameEn": "Moore Jordan",
   "role": "player",
   "age": 18,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 81,
   "popularity": 14,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 64,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 60,
-        "stamina": 57,
-        "velocity": 65,
-        "command": 58,
-        "control": 64,
-        "movement": 60,
-        "mentality": 65,
-        "recovery": 56,
-        "clutch": 51,
-        "holdRunners": 53
+        "ovr": 61,
+        "stamina": 58,
+        "velocity": 66,
+        "command": 59,
+        "control": 65,
+        "movement": 61,
+        "mentality": 66,
+        "recovery": 57,
+        "clutch": 52,
+        "holdRunners": 54
       },
       "batting": {
         "ovr": 61,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

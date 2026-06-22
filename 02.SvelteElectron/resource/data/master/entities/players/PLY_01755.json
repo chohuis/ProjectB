@@ -1,61 +1,46 @@
 {
   "id": "PLY_01755",
-  "name": "최원준",
-  "nameEn": "Choi Wonjun",
+  "name": "후지이 기요시",
+  "nameEn": "Fujii Kiyoshi",
   "role": "player",
-  "age": 17,
+  "age": 24,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_MASAN_HARBOR",
-  "teamId": "TEAM_HS_MASAN_HARBOR",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_MASAN_HARBOR",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+  "teamId": "TEAM_JBL_CL_SILVERWOLVES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "1B",
-      "jerseyNumber": 14,
+      "position": "CP",
+      "jerseyNumber": 40,
       "pitching": {
-        "ovr": 33,
-        "stamina": 35,
-        "velocity": 29,
-        "command": 38,
-        "control": 36,
-        "movement": 37,
-        "mentality": 31,
-        "recovery": 32,
-        "clutch": 43,
-        "holdRunners": 36
+        "ovr": 71,
+        "stamina": 60,
+        "velocity": 79,
+        "command": 76,
+        "control": 74,
+        "movement": 74,
+        "mentality": 72,
+        "recovery": 67
       },
       "batting": {
-        "ovr": 53,
-        "contact": 52,
-        "power": 47,
+        "ovr": 56,
+        "contact": 50,
+        "power": 52,
         "eye": 53,
         "discipline": 51,
-        "speed": 47,
-        "fielding": 54,
-        "arm": 53,
-        "battingClutch": 47,
-        "baseInstinct": 45,
-        "bunting": 43,
-        "platoon": 41
+        "speed": 53,
+        "fielding": 51,
+        "arm": 51,
+        "battingClutch": 50
       },
-      "developmentRate": 52,
-      "potentialHidden": 86,
-      "primaryPosition": "1B",
-      "positionRatings": {
-        "1B": 53
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 54,
+      "potentialHidden": 81
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 52,
-  "popularity": 47
+  }
 }

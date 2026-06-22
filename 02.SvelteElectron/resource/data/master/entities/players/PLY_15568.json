@@ -1,6 +1,6 @@
 {
   "id": "PLY_15568",
-  "name": "루이스 제이크",
+  "name": "Lewis Jake",
   "nameEn": "Lewis Jake",
   "role": "player",
   "age": 33,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 59,
   "popularity": 12,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 54
       },
       "batting": {
-        "ovr": 86,
-        "contact": 85,
-        "power": 81,
-        "eye": 83,
-        "discipline": 89,
-        "speed": 94,
-        "baseInstinct": 76,
-        "bunting": 78,
-        "platoon": 63,
-        "fielding": 75,
-        "arm": 82,
-        "battingClutch": 86
+        "ovr": 68,
+        "contact": 67,
+        "power": 64,
+        "eye": 66,
+        "discipline": 70,
+        "speed": 74,
+        "baseInstinct": 60,
+        "bunting": 62,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 65,
+        "battingClutch": 68
       },
       "positionRatings": {
         "3B": 68

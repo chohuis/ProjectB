@@ -1,14 +1,14 @@
 {
   "id": "PLY_01253",
   "name": "앤더슨 오스틴",
-  "nameEn": "Aen 더슨 오스틴",
+  "nameEn": "Anderson Austin",
   "role": "player",
   "age": 31,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_WAVERIDERS",
-  "teamId": "TEAM_ABL_WAVERIDERS_2",
+  "clubId": "CLUB_ABL_NYM",
+  "teamId": "TEAM_ABL_NYM_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
@@ -19,58 +19,28 @@
       "position": "SP",
       "jerseyNumber": 43,
       "pitching": {
-        "ovr": 63,
-        "stamina": 63,
-        "velocity": 58,
+        "ovr": 70,
+        "stamina": 74,
+        "velocity": 72,
         "command": 65,
         "control": 66,
         "movement": 63,
-        "mentality": 68,
-        "recovery": 63,
-        "clutch": 62,
-        "holdRunners": 61
+        "mentality": 69,
+        "recovery": 66
       },
       "batting": {
-        "ovr": 45,
-        "contact": 52,
-        "power": 43,
-        "eye": 50,
-        "discipline": 49,
+        "ovr": 35,
+        "contact": 38,
+        "power": 38,
+        "eye": 33,
+        "discipline": 36,
         "speed": 40,
-        "fielding": 44,
-        "arm": 41,
-        "battingClutch": 42,
-        "baseInstinct": 35,
-        "bunting": 36,
-        "platoon": 41
+        "fielding": 35,
+        "arm": 40,
+        "battingClutch": 41
       },
       "developmentRate": 40,
-      "potentialHidden": 89,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_FORKBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 9,
-      "contract": {
-        "salary": 16300,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 89
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

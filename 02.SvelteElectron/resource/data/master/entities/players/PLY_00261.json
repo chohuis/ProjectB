@@ -1,7 +1,7 @@
 {
   "id": "PLY_00261",
   "name": "안찬영",
-  "nameEn": "Ahn Chanyeong",
+  "nameEn": "Kwon Ji-sung",
   "role": "player",
   "age": 22,
   "status": "active",
@@ -19,43 +19,28 @@
       "position": "SP",
       "jerseyNumber": 1,
       "pitching": {
-        "ovr": 40,
-        "stamina": 45,
-        "velocity": 42,
-        "command": 40,
-        "control": 39,
-        "movement": 36,
-        "mentality": 40,
-        "recovery": 36,
-        "clutch": 38,
-        "holdRunners": 42
+        "ovr": 56,
+        "stamina": 53,
+        "velocity": 53,
+        "command": 52,
+        "control": 54,
+        "movement": 48,
+        "mentality": 49,
+        "recovery": 49
       },
       "batting": {
-        "ovr": 22,
-        "contact": 20,
-        "power": 26,
-        "eye": 20,
-        "discipline": 20,
-        "speed": 29,
-        "fielding": 20,
-        "arm": 20,
-        "battingClutch": 45,
-        "baseInstinct": 35,
-        "bunting": 30,
-        "platoon": 36
+        "ovr": 24,
+        "contact": 31,
+        "power": 31,
+        "eye": 27,
+        "discipline": 25,
+        "speed": 24,
+        "fielding": 28,
+        "arm": 26,
+        "battingClutch": 29
       },
       "developmentRate": 61,
-      "potentialHidden": 89,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 40
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 89
     },
     "coach": {
       "specialty": "-",
@@ -95,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

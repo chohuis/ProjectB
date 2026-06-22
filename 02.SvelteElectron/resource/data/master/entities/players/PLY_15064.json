@@ -1,6 +1,6 @@
 {
   "id": "PLY_15064",
-  "name": "킹 카일",
+  "name": "King Kyle",
   "nameEn": "King Kyle",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 62,
   "popularity": 45,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 51
       },
       "batting": {
-        "ovr": 55,
-        "contact": 57,
-        "power": 52,
-        "eye": 52,
-        "discipline": 54,
-        "speed": 61,
-        "baseInstinct": 54,
-        "bunting": 44,
-        "platoon": 49,
-        "fielding": 49,
-        "arm": 55,
-        "battingClutch": 43
+        "ovr": 56,
+        "contact": 58,
+        "power": 53,
+        "eye": 53,
+        "discipline": 55,
+        "speed": 62,
+        "baseInstinct": 55,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 56,
+        "battingClutch": 44
       },
       "positionRatings": {
         "2B": 56

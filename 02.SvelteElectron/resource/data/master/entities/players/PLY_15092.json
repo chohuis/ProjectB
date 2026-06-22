@@ -1,6 +1,6 @@
 {
   "id": "PLY_15092",
-  "name": "로빈슨 타일러",
+  "name": "Robinson Tyler",
   "nameEn": "Robinson Tyler",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 65,
   "popularity": 12,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 59
       },
       "batting": {
-        "ovr": 61,
-        "contact": 57,
-        "power": 51,
-        "eye": 63,
-        "discipline": 59,
-        "speed": 55,
-        "baseInstinct": 54,
-        "bunting": 52,
-        "platoon": 47,
-        "fielding": 56,
-        "arm": 53,
-        "battingClutch": 54
+        "ovr": 65,
+        "contact": 61,
+        "power": 54,
+        "eye": 67,
+        "discipline": 63,
+        "speed": 59,
+        "baseInstinct": 58,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 56,
+        "battingClutch": 58
       },
       "positionRatings": {
         "1B": 65

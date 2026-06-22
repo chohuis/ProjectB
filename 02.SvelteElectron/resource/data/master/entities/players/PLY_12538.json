@@ -1,9 +1,9 @@
 {
   "id": "PLY_12538",
-  "name": "에르난데스 케빈",
-  "nameEn": "Hernandez Kevin",
+  "name": "Martinez Austin",
+  "nameEn": "Martinez Austin",
   "role": "player",
-  "age": 22,
+  "age": 34,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 69,
-  "popularity": 35,
+  "notes": "국적:멕시코",
+  "diligence": 68,
+  "popularity": 18,
   "militaryStatus": "군필",
   "entryYear": 2042,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 22,
+  "entryAge": 34,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 52,
-      "primaryPosition": "SP",
-      "developmentRate": 76,
-      "potentialHidden": 92,
-      "proServiceYears": 0,
+      "position": "SS",
+      "jerseyNumber": 57,
+      "primaryPosition": "SS",
+      "developmentRate": 42,
+      "potentialHidden": 50,
+      "proServiceYears": 12,
       "pitching": {
-        "ovr": 52,
-        "stamina": 47,
-        "velocity": 57,
-        "command": 53,
-        "control": 56,
-        "movement": 53,
-        "mentality": 46,
-        "recovery": 44,
-        "clutch": 49,
-        "holdRunners": 46
+        "ovr": 66,
+        "stamina": 69,
+        "velocity": 67,
+        "command": 64,
+        "control": 58,
+        "movement": 66,
+        "mentality": 69,
+        "recovery": 56,
+        "clutch": 58,
+        "holdRunners": 52
       },
       "batting": {
-        "ovr": 55,
-        "contact": 53,
-        "power": 49,
-        "eye": 47,
-        "discipline": 53,
-        "speed": 51,
-        "baseInstinct": 53,
-        "bunting": 48,
+        "ovr": 66,
+        "contact": 71,
+        "power": 62,
+        "eye": 69,
+        "discipline": 60,
+        "speed": 65,
+        "baseInstinct": 67,
+        "bunting": 57,
         "platoon": 50,
-        "fielding": 49,
-        "arm": 50,
-        "battingClutch": 44
+        "fielding": 58,
+        "arm": 63,
+        "battingClutch": 57
       },
       "positionRatings": {
-        "SP": 55
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SS": 66
+      }
     },
     "coach": null,
     "manager": null,

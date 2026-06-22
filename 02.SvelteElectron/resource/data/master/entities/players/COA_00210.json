@@ -1,17 +1,17 @@
 {
   "id": "COA_00210",
-  "name": "야마자키 사토시",
-  "nameEn": "Yamazaki Satoshi",
+  "name": "무라카미 토루",
+  "nameEn": "Murakami Toru",
   "role": "coach",
-  "age": 37,
+  "age": 51,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
-  "clubId": "CLUB_JBL_CL_IRONSTORMS",
-  "teamId": "TEAM_JBL_CL_IRONSTORMS_1",
+  "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
+  "teamId": "TEAM_JBL_PL_SPIRITBUFFALOS_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
@@ -44,15 +44,15 @@
     },
     "coach": {
       "specialty": "투수",
-      "experienceYears": 6,
+      "experienceYears": 14,
       "stats": {
-        "teaching": 54,
-        "analysis": 74,
-        "communication": 59,
-        "discipline": 69,
+        "teaching": 82,
+        "analysis": 53,
+        "communication": 52,
+        "discipline": 55,
         "leadership": 79
       },
-      "trainingBuffs": "구속 훈련 +2%"
+      "trainingBuffs": ""
     },
     "manager": {
       "style": "균형",

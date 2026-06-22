@@ -1,6 +1,6 @@
 {
   "id": "PLY_16480",
-  "name": "에르난데스 칼렙",
+  "name": "Hernandez Caleb",
   "nameEn": "Hernandez Caleb",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 80,
   "popularity": 46,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 73,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 80,
-        "stamina": 78,
-        "velocity": 84,
-        "command": 75,
-        "control": 80,
-        "movement": 78,
-        "mentality": 88,
-        "recovery": 71,
-        "clutch": 75,
-        "holdRunners": 75
+        "ovr": 74,
+        "stamina": 72,
+        "velocity": 78,
+        "command": 69,
+        "control": 74,
+        "movement": 72,
+        "mentality": 81,
+        "recovery": 66,
+        "clutch": 69,
+        "holdRunners": 69
       },
       "batting": {
         "ovr": 74,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 74
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

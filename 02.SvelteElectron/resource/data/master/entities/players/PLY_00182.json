@@ -1,7 +1,7 @@
 {
   "id": "PLY_00182",
   "name": "배상민",
-  "nameEn": "Bae Sangmin",
+  "nameEn": "You Tae-hyun",
   "role": "player",
   "age": 19,
   "status": "active",
@@ -19,47 +19,28 @@
       "position": "SP",
       "jerseyNumber": 2,
       "pitching": {
-        "ovr": 60,
-        "stamina": 64,
-        "velocity": 62,
-        "command": 59,
-        "control": 58,
-        "movement": 65,
+        "ovr": 65,
+        "stamina": 70,
+        "velocity": 64,
+        "command": 69,
+        "control": 61,
+        "movement": 61,
         "mentality": 64,
-        "recovery": 63,
-        "clutch": 51,
-        "holdRunners": 49
+        "recovery": 66
       },
       "batting": {
-        "ovr": 42,
-        "contact": 47,
-        "power": 39,
-        "eye": 38,
-        "discipline": 41,
-        "speed": 39,
-        "fielding": 40,
-        "arm": 46,
-        "battingClutch": 44,
-        "baseInstinct": 40,
-        "bunting": 30,
-        "platoon": 35
+        "ovr": 45,
+        "contact": 37,
+        "power": 41,
+        "eye": 40,
+        "discipline": 40,
+        "speed": 36,
+        "fielding": 36,
+        "arm": 37,
+        "battingClutch": 39
       },
       "developmentRate": 55,
-      "potentialHidden": 67,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 67
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

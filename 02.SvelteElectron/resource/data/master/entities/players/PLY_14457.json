@@ -1,6 +1,6 @@
 {
   "id": "PLY_14457",
-  "name": "워커 케빈",
+  "name": "Walker Kevin",
   "nameEn": "Walker Kevin",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 55,
   "popularity": 30,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 61,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 52,
-        "stamina": 46,
-        "velocity": 60,
-        "command": 47,
-        "control": 53,
-        "movement": 54,
-        "mentality": 50,
-        "recovery": 51,
-        "clutch": 44,
-        "holdRunners": 50
+        "ovr": 53,
+        "stamina": 47,
+        "velocity": 61,
+        "command": 48,
+        "control": 54,
+        "movement": 55,
+        "mentality": 51,
+        "recovery": 52,
+        "clutch": 45,
+        "holdRunners": 51
       },
       "batting": {
         "ovr": 53,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 53
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

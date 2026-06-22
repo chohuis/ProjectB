@@ -1,7 +1,7 @@
 {
   "id": "PLY_00278",
   "name": "권성우",
-  "nameEn": "Kwon Seongu",
+  "nameEn": "Choi Min-jae",
   "role": "player",
   "age": 21,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "CF",
       "jerseyNumber": 18,
       "pitching": {
-        "ovr": 49,
-        "stamina": 46,
-        "velocity": 54,
-        "command": 53,
-        "control": 45,
-        "movement": 53,
-        "mentality": 52,
-        "recovery": 47,
-        "clutch": 38,
-        "holdRunners": 45
+        "ovr": 36,
+        "stamina": 40,
+        "velocity": 40,
+        "command": 44,
+        "control": 36,
+        "movement": 35,
+        "mentality": 41,
+        "recovery": 35
       },
       "batting": {
         "ovr": 69,
-        "contact": 74,
-        "power": 67,
-        "eye": 70,
-        "discipline": 70,
-        "speed": 75,
-        "fielding": 72,
-        "arm": 73,
-        "battingClutch": 58,
-        "baseInstinct": 58,
-        "bunting": 53,
-        "platoon": 56
+        "contact": 66,
+        "power": 65,
+        "eye": 67,
+        "discipline": 72,
+        "speed": 76,
+        "fielding": 74,
+        "arm": 71,
+        "battingClutch": 73
       },
       "developmentRate": 63,
-      "potentialHidden": 75,
-      "primaryPosition": "CF",
-      "positionRatings": {
-        "CF": 69
-      }
+      "potentialHidden": 75
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

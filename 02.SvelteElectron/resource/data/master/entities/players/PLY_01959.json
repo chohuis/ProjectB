@@ -1,72 +1,46 @@
 {
   "id": "PLY_01959",
-  "name": "문연우",
-  "nameEn": "Moon Yeonwoo",
+  "name": "니시무라 켄타",
+  "nameEn": "Nishimura Kenta",
   "role": "player",
-  "age": 26,
+  "age": 21,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_EMBERTIGERS",
-  "teamId": "TEAM_KBL_EMBERTIGERS_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
+  "teamId": "TEAM_JBL_PL_MARINESOLDIERS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "R",
-      "position": "RF",
-      "jerseyNumber": 78,
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 14,
       "pitching": {
-        "ovr": 20,
-        "stamina": 22,
-        "velocity": 20,
-        "command": 24,
-        "control": 23,
-        "movement": 20,
-        "mentality": 22,
-        "recovery": 20,
-        "clutch": 37,
-        "holdRunners": 40
+        "ovr": 60,
+        "stamina": 60,
+        "velocity": 62,
+        "command": 62,
+        "control": 56,
+        "movement": 60,
+        "mentality": 64,
+        "recovery": 60
       },
       "batting": {
-        "ovr": 38,
-        "contact": 40,
-        "power": 33,
-        "eye": 39,
-        "discipline": 38,
-        "speed": 42,
-        "fielding": 35,
-        "arm": 43,
-        "battingClutch": 43,
-        "baseInstinct": 37,
-        "bunting": 34,
-        "platoon": 36
+        "ovr": 87,
+        "contact": 86,
+        "power": 81,
+        "eye": 85,
+        "discipline": 83,
+        "speed": 79,
+        "fielding": 88,
+        "arm": 85,
+        "battingClutch": 88
       },
-      "developmentRate": 62,
-      "potentialHidden": 65,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 38
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 34,
+      "potentialHidden": 88
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 74,
-  "popularity": 39,
-  "militaryStatus": "군필"
+  }
 }

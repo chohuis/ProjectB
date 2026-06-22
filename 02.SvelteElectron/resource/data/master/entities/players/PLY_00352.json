@@ -1,7 +1,7 @@
 {
   "id": "PLY_00352",
   "name": "백준서",
-  "nameEn": "Baek Junseo",
+  "nameEn": "Lee Yeon-woo",
   "role": "player",
   "age": 20,
   "status": "active",
@@ -19,48 +19,28 @@
       "position": "C",
       "jerseyNumber": 12,
       "pitching": {
-        "ovr": 47,
+        "ovr": 45,
         "stamina": 47,
-        "velocity": 53,
-        "command": 44,
-        "control": 51,
+        "velocity": 48,
+        "command": 50,
+        "control": 49,
         "movement": 46,
-        "mentality": 49,
-        "recovery": 49,
-        "clutch": 40,
-        "holdRunners": 37
+        "mentality": 46,
+        "recovery": 48
       },
       "batting": {
-        "ovr": 67,
+        "ovr": 76,
         "contact": 69,
-        "power": 73,
-        "eye": 63,
+        "power": 72,
+        "eye": 72,
         "discipline": 69,
-        "speed": 69,
-        "fielding": 64,
-        "arm": 71,
-        "battingClutch": 64,
-        "baseInstinct": 60,
-        "bunting": 62,
-        "platoon": 65
+        "speed": 65,
+        "fielding": 76,
+        "arm": 77,
+        "battingClutch": 70
       },
       "developmentRate": 51,
-      "potentialHidden": 66,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 67
-      },
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 66
     },
     "coach": {
       "specialty": "-",
@@ -100,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

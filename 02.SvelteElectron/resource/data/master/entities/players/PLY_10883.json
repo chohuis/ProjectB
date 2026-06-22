@@ -1,9 +1,9 @@
 {
   "id": "PLY_10883",
-  "name": "해리스 라이언",
-  "nameEn": "Harris Ryan",
+  "name": "Jones Daniel",
+  "nameEn": "Jones Daniel",
   "role": "player",
-  "age": 28,
+  "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 67,
-  "popularity": 34,
+  "notes": "국적:베네수엘라",
+  "diligence": 77,
+  "popularity": 31,
   "militaryStatus": "군필",
   "entryYear": 2032,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 28,
+  "entryAge": 26,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 22,
-      "primaryPosition": "SP",
-      "developmentRate": 56,
-      "potentialHidden": 87,
-      "proServiceYears": 6,
+      "position": "LF",
+      "jerseyNumber": 53,
+      "primaryPosition": "LF",
+      "developmentRate": 54,
+      "potentialHidden": 57,
+      "proServiceYears": 4,
       "pitching": {
-        "ovr": 78,
-        "stamina": 79,
+        "ovr": 74,
+        "stamina": 76,
         "velocity": 83,
-        "command": 72,
-        "control": 75,
-        "movement": 80,
-        "mentality": 74,
-        "recovery": 67,
-        "clutch": 78,
-        "holdRunners": 76
+        "command": 71,
+        "control": 67,
+        "movement": 72,
+        "mentality": 77,
+        "recovery": 75,
+        "clutch": 74,
+        "holdRunners": 73
       },
       "batting": {
-        "ovr": 75,
-        "contact": 70,
-        "power": 69,
-        "eye": 70,
-        "discipline": 65,
-        "speed": 75,
-        "baseInstinct": 78,
-        "bunting": 56,
+        "ovr": 74,
+        "contact": 66,
+        "power": 76,
+        "eye": 69,
+        "discipline": 72,
+        "speed": 72,
+        "baseInstinct": 66,
+        "bunting": 67,
         "platoon": 50,
-        "fielding": 70,
-        "arm": 71,
-        "battingClutch": 68
+        "fielding": 76,
+        "arm": 67,
+        "battingClutch": 62
       },
       "positionRatings": {
-        "SP": 75
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "LF": 74
+      }
     },
     "coach": null,
     "manager": null,

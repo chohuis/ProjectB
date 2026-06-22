@@ -1,14 +1,14 @@
 {
   "id": "PLY_00835",
   "name": "스콧 루카스",
-  "nameEn": "Seu 콧 루카스",
+  "nameEn": "Scott Lucas",
   "role": "player",
   "age": 34,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_EMPIRE",
-  "teamId": "TEAM_ABL_EMPIRE_1",
+  "clubId": "CLUB_ABL_LAD",
+  "teamId": "TEAM_ABL_LAD",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -19,48 +19,28 @@
       "position": "C",
       "jerseyNumber": 15,
       "pitching": {
-        "ovr": 70,
-        "stamina": 68,
-        "velocity": 76,
-        "command": 73,
-        "control": 69,
-        "movement": 70,
+        "ovr": 75,
+        "stamina": 75,
+        "velocity": 80,
+        "command": 74,
+        "control": 74,
+        "movement": 69,
         "mentality": 73,
-        "recovery": 72,
-        "clutch": 67,
-        "holdRunners": 61
+        "recovery": 70
       },
       "batting": {
         "ovr": 91,
-        "contact": 97,
-        "power": 95,
-        "eye": 98,
-        "discipline": 90,
-        "speed": 92,
-        "fielding": 97,
-        "arm": 89,
-        "battingClutch": 81,
-        "baseInstinct": 83,
-        "bunting": 84,
-        "platoon": 87
+        "contact": 93,
+        "power": 96,
+        "eye": 97,
+        "discipline": 95,
+        "speed": 91,
+        "fielding": 92,
+        "arm": 99,
+        "battingClutch": 96
       },
       "developmentRate": 41,
-      "potentialHidden": 91,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 91
-      },
-      "proServiceYears": 12,
-      "contract": {
-        "salary": 21700,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 91
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

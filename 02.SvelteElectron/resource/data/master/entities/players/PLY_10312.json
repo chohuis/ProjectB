@@ -1,9 +1,9 @@
 {
   "id": "PLY_10312",
-  "name": "애덤스 칼렙",
-  "nameEn": "Adams Caleb",
+  "name": "Robinson Blake",
+  "nameEn": "Robinson Blake",
   "role": "player",
-  "age": 25,
+  "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 84,
-  "popularity": 39,
+  "notes": "국적:일본",
+  "diligence": 46,
+  "popularity": 34,
   "militaryStatus": "군필",
   "entryYear": 2028,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 25,
+  "entryAge": 26,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 72,
+      "jerseyNumber": 77,
       "primaryPosition": "SP",
-      "developmentRate": 68,
-      "potentialHidden": 85,
-      "proServiceYears": 3,
+      "developmentRate": 54,
+      "potentialHidden": 68,
+      "proServiceYears": 4,
       "pitching": {
-        "ovr": 72,
-        "stamina": 75,
-        "velocity": 71,
-        "command": 72,
-        "control": 68,
-        "movement": 72,
-        "mentality": 69,
-        "recovery": 70,
-        "clutch": 69,
-        "holdRunners": 65
+        "ovr": 76,
+        "stamina": 78,
+        "velocity": 76,
+        "command": 70,
+        "control": 76,
+        "movement": 80,
+        "mentality": 75,
+        "recovery": 74,
+        "clutch": 64,
+        "holdRunners": 66
       },
       "batting": {
-        "ovr": 77,
-        "contact": 75,
-        "power": 76,
-        "eye": 75,
+        "ovr": 76,
+        "contact": 69,
+        "power": 73,
+        "eye": 71,
         "discipline": 75,
-        "speed": 79,
-        "baseInstinct": 70,
-        "bunting": 61,
+        "speed": 70,
+        "baseInstinct": 76,
+        "bunting": 69,
         "platoon": 50,
-        "fielding": 72,
-        "arm": 67,
-        "battingClutch": 68
+        "fielding": 71,
+        "arm": 66,
+        "battingClutch": 66
       },
       "positionRatings": {
-        "SP": 77
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "SP": 76
+      }
     },
     "coach": null,
     "manager": null,

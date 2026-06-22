@@ -1,7 +1,7 @@
 {
   "id": "PLY_12516",
-  "name": "해리스 다니엘",
-  "nameEn": "Harris Daniel",
+  "name": "Lee Brandon",
+  "nameEn": "Lee Brandon",
   "role": "player",
   "age": 19,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 64,
-  "popularity": 37,
+  "notes": "국적:미국",
+  "diligence": 53,
+  "popularity": 20,
   "militaryStatus": "군필",
   "entryYear": 2042,
   "entryLeague": "LEAGUE_ABL",
@@ -21,49 +21,43 @@
   "entryAge": 19,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 86,
-      "primaryPosition": "SP",
-      "developmentRate": 56,
-      "potentialHidden": 67,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 2,
+      "primaryPosition": "C",
+      "developmentRate": 75,
+      "potentialHidden": 85,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 48,
-        "stamina": 41,
-        "velocity": 47,
-        "command": 41,
-        "control": 53,
-        "movement": 41,
-        "mentality": 47,
-        "recovery": 42,
-        "clutch": 47,
-        "holdRunners": 47
+        "ovr": 61,
+        "stamina": 60,
+        "velocity": 59,
+        "command": 62,
+        "control": 59,
+        "movement": 54,
+        "mentality": 58,
+        "recovery": 56,
+        "clutch": 56,
+        "holdRunners": 58
       },
       "batting": {
-        "ovr": 50,
-        "contact": 45,
-        "power": 46,
-        "eye": 52,
-        "discipline": 41,
-        "speed": 52,
-        "baseInstinct": 41,
-        "bunting": 38,
+        "ovr": 61,
+        "contact": 65,
+        "power": 57,
+        "eye": 60,
+        "discipline": 53,
+        "speed": 68,
+        "baseInstinct": 63,
+        "bunting": 46,
         "platoon": 50,
-        "fielding": 51,
-        "arm": 43,
-        "battingClutch": 41
+        "fielding": 61,
+        "arm": 62,
+        "battingClutch": 53
       },
       "positionRatings": {
-        "SP": 50
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+        "C": 61
+      }
     },
     "coach": null,
     "manager": null,

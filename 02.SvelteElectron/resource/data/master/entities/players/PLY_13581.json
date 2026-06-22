@@ -1,9 +1,9 @@
 {
   "id": "PLY_13581",
-  "name": "앨런 코디",
-  "nameEn": "Allen Cody",
+  "name": "Moore Jake",
+  "nameEn": "Moore Jake",
   "role": "player",
-  "age": 33,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 77,
-  "popularity": 28,
+  "notes": "국적:일본",
+  "diligence": 83,
+  "popularity": 30,
   "militaryStatus": "군필",
   "entryYear": 2048,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 33,
+  "entryAge": 22,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 46,
-      "primaryPosition": "SP",
-      "developmentRate": 42,
-      "potentialHidden": 60,
-      "proServiceYears": 11,
+      "position": "C",
+      "jerseyNumber": 9,
+      "primaryPosition": "C",
+      "developmentRate": 60,
+      "potentialHidden": 79,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 80,
-        "stamina": 78,
-        "velocity": 87,
-        "command": 78,
-        "control": 75,
-        "movement": 84,
-        "mentality": 79,
-        "recovery": 75,
-        "clutch": 72,
-        "holdRunners": 67
+        "ovr": 52,
+        "stamina": 50,
+        "velocity": 50,
+        "command": 49,
+        "control": 49,
+        "movement": 53,
+        "mentality": 45,
+        "recovery": 52,
+        "clutch": 52,
+        "holdRunners": 40
       },
       "batting": {
-        "ovr": 68,
-        "contact": 71,
-        "power": 70,
-        "eye": 64,
-        "discipline": 60,
-        "speed": 64,
-        "baseInstinct": 68,
-        "bunting": 49,
+        "ovr": 52,
+        "contact": 54,
+        "power": 51,
+        "eye": 55,
+        "discipline": 51,
+        "speed": 57,
+        "baseInstinct": 42,
+        "bunting": 47,
         "platoon": 50,
-        "fielding": 67,
-        "arm": 58,
-        "battingClutch": 67
+        "fielding": 52,
+        "arm": 45,
+        "battingClutch": 46
       },
       "positionRatings": {
-        "SP": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        }
-      ]
+        "C": 52
+      }
     },
     "coach": null,
     "manager": null,

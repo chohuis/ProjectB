@@ -1,14 +1,14 @@
 {
   "id": "PLY_00676",
   "name": "윤동현",
-  "nameEn": "Yoon Donghyeon",
+  "nameEn": "Hwang Seo-jun",
   "role": "player",
   "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_EMBERTIGERS",
-  "teamId": "TEAM_KBL_EMBERTIGERS_2",
+  "clubId": "CLUB_KBL_KT",
+  "teamId": "TEAM_KBL_KT_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,48 +19,28 @@
       "position": "C",
       "jerseyNumber": 41,
       "pitching": {
-        "ovr": 44,
-        "stamina": 50,
-        "velocity": 45,
-        "command": 47,
-        "control": 49,
-        "movement": 44,
-        "mentality": 40,
-        "recovery": 48,
-        "clutch": 41,
-        "holdRunners": 43
+        "ovr": 35,
+        "stamina": 41,
+        "velocity": 38,
+        "command": 41,
+        "control": 36,
+        "movement": 34,
+        "mentality": 36,
+        "recovery": 33
       },
       "batting": {
         "ovr": 64,
-        "contact": 59,
-        "power": 59,
-        "eye": 61,
-        "discipline": 70,
-        "speed": 66,
-        "fielding": 70,
-        "arm": 68,
-        "battingClutch": 62,
-        "baseInstinct": 56,
-        "bunting": 50,
-        "platoon": 53
+        "contact": 71,
+        "power": 66,
+        "eye": 69,
+        "discipline": 64,
+        "speed": 63,
+        "fielding": 67,
+        "arm": 67,
+        "battingClutch": 64
       },
       "developmentRate": 43,
-      "potentialHidden": 77,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 64
-      },
-      "proServiceYears": 5,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 77
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

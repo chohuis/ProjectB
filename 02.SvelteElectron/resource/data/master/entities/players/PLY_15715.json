@@ -1,6 +1,6 @@
 {
   "id": "PLY_15715",
-  "name": "브라운 헌터",
+  "name": "Brown Hunter",
   "nameEn": "Brown Hunter",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 75,
   "popularity": 23,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 40
       },
       "batting": {
-        "ovr": 53,
-        "contact": 51,
-        "power": 56,
-        "eye": 53,
-        "discipline": 56,
-        "speed": 57,
-        "baseInstinct": 47,
-        "bunting": 42,
-        "platoon": 49,
-        "fielding": 48,
-        "arm": 55,
-        "battingClutch": 49
+        "ovr": 54,
+        "contact": 52,
+        "power": 57,
+        "eye": 54,
+        "discipline": 57,
+        "speed": 58,
+        "baseInstinct": 48,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 56,
+        "battingClutch": 50
       },
       "positionRatings": {
         "C": 54

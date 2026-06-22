@@ -1,7 +1,7 @@
 {
   "id": "PLY_00436",
   "name": "나성준",
-  "nameEn": "Na Seongjun",
+  "nameEn": "Cha Gi-hoon",
   "role": "player",
   "age": 21,
   "status": "active",
@@ -20,47 +20,27 @@
       "jerseyNumber": 16,
       "pitching": {
         "ovr": 46,
-        "stamina": 51,
-        "velocity": 47,
-        "command": 47,
-        "control": 46,
-        "movement": 51,
-        "mentality": 49,
-        "recovery": 47,
-        "clutch": 44,
-        "holdRunners": 36
+        "stamina": 43,
+        "velocity": 51,
+        "command": 49,
+        "control": 44,
+        "movement": 40,
+        "mentality": 43,
+        "recovery": 47
       },
       "batting": {
-        "ovr": 66,
-        "contact": 64,
-        "power": 70,
-        "eye": 62,
-        "discipline": 70,
-        "speed": 67,
-        "fielding": 68,
-        "arm": 70,
-        "battingClutch": 60,
-        "baseInstinct": 55,
-        "bunting": 51,
-        "platoon": 64
+        "ovr": 73,
+        "contact": 73,
+        "power": 62,
+        "eye": 71,
+        "discipline": 69,
+        "speed": 72,
+        "fielding": 66,
+        "arm": 69,
+        "battingClutch": 70
       },
       "developmentRate": 51,
-      "potentialHidden": 80,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 66
-      },
-      "proServiceYears": 1,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 80
     },
     "coach": {
       "specialty": "-",
@@ -100,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

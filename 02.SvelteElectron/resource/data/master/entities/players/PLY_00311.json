@@ -1,7 +1,7 @@
 {
   "id": "PLY_00311",
   "name": "안성우",
-  "nameEn": "Ahn Seongu",
+  "nameEn": "Hwang Dong-jun",
   "role": "player",
   "age": 29,
   "status": "active",
@@ -19,48 +19,28 @@
       "position": "C",
       "jerseyNumber": 11,
       "pitching": {
-        "ovr": 41,
-        "stamina": 44,
-        "velocity": 45,
-        "command": 38,
-        "control": 45,
-        "movement": 46,
-        "mentality": 37,
-        "recovery": 41,
-        "clutch": 41,
-        "holdRunners": 33
+        "ovr": 37,
+        "stamina": 36,
+        "velocity": 35,
+        "command": 37,
+        "control": 33,
+        "movement": 35,
+        "mentality": 40,
+        "recovery": 38
       },
       "batting": {
-        "ovr": 61,
-        "contact": 62,
-        "power": 56,
-        "eye": 60,
-        "discipline": 64,
-        "speed": 66,
+        "ovr": 63,
+        "contact": 59,
+        "power": 65,
+        "eye": 65,
+        "discipline": 59,
+        "speed": 63,
         "fielding": 63,
-        "arm": 62,
-        "battingClutch": 59,
-        "baseInstinct": 60,
-        "bunting": 44,
-        "platoon": 47
+        "arm": 64,
+        "battingClutch": 60
       },
       "developmentRate": 52,
-      "potentialHidden": 75,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 61
-      },
-      "proServiceYears": 9,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 75
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

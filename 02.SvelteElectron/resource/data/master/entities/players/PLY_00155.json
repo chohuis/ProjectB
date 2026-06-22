@@ -1,7 +1,7 @@
 {
   "id": "PLY_00155",
   "name": "윤준서",
-  "nameEn": "Yoon Junseo",
+  "nameEn": "Min Chan-woo",
   "role": "player",
   "age": 17,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "SS",
       "jerseyNumber": 15,
       "pitching": {
-        "ovr": 20,
-        "stamina": 20,
-        "velocity": 20,
-        "command": 25,
-        "control": 21,
-        "movement": 20,
-        "mentality": 22,
-        "recovery": 24,
-        "clutch": 41,
-        "holdRunners": 43
+        "ovr": 25,
+        "stamina": 49,
+        "velocity": 39,
+        "command": 43,
+        "control": 36,
+        "movement": 34,
+        "mentality": 36,
+        "recovery": 46
       },
       "batting": {
-        "ovr": 28,
-        "contact": 30,
-        "power": 30,
-        "eye": 30,
-        "discipline": 27,
-        "speed": 33,
-        "fielding": 31,
-        "arm": 25,
-        "battingClutch": 39,
-        "baseInstinct": 41,
-        "bunting": 28,
-        "platoon": 38
+        "ovr": 44,
+        "contact": 51,
+        "power": 29,
+        "eye": 47,
+        "discipline": 37,
+        "speed": 39,
+        "fielding": 40,
+        "arm": 44,
+        "battingClutch": 33
       },
       "developmentRate": 49,
-      "potentialHidden": 66,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 28
-      }
+      "potentialHidden": 66
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

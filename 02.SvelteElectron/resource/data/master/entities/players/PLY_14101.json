@@ -1,6 +1,6 @@
 {
   "id": "PLY_14101",
-  "name": "영 에반",
+  "name": "Young Evan",
   "nameEn": "Young Evan",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 46,
   "popularity": 17,
   "militaryStatus": "군필",

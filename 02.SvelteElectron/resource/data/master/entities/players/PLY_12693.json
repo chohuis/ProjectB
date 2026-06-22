@@ -1,9 +1,9 @@
 {
   "id": "PLY_12693",
-  "name": "홀 제이슨",
-  "nameEn": "Hall Jason",
+  "name": "White Chris",
+  "nameEn": "White Chris",
   "role": "player",
-  "age": 18,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 84,
-  "popularity": 13,
+  "notes": "국적:미국",
+  "diligence": 80,
+  "popularity": 43,
   "militaryStatus": "군필",
   "entryYear": 2043,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 18,
+  "entryAge": 22,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 10,
-      "primaryPosition": "SP",
-      "developmentRate": 79,
-      "potentialHidden": 82,
+      "position": "SS",
+      "jerseyNumber": 64,
+      "primaryPosition": "SS",
+      "developmentRate": 64,
+      "potentialHidden": 90,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 58,
-        "stamina": 52,
-        "velocity": 64,
+        "ovr": 61,
+        "stamina": 61,
+        "velocity": 61,
         "command": 61,
-        "control": 58,
-        "movement": 58,
-        "mentality": 57,
-        "recovery": 47,
-        "clutch": 58,
+        "control": 53,
+        "movement": 63,
+        "mentality": 68,
+        "recovery": 52,
+        "clutch": 62,
         "holdRunners": 49
       },
       "batting": {
-        "ovr": 62,
-        "contact": 56,
-        "power": 52,
-        "eye": 54,
-        "discipline": 65,
-        "speed": 62,
-        "baseInstinct": 53,
-        "bunting": 55,
+        "ovr": 61,
+        "contact": 62,
+        "power": 59,
+        "eye": 55,
+        "discipline": 52,
+        "speed": 60,
+        "baseInstinct": 51,
+        "bunting": 48,
         "platoon": 50,
-        "fielding": 61,
-        "arm": 52,
-        "battingClutch": 52
+        "fielding": 51,
+        "arm": 56,
+        "battingClutch": 60
       },
       "positionRatings": {
-        "SP": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SS": 61
+      }
     },
     "coach": null,
     "manager": null,

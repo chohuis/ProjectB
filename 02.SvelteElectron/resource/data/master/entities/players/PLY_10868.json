@@ -1,9 +1,9 @@
 {
   "id": "PLY_10868",
-  "name": "애덤스 미겔",
-  "nameEn": "Adams Miguel",
+  "name": "Brown Marcus",
+  "nameEn": "Brown Marcus",
   "role": "player",
-  "age": 19,
+  "age": 35,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 67,
-  "popularity": 33,
+  "notes": "국적:일본",
+  "diligence": 76,
+  "popularity": 31,
   "militaryStatus": "군필",
   "entryYear": 2032,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 19,
+  "entryAge": 35,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 20,
+      "jerseyNumber": 8,
       "primaryPosition": "SP",
-      "developmentRate": 65,
-      "potentialHidden": 66,
-      "proServiceYears": 0,
+      "developmentRate": 42,
+      "potentialHidden": 76,
+      "proServiceYears": 13,
       "pitching": {
-        "ovr": 61,
-        "stamina": 59,
-        "velocity": 59,
-        "command": 63,
-        "control": 53,
+        "ovr": 57,
+        "stamina": 62,
+        "velocity": 55,
+        "command": 59,
+        "control": 50,
         "movement": 55,
-        "mentality": 63,
-        "recovery": 55,
-        "clutch": 49,
-        "holdRunners": 58
+        "mentality": 50,
+        "recovery": 52,
+        "clutch": 58,
+        "holdRunners": 44
       },
       "batting": {
-        "ovr": 66,
-        "contact": 63,
-        "power": 60,
-        "eye": 57,
-        "discipline": 57,
-        "speed": 70,
-        "baseInstinct": 55,
-        "bunting": 58,
+        "ovr": 57,
+        "contact": 49,
+        "power": 50,
+        "eye": 60,
+        "discipline": 55,
+        "speed": 64,
+        "baseInstinct": 52,
+        "bunting": 50,
         "platoon": 50,
-        "fielding": 60,
-        "arm": 64,
-        "battingClutch": 56
+        "fielding": 57,
+        "arm": 51,
+        "battingClutch": 48
       },
       "positionRatings": {
-        "SP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 57
+      }
     },
     "coach": null,
     "manager": null,

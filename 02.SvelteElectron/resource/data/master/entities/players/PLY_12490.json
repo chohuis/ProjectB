@@ -1,6 +1,6 @@
 {
   "id": "PLY_12490",
-  "name": "데이비스 에릭",
+  "name": "Davis Eric",
   "nameEn": "Davis Eric",
   "role": "player",
   "age": 35,
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 81,
-  "popularity": 38,
+  "notes": "국적:일본",
+  "diligence": 73,
+  "popularity": 37,
   "militaryStatus": "군필",
   "entryYear": 2042,
   "entryLeague": "LEAGUE_ABL",
@@ -24,50 +24,40 @@
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 78,
+      "jerseyNumber": 90,
       "primaryPosition": "SP",
       "developmentRate": 37,
       "potentialHidden": 66,
       "proServiceYears": 13,
       "pitching": {
-        "ovr": 79,
-        "stamina": 84,
-        "velocity": 81,
-        "command": 79,
-        "control": 81,
-        "movement": 74,
-        "mentality": 73,
-        "recovery": 71,
-        "clutch": 65,
-        "holdRunners": 78
+        "ovr": 67,
+        "stamina": 63,
+        "velocity": 75,
+        "command": 67,
+        "control": 64,
+        "movement": 59,
+        "mentality": 65,
+        "recovery": 56,
+        "clutch": 68,
+        "holdRunners": 58
       },
       "batting": {
         "ovr": 67,
-        "contact": 64,
-        "power": 67,
-        "eye": 68,
-        "discipline": 63,
+        "contact": 69,
+        "power": 66,
+        "eye": 64,
+        "discipline": 67,
         "speed": 70,
-        "baseInstinct": 66,
-        "bunting": 62,
+        "baseInstinct": 70,
+        "bunting": 55,
         "platoon": 50,
-        "fielding": 63,
-        "arm": 59,
-        "battingClutch": 55
+        "fielding": 59,
+        "arm": 57,
+        "battingClutch": 58
       },
       "positionRatings": {
         "SP": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

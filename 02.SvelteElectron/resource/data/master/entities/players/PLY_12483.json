@@ -1,9 +1,9 @@
 {
   "id": "PLY_12483",
-  "name": "가르시아 브랜던",
-  "nameEn": "Garcia Brandon",
+  "name": "Mitchell Jake",
+  "nameEn": "Mitchell Jake",
   "role": "player",
-  "age": 34,
+  "age": 35,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 64,
-  "popularity": 32,
+  "notes": "국적:미국",
+  "diligence": 75,
+  "popularity": 40,
   "militaryStatus": "군필",
   "entryYear": 2041,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 34,
+  "entryAge": 35,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 94,
+      "jerseyNumber": 2,
       "primaryPosition": "SP",
-      "developmentRate": 37,
-      "potentialHidden": 64,
-      "proServiceYears": 12,
+      "developmentRate": 54,
+      "potentialHidden": 74,
+      "proServiceYears": 13,
       "pitching": {
-        "ovr": 68,
-        "stamina": 70,
-        "velocity": 73,
-        "command": 68,
-        "control": 73,
-        "movement": 61,
-        "mentality": 71,
-        "recovery": 60,
-        "clutch": 55,
-        "holdRunners": 63
+        "ovr": 60,
+        "stamina": 56,
+        "velocity": 68,
+        "command": 57,
+        "control": 53,
+        "movement": 55,
+        "mentality": 55,
+        "recovery": 61,
+        "clutch": 58,
+        "holdRunners": 56
       },
       "batting": {
-        "ovr": 59,
-        "contact": 59,
-        "power": 54,
-        "eye": 56,
-        "discipline": 51,
-        "speed": 56,
-        "baseInstinct": 57,
-        "bunting": 47,
+        "ovr": 60,
+        "contact": 57,
+        "power": 57,
+        "eye": 61,
+        "discipline": 53,
+        "speed": 60,
+        "baseInstinct": 58,
+        "bunting": 43,
         "platoon": 50,
-        "fielding": 56,
-        "arm": 51,
-        "battingClutch": 58
+        "fielding": 53,
+        "arm": 57,
+        "battingClutch": 57
       },
       "positionRatings": {
-        "SP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 60
+      }
     },
     "coach": null,
     "manager": null,

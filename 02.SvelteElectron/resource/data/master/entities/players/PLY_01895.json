@@ -1,72 +1,46 @@
 {
   "id": "PLY_01895",
-  "name": "백성현",
-  "nameEn": "Baek Seonghyeon",
+  "name": "야마다 히라쿠",
+  "nameEn": "Yamada Hiraku",
   "role": "player",
-  "age": 27,
+  "age": 22,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_BEARGUARDIANS",
-  "teamId": "TEAM_KBL_BEARGUARDIANS_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_POLARBEARS",
+  "teamId": "TEAM_JBL_PL_POLARBEARS_2",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "SS",
-      "jerseyNumber": 54,
+      "position": "3B",
+      "jerseyNumber": 45,
       "pitching": {
-        "ovr": 22,
-        "stamina": 25,
-        "velocity": 24,
-        "command": 23,
-        "control": 20,
-        "movement": 24,
-        "mentality": 26,
-        "recovery": 20,
-        "clutch": 42,
-        "holdRunners": 38
+        "ovr": 39,
+        "stamina": 40,
+        "velocity": 46,
+        "command": 46,
+        "control": 44,
+        "movement": 44,
+        "mentality": 40,
+        "recovery": 41
       },
       "batting": {
-        "ovr": 42,
-        "contact": 43,
-        "power": 46,
-        "eye": 43,
-        "discipline": 43,
-        "speed": 48,
-        "fielding": 38,
-        "arm": 45,
-        "battingClutch": 37,
-        "baseInstinct": 38,
-        "bunting": 35,
-        "platoon": 39
+        "ovr": 69,
+        "contact": 72,
+        "power": 73,
+        "eye": 69,
+        "discipline": 64,
+        "speed": 65,
+        "fielding": 71,
+        "arm": 71,
+        "battingClutch": 71
       },
       "developmentRate": 39,
-      "potentialHidden": 56,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 42
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 5,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 59
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 66,
-  "popularity": 13,
-  "militaryStatus": "군필"
+  }
 }

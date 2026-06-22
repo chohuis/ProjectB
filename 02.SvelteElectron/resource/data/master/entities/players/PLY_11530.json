@@ -1,9 +1,9 @@
 {
   "id": "PLY_11530",
-  "name": "화이트 케빈",
-  "nameEn": "White Kevin",
+  "name": "Thomas Cody",
+  "nameEn": "Thomas Cody",
   "role": "player",
-  "age": 30,
+  "age": 19,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 64,
-  "popularity": 23,
+  "notes": "국적:도미니카",
+  "diligence": 74,
+  "popularity": 16,
   "militaryStatus": "군필",
   "entryYear": 2036,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 30,
+  "entryAge": 19,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "SP",
-      "jerseyNumber": 67,
+      "jerseyNumber": 27,
       "primaryPosition": "SP",
-      "developmentRate": 55,
-      "potentialHidden": 52,
-      "proServiceYears": 8,
+      "developmentRate": 76,
+      "potentialHidden": 85,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 64,
+        "ovr": 62,
         "stamina": 67,
-        "velocity": 70,
-        "command": 61,
-        "control": 63,
-        "movement": 62,
-        "mentality": 62,
-        "recovery": 60,
-        "clutch": 55,
-        "holdRunners": 61
+        "velocity": 60,
+        "command": 54,
+        "control": 57,
+        "movement": 58,
+        "mentality": 64,
+        "recovery": 61,
+        "clutch": 50,
+        "holdRunners": 51
       },
       "batting": {
         "ovr": 62,
-        "contact": 55,
-        "power": 54,
-        "eye": 61,
-        "discipline": 52,
-        "speed": 56,
-        "baseInstinct": 56,
-        "bunting": 52,
+        "contact": 60,
+        "power": 58,
+        "eye": 54,
+        "discipline": 57,
+        "speed": 63,
+        "baseInstinct": 59,
+        "bunting": 54,
         "platoon": 50,
-        "fielding": 61,
-        "arm": 52,
-        "battingClutch": 53
+        "fielding": 63,
+        "arm": 65,
+        "battingClutch": 51
       },
       "positionRatings": {
         "SP": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

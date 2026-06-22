@@ -1,6 +1,6 @@
 {
   "id": "PLY_15824",
-  "name": "스콧 에반",
+  "name": "Scott Evan",
   "nameEn": "Scott Evan",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 46,
   "popularity": 47,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 63
       },
       "batting": {
-        "ovr": 60,
-        "contact": 63,
-        "power": 56,
-        "eye": 64,
-        "discipline": 62,
-        "speed": 57,
-        "baseInstinct": 55,
-        "bunting": 42,
-        "platoon": 47,
-        "fielding": 58,
-        "arm": 63,
-        "battingClutch": 56
+        "ovr": 64,
+        "contact": 67,
+        "power": 60,
+        "eye": 68,
+        "discipline": 66,
+        "speed": 61,
+        "baseInstinct": 59,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 67,
+        "battingClutch": 60
       },
       "positionRatings": {
         "CF": 64

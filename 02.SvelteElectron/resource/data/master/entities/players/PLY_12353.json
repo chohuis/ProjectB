@@ -1,9 +1,9 @@
 {
   "id": "PLY_12353",
-  "name": "미첼 블레이크",
-  "nameEn": "Mitchell Blake",
+  "name": "White Chris",
+  "nameEn": "White Chris",
   "role": "player",
-  "age": 31,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 58,
-  "popularity": 46,
+  "notes": "국적:미국",
+  "diligence": 57,
+  "popularity": 30,
   "militaryStatus": "군필",
   "entryYear": 2041,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 31,
+  "entryAge": 28,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 34,
+      "jerseyNumber": 5,
       "primaryPosition": "SP",
-      "developmentRate": 39,
-      "potentialHidden": 72,
-      "proServiceYears": 9,
+      "developmentRate": 50,
+      "potentialHidden": 77,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 64,
-        "stamina": 58,
-        "velocity": 67,
-        "command": 54,
-        "control": 61,
-        "movement": 56,
-        "mentality": 64,
-        "recovery": 56,
-        "clutch": 52,
-        "holdRunners": 59
+        "ovr": 71,
+        "stamina": 68,
+        "velocity": 81,
+        "command": 69,
+        "control": 76,
+        "movement": 72,
+        "mentality": 66,
+        "recovery": 69,
+        "clutch": 65,
+        "holdRunners": 57
       },
       "batting": {
-        "ovr": 62,
-        "contact": 65,
-        "power": 54,
-        "eye": 60,
-        "discipline": 56,
-        "speed": 55,
-        "baseInstinct": 55,
-        "bunting": 48,
+        "ovr": 71,
+        "contact": 71,
+        "power": 64,
+        "eye": 71,
+        "discipline": 66,
+        "speed": 74,
+        "baseInstinct": 73,
+        "bunting": 56,
         "platoon": 50,
-        "fielding": 56,
-        "arm": 56,
-        "battingClutch": 56
+        "fielding": 70,
+        "arm": 71,
+        "battingClutch": 68
       },
       "positionRatings": {
-        "SP": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 71
+      }
     },
     "coach": null,
     "manager": null,

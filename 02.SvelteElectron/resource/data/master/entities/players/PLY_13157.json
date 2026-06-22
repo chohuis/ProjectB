@@ -1,9 +1,9 @@
 {
   "id": "PLY_13157",
-  "name": "화이트 트레버",
-  "nameEn": "White Trevor",
+  "name": "Hall Carlos",
+  "nameEn": "Hall Carlos",
   "role": "player",
-  "age": 29,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 67,
-  "popularity": 15,
+  "notes": "국적:미국",
+  "diligence": 84,
+  "popularity": 12,
   "militaryStatus": "군필",
   "entryYear": 2046,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 29,
+  "entryAge": 20,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 19,
-      "primaryPosition": "SP",
-      "developmentRate": 39,
-      "potentialHidden": 57,
-      "proServiceYears": 7,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 76,
+      "primaryPosition": "RF",
+      "developmentRate": 56,
+      "potentialHidden": 67,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 73,
-        "stamina": 77,
-        "velocity": 71,
-        "command": 75,
-        "control": 64,
-        "movement": 67,
-        "mentality": 77,
-        "recovery": 60,
-        "clutch": 70,
-        "holdRunners": 67
+        "ovr": 52,
+        "stamina": 44,
+        "velocity": 59,
+        "command": 51,
+        "control": 56,
+        "movement": 53,
+        "mentality": 56,
+        "recovery": 53,
+        "clutch": 43,
+        "holdRunners": 42
       },
       "batting": {
-        "ovr": 70,
-        "contact": 73,
-        "power": 70,
-        "eye": 72,
-        "discipline": 73,
-        "speed": 66,
-        "baseInstinct": 64,
-        "bunting": 58,
+        "ovr": 52,
+        "contact": 51,
+        "power": 54,
+        "eye": 47,
+        "discipline": 44,
+        "speed": 59,
+        "baseInstinct": 50,
+        "bunting": 39,
         "platoon": 50,
-        "fielding": 72,
-        "arm": 62,
-        "battingClutch": 58
+        "fielding": 53,
+        "arm": 46,
+        "battingClutch": 52
       },
       "positionRatings": {
-        "SP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ]
+        "RF": 52
+      }
     },
     "coach": null,
     "manager": null,

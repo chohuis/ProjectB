@@ -1,6 +1,6 @@
 {
   "id": "PLY_15639",
-  "name": "그린 조던",
+  "name": "Green Jordan",
   "nameEn": "Green Jordan",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 76,
   "popularity": 17,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 57
       },
       "batting": {
-        "ovr": 57,
-        "contact": 49,
-        "power": 54,
-        "eye": 58,
-        "discipline": 60,
-        "speed": 59,
-        "baseInstinct": 48,
-        "bunting": 42,
-        "platoon": 46,
-        "fielding": 55,
-        "arm": 53,
-        "battingClutch": 55
+        "ovr": 62,
+        "contact": 53,
+        "power": 59,
+        "eye": 63,
+        "discipline": 65,
+        "speed": 64,
+        "baseInstinct": 52,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 58,
+        "battingClutch": 60
       },
       "positionRatings": {
         "CF": 62

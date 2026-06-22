@@ -1,6 +1,6 @@
 {
   "id": "PLY_14686",
-  "name": "화이트 제이크",
+  "name": "White Jake",
   "nameEn": "White Jake",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 60,
   "popularity": 18,
   "militaryStatus": "군필",

@@ -1,6 +1,6 @@
 {
   "id": "PLY_14623",
-  "name": "브라운 케빈",
+  "name": "Brown Kevin",
   "nameEn": "Brown Kevin",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 49,
   "popularity": 26,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 65
       },
       "batting": {
-        "ovr": 71,
-        "contact": 72,
-        "power": 65,
-        "eye": 68,
-        "discipline": 66,
-        "speed": 67,
-        "baseInstinct": 72,
-        "bunting": 62,
-        "platoon": 49,
-        "fielding": 62,
-        "arm": 71,
-        "battingClutch": 71
+        "ovr": 72,
+        "contact": 73,
+        "power": 66,
+        "eye": 69,
+        "discipline": 67,
+        "speed": 68,
+        "baseInstinct": 73,
+        "bunting": 63,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 72,
+        "battingClutch": 72
       },
       "positionRatings": {
         "LF": 72

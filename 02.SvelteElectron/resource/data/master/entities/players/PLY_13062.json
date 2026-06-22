@@ -1,9 +1,9 @@
 {
   "id": "PLY_13062",
-  "name": "라이트 다니엘",
-  "nameEn": "Wright Daniel",
+  "name": "Moore Jordan",
+  "nameEn": "Moore Jordan",
   "role": "player",
-  "age": 22,
+  "age": 30,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 59,
-  "popularity": 39,
+  "popularity": 16,
   "militaryStatus": "군필",
   "entryYear": 2045,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 22,
+  "entryAge": 30,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 44,
-      "primaryPosition": "SP",
-      "developmentRate": 58,
-      "potentialHidden": 80,
-      "proServiceYears": 0,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 73,
+      "primaryPosition": "3B",
+      "developmentRate": 42,
+      "potentialHidden": 67,
+      "proServiceYears": 8,
       "pitching": {
-        "ovr": 55,
-        "stamina": 48,
-        "velocity": 58,
-        "command": 48,
-        "control": 55,
-        "movement": 57,
-        "mentality": 56,
-        "recovery": 54,
-        "clutch": 45,
-        "holdRunners": 53
+        "ovr": 71,
+        "stamina": 69,
+        "velocity": 70,
+        "command": 73,
+        "control": 67,
+        "movement": 71,
+        "mentality": 74,
+        "recovery": 68,
+        "clutch": 64,
+        "holdRunners": 65
       },
       "batting": {
-        "ovr": 59,
-        "contact": 52,
-        "power": 55,
-        "eye": 63,
-        "discipline": 62,
-        "speed": 66,
-        "baseInstinct": 50,
-        "bunting": 53,
+        "ovr": 71,
+        "contact": 67,
+        "power": 70,
+        "eye": 73,
+        "discipline": 70,
+        "speed": 69,
+        "baseInstinct": 60,
+        "bunting": 62,
         "platoon": 50,
-        "fielding": 49,
-        "arm": 59,
-        "battingClutch": 58
+        "fielding": 64,
+        "arm": 73,
+        "battingClutch": 61
       },
       "positionRatings": {
-        "SP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "3B": 71
+      }
     },
     "coach": null,
     "manager": null,

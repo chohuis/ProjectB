@@ -1,6 +1,6 @@
 {
   "id": "PLY_15990",
-  "name": "토마스 라이언",
+  "name": "Thomas Ryan",
   "nameEn": "Thomas Ryan",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 68,
   "popularity": 31,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 69,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 78,
-        "stamina": 73,
-        "velocity": 78,
-        "command": 67,
-        "control": 78,
-        "movement": 81,
-        "mentality": 82,
-        "recovery": 72,
-        "clutch": 70,
-        "holdRunners": 73
+        "ovr": 72,
+        "stamina": 67,
+        "velocity": 72,
+        "command": 62,
+        "control": 72,
+        "movement": 75,
+        "mentality": 76,
+        "recovery": 66,
+        "clutch": 65,
+        "holdRunners": 67
       },
       "batting": {
         "ovr": 72,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 72
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

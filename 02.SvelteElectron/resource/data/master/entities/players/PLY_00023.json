@@ -1,9 +1,9 @@
 {
   "id": "PLY_00023",
   "name": "안현진",
-  "nameEn": "Ahn Hyeonjin",
+  "nameEn": "Song Tae-yang",
   "role": "player",
-  "age": 18,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,47 +19,28 @@
       "position": "SP",
       "jerseyNumber": 3,
       "pitching": {
-        "ovr": 55,
-        "stamina": 57,
-        "velocity": 50,
-        "command": 60,
-        "control": 52,
-        "movement": 50,
-        "mentality": 55,
-        "recovery": 52,
-        "clutch": 49,
-        "holdRunners": 47
+        "ovr": 58,
+        "stamina": 73,
+        "velocity": 54,
+        "command": 49,
+        "control": 58,
+        "movement": 60,
+        "mentality": 69,
+        "recovery": 52
       },
       "batting": {
-        "ovr": 37,
-        "contact": 36,
-        "power": 38,
-        "eye": 36,
-        "discipline": 39,
-        "speed": 34,
-        "fielding": 39,
-        "arm": 32,
-        "battingClutch": 39,
-        "baseInstinct": 37,
-        "bunting": 28,
-        "platoon": 43
+        "ovr": 44,
+        "contact": 56,
+        "power": 43,
+        "eye": 63,
+        "discipline": 45,
+        "speed": 68,
+        "fielding": 59,
+        "arm": 60,
+        "battingClutch": 66
       },
       "developmentRate": 62,
-      "potentialHidden": 62,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 55
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 62
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

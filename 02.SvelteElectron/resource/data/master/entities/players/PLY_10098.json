@@ -1,9 +1,9 @@
 {
   "id": "PLY_10098",
-  "name": "무어 타일러",
-  "nameEn": "Moore Tyler",
+  "name": "Smith Connor",
+  "nameEn": "Smith Connor",
   "role": "player",
-  "age": 28,
+  "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 79,
-  "popularity": 43,
+  "notes": "국적:베네수엘라",
+  "diligence": 63,
+  "popularity": 24,
   "militaryStatus": "군필",
   "entryYear": 2027,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 28,
+  "entryAge": 25,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "L",
       "position": "SP",
-      "jerseyNumber": 41,
+      "jerseyNumber": 60,
       "primaryPosition": "SP",
-      "developmentRate": 46,
-      "potentialHidden": 78,
-      "proServiceYears": 6,
+      "developmentRate": 52,
+      "potentialHidden": 66,
+      "proServiceYears": 3,
       "pitching": {
-        "ovr": 83,
-        "stamina": 85,
-        "velocity": 85,
-        "command": 85,
-        "control": 78,
-        "movement": 86,
-        "mentality": 87,
-        "recovery": 73,
-        "clutch": 75,
-        "holdRunners": 76
+        "ovr": 79,
+        "stamina": 73,
+        "velocity": 86,
+        "command": 80,
+        "control": 79,
+        "movement": 78,
+        "mentality": 77,
+        "recovery": 75,
+        "clutch": 74,
+        "holdRunners": 66
       },
       "batting": {
-        "ovr": 80,
-        "contact": 84,
-        "power": 79,
-        "eye": 78,
-        "discipline": 77,
-        "speed": 87,
-        "baseInstinct": 73,
-        "bunting": 65,
+        "ovr": 79,
+        "contact": 78,
+        "power": 73,
+        "eye": 73,
+        "discipline": 79,
+        "speed": 75,
+        "baseInstinct": 80,
+        "bunting": 67,
         "platoon": 50,
-        "fielding": 72,
-        "arm": 70,
-        "battingClutch": 76
+        "fielding": 68,
+        "arm": 79,
+        "battingClutch": 68
       },
       "positionRatings": {
-        "SP": 80
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "SP": 79
+      }
     },
     "coach": null,
     "manager": null,

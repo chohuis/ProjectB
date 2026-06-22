@@ -1,6 +1,6 @@
 {
   "id": "PLY_16437",
-  "name": "데이비스 재크",
+  "name": "Davis Zach",
   "nameEn": "Davis Zach",
   "role": "player",
   "age": 31,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 65,
   "popularity": 12,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 44
       },
       "batting": {
-        "ovr": 66,
-        "contact": 65,
-        "power": 65,
-        "eye": 56,
-        "discipline": 63,
-        "speed": 65,
-        "baseInstinct": 65,
-        "bunting": 49,
-        "platoon": 56,
-        "fielding": 67,
-        "arm": 55,
-        "battingClutch": 60
+        "ovr": 59,
+        "contact": 58,
+        "power": 58,
+        "eye": 50,
+        "discipline": 56,
+        "speed": 58,
+        "baseInstinct": 58,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 49,
+        "battingClutch": 54
       },
       "positionRatings": {
         "CF": 59

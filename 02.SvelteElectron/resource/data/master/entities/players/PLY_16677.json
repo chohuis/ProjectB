@@ -1,6 +1,6 @@
 {
   "id": "PLY_16677",
-  "name": "스미스 크리스",
+  "name": "Smith Chris",
   "nameEn": "Smith Chris",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 50,
   "popularity": 17,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 83,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 52,
-        "stamina": 51,
-        "velocity": 62,
-        "command": 42,
-        "control": 50,
-        "movement": 44,
-        "mentality": 58,
-        "recovery": 44,
-        "clutch": 45,
-        "holdRunners": 41
+        "ovr": 53,
+        "stamina": 52,
+        "velocity": 63,
+        "command": 43,
+        "control": 51,
+        "movement": 45,
+        "mentality": 59,
+        "recovery": 45,
+        "clutch": 46,
+        "holdRunners": 42
       },
       "batting": {
         "ovr": 53,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 53
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

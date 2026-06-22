@@ -1,9 +1,9 @@
 {
   "id": "PLY_10508",
-  "name": "에르난데스 크리스",
-  "nameEn": "Hernandez Chris",
+  "name": "Green Jake",
+  "nameEn": "Green Jake",
   "role": "player",
-  "age": 23,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 60,
-  "popularity": 40,
+  "notes": "국적:베네수엘라",
+  "diligence": 78,
+  "popularity": 21,
   "militaryStatus": "군필",
   "entryYear": 2029,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 23,
+  "entryAge": 28,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 58,
+      "jerseyNumber": 22,
       "primaryPosition": "SP",
-      "developmentRate": 45,
-      "potentialHidden": 87,
-      "proServiceYears": 1,
+      "developmentRate": 54,
+      "potentialHidden": 62,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 63,
-        "stamina": 57,
-        "velocity": 68,
-        "command": 61,
-        "control": 60,
-        "movement": 55,
-        "mentality": 67,
-        "recovery": 57,
-        "clutch": 54,
-        "holdRunners": 61
+        "ovr": 69,
+        "stamina": 65,
+        "velocity": 69,
+        "command": 68,
+        "control": 65,
+        "movement": 63,
+        "mentality": 69,
+        "recovery": 68,
+        "clutch": 61,
+        "holdRunners": 67
       },
       "batting": {
-        "ovr": 68,
-        "contact": 60,
-        "power": 60,
+        "ovr": 69,
+        "contact": 70,
+        "power": 72,
         "eye": 68,
-        "discipline": 63,
-        "speed": 72,
-        "baseInstinct": 61,
-        "bunting": 51,
+        "discipline": 61,
+        "speed": 64,
+        "baseInstinct": 71,
+        "bunting": 52,
         "platoon": 50,
-        "fielding": 61,
-        "arm": 63,
-        "battingClutch": 65
+        "fielding": 63,
+        "arm": 59,
+        "battingClutch": 67
       },
       "positionRatings": {
-        "SP": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+        "SP": 69
+      }
     },
     "coach": null,
     "manager": null,

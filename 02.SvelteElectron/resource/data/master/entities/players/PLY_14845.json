@@ -1,6 +1,6 @@
 {
   "id": "PLY_14845",
-  "name": "미첼 오스틴",
+  "name": "Mitchell Austin",
   "nameEn": "Mitchell Austin",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 60,
   "popularity": 27,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 57,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 68,
-        "stamina": 66,
-        "velocity": 76,
-        "command": 66,
-        "control": 74,
-        "movement": 59,
-        "mentality": 75,
-        "recovery": 56,
-        "clutch": 69,
-        "holdRunners": 54
+        "ovr": 61,
+        "stamina": 59,
+        "velocity": 68,
+        "command": 59,
+        "control": 66,
+        "movement": 53,
+        "mentality": 67,
+        "recovery": 50,
+        "clutch": 62,
+        "holdRunners": 48
       },
       "batting": {
         "ovr": 61,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

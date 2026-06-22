@@ -1,6 +1,6 @@
 {
   "id": "PLY_14863",
-  "name": "데이비스 칼렙",
+  "name": "Davis Caleb",
   "nameEn": "Davis Caleb",
   "role": "player",
   "age": 34,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 53,
   "popularity": 18,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 50
       },
       "batting": {
-        "ovr": 70,
-        "contact": 61,
-        "power": 68,
-        "eye": 60,
-        "discipline": 71,
-        "speed": 69,
-        "baseInstinct": 60,
-        "bunting": 56,
-        "platoon": 63,
-        "fielding": 71,
-        "arm": 60,
-        "battingClutch": 70
+        "ovr": 56,
+        "contact": 49,
+        "power": 54,
+        "eye": 48,
+        "discipline": 57,
+        "speed": 55,
+        "baseInstinct": 48,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 48,
+        "battingClutch": 56
       },
       "positionRatings": {
         "2B": 56

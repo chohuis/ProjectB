@@ -1,6 +1,6 @@
 {
   "id": "PLY_15690",
-  "name": "데이비스 오스틴",
+  "name": "Davis Austin",
   "nameEn": "Davis Austin",
   "role": "player",
   "age": 34,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 77,
   "popularity": 30,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 52
       },
       "batting": {
-        "ovr": 69,
-        "contact": 60,
-        "power": 59,
-        "eye": 64,
-        "discipline": 72,
-        "speed": 78,
-        "baseInstinct": 56,
-        "bunting": 58,
-        "platoon": 63,
-        "fielding": 59,
-        "arm": 60,
-        "battingClutch": 56
+        "ovr": 55,
+        "contact": 48,
+        "power": 47,
+        "eye": 51,
+        "discipline": 57,
+        "speed": 62,
+        "baseInstinct": 45,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 48,
+        "battingClutch": 45
       },
       "positionRatings": {
         "LF": 55

@@ -1,9 +1,9 @@
 {
   "id": "PLY_00043",
   "name": "오예준",
-  "nameEn": "Oh Yejun",
+  "nameEn": "Cho Jae-hyun",
   "role": "player",
-  "age": 18,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,47 +19,28 @@
       "position": "SP",
       "jerseyNumber": 3,
       "pitching": {
-        "ovr": 57,
-        "stamina": 55,
-        "velocity": 53,
-        "command": 60,
-        "control": 59,
-        "movement": 57,
-        "mentality": 55,
-        "recovery": 55,
-        "clutch": 55,
-        "holdRunners": 50
+        "ovr": 54,
+        "stamina": 68,
+        "velocity": 62,
+        "command": 64,
+        "control": 60,
+        "movement": 58,
+        "mentality": 60,
+        "recovery": 61
       },
       "batting": {
-        "ovr": 39,
-        "contact": 39,
-        "power": 41,
-        "eye": 46,
-        "discipline": 42,
-        "speed": 41,
-        "fielding": 37,
-        "arm": 41,
-        "battingClutch": 44,
-        "baseInstinct": 45,
-        "bunting": 38,
-        "platoon": 42
+        "ovr": 33,
+        "contact": 48,
+        "power": 55,
+        "eye": 57,
+        "discipline": 47,
+        "speed": 64,
+        "fielding": 61,
+        "arm": 51,
+        "battingClutch": 60
       },
       "developmentRate": 53,
-      "potentialHidden": 72,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 72
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

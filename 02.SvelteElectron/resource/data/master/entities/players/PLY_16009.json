@@ -1,6 +1,6 @@
 {
   "id": "PLY_16009",
-  "name": "존슨 트레버",
+  "name": "Johnson Trevor",
   "nameEn": "Johnson Trevor",
   "role": "player",
   "age": 30,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 77,
   "popularity": 21,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 67,
       "proServiceYears": 8,
       "pitching": {
-        "ovr": 66,
-        "stamina": 66,
-        "velocity": 76,
-        "command": 60,
-        "control": 67,
-        "movement": 67,
-        "mentality": 63,
-        "recovery": 66,
-        "clutch": 60,
-        "holdRunners": 64
+        "ovr": 59,
+        "stamina": 59,
+        "velocity": 68,
+        "command": 54,
+        "control": 60,
+        "movement": 60,
+        "mentality": 56,
+        "recovery": 59,
+        "clutch": 54,
+        "holdRunners": 57
       },
       "batting": {
         "ovr": 59,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

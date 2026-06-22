@@ -1,6 +1,6 @@
 {
   "id": "PLY_15996",
-  "name": "브라운 칼렙",
+  "name": "Brown Caleb",
   "nameEn": "Brown Caleb",
   "role": "player",
   "age": 31,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 76,
   "popularity": 38,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 49
       },
       "batting": {
-        "ovr": 69,
-        "contact": 63,
-        "power": 67,
-        "eye": 73,
-        "discipline": 68,
-        "speed": 71,
-        "baseInstinct": 69,
-        "bunting": 49,
-        "platoon": 56,
-        "fielding": 65,
-        "arm": 62,
-        "battingClutch": 59
+        "ovr": 62,
+        "contact": 57,
+        "power": 60,
+        "eye": 66,
+        "discipline": 61,
+        "speed": 64,
+        "baseInstinct": 62,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 56,
+        "battingClutch": 53
       },
       "positionRatings": {
         "SS": 62

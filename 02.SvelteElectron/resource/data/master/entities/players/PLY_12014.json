@@ -1,9 +1,9 @@
 {
   "id": "PLY_12014",
-  "name": "토마스 딜런",
-  "nameEn": "Thomas Dylan",
+  "name": "Jones Hunter",
+  "nameEn": "Jones Hunter",
   "role": "player",
-  "age": 35,
+  "age": 34,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 55,
-  "popularity": 47,
+  "notes": "국적:쿠바",
+  "diligence": 56,
+  "popularity": 35,
   "militaryStatus": "군필",
   "entryYear": 2039,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 35,
+  "entryAge": 34,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 55,
+      "jerseyNumber": 42,
       "primaryPosition": "SP",
-      "developmentRate": 46,
-      "potentialHidden": 62,
-      "proServiceYears": 13,
+      "developmentRate": 43,
+      "potentialHidden": 70,
+      "proServiceYears": 12,
       "pitching": {
-        "ovr": 90,
-        "stamina": 88,
-        "velocity": 94,
-        "command": 86,
-        "control": 83,
-        "movement": 92,
-        "mentality": 91,
-        "recovery": 88,
-        "clutch": 76,
-        "holdRunners": 85
+        "ovr": 70,
+        "stamina": 71,
+        "velocity": 68,
+        "command": 73,
+        "control": 75,
+        "movement": 72,
+        "mentality": 73,
+        "recovery": 68,
+        "clutch": 63,
+        "holdRunners": 69
       },
       "batting": {
-        "ovr": 75,
-        "contact": 76,
-        "power": 64,
-        "eye": 76,
-        "discipline": 70,
-        "speed": 78,
-        "baseInstinct": 70,
-        "bunting": 59,
+        "ovr": 70,
+        "contact": 66,
+        "power": 61,
+        "eye": 75,
+        "discipline": 61,
+        "speed": 71,
+        "baseInstinct": 62,
+        "bunting": 60,
         "platoon": 50,
-        "fielding": 72,
-        "arm": 69,
-        "battingClutch": 68
+        "fielding": 64,
+        "arm": 62,
+        "battingClutch": 58
       },
       "positionRatings": {
-        "SP": 75
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "SP": 70
+      }
     },
     "coach": null,
     "manager": null,

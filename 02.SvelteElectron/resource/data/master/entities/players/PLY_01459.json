@@ -1,14 +1,14 @@
 {
   "id": "PLY_01459",
   "name": "애덤스 크리스토퍼",
-  "nameEn": "Ae 덤스 크리스토퍼",
+  "nameEn": "Adams Christopher",
   "role": "player",
   "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_DESERTSERPENTS",
-  "teamId": "TEAM_ABL_DESERTSERPENTS_1",
+  "clubId": "CLUB_ABL_ARI",
+  "teamId": "TEAM_ABL_ARI",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
@@ -19,62 +19,28 @@
       "position": "RP",
       "jerseyNumber": 9,
       "pitching": {
-        "ovr": 74,
-        "stamina": 76,
-        "velocity": 69,
-        "command": 70,
-        "control": 70,
-        "movement": 73,
-        "mentality": 75,
-        "recovery": 70,
-        "clutch": 68,
-        "holdRunners": 70
+        "ovr": 76,
+        "stamina": 68,
+        "velocity": 85,
+        "command": 84,
+        "control": 81,
+        "movement": 79,
+        "mentality": 83,
+        "recovery": 77
       },
       "batting": {
-        "ovr": 56,
-        "contact": 56,
-        "power": 61,
-        "eye": 56,
-        "discipline": 53,
-        "speed": 49,
-        "fielding": 51,
-        "arm": 58,
-        "battingClutch": 45,
-        "baseInstinct": 51,
-        "bunting": 43,
-        "platoon": 47
+        "ovr": 49,
+        "contact": 47,
+        "power": 50,
+        "eye": 52,
+        "discipline": 48,
+        "speed": 50,
+        "fielding": 48,
+        "arm": 49,
+        "battingClutch": 46
       },
       "developmentRate": 30,
-      "potentialHidden": 79,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 74
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 10,
-      "contract": {
-        "salary": 24800,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 79
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

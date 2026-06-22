@@ -1,6 +1,6 @@
 {
   "id": "PLY_14196",
-  "name": "가르시아 케빈",
+  "name": "Garcia Kevin",
   "nameEn": "Garcia Kevin",
   "role": "player",
   "age": 33,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 51,
   "popularity": 33,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 74,
       "proServiceYears": 11,
       "pitching": {
-        "ovr": 85,
-        "stamina": 81,
-        "velocity": 86,
-        "command": 75,
-        "control": 81,
-        "movement": 81,
-        "mentality": 86,
-        "recovery": 81,
-        "clutch": 81,
-        "holdRunners": 77
+        "ovr": 67,
+        "stamina": 64,
+        "velocity": 68,
+        "command": 59,
+        "control": 64,
+        "movement": 64,
+        "mentality": 68,
+        "recovery": 64,
+        "clutch": 64,
+        "holdRunners": 61
       },
       "batting": {
         "ovr": 67,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

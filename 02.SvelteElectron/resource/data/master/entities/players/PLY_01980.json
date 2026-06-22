@@ -1,72 +1,46 @@
 {
   "id": "PLY_01980",
-  "name": "정기준",
-  "nameEn": "Jeong Gijun",
+  "name": "요시다 소타",
+  "nameEn": "Yoshida Sota",
   "role": "player",
-  "age": 25,
+  "age": 32,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_ROYALLIONS",
-  "teamId": "TEAM_KBL_ROYALLIONS_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
+  "teamId": "TEAM_JBL_PL_MARINESOLDIERS_2",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
-      "handedness": "L",
-      "position": "LF",
-      "jerseyNumber": 90,
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "CP",
+      "jerseyNumber": 40,
       "pitching": {
-        "ovr": 40,
-        "stamina": 37,
-        "velocity": 41,
-        "command": 45,
-        "control": 39,
-        "movement": 42,
-        "mentality": 36,
-        "recovery": 37,
-        "clutch": 41,
-        "holdRunners": 41
+        "ovr": 61,
+        "stamina": 57,
+        "velocity": 69,
+        "command": 63,
+        "control": 70,
+        "movement": 66,
+        "mentality": 60,
+        "recovery": 64
       },
       "batting": {
-        "ovr": 60,
-        "contact": 61,
-        "power": 62,
-        "eye": 63,
-        "discipline": 66,
-        "speed": 56,
-        "fielding": 65,
-        "arm": 62,
-        "battingClutch": 60,
-        "baseInstinct": 54,
-        "bunting": 44,
-        "platoon": 50
+        "ovr": 48,
+        "contact": 44,
+        "power": 46,
+        "eye": 47,
+        "discipline": 43,
+        "speed": 43,
+        "fielding": 44,
+        "arm": 42,
+        "battingClutch": 40
       },
-      "developmentRate": 55,
-      "potentialHidden": 66,
-      "primaryPosition": "LF",
-      "positionRatings": {
-        "LF": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 3,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 39,
+      "potentialHidden": 86
     },
     "coach": {
       "specialty": "-",
@@ -106,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 55,
-  "popularity": 41
+  }
 }

@@ -1,9 +1,9 @@
 {
   "id": "PLY_00009",
   "name": "권성민",
-  "nameEn": "Kwon Seongmin",
+  "nameEn": "Hong Tae-hyun",
   "role": "player",
-  "age": 18,
+  "age": 17,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "C",
       "jerseyNumber": 9,
       "pitching": {
-        "ovr": 35,
-        "stamina": 33,
-        "velocity": 31,
-        "command": 36,
-        "control": 36,
-        "movement": 36,
-        "mentality": 39,
-        "recovery": 33,
-        "clutch": 35,
-        "holdRunners": 35
+        "ovr": 43,
+        "stamina": 72,
+        "velocity": 63,
+        "command": 51,
+        "control": 52,
+        "movement": 56,
+        "mentality": 66,
+        "recovery": 53
       },
       "batting": {
-        "ovr": 55,
-        "contact": 59,
-        "power": 52,
-        "eye": 54,
-        "discipline": 54,
-        "speed": 53,
-        "fielding": 60,
-        "arm": 54,
-        "battingClutch": 46,
-        "baseInstinct": 55,
-        "bunting": 43,
-        "platoon": 51
+        "ovr": 61,
+        "contact": 55,
+        "power": 49,
+        "eye": 50,
+        "discipline": 58,
+        "speed": 67,
+        "fielding": 55,
+        "arm": 58,
+        "battingClutch": 65
       },
       "developmentRate": 67,
-      "potentialHidden": 74,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 55
-      }
+      "potentialHidden": 74
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

@@ -1,6 +1,6 @@
 {
   "id": "PLY_16635",
-  "name": "톰슨 에릭",
+  "name": "Thompson Eric",
   "nameEn": "Thompson Eric",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 52,
   "popularity": 29,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 82,
       "proServiceYears": 3,
       "pitching": {
-        "ovr": 72,
-        "stamina": 66,
-        "velocity": 77,
-        "command": 64,
-        "control": 70,
-        "movement": 74,
-        "mentality": 69,
-        "recovery": 73,
-        "clutch": 60,
-        "holdRunners": 59
+        "ovr": 73,
+        "stamina": 67,
+        "velocity": 78,
+        "command": 65,
+        "control": 71,
+        "movement": 75,
+        "mentality": 70,
+        "recovery": 74,
+        "clutch": 61,
+        "holdRunners": 60
       },
       "batting": {
         "ovr": 73,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

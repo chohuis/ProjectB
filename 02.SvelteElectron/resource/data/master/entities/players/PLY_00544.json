@@ -1,14 +1,14 @@
 {
   "id": "PLY_00544",
   "name": "주성현",
-  "nameEn": "Joo Seonghyeon",
+  "nameEn": "Lee Yeon-woo",
   "role": "player",
   "age": 31,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_BEARGUARDIANS",
-  "teamId": "TEAM_KBL_BEARGUARDIANS_2",
+  "clubId": "CLUB_KBL_SAMSUNG",
+  "teamId": "TEAM_KBL_SAMSUNG_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,48 +19,28 @@
       "position": "2B",
       "jerseyNumber": 44,
       "pitching": {
-        "ovr": 46,
-        "stamina": 47,
-        "velocity": 41,
-        "command": 45,
-        "control": 42,
-        "movement": 44,
-        "mentality": 44,
-        "recovery": 51,
-        "clutch": 41,
-        "holdRunners": 39
+        "ovr": 39,
+        "stamina": 34,
+        "velocity": 36,
+        "command": 33,
+        "control": 31,
+        "movement": 31,
+        "mentality": 31,
+        "recovery": 32
       },
       "batting": {
-        "ovr": 66,
-        "contact": 69,
-        "power": 65,
-        "eye": 72,
-        "discipline": 72,
-        "speed": 72,
-        "fielding": 67,
-        "arm": 71,
-        "battingClutch": 60,
-        "baseInstinct": 60,
-        "bunting": 61,
-        "platoon": 54
+        "ovr": 67,
+        "contact": 64,
+        "power": 63,
+        "eye": 66,
+        "discipline": 64,
+        "speed": 73,
+        "fielding": 65,
+        "arm": 68,
+        "battingClutch": 72
       },
       "developmentRate": 43,
-      "potentialHidden": 65,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 66
-      },
-      "proServiceYears": 9,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 65
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

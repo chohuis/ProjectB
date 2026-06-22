@@ -1,61 +1,46 @@
 {
   "id": "PLY_01618",
-  "name": "우준서",
-  "nameEn": "Woo Junseo",
+  "name": "사사키 료",
+  "nameEn": "Sasaki Ryo",
   "role": "player",
-  "age": 18,
+  "age": 31,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_SUWON_EDGE",
-  "teamId": "TEAM_HS_SUWON_EDGE",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_SUWON_EDGE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TEMPOSTINGS",
+  "teamId": "TEAM_JBL_CL_TEMPOSTINGS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "SS",
-      "jerseyNumber": 27,
+      "position": "RP",
+      "jerseyNumber": 38,
       "pitching": {
-        "ovr": 36,
-        "stamina": 36,
-        "velocity": 40,
-        "command": 39,
-        "control": 32,
-        "movement": 38,
-        "mentality": 40,
-        "recovery": 36,
-        "clutch": 39,
-        "holdRunners": 33
+        "ovr": 64,
+        "stamina": 54,
+        "velocity": 70,
+        "command": 62,
+        "control": 59,
+        "movement": 66,
+        "mentality": 59,
+        "recovery": 59
       },
       "batting": {
-        "ovr": 56,
-        "contact": 56,
-        "power": 55,
-        "eye": 60,
-        "discipline": 62,
-        "speed": 52,
-        "fielding": 51,
-        "arm": 59,
-        "battingClutch": 53,
-        "baseInstinct": 47,
-        "bunting": 47,
-        "platoon": 50
+        "ovr": 35,
+        "contact": 43,
+        "power": 42,
+        "eye": 34,
+        "discipline": 38,
+        "speed": 41,
+        "fielding": 34,
+        "arm": 35,
+        "battingClutch": 39
       },
-      "developmentRate": 76,
-      "potentialHidden": 81,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 49,
+      "potentialHidden": 71
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 69,
-  "popularity": 34
+  }
 }

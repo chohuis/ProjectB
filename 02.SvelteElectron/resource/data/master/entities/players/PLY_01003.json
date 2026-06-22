@@ -1,14 +1,14 @@
 {
   "id": "PLY_01003",
   "name": "스콧 리엄",
-  "nameEn": "Seu 콧 리엄",
+  "nameEn": "Scott Liam",
   "role": "player",
   "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_SPACECOMETS",
-  "teamId": "TEAM_ABL_SPACECOMETS_1",
+  "clubId": "CLUB_ABL_SEA",
+  "teamId": "TEAM_ABL_SEA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:베네수엘라",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 3,
       "pitching": {
-        "ovr": 77,
-        "stamina": 82,
-        "velocity": 81,
-        "command": 73,
-        "control": 77,
-        "movement": 74,
-        "mentality": 78,
-        "recovery": 74,
-        "clutch": 71,
-        "holdRunners": 67
+        "ovr": 82,
+        "stamina": 85,
+        "velocity": 88,
+        "command": 84,
+        "control": 81,
+        "movement": 84,
+        "mentality": 87,
+        "recovery": 81
       },
       "batting": {
-        "ovr": 59,
-        "contact": 64,
-        "power": 62,
-        "eye": 57,
-        "discipline": 57,
-        "speed": 56,
-        "fielding": 62,
-        "arm": 64,
-        "battingClutch": 60,
-        "baseInstinct": 49,
-        "bunting": 42,
-        "platoon": 55
+        "ovr": 56,
+        "contact": 54,
+        "power": 53,
+        "eye": 53,
+        "discipline": 58,
+        "speed": 50,
+        "fielding": 52,
+        "arm": 55,
+        "battingClutch": 58
       },
       "developmentRate": 38,
-      "potentialHidden": 68,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 77
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_FORKBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 2,
-      "contract": {
-        "salary": 27100,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 68
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

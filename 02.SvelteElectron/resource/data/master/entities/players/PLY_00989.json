@@ -1,14 +1,14 @@
 {
   "id": "PLY_00989",
   "name": "앤더슨 니콜라스",
-  "nameEn": "Aen 더슨 니콜라스",
+  "nameEn": "Anderson Nicholas",
   "role": "player",
   "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_WINDBEARS",
-  "teamId": "TEAM_ABL_WINDBEARS_2",
+  "clubId": "CLUB_ABL_TOR",
+  "teamId": "TEAM_ABL_TOR_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
@@ -19,58 +19,28 @@
       "position": "CP",
       "jerseyNumber": 49,
       "pitching": {
-        "ovr": 71,
-        "stamina": 71,
-        "velocity": 66,
-        "command": 69,
-        "control": 67,
-        "movement": 74,
-        "mentality": 75,
-        "recovery": 76,
-        "clutch": 59,
-        "holdRunners": 63
+        "ovr": 77,
+        "stamina": 68,
+        "velocity": 82,
+        "command": 82,
+        "control": 80,
+        "movement": 76,
+        "mentality": 81,
+        "recovery": 73
       },
       "batting": {
-        "ovr": 53,
-        "contact": 57,
-        "power": 53,
-        "eye": 49,
+        "ovr": 51,
+        "contact": 54,
+        "power": 54,
+        "eye": 52,
         "discipline": 50,
-        "speed": 55,
-        "fielding": 50,
-        "arm": 47,
-        "battingClutch": 48,
-        "baseInstinct": 50,
-        "bunting": 38,
-        "platoon": 47
+        "speed": 50,
+        "fielding": 55,
+        "arm": 48,
+        "battingClutch": 55
       },
       "developmentRate": 43,
-      "potentialHidden": 83,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 71
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 3,
-      "contract": {
-        "salary": 22500,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 83
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,14 +1,14 @@
 {
   "id": "PLY_01319",
   "name": "스미스 다니엘",
-  "nameEn": "Seu 미스 다니엘",
+  "nameEn": "Smith Daniel",
   "role": "player",
   "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_MOUNTAINPEAKS",
-  "teamId": "TEAM_ABL_MOUNTAINPEAKS_1",
+  "clubId": "CLUB_ABL_STL",
+  "teamId": "TEAM_ABL_STL",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 4,
       "pitching": {
-        "ovr": 83,
-        "stamina": 89,
-        "velocity": 79,
-        "command": 86,
-        "control": 86,
-        "movement": 87,
-        "mentality": 80,
-        "recovery": 87,
-        "clutch": 82,
-        "holdRunners": 76
+        "ovr": 92,
+        "stamina": 93,
+        "velocity": 94,
+        "command": 92,
+        "control": 90,
+        "movement": 94,
+        "mentality": 96,
+        "recovery": 95
       },
       "batting": {
-        "ovr": 65,
-        "contact": 70,
-        "power": 70,
-        "eye": 71,
-        "discipline": 64,
-        "speed": 64,
-        "fielding": 63,
-        "arm": 61,
-        "battingClutch": 54,
-        "baseInstinct": 58,
-        "bunting": 59,
-        "platoon": 57
+        "ovr": 67,
+        "contact": 67,
+        "power": 63,
+        "eye": 59,
+        "discipline": 65,
+        "speed": 59,
+        "fielding": 58,
+        "arm": 65,
+        "battingClutch": 61
       },
       "developmentRate": 39,
-      "potentialHidden": 65,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 83
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 2,
-      "contract": {
-        "salary": 31700,
-        "durationYears": 4,
-        "remainingYears": 4,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 65
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,61 +1,46 @@
 {
   "id": "PLY_01639",
-  "name": "서주원",
-  "nameEn": "Seo Juwon",
+  "name": "아베 히라쿠",
+  "nameEn": "Abe Hiraku",
   "role": "player",
-  "age": 17,
+  "age": 32,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_YEOSU_SHORE",
-  "teamId": "TEAM_HS_YEOSU_SHORE",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_YEOSU_SHORE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONDRAKES",
+  "teamId": "TEAM_JBL_CL_IRONDRAKES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
-      "handedness": "R",
-      "position": "3B",
-      "jerseyNumber": 18,
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "RP",
+      "jerseyNumber": 9,
       "pitching": {
-        "ovr": 31,
-        "stamina": 35,
-        "velocity": 28,
-        "command": 36,
-        "control": 29,
-        "movement": 28,
-        "mentality": 34,
-        "recovery": 35,
-        "clutch": 45,
-        "holdRunners": 35
+        "ovr": 80,
+        "stamina": 66,
+        "velocity": 78,
+        "command": 75,
+        "control": 74,
+        "movement": 79,
+        "mentality": 76,
+        "recovery": 79
       },
       "batting": {
-        "ovr": 51,
-        "contact": 50,
-        "power": 48,
-        "eye": 46,
-        "discipline": 46,
-        "speed": 56,
-        "fielding": 52,
-        "arm": 53,
-        "battingClutch": 47,
-        "baseInstinct": 50,
-        "bunting": 44,
-        "platoon": 42
+        "ovr": 50,
+        "contact": 51,
+        "power": 52,
+        "eye": 52,
+        "discipline": 53,
+        "speed": 51,
+        "fielding": 51,
+        "arm": 48,
+        "battingClutch": 47
       },
-      "developmentRate": 65,
-      "potentialHidden": 64,
-      "primaryPosition": "3B",
-      "positionRatings": {
-        "3B": 51
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 40,
+      "potentialHidden": 80
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 52,
-  "popularity": 48
+  }
 }

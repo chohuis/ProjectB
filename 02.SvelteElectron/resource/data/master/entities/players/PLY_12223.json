@@ -1,7 +1,7 @@
 {
   "id": "PLY_12223",
-  "name": "로빈슨 트레버",
-  "nameEn": "Robinson Trevor",
+  "name": "Anderson Chris",
+  "nameEn": "Anderson Chris",
   "role": "player",
   "age": 28,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 49,
-  "popularity": 32,
+  "notes": "국적:파나마",
+  "diligence": 46,
+  "popularity": 31,
   "militaryStatus": "군필",
   "entryYear": 2040,
   "entryLeague": "LEAGUE_ABL",
@@ -21,57 +21,43 @@
   "entryAge": 28,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 65,
-      "primaryPosition": "SP",
-      "developmentRate": 46,
-      "potentialHidden": 78,
+      "position": "RF",
+      "jerseyNumber": 54,
+      "primaryPosition": "RF",
+      "developmentRate": 63,
+      "potentialHidden": 62,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 74,
-        "stamina": 67,
-        "velocity": 82,
-        "command": 68,
-        "control": 75,
-        "movement": 72,
-        "mentality": 75,
-        "recovery": 69,
+        "ovr": 78,
+        "stamina": 73,
+        "velocity": 83,
+        "command": 71,
+        "control": 72,
+        "movement": 80,
+        "mentality": 77,
+        "recovery": 76,
         "clutch": 74,
-        "holdRunners": 65
+        "holdRunners": 63
       },
       "batting": {
-        "ovr": 71,
-        "contact": 73,
-        "power": 66,
-        "eye": 66,
-        "discipline": 72,
-        "speed": 76,
-        "baseInstinct": 61,
-        "bunting": 57,
+        "ovr": 78,
+        "contact": 80,
+        "power": 76,
+        "eye": 70,
+        "discipline": 81,
+        "speed": 84,
+        "baseInstinct": 78,
+        "bunting": 64,
         "platoon": 50,
-        "fielding": 64,
-        "arm": 71,
-        "battingClutch": 58
+        "fielding": 72,
+        "arm": 69,
+        "battingClutch": 66
       },
       "positionRatings": {
-        "SP": 71
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "RF": 78
+      }
     },
     "coach": null,
     "manager": null,

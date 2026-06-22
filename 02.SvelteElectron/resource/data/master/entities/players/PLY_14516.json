@@ -1,6 +1,6 @@
 {
   "id": "PLY_14516",
-  "name": "리 마커스",
+  "name": "Lee Marcus",
   "nameEn": "Lee Marcus",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 53,
   "popularity": 37,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 76,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 52,
-        "stamina": 47,
-        "velocity": 52,
-        "command": 52,
-        "control": 52,
-        "movement": 49,
-        "mentality": 50,
-        "recovery": 44,
-        "clutch": 44,
-        "holdRunners": 37
+        "ovr": 53,
+        "stamina": 48,
+        "velocity": 53,
+        "command": 53,
+        "control": 53,
+        "movement": 50,
+        "mentality": 51,
+        "recovery": 45,
+        "clutch": 45,
+        "holdRunners": 38
       },
       "batting": {
         "ovr": 53,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 53
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,14 +1,14 @@
 {
   "id": "PLY_00672",
   "name": "김정우",
-  "nameEn": "Kim Jeongu",
+  "nameEn": "Nam Jae-hyun",
   "role": "player",
   "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_EMBERTIGERS",
-  "teamId": "TEAM_KBL_EMBERTIGERS_2",
+  "clubId": "CLUB_KBL_KT",
+  "teamId": "TEAM_KBL_KT_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 37,
       "pitching": {
-        "ovr": 66,
+        "ovr": 69,
         "stamina": 67,
-        "velocity": 68,
-        "command": 71,
-        "control": 65,
-        "movement": 64,
-        "mentality": 65,
-        "recovery": 64,
-        "clutch": 58,
-        "holdRunners": 60
+        "velocity": 80,
+        "command": 69,
+        "control": 74,
+        "movement": 73,
+        "mentality": 76,
+        "recovery": 75
       },
       "batting": {
-        "ovr": 48,
-        "contact": 54,
-        "power": 44,
-        "eye": 50,
-        "discipline": 54,
-        "speed": 53,
-        "fielding": 52,
-        "arm": 53,
-        "battingClutch": 39,
-        "baseInstinct": 40,
-        "bunting": 41,
-        "platoon": 35
+        "ovr": 44,
+        "contact": 44,
+        "power": 50,
+        "eye": 46,
+        "discipline": 47,
+        "speed": 51,
+        "fielding": 48,
+        "arm": 49,
+        "battingClutch": 45
       },
       "developmentRate": 43,
-      "potentialHidden": 82,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_KNUCKLEBALL",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 3,
-      "contract": {
-        "salary": 5300,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 82
     },
     "coach": {
       "specialty": "-",
@@ -110,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

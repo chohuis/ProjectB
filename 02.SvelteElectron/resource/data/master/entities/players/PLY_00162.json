@@ -1,7 +1,7 @@
 {
   "id": "PLY_00162",
   "name": "성민준",
-  "nameEn": "Seong Minjun",
+  "nameEn": "Park Jun-woo",
   "role": "player",
   "age": 20,
   "status": "active",
@@ -19,47 +19,28 @@
       "position": "SP",
       "jerseyNumber": 2,
       "pitching": {
-        "ovr": 57,
-        "stamina": 55,
-        "velocity": 62,
-        "command": 62,
-        "control": 57,
-        "movement": 61,
-        "mentality": 61,
-        "recovery": 53,
-        "clutch": 50,
-        "holdRunners": 49
+        "ovr": 58,
+        "stamina": 66,
+        "velocity": 61,
+        "command": 58,
+        "control": 58,
+        "movement": 56,
+        "mentality": 62,
+        "recovery": 63
       },
       "batting": {
-        "ovr": 39,
+        "ovr": 36,
         "contact": 37,
-        "power": 36,
-        "eye": 34,
-        "discipline": 44,
-        "speed": 41,
+        "power": 40,
+        "eye": 36,
+        "discipline": 32,
+        "speed": 34,
         "fielding": 39,
-        "arm": 40,
-        "battingClutch": 43,
-        "baseInstinct": 40,
-        "bunting": 40,
-        "platoon": 34
+        "arm": 39,
+        "battingClutch": 33
       },
       "developmentRate": 58,
-      "potentialHidden": 65,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 65
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

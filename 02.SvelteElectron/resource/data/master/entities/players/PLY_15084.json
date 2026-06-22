@@ -1,6 +1,6 @@
 {
   "id": "PLY_15084",
-  "name": "브라운 케빈",
+  "name": "Brown Kevin",
   "nameEn": "Brown Kevin",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 75,
   "popularity": 38,
   "militaryStatus": "군필",

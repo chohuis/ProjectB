@@ -1,65 +1,46 @@
 {
   "id": "PLY_01748",
-  "name": "송태우",
-  "nameEn": "Song Taewoo",
+  "name": "사사키 코지",
+  "nameEn": "Sasaki Koji",
   "role": "player",
-  "age": 16,
+  "age": 24,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_MASAN_HARBOR",
-  "teamId": "TEAM_HS_MASAN_HARBOR",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_MASAN_HARBOR",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+  "teamId": "TEAM_JBL_CL_SILVERWOLVES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
-      "position": "RP",
-      "jerseyNumber": 7,
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 33,
       "pitching": {
-        "ovr": 43,
-        "stamina": 41,
-        "velocity": 38,
-        "command": 40,
-        "control": 40,
-        "movement": 44,
-        "mentality": 39,
-        "recovery": 48,
-        "clutch": 44,
-        "holdRunners": 32
+        "ovr": 64,
+        "stamina": 67,
+        "velocity": 73,
+        "command": 70,
+        "control": 67,
+        "movement": 63,
+        "mentality": 64,
+        "recovery": 66
       },
       "batting": {
-        "ovr": 25,
-        "contact": 26,
-        "power": 29,
-        "eye": 21,
-        "discipline": 25,
-        "speed": 31,
-        "fielding": 26,
-        "arm": 20,
-        "battingClutch": 44,
-        "baseInstinct": 37,
-        "bunting": 28,
-        "platoon": 38
+        "ovr": 45,
+        "contact": 46,
+        "power": 44,
+        "eye": 48,
+        "discipline": 41,
+        "speed": 47,
+        "fielding": 48,
+        "arm": 48,
+        "battingClutch": 46
       },
-      "developmentRate": 85,
-      "potentialHidden": 72,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 43
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 2
-        }
-      ]
+      "developmentRate": 47,
+      "potentialHidden": 74
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 52,
-  "popularity": 29
+  }
 }

@@ -1,14 +1,14 @@
 {
   "id": "PLY_00956",
   "name": "라미레스 매튜",
-  "nameEn": "Ra 미레스 매튜",
+  "nameEn": "Ramirez Matthew",
   "role": "player",
   "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_WINDBEARS",
-  "teamId": "TEAM_ABL_WINDBEARS_1",
+  "clubId": "CLUB_ABL_TOR",
+  "teamId": "TEAM_ABL_TOR",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 1,
       "pitching": {
-        "ovr": 80,
-        "stamina": 84,
-        "velocity": 76,
-        "command": 76,
-        "control": 85,
-        "movement": 82,
-        "mentality": 78,
-        "recovery": 84,
-        "clutch": 78,
-        "holdRunners": 68
+        "ovr": 92,
+        "stamina": 94,
+        "velocity": 92,
+        "command": 91,
+        "control": 90,
+        "movement": 87,
+        "mentality": 87,
+        "recovery": 87
       },
       "batting": {
-        "ovr": 62,
-        "contact": 65,
+        "ovr": 65,
+        "contact": 62,
         "power": 66,
-        "eye": 63,
-        "discipline": 57,
-        "speed": 62,
-        "fielding": 58,
-        "arm": 66,
-        "battingClutch": 55,
-        "baseInstinct": 58,
-        "bunting": 50,
-        "platoon": 58
+        "eye": 67,
+        "discipline": 65,
+        "speed": 68,
+        "fielding": 66,
+        "arm": 68,
+        "battingClutch": 69
       },
       "developmentRate": 50,
-      "potentialHidden": 63,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 80
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 29400,
-        "durationYears": 4,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 63
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

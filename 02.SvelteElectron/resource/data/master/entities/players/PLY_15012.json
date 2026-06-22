@@ -1,6 +1,6 @@
 {
   "id": "PLY_15012",
-  "name": "킹 케빈",
+  "name": "King Kevin",
   "nameEn": "King Kevin",
   "role": "player",
   "age": 29,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 70,
   "popularity": 50,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 50,
       "proServiceYears": 7,
       "pitching": {
-        "ovr": 65,
-        "stamina": 55,
-        "velocity": 69,
-        "command": 62,
-        "control": 67,
-        "movement": 63,
-        "mentality": 61,
-        "recovery": 56,
-        "clutch": 55,
-        "holdRunners": 48
+        "ovr": 58,
+        "stamina": 49,
+        "velocity": 62,
+        "command": 55,
+        "control": 60,
+        "movement": 56,
+        "mentality": 54,
+        "recovery": 50,
+        "clutch": 49,
+        "holdRunners": 43
       },
       "batting": {
         "ovr": 58,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

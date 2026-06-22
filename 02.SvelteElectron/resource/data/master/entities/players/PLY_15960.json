@@ -1,6 +1,6 @@
 {
   "id": "PLY_15960",
-  "name": "토마스 딜런",
+  "name": "Thomas Dylan",
   "nameEn": "Thomas Dylan",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 58,
   "popularity": 17,
   "militaryStatus": "군필",
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 45
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

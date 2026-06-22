@@ -1,9 +1,9 @@
 {
   "id": "PLY_10423",
-  "name": "마르티네스 카일",
-  "nameEn": "Martinez Kyle",
+  "name": "Rodriguez Carlos",
+  "nameEn": "Rodriguez Carlos",
   "role": "player",
-  "age": 35,
+  "age": 30,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 48,
-  "popularity": 38,
+  "notes": "국적:베네수엘라",
+  "diligence": 62,
+  "popularity": 36,
   "militaryStatus": "군필",
   "entryYear": 2029,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 35,
+  "entryAge": 30,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 48,
+      "jerseyNumber": 61,
       "primaryPosition": "SP",
-      "developmentRate": 53,
-      "potentialHidden": 60,
-      "proServiceYears": 13,
+      "developmentRate": 55,
+      "potentialHidden": 63,
+      "proServiceYears": 8,
       "pitching": {
-        "ovr": 81,
-        "stamina": 81,
-        "velocity": 85,
-        "command": 85,
-        "control": 77,
-        "movement": 74,
-        "mentality": 75,
-        "recovery": 77,
-        "clutch": 66,
-        "holdRunners": 73
+        "ovr": 71,
+        "stamina": 68,
+        "velocity": 75,
+        "command": 73,
+        "control": 75,
+        "movement": 70,
+        "mentality": 66,
+        "recovery": 61,
+        "clutch": 60,
+        "holdRunners": 68
       },
       "batting": {
-        "ovr": 69,
+        "ovr": 71,
         "contact": 72,
-        "power": 59,
-        "eye": 69,
-        "discipline": 72,
-        "speed": 73,
-        "baseInstinct": 62,
-        "bunting": 50,
+        "power": 69,
+        "eye": 72,
+        "discipline": 61,
+        "speed": 64,
+        "baseInstinct": 67,
+        "bunting": 55,
         "platoon": 50,
-        "fielding": 63,
+        "fielding": 69,
         "arm": 72,
         "battingClutch": 59
       },
       "positionRatings": {
-        "SP": 69
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+        "SP": 71
+      }
     },
     "coach": null,
     "manager": null,

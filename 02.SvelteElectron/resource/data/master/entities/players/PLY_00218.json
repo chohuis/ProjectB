@@ -1,7 +1,7 @@
 {
   "id": "PLY_00218",
   "name": "차상현",
-  "nameEn": "Cha Sanghyeon",
+  "nameEn": "Ahn Seung-woo",
   "role": "player",
   "age": 21,
   "status": "active",
@@ -20,36 +20,27 @@
       "jerseyNumber": 18,
       "pitching": {
         "ovr": 43,
-        "stamina": 47,
-        "velocity": 44,
-        "command": 48,
-        "control": 41,
-        "movement": 48,
-        "mentality": 44,
-        "recovery": 41,
-        "clutch": 41,
-        "holdRunners": 42
+        "stamina": 34,
+        "velocity": 46,
+        "command": 39,
+        "control": 39,
+        "movement": 37,
+        "mentality": 36,
+        "recovery": 36
       },
       "batting": {
-        "ovr": 63,
-        "contact": 60,
-        "power": 62,
-        "eye": 65,
-        "discipline": 61,
-        "speed": 58,
+        "ovr": 65,
+        "contact": 69,
+        "power": 65,
+        "eye": 63,
+        "discipline": 60,
+        "speed": 64,
         "fielding": 68,
-        "arm": 69,
-        "battingClutch": 58,
-        "baseInstinct": 56,
-        "bunting": 54,
-        "platoon": 55
+        "arm": 67,
+        "battingClutch": 64
       },
       "developmentRate": 56,
-      "potentialHidden": 87,
-      "primaryPosition": "CF",
-      "positionRatings": {
-        "CF": 63
-      }
+      "potentialHidden": 87
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

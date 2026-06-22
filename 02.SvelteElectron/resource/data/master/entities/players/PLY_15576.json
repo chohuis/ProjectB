@@ -1,6 +1,6 @@
 {
   "id": "PLY_15576",
-  "name": "테일러 네이선",
+  "name": "Taylor Nathan",
   "nameEn": "Taylor Nathan",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 82,
   "popularity": 23,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 75,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 53,
-        "stamina": 53,
-        "velocity": 63,
-        "command": 47,
-        "control": 55,
-        "movement": 48,
-        "mentality": 57,
-        "recovery": 51,
-        "clutch": 48,
-        "holdRunners": 51
+        "ovr": 54,
+        "stamina": 54,
+        "velocity": 64,
+        "command": 48,
+        "control": 56,
+        "movement": 49,
+        "mentality": 58,
+        "recovery": 52,
+        "clutch": 49,
+        "holdRunners": 52
       },
       "batting": {
         "ovr": 54,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 54
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

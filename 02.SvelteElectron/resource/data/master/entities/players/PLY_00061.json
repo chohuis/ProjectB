@@ -1,9 +1,9 @@
 {
   "id": "PLY_00061",
   "name": "허준혁",
-  "nameEn": "Heo Junhyeok",
+  "nameEn": "Cho Tae-woo",
   "role": "player",
-  "age": 19,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,51 +19,28 @@
       "position": "SP",
       "jerseyNumber": 1,
       "pitching": {
-        "ovr": 55,
-        "stamina": 60,
-        "velocity": 52,
-        "command": 61,
-        "control": 54,
-        "movement": 52,
-        "mentality": 58,
-        "recovery": 55,
-        "clutch": 54,
-        "holdRunners": 48
+        "ovr": 62,
+        "stamina": 68,
+        "velocity": 59,
+        "command": 53,
+        "control": 62,
+        "movement": 53,
+        "mentality": 62,
+        "recovery": 59
       },
       "batting": {
-        "ovr": 37,
-        "contact": 43,
-        "power": 36,
-        "eye": 40,
-        "discipline": 40,
-        "speed": 38,
-        "fielding": 34,
-        "arm": 32,
-        "battingClutch": 45,
-        "baseInstinct": 37,
-        "bunting": 37,
-        "platoon": 39
+        "ovr": 52,
+        "contact": 62,
+        "power": 54,
+        "eye": 66,
+        "discipline": 58,
+        "speed": 63,
+        "fielding": 60,
+        "arm": 55,
+        "battingClutch": 51
       },
       "developmentRate": 63,
-      "potentialHidden": 82,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 55
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 2
-        }
-      ]
+      "potentialHidden": 82
     },
     "coach": {
       "specialty": "-",
@@ -103,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

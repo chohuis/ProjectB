@@ -1,6 +1,6 @@
 {
   "id": "PLY_15529",
-  "name": "로드리게스 마커스",
+  "name": "Rodriguez Marcus",
   "nameEn": "Rodriguez Marcus",
   "role": "player",
   "age": 30,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 65,
   "popularity": 41,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 55
       },
       "batting": {
-        "ovr": 71,
-        "contact": 68,
-        "power": 70,
-        "eye": 70,
-        "discipline": 66,
-        "speed": 64,
-        "baseInstinct": 60,
-        "bunting": 56,
-        "platoon": 55,
-        "fielding": 67,
-        "arm": 61,
-        "battingClutch": 67
+        "ovr": 65,
+        "contact": 62,
+        "power": 64,
+        "eye": 64,
+        "discipline": 60,
+        "speed": 59,
+        "baseInstinct": 55,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 56,
+        "battingClutch": 61
       },
       "positionRatings": {
         "1B": 65

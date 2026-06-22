@@ -1,14 +1,14 @@
 {
   "id": "PLY_00749",
   "name": "정재현",
-  "nameEn": "Jeong Jaehyeon",
+  "nameEn": "Son Yong-jun",
   "role": "player",
   "age": 33,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_STEELDINOS",
-  "teamId": "TEAM_KBL_STEELDINOS_1",
+  "clubId": "CLUB_KBL_LOTTE",
+  "teamId": "TEAM_KBL_LOTTE_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,48 +19,28 @@
       "position": "SS",
       "jerseyNumber": 19,
       "pitching": {
-        "ovr": 63,
-        "stamina": 64,
-        "velocity": 58,
-        "command": 59,
-        "control": 65,
-        "movement": 64,
-        "mentality": 64,
-        "recovery": 66,
-        "clutch": 57,
-        "holdRunners": 54
+        "ovr": 57,
+        "stamina": 61,
+        "velocity": 67,
+        "command": 64,
+        "control": 60,
+        "movement": 57,
+        "mentality": 58,
+        "recovery": 55
       },
       "batting": {
-        "ovr": 83,
-        "contact": 79,
-        "power": 82,
-        "eye": 83,
-        "discipline": 85,
-        "speed": 77,
-        "fielding": 88,
-        "arm": 79,
-        "battingClutch": 82,
-        "baseInstinct": 78,
-        "bunting": 77,
-        "platoon": 80
+        "ovr": 88,
+        "contact": 86,
+        "power": 80,
+        "eye": 90,
+        "discipline": 82,
+        "speed": 93,
+        "fielding": 84,
+        "arm": 87,
+        "battingClutch": 85
       },
       "developmentRate": 51,
-      "potentialHidden": 77,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 83
-      },
-      "proServiceYears": 11,
-      "contract": {
-        "salary": 4700,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 77
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,9 +1,9 @@
 {
   "id": "PLY_10681",
-  "name": "스미스 헌터",
-  "nameEn": "Smith Hunter",
+  "name": "Brown Cody",
+  "nameEn": "Brown Cody",
   "role": "player",
-  "age": 34,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 52,
-  "popularity": 12,
+  "notes": "국적:베네수엘라",
+  "diligence": 67,
+  "popularity": 11,
   "militaryStatus": "군필",
   "entryYear": 2031,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 34,
+  "entryAge": 20,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 38,
+      "jerseyNumber": 77,
       "primaryPosition": "SP",
-      "developmentRate": 41,
-      "potentialHidden": 55,
-      "proServiceYears": 12,
+      "developmentRate": 56,
+      "potentialHidden": 72,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 73,
-        "stamina": 72,
-        "velocity": 70,
-        "command": 66,
-        "control": 75,
-        "movement": 72,
-        "mentality": 79,
-        "recovery": 64,
-        "clutch": 68,
-        "holdRunners": 65
+        "ovr": 53,
+        "stamina": 53,
+        "velocity": 63,
+        "command": 46,
+        "control": 53,
+        "movement": 51,
+        "mentality": 53,
+        "recovery": 48,
+        "clutch": 51,
+        "holdRunners": 45
       },
       "batting": {
-        "ovr": 63,
-        "contact": 60,
-        "power": 58,
-        "eye": 64,
-        "discipline": 59,
-        "speed": 61,
-        "baseInstinct": 63,
-        "bunting": 47,
+        "ovr": 53,
+        "contact": 50,
+        "power": 54,
+        "eye": 47,
+        "discipline": 47,
+        "speed": 49,
+        "baseInstinct": 49,
+        "bunting": 39,
         "platoon": 50,
-        "fielding": 56,
-        "arm": 55,
-        "battingClutch": 57
+        "fielding": 44,
+        "arm": 47,
+        "battingClutch": 47
       },
       "positionRatings": {
-        "SP": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 53
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_15603",
-  "name": "루이스 에릭",
+  "name": "Lewis Eric",
   "nameEn": "Lewis Eric",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 55,
   "popularity": 28,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 75,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 71,
-        "stamina": 75,
-        "velocity": 72,
-        "command": 63,
-        "control": 66,
-        "movement": 62,
-        "mentality": 72,
-        "recovery": 61,
-        "clutch": 58,
-        "holdRunners": 56
+        "ovr": 65,
+        "stamina": 69,
+        "velocity": 66,
+        "command": 58,
+        "control": 60,
+        "movement": 57,
+        "mentality": 66,
+        "recovery": 56,
+        "clutch": 53,
+        "holdRunners": 51
       },
       "batting": {
         "ovr": 65,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

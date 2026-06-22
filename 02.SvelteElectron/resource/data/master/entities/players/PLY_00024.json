@@ -1,9 +1,9 @@
 {
   "id": "PLY_00024",
   "name": "안민준",
-  "nameEn": "Ahn Minjun",
+  "nameEn": "Son Jae-won",
   "role": "player",
-  "age": 18,
+  "age": 17,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,43 +19,28 @@
       "position": "SP",
       "jerseyNumber": 4,
       "pitching": {
-        "ovr": 53,
-        "stamina": 54,
-        "velocity": 56,
-        "command": 51,
+        "ovr": 57,
+        "stamina": 59,
+        "velocity": 52,
+        "command": 67,
         "control": 48,
-        "movement": 55,
-        "mentality": 55,
-        "recovery": 51,
-        "clutch": 51,
-        "holdRunners": 48
+        "movement": 63,
+        "mentality": 52,
+        "recovery": 64
       },
       "batting": {
-        "ovr": 35,
-        "contact": 37,
-        "power": 33,
-        "eye": 37,
-        "discipline": 33,
-        "speed": 31,
-        "fielding": 30,
-        "arm": 34,
-        "battingClutch": 43,
-        "baseInstinct": 43,
-        "bunting": 42,
-        "platoon": 34
+        "ovr": 41,
+        "contact": 50,
+        "power": 57,
+        "eye": 50,
+        "discipline": 61,
+        "speed": 67,
+        "fielding": 52,
+        "arm": 63,
+        "battingClutch": 62
       },
       "developmentRate": 56,
-      "potentialHidden": 71,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 53
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        }
-      ]
+      "potentialHidden": 71
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

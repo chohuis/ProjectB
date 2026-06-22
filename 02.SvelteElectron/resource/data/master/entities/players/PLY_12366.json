@@ -1,9 +1,9 @@
 {
   "id": "PLY_12366",
-  "name": "스미스 콜",
-  "nameEn": "Smith Cole",
+  "name": "Mitchell Luis",
+  "nameEn": "Mitchell Luis",
   "role": "player",
-  "age": 18,
+  "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 77,
-  "popularity": 29,
+  "notes": "국적:쿠바",
+  "diligence": 46,
+  "popularity": 10,
   "militaryStatus": "군필",
   "entryYear": 2041,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 18,
+  "entryAge": 26,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 80,
-      "primaryPosition": "SP",
-      "developmentRate": 69,
-      "potentialHidden": 85,
-      "proServiceYears": 0,
+      "position": "1B",
+      "jerseyNumber": 76,
+      "primaryPosition": "1B",
+      "developmentRate": 48,
+      "potentialHidden": 86,
+      "proServiceYears": 4,
       "pitching": {
-        "ovr": 56,
-        "stamina": 48,
-        "velocity": 58,
-        "command": 53,
-        "control": 54,
-        "movement": 49,
-        "mentality": 62,
-        "recovery": 58,
-        "clutch": 49,
-        "holdRunners": 47
+        "ovr": 74,
+        "stamina": 74,
+        "velocity": 76,
+        "command": 77,
+        "control": 74,
+        "movement": 77,
+        "mentality": 74,
+        "recovery": 65,
+        "clutch": 68,
+        "holdRunners": 68
       },
       "batting": {
-        "ovr": 60,
-        "contact": 53,
-        "power": 50,
-        "eye": 55,
-        "discipline": 55,
-        "speed": 61,
-        "baseInstinct": 58,
-        "bunting": 51,
+        "ovr": 74,
+        "contact": 73,
+        "power": 68,
+        "eye": 74,
+        "discipline": 69,
+        "speed": 69,
+        "baseInstinct": 75,
+        "bunting": 63,
         "platoon": 50,
-        "fielding": 62,
-        "arm": 63,
-        "battingClutch": 59
+        "fielding": 71,
+        "arm": 71,
+        "battingClutch": 70
       },
       "positionRatings": {
-        "SP": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "1B": 74
+      }
     },
     "coach": null,
     "manager": null,

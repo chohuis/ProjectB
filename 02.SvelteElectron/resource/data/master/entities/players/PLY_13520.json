@@ -1,9 +1,9 @@
 {
   "id": "PLY_13520",
-  "name": "해리스 콜",
-  "nameEn": "Harris Cole",
+  "name": "Scott Daniel",
+  "nameEn": "Scott Daniel",
   "role": "player",
-  "age": 22,
+  "age": 29,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 68,
-  "popularity": 18,
+  "notes": "국적:도미니카",
+  "diligence": 58,
+  "popularity": 19,
   "militaryStatus": "군필",
   "entryYear": 2048,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 22,
+  "entryAge": 29,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 48,
+      "jerseyNumber": 94,
       "primaryPosition": "SP",
-      "developmentRate": 73,
-      "potentialHidden": 92,
-      "proServiceYears": 0,
+      "developmentRate": 50,
+      "potentialHidden": 70,
+      "proServiceYears": 7,
       "pitching": {
-        "ovr": 49,
-        "stamina": 45,
-        "velocity": 57,
-        "command": 51,
-        "control": 52,
-        "movement": 51,
-        "mentality": 48,
-        "recovery": 48,
-        "clutch": 48,
-        "holdRunners": 38
+        "ovr": 63,
+        "stamina": 64,
+        "velocity": 71,
+        "command": 56,
+        "control": 64,
+        "movement": 54,
+        "mentality": 66,
+        "recovery": 51,
+        "clutch": 60,
+        "holdRunners": 53
       },
       "batting": {
-        "ovr": 51,
-        "contact": 56,
-        "power": 42,
-        "eye": 56,
-        "discipline": 50,
-        "speed": 54,
-        "baseInstinct": 45,
-        "bunting": 33,
+        "ovr": 63,
+        "contact": 58,
+        "power": 63,
+        "eye": 58,
+        "discipline": 57,
+        "speed": 61,
+        "baseInstinct": 56,
+        "bunting": 47,
         "platoon": 50,
-        "fielding": 52,
-        "arm": 53,
-        "battingClutch": 48
+        "fielding": 63,
+        "arm": 62,
+        "battingClutch": 57
       },
       "positionRatings": {
-        "SP": 51
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 63
+      }
     },
     "coach": null,
     "manager": null,

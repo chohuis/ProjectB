@@ -1,7 +1,7 @@
 {
   "id": "PLY_00438",
   "name": "홍동현",
-  "nameEn": "Hong Donghyeon",
+  "nameEn": "Sim Yeon-woo",
   "role": "player",
   "age": 19,
   "status": "active",
@@ -19,48 +19,28 @@
       "position": "CF",
       "jerseyNumber": 18,
       "pitching": {
-        "ovr": 40,
-        "stamina": 38,
-        "velocity": 46,
-        "command": 38,
-        "control": 44,
-        "movement": 36,
-        "mentality": 40,
-        "recovery": 43,
-        "clutch": 34,
-        "holdRunners": 34
+        "ovr": 33,
+        "stamina": 29,
+        "velocity": 30,
+        "command": 26,
+        "control": 29,
+        "movement": 27,
+        "mentality": 31,
+        "recovery": 28
       },
       "batting": {
-        "ovr": 60,
-        "contact": 64,
-        "power": 63,
-        "eye": 64,
-        "discipline": 64,
-        "speed": 53,
-        "fielding": 56,
-        "arm": 63,
-        "battingClutch": 58,
-        "baseInstinct": 51,
-        "bunting": 50,
-        "platoon": 51
+        "ovr": 63,
+        "contact": 62,
+        "power": 57,
+        "eye": 58,
+        "discipline": 55,
+        "speed": 65,
+        "fielding": 62,
+        "arm": 58,
+        "battingClutch": 60
       },
       "developmentRate": 58,
-      "potentialHidden": 55,
-      "primaryPosition": "CF",
-      "positionRatings": {
-        "CF": 60
-      },
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 55
     },
     "coach": {
       "specialty": "-",
@@ -100,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

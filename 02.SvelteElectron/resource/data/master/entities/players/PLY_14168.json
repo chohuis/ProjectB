@@ -1,6 +1,6 @@
 {
   "id": "PLY_14168",
-  "name": "무어 타일러",
+  "name": "Moore Tyler",
   "nameEn": "Moore Tyler",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 79,
   "popularity": 43,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 74,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 81,
-        "stamina": 83,
-        "velocity": 83,
-        "command": 83,
-        "control": 76,
-        "movement": 84,
-        "mentality": 85,
-        "recovery": 70,
-        "clutch": 72,
-        "holdRunners": 73
+        "ovr": 75,
+        "stamina": 77,
+        "velocity": 77,
+        "command": 77,
+        "control": 70,
+        "movement": 78,
+        "mentality": 79,
+        "recovery": 65,
+        "clutch": 67,
+        "holdRunners": 68
       },
       "batting": {
         "ovr": 75,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 75
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_16400",
-  "name": "스콧 딜런",
+  "name": "Scott Dylan",
   "nameEn": "Scott Dylan",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 50,
   "popularity": 28,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 60
       },
       "batting": {
-        "ovr": 60,
-        "contact": 54,
-        "power": 59,
-        "eye": 55,
-        "discipline": 54,
-        "speed": 66,
-        "baseInstinct": 54,
-        "bunting": 53,
-        "platoon": 48,
-        "fielding": 53,
-        "arm": 54,
-        "battingClutch": 57
+        "ovr": 62,
+        "contact": 56,
+        "power": 61,
+        "eye": 57,
+        "discipline": 56,
+        "speed": 68,
+        "baseInstinct": 56,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 56,
+        "battingClutch": 59
       },
       "positionRatings": {
         "RF": 62

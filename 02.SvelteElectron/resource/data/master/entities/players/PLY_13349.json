@@ -1,9 +1,9 @@
 {
   "id": "PLY_13349",
-  "name": "데이비스 라이언",
-  "nameEn": "Davis Ryan",
+  "name": "Rodriguez Caleb",
+  "nameEn": "Rodriguez Caleb",
   "role": "player",
-  "age": 18,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 81,
-  "popularity": 29,
+  "notes": "국적:멕시코",
+  "diligence": 79,
+  "popularity": 36,
   "militaryStatus": "군필",
   "entryYear": 2047,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 18,
+  "entryAge": 21,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 66,
-      "primaryPosition": "SP",
-      "developmentRate": 75,
-      "potentialHidden": 73,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 82,
+      "primaryPosition": "2B",
+      "developmentRate": 70,
+      "potentialHidden": 70,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 56,
-        "stamina": 61,
-        "velocity": 55,
-        "command": 57,
-        "control": 57,
-        "movement": 49,
-        "mentality": 51,
-        "recovery": 48,
-        "clutch": 55,
-        "holdRunners": 52
+        "ovr": 51,
+        "stamina": 46,
+        "velocity": 61,
+        "command": 48,
+        "control": 47,
+        "movement": 55,
+        "mentality": 56,
+        "recovery": 49,
+        "clutch": 51,
+        "holdRunners": 49
       },
       "batting": {
-        "ovr": 60,
-        "contact": 62,
-        "power": 53,
-        "eye": 63,
-        "discipline": 58,
-        "speed": 55,
-        "baseInstinct": 57,
-        "bunting": 48,
+        "ovr": 51,
+        "contact": 45,
+        "power": 42,
+        "eye": 48,
+        "discipline": 42,
+        "speed": 53,
+        "baseInstinct": 47,
+        "bunting": 38,
         "platoon": 50,
-        "fielding": 50,
-        "arm": 57,
-        "battingClutch": 51
+        "fielding": 41,
+        "arm": 42,
+        "battingClutch": 50
       },
       "positionRatings": {
-        "SP": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "2B": 51
+      }
     },
     "coach": null,
     "manager": null,

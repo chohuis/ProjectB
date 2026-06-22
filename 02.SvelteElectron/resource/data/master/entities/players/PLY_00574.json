@@ -1,14 +1,14 @@
 {
   "id": "PLY_00574",
   "name": "조예준",
-  "nameEn": "Jo Yejun",
+  "nameEn": "Ha Ye-jun",
   "role": "player",
   "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_SKYGULLS",
-  "teamId": "TEAM_KBL_SKYGULLS_1",
+  "clubId": "CLUB_KBL_LG",
+  "teamId": "TEAM_KBL_LG_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,48 +19,28 @@
       "position": "DH",
       "jerseyNumber": 24,
       "pitching": {
-        "ovr": 46,
-        "stamina": 52,
-        "velocity": 43,
-        "command": 42,
-        "control": 50,
-        "movement": 50,
-        "mentality": 51,
-        "recovery": 47,
-        "clutch": 38,
-        "holdRunners": 39
+        "ovr": 39,
+        "stamina": 38,
+        "velocity": 37,
+        "command": 39,
+        "control": 37,
+        "movement": 40,
+        "mentality": 34,
+        "recovery": 38
       },
       "batting": {
-        "ovr": 66,
-        "contact": 69,
-        "power": 63,
-        "eye": 69,
-        "discipline": 63,
-        "speed": 69,
-        "fielding": 61,
-        "arm": 72,
-        "battingClutch": 60,
-        "baseInstinct": 59,
-        "bunting": 55,
-        "platoon": 54
+        "ovr": 71,
+        "contact": 66,
+        "power": 76,
+        "eye": 70,
+        "discipline": 68,
+        "speed": 58,
+        "fielding": 63,
+        "arm": 66,
+        "battingClutch": 72
       },
       "developmentRate": 43,
-      "potentialHidden": 87,
-      "primaryPosition": "DH",
-      "positionRatings": {
-        "DH": 66
-      },
-      "proServiceYears": 2,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 87
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

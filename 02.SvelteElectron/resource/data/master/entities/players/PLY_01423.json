@@ -1,14 +1,14 @@
 {
   "id": "PLY_01423",
   "name": "스미스 마르코",
-  "nameEn": "Seu 미스 마르코",
+  "nameEn": "Smith Marco",
   "role": "player",
   "age": 37,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_COASTALRAYS",
-  "teamId": "TEAM_ABL_COASTALRAYS_1",
+  "clubId": "CLUB_ABL_SF",
+  "teamId": "TEAM_ABL_SF",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
@@ -20,47 +20,27 @@
       "jerseyNumber": 18,
       "pitching": {
         "ovr": 59,
-        "stamina": 62,
-        "velocity": 54,
-        "command": 61,
-        "control": 59,
-        "movement": 58,
-        "mentality": 65,
-        "recovery": 58,
-        "clutch": 52,
-        "holdRunners": 54
+        "stamina": 56,
+        "velocity": 63,
+        "command": 57,
+        "control": 55,
+        "movement": 55,
+        "mentality": 60,
+        "recovery": 54
       },
       "batting": {
-        "ovr": 79,
-        "contact": 82,
-        "power": 79,
-        "eye": 81,
+        "ovr": 84,
+        "contact": 83,
+        "power": 84,
+        "eye": 75,
         "discipline": 76,
-        "speed": 77,
-        "fielding": 77,
-        "arm": 78,
-        "battingClutch": 70,
-        "baseInstinct": 71,
-        "bunting": 75,
-        "platoon": 70
+        "speed": 80,
+        "fielding": 74,
+        "arm": 80,
+        "battingClutch": 83
       },
       "developmentRate": 37,
-      "potentialHidden": 68,
-      "primaryPosition": "3B",
-      "positionRatings": {
-        "3B": 79
-      },
-      "proServiceYears": 15,
-      "contract": {
-        "salary": 13200,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 68
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

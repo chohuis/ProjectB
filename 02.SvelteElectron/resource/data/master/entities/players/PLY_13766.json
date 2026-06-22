@@ -1,9 +1,9 @@
 {
   "id": "PLY_13766",
-  "name": "스콧 데릭",
-  "nameEn": "Scott Derek",
+  "name": "Jones Carlos",
+  "nameEn": "Jones Carlos",
   "role": "player",
-  "age": 28,
+  "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 58,
-  "popularity": 47,
+  "notes": "국적:일본",
+  "diligence": 77,
+  "popularity": 31,
   "militaryStatus": "군필",
   "entryYear": 2049,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 28,
+  "entryAge": 32,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 61,
+      "jerseyNumber": 79,
       "primaryPosition": "SP",
-      "developmentRate": 51,
-      "potentialHidden": 64,
-      "proServiceYears": 6,
+      "developmentRate": 42,
+      "potentialHidden": 62,
+      "proServiceYears": 10,
       "pitching": {
-        "ovr": 70,
-        "stamina": 62,
-        "velocity": 69,
-        "command": 63,
-        "control": 63,
-        "movement": 71,
-        "mentality": 76,
-        "recovery": 66,
-        "clutch": 65,
-        "holdRunners": 61
+        "ovr": 60,
+        "stamina": 61,
+        "velocity": 61,
+        "command": 51,
+        "control": 57,
+        "movement": 61,
+        "mentality": 63,
+        "recovery": 58,
+        "clutch": 61,
+        "holdRunners": 56
       },
       "batting": {
-        "ovr": 68,
-        "contact": 73,
-        "power": 67,
-        "eye": 62,
-        "discipline": 60,
-        "speed": 74,
-        "baseInstinct": 71,
-        "bunting": 54,
+        "ovr": 60,
+        "contact": 53,
+        "power": 61,
+        "eye": 64,
+        "discipline": 61,
+        "speed": 64,
+        "baseInstinct": 55,
+        "bunting": 41,
         "platoon": 50,
-        "fielding": 71,
-        "arm": 62,
-        "battingClutch": 59
+        "fielding": 61,
+        "arm": 52,
+        "battingClutch": 58
       },
       "positionRatings": {
-        "SP": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 1
-        }
-      ]
+        "SP": 60
+      }
     },
     "coach": null,
     "manager": null,

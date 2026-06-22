@@ -1,6 +1,6 @@
 {
   "id": "PLY_16666",
-  "name": "브라운 코너",
+  "name": "Brown Connor",
   "nameEn": "Brown Connor",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 59,
   "popularity": 29,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 46
       },
       "batting": {
-        "ovr": 51,
-        "contact": 48,
-        "power": 53,
-        "eye": 56,
-        "discipline": 50,
-        "speed": 46,
-        "baseInstinct": 44,
-        "bunting": 42,
-        "platoon": 49,
-        "fielding": 52,
-        "arm": 44,
-        "battingClutch": 39
+        "ovr": 52,
+        "contact": 49,
+        "power": 54,
+        "eye": 57,
+        "discipline": 51,
+        "speed": 47,
+        "baseInstinct": 45,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 45,
+        "battingClutch": 40
       },
       "positionRatings": {
         "C": 52

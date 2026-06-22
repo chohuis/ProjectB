@@ -1,6 +1,6 @@
 {
   "id": "PLY_14685",
-  "name": "워커 딜런",
+  "name": "Walker Dylan",
   "nameEn": "Walker Dylan",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 64,
   "popularity": 29,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 44
       },
       "batting": {
-        "ovr": 50,
-        "contact": 52,
-        "power": 53,
-        "eye": 43,
-        "discipline": 49,
-        "speed": 47,
-        "baseInstinct": 53,
-        "bunting": 32,
-        "platoon": 49,
-        "fielding": 41,
-        "arm": 40,
-        "battingClutch": 50
+        "ovr": 51,
+        "contact": 53,
+        "power": 54,
+        "eye": 44,
+        "discipline": 50,
+        "speed": 48,
+        "baseInstinct": 54,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 41,
+        "battingClutch": 51
       },
       "positionRatings": {
         "SS": 51

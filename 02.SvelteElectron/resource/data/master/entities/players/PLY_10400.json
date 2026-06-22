@@ -1,9 +1,9 @@
 {
   "id": "PLY_10400",
-  "name": "톰슨 마커스",
-  "nameEn": "Thompson Marcus",
+  "name": "Hernandez Ryan",
+  "nameEn": "Hernandez Ryan",
   "role": "player",
-  "age": 35,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 52,
-  "popularity": 34,
+  "notes": "국적:멕시코",
+  "diligence": 60,
+  "popularity": 29,
   "militaryStatus": "군필",
   "entryYear": 2029,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 35,
+  "entryAge": 28,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 69,
+      "jerseyNumber": 88,
       "primaryPosition": "SP",
-      "developmentRate": 44,
-      "potentialHidden": 73,
-      "proServiceYears": 13,
+      "developmentRate": 65,
+      "potentialHidden": 76,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 62,
-        "stamina": 59,
-        "velocity": 69,
-        "command": 60,
-        "control": 52,
-        "movement": 55,
-        "mentality": 59,
-        "recovery": 52,
-        "clutch": 54,
-        "holdRunners": 54
+        "ovr": 80,
+        "stamina": 77,
+        "velocity": 82,
+        "command": 74,
+        "control": 79,
+        "movement": 77,
+        "mentality": 87,
+        "recovery": 74,
+        "clutch": 71,
+        "holdRunners": 79
       },
       "batting": {
-        "ovr": 55,
-        "contact": 51,
-        "power": 51,
-        "eye": 52,
-        "discipline": 48,
-        "speed": 49,
-        "baseInstinct": 57,
-        "bunting": 46,
+        "ovr": 80,
+        "contact": 79,
+        "power": 76,
+        "eye": 82,
+        "discipline": 84,
+        "speed": 84,
+        "baseInstinct": 81,
+        "bunting": 68,
         "platoon": 50,
-        "fielding": 55,
-        "arm": 47,
-        "battingClutch": 44
+        "fielding": 82,
+        "arm": 70,
+        "battingClutch": 77
       },
       "positionRatings": {
-        "SP": 55
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 80
+      }
     },
     "coach": null,
     "manager": null,

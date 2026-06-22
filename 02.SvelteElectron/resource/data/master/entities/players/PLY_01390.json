@@ -1,14 +1,14 @@
 {
   "id": "PLY_01390",
   "name": "존스 에이든",
-  "nameEn": "Jon 스 에이든",
+  "nameEn": "Jones Aiden",
   "role": "player",
   "age": 23,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_LAKESPIRITS",
-  "teamId": "TEAM_ABL_LAKESPIRITS_2",
+  "clubId": "CLUB_ABL_SD",
+  "teamId": "TEAM_ABL_SD_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:쿠바",
@@ -19,62 +19,28 @@
       "position": "RP",
       "jerseyNumber": 45,
       "pitching": {
-        "ovr": 71,
-        "stamina": 73,
-        "velocity": 70,
-        "command": 72,
-        "control": 76,
-        "movement": 72,
-        "mentality": 72,
-        "recovery": 67,
-        "clutch": 69,
-        "holdRunners": 69
+        "ovr": 79,
+        "stamina": 67,
+        "velocity": 80,
+        "command": 79,
+        "control": 78,
+        "movement": 79,
+        "mentality": 75,
+        "recovery": 76
       },
       "batting": {
-        "ovr": 53,
-        "contact": 54,
-        "power": 53,
-        "eye": 53,
-        "discipline": 59,
-        "speed": 60,
-        "fielding": 55,
-        "arm": 53,
-        "battingClutch": 47,
-        "baseInstinct": 52,
-        "bunting": 48,
-        "platoon": 51
+        "ovr": 55,
+        "contact": 51,
+        "power": 55,
+        "eye": 54,
+        "discipline": 50,
+        "speed": 56,
+        "fielding": 53,
+        "arm": 55,
+        "battingClutch": 51
       },
       "developmentRate": 31,
-      "potentialHidden": 67,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 71
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 1,
-      "contract": {
-        "salary": 22500,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 67
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

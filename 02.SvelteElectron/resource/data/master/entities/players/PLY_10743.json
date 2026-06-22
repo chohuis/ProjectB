@@ -1,9 +1,9 @@
 {
   "id": "PLY_10743",
-  "name": "윌리엄스 라이언",
-  "nameEn": "Williams Ryan",
+  "name": "Nelson Logan",
+  "nameEn": "Nelson Logan",
   "role": "player",
-  "age": 25,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 84,
-  "popularity": 29,
+  "notes": "국적:미국",
+  "diligence": 75,
+  "popularity": 36,
   "militaryStatus": "군필",
   "entryYear": 2031,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 25,
+  "entryAge": 21,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 45,
+      "jerseyNumber": 4,
       "primaryPosition": "SP",
-      "developmentRate": 67,
-      "potentialHidden": 83,
-      "proServiceYears": 3,
+      "developmentRate": 78,
+      "potentialHidden": 66,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 63,
+        "ovr": 64,
         "stamina": 58,
         "velocity": 72,
-        "command": 65,
-        "control": 60,
+        "command": 66,
+        "control": 62,
         "movement": 65,
-        "mentality": 68,
-        "recovery": 54,
-        "clutch": 62,
-        "holdRunners": 56
+        "mentality": 67,
+        "recovery": 65,
+        "clutch": 55,
+        "holdRunners": 53
       },
       "batting": {
-        "ovr": 71,
-        "contact": 64,
-        "power": 66,
-        "eye": 66,
-        "discipline": 73,
-        "speed": 66,
-        "baseInstinct": 66,
-        "bunting": 61,
+        "ovr": 64,
+        "contact": 59,
+        "power": 57,
+        "eye": 57,
+        "discipline": 58,
+        "speed": 61,
+        "baseInstinct": 65,
+        "bunting": 49,
         "platoon": 50,
         "fielding": 61,
-        "arm": 72,
-        "battingClutch": 61
+        "arm": 57,
+        "battingClutch": 51
       },
       "positionRatings": {
-        "SP": 71
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "SP": 64
+      }
     },
     "coach": null,
     "manager": null,

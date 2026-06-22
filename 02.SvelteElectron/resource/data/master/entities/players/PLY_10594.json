@@ -1,9 +1,9 @@
 {
   "id": "PLY_10594",
-  "name": "스콧 그랜트",
-  "nameEn": "Scott Grant",
+  "name": "Lewis Marcus",
+  "nameEn": "Lewis Marcus",
   "role": "player",
-  "age": 26,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 79,
-  "popularity": 39,
+  "notes": "국적:미국",
+  "diligence": 53,
+  "popularity": 14,
   "militaryStatus": "군필",
   "entryYear": 2030,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 26,
+  "entryAge": 20,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 85,
-      "primaryPosition": "SP",
-      "developmentRate": 60,
-      "potentialHidden": 59,
-      "proServiceYears": 4,
+      "position": "C",
+      "jerseyNumber": 72,
+      "primaryPosition": "C",
+      "developmentRate": 67,
+      "potentialHidden": 93,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 80,
-        "stamina": 82,
-        "velocity": 81,
-        "command": 72,
-        "control": 82,
-        "movement": 75,
-        "mentality": 79,
-        "recovery": 69,
-        "clutch": 79,
-        "holdRunners": 70
+        "ovr": 63,
+        "stamina": 54,
+        "velocity": 72,
+        "command": 59,
+        "control": 58,
+        "movement": 54,
+        "mentality": 70,
+        "recovery": 60,
+        "clutch": 64,
+        "holdRunners": 49
       },
       "batting": {
-        "ovr": 82,
-        "contact": 83,
-        "power": 82,
-        "eye": 79,
-        "discipline": 81,
-        "speed": 81,
-        "baseInstinct": 82,
-        "bunting": 64,
+        "ovr": 63,
+        "contact": 55,
+        "power": 54,
+        "eye": 60,
+        "discipline": 60,
+        "speed": 68,
+        "baseInstinct": 55,
+        "bunting": 48,
         "platoon": 50,
-        "fielding": 85,
-        "arm": 81,
-        "battingClutch": 78
+        "fielding": 60,
+        "arm": 53,
+        "battingClutch": 63
       },
       "positionRatings": {
-        "SP": 82
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "C": 63
+      }
     },
     "coach": null,
     "manager": null,

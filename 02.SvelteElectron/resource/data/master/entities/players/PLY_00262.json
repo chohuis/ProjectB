@@ -1,7 +1,7 @@
 {
   "id": "PLY_00262",
   "name": "허시우",
-  "nameEn": "Heo Siu",
+  "nameEn": "Cho Ha-jun",
   "role": "player",
   "age": 20,
   "status": "active",
@@ -19,51 +19,28 @@
       "position": "SP",
       "jerseyNumber": 2,
       "pitching": {
-        "ovr": 56,
-        "stamina": 60,
-        "velocity": 55,
+        "ovr": 52,
+        "stamina": 58,
+        "velocity": 59,
         "command": 54,
-        "control": 53,
-        "movement": 54,
-        "mentality": 56,
-        "recovery": 55,
-        "clutch": 54,
-        "holdRunners": 48
+        "control": 58,
+        "movement": 57,
+        "mentality": 54,
+        "recovery": 53
       },
       "batting": {
-        "ovr": 38,
-        "contact": 35,
-        "power": 33,
-        "eye": 41,
-        "discipline": 44,
-        "speed": 39,
-        "fielding": 38,
-        "arm": 38,
-        "battingClutch": 42,
-        "baseInstinct": 41,
-        "bunting": 29,
-        "platoon": 42
+        "ovr": 32,
+        "contact": 33,
+        "power": 39,
+        "eye": 34,
+        "discipline": 30,
+        "speed": 38,
+        "fielding": 32,
+        "arm": 34,
+        "battingClutch": 31
       },
       "developmentRate": 64,
-      "potentialHidden": 74,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+      "potentialHidden": 74
     },
     "coach": {
       "specialty": "-",
@@ -103,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

@@ -1,9 +1,9 @@
 {
   "id": "PLY_10984",
-  "name": "로드리게스 에반",
-  "nameEn": "Rodriguez Evan",
+  "name": "Johnson Connor",
+  "nameEn": "Johnson Connor",
   "role": "player",
-  "age": 25,
+  "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 76,
-  "popularity": 35,
+  "notes": "국적:도미니카",
+  "diligence": 64,
+  "popularity": 41,
   "militaryStatus": "군필",
   "entryYear": 2032,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 25,
+  "entryAge": 32,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 80,
-      "primaryPosition": "SP",
-      "developmentRate": 54,
-      "potentialHidden": 56,
-      "proServiceYears": 3,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 20,
+      "primaryPosition": "3B",
+      "developmentRate": 40,
+      "potentialHidden": 60,
+      "proServiceYears": 10,
       "pitching": {
-        "ovr": 71,
-        "stamina": 70,
-        "velocity": 73,
-        "command": 69,
-        "control": 69,
-        "movement": 64,
-        "mentality": 70,
-        "recovery": 64,
-        "clutch": 60,
-        "holdRunners": 64
+        "ovr": 62,
+        "stamina": 58,
+        "velocity": 71,
+        "command": 63,
+        "control": 57,
+        "movement": 57,
+        "mentality": 58,
+        "recovery": 59,
+        "clutch": 61,
+        "holdRunners": 56
       },
       "batting": {
-        "ovr": 76,
-        "contact": 70,
-        "power": 69,
-        "eye": 81,
-        "discipline": 69,
-        "speed": 77,
-        "baseInstinct": 67,
-        "bunting": 69,
+        "ovr": 62,
+        "contact": 54,
+        "power": 63,
+        "eye": 65,
+        "discipline": 62,
+        "speed": 68,
+        "baseInstinct": 58,
+        "bunting": 48,
         "platoon": 50,
-        "fielding": 76,
-        "arm": 76,
-        "battingClutch": 71
+        "fielding": 60,
+        "arm": 59,
+        "battingClutch": 58
       },
       "positionRatings": {
-        "SP": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "3B": 62
+      }
     },
     "coach": null,
     "manager": null,

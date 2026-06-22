@@ -1,14 +1,14 @@
 {
   "id": "COA_00073",
   "name": "한태양",
-  "nameEn": "Han Taeyang",
+  "nameEn": "Choi Jae-won",
   "role": "coach",
-  "age": 40,
+  "age": 53,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_ROYALLIONS",
-  "teamId": "TEAM_KBL_ROYALLIONS_1",
+  "clubId": "CLUB_KBL_SSG",
+  "teamId": "TEAM_KBL_SSG_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -26,9 +26,7 @@
         "control": 50,
         "movement": 50,
         "mentality": 50,
-        "recovery": 50,
-        "clutch": 50,
-        "holdRunners": 50
+        "recovery": 50
       },
       "batting": {
         "ovr": 50,
@@ -39,25 +37,20 @@
         "speed": 50,
         "fielding": 50,
         "arm": 50,
-        "battingClutch": 50,
-        "baseInstinct": 50,
-        "bunting": 45,
-        "platoon": 50
+        "battingClutch": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 70,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 50
-      }
+      "potentialHidden": 70
     },
     "coach": {
-      "specialty": "-",
+      "specialty": "멘탈",
       "experienceYears": 15,
       "stats": {
         "teaching": 60,
-        "analytics": 57,
-        "experience": 4
+        "analysis": 57,
+        "communication": 71,
+        "discipline": 79,
+        "leadership": 57
       },
       "trainingBuffs": ""
     },
@@ -87,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

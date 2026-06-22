@@ -1,9 +1,9 @@
 {
   "id": "PLY_09885",
-  "name": "잭슨 루이스",
-  "nameEn": "Jackson Luis",
+  "name": "Young Luis",
+  "nameEn": "Young Luis",
   "role": "player",
-  "age": 18,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 67,
-  "popularity": 42,
+  "notes": "국적:미국",
+  "diligence": 64,
+  "popularity": 45,
   "militaryStatus": "군필",
   "entryYear": 2026,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 18,
+  "entryAge": 22,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 82,
-      "primaryPosition": "SP",
-      "developmentRate": 68,
-      "potentialHidden": 63,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 83,
+      "primaryPosition": "2B",
+      "developmentRate": 62,
+      "potentialHidden": 62,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 59,
-        "stamina": 52,
-        "velocity": 67,
-        "command": 50,
-        "control": 53,
-        "movement": 61,
-        "mentality": 62,
-        "recovery": 49,
-        "clutch": 60,
-        "holdRunners": 49
+        "ovr": 66,
+        "stamina": 71,
+        "velocity": 70,
+        "command": 58,
+        "control": 68,
+        "movement": 70,
+        "mentality": 63,
+        "recovery": 55,
+        "clutch": 56,
+        "holdRunners": 59
       },
       "batting": {
-        "ovr": 63,
-        "contact": 58,
-        "power": 60,
-        "eye": 59,
-        "discipline": 59,
-        "speed": 67,
-        "baseInstinct": 62,
-        "bunting": 53,
+        "ovr": 66,
+        "contact": 59,
+        "power": 64,
+        "eye": 58,
+        "discipline": 60,
+        "speed": 69,
+        "baseInstinct": 57,
+        "bunting": 59,
         "platoon": 50,
-        "fielding": 52,
-        "arm": 52,
-        "battingClutch": 64
+        "fielding": 68,
+        "arm": 61,
+        "battingClutch": 57
       },
       "positionRatings": {
-        "SP": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        }
-      ]
+        "2B": 66
+      }
     },
     "coach": null,
     "manager": null,

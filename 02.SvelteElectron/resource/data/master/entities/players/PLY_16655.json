@@ -1,6 +1,6 @@
 {
   "id": "PLY_16655",
-  "name": "넬슨 카를로스",
+  "name": "Nelson Carlos",
   "nameEn": "Nelson Carlos",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 49,
   "popularity": 43,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 72,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 59,
-        "stamina": 52,
-        "velocity": 62,
-        "command": 49,
-        "control": 54,
-        "movement": 61,
-        "mentality": 52,
-        "recovery": 58,
-        "clutch": 47,
-        "holdRunners": 58
+        "ovr": 60,
+        "stamina": 53,
+        "velocity": 63,
+        "command": 50,
+        "control": 55,
+        "movement": 62,
+        "mentality": 53,
+        "recovery": 59,
+        "clutch": 48,
+        "holdRunners": 59
       },
       "batting": {
         "ovr": 60,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

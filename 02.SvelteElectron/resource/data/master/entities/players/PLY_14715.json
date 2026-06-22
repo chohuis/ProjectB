@@ -1,6 +1,6 @@
 {
   "id": "PLY_14715",
-  "name": "마르티네스 카일",
+  "name": "Martinez Kyle",
   "nameEn": "Martinez Kyle",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 65,
   "popularity": 28,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 44
       },
       "batting": {
-        "ovr": 53,
-        "contact": 57,
-        "power": 46,
-        "eye": 47,
-        "discipline": 46,
-        "speed": 59,
-        "baseInstinct": 53,
-        "bunting": 45,
-        "platoon": 49,
-        "fielding": 55,
-        "arm": 53,
-        "battingClutch": 47
+        "ovr": 54,
+        "contact": 58,
+        "power": 47,
+        "eye": 48,
+        "discipline": 47,
+        "speed": 60,
+        "baseInstinct": 54,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 54,
+        "battingClutch": 48
       },
       "positionRatings": {
         "1B": 54

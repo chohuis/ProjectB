@@ -1,65 +1,46 @@
 {
   "id": "PLY_01554",
-  "name": "임동혁",
-  "nameEn": "Im Donghyeok",
+  "name": "타나카 이사무",
+  "nameEn": "Tanaka Isamu",
   "role": "player",
-  "age": 16,
+  "age": 38,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_BUSAN_WAVE",
-  "teamId": "TEAM_HS_BUSAN_WAVE",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_BUSAN_WAVE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_NEONCRANES",
+  "teamId": "TEAM_JBL_CL_NEONCRANES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "CP",
-      "jerseyNumber": 23,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 14,
       "pitching": {
-        "ovr": 50,
-        "stamina": 56,
-        "velocity": 53,
-        "command": 54,
-        "control": 55,
-        "movement": 55,
-        "mentality": 55,
-        "recovery": 53,
-        "clutch": 42,
-        "holdRunners": 44
+        "ovr": 46,
+        "stamina": 46,
+        "velocity": 51,
+        "command": 45,
+        "control": 45,
+        "movement": 48,
+        "mentality": 48,
+        "recovery": 45
       },
       "batting": {
-        "ovr": 32,
-        "contact": 35,
-        "power": 36,
-        "eye": 34,
-        "discipline": 32,
-        "speed": 30,
-        "fielding": 30,
-        "arm": 32,
-        "battingClutch": 38,
-        "baseInstinct": 43,
-        "bunting": 29,
-        "platoon": 36
+        "ovr": 67,
+        "contact": 70,
+        "power": 69,
+        "eye": 65,
+        "discipline": 68,
+        "speed": 61,
+        "fielding": 70,
+        "arm": 76,
+        "battingClutch": 71
       },
-      "developmentRate": 59,
-      "potentialHidden": 71,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 50
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SCREWBALL",
-          "grade": 4
-        }
-      ]
+      "developmentRate": 33,
+      "potentialHidden": 67
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 69,
-  "popularity": 25
+  }
 }

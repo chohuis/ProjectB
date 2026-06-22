@@ -1,14 +1,14 @@
 {
   "id": "PLY_01115",
   "name": "가르시아 데이비드",
-  "nameEn": "Ga 르시아 데이비드",
+  "nameEn": "Garcia David",
   "role": "player",
   "age": 30,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_LONESTARS",
-  "teamId": "TEAM_ABL_LONESTARS_1",
+  "clubId": "CLUB_ABL_TEX",
+  "teamId": "TEAM_ABL_TEX",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -19,48 +19,28 @@
       "position": "2B",
       "jerseyNumber": 25,
       "pitching": {
-        "ovr": 55,
-        "stamina": 61,
-        "velocity": 56,
-        "command": 53,
-        "control": 55,
-        "movement": 53,
-        "mentality": 57,
-        "recovery": 56,
-        "clutch": 53,
-        "holdRunners": 44
+        "ovr": 43,
+        "stamina": 42,
+        "velocity": 42,
+        "command": 39,
+        "control": 41,
+        "movement": 40,
+        "mentality": 43,
+        "recovery": 36
       },
       "batting": {
-        "ovr": 75,
-        "contact": 75,
-        "power": 71,
-        "eye": 80,
-        "discipline": 75,
-        "speed": 75,
-        "fielding": 76,
-        "arm": 80,
-        "battingClutch": 74,
-        "baseInstinct": 68,
-        "bunting": 70,
-        "platoon": 64
+        "ovr": 78,
+        "contact": 79,
+        "power": 75,
+        "eye": 73,
+        "discipline": 71,
+        "speed": 72,
+        "fielding": 74,
+        "arm": 73,
+        "battingClutch": 78
       },
       "developmentRate": 43,
-      "potentialHidden": 81,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 75
-      },
-      "proServiceYears": 8,
-      "contract": {
-        "salary": 10200,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 81
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,7 +1,7 @@
 {
   "id": "PLY_00046",
   "name": "남민혁",
-  "nameEn": "Nam Minhyeok",
+  "nameEn": "Bae Seung-woo",
   "role": "player",
   "age": 17,
   "status": "active",
@@ -19,43 +19,28 @@
       "position": "RP",
       "jerseyNumber": 6,
       "pitching": {
-        "ovr": 47,
-        "stamina": 45,
-        "velocity": 45,
-        "command": 50,
-        "control": 51,
-        "movement": 49,
-        "mentality": 47,
-        "recovery": 48,
-        "clutch": 40,
-        "holdRunners": 42
+        "ovr": 60,
+        "stamina": 54,
+        "velocity": 49,
+        "command": 56,
+        "control": 53,
+        "movement": 40,
+        "mentality": 44,
+        "recovery": 63
       },
       "batting": {
-        "ovr": 29,
-        "contact": 25,
-        "power": 25,
-        "eye": 31,
-        "discipline": 31,
-        "speed": 36,
-        "fielding": 32,
-        "arm": 29,
-        "battingClutch": 45,
-        "baseInstinct": 44,
-        "bunting": 33,
-        "platoon": 37
+        "ovr": 36,
+        "contact": 43,
+        "power": 45,
+        "eye": 50,
+        "discipline": 39,
+        "speed": 52,
+        "fielding": 56,
+        "arm": 56,
+        "battingClutch": 46
       },
       "developmentRate": 45,
-      "potentialHidden": 66,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 47
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 66
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

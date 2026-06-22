@@ -1,14 +1,14 @@
 {
   "id": "PLY_00714",
   "name": "곽진우",
-  "nameEn": "Kwak Jinu",
+  "nameEn": "Cho Ji-ho",
   "role": "player",
   "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_ROYALLIONS",
-  "teamId": "TEAM_KBL_ROYALLIONS_2",
+  "clubId": "CLUB_KBL_SSG",
+  "teamId": "TEAM_KBL_SSG_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,58 +19,28 @@
       "position": "SP",
       "jerseyNumber": 34,
       "pitching": {
-        "ovr": 65,
-        "stamina": 64,
-        "velocity": 68,
-        "command": 67,
-        "control": 62,
-        "movement": 64,
-        "mentality": 70,
-        "recovery": 65,
-        "clutch": 60,
-        "holdRunners": 56
+        "ovr": 67,
+        "stamina": 70,
+        "velocity": 73,
+        "command": 72,
+        "control": 68,
+        "movement": 71,
+        "mentality": 71,
+        "recovery": 67
       },
       "batting": {
-        "ovr": 47,
+        "ovr": 54,
         "contact": 48,
-        "power": 51,
-        "eye": 51,
-        "discipline": 43,
-        "speed": 50,
-        "fielding": 42,
-        "arm": 50,
-        "battingClutch": 41,
-        "baseInstinct": 42,
-        "bunting": 42,
-        "platoon": 34
+        "power": 47,
+        "eye": 53,
+        "discipline": 52,
+        "speed": 53,
+        "fielding": 51,
+        "arm": 51,
+        "battingClutch": 47
       },
       "developmentRate": 42,
-      "potentialHidden": 65,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_FORKBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 10,
-      "contract": {
-        "salary": 5100,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 65
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

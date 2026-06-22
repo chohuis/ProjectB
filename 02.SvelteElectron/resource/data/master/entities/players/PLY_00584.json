@@ -1,14 +1,14 @@
 {
   "id": "PLY_00584",
   "name": "구연우",
-  "nameEn": "Koo Yeonu",
+  "nameEn": "Kwak Geon-woo",
   "role": "player",
   "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_SKYGULLS",
-  "teamId": "TEAM_KBL_SKYGULLS_2",
+  "clubId": "CLUB_KBL_LG",
+  "teamId": "TEAM_KBL_LG_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,58 +19,28 @@
       "position": "CP",
       "jerseyNumber": 39,
       "pitching": {
-        "ovr": 67,
-        "stamina": 69,
-        "velocity": 70,
-        "command": 72,
-        "control": 64,
-        "movement": 63,
-        "mentality": 70,
-        "recovery": 70,
-        "clutch": 56,
-        "holdRunners": 62
+        "ovr": 78,
+        "stamina": 68,
+        "velocity": 79,
+        "command": 77,
+        "control": 79,
+        "movement": 71,
+        "mentality": 72,
+        "recovery": 77
       },
       "batting": {
-        "ovr": 49,
+        "ovr": 52,
         "contact": 52,
-        "power": 45,
-        "eye": 47,
-        "discipline": 47,
-        "speed": 53,
-        "fielding": 50,
-        "arm": 50,
-        "battingClutch": 48,
-        "baseInstinct": 41,
-        "bunting": 36,
-        "platoon": 46
+        "power": 52,
+        "eye": 56,
+        "discipline": 54,
+        "speed": 56,
+        "fielding": 54,
+        "arm": 52,
+        "battingClutch": 54
       },
       "developmentRate": 50,
-      "potentialHidden": 76,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 2,
-      "contract": {
-        "salary": 5500,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 76
     },
     "coach": {
       "specialty": "-",
@@ -110,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

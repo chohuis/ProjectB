@@ -1,9 +1,9 @@
 {
   "id": "PLY_12756",
-  "name": "에르난데스 로건",
-  "nameEn": "Hernandez Logan",
+  "name": "Taylor Hunter",
+  "nameEn": "Taylor Hunter",
   "role": "player",
-  "age": 28,
+  "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 67,
-  "popularity": 15,
+  "notes": "국적:베네수엘라",
+  "diligence": 55,
+  "popularity": 44,
   "militaryStatus": "군필",
   "entryYear": 2043,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 28,
+  "entryAge": 32,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 68,
+      "jerseyNumber": 3,
       "primaryPosition": "SP",
-      "developmentRate": 63,
-      "potentialHidden": 60,
-      "proServiceYears": 6,
+      "developmentRate": 41,
+      "potentialHidden": 73,
+      "proServiceYears": 10,
       "pitching": {
-        "ovr": 84,
-        "stamina": 81,
-        "velocity": 91,
-        "command": 84,
-        "control": 78,
-        "movement": 79,
-        "mentality": 82,
-        "recovery": 82,
-        "clutch": 82,
-        "holdRunners": 75
+        "ovr": 67,
+        "stamina": 62,
+        "velocity": 71,
+        "command": 63,
+        "control": 64,
+        "movement": 58,
+        "mentality": 72,
+        "recovery": 68,
+        "clutch": 54,
+        "holdRunners": 60
       },
       "batting": {
-        "ovr": 81,
-        "contact": 85,
-        "power": 82,
-        "eye": 78,
-        "discipline": 79,
-        "speed": 79,
-        "baseInstinct": 72,
-        "bunting": 75,
+        "ovr": 67,
+        "contact": 63,
+        "power": 61,
+        "eye": 65,
+        "discipline": 61,
+        "speed": 71,
+        "baseInstinct": 64,
+        "bunting": 54,
         "platoon": 50,
-        "fielding": 72,
-        "arm": 78,
-        "battingClutch": 81
+        "fielding": 69,
+        "arm": 60,
+        "battingClutch": 67
       },
       "positionRatings": {
-        "SP": 81
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "SP": 67
+      }
     },
     "coach": null,
     "manager": null,

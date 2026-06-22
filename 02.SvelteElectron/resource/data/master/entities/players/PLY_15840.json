@@ -1,6 +1,6 @@
 {
   "id": "PLY_15840",
-  "name": "로빈슨 네이선",
+  "name": "Robinson Nathan",
   "nameEn": "Robinson Nathan",
   "role": "player",
   "age": 34,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 79,
   "popularity": 35,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 59,
       "proServiceYears": 12,
       "pitching": {
-        "ovr": 86,
-        "stamina": 78,
-        "velocity": 83,
-        "command": 87,
-        "control": 75,
-        "movement": 73,
-        "mentality": 83,
-        "recovery": 76,
-        "clutch": 85,
-        "holdRunners": 75
+        "ovr": 68,
+        "stamina": 62,
+        "velocity": 66,
+        "command": 69,
+        "control": 59,
+        "movement": 58,
+        "mentality": 66,
+        "recovery": 60,
+        "clutch": 67,
+        "holdRunners": 59
       },
       "batting": {
         "ovr": 68,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

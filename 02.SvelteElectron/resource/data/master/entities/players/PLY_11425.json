@@ -1,9 +1,9 @@
 {
   "id": "PLY_11425",
-  "name": "로드리게스 카일",
-  "nameEn": "Rodriguez Kyle",
+  "name": "Johnson Evan",
+  "nameEn": "Johnson Evan",
   "role": "player",
-  "age": 25,
+  "age": 19,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 49,
-  "popularity": 24,
+  "notes": "국적:일본",
+  "diligence": 48,
+  "popularity": 32,
   "militaryStatus": "군필",
   "entryYear": 2035,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 25,
+  "entryAge": 19,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 24,
+      "jerseyNumber": 48,
       "primaryPosition": "SP",
-      "developmentRate": 51,
-      "potentialHidden": 66,
-      "proServiceYears": 3,
+      "developmentRate": 79,
+      "potentialHidden": 60,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 63,
-        "stamina": 63,
-        "velocity": 72,
-        "command": 58,
-        "control": 62,
-        "movement": 66,
-        "mentality": 59,
-        "recovery": 63,
-        "clutch": 57,
-        "holdRunners": 52
+        "ovr": 61,
+        "stamina": 53,
+        "velocity": 71,
+        "command": 54,
+        "control": 56,
+        "movement": 62,
+        "mentality": 67,
+        "recovery": 51,
+        "clutch": 54,
+        "holdRunners": 56
       },
       "batting": {
-        "ovr": 71,
-        "contact": 67,
+        "ovr": 61,
+        "contact": 62,
         "power": 63,
-        "eye": 69,
-        "discipline": 67,
-        "speed": 67,
-        "baseInstinct": 64,
-        "bunting": 58,
+        "eye": 56,
+        "discipline": 63,
+        "speed": 55,
+        "baseInstinct": 60,
+        "bunting": 49,
         "platoon": 50,
-        "fielding": 74,
-        "arm": 72,
-        "battingClutch": 69
+        "fielding": 56,
+        "arm": 54,
+        "battingClutch": 57
       },
       "positionRatings": {
-        "SP": 71
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "SP": 61
+      }
     },
     "coach": null,
     "manager": null,

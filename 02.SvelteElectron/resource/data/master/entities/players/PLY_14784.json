@@ -1,6 +1,6 @@
 {
   "id": "PLY_14784",
-  "name": "마틴 숀",
+  "name": "Martin Sean",
   "nameEn": "Martin Sean",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 59,
   "popularity": 26,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 54
       },
       "batting": {
-        "ovr": 61,
-        "contact": 63,
-        "power": 60,
-        "eye": 57,
-        "discipline": 53,
-        "speed": 68,
-        "baseInstinct": 53,
-        "bunting": 53,
-        "platoon": 47,
-        "fielding": 58,
-        "arm": 52,
-        "battingClutch": 52
+        "ovr": 65,
+        "contact": 67,
+        "power": 64,
+        "eye": 61,
+        "discipline": 56,
+        "speed": 72,
+        "baseInstinct": 57,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 55,
+        "battingClutch": 55
       },
       "positionRatings": {
         "CF": 65

@@ -1,6 +1,6 @@
 {
   "id": "PLY_16065",
-  "name": "클라크 네이선",
+  "name": "Clark Nathan",
   "nameEn": "Clark Nathan",
   "role": "player",
   "age": 29,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 60,
   "popularity": 13,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 53,
       "proServiceYears": 7,
       "pitching": {
-        "ovr": 68,
-        "stamina": 64,
-        "velocity": 65,
-        "command": 59,
-        "control": 66,
-        "movement": 65,
-        "mentality": 74,
-        "recovery": 62,
-        "clutch": 62,
-        "holdRunners": 62
+        "ovr": 61,
+        "stamina": 57,
+        "velocity": 58,
+        "command": 53,
+        "control": 59,
+        "movement": 58,
+        "mentality": 66,
+        "recovery": 56,
+        "clutch": 56,
+        "holdRunners": 56
       },
       "batting": {
         "ovr": 61,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

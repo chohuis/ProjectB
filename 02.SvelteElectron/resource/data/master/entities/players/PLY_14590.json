@@ -1,6 +1,6 @@
 {
   "id": "PLY_14590",
-  "name": "로드리게스 트레버",
+  "name": "Rodriguez Trevor",
   "nameEn": "Rodriguez Trevor",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 64,
   "popularity": 19,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 66
       },
       "batting": {
-        "ovr": 82,
-        "contact": 79,
-        "power": 83,
-        "eye": 85,
-        "discipline": 72,
-        "speed": 80,
-        "baseInstinct": 77,
-        "bunting": 69,
-        "platoon": 54,
-        "fielding": 70,
-        "arm": 82,
-        "battingClutch": 81
+        "ovr": 76,
+        "contact": 73,
+        "power": 77,
+        "eye": 79,
+        "discipline": 67,
+        "speed": 74,
+        "baseInstinct": 71,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 76,
+        "battingClutch": 75
       },
       "positionRatings": {
         "CF": 76

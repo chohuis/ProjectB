@@ -1,6 +1,6 @@
 {
   "id": "PLY_14265",
-  "name": "테일러 라이언",
+  "name": "Taylor Ryan",
   "nameEn": "Taylor Ryan",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 75,
   "popularity": 17,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 70
       },
       "batting": {
-        "ovr": 77,
-        "contact": 74,
-        "power": 73,
-        "eye": 79,
-        "discipline": 68,
-        "speed": 81,
-        "baseInstinct": 76,
-        "bunting": 57,
-        "platoon": 54,
-        "fielding": 73,
-        "arm": 76,
-        "battingClutch": 66
+        "ovr": 71,
+        "contact": 68,
+        "power": 67,
+        "eye": 73,
+        "discipline": 63,
+        "speed": 75,
+        "baseInstinct": 70,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 70,
+        "battingClutch": 61
       },
       "positionRatings": {
         "2B": 71

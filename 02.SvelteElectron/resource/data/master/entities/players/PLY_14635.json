@@ -1,6 +1,6 @@
 {
   "id": "PLY_14635",
-  "name": "카터 케빈",
+  "name": "Carter Kevin",
   "nameEn": "Carter Kevin",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 63,
   "popularity": 42,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 64
       },
       "batting": {
-        "ovr": 73,
-        "contact": 75,
-        "power": 64,
-        "eye": 77,
-        "discipline": 66,
-        "speed": 80,
-        "baseInstinct": 64,
-        "bunting": 66,
-        "platoon": 48,
-        "fielding": 73,
-        "arm": 71,
-        "battingClutch": 73
+        "ovr": 76,
+        "contact": 78,
+        "power": 67,
+        "eye": 80,
+        "discipline": 69,
+        "speed": 83,
+        "baseInstinct": 67,
+        "bunting": 69,
+        "platoon": 50,
+        "fielding": 76,
+        "arm": 74,
+        "battingClutch": 76
       },
       "positionRatings": {
         "LF": 76

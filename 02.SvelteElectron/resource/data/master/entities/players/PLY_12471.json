@@ -1,9 +1,9 @@
 {
   "id": "PLY_12471",
-  "name": "스미스 라이언",
-  "nameEn": "Smith Ryan",
+  "name": "Carter Brandon",
+  "nameEn": "Carter Brandon",
   "role": "player",
-  "age": 19,
+  "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 78,
-  "popularity": 34,
+  "notes": "국적:도미니카",
+  "diligence": 81,
+  "popularity": 38,
   "militaryStatus": "군필",
   "entryYear": 2041,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 19,
+  "entryAge": 24,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 20,
+      "jerseyNumber": 14,
       "primaryPosition": "SP",
-      "developmentRate": 69,
-      "potentialHidden": 93,
-      "proServiceYears": 0,
+      "developmentRate": 56,
+      "potentialHidden": 75,
+      "proServiceYears": 2,
       "pitching": {
-        "ovr": 48,
-        "stamina": 48,
-        "velocity": 52,
-        "command": 46,
-        "control": 49,
-        "movement": 47,
-        "mentality": 53,
-        "recovery": 50,
-        "clutch": 42,
-        "holdRunners": 45
+        "ovr": 72,
+        "stamina": 71,
+        "velocity": 77,
+        "command": 67,
+        "control": 76,
+        "movement": 64,
+        "mentality": 75,
+        "recovery": 62,
+        "clutch": 61,
+        "holdRunners": 62
       },
       "batting": {
-        "ovr": 50,
-        "contact": 55,
-        "power": 45,
-        "eye": 49,
-        "discipline": 49,
-        "speed": 50,
-        "baseInstinct": 48,
-        "bunting": 34,
+        "ovr": 72,
+        "contact": 74,
+        "power": 65,
+        "eye": 64,
+        "discipline": 67,
+        "speed": 69,
+        "baseInstinct": 68,
+        "bunting": 55,
         "platoon": 50,
-        "fielding": 41,
-        "arm": 52,
-        "battingClutch": 51
+        "fielding": 68,
+        "arm": 63,
+        "battingClutch": 62
       },
       "positionRatings": {
-        "SP": 50
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 72
+      }
     },
     "coach": null,
     "manager": null,

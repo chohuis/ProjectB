@@ -1,14 +1,14 @@
 {
   "id": "PLY_01109",
   "name": "홀 조너선",
-  "nameEn": "Hol  조너선",
+  "nameEn": "Hall Jonathan",
   "role": "player",
   "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_LONESTARS",
-  "teamId": "TEAM_ABL_LONESTARS_1",
+  "clubId": "CLUB_ABL_TEX",
+  "teamId": "TEAM_ABL_TEX",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
@@ -19,48 +19,28 @@
       "position": "SS",
       "jerseyNumber": 19,
       "pitching": {
-        "ovr": 69,
-        "stamina": 68,
-        "velocity": 71,
-        "command": 74,
-        "control": 74,
-        "movement": 67,
-        "mentality": 71,
-        "recovery": 71,
-        "clutch": 66,
-        "holdRunners": 59
+        "ovr": 65,
+        "stamina": 63,
+        "velocity": 63,
+        "command": 65,
+        "control": 58,
+        "movement": 59,
+        "mentality": 62,
+        "recovery": 57
       },
       "batting": {
         "ovr": 89,
-        "contact": 95,
-        "power": 94,
-        "eye": 86,
-        "discipline": 90,
-        "speed": 91,
-        "fielding": 85,
-        "arm": 86,
-        "battingClutch": 89,
-        "baseInstinct": 84,
-        "bunting": 81,
-        "platoon": 76
+        "contact": 89,
+        "power": 91,
+        "eye": 89,
+        "discipline": 89,
+        "speed": 93,
+        "fielding": 97,
+        "arm": 94,
+        "battingClutch": 94
       },
       "developmentRate": 44,
-      "potentialHidden": 77,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 89
-      },
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 20900,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 77
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

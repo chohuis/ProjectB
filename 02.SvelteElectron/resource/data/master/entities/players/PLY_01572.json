@@ -1,61 +1,46 @@
 {
   "id": "PLY_01572",
-  "name": "문준호",
-  "nameEn": "Moon Junho",
+  "name": "무라카미 진",
+  "nameEn": "Murakami Jin",
   "role": "player",
-  "age": 16,
+  "age": 28,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_GWANGJU_VISION",
-  "teamId": "TEAM_HS_GWANGJU_VISION",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_GWANGJU_VISION",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_NEONCRANES",
+  "teamId": "TEAM_JBL_CL_NEONCRANES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 21,
+      "position": "RP",
+      "jerseyNumber": 37,
       "pitching": {
-        "ovr": 52,
-        "stamina": 56,
-        "velocity": 51,
-        "command": 50,
-        "control": 51,
-        "movement": 53,
-        "mentality": 55,
-        "recovery": 53,
-        "clutch": 42,
-        "holdRunners": 44
+        "ovr": 69,
+        "stamina": 62,
+        "velocity": 67,
+        "command": 69,
+        "control": 66,
+        "movement": 63,
+        "mentality": 62,
+        "recovery": 61
       },
       "batting": {
-        "ovr": 34,
-        "contact": 40,
-        "power": 28,
-        "eye": 40,
-        "discipline": 33,
-        "speed": 35,
-        "fielding": 32,
-        "arm": 36,
-        "battingClutch": 42,
-        "baseInstinct": 37,
-        "bunting": 40,
-        "platoon": 33
+        "ovr": 49,
+        "contact": 43,
+        "power": 48,
+        "eye": 47,
+        "discipline": 48,
+        "speed": 40,
+        "fielding": 47,
+        "arm": 47,
+        "battingClutch": 49
       },
-      "developmentRate": 69,
-      "potentialHidden": 66,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 52
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        }
-      ]
+      "developmentRate": 55,
+      "potentialHidden": 67
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 57,
-  "popularity": 46
+  }
 }

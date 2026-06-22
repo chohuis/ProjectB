@@ -1,9 +1,9 @@
 {
   "id": "PLY_10081",
-  "name": "윌리엄스 헌터",
-  "nameEn": "Williams Hunter",
+  "name": "Clark Brandon",
+  "nameEn": "Clark Brandon",
   "role": "player",
-  "age": 24,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 81,
-  "popularity": 27,
+  "notes": "국적:도미니카",
+  "diligence": 69,
+  "popularity": 36,
   "militaryStatus": "군필",
   "entryYear": 2027,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 24,
+  "entryAge": 22,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 94,
-      "primaryPosition": "SP",
-      "developmentRate": 50,
-      "potentialHidden": 69,
-      "proServiceYears": 2,
+      "position": "LF",
+      "jerseyNumber": 17,
+      "primaryPosition": "LF",
+      "developmentRate": 65,
+      "potentialHidden": 79,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 70,
-        "stamina": 63,
-        "velocity": 79,
-        "command": 63,
-        "control": 68,
-        "movement": 68,
-        "mentality": 75,
-        "recovery": 69,
-        "clutch": 63,
-        "holdRunners": 61
+        "ovr": 54,
+        "stamina": 49,
+        "velocity": 63,
+        "command": 47,
+        "control": 55,
+        "movement": 46,
+        "mentality": 56,
+        "recovery": 44,
+        "clutch": 47,
+        "holdRunners": 41
       },
       "batting": {
-        "ovr": 77,
-        "contact": 77,
-        "power": 67,
-        "eye": 71,
-        "discipline": 79,
-        "speed": 75,
-        "baseInstinct": 69,
-        "bunting": 61,
+        "ovr": 54,
+        "contact": 56,
+        "power": 44,
+        "eye": 59,
+        "discipline": 56,
+        "speed": 59,
+        "baseInstinct": 47,
+        "bunting": 40,
         "platoon": 50,
-        "fielding": 72,
-        "arm": 71,
-        "battingClutch": 67
+        "fielding": 54,
+        "arm": 44,
+        "battingClutch": 45
       },
       "positionRatings": {
-        "SP": 77
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "LF": 54
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,9 +1,9 @@
 {
   "id": "PLY_09857",
-  "name": "에르난데스 재크",
-  "nameEn": "Hernandez Zach",
+  "name": "Smith Brandon",
+  "nameEn": "Smith Brandon",
   "role": "player",
-  "age": 23,
+  "age": 19,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 48,
-  "popularity": 18,
+  "notes": "국적:일본",
+  "diligence": 59,
+  "popularity": 27,
   "militaryStatus": "군필",
   "entryYear": 2026,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 23,
+  "entryAge": 19,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 5,
+      "jerseyNumber": 91,
       "primaryPosition": "SP",
-      "developmentRate": 52,
-      "potentialHidden": 56,
-      "proServiceYears": 1,
+      "developmentRate": 78,
+      "potentialHidden": 92,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 69,
-        "stamina": 73,
-        "velocity": 78,
-        "command": 70,
-        "control": 65,
-        "movement": 65,
-        "mentality": 74,
-        "recovery": 70,
-        "clutch": 68,
-        "holdRunners": 56
+        "ovr": 51,
+        "stamina": 54,
+        "velocity": 48,
+        "command": 46,
+        "control": 47,
+        "movement": 51,
+        "mentality": 56,
+        "recovery": 49,
+        "clutch": 43,
+        "holdRunners": 46
       },
       "batting": {
-        "ovr": 76,
-        "contact": 74,
-        "power": 70,
-        "eye": 77,
-        "discipline": 78,
-        "speed": 80,
-        "baseInstinct": 70,
-        "bunting": 67,
+        "ovr": 51,
+        "contact": 42,
+        "power": 43,
+        "eye": 55,
+        "discipline": 54,
+        "speed": 51,
+        "baseInstinct": 46,
+        "bunting": 35,
         "platoon": 50,
-        "fielding": 66,
-        "arm": 68,
-        "battingClutch": 76
+        "fielding": 49,
+        "arm": 45,
+        "battingClutch": 51
       },
       "positionRatings": {
-        "SP": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "SP": 51
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,76 +1,46 @@
 {
   "id": "PLY_01911",
-  "name": "전동현",
-  "nameEn": "Jeon Donghyeon",
+  "name": "오카다 토루",
+  "nameEn": "Okada Toru",
   "role": "player",
-  "age": 32,
+  "age": 28,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_SKYGULLS",
-  "teamId": "TEAM_KBL_SKYGULLS_1",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
+  "teamId": "TEAM_JBL_PL_SPIRITBUFFALOS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "RP",
-      "jerseyNumber": 43,
+      "jerseyNumber": 11,
       "pitching": {
-        "ovr": 80,
-        "stamina": 79,
-        "velocity": 76,
-        "command": 80,
-        "control": 84,
-        "movement": 82,
-        "mentality": 84,
-        "recovery": 80,
-        "clutch": 71,
-        "holdRunners": 69
+        "ovr": 72,
+        "stamina": 67,
+        "velocity": 78,
+        "command": 71,
+        "control": 68,
+        "movement": 73,
+        "mentality": 72,
+        "recovery": 73
       },
       "batting": {
-        "ovr": 62,
-        "contact": 59,
-        "power": 68,
-        "eye": 59,
-        "discipline": 65,
-        "speed": 61,
-        "fielding": 65,
-        "arm": 67,
-        "battingClutch": 60,
-        "baseInstinct": 57,
-        "bunting": 52,
-        "platoon": 51
+        "ovr": 44,
+        "contact": 43,
+        "power": 47,
+        "eye": 44,
+        "discipline": 39,
+        "speed": 43,
+        "fielding": 38,
+        "arm": 41,
+        "battingClutch": 46
       },
-      "developmentRate": 41,
-      "potentialHidden": 93,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 80
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 10,
-      "contract": {
-        "salary": 8400,
-        "durationYears": 4,
-        "remainingYears": 4,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 48,
+      "potentialHidden": 91
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 58,
-  "popularity": 31,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,6 +1,6 @@
 {
   "id": "PLY_14353",
-  "name": "카터 딜런",
+  "name": "Carter Dylan",
   "nameEn": "Carter Dylan",
   "role": "player",
   "age": 23,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 79,
   "popularity": 33,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 66
       },
       "batting": {
-        "ovr": 65,
-        "contact": 66,
-        "power": 61,
-        "eye": 63,
-        "discipline": 69,
-        "speed": 72,
-        "baseInstinct": 58,
-        "bunting": 50,
-        "platoon": 49,
-        "fielding": 65,
-        "arm": 63,
-        "battingClutch": 53
+        "ovr": 67,
+        "contact": 68,
+        "power": 63,
+        "eye": 65,
+        "discipline": 71,
+        "speed": 74,
+        "baseInstinct": 60,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 65,
+        "battingClutch": 55
       },
       "positionRatings": {
         "1B": 67

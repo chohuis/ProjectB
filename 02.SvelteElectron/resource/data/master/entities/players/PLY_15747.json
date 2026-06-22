@@ -1,6 +1,6 @@
 {
   "id": "PLY_15747",
-  "name": "화이트 딜런",
+  "name": "White Dylan",
   "nameEn": "White Dylan",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 51,
   "popularity": 31,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 65,
       "proServiceYears": 13,
       "pitching": {
-        "ovr": 89,
-        "stamina": 79,
-        "velocity": 97,
-        "command": 78,
-        "control": 93,
-        "movement": 80,
-        "mentality": 85,
-        "recovery": 81,
-        "clutch": 85,
-        "holdRunners": 80
+        "ovr": 70,
+        "stamina": 62,
+        "velocity": 76,
+        "command": 61,
+        "control": 73,
+        "movement": 63,
+        "mentality": 67,
+        "recovery": 64,
+        "clutch": 67,
+        "holdRunners": 63
       },
       "batting": {
         "ovr": 70,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

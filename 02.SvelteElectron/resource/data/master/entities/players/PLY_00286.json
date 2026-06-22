@@ -1,7 +1,7 @@
 {
   "id": "PLY_00286",
   "name": "강도현",
-  "nameEn": "Kang Dohyeon",
+  "nameEn": "Baek Min-jae",
   "role": "player",
   "age": 19,
   "status": "active",
@@ -19,47 +19,28 @@
       "position": "RP",
       "jerseyNumber": 6,
       "pitching": {
-        "ovr": 61,
-        "stamina": 64,
-        "velocity": 59,
-        "command": 60,
-        "control": 64,
-        "movement": 63,
-        "mentality": 63,
-        "recovery": 66,
-        "clutch": 52,
-        "holdRunners": 49
+        "ovr": 62,
+        "stamina": 60,
+        "velocity": 68,
+        "command": 66,
+        "control": 68,
+        "movement": 62,
+        "mentality": 65,
+        "recovery": 59
       },
       "batting": {
-        "ovr": 43,
-        "contact": 39,
-        "power": 49,
-        "eye": 40,
-        "discipline": 46,
-        "speed": 39,
-        "fielding": 44,
-        "arm": 43,
-        "battingClutch": 40,
-        "baseInstinct": 44,
-        "bunting": 39,
-        "platoon": 36
+        "ovr": 35,
+        "contact": 36,
+        "power": 36,
+        "eye": 41,
+        "discipline": 39,
+        "speed": 36,
+        "fielding": 32,
+        "arm": 40,
+        "battingClutch": 42
       },
       "developmentRate": 53,
-      "potentialHidden": 80,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_KNUCKLEBALL",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 80
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

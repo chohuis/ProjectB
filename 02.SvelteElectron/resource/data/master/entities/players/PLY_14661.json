@@ -1,6 +1,6 @@
 {
   "id": "PLY_14661",
-  "name": "스미스 로건",
+  "name": "Smith Logan",
   "nameEn": "Smith Logan",
   "role": "player",
   "age": 30,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 47,
   "popularity": 30,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 44,
       "proServiceYears": 8,
       "pitching": {
-        "ovr": 65,
-        "stamina": 61,
-        "velocity": 76,
-        "command": 63,
-        "control": 58,
-        "movement": 62,
-        "mentality": 59,
-        "recovery": 56,
-        "clutch": 64,
-        "holdRunners": 52
+        "ovr": 58,
+        "stamina": 54,
+        "velocity": 68,
+        "command": 56,
+        "control": 52,
+        "movement": 55,
+        "mentality": 53,
+        "recovery": 50,
+        "clutch": 57,
+        "holdRunners": 46
       },
       "batting": {
         "ovr": 58,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

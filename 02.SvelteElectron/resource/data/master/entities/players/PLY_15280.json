@@ -1,6 +1,6 @@
 {
   "id": "PLY_15280",
-  "name": "스미스 카일",
+  "name": "Smith Kyle",
   "nameEn": "Smith Kyle",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 60,
   "popularity": 36,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 64,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 75,
-        "stamina": 72,
-        "velocity": 86,
-        "command": 75,
-        "control": 68,
-        "movement": 68,
-        "mentality": 70,
-        "recovery": 65,
-        "clutch": 73,
-        "holdRunners": 72
+        "ovr": 69,
+        "stamina": 66,
+        "velocity": 79,
+        "command": 69,
+        "control": 63,
+        "movement": 63,
+        "mentality": 64,
+        "recovery": 60,
+        "clutch": 67,
+        "holdRunners": 66
       },
       "batting": {
         "ovr": 69,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 69
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

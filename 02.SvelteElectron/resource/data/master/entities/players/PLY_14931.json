@@ -1,6 +1,6 @@
 {
   "id": "PLY_14931",
-  "name": "존스 코너",
+  "name": "Jones Connor",
   "nameEn": "Jones Connor",
   "role": "player",
   "age": 34,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 77,
   "popularity": 46,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 47
       },
       "batting": {
-        "ovr": 73,
-        "contact": 63,
-        "power": 76,
-        "eye": 63,
-        "discipline": 70,
-        "speed": 72,
-        "baseInstinct": 68,
-        "bunting": 54,
-        "platoon": 63,
-        "fielding": 68,
-        "arm": 62,
-        "battingClutch": 65
+        "ovr": 58,
+        "contact": 50,
+        "power": 60,
+        "eye": 50,
+        "discipline": 56,
+        "speed": 57,
+        "baseInstinct": 54,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 49,
+        "battingClutch": 52
       },
       "positionRatings": {
         "C": 58

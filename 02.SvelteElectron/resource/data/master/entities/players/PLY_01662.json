@@ -1,61 +1,46 @@
 {
   "id": "PLY_01662",
-  "name": "구민우",
-  "nameEn": "Gu Minwoo",
+  "name": "무라카미 하야토",
+  "nameEn": "Murakami Hayato",
   "role": "player",
-  "age": 17,
+  "age": 21,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
-  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_CHUNCHEON_HIGHLAND",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONDRAKES",
+  "teamId": "TEAM_JBL_CL_IRONDRAKES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "C",
-      "jerseyNumber": 11,
+      "position": "RP",
+      "jerseyNumber": 37,
       "pitching": {
-        "ovr": 40,
-        "stamina": 40,
-        "velocity": 44,
-        "command": 36,
-        "control": 43,
-        "movement": 35,
-        "mentality": 42,
-        "recovery": 38,
-        "clutch": 41,
-        "holdRunners": 41
+        "ovr": 56,
+        "stamina": 49,
+        "velocity": 62,
+        "command": 57,
+        "control": 59,
+        "movement": 55,
+        "mentality": 59,
+        "recovery": 59
       },
       "batting": {
-        "ovr": 60,
-        "contact": 64,
-        "power": 63,
-        "eye": 61,
-        "discipline": 60,
-        "speed": 56,
-        "fielding": 65,
-        "arm": 60,
-        "battingClutch": 54,
-        "baseInstinct": 57,
-        "bunting": 49,
-        "platoon": 55
+        "ovr": 28,
+        "contact": 29,
+        "power": 32,
+        "eye": 28,
+        "discipline": 27,
+        "speed": 32,
+        "fielding": 25,
+        "arm": 25,
+        "battingClutch": 32
       },
-      "developmentRate": 54,
-      "potentialHidden": 85,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 45,
+      "potentialHidden": 84
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 75,
-  "popularity": 42
+  }
 }

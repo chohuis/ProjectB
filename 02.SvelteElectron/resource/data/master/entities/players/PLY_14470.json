@@ -1,6 +1,6 @@
 {
   "id": "PLY_14470",
-  "name": "홀 제이슨",
+  "name": "Hall Jason",
   "nameEn": "Hall Jason",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 59,
   "popularity": 19,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 52,
       "proServiceYears": 13,
       "pitching": {
-        "ovr": 84,
-        "stamina": 81,
-        "velocity": 87,
-        "command": 73,
-        "control": 76,
-        "movement": 88,
-        "mentality": 78,
-        "recovery": 79,
-        "clutch": 79,
-        "holdRunners": 81
+        "ovr": 66,
+        "stamina": 64,
+        "velocity": 68,
+        "command": 57,
+        "control": 60,
+        "movement": 69,
+        "mentality": 61,
+        "recovery": 62,
+        "clutch": 62,
+        "holdRunners": 64
       },
       "batting": {
         "ovr": 66,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

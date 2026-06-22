@@ -1,6 +1,6 @@
 {
   "id": "PLY_14454",
-  "name": "그린 케빈",
+  "name": "Green Kevin",
   "nameEn": "Green Kevin",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 50,
   "popularity": 34,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 55
       },
       "batting": {
-        "ovr": 72,
-        "contact": 72,
-        "power": 64,
-        "eye": 68,
-        "discipline": 68,
-        "speed": 67,
-        "baseInstinct": 64,
-        "bunting": 57,
-        "platoon": 55,
-        "fielding": 73,
-        "arm": 61,
-        "battingClutch": 72
+        "ovr": 66,
+        "contact": 66,
+        "power": 59,
+        "eye": 62,
+        "discipline": 62,
+        "speed": 61,
+        "baseInstinct": 59,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 56,
+        "battingClutch": 66
       },
       "positionRatings": {
         "2B": 66

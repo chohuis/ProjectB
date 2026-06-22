@@ -1,6 +1,6 @@
 {
   "id": "PLY_14628",
-  "name": "해리스 콜",
+  "name": "Harris Cole",
   "nameEn": "Harris Cole",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 48,
   "popularity": 22,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 53,
       "proServiceYears": 4,
       "pitching": {
-        "ovr": 71,
-        "stamina": 63,
-        "velocity": 78,
-        "command": 72,
-        "control": 71,
-        "movement": 70,
-        "mentality": 64,
-        "recovery": 60,
-        "clutch": 58,
-        "holdRunners": 59
+        "ovr": 72,
+        "stamina": 64,
+        "velocity": 79,
+        "command": 73,
+        "control": 72,
+        "movement": 71,
+        "mentality": 65,
+        "recovery": 61,
+        "clutch": 59,
+        "holdRunners": 60
       },
       "batting": {
         "ovr": 72,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 72
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

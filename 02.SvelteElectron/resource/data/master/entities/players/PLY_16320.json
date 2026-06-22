@@ -1,6 +1,6 @@
 {
   "id": "PLY_16320",
-  "name": "그린 제이슨",
+  "name": "Green Jason",
   "nameEn": "Green Jason",
   "role": "player",
   "age": 34,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 68,
   "popularity": 26,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 72,
       "proServiceYears": 12,
       "pitching": {
-        "ovr": 85,
-        "stamina": 86,
-        "velocity": 98,
-        "command": 88,
-        "control": 77,
-        "movement": 75,
-        "mentality": 84,
-        "recovery": 71,
-        "clutch": 80,
-        "holdRunners": 75
+        "ovr": 67,
+        "stamina": 68,
+        "velocity": 77,
+        "command": 69,
+        "control": 61,
+        "movement": 59,
+        "mentality": 66,
+        "recovery": 56,
+        "clutch": 63,
+        "holdRunners": 59
       },
       "batting": {
         "ovr": 67,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

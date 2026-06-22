@@ -1,72 +1,46 @@
 {
   "id": "PLY_01916",
-  "name": "황기훈",
-  "nameEn": "Hwang Gihun",
+  "name": "고토 츠바사",
+  "nameEn": "Goto Tsubasa",
   "role": "player",
   "age": 25,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_SKYGULLS",
-  "teamId": "TEAM_KBL_SKYGULLS_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
+  "teamId": "TEAM_JBL_PL_SPIRITBUFFALOS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "L",
-      "position": "C",
-      "jerseyNumber": 26,
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 16,
       "pitching": {
-        "ovr": 43,
-        "stamina": 44,
-        "velocity": 44,
-        "command": 48,
-        "control": 39,
-        "movement": 42,
-        "mentality": 40,
-        "recovery": 44,
-        "clutch": 39,
-        "holdRunners": 44
+        "ovr": 53,
+        "stamina": 55,
+        "velocity": 57,
+        "command": 57,
+        "control": 54,
+        "movement": 53,
+        "mentality": 53,
+        "recovery": 51
       },
       "batting": {
-        "ovr": 63,
-        "contact": 65,
-        "power": 69,
-        "eye": 61,
-        "discipline": 60,
-        "speed": 62,
-        "fielding": 68,
-        "arm": 62,
-        "battingClutch": 64,
-        "baseInstinct": 53,
-        "bunting": 55,
-        "platoon": 57
+        "ovr": 90,
+        "contact": 83,
+        "power": 94,
+        "eye": 89,
+        "discipline": 89,
+        "speed": 79,
+        "fielding": 84,
+        "arm": 79,
+        "battingClutch": 83
       },
-      "developmentRate": 66,
-      "potentialHidden": 67,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 3,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 40,
+      "potentialHidden": 86
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 63,
-  "popularity": 41,
-  "militaryStatus": "군필"
+  }
 }

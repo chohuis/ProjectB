@@ -1,6 +1,6 @@
 {
   "id": "PLY_14646",
-  "name": "리 코디",
+  "name": "Lee Cody",
   "nameEn": "Lee Cody",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 73,
   "popularity": 11,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 83,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 58,
-        "stamina": 63,
-        "velocity": 56,
-        "command": 59,
-        "control": 59,
-        "movement": 62,
-        "mentality": 57,
-        "recovery": 58,
-        "clutch": 54,
-        "holdRunners": 55
+        "ovr": 59,
+        "stamina": 64,
+        "velocity": 57,
+        "command": 60,
+        "control": 60,
+        "movement": 63,
+        "mentality": 58,
+        "recovery": 59,
+        "clutch": 55,
+        "holdRunners": 56
       },
       "batting": {
         "ovr": 59,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

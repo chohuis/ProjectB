@@ -1,7 +1,7 @@
 {
   "id": "PLY_00322",
   "name": "유민석",
-  "nameEn": "Yoo Minseok",
+  "nameEn": "Min Geon-woo",
   "role": "player",
   "age": 28,
   "status": "active",
@@ -19,58 +19,28 @@
       "position": "SP",
       "jerseyNumber": 2,
       "pitching": {
-        "ovr": 63,
-        "stamina": 69,
-        "velocity": 65,
-        "command": 61,
-        "control": 59,
-        "movement": 62,
-        "mentality": 61,
-        "recovery": 67,
-        "clutch": 57,
-        "holdRunners": 60
+        "ovr": 69,
+        "stamina": 68,
+        "velocity": 70,
+        "command": 70,
+        "control": 66,
+        "movement": 67,
+        "mentality": 69,
+        "recovery": 64
       },
       "batting": {
-        "ovr": 45,
-        "contact": 46,
-        "power": 44,
-        "eye": 41,
-        "discipline": 48,
-        "speed": 39,
-        "fielding": 41,
-        "arm": 51,
-        "battingClutch": 41,
-        "baseInstinct": 44,
-        "bunting": 36,
-        "platoon": 38
+        "ovr": 38,
+        "contact": 39,
+        "power": 37,
+        "eye": 38,
+        "discipline": 37,
+        "speed": 41,
+        "fielding": 32,
+        "arm": 34,
+        "battingClutch": 39
       },
       "developmentRate": 46,
-      "potentialHidden": 77,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_KNUCKLEBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 8,
-      "contract": {
-        "salary": 1600,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 77
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

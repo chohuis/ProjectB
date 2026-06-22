@@ -1,61 +1,46 @@
 {
   "id": "PLY_01846",
-  "name": "차승우",
-  "nameEn": "Cha Seungwoo",
+  "name": "타나카 료",
+  "nameEn": "Tanaka Ryo",
   "role": "player",
-  "age": 17,
+  "age": 31,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_SUNCHEON_BAY",
-  "teamId": "TEAM_HS_SUNCHEON_BAY",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_SUNCHEON_BAY",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
+  "teamId": "TEAM_JBL_PL_THUNDERFALCONS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "1B",
-      "jerseyNumber": 15,
+      "position": "C",
+      "jerseyNumber": 41,
       "pitching": {
-        "ovr": 28,
-        "stamina": 29,
-        "velocity": 27,
-        "command": 31,
-        "control": 29,
-        "movement": 28,
-        "mentality": 30,
-        "recovery": 26,
-        "clutch": 36,
-        "holdRunners": 43
+        "ovr": 40,
+        "stamina": 34,
+        "velocity": 40,
+        "command": 37,
+        "control": 33,
+        "movement": 33,
+        "mentality": 38,
+        "recovery": 38
       },
       "batting": {
-        "ovr": 48,
-        "contact": 45,
-        "power": 51,
-        "eye": 46,
-        "discipline": 51,
-        "speed": 43,
-        "fielding": 47,
-        "arm": 54,
-        "battingClutch": 48,
-        "baseInstinct": 41,
-        "bunting": 37,
-        "platoon": 46
+        "ovr": 69,
+        "contact": 68,
+        "power": 66,
+        "eye": 70,
+        "discipline": 68,
+        "speed": 64,
+        "fielding": 72,
+        "arm": 68,
+        "battingClutch": 68
       },
-      "developmentRate": 51,
-      "potentialHidden": 91,
-      "primaryPosition": "1B",
-      "positionRatings": {
-        "1B": 48
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 56,
+      "potentialHidden": 80
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 52,
-  "popularity": 43
+  }
 }

@@ -1,7 +1,7 @@
 {
   "id": "PLY_00376",
   "name": "윤지호",
-  "nameEn": "Yoon Jiho",
+  "nameEn": "Kwak Jae-min",
   "role": "player",
   "age": 21,
   "status": "active",
@@ -19,48 +19,28 @@
       "position": "SS",
       "jerseyNumber": 16,
       "pitching": {
-        "ovr": 40,
-        "stamina": 40,
-        "velocity": 40,
-        "command": 39,
-        "control": 40,
-        "movement": 40,
-        "mentality": 44,
-        "recovery": 37,
-        "clutch": 37,
-        "holdRunners": 33
+        "ovr": 38,
+        "stamina": 32,
+        "velocity": 36,
+        "command": 37,
+        "control": 31,
+        "movement": 31,
+        "mentality": 34,
+        "recovery": 32
       },
       "batting": {
-        "ovr": 60,
-        "contact": 61,
-        "power": 62,
-        "eye": 56,
-        "discipline": 56,
-        "speed": 57,
-        "fielding": 63,
-        "arm": 59,
-        "battingClutch": 50,
-        "baseInstinct": 50,
-        "bunting": 52,
-        "platoon": 49
+        "ovr": 66,
+        "contact": 59,
+        "power": 56,
+        "eye": 59,
+        "discipline": 64,
+        "speed": 64,
+        "fielding": 61,
+        "arm": 63,
+        "battingClutch": 64
       },
       "developmentRate": 49,
-      "potentialHidden": 57,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 60
-      },
-      "proServiceYears": 1,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 57
     },
     "coach": {
       "specialty": "-",
@@ -100,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

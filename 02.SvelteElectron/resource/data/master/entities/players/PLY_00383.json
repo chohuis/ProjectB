@@ -1,7 +1,7 @@
 {
   "id": "PLY_00383",
   "name": "윤찬영",
-  "nameEn": "Yoon Chanyeong",
+  "nameEn": "Na Seung-min",
   "role": "player",
   "age": 22,
   "status": "active",
@@ -19,58 +19,28 @@
       "position": "SP",
       "jerseyNumber": 3,
       "pitching": {
-        "ovr": 55,
-        "stamina": 57,
-        "velocity": 59,
-        "command": 57,
-        "control": 51,
-        "movement": 52,
-        "mentality": 58,
-        "recovery": 56,
-        "clutch": 49,
-        "holdRunners": 51
+        "ovr": 60,
+        "stamina": 58,
+        "velocity": 58,
+        "command": 54,
+        "control": 60,
+        "movement": 59,
+        "mentality": 52,
+        "recovery": 53
       },
       "batting": {
-        "ovr": 37,
-        "contact": 39,
-        "power": 39,
-        "eye": 39,
-        "discipline": 35,
-        "speed": 43,
-        "fielding": 38,
-        "arm": 39,
-        "battingClutch": 39,
-        "baseInstinct": 36,
-        "bunting": 30,
-        "platoon": 34
+        "ovr": 23,
+        "contact": 26,
+        "power": 24,
+        "eye": 22,
+        "discipline": 24,
+        "speed": 22,
+        "fielding": 25,
+        "arm": 29,
+        "battingClutch": 27
       },
       "developmentRate": 52,
-      "potentialHidden": 59,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 55
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 2,
-      "contract": {
-        "salary": 1000,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 59
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

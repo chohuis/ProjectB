@@ -1,6 +1,6 @@
 {
   "id": "PLY_15649",
-  "name": "브라운 미겔",
+  "name": "Brown Miguel",
   "nameEn": "Brown Miguel",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 74,
   "popularity": 31,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 74,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 53,
-        "stamina": 50,
-        "velocity": 52,
-        "command": 49,
-        "control": 52,
-        "movement": 56,
-        "mentality": 55,
-        "recovery": 54,
-        "clutch": 47,
-        "holdRunners": 48
+        "ovr": 54,
+        "stamina": 51,
+        "velocity": 53,
+        "command": 50,
+        "control": 53,
+        "movement": 57,
+        "mentality": 56,
+        "recovery": 55,
+        "clutch": 48,
+        "holdRunners": 49
       },
       "batting": {
         "ovr": 54,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 54
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

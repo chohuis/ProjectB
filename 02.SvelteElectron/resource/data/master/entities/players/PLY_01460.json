@@ -1,14 +1,14 @@
 {
   "id": "PLY_01460",
   "name": "토머스 이선",
-  "nameEn": "To 머스 이선",
+  "nameEn": "Thomas Ethan",
   "role": "player",
   "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_DESERTSERPENTS",
-  "teamId": "TEAM_ABL_DESERTSERPENTS_1",
+  "clubId": "CLUB_ABL_ARI",
+  "teamId": "TEAM_ABL_ARI",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
@@ -19,62 +19,28 @@
       "position": "RP",
       "jerseyNumber": 10,
       "pitching": {
-        "ovr": 59,
-        "stamina": 62,
-        "velocity": 61,
-        "command": 57,
-        "control": 55,
-        "movement": 55,
-        "mentality": 61,
-        "recovery": 62,
-        "clutch": 52,
-        "holdRunners": 58
+        "ovr": 72,
+        "stamina": 66,
+        "velocity": 79,
+        "command": 71,
+        "control": 72,
+        "movement": 72,
+        "mentality": 70,
+        "recovery": 66
       },
       "batting": {
-        "ovr": 41,
-        "contact": 37,
-        "power": 35,
-        "eye": 37,
-        "discipline": 39,
-        "speed": 36,
-        "fielding": 40,
-        "arm": 47,
-        "battingClutch": 46,
-        "baseInstinct": 41,
-        "bunting": 31,
-        "platoon": 36
+        "ovr": 45,
+        "contact": 42,
+        "power": 44,
+        "eye": 44,
+        "discipline": 43,
+        "speed": 46,
+        "fielding": 42,
+        "arm": 45,
+        "battingClutch": 46
       },
       "developmentRate": 41,
-      "potentialHidden": 90,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 3,
-      "contract": {
-        "salary": 13200,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 90
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,9 +1,9 @@
 {
   "id": "PLY_10769",
-  "name": "톰슨 헌터",
-  "nameEn": "Thompson Hunter",
+  "name": "White Hunter",
+  "nameEn": "White Hunter",
   "role": "player",
-  "age": 25,
+  "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 72,
-  "popularity": 38,
+  "notes": "국적:파나마",
+  "diligence": 73,
+  "popularity": 27,
   "militaryStatus": "군필",
   "entryYear": 2031,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 25,
+  "entryAge": 26,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 68,
+      "jerseyNumber": 18,
       "primaryPosition": "SP",
-      "developmentRate": 52,
-      "potentialHidden": 74,
-      "proServiceYears": 3,
+      "developmentRate": 69,
+      "potentialHidden": 60,
+      "proServiceYears": 4,
       "pitching": {
-        "ovr": 78,
-        "stamina": 70,
-        "velocity": 84,
-        "command": 79,
-        "control": 77,
-        "movement": 76,
-        "mentality": 76,
-        "recovery": 80,
+        "ovr": 76,
+        "stamina": 76,
+        "velocity": 83,
+        "command": 77,
+        "control": 68,
+        "movement": 79,
+        "mentality": 78,
+        "recovery": 68,
         "clutch": 67,
-        "holdRunners": 76
+        "holdRunners": 68
       },
       "batting": {
-        "ovr": 81,
-        "contact": 74,
-        "power": 72,
-        "eye": 79,
-        "discipline": 74,
-        "speed": 77,
-        "baseInstinct": 80,
-        "bunting": 66,
+        "ovr": 76,
+        "contact": 72,
+        "power": 78,
+        "eye": 74,
+        "discipline": 78,
+        "speed": 81,
+        "baseInstinct": 75,
+        "bunting": 64,
         "platoon": 50,
-        "fielding": 70,
-        "arm": 74,
-        "battingClutch": 78
+        "fielding": 75,
+        "arm": 76,
+        "battingClutch": 69
       },
       "positionRatings": {
-        "SP": 81
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "SP": 76
+      }
     },
     "coach": null,
     "manager": null,

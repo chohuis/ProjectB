@@ -1,9 +1,9 @@
 {
   "id": "PLY_12941",
-  "name": "리 타일러",
-  "nameEn": "Lee Tyler",
+  "name": "Taylor Derek",
+  "nameEn": "Taylor Derek",
   "role": "player",
-  "age": 20,
+  "age": 35,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 59,
-  "popularity": 16,
+  "notes": "국적:파나마",
+  "diligence": 53,
+  "popularity": 18,
   "militaryStatus": "군필",
   "entryYear": 2044,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 20,
+  "entryAge": 35,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 31,
-      "primaryPosition": "SP",
-      "developmentRate": 58,
-      "potentialHidden": 77,
-      "proServiceYears": 0,
+      "position": "SS",
+      "jerseyNumber": 91,
+      "primaryPosition": "SS",
+      "developmentRate": 37,
+      "potentialHidden": 61,
+      "proServiceYears": 13,
       "pitching": {
-        "ovr": 50,
-        "stamina": 42,
-        "velocity": 50,
-        "command": 51,
-        "control": 54,
-        "movement": 44,
-        "mentality": 44,
-        "recovery": 50,
-        "clutch": 42,
-        "holdRunners": 43
+        "ovr": 72,
+        "stamina": 67,
+        "velocity": 82,
+        "command": 71,
+        "control": 70,
+        "movement": 65,
+        "mentality": 73,
+        "recovery": 68,
+        "clutch": 63,
+        "holdRunners": 68
       },
       "batting": {
-        "ovr": 53,
-        "contact": 49,
-        "power": 44,
-        "eye": 48,
-        "discipline": 54,
-        "speed": 47,
-        "baseInstinct": 50,
-        "bunting": 39,
+        "ovr": 72,
+        "contact": 70,
+        "power": 67,
+        "eye": 75,
+        "discipline": 67,
+        "speed": 70,
+        "baseInstinct": 61,
+        "bunting": 63,
         "platoon": 50,
-        "fielding": 43,
-        "arm": 46,
-        "battingClutch": 49
+        "fielding": 74,
+        "arm": 62,
+        "battingClutch": 68
       },
       "positionRatings": {
-        "SP": 53
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SS": 72
+      }
     },
     "coach": null,
     "manager": null,

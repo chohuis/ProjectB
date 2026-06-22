@@ -1,72 +1,46 @@
 {
   "id": "PLY_01905",
-  "name": "성민우",
-  "nameEn": "Seong Minwoo",
+  "name": "사토 슌",
+  "nameEn": "Sato Shun",
   "role": "player",
-  "age": 29,
+  "age": 31,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_SKYGULLS",
-  "teamId": "TEAM_KBL_SKYGULLS_1",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
+  "teamId": "TEAM_JBL_PL_SPIRITBUFFALOS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
-      "handedness": "R",
-      "position": "UT",
-      "jerseyNumber": 85,
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 5,
       "pitching": {
-        "ovr": 27,
-        "stamina": 25,
-        "velocity": 26,
-        "command": 29,
-        "control": 23,
-        "movement": 28,
-        "mentality": 28,
-        "recovery": 29,
-        "clutch": 36,
-        "holdRunners": 39
+        "ovr": 87,
+        "stamina": 95,
+        "velocity": 95,
+        "command": 88,
+        "control": 87,
+        "movement": 84,
+        "mentality": 87,
+        "recovery": 85
       },
       "batting": {
-        "ovr": 47,
-        "contact": 49,
-        "power": 53,
-        "eye": 44,
-        "discipline": 52,
-        "speed": 41,
-        "fielding": 48,
-        "arm": 49,
-        "battingClutch": 42,
-        "baseInstinct": 44,
-        "bunting": 43,
-        "platoon": 34
+        "ovr": 70,
+        "contact": 64,
+        "power": 69,
+        "eye": 65,
+        "discipline": 68,
+        "speed": 65,
+        "fielding": 70,
+        "arm": 68,
+        "battingClutch": 71
       },
-      "developmentRate": 60,
-      "potentialHidden": 71,
-      "primaryPosition": "UT",
-      "positionRatings": {
-        "UT": 47
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 7,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 40,
+      "potentialHidden": 83
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 80,
-  "popularity": 32,
-  "militaryStatus": "군필"
+  }
 }

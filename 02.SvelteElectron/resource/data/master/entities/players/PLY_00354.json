@@ -1,7 +1,7 @@
 {
   "id": "PLY_00354",
   "name": "노지성",
-  "nameEn": "No Jiseong",
+  "nameEn": "Yoon Tae-yang",
   "role": "player",
   "age": 27,
   "status": "active",
@@ -19,48 +19,28 @@
       "position": "2B",
       "jerseyNumber": 14,
       "pitching": {
-        "ovr": 30,
-        "stamina": 31,
-        "velocity": 29,
-        "command": 28,
-        "control": 35,
-        "movement": 33,
-        "mentality": 31,
-        "recovery": 26,
-        "clutch": 36,
-        "holdRunners": 42
+        "ovr": 32,
+        "stamina": 23,
+        "velocity": 30,
+        "command": 32,
+        "control": 30,
+        "movement": 23,
+        "mentality": 32,
+        "recovery": 25
       },
       "batting": {
-        "ovr": 50,
-        "contact": 46,
-        "power": 47,
-        "eye": 51,
-        "discipline": 51,
-        "speed": 47,
-        "fielding": 49,
-        "arm": 51,
-        "battingClutch": 51,
-        "baseInstinct": 47,
-        "bunting": 38,
-        "platoon": 45
+        "ovr": 51,
+        "contact": 55,
+        "power": 51,
+        "eye": 54,
+        "discipline": 53,
+        "speed": 54,
+        "fielding": 58,
+        "arm": 56,
+        "battingClutch": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 86,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 50
-      },
-      "proServiceYears": 7,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 86
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

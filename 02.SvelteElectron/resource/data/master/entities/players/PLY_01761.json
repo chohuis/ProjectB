@@ -1,61 +1,46 @@
 {
   "id": "PLY_01761",
-  "name": "전현준",
-  "nameEn": "Jeon Hyeonjun",
+  "name": "이케다 유타",
+  "nameEn": "Ikeda Yuta",
   "role": "player",
-  "age": 17,
+  "age": 22,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_MASAN_HARBOR",
-  "teamId": "TEAM_HS_MASAN_HARBOR",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_MASAN_HARBOR",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+  "teamId": "TEAM_JBL_CL_SILVERWOLVES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
       "position": "SS",
-      "jerseyNumber": 20,
+      "jerseyNumber": 46,
       "pitching": {
-        "ovr": 30,
-        "stamina": 31,
-        "velocity": 26,
-        "command": 27,
-        "control": 34,
-        "movement": 35,
-        "mentality": 32,
-        "recovery": 32,
-        "clutch": 46,
-        "holdRunners": 36
+        "ovr": 49,
+        "stamina": 42,
+        "velocity": 50,
+        "command": 48,
+        "control": 46,
+        "movement": 48,
+        "mentality": 48,
+        "recovery": 47
       },
       "batting": {
-        "ovr": 50,
-        "contact": 54,
-        "power": 52,
-        "eye": 50,
-        "discipline": 56,
-        "speed": 54,
-        "fielding": 49,
-        "arm": 49,
-        "battingClutch": 43,
-        "baseInstinct": 39,
-        "bunting": 37,
-        "platoon": 45
+        "ovr": 67,
+        "contact": 68,
+        "power": 66,
+        "eye": 66,
+        "discipline": 74,
+        "speed": 72,
+        "fielding": 71,
+        "arm": 73,
+        "battingClutch": 67
       },
-      "developmentRate": 58,
-      "potentialHidden": 75,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 50
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 50,
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 68,
-  "popularity": 21
+  }
 }

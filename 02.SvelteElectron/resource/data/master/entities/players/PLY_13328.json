@@ -1,9 +1,9 @@
 {
   "id": "PLY_13328",
-  "name": "로빈슨 칼렙",
-  "nameEn": "Robinson Caleb",
+  "name": "Williams Luis",
+  "nameEn": "Williams Luis",
   "role": "player",
-  "age": 19,
+  "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 68,
-  "popularity": 26,
+  "notes": "국적:미국",
+  "diligence": 60,
+  "popularity": 42,
   "militaryStatus": "군필",
   "entryYear": 2047,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 19,
+  "entryAge": 27,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 6,
+      "jerseyNumber": 72,
       "primaryPosition": "SP",
-      "developmentRate": 62,
-      "potentialHidden": 67,
-      "proServiceYears": 0,
+      "developmentRate": 67,
+      "potentialHidden": 69,
+      "proServiceYears": 5,
       "pitching": {
-        "ovr": 59,
-        "stamina": 61,
-        "velocity": 64,
-        "command": 51,
-        "control": 59,
-        "movement": 61,
-        "mentality": 58,
-        "recovery": 50,
-        "clutch": 52,
-        "holdRunners": 55
+        "ovr": 76,
+        "stamina": 79,
+        "velocity": 80,
+        "command": 66,
+        "control": 78,
+        "movement": 77,
+        "mentality": 76,
+        "recovery": 72,
+        "clutch": 65,
+        "holdRunners": 67
       },
       "batting": {
-        "ovr": 64,
-        "contact": 68,
-        "power": 63,
-        "eye": 68,
-        "discipline": 62,
-        "speed": 58,
-        "baseInstinct": 64,
-        "bunting": 57,
+        "ovr": 76,
+        "contact": 77,
+        "power": 66,
+        "eye": 72,
+        "discipline": 67,
+        "speed": 82,
+        "baseInstinct": 66,
+        "bunting": 61,
         "platoon": 50,
-        "fielding": 60,
-        "arm": 61,
-        "battingClutch": 54
+        "fielding": 70,
+        "arm": 73,
+        "battingClutch": 70
       },
       "positionRatings": {
-        "SP": 64
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 1
-        }
-      ]
+        "SP": 76
+      }
     },
     "coach": null,
     "manager": null,

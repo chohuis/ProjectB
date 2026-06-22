@@ -1,6 +1,6 @@
 {
   "id": "PLY_16527",
-  "name": "워커 코디",
+  "name": "Walker Cody",
   "nameEn": "Walker Cody",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 62,
   "popularity": 18,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 56
       },
       "batting": {
-        "ovr": 67,
-        "contact": 64,
-        "power": 67,
-        "eye": 71,
-        "discipline": 60,
-        "speed": 67,
-        "baseInstinct": 63,
-        "bunting": 49,
-        "platoon": 49,
-        "fielding": 63,
-        "arm": 60,
-        "battingClutch": 55
+        "ovr": 69,
+        "contact": 66,
+        "power": 69,
+        "eye": 73,
+        "discipline": 62,
+        "speed": 69,
+        "baseInstinct": 65,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 62,
+        "battingClutch": 57
       },
       "positionRatings": {
         "3B": 69

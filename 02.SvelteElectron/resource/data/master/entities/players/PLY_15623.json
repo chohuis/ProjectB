@@ -1,6 +1,6 @@
 {
   "id": "PLY_15623",
-  "name": "넬슨 조던",
+  "name": "Nelson Jordan",
   "nameEn": "Nelson Jordan",
   "role": "player",
   "age": 18,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 68,
   "popularity": 19,
   "militaryStatus": "군필",

@@ -1,9 +1,9 @@
 {
   "id": "PLY_12314",
-  "name": "킹 로건",
-  "nameEn": "King Logan",
+  "name": "Anderson Marcus",
+  "nameEn": "Anderson Marcus",
   "role": "player",
-  "age": 25,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 83,
-  "popularity": 48,
+  "notes": "국적:도미니카",
+  "diligence": 46,
+  "popularity": 17,
   "militaryStatus": "군필",
   "entryYear": 2040,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 25,
+  "entryAge": 20,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 91,
-      "primaryPosition": "SP",
-      "developmentRate": 59,
+      "position": "SS",
+      "jerseyNumber": 27,
+      "primaryPosition": "SS",
+      "developmentRate": 67,
       "potentialHidden": 72,
-      "proServiceYears": 3,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 66,
-        "stamina": 62,
-        "velocity": 66,
-        "command": 66,
-        "control": 63,
-        "movement": 58,
-        "mentality": 63,
-        "recovery": 60,
-        "clutch": 63,
-        "holdRunners": 52
+        "ovr": 54,
+        "stamina": 48,
+        "velocity": 63,
+        "command": 53,
+        "control": 56,
+        "movement": 48,
+        "mentality": 51,
+        "recovery": 49,
+        "clutch": 53,
+        "holdRunners": 51
       },
       "batting": {
-        "ovr": 73,
-        "contact": 73,
-        "power": 67,
-        "eye": 71,
-        "discipline": 66,
-        "speed": 78,
-        "baseInstinct": 68,
-        "bunting": 63,
+        "ovr": 54,
+        "contact": 46,
+        "power": 53,
+        "eye": 50,
+        "discipline": 44,
+        "speed": 50,
+        "baseInstinct": 49,
+        "bunting": 40,
         "platoon": 50,
-        "fielding": 74,
-        "arm": 66,
-        "battingClutch": 60
+        "fielding": 44,
+        "arm": 44,
+        "battingClutch": 44
       },
       "positionRatings": {
-        "SP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ]
+        "SS": 54
+      }
     },
     "coach": null,
     "manager": null,

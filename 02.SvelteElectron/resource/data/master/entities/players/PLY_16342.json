@@ -1,6 +1,6 @@
 {
   "id": "PLY_16342",
-  "name": "윌리엄스 브랜던",
+  "name": "Williams Brandon",
   "nameEn": "Williams Brandon",
   "role": "player",
   "age": 33,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 57,
   "popularity": 27,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 64
       },
       "batting": {
-        "ovr": 86,
-        "contact": 76,
-        "power": 89,
-        "eye": 82,
-        "discipline": 73,
-        "speed": 90,
-        "baseInstinct": 76,
-        "bunting": 67,
-        "platoon": 63,
-        "fielding": 83,
-        "arm": 72,
-        "battingClutch": 77
+        "ovr": 68,
+        "contact": 60,
+        "power": 70,
+        "eye": 65,
+        "discipline": 58,
+        "speed": 71,
+        "baseInstinct": 60,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 57,
+        "battingClutch": 61
       },
       "positionRatings": {
         "LF": 68

@@ -1,9 +1,9 @@
 {
   "id": "PLY_00094",
   "name": "문재민",
-  "nameEn": "Moon Jaemin",
+  "nameEn": "Shin Hyun-seo",
   "role": "player",
-  "age": 18,
+  "age": 17,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "2B",
       "jerseyNumber": 14,
       "pitching": {
-        "ovr": 28,
-        "stamina": 30,
-        "velocity": 31,
-        "command": 33,
-        "control": 28,
-        "movement": 28,
-        "mentality": 31,
-        "recovery": 33,
-        "clutch": 42,
-        "holdRunners": 36
+        "ovr": 43,
+        "stamina": 53,
+        "velocity": 60,
+        "command": 61,
+        "control": 47,
+        "movement": 58,
+        "mentality": 65,
+        "recovery": 63
       },
       "batting": {
-        "ovr": 48,
-        "contact": 50,
-        "power": 49,
-        "eye": 54,
-        "discipline": 44,
-        "speed": 50,
-        "fielding": 49,
-        "arm": 45,
-        "battingClutch": 43,
-        "baseInstinct": 37,
-        "bunting": 32,
-        "platoon": 43
+        "ovr": 47,
+        "contact": 61,
+        "power": 39,
+        "eye": 42,
+        "discipline": 50,
+        "speed": 58,
+        "fielding": 55,
+        "arm": 52,
+        "battingClutch": 51
       },
       "developmentRate": 71,
-      "potentialHidden": 70,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 48
-      }
+      "potentialHidden": 70
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

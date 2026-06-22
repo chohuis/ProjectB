@@ -1,6 +1,6 @@
 {
   "id": "PLY_14654",
-  "name": "카터 로건",
+  "name": "Carter Logan",
   "nameEn": "Carter Logan",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 62,
   "popularity": 22,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 83,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 55,
-        "stamina": 56,
-        "velocity": 63,
-        "command": 51,
-        "control": 50,
-        "movement": 59,
-        "mentality": 49,
-        "recovery": 46,
-        "clutch": 53,
-        "holdRunners": 47
+        "ovr": 56,
+        "stamina": 57,
+        "velocity": 64,
+        "command": 52,
+        "control": 51,
+        "movement": 60,
+        "mentality": 50,
+        "recovery": 47,
+        "clutch": 54,
+        "holdRunners": 48
       },
       "batting": {
         "ovr": 56,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_14064",
-  "name": "윌리엄스 미겔",
+  "name": "Williams Miguel",
   "nameEn": "Williams Miguel",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 63,
   "popularity": 23,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 65,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 51,
-        "stamina": 51,
-        "velocity": 60,
-        "command": 51,
-        "control": 45,
-        "movement": 48,
-        "mentality": 51,
-        "recovery": 53,
-        "clutch": 47,
-        "holdRunners": 41
+        "ovr": 52,
+        "stamina": 52,
+        "velocity": 61,
+        "command": 52,
+        "control": 46,
+        "movement": 49,
+        "mentality": 52,
+        "recovery": 54,
+        "clutch": 48,
+        "holdRunners": 42
       },
       "batting": {
         "ovr": 52,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 52
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

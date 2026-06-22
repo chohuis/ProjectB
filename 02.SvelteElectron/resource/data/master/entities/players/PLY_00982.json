@@ -1,14 +1,14 @@
 {
   "id": "PLY_00982",
   "name": "곤살레스 로버트",
-  "nameEn": "Gon 살레스 로버트",
+  "nameEn": "Gonzalez Robert",
   "role": "player",
   "age": 29,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_WINDBEARS",
-  "teamId": "TEAM_ABL_WINDBEARS_2",
+  "clubId": "CLUB_ABL_TOR",
+  "teamId": "TEAM_ABL_TOR_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:쿠바",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 42,
       "pitching": {
-        "ovr": 72,
-        "stamina": 69,
-        "velocity": 68,
-        "command": 75,
-        "control": 68,
-        "movement": 68,
-        "mentality": 75,
-        "recovery": 73,
-        "clutch": 67,
-        "holdRunners": 64
+        "ovr": 83,
+        "stamina": 86,
+        "velocity": 80,
+        "command": 84,
+        "control": 80,
+        "movement": 74,
+        "mentality": 80,
+        "recovery": 75
       },
       "batting": {
-        "ovr": 54,
-        "contact": 60,
-        "power": 51,
-        "eye": 55,
-        "discipline": 57,
-        "speed": 48,
-        "fielding": 48,
-        "arm": 52,
-        "battingClutch": 48,
-        "baseInstinct": 45,
-        "bunting": 49,
-        "platoon": 48
+        "ovr": 48,
+        "contact": 49,
+        "power": 55,
+        "eye": 48,
+        "discipline": 53,
+        "speed": 53,
+        "fielding": 52,
+        "arm": 54,
+        "battingClutch": 52
       },
       "developmentRate": 40,
-      "potentialHidden": 81,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 72
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SCREWBALL",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_KNUCKLEBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 7,
-      "contract": {
-        "salary": 23200,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 81
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

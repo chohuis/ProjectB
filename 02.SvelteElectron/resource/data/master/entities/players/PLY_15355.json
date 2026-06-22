@@ -1,6 +1,6 @@
 {
   "id": "PLY_15355",
-  "name": "마르티네스 미겔",
+  "name": "Martinez Miguel",
   "nameEn": "Martinez Miguel",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 85,
   "popularity": 44,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 42
       },
       "batting": {
-        "ovr": 50,
-        "contact": 50,
-        "power": 51,
-        "eye": 46,
-        "discipline": 45,
-        "speed": 51,
-        "baseInstinct": 44,
-        "bunting": 44,
-        "platoon": 49,
-        "fielding": 44,
-        "arm": 46,
-        "battingClutch": 47
+        "ovr": 51,
+        "contact": 51,
+        "power": 52,
+        "eye": 47,
+        "discipline": 46,
+        "speed": 52,
+        "baseInstinct": 45,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 47,
+        "battingClutch": 48
       },
       "positionRatings": {
         "C": 51

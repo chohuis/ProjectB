@@ -1,6 +1,6 @@
 {
   "id": "PLY_15452",
-  "name": "그린 코너",
+  "name": "Green Connor",
   "nameEn": "Green Connor",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 82,
   "popularity": 19,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 65
       },
       "batting": {
-        "ovr": 68,
-        "contact": 71,
-        "power": 61,
-        "eye": 64,
-        "discipline": 70,
-        "speed": 73,
-        "baseInstinct": 65,
-        "bunting": 50,
-        "platoon": 49,
-        "fielding": 68,
-        "arm": 70,
-        "battingClutch": 64
+        "ovr": 70,
+        "contact": 73,
+        "power": 63,
+        "eye": 66,
+        "discipline": 72,
+        "speed": 75,
+        "baseInstinct": 67,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 70,
+        "arm": 72,
+        "battingClutch": 66
       },
       "positionRatings": {
         "C": 70

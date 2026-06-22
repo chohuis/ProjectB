@@ -1,61 +1,46 @@
 {
   "id": "PLY_01760",
-  "name": "나예준",
-  "nameEn": "Na Yejun",
+  "name": "사토 히로시",
+  "nameEn": "Sato Hiroshi",
   "role": "player",
-  "age": 17,
+  "age": 20,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_MASAN_HARBOR",
-  "teamId": "TEAM_HS_MASAN_HARBOR",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_MASAN_HARBOR",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+  "teamId": "TEAM_JBL_CL_SILVERWOLVES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
       "position": "3B",
-      "jerseyNumber": 19,
+      "jerseyNumber": 45,
       "pitching": {
-        "ovr": 35,
-        "stamina": 41,
-        "velocity": 32,
-        "command": 38,
-        "control": 40,
-        "movement": 32,
-        "mentality": 37,
-        "recovery": 36,
-        "clutch": 45,
-        "holdRunners": 40
+        "ovr": 44,
+        "stamina": 36,
+        "velocity": 43,
+        "command": 40,
+        "control": 43,
+        "movement": 38,
+        "mentality": 44,
+        "recovery": 39
       },
       "batting": {
-        "ovr": 55,
-        "contact": 52,
-        "power": 59,
-        "eye": 56,
-        "discipline": 55,
-        "speed": 54,
-        "fielding": 57,
-        "arm": 59,
-        "battingClutch": 47,
-        "baseInstinct": 48,
-        "bunting": 43,
-        "platoon": 45
+        "ovr": 77,
+        "contact": 79,
+        "power": 76,
+        "eye": 73,
+        "discipline": 77,
+        "speed": 74,
+        "fielding": 75,
+        "arm": 75,
+        "battingClutch": 74
       },
-      "developmentRate": 53,
-      "potentialHidden": 71,
-      "primaryPosition": "3B",
-      "positionRatings": {
-        "3B": 55
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 54,
+      "potentialHidden": 74
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 51,
-  "popularity": 32
+  }
 }

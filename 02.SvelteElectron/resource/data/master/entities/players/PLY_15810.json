@@ -1,6 +1,6 @@
 {
   "id": "PLY_15810",
-  "name": "영 알렉스",
+  "name": "Young Alex",
   "nameEn": "Young Alex",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 72,
   "popularity": 17,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 81,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 51,
-        "stamina": 43,
-        "velocity": 58,
-        "command": 44,
-        "control": 45,
-        "movement": 46,
-        "mentality": 47,
-        "recovery": 53,
-        "clutch": 41,
-        "holdRunners": 46
+        "ovr": 52,
+        "stamina": 44,
+        "velocity": 59,
+        "command": 45,
+        "control": 46,
+        "movement": 47,
+        "mentality": 48,
+        "recovery": 54,
+        "clutch": 42,
+        "holdRunners": 47
       },
       "batting": {
         "ovr": 52,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 52
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

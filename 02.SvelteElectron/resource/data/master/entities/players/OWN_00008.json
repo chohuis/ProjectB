@@ -1,7 +1,7 @@
 {
   "id": "OWN_00008",
   "name": "전지호",
-  "nameEn": "Jeon Jiho",
+  "nameEn": "Lee Seong-woo",
   "role": "owner",
   "age": 64,
   "status": "active",
@@ -79,12 +79,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
   }
 }

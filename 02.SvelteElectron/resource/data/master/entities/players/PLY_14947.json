@@ -1,6 +1,6 @@
 {
   "id": "PLY_14947",
-  "name": "로빈슨 라이언",
+  "name": "Robinson Ryan",
   "nameEn": "Robinson Ryan",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 78,
   "popularity": 47,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 72,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 72,
-        "stamina": 69,
-        "velocity": 76,
-        "command": 69,
-        "control": 62,
-        "movement": 73,
-        "mentality": 77,
-        "recovery": 60,
-        "clutch": 68,
-        "holdRunners": 67
+        "ovr": 66,
+        "stamina": 63,
+        "velocity": 70,
+        "command": 63,
+        "control": 57,
+        "movement": 67,
+        "mentality": 71,
+        "recovery": 55,
+        "clutch": 62,
+        "holdRunners": 61
       },
       "batting": {
         "ovr": 66,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_14271",
-  "name": "존슨 재크",
+  "name": "Johnson Zach",
   "nameEn": "Johnson Zach",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 59,
   "popularity": 46,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 57,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 60,
-        "stamina": 60,
-        "velocity": 65,
-        "command": 60,
-        "control": 52,
-        "movement": 55,
-        "mentality": 65,
-        "recovery": 53,
-        "clutch": 56,
-        "holdRunners": 45
+        "ovr": 61,
+        "stamina": 61,
+        "velocity": 66,
+        "command": 61,
+        "control": 53,
+        "movement": 56,
+        "mentality": 66,
+        "recovery": 54,
+        "clutch": 57,
+        "holdRunners": 46
       },
       "batting": {
         "ovr": 61,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

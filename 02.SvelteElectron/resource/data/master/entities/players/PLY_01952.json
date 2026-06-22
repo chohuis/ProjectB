@@ -1,72 +1,46 @@
 {
   "id": "PLY_01952",
-  "name": "김현서",
-  "nameEn": "Kim Hyeonseo",
+  "name": "스즈키 히라쿠",
+  "nameEn": "Suzuki Hiraku",
   "role": "player",
-  "age": 20,
+  "age": 22,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_EMBERTIGERS",
-  "teamId": "TEAM_KBL_EMBERTIGERS_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
+  "teamId": "TEAM_JBL_PL_MARINESOLDIERS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
-      "handedness": "R",
-      "position": "2B",
-      "jerseyNumber": 79,
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "RP",
+      "jerseyNumber": 7,
       "pitching": {
-        "ovr": 52,
-        "stamina": 49,
-        "velocity": 47,
-        "command": 58,
-        "control": 50,
-        "movement": 50,
-        "mentality": 53,
-        "recovery": 51,
-        "clutch": 46,
-        "holdRunners": 39
+        "ovr": 72,
+        "stamina": 63,
+        "velocity": 78,
+        "command": 74,
+        "control": 76,
+        "movement": 73,
+        "mentality": 71,
+        "recovery": 73
       },
       "batting": {
-        "ovr": 72,
-        "contact": 68,
-        "power": 77,
-        "eye": 67,
-        "discipline": 68,
-        "speed": 78,
-        "fielding": 78,
-        "arm": 76,
-        "battingClutch": 63,
-        "baseInstinct": 68,
-        "bunting": 65,
-        "platoon": 61
+        "ovr": 40,
+        "contact": 45,
+        "power": 39,
+        "eye": 43,
+        "discipline": 43,
+        "speed": 39,
+        "fielding": 38,
+        "arm": 40,
+        "battingClutch": 46
       },
-      "developmentRate": 44,
-      "potentialHidden": 78,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 72
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 2200,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 39,
+      "potentialHidden": 79
     },
     "coach": {
       "specialty": "-",
@@ -106,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 65,
-  "popularity": 14
+  }
 }

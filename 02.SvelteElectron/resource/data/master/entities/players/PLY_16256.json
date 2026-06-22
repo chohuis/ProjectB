@@ -1,6 +1,6 @@
 {
   "id": "PLY_16256",
-  "name": "홀 조던",
+  "name": "Hall Jordan",
   "nameEn": "Hall Jordan",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 84,
   "popularity": 49,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 68,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 70,
-        "stamina": 68,
-        "velocity": 81,
-        "command": 60,
-        "control": 64,
-        "movement": 63,
-        "mentality": 73,
-        "recovery": 67,
-        "clutch": 59,
-        "holdRunners": 68
+        "ovr": 63,
+        "stamina": 61,
+        "velocity": 73,
+        "command": 54,
+        "control": 58,
+        "movement": 57,
+        "mentality": 66,
+        "recovery": 60,
+        "clutch": 53,
+        "holdRunners": 61
       },
       "batting": {
         "ovr": 63,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

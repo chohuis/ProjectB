@@ -1,6 +1,6 @@
 {
   "id": "PLY_14474",
-  "name": "마틴 카일",
+  "name": "Martin Kyle",
   "nameEn": "Martin Kyle",
   "role": "player",
   "age": 34,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 50,
   "popularity": 25,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 43,
       "proServiceYears": 12,
       "pitching": {
-        "ovr": 80,
-        "stamina": 79,
-        "velocity": 90,
-        "command": 67,
-        "control": 74,
-        "movement": 72,
-        "mentality": 72,
-        "recovery": 71,
-        "clutch": 76,
-        "holdRunners": 76
+        "ovr": 63,
+        "stamina": 62,
+        "velocity": 71,
+        "command": 53,
+        "control": 58,
+        "movement": 57,
+        "mentality": 57,
+        "recovery": 56,
+        "clutch": 60,
+        "holdRunners": 60
       },
       "batting": {
         "ovr": 63,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

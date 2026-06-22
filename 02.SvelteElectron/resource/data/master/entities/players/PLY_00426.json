@@ -1,7 +1,7 @@
 {
   "id": "PLY_00426",
   "name": "권동준",
-  "nameEn": "Kwon Dongjun",
+  "nameEn": "Sung Jae-hyun",
   "role": "player",
   "age": 24,
   "status": "active",
@@ -19,62 +19,28 @@
       "position": "RP",
       "jerseyNumber": 6,
       "pitching": {
-        "ovr": 65,
-        "stamina": 62,
-        "velocity": 67,
-        "command": 68,
-        "control": 65,
+        "ovr": 73,
+        "stamina": 69,
+        "velocity": 80,
+        "command": 75,
+        "control": 69,
         "movement": 70,
-        "mentality": 70,
-        "recovery": 70,
-        "clutch": 56,
-        "holdRunners": 62
+        "mentality": 69,
+        "recovery": 71
       },
       "batting": {
-        "ovr": 47,
-        "contact": 51,
-        "power": 52,
-        "eye": 43,
-        "discipline": 42,
-        "speed": 49,
-        "fielding": 46,
-        "arm": 47,
-        "battingClutch": 47,
-        "baseInstinct": 39,
-        "bunting": 40,
-        "platoon": 39
+        "ovr": 45,
+        "contact": 45,
+        "power": 42,
+        "eye": 40,
+        "discipline": 44,
+        "speed": 47,
+        "fielding": 42,
+        "arm": 45,
+        "battingClutch": 40
       },
       "developmentRate": 48,
-      "potentialHidden": 64,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SCREWBALL",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 64
     },
     "coach": {
       "specialty": "-",
@@ -114,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

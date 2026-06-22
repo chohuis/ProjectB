@@ -1,14 +1,14 @@
 {
   "id": "PLY_00830",
   "name": "애덤스 데이비드",
-  "nameEn": "Ae 덤스 데이비드",
+  "nameEn": "Adams David",
   "role": "player",
-  "age": 40,
+  "age": 42,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_EMPIRE",
-  "teamId": "TEAM_ABL_EMPIRE_1",
+  "clubId": "CLUB_ABL_LAD",
+  "teamId": "TEAM_ABL_LAD",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:베네수엘라",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 10,
       "pitching": {
-        "ovr": 78,
-        "stamina": 75,
-        "velocity": 73,
-        "command": 80,
-        "control": 81,
-        "movement": 80,
-        "mentality": 74,
-        "recovery": 82,
-        "clutch": 68,
-        "holdRunners": 77
+        "ovr": 93,
+        "stamina": 84,
+        "velocity": 97,
+        "command": 86,
+        "control": 86,
+        "movement": 91,
+        "mentality": 89,
+        "recovery": 85
       },
       "batting": {
-        "ovr": 60,
-        "contact": 66,
-        "power": 57,
-        "eye": 66,
-        "discipline": 57,
-        "speed": 54,
-        "fielding": 65,
-        "arm": 62,
-        "battingClutch": 54,
-        "baseInstinct": 52,
-        "bunting": 45,
-        "platoon": 55
+        "ovr": 51,
+        "contact": 59,
+        "power": 56,
+        "eye": 52,
+        "discipline": 56,
+        "speed": 55,
+        "fielding": 53,
+        "arm": 50,
+        "battingClutch": 58
       },
       "developmentRate": 47,
-      "potentialHidden": 72,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 78
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_KNUCKLEBALL",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 18,
-      "contract": {
-        "salary": 27900,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 72
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,6 +1,6 @@
 {
   "id": "PLY_16210",
-  "name": "마틴 블레이크",
+  "name": "Martin Blake",
   "nameEn": "Martin Blake",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 57,
   "popularity": 48,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 60
       },
       "batting": {
-        "ovr": 60,
-        "contact": 60,
-        "power": 57,
-        "eye": 59,
-        "discipline": 57,
-        "speed": 59,
-        "baseInstinct": 60,
-        "bunting": 46,
-        "platoon": 47,
-        "fielding": 57,
-        "arm": 59,
-        "battingClutch": 52
+        "ovr": 64,
+        "contact": 64,
+        "power": 61,
+        "eye": 63,
+        "discipline": 61,
+        "speed": 63,
+        "baseInstinct": 64,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 63,
+        "battingClutch": 55
       },
       "positionRatings": {
         "3B": 64

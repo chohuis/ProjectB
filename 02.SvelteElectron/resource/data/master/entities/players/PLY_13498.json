@@ -1,9 +1,9 @@
 {
   "id": "PLY_13498",
-  "name": "마틴 조던",
-  "nameEn": "Martin Jordan",
+  "name": "Harris Hunter",
+  "nameEn": "Harris Hunter",
   "role": "player",
-  "age": 26,
+  "age": 23,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 72,
-  "popularity": 35,
+  "notes": "국적:파나마",
+  "diligence": 82,
+  "popularity": 46,
   "militaryStatus": "군필",
   "entryYear": 2048,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 26,
+  "entryAge": 23,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 72,
-      "primaryPosition": "SP",
-      "developmentRate": 51,
-      "potentialHidden": 66,
-      "proServiceYears": 4,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 26,
+      "primaryPosition": "CF",
+      "developmentRate": 48,
+      "potentialHidden": 78,
+      "proServiceYears": 1,
       "pitching": {
-        "ovr": 65,
-        "stamina": 61,
-        "velocity": 69,
-        "command": 55,
-        "control": 63,
-        "movement": 67,
-        "mentality": 60,
-        "recovery": 63,
-        "clutch": 63,
-        "holdRunners": 60
+        "ovr": 80,
+        "stamina": 71,
+        "velocity": 84,
+        "command": 71,
+        "control": 77,
+        "movement": 78,
+        "mentality": 77,
+        "recovery": 70,
+        "clutch": 78,
+        "holdRunners": 76
       },
       "batting": {
-        "ovr": 72,
-        "contact": 76,
-        "power": 73,
-        "eye": 74,
-        "discipline": 65,
-        "speed": 65,
-        "baseInstinct": 67,
-        "bunting": 55,
+        "ovr": 80,
+        "contact": 74,
+        "power": 80,
+        "eye": 77,
+        "discipline": 74,
+        "speed": 76,
+        "baseInstinct": 74,
+        "bunting": 67,
         "platoon": 50,
-        "fielding": 66,
-        "arm": 69,
-        "battingClutch": 63
+        "fielding": 75,
+        "arm": 78,
+        "battingClutch": 76
       },
       "positionRatings": {
-        "SP": 72
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "CF": 80
+      }
     },
     "coach": null,
     "manager": null,

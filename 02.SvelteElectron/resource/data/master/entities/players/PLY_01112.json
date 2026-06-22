@@ -1,14 +1,14 @@
 {
   "id": "PLY_01112",
   "name": "존슨 존",
-  "nameEn": "Jon 슨 존",
+  "nameEn": "Johnson John",
   "role": "player",
   "age": 31,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_LONESTARS",
-  "teamId": "TEAM_ABL_LONESTARS_1",
+  "clubId": "CLUB_ABL_TEX",
+  "teamId": "TEAM_ABL_TEX",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -19,48 +19,28 @@
       "position": "RF",
       "jerseyNumber": 22,
       "pitching": {
-        "ovr": 59,
-        "stamina": 65,
-        "velocity": 59,
-        "command": 58,
-        "control": 59,
-        "movement": 62,
-        "mentality": 64,
-        "recovery": 61,
-        "clutch": 52,
-        "holdRunners": 57
+        "ovr": 52,
+        "stamina": 48,
+        "velocity": 46,
+        "command": 48,
+        "control": 49,
+        "movement": 48,
+        "mentality": 48,
+        "recovery": 47
       },
       "batting": {
-        "ovr": 79,
-        "contact": 80,
-        "power": 84,
-        "eye": 75,
-        "discipline": 77,
-        "speed": 75,
-        "fielding": 75,
-        "arm": 83,
-        "battingClutch": 71,
-        "baseInstinct": 73,
-        "bunting": 67,
-        "platoon": 65
+        "ovr": 76,
+        "contact": 79,
+        "power": 86,
+        "eye": 80,
+        "discipline": 78,
+        "speed": 78,
+        "fielding": 74,
+        "arm": 77,
+        "battingClutch": 84
       },
       "developmentRate": 48,
-      "potentialHidden": 76,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 79
-      },
-      "proServiceYears": 9,
-      "contract": {
-        "salary": 13200,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 76
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

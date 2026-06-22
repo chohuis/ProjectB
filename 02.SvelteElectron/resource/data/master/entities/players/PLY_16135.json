@@ -1,6 +1,6 @@
 {
   "id": "PLY_16135",
-  "name": "데이비스 루이스",
+  "name": "Davis Luis",
   "nameEn": "Davis Luis",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 57,
   "popularity": 39,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 50
       },
       "batting": {
-        "ovr": 57,
-        "contact": 56,
-        "power": 47,
-        "eye": 56,
-        "discipline": 60,
-        "speed": 56,
-        "baseInstinct": 58,
-        "bunting": 51,
-        "platoon": 49,
-        "fielding": 46,
-        "arm": 59,
-        "battingClutch": 56
+        "ovr": 58,
+        "contact": 57,
+        "power": 48,
+        "eye": 57,
+        "discipline": 61,
+        "speed": 57,
+        "baseInstinct": 59,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 60,
+        "battingClutch": 57
       },
       "positionRatings": {
         "CF": 58

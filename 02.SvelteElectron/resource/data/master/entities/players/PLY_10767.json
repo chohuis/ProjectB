@@ -1,9 +1,9 @@
 {
   "id": "PLY_10767",
-  "name": "그린 카일",
-  "nameEn": "Green Kyle",
+  "name": "Nelson Luis",
+  "nameEn": "Nelson Luis",
   "role": "player",
-  "age": 22,
+  "age": 19,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 56,
-  "popularity": 47,
+  "notes": "국적:미국",
+  "diligence": 55,
+  "popularity": 39,
   "militaryStatus": "군필",
   "entryYear": 2031,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 22,
+  "entryAge": 19,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 80,
-      "primaryPosition": "SP",
-      "developmentRate": 73,
-      "potentialHidden": 73,
+      "position": "2B",
+      "jerseyNumber": 6,
+      "primaryPosition": "2B",
+      "developmentRate": 60,
+      "potentialHidden": 83,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 56,
-        "stamina": 56,
-        "velocity": 62,
-        "command": 52,
-        "control": 52,
-        "movement": 54,
-        "mentality": 56,
-        "recovery": 54,
-        "clutch": 52,
-        "holdRunners": 46
+        "ovr": 53,
+        "stamina": 46,
+        "velocity": 55,
+        "command": 46,
+        "control": 50,
+        "movement": 57,
+        "mentality": 53,
+        "recovery": 46,
+        "clutch": 49,
+        "holdRunners": 44
       },
       "batting": {
-        "ovr": 60,
-        "contact": 54,
-        "power": 57,
-        "eye": 64,
-        "discipline": 52,
-        "speed": 58,
-        "baseInstinct": 62,
-        "bunting": 53,
+        "ovr": 53,
+        "contact": 58,
+        "power": 45,
+        "eye": 49,
+        "discipline": 55,
+        "speed": 52,
+        "baseInstinct": 50,
+        "bunting": 47,
         "platoon": 50,
-        "fielding": 56,
-        "arm": 55,
-        "battingClutch": 51
+        "fielding": 43,
+        "arm": 43,
+        "battingClutch": 53
       },
       "positionRatings": {
-        "SP": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "2B": 53
+      }
     },
     "coach": null,
     "manager": null,

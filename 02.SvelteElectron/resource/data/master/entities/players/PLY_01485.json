@@ -1,14 +1,14 @@
 {
   "id": "PLY_01485",
   "name": "앨런 조셉",
-  "nameEn": "Ael 런 조셉",
+  "nameEn": "Allen Joseph",
   "role": "player",
   "age": 33,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_DESERTSERPENTS",
-  "teamId": "TEAM_ABL_DESERTSERPENTS_2",
+  "clubId": "CLUB_ABL_ARI",
+  "teamId": "TEAM_ABL_ARI_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:쿠바",
@@ -19,58 +19,28 @@
       "position": "CP",
       "jerseyNumber": 50,
       "pitching": {
-        "ovr": 71,
-        "stamina": 70,
-        "velocity": 70,
-        "command": 69,
-        "control": 72,
-        "movement": 72,
-        "mentality": 74,
-        "recovery": 68,
-        "clutch": 66,
-        "holdRunners": 59
+        "ovr": 74,
+        "stamina": 67,
+        "velocity": 84,
+        "command": 76,
+        "control": 74,
+        "movement": 77,
+        "mentality": 73,
+        "recovery": 76
       },
       "batting": {
         "ovr": 53,
-        "contact": 59,
-        "power": 51,
-        "eye": 56,
-        "discipline": 48,
-        "speed": 57,
-        "fielding": 56,
-        "arm": 53,
-        "battingClutch": 44,
-        "baseInstinct": 46,
-        "bunting": 44,
-        "platoon": 45
+        "contact": 49,
+        "power": 52,
+        "eye": 49,
+        "discipline": 50,
+        "speed": 49,
+        "fielding": 54,
+        "arm": 49,
+        "battingClutch": 54
       },
       "developmentRate": 47,
-      "potentialHidden": 88,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 71
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SCREWBALL",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 11,
-      "contract": {
-        "salary": 22500,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 88
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

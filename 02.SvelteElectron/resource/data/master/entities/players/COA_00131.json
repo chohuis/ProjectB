@@ -3,12 +3,12 @@
   "name": "가르시아 오스틴",
   "nameEn": "Garcia Austin",
   "role": "coach",
-  "age": 40,
+  "age": 44,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_BAYSEALS",
-  "teamId": "TEAM_ABL_BAYSEALS_2",
+  "clubId": "CLUB_ABL_PHI",
+  "teamId": "TEAM_ABL_PHI_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -26,9 +26,7 @@
         "control": 50,
         "movement": 50,
         "mentality": 50,
-        "recovery": 50,
-        "clutch": 50,
-        "holdRunners": 50
+        "recovery": 50
       },
       "batting": {
         "ovr": 50,
@@ -39,25 +37,20 @@
         "speed": 50,
         "fielding": 50,
         "arm": 50,
-        "battingClutch": 50,
-        "baseInstinct": 50,
-        "bunting": 45,
-        "platoon": 50
+        "battingClutch": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 70,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 50
-      }
+      "potentialHidden": 70
     },
     "coach": {
-      "specialty": "-",
+      "specialty": "투수",
       "experienceYears": 17,
       "stats": {
         "teaching": 59,
-        "analytics": 76,
-        "experience": 4
+        "analysis": 76,
+        "communication": 67,
+        "discipline": 52,
+        "leadership": 75
       },
       "trainingBuffs": "제구 훈련 +2%"
     },
@@ -87,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

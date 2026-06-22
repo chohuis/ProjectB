@@ -1,6 +1,6 @@
 {
   "id": "PLY_16697",
-  "name": "브라운 조던",
+  "name": "Brown Jordan",
   "nameEn": "Brown Jordan",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 71,
   "popularity": 49,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 83,
       "proServiceYears": 3,
       "pitching": {
-        "ovr": 65,
-        "stamina": 58,
-        "velocity": 74,
-        "command": 59,
-        "control": 61,
-        "movement": 57,
-        "mentality": 64,
-        "recovery": 64,
-        "clutch": 59,
-        "holdRunners": 55
+        "ovr": 68,
+        "stamina": 61,
+        "velocity": 77,
+        "command": 62,
+        "control": 64,
+        "movement": 60,
+        "mentality": 67,
+        "recovery": 67,
+        "clutch": 62,
+        "holdRunners": 58
       },
       "batting": {
         "ovr": 68,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

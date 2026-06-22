@@ -1,6 +1,6 @@
 {
   "id": "PLY_16510",
-  "name": "홀 오스틴",
+  "name": "Hall Austin",
   "nameEn": "Hall Austin",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 59,
   "popularity": 36,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 56
       },
       "batting": {
-        "ovr": 62,
-        "contact": 55,
-        "power": 54,
-        "eye": 57,
-        "discipline": 64,
-        "speed": 57,
-        "baseInstinct": 55,
-        "bunting": 45,
-        "platoon": 47,
-        "fielding": 54,
-        "arm": 62,
-        "battingClutch": 54
+        "ovr": 66,
+        "contact": 59,
+        "power": 58,
+        "eye": 61,
+        "discipline": 68,
+        "speed": 61,
+        "baseInstinct": 59,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 66,
+        "battingClutch": 57
       },
       "positionRatings": {
         "RF": 66

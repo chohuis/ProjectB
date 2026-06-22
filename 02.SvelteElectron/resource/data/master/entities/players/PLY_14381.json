@@ -1,6 +1,6 @@
 {
   "id": "PLY_14381",
-  "name": "로드리게스 알렉스",
+  "name": "Rodriguez Alex",
   "nameEn": "Rodriguez Alex",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 75,
   "popularity": 23,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 71,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 58,
-        "stamina": 62,
-        "velocity": 64,
-        "command": 57,
-        "control": 55,
-        "movement": 52,
-        "mentality": 61,
-        "recovery": 54,
-        "clutch": 52,
-        "holdRunners": 44
+        "ovr": 59,
+        "stamina": 63,
+        "velocity": 65,
+        "command": 58,
+        "control": 56,
+        "movement": 53,
+        "mentality": 62,
+        "recovery": 55,
+        "clutch": 53,
+        "holdRunners": 45
       },
       "batting": {
         "ovr": 59,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

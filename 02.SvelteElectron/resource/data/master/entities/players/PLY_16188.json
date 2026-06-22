@@ -1,6 +1,6 @@
 {
   "id": "PLY_16188",
-  "name": "가르시아 딜런",
+  "name": "Garcia Dylan",
   "nameEn": "Garcia Dylan",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 61,
   "popularity": 21,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 61,
       "proServiceYears": 4,
       "pitching": {
-        "ovr": 67,
-        "stamina": 69,
-        "velocity": 65,
-        "command": 59,
-        "control": 65,
-        "movement": 65,
-        "mentality": 68,
-        "recovery": 57,
-        "clutch": 66,
-        "holdRunners": 65
+        "ovr": 69,
+        "stamina": 71,
+        "velocity": 67,
+        "command": 61,
+        "control": 67,
+        "movement": 67,
+        "mentality": 70,
+        "recovery": 59,
+        "clutch": 68,
+        "holdRunners": 67
       },
       "batting": {
         "ovr": 69,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 69
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

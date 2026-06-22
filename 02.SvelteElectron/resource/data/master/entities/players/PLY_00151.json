@@ -1,9 +1,9 @@
 {
   "id": "PLY_00151",
   "name": "백승우",
-  "nameEn": "Baek Seungu",
+  "nameEn": "Kwon Si-woo",
   "role": "player",
-  "age": 19,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "2B",
       "jerseyNumber": 11,
       "pitching": {
-        "ovr": 33,
-        "stamina": 31,
-        "velocity": 33,
-        "command": 38,
-        "control": 32,
-        "movement": 31,
-        "mentality": 31,
-        "recovery": 30,
-        "clutch": 36,
-        "holdRunners": 37
+        "ovr": 42,
+        "stamina": 63,
+        "velocity": 51,
+        "command": 55,
+        "control": 46,
+        "movement": 54,
+        "mentality": 48,
+        "recovery": 63
       },
       "batting": {
-        "ovr": 53,
-        "contact": 57,
-        "power": 53,
-        "eye": 50,
-        "discipline": 51,
-        "speed": 58,
-        "fielding": 51,
-        "arm": 53,
-        "battingClutch": 45,
-        "baseInstinct": 42,
-        "bunting": 49,
-        "platoon": 42
+        "ovr": 61,
+        "contact": 45,
+        "power": 43,
+        "eye": 51,
+        "discipline": 59,
+        "speed": 59,
+        "fielding": 56,
+        "arm": 65,
+        "battingClutch": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 63,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 53
-      }
+      "potentialHidden": 63
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

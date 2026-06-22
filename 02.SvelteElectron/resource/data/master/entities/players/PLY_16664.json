@@ -1,6 +1,6 @@
 {
   "id": "PLY_16664",
-  "name": "홀 조던",
+  "name": "Hall Jordan",
   "nameEn": "Hall Jordan",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 53,
   "popularity": 46,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 69
       },
       "batting": {
-        "ovr": 71,
-        "contact": 67,
-        "power": 64,
-        "eye": 75,
-        "discipline": 75,
-        "speed": 71,
-        "baseInstinct": 61,
-        "bunting": 63,
-        "platoon": 49,
-        "fielding": 64,
-        "arm": 68,
-        "battingClutch": 67
+        "ovr": 72,
+        "contact": 68,
+        "power": 65,
+        "eye": 76,
+        "discipline": 76,
+        "speed": 72,
+        "baseInstinct": 62,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 69,
+        "battingClutch": 68
       },
       "positionRatings": {
         "LF": 72

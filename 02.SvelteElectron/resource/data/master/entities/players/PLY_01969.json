@@ -1,80 +1,46 @@
 {
   "id": "PLY_01969",
-  "name": "구준영",
-  "nameEn": "Gu Junyeong",
+  "name": "오카다 마코토",
+  "nameEn": "Okada Makoto",
   "role": "player",
-  "age": 25,
+  "age": 28,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_ROYALLIONS",
-  "teamId": "TEAM_KBL_ROYALLIONS_1",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
+  "teamId": "TEAM_JBL_PL_MARINESOLDIERS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "RP",
-      "jerseyNumber": 68,
+      "position": "DH",
+      "jerseyNumber": 24,
       "pitching": {
-        "ovr": 73,
-        "stamina": 76,
-        "velocity": 80,
-        "command": 71,
-        "control": 72,
-        "movement": 74,
-        "mentality": 77,
-        "recovery": 74,
-        "clutch": 63,
-        "holdRunners": 61
+        "ovr": 63,
+        "stamina": 63,
+        "velocity": 68,
+        "command": 60,
+        "control": 64,
+        "movement": 59,
+        "mentality": 62,
+        "recovery": 61
       },
       "batting": {
-        "ovr": 55,
-        "contact": 50,
-        "power": 54,
-        "eye": 57,
-        "discipline": 60,
-        "speed": 61,
-        "fielding": 50,
-        "arm": 57,
-        "battingClutch": 47,
-        "baseInstinct": 47,
-        "bunting": 47,
-        "platoon": 51
+        "ovr": 85,
+        "contact": 91,
+        "power": 90,
+        "eye": 88,
+        "discipline": 90,
+        "speed": 86,
+        "fielding": 81,
+        "arm": 88,
+        "battingClutch": 85
       },
-      "developmentRate": 67,
-      "potentialHidden": 85,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 3,
-      "contract": {
-        "salary": 6900,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 52,
+      "potentialHidden": 87
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 48,
-  "popularity": 60,
-  "militaryStatus": "군필"
+  }
 }

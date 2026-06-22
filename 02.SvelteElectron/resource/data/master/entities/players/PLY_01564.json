@@ -1,61 +1,46 @@
 {
   "id": "PLY_01564",
-  "name": "백재민",
-  "nameEn": "Baek Jaemin",
+  "name": "이토 이사무",
+  "nameEn": "Ito Isamu",
   "role": "player",
-  "age": 16,
+  "age": 38,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_DAEGU_HEAT",
-  "teamId": "TEAM_HS_DAEGU_HEAT",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_DAEGU_HEAT",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_NEONCRANES",
+  "teamId": "TEAM_JBL_CL_NEONCRANES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "CP",
-      "jerseyNumber": 23,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "DH",
+      "jerseyNumber": 24,
       "pitching": {
-        "ovr": 52,
-        "stamina": 58,
-        "velocity": 49,
-        "command": 58,
-        "control": 57,
-        "movement": 52,
-        "mentality": 50,
-        "recovery": 55,
-        "clutch": 40,
-        "holdRunners": 41
+        "ovr": 45,
+        "stamina": 40,
+        "velocity": 45,
+        "command": 42,
+        "control": 47,
+        "movement": 42,
+        "mentality": 46,
+        "recovery": 40
       },
       "batting": {
-        "ovr": 34,
-        "contact": 39,
-        "power": 29,
-        "eye": 35,
-        "discipline": 38,
-        "speed": 40,
-        "fielding": 31,
-        "arm": 38,
-        "battingClutch": 34,
-        "baseInstinct": 41,
-        "bunting": 35,
-        "platoon": 35
+        "ovr": 73,
+        "contact": 77,
+        "power": 77,
+        "eye": 73,
+        "discipline": 73,
+        "speed": 73,
+        "fielding": 67,
+        "arm": 75,
+        "battingClutch": 80
       },
-      "developmentRate": 82,
-      "potentialHidden": 60,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 52
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 36,
+      "potentialHidden": 83
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 59,
-  "popularity": 35
+  }
 }

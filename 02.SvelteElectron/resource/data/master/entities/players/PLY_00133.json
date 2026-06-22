@@ -1,9 +1,9 @@
 {
   "id": "PLY_00133",
   "name": "양지성",
-  "nameEn": "Yang Jiseong",
+  "nameEn": "You Sang-hyun",
   "role": "player",
-  "age": 18,
+  "age": 17,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "3B",
       "jerseyNumber": 13,
       "pitching": {
-        "ovr": 31,
-        "stamina": 31,
-        "velocity": 29,
-        "command": 29,
-        "control": 31,
-        "movement": 28,
-        "mentality": 32,
-        "recovery": 27,
-        "clutch": 43,
-        "holdRunners": 32
+        "ovr": 45,
+        "stamina": 54,
+        "velocity": 62,
+        "command": 46,
+        "control": 49,
+        "movement": 50,
+        "mentality": 47,
+        "recovery": 52
       },
       "batting": {
         "ovr": 51,
-        "contact": 58,
-        "power": 53,
-        "eye": 55,
-        "discipline": 47,
-        "speed": 55,
-        "fielding": 51,
-        "arm": 55,
-        "battingClutch": 45,
-        "baseInstinct": 49,
-        "bunting": 40,
-        "platoon": 43
+        "contact": 46,
+        "power": 51,
+        "eye": 56,
+        "discipline": 56,
+        "speed": 48,
+        "fielding": 54,
+        "arm": 57,
+        "battingClutch": 58
       },
       "developmentRate": 50,
-      "potentialHidden": 69,
-      "primaryPosition": "3B",
-      "positionRatings": {
-        "3B": 51
-      }
+      "potentialHidden": 69
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

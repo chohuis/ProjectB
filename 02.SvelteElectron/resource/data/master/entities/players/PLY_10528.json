@@ -1,9 +1,9 @@
 {
   "id": "PLY_10528",
-  "name": "마틴 제이슨",
-  "nameEn": "Martin Jason",
+  "name": "Smith Eric",
+  "nameEn": "Smith Eric",
   "role": "player",
-  "age": 26,
+  "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 75,
-  "popularity": 36,
+  "notes": "국적:미국",
+  "diligence": 70,
+  "popularity": 16,
   "militaryStatus": "군필",
   "entryYear": 2030,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 26,
+  "entryAge": 25,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 69,
+      "jerseyNumber": 12,
       "primaryPosition": "SP",
-      "developmentRate": 59,
-      "potentialHidden": 59,
-      "proServiceYears": 4,
+      "developmentRate": 49,
+      "potentialHidden": 76,
+      "proServiceYears": 3,
       "pitching": {
-        "ovr": 62,
-        "stamina": 55,
-        "velocity": 70,
-        "command": 61,
-        "control": 65,
-        "movement": 58,
-        "mentality": 65,
-        "recovery": 58,
-        "clutch": 53,
-        "holdRunners": 51
+        "ovr": 75,
+        "stamina": 70,
+        "velocity": 78,
+        "command": 71,
+        "control": 67,
+        "movement": 70,
+        "mentality": 79,
+        "recovery": 74,
+        "clutch": 68,
+        "holdRunners": 65
       },
       "batting": {
-        "ovr": 70,
-        "contact": 67,
-        "power": 59,
-        "eye": 72,
-        "discipline": 65,
-        "speed": 65,
-        "baseInstinct": 68,
-        "bunting": 54,
+        "ovr": 75,
+        "contact": 79,
+        "power": 75,
+        "eye": 73,
+        "discipline": 75,
+        "speed": 79,
+        "baseInstinct": 67,
+        "bunting": 68,
         "platoon": 50,
-        "fielding": 68,
-        "arm": 60,
-        "battingClutch": 66
+        "fielding": 73,
+        "arm": 73,
+        "battingClutch": 65
       },
       "positionRatings": {
-        "SP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "SP": 75
+      }
     },
     "coach": null,
     "manager": null,

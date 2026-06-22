@@ -1,7 +1,7 @@
 {
   "id": "PLY_00159",
   "name": "백준우",
-  "nameEn": "Baek Junu",
+  "nameEn": "Hwang Tae-jun",
   "role": "player",
   "age": 17,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "RF",
       "jerseyNumber": 19,
       "pitching": {
-        "ovr": 20,
-        "stamina": 20,
-        "velocity": 23,
-        "command": 20,
-        "control": 20,
-        "movement": 20,
-        "mentality": 21,
-        "recovery": 23,
-        "clutch": 41,
-        "holdRunners": 38
+        "ovr": 27,
+        "stamina": 52,
+        "velocity": 49,
+        "command": 50,
+        "control": 50,
+        "movement": 46,
+        "mentality": 52,
+        "recovery": 51
       },
       "batting": {
-        "ovr": 28,
-        "contact": 23,
+        "ovr": 39,
+        "contact": 36,
         "power": 33,
-        "eye": 27,
-        "discipline": 27,
-        "speed": 30,
-        "fielding": 27,
-        "arm": 22,
-        "battingClutch": 41,
-        "baseInstinct": 38,
-        "bunting": 42,
-        "platoon": 43
+        "eye": 38,
+        "discipline": 45,
+        "speed": 51,
+        "fielding": 40,
+        "arm": 56,
+        "battingClutch": 47
       },
       "developmentRate": 58,
-      "potentialHidden": 75,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 28
-      }
+      "potentialHidden": 75
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

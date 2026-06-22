@@ -1,72 +1,46 @@
 {
   "id": "PLY_01954",
-  "name": "서동우",
-  "nameEn": "Seo Dongwoo",
+  "name": "사사키 츠바사",
+  "nameEn": "Sasaki Tsubasa",
   "role": "player",
-  "age": 21,
+  "age": 28,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_EMBERTIGERS",
-  "teamId": "TEAM_KBL_EMBERTIGERS_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
+  "teamId": "TEAM_JBL_PL_MARINESOLDIERS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
-      "handedness": "R",
-      "position": "SS",
-      "jerseyNumber": 58,
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "RP",
+      "jerseyNumber": 9,
       "pitching": {
-        "ovr": 20,
-        "stamina": 20,
-        "velocity": 26,
-        "command": 20,
-        "control": 20,
-        "movement": 23,
-        "mentality": 20,
-        "recovery": 25,
-        "clutch": 36,
-        "holdRunners": 41
+        "ovr": 73,
+        "stamina": 58,
+        "velocity": 71,
+        "command": 68,
+        "control": 68,
+        "movement": 69,
+        "mentality": 66,
+        "recovery": 66
       },
       "batting": {
-        "ovr": 37,
-        "contact": 36,
-        "power": 42,
-        "eye": 34,
-        "discipline": 41,
-        "speed": 30,
-        "fielding": 32,
-        "arm": 34,
-        "battingClutch": 46,
-        "baseInstinct": 39,
-        "bunting": 39,
-        "platoon": 42
+        "ovr": 31,
+        "contact": 35,
+        "power": 31,
+        "eye": 33,
+        "discipline": 34,
+        "speed": 32,
+        "fielding": 29,
+        "arm": 32,
+        "battingClutch": 36
       },
-      "developmentRate": 44,
-      "potentialHidden": 45,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 37
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 53,
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",
@@ -106,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 47,
-  "popularity": 18
+  }
 }

@@ -1,6 +1,6 @@
 {
   "id": "PLY_14312",
-  "name": "톰슨 그랜트",
+  "name": "Thompson Grant",
   "nameEn": "Thompson Grant",
   "role": "player",
   "age": 32,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 59,
   "popularity": 41,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 50,
       "proServiceYears": 10,
       "pitching": {
-        "ovr": 82,
-        "stamina": 88,
-        "velocity": 91,
-        "command": 69,
-        "control": 77,
-        "movement": 81,
-        "mentality": 87,
-        "recovery": 69,
-        "clutch": 73,
-        "holdRunners": 78
+        "ovr": 65,
+        "stamina": 70,
+        "velocity": 72,
+        "command": 55,
+        "control": 61,
+        "movement": 64,
+        "mentality": 69,
+        "recovery": 55,
+        "clutch": 58,
+        "holdRunners": 62
       },
       "batting": {
         "ovr": 65,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

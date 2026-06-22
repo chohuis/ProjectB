@@ -1,7 +1,7 @@
 {
   "id": "PLY_00178",
   "name": "하현서",
-  "nameEn": "Ha Hyeonseo",
+  "nameEn": "Lee Seung-woo",
   "role": "player",
   "age": 21,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "CF",
       "jerseyNumber": 18,
       "pitching": {
-        "ovr": 23,
-        "stamina": 20,
-        "velocity": 21,
-        "command": 26,
-        "control": 26,
+        "ovr": 28,
+        "stamina": 25,
+        "velocity": 26,
+        "command": 27,
+        "control": 27,
         "movement": 24,
         "mentality": 24,
-        "recovery": 22,
-        "clutch": 46,
-        "holdRunners": 41
+        "recovery": 20
       },
       "batting": {
-        "ovr": 43,
-        "contact": 45,
-        "power": 41,
-        "eye": 47,
-        "discipline": 46,
-        "speed": 44,
-        "fielding": 40,
-        "arm": 43,
-        "battingClutch": 41,
-        "baseInstinct": 45,
-        "bunting": 39,
-        "platoon": 34
+        "ovr": 48,
+        "contact": 56,
+        "power": 52,
+        "eye": 49,
+        "discipline": 49,
+        "speed": 56,
+        "fielding": 55,
+        "arm": 49,
+        "battingClutch": 51
       },
       "developmentRate": 49,
-      "potentialHidden": 90,
-      "primaryPosition": "CF",
-      "positionRatings": {
-        "CF": 43
-      }
+      "potentialHidden": 90
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

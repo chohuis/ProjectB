@@ -1,6 +1,6 @@
 {
   "id": "PLY_15406",
-  "name": "화이트 카를로스",
+  "name": "White Carlos",
   "nameEn": "White Carlos",
   "role": "player",
   "age": 33,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 70,
   "popularity": 21,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 68,
       "proServiceYears": 11,
       "pitching": {
-        "ovr": 88,
-        "stamina": 91,
-        "velocity": 88,
-        "command": 91,
-        "control": 91,
-        "movement": 82,
-        "mentality": 92,
-        "recovery": 84,
-        "clutch": 87,
-        "holdRunners": 80
+        "ovr": 69,
+        "stamina": 71,
+        "velocity": 69,
+        "command": 71,
+        "control": 71,
+        "movement": 64,
+        "mentality": 72,
+        "recovery": 66,
+        "clutch": 68,
+        "holdRunners": 63
       },
       "batting": {
         "ovr": 69,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 69
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

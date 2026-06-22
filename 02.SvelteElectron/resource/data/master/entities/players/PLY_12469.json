@@ -1,9 +1,9 @@
 {
   "id": "PLY_12469",
-  "name": "토마스 오스틴",
-  "nameEn": "Thomas Austin",
+  "name": "Hall Daniel",
+  "nameEn": "Hall Daniel",
   "role": "player",
-  "age": 21,
+  "age": 35,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 75,
-  "popularity": 17,
+  "notes": "국적:도미니카",
+  "diligence": 69,
+  "popularity": 26,
   "militaryStatus": "군필",
   "entryYear": 2041,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 21,
+  "entryAge": 35,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 69,
-      "primaryPosition": "SP",
-      "developmentRate": 60,
-      "potentialHidden": 92,
-      "proServiceYears": 0,
+      "position": "CF",
+      "jerseyNumber": 75,
+      "primaryPosition": "CF",
+      "developmentRate": 51,
+      "potentialHidden": 68,
+      "proServiceYears": 13,
       "pitching": {
-        "ovr": 59,
-        "stamina": 60,
-        "velocity": 62,
-        "command": 55,
-        "control": 55,
-        "movement": 52,
-        "mentality": 61,
-        "recovery": 55,
-        "clutch": 55,
-        "holdRunners": 47
+        "ovr": 75,
+        "stamina": 72,
+        "velocity": 82,
+        "command": 72,
+        "control": 72,
+        "movement": 72,
+        "mentality": 76,
+        "recovery": 74,
+        "clutch": 72,
+        "holdRunners": 70
       },
       "batting": {
-        "ovr": 64,
-        "contact": 59,
-        "power": 64,
-        "eye": 56,
-        "discipline": 61,
-        "speed": 62,
-        "baseInstinct": 54,
-        "bunting": 50,
+        "ovr": 75,
+        "contact": 74,
+        "power": 72,
+        "eye": 70,
+        "discipline": 68,
+        "speed": 81,
+        "baseInstinct": 75,
+        "bunting": 70,
         "platoon": 50,
-        "fielding": 61,
-        "arm": 64,
-        "battingClutch": 55
+        "fielding": 71,
+        "arm": 65,
+        "battingClutch": 64
       },
       "positionRatings": {
-        "SP": 64
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "CF": 75
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_14948",
-  "name": "라이트 라이언",
+  "name": "Wright Ryan",
   "nameEn": "Wright Ryan",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 46,
   "popularity": 39,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 56
       },
       "batting": {
-        "ovr": 74,
-        "contact": 79,
-        "power": 67,
-        "eye": 79,
-        "discipline": 70,
-        "speed": 72,
-        "baseInstinct": 66,
-        "bunting": 60,
-        "platoon": 54,
-        "fielding": 66,
-        "arm": 76,
-        "battingClutch": 64
+        "ovr": 68,
+        "contact": 73,
+        "power": 62,
+        "eye": 73,
+        "discipline": 64,
+        "speed": 66,
+        "baseInstinct": 61,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 70,
+        "battingClutch": 59
       },
       "positionRatings": {
         "RF": 68

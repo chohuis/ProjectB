@@ -1,9 +1,9 @@
 {
   "id": "PLY_13266",
-  "name": "가르시아 마커스",
-  "nameEn": "Garcia Marcus",
+  "name": "Walker Trevor",
+  "nameEn": "Walker Trevor",
   "role": "player",
-  "age": 19,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 72,
-  "popularity": 21,
+  "notes": "국적:일본",
+  "diligence": 55,
+  "popularity": 40,
   "militaryStatus": "군필",
   "entryYear": 2046,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 19,
+  "entryAge": 21,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 96,
+      "jerseyNumber": 59,
       "primaryPosition": "SP",
-      "developmentRate": 57,
-      "potentialHidden": 72,
+      "developmentRate": 76,
+      "potentialHidden": 89,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 63,
-        "stamina": 61,
-        "velocity": 64,
-        "command": 54,
-        "control": 66,
-        "movement": 65,
-        "mentality": 62,
-        "recovery": 57,
-        "clutch": 57,
-        "holdRunners": 57
+        "ovr": 51,
+        "stamina": 48,
+        "velocity": 49,
+        "command": 41,
+        "control": 51,
+        "movement": 42,
+        "mentality": 51,
+        "recovery": 46,
+        "clutch": 39,
+        "holdRunners": 44
       },
       "batting": {
-        "ovr": 68,
-        "contact": 62,
-        "power": 70,
-        "eye": 69,
-        "discipline": 64,
-        "speed": 67,
-        "baseInstinct": 64,
-        "bunting": 54,
+        "ovr": 51,
+        "contact": 49,
+        "power": 52,
+        "eye": 53,
+        "discipline": 54,
+        "speed": 54,
+        "baseInstinct": 41,
+        "bunting": 45,
         "platoon": 50,
-        "fielding": 63,
-        "arm": 61,
-        "battingClutch": 57
+        "fielding": 48,
+        "arm": 50,
+        "battingClutch": 51
       },
       "positionRatings": {
-        "SP": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 1
-        }
-      ]
+        "SP": 51
+      }
     },
     "coach": null,
     "manager": null,

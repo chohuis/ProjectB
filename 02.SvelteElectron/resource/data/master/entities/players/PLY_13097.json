@@ -1,9 +1,9 @@
 {
   "id": "PLY_13097",
-  "name": "테일러 헌터",
-  "nameEn": "Taylor Hunter",
+  "name": "Hernandez Derek",
+  "nameEn": "Hernandez Derek",
   "role": "player",
-  "age": 34,
+  "age": 31,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 78,
-  "popularity": 22,
+  "notes": "국적:도미니카",
+  "diligence": 66,
+  "popularity": 19,
   "militaryStatus": "군필",
   "entryYear": 2045,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 34,
+  "entryAge": 31,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 71,
-      "primaryPosition": "SP",
-      "developmentRate": 54,
-      "potentialHidden": 68,
-      "proServiceYears": 12,
+      "position": "SS",
+      "jerseyNumber": 51,
+      "primaryPosition": "SS",
+      "developmentRate": 52,
+      "potentialHidden": 61,
+      "proServiceYears": 9,
       "pitching": {
-        "ovr": 74,
-        "stamina": 68,
-        "velocity": 74,
-        "command": 76,
+        "ovr": 71,
+        "stamina": 71,
+        "velocity": 70,
+        "command": 61,
         "control": 76,
-        "movement": 72,
-        "mentality": 71,
-        "recovery": 62,
-        "clutch": 72,
-        "holdRunners": 64
+        "movement": 69,
+        "mentality": 66,
+        "recovery": 61,
+        "clutch": 61,
+        "holdRunners": 68
       },
       "batting": {
-        "ovr": 64,
-        "contact": 59,
-        "power": 55,
-        "eye": 65,
-        "discipline": 67,
-        "speed": 70,
-        "baseInstinct": 65,
-        "bunting": 54,
+        "ovr": 71,
+        "contact": 75,
+        "power": 69,
+        "eye": 73,
+        "discipline": 70,
+        "speed": 72,
+        "baseInstinct": 69,
+        "bunting": 57,
         "platoon": 50,
-        "fielding": 66,
-        "arm": 61,
-        "battingClutch": 56
+        "fielding": 69,
+        "arm": 62,
+        "battingClutch": 60
       },
       "positionRatings": {
-        "SP": 64
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SS": 71
+      }
     },
     "coach": null,
     "manager": null,

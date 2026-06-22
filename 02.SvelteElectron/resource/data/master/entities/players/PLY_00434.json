@@ -1,7 +1,7 @@
 {
   "id": "PLY_00434",
   "name": "차기훈",
-  "nameEn": "Cha Gihun",
+  "nameEn": "You Seong-jun",
   "role": "player",
   "age": 25,
   "status": "active",
@@ -19,48 +19,28 @@
       "position": "2B",
       "jerseyNumber": 14,
       "pitching": {
-        "ovr": 40,
-        "stamina": 38,
-        "velocity": 39,
-        "command": 41,
-        "control": 42,
-        "movement": 42,
-        "mentality": 45,
-        "recovery": 42,
-        "clutch": 40,
-        "holdRunners": 38
+        "ovr": 33,
+        "stamina": 31,
+        "velocity": 38,
+        "command": 29,
+        "control": 30,
+        "movement": 27,
+        "mentality": 27,
+        "recovery": 34
       },
       "batting": {
-        "ovr": 60,
-        "contact": 64,
-        "power": 63,
-        "eye": 57,
-        "discipline": 58,
-        "speed": 63,
+        "ovr": 56,
+        "contact": 61,
+        "power": 54,
+        "eye": 55,
+        "discipline": 57,
+        "speed": 62,
         "fielding": 64,
-        "arm": 57,
-        "battingClutch": 52,
-        "baseInstinct": 53,
-        "bunting": 51,
-        "platoon": 49
+        "arm": 60,
+        "battingClutch": 62
       },
       "developmentRate": 50,
-      "potentialHidden": 72,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 60
-      },
-      "proServiceYears": 5,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 72
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

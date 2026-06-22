@@ -1,7 +1,7 @@
 {
   "id": "PLY_11484",
-  "name": "킹 블레이크",
-  "nameEn": "King Blake",
+  "name": "Scott Miguel",
+  "nameEn": "Scott Miguel",
   "role": "player",
   "age": 27,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 73,
-  "popularity": 18,
+  "notes": "국적:일본",
+  "diligence": 67,
+  "popularity": 40,
   "militaryStatus": "군필",
   "entryYear": 2035,
   "entryLeague": "LEAGUE_ABL",
@@ -24,54 +24,40 @@
       "playerType": "pitcher",
       "handedness": "L",
       "position": "SP",
-      "jerseyNumber": 42,
+      "jerseyNumber": 15,
       "primaryPosition": "SP",
       "developmentRate": 47,
-      "potentialHidden": 65,
+      "potentialHidden": 61,
       "proServiceYears": 5,
       "pitching": {
-        "ovr": 62,
-        "stamina": 59,
-        "velocity": 71,
-        "command": 54,
-        "control": 63,
-        "movement": 56,
-        "mentality": 60,
-        "recovery": 62,
-        "clutch": 57,
-        "holdRunners": 54
+        "ovr": 69,
+        "stamina": 73,
+        "velocity": 70,
+        "command": 69,
+        "control": 68,
+        "movement": 62,
+        "mentality": 74,
+        "recovery": 63,
+        "clutch": 56,
+        "holdRunners": 58
       },
       "batting": {
-        "ovr": 70,
-        "contact": 72,
-        "power": 65,
-        "eye": 74,
-        "discipline": 68,
-        "speed": 70,
-        "baseInstinct": 60,
-        "bunting": 55,
+        "ovr": 69,
+        "contact": 64,
+        "power": 59,
+        "eye": 71,
+        "discipline": 61,
+        "speed": 72,
+        "baseInstinct": 59,
+        "bunting": 59,
         "platoon": 50,
-        "fielding": 70,
-        "arm": 63,
-        "battingClutch": 70
+        "fielding": 69,
+        "arm": 60,
+        "battingClutch": 67
       },
       "positionRatings": {
-        "SP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ]
+        "SP": 69
+      }
     },
     "coach": null,
     "manager": null,

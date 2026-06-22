@@ -1,6 +1,6 @@
 {
   "id": "PLY_16449",
-  "name": "라이트 제이슨",
+  "name": "Wright Jason",
   "nameEn": "Wright Jason",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 73,
   "popularity": 12,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 62
       },
       "batting": {
-        "ovr": 82,
-        "contact": 74,
-        "power": 74,
-        "eye": 87,
-        "discipline": 77,
-        "speed": 91,
-        "baseInstinct": 79,
-        "bunting": 66,
-        "platoon": 63,
-        "fielding": 79,
-        "arm": 79,
-        "battingClutch": 68
+        "ovr": 65,
+        "contact": 59,
+        "power": 59,
+        "eye": 69,
+        "discipline": 61,
+        "speed": 72,
+        "baseInstinct": 63,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 63,
+        "battingClutch": 54
       },
       "positionRatings": {
         "2B": 65

@@ -1,7 +1,7 @@
 {
   "id": "PLY_00333",
   "name": "김연우",
-  "nameEn": "Kim Yeonu",
+  "nameEn": "Ko Tae-jun",
   "role": "player",
   "age": 24,
   "status": "active",
@@ -20,47 +20,27 @@
       "jerseyNumber": 13,
       "pitching": {
         "ovr": 36,
-        "stamina": 41,
-        "velocity": 38,
-        "command": 41,
-        "control": 41,
-        "movement": 41,
-        "mentality": 38,
-        "recovery": 38,
-        "clutch": 34,
-        "holdRunners": 38
+        "stamina": 30,
+        "velocity": 32,
+        "command": 30,
+        "control": 35,
+        "movement": 27,
+        "mentality": 28,
+        "recovery": 33
       },
       "batting": {
-        "ovr": 56,
-        "contact": 52,
-        "power": 60,
-        "eye": 57,
-        "discipline": 61,
-        "speed": 49,
-        "fielding": 58,
-        "arm": 55,
-        "battingClutch": 51,
-        "baseInstinct": 54,
-        "bunting": 51,
-        "platoon": 50
+        "ovr": 55,
+        "contact": 58,
+        "power": 66,
+        "eye": 58,
+        "discipline": 53,
+        "speed": 56,
+        "fielding": 52,
+        "arm": 52,
+        "battingClutch": 58
       },
       "developmentRate": 55,
-      "potentialHidden": 56,
-      "primaryPosition": "1B",
-      "positionRatings": {
-        "1B": 56
-      },
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 56
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

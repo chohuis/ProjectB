@@ -1,6 +1,6 @@
 {
   "id": "PLY_15123",
-  "name": "에르난데스 로건",
+  "name": "Hernandez Logan",
   "nameEn": "Hernandez Logan",
   "role": "player",
   "age": 32,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 49,
   "popularity": 30,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 52
       },
       "batting": {
-        "ovr": 84,
-        "contact": 85,
-        "power": 84,
-        "eye": 85,
-        "discipline": 74,
-        "speed": 79,
-        "baseInstinct": 81,
-        "bunting": 64,
-        "platoon": 64,
-        "fielding": 83,
-        "arm": 74,
-        "battingClutch": 71
+        "ovr": 66,
+        "contact": 67,
+        "power": 66,
+        "eye": 67,
+        "discipline": 58,
+        "speed": 62,
+        "baseInstinct": 64,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 58,
+        "battingClutch": 56
       },
       "positionRatings": {
         "3B": 66

@@ -1,76 +1,46 @@
 {
   "id": "PLY_02061",
-  "name": "다니엘 라이트",
-  "nameEn": "Daniel Wright",
+  "name": "야마다 슌",
+  "nameEn": "Yamada Shun",
   "role": "player",
-  "age": 26,
+  "age": 30,
   "status": "active",
-  "originLeagueId": "LEAGUE_ABL",
-  "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_HARBORHAWKS",
-  "teamId": "TEAM_ABL_HARBORHAWKS_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SUNS",
+  "teamId": "TEAM_JBL_PL_SUNS_2",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "SP",
-      "jerseyNumber": 1,
+      "jerseyNumber": 31,
       "pitching": {
-        "ovr": 67,
-        "stamina": 64,
-        "velocity": 73,
-        "command": 71,
-        "control": 65,
-        "movement": 66,
-        "mentality": 71,
-        "recovery": 67,
-        "clutch": 60,
-        "holdRunners": 64
+        "ovr": 71,
+        "stamina": 72,
+        "velocity": 77,
+        "command": 73,
+        "control": 67,
+        "movement": 72,
+        "mentality": 66,
+        "recovery": 70
       },
       "batting": {
-        "ovr": 49,
-        "contact": 54,
-        "power": 54,
-        "eye": 45,
-        "discipline": 54,
-        "speed": 47,
-        "fielding": 52,
-        "arm": 43,
-        "battingClutch": 41,
-        "baseInstinct": 40,
-        "bunting": 40,
-        "platoon": 42
+        "ovr": 46,
+        "contact": 49,
+        "power": 45,
+        "eye": 50,
+        "discipline": 49,
+        "speed": 45,
+        "fielding": 47,
+        "arm": 46,
+        "battingClutch": 51
       },
-      "developmentRate": 62,
-      "potentialHidden": 60,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 19400,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 51,
+      "potentialHidden": 85
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 53,
-  "popularity": 31,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,9 +1,9 @@
 {
   "id": "PLY_00027",
   "name": "나상민",
-  "nameEn": "Na Sangmin",
+  "nameEn": "Son Do-yun",
   "role": "player",
-  "age": 19,
+  "age": 15,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,47 +19,28 @@
       "position": "CP",
       "jerseyNumber": 7,
       "pitching": {
-        "ovr": 58,
-        "stamina": 63,
-        "velocity": 60,
-        "command": 60,
-        "control": 61,
-        "movement": 57,
-        "mentality": 62,
-        "recovery": 62,
-        "clutch": 57,
-        "holdRunners": 51
+        "ovr": 62,
+        "stamina": 59,
+        "velocity": 69,
+        "command": 57,
+        "control": 68,
+        "movement": 53,
+        "mentality": 74,
+        "recovery": 64
       },
       "batting": {
-        "ovr": 40,
-        "contact": 35,
-        "power": 46,
-        "eye": 46,
-        "discipline": 40,
-        "speed": 44,
-        "fielding": 40,
-        "arm": 36,
-        "battingClutch": 41,
-        "baseInstinct": 36,
-        "bunting": 36,
-        "platoon": 38
+        "ovr": 47,
+        "contact": 57,
+        "power": 57,
+        "eye": 59,
+        "discipline": 65,
+        "speed": 68,
+        "fielding": 61,
+        "arm": 63,
+        "battingClutch": 54
       },
       "developmentRate": 52,
-      "potentialHidden": 61,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 2
-        }
-      ]
+      "potentialHidden": 61
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

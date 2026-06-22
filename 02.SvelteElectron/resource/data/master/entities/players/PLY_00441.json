@@ -1,7 +1,7 @@
 {
   "id": "PLY_00441",
   "name": "하준영",
-  "nameEn": "Ha Junyeong",
+  "nameEn": "Song Seong-woo",
   "role": "player",
   "age": 24,
   "status": "active",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 1,
       "pitching": {
-        "ovr": 67,
-        "stamina": 68,
-        "velocity": 68,
-        "command": 64,
-        "control": 64,
-        "movement": 65,
-        "mentality": 71,
-        "recovery": 71,
-        "clutch": 62,
-        "holdRunners": 62
+        "ovr": 73,
+        "stamina": 78,
+        "velocity": 77,
+        "command": 75,
+        "control": 74,
+        "movement": 74,
+        "mentality": 74,
+        "recovery": 74
       },
       "batting": {
-        "ovr": 49,
-        "contact": 54,
-        "power": 55,
-        "eye": 54,
+        "ovr": 39,
+        "contact": 41,
+        "power": 39,
+        "eye": 44,
         "discipline": 45,
-        "speed": 44,
-        "fielding": 53,
-        "arm": 53,
-        "battingClutch": 42,
-        "baseInstinct": 41,
-        "bunting": 36,
-        "platoon": 36
+        "speed": 43,
+        "fielding": 43,
+        "arm": 37,
+        "battingClutch": 43
       },
       "developmentRate": 48,
-      "potentialHidden": 73,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_FORKBALL",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 1900,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 73
     },
     "coach": {
       "specialty": "-",
@@ -114,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

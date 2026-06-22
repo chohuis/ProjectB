@@ -1,6 +1,6 @@
 {
   "id": "PLY_14238",
-  "name": "앨런 라이언",
+  "name": "Allen Ryan",
   "nameEn": "Allen Ryan",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 78,
   "popularity": 42,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 67
       },
       "batting": {
-        "ovr": 65,
-        "contact": 68,
-        "power": 59,
-        "eye": 58,
-        "discipline": 67,
-        "speed": 65,
-        "baseInstinct": 68,
-        "bunting": 55,
-        "platoon": 48,
-        "fielding": 59,
-        "arm": 55,
-        "battingClutch": 62
+        "ovr": 68,
+        "contact": 71,
+        "power": 62,
+        "eye": 61,
+        "discipline": 70,
+        "speed": 68,
+        "baseInstinct": 71,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 58,
+        "battingClutch": 65
       },
       "positionRatings": {
         "CF": 68

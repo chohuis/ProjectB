@@ -1,9 +1,9 @@
 {
   "id": "PLY_11402",
-  "name": "루이스 조던",
-  "nameEn": "Lewis Jordan",
+  "name": "Robinson Evan",
+  "nameEn": "Robinson Evan",
   "role": "player",
-  "age": 23,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 55,
-  "popularity": 21,
+  "notes": "국적:미국",
+  "diligence": 71,
+  "popularity": 10,
   "militaryStatus": "군필",
   "entryYear": 2035,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 23,
+  "entryAge": 22,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 34,
-      "primaryPosition": "SP",
-      "developmentRate": 56,
-      "potentialHidden": 59,
-      "proServiceYears": 1,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 15,
+      "primaryPosition": "2B",
+      "developmentRate": 63,
+      "potentialHidden": 77,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 66,
-        "stamina": 68,
-        "velocity": 71,
-        "command": 65,
-        "control": 66,
-        "movement": 68,
-        "mentality": 60,
-        "recovery": 58,
-        "clutch": 56,
-        "holdRunners": 61
+        "ovr": 52,
+        "stamina": 45,
+        "velocity": 57,
+        "command": 50,
+        "control": 49,
+        "movement": 55,
+        "mentality": 49,
+        "recovery": 47,
+        "clutch": 51,
+        "holdRunners": 42
       },
       "batting": {
-        "ovr": 72,
-        "contact": 76,
-        "power": 66,
-        "eye": 76,
-        "discipline": 69,
-        "speed": 69,
-        "baseInstinct": 71,
-        "bunting": 62,
+        "ovr": 52,
+        "contact": 50,
+        "power": 50,
+        "eye": 53,
+        "discipline": 52,
+        "speed": 54,
+        "baseInstinct": 44,
+        "bunting": 40,
         "platoon": 50,
-        "fielding": 63,
-        "arm": 61,
-        "battingClutch": 68
+        "fielding": 54,
+        "arm": 50,
+        "battingClutch": 45
       },
       "positionRatings": {
-        "SP": 72
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "2B": 52
+      }
     },
     "coach": null,
     "manager": null,

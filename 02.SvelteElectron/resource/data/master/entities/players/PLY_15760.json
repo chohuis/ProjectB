@@ -1,6 +1,6 @@
 {
   "id": "PLY_15760",
-  "name": "카터 오스틴",
+  "name": "Carter Austin",
   "nameEn": "Carter Austin",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 75,
   "popularity": 28,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 66,
       "proServiceYears": 13,
       "pitching": {
-        "ovr": 66,
-        "stamina": 56,
-        "velocity": 67,
-        "command": 54,
-        "control": 68,
-        "movement": 57,
-        "mentality": 60,
-        "recovery": 55,
-        "clutch": 65,
-        "holdRunners": 61
+        "ovr": 53,
+        "stamina": 45,
+        "velocity": 54,
+        "command": 43,
+        "control": 55,
+        "movement": 46,
+        "mentality": 48,
+        "recovery": 44,
+        "clutch": 52,
+        "holdRunners": 49
       },
       "batting": {
         "ovr": 53,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 53
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

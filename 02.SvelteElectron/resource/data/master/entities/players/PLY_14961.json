@@ -1,6 +1,6 @@
 {
   "id": "PLY_14961",
-  "name": "라이트 카를로스",
+  "name": "Wright Carlos",
   "nameEn": "Wright Carlos",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 68,
   "popularity": 12,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 58
       },
       "batting": {
-        "ovr": 59,
-        "contact": 57,
-        "power": 52,
-        "eye": 62,
-        "discipline": 62,
-        "speed": 57,
-        "baseInstinct": 49,
-        "bunting": 54,
-        "platoon": 49,
-        "fielding": 59,
-        "arm": 61,
-        "battingClutch": 50
+        "ovr": 60,
+        "contact": 58,
+        "power": 53,
+        "eye": 63,
+        "discipline": 63,
+        "speed": 58,
+        "baseInstinct": 50,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 62,
+        "battingClutch": 51
       },
       "positionRatings": {
         "C": 60

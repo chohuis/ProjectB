@@ -1,14 +1,14 @@
 {
   "id": "PLY_01151",
   "name": "밀러 제임스",
-  "nameEn": "Mil 러 제임스",
+  "nameEn": "Miller James",
   "role": "player",
   "age": 40,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_RAINARROWS",
-  "teamId": "TEAM_ABL_RAINARROWS_1",
+  "clubId": "CLUB_ABL_ATL",
+  "teamId": "TEAM_ABL_ATL",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
@@ -19,48 +19,28 @@
       "position": "1B",
       "jerseyNumber": 16,
       "pitching": {
-        "ovr": 51,
-        "stamina": 53,
-        "velocity": 52,
-        "command": 47,
-        "control": 54,
-        "movement": 51,
-        "mentality": 51,
-        "recovery": 47,
-        "clutch": 45,
-        "holdRunners": 50
+        "ovr": 45,
+        "stamina": 49,
+        "velocity": 50,
+        "command": 50,
+        "control": 47,
+        "movement": 44,
+        "mentality": 49,
+        "recovery": 48
       },
       "batting": {
         "ovr": 71,
-        "contact": 71,
-        "power": 75,
-        "eye": 69,
-        "discipline": 69,
-        "speed": 65,
-        "fielding": 77,
-        "arm": 73,
-        "battingClutch": 70,
-        "baseInstinct": 70,
-        "bunting": 67,
-        "platoon": 63
+        "contact": 72,
+        "power": 74,
+        "eye": 73,
+        "discipline": 70,
+        "speed": 66,
+        "fielding": 68,
+        "arm": 66,
+        "battingClutch": 76
       },
       "developmentRate": 31,
-      "potentialHidden": 70,
-      "primaryPosition": "1B",
-      "positionRatings": {
-        "1B": 71
-      },
-      "proServiceYears": 18,
-      "contract": {
-        "salary": 7100,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 70
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

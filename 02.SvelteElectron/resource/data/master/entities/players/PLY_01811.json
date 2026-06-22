@@ -1,61 +1,46 @@
 {
   "id": "PLY_01811",
-  "name": "차정우",
-  "nameEn": "Cha Jeongwoo",
+  "name": "나카무라 슌",
+  "nameEn": "Nakamura Shun",
   "role": "player",
-  "age": 16,
+  "age": 33,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_GOYANG_ARROW",
-  "teamId": "TEAM_HS_GOYANG_ARROW",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_GOYANG_ARROW",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
+  "teamId": "TEAM_JBL_PL_THUNDERFALCONS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
-      "position": "CP",
-      "jerseyNumber": 10,
+      "position": "SP",
+      "jerseyNumber": 1,
       "pitching": {
-        "ovr": 35,
-        "stamina": 32,
-        "velocity": 30,
-        "command": 38,
-        "control": 40,
-        "movement": 34,
-        "mentality": 34,
-        "recovery": 31,
-        "clutch": 39,
-        "holdRunners": 33
+        "ovr": 80,
+        "stamina": 78,
+        "velocity": 85,
+        "command": 76,
+        "control": 75,
+        "movement": 74,
+        "mentality": 82,
+        "recovery": 80
       },
       "batting": {
-        "ovr": 22,
-        "contact": 23,
-        "power": 20,
-        "eye": 20,
-        "discipline": 23,
-        "speed": 20,
-        "fielding": 20,
-        "arm": 20,
-        "battingClutch": 44,
-        "baseInstinct": 45,
-        "bunting": 30,
-        "platoon": 40
+        "ovr": 47,
+        "contact": 41,
+        "power": 48,
+        "eye": 43,
+        "discipline": 43,
+        "speed": 40,
+        "fielding": 46,
+        "arm": 40,
+        "battingClutch": 41
       },
-      "developmentRate": 57,
-      "potentialHidden": 86,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 35
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 44,
+      "potentialHidden": 65
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 66,
-  "popularity": 21
+  }
 }

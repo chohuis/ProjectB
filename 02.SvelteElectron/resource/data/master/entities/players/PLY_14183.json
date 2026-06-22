@@ -1,6 +1,6 @@
 {
   "id": "PLY_14183",
-  "name": "토마스 데릭",
+  "name": "Thomas Derek",
   "nameEn": "Thomas Derek",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 46,
   "popularity": 22,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 53,
       "proServiceYears": 3,
       "pitching": {
-        "ovr": 58,
-        "stamina": 56,
-        "velocity": 66,
-        "command": 53,
-        "control": 54,
-        "movement": 53,
-        "mentality": 62,
-        "recovery": 55,
-        "clutch": 56,
-        "holdRunners": 45
+        "ovr": 63,
+        "stamina": 61,
+        "velocity": 72,
+        "command": 58,
+        "control": 59,
+        "movement": 58,
+        "mentality": 67,
+        "recovery": 60,
+        "clutch": 61,
+        "holdRunners": 49
       },
       "batting": {
         "ovr": 63,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

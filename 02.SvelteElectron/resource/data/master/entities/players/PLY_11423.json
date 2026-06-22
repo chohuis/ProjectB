@@ -1,7 +1,7 @@
 {
   "id": "PLY_11423",
-  "name": "톰슨 마커스",
-  "nameEn": "Thompson Marcus",
+  "name": "Taylor Eric",
+  "nameEn": "Taylor Eric",
   "role": "player",
   "age": 20,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 70,
-  "popularity": 43,
+  "notes": "국적:쿠바",
+  "diligence": 62,
+  "popularity": 37,
   "militaryStatus": "군필",
   "entryYear": 2035,
   "entryLeague": "LEAGUE_ABL",
@@ -21,53 +21,43 @@
   "entryAge": 20,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 13,
-      "primaryPosition": "SP",
-      "developmentRate": 78,
-      "potentialHidden": 76,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 5,
+      "primaryPosition": "C",
+      "developmentRate": 75,
+      "potentialHidden": 65,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 59,
-        "stamina": 60,
-        "velocity": 61,
-        "command": 52,
-        "control": 55,
-        "movement": 53,
-        "mentality": 64,
-        "recovery": 52,
-        "clutch": 54,
-        "holdRunners": 50
+        "ovr": 66,
+        "stamina": 67,
+        "velocity": 73,
+        "command": 60,
+        "control": 63,
+        "movement": 65,
+        "mentality": 73,
+        "recovery": 62,
+        "clutch": 58,
+        "holdRunners": 51
       },
       "batting": {
-        "ovr": 64,
-        "contact": 68,
-        "power": 62,
-        "eye": 62,
-        "discipline": 66,
-        "speed": 60,
-        "baseInstinct": 56,
-        "bunting": 51,
+        "ovr": 66,
+        "contact": 59,
+        "power": 56,
+        "eye": 57,
+        "discipline": 61,
+        "speed": 62,
+        "baseInstinct": 66,
+        "bunting": 47,
         "platoon": 50,
-        "fielding": 66,
-        "arm": 66,
-        "battingClutch": 61
+        "fielding": 68,
+        "arm": 57,
+        "battingClutch": 56
       },
       "positionRatings": {
-        "SP": 64
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "C": 66
+      }
     },
     "coach": null,
     "manager": null,

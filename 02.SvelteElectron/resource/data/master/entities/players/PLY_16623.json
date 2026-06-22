@@ -1,6 +1,6 @@
 {
   "id": "PLY_16623",
-  "name": "토마스 오스틴",
+  "name": "Thomas Austin",
   "nameEn": "Thomas Austin",
   "role": "player",
   "age": 30,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 59,
   "popularity": 30,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 66,
       "proServiceYears": 8,
       "pitching": {
-        "ovr": 61,
-        "stamina": 51,
-        "velocity": 61,
-        "command": 59,
-        "control": 61,
-        "movement": 56,
-        "mentality": 64,
-        "recovery": 61,
-        "clutch": 47,
-        "holdRunners": 45
+        "ovr": 54,
+        "stamina": 45,
+        "velocity": 54,
+        "command": 52,
+        "control": 54,
+        "movement": 50,
+        "mentality": 57,
+        "recovery": 54,
+        "clutch": 42,
+        "holdRunners": 40
       },
       "batting": {
         "ovr": 54,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 54
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

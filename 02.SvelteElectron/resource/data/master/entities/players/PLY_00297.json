@@ -1,7 +1,7 @@
 {
   "id": "PLY_00297",
   "name": "조동우",
-  "nameEn": "Jo Dongu",
+  "nameEn": "Son Chan-woo",
   "role": "player",
   "age": 21,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "LF",
       "jerseyNumber": 17,
       "pitching": {
-        "ovr": 44,
-        "stamina": 48,
-        "velocity": 46,
-        "command": 42,
-        "control": 43,
-        "movement": 44,
-        "mentality": 46,
-        "recovery": 40,
-        "clutch": 44,
-        "holdRunners": 41
+        "ovr": 37,
+        "stamina": 38,
+        "velocity": 42,
+        "command": 39,
+        "control": 37,
+        "movement": 40,
+        "mentality": 37,
+        "recovery": 33
       },
       "batting": {
-        "ovr": 64,
-        "contact": 60,
-        "power": 59,
-        "eye": 69,
-        "discipline": 64,
-        "speed": 61,
-        "fielding": 64,
-        "arm": 61,
-        "battingClutch": 56,
-        "baseInstinct": 58,
-        "bunting": 55,
-        "platoon": 52
+        "ovr": 62,
+        "contact": 66,
+        "power": 64,
+        "eye": 63,
+        "discipline": 67,
+        "speed": 64,
+        "fielding": 63,
+        "arm": 67,
+        "battingClutch": 61
       },
       "developmentRate": 65,
-      "potentialHidden": 64,
-      "primaryPosition": "LF",
-      "positionRatings": {
-        "LF": 64
-      }
+      "potentialHidden": 64
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

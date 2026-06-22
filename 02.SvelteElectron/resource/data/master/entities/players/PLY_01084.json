@@ -1,14 +1,14 @@
 {
   "id": "PLY_01084",
   "name": "스미스 미겔",
-  "nameEn": "Seu 미스 미겔",
+  "nameEn": "Smith Miguel",
   "role": "player",
   "age": 29,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_PEACHTREEFALCONS",
-  "teamId": "TEAM_ABL_PEACHTREEFALCONS_2",
+  "clubId": "CLUB_ABL_HOU",
+  "teamId": "TEAM_ABL_HOU_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -19,48 +19,28 @@
       "position": "2B",
       "jerseyNumber": 54,
       "pitching": {
-        "ovr": 49,
-        "stamina": 50,
-        "velocity": 46,
-        "command": 49,
-        "control": 51,
-        "movement": 53,
-        "mentality": 47,
-        "recovery": 54,
-        "clutch": 39,
-        "holdRunners": 36
+        "ovr": 47,
+        "stamina": 47,
+        "velocity": 50,
+        "command": 44,
+        "control": 44,
+        "movement": 41,
+        "mentality": 44,
+        "recovery": 44
       },
       "batting": {
         "ovr": 69,
-        "contact": 75,
-        "power": 72,
-        "eye": 67,
+        "contact": 68,
+        "power": 70,
+        "eye": 72,
         "discipline": 68,
-        "speed": 63,
-        "fielding": 75,
-        "arm": 70,
-        "battingClutch": 67,
-        "baseInstinct": 67,
-        "bunting": 62,
-        "platoon": 66
+        "speed": 67,
+        "fielding": 71,
+        "arm": 65,
+        "battingClutch": 68
       },
       "developmentRate": 45,
-      "potentialHidden": 65,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 69
-      },
-      "proServiceYears": 7,
-      "contract": {
-        "salary": 6300,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 65
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

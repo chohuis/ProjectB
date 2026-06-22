@@ -1,6 +1,6 @@
 {
   "id": "PLY_16540",
-  "name": "화이트 숀",
+  "name": "White Sean",
   "nameEn": "White Sean",
   "role": "player",
   "age": 18,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 81,
   "popularity": 43,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 75,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 57,
-        "stamina": 61,
-        "velocity": 66,
-        "command": 58,
-        "control": 53,
-        "movement": 56,
-        "mentality": 58,
-        "recovery": 49,
-        "clutch": 46,
-        "holdRunners": 47
+        "ovr": 58,
+        "stamina": 62,
+        "velocity": 67,
+        "command": 59,
+        "control": 54,
+        "movement": 57,
+        "mentality": 59,
+        "recovery": 50,
+        "clutch": 47,
+        "holdRunners": 48
       },
       "batting": {
         "ovr": 58,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

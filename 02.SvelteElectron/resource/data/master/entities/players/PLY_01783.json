@@ -1,61 +1,46 @@
 {
   "id": "PLY_01783",
-  "name": "노지원",
-  "nameEn": "No Jiwon",
+  "name": "사토 유토",
+  "nameEn": "Sato Yuto",
   "role": "player",
-  "age": 17,
+  "age": 25,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_JECHEON_RIDGE",
-  "teamId": "TEAM_HS_JECHEON_RIDGE",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_JECHEON_RIDGE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONSTORMS",
+  "teamId": "TEAM_JBL_CL_IRONSTORMS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "C",
-      "jerseyNumber": 12,
+      "position": "3B",
+      "jerseyNumber": 18,
       "pitching": {
-        "ovr": 28,
-        "stamina": 29,
-        "velocity": 31,
-        "command": 25,
-        "control": 33,
-        "movement": 27,
-        "mentality": 25,
-        "recovery": 31,
-        "clutch": 36,
-        "holdRunners": 42
+        "ovr": 63,
+        "stamina": 55,
+        "velocity": 59,
+        "command": 58,
+        "control": 64,
+        "movement": 62,
+        "mentality": 64,
+        "recovery": 60
       },
       "batting": {
-        "ovr": 48,
-        "contact": 51,
-        "power": 46,
-        "eye": 45,
-        "discipline": 43,
-        "speed": 50,
-        "fielding": 48,
-        "arm": 51,
-        "battingClutch": 37,
-        "baseInstinct": 40,
-        "bunting": 44,
-        "platoon": 40
+        "ovr": 86,
+        "contact": 88,
+        "power": 93,
+        "eye": 85,
+        "discipline": 90,
+        "speed": 81,
+        "fielding": 81,
+        "arm": 86,
+        "battingClutch": 84
       },
-      "developmentRate": 90,
-      "potentialHidden": 80,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 48
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 34,
+      "potentialHidden": 92
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 73,
-  "popularity": 29
+  }
 }

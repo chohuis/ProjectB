@@ -1,6 +1,6 @@
 {
   "id": "PLY_15402",
-  "name": "리 크리스",
+  "name": "Lee Chris",
   "nameEn": "Lee Chris",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 71,
   "popularity": 41,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 56
       },
       "batting": {
-        "ovr": 68,
-        "contact": 61,
-        "power": 61,
-        "eye": 66,
-        "discipline": 65,
-        "speed": 65,
-        "baseInstinct": 59,
-        "bunting": 58,
-        "platoon": 49,
-        "fielding": 69,
-        "arm": 58,
-        "battingClutch": 64
+        "ovr": 70,
+        "contact": 63,
+        "power": 63,
+        "eye": 68,
+        "discipline": 67,
+        "speed": 67,
+        "baseInstinct": 61,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 60,
+        "battingClutch": 66
       },
       "positionRatings": {
         "1B": 70

@@ -1,9 +1,9 @@
 {
   "id": "PLY_11223",
-  "name": "존스 케빈",
-  "nameEn": "Jones Kevin",
+  "name": "Walker Chris",
+  "nameEn": "Walker Chris",
   "role": "player",
-  "age": 35,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 79,
-  "popularity": 21,
+  "notes": "국적:쿠바",
+  "diligence": 49,
+  "popularity": 19,
   "militaryStatus": "군필",
   "entryYear": 2034,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 35,
+  "entryAge": 20,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 21,
-      "primaryPosition": "SP",
-      "developmentRate": 55,
+      "position": "1B",
+      "jerseyNumber": 62,
+      "primaryPosition": "1B",
+      "developmentRate": 62,
       "potentialHidden": 65,
-      "proServiceYears": 13,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 88,
-        "stamina": 86,
-        "velocity": 93,
-        "command": 82,
-        "control": 84,
-        "movement": 80,
-        "mentality": 81,
-        "recovery": 90,
-        "clutch": 88,
-        "holdRunners": 87
+        "ovr": 62,
+        "stamina": 58,
+        "velocity": 66,
+        "command": 56,
+        "control": 57,
+        "movement": 57,
+        "mentality": 66,
+        "recovery": 57,
+        "clutch": 61,
+        "holdRunners": 57
       },
       "batting": {
-        "ovr": 74,
-        "contact": 73,
-        "power": 66,
-        "eye": 71,
-        "discipline": 67,
-        "speed": 81,
-        "baseInstinct": 74,
-        "bunting": 68,
+        "ovr": 62,
+        "contact": 55,
+        "power": 58,
+        "eye": 60,
+        "discipline": 53,
+        "speed": 55,
+        "baseInstinct": 58,
+        "bunting": 43,
         "platoon": 50,
-        "fielding": 69,
-        "arm": 75,
-        "battingClutch": 65
+        "fielding": 57,
+        "arm": 60,
+        "battingClutch": 62
       },
       "positionRatings": {
-        "SP": 74
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "1B": 62
+      }
     },
     "coach": null,
     "manager": null,

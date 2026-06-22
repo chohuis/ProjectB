@@ -1,14 +1,14 @@
 {
   "id": "PLY_01140",
   "name": "애덤스 앤서니",
-  "nameEn": "Ae 덤스 앤서니",
+  "nameEn": "Adams Anthony",
   "role": "player",
   "age": 37,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_RAINARROWS",
-  "teamId": "TEAM_ABL_RAINARROWS_1",
+  "clubId": "CLUB_ABL_ATL",
+  "teamId": "TEAM_ABL_ATL",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:베네수엘라",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 5,
       "pitching": {
-        "ovr": 80,
-        "stamina": 84,
-        "velocity": 83,
-        "command": 78,
-        "control": 81,
-        "movement": 81,
+        "ovr": 91,
+        "stamina": 96,
+        "velocity": 91,
+        "command": 94,
+        "control": 94,
+        "movement": 93,
         "mentality": 86,
-        "recovery": 83,
-        "clutch": 72,
-        "holdRunners": 78
+        "recovery": 85
       },
       "batting": {
-        "ovr": 62,
-        "contact": 59,
-        "power": 63,
-        "eye": 59,
-        "discipline": 62,
-        "speed": 60,
-        "fielding": 64,
-        "arm": 62,
-        "battingClutch": 62,
-        "baseInstinct": 55,
-        "bunting": 46,
-        "platoon": 52
+        "ovr": 74,
+        "contact": 69,
+        "power": 67,
+        "eye": 70,
+        "discipline": 66,
+        "speed": 68,
+        "fielding": 70,
+        "arm": 73,
+        "battingClutch": 74
       },
       "developmentRate": 48,
-      "potentialHidden": 60,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 80
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 15,
-      "contract": {
-        "salary": 29400,
-        "durationYears": 4,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

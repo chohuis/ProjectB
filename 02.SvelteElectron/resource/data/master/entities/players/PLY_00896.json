@@ -1,14 +1,14 @@
 {
   "id": "PLY_00896",
   "name": "윌슨 벤자민",
-  "nameEn": "Wil 슨 벤자민",
+  "nameEn": "Wilson Benjamin",
   "role": "player",
   "age": 34,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_HARBORHAWKS",
-  "teamId": "TEAM_ABL_HARBORHAWKS_2",
+  "clubId": "CLUB_ABL_NYY",
+  "teamId": "TEAM_ABL_NYY_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 46,
       "pitching": {
-        "ovr": 67,
-        "stamina": 71,
-        "velocity": 65,
-        "command": 68,
-        "control": 69,
-        "movement": 62,
-        "mentality": 67,
-        "recovery": 64,
-        "clutch": 57,
-        "holdRunners": 56
+        "ovr": 71,
+        "stamina": 68,
+        "velocity": 79,
+        "command": 76,
+        "control": 75,
+        "movement": 76,
+        "mentality": 71,
+        "recovery": 69
       },
       "batting": {
-        "ovr": 49,
-        "contact": 52,
-        "power": 53,
-        "eye": 53,
-        "discipline": 47,
-        "speed": 48,
-        "fielding": 55,
-        "arm": 52,
-        "battingClutch": 43,
-        "baseInstinct": 44,
-        "bunting": 33,
-        "platoon": 45
+        "ovr": 50,
+        "contact": 47,
+        "power": 43,
+        "eye": 49,
+        "discipline": 41,
+        "speed": 46,
+        "fielding": 42,
+        "arm": 46,
+        "battingClutch": 49
       },
       "developmentRate": 40,
-      "potentialHidden": 84,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 12,
-      "contract": {
-        "salary": 19400,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 84
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

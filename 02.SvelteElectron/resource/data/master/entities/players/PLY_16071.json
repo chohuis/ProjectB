@@ -1,6 +1,6 @@
 {
   "id": "PLY_16071",
-  "name": "베이커 다니엘",
+  "name": "Baker Daniel",
   "nameEn": "Baker Daniel",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 58,
   "popularity": 49,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 56
       },
       "batting": {
-        "ovr": 60,
-        "contact": 64,
-        "power": 51,
-        "eye": 54,
-        "discipline": 53,
-        "speed": 56,
-        "baseInstinct": 52,
-        "bunting": 49,
-        "platoon": 48,
-        "fielding": 53,
-        "arm": 52,
-        "battingClutch": 51
+        "ovr": 62,
+        "contact": 66,
+        "power": 53,
+        "eye": 56,
+        "discipline": 55,
+        "speed": 58,
+        "baseInstinct": 54,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 54,
+        "battingClutch": 53
       },
       "positionRatings": {
         "3B": 62

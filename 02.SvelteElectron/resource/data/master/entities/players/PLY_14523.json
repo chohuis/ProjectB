@@ -1,6 +1,6 @@
 {
   "id": "PLY_14523",
-  "name": "잭슨 오스틴",
+  "name": "Jackson Austin",
   "nameEn": "Jackson Austin",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 83,
   "popularity": 42,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 54
       },
       "batting": {
-        "ovr": 61,
-        "contact": 57,
-        "power": 60,
-        "eye": 52,
-        "discipline": 62,
-        "speed": 66,
-        "baseInstinct": 63,
-        "bunting": 44,
-        "platoon": 48,
-        "fielding": 54,
-        "arm": 57,
-        "battingClutch": 48
+        "ovr": 63,
+        "contact": 59,
+        "power": 62,
+        "eye": 54,
+        "discipline": 64,
+        "speed": 68,
+        "baseInstinct": 65,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 59,
+        "battingClutch": 50
       },
       "positionRatings": {
         "1B": 63

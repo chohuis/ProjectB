@@ -1,6 +1,6 @@
 {
   "id": "PLY_14260",
-  "name": "라이트 트레버",
+  "name": "Wright Trevor",
   "nameEn": "Wright Trevor",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 48,
   "popularity": 34,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 58
       },
       "batting": {
-        "ovr": 64,
-        "contact": 61,
-        "power": 59,
-        "eye": 65,
-        "discipline": 66,
-        "speed": 71,
-        "baseInstinct": 64,
-        "bunting": 46,
-        "platoon": 48,
-        "fielding": 55,
-        "arm": 65,
-        "battingClutch": 54
+        "ovr": 66,
+        "contact": 63,
+        "power": 61,
+        "eye": 67,
+        "discipline": 68,
+        "speed": 73,
+        "baseInstinct": 66,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 67,
+        "battingClutch": 56
       },
       "positionRatings": {
         "SS": 66

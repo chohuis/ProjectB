@@ -1,6 +1,6 @@
 {
   "id": "PLY_15948",
-  "name": "톰슨 조던",
+  "name": "Thompson Jordan",
   "nameEn": "Thompson Jordan",
   "role": "player",
   "age": 30,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 63,
   "popularity": 41,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 73,
       "proServiceYears": 8,
       "pitching": {
-        "ovr": 73,
-        "stamina": 77,
-        "velocity": 71,
-        "command": 70,
-        "control": 68,
-        "movement": 68,
-        "mentality": 77,
-        "recovery": 64,
-        "clutch": 71,
-        "holdRunners": 63
+        "ovr": 67,
+        "stamina": 71,
+        "velocity": 65,
+        "command": 64,
+        "control": 62,
+        "movement": 62,
+        "mentality": 71,
+        "recovery": 59,
+        "clutch": 65,
+        "holdRunners": 58
       },
       "batting": {
         "ovr": 67,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

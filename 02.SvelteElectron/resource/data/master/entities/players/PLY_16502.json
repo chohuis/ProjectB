@@ -1,6 +1,6 @@
 {
   "id": "PLY_16502",
-  "name": "스미스 알렉스",
+  "name": "Smith Alex",
   "nameEn": "Smith Alex",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 73,
   "popularity": 30,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 54
       },
       "batting": {
-        "ovr": 60,
-        "contact": 53,
-        "power": 57,
-        "eye": 60,
-        "discipline": 63,
-        "speed": 64,
-        "baseInstinct": 59,
-        "bunting": 46,
-        "platoon": 49,
-        "fielding": 53,
-        "arm": 59,
-        "battingClutch": 47
+        "ovr": 61,
+        "contact": 54,
+        "power": 58,
+        "eye": 61,
+        "discipline": 64,
+        "speed": 65,
+        "baseInstinct": 60,
+        "bunting": 47,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 60,
+        "battingClutch": 48
       },
       "positionRatings": {
         "1B": 61

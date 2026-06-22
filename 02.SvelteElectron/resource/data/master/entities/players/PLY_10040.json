@@ -1,9 +1,9 @@
 {
   "id": "PLY_10040",
-  "name": "앤더슨 카일",
-  "nameEn": "Anderson Kyle",
+  "name": "Nelson Cole",
+  "nameEn": "Nelson Cole",
   "role": "player",
-  "age": 18,
+  "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 69,
-  "popularity": 49,
+  "notes": "국적:파나마",
+  "diligence": 52,
+  "popularity": 24,
   "militaryStatus": "군필",
   "entryYear": 2027,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 18,
+  "entryAge": 24,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 44,
+      "jerseyNumber": 76,
       "primaryPosition": "SP",
-      "developmentRate": 55,
-      "potentialHidden": 94,
-      "proServiceYears": 0,
+      "developmentRate": 57,
+      "potentialHidden": 70,
+      "proServiceYears": 2,
       "pitching": {
-        "ovr": 54,
-        "stamina": 52,
-        "velocity": 62,
-        "command": 52,
-        "control": 50,
-        "movement": 49,
-        "mentality": 54,
-        "recovery": 43,
-        "clutch": 53,
-        "holdRunners": 42
+        "ovr": 76,
+        "stamina": 72,
+        "velocity": 83,
+        "command": 77,
+        "control": 74,
+        "movement": 71,
+        "mentality": 83,
+        "recovery": 74,
+        "clutch": 69,
+        "holdRunners": 71
       },
       "batting": {
-        "ovr": 57,
-        "contact": 52,
-        "power": 56,
-        "eye": 61,
-        "discipline": 60,
-        "speed": 58,
-        "baseInstinct": 49,
-        "bunting": 41,
+        "ovr": 76,
+        "contact": 75,
+        "power": 72,
+        "eye": 68,
+        "discipline": 77,
+        "speed": 72,
+        "baseInstinct": 73,
+        "bunting": 61,
         "platoon": 50,
-        "fielding": 55,
-        "arm": 53,
-        "battingClutch": 50
+        "fielding": 78,
+        "arm": 66,
+        "battingClutch": 65
       },
       "positionRatings": {
-        "SP": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 76
+      }
     },
     "coach": null,
     "manager": null,

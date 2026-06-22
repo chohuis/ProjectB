@@ -1,6 +1,6 @@
 {
   "id": "PLY_16520",
-  "name": "로빈슨 네이선",
+  "name": "Robinson Nathan",
   "nameEn": "Robinson Nathan",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 62,
   "popularity": 21,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 58
       },
       "batting": {
-        "ovr": 55,
-        "contact": 50,
-        "power": 54,
-        "eye": 49,
-        "discipline": 55,
-        "speed": 60,
-        "baseInstinct": 58,
-        "bunting": 44,
-        "platoon": 45,
-        "fielding": 52,
-        "arm": 49,
-        "battingClutch": 53
+        "ovr": 61,
+        "contact": 56,
+        "power": 60,
+        "eye": 54,
+        "discipline": 61,
+        "speed": 67,
+        "baseInstinct": 64,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 54,
+        "battingClutch": 59
       },
       "positionRatings": {
         "1B": 61

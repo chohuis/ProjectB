@@ -1,6 +1,6 @@
 {
   "id": "PLY_16036",
-  "name": "존스 타일러",
+  "name": "Jones Tyler",
   "nameEn": "Jones Tyler",
   "role": "player",
   "age": 23,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 50,
   "popularity": 20,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 55
       },
       "batting": {
-        "ovr": 67,
-        "contact": 61,
-        "power": 57,
-        "eye": 61,
-        "discipline": 62,
-        "speed": 68,
-        "baseInstinct": 60,
-        "bunting": 61,
-        "platoon": 49,
-        "fielding": 60,
-        "arm": 62,
-        "battingClutch": 63
+        "ovr": 69,
+        "contact": 63,
+        "power": 59,
+        "eye": 63,
+        "discipline": 64,
+        "speed": 70,
+        "baseInstinct": 62,
+        "bunting": 63,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 64,
+        "battingClutch": 65
       },
       "positionRatings": {
         "LF": 69

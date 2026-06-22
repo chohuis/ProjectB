@@ -1,9 +1,9 @@
 {
   "id": "PLY_10800",
-  "name": "루이스 헌터",
-  "nameEn": "Lewis Hunter",
+  "name": "Green Jason",
+  "nameEn": "Green Jason",
   "role": "player",
-  "age": 30,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 45,
-  "popularity": 26,
+  "notes": "국적:미국",
+  "diligence": 80,
+  "popularity": 43,
   "militaryStatus": "군필",
   "entryYear": 2031,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 30,
+  "entryAge": 20,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 98,
+      "jerseyNumber": 54,
       "primaryPosition": "SP",
-      "developmentRate": 52,
-      "potentialHidden": 64,
-      "proServiceYears": 8,
+      "developmentRate": 58,
+      "potentialHidden": 84,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 72,
-        "stamina": 70,
-        "velocity": 76,
-        "command": 69,
+        "ovr": 67,
+        "stamina": 60,
+        "velocity": 71,
+        "command": 67,
         "control": 71,
-        "movement": 73,
-        "mentality": 78,
+        "movement": 63,
+        "mentality": 64,
         "recovery": 63,
-        "clutch": 71,
-        "holdRunners": 70
+        "clutch": 58,
+        "holdRunners": 64
       },
       "batting": {
-        "ovr": 69,
-        "contact": 64,
-        "power": 59,
-        "eye": 72,
-        "discipline": 72,
+        "ovr": 67,
+        "contact": 63,
+        "power": 67,
+        "eye": 66,
+        "discipline": 61,
         "speed": 71,
-        "baseInstinct": 72,
-        "bunting": 55,
+        "baseInstinct": 62,
+        "bunting": 57,
         "platoon": 50,
-        "fielding": 62,
-        "arm": 60,
-        "battingClutch": 68
+        "fielding": 61,
+        "arm": 69,
+        "battingClutch": 64
       },
       "positionRatings": {
-        "SP": 69
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "SP": 67
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_15853",
-  "name": "루이스 에반",
+  "name": "Lewis Evan",
   "nameEn": "Lewis Evan",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 78,
   "popularity": 49,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 59,
       "proServiceYears": 3,
       "pitching": {
-        "ovr": 67,
-        "stamina": 60,
-        "velocity": 76,
-        "command": 60,
-        "control": 63,
-        "movement": 65,
-        "mentality": 66,
-        "recovery": 64,
-        "clutch": 65,
-        "holdRunners": 59
+        "ovr": 69,
+        "stamina": 62,
+        "velocity": 78,
+        "command": 62,
+        "control": 65,
+        "movement": 67,
+        "mentality": 68,
+        "recovery": 66,
+        "clutch": 67,
+        "holdRunners": 61
       },
       "batting": {
         "ovr": 69,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 69
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

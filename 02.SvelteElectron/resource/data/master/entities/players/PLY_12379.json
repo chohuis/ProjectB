@@ -1,9 +1,9 @@
 {
   "id": "PLY_12379",
-  "name": "테일러 미겔",
-  "nameEn": "Taylor Miguel",
+  "name": "Adams Daniel",
+  "nameEn": "Adams Daniel",
   "role": "player",
-  "age": 33,
+  "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 59,
-  "popularity": 12,
+  "notes": "국적:파나마",
+  "diligence": 58,
+  "popularity": 18,
   "militaryStatus": "군필",
   "entryYear": 2041,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 33,
+  "entryAge": 32,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 9,
-      "primaryPosition": "SP",
-      "developmentRate": 54,
-      "potentialHidden": 68,
-      "proServiceYears": 11,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 35,
+      "primaryPosition": "3B",
+      "developmentRate": 38,
+      "potentialHidden": 63,
+      "proServiceYears": 10,
       "pitching": {
-        "ovr": 83,
-        "stamina": 81,
-        "velocity": 91,
-        "command": 81,
-        "control": 79,
-        "movement": 77,
-        "mentality": 87,
-        "recovery": 78,
-        "clutch": 70,
-        "holdRunners": 76
+        "ovr": 74,
+        "stamina": 74,
+        "velocity": 75,
+        "command": 72,
+        "control": 69,
+        "movement": 71,
+        "mentality": 71,
+        "recovery": 69,
+        "clutch": 72,
+        "holdRunners": 65
       },
       "batting": {
-        "ovr": 70,
-        "contact": 72,
-        "power": 66,
-        "eye": 61,
-        "discipline": 63,
-        "speed": 66,
-        "baseInstinct": 62,
-        "bunting": 51,
+        "ovr": 74,
+        "contact": 74,
+        "power": 71,
+        "eye": 66,
+        "discipline": 72,
+        "speed": 73,
+        "baseInstinct": 66,
+        "bunting": 57,
         "platoon": 50,
-        "fielding": 65,
-        "arm": 66,
+        "fielding": 71,
+        "arm": 65,
         "battingClutch": 70
       },
       "positionRatings": {
-        "SP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "3B": 74
+      }
     },
     "coach": null,
     "manager": null,

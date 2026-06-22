@@ -1,14 +1,14 @@
 {
   "id": "PLY_00901",
   "name": "윌리엄스 제이컵",
-  "nameEn": "Wil 리엄스 제이컵",
+  "nameEn": "Williams Jacob",
   "role": "player",
   "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_HARBORHAWKS",
-  "teamId": "TEAM_ABL_HARBORHAWKS_2",
+  "clubId": "CLUB_ABL_NYY",
+  "teamId": "TEAM_ABL_NYY_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:쿠바",
@@ -19,48 +19,28 @@
       "position": "C",
       "jerseyNumber": 51,
       "pitching": {
-        "ovr": 54,
-        "stamina": 55,
-        "velocity": 59,
-        "command": 51,
-        "control": 57,
-        "movement": 55,
-        "mentality": 58,
-        "recovery": 51,
-        "clutch": 45,
-        "holdRunners": 51
+        "ovr": 52,
+        "stamina": 46,
+        "velocity": 48,
+        "command": 54,
+        "control": 48,
+        "movement": 49,
+        "mentality": 51,
+        "recovery": 50
       },
       "batting": {
-        "ovr": 74,
-        "contact": 80,
-        "power": 72,
-        "eye": 69,
-        "discipline": 75,
-        "speed": 74,
-        "fielding": 69,
-        "arm": 68,
-        "battingClutch": 73,
-        "baseInstinct": 69,
-        "bunting": 66,
-        "platoon": 63
+        "ovr": 73,
+        "contact": 73,
+        "power": 77,
+        "eye": 70,
+        "discipline": 73,
+        "speed": 67,
+        "fielding": 75,
+        "arm": 82,
+        "battingClutch": 71
       },
       "developmentRate": 47,
-      "potentialHidden": 85,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 74
-      },
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 9400,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 85
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

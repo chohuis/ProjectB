@@ -1,14 +1,14 @@
 {
   "id": "PLY_01443",
   "name": "넬슨 다니엘",
-  "nameEn": "Nel 슨 다니엘",
+  "nameEn": "Nelson Daniel",
   "role": "player",
   "age": 35,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_COASTALRAYS",
-  "teamId": "TEAM_ABL_COASTALRAYS_2",
+  "clubId": "CLUB_ABL_SF",
+  "teamId": "TEAM_ABL_SF_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
@@ -20,47 +20,27 @@
       "jerseyNumber": 53,
       "pitching": {
         "ovr": 46,
-        "stamina": 49,
-        "velocity": 49,
-        "command": 42,
-        "control": 46,
-        "movement": 47,
-        "mentality": 46,
-        "recovery": 44,
-        "clutch": 41,
-        "holdRunners": 35
+        "stamina": 44,
+        "velocity": 40,
+        "command": 40,
+        "control": 39,
+        "movement": 40,
+        "mentality": 45,
+        "recovery": 43
       },
       "batting": {
-        "ovr": 66,
-        "contact": 72,
-        "power": 70,
-        "eye": 72,
-        "discipline": 61,
-        "speed": 70,
-        "fielding": 67,
-        "arm": 62,
-        "battingClutch": 60,
-        "baseInstinct": 56,
-        "bunting": 59,
-        "platoon": 58
+        "ovr": 65,
+        "contact": 64,
+        "power": 72,
+        "eye": 66,
+        "discipline": 63,
+        "speed": 62,
+        "fielding": 64,
+        "arm": 67,
+        "battingClutch": 67
       },
       "developmentRate": 32,
-      "potentialHidden": 69,
-      "primaryPosition": "1B",
-      "positionRatings": {
-        "1B": 66
-      },
-      "proServiceYears": 13,
-      "contract": {
-        "salary": 6300,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 69
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

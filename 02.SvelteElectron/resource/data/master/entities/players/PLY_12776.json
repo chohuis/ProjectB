@@ -1,9 +1,9 @@
 {
   "id": "PLY_12776",
-  "name": "그린 그랜트",
-  "nameEn": "Green Grant",
+  "name": "Taylor Jason",
+  "nameEn": "Taylor Jason",
   "role": "player",
-  "age": 31,
+  "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 69,
-  "popularity": 15,
+  "notes": "국적:쿠바",
+  "diligence": 78,
+  "popularity": 10,
   "militaryStatus": "군필",
   "entryYear": 2043,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 31,
+  "entryAge": 27,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 67,
-      "primaryPosition": "SP",
-      "developmentRate": 48,
-      "potentialHidden": 64,
-      "proServiceYears": 9,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 77,
+      "primaryPosition": "C",
+      "developmentRate": 46,
+      "potentialHidden": 83,
+      "proServiceYears": 5,
       "pitching": {
-        "ovr": 70,
-        "stamina": 61,
-        "velocity": 73,
-        "command": 72,
-        "control": 72,
-        "movement": 73,
-        "mentality": 68,
-        "recovery": 65,
-        "clutch": 59,
-        "holdRunners": 68
+        "ovr": 78,
+        "stamina": 72,
+        "velocity": 79,
+        "command": 75,
+        "control": 71,
+        "movement": 77,
+        "mentality": 79,
+        "recovery": 68,
+        "clutch": 79,
+        "holdRunners": 66
       },
       "batting": {
-        "ovr": 68,
-        "contact": 68,
-        "power": 67,
-        "eye": 65,
-        "discipline": 72,
-        "speed": 72,
-        "baseInstinct": 68,
-        "bunting": 58,
+        "ovr": 78,
+        "contact": 71,
+        "power": 70,
+        "eye": 80,
+        "discipline": 82,
+        "speed": 73,
+        "baseInstinct": 79,
+        "bunting": 61,
         "platoon": 50,
-        "fielding": 60,
-        "arm": 68,
-        "battingClutch": 63
+        "fielding": 78,
+        "arm": 77,
+        "battingClutch": 68
       },
       "positionRatings": {
-        "SP": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "C": 78
+      }
     },
     "coach": null,
     "manager": null,

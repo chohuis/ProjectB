@@ -1,9 +1,9 @@
 {
   "id": "PLY_09965",
-  "name": "그린 콜",
-  "nameEn": "Green Cole",
+  "name": "Hernandez Daniel",
+  "nameEn": "Hernandez Daniel",
   "role": "player",
-  "age": 19,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 61,
-  "popularity": 23,
+  "notes": "국적:베네수엘라",
+  "diligence": 74,
+  "popularity": 33,
   "militaryStatus": "군필",
   "entryYear": 2026,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 19,
+  "entryAge": 28,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 69,
+      "jerseyNumber": 78,
       "primaryPosition": "SP",
-      "developmentRate": 58,
-      "potentialHidden": 80,
-      "proServiceYears": 0,
+      "developmentRate": 54,
+      "potentialHidden": 64,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 62,
-        "stamina": 59,
-        "velocity": 69,
-        "command": 54,
-        "control": 61,
-        "movement": 56,
-        "mentality": 68,
-        "recovery": 60,
-        "clutch": 56,
-        "holdRunners": 59
+        "ovr": 67,
+        "stamina": 62,
+        "velocity": 76,
+        "command": 58,
+        "control": 71,
+        "movement": 69,
+        "mentality": 67,
+        "recovery": 55,
+        "clutch": 66,
+        "holdRunners": 54
       },
       "batting": {
         "ovr": 67,
-        "contact": 68,
+        "contact": 59,
         "power": 56,
-        "eye": 60,
-        "discipline": 58,
-        "speed": 65,
-        "baseInstinct": 62,
-        "bunting": 50,
+        "eye": 61,
+        "discipline": 62,
+        "speed": 66,
+        "baseInstinct": 67,
+        "bunting": 53,
         "platoon": 50,
-        "fielding": 68,
-        "arm": 62,
-        "battingClutch": 58
+        "fielding": 65,
+        "arm": 59,
+        "battingClutch": 68
       },
       "positionRatings": {
         "SP": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

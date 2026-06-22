@@ -1,17 +1,17 @@
 {
   "id": "COA_00192",
-  "name": "미우라 스스무",
-  "nameEn": "Miura Susumu",
+  "name": "이노우에 쇼",
+  "nameEn": "Inoue Sho",
   "role": "coach",
-  "age": 42,
+  "age": 34,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
-  "clubId": "CLUB_JBL_CL_TEMPOSTINGS",
-  "teamId": "TEAM_JBL_CL_TEMPOSTINGS_2",
+  "clubId": "CLUB_JBL_CL_IRONSTORMS",
+  "teamId": "TEAM_JBL_CL_IRONSTORMS_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
@@ -43,14 +43,14 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "타격",
-      "experienceYears": 13,
+      "specialty": "멘탈",
+      "experienceYears": 8,
       "stats": {
-        "teaching": 79,
-        "analysis": 84,
-        "communication": 78,
-        "discipline": 81,
-        "leadership": 54
+        "teaching": 58,
+        "analysis": 75,
+        "communication": 74,
+        "discipline": 77,
+        "leadership": 81
       },
       "trainingBuffs": "컨택 훈련 +2%"
     },

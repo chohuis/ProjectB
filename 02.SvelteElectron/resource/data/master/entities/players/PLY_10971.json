@@ -1,9 +1,9 @@
 {
   "id": "PLY_10971",
-  "name": "마틴 오스틴",
-  "nameEn": "Martin Austin",
+  "name": "Carter Trevor",
+  "nameEn": "Carter Trevor",
   "role": "player",
-  "age": 31,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 66,
-  "popularity": 48,
+  "notes": "국적:미국",
+  "diligence": 63,
+  "popularity": 20,
   "militaryStatus": "군필",
   "entryYear": 2032,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 31,
+  "entryAge": 21,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 2,
-      "primaryPosition": "SP",
-      "developmentRate": 46,
-      "potentialHidden": 57,
-      "proServiceYears": 9,
+      "position": "CF",
+      "jerseyNumber": 92,
+      "primaryPosition": "CF",
+      "developmentRate": 67,
+      "potentialHidden": 85,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 58,
-        "stamina": 58,
-        "velocity": 60,
-        "command": 57,
-        "control": 51,
-        "movement": 54,
-        "mentality": 56,
-        "recovery": 49,
-        "clutch": 51,
-        "holdRunners": 50
+        "ovr": 61,
+        "stamina": 59,
+        "velocity": 65,
+        "command": 58,
+        "control": 64,
+        "movement": 52,
+        "mentality": 66,
+        "recovery": 59,
+        "clutch": 60,
+        "holdRunners": 47
       },
       "batting": {
-        "ovr": 56,
-        "contact": 52,
-        "power": 48,
-        "eye": 57,
-        "discipline": 49,
+        "ovr": 61,
+        "contact": 61,
+        "power": 53,
+        "eye": 56,
+        "discipline": 53,
         "speed": 60,
-        "baseInstinct": 46,
-        "bunting": 38,
+        "baseInstinct": 52,
+        "bunting": 48,
         "platoon": 50,
-        "fielding": 47,
-        "arm": 51,
-        "battingClutch": 53
+        "fielding": 55,
+        "arm": 56,
+        "battingClutch": 50
       },
       "positionRatings": {
-        "SP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "CF": 61
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_15848",
-  "name": "넬슨 제이크",
+  "name": "Nelson Jake",
   "nameEn": "Nelson Jake",
   "role": "player",
   "age": 32,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 64,
   "popularity": 28,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 69,
       "proServiceYears": 10,
       "pitching": {
-        "ovr": 81,
-        "stamina": 85,
-        "velocity": 92,
-        "command": 72,
-        "control": 72,
-        "movement": 72,
-        "mentality": 86,
-        "recovery": 68,
-        "clutch": 67,
-        "holdRunners": 73
+        "ovr": 64,
+        "stamina": 67,
+        "velocity": 73,
+        "command": 57,
+        "control": 57,
+        "movement": 57,
+        "mentality": 68,
+        "recovery": 54,
+        "clutch": 53,
+        "holdRunners": 58
       },
       "batting": {
         "ovr": 64,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 64
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

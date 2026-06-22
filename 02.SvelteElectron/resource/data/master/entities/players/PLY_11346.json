@@ -1,9 +1,9 @@
 {
   "id": "PLY_11346",
-  "name": "앤더슨 트레버",
-  "nameEn": "Anderson Trevor",
+  "name": "Carter Jason",
+  "nameEn": "Carter Jason",
   "role": "player",
-  "age": 20,
+  "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 78,
-  "popularity": 23,
+  "notes": "국적:도미니카",
+  "diligence": 65,
+  "popularity": 28,
   "militaryStatus": "군필",
   "entryYear": 2035,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 20,
+  "entryAge": 26,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 71,
+      "jerseyNumber": 16,
       "primaryPosition": "SP",
-      "developmentRate": 69,
-      "potentialHidden": 85,
-      "proServiceYears": 0,
+      "developmentRate": 61,
+      "potentialHidden": 59,
+      "proServiceYears": 4,
       "pitching": {
-        "ovr": 53,
-        "stamina": 52,
-        "velocity": 51,
-        "command": 47,
-        "control": 53,
-        "movement": 45,
-        "mentality": 50,
-        "recovery": 48,
-        "clutch": 46,
-        "holdRunners": 50
+        "ovr": 70,
+        "stamina": 65,
+        "velocity": 79,
+        "command": 61,
+        "control": 61,
+        "movement": 66,
+        "mentality": 67,
+        "recovery": 69,
+        "clutch": 59,
+        "holdRunners": 69
       },
       "batting": {
-        "ovr": 56,
-        "contact": 49,
-        "power": 49,
-        "eye": 59,
-        "discipline": 48,
-        "speed": 49,
-        "baseInstinct": 51,
-        "bunting": 41,
+        "ovr": 70,
+        "contact": 68,
+        "power": 61,
+        "eye": 64,
+        "discipline": 71,
+        "speed": 64,
+        "baseInstinct": 69,
+        "bunting": 58,
         "platoon": 50,
-        "fielding": 56,
-        "arm": 47,
-        "battingClutch": 57
+        "fielding": 67,
+        "arm": 65,
+        "battingClutch": 62
       },
       "positionRatings": {
-        "SP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 70
+      }
     },
     "coach": null,
     "manager": null,

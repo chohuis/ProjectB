@@ -1,14 +1,14 @@
 {
   "id": "PLY_00595",
   "name": "문상현",
-  "nameEn": "Moon Sanghyeon",
+  "nameEn": "Yoon Yong-jun",
   "role": "player",
   "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_SKYGULLS",
-  "teamId": "TEAM_KBL_SKYGULLS_2",
+  "clubId": "CLUB_KBL_LG",
+  "teamId": "TEAM_KBL_LG_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,48 +19,28 @@
       "position": "DH",
       "jerseyNumber": 50,
       "pitching": {
-        "ovr": 23,
-        "stamina": 22,
-        "velocity": 26,
-        "command": 26,
-        "control": 27,
-        "movement": 26,
-        "mentality": 21,
-        "recovery": 20,
-        "clutch": 41,
-        "holdRunners": 41
+        "ovr": 41,
+        "stamina": 34,
+        "velocity": 43,
+        "command": 36,
+        "control": 33,
+        "movement": 32,
+        "mentality": 40,
+        "recovery": 33
       },
       "batting": {
-        "ovr": 43,
-        "contact": 43,
-        "power": 44,
-        "eye": 45,
-        "discipline": 42,
-        "speed": 37,
-        "fielding": 44,
-        "arm": 38,
-        "battingClutch": 37,
-        "baseInstinct": 35,
-        "bunting": 35,
-        "platoon": 39
+        "ovr": 60,
+        "contact": 60,
+        "power": 59,
+        "eye": 55,
+        "discipline": 53,
+        "speed": 50,
+        "fielding": 53,
+        "arm": 49,
+        "battingClutch": 60
       },
       "developmentRate": 44,
-      "potentialHidden": 58,
-      "primaryPosition": "DH",
-      "positionRatings": {
-        "DH": 43
-      },
-      "proServiceYears": 10,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 58
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

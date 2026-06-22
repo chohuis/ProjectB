@@ -1,6 +1,6 @@
 {
   "id": "PLY_16672",
-  "name": "테일러 오스틴",
+  "name": "Taylor Austin",
   "nameEn": "Taylor Austin",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 84,
   "popularity": 14,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 82,
       "proServiceYears": 4,
       "pitching": {
-        "ovr": 67,
-        "stamina": 62,
-        "velocity": 71,
-        "command": 63,
-        "control": 62,
-        "movement": 64,
-        "mentality": 68,
-        "recovery": 63,
-        "clutch": 60,
-        "holdRunners": 62
+        "ovr": 69,
+        "stamina": 64,
+        "velocity": 73,
+        "command": 65,
+        "control": 64,
+        "movement": 66,
+        "mentality": 70,
+        "recovery": 65,
+        "clutch": 62,
+        "holdRunners": 64
       },
       "batting": {
         "ovr": 69,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 69
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

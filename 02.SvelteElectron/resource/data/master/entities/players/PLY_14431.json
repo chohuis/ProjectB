@@ -1,6 +1,6 @@
 {
   "id": "PLY_14431",
-  "name": "카터 마커스",
+  "name": "Carter Marcus",
   "nameEn": "Carter Marcus",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 79,
   "popularity": 36,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 61
       },
       "batting": {
-        "ovr": 73,
-        "contact": 72,
-        "power": 75,
-        "eye": 64,
-        "discipline": 74,
-        "speed": 77,
-        "baseInstinct": 62,
-        "bunting": 62,
-        "platoon": 54,
-        "fielding": 69,
-        "arm": 63,
-        "battingClutch": 63
+        "ovr": 67,
+        "contact": 66,
+        "power": 69,
+        "eye": 59,
+        "discipline": 68,
+        "speed": 71,
+        "baseInstinct": 57,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 58,
+        "battingClutch": 58
       },
       "positionRatings": {
         "RF": 67

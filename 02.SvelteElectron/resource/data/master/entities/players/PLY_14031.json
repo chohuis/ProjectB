@@ -1,6 +1,6 @@
 {
   "id": "PLY_14031",
-  "name": "로드리게스 코디",
+  "name": "Rodriguez Cody",
   "nameEn": "Rodriguez Cody",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 57,
   "popularity": 41,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 80,
       "proServiceYears": 2,
       "pitching": {
-        "ovr": 71,
-        "stamina": 70,
-        "velocity": 79,
-        "command": 66,
-        "control": 71,
-        "movement": 70,
-        "mentality": 78,
-        "recovery": 64,
-        "clutch": 66,
-        "holdRunners": 59
+        "ovr": 74,
+        "stamina": 73,
+        "velocity": 82,
+        "command": 69,
+        "control": 74,
+        "movement": 73,
+        "mentality": 81,
+        "recovery": 67,
+        "clutch": 69,
+        "holdRunners": 61
       },
       "batting": {
         "ovr": 74,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 74
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

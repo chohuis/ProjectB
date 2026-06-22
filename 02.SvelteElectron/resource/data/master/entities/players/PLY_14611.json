@@ -1,6 +1,6 @@
 {
   "id": "PLY_14611",
-  "name": "마틴 루이스",
+  "name": "Martin Luis",
   "nameEn": "Martin Luis",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 71,
   "popularity": 23,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 85,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 58,
-        "stamina": 58,
-        "velocity": 60,
-        "command": 54,
-        "control": 56,
-        "movement": 48,
-        "mentality": 55,
-        "recovery": 49,
-        "clutch": 58,
-        "holdRunners": 43
+        "ovr": 59,
+        "stamina": 59,
+        "velocity": 61,
+        "command": 55,
+        "control": 57,
+        "movement": 49,
+        "mentality": 56,
+        "recovery": 50,
+        "clutch": 59,
+        "holdRunners": 44
       },
       "batting": {
         "ovr": 59,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

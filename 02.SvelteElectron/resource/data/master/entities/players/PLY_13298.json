@@ -1,9 +1,9 @@
 {
   "id": "PLY_13298",
-  "name": "마틴 에반",
-  "nameEn": "Martin Evan",
+  "name": "Garcia Daniel",
+  "nameEn": "Garcia Daniel",
   "role": "player",
-  "age": 22,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 53,
-  "popularity": 47,
+  "notes": "국적:도미니카",
+  "diligence": 78,
+  "popularity": 37,
   "militaryStatus": "군필",
   "entryYear": 2046,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 22,
+  "entryAge": 21,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 65,
-      "primaryPosition": "SP",
-      "developmentRate": 56,
-      "potentialHidden": 73,
+      "position": "3B",
+      "jerseyNumber": 26,
+      "primaryPosition": "3B",
+      "developmentRate": 67,
+      "potentialHidden": 82,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 52,
-        "stamina": 52,
-        "velocity": 52,
-        "command": 55,
-        "control": 53,
-        "movement": 52,
-        "mentality": 54,
-        "recovery": 52,
-        "clutch": 44,
-        "holdRunners": 51
+        "ovr": 65,
+        "stamina": 59,
+        "velocity": 68,
+        "command": 64,
+        "control": 63,
+        "movement": 56,
+        "mentality": 66,
+        "recovery": 63,
+        "clutch": 54,
+        "holdRunners": 53
       },
       "batting": {
-        "ovr": 55,
-        "contact": 60,
-        "power": 46,
-        "eye": 52,
-        "discipline": 55,
-        "speed": 52,
-        "baseInstinct": 47,
-        "bunting": 39,
+        "ovr": 65,
+        "contact": 70,
+        "power": 62,
+        "eye": 66,
+        "discipline": 68,
+        "speed": 72,
+        "baseInstinct": 59,
+        "bunting": 47,
         "platoon": 50,
-        "fielding": 58,
-        "arm": 53,
-        "battingClutch": 48
+        "fielding": 66,
+        "arm": 65,
+        "battingClutch": 59
       },
       "positionRatings": {
-        "SP": 55
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "3B": 65
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,9 +1,9 @@
 {
   "id": "PLY_11424",
-  "name": "잭슨 코너",
-  "nameEn": "Jackson Connor",
+  "name": "Davis Grant",
+  "nameEn": "Davis Grant",
   "role": "player",
-  "age": 27,
+  "age": 31,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 81,
-  "popularity": 22,
+  "notes": "국적:파나마",
+  "diligence": 66,
+  "popularity": 43,
   "militaryStatus": "군필",
   "entryYear": 2035,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 27,
+  "entryAge": 31,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 19,
+      "jerseyNumber": 69,
       "primaryPosition": "SP",
-      "developmentRate": 67,
-      "potentialHidden": 81,
-      "proServiceYears": 5,
+      "developmentRate": 50,
+      "potentialHidden": 50,
+      "proServiceYears": 9,
       "pitching": {
-        "ovr": 74,
-        "stamina": 70,
-        "velocity": 83,
-        "command": 70,
-        "control": 66,
-        "movement": 75,
-        "mentality": 74,
-        "recovery": 63,
-        "clutch": 66,
-        "holdRunners": 60
+        "ovr": 69,
+        "stamina": 61,
+        "velocity": 79,
+        "command": 67,
+        "control": 69,
+        "movement": 65,
+        "mentality": 73,
+        "recovery": 66,
+        "clutch": 65,
+        "holdRunners": 59
       },
       "batting": {
-        "ovr": 78,
-        "contact": 78,
-        "power": 73,
+        "ovr": 69,
+        "contact": 72,
+        "power": 68,
         "eye": 74,
-        "discipline": 75,
-        "speed": 85,
-        "baseInstinct": 74,
-        "bunting": 61,
+        "discipline": 73,
+        "speed": 68,
+        "baseInstinct": 61,
+        "bunting": 52,
         "platoon": 50,
-        "fielding": 72,
-        "arm": 77,
-        "battingClutch": 78
+        "fielding": 70,
+        "arm": 66,
+        "battingClutch": 68
       },
       "positionRatings": {
-        "SP": 78
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "SP": 69
+      }
     },
     "coach": null,
     "manager": null,

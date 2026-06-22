@@ -1,6 +1,6 @@
 {
   "id": "PLY_15877",
-  "name": "카터 코디",
+  "name": "Carter Cody",
   "nameEn": "Carter Cody",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 74,
   "popularity": 11,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 52
       },
       "batting": {
-        "ovr": 64,
-        "contact": 57,
-        "power": 67,
-        "eye": 57,
-        "discipline": 62,
-        "speed": 60,
-        "baseInstinct": 67,
-        "bunting": 59,
-        "platoon": 48,
-        "fielding": 59,
-        "arm": 66,
-        "battingClutch": 62
+        "ovr": 66,
+        "contact": 59,
+        "power": 69,
+        "eye": 59,
+        "discipline": 64,
+        "speed": 62,
+        "baseInstinct": 69,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 68,
+        "battingClutch": 64
       },
       "positionRatings": {
         "SS": 66

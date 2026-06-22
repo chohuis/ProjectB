@@ -1,14 +1,14 @@
 {
   "id": "PLY_01050",
   "name": "미첼 조너선",
-  "nameEn": "Mi 첼 조너선",
+  "nameEn": "Mitchell Jonathan",
   "role": "player",
-  "age": 40,
+  "age": 41,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_PEACHTREEFALCONS",
-  "teamId": "TEAM_ABL_PEACHTREEFALCONS_1",
+  "clubId": "CLUB_ABL_HOU",
+  "teamId": "TEAM_ABL_HOU",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:베네수엘라",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 5,
       "pitching": {
-        "ovr": 71,
-        "stamina": 71,
-        "velocity": 68,
-        "command": 75,
-        "control": 76,
-        "movement": 76,
-        "mentality": 74,
-        "recovery": 74,
-        "clutch": 62,
-        "holdRunners": 63
+        "ovr": 80,
+        "stamina": 82,
+        "velocity": 78,
+        "command": 77,
+        "control": 80,
+        "movement": 77,
+        "mentality": 75,
+        "recovery": 74
       },
       "batting": {
-        "ovr": 53,
+        "ovr": 54,
         "contact": 50,
         "power": 55,
-        "eye": 50,
-        "discipline": 58,
-        "speed": 50,
-        "fielding": 53,
-        "arm": 49,
-        "battingClutch": 46,
-        "baseInstinct": 50,
-        "bunting": 44,
-        "platoon": 42
+        "eye": 52,
+        "discipline": 49,
+        "speed": 48,
+        "fielding": 50,
+        "arm": 48,
+        "battingClutch": 55
       },
       "developmentRate": 36,
-      "potentialHidden": 89,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 71
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_SCREWBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 18,
-      "contract": {
-        "salary": 22500,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 89
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

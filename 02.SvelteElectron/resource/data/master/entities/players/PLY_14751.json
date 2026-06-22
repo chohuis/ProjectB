@@ -1,6 +1,6 @@
 {
   "id": "PLY_14751",
-  "name": "해리스 미겔",
+  "name": "Harris Miguel",
   "nameEn": "Harris Miguel",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 75,
   "popularity": 47,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 48
       },
       "batting": {
-        "ovr": 65,
-        "contact": 60,
-        "power": 53,
-        "eye": 60,
-        "discipline": 59,
-        "speed": 66,
-        "baseInstinct": 60,
-        "bunting": 56,
-        "platoon": 63,
-        "fielding": 60,
-        "arm": 61,
-        "battingClutch": 55
+        "ovr": 52,
+        "contact": 48,
+        "power": 42,
+        "eye": 48,
+        "discipline": 47,
+        "speed": 53,
+        "baseInstinct": 48,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 49,
+        "battingClutch": 44
       },
       "positionRatings": {
         "RF": 52

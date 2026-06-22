@@ -1,6 +1,6 @@
 {
   "id": "PLY_15403",
-  "name": "스콧 그랜트",
+  "name": "Scott Grant",
   "nameEn": "Scott Grant",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 71,
   "popularity": 16,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 52
       },
       "batting": {
-        "ovr": 64,
-        "contact": 59,
-        "power": 64,
-        "eye": 63,
-        "discipline": 59,
-        "speed": 58,
-        "baseInstinct": 62,
-        "bunting": 55,
-        "platoon": 48,
-        "fielding": 62,
-        "arm": 57,
-        "battingClutch": 57
+        "ovr": 66,
+        "contact": 61,
+        "power": 66,
+        "eye": 65,
+        "discipline": 61,
+        "speed": 60,
+        "baseInstinct": 64,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 59,
+        "battingClutch": 59
       },
       "positionRatings": {
         "LF": 66

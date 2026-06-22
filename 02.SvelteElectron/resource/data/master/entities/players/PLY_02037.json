@@ -1,72 +1,46 @@
 {
   "id": "PLY_02037",
-  "name": "빅터 무어",
-  "nameEn": "Victor Moore",
+  "name": "하야시 요스케",
+  "nameEn": "Hayashi Yosuke",
   "role": "player",
-  "age": 28,
+  "age": 34,
   "status": "active",
-  "originLeagueId": "LEAGUE_ABL",
-  "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_EMPIRE",
-  "teamId": "TEAM_ABL_EMPIRE_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SUNS",
+  "teamId": "TEAM_JBL_PL_SUNS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "UT",
-      "jerseyNumber": 90,
+      "position": "SP",
+      "jerseyNumber": 2,
       "pitching": {
-        "ovr": 48,
-        "stamina": 46,
-        "velocity": 44,
-        "command": 46,
-        "control": 49,
-        "movement": 46,
-        "mentality": 46,
-        "recovery": 44,
-        "clutch": 48,
-        "holdRunners": 44
+        "ovr": 80,
+        "stamina": 78,
+        "velocity": 80,
+        "command": 80,
+        "control": 83,
+        "movement": 75,
+        "mentality": 75,
+        "recovery": 80
       },
       "batting": {
-        "ovr": 68,
-        "contact": 67,
-        "power": 70,
-        "eye": 64,
-        "discipline": 73,
-        "speed": 61,
-        "fielding": 74,
-        "arm": 71,
-        "battingClutch": 68,
-        "baseInstinct": 65,
-        "bunting": 64,
-        "platoon": 61
+        "ovr": 51,
+        "contact": 44,
+        "power": 50,
+        "eye": 50,
+        "discipline": 46,
+        "speed": 49,
+        "fielding": 45,
+        "arm": 45,
+        "battingClutch": 52
       },
-      "developmentRate": 30,
-      "potentialHidden": 70,
-      "primaryPosition": "UT",
-      "positionRatings": {
-        "UT": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 6,
-      "contract": {
-        "salary": 6300,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 50,
+      "potentialHidden": 87
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 64,
-  "popularity": 54,
-  "militaryStatus": "군필"
+  }
 }

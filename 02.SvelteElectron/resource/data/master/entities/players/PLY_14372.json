@@ -1,6 +1,6 @@
 {
   "id": "PLY_14372",
-  "name": "앨런 트레버",
+  "name": "Allen Trevor",
   "nameEn": "Allen Trevor",
   "role": "player",
   "age": 33,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 61,
   "popularity": 42,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 53
       },
       "batting": {
-        "ovr": 69,
-        "contact": 61,
-        "power": 65,
-        "eye": 63,
-        "discipline": 58,
-        "speed": 77,
-        "baseInstinct": 61,
-        "bunting": 50,
-        "platoon": 63,
-        "fielding": 69,
-        "arm": 69,
-        "battingClutch": 65
+        "ovr": 55,
+        "contact": 49,
+        "power": 52,
+        "eye": 50,
+        "discipline": 46,
+        "speed": 61,
+        "baseInstinct": 49,
+        "bunting": 40,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 55,
+        "battingClutch": 52
       },
       "positionRatings": {
         "RF": 55

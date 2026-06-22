@@ -1,7 +1,7 @@
 {
   "id": "OWN_00002",
   "name": "고민우",
-  "nameEn": "Ko Minu",
+  "nameEn": "Na Dong-hyuk",
   "role": "owner",
   "age": 60,
   "status": "active",
@@ -79,12 +79,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
   }
 }

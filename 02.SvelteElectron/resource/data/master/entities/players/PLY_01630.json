@@ -1,61 +1,46 @@
 {
   "id": "PLY_01630",
-  "name": "권지호",
-  "nameEn": "Kwon Jiho",
+  "name": "아베 켄타",
+  "nameEn": "Abe Kenta",
   "role": "player",
-  "age": 16,
+  "age": 30,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_YEOSU_SHORE",
-  "teamId": "TEAM_HS_YEOSU_SHORE",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_YEOSU_SHORE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TEMPOSTINGS",
+  "teamId": "TEAM_JBL_CL_TEMPOSTINGS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "CP",
-      "jerseyNumber": 9,
+      "position": "DH",
+      "jerseyNumber": 50,
       "pitching": {
         "ovr": 47,
-        "stamina": 51,
-        "velocity": 45,
-        "command": 45,
-        "control": 46,
-        "movement": 42,
-        "mentality": 49,
-        "recovery": 51,
-        "clutch": 44,
-        "holdRunners": 38
+        "stamina": 50,
+        "velocity": 57,
+        "command": 51,
+        "control": 47,
+        "movement": 52,
+        "mentality": 50,
+        "recovery": 52
       },
       "batting": {
-        "ovr": 29,
-        "contact": 28,
-        "power": 30,
-        "eye": 30,
-        "discipline": 35,
-        "speed": 24,
-        "fielding": 33,
-        "arm": 25,
-        "battingClutch": 36,
-        "baseInstinct": 40,
-        "bunting": 38,
-        "platoon": 37
+        "ovr": 76,
+        "contact": 77,
+        "power": 79,
+        "eye": 72,
+        "discipline": 73,
+        "speed": 68,
+        "fielding": 61,
+        "arm": 72,
+        "battingClutch": 72
       },
-      "developmentRate": 74,
-      "potentialHidden": 66,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 47
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 48,
+      "potentialHidden": 70
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 73,
-  "popularity": 21
+  }
 }

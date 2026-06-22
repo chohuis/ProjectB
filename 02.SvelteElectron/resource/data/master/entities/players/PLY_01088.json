@@ -1,14 +1,14 @@
 {
   "id": "PLY_01088",
   "name": "토머스 제임스",
-  "nameEn": "To 머스 제임스",
+  "nameEn": "Thomas James",
   "role": "player",
   "age": 29,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_PEACHTREEFALCONS",
-  "teamId": "TEAM_ABL_PEACHTREEFALCONS_2",
+  "clubId": "CLUB_ABL_HOU",
+  "teamId": "TEAM_ABL_HOU_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -19,48 +19,28 @@
       "position": "CF",
       "jerseyNumber": 58,
       "pitching": {
-        "ovr": 49,
-        "stamina": 48,
-        "velocity": 52,
-        "command": 48,
-        "control": 48,
-        "movement": 44,
-        "mentality": 50,
-        "recovery": 47,
-        "clutch": 48,
-        "holdRunners": 39
+        "ovr": 43,
+        "stamina": 42,
+        "velocity": 48,
+        "command": 46,
+        "control": 47,
+        "movement": 43,
+        "mentality": 43,
+        "recovery": 42
       },
       "batting": {
-        "ovr": 69,
-        "contact": 72,
-        "power": 70,
-        "eye": 70,
-        "discipline": 66,
-        "speed": 72,
-        "fielding": 70,
-        "arm": 74,
-        "battingClutch": 66,
-        "baseInstinct": 57,
-        "bunting": 63,
-        "platoon": 64
+        "ovr": 68,
+        "contact": 66,
+        "power": 65,
+        "eye": 66,
+        "discipline": 71,
+        "speed": 77,
+        "fielding": 72,
+        "arm": 68,
+        "battingClutch": 71
       },
       "developmentRate": 35,
-      "potentialHidden": 60,
-      "primaryPosition": "CF",
-      "positionRatings": {
-        "CF": 69
-      },
-      "proServiceYears": 7,
-      "contract": {
-        "salary": 6300,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

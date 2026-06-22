@@ -1,9 +1,9 @@
 {
   "id": "PLY_00037",
   "name": "이정우",
-  "nameEn": "Lee Jeongu",
+  "nameEn": "Woo Hyun-woo",
   "role": "player",
-  "age": 18,
+  "age": 17,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "CF",
       "jerseyNumber": 17,
       "pitching": {
-        "ovr": 37,
-        "stamina": 38,
-        "velocity": 41,
-        "command": 34,
-        "control": 41,
-        "movement": 38,
-        "mentality": 35,
-        "recovery": 34,
-        "clutch": 42,
-        "holdRunners": 34
+        "ovr": 49,
+        "stamina": 71,
+        "velocity": 57,
+        "command": 59,
+        "control": 59,
+        "movement": 58,
+        "mentality": 54,
+        "recovery": 61
       },
       "batting": {
-        "ovr": 57,
+        "ovr": 62,
         "contact": 60,
-        "power": 60,
-        "eye": 58,
-        "discipline": 55,
-        "speed": 53,
-        "fielding": 54,
-        "arm": 57,
-        "battingClutch": 55,
-        "baseInstinct": 55,
-        "bunting": 46,
-        "platoon": 43
+        "power": 55,
+        "eye": 57,
+        "discipline": 54,
+        "speed": 64,
+        "fielding": 58,
+        "arm": 50,
+        "battingClutch": 66
       },
       "developmentRate": 68,
-      "potentialHidden": 62,
-      "primaryPosition": "CF",
-      "positionRatings": {
-        "CF": 57
-      }
+      "potentialHidden": 62
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

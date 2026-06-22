@@ -1,17 +1,17 @@
 {
   "id": "COA_00211",
-  "name": "후지타 켄타",
-  "nameEn": "Fujita Kenta",
+  "name": "후지타 이사무",
+  "nameEn": "Fujita Isamu",
   "role": "coach",
-  "age": 38,
+  "age": 51,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
-  "clubId": "CLUB_JBL_CL_IRONSTORMS",
-  "teamId": "TEAM_JBL_CL_IRONSTORMS_1",
+  "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
+  "teamId": "TEAM_JBL_PL_SPIRITBUFFALOS_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
@@ -44,15 +44,15 @@
     },
     "coach": {
       "specialty": "타격",
-      "experienceYears": 4,
+      "experienceYears": 9,
       "stats": {
-        "teaching": 78,
-        "analysis": 75,
-        "communication": 59,
-        "discipline": 81,
-        "leadership": 64
+        "teaching": 52,
+        "analysis": 81,
+        "communication": 84,
+        "discipline": 73,
+        "leadership": 77
       },
-      "trainingBuffs": ""
+      "trainingBuffs": "구속 훈련 +2%"
     },
     "manager": {
       "style": "균형",

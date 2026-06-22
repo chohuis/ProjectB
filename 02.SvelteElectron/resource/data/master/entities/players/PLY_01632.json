@@ -1,61 +1,46 @@
 {
   "id": "PLY_01632",
-  "name": "곽준서",
-  "nameEn": "Kwak Junseo",
+  "name": "고바야시 사토시",
+  "nameEn": "Kobayashi Satoshi",
   "role": "player",
-  "age": 17,
+  "age": 32,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_YEOSU_SHORE",
-  "teamId": "TEAM_HS_YEOSU_SHORE",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_YEOSU_SHORE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONDRAKES",
+  "teamId": "TEAM_JBL_CL_IRONDRAKES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "C",
-      "jerseyNumber": 11,
+      "position": "SP",
+      "jerseyNumber": 2,
       "pitching": {
-        "ovr": 31,
-        "stamina": 30,
-        "velocity": 37,
-        "command": 36,
-        "control": 33,
-        "movement": 30,
-        "mentality": 31,
-        "recovery": 27,
-        "clutch": 35,
-        "holdRunners": 38
+        "ovr": 81,
+        "stamina": 87,
+        "velocity": 86,
+        "command": 81,
+        "control": 81,
+        "movement": 76,
+        "mentality": 77,
+        "recovery": 82
       },
       "batting": {
-        "ovr": 51,
-        "contact": 46,
-        "power": 49,
-        "eye": 56,
-        "discipline": 47,
-        "speed": 51,
-        "fielding": 47,
-        "arm": 51,
-        "battingClutch": 50,
-        "baseInstinct": 42,
-        "bunting": 40,
-        "platoon": 44
+        "ovr": 52,
+        "contact": 56,
+        "power": 53,
+        "eye": 51,
+        "discipline": 56,
+        "speed": 57,
+        "fielding": 58,
+        "arm": 57,
+        "battingClutch": 59
       },
-      "developmentRate": 58,
-      "potentialHidden": 69,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 51
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 46,
+      "potentialHidden": 65
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 59,
-  "popularity": 32
+  }
 }

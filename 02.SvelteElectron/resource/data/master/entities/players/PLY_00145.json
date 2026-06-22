@@ -1,9 +1,9 @@
 {
   "id": "PLY_00145",
   "name": "신현우",
-  "nameEn": "Shin Hyeonu",
+  "nameEn": "Lee Min-woo",
   "role": "player",
-  "age": 18,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,47 +19,28 @@
       "position": "RP",
       "jerseyNumber": 5,
       "pitching": {
-        "ovr": 45,
-        "stamina": 46,
+        "ovr": 50,
+        "stamina": 47,
         "velocity": 48,
-        "command": 50,
-        "control": 42,
-        "movement": 48,
-        "mentality": 43,
-        "recovery": 48,
-        "clutch": 44,
-        "holdRunners": 35
+        "command": 43,
+        "control": 54,
+        "movement": 49,
+        "mentality": 59,
+        "recovery": 41
       },
       "batting": {
-        "ovr": 27,
-        "contact": 31,
-        "power": 33,
-        "eye": 22,
-        "discipline": 23,
-        "speed": 22,
-        "fielding": 33,
-        "arm": 24,
-        "battingClutch": 35,
-        "baseInstinct": 42,
-        "bunting": 33,
-        "platoon": 39
+        "ovr": 36,
+        "contact": 43,
+        "power": 52,
+        "eye": 55,
+        "discipline": 42,
+        "speed": 58,
+        "fielding": 50,
+        "arm": 48,
+        "battingClutch": 42
       },
       "developmentRate": 45,
-      "potentialHidden": 70,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 45
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      "potentialHidden": 70
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

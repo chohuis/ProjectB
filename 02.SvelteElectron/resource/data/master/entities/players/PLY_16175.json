@@ -1,6 +1,6 @@
 {
   "id": "PLY_16175",
-  "name": "넬슨 네이선",
+  "name": "Nelson Nathan",
   "nameEn": "Nelson Nathan",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 53,
   "popularity": 43,
   "militaryStatus": "군필",

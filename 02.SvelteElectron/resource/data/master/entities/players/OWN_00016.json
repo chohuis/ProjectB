@@ -1,14 +1,14 @@
 {
   "id": "OWN_00016",
   "name": "손민우",
-  "nameEn": "Son Minu",
+  "nameEn": "Kang Chan-young",
   "role": "owner",
-  "age": 40,
+  "age": 70,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_GIANTWHALES",
-  "teamId": "TEAM_KBL_GIANTWHALES_1",
+  "clubId": "CLUB_KBL_HANWHA",
+  "teamId": "TEAM_KBL_HANWHA_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -80,12 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
   }
 }

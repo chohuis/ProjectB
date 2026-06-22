@@ -1,72 +1,46 @@
 {
   "id": "PLY_01981",
-  "name": "윤원준",
-  "nameEn": "Yoon Wonjun",
+  "name": "기무라 츠바사",
+  "nameEn": "Kimura Tsubasa",
   "role": "player",
   "age": 23,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_ROYALLIONS",
-  "teamId": "TEAM_KBL_ROYALLIONS_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
+  "teamId": "TEAM_JBL_PL_MARINESOLDIERS_2",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "CP",
-      "jerseyNumber": 65,
+      "position": "C",
+      "jerseyNumber": 41,
       "pitching": {
-        "ovr": 40,
-        "stamina": 39,
-        "velocity": 46,
-        "command": 38,
-        "control": 42,
-        "movement": 40,
-        "mentality": 42,
-        "recovery": 45,
-        "clutch": 44,
-        "holdRunners": 34
+        "ovr": 30,
+        "stamina": 31,
+        "velocity": 31,
+        "command": 27,
+        "control": 24,
+        "movement": 26,
+        "mentality": 25,
+        "recovery": 25
       },
       "batting": {
-        "ovr": 22,
-        "contact": 25,
-        "power": 24,
-        "eye": 20,
-        "discipline": 25,
-        "speed": 20,
-        "fielding": 27,
-        "arm": 28,
-        "battingClutch": 37,
-        "baseInstinct": 34,
-        "bunting": 37,
-        "platoon": 34
+        "ovr": 56,
+        "contact": 56,
+        "power": 56,
+        "eye": 63,
+        "discipline": 57,
+        "speed": 60,
+        "fielding": 61,
+        "arm": 61,
+        "battingClutch": 63
       },
-      "developmentRate": 60,
-      "potentialHidden": 61,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 40
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 1,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 46,
+      "potentialHidden": 78
     },
     "coach": {
       "specialty": "-",
@@ -106,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 75,
-  "popularity": 30
+  }
 }

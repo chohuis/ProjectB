@@ -1,6 +1,6 @@
 {
   "id": "PLY_14261",
-  "name": "로빈슨 코디",
+  "name": "Robinson Cody",
   "nameEn": "Robinson Cody",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 78,
   "popularity": 24,
   "militaryStatus": "군필",

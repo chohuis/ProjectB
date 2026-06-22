@@ -1,69 +1,46 @@
 {
   "id": "PLY_01779",
-  "name": "배연우",
-  "nameEn": "Bae Yeonwoo",
+  "name": "고토 류",
+  "nameEn": "Goto Ryu",
   "role": "player",
-  "age": 16,
+  "age": 23,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_JECHEON_RIDGE",
-  "teamId": "TEAM_HS_JECHEON_RIDGE",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_JECHEON_RIDGE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONSTORMS",
+  "teamId": "TEAM_JBL_CL_IRONSTORMS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "RP",
-      "jerseyNumber": 8,
+      "position": "C",
+      "jerseyNumber": 14,
       "pitching": {
-        "ovr": 52,
-        "stamina": 54,
-        "velocity": 54,
-        "command": 55,
-        "control": 54,
-        "movement": 57,
-        "mentality": 57,
-        "recovery": 52,
-        "clutch": 44,
-        "holdRunners": 47
+        "ovr": 50,
+        "stamina": 48,
+        "velocity": 50,
+        "command": 49,
+        "control": 53,
+        "movement": 54,
+        "mentality": 54,
+        "recovery": 53
       },
       "batting": {
-        "ovr": 34,
-        "contact": 30,
-        "power": 39,
-        "eye": 35,
-        "discipline": 34,
-        "speed": 30,
-        "fielding": 35,
-        "arm": 34,
-        "battingClutch": 38,
-        "baseInstinct": 42,
-        "bunting": 32,
-        "platoon": 35
+        "ovr": 75,
+        "contact": 82,
+        "power": 79,
+        "eye": 78,
+        "discipline": 74,
+        "speed": 77,
+        "fielding": 83,
+        "arm": 81,
+        "battingClutch": 76
       },
-      "developmentRate": 72,
-      "potentialHidden": 62,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 52
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 36,
+      "potentialHidden": 72
     },
     "coach": {
       "specialty": "-",
@@ -103,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 67,
-  "popularity": 23
+  }
 }

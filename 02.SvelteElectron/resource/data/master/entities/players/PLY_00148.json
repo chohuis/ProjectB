@@ -1,9 +1,9 @@
 {
   "id": "PLY_00148",
   "name": "손도윤",
-  "nameEn": "Son Doyun",
+  "nameEn": "Sim Jun-seo",
   "role": "player",
-  "age": 19,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "C",
       "jerseyNumber": 8,
       "pitching": {
-        "ovr": 30,
-        "stamina": 36,
-        "velocity": 28,
-        "command": 34,
-        "control": 30,
-        "movement": 28,
-        "mentality": 29,
-        "recovery": 27,
-        "clutch": 41,
-        "holdRunners": 39
+        "ovr": 34,
+        "stamina": 66,
+        "velocity": 63,
+        "command": 48,
+        "control": 56,
+        "movement": 54,
+        "mentality": 52,
+        "recovery": 57
       },
       "batting": {
-        "ovr": 50,
-        "contact": 54,
-        "power": 51,
-        "eye": 47,
-        "discipline": 51,
-        "speed": 50,
-        "fielding": 54,
-        "arm": 48,
-        "battingClutch": 49,
-        "baseInstinct": 47,
-        "bunting": 46,
-        "platoon": 42
+        "ovr": 52,
+        "contact": 51,
+        "power": 56,
+        "eye": 54,
+        "discipline": 45,
+        "speed": 49,
+        "fielding": 57,
+        "arm": 51,
+        "battingClutch": 55
       },
       "developmentRate": 55,
-      "potentialHidden": 60,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 50
-      }
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

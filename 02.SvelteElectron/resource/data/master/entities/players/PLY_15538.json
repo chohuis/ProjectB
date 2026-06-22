@@ -1,6 +1,6 @@
 {
   "id": "PLY_15538",
-  "name": "앤더슨 재크",
+  "name": "Anderson Zach",
   "nameEn": "Anderson Zach",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 74,
   "popularity": 47,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 46
       },
       "batting": {
-        "ovr": 57,
-        "contact": 52,
-        "power": 47,
-        "eye": 52,
-        "discipline": 53,
-        "speed": 53,
-        "baseInstinct": 56,
-        "bunting": 52,
-        "platoon": 49,
-        "fielding": 53,
-        "arm": 52,
-        "battingClutch": 58
+        "ovr": 58,
+        "contact": 53,
+        "power": 48,
+        "eye": 53,
+        "discipline": 54,
+        "speed": 54,
+        "baseInstinct": 57,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 53,
+        "battingClutch": 59
       },
       "positionRatings": {
         "RF": 58

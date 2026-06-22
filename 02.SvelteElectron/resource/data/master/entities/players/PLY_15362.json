@@ -1,6 +1,6 @@
 {
   "id": "PLY_15362",
-  "name": "무어 딜런",
+  "name": "Moore Dylan",
   "nameEn": "Moore Dylan",
   "role": "player",
   "age": 18,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 81,
   "popularity": 44,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 86,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 53,
-        "stamina": 47,
-        "velocity": 51,
-        "command": 43,
-        "control": 46,
-        "movement": 53,
-        "mentality": 54,
-        "recovery": 43,
-        "clutch": 46,
-        "holdRunners": 44
+        "ovr": 54,
+        "stamina": 48,
+        "velocity": 52,
+        "command": 44,
+        "control": 47,
+        "movement": 54,
+        "mentality": 55,
+        "recovery": 44,
+        "clutch": 47,
+        "holdRunners": 45
       },
       "batting": {
         "ovr": 54,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 54
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

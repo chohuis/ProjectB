@@ -1,14 +1,14 @@
 {
   "id": "PLY_00873",
   "name": "넬슨 크리스토퍼",
-  "nameEn": "Nel 슨 크리스토퍼",
+  "nameEn": "Nelson Christopher",
   "role": "player",
   "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_HARBORHAWKS",
-  "teamId": "TEAM_ABL_HARBORHAWKS_1",
+  "clubId": "CLUB_ABL_NYY",
+  "teamId": "TEAM_ABL_NYY",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 8,
       "pitching": {
-        "ovr": 69,
-        "stamina": 69,
-        "velocity": 75,
-        "command": 73,
-        "control": 68,
-        "movement": 66,
-        "mentality": 70,
-        "recovery": 72,
-        "clutch": 68,
-        "holdRunners": 63
+        "ovr": 81,
+        "stamina": 68,
+        "velocity": 83,
+        "command": 74,
+        "control": 73,
+        "movement": 75,
+        "mentality": 78,
+        "recovery": 80
       },
       "batting": {
-        "ovr": 51,
-        "contact": 47,
-        "power": 50,
-        "eye": 57,
-        "discipline": 53,
-        "speed": 54,
-        "fielding": 55,
-        "arm": 47,
-        "battingClutch": 49,
-        "baseInstinct": 48,
-        "bunting": 44,
-        "platoon": 40
+        "ovr": 55,
+        "contact": 50,
+        "power": 54,
+        "eye": 54,
+        "discipline": 50,
+        "speed": 57,
+        "fielding": 48,
+        "arm": 50,
+        "battingClutch": 55
       },
       "developmentRate": 44,
-      "potentialHidden": 84,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 69
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 10,
-      "contract": {
-        "salary": 20900,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 84
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

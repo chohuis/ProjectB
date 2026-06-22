@@ -1,7 +1,7 @@
 {
   "id": "PLY_13849",
-  "name": "화이트 카를로스",
-  "nameEn": "White Carlos",
+  "name": "Anderson Carlos",
+  "nameEn": "Anderson Carlos",
   "role": "player",
   "age": 32,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 82,
-  "popularity": 21,
+  "notes": "국적:미국",
+  "diligence": 61,
+  "popularity": 12,
   "militaryStatus": "군필",
   "entryYear": 2050,
   "entryLeague": "LEAGUE_ABL",
@@ -21,53 +21,43 @@
   "entryAge": 32,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 95,
-      "primaryPosition": "SP",
-      "developmentRate": 49,
-      "potentialHidden": 76,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 81,
+      "primaryPosition": "2B",
+      "developmentRate": 52,
+      "potentialHidden": 74,
       "proServiceYears": 10,
       "pitching": {
-        "ovr": 79,
-        "stamina": 77,
-        "velocity": 87,
-        "command": 81,
-        "control": 70,
-        "movement": 75,
-        "mentality": 78,
-        "recovery": 77,
-        "clutch": 66,
-        "holdRunners": 65
+        "ovr": 57,
+        "stamina": 48,
+        "velocity": 65,
+        "command": 47,
+        "control": 62,
+        "movement": 48,
+        "mentality": 58,
+        "recovery": 46,
+        "clutch": 58,
+        "holdRunners": 43
       },
       "batting": {
-        "ovr": 67,
-        "contact": 66,
-        "power": 66,
-        "eye": 66,
-        "discipline": 58,
-        "speed": 70,
-        "baseInstinct": 60,
-        "bunting": 56,
+        "ovr": 57,
+        "contact": 56,
+        "power": 54,
+        "eye": 61,
+        "discipline": 54,
+        "speed": 58,
+        "baseInstinct": 56,
+        "bunting": 44,
         "platoon": 50,
-        "fielding": 59,
-        "arm": 60,
-        "battingClutch": 66
+        "fielding": 58,
+        "arm": 51,
+        "battingClutch": 48
       },
       "positionRatings": {
-        "SP": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "2B": 57
+      }
     },
     "coach": null,
     "manager": null,

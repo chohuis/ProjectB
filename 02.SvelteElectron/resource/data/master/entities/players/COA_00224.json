@@ -1,17 +1,17 @@
 {
   "id": "COA_00224",
-  "name": "시미즈 마코토",
-  "nameEn": "Shimizu Makoto",
+  "name": "하야시 미쓰루",
+  "nameEn": "Hayashi Mitsuru",
   "role": "coach",
-  "age": 36,
+  "age": 57,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
-  "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
-  "teamId": "TEAM_JBL_PL_SPIRITBUFFALOS_1",
+  "clubId": "CLUB_JBL_PL_SUNS",
+  "teamId": "TEAM_JBL_PL_SUNS_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
@@ -43,16 +43,16 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "수비",
-      "experienceYears": 8,
+      "specialty": "투수",
+      "experienceYears": 7,
       "stats": {
-        "teaching": 72,
-        "analysis": 79,
-        "communication": 65,
-        "discipline": 57,
-        "leadership": 59
+        "teaching": 80,
+        "analysis": 75,
+        "communication": 61,
+        "discipline": 81,
+        "leadership": 73
       },
-      "trainingBuffs": "구속 훈련 +2%"
+      "trainingBuffs": "제구 훈련 +2%"
     },
     "manager": {
       "style": "균형",

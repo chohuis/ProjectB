@@ -1,14 +1,14 @@
 {
   "id": "PLY_00591",
   "name": "박동우",
-  "nameEn": "Park Dongu",
+  "nameEn": "Hong Seung-min",
   "role": "player",
   "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_SKYGULLS",
-  "teamId": "TEAM_KBL_SKYGULLS_2",
+  "clubId": "CLUB_KBL_LG",
+  "teamId": "TEAM_KBL_LG_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,48 +19,28 @@
       "position": "SS",
       "jerseyNumber": 46,
       "pitching": {
-        "ovr": 54,
-        "stamina": 57,
-        "velocity": 51,
-        "command": 51,
-        "control": 58,
-        "movement": 55,
-        "mentality": 58,
-        "recovery": 50,
-        "clutch": 49,
-        "holdRunners": 43
+        "ovr": 46,
+        "stamina": 49,
+        "velocity": 50,
+        "command": 50,
+        "control": 47,
+        "movement": 42,
+        "mentality": 46,
+        "recovery": 43
       },
       "batting": {
         "ovr": 74,
-        "contact": 75,
-        "power": 75,
-        "eye": 73,
+        "contact": 79,
+        "power": 69,
+        "eye": 79,
         "discipline": 78,
-        "speed": 69,
-        "fielding": 77,
-        "arm": 76,
-        "battingClutch": 73,
-        "baseInstinct": 63,
-        "bunting": 64,
-        "platoon": 63
+        "speed": 80,
+        "fielding": 73,
+        "arm": 71,
+        "battingClutch": 74
       },
       "developmentRate": 54,
-      "potentialHidden": 78,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 74
-      },
-      "proServiceYears": 3,
-      "contract": {
-        "salary": 2700,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 78
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

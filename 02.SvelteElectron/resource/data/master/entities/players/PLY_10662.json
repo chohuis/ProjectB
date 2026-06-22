@@ -1,9 +1,9 @@
 {
   "id": "PLY_10662",
-  "name": "앤더슨 브랜던",
-  "nameEn": "Anderson Brandon",
+  "name": "Mitchell Eric",
+  "nameEn": "Mitchell Eric",
   "role": "player",
-  "age": 25,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 56,
-  "popularity": 45,
+  "notes": "국적:파나마",
+  "diligence": 73,
+  "popularity": 21,
   "militaryStatus": "군필",
   "entryYear": 2030,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 25,
+  "entryAge": 20,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 50,
-      "primaryPosition": "SP",
-      "developmentRate": 48,
-      "potentialHidden": 60,
-      "proServiceYears": 3,
+      "position": "SS",
+      "jerseyNumber": 49,
+      "primaryPosition": "SS",
+      "developmentRate": 60,
+      "potentialHidden": 62,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 68,
-        "stamina": 60,
-        "velocity": 74,
-        "command": 60,
-        "control": 65,
-        "movement": 60,
-        "mentality": 63,
-        "recovery": 57,
-        "clutch": 59,
-        "holdRunners": 54
+        "ovr": 52,
+        "stamina": 44,
+        "velocity": 53,
+        "command": 51,
+        "control": 50,
+        "movement": 46,
+        "mentality": 50,
+        "recovery": 52,
+        "clutch": 42,
+        "holdRunners": 42
       },
       "batting": {
-        "ovr": 74,
-        "contact": 78,
-        "power": 70,
-        "eye": 77,
-        "discipline": 68,
-        "speed": 70,
-        "baseInstinct": 74,
-        "bunting": 57,
+        "ovr": 52,
+        "contact": 52,
+        "power": 52,
+        "eye": 47,
+        "discipline": 43,
+        "speed": 54,
+        "baseInstinct": 45,
+        "bunting": 46,
         "platoon": 50,
-        "fielding": 74,
-        "arm": 65,
-        "battingClutch": 69
+        "fielding": 50,
+        "arm": 49,
+        "battingClutch": 52
       },
       "positionRatings": {
-        "SP": 74
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "SS": 52
+      }
     },
     "coach": null,
     "manager": null,

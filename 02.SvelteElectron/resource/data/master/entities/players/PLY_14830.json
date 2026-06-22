@@ -1,6 +1,6 @@
 {
   "id": "PLY_14830",
-  "name": "그린 카를로스",
+  "name": "Green Carlos",
   "nameEn": "Green Carlos",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 68,
   "popularity": 26,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 84,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 57,
-        "stamina": 54,
-        "velocity": 66,
-        "command": 52,
-        "control": 60,
-        "movement": 50,
-        "mentality": 54,
-        "recovery": 55,
-        "clutch": 58,
-        "holdRunners": 42
+        "ovr": 58,
+        "stamina": 55,
+        "velocity": 67,
+        "command": 53,
+        "control": 61,
+        "movement": 51,
+        "mentality": 55,
+        "recovery": 56,
+        "clutch": 59,
+        "holdRunners": 43
       },
       "batting": {
         "ovr": 58,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

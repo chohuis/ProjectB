@@ -1,17 +1,17 @@
 {
   "id": "COA_00226",
-  "name": "와타나베 슌",
-  "nameEn": "Watanabe Shun",
+  "name": "후지이 유토",
+  "nameEn": "Fujii Yuto",
   "role": "coach",
-  "age": 34,
+  "age": 49,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
-  "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
-  "teamId": "TEAM_JBL_PL_SPIRITBUFFALOS_1",
+  "clubId": "CLUB_JBL_PL_SUNS",
+  "teamId": "TEAM_JBL_PL_SUNS_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
@@ -43,14 +43,14 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "수비",
-      "experienceYears": 13,
+      "specialty": "멘탈",
+      "experienceYears": 3,
       "stats": {
-        "teaching": 77,
-        "analysis": 60,
-        "communication": 60,
-        "discipline": 80,
-        "leadership": 74
+        "teaching": 68,
+        "analysis": 67,
+        "communication": 55,
+        "discipline": 53,
+        "leadership": 83
       },
       "trainingBuffs": "제구 훈련 +2%"
     },

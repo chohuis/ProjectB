@@ -1,6 +1,6 @@
 {
   "id": "PLY_15806",
-  "name": "리 에반",
+  "name": "Lee Evan",
   "nameEn": "Lee Evan",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 55,
   "popularity": 19,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 56
       },
       "batting": {
-        "ovr": 73,
-        "contact": 73,
-        "power": 70,
-        "eye": 68,
-        "discipline": 62,
-        "speed": 78,
-        "baseInstinct": 64,
-        "bunting": 66,
-        "platoon": 54,
-        "fielding": 61,
-        "arm": 61,
-        "battingClutch": 72
+        "ovr": 67,
+        "contact": 67,
+        "power": 64,
+        "eye": 62,
+        "discipline": 57,
+        "speed": 72,
+        "baseInstinct": 59,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 56,
+        "battingClutch": 66
       },
       "positionRatings": {
         "3B": 67

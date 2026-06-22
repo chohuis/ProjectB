@@ -1,9 +1,9 @@
 {
   "id": "PLY_00085",
   "name": "우동현",
-  "nameEn": "Woo Donghyeon",
+  "nameEn": "Choi Chan-young",
   "role": "player",
-  "age": 18,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,51 +19,28 @@
       "position": "RP",
       "jerseyNumber": 5,
       "pitching": {
-        "ovr": 52,
-        "stamina": 53,
-        "velocity": 55,
-        "command": 51,
-        "control": 53,
-        "movement": 51,
-        "mentality": 56,
-        "recovery": 50,
-        "clutch": 51,
-        "holdRunners": 47
+        "ovr": 50,
+        "stamina": 65,
+        "velocity": 52,
+        "command": 62,
+        "control": 61,
+        "movement": 49,
+        "mentality": 50,
+        "recovery": 51
       },
       "batting": {
-        "ovr": 34,
-        "contact": 36,
-        "power": 39,
-        "eye": 40,
-        "discipline": 29,
-        "speed": 37,
-        "fielding": 40,
-        "arm": 30,
-        "battingClutch": 43,
-        "baseInstinct": 44,
-        "bunting": 36,
-        "platoon": 40
+        "ovr": 42,
+        "contact": 49,
+        "power": 55,
+        "eye": 56,
+        "discipline": 47,
+        "speed": 54,
+        "fielding": 48,
+        "arm": 50,
+        "battingClutch": 49
       },
       "developmentRate": 60,
-      "potentialHidden": 76,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 52
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        }
-      ]
+      "potentialHidden": 76
     },
     "coach": {
       "specialty": "-",
@@ -103,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

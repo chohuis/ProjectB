@@ -1,7 +1,7 @@
 {
   "id": "PLY_00217",
   "name": "신준영",
-  "nameEn": "Shin Junyeong",
+  "nameEn": "Nam Hyun-jin",
   "role": "player",
   "age": 22,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "LF",
       "jerseyNumber": 17,
       "pitching": {
-        "ovr": 49,
-        "stamina": 55,
-        "velocity": 45,
-        "command": 54,
-        "control": 48,
-        "movement": 48,
-        "mentality": 51,
-        "recovery": 50,
-        "clutch": 37,
-        "holdRunners": 46
+        "ovr": 53,
+        "stamina": 50,
+        "velocity": 51,
+        "command": 48,
+        "control": 49,
+        "movement": 51,
+        "mentality": 50,
+        "recovery": 52
       },
       "batting": {
-        "ovr": 69,
-        "contact": 70,
-        "power": 72,
-        "eye": 70,
-        "discipline": 68,
-        "speed": 65,
-        "fielding": 68,
-        "arm": 69,
-        "battingClutch": 69,
-        "baseInstinct": 58,
-        "bunting": 57,
-        "platoon": 61
+        "ovr": 74,
+        "contact": 73,
+        "power": 71,
+        "eye": 75,
+        "discipline": 71,
+        "speed": 70,
+        "fielding": 72,
+        "arm": 68,
+        "battingClutch": 76
       },
       "developmentRate": 58,
-      "potentialHidden": 89,
-      "primaryPosition": "LF",
-      "positionRatings": {
-        "LF": 69
-      }
+      "potentialHidden": 89
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

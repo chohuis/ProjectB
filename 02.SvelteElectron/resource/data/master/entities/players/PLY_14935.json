@@ -1,6 +1,6 @@
 {
   "id": "PLY_14935",
-  "name": "로빈슨 그랜트",
+  "name": "Robinson Grant",
   "nameEn": "Robinson Grant",
   "role": "player",
   "age": 33,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 85,
   "popularity": 16,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 57,
       "proServiceYears": 11,
       "pitching": {
-        "ovr": 84,
-        "stamina": 76,
-        "velocity": 81,
-        "command": 88,
-        "control": 80,
-        "movement": 74,
-        "mentality": 80,
-        "recovery": 73,
-        "clutch": 83,
-        "holdRunners": 75
+        "ovr": 66,
+        "stamina": 60,
+        "velocity": 64,
+        "command": 69,
+        "control": 63,
+        "movement": 58,
+        "mentality": 63,
+        "recovery": 57,
+        "clutch": 65,
+        "holdRunners": 59
       },
       "batting": {
         "ovr": 66,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

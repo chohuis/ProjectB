@@ -1,6 +1,6 @@
 {
   "id": "PLY_15933",
-  "name": "리 숀",
+  "name": "Lee Sean",
   "nameEn": "Lee Sean",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 76,
   "popularity": 31,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 70,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 61,
-        "stamina": 65,
-        "velocity": 59,
-        "command": 58,
-        "control": 61,
-        "movement": 54,
-        "mentality": 62,
-        "recovery": 53,
-        "clutch": 59,
-        "holdRunners": 54
+        "ovr": 63,
+        "stamina": 67,
+        "velocity": 61,
+        "command": 60,
+        "control": 63,
+        "movement": 56,
+        "mentality": 64,
+        "recovery": 55,
+        "clutch": 61,
+        "holdRunners": 56
       },
       "batting": {
         "ovr": 63,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

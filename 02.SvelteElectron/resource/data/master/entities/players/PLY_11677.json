@@ -1,9 +1,9 @@
 {
   "id": "PLY_11677",
-  "name": "데이비스 제이크",
-  "nameEn": "Davis Jake",
+  "name": "Thompson Daniel",
+  "nameEn": "Thompson Daniel",
   "role": "player",
-  "age": 21,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 68,
-  "popularity": 48,
+  "notes": "국적:도미니카",
+  "diligence": 51,
+  "popularity": 45,
   "militaryStatus": "군필",
   "entryYear": 2037,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 21,
+  "entryAge": 28,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "SP",
-      "jerseyNumber": 40,
+      "jerseyNumber": 58,
       "primaryPosition": "SP",
-      "developmentRate": 76,
-      "potentialHidden": 75,
-      "proServiceYears": 0,
+      "developmentRate": 53,
+      "potentialHidden": 73,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 59,
-        "stamina": 55,
-        "velocity": 63,
-        "command": 57,
-        "control": 63,
-        "movement": 53,
-        "mentality": 65,
-        "recovery": 52,
-        "clutch": 54,
-        "holdRunners": 48
+        "ovr": 80,
+        "stamina": 74,
+        "velocity": 85,
+        "command": 73,
+        "control": 73,
+        "movement": 80,
+        "mentality": 78,
+        "recovery": 82,
+        "clutch": 78,
+        "holdRunners": 79
       },
       "batting": {
-        "ovr": 63,
-        "contact": 56,
-        "power": 64,
-        "eye": 56,
-        "discipline": 61,
-        "speed": 59,
-        "baseInstinct": 60,
-        "bunting": 48,
+        "ovr": 80,
+        "contact": 75,
+        "power": 80,
+        "eye": 73,
+        "discipline": 72,
+        "speed": 76,
+        "baseInstinct": 72,
+        "bunting": 67,
         "platoon": 50,
-        "fielding": 53,
-        "arm": 62,
-        "battingClutch": 54
+        "fielding": 83,
+        "arm": 70,
+        "battingClutch": 68
       },
       "positionRatings": {
-        "SP": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 80
+      }
     },
     "coach": null,
     "manager": null,

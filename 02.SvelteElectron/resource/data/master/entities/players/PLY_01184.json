@@ -1,14 +1,14 @@
 {
   "id": "PLY_01184",
   "name": "윌리엄스 제임스",
-  "nameEn": "Wil 리엄스 제임스",
+  "nameEn": "Williams James",
   "role": "player",
   "age": 29,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_BAYSEALS",
-  "teamId": "TEAM_ABL_BAYSEALS_1",
+  "clubId": "CLUB_ABL_PHI",
+  "teamId": "TEAM_ABL_PHI",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:베네수엘라",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 4,
       "pitching": {
-        "ovr": 75,
-        "stamina": 79,
-        "velocity": 72,
-        "command": 75,
-        "control": 79,
-        "movement": 75,
-        "mentality": 80,
-        "recovery": 79,
-        "clutch": 73,
-        "holdRunners": 72
+        "ovr": 78,
+        "stamina": 85,
+        "velocity": 81,
+        "command": 83,
+        "control": 83,
+        "movement": 77,
+        "mentality": 76,
+        "recovery": 82
       },
       "batting": {
-        "ovr": 57,
-        "contact": 63,
-        "power": 53,
-        "eye": 63,
-        "discipline": 52,
-        "speed": 62,
-        "fielding": 60,
-        "arm": 62,
-        "battingClutch": 52,
-        "baseInstinct": 49,
-        "bunting": 43,
-        "platoon": 48
+        "ovr": 52,
+        "contact": 51,
+        "power": 54,
+        "eye": 45,
+        "discipline": 48,
+        "speed": 45,
+        "fielding": 50,
+        "arm": 48,
+        "battingClutch": 48
       },
       "developmentRate": 40,
-      "potentialHidden": 65,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 75
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SCREWBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_KNUCKLEBALL",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 7,
-      "contract": {
-        "salary": 25600,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 65
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

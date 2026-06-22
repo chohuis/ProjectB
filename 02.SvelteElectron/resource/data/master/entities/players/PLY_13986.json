@@ -1,6 +1,6 @@
 {
   "id": "PLY_13986",
-  "name": "영 다니엘",
+  "name": "Young Daniel",
   "nameEn": "Young Daniel",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 51,
   "popularity": 36,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 64,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 77,
-        "stamina": 77,
-        "velocity": 86,
-        "command": 78,
-        "control": 70,
-        "movement": 79,
-        "mentality": 79,
-        "recovery": 70,
-        "clutch": 77,
-        "holdRunners": 69
+        "ovr": 71,
+        "stamina": 71,
+        "velocity": 79,
+        "command": 72,
+        "control": 65,
+        "movement": 73,
+        "mentality": 73,
+        "recovery": 65,
+        "clutch": 71,
+        "holdRunners": 64
       },
       "batting": {
         "ovr": 71,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 71
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,72 +1,46 @@
 {
   "id": "PLY_01979",
-  "name": "허민석",
-  "nameEn": "Heo Minseok",
+  "name": "마쓰모토 슌",
+  "nameEn": "Matsumoto Shun",
   "role": "player",
-  "age": 26,
+  "age": 21,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_ROYALLIONS",
-  "teamId": "TEAM_KBL_ROYALLIONS_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
+  "teamId": "TEAM_JBL_PL_MARINESOLDIERS_2",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
-      "handedness": "L",
-      "position": "SS",
-      "jerseyNumber": 37,
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "CP",
+      "jerseyNumber": 39,
       "pitching": {
-        "ovr": 39,
-        "stamina": 43,
-        "velocity": 41,
-        "command": 41,
-        "control": 38,
-        "movement": 41,
-        "mentality": 40,
-        "recovery": 36,
-        "clutch": 40,
-        "holdRunners": 37
+        "ovr": 73,
+        "stamina": 58,
+        "velocity": 82,
+        "command": 75,
+        "control": 78,
+        "movement": 73,
+        "mentality": 70,
+        "recovery": 68
       },
       "batting": {
-        "ovr": 59,
-        "contact": 63,
-        "power": 55,
-        "eye": 65,
-        "discipline": 62,
-        "speed": 66,
-        "fielding": 55,
-        "arm": 61,
-        "battingClutch": 60,
-        "baseInstinct": 56,
-        "bunting": 48,
-        "platoon": 49
+        "ovr": 56,
+        "contact": 53,
+        "power": 52,
+        "eye": 53,
+        "discipline": 48,
+        "speed": 47,
+        "fielding": 51,
+        "arm": 49,
+        "battingClutch": 55
       },
-      "developmentRate": 66,
-      "potentialHidden": 74,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 46,
+      "potentialHidden": 76
     },
     "coach": {
       "specialty": "-",
@@ -106,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 51,
-  "popularity": 23
+  }
 }

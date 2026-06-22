@@ -1,9 +1,9 @@
 {
   "id": "PLY_12950",
-  "name": "영 오스틴",
-  "nameEn": "Young Austin",
+  "name": "Thomas Evan",
+  "nameEn": "Thomas Evan",
   "role": "player",
-  "age": 22,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 52,
-  "popularity": 40,
+  "notes": "국적:일본",
+  "diligence": 47,
+  "popularity": 24,
   "militaryStatus": "군필",
   "entryYear": 2044,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 22,
+  "entryAge": 21,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 47,
-      "primaryPosition": "SP",
-      "developmentRate": 64,
-      "potentialHidden": 84,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 79,
+      "primaryPosition": "LF",
+      "developmentRate": 59,
+      "potentialHidden": 76,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 52,
-        "stamina": 51,
-        "velocity": 55,
-        "command": 55,
-        "control": 56,
-        "movement": 52,
+        "ovr": 51,
+        "stamina": 52,
+        "velocity": 54,
+        "command": 46,
+        "control": 53,
+        "movement": 51,
         "mentality": 55,
-        "recovery": 48,
-        "clutch": 46,
+        "recovery": 46,
+        "clutch": 39,
         "holdRunners": 47
       },
       "batting": {
-        "ovr": 55,
-        "contact": 53,
-        "power": 56,
-        "eye": 48,
-        "discipline": 52,
-        "speed": 61,
-        "baseInstinct": 49,
-        "bunting": 47,
+        "ovr": 51,
+        "contact": 52,
+        "power": 45,
+        "eye": 44,
+        "discipline": 46,
+        "speed": 45,
+        "baseInstinct": 40,
+        "bunting": 41,
         "platoon": 50,
-        "fielding": 49,
-        "arm": 47,
-        "battingClutch": 48
+        "fielding": 52,
+        "arm": 41,
+        "battingClutch": 47
       },
       "positionRatings": {
-        "SP": 55
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "LF": 51
+      }
     },
     "coach": null,
     "manager": null,

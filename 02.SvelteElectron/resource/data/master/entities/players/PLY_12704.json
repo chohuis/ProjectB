@@ -1,9 +1,9 @@
 {
   "id": "PLY_12704",
-  "name": "로빈슨 네이선",
-  "nameEn": "Robinson Nathan",
+  "name": "Hall Cody",
+  "nameEn": "Hall Cody",
   "role": "player",
-  "age": 20,
+  "age": 23,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 82,
-  "popularity": 11,
+  "notes": "국적:일본",
+  "diligence": 52,
+  "popularity": 38,
   "militaryStatus": "군필",
   "entryYear": 2043,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 20,
+  "entryAge": 23,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 26,
+      "jerseyNumber": 87,
       "primaryPosition": "SP",
-      "developmentRate": 64,
-      "potentialHidden": 88,
-      "proServiceYears": 0,
+      "developmentRate": 46,
+      "potentialHidden": 78,
+      "proServiceYears": 1,
       "pitching": {
-        "ovr": 63,
-        "stamina": 57,
-        "velocity": 73,
-        "command": 64,
-        "control": 57,
-        "movement": 64,
-        "mentality": 59,
-        "recovery": 62,
-        "clutch": 51,
-        "holdRunners": 61
+        "ovr": 73,
+        "stamina": 66,
+        "velocity": 76,
+        "command": 70,
+        "control": 73,
+        "movement": 69,
+        "mentality": 76,
+        "recovery": 73,
+        "clutch": 72,
+        "holdRunners": 70
       },
       "batting": {
-        "ovr": 68,
-        "contact": 68,
+        "ovr": 73,
+        "contact": 65,
         "power": 70,
-        "eye": 60,
-        "discipline": 65,
-        "speed": 68,
-        "baseInstinct": 61,
-        "bunting": 51,
+        "eye": 73,
+        "discipline": 66,
+        "speed": 66,
+        "baseInstinct": 73,
+        "bunting": 65,
         "platoon": 50,
         "fielding": 64,
-        "arm": 68,
-        "battingClutch": 62
+        "arm": 67,
+        "battingClutch": 61
       },
       "positionRatings": {
-        "SP": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        }
-      ]
+        "SP": 73
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_15858",
-  "name": "킹 브랜던",
+  "name": "King Brandon",
   "nameEn": "King Brandon",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 69,
   "popularity": 48,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 74,
       "proServiceYears": 4,
       "pitching": {
-        "ovr": 60,
-        "stamina": 59,
-        "velocity": 68,
-        "command": 61,
-        "control": 56,
-        "movement": 60,
-        "mentality": 57,
-        "recovery": 62,
-        "clutch": 56,
-        "holdRunners": 46
+        "ovr": 64,
+        "stamina": 63,
+        "velocity": 73,
+        "command": 65,
+        "control": 60,
+        "movement": 64,
+        "mentality": 61,
+        "recovery": 66,
+        "clutch": 60,
+        "holdRunners": 49
       },
       "batting": {
         "ovr": 64,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 64
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

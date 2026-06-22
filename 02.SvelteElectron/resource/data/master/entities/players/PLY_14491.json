@@ -1,6 +1,6 @@
 {
   "id": "PLY_14491",
-  "name": "스미스 크리스",
+  "name": "Smith Chris",
   "nameEn": "Smith Chris",
   "role": "player",
   "age": 18,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 47,
   "popularity": 24,
   "militaryStatus": "군필",

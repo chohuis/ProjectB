@@ -1,9 +1,9 @@
 {
   "id": "PLY_13745",
-  "name": "넬슨 데릭",
-  "nameEn": "Nelson Derek",
+  "name": "Smith Daniel",
+  "nameEn": "Smith Daniel",
   "role": "player",
-  "age": 25,
+  "age": 35,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 55,
-  "popularity": 21,
+  "notes": "국적:베네수엘라",
+  "diligence": 68,
+  "popularity": 20,
   "militaryStatus": "군필",
   "entryYear": 2049,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 25,
+  "entryAge": 35,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 55,
-      "primaryPosition": "SP",
-      "developmentRate": 51,
-      "potentialHidden": 63,
-      "proServiceYears": 3,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 85,
+      "primaryPosition": "2B",
+      "developmentRate": 50,
+      "potentialHidden": 65,
+      "proServiceYears": 13,
       "pitching": {
-        "ovr": 69,
-        "stamina": 66,
-        "velocity": 69,
-        "command": 60,
-        "control": 71,
-        "movement": 60,
-        "mentality": 64,
-        "recovery": 68,
-        "clutch": 58,
-        "holdRunners": 56
+        "ovr": 68,
+        "stamina": 67,
+        "velocity": 72,
+        "command": 70,
+        "control": 62,
+        "movement": 63,
+        "mentality": 72,
+        "recovery": 63,
+        "clutch": 64,
+        "holdRunners": 63
       },
       "batting": {
-        "ovr": 75,
-        "contact": 80,
-        "power": 76,
-        "eye": 70,
-        "discipline": 78,
-        "speed": 68,
+        "ovr": 68,
+        "contact": 66,
+        "power": 64,
+        "eye": 68,
+        "discipline": 63,
+        "speed": 66,
         "baseInstinct": 69,
-        "bunting": 69,
+        "bunting": 61,
         "platoon": 50,
-        "fielding": 67,
-        "arm": 72,
-        "battingClutch": 75
+        "fielding": 57,
+        "arm": 61,
+        "battingClutch": 65
       },
       "positionRatings": {
-        "SP": 75
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "2B": 68
+      }
     },
     "coach": null,
     "manager": null,

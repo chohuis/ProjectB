@@ -1,9 +1,9 @@
 {
   "id": "PLY_00065",
   "name": "정성준",
-  "nameEn": "Jeong Seongjun",
+  "nameEn": "Song Ye-jun",
   "role": "player",
-  "age": 18,
+  "age": 17,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,47 +19,28 @@
       "position": "RP",
       "jerseyNumber": 5,
       "pitching": {
-        "ovr": 52,
-        "stamina": 56,
-        "velocity": 53,
-        "command": 48,
-        "control": 56,
-        "movement": 49,
-        "mentality": 50,
-        "recovery": 54,
-        "clutch": 44,
-        "holdRunners": 48
+        "ovr": 61,
+        "stamina": 59,
+        "velocity": 48,
+        "command": 62,
+        "control": 64,
+        "movement": 43,
+        "mentality": 61,
+        "recovery": 61
       },
       "batting": {
-        "ovr": 34,
-        "contact": 40,
-        "power": 40,
-        "eye": 38,
-        "discipline": 36,
-        "speed": 40,
-        "fielding": 37,
-        "arm": 40,
-        "battingClutch": 35,
-        "baseInstinct": 46,
-        "bunting": 41,
-        "platoon": 43
+        "ovr": 33,
+        "contact": 45,
+        "power": 56,
+        "eye": 43,
+        "discipline": 43,
+        "speed": 60,
+        "fielding": 55,
+        "arm": 52,
+        "battingClutch": 51
       },
       "developmentRate": 54,
-      "potentialHidden": 71,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 52
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_FORKBALL",
-          "grade": 3
-        }
-      ]
+      "potentialHidden": 71
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

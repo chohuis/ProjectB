@@ -1,7 +1,7 @@
 {
   "id": "PLY_00410",
   "name": "강현준",
-  "nameEn": "Kang Hyeonjun",
+  "nameEn": "Oh Jae-won",
   "role": "player",
   "age": 24,
   "status": "active",
@@ -19,58 +19,28 @@
       "position": "CP",
       "jerseyNumber": 10,
       "pitching": {
-        "ovr": 31,
-        "stamina": 33,
-        "velocity": 37,
-        "command": 32,
-        "control": 32,
-        "movement": 36,
-        "mentality": 36,
-        "recovery": 33,
-        "clutch": 41,
-        "holdRunners": 35
+        "ovr": 51,
+        "stamina": 35,
+        "velocity": 58,
+        "command": 54,
+        "control": 49,
+        "movement": 47,
+        "mentality": 46,
+        "recovery": 44
       },
       "batting": {
-        "ovr": 22,
-        "contact": 22,
-        "power": 22,
-        "eye": 21,
+        "ovr": 23,
+        "contact": 26,
+        "power": 25,
+        "eye": 24,
         "discipline": 26,
-        "speed": 24,
-        "fielding": 20,
-        "arm": 20,
-        "battingClutch": 38,
-        "baseInstinct": 39,
-        "bunting": 31,
-        "platoon": 40
+        "speed": 22,
+        "fielding": 24,
+        "arm": 26,
+        "battingClutch": 28
       },
       "developmentRate": 41,
-      "potentialHidden": 83,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 31
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 83
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

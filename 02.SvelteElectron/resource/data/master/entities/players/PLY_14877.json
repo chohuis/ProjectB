@@ -1,6 +1,6 @@
 {
   "id": "PLY_14877",
-  "name": "윌리엄스 브랜던",
+  "name": "Williams Brandon",
   "nameEn": "Williams Brandon",
   "role": "player",
   "age": 34,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 50,
   "popularity": 28,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 73,
       "proServiceYears": 12,
       "pitching": {
-        "ovr": 82,
-        "stamina": 82,
-        "velocity": 78,
-        "command": 81,
-        "control": 83,
-        "movement": 85,
-        "mentality": 90,
-        "recovery": 71,
-        "clutch": 73,
-        "holdRunners": 66
+        "ovr": 65,
+        "stamina": 65,
+        "velocity": 62,
+        "command": 64,
+        "control": 66,
+        "movement": 67,
+        "mentality": 71,
+        "recovery": 56,
+        "clutch": 58,
+        "holdRunners": 52
       },
       "batting": {
         "ovr": 65,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

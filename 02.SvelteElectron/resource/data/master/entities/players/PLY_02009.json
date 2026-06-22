@@ -1,80 +1,46 @@
 {
   "id": "PLY_02009",
-  "name": "박준호",
-  "nameEn": "Park Junho",
+  "name": "후쿠다 유타카",
+  "nameEn": "Fukuda Yutaka",
   "role": "player",
-  "age": 35,
+  "age": 27,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_GIANTWHALES",
-  "teamId": "TEAM_KBL_GIANTWHALES_1",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SEAGULLS",
+  "teamId": "TEAM_JBL_PL_SEAGULLS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 71,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 19,
       "pitching": {
-        "ovr": 82,
-        "stamina": 79,
-        "velocity": 83,
-        "command": 86,
-        "control": 81,
-        "movement": 82,
-        "mentality": 88,
-        "recovery": 83,
-        "clutch": 79,
-        "holdRunners": 79
+        "ovr": 68,
+        "stamina": 65,
+        "velocity": 70,
+        "command": 69,
+        "control": 63,
+        "movement": 60,
+        "mentality": 64,
+        "recovery": 65
       },
       "batting": {
-        "ovr": 64,
-        "contact": 68,
-        "power": 60,
-        "eye": 60,
-        "discipline": 59,
-        "speed": 60,
-        "fielding": 64,
-        "arm": 60,
-        "battingClutch": 60,
-        "baseInstinct": 53,
-        "bunting": 52,
-        "platoon": 60
+        "ovr": 86,
+        "contact": 88,
+        "power": 83,
+        "eye": 89,
+        "discipline": 88,
+        "speed": 85,
+        "fielding": 89,
+        "arm": 83,
+        "battingClutch": 82
       },
-      "developmentRate": 44,
-      "potentialHidden": 79,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 82
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SCREWBALL",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 13,
-      "contract": {
-        "salary": 8800,
-        "durationYears": 4,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 43,
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 57,
-  "popularity": 55,
-  "militaryStatus": "군필"
+  }
 }

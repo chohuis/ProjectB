@@ -1,9 +1,9 @@
 {
   "id": "PLY_09902",
-  "name": "톰슨 브랜던",
-  "nameEn": "Thompson Brandon",
+  "name": "Allen Miguel",
+  "nameEn": "Allen Miguel",
   "role": "player",
-  "age": 35,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 78,
-  "popularity": 19,
+  "notes": "국적:파나마",
+  "diligence": 64,
+  "popularity": 24,
   "militaryStatus": "군필",
   "entryYear": 2026,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 35,
+  "entryAge": 28,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 52,
-      "primaryPosition": "SP",
-      "developmentRate": 50,
-      "potentialHidden": 65,
-      "proServiceYears": 13,
+      "position": "CF",
+      "jerseyNumber": 69,
+      "primaryPosition": "CF",
+      "developmentRate": 70,
+      "potentialHidden": 84,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 84,
-        "stamina": 75,
-        "velocity": 93,
-        "command": 76,
-        "control": 79,
-        "movement": 78,
-        "mentality": 91,
-        "recovery": 76,
-        "clutch": 70,
-        "holdRunners": 69
+        "ovr": 68,
+        "stamina": 59,
+        "velocity": 66,
+        "command": 68,
+        "control": 72,
+        "movement": 65,
+        "mentality": 74,
+        "recovery": 58,
+        "clutch": 59,
+        "holdRunners": 61
       },
       "batting": {
-        "ovr": 71,
-        "contact": 64,
-        "power": 68,
-        "eye": 65,
-        "discipline": 68,
-        "speed": 77,
-        "baseInstinct": 65,
-        "bunting": 52,
+        "ovr": 68,
+        "contact": 69,
+        "power": 65,
+        "eye": 68,
+        "discipline": 65,
+        "speed": 61,
+        "baseInstinct": 68,
+        "bunting": 60,
         "platoon": 50,
-        "fielding": 72,
-        "arm": 72,
-        "battingClutch": 61
+        "fielding": 58,
+        "arm": 59,
+        "battingClutch": 59
       },
       "positionRatings": {
-        "SP": 71
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "CF": 68
+      }
     },
     "coach": null,
     "manager": null,

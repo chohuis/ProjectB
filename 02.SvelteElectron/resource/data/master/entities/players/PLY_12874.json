@@ -1,9 +1,9 @@
 {
   "id": "PLY_12874",
-  "name": "존슨 트레버",
-  "nameEn": "Johnson Trevor",
+  "name": "Smith Alex",
+  "nameEn": "Smith Alex",
   "role": "player",
-  "age": 30,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 77,
-  "popularity": 21,
+  "notes": "국적:일본",
+  "diligence": 75,
+  "popularity": 43,
   "militaryStatus": "군필",
   "entryYear": 2044,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 30,
+  "entryAge": 28,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 92,
-      "primaryPosition": "SP",
-      "developmentRate": 38,
-      "potentialHidden": 70,
-      "proServiceYears": 8,
+      "position": "2B",
+      "jerseyNumber": 38,
+      "primaryPosition": "2B",
+      "developmentRate": 63,
+      "potentialHidden": 65,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 66,
-        "stamina": 67,
-        "velocity": 76,
-        "command": 61,
-        "control": 67,
-        "movement": 68,
-        "mentality": 63,
-        "recovery": 66,
-        "clutch": 61,
-        "holdRunners": 64
+        "ovr": 74,
+        "stamina": 66,
+        "velocity": 73,
+        "command": 66,
+        "control": 70,
+        "movement": 66,
+        "mentality": 70,
+        "recovery": 74,
+        "clutch": 75,
+        "holdRunners": 73
       },
       "batting": {
-        "ovr": 64,
-        "contact": 62,
-        "power": 65,
-        "eye": 63,
-        "discipline": 66,
-        "speed": 67,
-        "baseInstinct": 62,
-        "bunting": 50,
+        "ovr": 74,
+        "contact": 70,
+        "power": 66,
+        "eye": 78,
+        "discipline": 77,
+        "speed": 81,
+        "baseInstinct": 70,
+        "bunting": 58,
         "platoon": 50,
-        "fielding": 61,
-        "arm": 61,
-        "battingClutch": 55
+        "fielding": 73,
+        "arm": 74,
+        "battingClutch": 63
       },
       "positionRatings": {
-        "SP": 64
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "2B": 74
+      }
     },
     "coach": null,
     "manager": null,

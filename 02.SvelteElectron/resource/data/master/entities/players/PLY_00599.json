@@ -1,14 +1,14 @@
 {
   "id": "PLY_00599",
   "name": "심재현",
-  "nameEn": "Sim Jaehyeon",
+  "nameEn": "Han Jin-woo",
   "role": "player",
   "age": 35,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_SOARINGEAGLES",
-  "teamId": "TEAM_KBL_SOARINGEAGLES_1",
+  "clubId": "CLUB_KBL_DOOSAN",
+  "teamId": "TEAM_KBL_DOOSAN_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 4,
       "pitching": {
-        "ovr": 75,
-        "stamina": 73,
-        "velocity": 71,
+        "ovr": 85,
+        "stamina": 86,
+        "velocity": 86,
         "command": 79,
-        "control": 77,
-        "movement": 72,
-        "mentality": 80,
-        "recovery": 74,
-        "clutch": 65,
-        "holdRunners": 66
+        "control": 84,
+        "movement": 81,
+        "mentality": 84,
+        "recovery": 80
       },
       "batting": {
-        "ovr": 57,
-        "contact": 60,
-        "power": 59,
-        "eye": 55,
-        "discipline": 60,
-        "speed": 64,
-        "fielding": 63,
-        "arm": 61,
-        "battingClutch": 54,
-        "baseInstinct": 49,
-        "bunting": 53,
-        "platoon": 46
+        "ovr": 50,
+        "contact": 49,
+        "power": 46,
+        "eye": 46,
+        "discipline": 46,
+        "speed": 49,
+        "fielding": 47,
+        "arm": 44,
+        "battingClutch": 46
       },
       "developmentRate": 51,
-      "potentialHidden": 82,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 75
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_FORKBALL",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 13,
-      "contract": {
-        "salary": 7300,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 82
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

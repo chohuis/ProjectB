@@ -1,76 +1,46 @@
 {
   "id": "PLY_01946",
-  "name": "고원준",
-  "nameEn": "Go Wonjun",
+  "name": "나카무라 마나부",
+  "nameEn": "Nakamura Manabu",
   "role": "player",
-  "age": 25,
+  "age": 22,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_EMBERTIGERS",
-  "teamId": "TEAM_KBL_EMBERTIGERS_1",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
+  "teamId": "TEAM_JBL_PL_MARINESOLDIERS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
-      "position": "CP",
-      "jerseyNumber": 72,
+      "position": "SP",
+      "jerseyNumber": 1,
       "pitching": {
-        "ovr": 74,
-        "stamina": 80,
-        "velocity": 74,
-        "command": 75,
-        "control": 70,
-        "movement": 70,
-        "mentality": 75,
-        "recovery": 75,
-        "clutch": 64,
-        "holdRunners": 65
+        "ovr": 85,
+        "stamina": 82,
+        "velocity": 84,
+        "command": 82,
+        "control": 79,
+        "movement": 79,
+        "mentality": 84,
+        "recovery": 81
       },
       "batting": {
-        "ovr": 56,
-        "contact": 52,
-        "power": 56,
-        "eye": 56,
-        "discipline": 51,
-        "speed": 59,
+        "ovr": 60,
+        "contact": 62,
+        "power": 57,
+        "eye": 62,
+        "discipline": 59,
+        "speed": 63,
         "fielding": 58,
-        "arm": 51,
-        "battingClutch": 50,
-        "baseInstinct": 55,
-        "bunting": 44,
-        "platoon": 53
+        "arm": 56,
+        "battingClutch": 62
       },
-      "developmentRate": 63,
-      "potentialHidden": 87,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 74
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 3,
-      "contract": {
-        "salary": 7100,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 45,
+      "potentialHidden": 72
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 69,
-  "popularity": 46,
-  "militaryStatus": "군필"
+  }
 }

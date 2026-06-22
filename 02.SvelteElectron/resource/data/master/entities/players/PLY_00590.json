@@ -1,14 +1,14 @@
 {
   "id": "PLY_00590",
   "name": "홍시우",
-  "nameEn": "Hong Siu",
+  "nameEn": "Son Woo-jin",
   "role": "player",
   "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_SKYGULLS",
-  "teamId": "TEAM_KBL_SKYGULLS_2",
+  "clubId": "CLUB_KBL_LG",
+  "teamId": "TEAM_KBL_LG_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -20,47 +20,27 @@
       "jerseyNumber": 45,
       "pitching": {
         "ovr": 38,
-        "stamina": 35,
-        "velocity": 39,
-        "command": 42,
-        "control": 40,
-        "movement": 40,
-        "mentality": 42,
-        "recovery": 37,
-        "clutch": 34,
-        "holdRunners": 42
+        "stamina": 31,
+        "velocity": 35,
+        "command": 40,
+        "control": 32,
+        "movement": 38,
+        "mentality": 39,
+        "recovery": 37
       },
       "batting": {
-        "ovr": 58,
-        "contact": 56,
-        "power": 56,
-        "eye": 58,
-        "discipline": 53,
-        "speed": 65,
-        "fielding": 56,
-        "arm": 54,
-        "battingClutch": 52,
-        "baseInstinct": 51,
-        "bunting": 48,
-        "platoon": 49
+        "ovr": 64,
+        "contact": 57,
+        "power": 64,
+        "eye": 62,
+        "discipline": 57,
+        "speed": 57,
+        "fielding": 58,
+        "arm": 62,
+        "battingClutch": 57
       },
       "developmentRate": 57,
-      "potentialHidden": 72,
-      "primaryPosition": "3B",
-      "positionRatings": {
-        "3B": 58
-      },
-      "proServiceYears": 6,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 72
     },
     "coach": {
       "specialty": "-",
@@ -100,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

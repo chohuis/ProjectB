@@ -1,6 +1,6 @@
 {
   "id": "PLY_15446",
-  "name": "스미스 루이스",
+  "name": "Smith Luis",
   "nameEn": "Smith Luis",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 79,
   "popularity": 26,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 42
       },
       "batting": {
-        "ovr": 63,
-        "contact": 54,
-        "power": 59,
-        "eye": 67,
-        "discipline": 61,
-        "speed": 72,
-        "baseInstinct": 57,
-        "bunting": 40,
-        "platoon": 62,
-        "fielding": 53,
-        "arm": 62,
-        "battingClutch": 51
+        "ovr": 51,
+        "contact": 44,
+        "power": 48,
+        "eye": 54,
+        "discipline": 49,
+        "speed": 58,
+        "baseInstinct": 46,
+        "bunting": 32,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 50,
+        "battingClutch": 41
       },
       "positionRatings": {
         "CF": 51

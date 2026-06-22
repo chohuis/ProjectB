@@ -1,14 +1,14 @@
 {
   "id": "PLY_00663",
   "name": "윤상민",
-  "nameEn": "Yoon Sangmin",
+  "nameEn": "Jeon Tae-yang",
   "role": "player",
   "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_EMBERTIGERS",
-  "teamId": "TEAM_KBL_EMBERTIGERS_1",
+  "clubId": "CLUB_KBL_KT",
+  "teamId": "TEAM_KBL_KT_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,48 +19,28 @@
       "position": "DH",
       "jerseyNumber": 23,
       "pitching": {
-        "ovr": 57,
-        "stamina": 62,
-        "velocity": 59,
-        "command": 59,
-        "control": 60,
-        "movement": 61,
-        "mentality": 54,
-        "recovery": 53,
-        "clutch": 48,
-        "holdRunners": 47
+        "ovr": 50,
+        "stamina": 49,
+        "velocity": 54,
+        "command": 50,
+        "control": 47,
+        "movement": 44,
+        "mentality": 46,
+        "recovery": 51
       },
       "batting": {
-        "ovr": 77,
-        "contact": 73,
-        "power": 78,
-        "eye": 79,
-        "discipline": 79,
-        "speed": 73,
-        "fielding": 78,
-        "arm": 75,
-        "battingClutch": 69,
-        "baseInstinct": 74,
-        "bunting": 71,
-        "platoon": 64
+        "ovr": 74,
+        "contact": 80,
+        "power": 85,
+        "eye": 77,
+        "discipline": 77,
+        "speed": 70,
+        "fielding": 72,
+        "arm": 71,
+        "battingClutch": 82
       },
       "developmentRate": 45,
-      "potentialHidden": 60,
-      "primaryPosition": "DH",
-      "positionRatings": {
-        "DH": 77
-      },
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 3300,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",
@@ -100,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

@@ -1,14 +1,14 @@
 {
   "id": "PLY_01270",
   "name": "데이비스 벤자민",
-  "nameEn": "De 이비스 벤자민",
+  "nameEn": "Davis Benjamin",
   "role": "player",
   "age": 30,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_WAVERIDERS",
-  "teamId": "TEAM_ABL_WAVERIDERS_2",
+  "clubId": "CLUB_ABL_NYM",
+  "teamId": "TEAM_ABL_NYM_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:쿠바",
@@ -20,47 +20,27 @@
       "jerseyNumber": 60,
       "pitching": {
         "ovr": 49,
-        "stamina": 53,
-        "velocity": 47,
-        "command": 46,
-        "control": 47,
+        "stamina": 43,
+        "velocity": 51,
+        "command": 47,
+        "control": 48,
         "movement": 45,
         "mentality": 45,
-        "recovery": 54,
-        "clutch": 42,
-        "holdRunners": 44
+        "recovery": 47
       },
       "batting": {
-        "ovr": 69,
-        "contact": 72,
-        "power": 64,
-        "eye": 67,
-        "discipline": 75,
+        "ovr": 71,
+        "contact": 74,
+        "power": 72,
+        "eye": 74,
+        "discipline": 67,
         "speed": 69,
-        "fielding": 72,
-        "arm": 70,
-        "battingClutch": 62,
-        "baseInstinct": 68,
-        "bunting": 54,
-        "platoon": 60
+        "fielding": 59,
+        "arm": 64,
+        "battingClutch": 70
       },
       "developmentRate": 31,
-      "potentialHidden": 67,
-      "primaryPosition": "DH",
-      "positionRatings": {
-        "DH": 69
-      },
-      "proServiceYears": 8,
-      "contract": {
-        "salary": 6300,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 67
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,9 +1,9 @@
 {
   "id": "PLY_11245",
-  "name": "앨런 딜런",
-  "nameEn": "Allen Dylan",
+  "name": "Adams Eric",
+  "nameEn": "Adams Eric",
   "role": "player",
-  "age": 24,
+  "age": 30,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 75,
-  "popularity": 10,
+  "notes": "국적:미국",
+  "diligence": 69,
+  "popularity": 29,
   "militaryStatus": "군필",
   "entryYear": 2034,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 24,
+  "entryAge": 30,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 77,
+      "jerseyNumber": 69,
       "primaryPosition": "SP",
-      "developmentRate": 55,
-      "potentialHidden": 68,
-      "proServiceYears": 2,
+      "developmentRate": 51,
+      "potentialHidden": 60,
+      "proServiceYears": 8,
       "pitching": {
-        "ovr": 69,
-        "stamina": 71,
-        "velocity": 69,
-        "command": 67,
-        "control": 61,
-        "movement": 71,
-        "mentality": 68,
-        "recovery": 65,
-        "clutch": 60,
-        "holdRunners": 65
+        "ovr": 61,
+        "stamina": 62,
+        "velocity": 64,
+        "command": 52,
+        "control": 62,
+        "movement": 65,
+        "mentality": 55,
+        "recovery": 63,
+        "clutch": 51,
+        "holdRunners": 47
       },
       "batting": {
-        "ovr": 76,
-        "contact": 75,
-        "power": 76,
-        "eye": 70,
-        "discipline": 75,
-        "speed": 80,
-        "baseInstinct": 65,
-        "bunting": 66,
+        "ovr": 61,
+        "contact": 55,
+        "power": 59,
+        "eye": 64,
+        "discipline": 55,
+        "speed": 59,
+        "baseInstinct": 63,
+        "bunting": 53,
         "platoon": 50,
-        "fielding": 75,
-        "arm": 70,
-        "battingClutch": 72
+        "fielding": 64,
+        "arm": 53,
+        "battingClutch": 51
       },
       "positionRatings": {
-        "SP": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "SP": 61
+      }
     },
     "coach": null,
     "manager": null,

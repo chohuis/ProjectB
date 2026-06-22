@@ -1,6 +1,6 @@
 {
   "id": "PLY_14373",
-  "name": "마틴 크리스",
+  "name": "Martin Chris",
   "nameEn": "Martin Chris",
   "role": "player",
   "age": 23,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 79,
   "popularity": 14,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 69,
       "proServiceYears": 1,
       "pitching": {
-        "ovr": 70,
-        "stamina": 69,
-        "velocity": 77,
-        "command": 62,
-        "control": 69,
-        "movement": 69,
-        "mentality": 77,
-        "recovery": 65,
-        "clutch": 71,
-        "holdRunners": 67
+        "ovr": 73,
+        "stamina": 72,
+        "velocity": 80,
+        "command": 65,
+        "control": 72,
+        "movement": 72,
+        "mentality": 80,
+        "recovery": 68,
+        "clutch": 74,
+        "holdRunners": 70
       },
       "batting": {
         "ovr": 73,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

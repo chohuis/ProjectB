@@ -1,6 +1,6 @@
 {
   "id": "PLY_14342",
-  "name": "가르시아 그랜트",
+  "name": "Garcia Grant",
   "nameEn": "Garcia Grant",
   "role": "player",
   "age": 31,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 75,
   "popularity": 46,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 62
       },
       "batting": {
-        "ovr": 73,
-        "contact": 77,
-        "power": 65,
-        "eye": 66,
-        "discipline": 69,
-        "speed": 74,
-        "baseInstinct": 62,
-        "bunting": 54,
-        "platoon": 54,
-        "fielding": 70,
-        "arm": 70,
-        "battingClutch": 66
+        "ovr": 67,
+        "contact": 71,
+        "power": 60,
+        "eye": 61,
+        "discipline": 63,
+        "speed": 68,
+        "baseInstinct": 57,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 64,
+        "battingClutch": 61
       },
       "positionRatings": {
         "1B": 67

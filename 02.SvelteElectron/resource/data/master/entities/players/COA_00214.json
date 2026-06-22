@@ -1,17 +1,17 @@
 {
   "id": "COA_00214",
-  "name": "이시다 히로시",
-  "nameEn": "Ishida Hiroshi",
+  "name": "기무라 슌",
+  "nameEn": "Kimura Shun",
   "role": "coach",
-  "age": 57,
+  "age": 58,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
-  "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
-  "teamId": "TEAM_JBL_PL_THUNDERFALCONS_1",
+  "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
+  "teamId": "TEAM_JBL_PL_MARINESOLDIERS_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
@@ -43,14 +43,14 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "투수",
-      "experienceYears": 7,
+      "specialty": "수비",
+      "experienceYears": 4,
       "stats": {
-        "teaching": 55,
-        "analysis": 53,
-        "communication": 58,
-        "discipline": 61,
-        "leadership": 69
+        "teaching": 59,
+        "analysis": 60,
+        "communication": 61,
+        "discipline": 57,
+        "leadership": 77
       },
       "trainingBuffs": ""
     },

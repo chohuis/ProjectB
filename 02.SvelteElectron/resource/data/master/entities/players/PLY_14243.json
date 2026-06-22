@@ -1,6 +1,6 @@
 {
   "id": "PLY_14243",
-  "name": "마틴 오스틴",
+  "name": "Martin Austin",
   "nameEn": "Martin Austin",
   "role": "player",
   "age": 23,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 83,
   "popularity": 30,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 60
       },
       "batting": {
-        "ovr": 67,
-        "contact": 59,
-        "power": 57,
-        "eye": 67,
-        "discipline": 66,
-        "speed": 62,
-        "baseInstinct": 62,
-        "bunting": 61,
-        "platoon": 49,
-        "fielding": 60,
-        "arm": 62,
-        "battingClutch": 62
+        "ovr": 69,
+        "contact": 61,
+        "power": 59,
+        "eye": 69,
+        "discipline": 68,
+        "speed": 64,
+        "baseInstinct": 64,
+        "bunting": 63,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 64,
+        "battingClutch": 64
       },
       "positionRatings": {
         "SS": 69

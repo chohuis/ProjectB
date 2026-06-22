@@ -3,12 +3,12 @@
   "name": "카터 이선",
   "nameEn": "Carter Ethan",
   "role": "manager",
-  "age": 40,
+  "age": 63,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_WINDBEARS",
-  "teamId": "TEAM_ABL_WINDBEARS_1",
+  "clubId": "CLUB_ABL_TOR",
+  "teamId": "TEAM_ABL_TOR",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -26,9 +26,7 @@
         "control": 50,
         "movement": 50,
         "mentality": 50,
-        "recovery": 50,
-        "clutch": 50,
-        "holdRunners": 50
+        "recovery": 50
       },
       "batting": {
         "ovr": 50,
@@ -39,17 +37,10 @@
         "speed": 50,
         "fielding": 50,
         "arm": 50,
-        "battingClutch": 50,
-        "baseInstinct": 50,
-        "bunting": 45,
-        "platoon": 50
+        "battingClutch": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 70,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 50
-      }
+      "potentialHidden": 70
     },
     "coach": {
       "specialty": "-",
@@ -67,12 +58,11 @@
       "style": "수비적",
       "experienceYears": 16,
       "stats": {
-        "motivation": 69,
-        "development": 50,
-        "strategy": 83,
-        "handlePressure": 67,
-        "handlePersonnel": 62,
-        "injuryMgmt": 31
+        "tactics": 83,
+        "decision": 67,
+        "rotationMgmt": 62,
+        "bullpenMgmt": 71,
+        "moraleMgmt": 69
       },
       "gamePlanBias": "",
       "riskTolerance": 69
@@ -90,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

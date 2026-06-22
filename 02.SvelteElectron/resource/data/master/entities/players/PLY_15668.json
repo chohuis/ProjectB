@@ -1,6 +1,6 @@
 {
   "id": "PLY_15668",
-  "name": "화이트 트레버",
+  "name": "White Trevor",
   "nameEn": "White Trevor",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 65,
   "popularity": 25,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 44
       },
       "batting": {
-        "ovr": 54,
-        "contact": 50,
-        "power": 52,
-        "eye": 51,
-        "discipline": 45,
-        "speed": 59,
-        "baseInstinct": 57,
-        "bunting": 42,
-        "platoon": 49,
-        "fielding": 53,
-        "arm": 44,
-        "battingClutch": 54
+        "ovr": 55,
+        "contact": 51,
+        "power": 53,
+        "eye": 52,
+        "discipline": 46,
+        "speed": 60,
+        "baseInstinct": 58,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 45,
+        "battingClutch": 55
       },
       "positionRatings": {
         "RF": 55

@@ -1,7 +1,7 @@
 {
   "id": "PLY_11785",
-  "name": "스콧 콜",
-  "nameEn": "Scott Cole",
+  "name": "Walker Logan",
+  "nameEn": "Walker Logan",
   "role": "player",
   "age": 22,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 78,
-  "popularity": 38,
+  "notes": "국적:파나마",
+  "diligence": 66,
+  "popularity": 25,
   "militaryStatus": "군필",
   "entryYear": 2037,
   "entryLeague": "LEAGUE_ABL",
@@ -21,53 +21,43 @@
   "entryAge": 22,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 56,
-      "primaryPosition": "SP",
-      "developmentRate": 66,
-      "potentialHidden": 70,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "2B",
+      "jerseyNumber": 68,
+      "primaryPosition": "2B",
+      "developmentRate": 60,
+      "potentialHidden": 60,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 53,
-        "stamina": 51,
-        "velocity": 56,
-        "command": 44,
-        "control": 55,
-        "movement": 46,
-        "mentality": 56,
-        "recovery": 50,
-        "clutch": 42,
-        "holdRunners": 51
+        "ovr": 64,
+        "stamina": 65,
+        "velocity": 70,
+        "command": 54,
+        "control": 58,
+        "movement": 58,
+        "mentality": 65,
+        "recovery": 64,
+        "clutch": 59,
+        "holdRunners": 52
       },
       "batting": {
-        "ovr": 56,
-        "contact": 51,
-        "power": 55,
-        "eye": 53,
-        "discipline": 53,
-        "speed": 56,
-        "baseInstinct": 59,
-        "bunting": 44,
+        "ovr": 64,
+        "contact": 60,
+        "power": 56,
+        "eye": 68,
+        "discipline": 66,
+        "speed": 63,
+        "baseInstinct": 64,
+        "bunting": 53,
         "platoon": 50,
-        "fielding": 47,
-        "arm": 54,
-        "battingClutch": 53
+        "fielding": 57,
+        "arm": 57,
+        "battingClutch": 57
       },
       "positionRatings": {
-        "SP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "2B": 64
+      }
     },
     "coach": null,
     "manager": null,

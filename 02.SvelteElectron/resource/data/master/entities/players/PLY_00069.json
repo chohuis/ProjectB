@@ -1,9 +1,9 @@
 {
   "id": "PLY_00069",
   "name": "장준혁",
-  "nameEn": "Jang Junhyeok",
+  "nameEn": "Na Geon-woo",
   "role": "player",
-  "age": 18,
+  "age": 17,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "C",
       "jerseyNumber": 9,
       "pitching": {
-        "ovr": 32,
-        "stamina": 35,
-        "velocity": 35,
-        "command": 33,
-        "control": 35,
-        "movement": 34,
-        "mentality": 28,
-        "recovery": 37,
-        "clutch": 36,
-        "holdRunners": 41
+        "ovr": 49,
+        "stamina": 56,
+        "velocity": 60,
+        "command": 64,
+        "control": 50,
+        "movement": 59,
+        "mentality": 51,
+        "recovery": 57
       },
       "batting": {
-        "ovr": 52,
-        "contact": 55,
-        "power": 54,
+        "ovr": 61,
+        "contact": 63,
+        "power": 44,
         "eye": 53,
-        "discipline": 55,
-        "speed": 59,
-        "fielding": 47,
-        "arm": 53,
-        "battingClutch": 42,
-        "baseInstinct": 52,
-        "bunting": 39,
-        "platoon": 42
+        "discipline": 49,
+        "speed": 66,
+        "fielding": 49,
+        "arm": 66,
+        "battingClutch": 48
       },
       "developmentRate": 49,
-      "potentialHidden": 86,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 52
-      }
+      "potentialHidden": 86
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

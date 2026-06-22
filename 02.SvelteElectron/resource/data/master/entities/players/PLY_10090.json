@@ -1,9 +1,9 @@
 {
   "id": "PLY_10090",
-  "name": "홀 미겔",
-  "nameEn": "Hall Miguel",
+  "name": "Lewis Trevor",
+  "nameEn": "Lewis Trevor",
   "role": "player",
-  "age": 33,
+  "age": 30,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 68,
-  "popularity": 23,
+  "notes": "국적:도미니카",
+  "diligence": 60,
+  "popularity": 35,
   "militaryStatus": "군필",
   "entryYear": 2027,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 33,
+  "entryAge": 30,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 71,
-      "primaryPosition": "SP",
-      "developmentRate": 37,
-      "potentialHidden": 71,
-      "proServiceYears": 11,
+      "position": "3B",
+      "jerseyNumber": 29,
+      "primaryPosition": "3B",
+      "developmentRate": 54,
+      "potentialHidden": 77,
+      "proServiceYears": 8,
       "pitching": {
-        "ovr": 91,
-        "stamina": 95,
-        "velocity": 99,
-        "command": 89,
-        "control": 87,
-        "movement": 91,
-        "mentality": 84,
-        "recovery": 84,
-        "clutch": 89,
-        "holdRunners": 78
+        "ovr": 70,
+        "stamina": 63,
+        "velocity": 75,
+        "command": 62,
+        "control": 65,
+        "movement": 68,
+        "mentality": 65,
+        "recovery": 70,
+        "clutch": 70,
+        "holdRunners": 55
       },
       "batting": {
-        "ovr": 76,
-        "contact": 72,
-        "power": 66,
-        "eye": 79,
-        "discipline": 72,
-        "speed": 77,
-        "baseInstinct": 72,
-        "bunting": 57,
+        "ovr": 70,
+        "contact": 75,
+        "power": 62,
+        "eye": 67,
+        "discipline": 60,
+        "speed": 66,
+        "baseInstinct": 62,
+        "bunting": 64,
         "platoon": 50,
-        "fielding": 71,
-        "arm": 67,
-        "battingClutch": 70
+        "fielding": 72,
+        "arm": 62,
+        "battingClutch": 59
       },
       "positionRatings": {
-        "SP": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "3B": 70
+      }
     },
     "coach": null,
     "manager": null,

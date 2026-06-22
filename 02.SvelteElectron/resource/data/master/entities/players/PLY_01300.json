@@ -1,14 +1,14 @@
 {
   "id": "PLY_01300",
   "name": "윌리엄스 에이든",
-  "nameEn": "Wil 리엄스 에이든",
+  "nameEn": "Williams Aiden",
   "role": "player",
   "age": 33,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_MOTORWOLVES",
-  "teamId": "TEAM_ABL_MOTORWOLVES_2",
+  "clubId": "CLUB_ABL_CHC",
+  "teamId": "TEAM_ABL_CHC_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 45,
       "pitching": {
-        "ovr": 75,
+        "ovr": 83,
         "stamina": 81,
-        "velocity": 77,
-        "command": 76,
-        "control": 72,
-        "movement": 77,
-        "mentality": 74,
-        "recovery": 75,
-        "clutch": 74,
-        "holdRunners": 65
+        "velocity": 85,
+        "command": 83,
+        "control": 81,
+        "movement": 81,
+        "mentality": 86,
+        "recovery": 79
       },
       "batting": {
-        "ovr": 57,
-        "contact": 58,
-        "power": 63,
-        "eye": 61,
+        "ovr": 62,
+        "contact": 63,
+        "power": 59,
+        "eye": 59,
         "discipline": 60,
-        "speed": 54,
-        "fielding": 61,
-        "arm": 53,
-        "battingClutch": 51,
-        "baseInstinct": 54,
-        "bunting": 53,
-        "platoon": 52
+        "speed": 60,
+        "fielding": 58,
+        "arm": 62,
+        "battingClutch": 65
       },
       "developmentRate": 46,
-      "potentialHidden": 90,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 75
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 11,
-      "contract": {
-        "salary": 25600,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 90
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

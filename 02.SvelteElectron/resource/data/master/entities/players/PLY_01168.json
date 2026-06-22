@@ -1,14 +1,14 @@
 {
   "id": "PLY_01168",
   "name": "넬슨 앤드류",
-  "nameEn": "Nel 슨 앤드류",
+  "nameEn": "Nelson Andrew",
   "role": "player",
   "age": 35,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_RAINARROWS",
-  "teamId": "TEAM_ABL_RAINARROWS_2",
+  "clubId": "CLUB_ABL_ATL",
+  "teamId": "TEAM_ABL_ATL_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 48,
       "pitching": {
-        "ovr": 69,
+        "ovr": 74,
         "stamina": 68,
-        "velocity": 71,
-        "command": 74,
-        "control": 69,
-        "movement": 65,
+        "velocity": 81,
+        "command": 72,
+        "control": 74,
+        "movement": 71,
         "mentality": 75,
-        "recovery": 71,
-        "clutch": 69,
-        "holdRunners": 56
+        "recovery": 77
       },
       "batting": {
-        "ovr": 51,
-        "contact": 56,
-        "power": 53,
-        "eye": 54,
-        "discipline": 54,
-        "speed": 51,
-        "fielding": 57,
-        "arm": 56,
-        "battingClutch": 41,
-        "baseInstinct": 43,
-        "bunting": 47,
-        "platoon": 49
+        "ovr": 44,
+        "contact": 43,
+        "power": 49,
+        "eye": 42,
+        "discipline": 45,
+        "speed": 45,
+        "fielding": 46,
+        "arm": 45,
+        "battingClutch": 49
       },
       "developmentRate": 30,
-      "potentialHidden": 68,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 69
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SCREWBALL",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 13,
-      "contract": {
-        "salary": 20900,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 68
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

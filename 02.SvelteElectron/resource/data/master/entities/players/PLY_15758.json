@@ -1,6 +1,6 @@
 {
   "id": "PLY_15758",
-  "name": "존스 로건",
+  "name": "Jones Logan",
   "nameEn": "Jones Logan",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 59,
   "popularity": 10,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 67
       },
       "batting": {
-        "ovr": 72,
-        "contact": 71,
-        "power": 71,
-        "eye": 68,
-        "discipline": 63,
-        "speed": 68,
-        "baseInstinct": 68,
-        "bunting": 56,
-        "platoon": 49,
-        "fielding": 71,
-        "arm": 75,
-        "battingClutch": 62
+        "ovr": 73,
+        "contact": 72,
+        "power": 72,
+        "eye": 69,
+        "discipline": 64,
+        "speed": 69,
+        "baseInstinct": 69,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 72,
+        "arm": 76,
+        "battingClutch": 63
       },
       "positionRatings": {
         "3B": 73

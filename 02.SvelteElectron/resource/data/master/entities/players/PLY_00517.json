@@ -1,14 +1,14 @@
 {
   "id": "PLY_00517",
   "name": "조원준",
-  "nameEn": "Jo Wonjun",
+  "nameEn": "Cho Tae-woo",
   "role": "player",
   "age": 33,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_BEARGUARDIANS",
-  "teamId": "TEAM_KBL_BEARGUARDIANS_1",
+  "clubId": "CLUB_KBL_SAMSUNG",
+  "teamId": "TEAM_KBL_SAMSUNG_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,58 +19,28 @@
       "position": "CP",
       "jerseyNumber": 12,
       "pitching": {
-        "ovr": 78,
-        "stamina": 80,
-        "velocity": 73,
-        "command": 78,
-        "control": 79,
-        "movement": 80,
-        "mentality": 80,
-        "recovery": 79,
-        "clutch": 75,
-        "holdRunners": 68
+        "ovr": 91,
+        "stamina": 81,
+        "velocity": 96,
+        "command": 85,
+        "control": 86,
+        "movement": 84,
+        "mentality": 92,
+        "recovery": 86
       },
       "batting": {
-        "ovr": 60,
-        "contact": 66,
-        "power": 61,
-        "eye": 60,
-        "discipline": 63,
-        "speed": 54,
-        "fielding": 61,
-        "arm": 60,
-        "battingClutch": 55,
-        "baseInstinct": 56,
-        "bunting": 55,
-        "platoon": 46
+        "ovr": 63,
+        "contact": 63,
+        "power": 58,
+        "eye": 59,
+        "discipline": 62,
+        "speed": 59,
+        "fielding": 59,
+        "arm": 63,
+        "battingClutch": 64
       },
       "developmentRate": 50,
-      "potentialHidden": 56,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 78
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 11,
-      "contract": {
-        "salary": 8000,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 56
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,14 +1,14 @@
 {
   "id": "PLY_01188",
   "name": "앤더슨 마이클",
-  "nameEn": "Aen 더슨 마이클",
+  "nameEn": "Anderson Michael",
   "role": "player",
   "age": 30,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_BAYSEALS",
-  "teamId": "TEAM_ABL_BAYSEALS_1",
+  "clubId": "CLUB_ABL_PHI",
+  "teamId": "TEAM_ABL_PHI",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,62 +19,28 @@
       "position": "RP",
       "jerseyNumber": 8,
       "pitching": {
-        "ovr": 65,
-        "stamina": 62,
-        "velocity": 63,
-        "command": 61,
-        "control": 62,
-        "movement": 70,
-        "mentality": 70,
-        "recovery": 61,
-        "clutch": 56,
-        "holdRunners": 52
+        "ovr": 77,
+        "stamina": 67,
+        "velocity": 77,
+        "command": 79,
+        "control": 74,
+        "movement": 75,
+        "mentality": 73,
+        "recovery": 71
       },
       "batting": {
-        "ovr": 47,
-        "contact": 50,
-        "power": 43,
+        "ovr": 52,
+        "contact": 51,
+        "power": 54,
         "eye": 53,
-        "discipline": 43,
-        "speed": 44,
-        "fielding": 51,
-        "arm": 45,
-        "battingClutch": 42,
-        "baseInstinct": 46,
-        "bunting": 33,
-        "platoon": 42
+        "discipline": 54,
+        "speed": 47,
+        "fielding": 50,
+        "arm": 48,
+        "battingClutch": 54
       },
       "developmentRate": 47,
-      "potentialHidden": 59,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SCREWBALL",
-          "grade": 5
-        }
-      ],
-      "proServiceYears": 8,
-      "contract": {
-        "salary": 17800,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 59
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,14 +1,14 @@
 {
   "id": "PLY_00658",
   "name": "서하준",
-  "nameEn": "Seo Hajun",
+  "nameEn": "Cho Sang-hyun",
   "role": "player",
   "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_EMBERTIGERS",
-  "teamId": "TEAM_KBL_EMBERTIGERS_1",
+  "clubId": "CLUB_KBL_KT",
+  "teamId": "TEAM_KBL_KT_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,48 +19,28 @@
       "position": "3B",
       "jerseyNumber": 18,
       "pitching": {
-        "ovr": 58,
-        "stamina": 59,
-        "velocity": 56,
-        "command": 56,
-        "control": 58,
-        "movement": 56,
-        "mentality": 56,
-        "recovery": 57,
-        "clutch": 50,
-        "holdRunners": 54
+        "ovr": 61,
+        "stamina": 58,
+        "velocity": 57,
+        "command": 60,
+        "control": 54,
+        "movement": 58,
+        "mentality": 54,
+        "recovery": 60
       },
       "batting": {
-        "ovr": 78,
-        "contact": 77,
-        "power": 73,
-        "eye": 80,
-        "discipline": 74,
-        "speed": 85,
+        "ovr": 79,
+        "contact": 78,
+        "power": 84,
+        "eye": 74,
+        "discipline": 82,
+        "speed": 79,
         "fielding": 75,
-        "arm": 83,
-        "battingClutch": 69,
-        "baseInstinct": 72,
-        "bunting": 67,
-        "platoon": 64
+        "arm": 77,
+        "battingClutch": 75
       },
       "developmentRate": 36,
-      "potentialHidden": 72,
-      "primaryPosition": "3B",
-      "positionRatings": {
-        "3B": 78
-      },
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 3600,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 72
     },
     "coach": {
       "specialty": "-",
@@ -100,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

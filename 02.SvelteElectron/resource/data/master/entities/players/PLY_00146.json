@@ -1,7 +1,7 @@
 {
   "id": "PLY_00146",
   "name": "문준우",
-  "nameEn": "Moon Junu",
+  "nameEn": "Choi Jin-woo",
   "role": "player",
   "age": 17,
   "status": "active",
@@ -19,43 +19,28 @@
       "position": "RP",
       "jerseyNumber": 6,
       "pitching": {
-        "ovr": 31,
-        "stamina": 29,
-        "velocity": 35,
-        "command": 29,
-        "control": 29,
-        "movement": 31,
-        "mentality": 27,
-        "recovery": 31,
-        "clutch": 44,
-        "holdRunners": 35
+        "ovr": 48,
+        "stamina": 53,
+        "velocity": 54,
+        "command": 43,
+        "control": 37,
+        "movement": 42,
+        "mentality": 48,
+        "recovery": 36
       },
       "batting": {
-        "ovr": 22,
-        "contact": 20,
-        "power": 20,
-        "eye": 20,
-        "discipline": 20,
-        "speed": 25,
-        "fielding": 20,
-        "arm": 20,
-        "battingClutch": 43,
-        "baseInstinct": 44,
-        "bunting": 34,
-        "platoon": 41
+        "ovr": 32,
+        "contact": 40,
+        "power": 44,
+        "eye": 45,
+        "discipline": 32,
+        "speed": 53,
+        "fielding": 40,
+        "arm": 46,
+        "battingClutch": 45
       },
       "developmentRate": 52,
-      "potentialHidden": 81,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 31
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        }
-      ]
+      "potentialHidden": 81
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

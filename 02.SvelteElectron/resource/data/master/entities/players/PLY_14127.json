@@ -1,6 +1,6 @@
 {
   "id": "PLY_14127",
-  "name": "가르시아 에릭",
+  "name": "Garcia Eric",
   "nameEn": "Garcia Eric",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 50,
   "popularity": 14,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 74,
       "proServiceYears": 5,
       "pitching": {
-        "ovr": 67,
-        "stamina": 64,
-        "velocity": 77,
-        "command": 61,
-        "control": 65,
-        "movement": 70,
-        "mentality": 61,
-        "recovery": 67,
-        "clutch": 66,
-        "holdRunners": 65
+        "ovr": 69,
+        "stamina": 66,
+        "velocity": 79,
+        "command": 63,
+        "control": 67,
+        "movement": 72,
+        "mentality": 63,
+        "recovery": 69,
+        "clutch": 68,
+        "holdRunners": 67
       },
       "batting": {
         "ovr": 69,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 69
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

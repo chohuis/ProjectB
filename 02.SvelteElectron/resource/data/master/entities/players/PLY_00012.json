@@ -1,9 +1,9 @@
 {
   "id": "PLY_00012",
   "name": "윤성민",
-  "nameEn": "Yoon Seongmin",
+  "nameEn": "Heo Seong-jun",
   "role": "player",
-  "age": 19,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "SS",
       "jerseyNumber": 12,
       "pitching": {
-        "ovr": 41,
-        "stamina": 39,
-        "velocity": 40,
-        "command": 38,
-        "control": 40,
-        "movement": 42,
-        "mentality": 37,
-        "recovery": 46,
-        "clutch": 39,
-        "holdRunners": 41
+        "ovr": 59,
+        "stamina": 78,
+        "velocity": 68,
+        "command": 58,
+        "control": 74,
+        "movement": 68,
+        "mentality": 65,
+        "recovery": 72
       },
       "batting": {
-        "ovr": 61,
-        "contact": 66,
-        "power": 63,
-        "eye": 62,
-        "discipline": 58,
-        "speed": 68,
-        "fielding": 61,
-        "arm": 67,
-        "battingClutch": 51,
-        "baseInstinct": 61,
-        "bunting": 55,
-        "platoon": 51
+        "ovr": 63,
+        "contact": 59,
+        "power": 60,
+        "eye": 54,
+        "discipline": 60,
+        "speed": 64,
+        "fielding": 62,
+        "arm": 74,
+        "battingClutch": 64
       },
       "developmentRate": 71,
-      "potentialHidden": 69,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 61
-      }
+      "potentialHidden": 69
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

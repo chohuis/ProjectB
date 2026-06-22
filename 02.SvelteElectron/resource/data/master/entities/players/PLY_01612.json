@@ -1,61 +1,46 @@
 {
   "id": "PLY_01612",
-  "name": "구도윤",
-  "nameEn": "Gu Doyun",
+  "name": "오카다 히로시",
+  "nameEn": "Okada Hiroshi",
   "role": "player",
-  "age": 16,
+  "age": 27,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_SUWON_EDGE",
-  "teamId": "TEAM_HS_SUWON_EDGE",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_SUWON_EDGE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TEMPOSTINGS",
+  "teamId": "TEAM_JBL_CL_TEMPOSTINGS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 21,
+      "jerseyNumber": 32,
       "pitching": {
-        "ovr": 38,
-        "stamina": 37,
-        "velocity": 38,
-        "command": 36,
-        "control": 34,
-        "movement": 36,
-        "mentality": 38,
-        "recovery": 41,
-        "clutch": 45,
-        "holdRunners": 44
+        "ovr": 64,
+        "stamina": 67,
+        "velocity": 61,
+        "command": 64,
+        "control": 60,
+        "movement": 59,
+        "mentality": 62,
+        "recovery": 63
       },
       "batting": {
-        "ovr": 22,
-        "contact": 23,
-        "power": 24,
-        "eye": 27,
-        "discipline": 20,
-        "speed": 25,
-        "fielding": 20,
-        "arm": 23,
-        "battingClutch": 44,
-        "baseInstinct": 43,
-        "bunting": 39,
-        "platoon": 40
+        "ovr": 31,
+        "contact": 29,
+        "power": 27,
+        "eye": 32,
+        "discipline": 29,
+        "speed": 30,
+        "fielding": 30,
+        "arm": 32,
+        "battingClutch": 34
       },
-      "developmentRate": 68,
-      "potentialHidden": 67,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 38
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 41,
+      "potentialHidden": 90
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 56,
-  "popularity": 42
+  }
 }

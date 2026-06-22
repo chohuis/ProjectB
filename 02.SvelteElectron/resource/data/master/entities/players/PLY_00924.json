@@ -1,14 +1,14 @@
 {
   "id": "PLY_00924",
   "name": "스콧 매튜",
-  "nameEn": "Seu 콧 매튜",
+  "nameEn": "Scott Matthew",
   "role": "player",
   "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_SUNDRAGONS",
-  "teamId": "TEAM_ABL_SUNDRAGONS_1",
+  "clubId": "CLUB_ABL_BOS",
+  "teamId": "TEAM_ABL_BOS",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,48 +19,28 @@
       "position": "C",
       "jerseyNumber": 14,
       "pitching": {
-        "ovr": 61,
-        "stamina": 58,
-        "velocity": 57,
-        "command": 67,
-        "control": 63,
-        "movement": 59,
-        "mentality": 64,
-        "recovery": 64,
-        "clutch": 57,
-        "holdRunners": 48
+        "ovr": 54,
+        "stamina": 56,
+        "velocity": 58,
+        "command": 52,
+        "control": 55,
+        "movement": 51,
+        "mentality": 55,
+        "recovery": 55
       },
       "batting": {
-        "ovr": 81,
-        "contact": 84,
-        "power": 76,
-        "eye": 83,
-        "discipline": 86,
-        "speed": 81,
-        "fielding": 77,
-        "arm": 80,
-        "battingClutch": 71,
-        "baseInstinct": 71,
-        "bunting": 69,
-        "platoon": 70
+        "ovr": 78,
+        "contact": 81,
+        "power": 86,
+        "eye": 81,
+        "discipline": 84,
+        "speed": 74,
+        "fielding": 87,
+        "arm": 88,
+        "battingClutch": 86
       },
       "developmentRate": 39,
-      "potentialHidden": 77,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 81
-      },
-      "proServiceYears": 10,
-      "contract": {
-        "salary": 14800,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 77
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

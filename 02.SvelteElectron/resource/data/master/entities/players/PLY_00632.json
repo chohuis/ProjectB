@@ -1,14 +1,14 @@
 {
   "id": "PLY_00632",
   "name": "장태민",
-  "nameEn": "Jang Taemin",
+  "nameEn": "Moon Woo-jin",
   "role": "player",
   "age": 29,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_SOARINGEAGLES",
-  "teamId": "TEAM_KBL_SOARINGEAGLES_2",
+  "clubId": "CLUB_KBL_DOOSAN",
+  "teamId": "TEAM_KBL_DOOSAN_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,48 +19,28 @@
       "position": "C",
       "jerseyNumber": 42,
       "pitching": {
-        "ovr": 47,
-        "stamina": 47,
-        "velocity": 49,
-        "command": 44,
-        "control": 43,
-        "movement": 47,
+        "ovr": 45,
+        "stamina": 45,
+        "velocity": 46,
+        "command": 42,
+        "control": 41,
+        "movement": 43,
         "mentality": 43,
-        "recovery": 48,
-        "clutch": 47,
-        "holdRunners": 40
+        "recovery": 40
       },
       "batting": {
-        "ovr": 67,
-        "contact": 63,
-        "power": 61,
-        "eye": 62,
-        "discipline": 69,
-        "speed": 73,
-        "fielding": 69,
-        "arm": 61,
-        "battingClutch": 57,
-        "baseInstinct": 56,
-        "bunting": 55,
-        "platoon": 60
+        "ovr": 70,
+        "contact": 69,
+        "power": 66,
+        "eye": 70,
+        "discipline": 66,
+        "speed": 62,
+        "fielding": 72,
+        "arm": 72,
+        "battingClutch": 71
       },
       "developmentRate": 53,
-      "potentialHidden": 74,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 67
-      },
-      "proServiceYears": 7,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 74
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

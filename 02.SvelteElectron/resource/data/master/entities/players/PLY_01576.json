@@ -1,61 +1,46 @@
 {
   "id": "PLY_01576",
-  "name": "민도윤",
-  "nameEn": "Min Doyun",
+  "name": "기무라 하야토",
+  "nameEn": "Kimura Hayato",
   "role": "player",
-  "age": 17,
+  "age": 19,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_GWANGJU_VISION",
-  "teamId": "TEAM_HS_GWANGJU_VISION",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_GWANGJU_VISION",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_NEONCRANES",
+  "teamId": "TEAM_JBL_CL_NEONCRANES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "L",
-      "position": "1B",
-      "jerseyNumber": 25,
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 41,
       "pitching": {
-        "ovr": 41,
-        "stamina": 44,
-        "velocity": 46,
-        "command": 41,
-        "control": 45,
-        "movement": 39,
-        "mentality": 45,
-        "recovery": 40,
-        "clutch": 44,
-        "holdRunners": 42
+        "ovr": 31,
+        "stamina": 33,
+        "velocity": 35,
+        "command": 31,
+        "control": 35,
+        "movement": 36,
+        "mentality": 31,
+        "recovery": 31
       },
       "batting": {
-        "ovr": 61,
-        "contact": 66,
-        "power": 62,
-        "eye": 61,
-        "discipline": 64,
-        "speed": 59,
-        "fielding": 56,
-        "arm": 62,
-        "battingClutch": 60,
-        "baseInstinct": 60,
-        "bunting": 48,
-        "platoon": 53
+        "ovr": 65,
+        "contact": 67,
+        "power": 67,
+        "eye": 64,
+        "discipline": 70,
+        "speed": 61,
+        "fielding": 74,
+        "arm": 74,
+        "battingClutch": 67
       },
-      "developmentRate": 72,
-      "potentialHidden": 91,
-      "primaryPosition": "1B",
-      "positionRatings": {
-        "1B": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 55,
+      "potentialHidden": 68
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 50,
-  "popularity": 19
+  }
 }

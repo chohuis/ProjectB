@@ -1,6 +1,6 @@
 {
   "id": "PLY_14495",
-  "name": "브라운 에반",
+  "name": "Brown Evan",
   "nameEn": "Brown Evan",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 60,
   "popularity": 11,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 71
       },
       "batting": {
-        "ovr": 77,
-        "contact": 72,
-        "power": 72,
-        "eye": 81,
-        "discipline": 80,
-        "speed": 80,
-        "baseInstinct": 76,
-        "bunting": 71,
-        "platoon": 51,
-        "fielding": 76,
-        "arm": 79,
-        "battingClutch": 70
+        "ovr": 76,
+        "contact": 71,
+        "power": 71,
+        "eye": 80,
+        "discipline": 79,
+        "speed": 79,
+        "baseInstinct": 75,
+        "bunting": 70,
+        "platoon": 50,
+        "fielding": 75,
+        "arm": 78,
+        "battingClutch": 69
       },
       "positionRatings": {
         "2B": 76

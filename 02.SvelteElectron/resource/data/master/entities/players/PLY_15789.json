@@ -1,6 +1,6 @@
 {
   "id": "PLY_15789",
-  "name": "넬슨 미겔",
+  "name": "Nelson Miguel",
   "nameEn": "Nelson Miguel",
   "role": "player",
   "age": 23,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 66,
   "popularity": 40,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 75,
       "proServiceYears": 1,
       "pitching": {
-        "ovr": 70,
-        "stamina": 71,
-        "velocity": 70,
-        "command": 67,
-        "control": 65,
-        "movement": 60,
-        "mentality": 63,
-        "recovery": 68,
-        "clutch": 68,
-        "holdRunners": 57
+        "ovr": 73,
+        "stamina": 74,
+        "velocity": 73,
+        "command": 70,
+        "control": 68,
+        "movement": 63,
+        "mentality": 66,
+        "recovery": 71,
+        "clutch": 71,
+        "holdRunners": 59
       },
       "batting": {
         "ovr": 73,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

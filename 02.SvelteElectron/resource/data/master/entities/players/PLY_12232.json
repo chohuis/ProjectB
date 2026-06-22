@@ -1,9 +1,9 @@
 {
   "id": "PLY_12232",
-  "name": "워커 마커스",
-  "nameEn": "Walker Marcus",
+  "name": "Hernandez Tyler",
+  "nameEn": "Hernandez Tyler",
   "role": "player",
-  "age": 22,
+  "age": 35,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 78,
-  "popularity": 12,
+  "notes": "국적:멕시코",
+  "diligence": 59,
+  "popularity": 49,
   "militaryStatus": "군필",
   "entryYear": 2040,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 22,
+  "entryAge": 35,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 76,
+      "jerseyNumber": 3,
       "primaryPosition": "SP",
-      "developmentRate": 69,
-      "potentialHidden": 64,
-      "proServiceYears": 0,
+      "developmentRate": 35,
+      "potentialHidden": 77,
+      "proServiceYears": 13,
       "pitching": {
-        "ovr": 60,
-        "stamina": 55,
-        "velocity": 66,
-        "command": 62,
-        "control": 65,
-        "movement": 59,
-        "mentality": 55,
-        "recovery": 61,
+        "ovr": 56,
+        "stamina": 49,
+        "velocity": 65,
+        "command": 50,
+        "control": 51,
+        "movement": 56,
+        "mentality": 63,
+        "recovery": 56,
         "clutch": 56,
-        "holdRunners": 55
+        "holdRunners": 47
       },
       "batting": {
-        "ovr": 65,
-        "contact": 59,
-        "power": 65,
-        "eye": 62,
-        "discipline": 64,
-        "speed": 59,
-        "baseInstinct": 62,
-        "bunting": 49,
+        "ovr": 56,
+        "contact": 53,
+        "power": 53,
+        "eye": 56,
+        "discipline": 53,
+        "speed": 50,
+        "baseInstinct": 50,
+        "bunting": 40,
         "platoon": 50,
-        "fielding": 67,
-        "arm": 67,
-        "battingClutch": 55
+        "fielding": 57,
+        "arm": 52,
+        "battingClutch": 44
       },
       "positionRatings": {
-        "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+        "SP": 56
+      }
     },
     "coach": null,
     "manager": null,

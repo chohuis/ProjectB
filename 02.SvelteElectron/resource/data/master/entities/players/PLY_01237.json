@@ -1,14 +1,14 @@
 {
   "id": "PLY_01237",
   "name": "로빈슨 제임스",
-  "nameEn": "Ro 빈슨 제임스",
+  "nameEn": "Robinson James",
   "role": "player",
   "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_WAVERIDERS",
-  "teamId": "TEAM_ABL_WAVERIDERS_1",
+  "clubId": "CLUB_ABL_NYM",
+  "teamId": "TEAM_ABL_NYM",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -19,58 +19,28 @@
       "position": "CP",
       "jerseyNumber": 12,
       "pitching": {
-        "ovr": 79,
-        "stamina": 82,
-        "velocity": 77,
-        "command": 82,
-        "control": 75,
-        "movement": 84,
-        "mentality": 85,
-        "recovery": 80,
-        "clutch": 71,
-        "holdRunners": 72
+        "ovr": 93,
+        "stamina": 74,
+        "velocity": 98,
+        "command": 90,
+        "control": 94,
+        "movement": 83,
+        "mentality": 86,
+        "recovery": 89
       },
       "batting": {
-        "ovr": 61,
+        "ovr": 58,
         "contact": 62,
-        "power": 64,
-        "eye": 58,
-        "discipline": 67,
-        "speed": 62,
-        "fielding": 67,
-        "arm": 62,
-        "battingClutch": 55,
-        "baseInstinct": 49,
-        "bunting": 48,
-        "platoon": 57
+        "power": 57,
+        "eye": 60,
+        "discipline": 62,
+        "speed": 58,
+        "fielding": 57,
+        "arm": 64,
+        "battingClutch": 61
       },
       "developmentRate": 51,
-      "potentialHidden": 81,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 79
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 6,
-      "contract": {
-        "salary": 28600,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 81
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,9 +1,9 @@
 {
   "id": "PLY_11257",
-  "name": "미첼 마커스",
-  "nameEn": "Mitchell Marcus",
+  "name": "Young Evan",
+  "nameEn": "Young Evan",
   "role": "player",
-  "age": 27,
+  "age": 35,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 70,
-  "popularity": 18,
+  "notes": "국적:멕시코",
+  "diligence": 53,
+  "popularity": 20,
   "militaryStatus": "군필",
   "entryYear": 2034,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 27,
+  "entryAge": 35,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 47,
-      "primaryPosition": "SP",
-      "developmentRate": 45,
-      "potentialHidden": 56,
-      "proServiceYears": 5,
+      "position": "LF",
+      "jerseyNumber": 77,
+      "primaryPosition": "LF",
+      "developmentRate": 37,
+      "potentialHidden": 69,
+      "proServiceYears": 13,
       "pitching": {
-        "ovr": 69,
-        "stamina": 71,
-        "velocity": 74,
-        "command": 68,
-        "control": 64,
-        "movement": 62,
-        "mentality": 67,
-        "recovery": 65,
-        "clutch": 60,
-        "holdRunners": 60
+        "ovr": 56,
+        "stamina": 60,
+        "velocity": 57,
+        "command": 45,
+        "control": 56,
+        "movement": 52,
+        "mentality": 60,
+        "recovery": 52,
+        "clutch": 55,
+        "holdRunners": 43
       },
       "batting": {
-        "ovr": 75,
-        "contact": 72,
-        "power": 70,
-        "eye": 76,
-        "discipline": 79,
-        "speed": 70,
-        "baseInstinct": 71,
-        "bunting": 59,
+        "ovr": 56,
+        "contact": 54,
+        "power": 54,
+        "eye": 58,
+        "discipline": 57,
+        "speed": 61,
+        "baseInstinct": 54,
+        "bunting": 43,
         "platoon": 50,
-        "fielding": 74,
-        "arm": 76,
-        "battingClutch": 68
+        "fielding": 47,
+        "arm": 48,
+        "battingClutch": 50
       },
       "positionRatings": {
-        "SP": 75
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "LF": 56
+      }
     },
     "coach": null,
     "manager": null,

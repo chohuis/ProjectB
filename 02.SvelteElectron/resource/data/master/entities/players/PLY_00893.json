@@ -1,14 +1,14 @@
 {
   "id": "PLY_00893",
   "name": "스콧 앤서니",
-  "nameEn": "Seu 콧 앤서니",
+  "nameEn": "Scott Anthony",
   "role": "player",
   "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_HARBORHAWKS",
-  "teamId": "TEAM_ABL_HARBORHAWKS_2",
+  "clubId": "CLUB_ABL_NYY",
+  "teamId": "TEAM_ABL_NYY_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 43,
       "pitching": {
-        "ovr": 70,
-        "stamina": 69,
-        "velocity": 71,
-        "command": 68,
-        "control": 72,
-        "movement": 73,
-        "mentality": 69,
-        "recovery": 71,
-        "clutch": 68,
-        "holdRunners": 63
+        "ovr": 82,
+        "stamina": 76,
+        "velocity": 80,
+        "command": 76,
+        "control": 77,
+        "movement": 78,
+        "mentality": 74,
+        "recovery": 74
       },
       "batting": {
-        "ovr": 52,
-        "contact": 48,
-        "power": 51,
-        "eye": 49,
-        "discipline": 49,
-        "speed": 58,
-        "fielding": 51,
-        "arm": 49,
-        "battingClutch": 46,
-        "baseInstinct": 40,
-        "bunting": 45,
-        "platoon": 44
+        "ovr": 58,
+        "contact": 59,
+        "power": 57,
+        "eye": 58,
+        "discipline": 55,
+        "speed": 59,
+        "fielding": 52,
+        "arm": 55,
+        "battingClutch": 58
       },
       "developmentRate": 42,
-      "potentialHidden": 62,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_KNUCKLEBALL",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 10,
-      "contract": {
-        "salary": 21700,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 62
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

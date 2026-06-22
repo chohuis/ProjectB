@@ -1,14 +1,14 @@
 {
   "id": "PLY_00740",
   "name": "손동혁",
-  "nameEn": "Son Donghyeok",
+  "nameEn": "Kang Min-seok",
   "role": "player",
   "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_STEELDINOS",
-  "teamId": "TEAM_KBL_STEELDINOS_1",
+  "clubId": "CLUB_KBL_LOTTE",
+  "teamId": "TEAM_KBL_LOTTE_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,62 +19,28 @@
       "position": "RP",
       "jerseyNumber": 10,
       "pitching": {
-        "ovr": 74,
-        "stamina": 71,
-        "velocity": 70,
-        "command": 77,
-        "control": 70,
-        "movement": 78,
-        "mentality": 76,
-        "recovery": 77,
-        "clutch": 70,
-        "holdRunners": 64
+        "ovr": 85,
+        "stamina": 76,
+        "velocity": 85,
+        "command": 80,
+        "control": 80,
+        "movement": 83,
+        "mentality": 80,
+        "recovery": 77
       },
       "batting": {
-        "ovr": 56,
-        "contact": 56,
-        "power": 57,
-        "eye": 56,
-        "discipline": 52,
-        "speed": 55,
-        "fielding": 56,
-        "arm": 61,
-        "battingClutch": 50,
-        "baseInstinct": 45,
-        "bunting": 47,
-        "platoon": 44
+        "ovr": 59,
+        "contact": 53,
+        "power": 54,
+        "eye": 51,
+        "discipline": 51,
+        "speed": 54,
+        "fielding": 57,
+        "arm": 52,
+        "battingClutch": 59
       },
       "developmentRate": 40,
-      "potentialHidden": 72,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 74
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SCREWBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 7100,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 72
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

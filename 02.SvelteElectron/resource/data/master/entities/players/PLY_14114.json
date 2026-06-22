@@ -1,6 +1,6 @@
 {
   "id": "PLY_14114",
-  "name": "존스 제이크",
+  "name": "Jones Jake",
   "nameEn": "Jones Jake",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 78,
   "popularity": 34,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 50
       },
       "batting": {
-        "ovr": 54,
-        "contact": 48,
-        "power": 49,
-        "eye": 48,
-        "discipline": 48,
-        "speed": 59,
-        "baseInstinct": 54,
-        "bunting": 37,
-        "platoon": 45,
-        "fielding": 53,
-        "arm": 50,
-        "battingClutch": 55
+        "ovr": 60,
+        "contact": 53,
+        "power": 54,
+        "eye": 53,
+        "discipline": 53,
+        "speed": 66,
+        "baseInstinct": 60,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 55,
+        "battingClutch": 61
       },
       "positionRatings": {
         "LF": 60

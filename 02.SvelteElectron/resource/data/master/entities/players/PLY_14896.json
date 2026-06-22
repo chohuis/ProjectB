@@ -1,6 +1,6 @@
 {
   "id": "PLY_14896",
-  "name": "토마스 루이스",
+  "name": "Thomas Luis",
   "nameEn": "Thomas Luis",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 46,
   "popularity": 43,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 50,
       "proServiceYears": 2,
       "pitching": {
-        "ovr": 62,
-        "stamina": 58,
-        "velocity": 71,
-        "command": 62,
-        "control": 56,
-        "movement": 57,
-        "mentality": 62,
-        "recovery": 59,
-        "clutch": 52,
-        "holdRunners": 59
+        "ovr": 64,
+        "stamina": 60,
+        "velocity": 73,
+        "command": 64,
+        "control": 58,
+        "movement": 59,
+        "mentality": 64,
+        "recovery": 61,
+        "clutch": 54,
+        "holdRunners": 61
       },
       "batting": {
         "ovr": 64,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 64
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

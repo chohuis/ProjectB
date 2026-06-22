@@ -1,9 +1,9 @@
 {
   "id": "PLY_00047",
   "name": "안태민",
-  "nameEn": "Ahn Taemin",
+  "nameEn": "Kang Dong-woo",
   "role": "player",
-  "age": 19,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,47 +19,28 @@
       "position": "CP",
       "jerseyNumber": 7,
       "pitching": {
-        "ovr": 57,
-        "stamina": 60,
-        "velocity": 55,
-        "command": 56,
-        "control": 53,
-        "movement": 57,
-        "mentality": 60,
-        "recovery": 62,
-        "clutch": 50,
-        "holdRunners": 47
+        "ovr": 55,
+        "stamina": 62,
+        "velocity": 58,
+        "command": 66,
+        "control": 59,
+        "movement": 53,
+        "mentality": 71,
+        "recovery": 61
       },
       "batting": {
-        "ovr": 39,
-        "contact": 43,
-        "power": 45,
-        "eye": 36,
-        "discipline": 36,
-        "speed": 36,
-        "fielding": 40,
-        "arm": 41,
-        "battingClutch": 40,
-        "baseInstinct": 37,
-        "bunting": 38,
-        "platoon": 35
+        "ovr": 47,
+        "contact": 61,
+        "power": 62,
+        "eye": 57,
+        "discipline": 56,
+        "speed": 70,
+        "fielding": 61,
+        "arm": 67,
+        "battingClutch": 57
       },
       "developmentRate": 66,
-      "potentialHidden": 76,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+      "potentialHidden": 76
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

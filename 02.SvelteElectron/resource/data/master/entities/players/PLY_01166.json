@@ -1,14 +1,14 @@
 {
   "id": "PLY_01166",
   "name": "스미스 이선",
-  "nameEn": "Seu 미스 이선",
+  "nameEn": "Smith Ethan",
   "role": "player",
   "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_RAINARROWS",
-  "teamId": "TEAM_ABL_RAINARROWS_2",
+  "clubId": "CLUB_ABL_ATL",
+  "teamId": "TEAM_ABL_ATL_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -19,62 +19,28 @@
       "position": "RP",
       "jerseyNumber": 46,
       "pitching": {
-        "ovr": 65,
-        "stamina": 63,
-        "velocity": 64,
-        "command": 70,
-        "control": 70,
-        "movement": 61,
-        "mentality": 63,
-        "recovery": 65,
-        "clutch": 57,
-        "holdRunners": 63
+        "ovr": 74,
+        "stamina": 68,
+        "velocity": 75,
+        "command": 71,
+        "control": 68,
+        "movement": 66,
+        "mentality": 69,
+        "recovery": 66
       },
       "batting": {
-        "ovr": 47,
-        "contact": 46,
-        "power": 44,
-        "eye": 43,
-        "discipline": 50,
-        "speed": 54,
-        "fielding": 48,
-        "arm": 43,
-        "battingClutch": 46,
-        "baseInstinct": 45,
-        "bunting": 36,
-        "platoon": 34
+        "ovr": 44,
+        "contact": 40,
+        "power": 45,
+        "eye": 38,
+        "discipline": 38,
+        "speed": 43,
+        "fielding": 39,
+        "arm": 39,
+        "battingClutch": 45
       },
       "developmentRate": 44,
-      "potentialHidden": 91,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 3,
-      "contract": {
-        "salary": 17800,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 91
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

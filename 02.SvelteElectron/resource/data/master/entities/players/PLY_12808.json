@@ -1,9 +1,9 @@
 {
   "id": "PLY_12808",
-  "name": "앤더슨 다니엘",
-  "nameEn": "Anderson Daniel",
+  "name": "Jackson Cole",
+  "nameEn": "Jackson Cole",
   "role": "player",
-  "age": 29,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 61,
-  "popularity": 13,
+  "notes": "국적:일본",
+  "diligence": 67,
+  "popularity": 14,
   "militaryStatus": "군필",
   "entryYear": 2043,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 29,
+  "entryAge": 22,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "SP",
-      "jerseyNumber": 88,
+      "jerseyNumber": 89,
       "primaryPosition": "SP",
-      "developmentRate": 46,
-      "potentialHidden": 63,
-      "proServiceYears": 7,
+      "developmentRate": 71,
+      "potentialHidden": 87,
+      "proServiceYears": 0,
       "pitching": {
         "ovr": 61,
-        "stamina": 54,
-        "velocity": 59,
-        "command": 54,
-        "control": 53,
-        "movement": 51,
-        "mentality": 60,
-        "recovery": 53,
-        "clutch": 51,
-        "holdRunners": 45
+        "stamina": 60,
+        "velocity": 67,
+        "command": 61,
+        "control": 59,
+        "movement": 61,
+        "mentality": 56,
+        "recovery": 60,
+        "clutch": 62,
+        "holdRunners": 59
       },
       "batting": {
-        "ovr": 59,
-        "contact": 54,
-        "power": 53,
-        "eye": 56,
-        "discipline": 53,
-        "speed": 64,
-        "baseInstinct": 60,
-        "bunting": 48,
+        "ovr": 61,
+        "contact": 61,
+        "power": 58,
+        "eye": 53,
+        "discipline": 63,
+        "speed": 56,
+        "baseInstinct": 56,
+        "bunting": 46,
         "platoon": 50,
-        "fielding": 50,
-        "arm": 50,
-        "battingClutch": 52
+        "fielding": 55,
+        "arm": 62,
+        "battingClutch": 59
       },
       "positionRatings": {
-        "SP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 61
+      }
     },
     "coach": null,
     "manager": null,

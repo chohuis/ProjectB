@@ -1,69 +1,46 @@
 {
   "id": "PLY_01624",
-  "name": "정현우",
-  "nameEn": "Jeong Hyeonwoo",
+  "name": "요시다 류",
+  "nameEn": "Yoshida Ryu",
   "role": "player",
-  "age": 16,
+  "age": 23,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_YEOSU_SHORE",
-  "teamId": "TEAM_HS_YEOSU_SHORE",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_YEOSU_SHORE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TEMPOSTINGS",
+  "teamId": "TEAM_JBL_CL_TEMPOSTINGS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 3,
+      "position": "2B",
+      "jerseyNumber": 44,
       "pitching": {
-        "ovr": 47,
-        "stamina": 44,
-        "velocity": 46,
-        "command": 44,
-        "control": 44,
-        "movement": 49,
-        "mentality": 52,
-        "recovery": 52,
-        "clutch": 46,
-        "holdRunners": 46
+        "ovr": 43,
+        "stamina": 39,
+        "velocity": 47,
+        "command": 37,
+        "control": 42,
+        "movement": 38,
+        "mentality": 37,
+        "recovery": 36
       },
       "batting": {
-        "ovr": 29,
-        "contact": 28,
-        "power": 25,
-        "eye": 32,
-        "discipline": 34,
-        "speed": 28,
-        "fielding": 32,
-        "arm": 31,
-        "battingClutch": 40,
-        "baseInstinct": 40,
-        "bunting": 35,
-        "platoon": 34
+        "ovr": 64,
+        "contact": 61,
+        "power": 60,
+        "eye": 62,
+        "discipline": 62,
+        "speed": 59,
+        "fielding": 64,
+        "arm": 61,
+        "battingClutch": 59
       },
-      "developmentRate": 66,
-      "potentialHidden": 67,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 47
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_KNUCKLEBALL",
-          "grade": 2
-        }
-      ]
+      "developmentRate": 49,
+      "potentialHidden": 82
     },
     "coach": {
       "specialty": "-",
@@ -103,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 76,
-  "popularity": 41
+  }
 }

@@ -1,14 +1,14 @@
 {
   "id": "PLY_01508",
   "name": "카터 크리스토퍼",
-  "nameEn": "Ka 터 크리스토퍼",
+  "nameEn": "Carter Christopher",
   "role": "player",
   "age": 40,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_RIVERCARDINALS",
-  "teamId": "TEAM_ABL_RIVERCARDINALS_1",
+  "clubId": "CLUB_ABL_BAL",
+  "teamId": "TEAM_ABL_BAL",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
@@ -19,58 +19,28 @@
       "position": "CP",
       "jerseyNumber": 13,
       "pitching": {
-        "ovr": 76,
-        "stamina": 78,
-        "velocity": 81,
-        "command": 76,
-        "control": 75,
-        "movement": 74,
-        "mentality": 81,
-        "recovery": 74,
-        "clutch": 72,
-        "holdRunners": 64
+        "ovr": 86,
+        "stamina": 72,
+        "velocity": 89,
+        "command": 83,
+        "control": 86,
+        "movement": 84,
+        "mentality": 79,
+        "recovery": 84
       },
       "batting": {
-        "ovr": 58,
-        "contact": 61,
-        "power": 53,
-        "eye": 55,
-        "discipline": 58,
-        "speed": 54,
-        "fielding": 56,
-        "arm": 55,
-        "battingClutch": 56,
-        "baseInstinct": 51,
-        "bunting": 48,
-        "platoon": 52
+        "ovr": 56,
+        "contact": 57,
+        "power": 56,
+        "eye": 54,
+        "discipline": 53,
+        "speed": 53,
+        "fielding": 53,
+        "arm": 53,
+        "battingClutch": 53
       },
       "developmentRate": 38,
-      "potentialHidden": 85,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 18,
-      "contract": {
-        "salary": 26300,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 85
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

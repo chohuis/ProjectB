@@ -1,7 +1,7 @@
 {
   "id": "PLY_12572",
-  "name": "존슨 카일",
-  "nameEn": "Johnson Kyle",
+  "name": "Young Jordan",
+  "nameEn": "Young Jordan",
   "role": "player",
   "age": 31,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 68,
-  "popularity": 37,
+  "notes": "국적:쿠바",
+  "diligence": 64,
+  "popularity": 50,
   "militaryStatus": "군필",
   "entryYear": 2042,
   "entryLeague": "LEAGUE_ABL",
@@ -24,54 +24,40 @@
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 39,
+      "jerseyNumber": 53,
       "primaryPosition": "SP",
-      "developmentRate": 47,
-      "potentialHidden": 62,
+      "developmentRate": 37,
+      "potentialHidden": 70,
       "proServiceYears": 9,
       "pitching": {
-        "ovr": 72,
-        "stamina": 69,
-        "velocity": 80,
-        "command": 75,
-        "control": 72,
-        "movement": 72,
-        "mentality": 69,
-        "recovery": 73,
-        "clutch": 71,
-        "holdRunners": 67
+        "ovr": 60,
+        "stamina": 65,
+        "velocity": 70,
+        "command": 52,
+        "control": 56,
+        "movement": 59,
+        "mentality": 66,
+        "recovery": 59,
+        "clutch": 61,
+        "holdRunners": 47
       },
       "batting": {
-        "ovr": 69,
-        "contact": 70,
-        "power": 59,
-        "eye": 62,
-        "discipline": 73,
-        "speed": 64,
-        "baseInstinct": 63,
-        "bunting": 51,
+        "ovr": 60,
+        "contact": 56,
+        "power": 55,
+        "eye": 59,
+        "discipline": 51,
+        "speed": 54,
+        "baseInstinct": 54,
+        "bunting": 49,
         "platoon": 50,
-        "fielding": 71,
-        "arm": 60,
-        "battingClutch": 59
+        "fielding": 56,
+        "arm": 54,
+        "battingClutch": 57
       },
       "positionRatings": {
-        "SP": 69
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "SP": 60
+      }
     },
     "coach": null,
     "manager": null,

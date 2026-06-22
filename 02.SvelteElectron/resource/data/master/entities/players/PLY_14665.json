@@ -1,6 +1,6 @@
 {
   "id": "PLY_14665",
-  "name": "존스 브랜던",
+  "name": "Jones Brandon",
   "nameEn": "Jones Brandon",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 64,
   "popularity": 14,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 75,
       "proServiceYears": 3,
       "pitching": {
-        "ovr": 71,
-        "stamina": 75,
-        "velocity": 79,
-        "command": 63,
-        "control": 64,
-        "movement": 63,
-        "mentality": 69,
-        "recovery": 65,
-        "clutch": 70,
-        "holdRunners": 65
+        "ovr": 72,
+        "stamina": 76,
+        "velocity": 80,
+        "command": 64,
+        "control": 65,
+        "movement": 64,
+        "mentality": 70,
+        "recovery": 66,
+        "clutch": 71,
+        "holdRunners": 66
       },
       "batting": {
         "ovr": 72,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 72
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

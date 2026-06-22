@@ -1,9 +1,9 @@
 {
   "id": "PLY_13123",
-  "name": "해리스 블레이크",
-  "nameEn": "Harris Blake",
+  "name": "Jackson Austin",
+  "nameEn": "Jackson Austin",
   "role": "player",
-  "age": 33,
+  "age": 35,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 84,
-  "popularity": 20,
+  "notes": "국적:파나마",
+  "diligence": 61,
+  "popularity": 33,
   "militaryStatus": "군필",
   "entryYear": 2045,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 33,
+  "entryAge": 35,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 3,
-      "primaryPosition": "SP",
-      "developmentRate": 44,
-      "potentialHidden": 62,
-      "proServiceYears": 11,
+      "position": "1B",
+      "jerseyNumber": 97,
+      "primaryPosition": "1B",
+      "developmentRate": 39,
+      "potentialHidden": 73,
+      "proServiceYears": 13,
       "pitching": {
-        "ovr": 90,
-        "stamina": 94,
-        "velocity": 88,
-        "command": 79,
-        "control": 82,
-        "movement": 90,
-        "mentality": 89,
-        "recovery": 76,
-        "clutch": 78,
-        "holdRunners": 84
+        "ovr": 71,
+        "stamina": 64,
+        "velocity": 82,
+        "command": 62,
+        "control": 74,
+        "movement": 74,
+        "mentality": 68,
+        "recovery": 62,
+        "clutch": 62,
+        "holdRunners": 60
       },
       "batting": {
-        "ovr": 75,
-        "contact": 72,
-        "power": 70,
+        "ovr": 71,
+        "contact": 69,
+        "power": 74,
         "eye": 71,
-        "discipline": 76,
-        "speed": 78,
-        "baseInstinct": 65,
-        "bunting": 68,
+        "discipline": 68,
+        "speed": 72,
+        "baseInstinct": 61,
+        "bunting": 58,
         "platoon": 50,
-        "fielding": 69,
-        "arm": 68,
-        "battingClutch": 75
+        "fielding": 68,
+        "arm": 71,
+        "battingClutch": 60
       },
       "positionRatings": {
-        "SP": 75
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "1B": 71
+      }
     },
     "coach": null,
     "manager": null,

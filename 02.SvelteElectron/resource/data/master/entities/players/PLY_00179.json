@@ -1,7 +1,7 @@
 {
   "id": "PLY_00179",
   "name": "우지성",
-  "nameEn": "Woo Jiseong",
+  "nameEn": "Kang Ji-hoon",
   "role": "player",
   "age": 21,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "RF",
       "jerseyNumber": 19,
       "pitching": {
-        "ovr": 36,
-        "stamina": 36,
-        "velocity": 36,
-        "command": 33,
-        "control": 38,
-        "movement": 32,
-        "mentality": 40,
-        "recovery": 33,
-        "clutch": 44,
-        "holdRunners": 44
+        "ovr": 34,
+        "stamina": 27,
+        "velocity": 35,
+        "command": 29,
+        "control": 29,
+        "movement": 27,
+        "mentality": 32,
+        "recovery": 32
       },
       "batting": {
         "ovr": 56,
-        "contact": 56,
-        "power": 61,
-        "eye": 55,
-        "discipline": 54,
-        "speed": 55,
-        "fielding": 57,
-        "arm": 60,
-        "battingClutch": 54,
-        "baseInstinct": 55,
-        "bunting": 52,
-        "platoon": 50
+        "contact": 54,
+        "power": 59,
+        "eye": 58,
+        "discipline": 59,
+        "speed": 56,
+        "fielding": 56,
+        "arm": 53,
+        "battingClutch": 54
       },
       "developmentRate": 63,
-      "potentialHidden": 69,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 56
-      }
+      "potentialHidden": 69
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

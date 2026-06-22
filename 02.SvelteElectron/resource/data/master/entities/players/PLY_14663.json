@@ -1,6 +1,6 @@
 {
   "id": "PLY_14663",
-  "name": "애덤스 미겔",
+  "name": "Adams Miguel",
   "nameEn": "Adams Miguel",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 67,
   "popularity": 33,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 61,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 60,
-        "stamina": 58,
-        "velocity": 58,
-        "command": 62,
-        "control": 51,
-        "movement": 53,
-        "mentality": 62,
-        "recovery": 53,
-        "clutch": 47,
-        "holdRunners": 57
+        "ovr": 61,
+        "stamina": 59,
+        "velocity": 59,
+        "command": 63,
+        "control": 52,
+        "movement": 54,
+        "mentality": 63,
+        "recovery": 54,
+        "clutch": 48,
+        "holdRunners": 58
       },
       "batting": {
         "ovr": 61,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

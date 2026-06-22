@@ -1,6 +1,6 @@
 {
   "id": "PLY_16379",
-  "name": "리 그랜트",
+  "name": "Lee Grant",
   "nameEn": "Lee Grant",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 46,
   "popularity": 13,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 62
       },
       "batting": {
-        "ovr": 61,
-        "contact": 60,
-        "power": 51,
-        "eye": 63,
-        "discipline": 57,
-        "speed": 56,
-        "baseInstinct": 52,
-        "bunting": 52,
-        "platoon": 47,
-        "fielding": 51,
-        "arm": 52,
-        "battingClutch": 50
+        "ovr": 65,
+        "contact": 64,
+        "power": 54,
+        "eye": 67,
+        "discipline": 61,
+        "speed": 60,
+        "baseInstinct": 55,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 55,
+        "battingClutch": 53
       },
       "positionRatings": {
         "1B": 65

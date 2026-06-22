@@ -1,14 +1,14 @@
 {
   "id": "PLY_01152",
   "name": "앨런 마이클",
-  "nameEn": "Ael 런 마이클",
+  "nameEn": "Allen Michael",
   "role": "player",
   "age": 37,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_RAINARROWS",
-  "teamId": "TEAM_ABL_RAINARROWS_1",
+  "clubId": "CLUB_ABL_ATL",
+  "teamId": "TEAM_ABL_ATL",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
@@ -19,48 +19,28 @@
       "position": "2B",
       "jerseyNumber": 17,
       "pitching": {
-        "ovr": 63,
-        "stamina": 59,
-        "velocity": 65,
-        "command": 67,
-        "control": 67,
-        "movement": 62,
-        "mentality": 63,
-        "recovery": 67,
-        "clutch": 53,
-        "holdRunners": 53
+        "ovr": 54,
+        "stamina": 51,
+        "velocity": 60,
+        "command": 59,
+        "control": 59,
+        "movement": 57,
+        "mentality": 55,
+        "recovery": 57
       },
       "batting": {
-        "ovr": 83,
-        "contact": 86,
+        "ovr": 80,
+        "contact": 84,
         "power": 82,
-        "eye": 82,
-        "discipline": 89,
-        "speed": 87,
-        "fielding": 86,
+        "eye": 86,
+        "discipline": 84,
+        "speed": 86,
+        "fielding": 81,
         "arm": 81,
-        "battingClutch": 81,
-        "baseInstinct": 72,
-        "bunting": 66,
-        "platoon": 79
+        "battingClutch": 86
       },
       "developmentRate": 44,
-      "potentialHidden": 70,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 83
-      },
-      "proServiceYears": 15,
-      "contract": {
-        "salary": 16300,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 70
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

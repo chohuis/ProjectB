@@ -1,6 +1,6 @@
 {
   "id": "PLY_16426",
-  "name": "킹 코너",
+  "name": "King Connor",
   "nameEn": "King Connor",
   "role": "player",
   "age": 30,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 46,
   "popularity": 11,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 57
       },
       "batting": {
-        "ovr": 76,
-        "contact": 68,
-        "power": 73,
-        "eye": 79,
-        "discipline": 66,
-        "speed": 78,
-        "baseInstinct": 66,
-        "bunting": 62,
-        "platoon": 54,
-        "fielding": 66,
-        "arm": 64,
-        "battingClutch": 71
+        "ovr": 70,
+        "contact": 63,
+        "power": 67,
+        "eye": 73,
+        "discipline": 61,
+        "speed": 72,
+        "baseInstinct": 61,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 59,
+        "battingClutch": 65
       },
       "positionRatings": {
         "1B": 70

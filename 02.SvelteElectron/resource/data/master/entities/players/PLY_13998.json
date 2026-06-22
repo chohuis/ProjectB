@@ -1,6 +1,6 @@
 {
   "id": "PLY_13998",
-  "name": "그린 조던",
+  "name": "Green Jordan",
   "nameEn": "Green Jordan",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 80,
   "popularity": 30,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 75,
       "proServiceYears": 2,
       "pitching": {
-        "ovr": 73,
-        "stamina": 70,
-        "velocity": 72,
-        "command": 70,
-        "control": 64,
-        "movement": 70,
-        "mentality": 73,
-        "recovery": 63,
-        "clutch": 73,
-        "holdRunners": 69
+        "ovr": 76,
+        "stamina": 73,
+        "velocity": 75,
+        "command": 73,
+        "control": 67,
+        "movement": 73,
+        "mentality": 76,
+        "recovery": 66,
+        "clutch": 76,
+        "holdRunners": 72
       },
       "batting": {
         "ovr": 76,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

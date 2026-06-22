@@ -1,6 +1,6 @@
 {
   "id": "PLY_16288",
-  "name": "앨런 코너",
+  "name": "Allen Connor",
   "nameEn": "Allen Connor",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 67,
   "popularity": 35,
   "militaryStatus": "군필",

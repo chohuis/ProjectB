@@ -1,80 +1,46 @@
 {
   "id": "PLY_01982",
-  "name": "정주원",
-  "nameEn": "Jeong Juwon",
+  "name": "카토 야마토",
+  "nameEn": "Kato Yamato",
   "role": "player",
-  "age": 28,
+  "age": 30,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_STEELDINOS",
-  "teamId": "TEAM_KBL_STEELDINOS_1",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
+  "teamId": "TEAM_JBL_PL_MARINESOLDIERS_2",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "CP",
-      "jerseyNumber": 66,
+      "position": "C",
+      "jerseyNumber": 42,
       "pitching": {
-        "ovr": 80,
-        "stamina": 81,
-        "velocity": 85,
-        "command": 79,
-        "control": 78,
-        "movement": 83,
-        "mentality": 82,
-        "recovery": 85,
-        "clutch": 76,
-        "holdRunners": 73
+        "ovr": 43,
+        "stamina": 38,
+        "velocity": 44,
+        "command": 44,
+        "control": 41,
+        "movement": 45,
+        "mentality": 43,
+        "recovery": 44
       },
       "batting": {
-        "ovr": 62,
-        "contact": 62,
-        "power": 64,
-        "eye": 63,
-        "discipline": 61,
-        "speed": 67,
-        "fielding": 65,
-        "arm": 64,
-        "battingClutch": 52,
-        "baseInstinct": 60,
-        "bunting": 49,
-        "platoon": 48
+        "ovr": 76,
+        "contact": 71,
+        "power": 71,
+        "eye": 74,
+        "discipline": 76,
+        "speed": 75,
+        "fielding": 73,
+        "arm": 76,
+        "battingClutch": 74
       },
-      "developmentRate": 58,
-      "potentialHidden": 83,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 80
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 6,
-      "contract": {
-        "salary": 8400,
-        "durationYears": 4,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 43,
+      "potentialHidden": 82
     },
     "coach": {
       "specialty": "-",
@@ -114,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 76,
-  "popularity": 54
+  }
 }

@@ -1,9 +1,9 @@
 {
   "id": "PLY_00143",
   "name": "유민혁",
-  "nameEn": "Yoo Minhyeok",
+  "nameEn": "Cha Ji-hoo",
   "role": "player",
-  "age": 18,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,43 +19,28 @@
       "position": "SP",
       "jerseyNumber": 3,
       "pitching": {
-        "ovr": 45,
-        "stamina": 50,
-        "velocity": 45,
-        "command": 44,
-        "control": 41,
-        "movement": 40,
-        "mentality": 50,
-        "recovery": 50,
-        "clutch": 46,
-        "holdRunners": 35
+        "ovr": 53,
+        "stamina": 49,
+        "velocity": 44,
+        "command": 43,
+        "control": 50,
+        "movement": 52,
+        "mentality": 55,
+        "recovery": 49
       },
       "batting": {
-        "ovr": 27,
-        "contact": 27,
-        "power": 29,
-        "eye": 24,
-        "discipline": 30,
-        "speed": 21,
-        "fielding": 25,
-        "arm": 23,
-        "battingClutch": 43,
-        "baseInstinct": 38,
-        "bunting": 28,
-        "platoon": 36
+        "ovr": 32,
+        "contact": 50,
+        "power": 37,
+        "eye": 49,
+        "discipline": 40,
+        "speed": 48,
+        "fielding": 55,
+        "arm": 51,
+        "battingClutch": 54
       },
       "developmentRate": 71,
-      "potentialHidden": 74,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 45
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 74
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

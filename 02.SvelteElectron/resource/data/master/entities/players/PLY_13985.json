@@ -1,6 +1,6 @@
 {
   "id": "PLY_13985",
-  "name": "워커 재크",
+  "name": "Walker Zach",
   "nameEn": "Walker Zach",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 67,
   "popularity": 29,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 74,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 50,
-        "stamina": 45,
-        "velocity": 60,
-        "command": 50,
-        "control": 44,
-        "movement": 46,
-        "mentality": 50,
-        "recovery": 42,
-        "clutch": 44,
-        "holdRunners": 42
+        "ovr": 51,
+        "stamina": 46,
+        "velocity": 61,
+        "command": 51,
+        "control": 45,
+        "movement": 47,
+        "mentality": 51,
+        "recovery": 43,
+        "clutch": 45,
+        "holdRunners": 43
       },
       "batting": {
         "ovr": 51,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 51
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

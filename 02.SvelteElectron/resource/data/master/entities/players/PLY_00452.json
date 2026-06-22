@@ -1,7 +1,7 @@
 {
   "id": "PLY_00452",
   "name": "양민석",
-  "nameEn": "Yang Minseok",
+  "nameEn": "Moon Jae-min",
   "role": "player",
   "age": 22,
   "status": "active",
@@ -19,48 +19,28 @@
       "position": "C",
       "jerseyNumber": 12,
       "pitching": {
-        "ovr": 45,
-        "stamina": 51,
-        "velocity": 41,
-        "command": 47,
-        "control": 46,
-        "movement": 46,
-        "mentality": 43,
-        "recovery": 41,
-        "clutch": 36,
-        "holdRunners": 38
+        "ovr": 32,
+        "stamina": 35,
+        "velocity": 35,
+        "command": 32,
+        "control": 33,
+        "movement": 31,
+        "mentality": 38,
+        "recovery": 33
       },
       "batting": {
-        "ovr": 65,
-        "contact": 60,
+        "ovr": 69,
+        "contact": 71,
         "power": 67,
-        "eye": 71,
-        "discipline": 68,
-        "speed": 63,
-        "fielding": 64,
-        "arm": 63,
-        "battingClutch": 65,
-        "baseInstinct": 65,
-        "bunting": 61,
-        "platoon": 60
+        "eye": 67,
+        "discipline": 64,
+        "speed": 61,
+        "fielding": 71,
+        "arm": 71,
+        "battingClutch": 65
       },
       "developmentRate": 56,
-      "potentialHidden": 84,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 65
-      },
-      "proServiceYears": 2,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 84
     },
     "coach": {
       "specialty": "-",
@@ -100,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

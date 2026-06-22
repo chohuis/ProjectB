@@ -1,9 +1,9 @@
 {
   "id": "PLY_10644",
-  "name": "테일러 에릭",
-  "nameEn": "Taylor Eric",
+  "name": "King Trevor",
+  "nameEn": "King Trevor",
   "role": "player",
-  "age": 26,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 65,
-  "popularity": 46,
+  "notes": "국적:일본",
+  "diligence": 64,
+  "popularity": 29,
   "militaryStatus": "군필",
   "entryYear": 2030,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 26,
+  "entryAge": 22,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 51,
-      "primaryPosition": "SP",
-      "developmentRate": 51,
-      "potentialHidden": 87,
-      "proServiceYears": 4,
+      "position": "2B",
+      "jerseyNumber": 84,
+      "primaryPosition": "2B",
+      "developmentRate": 77,
+      "potentialHidden": 93,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 56,
-        "stamina": 53,
-        "velocity": 56,
-        "command": 48,
-        "control": 58,
-        "movement": 57,
-        "mentality": 53,
+        "ovr": 51,
+        "stamina": 44,
+        "velocity": 51,
+        "command": 49,
+        "control": 46,
+        "movement": 55,
+        "mentality": 51,
         "recovery": 52,
-        "clutch": 56,
-        "holdRunners": 50
+        "clutch": 43,
+        "holdRunners": 44
       },
       "batting": {
-        "ovr": 66,
-        "contact": 70,
-        "power": 61,
-        "eye": 63,
-        "discipline": 56,
-        "speed": 66,
-        "baseInstinct": 65,
-        "bunting": 59,
+        "ovr": 51,
+        "contact": 53,
+        "power": 48,
+        "eye": 47,
+        "discipline": 50,
+        "speed": 45,
+        "baseInstinct": 41,
+        "bunting": 46,
         "platoon": 50,
-        "fielding": 59,
-        "arm": 58,
-        "battingClutch": 58
+        "fielding": 54,
+        "arm": 52,
+        "battingClutch": 42
       },
       "positionRatings": {
-        "SP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 1
-        }
-      ]
+        "2B": 51
+      }
     },
     "coach": null,
     "manager": null,

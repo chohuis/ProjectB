@@ -1,65 +1,46 @@
 {
   "id": "PLY_01743",
-  "name": "유재민",
-  "nameEn": "Yoo Jaemin",
+  "name": "야마모토 료",
+  "nameEn": "Yamamoto Ryo",
   "role": "player",
-  "age": 16,
+  "age": 32,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_MASAN_HARBOR",
-  "teamId": "TEAM_HS_MASAN_HARBOR",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_MASAN_HARBOR",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+  "teamId": "TEAM_JBL_CL_SILVERWOLVES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 2,
+      "position": "DH",
+      "jerseyNumber": 23,
       "pitching": {
-        "ovr": 50,
-        "stamina": 48,
-        "velocity": 46,
-        "command": 55,
-        "control": 49,
-        "movement": 54,
-        "mentality": 48,
-        "recovery": 53,
-        "clutch": 39,
-        "holdRunners": 40
+        "ovr": 58,
+        "stamina": 59,
+        "velocity": 59,
+        "command": 61,
+        "control": 54,
+        "movement": 60,
+        "mentality": 57,
+        "recovery": 59
       },
       "batting": {
-        "ovr": 32,
-        "contact": 35,
-        "power": 35,
-        "eye": 33,
-        "discipline": 30,
-        "speed": 32,
-        "fielding": 35,
-        "arm": 30,
-        "battingClutch": 39,
-        "baseInstinct": 39,
-        "bunting": 31,
-        "platoon": 32
+        "ovr": 77,
+        "contact": 85,
+        "power": 86,
+        "eye": 78,
+        "discipline": 83,
+        "speed": 73,
+        "fielding": 69,
+        "arm": 75,
+        "battingClutch": 85
       },
-      "developmentRate": 63,
-      "potentialHidden": 75,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 50
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 2
-        }
-      ]
+      "developmentRate": 34,
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 79,
-  "popularity": 47
+  }
 }

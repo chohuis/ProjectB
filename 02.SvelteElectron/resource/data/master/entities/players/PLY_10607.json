@@ -1,9 +1,9 @@
 {
   "id": "PLY_10607",
-  "name": "브라운 코너",
-  "nameEn": "Brown Connor",
+  "name": "White Logan",
+  "nameEn": "White Logan",
   "role": "player",
-  "age": 21,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 83,
-  "popularity": 17,
+  "notes": "국적:미국",
+  "diligence": 56,
+  "popularity": 47,
   "militaryStatus": "군필",
   "entryYear": 2030,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 21,
+  "entryAge": 28,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 79,
+      "jerseyNumber": 55,
       "primaryPosition": "SP",
-      "developmentRate": 62,
-      "potentialHidden": 70,
-      "proServiceYears": 0,
+      "developmentRate": 61,
+      "potentialHidden": 73,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 61,
-        "stamina": 57,
-        "velocity": 63,
-        "command": 53,
+        "ovr": 71,
+        "stamina": 70,
+        "velocity": 81,
+        "command": 74,
         "control": 64,
-        "movement": 58,
-        "mentality": 56,
-        "recovery": 61,
-        "clutch": 61,
-        "holdRunners": 55
+        "movement": 64,
+        "mentality": 65,
+        "recovery": 64,
+        "clutch": 66,
+        "holdRunners": 61
       },
       "batting": {
-        "ovr": 66,
-        "contact": 65,
-        "power": 69,
-        "eye": 59,
-        "discipline": 62,
-        "speed": 73,
-        "baseInstinct": 58,
-        "bunting": 56,
+        "ovr": 71,
+        "contact": 71,
+        "power": 61,
+        "eye": 76,
+        "discipline": 66,
+        "speed": 67,
+        "baseInstinct": 63,
+        "bunting": 59,
         "platoon": 50,
-        "fielding": 66,
-        "arm": 57,
-        "battingClutch": 56
+        "fielding": 61,
+        "arm": 69,
+        "battingClutch": 59
       },
       "positionRatings": {
-        "SP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 71
+      }
     },
     "coach": null,
     "manager": null,

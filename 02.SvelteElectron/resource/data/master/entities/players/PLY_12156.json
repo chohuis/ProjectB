@@ -1,9 +1,9 @@
 {
   "id": "PLY_12156",
-  "name": "애덤스 카일",
-  "nameEn": "Adams Kyle",
+  "name": "Mitchell Alex",
+  "nameEn": "Mitchell Alex",
   "role": "player",
-  "age": 21,
+  "age": 35,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 81,
-  "popularity": 40,
+  "notes": "국적:멕시코",
+  "diligence": 67,
+  "popularity": 25,
   "militaryStatus": "군필",
   "entryYear": 2039,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 21,
+  "entryAge": 35,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "SP",
-      "jerseyNumber": 72,
+      "jerseyNumber": 55,
       "primaryPosition": "SP",
-      "developmentRate": 72,
-      "potentialHidden": 69,
-      "proServiceYears": 0,
+      "developmentRate": 53,
+      "potentialHidden": 67,
+      "proServiceYears": 13,
       "pitching": {
-        "ovr": 59,
-        "stamina": 58,
-        "velocity": 65,
-        "command": 54,
-        "control": 61,
-        "movement": 53,
-        "mentality": 65,
-        "recovery": 53,
+        "ovr": 65,
+        "stamina": 69,
+        "velocity": 75,
+        "command": 58,
+        "control": 60,
+        "movement": 61,
+        "mentality": 67,
+        "recovery": 62,
         "clutch": 53,
-        "holdRunners": 55
+        "holdRunners": 63
       },
       "batting": {
-        "ovr": 64,
-        "contact": 64,
-        "power": 66,
-        "eye": 61,
+        "ovr": 65,
+        "contact": 66,
+        "power": 61,
+        "eye": 64,
         "discipline": 60,
-        "speed": 62,
-        "baseInstinct": 61,
-        "bunting": 47,
+        "speed": 61,
+        "baseInstinct": 57,
+        "bunting": 50,
         "platoon": 50,
-        "fielding": 63,
-        "arm": 66,
-        "battingClutch": 51
+        "fielding": 62,
+        "arm": 59,
+        "battingClutch": 63
       },
       "positionRatings": {
-        "SP": 64
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+        "SP": 65
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_14217",
-  "name": "마르티네스 브랜던",
+  "name": "Martinez Brandon",
   "nameEn": "Martinez Brandon",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 78,
   "popularity": 39,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 66,
       "proServiceYears": 2,
       "pitching": {
-        "ovr": 60,
-        "stamina": 63,
-        "velocity": 63,
-        "command": 55,
-        "control": 62,
-        "movement": 61,
-        "mentality": 53,
-        "recovery": 61,
-        "clutch": 51,
-        "holdRunners": 46
+        "ovr": 61,
+        "stamina": 64,
+        "velocity": 64,
+        "command": 56,
+        "control": 63,
+        "movement": 62,
+        "mentality": 54,
+        "recovery": 62,
+        "clutch": 52,
+        "holdRunners": 47
       },
       "batting": {
         "ovr": 61,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

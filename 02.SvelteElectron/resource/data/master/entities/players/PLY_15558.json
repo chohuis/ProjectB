@@ -1,6 +1,6 @@
 {
   "id": "PLY_15558",
-  "name": "리 재크",
+  "name": "Lee Zach",
   "nameEn": "Lee Zach",
   "role": "player",
   "age": 30,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 76,
   "popularity": 34,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 55
       },
       "batting": {
-        "ovr": 72,
-        "contact": 67,
-        "power": 73,
-        "eye": 69,
-        "discipline": 71,
-        "speed": 67,
-        "baseInstinct": 71,
-        "bunting": 52,
-        "platoon": 55,
-        "fielding": 61,
-        "arm": 60,
-        "battingClutch": 69
+        "ovr": 66,
+        "contact": 61,
+        "power": 67,
+        "eye": 63,
+        "discipline": 65,
+        "speed": 61,
+        "baseInstinct": 65,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 55,
+        "battingClutch": 63
       },
       "positionRatings": {
         "C": 66

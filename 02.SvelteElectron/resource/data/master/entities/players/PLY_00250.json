@@ -1,7 +1,7 @@
 {
   "id": "PLY_00250",
   "name": "한도윤",
-  "nameEn": "Han Doyun",
+  "nameEn": "Baek Do-hyun",
   "role": "player",
   "age": 22,
   "status": "active",
@@ -19,47 +19,28 @@
       "position": "CP",
       "jerseyNumber": 10,
       "pitching": {
-        "ovr": 60,
-        "stamina": 61,
-        "velocity": 61,
-        "command": 63,
-        "control": 57,
-        "movement": 62,
-        "mentality": 56,
-        "recovery": 58,
-        "clutch": 55,
-        "holdRunners": 58
+        "ovr": 66,
+        "stamina": 46,
+        "velocity": 70,
+        "command": 62,
+        "control": 66,
+        "movement": 61,
+        "mentality": 65,
+        "recovery": 63
       },
       "batting": {
-        "ovr": 42,
-        "contact": 37,
-        "power": 47,
-        "eye": 42,
-        "discipline": 41,
-        "speed": 37,
-        "fielding": 37,
-        "arm": 45,
-        "battingClutch": 35,
-        "baseInstinct": 39,
-        "bunting": 31,
-        "platoon": 43
+        "ovr": 31,
+        "contact": 29,
+        "power": 26,
+        "eye": 25,
+        "discipline": 32,
+        "speed": 25,
+        "fielding": 23,
+        "arm": 25,
+        "battingClutch": 25
       },
       "developmentRate": 63,
-      "potentialHidden": 82,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 3
-        }
-      ]
+      "potentialHidden": 82
     },
     "coach": {
       "specialty": "-",
@@ -99,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

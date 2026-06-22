@@ -1,69 +1,46 @@
 {
   "id": "PLY_01659",
-  "name": "오태우",
-  "nameEn": "Oh Taewoo",
+  "name": "오카모토 스스무",
+  "nameEn": "Okamoto Susumu",
   "role": "player",
-  "age": 16,
+  "age": 23,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
-  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_CHUNCHEON_HIGHLAND",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONDRAKES",
+  "teamId": "TEAM_JBL_CL_IRONDRAKES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
-      "position": "RP",
-      "jerseyNumber": 8,
+      "position": "SP",
+      "jerseyNumber": 34,
       "pitching": {
-        "ovr": 33,
-        "stamina": 34,
-        "velocity": 36,
-        "command": 35,
-        "control": 29,
-        "movement": 34,
-        "mentality": 30,
-        "recovery": 32,
-        "clutch": 44,
-        "holdRunners": 35
+        "ovr": 61,
+        "stamina": 58,
+        "velocity": 66,
+        "command": 63,
+        "control": 58,
+        "movement": 55,
+        "mentality": 59,
+        "recovery": 59
       },
       "batting": {
-        "ovr": 22,
-        "contact": 20,
-        "power": 26,
-        "eye": 24,
-        "discipline": 28,
-        "speed": 20,
-        "fielding": 21,
-        "arm": 20,
-        "battingClutch": 40,
-        "baseInstinct": 44,
-        "bunting": 36,
-        "platoon": 36
+        "ovr": 39,
+        "contact": 41,
+        "power": 42,
+        "eye": 34,
+        "discipline": 39,
+        "speed": 35,
+        "fielding": 36,
+        "arm": 39,
+        "battingClutch": 36
       },
-      "developmentRate": 58,
-      "potentialHidden": 75,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 33
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_KNUCKLEBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 2
-        }
-      ]
+      "developmentRate": 41,
+      "potentialHidden": 66
     },
     "coach": {
       "specialty": "-",
@@ -103,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 61,
-  "popularity": 31
+  }
 }

@@ -1,6 +1,6 @@
 {
   "id": "PLY_14433",
-  "name": "마틴 제이슨",
+  "name": "Martin Jason",
   "nameEn": "Martin Jason",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 75,
   "popularity": 36,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 54,
       "proServiceYears": 4,
       "pitching": {
-        "ovr": 61,
-        "stamina": 53,
-        "velocity": 69,
-        "command": 60,
-        "control": 64,
-        "movement": 57,
-        "mentality": 64,
-        "recovery": 56,
-        "clutch": 52,
-        "holdRunners": 50
+        "ovr": 65,
+        "stamina": 57,
+        "velocity": 74,
+        "command": 64,
+        "control": 68,
+        "movement": 61,
+        "mentality": 68,
+        "recovery": 60,
+        "clutch": 55,
+        "holdRunners": 53
       },
       "batting": {
         "ovr": 65,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

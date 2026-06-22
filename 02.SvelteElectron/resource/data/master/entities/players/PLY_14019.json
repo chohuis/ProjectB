@@ -1,6 +1,6 @@
 {
   "id": "PLY_14019",
-  "name": "영 카일",
+  "name": "Young Kyle",
   "nameEn": "Young Kyle",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 81,
   "popularity": 46,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 50
       },
       "batting": {
-        "ovr": 68,
-        "contact": 64,
-        "power": 67,
-        "eye": 67,
-        "discipline": 57,
-        "speed": 60,
-        "baseInstinct": 57,
-        "bunting": 49,
-        "platoon": 56,
-        "fielding": 65,
-        "arm": 59,
-        "battingClutch": 61
+        "ovr": 61,
+        "contact": 57,
+        "power": 60,
+        "eye": 60,
+        "discipline": 51,
+        "speed": 54,
+        "baseInstinct": 51,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 53,
+        "battingClutch": 55
       },
       "positionRatings": {
         "1B": 61

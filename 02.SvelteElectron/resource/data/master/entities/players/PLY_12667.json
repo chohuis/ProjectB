@@ -1,9 +1,9 @@
 {
   "id": "PLY_12667",
-  "name": "넬슨 알렉스",
-  "nameEn": "Nelson Alex",
+  "name": "Thompson Sean",
+  "nameEn": "Thompson Sean",
   "role": "player",
-  "age": 23,
+  "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 49,
-  "popularity": 14,
+  "notes": "국적:도미니카",
+  "diligence": 67,
+  "popularity": 22,
   "militaryStatus": "군필",
   "entryYear": 2043,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 23,
+  "entryAge": 27,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 53,
-      "primaryPosition": "SP",
-      "developmentRate": 64,
-      "potentialHidden": 85,
-      "proServiceYears": 1,
+      "position": "CF",
+      "jerseyNumber": 89,
+      "primaryPosition": "CF",
+      "developmentRate": 67,
+      "potentialHidden": 67,
+      "proServiceYears": 5,
       "pitching": {
-        "ovr": 62,
-        "stamina": 59,
-        "velocity": 66,
-        "command": 61,
+        "ovr": 70,
+        "stamina": 66,
+        "velocity": 74,
+        "command": 63,
         "control": 63,
-        "movement": 56,
+        "movement": 68,
         "mentality": 67,
-        "recovery": 56,
-        "clutch": 60,
-        "holdRunners": 51
+        "recovery": 62,
+        "clutch": 68,
+        "holdRunners": 61
       },
       "batting": {
-        "ovr": 67,
-        "contact": 66,
-        "power": 60,
-        "eye": 66,
+        "ovr": 70,
+        "contact": 67,
+        "power": 59,
+        "eye": 64,
         "discipline": 70,
-        "speed": 65,
-        "baseInstinct": 64,
-        "bunting": 52,
+        "speed": 73,
+        "baseInstinct": 67,
+        "bunting": 64,
         "platoon": 50,
-        "fielding": 59,
-        "arm": 64,
-        "battingClutch": 59
+        "fielding": 69,
+        "arm": 66,
+        "battingClutch": 64
       },
       "positionRatings": {
-        "SP": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+        "CF": 70
+      }
     },
     "coach": null,
     "manager": null,

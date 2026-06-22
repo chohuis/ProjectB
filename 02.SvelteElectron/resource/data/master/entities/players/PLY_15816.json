@@ -1,6 +1,6 @@
 {
   "id": "PLY_15816",
-  "name": "테일러 그랜트",
+  "name": "Taylor Grant",
   "nameEn": "Taylor Grant",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 75,
   "popularity": 17,
   "militaryStatus": "군필",

@@ -1,9 +1,9 @@
 {
   "id": "PLY_10007",
-  "name": "애덤스 네이선",
-  "nameEn": "Adams Nathan",
+  "name": "Allen Blake",
+  "nameEn": "Allen Blake",
   "role": "player",
-  "age": 24,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 57,
-  "popularity": 13,
+  "notes": "국적:베네수엘라",
+  "diligence": 52,
+  "popularity": 22,
   "militaryStatus": "군필",
   "entryYear": 2026,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 24,
+  "entryAge": 20,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 13,
-      "primaryPosition": "SP",
-      "developmentRate": 50,
-      "potentialHidden": 80,
-      "proServiceYears": 2,
+      "position": "C",
+      "jerseyNumber": 83,
+      "primaryPosition": "C",
+      "developmentRate": 74,
+      "potentialHidden": 70,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 70,
-        "stamina": 66,
-        "velocity": 80,
-        "command": 66,
-        "control": 73,
-        "movement": 67,
-        "mentality": 74,
-        "recovery": 61,
-        "clutch": 69,
-        "holdRunners": 59
+        "ovr": 60,
+        "stamina": 53,
+        "velocity": 61,
+        "command": 57,
+        "control": 59,
+        "movement": 61,
+        "mentality": 65,
+        "recovery": 54,
+        "clutch": 48,
+        "holdRunners": 51
       },
       "batting": {
-        "ovr": 77,
-        "contact": 79,
-        "power": 73,
-        "eye": 72,
-        "discipline": 75,
-        "speed": 81,
-        "baseInstinct": 67,
-        "bunting": 67,
+        "ovr": 60,
+        "contact": 53,
+        "power": 61,
+        "eye": 59,
+        "discipline": 61,
+        "speed": 63,
+        "baseInstinct": 58,
+        "bunting": 55,
         "platoon": 50,
-        "fielding": 79,
-        "arm": 68,
-        "battingClutch": 74
+        "fielding": 55,
+        "arm": 62,
+        "battingClutch": 55
       },
       "positionRatings": {
-        "SP": 77
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "C": 60
+      }
     },
     "coach": null,
     "manager": null,

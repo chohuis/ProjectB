@@ -1,6 +1,6 @@
 {
   "id": "PLY_15626",
-  "name": "스콧 재크",
+  "name": "Scott Zach",
   "nameEn": "Scott Zach",
   "role": "player",
   "age": 32,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 64,
   "popularity": 30,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 57,
       "proServiceYears": 10,
       "pitching": {
-        "ovr": 69,
-        "stamina": 73,
-        "velocity": 80,
-        "command": 58,
-        "control": 63,
-        "movement": 70,
-        "mentality": 75,
-        "recovery": 55,
-        "clutch": 58,
-        "holdRunners": 65
+        "ovr": 55,
+        "stamina": 58,
+        "velocity": 64,
+        "command": 46,
+        "control": 50,
+        "movement": 56,
+        "mentality": 60,
+        "recovery": 44,
+        "clutch": 46,
+        "holdRunners": 52
       },
       "batting": {
         "ovr": 55,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 55
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,7 +1,7 @@
 {
   "id": "PLY_11593",
-  "name": "스미스 칼렙",
-  "nameEn": "Smith Caleb",
+  "name": "Smith Carlos",
+  "nameEn": "Smith Carlos",
   "role": "player",
   "age": 24,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:멕시코",
   "diligence": 76,
-  "popularity": 24,
+  "popularity": 31,
   "militaryStatus": "군필",
   "entryYear": 2036,
   "entryLeague": "LEAGUE_ABL",
@@ -21,57 +21,43 @@
   "entryAge": 24,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 64,
-      "primaryPosition": "SP",
-      "developmentRate": 46,
-      "potentialHidden": 64,
+      "position": "C",
+      "jerseyNumber": 44,
+      "primaryPosition": "C",
+      "developmentRate": 60,
+      "potentialHidden": 84,
       "proServiceYears": 2,
       "pitching": {
-        "ovr": 68,
-        "stamina": 73,
-        "velocity": 66,
-        "command": 71,
-        "control": 66,
-        "movement": 71,
-        "mentality": 67,
-        "recovery": 67,
-        "clutch": 62,
-        "holdRunners": 59
+        "ovr": 75,
+        "stamina": 68,
+        "velocity": 75,
+        "command": 64,
+        "control": 80,
+        "movement": 66,
+        "mentality": 70,
+        "recovery": 75,
+        "clutch": 67,
+        "holdRunners": 71
       },
       "batting": {
         "ovr": 75,
-        "contact": 75,
-        "power": 77,
-        "eye": 78,
-        "discipline": 78,
-        "speed": 71,
-        "baseInstinct": 66,
-        "bunting": 62,
+        "contact": 73,
+        "power": 66,
+        "eye": 74,
+        "discipline": 65,
+        "speed": 79,
+        "baseInstinct": 67,
+        "bunting": 61,
         "platoon": 50,
-        "fielding": 68,
-        "arm": 70,
-        "battingClutch": 63
+        "fielding": 69,
+        "arm": 69,
+        "battingClutch": 73
       },
       "positionRatings": {
-        "SP": 75
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "C": 75
+      }
     },
     "coach": null,
     "manager": null,

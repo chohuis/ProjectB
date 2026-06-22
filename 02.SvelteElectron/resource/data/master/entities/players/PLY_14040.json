@@ -1,6 +1,6 @@
 {
   "id": "PLY_14040",
-  "name": "윌리엄스 알렉스",
+  "name": "Williams Alex",
   "nameEn": "Williams Alex",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 54,
   "popularity": 29,
   "militaryStatus": "군필",

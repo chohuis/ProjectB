@@ -1,7 +1,7 @@
 {
   "id": "PLY_00256",
   "name": "차재현",
-  "nameEn": "Cha Jaehyeon",
+  "nameEn": "Song Geon-woo",
   "role": "player",
   "age": 21,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "SS",
       "jerseyNumber": 16,
       "pitching": {
-        "ovr": 53,
-        "stamina": 53,
-        "velocity": 48,
-        "command": 56,
-        "control": 56,
-        "movement": 49,
-        "mentality": 57,
-        "recovery": 54,
-        "clutch": 50,
-        "holdRunners": 44
+        "ovr": 42,
+        "stamina": 39,
+        "velocity": 41,
+        "command": 41,
+        "control": 44,
+        "movement": 41,
+        "mentality": 39,
+        "recovery": 41
       },
       "batting": {
-        "ovr": 73,
-        "contact": 74,
-        "power": 70,
-        "eye": 79,
-        "discipline": 73,
-        "speed": 76,
-        "fielding": 71,
-        "arm": 74,
-        "battingClutch": 62,
-        "baseInstinct": 67,
-        "bunting": 62,
-        "platoon": 65
+        "ovr": 78,
+        "contact": 75,
+        "power": 74,
+        "eye": 75,
+        "discipline": 76,
+        "speed": 79,
+        "fielding": 80,
+        "arm": 72,
+        "battingClutch": 77
       },
       "developmentRate": 63,
-      "potentialHidden": 64,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 73
-      }
+      "potentialHidden": 64
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

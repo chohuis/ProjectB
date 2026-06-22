@@ -1,6 +1,6 @@
 {
   "id": "PLY_14667",
-  "name": "워커 에반",
+  "name": "Walker Evan",
   "nameEn": "Walker Evan",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 70,
   "popularity": 37,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 50
       },
       "batting": {
-        "ovr": 60,
-        "contact": 54,
-        "power": 56,
-        "eye": 64,
-        "discipline": 51,
-        "speed": 60,
-        "baseInstinct": 56,
-        "bunting": 45,
-        "platoon": 48,
-        "fielding": 51,
-        "arm": 57,
-        "battingClutch": 58
+        "ovr": 62,
+        "contact": 56,
+        "power": 58,
+        "eye": 66,
+        "discipline": 53,
+        "speed": 62,
+        "baseInstinct": 58,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 59,
+        "battingClutch": 60
       },
       "positionRatings": {
         "C": 62

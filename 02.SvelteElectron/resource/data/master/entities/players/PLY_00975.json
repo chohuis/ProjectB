@@ -1,14 +1,14 @@
 {
   "id": "PLY_00975",
   "name": "넬슨 앤서니",
-  "nameEn": "Nel 슨 앤서니",
+  "nameEn": "Nelson Anthony",
   "role": "player",
-  "age": 40,
+  "age": 41,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_WINDBEARS",
-  "teamId": "TEAM_ABL_WINDBEARS_1",
+  "clubId": "CLUB_ABL_TOR",
+  "teamId": "TEAM_ABL_TOR",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -19,48 +19,28 @@
       "position": "LF",
       "jerseyNumber": 20,
       "pitching": {
-        "ovr": 69,
-        "stamina": 67,
-        "velocity": 66,
-        "command": 66,
-        "control": 68,
-        "movement": 66,
-        "mentality": 73,
-        "recovery": 69,
-        "clutch": 65,
-        "holdRunners": 63
+        "ovr": 67,
+        "stamina": 64,
+        "velocity": 65,
+        "command": 63,
+        "control": 63,
+        "movement": 58,
+        "mentality": 62,
+        "recovery": 59
       },
       "batting": {
         "ovr": 89,
-        "contact": 85,
-        "power": 94,
-        "eye": 86,
-        "discipline": 87,
-        "speed": 83,
-        "fielding": 86,
-        "arm": 87,
-        "battingClutch": 87,
-        "baseInstinct": 79,
-        "bunting": 77,
-        "platoon": 85
+        "contact": 98,
+        "power": 98,
+        "eye": 90,
+        "discipline": 88,
+        "speed": 90,
+        "fielding": 89,
+        "arm": 90,
+        "battingClutch": 93
       },
       "developmentRate": 37,
-      "potentialHidden": 63,
-      "primaryPosition": "LF",
-      "positionRatings": {
-        "LF": 89
-      },
-      "proServiceYears": 18,
-      "contract": {
-        "salary": 20900,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 63
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

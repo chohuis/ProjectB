@@ -1,6 +1,6 @@
 {
   "id": "PLY_14119",
-  "name": "베이커 크리스",
+  "name": "Baker Chris",
   "nameEn": "Baker Chris",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 74,
   "popularity": 25,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 63
       },
       "batting": {
-        "ovr": 78,
-        "contact": 79,
-        "power": 73,
-        "eye": 74,
-        "discipline": 72,
-        "speed": 81,
-        "baseInstinct": 72,
-        "bunting": 67,
-        "platoon": 51,
-        "fielding": 74,
-        "arm": 76,
-        "battingClutch": 68
+        "ovr": 77,
+        "contact": 78,
+        "power": 72,
+        "eye": 73,
+        "discipline": 71,
+        "speed": 80,
+        "baseInstinct": 71,
+        "bunting": 66,
+        "platoon": 50,
+        "fielding": 73,
+        "arm": 75,
+        "battingClutch": 67
       },
       "positionRatings": {
         "3B": 77

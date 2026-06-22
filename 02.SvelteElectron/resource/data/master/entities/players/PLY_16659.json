@@ -1,6 +1,6 @@
 {
   "id": "PLY_16659",
-  "name": "해리스 다니엘",
+  "name": "Harris Daniel",
   "nameEn": "Harris Daniel",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 83,
   "popularity": 41,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 62,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 50,
-        "stamina": 51,
-        "velocity": 57,
-        "command": 52,
-        "control": 54,
-        "movement": 44,
-        "mentality": 47,
-        "recovery": 42,
-        "clutch": 40,
-        "holdRunners": 39
+        "ovr": 51,
+        "stamina": 52,
+        "velocity": 58,
+        "command": 53,
+        "control": 55,
+        "movement": 45,
+        "mentality": 48,
+        "recovery": 43,
+        "clutch": 41,
+        "holdRunners": 40
       },
       "batting": {
         "ovr": 51,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 51
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

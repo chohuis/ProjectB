@@ -1,14 +1,14 @@
 {
   "id": "PLY_01472",
   "name": "애덤스 브랜던",
-  "nameEn": "Ae 덤스 브랜던",
+  "nameEn": "Adams Brandon",
   "role": "player",
   "age": 30,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_DESERTSERPENTS",
-  "teamId": "TEAM_ABL_DESERTSERPENTS_1",
+  "clubId": "CLUB_ABL_ARI",
+  "teamId": "TEAM_ABL_ARI",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,48 +19,28 @@
       "position": "RF",
       "jerseyNumber": 22,
       "pitching": {
-        "ovr": 69,
-        "stamina": 69,
-        "velocity": 75,
-        "command": 74,
-        "control": 66,
-        "movement": 67,
-        "mentality": 68,
-        "recovery": 67,
-        "clutch": 64,
-        "holdRunners": 62
+        "ovr": 56,
+        "stamina": 59,
+        "velocity": 60,
+        "command": 63,
+        "control": 60,
+        "movement": 61,
+        "mentality": 59,
+        "recovery": 53
       },
       "batting": {
         "ovr": 89,
-        "contact": 87,
-        "power": 88,
-        "eye": 88,
-        "discipline": 92,
+        "contact": 97,
+        "power": 95,
+        "eye": 95,
+        "discipline": 88,
         "speed": 93,
-        "fielding": 87,
-        "arm": 93,
-        "battingClutch": 79,
-        "baseInstinct": 83,
-        "bunting": 84,
-        "platoon": 81
+        "fielding": 85,
+        "arm": 88,
+        "battingClutch": 96
       },
       "developmentRate": 43,
-      "potentialHidden": 70,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 89
-      },
-      "proServiceYears": 8,
-      "contract": {
-        "salary": 20900,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 70
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

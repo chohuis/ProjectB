@@ -1,14 +1,14 @@
 {
   "id": "PLY_01371",
   "name": "영 로버트",
-  "nameEn": "Yeong  로버트",
+  "nameEn": "Young Robert",
   "role": "player",
   "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_LAKESPIRITS",
-  "teamId": "TEAM_ABL_LAKESPIRITS_1",
+  "clubId": "CLUB_ABL_SD",
+  "teamId": "TEAM_ABL_SD",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 11,
       "pitching": {
-        "ovr": 80,
-        "stamina": 78,
-        "velocity": 84,
-        "command": 78,
-        "control": 84,
-        "movement": 80,
-        "mentality": 81,
-        "recovery": 81,
-        "clutch": 69,
-        "holdRunners": 77
+        "ovr": 93,
+        "stamina": 81,
+        "velocity": 92,
+        "command": 87,
+        "control": 87,
+        "movement": 87,
+        "mentality": 91,
+        "recovery": 91
       },
       "batting": {
         "ovr": 62,
-        "contact": 59,
-        "power": 59,
-        "eye": 59,
-        "discipline": 58,
-        "speed": 67,
-        "fielding": 57,
-        "arm": 60,
-        "battingClutch": 53,
-        "baseInstinct": 52,
-        "bunting": 52,
-        "platoon": 58
+        "contact": 64,
+        "power": 64,
+        "eye": 65,
+        "discipline": 68,
+        "speed": 64,
+        "fielding": 65,
+        "arm": 61,
+        "battingClutch": 67
       },
       "developmentRate": 47,
-      "potentialHidden": 79,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 80
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 10,
-      "contract": {
-        "salary": 29400,
-        "durationYears": 4,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 79
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

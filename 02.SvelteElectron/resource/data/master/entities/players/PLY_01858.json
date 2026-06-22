@@ -1,61 +1,46 @@
 {
   "id": "PLY_01858",
-  "name": "노건우",
-  "nameEn": "No Geonwoo",
+  "name": "사이토 켄타",
+  "nameEn": "Saito Kenta",
   "role": "player",
-  "age": 18,
+  "age": 28,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_SUNCHEON_BAY",
-  "teamId": "TEAM_HS_SUNCHEON_BAY",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_SUNCHEON_BAY",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_POLARBEARS",
+  "teamId": "TEAM_JBL_PL_POLARBEARS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
-      "handedness": "R",
-      "position": "RF",
-      "jerseyNumber": 27,
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 3,
       "pitching": {
-        "ovr": 38,
-        "stamina": 36,
-        "velocity": 34,
-        "command": 36,
-        "control": 34,
-        "movement": 38,
-        "mentality": 35,
-        "recovery": 39,
-        "clutch": 36,
-        "holdRunners": 40
+        "ovr": 71,
+        "stamina": 79,
+        "velocity": 79,
+        "command": 77,
+        "control": 72,
+        "movement": 77,
+        "mentality": 72,
+        "recovery": 75
       },
       "batting": {
-        "ovr": 58,
-        "contact": 53,
-        "power": 53,
-        "eye": 53,
+        "ovr": 49,
+        "contact": 55,
+        "power": 48,
+        "eye": 47,
         "discipline": 54,
-        "speed": 59,
-        "fielding": 62,
-        "arm": 56,
-        "battingClutch": 53,
-        "baseInstinct": 56,
-        "bunting": 42,
-        "platoon": 50
+        "speed": 47,
+        "fielding": 53,
+        "arm": 51,
+        "battingClutch": 53
       },
-      "developmentRate": 65,
-      "potentialHidden": 71,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 53,
+      "potentialHidden": 68
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 77,
-  "popularity": 25
+  }
 }

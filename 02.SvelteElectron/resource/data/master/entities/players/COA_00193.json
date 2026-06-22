@@ -1,17 +1,17 @@
 {
   "id": "COA_00193",
-  "name": "타나카 유토",
-  "nameEn": "Tanaka Yuto",
+  "name": "야마자키 사토시",
+  "nameEn": "Yamazaki Satoshi",
   "role": "coach",
-  "age": 46,
+  "age": 37,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
-  "clubId": "CLUB_JBL_CL_TEMPOSTINGS",
-  "teamId": "TEAM_JBL_CL_TEMPOSTINGS_2",
+  "clubId": "CLUB_JBL_CL_IRONSTORMS",
+  "teamId": "TEAM_JBL_CL_IRONSTORMS_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
@@ -43,14 +43,14 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "타격",
-      "experienceYears": 17,
+      "specialty": "투수",
+      "experienceYears": 6,
       "stats": {
-        "teaching": 80,
-        "analysis": 82,
+        "teaching": 54,
+        "analysis": 74,
         "communication": 59,
-        "discipline": 78,
-        "leadership": 65
+        "discipline": 69,
+        "leadership": 79
       },
       "trainingBuffs": "구속 훈련 +2%"
     },

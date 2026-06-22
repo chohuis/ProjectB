@@ -1,7 +1,7 @@
 {
   "id": "PLY_00275",
   "name": "남승민",
-  "nameEn": "Nam Seungmin",
+  "nameEn": "Baek Ji-hoo",
   "role": "player",
   "age": 20,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "3B",
       "jerseyNumber": 15,
       "pitching": {
-        "ovr": 47,
-        "stamina": 49,
-        "velocity": 53,
-        "command": 48,
-        "control": 44,
-        "movement": 52,
-        "mentality": 47,
-        "recovery": 50,
-        "clutch": 38,
-        "holdRunners": 40
+        "ovr": 39,
+        "stamina": 37,
+        "velocity": 39,
+        "command": 43,
+        "control": 37,
+        "movement": 34,
+        "mentality": 39,
+        "recovery": 33
       },
       "batting": {
-        "ovr": 67,
-        "contact": 62,
-        "power": 62,
-        "eye": 65,
-        "discipline": 63,
-        "speed": 73,
-        "fielding": 62,
-        "arm": 64,
-        "battingClutch": 61,
-        "baseInstinct": 61,
-        "bunting": 62,
-        "platoon": 59
+        "ovr": 66,
+        "contact": 66,
+        "power": 73,
+        "eye": 66,
+        "discipline": 68,
+        "speed": 68,
+        "fielding": 71,
+        "arm": 69,
+        "battingClutch": 67
       },
       "developmentRate": 56,
-      "potentialHidden": 90,
-      "primaryPosition": "3B",
-      "positionRatings": {
-        "3B": 67
-      }
+      "potentialHidden": 90
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

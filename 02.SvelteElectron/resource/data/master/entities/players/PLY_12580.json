@@ -1,9 +1,9 @@
 {
   "id": "PLY_12580",
-  "name": "에르난데스 마커스",
-  "nameEn": "Hernandez Marcus",
+  "name": "Jones Connor",
+  "nameEn": "Jones Connor",
   "role": "player",
-  "age": 33,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 53,
-  "popularity": 48,
+  "notes": "국적:베네수엘라",
+  "diligence": 84,
+  "popularity": 11,
   "militaryStatus": "군필",
   "entryYear": 2042,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 33,
+  "entryAge": 28,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 94,
+      "jerseyNumber": 10,
       "primaryPosition": "SP",
-      "developmentRate": 37,
-      "potentialHidden": 67,
-      "proServiceYears": 11,
+      "developmentRate": 58,
+      "potentialHidden": 57,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 91,
-        "stamina": 92,
-        "velocity": 96,
-        "command": 85,
-        "control": 95,
-        "movement": 89,
-        "mentality": 96,
-        "recovery": 80,
-        "clutch": 78,
-        "holdRunners": 86
+        "ovr": 78,
+        "stamina": 75,
+        "velocity": 85,
+        "command": 74,
+        "control": 80,
+        "movement": 69,
+        "mentality": 80,
+        "recovery": 71,
+        "clutch": 72,
+        "holdRunners": 71
       },
       "batting": {
-        "ovr": 76,
-        "contact": 76,
-        "power": 71,
-        "eye": 69,
-        "discipline": 80,
-        "speed": 70,
-        "baseInstinct": 74,
-        "bunting": 69,
+        "ovr": 78,
+        "contact": 72,
+        "power": 77,
+        "eye": 83,
+        "discipline": 77,
+        "speed": 83,
+        "baseInstinct": 81,
+        "bunting": 63,
         "platoon": 50,
-        "fielding": 73,
-        "arm": 73,
-        "battingClutch": 73
+        "fielding": 79,
+        "arm": 77,
+        "battingClutch": 70
       },
       "positionRatings": {
-        "SP": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "SP": 78
+      }
     },
     "coach": null,
     "manager": null,

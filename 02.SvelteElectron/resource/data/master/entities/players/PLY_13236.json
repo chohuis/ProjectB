@@ -1,9 +1,9 @@
 {
   "id": "PLY_13236",
-  "name": "워커 코디",
-  "nameEn": "Walker Cody",
+  "name": "Young Jake",
+  "nameEn": "Young Jake",
   "role": "player",
-  "age": 27,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 77,
-  "popularity": 50,
+  "notes": "국적:멕시코",
+  "diligence": 70,
+  "popularity": 38,
   "militaryStatus": "군필",
   "entryYear": 2046,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 27,
+  "entryAge": 28,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 14,
-      "primaryPosition": "SP",
-      "developmentRate": 50,
-      "potentialHidden": 77,
-      "proServiceYears": 5,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 26,
+      "primaryPosition": "CF",
+      "developmentRate": 49,
+      "potentialHidden": 74,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 71,
-        "stamina": 67,
-        "velocity": 79,
-        "command": 68,
-        "control": 64,
-        "movement": 69,
-        "mentality": 74,
-        "recovery": 69,
-        "clutch": 67,
-        "holdRunners": 58
+        "ovr": 82,
+        "stamina": 83,
+        "velocity": 90,
+        "command": 77,
+        "control": 86,
+        "movement": 74,
+        "mentality": 82,
+        "recovery": 80,
+        "clutch": 72,
+        "holdRunners": 78
       },
       "batting": {
-        "ovr": 76,
-        "contact": 78,
-        "power": 68,
-        "eye": 69,
-        "discipline": 73,
-        "speed": 82,
-        "baseInstinct": 66,
+        "ovr": 82,
+        "contact": 86,
+        "power": 72,
+        "eye": 80,
+        "discipline": 75,
+        "speed": 86,
+        "baseInstinct": 82,
         "bunting": 65,
         "platoon": 50,
-        "fielding": 67,
-        "arm": 78,
-        "battingClutch": 65
+        "fielding": 76,
+        "arm": 79,
+        "battingClutch": 71
       },
       "positionRatings": {
-        "SP": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "CF": 82
+      }
     },
     "coach": null,
     "manager": null,

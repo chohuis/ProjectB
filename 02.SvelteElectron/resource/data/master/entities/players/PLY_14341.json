@@ -1,6 +1,6 @@
 {
   "id": "PLY_14341",
-  "name": "잭슨 에반",
+  "name": "Jackson Evan",
   "nameEn": "Jackson Evan",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 58,
   "popularity": 29,
   "militaryStatus": "군필",

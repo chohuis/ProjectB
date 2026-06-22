@@ -1,9 +1,9 @@
 {
   "id": "PLY_11453",
-  "name": "존스 타일러",
-  "nameEn": "Jones Tyler",
+  "name": "Thomas Zach",
+  "nameEn": "Thomas Zach",
   "role": "player",
-  "age": 26,
+  "age": 19,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:파나마",
   "diligence": 75,
-  "popularity": 32,
+  "popularity": 20,
   "militaryStatus": "군필",
   "entryYear": 2035,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 26,
+  "entryAge": 19,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "SP",
-      "jerseyNumber": 30,
+      "jerseyNumber": 92,
       "primaryPosition": "SP",
-      "developmentRate": 50,
-      "potentialHidden": 56,
-      "proServiceYears": 4,
+      "developmentRate": 66,
+      "potentialHidden": 61,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 78,
-        "stamina": 76,
-        "velocity": 87,
-        "command": 81,
-        "control": 77,
-        "movement": 74,
-        "mentality": 85,
-        "recovery": 72,
-        "clutch": 66,
-        "holdRunners": 68
+        "ovr": 61,
+        "stamina": 64,
+        "velocity": 66,
+        "command": 57,
+        "control": 58,
+        "movement": 64,
+        "mentality": 63,
+        "recovery": 58,
+        "clutch": 55,
+        "holdRunners": 57
       },
       "batting": {
-        "ovr": 81,
-        "contact": 81,
-        "power": 79,
-        "eye": 77,
-        "discipline": 79,
-        "speed": 77,
-        "baseInstinct": 78,
-        "bunting": 72,
+        "ovr": 61,
+        "contact": 60,
+        "power": 58,
+        "eye": 53,
+        "discipline": 53,
+        "speed": 59,
+        "baseInstinct": 51,
+        "bunting": 56,
         "platoon": 50,
-        "fielding": 77,
-        "arm": 72,
-        "battingClutch": 72
+        "fielding": 56,
+        "arm": 59,
+        "battingClutch": 58
       },
       "positionRatings": {
-        "SP": 81
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "SP": 61
+      }
     },
     "coach": null,
     "manager": null,

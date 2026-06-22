@@ -1,72 +1,46 @@
 {
   "id": "PLY_02016",
-  "name": "구태양",
-  "nameEn": "Gu Taeyang",
+  "name": "이토 렌",
+  "nameEn": "Ito Ren",
   "role": "player",
-  "age": 19,
+  "age": 27,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_GIANTWHALES",
-  "teamId": "TEAM_KBL_GIANTWHALES_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SEAGULLS",
+  "teamId": "TEAM_JBL_PL_SEAGULLS_2",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "1B",
-      "jerseyNumber": 89,
+      "position": "SP",
+      "jerseyNumber": 31,
       "pitching": {
-        "ovr": 48,
-        "stamina": 48,
-        "velocity": 43,
-        "command": 52,
-        "control": 47,
-        "movement": 47,
-        "mentality": 45,
-        "recovery": 52,
-        "clutch": 42,
-        "holdRunners": 39
+        "ovr": 77,
+        "stamina": 77,
+        "velocity": 76,
+        "command": 80,
+        "control": 72,
+        "movement": 72,
+        "mentality": 73,
+        "recovery": 75
       },
       "batting": {
-        "ovr": 68,
-        "contact": 67,
-        "power": 64,
-        "eye": 63,
-        "discipline": 65,
-        "speed": 70,
-        "fielding": 63,
-        "arm": 63,
-        "battingClutch": 69,
-        "baseInstinct": 62,
-        "bunting": 65,
-        "platoon": 57
+        "ovr": 47,
+        "contact": 48,
+        "power": 44,
+        "eye": 40,
+        "discipline": 45,
+        "speed": 42,
+        "fielding": 46,
+        "arm": 40,
+        "battingClutch": 43
       },
-      "developmentRate": 47,
-      "potentialHidden": 74,
-      "primaryPosition": "1B",
-      "positionRatings": {
-        "1B": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 40,
+      "potentialHidden": 89
     },
     "coach": {
       "specialty": "-",
@@ -106,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 64,
-  "popularity": 13
+  }
 }

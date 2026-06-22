@@ -1,9 +1,9 @@
 {
   "id": "PLY_11382",
-  "name": "킹 케빈",
-  "nameEn": "King Kevin",
+  "name": "Martin Derek",
+  "nameEn": "Martin Derek",
   "role": "player",
-  "age": 29,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 70,
-  "popularity": 50,
+  "notes": "국적:쿠바",
+  "diligence": 48,
+  "popularity": 34,
   "militaryStatus": "군필",
   "entryYear": 2035,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 29,
+  "entryAge": 21,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 22,
-      "primaryPosition": "SP",
-      "developmentRate": 55,
-      "potentialHidden": 53,
-      "proServiceYears": 7,
+      "position": "SS",
+      "jerseyNumber": 62,
+      "primaryPosition": "SS",
+      "developmentRate": 56,
+      "potentialHidden": 64,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 65,
-        "stamina": 57,
-        "velocity": 69,
-        "command": 62,
-        "control": 68,
-        "movement": 64,
-        "mentality": 62,
+        "ovr": 66,
+        "stamina": 59,
+        "velocity": 66,
+        "command": 67,
+        "control": 58,
+        "movement": 65,
+        "mentality": 72,
         "recovery": 57,
-        "clutch": 57,
-        "holdRunners": 50
+        "clutch": 59,
+        "holdRunners": 58
       },
       "batting": {
-        "ovr": 63,
-        "contact": 61,
-        "power": 52,
-        "eye": 65,
-        "discipline": 58,
-        "speed": 58,
-        "baseInstinct": 58,
-        "bunting": 55,
+        "ovr": 66,
+        "contact": 65,
+        "power": 63,
+        "eye": 66,
+        "discipline": 57,
+        "speed": 62,
+        "baseInstinct": 65,
+        "bunting": 57,
         "platoon": 50,
-        "fielding": 65,
-        "arm": 60,
-        "battingClutch": 54
+        "fielding": 63,
+        "arm": 67,
+        "battingClutch": 56
       },
       "positionRatings": {
-        "SP": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SS": 66
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,72 +1,46 @@
 {
   "id": "PLY_01983",
-  "name": "서태준",
-  "nameEn": "Seo Taejun",
+  "name": "하야시 슌",
+  "nameEn": "Hayashi Shun",
   "role": "player",
-  "age": 24,
+  "age": 28,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_STEELDINOS",
-  "teamId": "TEAM_KBL_STEELDINOS_1",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
+  "teamId": "TEAM_JBL_PL_MARINESOLDIERS_2",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "UT",
-      "jerseyNumber": 57,
+      "position": "1B",
+      "jerseyNumber": 43,
       "pitching": {
-        "ovr": 66,
-        "stamina": 69,
-        "velocity": 67,
-        "command": 66,
-        "control": 63,
-        "movement": 68,
-        "mentality": 66,
-        "recovery": 63,
-        "clutch": 62,
-        "holdRunners": 59
+        "ovr": 53,
+        "stamina": 58,
+        "velocity": 61,
+        "command": 59,
+        "control": 51,
+        "movement": 50,
+        "mentality": 52,
+        "recovery": 54
       },
       "batting": {
-        "ovr": 86,
-        "contact": 89,
-        "power": 86,
-        "eye": 87,
-        "discipline": 85,
-        "speed": 83,
-        "fielding": 85,
-        "arm": 81,
-        "battingClutch": 78,
-        "baseInstinct": 75,
-        "bunting": 72,
-        "platoon": 74
+        "ovr": 80,
+        "contact": 82,
+        "power": 80,
+        "eye": 78,
+        "discipline": 79,
+        "speed": 78,
+        "fielding": 78,
+        "arm": 73,
+        "battingClutch": 78
       },
-      "developmentRate": 55,
-      "potentialHidden": 91,
-      "primaryPosition": "UT",
-      "positionRatings": {
-        "UT": 86
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 2,
-      "contract": {
-        "salary": 5300,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 49,
+      "potentialHidden": 69
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 68,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

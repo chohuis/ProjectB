@@ -1,9 +1,9 @@
 {
   "id": "PLY_12929",
-  "name": "로빈슨 칼렙",
-  "nameEn": "Robinson Caleb",
+  "name": "Smith Luis",
+  "nameEn": "Smith Luis",
   "role": "player",
-  "age": 21,
+  "age": 30,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:도미니카",
   "diligence": 65,
-  "popularity": 36,
+  "popularity": 42,
   "militaryStatus": "군필",
   "entryYear": 2044,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 21,
+  "entryAge": 30,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "SP",
-      "jerseyNumber": 70,
+      "jerseyNumber": 56,
       "primaryPosition": "SP",
-      "developmentRate": 74,
-      "potentialHidden": 76,
-      "proServiceYears": 0,
+      "developmentRate": 38,
+      "potentialHidden": 52,
+      "proServiceYears": 8,
       "pitching": {
-        "ovr": 63,
+        "ovr": 65,
         "stamina": 63,
         "velocity": 69,
-        "command": 57,
-        "control": 65,
-        "movement": 58,
-        "mentality": 59,
-        "recovery": 54,
-        "clutch": 61,
-        "holdRunners": 50
+        "command": 58,
+        "control": 66,
+        "movement": 68,
+        "mentality": 65,
+        "recovery": 66,
+        "clutch": 63,
+        "holdRunners": 57
       },
       "batting": {
-        "ovr": 68,
-        "contact": 63,
-        "power": 58,
-        "eye": 69,
-        "discipline": 69,
-        "speed": 61,
-        "baseInstinct": 68,
-        "bunting": 49,
+        "ovr": 65,
+        "contact": 64,
+        "power": 57,
+        "eye": 60,
+        "discipline": 61,
+        "speed": 67,
+        "baseInstinct": 65,
+        "bunting": 47,
         "platoon": 50,
-        "fielding": 60,
-        "arm": 71,
-        "battingClutch": 68
+        "fielding": 65,
+        "arm": 67,
+        "battingClutch": 63
       },
       "positionRatings": {
-        "SP": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+        "SP": 65
+      }
     },
     "coach": null,
     "manager": null,

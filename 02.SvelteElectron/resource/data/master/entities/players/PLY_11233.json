@@ -1,9 +1,9 @@
 {
   "id": "PLY_11233",
-  "name": "미첼 브랜던",
-  "nameEn": "Mitchell Brandon",
+  "name": "Martinez Carlos",
+  "nameEn": "Martinez Carlos",
   "role": "player",
-  "age": 21,
+  "age": 33,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 72,
-  "popularity": 19,
+  "notes": "국적:멕시코",
+  "diligence": 77,
+  "popularity": 39,
   "militaryStatus": "군필",
   "entryYear": 2034,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 21,
+  "entryAge": 33,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 58,
-      "primaryPosition": "SP",
-      "developmentRate": 71,
-      "potentialHidden": 90,
-      "proServiceYears": 0,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 29,
+      "primaryPosition": "RF",
+      "developmentRate": 51,
+      "potentialHidden": 55,
+      "proServiceYears": 11,
       "pitching": {
-        "ovr": 55,
-        "stamina": 51,
-        "velocity": 53,
-        "command": 48,
-        "control": 58,
-        "movement": 56,
-        "mentality": 61,
-        "recovery": 48,
-        "clutch": 54,
-        "holdRunners": 44
+        "ovr": 62,
+        "stamina": 60,
+        "velocity": 62,
+        "command": 55,
+        "control": 61,
+        "movement": 65,
+        "mentality": 60,
+        "recovery": 51,
+        "clutch": 55,
+        "holdRunners": 56
       },
       "batting": {
-        "ovr": 59,
-        "contact": 56,
-        "power": 51,
-        "eye": 50,
-        "discipline": 58,
-        "speed": 59,
-        "baseInstinct": 54,
-        "bunting": 44,
+        "ovr": 62,
+        "contact": 53,
+        "power": 54,
+        "eye": 65,
+        "discipline": 64,
+        "speed": 67,
+        "baseInstinct": 51,
+        "bunting": 52,
         "platoon": 50,
-        "fielding": 61,
-        "arm": 52,
-        "battingClutch": 52
+        "fielding": 52,
+        "arm": 64,
+        "battingClutch": 58
       },
       "positionRatings": {
-        "SP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "RF": 62
+      }
     },
     "coach": null,
     "manager": null,

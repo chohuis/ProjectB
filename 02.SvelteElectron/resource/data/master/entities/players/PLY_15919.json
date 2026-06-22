@@ -1,6 +1,6 @@
 {
   "id": "PLY_15919",
-  "name": "화이트 코너",
+  "name": "White Connor",
   "nameEn": "White Connor",
   "role": "player",
   "age": 18,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 64,
   "popularity": 26,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 45
       },
       "batting": {
-        "ovr": 51,
-        "contact": 43,
-        "power": 53,
-        "eye": 48,
-        "discipline": 47,
-        "speed": 56,
-        "baseInstinct": 45,
-        "bunting": 40,
-        "platoon": 49,
-        "fielding": 48,
-        "arm": 51,
-        "battingClutch": 51
+        "ovr": 52,
+        "contact": 44,
+        "power": 54,
+        "eye": 49,
+        "discipline": 48,
+        "speed": 57,
+        "baseInstinct": 46,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 52,
+        "battingClutch": 52
       },
       "positionRatings": {
         "LF": 52

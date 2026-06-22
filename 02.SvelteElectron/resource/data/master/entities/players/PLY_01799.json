@@ -1,61 +1,46 @@
 {
   "id": "PLY_01799",
-  "name": "양재윤",
-  "nameEn": "Yang Jaeyun",
+  "name": "마에다 마코토",
+  "nameEn": "Maeda Makoto",
   "role": "player",
-  "age": 18,
+  "age": 32,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_JECHEON_RIDGE",
-  "teamId": "TEAM_HS_JECHEON_RIDGE",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_JECHEON_RIDGE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONSTORMS",
+  "teamId": "TEAM_JBL_CL_IRONSTORMS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
-      "handedness": "R",
-      "position": "UT",
-      "jerseyNumber": 28,
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "CP",
+      "jerseyNumber": 39,
       "pitching": {
-        "ovr": 48,
-        "stamina": 52,
-        "velocity": 52,
-        "command": 53,
-        "control": 47,
-        "movement": 50,
-        "mentality": 49,
-        "recovery": 50,
-        "clutch": 42,
-        "holdRunners": 45
+        "ovr": 68,
+        "stamina": 56,
+        "velocity": 70,
+        "command": 66,
+        "control": 65,
+        "movement": 63,
+        "mentality": 70,
+        "recovery": 61
       },
       "batting": {
-        "ovr": 68,
-        "contact": 72,
-        "power": 67,
-        "eye": 72,
-        "discipline": 73,
-        "speed": 66,
-        "fielding": 74,
-        "arm": 70,
-        "battingClutch": 67,
-        "baseInstinct": 57,
-        "bunting": 56,
-        "platoon": 57
+        "ovr": 34,
+        "contact": 38,
+        "power": 38,
+        "eye": 33,
+        "discipline": 33,
+        "speed": 39,
+        "fielding": 31,
+        "arm": 33,
+        "battingClutch": 35
       },
-      "developmentRate": 68,
-      "potentialHidden": 69,
-      "primaryPosition": "UT",
-      "positionRatings": {
-        "UT": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 51,
+      "potentialHidden": 78
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 64,
-  "popularity": 48
+  }
 }

@@ -1,6 +1,6 @@
 {
   "id": "PLY_14393",
-  "name": "라이트 코너",
+  "name": "Wright Connor",
   "nameEn": "Wright Connor",
   "role": "player",
   "age": 30,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 79,
   "popularity": 36,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 39
       },
       "batting": {
-        "ovr": 58,
-        "contact": 50,
-        "power": 61,
-        "eye": 59,
-        "discipline": 57,
-        "speed": 56,
-        "baseInstinct": 49,
-        "bunting": 52,
-        "platoon": 57,
-        "fielding": 59,
-        "arm": 59,
-        "battingClutch": 50
+        "ovr": 51,
+        "contact": 44,
+        "power": 54,
+        "eye": 52,
+        "discipline": 50,
+        "speed": 49,
+        "baseInstinct": 43,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 52,
+        "battingClutch": 44
       },
       "positionRatings": {
         "3B": 51

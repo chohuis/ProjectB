@@ -1,14 +1,14 @@
 {
   "id": "PLY_01247",
   "name": "화이트 알레한드로",
-  "nameEn": "Hwa 이트 알레한드로",
+  "nameEn": "White Alejandro",
   "role": "player",
-  "age": 40,
+  "age": 41,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_WAVERIDERS",
-  "teamId": "TEAM_ABL_WAVERIDERS_1",
+  "clubId": "CLUB_ABL_NYM",
+  "teamId": "TEAM_ABL_NYM",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -19,48 +19,28 @@
       "position": "RF",
       "jerseyNumber": 22,
       "pitching": {
-        "ovr": 65,
-        "stamina": 71,
-        "velocity": 62,
-        "command": 68,
-        "control": 67,
-        "movement": 68,
-        "mentality": 67,
-        "recovery": 63,
-        "clutch": 64,
-        "holdRunners": 61
+        "ovr": 69,
+        "stamina": 65,
+        "velocity": 69,
+        "command": 62,
+        "control": 62,
+        "movement": 64,
+        "mentality": 66,
+        "recovery": 62
       },
       "batting": {
-        "ovr": 85,
-        "contact": 81,
-        "power": 81,
-        "eye": 91,
-        "discipline": 85,
-        "speed": 79,
-        "fielding": 80,
-        "arm": 90,
-        "battingClutch": 85,
-        "baseInstinct": 82,
-        "bunting": 74,
-        "platoon": 79
+        "ovr": 91,
+        "contact": 92,
+        "power": 88,
+        "eye": 89,
+        "discipline": 91,
+        "speed": 86,
+        "fielding": 82,
+        "arm": 85,
+        "battingClutch": 88
       },
       "developmentRate": 47,
-      "potentialHidden": 74,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 85
-      },
-      "proServiceYears": 18,
-      "contract": {
-        "salary": 17800,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 74
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,6 +1,6 @@
 {
   "id": "PLY_14415",
-  "name": "테일러 브랜던",
+  "name": "Taylor Brandon",
   "nameEn": "Taylor Brandon",
   "role": "player",
   "age": 32,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 46,
   "popularity": 18,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 70,
       "proServiceYears": 10,
       "pitching": {
-        "ovr": 78,
-        "stamina": 69,
-        "velocity": 87,
-        "command": 72,
-        "control": 81,
-        "movement": 73,
-        "mentality": 75,
-        "recovery": 75,
-        "clutch": 68,
-        "holdRunners": 62
+        "ovr": 62,
+        "stamina": 55,
+        "velocity": 69,
+        "command": 57,
+        "control": 64,
+        "movement": 58,
+        "mentality": 60,
+        "recovery": 60,
+        "clutch": 54,
+        "holdRunners": 49
       },
       "batting": {
         "ovr": 62,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

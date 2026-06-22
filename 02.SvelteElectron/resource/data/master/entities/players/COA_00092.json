@@ -3,12 +3,12 @@
   "name": "화이트 조셉",
   "nameEn": "White Joseph",
   "role": "coach",
-  "age": 40,
+  "age": 45,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_HARBORHAWKS",
-  "teamId": "TEAM_ABL_HARBORHAWKS_1",
+  "clubId": "CLUB_ABL_NYY",
+  "teamId": "TEAM_ABL_NYY",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -26,9 +26,7 @@
         "control": 50,
         "movement": 50,
         "mentality": 50,
-        "recovery": 50,
-        "clutch": 50,
-        "holdRunners": 50
+        "recovery": 50
       },
       "batting": {
         "ovr": 50,
@@ -39,25 +37,20 @@
         "speed": 50,
         "fielding": 50,
         "arm": 50,
-        "battingClutch": 50,
-        "baseInstinct": 50,
-        "bunting": 45,
-        "platoon": 50
+        "battingClutch": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 70,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 50
-      }
+      "potentialHidden": 70
     },
     "coach": {
-      "specialty": "-",
+      "specialty": "멘탈",
       "experienceYears": 4,
       "stats": {
         "teaching": 61,
-        "analytics": 65,
-        "experience": 1
+        "analysis": 65,
+        "communication": 79,
+        "discipline": 66,
+        "leadership": 78
       },
       "trainingBuffs": "구속 훈련 +2%"
     },
@@ -87,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

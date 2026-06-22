@@ -1,9 +1,9 @@
 {
   "id": "PLY_13224",
-  "name": "화이트 알렉스",
-  "nameEn": "White Alex",
+  "name": "Anderson Evan",
+  "nameEn": "Anderson Evan",
   "role": "player",
-  "age": 25,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 72,
-  "popularity": 44,
+  "notes": "국적:도미니카",
+  "diligence": 73,
+  "popularity": 31,
   "militaryStatus": "군필",
   "entryYear": 2046,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 25,
+  "entryAge": 20,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 82,
-      "primaryPosition": "SP",
-      "developmentRate": 59,
-      "potentialHidden": 78,
-      "proServiceYears": 3,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 53,
+      "primaryPosition": "3B",
+      "developmentRate": 65,
+      "potentialHidden": 80,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 71,
-        "stamina": 75,
-        "velocity": 76,
-        "command": 64,
-        "control": 64,
-        "movement": 68,
-        "mentality": 70,
-        "recovery": 72,
-        "clutch": 64,
-        "holdRunners": 66
+        "ovr": 60,
+        "stamina": 62,
+        "velocity": 60,
+        "command": 62,
+        "control": 60,
+        "movement": 59,
+        "mentality": 67,
+        "recovery": 60,
+        "clutch": 50,
+        "holdRunners": 52
       },
       "batting": {
-        "ovr": 76,
-        "contact": 76,
-        "power": 70,
-        "eye": 79,
-        "discipline": 70,
-        "speed": 72,
-        "baseInstinct": 72,
-        "bunting": 71,
+        "ovr": 60,
+        "contact": 58,
+        "power": 51,
+        "eye": 62,
+        "discipline": 52,
+        "speed": 54,
+        "baseInstinct": 62,
+        "bunting": 46,
         "platoon": 50,
-        "fielding": 77,
-        "arm": 70,
-        "battingClutch": 69
+        "fielding": 53,
+        "arm": 61,
+        "battingClutch": 48
       },
       "positionRatings": {
-        "SP": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "3B": 60
+      }
     },
     "coach": null,
     "manager": null,

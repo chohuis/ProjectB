@@ -1,9 +1,9 @@
 {
   "id": "PLY_13965",
-  "name": "스콧 브랜던",
-  "nameEn": "Scott Brandon",
+  "name": "Brown Grant",
+  "nameEn": "Brown Grant",
   "role": "player",
-  "age": 22,
+  "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 61,
-  "popularity": 48,
+  "notes": "국적:일본",
+  "diligence": 76,
+  "popularity": 32,
   "militaryStatus": "군필",
   "entryYear": 2050,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 22,
+  "entryAge": 27,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 93,
-      "primaryPosition": "SP",
-      "developmentRate": 79,
-      "potentialHidden": 72,
-      "proServiceYears": 0,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "C",
+      "jerseyNumber": 32,
+      "primaryPosition": "C",
+      "developmentRate": 46,
+      "potentialHidden": 67,
+      "proServiceYears": 5,
       "pitching": {
-        "ovr": 54,
-        "stamina": 54,
-        "velocity": 53,
-        "command": 46,
-        "control": 48,
-        "movement": 50,
-        "mentality": 59,
-        "recovery": 44,
-        "clutch": 50,
-        "holdRunners": 45
+        "ovr": 65,
+        "stamina": 66,
+        "velocity": 73,
+        "command": 68,
+        "control": 59,
+        "movement": 60,
+        "mentality": 70,
+        "recovery": 67,
+        "clutch": 59,
+        "holdRunners": 56
       },
       "batting": {
-        "ovr": 57,
-        "contact": 60,
-        "power": 57,
-        "eye": 53,
-        "discipline": 57,
-        "speed": 54,
-        "baseInstinct": 57,
-        "bunting": 51,
+        "ovr": 65,
+        "contact": 68,
+        "power": 62,
+        "eye": 69,
+        "discipline": 64,
+        "speed": 70,
+        "baseInstinct": 64,
+        "bunting": 57,
         "platoon": 50,
-        "fielding": 52,
-        "arm": 48,
-        "battingClutch": 56
+        "fielding": 64,
+        "arm": 58,
+        "battingClutch": 57
       },
       "positionRatings": {
-        "SP": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "C": 65
+      }
     },
     "coach": null,
     "manager": null,

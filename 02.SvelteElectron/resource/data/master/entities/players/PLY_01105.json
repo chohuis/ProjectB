@@ -1,14 +1,14 @@
 {
   "id": "PLY_01105",
   "name": "페레스 마이클",
-  "nameEn": "Pe 레스 마이클",
+  "nameEn": "Perez Michael",
   "role": "player",
   "age": 39,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_LONESTARS",
-  "teamId": "TEAM_ABL_LONESTARS_1",
+  "clubId": "CLUB_ABL_TEX",
+  "teamId": "TEAM_ABL_TEX",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,48 +19,28 @@
       "position": "C",
       "jerseyNumber": 15,
       "pitching": {
-        "ovr": 64,
+        "ovr": 60,
         "stamina": 61,
-        "velocity": 63,
-        "command": 63,
-        "control": 66,
-        "movement": 61,
-        "mentality": 63,
-        "recovery": 61,
-        "clutch": 63,
-        "holdRunners": 61
+        "velocity": 64,
+        "command": 58,
+        "control": 57,
+        "movement": 58,
+        "mentality": 62,
+        "recovery": 64
       },
       "batting": {
         "ovr": 84,
-        "contact": 89,
-        "power": 80,
-        "eye": 89,
-        "discipline": 89,
-        "speed": 79,
-        "fielding": 82,
-        "arm": 84,
-        "battingClutch": 78,
-        "baseInstinct": 74,
-        "bunting": 75,
-        "platoon": 80
+        "contact": 84,
+        "power": 89,
+        "eye": 83,
+        "discipline": 82,
+        "speed": 77,
+        "fielding": 86,
+        "arm": 89,
+        "battingClutch": 86
       },
       "developmentRate": 34,
-      "potentialHidden": 91,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 84
-      },
-      "proServiceYears": 17,
-      "contract": {
-        "salary": 17100,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 91
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,9 +1,9 @@
 {
   "id": "PLY_13905",
-  "name": "미첼 카를로스",
-  "nameEn": "Mitchell Carlos",
+  "name": "Clark Eric",
+  "nameEn": "Clark Eric",
   "role": "player",
-  "age": 33,
+  "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 66,
-  "popularity": 47,
+  "notes": "국적:쿠바",
+  "diligence": 58,
+  "popularity": 41,
   "militaryStatus": "군필",
   "entryYear": 2050,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 33,
+  "entryAge": 27,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 86,
-      "primaryPosition": "SP",
-      "developmentRate": 36,
-      "potentialHidden": 70,
-      "proServiceYears": 11,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 6,
+      "primaryPosition": "SS",
+      "developmentRate": 69,
+      "potentialHidden": 85,
+      "proServiceYears": 5,
       "pitching": {
-        "ovr": 85,
-        "stamina": 76,
-        "velocity": 87,
-        "command": 84,
-        "control": 77,
+        "ovr": 79,
+        "stamina": 84,
+        "velocity": 86,
+        "command": 77,
+        "control": 79,
         "movement": 78,
-        "mentality": 79,
-        "recovery": 74,
-        "clutch": 74,
-        "holdRunners": 79
+        "mentality": 81,
+        "recovery": 80,
+        "clutch": 73,
+        "holdRunners": 72
       },
       "batting": {
-        "ovr": 72,
-        "contact": 65,
+        "ovr": 79,
+        "contact": 75,
         "power": 74,
-        "eye": 76,
-        "discipline": 63,
-        "speed": 77,
-        "baseInstinct": 65,
-        "bunting": 63,
+        "eye": 82,
+        "discipline": 76,
+        "speed": 76,
+        "baseInstinct": 74,
+        "bunting": 73,
         "platoon": 50,
-        "fielding": 71,
-        "arm": 66,
-        "battingClutch": 68
+        "fielding": 76,
+        "arm": 82,
+        "battingClutch": 70
       },
       "positionRatings": {
-        "SP": 72
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "SS": 79
+      }
     },
     "coach": null,
     "manager": null,

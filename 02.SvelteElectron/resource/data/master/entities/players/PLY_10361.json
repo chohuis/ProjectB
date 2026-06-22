@@ -1,9 +1,9 @@
 {
   "id": "PLY_10361",
-  "name": "로드리게스 콜",
-  "nameEn": "Rodriguez Cole",
+  "name": "Wright Trevor",
+  "nameEn": "Wright Trevor",
   "role": "player",
-  "age": 18,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 48,
-  "popularity": 41,
+  "notes": "국적:미국",
+  "diligence": 64,
+  "popularity": 45,
   "militaryStatus": "군필",
   "entryYear": 2029,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 18,
+  "entryAge": 28,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 5,
-      "primaryPosition": "SP",
-      "developmentRate": 72,
-      "potentialHidden": 71,
-      "proServiceYears": 0,
+      "position": "1B",
+      "jerseyNumber": 90,
+      "primaryPosition": "1B",
+      "developmentRate": 70,
+      "potentialHidden": 56,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 58,
-        "stamina": 63,
-        "velocity": 68,
-        "command": 51,
-        "control": 51,
-        "movement": 52,
-        "mentality": 60,
-        "recovery": 57,
-        "clutch": 54,
-        "holdRunners": 55
+        "ovr": 78,
+        "stamina": 80,
+        "velocity": 86,
+        "command": 69,
+        "control": 70,
+        "movement": 71,
+        "mentality": 80,
+        "recovery": 78,
+        "clutch": 76,
+        "holdRunners": 70
       },
       "batting": {
-        "ovr": 62,
-        "contact": 60,
-        "power": 62,
-        "eye": 67,
-        "discipline": 53,
-        "speed": 58,
-        "baseInstinct": 53,
-        "bunting": 50,
+        "ovr": 78,
+        "contact": 73,
+        "power": 75,
+        "eye": 78,
+        "discipline": 79,
+        "speed": 76,
+        "baseInstinct": 71,
+        "bunting": 65,
         "platoon": 50,
-        "fielding": 64,
-        "arm": 56,
-        "battingClutch": 62
+        "fielding": 79,
+        "arm": 78,
+        "battingClutch": 68
       },
       "positionRatings": {
-        "SP": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "1B": 78
+      }
     },
     "coach": null,
     "manager": null,

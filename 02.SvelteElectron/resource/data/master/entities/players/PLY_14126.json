@@ -1,6 +1,6 @@
 {
   "id": "PLY_14126",
-  "name": "킹 코디",
+  "name": "King Cody",
   "nameEn": "King Cody",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 64,
   "popularity": 24,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 72,
       "proServiceYears": 3,
       "pitching": {
-        "ovr": 62,
-        "stamina": 63,
-        "velocity": 70,
-        "command": 59,
-        "control": 56,
-        "movement": 64,
-        "mentality": 57,
-        "recovery": 62,
-        "clutch": 54,
-        "holdRunners": 53
+        "ovr": 66,
+        "stamina": 67,
+        "velocity": 74,
+        "command": 63,
+        "control": 60,
+        "movement": 68,
+        "mentality": 61,
+        "recovery": 66,
+        "clutch": 57,
+        "holdRunners": 56
       },
       "batting": {
         "ovr": 66,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

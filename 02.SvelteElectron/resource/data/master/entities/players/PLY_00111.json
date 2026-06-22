@@ -1,9 +1,9 @@
 {
   "id": "PLY_00111",
   "name": "황준호",
-  "nameEn": "Hwang Junho",
+  "nameEn": "Ha Min-seok",
   "role": "player",
-  "age": 19,
+  "age": 15,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "2B",
       "jerseyNumber": 11,
       "pitching": {
-        "ovr": 40,
-        "stamina": 38,
-        "velocity": 39,
-        "command": 43,
-        "control": 39,
-        "movement": 45,
-        "mentality": 41,
-        "recovery": 37,
-        "clutch": 42,
-        "holdRunners": 37
+        "ovr": 43,
+        "stamina": 59,
+        "velocity": 69,
+        "command": 56,
+        "control": 56,
+        "movement": 63,
+        "mentality": 62,
+        "recovery": 70
       },
       "batting": {
-        "ovr": 60,
-        "contact": 62,
-        "power": 66,
-        "eye": 59,
-        "discipline": 58,
-        "speed": 63,
+        "ovr": 61,
+        "contact": 66,
+        "power": 56,
+        "eye": 60,
+        "discipline": 64,
+        "speed": 59,
         "fielding": 63,
-        "arm": 62,
-        "battingClutch": 58,
-        "baseInstinct": 55,
-        "bunting": 48,
-        "platoon": 51
+        "arm": 54,
+        "battingClutch": 62
       },
       "developmentRate": 74,
-      "potentialHidden": 76,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 60
-      }
+      "potentialHidden": 76
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

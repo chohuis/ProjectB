@@ -1,14 +1,14 @@
 {
   "id": "PLY_01317",
   "name": "존스 마이클",
-  "nameEn": "Jon 스 마이클",
+  "nameEn": "Jones Michael",
   "role": "player",
   "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_MOUNTAINPEAKS",
-  "teamId": "TEAM_ABL_MOUNTAINPEAKS_1",
+  "clubId": "CLUB_ABL_STL",
+  "teamId": "TEAM_ABL_STL",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 2,
       "pitching": {
-        "ovr": 76,
-        "stamina": 77,
-        "velocity": 74,
-        "command": 79,
-        "control": 77,
-        "movement": 78,
-        "mentality": 78,
-        "recovery": 74,
-        "clutch": 66,
-        "holdRunners": 74
+        "ovr": 85,
+        "stamina": 89,
+        "velocity": 82,
+        "command": 82,
+        "control": 80,
+        "movement": 79,
+        "mentality": 85,
+        "recovery": 79
       },
       "batting": {
-        "ovr": 58,
-        "contact": 53,
-        "power": 56,
-        "eye": 56,
-        "discipline": 61,
-        "speed": 60,
-        "fielding": 57,
-        "arm": 64,
-        "battingClutch": 52,
-        "baseInstinct": 56,
-        "bunting": 48,
-        "platoon": 47
+        "ovr": 62,
+        "contact": 61,
+        "power": 68,
+        "eye": 59,
+        "discipline": 64,
+        "speed": 62,
+        "fielding": 61,
+        "arm": 63,
+        "battingClutch": 62
       },
       "developmentRate": 43,
-      "potentialHidden": 89,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SCREWBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 5,
-      "contract": {
-        "salary": 26300,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 89
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

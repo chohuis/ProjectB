@@ -1,9 +1,9 @@
 {
   "id": "PLY_12474",
-  "name": "홀 오스틴",
-  "nameEn": "Hall Austin",
+  "name": "Williams Blake",
+  "nameEn": "Williams Blake",
   "role": "player",
-  "age": 26,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 84,
-  "popularity": 30,
+  "notes": "국적:쿠바",
+  "diligence": 79,
+  "popularity": 38,
   "militaryStatus": "군필",
   "entryYear": 2041,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 26,
+  "entryAge": 20,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "L",
       "position": "SP",
-      "jerseyNumber": 15,
+      "jerseyNumber": 83,
       "primaryPosition": "SP",
-      "developmentRate": 67,
-      "potentialHidden": 80,
-      "proServiceYears": 4,
+      "developmentRate": 59,
+      "potentialHidden": 77,
+      "proServiceYears": 0,
       "pitching": {
         "ovr": 59,
-        "stamina": 58,
-        "velocity": 64,
-        "command": 53,
+        "stamina": 57,
+        "velocity": 65,
+        "command": 57,
         "control": 62,
-        "movement": 56,
-        "mentality": 56,
-        "recovery": 60,
-        "clutch": 59,
-        "holdRunners": 49
+        "movement": 60,
+        "mentality": 62,
+        "recovery": 54,
+        "clutch": 53,
+        "holdRunners": 55
       },
       "batting": {
-        "ovr": 68,
-        "contact": 64,
-        "power": 68,
-        "eye": 70,
-        "discipline": 64,
-        "speed": 74,
-        "baseInstinct": 65,
-        "bunting": 57,
+        "ovr": 59,
+        "contact": 55,
+        "power": 53,
+        "eye": 63,
+        "discipline": 56,
+        "speed": 65,
+        "baseInstinct": 61,
+        "bunting": 53,
         "platoon": 50,
-        "fielding": 67,
-        "arm": 62,
-        "battingClutch": 64
+        "fielding": 62,
+        "arm": 50,
+        "battingClutch": 58
       },
       "positionRatings": {
-        "SP": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "SP": 59
+      }
     },
     "coach": null,
     "manager": null,

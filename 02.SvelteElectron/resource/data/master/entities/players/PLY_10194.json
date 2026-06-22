@@ -1,9 +1,9 @@
 {
   "id": "PLY_10194",
-  "name": "마틴 카를로스",
-  "nameEn": "Martin Carlos",
+  "name": "Brown Cody",
+  "nameEn": "Brown Cody",
   "role": "player",
-  "age": 22,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 82,
-  "popularity": 27,
+  "notes": "국적:미국",
+  "diligence": 45,
+  "popularity": 31,
   "militaryStatus": "군필",
   "entryYear": 2028,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 22,
+  "entryAge": 21,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 97,
+      "jerseyNumber": 38,
       "primaryPosition": "SP",
-      "developmentRate": 64,
-      "potentialHidden": 87,
+      "developmentRate": 80,
+      "potentialHidden": 84,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 54,
-        "stamina": 55,
-        "velocity": 56,
-        "command": 48,
-        "control": 58,
-        "movement": 50,
-        "mentality": 56,
-        "recovery": 44,
-        "clutch": 45,
-        "holdRunners": 48
+        "ovr": 55,
+        "stamina": 50,
+        "velocity": 55,
+        "command": 55,
+        "control": 49,
+        "movement": 45,
+        "mentality": 58,
+        "recovery": 51,
+        "clutch": 53,
+        "holdRunners": 47
       },
       "batting": {
-        "ovr": 57,
-        "contact": 50,
+        "ovr": 55,
+        "contact": 52,
         "power": 50,
-        "eye": 62,
-        "discipline": 56,
-        "speed": 51,
-        "baseInstinct": 46,
-        "bunting": 45,
+        "eye": 57,
+        "discipline": 50,
+        "speed": 56,
+        "baseInstinct": 45,
+        "bunting": 44,
         "platoon": 50,
         "fielding": 52,
-        "arm": 51,
-        "battingClutch": 48
+        "arm": 55,
+        "battingClutch": 43
       },
       "positionRatings": {
-        "SP": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 55
+      }
     },
     "coach": null,
     "manager": null,

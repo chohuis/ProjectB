@@ -1,69 +1,46 @@
 {
   "id": "PLY_01594",
-  "name": "신건우",
-  "nameEn": "Shin Geonwoo",
+  "name": "타카하시 요스케",
+  "nameEn": "Takahashi Yosuke",
   "role": "player",
-  "age": 16,
+  "age": 25,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_INCHEON_HARBOR",
-  "teamId": "TEAM_HS_INCHEON_HARBOR",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_INCHEON_HARBOR",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TEMPOSTINGS",
+  "teamId": "TEAM_JBL_CL_TEMPOSTINGS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
-      "position": "CP",
-      "jerseyNumber": 23,
+      "position": "RP",
+      "jerseyNumber": 9,
       "pitching": {
-        "ovr": 56,
-        "stamina": 54,
-        "velocity": 52,
-        "command": 56,
-        "control": 59,
-        "movement": 56,
-        "mentality": 54,
-        "recovery": 53,
-        "clutch": 50,
-        "holdRunners": 45
+        "ovr": 86,
+        "stamina": 82,
+        "velocity": 94,
+        "command": 82,
+        "control": 84,
+        "movement": 85,
+        "mentality": 86,
+        "recovery": 86
       },
       "batting": {
-        "ovr": 38,
-        "contact": 35,
-        "power": 33,
-        "eye": 44,
-        "discipline": 38,
-        "speed": 32,
-        "fielding": 40,
-        "arm": 44,
-        "battingClutch": 35,
-        "baseInstinct": 40,
-        "bunting": 39,
-        "platoon": 36
+        "ovr": 66,
+        "contact": 66,
+        "power": 65,
+        "eye": 60,
+        "discipline": 66,
+        "speed": 64,
+        "fielding": 65,
+        "arm": 62,
+        "battingClutch": 66
       },
-      "developmentRate": 78,
-      "potentialHidden": 73,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 48,
+      "potentialHidden": 58
     },
     "coach": {
       "specialty": "-",
@@ -103,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 64,
-  "popularity": 17
+  }
 }

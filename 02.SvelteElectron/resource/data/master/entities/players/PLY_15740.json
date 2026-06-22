@@ -1,6 +1,6 @@
 {
   "id": "PLY_15740",
-  "name": "영 블레이크",
+  "name": "Young Blake",
   "nameEn": "Young Blake",
   "role": "player",
   "age": 33,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 57,
   "popularity": 48,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 39
       },
       "batting": {
-        "ovr": 65,
-        "contact": 59,
-        "power": 64,
-        "eye": 68,
-        "discipline": 58,
-        "speed": 65,
-        "baseInstinct": 55,
-        "bunting": 58,
-        "platoon": 63,
-        "fielding": 59,
-        "arm": 68,
-        "battingClutch": 53
+        "ovr": 52,
+        "contact": 47,
+        "power": 51,
+        "eye": 54,
+        "discipline": 46,
+        "speed": 52,
+        "baseInstinct": 44,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 54,
+        "battingClutch": 42
       },
       "positionRatings": {
         "LF": 52

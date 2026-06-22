@@ -1,9 +1,9 @@
 {
   "id": "PLY_00123",
   "name": "하우진",
-  "nameEn": "Ha Ujin",
+  "nameEn": "Jung Min-woo",
   "role": "player",
-  "age": 18,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,43 +19,28 @@
       "position": "SP",
       "jerseyNumber": 3,
       "pitching": {
-        "ovr": 48,
+        "ovr": 57,
         "stamina": 53,
-        "velocity": 50,
-        "command": 50,
-        "control": 51,
-        "movement": 48,
-        "mentality": 46,
-        "recovery": 52,
-        "clutch": 40,
-        "holdRunners": 40
+        "velocity": 56,
+        "command": 48,
+        "control": 48,
+        "movement": 54,
+        "mentality": 44,
+        "recovery": 60
       },
       "batting": {
-        "ovr": 30,
-        "contact": 28,
-        "power": 34,
-        "eye": 31,
-        "discipline": 27,
-        "speed": 26,
-        "fielding": 26,
-        "arm": 34,
-        "battingClutch": 38,
-        "baseInstinct": 44,
-        "bunting": 39,
-        "platoon": 41
+        "ovr": 43,
+        "contact": 58,
+        "power": 45,
+        "eye": 55,
+        "discipline": 58,
+        "speed": 52,
+        "fielding": 53,
+        "arm": 60,
+        "battingClutch": 59
       },
       "developmentRate": 49,
-      "potentialHidden": 64,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 48
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        }
-      ]
+      "potentialHidden": 64
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

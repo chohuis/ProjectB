@@ -1,6 +1,6 @@
 {
   "id": "PLY_15751",
-  "name": "화이트 제이슨",
+  "name": "White Jason",
   "nameEn": "White Jason",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 52,
   "popularity": 16,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 56,
       "proServiceYears": 3,
       "pitching": {
-        "ovr": 68,
-        "stamina": 60,
-        "velocity": 66,
-        "command": 61,
-        "control": 68,
-        "movement": 63,
-        "mentality": 62,
-        "recovery": 65,
-        "clutch": 60,
-        "holdRunners": 62
+        "ovr": 70,
+        "stamina": 62,
+        "velocity": 68,
+        "command": 63,
+        "control": 70,
+        "movement": 65,
+        "mentality": 64,
+        "recovery": 67,
+        "clutch": 62,
+        "holdRunners": 64
       },
       "batting": {
         "ovr": 70,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

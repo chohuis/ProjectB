@@ -1,6 +1,6 @@
 {
   "id": "PLY_14479",
-  "name": "마르티네스 트레버",
+  "name": "Martinez Trevor",
   "nameEn": "Martinez Trevor",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 83,
   "popularity": 43,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 64
       },
       "batting": {
-        "ovr": 69,
-        "contact": 60,
-        "power": 61,
-        "eye": 65,
-        "discipline": 61,
-        "speed": 74,
-        "baseInstinct": 69,
-        "bunting": 57,
-        "platoon": 48,
-        "fielding": 69,
-        "arm": 65,
-        "battingClutch": 61
+        "ovr": 72,
+        "contact": 63,
+        "power": 64,
+        "eye": 68,
+        "discipline": 64,
+        "speed": 77,
+        "baseInstinct": 72,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 72,
+        "arm": 68,
+        "battingClutch": 64
       },
       "positionRatings": {
         "RF": 72

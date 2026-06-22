@@ -1,7 +1,7 @@
 {
   "id": "PLY_00187",
   "name": "신승우",
-  "nameEn": "Shin Seungu",
+  "nameEn": "Ku Chan-woo",
   "role": "player",
   "age": 19,
   "status": "active",
@@ -19,47 +19,28 @@
       "position": "RP",
       "jerseyNumber": 7,
       "pitching": {
-        "ovr": 59,
-        "stamina": 65,
-        "velocity": 58,
-        "command": 56,
-        "control": 60,
-        "movement": 63,
-        "mentality": 55,
-        "recovery": 55,
-        "clutch": 57,
-        "holdRunners": 47
+        "ovr": 64,
+        "stamina": 53,
+        "velocity": 71,
+        "command": 61,
+        "control": 68,
+        "movement": 64,
+        "mentality": 68,
+        "recovery": 59
       },
       "batting": {
-        "ovr": 41,
-        "contact": 38,
-        "power": 44,
-        "eye": 37,
-        "discipline": 40,
-        "speed": 35,
-        "fielding": 45,
-        "arm": 41,
-        "battingClutch": 36,
-        "baseInstinct": 38,
-        "bunting": 32,
-        "platoon": 35
+        "ovr": 28,
+        "contact": 33,
+        "power": 35,
+        "eye": 34,
+        "discipline": 34,
+        "speed": 27,
+        "fielding": 34,
+        "arm": 31,
+        "battingClutch": 29
       },
       "developmentRate": 53,
-      "potentialHidden": 60,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

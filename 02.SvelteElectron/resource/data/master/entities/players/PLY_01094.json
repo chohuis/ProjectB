@@ -1,14 +1,14 @@
 {
   "id": "PLY_01094",
   "name": "윌리엄스 미겔",
-  "nameEn": "Wil 리엄스 미겔",
+  "nameEn": "Williams Miguel",
   "role": "player",
   "age": 35,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_LONESTARS",
-  "teamId": "TEAM_ABL_LONESTARS_1",
+  "clubId": "CLUB_ABL_TEX",
+  "teamId": "TEAM_ABL_TEX",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 4,
       "pitching": {
-        "ovr": 79,
-        "stamina": 77,
-        "velocity": 81,
-        "command": 81,
-        "control": 82,
-        "movement": 77,
-        "mentality": 81,
-        "recovery": 76,
-        "clutch": 78,
-        "holdRunners": 67
+        "ovr": 85,
+        "stamina": 90,
+        "velocity": 93,
+        "command": 86,
+        "control": 83,
+        "movement": 84,
+        "mentality": 88,
+        "recovery": 88
       },
       "batting": {
-        "ovr": 61,
-        "contact": 63,
-        "power": 61,
-        "eye": 65,
-        "discipline": 60,
-        "speed": 63,
-        "fielding": 63,
-        "arm": 65,
-        "battingClutch": 52,
-        "baseInstinct": 56,
-        "bunting": 47,
-        "platoon": 52
+        "ovr": 59,
+        "contact": 61,
+        "power": 59,
+        "eye": 53,
+        "discipline": 53,
+        "speed": 56,
+        "fielding": 56,
+        "arm": 61,
+        "battingClutch": 58
       },
       "developmentRate": 33,
-      "potentialHidden": 76,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 79
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 13,
-      "contract": {
-        "salary": 28600,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 76
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

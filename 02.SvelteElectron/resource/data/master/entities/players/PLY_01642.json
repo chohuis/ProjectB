@@ -1,61 +1,46 @@
 {
   "id": "PLY_01642",
-  "name": "장기훈",
-  "nameEn": "Jang Gihun",
+  "name": "미우라 쓰요시",
+  "nameEn": "Miura Tsuyoshi",
   "role": "player",
-  "age": 18,
+  "age": 24,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_YEOSU_SHORE",
-  "teamId": "TEAM_HS_YEOSU_SHORE",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_YEOSU_SHORE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONDRAKES",
+  "teamId": "TEAM_JBL_CL_IRONDRAKES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "SS",
-      "jerseyNumber": 21,
+      "position": "CP",
+      "jerseyNumber": 12,
       "pitching": {
-        "ovr": 43,
-        "stamina": 42,
-        "velocity": 47,
-        "command": 43,
-        "control": 43,
-        "movement": 47,
-        "mentality": 43,
-        "recovery": 45,
-        "clutch": 34,
-        "holdRunners": 42
+        "ovr": 72,
+        "stamina": 63,
+        "velocity": 77,
+        "command": 76,
+        "control": 74,
+        "movement": 76,
+        "mentality": 74,
+        "recovery": 77
       },
       "batting": {
-        "ovr": 63,
-        "contact": 68,
-        "power": 69,
-        "eye": 63,
-        "discipline": 69,
-        "speed": 63,
-        "fielding": 61,
-        "arm": 62,
-        "battingClutch": 56,
-        "baseInstinct": 62,
-        "bunting": 53,
-        "platoon": 51
+        "ovr": 49,
+        "contact": 50,
+        "power": 45,
+        "eye": 50,
+        "discipline": 50,
+        "speed": 51,
+        "fielding": 46,
+        "arm": 49,
+        "battingClutch": 49
       },
-      "developmentRate": 71,
-      "potentialHidden": 74,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 33,
+      "potentialHidden": 85
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 62,
-  "popularity": 34
+  }
 }

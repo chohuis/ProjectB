@@ -1,14 +1,14 @@
 {
   "id": "PLY_01488",
   "name": "애덤스 다니엘",
-  "nameEn": "Ae 덤스 다니엘",
+  "nameEn": "Adams Daniel",
   "role": "player",
   "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_DESERTSERPENTS",
-  "teamId": "TEAM_ABL_DESERTSERPENTS_2",
+  "clubId": "CLUB_ABL_ARI",
+  "teamId": "TEAM_ABL_ARI_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
@@ -19,48 +19,28 @@
       "position": "1B",
       "jerseyNumber": 53,
       "pitching": {
-        "ovr": 57,
-        "stamina": 60,
-        "velocity": 56,
-        "command": 61,
-        "control": 60,
-        "movement": 56,
-        "mentality": 59,
-        "recovery": 55,
-        "clutch": 50,
-        "holdRunners": 46
+        "ovr": 49,
+        "stamina": 53,
+        "velocity": 59,
+        "command": 52,
+        "control": 53,
+        "movement": 48,
+        "mentality": 48,
+        "recovery": 53
       },
       "batting": {
-        "ovr": 77,
-        "contact": 78,
-        "power": 74,
+        "ovr": 82,
+        "contact": 77,
+        "power": 80,
         "eye": 77,
-        "discipline": 72,
-        "speed": 76,
-        "fielding": 83,
-        "arm": 75,
-        "battingClutch": 67,
-        "baseInstinct": 72,
-        "bunting": 73,
-        "platoon": 68
+        "discipline": 78,
+        "speed": 75,
+        "fielding": 74,
+        "arm": 73,
+        "battingClutch": 82
       },
       "developmentRate": 51,
-      "potentialHidden": 60,
-      "primaryPosition": "1B",
-      "positionRatings": {
-        "1B": 77
-      },
-      "proServiceYears": 2,
-      "contract": {
-        "salary": 11700,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

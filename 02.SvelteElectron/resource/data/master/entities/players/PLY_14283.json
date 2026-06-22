@@ -1,6 +1,6 @@
 {
   "id": "PLY_14283",
-  "name": "로드리게스 에릭",
+  "name": "Rodriguez Eric",
   "nameEn": "Rodriguez Eric",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 55,
   "popularity": 42,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 83,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 50,
-        "stamina": 42,
-        "velocity": 60,
-        "command": 40,
-        "control": 51,
-        "movement": 41,
-        "mentality": 57,
-        "recovery": 42,
-        "clutch": 42,
-        "holdRunners": 43
+        "ovr": 51,
+        "stamina": 43,
+        "velocity": 61,
+        "command": 41,
+        "control": 52,
+        "movement": 42,
+        "mentality": 58,
+        "recovery": 43,
+        "clutch": 43,
+        "holdRunners": 44
       },
       "batting": {
         "ovr": 51,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 51
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

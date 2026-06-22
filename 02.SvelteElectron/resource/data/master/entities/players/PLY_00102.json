@@ -1,9 +1,9 @@
 {
   "id": "PLY_00102",
   "name": "나현우",
-  "nameEn": "Na Hyeonu",
+  "nameEn": "Jang Min-hyuk",
   "role": "player",
-  "age": 19,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -20,50 +20,27 @@
       "jerseyNumber": 2,
       "pitching": {
         "ovr": 56,
-        "stamina": 55,
-        "velocity": 59,
-        "command": 54,
-        "control": 56,
-        "movement": 61,
-        "mentality": 60,
-        "recovery": 61,
-        "clutch": 50,
-        "holdRunners": 47
+        "stamina": 68,
+        "velocity": 61,
+        "command": 53,
+        "control": 53,
+        "movement": 63,
+        "mentality": 51,
+        "recovery": 64
       },
       "batting": {
-        "ovr": 38,
-        "contact": 40,
-        "power": 35,
-        "eye": 37,
-        "discipline": 44,
-        "speed": 38,
-        "fielding": 37,
-        "arm": 33,
-        "battingClutch": 35,
-        "baseInstinct": 37,
-        "bunting": 33,
-        "platoon": 34
+        "ovr": 45,
+        "contact": 67,
+        "power": 50,
+        "eye": 51,
+        "discipline": 64,
+        "speed": 65,
+        "fielding": 51,
+        "arm": 55,
+        "battingClutch": 66
       },
       "developmentRate": 70,
-      "potentialHidden": 89,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 2
-        }
-      ]
+      "potentialHidden": 89
     },
     "coach": {
       "specialty": "-",
@@ -103,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

@@ -1,7 +1,7 @@
 {
   "id": "PLY_00318",
   "name": "배준혁",
-  "nameEn": "Bae Junhyeok",
+  "nameEn": "Kwon Tae-jun",
   "role": "player",
   "age": 23,
   "status": "active",
@@ -19,48 +19,28 @@
       "position": "CF",
       "jerseyNumber": 18,
       "pitching": {
-        "ovr": 46,
-        "stamina": 46,
-        "velocity": 42,
-        "command": 47,
-        "control": 41,
-        "movement": 44,
-        "mentality": 50,
-        "recovery": 51,
-        "clutch": 42,
-        "holdRunners": 35
+        "ovr": 44,
+        "stamina": 40,
+        "velocity": 40,
+        "command": 45,
+        "control": 43,
+        "movement": 42,
+        "mentality": 38,
+        "recovery": 44
       },
       "batting": {
-        "ovr": 66,
-        "contact": 68,
-        "power": 72,
-        "eye": 71,
-        "discipline": 63,
+        "ovr": 68,
+        "contact": 72,
+        "power": 70,
+        "eye": 69,
+        "discipline": 70,
         "speed": 72,
-        "fielding": 61,
+        "fielding": 71,
         "arm": 68,
-        "battingClutch": 58,
-        "baseInstinct": 66,
-        "bunting": 52,
-        "platoon": 62
+        "battingClutch": 71
       },
       "developmentRate": 51,
-      "potentialHidden": 56,
-      "primaryPosition": "CF",
-      "positionRatings": {
-        "CF": 66
-      },
-      "proServiceYears": 3,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 56
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

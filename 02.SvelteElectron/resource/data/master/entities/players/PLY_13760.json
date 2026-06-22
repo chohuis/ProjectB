@@ -1,9 +1,9 @@
 {
   "id": "PLY_13760",
-  "name": "애덤스 에릭",
-  "nameEn": "Adams Eric",
+  "name": "Scott Zach",
+  "nameEn": "Scott Zach",
   "role": "player",
-  "age": 35,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 62,
-  "popularity": 26,
+  "notes": "국적:베네수엘라",
+  "diligence": 82,
+  "popularity": 27,
   "militaryStatus": "군필",
   "entryYear": 2049,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 35,
+  "entryAge": 28,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 35,
-      "primaryPosition": "SP",
-      "developmentRate": 54,
-      "potentialHidden": 75,
-      "proServiceYears": 13,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 97,
+      "primaryPosition": "3B",
+      "developmentRate": 59,
+      "potentialHidden": 82,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 74,
-        "stamina": 72,
-        "velocity": 73,
-        "command": 77,
-        "control": 77,
-        "movement": 66,
-        "mentality": 76,
-        "recovery": 66,
-        "clutch": 73,
-        "holdRunners": 61
+        "ovr": 79,
+        "stamina": 74,
+        "velocity": 82,
+        "command": 69,
+        "control": 78,
+        "movement": 81,
+        "mentality": 74,
+        "recovery": 69,
+        "clutch": 75,
+        "holdRunners": 70
       },
       "batting": {
-        "ovr": 64,
-        "contact": 68,
-        "power": 56,
-        "eye": 57,
-        "discipline": 62,
-        "speed": 70,
-        "baseInstinct": 67,
-        "bunting": 58,
+        "ovr": 79,
+        "contact": 82,
+        "power": 81,
+        "eye": 82,
+        "discipline": 78,
+        "speed": 81,
+        "baseInstinct": 71,
+        "bunting": 63,
         "platoon": 50,
-        "fielding": 56,
-        "arm": 56,
-        "battingClutch": 60
+        "fielding": 77,
+        "arm": 79,
+        "battingClutch": 71
       },
       "positionRatings": {
-        "SP": 64
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "3B": 79
+      }
     },
     "coach": null,
     "manager": null,

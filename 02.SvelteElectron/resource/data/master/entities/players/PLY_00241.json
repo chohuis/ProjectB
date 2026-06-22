@@ -1,7 +1,7 @@
 {
   "id": "PLY_00241",
   "name": "안성현",
-  "nameEn": "Ahn Seonghyeon",
+  "nameEn": "You Jae-yun",
   "role": "player",
   "age": 20,
   "status": "active",
@@ -19,47 +19,28 @@
       "position": "SP",
       "jerseyNumber": 1,
       "pitching": {
-        "ovr": 59,
-        "stamina": 61,
-        "velocity": 63,
-        "command": 61,
-        "control": 61,
-        "movement": 55,
-        "mentality": 58,
-        "recovery": 60,
-        "clutch": 49,
-        "holdRunners": 53
+        "ovr": 65,
+        "stamina": 67,
+        "velocity": 62,
+        "command": 66,
+        "control": 66,
+        "movement": 57,
+        "mentality": 59,
+        "recovery": 65
       },
       "batting": {
-        "ovr": 41,
-        "contact": 45,
-        "power": 40,
-        "eye": 36,
-        "discipline": 43,
-        "speed": 35,
-        "fielding": 37,
-        "arm": 37,
-        "battingClutch": 37,
-        "baseInstinct": 42,
-        "bunting": 31,
-        "platoon": 39
+        "ovr": 33,
+        "contact": 35,
+        "power": 36,
+        "eye": 29,
+        "discipline": 31,
+        "speed": 31,
+        "fielding": 28,
+        "arm": 34,
+        "battingClutch": 33
       },
       "developmentRate": 59,
-      "potentialHidden": 74,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 74
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

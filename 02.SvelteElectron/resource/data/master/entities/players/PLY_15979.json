@@ -1,6 +1,6 @@
 {
   "id": "PLY_15979",
-  "name": "스미스 코디",
+  "name": "Smith Cody",
   "nameEn": "Smith Cody",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 51,
   "popularity": 31,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 82,
       "proServiceYears": 2,
       "pitching": {
-        "ovr": 65,
-        "stamina": 60,
-        "velocity": 68,
-        "command": 61,
-        "control": 70,
-        "movement": 68,
-        "mentality": 63,
-        "recovery": 67,
-        "clutch": 64,
-        "holdRunners": 51
+        "ovr": 67,
+        "stamina": 62,
+        "velocity": 70,
+        "command": 63,
+        "control": 72,
+        "movement": 70,
+        "mentality": 65,
+        "recovery": 69,
+        "clutch": 66,
+        "holdRunners": 53
       },
       "batting": {
         "ovr": 67,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

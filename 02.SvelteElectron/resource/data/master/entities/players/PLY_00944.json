@@ -1,14 +1,14 @@
 {
   "id": "PLY_00944",
   "name": "스미스 매튜",
-  "nameEn": "Seu 미스 매튜",
+  "nameEn": "Smith Matthew",
   "role": "player",
   "age": 34,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_SUNDRAGONS",
-  "teamId": "TEAM_ABL_SUNDRAGONS_2",
+  "clubId": "CLUB_ABL_BOS",
+  "teamId": "TEAM_ABL_BOS_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
@@ -19,58 +19,28 @@
       "position": "CP",
       "jerseyNumber": 49,
       "pitching": {
-        "ovr": 66,
-        "stamina": 70,
-        "velocity": 71,
-        "command": 65,
-        "control": 64,
-        "movement": 70,
-        "mentality": 68,
-        "recovery": 68,
-        "clutch": 63,
-        "holdRunners": 62
+        "ovr": 69,
+        "stamina": 60,
+        "velocity": 75,
+        "command": 71,
+        "control": 75,
+        "movement": 74,
+        "mentality": 72,
+        "recovery": 70
       },
       "batting": {
-        "ovr": 48,
-        "contact": 50,
-        "power": 43,
-        "eye": 43,
-        "discipline": 48,
-        "speed": 47,
-        "fielding": 44,
-        "arm": 45,
-        "battingClutch": 44,
-        "baseInstinct": 40,
-        "bunting": 41,
-        "platoon": 35
+        "ovr": 47,
+        "contact": 53,
+        "power": 49,
+        "eye": 48,
+        "discipline": 49,
+        "speed": 52,
+        "fielding": 45,
+        "arm": 50,
+        "battingClutch": 51
       },
       "developmentRate": 34,
-      "potentialHidden": 77,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 12,
-      "contract": {
-        "salary": 18600,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 77
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

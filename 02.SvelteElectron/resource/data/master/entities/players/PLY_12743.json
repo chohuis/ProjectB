@@ -1,7 +1,7 @@
 {
   "id": "PLY_12743",
-  "name": "리 숀",
-  "nameEn": "Lee Sean",
+  "name": "Johnson Ryan",
+  "nameEn": "Johnson Ryan",
   "role": "player",
   "age": 19,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 76,
-  "popularity": 31,
+  "notes": "국적:일본",
+  "diligence": 67,
+  "popularity": 35,
   "militaryStatus": "군필",
   "entryYear": 2043,
   "entryLeague": "LEAGUE_ABL",
@@ -21,53 +21,43 @@
   "entryAge": 19,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 82,
-      "primaryPosition": "SP",
-      "developmentRate": 67,
-      "potentialHidden": 75,
+      "position": "LF",
+      "jerseyNumber": 16,
+      "primaryPosition": "LF",
+      "developmentRate": 69,
+      "potentialHidden": 74,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 63,
-        "stamina": 67,
-        "velocity": 61,
-        "command": 60,
-        "control": 63,
-        "movement": 57,
-        "mentality": 64,
-        "recovery": 56,
-        "clutch": 61,
-        "holdRunners": 57
+        "ovr": 55,
+        "stamina": 58,
+        "velocity": 52,
+        "command": 57,
+        "control": 49,
+        "movement": 47,
+        "mentality": 59,
+        "recovery": 47,
+        "clutch": 45,
+        "holdRunners": 43
       },
       "batting": {
-        "ovr": 68,
-        "contact": 62,
-        "power": 67,
-        "eye": 63,
-        "discipline": 58,
-        "speed": 71,
-        "baseInstinct": 65,
-        "bunting": 56,
+        "ovr": 55,
+        "contact": 55,
+        "power": 49,
+        "eye": 49,
+        "discipline": 45,
+        "speed": 60,
+        "baseInstinct": 46,
+        "bunting": 46,
         "platoon": 50,
-        "fielding": 63,
-        "arm": 69,
-        "battingClutch": 62
+        "fielding": 49,
+        "arm": 56,
+        "battingClutch": 52
       },
       "positionRatings": {
-        "SP": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "LF": 55
+      }
     },
     "coach": null,
     "manager": null,

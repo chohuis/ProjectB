@@ -1,9 +1,9 @@
 {
   "id": "PLY_12235",
-  "name": "앤더슨 크리스",
-  "nameEn": "Anderson Chris",
+  "name": "Lee Caleb",
+  "nameEn": "Lee Caleb",
   "role": "player",
-  "age": 32,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 70,
-  "popularity": 24,
+  "notes": "국적:베네수엘라",
+  "diligence": 50,
+  "popularity": 23,
   "militaryStatus": "군필",
   "entryYear": 2040,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 32,
+  "entryAge": 28,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 77,
-      "primaryPosition": "SP",
-      "developmentRate": 38,
-      "potentialHidden": 67,
-      "proServiceYears": 10,
+      "position": "CF",
+      "jerseyNumber": 30,
+      "primaryPosition": "CF",
+      "developmentRate": 50,
+      "potentialHidden": 87,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 76,
-        "stamina": 68,
-        "velocity": 87,
-        "command": 74,
-        "control": 74,
-        "movement": 72,
-        "mentality": 69,
-        "recovery": 70,
-        "clutch": 74,
-        "holdRunners": 64
+        "ovr": 74,
+        "stamina": 76,
+        "velocity": 83,
+        "command": 64,
+        "control": 65,
+        "movement": 76,
+        "mentality": 72,
+        "recovery": 66,
+        "clutch": 69,
+        "holdRunners": 70
       },
       "batting": {
-        "ovr": 65,
-        "contact": 62,
-        "power": 66,
-        "eye": 61,
-        "discipline": 56,
-        "speed": 59,
-        "baseInstinct": 63,
-        "bunting": 48,
+        "ovr": 74,
+        "contact": 75,
+        "power": 67,
+        "eye": 73,
+        "discipline": 75,
+        "speed": 80,
+        "baseInstinct": 73,
+        "bunting": 65,
         "platoon": 50,
-        "fielding": 61,
-        "arm": 67,
-        "battingClutch": 58
+        "fielding": 76,
+        "arm": 68,
+        "battingClutch": 64
       },
       "positionRatings": {
-        "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "CF": 74
+      }
     },
     "coach": null,
     "manager": null,

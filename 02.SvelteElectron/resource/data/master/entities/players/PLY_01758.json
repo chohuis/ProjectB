@@ -1,61 +1,46 @@
 {
   "id": "PLY_01758",
-  "name": "민우진",
-  "nameEn": "Min Woojin",
+  "name": "고토 쓰카사",
+  "nameEn": "Goto Tsukasa",
   "role": "player",
-  "age": 17,
+  "age": 22,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_MASAN_HARBOR",
-  "teamId": "TEAM_HS_MASAN_HARBOR",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_MASAN_HARBOR",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+  "teamId": "TEAM_JBL_CL_SILVERWOLVES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "R",
-      "position": "2B",
-      "jerseyNumber": 17,
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 43,
       "pitching": {
-        "ovr": 31,
-        "stamina": 31,
-        "velocity": 27,
-        "command": 29,
-        "control": 36,
-        "movement": 26,
-        "mentality": 28,
-        "recovery": 36,
-        "clutch": 43,
-        "holdRunners": 42
+        "ovr": 47,
+        "stamina": 41,
+        "velocity": 49,
+        "command": 46,
+        "control": 46,
+        "movement": 41,
+        "mentality": 43,
+        "recovery": 43
       },
       "batting": {
-        "ovr": 51,
-        "contact": 52,
-        "power": 55,
-        "eye": 50,
-        "discipline": 51,
-        "speed": 55,
-        "fielding": 49,
-        "arm": 51,
-        "battingClutch": 49,
-        "baseInstinct": 39,
-        "bunting": 45,
-        "platoon": 46
+        "ovr": 77,
+        "contact": 73,
+        "power": 82,
+        "eye": 78,
+        "discipline": 73,
+        "speed": 69,
+        "fielding": 76,
+        "arm": 72,
+        "battingClutch": 73
       },
-      "developmentRate": 81,
-      "potentialHidden": 60,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 51
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 53,
+      "potentialHidden": 68
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 50,
-  "popularity": 47
+  }
 }

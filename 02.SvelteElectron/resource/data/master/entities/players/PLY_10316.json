@@ -1,9 +1,9 @@
 {
   "id": "PLY_10316",
-  "name": "리 로건",
-  "nameEn": "Lee Logan",
+  "name": "Nelson Sean",
+  "nameEn": "Nelson Sean",
   "role": "player",
-  "age": 18,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 48,
-  "popularity": 45,
+  "notes": "국적:일본",
+  "diligence": 76,
+  "popularity": 31,
   "militaryStatus": "군필",
   "entryYear": 2028,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 18,
+  "entryAge": 20,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 74,
-      "primaryPosition": "SP",
-      "developmentRate": 66,
-      "potentialHidden": 60,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "3B",
+      "jerseyNumber": 62,
+      "primaryPosition": "3B",
+      "developmentRate": 73,
+      "potentialHidden": 82,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 60,
-        "stamina": 57,
-        "velocity": 59,
-        "command": 58,
-        "control": 56,
+        "ovr": 57,
+        "stamina": 61,
+        "velocity": 64,
+        "command": 47,
+        "control": 57,
         "movement": 55,
-        "mentality": 66,
-        "recovery": 49,
-        "clutch": 55,
-        "holdRunners": 54
+        "mentality": 54,
+        "recovery": 52,
+        "clutch": 52,
+        "holdRunners": 55
       },
       "batting": {
-        "ovr": 65,
-        "contact": 67,
-        "power": 65,
-        "eye": 60,
-        "discipline": 60,
-        "speed": 67,
-        "baseInstinct": 68,
-        "bunting": 52,
+        "ovr": 57,
+        "contact": 48,
+        "power": 50,
+        "eye": 56,
+        "discipline": 52,
+        "speed": 53,
+        "baseInstinct": 52,
+        "bunting": 38,
         "platoon": 50,
-        "fielding": 64,
-        "arm": 55,
-        "battingClutch": 57
+        "fielding": 53,
+        "arm": 47,
+        "battingClutch": 44
       },
       "positionRatings": {
-        "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "3B": 57
+      }
     },
     "coach": null,
     "manager": null,

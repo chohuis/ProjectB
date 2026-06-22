@@ -1,6 +1,6 @@
 {
   "id": "PLY_16497",
-  "name": "그린 오스틴",
+  "name": "Green Austin",
   "nameEn": "Green Austin",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 51,
   "popularity": 16,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 63,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 56,
-        "stamina": 57,
-        "velocity": 57,
-        "command": 59,
-        "control": 52,
-        "movement": 54,
-        "mentality": 55,
-        "recovery": 56,
-        "clutch": 53,
-        "holdRunners": 54
+        "ovr": 57,
+        "stamina": 58,
+        "velocity": 58,
+        "command": 60,
+        "control": 53,
+        "movement": 55,
+        "mentality": 56,
+        "recovery": 57,
+        "clutch": 54,
+        "holdRunners": 55
       },
       "batting": {
         "ovr": 57,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

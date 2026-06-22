@@ -1,6 +1,6 @@
 {
   "id": "PLY_16341",
-  "name": "톰슨 다니엘",
+  "name": "Thompson Daniel",
   "nameEn": "Thompson Daniel",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 82,
   "popularity": 24,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 63
       },
       "batting": {
-        "ovr": 82,
-        "contact": 83,
-        "power": 71,
-        "eye": 78,
-        "discipline": 85,
-        "speed": 88,
-        "baseInstinct": 74,
-        "bunting": 76,
-        "platoon": 54,
-        "fielding": 83,
-        "arm": 71,
-        "battingClutch": 76
+        "ovr": 76,
+        "contact": 77,
+        "power": 66,
+        "eye": 72,
+        "discipline": 79,
+        "speed": 82,
+        "baseInstinct": 69,
+        "bunting": 70,
+        "platoon": 50,
+        "fielding": 77,
+        "arm": 66,
+        "battingClutch": 70
       },
       "positionRatings": {
         "1B": 76

@@ -1,6 +1,6 @@
 {
   "id": "PLY_14409",
-  "name": "베이커 네이선",
+  "name": "Baker Nathan",
   "nameEn": "Baker Nathan",
   "role": "player",
   "age": 23,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 47,
   "popularity": 40,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 74
       },
       "batting": {
-        "ovr": 72,
-        "contact": 76,
-        "power": 74,
-        "eye": 75,
-        "discipline": 75,
-        "speed": 74,
-        "baseInstinct": 64,
-        "bunting": 65,
-        "platoon": 48,
-        "fielding": 69,
-        "arm": 75,
-        "battingClutch": 64
+        "ovr": 75,
+        "contact": 79,
+        "power": 77,
+        "eye": 78,
+        "discipline": 78,
+        "speed": 77,
+        "baseInstinct": 67,
+        "bunting": 68,
+        "platoon": 50,
+        "fielding": 72,
+        "arm": 78,
+        "battingClutch": 67
       },
       "positionRatings": {
         "3B": 75

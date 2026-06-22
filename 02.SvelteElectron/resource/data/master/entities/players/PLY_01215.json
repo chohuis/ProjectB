@@ -1,14 +1,14 @@
 {
   "id": "PLY_01215",
   "name": "무어 마이클",
-  "nameEn": "Mu 어 마이클",
+  "nameEn": "Moore Michael",
   "role": "player",
   "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_BAYSEALS",
-  "teamId": "TEAM_ABL_BAYSEALS_2",
+  "clubId": "CLUB_ABL_PHI",
+  "teamId": "TEAM_ABL_PHI_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
@@ -19,58 +19,28 @@
       "position": "CP",
       "jerseyNumber": 50,
       "pitching": {
-        "ovr": 57,
-        "stamina": 56,
-        "velocity": 56,
-        "command": 54,
-        "control": 61,
-        "movement": 54,
-        "mentality": 55,
-        "recovery": 55,
-        "clutch": 51,
-        "holdRunners": 46
+        "ovr": 66,
+        "stamina": 55,
+        "velocity": 75,
+        "command": 63,
+        "control": 66,
+        "movement": 61,
+        "mentality": 68,
+        "recovery": 65
       },
       "batting": {
         "ovr": 39,
-        "contact": 45,
-        "power": 41,
-        "eye": 38,
-        "discipline": 39,
-        "speed": 44,
-        "fielding": 43,
-        "arm": 45,
-        "battingClutch": 41,
-        "baseInstinct": 35,
-        "bunting": 41,
-        "platoon": 37
+        "contact": 43,
+        "power": 45,
+        "eye": 46,
+        "discipline": 42,
+        "speed": 45,
+        "fielding": 40,
+        "arm": 42,
+        "battingClutch": 44
       },
       "developmentRate": 51,
-      "potentialHidden": 74,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 11700,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 74
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

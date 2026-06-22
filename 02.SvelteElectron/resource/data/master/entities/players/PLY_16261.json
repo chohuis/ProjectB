@@ -1,6 +1,6 @@
 {
   "id": "PLY_16261",
-  "name": "워커 코디",
+  "name": "Walker Cody",
   "nameEn": "Walker Cody",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 77,
   "popularity": 50,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 72,
       "proServiceYears": 5,
       "pitching": {
-        "ovr": 70,
-        "stamina": 66,
-        "velocity": 79,
-        "command": 67,
-        "control": 63,
-        "movement": 68,
-        "mentality": 73,
-        "recovery": 68,
-        "clutch": 66,
-        "holdRunners": 56
+        "ovr": 71,
+        "stamina": 67,
+        "velocity": 80,
+        "command": 68,
+        "control": 64,
+        "movement": 69,
+        "mentality": 74,
+        "recovery": 69,
+        "clutch": 67,
+        "holdRunners": 57
       },
       "batting": {
         "ovr": 71,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 71
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

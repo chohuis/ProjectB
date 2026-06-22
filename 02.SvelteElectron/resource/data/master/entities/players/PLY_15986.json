@@ -1,6 +1,6 @@
 {
   "id": "PLY_15986",
-  "name": "홀 그랜트",
+  "name": "Hall Grant",
   "nameEn": "Hall Grant",
   "role": "player",
   "age": 33,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 47,
   "popularity": 13,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 41
       },
       "batting": {
-        "ovr": 66,
-        "contact": 66,
-        "power": 55,
-        "eye": 70,
-        "discipline": 70,
-        "speed": 67,
-        "baseInstinct": 57,
-        "bunting": 54,
-        "platoon": 62,
-        "fielding": 62,
-        "arm": 65,
-        "battingClutch": 55
+        "ovr": 53,
+        "contact": 53,
+        "power": 44,
+        "eye": 56,
+        "discipline": 56,
+        "speed": 54,
+        "baseInstinct": 46,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 52,
+        "battingClutch": 44
       },
       "positionRatings": {
         "LF": 53

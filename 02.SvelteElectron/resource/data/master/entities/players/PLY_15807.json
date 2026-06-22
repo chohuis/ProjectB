@@ -1,6 +1,6 @@
 {
   "id": "PLY_15807",
-  "name": "잭슨 콜",
+  "name": "Jackson Cole",
   "nameEn": "Jackson Cole",
   "role": "player",
   "age": 33,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 74,
   "popularity": 12,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 44
       },
       "batting": {
-        "ovr": 62,
-        "contact": 53,
-        "power": 57,
-        "eye": 66,
-        "discipline": 64,
-        "speed": 61,
-        "baseInstinct": 64,
-        "bunting": 51,
-        "platoon": 62,
-        "fielding": 63,
-        "arm": 53,
-        "battingClutch": 51
+        "ovr": 50,
+        "contact": 43,
+        "power": 46,
+        "eye": 53,
+        "discipline": 52,
+        "speed": 49,
+        "baseInstinct": 52,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 43,
+        "battingClutch": 41
       },
       "positionRatings": {
         "1B": 50

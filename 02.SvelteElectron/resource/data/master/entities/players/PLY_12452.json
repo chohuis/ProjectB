@@ -1,9 +1,9 @@
 {
   "id": "PLY_12452",
-  "name": "존스 케빈",
-  "nameEn": "Jones Kevin",
+  "name": "Baker Grant",
+  "nameEn": "Baker Grant",
   "role": "player",
-  "age": 33,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 79,
-  "popularity": 28,
+  "notes": "국적:미국",
+  "diligence": 65,
+  "popularity": 48,
   "militaryStatus": "군필",
   "entryYear": 2041,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 33,
+  "entryAge": 28,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 37,
-      "primaryPosition": "SP",
-      "developmentRate": 37,
-      "potentialHidden": 62,
-      "proServiceYears": 11,
+      "position": "RF",
+      "jerseyNumber": 24,
+      "primaryPosition": "RF",
+      "developmentRate": 52,
+      "potentialHidden": 78,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 83,
-        "stamina": 83,
-        "velocity": 79,
-        "command": 81,
-        "control": 75,
-        "movement": 74,
-        "mentality": 89,
-        "recovery": 81,
-        "clutch": 84,
-        "holdRunners": 65
+        "ovr": 72,
+        "stamina": 71,
+        "velocity": 74,
+        "command": 65,
+        "control": 64,
+        "movement": 69,
+        "mentality": 71,
+        "recovery": 68,
+        "clutch": 71,
+        "holdRunners": 57
       },
       "batting": {
-        "ovr": 70,
-        "contact": 63,
-        "power": 68,
-        "eye": 66,
-        "discipline": 70,
-        "speed": 73,
-        "baseInstinct": 72,
-        "bunting": 64,
+        "ovr": 72,
+        "contact": 68,
+        "power": 72,
+        "eye": 63,
+        "discipline": 65,
+        "speed": 76,
+        "baseInstinct": 63,
+        "bunting": 59,
         "platoon": 50,
-        "fielding": 67,
-        "arm": 65,
-        "battingClutch": 57
+        "fielding": 61,
+        "arm": 61,
+        "battingClutch": 72
       },
       "positionRatings": {
-        "SP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ]
+        "RF": 72
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,9 +1,9 @@
 {
   "id": "PLY_00087",
   "name": "권상민",
-  "nameEn": "Kwon Sangmin",
+  "nameEn": "Jang Chan-young",
   "role": "player",
-  "age": 19,
+  "age": 15,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -20,46 +20,27 @@
       "jerseyNumber": 7,
       "pitching": {
         "ovr": 59,
-        "stamina": 61,
-        "velocity": 57,
-        "command": 57,
-        "control": 63,
-        "movement": 63,
-        "mentality": 59,
-        "recovery": 55,
-        "clutch": 49,
-        "holdRunners": 49
+        "stamina": 70,
+        "velocity": 58,
+        "command": 65,
+        "control": 62,
+        "movement": 53,
+        "mentality": 67,
+        "recovery": 57
       },
       "batting": {
-        "ovr": 41,
-        "contact": 47,
-        "power": 39,
-        "eye": 45,
-        "discipline": 37,
-        "speed": 48,
-        "fielding": 37,
-        "arm": 41,
-        "battingClutch": 43,
-        "baseInstinct": 40,
-        "bunting": 37,
-        "platoon": 41
+        "ovr": 47,
+        "contact": 52,
+        "power": 52,
+        "eye": 54,
+        "discipline": 58,
+        "speed": 55,
+        "fielding": 63,
+        "arm": 55,
+        "battingClutch": 64
       },
       "developmentRate": 63,
-      "potentialHidden": 62,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 2
-        }
-      ]
+      "potentialHidden": 62
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

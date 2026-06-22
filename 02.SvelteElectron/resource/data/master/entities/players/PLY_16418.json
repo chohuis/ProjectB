@@ -1,6 +1,6 @@
 {
   "id": "PLY_16418",
-  "name": "톰슨 헌터",
+  "name": "Thompson Hunter",
   "nameEn": "Thompson Hunter",
   "role": "player",
   "age": 32,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 50,
   "popularity": 12,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 45
       },
       "batting": {
-        "ovr": 73,
-        "contact": 76,
-        "power": 77,
-        "eye": 74,
-        "discipline": 67,
-        "speed": 73,
-        "baseInstinct": 72,
-        "bunting": 64,
-        "platoon": 63,
-        "fielding": 69,
-        "arm": 64,
-        "battingClutch": 68
+        "ovr": 58,
+        "contact": 60,
+        "power": 61,
+        "eye": 59,
+        "discipline": 53,
+        "speed": 58,
+        "baseInstinct": 57,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 51,
+        "battingClutch": 54
       },
       "positionRatings": {
         "C": 58

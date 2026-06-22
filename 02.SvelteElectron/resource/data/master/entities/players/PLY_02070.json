@@ -1,84 +1,46 @@
 {
   "id": "PLY_02070",
-  "name": "노아 넬슨",
-  "nameEn": "Noah Nelson",
+  "name": "야마모토 다이키",
+  "nameEn": "Yamamoto Daiki",
   "role": "player",
-  "age": 26,
+  "age": 24,
   "status": "active",
-  "originLeagueId": "LEAGUE_ABL",
-  "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_SUNDRAGONS",
-  "teamId": "TEAM_ABL_SUNDRAGONS_1",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SUNS",
+  "teamId": "TEAM_JBL_PL_SUNS_2",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "CP",
-      "jerseyNumber": 87,
+      "jerseyNumber": 40,
       "pitching": {
-        "ovr": 85,
-        "stamina": 88,
-        "velocity": 82,
-        "command": 83,
-        "control": 84,
-        "movement": 85,
-        "mentality": 90,
-        "recovery": 82,
-        "clutch": 81,
-        "holdRunners": 77
+        "ovr": 74,
+        "stamina": 67,
+        "velocity": 77,
+        "command": 80,
+        "control": 78,
+        "movement": 71,
+        "mentality": 78,
+        "recovery": 75
       },
       "batting": {
-        "ovr": 67,
-        "contact": 68,
-        "power": 72,
-        "eye": 72,
-        "discipline": 71,
-        "speed": 65,
-        "fielding": 66,
-        "arm": 63,
-        "battingClutch": 57,
-        "baseInstinct": 64,
-        "bunting": 51,
-        "platoon": 63
+        "ovr": 52,
+        "contact": 51,
+        "power": 52,
+        "eye": 49,
+        "discipline": 44,
+        "speed": 50,
+        "fielding": 50,
+        "arm": 48,
+        "battingClutch": 47
       },
-      "developmentRate": 67,
-      "potentialHidden": 88,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 85
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 33200,
-        "durationYears": 4,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 50,
+      "potentialHidden": 62
     },
     "coach": {
       "specialty": "-",
@@ -118,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 64,
-  "popularity": 49,
-  "militaryStatus": "군필"
+  }
 }

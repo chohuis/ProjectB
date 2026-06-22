@@ -1,14 +1,14 @@
 {
   "id": "PLY_00732",
   "name": "오준우",
-  "nameEn": "Oh Junu",
+  "nameEn": "Kang Yong-jun",
   "role": "player",
   "age": 34,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_STEELDINOS",
-  "teamId": "TEAM_KBL_STEELDINOS_1",
+  "clubId": "CLUB_KBL_LOTTE",
+  "teamId": "TEAM_KBL_LOTTE_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,58 +19,28 @@
       "position": "SP",
       "jerseyNumber": 2,
       "pitching": {
-        "ovr": 63,
-        "stamina": 67,
-        "velocity": 67,
+        "ovr": 71,
+        "stamina": 75,
+        "velocity": 69,
         "command": 65,
-        "control": 62,
-        "movement": 67,
-        "mentality": 62,
-        "recovery": 68,
-        "clutch": 57,
-        "holdRunners": 52
+        "control": 71,
+        "movement": 71,
+        "mentality": 65,
+        "recovery": 63
       },
       "batting": {
-        "ovr": 45,
-        "contact": 40,
-        "power": 42,
-        "eye": 41,
+        "ovr": 43,
+        "contact": 45,
+        "power": 44,
+        "eye": 40,
         "discipline": 42,
-        "speed": 43,
-        "fielding": 50,
-        "arm": 41,
-        "battingClutch": 42,
-        "baseInstinct": 39,
-        "bunting": 40,
-        "platoon": 42
+        "speed": 45,
+        "fielding": 45,
+        "arm": 44,
+        "battingClutch": 44
       },
       "developmentRate": 38,
-      "potentialHidden": 78,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 12,
-      "contract": {
-        "salary": 4700,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 78
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

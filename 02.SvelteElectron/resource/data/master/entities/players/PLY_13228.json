@@ -1,9 +1,9 @@
 {
   "id": "PLY_13228",
-  "name": "마르티네스 카일",
-  "nameEn": "Martinez Kyle",
+  "name": "Hall Cole",
+  "nameEn": "Hall Cole",
   "role": "player",
-  "age": 25,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 50,
-  "popularity": 30,
+  "notes": "국적:쿠바",
+  "diligence": 63,
+  "popularity": 38,
   "militaryStatus": "군필",
   "entryYear": 2046,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 25,
+  "entryAge": 28,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 70,
-      "primaryPosition": "SP",
-      "developmentRate": 64,
-      "potentialHidden": 74,
-      "proServiceYears": 3,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 2,
+      "primaryPosition": "3B",
+      "developmentRate": 54,
+      "potentialHidden": 86,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 68,
-        "stamina": 62,
-        "velocity": 73,
-        "command": 66,
-        "control": 72,
-        "movement": 64,
-        "mentality": 65,
-        "recovery": 60,
-        "clutch": 61,
-        "holdRunners": 67
+        "ovr": 73,
+        "stamina": 69,
+        "velocity": 79,
+        "command": 70,
+        "control": 76,
+        "movement": 67,
+        "mentality": 67,
+        "recovery": 71,
+        "clutch": 70,
+        "holdRunners": 71
       },
       "batting": {
-        "ovr": 74,
-        "contact": 71,
+        "ovr": 73,
+        "contact": 68,
         "power": 64,
-        "eye": 69,
-        "discipline": 73,
-        "speed": 69,
-        "baseInstinct": 72,
-        "bunting": 58,
+        "eye": 75,
+        "discipline": 70,
+        "speed": 79,
+        "baseInstinct": 75,
+        "bunting": 60,
         "platoon": 50,
-        "fielding": 77,
-        "arm": 72,
-        "battingClutch": 69
+        "fielding": 65,
+        "arm": 68,
+        "battingClutch": 72
       },
       "positionRatings": {
-        "SP": 74
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "3B": 73
+      }
     },
     "coach": null,
     "manager": null,

@@ -3,12 +3,12 @@
   "name": "화이트 오스틴",
   "nameEn": "White Austin",
   "role": "manager",
-  "age": 40,
+  "age": 57,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_RAINARROWS",
-  "teamId": "TEAM_ABL_RAINARROWS_2",
+  "clubId": "CLUB_ABL_ATL",
+  "teamId": "TEAM_ABL_ATL_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -26,9 +26,7 @@
         "control": 50,
         "movement": 50,
         "mentality": 50,
-        "recovery": 50,
-        "clutch": 50,
-        "holdRunners": 50
+        "recovery": 50
       },
       "batting": {
         "ovr": 50,
@@ -39,17 +37,10 @@
         "speed": 50,
         "fielding": 50,
         "arm": 50,
-        "battingClutch": 50,
-        "baseInstinct": 50,
-        "bunting": 45,
-        "platoon": 50
+        "battingClutch": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 70,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 50
-      }
+      "potentialHidden": 70
     },
     "coach": {
       "specialty": "-",
@@ -67,12 +58,11 @@
       "style": "공격적",
       "experienceYears": 6,
       "stats": {
-        "motivation": 68,
-        "development": 50,
-        "strategy": 71,
-        "handlePressure": 62,
-        "handlePersonnel": 79,
-        "injuryMgmt": 62
+        "tactics": 71,
+        "decision": 62,
+        "rotationMgmt": 79,
+        "bullpenMgmt": 60,
+        "moraleMgmt": 68
       },
       "gamePlanBias": "",
       "riskTolerance": 38
@@ -90,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

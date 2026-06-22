@@ -1,6 +1,6 @@
 {
   "id": "PLY_10015",
-  "name": "마르티네스 라이언",
+  "name": "Martinez Ryan",
   "nameEn": "Martinez Ryan",
   "role": "player",
   "age": 31,
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 68,
-  "popularity": 43,
+  "notes": "국적:쿠바",
+  "diligence": 78,
+  "popularity": 44,
   "militaryStatus": "군필",
   "entryYear": 2027,
   "entryLeague": "LEAGUE_ABL",
@@ -24,50 +24,40 @@
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 71,
+      "jerseyNumber": 75,
       "primaryPosition": "SP",
       "developmentRate": 52,
       "potentialHidden": 51,
       "proServiceYears": 9,
       "pitching": {
-        "ovr": 69,
-        "stamina": 71,
-        "velocity": 68,
-        "command": 60,
-        "control": 62,
-        "movement": 66,
-        "mentality": 72,
-        "recovery": 66,
-        "clutch": 69,
-        "holdRunners": 60
+        "ovr": 67,
+        "stamina": 60,
+        "velocity": 66,
+        "command": 58,
+        "control": 65,
+        "movement": 67,
+        "mentality": 69,
+        "recovery": 68,
+        "clutch": 60,
+        "holdRunners": 54
       },
       "batting": {
         "ovr": 67,
-        "contact": 60,
-        "power": 68,
-        "eye": 71,
-        "discipline": 61,
-        "speed": 68,
-        "baseInstinct": 58,
-        "bunting": 52,
+        "contact": 70,
+        "power": 69,
+        "eye": 62,
+        "discipline": 65,
+        "speed": 62,
+        "baseInstinct": 60,
+        "bunting": 49,
         "platoon": 50,
-        "fielding": 57,
-        "arm": 65,
-        "battingClutch": 68
+        "fielding": 65,
+        "arm": 70,
+        "battingClutch": 58
       },
       "positionRatings": {
         "SP": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

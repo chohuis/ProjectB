@@ -1,6 +1,6 @@
 {
   "id": "PLY_15589",
-  "name": "윌리엄스 코디",
+  "name": "Williams Cody",
   "nameEn": "Williams Cody",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 59,
   "popularity": 13,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 81,
       "proServiceYears": 3,
       "pitching": {
-        "ovr": 61,
-        "stamina": 62,
-        "velocity": 63,
-        "command": 64,
-        "control": 60,
-        "movement": 52,
-        "mentality": 55,
-        "recovery": 60,
-        "clutch": 53,
-        "holdRunners": 51
+        "ovr": 65,
+        "stamina": 66,
+        "velocity": 67,
+        "command": 68,
+        "control": 64,
+        "movement": 55,
+        "mentality": 59,
+        "recovery": 64,
+        "clutch": 56,
+        "holdRunners": 54
       },
       "batting": {
         "ovr": 65,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

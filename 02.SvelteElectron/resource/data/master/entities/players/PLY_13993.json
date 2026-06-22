@@ -1,6 +1,6 @@
 {
   "id": "PLY_13993",
-  "name": "해리스 카일",
+  "name": "Harris Kyle",
   "nameEn": "Harris Kyle",
   "role": "player",
   "age": 33,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 58,
   "popularity": 23,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 47,
       "proServiceYears": 11,
       "pitching": {
-        "ovr": 69,
-        "stamina": 72,
-        "velocity": 79,
-        "command": 70,
-        "control": 61,
-        "movement": 72,
-        "mentality": 66,
-        "recovery": 60,
-        "clutch": 59,
-        "holdRunners": 66
+        "ovr": 55,
+        "stamina": 57,
+        "velocity": 63,
+        "command": 56,
+        "control": 49,
+        "movement": 57,
+        "mentality": 53,
+        "recovery": 48,
+        "clutch": 47,
+        "holdRunners": 53
       },
       "batting": {
         "ovr": 55,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 55
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

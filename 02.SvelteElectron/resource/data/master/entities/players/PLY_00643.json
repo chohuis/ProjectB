@@ -1,14 +1,14 @@
 {
   "id": "PLY_00643",
   "name": "나정우",
-  "nameEn": "Na Jeongu",
+  "nameEn": "Jeon Hyun-jun",
   "role": "player",
   "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_EMBERTIGERS",
-  "teamId": "TEAM_KBL_EMBERTIGERS_1",
+  "clubId": "CLUB_KBL_KT",
+  "teamId": "TEAM_KBL_KT_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 3,
       "pitching": {
-        "ovr": 77,
-        "stamina": 74,
-        "velocity": 79,
-        "command": 77,
-        "control": 75,
-        "movement": 81,
-        "mentality": 76,
-        "recovery": 77,
-        "clutch": 74,
-        "holdRunners": 71
+        "ovr": 88,
+        "stamina": 89,
+        "velocity": 86,
+        "command": 84,
+        "control": 81,
+        "movement": 86,
+        "mentality": 80,
+        "recovery": 86
       },
       "batting": {
-        "ovr": 59,
-        "contact": 61,
-        "power": 54,
-        "eye": 63,
-        "discipline": 65,
-        "speed": 57,
-        "fielding": 56,
-        "arm": 55,
-        "battingClutch": 50,
-        "baseInstinct": 53,
-        "bunting": 53,
-        "platoon": 55
+        "ovr": 63,
+        "contact": 59,
+        "power": 58,
+        "eye": 57,
+        "discipline": 59,
+        "speed": 62,
+        "fielding": 58,
+        "arm": 57,
+        "battingClutch": 66
       },
       "developmentRate": 53,
-      "potentialHidden": 63,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 77
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_KNUCKLEBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 7700,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 63
     },
     "coach": {
       "specialty": "-",
@@ -114,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

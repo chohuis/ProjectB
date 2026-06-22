@@ -1,14 +1,14 @@
 {
   "id": "PLY_01502",
   "name": "토레스 니콜라스",
-  "nameEn": "To 레스 니콜라스",
+  "nameEn": "Torres Nicholas",
   "role": "player",
   "age": 34,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_RIVERCARDINALS",
-  "teamId": "TEAM_ABL_RIVERCARDINALS_1",
+  "clubId": "CLUB_ABL_BAL",
+  "teamId": "TEAM_ABL_BAL",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:베네수엘라",
@@ -19,62 +19,28 @@
       "position": "RP",
       "jerseyNumber": 7,
       "pitching": {
-        "ovr": 68,
-        "stamina": 70,
-        "velocity": 64,
-        "command": 70,
-        "control": 73,
-        "movement": 72,
-        "mentality": 66,
-        "recovery": 71,
-        "clutch": 59,
-        "holdRunners": 56
+        "ovr": 76,
+        "stamina": 71,
+        "velocity": 77,
+        "command": 77,
+        "control": 76,
+        "movement": 69,
+        "mentality": 72,
+        "recovery": 72
       },
       "batting": {
-        "ovr": 50,
-        "contact": 55,
+        "ovr": 53,
+        "contact": 45,
         "power": 48,
-        "eye": 54,
-        "discipline": 49,
-        "speed": 51,
-        "fielding": 51,
-        "arm": 46,
-        "battingClutch": 45,
-        "baseInstinct": 47,
-        "bunting": 38,
-        "platoon": 47
+        "eye": 45,
+        "discipline": 44,
+        "speed": 48,
+        "fielding": 45,
+        "arm": 49,
+        "battingClutch": 45
       },
       "developmentRate": 39,
-      "potentialHidden": 63,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 5
-        }
-      ],
-      "proServiceYears": 12,
-      "contract": {
-        "salary": 20200,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 63
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

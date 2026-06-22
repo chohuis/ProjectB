@@ -1,6 +1,6 @@
 {
   "id": "PLY_16543",
-  "name": "마틴 트레버",
+  "name": "Martin Trevor",
   "nameEn": "Martin Trevor",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 47,
   "popularity": 33,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 69,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 60,
-        "stamina": 63,
-        "velocity": 57,
-        "command": 58,
-        "control": 52,
-        "movement": 59,
-        "mentality": 62,
-        "recovery": 61,
-        "clutch": 53,
-        "holdRunners": 51
+        "ovr": 62,
+        "stamina": 65,
+        "velocity": 59,
+        "command": 60,
+        "control": 54,
+        "movement": 61,
+        "mentality": 64,
+        "recovery": 63,
+        "clutch": 55,
+        "holdRunners": 53
       },
       "batting": {
         "ovr": 62,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

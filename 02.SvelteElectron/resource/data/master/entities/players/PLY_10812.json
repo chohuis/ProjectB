@@ -1,9 +1,9 @@
 {
   "id": "PLY_10812",
-  "name": "애덤스 재크",
-  "nameEn": "Adams Zach",
+  "name": "Jackson Caleb",
+  "nameEn": "Jackson Caleb",
   "role": "player",
-  "age": 23,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 64,
-  "popularity": 11,
+  "notes": "국적:도미니카",
+  "diligence": 75,
+  "popularity": 20,
   "militaryStatus": "군필",
   "entryYear": 2031,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 23,
+  "entryAge": 20,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
+      "position": "CF",
       "jerseyNumber": 51,
-      "primaryPosition": "SP",
+      "primaryPosition": "CF",
       "developmentRate": 70,
-      "potentialHidden": 78,
-      "proServiceYears": 1,
+      "potentialHidden": 93,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 67,
-        "stamina": 71,
-        "velocity": 69,
-        "command": 70,
-        "control": 62,
-        "movement": 67,
-        "mentality": 71,
-        "recovery": 61,
-        "clutch": 63,
-        "holdRunners": 61
+        "ovr": 58,
+        "stamina": 53,
+        "velocity": 63,
+        "command": 56,
+        "control": 52,
+        "movement": 55,
+        "mentality": 59,
+        "recovery": 53,
+        "clutch": 54,
+        "holdRunners": 49
       },
       "batting": {
-        "ovr": 73,
-        "contact": 74,
-        "power": 72,
-        "eye": 70,
-        "discipline": 77,
-        "speed": 67,
-        "baseInstinct": 71,
-        "bunting": 67,
+        "ovr": 58,
+        "contact": 63,
+        "power": 52,
+        "eye": 51,
+        "discipline": 55,
+        "speed": 59,
+        "baseInstinct": 49,
+        "bunting": 45,
         "platoon": 50,
-        "fielding": 69,
-        "arm": 74,
-        "battingClutch": 71
+        "fielding": 49,
+        "arm": 56,
+        "battingClutch": 58
       },
       "positionRatings": {
-        "SP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "CF": 58
+      }
     },
     "coach": null,
     "manager": null,

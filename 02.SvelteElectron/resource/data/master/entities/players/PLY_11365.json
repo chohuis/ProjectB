@@ -1,9 +1,9 @@
 {
   "id": "PLY_11365",
-  "name": "스미스 코너",
-  "nameEn": "Smith Connor",
+  "name": "Carter Grant",
+  "nameEn": "Carter Grant",
   "role": "player",
-  "age": 29,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 68,
-  "popularity": 42,
+  "notes": "국적:일본",
+  "diligence": 83,
+  "popularity": 48,
   "militaryStatus": "군필",
   "entryYear": 2035,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 29,
+  "entryAge": 22,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "SP",
-      "jerseyNumber": 92,
+      "jerseyNumber": 35,
       "primaryPosition": "SP",
-      "developmentRate": 36,
-      "potentialHidden": 77,
-      "proServiceYears": 7,
+      "developmentRate": 77,
+      "potentialHidden": 83,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 79,
-        "stamina": 70,
-        "velocity": 77,
-        "command": 73,
-        "control": 71,
-        "movement": 78,
-        "mentality": 83,
-        "recovery": 75,
-        "clutch": 69,
-        "holdRunners": 63
+        "ovr": 56,
+        "stamina": 60,
+        "velocity": 63,
+        "command": 58,
+        "control": 57,
+        "movement": 48,
+        "mentality": 57,
+        "recovery": 55,
+        "clutch": 50,
+        "holdRunners": 50
       },
       "batting": {
-        "ovr": 76,
-        "contact": 75,
-        "power": 76,
-        "eye": 69,
-        "discipline": 76,
-        "speed": 70,
-        "baseInstinct": 78,
-        "bunting": 70,
+        "ovr": 56,
+        "contact": 47,
+        "power": 47,
+        "eye": 54,
+        "discipline": 49,
+        "speed": 52,
+        "baseInstinct": 46,
+        "bunting": 46,
         "platoon": 50,
-        "fielding": 66,
-        "arm": 78,
-        "battingClutch": 65
+        "fielding": 54,
+        "arm": 54,
+        "battingClutch": 50
       },
       "positionRatings": {
-        "SP": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "SP": 56
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,14 +1,14 @@
 {
   "id": "PLY_00856",
   "name": "테일러 로버트",
-  "nameEn": "Te 일러 로버트",
+  "nameEn": "Taylor Robert",
   "role": "player",
   "age": 29,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_EMPIRE",
-  "teamId": "TEAM_ABL_EMPIRE_2",
+  "clubId": "CLUB_ABL_LAD",
+  "teamId": "TEAM_ABL_LAD_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,48 +19,28 @@
       "position": "C",
       "jerseyNumber": 51,
       "pitching": {
-        "ovr": 49,
-        "stamina": 54,
-        "velocity": 54,
-        "command": 50,
-        "control": 54,
-        "movement": 47,
-        "mentality": 45,
-        "recovery": 47,
-        "clutch": 39,
-        "holdRunners": 36
+        "ovr": 40,
+        "stamina": 39,
+        "velocity": 45,
+        "command": 42,
+        "control": 43,
+        "movement": 38,
+        "mentality": 37,
+        "recovery": 38
       },
       "batting": {
-        "ovr": 69,
-        "contact": 64,
+        "ovr": 68,
+        "contact": 68,
         "power": 73,
-        "eye": 72,
-        "discipline": 64,
-        "speed": 62,
-        "fielding": 65,
-        "arm": 66,
-        "battingClutch": 62,
-        "baseInstinct": 64,
-        "bunting": 61,
-        "platoon": 55
+        "eye": 73,
+        "discipline": 67,
+        "speed": 66,
+        "fielding": 71,
+        "arm": 71,
+        "battingClutch": 69
       },
       "developmentRate": 38,
-      "potentialHidden": 78,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 69
-      },
-      "proServiceYears": 7,
-      "contract": {
-        "salary": 6300,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 78
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,6 +1,6 @@
 {
   "id": "PLY_14759",
-  "name": "스미스 에릭",
+  "name": "Smith Eric",
   "nameEn": "Smith Eric",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 73,
   "popularity": 16,
   "militaryStatus": "군필",

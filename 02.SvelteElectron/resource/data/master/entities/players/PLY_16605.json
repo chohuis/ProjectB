@@ -1,6 +1,6 @@
 {
   "id": "PLY_16605",
-  "name": "넬슨 데릭",
+  "name": "Nelson Derek",
   "nameEn": "Nelson Derek",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 55,
   "popularity": 21,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 58,
       "proServiceYears": 3,
       "pitching": {
-        "ovr": 68,
-        "stamina": 65,
-        "velocity": 68,
-        "command": 58,
-        "control": 70,
-        "movement": 58,
-        "mentality": 63,
-        "recovery": 67,
-        "clutch": 56,
-        "holdRunners": 54
+        "ovr": 70,
+        "stamina": 67,
+        "velocity": 70,
+        "command": 60,
+        "control": 72,
+        "movement": 60,
+        "mentality": 65,
+        "recovery": 69,
+        "clutch": 58,
+        "holdRunners": 56
       },
       "batting": {
         "ovr": 70,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

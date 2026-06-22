@@ -1,6 +1,6 @@
 {
   "id": "PLY_16676",
-  "name": "톰슨 숀",
+  "name": "Thompson Sean",
   "nameEn": "Thompson Sean",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 46,
   "popularity": 38,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 38
       },
       "batting": {
-        "ovr": 52,
-        "contact": 51,
-        "power": 42,
-        "eye": 43,
-        "discipline": 42,
-        "speed": 53,
-        "baseInstinct": 53,
-        "bunting": 40,
-        "platoon": 49,
-        "fielding": 46,
-        "arm": 47,
-        "battingClutch": 39
+        "ovr": 53,
+        "contact": 52,
+        "power": 43,
+        "eye": 44,
+        "discipline": 43,
+        "speed": 54,
+        "baseInstinct": 54,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 48,
+        "battingClutch": 40
       },
       "positionRatings": {
         "CF": 53

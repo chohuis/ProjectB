@@ -1,9 +1,9 @@
 {
   "id": "PLY_00099",
   "name": "남도현",
-  "nameEn": "Nam Dohyeon",
+  "nameEn": "Cha Jun-hyuk",
   "role": "player",
-  "age": 17,
+  "age": 18,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "RF",
       "jerseyNumber": 19,
       "pitching": {
-        "ovr": 20,
-        "stamina": 25,
-        "velocity": 20,
-        "command": 20,
-        "control": 21,
-        "movement": 22,
-        "mentality": 24,
-        "recovery": 20,
-        "clutch": 35,
-        "holdRunners": 36
+        "ovr": 35,
+        "stamina": 48,
+        "velocity": 43,
+        "command": 41,
+        "control": 50,
+        "movement": 38,
+        "mentality": 54,
+        "recovery": 57
       },
       "batting": {
-        "ovr": 27,
-        "contact": 30,
-        "power": 27,
-        "eye": 31,
-        "discipline": 25,
-        "speed": 34,
-        "fielding": 31,
-        "arm": 30,
-        "battingClutch": 45,
-        "baseInstinct": 37,
-        "bunting": 34,
-        "platoon": 42
+        "ovr": 43,
+        "contact": 47,
+        "power": 37,
+        "eye": 46,
+        "discipline": 43,
+        "speed": 44,
+        "fielding": 54,
+        "arm": 49,
+        "battingClutch": 39
       },
       "developmentRate": 52,
-      "potentialHidden": 88,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 27
-      }
+      "potentialHidden": 88
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

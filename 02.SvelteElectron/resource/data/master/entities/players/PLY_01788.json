@@ -1,61 +1,46 @@
 {
   "id": "PLY_01788",
-  "name": "차하준",
-  "nameEn": "Cha Hajun",
+  "name": "오카다 히카루",
+  "nameEn": "Okada Hikaru",
   "role": "player",
-  "age": 17,
+  "age": 36,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_JECHEON_RIDGE",
-  "teamId": "TEAM_HS_JECHEON_RIDGE",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_JECHEON_RIDGE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONSTORMS",
+  "teamId": "TEAM_JBL_CL_IRONSTORMS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "2B",
-      "jerseyNumber": 17,
+      "position": "DH",
+      "jerseyNumber": 23,
       "pitching": {
-        "ovr": 30,
-        "stamina": 32,
-        "velocity": 31,
-        "command": 35,
-        "control": 32,
-        "movement": 34,
-        "mentality": 30,
-        "recovery": 30,
-        "clutch": 42,
-        "holdRunners": 41
+        "ovr": 38,
+        "stamina": 43,
+        "velocity": 46,
+        "command": 44,
+        "control": 39,
+        "movement": 36,
+        "mentality": 37,
+        "recovery": 38
       },
       "batting": {
-        "ovr": 50,
-        "contact": 51,
-        "power": 54,
-        "eye": 48,
-        "discipline": 45,
-        "speed": 55,
-        "fielding": 45,
-        "arm": 48,
-        "battingClutch": 43,
-        "baseInstinct": 46,
-        "bunting": 38,
-        "platoon": 36
+        "ovr": 70,
+        "contact": 76,
+        "power": 78,
+        "eye": 72,
+        "discipline": 69,
+        "speed": 66,
+        "fielding": 67,
+        "arm": 71,
+        "battingClutch": 70
       },
-      "developmentRate": 69,
-      "potentialHidden": 76,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 50
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 45,
+      "potentialHidden": 87
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 66,
-  "popularity": 23
+  }
 }

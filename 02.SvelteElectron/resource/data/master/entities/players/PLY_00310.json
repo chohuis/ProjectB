@@ -1,7 +1,7 @@
 {
   "id": "PLY_00310",
   "name": "신승우",
-  "nameEn": "Shin Seungu",
+  "nameEn": "Sung Si-woo",
   "role": "player",
   "age": 29,
   "status": "active",
@@ -19,58 +19,28 @@
       "position": "CP",
       "jerseyNumber": 10,
       "pitching": {
-        "ovr": 62,
-        "stamina": 58,
-        "velocity": 57,
+        "ovr": 72,
+        "stamina": 62,
+        "velocity": 79,
         "command": 66,
-        "control": 65,
-        "movement": 61,
-        "mentality": 61,
-        "recovery": 64,
-        "clutch": 57,
-        "holdRunners": 52
+        "control": 68,
+        "movement": 65,
+        "mentality": 72,
+        "recovery": 70
       },
       "batting": {
-        "ovr": 44,
-        "contact": 50,
-        "power": 43,
-        "eye": 39,
-        "discipline": 47,
+        "ovr": 50,
+        "contact": 48,
+        "power": 49,
+        "eye": 51,
+        "discipline": 51,
         "speed": 51,
-        "fielding": 42,
-        "arm": 38,
-        "battingClutch": 41,
-        "baseInstinct": 39,
-        "bunting": 42,
-        "platoon": 34
+        "fielding": 47,
+        "arm": 46,
+        "battingClutch": 46
       },
       "developmentRate": 53,
-      "potentialHidden": 61,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 9,
-      "contract": {
-        "salary": 1600,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 61
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

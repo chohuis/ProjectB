@@ -1,9 +1,9 @@
 {
   "id": "PLY_11730",
-  "name": "리 조던",
-  "nameEn": "Lee Jordan",
+  "name": "Jackson Alex",
+  "nameEn": "Jackson Alex",
   "role": "player",
-  "age": 32,
+  "age": 19,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 49,
-  "popularity": 41,
+  "notes": "국적:쿠바",
+  "diligence": 76,
+  "popularity": 13,
   "militaryStatus": "군필",
   "entryYear": 2037,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 32,
+  "entryAge": 19,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 65,
+      "jerseyNumber": 42,
       "primaryPosition": "SP",
-      "developmentRate": 35,
-      "potentialHidden": 78,
-      "proServiceYears": 10,
+      "developmentRate": 77,
+      "potentialHidden": 89,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 87,
-        "stamina": 89,
-        "velocity": 97,
-        "command": 88,
-        "control": 86,
-        "movement": 80,
-        "mentality": 92,
-        "recovery": 85,
-        "clutch": 75,
-        "holdRunners": 79
+        "ovr": 64,
+        "stamina": 67,
+        "velocity": 62,
+        "command": 60,
+        "control": 56,
+        "movement": 68,
+        "mentality": 64,
+        "recovery": 61,
+        "clutch": 64,
+        "holdRunners": 56
       },
       "batting": {
-        "ovr": 73,
-        "contact": 70,
-        "power": 72,
-        "eye": 74,
-        "discipline": 68,
-        "speed": 75,
-        "baseInstinct": 75,
-        "bunting": 60,
+        "ovr": 64,
+        "contact": 63,
+        "power": 57,
+        "eye": 64,
+        "discipline": 64,
+        "speed": 60,
+        "baseInstinct": 66,
+        "bunting": 54,
         "platoon": 50,
-        "fielding": 67,
-        "arm": 65,
-        "battingClutch": 68
+        "fielding": 61,
+        "arm": 57,
+        "battingClutch": 63
       },
       "positionRatings": {
-        "SP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "SP": 64
+      }
     },
     "coach": null,
     "manager": null,

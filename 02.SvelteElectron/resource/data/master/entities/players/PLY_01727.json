@@ -1,61 +1,46 @@
 {
   "id": "PLY_01727",
-  "name": "허민혁",
-  "nameEn": "Heo Minhyeok",
+  "name": "야마자키 준",
+  "nameEn": "Yamazaki Jun",
   "role": "player",
-  "age": 17,
+  "age": 35,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_GANGWON_PEAK",
-  "teamId": "TEAM_HS_GANGWON_PEAK",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_GANGWON_PEAK",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+  "teamId": "TEAM_JBL_CL_SILVERWOLVES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
-      "handedness": "R",
-      "position": "2B",
-      "jerseyNumber": 16,
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "RP",
+      "jerseyNumber": 7,
       "pitching": {
-        "ovr": 36,
-        "stamina": 38,
-        "velocity": 32,
-        "command": 34,
-        "control": 41,
-        "movement": 41,
-        "mentality": 41,
-        "recovery": 40,
-        "clutch": 41,
-        "holdRunners": 43
+        "ovr": 83,
+        "stamina": 71,
+        "velocity": 84,
+        "command": 84,
+        "control": 80,
+        "movement": 74,
+        "mentality": 79,
+        "recovery": 82
       },
       "batting": {
-        "ovr": 56,
-        "contact": 63,
-        "power": 54,
-        "eye": 61,
-        "discipline": 57,
-        "speed": 50,
-        "fielding": 59,
-        "arm": 51,
-        "battingClutch": 56,
-        "baseInstinct": 45,
-        "bunting": 50,
-        "platoon": 43
+        "ovr": 59,
+        "contact": 54,
+        "power": 59,
+        "eye": 56,
+        "discipline": 59,
+        "speed": 60,
+        "fielding": 51,
+        "arm": 57,
+        "battingClutch": 55
       },
-      "developmentRate": 57,
-      "potentialHidden": 78,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 34,
+      "potentialHidden": 74
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 76,
-  "popularity": 42
+  }
 }

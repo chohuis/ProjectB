@@ -1,6 +1,6 @@
 {
   "id": "PLY_14977",
-  "name": "가르시아 카일",
+  "name": "Garcia Kyle",
   "nameEn": "Garcia Kyle",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 61,
   "popularity": 24,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 74,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 57,
-        "stamina": 57,
-        "velocity": 59,
-        "command": 59,
-        "control": 59,
-        "movement": 47,
-        "mentality": 51,
-        "recovery": 47,
-        "clutch": 48,
-        "holdRunners": 43
+        "ovr": 58,
+        "stamina": 58,
+        "velocity": 60,
+        "command": 60,
+        "control": 60,
+        "movement": 48,
+        "mentality": 52,
+        "recovery": 48,
+        "clutch": 49,
+        "holdRunners": 44
       },
       "batting": {
         "ovr": 58,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

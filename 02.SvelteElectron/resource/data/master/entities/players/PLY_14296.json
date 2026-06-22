@@ -1,6 +1,6 @@
 {
   "id": "PLY_14296",
-  "name": "영 데릭",
+  "name": "Young Derek",
   "nameEn": "Young Derek",
   "role": "player",
   "age": 30,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 46,
   "popularity": 39,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 65
       },
       "batting": {
-        "ovr": 75,
-        "contact": 72,
-        "power": 71,
-        "eye": 74,
-        "discipline": 79,
-        "speed": 72,
-        "baseInstinct": 76,
-        "bunting": 65,
-        "platoon": 54,
-        "fielding": 76,
-        "arm": 70,
-        "battingClutch": 70
+        "ovr": 69,
+        "contact": 66,
+        "power": 65,
+        "eye": 68,
+        "discipline": 73,
+        "speed": 66,
+        "baseInstinct": 70,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 70,
+        "arm": 64,
+        "battingClutch": 64
       },
       "positionRatings": {
         "RF": 69

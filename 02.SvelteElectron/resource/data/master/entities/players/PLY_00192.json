@@ -1,7 +1,7 @@
 {
   "id": "PLY_00192",
   "name": "곽지훈",
-  "nameEn": "Kwak Jihun",
+  "nameEn": "Kim Ji-sung",
   "role": "player",
   "age": 20,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "C",
       "jerseyNumber": 12,
       "pitching": {
-        "ovr": 48,
-        "stamina": 51,
+        "ovr": 46,
+        "stamina": 45,
         "velocity": 47,
-        "command": 53,
-        "control": 51,
-        "movement": 48,
-        "mentality": 47,
-        "recovery": 53,
-        "clutch": 47,
-        "holdRunners": 44
+        "command": 47,
+        "control": 44,
+        "movement": 47,
+        "mentality": 48,
+        "recovery": 41
       },
       "batting": {
-        "ovr": 68,
-        "contact": 70,
-        "power": 67,
-        "eye": 67,
-        "discipline": 65,
-        "speed": 63,
-        "fielding": 65,
-        "arm": 62,
-        "battingClutch": 59,
-        "baseInstinct": 66,
-        "bunting": 53,
-        "platoon": 59
+        "ovr": 73,
+        "contact": 72,
+        "power": 74,
+        "eye": 71,
+        "discipline": 73,
+        "speed": 62,
+        "fielding": 67,
+        "arm": 75,
+        "battingClutch": 68
       },
       "developmentRate": 51,
-      "potentialHidden": 70,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 68
-      }
+      "potentialHidden": 70
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

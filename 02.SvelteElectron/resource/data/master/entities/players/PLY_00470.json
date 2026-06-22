@@ -1,14 +1,14 @@
 {
   "id": "PLY_00470",
   "name": "김현서",
-  "nameEn": "Kim Hyeonseo",
+  "nameEn": "Min Hyun-jin",
   "role": "player",
   "age": 38,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_TWINWOLVES",
-  "teamId": "TEAM_KBL_TWINWOLVES_1",
+  "clubId": "CLUB_KBL_KIA",
+  "teamId": "TEAM_KBL_KIA_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,62 +19,28 @@
       "position": "RP",
       "jerseyNumber": 10,
       "pitching": {
-        "ovr": 71,
-        "stamina": 67,
-        "velocity": 69,
-        "command": 72,
-        "control": 72,
-        "movement": 68,
-        "mentality": 67,
-        "recovery": 74,
-        "clutch": 61,
-        "holdRunners": 59
+        "ovr": 80,
+        "stamina": 71,
+        "velocity": 81,
+        "command": 79,
+        "control": 81,
+        "movement": 78,
+        "mentality": 82,
+        "recovery": 76
       },
       "batting": {
-        "ovr": 53,
-        "contact": 52,
+        "ovr": 51,
+        "contact": 50,
         "power": 53,
-        "eye": 53,
-        "discipline": 56,
-        "speed": 60,
-        "fielding": 55,
-        "arm": 54,
-        "battingClutch": 50,
-        "baseInstinct": 42,
-        "bunting": 42,
-        "platoon": 45
+        "eye": 54,
+        "discipline": 51,
+        "speed": 51,
+        "fielding": 54,
+        "arm": 53,
+        "battingClutch": 52
       },
       "developmentRate": 39,
-      "potentialHidden": 65,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 71
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_FORKBALL",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 16,
-      "contract": {
-        "salary": 6400,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 65
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

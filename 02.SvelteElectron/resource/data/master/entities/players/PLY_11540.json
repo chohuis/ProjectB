@@ -1,9 +1,9 @@
 {
   "id": "PLY_11540",
-  "name": "존슨 데릭",
-  "nameEn": "Johnson Derek",
+  "name": "Scott Nathan",
+  "nameEn": "Scott Nathan",
   "role": "player",
-  "age": 29,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 71,
-  "popularity": 48,
+  "notes": "국적:일본",
+  "diligence": 64,
+  "popularity": 30,
   "militaryStatus": "군필",
   "entryYear": 2036,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 29,
+  "entryAge": 20,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 81,
-      "primaryPosition": "SP",
-      "developmentRate": 49,
-      "potentialHidden": 51,
-      "proServiceYears": 7,
+      "position": "C",
+      "jerseyNumber": 14,
+      "primaryPosition": "C",
+      "developmentRate": 61,
+      "potentialHidden": 86,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 62,
+        "ovr": 58,
         "stamina": 62,
-        "velocity": 62,
-        "command": 63,
-        "control": 53,
-        "movement": 54,
-        "mentality": 56,
-        "recovery": 58,
-        "clutch": 52,
-        "holdRunners": 47
+        "velocity": 65,
+        "command": 55,
+        "control": 60,
+        "movement": 53,
+        "mentality": 52,
+        "recovery": 54,
+        "clutch": 54,
+        "holdRunners": 54
       },
       "batting": {
-        "ovr": 60,
-        "contact": 59,
-        "power": 55,
-        "eye": 56,
-        "discipline": 62,
-        "speed": 60,
-        "baseInstinct": 61,
-        "bunting": 41,
+        "ovr": 58,
+        "contact": 56,
+        "power": 47,
+        "eye": 54,
+        "discipline": 56,
+        "speed": 61,
+        "baseInstinct": 52,
+        "bunting": 40,
         "platoon": 50,
-        "fielding": 57,
-        "arm": 52,
-        "battingClutch": 48
+        "fielding": 52,
+        "arm": 57,
+        "battingClutch": 59
       },
       "positionRatings": {
-        "SP": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "C": 58
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,65 +1,46 @@
 {
   "id": "PLY_01773",
-  "name": "문태민",
-  "nameEn": "Moon Taemin",
+  "name": "야마자키 쓰요시",
+  "nameEn": "Yamazaki Tsuyoshi",
   "role": "player",
-  "age": 16,
+  "age": 26,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_JECHEON_RIDGE",
-  "teamId": "TEAM_HS_JECHEON_RIDGE",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_JECHEON_RIDGE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONSTORMS",
+  "teamId": "TEAM_JBL_CL_IRONSTORMS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 2,
+      "position": "RP",
+      "jerseyNumber": 8,
       "pitching": {
-        "ovr": 31,
-        "stamina": 30,
-        "velocity": 37,
-        "command": 35,
-        "control": 27,
-        "movement": 28,
-        "mentality": 31,
-        "recovery": 29,
-        "clutch": 36,
-        "holdRunners": 38
+        "ovr": 86,
+        "stamina": 79,
+        "velocity": 89,
+        "command": 87,
+        "control": 85,
+        "movement": 83,
+        "mentality": 83,
+        "recovery": 83
       },
       "batting": {
-        "ovr": 22,
-        "contact": 22,
-        "power": 21,
-        "eye": 27,
-        "discipline": 20,
-        "speed": 20,
-        "fielding": 27,
-        "arm": 20,
-        "battingClutch": 36,
-        "baseInstinct": 42,
-        "bunting": 36,
-        "platoon": 34
+        "ovr": 57,
+        "contact": 58,
+        "power": 56,
+        "eye": 52,
+        "discipline": 59,
+        "speed": 58,
+        "fielding": 53,
+        "arm": 52,
+        "battingClutch": 61
       },
-      "developmentRate": 82,
-      "potentialHidden": 86,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 31
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 3
-        }
-      ]
+      "developmentRate": 39,
+      "potentialHidden": 57
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 76,
-  "popularity": 39
+  }
 }

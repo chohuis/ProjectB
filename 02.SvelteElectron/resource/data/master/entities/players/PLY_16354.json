@@ -1,6 +1,6 @@
 {
   "id": "PLY_16354",
-  "name": "해리스 미겔",
+  "name": "Harris Miguel",
   "nameEn": "Harris Miguel",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 60,
   "popularity": 24,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 56,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 60,
-        "stamina": 55,
-        "velocity": 63,
-        "command": 52,
-        "control": 56,
-        "movement": 59,
-        "mentality": 63,
-        "recovery": 62,
-        "clutch": 50,
-        "holdRunners": 46
+        "ovr": 62,
+        "stamina": 57,
+        "velocity": 65,
+        "command": 54,
+        "control": 58,
+        "movement": 61,
+        "mentality": 65,
+        "recovery": 64,
+        "clutch": 52,
+        "holdRunners": 48
       },
       "batting": {
         "ovr": 62,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

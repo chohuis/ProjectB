@@ -1,6 +1,6 @@
 {
   "id": "PLY_15226",
-  "name": "톰슨 마커스",
+  "name": "Thompson Marcus",
   "nameEn": "Thompson Marcus",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 46,
   "popularity": 31,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 66
       },
       "batting": {
-        "ovr": 69,
-        "contact": 65,
-        "power": 59,
-        "eye": 73,
-        "discipline": 67,
-        "speed": 73,
-        "baseInstinct": 70,
-        "bunting": 62,
-        "platoon": 49,
-        "fielding": 69,
-        "arm": 70,
-        "battingClutch": 66
+        "ovr": 71,
+        "contact": 67,
+        "power": 61,
+        "eye": 75,
+        "discipline": 69,
+        "speed": 75,
+        "baseInstinct": 72,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 72,
+        "battingClutch": 68
       },
       "positionRatings": {
         "1B": 71

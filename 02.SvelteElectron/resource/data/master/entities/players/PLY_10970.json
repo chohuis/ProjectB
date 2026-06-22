@@ -1,9 +1,9 @@
 {
   "id": "PLY_10970",
-  "name": "스콧 카를로스",
-  "nameEn": "Scott Carlos",
+  "name": "Thompson Luis",
+  "nameEn": "Thompson Luis",
   "role": "player",
-  "age": 35,
+  "age": 19,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 81,
-  "popularity": 39,
+  "notes": "국적:베네수엘라",
+  "diligence": 72,
+  "popularity": 16,
   "militaryStatus": "군필",
   "entryYear": 2032,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 35,
+  "entryAge": 19,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 71,
-      "primaryPosition": "SP",
-      "developmentRate": 49,
-      "potentialHidden": 72,
-      "proServiceYears": 13,
+      "position": "C",
+      "jerseyNumber": 55,
+      "primaryPosition": "C",
+      "developmentRate": 58,
+      "potentialHidden": 61,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 63,
-        "stamina": 62,
-        "velocity": 69,
-        "command": 62,
-        "control": 56,
+        "ovr": 67,
+        "stamina": 69,
+        "velocity": 74,
+        "command": 65,
+        "control": 68,
         "movement": 63,
-        "mentality": 64,
-        "recovery": 52,
-        "clutch": 54,
-        "holdRunners": 52
+        "mentality": 67,
+        "recovery": 67,
+        "clutch": 55,
+        "holdRunners": 56
       },
       "batting": {
-        "ovr": 56,
-        "contact": 60,
-        "power": 46,
-        "eye": 53,
-        "discipline": 59,
+        "ovr": 67,
+        "contact": 62,
+        "power": 58,
+        "eye": 68,
+        "discipline": 64,
         "speed": 61,
-        "baseInstinct": 48,
-        "bunting": 44,
+        "baseInstinct": 59,
+        "bunting": 55,
         "platoon": 50,
-        "fielding": 48,
-        "arm": 48,
-        "battingClutch": 51
+        "fielding": 65,
+        "arm": 68,
+        "battingClutch": 56
       },
       "positionRatings": {
-        "SP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "C": 67
+      }
     },
     "coach": null,
     "manager": null,

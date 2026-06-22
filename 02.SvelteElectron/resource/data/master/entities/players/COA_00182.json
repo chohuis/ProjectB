@@ -1,16 +1,17 @@
 {
   "id": "COA_00182",
-  "name": "임태민",
-  "nameEn": "Im Taemin",
+  "name": "와타나베 카이토",
+  "nameEn": "Watanabe Kaito",
   "role": "coach",
-  "age": 49,
+  "age": 47,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_SUNCHEON_BAY",
-  "teamId": "TEAM_HS_SUNCHEON_BAY",
-  "schoolId": "SCHOOL_TEAM_HS_SUNCHEON_BAY",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TIDERAVES",
+  "teamId": "TEAM_JBL_CL_TIDERAVES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
@@ -25,9 +26,7 @@
         "control": 50,
         "movement": 50,
         "mentality": 50,
-        "recovery": 50,
-        "clutch": 50,
-        "holdRunners": 50
+        "recovery": 50
       },
       "batting": {
         "ovr": 50,
@@ -38,33 +37,22 @@
         "speed": 50,
         "fielding": 50,
         "arm": 50,
-        "battingClutch": 50,
-        "baseInstinct": 50,
-        "bunting": 45,
-        "platoon": 50
+        "battingClutch": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 65,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 50
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 70
     },
     "coach": {
-      "specialty": "pitching",
-      "experienceYears": 7,
+      "specialty": "투수",
+      "experienceYears": 15,
       "stats": {
-        "teaching": 74,
-        "analytics": 53,
-        "experience": 5
+        "teaching": 79,
+        "analysis": 55,
+        "communication": 75,
+        "discipline": 73,
+        "leadership": 58
       },
-      "trainingBuffs": "구속 훈련 +2%"
+      "trainingBuffs": "컨택 훈련 +2%"
     },
     "manager": {
       "style": "균형",
@@ -92,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

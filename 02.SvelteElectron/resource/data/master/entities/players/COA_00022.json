@@ -1,7 +1,7 @@
 {
   "id": "COA_00022",
   "name": "신원준",
-  "nameEn": "Shin Wonjun",
+  "nameEn": "Baek Jae-yun",
   "role": "coach",
   "age": 45,
   "status": "active",
@@ -26,9 +26,7 @@
         "control": 50,
         "movement": 50,
         "mentality": 50,
-        "recovery": 50,
-        "clutch": 50,
-        "holdRunners": 50
+        "recovery": 50
       },
       "batting": {
         "ovr": 50,
@@ -39,25 +37,20 @@
         "speed": 50,
         "fielding": 50,
         "arm": 50,
-        "battingClutch": 50,
-        "baseInstinct": 50,
-        "bunting": 45,
-        "platoon": 50
+        "battingClutch": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 70,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 50
-      }
+      "potentialHidden": 70
     },
     "coach": {
-      "specialty": "batting",
+      "specialty": "타격",
       "experienceYears": 3,
       "stats": {
         "teaching": 63,
-        "analytics": 64,
-        "experience": 1
+        "analysis": 64,
+        "communication": 69,
+        "discipline": 77,
+        "leadership": 72
       },
       "trainingBuffs": ""
     },
@@ -87,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

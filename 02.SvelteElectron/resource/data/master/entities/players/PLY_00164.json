@@ -1,7 +1,7 @@
 {
   "id": "PLY_00164",
   "name": "홍찬영",
-  "nameEn": "Hong Chanyeong",
+  "nameEn": "Oh Ji-won",
   "role": "player",
   "age": 20,
   "status": "active",
@@ -19,47 +19,28 @@
       "position": "SP",
       "jerseyNumber": 4,
       "pitching": {
-        "ovr": 55,
-        "stamina": 61,
-        "velocity": 61,
-        "command": 55,
-        "control": 52,
-        "movement": 59,
-        "mentality": 53,
-        "recovery": 55,
-        "clutch": 46,
-        "holdRunners": 50
+        "ovr": 56,
+        "stamina": 59,
+        "velocity": 64,
+        "command": 54,
+        "control": 59,
+        "movement": 52,
+        "mentality": 57,
+        "recovery": 56
       },
       "batting": {
-        "ovr": 37,
-        "contact": 38,
-        "power": 37,
-        "eye": 36,
-        "discipline": 38,
-        "speed": 44,
-        "fielding": 36,
-        "arm": 40,
-        "battingClutch": 43,
-        "baseInstinct": 39,
-        "bunting": 36,
-        "platoon": 40
+        "ovr": 29,
+        "contact": 33,
+        "power": 30,
+        "eye": 24,
+        "discipline": 27,
+        "speed": 28,
+        "fielding": 29,
+        "arm": 31,
+        "battingClutch": 25
       },
       "developmentRate": 64,
-      "potentialHidden": 72,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 55
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 72
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

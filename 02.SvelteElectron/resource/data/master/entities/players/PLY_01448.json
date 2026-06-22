@@ -1,14 +1,14 @@
 {
   "id": "PLY_01448",
   "name": "윌리엄스 니콜라스",
-  "nameEn": "Wil 리엄스 니콜라스",
+  "nameEn": "Williams Nicholas",
   "role": "player",
   "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_COASTALRAYS",
-  "teamId": "TEAM_ABL_COASTALRAYS_2",
+  "clubId": "CLUB_ABL_SF",
+  "teamId": "TEAM_ABL_SF_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
@@ -19,48 +19,28 @@
       "position": "CF",
       "jerseyNumber": 58,
       "pitching": {
-        "ovr": 46,
-        "stamina": 44,
-        "velocity": 44,
-        "command": 45,
-        "control": 43,
-        "movement": 42,
-        "mentality": 45,
-        "recovery": 43,
-        "clutch": 41,
-        "holdRunners": 38
+        "ovr": 47,
+        "stamina": 39,
+        "velocity": 50,
+        "command": 43,
+        "control": 40,
+        "movement": 47,
+        "mentality": 48,
+        "recovery": 41
       },
       "batting": {
-        "ovr": 66,
-        "contact": 70,
-        "power": 68,
+        "ovr": 62,
+        "contact": 65,
+        "power": 67,
         "eye": 61,
         "discipline": 63,
-        "speed": 67,
-        "fielding": 67,
-        "arm": 70,
-        "battingClutch": 66,
-        "baseInstinct": 58,
-        "bunting": 49,
-        "platoon": 63
+        "speed": 68,
+        "fielding": 71,
+        "arm": 62,
+        "battingClutch": 68
       },
       "developmentRate": 33,
-      "potentialHidden": 84,
-      "primaryPosition": "CF",
-      "positionRatings": {
-        "CF": 66
-      },
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 6300,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 84
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

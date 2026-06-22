@@ -1,6 +1,6 @@
 {
   "id": "PLY_15594",
-  "name": "킹 타일러",
+  "name": "King Tyler",
   "nameEn": "King Tyler",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 47,
   "popularity": 41,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 81,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 52,
-        "stamina": 54,
-        "velocity": 50,
-        "command": 48,
-        "control": 57,
-        "movement": 50,
-        "mentality": 59,
-        "recovery": 48,
-        "clutch": 51,
-        "holdRunners": 45
+        "ovr": 53,
+        "stamina": 55,
+        "velocity": 51,
+        "command": 49,
+        "control": 58,
+        "movement": 51,
+        "mentality": 60,
+        "recovery": 49,
+        "clutch": 52,
+        "holdRunners": 46
       },
       "batting": {
         "ovr": 53,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 53
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

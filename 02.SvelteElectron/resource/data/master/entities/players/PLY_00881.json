@@ -1,14 +1,14 @@
 {
   "id": "PLY_00881",
   "name": "마르티네스 크리스토퍼",
-  "nameEn": "Ma 르티네스 크리스토퍼",
+  "nameEn": "Martinez Christopher",
   "role": "player",
   "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_HARBORHAWKS",
-  "teamId": "TEAM_ABL_HARBORHAWKS_1",
+  "clubId": "CLUB_ABL_NYY",
+  "teamId": "TEAM_ABL_NYY",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,48 +19,28 @@
       "position": "1B",
       "jerseyNumber": 16,
       "pitching": {
-        "ovr": 61,
-        "stamina": 59,
-        "velocity": 63,
-        "command": 64,
-        "control": 61,
-        "movement": 65,
-        "mentality": 64,
-        "recovery": 66,
-        "clutch": 55,
-        "holdRunners": 51
+        "ovr": 64,
+        "stamina": 58,
+        "velocity": 68,
+        "command": 66,
+        "control": 65,
+        "movement": 60,
+        "mentality": 62,
+        "recovery": 60
       },
       "batting": {
-        "ovr": 81,
-        "contact": 77,
-        "power": 76,
-        "eye": 78,
-        "discipline": 87,
-        "speed": 85,
-        "fielding": 80,
-        "arm": 78,
-        "battingClutch": 73,
-        "baseInstinct": 76,
-        "bunting": 65,
-        "platoon": 74
+        "ovr": 82,
+        "contact": 82,
+        "power": 88,
+        "eye": 87,
+        "discipline": 81,
+        "speed": 80,
+        "fielding": 83,
+        "arm": 80,
+        "battingClutch": 81
       },
       "developmentRate": 52,
-      "potentialHidden": 90,
-      "primaryPosition": "1B",
-      "positionRatings": {
-        "1B": 81
-      },
-      "proServiceYears": 5,
-      "contract": {
-        "salary": 14800,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 90
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

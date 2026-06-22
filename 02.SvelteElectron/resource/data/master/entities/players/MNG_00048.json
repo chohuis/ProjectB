@@ -3,12 +3,12 @@
   "name": "플로레스 매튜",
   "nameEn": "Flores Matthew",
   "role": "manager",
-  "age": 40,
+  "age": 56,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_SPACECOMETS",
-  "teamId": "TEAM_ABL_SPACECOMETS_1",
+  "clubId": "CLUB_ABL_SEA",
+  "teamId": "TEAM_ABL_SEA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -26,9 +26,7 @@
         "control": 50,
         "movement": 50,
         "mentality": 50,
-        "recovery": 50,
-        "clutch": 50,
-        "holdRunners": 50
+        "recovery": 50
       },
       "batting": {
         "ovr": 50,
@@ -39,17 +37,10 @@
         "speed": 50,
         "fielding": 50,
         "arm": 50,
-        "battingClutch": 50,
-        "baseInstinct": 50,
-        "bunting": 45,
-        "platoon": 50
+        "battingClutch": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 70,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 50
-      }
+      "potentialHidden": 70
     },
     "coach": {
       "specialty": "-",
@@ -67,12 +58,11 @@
       "style": "균형",
       "experienceYears": 6,
       "stats": {
-        "motivation": 56,
-        "development": 50,
-        "strategy": 70,
-        "handlePressure": 56,
-        "handlePersonnel": 79,
-        "injuryMgmt": 52
+        "tactics": 70,
+        "decision": 56,
+        "rotationMgmt": 79,
+        "bullpenMgmt": 71,
+        "moraleMgmt": 56
       },
       "gamePlanBias": "",
       "riskTolerance": 48
@@ -90,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

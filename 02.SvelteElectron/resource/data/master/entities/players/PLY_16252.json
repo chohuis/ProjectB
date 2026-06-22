@@ -1,6 +1,6 @@
 {
   "id": "PLY_16252",
-  "name": "라이트 루이스",
+  "name": "Wright Luis",
   "nameEn": "Wright Luis",
   "role": "player",
   "age": 18,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 82,
   "popularity": 14,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 38
       },
       "batting": {
-        "ovr": 50,
-        "contact": 44,
-        "power": 40,
-        "eye": 47,
-        "discipline": 49,
-        "speed": 54,
-        "baseInstinct": 53,
-        "bunting": 40,
-        "platoon": 49,
-        "fielding": 51,
-        "arm": 53,
-        "battingClutch": 47
+        "ovr": 51,
+        "contact": 45,
+        "power": 41,
+        "eye": 48,
+        "discipline": 50,
+        "speed": 55,
+        "baseInstinct": 54,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 54,
+        "battingClutch": 48
       },
       "positionRatings": {
         "C": 51

@@ -1,6 +1,6 @@
 {
   "id": "PLY_15360",
-  "name": "넬슨 딜런",
+  "name": "Nelson Dylan",
   "nameEn": "Nelson Dylan",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 74,
   "popularity": 49,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 71,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 55,
-        "stamina": 58,
-        "velocity": 58,
-        "command": 57,
-        "control": 55,
-        "movement": 52,
-        "mentality": 60,
-        "recovery": 53,
-        "clutch": 53,
-        "holdRunners": 51
+        "ovr": 56,
+        "stamina": 59,
+        "velocity": 59,
+        "command": 58,
+        "control": 56,
+        "movement": 53,
+        "mentality": 61,
+        "recovery": 54,
+        "clutch": 54,
+        "holdRunners": 52
       },
       "batting": {
         "ovr": 56,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

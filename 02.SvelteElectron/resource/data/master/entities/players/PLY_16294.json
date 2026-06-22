@@ -1,6 +1,6 @@
 {
   "id": "PLY_16294",
-  "name": "가르시아 재크",
+  "name": "Garcia Zach",
   "nameEn": "Garcia Zach",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 56,
   "popularity": 19,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 55
       },
       "batting": {
-        "ovr": 74,
-        "contact": 75,
-        "power": 76,
-        "eye": 69,
-        "discipline": 73,
-        "speed": 81,
-        "baseInstinct": 66,
-        "bunting": 64,
-        "platoon": 54,
-        "fielding": 70,
-        "arm": 75,
-        "battingClutch": 64
+        "ovr": 68,
+        "contact": 69,
+        "power": 70,
+        "eye": 63,
+        "discipline": 67,
+        "speed": 74,
+        "baseInstinct": 61,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 69,
+        "battingClutch": 59
       },
       "positionRatings": {
         "LF": 68

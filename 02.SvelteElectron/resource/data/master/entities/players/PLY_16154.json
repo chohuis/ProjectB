@@ -1,6 +1,6 @@
 {
   "id": "PLY_16154",
-  "name": "톰슨 루이스",
+  "name": "Thompson Luis",
   "nameEn": "Thompson Luis",
   "role": "player",
   "age": 18,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 70,
   "popularity": 18,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 81,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 50,
-        "stamina": 45,
-        "velocity": 51,
-        "command": 43,
-        "control": 43,
-        "movement": 45,
-        "mentality": 49,
-        "recovery": 41,
-        "clutch": 39,
-        "holdRunners": 35
+        "ovr": 51,
+        "stamina": 46,
+        "velocity": 52,
+        "command": 44,
+        "control": 44,
+        "movement": 46,
+        "mentality": 50,
+        "recovery": 42,
+        "clutch": 40,
+        "holdRunners": 36
       },
       "batting": {
         "ovr": 51,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 51
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

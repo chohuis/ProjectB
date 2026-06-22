@@ -1,14 +1,14 @@
 {
   "id": "PLY_01261",
   "name": "밀러 로버트",
-  "nameEn": "Mil 러 로버트",
+  "nameEn": "Miller Robert",
   "role": "player",
   "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_WAVERIDERS",
-  "teamId": "TEAM_ABL_WAVERIDERS_2",
+  "clubId": "CLUB_ABL_NYM",
+  "teamId": "TEAM_ABL_NYM_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,48 +19,28 @@
       "position": "C",
       "jerseyNumber": 51,
       "pitching": {
-        "ovr": 59,
-        "stamina": 57,
-        "velocity": 65,
-        "command": 58,
-        "control": 62,
-        "movement": 62,
-        "mentality": 64,
-        "recovery": 56,
-        "clutch": 52,
-        "holdRunners": 53
+        "ovr": 57,
+        "stamina": 53,
+        "velocity": 60,
+        "command": 51,
+        "control": 56,
+        "movement": 49,
+        "mentality": 51,
+        "recovery": 52
       },
       "batting": {
-        "ovr": 79,
-        "contact": 80,
-        "power": 83,
-        "eye": 82,
-        "discipline": 84,
-        "speed": 86,
-        "fielding": 77,
-        "arm": 84,
-        "battingClutch": 72,
-        "baseInstinct": 70,
-        "bunting": 68,
-        "platoon": 67
+        "ovr": 77,
+        "contact": 76,
+        "power": 82,
+        "eye": 80,
+        "discipline": 81,
+        "speed": 73,
+        "fielding": 83,
+        "arm": 87,
+        "battingClutch": 77
       },
       "developmentRate": 48,
-      "potentialHidden": 76,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 79
-      },
-      "proServiceYears": 5,
-      "contract": {
-        "salary": 13200,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 76
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

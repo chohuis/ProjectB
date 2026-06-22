@@ -1,9 +1,9 @@
 {
   "id": "PLY_11882",
-  "name": "루이스 숀",
-  "nameEn": "Lewis Sean",
+  "name": "Adams Grant",
+  "nameEn": "Adams Grant",
   "role": "player",
-  "age": 31,
+  "age": 35,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 75,
-  "popularity": 18,
+  "notes": "국적:미국",
+  "diligence": 74,
+  "popularity": 30,
   "militaryStatus": "군필",
   "entryYear": 2038,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 31,
+  "entryAge": 35,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 20,
+      "jerseyNumber": 68,
       "primaryPosition": "SP",
-      "developmentRate": 40,
-      "potentialHidden": 68,
-      "proServiceYears": 9,
+      "developmentRate": 53,
+      "potentialHidden": 61,
+      "proServiceYears": 13,
       "pitching": {
-        "ovr": 70,
-        "stamina": 71,
-        "velocity": 74,
-        "command": 71,
-        "control": 68,
-        "movement": 72,
-        "mentality": 75,
-        "recovery": 69,
-        "clutch": 68,
-        "holdRunners": 56
+        "ovr": 60,
+        "stamina": 60,
+        "velocity": 59,
+        "command": 58,
+        "control": 52,
+        "movement": 52,
+        "mentality": 62,
+        "recovery": 51,
+        "clutch": 56,
+        "holdRunners": 49
       },
       "batting": {
-        "ovr": 68,
-        "contact": 63,
-        "power": 58,
-        "eye": 73,
-        "discipline": 72,
-        "speed": 71,
-        "baseInstinct": 61,
-        "bunting": 50,
+        "ovr": 60,
+        "contact": 59,
+        "power": 60,
+        "eye": 59,
+        "discipline": 58,
+        "speed": 67,
+        "baseInstinct": 63,
+        "bunting": 44,
         "platoon": 50,
-        "fielding": 66,
-        "arm": 66,
-        "battingClutch": 57
+        "fielding": 60,
+        "arm": 57,
+        "battingClutch": 48
       },
       "positionRatings": {
-        "SP": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "SP": 60
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,14 +1,14 @@
 {
   "id": "PLY_00640",
   "name": "오정우",
-  "nameEn": "Oh Jeongu",
+  "nameEn": "Kang Tae-woo",
   "role": "player",
   "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_SOARINGEAGLES",
-  "teamId": "TEAM_KBL_SOARINGEAGLES_2",
+  "clubId": "CLUB_KBL_DOOSAN",
+  "teamId": "TEAM_KBL_DOOSAN_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,48 +19,28 @@
       "position": "DH",
       "jerseyNumber": 50,
       "pitching": {
-        "ovr": 37,
-        "stamina": 40,
-        "velocity": 36,
-        "command": 34,
-        "control": 39,
-        "movement": 42,
-        "mentality": 38,
-        "recovery": 34,
-        "clutch": 43,
-        "holdRunners": 34
+        "ovr": 35,
+        "stamina": 33,
+        "velocity": 33,
+        "command": 30,
+        "control": 26,
+        "movement": 30,
+        "mentality": 27,
+        "recovery": 25
       },
       "batting": {
-        "ovr": 57,
-        "contact": 60,
-        "power": 60,
-        "eye": 52,
-        "discipline": 55,
-        "speed": 62,
-        "fielding": 62,
-        "arm": 51,
-        "battingClutch": 50,
-        "baseInstinct": 49,
-        "bunting": 44,
-        "platoon": 50
+        "ovr": 59,
+        "contact": 65,
+        "power": 63,
+        "eye": 62,
+        "discipline": 56,
+        "speed": 52,
+        "fielding": 49,
+        "arm": 59,
+        "battingClutch": 59
       },
       "developmentRate": 43,
-      "potentialHidden": 77,
-      "primaryPosition": "DH",
-      "positionRatings": {
-        "DH": 57
-      },
-      "proServiceYears": 5,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 77
     },
     "coach": {
       "specialty": "-",
@@ -100,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

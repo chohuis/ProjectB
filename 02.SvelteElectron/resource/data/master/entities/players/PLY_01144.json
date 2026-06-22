@@ -1,14 +1,14 @@
 {
   "id": "PLY_01144",
   "name": "해리스 알레한드로",
-  "nameEn": "Hae 리스 알레한드로",
+  "nameEn": "Harris Alejandro",
   "role": "player",
   "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_RAINARROWS",
-  "teamId": "TEAM_ABL_RAINARROWS_1",
+  "clubId": "CLUB_ABL_ATL",
+  "teamId": "TEAM_ABL_ATL",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,62 +19,28 @@
       "position": "RP",
       "jerseyNumber": 9,
       "pitching": {
-        "ovr": 83,
+        "ovr": 97,
         "stamina": 87,
-        "velocity": 88,
-        "command": 82,
-        "control": 86,
-        "movement": 79,
-        "mentality": 87,
-        "recovery": 85,
-        "clutch": 79,
-        "holdRunners": 75
+        "velocity": 100,
+        "command": 98,
+        "control": 94,
+        "movement": 93,
+        "mentality": 92,
+        "recovery": 90
       },
       "batting": {
-        "ovr": 65,
-        "contact": 72,
-        "power": 71,
-        "eye": 67,
-        "discipline": 71,
-        "speed": 69,
-        "fielding": 66,
+        "ovr": 64,
+        "contact": 65,
+        "power": 66,
+        "eye": 65,
+        "discipline": 66,
+        "speed": 62,
+        "fielding": 64,
         "arm": 63,
-        "battingClutch": 56,
-        "baseInstinct": 63,
-        "bunting": 61,
-        "platoon": 61
+        "battingClutch": 68
       },
       "developmentRate": 47,
-      "potentialHidden": 88,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 83
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 3,
-      "contract": {
-        "salary": 31700,
-        "durationYears": 4,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 88
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

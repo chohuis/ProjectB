@@ -1,6 +1,6 @@
 {
   "id": "PLY_14945",
-  "name": "마르티네스 딜런",
+  "name": "Martinez Dylan",
   "nameEn": "Martinez Dylan",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 63,
   "popularity": 43,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 50
       },
       "batting": {
-        "ovr": 61,
-        "contact": 55,
-        "power": 57,
-        "eye": 60,
-        "discipline": 54,
-        "speed": 59,
-        "baseInstinct": 60,
-        "bunting": 50,
-        "platoon": 48,
-        "fielding": 63,
-        "arm": 55,
-        "battingClutch": 50
+        "ovr": 63,
+        "contact": 57,
+        "power": 59,
+        "eye": 62,
+        "discipline": 56,
+        "speed": 61,
+        "baseInstinct": 62,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 57,
+        "battingClutch": 52
       },
       "positionRatings": {
         "LF": 63

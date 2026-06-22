@@ -1,80 +1,46 @@
 {
   "id": "PLY_02011",
-  "name": "조건우",
-  "nameEn": "Jo Geonwoo",
+  "name": "후지타 쓰카사",
+  "nameEn": "Fujita Tsukasa",
   "role": "player",
-  "age": 27,
+  "age": 33,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_GIANTWHALES",
-  "teamId": "TEAM_KBL_GIANTWHALES_1",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SEAGULLS",
+  "teamId": "TEAM_JBL_PL_SEAGULLS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "CP",
-      "jerseyNumber": 27,
+      "position": "CF",
+      "jerseyNumber": 21,
       "pitching": {
-        "ovr": 81,
-        "stamina": 83,
-        "velocity": 86,
-        "command": 86,
-        "control": 80,
-        "movement": 82,
-        "mentality": 81,
-        "recovery": 82,
-        "clutch": 79,
-        "holdRunners": 75
+        "ovr": 45,
+        "stamina": 48,
+        "velocity": 52,
+        "command": 52,
+        "control": 48,
+        "movement": 50,
+        "mentality": 51,
+        "recovery": 46
       },
       "batting": {
-        "ovr": 63,
-        "contact": 58,
-        "power": 65,
-        "eye": 66,
-        "discipline": 60,
-        "speed": 60,
-        "fielding": 63,
-        "arm": 61,
-        "battingClutch": 61,
-        "baseInstinct": 53,
-        "bunting": 57,
-        "platoon": 58
+        "ovr": 78,
+        "contact": 75,
+        "power": 74,
+        "eye": 78,
+        "discipline": 74,
+        "speed": 81,
+        "fielding": 82,
+        "arm": 80,
+        "battingClutch": 81
       },
-      "developmentRate": 30,
-      "potentialHidden": 95,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 81
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 5,
-      "contract": {
-        "salary": 8600,
-        "durationYears": 4,
-        "remainingYears": 4,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 39,
+      "potentialHidden": 71
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 57,
-  "popularity": 46,
-  "militaryStatus": "군필"
+  }
 }

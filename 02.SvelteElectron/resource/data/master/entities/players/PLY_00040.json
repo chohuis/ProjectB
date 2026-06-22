@@ -1,9 +1,9 @@
 {
   "id": "PLY_00040",
   "name": "양시우",
-  "nameEn": "Yang Siu",
+  "nameEn": "Lim Seong-min",
   "role": "player",
-  "age": 19,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "DH",
       "jerseyNumber": 20,
       "pitching": {
-        "ovr": 40,
-        "stamina": 42,
-        "velocity": 46,
-        "command": 44,
-        "control": 36,
-        "movement": 40,
-        "mentality": 37,
-        "recovery": 37,
-        "clutch": 37,
-        "holdRunners": 40
+        "ovr": 49,
+        "stamina": 69,
+        "velocity": 69,
+        "command": 54,
+        "control": 58,
+        "movement": 51,
+        "mentality": 66,
+        "recovery": 66
       },
       "batting": {
-        "ovr": 60,
-        "contact": 56,
-        "power": 62,
-        "eye": 62,
-        "discipline": 56,
-        "speed": 61,
-        "fielding": 56,
-        "arm": 66,
-        "battingClutch": 57,
-        "baseInstinct": 55,
-        "bunting": 47,
-        "platoon": 48
+        "ovr": 70,
+        "contact": 54,
+        "power": 66,
+        "eye": 63,
+        "discipline": 63,
+        "speed": 56,
+        "fielding": 60,
+        "arm": 62,
+        "battingClutch": 60
       },
       "developmentRate": 67,
-      "potentialHidden": 84,
-      "primaryPosition": "DH",
-      "positionRatings": {
-        "DH": 60
-      }
+      "potentialHidden": 84
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

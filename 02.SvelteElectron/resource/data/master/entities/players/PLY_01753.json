@@ -1,61 +1,46 @@
 {
   "id": "PLY_01753",
-  "name": "노원준",
-  "nameEn": "No Wonjun",
+  "name": "야마자키 히라쿠",
+  "nameEn": "Yamazaki Hiraku",
   "role": "player",
-  "age": 17,
+  "age": 24,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_MASAN_HARBOR",
-  "teamId": "TEAM_HS_MASAN_HARBOR",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_MASAN_HARBOR",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+  "teamId": "TEAM_JBL_CL_SILVERWOLVES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "C",
-      "jerseyNumber": 12,
+      "position": "RP",
+      "jerseyNumber": 38,
       "pitching": {
-        "ovr": 42,
-        "stamina": 41,
-        "velocity": 43,
-        "command": 42,
-        "control": 46,
-        "movement": 41,
-        "mentality": 39,
-        "recovery": 40,
-        "clutch": 40,
-        "holdRunners": 34
+        "ovr": 73,
+        "stamina": 58,
+        "velocity": 72,
+        "command": 73,
+        "control": 64,
+        "movement": 67,
+        "mentality": 66,
+        "recovery": 69
       },
       "batting": {
-        "ovr": 62,
-        "contact": 64,
-        "power": 63,
-        "eye": 58,
-        "discipline": 57,
-        "speed": 60,
-        "fielding": 67,
-        "arm": 60,
-        "battingClutch": 58,
-        "baseInstinct": 54,
-        "bunting": 51,
-        "platoon": 50
+        "ovr": 45,
+        "contact": 50,
+        "power": 45,
+        "eye": 48,
+        "discipline": 45,
+        "speed": 50,
+        "fielding": 43,
+        "arm": 44,
+        "battingClutch": 46
       },
-      "developmentRate": 90,
-      "potentialHidden": 66,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 54,
+      "potentialHidden": 69
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 64,
-  "popularity": 15
+  }
 }

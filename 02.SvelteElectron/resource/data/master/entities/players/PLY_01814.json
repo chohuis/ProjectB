@@ -1,61 +1,46 @@
 {
   "id": "PLY_01814",
-  "name": "박민석",
-  "nameEn": "Park Minseok",
+  "name": "무라카미 히로시",
+  "nameEn": "Murakami Hiroshi",
   "role": "player",
-  "age": 17,
+  "age": 32,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_GOYANG_ARROW",
-  "teamId": "TEAM_HS_GOYANG_ARROW",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_GOYANG_ARROW",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
+  "teamId": "TEAM_JBL_PL_THUNDERFALCONS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "C",
-      "jerseyNumber": 13,
+      "position": "SP",
+      "jerseyNumber": 4,
       "pitching": {
-        "ovr": 38,
-        "stamina": 36,
-        "velocity": 37,
-        "command": 43,
-        "control": 37,
-        "movement": 41,
-        "mentality": 39,
-        "recovery": 43,
-        "clutch": 45,
-        "holdRunners": 41
+        "ovr": 82,
+        "stamina": 85,
+        "velocity": 78,
+        "command": 83,
+        "control": 75,
+        "movement": 76,
+        "mentality": 75,
+        "recovery": 76
       },
       "batting": {
-        "ovr": 58,
-        "contact": 63,
-        "power": 54,
-        "eye": 54,
-        "discipline": 56,
-        "speed": 62,
-        "fielding": 56,
-        "arm": 63,
-        "battingClutch": 57,
-        "baseInstinct": 50,
-        "bunting": 46,
-        "platoon": 46
+        "ovr": 48,
+        "contact": 49,
+        "power": 50,
+        "eye": 48,
+        "discipline": 48,
+        "speed": 51,
+        "fielding": 46,
+        "arm": 45,
+        "battingClutch": 51
       },
-      "developmentRate": 73,
-      "potentialHidden": 82,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 47,
+      "potentialHidden": 80
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 58,
-  "popularity": 45
+  }
 }

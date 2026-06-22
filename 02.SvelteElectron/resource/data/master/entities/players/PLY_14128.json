@@ -1,6 +1,6 @@
 {
   "id": "PLY_14128",
-  "name": "베이커 미겔",
+  "name": "Baker Miguel",
   "nameEn": "Baker Miguel",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 48,
   "popularity": 19,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 61
       },
       "batting": {
-        "ovr": 60,
-        "contact": 56,
-        "power": 62,
-        "eye": 63,
-        "discipline": 51,
-        "speed": 59,
-        "baseInstinct": 62,
-        "bunting": 46,
-        "platoon": 47,
-        "fielding": 53,
-        "arm": 56,
-        "battingClutch": 52
+        "ovr": 64,
+        "contact": 60,
+        "power": 66,
+        "eye": 67,
+        "discipline": 54,
+        "speed": 63,
+        "baseInstinct": 66,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 60,
+        "battingClutch": 55
       },
       "positionRatings": {
         "C": 64

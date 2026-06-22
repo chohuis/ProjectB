@@ -1,6 +1,6 @@
 {
   "id": "PLY_14410",
-  "name": "루이스 코너",
+  "name": "Lewis Connor",
   "nameEn": "Lewis Connor",
   "role": "player",
   "age": 18,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 84,
   "popularity": 15,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 44
       },
       "batting": {
-        "ovr": 52,
-        "contact": 47,
-        "power": 48,
-        "eye": 50,
-        "discipline": 50,
-        "speed": 55,
-        "baseInstinct": 41,
-        "bunting": 38,
-        "platoon": 49,
-        "fielding": 54,
-        "arm": 51,
-        "battingClutch": 49
+        "ovr": 53,
+        "contact": 48,
+        "power": 49,
+        "eye": 51,
+        "discipline": 51,
+        "speed": 56,
+        "baseInstinct": 42,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 52,
+        "battingClutch": 50
       },
       "positionRatings": {
         "2B": 53

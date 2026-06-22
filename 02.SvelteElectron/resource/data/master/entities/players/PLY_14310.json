@@ -1,6 +1,6 @@
 {
   "id": "PLY_14310",
-  "name": "마르티네스 칼렙",
+  "name": "Martinez Caleb",
   "nameEn": "Martinez Caleb",
   "role": "player",
   "age": 32,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 71,
   "popularity": 12,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 52,
       "proServiceYears": 10,
       "pitching": {
-        "ovr": 84,
-        "stamina": 81,
-        "velocity": 98,
-        "command": 75,
-        "control": 90,
-        "movement": 87,
-        "mentality": 89,
-        "recovery": 75,
-        "clutch": 78,
-        "holdRunners": 67
+        "ovr": 66,
+        "stamina": 64,
+        "velocity": 77,
+        "command": 59,
+        "control": 71,
+        "movement": 68,
+        "mentality": 70,
+        "recovery": 59,
+        "clutch": 61,
+        "holdRunners": 53
       },
       "batting": {
         "ovr": 66,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_16150",
-  "name": "무어 케빈",
+  "name": "Moore Kevin",
   "nameEn": "Moore Kevin",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 81,
   "popularity": 34,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 56,
       "proServiceYears": 13,
       "pitching": {
-        "ovr": 66,
-        "stamina": 67,
-        "velocity": 76,
-        "command": 60,
-        "control": 67,
-        "movement": 70,
-        "mentality": 67,
-        "recovery": 67,
-        "clutch": 60,
-        "holdRunners": 59
+        "ovr": 53,
+        "stamina": 54,
+        "velocity": 61,
+        "command": 48,
+        "control": 54,
+        "movement": 56,
+        "mentality": 54,
+        "recovery": 54,
+        "clutch": 48,
+        "holdRunners": 47
       },
       "batting": {
         "ovr": 53,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 53
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

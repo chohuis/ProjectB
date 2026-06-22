@@ -1,6 +1,6 @@
 {
   "id": "PLY_15266",
-  "name": "화이트 코너",
+  "name": "White Connor",
   "nameEn": "White Connor",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 51,
   "popularity": 42,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 86,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 60,
-        "stamina": 52,
-        "velocity": 64,
-        "command": 51,
-        "control": 63,
-        "movement": 54,
-        "mentality": 62,
-        "recovery": 53,
-        "clutch": 50,
-        "holdRunners": 45
+        "ovr": 61,
+        "stamina": 53,
+        "velocity": 65,
+        "command": 52,
+        "control": 64,
+        "movement": 55,
+        "mentality": 63,
+        "recovery": 54,
+        "clutch": 51,
+        "holdRunners": 46
       },
       "batting": {
         "ovr": 61,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

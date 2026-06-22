@@ -1,9 +1,9 @@
 {
   "id": "PLY_13105",
-  "name": "스콧 네이선",
-  "nameEn": "Scott Nathan",
+  "name": "Young Luis",
+  "nameEn": "Young Luis",
   "role": "player",
-  "age": 24,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 52,
-  "popularity": 20,
+  "notes": "국적:멕시코",
+  "diligence": 45,
+  "popularity": 44,
   "militaryStatus": "군필",
   "entryYear": 2045,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 24,
+  "entryAge": 20,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 16,
+      "jerseyNumber": 84,
       "primaryPosition": "SP",
-      "developmentRate": 52,
-      "potentialHidden": 61,
-      "proServiceYears": 2,
+      "developmentRate": 66,
+      "potentialHidden": 64,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 63,
-        "stamina": 65,
-        "velocity": 69,
-        "command": 61,
-        "control": 61,
-        "movement": 57,
+        "ovr": 54,
+        "stamina": 52,
+        "velocity": 58,
+        "command": 45,
+        "control": 58,
+        "movement": 45,
         "mentality": 57,
-        "recovery": 54,
-        "clutch": 63,
-        "holdRunners": 57
+        "recovery": 55,
+        "clutch": 47,
+        "holdRunners": 47
       },
       "batting": {
-        "ovr": 68,
-        "contact": 67,
-        "power": 60,
-        "eye": 71,
-        "discipline": 69,
-        "speed": 65,
-        "baseInstinct": 68,
-        "bunting": 62,
+        "ovr": 54,
+        "contact": 53,
+        "power": 47,
+        "eye": 51,
+        "discipline": 54,
+        "speed": 50,
+        "baseInstinct": 55,
+        "bunting": 35,
         "platoon": 50,
-        "fielding": 65,
-        "arm": 61,
-        "battingClutch": 55
+        "fielding": 50,
+        "arm": 47,
+        "battingClutch": 41
       },
       "positionRatings": {
-        "SP": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+        "SP": 54
+      }
     },
     "coach": null,
     "manager": null,

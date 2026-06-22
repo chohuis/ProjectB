@@ -1,7 +1,7 @@
 {
   "id": "PLY_00229",
   "name": "이성민",
-  "nameEn": "Lee Seongmin",
+  "nameEn": "Lee Hyun-jin",
   "role": "player",
   "age": 19,
   "status": "active",
@@ -20,46 +20,27 @@
       "jerseyNumber": 9,
       "pitching": {
         "ovr": 58,
-        "stamina": 62,
-        "velocity": 64,
-        "command": 57,
-        "control": 59,
-        "movement": 55,
-        "mentality": 61,
-        "recovery": 56,
-        "clutch": 56,
-        "holdRunners": 48
+        "stamina": 48,
+        "velocity": 66,
+        "command": 61,
+        "control": 60,
+        "movement": 58,
+        "mentality": 56,
+        "recovery": 54
       },
       "batting": {
-        "ovr": 40,
-        "contact": 42,
-        "power": 42,
-        "eye": 39,
-        "discipline": 41,
+        "ovr": 36,
+        "contact": 36,
+        "power": 30,
+        "eye": 29,
+        "discipline": 33,
         "speed": 33,
-        "fielding": 41,
-        "arm": 46,
-        "battingClutch": 44,
-        "baseInstinct": 45,
-        "bunting": 41,
-        "platoon": 41
+        "fielding": 27,
+        "arm": 32,
+        "battingClutch": 34
       },
       "developmentRate": 59,
-      "potentialHidden": 71,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        }
-      ]
+      "potentialHidden": 71
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

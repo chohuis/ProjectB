@@ -1,6 +1,6 @@
 {
   "id": "PLY_15167",
-  "name": "리 헌터",
+  "name": "Lee Hunter",
   "nameEn": "Lee Hunter",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 79,
   "popularity": 22,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 53
       },
       "batting": {
-        "ovr": 59,
-        "contact": 56,
-        "power": 59,
-        "eye": 55,
-        "discipline": 63,
-        "speed": 57,
-        "baseInstinct": 58,
-        "bunting": 44,
-        "platoon": 49,
-        "fielding": 54,
-        "arm": 60,
-        "battingClutch": 57
+        "ovr": 60,
+        "contact": 57,
+        "power": 60,
+        "eye": 56,
+        "discipline": 64,
+        "speed": 58,
+        "baseInstinct": 59,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 61,
+        "battingClutch": 58
       },
       "positionRatings": {
         "CF": 60

@@ -1,6 +1,6 @@
 {
   "id": "PLY_14473",
-  "name": "에르난데스 블레이크",
+  "name": "Hernandez Blake",
   "nameEn": "Hernandez Blake",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 55,
   "popularity": 13,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 45
       },
       "batting": {
-        "ovr": 50,
-        "contact": 55,
-        "power": 40,
-        "eye": 46,
-        "discipline": 48,
-        "speed": 53,
-        "baseInstinct": 49,
-        "bunting": 33,
-        "platoon": 49,
-        "fielding": 44,
-        "arm": 45,
-        "battingClutch": 40
+        "ovr": 51,
+        "contact": 56,
+        "power": 41,
+        "eye": 47,
+        "discipline": 49,
+        "speed": 54,
+        "baseInstinct": 50,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 46,
+        "battingClutch": 41
       },
       "positionRatings": {
         "SS": 51

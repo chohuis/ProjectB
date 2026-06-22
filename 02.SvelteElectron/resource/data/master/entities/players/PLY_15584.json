@@ -1,6 +1,6 @@
 {
   "id": "PLY_15584",
-  "name": "로드리게스 블레이크",
+  "name": "Rodriguez Blake",
   "nameEn": "Rodriguez Blake",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 59,
   "popularity": 17,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 63
       },
       "batting": {
-        "ovr": 64,
-        "contact": 60,
-        "power": 54,
-        "eye": 62,
-        "discipline": 66,
-        "speed": 71,
-        "baseInstinct": 66,
-        "bunting": 58,
-        "platoon": 48,
-        "fielding": 55,
-        "arm": 54,
-        "battingClutch": 63
+        "ovr": 67,
+        "contact": 63,
+        "power": 57,
+        "eye": 65,
+        "discipline": 69,
+        "speed": 74,
+        "baseInstinct": 69,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 57,
+        "battingClutch": 66
       },
       "positionRatings": {
         "CF": 67

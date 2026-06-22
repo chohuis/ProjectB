@@ -1,9 +1,9 @@
 {
   "id": "PLY_00054",
   "name": "안도윤",
-  "nameEn": "Ahn Doyun",
+  "nameEn": "You Yong-jun",
   "role": "player",
-  "age": 18,
+  "age": 17,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "2B",
       "jerseyNumber": 14,
       "pitching": {
-        "ovr": 32,
-        "stamina": 36,
-        "velocity": 31,
-        "command": 34,
-        "control": 29,
-        "movement": 30,
-        "mentality": 28,
-        "recovery": 29,
-        "clutch": 37,
-        "holdRunners": 42
+        "ovr": 44,
+        "stamina": 64,
+        "velocity": 55,
+        "command": 59,
+        "control": 46,
+        "movement": 48,
+        "mentality": 59,
+        "recovery": 54
       },
       "batting": {
-        "ovr": 52,
-        "contact": 48,
-        "power": 48,
-        "eye": 52,
-        "discipline": 48,
-        "speed": 46,
-        "fielding": 53,
-        "arm": 57,
-        "battingClutch": 51,
-        "baseInstinct": 52,
-        "bunting": 42,
-        "platoon": 43
+        "ovr": 63,
+        "contact": 63,
+        "power": 45,
+        "eye": 45,
+        "discipline": 46,
+        "speed": 65,
+        "fielding": 61,
+        "arm": 59,
+        "battingClutch": 56
       },
       "developmentRate": 55,
-      "potentialHidden": 80,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 52
-      }
+      "potentialHidden": 80
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

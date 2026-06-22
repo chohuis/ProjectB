@@ -1,6 +1,6 @@
 {
   "id": "PLY_15272",
-  "name": "홀 에반",
+  "name": "Hall Evan",
   "nameEn": "Hall Evan",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 61,
   "popularity": 19,
   "militaryStatus": "군필",

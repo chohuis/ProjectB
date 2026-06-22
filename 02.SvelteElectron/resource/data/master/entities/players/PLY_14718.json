@@ -1,6 +1,6 @@
 {
   "id": "PLY_14718",
-  "name": "로드리게스 트레버",
+  "name": "Rodriguez Trevor",
   "nameEn": "Rodriguez Trevor",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 52,
   "popularity": 19,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 59,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 58,
-        "stamina": 59,
-        "velocity": 63,
-        "command": 51,
-        "control": 58,
-        "movement": 54,
-        "mentality": 61,
-        "recovery": 49,
-        "clutch": 48,
-        "holdRunners": 54
+        "ovr": 59,
+        "stamina": 60,
+        "velocity": 64,
+        "command": 52,
+        "control": 59,
+        "movement": 55,
+        "mentality": 62,
+        "recovery": 50,
+        "clutch": 49,
+        "holdRunners": 55
       },
       "batting": {
         "ovr": 59,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

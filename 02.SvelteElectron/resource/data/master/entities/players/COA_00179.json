@@ -1,16 +1,17 @@
 {
   "id": "COA_00179",
-  "name": "곽재현",
-  "nameEn": "Kwak Jaehyeon",
+  "name": "오타 미쓰루",
+  "nameEn": "Ota Mitsuru",
   "role": "coach",
-  "age": 39,
+  "age": 58,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_JECHEON_RIDGE",
-  "teamId": "TEAM_HS_JECHEON_RIDGE",
-  "schoolId": "SCHOOL_TEAM_HS_JECHEON_RIDGE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONDRAKES",
+  "teamId": "TEAM_JBL_CL_IRONDRAKES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
@@ -25,9 +26,7 @@
         "control": 50,
         "movement": 50,
         "mentality": 50,
-        "recovery": 50,
-        "clutch": 50,
-        "holdRunners": 50
+        "recovery": 50
       },
       "batting": {
         "ovr": 50,
@@ -38,33 +37,22 @@
         "speed": 50,
         "fielding": 50,
         "arm": 50,
-        "battingClutch": 50,
-        "baseInstinct": 50,
-        "bunting": 45,
-        "platoon": 50
+        "battingClutch": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 65,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 50
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 70
     },
     "coach": {
-      "specialty": "batting",
-      "experienceYears": 9,
+      "specialty": "투수",
+      "experienceYears": 18,
       "stats": {
-        "teaching": 56,
-        "analytics": 73,
-        "experience": 5
+        "teaching": 81,
+        "analysis": 75,
+        "communication": 53,
+        "discipline": 58,
+        "leadership": 76
       },
-      "trainingBuffs": "타격 훈련 +2%"
+      "trainingBuffs": ""
     },
     "manager": {
       "style": "균형",
@@ -92,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

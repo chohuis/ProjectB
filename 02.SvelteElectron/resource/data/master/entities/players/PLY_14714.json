@@ -1,6 +1,6 @@
 {
   "id": "PLY_14714",
-  "name": "베이커 에릭",
+  "name": "Baker Eric",
   "nameEn": "Baker Eric",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 68,
   "popularity": 39,
   "militaryStatus": "군필",

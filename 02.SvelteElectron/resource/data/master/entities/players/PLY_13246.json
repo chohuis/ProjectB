@@ -1,9 +1,9 @@
 {
   "id": "PLY_13246",
-  "name": "홀 로건",
-  "nameEn": "Hall Logan",
+  "name": "Hernandez Evan",
+  "nameEn": "Hernandez Evan",
   "role": "player",
-  "age": 28,
+  "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 82,
-  "popularity": 48,
+  "notes": "국적:멕시코",
+  "diligence": 84,
+  "popularity": 22,
   "militaryStatus": "군필",
   "entryYear": 2046,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 28,
+  "entryAge": 27,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 98,
-      "primaryPosition": "SP",
-      "developmentRate": 50,
-      "potentialHidden": 85,
-      "proServiceYears": 6,
+      "position": "LF",
+      "jerseyNumber": 21,
+      "primaryPosition": "LF",
+      "developmentRate": 56,
+      "potentialHidden": 83,
+      "proServiceYears": 5,
       "pitching": {
-        "ovr": 82,
-        "stamina": 85,
-        "velocity": 82,
-        "command": 85,
-        "control": 81,
-        "movement": 82,
-        "mentality": 88,
-        "recovery": 74,
-        "clutch": 78,
-        "holdRunners": 67
+        "ovr": 65,
+        "stamina": 61,
+        "velocity": 64,
+        "command": 65,
+        "control": 66,
+        "movement": 69,
+        "mentality": 61,
+        "recovery": 65,
+        "clutch": 55,
+        "holdRunners": 53
       },
       "batting": {
-        "ovr": 79,
-        "contact": 76,
-        "power": 76,
-        "eye": 71,
-        "discipline": 72,
-        "speed": 76,
-        "baseInstinct": 76,
-        "bunting": 69,
+        "ovr": 65,
+        "contact": 61,
+        "power": 65,
+        "eye": 58,
+        "discipline": 65,
+        "speed": 60,
+        "baseInstinct": 60,
+        "bunting": 55,
         "platoon": 50,
-        "fielding": 77,
-        "arm": 77,
-        "battingClutch": 74
+        "fielding": 60,
+        "arm": 56,
+        "battingClutch": 53
       },
       "positionRatings": {
-        "SP": 79
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 2
-        }
-      ]
+        "LF": 65
+      }
     },
     "coach": null,
     "manager": null,

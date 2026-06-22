@@ -1,65 +1,46 @@
 {
   "id": "PLY_01803",
-  "name": "문현준",
-  "nameEn": "Moon Hyeonjun",
+  "name": "아베 쓰카사",
+  "nameEn": "Abe Tsukasa",
   "role": "player",
-  "age": 16,
+  "age": 24,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_GOYANG_ARROW",
-  "teamId": "TEAM_HS_GOYANG_ARROW",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_GOYANG_ARROW",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONSTORMS",
+  "teamId": "TEAM_JBL_CL_IRONSTORMS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 2,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 43,
       "pitching": {
-        "ovr": 32,
+        "ovr": 38,
         "stamina": 35,
-        "velocity": 33,
-        "command": 32,
-        "control": 33,
-        "movement": 30,
-        "mentality": 32,
-        "recovery": 29,
-        "clutch": 36,
-        "holdRunners": 42
+        "velocity": 38,
+        "command": 30,
+        "control": 31,
+        "movement": 34,
+        "mentality": 33,
+        "recovery": 31
       },
       "batting": {
-        "ovr": 22,
-        "contact": 20,
-        "power": 24,
-        "eye": 20,
-        "discipline": 28,
-        "speed": 20,
-        "fielding": 22,
-        "arm": 20,
-        "battingClutch": 35,
-        "baseInstinct": 38,
-        "bunting": 39,
-        "platoon": 41
+        "ovr": 68,
+        "contact": 64,
+        "power": 73,
+        "eye": 69,
+        "discipline": 61,
+        "speed": 59,
+        "fielding": 68,
+        "arm": 65,
+        "battingClutch": 64
       },
-      "developmentRate": 51,
-      "potentialHidden": 71,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 32
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 2
-        }
-      ]
+      "developmentRate": 45,
+      "potentialHidden": 81
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 55,
-  "popularity": 21
+  }
 }

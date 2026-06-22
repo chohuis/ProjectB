@@ -1,7 +1,7 @@
 {
   "id": "PLY_10315",
-  "name": "영 다니엘",
-  "nameEn": "Young Daniel",
+  "name": "Williams Cole",
+  "nameEn": "Williams Cole",
   "role": "player",
   "age": 26,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 56,
-  "popularity": 34,
+  "notes": "국적:멕시코",
+  "diligence": 82,
+  "popularity": 18,
   "militaryStatus": "군필",
   "entryYear": 2028,
   "entryLeague": "LEAGUE_ABL",
@@ -24,50 +24,40 @@
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 24,
+      "jerseyNumber": 4,
       "primaryPosition": "SP",
-      "developmentRate": 57,
-      "potentialHidden": 64,
+      "developmentRate": 60,
+      "potentialHidden": 86,
       "proServiceYears": 4,
       "pitching": {
-        "ovr": 54,
-        "stamina": 48,
-        "velocity": 55,
-        "command": 51,
-        "control": 50,
-        "movement": 47,
-        "mentality": 52,
-        "recovery": 53,
-        "clutch": 54,
-        "holdRunners": 52
+        "ovr": 71,
+        "stamina": 74,
+        "velocity": 70,
+        "command": 70,
+        "control": 65,
+        "movement": 72,
+        "mentality": 68,
+        "recovery": 60,
+        "clutch": 64,
+        "holdRunners": 56
       },
       "batting": {
-        "ovr": 65,
-        "contact": 60,
-        "power": 68,
-        "eye": 66,
-        "discipline": 65,
-        "speed": 62,
-        "baseInstinct": 63,
-        "bunting": 51,
+        "ovr": 71,
+        "contact": 65,
+        "power": 60,
+        "eye": 73,
+        "discipline": 70,
+        "speed": 72,
+        "baseInstinct": 66,
+        "bunting": 55,
         "platoon": 50,
-        "fielding": 58,
-        "arm": 57,
-        "battingClutch": 62
+        "fielding": 68,
+        "arm": 73,
+        "battingClutch": 64
       },
       "positionRatings": {
-        "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 71
+      }
     },
     "coach": null,
     "manager": null,

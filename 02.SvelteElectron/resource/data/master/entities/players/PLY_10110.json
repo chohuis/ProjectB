@@ -1,9 +1,9 @@
 {
   "id": "PLY_10110",
-  "name": "톰슨 크리스",
-  "nameEn": "Thompson Chris",
+  "name": "Walker Brandon",
+  "nameEn": "Walker Brandon",
   "role": "player",
-  "age": 22,
+  "age": 19,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 62,
-  "popularity": 46,
+  "notes": "국적:베네수엘라",
+  "diligence": 72,
+  "popularity": 33,
   "militaryStatus": "군필",
   "entryYear": 2027,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 22,
+  "entryAge": 19,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 94,
+      "jerseyNumber": 89,
       "primaryPosition": "SP",
       "developmentRate": 57,
       "potentialHidden": 61,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 61,
-        "stamina": 64,
-        "velocity": 67,
-        "command": 52,
-        "control": 62,
-        "movement": 54,
-        "mentality": 62,
-        "recovery": 55,
+        "ovr": 62,
+        "stamina": 59,
+        "velocity": 64,
+        "command": 57,
+        "control": 65,
+        "movement": 62,
+        "mentality": 66,
+        "recovery": 52,
         "clutch": 58,
-        "holdRunners": 56
+        "holdRunners": 60
       },
       "batting": {
-        "ovr": 66,
-        "contact": 62,
-        "power": 67,
-        "eye": 67,
-        "discipline": 60,
-        "speed": 62,
-        "baseInstinct": 56,
-        "bunting": 61,
+        "ovr": 62,
+        "contact": 61,
+        "power": 65,
+        "eye": 55,
+        "discipline": 64,
+        "speed": 61,
+        "baseInstinct": 61,
+        "bunting": 56,
         "platoon": 50,
-        "fielding": 60,
-        "arm": 57,
-        "battingClutch": 57
+        "fielding": 59,
+        "arm": 56,
+        "battingClutch": 55
       },
       "positionRatings": {
-        "SP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+        "SP": 62
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,14 +1,14 @@
 {
   "id": "PLY_01456",
   "name": "미첼 카를로스",
-  "nameEn": "Mi 첼 카를로스",
+  "nameEn": "Mitchell Carlos",
   "role": "player",
   "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_DESERTSERPENTS",
-  "teamId": "TEAM_ABL_DESERTSERPENTS_1",
+  "clubId": "CLUB_ABL_ARI",
+  "teamId": "TEAM_ABL_ARI",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 6,
       "pitching": {
-        "ovr": 81,
-        "stamina": 78,
-        "velocity": 84,
-        "command": 79,
-        "control": 85,
-        "movement": 83,
-        "mentality": 77,
-        "recovery": 78,
-        "clutch": 80,
-        "holdRunners": 70
+        "ovr": 88,
+        "stamina": 81,
+        "velocity": 94,
+        "command": 86,
+        "control": 88,
+        "movement": 92,
+        "mentality": 93,
+        "recovery": 85
       },
       "batting": {
         "ovr": 63,
-        "contact": 68,
-        "power": 63,
-        "eye": 61,
-        "discipline": 68,
+        "contact": 61,
+        "power": 64,
+        "eye": 64,
+        "discipline": 64,
         "speed": 60,
-        "fielding": 61,
-        "arm": 61,
-        "battingClutch": 59,
-        "baseInstinct": 54,
-        "bunting": 55,
-        "platoon": 58
+        "fielding": 59,
+        "arm": 63,
+        "battingClutch": 59
       },
       "developmentRate": 35,
-      "potentialHidden": 69,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 81
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 3,
-      "contract": {
-        "salary": 30200,
-        "durationYears": 4,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 69
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

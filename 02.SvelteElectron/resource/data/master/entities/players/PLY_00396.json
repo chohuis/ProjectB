@@ -1,7 +1,7 @@
 {
   "id": "PLY_00396",
   "name": "홍재윤",
-  "nameEn": "Hong Jaeyun",
+  "nameEn": "Oh Min-hyuk",
   "role": "player",
   "age": 19,
   "status": "active",
@@ -19,48 +19,28 @@
       "position": "SS",
       "jerseyNumber": 16,
       "pitching": {
-        "ovr": 36,
-        "stamina": 33,
-        "velocity": 38,
-        "command": 39,
-        "control": 32,
-        "movement": 37,
-        "mentality": 40,
-        "recovery": 32,
-        "clutch": 40,
-        "holdRunners": 35
+        "ovr": 22,
+        "stamina": 22,
+        "velocity": 27,
+        "command": 22,
+        "control": 20,
+        "movement": 20,
+        "mentality": 24,
+        "recovery": 19
       },
       "batting": {
-        "ovr": 56,
-        "contact": 56,
-        "power": 60,
-        "eye": 57,
-        "discipline": 61,
-        "speed": 53,
-        "fielding": 59,
-        "arm": 57,
-        "battingClutch": 46,
-        "baseInstinct": 48,
-        "bunting": 46,
-        "platoon": 51
+        "ovr": 59,
+        "contact": 60,
+        "power": 52,
+        "eye": 58,
+        "discipline": 57,
+        "speed": 56,
+        "fielding": 58,
+        "arm": 51,
+        "battingClutch": 59
       },
       "developmentRate": 40,
-      "potentialHidden": 57,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 56
-      },
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 57
     },
     "coach": {
       "specialty": "-",
@@ -100,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

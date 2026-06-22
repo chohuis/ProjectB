@@ -1,9 +1,9 @@
 {
   "id": "PLY_10566",
-  "name": "무어 카를로스",
-  "nameEn": "Moore Carlos",
+  "name": "Davis Tyler",
+  "nameEn": "Davis Tyler",
   "role": "player",
-  "age": 22,
+  "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 62,
-  "popularity": 26,
+  "popularity": 44,
   "militaryStatus": "군필",
   "entryYear": 2030,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 22,
+  "entryAge": 32,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 37,
+      "jerseyNumber": 31,
       "primaryPosition": "SP",
-      "developmentRate": 61,
-      "potentialHidden": 84,
-      "proServiceYears": 0,
+      "developmentRate": 50,
+      "potentialHidden": 76,
+      "proServiceYears": 10,
       "pitching": {
-        "ovr": 54,
-        "stamina": 49,
-        "velocity": 64,
-        "command": 50,
-        "control": 58,
-        "movement": 45,
-        "mentality": 52,
-        "recovery": 44,
-        "clutch": 53,
-        "holdRunners": 52
+        "ovr": 63,
+        "stamina": 57,
+        "velocity": 71,
+        "command": 57,
+        "control": 67,
+        "movement": 66,
+        "mentality": 64,
+        "recovery": 55,
+        "clutch": 51,
+        "holdRunners": 48
       },
       "batting": {
-        "ovr": 57,
-        "contact": 55,
-        "power": 54,
-        "eye": 57,
-        "discipline": 60,
-        "speed": 54,
+        "ovr": 63,
+        "contact": 61,
+        "power": 59,
+        "eye": 65,
+        "discipline": 63,
+        "speed": 60,
         "baseInstinct": 56,
-        "bunting": 39,
+        "bunting": 45,
         "platoon": 50,
-        "fielding": 50,
-        "arm": 55,
-        "battingClutch": 49
+        "fielding": 66,
+        "arm": 54,
+        "battingClutch": 59
       },
       "positionRatings": {
-        "SP": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 63
+      }
     },
     "coach": null,
     "manager": null,

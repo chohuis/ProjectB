@@ -1,6 +1,6 @@
 {
   "id": "PLY_16102",
-  "name": "영 마커스",
+  "name": "Young Marcus",
   "nameEn": "Young Marcus",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 78,
   "popularity": 12,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 61
       },
       "batting": {
-        "ovr": 69,
-        "contact": 72,
-        "power": 61,
-        "eye": 61,
-        "discipline": 69,
-        "speed": 75,
-        "baseInstinct": 68,
-        "bunting": 64,
-        "platoon": 48,
-        "fielding": 64,
-        "arm": 60,
-        "battingClutch": 61
+        "ovr": 72,
+        "contact": 75,
+        "power": 64,
+        "eye": 64,
+        "discipline": 72,
+        "speed": 78,
+        "baseInstinct": 71,
+        "bunting": 67,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 63,
+        "battingClutch": 64
       },
       "positionRatings": {
         "1B": 72

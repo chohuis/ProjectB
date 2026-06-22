@@ -1,6 +1,6 @@
 {
   "id": "PLY_14526",
-  "name": "톰슨 데릭",
+  "name": "Thompson Derek",
   "nameEn": "Thompson Derek",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 58,
   "popularity": 46,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 49
       },
       "batting": {
-        "ovr": 65,
-        "contact": 54,
-        "power": 59,
-        "eye": 66,
-        "discipline": 66,
-        "speed": 65,
-        "baseInstinct": 55,
-        "bunting": 53,
-        "platoon": 63,
-        "fielding": 56,
-        "arm": 66,
-        "battingClutch": 54
+        "ovr": 52,
+        "contact": 43,
+        "power": 47,
+        "eye": 53,
+        "discipline": 53,
+        "speed": 52,
+        "baseInstinct": 44,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 53,
+        "battingClutch": 43
       },
       "positionRatings": {
         "3B": 52

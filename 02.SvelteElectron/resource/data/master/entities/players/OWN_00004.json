@@ -1,7 +1,7 @@
 {
   "id": "OWN_00004",
   "name": "조현우",
-  "nameEn": "Jo Hyeonu",
+  "nameEn": "Seo Min-woo",
   "role": "owner",
   "age": 55,
   "status": "active",
@@ -79,12 +79,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
   }
 }

@@ -1,61 +1,46 @@
 {
   "id": "PLY_01645",
-  "name": "최성현",
-  "nameEn": "Choi Seonghyeon",
+  "name": "고바야시 료",
+  "nameEn": "Kobayashi Ryo",
   "role": "player",
-  "age": 18,
+  "age": 34,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_YEOSU_SHORE",
-  "teamId": "TEAM_HS_YEOSU_SHORE",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_YEOSU_SHORE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONDRAKES",
+  "teamId": "TEAM_JBL_CL_IRONDRAKES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "CF",
-      "jerseyNumber": 24,
+      "position": "C",
+      "jerseyNumber": 15,
       "pitching": {
-        "ovr": 47,
-        "stamina": 50,
-        "velocity": 45,
-        "command": 48,
-        "control": 49,
-        "movement": 42,
-        "mentality": 50,
-        "recovery": 44,
-        "clutch": 36,
-        "holdRunners": 41
+        "ovr": 62,
+        "stamina": 61,
+        "velocity": 67,
+        "command": 63,
+        "control": 61,
+        "movement": 62,
+        "mentality": 63,
+        "recovery": 60
       },
       "batting": {
-        "ovr": 67,
-        "contact": 65,
-        "power": 64,
-        "eye": 66,
-        "discipline": 67,
-        "speed": 66,
-        "fielding": 64,
-        "arm": 64,
-        "battingClutch": 64,
-        "baseInstinct": 56,
-        "bunting": 56,
-        "platoon": 54
+        "ovr": 87,
+        "contact": 87,
+        "power": 86,
+        "eye": 83,
+        "discipline": 86,
+        "speed": 77,
+        "fielding": 83,
+        "arm": 86,
+        "battingClutch": 80
       },
-      "developmentRate": 63,
-      "potentialHidden": 74,
-      "primaryPosition": "CF",
-      "positionRatings": {
-        "CF": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 35,
+      "potentialHidden": 62
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 58,
-  "popularity": 35
+  }
 }

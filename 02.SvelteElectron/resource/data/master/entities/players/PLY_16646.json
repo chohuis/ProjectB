@@ -1,6 +1,6 @@
 {
   "id": "PLY_16646",
-  "name": "클라크 트레버",
+  "name": "Clark Trevor",
   "nameEn": "Clark Trevor",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 79,
   "popularity": 16,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 45
       },
       "batting": {
-        "ovr": 52,
-        "contact": 56,
-        "power": 49,
-        "eye": 51,
-        "discipline": 50,
-        "speed": 48,
-        "baseInstinct": 46,
-        "bunting": 47,
-        "platoon": 49,
-        "fielding": 41,
-        "arm": 46,
-        "battingClutch": 43
+        "ovr": 53,
+        "contact": 57,
+        "power": 50,
+        "eye": 52,
+        "discipline": 51,
+        "speed": 49,
+        "baseInstinct": 47,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 47,
+        "battingClutch": 44
       },
       "positionRatings": {
         "2B": 53

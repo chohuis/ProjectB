@@ -1,6 +1,6 @@
 {
   "id": "PLY_14937",
-  "name": "윌리엄스 콜",
+  "name": "Williams Cole",
   "nameEn": "Williams Cole",
   "role": "player",
   "age": 30,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 60,
   "popularity": 19,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 44
       },
       "batting": {
-        "ovr": 64,
-        "contact": 64,
-        "power": 54,
-        "eye": 68,
-        "discipline": 55,
-        "speed": 60,
-        "baseInstinct": 66,
-        "bunting": 51,
-        "platoon": 56,
-        "fielding": 55,
-        "arm": 65,
-        "battingClutch": 57
+        "ovr": 57,
+        "contact": 57,
+        "power": 48,
+        "eye": 61,
+        "discipline": 49,
+        "speed": 53,
+        "baseInstinct": 59,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 58,
+        "battingClutch": 51
       },
       "positionRatings": {
         "LF": 57

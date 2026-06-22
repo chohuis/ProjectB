@@ -1,9 +1,9 @@
 {
   "id": "PLY_13952",
-  "name": "카터 마커스",
-  "nameEn": "Carter Marcus",
+  "name": "Garcia Jordan",
+  "nameEn": "Garcia Jordan",
   "role": "player",
-  "age": 27,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 61,
-  "popularity": 12,
+  "notes": "국적:도미니카",
+  "diligence": 57,
+  "popularity": 30,
   "militaryStatus": "군필",
   "entryYear": 2050,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 27,
+  "entryAge": 21,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 78,
-      "primaryPosition": "SP",
-      "developmentRate": 52,
-      "potentialHidden": 68,
-      "proServiceYears": 5,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 85,
+      "primaryPosition": "1B",
+      "developmentRate": 68,
+      "potentialHidden": 81,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 60,
-        "stamina": 54,
-        "velocity": 63,
-        "command": 59,
-        "control": 63,
-        "movement": 52,
-        "mentality": 64,
-        "recovery": 57,
-        "clutch": 60,
-        "holdRunners": 58
+        "ovr": 53,
+        "stamina": 52,
+        "velocity": 61,
+        "command": 43,
+        "control": 45,
+        "movement": 49,
+        "mentality": 57,
+        "recovery": 53,
+        "clutch": 41,
+        "holdRunners": 47
       },
       "batting": {
-        "ovr": 69,
-        "contact": 71,
-        "power": 65,
-        "eye": 64,
-        "discipline": 60,
-        "speed": 69,
-        "baseInstinct": 66,
-        "bunting": 51,
+        "ovr": 53,
+        "contact": 45,
+        "power": 44,
+        "eye": 49,
+        "discipline": 52,
+        "speed": 58,
+        "baseInstinct": 55,
+        "bunting": 46,
         "platoon": 50,
-        "fielding": 60,
-        "arm": 64,
-        "battingClutch": 58
+        "fielding": 51,
+        "arm": 48,
+        "battingClutch": 46
       },
       "positionRatings": {
-        "SP": 69
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+        "1B": 53
+      }
     },
     "coach": null,
     "manager": null,

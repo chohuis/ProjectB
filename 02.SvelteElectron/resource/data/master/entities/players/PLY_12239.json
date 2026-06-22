@@ -1,9 +1,9 @@
 {
   "id": "PLY_12239",
-  "name": "킹 타일러",
-  "nameEn": "King Tyler",
+  "name": "King Jason",
+  "nameEn": "King Jason",
   "role": "player",
-  "age": 19,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 47,
-  "popularity": 41,
+  "notes": "국적:미국",
+  "diligence": 84,
+  "popularity": 43,
   "militaryStatus": "군필",
   "entryYear": 2040,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 19,
+  "entryAge": 20,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 65,
-      "primaryPosition": "SP",
-      "developmentRate": 60,
-      "potentialHidden": 86,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "RF",
+      "jerseyNumber": 5,
+      "primaryPosition": "RF",
+      "developmentRate": 78,
+      "potentialHidden": 94,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 55,
-        "stamina": 57,
-        "velocity": 53,
-        "command": 51,
-        "control": 60,
-        "movement": 53,
-        "mentality": 62,
-        "recovery": 51,
-        "clutch": 54,
+        "ovr": 54,
+        "stamina": 46,
+        "velocity": 51,
+        "command": 55,
+        "control": 57,
+        "movement": 54,
+        "mentality": 57,
+        "recovery": 46,
+        "clutch": 43,
         "holdRunners": 48
       },
       "batting": {
-        "ovr": 58,
-        "contact": 52,
-        "power": 60,
-        "eye": 52,
+        "ovr": 54,
+        "contact": 50,
+        "power": 46,
+        "eye": 50,
         "discipline": 52,
-        "speed": 61,
-        "baseInstinct": 58,
-        "bunting": 47,
+        "speed": 47,
+        "baseInstinct": 51,
+        "bunting": 38,
         "platoon": 50,
-        "fielding": 60,
-        "arm": 58,
-        "battingClutch": 46
+        "fielding": 56,
+        "arm": 50,
+        "battingClutch": 51
       },
       "positionRatings": {
-        "SP": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "RF": 54
+      }
     },
     "coach": null,
     "manager": null,

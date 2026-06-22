@@ -1,6 +1,6 @@
 {
   "id": "PLY_15215",
-  "name": "루이스 카일",
+  "name": "Lewis Kyle",
   "nameEn": "Lewis Kyle",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 67,
   "popularity": 18,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 51
       },
       "batting": {
-        "ovr": 56,
-        "contact": 60,
-        "power": 46,
-        "eye": 58,
-        "discipline": 47,
-        "speed": 59,
-        "baseInstinct": 56,
-        "bunting": 49,
-        "platoon": 49,
-        "fielding": 51,
-        "arm": 50,
-        "battingClutch": 49
+        "ovr": 57,
+        "contact": 61,
+        "power": 47,
+        "eye": 59,
+        "discipline": 48,
+        "speed": 60,
+        "baseInstinct": 57,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 51,
+        "battingClutch": 50
       },
       "positionRatings": {
         "C": 57

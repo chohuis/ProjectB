@@ -1,6 +1,6 @@
 {
   "id": "PLY_15274",
-  "name": "화이트 조던",
+  "name": "White Jordan",
   "nameEn": "White Jordan",
   "role": "player",
   "age": 30,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 52,
   "popularity": 48,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 71,
       "proServiceYears": 8,
       "pitching": {
-        "ovr": 75,
-        "stamina": 67,
-        "velocity": 87,
-        "command": 66,
-        "control": 66,
-        "movement": 74,
-        "mentality": 71,
-        "recovery": 76,
-        "clutch": 70,
-        "holdRunners": 65
+        "ovr": 69,
+        "stamina": 62,
+        "velocity": 80,
+        "command": 61,
+        "control": 61,
+        "movement": 68,
+        "mentality": 65,
+        "recovery": 70,
+        "clutch": 64,
+        "holdRunners": 60
       },
       "batting": {
         "ovr": 69,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 69
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,7 +1,7 @@
 {
   "id": "PLY_00372",
   "name": "안준영",
-  "nameEn": "Ahn Junyeong",
+  "nameEn": "Choi Yong-jun",
   "role": "player",
   "age": 19,
   "status": "active",
@@ -19,48 +19,28 @@
       "position": "C",
       "jerseyNumber": 12,
       "pitching": {
-        "ovr": 48,
-        "stamina": 49,
-        "velocity": 48,
-        "command": 46,
-        "control": 52,
-        "movement": 50,
-        "mentality": 53,
-        "recovery": 49,
-        "clutch": 42,
-        "holdRunners": 41
+        "ovr": 42,
+        "stamina": 41,
+        "velocity": 41,
+        "command": 45,
+        "control": 45,
+        "movement": 37,
+        "mentality": 43,
+        "recovery": 41
       },
       "batting": {
-        "ovr": 68,
-        "contact": 63,
-        "power": 66,
-        "eye": 68,
-        "discipline": 64,
+        "ovr": 71,
+        "contact": 67,
+        "power": 69,
+        "eye": 66,
+        "discipline": 74,
         "speed": 70,
-        "fielding": 68,
-        "arm": 71,
-        "battingClutch": 59,
-        "baseInstinct": 56,
-        "bunting": 62,
-        "platoon": 57
+        "fielding": 75,
+        "arm": 77,
+        "battingClutch": 73
       },
       "developmentRate": 58,
-      "potentialHidden": 69,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 68
-      },
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 69
     },
     "coach": {
       "specialty": "-",
@@ -100,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

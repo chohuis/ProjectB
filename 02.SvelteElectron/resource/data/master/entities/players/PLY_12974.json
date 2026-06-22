@@ -1,9 +1,9 @@
 {
   "id": "PLY_12974",
-  "name": "라이트 콜",
-  "nameEn": "Wright Cole",
+  "name": "Thompson Derek",
+  "nameEn": "Thompson Derek",
   "role": "player",
-  "age": 28,
+  "age": 33,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 56,
-  "popularity": 46,
+  "notes": "국적:파나마",
+  "diligence": 81,
+  "popularity": 43,
   "militaryStatus": "군필",
   "entryYear": 2044,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 28,
+  "entryAge": 33,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 66,
+      "jerseyNumber": 36,
       "primaryPosition": "SP",
-      "developmentRate": 66,
-      "potentialHidden": 59,
-      "proServiceYears": 6,
+      "developmentRate": 55,
+      "potentialHidden": 65,
+      "proServiceYears": 11,
       "pitching": {
-        "ovr": 80,
-        "stamina": 80,
-        "velocity": 82,
-        "command": 75,
-        "control": 80,
-        "movement": 77,
-        "mentality": 78,
-        "recovery": 71,
-        "clutch": 71,
-        "holdRunners": 69
+        "ovr": 68,
+        "stamina": 62,
+        "velocity": 66,
+        "command": 59,
+        "control": 69,
+        "movement": 61,
+        "mentality": 67,
+        "recovery": 65,
+        "clutch": 55,
+        "holdRunners": 65
       },
       "batting": {
-        "ovr": 77,
-        "contact": 73,
-        "power": 73,
-        "eye": 81,
-        "discipline": 80,
-        "speed": 71,
-        "baseInstinct": 70,
-        "bunting": 70,
+        "ovr": 68,
+        "contact": 62,
+        "power": 69,
+        "eye": 62,
+        "discipline": 71,
+        "speed": 68,
+        "baseInstinct": 62,
+        "bunting": 50,
         "platoon": 50,
-        "fielding": 73,
-        "arm": 78,
-        "battingClutch": 78
+        "fielding": 64,
+        "arm": 65,
+        "battingClutch": 59
       },
       "positionRatings": {
-        "SP": 77
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "SP": 68
+      }
     },
     "coach": null,
     "manager": null,

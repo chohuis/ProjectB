@@ -1,6 +1,6 @@
 {
   "id": "PLY_14617",
-  "name": "그린 카일",
+  "name": "Green Kyle",
   "nameEn": "Green Kyle",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 56,
   "popularity": 47,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 68,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 54,
-        "stamina": 54,
-        "velocity": 60,
-        "command": 50,
-        "control": 50,
-        "movement": 52,
-        "mentality": 54,
-        "recovery": 52,
-        "clutch": 50,
-        "holdRunners": 43
+        "ovr": 55,
+        "stamina": 55,
+        "velocity": 61,
+        "command": 51,
+        "control": 51,
+        "movement": 53,
+        "mentality": 55,
+        "recovery": 53,
+        "clutch": 51,
+        "holdRunners": 44
       },
       "batting": {
         "ovr": 55,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 55
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

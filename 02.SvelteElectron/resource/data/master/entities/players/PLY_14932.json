@@ -1,6 +1,6 @@
 {
   "id": "PLY_14932",
-  "name": "브라운 에릭",
+  "name": "Brown Eric",
   "nameEn": "Brown Eric",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 54,
   "popularity": 38,
   "militaryStatus": "군필",

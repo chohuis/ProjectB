@@ -1,69 +1,46 @@
 {
   "id": "PLY_01653",
-  "name": "박민석",
-  "nameEn": "Park Minseok",
+  "name": "엔도 소타",
+  "nameEn": "Endo Sota",
   "role": "player",
-  "age": 16,
+  "age": 31,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
-  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_CHUNCHEON_HIGHLAND",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONDRAKES",
+  "teamId": "TEAM_JBL_CL_IRONDRAKES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 2,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "DH",
+      "jerseyNumber": 23,
       "pitching": {
-        "ovr": 45,
-        "stamina": 48,
-        "velocity": 42,
-        "command": 42,
-        "control": 43,
-        "movement": 41,
-        "mentality": 47,
-        "recovery": 47,
-        "clutch": 46,
-        "holdRunners": 44
+        "ovr": 46,
+        "stamina": 43,
+        "velocity": 45,
+        "command": 49,
+        "control": 50,
+        "movement": 43,
+        "mentality": 46,
+        "recovery": 42
       },
       "batting": {
-        "ovr": 27,
-        "contact": 24,
-        "power": 31,
-        "eye": 22,
-        "discipline": 24,
-        "speed": 26,
-        "fielding": 25,
-        "arm": 25,
-        "battingClutch": 37,
-        "baseInstinct": 42,
-        "bunting": 34,
-        "platoon": 37
+        "ovr": 71,
+        "contact": 81,
+        "power": 75,
+        "eye": 75,
+        "discipline": 72,
+        "speed": 68,
+        "fielding": 69,
+        "arm": 68,
+        "battingClutch": 74
       },
-      "developmentRate": 53,
-      "potentialHidden": 86,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 45
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 3
-        }
-      ]
+      "developmentRate": 34,
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",
@@ -103,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 78,
-  "popularity": 24
+  }
 }

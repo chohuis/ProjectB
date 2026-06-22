@@ -1,9 +1,9 @@
 {
   "id": "PLY_13788",
-  "name": "데이비스 헌터",
-  "nameEn": "Davis Hunter",
+  "name": "White Zach",
+  "nameEn": "White Zach",
   "role": "player",
-  "age": 25,
+  "age": 19,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 66,
-  "popularity": 39,
+  "notes": "국적:베네수엘라",
+  "diligence": 65,
+  "popularity": 21,
   "militaryStatus": "군필",
   "entryYear": 2049,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 25,
+  "entryAge": 19,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 4,
+      "jerseyNumber": 6,
       "primaryPosition": "SP",
-      "developmentRate": 66,
-      "potentialHidden": 88,
-      "proServiceYears": 3,
+      "developmentRate": 56,
+      "potentialHidden": 75,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 74,
-        "stamina": 77,
-        "velocity": 82,
-        "command": 65,
-        "control": 77,
-        "movement": 67,
-        "mentality": 74,
-        "recovery": 67,
-        "clutch": 66,
-        "holdRunners": 65
+        "ovr": 55,
+        "stamina": 47,
+        "velocity": 59,
+        "command": 52,
+        "control": 52,
+        "movement": 54,
+        "mentality": 52,
+        "recovery": 47,
+        "clutch": 43,
+        "holdRunners": 46
       },
       "batting": {
-        "ovr": 78,
-        "contact": 73,
-        "power": 76,
-        "eye": 72,
-        "discipline": 78,
-        "speed": 80,
-        "baseInstinct": 76,
-        "bunting": 66,
+        "ovr": 55,
+        "contact": 56,
+        "power": 55,
+        "eye": 58,
+        "discipline": 50,
+        "speed": 60,
+        "baseInstinct": 50,
+        "bunting": 40,
         "platoon": 50,
-        "fielding": 69,
-        "arm": 72,
-        "battingClutch": 67
+        "fielding": 57,
+        "arm": 52,
+        "battingClutch": 44
       },
       "positionRatings": {
-        "SP": 78
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "SP": 55
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_16451",
-  "name": "라이트 알렉스",
+  "name": "Wright Alex",
   "nameEn": "Wright Alex",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 67,
   "popularity": 42,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 61
       },
       "batting": {
-        "ovr": 72,
-        "contact": 65,
-        "power": 74,
-        "eye": 69,
-        "discipline": 66,
-        "speed": 76,
-        "baseInstinct": 66,
-        "bunting": 55,
-        "platoon": 49,
-        "fielding": 68,
-        "arm": 68,
-        "battingClutch": 62
+        "ovr": 73,
+        "contact": 66,
+        "power": 75,
+        "eye": 70,
+        "discipline": 67,
+        "speed": 77,
+        "baseInstinct": 67,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 69,
+        "battingClutch": 63
       },
       "positionRatings": {
         "2B": 73

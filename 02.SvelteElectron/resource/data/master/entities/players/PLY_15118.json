@@ -1,6 +1,6 @@
 {
   "id": "PLY_15118",
-  "name": "영 크리스",
+  "name": "Young Chris",
   "nameEn": "Young Chris",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 57,
   "popularity": 48,
   "militaryStatus": "군필",
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 74
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

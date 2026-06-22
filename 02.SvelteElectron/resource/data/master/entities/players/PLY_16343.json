@@ -1,6 +1,6 @@
 {
   "id": "PLY_16343",
-  "name": "워커 다니엘",
+  "name": "Walker Daniel",
   "nameEn": "Walker Daniel",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 65,
   "popularity": 31,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 80,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 53,
-        "stamina": 50,
-        "velocity": 56,
-        "command": 55,
-        "control": 45,
-        "movement": 53,
-        "mentality": 53,
-        "recovery": 50,
-        "clutch": 41,
-        "holdRunners": 44
+        "ovr": 54,
+        "stamina": 51,
+        "velocity": 57,
+        "command": 56,
+        "control": 46,
+        "movement": 54,
+        "mentality": 54,
+        "recovery": 51,
+        "clutch": 42,
+        "holdRunners": 45
       },
       "batting": {
         "ovr": 54,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 54
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

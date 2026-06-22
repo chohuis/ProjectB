@@ -1,7 +1,7 @@
 {
   "id": "PLY_00209",
   "name": "허태준",
-  "nameEn": "Heo Taejun",
+  "nameEn": "Woo Jae-yun",
   "role": "player",
   "age": 21,
   "status": "active",
@@ -19,43 +19,28 @@
       "position": "CP",
       "jerseyNumber": 9,
       "pitching": {
-        "ovr": 34,
-        "stamina": 35,
-        "velocity": 35,
-        "command": 40,
-        "control": 35,
-        "movement": 38,
-        "mentality": 35,
-        "recovery": 33,
-        "clutch": 42,
-        "holdRunners": 41
+        "ovr": 51,
+        "stamina": 41,
+        "velocity": 55,
+        "command": 49,
+        "control": 55,
+        "movement": 49,
+        "mentality": 50,
+        "recovery": 48
       },
       "batting": {
-        "ovr": 22,
-        "contact": 22,
-        "power": 25,
-        "eye": 21,
-        "discipline": 20,
-        "speed": 28,
-        "fielding": 22,
-        "arm": 20,
-        "battingClutch": 39,
-        "baseInstinct": 35,
-        "bunting": 38,
-        "platoon": 35
+        "ovr": 31,
+        "contact": 28,
+        "power": 30,
+        "eye": 23,
+        "discipline": 24,
+        "speed": 29,
+        "fielding": 25,
+        "arm": 24,
+        "battingClutch": 31
       },
       "developmentRate": 57,
-      "potentialHidden": 74,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 34
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 74
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

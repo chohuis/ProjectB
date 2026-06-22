@@ -1,7 +1,7 @@
 {
   "id": "PLY_11965",
-  "name": "윌리엄스 그랜트",
-  "nameEn": "Williams Grant",
+  "name": "Adams Tyler",
+  "nameEn": "Adams Tyler",
   "role": "player",
   "age": 21,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 53,
-  "popularity": 12,
+  "notes": "국적:도미니카",
+  "diligence": 67,
+  "popularity": 38,
   "militaryStatus": "군필",
   "entryYear": 2038,
   "entryLeague": "LEAGUE_ABL",
@@ -22,52 +22,42 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "SP",
-      "jerseyNumber": 37,
+      "jerseyNumber": 70,
       "primaryPosition": "SP",
-      "developmentRate": 57,
-      "potentialHidden": 86,
+      "developmentRate": 79,
+      "potentialHidden": 72,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 54,
+        "ovr": 50,
         "stamina": 51,
-        "velocity": 61,
-        "command": 49,
-        "control": 50,
-        "movement": 45,
-        "mentality": 55,
-        "recovery": 54,
-        "clutch": 45,
-        "holdRunners": 41
+        "velocity": 60,
+        "command": 47,
+        "control": 54,
+        "movement": 52,
+        "mentality": 51,
+        "recovery": 45,
+        "clutch": 47,
+        "holdRunners": 46
       },
       "batting": {
-        "ovr": 57,
-        "contact": 50,
-        "power": 47,
-        "eye": 52,
-        "discipline": 53,
-        "speed": 53,
-        "baseInstinct": 46,
-        "bunting": 43,
+        "ovr": 50,
+        "contact": 44,
+        "power": 48,
+        "eye": 43,
+        "discipline": 44,
+        "speed": 48,
+        "baseInstinct": 42,
+        "bunting": 40,
         "platoon": 50,
-        "fielding": 55,
-        "arm": 59,
-        "battingClutch": 57
+        "fielding": 52,
+        "arm": 51,
+        "battingClutch": 48
       },
       "positionRatings": {
-        "SP": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 50
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,14 +1,14 @@
 {
   "id": "PLY_01063",
   "name": "스콧 카를로스",
-  "nameEn": "Seu 콧 카를로스",
+  "nameEn": "Scott Carlos",
   "role": "player",
   "age": 29,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_PEACHTREEFALCONS",
-  "teamId": "TEAM_ABL_PEACHTREEFALCONS_1",
+  "clubId": "CLUB_ABL_HOU",
+  "teamId": "TEAM_ABL_HOU",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -19,48 +19,28 @@
       "position": "3B",
       "jerseyNumber": 18,
       "pitching": {
-        "ovr": 57,
-        "stamina": 60,
-        "velocity": 53,
-        "command": 54,
-        "control": 57,
-        "movement": 55,
-        "mentality": 55,
-        "recovery": 54,
-        "clutch": 49,
-        "holdRunners": 51
+        "ovr": 43,
+        "stamina": 38,
+        "velocity": 47,
+        "command": 43,
+        "control": 39,
+        "movement": 44,
+        "mentality": 41,
+        "recovery": 40
       },
       "batting": {
-        "ovr": 77,
-        "contact": 75,
-        "power": 73,
-        "eye": 73,
-        "discipline": 77,
+        "ovr": 75,
+        "contact": 80,
+        "power": 76,
+        "eye": 76,
+        "discipline": 79,
         "speed": 73,
-        "fielding": 72,
-        "arm": 73,
-        "battingClutch": 67,
-        "baseInstinct": 74,
-        "bunting": 70,
-        "platoon": 73
+        "fielding": 78,
+        "arm": 75,
+        "battingClutch": 75
       },
       "developmentRate": 47,
-      "potentialHidden": 84,
-      "primaryPosition": "3B",
-      "positionRatings": {
-        "3B": 77
-      },
-      "proServiceYears": 7,
-      "contract": {
-        "salary": 11700,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 84
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,6 +1,6 @@
 {
   "id": "PLY_14361",
-  "name": "넬슨 제이슨",
+  "name": "Nelson Jason",
   "nameEn": "Nelson Jason",
   "role": "player",
   "age": 18,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 52,
   "popularity": 16,
   "militaryStatus": "군필",

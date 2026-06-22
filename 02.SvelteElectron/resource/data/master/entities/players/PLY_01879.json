@@ -1,80 +1,46 @@
 {
   "id": "PLY_01879",
-  "name": "임하준",
-  "nameEn": "Im Hajun",
+  "name": "와타나베 야마토",
+  "nameEn": "Watanabe Yamato",
   "role": "player",
-  "age": 20,
+  "age": 31,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_TWINWOLVES",
-  "teamId": "TEAM_KBL_TWINWOLVES_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_POLARBEARS",
+  "teamId": "TEAM_JBL_PL_POLARBEARS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 28,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "DH",
+      "jerseyNumber": 24,
       "pitching": {
-        "ovr": 73,
-        "stamina": 76,
-        "velocity": 70,
-        "command": 75,
-        "control": 70,
-        "movement": 73,
-        "mentality": 78,
-        "recovery": 78,
-        "clutch": 68,
-        "holdRunners": 68
+        "ovr": 44,
+        "stamina": 46,
+        "velocity": 43,
+        "command": 44,
+        "control": 47,
+        "movement": 47,
+        "mentality": 41,
+        "recovery": 41
       },
       "batting": {
-        "ovr": 55,
-        "contact": 55,
-        "power": 56,
-        "eye": 53,
-        "discipline": 59,
-        "speed": 57,
-        "fielding": 60,
-        "arm": 57,
-        "battingClutch": 53,
-        "baseInstinct": 43,
-        "bunting": 42,
-        "platoon": 46
+        "ovr": 73,
+        "contact": 73,
+        "power": 75,
+        "eye": 71,
+        "discipline": 74,
+        "speed": 70,
+        "fielding": 69,
+        "arm": 68,
+        "battingClutch": 72
       },
-      "developmentRate": 58,
-      "potentialHidden": 81,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 6900,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 39,
+      "potentialHidden": 68
     },
     "coach": {
       "specialty": "-",
@@ -114,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 48,
-  "popularity": 60
+  }
 }

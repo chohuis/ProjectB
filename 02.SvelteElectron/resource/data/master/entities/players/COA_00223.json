@@ -1,17 +1,17 @@
 {
   "id": "COA_00223",
-  "name": "미우라 진",
-  "nameEn": "Miura Jin",
+  "name": "하시모토 쇼",
+  "nameEn": "Hashimoto Sho",
   "role": "coach",
-  "age": 52,
+  "age": 51,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
-  "clubId": "CLUB_JBL_PL_POLARBEARS",
-  "teamId": "TEAM_JBL_PL_POLARBEARS_2",
+  "clubId": "CLUB_JBL_PL_SUNS",
+  "teamId": "TEAM_JBL_PL_SUNS_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
@@ -43,16 +43,16 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "타격",
-      "experienceYears": 14,
+      "specialty": "멘탈",
+      "experienceYears": 8,
       "stats": {
-        "teaching": 56,
-        "analysis": 79,
-        "communication": 61,
-        "discipline": 80,
-        "leadership": 63
+        "teaching": 59,
+        "analysis": 80,
+        "communication": 77,
+        "discipline": 65,
+        "leadership": 71
       },
-      "trainingBuffs": "제구 훈련 +2%"
+      "trainingBuffs": ""
     },
     "manager": {
       "style": "균형",

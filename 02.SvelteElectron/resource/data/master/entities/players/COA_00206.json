@@ -1,17 +1,17 @@
 {
   "id": "COA_00206",
-  "name": "엔도 렌",
-  "nameEn": "Endo Ren",
+  "name": "미우라 진",
+  "nameEn": "Miura Jin",
   "role": "coach",
-  "age": 42,
+  "age": 52,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
-  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
-  "teamId": "TEAM_JBL_CL_SILVERWOLVES_1",
+  "clubId": "CLUB_JBL_PL_POLARBEARS",
+  "teamId": "TEAM_JBL_PL_POLARBEARS_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
@@ -43,16 +43,16 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "투수",
-      "experienceYears": 4,
+      "specialty": "타격",
+      "experienceYears": 14,
       "stats": {
-        "teaching": 60,
-        "analysis": 66,
-        "communication": 67,
-        "discipline": 73,
-        "leadership": 58
+        "teaching": 56,
+        "analysis": 79,
+        "communication": 61,
+        "discipline": 80,
+        "leadership": 63
       },
-      "trainingBuffs": ""
+      "trainingBuffs": "제구 훈련 +2%"
     },
     "manager": {
       "style": "균형",

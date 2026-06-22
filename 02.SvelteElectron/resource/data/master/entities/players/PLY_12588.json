@@ -1,7 +1,7 @@
 {
   "id": "PLY_12588",
-  "name": "무어 카일",
-  "nameEn": "Moore Kyle",
+  "name": "Hernandez Connor",
+  "nameEn": "Hernandez Connor",
   "role": "player",
   "age": 28,
   "status": "active",
@@ -11,8 +11,8 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 53,
+  "notes": "국적:미국",
+  "diligence": 84,
   "popularity": 22,
   "militaryStatus": "군필",
   "entryYear": 2042,
@@ -21,57 +21,43 @@
   "entryAge": 28,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 13,
-      "primaryPosition": "SP",
-      "developmentRate": 68,
-      "potentialHidden": 63,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 42,
+      "primaryPosition": "C",
+      "developmentRate": 63,
+      "potentialHidden": 68,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 67,
-        "stamina": 63,
-        "velocity": 76,
-        "command": 69,
+        "ovr": 77,
+        "stamina": 73,
+        "velocity": 85,
+        "command": 72,
         "control": 69,
-        "movement": 71,
-        "mentality": 62,
-        "recovery": 63,
-        "clutch": 55,
-        "holdRunners": 60
+        "movement": 80,
+        "mentality": 77,
+        "recovery": 76,
+        "clutch": 71,
+        "holdRunners": 66
       },
       "batting": {
-        "ovr": 65,
-        "contact": 69,
-        "power": 63,
-        "eye": 62,
-        "discipline": 59,
-        "speed": 71,
-        "baseInstinct": 60,
-        "bunting": 58,
+        "ovr": 77,
+        "contact": 77,
+        "power": 69,
+        "eye": 80,
+        "discipline": 72,
+        "speed": 75,
+        "baseInstinct": 73,
+        "bunting": 70,
         "platoon": 50,
-        "fielding": 67,
-        "arm": 55,
-        "battingClutch": 62
+        "fielding": 68,
+        "arm": 73,
+        "battingClutch": 69
       },
       "positionRatings": {
-        "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "C": 77
+      }
     },
     "coach": null,
     "manager": null,

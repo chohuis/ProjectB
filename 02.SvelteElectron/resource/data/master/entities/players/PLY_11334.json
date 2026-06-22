@@ -1,9 +1,9 @@
 {
   "id": "PLY_11334",
-  "name": "잭슨 라이언",
-  "nameEn": "Jackson Ryan",
+  "name": "White Tyler",
+  "nameEn": "White Tyler",
   "role": "player",
-  "age": 21,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 55,
-  "popularity": 17,
+  "notes": "국적:멕시코",
+  "diligence": 59,
+  "popularity": 44,
   "militaryStatus": "군필",
   "entryYear": 2034,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 21,
+  "entryAge": 20,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 86,
-      "primaryPosition": "SP",
-      "developmentRate": 62,
-      "potentialHidden": 93,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 15,
+      "primaryPosition": "LF",
+      "developmentRate": 67,
+      "potentialHidden": 67,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 63,
-        "stamina": 65,
-        "velocity": 66,
-        "command": 63,
-        "control": 64,
-        "movement": 67,
-        "mentality": 69,
+        "ovr": 57,
+        "stamina": 50,
+        "velocity": 63,
+        "command": 47,
+        "control": 48,
+        "movement": 52,
+        "mentality": 56,
         "recovery": 57,
-        "clutch": 57,
-        "holdRunners": 52
+        "clutch": 45,
+        "holdRunners": 49
       },
       "batting": {
-        "ovr": 68,
-        "contact": 66,
-        "power": 59,
-        "eye": 61,
-        "discipline": 60,
-        "speed": 73,
-        "baseInstinct": 66,
-        "bunting": 55,
+        "ovr": 57,
+        "contact": 58,
+        "power": 52,
+        "eye": 58,
+        "discipline": 56,
+        "speed": 64,
+        "baseInstinct": 56,
+        "bunting": 47,
         "platoon": 50,
-        "fielding": 64,
-        "arm": 62,
-        "battingClutch": 64
+        "fielding": 57,
+        "arm": 57,
+        "battingClutch": 45
       },
       "positionRatings": {
-        "SP": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "LF": 57
+      }
     },
     "coach": null,
     "manager": null,

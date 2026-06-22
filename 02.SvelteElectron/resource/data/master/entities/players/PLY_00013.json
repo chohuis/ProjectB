@@ -1,9 +1,9 @@
 {
   "id": "PLY_00013",
   "name": "손승우",
-  "nameEn": "Son Seungu",
+  "nameEn": "Hong Yeon-woo",
   "role": "player",
-  "age": 18,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "3B",
       "jerseyNumber": 13,
       "pitching": {
-        "ovr": 41,
-        "stamina": 43,
-        "velocity": 46,
-        "command": 46,
-        "control": 39,
-        "movement": 44,
-        "mentality": 43,
-        "recovery": 41,
-        "clutch": 39,
-        "holdRunners": 32
+        "ovr": 40,
+        "stamina": 63,
+        "velocity": 62,
+        "command": 65,
+        "control": 55,
+        "movement": 63,
+        "mentality": 69,
+        "recovery": 70
       },
       "batting": {
-        "ovr": 61,
-        "contact": 63,
-        "power": 58,
-        "eye": 57,
-        "discipline": 63,
-        "speed": 68,
-        "fielding": 65,
-        "arm": 55,
-        "battingClutch": 61,
-        "baseInstinct": 50,
-        "bunting": 54,
-        "platoon": 57
+        "ovr": 63,
+        "contact": 68,
+        "power": 61,
+        "eye": 51,
+        "discipline": 58,
+        "speed": 62,
+        "fielding": 62,
+        "arm": 70,
+        "battingClutch": 61
       },
       "developmentRate": 75,
-      "potentialHidden": 76,
-      "primaryPosition": "3B",
-      "positionRatings": {
-        "3B": 61
-      }
+      "potentialHidden": 76
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

@@ -1,6 +1,6 @@
 {
   "id": "PLY_14524",
-  "name": "홀 네이선",
+  "name": "Hall Nathan",
   "nameEn": "Hall Nathan",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 48,
   "popularity": 18,
   "militaryStatus": "군필",

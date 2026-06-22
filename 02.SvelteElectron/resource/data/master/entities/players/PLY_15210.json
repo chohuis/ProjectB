@@ -1,6 +1,6 @@
 {
   "id": "PLY_15210",
-  "name": "베이커 알렉스",
+  "name": "Baker Alex",
   "nameEn": "Baker Alex",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 45,
   "popularity": 21,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 61,
       "proServiceYears": 13,
       "pitching": {
-        "ovr": 70,
-        "stamina": 66,
-        "velocity": 83,
-        "command": 66,
-        "control": 65,
-        "movement": 64,
-        "mentality": 70,
-        "recovery": 71,
-        "clutch": 65,
-        "holdRunners": 53
+        "ovr": 56,
+        "stamina": 53,
+        "velocity": 66,
+        "command": 53,
+        "control": 52,
+        "movement": 51,
+        "mentality": 56,
+        "recovery": 57,
+        "clutch": 52,
+        "holdRunners": 42
       },
       "batting": {
         "ovr": 56,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

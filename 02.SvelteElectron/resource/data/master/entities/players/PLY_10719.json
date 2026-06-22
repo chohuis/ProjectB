@@ -1,9 +1,9 @@
 {
   "id": "PLY_10719",
-  "name": "스미스 그랜트",
-  "nameEn": "Smith Grant",
+  "name": "Nelson Jason",
+  "nameEn": "Nelson Jason",
   "role": "player",
-  "age": 28,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 48,
-  "popularity": 31,
+  "notes": "국적:일본",
+  "diligence": 66,
+  "popularity": 23,
   "militaryStatus": "군필",
   "entryYear": 2031,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 28,
+  "entryAge": 22,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 89,
-      "primaryPosition": "SP",
-      "developmentRate": 63,
-      "potentialHidden": 78,
-      "proServiceYears": 6,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 49,
+      "primaryPosition": "1B",
+      "developmentRate": 77,
+      "potentialHidden": 84,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 82,
-        "stamina": 81,
-        "velocity": 89,
-        "command": 71,
-        "control": 73,
-        "movement": 76,
-        "mentality": 80,
-        "recovery": 81,
-        "clutch": 80,
-        "holdRunners": 73
+        "ovr": 56,
+        "stamina": 48,
+        "velocity": 53,
+        "command": 55,
+        "control": 60,
+        "movement": 60,
+        "mentality": 57,
+        "recovery": 55,
+        "clutch": 49,
+        "holdRunners": 52
       },
       "batting": {
-        "ovr": 79,
-        "contact": 70,
-        "power": 73,
-        "eye": 71,
-        "discipline": 79,
-        "speed": 78,
-        "baseInstinct": 80,
-        "bunting": 70,
+        "ovr": 56,
+        "contact": 55,
+        "power": 51,
+        "eye": 57,
+        "discipline": 57,
+        "speed": 56,
+        "baseInstinct": 58,
+        "bunting": 47,
         "platoon": 50,
-        "fielding": 81,
-        "arm": 79,
-        "battingClutch": 78
+        "fielding": 56,
+        "arm": 55,
+        "battingClutch": 46
       },
       "positionRatings": {
-        "SP": 79
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "1B": 56
+      }
     },
     "coach": null,
     "manager": null,

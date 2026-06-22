@@ -1,6 +1,6 @@
 {
   "id": "PLY_16143",
-  "name": "존슨 카일",
+  "name": "Johnson Kyle",
   "nameEn": "Johnson Kyle",
   "role": "player",
   "age": 31,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 64,
   "popularity": 47,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 57
       },
       "batting": {
-        "ovr": 68,
-        "contact": 72,
-        "power": 67,
-        "eye": 68,
-        "discipline": 68,
-        "speed": 72,
-        "baseInstinct": 57,
-        "bunting": 50,
-        "platoon": 56,
-        "fielding": 68,
-        "arm": 65,
-        "battingClutch": 62
+        "ovr": 61,
+        "contact": 65,
+        "power": 60,
+        "eye": 61,
+        "discipline": 61,
+        "speed": 65,
+        "baseInstinct": 51,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 58,
+        "battingClutch": 56
       },
       "positionRatings": {
         "CF": 61

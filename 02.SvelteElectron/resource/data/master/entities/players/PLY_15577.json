@@ -1,6 +1,6 @@
 {
   "id": "PLY_15577",
-  "name": "베이커 제이슨",
+  "name": "Baker Jason",
   "nameEn": "Baker Jason",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 74,
   "popularity": 50,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 45
       },
       "batting": {
-        "ovr": 59,
-        "contact": 62,
-        "power": 54,
-        "eye": 62,
-        "discipline": 53,
-        "speed": 57,
-        "baseInstinct": 53,
-        "bunting": 52,
-        "platoon": 49,
-        "fielding": 52,
-        "arm": 51,
-        "battingClutch": 48
+        "ovr": 60,
+        "contact": 63,
+        "power": 55,
+        "eye": 63,
+        "discipline": 54,
+        "speed": 58,
+        "baseInstinct": 54,
+        "bunting": 53,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 52,
+        "battingClutch": 49
       },
       "positionRatings": {
         "2B": 60

@@ -1,9 +1,9 @@
 {
   "id": "PLY_09853",
-  "name": "카터 마커스",
-  "nameEn": "Carter Marcus",
+  "name": "Brown Cole",
+  "nameEn": "Brown Cole",
   "role": "player",
-  "age": 20,
+  "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:멕시코",
   "diligence": 56,
-  "popularity": 23,
+  "popularity": 21,
   "militaryStatus": "군필",
   "entryYear": 2026,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 20,
+  "entryAge": 24,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 27,
-      "primaryPosition": "SP",
-      "developmentRate": 75,
-      "potentialHidden": 65,
-      "proServiceYears": 0,
+      "position": "2B",
+      "jerseyNumber": 49,
+      "primaryPosition": "2B",
+      "developmentRate": 48,
+      "potentialHidden": 64,
+      "proServiceYears": 2,
       "pitching": {
-        "ovr": 54,
-        "stamina": 48,
-        "velocity": 62,
-        "command": 49,
-        "control": 45,
-        "movement": 54,
-        "mentality": 51,
-        "recovery": 47,
-        "clutch": 50,
-        "holdRunners": 41
+        "ovr": 79,
+        "stamina": 70,
+        "velocity": 87,
+        "command": 72,
+        "control": 75,
+        "movement": 79,
+        "mentality": 73,
+        "recovery": 72,
+        "clutch": 71,
+        "holdRunners": 73
       },
       "batting": {
-        "ovr": 57,
-        "contact": 52,
-        "power": 51,
-        "eye": 56,
-        "discipline": 48,
-        "speed": 62,
-        "baseInstinct": 58,
-        "bunting": 40,
+        "ovr": 79,
+        "contact": 71,
+        "power": 81,
+        "eye": 83,
+        "discipline": 71,
+        "speed": 75,
+        "baseInstinct": 77,
+        "bunting": 67,
         "platoon": 50,
-        "fielding": 48,
-        "arm": 54,
-        "battingClutch": 50
+        "fielding": 68,
+        "arm": 70,
+        "battingClutch": 67
       },
       "positionRatings": {
-        "SP": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "2B": 79
+      }
     },
     "coach": null,
     "manager": null,

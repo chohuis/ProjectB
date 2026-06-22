@@ -1,14 +1,14 @@
 {
   "id": "PLY_01264",
   "name": "가르시아 일라이저",
-  "nameEn": "Ga 르시아 일라이저",
+  "nameEn": "Garcia Elijah",
   "role": "player",
   "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_WAVERIDERS",
-  "teamId": "TEAM_ABL_WAVERIDERS_2",
+  "clubId": "CLUB_ABL_NYM",
+  "teamId": "TEAM_ABL_NYM_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
@@ -19,48 +19,28 @@
       "position": "2B",
       "jerseyNumber": 54,
       "pitching": {
-        "ovr": 46,
-        "stamina": 51,
+        "ovr": 41,
+        "stamina": 35,
         "velocity": 41,
-        "command": 51,
-        "control": 50,
-        "movement": 44,
-        "mentality": 47,
-        "recovery": 47,
-        "clutch": 41,
-        "holdRunners": 42
+        "command": 39,
+        "control": 36,
+        "movement": 35,
+        "mentality": 35,
+        "recovery": 34
       },
       "batting": {
-        "ovr": 66,
-        "contact": 71,
-        "power": 70,
-        "eye": 63,
-        "discipline": 69,
-        "speed": 63,
-        "fielding": 64,
-        "arm": 63,
-        "battingClutch": 56,
-        "baseInstinct": 62,
-        "bunting": 52,
-        "platoon": 56
+        "ovr": 70,
+        "contact": 66,
+        "power": 63,
+        "eye": 65,
+        "discipline": 63,
+        "speed": 66,
+        "fielding": 70,
+        "arm": 66,
+        "battingClutch": 62
       },
       "developmentRate": 38,
-      "potentialHidden": 73,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 66
-      },
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 6300,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 73
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

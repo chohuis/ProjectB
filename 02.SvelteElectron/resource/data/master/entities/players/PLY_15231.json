@@ -1,6 +1,6 @@
 {
   "id": "PLY_15231",
-  "name": "데이비스 블레이크",
+  "name": "Davis Blake",
   "nameEn": "Davis Blake",
   "role": "player",
   "age": 34,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 53,
   "popularity": 42,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 43
       },
       "batting": {
-        "ovr": 63,
-        "contact": 67,
-        "power": 51,
-        "eye": 64,
-        "discipline": 53,
-        "speed": 65,
-        "baseInstinct": 62,
-        "bunting": 48,
-        "platoon": 62,
-        "fielding": 65,
-        "arm": 64,
-        "battingClutch": 57
+        "ovr": 51,
+        "contact": 54,
+        "power": 41,
+        "eye": 52,
+        "discipline": 43,
+        "speed": 53,
+        "baseInstinct": 50,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 52,
+        "battingClutch": 46
       },
       "positionRatings": {
         "C": 51

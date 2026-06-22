@@ -1,14 +1,14 @@
 {
   "id": "PLY_01364",
   "name": "앤더슨 타일러",
-  "nameEn": "Aen 더슨 타일러",
+  "nameEn": "Anderson Tyler",
   "role": "player",
   "age": 39,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_LAKESPIRITS",
-  "teamId": "TEAM_ABL_LAKESPIRITS_1",
+  "clubId": "CLUB_ABL_SD",
+  "teamId": "TEAM_ABL_SD",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 4,
       "pitching": {
-        "ovr": 82,
-        "stamina": 88,
-        "velocity": 86,
-        "command": 82,
-        "control": 83,
-        "movement": 83,
-        "mentality": 84,
-        "recovery": 80,
-        "clutch": 76,
-        "holdRunners": 73
+        "ovr": 90,
+        "stamina": 97,
+        "velocity": 97,
+        "command": 93,
+        "control": 89,
+        "movement": 90,
+        "mentality": 91,
+        "recovery": 86
       },
       "batting": {
-        "ovr": 64,
-        "contact": 70,
-        "power": 61,
-        "eye": 64,
-        "discipline": 60,
-        "speed": 62,
-        "fielding": 61,
-        "arm": 69,
-        "battingClutch": 59,
-        "baseInstinct": 63,
-        "bunting": 61,
-        "platoon": 51
+        "ovr": 73,
+        "contact": 68,
+        "power": 68,
+        "eye": 67,
+        "discipline": 70,
+        "speed": 72,
+        "fielding": 65,
+        "arm": 68,
+        "battingClutch": 73
       },
       "developmentRate": 38,
-      "potentialHidden": 82,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 82
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 17,
-      "contract": {
-        "salary": 30900,
-        "durationYears": 4,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 82
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,6 +1,6 @@
 {
   "id": "PLY_16653",
-  "name": "스미스 크리스",
+  "name": "Smith Chris",
   "nameEn": "Smith Chris",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 71,
   "popularity": 15,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 73
       },
       "batting": {
-        "ovr": 77,
-        "contact": 77,
-        "power": 70,
-        "eye": 72,
-        "discipline": 74,
-        "speed": 79,
-        "baseInstinct": 70,
-        "bunting": 69,
-        "platoon": 51,
-        "fielding": 73,
-        "arm": 76,
-        "battingClutch": 69
+        "ovr": 76,
+        "contact": 76,
+        "power": 69,
+        "eye": 71,
+        "discipline": 73,
+        "speed": 78,
+        "baseInstinct": 69,
+        "bunting": 68,
+        "platoon": 50,
+        "fielding": 72,
+        "arm": 75,
+        "battingClutch": 68
       },
       "positionRatings": {
         "LF": 76

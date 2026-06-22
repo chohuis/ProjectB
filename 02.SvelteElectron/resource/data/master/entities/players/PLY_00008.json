@@ -1,9 +1,9 @@
 {
   "id": "PLY_00008",
   "name": "하우진",
-  "nameEn": "Ha Ujin",
+  "nameEn": "Son Min-jae",
   "role": "player",
-  "age": 19,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "C",
       "jerseyNumber": 8,
       "pitching": {
-        "ovr": 44,
-        "stamina": 45,
-        "velocity": 41,
-        "command": 44,
-        "control": 45,
-        "movement": 40,
-        "mentality": 48,
-        "recovery": 40,
-        "clutch": 35,
-        "holdRunners": 34
+        "ovr": 50,
+        "stamina": 68,
+        "velocity": 64,
+        "command": 71,
+        "control": 57,
+        "movement": 68,
+        "mentality": 64,
+        "recovery": 60
       },
       "batting": {
-        "ovr": 64,
-        "contact": 62,
-        "power": 61,
-        "eye": 69,
-        "discipline": 70,
-        "speed": 63,
-        "fielding": 70,
-        "arm": 68,
-        "battingClutch": 60,
-        "baseInstinct": 64,
-        "bunting": 55,
-        "platoon": 52
+        "ovr": 75,
+        "contact": 75,
+        "power": 64,
+        "eye": 70,
+        "discipline": 61,
+        "speed": 72,
+        "fielding": 66,
+        "arm": 66,
+        "battingClutch": 56
       },
       "developmentRate": 45,
-      "potentialHidden": 94,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 64
-      }
+      "potentialHidden": 94
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

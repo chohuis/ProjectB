@@ -1,6 +1,6 @@
 {
   "id": "PLY_14695",
-  "name": "잭슨 네이선",
+  "name": "Jackson Nathan",
   "nameEn": "Jackson Nathan",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 68,
   "popularity": 35,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 70,
       "proServiceYears": 3,
       "pitching": {
-        "ovr": 65,
-        "stamina": 66,
-        "velocity": 63,
-        "command": 57,
-        "control": 64,
-        "movement": 58,
-        "mentality": 59,
-        "recovery": 57,
-        "clutch": 61,
-        "holdRunners": 57
+        "ovr": 68,
+        "stamina": 69,
+        "velocity": 66,
+        "command": 60,
+        "control": 67,
+        "movement": 61,
+        "mentality": 62,
+        "recovery": 60,
+        "clutch": 64,
+        "holdRunners": 60
       },
       "batting": {
         "ovr": 68,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

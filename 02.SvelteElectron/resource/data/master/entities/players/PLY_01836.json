@@ -1,65 +1,46 @@
 {
   "id": "PLY_01836",
-  "name": "양상현",
-  "nameEn": "Yang Sanghyeon",
+  "name": "야마다 쓰요시",
+  "nameEn": "Yamada Tsuyoshi",
   "role": "player",
-  "age": 16,
+  "age": 30,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_SUNCHEON_BAY",
-  "teamId": "TEAM_HS_SUNCHEON_BAY",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_SUNCHEON_BAY",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
+  "teamId": "TEAM_JBL_PL_THUNDERFALCONS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 5,
+      "jerseyNumber": 31,
       "pitching": {
-        "ovr": 52,
-        "stamina": 51,
-        "velocity": 56,
-        "command": 50,
-        "control": 55,
-        "movement": 52,
-        "mentality": 54,
-        "recovery": 53,
-        "clutch": 49,
-        "holdRunners": 40
+        "ovr": 71,
+        "stamina": 74,
+        "velocity": 76,
+        "command": 73,
+        "control": 75,
+        "movement": 71,
+        "mentality": 72,
+        "recovery": 70
       },
       "batting": {
-        "ovr": 34,
-        "contact": 38,
-        "power": 36,
-        "eye": 40,
-        "discipline": 37,
-        "speed": 34,
-        "fielding": 37,
-        "arm": 32,
-        "battingClutch": 41,
-        "baseInstinct": 36,
-        "bunting": 36,
-        "platoon": 42
+        "ovr": 45,
+        "contact": 41,
+        "power": 40,
+        "eye": 38,
+        "discipline": 38,
+        "speed": 45,
+        "fielding": 40,
+        "arm": 38,
+        "battingClutch": 41
       },
-      "developmentRate": 57,
-      "potentialHidden": 74,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 52
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ]
+      "developmentRate": 49,
+      "potentialHidden": 78
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 68,
-  "popularity": 43
+  }
 }

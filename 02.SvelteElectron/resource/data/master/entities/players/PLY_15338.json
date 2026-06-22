@@ -1,6 +1,6 @@
 {
   "id": "PLY_15338",
-  "name": "워커 제이슨",
+  "name": "Walker Jason",
   "nameEn": "Walker Jason",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 67,
   "popularity": 21,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 52
       },
       "batting": {
-        "ovr": 63,
-        "contact": 61,
-        "power": 63,
-        "eye": 57,
-        "discipline": 55,
-        "speed": 63,
-        "baseInstinct": 54,
-        "bunting": 56,
-        "platoon": 48,
-        "fielding": 66,
-        "arm": 54,
-        "battingClutch": 51
+        "ovr": 65,
+        "contact": 63,
+        "power": 65,
+        "eye": 59,
+        "discipline": 57,
+        "speed": 65,
+        "baseInstinct": 56,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 68,
+        "arm": 56,
+        "battingClutch": 53
       },
       "positionRatings": {
         "2B": 65

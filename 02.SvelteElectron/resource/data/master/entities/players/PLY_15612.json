@@ -1,6 +1,6 @@
 {
   "id": "PLY_15612",
-  "name": "에르난데스 알렉스",
+  "name": "Hernandez Alex",
   "nameEn": "Hernandez Alex",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 59,
   "popularity": 29,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 53,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 70,
-        "stamina": 71,
-        "velocity": 70,
-        "command": 72,
-        "control": 69,
-        "movement": 61,
-        "mentality": 71,
-        "recovery": 58,
-        "clutch": 58,
-        "holdRunners": 60
+        "ovr": 64,
+        "stamina": 65,
+        "velocity": 64,
+        "command": 66,
+        "control": 63,
+        "movement": 56,
+        "mentality": 65,
+        "recovery": 53,
+        "clutch": 53,
+        "holdRunners": 55
       },
       "batting": {
         "ovr": 64,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 64
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

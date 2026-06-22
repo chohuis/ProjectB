@@ -1,6 +1,6 @@
 {
   "id": "PLY_15601",
-  "name": "마틴 그랜트",
+  "name": "Martin Grant",
   "nameEn": "Martin Grant",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 67,
   "popularity": 28,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 54,
       "proServiceYears": 13,
       "pitching": {
-        "ovr": 66,
-        "stamina": 70,
-        "velocity": 80,
-        "command": 66,
-        "control": 60,
-        "movement": 71,
-        "mentality": 62,
-        "recovery": 61,
-        "clutch": 66,
-        "holdRunners": 57
+        "ovr": 53,
+        "stamina": 56,
+        "velocity": 64,
+        "command": 53,
+        "control": 48,
+        "movement": 57,
+        "mentality": 50,
+        "recovery": 49,
+        "clutch": 53,
+        "holdRunners": 46
       },
       "batting": {
         "ovr": 53,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 53
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

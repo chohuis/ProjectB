@@ -1,7 +1,7 @@
 {
   "id": "PLY_12631",
-  "name": "홀 칼렙",
-  "nameEn": "Hall Caleb",
+  "name": "Davis Sean",
+  "nameEn": "Davis Sean",
   "role": "player",
   "age": 26,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 78,
-  "popularity": 22,
+  "notes": "국적:일본",
+  "diligence": 48,
+  "popularity": 38,
   "militaryStatus": "군필",
   "entryYear": 2042,
   "entryLeague": "LEAGUE_ABL",
@@ -21,57 +21,43 @@
   "entryAge": 26,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 25,
-      "primaryPosition": "SP",
-      "developmentRate": 61,
-      "potentialHidden": 77,
+      "position": "3B",
+      "jerseyNumber": 94,
+      "primaryPosition": "3B",
+      "developmentRate": 67,
+      "potentialHidden": 59,
       "proServiceYears": 4,
       "pitching": {
-        "ovr": 63,
-        "stamina": 56,
-        "velocity": 69,
-        "command": 59,
-        "control": 64,
-        "movement": 62,
-        "mentality": 64,
-        "recovery": 54,
-        "clutch": 54,
-        "holdRunners": 55
+        "ovr": 73,
+        "stamina": 74,
+        "velocity": 80,
+        "command": 71,
+        "control": 67,
+        "movement": 68,
+        "mentality": 69,
+        "recovery": 70,
+        "clutch": 66,
+        "holdRunners": 60
       },
       "batting": {
-        "ovr": 71,
-        "contact": 76,
-        "power": 73,
-        "eye": 73,
-        "discipline": 68,
-        "speed": 72,
-        "baseInstinct": 60,
-        "bunting": 65,
+        "ovr": 73,
+        "contact": 74,
+        "power": 71,
+        "eye": 66,
+        "discipline": 72,
+        "speed": 74,
+        "baseInstinct": 64,
+        "bunting": 59,
         "platoon": 50,
-        "fielding": 70,
-        "arm": 61,
-        "battingClutch": 64
+        "fielding": 75,
+        "arm": 62,
+        "battingClutch": 71
       },
       "positionRatings": {
-        "SP": 71
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "3B": 73
+      }
     },
     "coach": null,
     "manager": null,

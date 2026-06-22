@@ -1,9 +1,9 @@
 {
   "id": "PLY_00064",
   "name": "심민준",
-  "nameEn": "Sim Minjun",
+  "nameEn": "Park Tae-hyun",
   "role": "player",
-  "age": 18,
+  "age": 17,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,43 +19,28 @@
       "position": "SP",
       "jerseyNumber": 4,
       "pitching": {
-        "ovr": 54,
-        "stamina": 55,
-        "velocity": 53,
-        "command": 59,
+        "ovr": 65,
+        "stamina": 64,
+        "velocity": 54,
+        "command": 58,
         "control": 55,
-        "movement": 57,
-        "mentality": 55,
-        "recovery": 59,
-        "clutch": 47,
-        "holdRunners": 51
+        "movement": 55,
+        "mentality": 56,
+        "recovery": 63
       },
       "batting": {
-        "ovr": 36,
-        "contact": 40,
-        "power": 42,
-        "eye": 33,
-        "discipline": 36,
-        "speed": 32,
-        "fielding": 34,
-        "arm": 31,
-        "battingClutch": 36,
-        "baseInstinct": 40,
-        "bunting": 41,
-        "platoon": 39
+        "ovr": 47,
+        "contact": 54,
+        "power": 59,
+        "eye": 44,
+        "discipline": 54,
+        "speed": 60,
+        "fielding": 66,
+        "arm": 59,
+        "battingClutch": 62
       },
       "developmentRate": 61,
-      "potentialHidden": 68,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 54
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        }
-      ]
+      "potentialHidden": 68
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

@@ -1,6 +1,6 @@
 {
   "id": "PLY_16092",
-  "name": "라이트 헌터",
+  "name": "Wright Hunter",
   "nameEn": "Wright Hunter",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 49,
   "popularity": 18,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 79,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 57,
-        "stamina": 52,
-        "velocity": 58,
-        "command": 58,
-        "control": 58,
-        "movement": 49,
-        "mentality": 60,
-        "recovery": 54,
-        "clutch": 50,
-        "holdRunners": 50
+        "ovr": 58,
+        "stamina": 53,
+        "velocity": 59,
+        "command": 59,
+        "control": 59,
+        "movement": 50,
+        "mentality": 61,
+        "recovery": 55,
+        "clutch": 51,
+        "holdRunners": 51
       },
       "batting": {
         "ovr": 58,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

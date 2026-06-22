@@ -1,6 +1,6 @@
 {
   "id": "PLY_16433",
-  "name": "홀 라이언",
+  "name": "Hall Ryan",
   "nameEn": "Hall Ryan",
   "role": "player",
   "age": 29,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 85,
   "popularity": 15,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 47
       },
       "batting": {
-        "ovr": 65,
-        "contact": 59,
-        "power": 54,
-        "eye": 63,
-        "discipline": 62,
-        "speed": 67,
-        "baseInstinct": 58,
-        "bunting": 50,
-        "platoon": 56,
-        "fielding": 64,
-        "arm": 54,
-        "battingClutch": 62
+        "ovr": 58,
+        "contact": 53,
+        "power": 48,
+        "eye": 56,
+        "discipline": 55,
+        "speed": 60,
+        "baseInstinct": 52,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 57,
+        "arm": 48,
+        "battingClutch": 55
       },
       "positionRatings": {
         "CF": 58

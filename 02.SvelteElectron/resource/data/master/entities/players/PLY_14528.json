@@ -1,6 +1,6 @@
 {
   "id": "PLY_14528",
-  "name": "미첼 브랜던",
+  "name": "Mitchell Brandon",
   "nameEn": "Mitchell Brandon",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 70,
   "popularity": 17,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 65
       },
       "batting": {
-        "ovr": 79,
-        "contact": 82,
-        "power": 79,
-        "eye": 77,
-        "discipline": 73,
-        "speed": 76,
-        "baseInstinct": 70,
-        "bunting": 61,
-        "platoon": 54,
-        "fielding": 79,
-        "arm": 68,
-        "battingClutch": 74
+        "ovr": 73,
+        "contact": 76,
+        "power": 73,
+        "eye": 71,
+        "discipline": 67,
+        "speed": 70,
+        "baseInstinct": 65,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 73,
+        "arm": 63,
+        "battingClutch": 68
       },
       "positionRatings": {
         "2B": 73

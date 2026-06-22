@@ -1,6 +1,6 @@
 {
   "id": "PLY_15017",
-  "name": "앤더슨 카를로스",
+  "name": "Anderson Carlos",
   "nameEn": "Anderson Carlos",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 81,
   "popularity": 43,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 52,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 69,
-        "stamina": 63,
-        "velocity": 72,
-        "command": 59,
-        "control": 62,
-        "movement": 68,
-        "mentality": 65,
-        "recovery": 58,
-        "clutch": 70,
-        "holdRunners": 55
+        "ovr": 62,
+        "stamina": 57,
+        "velocity": 65,
+        "command": 53,
+        "control": 56,
+        "movement": 61,
+        "mentality": 58,
+        "recovery": 52,
+        "clutch": 63,
+        "holdRunners": 49
       },
       "batting": {
         "ovr": 62,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

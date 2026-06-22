@@ -1,6 +1,6 @@
 {
   "id": "PLY_15827",
-  "name": "해리스 케빈",
+  "name": "Harris Kevin",
   "nameEn": "Harris Kevin",
   "role": "player",
   "age": 33,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 76,
   "popularity": 30,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 65
       },
       "batting": {
-        "ovr": 88,
-        "contact": 94,
-        "power": 83,
-        "eye": 80,
-        "discipline": 88,
-        "speed": 94,
-        "baseInstinct": 85,
-        "bunting": 82,
-        "platoon": 64,
-        "fielding": 80,
-        "arm": 88,
-        "battingClutch": 85
+        "ovr": 69,
+        "contact": 74,
+        "power": 65,
+        "eye": 63,
+        "discipline": 69,
+        "speed": 74,
+        "baseInstinct": 67,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 69,
+        "battingClutch": 67
       },
       "positionRatings": {
         "1B": 69

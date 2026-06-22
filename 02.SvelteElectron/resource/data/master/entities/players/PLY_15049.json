@@ -1,6 +1,6 @@
 {
   "id": "PLY_15049",
-  "name": "존슨 칼렙",
+  "name": "Johnson Caleb",
   "nameEn": "Johnson Caleb",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 48,
   "popularity": 35,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 68,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 51,
-        "stamina": 48,
-        "velocity": 52,
-        "command": 49,
-        "control": 50,
-        "movement": 45,
-        "mentality": 48,
-        "recovery": 51,
-        "clutch": 51,
-        "holdRunners": 45
+        "ovr": 52,
+        "stamina": 49,
+        "velocity": 53,
+        "command": 50,
+        "control": 51,
+        "movement": 46,
+        "mentality": 49,
+        "recovery": 52,
+        "clutch": 52,
+        "holdRunners": 46
       },
       "batting": {
         "ovr": 52,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 52
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_15741",
-  "name": "토마스 콜",
+  "name": "Thomas Cole",
   "nameEn": "Thomas Cole",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 73,
   "popularity": 42,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 80,
       "proServiceYears": 5,
       "pitching": {
-        "ovr": 57,
-        "stamina": 52,
-        "velocity": 54,
-        "command": 57,
-        "control": 50,
-        "movement": 55,
-        "mentality": 62,
-        "recovery": 46,
-        "clutch": 50,
-        "holdRunners": 55
+        "ovr": 62,
+        "stamina": 57,
+        "velocity": 59,
+        "command": 62,
+        "control": 54,
+        "movement": 60,
+        "mentality": 67,
+        "recovery": 50,
+        "clutch": 54,
+        "holdRunners": 60
       },
       "batting": {
         "ovr": 62,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

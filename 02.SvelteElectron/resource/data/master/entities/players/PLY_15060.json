@@ -1,6 +1,6 @@
 {
   "id": "PLY_15060",
-  "name": "영 라이언",
+  "name": "Young Ryan",
   "nameEn": "Young Ryan",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 60,
   "popularity": 10,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 55,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 75,
-        "stamina": 77,
-        "velocity": 77,
-        "command": 66,
-        "control": 74,
-        "movement": 65,
-        "mentality": 76,
-        "recovery": 71,
-        "clutch": 76,
-        "holdRunners": 64
+        "ovr": 69,
+        "stamina": 71,
+        "velocity": 71,
+        "command": 61,
+        "control": 68,
+        "movement": 60,
+        "mentality": 70,
+        "recovery": 65,
+        "clutch": 70,
+        "holdRunners": 59
       },
       "batting": {
         "ovr": 69,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 69
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

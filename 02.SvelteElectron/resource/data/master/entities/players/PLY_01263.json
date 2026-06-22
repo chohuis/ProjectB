@@ -1,14 +1,14 @@
 {
   "id": "PLY_01263",
   "name": "스콧 호세",
-  "nameEn": "Seu 콧 호세",
+  "nameEn": "Scott Jose",
   "role": "player",
   "age": 31,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_WAVERIDERS",
-  "teamId": "TEAM_ABL_WAVERIDERS_2",
+  "clubId": "CLUB_ABL_NYM",
+  "teamId": "TEAM_ABL_NYM_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -19,48 +19,28 @@
       "position": "1B",
       "jerseyNumber": 53,
       "pitching": {
-        "ovr": 57,
-        "stamina": 60,
-        "velocity": 61,
-        "command": 53,
-        "control": 57,
-        "movement": 56,
-        "mentality": 62,
-        "recovery": 56,
-        "clutch": 46,
-        "holdRunners": 45
+        "ovr": 50,
+        "stamina": 54,
+        "velocity": 60,
+        "command": 57,
+        "control": 55,
+        "movement": 52,
+        "mentality": 56,
+        "recovery": 48
       },
       "batting": {
-        "ovr": 77,
-        "contact": 73,
-        "power": 80,
-        "eye": 78,
-        "discipline": 74,
-        "speed": 71,
-        "fielding": 75,
-        "arm": 81,
-        "battingClutch": 76,
-        "baseInstinct": 77,
-        "bunting": 64,
-        "platoon": 73
+        "ovr": 81,
+        "contact": 75,
+        "power": 86,
+        "eye": 79,
+        "discipline": 75,
+        "speed": 73,
+        "fielding": 77,
+        "arm": 73,
+        "battingClutch": 79
       },
       "developmentRate": 45,
-      "potentialHidden": 63,
-      "primaryPosition": "1B",
-      "positionRatings": {
-        "1B": 77
-      },
-      "proServiceYears": 9,
-      "contract": {
-        "salary": 11700,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 63
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

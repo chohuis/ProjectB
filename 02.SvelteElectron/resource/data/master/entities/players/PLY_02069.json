@@ -1,80 +1,46 @@
 {
   "id": "PLY_02069",
-  "name": "로건 라미레스",
-  "nameEn": "Logan Ramirez",
+  "name": "사카모토 히로시",
+  "nameEn": "Sakamoto Hiroshi",
   "role": "player",
-  "age": 29,
+  "age": 31,
   "status": "active",
-  "originLeagueId": "LEAGUE_ABL",
-  "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_SUNDRAGONS",
-  "teamId": "TEAM_ABL_SUNDRAGONS_1",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SUNS",
+  "teamId": "TEAM_JBL_PL_SUNS_2",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
-      "position": "RP",
-      "jerseyNumber": 61,
+      "handedness": "R",
+      "position": "CP",
+      "jerseyNumber": 39,
       "pitching": {
-        "ovr": 83,
-        "stamina": 89,
-        "velocity": 82,
-        "command": 88,
-        "control": 81,
-        "movement": 84,
-        "mentality": 80,
-        "recovery": 86,
-        "clutch": 73,
-        "holdRunners": 79
+        "ovr": 64,
+        "stamina": 48,
+        "velocity": 65,
+        "command": 56,
+        "control": 58,
+        "movement": 58,
+        "mentality": 62,
+        "recovery": 60
       },
       "batting": {
-        "ovr": 65,
-        "contact": 62,
-        "power": 68,
-        "eye": 67,
-        "discipline": 62,
-        "speed": 66,
-        "fielding": 64,
-        "arm": 64,
-        "battingClutch": 62,
-        "baseInstinct": 59,
-        "bunting": 54,
-        "platoon": 54
+        "ovr": 41,
+        "contact": 34,
+        "power": 40,
+        "eye": 34,
+        "discipline": 34,
+        "speed": 33,
+        "fielding": 40,
+        "arm": 37,
+        "battingClutch": 41
       },
-      "developmentRate": 48,
-      "potentialHidden": 82,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 83
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SCREWBALL",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 7,
-      "contract": {
-        "salary": 31700,
-        "durationYears": 4,
-        "remainingYears": 4,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 44,
+      "potentialHidden": 77
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 69,
-  "popularity": 43,
-  "militaryStatus": "군필"
+  }
 }

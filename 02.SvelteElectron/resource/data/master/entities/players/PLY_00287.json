@@ -1,7 +1,7 @@
 {
   "id": "PLY_00287",
   "name": "조태양",
-  "nameEn": "Jo Taeyang",
+  "nameEn": "Woo Woo-jin",
   "role": "player",
   "age": 20,
   "status": "active",
@@ -19,47 +19,28 @@
       "position": "RP",
       "jerseyNumber": 7,
       "pitching": {
-        "ovr": 58,
-        "stamina": 55,
-        "velocity": 54,
+        "ovr": 63,
+        "stamina": 57,
+        "velocity": 63,
         "command": 60,
-        "control": 62,
-        "movement": 62,
-        "mentality": 62,
-        "recovery": 58,
-        "clutch": 46,
-        "holdRunners": 51
+        "control": 57,
+        "movement": 63,
+        "mentality": 59,
+        "recovery": 63
       },
       "batting": {
-        "ovr": 40,
-        "contact": 43,
-        "power": 41,
-        "eye": 36,
-        "discipline": 39,
-        "speed": 43,
-        "fielding": 44,
-        "arm": 38,
-        "battingClutch": 34,
-        "baseInstinct": 46,
-        "bunting": 37,
-        "platoon": 41
+        "ovr": 27,
+        "contact": 31,
+        "power": 30,
+        "eye": 27,
+        "discipline": 27,
+        "speed": 26,
+        "fielding": 27,
+        "arm": 26,
+        "battingClutch": 30
       },
       "developmentRate": 47,
-      "potentialHidden": 60,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

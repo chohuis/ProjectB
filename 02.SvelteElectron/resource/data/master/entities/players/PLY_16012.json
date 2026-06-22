@@ -1,6 +1,6 @@
 {
   "id": "PLY_16012",
-  "name": "해리스 숀",
+  "name": "Harris Sean",
   "nameEn": "Harris Sean",
   "role": "player",
   "age": 18,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 84,
   "popularity": 36,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 38
       },
       "batting": {
-        "ovr": 50,
-        "contact": 54,
-        "power": 42,
-        "eye": 49,
-        "discipline": 45,
-        "speed": 47,
-        "baseInstinct": 48,
-        "bunting": 32,
-        "platoon": 49,
-        "fielding": 52,
-        "arm": 39,
-        "battingClutch": 37
+        "ovr": 51,
+        "contact": 55,
+        "power": 43,
+        "eye": 50,
+        "discipline": 46,
+        "speed": 48,
+        "baseInstinct": 49,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 53,
+        "arm": 40,
+        "battingClutch": 38
       },
       "positionRatings": {
         "3B": 51

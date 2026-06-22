@@ -1,6 +1,6 @@
 {
   "id": "PLY_14100",
-  "name": "데이비스 브랜던",
+  "name": "Davis Brandon",
   "nameEn": "Davis Brandon",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 85,
   "popularity": 32,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 69,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 54,
-        "stamina": 46,
-        "velocity": 62,
-        "command": 57,
-        "control": 53,
-        "movement": 53,
-        "mentality": 60,
-        "recovery": 55,
-        "clutch": 44,
-        "holdRunners": 50
+        "ovr": 55,
+        "stamina": 47,
+        "velocity": 63,
+        "command": 58,
+        "control": 54,
+        "movement": 54,
+        "mentality": 61,
+        "recovery": 56,
+        "clutch": 45,
+        "holdRunners": 51
       },
       "batting": {
         "ovr": 55,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 55
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

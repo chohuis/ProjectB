@@ -1,7 +1,7 @@
 {
   "id": "PLY_00201",
   "name": "황준호",
-  "nameEn": "Hwang Junho",
+  "nameEn": "Seo Gi-hoon",
   "role": "player",
   "age": 19,
   "status": "active",
@@ -19,43 +19,28 @@
       "position": "SP",
       "jerseyNumber": 1,
       "pitching": {
-        "ovr": 46,
-        "stamina": 52,
-        "velocity": 47,
-        "command": 45,
-        "control": 50,
-        "movement": 48,
-        "mentality": 48,
-        "recovery": 45,
-        "clutch": 45,
-        "holdRunners": 38
+        "ovr": 58,
+        "stamina": 58,
+        "velocity": 52,
+        "command": 57,
+        "control": 53,
+        "movement": 49,
+        "mentality": 51,
+        "recovery": 51
       },
       "batting": {
-        "ovr": 28,
-        "contact": 33,
-        "power": 29,
-        "eye": 26,
-        "discipline": 31,
-        "speed": 35,
-        "fielding": 29,
-        "arm": 27,
-        "battingClutch": 37,
-        "baseInstinct": 39,
-        "bunting": 41,
-        "platoon": 34
+        "ovr": 33,
+        "contact": 31,
+        "power": 35,
+        "eye": 32,
+        "discipline": 32,
+        "speed": 27,
+        "fielding": 26,
+        "arm": 29,
+        "battingClutch": 31
       },
       "developmentRate": 54,
-      "potentialHidden": 78,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 46
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 78
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

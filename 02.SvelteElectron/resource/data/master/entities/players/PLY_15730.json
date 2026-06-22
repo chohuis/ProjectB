@@ -1,6 +1,6 @@
 {
   "id": "PLY_15730",
-  "name": "앤더슨 오스틴",
+  "name": "Anderson Austin",
   "nameEn": "Anderson Austin",
   "role": "player",
   "age": 31,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 72,
   "popularity": 49,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 46
       },
       "batting": {
-        "ovr": 57,
-        "contact": 51,
-        "power": 57,
-        "eye": 48,
-        "discipline": 54,
-        "speed": 59,
-        "baseInstinct": 49,
-        "bunting": 38,
-        "platoon": 57,
-        "fielding": 51,
-        "arm": 47,
-        "battingClutch": 54
+        "ovr": 50,
+        "contact": 45,
+        "power": 50,
+        "eye": 42,
+        "discipline": 47,
+        "speed": 52,
+        "baseInstinct": 43,
+        "bunting": 33,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 41,
+        "battingClutch": 47
       },
       "positionRatings": {
         "C": 50

@@ -1,14 +1,14 @@
 {
   "id": "PLY_01243",
   "name": "미첼 노아",
-  "nameEn": "Mi 첼 노아",
+  "nameEn": "Mitchell Noah",
   "role": "player",
   "age": 39,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_WAVERIDERS",
-  "teamId": "TEAM_ABL_WAVERIDERS_1",
+  "clubId": "CLUB_ABL_NYM",
+  "teamId": "TEAM_ABL_NYM",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -19,48 +19,28 @@
       "position": "3B",
       "jerseyNumber": 18,
       "pitching": {
-        "ovr": 68,
-        "stamina": 67,
-        "velocity": 67,
-        "command": 67,
-        "control": 70,
-        "movement": 68,
-        "mentality": 72,
-        "recovery": 73,
-        "clutch": 63,
-        "holdRunners": 62
+        "ovr": 64,
+        "stamina": 61,
+        "velocity": 64,
+        "command": 63,
+        "control": 62,
+        "movement": 62,
+        "mentality": 68,
+        "recovery": 64
       },
       "batting": {
-        "ovr": 88,
-        "contact": 90,
-        "power": 87,
-        "eye": 91,
-        "discipline": 85,
-        "speed": 89,
-        "fielding": 86,
-        "arm": 86,
-        "battingClutch": 79,
-        "baseInstinct": 82,
-        "bunting": 78,
-        "platoon": 81
+        "ovr": 91,
+        "contact": 94,
+        "power": 96,
+        "eye": 89,
+        "discipline": 87,
+        "speed": 86,
+        "fielding": 91,
+        "arm": 89,
+        "battingClutch": 93
       },
       "developmentRate": 51,
-      "potentialHidden": 70,
-      "primaryPosition": "3B",
-      "positionRatings": {
-        "3B": 88
-      },
-      "proServiceYears": 17,
-      "contract": {
-        "salary": 20200,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 70
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

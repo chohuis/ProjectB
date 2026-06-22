@@ -1,7 +1,7 @@
 {
   "id": "PLY_13383",
-  "name": "미첼 데릭",
-  "nameEn": "Mitchell Derek",
+  "name": "Jones Jordan",
+  "nameEn": "Jones Jordan",
   "role": "player",
   "age": 19,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 60,
-  "popularity": 23,
+  "notes": "국적:미국",
+  "diligence": 70,
+  "popularity": 36,
   "militaryStatus": "군필",
   "entryYear": 2047,
   "entryLeague": "LEAGUE_ABL",
@@ -21,53 +21,43 @@
   "entryAge": 19,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 27,
-      "primaryPosition": "SP",
-      "developmentRate": 75,
-      "potentialHidden": 90,
+      "position": "CF",
+      "jerseyNumber": 38,
+      "primaryPosition": "CF",
+      "developmentRate": 61,
+      "potentialHidden": 83,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 53,
-        "stamina": 57,
-        "velocity": 52,
-        "command": 54,
-        "control": 57,
-        "movement": 52,
-        "mentality": 52,
-        "recovery": 50,
-        "clutch": 45,
-        "holdRunners": 40
+        "ovr": 63,
+        "stamina": 59,
+        "velocity": 70,
+        "command": 65,
+        "control": 62,
+        "movement": 64,
+        "mentality": 63,
+        "recovery": 56,
+        "clutch": 51,
+        "holdRunners": 55
       },
       "batting": {
-        "ovr": 56,
-        "contact": 47,
-        "power": 49,
-        "eye": 60,
-        "discipline": 51,
-        "speed": 49,
-        "baseInstinct": 59,
-        "bunting": 40,
+        "ovr": 63,
+        "contact": 60,
+        "power": 52,
+        "eye": 64,
+        "discipline": 61,
+        "speed": 62,
+        "baseInstinct": 57,
+        "bunting": 45,
         "platoon": 50,
-        "fielding": 50,
-        "arm": 57,
-        "battingClutch": 46
+        "fielding": 61,
+        "arm": 66,
+        "battingClutch": 56
       },
       "positionRatings": {
-        "SP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "CF": 63
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,9 +1,9 @@
 {
   "id": "PLY_10545",
-  "name": "클라크 카일",
-  "nameEn": "Clark Kyle",
+  "name": "White Tyler",
+  "nameEn": "White Tyler",
   "role": "player",
-  "age": 20,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 66,
+  "notes": "국적:파나마",
+  "diligence": 46,
   "popularity": 33,
   "militaryStatus": "군필",
   "entryYear": 2030,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 20,
+  "entryAge": 28,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 31,
-      "primaryPosition": "SP",
-      "developmentRate": 69,
-      "potentialHidden": 73,
-      "proServiceYears": 0,
+      "position": "CF",
+      "jerseyNumber": 35,
+      "primaryPosition": "CF",
+      "developmentRate": 63,
+      "potentialHidden": 60,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 58,
-        "stamina": 62,
-        "velocity": 64,
-        "command": 52,
-        "control": 51,
-        "movement": 55,
-        "mentality": 52,
-        "recovery": 51,
-        "clutch": 55,
-        "holdRunners": 53
+        "ovr": 75,
+        "stamina": 74,
+        "velocity": 79,
+        "command": 74,
+        "control": 75,
+        "movement": 73,
+        "mentality": 82,
+        "recovery": 71,
+        "clutch": 64,
+        "holdRunners": 72
       },
       "batting": {
-        "ovr": 62,
-        "contact": 62,
-        "power": 57,
-        "eye": 57,
-        "discipline": 63,
-        "speed": 62,
-        "baseInstinct": 54,
-        "bunting": 54,
+        "ovr": 75,
+        "contact": 77,
+        "power": 77,
+        "eye": 79,
+        "discipline": 77,
+        "speed": 81,
+        "baseInstinct": 75,
+        "bunting": 63,
         "platoon": 50,
-        "fielding": 55,
-        "arm": 55,
-        "battingClutch": 53
+        "fielding": 68,
+        "arm": 75,
+        "battingClutch": 73
       },
       "positionRatings": {
-        "SP": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "CF": 75
+      }
     },
     "coach": null,
     "manager": null,

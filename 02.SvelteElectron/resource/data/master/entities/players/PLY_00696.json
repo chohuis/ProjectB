@@ -1,14 +1,14 @@
 {
   "id": "PLY_00696",
   "name": "고상현",
-  "nameEn": "Ko Sanghyeon",
+  "nameEn": "Ha Min-hyuk",
   "role": "player",
   "age": 37,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_ROYALLIONS",
-  "teamId": "TEAM_KBL_ROYALLIONS_1",
+  "clubId": "CLUB_KBL_SSG",
+  "teamId": "TEAM_KBL_SSG_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 11,
       "pitching": {
-        "ovr": 77,
-        "stamina": 80,
-        "velocity": 73,
-        "command": 77,
-        "control": 75,
-        "movement": 78,
-        "mentality": 78,
-        "recovery": 73,
-        "clutch": 75,
-        "holdRunners": 67
+        "ovr": 83,
+        "stamina": 79,
+        "velocity": 86,
+        "command": 86,
+        "control": 82,
+        "movement": 83,
+        "mentality": 87,
+        "recovery": 86
       },
       "batting": {
-        "ovr": 59,
-        "contact": 64,
-        "power": 54,
-        "eye": 55,
-        "discipline": 63,
-        "speed": 60,
-        "fielding": 58,
-        "arm": 54,
-        "battingClutch": 53,
-        "baseInstinct": 55,
-        "bunting": 42,
-        "platoon": 49
+        "ovr": 56,
+        "contact": 55,
+        "power": 49,
+        "eye": 51,
+        "discipline": 54,
+        "speed": 47,
+        "fielding": 49,
+        "arm": 47,
+        "battingClutch": 49
       },
       "developmentRate": 40,
-      "potentialHidden": 80,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 77
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 15,
-      "contract": {
-        "salary": 7700,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 80
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

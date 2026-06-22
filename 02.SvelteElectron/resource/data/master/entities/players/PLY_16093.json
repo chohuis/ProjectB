@@ -1,6 +1,6 @@
 {
   "id": "PLY_16093",
-  "name": "톰슨 코디",
+  "name": "Thompson Cody",
   "nameEn": "Thompson Cody",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 51,
   "popularity": 30,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 55,
       "proServiceYears": 2,
       "pitching": {
-        "ovr": 64,
-        "stamina": 67,
-        "velocity": 61,
-        "command": 56,
-        "control": 55,
-        "movement": 56,
-        "mentality": 69,
-        "recovery": 53,
-        "clutch": 59,
-        "holdRunners": 54
+        "ovr": 66,
+        "stamina": 69,
+        "velocity": 63,
+        "command": 58,
+        "control": 57,
+        "movement": 58,
+        "mentality": 71,
+        "recovery": 55,
+        "clutch": 61,
+        "holdRunners": 56
       },
       "batting": {
         "ovr": 66,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

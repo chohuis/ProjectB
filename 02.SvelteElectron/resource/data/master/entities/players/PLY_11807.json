@@ -1,9 +1,9 @@
 {
   "id": "PLY_11807",
-  "name": "로드리게스 조던",
-  "nameEn": "Rodriguez Jordan",
+  "name": "Davis Nathan",
+  "nameEn": "Davis Nathan",
   "role": "player",
-  "age": 19,
+  "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 75,
-  "popularity": 32,
+  "notes": "국적:베네수엘라",
+  "diligence": 71,
+  "popularity": 20,
   "militaryStatus": "군필",
   "entryYear": 2037,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 19,
+  "entryAge": 27,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 44,
-      "primaryPosition": "SP",
-      "developmentRate": 74,
-      "potentialHidden": 77,
-      "proServiceYears": 0,
+      "position": "CF",
+      "jerseyNumber": 63,
+      "primaryPosition": "CF",
+      "developmentRate": 66,
+      "potentialHidden": 80,
+      "proServiceYears": 5,
       "pitching": {
-        "ovr": 58,
-        "stamina": 58,
-        "velocity": 59,
-        "command": 56,
-        "control": 58,
-        "movement": 59,
-        "mentality": 55,
-        "recovery": 55,
-        "clutch": 54,
-        "holdRunners": 46
+        "ovr": 67,
+        "stamina": 68,
+        "velocity": 65,
+        "command": 63,
+        "control": 64,
+        "movement": 66,
+        "mentality": 72,
+        "recovery": 63,
+        "clutch": 61,
+        "holdRunners": 65
       },
       "batting": {
-        "ovr": 62,
-        "contact": 59,
-        "power": 57,
-        "eye": 59,
-        "discipline": 63,
-        "speed": 55,
-        "baseInstinct": 55,
-        "bunting": 49,
+        "ovr": 67,
+        "contact": 68,
+        "power": 56,
+        "eye": 68,
+        "discipline": 65,
+        "speed": 62,
+        "baseInstinct": 60,
+        "bunting": 57,
         "platoon": 50,
-        "fielding": 55,
-        "arm": 53,
-        "battingClutch": 56
+        "fielding": 60,
+        "arm": 57,
+        "battingClutch": 61
       },
       "positionRatings": {
-        "SP": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "CF": 67
+      }
     },
     "coach": null,
     "manager": null,

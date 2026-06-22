@@ -1,72 +1,46 @@
 {
   "id": "PLY_01892",
-  "name": "홍태우",
-  "nameEn": "Hong Taewoo",
+  "name": "미우라 히로시",
+  "nameEn": "Miura Hiroshi",
   "role": "player",
   "age": 21,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_BEARGUARDIANS",
-  "teamId": "TEAM_KBL_BEARGUARDIANS_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_POLARBEARS",
+  "teamId": "TEAM_JBL_PL_POLARBEARS_2",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "LF",
-      "jerseyNumber": 39,
+      "position": "C",
+      "jerseyNumber": 42,
       "pitching": {
-        "ovr": 47,
-        "stamina": 47,
-        "velocity": 49,
-        "command": 48,
-        "control": 51,
-        "movement": 44,
-        "mentality": 49,
-        "recovery": 51,
-        "clutch": 45,
-        "holdRunners": 45
+        "ovr": 27,
+        "stamina": 26,
+        "velocity": 32,
+        "command": 26,
+        "control": 26,
+        "movement": 24,
+        "mentality": 31,
+        "recovery": 26
       },
       "batting": {
-        "ovr": 67,
-        "contact": 64,
-        "power": 68,
-        "eye": 68,
-        "discipline": 67,
-        "speed": 62,
-        "fielding": 67,
-        "arm": 68,
-        "battingClutch": 66,
-        "baseInstinct": 57,
-        "bunting": 56,
-        "platoon": 64
+        "ovr": 60,
+        "contact": 63,
+        "power": 55,
+        "eye": 57,
+        "discipline": 54,
+        "speed": 55,
+        "fielding": 57,
+        "arm": 63,
+        "battingClutch": 63
       },
-      "developmentRate": 68,
-      "potentialHidden": 66,
-      "primaryPosition": "LF",
-      "positionRatings": {
-        "LF": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 39,
+      "potentialHidden": 85
     },
     "coach": {
       "specialty": "-",
@@ -106,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 46,
-  "popularity": 46
+  }
 }

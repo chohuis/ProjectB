@@ -1,9 +1,9 @@
 {
   "id": "PLY_00138",
   "name": "차재훈",
-  "nameEn": "Cha Jaehun",
+  "nameEn": "Jang Jun-ho",
   "role": "player",
-  "age": 18,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "RF",
       "jerseyNumber": 18,
       "pitching": {
-        "ovr": 20,
-        "stamina": 20,
-        "velocity": 20,
-        "command": 21,
-        "control": 20,
-        "movement": 22,
-        "mentality": 21,
-        "recovery": 20,
-        "clutch": 44,
-        "holdRunners": 37
+        "ovr": 42,
+        "stamina": 63,
+        "velocity": 62,
+        "command": 60,
+        "control": 58,
+        "movement": 57,
+        "mentality": 52,
+        "recovery": 60
       },
       "batting": {
-        "ovr": 30,
-        "contact": 33,
-        "power": 30,
-        "eye": 26,
-        "discipline": 35,
-        "speed": 25,
-        "fielding": 26,
-        "arm": 35,
-        "battingClutch": 43,
-        "baseInstinct": 38,
-        "bunting": 28,
-        "platoon": 33
+        "ovr": 56,
+        "contact": 41,
+        "power": 38,
+        "eye": 56,
+        "discipline": 46,
+        "speed": 52,
+        "fielding": 43,
+        "arm": 44,
+        "battingClutch": 46
       },
       "developmentRate": 64,
-      "potentialHidden": 61,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 30
-      }
+      "potentialHidden": 61
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

@@ -1,7 +1,7 @@
 {
   "id": "PLY_00309",
   "name": "권현준",
-  "nameEn": "Kwon Hyeonjun",
+  "nameEn": "Jung Min-woo",
   "role": "player",
   "age": 27,
   "status": "active",
@@ -19,54 +19,28 @@
       "position": "CP",
       "jerseyNumber": 9,
       "pitching": {
-        "ovr": 54,
-        "stamina": 55,
-        "velocity": 54,
-        "command": 60,
-        "control": 52,
-        "movement": 58,
-        "mentality": 57,
-        "recovery": 56,
-        "clutch": 44,
-        "holdRunners": 46
+        "ovr": 60,
+        "stamina": 50,
+        "velocity": 64,
+        "command": 61,
+        "control": 60,
+        "movement": 61,
+        "mentality": 58,
+        "recovery": 60
       },
       "batting": {
         "ovr": 36,
-        "contact": 39,
-        "power": 36,
-        "eye": 36,
+        "contact": 32,
+        "power": 31,
+        "eye": 29,
         "discipline": 33,
-        "speed": 40,
-        "fielding": 32,
-        "arm": 39,
-        "battingClutch": 41,
-        "baseInstinct": 41,
-        "bunting": 30,
-        "platoon": 38
+        "speed": 34,
+        "fielding": 29,
+        "arm": 35,
+        "battingClutch": 33
       },
       "developmentRate": 54,
-      "potentialHidden": 63,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 54
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 7,
-      "contract": {
-        "salary": 900,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 63
     },
     "coach": {
       "specialty": "-",
@@ -106,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

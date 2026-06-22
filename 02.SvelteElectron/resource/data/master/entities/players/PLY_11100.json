@@ -1,9 +1,9 @@
 {
   "id": "PLY_11100",
-  "name": "앨런 케빈",
-  "nameEn": "Allen Kevin",
+  "name": "Scott Carlos",
+  "nameEn": "Scott Carlos",
   "role": "player",
-  "age": 35,
+  "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 81,
-  "popularity": 37,
+  "notes": "국적:베네수엘라",
+  "diligence": 63,
+  "popularity": 23,
   "militaryStatus": "군필",
   "entryYear": 2033,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 35,
+  "entryAge": 25,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 5,
-      "primaryPosition": "SP",
-      "developmentRate": 40,
-      "potentialHidden": 54,
-      "proServiceYears": 13,
+      "position": "CF",
+      "jerseyNumber": 11,
+      "primaryPosition": "CF",
+      "developmentRate": 54,
+      "potentialHidden": 65,
+      "proServiceYears": 3,
       "pitching": {
         "ovr": 79,
-        "stamina": 74,
-        "velocity": 91,
-        "command": 81,
-        "control": 85,
-        "movement": 79,
-        "mentality": 81,
+        "stamina": 81,
+        "velocity": 84,
+        "command": 73,
+        "control": 81,
+        "movement": 74,
+        "mentality": 76,
         "recovery": 70,
-        "clutch": 73,
-        "holdRunners": 64
+        "clutch": 69,
+        "holdRunners": 77
       },
       "batting": {
-        "ovr": 67,
-        "contact": 70,
-        "power": 62,
-        "eye": 69,
-        "discipline": 67,
-        "speed": 74,
-        "baseInstinct": 67,
-        "bunting": 58,
+        "ovr": 79,
+        "contact": 82,
+        "power": 71,
+        "eye": 80,
+        "discipline": 77,
+        "speed": 85,
+        "baseInstinct": 70,
+        "bunting": 70,
         "platoon": 50,
-        "fielding": 59,
-        "arm": 61,
-        "battingClutch": 64
+        "fielding": 75,
+        "arm": 78,
+        "battingClutch": 69
       },
       "positionRatings": {
-        "SP": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "CF": 79
+      }
     },
     "coach": null,
     "manager": null,

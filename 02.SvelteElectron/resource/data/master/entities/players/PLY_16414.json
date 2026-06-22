@@ -1,6 +1,6 @@
 {
   "id": "PLY_16414",
-  "name": "스콧 루이스",
+  "name": "Scott Luis",
   "nameEn": "Scott Luis",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 63,
   "popularity": 28,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 58
       },
       "batting": {
-        "ovr": 65,
-        "contact": 63,
-        "power": 60,
-        "eye": 69,
-        "discipline": 56,
-        "speed": 70,
-        "baseInstinct": 65,
-        "bunting": 58,
-        "platoon": 49,
-        "fielding": 60,
-        "arm": 68,
-        "battingClutch": 61
+        "ovr": 67,
+        "contact": 65,
+        "power": 62,
+        "eye": 71,
+        "discipline": 58,
+        "speed": 72,
+        "baseInstinct": 67,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 70,
+        "battingClutch": 63
       },
       "positionRatings": {
         "2B": 67

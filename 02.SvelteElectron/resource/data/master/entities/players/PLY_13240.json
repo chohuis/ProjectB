@@ -1,7 +1,7 @@
 {
   "id": "PLY_13240",
-  "name": "톰슨 제이슨",
-  "nameEn": "Thompson Jason",
+  "name": "Anderson Kyle",
+  "nameEn": "Anderson Kyle",
   "role": "player",
   "age": 28,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 47,
-  "popularity": 22,
+  "notes": "국적:파나마",
+  "diligence": 53,
+  "popularity": 15,
   "militaryStatus": "군필",
   "entryYear": 2046,
   "entryLeague": "LEAGUE_ABL",
@@ -24,50 +24,40 @@
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 37,
+      "jerseyNumber": 70,
       "primaryPosition": "SP",
-      "developmentRate": 57,
-      "potentialHidden": 55,
+      "developmentRate": 48,
+      "potentialHidden": 82,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 70,
-        "stamina": 63,
-        "velocity": 69,
-        "command": 71,
-        "control": 66,
-        "movement": 61,
-        "mentality": 74,
-        "recovery": 71,
-        "clutch": 57,
-        "holdRunners": 63
+        "ovr": 66,
+        "stamina": 70,
+        "velocity": 65,
+        "command": 64,
+        "control": 64,
+        "movement": 58,
+        "mentality": 70,
+        "recovery": 64,
+        "clutch": 64,
+        "holdRunners": 57
       },
       "batting": {
-        "ovr": 68,
+        "ovr": 66,
         "contact": 65,
-        "power": 59,
-        "eye": 69,
-        "discipline": 58,
-        "speed": 66,
-        "baseInstinct": 57,
-        "bunting": 58,
+        "power": 68,
+        "eye": 66,
+        "discipline": 65,
+        "speed": 62,
+        "baseInstinct": 61,
+        "bunting": 50,
         "platoon": 50,
-        "fielding": 58,
-        "arm": 70,
-        "battingClutch": 63
+        "fielding": 59,
+        "arm": 60,
+        "battingClutch": 54
       },
       "positionRatings": {
-        "SP": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 66
+      }
     },
     "coach": null,
     "manager": null,

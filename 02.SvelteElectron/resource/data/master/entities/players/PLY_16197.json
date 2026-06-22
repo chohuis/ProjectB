@@ -1,6 +1,6 @@
 {
   "id": "PLY_16197",
-  "name": "테일러 카를로스",
+  "name": "Taylor Carlos",
   "nameEn": "Taylor Carlos",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 67,
   "popularity": 18,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 56,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 57,
-        "stamina": 57,
-        "velocity": 67,
-        "command": 49,
-        "control": 54,
-        "movement": 54,
-        "mentality": 52,
-        "recovery": 50,
-        "clutch": 46,
-        "holdRunners": 51
+        "ovr": 58,
+        "stamina": 58,
+        "velocity": 68,
+        "command": 50,
+        "control": 55,
+        "movement": 55,
+        "mentality": 53,
+        "recovery": 51,
+        "clutch": 47,
+        "holdRunners": 52
       },
       "batting": {
         "ovr": 58,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

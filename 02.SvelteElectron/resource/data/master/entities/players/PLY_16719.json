@@ -1,6 +1,6 @@
 {
   "id": "PLY_16719",
-  "name": "그린 블레이크",
+  "name": "Green Blake",
   "nameEn": "Green Blake",
   "role": "player",
   "age": 18,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 48,
   "popularity": 36,
   "militaryStatus": "군필",

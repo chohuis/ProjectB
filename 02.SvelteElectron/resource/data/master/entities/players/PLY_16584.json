@@ -1,6 +1,6 @@
 {
   "id": "PLY_16584",
-  "name": "스콧 데릭",
+  "name": "Scott Derek",
   "nameEn": "Scott Derek",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 74,
   "popularity": 37,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 76,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 81,
-        "stamina": 79,
-        "velocity": 84,
-        "command": 78,
-        "control": 73,
-        "movement": 75,
-        "mentality": 77,
-        "recovery": 75,
-        "clutch": 79,
-        "holdRunners": 68
+        "ovr": 75,
+        "stamina": 73,
+        "velocity": 78,
+        "command": 72,
+        "control": 68,
+        "movement": 69,
+        "mentality": 71,
+        "recovery": 69,
+        "clutch": 73,
+        "holdRunners": 63
       },
       "batting": {
         "ovr": 75,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 75
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

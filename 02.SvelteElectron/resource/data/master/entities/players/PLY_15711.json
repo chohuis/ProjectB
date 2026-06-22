@@ -1,6 +1,6 @@
 {
   "id": "PLY_15711",
-  "name": "마르티네스 제이슨",
+  "name": "Martinez Jason",
   "nameEn": "Martinez Jason",
   "role": "player",
   "age": 34,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 71,
   "popularity": 25,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 69,
       "proServiceYears": 12,
       "pitching": {
-        "ovr": 69,
-        "stamina": 70,
-        "velocity": 83,
-        "command": 72,
-        "control": 70,
-        "movement": 59,
-        "mentality": 72,
-        "recovery": 54,
-        "clutch": 65,
-        "holdRunners": 66
+        "ovr": 55,
+        "stamina": 56,
+        "velocity": 66,
+        "command": 57,
+        "control": 56,
+        "movement": 47,
+        "mentality": 57,
+        "recovery": 43,
+        "clutch": 52,
+        "holdRunners": 53
       },
       "batting": {
         "ovr": 55,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 55
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

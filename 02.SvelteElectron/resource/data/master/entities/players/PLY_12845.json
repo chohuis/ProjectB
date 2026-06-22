@@ -1,7 +1,7 @@
 {
   "id": "PLY_12845",
-  "name": "존스 그랜트",
-  "nameEn": "Jones Grant",
+  "name": "Adams Marcus",
+  "nameEn": "Adams Marcus",
   "role": "player",
   "age": 19,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 65,
-  "popularity": 14,
+  "notes": "국적:베네수엘라",
+  "diligence": 67,
+  "popularity": 10,
   "militaryStatus": "군필",
   "entryYear": 2044,
   "entryLeague": "LEAGUE_ABL",
@@ -22,52 +22,42 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "SP",
-      "jerseyNumber": 44,
+      "jerseyNumber": 71,
       "primaryPosition": "SP",
-      "developmentRate": 73,
-      "potentialHidden": 93,
+      "developmentRate": 65,
+      "potentialHidden": 72,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 57,
+        "ovr": 56,
         "stamina": 49,
-        "velocity": 64,
-        "command": 48,
-        "control": 55,
-        "movement": 50,
-        "mentality": 61,
-        "recovery": 54,
-        "clutch": 54,
-        "holdRunners": 44
+        "velocity": 59,
+        "command": 58,
+        "control": 47,
+        "movement": 46,
+        "mentality": 54,
+        "recovery": 50,
+        "clutch": 47,
+        "holdRunners": 55
       },
       "batting": {
-        "ovr": 61,
-        "contact": 55,
-        "power": 54,
-        "eye": 63,
-        "discipline": 55,
-        "speed": 56,
-        "baseInstinct": 54,
-        "bunting": 42,
+        "ovr": 56,
+        "contact": 47,
+        "power": 55,
+        "eye": 47,
+        "discipline": 58,
+        "speed": 62,
+        "baseInstinct": 51,
+        "bunting": 50,
         "platoon": 50,
-        "fielding": 56,
-        "arm": 50,
-        "battingClutch": 60
+        "fielding": 57,
+        "arm": 49,
+        "battingClutch": 53
       },
       "positionRatings": {
-        "SP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 56
+      }
     },
     "coach": null,
     "manager": null,

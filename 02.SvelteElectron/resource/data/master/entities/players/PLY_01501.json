@@ -1,14 +1,14 @@
 {
   "id": "PLY_01501",
   "name": "무어 알레한드로",
-  "nameEn": "Mu 어 알레한드로",
+  "nameEn": "Moore Alejandro",
   "role": "player",
-  "age": 40,
+  "age": 41,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_RIVERCARDINALS",
-  "teamId": "TEAM_ABL_RIVERCARDINALS_1",
+  "clubId": "CLUB_ABL_BAL",
+  "teamId": "TEAM_ABL_BAL",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 6,
       "pitching": {
-        "ovr": 76,
-        "stamina": 76,
-        "velocity": 74,
-        "command": 74,
-        "control": 78,
-        "movement": 72,
-        "mentality": 74,
-        "recovery": 80,
-        "clutch": 75,
-        "holdRunners": 73
+        "ovr": 83,
+        "stamina": 75,
+        "velocity": 86,
+        "command": 87,
+        "control": 85,
+        "movement": 85,
+        "mentality": 82,
+        "recovery": 79
       },
       "batting": {
-        "ovr": 58,
-        "contact": 58,
-        "power": 59,
-        "eye": 61,
-        "discipline": 61,
-        "speed": 58,
-        "fielding": 63,
-        "arm": 62,
-        "battingClutch": 49,
-        "baseInstinct": 53,
-        "bunting": 43,
-        "platoon": 54
+        "ovr": 54,
+        "contact": 59,
+        "power": 61,
+        "eye": 56,
+        "discipline": 60,
+        "speed": 60,
+        "fielding": 55,
+        "arm": 57,
+        "battingClutch": 62
       },
       "developmentRate": 52,
-      "potentialHidden": 92,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_KNUCKLEBALL",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 18,
-      "contract": {
-        "salary": 26300,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 92
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,17 +1,17 @@
 {
   "id": "COA_00203",
-  "name": "후지이 하야토",
-  "nameEn": "Fujii Hayato",
+  "name": "이시다 이사무",
+  "nameEn": "Ishida Isamu",
   "role": "coach",
-  "age": 52,
+  "age": 56,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
-  "clubId": "CLUB_JBL_CL_TIDERAVES",
-  "teamId": "TEAM_JBL_CL_TIDERAVES_2",
+  "clubId": "CLUB_JBL_PL_POLARBEARS",
+  "teamId": "TEAM_JBL_PL_POLARBEARS_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
@@ -43,16 +43,16 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "멘탈",
-      "experienceYears": 6,
+      "specialty": "수비",
+      "experienceYears": 17,
       "stats": {
-        "teaching": 81,
-        "analysis": 76,
-        "communication": 68,
-        "discipline": 57,
-        "leadership": 83
+        "teaching": 76,
+        "analysis": 66,
+        "communication": 62,
+        "discipline": 59,
+        "leadership": 52
       },
-      "trainingBuffs": ""
+      "trainingBuffs": "제구 훈련 +2%"
     },
     "manager": {
       "style": "균형",

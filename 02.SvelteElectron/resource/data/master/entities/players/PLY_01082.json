@@ -1,14 +1,14 @@
 {
   "id": "PLY_01082",
   "name": "카터 마이클",
-  "nameEn": "Ka 터 마이클",
+  "nameEn": "Carter Michael",
   "role": "player",
   "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_PEACHTREEFALCONS",
-  "teamId": "TEAM_ABL_PEACHTREEFALCONS_2",
+  "clubId": "CLUB_ABL_HOU",
+  "teamId": "TEAM_ABL_HOU_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
@@ -19,48 +19,28 @@
       "position": "C",
       "jerseyNumber": 52,
       "pitching": {
-        "ovr": 62,
-        "stamina": 60,
-        "velocity": 66,
-        "command": 65,
-        "control": 66,
-        "movement": 59,
-        "mentality": 59,
-        "recovery": 59,
-        "clutch": 58,
-        "holdRunners": 55
+        "ovr": 57,
+        "stamina": 54,
+        "velocity": 57,
+        "command": 51,
+        "control": 50,
+        "movement": 55,
+        "mentality": 50,
+        "recovery": 51
       },
       "batting": {
-        "ovr": 82,
-        "contact": 81,
-        "power": 77,
-        "eye": 85,
-        "discipline": 87,
-        "speed": 89,
-        "fielding": 79,
-        "arm": 84,
-        "battingClutch": 78,
-        "baseInstinct": 73,
-        "bunting": 76,
-        "platoon": 79
+        "ovr": 86,
+        "contact": 85,
+        "power": 86,
+        "eye": 86,
+        "discipline": 79,
+        "speed": 77,
+        "fielding": 83,
+        "arm": 88,
+        "battingClutch": 86
       },
       "developmentRate": 46,
-      "potentialHidden": 88,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 82
-      },
-      "proServiceYears": 6,
-      "contract": {
-        "salary": 15500,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 88
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

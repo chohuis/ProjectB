@@ -1,6 +1,6 @@
 {
   "id": "PLY_14966",
-  "name": "앤더슨 로건",
+  "name": "Anderson Logan",
   "nameEn": "Anderson Logan",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 79,
   "popularity": 50,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 82,
       "proServiceYears": 4,
       "pitching": {
-        "ovr": 72,
-        "stamina": 74,
-        "velocity": 70,
-        "command": 61,
-        "control": 71,
-        "movement": 71,
-        "mentality": 69,
-        "recovery": 66,
-        "clutch": 65,
-        "holdRunners": 66
+        "ovr": 73,
+        "stamina": 75,
+        "velocity": 71,
+        "command": 62,
+        "control": 72,
+        "movement": 72,
+        "mentality": 70,
+        "recovery": 67,
+        "clutch": 66,
+        "holdRunners": 67
       },
       "batting": {
         "ovr": 73,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

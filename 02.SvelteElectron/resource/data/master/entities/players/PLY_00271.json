@@ -1,7 +1,7 @@
 {
   "id": "PLY_00271",
   "name": "민태민",
-  "nameEn": "Min Taemin",
+  "nameEn": "Ha Tae-woo",
   "role": "player",
   "age": 19,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "C",
       "jerseyNumber": 11,
       "pitching": {
-        "ovr": 44,
-        "stamina": 50,
-        "velocity": 47,
-        "command": 48,
-        "control": 44,
-        "movement": 43,
-        "mentality": 44,
-        "recovery": 43,
-        "clutch": 37,
-        "holdRunners": 34
+        "ovr": 41,
+        "stamina": 41,
+        "velocity": 41,
+        "command": 39,
+        "control": 42,
+        "movement": 33,
+        "mentality": 39,
+        "recovery": 37
       },
       "batting": {
-        "ovr": 64,
-        "contact": 71,
-        "power": 70,
-        "eye": 69,
+        "ovr": 67,
+        "contact": 65,
+        "power": 68,
+        "eye": 59,
         "discipline": 67,
-        "speed": 65,
-        "fielding": 60,
-        "arm": 64,
-        "battingClutch": 54,
-        "baseInstinct": 56,
-        "bunting": 52,
-        "platoon": 50
+        "speed": 58,
+        "fielding": 67,
+        "arm": 68,
+        "battingClutch": 68
       },
       "developmentRate": 55,
-      "potentialHidden": 62,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 64
-      }
+      "potentialHidden": 62
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

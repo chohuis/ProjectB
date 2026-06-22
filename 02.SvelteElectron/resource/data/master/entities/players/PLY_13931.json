@@ -1,9 +1,9 @@
 {
   "id": "PLY_13931",
-  "name": "워커 데릭",
-  "nameEn": "Walker Derek",
+  "name": "Lee Grant",
+  "nameEn": "Lee Grant",
   "role": "player",
-  "age": 26,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 56,
-  "popularity": 46,
+  "notes": "국적:미국",
+  "diligence": 58,
+  "popularity": 29,
   "militaryStatus": "군필",
   "entryYear": 2050,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 26,
+  "entryAge": 21,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 96,
+      "jerseyNumber": 45,
       "primaryPosition": "SP",
-      "developmentRate": 60,
-      "potentialHidden": 75,
-      "proServiceYears": 4,
+      "developmentRate": 62,
+      "potentialHidden": 87,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 66,
-        "stamina": 63,
-        "velocity": 70,
-        "command": 61,
-        "control": 63,
-        "movement": 67,
-        "mentality": 63,
-        "recovery": 66,
-        "clutch": 63,
-        "holdRunners": 56
+        "ovr": 63,
+        "stamina": 65,
+        "velocity": 65,
+        "command": 57,
+        "control": 54,
+        "movement": 60,
+        "mentality": 61,
+        "recovery": 57,
+        "clutch": 62,
+        "holdRunners": 49
       },
       "batting": {
-        "ovr": 73,
-        "contact": 73,
-        "power": 67,
-        "eye": 70,
-        "discipline": 64,
-        "speed": 72,
-        "baseInstinct": 71,
-        "bunting": 60,
+        "ovr": 63,
+        "contact": 58,
+        "power": 59,
+        "eye": 55,
+        "discipline": 53,
+        "speed": 60,
+        "baseInstinct": 58,
+        "bunting": 53,
         "platoon": 50,
-        "fielding": 65,
-        "arm": 72,
-        "battingClutch": 73
+        "fielding": 56,
+        "arm": 59,
+        "battingClutch": 50
       },
       "positionRatings": {
-        "SP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "SP": 63
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_14422",
-  "name": "테일러 트레버",
+  "name": "Taylor Trevor",
   "nameEn": "Taylor Trevor",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 63,
   "popularity": 23,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 52
       },
       "batting": {
-        "ovr": 59,
-        "contact": 60,
-        "power": 49,
-        "eye": 61,
-        "discipline": 51,
-        "speed": 61,
-        "baseInstinct": 56,
-        "bunting": 47,
-        "platoon": 49,
-        "fielding": 48,
-        "arm": 52,
-        "battingClutch": 48
+        "ovr": 60,
+        "contact": 61,
+        "power": 50,
+        "eye": 62,
+        "discipline": 52,
+        "speed": 62,
+        "baseInstinct": 57,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 53,
+        "battingClutch": 49
       },
       "positionRatings": {
         "SS": 60

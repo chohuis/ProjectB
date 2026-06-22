@@ -1,9 +1,9 @@
 {
   "id": "PLY_13070",
-  "name": "무어 케빈",
-  "nameEn": "Moore Kevin",
+  "name": "Carter Dylan",
+  "nameEn": "Carter Dylan",
   "role": "player",
-  "age": 35,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 81,
-  "popularity": 34,
+  "notes": "국적:베네수엘라",
+  "diligence": 46,
+  "popularity": 11,
   "militaryStatus": "군필",
   "entryYear": 2045,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 35,
+  "entryAge": 20,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 59,
+      "jerseyNumber": 22,
       "primaryPosition": "SP",
-      "developmentRate": 48,
-      "potentialHidden": 60,
-      "proServiceYears": 13,
+      "developmentRate": 79,
+      "potentialHidden": 76,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 66,
-        "stamina": 67,
-        "velocity": 76,
-        "command": 60,
-        "control": 67,
-        "movement": 71,
-        "mentality": 67,
-        "recovery": 67,
-        "clutch": 60,
-        "holdRunners": 59
+        "ovr": 57,
+        "stamina": 50,
+        "velocity": 65,
+        "command": 54,
+        "control": 62,
+        "movement": 54,
+        "mentality": 53,
+        "recovery": 50,
+        "clutch": 47,
+        "holdRunners": 55
       },
       "batting": {
-        "ovr": 58,
-        "contact": 55,
-        "power": 51,
-        "eye": 52,
-        "discipline": 53,
-        "speed": 58,
+        "ovr": 57,
+        "contact": 59,
+        "power": 53,
+        "eye": 51,
+        "discipline": 56,
+        "speed": 53,
         "baseInstinct": 55,
-        "bunting": 40,
+        "bunting": 48,
         "platoon": 50,
-        "fielding": 48,
-        "arm": 52,
-        "battingClutch": 50
+        "fielding": 51,
+        "arm": 53,
+        "battingClutch": 53
       },
       "positionRatings": {
-        "SP": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 57
+      }
     },
     "coach": null,
     "manager": null,

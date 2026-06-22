@@ -1,69 +1,46 @@
 {
   "id": "PLY_01657",
-  "name": "문성민",
-  "nameEn": "Moon Seongmin",
+  "name": "야마구치 슌",
+  "nameEn": "Yamaguchi Shun",
   "role": "player",
-  "age": 16,
+  "age": 30,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
-  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_CHUNCHEON_HIGHLAND",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONDRAKES",
+  "teamId": "TEAM_JBL_CL_IRONDRAKES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
-      "position": "RP",
-      "jerseyNumber": 6,
+      "position": "SP",
+      "jerseyNumber": 32,
       "pitching": {
-        "ovr": 53,
-        "stamina": 49,
-        "velocity": 49,
-        "command": 49,
-        "control": 49,
-        "movement": 56,
-        "mentality": 58,
-        "recovery": 53,
-        "clutch": 50,
-        "holdRunners": 52
+        "ovr": 71,
+        "stamina": 73,
+        "velocity": 73,
+        "command": 73,
+        "control": 73,
+        "movement": 73,
+        "mentality": 70,
+        "recovery": 73
       },
       "batting": {
-        "ovr": 35,
-        "contact": 41,
-        "power": 35,
-        "eye": 38,
-        "discipline": 32,
-        "speed": 38,
-        "fielding": 32,
-        "arm": 37,
-        "battingClutch": 40,
-        "baseInstinct": 38,
-        "bunting": 38,
-        "platoon": 35
+        "ovr": 48,
+        "contact": 51,
+        "power": 53,
+        "eye": 47,
+        "discipline": 51,
+        "speed": 48,
+        "fielding": 50,
+        "arm": 46,
+        "battingClutch": 50
       },
-      "developmentRate": 64,
-      "potentialHidden": 87,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 53
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_KNUCKLEBALL",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        }
-      ]
+      "developmentRate": 49,
+      "potentialHidden": 91
     },
     "coach": {
       "specialty": "-",
@@ -103,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 64,
-  "popularity": 42
+  }
 }

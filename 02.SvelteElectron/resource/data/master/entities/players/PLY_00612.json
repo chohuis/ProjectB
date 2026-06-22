@@ -1,14 +1,14 @@
 {
   "id": "PLY_00612",
   "name": "강준영",
-  "nameEn": "Kang Junyeong",
+  "nameEn": "Ku Ji-sung",
   "role": "player",
   "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_SOARINGEAGLES",
-  "teamId": "TEAM_KBL_SOARINGEAGLES_1",
+  "clubId": "CLUB_KBL_DOOSAN",
+  "teamId": "TEAM_KBL_DOOSAN_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -20,47 +20,27 @@
       "jerseyNumber": 17,
       "pitching": {
         "ovr": 65,
-        "stamina": 69,
-        "velocity": 67,
+        "stamina": 61,
+        "velocity": 65,
         "command": 68,
         "control": 64,
-        "movement": 61,
-        "mentality": 61,
-        "recovery": 62,
-        "clutch": 54,
-        "holdRunners": 54
+        "movement": 63,
+        "mentality": 59,
+        "recovery": 63
       },
       "batting": {
-        "ovr": 85,
-        "contact": 90,
-        "power": 80,
-        "eye": 87,
-        "discipline": 89,
-        "speed": 80,
-        "fielding": 81,
-        "arm": 82,
-        "battingClutch": 77,
-        "baseInstinct": 81,
-        "bunting": 78,
-        "platoon": 82
+        "ovr": 90,
+        "contact": 91,
+        "power": 82,
+        "eye": 91,
+        "discipline": 91,
+        "speed": 91,
+        "fielding": 90,
+        "arm": 90,
+        "battingClutch": 86
       },
       "developmentRate": 37,
-      "potentialHidden": 77,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 85
-      },
-      "proServiceYears": 2,
-      "contract": {
-        "salary": 5100,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 77
     },
     "coach": {
       "specialty": "-",
@@ -100,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

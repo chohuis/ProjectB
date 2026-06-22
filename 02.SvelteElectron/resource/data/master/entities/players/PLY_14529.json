@@ -1,6 +1,6 @@
 {
   "id": "PLY_14529",
-  "name": "베이커 케빈",
+  "name": "Baker Kevin",
   "nameEn": "Baker Kevin",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 79,
   "popularity": 47,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 58
       },
       "batting": {
-        "ovr": 65,
-        "contact": 66,
-        "power": 55,
-        "eye": 57,
-        "discipline": 58,
-        "speed": 65,
-        "baseInstinct": 58,
-        "bunting": 50,
-        "platoon": 49,
-        "fielding": 56,
-        "arm": 63,
-        "battingClutch": 54
+        "ovr": 67,
+        "contact": 68,
+        "power": 57,
+        "eye": 59,
+        "discipline": 60,
+        "speed": 67,
+        "baseInstinct": 60,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 65,
+        "battingClutch": 56
       },
       "positionRatings": {
         "1B": 67

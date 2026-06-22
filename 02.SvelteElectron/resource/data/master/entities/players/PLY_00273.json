@@ -1,7 +1,7 @@
 {
   "id": "PLY_00273",
   "name": "문찬영",
-  "nameEn": "Moon Chanyeong",
+  "nameEn": "Cha Tae-woo",
   "role": "player",
   "age": 22,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "1B",
       "jerseyNumber": 13,
       "pitching": {
-        "ovr": 24,
-        "stamina": 22,
-        "velocity": 21,
+        "ovr": 27,
+        "stamina": 25,
+        "velocity": 31,
         "command": 29,
-        "control": 22,
-        "movement": 29,
-        "mentality": 24,
-        "recovery": 22,
-        "clutch": 42,
-        "holdRunners": 33
+        "control": 30,
+        "movement": 26,
+        "mentality": 26,
+        "recovery": 32
       },
       "batting": {
-        "ovr": 44,
-        "contact": 47,
-        "power": 50,
-        "eye": 47,
-        "discipline": 39,
-        "speed": 47,
-        "fielding": 44,
-        "arm": 39,
-        "battingClutch": 42,
-        "baseInstinct": 45,
-        "bunting": 34,
-        "platoon": 36
+        "ovr": 50,
+        "contact": 55,
+        "power": 56,
+        "eye": 50,
+        "discipline": 47,
+        "speed": 43,
+        "fielding": 52,
+        "arm": 48,
+        "battingClutch": 53
       },
       "developmentRate": 65,
-      "potentialHidden": 58,
-      "primaryPosition": "1B",
-      "positionRatings": {
-        "1B": 44
-      }
+      "potentialHidden": 58
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

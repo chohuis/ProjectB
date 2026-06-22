@@ -1,9 +1,9 @@
 {
   "id": "PLY_12437",
-  "name": "에르난데스 칼렙",
-  "nameEn": "Hernandez Caleb",
+  "name": "Lee Trevor",
+  "nameEn": "Lee Trevor",
   "role": "player",
-  "age": 22,
+  "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 53,
-  "popularity": 15,
+  "notes": "국적:일본",
+  "diligence": 84,
+  "popularity": 39,
   "militaryStatus": "군필",
   "entryYear": 2041,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 22,
+  "entryAge": 25,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 67,
+      "jerseyNumber": 42,
       "primaryPosition": "SP",
-      "developmentRate": 78,
-      "potentialHidden": 61,
-      "proServiceYears": 0,
+      "developmentRate": 58,
+      "potentialHidden": 73,
+      "proServiceYears": 3,
       "pitching": {
-        "ovr": 54,
-        "stamina": 55,
-        "velocity": 52,
-        "command": 57,
-        "control": 55,
-        "movement": 47,
-        "mentality": 58,
-        "recovery": 53,
-        "clutch": 46,
-        "holdRunners": 42
+        "ovr": 77,
+        "stamina": 69,
+        "velocity": 76,
+        "command": 80,
+        "control": 73,
+        "movement": 79,
+        "mentality": 80,
+        "recovery": 66,
+        "clutch": 77,
+        "holdRunners": 64
       },
       "batting": {
-        "ovr": 57,
-        "contact": 57,
-        "power": 53,
-        "eye": 55,
-        "discipline": 59,
-        "speed": 60,
-        "baseInstinct": 55,
-        "bunting": 44,
+        "ovr": 77,
+        "contact": 75,
+        "power": 74,
+        "eye": 79,
+        "discipline": 67,
+        "speed": 79,
+        "baseInstinct": 78,
+        "bunting": 63,
         "platoon": 50,
-        "fielding": 55,
-        "arm": 53,
-        "battingClutch": 46
+        "fielding": 73,
+        "arm": 77,
+        "battingClutch": 74
       },
       "positionRatings": {
-        "SP": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 77
+      }
     },
     "coach": null,
     "manager": null,

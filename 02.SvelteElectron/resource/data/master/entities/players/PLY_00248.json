@@ -1,7 +1,7 @@
 {
   "id": "PLY_00248",
   "name": "배준우",
-  "nameEn": "Bae Junu",
+  "nameEn": "Kang Tae-hyun",
   "role": "player",
   "age": 21,
   "status": "active",
@@ -19,47 +19,28 @@
       "position": "RP",
       "jerseyNumber": 8,
       "pitching": {
-        "ovr": 58,
-        "stamina": 63,
-        "velocity": 54,
-        "command": 60,
-        "control": 59,
-        "movement": 60,
-        "mentality": 63,
-        "recovery": 54,
-        "clutch": 55,
-        "holdRunners": 53
+        "ovr": 62,
+        "stamina": 52,
+        "velocity": 64,
+        "command": 58,
+        "control": 56,
+        "movement": 58,
+        "mentality": 55,
+        "recovery": 60
       },
       "batting": {
-        "ovr": 40,
-        "contact": 46,
-        "power": 38,
-        "eye": 44,
-        "discipline": 38,
-        "speed": 45,
-        "fielding": 46,
-        "arm": 39,
-        "battingClutch": 42,
-        "baseInstinct": 40,
-        "bunting": 31,
-        "platoon": 43
+        "ovr": 33,
+        "contact": 37,
+        "power": 35,
+        "eye": 34,
+        "discipline": 37,
+        "speed": 36,
+        "fielding": 39,
+        "arm": 32,
+        "battingClutch": 37
       },
       "developmentRate": 48,
-      "potentialHidden": 88,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 88
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

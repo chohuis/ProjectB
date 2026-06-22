@@ -1,7 +1,7 @@
 {
   "id": "PLY_00249",
   "name": "송민준",
-  "nameEn": "Song Minjun",
+  "nameEn": "Cho Tae-woo",
   "role": "player",
   "age": 20,
   "status": "active",
@@ -19,47 +19,28 @@
       "position": "CP",
       "jerseyNumber": 9,
       "pitching": {
-        "ovr": 59,
-        "stamina": 64,
-        "velocity": 62,
-        "command": 55,
-        "control": 55,
-        "movement": 58,
-        "mentality": 61,
-        "recovery": 55,
-        "clutch": 50,
-        "holdRunners": 48
+        "ovr": 64,
+        "stamina": 55,
+        "velocity": 68,
+        "command": 63,
+        "control": 63,
+        "movement": 65,
+        "mentality": 62,
+        "recovery": 58
       },
       "batting": {
         "ovr": 41,
-        "contact": 36,
+        "contact": 34,
         "power": 39,
-        "eye": 42,
-        "discipline": 40,
-        "speed": 40,
-        "fielding": 40,
-        "arm": 44,
-        "battingClutch": 46,
-        "baseInstinct": 34,
-        "bunting": 40,
-        "platoon": 32
+        "eye": 34,
+        "discipline": 33,
+        "speed": 37,
+        "fielding": 38,
+        "arm": 32,
+        "battingClutch": 37
       },
       "developmentRate": 62,
-      "potentialHidden": 69,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        }
-      ]
+      "potentialHidden": 69
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

@@ -1,7 +1,7 @@
 {
   "id": "PLY_00233",
   "name": "이성우",
-  "nameEn": "Lee Seongu",
+  "nameEn": "Kwak Do-hyun",
   "role": "player",
   "age": 20,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "1B",
       "jerseyNumber": 13,
       "pitching": {
-        "ovr": 42,
-        "stamina": 39,
-        "velocity": 47,
-        "command": 47,
-        "control": 47,
-        "movement": 43,
-        "mentality": 41,
-        "recovery": 38,
-        "clutch": 38,
-        "holdRunners": 41
+        "ovr": 40,
+        "stamina": 32,
+        "velocity": 43,
+        "command": 34,
+        "control": 40,
+        "movement": 34,
+        "mentality": 34,
+        "recovery": 36
       },
       "batting": {
-        "ovr": 62,
-        "contact": 58,
-        "power": 58,
-        "eye": 60,
+        "ovr": 60,
+        "contact": 63,
+        "power": 69,
+        "eye": 59,
         "discipline": 60,
-        "speed": 59,
-        "fielding": 66,
+        "speed": 61,
+        "fielding": 58,
         "arm": 58,
-        "battingClutch": 62,
-        "baseInstinct": 50,
-        "bunting": 47,
-        "platoon": 48
+        "battingClutch": 66
       },
       "developmentRate": 63,
-      "potentialHidden": 59,
-      "primaryPosition": "1B",
-      "positionRatings": {
-        "1B": 62
-      }
+      "potentialHidden": 59
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

@@ -1,9 +1,9 @@
 {
   "id": "PLY_11703",
-  "name": "로드리게스 숀",
-  "nameEn": "Rodriguez Sean",
+  "name": "Clark Chris",
+  "nameEn": "Clark Chris",
   "role": "player",
-  "age": 21,
+  "age": 19,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 51,
-  "popularity": 45,
+  "notes": "국적:멕시코",
+  "diligence": 74,
+  "popularity": 31,
   "militaryStatus": "군필",
   "entryYear": 2037,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 21,
+  "entryAge": 19,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "SP",
-      "jerseyNumber": 2,
+      "jerseyNumber": 22,
       "primaryPosition": "SP",
-      "developmentRate": 57,
-      "potentialHidden": 65,
+      "developmentRate": 56,
+      "potentialHidden": 80,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 49,
-        "stamina": 47,
-        "velocity": 52,
-        "command": 41,
-        "control": 53,
-        "movement": 42,
-        "mentality": 43,
-        "recovery": 43,
-        "clutch": 46,
-        "holdRunners": 44
+        "ovr": 51,
+        "stamina": 43,
+        "velocity": 59,
+        "command": 43,
+        "control": 42,
+        "movement": 41,
+        "mentality": 45,
+        "recovery": 45,
+        "clutch": 47,
+        "holdRunners": 45
       },
       "batting": {
         "ovr": 51,
-        "contact": 45,
-        "power": 44,
-        "eye": 55,
-        "discipline": 53,
-        "speed": 45,
-        "baseInstinct": 43,
-        "bunting": 45,
+        "contact": 42,
+        "power": 52,
+        "eye": 47,
+        "discipline": 51,
+        "speed": 46,
+        "baseInstinct": 47,
+        "bunting": 32,
         "platoon": 50,
-        "fielding": 52,
-        "arm": 43,
-        "battingClutch": 38
+        "fielding": 41,
+        "arm": 44,
+        "battingClutch": 43
       },
       "positionRatings": {
         "SP": 51
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

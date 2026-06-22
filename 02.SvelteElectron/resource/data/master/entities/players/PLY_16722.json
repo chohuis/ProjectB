@@ -1,6 +1,6 @@
 {
   "id": "PLY_16722",
-  "name": "톰슨 코너",
+  "name": "Thompson Connor",
   "nameEn": "Thompson Connor",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 57,
   "popularity": 39,
   "militaryStatus": "군필",

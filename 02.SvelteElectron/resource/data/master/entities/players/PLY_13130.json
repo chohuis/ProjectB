@@ -1,9 +1,9 @@
 {
   "id": "PLY_13130",
-  "name": "해리스 다니엘",
-  "nameEn": "Harris Daniel",
+  "name": "Hall Cody",
+  "nameEn": "Hall Cody",
   "role": "player",
-  "age": 20,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 83,
-  "popularity": 34,
+  "notes": "국적:일본",
+  "diligence": 71,
+  "popularity": 43,
   "militaryStatus": "군필",
   "entryYear": 2045,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 20,
+  "entryAge": 22,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 22,
-      "primaryPosition": "SP",
-      "developmentRate": 63,
-      "potentialHidden": 78,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 55,
+      "primaryPosition": "1B",
+      "developmentRate": 66,
+      "potentialHidden": 67,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 60,
-        "stamina": 64,
-        "velocity": 67,
-        "command": 59,
-        "control": 55,
+        "ovr": 58,
+        "stamina": 52,
+        "velocity": 62,
+        "command": 56,
+        "control": 57,
         "movement": 55,
-        "mentality": 62,
-        "recovery": 56,
-        "clutch": 55,
-        "holdRunners": 58
+        "mentality": 52,
+        "recovery": 54,
+        "clutch": 46,
+        "holdRunners": 54
       },
       "batting": {
-        "ovr": 65,
-        "contact": 69,
-        "power": 59,
-        "eye": 68,
-        "discipline": 61,
-        "speed": 62,
-        "baseInstinct": 61,
-        "bunting": 55,
+        "ovr": 58,
+        "contact": 58,
+        "power": 47,
+        "eye": 62,
+        "discipline": 60,
+        "speed": 56,
+        "baseInstinct": 47,
+        "bunting": 44,
         "platoon": 50,
-        "fielding": 60,
-        "arm": 65,
-        "battingClutch": 55
+        "fielding": 49,
+        "arm": 51,
+        "battingClutch": 45
       },
       "positionRatings": {
-        "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "1B": 58
+      }
     },
     "coach": null,
     "manager": null,

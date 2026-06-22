@@ -1,9 +1,9 @@
 {
   "id": "PLY_10905",
-  "name": "윌리엄스 마커스",
-  "nameEn": "Williams Marcus",
+  "name": "Harris Daniel",
+  "nameEn": "Harris Daniel",
   "role": "player",
-  "age": 19,
+  "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 80,
-  "popularity": 37,
+  "notes": "국적:멕시코",
+  "diligence": 56,
+  "popularity": 16,
   "militaryStatus": "군필",
   "entryYear": 2032,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 19,
+  "entryAge": 25,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 52,
-      "primaryPosition": "SP",
-      "developmentRate": 74,
-      "potentialHidden": 72,
-      "proServiceYears": 0,
+      "position": "3B",
+      "jerseyNumber": 7,
+      "primaryPosition": "3B",
+      "developmentRate": 59,
+      "potentialHidden": 78,
+      "proServiceYears": 3,
       "pitching": {
-        "ovr": 57,
-        "stamina": 57,
-        "velocity": 64,
-        "command": 50,
-        "control": 53,
-        "movement": 50,
-        "mentality": 55,
-        "recovery": 49,
-        "clutch": 57,
-        "holdRunners": 46
+        "ovr": 70,
+        "stamina": 62,
+        "velocity": 77,
+        "command": 67,
+        "control": 62,
+        "movement": 64,
+        "mentality": 68,
+        "recovery": 69,
+        "clutch": 66,
+        "holdRunners": 60
       },
       "batting": {
-        "ovr": 61,
-        "contact": 60,
-        "power": 64,
-        "eye": 55,
-        "discipline": 58,
-        "speed": 57,
-        "baseInstinct": 63,
-        "bunting": 46,
+        "ovr": 70,
+        "contact": 61,
+        "power": 63,
+        "eye": 72,
+        "discipline": 61,
+        "speed": 72,
+        "baseInstinct": 68,
+        "bunting": 52,
         "platoon": 50,
-        "fielding": 58,
-        "arm": 52,
-        "battingClutch": 62
+        "fielding": 67,
+        "arm": 69,
+        "battingClutch": 66
       },
       "positionRatings": {
-        "SP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "3B": 70
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,7 +1,7 @@
 {
   "id": "PLY_12244",
-  "name": "라이트 카를로스",
-  "nameEn": "Wright Carlos",
+  "name": "Jones Hunter",
+  "nameEn": "Jones Hunter",
   "role": "player",
   "age": 21,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 48,
-  "popularity": 22,
+  "notes": "국적:멕시코",
+  "diligence": 61,
+  "popularity": 20,
   "militaryStatus": "군필",
   "entryYear": 2040,
   "entryLeague": "LEAGUE_ABL",
@@ -22,52 +22,42 @@
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 40,
+      "jerseyNumber": 58,
       "primaryPosition": "SP",
-      "developmentRate": 73,
-      "potentialHidden": 95,
+      "developmentRate": 59,
+      "potentialHidden": 91,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 56,
-        "stamina": 50,
-        "velocity": 53,
-        "command": 54,
-        "control": 48,
-        "movement": 59,
-        "mentality": 49,
-        "recovery": 51,
-        "clutch": 44,
-        "holdRunners": 48
+        "ovr": 67,
+        "stamina": 65,
+        "velocity": 76,
+        "command": 58,
+        "control": 64,
+        "movement": 66,
+        "mentality": 72,
+        "recovery": 67,
+        "clutch": 65,
+        "holdRunners": 62
       },
       "batting": {
-        "ovr": 60,
-        "contact": 55,
-        "power": 51,
-        "eye": 61,
-        "discipline": 58,
-        "speed": 65,
-        "baseInstinct": 51,
-        "bunting": 44,
+        "ovr": 67,
+        "contact": 66,
+        "power": 69,
+        "eye": 64,
+        "discipline": 59,
+        "speed": 71,
+        "baseInstinct": 63,
+        "bunting": 52,
         "platoon": 50,
-        "fielding": 60,
-        "arm": 51,
-        "battingClutch": 54
+        "fielding": 67,
+        "arm": 57,
+        "battingClutch": 66
       },
       "positionRatings": {
-        "SP": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 67
+      }
     },
     "coach": null,
     "manager": null,

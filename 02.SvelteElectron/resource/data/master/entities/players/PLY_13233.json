@@ -1,9 +1,9 @@
 {
   "id": "PLY_13233",
-  "name": "화이트 오스틴",
-  "nameEn": "White Austin",
+  "name": "Brown Tyler",
+  "nameEn": "Brown Tyler",
   "role": "player",
-  "age": 20,
+  "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 73,
-  "popularity": 35,
+  "notes": "국적:멕시코",
+  "diligence": 71,
+  "popularity": 37,
   "militaryStatus": "군필",
   "entryYear": 2046,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 20,
+  "entryAge": 26,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 2,
-      "primaryPosition": "SP",
-      "developmentRate": 56,
-      "potentialHidden": 80,
-      "proServiceYears": 0,
+      "position": "CF",
+      "jerseyNumber": 58,
+      "primaryPosition": "CF",
+      "developmentRate": 63,
+      "potentialHidden": 72,
+      "proServiceYears": 4,
       "pitching": {
-        "ovr": 57,
-        "stamina": 61,
-        "velocity": 65,
-        "command": 58,
-        "control": 50,
-        "movement": 49,
-        "mentality": 61,
-        "recovery": 55,
-        "clutch": 52,
-        "holdRunners": 49
+        "ovr": 67,
+        "stamina": 62,
+        "velocity": 73,
+        "command": 59,
+        "control": 67,
+        "movement": 68,
+        "mentality": 74,
+        "recovery": 57,
+        "clutch": 56,
+        "holdRunners": 58
       },
       "batting": {
-        "ovr": 61,
-        "contact": 60,
-        "power": 55,
-        "eye": 57,
-        "discipline": 53,
-        "speed": 56,
-        "baseInstinct": 50,
-        "bunting": 47,
+        "ovr": 67,
+        "contact": 71,
+        "power": 65,
+        "eye": 61,
+        "discipline": 66,
+        "speed": 71,
+        "baseInstinct": 67,
+        "bunting": 58,
         "platoon": 50,
-        "fielding": 55,
-        "arm": 51,
-        "battingClutch": 49
+        "fielding": 58,
+        "arm": 68,
+        "battingClutch": 58
       },
       "positionRatings": {
-        "SP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "CF": 67
+      }
     },
     "coach": null,
     "manager": null,

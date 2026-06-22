@@ -1,6 +1,6 @@
 {
   "id": "PLY_14774",
-  "name": "앤더슨 카를로스",
+  "name": "Anderson Carlos",
   "nameEn": "Anderson Carlos",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 65,
   "popularity": 27,
   "militaryStatus": "군필",

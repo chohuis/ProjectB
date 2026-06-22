@@ -1,72 +1,46 @@
 {
   "id": "PLY_01912",
-  "name": "남태우",
-  "nameEn": "Nam Taewoo",
+  "name": "오타 야마토",
+  "nameEn": "Ota Yamato",
   "role": "player",
-  "age": 26,
+  "age": 24,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_SKYGULLS",
-  "teamId": "TEAM_KBL_SKYGULLS_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
+  "teamId": "TEAM_JBL_PL_SPIRITBUFFALOS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
-      "handedness": "L",
-      "position": "LF",
-      "jerseyNumber": 41,
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "CP",
+      "jerseyNumber": 12,
       "pitching": {
-        "ovr": 48,
-        "stamina": 52,
-        "velocity": 49,
-        "command": 45,
-        "control": 48,
-        "movement": 48,
-        "mentality": 48,
-        "recovery": 46,
-        "clutch": 48,
-        "holdRunners": 37
+        "ovr": 74,
+        "stamina": 61,
+        "velocity": 83,
+        "command": 72,
+        "control": 73,
+        "movement": 74,
+        "mentality": 74,
+        "recovery": 70
       },
       "batting": {
-        "ovr": 68,
-        "contact": 73,
-        "power": 70,
-        "eye": 63,
-        "discipline": 67,
-        "speed": 67,
-        "fielding": 73,
-        "arm": 74,
-        "battingClutch": 67,
-        "baseInstinct": 66,
-        "bunting": 64,
-        "platoon": 63
+        "ovr": 43,
+        "contact": 48,
+        "power": 48,
+        "eye": 44,
+        "discipline": 43,
+        "speed": 43,
+        "fielding": 46,
+        "arm": 46,
+        "battingClutch": 46
       },
-      "developmentRate": 64,
-      "potentialHidden": 80,
-      "primaryPosition": "LF",
-      "positionRatings": {
-        "LF": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 43,
+      "potentialHidden": 66
     },
     "coach": {
       "specialty": "-",
@@ -106,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 44,
-  "popularity": 17
+  }
 }

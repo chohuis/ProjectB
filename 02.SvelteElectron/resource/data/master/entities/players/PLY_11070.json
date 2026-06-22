@@ -1,9 +1,9 @@
 {
   "id": "PLY_11070",
-  "name": "윌리엄스 제이크",
-  "nameEn": "Williams Jake",
+  "name": "Young Brandon",
+  "nameEn": "Young Brandon",
   "role": "player",
-  "age": 23,
+  "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 51,
-  "popularity": 46,
+  "notes": "국적:베네수엘라",
+  "diligence": 47,
+  "popularity": 34,
   "militaryStatus": "군필",
   "entryYear": 2033,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 23,
+  "entryAge": 25,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 28,
+      "jerseyNumber": 90,
       "primaryPosition": "SP",
-      "developmentRate": 66,
-      "potentialHidden": 85,
-      "proServiceYears": 1,
+      "developmentRate": 65,
+      "potentialHidden": 65,
+      "proServiceYears": 3,
       "pitching": {
-        "ovr": 62,
-        "stamina": 54,
-        "velocity": 64,
-        "command": 60,
-        "control": 61,
-        "movement": 55,
-        "mentality": 62,
-        "recovery": 52,
-        "clutch": 59,
-        "holdRunners": 53
+        "ovr": 66,
+        "stamina": 64,
+        "velocity": 71,
+        "command": 57,
+        "control": 70,
+        "movement": 60,
+        "mentality": 70,
+        "recovery": 65,
+        "clutch": 60,
+        "holdRunners": 57
       },
       "batting": {
-        "ovr": 67,
-        "contact": 64,
-        "power": 58,
-        "eye": 69,
-        "discipline": 65,
-        "speed": 62,
+        "ovr": 66,
+        "contact": 63,
+        "power": 66,
+        "eye": 65,
+        "discipline": 57,
+        "speed": 70,
         "baseInstinct": 65,
-        "bunting": 56,
+        "bunting": 51,
         "platoon": 50,
-        "fielding": 64,
-        "arm": 62,
+        "fielding": 68,
+        "arm": 58,
         "battingClutch": 67
       },
       "positionRatings": {
-        "SP": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 66
+      }
     },
     "coach": null,
     "manager": null,

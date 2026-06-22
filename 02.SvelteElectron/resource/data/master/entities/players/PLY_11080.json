@@ -1,9 +1,9 @@
 {
   "id": "PLY_11080",
-  "name": "데이비스 제이크",
-  "nameEn": "Davis Jake",
+  "name": "Williams Miguel",
+  "nameEn": "Williams Miguel",
   "role": "player",
-  "age": 21,
+  "age": 19,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 55,
-  "popularity": 49,
+  "notes": "국적:파나마",
+  "diligence": 50,
+  "popularity": 24,
   "militaryStatus": "군필",
   "entryYear": 2033,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 21,
+  "entryAge": 19,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 70,
+      "jerseyNumber": 14,
       "primaryPosition": "SP",
-      "developmentRate": 66,
-      "potentialHidden": 72,
+      "developmentRate": 63,
+      "potentialHidden": 90,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 59,
-        "stamina": 53,
-        "velocity": 66,
-        "command": 54,
-        "control": 63,
-        "movement": 52,
-        "mentality": 57,
-        "recovery": 49,
-        "clutch": 55,
-        "holdRunners": 49
+        "ovr": 53,
+        "stamina": 47,
+        "velocity": 51,
+        "command": 45,
+        "control": 53,
+        "movement": 45,
+        "mentality": 55,
+        "recovery": 47,
+        "clutch": 47,
+        "holdRunners": 50
       },
       "batting": {
-        "ovr": 63,
-        "contact": 63,
-        "power": 52,
-        "eye": 54,
-        "discipline": 53,
-        "speed": 59,
-        "baseInstinct": 59,
-        "bunting": 57,
+        "ovr": 53,
+        "contact": 53,
+        "power": 51,
+        "eye": 49,
+        "discipline": 45,
+        "speed": 60,
+        "baseInstinct": 56,
+        "bunting": 45,
         "platoon": 50,
-        "fielding": 58,
-        "arm": 60,
-        "battingClutch": 58
+        "fielding": 55,
+        "arm": 50,
+        "battingClutch": 43
       },
       "positionRatings": {
-        "SP": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+        "SP": 53
+      }
     },
     "coach": null,
     "manager": null,

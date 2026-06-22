@@ -1,6 +1,6 @@
 {
   "id": "PLY_14184",
-  "name": "해리스 크리스",
+  "name": "Harris Chris",
   "nameEn": "Harris Chris",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 79,
   "popularity": 44,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 63,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 58,
-        "stamina": 62,
-        "velocity": 62,
-        "command": 60,
-        "control": 55,
-        "movement": 57,
-        "mentality": 61,
-        "recovery": 52,
-        "clutch": 53,
-        "holdRunners": 46
+        "ovr": 59,
+        "stamina": 63,
+        "velocity": 63,
+        "command": 61,
+        "control": 56,
+        "movement": 58,
+        "mentality": 62,
+        "recovery": 53,
+        "clutch": 54,
+        "holdRunners": 47
       },
       "batting": {
         "ovr": 59,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

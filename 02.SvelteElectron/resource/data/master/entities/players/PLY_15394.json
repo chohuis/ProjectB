@@ -1,6 +1,6 @@
 {
   "id": "PLY_15394",
-  "name": "스콧 제이크",
+  "name": "Scott Jake",
   "nameEn": "Scott Jake",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 63,
   "popularity": 17,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 51
       },
       "batting": {
-        "ovr": 52,
-        "contact": 52,
-        "power": 48,
-        "eye": 52,
-        "discipline": 52,
-        "speed": 59,
-        "baseInstinct": 50,
-        "bunting": 33,
-        "platoon": 49,
-        "fielding": 41,
-        "arm": 54,
-        "battingClutch": 41
+        "ovr": 53,
+        "contact": 53,
+        "power": 49,
+        "eye": 53,
+        "discipline": 53,
+        "speed": 60,
+        "baseInstinct": 51,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 42,
+        "arm": 55,
+        "battingClutch": 42
       },
       "positionRatings": {
         "SS": 53

@@ -1,61 +1,46 @@
 {
   "id": "PLY_01668",
-  "name": "전도윤",
-  "nameEn": "Jeon Doyun",
+  "name": "타나카 진",
+  "nameEn": "Tanaka Jin",
   "role": "player",
-  "age": 17,
+  "age": 31,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
-  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_CHUNCHEON_HIGHLAND",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONDRAKES",
+  "teamId": "TEAM_JBL_CL_IRONDRAKES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "2B",
-      "jerseyNumber": 17,
+      "position": "1B",
+      "jerseyNumber": 43,
       "pitching": {
-        "ovr": 33,
-        "stamina": 34,
-        "velocity": 38,
-        "command": 37,
-        "control": 31,
-        "movement": 34,
+        "ovr": 25,
+        "stamina": 24,
+        "velocity": 30,
+        "command": 31,
+        "control": 22,
+        "movement": 24,
         "mentality": 30,
-        "recovery": 33,
-        "clutch": 43,
-        "holdRunners": 42
+        "recovery": 27
       },
       "batting": {
-        "ovr": 53,
-        "contact": 55,
-        "power": 59,
-        "eye": 54,
-        "discipline": 57,
-        "speed": 50,
-        "fielding": 50,
-        "arm": 58,
-        "battingClutch": 45,
-        "baseInstinct": 48,
-        "bunting": 42,
-        "platoon": 50
+        "ovr": 58,
+        "contact": 59,
+        "power": 62,
+        "eye": 56,
+        "discipline": 62,
+        "speed": 56,
+        "fielding": 57,
+        "arm": 55,
+        "battingClutch": 58
       },
-      "developmentRate": 89,
-      "potentialHidden": 64,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 53
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 40,
+      "potentialHidden": 75
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 62,
-  "popularity": 24
+  }
 }

@@ -1,6 +1,6 @@
 {
   "id": "PLY_16308",
-  "name": "클라크 에반",
+  "name": "Clark Evan",
   "nameEn": "Clark Evan",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 57,
   "popularity": 13,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 47
       },
       "batting": {
-        "ovr": 59,
-        "contact": 61,
-        "power": 54,
-        "eye": 61,
-        "discipline": 53,
-        "speed": 62,
-        "baseInstinct": 55,
-        "bunting": 43,
-        "platoon": 49,
-        "fielding": 53,
-        "arm": 59,
-        "battingClutch": 58
+        "ovr": 60,
+        "contact": 62,
+        "power": 55,
+        "eye": 62,
+        "discipline": 54,
+        "speed": 63,
+        "baseInstinct": 56,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 60,
+        "battingClutch": 59
       },
       "positionRatings": {
         "2B": 60

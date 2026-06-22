@@ -1,9 +1,9 @@
 {
   "id": "PLY_10328",
-  "name": "화이트 칼렙",
-  "nameEn": "White Caleb",
+  "name": "Scott Alex",
+  "nameEn": "Scott Alex",
   "role": "player",
-  "age": 20,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 75,
-  "popularity": 30,
+  "notes": "국적:일본",
+  "diligence": 56,
+  "popularity": 16,
   "militaryStatus": "군필",
   "entryYear": 2028,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 20,
+  "entryAge": 21,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 71,
-      "primaryPosition": "SP",
-      "developmentRate": 72,
-      "potentialHidden": 88,
+      "position": "CF",
+      "jerseyNumber": 68,
+      "primaryPosition": "CF",
+      "developmentRate": 71,
+      "potentialHidden": 72,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 50,
-        "stamina": 52,
-        "velocity": 48,
-        "command": 42,
-        "control": 51,
-        "movement": 51,
+        "ovr": 57,
+        "stamina": 59,
+        "velocity": 55,
+        "command": 55,
+        "control": 58,
+        "movement": 54,
         "mentality": 54,
-        "recovery": 42,
-        "clutch": 42,
-        "holdRunners": 48
+        "recovery": 47,
+        "clutch": 49,
+        "holdRunners": 47
       },
       "batting": {
-        "ovr": 53,
-        "contact": 48,
-        "power": 49,
-        "eye": 57,
-        "discipline": 49,
-        "speed": 53,
-        "baseInstinct": 52,
-        "bunting": 38,
+        "ovr": 57,
+        "contact": 59,
+        "power": 50,
+        "eye": 60,
+        "discipline": 51,
+        "speed": 50,
+        "baseInstinct": 49,
+        "bunting": 43,
         "platoon": 50,
-        "fielding": 48,
-        "arm": 55,
-        "battingClutch": 41
+        "fielding": 56,
+        "arm": 53,
+        "battingClutch": 44
       },
       "positionRatings": {
-        "SP": 53
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "CF": 57
+      }
     },
     "coach": null,
     "manager": null,

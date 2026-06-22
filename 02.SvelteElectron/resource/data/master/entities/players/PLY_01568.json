@@ -1,61 +1,46 @@
 {
   "id": "PLY_01568",
-  "name": "황현서",
-  "nameEn": "Hwang Hyeonseo",
+  "name": "기무라 아키라",
+  "nameEn": "Kimura Akira",
   "role": "player",
-  "age": 18,
+  "age": 32,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_DAEGU_HEAT",
-  "teamId": "TEAM_HS_DAEGU_HEAT",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_DAEGU_HEAT",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_NEONCRANES",
+  "teamId": "TEAM_JBL_CL_NEONCRANES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "SS",
-      "jerseyNumber": 27,
+      "position": "SP",
+      "jerseyNumber": 33,
       "pitching": {
-        "ovr": 32,
-        "stamina": 37,
-        "velocity": 31,
-        "command": 36,
-        "control": 32,
-        "movement": 31,
-        "mentality": 37,
-        "recovery": 29,
-        "clutch": 46,
-        "holdRunners": 41
+        "ovr": 61,
+        "stamina": 63,
+        "velocity": 64,
+        "command": 59,
+        "control": 60,
+        "movement": 59,
+        "mentality": 61,
+        "recovery": 60
       },
       "batting": {
-        "ovr": 52,
-        "contact": 52,
-        "power": 57,
-        "eye": 53,
-        "discipline": 56,
-        "speed": 56,
-        "fielding": 48,
-        "arm": 50,
-        "battingClutch": 50,
-        "baseInstinct": 41,
-        "bunting": 43,
-        "platoon": 44
+        "ovr": 33,
+        "contact": 29,
+        "power": 37,
+        "eye": 31,
+        "discipline": 34,
+        "speed": 29,
+        "fielding": 32,
+        "arm": 30,
+        "battingClutch": 31
       },
-      "developmentRate": 63,
-      "potentialHidden": 65,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 52
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 46,
+      "potentialHidden": 69
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 64,
-  "popularity": 32
+  }
 }

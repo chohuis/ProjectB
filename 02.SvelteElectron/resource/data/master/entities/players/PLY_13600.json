@@ -1,7 +1,7 @@
 {
   "id": "PLY_13600",
-  "name": "가르시아 헌터",
-  "nameEn": "Garcia Hunter",
+  "name": "Young Nathan",
+  "nameEn": "Young Nathan",
   "role": "player",
   "age": 31,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 68,
-  "popularity": 41,
+  "notes": "국적:파나마",
+  "diligence": 84,
+  "popularity": 39,
   "militaryStatus": "군필",
   "entryYear": 2048,
   "entryLeague": "LEAGUE_ABL",
@@ -21,57 +21,43 @@
   "entryAge": 31,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 3,
-      "primaryPosition": "SP",
-      "developmentRate": 52,
-      "potentialHidden": 59,
+      "position": "1B",
+      "jerseyNumber": 10,
+      "primaryPosition": "1B",
+      "developmentRate": 43,
+      "potentialHidden": 75,
       "proServiceYears": 9,
       "pitching": {
-        "ovr": 76,
-        "stamina": 74,
-        "velocity": 78,
-        "command": 66,
-        "control": 70,
-        "movement": 79,
-        "mentality": 73,
-        "recovery": 65,
-        "clutch": 75,
-        "holdRunners": 71
+        "ovr": 65,
+        "stamina": 64,
+        "velocity": 72,
+        "command": 59,
+        "control": 64,
+        "movement": 61,
+        "mentality": 67,
+        "recovery": 64,
+        "clutch": 60,
+        "holdRunners": 58
       },
       "batting": {
-        "ovr": 73,
-        "contact": 68,
-        "power": 72,
-        "eye": 67,
-        "discipline": 67,
-        "speed": 68,
-        "baseInstinct": 74,
-        "bunting": 55,
+        "ovr": 65,
+        "contact": 56,
+        "power": 56,
+        "eye": 57,
+        "discipline": 66,
+        "speed": 60,
+        "baseInstinct": 67,
+        "bunting": 51,
         "platoon": 50,
-        "fielding": 73,
-        "arm": 64,
-        "battingClutch": 66
+        "fielding": 67,
+        "arm": 65,
+        "battingClutch": 65
       },
       "positionRatings": {
-        "SP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "1B": 65
+      }
     },
     "coach": null,
     "manager": null,

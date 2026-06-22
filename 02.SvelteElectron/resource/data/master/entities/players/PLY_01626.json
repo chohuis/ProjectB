@@ -1,69 +1,46 @@
 {
   "id": "PLY_01626",
-  "name": "최지성",
-  "nameEn": "Choi Jiseong",
+  "name": "오타 시게루",
+  "nameEn": "Ota Shigeru",
   "role": "player",
-  "age": 16,
+  "age": 24,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_YEOSU_SHORE",
-  "teamId": "TEAM_HS_YEOSU_SHORE",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_YEOSU_SHORE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TEMPOSTINGS",
+  "teamId": "TEAM_JBL_CL_TEMPOSTINGS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 5,
+      "position": "SS",
+      "jerseyNumber": 46,
       "pitching": {
-        "ovr": 49,
-        "stamina": 51,
-        "velocity": 49,
-        "command": 54,
-        "control": 49,
-        "movement": 47,
-        "mentality": 52,
-        "recovery": 49,
-        "clutch": 37,
-        "holdRunners": 37
+        "ovr": 42,
+        "stamina": 44,
+        "velocity": 47,
+        "command": 38,
+        "control": 43,
+        "movement": 38,
+        "mentality": 43,
+        "recovery": 40
       },
       "batting": {
-        "ovr": 31,
-        "contact": 32,
-        "power": 27,
-        "eye": 30,
-        "discipline": 36,
-        "speed": 36,
-        "fielding": 26,
-        "arm": 27,
-        "battingClutch": 40,
-        "baseInstinct": 41,
-        "bunting": 34,
-        "platoon": 36
+        "ovr": 76,
+        "contact": 78,
+        "power": 69,
+        "eye": 76,
+        "discipline": 78,
+        "speed": 74,
+        "fielding": 76,
+        "arm": 70,
+        "battingClutch": 75
       },
-      "developmentRate": 86,
-      "potentialHidden": 65,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 49
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 50,
+      "potentialHidden": 63
     },
     "coach": {
       "specialty": "-",
@@ -103,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 79,
-  "popularity": 42
+  }
 }

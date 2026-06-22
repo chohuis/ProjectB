@@ -1,6 +1,6 @@
 {
   "id": "PLY_14008",
-  "name": "마르티네스 코너",
+  "name": "Martinez Connor",
   "nameEn": "Martinez Connor",
   "role": "player",
   "age": 30,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 63,
   "popularity": 47,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 47
       },
       "batting": {
-        "ovr": 58,
-        "contact": 49,
-        "power": 59,
-        "eye": 49,
-        "discipline": 59,
-        "speed": 55,
-        "baseInstinct": 53,
-        "bunting": 51,
-        "platoon": 57,
-        "fielding": 57,
-        "arm": 53,
-        "battingClutch": 53
+        "ovr": 51,
+        "contact": 43,
+        "power": 52,
+        "eye": 43,
+        "discipline": 52,
+        "speed": 48,
+        "baseInstinct": 47,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 47,
+        "battingClutch": 47
       },
       "positionRatings": {
         "C": 51

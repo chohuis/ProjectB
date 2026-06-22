@@ -1,9 +1,9 @@
 {
   "id": "PLY_10262",
-  "name": "애덤스 에릭",
-  "nameEn": "Adams Eric",
+  "name": "Lee Cody",
+  "nameEn": "Lee Cody",
   "role": "player",
-  "age": 35,
+  "age": 33,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 50,
-  "popularity": 27,
+  "notes": "국적:미국",
+  "diligence": 60,
+  "popularity": 35,
   "militaryStatus": "군필",
   "entryYear": 2028,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 35,
+  "entryAge": 33,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 74,
-      "primaryPosition": "SP",
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 96,
+      "primaryPosition": "CF",
       "developmentRate": 49,
-      "potentialHidden": 74,
-      "proServiceYears": 13,
+      "potentialHidden": 70,
+      "proServiceYears": 11,
       "pitching": {
-        "ovr": 65,
-        "stamina": 58,
-        "velocity": 70,
-        "command": 64,
-        "control": 70,
-        "movement": 59,
-        "mentality": 57,
-        "recovery": 67,
-        "clutch": 62,
-        "holdRunners": 49
+        "ovr": 66,
+        "stamina": 67,
+        "velocity": 76,
+        "command": 68,
+        "control": 68,
+        "movement": 69,
+        "mentality": 64,
+        "recovery": 61,
+        "clutch": 60,
+        "holdRunners": 58
       },
       "batting": {
-        "ovr": 57,
-        "contact": 62,
-        "power": 54,
-        "eye": 61,
-        "discipline": 59,
-        "speed": 59,
-        "baseInstinct": 57,
-        "bunting": 44,
+        "ovr": 66,
+        "contact": 70,
+        "power": 55,
+        "eye": 66,
+        "discipline": 69,
+        "speed": 65,
+        "baseInstinct": 68,
+        "bunting": 51,
         "platoon": 50,
-        "fielding": 47,
-        "arm": 56,
-        "battingClutch": 51
+        "fielding": 65,
+        "arm": 63,
+        "battingClutch": 66
       },
       "positionRatings": {
-        "SP": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "CF": 66
+      }
     },
     "coach": null,
     "manager": null,

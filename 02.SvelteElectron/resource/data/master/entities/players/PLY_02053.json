@@ -1,72 +1,46 @@
 {
   "id": "PLY_02053",
-  "name": "로건 미첼",
-  "nameEn": "Logan Mitchell",
+  "name": "오타 소타",
+  "nameEn": "Ota Sota",
   "role": "player",
-  "age": 26,
+  "age": 38,
   "status": "active",
-  "originLeagueId": "LEAGUE_ABL",
-  "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_HARBORHAWKS",
-  "teamId": "TEAM_ABL_HARBORHAWKS_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SUNS",
+  "teamId": "TEAM_JBL_PL_SUNS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "L",
-      "position": "SS",
-      "jerseyNumber": 78,
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 18,
       "pitching": {
-        "ovr": 22,
-        "stamina": 25,
-        "velocity": 22,
-        "command": 28,
-        "control": 25,
-        "movement": 22,
-        "mentality": 27,
-        "recovery": 20,
-        "clutch": 42,
-        "holdRunners": 40
+        "ovr": 62,
+        "stamina": 59,
+        "velocity": 65,
+        "command": 64,
+        "control": 66,
+        "movement": 63,
+        "mentality": 60,
+        "recovery": 64
       },
       "batting": {
-        "ovr": 42,
-        "contact": 45,
-        "power": 43,
-        "eye": 47,
-        "discipline": 46,
-        "speed": 39,
-        "fielding": 41,
-        "arm": 47,
-        "battingClutch": 40,
-        "baseInstinct": 40,
-        "bunting": 31,
-        "platoon": 37
+        "ovr": 86,
+        "contact": 88,
+        "power": 92,
+        "eye": 86,
+        "discipline": 90,
+        "speed": 86,
+        "fielding": 86,
+        "arm": 93,
+        "battingClutch": 85
       },
-      "developmentRate": 36,
-      "potentialHidden": 59,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 42
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 6300,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 48,
+      "potentialHidden": 75
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 77,
-  "popularity": 11,
-  "militaryStatus": "군필"
+  }
 }

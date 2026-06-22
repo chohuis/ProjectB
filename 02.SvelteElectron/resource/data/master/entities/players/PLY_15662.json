@@ -1,6 +1,6 @@
 {
   "id": "PLY_15662",
-  "name": "스콧 카를로스",
+  "name": "Scott Carlos",
   "nameEn": "Scott Carlos",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 65,
   "popularity": 29,
   "militaryStatus": "군필",

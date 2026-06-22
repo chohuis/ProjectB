@@ -1,6 +1,6 @@
 {
   "id": "PLY_16336",
-  "name": "톰슨 에반",
+  "name": "Thompson Evan",
   "nameEn": "Thompson Evan",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 46,
   "popularity": 42,
   "militaryStatus": "군필",

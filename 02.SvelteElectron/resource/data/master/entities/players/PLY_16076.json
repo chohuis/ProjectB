@@ -1,6 +1,6 @@
 {
   "id": "PLY_16076",
-  "name": "리 조던",
+  "name": "Lee Jordan",
   "nameEn": "Lee Jordan",
   "role": "player",
   "age": 31,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 58,
   "popularity": 41,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 49,
       "proServiceYears": 9,
       "pitching": {
-        "ovr": 58,
-        "stamina": 59,
-        "velocity": 67,
-        "command": 55,
-        "control": 64,
-        "movement": 61,
-        "mentality": 64,
-        "recovery": 48,
-        "clutch": 55,
-        "holdRunners": 42
+        "ovr": 51,
+        "stamina": 52,
+        "velocity": 59,
+        "command": 48,
+        "control": 56,
+        "movement": 54,
+        "mentality": 56,
+        "recovery": 42,
+        "clutch": 48,
+        "holdRunners": 37
       },
       "batting": {
         "ovr": 51,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 51
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,7 +1,7 @@
 {
   "id": "PLY_00334",
   "name": "주기훈",
-  "nameEn": "Joo Gihun",
+  "nameEn": "Kang Jin-woo",
   "role": "player",
   "age": 23,
   "status": "active",
@@ -19,48 +19,28 @@
       "position": "2B",
       "jerseyNumber": 14,
       "pitching": {
-        "ovr": 48,
-        "stamina": 45,
-        "velocity": 55,
-        "command": 45,
+        "ovr": 54,
+        "stamina": 49,
+        "velocity": 51,
+        "command": 55,
         "control": 53,
-        "movement": 50,
-        "mentality": 50,
-        "recovery": 48,
-        "clutch": 41,
-        "holdRunners": 43
+        "movement": 52,
+        "mentality": 52,
+        "recovery": 51
       },
       "batting": {
-        "ovr": 68,
-        "contact": 69,
+        "ovr": 73,
+        "contact": 75,
         "power": 71,
-        "eye": 67,
-        "discipline": 70,
-        "speed": 64,
-        "fielding": 65,
-        "arm": 70,
-        "battingClutch": 64,
-        "baseInstinct": 62,
-        "bunting": 54,
-        "platoon": 61
+        "eye": 71,
+        "discipline": 68,
+        "speed": 70,
+        "fielding": 72,
+        "arm": 74,
+        "battingClutch": 71
       },
       "developmentRate": 51,
-      "potentialHidden": 69,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 68
-      },
-      "proServiceYears": 3,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 69
     },
     "coach": {
       "specialty": "-",
@@ -100,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

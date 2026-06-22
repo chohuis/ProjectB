@@ -1,61 +1,46 @@
 {
   "id": "PLY_01801",
-  "name": "주준우",
-  "nameEn": "Joo Junwoo",
+  "name": "사카모토 쇼",
+  "nameEn": "Sakamoto Sho",
   "role": "player",
-  "age": 18,
+  "age": 23,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_JECHEON_RIDGE",
-  "teamId": "TEAM_HS_JECHEON_RIDGE",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_JECHEON_RIDGE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONSTORMS",
+  "teamId": "TEAM_JBL_CL_IRONSTORMS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "UT",
-      "jerseyNumber": 30,
+      "position": "C",
+      "jerseyNumber": 41,
       "pitching": {
-        "ovr": 43,
-        "stamina": 45,
-        "velocity": 49,
-        "command": 45,
-        "control": 46,
-        "movement": 39,
-        "mentality": 39,
-        "recovery": 45,
-        "clutch": 37,
-        "holdRunners": 44
+        "ovr": 37,
+        "stamina": 39,
+        "velocity": 38,
+        "command": 39,
+        "control": 37,
+        "movement": 40,
+        "mentality": 35,
+        "recovery": 38
       },
       "batting": {
-        "ovr": 63,
-        "contact": 68,
-        "power": 60,
-        "eye": 60,
-        "discipline": 58,
-        "speed": 64,
-        "fielding": 60,
-        "arm": 57,
-        "battingClutch": 56,
-        "baseInstinct": 56,
-        "bunting": 51,
-        "platoon": 60
+        "ovr": 62,
+        "contact": 65,
+        "power": 67,
+        "eye": 65,
+        "discipline": 63,
+        "speed": 56,
+        "fielding": 63,
+        "arm": 68,
+        "battingClutch": 65
       },
-      "developmentRate": 63,
-      "potentialHidden": 87,
-      "primaryPosition": "UT",
-      "positionRatings": {
-        "UT": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 49,
+      "potentialHidden": 68
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 54,
-  "popularity": 25
+  }
 }

@@ -1,72 +1,46 @@
 {
   "id": "PLY_01971",
-  "name": "양현서",
-  "nameEn": "Yang Hyeonseo",
+  "name": "사사키 오사무",
+  "nameEn": "Sasaki Osamu",
   "role": "player",
-  "age": 25,
+  "age": 31,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_ROYALLIONS",
-  "teamId": "TEAM_KBL_ROYALLIONS_1",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
+  "teamId": "TEAM_JBL_PL_MARINESOLDIERS_2",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
-      "handedness": "R",
-      "position": "LF",
-      "jerseyNumber": 66,
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 31,
       "pitching": {
-        "ovr": 29,
-        "stamina": 29,
-        "velocity": 29,
-        "command": 27,
-        "control": 26,
-        "movement": 33,
-        "mentality": 27,
-        "recovery": 33,
-        "clutch": 45,
-        "holdRunners": 36
+        "ovr": 78,
+        "stamina": 81,
+        "velocity": 80,
+        "command": 80,
+        "control": 73,
+        "movement": 75,
+        "mentality": 75,
+        "recovery": 73
       },
       "batting": {
-        "ovr": 49,
-        "contact": 50,
-        "power": 51,
-        "eye": 48,
-        "discipline": 47,
-        "speed": 51,
-        "fielding": 50,
+        "ovr": 53,
+        "contact": 51,
+        "power": 54,
+        "eye": 50,
+        "discipline": 53,
+        "speed": 53,
+        "fielding": 47,
         "arm": 47,
-        "battingClutch": 48,
-        "baseInstinct": 45,
-        "bunting": 36,
-        "platoon": 37
+        "battingClutch": 46
       },
-      "developmentRate": 66,
-      "potentialHidden": 57,
-      "primaryPosition": "LF",
-      "positionRatings": {
-        "LF": 49
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 3,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 40,
+      "potentialHidden": 70
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 53,
-  "popularity": 40,
-  "militaryStatus": "군필"
+  }
 }

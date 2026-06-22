@@ -1,17 +1,17 @@
 {
   "id": "COA_00218",
-  "name": "하시모토 히로시",
-  "nameEn": "Hashimoto Hiroshi",
+  "name": "야마자키 코지",
+  "nameEn": "Yamazaki Koji",
   "role": "coach",
-  "age": 50,
+  "age": 57,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
-  "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
-  "teamId": "TEAM_JBL_PL_THUNDERFALCONS_2",
+  "clubId": "CLUB_JBL_PL_SEAGULLS",
+  "teamId": "TEAM_JBL_PL_SEAGULLS_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
@@ -43,16 +43,16 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "타격",
-      "experienceYears": 6,
+      "specialty": "투수",
+      "experienceYears": 7,
       "stats": {
-        "teaching": 77,
-        "analysis": 66,
-        "communication": 80,
-        "discipline": 71,
-        "leadership": 74
+        "teaching": 53,
+        "analysis": 58,
+        "communication": 68,
+        "discipline": 55,
+        "leadership": 72
       },
-      "trainingBuffs": "컨택 훈련 +2%"
+      "trainingBuffs": "제구 훈련 +2%"
     },
     "manager": {
       "style": "균형",

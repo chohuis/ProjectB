@@ -1,6 +1,6 @@
 {
   "id": "PLY_16200",
-  "name": "화이트 마커스",
+  "name": "White Marcus",
   "nameEn": "White Marcus",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 75,
   "popularity": 11,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 37
       },
       "batting": {
-        "ovr": 50,
-        "contact": 44,
-        "power": 42,
-        "eye": 50,
-        "discipline": 46,
-        "speed": 47,
-        "baseInstinct": 44,
-        "bunting": 33,
-        "platoon": 49,
-        "fielding": 44,
-        "arm": 45,
-        "battingClutch": 49
+        "ovr": 51,
+        "contact": 45,
+        "power": 43,
+        "eye": 51,
+        "discipline": 47,
+        "speed": 48,
+        "baseInstinct": 45,
+        "bunting": 34,
+        "platoon": 50,
+        "fielding": 45,
+        "arm": 46,
+        "battingClutch": 50
       },
       "positionRatings": {
         "SS": 51

@@ -1,6 +1,6 @@
 {
   "id": "PLY_15678",
-  "name": "해리스 크리스",
+  "name": "Harris Chris",
   "nameEn": "Harris Chris",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 76,
   "popularity": 23,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 65
       },
       "batting": {
-        "ovr": 67,
-        "contact": 71,
-        "power": 58,
-        "eye": 65,
-        "discipline": 68,
-        "speed": 70,
-        "baseInstinct": 66,
-        "bunting": 49,
-        "platoon": 49,
-        "fielding": 58,
-        "arm": 67,
-        "battingClutch": 66
+        "ovr": 69,
+        "contact": 73,
+        "power": 60,
+        "eye": 67,
+        "discipline": 70,
+        "speed": 72,
+        "baseInstinct": 68,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 69,
+        "battingClutch": 68
       },
       "positionRatings": {
         "C": 69

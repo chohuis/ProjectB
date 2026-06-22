@@ -1,6 +1,6 @@
 {
   "id": "PLY_14831",
-  "name": "존슨 크리스",
+  "name": "Johnson Chris",
   "nameEn": "Johnson Chris",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 55,
   "popularity": 38,
   "militaryStatus": "군필",

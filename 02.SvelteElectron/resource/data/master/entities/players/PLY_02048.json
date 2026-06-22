@@ -1,72 +1,46 @@
 {
   "id": "PLY_02048",
-  "name": "앤서니 로빈슨",
-  "nameEn": "Anthony Robinson",
+  "name": "후지타 렌",
+  "nameEn": "Fujita Ren",
   "role": "player",
-  "age": 23,
+  "age": 38,
   "status": "active",
-  "originLeagueId": "LEAGUE_ABL",
-  "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_HARBORHAWKS",
-  "teamId": "TEAM_ABL_HARBORHAWKS_1",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SUNS",
+  "teamId": "TEAM_JBL_PL_SUNS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
-      "handedness": "L",
-      "position": "RF",
-      "jerseyNumber": 76,
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "CP",
+      "jerseyNumber": 13,
       "pitching": {
-        "ovr": 56,
-        "stamina": 57,
-        "velocity": 61,
-        "command": 61,
-        "control": 57,
-        "movement": 54,
-        "mentality": 61,
-        "recovery": 61,
-        "clutch": 53,
-        "holdRunners": 51
+        "ovr": 75,
+        "stamina": 58,
+        "velocity": 78,
+        "command": 67,
+        "control": 70,
+        "movement": 68,
+        "mentality": 70,
+        "recovery": 73
       },
       "batting": {
-        "ovr": 76,
-        "contact": 78,
-        "power": 81,
-        "eye": 71,
-        "discipline": 79,
-        "speed": 75,
-        "fielding": 73,
-        "arm": 82,
-        "battingClutch": 70,
-        "baseInstinct": 69,
-        "bunting": 70,
-        "platoon": 67
+        "ovr": 42,
+        "contact": 45,
+        "power": 45,
+        "eye": 41,
+        "discipline": 40,
+        "speed": 41,
+        "fielding": 44,
+        "arm": 43,
+        "battingClutch": 41
       },
-      "developmentRate": 53,
-      "potentialHidden": 77,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 1,
-      "contract": {
-        "salary": 10900,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 40,
+      "potentialHidden": 65
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 65,
-  "popularity": 43,
-  "militaryStatus": "군필"
+  }
 }

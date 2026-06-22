@@ -1,9 +1,9 @@
 {
   "id": "PLY_13214",
-  "name": "에르난데스 미겔",
-  "nameEn": "Hernandez Miguel",
+  "name": "Brown Zach",
+  "nameEn": "Brown Zach",
   "role": "player",
-  "age": 28,
+  "age": 19,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 49,
-  "popularity": 17,
+  "notes": "국적:쿠바",
+  "diligence": 73,
+  "popularity": 44,
   "militaryStatus": "군필",
   "entryYear": 2046,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 28,
+  "entryAge": 19,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 12,
-      "primaryPosition": "SP",
-      "developmentRate": 58,
-      "potentialHidden": 79,
-      "proServiceYears": 6,
+      "position": "LF",
+      "jerseyNumber": 66,
+      "primaryPosition": "LF",
+      "developmentRate": 65,
+      "potentialHidden": 64,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 76,
-        "stamina": 70,
-        "velocity": 77,
-        "command": 74,
-        "control": 74,
-        "movement": 69,
-        "mentality": 77,
-        "recovery": 77,
-        "clutch": 73,
-        "holdRunners": 67
+        "ovr": 51,
+        "stamina": 48,
+        "velocity": 62,
+        "command": 46,
+        "control": 45,
+        "movement": 45,
+        "mentality": 51,
+        "recovery": 41,
+        "clutch": 49,
+        "holdRunners": 37
       },
       "batting": {
-        "ovr": 73,
-        "contact": 73,
-        "power": 64,
-        "eye": 69,
-        "discipline": 72,
-        "speed": 78,
-        "baseInstinct": 66,
-        "bunting": 58,
+        "ovr": 51,
+        "contact": 50,
+        "power": 47,
+        "eye": 49,
+        "discipline": 51,
+        "speed": 47,
+        "baseInstinct": 44,
+        "bunting": 33,
         "platoon": 50,
-        "fielding": 62,
-        "arm": 75,
-        "battingClutch": 64
+        "fielding": 50,
+        "arm": 42,
+        "battingClutch": 40
       },
       "positionRatings": {
-        "SP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "LF": 51
+      }
     },
     "coach": null,
     "manager": null,

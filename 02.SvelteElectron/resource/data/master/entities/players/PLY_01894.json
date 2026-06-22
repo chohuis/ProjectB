@@ -1,72 +1,46 @@
 {
   "id": "PLY_01894",
-  "name": "손지성",
-  "nameEn": "Son Jiseong",
+  "name": "아베 아키라",
+  "nameEn": "Abe Akira",
   "role": "player",
-  "age": 24,
+  "age": 27,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_BEARGUARDIANS",
-  "teamId": "TEAM_KBL_BEARGUARDIANS_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_POLARBEARS",
+  "teamId": "TEAM_JBL_PL_POLARBEARS_2",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "L",
-      "position": "RF",
-      "jerseyNumber": 80,
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 44,
       "pitching": {
-        "ovr": 20,
-        "stamina": 21,
-        "velocity": 20,
-        "command": 24,
-        "control": 20,
-        "movement": 20,
-        "mentality": 20,
-        "recovery": 20,
-        "clutch": 42,
-        "holdRunners": 41
+        "ovr": 30,
+        "stamina": 30,
+        "velocity": 30,
+        "command": 33,
+        "control": 28,
+        "movement": 34,
+        "mentality": 30,
+        "recovery": 28
       },
       "batting": {
-        "ovr": 39,
-        "contact": 43,
-        "power": 42,
-        "eye": 45,
-        "discipline": 41,
-        "speed": 33,
-        "fielding": 37,
-        "arm": 36,
-        "battingClutch": 43,
-        "baseInstinct": 37,
-        "bunting": 41,
-        "platoon": 43
+        "ovr": 62,
+        "contact": 63,
+        "power": 57,
+        "eye": 64,
+        "discipline": 59,
+        "speed": 61,
+        "fielding": 63,
+        "arm": 60,
+        "battingClutch": 65
       },
-      "developmentRate": 58,
-      "potentialHidden": 51,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 39
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 2,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 57,
+      "potentialHidden": 89
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 53,
-  "popularity": 29,
-  "militaryStatus": "군필"
+  }
 }

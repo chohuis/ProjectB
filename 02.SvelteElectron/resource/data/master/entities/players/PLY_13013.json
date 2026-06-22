@@ -1,9 +1,9 @@
 {
   "id": "PLY_13013",
-  "name": "톰슨 코디",
-  "nameEn": "Thompson Cody",
+  "name": "Smith Marcus",
+  "nameEn": "Smith Marcus",
   "role": "player",
-  "age": 24,
+  "age": 35,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 51,
-  "popularity": 30,
+  "notes": "국적:베네수엘라",
+  "diligence": 62,
+  "popularity": 32,
   "militaryStatus": "군필",
   "entryYear": 2045,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 24,
+  "entryAge": 35,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 76,
+      "jerseyNumber": 59,
       "primaryPosition": "SP",
-      "developmentRate": 57,
-      "potentialHidden": 60,
-      "proServiceYears": 2,
+      "developmentRate": 37,
+      "potentialHidden": 50,
+      "proServiceYears": 13,
       "pitching": {
-        "ovr": 65,
-        "stamina": 68,
-        "velocity": 62,
-        "command": 58,
-        "control": 57,
-        "movement": 58,
-        "mentality": 70,
-        "recovery": 55,
-        "clutch": 60,
-        "holdRunners": 56
+        "ovr": 67,
+        "stamina": 59,
+        "velocity": 74,
+        "command": 63,
+        "control": 67,
+        "movement": 70,
+        "mentality": 62,
+        "recovery": 66,
+        "clutch": 65,
+        "holdRunners": 54
       },
       "batting": {
-        "ovr": 71,
-        "contact": 67,
-        "power": 63,
-        "eye": 72,
-        "discipline": 61,
-        "speed": 64,
-        "baseInstinct": 72,
-        "bunting": 65,
+        "ovr": 67,
+        "contact": 72,
+        "power": 66,
+        "eye": 61,
+        "discipline": 68,
+        "speed": 72,
+        "baseInstinct": 65,
+        "bunting": 59,
         "platoon": 50,
-        "fielding": 63,
-        "arm": 68,
-        "battingClutch": 60
+        "fielding": 70,
+        "arm": 57,
+        "battingClutch": 57
       },
       "positionRatings": {
-        "SP": 71
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ]
+        "SP": 67
+      }
     },
     "coach": null,
     "manager": null,

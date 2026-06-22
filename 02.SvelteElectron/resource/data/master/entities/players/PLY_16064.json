@@ -1,6 +1,6 @@
 {
   "id": "PLY_16064",
-  "name": "로빈슨 칼렙",
+  "name": "Robinson Caleb",
   "nameEn": "Robinson Caleb",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 65,
   "popularity": 36,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 71,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 61,
-        "stamina": 61,
-        "velocity": 67,
-        "command": 55,
-        "control": 63,
-        "movement": 56,
-        "mentality": 57,
-        "recovery": 51,
-        "clutch": 59,
-        "holdRunners": 47
+        "ovr": 63,
+        "stamina": 63,
+        "velocity": 69,
+        "command": 57,
+        "control": 65,
+        "movement": 58,
+        "mentality": 59,
+        "recovery": 53,
+        "clutch": 61,
+        "holdRunners": 49
       },
       "batting": {
         "ovr": 63,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

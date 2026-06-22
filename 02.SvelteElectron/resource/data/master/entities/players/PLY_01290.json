@@ -1,14 +1,14 @@
 {
   "id": "PLY_01290",
   "name": "클라크 하비에르",
-  "nameEn": "Keul 라크 하비에르",
+  "nameEn": "Clark Javier",
   "role": "player",
   "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_MOTORWOLVES",
-  "teamId": "TEAM_ABL_MOTORWOLVES_1",
+  "clubId": "CLUB_ABL_CHC",
+  "teamId": "TEAM_ABL_CHC",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
@@ -19,48 +19,28 @@
       "position": "LF",
       "jerseyNumber": 20,
       "pitching": {
-        "ovr": 54,
-        "stamina": 57,
-        "velocity": 50,
-        "command": 55,
-        "control": 57,
-        "movement": 50,
-        "mentality": 54,
-        "recovery": 53,
-        "clutch": 52,
-        "holdRunners": 50
+        "ovr": 46,
+        "stamina": 43,
+        "velocity": 46,
+        "command": 39,
+        "control": 45,
+        "movement": 37,
+        "mentality": 45,
+        "recovery": 37
       },
       "batting": {
-        "ovr": 74,
-        "contact": 69,
-        "power": 74,
-        "eye": 74,
-        "discipline": 69,
-        "speed": 78,
-        "fielding": 75,
-        "arm": 74,
-        "battingClutch": 63,
-        "baseInstinct": 69,
-        "bunting": 66,
-        "platoon": 72
+        "ovr": 70,
+        "contact": 75,
+        "power": 78,
+        "eye": 68,
+        "discipline": 72,
+        "speed": 72,
+        "fielding": 65,
+        "arm": 72,
+        "battingClutch": 73
       },
       "developmentRate": 45,
-      "potentialHidden": 77,
-      "primaryPosition": "LF",
-      "positionRatings": {
-        "LF": 74
-      },
-      "proServiceYears": 10,
-      "contract": {
-        "salary": 9400,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 77
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

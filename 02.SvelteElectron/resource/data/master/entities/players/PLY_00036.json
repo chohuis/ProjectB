@@ -1,9 +1,9 @@
 {
   "id": "PLY_00036",
   "name": "주재윤",
-  "nameEn": "Joo Jaeyun",
+  "nameEn": "Heo Gi-hoon",
   "role": "player",
-  "age": 19,
+  "age": 15,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "LF",
       "jerseyNumber": 16,
       "pitching": {
-        "ovr": 43,
-        "stamina": 48,
-        "velocity": 49,
-        "command": 44,
-        "control": 42,
-        "movement": 43,
-        "mentality": 46,
-        "recovery": 42,
-        "clutch": 38,
-        "holdRunners": 37
+        "ovr": 47,
+        "stamina": 65,
+        "velocity": 59,
+        "command": 68,
+        "control": 69,
+        "movement": 66,
+        "mentality": 69,
+        "recovery": 67
       },
       "batting": {
-        "ovr": 63,
-        "contact": 62,
-        "power": 63,
-        "eye": 64,
-        "discipline": 62,
+        "ovr": 69,
+        "contact": 68,
+        "power": 60,
+        "eye": 63,
+        "discipline": 65,
         "speed": 69,
-        "fielding": 68,
-        "arm": 63,
-        "battingClutch": 58,
-        "baseInstinct": 51,
-        "bunting": 55,
-        "platoon": 53
+        "fielding": 71,
+        "arm": 56,
+        "battingClutch": 60
       },
       "developmentRate": 71,
-      "potentialHidden": 67,
-      "primaryPosition": "LF",
-      "positionRatings": {
-        "LF": 63
-      }
+      "potentialHidden": 67
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

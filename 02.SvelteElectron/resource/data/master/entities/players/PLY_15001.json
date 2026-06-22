@@ -1,6 +1,6 @@
 {
   "id": "PLY_15001",
-  "name": "영 로건",
+  "name": "Young Logan",
   "nameEn": "Young Logan",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 47,
   "popularity": 38,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 61
       },
       "batting": {
-        "ovr": 70,
-        "contact": 71,
-        "power": 67,
-        "eye": 71,
-        "discipline": 71,
-        "speed": 68,
-        "baseInstinct": 69,
-        "bunting": 49,
-        "platoon": 55,
-        "fielding": 73,
-        "arm": 69,
-        "battingClutch": 57
+        "ovr": 64,
+        "contact": 65,
+        "power": 61,
+        "eye": 65,
+        "discipline": 65,
+        "speed": 62,
+        "baseInstinct": 63,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 63,
+        "battingClutch": 52
       },
       "positionRatings": {
         "LF": 64

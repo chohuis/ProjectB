@@ -1,9 +1,9 @@
 {
   "id": "PLY_13275",
-  "name": "테일러 딜런",
-  "nameEn": "Taylor Dylan",
+  "name": "Garcia Logan",
+  "nameEn": "Garcia Logan",
   "role": "player",
-  "age": 24,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 62,
-  "popularity": 36,
+  "notes": "국적:도미니카",
+  "diligence": 63,
+  "popularity": 30,
   "militaryStatus": "군필",
   "entryYear": 2046,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 24,
+  "entryAge": 21,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 57,
-      "primaryPosition": "SP",
-      "developmentRate": 52,
-      "potentialHidden": 76,
-      "proServiceYears": 2,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 49,
+      "primaryPosition": "SS",
+      "developmentRate": 79,
+      "potentialHidden": 72,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 64,
-        "stamina": 59,
-        "velocity": 71,
-        "command": 59,
-        "control": 62,
-        "movement": 65,
-        "mentality": 70,
-        "recovery": 58,
-        "clutch": 61,
-        "holdRunners": 57
+        "ovr": 55,
+        "stamina": 56,
+        "velocity": 63,
+        "command": 53,
+        "control": 59,
+        "movement": 53,
+        "mentality": 52,
+        "recovery": 43,
+        "clutch": 54,
+        "holdRunners": 50
       },
       "batting": {
-        "ovr": 70,
-        "contact": 74,
-        "power": 65,
-        "eye": 65,
-        "discipline": 61,
-        "speed": 74,
-        "baseInstinct": 68,
-        "bunting": 64,
+        "ovr": 55,
+        "contact": 50,
+        "power": 44,
+        "eye": 47,
+        "discipline": 55,
+        "speed": 58,
+        "baseInstinct": 50,
+        "bunting": 37,
         "platoon": 50,
-        "fielding": 64,
-        "arm": 71,
-        "battingClutch": 67
+        "fielding": 49,
+        "arm": 46,
+        "battingClutch": 52
       },
       "positionRatings": {
-        "SP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "SS": 55
+      }
     },
     "coach": null,
     "manager": null,

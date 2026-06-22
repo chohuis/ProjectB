@@ -1,6 +1,6 @@
 {
   "id": "PLY_16163",
-  "name": "에르난데스 카일",
+  "name": "Hernandez Kyle",
   "nameEn": "Hernandez Kyle",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 49,
   "popularity": 47,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 48
       },
       "batting": {
-        "ovr": 57,
-        "contact": 50,
-        "power": 48,
-        "eye": 57,
-        "discipline": 59,
-        "speed": 58,
-        "baseInstinct": 58,
-        "bunting": 43,
-        "platoon": 49,
-        "fielding": 51,
-        "arm": 56,
-        "battingClutch": 45
+        "ovr": 58,
+        "contact": 51,
+        "power": 49,
+        "eye": 58,
+        "discipline": 60,
+        "speed": 59,
+        "baseInstinct": 59,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 57,
+        "battingClutch": 46
       },
       "positionRatings": {
         "1B": 58

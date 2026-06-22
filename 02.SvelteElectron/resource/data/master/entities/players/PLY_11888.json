@@ -1,9 +1,9 @@
 {
   "id": "PLY_11888",
-  "name": "마르티네스 카일",
-  "nameEn": "Martinez Kyle",
+  "name": "Smith Miguel",
+  "nameEn": "Smith Miguel",
   "role": "player",
-  "age": 28,
+  "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 70,
-  "popularity": 23,
+  "notes": "국적:미국",
+  "diligence": 68,
+  "popularity": 24,
   "militaryStatus": "군필",
   "entryYear": 2038,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 28,
+  "entryAge": 27,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 17,
-      "primaryPosition": "SP",
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 47,
+      "primaryPosition": "1B",
       "developmentRate": 49,
-      "potentialHidden": 88,
-      "proServiceYears": 6,
+      "potentialHidden": 61,
+      "proServiceYears": 5,
       "pitching": {
-        "ovr": 82,
-        "stamina": 76,
-        "velocity": 83,
-        "command": 71,
-        "control": 85,
-        "movement": 84,
-        "mentality": 84,
-        "recovery": 76,
-        "clutch": 80,
-        "holdRunners": 69
+        "ovr": 65,
+        "stamina": 57,
+        "velocity": 76,
+        "command": 66,
+        "control": 63,
+        "movement": 63,
+        "mentality": 71,
+        "recovery": 64,
+        "clutch": 56,
+        "holdRunners": 51
       },
       "batting": {
-        "ovr": 79,
-        "contact": 76,
-        "power": 73,
-        "eye": 80,
-        "discipline": 74,
-        "speed": 75,
-        "baseInstinct": 75,
-        "bunting": 60,
+        "ovr": 65,
+        "contact": 67,
+        "power": 65,
+        "eye": 70,
+        "discipline": 69,
+        "speed": 64,
+        "baseInstinct": 64,
+        "bunting": 58,
         "platoon": 50,
-        "fielding": 76,
-        "arm": 77,
-        "battingClutch": 72
+        "fielding": 60,
+        "arm": 59,
+        "battingClutch": 60
       },
       "positionRatings": {
-        "SP": 79
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "1B": 65
+      }
     },
     "coach": null,
     "manager": null,

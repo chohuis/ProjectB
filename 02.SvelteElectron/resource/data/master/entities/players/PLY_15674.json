@@ -1,6 +1,6 @@
 {
   "id": "PLY_15674",
-  "name": "존스 오스틴",
+  "name": "Jones Austin",
   "nameEn": "Jones Austin",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 60,
   "popularity": 29,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 83,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 50,
-        "stamina": 48,
-        "velocity": 51,
-        "command": 45,
-        "control": 51,
-        "movement": 53,
-        "mentality": 49,
-        "recovery": 49,
-        "clutch": 45,
-        "holdRunners": 41
+        "ovr": 51,
+        "stamina": 49,
+        "velocity": 52,
+        "command": 46,
+        "control": 52,
+        "movement": 54,
+        "mentality": 50,
+        "recovery": 50,
+        "clutch": 46,
+        "holdRunners": 42
       },
       "batting": {
         "ovr": 51,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 51
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

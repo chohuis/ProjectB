@@ -1,6 +1,6 @@
 {
   "id": "PLY_14344",
-  "name": "킹 크리스",
+  "name": "King Chris",
   "nameEn": "King Chris",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 59,
   "popularity": 29,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 55
       },
       "batting": {
-        "ovr": 88,
-        "contact": 78,
-        "power": 88,
-        "eye": 85,
-        "discipline": 84,
-        "speed": 96,
-        "baseInstinct": 74,
-        "bunting": 71,
-        "platoon": 64,
-        "fielding": 89,
-        "arm": 82,
-        "battingClutch": 71
+        "ovr": 69,
+        "contact": 61,
+        "power": 69,
+        "eye": 67,
+        "discipline": 66,
+        "speed": 75,
+        "baseInstinct": 58,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 70,
+        "arm": 64,
+        "battingClutch": 56
       },
       "positionRatings": {
         "C": 69

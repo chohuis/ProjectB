@@ -1,6 +1,6 @@
 {
   "id": "PLY_16708",
-  "name": "라이트 딜런",
+  "name": "Wright Dylan",
   "nameEn": "Wright Dylan",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 84,
   "popularity": 23,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 64,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 51,
-        "stamina": 49,
-        "velocity": 48,
-        "command": 48,
-        "control": 51,
-        "movement": 47,
-        "mentality": 47,
-        "recovery": 49,
-        "clutch": 45,
-        "holdRunners": 40
+        "ovr": 52,
+        "stamina": 50,
+        "velocity": 49,
+        "command": 49,
+        "control": 52,
+        "movement": 48,
+        "mentality": 48,
+        "recovery": 50,
+        "clutch": 46,
+        "holdRunners": 41
       },
       "batting": {
         "ovr": 52,
@@ -57,13 +57,7 @@
       },
       "positionRatings": {
         "SP": 52
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

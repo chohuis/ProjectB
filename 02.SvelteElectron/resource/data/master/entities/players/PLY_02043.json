@@ -1,72 +1,46 @@
 {
   "id": "PLY_02043",
-  "name": "데이비드 산체스",
-  "nameEn": "David Sanchez",
+  "name": "사토 쓰카사",
+  "nameEn": "Sato Tsukasa",
   "role": "player",
-  "age": 35,
+  "age": 26,
   "status": "active",
-  "originLeagueId": "LEAGUE_ABL",
-  "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_HARBORHAWKS",
-  "teamId": "TEAM_ABL_HARBORHAWKS_1",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SUNS",
+  "teamId": "TEAM_JBL_PL_SUNS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "UT",
-      "jerseyNumber": 4,
+      "position": "RP",
+      "jerseyNumber": 8,
       "pitching": {
-        "ovr": 61,
-        "stamina": 58,
-        "velocity": 61,
-        "command": 58,
-        "control": 58,
-        "movement": 57,
-        "mentality": 57,
-        "recovery": 64,
-        "clutch": 54,
-        "holdRunners": 55
+        "ovr": 85,
+        "stamina": 73,
+        "velocity": 86,
+        "command": 88,
+        "control": 82,
+        "movement": 84,
+        "mentality": 87,
+        "recovery": 82
       },
       "batting": {
-        "ovr": 81,
-        "contact": 84,
-        "power": 78,
-        "eye": 86,
-        "discipline": 85,
-        "speed": 75,
-        "fielding": 80,
-        "arm": 81,
-        "battingClutch": 72,
-        "baseInstinct": 71,
-        "bunting": 70,
-        "platoon": 78
+        "ovr": 54,
+        "contact": 54,
+        "power": 53,
+        "eye": 53,
+        "discipline": 52,
+        "speed": 52,
+        "fielding": 52,
+        "arm": 50,
+        "battingClutch": 57
       },
-      "developmentRate": 53,
-      "potentialHidden": 77,
-      "primaryPosition": "UT",
-      "positionRatings": {
-        "UT": 81
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 13,
-      "contract": {
-        "salary": 14800,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 48,
+      "potentialHidden": 79
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 40,
-  "popularity": 49,
-  "militaryStatus": "군필"
+  }
 }

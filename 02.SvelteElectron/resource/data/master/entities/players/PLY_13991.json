@@ -1,6 +1,6 @@
 {
   "id": "PLY_13991",
-  "name": "해리스 칼렙",
+  "name": "Harris Caleb",
   "nameEn": "Harris Caleb",
   "role": "player",
   "age": 23,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 51,
   "popularity": 49,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 56
       },
       "batting": {
-        "ovr": 63,
-        "contact": 61,
-        "power": 64,
-        "eye": 66,
-        "discipline": 59,
-        "speed": 62,
-        "baseInstinct": 65,
-        "bunting": 45,
-        "platoon": 48,
-        "fielding": 63,
-        "arm": 63,
-        "battingClutch": 56
+        "ovr": 65,
+        "contact": 63,
+        "power": 66,
+        "eye": 68,
+        "discipline": 61,
+        "speed": 64,
+        "baseInstinct": 67,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 65,
+        "battingClutch": 58
       },
       "positionRatings": {
         "LF": 65

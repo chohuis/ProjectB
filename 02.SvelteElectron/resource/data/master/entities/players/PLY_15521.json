@@ -1,6 +1,6 @@
 {
   "id": "PLY_15521",
-  "name": "가르시아 헌터",
+  "name": "Garcia Hunter",
   "nameEn": "Garcia Hunter",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 47,
   "popularity": 30,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 59
       },
       "batting": {
-        "ovr": 78,
-        "contact": 79,
-        "power": 68,
-        "eye": 69,
-        "discipline": 75,
-        "speed": 77,
-        "baseInstinct": 76,
-        "bunting": 73,
-        "platoon": 54,
-        "fielding": 70,
-        "arm": 73,
-        "battingClutch": 78
+        "ovr": 72,
+        "contact": 73,
+        "power": 63,
+        "eye": 64,
+        "discipline": 69,
+        "speed": 71,
+        "baseInstinct": 70,
+        "bunting": 67,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 67,
+        "battingClutch": 72
       },
       "positionRatings": {
         "2B": 72

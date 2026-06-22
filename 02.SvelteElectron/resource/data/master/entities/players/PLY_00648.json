@@ -1,14 +1,14 @@
 {
   "id": "PLY_00648",
   "name": "정지성",
-  "nameEn": "Jeong Jiseong",
+  "nameEn": "Sim Seong-jun",
   "role": "player",
   "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_EMBERTIGERS",
-  "teamId": "TEAM_KBL_EMBERTIGERS_1",
+  "clubId": "CLUB_KBL_KT",
+  "teamId": "TEAM_KBL_KT_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 8,
       "pitching": {
-        "ovr": 70,
-        "stamina": 74,
-        "velocity": 68,
-        "command": 70,
-        "control": 66,
-        "movement": 73,
-        "mentality": 68,
-        "recovery": 69,
-        "clutch": 63,
-        "holdRunners": 58
+        "ovr": 78,
+        "stamina": 69,
+        "velocity": 81,
+        "command": 71,
+        "control": 75,
+        "movement": 76,
+        "mentality": 70,
+        "recovery": 76
       },
       "batting": {
-        "ovr": 52,
-        "contact": 53,
-        "power": 52,
-        "eye": 49,
-        "discipline": 49,
-        "speed": 56,
-        "fielding": 51,
-        "arm": 58,
-        "battingClutch": 44,
-        "baseInstinct": 47,
-        "bunting": 45,
-        "platoon": 45
+        "ovr": 49,
+        "contact": 48,
+        "power": 46,
+        "eye": 47,
+        "discipline": 46,
+        "speed": 50,
+        "fielding": 50,
+        "arm": 52,
+        "battingClutch": 47
       },
       "developmentRate": 54,
-      "potentialHidden": 59,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 2,
-      "contract": {
-        "salary": 6200,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 59
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

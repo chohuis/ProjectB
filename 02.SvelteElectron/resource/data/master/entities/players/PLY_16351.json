@@ -1,6 +1,6 @@
 {
   "id": "PLY_16351",
-  "name": "톰슨 제이크",
+  "name": "Thompson Jake",
   "nameEn": "Thompson Jake",
   "role": "player",
   "age": 29,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 49,
   "popularity": 20,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 61,
       "proServiceYears": 7,
       "pitching": {
-        "ovr": 64,
-        "stamina": 64,
-        "velocity": 67,
-        "command": 62,
-        "control": 63,
-        "movement": 54,
-        "mentality": 60,
-        "recovery": 57,
-        "clutch": 56,
-        "holdRunners": 53
+        "ovr": 57,
+        "stamina": 57,
+        "velocity": 60,
+        "command": 55,
+        "control": 56,
+        "movement": 48,
+        "mentality": 53,
+        "recovery": 51,
+        "clutch": 50,
+        "holdRunners": 47
       },
       "batting": {
         "ovr": 57,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

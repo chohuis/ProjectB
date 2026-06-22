@@ -1,72 +1,46 @@
 {
   "id": "PLY_02049",
-  "name": "호세 윌슨",
-  "nameEn": "Jose Wilson",
+  "name": "스즈키 쇼",
+  "nameEn": "Suzuki Sho",
   "role": "player",
-  "age": 24,
+  "age": 36,
   "status": "active",
-  "originLeagueId": "LEAGUE_ABL",
-  "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_HARBORHAWKS",
-  "teamId": "TEAM_ABL_HARBORHAWKS_1",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SUNS",
+  "teamId": "TEAM_JBL_PL_SUNS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "SS",
-      "jerseyNumber": 83,
+      "position": "C",
+      "jerseyNumber": 14,
       "pitching": {
-        "ovr": 59,
-        "stamina": 58,
-        "velocity": 58,
-        "command": 60,
-        "control": 57,
-        "movement": 58,
-        "mentality": 64,
-        "recovery": 57,
-        "clutch": 57,
-        "holdRunners": 53
+        "ovr": 46,
+        "stamina": 41,
+        "velocity": 46,
+        "command": 44,
+        "control": 42,
+        "movement": 45,
+        "mentality": 45,
+        "recovery": 39
       },
       "batting": {
-        "ovr": 79,
-        "contact": 83,
-        "power": 76,
-        "eye": 82,
-        "discipline": 79,
-        "speed": 80,
-        "fielding": 81,
-        "arm": 81,
-        "battingClutch": 73,
-        "baseInstinct": 77,
-        "bunting": 69,
-        "platoon": 69
+        "ovr": 69,
+        "contact": 76,
+        "power": 70,
+        "eye": 74,
+        "discipline": 74,
+        "speed": 64,
+        "fielding": 74,
+        "arm": 77,
+        "battingClutch": 71
       },
-      "developmentRate": 57,
-      "potentialHidden": 77,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 79
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 2,
-      "contract": {
-        "salary": 13200,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 39,
+      "potentialHidden": 57
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 47,
-  "popularity": 46,
-  "militaryStatus": "군필"
+  }
 }

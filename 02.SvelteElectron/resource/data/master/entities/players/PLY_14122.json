@@ -1,6 +1,6 @@
 {
   "id": "PLY_14122",
-  "name": "화이트 카일",
+  "name": "White Kyle",
   "nameEn": "White Kyle",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 70,
   "popularity": 42,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 61
       },
       "batting": {
-        "ovr": 71,
-        "contact": 67,
-        "power": 68,
-        "eye": 75,
-        "discipline": 71,
-        "speed": 67,
-        "baseInstinct": 60,
-        "bunting": 52,
-        "platoon": 55,
-        "fielding": 66,
-        "arm": 73,
-        "battingClutch": 57
+        "ovr": 65,
+        "contact": 61,
+        "power": 62,
+        "eye": 69,
+        "discipline": 65,
+        "speed": 61,
+        "baseInstinct": 55,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 67,
+        "battingClutch": 52
       },
       "positionRatings": {
         "CF": 65

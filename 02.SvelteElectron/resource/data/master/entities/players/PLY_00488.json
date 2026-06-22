@@ -1,14 +1,14 @@
 {
   "id": "PLY_00488",
   "name": "최재현",
-  "nameEn": "Choi Jaehyeon",
+  "nameEn": "Jung Jae-yun",
   "role": "player",
   "age": 23,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_TWINWOLVES",
-  "teamId": "TEAM_KBL_TWINWOLVES_2",
+  "clubId": "CLUB_KBL_KIA",
+  "teamId": "TEAM_KBL_KIA_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 33,
       "pitching": {
-        "ovr": 67,
-        "stamina": 65,
-        "velocity": 73,
-        "command": 71,
-        "control": 68,
-        "movement": 63,
-        "mentality": 68,
-        "recovery": 63,
-        "clutch": 62,
-        "holdRunners": 65
+        "ovr": 73,
+        "stamina": 76,
+        "velocity": 74,
+        "command": 74,
+        "control": 79,
+        "movement": 74,
+        "mentality": 78,
+        "recovery": 70
       },
       "batting": {
-        "ovr": 49,
-        "contact": 53,
+        "ovr": 43,
+        "contact": 48,
         "power": 44,
-        "eye": 52,
+        "eye": 46,
         "discipline": 50,
-        "speed": 53,
-        "fielding": 54,
-        "arm": 44,
-        "battingClutch": 49,
-        "baseInstinct": 46,
-        "bunting": 42,
-        "platoon": 41
+        "speed": 45,
+        "fielding": 49,
+        "arm": 45,
+        "battingClutch": 48
       },
       "developmentRate": 43,
-      "potentialHidden": 79,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 5
-        }
-      ],
-      "proServiceYears": 1,
-      "contract": {
-        "salary": 5500,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 79
     },
     "coach": {
       "specialty": "-",
@@ -114,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

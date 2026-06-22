@@ -1,9 +1,9 @@
 {
   "id": "PLY_00158",
   "name": "배도현",
-  "nameEn": "Bae Dohyeon",
+  "nameEn": "Kang Jae-hoon",
   "role": "player",
-  "age": 18,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "RF",
       "jerseyNumber": 18,
       "pitching": {
-        "ovr": 29,
-        "stamina": 32,
-        "velocity": 33,
-        "command": 28,
-        "control": 26,
-        "movement": 32,
-        "mentality": 29,
-        "recovery": 34,
-        "clutch": 35,
-        "holdRunners": 44
+        "ovr": 44,
+        "stamina": 47,
+        "velocity": 52,
+        "command": 53,
+        "control": 47,
+        "movement": 51,
+        "mentality": 59,
+        "recovery": 44
       },
       "batting": {
-        "ovr": 49,
-        "contact": 45,
-        "power": 50,
-        "eye": 52,
-        "discipline": 45,
-        "speed": 56,
-        "fielding": 46,
-        "arm": 48,
-        "battingClutch": 49,
-        "baseInstinct": 42,
-        "bunting": 46,
-        "platoon": 37
+        "ovr": 47,
+        "contact": 39,
+        "power": 49,
+        "eye": 54,
+        "discipline": 53,
+        "speed": 61,
+        "fielding": 58,
+        "arm": 45,
+        "battingClutch": 47
       },
       "developmentRate": 55,
-      "potentialHidden": 60,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 49
-      }
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

@@ -1,17 +1,17 @@
 {
   "id": "COA_00188",
-  "name": "마에다 히로시",
-  "nameEn": "Maeda Hiroshi",
+  "name": "미우라 코지",
+  "nameEn": "Miura Koji",
   "role": "coach",
-  "age": 35,
+  "age": 51,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
-  "clubId": "CLUB_JBL_CL_NEONCRANES",
-  "teamId": "TEAM_JBL_CL_NEONCRANES_2",
+  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+  "teamId": "TEAM_JBL_CL_SILVERWOLVES_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
@@ -43,16 +43,16 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "타격",
-      "experienceYears": 4,
+      "specialty": "투수",
+      "experienceYears": 18,
       "stats": {
-        "teaching": 66,
-        "analysis": 52,
-        "communication": 78,
-        "discipline": 73,
-        "leadership": 55
+        "teaching": 67,
+        "analysis": 84,
+        "communication": 73,
+        "discipline": 55,
+        "leadership": 52
       },
-      "trainingBuffs": "체력 훈련 +2%"
+      "trainingBuffs": "구속 훈련 +2%"
     },
     "manager": {
       "style": "균형",

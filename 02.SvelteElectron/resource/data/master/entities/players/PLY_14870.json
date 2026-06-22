@@ -1,6 +1,6 @@
 {
   "id": "PLY_14870",
-  "name": "데이비스 마커스",
+  "name": "Davis Marcus",
   "nameEn": "Davis Marcus",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 82,
   "popularity": 44,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 61
       },
       "batting": {
-        "ovr": 61,
-        "contact": 61,
-        "power": 60,
-        "eye": 66,
-        "discipline": 62,
-        "speed": 63,
-        "baseInstinct": 64,
-        "bunting": 46,
-        "platoon": 48,
-        "fielding": 54,
-        "arm": 51,
-        "battingClutch": 61
+        "ovr": 63,
+        "contact": 63,
+        "power": 62,
+        "eye": 68,
+        "discipline": 64,
+        "speed": 65,
+        "baseInstinct": 66,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 53,
+        "battingClutch": 63
       },
       "positionRatings": {
         "1B": 63

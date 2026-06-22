@@ -1,69 +1,46 @@
 {
   "id": "PLY_01543",
-  "name": "고준서",
-  "nameEn": "Go Junseo",
+  "name": "무라카미 아키라",
+  "nameEn": "Murakami Akira",
   "role": "player",
-  "age": 16,
+  "age": 23,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_SEOUL_INNOVATION",
-  "teamId": "TEAM_HS_SEOUL_INNOVATION",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_SEOUL_INNOVATION",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_NEONCRANES",
+  "teamId": "TEAM_JBL_CL_NEONCRANES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
-      "position": "RP",
-      "jerseyNumber": 22,
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 3,
       "pitching": {
-        "ovr": 47,
-        "stamina": 44,
-        "velocity": 43,
-        "command": 47,
-        "control": 51,
-        "movement": 49,
-        "mentality": 46,
-        "recovery": 45,
-        "clutch": 36,
-        "holdRunners": 42
+        "ovr": 70,
+        "stamina": 71,
+        "velocity": 70,
+        "command": 72,
+        "control": 68,
+        "movement": 66,
+        "mentality": 68,
+        "recovery": 73
       },
       "batting": {
-        "ovr": 29,
-        "contact": 26,
-        "power": 29,
-        "eye": 27,
-        "discipline": 32,
-        "speed": 36,
-        "fielding": 34,
-        "arm": 26,
-        "battingClutch": 45,
-        "baseInstinct": 43,
-        "bunting": 30,
-        "platoon": 42
+        "ovr": 39,
+        "contact": 42,
+        "power": 42,
+        "eye": 43,
+        "discipline": 40,
+        "speed": 42,
+        "fielding": 37,
+        "arm": 40,
+        "battingClutch": 39
       },
       "developmentRate": 53,
-      "potentialHidden": 71,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 47
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 4
-        }
-      ]
+      "potentialHidden": 90
     },
     "coach": {
       "specialty": "-",
@@ -103,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 62,
-  "popularity": 37
+  }
 }

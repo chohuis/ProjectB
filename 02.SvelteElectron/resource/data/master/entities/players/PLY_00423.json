@@ -1,7 +1,7 @@
 {
   "id": "PLY_00423",
   "name": "노승우",
-  "nameEn": "No Seungu",
+  "nameEn": "Joo Min-jun",
   "role": "player",
   "age": 28,
   "status": "active",
@@ -19,58 +19,28 @@
       "position": "SP",
       "jerseyNumber": 3,
       "pitching": {
-        "ovr": 64,
-        "stamina": 69,
-        "velocity": 65,
-        "command": 64,
-        "control": 63,
-        "movement": 65,
-        "mentality": 66,
-        "recovery": 63,
-        "clutch": 55,
-        "holdRunners": 62
+        "ovr": 76,
+        "stamina": 73,
+        "velocity": 76,
+        "command": 75,
+        "control": 68,
+        "movement": 69,
+        "mentality": 71,
+        "recovery": 72
       },
       "batting": {
-        "ovr": 46,
-        "contact": 47,
-        "power": 51,
-        "eye": 51,
-        "discipline": 46,
-        "speed": 43,
-        "fielding": 45,
-        "arm": 50,
-        "battingClutch": 37,
-        "baseInstinct": 42,
-        "bunting": 39,
-        "platoon": 32
+        "ovr": 37,
+        "contact": 40,
+        "power": 36,
+        "eye": 39,
+        "discipline": 38,
+        "speed": 38,
+        "fielding": 37,
+        "arm": 39,
+        "battingClutch": 36
       },
       "developmentRate": 52,
-      "potentialHidden": 81,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 64
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 8,
-      "contract": {
-        "salary": 1700,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 81
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

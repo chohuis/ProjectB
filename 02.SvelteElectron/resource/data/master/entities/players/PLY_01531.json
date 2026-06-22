@@ -1,14 +1,14 @@
 {
   "id": "PLY_01531",
   "name": "라이트 카를로스",
-  "nameEn": "Ra 이트 카를로스",
+  "nameEn": "Wright Carlos",
   "role": "player",
   "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_RIVERCARDINALS",
-  "teamId": "TEAM_ABL_RIVERCARDINALS_2",
+  "clubId": "CLUB_ABL_BAL",
+  "teamId": "TEAM_ABL_BAL_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
@@ -19,48 +19,28 @@
       "position": "C",
       "jerseyNumber": 51,
       "pitching": {
-        "ovr": 51,
-        "stamina": 50,
-        "velocity": 52,
-        "command": 54,
-        "control": 55,
-        "movement": 48,
-        "mentality": 48,
-        "recovery": 47,
-        "clutch": 40,
-        "holdRunners": 39
+        "ovr": 35,
+        "stamina": 35,
+        "velocity": 41,
+        "command": 34,
+        "control": 31,
+        "movement": 37,
+        "mentality": 33,
+        "recovery": 31
       },
       "batting": {
-        "ovr": 71,
-        "contact": 68,
-        "power": 73,
+        "ovr": 67,
+        "contact": 73,
+        "power": 68,
         "eye": 70,
-        "discipline": 74,
-        "speed": 71,
-        "fielding": 73,
-        "arm": 74,
-        "battingClutch": 69,
-        "baseInstinct": 60,
-        "bunting": 65,
-        "platoon": 59
+        "discipline": 67,
+        "speed": 67,
+        "fielding": 70,
+        "arm": 77,
+        "battingClutch": 72
       },
       "developmentRate": 34,
-      "potentialHidden": 74,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 71
-      },
-      "proServiceYears": 5,
-      "contract": {
-        "salary": 7100,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 74
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

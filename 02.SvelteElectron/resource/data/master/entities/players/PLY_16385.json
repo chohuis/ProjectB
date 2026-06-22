@@ -1,6 +1,6 @@
 {
   "id": "PLY_16385",
-  "name": "킹 헌터",
+  "name": "King Hunter",
   "nameEn": "King Hunter",
   "role": "player",
   "age": 23,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 65,
   "popularity": 25,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 59
       },
       "batting": {
-        "ovr": 70,
-        "contact": 68,
-        "power": 68,
-        "eye": 68,
-        "discipline": 71,
-        "speed": 77,
-        "baseInstinct": 61,
-        "bunting": 53,
-        "platoon": 48,
-        "fielding": 68,
-        "arm": 64,
-        "battingClutch": 68
+        "ovr": 73,
+        "contact": 71,
+        "power": 71,
+        "eye": 71,
+        "discipline": 74,
+        "speed": 80,
+        "baseInstinct": 64,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 71,
+        "arm": 67,
+        "battingClutch": 71
       },
       "positionRatings": {
         "2B": 73

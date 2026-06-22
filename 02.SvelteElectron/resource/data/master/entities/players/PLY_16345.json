@@ -1,6 +1,6 @@
 {
   "id": "PLY_16345",
-  "name": "브라운 에반",
+  "name": "Brown Evan",
   "nameEn": "Brown Evan",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 51,
   "popularity": 39,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 72,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 50,
-        "stamina": 51,
-        "velocity": 61,
-        "command": 41,
-        "control": 54,
-        "movement": 48,
-        "mentality": 53,
-        "recovery": 48,
-        "clutch": 46,
-        "holdRunners": 37
+        "ovr": 51,
+        "stamina": 52,
+        "velocity": 62,
+        "command": 42,
+        "control": 55,
+        "movement": 49,
+        "mentality": 54,
+        "recovery": 49,
+        "clutch": 47,
+        "holdRunners": 38
       },
       "batting": {
         "ovr": 51,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 51
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

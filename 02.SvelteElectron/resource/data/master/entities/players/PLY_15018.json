@@ -1,6 +1,6 @@
 {
   "id": "PLY_15018",
-  "name": "존슨 알렉스",
+  "name": "Johnson Alex",
   "nameEn": "Johnson Alex",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 56,
   "popularity": 13,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 52
       },
       "batting": {
-        "ovr": 73,
-        "contact": 63,
-        "power": 73,
-        "eye": 69,
-        "discipline": 74,
-        "speed": 78,
-        "baseInstinct": 73,
-        "bunting": 55,
-        "platoon": 63,
-        "fielding": 69,
-        "arm": 74,
-        "battingClutch": 67
+        "ovr": 58,
+        "contact": 50,
+        "power": 58,
+        "eye": 55,
+        "discipline": 59,
+        "speed": 62,
+        "baseInstinct": 58,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 59,
+        "battingClutch": 53
       },
       "positionRatings": {
         "CF": 58

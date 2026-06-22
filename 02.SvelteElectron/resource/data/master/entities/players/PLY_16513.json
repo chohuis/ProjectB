@@ -1,6 +1,6 @@
 {
   "id": "PLY_16513",
-  "name": "워커 콜",
+  "name": "Walker Cole",
   "nameEn": "Walker Cole",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 51,
   "popularity": 42,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 42
       },
       "batting": {
-        "ovr": 50,
-        "contact": 44,
-        "power": 50,
-        "eye": 42,
-        "discipline": 53,
-        "speed": 56,
-        "baseInstinct": 51,
-        "bunting": 37,
-        "platoon": 49,
-        "fielding": 45,
-        "arm": 48,
-        "battingClutch": 49
+        "ovr": 51,
+        "contact": 45,
+        "power": 51,
+        "eye": 43,
+        "discipline": 54,
+        "speed": 57,
+        "baseInstinct": 52,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 49,
+        "battingClutch": 50
       },
       "positionRatings": {
         "3B": 51

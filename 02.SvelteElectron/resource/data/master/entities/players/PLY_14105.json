@@ -1,6 +1,6 @@
 {
   "id": "PLY_14105",
-  "name": "존슨 마커스",
+  "name": "Johnson Marcus",
   "nameEn": "Johnson Marcus",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 72,
   "popularity": 26,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 57
       },
       "batting": {
-        "ovr": 76,
-        "contact": 67,
-        "power": 68,
-        "eye": 68,
-        "discipline": 75,
-        "speed": 74,
-        "baseInstinct": 75,
-        "bunting": 64,
-        "platoon": 54,
-        "fielding": 75,
-        "arm": 67,
-        "battingClutch": 74
+        "ovr": 70,
+        "contact": 62,
+        "power": 63,
+        "eye": 63,
+        "discipline": 69,
+        "speed": 68,
+        "baseInstinct": 69,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 62,
+        "battingClutch": 68
       },
       "positionRatings": {
         "3B": 70

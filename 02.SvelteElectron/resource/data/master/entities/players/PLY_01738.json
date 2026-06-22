@@ -1,61 +1,46 @@
 {
   "id": "PLY_01738",
-  "name": "이지후",
-  "nameEn": "Lee Jihu",
+  "name": "사사키 쓰요시",
+  "nameEn": "Sasaki Tsuyoshi",
   "role": "player",
-  "age": 18,
+  "age": 35,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_GANGWON_PEAK",
-  "teamId": "TEAM_HS_GANGWON_PEAK",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_GANGWON_PEAK",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+  "teamId": "TEAM_JBL_CL_SILVERWOLVES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "RF",
-      "jerseyNumber": 27,
+      "position": "3B",
+      "jerseyNumber": 18,
       "pitching": {
-        "ovr": 41,
-        "stamina": 40,
-        "velocity": 39,
-        "command": 46,
-        "control": 40,
-        "movement": 43,
-        "mentality": 46,
-        "recovery": 39,
-        "clutch": 43,
-        "holdRunners": 38
+        "ovr": 55,
+        "stamina": 53,
+        "velocity": 53,
+        "command": 50,
+        "control": 57,
+        "movement": 48,
+        "mentality": 49,
+        "recovery": 48
       },
       "batting": {
-        "ovr": 61,
-        "contact": 66,
-        "power": 55,
-        "eye": 63,
-        "discipline": 61,
-        "speed": 62,
-        "fielding": 61,
-        "arm": 62,
-        "battingClutch": 59,
-        "baseInstinct": 56,
-        "bunting": 50,
-        "platoon": 56
+        "ovr": 81,
+        "contact": 79,
+        "power": 79,
+        "eye": 74,
+        "discipline": 74,
+        "speed": 80,
+        "fielding": 74,
+        "arm": 82,
+        "battingClutch": 76
       },
-      "developmentRate": 59,
-      "potentialHidden": 63,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 53,
+      "potentialHidden": 90
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 74,
-  "popularity": 39
+  }
 }

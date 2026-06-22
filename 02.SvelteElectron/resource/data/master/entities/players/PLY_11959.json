@@ -1,9 +1,9 @@
 {
   "id": "PLY_11959",
-  "name": "해리스 콜",
-  "nameEn": "Harris Cole",
+  "name": "Baker Kyle",
+  "nameEn": "Baker Kyle",
   "role": "player",
-  "age": 21,
+  "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 54,
-  "popularity": 22,
+  "notes": "국적:쿠바",
+  "diligence": 52,
+  "popularity": 30,
   "militaryStatus": "군필",
   "entryYear": 2038,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 21,
+  "entryAge": 25,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 4,
-      "primaryPosition": "SP",
-      "developmentRate": 77,
-      "potentialHidden": 61,
-      "proServiceYears": 0,
+      "position": "SS",
+      "jerseyNumber": 78,
+      "primaryPosition": "SS",
+      "developmentRate": 63,
+      "potentialHidden": 87,
+      "proServiceYears": 3,
       "pitching": {
-        "ovr": 56,
-        "stamina": 56,
-        "velocity": 65,
-        "command": 53,
-        "control": 51,
-        "movement": 54,
-        "mentality": 61,
-        "recovery": 53,
-        "clutch": 54,
-        "holdRunners": 53
+        "ovr": 82,
+        "stamina": 84,
+        "velocity": 89,
+        "command": 73,
+        "control": 86,
+        "movement": 82,
+        "mentality": 86,
+        "recovery": 82,
+        "clutch": 78,
+        "holdRunners": 68
       },
       "batting": {
-        "ovr": 60,
-        "contact": 63,
-        "power": 54,
-        "eye": 51,
-        "discipline": 54,
-        "speed": 53,
-        "baseInstinct": 56,
-        "bunting": 50,
+        "ovr": 82,
+        "contact": 80,
+        "power": 77,
+        "eye": 74,
+        "discipline": 84,
+        "speed": 88,
+        "baseInstinct": 84,
+        "bunting": 75,
         "platoon": 50,
-        "fielding": 57,
-        "arm": 49,
-        "battingClutch": 51
+        "fielding": 72,
+        "arm": 80,
+        "battingClutch": 74
       },
       "positionRatings": {
-        "SP": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SS": 82
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,9 +1,9 @@
 {
   "id": "PLY_10407",
-  "name": "스미스 타일러",
-  "nameEn": "Smith Tyler",
+  "name": "Garcia Tyler",
+  "nameEn": "Garcia Tyler",
   "role": "player",
-  "age": 22,
+  "age": 33,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 77,
-  "popularity": 28,
+  "notes": "국적:미국",
+  "diligence": 65,
+  "popularity": 46,
   "militaryStatus": "군필",
   "entryYear": 2029,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 22,
+  "entryAge": 33,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 15,
-      "primaryPosition": "SP",
-      "developmentRate": 80,
-      "potentialHidden": 69,
-      "proServiceYears": 0,
+      "position": "2B",
+      "jerseyNumber": 5,
+      "primaryPosition": "2B",
+      "developmentRate": 53,
+      "potentialHidden": 65,
+      "proServiceYears": 11,
       "pitching": {
-        "ovr": 55,
-        "stamina": 47,
-        "velocity": 59,
-        "command": 55,
-        "control": 52,
-        "movement": 54,
-        "mentality": 52,
+        "ovr": 64,
+        "stamina": 64,
+        "velocity": 73,
+        "command": 58,
+        "control": 67,
+        "movement": 55,
+        "mentality": 61,
         "recovery": 54,
-        "clutch": 48,
+        "clutch": 64,
         "holdRunners": 49
       },
       "batting": {
-        "ovr": 58,
-        "contact": 55,
-        "power": 57,
-        "eye": 56,
-        "discipline": 53,
-        "speed": 53,
-        "baseInstinct": 60,
-        "bunting": 51,
+        "ovr": 64,
+        "contact": 62,
+        "power": 56,
+        "eye": 64,
+        "discipline": 57,
+        "speed": 70,
+        "baseInstinct": 63,
+        "bunting": 49,
         "platoon": 50,
-        "fielding": 53,
-        "arm": 49,
-        "battingClutch": 59
+        "fielding": 55,
+        "arm": 60,
+        "battingClutch": 55
       },
       "positionRatings": {
-        "SP": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "2B": 64
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_14406",
-  "name": "미첼 딜런",
+  "name": "Mitchell Dylan",
   "nameEn": "Mitchell Dylan",
   "role": "player",
   "age": 18,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 56,
   "popularity": 41,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 48
       },
       "batting": {
-        "ovr": 50,
-        "contact": 44,
-        "power": 46,
-        "eye": 43,
-        "discipline": 54,
-        "speed": 53,
-        "baseInstinct": 46,
-        "bunting": 35,
-        "platoon": 49,
-        "fielding": 39,
-        "arm": 44,
-        "battingClutch": 40
+        "ovr": 51,
+        "contact": 45,
+        "power": 47,
+        "eye": 44,
+        "discipline": 55,
+        "speed": 54,
+        "baseInstinct": 47,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 40,
+        "arm": 45,
+        "battingClutch": 41
       },
       "positionRatings": {
         "3B": 51

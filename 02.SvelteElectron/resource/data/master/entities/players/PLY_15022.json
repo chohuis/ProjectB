@@ -1,6 +1,6 @@
 {
   "id": "PLY_15022",
-  "name": "로빈슨 크리스",
+  "name": "Robinson Chris",
   "nameEn": "Robinson Chris",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 53,
   "popularity": 33,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 89,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 55,
-        "stamina": 54,
-        "velocity": 58,
-        "command": 45,
-        "control": 48,
-        "movement": 55,
-        "mentality": 56,
-        "recovery": 49,
-        "clutch": 55,
-        "holdRunners": 43
+        "ovr": 56,
+        "stamina": 55,
+        "velocity": 59,
+        "command": 46,
+        "control": 49,
+        "movement": 56,
+        "mentality": 57,
+        "recovery": 50,
+        "clutch": 56,
+        "holdRunners": 44
       },
       "batting": {
         "ovr": 56,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,17 +1,17 @@
 {
   "id": "COA_00216",
-  "name": "하야시 츠바사",
-  "nameEn": "Hayashi Tsubasa",
+  "name": "스즈키 미쓰루",
+  "nameEn": "Suzuki Mitsuru",
   "role": "coach",
-  "age": 55,
+  "age": 47,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
-  "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
-  "teamId": "TEAM_JBL_PL_THUNDERFALCONS_1",
+  "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
+  "teamId": "TEAM_JBL_PL_MARINESOLDIERS_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
@@ -44,15 +44,15 @@
     },
     "coach": {
       "specialty": "투수",
-      "experienceYears": 6,
+      "experienceYears": 10,
       "stats": {
-        "teaching": 84,
-        "analysis": 73,
-        "communication": 62,
-        "discipline": 66,
-        "leadership": 60
+        "teaching": 71,
+        "analysis": 62,
+        "communication": 73,
+        "discipline": 77,
+        "leadership": 69
       },
-      "trainingBuffs": "구속 훈련 +2%"
+      "trainingBuffs": "체력 훈련 +2%"
     },
     "manager": {
       "style": "균형",

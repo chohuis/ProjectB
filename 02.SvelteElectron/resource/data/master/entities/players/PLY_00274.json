@@ -1,7 +1,7 @@
 {
   "id": "PLY_00274",
   "name": "김승우",
-  "nameEn": "Kim Seungu",
+  "nameEn": "Baek Yong-jun",
   "role": "player",
   "age": 19,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "2B",
       "jerseyNumber": 14,
       "pitching": {
-        "ovr": 53,
-        "stamina": 58,
-        "velocity": 54,
-        "command": 55,
-        "control": 51,
-        "movement": 56,
-        "mentality": 54,
-        "recovery": 51,
-        "clutch": 49,
-        "holdRunners": 51
+        "ovr": 52,
+        "stamina": 52,
+        "velocity": 58,
+        "command": 50,
+        "control": 53,
+        "movement": 51,
+        "mentality": 57,
+        "recovery": 56
       },
       "batting": {
-        "ovr": 73,
-        "contact": 77,
-        "power": 69,
-        "eye": 77,
-        "discipline": 78,
-        "speed": 73,
-        "fielding": 76,
-        "arm": 69,
-        "battingClutch": 73,
-        "baseInstinct": 68,
-        "bunting": 59,
-        "platoon": 59
+        "ovr": 75,
+        "contact": 75,
+        "power": 74,
+        "eye": 70,
+        "discipline": 72,
+        "speed": 78,
+        "fielding": 78,
+        "arm": 74,
+        "battingClutch": 78
       },
       "developmentRate": 53,
-      "potentialHidden": 77,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 73
-      }
+      "potentialHidden": 77
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

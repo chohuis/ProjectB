@@ -41,18 +41,18 @@
         "holdRunners": 30
       },
       "batting": {
-        "ovr": 42,
-        "contact": 45,
-        "power": 36,
-        "eye": 34,
-        "discipline": 39,
-        "speed": 44,
-        "baseInstinct": 36,
-        "bunting": 24,
-        "platoon": 42,
-        "fielding": 37,
-        "arm": 39,
-        "battingClutch": 35
+        "ovr": 50,
+        "contact": 53,
+        "power": 43,
+        "eye": 41,
+        "discipline": 47,
+        "speed": 52,
+        "baseInstinct": 43,
+        "bunting": 29,
+        "platoon": 50,
+        "fielding": 44,
+        "arm": 46,
+        "battingClutch": 42
       },
       "positionRatings": {
         "LF": 50

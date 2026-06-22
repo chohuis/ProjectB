@@ -1,72 +1,46 @@
 {
   "id": "PLY_01974",
-  "name": "유재윤",
-  "nameEn": "Yoo Jaeyun",
+  "name": "시미즈 슌",
+  "nameEn": "Shimizu Shun",
   "role": "player",
-  "age": 20,
+  "age": 32,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_ROYALLIONS",
-  "teamId": "TEAM_KBL_ROYALLIONS_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
+  "teamId": "TEAM_JBL_PL_MARINESOLDIERS_2",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "LF",
-      "jerseyNumber": 96,
+      "position": "SP",
+      "jerseyNumber": 34,
       "pitching": {
-        "ovr": 44,
-        "stamina": 46,
-        "velocity": 49,
-        "command": 45,
-        "control": 46,
-        "movement": 47,
-        "mentality": 44,
-        "recovery": 47,
-        "clutch": 43,
-        "holdRunners": 33
+        "ovr": 63,
+        "stamina": 66,
+        "velocity": 69,
+        "command": 64,
+        "control": 59,
+        "movement": 65,
+        "mentality": 64,
+        "recovery": 58
       },
       "batting": {
-        "ovr": 64,
-        "contact": 60,
-        "power": 67,
-        "eye": 66,
-        "discipline": 59,
-        "speed": 70,
-        "fielding": 64,
-        "arm": 61,
-        "battingClutch": 61,
-        "baseInstinct": 60,
-        "bunting": 47,
-        "platoon": 61
+        "ovr": 40,
+        "contact": 41,
+        "power": 41,
+        "eye": 36,
+        "discipline": 36,
+        "speed": 41,
+        "fielding": 38,
+        "arm": 34,
+        "battingClutch": 35
       },
-      "developmentRate": 62,
-      "potentialHidden": 75,
-      "primaryPosition": "LF",
-      "positionRatings": {
-        "LF": 64
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 55,
+      "potentialHidden": 81
     },
     "coach": {
       "specialty": "-",
@@ -106,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 57,
-  "popularity": 23
+  }
 }

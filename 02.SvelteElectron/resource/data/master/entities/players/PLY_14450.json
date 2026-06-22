@@ -1,6 +1,6 @@
 {
   "id": "PLY_14450",
-  "name": "클라크 카일",
+  "name": "Clark Kyle",
   "nameEn": "Clark Kyle",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 66,
   "popularity": 33,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 68,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 56,
-        "stamina": 60,
-        "velocity": 62,
-        "command": 50,
-        "control": 48,
-        "movement": 53,
-        "mentality": 50,
-        "recovery": 48,
-        "clutch": 53,
-        "holdRunners": 51
+        "ovr": 57,
+        "stamina": 61,
+        "velocity": 63,
+        "command": 51,
+        "control": 49,
+        "movement": 54,
+        "mentality": 51,
+        "recovery": 49,
+        "clutch": 54,
+        "holdRunners": 52
       },
       "batting": {
         "ovr": 57,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

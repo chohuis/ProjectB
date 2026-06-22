@@ -1,14 +1,14 @@
 {
   "id": "PLY_00634",
   "name": "우주원",
-  "nameEn": "Woo Juwon",
+  "nameEn": "Noh Geon-woo",
   "role": "player",
   "age": 19,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_SOARINGEAGLES",
-  "teamId": "TEAM_KBL_SOARINGEAGLES_2",
+  "clubId": "CLUB_KBL_DOOSAN",
+  "teamId": "TEAM_KBL_DOOSAN_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,48 +19,28 @@
       "position": "2B",
       "jerseyNumber": 44,
       "pitching": {
-        "ovr": 49,
-        "stamina": 53,
-        "velocity": 54,
+        "ovr": 44,
+        "stamina": 45,
+        "velocity": 48,
         "command": 49,
-        "control": 53,
-        "movement": 53,
-        "mentality": 53,
-        "recovery": 47,
-        "clutch": 40,
-        "holdRunners": 41
+        "control": 46,
+        "movement": 43,
+        "mentality": 43,
+        "recovery": 42
       },
       "batting": {
-        "ovr": 69,
-        "contact": 74,
-        "power": 72,
-        "eye": 68,
-        "discipline": 71,
-        "speed": 70,
-        "fielding": 72,
+        "ovr": 67,
+        "contact": 71,
+        "power": 70,
+        "eye": 64,
+        "discipline": 67,
+        "speed": 71,
+        "fielding": 74,
         "arm": 72,
-        "battingClutch": 68,
-        "baseInstinct": 59,
-        "bunting": 59,
-        "platoon": 66
+        "battingClutch": 69
       },
       "developmentRate": 47,
-      "potentialHidden": 72,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 69
-      },
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 72
     },
     "coach": {
       "specialty": "-",
@@ -100,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

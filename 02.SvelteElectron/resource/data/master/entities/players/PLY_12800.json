@@ -1,9 +1,9 @@
 {
   "id": "PLY_12800",
-  "name": "홀 콜",
-  "nameEn": "Hall Cole",
+  "name": "Taylor Hunter",
+  "nameEn": "Taylor Hunter",
   "role": "player",
-  "age": 28,
+  "age": 34,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 80,
-  "popularity": 28,
+  "notes": "국적:쿠바",
+  "diligence": 61,
+  "popularity": 18,
   "militaryStatus": "군필",
   "entryYear": 2043,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 28,
+  "entryAge": 34,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 3,
-      "primaryPosition": "SP",
-      "developmentRate": 69,
-      "potentialHidden": 82,
-      "proServiceYears": 6,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
+      "jerseyNumber": 44,
+      "primaryPosition": "LF",
+      "developmentRate": 51,
+      "potentialHidden": 61,
+      "proServiceYears": 12,
       "pitching": {
-        "ovr": 79,
-        "stamina": 76,
-        "velocity": 82,
-        "command": 80,
-        "control": 75,
-        "movement": 81,
-        "mentality": 85,
-        "recovery": 77,
-        "clutch": 79,
-        "holdRunners": 78
+        "ovr": 63,
+        "stamina": 63,
+        "velocity": 61,
+        "command": 59,
+        "control": 56,
+        "movement": 56,
+        "mentality": 64,
+        "recovery": 59,
+        "clutch": 52,
+        "holdRunners": 54
       },
       "batting": {
-        "ovr": 76,
-        "contact": 68,
-        "power": 66,
-        "eye": 69,
-        "discipline": 76,
-        "speed": 74,
-        "baseInstinct": 79,
-        "bunting": 64,
+        "ovr": 63,
+        "contact": 55,
+        "power": 54,
+        "eye": 57,
+        "discipline": 63,
+        "speed": 65,
+        "baseInstinct": 64,
+        "bunting": 47,
         "platoon": 50,
-        "fielding": 68,
-        "arm": 74,
-        "battingClutch": 64
+        "fielding": 58,
+        "arm": 63,
+        "battingClutch": 55
       },
       "positionRatings": {
-        "SP": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "LF": 63
+      }
     },
     "coach": null,
     "manager": null,

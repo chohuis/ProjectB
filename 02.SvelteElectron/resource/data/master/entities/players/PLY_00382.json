@@ -1,7 +1,7 @@
 {
   "id": "PLY_00382",
   "name": "민지호",
-  "nameEn": "Min Jiho",
+  "nameEn": "Cha Ji-ho",
   "role": "player",
   "age": 20,
   "status": "active",
@@ -19,54 +19,28 @@
       "position": "SP",
       "jerseyNumber": 2,
       "pitching": {
-        "ovr": 40,
-        "stamina": 45,
-        "velocity": 42,
-        "command": 36,
-        "control": 40,
-        "movement": 36,
-        "mentality": 43,
-        "recovery": 36,
-        "clutch": 36,
-        "holdRunners": 42
+        "ovr": 49,
+        "stamina": 53,
+        "velocity": 53,
+        "command": 53,
+        "control": 51,
+        "movement": 48,
+        "mentality": 49,
+        "recovery": 48
       },
       "batting": {
-        "ovr": 22,
-        "contact": 25,
-        "power": 22,
-        "eye": 24,
+        "ovr": 23,
+        "contact": 24,
+        "power": 24,
+        "eye": 26,
         "discipline": 26,
-        "speed": 26,
-        "fielding": 20,
+        "speed": 22,
+        "fielding": 28,
         "arm": 23,
-        "battingClutch": 44,
-        "baseInstinct": 39,
-        "bunting": 35,
-        "platoon": 36
+        "battingClutch": 23
       },
       "developmentRate": 57,
-      "potentialHidden": 82,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 40
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 82
     },
     "coach": {
       "specialty": "-",
@@ -106,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

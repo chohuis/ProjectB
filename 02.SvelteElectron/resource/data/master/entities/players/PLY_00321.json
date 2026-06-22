@@ -1,7 +1,7 @@
 {
   "id": "PLY_00321",
   "name": "하도현",
-  "nameEn": "Ha Dohyeon",
+  "nameEn": "Shin Jae-hoon",
   "role": "player",
   "age": 29,
   "status": "active",
@@ -19,58 +19,28 @@
       "position": "SP",
       "jerseyNumber": 1,
       "pitching": {
-        "ovr": 64,
-        "stamina": 61,
-        "velocity": 59,
-        "command": 65,
-        "control": 60,
+        "ovr": 69,
+        "stamina": 77,
+        "velocity": 73,
+        "command": 69,
+        "control": 73,
         "movement": 66,
-        "mentality": 61,
-        "recovery": 60,
-        "clutch": 56,
-        "holdRunners": 60
+        "mentality": 67,
+        "recovery": 70
       },
       "batting": {
-        "ovr": 46,
-        "contact": 48,
-        "power": 49,
-        "eye": 41,
+        "ovr": 48,
+        "contact": 49,
+        "power": 46,
+        "eye": 44,
         "discipline": 49,
-        "speed": 42,
-        "fielding": 49,
-        "arm": 41,
-        "battingClutch": 36,
-        "baseInstinct": 38,
-        "bunting": 36,
-        "platoon": 43
+        "speed": 49,
+        "fielding": 46,
+        "arm": 44,
+        "battingClutch": 46
       },
       "developmentRate": 53,
-      "potentialHidden": 85,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 64
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_SCREWBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 9,
-      "contract": {
-        "salary": 1700,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 85
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

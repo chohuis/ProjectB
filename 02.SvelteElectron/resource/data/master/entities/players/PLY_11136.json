@@ -1,9 +1,9 @@
 {
   "id": "PLY_11136",
-  "name": "데이비스 케빈",
-  "nameEn": "Davis Kevin",
+  "name": "Clark Dylan",
+  "nameEn": "Clark Dylan",
   "role": "player",
-  "age": 28,
+  "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 83,
-  "popularity": 27,
+  "notes": "국적:일본",
+  "diligence": 49,
+  "popularity": 44,
   "militaryStatus": "군필",
   "entryYear": 2033,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 28,
+  "entryAge": 27,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "LF",
       "jerseyNumber": 69,
-      "primaryPosition": "SP",
-      "developmentRate": 61,
-      "potentialHidden": 79,
-      "proServiceYears": 6,
+      "primaryPosition": "LF",
+      "developmentRate": 54,
+      "potentialHidden": 75,
+      "proServiceYears": 5,
       "pitching": {
-        "ovr": 83,
-        "stamina": 82,
-        "velocity": 89,
-        "command": 84,
-        "control": 79,
-        "movement": 81,
-        "mentality": 89,
-        "recovery": 85,
-        "clutch": 82,
-        "holdRunners": 74
+        "ovr": 80,
+        "stamina": 81,
+        "velocity": 83,
+        "command": 77,
+        "control": 81,
+        "movement": 71,
+        "mentality": 86,
+        "recovery": 76,
+        "clutch": 79,
+        "holdRunners": 78
       },
       "batting": {
         "ovr": 80,
         "contact": 81,
-        "power": 82,
-        "eye": 80,
-        "discipline": 81,
-        "speed": 82,
+        "power": 81,
+        "eye": 77,
+        "discipline": 75,
+        "speed": 85,
         "baseInstinct": 79,
-        "bunting": 64,
+        "bunting": 71,
         "platoon": 50,
-        "fielding": 82,
-        "arm": 70,
-        "battingClutch": 78
+        "fielding": 70,
+        "arm": 83,
+        "battingClutch": 71
       },
       "positionRatings": {
-        "SP": 80
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "LF": 80
+      }
     },
     "coach": null,
     "manager": null,

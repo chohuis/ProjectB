@@ -1,14 +1,14 @@
 {
   "id": "PLY_01128",
   "name": "스미스 앤서니",
-  "nameEn": "Seu 미스 앤서니",
+  "nameEn": "Smith Anthony",
   "role": "player",
   "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_LONESTARS",
-  "teamId": "TEAM_ABL_LONESTARS_2",
+  "clubId": "CLUB_ABL_TEX",
+  "teamId": "TEAM_ABL_TEX_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:쿠바",
@@ -19,48 +19,28 @@
       "position": "1B",
       "jerseyNumber": 53,
       "pitching": {
-        "ovr": 46,
-        "stamina": 50,
-        "velocity": 50,
-        "command": 47,
-        "control": 49,
-        "movement": 46,
-        "mentality": 43,
-        "recovery": 43,
-        "clutch": 42,
-        "holdRunners": 34
+        "ovr": 36,
+        "stamina": 39,
+        "velocity": 42,
+        "command": 35,
+        "control": 39,
+        "movement": 39,
+        "mentality": 36,
+        "recovery": 35
       },
       "batting": {
-        "ovr": 66,
-        "contact": 61,
-        "power": 66,
-        "eye": 66,
-        "discipline": 66,
-        "speed": 60,
-        "fielding": 68,
+        "ovr": 67,
+        "contact": 65,
+        "power": 72,
+        "eye": 65,
+        "discipline": 65,
+        "speed": 61,
+        "fielding": 67,
         "arm": 64,
-        "battingClutch": 57,
-        "baseInstinct": 65,
-        "bunting": 61,
-        "platoon": 60
+        "battingClutch": 66
       },
       "developmentRate": 30,
-      "potentialHidden": 77,
-      "primaryPosition": "1B",
-      "positionRatings": {
-        "1B": 66
-      },
-      "proServiceYears": 2,
-      "contract": {
-        "salary": 6300,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 77
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

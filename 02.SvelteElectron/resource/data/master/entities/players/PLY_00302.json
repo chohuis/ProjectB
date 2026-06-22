@@ -1,7 +1,7 @@
 {
   "id": "PLY_00302",
   "name": "우재윤",
-  "nameEn": "Woo Jaeyun",
+  "nameEn": "Hwang Seong-hyun",
   "role": "player",
   "age": 30,
   "status": "active",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 2,
       "pitching": {
-        "ovr": 59,
-        "stamina": 64,
-        "velocity": 62,
-        "command": 60,
-        "control": 57,
-        "movement": 63,
-        "mentality": 64,
-        "recovery": 62,
-        "clutch": 54,
-        "holdRunners": 51
+        "ovr": 62,
+        "stamina": 65,
+        "velocity": 68,
+        "command": 59,
+        "control": 63,
+        "movement": 61,
+        "mentality": 59,
+        "recovery": 61
       },
       "batting": {
-        "ovr": 41,
-        "contact": 42,
-        "power": 35,
-        "eye": 43,
-        "discipline": 45,
-        "speed": 41,
-        "fielding": 46,
-        "arm": 44,
-        "battingClutch": 34,
-        "baseInstinct": 42,
-        "bunting": 38,
-        "platoon": 40
+        "ovr": 37,
+        "contact": 29,
+        "power": 36,
+        "eye": 33,
+        "discipline": 28,
+        "speed": 29,
+        "fielding": 33,
+        "arm": 35,
+        "battingClutch": 32
       },
       "developmentRate": 48,
-      "potentialHidden": 75,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 10,
-      "contract": {
-        "salary": 1300,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 75
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

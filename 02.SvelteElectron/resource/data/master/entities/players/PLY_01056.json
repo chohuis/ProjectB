@@ -1,14 +1,14 @@
 {
   "id": "PLY_01056",
   "name": "해리스 크리스토퍼",
-  "nameEn": "Hae 리스 크리스토퍼",
+  "nameEn": "Harris Christopher",
   "role": "player",
   "age": 23,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_PEACHTREEFALCONS",
-  "teamId": "TEAM_ABL_PEACHTREEFALCONS_1",
+  "clubId": "CLUB_ABL_HOU",
+  "teamId": "TEAM_ABL_HOU",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 11,
       "pitching": {
-        "ovr": 73,
-        "stamina": 75,
-        "velocity": 72,
-        "command": 75,
-        "control": 74,
-        "movement": 72,
-        "mentality": 74,
-        "recovery": 71,
-        "clutch": 70,
-        "holdRunners": 68
+        "ovr": 82,
+        "stamina": 73,
+        "velocity": 82,
+        "command": 76,
+        "control": 78,
+        "movement": 81,
+        "mentality": 81,
+        "recovery": 77
       },
       "batting": {
-        "ovr": 55,
-        "contact": 53,
-        "power": 54,
-        "eye": 59,
-        "discipline": 59,
-        "speed": 52,
-        "fielding": 52,
-        "arm": 59,
-        "battingClutch": 49,
-        "baseInstinct": 48,
-        "bunting": 39,
-        "platoon": 47
+        "ovr": 56,
+        "contact": 55,
+        "power": 55,
+        "eye": 55,
+        "discipline": 52,
+        "speed": 55,
+        "fielding": 50,
+        "arm": 49,
+        "battingClutch": 55
       },
       "developmentRate": 42,
-      "potentialHidden": 70,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 1,
-      "contract": {
-        "salary": 24000,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 70
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

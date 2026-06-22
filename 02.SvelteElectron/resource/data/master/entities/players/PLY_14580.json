@@ -1,6 +1,6 @@
 {
   "id": "PLY_14580",
-  "name": "톰슨 라이언",
+  "name": "Thompson Ryan",
   "nameEn": "Thompson Ryan",
   "role": "player",
   "age": 23,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 74,
   "popularity": 13,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 57
       },
       "batting": {
-        "ovr": 62,
-        "contact": 58,
-        "power": 57,
-        "eye": 60,
-        "discipline": 64,
-        "speed": 60,
-        "baseInstinct": 62,
-        "bunting": 57,
-        "platoon": 48,
-        "fielding": 58,
-        "arm": 61,
-        "battingClutch": 58
+        "ovr": 64,
+        "contact": 60,
+        "power": 59,
+        "eye": 62,
+        "discipline": 66,
+        "speed": 62,
+        "baseInstinct": 64,
+        "bunting": 59,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 63,
+        "battingClutch": 60
       },
       "positionRatings": {
         "RF": 64

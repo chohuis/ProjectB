@@ -1,7 +1,7 @@
 {
   "id": "PLY_00361",
   "name": "하승현",
-  "nameEn": "Ha Seunghyeon",
+  "nameEn": "Nam Chan-young",
   "role": "player",
   "age": 20,
   "status": "active",
@@ -19,54 +19,28 @@
       "position": "SP",
       "jerseyNumber": 1,
       "pitching": {
-        "ovr": 51,
-        "stamina": 52,
-        "velocity": 54,
+        "ovr": 52,
+        "stamina": 62,
+        "velocity": 58,
         "command": 52,
-        "control": 52,
-        "movement": 51,
-        "mentality": 48,
-        "recovery": 50,
-        "clutch": 40,
-        "holdRunners": 42
+        "control": 51,
+        "movement": 58,
+        "mentality": 51,
+        "recovery": 58
       },
       "batting": {
-        "ovr": 33,
-        "contact": 30,
-        "power": 32,
-        "eye": 36,
-        "discipline": 31,
-        "speed": 35,
-        "fielding": 38,
-        "arm": 28,
-        "battingClutch": 44,
-        "baseInstinct": 43,
-        "bunting": 38,
-        "platoon": 36
+        "ovr": 24,
+        "contact": 29,
+        "power": 23,
+        "eye": 26,
+        "discipline": 24,
+        "speed": 29,
+        "fielding": 24,
+        "arm": 24,
+        "battingClutch": 24
       },
       "developmentRate": 58,
-      "potentialHidden": 81,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 51
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 700,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 81
     },
     "coach": {
       "specialty": "-",
@@ -106,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

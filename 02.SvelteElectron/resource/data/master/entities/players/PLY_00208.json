@@ -1,7 +1,7 @@
 {
   "id": "PLY_00208",
   "name": "문예준",
-  "nameEn": "Moon Yejun",
+  "nameEn": "Jang Do-yun",
   "role": "player",
   "age": 19,
   "status": "active",
@@ -19,47 +19,28 @@
       "position": "RP",
       "jerseyNumber": 8,
       "pitching": {
-        "ovr": 56,
-        "stamina": 59,
-        "velocity": 51,
-        "command": 58,
-        "control": 56,
-        "movement": 57,
-        "mentality": 62,
-        "recovery": 52,
-        "clutch": 53,
-        "holdRunners": 45
+        "ovr": 62,
+        "stamina": 50,
+        "velocity": 64,
+        "command": 59,
+        "control": 58,
+        "movement": 54,
+        "mentality": 59,
+        "recovery": 60
       },
       "batting": {
-        "ovr": 38,
-        "contact": 42,
-        "power": 38,
-        "eye": 43,
+        "ovr": 37,
+        "contact": 34,
+        "power": 39,
+        "eye": 36,
         "discipline": 35,
-        "speed": 38,
-        "fielding": 38,
-        "arm": 43,
-        "battingClutch": 41,
-        "baseInstinct": 39,
-        "bunting": 29,
-        "platoon": 43
+        "speed": 31,
+        "fielding": 36,
+        "arm": 38,
+        "battingClutch": 34
       },
       "developmentRate": 47,
-      "potentialHidden": 59,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 59
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

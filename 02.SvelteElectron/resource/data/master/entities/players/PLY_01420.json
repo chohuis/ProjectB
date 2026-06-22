@@ -1,14 +1,14 @@
 {
   "id": "PLY_01420",
   "name": "해리스 조셉",
-  "nameEn": "Hae 리스 조셉",
+  "nameEn": "Harris Joseph",
   "role": "player",
   "age": 31,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_COASTALRAYS",
-  "teamId": "TEAM_ABL_COASTALRAYS_1",
+  "clubId": "CLUB_ABL_SF",
+  "teamId": "TEAM_ABL_SF",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
@@ -19,48 +19,28 @@
       "position": "C",
       "jerseyNumber": 15,
       "pitching": {
-        "ovr": 61,
-        "stamina": 63,
-        "velocity": 61,
-        "command": 65,
-        "control": 57,
-        "movement": 57,
-        "mentality": 65,
-        "recovery": 58,
-        "clutch": 59,
-        "holdRunners": 59
+        "ovr": 52,
+        "stamina": 52,
+        "velocity": 58,
+        "command": 55,
+        "control": 51,
+        "movement": 49,
+        "mentality": 55,
+        "recovery": 57
       },
       "batting": {
-        "ovr": 81,
-        "contact": 84,
-        "power": 86,
-        "eye": 84,
-        "discipline": 77,
+        "ovr": 83,
+        "contact": 76,
+        "power": 81,
+        "eye": 81,
+        "discipline": 81,
         "speed": 77,
-        "fielding": 76,
-        "arm": 87,
-        "battingClutch": 74,
-        "baseInstinct": 79,
-        "bunting": 76,
-        "platoon": 75
+        "fielding": 82,
+        "arm": 83,
+        "battingClutch": 83
       },
       "developmentRate": 43,
-      "potentialHidden": 71,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 81
-      },
-      "proServiceYears": 9,
-      "contract": {
-        "salary": 14800,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 71
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

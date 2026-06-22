@@ -1,14 +1,14 @@
 {
   "id": "PLY_01424",
   "name": "마틴 빅터",
-  "nameEn": "Ma 틴 빅터",
+  "nameEn": "Martin Victor",
   "role": "player",
   "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_COASTALRAYS",
-  "teamId": "TEAM_ABL_COASTALRAYS_1",
+  "clubId": "CLUB_ABL_SF",
+  "teamId": "TEAM_ABL_SF",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,48 +19,28 @@
       "position": "SS",
       "jerseyNumber": 19,
       "pitching": {
-        "ovr": 58,
-        "stamina": 62,
-        "velocity": 53,
-        "command": 63,
-        "control": 56,
-        "movement": 58,
-        "mentality": 62,
-        "recovery": 61,
-        "clutch": 49,
-        "holdRunners": 57
+        "ovr": 54,
+        "stamina": 50,
+        "velocity": 60,
+        "command": 52,
+        "control": 55,
+        "movement": 54,
+        "mentality": 58,
+        "recovery": 50
       },
       "batting": {
-        "ovr": 78,
-        "contact": 81,
-        "power": 78,
-        "eye": 74,
-        "discipline": 77,
-        "speed": 78,
-        "fielding": 78,
+        "ovr": 74,
+        "contact": 78,
+        "power": 72,
+        "eye": 78,
+        "discipline": 72,
+        "speed": 79,
+        "fielding": 79,
         "arm": 74,
-        "battingClutch": 70,
-        "baseInstinct": 77,
-        "bunting": 75,
-        "platoon": 64
+        "battingClutch": 76
       },
       "developmentRate": 47,
-      "potentialHidden": 74,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 78
-      },
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 12500,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 74
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

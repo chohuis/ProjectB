@@ -1,6 +1,6 @@
 {
   "id": "PLY_16003",
-  "name": "라이트 카를로스",
+  "name": "Wright Carlos",
   "nameEn": "Wright Carlos",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 64,
   "popularity": 30,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 68,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 69,
-        "stamina": 61,
-        "velocity": 80,
-        "command": 65,
-        "control": 72,
-        "movement": 61,
-        "mentality": 66,
-        "recovery": 65,
-        "clutch": 62,
-        "holdRunners": 65
+        "ovr": 62,
+        "stamina": 55,
+        "velocity": 72,
+        "command": 58,
+        "control": 65,
+        "movement": 55,
+        "mentality": 59,
+        "recovery": 58,
+        "clutch": 56,
+        "holdRunners": 58
       },
       "batting": {
         "ovr": 62,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

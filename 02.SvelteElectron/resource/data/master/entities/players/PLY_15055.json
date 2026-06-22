@@ -1,6 +1,6 @@
 {
   "id": "PLY_15055",
-  "name": "로드리게스 카일",
+  "name": "Rodriguez Kyle",
   "nameEn": "Rodriguez Kyle",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 49,
   "popularity": 24,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 62,
       "proServiceYears": 3,
       "pitching": {
-        "ovr": 62,
-        "stamina": 62,
-        "velocity": 71,
-        "command": 56,
-        "control": 61,
-        "movement": 65,
-        "mentality": 58,
-        "recovery": 62,
-        "clutch": 55,
-        "holdRunners": 51
+        "ovr": 66,
+        "stamina": 66,
+        "velocity": 76,
+        "command": 60,
+        "control": 65,
+        "movement": 69,
+        "mentality": 62,
+        "recovery": 66,
+        "clutch": 59,
+        "holdRunners": 54
       },
       "batting": {
         "ovr": 66,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

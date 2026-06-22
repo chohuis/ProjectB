@@ -1,6 +1,6 @@
 {
   "id": "PLY_14244",
-  "name": "잭슨 알렉스",
+  "name": "Jackson Alex",
   "nameEn": "Jackson Alex",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 65,
   "popularity": 31,
   "militaryStatus": "군필",

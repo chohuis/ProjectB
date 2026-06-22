@@ -1,6 +1,6 @@
 {
   "id": "PLY_14535",
-  "name": "홀 마커스",
+  "name": "Hall Marcus",
   "nameEn": "Hall Marcus",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 60,
   "popularity": 33,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 45
       },
       "batting": {
-        "ovr": 54,
-        "contact": 54,
-        "power": 53,
-        "eye": 58,
-        "discipline": 54,
-        "speed": 61,
-        "baseInstinct": 56,
-        "bunting": 36,
-        "platoon": 49,
-        "fielding": 57,
-        "arm": 46,
-        "battingClutch": 53
+        "ovr": 55,
+        "contact": 55,
+        "power": 54,
+        "eye": 59,
+        "discipline": 55,
+        "speed": 62,
+        "baseInstinct": 57,
+        "bunting": 37,
+        "platoon": 50,
+        "fielding": 58,
+        "arm": 47,
+        "battingClutch": 54
       },
       "positionRatings": {
         "2B": 55

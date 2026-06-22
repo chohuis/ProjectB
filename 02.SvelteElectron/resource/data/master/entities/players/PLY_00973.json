@@ -1,14 +1,14 @@
 {
   "id": "PLY_00973",
   "name": "윌리엄스 메이슨",
-  "nameEn": "Wil 리엄스 메이슨",
+  "nameEn": "Williams Mason",
   "role": "player",
   "age": 33,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_WINDBEARS",
-  "teamId": "TEAM_ABL_WINDBEARS_1",
+  "clubId": "CLUB_ABL_TOR",
+  "teamId": "TEAM_ABL_TOR",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
@@ -19,48 +19,28 @@
       "position": "3B",
       "jerseyNumber": 18,
       "pitching": {
-        "ovr": 58,
-        "stamina": 56,
-        "velocity": 60,
-        "command": 60,
-        "control": 55,
-        "movement": 63,
-        "mentality": 60,
-        "recovery": 54,
-        "clutch": 49,
-        "holdRunners": 50
+        "ovr": 53,
+        "stamina": 49,
+        "velocity": 58,
+        "command": 52,
+        "control": 56,
+        "movement": 54,
+        "mentality": 52,
+        "recovery": 52
       },
       "batting": {
         "ovr": 78,
-        "contact": 83,
-        "power": 73,
-        "eye": 75,
-        "discipline": 80,
-        "speed": 80,
-        "fielding": 81,
-        "arm": 82,
-        "battingClutch": 70,
-        "baseInstinct": 70,
-        "bunting": 69,
-        "platoon": 75
+        "contact": 82,
+        "power": 83,
+        "eye": 74,
+        "discipline": 76,
+        "speed": 76,
+        "fielding": 75,
+        "arm": 85,
+        "battingClutch": 80
       },
       "developmentRate": 30,
-      "potentialHidden": 69,
-      "primaryPosition": "3B",
-      "positionRatings": {
-        "3B": 78
-      },
-      "proServiceYears": 11,
-      "contract": {
-        "salary": 12500,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 69
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

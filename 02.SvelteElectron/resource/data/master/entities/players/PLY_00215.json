@@ -1,7 +1,7 @@
 {
   "id": "PLY_00215",
   "name": "주용준",
-  "nameEn": "Joo Yongjun",
+  "nameEn": "Bae Ji-won",
   "role": "player",
   "age": 20,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "3B",
       "jerseyNumber": 15,
       "pitching": {
-        "ovr": 36,
-        "stamina": 33,
-        "velocity": 32,
-        "command": 37,
-        "control": 33,
-        "movement": 36,
-        "mentality": 38,
-        "recovery": 33,
-        "clutch": 46,
-        "holdRunners": 33
+        "ovr": 27,
+        "stamina": 30,
+        "velocity": 28,
+        "command": 25,
+        "control": 26,
+        "movement": 30,
+        "mentality": 32,
+        "recovery": 31
       },
       "batting": {
-        "ovr": 56,
-        "contact": 62,
-        "power": 57,
-        "eye": 58,
-        "discipline": 51,
-        "speed": 50,
-        "fielding": 53,
+        "ovr": 59,
+        "contact": 60,
+        "power": 61,
+        "eye": 53,
+        "discipline": 53,
+        "speed": 54,
+        "fielding": 51,
         "arm": 57,
-        "battingClutch": 48,
-        "baseInstinct": 45,
-        "bunting": 41,
-        "platoon": 51
+        "battingClutch": 60
       },
       "developmentRate": 64,
-      "potentialHidden": 70,
-      "primaryPosition": "3B",
-      "positionRatings": {
-        "3B": 56
-      }
+      "potentialHidden": 70
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

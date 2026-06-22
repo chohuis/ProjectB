@@ -1,6 +1,6 @@
 {
   "id": "PLY_15512",
-  "name": "영 루이스",
+  "name": "Young Luis",
   "nameEn": "Young Luis",
   "role": "player",
   "age": 33,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 58,
   "popularity": 44,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 55
       },
       "batting": {
-        "ovr": 71,
-        "contact": 67,
-        "power": 62,
-        "eye": 64,
-        "discipline": 73,
-        "speed": 75,
-        "baseInstinct": 65,
-        "bunting": 49,
-        "platoon": 62,
-        "fielding": 70,
-        "arm": 73,
-        "battingClutch": 70
+        "ovr": 57,
+        "contact": 54,
+        "power": 50,
+        "eye": 51,
+        "discipline": 59,
+        "speed": 60,
+        "baseInstinct": 52,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 59,
+        "battingClutch": 56
       },
       "positionRatings": {
         "2B": 57

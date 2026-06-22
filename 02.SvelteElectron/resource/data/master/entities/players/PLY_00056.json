@@ -1,9 +1,9 @@
 {
   "id": "PLY_00056",
   "name": "신재윤",
-  "nameEn": "Shin Jaeyun",
+  "nameEn": "Cho Ha-jun",
   "role": "player",
-  "age": 19,
+  "age": 15,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "LF",
       "jerseyNumber": 16,
       "pitching": {
-        "ovr": 35,
-        "stamina": 40,
-        "velocity": 35,
-        "command": 40,
-        "control": 33,
-        "movement": 34,
-        "mentality": 33,
-        "recovery": 39,
-        "clutch": 41,
-        "holdRunners": 38
+        "ovr": 47,
+        "stamina": 72,
+        "velocity": 71,
+        "command": 61,
+        "control": 68,
+        "movement": 56,
+        "mentality": 62,
+        "recovery": 63
       },
       "batting": {
-        "ovr": 55,
-        "contact": 61,
+        "ovr": 59,
+        "contact": 54,
         "power": 55,
-        "eye": 51,
-        "discipline": 56,
-        "speed": 57,
-        "fielding": 56,
-        "arm": 50,
-        "battingClutch": 50,
-        "baseInstinct": 52,
-        "bunting": 38,
-        "platoon": 44
+        "eye": 55,
+        "discipline": 51,
+        "speed": 58,
+        "fielding": 63,
+        "arm": 55,
+        "battingClutch": 67
       },
       "developmentRate": 60,
-      "potentialHidden": 66,
-      "primaryPosition": "LF",
-      "positionRatings": {
-        "LF": 55
-      }
+      "potentialHidden": 66
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

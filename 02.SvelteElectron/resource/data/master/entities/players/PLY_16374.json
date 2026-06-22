@@ -1,6 +1,6 @@
 {
   "id": "PLY_16374",
-  "name": "존슨 로건",
+  "name": "Johnson Logan",
   "nameEn": "Johnson Logan",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 58,
   "popularity": 15,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 54
       },
       "batting": {
-        "ovr": 72,
-        "contact": 64,
-        "power": 72,
-        "eye": 63,
-        "discipline": 70,
-        "speed": 80,
-        "baseInstinct": 67,
-        "bunting": 59,
-        "platoon": 55,
-        "fielding": 73,
-        "arm": 73,
-        "battingClutch": 70
+        "ovr": 66,
+        "contact": 59,
+        "power": 66,
+        "eye": 58,
+        "discipline": 64,
+        "speed": 73,
+        "baseInstinct": 61,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 67,
+        "battingClutch": 64
       },
       "positionRatings": {
         "2B": 66

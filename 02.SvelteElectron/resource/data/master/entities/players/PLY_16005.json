@@ -1,6 +1,6 @@
 {
   "id": "PLY_16005",
-  "name": "루이스 라이언",
+  "name": "Lewis Ryan",
   "nameEn": "Lewis Ryan",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 53,
   "popularity": 26,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 61
       },
       "batting": {
-        "ovr": 68,
-        "contact": 61,
-        "power": 71,
-        "eye": 71,
-        "discipline": 67,
-        "speed": 63,
-        "baseInstinct": 71,
-        "bunting": 60,
-        "platoon": 49,
-        "fielding": 65,
-        "arm": 64,
-        "battingClutch": 68
+        "ovr": 70,
+        "contact": 63,
+        "power": 73,
+        "eye": 73,
+        "discipline": 69,
+        "speed": 65,
+        "baseInstinct": 73,
+        "bunting": 62,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 66,
+        "battingClutch": 70
       },
       "positionRatings": {
         "1B": 70

@@ -1,9 +1,9 @@
 {
   "id": "PLY_13469",
-  "name": "루이스 케빈",
-  "nameEn": "Lewis Kevin",
+  "name": "Adams Daniel",
+  "nameEn": "Adams Daniel",
   "role": "player",
-  "age": 32,
+  "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 66,
-  "popularity": 46,
+  "notes": "국적:멕시코",
+  "diligence": 70,
+  "popularity": 18,
   "militaryStatus": "군필",
   "entryYear": 2047,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 32,
+  "entryAge": 24,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 19,
+      "jerseyNumber": 80,
       "primaryPosition": "SP",
-      "developmentRate": 36,
-      "potentialHidden": 63,
-      "proServiceYears": 10,
+      "developmentRate": 52,
+      "potentialHidden": 81,
+      "proServiceYears": 2,
       "pitching": {
-        "ovr": 74,
-        "stamina": 65,
-        "velocity": 82,
-        "command": 62,
-        "control": 65,
-        "movement": 64,
-        "mentality": 80,
-        "recovery": 60,
+        "ovr": 68,
+        "stamina": 61,
+        "velocity": 77,
+        "command": 58,
+        "control": 70,
+        "movement": 67,
+        "mentality": 65,
+        "recovery": 65,
         "clutch": 67,
         "holdRunners": 66
       },
       "batting": {
-        "ovr": 64,
-        "contact": 68,
-        "power": 58,
-        "eye": 57,
-        "discipline": 54,
-        "speed": 67,
-        "baseInstinct": 67,
-        "bunting": 45,
+        "ovr": 68,
+        "contact": 69,
+        "power": 61,
+        "eye": 64,
+        "discipline": 67,
+        "speed": 66,
+        "baseInstinct": 65,
+        "bunting": 57,
         "platoon": 50,
-        "fielding": 65,
-        "arm": 65,
-        "battingClutch": 60
+        "fielding": 70,
+        "arm": 70,
+        "battingClutch": 64
       },
       "positionRatings": {
-        "SP": 64
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 68
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,9 +1,9 @@
 {
   "id": "PLY_12311",
-  "name": "킹 제이슨",
-  "nameEn": "King Jason",
+  "name": "Baker Jason",
+  "nameEn": "Baker Jason",
   "role": "player",
-  "age": 35,
+  "age": 29,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 55,
-  "popularity": 47,
+  "notes": "국적:미국",
+  "diligence": 83,
+  "popularity": 44,
   "militaryStatus": "군필",
   "entryYear": 2040,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 35,
+  "entryAge": 29,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 78,
-      "primaryPosition": "SP",
-      "developmentRate": 39,
-      "potentialHidden": 73,
-      "proServiceYears": 13,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 88,
+      "primaryPosition": "SS",
+      "developmentRate": 43,
+      "potentialHidden": 52,
+      "proServiceYears": 7,
       "pitching": {
-        "ovr": 87,
-        "stamina": 86,
-        "velocity": 87,
-        "command": 80,
-        "control": 93,
-        "movement": 81,
-        "mentality": 86,
-        "recovery": 74,
-        "clutch": 81,
-        "holdRunners": 74
+        "ovr": 74,
+        "stamina": 67,
+        "velocity": 77,
+        "command": 65,
+        "control": 77,
+        "movement": 68,
+        "mentality": 80,
+        "recovery": 69,
+        "clutch": 73,
+        "holdRunners": 72
       },
       "batting": {
-        "ovr": 73,
-        "contact": 73,
-        "power": 71,
-        "eye": 73,
-        "discipline": 69,
-        "speed": 79,
-        "baseInstinct": 72,
-        "bunting": 61,
+        "ovr": 74,
+        "contact": 74,
+        "power": 70,
+        "eye": 71,
+        "discipline": 71,
+        "speed": 77,
+        "baseInstinct": 75,
+        "bunting": 59,
         "platoon": 50,
-        "fielding": 69,
+        "fielding": 75,
         "arm": 73,
-        "battingClutch": 69
+        "battingClutch": 64
       },
       "positionRatings": {
-        "SP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "SS": 74
+      }
     },
     "coach": null,
     "manager": null,

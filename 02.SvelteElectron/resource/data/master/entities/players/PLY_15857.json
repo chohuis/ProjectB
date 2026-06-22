@@ -1,6 +1,6 @@
 {
   "id": "PLY_15857",
-  "name": "넬슨 알렉스",
+  "name": "Nelson Alex",
   "nameEn": "Nelson Alex",
   "role": "player",
   "age": 23,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 49,
   "popularity": 14,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 81,
       "proServiceYears": 1,
       "pitching": {
-        "ovr": 60,
-        "stamina": 57,
-        "velocity": 64,
-        "command": 59,
-        "control": 61,
-        "movement": 54,
-        "mentality": 65,
-        "recovery": 53,
-        "clutch": 58,
-        "holdRunners": 48
+        "ovr": 62,
+        "stamina": 59,
+        "velocity": 66,
+        "command": 61,
+        "control": 63,
+        "movement": 56,
+        "mentality": 67,
+        "recovery": 55,
+        "clutch": 60,
+        "holdRunners": 50
       },
       "batting": {
         "ovr": 62,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

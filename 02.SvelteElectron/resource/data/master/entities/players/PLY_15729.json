@@ -1,6 +1,6 @@
 {
   "id": "PLY_15729",
-  "name": "로드리게스 재크",
+  "name": "Rodriguez Zach",
   "nameEn": "Rodriguez Zach",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 47,
   "popularity": 31,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 55
       },
       "batting": {
-        "ovr": 60,
-        "contact": 55,
-        "power": 57,
-        "eye": 56,
-        "discipline": 58,
-        "speed": 53,
-        "baseInstinct": 61,
-        "bunting": 48,
-        "platoon": 49,
-        "fielding": 55,
-        "arm": 52,
-        "battingClutch": 49
+        "ovr": 61,
+        "contact": 56,
+        "power": 58,
+        "eye": 57,
+        "discipline": 59,
+        "speed": 54,
+        "baseInstinct": 62,
+        "bunting": 49,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 53,
+        "battingClutch": 50
       },
       "positionRatings": {
         "LF": 61

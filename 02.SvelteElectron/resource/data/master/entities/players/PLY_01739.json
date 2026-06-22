@@ -1,61 +1,46 @@
 {
   "id": "PLY_01739",
-  "name": "유준영",
-  "nameEn": "Yoo Junyeong",
+  "name": "무라카미 유타카",
+  "nameEn": "Murakami Yutaka",
   "role": "player",
-  "age": 18,
+  "age": 34,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_GANGWON_PEAK",
-  "teamId": "TEAM_HS_GANGWON_PEAK",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_GANGWON_PEAK",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+  "teamId": "TEAM_JBL_CL_SILVERWOLVES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "UT",
-      "jerseyNumber": 28,
+      "position": "SS",
+      "jerseyNumber": 19,
       "pitching": {
-        "ovr": 43,
-        "stamina": 48,
-        "velocity": 45,
-        "command": 46,
-        "control": 47,
-        "movement": 41,
-        "mentality": 46,
-        "recovery": 43,
-        "clutch": 36,
-        "holdRunners": 38
+        "ovr": 57,
+        "stamina": 55,
+        "velocity": 56,
+        "command": 52,
+        "control": 54,
+        "movement": 51,
+        "mentality": 57,
+        "recovery": 54
       },
       "batting": {
-        "ovr": 63,
-        "contact": 66,
-        "power": 64,
-        "eye": 68,
-        "discipline": 63,
-        "speed": 68,
-        "fielding": 60,
-        "arm": 65,
-        "battingClutch": 63,
-        "baseInstinct": 54,
-        "bunting": 59,
-        "platoon": 55
+        "ovr": 85,
+        "contact": 82,
+        "power": 77,
+        "eye": 78,
+        "discipline": 78,
+        "speed": 86,
+        "fielding": 85,
+        "arm": 82,
+        "battingClutch": 79
       },
-      "developmentRate": 71,
-      "potentialHidden": 70,
-      "primaryPosition": "UT",
-      "positionRatings": {
-        "UT": 63
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 35,
+      "potentialHidden": 83
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 76,
-  "popularity": 12
+  }
 }

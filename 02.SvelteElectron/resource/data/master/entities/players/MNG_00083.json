@@ -1,85 +1,84 @@
-﻿{
-    "id":  "MNG_00083",
-    "name":  "사사키 히카루",
-    "nameEn":  "Sasaki Hikaru",
-    "role":  "manager",
-    "age":  48,
-    "status":  "active",
-    "originLeagueId":  "LEAGUE_JBL",
-    "leagueId":  "LEAGUE_JBL",
-    "clubId":  "CLUB_JBL_CL_TEMPOSTINGS",
-    "teamId":  "TEAM_JBL_CL_TEMPOSTINGS_2",
-    "schoolId":  "SCHOOL_NONE",
-    "grade":  null,
-    "notes":  "",
-    "details":  {
-                    "player":  {
-                                   "playerType":  "pitcher",
-                                   "handedness":  "R",
-                                   "position":  "SP",
-                                   "jerseyNumber":  0,
-                                   "pitching":  {
-                                                    "ovr":  50,
-                                                    "stamina":  50,
-                                                    "velocity":  50,
-                                                    "command":  50,
-                                                    "control":  50,
-                                                    "movement":  50,
-                                                    "mentality":  50,
-                                                    "recovery":  50
-                                                },
-                                   "batting":  {
-                                                   "ovr":  50,
-                                                   "contact":  50,
-                                                   "power":  50,
-                                                   "eye":  50,
-                                                   "discipline":  50,
-                                                   "speed":  50,
-                                                   "fielding":  50,
-                                                   "arm":  50,
-                                                   "battingClutch":  50
-                                               },
-                                   "developmentRate":  50,
-                                   "potentialHidden":  70
-                               },
-                    "coach":  {
-                                  "specialty":  "-",
-                                  "experienceYears":  0,
-                                  "stats":  {
-                                                "teaching":  50,
-                                                "analysis":  50,
-                                                "communication":  50,
-                                                "discipline":  50,
-                                                "leadership":  50
-                                            },
-                                  "trainingBuffs":  ""
-                              },
-                    "manager":  {
-                                    "style":  "공격적",
-                                    "experienceYears":  19,
-                                    "stats":  {
-                                                  "tactics":  59,
-                                                  "decision":  56,
-                                                  "rotationMgmt":  60,
-                                                  "bullpenMgmt":  86,
-                                                  "moraleMgmt":  72,
-                                                  "injuryMgmt":  45
-                                              },
-                                    "gamePlanBias":  "",
-                                    "riskTolerance":  55
-                                },
-                    "owner":  {
-                                  "ownershipStyle":  "안정 운영",
-                                  "tenureYears":  0,
-                                  "stats":  {
-                                                "budgetSupport":  50,
-                                                "patience":  50,
-                                                "prInfluence":  50,
-                                                "facilityInvestment":  50,
-                                                "staffTrust":  50
-                                            },
-                                  "budgetPolicy":  "",
-                                  "hiringPolicy":  ""
-                              }
-                }
+{
+  "id": "MNG_00083",
+  "name": "고토 미쓰루",
+  "nameEn": "Goto Mitsuru",
+  "role": "manager",
+  "age": 63,
+  "status": "active",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONSTORMS",
+  "teamId": "TEAM_JBL_CL_IRONSTORMS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 0,
+      "pitching": {
+        "ovr": 50,
+        "stamina": 50,
+        "velocity": 50,
+        "command": 50,
+        "control": 50,
+        "movement": 50,
+        "mentality": 50,
+        "recovery": 50
+      },
+      "batting": {
+        "ovr": 50,
+        "contact": 50,
+        "power": 50,
+        "eye": 50,
+        "discipline": 50,
+        "speed": 50,
+        "fielding": 50,
+        "arm": 50,
+        "battingClutch": 50
+      },
+      "developmentRate": 50,
+      "potentialHidden": 70
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "데이터 중심",
+      "experienceYears": 13,
+      "stats": {
+        "tactics": 61,
+        "decision": 81,
+        "rotationMgmt": 75,
+        "bullpenMgmt": 80,
+        "moraleMgmt": 75
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 45
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  }
 }

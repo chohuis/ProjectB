@@ -1,6 +1,6 @@
 {
   "id": "PLY_14475",
-  "name": "킹 코너",
+  "name": "King Connor",
   "nameEn": "King Connor",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 79,
   "popularity": 17,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 63,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 59,
-        "stamina": 55,
-        "velocity": 70,
-        "command": 55,
-        "control": 62,
-        "movement": 58,
-        "mentality": 65,
-        "recovery": 54,
-        "clutch": 48,
-        "holdRunners": 52
+        "ovr": 60,
+        "stamina": 56,
+        "velocity": 71,
+        "command": 56,
+        "control": 63,
+        "movement": 59,
+        "mentality": 66,
+        "recovery": 55,
+        "clutch": 49,
+        "holdRunners": 53
       },
       "batting": {
         "ovr": 60,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

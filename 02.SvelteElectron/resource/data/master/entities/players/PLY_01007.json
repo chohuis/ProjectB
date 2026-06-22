@@ -1,14 +1,14 @@
 {
   "id": "PLY_01007",
   "name": "밀러 존",
-  "nameEn": "Mil 러 존",
+  "nameEn": "Miller John",
   "role": "player",
   "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_SPACECOMETS",
-  "teamId": "TEAM_ABL_SPACECOMETS_1",
+  "clubId": "CLUB_ABL_SEA",
+  "teamId": "TEAM_ABL_SEA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 7,
       "pitching": {
-        "ovr": 77,
+        "ovr": 86,
         "stamina": 76,
-        "velocity": 76,
-        "command": 79,
-        "control": 76,
-        "movement": 76,
-        "mentality": 73,
-        "recovery": 77,
-        "clutch": 76,
-        "holdRunners": 76
+        "velocity": 90,
+        "command": 91,
+        "control": 88,
+        "movement": 82,
+        "mentality": 86,
+        "recovery": 88
       },
       "batting": {
-        "ovr": 59,
-        "contact": 59,
-        "power": 56,
-        "eye": 65,
-        "discipline": 55,
-        "speed": 61,
-        "fielding": 60,
-        "arm": 55,
-        "battingClutch": 48,
-        "baseInstinct": 52,
-        "bunting": 45,
-        "platoon": 51
+        "ovr": 63,
+        "contact": 65,
+        "power": 61,
+        "eye": 66,
+        "discipline": 60,
+        "speed": 65,
+        "fielding": 64,
+        "arm": 61,
+        "battingClutch": 64
       },
       "developmentRate": 43,
-      "potentialHidden": 66,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 77
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 27100,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 66
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

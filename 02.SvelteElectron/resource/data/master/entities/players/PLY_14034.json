@@ -1,6 +1,6 @@
 {
   "id": "PLY_14034",
-  "name": "화이트 딜런",
+  "name": "White Dylan",
   "nameEn": "White Dylan",
   "role": "player",
   "age": 34,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 48,
   "popularity": 40,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 49
       },
       "batting": {
-        "ovr": 81,
-        "contact": 85,
-        "power": 77,
-        "eye": 84,
-        "discipline": 84,
-        "speed": 78,
-        "baseInstinct": 80,
-        "bunting": 57,
-        "platoon": 63,
-        "fielding": 70,
-        "arm": 73,
-        "battingClutch": 73
+        "ovr": 64,
+        "contact": 67,
+        "power": 61,
+        "eye": 66,
+        "discipline": 66,
+        "speed": 62,
+        "baseInstinct": 63,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 58,
+        "battingClutch": 58
       },
       "positionRatings": {
         "CF": 64

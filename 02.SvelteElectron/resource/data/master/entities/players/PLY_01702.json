@@ -1,61 +1,46 @@
 {
   "id": "PLY_01702",
-  "name": "오성준",
-  "nameEn": "Oh Seongjun",
+  "name": "시미즈 유타카",
+  "nameEn": "Shimizu Yutaka",
   "role": "player",
-  "age": 18,
+  "age": 21,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_JEJU_WIND",
-  "teamId": "TEAM_HS_JEJU_WIND",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_JEJU_WIND",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TIDERAVES",
+  "teamId": "TEAM_JBL_CL_TIDERAVES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "L",
-      "position": "SS",
-      "jerseyNumber": 21,
+      "position": "SP",
+      "jerseyNumber": 32,
       "pitching": {
-        "ovr": 45,
-        "stamina": 41,
-        "velocity": 43,
-        "command": 41,
-        "control": 42,
-        "movement": 43,
-        "mentality": 47,
-        "recovery": 41,
-        "clutch": 43,
-        "holdRunners": 34
+        "ovr": 77,
+        "stamina": 75,
+        "velocity": 73,
+        "command": 77,
+        "control": 74,
+        "movement": 74,
+        "mentality": 71,
+        "recovery": 72
       },
       "batting": {
-        "ovr": 65,
-        "contact": 69,
-        "power": 63,
-        "eye": 62,
-        "discipline": 63,
-        "speed": 67,
-        "fielding": 63,
-        "arm": 64,
-        "battingClutch": 57,
-        "baseInstinct": 55,
-        "bunting": 53,
-        "platoon": 61
+        "ovr": 42,
+        "contact": 43,
+        "power": 50,
+        "eye": 41,
+        "discipline": 46,
+        "speed": 49,
+        "fielding": 42,
+        "arm": 46,
+        "battingClutch": 44
       },
-      "developmentRate": 53,
-      "potentialHidden": 92,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 45,
+      "potentialHidden": 90
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 52,
-  "popularity": 45
+  }
 }

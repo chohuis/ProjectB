@@ -1,6 +1,6 @@
 {
   "id": "PLY_14645",
-  "name": "넬슨 콜",
+  "name": "Nelson Cole",
   "nameEn": "Nelson Cole",
   "role": "player",
   "age": 31,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 67,
   "popularity": 23,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 55,
       "proServiceYears": 9,
       "pitching": {
-        "ovr": 64,
-        "stamina": 68,
-        "velocity": 64,
-        "command": 62,
-        "control": 58,
-        "movement": 62,
-        "mentality": 65,
-        "recovery": 55,
-        "clutch": 56,
-        "holdRunners": 52
+        "ovr": 57,
+        "stamina": 61,
+        "velocity": 57,
+        "command": 55,
+        "control": 52,
+        "movement": 55,
+        "mentality": 58,
+        "recovery": 49,
+        "clutch": 50,
+        "holdRunners": 46
       },
       "batting": {
         "ovr": 57,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

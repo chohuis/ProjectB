@@ -1,6 +1,6 @@
 {
   "id": "PLY_16167",
-  "name": "미첼 다니엘",
+  "name": "Mitchell Daniel",
   "nameEn": "Mitchell Daniel",
   "role": "player",
   "age": 33,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 60,
   "popularity": 16,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 44
       },
       "batting": {
-        "ovr": 69,
-        "contact": 61,
-        "power": 65,
-        "eye": 70,
-        "discipline": 72,
-        "speed": 72,
-        "baseInstinct": 56,
-        "bunting": 55,
-        "platoon": 63,
-        "fielding": 59,
-        "arm": 72,
-        "battingClutch": 68
+        "ovr": 55,
+        "contact": 49,
+        "power": 52,
+        "eye": 56,
+        "discipline": 57,
+        "speed": 57,
+        "baseInstinct": 45,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 57,
+        "battingClutch": 54
       },
       "positionRatings": {
         "3B": 55

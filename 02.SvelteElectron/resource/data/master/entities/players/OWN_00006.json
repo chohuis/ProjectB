@@ -1,7 +1,7 @@
 {
   "id": "OWN_00006",
   "name": "곽민석",
-  "nameEn": "Kwak Minseok",
+  "nameEn": "You Hyun-jin",
   "role": "owner",
   "age": 50,
   "status": "active",
@@ -79,12 +79,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
   }
 }

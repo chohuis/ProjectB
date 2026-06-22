@@ -1,9 +1,9 @@
 {
   "id": "PLY_10741",
-  "name": "마틴 데릭",
-  "nameEn": "Martin Derek",
+  "name": "Harris Marcus",
+  "nameEn": "Harris Marcus",
   "role": "player",
-  "age": 25,
+  "age": 19,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 48,
-  "popularity": 43,
+  "notes": "국적:도미니카",
+  "diligence": 60,
+  "popularity": 45,
   "militaryStatus": "군필",
   "entryYear": 2031,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 25,
+  "entryAge": 19,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 76,
+      "jerseyNumber": 96,
       "primaryPosition": "SP",
-      "developmentRate": 60,
-      "potentialHidden": 65,
-      "proServiceYears": 3,
+      "developmentRate": 67,
+      "potentialHidden": 74,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 69,
-        "stamina": 71,
-        "velocity": 79,
-        "command": 66,
-        "control": 70,
-        "movement": 61,
-        "mentality": 70,
-        "recovery": 62,
-        "clutch": 65,
-        "holdRunners": 66
+        "ovr": 51,
+        "stamina": 49,
+        "velocity": 61,
+        "command": 47,
+        "control": 45,
+        "movement": 54,
+        "mentality": 57,
+        "recovery": 45,
+        "clutch": 50,
+        "holdRunners": 49
       },
       "batting": {
-        "ovr": 75,
-        "contact": 71,
-        "power": 75,
-        "eye": 72,
-        "discipline": 76,
-        "speed": 82,
-        "baseInstinct": 70,
-        "bunting": 58,
+        "ovr": 51,
+        "contact": 44,
+        "power": 52,
+        "eye": 49,
+        "discipline": 43,
+        "speed": 50,
+        "baseInstinct": 44,
+        "bunting": 44,
         "platoon": 50,
-        "fielding": 71,
-        "arm": 72,
-        "battingClutch": 71
+        "fielding": 42,
+        "arm": 45,
+        "battingClutch": 47
       },
       "positionRatings": {
-        "SP": 75
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "SP": 51
+      }
     },
     "coach": null,
     "manager": null,

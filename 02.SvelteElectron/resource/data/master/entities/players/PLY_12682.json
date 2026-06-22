@@ -1,9 +1,9 @@
 {
   "id": "PLY_12682",
-  "name": "토마스 딜런",
-  "nameEn": "Thomas Dylan",
+  "name": "White Kevin",
+  "nameEn": "White Kevin",
   "role": "player",
-  "age": 31,
+  "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 63,
-  "popularity": 19,
+  "notes": "국적:파나마",
+  "diligence": 59,
+  "popularity": 40,
   "militaryStatus": "군필",
   "entryYear": 2043,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 31,
+  "entryAge": 25,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 49,
-      "primaryPosition": "SP",
-      "developmentRate": 40,
-      "potentialHidden": 61,
-      "proServiceYears": 9,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 33,
+      "primaryPosition": "CF",
+      "developmentRate": 63,
+      "potentialHidden": 69,
+      "proServiceYears": 3,
       "pitching": {
-        "ovr": 63,
-        "stamina": 62,
-        "velocity": 73,
-        "command": 57,
-        "control": 61,
-        "movement": 65,
-        "mentality": 67,
-        "recovery": 52,
-        "clutch": 57,
-        "holdRunners": 55
+        "ovr": 70,
+        "stamina": 65,
+        "velocity": 80,
+        "command": 69,
+        "control": 63,
+        "movement": 60,
+        "mentality": 63,
+        "recovery": 66,
+        "clutch": 60,
+        "holdRunners": 57
       },
       "batting": {
-        "ovr": 61,
-        "contact": 52,
-        "power": 58,
-        "eye": 56,
-        "discipline": 62,
-        "speed": 65,
-        "baseInstinct": 58,
-        "bunting": 45,
+        "ovr": 70,
+        "contact": 64,
+        "power": 61,
+        "eye": 63,
+        "discipline": 69,
+        "speed": 74,
+        "baseInstinct": 66,
+        "bunting": 52,
         "platoon": 50,
-        "fielding": 54,
-        "arm": 55,
-        "battingClutch": 58
+        "fielding": 62,
+        "arm": 68,
+        "battingClutch": 66
       },
       "positionRatings": {
-        "SP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "CF": 70
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,9 +1,9 @@
 {
   "id": "PLY_13436",
-  "name": "마틴 라이언",
-  "nameEn": "Martin Ryan",
+  "name": "Taylor Zach",
+  "nameEn": "Taylor Zach",
   "role": "player",
-  "age": 28,
+  "age": 19,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 68,
-  "popularity": 50,
+  "notes": "국적:파나마",
+  "diligence": 78,
+  "popularity": 41,
   "militaryStatus": "군필",
   "entryYear": 2047,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 28,
+  "entryAge": 19,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 41,
-      "primaryPosition": "SP",
-      "developmentRate": 59,
-      "potentialHidden": 68,
-      "proServiceYears": 6,
+      "position": "RF",
+      "jerseyNumber": 75,
+      "primaryPosition": "RF",
+      "developmentRate": 56,
+      "potentialHidden": 92,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 69,
-        "stamina": 61,
-        "velocity": 78,
-        "command": 61,
-        "control": 71,
-        "movement": 72,
-        "mentality": 69,
-        "recovery": 58,
-        "clutch": 65,
-        "holdRunners": 61
+        "ovr": 52,
+        "stamina": 46,
+        "velocity": 57,
+        "command": 44,
+        "control": 52,
+        "movement": 46,
+        "mentality": 51,
+        "recovery": 54,
+        "clutch": 47,
+        "holdRunners": 45
       },
       "batting": {
-        "ovr": 67,
-        "contact": 70,
-        "power": 67,
-        "eye": 61,
-        "discipline": 64,
-        "speed": 70,
-        "baseInstinct": 68,
-        "bunting": 54,
+        "ovr": 52,
+        "contact": 57,
+        "power": 47,
+        "eye": 50,
+        "discipline": 49,
+        "speed": 49,
+        "baseInstinct": 53,
+        "bunting": 44,
         "platoon": 50,
-        "fielding": 68,
-        "arm": 56,
-        "battingClutch": 59
+        "fielding": 51,
+        "arm": 50,
+        "battingClutch": 51
       },
       "positionRatings": {
-        "SP": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "RF": 52
+      }
     },
     "coach": null,
     "manager": null,

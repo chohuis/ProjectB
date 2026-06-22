@@ -1,6 +1,6 @@
 {
   "id": "PLY_15790",
-  "name": "카터 타일러",
+  "name": "Carter Tyler",
   "nameEn": "Carter Tyler",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 72,
   "popularity": 38,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 58
       },
       "batting": {
-        "ovr": 71,
-        "contact": 72,
-        "power": 62,
-        "eye": 66,
-        "discipline": 61,
-        "speed": 76,
-        "baseInstinct": 70,
-        "bunting": 60,
-        "platoon": 55,
-        "fielding": 66,
-        "arm": 61,
-        "battingClutch": 61
+        "ovr": 65,
+        "contact": 66,
+        "power": 57,
+        "eye": 60,
+        "discipline": 56,
+        "speed": 70,
+        "baseInstinct": 64,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 56,
+        "battingClutch": 56
       },
       "positionRatings": {
         "1B": 65

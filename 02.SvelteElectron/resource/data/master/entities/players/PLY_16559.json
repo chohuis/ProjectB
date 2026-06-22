@@ -1,6 +1,6 @@
 {
   "id": "PLY_16559",
-  "name": "에르난데스 카를로스",
+  "name": "Hernandez Carlos",
   "nameEn": "Hernandez Carlos",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 81,
   "popularity": 46,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 75,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 76,
-        "stamina": 67,
-        "velocity": 84,
-        "command": 67,
-        "control": 71,
-        "movement": 74,
-        "mentality": 69,
-        "recovery": 69,
-        "clutch": 64,
-        "holdRunners": 75
+        "ovr": 70,
+        "stamina": 62,
+        "velocity": 77,
+        "command": 62,
+        "control": 65,
+        "movement": 68,
+        "mentality": 64,
+        "recovery": 64,
+        "clutch": 59,
+        "holdRunners": 69
       },
       "batting": {
         "ovr": 70,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

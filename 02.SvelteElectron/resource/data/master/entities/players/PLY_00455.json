@@ -1,7 +1,7 @@
 {
   "id": "PLY_00455",
   "name": "차용준",
-  "nameEn": "Cha Yongjun",
+  "nameEn": "Sim Min-woo",
   "role": "player",
   "age": 27,
   "status": "active",
@@ -19,48 +19,28 @@
       "position": "3B",
       "jerseyNumber": 15,
       "pitching": {
-        "ovr": 44,
-        "stamina": 47,
-        "velocity": 49,
-        "command": 47,
-        "control": 48,
-        "movement": 47,
-        "mentality": 48,
-        "recovery": 49,
-        "clutch": 40,
-        "holdRunners": 38
+        "ovr": 42,
+        "stamina": 43,
+        "velocity": 46,
+        "command": 43,
+        "control": 44,
+        "movement": 39,
+        "mentality": 38,
+        "recovery": 37
       },
       "batting": {
-        "ovr": 64,
-        "contact": 62,
-        "power": 67,
-        "eye": 63,
+        "ovr": 66,
+        "contact": 67,
+        "power": 65,
+        "eye": 68,
         "discipline": 66,
-        "speed": 60,
+        "speed": 67,
         "fielding": 61,
-        "arm": 60,
-        "battingClutch": 63,
-        "baseInstinct": 62,
-        "bunting": 57,
-        "platoon": 56
+        "arm": 70,
+        "battingClutch": 66
       },
       "developmentRate": 42,
-      "potentialHidden": 77,
-      "primaryPosition": "3B",
-      "positionRatings": {
-        "3B": 64
-      },
-      "proServiceYears": 7,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 77
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

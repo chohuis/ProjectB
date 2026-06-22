@@ -1,7 +1,7 @@
 {
   "id": "PLY_00447",
   "name": "이재훈",
-  "nameEn": "Lee Jaehun",
+  "nameEn": "Ko Gi-jun",
   "role": "player",
   "age": 23,
   "status": "active",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 7,
       "pitching": {
-        "ovr": 56,
-        "stamina": 62,
-        "velocity": 55,
-        "command": 60,
-        "control": 56,
-        "movement": 60,
-        "mentality": 61,
-        "recovery": 57,
-        "clutch": 49,
-        "holdRunners": 44
+        "ovr": 62,
+        "stamina": 52,
+        "velocity": 61,
+        "command": 61,
+        "control": 60,
+        "movement": 59,
+        "mentality": 59,
+        "recovery": 52
       },
       "batting": {
-        "ovr": 38,
-        "contact": 45,
-        "power": 42,
-        "eye": 38,
+        "ovr": 36,
+        "contact": 34,
+        "power": 34,
+        "eye": 32,
         "discipline": 33,
-        "speed": 43,
-        "fielding": 34,
-        "arm": 33,
-        "battingClutch": 40,
-        "baseInstinct": 46,
-        "bunting": 32,
-        "platoon": 33
+        "speed": 40,
+        "fielding": 39,
+        "arm": 35,
+        "battingClutch": 41
       },
       "developmentRate": 54,
-      "potentialHidden": 61,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 3,
-      "contract": {
-        "salary": 1100,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 61
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

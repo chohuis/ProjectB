@@ -1,9 +1,9 @@
 {
   "id": "PLY_13948",
-  "name": "마틴 타일러",
-  "nameEn": "Martin Tyler",
+  "name": "Johnson Caleb",
+  "nameEn": "Johnson Caleb",
   "role": "player",
-  "age": 34,
+  "age": 33,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 48,
-  "popularity": 46,
+  "notes": "국적:미국",
+  "diligence": 63,
+  "popularity": 31,
   "militaryStatus": "군필",
   "entryYear": 2050,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 34,
+  "entryAge": 33,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 65,
-      "primaryPosition": "SP",
-      "developmentRate": 38,
-      "potentialHidden": 45,
-      "proServiceYears": 12,
+      "position": "2B",
+      "jerseyNumber": 14,
+      "primaryPosition": "2B",
+      "developmentRate": 49,
+      "potentialHidden": 60,
+      "proServiceYears": 11,
       "pitching": {
-        "ovr": 69,
-        "stamina": 74,
-        "velocity": 76,
-        "command": 56,
-        "control": 60,
-        "movement": 59,
-        "mentality": 66,
-        "recovery": 59,
-        "clutch": 66,
-        "holdRunners": 67
+        "ovr": 74,
+        "stamina": 71,
+        "velocity": 73,
+        "command": 69,
+        "control": 67,
+        "movement": 68,
+        "mentality": 71,
+        "recovery": 76,
+        "clutch": 71,
+        "holdRunners": 65
       },
       "batting": {
-        "ovr": 60,
-        "contact": 55,
-        "power": 61,
-        "eye": 60,
-        "discipline": 63,
-        "speed": 57,
-        "baseInstinct": 56,
-        "bunting": 42,
+        "ovr": 74,
+        "contact": 74,
+        "power": 70,
+        "eye": 67,
+        "discipline": 68,
+        "speed": 69,
+        "baseInstinct": 67,
+        "bunting": 57,
         "platoon": 50,
-        "fielding": 54,
-        "arm": 59,
-        "battingClutch": 55
+        "fielding": 69,
+        "arm": 67,
+        "battingClutch": 67
       },
       "positionRatings": {
-        "SP": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "2B": 74
+      }
     },
     "coach": null,
     "manager": null,

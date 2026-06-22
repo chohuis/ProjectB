@@ -1,6 +1,6 @@
 {
   "id": "PLY_16290",
-  "name": "앤더슨 루이스",
+  "name": "Anderson Luis",
   "nameEn": "Anderson Luis",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 75,
   "popularity": 28,
   "militaryStatus": "군필",

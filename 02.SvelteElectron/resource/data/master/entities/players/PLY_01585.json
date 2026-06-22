@@ -1,61 +1,46 @@
 {
   "id": "PLY_01585",
-  "name": "손현준",
-  "nameEn": "Son Hyeonjun",
+  "name": "마에다 료",
+  "nameEn": "Maeda Ryo",
   "role": "player",
-  "age": 17,
+  "age": 26,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_DAEJEON_RISE",
-  "teamId": "TEAM_HS_DAEJEON_RISE",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_DAEJEON_RISE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_NEONCRANES",
+  "teamId": "TEAM_JBL_CL_NEONCRANES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "C",
-      "jerseyNumber": 24,
+      "position": "DH",
+      "jerseyNumber": 50,
       "pitching": {
-        "ovr": 34,
-        "stamina": 38,
-        "velocity": 38,
-        "command": 38,
-        "control": 38,
-        "movement": 31,
-        "mentality": 31,
-        "recovery": 38,
-        "clutch": 43,
-        "holdRunners": 32
+        "ovr": 48,
+        "stamina": 49,
+        "velocity": 51,
+        "command": 52,
+        "control": 47,
+        "movement": 42,
+        "mentality": 49,
+        "recovery": 50
       },
       "batting": {
-        "ovr": 54,
-        "contact": 51,
-        "power": 57,
-        "eye": 60,
-        "discipline": 60,
-        "speed": 55,
-        "fielding": 50,
-        "arm": 55,
-        "battingClutch": 52,
-        "baseInstinct": 45,
-        "bunting": 50,
-        "platoon": 48
+        "ovr": 78,
+        "contact": 79,
+        "power": 83,
+        "eye": 78,
+        "discipline": 79,
+        "speed": 75,
+        "fielding": 73,
+        "arm": 73,
+        "battingClutch": 77
       },
-      "developmentRate": 89,
-      "potentialHidden": 83,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 54
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 53,
+      "potentialHidden": 83
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 59,
-  "popularity": 37
+  }
 }

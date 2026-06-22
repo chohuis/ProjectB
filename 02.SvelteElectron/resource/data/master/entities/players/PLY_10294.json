@@ -1,7 +1,7 @@
 {
   "id": "PLY_10294",
-  "name": "토마스 미겔",
-  "nameEn": "Thomas Miguel",
+  "name": "Martin Jordan",
+  "nameEn": "Martin Jordan",
   "role": "player",
   "age": 28,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 64,
-  "popularity": 33,
+  "notes": "국적:미국",
+  "diligence": 68,
+  "popularity": 17,
   "militaryStatus": "군필",
   "entryYear": 2028,
   "entryLeague": "LEAGUE_ABL",
@@ -24,54 +24,40 @@
       "playerType": "pitcher",
       "handedness": "L",
       "position": "SP",
-      "jerseyNumber": 69,
+      "jerseyNumber": 56,
       "primaryPosition": "SP",
-      "developmentRate": 47,
-      "potentialHidden": 62,
+      "developmentRate": 45,
+      "potentialHidden": 86,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 83,
-        "stamina": 80,
-        "velocity": 89,
-        "command": 78,
-        "control": 78,
-        "movement": 77,
+        "ovr": 73,
+        "stamina": 71,
+        "velocity": 71,
+        "command": 67,
+        "control": 66,
+        "movement": 64,
         "mentality": 78,
-        "recovery": 77,
-        "clutch": 75,
-        "holdRunners": 75
+        "recovery": 68,
+        "clutch": 65,
+        "holdRunners": 70
       },
       "batting": {
-        "ovr": 80,
-        "contact": 79,
-        "power": 79,
-        "eye": 82,
-        "discipline": 82,
-        "speed": 74,
-        "baseInstinct": 79,
-        "bunting": 72,
+        "ovr": 73,
+        "contact": 74,
+        "power": 72,
+        "eye": 69,
+        "discipline": 67,
+        "speed": 70,
+        "baseInstinct": 64,
+        "bunting": 57,
         "platoon": 50,
-        "fielding": 69,
-        "arm": 70,
-        "battingClutch": 70
+        "fielding": 70,
+        "arm": 72,
+        "battingClutch": 73
       },
       "positionRatings": {
-        "SP": 80
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "SP": 73
+      }
     },
     "coach": null,
     "manager": null,

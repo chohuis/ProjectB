@@ -1,6 +1,6 @@
 {
   "id": "PLY_15127",
-  "name": "무어 제이슨",
+  "name": "Moore Jason",
   "nameEn": "Moore Jason",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 81,
   "popularity": 23,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 52,
       "proServiceYears": 3,
       "pitching": {
-        "ovr": 68,
-        "stamina": 73,
-        "velocity": 72,
-        "command": 63,
-        "control": 61,
-        "movement": 65,
-        "mentality": 68,
-        "recovery": 65,
-        "clutch": 68,
-        "holdRunners": 65
+        "ovr": 70,
+        "stamina": 75,
+        "velocity": 74,
+        "command": 65,
+        "control": 63,
+        "movement": 67,
+        "mentality": 70,
+        "recovery": 67,
+        "clutch": 70,
+        "holdRunners": 67
       },
       "batting": {
         "ovr": 70,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,61 +1,46 @@
 {
   "id": "PLY_01694",
-  "name": "남태현",
-  "nameEn": "Nam Taehyeon",
+  "name": "타나카 기요시",
+  "nameEn": "Tanaka Kiyoshi",
   "role": "player",
-  "age": 17,
+  "age": 31,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_JEJU_WIND",
-  "teamId": "TEAM_HS_JEJU_WIND",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_JEJU_WIND",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TIDERAVES",
+  "teamId": "TEAM_JBL_CL_TIDERAVES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "L",
-      "position": "C",
-      "jerseyNumber": 13,
+      "handedness": "R",
+      "position": "SS",
+      "jerseyNumber": 19,
       "pitching": {
-        "ovr": 39,
-        "stamina": 45,
-        "velocity": 43,
-        "command": 36,
-        "control": 43,
-        "movement": 38,
-        "mentality": 35,
-        "recovery": 36,
-        "clutch": 43,
-        "holdRunners": 38
+        "ovr": 54,
+        "stamina": 56,
+        "velocity": 62,
+        "command": 61,
+        "control": 60,
+        "movement": 57,
+        "mentality": 56,
+        "recovery": 58
       },
       "batting": {
-        "ovr": 59,
-        "contact": 57,
-        "power": 54,
-        "eye": 55,
-        "discipline": 59,
-        "speed": 59,
-        "fielding": 61,
-        "arm": 57,
-        "battingClutch": 49,
-        "baseInstinct": 47,
-        "bunting": 44,
-        "platoon": 56
+        "ovr": 85,
+        "contact": 87,
+        "power": 78,
+        "eye": 79,
+        "discipline": 79,
+        "speed": 82,
+        "fielding": 83,
+        "arm": 79,
+        "battingClutch": 87
       },
-      "developmentRate": 60,
-      "potentialHidden": 68,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 48,
+      "potentialHidden": 73
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 72,
-  "popularity": 13
+  }
 }

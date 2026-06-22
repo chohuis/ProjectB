@@ -1,7 +1,7 @@
 {
   "id": "PLY_00402",
   "name": "심지성",
-  "nameEn": "Sim Jiseong",
+  "nameEn": "Jeon Sang-hyun",
   "role": "player",
   "age": 29,
   "status": "active",
@@ -19,54 +19,28 @@
       "position": "SP",
       "jerseyNumber": 2,
       "pitching": {
-        "ovr": 53,
-        "stamina": 59,
+        "ovr": 57,
+        "stamina": 57,
         "velocity": 56,
-        "command": 56,
-        "control": 53,
+        "command": 55,
+        "control": 54,
         "movement": 54,
-        "mentality": 56,
-        "recovery": 50,
-        "clutch": 46,
-        "holdRunners": 46
+        "mentality": 60,
+        "recovery": 51
       },
       "batting": {
-        "ovr": 35,
-        "contact": 38,
-        "power": 30,
-        "eye": 34,
-        "discipline": 41,
-        "speed": 31,
-        "fielding": 40,
-        "arm": 38,
-        "battingClutch": 37,
-        "baseInstinct": 39,
-        "bunting": 29,
-        "platoon": 34
+        "ovr": 33,
+        "contact": 34,
+        "power": 34,
+        "eye": 31,
+        "discipline": 26,
+        "speed": 34,
+        "fielding": 27,
+        "arm": 31,
+        "battingClutch": 30
       },
       "developmentRate": 54,
-      "potentialHidden": 84,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 53
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 9,
-      "contract": {
-        "salary": 900,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 84
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

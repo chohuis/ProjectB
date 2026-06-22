@@ -1,9 +1,9 @@
 {
   "id": "PLY_00063",
   "name": "조동현",
-  "nameEn": "Jo Donghyeon",
+  "nameEn": "Woo Hyun-jin",
   "role": "player",
-  "age": 18,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,43 +19,28 @@
       "position": "SP",
       "jerseyNumber": 3,
       "pitching": {
-        "ovr": 52,
-        "stamina": 58,
-        "velocity": 48,
-        "command": 48,
-        "control": 51,
-        "movement": 56,
-        "mentality": 58,
-        "recovery": 56,
-        "clutch": 41,
-        "holdRunners": 42
+        "ovr": 51,
+        "stamina": 65,
+        "velocity": 51,
+        "command": 60,
+        "control": 62,
+        "movement": 57,
+        "mentality": 51,
+        "recovery": 51
       },
       "batting": {
-        "ovr": 34,
-        "contact": 34,
-        "power": 32,
-        "eye": 40,
-        "discipline": 29,
-        "speed": 35,
-        "fielding": 38,
-        "arm": 32,
-        "battingClutch": 46,
-        "baseInstinct": 38,
-        "bunting": 36,
-        "platoon": 38
+        "ovr": 40,
+        "contact": 60,
+        "power": 48,
+        "eye": 52,
+        "discipline": 50,
+        "speed": 61,
+        "fielding": 64,
+        "arm": 64,
+        "battingClutch": 55
       },
       "developmentRate": 45,
-      "potentialHidden": 81,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 52
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 81
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

@@ -1,72 +1,46 @@
 {
   "id": "PLY_02045",
-  "name": "노아 테일러",
-  "nameEn": "Noah Taylor",
+  "name": "이토 소타",
+  "nameEn": "Ito Sota",
   "role": "player",
-  "age": 32,
+  "age": 29,
   "status": "active",
-  "originLeagueId": "LEAGUE_ABL",
-  "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_HARBORHAWKS",
-  "teamId": "TEAM_ABL_HARBORHAWKS_1",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SUNS",
+  "teamId": "TEAM_JBL_PL_SUNS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "2B",
-      "jerseyNumber": 42,
+      "position": "RP",
+      "jerseyNumber": 10,
       "pitching": {
-        "ovr": 36,
-        "stamina": 35,
-        "velocity": 33,
-        "command": 40,
-        "control": 39,
-        "movement": 33,
-        "mentality": 36,
-        "recovery": 35,
-        "clutch": 46,
-        "holdRunners": 41
+        "ovr": 79,
+        "stamina": 69,
+        "velocity": 81,
+        "command": 75,
+        "control": 80,
+        "movement": 78,
+        "mentality": 72,
+        "recovery": 74
       },
       "batting": {
-        "ovr": 56,
-        "contact": 53,
-        "power": 59,
-        "eye": 51,
-        "discipline": 54,
-        "speed": 60,
-        "fielding": 59,
-        "arm": 55,
-        "battingClutch": 54,
-        "baseInstinct": 49,
-        "bunting": 50,
-        "platoon": 45
+        "ovr": 51,
+        "contact": 50,
+        "power": 50,
+        "eye": 44,
+        "discipline": 44,
+        "speed": 46,
+        "fielding": 47,
+        "arm": 43,
+        "battingClutch": 51
       },
-      "developmentRate": 64,
-      "potentialHidden": 70,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 10,
-      "contract": {
-        "salary": 6300,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 39,
+      "potentialHidden": 86
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 78,
-  "popularity": 18,
-  "militaryStatus": "군필"
+  }
 }

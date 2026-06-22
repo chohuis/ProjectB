@@ -1,9 +1,9 @@
 {
   "id": "PLY_11281",
-  "name": "테일러 블레이크",
-  "nameEn": "Taylor Blake",
+  "name": "King Blake",
+  "nameEn": "King Blake",
   "role": "player",
-  "age": 19,
+  "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 78,
-  "popularity": 45,
+  "notes": "국적:미국",
+  "diligence": 85,
+  "popularity": 38,
   "militaryStatus": "군필",
   "entryYear": 2034,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 19,
+  "entryAge": 26,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 40,
-      "primaryPosition": "SP",
-      "developmentRate": 75,
-      "potentialHidden": 65,
-      "proServiceYears": 0,
+      "position": "1B",
+      "jerseyNumber": 15,
+      "primaryPosition": "1B",
+      "developmentRate": 69,
+      "potentialHidden": 71,
+      "proServiceYears": 4,
       "pitching": {
-        "ovr": 59,
-        "stamina": 63,
-        "velocity": 57,
-        "command": 53,
-        "control": 59,
-        "movement": 53,
-        "mentality": 55,
-        "recovery": 60,
-        "clutch": 56,
-        "holdRunners": 46
+        "ovr": 82,
+        "stamina": 83,
+        "velocity": 79,
+        "command": 82,
+        "control": 82,
+        "movement": 85,
+        "mentality": 80,
+        "recovery": 79,
+        "clutch": 69,
+        "holdRunners": 75
       },
       "batting": {
-        "ovr": 64,
-        "contact": 60,
-        "power": 58,
-        "eye": 67,
-        "discipline": 61,
-        "speed": 68,
-        "baseInstinct": 54,
-        "bunting": 57,
+        "ovr": 82,
+        "contact": 78,
+        "power": 75,
+        "eye": 76,
+        "discipline": 74,
+        "speed": 86,
+        "baseInstinct": 71,
+        "bunting": 77,
         "platoon": 50,
-        "fielding": 54,
-        "arm": 64,
-        "battingClutch": 64
+        "fielding": 84,
+        "arm": 79,
+        "battingClutch": 69
       },
       "positionRatings": {
-        "SP": 64
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "1B": 82
+      }
     },
     "coach": null,
     "manager": null,

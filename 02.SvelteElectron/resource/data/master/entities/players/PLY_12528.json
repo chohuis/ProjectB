@@ -1,9 +1,9 @@
 {
   "id": "PLY_12528",
-  "name": "화이트 에릭",
-  "nameEn": "White Eric",
+  "name": "Clark Nathan",
+  "nameEn": "Clark Nathan",
   "role": "player",
-  "age": 20,
+  "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 54,
-  "popularity": 47,
+  "notes": "국적:도미니카",
+  "diligence": 71,
+  "popularity": 17,
   "militaryStatus": "군필",
   "entryYear": 2042,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 20,
+  "entryAge": 32,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 98,
-      "primaryPosition": "SP",
-      "developmentRate": 63,
-      "potentialHidden": 76,
-      "proServiceYears": 0,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 5,
+      "primaryPosition": "2B",
+      "developmentRate": 46,
+      "potentialHidden": 50,
+      "proServiceYears": 10,
       "pitching": {
-        "ovr": 48,
-        "stamina": 40,
-        "velocity": 50,
-        "command": 43,
-        "control": 42,
-        "movement": 50,
-        "mentality": 53,
+        "ovr": 58,
+        "stamina": 52,
+        "velocity": 69,
+        "command": 59,
+        "control": 57,
+        "movement": 52,
+        "mentality": 58,
         "recovery": 48,
-        "clutch": 47,
-        "holdRunners": 41
+        "clutch": 55,
+        "holdRunners": 55
       },
       "batting": {
-        "ovr": 50,
-        "contact": 53,
-        "power": 51,
-        "eye": 48,
-        "discipline": 41,
-        "speed": 55,
-        "baseInstinct": 44,
-        "bunting": 43,
+        "ovr": 58,
+        "contact": 63,
+        "power": 49,
+        "eye": 54,
+        "discipline": 58,
+        "speed": 58,
+        "baseInstinct": 59,
+        "bunting": 45,
         "platoon": 50,
-        "fielding": 46,
-        "arm": 41,
-        "battingClutch": 42
+        "fielding": 47,
+        "arm": 55,
+        "battingClutch": 57
       },
       "positionRatings": {
-        "SP": 50
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "2B": 58
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,17 +1,17 @@
 {
   "id": "COA_00200",
-  "name": "오카다 하야토",
-  "nameEn": "Okada Hayato",
+  "name": "야마다 유토",
+  "nameEn": "Yamada Yuto",
   "role": "coach",
-  "age": 41,
+  "age": 38,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
-  "clubId": "CLUB_JBL_CL_TIDERAVES",
-  "teamId": "TEAM_JBL_CL_TIDERAVES_1",
+  "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
+  "teamId": "TEAM_JBL_PL_THUNDERFALCONS_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
@@ -43,16 +43,16 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "타격",
-      "experienceYears": 3,
+      "specialty": "투수",
+      "experienceYears": 10,
       "stats": {
-        "teaching": 61,
-        "analysis": 53,
-        "communication": 55,
-        "discipline": 66,
-        "leadership": 81
+        "teaching": 53,
+        "analysis": 74,
+        "communication": 67,
+        "discipline": 80,
+        "leadership": 61
       },
-      "trainingBuffs": "제구 훈련 +2%"
+      "trainingBuffs": "컨택 훈련 +2%"
     },
     "manager": {
       "style": "균형",

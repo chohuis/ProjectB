@@ -1,9 +1,9 @@
 {
   "id": "PLY_11553",
-  "name": "스콧 헌터",
-  "nameEn": "Scott Hunter",
+  "name": "Anderson Carlos",
+  "nameEn": "Anderson Carlos",
   "role": "player",
-  "age": 22,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 74,
-  "popularity": 48,
+  "notes": "국적:미국",
+  "diligence": 71,
+  "popularity": 21,
   "militaryStatus": "군필",
   "entryYear": 2036,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 22,
+  "entryAge": 21,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 82,
+      "jerseyNumber": 77,
       "primaryPosition": "SP",
-      "developmentRate": 59,
-      "potentialHidden": 75,
+      "developmentRate": 55,
+      "potentialHidden": 90,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 52,
-        "stamina": 52,
-        "velocity": 61,
-        "command": 46,
-        "control": 54,
-        "movement": 51,
-        "mentality": 49,
-        "recovery": 43,
-        "clutch": 45,
-        "holdRunners": 48
+        "ovr": 63,
+        "stamina": 63,
+        "velocity": 64,
+        "command": 53,
+        "control": 66,
+        "movement": 55,
+        "mentality": 65,
+        "recovery": 52,
+        "clutch": 59,
+        "holdRunners": 54
       },
       "batting": {
-        "ovr": 55,
-        "contact": 48,
-        "power": 57,
-        "eye": 57,
-        "discipline": 57,
-        "speed": 53,
-        "baseInstinct": 57,
-        "bunting": 44,
+        "ovr": 63,
+        "contact": 62,
+        "power": 64,
+        "eye": 55,
+        "discipline": 59,
+        "speed": 61,
+        "baseInstinct": 61,
+        "bunting": 52,
         "platoon": 50,
-        "fielding": 57,
+        "fielding": 60,
         "arm": 54,
-        "battingClutch": 55
+        "battingClutch": 59
       },
       "positionRatings": {
-        "SP": 55
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 63
+      }
     },
     "coach": null,
     "manager": null,

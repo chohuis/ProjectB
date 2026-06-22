@@ -1,6 +1,6 @@
 {
   "id": "PLY_15399",
-  "name": "클라크 에릭",
+  "name": "Clark Eric",
   "nameEn": "Clark Eric",
   "role": "player",
   "age": 33,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 64,
   "popularity": 27,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 44
       },
       "batting": {
-        "ovr": 67,
-        "contact": 60,
-        "power": 58,
-        "eye": 73,
-        "discipline": 63,
-        "speed": 73,
-        "baseInstinct": 68,
-        "bunting": 45,
-        "platoon": 62,
-        "fielding": 60,
-        "arm": 61,
-        "battingClutch": 55
+        "ovr": 54,
+        "contact": 48,
+        "power": 47,
+        "eye": 59,
+        "discipline": 51,
+        "speed": 59,
+        "baseInstinct": 55,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 49,
+        "battingClutch": 44
       },
       "positionRatings": {
         "SS": 54

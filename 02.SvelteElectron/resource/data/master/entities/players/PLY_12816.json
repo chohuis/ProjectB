@@ -1,9 +1,9 @@
 {
   "id": "PLY_12816",
-  "name": "해리스 그랜트",
-  "nameEn": "Harris Grant",
+  "name": "Jones Jake",
+  "nameEn": "Jones Jake",
   "role": "player",
-  "age": 29,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 51,
-  "popularity": 24,
+  "notes": "국적:미국",
+  "diligence": 84,
+  "popularity": 16,
   "militaryStatus": "군필",
   "entryYear": 2043,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 29,
+  "entryAge": 21,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 82,
-      "primaryPosition": "SP",
-      "developmentRate": 49,
-      "potentialHidden": 54,
-      "proServiceYears": 7,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 7,
+      "primaryPosition": "C",
+      "developmentRate": 68,
+      "potentialHidden": 70,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 58,
-        "stamina": 52,
-        "velocity": 61,
-        "command": 49,
-        "control": 52,
-        "movement": 56,
-        "mentality": 60,
-        "recovery": 59,
-        "clutch": 56,
-        "holdRunners": 54
+        "ovr": 56,
+        "stamina": 51,
+        "velocity": 53,
+        "command": 47,
+        "control": 55,
+        "movement": 54,
+        "mentality": 51,
+        "recovery": 46,
+        "clutch": 55,
+        "holdRunners": 46
       },
       "batting": {
         "ovr": 56,
-        "contact": 56,
-        "power": 49,
-        "eye": 53,
-        "discipline": 47,
-        "speed": 53,
-        "baseInstinct": 58,
+        "contact": 54,
+        "power": 54,
+        "eye": 51,
+        "discipline": 58,
+        "speed": 55,
+        "baseInstinct": 52,
         "bunting": 41,
         "platoon": 50,
-        "fielding": 59,
-        "arm": 49,
-        "battingClutch": 50
+        "fielding": 57,
+        "arm": 52,
+        "battingClutch": 48
       },
       "positionRatings": {
-        "SP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "C": 56
+      }
     },
     "coach": null,
     "manager": null,

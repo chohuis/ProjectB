@@ -1,6 +1,6 @@
 {
   "id": "PLY_14195",
-  "name": "데이비스 데릭",
+  "name": "Davis Derek",
   "nameEn": "Davis Derek",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 83,
   "popularity": 36,
   "militaryStatus": "군필",

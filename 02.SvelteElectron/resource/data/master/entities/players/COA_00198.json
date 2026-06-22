@@ -1,17 +1,17 @@
 {
   "id": "COA_00198",
-  "name": "하시모토 코지",
-  "nameEn": "Hashimoto Koji",
+  "name": "타카하시 사토시",
+  "nameEn": "Takahashi Satoshi",
   "role": "coach",
-  "age": 42,
+  "age": 54,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
-  "clubId": "CLUB_JBL_CL_IRONDRAKES",
-  "teamId": "TEAM_JBL_CL_IRONDRAKES_2",
+  "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
+  "teamId": "TEAM_JBL_PL_THUNDERFALCONS_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
@@ -43,16 +43,16 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "수비",
-      "experienceYears": 6,
+      "specialty": "타격",
+      "experienceYears": 12,
       "stats": {
-        "teaching": 56,
-        "analysis": 79,
-        "communication": 72,
-        "discipline": 77,
+        "teaching": 61,
+        "analysis": 74,
+        "communication": 71,
+        "discipline": 76,
         "leadership": 79
       },
-      "trainingBuffs": ""
+      "trainingBuffs": "제구 훈련 +2%"
     },
     "manager": {
       "style": "균형",

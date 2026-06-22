@@ -1,6 +1,6 @@
 {
   "id": "PLY_15974",
-  "name": "애덤스 블레이크",
+  "name": "Adams Blake",
   "nameEn": "Adams Blake",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 53,
   "popularity": 36,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 44
       },
       "batting": {
-        "ovr": 54,
-        "contact": 49,
-        "power": 48,
-        "eye": 52,
-        "discipline": 49,
-        "speed": 58,
-        "baseInstinct": 47,
-        "bunting": 43,
-        "platoon": 49,
-        "fielding": 45,
-        "arm": 46,
-        "battingClutch": 44
+        "ovr": 55,
+        "contact": 50,
+        "power": 49,
+        "eye": 53,
+        "discipline": 50,
+        "speed": 59,
+        "baseInstinct": 48,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 46,
+        "arm": 47,
+        "battingClutch": 45
       },
       "positionRatings": {
         "1B": 55

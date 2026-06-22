@@ -1,61 +1,46 @@
 {
   "id": "PLY_01809",
-  "name": "차태현",
-  "nameEn": "Cha Taehyeon",
+  "name": "나카무라 아키라",
+  "nameEn": "Nakamura Akira",
   "role": "player",
-  "age": 16,
+  "age": 31,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_GOYANG_ARROW",
-  "teamId": "TEAM_HS_GOYANG_ARROW",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_GOYANG_ARROW",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONSTORMS",
+  "teamId": "TEAM_JBL_CL_IRONSTORMS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "RP",
-      "jerseyNumber": 8,
+      "position": "RF",
+      "jerseyNumber": 49,
       "pitching": {
-        "ovr": 52,
-        "stamina": 57,
-        "velocity": 55,
-        "command": 53,
-        "control": 48,
-        "movement": 55,
-        "mentality": 52,
-        "recovery": 48,
-        "clutch": 51,
-        "holdRunners": 43
+        "ovr": 46,
+        "stamina": 42,
+        "velocity": 41,
+        "command": 42,
+        "control": 44,
+        "movement": 44,
+        "mentality": 39,
+        "recovery": 45
       },
       "batting": {
-        "ovr": 34,
-        "contact": 33,
-        "power": 35,
-        "eye": 29,
-        "discipline": 40,
-        "speed": 29,
-        "fielding": 35,
-        "arm": 40,
-        "battingClutch": 43,
-        "baseInstinct": 39,
-        "bunting": 31,
-        "platoon": 41
+        "ovr": 77,
+        "contact": 76,
+        "power": 75,
+        "eye": 75,
+        "discipline": 78,
+        "speed": 72,
+        "fielding": 73,
+        "arm": 72,
+        "battingClutch": 75
       },
-      "developmentRate": 56,
-      "potentialHidden": 65,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 52
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        }
-      ]
+      "developmentRate": 40,
+      "potentialHidden": 69
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 51,
-  "popularity": 40
+  }
 }

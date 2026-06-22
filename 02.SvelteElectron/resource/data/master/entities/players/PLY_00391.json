@@ -1,7 +1,7 @@
 {
   "id": "PLY_00391",
   "name": "서재원",
-  "nameEn": "Seo Jaewon",
+  "nameEn": "Ku Jae-hyun",
   "role": "player",
   "age": 25,
   "status": "active",
@@ -19,48 +19,28 @@
       "position": "C",
       "jerseyNumber": 11,
       "pitching": {
-        "ovr": 29,
-        "stamina": 28,
-        "velocity": 30,
-        "command": 30,
-        "control": 29,
-        "movement": 30,
-        "mentality": 28,
-        "recovery": 26,
-        "clutch": 35,
-        "holdRunners": 39
+        "ovr": 30,
+        "stamina": 24,
+        "velocity": 25,
+        "command": 29,
+        "control": 23,
+        "movement": 24,
+        "mentality": 24,
+        "recovery": 26
       },
       "batting": {
-        "ovr": 49,
-        "contact": 46,
-        "power": 50,
-        "eye": 53,
-        "discipline": 50,
-        "speed": 43,
+        "ovr": 51,
+        "contact": 51,
+        "power": 58,
+        "eye": 52,
+        "discipline": 56,
+        "speed": 54,
         "fielding": 51,
-        "arm": 48,
-        "battingClutch": 41,
-        "baseInstinct": 41,
-        "bunting": 41,
-        "platoon": 36
+        "arm": 53,
+        "battingClutch": 51
       },
       "developmentRate": 45,
-      "potentialHidden": 57,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 49
-      },
-      "proServiceYears": 5,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 57
     },
     "coach": {
       "specialty": "-",
@@ -100,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

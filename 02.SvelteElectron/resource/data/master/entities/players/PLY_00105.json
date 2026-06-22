@@ -1,9 +1,9 @@
 {
   "id": "PLY_00105",
   "name": "남재원",
-  "nameEn": "Nam Jaewon",
+  "nameEn": "Sim Tae-min",
   "role": "player",
-  "age": 18,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,47 +19,28 @@
       "position": "RP",
       "jerseyNumber": 5,
       "pitching": {
-        "ovr": 56,
-        "stamina": 58,
-        "velocity": 58,
-        "command": 55,
-        "control": 59,
-        "movement": 54,
-        "mentality": 53,
-        "recovery": 57,
-        "clutch": 51,
-        "holdRunners": 53
+        "ovr": 58,
+        "stamina": 55,
+        "velocity": 60,
+        "command": 45,
+        "control": 61,
+        "movement": 58,
+        "mentality": 62,
+        "recovery": 63
       },
       "batting": {
-        "ovr": 38,
-        "contact": 42,
-        "power": 34,
-        "eye": 42,
-        "discipline": 40,
-        "speed": 43,
-        "fielding": 42,
-        "arm": 33,
-        "battingClutch": 44,
-        "baseInstinct": 45,
-        "bunting": 35,
-        "platoon": 38
+        "ovr": 37,
+        "contact": 56,
+        "power": 56,
+        "eye": 51,
+        "discipline": 54,
+        "speed": 51,
+        "fielding": 64,
+        "arm": 52,
+        "battingClutch": 49
       },
       "developmentRate": 65,
-      "potentialHidden": 82,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 82
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

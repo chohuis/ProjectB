@@ -1,7 +1,7 @@
 {
   "id": "PLY_00317",
   "name": "고도윤",
-  "nameEn": "Ko Doyun",
+  "nameEn": "Jung Jae-hyun",
   "role": "player",
   "age": 21,
   "status": "active",
@@ -19,48 +19,28 @@
       "position": "LF",
       "jerseyNumber": 17,
       "pitching": {
-        "ovr": 41,
-        "stamina": 38,
-        "velocity": 39,
-        "command": 38,
-        "control": 40,
-        "movement": 46,
-        "mentality": 43,
-        "recovery": 38,
-        "clutch": 36,
-        "holdRunners": 34
+        "ovr": 43,
+        "stamina": 35,
+        "velocity": 44,
+        "command": 39,
+        "control": 37,
+        "movement": 35,
+        "mentality": 40,
+        "recovery": 40
       },
       "batting": {
-        "ovr": 61,
-        "contact": 65,
-        "power": 57,
-        "eye": 57,
-        "discipline": 64,
+        "ovr": 63,
+        "contact": 67,
+        "power": 62,
+        "eye": 62,
+        "discipline": 66,
         "speed": 60,
-        "fielding": 59,
-        "arm": 66,
-        "battingClutch": 62,
-        "baseInstinct": 59,
-        "bunting": 53,
-        "platoon": 54
+        "fielding": 56,
+        "arm": 65,
+        "battingClutch": 62
       },
       "developmentRate": 57,
-      "potentialHidden": 62,
-      "primaryPosition": "LF",
-      "positionRatings": {
-        "LF": 61
-      },
-      "proServiceYears": 1,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 62
     },
     "coach": {
       "specialty": "-",
@@ -100,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

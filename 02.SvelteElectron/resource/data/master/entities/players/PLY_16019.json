@@ -1,6 +1,6 @@
 {
   "id": "PLY_16019",
-  "name": "존스 칼렙",
+  "name": "Jones Caleb",
   "nameEn": "Jones Caleb",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 61,
   "popularity": 37,
   "militaryStatus": "군필",
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 74
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 2
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

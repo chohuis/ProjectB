@@ -1,6 +1,6 @@
 {
   "id": "PLY_14565",
-  "name": "루이스 마커스",
+  "name": "Lewis Marcus",
   "nameEn": "Lewis Marcus",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 74,
   "popularity": 37,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 45
       },
       "batting": {
-        "ovr": 50,
-        "contact": 45,
-        "power": 42,
-        "eye": 45,
-        "discipline": 49,
-        "speed": 51,
-        "baseInstinct": 50,
-        "bunting": 37,
-        "platoon": 49,
-        "fielding": 51,
-        "arm": 52,
-        "battingClutch": 40
+        "ovr": 51,
+        "contact": 46,
+        "power": 43,
+        "eye": 46,
+        "discipline": 50,
+        "speed": 52,
+        "baseInstinct": 51,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 53,
+        "battingClutch": 41
       },
       "positionRatings": {
         "1B": 51

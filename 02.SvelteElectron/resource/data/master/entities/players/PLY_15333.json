@@ -1,6 +1,6 @@
 {
   "id": "PLY_15333",
-  "name": "마르티네스 케빈",
+  "name": "Martinez Kevin",
   "nameEn": "Martinez Kevin",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 83,
   "popularity": 38,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 50
       },
       "batting": {
-        "ovr": 54,
-        "contact": 51,
-        "power": 57,
-        "eye": 51,
-        "discipline": 48,
-        "speed": 49,
-        "baseInstinct": 55,
-        "bunting": 37,
-        "platoon": 45,
-        "fielding": 47,
-        "arm": 53,
-        "battingClutch": 51
+        "ovr": 60,
+        "contact": 57,
+        "power": 63,
+        "eye": 57,
+        "discipline": 53,
+        "speed": 54,
+        "baseInstinct": 61,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 59,
+        "battingClutch": 57
       },
       "positionRatings": {
         "CF": 60

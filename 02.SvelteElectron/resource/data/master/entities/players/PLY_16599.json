@@ -1,6 +1,6 @@
 {
   "id": "PLY_16599",
-  "name": "카터 다니엘",
+  "name": "Carter Daniel",
   "nameEn": "Carter Daniel",
   "role": "player",
   "age": 30,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 51,
   "popularity": 31,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 61,
       "proServiceYears": 8,
       "pitching": {
-        "ovr": 66,
-        "stamina": 68,
-        "velocity": 68,
-        "command": 63,
-        "control": 64,
-        "movement": 65,
-        "mentality": 73,
-        "recovery": 59,
-        "clutch": 55,
-        "holdRunners": 64
+        "ovr": 59,
+        "stamina": 61,
+        "velocity": 61,
+        "command": 56,
+        "control": 57,
+        "movement": 58,
+        "mentality": 65,
+        "recovery": 53,
+        "clutch": 49,
+        "holdRunners": 57
       },
       "batting": {
         "ovr": 59,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

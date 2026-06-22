@@ -1,6 +1,6 @@
 {
   "id": "PLY_16165",
-  "name": "킹 타일러",
+  "name": "King Tyler",
   "nameEn": "King Tyler",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 66,
   "popularity": 49,
   "militaryStatus": "군필",

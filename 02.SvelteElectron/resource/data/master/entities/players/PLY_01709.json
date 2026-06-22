@@ -1,61 +1,46 @@
 {
   "id": "PLY_01709",
-  "name": "성민우",
-  "nameEn": "Seong Minwoo",
+  "name": "사사키 렌",
+  "nameEn": "Sasaki Ren",
   "role": "player",
-  "age": 18,
+  "age": 24,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_JEJU_WIND",
-  "teamId": "TEAM_HS_JEJU_WIND",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_JEJU_WIND",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TIDERAVES",
+  "teamId": "TEAM_JBL_CL_TIDERAVES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "UT",
-      "jerseyNumber": 28,
+      "position": "CP",
+      "jerseyNumber": 39,
       "pitching": {
-        "ovr": 35,
-        "stamina": 31,
-        "velocity": 35,
-        "command": 38,
-        "control": 36,
-        "movement": 39,
-        "mentality": 35,
-        "recovery": 31,
-        "clutch": 40,
-        "holdRunners": 44
+        "ovr": 62,
+        "stamina": 56,
+        "velocity": 71,
+        "command": 63,
+        "control": 68,
+        "movement": 60,
+        "mentality": 66,
+        "recovery": 63
       },
       "batting": {
-        "ovr": 55,
-        "contact": 56,
-        "power": 52,
-        "eye": 52,
-        "discipline": 59,
-        "speed": 57,
-        "fielding": 53,
-        "arm": 51,
-        "battingClutch": 51,
-        "baseInstinct": 48,
-        "bunting": 43,
-        "platoon": 44
+        "ovr": 28,
+        "contact": 34,
+        "power": 32,
+        "eye": 33,
+        "discipline": 28,
+        "speed": 26,
+        "fielding": 31,
+        "arm": 29,
+        "battingClutch": 33
       },
-      "developmentRate": 66,
-      "potentialHidden": 92,
-      "primaryPosition": "UT",
-      "positionRatings": {
-        "UT": 55
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 49,
+      "potentialHidden": 79
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 75,
-  "popularity": 34
+  }
 }

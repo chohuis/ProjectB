@@ -1,6 +1,6 @@
 {
   "id": "PLY_14631",
-  "name": "마르티네스 브랜던",
+  "name": "Martinez Brandon",
   "nameEn": "Martinez Brandon",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 50,
   "popularity": 19,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 52
       },
       "batting": {
-        "ovr": 71,
-        "contact": 69,
-        "power": 67,
-        "eye": 62,
-        "discipline": 61,
-        "speed": 62,
-        "baseInstinct": 70,
-        "bunting": 60,
-        "platoon": 62,
-        "fielding": 70,
-        "arm": 59,
-        "battingClutch": 69
+        "ovr": 57,
+        "contact": 55,
+        "power": 54,
+        "eye": 50,
+        "discipline": 49,
+        "speed": 50,
+        "baseInstinct": 56,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 47,
+        "battingClutch": 55
       },
       "positionRatings": {
         "C": 57

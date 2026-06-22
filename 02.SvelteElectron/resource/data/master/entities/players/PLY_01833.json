@@ -1,69 +1,46 @@
 {
   "id": "PLY_01833",
-  "name": "전도현",
-  "nameEn": "Jeon Dohyeon",
+  "name": "기무라 쓰카사",
+  "nameEn": "Kimura Tsukasa",
   "role": "player",
-  "age": 16,
+  "age": 36,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_SUNCHEON_BAY",
-  "teamId": "TEAM_HS_SUNCHEON_BAY",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_SUNCHEON_BAY",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
+  "teamId": "TEAM_JBL_PL_THUNDERFALCONS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 2,
+      "position": "DH",
+      "jerseyNumber": 23,
       "pitching": {
-        "ovr": 56,
-        "stamina": 54,
-        "velocity": 56,
-        "command": 54,
-        "control": 61,
-        "movement": 53,
-        "mentality": 59,
-        "recovery": 60,
-        "clutch": 45,
-        "holdRunners": 47
+        "ovr": 54,
+        "stamina": 52,
+        "velocity": 51,
+        "command": 50,
+        "control": 52,
+        "movement": 46,
+        "mentality": 49,
+        "recovery": 46
       },
       "batting": {
-        "ovr": 38,
-        "contact": 39,
-        "power": 40,
-        "eye": 37,
-        "discipline": 33,
-        "speed": 35,
-        "fielding": 40,
-        "arm": 38,
-        "battingClutch": 40,
-        "baseInstinct": 45,
-        "bunting": 34,
-        "platoon": 33
+        "ovr": 80,
+        "contact": 79,
+        "power": 82,
+        "eye": 80,
+        "discipline": 77,
+        "speed": 69,
+        "fielding": 71,
+        "arm": 68,
+        "battingClutch": 73
       },
-      "developmentRate": 58,
-      "potentialHidden": 82,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 32,
+      "potentialHidden": 58
     },
     "coach": {
       "specialty": "-",
@@ -103,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 76,
-  "popularity": 24
+  }
 }

@@ -1,6 +1,6 @@
 {
   "id": "PLY_14632",
-  "name": "가르시아 타일러",
+  "name": "Garcia Tyler",
   "nameEn": "Garcia Tyler",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 46,
   "popularity": 15,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 48
       },
       "batting": {
-        "ovr": 60,
-        "contact": 55,
-        "power": 56,
-        "eye": 64,
-        "discipline": 59,
-        "speed": 54,
-        "baseInstinct": 53,
-        "bunting": 45,
-        "platoon": 48,
-        "fielding": 58,
-        "arm": 57,
-        "battingClutch": 60
+        "ovr": 62,
+        "contact": 57,
+        "power": 58,
+        "eye": 66,
+        "discipline": 61,
+        "speed": 56,
+        "baseInstinct": 55,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 59,
+        "battingClutch": 62
       },
       "positionRatings": {
         "3B": 62

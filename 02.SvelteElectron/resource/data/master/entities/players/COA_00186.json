@@ -1,17 +1,17 @@
 {
   "id": "COA_00186",
-  "name": "마에다 슌",
-  "nameEn": "Maeda Shun",
+  "name": "후지이 하야토",
+  "nameEn": "Fujii Hayato",
   "role": "coach",
-  "age": 34,
+  "age": 52,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
-  "clubId": "CLUB_JBL_CL_NEONCRANES",
-  "teamId": "TEAM_JBL_CL_NEONCRANES_1",
+  "clubId": "CLUB_JBL_CL_TIDERAVES",
+  "teamId": "TEAM_JBL_CL_TIDERAVES_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
@@ -43,16 +43,16 @@
       "potentialHidden": 70
     },
     "coach": {
-      "specialty": "타격",
-      "experienceYears": 15,
+      "specialty": "멘탈",
+      "experienceYears": 6,
       "stats": {
-        "teaching": 78,
-        "analysis": 81,
-        "communication": 67,
-        "discipline": 53,
-        "leadership": 71
+        "teaching": 81,
+        "analysis": 76,
+        "communication": 68,
+        "discipline": 57,
+        "leadership": 83
       },
-      "trainingBuffs": "컨택 훈련 +2%"
+      "trainingBuffs": ""
     },
     "manager": {
       "style": "균형",

@@ -1,9 +1,9 @@
 {
   "id": "PLY_00142",
   "name": "오동우",
-  "nameEn": "Oh Dongu",
+  "nameEn": "Han Ju-won",
   "role": "player",
-  "age": 19,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,43 +19,28 @@
       "position": "SP",
       "jerseyNumber": 2,
       "pitching": {
-        "ovr": 51,
-        "stamina": 55,
-        "velocity": 51,
-        "command": 53,
-        "control": 54,
-        "movement": 53,
-        "mentality": 49,
-        "recovery": 50,
-        "clutch": 45,
-        "holdRunners": 44
+        "ovr": 49,
+        "stamina": 69,
+        "velocity": 49,
+        "command": 45,
+        "control": 56,
+        "movement": 51,
+        "mentality": 61,
+        "recovery": 50
       },
       "batting": {
-        "ovr": 33,
-        "contact": 37,
-        "power": 35,
-        "eye": 29,
-        "discipline": 38,
-        "speed": 38,
-        "fielding": 36,
-        "arm": 38,
-        "battingClutch": 36,
-        "baseInstinct": 43,
-        "bunting": 28,
-        "platoon": 34
+        "ovr": 31,
+        "contact": 59,
+        "power": 48,
+        "eye": 57,
+        "discipline": 58,
+        "speed": 60,
+        "fielding": 48,
+        "arm": 57,
+        "battingClutch": 49
       },
       "developmentRate": 71,
-      "potentialHidden": 78,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 51
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        }
-      ]
+      "potentialHidden": 78
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

@@ -1,6 +1,6 @@
 {
   "id": "PLY_14438",
-  "name": "워커 트레버",
+  "name": "Walker Trevor",
   "nameEn": "Walker Trevor",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 50,
   "popularity": 26,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 66,
       "proServiceYears": 5,
       "pitching": {
-        "ovr": 67,
-        "stamina": 70,
-        "velocity": 65,
-        "command": 59,
-        "control": 66,
-        "movement": 58,
-        "mentality": 70,
-        "recovery": 68,
-        "clutch": 66,
-        "holdRunners": 65
+        "ovr": 69,
+        "stamina": 72,
+        "velocity": 67,
+        "command": 61,
+        "control": 68,
+        "movement": 60,
+        "mentality": 72,
+        "recovery": 70,
+        "clutch": 68,
+        "holdRunners": 67
       },
       "batting": {
         "ovr": 69,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 69
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,6 +1,6 @@
 {
   "id": "PLY_16111",
-  "name": "킹 다니엘",
+  "name": "King Daniel",
   "nameEn": "King Daniel",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 48,
   "popularity": 41,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 63
       },
       "batting": {
-        "ovr": 67,
-        "contact": 60,
-        "power": 64,
-        "eye": 67,
-        "discipline": 66,
-        "speed": 64,
-        "baseInstinct": 63,
-        "bunting": 56,
-        "platoon": 49,
-        "fielding": 64,
-        "arm": 59,
-        "battingClutch": 67
+        "ovr": 69,
+        "contact": 62,
+        "power": 66,
+        "eye": 69,
+        "discipline": 68,
+        "speed": 66,
+        "baseInstinct": 65,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 61,
+        "battingClutch": 69
       },
       "positionRatings": {
         "2B": 69

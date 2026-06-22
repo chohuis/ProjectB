@@ -1,14 +1,14 @@
 {
   "id": "PLY_01002",
   "name": "킹 앤드류",
-  "nameEn": "King  앤드류",
+  "nameEn": "King Andrew",
   "role": "player",
   "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_SPACECOMETS",
-  "teamId": "TEAM_ABL_SPACECOMETS_1",
+  "clubId": "CLUB_ABL_SEA",
+  "teamId": "TEAM_ABL_SEA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 2,
       "pitching": {
-        "ovr": 70,
-        "stamina": 75,
-        "velocity": 75,
-        "command": 68,
-        "control": 68,
-        "movement": 65,
-        "mentality": 75,
-        "recovery": 66,
-        "clutch": 68,
-        "holdRunners": 58
+        "ovr": 80,
+        "stamina": 80,
+        "velocity": 77,
+        "command": 80,
+        "control": 73,
+        "movement": 75,
+        "mentality": 76,
+        "recovery": 72
       },
       "batting": {
-        "ovr": 52,
-        "contact": 55,
-        "power": 52,
-        "eye": 57,
-        "discipline": 50,
-        "speed": 53,
-        "fielding": 51,
-        "arm": 49,
-        "battingClutch": 51,
-        "baseInstinct": 50,
-        "bunting": 49,
-        "platoon": 42
+        "ovr": 41,
+        "contact": 48,
+        "power": 40,
+        "eye": 40,
+        "discipline": 42,
+        "speed": 42,
+        "fielding": 43,
+        "arm": 41,
+        "battingClutch": 41
       },
       "developmentRate": 32,
-      "potentialHidden": 77,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 5,
-      "contract": {
-        "salary": 21700,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 77
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

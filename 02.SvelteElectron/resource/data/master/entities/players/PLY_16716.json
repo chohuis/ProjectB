@@ -1,6 +1,6 @@
 {
   "id": "PLY_16716",
-  "name": "베이커 숀",
+  "name": "Baker Sean",
   "nameEn": "Baker Sean",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 49,
   "popularity": 35,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 67,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 79,
-        "stamina": 69,
-        "velocity": 88,
-        "command": 74,
-        "control": 81,
-        "movement": 76,
-        "mentality": 87,
-        "recovery": 77,
-        "clutch": 75,
-        "holdRunners": 73
+        "ovr": 73,
+        "stamina": 64,
+        "velocity": 81,
+        "command": 68,
+        "control": 75,
+        "movement": 70,
+        "mentality": 80,
+        "recovery": 71,
+        "clutch": 69,
+        "holdRunners": 67
       },
       "batting": {
         "ovr": 73,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,9 +1,9 @@
 {
   "id": "PLY_09917",
-  "name": "앤더슨 콜",
-  "nameEn": "Anderson Cole",
+  "name": "Walker Jake",
+  "nameEn": "Walker Jake",
   "role": "player",
-  "age": 21,
+  "age": 18,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 72,
-  "popularity": 43,
+  "notes": "국적:일본",
+  "diligence": 82,
+  "popularity": 35,
   "militaryStatus": "군필",
   "entryYear": 2026,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 21,
+  "entryAge": 18,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 55,
+      "jerseyNumber": 18,
       "primaryPosition": "SP",
-      "developmentRate": 71,
-      "potentialHidden": 84,
+      "developmentRate": 65,
+      "potentialHidden": 70,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 61,
-        "stamina": 61,
-        "velocity": 61,
-        "command": 62,
+        "ovr": 68,
+        "stamina": 67,
+        "velocity": 79,
+        "command": 70,
         "control": 59,
-        "movement": 56,
-        "mentality": 60,
-        "recovery": 53,
-        "clutch": 61,
-        "holdRunners": 53
+        "movement": 66,
+        "mentality": 62,
+        "recovery": 61,
+        "clutch": 63,
+        "holdRunners": 65
       },
       "batting": {
-        "ovr": 66,
-        "contact": 65,
-        "power": 60,
-        "eye": 67,
-        "discipline": 66,
-        "speed": 66,
-        "baseInstinct": 68,
-        "bunting": 50,
+        "ovr": 68,
+        "contact": 60,
+        "power": 69,
+        "eye": 72,
+        "discipline": 71,
+        "speed": 71,
+        "baseInstinct": 62,
+        "bunting": 59,
         "platoon": 50,
-        "fielding": 67,
-        "arm": 67,
-        "battingClutch": 65
+        "fielding": 66,
+        "arm": 63,
+        "battingClutch": 60
       },
       "positionRatings": {
-        "SP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 68
+      }
     },
     "coach": null,
     "manager": null,

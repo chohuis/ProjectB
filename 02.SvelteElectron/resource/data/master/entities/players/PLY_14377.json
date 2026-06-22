@@ -1,6 +1,6 @@
 {
   "id": "PLY_14377",
-  "name": "윌리엄스 제이슨",
+  "name": "Williams Jason",
   "nameEn": "Williams Jason",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 54,
   "popularity": 15,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 65
       },
       "batting": {
-        "ovr": 71,
-        "contact": 64,
-        "power": 67,
-        "eye": 74,
-        "discipline": 73,
-        "speed": 66,
-        "baseInstinct": 67,
-        "bunting": 55,
-        "platoon": 49,
-        "fielding": 64,
-        "arm": 63,
-        "battingClutch": 64
+        "ovr": 72,
+        "contact": 65,
+        "power": 68,
+        "eye": 75,
+        "discipline": 74,
+        "speed": 67,
+        "baseInstinct": 68,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 64,
+        "battingClutch": 65
       },
       "positionRatings": {
         "SS": 72

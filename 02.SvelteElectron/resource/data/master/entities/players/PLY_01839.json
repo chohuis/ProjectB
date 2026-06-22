@@ -1,65 +1,46 @@
 {
   "id": "PLY_01839",
-  "name": "문정우",
-  "nameEn": "Moon Jeongwoo",
+  "name": "이시카와 코지",
+  "nameEn": "Ishikawa Koji",
   "role": "player",
-  "age": 16,
+  "age": 31,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_SUNCHEON_BAY",
-  "teamId": "TEAM_HS_SUNCHEON_BAY",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_SUNCHEON_BAY",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
+  "teamId": "TEAM_JBL_PL_THUNDERFALCONS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
-      "position": "RP",
-      "jerseyNumber": 8,
+      "position": "SP",
+      "jerseyNumber": 34,
       "pitching": {
-        "ovr": 35,
-        "stamina": 38,
-        "velocity": 33,
-        "command": 31,
-        "control": 34,
-        "movement": 33,
-        "mentality": 35,
-        "recovery": 40,
-        "clutch": 41,
-        "holdRunners": 40
+        "ovr": 78,
+        "stamina": 82,
+        "velocity": 80,
+        "command": 77,
+        "control": 81,
+        "movement": 73,
+        "mentality": 77,
+        "recovery": 78
       },
       "batting": {
-        "ovr": 22,
-        "contact": 20,
-        "power": 25,
-        "eye": 26,
-        "discipline": 26,
-        "speed": 21,
-        "fielding": 20,
-        "arm": 21,
-        "battingClutch": 38,
-        "baseInstinct": 42,
-        "bunting": 32,
-        "platoon": 37
+        "ovr": 50,
+        "contact": 48,
+        "power": 45,
+        "eye": 44,
+        "discipline": 41,
+        "speed": 46,
+        "fielding": 45,
+        "arm": 41,
+        "battingClutch": 47
       },
-      "developmentRate": 83,
-      "potentialHidden": 87,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 35
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_KNUCKLEBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 40,
+      "potentialHidden": 88
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 74,
-  "popularity": 14
+  }
 }

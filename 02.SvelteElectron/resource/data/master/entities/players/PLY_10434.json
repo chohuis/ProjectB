@@ -1,9 +1,9 @@
 {
   "id": "PLY_10434",
-  "name": "토마스 칼렙",
-  "nameEn": "Thomas Caleb",
+  "name": "Wright Austin",
+  "nameEn": "Wright Austin",
   "role": "player",
-  "age": 20,
+  "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 75,
-  "popularity": 18,
+  "notes": "국적:일본",
+  "diligence": 77,
+  "popularity": 28,
   "militaryStatus": "군필",
   "entryYear": 2029,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 20,
+  "entryAge": 27,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 83,
-      "primaryPosition": "SP",
-      "developmentRate": 66,
-      "potentialHidden": 73,
-      "proServiceYears": 0,
+      "position": "LF",
+      "jerseyNumber": 96,
+      "primaryPosition": "LF",
+      "developmentRate": 51,
+      "potentialHidden": 59,
+      "proServiceYears": 5,
       "pitching": {
-        "ovr": 61,
-        "stamina": 57,
-        "velocity": 68,
-        "command": 56,
-        "control": 63,
-        "movement": 57,
-        "mentality": 61,
-        "recovery": 57,
-        "clutch": 50,
-        "holdRunners": 50
+        "ovr": 68,
+        "stamina": 70,
+        "velocity": 71,
+        "command": 64,
+        "control": 59,
+        "movement": 69,
+        "mentality": 71,
+        "recovery": 68,
+        "clutch": 61,
+        "holdRunners": 57
       },
       "batting": {
-        "ovr": 66,
-        "contact": 66,
-        "power": 63,
-        "eye": 58,
-        "discipline": 57,
-        "speed": 68,
-        "baseInstinct": 59,
-        "bunting": 58,
+        "ovr": 68,
+        "contact": 61,
+        "power": 58,
+        "eye": 72,
+        "discipline": 61,
+        "speed": 62,
+        "baseInstinct": 62,
+        "bunting": 52,
         "platoon": 50,
-        "fielding": 66,
-        "arm": 56,
-        "battingClutch": 62
+        "fielding": 61,
+        "arm": 58,
+        "battingClutch": 67
       },
       "positionRatings": {
-        "SP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+        "LF": 68
+      }
     },
     "coach": null,
     "manager": null,

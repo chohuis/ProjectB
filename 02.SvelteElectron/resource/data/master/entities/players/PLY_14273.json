@@ -1,6 +1,6 @@
 {
   "id": "PLY_14273",
-  "name": "루이스 조던",
+  "name": "Lewis Jordan",
   "nameEn": "Lewis Jordan",
   "role": "player",
   "age": 33,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 66,
   "popularity": 37,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 45
       },
       "batting": {
-        "ovr": 65,
-        "contact": 55,
-        "power": 65,
-        "eye": 65,
-        "discipline": 59,
-        "speed": 59,
-        "baseInstinct": 53,
-        "bunting": 51,
-        "platoon": 63,
-        "fielding": 64,
-        "arm": 60,
-        "battingClutch": 50
+        "ovr": 52,
+        "contact": 44,
+        "power": 52,
+        "eye": 52,
+        "discipline": 47,
+        "speed": 47,
+        "baseInstinct": 42,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 51,
+        "arm": 48,
+        "battingClutch": 40
       },
       "positionRatings": {
         "1B": 52

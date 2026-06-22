@@ -1,6 +1,6 @@
 {
   "id": "PLY_15005",
-  "name": "리 타일러",
+  "name": "Lee Tyler",
   "nameEn": "Lee Tyler",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 61,
   "popularity": 48,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 57,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 54,
-        "stamina": 53,
-        "velocity": 61,
-        "command": 46,
-        "control": 46,
-        "movement": 49,
-        "mentality": 51,
-        "recovery": 47,
-        "clutch": 47,
-        "holdRunners": 47
+        "ovr": 55,
+        "stamina": 54,
+        "velocity": 62,
+        "command": 47,
+        "control": 47,
+        "movement": 50,
+        "mentality": 52,
+        "recovery": 48,
+        "clutch": 48,
+        "holdRunners": 48
       },
       "batting": {
         "ovr": 55,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 55
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

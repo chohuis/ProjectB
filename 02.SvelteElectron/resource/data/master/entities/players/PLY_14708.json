@@ -1,6 +1,6 @@
 {
   "id": "PLY_14708",
-  "name": "존스 타일러",
+  "name": "Jones Tyler",
   "nameEn": "Jones Tyler",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 68,
   "popularity": 23,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 74,
       "proServiceYears": 3,
       "pitching": {
-        "ovr": 54,
-        "stamina": 51,
-        "velocity": 62,
-        "command": 45,
-        "control": 55,
-        "movement": 51,
-        "mentality": 56,
-        "recovery": 55,
-        "clutch": 52,
-        "holdRunners": 50
+        "ovr": 60,
+        "stamina": 57,
+        "velocity": 69,
+        "command": 50,
+        "control": 61,
+        "movement": 57,
+        "mentality": 62,
+        "recovery": 61,
+        "clutch": 58,
+        "holdRunners": 56
       },
       "batting": {
         "ovr": 60,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

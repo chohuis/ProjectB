@@ -1,14 +1,14 @@
 {
   "id": "PLY_01075",
   "name": "마르티네스 조셉",
-  "nameEn": "Ma 르티네스 조셉",
+  "nameEn": "Martinez Joseph",
   "role": "player",
   "age": 23,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_PEACHTREEFALCONS",
-  "teamId": "TEAM_ABL_PEACHTREEFALCONS_2",
+  "clubId": "CLUB_ABL_HOU",
+  "teamId": "TEAM_ABL_HOU_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 45,
       "pitching": {
-        "ovr": 61,
-        "stamina": 63,
-        "velocity": 58,
-        "command": 64,
-        "control": 58,
-        "movement": 60,
-        "mentality": 58,
-        "recovery": 59,
-        "clutch": 57,
-        "holdRunners": 49
+        "ovr": 69,
+        "stamina": 65,
+        "velocity": 74,
+        "command": 66,
+        "control": 65,
+        "movement": 68,
+        "mentality": 64,
+        "recovery": 67
       },
       "batting": {
-        "ovr": 43,
-        "contact": 45,
-        "power": 41,
-        "eye": 42,
-        "discipline": 49,
-        "speed": 48,
-        "fielding": 39,
-        "arm": 49,
-        "battingClutch": 42,
-        "baseInstinct": 45,
-        "bunting": 33,
-        "platoon": 34
+        "ovr": 44,
+        "contact": 43,
+        "power": 39,
+        "eye": 37,
+        "discipline": 41,
+        "speed": 39,
+        "fielding": 40,
+        "arm": 43,
+        "battingClutch": 38
       },
       "developmentRate": 32,
-      "potentialHidden": 90,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 1,
-      "contract": {
-        "salary": 14800,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 90
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,14 +1,14 @@
 {
   "id": "PLY_01142",
   "name": "해리스 케빈",
-  "nameEn": "Hae 리스 케빈",
+  "nameEn": "Harris Kevin",
   "role": "player",
   "age": 39,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_RAINARROWS",
-  "teamId": "TEAM_ABL_RAINARROWS_1",
+  "clubId": "CLUB_ABL_ATL",
+  "teamId": "TEAM_ABL_ATL",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 7,
       "pitching": {
-        "ovr": 75,
-        "stamina": 77,
-        "velocity": 81,
-        "command": 81,
-        "control": 78,
-        "movement": 75,
-        "mentality": 78,
-        "recovery": 75,
-        "clutch": 63,
-        "holdRunners": 65
+        "ovr": 84,
+        "stamina": 76,
+        "velocity": 88,
+        "command": 86,
+        "control": 77,
+        "movement": 80,
+        "mentality": 84,
+        "recovery": 83
       },
       "batting": {
-        "ovr": 57,
-        "contact": 53,
-        "power": 53,
-        "eye": 56,
-        "discipline": 62,
-        "speed": 54,
-        "fielding": 53,
+        "ovr": 53,
+        "contact": 51,
+        "power": 51,
+        "eye": 47,
+        "discipline": 53,
+        "speed": 51,
+        "fielding": 51,
         "arm": 55,
-        "battingClutch": 57,
-        "baseInstinct": 50,
-        "bunting": 54,
-        "platoon": 55
+        "battingClutch": 54
       },
       "developmentRate": 41,
-      "potentialHidden": 75,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 75
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 17,
-      "contract": {
-        "salary": 25600,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 75
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

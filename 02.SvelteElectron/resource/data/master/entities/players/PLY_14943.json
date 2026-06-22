@@ -1,6 +1,6 @@
 {
   "id": "PLY_14943",
-  "name": "로빈슨 헌터",
+  "name": "Robinson Hunter",
   "nameEn": "Robinson Hunter",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 54,
   "popularity": 30,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 53
       },
       "batting": {
-        "ovr": 86,
-        "contact": 91,
-        "power": 76,
-        "eye": 90,
-        "discipline": 80,
-        "speed": 83,
-        "baseInstinct": 75,
-        "bunting": 78,
-        "platoon": 63,
-        "fielding": 76,
-        "arm": 73,
-        "battingClutch": 82
+        "ovr": 68,
+        "contact": 72,
+        "power": 60,
+        "eye": 71,
+        "discipline": 63,
+        "speed": 66,
+        "baseInstinct": 59,
+        "bunting": 62,
+        "platoon": 50,
+        "fielding": 60,
+        "arm": 58,
+        "battingClutch": 65
       },
       "positionRatings": {
         "1B": 68

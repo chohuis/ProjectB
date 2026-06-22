@@ -1,9 +1,9 @@
 {
   "id": "PLY_00092",
   "name": "최상현",
-  "nameEn": "Choi Sanghyeon",
+  "nameEn": "Hong Seung-woo",
   "role": "player",
-  "age": 19,
+  "age": 15,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "SS",
       "jerseyNumber": 12,
       "pitching": {
-        "ovr": 39,
-        "stamina": 40,
-        "velocity": 45,
-        "command": 44,
-        "control": 41,
-        "movement": 40,
-        "mentality": 38,
-        "recovery": 40,
-        "clutch": 36,
-        "holdRunners": 40
+        "ovr": 50,
+        "stamina": 64,
+        "velocity": 63,
+        "command": 61,
+        "control": 59,
+        "movement": 62,
+        "mentality": 67,
+        "recovery": 50
       },
       "batting": {
-        "ovr": 59,
-        "contact": 57,
-        "power": 65,
-        "eye": 65,
-        "discipline": 59,
-        "speed": 60,
-        "fielding": 62,
-        "arm": 56,
-        "battingClutch": 56,
-        "baseInstinct": 52,
-        "bunting": 49,
-        "platoon": 45
+        "ovr": 63,
+        "contact": 52,
+        "power": 51,
+        "eye": 57,
+        "discipline": 55,
+        "speed": 69,
+        "fielding": 69,
+        "arm": 64,
+        "battingClutch": 61
       },
       "developmentRate": 61,
-      "potentialHidden": 80,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 59
-      }
+      "potentialHidden": 80
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

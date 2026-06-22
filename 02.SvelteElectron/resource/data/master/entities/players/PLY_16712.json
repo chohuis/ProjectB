@@ -1,6 +1,6 @@
 {
   "id": "PLY_16712",
-  "name": "화이트 제이크",
+  "name": "White Jake",
   "nameEn": "White Jake",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 52,
   "popularity": 46,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 79,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 57,
-        "stamina": 61,
-        "velocity": 63,
-        "command": 59,
-        "control": 58,
-        "movement": 52,
-        "mentality": 55,
-        "recovery": 53,
-        "clutch": 54,
-        "holdRunners": 47
+        "ovr": 58,
+        "stamina": 62,
+        "velocity": 64,
+        "command": 60,
+        "control": 59,
+        "movement": 53,
+        "mentality": 56,
+        "recovery": 54,
+        "clutch": 55,
+        "holdRunners": 48
       },
       "batting": {
         "ovr": 58,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

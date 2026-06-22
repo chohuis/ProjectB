@@ -1,14 +1,14 @@
 {
   "id": "PLY_01193",
   "name": "베이커 존",
-  "nameEn": "Be 이커 존",
+  "nameEn": "Baker John",
   "role": "player",
   "age": 40,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_BAYSEALS",
-  "teamId": "TEAM_ABL_BAYSEALS_1",
+  "clubId": "CLUB_ABL_PHI",
+  "teamId": "TEAM_ABL_PHI",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
@@ -19,58 +19,28 @@
       "position": "CP",
       "jerseyNumber": 13,
       "pitching": {
-        "ovr": 73,
-        "stamina": 76,
-        "velocity": 69,
-        "command": 70,
-        "control": 75,
-        "movement": 75,
-        "mentality": 70,
-        "recovery": 78,
-        "clutch": 70,
-        "holdRunners": 62
+        "ovr": 81,
+        "stamina": 68,
+        "velocity": 87,
+        "command": 78,
+        "control": 81,
+        "movement": 76,
+        "mentality": 80,
+        "recovery": 75
       },
       "batting": {
-        "ovr": 55,
-        "contact": 53,
-        "power": 57,
+        "ovr": 51,
+        "contact": 59,
+        "power": 54,
         "eye": 55,
-        "discipline": 56,
-        "speed": 61,
-        "fielding": 59,
-        "arm": 49,
-        "battingClutch": 47,
-        "baseInstinct": 54,
-        "bunting": 50,
-        "platoon": 45
+        "discipline": 58,
+        "speed": 53,
+        "fielding": 56,
+        "arm": 54,
+        "battingClutch": 52
       },
       "developmentRate": 34,
-      "potentialHidden": 90,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_KNUCKLEBALL",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 18,
-      "contract": {
-        "salary": 24000,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 90
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

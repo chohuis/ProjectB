@@ -1,9 +1,9 @@
 {
   "id": "PLY_12248",
-  "name": "루이스 에릭",
-  "nameEn": "Lewis Eric",
+  "name": "Scott Sean",
+  "nameEn": "Scott Sean",
   "role": "player",
-  "age": 28,
+  "age": 35,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 55,
-  "popularity": 28,
+  "notes": "국적:일본",
+  "diligence": 53,
+  "popularity": 15,
   "militaryStatus": "군필",
   "entryYear": 2040,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 28,
+  "entryAge": 35,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 51,
-      "primaryPosition": "SP",
-      "developmentRate": 62,
-      "potentialHidden": 79,
-      "proServiceYears": 6,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 62,
+      "primaryPosition": "1B",
+      "developmentRate": 50,
+      "potentialHidden": 58,
+      "proServiceYears": 13,
       "pitching": {
-        "ovr": 73,
-        "stamina": 77,
-        "velocity": 74,
-        "command": 66,
-        "control": 68,
-        "movement": 65,
-        "mentality": 74,
-        "recovery": 64,
-        "clutch": 60,
-        "holdRunners": 58
+        "ovr": 62,
+        "stamina": 62,
+        "velocity": 69,
+        "command": 61,
+        "control": 64,
+        "movement": 62,
+        "mentality": 66,
+        "recovery": 60,
+        "clutch": 53,
+        "holdRunners": 54
       },
       "batting": {
-        "ovr": 70,
-        "contact": 71,
-        "power": 67,
-        "eye": 68,
-        "discipline": 64,
-        "speed": 76,
-        "baseInstinct": 65,
-        "bunting": 64,
+        "ovr": 62,
+        "contact": 54,
+        "power": 52,
+        "eye": 56,
+        "discipline": 65,
+        "speed": 64,
+        "baseInstinct": 53,
+        "bunting": 49,
         "platoon": 50,
-        "fielding": 70,
-        "arm": 66,
-        "battingClutch": 71
+        "fielding": 57,
+        "arm": 62,
+        "battingClutch": 56
       },
       "positionRatings": {
-        "SP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ]
+        "1B": 62
+      }
     },
     "coach": null,
     "manager": null,

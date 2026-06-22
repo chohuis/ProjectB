@@ -1,14 +1,14 @@
 {
   "id": "PLY_01499",
   "name": "리베라 노아",
-  "nameEn": "Ri 베라 노아",
+  "nameEn": "Rivera Noah",
   "role": "player",
-  "age": 40,
+  "age": 41,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_RIVERCARDINALS",
-  "teamId": "TEAM_ABL_RIVERCARDINALS_1",
+  "clubId": "CLUB_ABL_BAL",
+  "teamId": "TEAM_ABL_BAL",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 4,
       "pitching": {
-        "ovr": 79,
-        "stamina": 80,
-        "velocity": 81,
-        "command": 79,
-        "control": 81,
-        "movement": 77,
-        "mentality": 76,
-        "recovery": 78,
-        "clutch": 67,
-        "holdRunners": 75
+        "ovr": 88,
+        "stamina": 88,
+        "velocity": 89,
+        "command": 83,
+        "control": 88,
+        "movement": 81,
+        "mentality": 83,
+        "recovery": 87
       },
       "batting": {
-        "ovr": 61,
-        "contact": 56,
-        "power": 56,
-        "eye": 57,
-        "discipline": 60,
-        "speed": 56,
+        "ovr": 65,
+        "contact": 62,
+        "power": 63,
+        "eye": 61,
+        "discipline": 63,
+        "speed": 67,
         "fielding": 63,
-        "arm": 62,
-        "battingClutch": 61,
-        "baseInstinct": 49,
-        "bunting": 51,
-        "platoon": 48
+        "arm": 68,
+        "battingClutch": 63
       },
       "developmentRate": 51,
-      "potentialHidden": 71,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 79
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SCREWBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 18,
-      "contract": {
-        "salary": 28600,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 71
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

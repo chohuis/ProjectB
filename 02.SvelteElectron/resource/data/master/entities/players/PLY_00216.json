@@ -1,7 +1,7 @@
 {
   "id": "PLY_00216",
   "name": "홍민재",
-  "nameEn": "Hong Minjae",
+  "nameEn": "Shin Seong-jun",
   "role": "player",
   "age": 22,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "SS",
       "jerseyNumber": 16,
       "pitching": {
-        "ovr": 39,
+        "ovr": 34,
         "stamina": 36,
-        "velocity": 38,
-        "command": 42,
-        "control": 39,
-        "movement": 36,
-        "mentality": 37,
-        "recovery": 36,
-        "clutch": 39,
-        "holdRunners": 33
+        "velocity": 36,
+        "command": 32,
+        "control": 37,
+        "movement": 32,
+        "mentality": 35,
+        "recovery": 31
       },
       "batting": {
-        "ovr": 59,
-        "contact": 62,
-        "power": 57,
-        "eye": 65,
-        "discipline": 65,
-        "speed": 54,
-        "fielding": 55,
+        "ovr": 60,
+        "contact": 57,
+        "power": 56,
+        "eye": 63,
+        "discipline": 55,
+        "speed": 60,
+        "fielding": 61,
         "arm": 56,
-        "battingClutch": 50,
-        "baseInstinct": 49,
-        "bunting": 42,
-        "platoon": 46
+        "battingClutch": 64
       },
       "developmentRate": 47,
-      "potentialHidden": 75,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 59
-      }
+      "potentialHidden": 75
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

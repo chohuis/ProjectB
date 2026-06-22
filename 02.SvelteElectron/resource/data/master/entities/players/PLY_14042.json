@@ -1,6 +1,6 @@
 {
   "id": "PLY_14042",
-  "name": "앤더슨 콜",
+  "name": "Anderson Cole",
   "nameEn": "Anderson Cole",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 72,
   "popularity": 43,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 79,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 60,
-        "stamina": 60,
-        "velocity": 60,
-        "command": 61,
-        "control": 58,
-        "movement": 55,
-        "mentality": 59,
-        "recovery": 51,
-        "clutch": 60,
-        "holdRunners": 51
+        "ovr": 61,
+        "stamina": 61,
+        "velocity": 61,
+        "command": 62,
+        "control": 59,
+        "movement": 56,
+        "mentality": 60,
+        "recovery": 52,
+        "clutch": 61,
+        "holdRunners": 52
       },
       "batting": {
         "ovr": 61,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

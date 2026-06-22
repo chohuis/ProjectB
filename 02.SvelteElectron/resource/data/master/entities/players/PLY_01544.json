@@ -1,65 +1,46 @@
 {
   "id": "PLY_01544",
-  "name": "민민재",
-  "nameEn": "Min Minjae",
+  "name": "야마구치 유토",
+  "nameEn": "Yamaguchi Yuto",
   "role": "player",
-  "age": 16,
+  "age": 35,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_SEOUL_INNOVATION",
-  "teamId": "TEAM_HS_SEOUL_INNOVATION",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_SEOUL_INNOVATION",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_NEONCRANES",
+  "teamId": "TEAM_JBL_CL_NEONCRANES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
-      "position": "CP",
-      "jerseyNumber": 23,
+      "position": "SP",
+      "jerseyNumber": 4,
       "pitching": {
-        "ovr": 47,
-        "stamina": 48,
-        "velocity": 52,
-        "command": 45,
-        "control": 49,
-        "movement": 49,
-        "mentality": 45,
-        "recovery": 45,
-        "clutch": 45,
-        "holdRunners": 38
+        "ovr": 74,
+        "stamina": 78,
+        "velocity": 78,
+        "command": 73,
+        "control": 78,
+        "movement": 76,
+        "mentality": 76,
+        "recovery": 78
       },
       "batting": {
-        "ovr": 29,
-        "contact": 34,
-        "power": 32,
-        "eye": 32,
-        "discipline": 35,
-        "speed": 27,
-        "fielding": 34,
-        "arm": 33,
-        "battingClutch": 41,
-        "baseInstinct": 35,
-        "bunting": 34,
-        "platoon": 38
+        "ovr": 49,
+        "contact": 46,
+        "power": 44,
+        "eye": 44,
+        "discipline": 51,
+        "speed": 51,
+        "fielding": 50,
+        "arm": 46,
+        "battingClutch": 51
       },
-      "developmentRate": 52,
-      "potentialHidden": 79,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 47
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SCREWBALL",
-          "grade": 3
-        }
-      ]
+      "developmentRate": 35,
+      "potentialHidden": 77
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 66,
-  "popularity": 16
+  }
 }

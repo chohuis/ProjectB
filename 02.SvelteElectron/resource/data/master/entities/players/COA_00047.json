@@ -1,14 +1,14 @@
 {
   "id": "COA_00047",
   "name": "허지후",
-  "nameEn": "Heo Jihu",
+  "nameEn": "Song Dong-woo",
   "role": "coach",
-  "age": 40,
+  "age": 57,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_TWINWOLVES",
-  "teamId": "TEAM_KBL_TWINWOLVES_1",
+  "clubId": "CLUB_KBL_KIA",
+  "teamId": "TEAM_KBL_KIA_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -26,9 +26,7 @@
         "control": 50,
         "movement": 50,
         "mentality": 50,
-        "recovery": 50,
-        "clutch": 50,
-        "holdRunners": 50
+        "recovery": 50
       },
       "batting": {
         "ovr": 50,
@@ -39,25 +37,20 @@
         "speed": 50,
         "fielding": 50,
         "arm": 50,
-        "battingClutch": 50,
-        "baseInstinct": 50,
-        "bunting": 45,
-        "platoon": 50
+        "battingClutch": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 70,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 50
-      }
+      "potentialHidden": 70
     },
     "coach": {
-      "specialty": "-",
+      "specialty": "멘탈",
       "experienceYears": 8,
       "stats": {
         "teaching": 54,
-        "analytics": 73,
-        "experience": 2
+        "analysis": 73,
+        "communication": 80,
+        "discipline": 58,
+        "leadership": 59
       },
       "trainingBuffs": ""
     },
@@ -87,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

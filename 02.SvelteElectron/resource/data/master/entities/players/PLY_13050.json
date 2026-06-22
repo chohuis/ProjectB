@@ -1,9 +1,9 @@
 {
   "id": "PLY_13050",
-  "name": "앤더슨 숀",
-  "nameEn": "Anderson Sean",
+  "name": "Walker Brandon",
+  "nameEn": "Walker Brandon",
   "role": "player",
-  "age": 24,
+  "age": 31,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 50,
-  "popularity": 17,
+  "notes": "국적:쿠바",
+  "diligence": 63,
+  "popularity": 32,
   "militaryStatus": "군필",
   "entryYear": 2045,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 24,
+  "entryAge": 31,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 5,
-      "primaryPosition": "SP",
-      "developmentRate": 69,
-      "potentialHidden": 63,
-      "proServiceYears": 2,
+      "position": "3B",
+      "jerseyNumber": 29,
+      "primaryPosition": "3B",
+      "developmentRate": 55,
+      "potentialHidden": 77,
+      "proServiceYears": 9,
       "pitching": {
-        "ovr": 68,
-        "stamina": 72,
-        "velocity": 70,
-        "command": 60,
-        "control": 61,
-        "movement": 61,
-        "mentality": 68,
-        "recovery": 69,
-        "clutch": 67,
-        "holdRunners": 63
+        "ovr": 58,
+        "stamina": 52,
+        "velocity": 68,
+        "command": 56,
+        "control": 54,
+        "movement": 50,
+        "mentality": 64,
+        "recovery": 47,
+        "clutch": 53,
+        "holdRunners": 55
       },
       "batting": {
-        "ovr": 75,
-        "contact": 76,
-        "power": 66,
-        "eye": 74,
-        "discipline": 78,
-        "speed": 79,
-        "baseInstinct": 67,
-        "bunting": 70,
+        "ovr": 58,
+        "contact": 57,
+        "power": 50,
+        "eye": 52,
+        "discipline": 61,
+        "speed": 61,
+        "baseInstinct": 57,
+        "bunting": 47,
         "platoon": 50,
-        "fielding": 70,
-        "arm": 75,
-        "battingClutch": 70
+        "fielding": 58,
+        "arm": 48,
+        "battingClutch": 46
       },
       "positionRatings": {
-        "SP": 75
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "3B": 58
+      }
     },
     "coach": null,
     "manager": null,

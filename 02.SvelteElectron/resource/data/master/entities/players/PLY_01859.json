@@ -1,61 +1,46 @@
 {
   "id": "PLY_01859",
-  "name": "곽상현",
-  "nameEn": "Kwak Sanghyeon",
+  "name": "야마구치 마나부",
+  "nameEn": "Yamaguchi Manabu",
   "role": "player",
-  "age": 18,
+  "age": 32,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_SUNCHEON_BAY",
-  "teamId": "TEAM_HS_SUNCHEON_BAY",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_SUNCHEON_BAY",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_POLARBEARS",
+  "teamId": "TEAM_JBL_PL_POLARBEARS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
-      "handedness": "R",
-      "position": "UT",
-      "jerseyNumber": 28,
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 4,
       "pitching": {
-        "ovr": 44,
-        "stamina": 47,
-        "velocity": 42,
-        "command": 45,
-        "control": 47,
-        "movement": 41,
-        "mentality": 46,
-        "recovery": 44,
-        "clutch": 37,
-        "holdRunners": 40
+        "ovr": 82,
+        "stamina": 86,
+        "velocity": 86,
+        "command": 81,
+        "control": 86,
+        "movement": 77,
+        "mentality": 86,
+        "recovery": 77
       },
       "batting": {
-        "ovr": 64,
-        "contact": 69,
-        "power": 69,
-        "eye": 69,
-        "discipline": 64,
-        "speed": 60,
-        "fielding": 62,
-        "arm": 69,
-        "battingClutch": 59,
-        "baseInstinct": 53,
-        "bunting": 48,
-        "platoon": 56
+        "ovr": 50,
+        "contact": 53,
+        "power": 54,
+        "eye": 53,
+        "discipline": 56,
+        "speed": 57,
+        "fielding": 54,
+        "arm": 51,
+        "battingClutch": 54
       },
-      "developmentRate": 67,
-      "potentialHidden": 71,
-      "primaryPosition": "UT",
-      "positionRatings": {
-        "UT": 64
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 45,
+      "potentialHidden": 69
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 76,
-  "popularity": 47
+  }
 }

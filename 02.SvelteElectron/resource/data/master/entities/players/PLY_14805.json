@@ -1,6 +1,6 @@
 {
   "id": "PLY_14805",
-  "name": "리 헌터",
+  "name": "Lee Hunter",
   "nameEn": "Lee Hunter",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 54,
   "popularity": 42,
   "militaryStatus": "군필",

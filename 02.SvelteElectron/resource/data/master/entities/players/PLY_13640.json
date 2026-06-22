@@ -1,9 +1,9 @@
 {
   "id": "PLY_13640",
-  "name": "데이비스 데릭",
-  "nameEn": "Davis Derek",
+  "name": "Hall Evan",
+  "nameEn": "Hall Evan",
   "role": "player",
-  "age": 31,
+  "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:파나마",
   "diligence": 56,
-  "popularity": 45,
+  "popularity": 40,
   "militaryStatus": "군필",
   "entryYear": 2048,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 31,
+  "entryAge": 25,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 91,
+      "jerseyNumber": 8,
       "primaryPosition": "SP",
-      "developmentRate": 39,
-      "potentialHidden": 75,
-      "proServiceYears": 9,
+      "developmentRate": 51,
+      "potentialHidden": 74,
+      "proServiceYears": 3,
       "pitching": {
-        "ovr": 62,
-        "stamina": 64,
-        "velocity": 66,
-        "command": 60,
-        "control": 55,
-        "movement": 63,
-        "mentality": 67,
-        "recovery": 55,
-        "clutch": 55,
-        "holdRunners": 50
+        "ovr": 71,
+        "stamina": 69,
+        "velocity": 76,
+        "command": 62,
+        "control": 74,
+        "movement": 69,
+        "mentality": 64,
+        "recovery": 70,
+        "clutch": 69,
+        "holdRunners": 67
       },
       "batting": {
-        "ovr": 60,
-        "contact": 57,
-        "power": 62,
-        "eye": 65,
-        "discipline": 62,
-        "speed": 66,
-        "baseInstinct": 59,
-        "bunting": 46,
+        "ovr": 71,
+        "contact": 69,
+        "power": 69,
+        "eye": 66,
+        "discipline": 70,
+        "speed": 68,
+        "baseInstinct": 69,
+        "bunting": 55,
         "platoon": 50,
-        "fielding": 53,
-        "arm": 51,
-        "battingClutch": 48
+        "fielding": 64,
+        "arm": 67,
+        "battingClutch": 65
       },
       "positionRatings": {
-        "SP": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 71
+      }
     },
     "coach": null,
     "manager": null,

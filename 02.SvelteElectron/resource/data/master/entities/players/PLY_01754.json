@@ -1,61 +1,46 @@
 {
   "id": "PLY_01754",
-  "name": "정승현",
-  "nameEn": "Jeong Seunghyeon",
+  "name": "와타나베 유타",
+  "nameEn": "Watanabe Yuta",
   "role": "player",
-  "age": 17,
+  "age": 21,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_MASAN_HARBOR",
-  "teamId": "TEAM_HS_MASAN_HARBOR",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_MASAN_HARBOR",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+  "teamId": "TEAM_JBL_CL_SILVERWOLVES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "C",
-      "jerseyNumber": 13,
+      "position": "CP",
+      "jerseyNumber": 39,
       "pitching": {
-        "ovr": 35,
-        "stamina": 39,
-        "velocity": 30,
-        "command": 37,
-        "control": 37,
-        "movement": 33,
-        "mentality": 40,
-        "recovery": 39,
-        "clutch": 36,
-        "holdRunners": 41
+        "ovr": 75,
+        "stamina": 63,
+        "velocity": 79,
+        "command": 78,
+        "control": 74,
+        "movement": 74,
+        "mentality": 74,
+        "recovery": 78
       },
       "batting": {
         "ovr": 55,
-        "contact": 56,
-        "power": 54,
-        "eye": 57,
-        "discipline": 58,
+        "contact": 52,
+        "power": 50,
+        "eye": 50,
+        "discipline": 49,
         "speed": 51,
-        "fielding": 52,
-        "arm": 52,
-        "battingClutch": 45,
-        "baseInstinct": 45,
-        "bunting": 47,
-        "platoon": 49
+        "fielding": 50,
+        "arm": 51,
+        "battingClutch": 55
       },
-      "developmentRate": 73,
-      "potentialHidden": 78,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 55
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 53,
+      "potentialHidden": 87
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 73,
-  "popularity": 30
+  }
 }

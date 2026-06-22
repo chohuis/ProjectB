@@ -1,6 +1,6 @@
 {
   "id": "PLY_14750",
-  "name": "브라운 코디",
+  "name": "Brown Cody",
   "nameEn": "Brown Cody",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 71,
   "popularity": 26,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 52
       },
       "batting": {
-        "ovr": 68,
-        "contact": 74,
-        "power": 69,
-        "eye": 58,
-        "discipline": 71,
-        "speed": 67,
-        "baseInstinct": 70,
-        "bunting": 50,
-        "platoon": 56,
-        "fielding": 61,
-        "arm": 70,
-        "battingClutch": 55
+        "ovr": 61,
+        "contact": 66,
+        "power": 62,
+        "eye": 52,
+        "discipline": 64,
+        "speed": 60,
+        "baseInstinct": 63,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 63,
+        "battingClutch": 49
       },
       "positionRatings": {
         "CF": 61

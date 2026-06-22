@@ -1,6 +1,6 @@
 {
   "id": "PLY_14079",
-  "name": "앨런 오스틴",
+  "name": "Allen Austin",
   "nameEn": "Allen Austin",
   "role": "player",
   "age": 23,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 46,
   "popularity": 22,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 57,
       "proServiceYears": 1,
       "pitching": {
-        "ovr": 60,
-        "stamina": 56,
-        "velocity": 71,
-        "command": 55,
-        "control": 57,
-        "movement": 59,
-        "mentality": 54,
-        "recovery": 51,
-        "clutch": 48,
-        "holdRunners": 50
+        "ovr": 62,
+        "stamina": 58,
+        "velocity": 73,
+        "command": 57,
+        "control": 59,
+        "movement": 61,
+        "mentality": 56,
+        "recovery": 53,
+        "clutch": 50,
+        "holdRunners": 52
       },
       "batting": {
         "ovr": 62,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

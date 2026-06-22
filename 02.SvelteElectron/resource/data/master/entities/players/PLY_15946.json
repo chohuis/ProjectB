@@ -1,6 +1,6 @@
 {
   "id": "PLY_15946",
-  "name": "에르난데스 로건",
+  "name": "Hernandez Logan",
   "nameEn": "Hernandez Logan",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 67,
   "popularity": 15,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 55,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 82,
-        "stamina": 79,
-        "velocity": 90,
-        "command": 82,
-        "control": 76,
-        "movement": 77,
-        "mentality": 80,
-        "recovery": 80,
-        "clutch": 80,
-        "holdRunners": 72
+        "ovr": 76,
+        "stamina": 73,
+        "velocity": 83,
+        "command": 76,
+        "control": 70,
+        "movement": 71,
+        "mentality": 74,
+        "recovery": 74,
+        "clutch": 74,
+        "holdRunners": 67
       },
       "batting": {
         "ovr": 76,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

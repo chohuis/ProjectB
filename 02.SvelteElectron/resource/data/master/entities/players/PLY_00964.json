@@ -1,14 +1,14 @@
 {
   "id": "PLY_00964",
   "name": "그린 조셉",
-  "nameEn": "Geu 린 조셉",
+  "nameEn": "Green Joseph",
   "role": "player",
   "age": 38,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_WINDBEARS",
-  "teamId": "TEAM_ABL_WINDBEARS_1",
+  "clubId": "CLUB_ABL_TOR",
+  "teamId": "TEAM_ABL_TOR",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:베네수엘라",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 9,
       "pitching": {
-        "ovr": 73,
-        "stamina": 75,
-        "velocity": 73,
-        "command": 73,
-        "control": 75,
-        "movement": 72,
-        "mentality": 69,
-        "recovery": 71,
-        "clutch": 71,
-        "holdRunners": 66
+        "ovr": 76,
+        "stamina": 69,
+        "velocity": 84,
+        "command": 78,
+        "control": 80,
+        "movement": 81,
+        "mentality": 78,
+        "recovery": 75
       },
       "batting": {
-        "ovr": 55,
-        "contact": 55,
-        "power": 56,
-        "eye": 56,
-        "discipline": 58,
-        "speed": 49,
-        "fielding": 51,
-        "arm": 59,
-        "battingClutch": 53,
-        "baseInstinct": 50,
-        "bunting": 40,
-        "platoon": 42
+        "ovr": 51,
+        "contact": 45,
+        "power": 48,
+        "eye": 50,
+        "discipline": 44,
+        "speed": 46,
+        "fielding": 49,
+        "arm": 47,
+        "battingClutch": 45
       },
       "developmentRate": 50,
-      "potentialHidden": 76,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 16,
-      "contract": {
-        "salary": 24000,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 76
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

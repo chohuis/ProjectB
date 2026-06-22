@@ -1,6 +1,6 @@
 {
   "id": "PLY_15241",
-  "name": "로드리게스 데릭",
+  "name": "Rodriguez Derek",
   "nameEn": "Rodriguez Derek",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 78,
   "popularity": 26,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 71,
       "proServiceYears": 13,
       "pitching": {
-        "ovr": 86,
-        "stamina": 76,
-        "velocity": 91,
-        "command": 85,
-        "control": 77,
-        "movement": 76,
-        "mentality": 80,
-        "recovery": 71,
-        "clutch": 76,
-        "holdRunners": 70
+        "ovr": 68,
+        "stamina": 60,
+        "velocity": 72,
+        "command": 67,
+        "control": 61,
+        "movement": 60,
+        "mentality": 63,
+        "recovery": 56,
+        "clutch": 60,
+        "holdRunners": 55
       },
       "batting": {
         "ovr": 68,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

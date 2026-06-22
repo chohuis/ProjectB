@@ -1,6 +1,6 @@
 {
   "id": "PLY_16566",
-  "name": "마르티네스 코디",
+  "name": "Martinez Cody",
   "nameEn": "Martinez Cody",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 61,
   "popularity": 35,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 73,
       "proServiceYears": 5,
       "pitching": {
-        "ovr": 57,
-        "stamina": 60,
-        "velocity": 64,
-        "command": 49,
-        "control": 52,
-        "movement": 51,
-        "mentality": 59,
-        "recovery": 51,
-        "clutch": 51,
-        "holdRunners": 54
+        "ovr": 62,
+        "stamina": 65,
+        "velocity": 70,
+        "command": 53,
+        "control": 57,
+        "movement": 55,
+        "mentality": 64,
+        "recovery": 55,
+        "clutch": 56,
+        "holdRunners": 59
       },
       "batting": {
         "ovr": 62,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

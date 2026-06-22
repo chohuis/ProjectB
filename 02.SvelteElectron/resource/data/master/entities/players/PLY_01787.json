@@ -1,61 +1,46 @@
 {
   "id": "PLY_01787",
-  "name": "나진우",
-  "nameEn": "Na Jinwoo",
+  "name": "요시다 미쓰루",
+  "nameEn": "Yoshida Mitsuru",
   "role": "player",
-  "age": 17,
+  "age": 35,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_JECHEON_RIDGE",
-  "teamId": "TEAM_HS_JECHEON_RIDGE",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_JECHEON_RIDGE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONSTORMS",
+  "teamId": "TEAM_JBL_CL_IRONSTORMS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "2B",
-      "jerseyNumber": 16,
+      "position": "RF",
+      "jerseyNumber": 22,
       "pitching": {
-        "ovr": 39,
-        "stamina": 41,
-        "velocity": 36,
-        "command": 43,
-        "control": 37,
-        "movement": 34,
-        "mentality": 38,
-        "recovery": 36,
-        "clutch": 37,
-        "holdRunners": 42
+        "ovr": 53,
+        "stamina": 50,
+        "velocity": 55,
+        "command": 53,
+        "control": 54,
+        "movement": 53,
+        "mentality": 52,
+        "recovery": 51
       },
       "batting": {
-        "ovr": 59,
-        "contact": 65,
-        "power": 63,
-        "eye": 64,
-        "discipline": 63,
-        "speed": 56,
-        "fielding": 56,
-        "arm": 54,
-        "battingClutch": 49,
-        "baseInstinct": 51,
-        "bunting": 46,
-        "platoon": 53
+        "ovr": 80,
+        "contact": 82,
+        "power": 87,
+        "eye": 80,
+        "discipline": 79,
+        "speed": 80,
+        "fielding": 81,
+        "arm": 79,
+        "battingClutch": 84
       },
-      "developmentRate": 90,
-      "potentialHidden": 61,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 35,
+      "potentialHidden": 75
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 78,
-  "popularity": 15
+  }
 }

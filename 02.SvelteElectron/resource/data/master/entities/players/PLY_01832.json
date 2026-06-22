@@ -1,61 +1,46 @@
 {
   "id": "PLY_01832",
-  "name": "임재민",
-  "nameEn": "Im Jaemin",
+  "name": "후지이 요스케",
+  "nameEn": "Fujii Yosuke",
   "role": "player",
-  "age": 16,
+  "age": 22,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_SUNCHEON_BAY",
-  "teamId": "TEAM_HS_SUNCHEON_BAY",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_SUNCHEON_BAY",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
+  "teamId": "TEAM_JBL_PL_THUNDERFALCONS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 1,
+      "position": "RF",
+      "jerseyNumber": 22,
       "pitching": {
-        "ovr": 48,
-        "stamina": 49,
-        "velocity": 44,
-        "command": 45,
-        "control": 49,
-        "movement": 45,
-        "mentality": 54,
-        "recovery": 53,
-        "clutch": 43,
-        "holdRunners": 39
+        "ovr": 54,
+        "stamina": 56,
+        "velocity": 60,
+        "command": 58,
+        "control": 53,
+        "movement": 49,
+        "mentality": 51,
+        "recovery": 48
       },
       "batting": {
-        "ovr": 30,
-        "contact": 29,
-        "power": 31,
-        "eye": 33,
-        "discipline": 31,
-        "speed": 30,
-        "fielding": 27,
-        "arm": 33,
-        "battingClutch": 39,
-        "baseInstinct": 41,
-        "bunting": 41,
-        "platoon": 36
+        "ovr": 88,
+        "contact": 87,
+        "power": 94,
+        "eye": 91,
+        "discipline": 85,
+        "speed": 84,
+        "fielding": 83,
+        "arm": 87,
+        "battingClutch": 90
       },
-      "developmentRate": 77,
-      "potentialHidden": 73,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 48
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 40,
+      "potentialHidden": 75
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 64,
-  "popularity": 50
+  }
 }

@@ -1,7 +1,7 @@
 {
   "id": "PLY_12295",
-  "name": "마틴 그랜트",
-  "nameEn": "Martin Grant",
+  "name": "Mitchell Dylan",
+  "nameEn": "Mitchell Dylan",
   "role": "player",
   "age": 31,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 51,
-  "popularity": 46,
+  "notes": "국적:베네수엘라",
+  "diligence": 76,
+  "popularity": 11,
   "militaryStatus": "군필",
   "entryYear": 2040,
   "entryLeague": "LEAGUE_ABL",
@@ -24,50 +24,40 @@
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 23,
+      "jerseyNumber": 33,
       "primaryPosition": "SP",
-      "developmentRate": 52,
-      "potentialHidden": 69,
+      "developmentRate": 51,
+      "potentialHidden": 55,
       "proServiceYears": 9,
       "pitching": {
-        "ovr": 58,
-        "stamina": 57,
-        "velocity": 56,
-        "command": 50,
-        "control": 51,
-        "movement": 61,
-        "mentality": 55,
-        "recovery": 55,
-        "clutch": 52,
-        "holdRunners": 48
+        "ovr": 64,
+        "stamina": 62,
+        "velocity": 63,
+        "command": 62,
+        "control": 61,
+        "movement": 57,
+        "mentality": 67,
+        "recovery": 64,
+        "clutch": 55,
+        "holdRunners": 49
       },
       "batting": {
-        "ovr": 56,
-        "contact": 52,
-        "power": 46,
-        "eye": 51,
-        "discipline": 48,
-        "speed": 57,
-        "baseInstinct": 59,
+        "ovr": 64,
+        "contact": 61,
+        "power": 61,
+        "eye": 66,
+        "discipline": 64,
+        "speed": 68,
+        "baseInstinct": 60,
         "bunting": 51,
         "platoon": 50,
-        "fielding": 54,
+        "fielding": 61,
         "arm": 59,
-        "battingClutch": 54
+        "battingClutch": 62
       },
       "positionRatings": {
-        "SP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 64
+      }
     },
     "coach": null,
     "manager": null,

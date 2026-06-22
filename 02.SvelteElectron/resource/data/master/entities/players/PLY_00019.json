@@ -1,7 +1,7 @@
 {
   "id": "PLY_00019",
   "name": "조지성",
-  "nameEn": "Jo Jiseong",
+  "nameEn": "Hong Sang-min",
   "role": "player",
   "age": 17,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "RF",
       "jerseyNumber": 19,
       "pitching": {
-        "ovr": 37,
-        "stamina": 34,
-        "velocity": 43,
-        "command": 37,
-        "control": 37,
-        "movement": 33,
-        "mentality": 36,
-        "recovery": 38,
-        "clutch": 45,
-        "holdRunners": 43
+        "ovr": 48,
+        "stamina": 58,
+        "velocity": 58,
+        "command": 58,
+        "control": 59,
+        "movement": 44,
+        "mentality": 66,
+        "recovery": 62
       },
       "batting": {
         "ovr": 57,
-        "contact": 53,
-        "power": 61,
-        "eye": 57,
-        "discipline": 56,
-        "speed": 63,
-        "fielding": 59,
-        "arm": 52,
-        "battingClutch": 49,
-        "baseInstinct": 46,
-        "bunting": 54,
-        "platoon": 44
+        "contact": 58,
+        "power": 51,
+        "eye": 60,
+        "discipline": 62,
+        "speed": 65,
+        "fielding": 54,
+        "arm": 63,
+        "battingClutch": 52
       },
       "developmentRate": 64,
-      "potentialHidden": 65,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 57
-      }
+      "potentialHidden": 65
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

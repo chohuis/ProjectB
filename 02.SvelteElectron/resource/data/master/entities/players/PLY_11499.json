@@ -1,9 +1,9 @@
 {
   "id": "PLY_11499",
-  "name": "화이트 제이슨",
-  "nameEn": "White Jason",
+  "name": "Allen Hunter",
+  "nameEn": "Allen Hunter",
   "role": "player",
-  "age": 28,
+  "age": 27,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 62,
-  "popularity": 48,
+  "notes": "국적:쿠바",
+  "diligence": 61,
+  "popularity": 33,
   "militaryStatus": "군필",
   "entryYear": 2035,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 28,
+  "entryAge": 27,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 31,
-      "primaryPosition": "SP",
-      "developmentRate": 69,
-      "potentialHidden": 64,
-      "proServiceYears": 6,
+      "position": "2B",
+      "jerseyNumber": 65,
+      "primaryPosition": "2B",
+      "developmentRate": 70,
+      "potentialHidden": 82,
+      "proServiceYears": 5,
       "pitching": {
-        "ovr": 81,
-        "stamina": 84,
-        "velocity": 83,
-        "command": 73,
-        "control": 80,
-        "movement": 82,
-        "mentality": 87,
-        "recovery": 79,
-        "clutch": 79,
-        "holdRunners": 72
+        "ovr": 82,
+        "stamina": 83,
+        "velocity": 90,
+        "command": 76,
+        "control": 75,
+        "movement": 75,
+        "mentality": 84,
+        "recovery": 72,
+        "clutch": 73,
+        "holdRunners": 74
       },
       "batting": {
-        "ovr": 78,
-        "contact": 83,
+        "ovr": 82,
+        "contact": 80,
         "power": 81,
-        "eye": 76,
-        "discipline": 77,
-        "speed": 73,
-        "baseInstinct": 80,
-        "bunting": 62,
+        "eye": 86,
+        "discipline": 75,
+        "speed": 88,
+        "baseInstinct": 82,
+        "bunting": 73,
         "platoon": 50,
-        "fielding": 74,
-        "arm": 79,
-        "battingClutch": 75
+        "fielding": 84,
+        "arm": 81,
+        "battingClutch": 78
       },
       "positionRatings": {
-        "SP": 78
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "2B": 82
+      }
     },
     "coach": null,
     "manager": null,

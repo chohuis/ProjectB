@@ -1,9 +1,9 @@
 {
   "id": "PLY_00041",
   "name": "전재윤",
-  "nameEn": "Jeon Jaeyun",
+  "nameEn": "Ahn Min-woo",
   "role": "player",
-  "age": 19,
+  "age": 15,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -20,46 +20,27 @@
       "jerseyNumber": 1,
       "pitching": {
         "ovr": 57,
-        "stamina": 58,
-        "velocity": 57,
-        "command": 56,
-        "control": 62,
-        "movement": 59,
-        "mentality": 55,
-        "recovery": 55,
-        "clutch": 51,
-        "holdRunners": 49
+        "stamina": 72,
+        "velocity": 61,
+        "command": 59,
+        "control": 59,
+        "movement": 55,
+        "mentality": 59,
+        "recovery": 69
       },
       "batting": {
-        "ovr": 39,
-        "contact": 38,
-        "power": 37,
-        "eye": 40,
-        "discipline": 44,
-        "speed": 35,
-        "fielding": 41,
-        "arm": 41,
-        "battingClutch": 41,
-        "baseInstinct": 43,
-        "bunting": 35,
-        "platoon": 37
+        "ovr": 47,
+        "contact": 60,
+        "power": 63,
+        "eye": 63,
+        "discipline": 53,
+        "speed": 72,
+        "fielding": 62,
+        "arm": 54,
+        "battingClutch": 58
       },
       "developmentRate": 46,
-      "potentialHidden": 82,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 82
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

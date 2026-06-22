@@ -1,7 +1,7 @@
 {
   "id": "PLY_00226",
   "name": "남민준",
-  "nameEn": "Nam Minjun",
+  "nameEn": "Baek Tae-jun",
   "role": "player",
   "age": 19,
   "status": "active",
@@ -19,47 +19,28 @@
       "position": "RP",
       "jerseyNumber": 6,
       "pitching": {
-        "ovr": 61,
-        "stamina": 64,
-        "velocity": 60,
-        "command": 59,
-        "control": 60,
-        "movement": 61,
-        "mentality": 62,
-        "recovery": 61,
-        "clutch": 52,
-        "holdRunners": 49
+        "ovr": 69,
+        "stamina": 56,
+        "velocity": 72,
+        "command": 68,
+        "control": 69,
+        "movement": 64,
+        "mentality": 65,
+        "recovery": 66
       },
       "batting": {
-        "ovr": 43,
-        "contact": 39,
-        "power": 48,
-        "eye": 48,
-        "discipline": 42,
-        "speed": 47,
-        "fielding": 48,
-        "arm": 46,
-        "battingClutch": 40,
-        "baseInstinct": 38,
-        "bunting": 37,
-        "platoon": 36
+        "ovr": 46,
+        "contact": 43,
+        "power": 45,
+        "eye": 45,
+        "discipline": 48,
+        "speed": 40,
+        "fielding": 47,
+        "arm": 40,
+        "battingClutch": 49
       },
       "developmentRate": 52,
-      "potentialHidden": 62,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 62
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

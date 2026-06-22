@@ -1,72 +1,46 @@
 {
   "id": "PLY_02017",
-  "name": "손성민",
-  "nameEn": "Son Seongmin",
+  "name": "콘도 츠바사",
+  "nameEn": "Kondo Tsubasa",
   "role": "player",
-  "age": 24,
+  "age": 29,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_GIANTWHALES",
-  "teamId": "TEAM_KBL_GIANTWHALES_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SEAGULLS",
+  "teamId": "TEAM_JBL_PL_SEAGULLS_2",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
-      "handedness": "L",
-      "position": "SS",
-      "jerseyNumber": 26,
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 32,
       "pitching": {
-        "ovr": 42,
-        "stamina": 43,
-        "velocity": 43,
-        "command": 48,
-        "control": 38,
-        "movement": 42,
-        "mentality": 42,
-        "recovery": 46,
-        "clutch": 44,
-        "holdRunners": 37
+        "ovr": 67,
+        "stamina": 67,
+        "velocity": 69,
+        "command": 69,
+        "control": 68,
+        "movement": 68,
+        "mentality": 69,
+        "recovery": 69
       },
       "batting": {
-        "ovr": 62,
-        "contact": 63,
-        "power": 66,
-        "eye": 63,
-        "discipline": 68,
-        "speed": 59,
-        "fielding": 62,
-        "arm": 63,
-        "battingClutch": 61,
-        "baseInstinct": 50,
-        "bunting": 53,
-        "platoon": 56
+        "ovr": 43,
+        "contact": 41,
+        "power": 36,
+        "eye": 41,
+        "discipline": 36,
+        "speed": 41,
+        "fielding": 34,
+        "arm": 42,
+        "battingClutch": 41
       },
-      "developmentRate": 54,
-      "potentialHidden": 75,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 2,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 56,
+      "potentialHidden": 62
     },
     "coach": {
       "specialty": "-",
@@ -106,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 60
+  }
 }

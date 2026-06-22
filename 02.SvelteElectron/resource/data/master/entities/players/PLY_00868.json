@@ -1,14 +1,14 @@
 {
   "id": "PLY_00868",
   "name": "잭슨 조셉",
-  "nameEn": "Jaek 슨 조셉",
+  "nameEn": "Jackson Joseph",
   "role": "player",
   "age": 33,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_HARBORHAWKS",
-  "teamId": "TEAM_ABL_HARBORHAWKS_1",
+  "clubId": "CLUB_ABL_NYY",
+  "teamId": "TEAM_ABL_NYY",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:베네수엘라",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 3,
       "pitching": {
-        "ovr": 73,
-        "stamina": 77,
-        "velocity": 68,
-        "command": 78,
-        "control": 75,
-        "movement": 69,
-        "mentality": 79,
-        "recovery": 78,
-        "clutch": 72,
-        "holdRunners": 60
+        "ovr": 78,
+        "stamina": 80,
+        "velocity": 84,
+        "command": 82,
+        "control": 76,
+        "movement": 75,
+        "mentality": 82,
+        "recovery": 76
       },
       "batting": {
-        "ovr": 55,
-        "contact": 60,
-        "power": 57,
-        "eye": 52,
+        "ovr": 48,
+        "contact": 51,
+        "power": 53,
+        "eye": 47,
         "discipline": 51,
-        "speed": 56,
-        "fielding": 54,
-        "arm": 52,
-        "battingClutch": 51,
-        "baseInstinct": 51,
-        "bunting": 49,
-        "platoon": 49
+        "speed": 48,
+        "fielding": 46,
+        "arm": 49,
+        "battingClutch": 53
       },
       "developmentRate": 45,
-      "potentialHidden": 89,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 11,
-      "contract": {
-        "salary": 24000,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 89
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,61 +1,46 @@
 {
   "id": "PLY_01562",
-  "name": "심지훈",
-  "nameEn": "Shim Jihun",
+  "name": "요시다 료",
+  "nameEn": "Yoshida Ryo",
   "role": "player",
-  "age": 16,
+  "age": 38,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_DAEGU_HEAT",
-  "teamId": "TEAM_HS_DAEGU_HEAT",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_DAEGU_HEAT",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_NEONCRANES",
+  "teamId": "TEAM_JBL_CL_NEONCRANES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 21,
+      "position": "RF",
+      "jerseyNumber": 22,
       "pitching": {
         "ovr": 46,
-        "stamina": 48,
-        "velocity": 48,
-        "command": 49,
-        "control": 43,
-        "movement": 48,
-        "mentality": 46,
-        "recovery": 51,
-        "clutch": 43,
-        "holdRunners": 41
+        "stamina": 50,
+        "velocity": 53,
+        "command": 51,
+        "control": 50,
+        "movement": 50,
+        "mentality": 50,
+        "recovery": 44
       },
       "batting": {
-        "ovr": 28,
-        "contact": 26,
-        "power": 26,
-        "eye": 30,
-        "discipline": 27,
-        "speed": 34,
-        "fielding": 23,
-        "arm": 25,
-        "battingClutch": 35,
-        "baseInstinct": 43,
-        "bunting": 34,
-        "platoon": 35
+        "ovr": 86,
+        "contact": 87,
+        "power": 87,
+        "eye": 80,
+        "discipline": 82,
+        "speed": 80,
+        "fielding": 75,
+        "arm": 80,
+        "battingClutch": 85
       },
-      "developmentRate": 52,
-      "potentialHidden": 90,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 46
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 32,
+      "potentialHidden": 69
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 52,
-  "popularity": 33
+  }
 }

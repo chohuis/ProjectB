@@ -1,6 +1,6 @@
 {
   "id": "PLY_15354",
-  "name": "영 오스틴",
+  "name": "Young Austin",
   "nameEn": "Young Austin",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 79,
   "popularity": 31,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 51
       },
       "batting": {
-        "ovr": 61,
-        "contact": 63,
-        "power": 54,
-        "eye": 62,
-        "discipline": 61,
-        "speed": 57,
-        "baseInstinct": 51,
-        "bunting": 52,
-        "platoon": 48,
-        "fielding": 60,
-        "arm": 55,
-        "battingClutch": 49
+        "ovr": 63,
+        "contact": 65,
+        "power": 56,
+        "eye": 64,
+        "discipline": 63,
+        "speed": 59,
+        "baseInstinct": 53,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 57,
+        "battingClutch": 51
       },
       "positionRatings": {
         "RF": 63

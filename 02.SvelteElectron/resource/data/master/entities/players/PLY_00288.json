@@ -1,7 +1,7 @@
 {
   "id": "PLY_00288",
   "name": "임원준",
-  "nameEn": "Lim Wonjun",
+  "nameEn": "Ahn Seo-jun",
   "role": "player",
   "age": 19,
   "status": "active",
@@ -20,50 +20,27 @@
       "jerseyNumber": 8,
       "pitching": {
         "ovr": 50,
-        "stamina": 52,
-        "velocity": 50,
-        "command": 50,
-        "control": 53,
-        "movement": 47,
-        "mentality": 47,
-        "recovery": 49,
-        "clutch": 48,
-        "holdRunners": 40
+        "stamina": 42,
+        "velocity": 59,
+        "command": 57,
+        "control": 52,
+        "movement": 52,
+        "mentality": 52,
+        "recovery": 53
       },
       "batting": {
-        "ovr": 32,
-        "contact": 33,
-        "power": 33,
-        "eye": 28,
-        "discipline": 33,
-        "speed": 25,
-        "fielding": 36,
-        "arm": 33,
-        "battingClutch": 40,
-        "baseInstinct": 34,
-        "bunting": 28,
-        "platoon": 37
+        "ovr": 24,
+        "contact": 26,
+        "power": 18,
+        "eye": 18,
+        "discipline": 22,
+        "speed": 18,
+        "fielding": 22,
+        "arm": 25,
+        "battingClutch": 20
       },
       "developmentRate": 53,
-      "potentialHidden": 72,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 50
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 3
-        }
-      ]
+      "potentialHidden": 72
     },
     "coach": {
       "specialty": "-",
@@ -103,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

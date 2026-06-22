@@ -1,72 +1,46 @@
 {
   "id": "PLY_02071",
-  "name": "매튜 넬슨",
-  "nameEn": "Matthew Nelson",
+  "name": "이시다 류",
+  "nameEn": "Ishida Ryu",
   "role": "player",
-  "age": 31,
+  "age": 30,
   "status": "active",
-  "originLeagueId": "LEAGUE_ABL",
-  "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_SUNDRAGONS",
-  "teamId": "TEAM_ABL_SUNDRAGONS_1",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SUNS",
+  "teamId": "TEAM_JBL_PL_SUNS_2",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "RF",
-      "jerseyNumber": 33,
+      "position": "C",
+      "jerseyNumber": 41,
       "pitching": {
-        "ovr": 61,
-        "stamina": 67,
-        "velocity": 63,
-        "command": 58,
-        "control": 62,
-        "movement": 60,
-        "mentality": 65,
-        "recovery": 58,
-        "clutch": 57,
-        "holdRunners": 53
+        "ovr": 46,
+        "stamina": 45,
+        "velocity": 46,
+        "command": 42,
+        "control": 42,
+        "movement": 45,
+        "mentality": 46,
+        "recovery": 46
       },
       "batting": {
-        "ovr": 81,
-        "contact": 80,
-        "power": 84,
-        "eye": 79,
-        "discipline": 86,
-        "speed": 84,
-        "fielding": 87,
-        "arm": 87,
-        "battingClutch": 80,
-        "baseInstinct": 76,
-        "bunting": 77,
-        "platoon": 72
+        "ovr": 76,
+        "contact": 75,
+        "power": 74,
+        "eye": 73,
+        "discipline": 75,
+        "speed": 75,
+        "fielding": 80,
+        "arm": 76,
+        "battingClutch": 79
       },
-      "developmentRate": 35,
-      "potentialHidden": 81,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 81
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 9,
-      "contract": {
-        "salary": 14800,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 53,
+      "potentialHidden": 88
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 57,
-  "popularity": 43,
-  "militaryStatus": "군필"
+  }
 }

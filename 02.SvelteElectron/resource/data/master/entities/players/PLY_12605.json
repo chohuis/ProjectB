@@ -1,9 +1,9 @@
 {
   "id": "PLY_12605",
-  "name": "마틴 트레버",
-  "nameEn": "Martin Trevor",
+  "name": "Baker Nathan",
+  "nameEn": "Baker Nathan",
   "role": "player",
-  "age": 22,
+  "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 59,
-  "popularity": 35,
+  "notes": "국적:미국",
+  "diligence": 62,
+  "popularity": 31,
   "militaryStatus": "군필",
   "entryYear": 2042,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 22,
+  "entryAge": 24,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 37,
-      "primaryPosition": "SP",
-      "developmentRate": 71,
-      "potentialHidden": 93,
-      "proServiceYears": 0,
+      "position": "1B",
+      "jerseyNumber": 23,
+      "primaryPosition": "1B",
+      "developmentRate": 49,
+      "potentialHidden": 68,
+      "proServiceYears": 2,
       "pitching": {
-        "ovr": 55,
-        "stamina": 49,
+        "ovr": 65,
+        "stamina": 60,
         "velocity": 64,
-        "command": 52,
-        "control": 56,
-        "movement": 54,
-        "mentality": 60,
-        "recovery": 48,
-        "clutch": 55,
-        "holdRunners": 41
+        "command": 68,
+        "control": 63,
+        "movement": 57,
+        "mentality": 59,
+        "recovery": 63,
+        "clutch": 52,
+        "holdRunners": 59
       },
       "batting": {
-        "ovr": 59,
-        "contact": 57,
-        "power": 54,
-        "eye": 56,
-        "discipline": 59,
-        "speed": 64,
-        "baseInstinct": 54,
-        "bunting": 48,
+        "ovr": 65,
+        "contact": 63,
+        "power": 63,
+        "eye": 68,
+        "discipline": 66,
+        "speed": 60,
+        "baseInstinct": 64,
+        "bunting": 60,
         "platoon": 50,
-        "fielding": 52,
-        "arm": 52,
-        "battingClutch": 50
+        "fielding": 67,
+        "arm": 68,
+        "battingClutch": 63
       },
       "positionRatings": {
-        "SP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "1B": 65
+      }
     },
     "coach": null,
     "manager": null,

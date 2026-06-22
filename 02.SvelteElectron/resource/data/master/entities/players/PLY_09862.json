@@ -1,7 +1,7 @@
 {
   "id": "PLY_09862",
-  "name": "앨런 숀",
-  "nameEn": "Allen Sean",
+  "name": "Mitchell Zach",
+  "nameEn": "Mitchell Zach",
   "role": "player",
   "age": 28,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 79,
-  "popularity": 11,
+  "notes": "국적:쿠바",
+  "diligence": 80,
+  "popularity": 13,
   "militaryStatus": "군필",
   "entryYear": 2026,
   "entryLeague": "LEAGUE_ABL",
@@ -21,57 +21,43 @@
   "entryAge": 28,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 65,
-      "primaryPosition": "SP",
-      "developmentRate": 67,
-      "potentialHidden": 76,
+      "position": "RF",
+      "jerseyNumber": 69,
+      "primaryPosition": "RF",
+      "developmentRate": 50,
+      "potentialHidden": 75,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 73,
-        "stamina": 78,
-        "velocity": 79,
-        "command": 76,
-        "control": 71,
+        "ovr": 71,
+        "stamina": 72,
+        "velocity": 73,
+        "command": 64,
+        "control": 69,
         "movement": 68,
-        "mentality": 69,
-        "recovery": 70,
-        "clutch": 73,
-        "holdRunners": 65
+        "mentality": 76,
+        "recovery": 65,
+        "clutch": 70,
+        "holdRunners": 66
       },
       "batting": {
-        "ovr": 70,
-        "contact": 73,
-        "power": 60,
-        "eye": 62,
-        "discipline": 70,
-        "speed": 74,
-        "baseInstinct": 64,
+        "ovr": 71,
+        "contact": 63,
+        "power": 69,
+        "eye": 64,
+        "discipline": 73,
+        "speed": 76,
+        "baseInstinct": 66,
         "bunting": 55,
         "platoon": 50,
-        "fielding": 67,
-        "arm": 66,
-        "battingClutch": 69
+        "fielding": 62,
+        "arm": 69,
+        "battingClutch": 70
       },
       "positionRatings": {
-        "SP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "RF": 71
+      }
     },
     "coach": null,
     "manager": null,

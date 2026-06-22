@@ -1,72 +1,46 @@
 {
   "id": "PLY_02079",
-  "name": "마이클 잭슨",
-  "nameEn": "Michael Jackson",
+  "name": "이노우에 이사무",
+  "nameEn": "Inoue Isamu",
   "role": "player",
-  "age": 26,
+  "age": 29,
   "status": "active",
-  "originLeagueId": "LEAGUE_ABL",
-  "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_SUNDRAGONS",
-  "teamId": "TEAM_ABL_SUNDRAGONS_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SUNS",
+  "teamId": "TEAM_JBL_PL_SUNS_2",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "1B",
-      "jerseyNumber": 92,
+      "position": "RF",
+      "jerseyNumber": 49,
       "pitching": {
-        "ovr": 24,
-        "stamina": 25,
-        "velocity": 26,
-        "command": 25,
-        "control": 26,
-        "movement": 22,
-        "mentality": 24,
-        "recovery": 23,
-        "clutch": 35,
-        "holdRunners": 35
+        "ovr": 37,
+        "stamina": 33,
+        "velocity": 40,
+        "command": 31,
+        "control": 35,
+        "movement": 36,
+        "mentality": 38,
+        "recovery": 31
       },
       "batting": {
-        "ovr": 44,
-        "contact": 50,
-        "power": 40,
-        "eye": 47,
-        "discipline": 48,
-        "speed": 43,
-        "fielding": 42,
-        "arm": 50,
-        "battingClutch": 40,
-        "baseInstinct": 45,
-        "bunting": 38,
-        "platoon": 39
+        "ovr": 63,
+        "contact": 64,
+        "power": 67,
+        "eye": 68,
+        "discipline": 67,
+        "speed": 63,
+        "fielding": 59,
+        "arm": 66,
+        "battingClutch": 69
       },
-      "developmentRate": 42,
-      "potentialHidden": 54,
-      "primaryPosition": "1B",
-      "positionRatings": {
-        "1B": 44
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 6300,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 52,
+      "potentialHidden": 89
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 71,
-  "popularity": 41,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,7 +1,7 @@
 {
   "id": "PLY_00435",
   "name": "황도윤",
-  "nameEn": "Hwang Doyun",
+  "nameEn": "Kang Jae-hoon",
   "role": "player",
   "age": 24,
   "status": "active",
@@ -19,48 +19,28 @@
       "position": "3B",
       "jerseyNumber": 15,
       "pitching": {
-        "ovr": 30,
-        "stamina": 31,
-        "velocity": 31,
-        "command": 30,
-        "control": 33,
-        "movement": 32,
-        "mentality": 34,
-        "recovery": 33,
-        "clutch": 41,
-        "holdRunners": 34
+        "ovr": 27,
+        "stamina": 28,
+        "velocity": 34,
+        "command": 28,
+        "control": 29,
+        "movement": 25,
+        "mentality": 28,
+        "recovery": 25
       },
       "batting": {
-        "ovr": 50,
-        "contact": 46,
-        "power": 49,
-        "eye": 52,
-        "discipline": 46,
+        "ovr": 57,
+        "contact": 55,
+        "power": 56,
+        "eye": 54,
+        "discipline": 49,
         "speed": 50,
-        "fielding": 51,
-        "arm": 47,
-        "battingClutch": 44,
-        "baseInstinct": 50,
-        "bunting": 47,
-        "platoon": 38
+        "fielding": 50,
+        "arm": 57,
+        "battingClutch": 56
       },
       "developmentRate": 54,
-      "potentialHidden": 59,
-      "primaryPosition": "3B",
-      "positionRatings": {
-        "3B": 50
-      },
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 59
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

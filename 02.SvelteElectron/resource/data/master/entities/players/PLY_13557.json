@@ -1,9 +1,9 @@
 {
   "id": "PLY_13557",
-  "name": "로드리게스 딜런",
-  "nameEn": "Rodriguez Dylan",
+  "name": "Adams Daniel",
+  "nameEn": "Adams Daniel",
   "role": "player",
-  "age": 22,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 75,
-  "popularity": 42,
+  "notes": "국적:베네수엘라",
+  "diligence": 48,
+  "popularity": 37,
   "militaryStatus": "군필",
   "entryYear": 2048,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 22,
+  "entryAge": 28,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 54,
-      "primaryPosition": "SP",
-      "developmentRate": 75,
-      "potentialHidden": 94,
-      "proServiceYears": 0,
+      "position": "CF",
+      "jerseyNumber": 24,
+      "primaryPosition": "CF",
+      "developmentRate": 53,
+      "potentialHidden": 67,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 50,
-        "stamina": 43,
-        "velocity": 58,
-        "command": 47,
-        "control": 50,
-        "movement": 42,
-        "mentality": 45,
-        "recovery": 42,
-        "clutch": 39,
-        "holdRunners": 39
+        "ovr": 66,
+        "stamina": 59,
+        "velocity": 77,
+        "command": 68,
+        "control": 67,
+        "movement": 58,
+        "mentality": 67,
+        "recovery": 62,
+        "clutch": 54,
+        "holdRunners": 57
       },
       "batting": {
-        "ovr": 53,
-        "contact": 57,
-        "power": 43,
-        "eye": 56,
-        "discipline": 51,
-        "speed": 52,
-        "baseInstinct": 51,
-        "bunting": 37,
+        "ovr": 66,
+        "contact": 67,
+        "power": 61,
+        "eye": 66,
+        "discipline": 65,
+        "speed": 60,
+        "baseInstinct": 57,
+        "bunting": 52,
         "platoon": 50,
-        "fielding": 42,
-        "arm": 50,
-        "battingClutch": 46
+        "fielding": 58,
+        "arm": 64,
+        "battingClutch": 65
       },
       "positionRatings": {
-        "SP": 53
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "CF": 66
+      }
     },
     "coach": null,
     "manager": null,

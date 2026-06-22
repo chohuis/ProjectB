@@ -1,9 +1,9 @@
 {
   "id": "PLY_00066",
   "name": "오재민",
-  "nameEn": "Oh Jaemin",
+  "nameEn": "Jung Won-jun",
   "role": "player",
-  "age": 17,
+  "age": 18,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,47 +19,28 @@
       "position": "RP",
       "jerseyNumber": 6,
       "pitching": {
-        "ovr": 44,
+        "ovr": 51,
         "stamina": 46,
-        "velocity": 49,
-        "command": 42,
+        "velocity": 43,
+        "command": 54,
         "control": 46,
-        "movement": 44,
-        "mentality": 49,
-        "recovery": 45,
-        "clutch": 38,
-        "holdRunners": 34
+        "movement": 53,
+        "mentality": 57,
+        "recovery": 46
       },
       "batting": {
-        "ovr": 26,
-        "contact": 22,
-        "power": 30,
-        "eye": 21,
-        "discipline": 27,
-        "speed": 21,
-        "fielding": 28,
-        "arm": 22,
-        "battingClutch": 35,
-        "baseInstinct": 43,
-        "bunting": 31,
-        "platoon": 38
+        "ovr": 30,
+        "contact": 47,
+        "power": 49,
+        "eye": 50,
+        "discipline": 38,
+        "speed": 49,
+        "fielding": 53,
+        "arm": 50,
+        "battingClutch": 43
       },
       "developmentRate": 65,
-      "potentialHidden": 60,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 44
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 2
-        }
-      ]
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

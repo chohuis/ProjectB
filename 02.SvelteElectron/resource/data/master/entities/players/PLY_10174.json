@@ -1,9 +1,9 @@
 {
   "id": "PLY_10174",
-  "name": "해리스 크리스",
-  "nameEn": "Harris Chris",
+  "name": "Garcia Marcus",
+  "nameEn": "Garcia Marcus",
   "role": "player",
-  "age": 27,
+  "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 69,
-  "popularity": 27,
+  "notes": "국적:멕시코",
+  "diligence": 54,
+  "popularity": 29,
   "militaryStatus": "군필",
   "entryYear": 2027,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 27,
+  "entryAge": 24,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 29,
+      "jerseyNumber": 47,
       "primaryPosition": "SP",
-      "developmentRate": 48,
-      "potentialHidden": 61,
-      "proServiceYears": 5,
+      "developmentRate": 60,
+      "potentialHidden": 60,
+      "proServiceYears": 2,
       "pitching": {
         "ovr": 71,
-        "stamina": 69,
-        "velocity": 79,
-        "command": 72,
-        "control": 63,
-        "movement": 67,
-        "mentality": 77,
-        "recovery": 64,
-        "clutch": 67,
-        "holdRunners": 69
+        "stamina": 75,
+        "velocity": 80,
+        "command": 62,
+        "control": 72,
+        "movement": 71,
+        "mentality": 75,
+        "recovery": 69,
+        "clutch": 65,
+        "holdRunners": 68
       },
       "batting": {
-        "ovr": 76,
-        "contact": 74,
-        "power": 69,
-        "eye": 81,
-        "discipline": 71,
-        "speed": 81,
-        "baseInstinct": 66,
-        "bunting": 68,
+        "ovr": 71,
+        "contact": 73,
+        "power": 67,
+        "eye": 75,
+        "discipline": 68,
+        "speed": 67,
+        "baseInstinct": 71,
+        "bunting": 66,
         "platoon": 50,
-        "fielding": 73,
-        "arm": 73,
-        "battingClutch": 67
+        "fielding": 66,
+        "arm": 69,
+        "battingClutch": 64
       },
       "positionRatings": {
-        "SP": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "SP": 71
+      }
     },
     "coach": null,
     "manager": null,

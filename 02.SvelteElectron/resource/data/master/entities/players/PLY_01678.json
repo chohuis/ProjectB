@@ -1,61 +1,46 @@
 {
   "id": "PLY_01678",
-  "name": "양정우",
-  "nameEn": "Yang Jeongwoo",
+  "name": "와타나베 유타카",
+  "nameEn": "Watanabe Yutaka",
   "role": "player",
-  "age": 18,
+  "age": 31,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
-  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_CHUNCHEON_HIGHLAND",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TIDERAVES",
+  "teamId": "TEAM_JBL_CL_TIDERAVES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "RF",
-      "jerseyNumber": 27,
+      "position": "SP",
+      "jerseyNumber": 3,
       "pitching": {
-        "ovr": 47,
-        "stamina": 52,
-        "velocity": 50,
-        "command": 50,
-        "control": 51,
-        "movement": 44,
-        "mentality": 45,
-        "recovery": 48,
-        "clutch": 43,
-        "holdRunners": 41
+        "ovr": 69,
+        "stamina": 70,
+        "velocity": 78,
+        "command": 76,
+        "control": 72,
+        "movement": 70,
+        "mentality": 71,
+        "recovery": 74
       },
       "batting": {
-        "ovr": 67,
-        "contact": 62,
-        "power": 71,
-        "eye": 64,
-        "discipline": 73,
-        "speed": 74,
-        "fielding": 61,
-        "arm": 62,
-        "battingClutch": 67,
-        "baseInstinct": 65,
-        "bunting": 55,
-        "platoon": 56
+        "ovr": 36,
+        "contact": 44,
+        "power": 37,
+        "eye": 38,
+        "discipline": 41,
+        "speed": 35,
+        "fielding": 42,
+        "arm": 43,
+        "battingClutch": 36
       },
-      "developmentRate": 57,
-      "potentialHidden": 71,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 44,
+      "potentialHidden": 89
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 61,
-  "popularity": 38
+  }
 }

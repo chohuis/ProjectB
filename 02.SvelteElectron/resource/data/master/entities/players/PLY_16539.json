@@ -1,6 +1,6 @@
 {
   "id": "PLY_16539",
-  "name": "홀 마커스",
+  "name": "Hall Marcus",
   "nameEn": "Hall Marcus",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 60,
   "popularity": 45,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 74,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 59,
-        "stamina": 51,
-        "velocity": 57,
-        "command": 48,
-        "control": 61,
-        "movement": 57,
-        "mentality": 58,
-        "recovery": 50,
-        "clutch": 51,
-        "holdRunners": 48
+        "ovr": 60,
+        "stamina": 52,
+        "velocity": 58,
+        "command": 49,
+        "control": 62,
+        "movement": 58,
+        "mentality": 59,
+        "recovery": 51,
+        "clutch": 52,
+        "holdRunners": 49
       },
       "batting": {
         "ovr": 60,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

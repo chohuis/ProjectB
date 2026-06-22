@@ -1,6 +1,6 @@
 {
   "id": "PLY_14694",
-  "name": "스미스 카를로스",
+  "name": "Smith Carlos",
   "nameEn": "Smith Carlos",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 53,
   "popularity": 13,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 65
       },
       "batting": {
-        "ovr": 86,
-        "contact": 83,
-        "power": 78,
-        "eye": 78,
-        "discipline": 90,
-        "speed": 83,
-        "baseInstinct": 75,
-        "bunting": 63,
-        "platoon": 63,
-        "fielding": 83,
-        "arm": 72,
-        "battingClutch": 71
+        "ovr": 68,
+        "contact": 66,
+        "power": 62,
+        "eye": 62,
+        "discipline": 71,
+        "speed": 66,
+        "baseInstinct": 59,
+        "bunting": 50,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 57,
+        "battingClutch": 56
       },
       "positionRatings": {
         "SS": 68

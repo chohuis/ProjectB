@@ -1,14 +1,14 @@
 {
   "id": "PLY_01406",
   "name": "브라운 애드리언",
-  "nameEn": "Beu 라운 애드리언",
+  "nameEn": "Brown Adrian",
   "role": "player",
   "age": 37,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_COASTALRAYS",
-  "teamId": "TEAM_ABL_COASTALRAYS_1",
+  "clubId": "CLUB_ABL_SF",
+  "teamId": "TEAM_ABL_SF",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 1,
       "pitching": {
-        "ovr": 81,
-        "stamina": 86,
-        "velocity": 78,
-        "command": 85,
-        "control": 78,
-        "movement": 78,
-        "mentality": 85,
-        "recovery": 80,
-        "clutch": 79,
-        "holdRunners": 80
+        "ovr": 89,
+        "stamina": 89,
+        "velocity": 88,
+        "command": 87,
+        "control": 84,
+        "movement": 91,
+        "mentality": 89,
+        "recovery": 89
       },
       "batting": {
-        "ovr": 63,
-        "contact": 65,
-        "power": 67,
-        "eye": 62,
-        "discipline": 59,
-        "speed": 66,
-        "fielding": 62,
-        "arm": 59,
-        "battingClutch": 54,
-        "baseInstinct": 63,
-        "bunting": 57,
-        "platoon": 53
+        "ovr": 65,
+        "contact": 73,
+        "power": 68,
+        "eye": 70,
+        "discipline": 70,
+        "speed": 68,
+        "fielding": 68,
+        "arm": 69,
+        "battingClutch": 68
       },
       "developmentRate": 44,
-      "potentialHidden": 73,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 81
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SCREWBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_KNUCKLEBALL",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 15,
-      "contract": {
-        "salary": 30200,
-        "durationYears": 4,
-        "remainingYears": 4,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 73
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

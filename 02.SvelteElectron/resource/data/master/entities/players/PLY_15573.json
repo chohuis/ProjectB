@@ -1,6 +1,6 @@
 {
   "id": "PLY_15573",
-  "name": "애덤스 카를로스",
+  "name": "Adams Carlos",
   "nameEn": "Adams Carlos",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 46,
   "popularity": 47,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 67
       },
       "batting": {
-        "ovr": 71,
-        "contact": 73,
-        "power": 74,
-        "eye": 64,
-        "discipline": 71,
-        "speed": 64,
-        "baseInstinct": 70,
-        "bunting": 54,
-        "platoon": 49,
-        "fielding": 66,
-        "arm": 61,
-        "battingClutch": 61
+        "ovr": 72,
+        "contact": 74,
+        "power": 75,
+        "eye": 65,
+        "discipline": 72,
+        "speed": 65,
+        "baseInstinct": 71,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 62,
+        "battingClutch": 62
       },
       "positionRatings": {
         "LF": 72

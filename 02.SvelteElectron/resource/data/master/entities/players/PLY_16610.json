@@ -1,6 +1,6 @@
 {
   "id": "PLY_16610",
-  "name": "스미스 브랜던",
+  "name": "Smith Brandon",
   "nameEn": "Smith Brandon",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 63,
   "popularity": 46,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 65
       },
       "batting": {
-        "ovr": 74,
-        "contact": 78,
-        "power": 66,
-        "eye": 67,
-        "discipline": 67,
-        "speed": 72,
-        "baseInstinct": 63,
-        "bunting": 66,
-        "platoon": 54,
-        "fielding": 66,
-        "arm": 64,
-        "battingClutch": 63
+        "ovr": 68,
+        "contact": 72,
+        "power": 61,
+        "eye": 62,
+        "discipline": 62,
+        "speed": 66,
+        "baseInstinct": 58,
+        "bunting": 61,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 59,
+        "battingClutch": 58
       },
       "positionRatings": {
         "C": 68

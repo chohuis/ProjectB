@@ -1,6 +1,6 @@
 {
   "id": "PLY_15719",
-  "name": "앤더슨 에릭",
+  "name": "Anderson Eric",
   "nameEn": "Anderson Eric",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 74,
   "popularity": 46,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 38
       },
       "batting": {
-        "ovr": 52,
-        "contact": 57,
-        "power": 50,
-        "eye": 52,
-        "discipline": 50,
-        "speed": 48,
-        "baseInstinct": 49,
-        "bunting": 37,
-        "platoon": 49,
-        "fielding": 51,
-        "arm": 43,
-        "battingClutch": 50
+        "ovr": 53,
+        "contact": 58,
+        "power": 51,
+        "eye": 53,
+        "discipline": 51,
+        "speed": 49,
+        "baseInstinct": 50,
+        "bunting": 38,
+        "platoon": 50,
+        "fielding": 52,
+        "arm": 44,
+        "battingClutch": 51
       },
       "positionRatings": {
         "CF": 53

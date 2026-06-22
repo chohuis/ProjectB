@@ -1,6 +1,6 @@
 {
   "id": "PLY_15619",
-  "name": "톰슨 재크",
+  "name": "Thompson Zach",
   "nameEn": "Thompson Zach",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 52,
   "popularity": 27,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 62,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 58,
-        "stamina": 53,
-        "velocity": 67,
-        "command": 48,
-        "control": 61,
-        "movement": 53,
-        "mentality": 62,
-        "recovery": 52,
-        "clutch": 53,
-        "holdRunners": 48
+        "ovr": 59,
+        "stamina": 54,
+        "velocity": 68,
+        "command": 49,
+        "control": 62,
+        "movement": 54,
+        "mentality": 63,
+        "recovery": 53,
+        "clutch": 54,
+        "holdRunners": 49
       },
       "batting": {
         "ovr": 59,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

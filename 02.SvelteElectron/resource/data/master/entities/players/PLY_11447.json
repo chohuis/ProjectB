@@ -1,9 +1,9 @@
 {
   "id": "PLY_11447",
-  "name": "스콧 에반",
-  "nameEn": "Scott Evan",
+  "name": "Williams Jake",
+  "nameEn": "Williams Jake",
   "role": "player",
-  "age": 18,
+  "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 64,
-  "popularity": 37,
+  "notes": "국적:쿠바",
+  "diligence": 77,
+  "popularity": 15,
   "militaryStatus": "군필",
   "entryYear": 2035,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 18,
+  "entryAge": 32,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 18,
-      "primaryPosition": "SP",
-      "developmentRate": 64,
-      "potentialHidden": 60,
-      "proServiceYears": 0,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 42,
+      "primaryPosition": "2B",
+      "developmentRate": 44,
+      "potentialHidden": 64,
+      "proServiceYears": 10,
       "pitching": {
-        "ovr": 51,
-        "stamina": 52,
-        "velocity": 49,
-        "command": 43,
-        "control": 54,
-        "movement": 49,
-        "mentality": 56,
-        "recovery": 40,
-        "clutch": 41,
-        "holdRunners": 47
+        "ovr": 61,
+        "stamina": 60,
+        "velocity": 68,
+        "command": 54,
+        "control": 61,
+        "movement": 62,
+        "mentality": 54,
+        "recovery": 51,
+        "clutch": 61,
+        "holdRunners": 50
       },
       "batting": {
-        "ovr": 54,
-        "contact": 50,
-        "power": 47,
-        "eye": 58,
-        "discipline": 53,
-        "speed": 60,
-        "baseInstinct": 56,
-        "bunting": 48,
+        "ovr": 61,
+        "contact": 63,
+        "power": 59,
+        "eye": 59,
+        "discipline": 54,
+        "speed": 61,
+        "baseInstinct": 62,
+        "bunting": 54,
         "platoon": 50,
-        "fielding": 46,
-        "arm": 49,
-        "battingClutch": 55
+        "fielding": 58,
+        "arm": 56,
+        "battingClutch": 53
       },
       "positionRatings": {
-        "SP": 54
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "2B": 61
+      }
     },
     "coach": null,
     "manager": null,

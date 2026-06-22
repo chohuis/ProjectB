@@ -1,9 +1,9 @@
 {
   "id": "PLY_10317",
-  "name": "로드리게스 미겔",
-  "nameEn": "Rodriguez Miguel",
+  "name": "Anderson Derek",
+  "nameEn": "Anderson Derek",
   "role": "player",
-  "age": 21,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 47,
-  "popularity": 18,
+  "notes": "국적:멕시코",
+  "diligence": 77,
+  "popularity": 40,
   "militaryStatus": "군필",
   "entryYear": 2028,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 21,
+  "entryAge": 20,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 2,
+      "jerseyNumber": 6,
       "primaryPosition": "SP",
-      "developmentRate": 76,
-      "potentialHidden": 76,
+      "developmentRate": 56,
+      "potentialHidden": 92,
       "proServiceYears": 0,
       "pitching": {
         "ovr": 59,
-        "stamina": 59,
-        "velocity": 56,
-        "command": 61,
-        "control": 53,
-        "movement": 51,
-        "mentality": 55,
-        "recovery": 48,
-        "clutch": 53,
-        "holdRunners": 48
+        "stamina": 53,
+        "velocity": 63,
+        "command": 55,
+        "control": 60,
+        "movement": 54,
+        "mentality": 65,
+        "recovery": 49,
+        "clutch": 55,
+        "holdRunners": 57
       },
       "batting": {
-        "ovr": 64,
-        "contact": 55,
-        "power": 55,
-        "eye": 66,
-        "discipline": 62,
-        "speed": 57,
-        "baseInstinct": 53,
-        "bunting": 48,
+        "ovr": 59,
+        "contact": 51,
+        "power": 56,
+        "eye": 58,
+        "discipline": 57,
+        "speed": 61,
+        "baseInstinct": 59,
+        "bunting": 51,
         "platoon": 50,
-        "fielding": 62,
-        "arm": 57,
-        "battingClutch": 63
+        "fielding": 59,
+        "arm": 52,
+        "battingClutch": 58
       },
       "positionRatings": {
-        "SP": 64
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 59
+      }
     },
     "coach": null,
     "manager": null,

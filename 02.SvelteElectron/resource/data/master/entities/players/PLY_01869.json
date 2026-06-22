@@ -1,76 +1,46 @@
 {
   "id": "PLY_01869",
-  "name": "고현우",
-  "nameEn": "Go Hyeonwoo",
+  "name": "이노우에 사토시",
+  "nameEn": "Inoue Satoshi",
   "role": "player",
-  "age": 34,
+  "age": 35,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_TWINWOLVES",
-  "teamId": "TEAM_KBL_TWINWOLVES_1",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_POLARBEARS",
+  "teamId": "TEAM_JBL_PL_POLARBEARS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "CP",
-      "jerseyNumber": 84,
+      "position": "C",
+      "jerseyNumber": 14,
       "pitching": {
-        "ovr": 65,
-        "stamina": 64,
-        "velocity": 60,
-        "command": 65,
-        "control": 64,
-        "movement": 63,
-        "mentality": 64,
-        "recovery": 66,
-        "clutch": 61,
-        "holdRunners": 63
+        "ovr": 46,
+        "stamina": 45,
+        "velocity": 48,
+        "command": 52,
+        "control": 47,
+        "movement": 52,
+        "mentality": 48,
+        "recovery": 51
       },
       "batting": {
-        "ovr": 47,
-        "contact": 51,
-        "power": 45,
-        "eye": 53,
-        "discipline": 52,
-        "speed": 52,
-        "fielding": 45,
-        "arm": 47,
-        "battingClutch": 39,
-        "baseInstinct": 36,
-        "bunting": 33,
-        "platoon": 41
+        "ovr": 78,
+        "contact": 76,
+        "power": 73,
+        "eye": 71,
+        "discipline": 74,
+        "speed": 71,
+        "fielding": 80,
+        "arm": 79,
+        "battingClutch": 73
       },
-      "developmentRate": 68,
-      "potentialHidden": 68,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 12,
-      "contract": {
-        "salary": 5100,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 47,
+      "potentialHidden": 59
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 76,
-  "popularity": 56,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,9 +1,9 @@
 {
   "id": "PLY_00132",
   "name": "이승민",
-  "nameEn": "Lee Seungmin",
+  "nameEn": "Hwang Jun-young",
   "role": "player",
-  "age": 19,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "SS",
       "jerseyNumber": 12,
       "pitching": {
-        "ovr": 33,
-        "stamina": 35,
-        "velocity": 37,
-        "command": 31,
-        "control": 29,
-        "movement": 31,
-        "mentality": 35,
-        "recovery": 36,
-        "clutch": 45,
-        "holdRunners": 38
+        "ovr": 47,
+        "stamina": 59,
+        "velocity": 63,
+        "command": 64,
+        "control": 54,
+        "movement": 61,
+        "mentality": 50,
+        "recovery": 61
       },
       "batting": {
-        "ovr": 53,
-        "contact": 54,
-        "power": 53,
+        "ovr": 65,
+        "contact": 50,
+        "power": 48,
         "eye": 50,
-        "discipline": 55,
-        "speed": 48,
-        "fielding": 52,
-        "arm": 54,
-        "battingClutch": 51,
-        "baseInstinct": 51,
-        "bunting": 42,
-        "platoon": 42
+        "discipline": 54,
+        "speed": 64,
+        "fielding": 55,
+        "arm": 51,
+        "battingClutch": 61
       },
       "developmentRate": 71,
-      "potentialHidden": 62,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 53
-      }
+      "potentialHidden": 62
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

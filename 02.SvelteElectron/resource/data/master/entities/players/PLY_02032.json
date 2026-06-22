@@ -1,72 +1,46 @@
 {
   "id": "PLY_02032",
-  "name": "앤드류 윌슨",
-  "nameEn": "Andrew Wilson",
+  "name": "오타 이사무",
+  "nameEn": "Ota Isamu",
   "role": "player",
-  "age": 25,
+  "age": 26,
   "status": "active",
-  "originLeagueId": "LEAGUE_ABL",
-  "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_EMPIRE",
-  "teamId": "TEAM_ABL_EMPIRE_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SEAGULLS",
+  "teamId": "TEAM_JBL_PL_SEAGULLS_2",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
       "position": "LF",
-      "jerseyNumber": 23,
+      "jerseyNumber": 47,
       "pitching": {
-        "ovr": 54,
-        "stamina": 58,
-        "velocity": 54,
-        "command": 53,
-        "control": 55,
-        "movement": 58,
-        "mentality": 56,
-        "recovery": 58,
-        "clutch": 43,
-        "holdRunners": 49
+        "ovr": 40,
+        "stamina": 35,
+        "velocity": 39,
+        "command": 44,
+        "control": 43,
+        "movement": 41,
+        "mentality": 43,
+        "recovery": 37
       },
       "batting": {
-        "ovr": 74,
-        "contact": 73,
-        "power": 74,
-        "eye": 70,
-        "discipline": 79,
-        "speed": 74,
-        "fielding": 71,
-        "arm": 69,
-        "battingClutch": 67,
-        "baseInstinct": 71,
-        "bunting": 58,
-        "platoon": 72
+        "ovr": 59,
+        "contact": 64,
+        "power": 66,
+        "eye": 64,
+        "discipline": 57,
+        "speed": 63,
+        "fielding": 58,
+        "arm": 60,
+        "battingClutch": 64
       },
-      "developmentRate": 50,
-      "potentialHidden": 83,
-      "primaryPosition": "LF",
-      "positionRatings": {
-        "LF": 74
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 3,
-      "contract": {
-        "salary": 9400,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 39,
+      "potentialHidden": 75
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 63,
-  "popularity": 55,
-  "militaryStatus": "군필"
+  }
 }

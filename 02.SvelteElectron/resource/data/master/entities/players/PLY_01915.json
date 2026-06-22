@@ -1,80 +1,46 @@
 {
   "id": "PLY_01915",
-  "name": "유재윤",
-  "nameEn": "Yoo Jaeyun",
+  "name": "이토 유토",
+  "nameEn": "Ito Yuto",
   "role": "player",
-  "age": 24,
+  "age": 28,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_SKYGULLS",
-  "teamId": "TEAM_KBL_SKYGULLS_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SPIRITBUFFALOS",
+  "teamId": "TEAM_JBL_PL_SPIRITBUFFALOS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "RP",
-      "jerseyNumber": 98,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 15,
       "pitching": {
-        "ovr": 67,
-        "stamina": 64,
-        "velocity": 67,
-        "command": 72,
-        "control": 68,
-        "movement": 63,
-        "mentality": 63,
-        "recovery": 71,
-        "clutch": 56,
-        "holdRunners": 62
+        "ovr": 53,
+        "stamina": 55,
+        "velocity": 52,
+        "command": 57,
+        "control": 56,
+        "movement": 50,
+        "mentality": 54,
+        "recovery": 55
       },
       "batting": {
-        "ovr": 49,
-        "contact": 46,
-        "power": 54,
-        "eye": 55,
-        "discipline": 48,
-        "speed": 43,
-        "fielding": 46,
-        "arm": 45,
-        "battingClutch": 45,
-        "baseInstinct": 44,
-        "bunting": 41,
-        "platoon": 38
+        "ovr": 79,
+        "contact": 78,
+        "power": 77,
+        "eye": 75,
+        "discipline": 76,
+        "speed": 77,
+        "fielding": 78,
+        "arm": 82,
+        "battingClutch": 81
       },
-      "developmentRate": 32,
-      "potentialHidden": 72,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 2,
-      "contract": {
-        "salary": 5500,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 52,
+      "potentialHidden": 78
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 55,
-  "popularity": 35,
-  "militaryStatus": "군필"
+  }
 }

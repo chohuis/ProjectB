@@ -1,9 +1,9 @@
 {
   "id": "PLY_11884",
-  "name": "가르시아 트레버",
-  "nameEn": "Garcia Trevor",
+  "name": "Scott Blake",
+  "nameEn": "Scott Blake",
   "role": "player",
-  "age": 23,
+  "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 56,
-  "popularity": 32,
+  "notes": "국적:멕시코",
+  "diligence": 68,
+  "popularity": 37,
   "militaryStatus": "군필",
   "entryYear": 2038,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 23,
+  "entryAge": 24,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 56,
-      "primaryPosition": "SP",
-      "developmentRate": 50,
-      "potentialHidden": 76,
-      "proServiceYears": 1,
+      "position": "C",
+      "jerseyNumber": 24,
+      "primaryPosition": "C",
+      "developmentRate": 68,
+      "potentialHidden": 58,
+      "proServiceYears": 2,
       "pitching": {
-        "ovr": 68,
-        "stamina": 67,
-        "velocity": 78,
-        "command": 70,
-        "control": 63,
-        "movement": 69,
-        "mentality": 69,
-        "recovery": 58,
-        "clutch": 59,
-        "holdRunners": 59
+        "ovr": 77,
+        "stamina": 82,
+        "velocity": 81,
+        "command": 76,
+        "control": 71,
+        "movement": 77,
+        "mentality": 70,
+        "recovery": 67,
+        "clutch": 66,
+        "holdRunners": 65
       },
       "batting": {
-        "ovr": 75,
-        "contact": 78,
-        "power": 66,
-        "eye": 79,
-        "discipline": 72,
-        "speed": 77,
-        "baseInstinct": 67,
-        "bunting": 61,
+        "ovr": 77,
+        "contact": 74,
+        "power": 68,
+        "eye": 73,
+        "discipline": 69,
+        "speed": 75,
+        "baseInstinct": 77,
+        "bunting": 59,
         "platoon": 50,
-        "fielding": 71,
-        "arm": 77,
-        "battingClutch": 62
+        "fielding": 75,
+        "arm": 72,
+        "battingClutch": 66
       },
       "positionRatings": {
-        "SP": 75
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "C": 77
+      }
     },
     "coach": null,
     "manager": null,

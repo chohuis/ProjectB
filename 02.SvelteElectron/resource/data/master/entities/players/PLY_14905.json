@@ -1,6 +1,6 @@
 {
   "id": "PLY_14905",
-  "name": "앤더슨 알렉스",
+  "name": "Anderson Alex",
   "nameEn": "Anderson Alex",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 73,
   "popularity": 25,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 50
       },
       "batting": {
-        "ovr": 61,
-        "contact": 61,
-        "power": 64,
-        "eye": 61,
-        "discipline": 57,
-        "speed": 62,
-        "baseInstinct": 51,
-        "bunting": 45,
-        "platoon": 48,
-        "fielding": 60,
-        "arm": 58,
-        "battingClutch": 51
+        "ovr": 63,
+        "contact": 63,
+        "power": 66,
+        "eye": 63,
+        "discipline": 59,
+        "speed": 64,
+        "baseInstinct": 53,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 62,
+        "arm": 60,
+        "battingClutch": 53
       },
       "positionRatings": {
         "2B": 63

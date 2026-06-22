@@ -1,6 +1,6 @@
 {
   "id": "PLY_14063",
-  "name": "스콧 숀",
+  "name": "Scott Sean",
   "nameEn": "Scott Sean",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 48,
   "popularity": 48,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 49
       },
       "batting": {
-        "ovr": 58,
-        "contact": 60,
-        "power": 55,
-        "eye": 58,
-        "discipline": 50,
-        "speed": 54,
-        "baseInstinct": 60,
-        "bunting": 53,
-        "platoon": 49,
-        "fielding": 55,
-        "arm": 48,
-        "battingClutch": 47
+        "ovr": 59,
+        "contact": 61,
+        "power": 56,
+        "eye": 59,
+        "discipline": 51,
+        "speed": 55,
+        "baseInstinct": 61,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 49,
+        "battingClutch": 48
       },
       "positionRatings": {
         "RF": 59

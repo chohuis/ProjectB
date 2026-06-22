@@ -1,14 +1,14 @@
 {
   "id": "PLY_01268",
   "name": "윌리엄스 매튜",
-  "nameEn": "Wil 리엄스 매튜",
+  "nameEn": "Williams Matthew",
   "role": "player",
   "age": 33,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_WAVERIDERS",
-  "teamId": "TEAM_ABL_WAVERIDERS_2",
+  "clubId": "CLUB_ABL_NYM",
+  "teamId": "TEAM_ABL_NYM_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
@@ -20,47 +20,27 @@
       "jerseyNumber": 58,
       "pitching": {
         "ovr": 60,
-        "stamina": 62,
-        "velocity": 57,
-        "command": 56,
-        "control": 62,
-        "movement": 57,
-        "mentality": 65,
-        "recovery": 65,
-        "clutch": 49,
-        "holdRunners": 56
+        "stamina": 59,
+        "velocity": 60,
+        "command": 61,
+        "control": 55,
+        "movement": 60,
+        "mentality": 57,
+        "recovery": 52
       },
       "batting": {
-        "ovr": 80,
-        "contact": 84,
-        "power": 78,
-        "eye": 79,
-        "discipline": 85,
-        "speed": 85,
-        "fielding": 76,
-        "arm": 84,
-        "battingClutch": 80,
-        "baseInstinct": 75,
-        "bunting": 65,
-        "platoon": 71
+        "ovr": 84,
+        "contact": 80,
+        "power": 82,
+        "eye": 84,
+        "discipline": 81,
+        "speed": 82,
+        "fielding": 86,
+        "arm": 79,
+        "battingClutch": 80
       },
       "developmentRate": 33,
-      "potentialHidden": 67,
-      "primaryPosition": "CF",
-      "positionRatings": {
-        "CF": 80
-      },
-      "proServiceYears": 11,
-      "contract": {
-        "salary": 14000,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 67
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

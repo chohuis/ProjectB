@@ -1,9 +1,9 @@
 {
   "id": "PLY_13718",
-  "name": "톰슨 트레버",
-  "nameEn": "Thompson Trevor",
+  "name": "Moore Jake",
+  "nameEn": "Moore Jake",
   "role": "player",
-  "age": 26,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 49,
-  "popularity": 32,
+  "notes": "국적:도미니카",
+  "diligence": 54,
+  "popularity": 16,
   "militaryStatus": "군필",
   "entryYear": 2049,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 26,
+  "entryAge": 20,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 11,
-      "primaryPosition": "SP",
-      "developmentRate": 54,
-      "potentialHidden": 58,
-      "proServiceYears": 4,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "1B",
+      "jerseyNumber": 86,
+      "primaryPosition": "1B",
+      "developmentRate": 58,
+      "potentialHidden": 71,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 72,
-        "stamina": 65,
-        "velocity": 77,
-        "command": 63,
-        "control": 68,
-        "movement": 75,
-        "mentality": 70,
-        "recovery": 65,
-        "clutch": 65,
-        "holdRunners": 60
+        "ovr": 51,
+        "stamina": 50,
+        "velocity": 51,
+        "command": 49,
+        "control": 55,
+        "movement": 53,
+        "mentality": 58,
+        "recovery": 47,
+        "clutch": 40,
+        "holdRunners": 39
       },
       "batting": {
-        "ovr": 77,
-        "contact": 69,
-        "power": 78,
-        "eye": 74,
-        "discipline": 74,
-        "speed": 73,
-        "baseInstinct": 74,
-        "bunting": 63,
+        "ovr": 51,
+        "contact": 42,
+        "power": 44,
+        "eye": 43,
+        "discipline": 45,
+        "speed": 51,
+        "baseInstinct": 45,
+        "bunting": 43,
         "platoon": 50,
-        "fielding": 69,
-        "arm": 68,
-        "battingClutch": 75
+        "fielding": 48,
+        "arm": 51,
+        "battingClutch": 49
       },
       "positionRatings": {
-        "SP": 77
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "1B": 51
+      }
     },
     "coach": null,
     "manager": null,

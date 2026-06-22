@@ -1,14 +1,14 @@
 {
   "id": "PLY_00984",
   "name": "화이트 루카스",
-  "nameEn": "Hwa 이트 루카스",
+  "nameEn": "White Lucas",
   "role": "player",
   "age": 29,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_WINDBEARS",
-  "teamId": "TEAM_ABL_WINDBEARS_2",
+  "clubId": "CLUB_ABL_TOR",
+  "teamId": "TEAM_ABL_TOR_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 44,
       "pitching": {
-        "ovr": 66,
-        "stamina": 68,
-        "velocity": 69,
-        "command": 67,
-        "control": 64,
+        "ovr": 73,
+        "stamina": 75,
+        "velocity": 70,
+        "command": 69,
+        "control": 74,
         "movement": 71,
-        "mentality": 65,
-        "recovery": 62,
-        "clutch": 59,
-        "holdRunners": 60
+        "mentality": 73,
+        "recovery": 67
       },
       "batting": {
-        "ovr": 48,
-        "contact": 54,
-        "power": 43,
-        "eye": 47,
-        "discipline": 52,
-        "speed": 51,
-        "fielding": 51,
-        "arm": 54,
-        "battingClutch": 48,
-        "baseInstinct": 42,
-        "bunting": 40,
-        "platoon": 37
+        "ovr": 42,
+        "contact": 47,
+        "power": 40,
+        "eye": 44,
+        "discipline": 46,
+        "speed": 43,
+        "fielding": 45,
+        "arm": 40,
+        "battingClutch": 48
       },
       "developmentRate": 52,
-      "potentialHidden": 91,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_FORKBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 7,
-      "contract": {
-        "salary": 18600,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 91
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

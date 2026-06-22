@@ -1,61 +1,46 @@
 {
   "id": "PLY_01850",
-  "name": "고현준",
-  "nameEn": "Go Hyeonjun",
+  "name": "이노우에 료",
+  "nameEn": "Inoue Ryo",
   "role": "player",
-  "age": 17,
+  "age": 32,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_SUNCHEON_BAY",
-  "teamId": "TEAM_HS_SUNCHEON_BAY",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_SUNCHEON_BAY",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
+  "teamId": "TEAM_JBL_PL_THUNDERFALCONS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "R",
+      "handedness": "L",
       "position": "3B",
-      "jerseyNumber": 19,
+      "jerseyNumber": 45,
       "pitching": {
-        "ovr": 40,
-        "stamina": 37,
-        "velocity": 36,
-        "command": 41,
-        "control": 37,
-        "movement": 37,
-        "mentality": 38,
-        "recovery": 45,
-        "clutch": 41,
-        "holdRunners": 39
+        "ovr": 41,
+        "stamina": 43,
+        "velocity": 51,
+        "command": 48,
+        "control": 44,
+        "movement": 45,
+        "mentality": 44,
+        "recovery": 45
       },
       "batting": {
-        "ovr": 60,
-        "contact": 56,
-        "power": 58,
+        "ovr": 69,
+        "contact": 65,
+        "power": 71,
         "eye": 66,
-        "discipline": 62,
-        "speed": 60,
-        "fielding": 59,
-        "arm": 57,
-        "battingClutch": 55,
-        "baseInstinct": 53,
-        "bunting": 51,
-        "platoon": 58
+        "discipline": 63,
+        "speed": 62,
+        "fielding": 67,
+        "arm": 69,
+        "battingClutch": 66
       },
-      "developmentRate": 57,
-      "potentialHidden": 70,
-      "primaryPosition": "3B",
-      "positionRatings": {
-        "3B": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 56,
+      "potentialHidden": 73
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 69,
-  "popularity": 46
+  }
 }

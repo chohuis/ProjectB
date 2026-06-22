@@ -1,9 +1,9 @@
 {
   "id": "PLY_13896",
-  "name": "앨런 헌터",
-  "nameEn": "Allen Hunter",
+  "name": "Brown Luis",
+  "nameEn": "Brown Luis",
   "role": "player",
-  "age": 24,
+  "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 81,
-  "popularity": 23,
+  "notes": "국적:미국",
+  "diligence": 69,
+  "popularity": 24,
   "militaryStatus": "군필",
   "entryYear": 2050,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 24,
+  "entryAge": 32,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 17,
-      "primaryPosition": "SP",
-      "developmentRate": 53,
-      "potentialHidden": 77,
-      "proServiceYears": 2,
+      "position": "RF",
+      "jerseyNumber": 25,
+      "primaryPosition": "RF",
+      "developmentRate": 48,
+      "potentialHidden": 57,
+      "proServiceYears": 10,
       "pitching": {
-        "ovr": 68,
-        "stamina": 67,
-        "velocity": 75,
-        "command": 62,
-        "control": 72,
-        "movement": 71,
-        "mentality": 72,
-        "recovery": 62,
-        "clutch": 62,
-        "holdRunners": 59
+        "ovr": 71,
+        "stamina": 63,
+        "velocity": 76,
+        "command": 67,
+        "control": 64,
+        "movement": 69,
+        "mentality": 77,
+        "recovery": 61,
+        "clutch": 66,
+        "holdRunners": 57
       },
       "batting": {
-        "ovr": 74,
-        "contact": 69,
-        "power": 70,
-        "eye": 68,
-        "discipline": 73,
-        "speed": 70,
-        "baseInstinct": 63,
-        "bunting": 56,
+        "ovr": 71,
+        "contact": 65,
+        "power": 64,
+        "eye": 75,
+        "discipline": 71,
+        "speed": 75,
+        "baseInstinct": 61,
+        "bunting": 57,
         "platoon": 50,
-        "fielding": 71,
-        "arm": 73,
-        "battingClutch": 73
+        "fielding": 63,
+        "arm": 69,
+        "battingClutch": 61
       },
       "positionRatings": {
-        "SP": 74
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "RF": 71
+      }
     },
     "coach": null,
     "manager": null,

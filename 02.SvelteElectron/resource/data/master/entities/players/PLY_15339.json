@@ -1,6 +1,6 @@
 {
   "id": "PLY_15339",
-  "name": "해리스 딜런",
+  "name": "Harris Dylan",
   "nameEn": "Harris Dylan",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 55,
   "popularity": 35,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 74,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 82,
-        "stamina": 74,
-        "velocity": 85,
-        "command": 70,
-        "control": 74,
-        "movement": 74,
-        "mentality": 79,
-        "recovery": 82,
-        "clutch": 76,
-        "holdRunners": 72
+        "ovr": 76,
+        "stamina": 69,
+        "velocity": 79,
+        "command": 65,
+        "control": 69,
+        "movement": 69,
+        "mentality": 73,
+        "recovery": 76,
+        "clutch": 70,
+        "holdRunners": 67
       },
       "batting": {
         "ovr": 76,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

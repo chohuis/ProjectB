@@ -1,9 +1,9 @@
 {
   "id": "PLY_13860",
-  "name": "애덤스 카를로스",
-  "nameEn": "Adams Carlos",
+  "name": "Hall Austin",
+  "nameEn": "Hall Austin",
   "role": "player",
-  "age": 22,
+  "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 81,
-  "popularity": 19,
+  "notes": "국적:파나마",
+  "diligence": 52,
+  "popularity": 21,
   "militaryStatus": "군필",
   "entryYear": 2050,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 22,
+  "entryAge": 25,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 37,
-      "primaryPosition": "SP",
-      "developmentRate": 78,
-      "potentialHidden": 69,
-      "proServiceYears": 0,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 83,
+      "primaryPosition": "RF",
+      "developmentRate": 55,
+      "potentialHidden": 85,
+      "proServiceYears": 3,
       "pitching": {
-        "ovr": 56,
-        "stamina": 56,
-        "velocity": 64,
-        "command": 49,
-        "control": 53,
-        "movement": 49,
-        "mentality": 63,
-        "recovery": 53,
-        "clutch": 46,
-        "holdRunners": 48
+        "ovr": 76,
+        "stamina": 71,
+        "velocity": 74,
+        "command": 70,
+        "control": 73,
+        "movement": 69,
+        "mentality": 83,
+        "recovery": 72,
+        "clutch": 65,
+        "holdRunners": 73
       },
       "batting": {
-        "ovr": 60,
-        "contact": 54,
-        "power": 56,
-        "eye": 56,
-        "discipline": 61,
-        "speed": 62,
-        "baseInstinct": 50,
-        "bunting": 44,
+        "ovr": 76,
+        "contact": 76,
+        "power": 66,
+        "eye": 68,
+        "discipline": 78,
+        "speed": 75,
+        "baseInstinct": 73,
+        "bunting": 58,
         "platoon": 50,
-        "fielding": 61,
-        "arm": 52,
-        "battingClutch": 50
+        "fielding": 66,
+        "arm": 66,
+        "battingClutch": 64
       },
       "positionRatings": {
-        "SP": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "RF": 76
+      }
     },
     "coach": null,
     "manager": null,

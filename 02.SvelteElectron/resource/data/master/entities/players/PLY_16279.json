@@ -1,6 +1,6 @@
 {
   "id": "PLY_16279",
-  "name": "에르난데스 에반",
+  "name": "Hernandez Evan",
   "nameEn": "Hernandez Evan",
   "role": "player",
   "age": 32,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 82,
   "popularity": 20,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 52
       },
       "batting": {
-        "ovr": 69,
-        "contact": 70,
-        "power": 66,
-        "eye": 75,
-        "discipline": 59,
-        "speed": 77,
-        "baseInstinct": 59,
-        "bunting": 54,
-        "platoon": 63,
-        "fielding": 59,
-        "arm": 70,
-        "battingClutch": 63
+        "ovr": 55,
+        "contact": 56,
+        "power": 53,
+        "eye": 60,
+        "discipline": 47,
+        "speed": 61,
+        "baseInstinct": 47,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 56,
+        "battingClutch": 50
       },
       "positionRatings": {
         "SS": 55

@@ -1,65 +1,46 @@
 {
   "id": "PLY_01751",
-  "name": "송동혁",
-  "nameEn": "Song Donghyeok",
+  "name": "나카무라 기요시",
+  "nameEn": "Nakamura Kiyoshi",
   "role": "player",
-  "age": 16,
+  "age": 20,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_MASAN_HARBOR",
-  "teamId": "TEAM_HS_MASAN_HARBOR",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_MASAN_HARBOR",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+  "teamId": "TEAM_JBL_CL_SILVERWOLVES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
-      "position": "CP",
-      "jerseyNumber": 10,
+      "position": "RP",
+      "jerseyNumber": 36,
       "pitching": {
-        "ovr": 46,
-        "stamina": 47,
-        "velocity": 44,
-        "command": 44,
-        "control": 42,
-        "movement": 44,
-        "mentality": 48,
-        "recovery": 46,
-        "clutch": 40,
-        "holdRunners": 41
+        "ovr": 74,
+        "stamina": 66,
+        "velocity": 82,
+        "command": 73,
+        "control": 73,
+        "movement": 78,
+        "mentality": 77,
+        "recovery": 77
       },
       "batting": {
-        "ovr": 28,
-        "contact": 29,
-        "power": 29,
-        "eye": 32,
-        "discipline": 33,
-        "speed": 28,
-        "fielding": 28,
-        "arm": 25,
-        "battingClutch": 34,
-        "baseInstinct": 42,
-        "bunting": 41,
-        "platoon": 34
+        "ovr": 57,
+        "contact": 59,
+        "power": 55,
+        "eye": 53,
+        "discipline": 53,
+        "speed": 55,
+        "fielding": 55,
+        "arm": 56,
+        "battingClutch": 60
       },
-      "developmentRate": 75,
-      "potentialHidden": 81,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 46
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 4
-        }
-      ]
+      "developmentRate": 47,
+      "potentialHidden": 69
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 75,
-  "popularity": 48
+  }
 }

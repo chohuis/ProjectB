@@ -1,7 +1,7 @@
 {
   "id": "PLY_00263",
   "name": "임지호",
-  "nameEn": "Lim Jiho",
+  "nameEn": "Noh Ji-sung",
   "role": "player",
   "age": 22,
   "status": "active",
@@ -19,43 +19,28 @@
       "position": "SP",
       "jerseyNumber": 3,
       "pitching": {
-        "ovr": 51,
-        "stamina": 51,
-        "velocity": 55,
-        "command": 48,
-        "control": 49,
-        "movement": 47,
-        "mentality": 56,
-        "recovery": 49,
-        "clutch": 50,
-        "holdRunners": 41
+        "ovr": 56,
+        "stamina": 59,
+        "velocity": 54,
+        "command": 58,
+        "control": 51,
+        "movement": 48,
+        "mentality": 57,
+        "recovery": 52
       },
       "batting": {
-        "ovr": 33,
+        "ovr": 36,
         "contact": 30,
-        "power": 32,
-        "eye": 30,
-        "discipline": 34,
-        "speed": 40,
-        "fielding": 31,
-        "arm": 37,
-        "battingClutch": 43,
-        "baseInstinct": 46,
-        "bunting": 41,
-        "platoon": 35
+        "power": 33,
+        "eye": 27,
+        "discipline": 32,
+        "speed": 28,
+        "fielding": 26,
+        "arm": 27,
+        "battingClutch": 29
       },
       "developmentRate": 60,
-      "potentialHidden": 58,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 51
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        }
-      ]
+      "potentialHidden": 58
     },
     "coach": {
       "specialty": "-",
@@ -95,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

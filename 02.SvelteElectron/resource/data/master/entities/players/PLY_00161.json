@@ -1,7 +1,7 @@
 {
   "id": "PLY_00161",
   "name": "황연우",
-  "nameEn": "Hwang Yeonu",
+  "nameEn": "Ku Jun-young",
   "role": "player",
   "age": 22,
   "status": "active",
@@ -19,51 +19,28 @@
       "position": "SP",
       "jerseyNumber": 1,
       "pitching": {
-        "ovr": 65,
-        "stamina": 70,
-        "velocity": 67,
-        "command": 68,
-        "control": 62,
-        "movement": 68,
-        "mentality": 63,
-        "recovery": 65,
-        "clutch": 64,
-        "holdRunners": 64
+        "ovr": 67,
+        "stamina": 74,
+        "velocity": 77,
+        "command": 75,
+        "control": 67,
+        "movement": 66,
+        "mentality": 69,
+        "recovery": 73
       },
       "batting": {
-        "ovr": 47,
-        "contact": 46,
-        "power": 51,
-        "eye": 52,
-        "discipline": 45,
-        "speed": 48,
-        "fielding": 49,
-        "arm": 48,
-        "battingClutch": 45,
-        "baseInstinct": 37,
-        "bunting": 35,
-        "platoon": 35
+        "ovr": 43,
+        "contact": 37,
+        "power": 44,
+        "eye": 36,
+        "discipline": 43,
+        "speed": 42,
+        "fielding": 34,
+        "arm": 35,
+        "battingClutch": 39
       },
       "developmentRate": 49,
-      "potentialHidden": 82,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_FORKBALL",
-          "grade": 4
-        }
-      ]
+      "potentialHidden": 82
     },
     "coach": {
       "specialty": "-",
@@ -103,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,6 +1,6 @@
 {
   "id": "PLY_14478",
-  "name": "존스 코디",
+  "name": "Jones Cody",
   "nameEn": "Jones Cody",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 80,
   "popularity": 16,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 55,
       "proServiceYears": 2,
       "pitching": {
-        "ovr": 72,
-        "stamina": 64,
-        "velocity": 77,
-        "command": 67,
-        "control": 67,
-        "movement": 68,
-        "mentality": 65,
-        "recovery": 65,
-        "clutch": 62,
-        "holdRunners": 60
+        "ovr": 75,
+        "stamina": 67,
+        "velocity": 80,
+        "command": 70,
+        "control": 70,
+        "movement": 71,
+        "mentality": 68,
+        "recovery": 68,
+        "clutch": 65,
+        "holdRunners": 62
       },
       "batting": {
         "ovr": 75,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 75
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

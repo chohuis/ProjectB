@@ -1,72 +1,46 @@
 {
   "id": "PLY_01876",
-  "name": "남상민",
-  "nameEn": "Nam Sangmin",
+  "name": "타나카 히로시",
+  "nameEn": "Tanaka Hiroshi",
   "role": "player",
-  "age": 25,
+  "age": 28,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_TWINWOLVES",
-  "teamId": "TEAM_KBL_TWINWOLVES_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_POLARBEARS",
+  "teamId": "TEAM_JBL_PL_POLARBEARS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "L",
-      "position": "SS",
-      "jerseyNumber": 29,
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 21,
       "pitching": {
-        "ovr": 27,
-        "stamina": 32,
-        "velocity": 26,
-        "command": 32,
-        "control": 26,
-        "movement": 25,
-        "mentality": 27,
-        "recovery": 26,
-        "clutch": 36,
-        "holdRunners": 33
+        "ovr": 52,
+        "stamina": 46,
+        "velocity": 52,
+        "command": 48,
+        "control": 46,
+        "movement": 51,
+        "mentality": 51,
+        "recovery": 43
       },
       "batting": {
-        "ovr": 47,
-        "contact": 43,
-        "power": 45,
-        "eye": 53,
-        "discipline": 43,
-        "speed": 52,
-        "fielding": 49,
-        "arm": 46,
-        "battingClutch": 46,
-        "baseInstinct": 42,
-        "bunting": 33,
-        "platoon": 45
+        "ovr": 70,
+        "contact": 73,
+        "power": 71,
+        "eye": 72,
+        "discipline": 75,
+        "speed": 77,
+        "fielding": 74,
+        "arm": 70,
+        "battingClutch": 78
       },
-      "developmentRate": 50,
-      "potentialHidden": 64,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 47
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 3,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 37,
+      "potentialHidden": 78
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 27,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,9 +1,9 @@
 {
   "id": "PLY_12375",
-  "name": "마르티네스 케빈",
-  "nameEn": "Martinez Kevin",
+  "name": "Rodriguez Austin",
+  "nameEn": "Rodriguez Austin",
   "role": "player",
-  "age": 21,
+  "age": 35,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 79,
-  "popularity": 25,
+  "notes": "국적:일본",
+  "diligence": 51,
+  "popularity": 15,
   "militaryStatus": "군필",
   "entryYear": 2041,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 21,
+  "entryAge": 35,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "SP",
-      "jerseyNumber": 68,
+      "jerseyNumber": 51,
       "primaryPosition": "SP",
-      "developmentRate": 76,
-      "potentialHidden": 94,
-      "proServiceYears": 0,
+      "developmentRate": 53,
+      "potentialHidden": 53,
+      "proServiceYears": 13,
       "pitching": {
-        "ovr": 62,
-        "stamina": 55,
-        "velocity": 64,
-        "command": 54,
-        "control": 64,
-        "movement": 64,
-        "mentality": 57,
-        "recovery": 55,
-        "clutch": 52,
-        "holdRunners": 52
+        "ovr": 75,
+        "stamina": 70,
+        "velocity": 83,
+        "command": 75,
+        "control": 80,
+        "movement": 67,
+        "mentality": 81,
+        "recovery": 76,
+        "clutch": 74,
+        "holdRunners": 74
       },
       "batting": {
-        "ovr": 67,
+        "ovr": 75,
         "contact": 68,
-        "power": 59,
-        "eye": 72,
-        "discipline": 59,
-        "speed": 65,
-        "baseInstinct": 61,
-        "bunting": 50,
+        "power": 69,
+        "eye": 73,
+        "discipline": 71,
+        "speed": 75,
+        "baseInstinct": 73,
+        "bunting": 64,
         "platoon": 50,
-        "fielding": 63,
-        "arm": 63,
-        "battingClutch": 66
+        "fielding": 68,
+        "arm": 66,
+        "battingClutch": 63
       },
       "positionRatings": {
-        "SP": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 1
-        }
-      ]
+        "SP": 75
+      }
     },
     "coach": null,
     "manager": null,

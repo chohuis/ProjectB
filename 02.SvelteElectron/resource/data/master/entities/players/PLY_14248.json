@@ -1,6 +1,6 @@
 {
   "id": "PLY_14248",
-  "name": "미첼 코디",
+  "name": "Mitchell Cody",
   "nameEn": "Mitchell Cody",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 56,
   "popularity": 18,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 63
       },
       "batting": {
-        "ovr": 70,
-        "contact": 61,
-        "power": 69,
-        "eye": 67,
-        "discipline": 73,
-        "speed": 78,
-        "baseInstinct": 66,
-        "bunting": 57,
-        "platoon": 55,
-        "fielding": 72,
-        "arm": 67,
-        "battingClutch": 70
+        "ovr": 64,
+        "contact": 56,
+        "power": 63,
+        "eye": 61,
+        "discipline": 67,
+        "speed": 71,
+        "baseInstinct": 60,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 61,
+        "battingClutch": 64
       },
       "positionRatings": {
         "C": 64

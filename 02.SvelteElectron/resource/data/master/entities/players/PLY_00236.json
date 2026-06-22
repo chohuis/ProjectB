@@ -1,7 +1,7 @@
 {
   "id": "PLY_00236",
   "name": "조정우",
-  "nameEn": "Jo Jeongu",
+  "nameEn": "Joo Jun-hyuk",
   "role": "player",
   "age": 19,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "SS",
       "jerseyNumber": 16,
       "pitching": {
-        "ovr": 48,
-        "stamina": 50,
-        "velocity": 43,
-        "command": 47,
-        "control": 50,
-        "movement": 51,
-        "mentality": 49,
-        "recovery": 50,
-        "clutch": 47,
-        "holdRunners": 36
+        "ovr": 46,
+        "stamina": 46,
+        "velocity": 51,
+        "command": 45,
+        "control": 45,
+        "movement": 45,
+        "mentality": 50,
+        "recovery": 49
       },
       "batting": {
-        "ovr": 68,
-        "contact": 64,
-        "power": 71,
-        "eye": 68,
-        "discipline": 69,
-        "speed": 62,
-        "fielding": 73,
-        "arm": 71,
-        "battingClutch": 59,
-        "baseInstinct": 68,
-        "bunting": 53,
-        "platoon": 63
+        "ovr": 70,
+        "contact": 66,
+        "power": 66,
+        "eye": 69,
+        "discipline": 71,
+        "speed": 74,
+        "fielding": 71,
+        "arm": 69,
+        "battingClutch": 71
       },
       "developmentRate": 65,
-      "potentialHidden": 87,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 68
-      }
+      "potentialHidden": 87
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

@@ -1,6 +1,6 @@
 {
   "id": "PLY_15300",
-  "name": "가르시아 칼렙",
+  "name": "Garcia Caleb",
   "nameEn": "Garcia Caleb",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 68,
   "popularity": 43,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 66,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 50,
-        "stamina": 49,
-        "velocity": 56,
-        "command": 42,
-        "control": 42,
-        "movement": 53,
-        "mentality": 51,
-        "recovery": 45,
-        "clutch": 45,
-        "holdRunners": 40
+        "ovr": 51,
+        "stamina": 50,
+        "velocity": 57,
+        "command": 43,
+        "control": 43,
+        "movement": 54,
+        "mentality": 52,
+        "recovery": 46,
+        "clutch": 46,
+        "holdRunners": 41
       },
       "batting": {
         "ovr": 51,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 51
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,7 +1,7 @@
 {
   "id": "PLY_00374",
   "name": "신동현",
-  "nameEn": "Shin Donghyeon",
+  "nameEn": "Seo Tae-woo",
   "role": "player",
   "age": 29,
   "status": "active",
@@ -19,48 +19,28 @@
       "position": "2B",
       "jerseyNumber": 14,
       "pitching": {
-        "ovr": 43,
-        "stamina": 43,
-        "velocity": 42,
-        "command": 45,
-        "control": 48,
-        "movement": 46,
-        "mentality": 42,
-        "recovery": 47,
-        "clutch": 45,
-        "holdRunners": 39
+        "ovr": 38,
+        "stamina": 32,
+        "velocity": 36,
+        "command": 40,
+        "control": 39,
+        "movement": 37,
+        "mentality": 37,
+        "recovery": 38
       },
       "batting": {
-        "ovr": 63,
-        "contact": 62,
-        "power": 69,
-        "eye": 62,
-        "discipline": 65,
-        "speed": 70,
-        "fielding": 65,
-        "arm": 58,
-        "battingClutch": 55,
-        "baseInstinct": 55,
-        "bunting": 50,
-        "platoon": 58
+        "ovr": 62,
+        "contact": 66,
+        "power": 61,
+        "eye": 68,
+        "discipline": 60,
+        "speed": 63,
+        "fielding": 66,
+        "arm": 60,
+        "battingClutch": 67
       },
       "developmentRate": 48,
-      "potentialHidden": 58,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 63
-      },
-      "proServiceYears": 9,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 58
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,72 +1,46 @@
 {
   "id": "PLY_02072",
-  "name": "제이콥 존스",
-  "nameEn": "Jacob Jones",
+  "name": "야마자키 켄타",
+  "nameEn": "Yamazaki Kenta",
   "role": "player",
-  "age": 22,
+  "age": 23,
   "status": "active",
-  "originLeagueId": "LEAGUE_ABL",
-  "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_SUNDRAGONS",
-  "teamId": "TEAM_ABL_SUNDRAGONS_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SUNS",
+  "teamId": "TEAM_JBL_PL_SUNS_2",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "1B",
-      "jerseyNumber": 33,
+      "position": "C",
+      "jerseyNumber": 42,
       "pitching": {
-        "ovr": 42,
-        "stamina": 43,
-        "velocity": 42,
-        "command": 47,
-        "control": 47,
-        "movement": 42,
-        "mentality": 39,
-        "recovery": 38,
-        "clutch": 45,
-        "holdRunners": 35
+        "ovr": 48,
+        "stamina": 46,
+        "velocity": 50,
+        "command": 43,
+        "control": 50,
+        "movement": 45,
+        "mentality": 49,
+        "recovery": 46
       },
       "batting": {
-        "ovr": 62,
-        "contact": 67,
-        "power": 61,
-        "eye": 57,
-        "discipline": 61,
+        "ovr": 74,
+        "contact": 75,
+        "power": 75,
+        "eye": 73,
+        "discipline": 77,
         "speed": 67,
-        "fielding": 59,
-        "arm": 61,
-        "battingClutch": 57,
-        "baseInstinct": 51,
-        "bunting": 57,
-        "platoon": 60
+        "fielding": 75,
+        "arm": 74,
+        "battingClutch": 74
       },
-      "developmentRate": 36,
-      "potentialHidden": 63,
-      "primaryPosition": "1B",
-      "positionRatings": {
-        "1B": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 6300,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 41,
+      "potentialHidden": 59
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 71,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

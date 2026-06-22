@@ -1,6 +1,6 @@
 {
   "id": "PLY_16377",
-  "name": "가르시아 크리스",
+  "name": "Garcia Chris",
   "nameEn": "Garcia Chris",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 56,
   "popularity": 33,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 62
       },
       "batting": {
-        "ovr": 67,
-        "contact": 66,
-        "power": 63,
-        "eye": 71,
-        "discipline": 63,
-        "speed": 64,
-        "baseInstinct": 68,
-        "bunting": 53,
-        "platoon": 49,
-        "fielding": 59,
-        "arm": 58,
-        "battingClutch": 54
+        "ovr": 69,
+        "contact": 68,
+        "power": 65,
+        "eye": 73,
+        "discipline": 65,
+        "speed": 66,
+        "baseInstinct": 70,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 60,
+        "battingClutch": 56
       },
       "positionRatings": {
         "RF": 69

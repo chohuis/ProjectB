@@ -1,65 +1,46 @@
 {
   "id": "PLY_01807",
-  "name": "배동우",
-  "nameEn": "Bae Dongwoo",
+  "name": "이노우에 렌",
+  "nameEn": "Inoue Ren",
   "role": "player",
-  "age": 16,
+  "age": 29,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_GOYANG_ARROW",
-  "teamId": "TEAM_HS_GOYANG_ARROW",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_GOYANG_ARROW",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_IRONSTORMS",
+  "teamId": "TEAM_JBL_CL_IRONSTORMS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "RP",
-      "jerseyNumber": 6,
+      "position": "LF",
+      "jerseyNumber": 47,
       "pitching": {
-        "ovr": 39,
-        "stamina": 39,
-        "velocity": 38,
-        "command": 35,
-        "control": 35,
-        "movement": 35,
+        "ovr": 46,
+        "stamina": 41,
+        "velocity": 49,
+        "command": 42,
+        "control": 42,
+        "movement": 44,
         "mentality": 38,
-        "recovery": 39,
-        "clutch": 39,
-        "holdRunners": 32
+        "recovery": 45
       },
       "batting": {
-        "ovr": 22,
-        "contact": 22,
-        "power": 26,
-        "eye": 25,
-        "discipline": 20,
-        "speed": 23,
-        "fielding": 27,
-        "arm": 25,
-        "battingClutch": 43,
-        "baseInstinct": 38,
-        "bunting": 40,
-        "platoon": 34
+        "ovr": 72,
+        "contact": 74,
+        "power": 74,
+        "eye": 69,
+        "discipline": 70,
+        "speed": 73,
+        "fielding": 66,
+        "arm": 69,
+        "battingClutch": 75
       },
-      "developmentRate": 64,
-      "potentialHidden": 66,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 39
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 4
-        }
-      ]
+      "developmentRate": 50,
+      "potentialHidden": 83
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 71,
-  "popularity": 42
+  }
 }

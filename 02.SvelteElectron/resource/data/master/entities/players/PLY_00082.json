@@ -1,9 +1,9 @@
 {
   "id": "PLY_00082",
   "name": "서재원",
-  "nameEn": "Seo Jaewon",
+  "nameEn": "You Tae-hyun",
   "role": "player",
-  "age": 19,
+  "age": 15,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,51 +19,28 @@
       "position": "SP",
       "jerseyNumber": 2,
       "pitching": {
-        "ovr": 54,
-        "stamina": 56,
-        "velocity": 49,
-        "command": 52,
+        "ovr": 57,
+        "stamina": 64,
+        "velocity": 54,
+        "command": 54,
         "control": 59,
-        "movement": 58,
-        "mentality": 55,
-        "recovery": 58,
-        "clutch": 50,
-        "holdRunners": 52
+        "movement": 55,
+        "mentality": 63,
+        "recovery": 57
       },
       "batting": {
-        "ovr": 36,
-        "contact": 32,
-        "power": 31,
-        "eye": 33,
-        "discipline": 39,
-        "speed": 40,
-        "fielding": 31,
-        "arm": 42,
-        "battingClutch": 40,
-        "baseInstinct": 46,
-        "bunting": 28,
-        "platoon": 38
+        "ovr": 48,
+        "contact": 67,
+        "power": 47,
+        "eye": 45,
+        "discipline": 64,
+        "speed": 64,
+        "fielding": 69,
+        "arm": 61,
+        "battingClutch": 52
       },
       "developmentRate": 70,
-      "potentialHidden": 68,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 54
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_FORKBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+      "potentialHidden": 68
     },
     "coach": {
       "specialty": "-",
@@ -103,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

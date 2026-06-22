@@ -1,14 +1,14 @@
 {
   "id": "PLY_00493",
   "name": "이성민",
-  "nameEn": "Lee Seongmin",
+  "nameEn": "Min Ha-jun",
   "role": "player",
   "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_TWINWOLVES",
-  "teamId": "TEAM_KBL_TWINWOLVES_2",
+  "clubId": "CLUB_KBL_KIA",
+  "teamId": "TEAM_KBL_KIA_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,62 +19,28 @@
       "position": "RP",
       "jerseyNumber": 38,
       "pitching": {
-        "ovr": 69,
-        "stamina": 74,
-        "velocity": 75,
+        "ovr": 73,
+        "stamina": 67,
+        "velocity": 78,
         "command": 73,
         "control": 73,
-        "movement": 69,
-        "mentality": 67,
-        "recovery": 73,
-        "clutch": 60,
-        "holdRunners": 57
+        "movement": 79,
+        "mentality": 79,
+        "recovery": 77
       },
       "batting": {
-        "ovr": 51,
-        "contact": 53,
-        "power": 51,
-        "eye": 49,
+        "ovr": 53,
+        "contact": 61,
+        "power": 58,
+        "eye": 52,
         "discipline": 54,
-        "speed": 52,
-        "fielding": 48,
-        "arm": 48,
-        "battingClutch": 51,
-        "baseInstinct": 48,
-        "bunting": 35,
-        "platoon": 44
+        "speed": 58,
+        "fielding": 58,
+        "arm": 56,
+        "battingClutch": 55
       },
       "developmentRate": 57,
-      "potentialHidden": 76,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 69
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_SCREWBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 2,
-      "contract": {
-        "salary": 6000,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 76
     },
     "coach": {
       "specialty": "-",
@@ -114,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

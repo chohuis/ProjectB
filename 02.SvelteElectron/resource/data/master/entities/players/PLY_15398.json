@@ -1,6 +1,6 @@
 {
   "id": "PLY_15398",
-  "name": "그린 미겔",
+  "name": "Green Miguel",
   "nameEn": "Green Miguel",
   "role": "player",
   "age": 31,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 46,
   "popularity": 28,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 50
       },
       "batting": {
-        "ovr": 59,
-        "contact": 52,
-        "power": 60,
-        "eye": 59,
-        "discipline": 54,
-        "speed": 53,
-        "baseInstinct": 51,
-        "bunting": 50,
-        "platoon": 57,
-        "fielding": 54,
-        "arm": 59,
-        "battingClutch": 49
+        "ovr": 52,
+        "contact": 46,
+        "power": 53,
+        "eye": 52,
+        "discipline": 48,
+        "speed": 47,
+        "baseInstinct": 45,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 48,
+        "arm": 52,
+        "battingClutch": 43
       },
       "positionRatings": {
         "SS": 52

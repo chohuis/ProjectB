@@ -1,6 +1,6 @@
 {
   "id": "PLY_15596",
-  "name": "카터 루이스",
+  "name": "Carter Luis",
   "nameEn": "Carter Luis",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 54,
   "popularity": 44,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 67,
       "proServiceYears": 3,
       "pitching": {
-        "ovr": 64,
-        "stamina": 64,
-        "velocity": 65,
-        "command": 58,
-        "control": 66,
-        "movement": 57,
-        "mentality": 62,
-        "recovery": 62,
-        "clutch": 54,
-        "holdRunners": 62
+        "ovr": 67,
+        "stamina": 67,
+        "velocity": 68,
+        "command": 61,
+        "control": 69,
+        "movement": 60,
+        "mentality": 65,
+        "recovery": 65,
+        "clutch": 57,
+        "holdRunners": 65
       },
       "batting": {
         "ovr": 67,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

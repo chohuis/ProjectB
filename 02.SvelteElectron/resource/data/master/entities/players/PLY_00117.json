@@ -1,9 +1,9 @@
 {
   "id": "PLY_00117",
   "name": "조동우",
-  "nameEn": "Jo Dongu",
+  "nameEn": "Ko Tae-yang",
   "role": "player",
-  "age": 18,
+  "age": 17,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "CF",
       "jerseyNumber": 17,
       "pitching": {
-        "ovr": 28,
-        "stamina": 33,
-        "velocity": 25,
-        "command": 27,
-        "control": 28,
-        "movement": 33,
-        "mentality": 31,
-        "recovery": 31,
-        "clutch": 41,
-        "holdRunners": 34
+        "ovr": 39,
+        "stamina": 55,
+        "velocity": 46,
+        "command": 62,
+        "control": 53,
+        "movement": 51,
+        "mentality": 47,
+        "recovery": 57
       },
       "batting": {
-        "ovr": 48,
-        "contact": 48,
-        "power": 43,
-        "eye": 45,
-        "discipline": 49,
-        "speed": 44,
-        "fielding": 43,
-        "arm": 46,
-        "battingClutch": 42,
-        "baseInstinct": 47,
-        "bunting": 38,
-        "platoon": 41
+        "ovr": 55,
+        "contact": 46,
+        "power": 52,
+        "eye": 43,
+        "discipline": 47,
+        "speed": 50,
+        "fielding": 47,
+        "arm": 64,
+        "battingClutch": 56
       },
       "developmentRate": 54,
-      "potentialHidden": 80,
-      "primaryPosition": "CF",
-      "positionRatings": {
-        "CF": 48
-      }
+      "potentialHidden": 80
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

@@ -1,69 +1,46 @@
 {
   "id": "PLY_01625",
-  "name": "황민준",
-  "nameEn": "Hwang Minjun",
+  "name": "마쓰모토 스스무",
+  "nameEn": "Matsumoto Susumu",
   "role": "player",
-  "age": 16,
+  "age": 24,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_YEOSU_SHORE",
-  "teamId": "TEAM_HS_YEOSU_SHORE",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_YEOSU_SHORE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TEMPOSTINGS",
+  "teamId": "TEAM_JBL_CL_TEMPOSTINGS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 4,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 45,
       "pitching": {
-        "ovr": 29,
-        "stamina": 28,
-        "velocity": 24,
-        "command": 29,
-        "control": 33,
-        "movement": 33,
-        "mentality": 26,
-        "recovery": 25,
-        "clutch": 40,
-        "holdRunners": 38
+        "ovr": 50,
+        "stamina": 52,
+        "velocity": 52,
+        "command": 50,
+        "control": 54,
+        "movement": 47,
+        "mentality": 54,
+        "recovery": 47
       },
       "batting": {
-        "ovr": 22,
-        "contact": 27,
-        "power": 23,
-        "eye": 20,
-        "discipline": 20,
-        "speed": 28,
-        "fielding": 22,
-        "arm": 20,
-        "battingClutch": 35,
-        "baseInstinct": 39,
-        "bunting": 31,
-        "platoon": 42
+        "ovr": 81,
+        "contact": 80,
+        "power": 75,
+        "eye": 77,
+        "discipline": 75,
+        "speed": 71,
+        "fielding": 71,
+        "arm": 82,
+        "battingClutch": 75
       },
-      "developmentRate": 63,
-      "potentialHidden": 71,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 29
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 2
-        }
-      ]
+      "developmentRate": 48,
+      "potentialHidden": 76
     },
     "coach": {
       "specialty": "-",
@@ -103,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 64,
-  "popularity": 19
+  }
 }

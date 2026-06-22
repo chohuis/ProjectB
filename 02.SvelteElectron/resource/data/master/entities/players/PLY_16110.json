@@ -1,6 +1,6 @@
 {
   "id": "PLY_16110",
-  "name": "홀 트레버",
+  "name": "Hall Trevor",
   "nameEn": "Hall Trevor",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 52,
   "popularity": 25,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 55
       },
       "batting": {
-        "ovr": 60,
-        "contact": 59,
-        "power": 61,
-        "eye": 62,
-        "discipline": 62,
-        "speed": 60,
-        "baseInstinct": 56,
-        "bunting": 50,
-        "platoon": 48,
-        "fielding": 52,
-        "arm": 50,
-        "battingClutch": 55
+        "ovr": 62,
+        "contact": 61,
+        "power": 63,
+        "eye": 64,
+        "discipline": 64,
+        "speed": 62,
+        "baseInstinct": 58,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 52,
+        "battingClutch": 57
       },
       "positionRatings": {
         "1B": 62

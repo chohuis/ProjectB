@@ -1,9 +1,9 @@
 {
   "id": "PLY_11230",
-  "name": "존스 헌터",
-  "nameEn": "Jones Hunter",
+  "name": "Martin Marcus",
+  "nameEn": "Martin Marcus",
   "role": "player",
-  "age": 23,
+  "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 69,
-  "popularity": 37,
+  "notes": "국적:멕시코",
+  "diligence": 66,
+  "popularity": 22,
   "militaryStatus": "군필",
   "entryYear": 2034,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 23,
+  "entryAge": 26,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 67,
-      "primaryPosition": "SP",
-      "developmentRate": 52,
-      "potentialHidden": 80,
-      "proServiceYears": 1,
+      "position": "SS",
+      "jerseyNumber": 43,
+      "primaryPosition": "SS",
+      "developmentRate": 58,
+      "potentialHidden": 65,
+      "proServiceYears": 4,
       "pitching": {
-        "ovr": 63,
-        "stamina": 57,
-        "velocity": 68,
-        "command": 58,
-        "control": 57,
-        "movement": 62,
-        "mentality": 60,
-        "recovery": 64,
-        "clutch": 60,
-        "holdRunners": 51
+        "ovr": 71,
+        "stamina": 73,
+        "velocity": 74,
+        "command": 67,
+        "control": 65,
+        "movement": 69,
+        "mentality": 75,
+        "recovery": 72,
+        "clutch": 71,
+        "holdRunners": 68
       },
       "batting": {
-        "ovr": 69,
-        "contact": 64,
-        "power": 71,
-        "eye": 61,
-        "discipline": 69,
-        "speed": 72,
-        "baseInstinct": 60,
-        "bunting": 54,
+        "ovr": 71,
+        "contact": 62,
+        "power": 65,
+        "eye": 70,
+        "discipline": 68,
+        "speed": 67,
+        "baseInstinct": 72,
+        "bunting": 53,
         "platoon": 50,
-        "fielding": 71,
-        "arm": 68,
-        "battingClutch": 56
+        "fielding": 70,
+        "arm": 63,
+        "battingClutch": 71
       },
       "positionRatings": {
-        "SP": 69
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        }
-      ]
+        "SS": 71
+      }
     },
     "coach": null,
     "manager": null,

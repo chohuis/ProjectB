@@ -1,72 +1,46 @@
 {
   "id": "PLY_02046",
-  "name": "크리스토퍼 윌슨",
-  "nameEn": "Christopher Wilson",
+  "name": "타나카 슌",
+  "nameEn": "Tanaka Shun",
   "role": "player",
   "age": 25,
   "status": "active",
-  "originLeagueId": "LEAGUE_ABL",
-  "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_HARBORHAWKS",
-  "teamId": "TEAM_ABL_HARBORHAWKS_1",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SUNS",
+  "teamId": "TEAM_JBL_PL_SUNS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "LF",
-      "jerseyNumber": 31,
+      "position": "RP",
+      "jerseyNumber": 11,
       "pitching": {
-        "ovr": 31,
-        "stamina": 33,
-        "velocity": 31,
-        "command": 28,
-        "control": 36,
-        "movement": 35,
-        "mentality": 29,
-        "recovery": 32,
-        "clutch": 42,
-        "holdRunners": 32
+        "ovr": 90,
+        "stamina": 83,
+        "velocity": 95,
+        "command": 88,
+        "control": 91,
+        "movement": 83,
+        "mentality": 92,
+        "recovery": 85
       },
       "batting": {
-        "ovr": 51,
-        "contact": 49,
-        "power": 47,
-        "eye": 46,
-        "discipline": 56,
-        "speed": 55,
-        "fielding": 54,
-        "arm": 45,
-        "battingClutch": 49,
-        "baseInstinct": 49,
-        "bunting": 40,
-        "platoon": 39
+        "ovr": 64,
+        "contact": 71,
+        "power": 67,
+        "eye": 70,
+        "discipline": 67,
+        "speed": 65,
+        "fielding": 63,
+        "arm": 69,
+        "battingClutch": 71
       },
-      "developmentRate": 65,
-      "potentialHidden": 73,
-      "primaryPosition": "LF",
-      "positionRatings": {
-        "LF": 51
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 3,
-      "contract": {
-        "salary": 6300,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 47,
+      "potentialHidden": 85
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 69,
-  "popularity": 54,
-  "militaryStatus": "군필"
+  }
 }

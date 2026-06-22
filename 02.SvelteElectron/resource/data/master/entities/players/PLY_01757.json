@@ -1,61 +1,46 @@
 {
   "id": "PLY_01757",
-  "name": "송주원",
-  "nameEn": "Song Juwon",
+  "name": "엔도 히로시",
+  "nameEn": "Endo Hiroshi",
   "role": "player",
-  "age": 17,
+  "age": 24,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_MASAN_HARBOR",
-  "teamId": "TEAM_HS_MASAN_HARBOR",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_MASAN_HARBOR",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+  "teamId": "TEAM_JBL_CL_SILVERWOLVES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "2B",
-      "jerseyNumber": 16,
+      "position": "C",
+      "jerseyNumber": 42,
       "pitching": {
-        "ovr": 38,
-        "stamina": 44,
-        "velocity": 44,
-        "command": 37,
-        "control": 34,
-        "movement": 42,
-        "mentality": 37,
-        "recovery": 39,
-        "clutch": 36,
-        "holdRunners": 42
+        "ovr": 48,
+        "stamina": 46,
+        "velocity": 50,
+        "command": 48,
+        "control": 44,
+        "movement": 43,
+        "mentality": 49,
+        "recovery": 41
       },
       "batting": {
-        "ovr": 58,
-        "contact": 59,
-        "power": 63,
-        "eye": 53,
-        "discipline": 59,
-        "speed": 53,
-        "fielding": 56,
-        "arm": 55,
-        "battingClutch": 52,
-        "baseInstinct": 53,
-        "bunting": 54,
-        "platoon": 53
+        "ovr": 76,
+        "contact": 74,
+        "power": 68,
+        "eye": 67,
+        "discipline": 71,
+        "speed": 71,
+        "fielding": 72,
+        "arm": 77,
+        "battingClutch": 72
       },
-      "developmentRate": 79,
-      "potentialHidden": 60,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 41,
+      "potentialHidden": 80
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 72,
-  "popularity": 38
+  }
 }

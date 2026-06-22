@@ -1,7 +1,7 @@
 {
   "id": "PLY_00235",
   "name": "남준호",
-  "nameEn": "Nam Junho",
+  "nameEn": "Kim Ju-won",
   "role": "player",
   "age": 21,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "3B",
       "jerseyNumber": 15,
       "pitching": {
-        "ovr": 33,
-        "stamina": 32,
+        "ovr": 30,
+        "stamina": 33,
         "velocity": 31,
-        "command": 37,
-        "control": 38,
-        "movement": 29,
-        "mentality": 32,
-        "recovery": 31,
-        "clutch": 39,
-        "holdRunners": 33
+        "command": 31,
+        "control": 32,
+        "movement": 27,
+        "mentality": 29,
+        "recovery": 28
       },
       "batting": {
         "ovr": 53,
-        "contact": 53,
-        "power": 52,
-        "eye": 53,
-        "discipline": 53,
-        "speed": 58,
-        "fielding": 48,
-        "arm": 56,
-        "battingClutch": 45,
-        "baseInstinct": 41,
-        "bunting": 48,
-        "platoon": 41
+        "contact": 54,
+        "power": 60,
+        "eye": 50,
+        "discipline": 54,
+        "speed": 48,
+        "fielding": 51,
+        "arm": 60,
+        "battingClutch": 56
       },
       "developmentRate": 45,
-      "potentialHidden": 86,
-      "primaryPosition": "3B",
-      "positionRatings": {
-        "3B": 53
-      }
+      "potentialHidden": 86
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

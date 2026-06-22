@@ -1,9 +1,9 @@
 {
   "id": "PLY_12916",
-  "name": "톰슨 제이크",
-  "nameEn": "Thompson Jake",
+  "name": "White Connor",
+  "nameEn": "White Connor",
   "role": "player",
-  "age": 22,
+  "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 65,
-  "popularity": 38,
+  "notes": "국적:도미니카",
+  "diligence": 49,
+  "popularity": 41,
   "militaryStatus": "군필",
   "entryYear": 2044,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 22,
+  "entryAge": 32,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 15,
-      "primaryPosition": "SP",
-      "developmentRate": 80,
-      "potentialHidden": 87,
-      "proServiceYears": 0,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 98,
+      "primaryPosition": "SS",
+      "developmentRate": 44,
+      "potentialHidden": 69,
+      "proServiceYears": 10,
       "pitching": {
-        "ovr": 55,
-        "stamina": 54,
-        "velocity": 62,
-        "command": 53,
-        "control": 48,
-        "movement": 57,
-        "mentality": 49,
-        "recovery": 55,
-        "clutch": 47,
-        "holdRunners": 48
+        "ovr": 68,
+        "stamina": 64,
+        "velocity": 76,
+        "command": 71,
+        "control": 60,
+        "movement": 70,
+        "mentality": 67,
+        "recovery": 61,
+        "clutch": 67,
+        "holdRunners": 63
       },
       "batting": {
-        "ovr": 59,
-        "contact": 51,
-        "power": 56,
-        "eye": 58,
-        "discipline": 56,
-        "speed": 63,
-        "baseInstinct": 48,
-        "bunting": 40,
+        "ovr": 68,
+        "contact": 62,
+        "power": 70,
+        "eye": 70,
+        "discipline": 64,
+        "speed": 62,
+        "baseInstinct": 64,
+        "bunting": 60,
         "platoon": 50,
-        "fielding": 53,
-        "arm": 50,
-        "battingClutch": 58
+        "fielding": 58,
+        "arm": 69,
+        "battingClutch": 67
       },
       "positionRatings": {
-        "SP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SS": 68
+      }
     },
     "coach": null,
     "manager": null,

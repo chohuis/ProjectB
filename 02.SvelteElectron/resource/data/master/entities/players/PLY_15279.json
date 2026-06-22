@@ -1,6 +1,6 @@
 {
   "id": "PLY_15279",
-  "name": "마르티네스 헌터",
+  "name": "Martinez Hunter",
   "nameEn": "Martinez Hunter",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 54,
   "popularity": 12,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 61
       },
       "batting": {
-        "ovr": 70,
-        "contact": 66,
-        "power": 60,
-        "eye": 66,
-        "discipline": 71,
-        "speed": 71,
-        "baseInstinct": 64,
-        "bunting": 63,
-        "platoon": 49,
-        "fielding": 69,
-        "arm": 64,
-        "battingClutch": 65
+        "ovr": 71,
+        "contact": 67,
+        "power": 61,
+        "eye": 67,
+        "discipline": 72,
+        "speed": 72,
+        "baseInstinct": 65,
+        "bunting": 64,
+        "platoon": 50,
+        "fielding": 70,
+        "arm": 65,
+        "battingClutch": 66
       },
       "positionRatings": {
         "3B": 71

@@ -1,7 +1,7 @@
 {
   "id": "PLY_00268",
   "name": "노동준",
-  "nameEn": "No Dongjun",
+  "nameEn": "Hong Tae-woo",
   "role": "player",
   "age": 22,
   "status": "active",
@@ -19,51 +19,28 @@
       "position": "RP",
       "jerseyNumber": 8,
       "pitching": {
-        "ovr": 60,
-        "stamina": 64,
-        "velocity": 63,
-        "command": 56,
-        "control": 64,
-        "movement": 63,
+        "ovr": 59,
+        "stamina": 56,
+        "velocity": 69,
+        "command": 60,
+        "control": 62,
+        "movement": 60,
         "mentality": 59,
-        "recovery": 61,
-        "clutch": 51,
-        "holdRunners": 51
+        "recovery": 63
       },
       "batting": {
-        "ovr": 42,
-        "contact": 46,
-        "power": 38,
-        "eye": 48,
+        "ovr": 41,
+        "contact": 37,
+        "power": 39,
+        "eye": 39,
         "discipline": 38,
-        "speed": 42,
-        "fielding": 37,
-        "arm": 46,
-        "battingClutch": 40,
-        "baseInstinct": 36,
-        "bunting": 33,
-        "platoon": 42
+        "speed": 39,
+        "fielding": 40,
+        "arm": 35,
+        "battingClutch": 42
       },
       "developmentRate": 59,
-      "potentialHidden": 68,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+      "potentialHidden": 68
     },
     "coach": {
       "specialty": "-",
@@ -103,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

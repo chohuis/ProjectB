@@ -1,9 +1,9 @@
 {
   "id": "PLY_10357",
-  "name": "존스 딜런",
-  "nameEn": "Jones Dylan",
+  "name": "Robinson Zach",
+  "nameEn": "Robinson Zach",
   "role": "player",
-  "age": 33,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 79,
-  "popularity": 46,
+  "notes": "국적:멕시코",
+  "diligence": 70,
+  "popularity": 11,
   "militaryStatus": "군필",
   "entryYear": 2029,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 33,
+  "entryAge": 22,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 95,
-      "primaryPosition": "SP",
-      "developmentRate": 48,
-      "potentialHidden": 58,
-      "proServiceYears": 11,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "LF",
+      "jerseyNumber": 25,
+      "primaryPosition": "LF",
+      "developmentRate": 70,
+      "potentialHidden": 85,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 70,
-        "stamina": 70,
-        "velocity": 75,
-        "command": 60,
-        "control": 73,
-        "movement": 64,
-        "mentality": 69,
-        "recovery": 65,
-        "clutch": 67,
-        "holdRunners": 63
+        "ovr": 58,
+        "stamina": 55,
+        "velocity": 67,
+        "command": 53,
+        "control": 50,
+        "movement": 51,
+        "mentality": 56,
+        "recovery": 54,
+        "clutch": 51,
+        "holdRunners": 48
       },
       "batting": {
-        "ovr": 61,
-        "contact": 62,
-        "power": 59,
-        "eye": 52,
-        "discipline": 53,
-        "speed": 57,
-        "baseInstinct": 56,
-        "bunting": 54,
+        "ovr": 58,
+        "contact": 56,
+        "power": 48,
+        "eye": 51,
+        "discipline": 51,
+        "speed": 64,
+        "baseInstinct": 54,
+        "bunting": 43,
         "platoon": 50,
-        "fielding": 56,
-        "arm": 51,
-        "battingClutch": 51
+        "fielding": 55,
+        "arm": 60,
+        "battingClutch": 57
       },
       "positionRatings": {
-        "SP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "LF": 58
+      }
     },
     "coach": null,
     "manager": null,

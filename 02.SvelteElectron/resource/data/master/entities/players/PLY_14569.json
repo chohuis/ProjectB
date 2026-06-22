@@ -1,6 +1,6 @@
 {
   "id": "PLY_14569",
-  "name": "스미스 그랜트",
+  "name": "Smith Grant",
   "nameEn": "Smith Grant",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 48,
   "popularity": 31,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 74,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 80,
-        "stamina": 79,
-        "velocity": 88,
-        "command": 68,
-        "control": 70,
-        "movement": 74,
-        "mentality": 78,
-        "recovery": 79,
-        "clutch": 78,
-        "holdRunners": 70
+        "ovr": 74,
+        "stamina": 73,
+        "velocity": 81,
+        "command": 63,
+        "control": 65,
+        "movement": 68,
+        "mentality": 72,
+        "recovery": 73,
+        "clutch": 72,
+        "holdRunners": 65
       },
       "batting": {
         "ovr": 74,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 74
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

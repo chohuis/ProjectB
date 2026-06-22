@@ -1,6 +1,6 @@
 {
   "id": "PLY_15814",
-  "name": "그린 재크",
+  "name": "Green Zach",
   "nameEn": "Green Zach",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 64,
   "popularity": 45,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 39
       },
       "batting": {
-        "ovr": 51,
-        "contact": 52,
-        "power": 46,
-        "eye": 45,
-        "discipline": 42,
-        "speed": 49,
-        "baseInstinct": 46,
-        "bunting": 35,
-        "platoon": 49,
-        "fielding": 49,
-        "arm": 48,
-        "battingClutch": 43
+        "ovr": 52,
+        "contact": 53,
+        "power": 47,
+        "eye": 46,
+        "discipline": 43,
+        "speed": 50,
+        "baseInstinct": 47,
+        "bunting": 36,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 49,
+        "battingClutch": 44
       },
       "positionRatings": {
         "CF": 52

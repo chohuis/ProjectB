@@ -1,9 +1,9 @@
 {
   "id": "PLY_10267",
-  "name": "마틴 제이크",
-  "nameEn": "Martin Jake",
+  "name": "Hernandez Daniel",
+  "nameEn": "Hernandez Daniel",
   "role": "player",
-  "age": 27,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 52,
-  "popularity": 30,
+  "notes": "국적:미국",
+  "diligence": 46,
+  "popularity": 19,
   "militaryStatus": "군필",
   "entryYear": 2028,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 27,
+  "entryAge": 20,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 39,
-      "primaryPosition": "SP",
-      "developmentRate": 57,
-      "potentialHidden": 59,
-      "proServiceYears": 5,
+      "position": "SS",
+      "jerseyNumber": 75,
+      "primaryPosition": "SS",
+      "developmentRate": 70,
+      "potentialHidden": 91,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 68,
-        "stamina": 61,
-        "velocity": 68,
-        "command": 59,
-        "control": 69,
-        "movement": 61,
-        "mentality": 63,
-        "recovery": 69,
-        "clutch": 59,
-        "holdRunners": 62
+        "ovr": 51,
+        "stamina": 52,
+        "velocity": 58,
+        "command": 54,
+        "control": 54,
+        "movement": 54,
+        "mentality": 46,
+        "recovery": 43,
+        "clutch": 46,
+        "holdRunners": 41
       },
       "batting": {
-        "ovr": 74,
-        "contact": 70,
-        "power": 68,
-        "eye": 72,
-        "discipline": 75,
-        "speed": 71,
-        "baseInstinct": 66,
-        "bunting": 66,
+        "ovr": 51,
+        "contact": 54,
+        "power": 44,
+        "eye": 55,
+        "discipline": 48,
+        "speed": 50,
+        "baseInstinct": 52,
+        "bunting": 35,
         "platoon": 50,
-        "fielding": 77,
-        "arm": 63,
-        "battingClutch": 64
+        "fielding": 49,
+        "arm": 53,
+        "battingClutch": 42
       },
       "positionRatings": {
-        "SP": 74
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "SS": 51
+      }
     },
     "coach": null,
     "manager": null,

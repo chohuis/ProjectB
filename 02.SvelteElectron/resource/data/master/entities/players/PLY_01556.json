@@ -1,61 +1,46 @@
 {
   "id": "PLY_01556",
-  "name": "나성준",
-  "nameEn": "Na Seongjun",
+  "name": "무라카미 오사무",
+  "nameEn": "Murakami Osamu",
   "role": "player",
-  "age": 17,
+  "age": 25,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_BUSAN_WAVE",
-  "teamId": "TEAM_HS_BUSAN_WAVE",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_BUSAN_WAVE",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_NEONCRANES",
+  "teamId": "TEAM_JBL_CL_NEONCRANES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "R",
+      "handedness": "L",
       "position": "1B",
-      "jerseyNumber": 25,
+      "jerseyNumber": 16,
       "pitching": {
-        "ovr": 34,
-        "stamina": 31,
-        "velocity": 39,
-        "command": 39,
-        "control": 38,
-        "movement": 36,
-        "mentality": 37,
-        "recovery": 35,
-        "clutch": 43,
-        "holdRunners": 34
+        "ovr": 54,
+        "stamina": 55,
+        "velocity": 60,
+        "command": 55,
+        "control": 53,
+        "movement": 55,
+        "mentality": 55,
+        "recovery": 58
       },
       "batting": {
-        "ovr": 54,
-        "contact": 57,
-        "power": 51,
-        "eye": 59,
-        "discipline": 49,
-        "speed": 60,
-        "fielding": 51,
-        "arm": 54,
-        "battingClutch": 52,
-        "baseInstinct": 46,
-        "bunting": 44,
-        "platoon": 45
+        "ovr": 78,
+        "contact": 85,
+        "power": 89,
+        "eye": 81,
+        "discipline": 79,
+        "speed": 72,
+        "fielding": 76,
+        "arm": 77,
+        "battingClutch": 82
       },
-      "developmentRate": 79,
-      "potentialHidden": 85,
-      "primaryPosition": "1B",
-      "positionRatings": {
-        "1B": 54
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 50,
+      "potentialHidden": 85
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 54,
-  "popularity": 28
+  }
 }

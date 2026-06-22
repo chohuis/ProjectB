@@ -1,61 +1,46 @@
 {
   "id": "PLY_01838",
-  "name": "송현우",
-  "nameEn": "Song Hyeonwoo",
+  "name": "콘도 야마토",
+  "nameEn": "Kondo Yamato",
   "role": "player",
-  "age": 16,
+  "age": 19,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_SUNCHEON_BAY",
-  "teamId": "TEAM_HS_SUNCHEON_BAY",
-  "grade": 1,
-  "schoolId": "SCHOOL_TEAM_HS_SUNCHEON_BAY",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
+  "teamId": "TEAM_JBL_PL_THUNDERFALCONS_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
-      "position": "RP",
-      "jerseyNumber": 7,
+      "position": "SP",
+      "jerseyNumber": 33,
       "pitching": {
-        "ovr": 52,
-        "stamina": 51,
-        "velocity": 52,
-        "command": 54,
-        "control": 54,
-        "movement": 56,
-        "mentality": 55,
-        "recovery": 49,
-        "clutch": 47,
-        "holdRunners": 41
+        "ovr": 77,
+        "stamina": 78,
+        "velocity": 71,
+        "command": 70,
+        "control": 73,
+        "movement": 69,
+        "mentality": 72,
+        "recovery": 67
       },
       "batting": {
-        "ovr": 34,
-        "contact": 32,
-        "power": 40,
-        "eye": 40,
-        "discipline": 33,
-        "speed": 29,
-        "fielding": 39,
-        "arm": 38,
-        "battingClutch": 45,
-        "baseInstinct": 37,
-        "bunting": 33,
-        "platoon": 34
+        "ovr": 44,
+        "contact": 38,
+        "power": 45,
+        "eye": 37,
+        "discipline": 38,
+        "speed": 38,
+        "fielding": 36,
+        "arm": 43,
+        "battingClutch": 38
       },
-      "developmentRate": 83,
-      "potentialHidden": 90,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 52
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        }
-      ]
+      "developmentRate": 56,
+      "potentialHidden": 72
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 52,
-  "popularity": 29
+  }
 }

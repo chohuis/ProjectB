@@ -1,6 +1,6 @@
 {
   "id": "PLY_15905",
-  "name": "테일러 제이슨",
+  "name": "Taylor Jason",
   "nameEn": "Taylor Jason",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 81,
   "popularity": 48,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 56
       },
       "batting": {
-        "ovr": 60,
-        "contact": 58,
-        "power": 53,
-        "eye": 56,
-        "discipline": 60,
-        "speed": 57,
-        "baseInstinct": 61,
-        "bunting": 52,
-        "platoon": 48,
-        "fielding": 63,
-        "arm": 50,
-        "battingClutch": 58
+        "ovr": 62,
+        "contact": 60,
+        "power": 55,
+        "eye": 58,
+        "discipline": 62,
+        "speed": 59,
+        "baseInstinct": 63,
+        "bunting": 54,
+        "platoon": 50,
+        "fielding": 65,
+        "arm": 52,
+        "battingClutch": 60
       },
       "positionRatings": {
         "RF": 62

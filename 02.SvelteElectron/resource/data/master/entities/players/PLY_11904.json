@@ -1,9 +1,9 @@
 {
   "id": "PLY_11904",
-  "name": "데이비스 조던",
-  "nameEn": "Davis Jordan",
+  "name": "Harris Ryan",
+  "nameEn": "Harris Ryan",
   "role": "player",
-  "age": 22,
+  "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:쿠바",
   "diligence": 68,
-  "popularity": 31,
+  "popularity": 24,
   "militaryStatus": "군필",
   "entryYear": 2038,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 22,
+  "entryAge": 25,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 11,
+      "jerseyNumber": 70,
       "primaryPosition": "SP",
-      "developmentRate": 77,
-      "potentialHidden": 84,
-      "proServiceYears": 0,
+      "developmentRate": 51,
+      "potentialHidden": 88,
+      "proServiceYears": 3,
       "pitching": {
-        "ovr": 50,
-        "stamina": 45,
-        "velocity": 59,
-        "command": 47,
-        "control": 50,
-        "movement": 44,
-        "mentality": 50,
-        "recovery": 52,
-        "clutch": 51,
-        "holdRunners": 40
+        "ovr": 65,
+        "stamina": 61,
+        "velocity": 74,
+        "command": 61,
+        "control": 69,
+        "movement": 60,
+        "mentality": 59,
+        "recovery": 62,
+        "clutch": 64,
+        "holdRunners": 59
       },
       "batting": {
-        "ovr": 52,
-        "contact": 50,
-        "power": 54,
-        "eye": 52,
-        "discipline": 54,
-        "speed": 59,
-        "baseInstinct": 53,
-        "bunting": 40,
+        "ovr": 65,
+        "contact": 67,
+        "power": 56,
+        "eye": 58,
+        "discipline": 59,
+        "speed": 70,
+        "baseInstinct": 66,
+        "bunting": 57,
         "platoon": 50,
-        "fielding": 48,
-        "arm": 45,
-        "battingClutch": 50
+        "fielding": 62,
+        "arm": 61,
+        "battingClutch": 53
       },
       "positionRatings": {
-        "SP": 52
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 65
+      }
     },
     "coach": null,
     "manager": null,

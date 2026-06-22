@@ -1,6 +1,6 @@
 {
   "id": "PLY_16550",
-  "name": "잭슨 카일",
+  "name": "Jackson Kyle",
   "nameEn": "Jackson Kyle",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 69,
   "popularity": 36,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 59
       },
       "batting": {
-        "ovr": 61,
-        "contact": 63,
-        "power": 58,
-        "eye": 57,
-        "discipline": 61,
-        "speed": 67,
-        "baseInstinct": 58,
-        "bunting": 45,
-        "platoon": 47,
-        "fielding": 57,
-        "arm": 64,
-        "battingClutch": 58
+        "ovr": 65,
+        "contact": 67,
+        "power": 62,
+        "eye": 61,
+        "discipline": 65,
+        "speed": 71,
+        "baseInstinct": 62,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 61,
+        "arm": 68,
+        "battingClutch": 62
       },
       "positionRatings": {
         "2B": 65

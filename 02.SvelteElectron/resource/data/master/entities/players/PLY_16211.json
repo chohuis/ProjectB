@@ -1,6 +1,6 @@
 {
   "id": "PLY_16211",
-  "name": "영 미겔",
+  "name": "Young Miguel",
   "nameEn": "Young Miguel",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 60,
   "popularity": 16,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 46
       },
       "batting": {
-        "ovr": 50,
-        "contact": 55,
-        "power": 44,
-        "eye": 52,
-        "discipline": 48,
-        "speed": 48,
-        "baseInstinct": 48,
-        "bunting": 38,
-        "platoon": 49,
-        "fielding": 42,
-        "arm": 49,
-        "battingClutch": 50
+        "ovr": 51,
+        "contact": 56,
+        "power": 45,
+        "eye": 53,
+        "discipline": 49,
+        "speed": 49,
+        "baseInstinct": 49,
+        "bunting": 39,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 50,
+        "battingClutch": 51
       },
       "positionRatings": {
         "2B": 51

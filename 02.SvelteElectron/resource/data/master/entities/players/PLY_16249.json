@@ -1,6 +1,6 @@
 {
   "id": "PLY_16249",
-  "name": "화이트 알렉스",
+  "name": "White Alex",
   "nameEn": "White Alex",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 72,
   "popularity": 44,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 73,
       "proServiceYears": 3,
       "pitching": {
-        "ovr": 70,
-        "stamina": 74,
-        "velocity": 75,
-        "command": 63,
-        "control": 63,
-        "movement": 67,
-        "mentality": 69,
-        "recovery": 71,
-        "clutch": 62,
-        "holdRunners": 65
+        "ovr": 71,
+        "stamina": 75,
+        "velocity": 76,
+        "command": 64,
+        "control": 64,
+        "movement": 68,
+        "mentality": 70,
+        "recovery": 72,
+        "clutch": 63,
+        "holdRunners": 66
       },
       "batting": {
         "ovr": 71,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 71
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

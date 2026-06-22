@@ -1,7 +1,7 @@
 {
   "id": "PLY_10146",
-  "name": "가르시아 블레이크",
-  "nameEn": "Garcia Blake",
+  "name": "Hall Logan",
+  "nameEn": "Hall Logan",
   "role": "player",
   "age": 23,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 81,
-  "popularity": 49,
+  "notes": "국적:멕시코",
+  "diligence": 79,
+  "popularity": 46,
   "militaryStatus": "군필",
   "entryYear": 2027,
   "entryLeague": "LEAGUE_ABL",
@@ -21,53 +21,43 @@
   "entryAge": 23,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 50,
-      "primaryPosition": "SP",
-      "developmentRate": 70,
-      "potentialHidden": 76,
+      "position": "3B",
+      "jerseyNumber": 77,
+      "primaryPosition": "3B",
+      "developmentRate": 69,
+      "potentialHidden": 72,
       "proServiceYears": 1,
       "pitching": {
-        "ovr": 63,
-        "stamina": 63,
-        "velocity": 69,
-        "command": 61,
-        "control": 57,
-        "movement": 57,
-        "mentality": 62,
-        "recovery": 55,
-        "clutch": 57,
-        "holdRunners": 60
+        "ovr": 66,
+        "stamina": 60,
+        "velocity": 67,
+        "command": 56,
+        "control": 67,
+        "movement": 56,
+        "mentality": 64,
+        "recovery": 62,
+        "clutch": 66,
+        "holdRunners": 53
       },
       "batting": {
-        "ovr": 68,
-        "contact": 69,
-        "power": 64,
-        "eye": 68,
-        "discipline": 65,
-        "speed": 61,
-        "baseInstinct": 59,
-        "bunting": 57,
+        "ovr": 66,
+        "contact": 61,
+        "power": 63,
+        "eye": 60,
+        "discipline": 58,
+        "speed": 67,
+        "baseInstinct": 60,
+        "bunting": 48,
         "platoon": 50,
-        "fielding": 58,
-        "arm": 58,
-        "battingClutch": 62
+        "fielding": 60,
+        "arm": 60,
+        "battingClutch": 55
       },
       "positionRatings": {
-        "SP": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "3B": 66
+      }
     },
     "coach": null,
     "manager": null,

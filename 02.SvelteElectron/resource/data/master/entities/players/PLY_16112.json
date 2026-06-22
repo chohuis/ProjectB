@@ -1,6 +1,6 @@
 {
   "id": "PLY_16112",
-  "name": "데이비스 라이언",
+  "name": "Davis Ryan",
   "nameEn": "Davis Ryan",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 47,
   "popularity": 31,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 80,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 50,
-        "stamina": 48,
-        "velocity": 50,
-        "command": 47,
-        "control": 49,
-        "movement": 45,
-        "mentality": 56,
-        "recovery": 39,
-        "clutch": 43,
-        "holdRunners": 46
+        "ovr": 51,
+        "stamina": 49,
+        "velocity": 51,
+        "command": 48,
+        "control": 50,
+        "movement": 46,
+        "mentality": 57,
+        "recovery": 40,
+        "clutch": 44,
+        "holdRunners": 47
       },
       "batting": {
         "ovr": 51,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 51
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

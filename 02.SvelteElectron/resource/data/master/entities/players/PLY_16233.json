@@ -1,6 +1,6 @@
 {
   "id": "PLY_16233",
-  "name": "브라운 루이스",
+  "name": "Brown Luis",
   "nameEn": "Brown Luis",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 73,
   "popularity": 16,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 58
       },
       "batting": {
-        "ovr": 59,
-        "contact": 54,
-        "power": 48,
-        "eye": 60,
-        "discipline": 57,
-        "speed": 52,
-        "baseInstinct": 56,
-        "bunting": 51,
-        "platoon": 49,
-        "fielding": 58,
-        "arm": 59,
-        "battingClutch": 58
+        "ovr": 60,
+        "contact": 55,
+        "power": 49,
+        "eye": 61,
+        "discipline": 58,
+        "speed": 53,
+        "baseInstinct": 57,
+        "bunting": 52,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 60,
+        "battingClutch": 59
       },
       "positionRatings": {
         "RF": 60

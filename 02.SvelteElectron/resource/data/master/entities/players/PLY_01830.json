@@ -1,61 +1,46 @@
 {
   "id": "PLY_01830",
-  "name": "허준호",
-  "nameEn": "Heo Junho",
+  "name": "사사키 기요시",
+  "nameEn": "Sasaki Kiyoshi",
   "role": "player",
-  "age": 18,
+  "age": 30,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_GOYANG_ARROW",
-  "teamId": "TEAM_HS_GOYANG_ARROW",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_GOYANG_ARROW",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
+  "teamId": "TEAM_JBL_PL_THUNDERFALCONS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "UT",
-      "jerseyNumber": 29,
+      "position": "LF",
+      "jerseyNumber": 20,
       "pitching": {
-        "ovr": 42,
-        "stamina": 42,
-        "velocity": 37,
-        "command": 44,
-        "control": 47,
-        "movement": 43,
-        "mentality": 39,
-        "recovery": 44,
-        "clutch": 37,
-        "holdRunners": 35
+        "ovr": 57,
+        "stamina": 52,
+        "velocity": 61,
+        "command": 58,
+        "control": 55,
+        "movement": 51,
+        "mentality": 55,
+        "recovery": 54
       },
       "batting": {
-        "ovr": 62,
-        "contact": 61,
-        "power": 60,
-        "eye": 63,
-        "discipline": 64,
-        "speed": 60,
-        "fielding": 63,
-        "arm": 58,
-        "battingClutch": 54,
-        "baseInstinct": 53,
-        "bunting": 49,
-        "platoon": 57
+        "ovr": 89,
+        "contact": 93,
+        "power": 87,
+        "eye": 84,
+        "discipline": 86,
+        "speed": 91,
+        "fielding": 85,
+        "arm": 88,
+        "battingClutch": 90
       },
-      "developmentRate": 50,
-      "potentialHidden": 83,
-      "primaryPosition": "UT",
-      "positionRatings": {
-        "UT": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 33,
+      "potentialHidden": 69
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 63,
-  "popularity": 49
+  }
 }

@@ -1,14 +1,14 @@
 {
   "id": "PLY_01325",
   "name": "그린 데이비드",
-  "nameEn": "Geu 린 데이비드",
+  "nameEn": "Green David",
   "role": "player",
   "age": 34,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_MOUNTAINPEAKS",
-  "teamId": "TEAM_ABL_MOUNTAINPEAKS_1",
+  "clubId": "CLUB_ABL_STL",
+  "teamId": "TEAM_ABL_STL",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:베네수엘라",
@@ -19,62 +19,28 @@
       "position": "RP",
       "jerseyNumber": 10,
       "pitching": {
-        "ovr": 74,
-        "stamina": 74,
-        "velocity": 74,
-        "command": 78,
-        "control": 73,
-        "movement": 76,
-        "mentality": 70,
-        "recovery": 72,
-        "clutch": 69,
-        "holdRunners": 65
+        "ovr": 83,
+        "stamina": 76,
+        "velocity": 82,
+        "command": 76,
+        "control": 83,
+        "movement": 78,
+        "mentality": 78,
+        "recovery": 78
       },
       "batting": {
-        "ovr": 56,
-        "contact": 61,
-        "power": 51,
-        "eye": 56,
-        "discipline": 52,
-        "speed": 55,
+        "ovr": 58,
+        "contact": 60,
+        "power": 61,
+        "eye": 54,
+        "discipline": 60,
+        "speed": 57,
         "fielding": 54,
-        "arm": 58,
-        "battingClutch": 51,
-        "baseInstinct": 45,
-        "bunting": 46,
-        "platoon": 53
+        "arm": 56,
+        "battingClutch": 55
       },
       "developmentRate": 34,
-      "potentialHidden": 71,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 74
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 12,
-      "contract": {
-        "salary": 24800,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 71
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

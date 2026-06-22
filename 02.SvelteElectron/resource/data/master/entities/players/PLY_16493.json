@@ -1,6 +1,6 @@
 {
   "id": "PLY_16493",
-  "name": "클라크 블레이크",
+  "name": "Clark Blake",
   "nameEn": "Clark Blake",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 73,
   "popularity": 45,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 64,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 77,
-        "stamina": 74,
-        "velocity": 81,
-        "command": 67,
-        "control": 78,
-        "movement": 72,
-        "mentality": 70,
-        "recovery": 78,
-        "clutch": 73,
-        "holdRunners": 63
+        "ovr": 71,
+        "stamina": 68,
+        "velocity": 75,
+        "command": 62,
+        "control": 72,
+        "movement": 66,
+        "mentality": 65,
+        "recovery": 72,
+        "clutch": 67,
+        "holdRunners": 58
       },
       "batting": {
         "ovr": 71,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 71
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

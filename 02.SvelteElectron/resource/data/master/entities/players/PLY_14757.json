@@ -1,6 +1,6 @@
 {
   "id": "PLY_14757",
-  "name": "잭슨 제이크",
+  "name": "Jackson Jake",
   "nameEn": "Jackson Jake",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 55,
   "popularity": 40,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 72
       },
       "batting": {
-        "ovr": 80,
-        "contact": 76,
-        "power": 75,
-        "eye": 80,
-        "discipline": 76,
-        "speed": 77,
-        "baseInstinct": 79,
-        "bunting": 65,
-        "platoon": 54,
-        "fielding": 69,
-        "arm": 82,
-        "battingClutch": 70
+        "ovr": 74,
+        "contact": 70,
+        "power": 69,
+        "eye": 74,
+        "discipline": 70,
+        "speed": 71,
+        "baseInstinct": 73,
+        "bunting": 60,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 76,
+        "battingClutch": 65
       },
       "positionRatings": {
         "LF": 74

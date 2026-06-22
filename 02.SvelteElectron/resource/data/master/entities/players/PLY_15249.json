@@ -1,6 +1,6 @@
 {
   "id": "PLY_15249",
-  "name": "그린 타일러",
+  "name": "Green Tyler",
   "nameEn": "Green Tyler",
   "role": "player",
   "age": 30,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 55,
   "popularity": 13,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 51
       },
       "batting": {
-        "ovr": 72,
-        "contact": 71,
-        "power": 62,
-        "eye": 73,
-        "discipline": 63,
-        "speed": 77,
-        "baseInstinct": 64,
-        "bunting": 62,
-        "platoon": 55,
-        "fielding": 70,
-        "arm": 65,
-        "battingClutch": 60
+        "ovr": 66,
+        "contact": 65,
+        "power": 57,
+        "eye": 67,
+        "discipline": 58,
+        "speed": 71,
+        "baseInstinct": 59,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 60,
+        "battingClutch": 55
       },
       "positionRatings": {
         "LF": 66

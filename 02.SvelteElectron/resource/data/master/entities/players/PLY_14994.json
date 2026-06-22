@@ -1,6 +1,6 @@
 {
   "id": "PLY_14994",
-  "name": "앨런 데릭",
+  "name": "Allen Derek",
   "nameEn": "Allen Derek",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 76,
   "popularity": 38,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 63
       },
       "batting": {
-        "ovr": 64,
-        "contact": 62,
-        "power": 58,
-        "eye": 66,
-        "discipline": 61,
-        "speed": 62,
-        "baseInstinct": 59,
-        "bunting": 46,
-        "platoon": 48,
-        "fielding": 63,
-        "arm": 56,
-        "battingClutch": 60
+        "ovr": 67,
+        "contact": 65,
+        "power": 61,
+        "eye": 69,
+        "discipline": 64,
+        "speed": 65,
+        "baseInstinct": 62,
+        "bunting": 48,
+        "platoon": 50,
+        "fielding": 66,
+        "arm": 59,
+        "battingClutch": 63
       },
       "positionRatings": {
         "1B": 67

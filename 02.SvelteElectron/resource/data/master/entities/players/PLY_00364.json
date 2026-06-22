@@ -1,7 +1,7 @@
 {
   "id": "PLY_00364",
   "name": "남서준",
-  "nameEn": "Nam Seojun",
+  "nameEn": "Kang Hyun-woo",
   "role": "player",
   "age": 20,
   "status": "active",
@@ -19,54 +19,28 @@
       "position": "SP",
       "jerseyNumber": 4,
       "pitching": {
-        "ovr": 51,
-        "stamina": 53,
+        "ovr": 59,
+        "stamina": 58,
         "velocity": 56,
-        "command": 55,
-        "control": 55,
-        "movement": 49,
-        "mentality": 50,
-        "recovery": 55,
-        "clutch": 43,
-        "holdRunners": 47
+        "command": 54,
+        "control": 52,
+        "movement": 58,
+        "mentality": 55,
+        "recovery": 57
       },
       "batting": {
-        "ovr": 33,
-        "contact": 34,
-        "power": 31,
-        "eye": 28,
-        "discipline": 35,
-        "speed": 28,
-        "fielding": 37,
-        "arm": 27,
-        "battingClutch": 34,
-        "baseInstinct": 36,
-        "bunting": 38,
-        "platoon": 35
+        "ovr": 32,
+        "contact": 30,
+        "power": 27,
+        "eye": 33,
+        "discipline": 27,
+        "speed": 29,
+        "fielding": 31,
+        "arm": 32,
+        "battingClutch": 30
       },
       "developmentRate": 45,
-      "potentialHidden": 60,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 51
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 700,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 60
     },
     "coach": {
       "specialty": "-",
@@ -106,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

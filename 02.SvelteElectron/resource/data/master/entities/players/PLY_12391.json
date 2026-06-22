@@ -1,9 +1,9 @@
 {
   "id": "PLY_12391",
-  "name": "토마스 숀",
-  "nameEn": "Thomas Sean",
+  "name": "Martinez Kevin",
+  "nameEn": "Martinez Kevin",
   "role": "player",
-  "age": 26,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 80,
-  "popularity": 42,
+  "notes": "국적:도미니카",
+  "diligence": 46,
+  "popularity": 45,
   "militaryStatus": "군필",
   "entryYear": 2041,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 26,
+  "entryAge": 21,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 36,
+      "jerseyNumber": 80,
       "primaryPosition": "SP",
-      "developmentRate": 57,
-      "potentialHidden": 85,
-      "proServiceYears": 4,
+      "developmentRate": 56,
+      "potentialHidden": 83,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 78,
-        "stamina": 81,
-        "velocity": 82,
-        "command": 72,
-        "control": 73,
-        "movement": 75,
-        "mentality": 76,
-        "recovery": 78,
-        "clutch": 78,
-        "holdRunners": 73
+        "ovr": 51,
+        "stamina": 46,
+        "velocity": 52,
+        "command": 48,
+        "control": 56,
+        "movement": 52,
+        "mentality": 54,
+        "recovery": 52,
+        "clutch": 45,
+        "holdRunners": 40
       },
       "batting": {
-        "ovr": 81,
-        "contact": 85,
-        "power": 82,
-        "eye": 82,
-        "discipline": 75,
-        "speed": 78,
-        "baseInstinct": 80,
-        "bunting": 70,
+        "ovr": 51,
+        "contact": 46,
+        "power": 53,
+        "eye": 52,
+        "discipline": 42,
+        "speed": 51,
+        "baseInstinct": 41,
+        "bunting": 38,
         "platoon": 50,
-        "fielding": 84,
-        "arm": 71,
-        "battingClutch": 80
+        "fielding": 49,
+        "arm": 42,
+        "battingClutch": 42
       },
       "positionRatings": {
-        "SP": 81
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "SP": 51
+      }
     },
     "coach": null,
     "manager": null,

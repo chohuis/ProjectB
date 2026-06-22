@@ -1,14 +1,14 @@
 {
   "id": "PLY_00636",
   "name": "민준우",
-  "nameEn": "Min Junu",
+  "nameEn": "Noh Jun-woo",
   "role": "player",
   "age": 29,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_SOARINGEAGLES",
-  "teamId": "TEAM_KBL_SOARINGEAGLES_2",
+  "clubId": "CLUB_KBL_DOOSAN",
+  "teamId": "TEAM_KBL_DOOSAN_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,48 +19,28 @@
       "position": "SS",
       "jerseyNumber": 46,
       "pitching": {
-        "ovr": 49,
-        "stamina": 46,
-        "velocity": 44,
-        "command": 49,
-        "control": 48,
-        "movement": 46,
+        "ovr": 53,
+        "stamina": 51,
+        "velocity": 47,
+        "command": 52,
+        "control": 47,
+        "movement": 45,
         "mentality": 49,
-        "recovery": 51,
-        "clutch": 49,
-        "holdRunners": 46
+        "recovery": 46
       },
       "batting": {
-        "ovr": 69,
-        "contact": 65,
+        "ovr": 66,
+        "contact": 73,
         "power": 65,
-        "eye": 70,
-        "discipline": 64,
-        "speed": 67,
-        "fielding": 69,
-        "arm": 65,
-        "battingClutch": 63,
-        "baseInstinct": 59,
-        "bunting": 66,
-        "platoon": 56
+        "eye": 67,
+        "discipline": 69,
+        "speed": 71,
+        "fielding": 70,
+        "arm": 68,
+        "battingClutch": 73
       },
       "developmentRate": 57,
-      "potentialHidden": 58,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 69
-      },
-      "proServiceYears": 7,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 58
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

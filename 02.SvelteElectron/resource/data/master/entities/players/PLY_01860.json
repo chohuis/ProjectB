@@ -1,61 +1,46 @@
 {
   "id": "PLY_01860",
-  "name": "임재현",
-  "nameEn": "Im Jaehyeon",
+  "name": "스즈키 스스무",
+  "nameEn": "Suzuki Susumu",
   "role": "player",
-  "age": 18,
+  "age": 27,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_SUNCHEON_BAY",
-  "teamId": "TEAM_HS_SUNCHEON_BAY",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_SUNCHEON_BAY",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_POLARBEARS",
+  "teamId": "TEAM_JBL_PL_POLARBEARS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "UT",
-      "jerseyNumber": 29,
+      "position": "SP",
+      "jerseyNumber": 5,
       "pitching": {
-        "ovr": 37,
-        "stamina": 38,
-        "velocity": 35,
-        "command": 41,
-        "control": 42,
-        "movement": 41,
-        "mentality": 40,
-        "recovery": 33,
-        "clutch": 41,
-        "holdRunners": 32
+        "ovr": 79,
+        "stamina": 85,
+        "velocity": 84,
+        "command": 82,
+        "control": 77,
+        "movement": 84,
+        "mentality": 80,
+        "recovery": 77
       },
       "batting": {
-        "ovr": 57,
-        "contact": 61,
-        "power": 59,
-        "eye": 59,
-        "discipline": 53,
-        "speed": 63,
-        "fielding": 58,
-        "arm": 58,
-        "battingClutch": 53,
-        "baseInstinct": 51,
-        "bunting": 52,
-        "platoon": 52
+        "ovr": 58,
+        "contact": 57,
+        "power": 61,
+        "eye": 61,
+        "discipline": 62,
+        "speed": 54,
+        "fielding": 53,
+        "arm": 56,
+        "battingClutch": 61
       },
-      "developmentRate": 73,
-      "potentialHidden": 75,
-      "primaryPosition": "UT",
-      "positionRatings": {
-        "UT": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 39,
+      "potentialHidden": 62
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 61,
-  "popularity": 36
+  }
 }

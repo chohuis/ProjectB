@@ -1,9 +1,9 @@
 {
   "id": "PLY_00020",
   "name": "오준혁",
-  "nameEn": "Oh Junhyeok",
+  "nameEn": "Na Chan-young",
   "role": "player",
-  "age": 19,
+  "age": 15,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "DH",
       "jerseyNumber": 20,
       "pitching": {
-        "ovr": 41,
-        "stamina": 46,
-        "velocity": 41,
-        "command": 43,
-        "control": 37,
-        "movement": 41,
-        "mentality": 43,
-        "recovery": 40,
-        "clutch": 41,
-        "holdRunners": 40
+        "ovr": 58,
+        "stamina": 74,
+        "velocity": 74,
+        "command": 69,
+        "control": 71,
+        "movement": 70,
+        "mentality": 64,
+        "recovery": 67
       },
       "batting": {
-        "ovr": 61,
-        "contact": 63,
-        "power": 58,
-        "eye": 58,
-        "discipline": 61,
-        "speed": 66,
-        "fielding": 60,
-        "arm": 60,
-        "battingClutch": 59,
-        "baseInstinct": 58,
-        "bunting": 51,
-        "platoon": 49
+        "ovr": 73,
+        "contact": 66,
+        "power": 59,
+        "eye": 56,
+        "discipline": 54,
+        "speed": 65,
+        "fielding": 78,
+        "arm": 62,
+        "battingClutch": 59
       },
       "developmentRate": 51,
-      "potentialHidden": 83,
-      "primaryPosition": "DH",
-      "positionRatings": {
-        "DH": 61
-      }
+      "potentialHidden": 83
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

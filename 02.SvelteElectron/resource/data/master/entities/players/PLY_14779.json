@@ -1,6 +1,6 @@
 {
   "id": "PLY_14779",
-  "name": "홀 케빈",
+  "name": "Hall Kevin",
   "nameEn": "Hall Kevin",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 53,
   "popularity": 12,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 61
       },
       "batting": {
-        "ovr": 69,
-        "contact": 61,
-        "power": 60,
-        "eye": 72,
-        "discipline": 72,
-        "speed": 71,
-        "baseInstinct": 62,
-        "bunting": 63,
-        "platoon": 48,
-        "fielding": 61,
-        "arm": 66,
-        "battingClutch": 57
+        "ovr": 72,
+        "contact": 64,
+        "power": 63,
+        "eye": 75,
+        "discipline": 75,
+        "speed": 74,
+        "baseInstinct": 65,
+        "bunting": 66,
+        "platoon": 50,
+        "fielding": 64,
+        "arm": 69,
+        "battingClutch": 59
       },
       "positionRatings": {
         "C": 72

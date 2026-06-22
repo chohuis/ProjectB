@@ -1,6 +1,6 @@
 {
   "id": "PLY_14869",
-  "name": "리 조던",
+  "name": "Lee Jordan",
   "nameEn": "Lee Jordan",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 55,
   "popularity": 20,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 67
       },
       "batting": {
-        "ovr": 72,
-        "contact": 71,
-        "power": 74,
-        "eye": 67,
-        "discipline": 75,
-        "speed": 68,
-        "baseInstinct": 64,
-        "bunting": 65,
-        "platoon": 49,
-        "fielding": 66,
-        "arm": 75,
-        "battingClutch": 72
+        "ovr": 73,
+        "contact": 72,
+        "power": 75,
+        "eye": 68,
+        "discipline": 76,
+        "speed": 69,
+        "baseInstinct": 65,
+        "bunting": 66,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 76,
+        "battingClutch": 73
       },
       "positionRatings": {
         "1B": 73

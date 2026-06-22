@@ -1,6 +1,6 @@
 {
   "id": "PLY_15152",
-  "name": "카터 케빈",
+  "name": "Carter Kevin",
   "nameEn": "Carter Kevin",
   "role": "player",
   "age": 33,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 60,
   "popularity": 14,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 48,
       "proServiceYears": 11,
       "pitching": {
-        "ovr": 67,
-        "stamina": 68,
-        "velocity": 72,
-        "command": 60,
-        "control": 63,
-        "movement": 56,
-        "mentality": 58,
-        "recovery": 65,
-        "clutch": 66,
-        "holdRunners": 56
+        "ovr": 54,
+        "stamina": 55,
+        "velocity": 58,
+        "command": 48,
+        "control": 51,
+        "movement": 45,
+        "mentality": 47,
+        "recovery": 52,
+        "clutch": 53,
+        "holdRunners": 45
       },
       "batting": {
         "ovr": 54,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 54
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

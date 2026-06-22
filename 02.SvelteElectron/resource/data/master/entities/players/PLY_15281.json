@@ -1,6 +1,6 @@
 {
   "id": "PLY_15281",
-  "name": "홀 에반",
+  "name": "Hall Evan",
   "nameEn": "Hall Evan",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 47,
   "popularity": 42,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 57
       },
       "batting": {
-        "ovr": 61,
-        "contact": 63,
-        "power": 58,
-        "eye": 55,
-        "discipline": 65,
-        "speed": 58,
-        "baseInstinct": 53,
-        "bunting": 53,
-        "platoon": 47,
-        "fielding": 55,
-        "arm": 62,
-        "battingClutch": 61
+        "ovr": 65,
+        "contact": 67,
+        "power": 62,
+        "eye": 59,
+        "discipline": 69,
+        "speed": 62,
+        "baseInstinct": 56,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 59,
+        "arm": 66,
+        "battingClutch": 65
       },
       "positionRatings": {
         "2B": 65

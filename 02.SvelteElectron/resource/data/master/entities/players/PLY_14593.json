@@ -1,6 +1,6 @@
 {
   "id": "PLY_14593",
-  "name": "윌리엄스 라이언",
+  "name": "Williams Ryan",
   "nameEn": "Williams Ryan",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 84,
   "popularity": 29,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 78,
       "proServiceYears": 3,
       "pitching": {
-        "ovr": 62,
-        "stamina": 56,
-        "velocity": 71,
-        "command": 64,
-        "control": 59,
-        "movement": 64,
-        "mentality": 68,
-        "recovery": 53,
-        "clutch": 61,
-        "holdRunners": 54
+        "ovr": 66,
+        "stamina": 60,
+        "velocity": 76,
+        "command": 68,
+        "control": 63,
+        "movement": 68,
+        "mentality": 72,
+        "recovery": 56,
+        "clutch": 65,
+        "holdRunners": 58
       },
       "batting": {
         "ovr": 66,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

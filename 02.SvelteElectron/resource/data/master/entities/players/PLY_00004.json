@@ -1,9 +1,9 @@
 {
   "id": "PLY_00004",
   "name": "한성우",
-  "nameEn": "Han Seongu",
+  "nameEn": "Kwon Do-hyun",
   "role": "player",
-  "age": 18,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,47 +19,28 @@
       "position": "SP",
       "jerseyNumber": 4,
       "pitching": {
-        "ovr": 57,
-        "stamina": 61,
-        "velocity": 61,
-        "command": 62,
-        "control": 59,
-        "movement": 55,
-        "mentality": 54,
-        "recovery": 53,
-        "clutch": 54,
-        "holdRunners": 54
+        "ovr": 63,
+        "stamina": 67,
+        "velocity": 62,
+        "command": 52,
+        "control": 55,
+        "movement": 59,
+        "mentality": 71,
+        "recovery": 66
       },
       "batting": {
-        "ovr": 39,
-        "contact": 36,
-        "power": 45,
-        "eye": 45,
-        "discipline": 40,
-        "speed": 38,
-        "fielding": 38,
-        "arm": 41,
-        "battingClutch": 38,
-        "baseInstinct": 38,
-        "bunting": 35,
-        "platoon": 35
+        "ovr": 48,
+        "contact": 60,
+        "power": 57,
+        "eye": 65,
+        "discipline": 56,
+        "speed": 71,
+        "fielding": 56,
+        "arm": 67,
+        "battingClutch": 64
       },
       "developmentRate": 53,
-      "potentialHidden": 73,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 73
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

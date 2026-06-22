@@ -1,6 +1,6 @@
 {
   "id": "PLY_16015",
-  "name": "애덤스 코너",
+  "name": "Adams Connor",
   "nameEn": "Adams Connor",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 50,
   "popularity": 29,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 52
       },
       "batting": {
-        "ovr": 57,
-        "contact": 48,
-        "power": 56,
-        "eye": 50,
-        "discipline": 53,
-        "speed": 58,
-        "baseInstinct": 53,
-        "bunting": 44,
-        "platoon": 49,
-        "fielding": 49,
-        "arm": 46,
-        "battingClutch": 50
+        "ovr": 58,
+        "contact": 49,
+        "power": 57,
+        "eye": 51,
+        "discipline": 54,
+        "speed": 59,
+        "baseInstinct": 54,
+        "bunting": 45,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 47,
+        "battingClutch": 51
       },
       "positionRatings": {
         "SS": 58

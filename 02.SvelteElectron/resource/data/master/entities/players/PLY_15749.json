@@ -1,6 +1,6 @@
 {
   "id": "PLY_15749",
-  "name": "무어 숀",
+  "name": "Moore Sean",
   "nameEn": "Moore Sean",
   "role": "player",
   "age": 31,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 50,
   "popularity": 34,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 57
       },
       "batting": {
-        "ovr": 73,
-        "contact": 73,
-        "power": 68,
-        "eye": 74,
-        "discipline": 69,
-        "speed": 78,
-        "baseInstinct": 66,
-        "bunting": 63,
-        "platoon": 54,
-        "fielding": 75,
-        "arm": 71,
-        "battingClutch": 63
+        "ovr": 67,
+        "contact": 67,
+        "power": 62,
+        "eye": 68,
+        "discipline": 63,
+        "speed": 72,
+        "baseInstinct": 61,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 65,
+        "battingClutch": 58
       },
       "positionRatings": {
         "C": 67

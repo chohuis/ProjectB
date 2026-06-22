@@ -1,6 +1,6 @@
 {
   "id": "PLY_16460",
-  "name": "킹 에반",
+  "name": "King Evan",
   "nameEn": "King Evan",
   "role": "player",
   "age": 30,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 46,
   "popularity": 13,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 61
       },
       "batting": {
-        "ovr": 72,
-        "contact": 63,
-        "power": 62,
-        "eye": 72,
-        "discipline": 65,
-        "speed": 73,
-        "baseInstinct": 71,
-        "bunting": 62,
-        "platoon": 55,
-        "fielding": 61,
-        "arm": 74,
-        "battingClutch": 64
+        "ovr": 66,
+        "contact": 58,
+        "power": 57,
+        "eye": 66,
+        "discipline": 60,
+        "speed": 67,
+        "baseInstinct": 65,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 68,
+        "battingClutch": 59
       },
       "positionRatings": {
         "LF": 66

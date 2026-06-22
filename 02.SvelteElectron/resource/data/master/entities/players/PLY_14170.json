@@ -1,6 +1,6 @@
 {
   "id": "PLY_14170",
-  "name": "라이트 조던",
+  "name": "Wright Jordan",
   "nameEn": "Wright Jordan",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 70,
   "popularity": 20,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 83,
       "proServiceYears": 5,
       "pitching": {
-        "ovr": 61,
-        "stamina": 63,
-        "velocity": 71,
-        "command": 53,
-        "control": 60,
-        "movement": 63,
-        "mentality": 65,
-        "recovery": 56,
-        "clutch": 59,
-        "holdRunners": 47
+        "ovr": 65,
+        "stamina": 67,
+        "velocity": 76,
+        "command": 56,
+        "control": 64,
+        "movement": 67,
+        "mentality": 69,
+        "recovery": 60,
+        "clutch": 63,
+        "holdRunners": 50
       },
       "batting": {
         "ovr": 65,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

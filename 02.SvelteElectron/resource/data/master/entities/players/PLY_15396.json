@@ -1,6 +1,6 @@
 {
   "id": "PLY_15396",
-  "name": "잭슨 브랜던",
+  "name": "Jackson Brandon",
   "nameEn": "Jackson Brandon",
   "role": "player",
   "age": 32,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 65,
   "popularity": 15,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 69,
       "proServiceYears": 10,
       "pitching": {
-        "ovr": 63,
-        "stamina": 56,
-        "velocity": 67,
-        "command": 67,
-        "control": 57,
-        "movement": 56,
-        "mentality": 67,
-        "recovery": 51,
-        "clutch": 58,
-        "holdRunners": 48
+        "ovr": 51,
+        "stamina": 45,
+        "velocity": 54,
+        "command": 54,
+        "control": 46,
+        "movement": 45,
+        "mentality": 54,
+        "recovery": 41,
+        "clutch": 47,
+        "holdRunners": 39
       },
       "batting": {
         "ovr": 51,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 51
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

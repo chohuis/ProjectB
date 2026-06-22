@@ -1,6 +1,6 @@
 {
   "id": "PLY_14199",
-  "name": "앨런 카를로스",
+  "name": "Allen Carlos",
   "nameEn": "Allen Carlos",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 58,
   "popularity": 39,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 73
       },
       "batting": {
-        "ovr": 83,
-        "contact": 87,
-        "power": 73,
-        "eye": 78,
-        "discipline": 86,
-        "speed": 78,
-        "baseInstinct": 81,
-        "bunting": 75,
-        "platoon": 54,
-        "fielding": 78,
-        "arm": 79,
-        "battingClutch": 78
+        "ovr": 77,
+        "contact": 81,
+        "power": 68,
+        "eye": 72,
+        "discipline": 80,
+        "speed": 72,
+        "baseInstinct": 75,
+        "bunting": 70,
+        "platoon": 50,
+        "fielding": 72,
+        "arm": 73,
+        "battingClutch": 72
       },
       "positionRatings": {
         "SS": 77

@@ -1,61 +1,46 @@
 {
   "id": "PLY_01765",
-  "name": "김동준",
-  "nameEn": "Kim Dongjun",
+  "name": "후지이 야마토",
+  "nameEn": "Fujii Yamato",
   "role": "player",
-  "age": 18,
+  "age": 25,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_MASAN_HARBOR",
-  "teamId": "TEAM_HS_MASAN_HARBOR",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_MASAN_HARBOR",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_SILVERWOLVES",
+  "teamId": "TEAM_JBL_CL_SILVERWOLVES_2",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "CF",
-      "jerseyNumber": 24,
+      "position": "DH",
+      "jerseyNumber": 50,
       "pitching": {
-        "ovr": 47,
-        "stamina": 53,
-        "velocity": 52,
-        "command": 46,
-        "control": 51,
-        "movement": 44,
-        "mentality": 51,
-        "recovery": 45,
-        "clutch": 45,
-        "holdRunners": 42
+        "ovr": 40,
+        "stamina": 42,
+        "velocity": 40,
+        "command": 41,
+        "control": 40,
+        "movement": 40,
+        "mentality": 44,
+        "recovery": 42
       },
       "batting": {
-        "ovr": 67,
-        "contact": 72,
-        "power": 72,
-        "eye": 70,
-        "discipline": 66,
+        "ovr": 76,
+        "contact": 74,
+        "power": 78,
+        "eye": 72,
+        "discipline": 76,
         "speed": 67,
         "fielding": 64,
-        "arm": 65,
-        "battingClutch": 62,
-        "baseInstinct": 56,
-        "bunting": 50,
-        "platoon": 63
+        "arm": 74,
+        "battingClutch": 74
       },
-      "developmentRate": 82,
-      "potentialHidden": 64,
-      "primaryPosition": "CF",
-      "positionRatings": {
-        "CF": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 40,
+      "potentialHidden": 74
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 72,
-  "popularity": 36
+  }
 }

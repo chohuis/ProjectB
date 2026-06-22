@@ -1,6 +1,6 @@
 {
   "id": "PLY_14447",
-  "name": "로빈슨 숀",
+  "name": "Robinson Sean",
   "nameEn": "Robinson Sean",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 51,
   "popularity": 46,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 81,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 60,
-        "stamina": 57,
-        "velocity": 69,
-        "command": 58,
-        "control": 54,
-        "movement": 60,
-        "mentality": 63,
-        "recovery": 51,
-        "clutch": 49,
-        "holdRunners": 57
+        "ovr": 62,
+        "stamina": 59,
+        "velocity": 71,
+        "command": 60,
+        "control": 56,
+        "movement": 62,
+        "mentality": 65,
+        "recovery": 53,
+        "clutch": 51,
+        "holdRunners": 59
       },
       "batting": {
         "ovr": 62,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

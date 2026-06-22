@@ -1,7 +1,7 @@
 {
   "id": "PLY_00358",
   "name": "유준호",
-  "nameEn": "Yoo Junho",
+  "nameEn": "Sim Seung-woo",
   "role": "player",
   "age": 24,
   "status": "active",
@@ -19,48 +19,28 @@
       "position": "CF",
       "jerseyNumber": 18,
       "pitching": {
-        "ovr": 38,
-        "stamina": 40,
-        "velocity": 39,
-        "command": 35,
-        "control": 38,
-        "movement": 39,
-        "mentality": 41,
-        "recovery": 35,
-        "clutch": 40,
-        "holdRunners": 37
+        "ovr": 34,
+        "stamina": 25,
+        "velocity": 35,
+        "command": 32,
+        "control": 31,
+        "movement": 31,
+        "mentality": 34,
+        "recovery": 26
       },
       "batting": {
-        "ovr": 58,
-        "contact": 54,
-        "power": 57,
-        "eye": 54,
-        "discipline": 62,
-        "speed": 61,
-        "fielding": 61,
-        "arm": 61,
-        "battingClutch": 48,
-        "baseInstinct": 50,
-        "bunting": 52,
-        "platoon": 51
+        "ovr": 59,
+        "contact": 59,
+        "power": 58,
+        "eye": 57,
+        "discipline": 56,
+        "speed": 64,
+        "fielding": 59,
+        "arm": 53,
+        "battingClutch": 59
       },
       "developmentRate": 57,
-      "potentialHidden": 86,
-      "primaryPosition": "CF",
-      "positionRatings": {
-        "CF": 58
-      },
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 86
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

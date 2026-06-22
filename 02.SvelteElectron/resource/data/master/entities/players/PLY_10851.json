@@ -1,9 +1,9 @@
 {
   "id": "PLY_10851",
-  "name": "리 코디",
-  "nameEn": "Lee Cody",
+  "name": "Mitchell Hunter",
+  "nameEn": "Mitchell Hunter",
   "role": "player",
-  "age": 20,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 73,
-  "popularity": 11,
+  "notes": "국적:미국",
+  "diligence": 53,
+  "popularity": 29,
   "militaryStatus": "군필",
   "entryYear": 2032,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 20,
+  "entryAge": 28,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 36,
-      "primaryPosition": "SP",
-      "developmentRate": 80,
-      "potentialHidden": 88,
-      "proServiceYears": 0,
+      "position": "LF",
+      "jerseyNumber": 55,
+      "primaryPosition": "LF",
+      "developmentRate": 57,
+      "potentialHidden": 61,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 59,
-        "stamina": 64,
-        "velocity": 57,
-        "command": 60,
-        "control": 60,
-        "movement": 63,
-        "mentality": 58,
-        "recovery": 59,
-        "clutch": 55,
-        "holdRunners": 56
+        "ovr": 80,
+        "stamina": 79,
+        "velocity": 82,
+        "command": 70,
+        "control": 83,
+        "movement": 74,
+        "mentality": 86,
+        "recovery": 79,
+        "clutch": 68,
+        "holdRunners": 77
       },
       "batting": {
-        "ovr": 64,
-        "contact": 62,
-        "power": 56,
-        "eye": 64,
-        "discipline": 54,
-        "speed": 60,
-        "baseInstinct": 60,
-        "bunting": 58,
+        "ovr": 80,
+        "contact": 84,
+        "power": 78,
+        "eye": 81,
+        "discipline": 83,
+        "speed": 83,
+        "baseInstinct": 78,
+        "bunting": 67,
         "platoon": 50,
-        "fielding": 61,
-        "arm": 61,
-        "battingClutch": 56
+        "fielding": 82,
+        "arm": 79,
+        "battingClutch": 68
       },
       "positionRatings": {
-        "SP": 64
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 1
-        }
-      ]
+        "LF": 80
+      }
     },
     "coach": null,
     "manager": null,

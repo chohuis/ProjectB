@@ -1,7 +1,7 @@
 {
   "id": "PLY_00308",
   "name": "장상민",
-  "nameEn": "Jang Sangmin",
+  "nameEn": "Min Jae-min",
   "role": "player",
   "age": 24,
   "status": "active",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 8,
       "pitching": {
-        "ovr": 62,
-        "stamina": 66,
-        "velocity": 60,
-        "command": 66,
-        "control": 67,
-        "movement": 63,
-        "mentality": 66,
-        "recovery": 62,
-        "clutch": 60,
-        "holdRunners": 50
+        "ovr": 72,
+        "stamina": 62,
+        "velocity": 78,
+        "command": 72,
+        "control": 74,
+        "movement": 70,
+        "mentality": 70,
+        "recovery": 71
       },
       "batting": {
-        "ovr": 44,
-        "contact": 48,
-        "power": 49,
-        "eye": 46,
-        "discipline": 44,
-        "speed": 38,
-        "fielding": 43,
-        "arm": 49,
-        "battingClutch": 35,
-        "baseInstinct": 35,
-        "bunting": 29,
-        "platoon": 42
+        "ovr": 53,
+        "contact": 55,
+        "power": 54,
+        "eye": 53,
+        "discipline": 49,
+        "speed": 53,
+        "fielding": 53,
+        "arm": 55,
+        "battingClutch": 56
       },
       "developmentRate": 53,
-      "potentialHidden": 56,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 62
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 1600,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 56
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

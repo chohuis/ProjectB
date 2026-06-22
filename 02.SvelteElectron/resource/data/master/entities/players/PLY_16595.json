@@ -1,6 +1,6 @@
 {
   "id": "PLY_16595",
-  "name": "로빈슨 라이언",
+  "name": "Robinson Ryan",
   "nameEn": "Robinson Ryan",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 48,
   "popularity": 31,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 68
       },
       "batting": {
-        "ovr": 72,
-        "contact": 71,
-        "power": 73,
-        "eye": 68,
-        "discipline": 62,
-        "speed": 72,
-        "baseInstinct": 68,
-        "bunting": 56,
-        "platoon": 49,
-        "fielding": 69,
-        "arm": 66,
-        "battingClutch": 62
+        "ovr": 73,
+        "contact": 72,
+        "power": 74,
+        "eye": 69,
+        "discipline": 63,
+        "speed": 73,
+        "baseInstinct": 69,
+        "bunting": 57,
+        "platoon": 50,
+        "fielding": 70,
+        "arm": 67,
+        "battingClutch": 63
       },
       "positionRatings": {
         "CF": 73

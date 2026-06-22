@@ -1,6 +1,6 @@
 {
   "id": "PLY_16121",
-  "name": "마틴 조던",
+  "name": "Martin Jordan",
   "nameEn": "Martin Jordan",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 72,
   "popularity": 27,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 63
       },
       "batting": {
-        "ovr": 72,
-        "contact": 63,
-        "power": 65,
-        "eye": 65,
-        "discipline": 75,
-        "speed": 71,
-        "baseInstinct": 64,
-        "bunting": 56,
-        "platoon": 48,
-        "fielding": 66,
-        "arm": 66,
-        "battingClutch": 66
+        "ovr": 75,
+        "contact": 66,
+        "power": 68,
+        "eye": 68,
+        "discipline": 78,
+        "speed": 74,
+        "baseInstinct": 67,
+        "bunting": 58,
+        "platoon": 50,
+        "fielding": 69,
+        "arm": 69,
+        "battingClutch": 69
       },
       "positionRatings": {
         "1B": 75

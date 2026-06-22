@@ -1,7 +1,7 @@
 {
   "id": "PLY_10843",
-  "name": "에르난데스 타일러",
-  "nameEn": "Hernandez Tyler",
+  "name": "Thompson Carlos",
+  "nameEn": "Thompson Carlos",
   "role": "player",
   "age": 24,
   "status": "active",
@@ -11,9 +11,9 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 85,
-  "popularity": 47,
+  "notes": "국적:파나마",
+  "diligence": 80,
+  "popularity": 12,
   "militaryStatus": "군필",
   "entryYear": 2032,
   "entryLeague": "LEAGUE_ABL",
@@ -21,57 +21,43 @@
   "entryAge": 24,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 94,
-      "primaryPosition": "SP",
+      "position": "3B",
+      "jerseyNumber": 70,
+      "primaryPosition": "3B",
       "developmentRate": 63,
-      "potentialHidden": 61,
+      "potentialHidden": 87,
       "proServiceYears": 2,
       "pitching": {
-        "ovr": 67,
-        "stamina": 64,
-        "velocity": 73,
-        "command": 68,
-        "control": 60,
-        "movement": 62,
-        "mentality": 70,
-        "recovery": 58,
-        "clutch": 61,
-        "holdRunners": 62
+        "ovr": 81,
+        "stamina": 74,
+        "velocity": 84,
+        "command": 80,
+        "control": 76,
+        "movement": 80,
+        "mentality": 81,
+        "recovery": 81,
+        "clutch": 71,
+        "holdRunners": 70
       },
       "batting": {
-        "ovr": 73,
-        "contact": 68,
+        "ovr": 81,
+        "contact": 84,
         "power": 72,
-        "eye": 71,
-        "discipline": 75,
-        "speed": 69,
-        "baseInstinct": 66,
-        "bunting": 66,
+        "eye": 73,
+        "discipline": 71,
+        "speed": 81,
+        "baseInstinct": 75,
+        "bunting": 64,
         "platoon": 50,
-        "fielding": 65,
-        "arm": 63,
-        "battingClutch": 61
+        "fielding": 78,
+        "arm": 76,
+        "battingClutch": 70
       },
       "positionRatings": {
-        "SP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "3B": 81
+      }
     },
     "coach": null,
     "manager": null,

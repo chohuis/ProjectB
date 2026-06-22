@@ -1,14 +1,14 @@
 {
   "id": "PLY_01055",
   "name": "미첼 루이스",
-  "nameEn": "Mi 첼 루이스",
+  "nameEn": "Mitchell Luis",
   "role": "player",
   "age": 23,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_PEACHTREEFALCONS",
-  "teamId": "TEAM_ABL_PEACHTREEFALCONS_1",
+  "clubId": "CLUB_ABL_HOU",
+  "teamId": "TEAM_ABL_HOU",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:베네수엘라",
@@ -19,62 +19,28 @@
       "position": "RP",
       "jerseyNumber": 10,
       "pitching": {
-        "ovr": 73,
-        "stamina": 75,
-        "velocity": 74,
-        "command": 70,
-        "control": 77,
-        "movement": 74,
-        "mentality": 72,
-        "recovery": 72,
-        "clutch": 69,
-        "holdRunners": 63
+        "ovr": 77,
+        "stamina": 71,
+        "velocity": 84,
+        "command": 80,
+        "control": 81,
+        "movement": 78,
+        "mentality": 81,
+        "recovery": 76
       },
       "batting": {
-        "ovr": 55,
-        "contact": 52,
-        "power": 49,
-        "eye": 56,
-        "discipline": 50,
-        "speed": 62,
-        "fielding": 53,
-        "arm": 60,
-        "battingClutch": 56,
-        "baseInstinct": 52,
-        "bunting": 51,
-        "platoon": 46
+        "ovr": 45,
+        "contact": 43,
+        "power": 50,
+        "eye": 50,
+        "discipline": 44,
+        "speed": 47,
+        "fielding": 46,
+        "arm": 49,
+        "battingClutch": 43
       },
       "developmentRate": 46,
-      "potentialHidden": 75,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 1,
-      "contract": {
-        "salary": 24000,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 75
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

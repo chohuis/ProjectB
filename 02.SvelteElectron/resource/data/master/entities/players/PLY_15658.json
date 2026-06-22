@@ -1,6 +1,6 @@
 {
   "id": "PLY_15658",
-  "name": "톰슨 에릭",
+  "name": "Thompson Eric",
   "nameEn": "Thompson Eric",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 70,
   "popularity": 47,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 52
       },
       "batting": {
-        "ovr": 84,
-        "contact": 80,
-        "power": 80,
-        "eye": 85,
-        "discipline": 75,
-        "speed": 89,
-        "baseInstinct": 76,
-        "bunting": 71,
-        "platoon": 64,
-        "fielding": 80,
-        "arm": 81,
-        "battingClutch": 81
+        "ovr": 66,
+        "contact": 63,
+        "power": 63,
+        "eye": 67,
+        "discipline": 59,
+        "speed": 70,
+        "baseInstinct": 60,
+        "bunting": 56,
+        "platoon": 50,
+        "fielding": 63,
+        "arm": 64,
+        "battingClutch": 64
       },
       "positionRatings": {
         "SS": 66

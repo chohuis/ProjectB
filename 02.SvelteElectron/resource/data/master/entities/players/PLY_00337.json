@@ -1,7 +1,7 @@
 {
   "id": "PLY_00337",
   "name": "손동준",
-  "nameEn": "Son Dongjun",
+  "nameEn": "Jung Jae-min",
   "role": "player",
   "age": 24,
   "status": "active",
@@ -19,48 +19,28 @@
       "position": "LF",
       "jerseyNumber": 17,
       "pitching": {
-        "ovr": 47,
-        "stamina": 52,
-        "velocity": 42,
-        "command": 43,
-        "control": 47,
-        "movement": 44,
-        "mentality": 50,
-        "recovery": 49,
-        "clutch": 41,
-        "holdRunners": 37
+        "ovr": 42,
+        "stamina": 46,
+        "velocity": 46,
+        "command": 42,
+        "control": 45,
+        "movement": 42,
+        "mentality": 40,
+        "recovery": 46
       },
       "batting": {
-        "ovr": 67,
-        "contact": 73,
-        "power": 62,
-        "eye": 73,
-        "discipline": 68,
-        "speed": 69,
-        "fielding": 68,
-        "arm": 72,
-        "battingClutch": 65,
-        "baseInstinct": 63,
-        "bunting": 57,
-        "platoon": 65
+        "ovr": 70,
+        "contact": 71,
+        "power": 70,
+        "eye": 70,
+        "discipline": 75,
+        "speed": 68,
+        "fielding": 69,
+        "arm": 71,
+        "battingClutch": 72
       },
       "developmentRate": 46,
-      "potentialHidden": 85,
-      "primaryPosition": "LF",
-      "positionRatings": {
-        "LF": 67
-      },
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 600,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 85
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

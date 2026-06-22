@@ -1,76 +1,46 @@
 {
   "id": "PLY_01883",
-  "name": "황성민",
-  "nameEn": "Hwang Seongmin",
+  "name": "시미즈 렌",
+  "nameEn": "Shimizu Ren",
   "role": "player",
-  "age": 35,
+  "age": 32,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_BEARGUARDIANS",
-  "teamId": "TEAM_KBL_BEARGUARDIANS_1",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_POLARBEARS",
+  "teamId": "TEAM_JBL_PL_POLARBEARS_2",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
-      "position": "CP",
-      "jerseyNumber": 3,
+      "handedness": "L",
+      "position": "SP",
+      "jerseyNumber": 33,
       "pitching": {
-        "ovr": 59,
-        "stamina": 57,
-        "velocity": 65,
-        "command": 55,
-        "control": 59,
-        "movement": 62,
-        "mentality": 59,
-        "recovery": 59,
-        "clutch": 59,
-        "holdRunners": 50
+        "ovr": 75,
+        "stamina": 70,
+        "velocity": 71,
+        "command": 76,
+        "control": 68,
+        "movement": 69,
+        "mentality": 68,
+        "recovery": 70
       },
       "batting": {
-        "ovr": 41,
-        "contact": 37,
-        "power": 44,
-        "eye": 41,
-        "discipline": 39,
-        "speed": 37,
-        "fielding": 39,
-        "arm": 41,
-        "battingClutch": 41,
-        "baseInstinct": 43,
-        "bunting": 29,
-        "platoon": 43
+        "ovr": 42,
+        "contact": 36,
+        "power": 41,
+        "eye": 35,
+        "discipline": 37,
+        "speed": 34,
+        "fielding": 34,
+        "arm": 38,
+        "battingClutch": 34
       },
-      "developmentRate": 63,
-      "potentialHidden": 76,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 13,
-      "contract": {
-        "salary": 3800,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 46,
+      "potentialHidden": 67
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 75,
-  "popularity": 11,
-  "militaryStatus": "군필"
+  }
 }

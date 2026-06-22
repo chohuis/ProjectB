@@ -1,14 +1,14 @@
 {
   "id": "PLY_01085",
   "name": "밀러 카를로스",
-  "nameEn": "Mil 러 카를로스",
+  "nameEn": "Miller Carlos",
   "role": "player",
   "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_PEACHTREEFALCONS",
-  "teamId": "TEAM_ABL_PEACHTREEFALCONS_2",
+  "clubId": "CLUB_ABL_HOU",
+  "teamId": "TEAM_ABL_HOU_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
@@ -20,47 +20,27 @@
       "jerseyNumber": 55,
       "pitching": {
         "ovr": 49,
-        "stamina": 49,
-        "velocity": 44,
-        "command": 46,
-        "control": 54,
-        "movement": 49,
-        "mentality": 54,
-        "recovery": 45,
-        "clutch": 43,
-        "holdRunners": 38
+        "stamina": 45,
+        "velocity": 50,
+        "command": 42,
+        "control": 47,
+        "movement": 43,
+        "mentality": 41,
+        "recovery": 48
       },
       "batting": {
-        "ovr": 69,
+        "ovr": 71,
         "contact": 71,
-        "power": 68,
-        "eye": 74,
-        "discipline": 69,
-        "speed": 64,
-        "fielding": 71,
-        "arm": 70,
-        "battingClutch": 60,
-        "baseInstinct": 65,
-        "bunting": 60,
-        "platoon": 59
+        "power": 71,
+        "eye": 70,
+        "discipline": 63,
+        "speed": 66,
+        "fielding": 69,
+        "arm": 72,
+        "battingClutch": 67
       },
       "developmentRate": 33,
-      "potentialHidden": 74,
-      "primaryPosition": "3B",
-      "positionRatings": {
-        "3B": 69
-      },
-      "proServiceYears": 6,
-      "contract": {
-        "salary": 6300,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 74
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

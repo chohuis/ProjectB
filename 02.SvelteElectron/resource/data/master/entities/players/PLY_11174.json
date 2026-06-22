@@ -1,9 +1,9 @@
 {
   "id": "PLY_11174",
-  "name": "앤더슨 카를로스",
-  "nameEn": "Anderson Carlos",
+  "name": "Johnson Kyle",
+  "nameEn": "Johnson Kyle",
   "role": "player",
-  "age": 20,
+  "age": 18,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 84,
-  "popularity": 16,
+  "notes": "국적:멕시코",
+  "diligence": 68,
+  "popularity": 44,
   "militaryStatus": "군필",
   "entryYear": 2034,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 20,
+  "entryAge": 18,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "L",
-      "position": "SP",
-      "jerseyNumber": 29,
-      "primaryPosition": "SP",
-      "developmentRate": 56,
-      "potentialHidden": 94,
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 77,
+      "primaryPosition": "2B",
+      "developmentRate": 59,
+      "potentialHidden": 61,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 53,
-        "stamina": 55,
-        "velocity": 58,
-        "command": 54,
-        "control": 50,
-        "movement": 54,
-        "mentality": 60,
-        "recovery": 44,
-        "clutch": 42,
-        "holdRunners": 51
+        "ovr": 68,
+        "stamina": 72,
+        "velocity": 67,
+        "command": 58,
+        "control": 72,
+        "movement": 62,
+        "mentality": 73,
+        "recovery": 58,
+        "clutch": 57,
+        "holdRunners": 58
       },
       "batting": {
-        "ovr": 56,
-        "contact": 52,
+        "ovr": 68,
+        "contact": 69,
         "power": 57,
-        "eye": 49,
-        "discipline": 49,
-        "speed": 54,
-        "baseInstinct": 55,
-        "bunting": 38,
+        "eye": 69,
+        "discipline": 67,
+        "speed": 62,
+        "baseInstinct": 61,
+        "bunting": 56,
         "platoon": 50,
-        "fielding": 56,
-        "arm": 55,
-        "battingClutch": 44
+        "fielding": 65,
+        "arm": 67,
+        "battingClutch": 60
       },
       "positionRatings": {
-        "SP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "2B": 68
+      }
     },
     "coach": null,
     "manager": null,

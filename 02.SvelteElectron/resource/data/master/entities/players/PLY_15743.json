@@ -1,6 +1,6 @@
 {
   "id": "PLY_15743",
-  "name": "톰슨 미겔",
+  "name": "Thompson Miguel",
   "nameEn": "Thompson Miguel",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 84,
   "popularity": 32,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 47
       },
       "batting": {
-        "ovr": 59,
-        "contact": 56,
-        "power": 52,
-        "eye": 61,
-        "discipline": 53,
-        "speed": 63,
-        "baseInstinct": 48,
-        "bunting": 40,
-        "platoon": 49,
-        "fielding": 49,
-        "arm": 51,
-        "battingClutch": 56
+        "ovr": 60,
+        "contact": 57,
+        "power": 53,
+        "eye": 62,
+        "discipline": 54,
+        "speed": 64,
+        "baseInstinct": 49,
+        "bunting": 41,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 52,
+        "battingClutch": 57
       },
       "positionRatings": {
         "CF": 60

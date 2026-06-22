@@ -1,6 +1,6 @@
 {
   "id": "PLY_16632",
-  "name": "넬슨 데릭",
+  "name": "Nelson Derek",
   "nameEn": "Nelson Derek",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 55,
   "popularity": 26,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 52
       },
       "batting": {
-        "ovr": 53,
-        "contact": 49,
-        "power": 46,
-        "eye": 45,
-        "discipline": 51,
-        "speed": 46,
-        "baseInstinct": 51,
-        "bunting": 41,
-        "platoon": 49,
-        "fielding": 46,
-        "arm": 55,
-        "battingClutch": 52
+        "ovr": 54,
+        "contact": 50,
+        "power": 47,
+        "eye": 46,
+        "discipline": 52,
+        "speed": 47,
+        "baseInstinct": 52,
+        "bunting": 42,
+        "platoon": 50,
+        "fielding": 47,
+        "arm": 56,
+        "battingClutch": 53
       },
       "positionRatings": {
         "RF": 54

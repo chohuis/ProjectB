@@ -1,9 +1,9 @@
 {
   "id": "PLY_00084",
   "name": "주민준",
-  "nameEn": "Joo Minjun",
+  "nameEn": "Oh Ji-sung",
   "role": "player",
-  "age": 18,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,51 +19,28 @@
       "position": "SP",
       "jerseyNumber": 4,
       "pitching": {
-        "ovr": 52,
-        "stamina": 54,
-        "velocity": 47,
-        "command": 56,
-        "control": 53,
-        "movement": 48,
-        "mentality": 49,
-        "recovery": 54,
-        "clutch": 42,
-        "holdRunners": 50
+        "ovr": 60,
+        "stamina": 57,
+        "velocity": 64,
+        "command": 53,
+        "control": 49,
+        "movement": 40,
+        "mentality": 58,
+        "recovery": 62
       },
       "batting": {
-        "ovr": 34,
-        "contact": 34,
-        "power": 31,
-        "eye": 31,
-        "discipline": 38,
-        "speed": 29,
-        "fielding": 36,
-        "arm": 34,
-        "battingClutch": 40,
-        "baseInstinct": 39,
-        "bunting": 33,
-        "platoon": 34
+        "ovr": 41,
+        "contact": 45,
+        "power": 40,
+        "eye": 50,
+        "discipline": 59,
+        "speed": 56,
+        "fielding": 62,
+        "arm": 56,
+        "battingClutch": 61
       },
       "developmentRate": 64,
-      "potentialHidden": 66,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 52
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      "potentialHidden": 66
     },
     "coach": {
       "specialty": "-",
@@ -103,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

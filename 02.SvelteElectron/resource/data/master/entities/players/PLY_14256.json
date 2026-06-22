@@ -1,6 +1,6 @@
 {
   "id": "PLY_14256",
-  "name": "화이트 헌터",
+  "name": "White Hunter",
   "nameEn": "White Hunter",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 56,
   "popularity": 50,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 62,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 50,
-        "stamina": 41,
-        "velocity": 55,
-        "command": 42,
-        "control": 49,
-        "movement": 45,
-        "mentality": 51,
-        "recovery": 47,
-        "clutch": 40,
-        "holdRunners": 47
+        "ovr": 51,
+        "stamina": 42,
+        "velocity": 56,
+        "command": 43,
+        "control": 50,
+        "movement": 46,
+        "mentality": 52,
+        "recovery": 48,
+        "clutch": 41,
+        "holdRunners": 48
       },
       "batting": {
         "ovr": 51,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 51
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

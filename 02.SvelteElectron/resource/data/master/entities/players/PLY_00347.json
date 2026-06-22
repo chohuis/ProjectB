@@ -1,7 +1,7 @@
 {
   "id": "PLY_00347",
   "name": "신동준",
-  "nameEn": "Shin Dongjun",
+  "nameEn": "Heo Tae-hyun",
   "role": "player",
   "age": 21,
   "status": "active",
@@ -19,62 +19,28 @@
       "position": "RP",
       "jerseyNumber": 7,
       "pitching": {
-        "ovr": 56,
-        "stamina": 55,
-        "velocity": 53,
-        "command": 61,
-        "control": 58,
-        "movement": 54,
-        "mentality": 61,
-        "recovery": 54,
-        "clutch": 49,
-        "holdRunners": 50
+        "ovr": 62,
+        "stamina": 56,
+        "velocity": 67,
+        "command": 58,
+        "control": 57,
+        "movement": 57,
+        "mentality": 56,
+        "recovery": 59
       },
       "batting": {
         "ovr": 38,
-        "contact": 43,
-        "power": 40,
-        "eye": 44,
-        "discipline": 41,
-        "speed": 36,
-        "fielding": 35,
-        "arm": 36,
-        "battingClutch": 42,
-        "baseInstinct": 42,
-        "bunting": 39,
-        "platoon": 39
+        "contact": 36,
+        "power": 33,
+        "eye": 30,
+        "discipline": 36,
+        "speed": 32,
+        "fielding": 31,
+        "arm": 30,
+        "battingClutch": 38
       },
       "developmentRate": 57,
-      "potentialHidden": 67,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 3
-        }
-      ],
-      "proServiceYears": 1,
-      "contract": {
-        "salary": 1100,
-        "durationYears": 2,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 67
     },
     "coach": {
       "specialty": "-",
@@ -114,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

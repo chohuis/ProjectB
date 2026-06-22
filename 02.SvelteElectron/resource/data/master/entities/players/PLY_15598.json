@@ -1,6 +1,6 @@
 {
   "id": "PLY_15598",
-  "name": "넬슨 네이선",
+  "name": "Nelson Nathan",
   "nameEn": "Nelson Nathan",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 58,
   "popularity": 14,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 81,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 55,
-        "stamina": 48,
-        "velocity": 62,
-        "command": 56,
-        "control": 57,
-        "movement": 55,
-        "mentality": 53,
-        "recovery": 46,
-        "clutch": 43,
-        "holdRunners": 50
+        "ovr": 56,
+        "stamina": 49,
+        "velocity": 63,
+        "command": 57,
+        "control": 58,
+        "movement": 56,
+        "mentality": 54,
+        "recovery": 47,
+        "clutch": 44,
+        "holdRunners": 51
       },
       "batting": {
         "ovr": 56,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

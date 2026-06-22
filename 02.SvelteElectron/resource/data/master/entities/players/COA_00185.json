@@ -1,17 +1,17 @@
 {
   "id": "COA_00185",
-  "name": "스즈키 히카루",
-  "nameEn": "Suzuki Hikaru",
+  "name": "기무라 요스케",
+  "nameEn": "Kimura Yosuke",
   "role": "coach",
-  "age": 43,
+  "age": 36,
   "status": "active",
   "originLeagueId": "LEAGUE_JBL",
   "leagueId": "LEAGUE_JBL",
-  "clubId": "CLUB_JBL_CL_NEONCRANES",
-  "teamId": "TEAM_JBL_CL_NEONCRANES_1",
+  "clubId": "CLUB_JBL_CL_TIDERAVES",
+  "teamId": "TEAM_JBL_CL_TIDERAVES_2",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "pitcher",
@@ -44,13 +44,13 @@
     },
     "coach": {
       "specialty": "타격",
-      "experienceYears": 18,
+      "experienceYears": 16,
       "stats": {
-        "teaching": 60,
-        "analysis": 69,
-        "communication": 81,
-        "discipline": 75,
-        "leadership": 67
+        "teaching": 81,
+        "analysis": 83,
+        "communication": 76,
+        "discipline": 70,
+        "leadership": 74
       },
       "trainingBuffs": "컨택 훈련 +2%"
     },

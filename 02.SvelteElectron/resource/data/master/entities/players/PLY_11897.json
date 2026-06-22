@@ -1,9 +1,9 @@
 {
   "id": "PLY_11897",
-  "name": "무어 딜런",
-  "nameEn": "Moore Dylan",
+  "name": "White Sean",
+  "nameEn": "White Sean",
   "role": "player",
-  "age": 18,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 81,
-  "popularity": 44,
+  "notes": "국적:일본",
+  "diligence": 61,
+  "popularity": 32,
   "militaryStatus": "군필",
   "entryYear": 2038,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 18,
+  "entryAge": 22,
   "details": {
     "player": {
-      "playerType": "pitcher",
-      "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 31,
-      "primaryPosition": "SP",
-      "developmentRate": 65,
-      "potentialHidden": 91,
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "C",
+      "jerseyNumber": 39,
+      "primaryPosition": "C",
+      "developmentRate": 67,
+      "potentialHidden": 61,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 55,
-        "stamina": 49,
+        "ovr": 51,
+        "stamina": 53,
         "velocity": 53,
-        "command": 46,
-        "control": 48,
-        "movement": 55,
-        "mentality": 56,
-        "recovery": 46,
-        "clutch": 48,
-        "holdRunners": 47
+        "command": 47,
+        "control": 55,
+        "movement": 42,
+        "mentality": 47,
+        "recovery": 47,
+        "clutch": 39,
+        "holdRunners": 41
       },
       "batting": {
-        "ovr": 59,
-        "contact": 51,
-        "power": 60,
-        "eye": 55,
-        "discipline": 54,
-        "speed": 64,
-        "baseInstinct": 51,
-        "bunting": 43,
+        "ovr": 51,
+        "contact": 55,
+        "power": 54,
+        "eye": 45,
+        "discipline": 49,
+        "speed": 55,
+        "baseInstinct": 41,
+        "bunting": 35,
         "platoon": 50,
-        "fielding": 59,
-        "arm": 59,
-        "battingClutch": 52
+        "fielding": 43,
+        "arm": 52,
+        "battingClutch": 51
       },
       "positionRatings": {
-        "SP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "C": 51
+      }
     },
     "coach": null,
     "manager": null,

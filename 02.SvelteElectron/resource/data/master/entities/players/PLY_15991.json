@@ -1,6 +1,6 @@
 {
   "id": "PLY_15991",
-  "name": "리 딜런",
+  "name": "Lee Dylan",
   "nameEn": "Lee Dylan",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 64,
   "popularity": 19,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 56
       },
       "batting": {
-        "ovr": 60,
-        "contact": 62,
-        "power": 50,
-        "eye": 57,
-        "discipline": 56,
-        "speed": 59,
-        "baseInstinct": 53,
-        "bunting": 54,
-        "platoon": 49,
-        "fielding": 54,
-        "arm": 52,
-        "battingClutch": 49
+        "ovr": 61,
+        "contact": 63,
+        "power": 51,
+        "eye": 58,
+        "discipline": 57,
+        "speed": 60,
+        "baseInstinct": 54,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 55,
+        "arm": 53,
+        "battingClutch": 50
       },
       "positionRatings": {
         "3B": 61

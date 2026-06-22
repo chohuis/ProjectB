@@ -1,14 +1,14 @@
 {
   "id": "PLY_00567",
   "name": "남지호",
-  "nameEn": "Nam Jiho",
+  "nameEn": "Na Do-yun",
   "role": "player",
   "age": 32,
   "status": "active",
   "originLeagueId": "LEAGUE_KBL",
   "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_SKYGULLS",
-  "teamId": "TEAM_KBL_SKYGULLS_1",
+  "clubId": "CLUB_KBL_LG",
+  "teamId": "TEAM_KBL_LG_1",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -19,48 +19,28 @@
       "position": "2B",
       "jerseyNumber": 17,
       "pitching": {
-        "ovr": 66,
-        "stamina": 69,
+        "ovr": 60,
+        "stamina": 56,
         "velocity": 65,
-        "command": 66,
-        "control": 64,
-        "movement": 65,
-        "mentality": 70,
-        "recovery": 67,
-        "clutch": 65,
-        "holdRunners": 58
+        "command": 55,
+        "control": 57,
+        "movement": 59,
+        "mentality": 61,
+        "recovery": 54
       },
       "batting": {
-        "ovr": 86,
-        "contact": 86,
-        "power": 90,
-        "eye": 87,
-        "discipline": 84,
-        "speed": 82,
-        "fielding": 89,
-        "arm": 83,
-        "battingClutch": 79,
-        "baseInstinct": 77,
-        "bunting": 73,
-        "platoon": 74
+        "ovr": 91,
+        "contact": 92,
+        "power": 85,
+        "eye": 92,
+        "discipline": 87,
+        "speed": 92,
+        "fielding": 90,
+        "arm": 91,
+        "battingClutch": 88
       },
       "developmentRate": 41,
-      "potentialHidden": 69,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 86
-      },
-      "proServiceYears": 10,
-      "contract": {
-        "salary": 5300,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 69
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,7 +1,7 @@
 {
   "id": "PLY_00422",
   "name": "고준영",
-  "nameEn": "Ko Junyeong",
+  "nameEn": "Choi Tae-yang",
   "role": "player",
   "age": 27,
   "status": "active",
@@ -19,58 +19,28 @@
       "position": "SP",
       "jerseyNumber": 2,
       "pitching": {
-        "ovr": 57,
-        "stamina": 59,
-        "velocity": 56,
-        "command": 54,
-        "control": 55,
-        "movement": 57,
-        "mentality": 53,
-        "recovery": 57,
-        "clutch": 55,
-        "holdRunners": 52
+        "ovr": 64,
+        "stamina": 60,
+        "velocity": 59,
+        "command": 57,
+        "control": 57,
+        "movement": 59,
+        "mentality": 61,
+        "recovery": 63
       },
       "batting": {
-        "ovr": 39,
-        "contact": 38,
-        "power": 39,
-        "eye": 41,
-        "discipline": 41,
-        "speed": 37,
-        "fielding": 45,
-        "arm": 40,
-        "battingClutch": 42,
-        "baseInstinct": 42,
-        "bunting": 35,
-        "platoon": 34
+        "ovr": 33,
+        "contact": 34,
+        "power": 34,
+        "eye": 35,
+        "discipline": 33,
+        "speed": 36,
+        "fielding": 33,
+        "arm": 38,
+        "battingClutch": 36
       },
       "developmentRate": 51,
-      "potentialHidden": 85,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 7,
-      "contract": {
-        "salary": 1200,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 85
     },
     "coach": {
       "specialty": "-",
@@ -110,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

@@ -1,7 +1,7 @@
 {
   "id": "PLY_00168",
   "name": "전도현",
-  "nameEn": "Jeon Dohyeon",
+  "nameEn": "Seo Geon-woo",
   "role": "player",
   "age": 22,
   "status": "active",
@@ -19,47 +19,28 @@
       "position": "RP",
       "jerseyNumber": 8,
       "pitching": {
-        "ovr": 57,
-        "stamina": 62,
-        "velocity": 61,
-        "command": 56,
-        "control": 55,
-        "movement": 53,
-        "mentality": 55,
-        "recovery": 56,
-        "clutch": 51,
-        "holdRunners": 56
+        "ovr": 61,
+        "stamina": 56,
+        "velocity": 63,
+        "command": 59,
+        "control": 60,
+        "movement": 60,
+        "mentality": 63,
+        "recovery": 60
       },
       "batting": {
-        "ovr": 39,
-        "contact": 34,
-        "power": 36,
-        "eye": 37,
-        "discipline": 41,
-        "speed": 43,
-        "fielding": 44,
-        "arm": 40,
-        "battingClutch": 37,
-        "baseInstinct": 38,
-        "bunting": 37,
-        "platoon": 37
+        "ovr": 30,
+        "contact": 29,
+        "power": 34,
+        "eye": 28,
+        "discipline": 31,
+        "speed": 33,
+        "fielding": 32,
+        "arm": 34,
+        "battingClutch": 30
       },
       "developmentRate": 47,
-      "potentialHidden": 65,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CUTTER",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 65
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

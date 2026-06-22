@@ -1,7 +1,7 @@
 {
   "id": "PLY_00234",
   "name": "성준영",
-  "nameEn": "Seong Junyeong",
+  "nameEn": "Na Min-jae",
   "role": "player",
   "age": 21,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "2B",
       "jerseyNumber": 14,
       "pitching": {
-        "ovr": 39,
-        "stamina": 43,
-        "velocity": 41,
-        "command": 42,
-        "control": 37,
-        "movement": 38,
-        "mentality": 36,
-        "recovery": 39,
-        "clutch": 35,
-        "holdRunners": 35
+        "ovr": 37,
+        "stamina": 41,
+        "velocity": 40,
+        "command": 43,
+        "control": 40,
+        "movement": 37,
+        "mentality": 39,
+        "recovery": 35
       },
       "batting": {
-        "ovr": 59,
-        "contact": 63,
-        "power": 60,
-        "eye": 55,
+        "ovr": 56,
+        "contact": 61,
+        "power": 59,
+        "eye": 60,
         "discipline": 59,
-        "speed": 59,
-        "fielding": 55,
-        "arm": 62,
-        "battingClutch": 59,
-        "baseInstinct": 56,
-        "bunting": 47,
-        "platoon": 50
+        "speed": 63,
+        "fielding": 64,
+        "arm": 61,
+        "battingClutch": 55
       },
       "developmentRate": 48,
-      "potentialHidden": 84,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 59
-      }
+      "potentialHidden": 84
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

@@ -1,6 +1,6 @@
 {
   "id": "PLY_15679",
-  "name": "테일러 미겔",
+  "name": "Taylor Miguel",
   "nameEn": "Taylor Miguel",
   "role": "player",
   "age": 33,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 59,
   "popularity": 12,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 64,
       "proServiceYears": 11,
       "pitching": {
-        "ovr": 81,
-        "stamina": 78,
-        "velocity": 90,
-        "command": 80,
-        "control": 77,
-        "movement": 76,
-        "mentality": 86,
-        "recovery": 76,
-        "clutch": 67,
-        "holdRunners": 73
+        "ovr": 64,
+        "stamina": 62,
+        "velocity": 71,
+        "command": 63,
+        "control": 61,
+        "movement": 60,
+        "mentality": 68,
+        "recovery": 60,
+        "clutch": 53,
+        "holdRunners": 58
       },
       "batting": {
         "ovr": 64,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 64
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

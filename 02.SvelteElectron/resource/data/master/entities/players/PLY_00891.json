@@ -1,14 +1,14 @@
 {
   "id": "PLY_00891",
   "name": "영 앤드류",
-  "nameEn": "Yeong  앤드류",
+  "nameEn": "Young Andrew",
   "role": "player",
   "age": 33,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_HARBORHAWKS",
-  "teamId": "TEAM_ABL_HARBORHAWKS_2",
+  "clubId": "CLUB_ABL_NYY",
+  "teamId": "TEAM_ABL_NYY_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 41,
       "pitching": {
-        "ovr": 69,
-        "stamina": 74,
-        "velocity": 75,
-        "command": 66,
-        "control": 72,
-        "movement": 69,
-        "mentality": 70,
-        "recovery": 66,
-        "clutch": 61,
-        "holdRunners": 67
+        "ovr": 73,
+        "stamina": 80,
+        "velocity": 76,
+        "command": 77,
+        "control": 76,
+        "movement": 73,
+        "mentality": 73,
+        "recovery": 74
       },
       "batting": {
-        "ovr": 51,
-        "contact": 56,
-        "power": 52,
-        "eye": 47,
-        "discipline": 55,
-        "speed": 56,
-        "fielding": 46,
-        "arm": 56,
-        "battingClutch": 44,
-        "baseInstinct": 42,
-        "bunting": 39,
-        "platoon": 48
+        "ovr": 48,
+        "contact": 43,
+        "power": 46,
+        "eye": 48,
+        "discipline": 45,
+        "speed": 45,
+        "fielding": 41,
+        "arm": 46,
+        "battingClutch": 48
       },
       "developmentRate": 51,
-      "potentialHidden": 70,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 69
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_KNUCKLEBALL",
-          "grade": 5
-        }
-      ],
-      "proServiceYears": 11,
-      "contract": {
-        "salary": 20900,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 70
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,14 +1,14 @@
 {
   "id": "PLY_01033",
   "name": "영 다니엘",
-  "nameEn": "Yeong  다니엘",
+  "nameEn": "Young Daniel",
   "role": "player",
   "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_SPACECOMETS",
-  "teamId": "TEAM_ABL_SPACECOMETS_2",
+  "clubId": "CLUB_ABL_SEA",
+  "teamId": "TEAM_ABL_SEA_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:쿠바",
@@ -19,62 +19,28 @@
       "position": "RP",
       "jerseyNumber": 48,
       "pitching": {
-        "ovr": 71,
-        "stamina": 73,
-        "velocity": 71,
-        "command": 76,
-        "control": 74,
-        "movement": 67,
-        "mentality": 72,
-        "recovery": 72,
-        "clutch": 68,
-        "holdRunners": 61
+        "ovr": 80,
+        "stamina": 72,
+        "velocity": 79,
+        "command": 77,
+        "control": 78,
+        "movement": 77,
+        "mentality": 79,
+        "recovery": 80
       },
       "batting": {
-        "ovr": 53,
-        "contact": 49,
-        "power": 53,
+        "ovr": 54,
+        "contact": 54,
+        "power": 52,
         "eye": 54,
-        "discipline": 56,
-        "speed": 48,
-        "fielding": 58,
-        "arm": 56,
-        "battingClutch": 53,
-        "baseInstinct": 53,
-        "bunting": 42,
-        "platoon": 40
+        "discipline": 47,
+        "speed": 51,
+        "fielding": 49,
+        "arm": 51,
+        "battingClutch": 49
       },
       "developmentRate": 47,
-      "potentialHidden": 76,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 71
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SINKER",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 22500,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 76
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

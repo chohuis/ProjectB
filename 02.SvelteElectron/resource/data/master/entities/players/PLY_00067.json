@@ -1,9 +1,9 @@
 {
   "id": "PLY_00067",
   "name": "주준우",
-  "nameEn": "Joo Junu",
+  "nameEn": "You Ji-sung",
   "role": "player",
-  "age": 19,
+  "age": 16,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,47 +19,28 @@
       "position": "CP",
       "jerseyNumber": 7,
       "pitching": {
-        "ovr": 59,
-        "stamina": 59,
-        "velocity": 63,
-        "command": 62,
-        "control": 55,
-        "movement": 61,
-        "mentality": 60,
-        "recovery": 59,
-        "clutch": 50,
-        "holdRunners": 46
+        "ovr": 66,
+        "stamina": 67,
+        "velocity": 69,
+        "command": 56,
+        "control": 51,
+        "movement": 54,
+        "mentality": 70,
+        "recovery": 60
       },
       "batting": {
-        "ovr": 41,
-        "contact": 41,
+        "ovr": 48,
+        "contact": 67,
         "power": 47,
-        "eye": 47,
-        "discipline": 47,
-        "speed": 44,
-        "fielding": 36,
-        "arm": 42,
-        "battingClutch": 43,
-        "baseInstinct": 41,
-        "bunting": 35,
-        "platoon": 35
+        "eye": 56,
+        "discipline": 48,
+        "speed": 53,
+        "fielding": 63,
+        "arm": 72,
+        "battingClutch": 61
       },
       "developmentRate": 49,
-      "potentialHidden": 87,
-      "primaryPosition": "CP",
-      "positionRatings": {
-        "CP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        }
-      ]
+      "potentialHidden": 87
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

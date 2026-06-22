@@ -1,9 +1,9 @@
 {
   "id": "PLY_12953",
-  "name": "마틴 데릭",
-  "nameEn": "Martin Derek",
+  "name": "Clark Derek",
+  "nameEn": "Clark Derek",
   "role": "player",
-  "age": 25,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 84,
-  "popularity": 10,
+  "notes": "국적:쿠바",
+  "diligence": 47,
+  "popularity": 34,
   "militaryStatus": "군필",
   "entryYear": 2044,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 25,
+  "entryAge": 21,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 15,
-      "primaryPosition": "SP",
-      "developmentRate": 54,
-      "potentialHidden": 81,
-      "proServiceYears": 3,
+      "position": "C",
+      "jerseyNumber": 91,
+      "primaryPosition": "C",
+      "developmentRate": 66,
+      "potentialHidden": 76,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 77,
-        "stamina": 69,
-        "velocity": 82,
-        "command": 72,
-        "control": 69,
-        "movement": 71,
-        "mentality": 81,
-        "recovery": 65,
-        "clutch": 77,
-        "holdRunners": 64
+        "ovr": 65,
+        "stamina": 64,
+        "velocity": 75,
+        "command": 66,
+        "control": 70,
+        "movement": 60,
+        "mentality": 60,
+        "recovery": 56,
+        "clutch": 66,
+        "holdRunners": 58
       },
       "batting": {
-        "ovr": 80,
-        "contact": 72,
-        "power": 73,
-        "eye": 84,
-        "discipline": 81,
-        "speed": 84,
-        "baseInstinct": 80,
-        "bunting": 68,
+        "ovr": 65,
+        "contact": 67,
+        "power": 56,
+        "eye": 60,
+        "discipline": 57,
+        "speed": 64,
+        "baseInstinct": 57,
+        "bunting": 59,
         "platoon": 50,
-        "fielding": 74,
-        "arm": 71,
-        "battingClutch": 80
+        "fielding": 57,
+        "arm": 68,
+        "battingClutch": 62
       },
       "positionRatings": {
-        "SP": 80
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "C": 65
+      }
     },
     "coach": null,
     "manager": null,

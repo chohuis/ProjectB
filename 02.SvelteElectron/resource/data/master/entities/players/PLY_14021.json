@@ -1,6 +1,6 @@
 {
   "id": "PLY_14021",
-  "name": "스콧 카를로스",
+  "name": "Scott Carlos",
   "nameEn": "Scott Carlos",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 82,
   "popularity": 11,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 80,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 51,
-        "stamina": 56,
-        "velocity": 53,
-        "command": 48,
-        "control": 45,
-        "movement": 43,
-        "mentality": 56,
-        "recovery": 47,
-        "clutch": 51,
-        "holdRunners": 46
+        "ovr": 52,
+        "stamina": 57,
+        "velocity": 54,
+        "command": 49,
+        "control": 46,
+        "movement": 44,
+        "mentality": 57,
+        "recovery": 48,
+        "clutch": 52,
+        "holdRunners": 47
       },
       "batting": {
         "ovr": 52,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 52
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

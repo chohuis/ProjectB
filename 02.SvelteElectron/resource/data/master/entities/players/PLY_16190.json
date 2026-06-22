@@ -1,6 +1,6 @@
 {
   "id": "PLY_16190",
-  "name": "존스 그랜트",
+  "name": "Jones Grant",
   "nameEn": "Jones Grant",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 77,
   "popularity": 39,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 58,
       "proServiceYears": 2,
       "pitching": {
-        "ovr": 69,
-        "stamina": 62,
-        "velocity": 74,
-        "command": 72,
-        "control": 69,
-        "movement": 64,
-        "mentality": 68,
-        "recovery": 59,
-        "clutch": 58,
-        "holdRunners": 62
+        "ovr": 72,
+        "stamina": 65,
+        "velocity": 77,
+        "command": 75,
+        "control": 72,
+        "movement": 67,
+        "mentality": 71,
+        "recovery": 62,
+        "clutch": 60,
+        "holdRunners": 65
       },
       "batting": {
         "ovr": 72,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 72
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

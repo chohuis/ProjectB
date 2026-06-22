@@ -1,6 +1,6 @@
 {
   "id": "PLY_14674",
-  "name": "데이비스 다니엘",
+  "name": "Davis Daniel",
   "nameEn": "Davis Daniel",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 81,
   "popularity": 15,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 83,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 54,
-        "stamina": 45,
-        "velocity": 59,
-        "command": 55,
-        "control": 57,
-        "movement": 54,
-        "mentality": 47,
-        "recovery": 43,
-        "clutch": 48,
-        "holdRunners": 52
+        "ovr": 55,
+        "stamina": 46,
+        "velocity": 60,
+        "command": 56,
+        "control": 58,
+        "movement": 55,
+        "mentality": 48,
+        "recovery": 44,
+        "clutch": 49,
+        "holdRunners": 53
       },
       "batting": {
         "ovr": 55,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 55
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

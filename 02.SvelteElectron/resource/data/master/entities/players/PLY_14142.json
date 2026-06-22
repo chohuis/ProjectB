@@ -1,6 +1,6 @@
 {
   "id": "PLY_14142",
-  "name": "그린 콜",
+  "name": "Green Cole",
   "nameEn": "Green Cole",
   "role": "player",
   "age": 27,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 49,
   "popularity": 30,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 83,
       "proServiceYears": 5,
       "pitching": {
-        "ovr": 60,
-        "stamina": 61,
-        "velocity": 65,
-        "command": 61,
-        "control": 63,
-        "movement": 62,
-        "mentality": 64,
-        "recovery": 54,
-        "clutch": 53,
-        "holdRunners": 49
+        "ovr": 64,
+        "stamina": 65,
+        "velocity": 69,
+        "command": 65,
+        "control": 67,
+        "movement": 66,
+        "mentality": 68,
+        "recovery": 58,
+        "clutch": 57,
+        "holdRunners": 52
       },
       "batting": {
         "ovr": 64,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 64
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

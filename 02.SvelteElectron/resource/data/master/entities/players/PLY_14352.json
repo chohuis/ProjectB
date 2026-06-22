@@ -1,6 +1,6 @@
 {
   "id": "PLY_14352",
-  "name": "홀 타일러",
+  "name": "Hall Tyler",
   "nameEn": "Hall Tyler",
   "role": "player",
   "age": 18,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 56,
   "popularity": 35,
   "militaryStatus": "군필",

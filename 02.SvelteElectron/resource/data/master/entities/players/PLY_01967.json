@@ -1,72 +1,46 @@
 {
   "id": "PLY_01967",
-  "name": "조동우",
-  "nameEn": "Jo Dongwoo",
+  "name": "마쓰모토 히라쿠",
+  "nameEn": "Matsumoto Hiraku",
   "role": "player",
-  "age": 31,
+  "age": 22,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_ROYALLIONS",
-  "teamId": "TEAM_KBL_ROYALLIONS_1",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
+  "teamId": "TEAM_JBL_PL_MARINESOLDIERS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
-      "handedness": "L",
-      "position": "SS",
-      "jerseyNumber": 27,
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 22,
       "pitching": {
-        "ovr": 49,
-        "stamina": 51,
-        "velocity": 48,
-        "command": 53,
-        "control": 54,
-        "movement": 53,
-        "mentality": 50,
-        "recovery": 53,
-        "clutch": 38,
-        "holdRunners": 42
+        "ovr": 50,
+        "stamina": 50,
+        "velocity": 53,
+        "command": 48,
+        "control": 55,
+        "movement": 52,
+        "mentality": 47,
+        "recovery": 53
       },
       "batting": {
-        "ovr": 69,
-        "contact": 66,
-        "power": 70,
-        "eye": 70,
-        "discipline": 66,
-        "speed": 72,
-        "fielding": 71,
-        "arm": 66,
-        "battingClutch": 60,
-        "baseInstinct": 59,
-        "bunting": 62,
-        "platoon": 58
+        "ovr": 83,
+        "contact": 76,
+        "power": 83,
+        "eye": 78,
+        "discipline": 82,
+        "speed": 76,
+        "fielding": 73,
+        "arm": 74,
+        "battingClutch": 77
       },
-      "developmentRate": 55,
-      "potentialHidden": 72,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 69
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 9,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 40,
+      "potentialHidden": 70
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 44,
-  "popularity": 11,
-  "militaryStatus": "군필"
+  }
 }

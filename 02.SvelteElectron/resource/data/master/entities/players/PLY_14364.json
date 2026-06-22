@@ -1,6 +1,6 @@
 {
   "id": "PLY_14364",
-  "name": "베이커 에릭",
+  "name": "Baker Eric",
   "nameEn": "Baker Eric",
   "role": "player",
   "age": 21,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 81,
   "popularity": 22,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 75,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 59,
-        "stamina": 51,
-        "velocity": 59,
-        "command": 62,
-        "control": 63,
-        "movement": 51,
-        "mentality": 55,
-        "recovery": 48,
-        "clutch": 51,
-        "holdRunners": 55
+        "ovr": 60,
+        "stamina": 52,
+        "velocity": 60,
+        "command": 63,
+        "control": 64,
+        "movement": 52,
+        "mentality": 56,
+        "recovery": 49,
+        "clutch": 52,
+        "holdRunners": 56
       },
       "batting": {
         "ovr": 60,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 60
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

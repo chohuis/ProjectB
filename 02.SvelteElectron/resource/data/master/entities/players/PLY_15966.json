@@ -1,6 +1,6 @@
 {
   "id": "PLY_15966",
-  "name": "루이스 타일러",
+  "name": "Lewis Tyler",
   "nameEn": "Lewis Tyler",
   "role": "player",
   "age": 25,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 76,
   "popularity": 25,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 82,
       "proServiceYears": 3,
       "pitching": {
-        "ovr": 55,
-        "stamina": 55,
-        "velocity": 55,
-        "command": 56,
-        "control": 57,
-        "movement": 54,
-        "mentality": 59,
-        "recovery": 52,
-        "clutch": 49,
-        "holdRunners": 51
+        "ovr": 61,
+        "stamina": 61,
+        "velocity": 61,
+        "command": 62,
+        "control": 63,
+        "movement": 60,
+        "mentality": 65,
+        "recovery": 58,
+        "clutch": 54,
+        "holdRunners": 57
       },
       "batting": {
         "ovr": 61,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 61
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,14 +1,14 @@
 {
   "id": "PLY_01288",
   "name": "워커 벤자민",
-  "nameEn": "Wo 커 벤자민",
+  "nameEn": "Walker Benjamin",
   "role": "player",
-  "age": 40,
+  "age": 41,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_MOTORWOLVES",
-  "teamId": "TEAM_ABL_MOTORWOLVES_1",
+  "clubId": "CLUB_ABL_CHC",
+  "teamId": "TEAM_ABL_CHC",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
@@ -19,48 +19,28 @@
       "position": "3B",
       "jerseyNumber": 18,
       "pitching": {
-        "ovr": 60,
-        "stamina": 64,
-        "velocity": 57,
-        "command": 63,
-        "control": 56,
-        "movement": 63,
-        "mentality": 62,
-        "recovery": 57,
-        "clutch": 50,
-        "holdRunners": 59
+        "ovr": 47,
+        "stamina": 53,
+        "velocity": 50,
+        "command": 50,
+        "control": 49,
+        "movement": 45,
+        "mentality": 47,
+        "recovery": 47
       },
       "batting": {
-        "ovr": 80,
-        "contact": 82,
-        "power": 75,
-        "eye": 78,
-        "discipline": 78,
-        "speed": 81,
-        "fielding": 82,
-        "arm": 85,
-        "battingClutch": 79,
-        "baseInstinct": 73,
-        "bunting": 70,
-        "platoon": 77
+        "ovr": 79,
+        "contact": 77,
+        "power": 80,
+        "eye": 84,
+        "discipline": 79,
+        "speed": 75,
+        "fielding": 80,
+        "arm": 83,
+        "battingClutch": 84
       },
       "developmentRate": 31,
-      "potentialHidden": 92,
-      "primaryPosition": "3B",
-      "positionRatings": {
-        "3B": 80
-      },
-      "proServiceYears": 18,
-      "contract": {
-        "salary": 14000,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 92
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

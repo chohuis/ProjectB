@@ -1,7 +1,7 @@
 {
   "id": "PLY_00291",
   "name": "구용준",
-  "nameEn": "Koo Yongjun",
+  "nameEn": "Kang Ji-hoon",
   "role": "player",
   "age": 20,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "C",
       "jerseyNumber": 11,
       "pitching": {
-        "ovr": 51,
-        "stamina": 52,
-        "velocity": 53,
-        "command": 48,
-        "control": 55,
-        "movement": 50,
-        "mentality": 51,
-        "recovery": 56,
-        "clutch": 50,
-        "holdRunners": 44
+        "ovr": 45,
+        "stamina": 42,
+        "velocity": 46,
+        "command": 40,
+        "control": 44,
+        "movement": 39,
+        "mentality": 43,
+        "recovery": 42
       },
       "batting": {
-        "ovr": 71,
-        "contact": 67,
-        "power": 75,
-        "eye": 76,
+        "ovr": 72,
+        "contact": 77,
+        "power": 71,
+        "eye": 73,
         "discipline": 75,
-        "speed": 67,
-        "fielding": 69,
-        "arm": 66,
-        "battingClutch": 61,
-        "baseInstinct": 65,
-        "bunting": 66,
-        "platoon": 59
+        "speed": 65,
+        "fielding": 72,
+        "arm": 78,
+        "battingClutch": 75
       },
       "developmentRate": 46,
-      "potentialHidden": 63,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 71
-      }
+      "potentialHidden": 63
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

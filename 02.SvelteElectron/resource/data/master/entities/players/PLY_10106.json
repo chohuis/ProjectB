@@ -1,9 +1,9 @@
 {
   "id": "PLY_10106",
-  "name": "앨런 크리스",
-  "nameEn": "Allen Chris",
+  "name": "Smith Connor",
+  "nameEn": "Smith Connor",
   "role": "player",
-  "age": 27,
+  "age": 23,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 53,
-  "popularity": 42,
+  "notes": "국적:베네수엘라",
+  "diligence": 47,
+  "popularity": 43,
   "militaryStatus": "군필",
   "entryYear": 2027,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 27,
+  "entryAge": 23,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "SP",
-      "jerseyNumber": 11,
+      "jerseyNumber": 61,
       "primaryPosition": "SP",
-      "developmentRate": 66,
-      "potentialHidden": 61,
-      "proServiceYears": 5,
+      "developmentRate": 62,
+      "potentialHidden": 76,
+      "proServiceYears": 1,
       "pitching": {
-        "ovr": 75,
-        "stamina": 67,
-        "velocity": 84,
-        "command": 75,
+        "ovr": 71,
+        "stamina": 64,
+        "velocity": 70,
+        "command": 63,
         "control": 71,
-        "movement": 75,
-        "mentality": 78,
-        "recovery": 66,
-        "clutch": 67,
-        "holdRunners": 66
+        "movement": 70,
+        "mentality": 74,
+        "recovery": 69,
+        "clutch": 64,
+        "holdRunners": 62
       },
       "batting": {
-        "ovr": 79,
-        "contact": 82,
-        "power": 77,
-        "eye": 81,
-        "discipline": 73,
-        "speed": 83,
-        "baseInstinct": 77,
-        "bunting": 69,
+        "ovr": 71,
+        "contact": 65,
+        "power": 73,
+        "eye": 69,
+        "discipline": 70,
+        "speed": 76,
+        "baseInstinct": 73,
+        "bunting": 64,
         "platoon": 50,
-        "fielding": 70,
-        "arm": 79,
-        "battingClutch": 67
+        "fielding": 69,
+        "arm": 69,
+        "battingClutch": 68
       },
       "positionRatings": {
-        "SP": 79
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 4
-        }
-      ]
+        "SP": 71
+      }
     },
     "coach": null,
     "manager": null,

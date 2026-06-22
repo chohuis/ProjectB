@@ -1,14 +1,14 @@
 {
   "id": "PLY_01368",
   "name": "토머스 루이스",
-  "nameEn": "To 머스 루이스",
+  "nameEn": "Thomas Luis",
   "role": "player",
   "age": 29,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_LAKESPIRITS",
-  "teamId": "TEAM_ABL_LAKESPIRITS_1",
+  "clubId": "CLUB_ABL_SD",
+  "teamId": "TEAM_ABL_SD",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
@@ -19,58 +19,28 @@
       "position": "RP",
       "jerseyNumber": 8,
       "pitching": {
-        "ovr": 70,
-        "stamina": 74,
-        "velocity": 72,
-        "command": 67,
-        "control": 67,
-        "movement": 74,
-        "mentality": 71,
-        "recovery": 67,
-        "clutch": 63,
-        "holdRunners": 59
+        "ovr": 75,
+        "stamina": 69,
+        "velocity": 83,
+        "command": 73,
+        "control": 75,
+        "movement": 77,
+        "mentality": 77,
+        "recovery": 75
       },
       "batting": {
-        "ovr": 52,
-        "contact": 58,
-        "power": 51,
-        "eye": 51,
-        "discipline": 57,
-        "speed": 58,
-        "fielding": 53,
-        "arm": 54,
-        "battingClutch": 47,
-        "baseInstinct": 42,
-        "bunting": 43,
-        "platoon": 41
+        "ovr": 51,
+        "contact": 53,
+        "power": 47,
+        "eye": 47,
+        "discipline": 47,
+        "speed": 49,
+        "fielding": 46,
+        "arm": 51,
+        "battingClutch": 47
       },
       "developmentRate": 35,
-      "potentialHidden": 69,
-      "primaryPosition": "RP",
-      "positionRatings": {
-        "RP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        }
-      ],
-      "proServiceYears": 7,
-      "contract": {
-        "salary": 21700,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 69
     },
     "coach": {
       "specialty": "-",
@@ -110,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,14 +1,14 @@
 {
   "id": "PLY_00954",
   "name": "로드리게스 오스틴",
-  "nameEn": "Ro 드리게스 오스틴",
+  "nameEn": "Rodriguez Austin",
   "role": "player",
   "age": 26,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_SUNDRAGONS",
-  "teamId": "TEAM_ABL_SUNDRAGONS_2",
+  "clubId": "CLUB_ABL_BOS",
+  "teamId": "TEAM_ABL_BOS_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:쿠바",
@@ -19,48 +19,28 @@
       "position": "RF",
       "jerseyNumber": 59,
       "pitching": {
-        "ovr": 49,
-        "stamina": 54,
-        "velocity": 49,
-        "command": 50,
-        "control": 54,
-        "movement": 50,
-        "mentality": 51,
-        "recovery": 48,
-        "clutch": 38,
-        "holdRunners": 46
+        "ovr": 33,
+        "stamina": 35,
+        "velocity": 40,
+        "command": 39,
+        "control": 32,
+        "movement": 37,
+        "mentality": 33,
+        "recovery": 31
       },
       "batting": {
-        "ovr": 69,
-        "contact": 70,
+        "ovr": 72,
+        "contact": 68,
         "power": 69,
-        "eye": 66,
-        "discipline": 72,
-        "speed": 65,
-        "fielding": 66,
-        "arm": 73,
-        "battingClutch": 65,
-        "baseInstinct": 63,
-        "bunting": 63,
-        "platoon": 67
+        "eye": 71,
+        "discipline": 67,
+        "speed": 71,
+        "fielding": 67,
+        "arm": 65,
+        "battingClutch": 73
       },
       "developmentRate": 46,
-      "potentialHidden": 65,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 69
-      },
-      "proServiceYears": 4,
-      "contract": {
-        "salary": 6300,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 65
     },
     "coach": {
       "specialty": "-",
@@ -100,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

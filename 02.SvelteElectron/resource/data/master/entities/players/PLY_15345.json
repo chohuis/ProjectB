@@ -1,6 +1,6 @@
 {
   "id": "PLY_15345",
-  "name": "가르시아 콜",
+  "name": "Garcia Cole",
   "nameEn": "Garcia Cole",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 50,
   "popularity": 19,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 66
       },
       "batting": {
-        "ovr": 76,
-        "contact": 68,
-        "power": 77,
-        "eye": 67,
-        "discipline": 76,
-        "speed": 68,
-        "baseInstinct": 78,
-        "bunting": 60,
-        "platoon": 54,
-        "fielding": 73,
-        "arm": 78,
-        "battingClutch": 74
+        "ovr": 70,
+        "contact": 63,
+        "power": 71,
+        "eye": 62,
+        "discipline": 70,
+        "speed": 63,
+        "baseInstinct": 72,
+        "bunting": 55,
+        "platoon": 50,
+        "fielding": 67,
+        "arm": 72,
+        "battingClutch": 68
       },
       "positionRatings": {
         "SS": 70

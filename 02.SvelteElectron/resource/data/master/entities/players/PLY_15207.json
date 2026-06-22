@@ -1,6 +1,6 @@
 {
   "id": "PLY_15207",
-  "name": "로드리게스 제이슨",
+  "name": "Rodriguez Jason",
   "nameEn": "Rodriguez Jason",
   "role": "player",
   "age": 31,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 53,
   "popularity": 20,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 65,
       "proServiceYears": 9,
       "pitching": {
-        "ovr": 70,
-        "stamina": 61,
-        "velocity": 69,
-        "command": 59,
-        "control": 70,
-        "movement": 62,
-        "mentality": 75,
-        "recovery": 59,
-        "clutch": 58,
-        "holdRunners": 59
+        "ovr": 64,
+        "stamina": 56,
+        "velocity": 63,
+        "command": 54,
+        "control": 64,
+        "movement": 57,
+        "mentality": 69,
+        "recovery": 54,
+        "clutch": 53,
+        "holdRunners": 54
       },
       "batting": {
         "ovr": 64,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 64
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

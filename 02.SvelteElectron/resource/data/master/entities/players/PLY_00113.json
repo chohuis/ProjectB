@@ -1,9 +1,9 @@
 {
   "id": "PLY_00113",
   "name": "황재윤",
-  "nameEn": "Hwang Jaeyun",
+  "nameEn": "Kwak Tae-jun",
   "role": "player",
-  "age": 18,
+  "age": 17,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "3B",
       "jerseyNumber": 13,
       "pitching": {
-        "ovr": 31,
-        "stamina": 34,
-        "velocity": 35,
-        "command": 32,
-        "control": 34,
-        "movement": 28,
-        "mentality": 31,
-        "recovery": 27,
-        "clutch": 42,
-        "holdRunners": 41
+        "ovr": 43,
+        "stamina": 57,
+        "velocity": 63,
+        "command": 47,
+        "control": 55,
+        "movement": 53,
+        "mentality": 49,
+        "recovery": 63
       },
       "batting": {
-        "ovr": 51,
-        "contact": 52,
+        "ovr": 55,
+        "contact": 47,
         "power": 51,
         "eye": 57,
         "discipline": 54,
-        "speed": 49,
-        "fielding": 54,
-        "arm": 46,
-        "battingClutch": 51,
-        "baseInstinct": 44,
-        "bunting": 40,
-        "platoon": 40
+        "speed": 48,
+        "fielding": 53,
+        "arm": 64,
+        "battingClutch": 46
       },
       "developmentRate": 54,
-      "potentialHidden": 63,
-      "primaryPosition": "3B",
-      "positionRatings": {
-        "3B": 51
-      }
+      "potentialHidden": 63
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

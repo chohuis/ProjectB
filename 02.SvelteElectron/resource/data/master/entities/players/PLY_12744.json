@@ -1,9 +1,9 @@
 {
   "id": "PLY_12744",
-  "name": "카터 카일",
-  "nameEn": "Carter Kyle",
+  "name": "Martin Daniel",
+  "nameEn": "Martin Daniel",
   "role": "player",
-  "age": 28,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 65,
-  "popularity": 46,
+  "notes": "국적:파나마",
+  "diligence": 70,
+  "popularity": 47,
   "militaryStatus": "군필",
   "entryYear": 2043,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 28,
+  "entryAge": 21,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 70,
+      "jerseyNumber": 43,
       "primaryPosition": "SP",
-      "developmentRate": 58,
-      "potentialHidden": 61,
-      "proServiceYears": 6,
+      "developmentRate": 77,
+      "potentialHidden": 64,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 67,
-        "stamina": 62,
-        "velocity": 68,
-        "command": 68,
-        "control": 70,
-        "movement": 68,
-        "mentality": 64,
-        "recovery": 64,
-        "clutch": 58,
-        "holdRunners": 63
+        "ovr": 61,
+        "stamina": 55,
+        "velocity": 70,
+        "command": 54,
+        "control": 56,
+        "movement": 55,
+        "mentality": 66,
+        "recovery": 50,
+        "clutch": 52,
+        "holdRunners": 57
       },
       "batting": {
-        "ovr": 65,
-        "contact": 62,
-        "power": 60,
-        "eye": 61,
-        "discipline": 58,
-        "speed": 64,
-        "baseInstinct": 56,
-        "bunting": 53,
+        "ovr": 61,
+        "contact": 60,
+        "power": 56,
+        "eye": 55,
+        "discipline": 60,
+        "speed": 57,
+        "baseInstinct": 53,
+        "bunting": 48,
         "platoon": 50,
-        "fielding": 59,
+        "fielding": 63,
         "arm": 56,
-        "battingClutch": 63
+        "battingClutch": 52
       },
       "positionRatings": {
-        "SP": 65
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 1
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 1
-        }
-      ]
+        "SP": 61
+      }
     },
     "coach": null,
     "manager": null,

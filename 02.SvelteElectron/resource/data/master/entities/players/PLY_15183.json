@@ -1,6 +1,6 @@
 {
   "id": "PLY_15183",
-  "name": "킹 루이스",
+  "name": "King Luis",
   "nameEn": "King Luis",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 47,
   "popularity": 23,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 58,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 82,
-        "stamina": 86,
-        "velocity": 84,
-        "command": 73,
-        "control": 86,
-        "movement": 82,
-        "mentality": 76,
-        "recovery": 79,
-        "clutch": 70,
-        "holdRunners": 81
+        "ovr": 76,
+        "stamina": 80,
+        "velocity": 78,
+        "command": 68,
+        "control": 80,
+        "movement": 76,
+        "mentality": 70,
+        "recovery": 73,
+        "clutch": 65,
+        "holdRunners": 75
       },
       "batting": {
         "ovr": 76,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 76
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 2
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

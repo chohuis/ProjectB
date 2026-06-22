@@ -1,6 +1,6 @@
 {
   "id": "PLY_14506",
-  "name": "윌리엄스 재크",
+  "name": "Williams Zach",
   "nameEn": "Williams Zach",
   "role": "player",
   "age": 32,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 78,
   "popularity": 14,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 61
       },
       "batting": {
-        "ovr": 82,
-        "contact": 77,
-        "power": 72,
-        "eye": 78,
-        "discipline": 83,
-        "speed": 74,
-        "baseInstinct": 72,
-        "bunting": 64,
-        "platoon": 63,
-        "fielding": 71,
-        "arm": 85,
-        "battingClutch": 78
+        "ovr": 65,
+        "contact": 61,
+        "power": 57,
+        "eye": 62,
+        "discipline": 66,
+        "speed": 59,
+        "baseInstinct": 57,
+        "bunting": 51,
+        "platoon": 50,
+        "fielding": 56,
+        "arm": 67,
+        "battingClutch": 62
       },
       "positionRatings": {
         "SS": 65

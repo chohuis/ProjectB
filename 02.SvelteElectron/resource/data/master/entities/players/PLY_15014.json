@@ -1,6 +1,6 @@
 {
   "id": "PLY_15014",
-  "name": "존스 오스틴",
+  "name": "Jones Austin",
   "nameEn": "Jones Austin",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 52,
   "popularity": 37,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 55
       },
       "batting": {
-        "ovr": 55,
-        "contact": 57,
-        "power": 55,
-        "eye": 48,
-        "discipline": 57,
-        "speed": 50,
-        "baseInstinct": 57,
-        "bunting": 45,
-        "platoon": 49,
-        "fielding": 48,
-        "arm": 53,
-        "battingClutch": 53
+        "ovr": 56,
+        "contact": 58,
+        "power": 56,
+        "eye": 49,
+        "discipline": 58,
+        "speed": 51,
+        "baseInstinct": 58,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 49,
+        "arm": 54,
+        "battingClutch": 54
       },
       "positionRatings": {
         "CF": 56

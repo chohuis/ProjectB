@@ -1,7 +1,7 @@
 {
   "id": "OWN_00005",
   "name": "민진우",
-  "nameEn": "Min Jinu",
+  "nameEn": "Hong Seung-hyun",
   "role": "owner",
   "age": 62,
   "status": "active",
@@ -79,12 +79,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
   }
 }

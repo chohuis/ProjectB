@@ -1,6 +1,6 @@
 {
   "id": "PLY_16481",
-  "name": "앨런 딜런",
+  "name": "Allen Dylan",
   "nameEn": "Allen Dylan",
   "role": "player",
   "age": 20,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 65,
   "popularity": 30,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 41
       },
       "batting": {
-        "ovr": 54,
-        "contact": 51,
-        "power": 44,
-        "eye": 59,
-        "discipline": 45,
-        "speed": 55,
-        "baseInstinct": 49,
-        "bunting": 45,
-        "platoon": 49,
-        "fielding": 53,
-        "arm": 46,
-        "battingClutch": 47
+        "ovr": 55,
+        "contact": 52,
+        "power": 45,
+        "eye": 60,
+        "discipline": 46,
+        "speed": 56,
+        "baseInstinct": 50,
+        "bunting": 46,
+        "platoon": 50,
+        "fielding": 54,
+        "arm": 47,
+        "battingClutch": 48
       },
       "positionRatings": {
         "CF": 55

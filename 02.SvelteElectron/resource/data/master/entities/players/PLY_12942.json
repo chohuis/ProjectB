@@ -1,9 +1,9 @@
 {
   "id": "PLY_12942",
-  "name": "톰슨 블레이크",
-  "nameEn": "Thompson Blake",
+  "name": "Taylor Jake",
+  "nameEn": "Taylor Jake",
   "role": "player",
-  "age": 27,
+  "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 63,
-  "popularity": 26,
+  "notes": "국적:일본",
+  "diligence": 73,
+  "popularity": 20,
   "militaryStatus": "군필",
   "entryYear": 2044,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 27,
+  "entryAge": 28,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 56,
-      "primaryPosition": "SP",
-      "developmentRate": 57,
-      "potentialHidden": 63,
-      "proServiceYears": 5,
+      "position": "LF",
+      "jerseyNumber": 95,
+      "primaryPosition": "LF",
+      "developmentRate": 50,
+      "potentialHidden": 87,
+      "proServiceYears": 6,
       "pitching": {
-        "ovr": 62,
-        "stamina": 54,
-        "velocity": 66,
-        "command": 58,
-        "control": 56,
-        "movement": 58,
-        "mentality": 64,
-        "recovery": 55,
-        "clutch": 56,
-        "holdRunners": 53
+        "ovr": 78,
+        "stamina": 76,
+        "velocity": 77,
+        "command": 69,
+        "control": 81,
+        "movement": 79,
+        "mentality": 77,
+        "recovery": 74,
+        "clutch": 71,
+        "holdRunners": 70
       },
       "batting": {
-        "ovr": 70,
-        "contact": 74,
-        "power": 60,
-        "eye": 61,
-        "discipline": 67,
-        "speed": 67,
-        "baseInstinct": 62,
-        "bunting": 52,
+        "ovr": 78,
+        "contact": 69,
+        "power": 74,
+        "eye": 82,
+        "discipline": 77,
+        "speed": 74,
+        "baseInstinct": 71,
+        "bunting": 71,
         "platoon": 50,
-        "fielding": 66,
-        "arm": 59,
+        "fielding": 72,
+        "arm": 79,
         "battingClutch": 69
       },
       "positionRatings": {
-        "SP": 70
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SPLITTER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 2
-        }
-      ]
+        "LF": 78
+      }
     },
     "coach": null,
     "manager": null,

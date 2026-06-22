@@ -1,9 +1,9 @@
 {
   "id": "PLY_12355",
-  "name": "에르난데스 블레이크",
-  "nameEn": "Hernandez Blake",
+  "name": "Clark Hunter",
+  "nameEn": "Clark Hunter",
   "role": "player",
-  "age": 19,
+  "age": 31,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 47,
-  "popularity": 37,
+  "notes": "국적:쿠바",
+  "diligence": 58,
+  "popularity": 35,
   "militaryStatus": "군필",
   "entryYear": 2041,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 19,
+  "entryAge": 31,
   "details": {
     "player": {
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 46,
+      "jerseyNumber": 18,
       "primaryPosition": "SP",
-      "developmentRate": 59,
+      "developmentRate": 45,
       "potentialHidden": 67,
-      "proServiceYears": 0,
+      "proServiceYears": 9,
       "pitching": {
-        "ovr": 55,
-        "stamina": 54,
-        "velocity": 60,
-        "command": 46,
-        "control": 56,
-        "movement": 57,
-        "mentality": 56,
-        "recovery": 49,
-        "clutch": 45,
-        "holdRunners": 52
+        "ovr": 63,
+        "stamina": 58,
+        "velocity": 61,
+        "command": 62,
+        "control": 68,
+        "movement": 58,
+        "mentality": 62,
+        "recovery": 60,
+        "clutch": 51,
+        "holdRunners": 56
       },
       "batting": {
-        "ovr": 58,
-        "contact": 50,
-        "power": 59,
-        "eye": 59,
-        "discipline": 61,
-        "speed": 52,
-        "baseInstinct": 54,
-        "bunting": 43,
+        "ovr": 63,
+        "contact": 66,
+        "power": 54,
+        "eye": 66,
+        "discipline": 56,
+        "speed": 70,
+        "baseInstinct": 63,
+        "bunting": 48,
         "platoon": 50,
-        "fielding": 51,
-        "arm": 57,
-        "battingClutch": 53
+        "fielding": 54,
+        "arm": 59,
+        "battingClutch": 54
       },
       "positionRatings": {
-        "SP": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 63
+      }
     },
     "coach": null,
     "manager": null,

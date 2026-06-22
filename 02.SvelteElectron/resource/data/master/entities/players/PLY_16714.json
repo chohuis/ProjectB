@@ -1,6 +1,6 @@
 {
   "id": "PLY_16714",
-  "name": "토마스 그랜트",
+  "name": "Thomas Grant",
   "nameEn": "Thomas Grant",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 82,
   "popularity": 44,
   "militaryStatus": "군필",

@@ -1,72 +1,46 @@
 {
   "id": "PLY_02041",
-  "name": "매슨 데이비스",
-  "nameEn": "Mason Davis",
+  "name": "후지이 마코토",
+  "nameEn": "Fujii Makoto",
   "role": "player",
-  "age": 20,
+  "age": 33,
   "status": "active",
-  "originLeagueId": "LEAGUE_ABL",
-  "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_EMPIRE",
-  "teamId": "TEAM_ABL_EMPIRE_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SUNS",
+  "teamId": "TEAM_JBL_PL_SUNS_1",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
-      "handedness": "R",
-      "position": "UT",
-      "jerseyNumber": 82,
+      "playerType": "pitcher",
+      "handedness": "L",
+      "position": "RP",
+      "jerseyNumber": 6,
       "pitching": {
-        "ovr": 37,
-        "stamina": 40,
-        "velocity": 37,
-        "command": 41,
-        "control": 41,
-        "movement": 41,
-        "mentality": 39,
-        "recovery": 36,
-        "clutch": 43,
-        "holdRunners": 41
+        "ovr": 83,
+        "stamina": 69,
+        "velocity": 82,
+        "command": 76,
+        "control": 76,
+        "movement": 81,
+        "mentality": 83,
+        "recovery": 78
       },
       "batting": {
-        "ovr": 57,
-        "contact": 61,
-        "power": 62,
-        "eye": 56,
-        "discipline": 62,
-        "speed": 61,
-        "fielding": 58,
-        "arm": 59,
-        "battingClutch": 52,
-        "baseInstinct": 57,
-        "bunting": 50,
-        "platoon": 49
+        "ovr": 50,
+        "contact": 47,
+        "power": 47,
+        "eye": 53,
+        "discipline": 49,
+        "speed": 51,
+        "fielding": 45,
+        "arm": 49,
+        "battingClutch": 47
       },
-      "developmentRate": 49,
-      "potentialHidden": 75,
-      "primaryPosition": "UT",
-      "positionRatings": {
-        "UT": 57
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 6300,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 46,
+      "potentialHidden": 72
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 69,
-  "popularity": 49,
-  "militaryStatus": "군필"
+  }
 }

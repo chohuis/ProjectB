@@ -1,61 +1,46 @@
 {
   "id": "PLY_01822",
-  "name": "신민재",
-  "nameEn": "Shin Minjae",
+  "name": "사토 다이키",
+  "nameEn": "Sato Daiki",
   "role": "player",
-  "age": 18,
+  "age": 37,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_GOYANG_ARROW",
-  "teamId": "TEAM_HS_GOYANG_ARROW",
-  "grade": 3,
-  "schoolId": "SCHOOL_TEAM_HS_GOYANG_ARROW",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_THUNDERFALCONS",
+  "teamId": "TEAM_JBL_PL_THUNDERFALCONS_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "SS",
-      "jerseyNumber": 21,
+      "position": "CP",
+      "jerseyNumber": 12,
       "pitching": {
-        "ovr": 38,
-        "stamina": 35,
-        "velocity": 37,
-        "command": 38,
-        "control": 37,
-        "movement": 37,
-        "mentality": 35,
-        "recovery": 36,
-        "clutch": 41,
-        "holdRunners": 37
+        "ovr": 83,
+        "stamina": 74,
+        "velocity": 87,
+        "command": 83,
+        "control": 88,
+        "movement": 83,
+        "mentality": 84,
+        "recovery": 88
       },
       "batting": {
-        "ovr": 58,
-        "contact": 57,
-        "power": 59,
-        "eye": 64,
-        "discipline": 60,
+        "ovr": 68,
+        "contact": 62,
+        "power": 62,
+        "eye": 63,
+        "discipline": 68,
         "speed": 61,
-        "fielding": 54,
-        "arm": 63,
-        "battingClutch": 56,
-        "baseInstinct": 56,
-        "bunting": 53,
-        "platoon": 47
+        "fielding": 63,
+        "arm": 67,
+        "battingClutch": 68
       },
-      "developmentRate": 53,
-      "potentialHidden": 68,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 58
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 35,
+      "potentialHidden": 61
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 54,
-  "popularity": 29
+  }
 }

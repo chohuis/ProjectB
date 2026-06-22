@@ -3,12 +3,12 @@
   "name": "워커 데이비드",
   "nameEn": "Walker David",
   "role": "manager",
-  "age": 40,
+  "age": 69,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_DESERTSERPENTS",
-  "teamId": "TEAM_ABL_DESERTSERPENTS_2",
+  "clubId": "CLUB_ABL_ARI",
+  "teamId": "TEAM_ABL_ARI_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "",
@@ -26,9 +26,7 @@
         "control": 50,
         "movement": 50,
         "mentality": 50,
-        "recovery": 50,
-        "clutch": 50,
-        "holdRunners": 50
+        "recovery": 50
       },
       "batting": {
         "ovr": 50,
@@ -39,17 +37,10 @@
         "speed": 50,
         "fielding": 50,
         "arm": 50,
-        "battingClutch": 50,
-        "baseInstinct": 50,
-        "bunting": 45,
-        "platoon": 50
+        "battingClutch": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 70,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 50
-      }
+      "potentialHidden": 70
     },
     "coach": {
       "specialty": "-",
@@ -67,12 +58,11 @@
       "style": "균형",
       "experienceYears": 9,
       "stats": {
-        "motivation": 75,
-        "development": 50,
-        "strategy": 73,
-        "handlePressure": 64,
-        "handlePersonnel": 85,
-        "injuryMgmt": 35
+        "tactics": 73,
+        "decision": 64,
+        "rotationMgmt": 85,
+        "bullpenMgmt": 69,
+        "moraleMgmt": 75
       },
       "gamePlanBias": "",
       "riskTolerance": 65
@@ -90,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

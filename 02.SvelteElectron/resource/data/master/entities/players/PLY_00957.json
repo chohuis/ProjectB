@@ -1,14 +1,14 @@
 {
   "id": "PLY_00957",
   "name": "존슨 케빈",
-  "nameEn": "Jon 슨 케빈",
+  "nameEn": "Johnson Kevin",
   "role": "player",
   "age": 30,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_WINDBEARS",
-  "teamId": "TEAM_ABL_WINDBEARS_1",
+  "clubId": "CLUB_ABL_TOR",
+  "teamId": "TEAM_ABL_TOR",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 2,
       "pitching": {
-        "ovr": 78,
-        "stamina": 84,
-        "velocity": 74,
-        "command": 75,
-        "control": 77,
-        "movement": 76,
-        "mentality": 79,
-        "recovery": 75,
-        "clutch": 76,
-        "holdRunners": 76
+        "ovr": 89,
+        "stamina": 92,
+        "velocity": 92,
+        "command": 90,
+        "control": 83,
+        "movement": 85,
+        "mentality": 86,
+        "recovery": 80
       },
       "batting": {
-        "ovr": 60,
-        "contact": 61,
-        "power": 64,
-        "eye": 66,
-        "discipline": 65,
-        "speed": 53,
-        "fielding": 57,
-        "arm": 64,
-        "battingClutch": 50,
-        "baseInstinct": 56,
-        "bunting": 54,
-        "platoon": 49
+        "ovr": 61,
+        "contact": 58,
+        "power": 61,
+        "eye": 62,
+        "discipline": 63,
+        "speed": 60,
+        "fielding": 58,
+        "arm": 61,
+        "battingClutch": 66
       },
       "developmentRate": 47,
-      "potentialHidden": 70,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 78
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_FORKBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_KNUCKLEBALL",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 8,
-      "contract": {
-        "salary": 27900,
-        "durationYears": 3,
-        "remainingYears": 2,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 70
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

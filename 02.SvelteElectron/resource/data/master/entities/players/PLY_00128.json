@@ -1,9 +1,9 @@
 {
   "id": "PLY_00128",
   "name": "배기훈",
-  "nameEn": "Bae Gihun",
+  "nameEn": "Nam Min-jun",
   "role": "player",
-  "age": 19,
+  "age": 15,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "C",
       "jerseyNumber": 8,
       "pitching": {
-        "ovr": 36,
-        "stamina": 42,
-        "velocity": 39,
-        "command": 38,
-        "control": 32,
-        "movement": 38,
-        "mentality": 33,
-        "recovery": 35,
-        "clutch": 38,
-        "holdRunners": 41
+        "ovr": 51,
+        "stamina": 70,
+        "velocity": 66,
+        "command": 57,
+        "control": 56,
+        "movement": 47,
+        "mentality": 48,
+        "recovery": 63
       },
       "batting": {
-        "ovr": 56,
-        "contact": 57,
-        "power": 57,
-        "eye": 59,
+        "ovr": 63,
+        "contact": 46,
+        "power": 55,
+        "eye": 51,
         "discipline": 62,
         "speed": 52,
-        "fielding": 56,
-        "arm": 62,
-        "battingClutch": 54,
-        "baseInstinct": 48,
-        "bunting": 44,
-        "platoon": 46
+        "fielding": 64,
+        "arm": 68,
+        "battingClutch": 47
       },
       "developmentRate": 54,
-      "potentialHidden": 79,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 56
-      }
+      "potentialHidden": 79
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

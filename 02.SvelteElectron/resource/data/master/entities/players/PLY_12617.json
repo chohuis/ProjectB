@@ -1,9 +1,9 @@
 {
   "id": "PLY_12617",
-  "name": "루이스 코디",
-  "nameEn": "Lewis Cody",
+  "name": "Williams Cole",
+  "nameEn": "Williams Cole",
   "role": "player",
-  "age": 33,
+  "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 69,
-  "popularity": 41,
+  "notes": "국적:쿠바",
+  "diligence": 51,
+  "popularity": 21,
   "militaryStatus": "군필",
   "entryYear": 2042,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 33,
+  "entryAge": 24,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "L",
+      "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 34,
+      "jerseyNumber": 29,
       "primaryPosition": "SP",
-      "developmentRate": 49,
-      "potentialHidden": 71,
-      "proServiceYears": 11,
+      "developmentRate": 52,
+      "potentialHidden": 72,
+      "proServiceYears": 2,
       "pitching": {
-        "ovr": 88,
-        "stamina": 93,
-        "velocity": 90,
-        "command": 81,
-        "control": 82,
-        "movement": 82,
-        "mentality": 90,
-        "recovery": 89,
-        "clutch": 73,
-        "holdRunners": 83
+        "ovr": 78,
+        "stamina": 79,
+        "velocity": 76,
+        "command": 75,
+        "control": 76,
+        "movement": 70,
+        "mentality": 72,
+        "recovery": 76,
+        "clutch": 70,
+        "holdRunners": 73
       },
       "batting": {
-        "ovr": 74,
-        "contact": 78,
-        "power": 64,
+        "ovr": 78,
+        "contact": 77,
+        "power": 80,
         "eye": 70,
-        "discipline": 67,
-        "speed": 71,
-        "baseInstinct": 73,
-        "bunting": 66,
+        "discipline": 71,
+        "speed": 76,
+        "baseInstinct": 71,
+        "bunting": 61,
         "platoon": 50,
-        "fielding": 65,
-        "arm": 68,
-        "battingClutch": 73
+        "fielding": 76,
+        "arm": 76,
+        "battingClutch": 67
       },
       "positionRatings": {
-        "SP": 74
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "SP": 78
+      }
     },
     "coach": null,
     "manager": null,

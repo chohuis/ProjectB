@@ -1,72 +1,46 @@
 {
   "id": "PLY_02024",
-  "name": "마르코 브라운",
-  "nameEn": "Marco Brown",
+  "name": "기무라 류",
+  "nameEn": "Kimura Ryu",
   "role": "player",
-  "age": 24,
+  "age": 26,
   "status": "active",
-  "originLeagueId": "LEAGUE_ABL",
-  "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_EMPIRE",
-  "teamId": "TEAM_ABL_EMPIRE_1",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_SEAGULLS",
+  "teamId": "TEAM_JBL_PL_SEAGULLS_2",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "SS",
-      "jerseyNumber": 51,
+      "position": "CP",
+      "jerseyNumber": 39,
       "pitching": {
-        "ovr": 65,
-        "stamina": 64,
-        "velocity": 71,
-        "command": 61,
-        "control": 62,
+        "ovr": 67,
+        "stamina": 49,
+        "velocity": 68,
+        "command": 64,
+        "control": 64,
         "movement": 62,
-        "mentality": 63,
-        "recovery": 64,
-        "clutch": 63,
-        "holdRunners": 60
+        "mentality": 61,
+        "recovery": 63
       },
       "batting": {
-        "ovr": 85,
-        "contact": 90,
-        "power": 90,
-        "eye": 86,
-        "discipline": 87,
-        "speed": 86,
-        "fielding": 83,
-        "arm": 82,
-        "battingClutch": 80,
-        "baseInstinct": 82,
-        "bunting": 80,
-        "platoon": 74
+        "ovr": 32,
+        "contact": 37,
+        "power": 33,
+        "eye": 37,
+        "discipline": 34,
+        "speed": 39,
+        "fielding": 33,
+        "arm": 35,
+        "battingClutch": 36
       },
-      "developmentRate": 59,
-      "potentialHidden": 86,
-      "primaryPosition": "SS",
-      "positionRatings": {
-        "SS": 85
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 2,
-      "contract": {
-        "salary": 17800,
-        "durationYears": 3,
-        "remainingYears": 3,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 50,
+      "potentialHidden": 91
     },
     "coach": {
       "specialty": "-",
@@ -106,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 49,
-  "popularity": 20,
-  "militaryStatus": "군필"
+  }
 }

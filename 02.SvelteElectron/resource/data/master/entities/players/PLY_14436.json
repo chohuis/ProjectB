@@ -1,6 +1,6 @@
 {
   "id": "PLY_14436",
-  "name": "스미스 재크",
+  "name": "Smith Zach",
   "nameEn": "Smith Zach",
   "role": "player",
   "age": 26,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 84,
   "popularity": 24,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 66,
       "proServiceYears": 4,
       "pitching": {
-        "ovr": 62,
-        "stamina": 59,
-        "velocity": 68,
-        "command": 60,
-        "control": 56,
-        "movement": 54,
-        "mentality": 67,
-        "recovery": 56,
-        "clutch": 58,
-        "holdRunners": 49
+        "ovr": 66,
+        "stamina": 63,
+        "velocity": 72,
+        "command": 64,
+        "control": 60,
+        "movement": 57,
+        "mentality": 71,
+        "recovery": 60,
+        "clutch": 62,
+        "holdRunners": 52
       },
       "batting": {
         "ovr": 66,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 66
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

@@ -1,9 +1,9 @@
 {
   "id": "PLY_11810",
-  "name": "앨런 라이언",
-  "nameEn": "Allen Ryan",
+  "name": "Williams Caleb",
+  "nameEn": "Williams Caleb",
   "role": "player",
-  "age": 21,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 74,
-  "popularity": 17,
+  "notes": "국적:멕시코",
+  "diligence": 53,
+  "popularity": 35,
   "militaryStatus": "군필",
   "entryYear": 2037,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 21,
+  "entryAge": 22,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 83,
-      "primaryPosition": "SP",
-      "developmentRate": 70,
-      "potentialHidden": 66,
+      "position": "SS",
+      "jerseyNumber": 63,
+      "primaryPosition": "SS",
+      "developmentRate": 73,
+      "potentialHidden": 60,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 59,
-        "stamina": 58,
-        "velocity": 56,
-        "command": 50,
-        "control": 59,
-        "movement": 58,
-        "mentality": 57,
-        "recovery": 53,
-        "clutch": 51,
-        "holdRunners": 47
+        "ovr": 64,
+        "stamina": 62,
+        "velocity": 73,
+        "command": 53,
+        "control": 57,
+        "movement": 61,
+        "mentality": 69,
+        "recovery": 64,
+        "clutch": 54,
+        "holdRunners": 61
       },
       "batting": {
         "ovr": 64,
-        "contact": 67,
-        "power": 60,
-        "eye": 68,
-        "discipline": 56,
-        "speed": 61,
-        "baseInstinct": 64,
-        "bunting": 51,
+        "contact": 61,
+        "power": 61,
+        "eye": 61,
+        "discipline": 65,
+        "speed": 70,
+        "baseInstinct": 61,
+        "bunting": 56,
         "platoon": 50,
-        "fielding": 53,
-        "arm": 53,
-        "battingClutch": 64
+        "fielding": 54,
+        "arm": 62,
+        "battingClutch": 57
       },
       "positionRatings": {
-        "SP": 64
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SS": 64
+      }
     },
     "coach": null,
     "manager": null,

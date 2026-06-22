@@ -1,7 +1,7 @@
 {
   "id": "PLY_00203",
   "name": "차승민",
-  "nameEn": "Cha Seungmin",
+  "nameEn": "Cha Min-jae",
   "role": "player",
   "age": 21,
   "status": "active",
@@ -19,47 +19,28 @@
       "position": "SP",
       "jerseyNumber": 3,
       "pitching": {
-        "ovr": 55,
-        "stamina": 51,
-        "velocity": 57,
-        "command": 57,
-        "control": 59,
-        "movement": 51,
-        "mentality": 58,
-        "recovery": 60,
-        "clutch": 50,
-        "holdRunners": 48
+        "ovr": 52,
+        "stamina": 61,
+        "velocity": 61,
+        "command": 60,
+        "control": 54,
+        "movement": 57,
+        "mentality": 53,
+        "recovery": 51
       },
       "batting": {
-        "ovr": 37,
-        "contact": 37,
-        "power": 38,
-        "eye": 39,
-        "discipline": 32,
-        "speed": 40,
-        "fielding": 37,
-        "arm": 38,
-        "battingClutch": 40,
-        "baseInstinct": 37,
-        "bunting": 36,
-        "platoon": 41
+        "ovr": 36,
+        "contact": 31,
+        "power": 30,
+        "eye": 28,
+        "discipline": 33,
+        "speed": 31,
+        "fielding": 29,
+        "arm": 33,
+        "battingClutch": 34
       },
       "developmentRate": 59,
-      "potentialHidden": 76,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 55
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 1
-        }
-      ]
+      "potentialHidden": 76
     },
     "coach": {
       "specialty": "-",
@@ -99,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

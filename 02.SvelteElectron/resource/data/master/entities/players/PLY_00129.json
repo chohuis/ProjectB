@@ -1,9 +1,9 @@
 {
   "id": "PLY_00129",
   "name": "박민혁",
-  "nameEn": "Park Minhyeok",
+  "nameEn": "Ahn Tae-woo",
   "role": "player",
-  "age": 18,
+  "age": 17,
   "status": "active",
   "originLeagueId": "LEAGUE_HIGHSCHOOL",
   "leagueId": "LEAGUE_HIGHSCHOOL",
@@ -19,37 +19,28 @@
       "position": "C",
       "jerseyNumber": 9,
       "pitching": {
-        "ovr": 25,
-        "stamina": 22,
-        "velocity": 26,
-        "command": 29,
-        "control": 25,
-        "movement": 25,
-        "mentality": 26,
-        "recovery": 21,
-        "clutch": 34,
-        "holdRunners": 37
+        "ovr": 41,
+        "stamina": 61,
+        "velocity": 59,
+        "command": 59,
+        "control": 50,
+        "movement": 44,
+        "mentality": 58,
+        "recovery": 62
       },
       "batting": {
-        "ovr": 45,
-        "contact": 44,
-        "power": 51,
-        "eye": 49,
-        "discipline": 48,
-        "speed": 49,
-        "fielding": 43,
-        "arm": 47,
-        "battingClutch": 38,
-        "baseInstinct": 45,
-        "bunting": 32,
-        "platoon": 36
+        "ovr": 48,
+        "contact": 53,
+        "power": 42,
+        "eye": 57,
+        "discipline": 42,
+        "speed": 47,
+        "fielding": 45,
+        "arm": 55,
+        "battingClutch": 53
       },
       "developmentRate": 61,
-      "potentialHidden": 61,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 45
-      }
+      "potentialHidden": 61
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

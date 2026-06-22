@@ -1,6 +1,6 @@
 {
   "id": "PLY_15876",
-  "name": "홀 콜",
+  "name": "Hall Cole",
   "nameEn": "Hall Cole",
   "role": "player",
   "age": 34,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 64,
   "popularity": 22,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 43
       },
       "batting": {
-        "ovr": 65,
-        "contact": 63,
-        "power": 51,
-        "eye": 60,
-        "discipline": 55,
-        "speed": 60,
-        "baseInstinct": 53,
-        "bunting": 54,
-        "platoon": 63,
-        "fielding": 54,
-        "arm": 55,
-        "battingClutch": 63
+        "ovr": 52,
+        "contact": 50,
+        "power": 41,
+        "eye": 48,
+        "discipline": 44,
+        "speed": 48,
+        "baseInstinct": 42,
+        "bunting": 43,
+        "platoon": 50,
+        "fielding": 43,
+        "arm": 44,
+        "battingClutch": 50
       },
       "positionRatings": {
         "RF": 52

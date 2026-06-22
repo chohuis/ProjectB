@@ -1,6 +1,6 @@
 {
   "id": "PLY_16142",
-  "name": "라이트 다니엘",
+  "name": "Wright Daniel",
   "nameEn": "Wright Daniel",
   "role": "player",
   "age": 22,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 59,
   "popularity": 39,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 75,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 53,
-        "stamina": 45,
-        "velocity": 56,
-        "command": 45,
-        "control": 53,
-        "movement": 55,
-        "mentality": 54,
-        "recovery": 52,
-        "clutch": 42,
-        "holdRunners": 51
+        "ovr": 54,
+        "stamina": 46,
+        "velocity": 57,
+        "command": 46,
+        "control": 54,
+        "movement": 56,
+        "mentality": 55,
+        "recovery": 53,
+        "clutch": 43,
+        "holdRunners": 52
       },
       "batting": {
         "ovr": 54,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 54
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

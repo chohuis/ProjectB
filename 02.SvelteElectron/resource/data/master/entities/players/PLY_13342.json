@@ -1,9 +1,9 @@
 {
   "id": "PLY_13342",
-  "name": "앤더슨 제이크",
-  "nameEn": "Anderson Jake",
+  "name": "Brown Luis",
+  "nameEn": "Brown Luis",
   "role": "player",
-  "age": 21,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 67,
-  "popularity": 25,
+  "notes": "국적:멕시코",
+  "diligence": 55,
+  "popularity": 31,
   "militaryStatus": "군필",
   "entryYear": 2047,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 21,
+  "entryAge": 22,
   "details": {
     "player": {
       "playerType": "pitcher",
-      "handedness": "R",
+      "handedness": "L",
       "position": "SP",
-      "jerseyNumber": 51,
+      "jerseyNumber": 18,
       "primaryPosition": "SP",
-      "developmentRate": 62,
-      "potentialHidden": 61,
+      "developmentRate": 68,
+      "potentialHidden": 89,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 59,
-        "stamina": 53,
-        "velocity": 68,
-        "command": 52,
-        "control": 61,
-        "movement": 50,
-        "mentality": 53,
-        "recovery": 53,
-        "clutch": 49,
-        "holdRunners": 46
+        "ovr": 66,
+        "stamina": 67,
+        "velocity": 67,
+        "command": 60,
+        "control": 65,
+        "movement": 60,
+        "mentality": 67,
+        "recovery": 65,
+        "clutch": 63,
+        "holdRunners": 57
       },
       "batting": {
-        "ovr": 64,
-        "contact": 56,
-        "power": 63,
-        "eye": 59,
-        "discipline": 66,
-        "speed": 64,
-        "baseInstinct": 64,
-        "bunting": 56,
+        "ovr": 66,
+        "contact": 59,
+        "power": 65,
+        "eye": 60,
+        "discipline": 67,
+        "speed": 59,
+        "baseInstinct": 62,
+        "bunting": 53,
         "platoon": 50,
-        "fielding": 56,
-        "arm": 60,
-        "battingClutch": 53
+        "fielding": 59,
+        "arm": 58,
+        "battingClutch": 61
       },
       "positionRatings": {
-        "SP": 64
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 3
-        }
-      ]
+        "SP": 66
+      }
     },
     "coach": null,
     "manager": null,

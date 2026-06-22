@@ -1,6 +1,6 @@
 {
   "id": "PLY_16689",
-  "name": "가르시아 알렉스",
+  "name": "Garcia Alex",
   "nameEn": "Garcia Alex",
   "role": "player",
   "age": 30,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 67,
   "popularity": 38,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 66,
       "proServiceYears": 8,
       "pitching": {
-        "ovr": 57,
-        "stamina": 56,
-        "velocity": 55,
-        "command": 52,
-        "control": 62,
-        "movement": 48,
-        "mentality": 63,
-        "recovery": 57,
-        "clutch": 56,
-        "holdRunners": 56
+        "ovr": 50,
+        "stamina": 49,
+        "velocity": 48,
+        "command": 46,
+        "control": 54,
+        "movement": 42,
+        "mentality": 55,
+        "recovery": 50,
+        "clutch": 49,
+        "holdRunners": 49
       },
       "batting": {
         "ovr": 50,
@@ -57,13 +57,7 @@
       },
       "positionRatings": {
         "SP": 50
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

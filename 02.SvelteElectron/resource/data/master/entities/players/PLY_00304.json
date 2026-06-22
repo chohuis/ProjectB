@@ -1,7 +1,7 @@
 {
   "id": "PLY_00304",
   "name": "홍승우",
-  "nameEn": "Hong Seungu",
+  "nameEn": "Han Ju-won",
   "role": "player",
   "age": 23,
   "status": "active",
@@ -19,58 +19,28 @@
       "position": "SP",
       "jerseyNumber": 4,
       "pitching": {
-        "ovr": 59,
+        "ovr": 66,
         "stamina": 63,
         "velocity": 64,
-        "command": 60,
-        "control": 58,
-        "movement": 63,
-        "mentality": 64,
-        "recovery": 55,
-        "clutch": 53,
-        "holdRunners": 55
+        "command": 58,
+        "control": 64,
+        "movement": 60,
+        "mentality": 63,
+        "recovery": 64
       },
       "batting": {
-        "ovr": 41,
-        "contact": 47,
-        "power": 44,
-        "eye": 40,
-        "discipline": 42,
-        "speed": 38,
-        "fielding": 47,
-        "arm": 37,
-        "battingClutch": 46,
-        "baseInstinct": 44,
-        "bunting": 33,
-        "platoon": 39
+        "ovr": 38,
+        "contact": 42,
+        "power": 42,
+        "eye": 44,
+        "discipline": 36,
+        "speed": 43,
+        "fielding": 39,
+        "arm": 36,
+        "battingClutch": 44
       },
       "developmentRate": 48,
-      "potentialHidden": 61,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 59
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 3,
-      "contract": {
-        "salary": 1300,
-        "durationYears": 2,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 61
     },
     "coach": {
       "specialty": "-",
@@ -110,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

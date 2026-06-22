@@ -1,6 +1,6 @@
 {
   "id": "PLY_15181",
-  "name": "애덤스 라이언",
+  "name": "Adams Ryan",
   "nameEn": "Adams Ryan",
   "role": "player",
   "age": 23,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 55,
   "popularity": 26,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 62,
       "proServiceYears": 1,
       "pitching": {
-        "ovr": 74,
-        "stamina": 69,
-        "velocity": 77,
-        "command": 64,
-        "control": 70,
-        "movement": 74,
-        "mentality": 77,
-        "recovery": 67,
-        "clutch": 72,
-        "holdRunners": 65
+        "ovr": 77,
+        "stamina": 72,
+        "velocity": 80,
+        "command": 67,
+        "control": 73,
+        "movement": 77,
+        "mentality": 80,
+        "recovery": 70,
+        "clutch": 75,
+        "holdRunners": 68
       },
       "batting": {
         "ovr": 77,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 77
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 5
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

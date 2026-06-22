@@ -1,9 +1,9 @@
 {
   "id": "PLY_11535",
-  "name": "로빈슨 크리스",
-  "nameEn": "Robinson Chris",
+  "name": "Jones Alex",
+  "nameEn": "Jones Alex",
   "role": "player",
-  "age": 21,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 73,
-  "popularity": 45,
+  "notes": "국적:도미니카",
+  "diligence": 77,
+  "popularity": 26,
   "militaryStatus": "군필",
   "entryYear": 2036,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 21,
+  "entryAge": 22,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 59,
-      "primaryPosition": "SP",
-      "developmentRate": 65,
-      "potentialHidden": 88,
+      "position": "2B",
+      "jerseyNumber": 74,
+      "primaryPosition": "2B",
+      "developmentRate": 77,
+      "potentialHidden": 81,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 52,
-        "stamina": 44,
-        "velocity": 59,
-        "command": 53,
+        "ovr": 53,
+        "stamina": 56,
+        "velocity": 53,
+        "command": 51,
         "control": 50,
-        "movement": 48,
-        "mentality": 46,
-        "recovery": 41,
-        "clutch": 49,
-        "holdRunners": 40
+        "movement": 55,
+        "mentality": 47,
+        "recovery": 55,
+        "clutch": 53,
+        "holdRunners": 39
       },
       "batting": {
-        "ovr": 55,
-        "contact": 60,
-        "power": 47,
-        "eye": 56,
-        "discipline": 55,
-        "speed": 57,
-        "baseInstinct": 51,
-        "bunting": 50,
+        "ovr": 53,
+        "contact": 54,
+        "power": 55,
+        "eye": 52,
+        "discipline": 52,
+        "speed": 50,
+        "baseInstinct": 55,
+        "bunting": 37,
         "platoon": 50,
-        "fielding": 53,
-        "arm": 52,
-        "battingClutch": 42
+        "fielding": 55,
+        "arm": 46,
+        "battingClutch": 52
       },
       "positionRatings": {
-        "SP": 55
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "2B": 53
+      }
     },
     "coach": null,
     "manager": null,

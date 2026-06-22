@@ -1,9 +1,9 @@
 {
   "id": "PLY_13960",
-  "name": "에르난데스 제이크",
-  "nameEn": "Hernandez Jake",
+  "name": "Thomas Cody",
+  "nameEn": "Thomas Cody",
   "role": "player",
-  "age": 31,
+  "age": 29,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,67 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 70,
-  "popularity": 33,
+  "notes": "국적:베네수엘라",
+  "diligence": 83,
+  "popularity": 15,
   "militaryStatus": "군필",
   "entryYear": 2050,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 31,
+  "entryAge": 29,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 47,
-      "primaryPosition": "SP",
-      "developmentRate": 54,
-      "potentialHidden": 66,
-      "proServiceYears": 9,
+      "position": "2B",
+      "jerseyNumber": 68,
+      "primaryPosition": "2B",
+      "developmentRate": 42,
+      "potentialHidden": 77,
+      "proServiceYears": 7,
       "pitching": {
-        "ovr": 74,
-        "stamina": 72,
-        "velocity": 80,
-        "command": 72,
-        "control": 71,
-        "movement": 70,
-        "mentality": 67,
-        "recovery": 66,
-        "clutch": 67,
-        "holdRunners": 65
+        "ovr": 62,
+        "stamina": 55,
+        "velocity": 62,
+        "command": 54,
+        "control": 59,
+        "movement": 64,
+        "mentality": 56,
+        "recovery": 59,
+        "clutch": 55,
+        "holdRunners": 59
       },
       "batting": {
-        "ovr": 71,
-        "contact": 68,
-        "power": 60,
+        "ovr": 62,
+        "contact": 64,
+        "power": 56,
         "eye": 63,
-        "discipline": 63,
-        "speed": 75,
+        "discipline": 56,
+        "speed": 66,
         "baseInstinct": 64,
-        "bunting": 64,
+        "bunting": 49,
         "platoon": 50,
-        "fielding": 66,
+        "fielding": 53,
         "arm": 63,
-        "battingClutch": 59
+        "battingClutch": 56
       },
       "positionRatings": {
-        "SP": 71
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 3
-        }
-      ]
+        "2B": 62
+      }
     },
     "coach": null,
     "manager": null,

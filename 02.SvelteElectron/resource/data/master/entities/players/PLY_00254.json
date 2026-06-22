@@ -1,7 +1,7 @@
 {
   "id": "PLY_00254",
   "name": "남찬영",
-  "nameEn": "Nam Chanyeong",
+  "nameEn": "Min Hyun-seo",
   "role": "player",
   "age": 22,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "2B",
       "jerseyNumber": 14,
       "pitching": {
-        "ovr": 43,
-        "stamina": 47,
-        "velocity": 49,
-        "command": 41,
-        "control": 48,
+        "ovr": 39,
+        "stamina": 39,
+        "velocity": 43,
+        "command": 44,
+        "control": 41,
         "movement": 41,
-        "mentality": 48,
-        "recovery": 40,
-        "clutch": 45,
-        "holdRunners": 40
+        "mentality": 43,
+        "recovery": 42
       },
       "batting": {
-        "ovr": 63,
-        "contact": 63,
-        "power": 65,
+        "ovr": 66,
+        "contact": 65,
+        "power": 63,
         "eye": 66,
-        "discipline": 64,
-        "speed": 64,
-        "fielding": 69,
-        "arm": 69,
-        "battingClutch": 57,
-        "baseInstinct": 58,
-        "bunting": 47,
-        "platoon": 51
+        "discipline": 59,
+        "speed": 62,
+        "fielding": 65,
+        "arm": 67,
+        "battingClutch": 67
       },
       "developmentRate": 63,
-      "potentialHidden": 67,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 63
-      }
+      "potentialHidden": 67
     },
     "coach": {
       "specialty": "-",
@@ -89,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

@@ -1,6 +1,6 @@
 {
   "id": "PLY_16477",
-  "name": "테일러 에반",
+  "name": "Taylor Evan",
   "nameEn": "Taylor Evan",
   "role": "player",
   "age": 28,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 54,
   "popularity": 13,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 53,
       "proServiceYears": 6,
       "pitching": {
-        "ovr": 81,
-        "stamina": 78,
-        "velocity": 85,
-        "command": 71,
-        "control": 85,
-        "movement": 81,
-        "mentality": 85,
-        "recovery": 71,
-        "clutch": 79,
-        "holdRunners": 71
+        "ovr": 75,
+        "stamina": 72,
+        "velocity": 79,
+        "command": 66,
+        "control": 79,
+        "movement": 75,
+        "mentality": 79,
+        "recovery": 66,
+        "clutch": 73,
+        "holdRunners": 66
       },
       "batting": {
         "ovr": 75,
@@ -57,21 +57,7 @@
       },
       "positionRatings": {
         "SP": 75
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SLIDER",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CHANGEUP",
-          "grade": 2
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

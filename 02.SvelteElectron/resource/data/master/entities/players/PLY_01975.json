@@ -1,72 +1,46 @@
 {
   "id": "PLY_01975",
-  "name": "황지후",
-  "nameEn": "Hwang Jihu",
+  "name": "이시다 히라쿠",
+  "nameEn": "Ishida Hiraku",
   "role": "player",
-  "age": 20,
+  "age": 30,
   "status": "active",
-  "originLeagueId": "LEAGUE_KBL",
-  "leagueId": "LEAGUE_KBL",
-  "clubId": "CLUB_KBL_ROYALLIONS",
-  "teamId": "TEAM_KBL_ROYALLIONS_2",
-  "grade": null,
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_PL_MARINESOLDIERS",
+  "teamId": "TEAM_JBL_PL_MARINESOLDIERS_2",
   "schoolId": "SCHOOL_NONE",
-  "notes": "",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
-      "playerType": "batter",
+      "playerType": "pitcher",
       "handedness": "R",
-      "position": "RF",
-      "jerseyNumber": 32,
+      "position": "RP",
+      "jerseyNumber": 35,
       "pitching": {
-        "ovr": 36,
-        "stamina": 38,
-        "velocity": 37,
-        "command": 38,
-        "control": 41,
-        "movement": 33,
-        "mentality": 34,
-        "recovery": 40,
-        "clutch": 40,
-        "holdRunners": 42
+        "ovr": 71,
+        "stamina": 62,
+        "velocity": 76,
+        "command": 70,
+        "control": 65,
+        "movement": 65,
+        "mentality": 72,
+        "recovery": 63
       },
       "batting": {
-        "ovr": 56,
-        "contact": 58,
-        "power": 56,
-        "eye": 62,
-        "discipline": 55,
-        "speed": 54,
-        "fielding": 56,
-        "arm": 60,
-        "battingClutch": 57,
-        "baseInstinct": 47,
-        "bunting": 43,
-        "platoon": 51
+        "ovr": 51,
+        "contact": 44,
+        "power": 45,
+        "eye": 48,
+        "discipline": 48,
+        "speed": 47,
+        "fielding": 46,
+        "arm": 44,
+        "battingClutch": 50
       },
-      "developmentRate": 39,
-      "potentialHidden": 72,
-      "primaryPosition": "RF",
-      "positionRatings": {
-        "RF": 56
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ],
-      "proServiceYears": 0,
-      "contract": {
-        "salary": 1800,
-        "durationYears": 1,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "developmentRate": 41,
+      "potentialHidden": 68
     },
     "coach": {
       "specialty": "-",
@@ -106,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 54,
-  "popularity": 25
+  }
 }

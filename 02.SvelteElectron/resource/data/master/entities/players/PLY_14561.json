@@ -1,6 +1,6 @@
 {
   "id": "PLY_14561",
-  "name": "존슨 그랜트",
+  "name": "Johnson Grant",
   "nameEn": "Johnson Grant",
   "role": "player",
   "age": 35,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 49,
   "popularity": 15,
   "militaryStatus": "군필",
@@ -42,18 +42,18 @@
         "holdRunners": 42
       },
       "batting": {
-        "ovr": 65,
-        "contact": 69,
-        "power": 53,
-        "eye": 56,
-        "discipline": 69,
-        "speed": 58,
-        "baseInstinct": 59,
-        "bunting": 55,
-        "platoon": 63,
-        "fielding": 63,
-        "arm": 60,
-        "battingClutch": 65
+        "ovr": 52,
+        "contact": 55,
+        "power": 42,
+        "eye": 45,
+        "discipline": 55,
+        "speed": 46,
+        "baseInstinct": 47,
+        "bunting": 44,
+        "platoon": 50,
+        "fielding": 50,
+        "arm": 48,
+        "battingClutch": 52
       },
       "positionRatings": {
         "SS": 52

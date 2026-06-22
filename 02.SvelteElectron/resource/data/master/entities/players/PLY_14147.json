@@ -1,6 +1,6 @@
 {
   "id": "PLY_14147",
-  "name": "넬슨 케빈",
+  "name": "Nelson Kevin",
   "nameEn": "Nelson Kevin",
   "role": "player",
   "age": 24,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 55,
   "popularity": 21,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 67,
       "proServiceYears": 2,
       "pitching": {
-        "ovr": 66,
-        "stamina": 68,
-        "velocity": 71,
-        "command": 67,
-        "control": 58,
-        "movement": 60,
-        "mentality": 62,
-        "recovery": 61,
-        "clutch": 60,
-        "holdRunners": 57
+        "ovr": 68,
+        "stamina": 70,
+        "velocity": 73,
+        "command": 69,
+        "control": 60,
+        "movement": 62,
+        "mentality": 64,
+        "recovery": 63,
+        "clutch": 62,
+        "holdRunners": 59
       },
       "batting": {
         "ovr": 68,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 68
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

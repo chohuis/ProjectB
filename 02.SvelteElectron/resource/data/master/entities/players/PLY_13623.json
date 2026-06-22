@@ -1,9 +1,9 @@
 {
   "id": "PLY_13623",
-  "name": "앨런 크리스",
-  "nameEn": "Allen Chris",
+  "name": "Smith Ryan",
+  "nameEn": "Smith Ryan",
   "role": "player",
-  "age": 25,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
@@ -11,63 +11,53 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
-  "diligence": 49,
-  "popularity": 44,
+  "notes": "국적:미국",
+  "diligence": 80,
+  "popularity": 46,
   "militaryStatus": "군필",
   "entryYear": 2048,
   "entryLeague": "LEAGUE_ABL",
   "entryTeam": null,
-  "entryAge": 25,
+  "entryAge": 21,
   "details": {
     "player": {
-      "playerType": "pitcher",
+      "playerType": "batter",
       "handedness": "R",
-      "position": "SP",
-      "jerseyNumber": 96,
-      "primaryPosition": "SP",
-      "developmentRate": 57,
-      "potentialHidden": 63,
-      "proServiceYears": 3,
+      "position": "2B",
+      "jerseyNumber": 14,
+      "primaryPosition": "2B",
+      "developmentRate": 67,
+      "potentialHidden": 65,
+      "proServiceYears": 0,
       "pitching": {
-        "ovr": 57,
-        "stamina": 54,
-        "velocity": 57,
-        "command": 55,
-        "control": 60,
-        "movement": 49,
-        "mentality": 62,
-        "recovery": 52,
-        "clutch": 56,
-        "holdRunners": 50
+        "ovr": 60,
+        "stamina": 60,
+        "velocity": 69,
+        "command": 51,
+        "control": 62,
+        "movement": 54,
+        "mentality": 58,
+        "recovery": 55,
+        "clutch": 52,
+        "holdRunners": 57
       },
       "batting": {
-        "ovr": 67,
-        "contact": 70,
-        "power": 65,
-        "eye": 62,
-        "discipline": 67,
-        "speed": 61,
-        "baseInstinct": 59,
-        "bunting": 49,
+        "ovr": 60,
+        "contact": 58,
+        "power": 57,
+        "eye": 59,
+        "discipline": 52,
+        "speed": 53,
+        "baseInstinct": 55,
+        "bunting": 53,
         "platoon": 50,
-        "fielding": 64,
-        "arm": 62,
-        "battingClutch": 66
+        "fielding": 50,
+        "arm": 60,
+        "battingClutch": 56
       },
       "positionRatings": {
-        "SP": 67
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "2B": 60
+      }
     },
     "coach": null,
     "manager": null,

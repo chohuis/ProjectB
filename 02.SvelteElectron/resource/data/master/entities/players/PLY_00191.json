@@ -1,7 +1,7 @@
 {
   "id": "PLY_00191",
   "name": "황성준",
-  "nameEn": "Hwang Seongjun",
+  "nameEn": "Ha Gi-hoon",
   "role": "player",
   "age": 21,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "C",
       "jerseyNumber": 11,
       "pitching": {
-        "ovr": 36,
-        "stamina": 33,
+        "ovr": 32,
+        "stamina": 31,
         "velocity": 35,
-        "command": 37,
-        "control": 38,
-        "movement": 35,
-        "mentality": 41,
-        "recovery": 32,
-        "clutch": 44,
-        "holdRunners": 33
+        "command": 30,
+        "control": 24,
+        "movement": 31,
+        "mentality": 27,
+        "recovery": 28
       },
       "batting": {
-        "ovr": 56,
-        "contact": 56,
-        "power": 60,
-        "eye": 62,
+        "ovr": 55,
+        "contact": 59,
+        "power": 53,
+        "eye": 58,
         "discipline": 59,
-        "speed": 63,
+        "speed": 51,
         "fielding": 57,
-        "arm": 54,
-        "battingClutch": 48,
-        "baseInstinct": 54,
-        "bunting": 46,
-        "platoon": 49
+        "arm": 56,
+        "battingClutch": 55
       },
       "developmentRate": 46,
-      "potentialHidden": 69,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 56
-      }
+      "potentialHidden": 69
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

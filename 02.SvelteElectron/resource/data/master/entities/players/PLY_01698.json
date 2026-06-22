@@ -1,61 +1,46 @@
 {
   "id": "PLY_01698",
-  "name": "심동현",
-  "nameEn": "Shim Donghyeon",
+  "name": "이토 유타카",
+  "nameEn": "Ito Yutaka",
   "role": "player",
-  "age": 17,
+  "age": 35,
   "status": "active",
-  "originLeagueId": "LEAGUE_HIGHSCHOOL",
-  "leagueId": "LEAGUE_HIGHSCHOOL",
-  "clubId": "TEAM_HS_JEJU_WIND",
-  "teamId": "TEAM_HS_JEJU_WIND",
-  "grade": 2,
-  "schoolId": "SCHOOL_TEAM_HS_JEJU_WIND",
-  "notes": "",
+  "originLeagueId": "LEAGUE_JBL",
+  "leagueId": "LEAGUE_JBL",
+  "clubId": "CLUB_JBL_CL_TIDERAVES",
+  "teamId": "TEAM_JBL_CL_TIDERAVES_1",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:일본",
   "details": {
     "player": {
       "playerType": "batter",
       "handedness": "R",
-      "position": "2B",
-      "jerseyNumber": 17,
+      "position": "DH",
+      "jerseyNumber": 23,
       "pitching": {
-        "ovr": 34,
-        "stamina": 32,
-        "velocity": 38,
-        "command": 34,
-        "control": 33,
-        "movement": 30,
-        "mentality": 32,
-        "recovery": 36,
-        "clutch": 41,
-        "holdRunners": 42
+        "ovr": 63,
+        "stamina": 58,
+        "velocity": 60,
+        "command": 59,
+        "control": 59,
+        "movement": 55,
+        "mentality": 64,
+        "recovery": 63
       },
       "batting": {
-        "ovr": 54,
-        "contact": 49,
-        "power": 49,
-        "eye": 52,
-        "discipline": 50,
-        "speed": 56,
-        "fielding": 49,
-        "arm": 59,
-        "battingClutch": 53,
-        "baseInstinct": 48,
-        "bunting": 44,
-        "platoon": 43
+        "ovr": 88,
+        "contact": 92,
+        "power": 92,
+        "eye": 91,
+        "discipline": 85,
+        "speed": 86,
+        "fielding": 84,
+        "arm": 84,
+        "battingClutch": 84
       },
-      "developmentRate": 64,
-      "potentialHidden": 69,
-      "primaryPosition": "2B",
-      "positionRatings": {
-        "2B": 54
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 1
-        }
-      ]
+      "developmentRate": 41,
+      "potentialHidden": 83
     },
     "coach": {
       "specialty": "-",
@@ -95,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 68,
-  "popularity": 21
+  }
 }

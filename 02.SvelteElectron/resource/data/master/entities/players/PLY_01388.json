@@ -1,14 +1,14 @@
 {
   "id": "PLY_01388",
   "name": "스콧 제이컵",
-  "nameEn": "Seu 콧 제이컵",
+  "nameEn": "Scott Jacob",
   "role": "player",
   "age": 28,
   "status": "active",
   "originLeagueId": "LEAGUE_ABL",
   "leagueId": "LEAGUE_ABL",
-  "clubId": "CLUB_ABL_LAKESPIRITS",
-  "teamId": "TEAM_ABL_LAKESPIRITS_2",
+  "clubId": "CLUB_ABL_SD",
+  "teamId": "TEAM_ABL_SD_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
@@ -19,62 +19,28 @@
       "position": "SP",
       "jerseyNumber": 43,
       "pitching": {
-        "ovr": 73,
-        "stamina": 79,
-        "velocity": 71,
-        "command": 75,
-        "control": 69,
-        "movement": 72,
-        "mentality": 71,
-        "recovery": 70,
-        "clutch": 69,
-        "holdRunners": 63
+        "ovr": 82,
+        "stamina": 81,
+        "velocity": 87,
+        "command": 80,
+        "control": 77,
+        "movement": 78,
+        "mentality": 79,
+        "recovery": 77
       },
       "batting": {
-        "ovr": 55,
-        "contact": 56,
-        "power": 52,
-        "eye": 59,
-        "discipline": 54,
-        "speed": 55,
-        "fielding": 50,
-        "arm": 54,
-        "battingClutch": 49,
-        "baseInstinct": 53,
-        "bunting": 49,
-        "platoon": 45
+        "ovr": 48,
+        "contact": 53,
+        "power": 50,
+        "eye": 48,
+        "discipline": 49,
+        "speed": 46,
+        "fielding": 47,
+        "arm": 49,
+        "battingClutch": 52
       },
       "developmentRate": 37,
-      "potentialHidden": 62,
-      "primaryPosition": "SP",
-      "positionRatings": {
-        "SP": 73
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_SCREWBALL",
-          "grade": 3
-        },
-        {
-          "id": "PITCH_FORKBALL",
-          "grade": 2
-        }
-      ],
-      "proServiceYears": 6,
-      "contract": {
-        "salary": 24000,
-        "durationYears": 3,
-        "remainingYears": 1,
-        "signingBonus": 0,
-        "teamOptionYears": 0,
-        "playerOptionYears": 0,
-        "noTrade": false,
-        "status": "active"
-      }
+      "potentialHidden": 62
     },
     "coach": {
       "specialty": "-",
@@ -114,15 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30,
-  "militaryStatus": "군필"
+  }
 }

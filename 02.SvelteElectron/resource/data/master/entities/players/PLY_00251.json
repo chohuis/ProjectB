@@ -1,7 +1,7 @@
 {
   "id": "PLY_00251",
   "name": "권재윤",
-  "nameEn": "Kwon Jaeyun",
+  "nameEn": "Park Tae-woo",
   "role": "player",
   "age": 21,
   "status": "active",
@@ -19,37 +19,28 @@
       "position": "C",
       "jerseyNumber": 11,
       "pitching": {
-        "ovr": 31,
-        "stamina": 29,
-        "velocity": 28,
-        "command": 33,
-        "control": 28,
-        "movement": 28,
-        "mentality": 29,
-        "recovery": 32,
-        "clutch": 40,
-        "holdRunners": 38
+        "ovr": 27,
+        "stamina": 20,
+        "velocity": 24,
+        "command": 27,
+        "control": 25,
+        "movement": 21,
+        "mentality": 22,
+        "recovery": 27
       },
       "batting": {
-        "ovr": 51,
-        "contact": 51,
+        "ovr": 57,
+        "contact": 55,
         "power": 53,
-        "eye": 53,
-        "discipline": 46,
-        "speed": 57,
-        "fielding": 46,
-        "arm": 56,
-        "battingClutch": 42,
-        "baseInstinct": 40,
-        "bunting": 43,
-        "platoon": 45
+        "eye": 51,
+        "discipline": 51,
+        "speed": 47,
+        "fielding": 55,
+        "arm": 57,
+        "battingClutch": 57
       },
       "developmentRate": 55,
-      "potentialHidden": 62,
-      "primaryPosition": "C",
-      "positionRatings": {
-        "C": 51
-      }
+      "potentialHidden": 62
     },
     "coach": {
       "specialty": "-",
@@ -89,14 +80,5 @@
       "budgetPolicy": "",
       "hiringPolicy": ""
     }
-  },
-  "contact": {
-    "category": "",
-    "relation": "",
-    "initialAffinity": 0,
-    "arcs": [],
-    "chat": {}
-  },
-  "diligence": 60,
-  "popularity": 30
+  }
 }

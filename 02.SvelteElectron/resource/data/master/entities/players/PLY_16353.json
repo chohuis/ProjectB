@@ -1,6 +1,6 @@
 {
   "id": "PLY_16353",
-  "name": "미첼 데릭",
+  "name": "Mitchell Derek",
   "nameEn": "Mitchell Derek",
   "role": "player",
   "age": 19,
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:일본",
   "diligence": 60,
   "popularity": 23,
   "militaryStatus": "군필",
@@ -30,16 +30,16 @@
       "potentialHidden": 85,
       "proServiceYears": 0,
       "pitching": {
-        "ovr": 50,
-        "stamina": 54,
-        "velocity": 49,
-        "command": 51,
-        "control": 54,
-        "movement": 49,
-        "mentality": 49,
-        "recovery": 47,
-        "clutch": 42,
-        "holdRunners": 36
+        "ovr": 51,
+        "stamina": 55,
+        "velocity": 50,
+        "command": 52,
+        "control": 55,
+        "movement": 50,
+        "mentality": 50,
+        "recovery": 48,
+        "clutch": 43,
+        "holdRunners": 37
       },
       "batting": {
         "ovr": 51,
@@ -57,17 +57,7 @@
       },
       "positionRatings": {
         "SP": 51
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 2
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+      }
     },
     "coach": null,
     "manager": null,

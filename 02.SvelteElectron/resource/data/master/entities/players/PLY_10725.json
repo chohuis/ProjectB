@@ -1,7 +1,7 @@
 {
   "id": "PLY_10725",
-  "name": "넬슨 코너",
-  "nameEn": "Nelson Connor",
+  "name": "Jackson Trevor",
+  "nameEn": "Jackson Trevor",
   "role": "player",
   "age": 21,
   "status": "active",
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "",
+  "notes": "국적:베네수엘라",
   "diligence": 77,
   "popularity": 47,
   "militaryStatus": "군필",
@@ -24,50 +24,40 @@
       "playerType": "pitcher",
       "handedness": "R",
       "position": "SP",
-      "jerseyNumber": 54,
+      "jerseyNumber": 48,
       "primaryPosition": "SP",
-      "developmentRate": 71,
-      "potentialHidden": 79,
+      "developmentRate": 73,
+      "potentialHidden": 93,
       "proServiceYears": 0,
       "pitching": {
         "ovr": 59,
-        "stamina": 59,
-        "velocity": 68,
-        "command": 55,
-        "control": 54,
-        "movement": 55,
-        "mentality": 55,
-        "recovery": 53,
-        "clutch": 57,
-        "holdRunners": 53
+        "stamina": 61,
+        "velocity": 62,
+        "command": 59,
+        "control": 56,
+        "movement": 63,
+        "mentality": 52,
+        "recovery": 60,
+        "clutch": 56,
+        "holdRunners": 55
       },
       "batting": {
-        "ovr": 64,
+        "ovr": 59,
         "contact": 57,
-        "power": 56,
-        "eye": 57,
-        "discipline": 57,
-        "speed": 66,
-        "baseInstinct": 62,
-        "bunting": 48,
+        "power": 59,
+        "eye": 59,
+        "discipline": 54,
+        "speed": 63,
+        "baseInstinct": 55,
+        "bunting": 44,
         "platoon": 50,
         "fielding": 58,
-        "arm": 59,
-        "battingClutch": 57
+        "arm": 57,
+        "battingClutch": 55
       },
       "positionRatings": {
-        "SP": 64
-      },
-      "pitches": [
-        {
-          "id": "PITCH_FASTBALL",
-          "grade": 4
-        },
-        {
-          "id": "PITCH_CURVE",
-          "grade": 1
-        }
-      ]
+        "SP": 59
+      }
     },
     "coach": null,
     "manager": null,
