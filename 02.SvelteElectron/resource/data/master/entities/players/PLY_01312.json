@@ -1,7 +1,7 @@
 ﻿{
   "id": "PLY_01312",
-  "name": "해리스 호세",
-  "nameEn": "Harris Jose",
+  "name": "이와사키 다케시",
+  "nameEn": "Iwasaki Takeshi",
   "role": "player",
   "age": 32,
   "status": "active",
@@ -11,7 +11,7 @@
   "teamId": "TEAM_ABL_CHC_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "국적:도미니카",
+  "notes": "국적:일본",
   "militaryStatus": "해당없음",
   "details": {
     "player": {

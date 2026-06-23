@@ -1,7 +1,7 @@
 {
   "id": "PLY_11308",
-  "name": "Young Kyle",
-  "nameEn": "Young Kyle",
+  "name": "허종수",
+  "nameEn": "Heo Jong-su",
   "role": "player",
   "age": 22,
   "status": "active",
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "국적:미국",
+  "notes": "국적:한국",
   "diligence": 71,
   "popularity": 12,
   "militaryStatus": "군필",

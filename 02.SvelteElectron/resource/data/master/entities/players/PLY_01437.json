@@ -1,7 +1,7 @@
 ﻿{
   "id": "PLY_01437",
-  "name": "밀러 다니엘",
-  "nameEn": "Miller Daniel",
+  "name": "송서준",
+  "nameEn": "Song Seo-jun",
   "role": "player",
   "age": 22,
   "status": "active",
@@ -11,7 +11,7 @@
   "teamId": "TEAM_ABL_SF_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "국적:도미니카",
+  "notes": "국적:한국",
   "militaryStatus": "해당없음",
   "details": {
     "player": {

@@ -1,7 +1,7 @@
 ﻿{
   "id": "PLY_00934",
-  "name": "넬슨 존",
-  "nameEn": "Nelson John",
+  "name": "무라카미 켄스케",
+  "nameEn": "Murakami Kensuke",
   "role": "player",
   "age": 34,
   "status": "active",
@@ -11,7 +11,7 @@
   "teamId": "TEAM_ABL_BOS",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "국적:도미니카",
+  "notes": "국적:일본",
   "militaryStatus": "해당없음",
   "details": {
     "player": {

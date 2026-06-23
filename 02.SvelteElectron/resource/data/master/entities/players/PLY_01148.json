@@ -1,7 +1,7 @@
 ﻿{
   "id": "PLY_01148",
-  "name": "라이트 메이슨",
-  "nameEn": "Wright Mason",
+  "name": "김예준",
+  "nameEn": "Kim Ye-jun",
   "role": "player",
   "age": 24,
   "status": "active",
@@ -11,7 +11,7 @@
   "teamId": "TEAM_ABL_ATL",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "국적:도미니카",
+  "notes": "국적:한국",
   "militaryStatus": "해당없음",
   "details": {
     "player": {

@@ -1,7 +1,7 @@
 ﻿{
   "id": "PLY_01327",
-  "name": "워커 니콜라스",
-  "nameEn": "Walker Nicholas",
+  "name": "오성민",
+  "nameEn": "Oh Sung-min",
   "role": "player",
   "age": 31,
   "status": "active",
@@ -11,7 +11,7 @@
   "teamId": "TEAM_ABL_STL",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "국적:도미니카",
+  "notes": "국적:한국",
   "militaryStatus": "해당없음",
   "details": {
     "player": {

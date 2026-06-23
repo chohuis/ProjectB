@@ -1,7 +1,7 @@
 {
   "id": "PLY_10716",
-  "name": "Thomas Grant",
-  "nameEn": "Thomas Grant",
+  "name": "나카무라 유스케",
+  "nameEn": "Nakamura Yusuke",
   "role": "player",
   "age": 20,
   "status": "active",
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "국적:멕시코",
+  "notes": "국적:일본",
   "diligence": 53,
   "popularity": 29,
   "militaryStatus": "군필",

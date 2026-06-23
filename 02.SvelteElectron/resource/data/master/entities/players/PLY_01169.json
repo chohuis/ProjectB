@@ -1,7 +1,7 @@
 ﻿{
   "id": "PLY_01169",
-  "name": "홀 앤드류",
-  "nameEn": "Hall Andrew",
+  "name": "오가와 아키라",
+  "nameEn": "Ogawa Akira",
   "role": "player",
   "age": 23,
   "status": "active",
@@ -11,7 +11,7 @@
   "teamId": "TEAM_ABL_ATL_AAA",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "국적:쿠바",
+  "notes": "국적:일본",
   "militaryStatus": "해당없음",
   "details": {
     "player": {

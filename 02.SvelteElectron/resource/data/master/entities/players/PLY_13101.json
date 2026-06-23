@@ -1,7 +1,7 @@
 {
   "id": "PLY_13101",
-  "name": "Martinez Dylan",
-  "nameEn": "Martinez Dylan",
+  "name": "정지호",
+  "nameEn": "Jung Ji-ho",
   "role": "player",
   "age": 21,
   "status": "active",
@@ -11,7 +11,7 @@
   "teamId": "",
   "schoolId": "",
   "grade": null,
-  "notes": "국적:멕시코",
+  "notes": "국적:한국",
   "diligence": 84,
   "popularity": 33,
   "militaryStatus": "군필",
