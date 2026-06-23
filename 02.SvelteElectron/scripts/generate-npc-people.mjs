@@ -264,7 +264,7 @@ function blankDetails() {
       position: "SP",
       jerseyNumber: 0,
       pitching: { ovr: 50, stamina: 50, velocity: 50, command: 50, control: 50, movement: 50, mentality: 50, recovery: 50 },
-      batting: { ovr: 50, contact: 50, power: 50, eye: 50, discipline: 50, speed: 50, fielding: 50, arm: 50, battingClutch: 50 },
+      batting: { ovr: 50, contact: 50, power: 50, eye: 50, discipline: 50, speed: 50, fielding: 50, arm: 50, battingClutch: 50, baseInstinct: 45, bunting: 35, platoon: 50 },
       developmentRate: 50,
       potentialHidden: 70
     },
@@ -305,7 +305,7 @@ function buildPitching(rng, pos, ovr) {
 }
 
 function buildBatting(rng, pos, ovr) {
-  const b = { ovr, contact: ovr, power: ovr, eye: ovr - 1, discipline: ovr - 1, speed: ovr - 1, fielding: ovr - 2, arm: ovr - 1, battingClutch: ovr };
+  const b = { ovr, contact: ovr, power: ovr, eye: ovr - 1, discipline: ovr - 1, speed: ovr - 1, fielding: ovr - 2, arm: ovr - 1, battingClutch: ovr, baseInstinct: clamp(ovr - 5), bunting: clamp(ovr - 15), platoon: 50 };
   if (pos === "C") { b.arm += 4; b.fielding += 3; b.speed -= 3; }
   if (pos === "1B") { b.power += 4; b.speed -= 4; b.arm -= 2; }
   if (["2B", "SS"].includes(pos)) { b.speed += 3; b.fielding += 3; b.power -= 3; }

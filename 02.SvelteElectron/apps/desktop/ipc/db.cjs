@@ -1105,8 +1105,11 @@ function dbLoadSlot(db, slotId) {
       } : undefined,
       batting: n.bat_ovr != null ? {
         ovr: n.bat_ovr, contact: n.bat_contact, power: n.bat_power, eye: n.bat_eye,
-        discipline: n.bat_discipline, speed: n.bat_speed, baseInstinct: n.bat_base_instinct,
-        bunting: n.bat_bunting, platoon: n.bat_platoon, fielding: n.bat_fielding,
+        discipline: n.bat_discipline, speed: n.bat_speed,
+        baseInstinct: n.bat_base_instinct ?? n.bat_ovr,
+        bunting:      n.bat_bunting       ?? n.bat_ovr,
+        platoon:      n.bat_platoon       ?? 50,
+        fielding: n.bat_fielding,
         arm: n.bat_arm, battingClutch: n.bat_batting_clutch ?? n.bat_ovr,
       } : undefined,
       careerHistory: npcHistMap[n.npc_id] ?? [],
@@ -1310,8 +1313,11 @@ function masterRowToEntityRow(r) {
     } : null,
     batting: r.bat_ovr != null ? {
       ovr: r.bat_ovr, contact: r.bat_contact, power: r.bat_power, eye: r.bat_eye,
-      discipline: r.bat_discipline, speed: r.bat_speed, baseInstinct: r.bat_base_instinct,
-      bunting: r.bat_bunting, platoon: r.bat_platoon, fielding: r.bat_fielding,
+      discipline: r.bat_discipline, speed: r.bat_speed,
+      baseInstinct: r.bat_base_instinct ?? r.bat_ovr,
+      bunting:      r.bat_bunting       ?? r.bat_ovr,
+      platoon:      r.bat_platoon       ?? 50,
+      fielding: r.bat_fielding,
       arm: r.bat_arm, battingClutch: r.bat_batting_clutch ?? r.bat_ovr,
     } : null,
   };

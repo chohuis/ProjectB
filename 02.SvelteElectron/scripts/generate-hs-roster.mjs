@@ -94,7 +94,7 @@ function blankPlayer() {
   return {
     playerType: "pitcher", handedness: "R", position: "SP", jerseyNumber: 0,
     pitching: { ovr:50, stamina:50, velocity:50, command:50, control:50, movement:50, mentality:50, recovery:50 },
-    batting:  { ovr:50, contact:50, power:50, eye:50, discipline:50, speed:50, fielding:50, arm:50, battingClutch:50 },
+    batting:  { ovr:50, contact:50, power:50, eye:50, discipline:50, speed:50, fielding:50, arm:50, battingClutch:50, baseInstinct:45, bunting:35, platoon:50 },
     developmentRate: 50, potentialHidden: 65,
   };
 }
@@ -261,6 +261,9 @@ function generateTeam(team, teamIdx) {
       fielding:     genStat(rng, 55 + bias + gradeBonus, 10),
       arm:          genStat(rng, 55 + bias + gradeBonus, 10),
       battingClutch: genStat(rng, 52 + bias + gradeBonus, 10),
+      baseInstinct:  genStat(rng, 50 + bias + gradeBonus, 10),
+      bunting:       genStat(rng, 38 + bias + gradeBonus, 10),
+      platoon:       50,
     };
 
     entities.push({

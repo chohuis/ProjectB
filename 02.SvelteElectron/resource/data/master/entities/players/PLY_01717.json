@@ -38,7 +38,10 @@
         "speed": 63,
         "fielding": 65,
         "arm": 66,
-        "battingClutch": 66
+        "battingClutch": 66,
+        "baseInstinct": 65,
+        "bunting": 55,
+        "platoon": 50
       },
       "developmentRate": 55,
       "potentialHidden": 78
