@@ -49,6 +49,8 @@ contextBridge.exposeInMainWorld("projectB", {
   npcBgHsGraduateDraft:        (p) => ipcRenderer.invoke("npc:bgHsGraduateDraft",        p),
   npcDetermineProtagonistDraft: (p) => ipcRenderer.invoke("npc:determineProtagonistDraft", p),
   npcAdvanceProtagonistGrade:   (p) => ipcRenderer.invoke("npc:advanceProtagonistGrade",   p),
+  npcAdvanceAllGrades:          (p) => ipcRenderer.invoke("npc:advanceAllGrades",          p),
+  npcAdvanceAllAges:            (p) => ipcRenderer.invoke("npc:advanceAllAges",            p),
   npcBulkInsertGameLogs:        (p) => ipcRenderer.invoke("npc:bulkInsertGameLogs",        p),
   npcTrimGameLogs:              (p) => ipcRenderer.invoke("npc:trimGameLogs",              p),
   npcGetRecentGames:            (p) => ipcRenderer.invoke("npc:getRecentGames",            p),

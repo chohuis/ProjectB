@@ -325,6 +325,28 @@ pub fn advance_protagonist_grade_native(params_json: String) -> String {
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("advanceProtagonistGradeNative/serialize", e))
 }
 
+/// HS + 대학 전체 학년 진급 (단일 호출)
+#[napi]
+pub fn advance_all_grades_native(params_json: String) -> String {
+    let params: AdvanceGradesParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("advanceAllGradesNative", e),
+    };
+    let result = npc_sim::advance_all_grades(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("advanceAllGradesNative/serialize", e))
+}
+
+/// 전체 NPC 나이 +1 (학년 진급 이후 단일 호출)
+#[napi]
+pub fn advance_all_ages_native(params_json: String) -> String {
+    let params: AdvanceAllAgesParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("advanceAllAgesNative", e),
+    };
+    let result = npc_sim::advance_all_ages(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("advanceAllAgesNative/serialize", e))
+}
+
 // ── 성장 엔진 (Phase 4) ───────────────────────────────────────────────────────
 
 /// 주간 훈련 성장 계산

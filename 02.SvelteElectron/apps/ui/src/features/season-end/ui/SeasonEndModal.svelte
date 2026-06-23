@@ -376,9 +376,7 @@
     // ── 독립리그: 오프시즌 W39~W47에 careerChoiceHub로 이미 처리됨 ──
     // SeasonEndModal에서는 연간 정산만 진행
 
-    let progressedByHighschoolSync = false;
     if (p.careerStage === "highschool" && p.schoolId) {
-      progressedByHighschoolSync = true;
       gameStore.addMessage({
         id: `msg-season-hs-sync-${Date.now()}`,
         category: "news",
@@ -429,7 +427,7 @@
       const indIds  = $masterStore.teams.filter(t => t.leagueId === "LEAGUE_INDEPENDENT").map(t => t.id);
       await gameStore.processNpcDraft(now, univIds, indIds);
     }
-    if (!progressedByHighschoolSync) gameStore.advanceSeasonYear($seasonStore.seasonYear);
+    gameStore.advanceSeasonYear($seasonStore.seasonYear);
     seasonStore.startNewSeason();
 
     // gradeBeforeAdvance 기준으로 판단: processSeasonEnd 후 p.grade는 이미 증가해 있으므로

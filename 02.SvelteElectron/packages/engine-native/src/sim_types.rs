@@ -150,7 +150,16 @@ pub struct OffseasonOutput {
 #[serde(rename_all = "camelCase")]
 pub struct GradeAdvanceResult {
     pub updated: Vec<NpcSaveState>,
-    pub graduated: Vec<NpcSaveState>,
+    pub hs_graduated: Vec<NpcSaveState>,    // HS grade 3 → 드래프트 풀
+    pub univ_graduated: Vec<NpcSaveState>,  // 대학 grade 4 → 드래프트 풀
+}
+
+// ── 전체 나이 증가 입력 ─────────────────────────────────────────────────────────
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct AdvanceAllAgesParams {
+    pub npcs: Vec<NpcSaveState>,
 }
 
 // ── 신입생 생성 파라미터 ─────────────────────────────────────────────────────────
@@ -455,7 +464,6 @@ pub struct SimGameResult {
 #[serde(rename_all = "camelCase")]
 pub struct ProtagonistGradeResult {
     pub new_grade: serde_json::Value,
-    pub new_age: i32,
     pub is_graduating: bool,
 }
 

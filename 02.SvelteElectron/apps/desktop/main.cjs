@@ -480,6 +480,14 @@ app.whenReady().then(() => {
     try { return engineNative.advanceProtagonistGradeNative(paramsJson); }
     catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
+  ipcMain.handle("npc:advanceAllGrades", (_event, paramsJson) => {
+    try { return engineNative.advanceAllGradesNative(paramsJson); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("npc:advanceAllAges", (_event, paramsJson) => {
+    try { return engineNative.advanceAllAgesNative(paramsJson); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
 
   // ── NPC 경기 기록 IPC ─────────────────────────────────────────────────────────
   ipcMain.handle("npc:bulkInsertGameLogs", (_event, p) => {

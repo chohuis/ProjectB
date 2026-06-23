@@ -24,7 +24,8 @@ import type {
 } from "../types/save";
 import { makeSaveGame, migrateSaveGame } from "../types/save";
 import {
-  advanceHighSchoolGrades,
+  advanceAllGrades,
+  advanceAllAges,
   advanceProtagonistGrade,
   initHighSchoolNpcs,
 } from "../utils/gradeAdvance";
@@ -1606,38 +1607,27 @@ function createGameStore() {
       });
     },
 
-    // 시즌 종료 후 주인공 상태 갱신 (나이+1, 학년+1, 프로연차+1, 오프시즌 회복)
+    // 시즌 종료 후 주인공 상태 갱신 (나이+1, 프로연차+1, 오프시즌 회복)
+    // 학년 진급은 processSeasonEnd에서 먼저 처리되므로 여기서는 age만 증가
     advanceSeasonYear(_seasonYear?: number) {
       update((s) => {
         const p = s.protagonist;
         const isPro = ["pro", "pro_kbl", "pro_abl", "pro_jbl"].includes(p.careerStage);
-        const isStudent = ["highschool", "university"].includes(p.careerStage);
-        const newGrade =
-          isStudent && p.grade && p.grade < 3
-            ? ((p.grade + 1) as 1 | 2 | 3)
-            : p.grade;
-        const draftTriggeredReset =
-          p.careerStage === "highschool" && newGrade === 3;
         const protagonist: ProtagonistSave = {
           ...p,
           age: p.age + 1,
-          grade: newGrade,
           proServiceYears: isPro ? p.proServiceYears + 1 : p.proServiceYears,
           condition: Math.min(100, p.condition + 20),
           fatigue: Math.max(0, p.fatigue - 30),
           seasonHealth: { lowConditionWeeks: 0, highFatigueWeeks: 0, injuryCount: 0, totalWeeks: 0 },
           sportsUnitApplied: false,
         };
-        const schoolState = draftTriggeredReset
-          ? { ...s.schoolState, draftTriggered: false }
-          : s.schoolState;
 
         return {
           ...s,
           protagonist,
           player: toPlayerCompat(protagonist),
-          school: toSchoolCompat(protagonist.careerStage, schoolState),
-          schoolState,
+          school: toSchoolCompat(protagonist.careerStage, s.schoolState),
         };
       });
     },
@@ -2127,30 +2117,37 @@ function createGameStore() {
       }));
     },
 
-    // 시즌 종료 처리: 학년 진급 + 졸업
+    // 시즌 종료 처리: ① 학년 진급 → ② 나이 일괄 +1
     // 신입생은 다음 시즌 W1에 master.db entry_year 기반으로 자동 활성화됨
     async processSeasonEnd(seasonYear: number) {
       const s = get({ subscribe });
 
-      // 1. 학년 진급 + 졸업
-      const { updated, graduated } = await advanceHighSchoolGrades(s.npcs, seasonYear);
-      autoLog(`[시즌종료] 고교NPC 진급 처리: 재학 ${updated.length}명, 졸업(드래프트대기) ${graduated.length}명`);
+      // ① HS + 대학 전체 NPC 학년 진급 (나이 증가 없음)
+      const { updated, hsGraduated, univGraduated } = await advanceAllGrades(s.npcs, seasonYear);
+      autoLog(`[시즌종료] NPC 진급: 재학 ${updated.length}명, HS졸업 ${hsGraduated.length}명, 대학졸업 ${univGraduated.length}명`);
 
-      // 2. 주인공 학년 진급
+      // ② 전체 NPC 나이 +1 (단일 호출 — 졸업생 포함)
+      const allNpcs = [...updated, ...hsGraduated, ...univGraduated];
+      const agedNpcs = await advanceAllAges(allNpcs);
+      const hsGradIds   = new Set(hsGraduated.map(n => n.npcId));
+      const univGradIds = new Set(univGraduated.map(n => n.npcId));
+      const agedUpdated      = agedNpcs.filter(n => !hsGradIds.has(n.npcId) && !univGradIds.has(n.npcId));
+      const agedHsGraduated  = agedNpcs.filter(n => hsGradIds.has(n.npcId));
+      const agedUnivGraduated = agedNpcs.filter(n => univGradIds.has(n.npcId));
+
+      // ③ 주인공 학년 진급 (HS + 대학, 나이는 advanceSeasonYear에서)
       const proto = s.protagonist;
-      const gradeResult = proto.grade != null && proto.careerStage === "highschool"
-        ? advanceProtagonistGrade(proto.grade, proto.age)
+      const isStudentProto = proto.grade != null && ["highschool", "university"].includes(proto.careerStage);
+      const gradeResult = isStudentProto
+        ? advanceProtagonistGrade(proto.grade!, proto.careerStage)
         : null;
-
-      const updatedProto = gradeResult
-        ? { ...proto, ...gradeResult.patch }
-        : proto;
+      const updatedProto = gradeResult ? { ...proto, ...gradeResult.patch } : proto;
 
       update((st) => ({
         ...st,
-        npcs: updated,
+        npcs: agedUpdated,
         protagonist: updatedProto,
-        pendingDraft: graduated,
+        pendingDraft: [...st.pendingDraft, ...agedHsGraduated, ...agedUnivGraduated],
       }));
     },
 

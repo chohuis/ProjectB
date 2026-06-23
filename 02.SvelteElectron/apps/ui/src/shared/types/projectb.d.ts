@@ -118,6 +118,8 @@ declare global {
       npcBgHsGraduateDraft:        (p: string) => Promise<string>;
       npcDetermineProtagonistDraft: (p: string) => Promise<string>;
       npcAdvanceProtagonistGrade:   (p: string) => Promise<string>;
+      npcAdvanceAllGrades:          (p: string) => Promise<string>;
+      npcAdvanceAllAges:            (p: string) => Promise<string>;
       npcCalcWeeklyGrowth:          (p: string) => Promise<string>;
       // ── NPC 경기 기록 ──────────────────────────────────────────
       npcBulkInsertGameLogs:        (p: string) => Promise<string>;

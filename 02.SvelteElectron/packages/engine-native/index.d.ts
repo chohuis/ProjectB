@@ -57,6 +57,10 @@ export declare function determineProtagonistDraftNative(paramsJson: string): str
 export declare function runDraftBoardNative(paramsJson: string): string
 /** 주인공 학년 진급 */
 export declare function advanceProtagonistGradeNative(paramsJson: string): string
+/** HS + 대학 전체 학년 진급 (단일 호출) */
+export declare function advanceAllGradesNative(paramsJson: string): string
+/** 전체 NPC 나이 +1 (학년 진급 이후 단일 호출) */
+export declare function advanceAllAgesNative(paramsJson: string): string
 /** 주간 훈련 성장 계산 */
 export declare function calcTrainingGrowthNative(paramsJson: string): string
 /** 경기 성장 계산 */

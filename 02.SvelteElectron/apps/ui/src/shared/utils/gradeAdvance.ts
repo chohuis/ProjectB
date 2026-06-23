@@ -24,10 +24,8 @@ export function entityToNpcState(
   const pl   = entity.details.player as EntityPlayerDetails;
   const grade = (Math.min(entity.grade ?? 3, 3)) as 1 | 2 | 3;
   const isMilitary = entity.militaryStatus === "현역";
-  // 체육부대: notes에서 group 파악 ("senior" = 전역 1년 남음, "junior" = 막입대 2년 남음)
   const notes = (entity as unknown as { notes?: string }).notes ?? "";
   const group = notes.includes("senior") ? "senior" : "junior";
-  // clubId에서 원소속팀 ID 파생 (CLUB_KBL_TWINWOLVES → TEAM_KBL_TWINWOLVES_1)
   const clubId = (entity as unknown as { clubId?: string }).clubId ?? "";
   const originLeagueId = entity.originLeagueId ?? "";
   const originalTeamId = clubId
@@ -80,11 +78,12 @@ export function initHighSchoolNpcs(
 
 // ── 학년 진급 결과 ────────────────────────────────────────────
 export interface GradeAdvanceResult {
-  updated:   NpcSaveState[];
-  graduated: NpcSaveState[];
+  updated:       NpcSaveState[];
+  hsGraduated:   NpcSaveState[];  // HS grade 3 → 드래프트 풀
+  univGraduated: NpcSaveState[];  // 대학 grade 4 → 드래프트 풀
 }
 
-// ── 학년 진급 (Rust DLL 위임) ────────────────────────────────
+// ── HS 전용 학년 진급 (기존 호환, advance_all_grades 사용 권장) ──
 export async function advanceHighSchoolGrades(
   npcs: NpcSaveState[],
   seasonYear: number,
@@ -98,26 +97,61 @@ export async function advanceHighSchoolGrades(
     potentialHidden: n.potentialHidden ?? 75,
   });
   return {
-    updated:   raw.updated.map(rehydrate),
-    graduated: raw.graduated.map(rehydrate),
+    updated:       raw.updated.map(rehydrate),
+    hsGraduated:   raw.hsGraduated.map(rehydrate),
+    univGraduated: raw.univGraduated.map(rehydrate),
   };
 }
 
-// ── 주인공 학년 진급 (경량 — TS 유지) ───────────────────────
+// ── HS + 대학 전체 학년 진급 (단일 호출) ─────────────────────
+export async function advanceAllGrades(
+  npcs: NpcSaveState[],
+  seasonYear: number,
+): Promise<GradeAdvanceResult> {
+  const emotionRoles = new Map(npcs.map(n => [n.npcId, n.emotionRole] as const));
+  const json = await api().npcAdvanceAllGrades(JSON.stringify({ npcs, seasonYear }));
+  const raw = parseResult<GradeAdvanceResult>(json);
+  const rehydrate = (n: NpcSaveState): NpcSaveState => ({
+    ...n,
+    emotionRole:     n.emotionRole     ?? emotionRoles.get(n.npcId),
+    potentialHidden: n.potentialHidden ?? 75,
+  });
+  return {
+    updated:       raw.updated.map(rehydrate),
+    hsGraduated:   raw.hsGraduated.map(rehydrate),
+    univGraduated: raw.univGraduated.map(rehydrate),
+  };
+}
+
+// ── 전체 NPC 나이 +1 (학년 진급 이후 단일 호출) ──────────────
+export async function advanceAllAges(
+  npcs: NpcSaveState[],
+): Promise<NpcSaveState[]> {
+  const emotionRoles = new Map(npcs.map(n => [n.npcId, n.emotionRole] as const));
+  const json = await api().npcAdvanceAllAges(JSON.stringify({ npcs }));
+  const result = parseResult<NpcSaveState[]>(json);
+  return result.map(n => ({
+    ...n,
+    emotionRole:     n.emotionRole     ?? emotionRoles.get(n.npcId),
+    potentialHidden: n.potentialHidden ?? 75,
+  }));
+}
+
+// ── 주인공 학년 진급 (TS 유지) ───────────────────────────────
 export interface ProtagonistGradeResult {
-  newGrade:     1 | 2 | 3 | "graduated";
-  patch:        { grade?: 1 | 2 | 3; age: number };
+  newGrade:     1 | 2 | 3 | 4 | "graduated";
+  patch:        { grade?: 1 | 2 | 3 | 4 };
   isGraduating: boolean;
 }
 
 export function advanceProtagonistGrade(
-  currentGrade: 1 | 2 | 3,
-  currentAge:   number,
+  currentGrade: number,
+  careerStage: string,
 ): ProtagonistGradeResult {
-  const newAge = currentAge + 1;
-  if (currentGrade === 3) {
-    return { newGrade: "graduated", patch: { age: newAge }, isGraduating: true };
+  const maxGrade = careerStage === "university" ? 4 : 3;
+  if (currentGrade >= maxGrade) {
+    return { newGrade: "graduated", patch: {}, isGraduating: true };
   }
-  const next = (currentGrade + 1) as 1 | 2 | 3;
-  return { newGrade: next, patch: { grade: next, age: newAge }, isGraduating: false };
+  const next = (currentGrade + 1) as 1 | 2 | 3 | 4;
+  return { newGrade: next, patch: { grade: next }, isGraduating: false };
 }

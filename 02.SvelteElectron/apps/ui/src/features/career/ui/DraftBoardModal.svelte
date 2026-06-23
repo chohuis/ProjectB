@@ -203,7 +203,7 @@
         id: heroId,
         name: heroName,
         ovr: $gameStore.protagonist.pitching.ovr,
-        age: $gameStore.protagonist.age ?? 18,
+        age: $gameStore.protagonist.age ?? 19,
         potential: 75,
         isUser: true,
         position: $gameStore.protagonist.position ?? "SP",

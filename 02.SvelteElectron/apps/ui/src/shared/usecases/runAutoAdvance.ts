@@ -386,7 +386,7 @@ export async function runSeasonEndBgProcessing(now: number): Promise<void> {
     }
   }
 
-  // Phase 7-A: 고교/대학/독립 배경 선수 나이+학년 증가
+  // Phase 7-A: 고교/대학/독립 배경 선수 학년 진급 + 나이 +1
   {
     const gNonPro = get(gameStore);
     const mNonPro = get(masterStore);
@@ -402,16 +402,22 @@ export async function runSeasonEndBgProcessing(now: number): Promise<void> {
     );
 
     if (toAgeNonPro.length > 0 && slotIdNonPro) {
-      const hsGrad3 = toAgeNonPro.filter(e => e.leagueId === "LEAGUE_HIGHSCHOOL" && (e.grade ?? 0) >= 3);
+      const hsGrad = toAgeNonPro.filter(e => e.leagueId === "LEAGUE_HIGHSCHOOL" && (e.grade ?? 0) >= 3);
       const hsOther = toAgeNonPro.filter(e => e.leagueId === "LEAGUE_HIGHSCHOOL" && (e.grade ?? 0) < 3);
-      const univCount = toAgeNonPro.filter(e => e.leagueId === "LEAGUE_UNIVERSITY").length;
+      const univGrad = toAgeNonPro.filter(e => e.leagueId === "LEAGUE_UNIVERSITY" && (e.grade ?? 0) >= 4);
+      const univOther = toAgeNonPro.filter(e => e.leagueId === "LEAGUE_UNIVERSITY" && (e.grade ?? 0) < 4);
       const indCount  = toAgeNonPro.filter(e => e.leagueId === "LEAGUE_INDEPENDENT").length;
 
       const agedNonPro = toAgeNonPro.map(e => {
-        // grade-3 고교 배경 선수는 졸업 처리 (DRAFT_POOL 이동, grade 제거)
+        // HS grade ≥ 3: 졸업 → DRAFT_POOL
         if (e.leagueId === "LEAGUE_HIGHSCHOOL" && (e.grade ?? 0) >= 3) {
           return { ...e, age: e.age + 1, leagueId: "LEAGUE_DRAFT_POOL", grade: null };
         }
+        // UNIV grade ≥ 4: 졸업 → DRAFT_POOL
+        if (e.leagueId === "LEAGUE_UNIVERSITY" && (e.grade ?? 0) >= 4) {
+          return { ...e, age: e.age + 1, leagueId: "LEAGUE_DRAFT_POOL", grade: null };
+        }
+        // HS/UNIV 재학: 학년+1, 나이+1
         return {
           ...e,
           age: e.age + 1,
@@ -426,7 +432,7 @@ export async function runSeasonEndBgProcessing(now: number): Promise<void> {
       ) as { ok: boolean; count?: number; error?: string };
 
       if (ageResNonPro.error) autoLog(`[비프로에이징오류] ${ageResNonPro.error}`);
-      else autoLog(`[비프로에이징] 고교재학 ${hsOther.length}명 / 고교졸업(DRAFT_POOL이동) ${hsGrad3.length}명 / 대학 ${univCount}명 / 독립 ${indCount}명 → 나이+학년 증가`);
+      else autoLog(`[비프로에이징] 고교재학 ${hsOther.length}명 / 고교졸업 ${hsGrad.length}명 / 대학재학 ${univOther.length}명 / 대학졸업 ${univGrad.length}명 / 독립 ${indCount}명`);
 
       await masterStore.reloadEntities(now, slotIdNonPro);
     }

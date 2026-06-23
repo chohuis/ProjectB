@@ -726,38 +726,22 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
 
         let mut n = npc;
 
-        // 1. 군 복무 중: 나이만 증가, 나머지 처리 건너뜀 (전역/입대는 별도 패스에서 처리)
+        // 1. 군 복무 중: 나머지 처리 건너뜀 (나이 증가는 advance_all_ages에서 일괄 처리)
         if n.career_status == "military" {
-            n.age += 1;
             return n;
         }
 
         if n.career_status == "retired" || n.current_league == "LEAGUE_RETIRED" { return n; }
 
-        // 2. 나이 +1
-        n.age += 1;
-
         if n.current_league == "LEAGUE_DRAFT_POOL" || n.current_league == "LEAGUE_FREE_AGENT" { return n; }
         if n.career_status != "active" { return n; }
 
-        // 3. 대학 학년 진급 + 졸업
+        // 대학 처리: 학년 진급은 advance_all_grades에서, 여기서는 grade 4 졸업생만 pending 처리
         if n.current_league == "LEAGUE_UNIVERSITY" {
-            if n.grade == Some(3) {
-                let entry = NpcCareerEntry {
-                    year: season_year,
-                    league_id: "LEAGUE_UNIVERSITY".into(),
-                    team_id: n.current_team.clone(),
-                    stat_line: "-".into(),
-                    highlights: vec![],
-                };
-                n.grade          = None;
-                n.current_league = "LEAGUE_DRAFT_POOL".into();
-                n.career_history.push(entry);
+            if n.grade.is_none() {
+                // advance_all_grades에서 grade=None + LEAGUE_DRAFT_POOL로 전환된 졸업생
                 new_pending.push(n.clone());
                 summary.univ_graduated_count += 1;
-                return n;
-            } else if let Some(g) = n.grade {
-                if g < 3 { n.grade = Some(g + 1); }
             }
             return n;
         }
@@ -866,10 +850,11 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
 
 // ── 학년 진급 ─────────────────────────────────────────────────────────────────
 
+// HS 전용 학년 진급 (기존 호환용, advance_all_grades 사용 권장)
 pub fn advance_grades(params: AdvanceGradesParams) -> GradeAdvanceResult {
-    let mut updated   = Vec::new();
-    let mut graduated = Vec::new();
-    let season_year   = params.season_year;
+    let mut updated      = Vec::new();
+    let mut hs_graduated = Vec::new();
+    let season_year      = params.season_year;
 
     for npc in params.npcs {
         let is_hs = npc.current_league == "LEAGUE_HIGHSCHOOL"
@@ -880,7 +865,7 @@ pub fn advance_grades(params: AdvanceGradesParams) -> GradeAdvanceResult {
 
         let grade = npc.grade.unwrap();
 
-        if grade == 3 {
+        if grade >= 3 {
             let entry = NpcCareerEntry {
                 year: season_year,
                 league_id: "LEAGUE_HIGHSCHOOL".into(),
@@ -890,19 +875,95 @@ pub fn advance_grades(params: AdvanceGradesParams) -> GradeAdvanceResult {
             };
             let mut g = npc;
             g.grade          = None;
-            g.age           += 1;
             g.current_league = "LEAGUE_DRAFT_POOL".into();
             g.career_history.push(entry);
-            graduated.push(g);
+            hs_graduated.push(g);
         } else {
             let mut n = npc;
             n.grade = Some(grade + 1);
-            n.age  += 1;
             updated.push(n);
         }
     }
 
-    GradeAdvanceResult { updated, graduated }
+    GradeAdvanceResult { updated, hs_graduated, univ_graduated: vec![] }
+}
+
+// HS + 대학 전체 학년 진급 (단일 호출용)
+pub fn advance_all_grades(params: AdvanceGradesParams) -> GradeAdvanceResult {
+    let mut updated        = Vec::new();
+    let mut hs_graduated   = Vec::new();
+    let mut univ_graduated = Vec::new();
+    let season_year        = params.season_year;
+
+    for npc in params.npcs {
+        // ── 고등학교 ──────────────────────────────────────────────────────────
+        if npc.current_league == "LEAGUE_HIGHSCHOOL"
+            && npc.career_status == "active"
+            && npc.grade.is_some()
+        {
+            let grade = npc.grade.unwrap();
+            if grade >= 3 {
+                let entry = NpcCareerEntry {
+                    year: season_year,
+                    league_id: "LEAGUE_HIGHSCHOOL".into(),
+                    team_id: npc.current_team.clone(),
+                    stat_line: "-".into(),
+                    highlights: vec![],
+                };
+                let mut g = npc;
+                g.grade          = None;
+                g.current_league = "LEAGUE_DRAFT_POOL".into();
+                g.career_history.push(entry);
+                hs_graduated.push(g);
+            } else {
+                let mut n = npc;
+                n.grade = Some(grade + 1);
+                updated.push(n);
+            }
+            continue;
+        }
+
+        // ── 대학교 ────────────────────────────────────────────────────────────
+        if npc.current_league == "LEAGUE_UNIVERSITY"
+            && npc.career_status == "active"
+            && npc.grade.is_some()
+        {
+            let grade = npc.grade.unwrap();
+            if grade >= 4 {
+                let entry = NpcCareerEntry {
+                    year: season_year,
+                    league_id: "LEAGUE_UNIVERSITY".into(),
+                    team_id: npc.current_team.clone(),
+                    stat_line: "-".into(),
+                    highlights: vec![],
+                };
+                let mut g = npc;
+                g.grade          = None;
+                g.current_league = "LEAGUE_DRAFT_POOL".into();
+                g.career_history.push(entry);
+                univ_graduated.push(g);
+            } else {
+                let mut n = npc;
+                n.grade = Some(grade + 1);
+                updated.push(n);
+            }
+            continue;
+        }
+
+        updated.push(npc);
+    }
+
+    GradeAdvanceResult { updated, hs_graduated, univ_graduated }
+}
+
+// 전체 NPC 나이 +1 (단일 호출, 학년 진급 이후 실행)
+pub fn advance_all_ages(params: AdvanceAllAgesParams) -> Vec<NpcSaveState> {
+    params.npcs.into_iter().map(|mut n| {
+        if n.career_status != "retired" && n.current_league != "LEAGUE_RETIRED" {
+            n.age += 1;
+        }
+        n
+    }).collect()
 }
 
 // ── 신입생 생성 ───────────────────────────────────────────────────────────────
@@ -975,7 +1036,7 @@ pub fn generate_freshmen(params: GenerateFreshmenParams) -> Vec<NpcSaveState> {
             player_type:    if is_sp { "pitcher".into() } else { "batter".into() },
             position,
             grade:          Some(1),
-            age:            16,
+            age:            17,
             school_id:      params.school_id.clone(),
             graduation_year: params.season_year + 2,
             career_status:  "active".into(),
@@ -1338,8 +1399,8 @@ pub fn run_draft_board(params: DraftBoardParams) -> DraftBoardResult {
         .cloned()
         .collect();
     sorted.sort_by(|a, b| {
-        let sa = a.ovr + (a.potential - 50.0) * 0.3 - (a.age as f64 - 18.0).max(0.0) * 3.0;
-        let sb = b.ovr + (b.potential - 50.0) * 0.3 - (b.age as f64 - 18.0).max(0.0) * 3.0;
+        let sa = a.ovr + (a.potential - 50.0) * 0.3 - (a.age as f64 - 19.0).max(0.0) * 3.0;
+        let sb = b.ovr + (b.potential - 50.0) * 0.3 - (b.age as f64 - 19.0).max(0.0) * 3.0;
         sb.partial_cmp(&sa).unwrap_or(std::cmp::Ordering::Equal)
     });
 
@@ -1379,7 +1440,7 @@ pub fn run_draft_board(params: DraftBoardParams) -> DraftBoardResult {
             // 가중치 점수 계산 (noise [0, 6])
             let scores: Vec<f64> = pool.iter().map(|&i| {
                 let c = &sorted[i];
-                let age_penalty = (c.age as f64 - 18.0).max(0.0) * 3.0;
+                let age_penalty = (c.age as f64 - 19.0).max(0.0) * 3.0;
                 let pot_bonus   = (c.potential - 50.0) * 0.3;
                 let noise       = rng.next() * 6.0;
                 (c.ovr + pot_bonus - age_penalty + noise).max(0.1)
@@ -1411,18 +1472,15 @@ pub fn run_draft_board(params: DraftBoardParams) -> DraftBoardResult {
 }
 
 pub fn advance_protagonist_grade(params: ProtagonistGradeParams) -> ProtagonistGradeResult {
-    let new_age = params.current_age + 1;
-    if params.current_grade == 3 {
+    if params.current_grade >= 3 {
         return ProtagonistGradeResult {
             new_grade: serde_json::Value::String("graduated".into()),
-            new_age,
             is_graduating: true,
         };
     }
     let next = params.current_grade + 1;
     ProtagonistGradeResult {
         new_grade: serde_json::Value::Number(next.into()),
-        new_age,
         is_graduating: false,
     }
 }
@@ -1436,12 +1494,12 @@ use crate::sim_types::{
 
 fn age_growth_factor(age: i32) -> f64 {
     match age {
-        i32::MIN..=17 => 1.35,
-        18..=20       => 1.20,
-        21..=23       => 1.00,
-        24..=26       => 0.70,
-        27..=29       => 0.30,
-        30..=32       => 0.08,
+        i32::MIN..=18 => 1.35,
+        19..=21       => 1.20,
+        22..=24       => 1.00,
+        25..=27       => 0.70,
+        28..=30       => 0.30,
+        31..=32       => 0.08,
         _             => 0.00,
     }
 }
