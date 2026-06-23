@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00204",
   "name": "백하준",
   "nameEn": "Yang Ha-jun",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_UNIV_SEOHAE",
   "schoolId": "SCHOOL_UNIV_YONSEI",
   "grade": 1,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "pitcher",

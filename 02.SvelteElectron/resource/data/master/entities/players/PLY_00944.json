@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00944",
   "name": "스미스 매튜",
   "nameEn": "Smith Matthew",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01378",
   "name": "토레스 제이컵",
   "nameEn": "Torres Jacob",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

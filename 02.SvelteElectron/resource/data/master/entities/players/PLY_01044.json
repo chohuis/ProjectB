@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01044",
   "name": "워커 제이컵",
   "nameEn": "Walker Jacob",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01454",
   "name": "존스 벤자민",
   "nameEn": "Jones Benjamin",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

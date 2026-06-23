@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01768",
   "name": "고토 유타카",
   "nameEn": "Goto Yutaka",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

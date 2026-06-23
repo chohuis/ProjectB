@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01824",
   "name": "마에다 카이토",
   "nameEn": "Maeda Kaito",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

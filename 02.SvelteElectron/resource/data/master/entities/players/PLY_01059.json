@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01059",
   "name": "그린 애드리언",
   "nameEn": "Green Adrian",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

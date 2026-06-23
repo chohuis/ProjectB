@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01915",
   "name": "이토 유토",
   "nameEn": "Ito Yuto",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

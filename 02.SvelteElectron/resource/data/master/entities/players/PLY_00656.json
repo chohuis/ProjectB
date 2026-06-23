@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00656",
   "name": "허태양",
   "nameEn": "Baek Jun-hyuk",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "batter",

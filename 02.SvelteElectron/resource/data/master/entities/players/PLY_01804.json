@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01804",
   "name": "나카무라 야마토",
   "nameEn": "Nakamura Yamato",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

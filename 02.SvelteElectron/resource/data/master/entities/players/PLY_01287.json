@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01287",
   "name": "화이트 이선",
   "nameEn": "White Ethan",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

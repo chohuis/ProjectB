@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00403",
   "name": "나우진",
   "nameEn": "Ku Dong-hyun",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_IND_INCHEON_ORCAS",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "pitcher",

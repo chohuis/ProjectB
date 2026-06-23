@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01191",
   "name": "루이스 조셉",
   "nameEn": "Lewis Joseph",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

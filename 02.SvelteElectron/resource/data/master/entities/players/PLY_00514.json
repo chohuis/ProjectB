@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00514",
   "name": "박찬영",
   "nameEn": "Cha Jeong-woo",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "pitcher",

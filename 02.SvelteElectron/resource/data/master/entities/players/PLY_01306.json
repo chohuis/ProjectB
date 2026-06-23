@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01306",
   "name": "톰프슨 저스틴",
   "nameEn": "Thompson Justin",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:쿠바",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01793",
   "name": "니시무라 츠바사",
   "nameEn": "Nishimura Tsubasa",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

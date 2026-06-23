@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01095",
   "name": "카스티요 조너선",
   "nameEn": "Castillo Jonathan",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

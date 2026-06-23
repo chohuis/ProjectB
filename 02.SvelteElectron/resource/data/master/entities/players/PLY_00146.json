@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00146",
   "name": "문준우",
   "nameEn": "Choi Jin-woo",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_HS_SUWON_EDGE",
   "grade": 1,
   "schoolId": "SCHOOL_HS_SUWON_EDGE",
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "pitcher",

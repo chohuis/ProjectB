@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01537",
   "name": "미첼 데이비드",
   "nameEn": "Mitchell David",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

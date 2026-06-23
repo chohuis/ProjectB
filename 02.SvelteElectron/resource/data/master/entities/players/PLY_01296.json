@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01296",
   "name": "로빈슨 라이언",
   "nameEn": "Robinson Ryan",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

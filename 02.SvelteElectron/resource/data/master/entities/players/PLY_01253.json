@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01253",
   "name": "앤더슨 오스틴",
   "nameEn": "Anderson Austin",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00255",
   "name": "문승우",
   "nameEn": "Ahn Chan-young",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_UNIV_CHEONGUN",
   "schoolId": "SCHOOL_UNIV_HANYANG",
   "grade": 3,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "batter",

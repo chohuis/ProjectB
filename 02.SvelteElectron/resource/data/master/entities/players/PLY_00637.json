@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00637",
   "name": "안정우",
   "nameEn": "Moon Chan-woo",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "batter",

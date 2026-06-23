@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01028",
   "name": "토레스 이선",
   "nameEn": "Torres Ethan",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:쿠바",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00424",
   "name": "나정우",
   "nameEn": "Kim Jeong-woo",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_IND_SUWON_BLAZE",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "pitcher",

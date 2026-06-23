@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00597",
   "name": "민태현",
   "nameEn": "Oh Dong-hyuk",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "pitcher",

@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01827",
   "name": "이시카와 히로시",
   "nameEn": "Ishikawa Hiroshi",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

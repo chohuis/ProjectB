@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00569",
   "name": "나태준",
   "nameEn": "Lim Dong-hyuk",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "batter",

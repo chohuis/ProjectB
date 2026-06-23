@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01074",
   "name": "로드리게스 카를로스",
   "nameEn": "Rodriguez Carlos",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:쿠바",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

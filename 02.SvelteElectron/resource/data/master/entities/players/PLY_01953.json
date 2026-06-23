@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01953",
   "name": "오타 히로시",
   "nameEn": "Ota Hiroshi",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

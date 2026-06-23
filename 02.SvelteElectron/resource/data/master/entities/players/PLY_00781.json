@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00781",
   "name": "배준호",
   "nameEn": "Ha Seung-woo",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "pitcher",

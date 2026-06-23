@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01417",
   "name": "넬슨 마이클",
   "nameEn": "Nelson Michael",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

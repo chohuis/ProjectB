@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01494",
   "name": "로드리게스 다니엘",
   "nameEn": "Rodriguez Daniel",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:쿠바",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

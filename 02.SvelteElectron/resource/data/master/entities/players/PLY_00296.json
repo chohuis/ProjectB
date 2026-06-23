@@ -1,9 +1,9 @@
-{
+﻿{
   "id": "PLY_00296",
   "name": "고성민",
   "nameEn": "Ahn Tae-min",
   "role": "player",
-  "age": 20,
+  "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_UNIVERSITY",
   "leagueId": "LEAGUE_UNIVERSITY",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_UNIV_GAON",
   "schoolId": "SCHOOL_UNIV_DONGGUK",
   "grade": 4,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "batter",

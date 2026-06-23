@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00167",
   "name": "배성준",
   "nameEn": "Hwang Dong-hyuk",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_UNIV_HANBBIT",
   "schoolId": "SCHOOL_UNIV_KNSU",
   "grade": 2,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "pitcher",

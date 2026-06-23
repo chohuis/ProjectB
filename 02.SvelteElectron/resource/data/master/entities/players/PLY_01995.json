@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01995",
   "name": "사이토 히카루",
   "nameEn": "Saito Hikaru",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

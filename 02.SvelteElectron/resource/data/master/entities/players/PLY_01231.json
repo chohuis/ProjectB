@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01231",
   "name": "앤더슨 데이비드",
   "nameEn": "Anderson David",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

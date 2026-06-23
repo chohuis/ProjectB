@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_02014",
   "name": "무라카미 료",
   "nameEn": "Murakami Ryo",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

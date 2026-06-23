@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01499",
   "name": "리베라 노아",
   "nameEn": "Rivera Noah",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

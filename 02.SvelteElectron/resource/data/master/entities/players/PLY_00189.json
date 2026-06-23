@@ -1,9 +1,9 @@
-{
+﻿{
   "id": "PLY_00189",
   "name": "한태우",
   "nameEn": "Ha Min-woo",
   "role": "player",
-  "age": 19,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_UNIVERSITY",
   "leagueId": "LEAGUE_UNIVERSITY",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_UNIV_DONGMYUNG",
   "schoolId": "SCHOOL_UNIV_KNU",
   "grade": 2,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "pitcher",

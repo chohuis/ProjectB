@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01440",
   "name": "스콧 데이비드",
   "nameEn": "Scott David",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:쿠바",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

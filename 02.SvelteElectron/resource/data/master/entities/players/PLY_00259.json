@@ -1,9 +1,9 @@
-{
+﻿{
   "id": "PLY_00259",
   "name": "한용준",
   "nameEn": "Moon Min-jae",
   "role": "player",
-  "age": 19,
+  "age": 23,
   "status": "active",
   "originLeagueId": "LEAGUE_UNIVERSITY",
   "leagueId": "LEAGUE_UNIVERSITY",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_UNIV_CHEONGUN",
   "schoolId": "SCHOOL_UNIV_HANYANG",
   "grade": 4,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "batter",

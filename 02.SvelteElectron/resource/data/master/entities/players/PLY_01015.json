@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01015",
   "name": "앨런 호세",
   "nameEn": "Allen Jose",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:베네수엘라",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

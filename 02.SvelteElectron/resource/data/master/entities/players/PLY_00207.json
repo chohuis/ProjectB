@@ -1,9 +1,9 @@
-{
+﻿{
   "id": "PLY_00207",
   "name": "박민우",
   "nameEn": "Hong Min-hyuk",
   "role": "player",
-  "age": 22,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_UNIVERSITY",
   "leagueId": "LEAGUE_UNIVERSITY",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_UNIV_SEOHAE",
   "schoolId": "SCHOOL_UNIV_YONSEI",
   "grade": 2,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "pitcher",

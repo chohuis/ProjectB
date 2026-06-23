@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00838",
   "name": "데이비스 데이비드",
   "nameEn": "Davis David",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

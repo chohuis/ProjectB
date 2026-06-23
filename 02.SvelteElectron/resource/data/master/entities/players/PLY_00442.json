@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00442",
   "name": "오동준",
   "nameEn": "Nam Seung-min",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_IND_ULSAN_PHOENIX",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "pitcher",

@@ -1,9 +1,9 @@
-{
+﻿{
   "id": "PLY_00250",
   "name": "한도윤",
   "nameEn": "Baek Do-hyun",
   "role": "player",
-  "age": 22,
+  "age": 23,
   "status": "active",
   "originLeagueId": "LEAGUE_UNIVERSITY",
   "leagueId": "LEAGUE_UNIVERSITY",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_UNIV_CHEONGUN",
   "schoolId": "SCHOOL_UNIV_HANYANG",
   "grade": 2,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "pitcher",

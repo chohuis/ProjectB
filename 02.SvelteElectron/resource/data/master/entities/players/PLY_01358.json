@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01358",
   "name": "킹 앤서니",
   "nameEn": "King Anthony",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

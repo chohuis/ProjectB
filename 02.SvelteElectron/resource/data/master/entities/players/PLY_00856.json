@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00856",
   "name": "테일러 로버트",
   "nameEn": "Taylor Robert",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

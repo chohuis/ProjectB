@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00576",
   "name": "황기준",
   "nameEn": "Moon Ju-won",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "pitcher",

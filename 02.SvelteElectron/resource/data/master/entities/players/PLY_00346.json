@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00346",
   "name": "박도현",
   "nameEn": "Nam Jeong-woo",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_IND_DAEGU_FALCONS",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "pitcher",

@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01064",
   "name": "스미스 로버트",
   "nameEn": "Smith Robert",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

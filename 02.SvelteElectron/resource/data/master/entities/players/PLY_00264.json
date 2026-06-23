@@ -1,9 +1,9 @@
-{
+﻿{
   "id": "PLY_00264",
   "name": "나동현",
   "nameEn": "Oh Tae-yang",
   "role": "player",
-  "age": 19,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_UNIVERSITY",
   "leagueId": "LEAGUE_UNIVERSITY",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_UNIV_MIRAE",
   "schoolId": "SCHOOL_UNIV_CHUNGBUK",
   "grade": 1,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "pitcher",

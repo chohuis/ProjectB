@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00806",
   "name": "최재훈",
   "nameEn": "Choi Jin-woo",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "pitcher",

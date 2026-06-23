@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00828",
   "name": "화이트 하비에르",
   "nameEn": "White Javier",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

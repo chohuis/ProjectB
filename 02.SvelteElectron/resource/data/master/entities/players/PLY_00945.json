@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00945",
   "name": "루이스 호세",
   "nameEn": "Lewis Jose",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:쿠바",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

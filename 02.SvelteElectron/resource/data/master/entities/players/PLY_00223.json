@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00223",
   "name": "백태양",
   "nameEn": "Sung Jae-hoon",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_UNIV_NAMGANG",
   "schoolId": "SCHOOL_UNIV_KOREA",
   "grade": 1,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "pitcher",

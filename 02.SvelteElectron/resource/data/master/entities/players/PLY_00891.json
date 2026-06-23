@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00891",
   "name": "영 앤드류",
   "nameEn": "Young Andrew",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01113",
   "name": "리 크리스토퍼",
   "nameEn": "Lee Christopher",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:베네수엘라",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

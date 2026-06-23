@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01190",
   "name": "밀러 데이비드",
   "nameEn": "Miller David",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

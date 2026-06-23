@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01230",
   "name": "토레스 호세",
   "nameEn": "Torres Jose",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

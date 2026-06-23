@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00887",
   "name": "윌슨 제이컵",
   "nameEn": "Wilson Jacob",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

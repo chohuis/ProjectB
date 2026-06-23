@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01368",
   "name": "토머스 루이스",
   "nameEn": "Thomas Luis",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

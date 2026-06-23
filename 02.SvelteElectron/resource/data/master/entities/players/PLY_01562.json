@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01562",
   "name": "요시다 료",
   "nameEn": "Yoshida Ryo",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00589",
   "name": "임재원",
   "nameEn": "Sung Tae-jun",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "batter",

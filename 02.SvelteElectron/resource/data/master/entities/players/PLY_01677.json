@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01677",
   "name": "마에다 하야토",
   "nameEn": "Maeda Hayato",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00512",
   "name": "백상현",
   "nameEn": "Kwak Min-jae",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "pitcher",

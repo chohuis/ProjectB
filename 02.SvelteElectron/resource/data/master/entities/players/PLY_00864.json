@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00864",
   "name": "밀러 로건",
   "nameEn": "Miller Logan",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

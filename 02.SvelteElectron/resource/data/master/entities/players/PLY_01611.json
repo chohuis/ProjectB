@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01611",
   "name": "고바야시 마나부",
   "nameEn": "Kobayashi Manabu",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

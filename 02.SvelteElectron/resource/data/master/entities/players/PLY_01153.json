@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01153",
   "name": "해리스 메이슨",
   "nameEn": "Harris Mason",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

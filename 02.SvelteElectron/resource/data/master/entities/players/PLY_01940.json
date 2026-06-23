@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01940",
   "name": "시미즈 진",
   "nameEn": "Shimizu Jin",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

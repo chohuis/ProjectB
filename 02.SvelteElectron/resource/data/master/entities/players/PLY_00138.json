@@ -11,7 +11,8 @@
   "teamId": "TEAM_HS_ULSAN_CHARGE",
   "grade": 2,
   "schoolId": "SCHOOL_HS_ULSAN_CHARGE",
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "batter",

@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00881",
   "name": "마르티네스 크리스토퍼",
   "nameEn": "Martinez Christopher",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

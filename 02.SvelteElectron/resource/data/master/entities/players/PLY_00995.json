@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00995",
   "name": "리 제임스",
   "nameEn": "Lee James",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

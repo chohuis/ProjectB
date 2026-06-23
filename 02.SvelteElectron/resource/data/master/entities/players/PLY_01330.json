@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01330",
   "name": "라미레스 노아",
   "nameEn": "Ramirez Noah",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

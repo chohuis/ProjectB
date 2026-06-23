@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01594",
   "name": "타카하시 요스케",
   "nameEn": "Takahashi Yosuke",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

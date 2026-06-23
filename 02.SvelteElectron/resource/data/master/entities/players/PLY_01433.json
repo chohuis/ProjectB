@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01433",
   "name": "킹 데이비드",
   "nameEn": "King David",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:쿠바",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

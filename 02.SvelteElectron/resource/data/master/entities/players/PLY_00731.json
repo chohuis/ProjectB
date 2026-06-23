@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00731",
   "name": "백민혁",
   "nameEn": "Baek Ji-sung",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "pitcher",

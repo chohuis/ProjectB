@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00598",
   "name": "조성우",
   "nameEn": "Hong Dong-hyuk",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "pitcher",

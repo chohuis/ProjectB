@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01717",
   "name": "타카하시 마나부",
   "nameEn": "Takahashi Manabu",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

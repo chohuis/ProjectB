@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00326",
   "name": "홍기준",
   "nameEn": "Cho Gi-jun",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_IND_BUSAN_TEMPEST",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "pitcher",

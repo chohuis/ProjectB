@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00590",
   "name": "홍시우",
   "nameEn": "Son Woo-jin",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "batter",

@@ -1,9 +1,9 @@
-{
+﻿{
   "id": "PLY_00242",
   "name": "우우진",
   "nameEn": "Moon Seong-jun",
   "role": "player",
-  "age": 20,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_UNIVERSITY",
   "leagueId": "LEAGUE_UNIVERSITY",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_UNIV_CHEONGUN",
   "schoolId": "SCHOOL_UNIV_HANYANG",
   "grade": 1,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "pitcher",

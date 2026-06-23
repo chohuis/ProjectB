@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00241",
   "name": "안성현",
   "nameEn": "You Jae-yun",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_UNIV_CHEONGUN",
   "schoolId": "SCHOOL_UNIV_HANYANG",
   "grade": 1,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "pitcher",

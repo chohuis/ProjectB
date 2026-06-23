@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01472",
   "name": "애덤스 브랜던",
   "nameEn": "Adams Brandon",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00929",
   "name": "브라운 제임스",
   "nameEn": "Brown James",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

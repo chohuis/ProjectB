@@ -1,9 +1,9 @@
-{
+﻿{
   "id": "PLY_00197",
   "name": "한민재",
   "nameEn": "Nam Seo-jun",
   "role": "player",
-  "age": 22,
+  "age": 23,
   "status": "active",
   "originLeagueId": "LEAGUE_UNIVERSITY",
   "leagueId": "LEAGUE_UNIVERSITY",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_UNIV_DONGMYUNG",
   "schoolId": "SCHOOL_UNIV_KNU",
   "grade": 4,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "batter",

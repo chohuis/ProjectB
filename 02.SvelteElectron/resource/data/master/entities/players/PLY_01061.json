@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01061",
   "name": "무어 조너선",
   "nameEn": "Moore Jonathan",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:베네수엘라",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

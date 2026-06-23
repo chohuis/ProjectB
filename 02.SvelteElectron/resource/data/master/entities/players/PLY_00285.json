@@ -1,9 +1,9 @@
-{
+﻿{
   "id": "PLY_00285",
   "name": "민현서",
   "nameEn": "Min Gi-jun",
   "role": "player",
-  "age": 19,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_UNIVERSITY",
   "leagueId": "LEAGUE_UNIVERSITY",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_UNIV_GAON",
   "schoolId": "SCHOOL_UNIV_DONGGUK",
   "grade": 1,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "pitcher",

@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01533",
   "name": "톰프슨 노아",
   "nameEn": "Thompson Noah",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:쿠바",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

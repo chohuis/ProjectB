@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01220",
   "name": "토머스 조너선",
   "nameEn": "Thomas Jonathan",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00466",
   "name": "최상현",
   "nameEn": "Cha Ji-ho",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "pitcher",

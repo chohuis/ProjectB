@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00673",
   "name": "우준혁",
   "nameEn": "Sim Jae-min",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "pitcher",

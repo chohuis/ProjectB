@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00927",
   "name": "톰프슨 하비에르",
   "nameEn": "Thompson Javier",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

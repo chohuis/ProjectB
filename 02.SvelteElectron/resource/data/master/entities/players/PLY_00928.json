@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00928",
   "name": "루이스 마르코",
   "nameEn": "Lewis Marco",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

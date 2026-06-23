@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00979",
   "name": "로드리게스 후안",
   "nameEn": "Rodriguez Juan",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

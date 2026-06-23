@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01039",
   "name": "윌리엄스 로버트",
   "nameEn": "Williams Robert",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

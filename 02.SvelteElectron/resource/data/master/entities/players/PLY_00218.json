@@ -1,9 +1,9 @@
-{
+﻿{
   "id": "PLY_00218",
   "name": "차상현",
   "nameEn": "Ahn Seung-woo",
   "role": "player",
-  "age": 21,
+  "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_UNIVERSITY",
   "leagueId": "LEAGUE_UNIVERSITY",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_UNIV_SEOHAE",
   "schoolId": "SCHOOL_UNIV_YONSEI",
   "grade": 4,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "batter",

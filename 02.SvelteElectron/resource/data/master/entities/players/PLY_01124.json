@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01124",
   "name": "화이트 데이비드",
   "nameEn": "White David",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

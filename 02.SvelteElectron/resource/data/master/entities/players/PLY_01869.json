@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01869",
   "name": "이노우에 사토시",
   "nameEn": "Inoue Satoshi",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

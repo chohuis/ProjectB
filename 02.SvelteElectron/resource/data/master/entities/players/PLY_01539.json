@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01539",
   "name": "킹 저스틴",
   "nameEn": "King Justin",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

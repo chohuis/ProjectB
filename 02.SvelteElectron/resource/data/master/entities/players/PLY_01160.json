@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01160",
   "name": "로드리게스 조셉",
   "nameEn": "Rodriguez Joseph",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

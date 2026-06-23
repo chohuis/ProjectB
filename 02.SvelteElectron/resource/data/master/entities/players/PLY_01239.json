@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01239",
   "name": "플로레스 크리스토퍼",
   "nameEn": "Flores Christopher",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

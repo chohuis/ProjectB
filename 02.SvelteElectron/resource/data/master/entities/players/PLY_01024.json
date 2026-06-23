@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01024",
   "name": "윌리엄스 윌리엄",
   "nameEn": "Williams William",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

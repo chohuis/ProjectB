@@ -1,9 +1,9 @@
-{
+﻿{
   "id": "PLY_00203",
   "name": "차승민",
   "nameEn": "Cha Min-jae",
   "role": "player",
-  "age": 21,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_UNIVERSITY",
   "leagueId": "LEAGUE_UNIVERSITY",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_UNIV_SEOHAE",
   "schoolId": "SCHOOL_UNIV_YONSEI",
   "grade": 1,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "pitcher",

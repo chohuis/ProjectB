@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00918",
   "name": "테일러 조너선",
   "nameEn": "Taylor Jonathan",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

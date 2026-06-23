@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01528",
   "name": "스콧 벤자민",
   "nameEn": "Scott Benjamin",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

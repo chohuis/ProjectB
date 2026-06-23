@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01126",
   "name": "킹 노아",
   "nameEn": "King Noah",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

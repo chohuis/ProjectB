@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01930",
   "name": "오카모토 쇼",
   "nameEn": "Okamoto Sho",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

@@ -1,9 +1,9 @@
-{
+﻿{
   "id": "PLY_00240",
   "name": "백우진",
   "nameEn": "Ahn Seung-hyun",
   "role": "player",
-  "age": 21,
+  "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_UNIVERSITY",
   "leagueId": "LEAGUE_UNIVERSITY",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_UNIV_NAMGANG",
   "schoolId": "SCHOOL_UNIV_KOREA",
   "grade": 4,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "batter",

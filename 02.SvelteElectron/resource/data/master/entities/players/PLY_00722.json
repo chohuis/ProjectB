@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00722",
   "name": "전용준",
   "nameEn": "Heo Jun-young",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "batter",

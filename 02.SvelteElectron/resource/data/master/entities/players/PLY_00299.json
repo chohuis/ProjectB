@@ -1,9 +1,9 @@
-{
+﻿{
   "id": "PLY_00299",
   "name": "곽재원",
   "nameEn": "Kim Jae-min",
   "role": "player",
-  "age": 20,
+  "age": 23,
   "status": "active",
   "originLeagueId": "LEAGUE_UNIVERSITY",
   "leagueId": "LEAGUE_UNIVERSITY",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_UNIV_GAON",
   "schoolId": "SCHOOL_UNIV_DONGGUK",
   "grade": 4,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "batter",

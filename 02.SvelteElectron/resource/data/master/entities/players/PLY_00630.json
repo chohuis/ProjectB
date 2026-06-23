@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00630",
   "name": "조주원",
   "nameEn": "Bae Jae-hoon",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "pitcher",

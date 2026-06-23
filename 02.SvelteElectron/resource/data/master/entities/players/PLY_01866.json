@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01866",
   "name": "무라카미 요스케",
   "nameEn": "Murakami Yosuke",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

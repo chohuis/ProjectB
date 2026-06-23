@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01315",
   "name": "윌리엄스 알레한드로",
   "nameEn": "Williams Alejandro",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

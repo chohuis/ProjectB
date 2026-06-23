@@ -1,9 +1,9 @@
-{
+﻿{
   "id": "PLY_00231",
   "name": "남정우",
   "nameEn": "Baek Min-jae",
   "role": "player",
-  "age": 21,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_UNIVERSITY",
   "leagueId": "LEAGUE_UNIVERSITY",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_UNIV_NAMGANG",
   "schoolId": "SCHOOL_UNIV_KOREA",
   "grade": 3,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "batter",

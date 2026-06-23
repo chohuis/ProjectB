@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01227",
   "name": "마틴 디에고",
   "nameEn": "Martin Diego",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

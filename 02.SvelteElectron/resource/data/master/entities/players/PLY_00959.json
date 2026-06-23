@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00959",
   "name": "무어 조셉",
   "nameEn": "Moore Joseph",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

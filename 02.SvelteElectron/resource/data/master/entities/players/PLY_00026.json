@@ -11,7 +11,8 @@
   "teamId": "TEAM_HS_BUSAN_WAVE",
   "grade": 1,
   "schoolId": "SCHOOL_HS_BUSAN_WAVE",
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "pitcher",

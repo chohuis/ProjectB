@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00445",
   "name": "전승민",
   "nameEn": "Moon Hyun-jin",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_IND_ULSAN_PHOENIX",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "pitcher",

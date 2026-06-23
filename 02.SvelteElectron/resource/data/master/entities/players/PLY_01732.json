@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01732",
   "name": "와타나베 코지",
   "nameEn": "Watanabe Koji",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

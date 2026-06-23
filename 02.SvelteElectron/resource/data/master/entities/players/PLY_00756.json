@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00756",
   "name": "이예준",
   "nameEn": "Han Tae-woo",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "pitcher",

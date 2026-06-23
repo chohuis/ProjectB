@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01014",
   "name": "브라운 앤드류",
   "nameEn": "Brown Andrew",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

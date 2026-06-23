@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00888",
   "name": "애덤스 앤드류",
   "nameEn": "Adams Andrew",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

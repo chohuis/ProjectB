@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00682",
   "name": "권승우",
   "nameEn": "Song Do-hyun",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "batter",

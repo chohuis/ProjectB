@@ -1,9 +1,9 @@
-{
+﻿{
   "id": "PLY_00237",
   "name": "안지훈",
   "nameEn": "Nam Seong-hyun",
   "role": "player",
-  "age": 19,
+  "age": 23,
   "status": "active",
   "originLeagueId": "LEAGUE_UNIVERSITY",
   "leagueId": "LEAGUE_UNIVERSITY",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_UNIV_NAMGANG",
   "schoolId": "SCHOOL_UNIV_KOREA",
   "grade": 4,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "batter",

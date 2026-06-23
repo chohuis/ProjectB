@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01186",
   "name": "루이스 데이비드",
   "nameEn": "Lewis David",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

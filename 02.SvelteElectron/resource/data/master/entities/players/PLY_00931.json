@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00931",
   "name": "미첼 빅터",
   "nameEn": "Mitchell Victor",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01452",
   "name": "테일러 일라이저",
   "nameEn": "Taylor Elijah",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

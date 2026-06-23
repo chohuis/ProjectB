@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00801",
   "name": "우상현",
   "nameEn": "Sung Hyun-woo",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "pitcher",

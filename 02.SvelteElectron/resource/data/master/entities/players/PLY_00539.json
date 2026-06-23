@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00539",
   "name": "정현준",
   "nameEn": "Ko Seong-hyun",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "pitcher",

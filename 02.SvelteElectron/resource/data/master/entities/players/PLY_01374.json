@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01374",
   "name": "해리스 애드리언",
   "nameEn": "Harris Adrian",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

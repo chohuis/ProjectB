@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01020",
   "name": "킹 루카스",
   "nameEn": "King Lucas",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

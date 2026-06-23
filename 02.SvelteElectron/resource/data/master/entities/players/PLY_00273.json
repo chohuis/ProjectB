@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00273",
   "name": "문찬영",
   "nameEn": "Cha Tae-woo",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_UNIV_MIRAE",
   "schoolId": "SCHOOL_UNIV_CHUNGBUK",
   "grade": 3,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "batter",

@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01464",
   "name": "마틴 케빈",
   "nameEn": "Martin Kevin",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

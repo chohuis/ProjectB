@@ -1,9 +1,9 @@
-{
+﻿{
   "id": "PLY_00249",
   "name": "송민준",
   "nameEn": "Cho Tae-woo",
   "role": "player",
-  "age": 20,
+  "age": 21,
   "status": "active",
   "originLeagueId": "LEAGUE_UNIVERSITY",
   "leagueId": "LEAGUE_UNIVERSITY",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_UNIV_CHEONGUN",
   "schoolId": "SCHOOL_UNIV_HANYANG",
   "grade": 2,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "pitcher",

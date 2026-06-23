@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00650",
   "name": "박승우",
   "nameEn": "Sim Tae-hyun",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "pitcher",

@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01355",
   "name": "브라운 에이든",
   "nameEn": "Brown Aiden",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

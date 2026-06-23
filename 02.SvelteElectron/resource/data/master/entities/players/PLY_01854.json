@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01854",
   "name": "사이토 시게루",
   "nameEn": "Saito Shigeru",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

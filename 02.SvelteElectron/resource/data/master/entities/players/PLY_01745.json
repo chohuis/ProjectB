@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01745",
   "name": "후지이 다이키",
   "nameEn": "Fujii Daiki",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00961",
   "name": "영 제임스",
   "nameEn": "Young James",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

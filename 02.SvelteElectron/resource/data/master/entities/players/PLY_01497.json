@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01497",
   "name": "스미스 크리스토퍼",
   "nameEn": "Smith Christopher",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

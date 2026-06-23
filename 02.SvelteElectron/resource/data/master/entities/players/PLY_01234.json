@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01234",
   "name": "존슨 제임스",
   "nameEn": "Johnson James",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

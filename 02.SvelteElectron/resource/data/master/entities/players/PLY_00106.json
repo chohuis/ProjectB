@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00106",
   "name": "안지원",
   "nameEn": "Jung Dong-hyun",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_HS_INCHEON_HARBOR",
   "grade": 1,
   "schoolId": "SCHOOL_HS_INCHEON_HARBOR",
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "pitcher",

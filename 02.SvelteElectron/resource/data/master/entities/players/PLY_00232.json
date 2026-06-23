@@ -1,9 +1,9 @@
-{
+﻿{
   "id": "PLY_00232",
   "name": "황승현",
   "nameEn": "Choi Ju-won",
   "role": "player",
-  "age": 19,
+  "age": 24,
   "status": "active",
   "originLeagueId": "LEAGUE_UNIVERSITY",
   "leagueId": "LEAGUE_UNIVERSITY",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_UNIV_NAMGANG",
   "schoolId": "SCHOOL_UNIV_KOREA",
   "grade": 3,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "batter",

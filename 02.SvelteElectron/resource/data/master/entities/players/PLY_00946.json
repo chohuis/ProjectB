@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00946",
   "name": "브라운 벤자민",
   "nameEn": "Brown Benjamin",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

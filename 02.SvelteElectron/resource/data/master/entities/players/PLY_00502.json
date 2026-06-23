@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00502",
   "name": "유도현",
   "nameEn": "Hong Jun-young",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "batter",

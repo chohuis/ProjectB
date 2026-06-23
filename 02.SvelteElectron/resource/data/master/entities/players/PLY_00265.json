@@ -1,9 +1,9 @@
-{
+﻿{
   "id": "PLY_00265",
   "name": "민태현",
   "nameEn": "Park Seung-min",
   "role": "player",
-  "age": 19,
+  "age": 20,
   "status": "active",
   "originLeagueId": "LEAGUE_UNIVERSITY",
   "leagueId": "LEAGUE_UNIVERSITY",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_UNIV_MIRAE",
   "schoolId": "SCHOOL_UNIV_CHUNGBUK",
   "grade": 1,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "pitcher",

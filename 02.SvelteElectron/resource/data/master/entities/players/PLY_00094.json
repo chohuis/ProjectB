@@ -11,7 +11,8 @@
   "teamId": "TEAM_HS_DAEJEON_RISE",
   "grade": 2,
   "schoolId": "SCHOOL_HS_DAEJEON_RISE",
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "batter",

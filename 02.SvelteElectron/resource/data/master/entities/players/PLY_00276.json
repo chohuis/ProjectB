@@ -1,9 +1,9 @@
-{
+﻿{
   "id": "PLY_00276",
   "name": "민동현",
   "nameEn": "Ahn Hyun-jun",
   "role": "player",
-  "age": 19,
+  "age": 25,
   "status": "active",
   "originLeagueId": "LEAGUE_UNIVERSITY",
   "leagueId": "LEAGUE_UNIVERSITY",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_UNIV_MIRAE",
   "schoolId": "SCHOOL_UNIV_CHUNGBUK",
   "grade": 4,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "batter",

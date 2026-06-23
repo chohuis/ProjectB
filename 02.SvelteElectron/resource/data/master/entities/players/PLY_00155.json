@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00155",
   "name": "윤준서",
   "nameEn": "Min Chan-woo",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_HS_SUWON_EDGE",
   "grade": 1,
   "schoolId": "SCHOOL_HS_SUWON_EDGE",
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "batter",

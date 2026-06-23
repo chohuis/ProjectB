@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00567",
   "name": "남지호",
   "nameEn": "Na Do-yun",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "batter",

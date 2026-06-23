@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00922",
   "name": "윌슨 브랜던",
   "nameEn": "Wilson Brandon",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:베네수엘라",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

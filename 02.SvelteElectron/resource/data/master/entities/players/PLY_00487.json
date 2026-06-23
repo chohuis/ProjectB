@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00487",
   "name": "곽동현",
   "nameEn": "Moon Min-hyuk",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "pitcher",

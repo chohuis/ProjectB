@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00165",
   "name": "장준호",
   "nameEn": "Song Min-seok",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_UNIV_HANBBIT",
   "schoolId": "SCHOOL_UNIV_KNSU",
   "grade": 1,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "pitcher",

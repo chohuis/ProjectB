@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01692",
   "name": "와타나베 마나부",
   "nameEn": "Watanabe Manabu",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

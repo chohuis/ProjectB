@@ -1,9 +1,9 @@
-{
+﻿{
   "id": "PLY_00279",
   "name": "강성우",
   "nameEn": "You Hyun-seo",
   "role": "player",
-  "age": 21,
+  "age": 23,
   "status": "active",
   "originLeagueId": "LEAGUE_UNIVERSITY",
   "leagueId": "LEAGUE_UNIVERSITY",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_UNIV_MIRAE",
   "schoolId": "SCHOOL_UNIV_CHUNGBUK",
   "grade": 4,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "batter",

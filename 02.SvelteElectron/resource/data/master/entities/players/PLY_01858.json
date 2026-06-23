@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01858",
   "name": "사이토 켄타",
   "nameEn": "Saito Kenta",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01213",
   "name": "로드리게스 크리스토퍼",
   "nameEn": "Rodriguez Christopher",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

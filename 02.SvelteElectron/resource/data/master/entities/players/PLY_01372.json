@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01372",
   "name": "밀러 프란시스코",
   "nameEn": "Miller Francisco",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:베네수엘라",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

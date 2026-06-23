@@ -11,7 +11,8 @@
   "teamId": "TEAM_HS_GWANGJU_VISION",
   "grade": 2,
   "schoolId": "SCHOOL_HS_GWANGJU_VISION",
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "batter",

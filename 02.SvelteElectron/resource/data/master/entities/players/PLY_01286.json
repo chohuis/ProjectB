@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01286",
   "name": "브라운 윌리엄",
   "nameEn": "Brown William",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

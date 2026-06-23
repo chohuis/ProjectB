@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01188",
   "name": "앤더슨 마이클",
   "nameEn": "Anderson Michael",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

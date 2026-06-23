@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00315",
   "name": "임지훈",
   "nameEn": "Ku Jae-hyun",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_IND_SEOUL_PIONEERS",
   "schoolId": "SCHOOL_NONE",
   "grade": null,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "batter",

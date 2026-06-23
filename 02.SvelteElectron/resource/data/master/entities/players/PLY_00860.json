@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00860",
   "name": "존슨 윌리엄",
   "nameEn": "Johnson William",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

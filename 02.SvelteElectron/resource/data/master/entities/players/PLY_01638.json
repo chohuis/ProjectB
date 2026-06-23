@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01638",
   "name": "스즈키 유타카",
   "nameEn": "Suzuki Yutaka",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

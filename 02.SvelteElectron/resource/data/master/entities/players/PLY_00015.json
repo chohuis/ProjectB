@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00015",
   "name": "하민혁",
   "nameEn": "Han Sang-min",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_HS_SEOUL_INNOVATION",
   "grade": 1,
   "schoolId": "SCHOOL_HS_SEOUL_INNOVATION",
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "batter",

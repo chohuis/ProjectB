@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01476",
   "name": "해리스 니콜라스",
   "nameEn": "Harris Nicholas",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:쿠바",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

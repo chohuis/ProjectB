@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01647",
   "name": "이노우에 켄타",
   "nameEn": "Inoue Kenta",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

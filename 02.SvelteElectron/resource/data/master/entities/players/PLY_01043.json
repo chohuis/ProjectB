@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01043",
   "name": "홀 빅터",
   "nameEn": "Hall Victor",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:쿠바",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

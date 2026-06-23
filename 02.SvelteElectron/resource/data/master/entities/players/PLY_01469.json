@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01469",
   "name": "리 로버트",
   "nameEn": "Lee Robert",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

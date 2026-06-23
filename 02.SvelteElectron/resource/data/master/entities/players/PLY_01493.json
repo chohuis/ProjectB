@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01493",
   "name": "화이트 디에고",
   "nameEn": "White Diego",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

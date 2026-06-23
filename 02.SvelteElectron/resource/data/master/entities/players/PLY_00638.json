@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00638",
   "name": "정주원",
   "nameEn": "Hwang Jae-hoon",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "batter",

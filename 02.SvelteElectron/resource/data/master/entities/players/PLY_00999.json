@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00999",
   "name": "윌슨 제임스",
   "nameEn": "Wilson James",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01961",
   "name": "후지이 이사무",
   "nameEn": "Fujii Isamu",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

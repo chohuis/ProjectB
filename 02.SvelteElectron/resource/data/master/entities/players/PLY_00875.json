@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00875",
   "name": "무어 제임스",
   "nameEn": "Moore James",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:베네수엘라",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

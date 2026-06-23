@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01177",
   "name": "앨런 마르코",
   "nameEn": "Allen Marco",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:미국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

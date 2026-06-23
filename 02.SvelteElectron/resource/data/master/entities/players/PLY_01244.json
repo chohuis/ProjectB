@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01244",
   "name": "리베라 앤서니",
   "nameEn": "Rivera Anthony",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

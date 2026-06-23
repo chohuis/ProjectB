@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01399",
   "name": "윌슨 메이슨",
   "nameEn": "Wilson Mason",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

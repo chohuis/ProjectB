@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00876",
   "name": "스미스 제임스",
   "nameEn": "Smith James",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

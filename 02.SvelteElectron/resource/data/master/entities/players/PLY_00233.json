@@ -1,9 +1,9 @@
-{
+﻿{
   "id": "PLY_00233",
   "name": "이성우",
   "nameEn": "Kwak Do-hyun",
   "role": "player",
-  "age": 20,
+  "age": 22,
   "status": "active",
   "originLeagueId": "LEAGUE_UNIVERSITY",
   "leagueId": "LEAGUE_UNIVERSITY",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_UNIV_NAMGANG",
   "schoolId": "SCHOOL_UNIV_KOREA",
   "grade": 3,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "batter",

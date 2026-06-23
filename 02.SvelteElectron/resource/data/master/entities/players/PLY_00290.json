@@ -1,9 +1,9 @@
-{
+﻿{
   "id": "PLY_00290",
   "name": "최준호",
   "nameEn": "Kim Jun-woo",
   "role": "player",
-  "age": 20,
+  "age": 23,
   "status": "active",
   "originLeagueId": "LEAGUE_UNIVERSITY",
   "leagueId": "LEAGUE_UNIVERSITY",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_UNIV_GAON",
   "schoolId": "SCHOOL_UNIV_DONGGUK",
   "grade": 2,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "pitcher",

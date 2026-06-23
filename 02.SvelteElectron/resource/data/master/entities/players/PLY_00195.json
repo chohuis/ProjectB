@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00195",
   "name": "박연우",
   "nameEn": "Jang Dong-jun",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_UNIV_DONGMYUNG",
   "schoolId": "SCHOOL_UNIV_KNU",
   "grade": 3,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "batter",

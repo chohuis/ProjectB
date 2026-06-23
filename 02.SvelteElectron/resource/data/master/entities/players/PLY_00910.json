@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00910",
   "name": "넬슨 일라이저",
   "nameEn": "Nelson Elijah",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:일본",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "batter",

@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00269",
   "name": "남용준",
   "nameEn": "Heo Jun-young",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_UNIV_MIRAE",
   "schoolId": "SCHOOL_UNIV_CHUNGBUK",
   "grade": 2,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "미필",
   "details": {
     "player": {
       "playerType": "pitcher",

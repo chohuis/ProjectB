@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_00284",
   "name": "우지훈",
   "nameEn": "Lee Hyun-jin",
@@ -11,7 +11,8 @@
   "teamId": "TEAM_UNIV_GAON",
   "schoolId": "SCHOOL_UNIV_DONGGUK",
   "grade": 1,
-  "notes": "",
+  "notes": "국적:한국",
+  "militaryStatus": "군필",
   "details": {
     "player": {
       "playerType": "pitcher",

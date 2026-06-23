@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01412",
   "name": "윌슨 이선",
   "nameEn": "Wilson Ethan",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

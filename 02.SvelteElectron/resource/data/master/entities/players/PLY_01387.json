@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01387",
   "name": "윌리엄스 벤자민",
   "nameEn": "Williams Benjamin",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:한국",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",

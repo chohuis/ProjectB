@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "PLY_01123",
   "name": "애덤스 마르코",
   "nameEn": "Adams Marco",
@@ -12,6 +12,7 @@
   "schoolId": "SCHOOL_NONE",
   "grade": null,
   "notes": "국적:도미니카",
+  "militaryStatus": "해당없음",
   "details": {
     "player": {
       "playerType": "pitcher",
