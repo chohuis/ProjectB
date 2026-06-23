@@ -29,6 +29,7 @@
   import CareerResultsModal from "../../features/career/ui/CareerResultsModal.svelte";
   import CareerResultModal from "../../features/career/ui/CareerResultModal.svelte";
   import DraftObserveModal from "../../features/career/ui/DraftObserveModal.svelte";
+  import DraftNotificationModal from "../../features/contract/ui/DraftNotificationModal.svelte";
   import ContractNegotiationModal from "../../features/contract/ui/ContractNegotiationModal.svelte";
   import OptionClauseModal from "../../features/contract/ui/OptionClauseModal.svelte";
   import TradeModal from "../../features/contract/ui/TradeModal.svelte";
@@ -90,6 +91,7 @@
       case "draftObserve":
       case "sportsUnitApplication":
       case "militaryEnlistAsk":
+      case "draftNotification":
       case "trade":
       case "salaryNegotiation":
       case "optionClause":
@@ -123,6 +125,7 @@
   $: pendingCareerResults = $nextPendingAction?.type === "careerResults";
   $: pendingCareerChoice = $nextPendingAction?.type === "careerChoice";
   $: pendingDraftObserve = $nextPendingAction?.type === "draftObserve";
+  $: pendingDraftNotification = $nextPendingAction?.type === "draftNotification" ? $nextPendingAction : null;
   $: pendingSalaryNegotiation = $nextPendingAction?.type === "salaryNegotiation" ? $nextPendingAction : null;
   $: pendingOptionClause = $nextPendingAction?.type === "optionClause" ? $nextPendingAction : null;
   $: pendingTrade = $nextPendingAction?.type === "trade" ? $nextPendingAction : null;
@@ -527,6 +530,10 @@
 
 {#if pendingDraftObserve && currentTab === "messages"}
   <DraftObserveModal on:close={() => seasonStore.resolvePendingAction("draftObserve")} />
+{/if}
+
+{#if pendingDraftNotification && currentTab === "messages"}
+  <DraftNotificationModal action={pendingDraftNotification} />
 {/if}
 
 {#if pendingSalaryNegotiation && currentTab === "messages"}

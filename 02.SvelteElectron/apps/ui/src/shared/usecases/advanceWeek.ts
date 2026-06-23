@@ -2240,7 +2240,10 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
               leagueId: updatedContract.leagueId,
               offeredSalary,
               durationYears: 1,
+              minDurationYears: 1,
+              maxDurationYears: 3,
               signingBonus: 0,
+              context: "renewal",
             });
           }
         } else if (!updatedContract) {
@@ -2255,7 +2258,10 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
               leagueId: gAfterProg.protagonist.leagueId,
               offeredSalary,
               durationYears: 1,
+              minDurationYears: 1,
+              maxDurationYears: 3,
               signingBonus: 0,
+              context: "renewal",
             });
           }
         } else if (updatedContract.remainingYears > 0) {
@@ -2267,7 +2273,10 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
             leagueId: updatedContract.leagueId,
             offeredSalary,
             durationYears: updatedContract.remainingYears,
+            minDurationYears: 1,
+            maxDurationYears: 3,
             signingBonus: 0,
+            context: "renewal",
           });
         }
       }
@@ -2614,7 +2623,10 @@ async function handleSeasonEnd(): Promise<WeekAdvanceResult> {
         teamId: contract.teamId, leagueId: contract.leagueId,
         offeredSalary: contract.salary,
         durationYears: Math.max(1, contract.remainingYears),
+        minDurationYears: 1,
+        maxDurationYears: 2,
         signingBonus: 0,
+        context: "military_return",
       };
       seasonStore.pushPendingAction(action);
       return { processedWeek: s.currentWeek, logs: ["전역: 복귀 계약 협상을 진행하세요."], newMessages: [], matchResults: [], stoppedBy: action };

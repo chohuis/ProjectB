@@ -2,7 +2,7 @@
   import { gameStore } from "../../../shared/stores/game";
   import { seasonStore } from "../../../shared/stores/season";
   import { masterStore } from "../../../shared/stores/master";
-  import { calcDraftSalary } from "../../../shared/utils/universityUtils";
+  import { calcKblDraftContract } from "../../../shared/utils/draftSalaryTable";
 
   let resolving = false;
 
@@ -43,19 +43,23 @@
     resolving = true;
 
     if (kind === "draft") {
-      const draftRound = results?.draftRound ?? 10;
-      const offeredSalary = calcDraftSalary(draftRound, $gameStore.protagonist.pitching.ovr);
+      const pickNo  = results?.draftPick   ?? 80;
+      const teamId  = results?.draftTeamId ?? $gameStore.protagonist.teamId;
+      const { salary, durationYears, signingBonus } = calcKblDraftContract(pickNo, teamId);
       seasonStore.resolvePendingAction("careerChoice");
       seasonStore.pushPendingAction({
-        type: "salaryNegotiation",
-        teamId: results?.draftTeamId ?? $gameStore.protagonist.teamId,
+        type: "draftNotification",
+        teamId,
         leagueId: "LEAGUE_KBL",
-        offeredSalary,
-        durationYears: 2,
-        signingBonus: results?.draftSigningBonus ?? 0,
+        round:    results?.draftRound ?? 10,
+        pickNo,
+        salary,
+        durationYears,
+        signingBonus,
+        altUniversityTeamId:  univPassed[0] ?? undefined,
+        altIndependentTeamId: indiePassed[0] ?? undefined,
       });
-      gameStore.setCareerApplicationsSubmitted(false);
-      gameStore.clearCareerResults();
+      // clearCareerResults는 DraftNotificationModal에서 처리
       gameStore.setCareerFinalChoice("draft");
     } else if (kind === "university" && teamId) {
       gameStore.applyDraftDecision({ stage: "university", leagueId: "LEAGUE_UNIVERSITY", teamId });

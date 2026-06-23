@@ -107,12 +107,27 @@ export type PendingAction =
   | { type: "careerChoice" }
   | { type: "draftObserve" }
   | {
+      type: "draftNotification";
+      teamId: string;
+      leagueId: string;
+      round: number;
+      pickNo: number;
+      salary: number;
+      durationYears: 3;
+      signingBonus: number;
+      altUniversityTeamId?: string;
+      altIndependentTeamId?: string;
+    }
+  | {
       type: "salaryNegotiation";
       teamId: string;
       leagueId: string;
       offeredSalary: number;
       durationYears: number;
+      minDurationYears: number;
+      maxDurationYears: number;
       signingBonus: number;
+      context: "initial" | "renewal" | "military_return";
     }
   | { type: "faMarket" }
   | {

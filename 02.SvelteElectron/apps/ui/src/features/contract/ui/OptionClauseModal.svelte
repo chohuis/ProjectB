@@ -26,7 +26,10 @@
         leagueId: $gameStore.protagonist.contract?.leagueId ?? $gameStore.protagonist.leagueId,
         offeredSalary: action.nextSalary,
         durationYears: 1,
+        minDurationYears: 1,
+        maxDurationYears: 3,
         signingBonus: 0,
+        context: "renewal",
       });
     }
     await gameStore.save();
@@ -52,7 +55,10 @@
         leagueId: $gameStore.protagonist.contract?.leagueId ?? $gameStore.protagonist.leagueId,
         offeredSalary: action.nextSalary,
         durationYears: 1,
+        minDurationYears: 1,
+        maxDurationYears: 3,
         signingBonus: 0,
+        context: "renewal",
       });
     }
     await gameStore.save();
