@@ -1099,14 +1099,15 @@ function dbLoadSlot(db, slotId) {
       pitching: n.pitch_ovr != null ? {
         ovr: n.pitch_ovr, stamina: n.pitch_stamina, velocity: n.pitch_velocity,
         command: n.pitch_command, control: n.pitch_control, movement: n.pitch_movement,
-        mentality: n.pitch_mentality, recovery: n.pitch_recovery, clutch: n.pitch_clutch,
-        holdRunners: n.pitch_hold_runners,
+        mentality: n.pitch_mentality, recovery: n.pitch_recovery,
+        clutch:      n.pitch_clutch      ?? n.pitch_ovr,
+        holdRunners: n.pitch_hold_runners ?? n.pitch_ovr,
       } : undefined,
       batting: n.bat_ovr != null ? {
         ovr: n.bat_ovr, contact: n.bat_contact, power: n.bat_power, eye: n.bat_eye,
         discipline: n.bat_discipline, speed: n.bat_speed, baseInstinct: n.bat_base_instinct,
         bunting: n.bat_bunting, platoon: n.bat_platoon, fielding: n.bat_fielding,
-        arm: n.bat_arm, battingClutch: n.bat_batting_clutch,
+        arm: n.bat_arm, battingClutch: n.bat_batting_clutch ?? n.bat_ovr,
       } : undefined,
       careerHistory: npcHistMap[n.npc_id] ?? [],
       achievements:  npcAchMap[n.npc_id]  ?? [],
@@ -1303,14 +1304,15 @@ function masterRowToEntityRow(r) {
     pitching: r.pitch_ovr != null ? {
       ovr: r.pitch_ovr, stamina: r.pitch_stamina, velocity: r.pitch_velocity,
       command: r.pitch_command, control: r.pitch_control, movement: r.pitch_movement,
-      mentality: r.pitch_mentality, recovery: r.pitch_recovery, clutch: r.pitch_clutch,
-      holdRunners: r.pitch_hold_runners,
+      mentality: r.pitch_mentality, recovery: r.pitch_recovery,
+      clutch:      r.pitch_clutch      ?? r.pitch_ovr,
+      holdRunners: r.pitch_hold_runners ?? r.pitch_ovr,
     } : null,
     batting: r.bat_ovr != null ? {
       ovr: r.bat_ovr, contact: r.bat_contact, power: r.bat_power, eye: r.bat_eye,
       discipline: r.bat_discipline, speed: r.bat_speed, baseInstinct: r.bat_base_instinct,
       bunting: r.bat_bunting, platoon: r.bat_platoon, fielding: r.bat_fielding,
-      arm: r.bat_arm, battingClutch: r.bat_clutch,
+      arm: r.bat_arm, battingClutch: r.bat_batting_clutch ?? r.bat_ovr,
     } : null,
   };
   const staffData = r.staff_json ? JSON.parse(r.staff_json) : {};

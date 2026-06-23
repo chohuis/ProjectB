@@ -633,7 +633,7 @@ async function processWeeklyNpcGrowth(weekNum: number): Promise<void> {
       monthIndex: 0,  // 주간 모드에서는 사용 안 함
       pitchCatalogIds: m.pitchCatalog.map((p) => p.id),
     }))
-  ) as { updated: Array<{
+  ) as { updated?: Array<{
     npcId: string;
     pitching?: any;
     batting?: any;
@@ -643,7 +643,12 @@ async function processWeeklyNpcGrowth(weekNum: number): Promise<void> {
     fameDelta: number;
     pitches: Array<{ id: string; grade: 1 | 2 | 3 | 4 | 5 }>;
     pitchInTraining?: { id: string; progress: number; isNew: boolean };
-  }> };
+  }>; error?: string };
+
+  if (!Array.isArray(result.updated)) {
+    console.error('[processWeeklyNpcGrowth] npcCalcWeeklyGrowth 실패:', result.error ?? result);
+    return;
+  }
 
   seasonStore.applyNpcLiveGrowth(result.updated);
 
