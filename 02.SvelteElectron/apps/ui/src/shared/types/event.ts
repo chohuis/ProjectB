@@ -1,4 +1,4 @@
-import type { DecisionEffect, MessageCategory } from "./main";
+import type { DecisionEffect } from "./main";
 import type { CareerStage, PlayerType, PitchingStatKey, ProtagonistSave, PlayerSeasonStats } from "./save";
 import type { SeasonPhase, Standing } from "./season";
 
@@ -86,7 +86,7 @@ export interface EventPool {
 // ── 메시지 템플릿 ──────────────────────────────────────────────
 export interface MessageTemplate {
   id: string;
-  category: MessageCategory;
+  category: string; // 이벤트 내부 분류 (media, training 등) — eventEngine에서 MessageCategory로 매핑
   subject: string;
   body: string;
   decisionTemplateId?: string | null;

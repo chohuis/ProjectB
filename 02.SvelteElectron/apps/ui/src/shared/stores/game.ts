@@ -428,6 +428,25 @@ function migrateProtagonist(p: ProtagonistSave & { learnedPitchIds?: string[] })
   };
 }
 
+// ── 저장된 mailbox 카테고리 정규화 (구버전 save 호환) ──────────────
+const MAILBOX_CATEGORY_MAP: Record<string, import("../types/main").MessageCategory> = {
+  media:       "news",
+  social:      "news",
+  training:    "coach",
+  hs_training: "coach",
+  health:      "coach",
+  mental:      "coach",
+};
+const VALID_MSG_CATEGORIES = new Set(["system", "news", "coach", "manager"]);
+
+function normalizeMailbox(mailbox: import("../types/main").MessageItem[]): import("../types/main").MessageItem[] {
+  return mailbox.map((m) => {
+    if (VALID_MSG_CATEGORIES.has(m.category)) return m;
+    const mapped = MAILBOX_CATEGORY_MAP[m.category];
+    return { ...m, category: mapped ?? "system" };
+  });
+}
+
 // ── SaveGame → 스토어 상태 변환 ───────────────────────────────
 function fromSaveGame(saved: SaveGame): GameStoreState {
   const p = migrateProtagonist(saved.protagonist);
@@ -436,7 +455,7 @@ function fromSaveGame(saved: SaveGame): GameStoreState {
   return {
     currentSlotId: null,
     protagonist:  p,
-    mailbox:      saved.mailbox,
+    mailbox:      normalizeMailbox(saved.mailbox ?? []),
     trainingPlan: saved.trainingPlan,
     trainingPresets: saved.trainingPresets ?? DEFAULT_TRAINING_PRESETS,
     schoolState:  { ...DEFAULT_SCHOOL, ...saved.schoolState },

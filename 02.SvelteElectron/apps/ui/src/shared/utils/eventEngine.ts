@@ -1,6 +1,17 @@
 import type { EventRule, EventPool, MessageTemplate, DecisionTemplate, EventContext } from "../types/event";
-import type { MessageItem } from "../types/main";
+import type { MessageCategory, MessageItem } from "../types/main";
 import { evaluateConditions } from "./conditionEvaluator";
+
+// 이벤트 내부 카테고리 → UI 표시 카테고리 매핑
+// JSON 템플릿의 category 필드는 내부 분류용이며 여기서 표시용으로 변환된다
+const EVENT_DISPLAY_CATEGORY: Record<string, MessageCategory> = {
+  media:       "news",
+  social:      "news",
+  training:    "coach",
+  hs_training: "coach",
+  health:      "coach",
+  mental:      "coach",
+};
 
 // ── oncePolicy 통과 여부 ───────────────────────────────────────
 function checkOncePolicy(
@@ -48,7 +59,7 @@ function ruleToOutput(
 
   const message: MessageItem = {
     id:        `evt-${rule.id}-w${week}-${Date.now()}`,
-    category:  msgTmpl?.category ?? "system",
+    category:  EVENT_DISPLAY_CATEGORY[msgTmpl?.category ?? ""] ?? "system",
     sender:    "이벤트 시스템",
     subject:   title,
     preview:   body.slice(0, 60),
