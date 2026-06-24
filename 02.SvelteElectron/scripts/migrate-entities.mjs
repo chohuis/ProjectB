@@ -1,12 +1,10 @@
-/**
- * migrate-entities.mjs — 마이그레이션 / 증분 추가
+﻿/**
+ * migrate-entities.mjs ??留덉씠洹몃젅?댁뀡 / 利앸텇 異붽?
  *
- * 기본 실행: npm run migrate:entities
- *   - 전체 people_*.json 을 재처리해 PLY_00001부터 재부여
- *
- * 추가 실행: npm run migrate:entities -- --append people_jbl.json
- *   - 기존 _index.json 의 최대 카운터를 읽어 이어서 번호 부여
- *   - 지정한 bulk 파일만 처리하고 _index.json 에 병합
+ * 湲곕낯 ?ㅽ뻾: npm run migrate:entities
+ *   - ?꾩껜 people_*.json ???ъ쿂由ы빐 PLY_00001遺???щ??? *
+ * 異붽? ?ㅽ뻾: npm run migrate:entities -- --append people_jbl.json
+ *   - 湲곗〈 _index.json ??理쒕? 移댁슫?곕? ?쎌뼱 ?댁뼱??踰덊샇 遺?? *   - 吏?뺥븳 bulk ?뚯씪留?泥섎━?섍퀬 _index.json ??蹂묓빀
  */
 import {
   readFileSync, writeFileSync, readdirSync,
@@ -22,11 +20,11 @@ const PLAYERS   = join(MASTER, "entities/players");
 const INDEX     = join(PLAYERS, "_index.json");
 
 const SOURCE_FILES = [
-  join(MASTER, "entities/people_hs.json"),
-  join(MASTER, "entities/people_univ.json"),
-  join(MASTER, "entities/people_ind.json"),
-  join(MASTER, "entities/people_kbl.json"),
-  join(MASTER, "entities/people_abl.json"),
+  join(ROOT, "resource/data/staging/people_hs.json"),
+  join(ROOT, "resource/data/staging/people_univ.json"),
+  join(ROOT, "resource/data/staging/people_ind.json"),
+  join(ROOT, "resource/data/staging/people_kbl.json"),
+  join(ROOT, "resource/data/staging/people_abl.json"),
 ];
 
 const ROLE_PREFIX = { player: "PLY", coach: "COA", manager: "MNG", owner: "OWN" };
@@ -36,22 +34,22 @@ function writeJson(p, d) { writeFileSync(p, JSON.stringify(d, null, 2), "utf8");
 
 mkdirSync(PLAYERS, { recursive: true });
 
-// ── CLI 파싱 ──────────────────────────────────────────────────
+// ?? CLI ?뚯떛 ??????????????????????????????????????????????????
 const args = process.argv.slice(2);
 const appendIdx = args.indexOf("--append");
 const isAppend  = appendIdx !== -1;
 const appendFiles = isAppend
   ? args.slice(appendIdx + 1).map(f =>
-      f.startsWith("/") || f.includes(":\\") ? f : join(MASTER, "entities", f)
+      f.startsWith("/") || f.includes(":\\") ? f : join(ROOT, "resource/data/staging", f)
     )
   : [];
 
-// ── 카운터 초기화 ─────────────────────────────────────────────
+// ?? 移댁슫??珥덇린???????????????????????????????????????????????
 const counters = { PLY: 0, COA: 0, MNG: 0, OWN: 0 };
 let byLeague = {};
 
 if (isAppend && existsSync(INDEX)) {
-  // 기존 index 로드 및 최대 카운터 계산
+  // 湲곗〈 index 濡쒕뱶 諛?理쒕? 移댁슫??怨꾩궛
   const existing = readJson(INDEX);
   byLeague = existing.byLeague ?? {};
   for (const ids of Object.values(byLeague)) {
@@ -62,21 +60,21 @@ if (isAppend && existsSync(INDEX)) {
       }
     }
   }
-  console.log(`[append] 기존 카운터: PLY=${counters.PLY} COA=${counters.COA} MNG=${counters.MNG} OWN=${counters.OWN}`);
+  console.log(`[append] 湲곗〈 移댁슫?? PLY=${counters.PLY} COA=${counters.COA} MNG=${counters.MNG} OWN=${counters.OWN}`);
 }
 
-// ── 처리할 소스 결정 ─────────────────────────────────────────
+// ?? 泥섎━???뚯뒪 寃곗젙 ?????????????????????????????????????????
 const targets = isAppend ? appendFiles : SOURCE_FILES;
 let total = 0;
 
 for (const srcPath of targets) {
   if (!existsSync(srcPath)) {
-    console.log(`스킵 (없음): ${srcPath}`);
+    console.log(`?ㅽ궢 (?놁쓬): ${srcPath}`);
     continue;
   }
   const bulk = readJson(srcPath);
   const entities = bulk.entities ?? [];
-  console.log(`처리 중: ${basename(srcPath)} — ${entities.length}개`);
+  console.log(`泥섎━ 以? ${basename(srcPath)} ??${entities.length}媛?);
 
   for (const ent of entities) {
     const role   = ent.role ?? "player";
@@ -94,16 +92,16 @@ for (const srcPath of targets) {
   }
 }
 
-// ── _index.json 갱신 ─────────────────────────────────────────
+// ?? _index.json 媛깆떊 ?????????????????????????????????????????
 writeJson(INDEX, { generated: new Date().toISOString(), byLeague });
 
-console.log(`\n✓ ${isAppend ? "추가 " : ""}마이그레이션 완료 — ${total}개 엔티티`);
+console.log(`\n??${isAppend ? "異붽? " : ""}留덉씠洹몃젅?댁뀡 ?꾨즺 ??${total}媛??뷀떚??);
 for (const [league, ids] of Object.entries(byLeague)) {
-  console.log(`  ${league}: ${ids.length}개`);
+  console.log(`  ${league}: ${ids.length}媛?);
 }
-console.log(`\n최종 카운터: PLY=${counters.PLY} COA=${counters.COA} MNG=${counters.MNG} OWN=${counters.OWN}`);
+console.log(`\n理쒖쥌 移댁슫?? PLY=${counters.PLY} COA=${counters.COA} MNG=${counters.MNG} OWN=${counters.OWN}`);
 if (!isAppend) {
-  console.log("\n⚠ 기존 people_*.json 파일은 삭제하지 않았습니다.");
-  console.log("  정상 동작 확인 후 수동으로 삭제하세요.");
+  console.log("\n??湲곗〈 people_*.json ?뚯씪? ??젣?섏? ?딆븯?듬땲??");
+  console.log("  ?뺤긽 ?숈옉 ?뺤씤 ???섎룞?쇰줈 ??젣?섏꽭??");
 }
-console.log("  npm run gen:manifest 도 실행하세요.");
+console.log("  npm run gen:manifest ???ㅽ뻾?섏꽭??");

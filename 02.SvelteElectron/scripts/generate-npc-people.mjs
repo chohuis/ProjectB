@@ -1,10 +1,9 @@
-/**
+﻿/**
  * generate-npc-people.mjs
- * NPC 선수/스태프 데이터 생성기
- * - KBL 8팀
- * - ABL 16팀 (MLB + AAA)
- * - 대학 7팀
- * - 독립 8팀
+ * NPC ?좎닔/?ㅽ깭???곗씠???앹꽦湲? * - KBL 8?
+ * - ABL 16? (MLB + AAA)
+ * - ???7?
+ * - ?낅┰ 8?
  */
 
 import { readFileSync, writeFileSync } from "fs";
@@ -14,7 +13,7 @@ import { fileURLToPath } from "url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
 const MASTER = resolve(ROOT, "resource/data/master");
-const ENTITIES_DIR = resolve(MASTER, "entities");
+const ENTITIES_DIR = resolve(ROOT, "resource/data/staging");
 
 const krPool = JSON.parse(readFileSync(resolve(MASTER, "players/name_pool_kr.json"), "utf8"));
 const enPool = JSON.parse(readFileSync(resolve(MASTER, "players/name_pool_en.json"), "utf8"));
@@ -198,61 +197,61 @@ function romanToHangulSimple(input) {
   if (!word) return input;
 
   const directMap = {
-    james: "제임스", michael: "마이클", david: "데이비드", john: "존", robert: "로버트",
-    daniel: "다니엘", matthew: "매튜", joseph: "조셉", christopher: "크리스토퍼", anthony: "앤서니",
-    andrew: "앤드류", ryan: "라이언", nicholas: "니콜라스", brandon: "브랜던", jonathan: "조너선",
-    tyler: "타일러", justin: "저스틴", kevin: "케빈", austin: "오스틴", logan: "로건",
-    noah: "노아", liam: "리엄", mason: "메이슨", ethan: "이선", jacob: "제이컵",
-    aiden: "에이든", elijah: "일라이저", lucas: "루카스", benjamin: "벤자민", william: "윌리엄",
-    carlos: "카를로스", jose: "호세", luis: "루이스", miguel: "미겔", juan: "후안",
-    alejandro: "알레한드로", francisco: "프란시스코", javier: "하비에르", diego: "디에고",
-    victor: "빅터", adrian: "애드리언", marco: "마르코",
-    smith: "스미스", johnson: "존슨", williams: "윌리엄스", brown: "브라운", jones: "존스",
-    miller: "밀러", davis: "데이비스", wilson: "윌슨", moore: "무어", taylor: "테일러",
-    anderson: "앤더슨", thomas: "토머스", jackson: "잭슨", white: "화이트", harris: "해리스",
-    martin: "마틴", thompson: "톰프슨", garcia: "가르시아", martinez: "마르티네스", robinson: "로빈슨",
-    clark: "클라크", rodriguez: "로드리게스", lewis: "루이스", lee: "리", walker: "워커",
-    hall: "홀", allen: "앨런", young: "영", king: "킹", wright: "라이트",
-    scott: "스콧", green: "그린", baker: "베이커", adams: "애덤스", nelson: "넬슨",
-    carter: "카터", mitchell: "미첼", perez: "페레스", sanchez: "산체스", ramirez: "라미레스",
-    flores: "플로레스", castillo: "카스티요", gonzalez: "곤살레스", rivera: "리베라", torres: "토레스"
+    james: "?쒖엫??, michael: "留덉씠??, david: "?곗씠鍮꾨뱶", john: "議?, robert: "濡쒕쾭??,
+    daniel: "?ㅻ땲??, matthew: "留ㅽ뒠", joseph: "議곗뀎", christopher: "?щ━?ㅽ넗??, anthony: "?ㅼ꽌??,
+    andrew: "?ㅻ뱶瑜?, ryan: "?쇱씠??, nicholas: "?덉퐳?쇱뒪", brandon: "釉뚮옖??, jonathan: "議곕꼫??,
+    tyler: "??쇰윭", justin: "??ㅽ떞", kevin: "耳鍮?, austin: "?ㅼ뒪??, logan: "濡쒓굔",
+    noah: "?몄븘", liam: "由ъ뾼", mason: "硫붿씠??, ethan: "?댁꽑", jacob: "?쒖씠而?,
+    aiden: "?먯씠??, elijah: "?쇰씪?댁?", lucas: "猷⑥뭅??, benjamin: "踰ㅼ옄誘?, william: "?뚮━??,
+    carlos: "移대?濡쒖뒪", jose: "?몄꽭", luis: "猷⑥씠??, miguel: "誘멸쾾", juan: "?꾩븞",
+    alejandro: "?뚮젅?쒕뱶濡?, francisco: "?꾨??쒖뒪肄?, javier: "?섎퉬?먮Ⅴ", diego: "?붿뿉怨?,
+    victor: "鍮낇꽣", adrian: "?좊뱶由ъ뼵", marco: "留덈Ⅴ肄?,
+    smith: "?ㅻ???, johnson: "議댁뒯", williams: "?뚮━?꾩뒪", brown: "釉뚮씪??, jones: "議댁뒪",
+    miller: "諛??, davis: "?곗씠鍮꾩뒪", wilson: "?뚯뒯", moore: "臾댁뼱", taylor: "?뚯씪??,
+    anderson: "?ㅻ뜑??, thomas: "?좊㉧??, jackson: "??뒯", white: "?붿씠??, harris: "?대━??,
+    martin: "留덊떞", thompson: "?고봽??, garcia: "媛瑜댁떆??, martinez: "留덈Ⅴ?곕꽕??, robinson: "濡쒕퉰??,
+    clark: "?대씪??, rodriguez: "濡쒕뱶由ш쾶??, lewis: "猷⑥씠??, lee: "由?, walker: "?뚯빱",
+    hall: "?", allen: "?⑤윴", young: "??, king: "??, wright: "?쇱씠??,
+    scott: "?ㅼ쉑", green: "洹몃┛", baker: "踰좎씠而?, adams: "?좊뜡??, nelson: "?ъ뒯",
+    carter: "移댄꽣", mitchell: "誘몄꼈", perez: "?섎젅??, sanchez: "?곗껜??, ramirez: "?쇰??덉뒪",
+    flores: "?뚮줈?덉뒪", castillo: "移댁뒪?곗슂", gonzalez: "怨ㅼ궡?덉뒪", rivera: "由щ쿋??, torres: "?좊젅??
   };
   if (directMap[word]) return directMap[word];
 
   let out = word;
   out = out
-    .replace(/ph/g, "프")
-    .replace(/ch/g, "치")
-    .replace(/sh/g, "시")
-    .replace(/th/g, "스")
-    .replace(/ck/g, "크")
-    .replace(/qu/g, "쿠")
-    .replace(/x/g, "크스");
+    .replace(/ph/g, "??)
+    .replace(/ch/g, "移?)
+    .replace(/sh/g, "??)
+    .replace(/th/g, "??)
+    .replace(/ck/g, "??)
+    .replace(/qu/g, "荑?)
+    .replace(/x/g, "?ъ뒪");
   out = out
-    .replace(/a/g, "아")
-    .replace(/e/g, "에")
-    .replace(/i/g, "이")
-    .replace(/o/g, "오")
-    .replace(/u/g, "우")
-    .replace(/y/g, "이")
-    .replace(/b/g, "브")
-    .replace(/c/g, "크")
-    .replace(/d/g, "드")
-    .replace(/f/g, "프")
-    .replace(/g/g, "그")
-    .replace(/h/g, "흐")
-    .replace(/j/g, "제")
-    .replace(/k/g, "크")
-    .replace(/l/g, "르")
-    .replace(/m/g, "므")
-    .replace(/n/g, "느")
-    .replace(/p/g, "프")
-    .replace(/r/g, "르")
-    .replace(/s/g, "스")
-    .replace(/t/g, "트")
-    .replace(/v/g, "브")
-    .replace(/w/g, "우")
-    .replace(/z/g, "즈");
+    .replace(/a/g, "??)
+    .replace(/e/g, "??)
+    .replace(/i/g, "??)
+    .replace(/o/g, "??)
+    .replace(/u/g, "??)
+    .replace(/y/g, "??)
+    .replace(/b/g, "釉?)
+    .replace(/c/g, "??)
+    .replace(/d/g, "??)
+    .replace(/f/g, "??)
+    .replace(/g/g, "洹?)
+    .replace(/h/g, "??)
+    .replace(/j/g, "??)
+    .replace(/k/g, "??)
+    .replace(/l/g, "瑜?)
+    .replace(/m/g, "誘")
+    .replace(/n/g, "??)
+    .replace(/p/g, "??)
+    .replace(/r/g, "瑜?)
+    .replace(/s/g, "??)
+    .replace(/t/g, "??)
+    .replace(/v/g, "釉?)
+    .replace(/w/g, "??)
+    .replace(/z/g, "利?);
   return out;
 }
 
@@ -275,14 +274,14 @@ function blankDetails() {
       trainingBuffs: ""
     },
     manager: {
-      style: "균형",
+      style: "洹좏삎",
       experienceYears: 0,
       stats: { tactics: 50, decision: 50, rotationMgmt: 50, bullpenMgmt: 50, moraleMgmt: 50 },
       gamePlanBias: "",
       riskTolerance: 50
     },
     owner: {
-      ownershipStyle: "안정 운영",
+      ownershipStyle: "?덉젙 ?댁쁺",
       tenureYears: 0,
       stats: { budgetSupport: 50, patience: 50, prInfluence: 50, facilityInvestment: 50, staffTrust: 50 },
       budgetPolicy: "",
@@ -356,17 +355,17 @@ function makeStaffEntity({ rng, makeName, id, role, leagueId, originLeagueId, te
   const { name, nameEn } = makeName();
   const details = blankDetails();
   if (role === "coach") {
-    details.coach.specialty = pick(rng, ["투수", "타격", "수비", "멘탈"]);
+    details.coach.specialty = pick(rng, ["?ъ닔", "?寃?, "?섎퉬", "硫섑깉"]);
     details.coach.experienceYears = randInt(rng, 3, 18);
-    details.coach.trainingBuffs = pct(rng, 0.6) ? pick(rng, ["구속 훈련 +2%", "제구 훈련 +2%", "컨택 훈련 +2%", "체력 훈련 +2%"]) : "";
+    details.coach.trainingBuffs = pct(rng, 0.6) ? pick(rng, ["援ъ냽 ?덈젴 +2%", "?쒓뎄 ?덈젴 +2%", "而⑦깮 ?덈젴 +2%", "泥대젰 ?덈젴 +2%"]) : "";
     Object.keys(details.coach.stats).forEach((k) => { details.coach.stats[k] = randInt(rng, 52, 84); });
   } else if (role === "manager") {
-    details.manager.style = pick(rng, ["균형", "공격적", "수비적", "데이터 중심", "유망주 중심"]);
+    details.manager.style = pick(rng, ["洹좏삎", "怨듦꺽??, "?섎퉬??, "?곗씠??以묒떖", "?좊쭩二?以묒떖"]);
     details.manager.experienceYears = randInt(rng, 5, 24);
     details.manager.riskTolerance = randInt(rng, 35, 75);
     Object.keys(details.manager.stats).forEach((k) => { details.manager.stats[k] = randInt(rng, 55, 86); });
   } else if (role === "owner") {
-    details.owner.ownershipStyle = pick(rng, ["공격 투자", "안정 운영", "성적 우선", "유망주 중심"]);
+    details.owner.ownershipStyle = pick(rng, ["怨듦꺽 ?ъ옄", "?덉젙 ?댁쁺", "?깆쟻 ?곗꽑", "?좊쭩二?以묒떖"]);
     details.owner.tenureYears = randInt(rng, 3, 20);
     details.owner.stats.budgetSupport = randInt(rng, 60, 90);
     details.owner.stats.patience = randInt(rng, 50, 80);
@@ -402,27 +401,27 @@ function generateKbl() {
     POS_25.forEach((pos, i) => {
       const id = `PLY_KBL_${pad2(club.no)}_${pad3(i + 1)}`;
       usedId.add(id);
-      all.push(makePlayerEntity({ rng, makeName, id, leagueId: "LEAGUE_KBL", originLeagueId: "LEAGUE_KBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", grade: null, conf: LEAGUE_CONF.LEAGUE_KBL_1, position: pos, jerseyNumber: i + 1, notes: "국적:한국" }));
+      all.push(makePlayerEntity({ rng, makeName, id, leagueId: "LEAGUE_KBL", originLeagueId: "LEAGUE_KBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", grade: null, conf: LEAGUE_CONF.LEAGUE_KBL_1, position: pos, jerseyNumber: i + 1, notes: "援?쟻:?쒓뎅" }));
     });
     for (let i = 0; i < 3; i += 1) {
       const id = `COA_KBL_${pad2(club.no)}_${pad3(i + 1)}`;
       usedId.add(id);
-      all.push(makeStaffEntity({ rng, makeName, id, role: "coach", leagueId: "LEAGUE_KBL", originLeagueId: "LEAGUE_KBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [34, 58], notes: "국적:한국" }));
+      all.push(makeStaffEntity({ rng, makeName, id, role: "coach", leagueId: "LEAGUE_KBL", originLeagueId: "LEAGUE_KBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [34, 58], notes: "援?쟻:?쒓뎅" }));
     }
-    all.push(makeStaffEntity({ rng, makeName, id: `MNG_KBL_${pad2(club.no)}_001`, role: "manager", leagueId: "LEAGUE_KBL", originLeagueId: "LEAGUE_KBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [42, 66], notes: "국적:한국" }));
-    all.push(makeStaffEntity({ rng, makeName, id: `OWN_KBL_${pad2(club.no)}_001`, role: "owner", leagueId: "LEAGUE_KBL", originLeagueId: "LEAGUE_KBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [48, 74], notes: "국적:한국" }));
+    all.push(makeStaffEntity({ rng, makeName, id: `MNG_KBL_${pad2(club.no)}_001`, role: "manager", leagueId: "LEAGUE_KBL", originLeagueId: "LEAGUE_KBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [42, 66], notes: "援?쟻:?쒓뎅" }));
+    all.push(makeStaffEntity({ rng, makeName, id: `OWN_KBL_${pad2(club.no)}_001`, role: "owner", leagueId: "LEAGUE_KBL", originLeagueId: "LEAGUE_KBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [48, 74], notes: "援?쟻:?쒓뎅" }));
 
     POS_20.forEach((pos, i) => {
       const id = `PLY_KBL_${pad2(club.no)}_${pad3(100 + i + 1)}`;
       usedId.add(id);
-      all.push(makePlayerEntity({ rng, makeName, id, leagueId: "LEAGUE_KBL", originLeagueId: "LEAGUE_KBL", teamId: club.team2, clubId: club.clubId, schoolId: "SCHOOL_NONE", grade: null, conf: LEAGUE_CONF.LEAGUE_KBL_2, position: pos, jerseyNumber: i + 31, notes: "국적:한국" }));
+      all.push(makePlayerEntity({ rng, makeName, id, leagueId: "LEAGUE_KBL", originLeagueId: "LEAGUE_KBL", teamId: club.team2, clubId: club.clubId, schoolId: "SCHOOL_NONE", grade: null, conf: LEAGUE_CONF.LEAGUE_KBL_2, position: pos, jerseyNumber: i + 31, notes: "援?쟻:?쒓뎅" }));
     });
     for (let i = 0; i < 2; i += 1) {
       const id = `COA_KBL_${pad2(club.no)}_${pad3(100 + i + 1)}`;
       usedId.add(id);
-      all.push(makeStaffEntity({ rng, makeName, id, role: "coach", leagueId: "LEAGUE_KBL", originLeagueId: "LEAGUE_KBL", teamId: club.team2, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [34, 58], notes: "국적:한국" }));
+      all.push(makeStaffEntity({ rng, makeName, id, role: "coach", leagueId: "LEAGUE_KBL", originLeagueId: "LEAGUE_KBL", teamId: club.team2, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [34, 58], notes: "援?쟻:?쒓뎅" }));
     }
-    all.push(makeStaffEntity({ rng, makeName, id: `MNG_KBL_${pad2(club.no)}_101`, role: "manager", leagueId: "LEAGUE_KBL", originLeagueId: "LEAGUE_KBL", teamId: club.team2, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [42, 66], notes: "국적:한국" }));
+    all.push(makeStaffEntity({ rng, makeName, id: `MNG_KBL_${pad2(club.no)}_101`, role: "manager", leagueId: "LEAGUE_KBL", originLeagueId: "LEAGUE_KBL", teamId: club.team2, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [42, 66], notes: "援?쟻:?쒓뎅" }));
   });
   return { version: 1, sourceLeague: "LEAGUE_KBL", entities: all };
 }
@@ -435,7 +434,7 @@ function generateAbl() {
     const makeName = createAblNameMaker(rng, usedName);
     POS_25.forEach((pos, i) => {
       const id = `PLY_ABL_${pad2(club.no)}_${pad3(i + 1)}`;
-      const p = makePlayerEntity({ rng, makeName, id, leagueId: "LEAGUE_ABL", originLeagueId: "LEAGUE_ABL", teamId: club.mlb, clubId: club.clubId, schoolId: "SCHOOL_NONE", grade: null, conf: LEAGUE_CONF.LEAGUE_ABL_MLB, position: pos, jerseyNumber: i + 1, notes: `국적:${pick(rng, ["미국", "도미니카", "일본", "한국", "베네수엘라"])}` });
+      const p = makePlayerEntity({ rng, makeName, id, leagueId: "LEAGUE_ABL", originLeagueId: "LEAGUE_ABL", teamId: club.mlb, clubId: club.clubId, schoolId: "SCHOOL_NONE", grade: null, conf: LEAGUE_CONF.LEAGUE_ABL_MLB, position: pos, jerseyNumber: i + 1, notes: `援?쟻:${pick(rng, ["誘멸뎅", "?꾨??덉뭅", "?쇰낯", "?쒓뎅", "踰좊꽕?섏뿕??])}` });
       all.push(p);
     });
     for (let i = 0; i < 3; i += 1) {
@@ -445,7 +444,7 @@ function generateAbl() {
 
     POS_20.forEach((pos, i) => {
       const id = `PLY_ABL_${pad2(club.no)}_${pad3(100 + i + 1)}`;
-      const p = makePlayerEntity({ rng, makeName, id, leagueId: "LEAGUE_ABL", originLeagueId: "LEAGUE_ABL", teamId: club.aaa, clubId: club.clubId, schoolId: "SCHOOL_NONE", grade: null, conf: LEAGUE_CONF.LEAGUE_ABL_AAA, position: pos, jerseyNumber: i + 41, notes: `국적:${pick(rng, ["미국", "도미니카", "일본", "한국", "쿠바"])}` });
+      const p = makePlayerEntity({ rng, makeName, id, leagueId: "LEAGUE_ABL", originLeagueId: "LEAGUE_ABL", teamId: club.aaa, clubId: club.clubId, schoolId: "SCHOOL_NONE", grade: null, conf: LEAGUE_CONF.LEAGUE_ABL_AAA, position: pos, jerseyNumber: i + 41, notes: `援?쟻:${pick(rng, ["誘멸뎅", "?꾨??덉뭅", "?쇰낯", "?쒓뎅", "荑좊컮"])}` });
       all.push(p);
     });
     for (let i = 0; i < 2; i += 1) {
@@ -505,22 +504,22 @@ function generateJbl() {
     const makeName = createJblNameMaker(rng, usedName);
     POS_25.forEach((pos, i) => {
       const id = `PLY_JBL_${pad2(club.no)}_${pad3(i + 1)}`;
-      all.push(makePlayerEntity({ rng, makeName, id, leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", grade: null, conf: LEAGUE_CONF.LEAGUE_JBL_1, position: pos, jerseyNumber: i + 1, notes: "국적:일본" }));
+      all.push(makePlayerEntity({ rng, makeName, id, leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", grade: null, conf: LEAGUE_CONF.LEAGUE_JBL_1, position: pos, jerseyNumber: i + 1, notes: "援?쟻:?쇰낯" }));
     });
     for (let i = 0; i < 3; i += 1) {
-      all.push(makeStaffEntity({ rng, makeName, id: `COA_JBL_${pad2(club.no)}_${pad3(i + 1)}`, role: "coach", leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [34, 58], notes: "국적:일본" }));
+      all.push(makeStaffEntity({ rng, makeName, id: `COA_JBL_${pad2(club.no)}_${pad3(i + 1)}`, role: "coach", leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [34, 58], notes: "援?쟻:?쇰낯" }));
     }
-    all.push(makeStaffEntity({ rng, makeName, id: `MNG_JBL_${pad2(club.no)}_001`, role: "manager", leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [42, 66], notes: "국적:일본" }));
-    all.push(makeStaffEntity({ rng, makeName, id: `OWN_JBL_${pad2(club.no)}_001`, role: "owner",   leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [48, 74], notes: "국적:일본" }));
+    all.push(makeStaffEntity({ rng, makeName, id: `MNG_JBL_${pad2(club.no)}_001`, role: "manager", leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [42, 66], notes: "援?쟻:?쇰낯" }));
+    all.push(makeStaffEntity({ rng, makeName, id: `OWN_JBL_${pad2(club.no)}_001`, role: "owner",   leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team1, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [48, 74], notes: "援?쟻:?쇰낯" }));
 
     POS_20.forEach((pos, i) => {
       const id = `PLY_JBL_${pad2(club.no)}_${pad3(100 + i + 1)}`;
-      all.push(makePlayerEntity({ rng, makeName, id, leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team2, clubId: club.clubId, schoolId: "SCHOOL_NONE", grade: null, conf: LEAGUE_CONF.LEAGUE_JBL_2, position: pos, jerseyNumber: i + 31, notes: "국적:일본" }));
+      all.push(makePlayerEntity({ rng, makeName, id, leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team2, clubId: club.clubId, schoolId: "SCHOOL_NONE", grade: null, conf: LEAGUE_CONF.LEAGUE_JBL_2, position: pos, jerseyNumber: i + 31, notes: "援?쟻:?쇰낯" }));
     });
     for (let i = 0; i < 2; i += 1) {
-      all.push(makeStaffEntity({ rng, makeName, id: `COA_JBL_${pad2(club.no)}_${pad3(100 + i + 1)}`, role: "coach", leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team2, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [34, 58], notes: "국적:일본" }));
+      all.push(makeStaffEntity({ rng, makeName, id: `COA_JBL_${pad2(club.no)}_${pad3(100 + i + 1)}`, role: "coach", leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team2, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [34, 58], notes: "援?쟻:?쇰낯" }));
     }
-    all.push(makeStaffEntity({ rng, makeName, id: `MNG_JBL_${pad2(club.no)}_101`, role: "manager", leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team2, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [42, 66], notes: "국적:일본" }));
+    all.push(makeStaffEntity({ rng, makeName, id: `MNG_JBL_${pad2(club.no)}_101`, role: "manager", leagueId: "LEAGUE_JBL", originLeagueId: "LEAGUE_JBL", teamId: club.team2, clubId: club.clubId, schoolId: "SCHOOL_NONE", ageRange: [42, 66], notes: "援?쟻:?쇰낯" }));
   });
   return { version: 1, sourceLeague: "LEAGUE_JBL", entities: all };
 }
@@ -529,7 +528,7 @@ function assertUniqueIds(files) {
   const seen = new Set();
   for (const file of files) {
     for (const e of file.entities) {
-      if (seen.has(e.id)) throw new Error(`중복 ID 발견: ${e.id}`);
+      if (seen.has(e.id)) throw new Error(`以묐났 ID 諛쒓껄: ${e.id}`);
       seen.add(e.id);
     }
   }
@@ -549,12 +548,12 @@ function run() {
   writeFileSync(resolve(ENTITIES_DIR, "people_ind.json"),  JSON.stringify(ind,  null, 2), "utf8");
   writeFileSync(resolve(ENTITIES_DIR, "people_jbl.json"),  JSON.stringify(jbl,  null, 2), "utf8");
 
-  console.log(`KBL:  ${kbl.entities.length}명 (목표 424)`);
-  console.log(`ABL:  ${abl.entities.length}명 (목표 832)`);
-  console.log(`UNIV: ${univ.entities.length}명 (목표 161)`);
-  console.log(`IND:  ${ind.entities.length}명 (목표 184)`);
-  console.log(`JBL:  ${jbl.entities.length}명 (목표 636)`);
-  console.log("완료: people_kbl.json / people_abl.json / people_univ.json / people_ind.json / people_jbl.json");
+  console.log(`KBL:  ${kbl.entities.length}紐?(紐⑺몴 424)`);
+  console.log(`ABL:  ${abl.entities.length}紐?(紐⑺몴 832)`);
+  console.log(`UNIV: ${univ.entities.length}紐?(紐⑺몴 161)`);
+  console.log(`IND:  ${ind.entities.length}紐?(紐⑺몴 184)`);
+  console.log(`JBL:  ${jbl.entities.length}紐?(紐⑺몴 636)`);
+  console.log("?꾨즺: people_kbl.json / people_abl.json / people_univ.json / people_ind.json / people_jbl.json");
 }
 
 run();

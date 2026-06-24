@@ -1,11 +1,11 @@
-import { derived, writable } from "svelte/store";
+﻿import { derived, writable } from "svelte/store";
 import type { EventRule, EventPool, MessageTemplate, DecisionTemplate, DecisionTemplateOption } from "../types/event";
 import type { CareerStage, ManagerAttributes, CoachAttributes, CoachSpecialty } from "../types/save";
 import type { DecisionEffect } from "../types/main";
 
 export type { ManagerAttributes, CoachAttributes, CoachSpecialty };
 
-// ── 훈련·구종 타입 ─────────────────────────────────────────────
+// ?? ?덈젴쨌援ъ쥌 ????????????????????????????????????????????????
 export interface TrainingProgram {
   id: string;
   name: string;
@@ -29,7 +29,7 @@ export interface PitchUnlockRule {
   params: { stat?: string; value?: number };
 }
 
-// ── refs 타입 (refs.json 구조) ─────────────────────────────────
+// ?? refs ???(refs.json 援ъ“) ?????????????????????????????????
 export interface LeagueRef {
   id: string;
   name: string;
@@ -54,14 +54,14 @@ export interface TeamProfile {
   desc?: string;
   tags?: string[];
   strengths?: string[];
-  funding?: "최상" | "상" | "중" | "하" | "최하";
-  difficulty?: "최상" | "상" | "중" | "하" | "최하";
+  funding?: "理쒖긽" | "?? | "以? | "?? | "理쒗븯";
+  difficulty?: "理쒖긽" | "?? | "以? | "?? | "理쒗븯";
   prestige?: "S" | "A" | "B" | "C" | "D";
-  fanBase?: "소규모" | "지역" | "광역" | "전국" | "메가";
+  fanBase?: "?뚭퇋紐? | "吏?? | "愿묒뿭" | "?꾧뎅" | "硫붽?";
   facilityLevel?: 1 | 2 | 3 | 4 | 5;
-  atmosphere?: "엄격" | "체계적" | "균형" | "자유로운" | "가족적";
-  mediaPressure?: "낮음" | "보통" | "높음" | "극심";
-  promoChance?: "높음" | "보통" | "낮음";
+  atmosphere?: "?꾧꺽" | "泥닿퀎?? | "洹좏삎" | "?먯쑀濡쒖슫" | "媛議깆쟻";
+  mediaPressure?: "??쓬" | "蹂댄넻" | "?믪쓬" | "洹뱀떖";
+  promoChance?: "?믪쓬" | "蹂댄넻" | "??쓬";
 }
 
 export interface ProTeamProfile {
@@ -114,14 +114,14 @@ export interface TeamRef {
   history?: TeamHistory;
 }
 
-// ── 인물 엔티티 상세 타입 ──────────────────────────────────────
+// ?? ?몃Ъ ?뷀떚???곸꽭 ?????????????????????????????????????????
 export interface EntityManagerStats {
   motivation: number;
   development: number;
   strategy: number;
   handlePressure: number;
   handlePersonnel: number;
-  injuryMgmt?: number;  // 부상 관리 (70+ 보수적, 40미만 무리형)
+  injuryMgmt?: number;  // 遺??愿由?(70+ 蹂댁닔?? 40誘몃쭔 臾대━??
 }
 
 export interface EntityManagerDetails {
@@ -135,7 +135,7 @@ export interface EntityManagerDetails {
 export interface EntityCoachStats {
   teaching: number;
   analytics: number;
-  experience: number; // 레벨 1~5
+  experience: number; // ?덈꺼 1~5
 }
 
 export interface EntityCoachDetails {
@@ -171,7 +171,7 @@ export interface EntityPlayerDetails {
   potentialHidden: number;
   proServiceYears?: number;
   militaryEnlistYear?: number;
-  militaryStatus?: "현역" | "군필" | "면제";
+  militaryStatus?: "?꾩뿭" | "援고븘" | "硫댁젣";
   militaryUnit?: "sports" | "general";
   originalLeagueId?: string;
   originalTeamId?: string;
@@ -186,7 +186,7 @@ export interface EntityDetails {
   owner:   Record<string, unknown> | null;
 }
 
-// ── 인물 엔티티 타입 (people_*.json 구조) ─────────────────────
+// ?? ?몃Ъ ?뷀떚?????(people_*.json 援ъ“) ?????????????????????
 export interface EntityRow {
   id: string;
   name: string;
@@ -202,7 +202,7 @@ export interface EntityRow {
   schoolId: string;
   grade?: number;
   notes: string;
-  militaryStatus?: "미필" | "군필" | "현역" | "면제";
+  militaryStatus?: "誘명븘" | "援고븘" | "?꾩뿭" | "硫댁젣";
   personality?: import("../types/save").NpcPersonality;
   entryYear?:   number;
   entryLeague?: string;
@@ -211,7 +211,7 @@ export interface EntityRow {
   details: EntityDetails;
 }
 
-// ── NPC 라이브 스탯 타입 ───────────────────────────────────────
+// ?? NPC ?쇱씠釉??ㅽ꺈 ??????????????????????????????????????????
 export interface NpcLiveStat {
   pitching?: import("../types/save").PitchingAttributes;
   batting?:  import("../types/save").BattingAttributes;
@@ -223,7 +223,7 @@ export interface NpcLiveStat {
 }
 export type NpcLiveStats = Record<string, NpcLiveStat>;
 
-// ── 군 이벤트 타입 ────────────────────────────────────────────
+// ?? 援??대깽?????????????????????????????????????????????????
 export interface MilitaryEvent {
   id: string;
   title: string;
@@ -242,7 +242,7 @@ export interface MilitaryEvent {
   fatigueDelta?: number;
 }
 
-// ── 스토어 상태 ───────────────────────────────────────────────
+// ?? ?ㅽ넗???곹깭 ???????????????????????????????????????????????
 export interface MasterState {
   loaded: boolean;
   trainingPrograms: TrainingProgram[];
@@ -263,7 +263,7 @@ export interface MasterState {
   militaryGeneralEvents: MilitaryEvent[];
 }
 
-// ── masterFetch 래퍼 (IPC 우선, fetch 폴백) ───────────────────
+// ?? masterFetch ?섑띁 (IPC ?곗꽑, fetch ?대갚) ???????????????????
 async function fetchMaster<T>(relPath: string): Promise<T | null> {
   try {
     if (window.projectB?.masterFetch) {
@@ -277,12 +277,12 @@ async function fetchMaster<T>(relPath: string): Promise<T | null> {
   }
 }
 
-// ── 이벤트 JSON 파서 ─────────────────────────────────────────
-// 한국 학사 연도 기준 월 → 주차 시작값 (3월=주1 기준)
+// ?? ?대깽??JSON ?뚯꽌 ?????????????????????????????????????????
+// ?쒓뎅 ?숈궗 ?곕룄 湲곗? ????二쇱감 ?쒖옉媛?(3??二? 湲곗?)
 const MONTH_STARTS = [0, 5, 9, 13, 18, 22, 26, 31, 35, 39, 44, 48];
 
 function scheduleToWeek(month: number, weekOfMonth: number): number {
-  // 3월=index0, 4월=index1, ..., 12월=index9, 1월=index10, 2월=index11
+  // 3??index0, 4??index1, ..., 12??index9, 1??index10, 2??index11
   const idx = month >= 3 ? month - 3 : month + 9;
   const base = MONTH_STARTS[idx] ?? 0;
   return base + weekOfMonth;
@@ -299,8 +299,7 @@ function stageToCareerStage(stage: string): CareerStage | null {
   return map[stage] ?? null;
 }
 
-// effects 문자열 배열 → DecisionEffect 변환
-// 형식 예: ["condition:-4", "xp.command:+1", "fatigue:+5", "fame:+3", "addTag.급성장"]
+// effects 臾몄옄??諛곗뿴 ??DecisionEffect 蹂??// ?뺤떇 ?? ["condition:-4", "xp.command:+1", "fatigue:+5", "fame:+3", "addTag.湲됱꽦??]
 function parseEffectsArray(effects: string[]): DecisionEffect {
   const result: DecisionEffect = {};
   for (const e of effects) {
@@ -332,11 +331,10 @@ function parseEventRule(raw: Record<string, any>): EventRule {
   let conditions: import("../types/event").Condition[] = [];
 
   if (Array.isArray(raw.conditions)) {
-    // 새 포맷: conditions 배열 직접 사용
+    // ???щ㎎: conditions 諛곗뿴 吏곸젒 ?ъ슜
     conditions = raw.conditions as import("../types/event").Condition[];
   } else if (raw.schedule && typeof raw.schedule === "object") {
-    // 구 포맷 하위 호환: schedule 필드 → week_eq + career_stage 변환
-    const { month, weekOfMonth, stage } = raw.schedule as Record<string, unknown>;
+    // 援??щ㎎ ?섏쐞 ?명솚: schedule ?꾨뱶 ??week_eq + career_stage 蹂??    const { month, weekOfMonth, stage } = raw.schedule as Record<string, unknown>;
     if (typeof month === "number" && typeof weekOfMonth === "number") {
       conditions.push({ type: "week_eq", value: scheduleToWeek(month, weekOfMonth) });
     }
@@ -385,11 +383,11 @@ function parseDecisionTemplate(raw: Record<string, any>): DecisionTemplate {
     (o: Record<string, any>): DecisionTemplateOption => {
       let effects: DecisionEffect | undefined;
       if (Array.isArray(o.effects)) {
-        // 구 포맷: ["fatigue:+10", "xp.velocity:+3"]
+        // 援??щ㎎: ["fatigue:+10", "xp.velocity:+3"]
         const parsed = parseEffectsArray(o.effects as string[]);
         effects = Object.keys(parsed).length > 0 ? parsed : undefined;
       } else if (o.effects && typeof o.effects === "object") {
-        // 신 포맷: { fatigueDelta: 10, xp: { velocity: 3 } }
+        // ???щ㎎: { fatigueDelta: 10, xp: { velocity: 3 } }
         effects = o.effects as DecisionEffect;
       }
       return {
@@ -421,7 +419,7 @@ function parseEventPool(raw: Record<string, any>): EventPool {
   };
 }
 
-// ── Manifest 타입 ─────────────────────────────────────────────
+// ?? Manifest ????????????????????????????????????????????????
 interface Manifest {
   generatedAt: string;
   events: {
@@ -432,7 +430,7 @@ interface Manifest {
   achievements: { baseball: string[]; growth: string[]; social: string[]; hidden: string[] };
 }
 
-// entities/players/_index.json 구조
+// entities/players/_index.json 援ъ“
 interface EntityIndex {
   generated: string;
   byLeague: Record<string, string[]>;
@@ -444,47 +442,47 @@ interface LeagueTeamIndex {
 }
 
 const TEAM_NAME_MAP: Record<string, string> = {
-  TEAM_UNIV_HANBBIT: "한빛체육대학교",
-  TEAM_UNIV_DONGMYUNG: "동명과학대학교",
-  TEAM_UNIV_SEOHAE: "서해국제대학교",
-  TEAM_UNIV_NAMGANG: "남강대학교",
-  TEAM_UNIV_CHEONGUN: "청운공과대학교",
-  TEAM_UNIV_MIRAE: "미래창성대학교",
-  TEAM_UNIV_GAON: "가온문화대학교",
-  TEAM_IND_SEOUL_PIONEERS: "서울 파이오니어스",
-  TEAM_IND_BUSAN_TEMPEST: "부산 템페스트",
-  TEAM_IND_DAEGU_FALCONS: "대구 팔콘스",
-  TEAM_IND_GWANGJU_STORM: "광주 스톰",
-  TEAM_IND_DAEJEON_HUNTERS: "대전 헌터스",
-  TEAM_IND_INCHEON_ORCAS: "인천 오르카스",
-  TEAM_IND_SUWON_BLAZE: "수원 블레이즈",
-  TEAM_IND_ULSAN_PHOENIX: "울산 피닉스",
-  TEAM_HS_YEOSU_SHORE: "여수 쇼어",
-  TEAM_HS_CHUNCHEON_HIGHLAND: "춘천 하이랜드",
-  TEAM_HS_JEJU_WIND: "제주 윈드",
-  TEAM_HS_GANGWON_PEAK: "강원 피크",
-  TEAM_HS_MASAN_HARBOR: "마산 하버",
-  TEAM_HS_JECHEON_RIDGE: "제천 릿지",
-  TEAM_HS_GOYANG_ARROW: "고양 애로우",
-  TEAM_HS_SUNCHEON_BAY: "순천 베이",
+  TEAM_UNIV_HANBBIT: "?쒕튆泥댁쑁??숆탳",
+  TEAM_UNIV_DONGMYUNG: "?숇챸怨쇳븰??숆탳",
+  TEAM_UNIV_SEOHAE: "?쒗빐援?젣??숆탳",
+  TEAM_UNIV_NAMGANG: "?④컯??숆탳",
+  TEAM_UNIV_CHEONGUN: "泥?슫怨듦낵??숆탳",
+  TEAM_UNIV_MIRAE: "誘몃옒李쎌꽦??숆탳",
+  TEAM_UNIV_GAON: "媛?⑤Ц?붾??숆탳",
+  TEAM_IND_SEOUL_PIONEERS: "?쒖슱 ?뚯씠?ㅻ땲?댁뒪",
+  TEAM_IND_BUSAN_TEMPEST: "遺???쒗럹?ㅽ듃",
+  TEAM_IND_DAEGU_FALCONS: "?援??붿퐯??,
+  TEAM_IND_GWANGJU_STORM: "愿묒＜ ?ㅽ넱",
+  TEAM_IND_DAEJEON_HUNTERS: "????뚰꽣??,
+  TEAM_IND_INCHEON_ORCAS: "?몄쿇 ?ㅻⅤ移댁뒪",
+  TEAM_IND_SUWON_BLAZE: "?섏썝 釉붾젅?댁쫰",
+  TEAM_IND_ULSAN_PHOENIX: "?몄궛 ?쇰땳??,
+  TEAM_HS_YEOSU_SHORE: "?ъ닔 ?쇱뼱",
+  TEAM_HS_CHUNCHEON_HIGHLAND: "異섏쿇 ?섏씠?쒕뱶",
+  TEAM_HS_JEJU_WIND: "?쒖＜ ?덈뱶",
+  TEAM_HS_GANGWON_PEAK: "媛뺤썝 ?쇳겕",
+  TEAM_HS_MASAN_HARBOR: "留덉궛 ?섎쾭",
+  TEAM_HS_JECHEON_RIDGE: "?쒖쿇 由우?",
+  TEAM_HS_GOYANG_ARROW: "怨좎뼇 ?좊줈??,
+  TEAM_HS_SUNCHEON_BAY: "?쒖쿇 踰좎씠",
 };
 
-const TEAM_PROFILE_MAP: Record<string, { style: string; desc: string; strengths: string[]; funding: "최상" | "상" | "중" | "하" | "최하"; difficulty: "최상" | "상" | "중" | "하" | "최하" }> = {
-  TEAM_UNIV_HANBBIT:   { style: "투수 중심", desc: "기초 체력과 투수 운용이 강한 전통의 대학팀.", strengths: ["투수력", "체력"], funding: "중", difficulty: "중" },
-  TEAM_UNIV_DONGMYUNG: { style: "수비 안정", desc: "실책 억제와 수비 전술을 중시하는 운영형 팀.", strengths: ["수비", "작전"], funding: "중", difficulty: "중" },
-  TEAM_UNIV_SEOHAE:    { style: "공격 지향", desc: "타선 집중력이 높고 공격 템포가 빠른 팀.", strengths: ["타격", "주루"], funding: "상", difficulty: "상" },
-  TEAM_UNIV_NAMGANG:   { style: "균형형", desc: "공수 밸런스가 안정적인 전천후 팀 컬러.", strengths: ["밸런스", "집중력"], funding: "상", difficulty: "상" },
-  TEAM_UNIV_CHEONGUN:  { style: "피지컬", desc: "강한 피지컬과 장타를 앞세운 파워형 팀.", strengths: ["장타력", "피지컬"], funding: "중", difficulty: "중" },
-  TEAM_UNIV_MIRAE:     { style: "육성형", desc: "유망주 성장과 장기 육성에 강점을 가진 팀.", strengths: ["육성", "멘탈"], funding: "중", difficulty: "하" },
-  TEAM_UNIV_GAON:      { style: "기동형", desc: "기동력과 번트/작전 수행이 뛰어난 팀.", strengths: ["주루", "작전"], funding: "중", difficulty: "중" },
-  TEAM_IND_SEOUL_PIONEERS: { style: "베테랑 중심", desc: "경험 많은 투수 운용이 강점인 독립팀.", strengths: ["경험", "불펜"], funding: "중", difficulty: "상" },
-  TEAM_IND_BUSAN_TEMPEST: { style: "공격 지향", desc: "강한 중심타선으로 승부를 거는 공격형 팀.", strengths: ["타격", "클러치"], funding: "중", difficulty: "중" },
-  TEAM_IND_DAEGU_FALCONS: { style: "수비 중심", desc: "탄탄한 내야 수비와 안정적인 경기 운영.", strengths: ["수비", "집중력"], funding: "하", difficulty: "중" },
-  TEAM_IND_GWANGJU_STORM: { style: "기동형", desc: "빠른 주루와 번트 플레이를 적극 활용.", strengths: ["주루", "작전"], funding: "하", difficulty: "하" },
-  TEAM_IND_DAEJEON_HUNTERS: { style: "투수 중심", desc: "선발진 완성도가 높은 로테이션형 팀.", strengths: ["선발", "제구"], funding: "중", difficulty: "중" },
-  TEAM_IND_INCHEON_ORCAS: { style: "균형형", desc: "특정 약점이 적고 기복이 작은 밸런스 팀.", strengths: ["밸런스", "수비"], funding: "중", difficulty: "중" },
-  TEAM_IND_SUWON_BLAZE: { style: "파워형", desc: "장타 생산력과 공격 폭발력이 뛰어난 팀.", strengths: ["장타력", "타격"], funding: "상", difficulty: "상" },
-  TEAM_IND_ULSAN_PHOENIX: { style: "육성형", desc: "신인·저평가 자원의 성장 폭이 큰 팀.", strengths: ["육성", "적응력"], funding: "하", difficulty: "하" },
+const TEAM_PROFILE_MAP: Record<string, { style: string; desc: string; strengths: string[]; funding: "理쒖긽" | "?? | "以? | "?? | "理쒗븯"; difficulty: "理쒖긽" | "?? | "以? | "?? | "理쒗븯" }> = {
+  TEAM_UNIV_HANBBIT:   { style: "?ъ닔 以묒떖", desc: "湲곗큹 泥대젰怨??ъ닔 ?댁슜??媛뺥븳 ?꾪넻????숉?.", strengths: ["?ъ닔??, "泥대젰"], funding: "以?, difficulty: "以? },
+  TEAM_UNIV_DONGMYUNG: { style: "?섎퉬 ?덉젙", desc: "?ㅼ콉 ?듭젣? ?섎퉬 ?꾩닠??以묒떆?섎뒗 ?댁쁺???.", strengths: ["?섎퉬", "?묒쟾"], funding: "以?, difficulty: "以? },
+  TEAM_UNIV_SEOHAE:    { style: "怨듦꺽 吏??, desc: "???吏묒쨷?μ씠 ?믨퀬 怨듦꺽 ?쒗룷媛 鍮좊Ⅸ ?.", strengths: ["?寃?, "二쇰（"], funding: "??, difficulty: "?? },
+  TEAM_UNIV_NAMGANG:   { style: "洹좏삎??, desc: "怨듭닔 諛몃윴?ㅺ? ?덉젙?곸씤 ?꾩쿇??? 而щ윭.", strengths: ["諛몃윴??, "吏묒쨷??], funding: "??, difficulty: "?? },
+  TEAM_UNIV_CHEONGUN:  { style: "?쇱?而?, desc: "媛뺥븳 ?쇱?而ш낵 ?ν?瑜??욎꽭???뚯썙???.", strengths: ["?ν???, "?쇱?而?], funding: "以?, difficulty: "以? },
+  TEAM_UNIV_MIRAE:     { style: "?≪꽦??, desc: "?좊쭩二??깆옣怨??κ린 ?≪꽦??媛뺤젏??媛吏??.", strengths: ["?≪꽦", "硫섑깉"], funding: "以?, difficulty: "?? },
+  TEAM_UNIV_GAON:      { style: "湲곕룞??, desc: "湲곕룞?κ낵 踰덊듃/?묒쟾 ?섑뻾???곗뼱???.", strengths: ["二쇰（", "?묒쟾"], funding: "以?, difficulty: "以? },
+  TEAM_IND_SEOUL_PIONEERS: { style: "踰좏뀒??以묒떖", desc: "寃쏀뿕 留롮? ?ъ닔 ?댁슜??媛뺤젏???낅┰?.", strengths: ["寃쏀뿕", "遺덊렂"], funding: "以?, difficulty: "?? },
+  TEAM_IND_BUSAN_TEMPEST: { style: "怨듦꺽 吏??, desc: "媛뺥븳 以묒떖??좎쑝濡??밸?瑜?嫄곕뒗 怨듦꺽???.", strengths: ["?寃?, "?대윭移?], funding: "以?, difficulty: "以? },
+  TEAM_IND_DAEGU_FALCONS: { style: "?섎퉬 以묒떖", desc: "?꾪깂???댁빞 ?섎퉬? ?덉젙?곸씤 寃쎄린 ?댁쁺.", strengths: ["?섎퉬", "吏묒쨷??], funding: "??, difficulty: "以? },
+  TEAM_IND_GWANGJU_STORM: { style: "湲곕룞??, desc: "鍮좊Ⅸ 二쇰（? 踰덊듃 ?뚮젅?대? ?곴레 ?쒖슜.", strengths: ["二쇰（", "?묒쟾"], funding: "??, difficulty: "?? },
+  TEAM_IND_DAEJEON_HUNTERS: { style: "?ъ닔 以묒떖", desc: "?좊컻吏??꾩꽦?꾧? ?믪? 濡쒗뀒?댁뀡???.", strengths: ["?좊컻", "?쒓뎄"], funding: "以?, difficulty: "以? },
+  TEAM_IND_INCHEON_ORCAS: { style: "洹좏삎??, desc: "?뱀젙 ?쎌젏???곴퀬 湲곕났???묒? 諛몃윴???.", strengths: ["諛몃윴??, "?섎퉬"], funding: "以?, difficulty: "以? },
+  TEAM_IND_SUWON_BLAZE: { style: "?뚯썙??, desc: "?ν? ?앹궛?κ낵 怨듦꺽 ??컻?μ씠 ?곗뼱???.", strengths: ["?ν???, "?寃?], funding: "??, difficulty: "?? },
+  TEAM_IND_ULSAN_PHOENIX: { style: "?≪꽦??, desc: "?좎씤쨌??됯? ?먯썝???깆옣 ??씠 ???.", strengths: ["?≪꽦", "?곸쓳??], funding: "??, difficulty: "?? },
 };
 
 function teamNameFromId(teamId: string): string {
@@ -536,14 +534,14 @@ function mergeSupplementTeams(
   return merged;
 }
 
-// ── batchFetch 헬퍼 ───────────────────────────────────────────
+// ?? batchFetch ?ы띁 ???????????????????????????????????????????
 async function batchFetch<T>(ids: string[], pathFn: (id: string) => string): Promise<T[]> {
   if (ids.length === 0) return [];
   const results = await Promise.all(ids.map((id) => fetchMaster<T>(pathFn(id))));
   return results.filter((r): r is NonNullable<typeof r> => r !== null) as T[];
 }
 
-// ── 스토어 생성 ───────────────────────────────────────────────
+// ?? ?ㅽ넗???앹꽦 ???????????????????????????????????????????????
 function createMasterStore() {
   const { subscribe, update } = writable<MasterState>({
     loaded: false,
@@ -565,7 +563,7 @@ function createMasterStore() {
     militaryGeneralEvents: [],
   });
 
-  // ── manifest 기반 이벤트 로드 ──────────────────────────────
+  // ?? manifest 湲곕컲 ?대깽??濡쒕뱶 ??????????????????????????????
   async function loadEventsFromManifest(m: Manifest): Promise<EventRule[]> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [mandatory, conditional, media, social, teamLife] = await Promise.all([
@@ -580,7 +578,7 @@ function createMasterStore() {
       .map((r) => parseEventRule(r as Record<string, any>));
   }
 
-  // ── manifest 기반 업적 로드 ───────────────────────────────
+  // ?? manifest 湲곕컲 ?낆쟻 濡쒕뱶 ???????????????????????????????
   async function loadAchievementsFromManifest(
     m: Manifest,
   ): Promise<import("../utils/achievementEngine").MasterAchievement[]> {
@@ -595,7 +593,7 @@ function createMasterStore() {
 
   async function load() {
     try {
-      // ── 공통 데이터 (변경 없음) ────────────────────────────
+      // ?? 怨듯넻 ?곗씠??(蹂寃??놁쓬) ????????????????????????????
       const [
         trainingData, pitchData, unlockData, refsData,
         univTeamsIndex, indepTeamsIndex, hsTeamsIndex,
@@ -637,7 +635,7 @@ function createMasterStore() {
       const eventPools = rawPools.map(parseEventPool);
       const mergedTeams = mergeSupplementTeams(refsData?.teams ?? [], univTeamsIndex, indepTeamsIndex, hsTeamsIndex);
 
-      // ── manifest 기반 로드 (이벤트·업적·캐릭터) ──────────
+      // ?? manifest 湲곕컲 濡쒕뱶 (?대깽?맞룹뾽?겶룹틦由?꽣) ??????????
       let eventRules:  EventRule[] = [];
       let achievements: import("../utils/achievementEngine").MasterAchievement[] = [];
 
@@ -647,8 +645,8 @@ function createMasterStore() {
           loadAchievementsFromManifest(manifest),
         ]);
       } else {
-        // ── 레거시 폴백 (manifest 없을 때) ───────────────────
-        console.warn("[masterStore] _manifest.json 없음 — 레거시 로딩");
+        // ?? ?덇굅???대갚 (manifest ?놁쓣 ?? ???????????????????
+        console.warn("[masterStore] _manifest.json ?놁쓬 ???덇굅??濡쒕뵫");
         const [mandatoryData, conditionalData, randomData, achData] =
           await Promise.all([
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -691,8 +689,8 @@ function createMasterStore() {
         militaryGeneralEvents: militaryGeneralData?.events ?? [],
       }));
 
-      // 전체 엔티티 사전 로드 — 배경 리그 시뮬에 모든 팀 선수 데이터 필요
-      // loaded: true 이후에 실행하므로 게임 진입을 블로킹하지 않음
+      // ?꾩껜 ?뷀떚???ъ쟾 濡쒕뱶 ??諛곌꼍 由ш렇 ?쒕???紐⑤뱺 ? ?좎닔 ?곗씠???꾩슂
+      // loaded: true ?댄썑???ㅽ뻾?섎?濡?寃뚯엫 吏꾩엯??釉붾줈?뱁븯吏 ?딆쓬
       await reloadEntities();
     } catch (e) {
       console.warn("[masterStore] load failed", e);
@@ -700,7 +698,7 @@ function createMasterStore() {
     }
   }
 
-  // ── 부분 재로드 (파일 드롭 핫리로드용) ───────────────────
+  // ?? 遺遺??щ줈??(?뚯씪 ?쒕∼ ?ル━濡쒕뱶?? ???????????????????
   async function reloadEvents() {
     const manifest = await fetchMaster<Manifest>("_manifest.json");
     if (!manifest) return;
@@ -721,10 +719,8 @@ function createMasterStore() {
       if (window.projectB?.masterLoadEntities) {
         rows = (await window.projectB.masterLoadEntities("", seasonYear, slotId)) as EntityRow[];
       } else {
-        const index = await fetchMaster<EntityIndex>("entities/players/_index.json");
-        if (!index?.byLeague) return;
-        const allIds = Object.values(index.byLeague).flat();
-        rows = await batchFetch<EntityRow>(allIds, (id) => `entities/players/${id}.json`);
+        console.error("[masterStore] window.projectB 없음 — npm run dev (Electron 포함) 으로 실행하세요");
+        return;
       }
       if (rows.length > 0) update((s) => ({ ...s, entities: rows }));
     } catch (e) {
@@ -737,13 +733,11 @@ function createMasterStore() {
     if (window.projectB?.masterLoadEntities) {
       rows = (await window.projectB.masterLoadEntities(leagueId, seasonYear, slotId)) as EntityRow[];
     } else {
-      const index = await fetchMaster<EntityIndex>("entities/players/_index.json");
-      if (!index?.byLeague) return;
-      const ids = index.byLeague[leagueId] ?? [];
-      rows = await batchFetch<EntityRow>(ids, (id) => `entities/players/${id}.json`);
+      console.error("[masterStore] window.projectB 없음 — npm run dev (Electron 포함) 으로 실행하세요");
+      return;
     }
     update((s) => {
-      // seasonYear가 주어지면, 이미 스토어에 있는 미래 선수(entryYear > seasonYear) 제거
+      // seasonYear媛 二쇱뼱吏硫? ?대? ?ㅽ넗?댁뿉 ?덈뒗 誘몃옒 ?좎닔(entryYear > seasonYear) ?쒓굅
       const base = seasonYear !== undefined
         ? s.entities.filter((e) => !e.entryYear || e.entryYear <= seasonYear)
         : s.entities;
@@ -753,7 +747,7 @@ function createMasterStore() {
     });
   }
 
-  // ── 핫리로드 리스너 (개발 환경: 파일 드롭 → 자동 반영) ──
+  // ?? ?ル━濡쒕뱶 由ъ뒪??(媛쒕컻 ?섍꼍: ?뚯씪 ?쒕∼ ???먮룞 諛섏쁺) ??
   function setupContentWatcher() {
     const api = (window as Window & typeof globalThis & { projectB?: { onContentChanged?: (cb: (data: { filename: string }) => void) => void } }).projectB;
     if (!api?.onContentChanged) return;
@@ -768,7 +762,7 @@ function createMasterStore() {
     });
   }
 
-  // npcLiveStats의 pitching/batting 값을 entities에 인메모리 덮어쓰기
+  // npcLiveStats??pitching/batting 媛믪쓣 entities???몃찓紐⑤━ ??뼱?곌린
   function applyNpcLiveStats(npcLiveStats: Record<string, import("../types/season").NpcLiveStat>) {
     update((s) => {
       const entities = s.entities.map((e) => {
@@ -816,7 +810,7 @@ function createMasterStore() {
 
 export const masterStore = createMasterStore();
 
-// ── 파생 스토어 ───────────────────────────────────────────────
+// ?? ?뚯깮 ?ㅽ넗?????????????????????????????????????????????????
 export const trainingProgramMap = derived(masterStore, ($m) =>
   new Map($m.trainingPrograms.map((p) => [p.id, p]))
 );

@@ -1,8 +1,8 @@
-/**
+﻿/**
  * generate-hs-roster.mjs
- * 고교 8팀 선수·스태프 자동 생성 → people_hs.json
+ * 怨좉탳 8? ?좎닔쨌?ㅽ깭???먮룞 ?앹꽦 ??people_hs.json
  *
- * 사용: node scripts/generate-hs-roster.mjs
+ * ?ъ슜: node scripts/generate-hs-roster.mjs
  */
 
 import { readFileSync, writeFileSync } from "fs";
@@ -13,7 +13,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
 const MASTER = resolve(ROOT, "resource/data/master");
 
-// ── 이름 풀 로드 ──────────────────────────────────────────────────────────────
+// ?? ?대쫫 ? 濡쒕뱶 ??????????????????????????????????????????????????????????????
 const nameKr = JSON.parse(readFileSync(resolve(MASTER, "players/name_pool_kr.json"), "utf8"));
 const nameEn = JSON.parse(readFileSync(resolve(MASTER, "players/name_pool_en.json"), "utf8"));
 
@@ -22,7 +22,7 @@ const KR_GIVEN  = nameKr.givenNames;
 const EN_LAST   = nameEn.lastNames;
 const EN_FIRST  = nameEn.givenNames;
 
-// ── 팀 정의 (bias: 팀 전체 전력 보정치) ──────────────────────────────────────
+// ?? ? ?뺤쓽 (bias: ? ?꾩껜 ?꾨젰 蹂댁젙移? ??????????????????????????????????????
 const TEAMS = [
   { id: "TEAM_HS_SEOUL_INNOVATION", nameEn: "Seoul Innovation", schoolId: "SCHOOL_HS_SEOUL_INNOVATION", bias:  8 },
   { id: "TEAM_HS_BUSAN_WAVE",       nameEn: "Busan Wave",       schoolId: "SCHOOL_HS_BUSAN_WAVE",       bias:  5 },
@@ -34,10 +34,9 @@ const TEAMS = [
   { id: "TEAM_HS_SUWON_EDGE",       nameEn: "Suwon Edge",       schoolId: "SCHOOL_HS_SUWON_EDGE",       bias: -4 },
 ];
 
-// ── 선수 슬롯 (포지션·타입·학년) ──────────────────────────────────────────────
-//   3학년: 주전 / 2학년: 준주전 / 1학년: 유망주
-const PLAYER_SLOTS = [
-  // 투수 (7)
+// ?? ?좎닔 ?щ’ (?ъ??샕룻??끒룻븰?? ??????????????????????????????????????????????
+//   3?숇뀈: 二쇱쟾 / 2?숇뀈: 以二쇱쟾 / 1?숇뀈: ?좊쭩二?const PLAYER_SLOTS = [
+  // ?ъ닔 (7)
   { position: "SP", type: "pitcher", grade: 3 },
   { position: "SP", type: "pitcher", grade: 3 },
   { position: "SP", type: "pitcher", grade: 2 },
@@ -45,26 +44,26 @@ const PLAYER_SLOTS = [
   { position: "RP", type: "pitcher", grade: 2 },
   { position: "RP", type: "pitcher", grade: 1 },
   { position: "CP", type: "pitcher", grade: 3 },
-  // 포수 (2)
+  // ?ъ닔 (2)
   { position: "C",  type: "batter",  grade: 3 },
   { position: "C",  type: "batter",  grade: 2 },
-  // 내야수 (6)
+  // ?댁빞??(6)
   { position: "1B", type: "batter",  grade: 3 },
   { position: "2B", type: "batter",  grade: 3 },
   { position: "SS", type: "batter",  grade: 3 },
   { position: "3B", type: "batter",  grade: 2 },
   { position: "2B", type: "batter",  grade: 2 },
   { position: "SS", type: "batter",  grade: 1 },
-  // 외야수 (4)
+  // ?몄빞??(4)
   { position: "LF", type: "batter",  grade: 3 },
   { position: "CF", type: "batter",  grade: 2 },
   { position: "RF", type: "batter",  grade: 2 },
   { position: "RF", type: "batter",  grade: 1 },
-  // 지명타자 (1)
+  // 吏紐낇???(1)
   { position: "DH", type: "batter",  grade: 3 },
 ];
 
-// ── LCG 시드 RNG (팀별 고정 시드 → 재실행해도 동일 결과) ─────────────────────
+// ?? LCG ?쒕뱶 RNG (?蹂?怨좎젙 ?쒕뱶 ???ъ떎?됲빐???숈씪 寃곌낵) ?????????????????????
 function makeRng(seed) {
   let s = seed >>> 0;
   return () => {
@@ -89,7 +88,7 @@ function genStat(rng, base, spread = 10) {
   return clamp(base + (rng() - 0.5) * 2 * spread);
 }
 
-// ── 기본 details 객체 ─────────────────────────────────────────────────────────
+// ?? 湲곕낯 details 媛앹껜 ?????????????????????????????????????????????????????????
 function blankPlayer() {
   return {
     playerType: "pitcher", handedness: "R", position: "SP", jerseyNumber: 0,
@@ -99,10 +98,10 @@ function blankPlayer() {
   };
 }
 function blankCoach()   { return { specialty:"-", experienceYears:0, stats:{ teaching:50, analysis:50, communication:50, discipline:50, leadership:50 }, trainingBuffs:"" }; }
-function blankManager() { return { style:"균형", experienceYears:0, stats:{ tactics:50, decision:50, rotationMgmt:50, bullpenMgmt:50, moraleMgmt:50 }, gamePlanBias:"", riskTolerance:50 }; }
-function blankOwner()   { return { ownershipStyle:"안정 운영", tenureYears:0, stats:{ budgetSupport:50, patience:50, prInfluence:50, facilityInvestment:50, staffTrust:50 }, budgetPolicy:"", hiringPolicy:"" }; }
+function blankManager() { return { style:"洹좏삎", experienceYears:0, stats:{ tactics:50, decision:50, rotationMgmt:50, bullpenMgmt:50, moraleMgmt:50 }, gamePlanBias:"", riskTolerance:50 }; }
+function blankOwner()   { return { ownershipStyle:"?덉젙 ?댁쁺", tenureYears:0, stats:{ budgetSupport:50, patience:50, prInfluence:50, facilityInvestment:50, staffTrust:50 }, budgetPolicy:"", hiringPolicy:"" }; }
 
-// ── 이름 생성 (중복 방지) ──────────────────────────────────────────────────────
+// ?? ?대쫫 ?앹꽦 (以묐났 諛⑹?) ??????????????????????????????????????????????????????
 function makeNameGen(rng) {
   const used = new Set();
   return function () {
@@ -119,7 +118,7 @@ function makeNameGen(rng) {
   };
 }
 
-// ── 팀 1개 생성 ───────────────────────────────────────────────────────────────
+// ?? ? 1媛??앹꽦 ???????????????????????????????????????????????????????????????
 function generateTeam(team, teamIdx) {
   const rng     = makeRng(0xBEEF + teamIdx * 0x3E7);
   const makeName = makeNameGen(rng);
@@ -128,7 +127,7 @@ function generateTeam(team, teamIdx) {
   const pfmt    = (n) => String(n).padStart(3, "0");
   const entities = [];
 
-  // ── 감독 ──
+  // ?? 媛먮룆 ??
   const mgr = makeName();
   entities.push({
     id: `MNG_HS_${tfmt(teamIdx + 1)}_001`,
@@ -145,7 +144,7 @@ function generateTeam(team, teamIdx) {
       player: blankPlayer(),
       coach: blankCoach(),
       manager: {
-        style: pick(rng, ["균형", "공격적", "수비적", "데이터 중심", "베테랑 중심"]),
+        style: pick(rng, ["洹좏삎", "怨듦꺽??, "?섎퉬??, "?곗씠??以묒떖", "踰좏뀒??以묒떖"]),
         experienceYears: randInt(rng, 5, 20),
         stats: {
           tactics:      genStat(rng, 60 + bias, 12),
@@ -161,10 +160,10 @@ function generateTeam(team, teamIdx) {
     },
   });
 
-  // ── 코치 (투수코치, 타격코치) ──
+  // ?? 肄붿튂 (?ъ닔肄붿튂, ?寃⑹퐫移? ??
   const COACH_SPECS = [
-    { specialty: "투구", trainingBuffs: "구속 훈련 +2%" },
-    { specialty: "타격", trainingBuffs: "컨택 훈련 +2%" },
+    { specialty: "?ш뎄", trainingBuffs: "援ъ냽 ?덈젴 +2%" },
+    { specialty: "?寃?, trainingBuffs: "而⑦깮 ?덈젴 +2%" },
   ];
   COACH_SPECS.forEach((spec, ci) => {
     const c = makeName();
@@ -199,7 +198,7 @@ function generateTeam(team, teamIdx) {
     });
   });
 
-  // ── 이사장 ──
+  // ?? ?댁궗????
   const own = makeName();
   entities.push({
     id: `OWN_HS_${tfmt(teamIdx + 1)}_001`,
@@ -211,13 +210,13 @@ function generateTeam(team, teamIdx) {
     leagueId: "LEAGUE_HIGHSCHOOL",
     clubId: id, teamId: id,
     schoolId,
-    notes: "학교법인 이사장",
+    notes: "?숆탳踰뺤씤 ?댁궗??,
     details: {
       player: blankPlayer(),
       coach: blankCoach(),
       manager: blankManager(),
       owner: {
-        ownershipStyle: pick(rng, ["안정 운영", "투자 확대", "육성 우선", "성적 우선"]),
+        ownershipStyle: pick(rng, ["?덉젙 ?댁쁺", "?ъ옄 ?뺣?", "?≪꽦 ?곗꽑", "?깆쟻 ?곗꽑"]),
         tenureYears: randInt(rng, 3, 15),
         stats: {
           budgetSupport:      genStat(rng, 55 + bias, 10),
@@ -232,13 +231,13 @@ function generateTeam(team, teamIdx) {
     },
   });
 
-  // ── 선수 20명 ──
+  // ?? ?좎닔 20紐???
   PLAYER_SLOTS.forEach((slot, pi) => {
     const p           = makeName();
     const isPitcher   = slot.type === "pitcher";
     const gradeBonus  = slot.grade === 3 ? 5 : slot.grade === 2 ? 0 : -5;
     const baseOvr     = 55 + bias + gradeBonus;
-    const highPot     = rng() > 0.8; // 20% 고잠재력
+    const highPot     = rng() > 0.8; // 20% 怨좎옞?щ젰
 
     const pitching = {
       ovr:       genStat(rng, isPitcher ? baseOvr     : baseOvr - 15, 8),
@@ -299,12 +298,12 @@ function generateTeam(team, teamIdx) {
   return entities;
 }
 
-// ── 실행 ──────────────────────────────────────────────────────────────────────
+// ?? ?ㅽ뻾 ??????????????????????????????????????????????????????????????????????
 const all = [];
 for (let i = 0; i < TEAMS.length; i++) {
   const entities = generateTeam(TEAMS[i], i);
   all.push(...entities);
-  console.log(`✓ ${TEAMS[i].nameEn.padEnd(22)} ${entities.length}명  (선수 ${PLAYER_SLOTS.length}, 스태프 4)`);
+  console.log(`??${TEAMS[i].nameEn.padEnd(22)} ${entities.length}紐? (?좎닔 ${PLAYER_SLOTS.length}, ?ㅽ깭??4)`);
 }
 
 const output = {
@@ -313,8 +312,8 @@ const output = {
   entities: all,
 };
 
-const outPath = resolve(MASTER, "entities/people_hs.json");
+const outPath = resolve(ROOT, "resource/data/staging/people_hs.json");
 writeFileSync(outPath, JSON.stringify(output, null, 2), "utf8");
 
-console.log(`\n✅ 총 ${all.length}명 생성 완료`);
-console.log(`   → ${outPath}`);
+console.log(`\n??珥?${all.length}紐??앹꽦 ?꾨즺`);
+console.log(`   ??${outPath}`);
