@@ -180,6 +180,9 @@
         runsFor: st.runsFor, runsAgainst: st.runsAgainst, streak: st.streak, last10: st.last10 });
     }
     for (const [lid, ls] of Object.entries($seasonStore.leagueState)) {
+      // 주인공 리그는 첫 번째 루프에서 group_label 포함해 저장했으므로 건너뜀
+      // (leagueState에도 동일 리그가 있어 INSERT OR REPLACE로 덮어쓰면 group_label이 '' 로 초기화됨)
+      if (lid === $seasonStore.leagueId) continue;
       for (const st of (ls.standings ?? [])) {
         standingRows.push({ leagueId: lid, teamId: st.teamId, groupLabel: "",
           wins: st.wins, losses: st.losses, draws: st.draws, winPct: st.winPct,
