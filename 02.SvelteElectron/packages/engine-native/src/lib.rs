@@ -472,6 +472,28 @@ pub fn calc_offered_salary_for_protagonist_native(params_json: String) -> String
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcOfferedSalaryForProtagonistNative/serialize", e))
 }
 
+/// NPC 재계약 연봉 계산
+#[napi]
+pub fn calc_npc_renewal_salary_native(params_json: String) -> String {
+    let params: player_engine::CalcNpcRenewalSalaryParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("calcNpcRenewalSalaryNative", e),
+    };
+    let result = player_engine::calc_npc_renewal_salary(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcNpcRenewalSalaryNative/serialize", e))
+}
+
+/// NPC 재계약 기간 계산
+#[napi]
+pub fn calc_npc_contract_years_native(params_json: String) -> String {
+    let params: player_engine::CalcNpcContractYearsParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("calcNpcContractYearsNative", e),
+    };
+    let result = player_engine::calc_npc_contract_years(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcNpcContractYearsNative/serialize", e))
+}
+
 /// FA 오퍼 생성
 #[napi]
 pub fn generate_fa_offers_native(params_json: String) -> String {

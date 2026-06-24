@@ -83,6 +83,10 @@ export declare function calcMarketSalaryNative(paramsJson: string): string
 export declare function calcOfferedSalaryNative(paramsJson: string): string
 /** 주인공 제안 연봉 계산 (시즌 스탯 반영) */
 export declare function calcOfferedSalaryForProtagonistNative(paramsJson: string): string
+/** NPC 재계약 연봉 계산 */
+export declare function calcNpcRenewalSalaryNative(paramsJson: string): string
+/** NPC 재계약 기간 계산 */
+export declare function calcNpcContractYearsNative(paramsJson: string): string
 /** FA 오퍼 생성 */
 export declare function generateFaOffersNative(paramsJson: string): string
 /** 드래프트 순위/계약금 계산 */

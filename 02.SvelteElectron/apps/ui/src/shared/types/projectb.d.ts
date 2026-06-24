@@ -151,6 +151,9 @@ declare global {
       salaryCalcMarketSalary:                (p: string) => Promise<string>;
       salaryCalcOfferedSalary:               (p: string) => Promise<string>;
       salaryCalcOfferedSalaryForProtagonist: (p: string) => Promise<string>;
+      calcNpcRenewalSalaryNative:            (p: string) => Promise<string>;
+      calcNpcContractYearsNative:            (p: string) => Promise<string>;
+      npcUpdateContracts:                    (p: string) => Promise<string>;
       faGenerateOffers:                      (p: string) => Promise<string>;
       draftCalcDraftRank:                    (p: string) => Promise<string>;
       draftRunBoard:                         (p: string) => Promise<string>;

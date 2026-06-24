@@ -519,6 +519,49 @@ pub fn calc_indie_scout_offer(p: IndieScoutOfferParams) -> IndieScoutOfferResult
     }
 }
 
+// ── calc_npc_renewal_salary ──────────────────────────────────────────────────
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CalcNpcRenewalSalaryParams {
+    pub ovr: f64,
+    pub age: i32,
+    pub league_id: String,
+    pub current_salary: i64,
+    pub performance_score: f64,  // 0~100, 시즌 성적 기반
+    pub greed: f64,              // personality.greed 0~100
+}
+
+pub fn calc_npc_renewal_salary(p: CalcNpcRenewalSalaryParams) -> i64 {
+    let market = (1800.0 + (p.ovr - 50.0).max(0.0) * 220.0) * league_salary_mult(&p.league_id);
+    let blend  = p.current_salary as f64 * 0.6 + market * 0.4;
+    let perf   = 0.9 + (p.performance_score / 100.0) * 0.2;   // ×0.90~×1.10
+    let greed  = 1.0 + (p.greed - 50.0) / 500.0;              // ×0.90~×1.10
+    let age_damp = if p.age >= 33 { 0.9 } else { 1.0 };
+    let raw = blend * perf * greed * age_damp;
+    raw.max(market * 0.55).min(market * 1.35).round() as i64
+}
+
+// ── calc_npc_contract_years ──────────────────────────────────────────────────
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CalcNpcContractYearsParams {
+    pub age: i32,
+    pub development_focus: f64,   // team_profile.development_focus 0~100
+    pub win_now_pressure: f64,    // team_profile.win_now_pressure 0~100
+    pub stability_preference: f64, // personality.stability_preference 0~100
+}
+
+pub fn calc_npc_contract_years(p: CalcNpcContractYearsParams) -> i32 {
+    if p.age >= 34 { return 1; }
+    if p.win_now_pressure > 70.0 && p.age >= 30 { return 1; }
+    if p.development_focus > 60.0 && p.age <= 25 {
+        return if p.stability_preference > 60.0 { 3 } else { 2 };
+    }
+    if p.stability_preference > 65.0 { 2 } else { 1 }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

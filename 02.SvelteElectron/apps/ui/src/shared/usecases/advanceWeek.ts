@@ -24,7 +24,7 @@ import { isFaEligible, getFaThreshold } from "../utils/faEngine";
 import type { LeagueSeasonState, MatchResult, PendingAction, PlayerCondition, ScheduleEntry, WeekAdvanceResult } from "../types/season";
 import type { EventContext } from "../types/event";
 import type { MessageItem } from "../types/main";
-import type { InjurySeverity, InjuryHistoryEntry, InjuryState, InjuryType, NpcMemory, PitchingAttributes, ProtagonistSave } from "../types/save";
+import type { InjurySeverity, InjuryHistoryEntry, InjuryState, InjuryType, NpcMemory, PitchingAttributes, PlayerSeasonStats, ProtagonistSave } from "../types/save";
 import { INJURY_LABEL } from "../types/save";
 import { toGameDate, generateHsPostseasonSemis, generateHsPostseasonFinal } from "../utils/scheduleGen";
 import { assignProtagonistRole, assignHighschoolPosition, ROLE_DESCRIPTION, isReliefsRole, relieverWouldPitch } from "../utils/pitcherRoleEngine";
@@ -705,6 +705,37 @@ const DEFAULT_TEAM_PROFILE: ProTeamProfile = {
   prestige: 50, marketAppeal: 50, clubhouseCulture: 50, medicalQuality: 50, farmInvestment: 50,
 };
 
+// 투수: ERA 2.50=80pt·4.00=50pt·6.00=10pt / 타자: OPS .900=85pt·.700=50pt·.550=20pt
+function calcNpcPerfScore(stats: PlayerSeasonStats): number {
+  if (stats.type === "pitcher") {
+    if (stats.ip < 5) return 50;
+    const eraPts   = Math.max(10, Math.min(95, 80 - (stats.era - 2.5) * 15));
+    const gamesPts = Math.min(15, (stats.g / 55) * 15);
+    return Math.round(eraPts * 0.85 + gamesPts * 0.15);
+  }
+  if (stats.ab < 30) return 50;
+  const opsPts   = Math.max(10, Math.min(95, 50 + (stats.ops - 0.700) * 180));
+  const gamesPts = Math.min(15, (stats.g / 130) * 15);
+  return Math.round(opsPts * 0.85 + gamesPts * 0.15);
+}
+
+// +1=급상승, -1=급하락, 0=변동없음 (투수 ERA ±1.5 / 타자 OPS ±.100 / 출전 급감)
+function detectPerfSwing(curr: PlayerSeasonStats, prev: PlayerSeasonStats): number {
+  if (curr.type !== prev.type) return 0;
+  if (curr.type === "pitcher" && prev.type === "pitcher") {
+    const eraDelta  = prev.era - curr.era;   // 낮을수록 좋음 → 개선이면 양수
+    const gamesDrop = prev.g - curr.g;
+    if (Math.abs(eraDelta) >= 1.5 || gamesDrop >= 20)
+      return eraDelta >= 0 ? 1 : -1;
+  } else if (curr.type === "batter" && prev.type === "batter") {
+    const opsDelta  = curr.ops - prev.ops;   // 높을수록 좋음 → 개선이면 양수
+    const gamesDrop = prev.g - curr.g;
+    if (Math.abs(opsDelta) >= 0.100 || gamesDrop >= 30)
+      return opsDelta >= 0 ? 1 : -1;
+  }
+  return 0;
+}
+
 const TRADE_REASON_LABEL: Record<string, string> = {
   position_surplus:   "포지션 보강",
   injury_cover:       "부상 대체",
@@ -1373,6 +1404,100 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
           personality: { ...npcPersonality, loyalty: newLoyalty },
         };
       }
+    }
+  }
+
+  // ── 명명 NPC 계약 연수 갱신 + 성적 기반 재계약/중간조정 ─────────
+  {
+    const npcContractUpdates: Array<{
+      npcId: string; currentSalary: number; contractYears: number; proServiceYears: number;
+    }> = [];
+    const liveStats  = get(npcLiveStatsStore);
+    const defaultPers = {
+      loyalty: 50, ambition: 50, greed: 40, competitiveDrive: 50,
+      stabilityPreference: 50, professionalism: 60, overseasAmbition: 30,
+      marketPreference: 50, homeTeamId: null as null,
+    };
+
+    for (const npc of namedNpcs) {
+      const cur = updatedNpcs.find(n => n.npcId === npc.npcId);
+      if (!cur) continue;
+      if (cur.careerStatus === "retired" || (cur as any).careerStatus === "free_agent") continue;
+
+      const newProSY       = (npc.proServiceYears ?? 0) + 1;
+      const oldContractYrs = npc.contractYears ?? 1;
+      const newContractYrs = Math.max(0, oldContractYrs - 1);
+      let   newSalary      = npc.currentSalary ?? 0;
+      let   finalYears     = newContractYrs;
+
+      // 성적 데이터 — 올해(leagueState) vs 작년(careerHistory 마지막)
+      const currStats = s.leagueState[npc.currentLeague ?? ""]?.stats[npc.npcId];
+      const prevStats = npc.careerHistory.at(-1)?.stats;
+      const perfScore = currStats ? calcNpcPerfScore(currStats) : 50;
+
+      const entity  = m.entities.find(e => e.id === npc.npcId);
+      const liveOvr = entity ? npcOvr(entity, liveStats) : 60;
+      const pers    = npc.personality ?? defaultPers;
+
+      if (newContractYrs <= 0) {
+        // 계약 만료 → 실제 성적 반영 자동 갱신
+        const profile = getTeamProfile(npc.currentTeam, g, m) ?? DEFAULT_TEAM_PROFILE;
+        const [salaryRaw, yearsRaw] = await Promise.all([
+          window.projectB!.calcNpcRenewalSalaryNative(JSON.stringify({
+            ovr: liveOvr, age: npc.age,
+            leagueId:         npc.currentLeague ?? "",
+            currentSalary:    newSalary,
+            performanceScore: perfScore,
+            greed:            pers.greed,
+          })),
+          window.projectB!.calcNpcContractYearsNative(JSON.stringify({
+            age:                 npc.age,
+            developmentFocus:    profile.developmentFocus,
+            winNowPressure:      profile.winNowPressure,
+            stabilityPreference: pers.stabilityPreference,
+          })),
+        ]);
+        newSalary  = JSON.parse(salaryRaw) as number;
+        finalYears = JSON.parse(yearsRaw) as number;
+        autoLog(`[재계약] ${npc.name} → ${newSalary.toLocaleString()}만 ${finalYears}년 (성적점수 ${perfScore})`);
+      } else if (currStats && prevStats) {
+        // 계약 기간 중 성적 급변 → 연봉만 조정 (기간 유지)
+        const swing = detectPerfSwing(currStats, prevStats);
+        if (swing !== 0) {
+          const salaryRaw = await window.projectB!.calcNpcRenewalSalaryNative(JSON.stringify({
+            ovr: liveOvr, age: npc.age,
+            leagueId:         npc.currentLeague ?? "",
+            currentSalary:    newSalary,
+            performanceScore: perfScore,
+            greed:            pers.greed,
+          }));
+          const adjSalary = JSON.parse(salaryRaw) as number;
+          // 10% 이상 차이날 때만 중간 조정
+          if (Math.abs(adjSalary - newSalary) / Math.max(newSalary, 1) >= 0.10) {
+            newSalary = adjSalary;
+            autoLog(`[중간조정] ${npc.name} 성적 ${swing > 0 ? "급등" : "급락"} → ${newSalary.toLocaleString()}만 (잔여 ${finalYears}년)`);
+          }
+        }
+      }
+
+      const idx = updatedNpcs.findIndex(n => n.npcId === npc.npcId);
+      if (idx >= 0) {
+        updatedNpcs[idx] = {
+          ...updatedNpcs[idx],
+          proServiceYears: newProSY,
+          currentSalary:   newSalary,
+          contractYears:   finalYears,
+        };
+      }
+      npcContractUpdates.push({ npcId: npc.npcId, currentSalary: newSalary, contractYears: finalYears, proServiceYears: newProSY });
+    }
+
+    if (slotId && npcContractUpdates.length > 0) {
+      const res = JSON.parse(
+        await window.projectB!.npcUpdateContracts(JSON.stringify({ slotId, updates: npcContractUpdates }))
+      ) as { ok?: boolean; error?: string };
+      if (res.error) autoLog(`[계약갱신오류] ${res.error}`);
+      else autoLog(`[계약갱신] 명명 NPC ${npcContractUpdates.length}명 갱신 완료`);
     }
   }
 

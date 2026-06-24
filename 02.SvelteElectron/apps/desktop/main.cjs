@@ -690,6 +690,23 @@ app.whenReady().then(() => {
     } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
 
+  ipcMain.handle("npc:updateContracts", (_event, p) => {
+    try {
+      const { slotId, updates } = JSON.parse(p);
+      // updates: Array<{ npcId, currentSalary, contractYears, proServiceYears }>
+      const stmt = db.prepare(`
+        UPDATE npc_runtime
+        SET current_salary = ?, contract_years = ?, pro_service_years = ?
+        WHERE slot_id = ? AND npc_id = ?
+      `);
+      db.transaction(() => {
+        for (const u of updates)
+          stmt.run(u.currentSalary, u.contractYears, u.proServiceYears, slotId, u.npcId);
+      })();
+      return JSON.stringify({ ok: true });
+    } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
   // ── 리그 거래 기록 ───────────────────────────────────────────────────────────
   ipcMain.handle("league:addTransactions", (_event, p) => {
     try {

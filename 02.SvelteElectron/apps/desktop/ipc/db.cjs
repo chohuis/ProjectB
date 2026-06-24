@@ -927,12 +927,12 @@ function dbSaveSlot(db, slotId, game, season) {
     const npcStmt = db.prepare(`INSERT INTO npc_runtime (
       slot_id,npc_id,name,name_en,player_type,position,age,grade,school_id,graduation_year,
       career_status,current_league,current_team,military_status,military_enlist_year,military_discharge_year,
-      pro_service_years,development_rate,
+      pro_service_years,development_rate,current_salary,contract_years,
       pitch_ovr,pitch_stamina,pitch_velocity,pitch_command,pitch_control,pitch_movement,
       pitch_mentality,pitch_recovery,pitch_clutch,pitch_hold_runners,
       bat_ovr,bat_contact,bat_power,bat_eye,bat_discipline,bat_speed,
       bat_base_instinct,bat_bunting,bat_platoon,bat_fielding,bat_arm,bat_batting_clutch
-    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`);
+    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`);
     const npcHistStmt = db.prepare(`INSERT INTO npc_career_history (slot_id,npc_id,year,league_id,team_id,stat_line,highlights_json,sort_order) VALUES (?,?,?,?,?,?,?,?)`);
     const npcAchStmt  = db.prepare(`INSERT INTO npc_achievements (slot_id,npc_id,achievement_text,sort_order) VALUES (?,?,?,?)`);
     for (const npc of (game?.npcs ?? [])) {
@@ -947,6 +947,7 @@ function dbSaveSlot(db, slotId, game, season) {
         npc.militaryEnlistYear ?? null, npc.militaryDischargeYear ?? null,
         npc.proServiceYears ?? 0,
         npc.developmentRate ?? 60,
+        npc.currentSalary ?? 0, npc.contractYears ?? 1,
         pi.ovr ?? null, pi.stamina ?? null, pi.velocity ?? null, pi.command ?? null,
         pi.control ?? null, pi.movement ?? null, pi.mentality ?? null,
         pi.recovery ?? null, pi.clutch ?? null, pi.holdRunners ?? null,

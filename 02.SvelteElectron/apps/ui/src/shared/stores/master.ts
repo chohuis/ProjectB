@@ -54,14 +54,14 @@ export interface TeamProfile {
   desc?: string;
   tags?: string[];
   strengths?: string[];
-  funding?: "理쒖긽" | "?? | "以? | "?? | "理쒗븯";
-  difficulty?: "理쒖긽" | "?? | "以? | "?? | "理쒗븯";
+  funding?: "최하" | "하" | "중" | "상" | "최상";
+  difficulty?: "최하" | "하" | "중" | "상" | "최상";
   prestige?: "S" | "A" | "B" | "C" | "D";
-  fanBase?: "?뚭퇋紐? | "吏?? | "愿묒뿭" | "?꾧뎅" | "硫붽?";
+  fanBase?: "메가" | "전국" | "광역" | "지역" | "소규모";
   facilityLevel?: 1 | 2 | 3 | 4 | 5;
-  atmosphere?: "?꾧꺽" | "泥닿퀎?? | "洹좏삎" | "?먯쑀濡쒖슫" | "媛議깆쟻";
-  mediaPressure?: "??쓬" | "蹂댄넻" | "?믪쓬" | "洹뱀떖";
-  promoChance?: "?믪쓬" | "蹂댄넻" | "??쓬";
+  atmosphere?: "체계적" | "엄격" | "균형" | "자유로운" | "가족적";
+  mediaPressure?: "낮음" | "보통" | "높음" | "매우높음";
+  promoChance?: "낮음" | "보통" | "높음";
 }
 
 export interface ProTeamProfile {
@@ -171,7 +171,7 @@ export interface EntityPlayerDetails {
   potentialHidden: number;
   proServiceYears?: number;
   militaryEnlistYear?: number;
-  militaryStatus?: "?꾩뿭" | "援고븘" | "硫댁젣";
+  militaryStatus?: "미필" | "현역" | "군필" | "면제";
   militaryUnit?: "sports" | "general";
   originalLeagueId?: string;
   originalTeamId?: string;
@@ -202,7 +202,7 @@ export interface EntityRow {
   schoolId: string;
   grade?: number;
   notes: string;
-  militaryStatus?: "誘명븘" | "援고븘" | "?꾩뿭" | "硫댁젣";
+  militaryStatus?: "미필" | "현역" | "군필" | "면제";
   personality?: import("../types/save").NpcPersonality;
   entryYear?:   number;
   entryLeague?: string;
@@ -334,7 +334,8 @@ function parseEventRule(raw: Record<string, any>): EventRule {
     // ???щ㎎: conditions 諛곗뿴 吏곸젒 ?ъ슜
     conditions = raw.conditions as import("../types/event").Condition[];
   } else if (raw.schedule && typeof raw.schedule === "object") {
-    // 援??щ㎎ ?섏쐞 ?명솚: schedule ?꾨뱶 ??week_eq + career_stage 蹂??    const { month, weekOfMonth, stage } = raw.schedule as Record<string, unknown>;
+    // 구형 포맷 처리: schedule 필드에서 week_eq + career_stage 조건 변환
+    const { month, weekOfMonth, stage } = raw.schedule as Record<string, unknown>;
     if (typeof month === "number" && typeof weekOfMonth === "number") {
       conditions.push({ type: "week_eq", value: scheduleToWeek(month, weekOfMonth) });
     }
@@ -442,47 +443,47 @@ interface LeagueTeamIndex {
 }
 
 const TEAM_NAME_MAP: Record<string, string> = {
-  TEAM_UNIV_HANBBIT: "?쒕튆泥댁쑁??숆탳",
-  TEAM_UNIV_DONGMYUNG: "?숇챸怨쇳븰??숆탳",
-  TEAM_UNIV_SEOHAE: "?쒗빐援?젣??숆탳",
-  TEAM_UNIV_NAMGANG: "?④컯??숆탳",
-  TEAM_UNIV_CHEONGUN: "泥?슫怨듦낵??숆탳",
-  TEAM_UNIV_MIRAE: "誘몃옒李쎌꽦??숆탳",
-  TEAM_UNIV_GAON: "媛?⑤Ц?붾??숆탳",
-  TEAM_IND_SEOUL_PIONEERS: "?쒖슱 ?뚯씠?ㅻ땲?댁뒪",
-  TEAM_IND_BUSAN_TEMPEST: "遺???쒗럹?ㅽ듃",
-  TEAM_IND_DAEGU_FALCONS: "?援??붿퐯??,
-  TEAM_IND_GWANGJU_STORM: "愿묒＜ ?ㅽ넱",
-  TEAM_IND_DAEJEON_HUNTERS: "????뚰꽣??,
-  TEAM_IND_INCHEON_ORCAS: "?몄쿇 ?ㅻⅤ移댁뒪",
-  TEAM_IND_SUWON_BLAZE: "?섏썝 釉붾젅?댁쫰",
-  TEAM_IND_ULSAN_PHOENIX: "?몄궛 ?쇰땳??,
-  TEAM_HS_YEOSU_SHORE: "?ъ닔 ?쇱뼱",
-  TEAM_HS_CHUNCHEON_HIGHLAND: "異섏쿇 ?섏씠?쒕뱶",
-  TEAM_HS_JEJU_WIND: "?쒖＜ ?덈뱶",
-  TEAM_HS_GANGWON_PEAK: "媛뺤썝 ?쇳겕",
-  TEAM_HS_MASAN_HARBOR: "留덉궛 ?섎쾭",
-  TEAM_HS_JECHEON_RIDGE: "?쒖쿇 由우?",
-  TEAM_HS_GOYANG_ARROW: "怨좎뼇 ?좊줈??,
-  TEAM_HS_SUNCHEON_BAY: "?쒖쿇 踰좎씠",
+  TEAM_UNIV_HANBBIT:              "한빛체육대학교",
+  TEAM_UNIV_DONGMYUNG:            "동명과학대학교",
+  TEAM_UNIV_SEOHAE:               "서해국제대학교",
+  TEAM_UNIV_NAMGANG:              "남강대학교",
+  TEAM_UNIV_CHEONGUN:             "청운공과대학교",
+  TEAM_UNIV_MIRAE:                "미래창성대학교",
+  TEAM_UNIV_GAON:                 "가온문화대학교",
+  TEAM_IND_SEOUL_PIONEERS:        "서울 파이오니어스",
+  TEAM_IND_BUSAN_TEMPEST:         "부산 템페스트",
+  TEAM_IND_DAEGU_FALCONS:         "대구 팰컨스",
+  TEAM_IND_GWANGJU_STORM:         "광주 스톰",
+  TEAM_IND_DAEJEON_HUNTERS:       "대전 헌터스",
+  TEAM_IND_INCHEON_ORCAS:         "인천 오르카스",
+  TEAM_IND_SUWON_BLAZE:           "수원 블레이즈",
+  TEAM_IND_ULSAN_PHOENIX:         "울산 피닉스",
+  TEAM_HS_YEOSU_SHORE:            "여수 쇼어",
+  TEAM_HS_CHUNCHEON_HIGHLAND:     "춘천 하이랜드",
+  TEAM_HS_JEJU_WIND:              "제주 윈드",
+  TEAM_HS_GANGWON_PEAK:           "강원 피크",
+  TEAM_HS_MASAN_HARBOR:           "마산 하버",
+  TEAM_HS_JECHEON_RIDGE:          "제천 릿지",
+  TEAM_HS_GOYANG_ARROW:           "고양 애로우",
+  TEAM_HS_SUNCHEON_BAY:           "순천 베이",
 };
 
-const TEAM_PROFILE_MAP: Record<string, { style: string; desc: string; strengths: string[]; funding: "理쒖긽" | "?? | "以? | "?? | "理쒗븯"; difficulty: "理쒖긽" | "?? | "以? | "?? | "理쒗븯" }> = {
-  TEAM_UNIV_HANBBIT:   { style: "?ъ닔 以묒떖", desc: "湲곗큹 泥대젰怨??ъ닔 ?댁슜??媛뺥븳 ?꾪넻????숉?.", strengths: ["?ъ닔??, "泥대젰"], funding: "以?, difficulty: "以? },
-  TEAM_UNIV_DONGMYUNG: { style: "?섎퉬 ?덉젙", desc: "?ㅼ콉 ?듭젣? ?섎퉬 ?꾩닠??以묒떆?섎뒗 ?댁쁺???.", strengths: ["?섎퉬", "?묒쟾"], funding: "以?, difficulty: "以? },
-  TEAM_UNIV_SEOHAE:    { style: "怨듦꺽 吏??, desc: "???吏묒쨷?μ씠 ?믨퀬 怨듦꺽 ?쒗룷媛 鍮좊Ⅸ ?.", strengths: ["?寃?, "二쇰（"], funding: "??, difficulty: "?? },
-  TEAM_UNIV_NAMGANG:   { style: "洹좏삎??, desc: "怨듭닔 諛몃윴?ㅺ? ?덉젙?곸씤 ?꾩쿇??? 而щ윭.", strengths: ["諛몃윴??, "吏묒쨷??], funding: "??, difficulty: "?? },
-  TEAM_UNIV_CHEONGUN:  { style: "?쇱?而?, desc: "媛뺥븳 ?쇱?而ш낵 ?ν?瑜??욎꽭???뚯썙???.", strengths: ["?ν???, "?쇱?而?], funding: "以?, difficulty: "以? },
-  TEAM_UNIV_MIRAE:     { style: "?≪꽦??, desc: "?좊쭩二??깆옣怨??κ린 ?≪꽦??媛뺤젏??媛吏??.", strengths: ["?≪꽦", "硫섑깉"], funding: "以?, difficulty: "?? },
-  TEAM_UNIV_GAON:      { style: "湲곕룞??, desc: "湲곕룞?κ낵 踰덊듃/?묒쟾 ?섑뻾???곗뼱???.", strengths: ["二쇰（", "?묒쟾"], funding: "以?, difficulty: "以? },
-  TEAM_IND_SEOUL_PIONEERS: { style: "踰좏뀒??以묒떖", desc: "寃쏀뿕 留롮? ?ъ닔 ?댁슜??媛뺤젏???낅┰?.", strengths: ["寃쏀뿕", "遺덊렂"], funding: "以?, difficulty: "?? },
-  TEAM_IND_BUSAN_TEMPEST: { style: "怨듦꺽 吏??, desc: "媛뺥븳 以묒떖??좎쑝濡??밸?瑜?嫄곕뒗 怨듦꺽???.", strengths: ["?寃?, "?대윭移?], funding: "以?, difficulty: "以? },
-  TEAM_IND_DAEGU_FALCONS: { style: "?섎퉬 以묒떖", desc: "?꾪깂???댁빞 ?섎퉬? ?덉젙?곸씤 寃쎄린 ?댁쁺.", strengths: ["?섎퉬", "吏묒쨷??], funding: "??, difficulty: "以? },
-  TEAM_IND_GWANGJU_STORM: { style: "湲곕룞??, desc: "鍮좊Ⅸ 二쇰（? 踰덊듃 ?뚮젅?대? ?곴레 ?쒖슜.", strengths: ["二쇰（", "?묒쟾"], funding: "??, difficulty: "?? },
-  TEAM_IND_DAEJEON_HUNTERS: { style: "?ъ닔 以묒떖", desc: "?좊컻吏??꾩꽦?꾧? ?믪? 濡쒗뀒?댁뀡???.", strengths: ["?좊컻", "?쒓뎄"], funding: "以?, difficulty: "以? },
-  TEAM_IND_INCHEON_ORCAS: { style: "洹좏삎??, desc: "?뱀젙 ?쎌젏???곴퀬 湲곕났???묒? 諛몃윴???.", strengths: ["諛몃윴??, "?섎퉬"], funding: "以?, difficulty: "以? },
-  TEAM_IND_SUWON_BLAZE: { style: "?뚯썙??, desc: "?ν? ?앹궛?κ낵 怨듦꺽 ??컻?μ씠 ?곗뼱???.", strengths: ["?ν???, "?寃?], funding: "??, difficulty: "?? },
-  TEAM_IND_ULSAN_PHOENIX: { style: "?≪꽦??, desc: "?좎씤쨌??됯? ?먯썝???깆옣 ??씠 ???.", strengths: ["?≪꽦", "?곸쓳??], funding: "??, difficulty: "?? },
+const TEAM_PROFILE_MAP: Record<string, TeamProfile> = {
+  TEAM_UNIV_HANBBIT:         { style: "스피드형",  desc: "체육 특화 대학의 압도적인 신체 능력. 최상급 훈련 시설과 스포츠 과학 접목으로 선수 육성률이 전국 최고 수준이다. 체력과 스피드를 앞세운 야구가 특기.",  strengths: ["체력", "주루", "수비"],           funding: "상",  difficulty: "상"  },
+  TEAM_UNIV_DONGMYUNG:       { style: "투지형",    desc: "영남권 대학야구를 대표하는 팀. 지역 고교 유망주를 흡수하며 탄탄한 팀을 구성하고, 수도권 명문들에 도전장을 내미는 지방의 자존심이다.",               strengths: ["투지", "수비"],                  funding: "중",  difficulty: "중"  },
+  TEAM_UNIV_SEOHAE:          { style: "공격형",    desc: "고려대의 영원한 라이벌. 매 시즌 강력한 타선을 구축하며 연고전에서 리그 판도를 뒤흔든다. 공격적인 스카우팅과 적극적인 선수 육성이 장점이다.",              strengths: ["타격", "주루", "공격"],          funding: "상",  difficulty: "최상" },
+  TEAM_UNIV_NAMGANG:         { style: "균형형",    desc: "한국 대학야구의 절대 명가. 풍부한 역사와 최고 수준의 코칭 스태프가 매 시즌 KBL 드래프트 다수 배출을 가능케 한다. 스카우터들이 가장 먼저 찾는 학교다.", strengths: ["투수력", "수비", "코칭"],        funding: "상",  difficulty: "최상" },
+  TEAM_UNIV_CHEONGUN:        { style: "투수형",    desc: "에이스 한 명이 팀을 이끄는 투수 중심 야구의 명가. 공학 마인드의 철저한 분석 야구로 매 시즌 상위권을 유지하며, 완성형 투수 배출로 유명하다.",             strengths: ["투수력", "제구", "분석"],        funding: "상",  difficulty: "상"  },
+  TEAM_UNIV_MIRAE:           { style: "균형형",    desc: "중부권의 조용한 야구부. 풍부한 지원은 없지만 선수들의 자발적인 열정으로 매 시즌 출전권을 유지한다. 저비용 고효율의 팀 운영이 특기.",                    strengths: ["투지", "작전"],                  funding: "하",  difficulty: "하"  },
+  TEAM_UNIV_GAON:            { style: "균형형",    desc: "화려함보다 균형을 추구하는 팀. 매 시즌 꾸준히 중상위권을 유지하며 조용히 프로 선수를 배출해왔다. 팀 케미스트리가 강점이다.",                            strengths: ["수비", "팀워크"],                funding: "중",  difficulty: "중"  },
+  TEAM_IND_SEOUL_PIONEERS:   { style: "균형형",    desc: "독립리그 최고 명문. 체계적인 운영과 풍부한 네트워크로 KBL 복귀를 꿈꾸는 선수들이 가장 선호하는 팀이다. 매 시즌 가장 많은 KBL 입단 성사를 이뤄낸다.",    strengths: ["코칭", "데이터 분석", "기회 창출"], funding: "중", difficulty: "상" },
+  TEAM_IND_BUSAN_TEMPEST:    { style: "공격형",    desc: "부산 특유의 거친 기질과 뜨거운 열정이 그대로 담긴 팀. 독립리그 최고의 공격력을 자랑하며 서울 파이오니어스의 최대 라이벌로 자리매김했다.",              strengths: ["타격", "파워", "투지"],          funding: "중",  difficulty: "상"  },
+  TEAM_IND_DAEGU_FALCONS:    { style: "투수형",    desc: "영남권 독립리그 대표팀. 우수한 투수 자원을 발굴하는 데 특화되어 있으며, 대구·경북 지역 고교 출신 선수들이 KBL 문을 두드리는 등용문 역할을 한다.",        strengths: ["투수력", "제구"],               funding: "하",  difficulty: "중"  },
+  TEAM_IND_GWANGJU_STORM:    { style: "투지형",    desc: "호남의 투지를 담은 팀. 재정 여건은 빠듯하지만 선수들의 열정만큼은 독립리그 최고다. 약자가 강자를 꺾는 이변이 잦은, 상대 팀이 가장 경계하는 복병이다.",   strengths: ["투지", "집중력"],               funding: "하",  difficulty: "하"  },
+  TEAM_IND_DAEJEON_HUNTERS:  { style: "균형형",    desc: "충청권 독립리그 유일 팀. 중부권 선수들의 활동 무대이며 꾸준히 리그 중위권을 유지한다. 재정적으로 빠듯하지만 지역 팬들의 응원이 원동력이다.",             strengths: ["수비", "작전"],                  funding: "하",  difficulty: "하"  },
+  TEAM_IND_INCHEON_ORCAS:    { style: "수비형",    desc: "끈질긴 수비와 침착한 경기 운영이 특기. 항만 도시 인천의 끈기를 닮은 팀으로, 독립리그에서 가장 실점이 적은 팀으로 꾸준히 상위권을 유지한다.",             strengths: ["수비", "투수력", "집중력"],      funding: "중",  difficulty: "중"  },
+  TEAM_IND_SUWON_BLAZE:      { style: "공격형",    desc: "수도권 외곽 수원의 공격적인 야구팀. 드래프트 미지명 강타자들이 모여 파워야구를 구현하며, 홈런과 장거리 타격으로 관중을 열광시키는 스타일이다.",          strengths: ["타격", "파워"],                  funding: "중",  difficulty: "중"  },
+  TEAM_IND_ULSAN_PHOENIX:    { style: "균형형",    desc: "부상에서 돌아온 선수들의 재기 무대로 알려진 팀. 피닉스라는 이름처럼 다시 날아오르길 꿈꾸는 선수들로 구성되며, 강한 정신력이 팀의 상징이다.",            strengths: ["투지", "정신력", "집중력"],      funding: "하",  difficulty: "하"  },
 };
 
 function teamNameFromId(teamId: string): string {
