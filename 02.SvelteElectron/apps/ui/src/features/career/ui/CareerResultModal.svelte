@@ -82,13 +82,24 @@
       });
     } else {
       // 전원 탈락: 현역 입대 (고3 강제 케이스)
-      gameStore.enlistMilitary("general", 52, false, $seasonStore.seasonYear);
-      seasonStore.initSeason("LEAGUE_MILITARY", ($seasonStore.seasonYear || 2026) + 1, 100, []);
+      const slotId = $gameStore.currentSlotId;
+      const proto = $gameStore.protagonist;
+      const seasonYear = $seasonStore.seasonYear;
+      gameStore.enlistMilitary("general", 52, false, seasonYear);
+      seasonStore.initSeason("LEAGUE_MILITARY", (seasonYear || 2026) + 1, 100, []);
       seasonStore.setSchedule([]);
       gameStore.setCareerApplicationsSubmitted(false);
       gameStore.clearCareerResults();
       gameStore.setCareerFinalChoice("general");
       seasonStore.resolvePendingAction("careerChoice");
+      if (slotId) {
+        await window.projectB!.leagueAddTransactions(JSON.stringify({
+          slotId, rows: [{ seasonYear, week: 52, category: "military",
+            playerId: proto.id, playerName: proto.name,
+            fromTeamId: proto.teamId || null, fromLeagueId: proto.leagueId || null,
+            detail: "일반병 입대" }],
+        }));
+      }
     }
 
     await gameStore.save();

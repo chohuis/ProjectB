@@ -3024,6 +3024,16 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
           gameStore.enlistMilitary("sports", weekNum, true, s.seasonYear);
           seasonStore.initSeason("LEAGUE_MILITARY", s.seasonYear + 1, 100, []);
           seasonStore.setSchedule([]);
+          const milSlotId = get(gameStore).currentSlotId;
+          if (milSlotId) {
+            await window.projectB!.leagueAddTransactions(JSON.stringify({
+              slotId: milSlotId,
+              rows: [{ seasonYear: s.seasonYear, week: weekNum, category: "military",
+                playerId: p.id, playerName: p.name,
+                fromTeamId: p.teamId || null, fromLeagueId: p.leagueId || null,
+                detail: "체육부대 입대" }],
+            }));
+          }
           await gameStore.save();
           await seasonStore.save();
           return { processedWeek: weekNum, logs: ["체육부대 입대"], newMessages: [], matchResults: [], stoppedBy: null };

@@ -1,0 +1,54 @@
+{
+  "id": "PLY_16733",
+  "name": "장민호",
+  "nameEn": "Jang Min-ho",
+  "role": "player",
+  "age": 26,
+  "status": "active",
+  "originLeagueId": "LEAGUE_KBL",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "CLUB_KBL_HANWHA",
+  "teamId": "TEAM_SPORTS_UNIT",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:한국",
+  "militaryStatus": "현역",
+  "militaryEnlistYear": 2025,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "1B",
+      "jerseyNumber": 9,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 44,
+        "velocity": 49,
+        "command": 45,
+        "control": 44,
+        "movement": 47,
+        "mentality": 49,
+        "recovery": 51
+      },
+      "batting": {
+        "ovr": 73,
+        "contact": 74,
+        "power": 80,
+        "eye": 73,
+        "discipline": 70,
+        "speed": 64,
+        "fielding": 68,
+        "arm": 69,
+        "battingClutch": 68,
+        "baseInstinct": 63,
+        "bunting": 56,
+        "platoon": 50
+      },
+      "developmentRate": 27,
+      "potentialHidden": 61
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "id": "PLY_16750",
+  "name": "조준영",
+  "nameEn": "Jo Jun-young",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "",
+  "teamId": "TEAM_SPORTS_UNIT",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:한국",
+  "militaryStatus": "현역",
+  "militaryEnlistYear": 2026,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "3B",
+      "jerseyNumber": 26,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 42,
+        "velocity": 47,
+        "command": 43,
+        "control": 42,
+        "movement": 45,
+        "mentality": 47,
+        "recovery": 49
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 69,
+        "power": 72,
+        "eye": 68,
+        "discipline": 65,
+        "speed": 64,
+        "fielding": 69,
+        "arm": 72,
+        "battingClutch": 63,
+        "baseInstinct": 59,
+        "bunting": 52,
+        "platoon": 50
+      },
+      "developmentRate": 32,
+      "potentialHidden": 66
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  }
+}

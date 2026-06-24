@@ -1,0 +1,54 @@
+{
+  "id": "PLY_16754",
+  "name": "김우진",
+  "nameEn": "Kim Woo-jin",
+  "role": "player",
+  "age": 23,
+  "status": "active",
+  "originLeagueId": "LEAGUE_KBL",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "CLUB_KBL_LG",
+  "teamId": "TEAM_SPORTS_UNIT",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:한국",
+  "militaryStatus": "현역",
+  "militaryEnlistYear": 2026,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 30,
+      "pitching": {
+        "ovr": 44,
+        "stamina": 41,
+        "velocity": 46,
+        "command": 42,
+        "control": 41,
+        "movement": 44,
+        "mentality": 46,
+        "recovery": 48
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 72,
+        "power": 67,
+        "eye": 69,
+        "discipline": 66,
+        "speed": 67,
+        "fielding": 70,
+        "arm": 73,
+        "battingClutch": 64,
+        "baseInstinct": 60,
+        "bunting": 53,
+        "platoon": 50
+      },
+      "developmentRate": 30,
+      "potentialHidden": 64
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  }
+}

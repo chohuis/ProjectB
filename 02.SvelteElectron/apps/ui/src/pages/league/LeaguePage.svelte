@@ -55,6 +55,12 @@
     trade: "TR", fa: "FA", draft: "DR", military: "MIL", retirement: "RT",
   };
 
+  function txMilIcon(detail?: string | null): string {
+    if (detail === "체육부대 입대") return "SPT";
+    if (detail === "전역") return "EXP";
+    return "MIL";
+  }
+
   // ── 공통 년도 선택 ───────────────────────────────────────────
   let selectedYear: number = _saved.selectedYear;
   let historyYears: number[] = [];
@@ -855,7 +861,7 @@
                 <h3 class="tx-year-heading">{year}년</h3>
                 {#each txGroupedRows(rows) as group}
                   <div class="tx-entry tx-cat-{group.category}">
-                    <span class="tx-icon">{TX_ICON[group.category] ?? "·"}</span>
+                    <span class="tx-icon">{group.category === "military" ? txMilIcon(group.rows[0]?.detail) : (TX_ICON[group.category] ?? "·")}</span>
                     <div class="tx-body">
                       {#if group.category === "trade"}
                         <!-- 트레이드: 두 선수 한 줄 -->
@@ -891,11 +897,20 @@
                         {#if r.detail}<span class="tx-reason">{r.detail}</span>{/if}
                       {:else if group.category === "military"}
                         {@const r = group.rows[0]}
-                        <span class="tx-tag tag-military">병역</span>
+                        {#if r.detail === "체육부대 입대"}
+                          <span class="tx-tag tag-mil-sports">체육부대</span>
+                        {:else if r.detail === "일반병 입대"}
+                          <span class="tx-tag tag-mil-general">일반입대</span>
+                        {:else if r.detail === "전역"}
+                          <span class="tx-tag tag-mil-discharge">전역</span>
+                        {:else}
+                          <span class="tx-tag tag-military">병역</span>
+                        {/if}
                         <span class="tx-detail">
                           <strong class="player-link" on:dblclick|stopPropagation={() => { if (r.playerId) txModalEntityId = r.playerId; }} title="더블클릭: 선수 상세">{r.playerName}</strong>
+                          {#if r.detail !== "전역" && r.fromTeamId}<span class="tx-arrow">{txTeamName(r.fromTeamId)}</span>{/if}
+                          {#if r.detail === "전역" && r.toTeamId}<span class="tx-arrow">→ {txTeamName(r.toTeamId)}</span>{/if}
                         </span>
-                        {#if r.detail}<span class="tx-reason">{r.detail}</span>{/if}
                       {:else if group.category === "retirement"}
                         {@const r = group.rows[0]}
                         <span class="tx-tag tag-retirement">은퇴</span>
@@ -1263,7 +1278,10 @@
   .tag-trade      { background: #1a3878; color: #80b0ff; }
   .tag-fa         { background: #0e3820; color: #60d890; }
   .tag-draft      { background: #3a3010; color: #f0c840; }
-  .tag-military   { background: #2a1060; color: #c080ff; }
+  .tag-military        { background: #2a1060; color: #c080ff; }
+  .tag-mil-sports      { background: #1a2860; color: #80b0ff; }
+  .tag-mil-general     { background: #282828; color: #909090; }
+  .tag-mil-discharge   { background: #0d2a18; color: #50c878; }
   .tag-retirement { background: #3a1008; color: #ff9070; }
 
   .tx-detail { color: #c8dcf6; }

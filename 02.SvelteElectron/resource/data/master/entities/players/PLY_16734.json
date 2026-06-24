@@ -1,0 +1,54 @@
+{
+  "id": "PLY_16734",
+  "name": "임동훈",
+  "nameEn": "Im Dong-hun",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_KBL",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "CLUB_KBL_KT",
+  "teamId": "TEAM_SPORTS_UNIT",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:한국",
+  "militaryStatus": "현역",
+  "militaryEnlistYear": 2025,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "2B",
+      "jerseyNumber": 10,
+      "pitching": {
+        "ovr": 46,
+        "stamina": 43,
+        "velocity": 48,
+        "command": 44,
+        "control": 43,
+        "movement": 46,
+        "mentality": 48,
+        "recovery": 50
+      },
+      "batting": {
+        "ovr": 69,
+        "contact": 72,
+        "power": 61,
+        "eye": 69,
+        "discipline": 66,
+        "speed": 74,
+        "fielding": 74,
+        "arm": 66,
+        "battingClutch": 64,
+        "baseInstinct": 60,
+        "bunting": 53,
+        "platoon": 50
+      },
+      "developmentRate": 24,
+      "potentialHidden": 58
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  }
+}

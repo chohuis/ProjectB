@@ -232,28 +232,74 @@
     return "none";
   }
 
-  // ── 계약 요약 (팀명 + 연도 범위 + n년차) ──────────────────
+  // ── 계약/재학 요약 (팀명 + 연도 범위 + n년차/학년) ──────────────────
   $: contractSummary = (() => {
     if (!modalEntity) return null;
     const curYear = $seasonStore.seasonYear ?? 2026;
-    let teamId: string, dur: number;
+
     if (isProtagonistModal) {
-      const c = $gameStore.protagonist.contract;
+      const p = $gameStore.protagonist;
+      const teamName = teamById.get(p.teamId) ?? (p.teamId || "미소속");
+
+      if (p.leagueId === "LEAGUE_HIGHSCHOOL" && p.grade != null) {
+        const graduationYear = curYear + (3 - p.grade);
+        const enrollYear     = curYear - p.grade + 1;
+        return { teamName, startYear: enrollYear, endYear: graduationYear, durLabel: undefined as string | undefined, yearsIn: p.grade, isSchool: true };
+      }
+
+      if (p.leagueId === "LEAGUE_UNIVERSITY" && p.grade != null) {
+        const baseGradYear   = curYear + (4 - p.grade);
+        const milDuringUniv  = p.militaryHiatusStage === "university";
+        const graduationYear = baseGradYear + (milDuringUniv ? 2 : 0);
+        const enrollYear     = curYear - p.grade + 1;
+        return { teamName, startYear: enrollYear, endYear: graduationYear, durLabel: undefined as string | undefined, yearsIn: p.grade, isSchool: true };
+      }
+
+      const c = p.contract;
       if (!c) return null;
-      teamId = $gameStore.protagonist.teamId;
-      // 주인공은 실제 계약 잔여년수 사용
-      const rem = c.remainingYears;
-      const endYear   = curYear + rem - 1;
+      const rem      = c.remainingYears;
+      const endYear  = curYear + rem - 1;
       const startYear = endYear - c.durationYears + 1;
-      const yearsIn   = c.durationYears - rem + 1;
-      return { teamName: teamById.get(teamId) ?? teamId, startYear, endYear, durLabel: undefined as string | undefined, yearsIn };
+      const yearsIn  = c.durationYears - rem + 1;
+      return { teamName, startYear, endYear, durLabel: undefined as string | undefined, yearsIn, isSchool: false };
+
     } else {
-      const mp2 = (modalEntity.details as EntityDetails)?.player;
-      teamId = modalEntity.teamId;
-      // NPC: 계약 기간 추정값만 표시 (signingYear 미추적으로 절대 연도 불가)
-      dur = modalNpcSave?.contractYears ?? mp2?.contract?.durationYears ?? 1;
-      const yearsIn = modalNpcSave?.proServiceYears ?? mp2?.proServiceYears ?? 1;
-      return { teamName: teamById.get(teamId) ?? teamId, startYear: null, endYear: null, durLabel: `${dur}년 계약`, yearsIn };
+      const mp2      = (modalEntity.details as EntityDetails)?.player;
+      const teamId   = modalEntity.teamId;
+      const teamName = teamById.get(teamId) ?? teamId;
+      const leagueId = modalEntity.leagueId;
+
+      if (leagueId === "LEAGUE_HIGHSCHOOL") {
+        const grade          = modalNpcSave?.grade ?? 3;
+        const graduationYear = modalNpcSave?.graduationYear ?? (curYear + (3 - grade));
+        const enrollYear     = curYear - grade + 1;
+        return { teamName, startYear: enrollYear, endYear: graduationYear, durLabel: undefined as string | undefined, yearsIn: grade, isSchool: true };
+      }
+
+      if (leagueId === "LEAGUE_UNIVERSITY") {
+        const grade          = modalNpcSave?.grade ?? 4;
+        const isMilDuringUniv = (modalNpcSave?.militaryStatus === "현역" || modalNpcSave?.militaryStatus === "군필")
+          && (modalNpcSave?.militaryDischargeYear ?? 0) > (curYear - 2);
+        const baseGradYear   = curYear + (4 - grade);
+        const graduationYear = baseGradYear + (isMilDuringUniv ? 2 : 0);
+        const enrollYear     = curYear - grade + 1;
+        return { teamName, startYear: enrollYear, endYear: graduationYear, durLabel: undefined as string | undefined, yearsIn: grade, isSchool: true };
+      }
+
+      // NPC 프로 — mp2.contract.remainingYears로 절대 연도 계산
+      const rem = mp2?.contract?.remainingYears;
+      const dur = mp2?.contract?.durationYears;
+      if (rem != null && dur != null && rem > 0) {
+        const endYear   = curYear + rem - 1;
+        const startYear = endYear - dur + 1;
+        const yearsIn   = dur - rem + 1;
+        return { teamName, startYear, endYear, durLabel: undefined as string | undefined, yearsIn, isSchool: false };
+      }
+
+      // 폴백
+      const durFallback = modalNpcSave?.contractYears ?? mp2?.contract?.durationYears ?? 1;
+      const yearsIn     = modalNpcSave?.proServiceYears ?? mp2?.proServiceYears ?? 1;
+      return { teamName, startYear: null, endYear: null, durLabel: `${durFallback}년 계약`, yearsIn, isSchool: false };
     }
   })();
 
@@ -288,7 +334,7 @@
   })();
   $: hasRank = historyEntries.some((e) => e.rank != null);
 
-  // ── 팀 이력 (league_transactions DB 조회) ────────────────────
+  // ── 팀 이력 (league_transactions DB 조회 / 주인공은 careerRecords 합성) ────
   type PlayerTransaction = {
     id: number; seasonYear: number; week: number | null;
     category: string;
@@ -320,10 +366,27 @@
     }
   }
 
+  // 주인공 팀 이력: careerRecords에서 드래프트·이적 이벤트 합성
+  $: protagonistTeamHistory = (() => {
+    if (!isProtagonistModal) return [] as PlayerTransaction[];
+    const records = [...($gameStore.protagonist.careerRecords ?? [])];
+    const result: PlayerTransaction[] = [];
+    for (let i = 0; i < records.length; i++) {
+      const r = records[i];
+      const prev = records[i - 1];
+      if (!prev) {
+        result.push({ id: i, seasonYear: r.year, week: null, category: "draft", fromTeamId: null, fromLeagueId: null, toTeamId: r.teamId, toLeagueId: r.leagueId, detail: null });
+      } else if (prev.teamId !== r.teamId) {
+        result.push({ id: i, seasonYear: r.year, week: null, category: "transfer", fromTeamId: prev.teamId, fromLeagueId: prev.leagueId, toTeamId: r.teamId, toLeagueId: r.leagueId, detail: null });
+      }
+    }
+    return result.reverse();
+  })();
+
   function txLabel(cat: string) {
     const m: Record<string, string> = {
       trade: "트레이드", fa: "FA", retirement: "은퇴",
-      military: "병역", draft: "드래프트",
+      military: "병역", draft: "드래프트", transfer: "이적",
     };
     return m[cat] ?? cat;
   }
@@ -510,7 +573,11 @@
                   {:else if contractSummary.durLabel}
                     <span class="cp-range">({contractSummary.durLabel})</span>
                   {/if}
-                  <span class="cp-yrsin">{contractSummary.yearsIn}년차</span>
+                  {#if contractSummary.isSchool}
+                    <span class="cp-yrsin">{contractSummary.yearsIn}학년</span>
+                  {:else}
+                    <span class="cp-yrsin">{contractSummary.yearsIn}년차</span>
+                  {/if}
                 </div>
               </div>
             {/if}
@@ -811,15 +878,21 @@
                     {/if}
                   {:else}
                     {@const npcSalary   = modalNpcSave?.currentSalary ?? mp?.contract?.salary}
-                    {@const npcDuration = modalNpcSave?.contractYears  ?? mp?.contract?.durationYears}
+                    {@const npcDur      = mp?.contract?.durationYears ?? modalNpcSave?.contractYears}
+                    {@const npcRem      = mp?.contract?.remainingYears}
+                    {@const _cy         = $seasonStore.seasonYear ?? 2026}
+                    {@const npcEndYear  = npcRem != null && npcRem > 0 ? _cy + npcRem - 1 : null}
+                    {@const npcStartYear = npcEndYear != null && npcDur != null ? npcEndYear - npcDur + 1 : null}
                     {@const npcService  = modalNpcSave?.proServiceYears ?? mp?.proServiceYears}
-                    {#if npcSalary != null || npcDuration != null}
+                    {#if npcSalary != null || npcDur != null}
                       <div class="ci-grid">
                         {#if npcSalary != null}
                           <div class="ci"><span>연봉</span><strong>{formatSalary(npcSalary)}</strong></div>
                         {/if}
-                        {#if npcDuration != null}
-                          <div class="ci"><span>계약 기간</span><strong>{npcDuration}년</strong></div>
+                        {#if npcStartYear != null}
+                          <div class="ci ci-full"><span>계약 기간</span><strong>{npcStartYear}~{npcEndYear}년 ({npcDur}년, {npcRem}년 잔여)</strong></div>
+                        {:else if npcDur != null}
+                          <div class="ci"><span>계약 기간</span><strong>{npcDur}년</strong></div>
                         {/if}
                         {#if npcService != null}
                           <div class="ci"><span>프로 경력</span><strong>{npcService}년차</strong></div>
@@ -854,14 +927,14 @@
                   </section>
                 {/if}
 
-                <!-- 팀 이력 (league_transactions 기반) -->
-                {#if playerTransactions.length > 0}
+                <!-- 팀 이력 (NPC: league_transactions / 주인공: careerRecords 합성) -->
+                {#if (isProtagonistModal ? protagonistTeamHistory : playerTransactions).length > 0}
                   <section class="msec">
                     <h4>팀 이력</h4>
                     <table class="gtable">
                       <thead><tr><th>연도</th><th>유형</th><th>내용</th></tr></thead>
                       <tbody>
-                        {#each playerTransactions as tx}
+                        {#each (isProtagonistModal ? protagonistTeamHistory : playerTransactions) as tx}
                           <tr>
                             <td>{tx.seasonYear}</td>
                             <td>{txLabel(tx.category)}</td>

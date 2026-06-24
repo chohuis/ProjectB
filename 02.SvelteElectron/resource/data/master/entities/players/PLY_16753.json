@@ -1,0 +1,54 @@
+{
+  "id": "PLY_16753",
+  "name": "박민석",
+  "nameEn": "Park Min-seok",
+  "role": "player",
+  "age": 22,
+  "status": "active",
+  "originLeagueId": "LEAGUE_INDEPENDENT",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "",
+  "teamId": "TEAM_SPORTS_UNIT",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:한국",
+  "militaryStatus": "현역",
+  "militaryEnlistYear": 2026,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "CF",
+      "jerseyNumber": 29,
+      "pitching": {
+        "ovr": 43,
+        "stamina": 40,
+        "velocity": 45,
+        "command": 41,
+        "control": 40,
+        "movement": 43,
+        "mentality": 45,
+        "recovery": 47
+      },
+      "batting": {
+        "ovr": 66,
+        "contact": 69,
+        "power": 60,
+        "eye": 66,
+        "discipline": 63,
+        "speed": 74,
+        "fielding": 71,
+        "arm": 67,
+        "battingClutch": 61,
+        "baseInstinct": 57,
+        "bunting": 50,
+        "platoon": 50
+      },
+      "developmentRate": 34,
+      "potentialHidden": 68
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  }
+}

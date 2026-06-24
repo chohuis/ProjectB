@@ -75,10 +75,21 @@
         context: "initial",
       });
     } else {
-      gameStore.enlistMilitary("general", 52, false, $seasonStore.seasonYear);
-      seasonStore.initSeason("LEAGUE_MILITARY", ($seasonStore.seasonYear || 2026) + 1, 100, []);
+      const slotId = $gameStore.currentSlotId;
+      const proto = $gameStore.protagonist;
+      const seasonYear = $seasonStore.seasonYear;
+      gameStore.enlistMilitary("general", 52, false, seasonYear);
+      seasonStore.initSeason("LEAGUE_MILITARY", (seasonYear || 2026) + 1, 100, []);
       seasonStore.setSchedule([]);
       gameStore.setCareerFinalChoice("general");
+      if (slotId) {
+        await window.projectB!.leagueAddTransactions(JSON.stringify({
+          slotId, rows: [{ seasonYear, week: 52, category: "military",
+            playerId: proto.id, playerName: proto.name,
+            fromTeamId: proto.teamId || null, fromLeagueId: proto.leagueId || null,
+            detail: "일반병 입대" }],
+        }));
+      }
     }
 
     gameStore.clearCareerResults();

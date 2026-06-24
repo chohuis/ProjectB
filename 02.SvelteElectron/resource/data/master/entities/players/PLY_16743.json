@@ -1,0 +1,54 @@
+{
+  "id": "PLY_16743",
+  "name": "전민혁",
+  "nameEn": "Jeon Min-hyuk",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_KBL",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "CLUB_KBL_LG",
+  "teamId": "TEAM_SPORTS_UNIT",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:한국",
+  "militaryStatus": "현역",
+  "militaryEnlistYear": 2026,
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 19,
+      "pitching": {
+        "ovr": 72,
+        "stamina": 66,
+        "velocity": 77,
+        "command": 71,
+        "control": 70,
+        "movement": 74,
+        "mentality": 70,
+        "recovery": 73
+      },
+      "batting": {
+        "ovr": 53,
+        "contact": 54,
+        "power": 49,
+        "eye": 52,
+        "discipline": 50,
+        "speed": 55,
+        "fielding": 51,
+        "arm": 54,
+        "battingClutch": 48,
+        "baseInstinct": 44,
+        "bunting": 40,
+        "platoon": 50
+      },
+      "developmentRate": 29,
+      "potentialHidden": 63
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  }
+}

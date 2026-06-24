@@ -1,0 +1,54 @@
+{
+  "id": "PLY_16736",
+  "name": "한진호",
+  "nameEn": "Han Jin-ho",
+  "role": "player",
+  "age": 24,
+  "status": "active",
+  "originLeagueId": "LEAGUE_KBL",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "CLUB_KBL_DOOSAN",
+  "teamId": "TEAM_SPORTS_UNIT",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:한국",
+  "militaryStatus": "현역",
+  "militaryEnlistYear": 2025,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "SS",
+      "jerseyNumber": 12,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 42,
+        "velocity": 47,
+        "command": 43,
+        "control": 42,
+        "movement": 45,
+        "mentality": 47,
+        "recovery": 49
+      },
+      "batting": {
+        "ovr": 68,
+        "contact": 71,
+        "power": 60,
+        "eye": 68,
+        "discipline": 65,
+        "speed": 73,
+        "fielding": 76,
+        "arm": 71,
+        "battingClutch": 63,
+        "baseInstinct": 59,
+        "bunting": 52,
+        "platoon": 50
+      },
+      "developmentRate": 24,
+      "potentialHidden": 57
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  }
+}

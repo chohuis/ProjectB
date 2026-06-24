@@ -1,0 +1,54 @@
+{
+  "id": "PLY_16738",
+  "name": "권태민",
+  "nameEn": "Kwon Tae-min",
+  "role": "player",
+  "age": 25,
+  "status": "active",
+  "originLeagueId": "LEAGUE_KBL",
+  "leagueId": "LEAGUE_UNIVERSITY",
+  "clubId": "CLUB_KBL_LOTTE",
+  "teamId": "TEAM_SPORTS_UNIT",
+  "schoolId": "SCHOOL_NONE",
+  "grade": null,
+  "notes": "국적:한국",
+  "militaryStatus": "현역",
+  "militaryEnlistYear": 2025,
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "L",
+      "position": "CF",
+      "jerseyNumber": 14,
+      "pitching": {
+        "ovr": 45,
+        "stamina": 42,
+        "velocity": 47,
+        "command": 43,
+        "control": 42,
+        "movement": 45,
+        "mentality": 47,
+        "recovery": 49
+      },
+      "batting": {
+        "ovr": 70,
+        "contact": 73,
+        "power": 64,
+        "eye": 70,
+        "discipline": 67,
+        "speed": 78,
+        "fielding": 75,
+        "arm": 71,
+        "battingClutch": 65,
+        "baseInstinct": 61,
+        "bunting": 54,
+        "platoon": 50
+      },
+      "developmentRate": 26,
+      "potentialHidden": 60
+    },
+    "coach": null,
+    "manager": null,
+    "owner": null
+  }
+}

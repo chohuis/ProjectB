@@ -1304,6 +1304,12 @@ function masterRowToEntityRow(r) {
     potentialHidden: r.potential_hidden ?? 60,
     proServiceYears: r.pro_service_years ?? undefined,
     contract: r.contract_json ? JSON.parse(r.contract_json) : undefined,
+    militaryEnlistYear: r.military_enlist_year ?? undefined,
+    // 현역 엔티티에 한해 origin 정보로 originalLeagueId/TeamId 파생 (Phase 4-1 전역 복귀용)
+    originalLeagueId: r.military_status === "현역" ? (r.origin_league_id || undefined) : undefined,
+    originalTeamId:   r.military_status === "현역" && r.club_id
+      ? r.club_id.replace(/^CLUB_/, "TEAM_") + "_1"
+      : undefined,
     pitching: r.pitch_ovr != null ? {
       ovr: r.pitch_ovr, stamina: r.pitch_stamina, velocity: r.pitch_velocity,
       command: r.pitch_command, control: r.pitch_control, movement: r.pitch_movement,
@@ -1330,6 +1336,7 @@ function masterRowToEntityRow(r) {
     leagueId: r.league_id ?? "", clubId: r.club_id ?? "",
     teamId: r.team_id ?? "", schoolId: r.school_id ?? "",
     grade: r.grade ?? undefined, notes: r.notes ?? "",
+    militaryStatus: r.military_status ?? undefined,
     personality: r.personality_json ? JSON.parse(r.personality_json) : undefined,
     entryYear:   r.entry_year   ?? undefined,
     entryLeague: r.entry_league ?? undefined,

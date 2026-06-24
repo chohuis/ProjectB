@@ -57,11 +57,22 @@
     if (resolving) return;
     if (!confirm("바로 입대하시겠습니까? 기존 신청은 모두 무시됩니다.")) return;
     resolving = true;
+    const slotId = $gameStore.currentSlotId;
+    const proto = $gameStore.protagonist;
+    const seasonYear = $seasonStore.seasonYear;
     gameStore.enlistMilitary("general");
     gameStore.setCareerApplicationsSubmitted(false);
     gameStore.clearCareerResults();
     gameStore.setCareerChoiceUiState({ popupOpened: false, mode: "none", confirmed: true });
     seasonStore.resolvePendingAction("careerChoiceHub");
+    if (slotId) {
+      await window.projectB!.leagueAddTransactions(JSON.stringify({
+        slotId, rows: [{ seasonYear, week: $seasonStore.currentWeek, category: "military",
+          playerId: proto.id, playerName: proto.name,
+          fromTeamId: proto.teamId || null, fromLeagueId: proto.leagueId || null,
+          detail: "일반병 입대" }],
+      }));
+    }
     await gameStore.save();
     await seasonStore.save();
     resolving = false;

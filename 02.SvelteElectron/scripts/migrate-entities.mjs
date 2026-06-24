@@ -74,7 +74,7 @@ for (const srcPath of targets) {
   }
   const bulk = readJson(srcPath);
   const entities = bulk.entities ?? [];
-  console.log(`泥섎━ 以? ${basename(srcPath)} ??${entities.length}媛?);
+  console.log(`[migrate] ${basename(srcPath)} => ${entities.length}개`);
 
   for (const ent of entities) {
     const role   = ent.role ?? "player";
@@ -95,9 +95,10 @@ for (const srcPath of targets) {
 // ?? _index.json 媛깆떊 ?????????????????????????????????????????
 writeJson(INDEX, { generated: new Date().toISOString(), byLeague });
 
-console.log(`\n??${isAppend ? "異붽? " : ""}留덉씠洹몃젅?댁뀡 ?꾨즺 ??${total}媛??뷀떚??);
+console.log(`
+${isAppend ? "[append] " : ""}마이그레이션 완료 => ${total}개 처리됨`);
 for (const [league, ids] of Object.entries(byLeague)) {
-  console.log(`  ${league}: ${ids.length}媛?);
+  console.log(`  ${league}: ${ids.length}개`);
 }
 console.log(`\n理쒖쥌 移댁슫?? PLY=${counters.PLY} COA=${counters.COA} MNG=${counters.MNG} OWN=${counters.OWN}`);
 if (!isAppend) {
