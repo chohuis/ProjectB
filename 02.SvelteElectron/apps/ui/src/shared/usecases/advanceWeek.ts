@@ -1746,6 +1746,9 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
 
     seasonStore.initNpcLiveStats(updatedEntities, currentSeasonYear);
     seasonStore.snapNpcSeasonStart();
+
+    // KBL 프로 NPC가 gameStore.npcs에 없으면 초기화 (새 게임 첫 W1 또는 세이브 로드 후 첫 주)
+    gameStore.initProNpcsIfMissing(updatedEntities, currentSeasonYear);
   }
 
   const isUniversity = g.protagonist.careerStage === "university";

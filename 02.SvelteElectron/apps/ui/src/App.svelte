@@ -46,6 +46,9 @@
           masterStore.applyNpcLiveStats(envelope.season.npcLiveStats ?? {});
           // 미래 선수 제외: 저장 시점 seasonYear 기준으로 entities 재필터
           await masterStore.reloadEntities(envelope.season.seasonYear, slotId);
+          // KBL 프로 NPC가 gameStore.npcs에 없으면 초기화 (구버전 세이브 대응)
+          const loadedEntities = get(masterStore).entities;
+          gameStore.initProNpcsIfMissing(loadedEntities, envelope.season.seasonYear);
         }
         phase = "playing";
       } catch (e) {

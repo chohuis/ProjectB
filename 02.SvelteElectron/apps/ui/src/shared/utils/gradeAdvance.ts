@@ -62,6 +62,51 @@ export function entityToNpcState(
   };
 }
 
+// ── 프로 선수 EntityRow → NpcSaveState 변환 ─────────────────
+export function entityToProNpcState(
+  entity: EntityRow,
+  _seasonYear: number,
+): NpcSaveState {
+  const pl = entity.details?.player;
+  const isMilitary =
+    entity.militaryStatus === "현역" || pl?.militaryStatus === "현역";
+  const enlistYear = pl?.militaryEnlistYear;
+  const careerStatus: NpcSaveState["careerStatus"] =
+    entity.status === "retired" ? "retired"
+    : isMilitary               ? "military"
+    : entity.status === "inactive" ? "free_agent"
+    : "active";
+
+  return {
+    npcId:          entity.id,
+    name:           entity.name,
+    nameEn:         entity.nameEn,
+    playerType:     pl?.playerType === "twoWay" ? "pitcher" : (pl?.playerType ?? "pitcher"),
+    position:       pl?.position ?? "",
+    age:            entity.age,
+    schoolId:       "",
+    graduationYear: 0,
+    careerStatus,
+    currentLeague:  isMilitary ? (pl?.originalLeagueId ?? entity.leagueId) : entity.leagueId,
+    currentTeam:    isMilitary ? (pl?.originalTeamId   ?? entity.teamId)   : entity.teamId,
+    militaryStatus: entity.militaryStatus ?? pl?.militaryStatus ?? "미필",
+    militaryUnit:   isMilitary ? (pl?.militaryUnit ?? "general") : undefined,
+    militaryEnlistYear:    enlistYear,
+    militaryDischargeYear: enlistYear ? enlistYear + 2 : undefined,
+    originalLeagueId: isMilitary ? entity.leagueId : undefined,
+    originalTeamId:   isMilitary ? entity.teamId   : undefined,
+    developmentRate:  pl?.developmentRate ?? 50,
+    potentialHidden:  pl?.potentialHidden ?? 75,
+    proServiceYears:  pl?.proServiceYears ?? 0,
+    currentSalary:    pl?.contract?.salary,
+    contractYears:    pl?.contract?.remainingYears,
+    personality:      entity.personality,
+    careerHistory:    [],
+    achievements:     [],
+    fame:             0,
+  };
+}
+
 export function initHighSchoolNpcs(
   entities: EntityRow[],
   seasonYear: number,

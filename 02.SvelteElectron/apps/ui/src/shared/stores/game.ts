@@ -29,6 +29,7 @@ import {
   advanceAllAges,
   advanceProtagonistGrade,
   initHighSchoolNpcs,
+  entityToProNpcState,
 } from "../utils/gradeAdvance";
 import {
   applyDraftToNpcs,
@@ -844,6 +845,26 @@ function createGameStore() {
         const fresh = newNpcs.filter(n => !existingIds.has(n.npcId));
         return { ...s, npcs: [...s.npcs, ...fresh] };
       });
+    },
+
+    // 프로 NPC 초기화: KBL 선수가 gameStore.npcs에 없으면 entities에서 변환·추가
+    // 세이브 로드 직후 또는 W1 season start 시 호출
+    initProNpcsIfMissing(
+      entities: import("../stores/master").EntityRow[],
+      seasonYear: number,
+    ) {
+      const s = get({ subscribe });
+      const existingIds = new Set(s.npcs.map(n => n.npcId));
+      const newProNpcs = entities.filter(e =>
+        e.role === "player" &&
+        e.leagueId === "LEAGUE_KBL" &&
+        e.status !== "retired" &&
+        !existingIds.has(e.id)
+      ).map(e => entityToProNpcState(e, seasonYear));
+
+      if (newProNpcs.length === 0) return;
+      autoLog(`[프로NPC초기화] KBL ${newProNpcs.length}명 → gameStore.npcs 추가 (Y${seasonYear})`);
+      update((st) => ({ ...st, npcs: [...st.npcs, ...newProNpcs] }));
     },
 
     patchProTeamProfile(teamId: string, profile: import("../stores/master").ProTeamProfile) {
@@ -1833,24 +1854,27 @@ function createGameStore() {
         const npcMap = new Map(decayedNpcs.map(n => [n.npcId, n]));
         const npcLiveStats = get(npcLiveStatsStore);
 
-        // Phase 4-0: ABL/JBL 원출신 외국인 선수 면제 일괄 패치
+        // Phase 4-0: 외국인 선수 면제 일괄 패치
+        // originLeagueId가 없는 선수도 현재 leagueId(ABL/JBL)로 판별, 국적:한국 태그 있으면 제외
+        const foreignLeagues = new Set(["LEAGUE_ABL", "LEAGUE_JBL"]);
         const foreignExempt = mNow.entities.filter(e =>
           e.role === "player" &&
-          (e.originLeagueId === "LEAGUE_ABL" || e.originLeagueId === "LEAGUE_JBL") &&
+          (foreignLeagues.has(e.originLeagueId) || foreignLeagues.has(e.leagueId)) &&
           !e.notes?.includes("국적:한국") &&
           e.militaryStatus !== "면제" &&
           e.militaryStatus !== "군필" &&
           e.militaryStatus !== "현역"
         );
+        // exemptedIds: DB 패치 전후 모두 milCandidates/generalPool 에서 명시적 제외
+        const exemptedIds = new Set(foreignExempt.map(e => e.id));
         if (foreignExempt.length > 0) {
           const exemptPatched = foreignExempt.map(e => ({ ...e, militaryStatus: "면제" as const, slotId }));
           const exemptRes = JSON.parse(
             await window.projectB!.masterBulkUpsertEntities(JSON.stringify({ slotId, entities: exemptPatched }))
           ) as { ok: boolean; error?: string };
           if (!exemptRes.error) {
-            const exemptIdSet = new Set(foreignExempt.map(e => e.id));
             for (let i = 0; i < decayedNpcs.length; i++) {
-              if (exemptIdSet.has(decayedNpcs[i].npcId) && decayedNpcs[i].militaryStatus === "미필") {
+              if (exemptedIds.has(decayedNpcs[i].npcId) && decayedNpcs[i].militaryStatus === "미필") {
                 decayedNpcs[i] = { ...decayedNpcs[i], militaryStatus: "면제" };
               }
             }
@@ -1908,16 +1932,18 @@ function createGameStore() {
           }
         }
 
-        // 2. 체육부대 입대: entities 단일 후보 풀
+        // 2. 체육부대 입대: KBL 한국인 선수만 후보
+        const kblOnly = new Set(["LEAGUE_KBL"]);
         const milCandidates = mNow.entities.filter(e =>
           e.role === "player" &&
           e.status !== "retired" &&
           e.militaryStatus !== "현역" && e.militaryStatus !== "군필" && e.militaryStatus !== "면제" &&
           e.details?.player?.militaryStatus !== "현역" &&
           !e.details?.player?.militaryEnlistYear &&
-          proLeagues.has(e.leagueId ?? "") &&
+          kblOnly.has(e.leagueId ?? "") &&
           e.teamId && e.teamId !== "" &&
           !dischargedIds.has(e.id) &&
+          !exemptedIds.has(e.id) &&
           e.age >= 18 && e.age <= 27
         ).map(e => {
           const live = npcLiveStats[e.id];
@@ -2048,17 +2074,18 @@ function createGameStore() {
           }
         }
 
-        // 3. 일반병 강제 입대: age>=28 또는 age=27 체육부대 탈락 → 시즌 30명 랜덤 상한
+        // 3. 일반병 강제 입대: KBL 한국인 age>=28 또는 체육부대 탈락 27세 → 시즌 30명 랜덤 상한
         const candidateIdSet = new Set(milCandidates.map(c => c.id));
         const mGeneral = get(masterStore);
         const generalPool = mGeneral.entities.filter(e =>
           e.role === "player" &&
           e.status !== "retired" &&
-          proLeagues.has(e.leagueId ?? "") &&
+          kblOnly.has(e.leagueId ?? "") &&
           e.militaryStatus !== "현역" && e.militaryStatus !== "군필" && e.militaryStatus !== "면제" &&
           e.details?.player?.militaryStatus !== "현역" &&
           !e.details?.player?.militaryEnlistYear &&
           !dischargedIds.has(e.id) &&
+          !exemptedIds.has(e.id) &&
           !selectedSportsIds.has(e.id) && (
             e.age >= 28 ||
             (e.age === 27 && candidateIdSet.has(e.id))
