@@ -1855,26 +1855,29 @@ function createGameStore() {
         const npcLiveStats = get(npcLiveStatsStore);
 
         // Phase 4-0: 외국인 선수 면제 일괄 패치
-        // originLeagueId가 없는 선수도 현재 leagueId(ABL/JBL)로 판별, 국적:한국 태그 있으면 제외
-        const foreignLeagues = new Set(["LEAGUE_ABL", "LEAGUE_JBL"]);
+        // 국적 기반 판별: originLeagueId ABL/JBL이면 외국인, notes에 "국적:한국"이면 한국인
+        const isKoreanEntity = (e: import("./master").EntityRow): boolean => {
+          if (e.notes?.includes("국적:한국")) return true;
+          const orig = e.originLeagueId;
+          if (orig === "LEAGUE_ABL" || orig === "LEAGUE_JBL") return false;
+          return true;
+        };
         const foreignExempt = mNow.entities.filter(e =>
           e.role === "player" &&
-          (foreignLeagues.has(e.originLeagueId) || foreignLeagues.has(e.leagueId)) &&
-          !e.notes?.includes("국적:한국") &&
+          !isKoreanEntity(e) &&
           e.militaryStatus !== "면제" &&
           e.militaryStatus !== "군필" &&
           e.militaryStatus !== "현역"
         );
-        // exemptedIds: DB 패치 전후 모두 milCandidates/generalPool 에서 명시적 제외
-        const exemptedIds = new Set(foreignExempt.map(e => e.id));
         if (foreignExempt.length > 0) {
           const exemptPatched = foreignExempt.map(e => ({ ...e, militaryStatus: "면제" as const, slotId }));
           const exemptRes = JSON.parse(
             await window.projectB!.masterBulkUpsertEntities(JSON.stringify({ slotId, entities: exemptPatched }))
           ) as { ok: boolean; error?: string };
           if (!exemptRes.error) {
+            const exemptedIdSet = new Set(foreignExempt.map(e => e.id));
             for (let i = 0; i < decayedNpcs.length; i++) {
-              if (exemptedIds.has(decayedNpcs[i].npcId) && decayedNpcs[i].militaryStatus === "미필") {
+              if (exemptedIdSet.has(decayedNpcs[i].npcId) && decayedNpcs[i].militaryStatus === "미필") {
                 decayedNpcs[i] = { ...decayedNpcs[i], militaryStatus: "면제" };
               }
             }
@@ -1933,17 +1936,16 @@ function createGameStore() {
         }
 
         // 2. 체육부대 입대: KBL 한국인 선수만 후보
-        const kblOnly = new Set(["LEAGUE_KBL"]);
         const milCandidates = mNow.entities.filter(e =>
           e.role === "player" &&
           e.status !== "retired" &&
           e.militaryStatus !== "현역" && e.militaryStatus !== "군필" && e.militaryStatus !== "면제" &&
           e.details?.player?.militaryStatus !== "현역" &&
           !e.details?.player?.militaryEnlistYear &&
-          kblOnly.has(e.leagueId ?? "") &&
+          e.leagueId === "LEAGUE_KBL" &&
+          isKoreanEntity(e) &&
           e.teamId && e.teamId !== "" &&
           !dischargedIds.has(e.id) &&
-          !exemptedIds.has(e.id) &&
           e.age >= 18 && e.age <= 27
         ).map(e => {
           const live = npcLiveStats[e.id];
@@ -2080,12 +2082,12 @@ function createGameStore() {
         const generalPool = mGeneral.entities.filter(e =>
           e.role === "player" &&
           e.status !== "retired" &&
-          kblOnly.has(e.leagueId ?? "") &&
+          e.leagueId === "LEAGUE_KBL" &&
+          isKoreanEntity(e) &&
           e.militaryStatus !== "현역" && e.militaryStatus !== "군필" && e.militaryStatus !== "면제" &&
           e.details?.player?.militaryStatus !== "현역" &&
           !e.details?.player?.militaryEnlistYear &&
           !dischargedIds.has(e.id) &&
-          !exemptedIds.has(e.id) &&
           !selectedSportsIds.has(e.id) && (
             e.age >= 28 ||
             (e.age === 27 && candidateIdSet.has(e.id))
