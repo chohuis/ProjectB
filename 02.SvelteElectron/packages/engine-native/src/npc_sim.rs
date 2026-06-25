@@ -720,6 +720,9 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     let mut summary = SeasonEndSummary::default();
     let mut new_pending: Vec<NpcSaveState> = Vec::new();
     let season_year = params.season_year;
+    // TS에서 FA/은퇴 결정 완료된 named NPC — Rust가 랜덤 FA 재결정하지 않도록 스킵
+    let named_npc_id_set: std::collections::HashSet<&str> =
+        params.named_npc_ids.iter().map(|s| s.as_str()).collect();
 
     let mut processed: Vec<NpcSaveState> = params.npcs.into_iter().map(|npc| {
         if npc.current_league == "LEAGUE_HIGHSCHOOL" { return npc; }
@@ -755,7 +758,9 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
         {
             n.pro_service_years = Some(n.pro_service_years.unwrap_or(0) + 1);
             let fa_threshold = fa_eligibility_years(&n.current_league);
-            if n.pro_service_years.unwrap_or(0) >= fa_threshold && rng.gen::<f64>() < 0.6 {
+            // named_npc_id_set에 포함된 NPC는 TS에서 이미 FA/재계약 결정 완료 — 덮어쓰지 않음
+            let is_named = named_npc_id_set.contains(n.npc_id.as_str());
+            if !is_named && n.pro_service_years.unwrap_or(0) >= fa_threshold && rng.gen::<f64>() < 0.6 {
                 n.current_league    = "LEAGUE_FREE_AGENT".into();
                 n.current_team      = "".into();
                 n.pro_service_years = Some(0);
@@ -787,25 +792,29 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
                 n.military_status = "군필".into();
                 if n.military_unit.as_deref() == Some("sports") {
                     // 체육부대: 원소속팀 복귀 (KBL/ABL), 독립 출신은 독립리그
-                    n.current_league = n.original_league_id.take()
+                    // clone()으로 읽고 이후 별도 클리어 (take()는 이중 실행 시 데이터 손실)
+                    n.current_league = n.original_league_id.clone()
+                        .filter(|l| !l.is_empty())
                         .unwrap_or_else(|| "LEAGUE_INDEPENDENT".into());
-                    n.current_team   = n.original_team_id.take().unwrap_or_default();
+                    n.current_team   = n.original_team_id.clone().unwrap_or_default();
                 } else {
                     // 일반부대: 계약 잔여 있으면 원소속팀 복귀, 없으면 FA
                     let has_contract = n.contract_years > 0;
                     if has_contract {
-                        n.current_league = n.original_league_id.take()
+                        n.current_league = n.original_league_id.clone()
                             .filter(|l| !l.is_empty())
                             .unwrap_or_else(|| "LEAGUE_INDEPENDENT".into());
-                        n.current_team   = n.original_team_id.take().unwrap_or_default();
+                        n.current_team   = n.original_team_id.clone().unwrap_or_default();
                     } else {
-                        n.current_league     = "LEAGUE_FREE_AGENT".into();
-                        n.current_team       = "".into();
-                        n.original_league_id = None;
-                        n.original_team_id   = None;
+                        n.current_league = "LEAGUE_FREE_AGENT".into();
+                        n.current_team   = "".into();
                     }
                 }
-                n.military_unit = None;
+                // 복귀 완료 후 필드 클리어
+                n.original_league_id    = None;
+                n.original_team_id      = None;
+                n.military_unit         = None;
+                n.military_discharge_year = None;
                 summary.military_discharged_count += 1;
                 summary.military_discharged_names.push(n.name.clone());
             }
@@ -818,22 +827,40 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     let mut logs: Vec<String> = Vec::new();
     let mut after_normalize = normalize_offseason_npcs(processed, season_year, &mut summary, &mut logs, &mut rng);
 
-    // 8. FA → KBL 1군 재배치
-    let kbl_teams: Vec<String> = {
-        let mut seen: HashSet<String> = HashSet::new();
-        after_normalize.iter()
-            .filter(|n| n.current_league == "LEAGUE_KBL" && !is_kbl_farm_team(&n.current_team))
-            .map(|n| n.current_team.clone())
-            .filter(|t| seen.insert(t.clone()))
-            .collect()
-    };
+    // 8. FA → 원래 리그별 재배치 (KBL→KBL, ABL→ABL, JBL→JBL, 기타→독립)
+    // 리그별 현역 팀 목록 수집
+    let mut league_teams: HashMap<String, Vec<String>> = HashMap::new();
+    for n in after_normalize.iter() {
+        if n.career_status != "active" || n.current_team.is_empty() { continue; }
+        let is_pro = n.current_league == "LEAGUE_KBL"
+            || n.current_league == "LEAGUE_ABL"
+            || n.current_league == "LEAGUE_JBL";
+        if !is_pro { continue; }
+        league_teams
+            .entry(n.current_league.clone())
+            .or_default()
+            .push(n.current_team.clone());
+    }
+    // 중복 제거
+    for teams in league_teams.values_mut() {
+        teams.sort();
+        teams.dedup();
+    }
 
     for npc in after_normalize.iter_mut() {
         if npc.current_league != "LEAGUE_FREE_AGENT" { continue; }
-        if !kbl_teams.is_empty() {
-            let idx = (rng.gen::<f64>() * kbl_teams.len() as f64) as usize % kbl_teams.len();
-            npc.current_league = "LEAGUE_KBL".into();
-            npc.current_team   = kbl_teams[idx].clone();
+        // FA 직전 리그 판별: original_league_id 우선, 없으면 KBL 기본값
+        let origin_league = npc.original_league_id.as_deref()
+            .filter(|l| !l.is_empty())
+            .unwrap_or("LEAGUE_KBL");
+        if let Some(teams) = league_teams.get(origin_league) {
+            if !teams.is_empty() {
+                let idx = (rng.gen::<f64>() * teams.len() as f64) as usize % teams.len();
+                npc.current_league = origin_league.into();
+                npc.current_team   = teams[idx].clone();
+                npc.original_league_id = None;
+                npc.original_team_id   = None;
+            }
         } else {
             npc.current_league = "LEAGUE_INDEPENDENT".into();
             npc.current_team   = "".into();
@@ -1033,6 +1060,7 @@ pub fn generate_freshmen(params: GenerateFreshmenParams) -> Vec<NpcSaveState> {
             npc_id,
             name,
             name_en: Some(name_en),
+            nationality:    Some("KOR".into()),
             player_type:    if is_sp { "pitcher".into() } else { "batter".into() },
             position,
             grade:          Some(1),
@@ -1048,6 +1076,7 @@ pub fn generate_freshmen(params: GenerateFreshmenParams) -> Vec<NpcSaveState> {
             development_rate: dev_r.round() as i32,
             potential_hidden: params.pitching_ovr_max.max(params.batting_ovr_max) * 1.15,
             career_history:  vec![],
+            career_events:   vec![],
             achievements:    vec![],
             military_enlist_year:    None,
             military_discharge_year: None,
@@ -1245,12 +1274,15 @@ pub fn apply_draft(params: ApplyDraftParams) -> Vec<NpcSaveState> {
     for npc in result_npcs.iter_mut() {
         if npc.current_league != "LEAGUE_DRAFT_POOL" { continue; }
         if let Some(pick) = pick_map.get(&npc.npc_id) {
-            npc.career_history.push(NpcCareerEntry {
+            // career_history에는 실제 시즌 기록만 → 드래프트 이벤트는 career_events에 기록
+            npc.career_events.push(NpcCareerEvent {
                 year: params.result.year,
-                league_id: "LEAGUE_DRAFT".into(),
-                team_id: pick.team_id.clone(),
-                stat_line: format!("드래프트 {}라운드 {}번 지명", pick.round, pick.pick),
-                highlights: vec![format!("{}라운드 지명", pick.round)],
+                event_type: "draft_picked".into(),
+                from_team_id: None,
+                to_team_id: Some(pick.team_id.clone()),
+                from_league_id: None,
+                to_league_id: Some("LEAGUE_KBL".into()),
+                detail: Some(format!("{}라운드 {}번 지명", pick.round, pick.pick)),
             });
             npc.current_league = "LEAGUE_KBL".into();
             npc.current_team   = pick.team_id.clone();
@@ -1278,29 +1310,33 @@ pub fn apply_draft(params: ApplyDraftParams) -> Vec<NpcSaveState> {
         let npc = &mut result_npcs[idx];
         match assigned {
             Some((tid, is_univ)) => {
-                let (league, stat) = if is_univ {
+                let (league, detail_str) = if is_univ {
                     ("LEAGUE_UNIVERSITY", "미지명 → 대학리그")
                 } else {
                     ("LEAGUE_INDEPENDENT", "미지명 → 독립리그")
                 };
-                npc.career_history.push(NpcCareerEntry {
+                npc.career_events.push(NpcCareerEvent {
                     year: params.result.year,
-                    league_id: "LEAGUE_DRAFT".into(),
-                    team_id: tid.clone(),
-                    stat_line: stat.into(),
-                    highlights: vec![],
+                    event_type: "draft_undrafted".into(),
+                    from_team_id: None,
+                    to_team_id: Some(tid.clone()),
+                    from_league_id: None,
+                    to_league_id: Some(league.into()),
+                    detail: Some(detail_str.into()),
                 });
                 npc.current_league = league.into();
                 npc.current_team   = tid;
                 if is_univ { npc.grade = Some(1); }
             }
             None => {
-                npc.career_history.push(NpcCareerEntry {
+                npc.career_events.push(NpcCareerEvent {
                     year: params.result.year,
-                    league_id: "LEAGUE_DRAFT".into(),
-                    team_id: "".into(),
-                    stat_line: "미지명 → 은퇴".into(),
-                    highlights: vec![],
+                    event_type: "retirement".into(),
+                    from_team_id: None,
+                    to_team_id: None,
+                    from_league_id: None,
+                    to_league_id: None,
+                    detail: Some("미지명 → 은퇴".into()),
                 });
                 npc.career_status  = "retired".into();
                 npc.current_league = "LEAGUE_RETIRED".into();

@@ -927,6 +927,38 @@
                   </section>
                 {/if}
 
+                <!-- NPC 주요 이벤트 (트레이드·FA·군입대 등) -->
+                {#if !isProtagonistModal && (modalNpcSave?.careerEvents?.length ?? 0) > 0}
+                  <section class="msec">
+                    <h4>주요 이벤트</h4>
+                    <table class="gtable">
+                      <thead><tr><th>연도</th><th>유형</th><th>내용</th></tr></thead>
+                      <tbody>
+                        {#each [...(modalNpcSave?.careerEvents ?? [])].reverse() as ev}
+                          <tr>
+                            <td>{ev.year}</td>
+                            <td>{
+                              ev.eventType === "trade" ? "트레이드" :
+                              ev.eventType === "fa_signed" ? "FA" :
+                              ev.eventType === "military_enlist" ? "입대" :
+                              ev.eventType === "military_discharge" ? "전역" :
+                              ev.eventType === "draft_picked" ? "드래프트" :
+                              ev.eventType === "retirement" ? "은퇴" : ev.eventType
+                            }</td>
+                            <td>{
+                              ev.eventType === "trade"
+                                ? `${teamById.get(ev.fromTeamId ?? "") ?? ev.fromTeamId ?? ""} → ${teamById.get(ev.toTeamId ?? "") ?? ev.toTeamId ?? ""}`
+                                : ev.eventType === "fa_signed"
+                                ? `${teamById.get(ev.toTeamId ?? "") ?? ev.toTeamId ?? ""} 입단`
+                                : ev.detail ?? ""
+                            }</td>
+                          </tr>
+                        {/each}
+                      </tbody>
+                    </table>
+                  </section>
+                {/if}
+
                 <!-- 팀 이력 (NPC: league_transactions / 주인공: careerRecords 합성) -->
                 {#if (isProtagonistModal ? protagonistTeamHistory : playerTransactions).length > 0}
                   <section class="msec">

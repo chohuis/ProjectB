@@ -62,6 +62,23 @@ pub struct NpcCareerEntry {
     pub highlights: Vec<String>,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct NpcCareerEvent {
+    pub year: i32,
+    pub event_type: String,  // "draft_picked"|"draft_undrafted"|"trade"|"fa_signed"|"military_enlist"|"military_discharge"|"retirement"
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub from_team_id: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub to_team_id: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub from_league_id: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub to_league_id: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub detail: Option<String>,
+}
+
 // ── NPC 저장 상태 ─────────────────────────────────────────────────────────────
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -71,6 +88,8 @@ pub struct NpcSaveState {
     pub name: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub name_en: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub nationality: Option<String>,  // "KOR"|"JPN"|"USA"|"OTHER"; None → "KOR" 폴백
     pub player_type: String,
     pub position: String,
     pub age: i32,
@@ -108,6 +127,8 @@ pub struct NpcSaveState {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pro_service_years: Option<i32>,
     pub career_history: Vec<NpcCareerEntry>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub career_events: Vec<NpcCareerEvent>,
     pub achievements: Vec<String>,
     #[serde(default)]
     pub fame: f64,
@@ -475,6 +496,9 @@ pub struct OffseasonParams {
     pub npcs: Vec<NpcSaveState>,
     pub pending_draft: Vec<NpcSaveState>,
     pub season_year: i32,
+    // TS에서 FA/은퇴 결정을 완료한 named NPC ID 목록 — Rust FA 로직 스킵 대상
+    #[serde(default)]
+    pub named_npc_ids: Vec<String>,
 }
 
 // ── 학년 진급 입력 ───────────────────────────────────────────────────────────

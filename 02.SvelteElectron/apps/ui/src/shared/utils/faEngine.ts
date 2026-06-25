@@ -43,7 +43,7 @@ export async function generateFaOffers(
 
 export function isFaEligible(protagonist: ProtagonistSave, _attendsUniversity: boolean): boolean {
   const requiredYears = getFaThreshold(protagonist.leagueId);
-  return protagonist.proServiceYears >= requiredYears || protagonist.contract?.remainingYears === 0;
+  return protagonist.proServiceYears >= requiredYears;
 }
 
 export function toContract(offer: FaOffer): ProContract {

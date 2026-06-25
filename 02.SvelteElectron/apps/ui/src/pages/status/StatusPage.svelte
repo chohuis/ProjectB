@@ -544,6 +544,37 @@
             {/each}
           </div>
         </article>
+
+        {#if ($gameStore.protagonist.careerEvents?.length ?? 0) > 0}
+          <article class="card career-card">
+            <h3>주요 이벤트</h3>
+            <table class="career-table">
+              <thead><tr><th>연도</th><th>유형</th><th>내용</th></tr></thead>
+              <tbody>
+                {#each [...($gameStore.protagonist.careerEvents ?? [])].reverse() as ev}
+                  <tr>
+                    <td class="year-cell">{ev.year}</td>
+                    <td>{
+                      ev.eventType === "trade" ? "트레이드" :
+                      ev.eventType === "fa_signed" ? "FA 계약" :
+                      ev.eventType === "military_enlist" ? "입대" :
+                      ev.eventType === "military_discharge" ? "전역" :
+                      ev.eventType === "draft_picked" ? "드래프트" :
+                      ev.eventType === "retirement" ? "은퇴" : ev.eventType
+                    }</td>
+                    <td>{
+                      ev.eventType === "trade"
+                        ? `${$teamMap.get(ev.fromTeamId ?? "")?.name ?? ev.fromTeamId ?? ""} → ${$teamMap.get(ev.toTeamId ?? "")?.name ?? ev.toTeamId ?? ""}`
+                        : ev.eventType === "fa_signed"
+                        ? `${$teamMap.get(ev.toTeamId ?? "")?.name ?? ev.toTeamId ?? ""} 입단`
+                        : ev.detail ?? ""
+                    }</td>
+                  </tr>
+                {/each}
+              </tbody>
+            </table>
+          </article>
+        {/if}
       {/if}
     {/if}
 

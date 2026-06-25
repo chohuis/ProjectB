@@ -350,6 +350,9 @@
         });
       }
 
+      // 시즌 종료 후 계약 연수 감산 (W43이 아닌 시즌 끝에 처리)
+      gameStore.applySeasonContractProgress();
+
       const pending = p.pendingNextContract;
       if (pending) {
         gameStore.applyPendingNextContract();

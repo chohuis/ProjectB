@@ -134,6 +134,7 @@ export type PendingAction =
       type: "trade";
       fromTeamId: string;
       toTeamId: string;
+      toLeagueId?: string;
       receivedNpcId: string;
       receivedNpcName: string;
       receivedOvr: number;

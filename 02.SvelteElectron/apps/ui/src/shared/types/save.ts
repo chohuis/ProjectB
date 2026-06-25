@@ -310,6 +310,7 @@ export interface ProtagonistSave {
   };
   currentRole?: PitcherRole;  // 현재 시즌 역할 (시즌 시작 시 배정)
   careerRecords?: CareerSeasonRecord[];  // 시즌별 기록 히스토리
+  careerEvents?: NpcCareerEvent[];  // 드래프트·트레이드·군입대 이벤트
   // 시즌 시작 스냅샷 (능력치 트렌드 화살표용)
   seasonStartPitching?: PitchingAttributes;
   seasonStartBatting?: BattingAttributes;
@@ -549,8 +550,9 @@ export interface ProtagonistDraftOutcome {
 
 // ── 드래프트 타입 ────────────────────────────────────────────
 export type MilitaryStatus = "미필" | "현역" | "군필" | "면제";
-export type NpcCareerStatus = "active" | "military" | "injured" | "retired";
+export type NpcCareerStatus = "active" | "military" | "injured" | "retired" | "free_agent";
 export type NpcEmotionRole = "manager" | "coach" | "rival" | "teammate";
+export type Nationality = "KOR" | "JPN" | "USA" | "OTHER";
 
 export interface AnonDraftEntry {
   npcId:      string;
@@ -568,6 +570,25 @@ export interface NpcCareerEntry {
   statLine: string;  // "15승 3패 ERA 2.41" | "타율 .312 12홈런"
   highlights: string[];  // ["신인상", "올스타"]
   stats?: PlayerSeasonStats;  // 연도별 상세 성적 (최근 5년 표시용)
+}
+
+export type NpcCareerEventType =
+  | "draft_picked"
+  | "draft_undrafted"
+  | "trade"
+  | "fa_signed"
+  | "military_enlist"
+  | "military_discharge"
+  | "retirement";
+
+export interface NpcCareerEvent {
+  year: number;
+  eventType: NpcCareerEventType;
+  fromTeamId?: string;
+  toTeamId?: string;
+  fromLeagueId?: string;
+  toLeagueId?: string;
+  detail?: string;
 }
 
 export interface NpcPersonality {
@@ -597,6 +618,8 @@ export interface NpcSaveState {
   emotionRole?: NpcEmotionRole;
   potentialHidden?: number;  // 성장 cap 계산용 — 없으면 75 폴백 (구버전 세이브 호환)
 
+  nationality?: Nationality;  // 없으면 "KOR" 폴백
+
   // 기본 정보
   careerStatus: NpcCareerStatus;
   currentLeague: string;
@@ -624,6 +647,7 @@ export interface NpcSaveState {
     recoveryWeeksLeft: number;
   };
   careerHistory: NpcCareerEntry[];
+  careerEvents?: NpcCareerEvent[];  // 드래프트·트레이드·군입대 등 이벤트 기록 (optional, 구버전 세이브 호환)
   achievements: string[];  // ["2025 신인상", "2027 MVP"]
 
   fame: number;

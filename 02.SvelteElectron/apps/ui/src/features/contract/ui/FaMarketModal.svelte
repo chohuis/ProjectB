@@ -29,6 +29,8 @@
     const contract = toContract(offer);
     const signingTeamName = $masterStore.teams.find((t) => t.id === contract.teamId)?.name ?? contract.teamId;
     gameStore.setPendingNextContract(contract);
+    gameStore.addCareerEvent({ year: $seasonStore.seasonYear, eventType: "fa_signed",
+      toTeamId: contract.teamId, toLeagueId: contract.leagueId });
     gameStore.addMessage({
       id: `msg-fa-signed-${Date.now()}`,
       category: "system", sender: "에이전트",

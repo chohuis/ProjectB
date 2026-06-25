@@ -97,11 +97,24 @@ export async function applyDraftToNpcs(
 ): Promise<NpcSaveState[]> {
   const emotionRoles = new Map(npcs.map(n => [n.npcId, n.emotionRole] as const));
   const json = await api().npcApplyDraft(JSON.stringify({ npcs, result, universityTeamIds, independentTeamIds }));
-  return parseResult<NpcSaveState[]>(json).map(n => ({
+  const updated = parseResult<NpcSaveState[]>(json).map(n => ({
     ...n,
     emotionRole:     n.emotionRole     ?? emotionRoles.get(n.npcId),
     potentialHidden: n.potentialHidden ?? 75,
   }));
+
+  const pickedMap = new Map(result.picks.map(p => [p.npcId, p]));
+  return updated.map(n => {
+    const pick = pickedMap.get(n.npcId);
+    if (!pick) return n;
+    return {
+      ...n,
+      careerEvents: [
+        ...(n.careerEvents ?? []),
+        { year: result.year, eventType: "draft_picked" as const, toTeamId: pick.teamId },
+      ],
+    };
+  });
 }
 
 // ── 주인공 드래프트 결과 결정 (Rust DLL 위임) ────────────────

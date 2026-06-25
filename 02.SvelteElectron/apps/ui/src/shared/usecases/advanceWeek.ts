@@ -34,6 +34,27 @@ import {
   makeSeriesGame, nextGameNum,
 } from "../utils/postseasonEngine";
 
+// ── NPC 상태 단일 업데이트 헬퍼 ──────────────────────────────
+// named NPC의 팀/상태 변경 시 gameStore + masterStore를 동시에 업데이트
+function updateNpcsAndSync(npcs: import("../types/save").NpcSaveState[]): void {
+  gameStore.updateNpcs(npcs);
+  masterStore.syncNpcsToEntities(npcs);
+}
+
+// ── 군입대 대상 판별 (nationality 기반) ──────────────────────
+// nationality 없는 구버전 NPC는 originLeagueId로 폴백
+function isKoreanMilitaryEligible(
+  npc: import("../types/save").NpcSaveState | import("../stores/master").EntityRow,
+  npcSave?: import("../types/save").NpcSaveState,
+): boolean {
+  const nationality = npcSave?.nationality
+    ?? (npc as import("../types/save").NpcSaveState).nationality
+    ?? ((npc as import("../stores/master").EntityRow).originLeagueId === "LEAGUE_ABL" ? "USA"
+      : (npc as import("../stores/master").EntityRow).originLeagueId === "LEAGUE_JBL"  ? "JPN"
+      : "KOR");
+  return nationality === "KOR";
+}
+
 // ── 리그 표시명 ───────────────────────────────────────────────
 const LEAGUE_NAMES: Record<string, string> = {
   LEAGUE_HIGHSCHOOL:  "고교 리그",
@@ -1057,8 +1078,9 @@ async function processTradeWindow(weekInYear: number, leagueId: string): Promise
         receivedMedicalNote = (MEDICAL_SEVERITY_LABEL[receivedMedical.rejectionReason] ?? "부상 이력") + weeksNote;
       }
 
-      const fromTeamId = protagonistIsOffered ? g.protagonist.teamId : proposal.proposingTeamId;
-      const toTeamId   = protagonistIsOffered ? proposal.receivingTeamId : proposal.proposingTeamId;
+      const fromTeamId   = protagonistIsOffered ? g.protagonist.teamId : proposal.proposingTeamId;
+      const toTeamId     = protagonistIsOffered ? proposal.receivingTeamId : proposal.proposingTeamId;
+      const toLeagueId   = m.teams.find(t => t.id === toTeamId)?.leagueId ?? g.protagonist.leagueId;
 
       seasonStore.pushPendingAction({
         type: "event",
@@ -1071,6 +1093,7 @@ async function processTradeWindow(weekInYear: number, leagueId: string): Promise
         type: "trade",
         fromTeamId,
         toTeamId,
+        toLeagueId,
         receivedNpcId:         receivedAsset.playerId,
         receivedNpcName:       receivedName,
         receivedOvr:           Math.round(receivedAsset.ovr),
@@ -1089,7 +1112,7 @@ async function processTradeWindow(weekInYear: number, leagueId: string): Promise
       npcId1: offeredId,   teamId1: proposal.receivingTeamId,
       npcId2: requestedId, teamId2: proposal.proposingTeamId,
     }));
-    // 배경 엔티티 팀 이동 overlay 저장
+    // 배경 엔티티 팀 이동 overlay 저장 + named NPC gameStore 동기화
     {
       const bgMoves: Array<{ id: string; teamId: string }> = [];
       const bgOff = bgEntityAssets.find(a => a.playerId === offeredId);
@@ -1110,6 +1133,17 @@ async function processTradeWindow(weekInYear: number, leagueId: string): Promise
           ) as { ok: boolean; error?: string };
           if (res.error) autoLog(`[트레이드overlay오류] ${res.error}`);
         }
+      }
+      // named NPC는 gameStore.npcs도 갱신
+      const tradeSwap: Record<string, string> = {};
+      if (!bgOff) tradeSwap[offeredId]  = proposal.receivingTeamId;
+      if (!bgReq) tradeSwap[requestedId] = proposal.proposingTeamId;
+      if (Object.keys(tradeSwap).length > 0) {
+        const updatedNpcs = get(gameStore).npcs.map(n => {
+          const newTeam = tradeSwap[n.npcId];
+          return newTeam ? { ...n, currentTeam: newTeam } : n;
+        });
+        updateNpcsAndSync(updatedNpcs);
       }
     }
     autoLog(`[트레이드성사] ${leagueId} W${weekInYear}: ${namedMap.get(offeredId)?.name ?? m.entities.find(e => e.id === offeredId)?.name ?? offeredId} ↔ ${namedMap.get(requestedId)?.name ?? m.entities.find(e => e.id === requestedId)?.name ?? requestedId}`);
@@ -1384,7 +1418,24 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
 
     if (faRes.applyFa) {
       const idx = updatedNpcs.findIndex(n => n.npcId === npc.npcId);
-      if (idx >= 0) updatedNpcs[idx] = { ...updatedNpcs[idx], careerStatus: "free_agent" as any };
+      if (idx >= 0) {
+        const cur = updatedNpcs[idx];
+        // LEAGUE_FREE_AGENT로 전환해야 Rust run_offseason step 8에서 리그별 재배치됨
+        updatedNpcs[idx] = {
+          ...cur,
+          careerStatus:    "free_agent",
+          originalLeagueId: cur.currentLeague,
+          originalTeamId:   cur.currentTeam,
+          currentLeague:   "LEAGUE_FREE_AGENT",
+          currentTeam:     "",
+          proServiceYears: 0,
+          careerEvents: [
+            ...(cur.careerEvents ?? []),
+            { year: s.seasonYear, eventType: "fa_signed" as const,
+              fromTeamId: cur.currentTeam, fromLeagueId: cur.currentLeague },
+          ],
+        };
+      }
       logs.push(`[W${weekNum}] ${npc.name} FA 신청`);
       autoLog(`[FA신청] ${npc.name} (${league}, ${npc.proServiceYears}년)`);
     } else {
@@ -1422,7 +1473,7 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
     for (const npc of namedNpcs) {
       const cur = updatedNpcs.find(n => n.npcId === npc.npcId);
       if (!cur) continue;
-      if (cur.careerStatus === "retired" || (cur as any).careerStatus === "free_agent") continue;
+      if (cur.careerStatus === "retired" || cur.careerStatus === "free_agent") continue;
 
       const newProSY       = (npc.proServiceYears ?? 0) + 1;
       const oldContractYrs = npc.contractYears ?? 1;
@@ -1484,11 +1535,12 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
       if (idx >= 0) {
         updatedNpcs[idx] = {
           ...updatedNpcs[idx],
-          proServiceYears: newProSY,
+          // proServiceYears는 Rust run_offseason이 +1 처리 — 여기서 증가시키면 double-increment 발생
           currentSalary:   newSalary,
           contractYears:   finalYears,
         };
       }
+      // master_overlay.db 표시용으로는 +1 전달 (NpcSaveState는 Rust 결과로 덮어씀)
       npcContractUpdates.push({ npcId: npc.npcId, currentSalary: newSalary, contractYears: finalYears, proServiceYears: newProSY });
     }
 
@@ -1501,7 +1553,7 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
     }
   }
 
-  gameStore.updateNpcs(updatedNpcs);
+  updateNpcsAndSync(updatedNpcs);
 
   if (slotId && namedRetirementRows.length > 0) {
     autoLog(`[은퇴기록] 명명 NPC 은퇴 ${namedRetirementRows.length}명 DB 저장`);
@@ -2339,30 +2391,32 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       );
       const hasPendingNext = !!gOff.protagonist.pendingNextContract;
 
+      // applySeasonContractProgress()는 W52(SeasonEndModal)에서 호출 — 여기서는 미리 체크만
+      // 이번 시즌 종료 후 계약이 만료되는지 확인 (remainingYears === 1 → 감산 후 0)
       if (!hasPending && !hasPendingNext && contract) {
-        gameStore.applySeasonContractProgress();
-        const gAfterProg = get(gameStore);
-        const updatedContract = gAfterProg.protagonist.contract;
-        const myStats = (sOff.stats[gAfterProg.protagonist.id] ?? null) as import("../types/save").PitcherSeasonStats | null;
+        const myStats = (sOff.stats[gOff.protagonist.id] ?? null) as import("../types/save").PitcherSeasonStats | null;
 
-        if (updatedContract && updatedContract.remainingYears === 0) {
-          // 계약 만료 — 옵션 조항 우선 처리
-          const offeredSalary = await calcOfferedSalaryForProtagonist(gAfterProg.protagonist, myStats);
-          if (updatedContract.teamOptionYears > 0) {
+        if (contract.remainingYears === 1) {
+          // 이번 시즌 마지막 계약 연도 — 만료 예정
+          const offeredSalary = await calcOfferedSalaryForProtagonist(gOff.protagonist, myStats);
+          if (contract.teamOptionYears > 0) {
             const seasonRating = await calcSeasonRating(myStats);
-            const exercised = seasonRating >= 60;
+            const profile = getTeamProfile(gOff.protagonist.teamId, gOff, m) ?? DEFAULT_TEAM_PROFILE;
+            // winNowPressure: 0→기준75, 50→63, 100→50 (공격적 팀은 낮은 기준에도 행사)
+            const threshold = 75 - Math.round((profile.winNowPressure / 100) * 25);
+            const exercised = seasonRating >= threshold;
             const action: PendingAction = { type: "optionClause", optionType: "team", exercised, nextSalary: offeredSalary };
             seasonStore.pushPendingAction(action);
-          } else if (updatedContract.playerOptionYears > 0) {
+          } else if (contract.playerOptionYears > 0) {
             const action: PendingAction = { type: "optionClause", optionType: "player", exercised: false, nextSalary: offeredSalary };
             seasonStore.pushPendingAction(action);
-          } else if (isFaEligible(gAfterProg.protagonist, gAfterProg.schoolState.attendsUniversity)) {
+          } else if (isFaEligible(gOff.protagonist, gOff.schoolState.attendsUniversity)) {
             seasonStore.pushPendingAction({ type: "faMarket" });
           } else {
             seasonStore.pushPendingAction({
               type: "salaryNegotiation",
-              teamId: updatedContract.teamId,
-              leagueId: updatedContract.leagueId,
+              teamId: contract.teamId,
+              leagueId: contract.leagueId,
               offeredSalary,
               durationYears: 1,
               minDurationYears: 1,
@@ -2371,16 +2425,16 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
               context: "renewal",
             });
           }
-        } else if (!updatedContract) {
-          // 계약 자체 없음 (이례적) — FA or 최소 계약
-          if (isFaEligible(gAfterProg.protagonist, gAfterProg.schoolState.attendsUniversity)) {
+        } else if (contract.remainingYears <= 0) {
+          // 이미 만료된 계약 — 계약 없음 처리
+          if (isFaEligible(gOff.protagonist, gOff.schoolState.attendsUniversity)) {
             seasonStore.pushPendingAction({ type: "faMarket" });
           } else {
-            const offeredSalary = await calcOfferedSalaryForProtagonist(gAfterProg.protagonist, myStats);
+            const offeredSalary = await calcOfferedSalaryForProtagonist(gOff.protagonist, myStats);
             seasonStore.pushPendingAction({
               type: "salaryNegotiation",
-              teamId: gAfterProg.protagonist.teamId,
-              leagueId: gAfterProg.protagonist.leagueId,
+              teamId: gOff.protagonist.teamId,
+              leagueId: gOff.protagonist.leagueId,
               offeredSalary,
               durationYears: 1,
               minDurationYears: 1,
@@ -2389,15 +2443,21 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
               context: "renewal",
             });
           }
-        } else if (updatedContract.remainingYears > 0) {
-          // 잔여 계약 있음 — 연봉협상 오퍼
-          const offeredSalary = await calcOfferedSalaryForProtagonist(gAfterProg.protagonist, myStats);
+        }
+        // remainingYears > 1: 계약 기간 중 — 아무것도 하지 않음
+      } else if (!contract && !hasPending && !hasPendingNext) {
+        // 계약 자체 없음 (이례적)
+        const myStats = (sOff.stats[gOff.protagonist.id] ?? null) as import("../types/save").PitcherSeasonStats | null;
+        if (isFaEligible(gOff.protagonist, gOff.schoolState.attendsUniversity)) {
+          seasonStore.pushPendingAction({ type: "faMarket" });
+        } else {
+          const offeredSalary = await calcOfferedSalaryForProtagonist(gOff.protagonist, myStats);
           seasonStore.pushPendingAction({
             type: "salaryNegotiation",
-            teamId: updatedContract.teamId,
-            leagueId: updatedContract.leagueId,
+            teamId: gOff.protagonist.teamId,
+            leagueId: gOff.protagonist.leagueId,
             offeredSalary,
-            durationYears: updatedContract.remainingYears,
+            durationYears: 1,
             minDurationYears: 1,
             maxDurationYears: 3,
             signingBonus: 0,
@@ -2741,6 +2801,8 @@ async function handleSeasonEnd(): Promise<WeekAdvanceResult> {
   // 군 복무 종료
   if (g.protagonist.careerStage === "military") {
     gameStore.completeMilitaryService();
+    gameStore.addCareerEvent({ year: s.seasonYear, eventType: "military_discharge",
+      toTeamId: g.protagonist.contract?.teamId ?? undefined, detail: "전역" });
     const contract = g.protagonist.contract;
     if (contract) {
       const action: PendingAction = {
@@ -2756,7 +2818,10 @@ async function handleSeasonEnd(): Promise<WeekAdvanceResult> {
       seasonStore.pushPendingAction(action);
       return { processedWeek: s.currentWeek, logs: ["전역: 복귀 계약 협상을 진행하세요."], newMessages: [], matchResults: [], stoppedBy: action };
     }
-    return { processedWeek: s.currentWeek, logs: ["전역 완료"], newMessages: [], matchResults: [], stoppedBy: null };
+    // 잔여 계약 없이 전역 → FA 시장으로
+    const faAction: PendingAction = { type: "faMarket" };
+    seasonStore.pushPendingAction(faAction);
+    return { processedWeek: s.currentWeek, logs: ["전역 완료 — FA 시장 오픈"], newMessages: [], matchResults: [], stoppedBy: faAction };
   }
 
   // 프로 계약 로직은 processWeekBoundary W43에서 처리
@@ -3055,10 +3120,8 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
         const npcCandidates = m.entities
           .filter((e) => {
             if (e.role !== "player") return false;
-            const isForeign = (e.originLeagueId === "LEAGUE_ABL" || e.originLeagueId === "LEAGUE_JBL")
-              && !e.notes?.includes("국적:한국");
-            if (isForeign) return false;
             const npcSave = g.npcs.find((n) => n.npcId === e.id);
+            if (!isKoreanMilitaryEligible(e, npcSave)) return false;
             return npcSave?.militaryStatus === "미필"
               && npcSave.careerStatus === "active"
               && e.id !== p.id;
@@ -3067,7 +3130,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
             const live = get(npcLiveStatsStore)[e.id];
             const ep = (e.details as import("../stores/master").EntityDetails)?.player;
             const ovr = live?.pitching?.ovr ?? ep?.pitching?.ovr ?? 50;
-            return { id: e.id, name: e.name, ovr, teamId: e.teamId, isProtagonist: false };
+            return { id: e.id, name: e.name, ovr, teamId: e.teamId, position: ep?.position ?? "SP", isProtagonist: false };
           });
 
         if (npcCandidates.length > 0) {
@@ -3106,26 +3169,24 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
         const npcPool = m.entities
           .filter((e) => {
             if (e.role !== "player") return false;
-            const isForeign = (e.originLeagueId === "LEAGUE_ABL" || e.originLeagueId === "LEAGUE_JBL")
-              && !e.notes?.includes("국적:한국");
-            if (isForeign) return false;
             const npcSave = g.npcs.find((n) => n.npcId === e.id);
+            if (!isKoreanMilitaryEligible(e, npcSave)) return false;
             return npcSave?.militaryStatus === "미필" && npcSave.careerStatus === "active" && e.id !== p.id;
           })
           .map((e) => {
             const live = get(npcLiveStatsStore)[e.id];
             const ep = (e.details as import("../stores/master").EntityDetails)?.player;
             const ovr = live?.pitching?.ovr ?? ep?.pitching?.ovr ?? 50;
-            return { id: e.id, name: e.name, ovr, teamId: e.teamId, isProtagonist: false };
+            return { id: e.id, name: e.name, ovr, teamId: e.teamId, position: ep?.position ?? "SP", isProtagonist: false };
           });
 
         // NPC 29명 + 주인공 1명 = 30명 풀
         const topNpcRaw = JSON.parse(
           await window.projectB!.militaryCalcCandidates(JSON.stringify({ candidates: npcPool, topN: 29 }))
-        ) as { topCandidates: { id: string; name: string; ovr: number; teamId: string }[] };
+        ) as { topCandidates: { id: string; name: string; ovr: number; teamId: string; position: string }[] };
 
         const applicants = [
-          { id: p.id, name: p.name, ovr: p.pitching.ovr, teamId: p.teamId, isProtagonist: true },
+          { id: p.id, name: p.name, ovr: p.pitching.ovr, teamId: p.teamId, position: p.position ?? "SP", isProtagonist: true },
           ...topNpcRaw.topCandidates.map((c) => ({ ...c, isProtagonist: false })),
         ];
 
@@ -3147,6 +3208,10 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
             createdAt: `W${weekNum}`, readAt: null,
           });
           gameStore.enlistMilitary("sports", weekNum, true, s.seasonYear);
+          gameStore.addCareerEvent({ year: s.seasonYear, eventType: "military_enlist",
+            fromTeamId: p.teamId || undefined, fromLeagueId: p.leagueId || undefined, detail: "체육부대 입대" });
+          // 군입대 시 SeasonEndModal이 스킵되므로 여기서 NPC 오프시즌 처리
+          await gameStore.processAllLeaguesSeasonEnd(s.seasonYear);
           seasonStore.initSeason("LEAGUE_MILITARY", s.seasonYear + 1, 100, []);
           seasonStore.setSchedule([]);
           const milSlotId = get(gameStore).currentSlotId;
@@ -3314,11 +3379,15 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
             let pitcherConds2: Record<string, PlayerCondition> = {};
 
             if (entities2.length > 0) {
+              const _tradeWeeks2 = gCurrent.protagonist.tradeAdaptationWeeks ?? 0;
               const sim2 = await simulateGame(game.homeTeamId, game.awayTeamId, entities2, {
                 conditions: conditions2, homeRotIdx: homeRotIdx2, awayRotIdx: awayRotIdx2, week: game.week,
                 npcInjuries: get(seasonStore).npcInjuries,
                 rotationSize: rotationSizeForStage(gCurrent.protagonist.careerStage),
                 npcLiveStats: get(npcLiveStatsStore),
+                tradeAdaptationPenalty: _tradeWeeks2 > 0
+                  ? { playerId: gCurrent.protagonist.id, factor: 1 - 0.04 * _tradeWeeks2 }
+                  : undefined,
               });
               npcResult2 = sim2.result; nextHomeRot2 = sim2.nextHomeRotIdx; nextAwayRot2 = sim2.nextAwayRotIdx; pitcherConds2 = sim2.pitcherConditions;
             } else {
@@ -3362,11 +3431,15 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
           let pitcherConds: Record<string, PlayerCondition> = {};
 
           if (entities.length > 0) {
+            const _tradeWeeksNpc = gCurrent.protagonist.tradeAdaptationWeeks ?? 0;
             const sim = await simulateGame(game.homeTeamId, game.awayTeamId, entities, {
               conditions, homeRotIdx, awayRotIdx, week: game.week,
               npcInjuries: get(seasonStore).npcInjuries,
               rotationSize: rotationSizeForStage(gCurrent.protagonist.careerStage),
               npcLiveStats: get(npcLiveStatsStore),
+              tradeAdaptationPenalty: _tradeWeeksNpc > 0
+                ? { playerId: gCurrent.protagonist.id, factor: 1 - 0.04 * _tradeWeeksNpc }
+                : undefined,
             });
             npcResult      = sim.result;
             nextHomeRotIdx = sim.nextHomeRotIdx;
@@ -3569,11 +3642,15 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
         let pitcherConds: Record<string, PlayerCondition> = {};
 
         if (entities.length > 0) {
+          const _tradeWeeksPs = gCurrent.protagonist.tradeAdaptationWeeks ?? 0;
           const sim = await simulateGame(game.homeTeamId, game.awayTeamId, entities, {
             conditions, homeRotIdx, awayRotIdx, week: game.week,
             npcInjuries: get(seasonStore).npcInjuries,
             rotationSize: rotationSizeForStage(gCurrent.protagonist.careerStage),
             npcLiveStats: get(npcLiveStatsStore),
+            tradeAdaptationPenalty: _tradeWeeksPs > 0
+              ? { playerId: gCurrent.protagonist.id, factor: 1 - 0.04 * _tradeWeeksPs }
+              : undefined,
           });
           npcResult      = sim.result;
           nextHomeRotIdx = sim.nextHomeRotIdx;

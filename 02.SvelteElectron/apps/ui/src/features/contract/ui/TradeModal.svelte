@@ -53,7 +53,10 @@
       description: `${fromTeamName} → ${toTeamName} 이적이 확정되었습니다.`,
       choices: [{ id: "ok", label: "확인" }],
     });
-    gameStore.applyTradeTransfer(action.toTeamId);
+    gameStore.applyTradeTransfer(action.toTeamId, action.toLeagueId ?? g.protagonist.leagueId);
+    gameStore.addCareerEvent({ year: seasonYear, eventType: "trade",
+      fromTeamId: action.fromTeamId, fromLeagueId: g.protagonist.leagueId,
+      toTeamId: action.toTeamId, toLeagueId: action.toLeagueId ?? g.protagonist.leagueId });
     seasonStore.resolvePendingAction("trade");
 
     // 리그 거래 기록

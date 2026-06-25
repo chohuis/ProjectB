@@ -24,6 +24,10 @@
     const proto = $gameStore.protagonist;
     const seasonYear = $seasonStore.seasonYear;
     gameStore.enlistMilitary("general", 52, false, seasonYear);
+    gameStore.addCareerEvent({ year: seasonYear, eventType: "military_enlist",
+      fromTeamId: proto.teamId || undefined, fromLeagueId: proto.leagueId || undefined, detail: "일반병 입대" });
+    // 군입대 시 SeasonEndModal이 스킵되므로 NPC 오프시즌 처리
+    await gameStore.processAllLeaguesSeasonEnd(seasonYear);
     seasonStore.initSeason("LEAGUE_MILITARY", (seasonYear || 2026) + 1, 100, []);
     seasonStore.setSchedule([]);
     seasonStore.resolvePendingAction("militaryEnlistAsk");

@@ -28,18 +28,20 @@ function toSimPitcher(
   id: string,
   entityMap: Map<string, EntityRow>,
   npcLiveStats?: Record<string, NpcLiveStat>,
+  adaptFactor?: number,
 ): SimPitcher | null {
   const e = entityMap.get(id);
   if (!e) return null;
   const live = npcLiveStats?.[id];
   const p = live?.pitching ?? (e.details.player as EntityPlayerDetails).pitching;
+  const f = adaptFactor ?? 1;
   return {
     id,
-    velocity:  p?.velocity  ?? 50,
-    movement:  p?.movement  ?? 50,
-    command:   p?.command   ?? 50,
-    control:   p?.control   ?? 50,
-    stamina:   p?.stamina   ?? 50,
+    velocity:  Math.round((p?.velocity  ?? 50) * f),
+    movement:  Math.round((p?.movement  ?? 50) * f),
+    command:   Math.round((p?.command   ?? 50) * f),
+    control:   Math.round((p?.control   ?? 50) * f),
+    stamina:   Math.round((p?.stamina   ?? 50) * f),
   };
 }
 
@@ -146,6 +148,7 @@ export async function simulateGame(
     leagueId?:       string;
     homeHandlePersonnel?: number;
     awayHandlePersonnel?: number;
+    tradeAdaptationPenalty?: { playerId: string; factor: number };
   },
 ): Promise<SimGameResult> {
   const {
@@ -159,6 +162,7 @@ export async function simulateGame(
     leagueId = "",
     homeHandlePersonnel = 50,
     awayHandlePersonnel = 50,
+    tradeAdaptationPenalty,
   } = options ?? {};
 
   const entityMap = new Map(entities.map((e) => [e.id, e]));
@@ -166,7 +170,11 @@ export async function simulateGame(
   const homeRoster = buildTeamRoster(homeTeamId, entities, npcInjuries, rotationSize, conditions, week, homeRotIdx, leagueId, homeHandlePersonnel);
   const awayRoster = buildTeamRoster(awayTeamId, entities, npcInjuries, rotationSize, conditions, week, awayRotIdx, leagueId, awayHandlePersonnel);
 
-  const toSimPitchers = (ids: string[]) => ids.map(id => toSimPitcher(id, entityMap, npcLiveStats)).filter(Boolean) as SimPitcher[];
+  const toSimPitchers = (ids: string[]) => ids.map(id => {
+    const factor = tradeAdaptationPenalty && id === tradeAdaptationPenalty.playerId
+      ? tradeAdaptationPenalty.factor : undefined;
+    return toSimPitcher(id, entityMap, npcLiveStats, factor);
+  }).filter(Boolean) as SimPitcher[];
   const toSimBatters  = (ids: string[]) => ids.map(id => toSimBatter(id, entityMap, npcLiveStats)).filter(Boolean)  as SimBatter[];
 
   const params = {

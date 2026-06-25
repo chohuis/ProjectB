@@ -11,6 +11,7 @@ import type {
   CareerSeasonRecord,
   InjuryState,
   NpcCareerEntry,
+  NpcCareerEvent,
   NpcSaveState,
   PitchEntry,
   NpcEmotionRole,
@@ -1289,6 +1290,7 @@ function createGameStore() {
           contract.leagueId === "LEAGUE_JBL"         ? "pro_jbl" :
           contract.leagueId === "LEAGUE_INDEPENDENT" ? "independent" :
           "pro_kbl";
+        const isNewTeam = contract.teamId !== s.protagonist.teamId;
         const protagonist: ProtagonistSave = {
           ...s.protagonist,
           contract: { ...contract, status: "active" },
@@ -1299,7 +1301,7 @@ function createGameStore() {
           faNegotiationRound: 0,
           faUnsignedWeeks: 0,
           tradeAdaptationWeeks: 0,
-          proServiceYears: 0,
+          proServiceYears: isNewTeam ? 0 : s.protagonist.proServiceYears,
         };
         return {
           ...s,
@@ -1319,6 +1321,7 @@ function createGameStore() {
           contract.leagueId === "LEAGUE_JBL"         ? "pro_jbl" :
           contract.leagueId === "LEAGUE_INDEPENDENT" ? "independent" :
           "pro_kbl";
+        const isNewTeam = contract.teamId !== s.protagonist.teamId;
         const protagonist: ProtagonistSave = {
           ...s.protagonist,
           pendingNextContract: { ...contract, status: "active" },
@@ -1328,7 +1331,7 @@ function createGameStore() {
           money: Math.max(0, s.protagonist.money + contract.signingBonus),
           faNegotiationRound: 0,
           faUnsignedWeeks: 0,
-          proServiceYears: 0,
+          proServiceYears: isNewTeam ? 0 : s.protagonist.proServiceYears,
         };
         return {
           ...s,
@@ -1353,18 +1356,23 @@ function createGameStore() {
       });
     },
 
-    applyTradeTransfer(toTeamId: string) {
+    applyTradeTransfer(toTeamId: string, toLeagueId?: string) {
       update((s) => {
         const current = s.protagonist.contract;
+        const newLeagueId = toLeagueId ?? s.protagonist.leagueId;
+        const leagueStage: import("../types/save").CareerStage =
+          newLeagueId === "LEAGUE_ABL"         ? "pro_abl" :
+          newLeagueId === "LEAGUE_JBL"         ? "pro_jbl" :
+          newLeagueId === "LEAGUE_INDEPENDENT" ? "independent" :
+          "pro_kbl";
         const protagonist: ProtagonistSave = {
           ...s.protagonist,
-          teamId: toTeamId,
+          teamId:    toTeamId,
+          leagueId:  newLeagueId,
+          careerStage: leagueStage,
           tradeAdaptationWeeks: 3,
           contract: current
-            ? {
-                ...current,
-                teamId: toTeamId,
-              }
+            ? { ...current, teamId: toTeamId, leagueId: newLeagueId }
             : current,
         };
         return {
@@ -1397,7 +1405,8 @@ function createGameStore() {
       update((s) => {
         const now = s.protagonist;
         const isPro = now.careerStage === "pro_kbl" || now.careerStage === "pro_abl" || now.careerStage === "pro_jbl" || now.careerStage === "independent";
-        const extendedContract = isPro && now.contract
+        // 유효한 계약(잔여 > 0)만 군 복무 기간만큼 연장; 만료된 계약은 연장 없이 전역 후 FA/재계약
+        const extendedContract = isPro && now.contract && now.contract.remainingYears > 0
           ? { ...now.contract, remainingYears: now.contract.remainingYears + 2 }
           : now.contract;
         const protagonist: ProtagonistSave = {
@@ -1534,6 +1543,16 @@ function createGameStore() {
       }));
     },
 
+    addCareerEvent(event: NpcCareerEvent) {
+      update((s) => ({
+        ...s,
+        protagonist: {
+          ...s.protagonist,
+          careerEvents: [...(s.protagonist.careerEvents ?? []), event],
+        },
+      }));
+    },
+
     applyOptionResult(payload: {
       exercised: boolean;
       nextSalary: number;
@@ -1666,7 +1685,9 @@ function createGameStore() {
         s.npcs.map(n => [n.npcId, { name: n.name, status: n.militaryStatus, unit: n.militaryUnit, league: n.currentLeague, team: n.currentTeam }])
       );
 
-      const result = await runOffseasonProcessing(s.npcs, s.pendingDraft, seasonYear);
+      // TS에서 이미 FA/재계약 결정된 named NPC ID → Rust FA 랜덤 재결정 방지
+      const namedNpcIds = s.npcs.map(n => n.npcId);
+      const result = await runOffseasonProcessing(s.npcs, s.pendingDraft, seasonYear, namedNpcIds);
       const { decayDormantEmotion, archiveNpc } = await import("../utils/emotionEngine");
       const decayedNpcs = result.npcs.map(n => {
         if (n.emotionStatus === "dormant" && n.emotion) {
@@ -1707,7 +1728,7 @@ function createGameStore() {
         }
       }
 
-      // before/after 비교로 전역 추출 (입대는 Phase 4 통합 처리)
+      // before/after 비교로 전역·입대 추출 및 careerEvents 기록
       const militaryEnlistedSports: string[] = [];
       const militaryEnlistedGeneral: string[] = [];
       const militaryDischargedNames: string[] = [];
@@ -1715,6 +1736,7 @@ function createGameStore() {
       for (const n of result.npcs) {
         const before = beforeMilitary.get(n.npcId);
         if (!before) continue;
+        const decIdx = decayedNpcs.findIndex(d => d.npcId === n.npcId);
         if (before.status === "현역" && n.militaryStatus !== "현역") {
           militaryDischargedNames.push(before.name);
           dischargeRows.push({
@@ -1726,6 +1748,27 @@ function createGameStore() {
             toLeagueId: proLeagues.has(n.currentLeague) ? n.currentLeague : undefined,
             detail: "전역",
           });
+          if (decIdx >= 0) {
+            decayedNpcs[decIdx] = {
+              ...decayedNpcs[decIdx],
+              careerEvents: [
+                ...(decayedNpcs[decIdx].careerEvents ?? []),
+                { year: seasonYear, eventType: "military_discharge" as const,
+                  toLeagueId: proLeagues.has(n.currentLeague) ? n.currentLeague : undefined },
+              ],
+            };
+          }
+        } else if (before.status !== "현역" && n.militaryStatus === "현역") {
+          if (decIdx >= 0) {
+            decayedNpcs[decIdx] = {
+              ...decayedNpcs[decIdx],
+              careerEvents: [
+                ...(decayedNpcs[decIdx].careerEvents ?? []),
+                { year: seasonYear, eventType: "military_enlist" as const,
+                  fromTeamId: before.team, fromLeagueId: before.league },
+              ],
+            };
+          }
         }
       }
       if (slotId && dischargeRows.length > 0) {
