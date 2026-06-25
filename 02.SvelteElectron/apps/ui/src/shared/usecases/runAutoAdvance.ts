@@ -345,47 +345,6 @@ export async function runAutoAdvance(): Promise<void> {
 // ── 시즌 종료 배경 처리 (자동/수동 공통) ────────────────────────────────────
 // SeasonEndModal에서 호출 (시즌 종료 배경 처리)
 export async function runSeasonEndBgProcessing(now: number): Promise<void> {
-  // Phase 1: 프로 배경 엔티티 age / proServiceYears 연간 갱신
-  {
-    const gAge = get(gameStore);
-    const mAge = get(masterStore);
-    const slotIdAge = gAge.currentSlotId;
-    const namedIdsAge = new Set(gAge.npcs.map(n => n.npcId));
-    const proLeagueSetAge = new Set(["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"]);
-
-    const toAge = mAge.entities.filter(e =>
-      e.role === "player" &&
-      e.leagueId && proLeagueSetAge.has(e.leagueId) &&
-      !namedIdsAge.has(e.id)
-    );
-
-    if (toAge.length > 0 && slotIdAge) {
-      const aged = toAge.map(e => {
-        const isPro = !!(e.teamId && e.teamId !== "");
-        const curPSY = (e.details?.player?.proServiceYears ?? 0);
-        return {
-          ...e,
-          age: e.age + 1,
-          details: {
-            ...e.details,
-            player: {
-              ...e.details?.player,
-              proServiceYears: isPro ? curPSY + 1 : curPSY,
-            },
-          },
-        };
-      });
-      const ageRes = JSON.parse(
-        await window.projectB!.masterBulkUpsertEntities(
-          JSON.stringify({ slotId: slotIdAge, entities: aged })
-        )
-      ) as { ok: boolean; count?: number; error?: string };
-      if (ageRes.error) autoLog(`[엔티티에이징오류] ${ageRes.error}`);
-      else autoLog(`[엔티티에이징] ${ageRes.count ?? aged.length}명 overlay 저장`);
-      await masterStore.reloadEntities(now, slotIdAge);
-    }
-  }
-
   // Phase 7-A: 고교/대학/독립 배경 선수 학년 진급 + 나이 +1
   {
     const gNonPro = get(gameStore);

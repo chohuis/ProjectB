@@ -873,40 +873,6 @@ async function processTradeWindow(weekInYear: number, leagueId: string): Promise
 
   const allNpcAssets = npcRows.map(buildNpcAsset);
 
-  // ── Phase 5: 배경 엔티티 트레이드 자산 ──────────────────────────────────────
-  const bgTradeEntities = m.entities.filter(e =>
-    e.role === "player" &&
-    e.leagueId === leagueId &&
-    e.teamId && e.teamId !== "" &&
-    e.status !== "retired" &&
-    !namedMap.has(e.id) &&
-    !e.details?.player?.militaryEnlistYear
-  );
-  const bgEntityAssets = bgTradeEntities.map(e => {
-    const liveOvr = npcOvr(e, get(npcLiveStatsStore));
-    const inj = s.npcInjuries[e.id];
-    return {
-      playerId: e.id,
-      teamId: e.teamId!,
-      position: e.details?.player?.position ?? "SP",
-      age: e.age,
-      ovr: liveOvr,
-      trueOvr: liveOvr,
-      salary: 2000,
-      remainingYears: 1,
-      isProspect: (e.details?.player?.proServiceYears ?? 0) <= 2,
-      personality: e.personality ?? null,
-      injurySeverity: inj?.severity ?? null,
-      injuryWeeksLeft: inj?.weeksLeft ?? 0,
-      careerInjuryCount: 0,
-      hasSteroidHistory: false,
-    };
-  });
-  for (const teamRoster of teamWithRosters) {
-    const bgIds = bgEntityAssets.filter(a => a.teamId === teamRoster.teamId).map(a => a.playerId);
-    teamRoster.activeRoster.push(...bgIds);
-  }
-
   const proInjury = g.protagonist.injury;
   const proHistory = g.protagonist.injuryHistory ?? [];
   const protagonistAsset = {
@@ -928,8 +894,8 @@ async function processTradeWindow(weekInYear: number, leagueId: string): Promise
   };
 
   const allAssets = isMyLeague
-    ? [...allNpcAssets, ...bgEntityAssets, protagonistAsset]
-    : [...allNpcAssets, ...bgEntityAssets];
+    ? [...allNpcAssets, protagonistAsset]
+    : [...allNpcAssets];
 
   // ④ generateTradeProposals 호출
   const seasonStanding: Record<string, number> = {};
@@ -1112,39 +1078,14 @@ async function processTradeWindow(weekInYear: number, leagueId: string): Promise
       npcId1: offeredId,   teamId1: proposal.receivingTeamId,
       npcId2: requestedId, teamId2: proposal.proposingTeamId,
     }));
-    // 배경 엔티티 팀 이동 overlay 저장 + named NPC gameStore 동기화
+    // gameStore.npcs 팀 갱신 (모든 NPC는 Named NPC)
     {
-      const bgMoves: Array<{ id: string; teamId: string }> = [];
-      const bgOff = bgEntityAssets.find(a => a.playerId === offeredId);
-      const bgReq = bgEntityAssets.find(a => a.playerId === requestedId);
-      if (bgOff) bgMoves.push({ id: bgOff.playerId, teamId: proposal.receivingTeamId });
-      if (bgReq) bgMoves.push({ id: bgReq.playerId, teamId: proposal.proposingTeamId });
-      if (bgMoves.length > 0) {
-        masterStore.patchEntityTeams(bgMoves);
-        const moveMap = new Map(bgMoves.map(mv => [mv.id, mv.teamId]));
-        const toUpsert = m.entities
-          .filter(e => moveMap.has(e.id))
-          .map(e => ({ ...e, teamId: moveMap.get(e.id)!, slotId }));
-        if (toUpsert.length > 0) {
-          const res = JSON.parse(
-            await window.projectB!.masterBulkUpsertEntities(
-              JSON.stringify({ slotId, entities: toUpsert })
-            )
-          ) as { ok: boolean; error?: string };
-          if (res.error) autoLog(`[트레이드overlay오류] ${res.error}`);
-        }
-      }
-      // named NPC는 gameStore.npcs도 갱신
-      const tradeSwap: Record<string, string> = {};
-      if (!bgOff) tradeSwap[offeredId]  = proposal.receivingTeamId;
-      if (!bgReq) tradeSwap[requestedId] = proposal.proposingTeamId;
-      if (Object.keys(tradeSwap).length > 0) {
-        const updatedNpcs = get(gameStore).npcs.map(n => {
-          const newTeam = tradeSwap[n.npcId];
-          return newTeam ? { ...n, currentTeam: newTeam } : n;
-        });
-        updateNpcsAndSync(updatedNpcs);
-      }
+      const updatedNpcs = get(gameStore).npcs.map(n => {
+        if (n.npcId === offeredId)   return { ...n, currentTeam: proposal.receivingTeamId };
+        if (n.npcId === requestedId) return { ...n, currentTeam: proposal.proposingTeamId };
+        return n;
+      });
+      updateNpcsAndSync(updatedNpcs);
     }
     autoLog(`[트레이드성사] ${leagueId} W${weekInYear}: ${namedMap.get(offeredId)?.name ?? m.entities.find(e => e.id === offeredId)?.name ?? offeredId} ↔ ${namedMap.get(requestedId)?.name ?? m.entities.find(e => e.id === requestedId)?.name ?? requestedId}`);
 
@@ -1276,7 +1217,25 @@ async function processProTeamCallupCalldown(weekNum: number): Promise<string[]> 
     }
   }
 
-  if (allMoves.length > 0) masterStore.patchEntityTeams(allMoves);
+  if (allMoves.length > 0) {
+    masterStore.patchEntityTeams(allMoves);
+    const slotId = get(gameStore).currentSlotId;
+    if (slotId) {
+      const mNow = get(masterStore);
+      const moveMap = new Map(allMoves.map(mv => [mv.id, mv.teamId]));
+      const toUpsert = mNow.entities
+        .filter(e => moveMap.has(e.id))
+        .map(e => ({ ...e, teamId: moveMap.get(e.id)!, slotId }));
+      if (toUpsert.length > 0) {
+        const res = JSON.parse(
+          await window.projectB!.masterBulkUpsertEntities(
+            JSON.stringify({ slotId, entities: toUpsert })
+          )
+        ) as { ok: boolean; error?: string };
+        if (res.error) autoLog(`[콜업콜다운overlay오류] ${res.error}`);
+      }
+    }
+  }
   return logs;
 }
 
@@ -1330,7 +1289,6 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
   const slotId = g.currentSlotId;
 
   const proLeagues = new Set(["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"]);
-  const namedIdSet = new Set(g.npcs.map(n => n.npcId));
   const proNpcCount = g.npcs.filter(n => n.careerStatus === "active" && n.currentLeague && proLeagues.has(n.currentLeague)).length;
   autoLog(`[W43오프시즌] 은퇴/FA 결정 시작 (프로NPC ${proNpcCount}명, careerStage=${g.protagonist.careerStage})`);
 
@@ -1561,197 +1519,6 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
       await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: namedRetirementRows }))
     );
     if (res.error) autoLog(`[은퇴기록오류] ${res.error}`);
-  }
-
-  // ── 배경 프로 NPC 처리 (masterStore entities 기반, gameStore에 없는 선수) ─
-  const backgroundProEntities = m.entities.filter(e =>
-    e.role === "player" &&
-    e.leagueId && proLeagues.has(e.leagueId) &&
-    e.teamId && e.teamId !== "" &&
-    !namedIdSet.has(e.id) &&
-    e.age >= 35
-  );
-
-  const entityMoves: Array<{ id: string; teamId: string }> = [];
-  const bgRetirementRows: object[] = [];
-  const defaultPersonality = () => ({
-    loyalty: 50, ambition: 50, greed: 40, competitiveDrive: 50,
-    stabilityPreference: 50, professionalism: 60, overseasAmbition: 30,
-    marketPreference: 50, homeTeamId: null,
-  });
-
-  for (const entity of backgroundProEntities) {
-    const personality = entity.personality ?? defaultPersonality();
-    const liveOvr   = npcOvr(entity, get(npcLiveStatsStore));
-    const profile   = getTeamProfile(entity.teamId, g, m);
-    if (!profile) continue;
-
-    const retSuggest = JSON.parse(
-      await window.projectB!.evalRetirementSuggestionNative(JSON.stringify({
-        teamProfile: profile,
-        player: buildRosterRef(entity, get(npcLiveStatsStore)),
-        ovrTrend: (get(npcLiveStatsStore)[entity.id]?.peakOvr ?? liveOvr) - liveOvr,
-        prospectOvrAtPosition: 65,
-        currentSalary: 0,
-        marketValue:   1000,
-      }))
-    ) as { suggest: boolean; urgency: number };
-
-    if (!retSuggest.suggest) continue;
-
-    const retResp = JSON.parse(
-      await window.projectB!.playerEvalRetirementResponseNative(JSON.stringify({
-        personality,
-        age: entity.age,
-        ovr: liveOvr,
-        ovrTrend: (get(npcLiveStatsStore)[entity.id]?.peakOvr ?? liveOvr) - liveOvr,
-        proServiceYears: 0,
-        otherTeamInterest: false,
-      }))
-    ) as { accept: boolean; seekOtherTeam: boolean };
-
-    if (retResp.accept) {
-      entityMoves.push({ id: entity.id, teamId: "" });
-      autoLog(`[배경은퇴] ${entity.name ?? entity.id} (${entity.leagueId})`);
-      bgRetirementRows.push({
-        seasonYear: s.seasonYear,
-        week: weekNum,
-        category: "retirement",
-        playerId: entity.id,
-        playerName: entity.name ?? entity.id,
-        fromTeamId: entity.teamId,
-        fromLeagueId: entity.leagueId,
-        detail: "오프시즌 은퇴",
-      });
-    }
-  }
-
-  if (entityMoves.length > 0) {
-    masterStore.patchEntityTeams(entityMoves);
-    if (slotId) {
-      const moveMap = new Map(entityMoves.map(mv => [mv.id, mv.teamId]));
-      const toUpsert = m.entities
-        .filter(e => moveMap.has(e.id))
-        .map(e => ({ ...e, teamId: moveMap.get(e.id)!, status: "retired" as const, slotId }));
-      if (toUpsert.length > 0) {
-        const res = JSON.parse(
-          await window.projectB!.masterBulkUpsertEntities(
-            JSON.stringify({ slotId, entities: toUpsert })
-          )
-        ) as { ok: boolean; error?: string };
-        if (res.error) autoLog(`[은퇴overlay오류] ${res.error}`);
-      }
-    }
-  }
-
-  if (slotId && bgRetirementRows.length > 0) {
-    autoLog(`[은퇴기록] 배경 NPC 은퇴 ${bgRetirementRows.length}명 DB 저장`);
-    const res = JSON.parse(
-      await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: bgRetirementRows }))
-    );
-    if (res.error) autoLog(`[은퇴기록오류] ${res.error}`);
-  }
-
-  // ── Phase 3: 배경 엔티티 FA 처리 ─────────────────────────────────────────
-  {
-    const retiredEntityIds = new Set(entityMoves.map(mv => mv.id));
-    // proServiceYears가 0/미설정인 경우 entryYear 또는 entryAge로 역산
-    const effectivePSY = (e: import("../stores/master").EntityRow): number => {
-      const stored = e.details?.player?.proServiceYears ?? 0;
-      if (stored > 0) return stored;
-      if (e.entryYear) return Math.max(0, s.seasonYear - e.entryYear);
-      if (e.entryAge) return Math.max(0, e.age - e.entryAge);
-      return 0;
-    };
-    const bgFaEntities = m.entities.filter(e =>
-      e.role === "player" &&
-      e.leagueId && proLeagues.has(e.leagueId) &&
-      e.teamId && e.teamId !== "" &&
-      e.status !== "retired" &&
-      !namedIdSet.has(e.id) &&
-      !retiredEntityIds.has(e.id) &&
-      !e.details?.player?.militaryEnlistYear &&
-      e.age < 36 &&
-      effectivePSY(e) >= getFaThreshold(e.leagueId)
-    );
-    autoLog(`[배경FA] 후보 ${bgFaEntities.length}명 (전체 엔티티 ${m.entities.length}명)`);
-
-    const bgFaMoves: Array<{ id: string; teamId: string }> = [];
-    const bgFaRows: object[] = [];
-    let bgFaDeclinedCount = 0;
-
-    for (const entity of bgFaEntities) {
-      const leagueId = entity.leagueId!;
-      const proSY = effectivePSY(entity);
-      const liveOvr = npcOvr(entity, get(npcLiveStatsStore));
-      const leagueStd = getLeagueStandings(leagueId, s);
-      const teamStandings = [...leagueStd].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
-      const teamRank = teamStandings.findIndex(r => r.teamId === entity.teamId) + 1;
-
-      const leagueSalaryBase: Record<string, number> = {
-        LEAGUE_KBL: 1200, LEAGUE_ABL: 800, LEAGUE_JBL: 500,
-      };
-      const currentSalary = leagueSalaryBase[leagueId] ?? 800;
-      const marketValue = Math.round(800 + liveOvr * 30);
-      const faRes = JSON.parse(
-        await window.projectB!.playerEvalFaDecisionNative(JSON.stringify({
-          personality: entity.personality ?? defaultPersonality(),
-          age: entity.age,
-          ovr: liveOvr,
-          proServiceYears: proSY,
-          currentSalary,
-          marketValue,
-          teamStanding: teamRank || 4,
-          totalTeams: teamStandings.length || 8,
-          expectedPlayingTime: 0.5,
-          leagueId,
-          fame: 0,
-        }))
-      ) as { applyFa: boolean };
-
-      if (!faRes.applyFa) { bgFaDeclinedCount++; continue; }
-
-      const candidates = m.teams.filter(t => t.leagueId === leagueId && t.id !== entity.teamId);
-      if (candidates.length === 0) continue;
-
-      const cIdx = [...entity.id].reduce((acc, c) => acc + c.charCodeAt(0), s.seasonYear) % candidates.length;
-      const newTeam = candidates[cIdx];
-
-      bgFaMoves.push({ id: entity.id, teamId: newTeam.id });
-      autoLog(`[배경FA] ${entity.name ?? entity.id} ${entity.teamId} → ${newTeam.id}`);
-      bgFaRows.push({
-        seasonYear: s.seasonYear, week: weekNum, category: "fa",
-        playerId: entity.id, playerName: entity.name ?? entity.id,
-        fromTeamId: entity.teamId, toTeamId: newTeam.id,
-        fromLeagueId: leagueId, detail: "오프시즌 FA 이적",
-      });
-    }
-
-    autoLog(`[배경FA결과] 신청 ${bgFaMoves.length}명 / 거절 ${bgFaDeclinedCount}명 / 총 후보 ${bgFaEntities.length}명`);
-
-    if (bgFaMoves.length > 0) {
-      masterStore.patchEntityTeams(bgFaMoves);
-      if (slotId) {
-        const moveMap = new Map(bgFaMoves.map(mv => [mv.id, mv.teamId]));
-        const toUpsert = m.entities
-          .filter(e => moveMap.has(e.id))
-          .map(e => ({ ...e, teamId: moveMap.get(e.id)!, slotId }));
-        const res = JSON.parse(
-          await window.projectB!.masterBulkUpsertEntities(
-            JSON.stringify({ slotId, entities: toUpsert })
-          )
-        ) as { ok: boolean; error?: string };
-        if (res.error) autoLog(`[배경FA오류] ${res.error}`);
-      }
-    }
-
-    if (slotId && bgFaRows.length > 0) {
-      autoLog(`[FA기록] 배경 NPC FA ${bgFaRows.length}명 DB 저장`);
-      const res = JSON.parse(
-        await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: bgFaRows }))
-      );
-      if (res.error) autoLog(`[FA기록오류] ${res.error}`);
-    }
   }
 
   return logs;
