@@ -88,6 +88,8 @@ contextBridge.exposeInMainWorld("projectB", {
   militaryCalcCandidates:                (p) => ipcRenderer.invoke("military:calcCandidates",                     p),
   militaryCalcSelection:                 (p) => ipcRenderer.invoke("military:calcSelection",                      p),
   militaryPickGeneral:                   (p) => ipcRenderer.invoke("military:pickGeneral",                        p),
+  calcNpcRenewalSalaryNative:            (p) => ipcRenderer.invoke("npc:calcRenewalSalary",                       p),
+  calcNpcContractYearsNative:            (p) => ipcRenderer.invoke("npc:calcContractYears",                       p),
   indieCalcScoutOffer:                   (p) => ipcRenderer.invoke("indie:calcScoutOffer",                         p),
 
   // ── 스케줄 엔진 (Phase 5) ────────────────────────────────────────────────

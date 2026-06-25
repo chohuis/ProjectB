@@ -948,6 +948,14 @@ app.whenReady().then(() => {
     try { return engineNative.pickGeneralEnlisteesNative(paramsJson); }
     catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
+  ipcMain.handle("npc:calcRenewalSalary", (_event, paramsJson) => {
+    try { return engineNative.calcNpcRenewalSalaryNative(paramsJson); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+  ipcMain.handle("npc:calcContractYears", (_event, paramsJson) => {
+    try { return engineNative.calcNpcContractYearsNative(paramsJson); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
   ipcMain.handle("indie:calcScoutOffer", (_event, paramsJson) => {
     try { return engineNative.calcIndieScoutOfferNative(paramsJson); }
     catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
