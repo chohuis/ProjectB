@@ -800,12 +800,39 @@ function createMasterStore() {
     }));
   }
 
+  function syncNpcsToEntities(npcs: import("../types/save").NpcSaveState[]) {
+    if (npcs.length === 0) return;
+    const npcMap = new Map(npcs.map((n) => [n.npcId, n]));
+    update((s) => ({
+      ...s,
+      entities: s.entities.map((e) => {
+        const npc = npcMap.get(e.id);
+        if (!npc) return e;
+        const statusMap: Record<string, EntityRow["status"]> = {
+          retired:    "retired",
+          military:   "military",
+          injured:    "injured",
+          free_agent: "inactive",
+        };
+        return {
+          ...e,
+          teamId:        npc.currentTeam,
+          leagueId:      npc.currentLeague,
+          age:           npc.age,
+          militaryStatus: npc.militaryStatus,
+          status:        statusMap[npc.careerStatus] ?? "active",
+        };
+      }),
+    }));
+  }
+
   return {
     subscribe, load, loadEntities, reloadEntities,
     reloadEvents, reloadAchievements,
     setupContentWatcher,
     applyNpcLiveStats,
     patchEntityTeams,
+    syncNpcsToEntities,
   };
 }
 
