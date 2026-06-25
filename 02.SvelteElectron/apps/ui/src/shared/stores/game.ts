@@ -50,7 +50,7 @@ import {
 } from "../utils/npcEngine";
 import { getFaThreshold } from "../utils/faEngine";
 import { masterStore } from "./master";
-import { autoLog } from "./autoAdvance";
+import { autoLog, logEvent, logVerify, type PlayerEventEntry } from "./autoAdvance";
 import { npcLiveStatsStore } from "./npcLiveStats";
 import type { SeasonEndSummary } from "../utils/npcEngine";
 export type { SeasonEndSummary } from "../utils/npcEngine";
@@ -1700,12 +1700,25 @@ function createGameStore() {
       });
 
       const slotId = s.currentSlotId;
+      const _t0SeasonEnd = Date.now();
+      const _faEntries: PlayerEventEntry[] = [];
+
       if (slotId) {
         // FA 재배치 기록: 오프시즌 처리 후 팀이 바뀐 FA 자격 선수
         const faRows: import("../types/save").LeagueTransactionRow[] = [];
         for (const n of result.npcs) {
           const prev = beforeTeam.get(n.npcId);
           if (prev && prev !== n.currentTeam && proLeagues.has(n.currentLeague) && n.careerStatus === "active") {
+            const ovr = n.pitching?.ovr ?? n.batting?.ovr ?? 0;
+            const prevShort = prev.replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "");
+            const nextShort = n.currentTeam.replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "");
+            autoLog(`  [FA이동] ${n.name} | ${prevShort}→${nextShort} | OVR:${ovr} | ${n.currentLeague.replace("LEAGUE_", "")}`);
+            _faEntries.push({
+              npcId: n.npcId, name: n.name,
+              fromTeamId: prev, toTeamId: n.currentTeam,
+              fromLeagueId: n.currentLeague, toLeagueId: n.currentLeague,
+              detail: `OVR:${ovr} | 서비스:${n.proServiceYears ?? 0}년`,
+            });
             faRows.push({
               seasonYear,
               category: "fa",
@@ -1719,12 +1732,24 @@ function createGameStore() {
             });
           }
         }
+        let _faDbOk = true;
         if (faRows.length > 0) {
           const faRes = JSON.parse(
             await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: faRows }))
           );
-          if (faRes.error) autoLog(`[NPC FA오류] FA 기록 오류: ${faRes.error}`);
-          else autoLog(`[NPC FA] FA 기록 ${faRows.length}건 저장`);
+          if (faRes.error) { autoLog(`[NPC FA오류] ${faRes.error}`); _faDbOk = false; }
+          else autoLog(`[NPC FA] FA 이동 ${faRows.length}명 DB ✓`);
+        }
+        if (_faEntries.length > 0) {
+          logEvent({
+            id: `fa-result-Y${seasonYear}`,
+            type: "fa_result",
+            seasonYear,
+            players: _faEntries,
+            counts: { input: beforeTeam.size, processed: _faEntries.length, saved: faRows.length },
+            dbOk: _faDbOk,
+            durationMs: Date.now() - _t0SeasonEnd,
+          });
         }
       }
 
@@ -1733,19 +1758,30 @@ function createGameStore() {
       const militaryEnlistedGeneral: string[] = [];
       const militaryDischargedNames: string[] = [];
       const dischargeRows: import("../types/save").LeagueTransactionRow[] = [];
+      const _dischargeEntries: PlayerEventEntry[] = [];
       for (const n of result.npcs) {
         const before = beforeMilitary.get(n.npcId);
         if (!before) continue;
         const decIdx = decayedNpcs.findIndex(d => d.npcId === n.npcId);
         if (before.status === "현역" && n.militaryStatus !== "현역") {
           militaryDischargedNames.push(before.name);
+          const returnLeague = proLeagues.has(n.currentLeague) ? n.currentLeague : undefined;
+          const ovr = n.pitching?.ovr ?? n.batting?.ovr ?? 0;
+          autoLog(`  [전역] ${before.name} | 군→${returnLeague?.replace("LEAGUE_", "") ?? "미확정"} | OVR:${ovr}`);
+          _dischargeEntries.push({
+            npcId: n.npcId, name: n.name,
+            fromLeagueId: before.league,
+            toLeagueId: returnLeague,
+            toTeamId: n.currentTeam,
+            detail: `군→${returnLeague?.replace("LEAGUE_", "") ?? "미확정"} | OVR:${ovr}`,
+          });
           dischargeRows.push({
             seasonYear,
             category: "military",
             playerId: n.npcId,
             playerName: n.name,
             fromLeagueId: before.league,
-            toLeagueId: proLeagues.has(n.currentLeague) ? n.currentLeague : undefined,
+            toLeagueId: returnLeague,
             detail: "전역",
           });
           if (decIdx >= 0) {
@@ -1754,7 +1790,7 @@ function createGameStore() {
               careerEvents: [
                 ...(decayedNpcs[decIdx].careerEvents ?? []),
                 { year: seasonYear, eventType: "military_discharge" as const,
-                  toLeagueId: proLeagues.has(n.currentLeague) ? n.currentLeague : undefined },
+                  toLeagueId: returnLeague },
               ],
             };
           }
@@ -1771,12 +1807,24 @@ function createGameStore() {
           }
         }
       }
+      let _dischargeDbOk = true;
       if (slotId && dischargeRows.length > 0) {
         const milRes = JSON.parse(
           await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: dischargeRows }))
         );
-        if (milRes.error) autoLog(`[NPC전역오류] 전역 기록 오류: ${milRes.error}`);
-        else autoLog(`[NPC전역] 전역 기록 ${dischargeRows.length}건 저장`);
+        if (milRes.error) { autoLog(`[NPC전역오류] ${milRes.error}`); _dischargeDbOk = false; }
+        else autoLog(`[NPC전역] ${dischargeRows.length}명 DB ✓`);
+      }
+      if (_dischargeEntries.length > 0) {
+        logEvent({
+          id: `discharge-Y${seasonYear}`,
+          type: "discharge",
+          seasonYear,
+          players: _dischargeEntries,
+          counts: { input: beforeMilitary.size, processed: _dischargeEntries.length, saved: dischargeRows.length },
+          dbOk: _dischargeDbOk,
+          durationMs: Date.now() - _t0SeasonEnd,
+        });
       }
 
       // ── Phase 4: 병역 통합 처리 (단일 소스: masterStore.entities) ─────────────
@@ -1925,6 +1973,8 @@ function createGameStore() {
                   slotId,
                 }));
 
+              const _sportsEntries: PlayerEventEntry[] = [];
+
               if (sportsEnlistEntities.length > 0) {
                 const enlRes = JSON.parse(
                   await window.projectB!.masterBulkUpsertEntities(JSON.stringify({ slotId, entities: sportsEnlistEntities }))
@@ -1934,6 +1984,18 @@ function createGameStore() {
                     selectedSportsIds.add(e.id);
                     militaryEnlistedSports.push(e.name);
                     const orig = mNow.entities.find(o => o.id === e.id)!;
+                    const live = npcLiveStats[e.id];
+                    const dp = e.details?.player;
+                    const rawOvr = live?.pitching?.ovr ?? live?.batting?.ovr ?? (dp as any)?.pitching?.ovr ?? (dp as any)?.batting?.ovr;
+                    const ovr = Math.round((typeof rawOvr === "number" && isFinite(rawOvr)) ? rawOvr : 50);
+                    const fromShort = (orig.teamId ?? "").replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "");
+                    autoLog(`  [체육부대] ${e.name} | ${fromShort} | OVR:${ovr} | ${e.age ?? "?"}세`);
+                    _sportsEntries.push({
+                      npcId: e.id, name: e.name,
+                      fromTeamId: orig.teamId, fromLeagueId: orig.leagueId,
+                      toLeagueId: "LEAGUE_UNIVERSITY",
+                      detail: `OVR:${ovr} | ${e.age ?? "?"}세 | 제대예정 Y${seasonYear + 2}`,
+                    });
                     enlTxRows.push({
                       seasonYear, category: "military" as const,
                       playerId: e.id, playerName: e.name,
@@ -1962,12 +2024,25 @@ function createGameStore() {
                 };
               }
 
+              let _sportsDbOk = true;
               if (enlTxRows.length > 0) {
                 const enlTxRes = JSON.parse(
                   await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: enlTxRows }))
                 ) as { ok?: boolean; error?: string };
-                if (enlTxRes.error) autoLog(`[병역입대오류] TX 저장 실패: ${enlTxRes.error}`);
-                else autoLog(`[체육부대입대] ${sportsEnlistEntities.length}명`);
+                if (enlTxRes.error) { autoLog(`[병역입대오류] TX 저장 실패: ${enlTxRes.error}`); _sportsDbOk = false; }
+                else autoLog(`[체육부대입대] ${sportsEnlistEntities.length}명 DB ✓`);
+              }
+              if (_sportsEntries.length > 0) {
+                logEvent({
+                  id: `enlist-sports-Y${seasonYear}`,
+                  type: "enlist_sports",
+                  seasonYear,
+                  players: _sportsEntries,
+                  counts: { input: milCandidates.length, processed: _sportsEntries.length, saved: enlTxRows.length },
+                  dbOk: _sportsDbOk,
+                  durationMs: Date.now() - _t0SeasonEnd,
+                  extra: `후보풀 ${milCandidates.length}명 중 TOP70 → ${_sportsEntries.length}명 선발`,
+                });
               }
             }
           }
@@ -2025,6 +2100,7 @@ function createGameStore() {
           const genRes = JSON.parse(
             await window.projectB!.masterBulkUpsertEntities(JSON.stringify({ slotId, entities: genEntities }))
           ) as { ok: boolean; error?: string };
+          const _generalEntries: PlayerEventEntry[] = [];
           if (!genRes.error) {
             const genTxRows = generalEnlistEntities.map(e => ({
               seasonYear, category: "military" as const,
@@ -2032,10 +2108,28 @@ function createGameStore() {
               fromTeamId: e.teamId, fromLeagueId: e.leagueId,
               detail: "일반병 입대",
             }));
-            await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: genTxRows }));
+            let _generalDbOk = true;
+            const genTxRes = JSON.parse(
+              await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: genTxRows }))
+            ) as { ok?: boolean; error?: string };
+            if (genTxRes.error) { autoLog(`[일반병입대오류] TX: ${genTxRes.error}`); _generalDbOk = false; }
 
             const genIdSet = new Set(generalEnlistEntities.map(e => e.id));
-            generalEnlistEntities.forEach(e => militaryEnlistedGeneral.push(e.name));
+            generalEnlistEntities.forEach(e => {
+              militaryEnlistedGeneral.push(e.name);
+              const fromShort = (e.teamId ?? "").replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "");
+              const live = npcLiveStats[e.id];
+              const dp = e.details?.player;
+              const rawOvr = live?.pitching?.ovr ?? live?.batting?.ovr ?? (dp as any)?.pitching?.ovr ?? (dp as any)?.batting?.ovr;
+              const ovr = Math.round((typeof rawOvr === "number" && isFinite(rawOvr)) ? rawOvr : 50);
+              autoLog(`  [일반병] ${e.name} | ${fromShort} | OVR:${ovr} | ${e.age ?? "?"}세`);
+              _generalEntries.push({
+                npcId: e.id, name: e.name,
+                fromTeamId: e.teamId, fromLeagueId: e.leagueId,
+                toLeagueId: "LEAGUE_MILITARY",
+                detail: `OVR:${ovr} | ${e.age ?? "?"}세 | 제대예정 Y${seasonYear + 2}`,
+              });
+            });
             for (let i = 0; i < decayedNpcs.length; i++) {
               if (!genIdSet.has(decayedNpcs[i].npcId)) continue;
               const n = decayedNpcs[i];
@@ -2052,7 +2146,19 @@ function createGameStore() {
                 currentTeam:           "",
               };
             }
-            autoLog(`[일반병입대] ${generalEnlistEntities.length}명 (후보 ${generalPool.length}명 중)`);
+            autoLog(`[일반병입대] ${generalEnlistEntities.length}명 (후보 ${generalPool.length}명 중) ${_generalDbOk ? "DB ✓" : "DB ✗"}`);
+            if (_generalEntries.length > 0) {
+              logEvent({
+                id: `enlist-general-Y${seasonYear}`,
+                type: "enlist_general",
+                seasonYear,
+                players: _generalEntries,
+                counts: { input: generalPool.length, processed: _generalEntries.length, saved: _generalEntries.length },
+                dbOk: _generalDbOk,
+                durationMs: Date.now() - _t0SeasonEnd,
+                extra: `후보 ${generalPool.length}명 중 ${_generalEntries.length}명 입대`,
+              });
+            }
           }
         }
       }
@@ -2062,6 +2168,13 @@ function createGameStore() {
         militaryEnlistedGeneral,
         militaryDischargedNames,
       };
+
+      logVerify(`Y${seasonYear} 시즌종료 오프시즌 완료 (${Date.now() - _t0SeasonEnd}ms)`, [
+        { name: `FA이동 ${_faEntries.length}명`, ok: true },
+        { name: `전역 ${_dischargeEntries.length}명`, ok: _dischargeDbOk },
+        { name: `체육부대 ${militaryEnlistedSports.length}명`, ok: true },
+        { name: `일반병 ${militaryEnlistedGeneral.length}명`, ok: true },
+      ]);
 
       update((st) => ({
         ...st,
@@ -2296,10 +2409,34 @@ function createGameStore() {
       universityTeamIds: string[],
       independentTeamIds: string[],
     ): Promise<void> {
+      const _t0Draft = Date.now();
       const s = get({ subscribe });
       if (s.pendingDraft.length === 0) return;
+
+      autoLog(`[드래프트] Y${year} 후보 ${s.pendingDraft.length}명 시뮬 시작`);
       const simResult = await runDraftSimulation(s.pendingDraft, [], year);
-      // pendingDraft(졸업생)는 updated에서 제거됐으므로 병합 후 전달
+
+      // 픽별 상세 로그
+      const npcInfoMap = new Map(s.pendingDraft.map(n => [n.npcId, n]));
+      const _draftEntries: PlayerEventEntry[] = [];
+      for (const pick of simResult.picks) {
+        const npc = npcInfoMap.get(pick.npcId);
+        const ovr = npc ? (npc.pitching?.ovr ?? npc.batting?.ovr ?? 0) : 0;
+        const pos = npc?.playerType === "pitcher" ? "P" : (npc?.primaryPosition ?? "?");
+        const age = npc?.age ?? 0;
+        const potential = npc?.developmentRate ?? 0;
+        const teamShort = pick.teamId.replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "");
+        autoLog(`  ${pick.round}R-${pick.pick}: ${npc?.name ?? pick.npcId} (OVR:${ovr} ${pos} ${age}세 잠재${potential}) → ${teamShort}`);
+        _draftEntries.push({
+          npcId: pick.npcId,
+          name: npc?.name ?? pick.npcId,
+          toTeamId: pick.teamId,
+          toLeagueId: "LEAGUE_KBL",
+          detail: `${pick.round}라운드 ${pick.pick}순위 | OVR:${ovr} ${pos} ${age}세 잠재:${potential}`,
+        });
+      }
+      autoLog(`[드래프트] 지명 ${simResult.picks.length}건 (미지명 ${s.pendingDraft.length - simResult.picks.length}명)`);
+
       const npcIdSet = new Set(s.npcs.map(n => n.npcId));
       const combined = [
         ...s.npcs,
@@ -2312,6 +2449,7 @@ function createGameStore() {
 
       // NPC 드래프트 픽 거래 기록
       const slotId = s.currentSlotId;
+      let _draftDbOk = true;
       if (slotId && simResult.picks.length > 0) {
         const nameMap = new Map(s.pendingDraft.map((n) => [n.npcId, n.name]));
         const rows = simResult.picks.map((pick) => ({
@@ -2329,9 +2467,26 @@ function createGameStore() {
         const draftRes = JSON.parse(
           await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows }))
         );
-        if (draftRes.error) autoLog(`[NPC드래프트오류] 기록 오류: ${draftRes.error}`);
-        else autoLog(`[NPC드래프트] 기록 ${rows.length}건 저장`);
+        if (draftRes.error) { autoLog(`[NPC드래프트오류] ${draftRes.error}`); _draftDbOk = false; }
+        else autoLog(`[NPC드래프트] DB 저장 ${rows.length}건 ✓`);
       }
+
+      logEvent({
+        id: `draft-Y${year}`,
+        type: "draft",
+        seasonYear: year,
+        players: _draftEntries,
+        counts: { input: s.pendingDraft.length, processed: simResult.picks.length, saved: simResult.picks.length },
+        dbOk: _draftDbOk,
+        durationMs: Date.now() - _t0Draft,
+        extra: `미지명 ${s.pendingDraft.length - simResult.picks.length}명`,
+      });
+
+      logVerify(`Y${year} 드래프트 완료`, [
+        { name: `후보 ${s.pendingDraft.length}명 → 지명 ${simResult.picks.length}건`, ok: simResult.picks.length > 0 },
+        { name: `DB 저장`, ok: _draftDbOk },
+        { name: `gameStore.npcs 반영`, ok: updatedNpcs.length >= s.npcs.length },
+      ]);
     },
 
     // 하위 호환: App.svelte의 hydrate 호출 유지
