@@ -121,17 +121,21 @@ function genPitches(count) {
   return result;
 }
 
+// bias 반영 OVR: 학년 기본값 + 팀 bias, 범위 clamping
 const GRADE_CONF = {
   1: { age: 16, ovrLo: 45, ovrHi: 57, potLo: 60, potHi: 90 },
   2: { age: 17, ovrLo: 50, ovrHi: 63, potLo: 60, potHi: 92 },
   3: { age: 18, ovrLo: 55, ovrHi: 70, potLo: 63, potHi: 95 }
 };
 
-function buildPlayer(id, teamId, grade, position, jerseyNumber) {
+function buildPlayer(id, teamId, grade, position, jerseyNumber, bias) {
   const gc = GRADE_CONF[grade];
+  const b  = bias || 0;
   const isPitcher = PITCHER_POS.has(position);
-  const pitchOvr = randInt(gc.ovrLo, gc.ovrHi);
-  const batOvr   = isPitcher ? randInt(30, 50) : randInt(gc.ovrLo, gc.ovrHi);
+  const pitchOvr = clamp(randInt(gc.ovrLo, gc.ovrHi) + b, 30, 99);
+  const batOvr   = isPitcher
+    ? clamp(randInt(30, 50) + b, 30, 99)
+    : clamp(randInt(gc.ovrLo, gc.ovrHi) + b, 30, 99);
   const nm = randName();
   return {
     id,
@@ -156,7 +160,7 @@ function buildPlayer(id, teamId, grade, position, jerseyNumber) {
         pitching: genPitching(pitchOvr),
         batting:  genBatting(batOvr),
         developmentRate: randInt(50, 90),
-        potentialHidden: randInt(gc.potLo, gc.potHi),
+        potentialHidden: clamp(randInt(gc.potLo, gc.potHi), 30, 99),
         primaryPosition: position,
         positionRatings: { [position]: pitchOvr },
         pitches: isPitcher ? genPitches(randInt(2, 4)) : [{ id: 'PITCH_FASTBALL', grade: 1 }]
@@ -263,36 +267,20 @@ function writeEntity(data) {
   fs.writeFileSync(fp, JSON.stringify(data, null, 2), 'utf8');
 }
 
-// ====== TEAM DEFINITIONS ======
-const EXISTING_TEAMS = [
-  { id: 'TEAM_HS_SEOUL_INNOVATION',  mng: 'MNG_00001', coas: ['COA_00001','COA_00002'], own: 'OWN_00001', plyStart:  1, plyEnd:  20 },
-  { id: 'TEAM_HS_BUSAN_WAVE',        mng: 'MNG_00002', coas: ['COA_00003','COA_00004'], own: 'OWN_00002', plyStart: 21, plyEnd:  40 },
-  { id: 'TEAM_HS_DAEGU_HEAT',        mng: 'MNG_00003', coas: ['COA_00005','COA_00006'], own: 'OWN_00003', plyStart: 41, plyEnd:  60 },
-  { id: 'TEAM_HS_GWANGJU_VISION',    mng: 'MNG_00004', coas: ['COA_00007','COA_00008'], own: 'OWN_00004', plyStart: 61, plyEnd:  80 },
-  { id: 'TEAM_HS_DAEJEON_RISE',      mng: 'MNG_00005', coas: ['COA_00009','COA_00010'], own: 'OWN_00005', plyStart: 81, plyEnd: 100 },
-  { id: 'TEAM_HS_INCHEON_HARBOR',    mng: 'MNG_00006', coas: ['COA_00011','COA_00012'], own: 'OWN_00006', plyStart:101, plyEnd: 120 },
-  { id: 'TEAM_HS_ULSAN_CHARGE',      mng: 'MNG_00007', coas: ['COA_00013','COA_00014'], own: 'OWN_00007', plyStart:121, plyEnd: 140 },
-  { id: 'TEAM_HS_SUWON_EDGE',        mng: 'MNG_00008', coas: ['COA_00015','COA_00016'], own: 'OWN_00008', plyStart:141, plyEnd: 160 },
-];
-
+// ====== NPC TEAM DEFINITIONS ======
+// bias: 팀 강도 차등 (+3 강호 ~ -3 약팀)
 const NPC_TEAMS = [
-  { id: 'TEAM_HS_YEOSU_SHORE',        nameKr: '여수 쇼어스'     },
-  { id: 'TEAM_HS_CHUNCHEON_HIGHLAND', nameKr: '춴천 하이랜드' },
-  { id: 'TEAM_HS_JEJU_WIND',          nameKr: '제주 윈드'            },
-  { id: 'TEAM_HS_GANGWON_PEAK',       nameKr: '강원 피크'            },
-  { id: 'TEAM_HS_MASAN_HARBOR',       nameKr: '마산 하버'            },
-  { id: 'TEAM_HS_JECHEON_RIDGE',      nameKr: '제천 릿지'            },
-  { id: 'TEAM_HS_GOYANG_ARROW',       nameKr: '고양 애로우'      },
-  { id: 'TEAM_HS_SUNCHEON_BAY',       nameKr: '순천 베이'            },
+  { id: 'TEAM_HS_GOYANG_ARROW',       nameKr: '고양 애로우',    bias:  3 },
+  { id: 'TEAM_HS_YEOSU_SHORE',        nameKr: '여수 쇼어스',    bias:  2 },
+  { id: 'TEAM_HS_CHUNCHEON_HIGHLAND', nameKr: '춘천 하이랜드',  bias:  1 },
+  { id: 'TEAM_HS_JEJU_WIND',          nameKr: '제주 윈드',      bias:  0 },
+  { id: 'TEAM_HS_GANGWON_PEAK',       nameKr: '강원 피크',      bias: -1 },
+  { id: 'TEAM_HS_MASAN_HARBOR',       nameKr: '마산 하버',      bias: -1 },
+  { id: 'TEAM_HS_JECHEON_RIDGE',      nameKr: '제천 릿지',      bias: -2 },
+  { id: 'TEAM_HS_SUNCHEON_BAY',       nameKr: '순천 베이',      bias: -3 },
 ];
 
-// Positions for 10 players added to existing teams
-const ADD_POSITIONS = ['SP','RP','CP','C','1B','2B','SS','LF','RF','UT'];
-// Grades for additions: 3x grade1, 3x grade2, 4x grade3
-const ADD_GRADES    = [1,1,1,2,2,2,3,3,3,3];
-
-// Positions for 30-player NPC team roster
-// 10 pitchers + 3C + 2×(1B,2B,3B,SS) + 2×(LF,CF,RF) + 3UT = 30
+// 포지션 순서: j 0-9 → 1학년(투수), j 10-19 → 2학년(야수), j 20-29 → 3학년(야수)
 const ROSTER_30 = [
   'SP','SP','SP','SP','SP',
   'RP','RP','RP',
@@ -308,40 +296,19 @@ const ROSTER_30 = [
   'UT','UT','UT'
 ];
 
-// ====== COUNTERS ======
-let plyN = 1542;
-let coaN = 168;
-let mngN = 72;
+// ====== ID 카운터 (현재 최대값 이후 시작) ======
+let plyN = 16755;  // PLY_16754가 현재 최대
+let coaN = 227;    // COA_00226이 현재 최대
+let mngN = 96;     // MNG_00095가 현재 최대
 
-const newHsEntries = [];
+const plyStart = plyN;
+const coaStart = coaN;
+const mngStart = mngN;
+
+const newNpcEntries = [];
 let createdCount = 0;
 
-// 1. EXISTING 8 TEAMS: rebuild block + add 10 new players each
-for (const team of EXISTING_TEAMS) {
-  // Original block
-  newHsEntries.push(team.mng);
-  for (const c of team.coas) newHsEntries.push(c);
-  newHsEntries.push(team.own);
-  for (let n = team.plyStart; n <= team.plyEnd; n++) {
-    newHsEntries.push(fmtId('PLY', n));
-  }
-  // 10 new players (jersey 21-30)
-  for (let j = 0; j < 10; j++) {
-    const id  = fmtId('PLY', plyN++);
-    const pos = ADD_POSITIONS[j];
-    const gr  = ADD_GRADES[j];
-    const jersey = 21 + j;
-    writeEntity(buildPlayer(id, team.id, gr, pos, jersey));
-    newHsEntries.push(id);
-    createdCount++;
-  }
-}
-
-// Preserve trailing special entries (PLY_01541, COA_00167) from original array
-newHsEntries.push('PLY_01541');
-newHsEntries.push('COA_00167');
-
-// 2. NEW NPC TEAMS: MNG + 2 COA + 30 PLY each
+// NPC 8팀: MNG + 2 COA + 30 PLY each
 for (const npc of NPC_TEAMS) {
   const mngId  = fmtId('MNG', mngN++);
   const coaId1 = fmtId('COA', coaN++);
@@ -352,41 +319,35 @@ for (const npc of NPC_TEAMS) {
   writeEntity(buildCoach(coaId2, npc.id, 'batting'));
   createdCount += 3;
 
-  newHsEntries.push(mngId);
-  newHsEntries.push(coaId1);
-  newHsEntries.push(coaId2);
+  newNpcEntries.push(mngId);
+  newNpcEntries.push(coaId1);
+  newNpcEntries.push(coaId2);
 
   for (let j = 0; j < 30; j++) {
     const id     = fmtId('PLY', plyN++);
     const pos    = ROSTER_30[j];
-    const grade  = Math.floor(j / 10) + 1; // 0-9=1학년, 10-19=2학년, 20-29=3학년
+    const grade  = Math.floor(j / 10) + 1;
     const jersey = j + 1;
-    writeEntity(buildPlayer(id, npc.id, grade, pos, jersey));
-    newHsEntries.push(id);
+    writeEntity(buildPlayer(id, npc.id, grade, pos, jersey, npc.bias));
+    newNpcEntries.push(id);
     createdCount++;
   }
+
+  const gcConf = GRADE_CONF;
+  console.log(`  ${npc.nameKr.padEnd(10)} (bias${npc.bias >= 0 ? '+' : ''}${npc.bias})  1학년 OVR ${gcConf[1].ovrLo+npc.bias}~${gcConf[1].ovrHi+npc.bias}  3학년 OVR ${gcConf[3].ovrLo+npc.bias}~${gcConf[3].ovrHi+npc.bias}`);
 }
 
-// 3. UPDATE _index.json
+// ====== _index.json: 기존 HS 항목 유지 + 신규 NPC 항목 append ======
 const indexPath = path.join(PLAYERS_DIR, '_index.json');
 const indexData = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
+const existingHs = indexData.byLeague['LEAGUE_HIGHSCHOOL'] || [];
 indexData.generated = new Date().toISOString();
-indexData.byLeague['LEAGUE_HIGHSCHOOL'] = newHsEntries;
+indexData.byLeague['LEAGUE_HIGHSCHOOL'] = [...existingHs, ...newNpcEntries];
 fs.writeFileSync(indexPath, JSON.stringify(indexData, null, 2), 'utf8');
 
-// 4. UPDATE highschool/index.json
-const hsIndexPath = path.join(BASE, 'teams', 'highschool', 'index.json');
-const hsIndex = JSON.parse(fs.readFileSync(hsIndexPath, 'utf8'));
-hsIndex.activeTeamIds     = [...EXISTING_TEAMS.map(t => t.id), ...NPC_TEAMS.map(t => t.id)];
-hsIndex.selectableTeamIds = EXISTING_TEAMS.map(t => t.id);
-hsIndex.npcOnlyTeamIds    = NPC_TEAMS.map(t => t.id);
-hsIndex.teamCount         = 16;
-hsIndex.npcTeamCount      = 40;
-fs.writeFileSync(hsIndexPath, JSON.stringify(hsIndex, null, 2), 'utf8');
-
-console.log('Phase 0-A: HS expansion done');
-console.log('  PLY written  : ' + (plyN - 1542) + ' files  (' + fmtId('PLY',1542) + ' ~ ' + fmtId('PLY',plyN-1));
-console.log('  COA written  : ' + (coaN - 168)  + ' files  (' + fmtId('COA',168)  + ' ~ ' + fmtId('COA',coaN-1));
-console.log('  MNG written  : ' + (mngN - 72)   + ' files  (' + fmtId('MNG',72)   + ' ~ ' + fmtId('MNG',mngN-1));
-console.log('  Total created: ' + createdCount);
-console.log('  HS index: ' + hsIndex.activeTeamIds.length + ' active teams (' + hsIndex.selectableTeamIds.length + ' selectable, ' + hsIndex.npcOnlyTeamIds.length + ' NPC-only)');
+console.log('\nPhase 1: HS NpcOnly 선수 생성 완료');
+console.log(`  PLY 생성: ${plyN - plyStart}개  (${fmtId('PLY', plyStart)} ~ ${fmtId('PLY', plyN - 1)})`);
+console.log(`  COA 생성: ${coaN - coaStart}개  (${fmtId('COA', coaStart)} ~ ${fmtId('COA', coaN - 1)})`);
+console.log(`  MNG 생성: ${mngN - mngStart}개  (${fmtId('MNG', mngStart)} ~ ${fmtId('MNG', mngN - 1)})`);
+console.log(`  총 생성:  ${createdCount}개`);
+console.log(`  _index.json LEAGUE_HIGHSCHOOL: ${existingHs.length} → ${indexData.byLeague['LEAGUE_HIGHSCHOOL'].length}개`);
