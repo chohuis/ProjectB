@@ -154,6 +154,8 @@ declare global {
       calcNpcRenewalSalaryNative:            (p: string) => Promise<string>;
       calcNpcContractYearsNative:            (p: string) => Promise<string>;
       npcUpdateContracts:                    (p: string) => Promise<string>;
+      npcArchiveRetired:                     (p: string) => Promise<string>;
+      npcQueryRetiredArchive:                (p: string) => Promise<string>;
       faGenerateOffers:                      (p: string) => Promise<string>;
       draftCalcDraftRank:                    (p: string) => Promise<string>;
       draftRunBoard:                         (p: string) => Promise<string>;
