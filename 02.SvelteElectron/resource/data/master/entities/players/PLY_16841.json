@@ -1,0 +1,108 @@
+{
+  "id": "PLY_16841",
+  "name": "윤민혁",
+  "nameEn": "Yoon Minhyeok",
+  "role": "player",
+  "age": 18,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "teamId": "TEAM_HS_CHUNCHEON_HIGHLAND",
+  "grade": 3,
+  "schoolId": "SCHOOL_TEAM_HS_CHUNCHEON_HIGHLAND",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "batter",
+      "handedness": "R",
+      "position": "RF",
+      "jerseyNumber": 27,
+      "pitching": {
+        "ovr": 61,
+        "stamina": 57,
+        "velocity": 49,
+        "command": 72,
+        "control": 70,
+        "movement": 68,
+        "mentality": 53,
+        "recovery": 70,
+        "clutch": 50,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 61,
+        "contact": 71,
+        "power": 53,
+        "eye": 57,
+        "discipline": 68,
+        "speed": 50,
+        "fielding": 53,
+        "arm": 63,
+        "battingClutch": 50,
+        "baseInstinct": 50,
+        "bunting": 45,
+        "platoon": 50
+      },
+      "developmentRate": 68,
+      "potentialHidden": 84,
+      "primaryPosition": "RF",
+      "positionRatings": {
+        "RF": 61
+      },
+      "pitches": [
+        {
+          "id": "PITCH_FASTBALL",
+          "grade": 1
+        }
+      ]
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  },
+  "diligence": 73,
+  "popularity": 38
+}

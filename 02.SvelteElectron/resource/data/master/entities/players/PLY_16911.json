@@ -1,0 +1,120 @@
+{
+  "id": "PLY_16911",
+  "name": "유기준",
+  "nameEn": "Yoo Gijun",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_MASAN_HARBOR",
+  "teamId": "TEAM_HS_MASAN_HARBOR",
+  "grade": 1,
+  "schoolId": "SCHOOL_TEAM_HS_MASAN_HARBOR",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "RP",
+      "jerseyNumber": 7,
+      "pitching": {
+        "ovr": 47,
+        "stamina": 42,
+        "velocity": 48,
+        "command": 53,
+        "control": 51,
+        "movement": 37,
+        "mentality": 40,
+        "recovery": 48,
+        "clutch": 50,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 38,
+        "contact": 33,
+        "power": 30,
+        "eye": 48,
+        "discipline": 30,
+        "speed": 47,
+        "fielding": 43,
+        "arm": 43,
+        "battingClutch": 50,
+        "baseInstinct": 50,
+        "bunting": 45,
+        "platoon": 50
+      },
+      "developmentRate": 70,
+      "potentialHidden": 71,
+      "primaryPosition": "RP",
+      "positionRatings": {
+        "RP": 47
+      },
+      "pitches": [
+        {
+          "id": "PITCH_FASTBALL",
+          "grade": 2
+        },
+        {
+          "id": "PITCH_KNUCKLEBALL",
+          "grade": 4
+        },
+        {
+          "id": "PITCH_SPLITTER",
+          "grade": 4
+        },
+        {
+          "id": "PITCH_SLIDER",
+          "grade": 1
+        }
+      ]
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  },
+  "diligence": 54,
+  "popularity": 32
+}

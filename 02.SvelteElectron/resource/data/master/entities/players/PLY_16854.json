@@ -1,0 +1,120 @@
+{
+  "id": "PLY_16854",
+  "name": "이준우",
+  "nameEn": "Lee Junwoo",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "grade": 1,
+  "schoolId": "SCHOOL_TEAM_HS_JEJU_WIND",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "CP",
+      "jerseyNumber": 10,
+      "pitching": {
+        "ovr": 57,
+        "stamina": 51,
+        "velocity": 55,
+        "command": 54,
+        "control": 65,
+        "movement": 46,
+        "mentality": 57,
+        "recovery": 59,
+        "clutch": 50,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 31,
+        "contact": 31,
+        "power": 43,
+        "eye": 36,
+        "discipline": 30,
+        "speed": 30,
+        "fielding": 40,
+        "arm": 30,
+        "battingClutch": 50,
+        "baseInstinct": 50,
+        "bunting": 45,
+        "platoon": 50
+      },
+      "developmentRate": 71,
+      "potentialHidden": 73,
+      "primaryPosition": "CP",
+      "positionRatings": {
+        "CP": 57
+      },
+      "pitches": [
+        {
+          "id": "PITCH_FASTBALL",
+          "grade": 2
+        },
+        {
+          "id": "PITCH_CUTTER",
+          "grade": 2
+        },
+        {
+          "id": "PITCH_CHANGEUP",
+          "grade": 4
+        },
+        {
+          "id": "PITCH_SLIDER",
+          "grade": 4
+        }
+      ]
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  },
+  "diligence": 73,
+  "popularity": 48
+}

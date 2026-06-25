@@ -1,0 +1,112 @@
+{
+  "id": "PLY_16847",
+  "name": "오재민",
+  "nameEn": "Oh Jaemin",
+  "role": "player",
+  "age": 16,
+  "status": "active",
+  "originLeagueId": "LEAGUE_HIGHSCHOOL",
+  "leagueId": "LEAGUE_HIGHSCHOOL",
+  "clubId": "TEAM_HS_JEJU_WIND",
+  "teamId": "TEAM_HS_JEJU_WIND",
+  "grade": 1,
+  "schoolId": "SCHOOL_TEAM_HS_JEJU_WIND",
+  "notes": "",
+  "details": {
+    "player": {
+      "playerType": "pitcher",
+      "handedness": "R",
+      "position": "SP",
+      "jerseyNumber": 3,
+      "pitching": {
+        "ovr": 49,
+        "stamina": 45,
+        "velocity": 60,
+        "command": 49,
+        "control": 59,
+        "movement": 59,
+        "mentality": 43,
+        "recovery": 45,
+        "clutch": 50,
+        "holdRunners": 50
+      },
+      "batting": {
+        "ovr": 49,
+        "contact": 40,
+        "power": 45,
+        "eye": 50,
+        "discipline": 49,
+        "speed": 47,
+        "fielding": 56,
+        "arm": 37,
+        "battingClutch": 50,
+        "baseInstinct": 50,
+        "bunting": 45,
+        "platoon": 50
+      },
+      "developmentRate": 78,
+      "potentialHidden": 74,
+      "primaryPosition": "SP",
+      "positionRatings": {
+        "SP": 49
+      },
+      "pitches": [
+        {
+          "id": "PITCH_FASTBALL",
+          "grade": 2
+        },
+        {
+          "id": "PITCH_CUTTER",
+          "grade": 1
+        }
+      ]
+    },
+    "coach": {
+      "specialty": "-",
+      "experienceYears": 0,
+      "stats": {
+        "teaching": 50,
+        "analysis": 50,
+        "communication": 50,
+        "discipline": 50,
+        "leadership": 50
+      },
+      "trainingBuffs": ""
+    },
+    "manager": {
+      "style": "균형",
+      "experienceYears": 0,
+      "stats": {
+        "tactics": 50,
+        "decision": 50,
+        "rotationMgmt": 50,
+        "bullpenMgmt": 50,
+        "moraleMgmt": 50
+      },
+      "gamePlanBias": "",
+      "riskTolerance": 50
+    },
+    "owner": {
+      "ownershipStyle": "안정 운영",
+      "tenureYears": 0,
+      "stats": {
+        "budgetSupport": 50,
+        "patience": 50,
+        "prInfluence": 50,
+        "facilityInvestment": 50,
+        "staffTrust": 50
+      },
+      "budgetPolicy": "",
+      "hiringPolicy": ""
+    }
+  },
+  "contact": {
+    "category": "",
+    "relation": "",
+    "initialAffinity": 0,
+    "arcs": [],
+    "chat": {}
+  },
+  "diligence": 75,
+  "popularity": 10
+}
