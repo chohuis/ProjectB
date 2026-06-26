@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01358",
   "name": "킹 앤서니",
   "nameEn": "King Anthony",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

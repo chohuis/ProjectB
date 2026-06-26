@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01335",
   "name": "영 마이클",
   "nameEn": "Young Michael",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

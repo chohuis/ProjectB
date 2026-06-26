@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01674",
   "name": "이케다 오사무",
   "nameEn": "Ikeda Osamu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 65
+      "potentialHidden": 65,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

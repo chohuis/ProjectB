@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00759",
   "name": "이준호",
   "nameEn": "Noh Ju-won",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 55,
-      "potentialHidden": 58
+      "potentialHidden": 58,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

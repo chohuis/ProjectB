@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00535",
   "name": "허동혁",
   "nameEn": "Na Jeong-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 60,
-      "potentialHidden": 62
+      "potentialHidden": 62,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

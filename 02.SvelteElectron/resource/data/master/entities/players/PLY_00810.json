@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00810",
   "name": "유승우",
   "nameEn": "Song Tae-hyun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 54,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

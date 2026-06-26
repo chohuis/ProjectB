@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01338",
   "name": "앤더슨 후안",
   "nameEn": "Anderson Juan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 87
+      "potentialHidden": 87,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

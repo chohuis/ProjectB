@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01653",
   "name": "엔도 소타",
   "nameEn": "Endo Sota",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 34,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

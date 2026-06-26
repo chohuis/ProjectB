@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00469",
   "name": "차지훈",
   "nameEn": "Noh Min-seok",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 61
+      "potentialHidden": 61,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

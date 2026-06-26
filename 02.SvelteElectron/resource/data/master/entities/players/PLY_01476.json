@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01476",
   "name": "해리스 니콜라스",
   "nameEn": "Harris Nicholas",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 34,
-      "potentialHidden": 65
+      "potentialHidden": 65,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

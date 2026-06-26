@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01681",
   "name": "마에다 야마토",
   "nameEn": "Maeda Yamato",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

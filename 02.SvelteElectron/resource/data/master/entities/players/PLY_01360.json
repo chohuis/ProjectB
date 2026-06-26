@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01360",
   "name": "워커 케빈",
   "nameEn": "Walker Kevin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 80
+      "potentialHidden": 80,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

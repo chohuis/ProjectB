@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01795",
   "name": "타카하시 쓰카사",
   "nameEn": "Takahashi Tsukasa",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

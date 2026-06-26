@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00571",
   "name": "임시우",
   "nameEn": "Ko Tae-yang",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 79
+      "potentialHidden": 79,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

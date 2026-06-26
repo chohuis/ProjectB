@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01685",
   "name": "타나카 히라쿠",
   "nameEn": "Tanaka Hiraku",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 87
+      "potentialHidden": 87,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

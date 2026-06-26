@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01418",
   "name": "그린 앤서니",
   "nameEn": "Green Anthony",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 17
     },
     "coach": {
       "specialty": "-",

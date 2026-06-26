@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00880",
   "name": "토머스 크리스토퍼",
   "nameEn": "Thomas Christopher",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 18
     },
     "coach": {
       "specialty": "-",

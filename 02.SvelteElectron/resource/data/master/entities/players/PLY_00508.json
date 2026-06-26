@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00508",
   "name": "차현준",
   "nameEn": "Kwak Ji-ho",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 56
+      "potentialHidden": 56,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

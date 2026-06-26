@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01865",
   "name": "사이토 렌",
   "nameEn": "Saito Ren",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 89
+      "potentialHidden": 89,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

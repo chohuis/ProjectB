@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00704",
   "name": "신현서",
   "nameEn": "Sung Ha-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

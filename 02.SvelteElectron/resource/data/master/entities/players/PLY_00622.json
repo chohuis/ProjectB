@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00622",
   "name": "고태민",
   "nameEn": "Min Hyun-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

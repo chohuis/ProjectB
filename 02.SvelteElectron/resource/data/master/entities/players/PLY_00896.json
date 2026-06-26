@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00896",
   "name": "윌슨 벤자민",
   "nameEn": "Wilson Benjamin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

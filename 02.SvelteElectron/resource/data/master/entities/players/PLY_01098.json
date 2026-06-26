@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01098",
   "name": "산체스 조너선",
   "nameEn": "Sanchez Jonathan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 30,
-      "potentialHidden": 89
+      "potentialHidden": 89,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

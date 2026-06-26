@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01016",
   "name": "데이비스 타일러",
   "nameEn": "Davis Tyler",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 17
     },
     "coach": {
       "specialty": "-",

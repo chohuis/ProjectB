@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00800",
   "name": "이민석",
   "nameEn": "Yoon Jae-yun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

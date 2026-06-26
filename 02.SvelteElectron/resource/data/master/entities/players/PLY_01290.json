@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01290",
   "name": "클라크 하비에르",
   "nameEn": "Clark Javier",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

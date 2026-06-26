@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01883",
   "name": "시미즈 렌",
   "nameEn": "Shimizu Ren",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01295",
   "name": "브라운 하비에르",
   "nameEn": "Brown Javier",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 36,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

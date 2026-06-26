@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00856",
   "name": "테일러 로버트",
   "nameEn": "Taylor Robert",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

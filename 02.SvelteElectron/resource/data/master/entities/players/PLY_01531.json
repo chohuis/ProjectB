@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01531",
   "name": "라이트 카를로스",
   "nameEn": "Wright Carlos",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 34,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

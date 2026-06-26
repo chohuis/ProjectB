@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00623",
   "name": "조태현",
   "nameEn": "Nam Tae-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 54,
-      "potentialHidden": 86
+      "potentialHidden": 86,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00601",
   "name": "곽재민",
   "nameEn": "Jeon Seong-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 76
+      "potentialHidden": 76,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

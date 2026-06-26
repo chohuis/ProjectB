@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00961",
   "name": "영 제임스",
   "nameEn": "Young James",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

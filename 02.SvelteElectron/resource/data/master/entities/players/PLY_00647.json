@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00647",
   "name": "나승우",
   "nameEn": "Yoon Tae-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 56
+      "potentialHidden": 56,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

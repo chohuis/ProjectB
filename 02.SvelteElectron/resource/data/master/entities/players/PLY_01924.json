@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01924",
   "name": "콘도 아키라",
   "nameEn": "Kondo Akira",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 87
+      "potentialHidden": 87,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

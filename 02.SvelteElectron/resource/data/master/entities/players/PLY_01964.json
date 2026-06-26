@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01964",
   "name": "타나카 쇼",
   "nameEn": "Tanaka Sho",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

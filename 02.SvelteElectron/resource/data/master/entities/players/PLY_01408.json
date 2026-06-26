@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01408",
   "name": "밀러 조셉",
   "nameEn": "Miller Joseph",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 88
+      "potentialHidden": 88,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00701",
   "name": "권지원",
   "nameEn": "Lee Hyun-jin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 83
+      "potentialHidden": 83,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00574",
   "name": "조예준",
   "nameEn": "Ha Ye-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 87
+      "potentialHidden": 87,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

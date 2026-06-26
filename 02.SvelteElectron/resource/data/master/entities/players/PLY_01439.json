@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01439",
   "name": "밀러 타일러",
   "nameEn": "Miller Tyler",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 75
+      "potentialHidden": 75,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

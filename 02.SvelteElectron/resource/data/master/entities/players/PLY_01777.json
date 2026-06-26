@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01777",
   "name": "카토 슌",
   "nameEn": "Kato Shun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 65
+      "potentialHidden": 65,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

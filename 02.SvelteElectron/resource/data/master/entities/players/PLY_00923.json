@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00923",
   "name": "밀러 케빈",
   "nameEn": "Miller Kevin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 69
+      "potentialHidden": 69,
+      "proServiceYears": 19
     },
     "coach": {
       "specialty": "-",

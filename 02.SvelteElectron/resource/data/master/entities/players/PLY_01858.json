@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01858",
   "name": "사이토 켄타",
   "nameEn": "Saito Kenta",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 53,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

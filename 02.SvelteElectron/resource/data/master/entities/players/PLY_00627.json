@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00627",
   "name": "고도윤",
   "nameEn": "You Seong-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

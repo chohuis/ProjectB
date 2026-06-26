@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01126",
   "name": "킹 노아",
   "nameEn": "King Noah",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

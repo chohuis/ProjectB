@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01532",
   "name": "데이비스 하비에르",
   "nameEn": "Davis Javier",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 31,
-      "potentialHidden": 80
+      "potentialHidden": 80,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

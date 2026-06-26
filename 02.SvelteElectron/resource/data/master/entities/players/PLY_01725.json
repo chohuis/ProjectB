@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01725",
   "name": "사카모토 히카루",
   "nameEn": "Sakamoto Hikaru",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 83
+      "potentialHidden": 83,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

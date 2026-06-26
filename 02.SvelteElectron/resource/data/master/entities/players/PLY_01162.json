@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01162",
   "name": "스미스 케빈",
   "nameEn": "Smith Kevin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 33,
-      "potentialHidden": 80
+      "potentialHidden": 80,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01668",
   "name": "타나카 진",
   "nameEn": "Tanaka Jin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 75
+      "potentialHidden": 75,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

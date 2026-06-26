@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00519",
   "name": "곽동우",
   "nameEn": "Noh Sang-hyun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 89
+      "potentialHidden": 89,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02039",
   "name": "콘도 요스케",
   "nameEn": "Kondo Yosuke",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 87
+      "potentialHidden": 87,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

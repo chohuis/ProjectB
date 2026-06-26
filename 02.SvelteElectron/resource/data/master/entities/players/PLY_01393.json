@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01393",
   "name": "윌슨 앤서니",
   "nameEn": "Wilson Anthony",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

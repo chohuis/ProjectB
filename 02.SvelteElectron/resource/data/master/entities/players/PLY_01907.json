@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01907",
   "name": "고바야시 유타카",
   "nameEn": "Kobayashi Yutaka",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

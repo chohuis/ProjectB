@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01631",
   "name": "야마모토 히로시",
   "nameEn": "Yamamoto Hiroshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 90
+      "potentialHidden": 90,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

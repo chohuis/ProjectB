@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01046",
   "name": "애덤스 노아",
   "nameEn": "Adams Noah",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 80
+      "potentialHidden": 80,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

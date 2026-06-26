@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01093",
   "name": "페레스 루이스",
   "nameEn": "Perez Luis",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 79
+      "potentialHidden": 79,
+      "proServiceYears": 20
     },
     "coach": {
       "specialty": "-",

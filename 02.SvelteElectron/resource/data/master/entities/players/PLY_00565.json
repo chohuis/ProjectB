@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00565",
   "name": "차상현",
   "nameEn": "Kwon Seung-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 76
+      "potentialHidden": 76,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

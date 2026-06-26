@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00817",
   "name": "서용준",
   "nameEn": "Park Do-yun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 57
+      "potentialHidden": 57,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

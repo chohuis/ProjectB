@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01320",
   "name": "앨런 매튜",
   "nameEn": "Allen Matthew",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 37,
-      "potentialHidden": 73
+      "potentialHidden": 73,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01292",
   "name": "라미레스 에이든",
   "nameEn": "Ramirez Aiden",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 30,
-      "potentialHidden": 88
+      "potentialHidden": 88,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

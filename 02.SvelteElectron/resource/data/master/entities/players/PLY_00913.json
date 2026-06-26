@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00913",
   "name": "클라크 노아",
   "nameEn": "Clark Noah",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

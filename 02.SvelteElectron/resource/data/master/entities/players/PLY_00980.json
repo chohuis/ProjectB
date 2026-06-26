@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00980",
   "name": "리 이선",
   "nameEn": "Lee Ethan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 35,
-      "potentialHidden": 90
+      "potentialHidden": 90,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

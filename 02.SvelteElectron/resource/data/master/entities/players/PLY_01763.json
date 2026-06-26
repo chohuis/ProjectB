@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01763",
   "name": "사토 스스무",
   "nameEn": "Sato Susumu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 57,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00879",
   "name": "베이커 로건",
   "nameEn": "Baker Logan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 58
+      "potentialHidden": 58,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

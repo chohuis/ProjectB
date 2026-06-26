@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01875",
   "name": "마쓰모토 류",
   "nameEn": "Matsumoto Ryu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 88
+      "potentialHidden": 88,
+      "proServiceYears": 16
     },
     "coach": {
       "specialty": "-",

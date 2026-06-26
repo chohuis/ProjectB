@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01630",
   "name": "아베 켄타",
   "nameEn": "Abe Kenta",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

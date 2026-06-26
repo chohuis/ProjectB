@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01428",
   "name": "그린 일라이저",
   "nameEn": "Green Elijah",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 33,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 20
     },
     "coach": {
       "specialty": "-",

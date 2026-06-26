@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02013",
   "name": "사카모토 다이키",
   "nameEn": "Sakamoto Daiki",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 65
+      "potentialHidden": 65,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

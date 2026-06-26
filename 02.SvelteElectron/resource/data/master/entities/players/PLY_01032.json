@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01032",
   "name": "스미스 벤자민",
   "nameEn": "Smith Benjamin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

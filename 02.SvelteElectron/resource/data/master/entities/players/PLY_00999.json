@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00999",
   "name": "윌슨 제임스",
   "nameEn": "Wilson James",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 80
+      "potentialHidden": 80,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

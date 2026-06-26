@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01969",
   "name": "오카다 마코토",
   "nameEn": "Okada Makoto",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 87
+      "potentialHidden": 87,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

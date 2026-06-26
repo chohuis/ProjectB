@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01265",
   "name": "베이커 벤자민",
   "nameEn": "Baker Benjamin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 64
+      "potentialHidden": 64,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

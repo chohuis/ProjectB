@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01154",
   "name": "잭슨 앤드류",
   "nameEn": "Jackson Andrew",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 20
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01108",
   "name": "페레스 존",
   "nameEn": "Perez John",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 31,
-      "potentialHidden": 58
+      "potentialHidden": 58,
+      "proServiceYears": 17
     },
     "coach": {
       "specialty": "-",

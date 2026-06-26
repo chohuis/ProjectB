@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01288",
   "name": "워커 벤자민",
   "nameEn": "Walker Benjamin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 31,
-      "potentialHidden": 92
+      "potentialHidden": 92,
+      "proServiceYears": 19
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01724",
   "name": "콘도 유타카",
   "nameEn": "Kondo Yutaka",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 64
+      "potentialHidden": 64,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

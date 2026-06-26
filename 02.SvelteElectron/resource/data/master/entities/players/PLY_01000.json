@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01000",
   "name": "토머스 브랜던",
   "nameEn": "Thomas Brandon",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 30,
-      "potentialHidden": 75
+      "potentialHidden": 75,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01644",
   "name": "후쿠다 야마토",
   "nameEn": "Fukuda Yamato",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

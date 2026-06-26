@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01251",
   "name": "리베라 호세",
   "nameEn": "Rivera Jose",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 75
+      "potentialHidden": 75,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

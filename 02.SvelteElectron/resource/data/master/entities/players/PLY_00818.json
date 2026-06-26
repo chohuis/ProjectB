@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00818",
   "name": "고재현",
   "nameEn": "Cho Jun-seo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 59,
-      "potentialHidden": 66
+      "potentialHidden": 66,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

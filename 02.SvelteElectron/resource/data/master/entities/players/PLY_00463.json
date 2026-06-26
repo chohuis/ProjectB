@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00463",
   "name": "하성현",
   "nameEn": "Son Seo-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 87
+      "potentialHidden": 87,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

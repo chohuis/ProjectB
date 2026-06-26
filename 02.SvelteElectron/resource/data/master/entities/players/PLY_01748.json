@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01748",
   "name": "사사키 코지",
   "nameEn": "Sasaki Koji",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

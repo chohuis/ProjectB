@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00948",
   "name": "톰프슨 마이클",
   "nameEn": "Thompson Michael",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 73
+      "potentialHidden": 73,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

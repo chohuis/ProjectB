@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01670",
   "name": "콘도 유토",
   "nameEn": "Kondo Yuto",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

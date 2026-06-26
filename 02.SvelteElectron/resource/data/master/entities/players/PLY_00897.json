@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00897",
   "name": "라미레스 이선",
   "nameEn": "Ramirez Ethan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 66
+      "potentialHidden": 66,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

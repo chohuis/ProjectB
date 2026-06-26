@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00642",
   "name": "노동준",
   "nameEn": "Woo Tae-yang",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

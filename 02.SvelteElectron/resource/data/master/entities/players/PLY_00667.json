@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00667",
   "name": "박현우",
   "nameEn": "Han Tae-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

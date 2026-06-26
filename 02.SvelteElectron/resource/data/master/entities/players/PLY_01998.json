@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01998",
   "name": "사카모토 미쓰루",
   "nameEn": "Sakamoto Mitsuru",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 53,
-      "potentialHidden": 79
+      "potentialHidden": 79,
+      "proServiceYears": 16
     },
     "coach": {
       "specialty": "-",

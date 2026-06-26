@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00684",
   "name": "김현진",
   "nameEn": "Jeon Do-hyun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 57,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

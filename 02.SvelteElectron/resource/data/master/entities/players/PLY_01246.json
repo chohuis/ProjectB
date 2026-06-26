@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01246",
   "name": "라이트 마르코",
   "nameEn": "Wright Marco",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 83
+      "potentialHidden": 83,
+      "proServiceYears": 18
     },
     "coach": {
       "specialty": "-",

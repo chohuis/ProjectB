@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02012",
   "name": "사사키 류",
   "nameEn": "Sasaki Ryu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 35,
-      "potentialHidden": 58
+      "potentialHidden": 58,
+      "proServiceYears": 16
     },
     "coach": {
       "specialty": "-",

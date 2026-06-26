@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00954",
   "name": "로드리게스 오스틴",
   "nameEn": "Rodriguez Austin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 65
+      "potentialHidden": 65,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

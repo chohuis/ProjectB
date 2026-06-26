@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01059",
   "name": "그린 애드리언",
   "nameEn": "Green Adrian",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 92
+      "potentialHidden": 92,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

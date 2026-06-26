@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01272",
   "name": "미첼 라이언",
   "nameEn": "Mitchell Ryan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

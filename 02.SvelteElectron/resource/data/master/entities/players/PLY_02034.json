@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02034",
   "name": "오타 아키라",
   "nameEn": "Ota Akira",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 56,
-      "potentialHidden": 57
+      "potentialHidden": 57,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00569",
   "name": "나태준",
   "nameEn": "Lim Dong-hyuk",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 88
+      "potentialHidden": 88,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

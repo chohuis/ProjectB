@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01092",
   "name": "브라운 일라이저",
   "nameEn": "Brown Elijah",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01058",
   "name": "루이스 카를로스",
   "nameEn": "Lewis Carlos",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 34,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 19
     },
     "coach": {
       "specialty": "-",

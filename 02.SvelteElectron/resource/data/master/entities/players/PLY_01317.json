@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01317",
   "name": "존스 마이클",
   "nameEn": "Jones Michael",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 89
+      "potentialHidden": 89,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

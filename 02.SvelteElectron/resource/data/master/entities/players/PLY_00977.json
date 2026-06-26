@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00977",
   "name": "클라크 제임스",
   "nameEn": "Clark James",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 34,
-      "potentialHidden": 88
+      "potentialHidden": 88,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

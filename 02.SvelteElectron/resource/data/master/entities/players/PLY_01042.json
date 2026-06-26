@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01042",
   "name": "미첼 타일러",
   "nameEn": "Mitchell Tyler",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 36,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

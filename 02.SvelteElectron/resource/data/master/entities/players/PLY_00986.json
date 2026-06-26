@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00986",
   "name": "데이비스 매튜",
   "nameEn": "Davis Matthew",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 36,
-      "potentialHidden": 62
+      "potentialHidden": 62,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

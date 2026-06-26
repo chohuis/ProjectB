@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01769",
   "name": "나카무라 료",
   "nameEn": "Nakamura Ryo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 34,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01245",
   "name": "존슨 이선",
   "nameEn": "Johnson Ethan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 79
+      "potentialHidden": 79,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

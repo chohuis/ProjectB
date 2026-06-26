@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00541",
   "name": "이승우",
   "nameEn": "Jeon Tae-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 60,
-      "potentialHidden": 58
+      "potentialHidden": 58,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

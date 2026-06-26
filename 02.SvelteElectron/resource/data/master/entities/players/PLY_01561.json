@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01561",
   "name": "엔도 미쓰루",
   "nameEn": "Endo Mitsuru",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

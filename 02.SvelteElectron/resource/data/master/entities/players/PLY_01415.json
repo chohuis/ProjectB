@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01415",
   "name": "그린 윌리엄",
   "nameEn": "Green William",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

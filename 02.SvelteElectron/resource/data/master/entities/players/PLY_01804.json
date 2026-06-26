@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01804",
   "name": "나카무라 야마토",
   "nameEn": "Nakamura Yamato",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

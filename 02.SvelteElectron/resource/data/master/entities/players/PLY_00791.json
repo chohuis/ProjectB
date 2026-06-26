@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00791",
   "name": "황찬영",
   "nameEn": "Baek Ji-ho",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 59
+      "potentialHidden": 59,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

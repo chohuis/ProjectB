@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01057",
   "name": "홀 매튜",
   "nameEn": "Hall Matthew",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 30,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 18
     },
     "coach": {
       "specialty": "-",

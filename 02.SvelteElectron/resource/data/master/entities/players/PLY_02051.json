@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02051",
   "name": "야마다 히로시",
   "nameEn": "Yamada Hiroshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

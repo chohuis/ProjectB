@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01459",
   "name": "애덤스 크리스토퍼",
   "nameEn": "Adams Christopher",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 30,
-      "potentialHidden": 79
+      "potentialHidden": 79,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

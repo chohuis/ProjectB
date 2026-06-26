@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00805",
   "name": "정지호",
   "nameEn": "Sung Tae-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 58,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02022",
   "name": "야마다 카이토",
   "nameEn": "Yamada Kaito",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

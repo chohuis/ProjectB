@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01091",
   "name": "존스 크리스토퍼",
   "nameEn": "Jones Christopher",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 75
+      "potentialHidden": 75,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00678",
   "name": "한기준",
   "nameEn": "Kwon Sang-hyun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 64
+      "potentialHidden": 64,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

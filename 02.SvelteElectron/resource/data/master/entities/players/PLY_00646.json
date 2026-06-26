@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00646",
   "name": "황도윤",
   "nameEn": "Min Ji-won",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 87
+      "potentialHidden": 87,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

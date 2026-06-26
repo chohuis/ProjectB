@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00955",
   "name": "라이트 제임스",
   "nameEn": "Wright James",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 34,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

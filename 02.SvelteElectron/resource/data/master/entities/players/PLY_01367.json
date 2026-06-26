@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01367",
   "name": "로빈슨 마르코",
   "nameEn": "Robinson Marco",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 19
     },
     "coach": {
       "specialty": "-",

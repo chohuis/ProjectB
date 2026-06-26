@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01267",
   "name": "밀러 크리스토퍼",
   "nameEn": "Miller Christopher",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 61
+      "potentialHidden": 61,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

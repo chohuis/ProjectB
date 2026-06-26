@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01348",
   "name": "윌슨 조너선",
   "nameEn": "Wilson Jonathan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 87
+      "potentialHidden": 87,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

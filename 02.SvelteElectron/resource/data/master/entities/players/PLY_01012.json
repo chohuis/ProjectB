@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01012",
   "name": "브라운 다니엘",
   "nameEn": "Brown Daniel",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 35,
-      "potentialHidden": 62
+      "potentialHidden": 62,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

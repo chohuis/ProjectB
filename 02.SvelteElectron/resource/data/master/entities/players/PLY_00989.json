@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00989",
   "name": "앤더슨 니콜라스",
   "nameEn": "Anderson Nicholas",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 83
+      "potentialHidden": 83,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01327",
   "name": "오성민",
   "nameEn": "Oh Sung-min",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 83
+      "potentialHidden": 83,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01094",
   "name": "윌리엄스 미겔",
   "nameEn": "Williams Miguel",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 33,
-      "potentialHidden": 76
+      "potentialHidden": 76,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

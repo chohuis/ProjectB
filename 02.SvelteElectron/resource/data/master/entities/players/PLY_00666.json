@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00666",
   "name": "이태준",
   "nameEn": "Na Min-jae",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

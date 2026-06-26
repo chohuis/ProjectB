@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01484",
   "name": "리 마르코",
   "nameEn": "Lee Marco",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00957",
   "name": "존슨 케빈",
   "nameEn": "Johnson Kevin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

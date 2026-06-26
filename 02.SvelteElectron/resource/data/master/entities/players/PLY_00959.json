@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00959",
   "name": "무어 조셉",
   "nameEn": "Moore Joseph",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 66
+      "potentialHidden": 66,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

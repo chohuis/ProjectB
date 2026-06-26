@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00686",
   "name": "백동현",
   "nameEn": "Na Seung-min",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 55,
-      "potentialHidden": 65
+      "potentialHidden": 65,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

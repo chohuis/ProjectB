@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01610",
   "name": "기무라 토루",
   "nameEn": "Kimura Toru",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 73
+      "potentialHidden": 73,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

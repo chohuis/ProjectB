@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01370",
   "name": "클라크 앤서니",
   "nameEn": "Clark Anthony",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 14
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00910",
   "name": "넬슨 일라이저",
   "nameEn": "Nelson Elijah",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 86
+      "potentialHidden": 86,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

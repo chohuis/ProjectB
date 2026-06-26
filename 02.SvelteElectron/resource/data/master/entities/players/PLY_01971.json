@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01971",
   "name": "사사키 오사무",
   "nameEn": "Sasaki Osamu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

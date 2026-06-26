@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00763",
   "name": "노태민",
   "nameEn": "You Min-hyuk",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

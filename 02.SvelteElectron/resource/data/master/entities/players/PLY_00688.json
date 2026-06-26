@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00688",
   "name": "박재윤",
   "nameEn": "Hwang Geon-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

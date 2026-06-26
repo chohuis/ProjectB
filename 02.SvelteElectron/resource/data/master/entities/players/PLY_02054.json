@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02054",
   "name": "엔도 다이키",
   "nameEn": "Endo Daiki",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 33,
-      "potentialHidden": 57
+      "potentialHidden": 57,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

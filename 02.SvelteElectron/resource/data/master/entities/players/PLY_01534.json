@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01534",
   "name": "리 라이언",
   "nameEn": "Lee Ryan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 34,
-      "potentialHidden": 62
+      "potentialHidden": 62,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

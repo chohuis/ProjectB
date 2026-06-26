@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00509",
   "name": "하준혁",
   "nameEn": "Kim Yong-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 79
+      "potentialHidden": 79,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

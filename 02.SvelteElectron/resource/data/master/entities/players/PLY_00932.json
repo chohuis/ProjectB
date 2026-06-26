@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00932",
   "name": "잭슨 데이비드",
   "nameEn": "Jackson David",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

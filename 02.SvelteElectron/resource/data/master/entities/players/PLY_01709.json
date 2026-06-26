@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01709",
   "name": "사사키 렌",
   "nameEn": "Sasaki Ren",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 79
+      "potentialHidden": 79,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

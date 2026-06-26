@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01947",
   "name": "야마다 츠바사",
   "nameEn": "Yamada Tsubasa",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

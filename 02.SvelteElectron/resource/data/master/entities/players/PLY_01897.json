@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01897",
   "name": "카토 카이토",
   "nameEn": "Kato Kaito",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 53,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

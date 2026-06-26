@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01542",
   "name": "사사키 마나부",
   "nameEn": "Sasaki Manabu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 35,
-      "potentialHidden": 79
+      "potentialHidden": 79,
+      "proServiceYears": 16
     },
     "coach": {
       "specialty": "-",

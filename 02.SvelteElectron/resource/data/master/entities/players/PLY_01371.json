@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01371",
   "name": "영 로버트",
   "nameEn": "Young Robert",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 79
+      "potentialHidden": 79,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

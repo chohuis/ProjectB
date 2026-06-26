@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00521",
   "name": "나용준",
   "nameEn": "Ahn Hyun-jin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 90
+      "potentialHidden": 90,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

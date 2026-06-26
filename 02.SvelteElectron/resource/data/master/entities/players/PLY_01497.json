@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01497",
   "name": "스미스 크리스토퍼",
   "nameEn": "Smith Christopher",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 76
+      "potentialHidden": 76,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

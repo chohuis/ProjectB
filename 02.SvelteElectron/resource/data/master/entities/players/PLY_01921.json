@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01921",
   "name": "시미즈 소타",
   "nameEn": "Shimizu Sota",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 92
+      "potentialHidden": 92,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

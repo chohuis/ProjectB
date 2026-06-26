@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01196",
   "name": "로빈슨 마이클",
   "nameEn": "Robinson Michael",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 34,
-      "potentialHidden": 58
+      "potentialHidden": 58,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

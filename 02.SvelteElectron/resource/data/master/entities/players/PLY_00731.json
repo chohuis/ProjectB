@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00731",
   "name": "백민혁",
   "nameEn": "Baek Ji-sung",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 37,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

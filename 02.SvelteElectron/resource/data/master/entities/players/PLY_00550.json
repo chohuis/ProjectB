@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00550",
   "name": "전태양",
   "nameEn": "Nam Tae-yang",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 58,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

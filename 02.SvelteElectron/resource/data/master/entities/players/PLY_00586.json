@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00586",
   "name": "권주원",
   "nameEn": "Lee Jun-young",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 71
+      "potentialHidden": 71,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01191",
   "name": "루이스 조셉",
   "nameEn": "Lewis Joseph",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 88
+      "potentialHidden": 88,
+      "proServiceYears": 17
     },
     "coach": {
       "specialty": "-",

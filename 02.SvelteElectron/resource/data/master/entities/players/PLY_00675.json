@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00675",
   "name": "김기훈",
   "nameEn": "Ha Dong-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 62
+      "potentialHidden": 62,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

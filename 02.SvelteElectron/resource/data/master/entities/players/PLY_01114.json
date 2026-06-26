@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01114",
   "name": "잭슨 오스틴",
   "nameEn": "Jackson Austin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

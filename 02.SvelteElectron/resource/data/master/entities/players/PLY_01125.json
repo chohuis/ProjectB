@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01125",
   "name": "테일러 다니엘",
   "nameEn": "Taylor Daniel",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 37,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

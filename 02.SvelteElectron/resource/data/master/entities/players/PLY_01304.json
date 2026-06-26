@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01304",
   "name": "윌리엄스 앤드류",
   "nameEn": "Williams Andrew",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

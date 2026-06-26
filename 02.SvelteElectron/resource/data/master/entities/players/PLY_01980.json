@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01980",
   "name": "요시다 소타",
   "nameEn": "Yoshida Sota",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 86
+      "potentialHidden": 86,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

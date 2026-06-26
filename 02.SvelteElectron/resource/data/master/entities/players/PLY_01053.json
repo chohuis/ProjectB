@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01053",
   "name": "넬슨 니콜라스",
   "nameEn": "Nelson Nicholas",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 31,
-      "potentialHidden": 89
+      "potentialHidden": 89,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01930",
   "name": "오카모토 쇼",
   "nameEn": "Okamoto Sho",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

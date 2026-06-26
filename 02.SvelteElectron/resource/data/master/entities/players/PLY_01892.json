@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01892",
   "name": "미우라 히로시",
   "nameEn": "Miura Hiroshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

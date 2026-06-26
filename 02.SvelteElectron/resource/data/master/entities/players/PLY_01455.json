@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01455",
   "name": "존스 브랜던",
   "nameEn": "Jones Brandon",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 76
+      "potentialHidden": 76,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01312",
   "name": "이와사키 다케시",
   "nameEn": "Iwasaki Takeshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

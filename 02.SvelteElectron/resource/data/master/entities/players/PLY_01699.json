@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01699",
   "name": "고바야시 유토",
   "nameEn": "Kobayashi Yuto",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 91
+      "potentialHidden": 91,
+      "proServiceYears": 16
     },
     "coach": {
       "specialty": "-",

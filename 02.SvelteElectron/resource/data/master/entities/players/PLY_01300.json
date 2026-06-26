@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01300",
   "name": "윌리엄스 에이든",
   "nameEn": "Williams Aiden",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 90
+      "potentialHidden": 90,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

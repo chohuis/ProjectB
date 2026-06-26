@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01015",
   "name": "앨런 호세",
   "nameEn": "Allen Jose",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 73
+      "potentialHidden": 73,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

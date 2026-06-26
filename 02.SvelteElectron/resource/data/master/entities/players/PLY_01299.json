@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01299",
   "name": "톰프슨 벤자민",
   "nameEn": "Thompson Benjamin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

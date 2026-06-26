@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01217",
   "name": "마틴 매튜",
   "nameEn": "Martin Matthew",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 34,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

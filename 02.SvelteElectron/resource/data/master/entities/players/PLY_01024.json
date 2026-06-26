@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01024",
   "name": "윌리엄스 윌리엄",
   "nameEn": "Williams William",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

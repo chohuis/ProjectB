@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01714",
   "name": "무라카미 쇼",
   "nameEn": "Murakami Sho",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 55,
-      "potentialHidden": 86
+      "potentialHidden": 86,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

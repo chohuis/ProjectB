@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00683",
   "name": "신주원",
   "nameEn": "Bae Seong-hyun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

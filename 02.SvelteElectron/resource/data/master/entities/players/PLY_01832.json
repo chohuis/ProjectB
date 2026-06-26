@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01832",
   "name": "후지이 요스케",
   "nameEn": "Fujii Yosuke",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 75
+      "potentialHidden": 75,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

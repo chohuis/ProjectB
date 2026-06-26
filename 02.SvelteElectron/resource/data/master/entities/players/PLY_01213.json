@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01213",
   "name": "로드리게스 크리스토퍼",
   "nameEn": "Rodriguez Christopher",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 91
+      "potentialHidden": 91,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

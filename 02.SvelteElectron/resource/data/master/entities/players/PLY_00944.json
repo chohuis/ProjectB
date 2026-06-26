@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00944",
   "name": "스미스 매튜",
   "nameEn": "Smith Matthew",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 34,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00641",
   "name": "백건우",
   "nameEn": "Han Sang-min",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 53,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

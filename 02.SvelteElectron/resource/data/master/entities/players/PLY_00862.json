@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00862",
   "name": "가르시아 애드리언",
   "nameEn": "Garcia Adrian",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01510",
   "name": "존슨 리엄",
   "nameEn": "Johnson Liam",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 31,
-      "potentialHidden": 86
+      "potentialHidden": 86,
+      "proServiceYears": 19
     },
     "coach": {
       "specialty": "-",

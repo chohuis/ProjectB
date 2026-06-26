@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01558",
   "name": "사사키 사토시",
   "nameEn": "Sasaki Satoshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 58
+      "potentialHidden": 58,
+      "proServiceYears": 15
     },
     "coach": {
       "specialty": "-",

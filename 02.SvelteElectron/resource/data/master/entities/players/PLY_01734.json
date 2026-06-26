@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01734",
   "name": "콘도 준",
   "nameEn": "Kondo Jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

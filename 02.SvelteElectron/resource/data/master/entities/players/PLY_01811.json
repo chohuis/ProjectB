@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01811",
   "name": "나카무라 슌",
   "nameEn": "Nakamura Shun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 65
+      "potentialHidden": 65,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

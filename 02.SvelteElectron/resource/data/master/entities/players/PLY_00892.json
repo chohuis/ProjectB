@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00892",
   "name": "잭슨 니콜라스",
   "nameEn": "Jackson Nicholas",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 66
+      "potentialHidden": 66,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

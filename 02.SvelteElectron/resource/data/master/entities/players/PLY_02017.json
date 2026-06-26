@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02017",
   "name": "콘도 츠바사",
   "nameEn": "Kondo Tsubasa",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 56,
-      "potentialHidden": 62
+      "potentialHidden": 62,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

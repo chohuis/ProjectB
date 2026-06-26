@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00878",
   "name": "앤더슨 라이언",
   "nameEn": "Anderson Ryan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 75
+      "potentialHidden": 75,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02028",
   "name": "야마모토 진",
   "nameEn": "Yamamoto Jin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

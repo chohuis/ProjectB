@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00480",
   "name": "강시우",
   "nameEn": "Nam Sang-min",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 72
+      "potentialHidden": 72,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

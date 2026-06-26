@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01721",
   "name": "나카무라 유토",
   "nameEn": "Nakamura Yuto",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 37,
-      "potentialHidden": 59
+      "potentialHidden": 59,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

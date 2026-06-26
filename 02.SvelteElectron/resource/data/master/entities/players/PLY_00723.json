@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00723",
   "name": "성태양",
   "nameEn": "Han Tae-min",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 54,
-      "potentialHidden": 79
+      "potentialHidden": 79,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

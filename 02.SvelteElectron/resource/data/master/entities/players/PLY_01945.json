@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01945",
   "name": "와타나베 오사무",
   "nameEn": "Watanabe Osamu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00801",
   "name": "우상현",
   "nameEn": "Sung Hyun-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 53,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

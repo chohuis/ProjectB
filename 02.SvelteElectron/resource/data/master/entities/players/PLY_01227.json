@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01227",
   "name": "마틴 디에고",
   "nameEn": "Martin Diego",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 92
+      "potentialHidden": 92,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01589",
   "name": "후쿠다 요스케",
   "nameEn": "Fukuda Yosuke",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 71
+      "potentialHidden": 71,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

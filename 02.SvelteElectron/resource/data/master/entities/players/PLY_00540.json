@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00540",
   "name": "민지후",
   "nameEn": "Jung Gi-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 55,
-      "potentialHidden": 86
+      "potentialHidden": 86,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

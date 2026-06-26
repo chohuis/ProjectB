@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01953",
   "name": "오타 히로시",
   "nameEn": "Ota Hiroshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 35,
-      "potentialHidden": 61
+      "potentialHidden": 61,
+      "proServiceYears": 16
     },
     "coach": {
       "specialty": "-",

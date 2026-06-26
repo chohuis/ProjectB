@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01287",
   "name": "화이트 이선",
   "nameEn": "White Ethan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 37,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 15
     },
     "coach": {
       "specialty": "-",

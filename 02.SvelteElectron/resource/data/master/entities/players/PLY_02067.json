@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02067",
   "name": "사토 야마토",
   "nameEn": "Sato Yamato",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

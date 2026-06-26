@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01263",
   "name": "스콧 호세",
   "nameEn": "Scott Jose",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

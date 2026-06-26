@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00815",
   "name": "안지원",
   "nameEn": "Yoon Hyun-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 60,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

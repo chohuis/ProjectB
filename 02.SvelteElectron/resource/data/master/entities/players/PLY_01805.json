@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01805",
   "name": "야마모토 토루",
   "nameEn": "Yamamoto Toru",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02042",
   "name": "아베 시게루",
   "nameEn": "Abe Shigeru",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

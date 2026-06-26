@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01955",
   "name": "하야시 쇼",
   "nameEn": "Hayashi Sho",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 75
+      "potentialHidden": 75,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

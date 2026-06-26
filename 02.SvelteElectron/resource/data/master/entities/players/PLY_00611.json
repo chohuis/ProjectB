@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00611",
   "name": "양동우",
   "nameEn": "Kwon Min-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 89
+      "potentialHidden": 89,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02038",
   "name": "후지타 류",
   "nameEn": "Fujita Ryu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 33,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

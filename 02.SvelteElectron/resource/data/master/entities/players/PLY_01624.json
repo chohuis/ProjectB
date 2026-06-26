@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01624",
   "name": "요시다 류",
   "nameEn": "Yoshida Ryu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

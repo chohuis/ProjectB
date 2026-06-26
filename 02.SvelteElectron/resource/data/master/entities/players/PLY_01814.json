@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01814",
   "name": "무라카미 히로시",
   "nameEn": "Murakami Hiroshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 80
+      "potentialHidden": 80,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

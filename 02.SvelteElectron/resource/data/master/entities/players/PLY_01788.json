@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01788",
   "name": "오카다 히카루",
   "nameEn": "Okada Hikaru",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 87
+      "potentialHidden": 87,
+      "proServiceYears": 14
     },
     "coach": {
       "specialty": "-",

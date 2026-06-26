@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01266",
   "name": "미첼 크리스토퍼",
   "nameEn": "Mitchell Christopher",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 79
+      "potentialHidden": 79,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

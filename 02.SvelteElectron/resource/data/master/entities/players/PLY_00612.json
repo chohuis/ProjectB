@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00612",
   "name": "강준영",
   "nameEn": "Ku Ji-sung",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 37,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

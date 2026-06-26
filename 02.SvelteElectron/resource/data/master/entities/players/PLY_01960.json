@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01960",
   "name": "하시모토 쓰요시",
   "nameEn": "Hashimoto Tsuyoshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 34,
-      "potentialHidden": 62
+      "potentialHidden": 62,
+      "proServiceYears": 15
     },
     "coach": {
       "specialty": "-",

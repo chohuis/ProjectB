@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00479",
   "name": "하재윤",
   "nameEn": "Moon Sang-hyun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01477",
   "name": "로드리게스 벤자민",
   "nameEn": "Rodriguez Benjamin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 92
+      "potentialHidden": 92,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

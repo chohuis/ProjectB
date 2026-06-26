@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02000",
   "name": "마에다 츠바사",
   "nameEn": "Maeda Tsubasa",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 33,
-      "potentialHidden": 76
+      "potentialHidden": 76,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

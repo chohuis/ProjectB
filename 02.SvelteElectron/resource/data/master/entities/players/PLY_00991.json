@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00991",
   "name": "로드리게스 마이클",
   "nameEn": "Rodriguez Michael",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

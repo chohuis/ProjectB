@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00636",
   "name": "민준우",
   "nameEn": "Noh Jun-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 57,
-      "potentialHidden": 58
+      "potentialHidden": 58,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00992",
   "name": "존슨 프란시스코",
   "nameEn": "Johnson Francisco",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

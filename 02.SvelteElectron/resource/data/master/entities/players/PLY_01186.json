@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01186",
   "name": "루이스 데이비드",
   "nameEn": "Lewis David",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 79
+      "potentialHidden": 79,
+      "proServiceYears": 17
     },
     "coach": {
       "specialty": "-",

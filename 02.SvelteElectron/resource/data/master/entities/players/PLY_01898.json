@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01898",
   "name": "사카모토 아키라",
   "nameEn": "Sakamoto Akira",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 91
+      "potentialHidden": 91,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01992",
   "name": "무라카미 마나부",
   "nameEn": "Murakami Manabu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

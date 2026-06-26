@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00462",
   "name": "유지원",
   "nameEn": "Song Tae-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 55,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

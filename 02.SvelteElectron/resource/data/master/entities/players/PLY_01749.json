@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01749",
   "name": "마에다 히카루",
   "nameEn": "Maeda Hikaru",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 58
+      "potentialHidden": 58,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01314",
   "name": "넬슨 케빈",
   "nameEn": "Nelson Kevin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

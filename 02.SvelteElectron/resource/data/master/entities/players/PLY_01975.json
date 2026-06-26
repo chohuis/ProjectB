@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01975",
   "name": "이시다 히라쿠",
   "nameEn": "Ishida Hiraku",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

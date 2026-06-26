@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01168",
   "name": "넬슨 앤드류",
   "nameEn": "Nelson Andrew",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 30,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

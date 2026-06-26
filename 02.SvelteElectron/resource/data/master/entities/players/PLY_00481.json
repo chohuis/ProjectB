@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00481",
   "name": "주현진",
   "nameEn": "Woo Seung-hyun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

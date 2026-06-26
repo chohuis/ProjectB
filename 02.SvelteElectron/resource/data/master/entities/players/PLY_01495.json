@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01495",
   "name": "브라운 리엄",
   "nameEn": "Brown Liam",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

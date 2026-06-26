@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01745",
   "name": "후지이 다이키",
   "nameEn": "Fujii Daiki",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 73
+      "potentialHidden": 73,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

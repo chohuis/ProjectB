@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00771",
   "name": "장태우",
   "nameEn": "Shin Ha-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 53,
-      "potentialHidden": 59
+      "potentialHidden": 59,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00990",
   "name": "리 하비에르",
   "nameEn": "Lee Javier",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 83
+      "potentialHidden": 83,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

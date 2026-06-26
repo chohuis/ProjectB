@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01876",
   "name": "타나카 히로시",
   "nameEn": "Tanaka Hiroshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 37,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

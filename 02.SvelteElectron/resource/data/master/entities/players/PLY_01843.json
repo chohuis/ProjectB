@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01843",
   "name": "오카모토 렌",
   "nameEn": "Okamoto Ren",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 56,
-      "potentialHidden": 87
+      "potentialHidden": 87,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

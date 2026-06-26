@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01557",
   "name": "카토 히로시",
   "nameEn": "Kato Hiroshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 35,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00553",
   "name": "권준호",
   "nameEn": "Ko Jun-seo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 75
+      "potentialHidden": 75,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

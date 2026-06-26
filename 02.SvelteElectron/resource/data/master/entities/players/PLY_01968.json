@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01968",
   "name": "야마구치 미쓰루",
   "nameEn": "Yamaguchi Mitsuru",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 14
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00536",
   "name": "곽재윤",
   "nameEn": "Lim Ji-hoo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 57,
-      "potentialHidden": 56
+      "potentialHidden": 56,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

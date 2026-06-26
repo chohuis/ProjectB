@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00851",
   "name": "무어 로버트",
   "nameEn": "Moore Robert",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

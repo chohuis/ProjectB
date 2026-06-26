@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02023",
   "name": "사사키 히라쿠",
   "nameEn": "Sasaki Hiraku",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 87
+      "potentialHidden": 87,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

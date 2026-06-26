@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01958",
   "name": "무라카미 기요시",
   "nameEn": "Murakami Kiyoshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 35,
-      "potentialHidden": 88
+      "potentialHidden": 88,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

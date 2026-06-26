@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01841",
   "name": "타나카 다이키",
   "nameEn": "Tanaka Daiki",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 73
+      "potentialHidden": 73,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

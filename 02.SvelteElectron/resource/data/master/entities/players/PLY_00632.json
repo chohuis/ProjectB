@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00632",
   "name": "장태민",
   "nameEn": "Moon Woo-jin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 53,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

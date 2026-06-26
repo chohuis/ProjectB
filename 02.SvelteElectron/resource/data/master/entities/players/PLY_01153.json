@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01153",
   "name": "해리스 메이슨",
   "nameEn": "Harris Mason",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 92
+      "potentialHidden": 92,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

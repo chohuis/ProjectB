@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01771",
   "name": "고바야시 토루",
   "nameEn": "Kobayashi Toru",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

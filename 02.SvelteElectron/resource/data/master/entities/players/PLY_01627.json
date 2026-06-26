@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01627",
   "name": "야마다 유타카",
   "nameEn": "Yamada Yutaka",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 69
+      "potentialHidden": 69,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

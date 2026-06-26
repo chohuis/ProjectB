@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00593",
   "name": "이동준",
   "nameEn": "Han Min-hyuk",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 64
+      "potentialHidden": 64,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

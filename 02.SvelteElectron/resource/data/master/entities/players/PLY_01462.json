@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01462",
   "name": "존스 오스틴",
   "nameEn": "Jones Austin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 64
+      "potentialHidden": 64,
+      "proServiceYears": 19
     },
     "coach": {
       "specialty": "-",

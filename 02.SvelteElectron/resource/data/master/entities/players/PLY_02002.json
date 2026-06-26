@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02002",
   "name": "니시무라 이사무",
   "nameEn": "Nishimura Isamu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 86
+      "potentialHidden": 86,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01416",
   "name": "앨런 제임스",
   "nameEn": "Allen James",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 91
+      "potentialHidden": 91,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

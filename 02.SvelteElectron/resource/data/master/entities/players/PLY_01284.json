@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01284",
   "name": "브라운 저스틴",
   "nameEn": "Brown Justin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 72
+      "potentialHidden": 72,
+      "proServiceYears": 15
     },
     "coach": {
       "specialty": "-",

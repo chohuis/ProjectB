@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02076",
   "name": "고바야시 야마토",
   "nameEn": "Kobayashi Yamato",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 91
+      "potentialHidden": 91,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

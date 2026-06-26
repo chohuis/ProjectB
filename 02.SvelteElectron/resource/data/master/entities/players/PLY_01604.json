@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01604",
   "name": "후쿠다 히로시",
   "nameEn": "Fukuda Hiroshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 71
+      "potentialHidden": 71,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

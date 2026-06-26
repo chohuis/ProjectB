@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01255",
   "name": "마틴 마이클",
   "nameEn": "Martin Michael",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 86
+      "potentialHidden": 86,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

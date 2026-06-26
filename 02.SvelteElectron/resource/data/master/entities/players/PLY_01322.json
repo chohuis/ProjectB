@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01322",
   "name": "로빈슨 데이비드",
   "nameEn": "Robinson David",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 35,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00531",
   "name": "손시우",
   "nameEn": "Choi Seung-min",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 76
+      "potentialHidden": 76,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

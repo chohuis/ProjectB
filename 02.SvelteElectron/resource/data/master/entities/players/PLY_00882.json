@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00882",
   "name": "라미레스 저스틴",
   "nameEn": "Ramirez Justin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 33,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

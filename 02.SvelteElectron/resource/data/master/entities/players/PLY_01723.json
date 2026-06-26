@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01723",
   "name": "야마자키 기요시",
   "nameEn": "Yamazaki Kiyoshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

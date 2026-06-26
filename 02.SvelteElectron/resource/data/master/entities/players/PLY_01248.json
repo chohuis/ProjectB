@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01248",
   "name": "스콧 이선",
   "nameEn": "Scott Ethan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01772",
   "name": "하시모토 준",
   "nameEn": "Hashimoto Jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 58
+      "potentialHidden": 58,
+      "proServiceYears": 16
     },
     "coach": {
       "specialty": "-",

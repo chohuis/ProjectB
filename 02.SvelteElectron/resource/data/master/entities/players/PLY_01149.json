@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01149",
   "name": "브라운 호세",
   "nameEn": "Brown Jose",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 30,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

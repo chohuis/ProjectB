@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01254",
   "name": "무어 크리스토퍼",
   "nameEn": "Moore Christopher",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 83
+      "potentialHidden": 83,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

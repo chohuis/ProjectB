@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01468",
   "name": "워커 크리스토퍼",
   "nameEn": "Walker Christopher",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

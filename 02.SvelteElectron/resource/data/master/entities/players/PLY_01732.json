@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01732",
   "name": "와타나베 코지",
   "nameEn": "Watanabe Koji",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 90
+      "potentialHidden": 90,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

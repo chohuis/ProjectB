@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01306",
   "name": "톰프슨 저스틴",
   "nameEn": "Thompson Justin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 37,
-      "potentialHidden": 75
+      "potentialHidden": 75,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

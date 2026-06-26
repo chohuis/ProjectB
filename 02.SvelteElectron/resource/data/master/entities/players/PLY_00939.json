@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00939",
   "name": "가르시아 에이든",
   "nameEn": "Garcia Aiden",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 80
+      "potentialHidden": 80,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

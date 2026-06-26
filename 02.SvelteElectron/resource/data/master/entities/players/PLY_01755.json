@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01755",
   "name": "후지이 기요시",
   "nameEn": "Fujii Kiyoshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 54,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

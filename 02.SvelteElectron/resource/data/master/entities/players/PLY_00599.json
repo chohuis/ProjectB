@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00599",
   "name": "심재현",
   "nameEn": "Han Jin-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

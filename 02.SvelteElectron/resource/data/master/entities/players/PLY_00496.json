@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00496",
   "name": "곽예준",
   "nameEn": "Na Jin-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 55,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

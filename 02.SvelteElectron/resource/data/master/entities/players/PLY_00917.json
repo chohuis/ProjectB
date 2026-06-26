@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00917",
   "name": "브라운 루카스",
   "nameEn": "Brown Lucas",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 36,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

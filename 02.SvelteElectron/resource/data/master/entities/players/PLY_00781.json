@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00781",
   "name": "배준호",
   "nameEn": "Ha Seung-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 37,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01084",
   "name": "스미스 미겔",
   "nameEn": "Smith Miguel",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 65
+      "potentialHidden": 65,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

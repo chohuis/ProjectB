@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01394",
   "name": "루이스 애드리언",
   "nameEn": "Lewis Adrian",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 37,
-      "potentialHidden": 66
+      "potentialHidden": 66,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

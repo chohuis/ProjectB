@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01373",
   "name": "밀러 루이스",
   "nameEn": "Miller Luis",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 73
+      "potentialHidden": 73,
+      "proServiceYears": 16
     },
     "coach": {
       "specialty": "-",

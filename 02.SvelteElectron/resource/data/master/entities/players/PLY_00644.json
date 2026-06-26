@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00644",
   "name": "곽준영",
   "nameEn": "Joo Seung-hyun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 58
+      "potentialHidden": 58,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

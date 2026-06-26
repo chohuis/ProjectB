@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01620",
   "name": "요시다 오사무",
   "nameEn": "Yoshida Osamu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 71
+      "potentialHidden": 71,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02048",
   "name": "후지타 렌",
   "nameEn": "Fujita Ren",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 65
+      "potentialHidden": 65,
+      "proServiceYears": 16
     },
     "coach": {
       "specialty": "-",

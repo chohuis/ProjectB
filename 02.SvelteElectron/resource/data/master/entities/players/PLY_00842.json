@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00842",
   "name": "데이비스 루카스",
   "nameEn": "Davis Lucas",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 86
+      "potentialHidden": 86,
+      "proServiceYears": 14
     },
     "coach": {
       "specialty": "-",

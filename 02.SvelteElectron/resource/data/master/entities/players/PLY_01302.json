@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01302",
   "name": "워커 타일러",
   "nameEn": "Walker Tyler",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 34,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

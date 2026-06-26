@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01767",
   "name": "이케다 마나부",
   "nameEn": "Ikeda Manabu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 61
+      "potentialHidden": 61,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00802",
   "name": "홍상현",
   "nameEn": "Ku Si-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 73
+      "potentialHidden": 73,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

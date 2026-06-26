@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02029",
   "name": "이노우에 히라쿠",
   "nameEn": "Inoue Hiraku",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 72
+      "potentialHidden": 72,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

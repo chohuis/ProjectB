@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00692",
   "name": "권도현",
   "nameEn": "Kwon Seong-min",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 53,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00871",
   "name": "윌슨 데이비드",
   "nameEn": "Wilson David",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 61
+      "potentialHidden": 61,
+      "proServiceYears": 18
     },
     "coach": {
       "specialty": "-",

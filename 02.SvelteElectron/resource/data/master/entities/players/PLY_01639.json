@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01639",
   "name": "아베 히라쿠",
   "nameEn": "Abe Hiraku",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 80
+      "potentialHidden": 80,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

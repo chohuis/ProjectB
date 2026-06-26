@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01044",
   "name": "워커 제이컵",
   "nameEn": "Walker Jacob",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 33,
-      "potentialHidden": 91
+      "potentialHidden": 91,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

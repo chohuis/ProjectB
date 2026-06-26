@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01885",
   "name": "나카무라 준",
   "nameEn": "Nakamura Jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 83
+      "potentialHidden": 83,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00659",
   "name": "강준혁",
   "nameEn": "Woo Jun-young",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

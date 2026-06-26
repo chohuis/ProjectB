@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00475",
   "name": "장성준",
   "nameEn": "Yang Ji-ho",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 79
+      "potentialHidden": 79,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

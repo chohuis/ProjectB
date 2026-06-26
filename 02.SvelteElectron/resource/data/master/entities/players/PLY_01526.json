@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01526",
   "name": "산체스 라이언",
   "nameEn": "Sanchez Ryan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

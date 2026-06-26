@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01089",
   "name": "카터 제임스",
   "nameEn": "Carter James",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 37,
-      "potentialHidden": 88
+      "potentialHidden": 88,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

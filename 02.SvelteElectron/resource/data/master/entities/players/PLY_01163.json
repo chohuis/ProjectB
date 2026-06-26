@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01163",
   "name": "킹 제임스",
   "nameEn": "King James",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 31,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

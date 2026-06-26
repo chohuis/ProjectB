@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01982",
   "name": "카토 야마토",
   "nameEn": "Kato Yamato",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02006",
   "name": "무라카미 쓰요시",
   "nameEn": "Murakami Tsuyoshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 65
+      "potentialHidden": 65,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

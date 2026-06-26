@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00984",
   "name": "화이트 루카스",
   "nameEn": "White Lucas",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 91
+      "potentialHidden": 91,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

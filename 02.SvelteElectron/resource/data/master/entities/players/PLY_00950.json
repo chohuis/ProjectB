@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00950",
   "name": "루이스 타일러",
   "nameEn": "Lewis Tyler",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 31,
-      "potentialHidden": 64
+      "potentialHidden": 64,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

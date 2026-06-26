@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01131",
   "name": "마틴 리엄",
   "nameEn": "Martin Liam",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 80
+      "potentialHidden": 80,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

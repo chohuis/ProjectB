@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01471",
   "name": "카터 하비에르",
   "nameEn": "Carter Javier",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 37,
-      "potentialHidden": 72
+      "potentialHidden": 72,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

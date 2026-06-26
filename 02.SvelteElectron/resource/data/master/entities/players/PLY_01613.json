@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01613",
   "name": "이시다 쓰요시",
   "nameEn": "Ishida Tsuyoshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

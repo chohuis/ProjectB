@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01571",
   "name": "아베 료",
   "nameEn": "Abe Ryo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 66
+      "potentialHidden": 66,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

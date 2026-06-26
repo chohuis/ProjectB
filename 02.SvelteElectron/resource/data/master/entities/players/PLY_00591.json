@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00591",
   "name": "박동우",
   "nameEn": "Hong Seung-min",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 54,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01264",
   "name": "가르시아 일라이저",
   "nameEn": "Garcia Elijah",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 73
+      "potentialHidden": 73,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

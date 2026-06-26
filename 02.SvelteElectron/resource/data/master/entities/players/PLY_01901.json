@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01901",
   "name": "나카무라 히로시",
   "nameEn": "Nakamura Hiroshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 15
     },
     "coach": {
       "specialty": "-",

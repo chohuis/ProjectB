@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01720",
   "name": "야마구치 쓰카사",
   "nameEn": "Yamaguchi Tsukasa",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

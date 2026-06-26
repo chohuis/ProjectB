@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00514",
   "name": "박찬영",
   "nameEn": "Cha Jeong-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 36,
-      "potentialHidden": 79
+      "potentialHidden": 79,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

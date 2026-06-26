@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01101",
   "name": "라이트 호세",
   "nameEn": "Wright Jose",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 30,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

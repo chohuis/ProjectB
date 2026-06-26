@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00855",
   "name": "해리스 타일러",
   "nameEn": "Harris Tyler",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 89
+      "potentialHidden": 89,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

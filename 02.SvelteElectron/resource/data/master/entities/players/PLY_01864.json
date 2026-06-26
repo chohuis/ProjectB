@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01864",
   "name": "엔도 쓰요시",
   "nameEn": "Endo Tsuyoshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

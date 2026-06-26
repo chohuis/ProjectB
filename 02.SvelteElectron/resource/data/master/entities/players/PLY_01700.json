@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01700",
   "name": "마에다 준",
   "nameEn": "Maeda Jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 61
+      "potentialHidden": 61,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

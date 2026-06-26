@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01171",
   "name": "데이비스 메이슨",
   "nameEn": "Davis Mason",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

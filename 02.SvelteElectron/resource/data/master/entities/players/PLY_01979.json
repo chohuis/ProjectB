@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01979",
   "name": "마쓰모토 슌",
   "nameEn": "Matsumoto Shun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 76
+      "potentialHidden": 76,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

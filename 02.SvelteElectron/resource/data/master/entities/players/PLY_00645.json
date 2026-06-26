@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00645",
   "name": "서성민",
   "nameEn": "Oh Dong-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

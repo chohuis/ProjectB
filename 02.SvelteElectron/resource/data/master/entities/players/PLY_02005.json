@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02005",
   "name": "카토 소타",
   "nameEn": "Kato Sota",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 53,
-      "potentialHidden": 61
+      "potentialHidden": 61,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

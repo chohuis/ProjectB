@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01781",
   "name": "이케다 렌",
   "nameEn": "Ikeda Ren",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

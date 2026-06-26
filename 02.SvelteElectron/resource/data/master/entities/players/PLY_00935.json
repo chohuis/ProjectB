@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00935",
   "name": "토머스 마이클",
   "nameEn": "Thomas Michael",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 30,
-      "potentialHidden": 66
+      "potentialHidden": 66,
+      "proServiceYears": 20
     },
     "coach": {
       "specialty": "-",

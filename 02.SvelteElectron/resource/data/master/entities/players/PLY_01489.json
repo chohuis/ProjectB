@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01489",
   "name": "로빈슨 로건",
   "nameEn": "Robinson Logan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 86
+      "potentialHidden": 86,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

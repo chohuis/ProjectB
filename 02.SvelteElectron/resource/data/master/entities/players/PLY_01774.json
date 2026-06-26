@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01774",
   "name": "니시무라 진",
   "nameEn": "Nishimura Jin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 34,
-      "potentialHidden": 76
+      "potentialHidden": 76,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00974",
   "name": "윌리엄스 조너선",
   "nameEn": "Williams Jonathan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 83
+      "potentialHidden": 83,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

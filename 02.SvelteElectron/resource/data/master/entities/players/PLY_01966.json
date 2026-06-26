@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01966",
   "name": "고토 히라쿠",
   "nameEn": "Goto Hiraku",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 91
+      "potentialHidden": 91,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

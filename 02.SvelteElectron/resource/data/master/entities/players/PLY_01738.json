@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01738",
   "name": "사사키 쓰요시",
   "nameEn": "Sasaki Tsuyoshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 53,
-      "potentialHidden": 90
+      "potentialHidden": 90,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

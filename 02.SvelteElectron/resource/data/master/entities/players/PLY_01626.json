@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01626",
   "name": "오타 시게루",
   "nameEn": "Ota Shigeru",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

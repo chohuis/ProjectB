@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01492",
   "name": "리베라 애드리언",
   "nameEn": "Rivera Adrian",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 91
+      "potentialHidden": 91,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

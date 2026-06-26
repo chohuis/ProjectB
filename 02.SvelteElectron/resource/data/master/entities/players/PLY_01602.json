@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01602",
   "name": "콘도 오사무",
   "nameEn": "Kondo Osamu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 79
+      "potentialHidden": 79,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

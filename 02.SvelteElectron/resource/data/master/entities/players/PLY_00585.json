@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00585",
   "name": "백준호",
   "nameEn": "Lee Chan-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 58,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

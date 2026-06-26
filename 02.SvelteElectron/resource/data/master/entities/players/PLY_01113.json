@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01113",
   "name": "리 크리스토퍼",
   "nameEn": "Lee Christopher",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 92
+      "potentialHidden": 92,
+      "proServiceYears": 18
     },
     "coach": {
       "specialty": "-",

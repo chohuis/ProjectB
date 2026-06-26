@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01715",
   "name": "야마구치 사토시",
   "nameEn": "Yamaguchi Satoshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 61
+      "potentialHidden": 61,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

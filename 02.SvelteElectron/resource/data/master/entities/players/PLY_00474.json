@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00474",
   "name": "허준영",
   "nameEn": "Shin Yong-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

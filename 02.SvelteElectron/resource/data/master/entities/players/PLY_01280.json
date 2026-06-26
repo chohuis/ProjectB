@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01280",
   "name": "킹 빅터",
   "nameEn": "King Victor",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 35,
-      "potentialHidden": 73
+      "potentialHidden": 73,
+      "proServiceYears": 20
     },
     "coach": {
       "specialty": "-",

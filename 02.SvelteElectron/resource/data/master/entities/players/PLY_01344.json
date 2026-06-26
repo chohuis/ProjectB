@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01344",
   "name": "홀 마이클",
   "nameEn": "Hall Michael",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

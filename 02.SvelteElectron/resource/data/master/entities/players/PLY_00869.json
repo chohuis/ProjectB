@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00869",
   "name": "루이스 벤자민",
   "nameEn": "Lewis Benjamin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 73
+      "potentialHidden": 73,
+      "proServiceYears": 17
     },
     "coach": {
       "specialty": "-",

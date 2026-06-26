@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01592",
   "name": "시미즈 시게루",
   "nameEn": "Shimizu Shigeru",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 37,
-      "potentialHidden": 62
+      "potentialHidden": 62,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

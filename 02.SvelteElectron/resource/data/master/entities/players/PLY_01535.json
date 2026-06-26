@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01535",
   "name": "윌슨 마이클",
   "nameEn": "Wilson Michael",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 86
+      "potentialHidden": 86,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

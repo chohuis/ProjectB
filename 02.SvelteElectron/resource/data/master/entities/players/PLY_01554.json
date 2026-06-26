@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01554",
   "name": "타나카 이사무",
   "nameEn": "Tanaka Isamu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 33,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 16
     },
     "coach": {
       "specialty": "-",

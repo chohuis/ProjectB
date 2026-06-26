@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01005",
   "name": "카터 루이스",
   "nameEn": "Carter Luis",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 33,
-      "potentialHidden": 61
+      "potentialHidden": 61,
+      "proServiceYears": 19
     },
     "coach": {
       "specialty": "-",

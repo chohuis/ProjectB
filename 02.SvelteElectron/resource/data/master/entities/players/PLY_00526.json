@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00526",
   "name": "주진우",
   "nameEn": "Cha Seo-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 79
+      "potentialHidden": 79,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

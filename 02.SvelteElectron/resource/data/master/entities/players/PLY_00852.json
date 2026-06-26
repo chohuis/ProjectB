@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00852",
   "name": "가르시아 프란시스코",
   "nameEn": "Garcia Francisco",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

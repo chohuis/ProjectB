@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01437",
   "name": "송서준",
   "nameEn": "Song Seo-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 75
+      "potentialHidden": 75,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

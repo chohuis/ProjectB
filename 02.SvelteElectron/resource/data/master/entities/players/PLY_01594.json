@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01594",
   "name": "타카하시 요스케",
   "nameEn": "Takahashi Yosuke",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 58
+      "potentialHidden": 58,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

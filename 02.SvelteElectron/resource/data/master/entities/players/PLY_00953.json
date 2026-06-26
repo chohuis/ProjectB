@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00953",
   "name": "잭슨 타일러",
   "nameEn": "Jackson Tyler",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

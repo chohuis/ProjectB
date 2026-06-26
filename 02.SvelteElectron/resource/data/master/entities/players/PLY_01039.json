@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01039",
   "name": "윌리엄스 로버트",
   "nameEn": "Williams Robert",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 91
+      "potentialHidden": 91,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

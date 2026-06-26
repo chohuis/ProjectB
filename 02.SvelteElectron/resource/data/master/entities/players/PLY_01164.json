@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01164",
   "name": "밀러 저스틴",
   "nameEn": "Miller Justin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 73
+      "potentialHidden": 73,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

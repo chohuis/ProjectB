@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01908",
   "name": "니시무라 하야토",
   "nameEn": "Nishimura Hayato",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 36,
-      "potentialHidden": 66
+      "potentialHidden": 66,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

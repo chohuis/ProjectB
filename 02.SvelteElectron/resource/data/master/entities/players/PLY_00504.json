@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00504",
   "name": "한재윤",
   "nameEn": "Na Chan-young",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 56,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

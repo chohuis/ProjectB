@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01346",
   "name": "스콧 케빈",
   "nameEn": "Scott Kevin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

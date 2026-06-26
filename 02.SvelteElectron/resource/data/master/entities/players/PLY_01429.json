@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01429",
   "name": "워커 로버트",
   "nameEn": "Walker Robert",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

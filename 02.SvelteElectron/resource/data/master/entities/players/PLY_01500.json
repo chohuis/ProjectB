@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01500",
   "name": "토머스 로건",
   "nameEn": "Thomas Logan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 35,
-      "potentialHidden": 80
+      "potentialHidden": 80,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

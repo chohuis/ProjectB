@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01161",
   "name": "윌리엄스 존",
   "nameEn": "Williams John",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

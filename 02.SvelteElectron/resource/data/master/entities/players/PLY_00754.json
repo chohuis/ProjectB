@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00754",
   "name": "정민재",
   "nameEn": "Yang Dong-hyun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

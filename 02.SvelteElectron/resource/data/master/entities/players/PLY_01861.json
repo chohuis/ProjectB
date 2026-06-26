@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01861",
   "name": "타카하시 렌",
   "nameEn": "Takahashi Ren",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 61
+      "potentialHidden": 61,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

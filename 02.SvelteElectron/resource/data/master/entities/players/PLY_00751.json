@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00751",
   "name": "백연우",
   "nameEn": "Han Gi-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

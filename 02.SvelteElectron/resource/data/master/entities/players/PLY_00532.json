@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00532",
   "name": "신성우",
   "nameEn": "Jeon Dong-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 56,
-      "potentialHidden": 71
+      "potentialHidden": 71,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

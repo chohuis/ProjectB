@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01488",
   "name": "애덤스 다니엘",
   "nameEn": "Adams Daniel",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

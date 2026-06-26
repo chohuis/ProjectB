@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00595",
   "name": "문상현",
   "nameEn": "Yoon Yong-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 58
+      "potentialHidden": 58,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

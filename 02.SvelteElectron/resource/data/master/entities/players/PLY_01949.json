@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01949",
   "name": "하야시 유타",
   "nameEn": "Hayashi Yuta",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

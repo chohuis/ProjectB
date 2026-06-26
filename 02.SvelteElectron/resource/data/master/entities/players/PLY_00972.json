@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00972",
   "name": "밀러 조너선",
   "nameEn": "Miller Jonathan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 89
+      "potentialHidden": 89,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

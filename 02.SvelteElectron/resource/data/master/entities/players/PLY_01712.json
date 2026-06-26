@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01712",
   "name": "이시다 기요시",
   "nameEn": "Ishida Kiyoshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 59
+      "potentialHidden": 59,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

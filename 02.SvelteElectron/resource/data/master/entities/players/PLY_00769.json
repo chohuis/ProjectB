@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00769",
   "name": "신재윤",
   "nameEn": "Lim Ji-won",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 58
+      "potentialHidden": 58,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

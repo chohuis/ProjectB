@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01533",
   "name": "톰프슨 노아",
   "nameEn": "Thompson Noah",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

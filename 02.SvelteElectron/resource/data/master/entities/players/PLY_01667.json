@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01667",
   "name": "타카하시 아키라",
   "nameEn": "Takahashi Akira",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 65
+      "potentialHidden": 65,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

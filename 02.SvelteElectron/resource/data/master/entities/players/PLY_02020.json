@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02020",
   "name": "하시모토 진",
   "nameEn": "Hashimoto Jin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 54,
-      "potentialHidden": 66
+      "potentialHidden": 66,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

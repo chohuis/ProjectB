@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01159",
   "name": "윌리엄스 케빈",
   "nameEn": "Williams Kevin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 59
+      "potentialHidden": 59,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

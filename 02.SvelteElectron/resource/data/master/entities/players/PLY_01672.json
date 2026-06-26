@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01672",
   "name": "아베 기요시",
   "nameEn": "Abe Kiyoshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 57,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

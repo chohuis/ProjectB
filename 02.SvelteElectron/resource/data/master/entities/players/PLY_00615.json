@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00615",
   "name": "조재훈",
   "nameEn": "Shin Hyun-seo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

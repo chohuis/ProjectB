@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00670",
   "name": "노상민",
   "nameEn": "Baek Min-hyuk",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 60,
-      "potentialHidden": 65
+      "potentialHidden": 65,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

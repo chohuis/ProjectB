@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00866",
   "name": "홀 알레한드로",
   "nameEn": "Hall Alejandro",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 90
+      "potentialHidden": 90,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

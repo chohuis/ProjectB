@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01776",
   "name": "무라카미 츠바사",
   "nameEn": "Murakami Tsubasa",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01790",
   "name": "후쿠다 토루",
   "nameEn": "Fukuda Toru",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 92
+      "potentialHidden": 92,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

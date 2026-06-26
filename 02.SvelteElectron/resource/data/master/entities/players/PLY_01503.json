@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01503",
   "name": "앨런 하비에르",
   "nameEn": "Allen Javier",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 76
+      "potentialHidden": 76,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

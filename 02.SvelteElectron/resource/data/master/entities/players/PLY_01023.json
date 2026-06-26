@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01023",
   "name": "가르시아 마르코",
   "nameEn": "Garcia Marco",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 30,
-      "potentialHidden": 64
+      "potentialHidden": 64,
+      "proServiceYears": 20
     },
     "coach": {
       "specialty": "-",

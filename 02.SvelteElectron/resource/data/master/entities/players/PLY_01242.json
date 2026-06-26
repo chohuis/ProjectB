@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01242",
   "name": "베이커 니콜라스",
   "nameEn": "Baker Nicholas",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

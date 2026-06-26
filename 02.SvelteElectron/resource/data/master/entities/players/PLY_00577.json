@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00577",
   "name": "김우진",
   "nameEn": "Hwang Hyun-jin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 58,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

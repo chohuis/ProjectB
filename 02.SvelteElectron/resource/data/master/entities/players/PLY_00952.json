@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00952",
   "name": "앤더슨 매튜",
   "nameEn": "Anderson Matthew",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

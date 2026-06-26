@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00610",
   "name": "유재훈",
   "nameEn": "Noh Jun-hyuk",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 57
+      "potentialHidden": 57,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

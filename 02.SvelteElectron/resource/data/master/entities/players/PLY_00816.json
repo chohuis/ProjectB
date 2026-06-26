@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00816",
   "name": "성민재",
   "nameEn": "Cha Dong-hyun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

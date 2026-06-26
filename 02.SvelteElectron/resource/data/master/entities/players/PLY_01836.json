@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01836",
   "name": "야마다 쓰요시",
   "nameEn": "Yamada Tsuyoshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01619",
   "name": "요시다 쇼",
   "nameEn": "Yoshida Sho",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

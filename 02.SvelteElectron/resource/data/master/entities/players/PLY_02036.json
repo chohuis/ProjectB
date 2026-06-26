@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02036",
   "name": "니시무라 유토",
   "nameEn": "Nishimura Yuto",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

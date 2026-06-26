@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01247",
   "name": "화이트 알레한드로",
   "nameEn": "White Alejandro",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 19
     },
     "coach": {
       "specialty": "-",

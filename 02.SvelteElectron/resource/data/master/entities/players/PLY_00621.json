@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00621",
   "name": "최성현",
   "nameEn": "Cha Hyun-seo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 80
+      "potentialHidden": 80,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

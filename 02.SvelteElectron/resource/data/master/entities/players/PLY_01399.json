@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01399",
   "name": "윌슨 메이슨",
   "nameEn": "Wilson Mason",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 71
+      "potentialHidden": 71,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

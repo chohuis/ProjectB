@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01206",
   "name": "마르티네스 앤서니",
   "nameEn": "Martinez Anthony",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 90
+      "potentialHidden": 90,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

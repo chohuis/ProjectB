@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01501",
   "name": "무어 알레한드로",
   "nameEn": "Moore Alejandro",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 92
+      "potentialHidden": 92,
+      "proServiceYears": 19
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00690",
   "name": "이태현",
   "nameEn": "Kwak Min-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01308",
   "name": "잭슨 디에고",
   "nameEn": "Jackson Diego",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 37,
-      "potentialHidden": 61
+      "potentialHidden": 61,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01878",
   "name": "후쿠다 쓰카사",
   "nameEn": "Fukuda Tsukasa",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 75
+      "potentialHidden": 75,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

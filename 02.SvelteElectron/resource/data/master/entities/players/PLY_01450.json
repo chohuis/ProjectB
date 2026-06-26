@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01450",
   "name": "로빈슨 미겔",
   "nameEn": "Robinson Miguel",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 72
+      "potentialHidden": 72,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01902",
   "name": "마에다 렌",
   "nameEn": "Maeda Ren",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 35,
-      "potentialHidden": 75
+      "potentialHidden": 75,
+      "proServiceYears": 14
     },
     "coach": {
       "specialty": "-",

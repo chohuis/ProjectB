@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00681",
   "name": "백태현",
   "nameEn": "Shin Yeon-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 61
+      "potentialHidden": 61,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

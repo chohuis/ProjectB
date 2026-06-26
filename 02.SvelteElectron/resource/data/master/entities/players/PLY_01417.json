@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01417",
   "name": "넬슨 마이클",
   "nameEn": "Nelson Michael",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 62
+      "potentialHidden": 62,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

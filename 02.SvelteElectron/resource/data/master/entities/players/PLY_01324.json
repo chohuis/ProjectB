@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01324",
   "name": "스미스 에이든",
   "nameEn": "Smith Aiden",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 15
     },
     "coach": {
       "specialty": "-",

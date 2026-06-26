@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01989",
   "name": "고바야시 쇼",
   "nameEn": "Kobayashi Sho",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 89
+      "potentialHidden": 89,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

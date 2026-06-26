@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01188",
   "name": "앤더슨 마이클",
   "nameEn": "Anderson Michael",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 59
+      "potentialHidden": 59,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

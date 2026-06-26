@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00785",
   "name": "홍용준",
   "nameEn": "Park Geon-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 64
+      "potentialHidden": 64,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

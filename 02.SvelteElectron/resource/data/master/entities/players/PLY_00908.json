@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00908",
   "name": "로드리게스 로건",
   "nameEn": "Rodriguez Logan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

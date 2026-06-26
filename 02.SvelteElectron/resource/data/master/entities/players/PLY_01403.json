@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01403",
   "name": "홀 메이슨",
   "nameEn": "Hall Mason",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 30,
-      "potentialHidden": 66
+      "potentialHidden": 66,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

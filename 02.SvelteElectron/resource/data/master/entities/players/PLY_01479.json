@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01479",
   "name": "로빈슨 호세",
   "nameEn": "Robinson Jose",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 88
+      "potentialHidden": 88,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

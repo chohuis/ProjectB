@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00710",
   "name": "신민우",
   "nameEn": "Cho Sang-hyun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 83
+      "potentialHidden": 83,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

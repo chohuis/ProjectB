@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01133",
   "name": "윌슨 마르코",
   "nameEn": "Wilson Marco",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 62
+      "potentialHidden": 62,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

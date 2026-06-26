@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01661",
   "name": "고토 히로시",
   "nameEn": "Goto Hiroshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 61
+      "potentialHidden": 61,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

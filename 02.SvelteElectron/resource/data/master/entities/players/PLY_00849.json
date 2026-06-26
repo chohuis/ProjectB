@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00849",
   "name": "그린 로버트",
   "nameEn": "Green Robert",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 90
+      "potentialHidden": 90,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

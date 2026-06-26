@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00602",
   "name": "임성준",
   "nameEn": "Heo Seo-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 54,
-      "potentialHidden": 80
+      "potentialHidden": 80,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

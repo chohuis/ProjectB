@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01789",
   "name": "사카모토 토루",
   "nameEn": "Sakamoto Toru",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

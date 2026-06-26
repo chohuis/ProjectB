@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01605",
   "name": "야마구치 야마토",
   "nameEn": "Yamaguchi Yamato",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 76
+      "potentialHidden": 76,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

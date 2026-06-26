@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01765",
   "name": "후지이 야마토",
   "nameEn": "Fujii Yamato",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

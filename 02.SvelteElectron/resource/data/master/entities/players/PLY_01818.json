@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01818",
   "name": "기무라 오사무",
   "nameEn": "Kimura Osamu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 87
+      "potentialHidden": 87,
+      "proServiceYears": 16
     },
     "coach": {
       "specialty": "-",

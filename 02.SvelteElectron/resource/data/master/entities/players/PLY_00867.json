@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00867",
   "name": "화이트 빅터",
   "nameEn": "White Victor",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 31,
-      "potentialHidden": 91
+      "potentialHidden": 91,
+      "proServiceYears": 14
     },
     "coach": {
       "specialty": "-",

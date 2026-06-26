@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00633",
   "name": "유서준",
   "nameEn": "Yang Ju-won",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 56,
-      "potentialHidden": 62
+      "potentialHidden": 62,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

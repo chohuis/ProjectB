@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01474",
   "name": "가르시아 매튜",
   "nameEn": "Garcia Matthew",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 16
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00477",
   "name": "양지후",
   "nameEn": "Min Ji-won",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 90
+      "potentialHidden": 90,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

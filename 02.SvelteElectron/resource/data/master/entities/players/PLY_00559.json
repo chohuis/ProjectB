@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00559",
   "name": "백재현",
   "nameEn": "Kim Seong-hyun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 57
+      "potentialHidden": 57,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

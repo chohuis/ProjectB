@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00927",
   "name": "톰프슨 하비에르",
   "nameEn": "Thompson Javier",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 36,
-      "potentialHidden": 72
+      "potentialHidden": 72,
+      "proServiceYears": 20
     },
     "coach": {
       "specialty": "-",

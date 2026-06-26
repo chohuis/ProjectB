@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01073",
   "name": "밀러 호세",
   "nameEn": "Miller Jose",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

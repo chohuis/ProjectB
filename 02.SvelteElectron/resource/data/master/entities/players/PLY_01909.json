@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01909",
   "name": "사토 하야토",
   "nameEn": "Sato Hayato",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 91
+      "potentialHidden": 91,
+      "proServiceYears": 16
     },
     "coach": {
       "specialty": "-",

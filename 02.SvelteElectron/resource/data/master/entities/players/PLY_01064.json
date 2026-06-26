@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01064",
   "name": "스미스 로버트",
   "nameEn": "Smith Robert",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 36,
-      "potentialHidden": 83
+      "potentialHidden": 83,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

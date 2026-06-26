@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01614",
   "name": "미우라 유타",
   "nameEn": "Miura Yuta",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 72
+      "potentialHidden": 72,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

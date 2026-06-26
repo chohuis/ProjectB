@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01881",
   "name": "하야시 진",
   "nameEn": "Hayashi Jin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 57,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

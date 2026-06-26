@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00839",
   "name": "윌슨 오스틴",
   "nameEn": "Wilson Austin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 20
     },
     "coach": {
       "specialty": "-",

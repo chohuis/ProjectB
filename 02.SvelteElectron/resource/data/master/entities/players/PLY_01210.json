@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01210",
   "name": "리베라 제임스",
   "nameEn": "Rivera James",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

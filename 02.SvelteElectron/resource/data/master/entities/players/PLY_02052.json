@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02052",
   "name": "엔도 아키라",
   "nameEn": "Endo Akira",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 88
+      "potentialHidden": 88,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

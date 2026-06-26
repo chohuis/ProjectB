@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01822",
   "name": "사토 다이키",
   "nameEn": "Sato Daiki",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 35,
-      "potentialHidden": 61
+      "potentialHidden": 61,
+      "proServiceYears": 15
     },
     "coach": {
       "specialty": "-",

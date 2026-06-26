@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01055",
   "name": "미첼 루이스",
   "nameEn": "Mitchell Luis",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 75
+      "potentialHidden": 75,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

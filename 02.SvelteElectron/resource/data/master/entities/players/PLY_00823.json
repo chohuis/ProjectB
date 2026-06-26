@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00823",
   "name": "루이스 조너선",
   "nameEn": "Lewis Jonathan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 73
+      "potentialHidden": 73,
+      "proServiceYears": 14
     },
     "coach": {
       "specialty": "-",

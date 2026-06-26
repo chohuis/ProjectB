@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01473",
   "name": "해리스 데이비드",
   "nameEn": "Harris David",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 62
+      "potentialHidden": 62,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

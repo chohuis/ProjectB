@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00524",
   "name": "오준영",
   "nameEn": "Sung Dong-hyuk",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 79
+      "potentialHidden": 79,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

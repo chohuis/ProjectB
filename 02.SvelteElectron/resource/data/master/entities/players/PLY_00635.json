@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00635",
   "name": "주준혁",
   "nameEn": "Yang Dong-hyuk",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 57,
-      "potentialHidden": 75
+      "potentialHidden": 75,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

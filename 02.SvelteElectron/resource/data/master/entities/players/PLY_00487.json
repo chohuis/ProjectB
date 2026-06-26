@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00487",
   "name": "곽동현",
   "nameEn": "Moon Min-hyuk",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 59,
-      "potentialHidden": 57
+      "potentialHidden": 57,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

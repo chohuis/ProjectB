@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01648",
   "name": "스즈키 카이토",
   "nameEn": "Suzuki Kaito",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 61
+      "potentialHidden": 61,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

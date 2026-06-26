@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01090",
   "name": "라이트 케빈",
   "nameEn": "Wright Kevin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00796",
   "name": "곽성준",
   "nameEn": "Han Min-jae",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

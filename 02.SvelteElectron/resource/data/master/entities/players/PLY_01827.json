@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01827",
   "name": "이시카와 히로시",
   "nameEn": "Ishikawa Hiroshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

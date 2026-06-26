@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01943",
   "name": "와타나베 아키라",
   "nameEn": "Watanabe Akira",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 87
+      "potentialHidden": 87,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

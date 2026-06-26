@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01342",
   "name": "잭슨 노아",
   "nameEn": "Jackson Noah",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 83
+      "potentialHidden": 83,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01026",
   "name": "무어 앤서니",
   "nameEn": "Moore Anthony",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 80
+      "potentialHidden": 80,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

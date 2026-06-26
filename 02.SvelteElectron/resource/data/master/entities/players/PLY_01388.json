@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01388",
   "name": "스콧 제이컵",
   "nameEn": "Scott Jacob",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 37,
-      "potentialHidden": 62
+      "potentialHidden": 62,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

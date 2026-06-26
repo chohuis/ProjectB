@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01962",
   "name": "니시무라 류",
   "nameEn": "Nishimura Ryu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 79
+      "potentialHidden": 79,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

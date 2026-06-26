@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01056",
   "name": "해리스 크리스토퍼",
   "nameEn": "Harris Christopher",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

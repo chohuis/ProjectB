@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01203",
   "name": "밀러 일라이저",
   "nameEn": "Miller Elijah",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 34,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

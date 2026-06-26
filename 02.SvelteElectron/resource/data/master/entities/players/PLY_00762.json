@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00762",
   "name": "윤상현",
   "nameEn": "Han Seo-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 66
+      "potentialHidden": 66,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

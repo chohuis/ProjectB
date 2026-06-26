@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00554",
   "name": "허용준",
   "nameEn": "Baek Jun-ho",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 71
+      "potentialHidden": 71,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

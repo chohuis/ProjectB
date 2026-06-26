@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01598",
   "name": "오카다 아키라",
   "nameEn": "Okada Akira",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 35,
-      "potentialHidden": 57
+      "potentialHidden": 57,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

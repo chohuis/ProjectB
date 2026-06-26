@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00774",
   "name": "한동우",
   "nameEn": "Yang Dong-hyun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 86
+      "potentialHidden": 86,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

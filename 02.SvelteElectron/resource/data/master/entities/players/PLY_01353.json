@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01353",
   "name": "카스티요 제임스",
   "nameEn": "Castillo James",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

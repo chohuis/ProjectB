@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01472",
   "name": "애덤스 브랜던",
   "nameEn": "Adams Brandon",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01778",
   "name": "사카모토 소타",
   "nameEn": "Sakamoto Sota",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 36,
-      "potentialHidden": 66
+      "potentialHidden": 66,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

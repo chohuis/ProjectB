@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01239",
   "name": "플로레스 크리스토퍼",
   "nameEn": "Flores Christopher",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 73
+      "potentialHidden": 73,
+      "proServiceYears": 17
     },
     "coach": {
       "specialty": "-",

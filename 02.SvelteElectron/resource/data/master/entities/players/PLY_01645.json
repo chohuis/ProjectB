@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01645",
   "name": "고바야시 료",
   "nameEn": "Kobayashi Ryo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 35,
-      "potentialHidden": 62
+      "potentialHidden": 62,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

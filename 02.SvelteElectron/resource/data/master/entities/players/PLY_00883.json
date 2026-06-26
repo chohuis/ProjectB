@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00883",
   "name": "영 앤서니",
   "nameEn": "Young Anthony",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 31,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

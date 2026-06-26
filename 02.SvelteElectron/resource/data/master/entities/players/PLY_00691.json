@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00691",
   "name": "임재윤",
   "nameEn": "Noh Ha-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

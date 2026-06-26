@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01556",
   "name": "무라카미 오사무",
   "nameEn": "Murakami Osamu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

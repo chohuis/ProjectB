@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01502",
   "name": "토레스 니콜라스",
   "nameEn": "Torres Nicholas",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

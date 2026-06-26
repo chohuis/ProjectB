@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01328",
   "name": "토레스 앤서니",
   "nameEn": "Torres Anthony",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 35,
-      "potentialHidden": 76
+      "potentialHidden": 76,
+      "proServiceYears": 20
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01606",
   "name": "이시다 카이토",
   "nameEn": "Ishida Kaito",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 66
+      "potentialHidden": 66,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

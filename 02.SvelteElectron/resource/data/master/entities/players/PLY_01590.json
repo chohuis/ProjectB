@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01590",
   "name": "타카하시 토루",
   "nameEn": "Takahashi Toru",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 76
+      "potentialHidden": 76,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

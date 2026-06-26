@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01105",
   "name": "페레스 마이클",
   "nameEn": "Perez Michael",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 34,
-      "potentialHidden": 91
+      "potentialHidden": 91,
+      "proServiceYears": 17
     },
     "coach": {
       "specialty": "-",

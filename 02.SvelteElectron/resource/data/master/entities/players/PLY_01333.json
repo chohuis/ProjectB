@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01333",
   "name": "무어 프란시스코",
   "nameEn": "Moore Francisco",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 92
+      "potentialHidden": 92,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

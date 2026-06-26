@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00740",
   "name": "손동혁",
   "nameEn": "Kang Min-seok",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 72
+      "potentialHidden": 72,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00930",
   "name": "앨런 제이컵",
   "nameEn": "Allen Jacob",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 19
     },
     "coach": {
       "specialty": "-",

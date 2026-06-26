@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01349",
   "name": "페레스 오스틴",
   "nameEn": "Perez Austin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 90
+      "potentialHidden": 90,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

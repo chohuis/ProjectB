@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01446",
   "name": "라이트 오스틴",
   "nameEn": "Wright Austin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

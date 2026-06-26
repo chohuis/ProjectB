@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01345",
   "name": "무어 브랜던",
   "nameEn": "Moore Brandon",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

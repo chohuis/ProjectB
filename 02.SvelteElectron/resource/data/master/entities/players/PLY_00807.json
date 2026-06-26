@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00807",
   "name": "홍승현",
   "nameEn": "Baek Jun-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

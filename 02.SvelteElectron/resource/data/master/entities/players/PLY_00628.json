@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00628",
   "name": "곽지후",
   "nameEn": "Hwang Min-jae",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 59,
-      "potentialHidden": 72
+      "potentialHidden": 72,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

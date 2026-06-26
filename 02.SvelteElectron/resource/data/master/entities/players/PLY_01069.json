@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01069",
   "name": "산체스 조셉",
   "nameEn": "Sanchez Joseph",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

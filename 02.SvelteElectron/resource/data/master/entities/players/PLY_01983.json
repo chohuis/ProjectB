@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01983",
   "name": "하야시 슌",
   "nameEn": "Hayashi Shun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 69
+      "potentialHidden": 69,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

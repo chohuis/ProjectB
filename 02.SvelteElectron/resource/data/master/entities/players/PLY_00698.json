@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00698",
   "name": "권재현",
   "nameEn": "You Ji-hoon",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

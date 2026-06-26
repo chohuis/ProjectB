@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01313",
   "name": "무어 로건",
   "nameEn": "Moore Logan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

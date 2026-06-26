@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00901",
   "name": "윌리엄스 제이컵",
   "nameEn": "Williams Jacob",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

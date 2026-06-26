@@ -2078,23 +2078,38 @@ function createGameStore() {
           }
         }
 
-        // 3. 일반병 강제 입대: 3개 프로리그 한국인 age>=28 또는 체육부대 탈락 27세 → 시즌 30명 랜덤 상한
+        // 3. 일반병 강제 입대
         const candidateIdSet = new Set(milCandidates.map(c => c.id));
         const mGeneral = get(masterStore);
-        const generalPool = mGeneral.entities.filter(e =>
+
+        // 공통 입대 자격 조건
+        const isEnlistEligible = (e: import("./master").EntityRow) =>
           e.role === "player" &&
           e.status !== "retired" &&
-          proLeagues.has(e.leagueId ?? "") &&
           isKoreanEntity(e) &&
           e.militaryStatus !== "현역" && e.militaryStatus !== "군필" && e.militaryStatus !== "면제" &&
           e.details?.player?.militaryStatus !== "현역" &&
           !e.details?.player?.militaryEnlistYear &&
           !dischargedIds.has(e.id) &&
-          !selectedSportsIds.has(e.id) && (
-            e.age >= 28 ||
-            (e.age === 27 && candidateIdSet.has(e.id))
-          )
+          !selectedSportsIds.has(e.id);
+
+        // 프로리그(KBL/ABL/JBL): 28세+ 또는 체육부대 탈락 27세
+        const generalPoolPro = mGeneral.entities.filter(e =>
+          isEnlistEligible(e) &&
+          proLeagues.has(e.leagueId ?? "") &&
+          (e.age >= 28 || (e.age === 27 && candidateIdSet.has(e.id)))
         );
+
+        // 독립/대학리그: 26세+ (프로 입단 가능성 낮아지기 전에 처리)
+        const nonProMilLeagues = new Set(["LEAGUE_INDEPENDENT", "LEAGUE_UNIVERSITY"]);
+        const generalPoolNonPro = mGeneral.entities.filter(e =>
+          isEnlistEligible(e) &&
+          nonProMilLeagues.has(e.leagueId ?? "") &&
+          e.age >= 26
+        );
+
+        const generalPool = [...generalPoolPro, ...generalPoolNonPro];
+        autoLog(`[일반병후보] 프로 ${generalPoolPro.length}명 + 독립/대학26세+ ${generalPoolNonPro.length}명 = ${generalPool.length}명`);
 
         // Rust LCG로 최대 30명 랜덤 선택
         const generalEnlistEntities = await (async () => {

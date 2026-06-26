@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00864",
   "name": "밀러 로건",
   "nameEn": "Miller Logan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

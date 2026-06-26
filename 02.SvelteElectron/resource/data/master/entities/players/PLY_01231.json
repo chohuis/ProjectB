@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01231",
   "name": "앤더슨 데이비드",
   "nameEn": "Anderson David",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 58
+      "potentialHidden": 58,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

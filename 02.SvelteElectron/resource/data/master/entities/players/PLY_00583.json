@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00583",
   "name": "유동현",
   "nameEn": "Jung Tae-yang",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

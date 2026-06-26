@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00555",
   "name": "차현서",
   "nameEn": "Yoon Jun-ho",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

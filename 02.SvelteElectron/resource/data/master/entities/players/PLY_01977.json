@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01977",
   "name": "나카무라 츠바사",
   "nameEn": "Nakamura Tsubasa",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

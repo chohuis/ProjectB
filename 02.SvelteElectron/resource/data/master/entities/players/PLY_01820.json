@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01820",
   "name": "이시카와 료",
   "nameEn": "Ishikawa Ryo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

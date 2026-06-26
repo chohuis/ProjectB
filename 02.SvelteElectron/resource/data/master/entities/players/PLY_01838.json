@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01838",
   "name": "콘도 야마토",
   "nameEn": "Kondo Yamato",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 56,
-      "potentialHidden": 72
+      "potentialHidden": 72,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

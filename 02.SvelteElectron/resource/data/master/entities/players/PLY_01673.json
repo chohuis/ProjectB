@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01673",
   "name": "스즈키 마코토",
   "nameEn": "Suzuki Makoto",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 91
+      "potentialHidden": 91,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

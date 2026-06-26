@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01623",
   "name": "사이토 히라쿠",
   "nameEn": "Saito Hiraku",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 65
+      "potentialHidden": 65,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

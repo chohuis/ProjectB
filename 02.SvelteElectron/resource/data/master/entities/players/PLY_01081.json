@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01081",
   "name": "토머스 다니엘",
   "nameEn": "Thomas Daniel",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 36,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

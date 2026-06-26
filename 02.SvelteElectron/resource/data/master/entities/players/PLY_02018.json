@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02018",
   "name": "콘도 마나부",
   "nameEn": "Kondo Manabu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 71
+      "potentialHidden": 71,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

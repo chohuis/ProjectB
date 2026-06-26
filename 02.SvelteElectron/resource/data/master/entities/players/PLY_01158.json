@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01158",
   "name": "존스 존",
   "nameEn": "Jones John",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01465",
   "name": "클라크 윌리엄",
   "nameEn": "Clark William",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

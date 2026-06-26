@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00760",
   "name": "홍지호",
   "nameEn": "You Chan-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

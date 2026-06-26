@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01986",
   "name": "이토 준",
   "nameEn": "Ito Jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

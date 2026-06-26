@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00982",
   "name": "곤살레스 로버트",
   "nameEn": "Gonzalez Robert",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

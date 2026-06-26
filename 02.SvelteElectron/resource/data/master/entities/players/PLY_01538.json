@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01538",
   "name": "산체스 리엄",
   "nameEn": "Sanchez Liam",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

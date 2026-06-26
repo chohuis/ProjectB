@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01773",
   "name": "야마자키 쓰요시",
   "nameEn": "Yamazaki Tsuyoshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 57
+      "potentialHidden": 57,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

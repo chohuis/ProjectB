@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01504",
   "name": "클라크 제이컵",
   "nameEn": "Clark Jacob",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

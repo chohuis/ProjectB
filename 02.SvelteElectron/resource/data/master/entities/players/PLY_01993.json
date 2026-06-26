@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01993",
   "name": "후지타 시게루",
   "nameEn": "Fujita Shigeru",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

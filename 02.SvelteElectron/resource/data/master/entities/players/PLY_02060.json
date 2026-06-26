@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02060",
   "name": "후지이 료",
   "nameEn": "Fujii Ryo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 83
+      "potentialHidden": 83,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

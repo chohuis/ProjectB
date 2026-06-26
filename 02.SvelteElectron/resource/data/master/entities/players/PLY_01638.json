@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01638",
   "name": "스즈키 유타카",
   "nameEn": "Suzuki Yutaka",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 58
+      "potentialHidden": 58,
+      "proServiceYears": 15
     },
     "coach": {
       "specialty": "-",

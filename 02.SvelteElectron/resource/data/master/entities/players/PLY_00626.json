@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00626",
   "name": "남동혁",
   "nameEn": "You Seong-min",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

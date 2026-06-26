@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01821",
   "name": "엔도 마코토",
   "nameEn": "Endo Makoto",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 65
+      "potentialHidden": 65,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

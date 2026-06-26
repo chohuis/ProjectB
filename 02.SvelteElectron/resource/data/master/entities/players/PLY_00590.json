@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00590",
   "name": "홍시우",
   "nameEn": "Son Woo-jin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 57,
-      "potentialHidden": 72
+      "potentialHidden": 72,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

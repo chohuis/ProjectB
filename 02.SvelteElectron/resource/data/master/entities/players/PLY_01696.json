@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01696",
   "name": "와타나베 렌",
   "nameEn": "Watanabe Ren",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 37,
-      "potentialHidden": 72
+      "potentialHidden": 72,
+      "proServiceYears": 14
     },
     "coach": {
       "specialty": "-",

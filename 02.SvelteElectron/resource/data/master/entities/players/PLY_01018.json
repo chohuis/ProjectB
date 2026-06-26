@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01018",
   "name": "데이비스 조너선",
   "nameEn": "Davis Jonathan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

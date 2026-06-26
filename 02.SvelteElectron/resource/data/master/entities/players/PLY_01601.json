@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01601",
   "name": "하야시 류",
   "nameEn": "Hayashi Ryu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 36,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

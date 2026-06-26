@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01750",
   "name": "후지타 슌",
   "nameEn": "Fujita Shun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 76
+      "potentialHidden": 76,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02046",
   "name": "타나카 슌",
   "nameEn": "Tanaka Shun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

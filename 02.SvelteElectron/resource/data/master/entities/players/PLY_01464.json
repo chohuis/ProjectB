@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01464",
   "name": "마틴 케빈",
   "nameEn": "Martin Kevin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 19
     },
     "coach": {
       "specialty": "-",

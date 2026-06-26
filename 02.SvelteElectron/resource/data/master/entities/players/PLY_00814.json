@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00814",
   "name": "우시우",
   "nameEn": "Lee Hyun-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 55,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

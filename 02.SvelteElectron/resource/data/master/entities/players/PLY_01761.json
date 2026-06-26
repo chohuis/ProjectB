@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01761",
   "name": "이케다 유타",
   "nameEn": "Ikeda Yuta",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

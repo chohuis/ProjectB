@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01072",
   "name": "마틴 로버트",
   "nameEn": "Martin Robert",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

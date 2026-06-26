@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01633",
   "name": "이토 츠바사",
   "nameEn": "Ito Tsubasa",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 66
+      "potentialHidden": 66,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

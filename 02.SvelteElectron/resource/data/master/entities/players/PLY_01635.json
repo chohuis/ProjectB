@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01635",
   "name": "오카모토 히라쿠",
   "nameEn": "Okamoto Hiraku",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 33,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 15
     },
     "coach": {
       "specialty": "-",

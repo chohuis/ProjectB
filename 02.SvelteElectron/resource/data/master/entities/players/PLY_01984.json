@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01984",
   "name": "타나카 시게루",
   "nameEn": "Tanaka Shigeru",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 86
+      "potentialHidden": 86,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

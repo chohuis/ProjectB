@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00656",
   "name": "허태양",
   "nameEn": "Baek Jun-hyuk",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 54,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

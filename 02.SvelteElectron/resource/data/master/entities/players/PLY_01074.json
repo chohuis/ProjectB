@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01074",
   "name": "로드리게스 카를로스",
   "nameEn": "Rodriguez Carlos",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 34,
-      "potentialHidden": 62
+      "potentialHidden": 62,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

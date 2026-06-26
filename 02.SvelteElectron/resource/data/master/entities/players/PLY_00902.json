@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00902",
   "name": "브라운 빅터",
   "nameEn": "Brown Victor",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 31,
-      "potentialHidden": 90
+      "potentialHidden": 90,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

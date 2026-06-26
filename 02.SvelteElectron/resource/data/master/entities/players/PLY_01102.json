@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01102",
   "name": "리 제이컵",
   "nameEn": "Lee Jacob",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 31,
-      "potentialHidden": 61
+      "potentialHidden": 61,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

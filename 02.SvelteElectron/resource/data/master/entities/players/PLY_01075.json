@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01075",
   "name": "마르티네스 조셉",
   "nameEn": "Martinez Joseph",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 90
+      "potentialHidden": 90,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

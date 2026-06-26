@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01959",
   "name": "니시무라 켄타",
   "nameEn": "Nishimura Kenta",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 34,
-      "potentialHidden": 88
+      "potentialHidden": 88,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

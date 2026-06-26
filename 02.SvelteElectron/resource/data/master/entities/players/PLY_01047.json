@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01047",
   "name": "라이트 브랜던",
   "nameEn": "Wright Brandon",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 59
+      "potentialHidden": 59,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

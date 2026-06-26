@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01426",
   "name": "해리스 로버트",
   "nameEn": "Harris Robert",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 33,
-      "potentialHidden": 83
+      "potentialHidden": 83,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01220",
   "name": "토머스 조너선",
   "nameEn": "Thomas Jonathan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 37,
-      "potentialHidden": 88
+      "potentialHidden": 88,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

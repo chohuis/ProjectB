@@ -797,11 +797,36 @@ async function processTradeWindow(weekInYear: number, leagueId: string): Promise
     return;
   }
   autoLog(`[트레이드윈도우] ${leagueId} npcRows=${_npcRaw.length}`);
-  const npcRows = _npcRaw as Array<{
+  type NpcTradeRow = {
     npcId: string; position: string; currentTeam: string; currentLeague: string;
     currentSalary: number; contractYears: number; proServiceYears: number;
     pitchOvr: number | null; batOvr: number | null; age: number;
-  }>;
+  };
+  // npc_runtime 미초기화(새 게임 첫 시즌 saveSlot 전) 시 gameStore.npcs 메모리 폴백
+  let npcRows: NpcTradeRow[];
+  if (_npcRaw.length === 0) {
+    const liveStats = get(npcLiveStatsStore);
+    npcRows = g.npcs
+      .filter(n => n.careerStatus === "active" && n.currentLeague === leagueId)
+      .map(n => {
+        const ls = liveStats[n.npcId];
+        return {
+          npcId:          n.npcId,
+          position:       n.position ?? "",
+          currentTeam:    n.currentTeam ?? "",
+          currentLeague:  leagueId,
+          currentSalary:  (n as any).currentSalary ?? 2000,
+          contractYears:  (n as any).contractYears ?? 2,
+          proServiceYears: n.proServiceYears ?? 0,
+          pitchOvr:       ls?.pitchOvr ?? null,
+          batOvr:         ls?.batOvr   ?? null,
+          age:            n.age ?? 25,
+        };
+      });
+    autoLog(`[트레이드윈도우] npc_runtime 미초기화 → 메모리 폴백 ${npcRows.length}명`);
+  } else {
+    npcRows = _npcRaw as NpcTradeRow[];
+  }
 
   const proTeams = m.teams.filter(
     (t) => t.leagueId === leagueId && t.id.endsWith("_1")

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00975",
   "name": "넬슨 앤서니",
   "nameEn": "Nelson Anthony",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 37,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 19
     },
     "coach": {
       "specialty": "-",

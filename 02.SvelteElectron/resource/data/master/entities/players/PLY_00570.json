@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00570",
   "name": "조동우",
   "nameEn": "You Jae-hoon",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 55,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

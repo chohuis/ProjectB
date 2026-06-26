@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01588",
   "name": "오타 쇼",
   "nameEn": "Ota Sho",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00996",
   "name": "해리스 로건",
   "nameEn": "Harris Logan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

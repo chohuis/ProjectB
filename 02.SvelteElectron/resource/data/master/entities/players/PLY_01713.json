@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01713",
   "name": "이노우에 미쓰루",
   "nameEn": "Inoue Mitsuru",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 55,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

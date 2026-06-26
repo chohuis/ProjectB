@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01225",
   "name": "카스티요 앤드류",
   "nameEn": "Castillo Andrew",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 33,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

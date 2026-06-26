@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01445",
   "name": "카스티요 루카스",
   "nameEn": "Castillo Lucas",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

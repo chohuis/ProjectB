@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00886",
   "name": "라미레스 메이슨",
   "nameEn": "Ramirez Mason",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 72
+      "potentialHidden": 72,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

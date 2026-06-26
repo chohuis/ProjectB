@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00693",
   "name": "황지원",
   "nameEn": "Baek Gi-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 55,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

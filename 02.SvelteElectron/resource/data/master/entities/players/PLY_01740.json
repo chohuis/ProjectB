@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01740",
   "name": "야마구치 준",
   "nameEn": "Yamaguchi Jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 72
+      "potentialHidden": 72,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

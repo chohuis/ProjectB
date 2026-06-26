@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01586",
   "name": "야마모토 시게루",
   "nameEn": "Yamamoto Shigeru",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 37,
-      "potentialHidden": 88
+      "potentialHidden": 88,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

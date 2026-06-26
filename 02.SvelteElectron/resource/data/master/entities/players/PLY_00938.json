@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00938",
   "name": "미첼 브랜던",
   "nameEn": "Mitchell Brandon",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

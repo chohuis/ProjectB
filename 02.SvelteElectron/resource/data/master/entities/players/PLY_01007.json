@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01007",
   "name": "밀러 존",
   "nameEn": "Miller John",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 66
+      "potentialHidden": 66,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

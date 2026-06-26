@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01541",
   "name": "야마모토 슌",
   "nameEn": "Yamamoto Shun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

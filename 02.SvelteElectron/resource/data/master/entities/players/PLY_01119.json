@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01119",
   "name": "라미레스 제임스",
   "nameEn": "Ramirez James",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 30,
-      "potentialHidden": 64
+      "potentialHidden": 64,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

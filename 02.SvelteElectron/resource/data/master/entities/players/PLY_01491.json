@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01491",
   "name": "로빈슨 윌리엄",
   "nameEn": "Robinson William",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

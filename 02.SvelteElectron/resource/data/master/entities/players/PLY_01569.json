@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01569",
   "name": "타카하시 기요시",
   "nameEn": "Takahashi Kiyoshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 62
+      "potentialHidden": 62,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

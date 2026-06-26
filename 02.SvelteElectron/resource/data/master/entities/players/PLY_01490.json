@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01490",
   "name": "스콧 마이클",
   "nameEn": "Scott Michael",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 33,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

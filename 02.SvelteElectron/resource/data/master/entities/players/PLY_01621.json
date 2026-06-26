@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01621",
   "name": "콘도 마코토",
   "nameEn": "Kondo Makoto",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 83
+      "potentialHidden": 83,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

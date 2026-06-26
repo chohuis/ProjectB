@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00765",
   "name": "이현우",
   "nameEn": "Seo Hyun-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00556",
   "name": "임승민",
   "nameEn": "Ku Dong-hyuk",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 65
+      "potentialHidden": 65,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

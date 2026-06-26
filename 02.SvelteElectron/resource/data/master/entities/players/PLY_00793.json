@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00793",
   "name": "구지원",
   "nameEn": "Jeon Do-yun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 90
+      "potentialHidden": 90,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

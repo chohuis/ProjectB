@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01045",
   "name": "영 케빈",
   "nameEn": "Young Kevin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01981",
   "name": "기무라 츠바사",
   "nameEn": "Kimura Tsubasa",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

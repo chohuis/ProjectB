@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01794",
   "name": "사토 요스케",
   "nameEn": "Sato Yosuke",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

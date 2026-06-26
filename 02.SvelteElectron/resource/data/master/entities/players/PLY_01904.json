@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01904",
   "name": "카토 진",
   "nameEn": "Kato Jin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

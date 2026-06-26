@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01444",
   "name": "마틴 조너선",
   "nameEn": "Martin Jonathan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

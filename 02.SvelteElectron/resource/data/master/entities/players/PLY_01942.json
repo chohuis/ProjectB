@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01942",
   "name": "마쓰모토 아키라",
   "nameEn": "Matsumoto Akira",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 65
+      "potentialHidden": 65,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01215",
   "name": "무어 마이클",
   "nameEn": "Moore Michael",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

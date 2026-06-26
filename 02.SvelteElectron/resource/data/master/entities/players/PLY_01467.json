@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01467",
   "name": "화이트 벤자민",
   "nameEn": "White Benjamin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 33,
-      "potentialHidden": 71
+      "potentialHidden": 71,
+      "proServiceYears": 14
     },
     "coach": {
       "specialty": "-",

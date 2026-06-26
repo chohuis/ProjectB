@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01844",
   "name": "니시무라 히로시",
   "nameEn": "Nishimura Hiroshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 66
+      "potentialHidden": 66,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

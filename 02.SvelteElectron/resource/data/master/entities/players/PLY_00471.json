@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00471",
   "name": "권민재",
   "nameEn": "Oh Jun-seo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

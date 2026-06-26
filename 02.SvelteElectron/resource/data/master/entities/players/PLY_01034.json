@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01034",
   "name": "테일러 라이언",
   "nameEn": "Taylor Ryan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 72
+      "potentialHidden": 72,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

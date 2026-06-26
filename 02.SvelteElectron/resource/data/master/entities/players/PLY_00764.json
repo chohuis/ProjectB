@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00764",
   "name": "박태양",
   "nameEn": "Lim Chan-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 53,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

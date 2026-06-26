@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01419",
   "name": "클라크 로건",
   "nameEn": "Clark Logan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 36,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 14
     },
     "coach": {
       "specialty": "-",

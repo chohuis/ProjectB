@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01651",
   "name": "오카다 코지",
   "nameEn": "Okada Koji",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 15
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01025",
   "name": "스미스 카를로스",
   "nameEn": "Smith Carlos",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 37,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

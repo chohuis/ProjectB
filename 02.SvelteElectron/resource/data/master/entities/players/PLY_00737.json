@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00737",
   "name": "황진우",
   "nameEn": "Oh Seong-hyun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

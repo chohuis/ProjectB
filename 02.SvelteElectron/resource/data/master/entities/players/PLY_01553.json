@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01553",
   "name": "이시카와 유타",
   "nameEn": "Ishikawa Yuta",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 33,
-      "potentialHidden": 61
+      "potentialHidden": 61,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

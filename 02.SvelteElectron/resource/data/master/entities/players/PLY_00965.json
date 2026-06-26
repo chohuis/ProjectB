@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00965",
   "name": "윌슨 호세",
   "nameEn": "Wilson Jose",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

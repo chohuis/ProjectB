@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01340",
   "name": "리 윌리엄",
   "nameEn": "Lee William",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

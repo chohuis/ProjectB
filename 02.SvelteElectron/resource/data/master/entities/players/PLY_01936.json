@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01936",
   "name": "카토 이사무",
   "nameEn": "Kato Isamu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

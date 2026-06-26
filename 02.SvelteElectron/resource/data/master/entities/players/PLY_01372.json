@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01372",
   "name": "밀러 프란시스코",
   "nameEn": "Miller Francisco",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 64
+      "potentialHidden": 64,
+      "proServiceYears": 20
     },
     "coach": {
       "specialty": "-",

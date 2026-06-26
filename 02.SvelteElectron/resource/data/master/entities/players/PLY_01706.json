@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01706",
   "name": "오카다 쇼",
   "nameEn": "Okada Sho",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

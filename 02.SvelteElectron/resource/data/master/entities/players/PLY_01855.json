@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01855",
   "name": "마쓰모토 마나부",
   "nameEn": "Matsumoto Manabu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

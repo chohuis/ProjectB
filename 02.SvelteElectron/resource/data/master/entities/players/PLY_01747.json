@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01747",
   "name": "이시다 슌",
   "nameEn": "Ishida Shun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 57,
-      "potentialHidden": 90
+      "potentialHidden": 90,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

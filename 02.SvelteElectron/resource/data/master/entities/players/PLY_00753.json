@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00753",
   "name": "손지훈",
   "nameEn": "Ha Min-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 36,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

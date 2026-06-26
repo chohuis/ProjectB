@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01933",
   "name": "고토 요스케",
   "nameEn": "Goto Yosuke",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 54,
-      "potentialHidden": 88
+      "potentialHidden": 88,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

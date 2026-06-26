@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00472",
   "name": "민원준",
   "nameEn": "Min Seo-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 36,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

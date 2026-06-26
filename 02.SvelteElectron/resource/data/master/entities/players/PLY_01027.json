@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01027",
   "name": "라이트 로버트",
   "nameEn": "Wright Robert",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 33,
-      "potentialHidden": 89
+      "potentialHidden": 89,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01396",
   "name": "영 루카스",
   "nameEn": "Young Lucas",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

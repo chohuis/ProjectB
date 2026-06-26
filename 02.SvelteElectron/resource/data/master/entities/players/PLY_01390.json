@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01390",
   "name": "존스 에이든",
   "nameEn": "Jones Aiden",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 31,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

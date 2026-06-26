@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01544",
   "name": "야마구치 유토",
   "nameEn": "Yamaguchi Yuto",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 35,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

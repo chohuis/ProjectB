@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01869",
   "name": "이노우에 사토시",
   "nameEn": "Inoue Satoshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 59
+      "potentialHidden": 59,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

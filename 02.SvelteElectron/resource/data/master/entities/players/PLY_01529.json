@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01529",
   "name": "카터 에이든",
   "nameEn": "Carter Aiden",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

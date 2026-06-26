@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01193",
   "name": "베이커 존",
   "nameEn": "Baker John",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 34,
-      "potentialHidden": 90
+      "potentialHidden": 90,
+      "proServiceYears": 18
     },
     "coach": {
       "specialty": "-",

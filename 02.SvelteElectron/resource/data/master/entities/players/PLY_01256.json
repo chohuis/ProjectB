@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01256",
   "name": "가르시아 라이언",
   "nameEn": "Garcia Ryan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

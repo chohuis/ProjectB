@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01760",
   "name": "사토 히로시",
   "nameEn": "Sato Hiroshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 54,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

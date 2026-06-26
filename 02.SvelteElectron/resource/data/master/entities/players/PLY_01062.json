@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01062",
   "name": "데이비스 존",
   "nameEn": "Davis John",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

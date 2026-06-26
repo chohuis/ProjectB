@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01675",
   "name": "후지타 히로시",
   "nameEn": "Fujita Hiroshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 83
+      "potentialHidden": 83,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

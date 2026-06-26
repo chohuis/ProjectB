@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01775",
   "name": "사사키 요스케",
   "nameEn": "Sasaki Yosuke",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 88
+      "potentialHidden": 88,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

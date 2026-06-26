@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01733",
   "name": "후쿠다 코지",
   "nameEn": "Fukuda Koji",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 37,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

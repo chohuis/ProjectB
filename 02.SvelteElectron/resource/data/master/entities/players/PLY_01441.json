@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01441",
   "name": "미첼 디에고",
   "nameEn": "Mitchell Diego",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 69
+      "potentialHidden": 69,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

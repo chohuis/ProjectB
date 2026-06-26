@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01043",
   "name": "홀 빅터",
   "nameEn": "Hall Victor",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 75
+      "potentialHidden": 75,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01857",
   "name": "마쓰모토 준",
   "nameEn": "Matsumoto Jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

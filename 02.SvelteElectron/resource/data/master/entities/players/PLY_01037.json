@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01037",
   "name": "워커 제임스",
   "nameEn": "Walker James",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

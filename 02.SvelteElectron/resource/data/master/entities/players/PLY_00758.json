@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00758",
   "name": "성성준",
   "nameEn": "Son Jun-seo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 53,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

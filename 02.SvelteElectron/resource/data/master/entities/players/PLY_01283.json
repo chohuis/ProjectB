@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01283",
   "name": "애덤스 마이클",
   "nameEn": "Adams Michael",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

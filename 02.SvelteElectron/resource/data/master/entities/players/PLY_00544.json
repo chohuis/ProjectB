@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00544",
   "name": "주성현",
   "nameEn": "Lee Yeon-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 65
+      "potentialHidden": 65,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01807",
   "name": "이노우에 렌",
   "nameEn": "Inoue Ren",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 83
+      "potentialHidden": 83,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

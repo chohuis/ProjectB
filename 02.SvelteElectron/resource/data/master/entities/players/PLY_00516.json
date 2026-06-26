@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00516",
   "name": "허재훈",
   "nameEn": "Seo Dong-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 56
+      "potentialHidden": 56,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

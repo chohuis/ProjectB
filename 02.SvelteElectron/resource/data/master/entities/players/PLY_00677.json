@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00677",
   "name": "우성준",
   "nameEn": "You Hyun-seo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 58
+      "potentialHidden": 58,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

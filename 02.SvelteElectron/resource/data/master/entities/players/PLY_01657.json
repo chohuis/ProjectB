@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01657",
   "name": "야마구치 슌",
   "nameEn": "Yamaguchi Shun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 91
+      "potentialHidden": 91,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

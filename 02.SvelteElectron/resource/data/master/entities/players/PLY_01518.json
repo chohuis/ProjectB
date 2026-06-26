@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01518",
   "name": "카터 마르코",
   "nameEn": "Carter Marco",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 14
     },
     "coach": {
       "specialty": "-",

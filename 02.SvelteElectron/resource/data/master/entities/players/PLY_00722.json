@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00722",
   "name": "전용준",
   "nameEn": "Heo Jun-young",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 57
+      "potentialHidden": 57,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01478",
   "name": "로빈슨 빅터",
   "nameEn": "Robinson Victor",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 90
+      "potentialHidden": 90,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

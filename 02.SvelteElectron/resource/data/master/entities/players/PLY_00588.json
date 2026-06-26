@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00588",
   "name": "성준서",
   "nameEn": "Kwon Min-seok",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 72
+      "potentialHidden": 72,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

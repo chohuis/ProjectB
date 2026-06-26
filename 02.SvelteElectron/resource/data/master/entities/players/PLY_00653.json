@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00653",
   "name": "민용준",
   "nameEn": "Jang Yong-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 71
+      "potentialHidden": 71,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

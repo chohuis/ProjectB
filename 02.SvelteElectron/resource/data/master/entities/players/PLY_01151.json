@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01151",
   "name": "밀러 제임스",
   "nameEn": "Miller James",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 31,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 18
     },
     "coach": {
       "specialty": "-",

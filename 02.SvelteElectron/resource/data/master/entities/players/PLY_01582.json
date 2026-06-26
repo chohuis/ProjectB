@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01582",
   "name": "야마모토 마나부",
   "nameEn": "Yamamoto Manabu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 79
+      "potentialHidden": 79,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

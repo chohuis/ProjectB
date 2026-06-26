@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00738",
   "name": "윤승민",
   "nameEn": "Heo Ji-hoon",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 55,
-      "potentialHidden": 88
+      "potentialHidden": 88,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

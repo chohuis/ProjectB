@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01896",
   "name": "후지타 유타",
   "nameEn": "Fujita Yuta",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

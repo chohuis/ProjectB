@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01717",
   "name": "타카하시 마나부",
   "nameEn": "Takahashi Manabu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 55,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01065",
   "name": "브라운 데이비드",
   "nameEn": "Brown David",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 14
     },
     "coach": {
       "specialty": "-",

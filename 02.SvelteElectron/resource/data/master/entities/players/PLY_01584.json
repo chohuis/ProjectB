@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01584",
   "name": "기무라 코지",
   "nameEn": "Kimura Koji",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 53,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

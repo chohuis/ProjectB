@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00756",
   "name": "이예준",
   "nameEn": "Han Tae-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 55,
-      "potentialHidden": 89
+      "potentialHidden": 89,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

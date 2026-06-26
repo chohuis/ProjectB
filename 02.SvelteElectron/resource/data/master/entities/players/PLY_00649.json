@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00649",
   "name": "송진우",
   "nameEn": "Han Jae-yun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 35,
-      "potentialHidden": 87
+      "potentialHidden": 87,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

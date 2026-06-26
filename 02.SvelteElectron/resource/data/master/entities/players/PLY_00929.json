@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00929",
   "name": "브라운 제임스",
   "nameEn": "Brown James",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 20
     },
     "coach": {
       "specialty": "-",

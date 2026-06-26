@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00743",
   "name": "박진우",
   "nameEn": "You Seung-hyun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

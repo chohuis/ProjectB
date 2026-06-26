@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01819",
   "name": "후지이 히로시",
   "nameEn": "Fujii Hiroshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 88
+      "potentialHidden": 88,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

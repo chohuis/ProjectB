@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01800",
   "name": "니시무라 렌",
   "nameEn": "Nishimura Ren",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

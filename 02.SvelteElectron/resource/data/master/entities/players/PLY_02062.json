@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02062",
   "name": "이토 요스케",
   "nameEn": "Ito Yosuke",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 79
+      "potentialHidden": 79,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

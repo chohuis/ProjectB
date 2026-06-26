@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01175",
   "name": "화이트 마이클",
   "nameEn": "White Michael",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 79
+      "potentialHidden": 79,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

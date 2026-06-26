@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00993",
   "name": "데이비스 로버트",
   "nameEn": "Davis Robert",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

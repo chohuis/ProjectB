@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01165",
   "name": "해리스 제임스",
   "nameEn": "Harris James",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 91
+      "potentialHidden": 91,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01508",
   "name": "카터 크리스토퍼",
   "nameEn": "Carter Christopher",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 18
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00673",
   "name": "우준혁",
   "nameEn": "Sim Jae-min",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 55,
-      "potentialHidden": 66
+      "potentialHidden": 66,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

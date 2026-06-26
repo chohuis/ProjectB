@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02064",
   "name": "사이토 히로시",
   "nameEn": "Saito Hiroshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 54,
-      "potentialHidden": 71
+      "potentialHidden": 71,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

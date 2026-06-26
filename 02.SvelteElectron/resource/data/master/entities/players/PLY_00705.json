@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00705",
   "name": "권기준",
   "nameEn": "Ahn Jae-hoon",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 83
+      "potentialHidden": 83,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

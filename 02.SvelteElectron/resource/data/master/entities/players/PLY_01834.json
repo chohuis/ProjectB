@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01834",
   "name": "와타나베 마코토",
   "nameEn": "Watanabe Makoto",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

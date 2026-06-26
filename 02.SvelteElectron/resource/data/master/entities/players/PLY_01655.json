@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01655",
   "name": "후쿠다 오사무",
   "nameEn": "Fukuda Osamu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 53,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

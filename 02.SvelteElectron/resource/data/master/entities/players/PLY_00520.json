@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00520",
   "name": "박기훈",
   "nameEn": "Sung Ye-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 89
+      "potentialHidden": 89,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

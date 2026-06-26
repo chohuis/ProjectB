@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00827",
   "name": "토머스 윌리엄",
   "nameEn": "Thomas William",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 36,
-      "potentialHidden": 75
+      "potentialHidden": 75,
+      "proServiceYears": 18
     },
     "coach": {
       "specialty": "-",

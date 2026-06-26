@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01770",
   "name": "하시모토 요스케",
   "nameEn": "Hashimoto Yosuke",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 79
+      "potentialHidden": 79,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

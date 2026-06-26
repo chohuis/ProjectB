@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01406",
   "name": "브라운 애드리언",
   "nameEn": "Brown Adrian",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 73
+      "potentialHidden": 73,
+      "proServiceYears": 15
     },
     "coach": {
       "specialty": "-",

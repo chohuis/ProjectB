@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01384",
   "name": "앤더슨 윌리엄",
   "nameEn": "Anderson William",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00983",
   "name": "가르시아 로버트",
   "nameEn": "Garcia Robert",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 59
+      "potentialHidden": 59,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

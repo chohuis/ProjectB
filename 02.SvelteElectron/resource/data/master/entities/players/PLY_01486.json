@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01486",
   "name": "로빈슨 케빈",
   "nameEn": "Robinson Kevin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

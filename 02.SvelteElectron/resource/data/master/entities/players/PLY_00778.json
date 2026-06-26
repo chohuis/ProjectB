@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00778",
   "name": "유준우",
   "nameEn": "You Jae-min",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 37,
-      "potentialHidden": 83
+      "potentialHidden": 83,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

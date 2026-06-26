@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01862",
   "name": "마에다 사토시",
   "nameEn": "Maeda Satoshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

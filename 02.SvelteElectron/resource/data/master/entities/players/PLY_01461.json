@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01461",
   "name": "카터 앤드류",
   "nameEn": "Carter Andrew",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

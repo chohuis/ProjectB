@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00584",
   "name": "구연우",
   "nameEn": "Kwak Geon-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 76
+      "potentialHidden": 76,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

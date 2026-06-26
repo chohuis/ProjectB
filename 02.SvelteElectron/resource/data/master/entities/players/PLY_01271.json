@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01271",
   "name": "존슨 애드리언",
   "nameEn": "Johnson Adrian",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 37,
-      "potentialHidden": 80
+      "potentialHidden": 80,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

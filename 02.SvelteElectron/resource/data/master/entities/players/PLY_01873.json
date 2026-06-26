@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01873",
   "name": "이시카와 시게루",
   "nameEn": "Ishikawa Shigeru",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

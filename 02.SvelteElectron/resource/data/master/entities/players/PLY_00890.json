@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00890",
   "name": "마틴 노아",
   "nameEn": "Martin Noah",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

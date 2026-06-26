@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01356",
   "name": "스미스 브랜던",
   "nameEn": "Smith Brandon",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 34,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

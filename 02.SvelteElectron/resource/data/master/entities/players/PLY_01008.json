@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01008",
   "name": "그린 타일러",
   "nameEn": "Green Tyler",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 86
+      "potentialHidden": 86,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

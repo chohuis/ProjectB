@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00674",
   "name": "최태민",
   "nameEn": "Cho Seong-min",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 69
+      "potentialHidden": 69,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

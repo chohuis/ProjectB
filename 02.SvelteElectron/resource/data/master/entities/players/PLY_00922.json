@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00922",
   "name": "윌슨 브랜던",
   "nameEn": "Wilson Brandon",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 33,
-      "potentialHidden": 58
+      "potentialHidden": 58,
+      "proServiceYears": 14
     },
     "coach": {
       "specialty": "-",

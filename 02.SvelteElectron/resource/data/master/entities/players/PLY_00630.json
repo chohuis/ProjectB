@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00630",
   "name": "조주원",
   "nameEn": "Bae Jae-hoon",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

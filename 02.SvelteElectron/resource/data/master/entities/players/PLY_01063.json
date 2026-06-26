@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01063",
   "name": "스콧 카를로스",
   "nameEn": "Scott Carlos",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

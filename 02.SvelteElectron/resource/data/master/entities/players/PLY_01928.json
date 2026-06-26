@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01928",
   "name": "야마자키 카이토",
   "nameEn": "Yamazaki Kaito",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 53,
-      "potentialHidden": 83
+      "potentialHidden": 83,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

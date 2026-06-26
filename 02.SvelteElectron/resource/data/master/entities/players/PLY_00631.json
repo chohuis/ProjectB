@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00631",
   "name": "이지훈",
   "nameEn": "Son Hyun-seo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 75
+      "potentialHidden": 75,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00937",
   "name": "윌리엄스 프란시스코",
   "nameEn": "Williams Francisco",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 59
+      "potentialHidden": 59,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

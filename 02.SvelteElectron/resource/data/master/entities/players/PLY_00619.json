@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00619",
   "name": "남현진",
   "nameEn": "Lee Geon-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 87
+      "potentialHidden": 87,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

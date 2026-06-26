@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01182",
   "name": "넬슨 로건",
   "nameEn": "Nelson Logan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 69
+      "potentialHidden": 69,
+      "proServiceYears": 14
     },
     "coach": {
       "specialty": "-",

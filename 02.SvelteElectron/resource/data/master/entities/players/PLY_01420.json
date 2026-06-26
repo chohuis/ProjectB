@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01420",
   "name": "해리스 조셉",
   "nameEn": "Harris Joseph",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 71
+      "potentialHidden": 71,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

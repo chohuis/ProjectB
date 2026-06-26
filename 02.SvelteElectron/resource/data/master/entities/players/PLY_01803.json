@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01803",
   "name": "아베 쓰카사",
   "nameEn": "Abe Tsukasa",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

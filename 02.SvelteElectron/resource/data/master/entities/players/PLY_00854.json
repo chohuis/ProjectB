@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00854",
   "name": "브라운 크리스토퍼",
   "nameEn": "Brown Christopher",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 73
+      "potentialHidden": 73,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

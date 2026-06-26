@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01411",
   "name": "톰프슨 존",
   "nameEn": "Thompson John",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 14
     },
     "coach": {
       "specialty": "-",

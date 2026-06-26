@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01669",
   "name": "야마자키 료",
   "nameEn": "Yamazaki Ryo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 75
+      "potentialHidden": 75,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

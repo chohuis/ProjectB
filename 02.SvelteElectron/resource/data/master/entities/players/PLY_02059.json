@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02059",
   "name": "오카다 슌",
   "nameEn": "Okada Shun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

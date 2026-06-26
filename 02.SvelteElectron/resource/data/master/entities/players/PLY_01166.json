@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01166",
   "name": "스미스 이선",
   "nameEn": "Smith Ethan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 91
+      "potentialHidden": 91,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

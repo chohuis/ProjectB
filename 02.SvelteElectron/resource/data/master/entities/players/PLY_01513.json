@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01513",
   "name": "잭슨 루이스",
   "nameEn": "Jackson Luis",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 31,
-      "potentialHidden": 88
+      "potentialHidden": 88,
+      "proServiceYears": 18
     },
     "coach": {
       "specialty": "-",

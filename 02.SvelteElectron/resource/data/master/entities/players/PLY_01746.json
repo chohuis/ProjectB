@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01746",
   "name": "타나카 쓰카사",
   "nameEn": "Tanaka Tsukasa",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 61
+      "potentialHidden": 61,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

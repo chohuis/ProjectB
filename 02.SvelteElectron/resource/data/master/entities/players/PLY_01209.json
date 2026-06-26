@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01209",
   "name": "브라운 오스틴",
   "nameEn": "Brown Austin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 71
+      "potentialHidden": 71,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

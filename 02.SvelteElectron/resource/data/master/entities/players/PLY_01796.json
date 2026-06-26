@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01796",
   "name": "야마구치 마코토",
   "nameEn": "Yamaguchi Makoto",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 53,
-      "potentialHidden": 66
+      "potentialHidden": 66,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02035",
   "name": "하야시 사토시",
   "nameEn": "Hayashi Satoshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

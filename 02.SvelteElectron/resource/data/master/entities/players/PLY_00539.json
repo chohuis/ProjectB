@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00539",
   "name": "정현준",
   "nameEn": "Ko Seong-hyun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 58
+      "potentialHidden": 58,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

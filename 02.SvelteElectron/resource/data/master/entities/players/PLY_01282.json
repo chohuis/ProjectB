@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01282",
   "name": "해리스 제이컵",
   "nameEn": "Harris Jacob",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

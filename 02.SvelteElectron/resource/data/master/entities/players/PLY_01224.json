@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01224",
   "name": "테일러 조셉",
   "nameEn": "Taylor Joseph",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 34,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

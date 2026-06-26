@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00745",
   "name": "배도윤",
   "nameEn": "Na Si-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

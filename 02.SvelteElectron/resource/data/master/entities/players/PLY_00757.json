@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00757",
   "name": "문준호",
   "nameEn": "Heo Tae-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 72
+      "potentialHidden": 72,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

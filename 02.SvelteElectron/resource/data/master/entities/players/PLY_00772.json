@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00772",
   "name": "양찬우",
   "nameEn": "Moon Tae-yang",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 88
+      "potentialHidden": 88,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

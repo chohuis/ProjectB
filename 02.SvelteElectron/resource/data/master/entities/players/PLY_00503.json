@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00503",
   "name": "정준영",
   "nameEn": "Nam Jun-hyuk",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 69
+      "potentialHidden": 69,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

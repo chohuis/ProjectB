@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00468",
   "name": "나태우",
   "nameEn": "Woo Ji-ho",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 53,
-      "potentialHidden": 71
+      "potentialHidden": 71,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

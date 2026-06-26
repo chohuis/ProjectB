@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02024",
   "name": "기무라 류",
   "nameEn": "Kimura Ryu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 91
+      "potentialHidden": 91,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

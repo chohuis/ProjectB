@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02080",
   "name": "이케다 마코토",
   "nameEn": "Ikeda Makoto",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 58
+      "potentialHidden": 58,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

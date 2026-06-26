@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01937",
   "name": "후지타 츠바사",
   "nameEn": "Fujita Tsubasa",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 88
+      "potentialHidden": 88,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

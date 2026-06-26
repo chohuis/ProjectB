@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00592",
   "name": "신태우",
   "nameEn": "Son Tae-hyun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 87
+      "potentialHidden": 87,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

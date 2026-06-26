@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01138",
   "name": "앨런 조너선",
   "nameEn": "Allen Jonathan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 86
+      "potentialHidden": 86,
+      "proServiceYears": 14
     },
     "coach": {
       "specialty": "-",

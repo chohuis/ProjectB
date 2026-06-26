@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01169",
   "name": "오가와 아키라",
   "nameEn": "Ogawa Akira",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 91
+      "potentialHidden": 91,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

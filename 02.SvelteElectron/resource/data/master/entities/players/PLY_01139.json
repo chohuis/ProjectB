@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01139",
   "name": "스미스 후안",
   "nameEn": "Smith Juan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 35,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 15
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00724",
   "name": "곽현우",
   "nameEn": "Lim Hyun-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 54,
-      "potentialHidden": 57
+      "potentialHidden": 57,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

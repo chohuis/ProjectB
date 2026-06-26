@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01366",
   "name": "페레스 조너선",
   "nameEn": "Perez Jonathan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 30,
-      "potentialHidden": 64
+      "potentialHidden": 64,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

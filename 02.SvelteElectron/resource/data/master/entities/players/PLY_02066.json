@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02066",
   "name": "이토 히로시",
   "nameEn": "Ito Hiroshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 55,
-      "potentialHidden": 86
+      "potentialHidden": 86,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

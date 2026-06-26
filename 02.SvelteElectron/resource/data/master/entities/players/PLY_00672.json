@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00672",
   "name": "김정우",
   "nameEn": "Nam Jae-hyun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

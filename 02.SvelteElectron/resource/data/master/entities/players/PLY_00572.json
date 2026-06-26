@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00572",
   "name": "배민석",
   "nameEn": "Yang Geon-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

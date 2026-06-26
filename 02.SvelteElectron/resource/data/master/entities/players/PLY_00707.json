@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00707",
   "name": "송민우",
   "nameEn": "Moon Dong-hyuk",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 88
+      "potentialHidden": 88,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

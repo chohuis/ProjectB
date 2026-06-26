@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01499",
   "name": "리베라 노아",
   "nameEn": "Rivera Noah",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 71
+      "potentialHidden": 71,
+      "proServiceYears": 19
     },
     "coach": {
       "specialty": "-",

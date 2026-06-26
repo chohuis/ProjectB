@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01434",
   "name": "테일러 앤드류",
   "nameEn": "Taylor Andrew",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

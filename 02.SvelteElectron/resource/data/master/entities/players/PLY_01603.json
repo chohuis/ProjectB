@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01603",
   "name": "타나카 렌",
   "nameEn": "Tanaka Ren",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 16
     },
     "coach": {
       "specialty": "-",

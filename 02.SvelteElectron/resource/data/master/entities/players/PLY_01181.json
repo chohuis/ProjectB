@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01181",
   "name": "테일러 이선",
   "nameEn": "Taylor Ethan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 35,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

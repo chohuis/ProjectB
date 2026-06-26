@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01195",
   "name": "베이커 케빈",
   "nameEn": "Baker Kevin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 18
     },
     "coach": {
       "specialty": "-",

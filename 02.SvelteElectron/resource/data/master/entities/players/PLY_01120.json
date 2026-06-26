@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01120",
   "name": "무어 라이언",
   "nameEn": "Moore Ryan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

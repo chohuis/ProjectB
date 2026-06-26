@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00825",
   "name": "토머스 케빈",
   "nameEn": "Thomas Kevin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 30,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 15
     },
     "coach": {
       "specialty": "-",

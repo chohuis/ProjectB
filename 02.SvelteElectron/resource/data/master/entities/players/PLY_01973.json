@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01973",
   "name": "타카하시 미쓰루",
   "nameEn": "Takahashi Mitsuru",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 65
+      "potentialHidden": 65,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

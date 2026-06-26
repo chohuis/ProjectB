@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01268",
   "name": "윌리엄스 매튜",
   "nameEn": "Williams Matthew",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 33,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

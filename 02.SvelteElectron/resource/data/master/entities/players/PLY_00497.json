@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00497",
   "name": "윤태준",
   "nameEn": "Moon Do-hyun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 59
+      "potentialHidden": 59,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

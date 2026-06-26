@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01646",
   "name": "야마모토 스스무",
   "nameEn": "Yamamoto Susumu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

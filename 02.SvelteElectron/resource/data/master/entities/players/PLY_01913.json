@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01913",
   "name": "야마모토 쓰요시",
   "nameEn": "Yamamoto Tsuyoshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 57
+      "potentialHidden": 57,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

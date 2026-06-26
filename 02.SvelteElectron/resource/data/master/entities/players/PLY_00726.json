@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00726",
   "name": "나동준",
   "nameEn": "Bae Tae-hyun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 56,
-      "potentialHidden": 61
+      "potentialHidden": 61,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

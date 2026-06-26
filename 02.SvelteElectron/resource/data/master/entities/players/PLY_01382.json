@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01382",
   "name": "톰프슨 알레한드로",
   "nameEn": "Thompson Alejandro",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

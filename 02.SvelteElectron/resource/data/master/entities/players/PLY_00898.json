@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00898",
   "name": "잭슨 마르코",
   "nameEn": "Jackson Marco",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 86
+      "potentialHidden": 86,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

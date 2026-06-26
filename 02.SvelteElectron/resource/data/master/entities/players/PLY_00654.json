@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00654",
   "name": "강지훈",
   "nameEn": "Jeon Jae-hoon",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 83
+      "potentialHidden": 83,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

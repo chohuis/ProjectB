@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01111",
   "name": "애덤스 조셉",
   "nameEn": "Adams Joseph",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 58
+      "potentialHidden": 58,
+      "proServiceYears": 15
     },
     "coach": {
       "specialty": "-",

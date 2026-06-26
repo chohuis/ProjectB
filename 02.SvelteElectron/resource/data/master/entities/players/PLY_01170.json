@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01170",
   "name": "마틴 데이비드",
   "nameEn": "Martin David",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 92
+      "potentialHidden": 92,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

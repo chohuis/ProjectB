@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01001",
   "name": "스미스 빅터",
   "nameEn": "Smith Victor",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

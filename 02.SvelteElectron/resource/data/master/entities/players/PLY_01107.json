@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01107",
   "name": "클라크 매튜",
   "nameEn": "Clark Matthew",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 66
+      "potentialHidden": 66,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

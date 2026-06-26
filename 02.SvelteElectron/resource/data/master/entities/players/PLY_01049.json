@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01049",
   "name": "워커 디에고",
   "nameEn": "Walker Diego",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 90
+      "potentialHidden": 90,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

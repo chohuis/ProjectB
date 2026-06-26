@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02008",
   "name": "마쓰모토 시게루",
   "nameEn": "Matsumoto Shigeru",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 53,
-      "potentialHidden": 62
+      "potentialHidden": 62,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

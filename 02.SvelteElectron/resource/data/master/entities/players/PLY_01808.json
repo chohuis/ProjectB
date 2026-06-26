@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01808",
   "name": "아베 코지",
   "nameEn": "Abe Koji",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 87
+      "potentialHidden": 87,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

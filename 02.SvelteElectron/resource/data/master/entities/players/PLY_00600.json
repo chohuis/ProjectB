@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00600",
   "name": "최동현",
   "nameEn": "Sim Hyun-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 55,
-      "potentialHidden": 90
+      "potentialHidden": 90,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

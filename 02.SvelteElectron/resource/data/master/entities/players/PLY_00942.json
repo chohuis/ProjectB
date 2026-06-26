@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00942",
   "name": "존슨 타일러",
   "nameEn": "Johnson Tyler",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 35,
-      "potentialHidden": 89
+      "potentialHidden": 89,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

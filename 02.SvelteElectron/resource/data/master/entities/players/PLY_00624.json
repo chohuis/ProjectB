@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00624",
   "name": "오태양",
   "nameEn": "Cha Tae-hyun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 90
+      "potentialHidden": 90,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

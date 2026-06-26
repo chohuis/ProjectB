@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00561",
   "name": "유지후",
   "nameEn": "Kang Jun-ho",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 36,
-      "potentialHidden": 56
+      "potentialHidden": 56,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

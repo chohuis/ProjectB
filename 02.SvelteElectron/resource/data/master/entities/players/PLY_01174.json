@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01174",
   "name": "영 노아",
   "nameEn": "Young Noah",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 92
+      "potentialHidden": 92,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

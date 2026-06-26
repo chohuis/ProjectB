@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01458",
   "name": "데이비스 미겔",
   "nameEn": "Davis Miguel",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 90
+      "potentialHidden": 90,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

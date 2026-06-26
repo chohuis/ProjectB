@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01934",
   "name": "미우라 오사무",
   "nameEn": "Miura Osamu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 61
+      "potentialHidden": 61,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01812",
   "name": "미우라 히카루",
   "nameEn": "Miura Hikaru",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 71
+      "potentialHidden": 71,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

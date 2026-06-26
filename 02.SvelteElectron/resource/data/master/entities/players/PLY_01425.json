@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01425",
   "name": "존슨 일라이저",
   "nameEn": "Johnson Elijah",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 33,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

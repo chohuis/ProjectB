@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01071",
   "name": "밀러 빅터",
   "nameEn": "Miller Victor",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

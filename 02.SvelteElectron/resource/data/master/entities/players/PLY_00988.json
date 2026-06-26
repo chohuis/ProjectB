@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00988",
   "name": "잭슨 제임스",
   "nameEn": "Jackson James",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 33,
-      "potentialHidden": 83
+      "potentialHidden": 83,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

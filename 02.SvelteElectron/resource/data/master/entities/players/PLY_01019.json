@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01019",
   "name": "밀러 앤서니",
   "nameEn": "Miller Anthony",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 37,
-      "potentialHidden": 69
+      "potentialHidden": 69,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

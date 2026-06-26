@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01136",
   "name": "라미레스 애드리언",
   "nameEn": "Ramirez Adrian",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 87
+      "potentialHidden": 87,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

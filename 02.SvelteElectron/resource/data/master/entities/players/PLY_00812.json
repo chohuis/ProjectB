@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00812",
   "name": "윤정우",
   "nameEn": "Son Jin-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

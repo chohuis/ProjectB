@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01578",
   "name": "니시무라 마나부",
   "nameEn": "Nishimura Manabu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 56,
-      "potentialHidden": 62
+      "potentialHidden": 62,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

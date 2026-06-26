@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00616",
   "name": "심찬우",
   "nameEn": "Seo Ji-won",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 35,
-      "potentialHidden": 90
+      "potentialHidden": 90,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

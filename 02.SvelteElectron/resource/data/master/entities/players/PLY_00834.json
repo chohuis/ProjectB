@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00834",
   "name": "가르시아 제이컵",
   "nameEn": "Garcia Jacob",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

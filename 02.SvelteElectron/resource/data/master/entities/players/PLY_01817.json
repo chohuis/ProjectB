@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01817",
   "name": "후쿠다 슌",
   "nameEn": "Fukuda Shun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 76
+      "potentialHidden": 76,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

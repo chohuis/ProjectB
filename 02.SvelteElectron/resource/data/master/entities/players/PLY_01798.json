@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01798",
   "name": "카토 미쓰루",
   "nameEn": "Kato Mitsuru",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 80
+      "potentialHidden": 80,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

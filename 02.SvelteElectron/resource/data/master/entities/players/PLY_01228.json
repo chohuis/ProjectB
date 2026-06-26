@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01228",
   "name": "로드리게스 로버트",
   "nameEn": "Rodriguez Robert",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 58
+      "potentialHidden": 58,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

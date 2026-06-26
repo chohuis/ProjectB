@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01422",
   "name": "워커 일라이저",
   "nameEn": "Walker Elijah",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 72
+      "potentialHidden": 72,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

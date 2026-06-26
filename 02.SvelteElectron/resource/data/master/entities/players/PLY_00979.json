@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00979",
   "name": "로드리게스 후안",
   "nameEn": "Rodriguez Juan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 91
+      "potentialHidden": 91,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

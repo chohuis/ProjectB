@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00776",
   "name": "백찬우",
   "nameEn": "Seo Tae-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 61
+      "potentialHidden": 61,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00783",
   "name": "손용준",
   "nameEn": "Jeon Jun-hyuk",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 89
+      "potentialHidden": 89,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

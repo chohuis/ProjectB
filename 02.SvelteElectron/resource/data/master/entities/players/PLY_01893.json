@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01893",
   "name": "마쓰모토 오사무",
   "nameEn": "Matsumoto Osamu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

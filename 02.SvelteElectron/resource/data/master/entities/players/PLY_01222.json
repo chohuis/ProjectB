@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01222",
   "name": "앤더슨 다니엘",
   "nameEn": "Anderson Daniel",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 58
+      "potentialHidden": 58,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

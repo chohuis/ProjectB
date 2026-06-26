@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01874",
   "name": "야마모토 준",
   "nameEn": "Yamamoto Jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 80
+      "potentialHidden": 80,
+      "proServiceYears": 16
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00467",
   "name": "최시우",
   "nameEn": "Lee Ji-won",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

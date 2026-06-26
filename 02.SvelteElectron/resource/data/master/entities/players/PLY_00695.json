@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00695",
   "name": "노우진",
   "nameEn": "Yang Sang-hyun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 59
+      "potentialHidden": 59,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00998",
   "name": "리 조셉",
   "nameEn": "Lee Joseph",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 30,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

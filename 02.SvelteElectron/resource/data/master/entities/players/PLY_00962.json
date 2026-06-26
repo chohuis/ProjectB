@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00962",
   "name": "무어 노아",
   "nameEn": "Moore Noah",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 76
+      "potentialHidden": 76,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

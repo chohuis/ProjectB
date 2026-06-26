@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01637",
   "name": "이토 료",
   "nameEn": "Ito Ryo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 71
+      "potentialHidden": 71,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

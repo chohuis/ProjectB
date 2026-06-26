@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01436",
   "name": "테일러 루카스",
   "nameEn": "Taylor Lucas",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 35,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

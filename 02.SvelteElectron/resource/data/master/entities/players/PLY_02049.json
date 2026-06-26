@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02049",
   "name": "스즈키 쇼",
   "nameEn": "Suzuki Sho",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 57
+      "potentialHidden": 57,
+      "proServiceYears": 14
     },
     "coach": {
       "specialty": "-",

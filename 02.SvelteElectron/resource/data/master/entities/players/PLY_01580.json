@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01580",
   "name": "사이토 슌",
   "nameEn": "Saito Shun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00517",
   "name": "조원준",
   "nameEn": "Cho Tae-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 56
+      "potentialHidden": 56,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

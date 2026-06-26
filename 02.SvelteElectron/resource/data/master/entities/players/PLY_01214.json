@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01214",
   "name": "넬슨 조너선",
   "nameEn": "Nelson Jonathan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 37,
-      "potentialHidden": 92
+      "potentialHidden": 92,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

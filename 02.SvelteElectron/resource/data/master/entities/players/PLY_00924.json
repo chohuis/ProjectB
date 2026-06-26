@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00924",
   "name": "스콧 매튜",
   "nameEn": "Scott Matthew",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

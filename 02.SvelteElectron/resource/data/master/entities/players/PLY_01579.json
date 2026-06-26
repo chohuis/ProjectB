@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01579",
   "name": "시미즈 켄타",
   "nameEn": "Shimizu Kenta",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 91
+      "potentialHidden": 91,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

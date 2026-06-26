@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00718",
   "name": "우하준",
   "nameEn": "Heo Ji-hoo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

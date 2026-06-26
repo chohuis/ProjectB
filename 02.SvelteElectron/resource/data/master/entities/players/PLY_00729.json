@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00729",
   "name": "손찬우",
   "nameEn": "Ko Jin-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 57,
-      "potentialHidden": 80
+      "potentialHidden": 80,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

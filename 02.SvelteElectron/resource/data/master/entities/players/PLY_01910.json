@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01910",
   "name": "와타나베 켄타",
   "nameEn": "Watanabe Kenta",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

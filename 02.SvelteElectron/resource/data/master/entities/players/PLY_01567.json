@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01567",
   "name": "고바야시 켄타",
   "nameEn": "Kobayashi Kenta",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

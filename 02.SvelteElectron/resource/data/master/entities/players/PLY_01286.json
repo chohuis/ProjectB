@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01286",
   "name": "브라운 윌리엄",
   "nameEn": "Brown William",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 83
+      "potentialHidden": 83,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

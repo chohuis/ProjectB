@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00876",
   "name": "스미스 제임스",
   "nameEn": "Smith James",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

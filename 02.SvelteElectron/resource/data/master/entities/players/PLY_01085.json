@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01085",
   "name": "밀러 카를로스",
   "nameEn": "Miller Carlos",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 33,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00534",
   "name": "황승민",
   "nameEn": "Oh Tae-min",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 79
+      "potentialHidden": 79,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

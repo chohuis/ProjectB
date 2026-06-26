@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00970",
   "name": "마틴 제임스",
   "nameEn": "Martin James",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 33,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 14
     },
     "coach": {
       "specialty": "-",

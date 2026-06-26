@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00916",
   "name": "브라운 로건",
   "nameEn": "Brown Logan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 31,
-      "potentialHidden": 83
+      "potentialHidden": 83,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

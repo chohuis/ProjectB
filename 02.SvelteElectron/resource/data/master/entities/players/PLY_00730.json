@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00730",
   "name": "구상민",
   "nameEn": "Song Si-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 79
+      "potentialHidden": 79,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

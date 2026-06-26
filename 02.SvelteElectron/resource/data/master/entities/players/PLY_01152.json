@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01152",
   "name": "앨런 마이클",
   "nameEn": "Allen Michael",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 15
     },
     "coach": {
       "specialty": "-",

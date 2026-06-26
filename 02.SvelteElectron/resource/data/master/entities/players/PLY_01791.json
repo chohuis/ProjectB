@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01791",
   "name": "요시다 코지",
   "nameEn": "Yoshida Koji",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 87
+      "potentialHidden": 87,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

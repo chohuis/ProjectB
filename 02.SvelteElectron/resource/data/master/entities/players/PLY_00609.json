@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00609",
   "name": "한하준",
   "nameEn": "Song Dong-hyun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 65
+      "potentialHidden": 65,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

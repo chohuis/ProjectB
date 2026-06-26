@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01608",
   "name": "오카다 료",
   "nameEn": "Okada Ryo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

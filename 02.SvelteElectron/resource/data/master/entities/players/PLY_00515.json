@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00515",
   "name": "황성민",
   "nameEn": "Sim Ju-won",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 80
+      "potentialHidden": 80,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

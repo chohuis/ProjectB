@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01270",
   "name": "데이비스 벤자민",
   "nameEn": "Davis Benjamin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 31,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

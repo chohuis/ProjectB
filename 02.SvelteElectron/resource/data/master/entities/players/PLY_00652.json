@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00652",
   "name": "강민재",
   "nameEn": "Jung Jae-won",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

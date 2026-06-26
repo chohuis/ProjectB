@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00837",
   "name": "킹 로버트",
   "nameEn": "King Robert",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 90
+      "potentialHidden": 90,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

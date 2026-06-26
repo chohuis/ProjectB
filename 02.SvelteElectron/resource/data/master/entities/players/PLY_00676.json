@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00676",
   "name": "윤동현",
   "nameEn": "Hwang Seo-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

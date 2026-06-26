@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00967",
   "name": "워커 조셉",
   "nameEn": "Walker Joseph",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 65
+      "potentialHidden": 65,
+      "proServiceYears": 15
     },
     "coach": {
       "specialty": "-",

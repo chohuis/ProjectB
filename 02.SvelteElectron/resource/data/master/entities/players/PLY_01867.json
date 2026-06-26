@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01867",
   "name": "사이토 소타",
   "nameEn": "Saito Sota",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 80
+      "potentialHidden": 80,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

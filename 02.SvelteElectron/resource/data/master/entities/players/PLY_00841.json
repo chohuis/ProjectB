@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00841",
   "name": "데이비스 브랜던",
   "nameEn": "Davis Brandon",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 66
+      "potentialHidden": 66,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

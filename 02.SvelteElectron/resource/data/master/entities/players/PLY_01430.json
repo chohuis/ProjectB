@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01430",
   "name": "화이트 일라이저",
   "nameEn": "White Elijah",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 17
     },
     "coach": {
       "specialty": "-",

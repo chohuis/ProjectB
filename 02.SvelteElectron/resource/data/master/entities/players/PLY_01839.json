@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01839",
   "name": "이시카와 코지",
   "nameEn": "Ishikawa Koji",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 88
+      "potentialHidden": 88,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

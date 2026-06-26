@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00566",
   "name": "오태우",
   "nameEn": "Ko Jun-ho",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

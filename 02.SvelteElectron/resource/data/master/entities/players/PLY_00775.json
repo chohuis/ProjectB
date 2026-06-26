@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00775",
   "name": "강승우",
   "nameEn": "Park Tae-min",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 87
+      "potentialHidden": 87,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

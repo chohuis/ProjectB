@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01421",
   "name": "베이커 메이슨",
   "nameEn": "Baker Mason",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 35,
-      "potentialHidden": 73
+      "potentialHidden": 73,
+      "proServiceYears": 16
     },
     "coach": {
       "specialty": "-",

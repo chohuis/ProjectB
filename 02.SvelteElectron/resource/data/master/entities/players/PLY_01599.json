@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01599",
   "name": "요시다 진",
   "nameEn": "Yoshida Jin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 87
+      "potentialHidden": 87,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00889",
   "name": "스미스 루카스",
   "nameEn": "Smith Lucas",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

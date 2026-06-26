@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01482",
   "name": "루이스 마이클",
   "nameEn": "Lewis Michael",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 34,
-      "potentialHidden": 89
+      "potentialHidden": 89,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

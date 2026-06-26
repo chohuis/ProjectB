@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01352",
   "name": "테일러 카를로스",
   "nameEn": "Taylor Carlos",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 36,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00734",
   "name": "나동우",
   "nameEn": "Cho Ji-hoo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01470",
   "name": "넬슨 후안",
   "nameEn": "Nelson Juan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 88
+      "potentialHidden": 88,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

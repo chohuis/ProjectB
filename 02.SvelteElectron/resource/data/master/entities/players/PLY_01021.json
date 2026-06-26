@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01021",
   "name": "토머스 존",
   "nameEn": "Thomas John",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 76
+      "potentialHidden": 76,
+      "proServiceYears": 20
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00492",
   "name": "신민혁",
   "nameEn": "Cho Hyun-seo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 90
+      "potentialHidden": 90,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

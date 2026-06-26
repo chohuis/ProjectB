@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00794",
   "name": "강민석",
   "nameEn": "Kim Jae-hyun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 57
+      "potentialHidden": 57,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

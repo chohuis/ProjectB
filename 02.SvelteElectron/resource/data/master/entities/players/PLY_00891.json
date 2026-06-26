@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00891",
   "name": "영 앤드류",
   "nameEn": "Young Andrew",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

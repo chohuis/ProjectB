@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01530",
   "name": "라미레스 하비에르",
   "nameEn": "Ramirez Javier",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 86
+      "potentialHidden": 86,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

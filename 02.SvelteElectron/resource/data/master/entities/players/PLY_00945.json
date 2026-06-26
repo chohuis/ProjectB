@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00945",
   "name": "루이스 호세",
   "nameEn": "Lewis Jose",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

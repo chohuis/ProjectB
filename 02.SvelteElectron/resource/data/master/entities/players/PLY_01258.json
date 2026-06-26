@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01258",
   "name": "존스 니콜라스",
   "nameEn": "Jones Nicholas",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 73
+      "potentialHidden": 73,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

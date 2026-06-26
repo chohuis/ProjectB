@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01316",
   "name": "클라크 일라이저",
   "nameEn": "Clark Elijah",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 61
+      "potentialHidden": 61,
+      "proServiceYears": 15
     },
     "coach": {
       "specialty": "-",

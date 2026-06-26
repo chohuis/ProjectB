@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01277",
   "name": "홀 호세",
   "nameEn": "Hall Jose",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 34,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

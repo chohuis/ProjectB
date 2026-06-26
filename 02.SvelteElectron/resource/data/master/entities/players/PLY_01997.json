@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01997",
   "name": "무라카미 류",
   "nameEn": "Murakami Ryu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 36,
-      "potentialHidden": 80
+      "potentialHidden": 80,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

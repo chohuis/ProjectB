@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01780",
   "name": "하시모토 쓰카사",
   "nameEn": "Hashimoto Tsukasa",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 66
+      "potentialHidden": 66,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

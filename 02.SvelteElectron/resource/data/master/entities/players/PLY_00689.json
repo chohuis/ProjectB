@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00689",
   "name": "문용준",
   "nameEn": "Na Hyun-jin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

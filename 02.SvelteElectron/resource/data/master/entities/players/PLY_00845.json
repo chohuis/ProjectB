@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00845",
   "name": "해리스 조너선",
   "nameEn": "Harris Jonathan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 17
     },
     "coach": {
       "specialty": "-",

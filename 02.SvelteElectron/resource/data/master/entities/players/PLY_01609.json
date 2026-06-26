@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01609",
   "name": "고바야시 히로시",
   "nameEn": "Kobayashi Hiroshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

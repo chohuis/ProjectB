@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01173",
   "name": "화이트 다니엘",
   "nameEn": "White Daniel",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 71
+      "potentialHidden": 71,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

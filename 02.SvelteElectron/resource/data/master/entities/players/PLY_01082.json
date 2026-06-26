@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01082",
   "name": "카터 마이클",
   "nameEn": "Carter Michael",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 88
+      "potentialHidden": 88,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

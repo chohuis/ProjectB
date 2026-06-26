@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01230",
   "name": "토레스 호세",
   "nameEn": "Torres Jose",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

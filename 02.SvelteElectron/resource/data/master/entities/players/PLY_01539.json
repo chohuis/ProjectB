@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01539",
   "name": "킹 저스틴",
   "nameEn": "King Justin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

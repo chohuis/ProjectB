@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01549",
   "name": "와타나베 준",
   "nameEn": "Watanabe Jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 35,
-      "potentialHidden": 90
+      "potentialHidden": 90,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

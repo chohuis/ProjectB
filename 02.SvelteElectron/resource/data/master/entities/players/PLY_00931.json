@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00931",
   "name": "미첼 빅터",
   "nameEn": "Mitchell Victor",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 17
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01710",
   "name": "마에다 이사무",
   "nameEn": "Maeda Isamu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

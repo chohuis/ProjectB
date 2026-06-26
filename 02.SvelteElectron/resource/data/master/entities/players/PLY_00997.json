@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00997",
   "name": "클라크 데이비드",
   "nameEn": "Clark David",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 37,
-      "potentialHidden": 58
+      "potentialHidden": 58,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

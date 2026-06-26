@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01017",
   "name": "토머스 타일러",
   "nameEn": "Thomas Tyler",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 31,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

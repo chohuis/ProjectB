@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02003",
   "name": "스즈키 유타",
   "nameEn": "Suzuki Yuta",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 71
+      "potentialHidden": 71,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

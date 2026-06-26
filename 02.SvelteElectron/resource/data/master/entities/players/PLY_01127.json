@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01127",
   "name": "톰프슨 카를로스",
   "nameEn": "Thompson Carlos",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 83
+      "potentialHidden": 83,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

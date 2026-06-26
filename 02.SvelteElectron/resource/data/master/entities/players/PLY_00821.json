@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00821",
   "name": "클라크 다니엘",
   "nameEn": "Clark Daniel",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 86
+      "potentialHidden": 86,
+      "proServiceYears": 18
     },
     "coach": {
       "specialty": "-",

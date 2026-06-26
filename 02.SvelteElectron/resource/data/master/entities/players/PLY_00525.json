@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00525",
   "name": "곽지원",
   "nameEn": "Na Dong-hyuk",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 73
+      "potentialHidden": 73,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

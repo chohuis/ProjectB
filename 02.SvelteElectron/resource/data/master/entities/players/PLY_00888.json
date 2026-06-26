@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00888",
   "name": "애덤스 앤드류",
   "nameEn": "Adams Andrew",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 75
+      "potentialHidden": 75,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

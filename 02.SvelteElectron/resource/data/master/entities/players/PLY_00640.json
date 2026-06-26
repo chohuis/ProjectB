@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00640",
   "name": "오정우",
   "nameEn": "Kang Tae-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

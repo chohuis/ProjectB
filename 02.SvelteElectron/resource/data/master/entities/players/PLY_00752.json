@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00752",
   "name": "성예준",
   "nameEn": "Song Seung-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 35,
-      "potentialHidden": 56
+      "potentialHidden": 56,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

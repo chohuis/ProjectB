@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01660",
   "name": "나카무라 히라쿠",
   "nameEn": "Nakamura Hiraku",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 56,
-      "potentialHidden": 89
+      "potentialHidden": 89,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

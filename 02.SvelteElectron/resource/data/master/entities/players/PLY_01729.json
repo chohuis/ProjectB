@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01729",
   "name": "고바야시 아키라",
   "nameEn": "Kobayashi Akira",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 16
     },
     "coach": {
       "specialty": "-",

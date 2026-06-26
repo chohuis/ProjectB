@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01837",
   "name": "하시모토 유타카",
   "nameEn": "Hashimoto Yutaka",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

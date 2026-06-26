@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00482",
   "name": "윤동혁",
   "nameEn": "Hong Seong-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 53,
-      "potentialHidden": 86
+      "potentialHidden": 86,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

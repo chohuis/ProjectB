@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01160",
   "name": "로드리게스 조셉",
   "nameEn": "Rodriguez Joseph",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 59
+      "potentialHidden": 59,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

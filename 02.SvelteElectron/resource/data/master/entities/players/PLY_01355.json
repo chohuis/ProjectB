@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01355",
   "name": "브라운 에이든",
   "nameEn": "Brown Aiden",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 86
+      "potentialHidden": 86,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

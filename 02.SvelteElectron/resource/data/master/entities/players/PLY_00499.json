@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00499",
   "name": "송태현",
   "nameEn": "Sim Jeong-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

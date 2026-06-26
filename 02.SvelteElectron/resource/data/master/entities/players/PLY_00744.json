@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00744",
   "name": "차상민",
   "nameEn": "Kwak Ha-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 35,
-      "potentialHidden": 89
+      "potentialHidden": 89,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

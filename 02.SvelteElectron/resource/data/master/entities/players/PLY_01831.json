@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01831",
   "name": "이시카와 슌",
   "nameEn": "Ishikawa Shun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 76
+      "potentialHidden": 76,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

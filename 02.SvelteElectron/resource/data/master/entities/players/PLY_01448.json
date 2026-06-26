@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01448",
   "name": "윌리엄스 니콜라스",
   "nameEn": "Williams Nicholas",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 33,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

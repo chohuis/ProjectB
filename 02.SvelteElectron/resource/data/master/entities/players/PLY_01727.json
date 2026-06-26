@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01727",
   "name": "야마자키 준",
   "nameEn": "Yamazaki Jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 34,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

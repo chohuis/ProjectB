@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00808",
   "name": "하준호",
   "nameEn": "Ko Tae-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 54,
-      "potentialHidden": 80
+      "potentialHidden": 80,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

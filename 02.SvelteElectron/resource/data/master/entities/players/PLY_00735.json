@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00735",
   "name": "노하준",
   "nameEn": "Kwon Jae-won",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

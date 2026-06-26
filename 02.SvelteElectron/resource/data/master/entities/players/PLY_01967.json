@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01967",
   "name": "마쓰모토 히라쿠",
   "nameEn": "Matsumoto Hiraku",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

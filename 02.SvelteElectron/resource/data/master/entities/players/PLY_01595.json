@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01595",
   "name": "타카하시 히로시",
   "nameEn": "Takahashi Hiroshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

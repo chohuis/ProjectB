@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00502",
   "name": "유도현",
   "nameEn": "Hong Jun-young",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

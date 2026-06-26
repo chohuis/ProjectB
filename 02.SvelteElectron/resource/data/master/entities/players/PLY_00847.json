@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00847",
   "name": "로빈슨 카를로스",
   "nameEn": "Robinson Carlos",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 66
+      "potentialHidden": 66,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

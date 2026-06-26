@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00884",
   "name": "존스 조너선",
   "nameEn": "Jones Jonathan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 18
     },
     "coach": {
       "specialty": "-",

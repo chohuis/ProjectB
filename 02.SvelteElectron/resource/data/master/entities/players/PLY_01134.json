@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01134",
   "name": "앨런 리엄",
   "nameEn": "Allen Liam",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

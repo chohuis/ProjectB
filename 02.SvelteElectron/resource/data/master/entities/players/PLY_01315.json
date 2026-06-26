@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01315",
   "name": "윌리엄스 알레한드로",
   "nameEn": "Williams Alejandro",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 36,
-      "potentialHidden": 92
+      "potentialHidden": 92,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

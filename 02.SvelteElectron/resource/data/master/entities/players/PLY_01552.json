@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01552",
   "name": "사사키 히로시",
   "nameEn": "Sasaki Hiroshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 33,
-      "potentialHidden": 69
+      "potentialHidden": 69,
+      "proServiceYears": 16
     },
     "coach": {
       "specialty": "-",

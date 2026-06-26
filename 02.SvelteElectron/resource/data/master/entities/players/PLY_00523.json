@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00523",
   "name": "홍준우",
   "nameEn": "Min Dong-hyun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 90
+      "potentialHidden": 90,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

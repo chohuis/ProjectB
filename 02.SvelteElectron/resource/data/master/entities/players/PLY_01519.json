@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01519",
   "name": "톰프슨 빅터",
   "nameEn": "Thompson Victor",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 87
+      "potentialHidden": 87,
+      "proServiceYears": 18
     },
     "coach": {
       "specialty": "-",

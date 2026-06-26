@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01640",
   "name": "사사키 마코토",
   "nameEn": "Sasaki Makoto",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 36,
-      "potentialHidden": 92
+      "potentialHidden": 92,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

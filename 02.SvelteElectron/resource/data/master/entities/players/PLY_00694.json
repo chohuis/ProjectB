@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00694",
   "name": "오상현",
   "nameEn": "Baek Min-seok",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 71
+      "potentialHidden": 71,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

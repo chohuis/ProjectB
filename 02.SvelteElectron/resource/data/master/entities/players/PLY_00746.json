@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00746",
   "name": "안현우",
   "nameEn": "Ha Do-hyun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 36,
-      "potentialHidden": 89
+      "potentialHidden": 89,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

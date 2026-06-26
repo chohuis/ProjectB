@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01886",
   "name": "엔도 료",
   "nameEn": "Endo Ryo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 62
+      "potentialHidden": 62,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

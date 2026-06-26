@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01899",
   "name": "사카모토 기요시",
   "nameEn": "Sakamoto Kiyoshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 54,
-      "potentialHidden": 58
+      "potentialHidden": 58,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

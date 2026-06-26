@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01236",
   "name": "윌슨 크리스토퍼",
   "nameEn": "Wilson Christopher",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 87
+      "potentialHidden": 87,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

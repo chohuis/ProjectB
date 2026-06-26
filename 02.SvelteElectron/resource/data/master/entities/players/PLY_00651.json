@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00651",
   "name": "김서준",
   "nameEn": "Min Min-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01260",
   "name": "영 마르코",
   "nameEn": "Young Marco",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 37,
-      "potentialHidden": 69
+      "potentialHidden": 69,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

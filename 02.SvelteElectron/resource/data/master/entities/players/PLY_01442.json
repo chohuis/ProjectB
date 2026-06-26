@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01442",
   "name": "존슨 앤서니",
   "nameEn": "Johnson Anthony",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 59
+      "potentialHidden": 59,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

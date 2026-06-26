@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01083",
   "name": "해리스 앤드류",
   "nameEn": "Harris Andrew",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 61
+      "potentialHidden": 61,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

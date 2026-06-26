@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00560",
   "name": "문기준",
   "nameEn": "Kwon Min-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

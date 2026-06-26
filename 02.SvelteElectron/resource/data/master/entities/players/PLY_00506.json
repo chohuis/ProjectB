@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00506",
   "name": "배주원",
   "nameEn": "Jang Jun-young",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

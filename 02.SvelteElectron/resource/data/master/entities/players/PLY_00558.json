@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00558",
   "name": "이원준",
   "nameEn": "Sung Min-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 54,
-      "potentialHidden": 65
+      "potentialHidden": 65,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

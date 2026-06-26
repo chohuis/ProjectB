@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00687",
   "name": "우태민",
   "nameEn": "Kwak Seung-hyun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

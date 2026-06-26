@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00533",
   "name": "정승민",
   "nameEn": "Yang Tae-min",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 61
+      "potentialHidden": 61,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01521",
   "name": "앤더슨 제이컵",
   "nameEn": "Anderson Jacob",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 34,
-      "potentialHidden": 62
+      "potentialHidden": 62,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

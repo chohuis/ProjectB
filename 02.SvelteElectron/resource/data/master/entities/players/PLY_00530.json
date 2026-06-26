@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00530",
   "name": "서정우",
   "nameEn": "Sung Tae-yang",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 76
+      "potentialHidden": 76,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

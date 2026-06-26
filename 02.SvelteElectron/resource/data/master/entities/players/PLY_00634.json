@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00634",
   "name": "우주원",
   "nameEn": "Noh Geon-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 72
+      "potentialHidden": 72,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

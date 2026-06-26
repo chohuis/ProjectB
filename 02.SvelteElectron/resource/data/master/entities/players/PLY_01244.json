@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01244",
   "name": "리베라 앤서니",
   "nameEn": "Rivera Anthony",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 30,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 14
     },
     "coach": {
       "specialty": "-",

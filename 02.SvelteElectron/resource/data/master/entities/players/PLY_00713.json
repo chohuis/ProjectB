@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00713",
   "name": "성동혁",
   "nameEn": "Oh Ji-sung",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 88
+      "potentialHidden": 88,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

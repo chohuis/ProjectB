@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01383",
   "name": "잭슨 크리스토퍼",
   "nameEn": "Jackson Christopher",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 33,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 18
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01870",
   "name": "이케다 스스무",
   "nameEn": "Ikeda Susumu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 65
+      "potentialHidden": 65,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

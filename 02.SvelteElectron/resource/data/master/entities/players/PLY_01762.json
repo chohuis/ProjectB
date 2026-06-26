@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01762",
   "name": "이케다 준",
   "nameEn": "Ikeda Jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

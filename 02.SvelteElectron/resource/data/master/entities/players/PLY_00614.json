@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00614",
   "name": "남민우",
   "nameEn": "Nam Hyun-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01060",
   "name": "홀 크리스토퍼",
   "nameEn": "Hall Christopher",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

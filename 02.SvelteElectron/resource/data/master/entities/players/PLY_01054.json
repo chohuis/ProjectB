@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01054",
   "name": "클라크 카를로스",
   "nameEn": "Clark Carlos",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

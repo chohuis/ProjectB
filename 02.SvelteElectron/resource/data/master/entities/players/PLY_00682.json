@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00682",
   "name": "권승우",
   "nameEn": "Song Do-hyun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 61
+      "potentialHidden": 61,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01041",
   "name": "워커 마르코",
   "nameEn": "Walker Marco",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 31,
-      "potentialHidden": 89
+      "potentialHidden": 89,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

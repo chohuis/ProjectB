@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01155",
   "name": "존스 빅터",
   "nameEn": "Jones Victor",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 36,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

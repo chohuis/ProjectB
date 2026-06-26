@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01679",
   "name": "사사키 유타카",
   "nameEn": "Sasaki Yutaka",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 71
+      "potentialHidden": 71,
+      "proServiceYears": 16
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01252",
   "name": "로빈슨 브랜던",
   "nameEn": "Robinson Brandon",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 88
+      "potentialHidden": 88,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

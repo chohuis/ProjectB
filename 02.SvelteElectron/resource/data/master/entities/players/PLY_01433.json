@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01433",
   "name": "킹 데이비드",
   "nameEn": "King David",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 71
+      "potentialHidden": 71,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

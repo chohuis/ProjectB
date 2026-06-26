@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01546",
   "name": "후지이 쇼",
   "nameEn": "Fujii Sho",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 59
+      "potentialHidden": 59,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

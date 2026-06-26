@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01726",
   "name": "시미즈 유타",
   "nameEn": "Shimizu Yuta",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 86
+      "potentialHidden": 86,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

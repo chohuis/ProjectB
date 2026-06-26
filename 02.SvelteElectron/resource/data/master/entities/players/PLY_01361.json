@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01361",
   "name": "홀 라이언",
   "nameEn": "Hall Ryan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 65
+      "potentialHidden": 65,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

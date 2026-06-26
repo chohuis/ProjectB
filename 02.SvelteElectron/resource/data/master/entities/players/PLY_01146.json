@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01146",
   "name": "톰프슨 마르코",
   "nameEn": "Thompson Marco",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

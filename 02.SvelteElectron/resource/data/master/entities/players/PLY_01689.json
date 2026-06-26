@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01689",
   "name": "타나카 켄타",
   "nameEn": "Tanaka Kenta",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 33,
-      "potentialHidden": 79
+      "potentialHidden": 79,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

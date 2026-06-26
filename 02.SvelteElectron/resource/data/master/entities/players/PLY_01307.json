@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01307",
   "name": "워커 이선",
   "nameEn": "Walker Ethan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 73
+      "potentialHidden": 73,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

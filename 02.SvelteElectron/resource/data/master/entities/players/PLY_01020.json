@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01020",
   "name": "킹 루카스",
   "nameEn": "King Lucas",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 14
     },
     "coach": {
       "specialty": "-",

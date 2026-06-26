@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01198",
   "name": "마틴 다니엘",
   "nameEn": "Martin Daniel",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 90
+      "potentialHidden": 90,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

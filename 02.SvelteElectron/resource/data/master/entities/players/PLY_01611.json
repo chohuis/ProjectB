@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01611",
   "name": "고바야시 마나부",
   "nameEn": "Kobayashi Manabu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 53,
-      "potentialHidden": 73
+      "potentialHidden": 73,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

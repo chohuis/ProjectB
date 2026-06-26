@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00809",
   "name": "임상민",
   "nameEn": "Hong Seong-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 60,
-      "potentialHidden": 87
+      "potentialHidden": 87,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

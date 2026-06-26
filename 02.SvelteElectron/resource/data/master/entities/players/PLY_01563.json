@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01563",
   "name": "미우라 슌",
   "nameEn": "Miura Shun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 53,
-      "potentialHidden": 72
+      "potentialHidden": 72,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

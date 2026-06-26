@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01414",
   "name": "데이비스 이선",
   "nameEn": "Davis Ethan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 80
+      "potentialHidden": 80,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

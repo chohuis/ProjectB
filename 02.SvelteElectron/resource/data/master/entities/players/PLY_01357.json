@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01357",
   "name": "브라운 조셉",
   "nameEn": "Brown Joseph",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 76
+      "potentialHidden": 76,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

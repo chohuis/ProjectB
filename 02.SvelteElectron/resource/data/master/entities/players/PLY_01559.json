@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01559",
   "name": "후지이 슌",
   "nameEn": "Fujii Shun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 33,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

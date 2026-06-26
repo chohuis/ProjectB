@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01293",
   "name": "리 카를로스",
   "nameEn": "Lee Carlos",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 66
+      "potentialHidden": 66,
+      "proServiceYears": 19
     },
     "coach": {
       "specialty": "-",

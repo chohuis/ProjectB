@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01285",
   "name": "앤더슨 호세",
   "nameEn": "Anderson Jose",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 15
     },
     "coach": {
       "specialty": "-",

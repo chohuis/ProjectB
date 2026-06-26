@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00893",
   "name": "스콧 앤서니",
   "nameEn": "Scott Anthony",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 62
+      "potentialHidden": 62,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

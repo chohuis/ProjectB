@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01956",
   "name": "이시다 히카루",
   "nameEn": "Ishida Hikaru",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 73
+      "potentialHidden": 73,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

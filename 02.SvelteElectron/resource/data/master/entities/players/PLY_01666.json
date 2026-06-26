@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01666",
   "name": "고바야시 쓰카사",
   "nameEn": "Kobayashi Tsukasa",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 86
+      "potentialHidden": 86,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01142",
   "name": "해리스 케빈",
   "nameEn": "Harris Kevin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 75
+      "potentialHidden": 75,
+      "proServiceYears": 17
     },
     "coach": {
       "specialty": "-",

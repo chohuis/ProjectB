@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01793",
   "name": "니시무라 츠바사",
   "nameEn": "Nishimura Tsubasa",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 53,
-      "potentialHidden": 65
+      "potentialHidden": 65,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

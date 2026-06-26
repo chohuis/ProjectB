@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01739",
   "name": "무라카미 유타카",
   "nameEn": "Murakami Yutaka",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 35,
-      "potentialHidden": 83
+      "potentialHidden": 83,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

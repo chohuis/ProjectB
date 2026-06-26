@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01854",
   "name": "사이토 시게루",
   "nameEn": "Saito Shigeru",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 86
+      "potentialHidden": 86,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

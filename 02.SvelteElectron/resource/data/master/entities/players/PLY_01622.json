@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01622",
   "name": "아베 소타",
   "nameEn": "Abe Sota",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 73
+      "potentialHidden": 73,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

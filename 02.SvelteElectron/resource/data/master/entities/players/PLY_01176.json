@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01176",
   "name": "존슨 라이언",
   "nameEn": "Johnson Ryan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 59
+      "potentialHidden": 59,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

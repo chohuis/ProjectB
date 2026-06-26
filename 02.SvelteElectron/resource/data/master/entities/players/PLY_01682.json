@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01682",
   "name": "야마구치 히로시",
   "nameEn": "Yamaguchi Hiroshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

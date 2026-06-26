@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01079",
   "name": "데이비스 빅터",
   "nameEn": "Davis Victor",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

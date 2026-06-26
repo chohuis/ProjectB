@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01704",
   "name": "오카다 켄타",
   "nameEn": "Okada Kenta",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

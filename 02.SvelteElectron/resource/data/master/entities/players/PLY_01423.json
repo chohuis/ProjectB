@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01423",
   "name": "스미스 마르코",
   "nameEn": "Smith Marco",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 37,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 15
     },
     "coach": {
       "specialty": "-",

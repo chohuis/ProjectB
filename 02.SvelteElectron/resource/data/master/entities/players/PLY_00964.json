@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00964",
   "name": "그린 조셉",
   "nameEn": "Green Joseph",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 76
+      "potentialHidden": 76,
+      "proServiceYears": 16
     },
     "coach": {
       "specialty": "-",

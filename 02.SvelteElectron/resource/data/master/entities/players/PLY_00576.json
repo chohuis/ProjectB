@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00576",
   "name": "황기준",
   "nameEn": "Moon Ju-won",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

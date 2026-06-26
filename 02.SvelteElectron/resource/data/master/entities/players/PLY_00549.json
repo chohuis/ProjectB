@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00549",
   "name": "허태우",
   "nameEn": "Park Tae-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

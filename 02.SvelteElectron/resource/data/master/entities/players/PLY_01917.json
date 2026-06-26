@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01917",
   "name": "고토 켄타",
   "nameEn": "Goto Kenta",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 61
+      "potentialHidden": 61,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

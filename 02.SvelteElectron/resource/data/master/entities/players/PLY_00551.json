@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00551",
   "name": "배준우",
   "nameEn": "Joo Seong-hyun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 89
+      "potentialHidden": 89,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

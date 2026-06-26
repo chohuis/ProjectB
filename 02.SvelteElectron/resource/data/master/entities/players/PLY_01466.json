@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01466",
   "name": "마틴 타일러",
   "nameEn": "Martin Tyler",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 19
     },
     "coach": {
       "specialty": "-",

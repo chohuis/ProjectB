@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00784",
   "name": "임하준",
   "nameEn": "Cho Sang-min",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 87
+      "potentialHidden": 87,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01730",
   "name": "사이토 쓰요시",
   "nameEn": "Saito Tsuyoshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 59
+      "potentialHidden": 59,
+      "proServiceYears": 16
     },
     "coach": {
       "specialty": "-",

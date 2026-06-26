@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01463",
   "name": "마틴 알레한드로",
   "nameEn": "Martin Alejandro",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 72
+      "potentialHidden": 72,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

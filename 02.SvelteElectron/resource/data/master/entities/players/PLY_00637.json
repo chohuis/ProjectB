@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00637",
   "name": "안정우",
   "nameEn": "Moon Chan-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 90
+      "potentialHidden": 90,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

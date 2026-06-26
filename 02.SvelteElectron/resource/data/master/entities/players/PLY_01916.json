@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01916",
   "name": "고토 츠바사",
   "nameEn": "Goto Tsubasa",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 86
+      "potentialHidden": 86,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

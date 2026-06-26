@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00717",
   "name": "최민준",
   "nameEn": "Min Jae-min",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 54,
-      "potentialHidden": 83
+      "potentialHidden": 83,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

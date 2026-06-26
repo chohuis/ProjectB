@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01662",
   "name": "무라카미 하야토",
   "nameEn": "Murakami Hayato",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

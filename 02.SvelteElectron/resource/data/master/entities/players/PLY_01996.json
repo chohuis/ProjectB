@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01996",
   "name": "고토 슌",
   "nameEn": "Goto Shun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 73
+      "potentialHidden": 73,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

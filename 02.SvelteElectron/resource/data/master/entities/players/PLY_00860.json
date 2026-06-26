@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00860",
   "name": "존슨 윌리엄",
   "nameEn": "Johnson William",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 87
+      "potentialHidden": 87,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

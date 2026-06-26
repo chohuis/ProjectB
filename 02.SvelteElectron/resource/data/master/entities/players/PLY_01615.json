@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01615",
   "name": "사카모토 마코토",
   "nameEn": "Sakamoto Makoto",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 90
+      "potentialHidden": 90,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

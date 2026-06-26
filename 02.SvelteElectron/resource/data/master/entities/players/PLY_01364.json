@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01364",
   "name": "앤더슨 타일러",
   "nameEn": "Anderson Tyler",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 17
     },
     "coach": {
       "specialty": "-",

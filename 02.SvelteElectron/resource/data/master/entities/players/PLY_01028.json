@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01028",
   "name": "토레스 이선",
   "nameEn": "Torres Ethan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 36,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00494",
   "name": "오동준",
   "nameEn": "Kwon Tae-hyun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 61
+      "potentialHidden": 61,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

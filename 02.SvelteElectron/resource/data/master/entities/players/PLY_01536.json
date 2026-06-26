@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01536",
   "name": "리 알레한드로",
   "nameEn": "Lee Alejandro",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

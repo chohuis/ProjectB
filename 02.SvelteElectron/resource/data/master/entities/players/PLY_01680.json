@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01680",
   "name": "와타나베 히라쿠",
   "nameEn": "Watanabe Hiraku",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 91
+      "potentialHidden": 91,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

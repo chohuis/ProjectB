@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00822",
   "name": "워커 존",
   "nameEn": "Walker John",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 17
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01974",
   "name": "시미즈 슌",
   "nameEn": "Shimizu Shun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 55,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

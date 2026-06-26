@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00976",
   "name": "클라크 조셉",
   "nameEn": "Clark Joseph",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 17
     },
     "coach": {
       "specialty": "-",

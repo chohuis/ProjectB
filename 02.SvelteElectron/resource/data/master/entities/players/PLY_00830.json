@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00830",
   "name": "애덤스 데이비드",
   "nameEn": "Adams David",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 72
+      "potentialHidden": 72,
+      "proServiceYears": 20
     },
     "coach": {
       "specialty": "-",

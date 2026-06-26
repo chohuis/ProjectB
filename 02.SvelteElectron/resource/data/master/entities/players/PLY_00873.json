@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00873",
   "name": "넬슨 크리스토퍼",
   "nameEn": "Nelson Christopher",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

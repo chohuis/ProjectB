@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00850",
   "name": "스미스 데이비드",
   "nameEn": "Smith David",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 75
+      "potentialHidden": 75,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

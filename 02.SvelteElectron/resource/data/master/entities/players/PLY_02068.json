@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02068",
   "name": "오타 료",
   "nameEn": "Ota Ryo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

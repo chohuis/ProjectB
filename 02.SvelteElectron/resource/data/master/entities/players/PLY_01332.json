@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01332",
   "name": "플로레스 다니엘",
   "nameEn": "Flores Daniel",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 62
+      "potentialHidden": 62,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

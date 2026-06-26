@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00906",
   "name": "앤더슨 제임스",
   "nameEn": "Anderson James",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

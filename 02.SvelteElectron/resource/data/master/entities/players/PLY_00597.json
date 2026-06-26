@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00597",
   "name": "민태현",
   "nameEn": "Oh Dong-hyuk",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 73
+      "potentialHidden": 73,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

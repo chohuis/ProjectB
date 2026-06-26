@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01469",
   "name": "리 로버트",
   "nameEn": "Lee Robert",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01801",
   "name": "사카모토 쇼",
   "nameEn": "Sakamoto Sho",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 68
+      "potentialHidden": 68,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

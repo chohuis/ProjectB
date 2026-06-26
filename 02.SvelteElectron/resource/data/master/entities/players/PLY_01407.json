@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01407",
   "name": "앨런 로버트",
   "nameEn": "Allen Robert",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 73
+      "potentialHidden": 73,
+      "proServiceYears": 18
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00638",
   "name": "정주원",
   "nameEn": "Hwang Jae-hoon",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 56,
-      "potentialHidden": 76
+      "potentialHidden": 76,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

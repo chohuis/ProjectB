@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00552",
   "name": "장원준",
   "nameEn": "You Ji-hoo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 71
+      "potentialHidden": 71,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

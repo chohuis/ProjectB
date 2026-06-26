@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00829",
   "name": "리 로건",
   "nameEn": "Lee Logan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

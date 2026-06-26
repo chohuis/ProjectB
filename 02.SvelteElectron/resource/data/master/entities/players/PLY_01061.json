@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01061",
   "name": "무어 조너선",
   "nameEn": "Moore Jonathan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 34,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

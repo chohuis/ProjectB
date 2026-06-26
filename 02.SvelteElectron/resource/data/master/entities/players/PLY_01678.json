@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01678",
   "name": "와타나베 유타카",
   "nameEn": "Watanabe Yutaka",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 89
+      "potentialHidden": 89,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

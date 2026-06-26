@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00715",
   "name": "허주원",
   "nameEn": "Seo Jeong-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

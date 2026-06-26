@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01104",
   "name": "앨런 벤자민",
   "nameEn": "Allen Benjamin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

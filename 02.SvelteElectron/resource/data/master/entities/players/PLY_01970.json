@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01970",
   "name": "후지타 기요시",
   "nameEn": "Fujita Kiyoshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 79
+      "potentialHidden": 79,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

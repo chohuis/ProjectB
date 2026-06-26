@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00680",
   "name": "허상민",
   "nameEn": "Woo Yong-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

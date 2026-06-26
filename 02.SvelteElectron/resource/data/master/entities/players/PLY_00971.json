@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00971",
   "name": "라미레스 조너선",
   "nameEn": "Ramirez Jonathan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 35,
-      "potentialHidden": 66
+      "potentialHidden": 66,
+      "proServiceYears": 15
     },
     "coach": {
       "specialty": "-",

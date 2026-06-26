@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01891",
   "name": "오카다 사토시",
   "nameEn": "Okada Satoshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 66
+      "potentialHidden": 66,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

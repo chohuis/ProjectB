@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01616",
   "name": "오타 켄타",
   "nameEn": "Ota Kenta",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 73
+      "potentialHidden": 73,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

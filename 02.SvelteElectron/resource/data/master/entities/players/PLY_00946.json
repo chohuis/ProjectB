@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00946",
   "name": "브라운 벤자민",
   "nameEn": "Brown Benjamin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 73
+      "potentialHidden": 73,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

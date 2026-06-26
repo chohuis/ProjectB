@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01289",
   "name": "앤더슨 조셉",
   "nameEn": "Anderson Joseph",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 35,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 14
     },
     "coach": {
       "specialty": "-",

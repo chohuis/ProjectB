@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02004",
   "name": "미우라 요스케",
   "nameEn": "Miura Yosuke",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 72
+      "potentialHidden": 72,
+      "proServiceYears": 16
     },
     "coach": {
       "specialty": "-",

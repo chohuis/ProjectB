@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01431",
   "name": "미첼 조셉",
   "nameEn": "Mitchell Joseph",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

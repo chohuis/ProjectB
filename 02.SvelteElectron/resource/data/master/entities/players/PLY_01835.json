@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01835",
   "name": "오타 츠바사",
   "nameEn": "Ota Tsubasa",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 15
     },
     "coach": {
       "specialty": "-",

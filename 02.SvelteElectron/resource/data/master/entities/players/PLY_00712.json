@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00712",
   "name": "오도윤",
   "nameEn": "Kang Dong-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 55,
-      "potentialHidden": 62
+      "potentialHidden": 62,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

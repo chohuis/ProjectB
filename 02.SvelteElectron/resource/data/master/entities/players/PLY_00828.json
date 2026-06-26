@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00828",
   "name": "화이트 하비에르",
   "nameEn": "White Javier",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 79
+      "potentialHidden": 79,
+      "proServiceYears": 15
     },
     "coach": {
       "specialty": "-",

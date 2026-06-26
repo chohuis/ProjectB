@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00928",
   "name": "루이스 마르코",
   "nameEn": "Lewis Marco",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 34,
-      "potentialHidden": 86
+      "potentialHidden": 86,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00511",
   "name": "홍재민",
   "nameEn": "Nam Jin-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 75
+      "potentialHidden": 75,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

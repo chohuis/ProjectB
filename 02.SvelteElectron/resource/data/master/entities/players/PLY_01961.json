@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01961",
   "name": "후지이 이사무",
   "nameEn": "Fujii Isamu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 62
+      "potentialHidden": 62,
+      "proServiceYears": 15
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01229",
   "name": "무어 매튜",
   "nameEn": "Moore Matthew",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

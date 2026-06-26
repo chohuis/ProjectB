@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01183",
   "name": "카스티요 호세",
   "nameEn": "Castillo Jose",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

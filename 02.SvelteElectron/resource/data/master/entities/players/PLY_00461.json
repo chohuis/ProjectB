@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00461",
   "name": "배동우",
   "nameEn": "Moon Sang-hyun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 58
+      "potentialHidden": 58,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

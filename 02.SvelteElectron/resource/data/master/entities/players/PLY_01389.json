@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01389",
   "name": "홀 애드리언",
   "nameEn": "Hall Adrian",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 75
+      "potentialHidden": 75,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00832",
   "name": "존슨 다니엘",
   "nameEn": "Johnson Daniel",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 34,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 14
     },
     "coach": {
       "specialty": "-",

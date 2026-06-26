@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01737",
   "name": "요시다 다이키",
   "nameEn": "Yoshida Daiki",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 53,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

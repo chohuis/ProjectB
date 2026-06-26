@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01922",
   "name": "와타나베 유토",
   "nameEn": "Watanabe Yuto",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 79
+      "potentialHidden": 79,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01976",
   "name": "와타나베 스스무",
   "nameEn": "Watanabe Susumu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

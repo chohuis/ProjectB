@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01363",
   "name": "라이트 크리스토퍼",
   "nameEn": "Wright Christopher",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 87
+      "potentialHidden": 87,
+      "proServiceYears": 17
     },
     "coach": {
       "specialty": "-",

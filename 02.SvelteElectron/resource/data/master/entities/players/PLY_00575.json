@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00575",
   "name": "우태양",
   "nameEn": "Woo Ji-won",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 36,
-      "potentialHidden": 79
+      "potentialHidden": 79,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

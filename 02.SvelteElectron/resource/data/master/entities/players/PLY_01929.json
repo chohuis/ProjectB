@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01929",
   "name": "기무라 준",
   "nameEn": "Kimura Jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 86
+      "potentialHidden": 86,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

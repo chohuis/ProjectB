@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01376",
   "name": "톰프슨 루카스",
   "nameEn": "Thompson Lucas",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 33,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 18
     },
     "coach": {
       "specialty": "-",

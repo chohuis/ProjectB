@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00522",
   "name": "배용준",
   "nameEn": "Seo Ye-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 58
+      "potentialHidden": 58,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

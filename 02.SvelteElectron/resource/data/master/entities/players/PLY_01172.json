@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01172",
   "name": "존스 조셉",
   "nameEn": "Jones Joseph",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

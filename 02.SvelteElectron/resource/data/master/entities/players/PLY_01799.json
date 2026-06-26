@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01799",
   "name": "마에다 마코토",
   "nameEn": "Maeda Makoto",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

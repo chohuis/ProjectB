@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01903",
   "name": "타나카 하야토",
   "nameEn": "Tanaka Hayato",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

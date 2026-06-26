@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01048",
   "name": "라미레스 케빈",
   "nameEn": "Ramirez Kevin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

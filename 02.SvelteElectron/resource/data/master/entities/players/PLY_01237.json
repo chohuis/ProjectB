@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01237",
   "name": "로빈슨 제임스",
   "nameEn": "Robinson James",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 81
+      "potentialHidden": 81,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

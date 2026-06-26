@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01990",
   "name": "오타 마나부",
   "nameEn": "Ota Manabu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01243",
   "name": "미첼 노아",
   "nameEn": "Mitchell Noah",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 17
     },
     "coach": {
       "specialty": "-",

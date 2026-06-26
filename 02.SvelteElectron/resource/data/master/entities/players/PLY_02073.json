@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02073",
   "name": "콘도 코지",
   "nameEn": "Kondo Koji",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 59
+      "potentialHidden": 59,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

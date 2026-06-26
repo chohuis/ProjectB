@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00843",
   "name": "리 리엄",
   "nameEn": "Lee Liam",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 83
+      "potentialHidden": 83,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00603",
   "name": "손지성",
   "nameEn": "Oh Seung-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 62
+      "potentialHidden": 62,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00543",
   "name": "최준우",
   "nameEn": "Sung Min-hyuk",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01487",
   "name": "무어 마르코",
   "nameEn": "Moore Marco",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

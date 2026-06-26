@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01766",
   "name": "나카무라 카이토",
   "nameEn": "Nakamura Kaito",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 62
+      "potentialHidden": 62,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

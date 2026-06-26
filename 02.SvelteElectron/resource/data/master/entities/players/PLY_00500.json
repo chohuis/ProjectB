@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00500",
   "name": "조지성",
   "nameEn": "Oh Jun-seo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

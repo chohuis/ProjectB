@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01279",
   "name": "마르티네스 앤드류",
   "nameEn": "Martinez Andrew",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 79
+      "potentialHidden": 79,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01103",
   "name": "클라크 메이슨",
   "nameEn": "Clark Mason",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 49,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

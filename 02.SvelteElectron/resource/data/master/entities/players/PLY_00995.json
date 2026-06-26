@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00995",
   "name": "리 제임스",
   "nameEn": "Lee James",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

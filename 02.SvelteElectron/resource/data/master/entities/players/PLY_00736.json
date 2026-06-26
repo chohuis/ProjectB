@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00736",
   "name": "문지훈",
   "nameEn": "Park Ji-sung",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

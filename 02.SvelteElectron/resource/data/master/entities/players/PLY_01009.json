@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01009",
   "name": "그린 프란시스코",
   "nameEn": "Green Francisco",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 77
+      "potentialHidden": 77,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

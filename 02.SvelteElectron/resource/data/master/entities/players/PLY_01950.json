@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01950",
   "name": "타카하시 진",
   "nameEn": "Takahashi Jin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 52,
-      "potentialHidden": 83
+      "potentialHidden": 83,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

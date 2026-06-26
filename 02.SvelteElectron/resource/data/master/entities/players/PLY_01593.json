@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01593",
   "name": "이노우에 아키라",
   "nameEn": "Inoue Akira",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 83
+      "potentialHidden": 83,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

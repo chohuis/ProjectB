@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00858",
   "name": "윌리엄스 다니엘",
   "nameEn": "Williams Daniel",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

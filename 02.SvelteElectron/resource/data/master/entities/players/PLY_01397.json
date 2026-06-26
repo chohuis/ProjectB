@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01397",
   "name": "카터 다니엘",
   "nameEn": "Carter Daniel",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 37,
-      "potentialHidden": 80
+      "potentialHidden": 80,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

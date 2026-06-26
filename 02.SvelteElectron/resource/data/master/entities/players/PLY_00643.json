@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00643",
   "name": "나정우",
   "nameEn": "Jeon Hyun-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 53,
-      "potentialHidden": 63
+      "potentialHidden": 63,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

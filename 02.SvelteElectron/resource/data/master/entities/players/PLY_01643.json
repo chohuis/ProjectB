@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01643",
   "name": "미우라 시게루",
   "nameEn": "Miura Shigeru",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 34,
-      "potentialHidden": 75
+      "potentialHidden": 75,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

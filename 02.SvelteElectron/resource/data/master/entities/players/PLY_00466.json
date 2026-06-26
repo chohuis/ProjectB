@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00466",
   "name": "최상현",
   "nameEn": "Cha Ji-ho",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

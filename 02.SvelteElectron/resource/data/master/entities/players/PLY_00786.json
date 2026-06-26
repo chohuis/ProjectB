@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00786",
   "name": "송지훈",
   "nameEn": "Seo Min-jae",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 54,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

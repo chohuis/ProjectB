@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01906",
   "name": "사이토 료",
   "nameEn": "Saito Ryo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 64
+      "potentialHidden": 64,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

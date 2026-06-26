@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01583",
   "name": "콘도 렌",
   "nameEn": "Kondo Ren",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

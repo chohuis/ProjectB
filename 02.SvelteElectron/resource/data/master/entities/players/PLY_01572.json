@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01572",
   "name": "무라카미 진",
   "nameEn": "Murakami Jin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 55,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

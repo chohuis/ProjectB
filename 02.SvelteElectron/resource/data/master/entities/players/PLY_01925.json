@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01925",
   "name": "후지타 쇼",
   "nameEn": "Fujita Sho",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 75
+      "potentialHidden": 75,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

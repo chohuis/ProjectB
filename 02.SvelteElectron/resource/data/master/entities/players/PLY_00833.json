@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00833",
   "name": "테일러 저스틴",
   "nameEn": "Taylor Justin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 20
     },
     "coach": {
       "specialty": "-",

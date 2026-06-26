@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01309",
   "name": "루이스 제임스",
   "nameEn": "Lewis James",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 30,
-      "potentialHidden": 61
+      "potentialHidden": 61,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

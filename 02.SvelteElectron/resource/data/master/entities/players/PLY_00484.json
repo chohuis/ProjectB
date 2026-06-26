@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00484",
   "name": "권현우",
   "nameEn": "Han Hyun-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

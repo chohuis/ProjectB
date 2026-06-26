@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01612",
   "name": "오카다 히로시",
   "nameEn": "Okada Hiroshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 90
+      "potentialHidden": 90,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

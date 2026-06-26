@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00513",
   "name": "우민재",
   "nameEn": "Yoon Gi-jun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 53,
-      "potentialHidden": 87
+      "potentialHidden": 87,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

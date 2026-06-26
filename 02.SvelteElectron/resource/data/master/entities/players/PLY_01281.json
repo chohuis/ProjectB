@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01281",
   "name": "데이비스 제임스",
   "nameEn": "Davis James",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 36,
-      "potentialHidden": 67
+      "potentialHidden": 67,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

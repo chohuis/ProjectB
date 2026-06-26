@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01999",
   "name": "야마구치 기요시",
   "nameEn": "Yamaguchi Kiyoshi",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 61
+      "potentialHidden": 61,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01481",
   "name": "화이트 케빈",
   "nameEn": "White Kevin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 61
+      "potentialHidden": 61,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

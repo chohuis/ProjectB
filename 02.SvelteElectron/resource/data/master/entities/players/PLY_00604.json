@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00604",
   "name": "이현준",
   "nameEn": "Kang Min-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 53,
-      "potentialHidden": 89
+      "potentialHidden": 89,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

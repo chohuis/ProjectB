@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01512",
   "name": "브라운 마르코",
   "nameEn": "Brown Marco",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 59
+      "potentialHidden": 59,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

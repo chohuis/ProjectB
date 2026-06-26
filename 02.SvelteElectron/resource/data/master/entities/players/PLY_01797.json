@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01797",
   "name": "이노우에 슌",
   "nameEn": "Inoue Shun",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 53,
-      "potentialHidden": 59
+      "potentialHidden": 59,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

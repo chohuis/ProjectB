@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00934",
   "name": "무라카미 켄스케",
   "nameEn": "Murakami Kensuke",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 37,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 12
     },
     "coach": {
       "specialty": "-",

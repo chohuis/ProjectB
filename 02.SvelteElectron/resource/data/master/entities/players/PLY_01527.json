@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01527",
   "name": "무어 케빈",
   "nameEn": "Moore Kevin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 31,
-      "potentialHidden": 88
+      "potentialHidden": 88,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

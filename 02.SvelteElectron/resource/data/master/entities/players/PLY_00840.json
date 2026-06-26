@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00840",
   "name": "스미스 앤드류",
   "nameEn": "Smith Andrew",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 86
+      "potentialHidden": 86,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01954",
   "name": "사사키 츠바사",
   "nameEn": "Sasaki Tsubasa",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 53,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

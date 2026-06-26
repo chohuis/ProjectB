@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00617",
   "name": "하정우",
   "nameEn": "Kim Jun-woo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 79
+      "potentialHidden": 79,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

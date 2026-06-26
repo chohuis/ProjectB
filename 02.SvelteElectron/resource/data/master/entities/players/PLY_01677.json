@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01677",
   "name": "마에다 하야토",
   "nameEn": "Maeda Hayato",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 75
+      "potentialHidden": 75,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

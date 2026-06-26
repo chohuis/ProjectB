@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01650",
   "name": "오카다 유토",
   "nameEn": "Okada Yuto",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 47,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01692",
   "name": "와타나베 마나부",
   "nameEn": "Watanabe Manabu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 86
+      "potentialHidden": 86,
+      "proServiceYears": 7
     },
     "coach": {
       "specialty": "-",

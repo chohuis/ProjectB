@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00657",
   "name": "성하준",
   "nameEn": "Na Jae-hoon",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 83
+      "potentialHidden": 83,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

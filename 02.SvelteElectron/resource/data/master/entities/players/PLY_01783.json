@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01783",
   "name": "사토 유토",
   "nameEn": "Sato Yuto",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 34,
-      "potentialHidden": 92
+      "potentialHidden": 92,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

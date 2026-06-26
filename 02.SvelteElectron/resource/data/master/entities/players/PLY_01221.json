@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01221",
   "name": "스콧 에이든",
   "nameEn": "Scott Aiden",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 51,
-      "potentialHidden": 62
+      "potentialHidden": 62,
+      "proServiceYears": 13
     },
     "coach": {
       "specialty": "-",

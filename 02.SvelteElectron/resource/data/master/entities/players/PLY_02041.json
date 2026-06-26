@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02041",
   "name": "후지이 마코토",
   "nameEn": "Fujii Makoto",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 46,
-      "potentialHidden": 72
+      "potentialHidden": 72,
+      "proServiceYears": 11
     },
     "coach": {
       "specialty": "-",

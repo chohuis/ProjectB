@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01218",
   "name": "톰프슨 루이스",
   "nameEn": "Thompson Luis",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 74
+      "potentialHidden": 74,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

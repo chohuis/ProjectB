@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01427",
   "name": "킹 벤자민",
   "nameEn": "King Benjamin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

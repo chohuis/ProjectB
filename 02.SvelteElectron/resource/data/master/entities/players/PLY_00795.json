@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00795",
   "name": "김재윤",
   "nameEn": "Nam Ji-hoo",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

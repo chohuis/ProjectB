@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00943",
   "name": "화이트 카를로스",
   "nameEn": "White Carlos",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01987",
   "name": "고토 쇼",
   "nameEn": "Goto Sho",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 55,
-      "potentialHidden": 78
+      "potentialHidden": 78,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

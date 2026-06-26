@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01238",
   "name": "테일러 에이든",
   "nameEn": "Taylor Aiden",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 58
+      "potentialHidden": 58,
+      "proServiceYears": 5
     },
     "coach": {
       "specialty": "-",

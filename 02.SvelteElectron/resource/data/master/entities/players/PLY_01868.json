@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01868",
   "name": "이노우에 유타카",
   "nameEn": "Inoue Yutaka",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 91
+      "potentialHidden": 91,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01122",
   "name": "라이트 다니엘",
   "nameEn": "Wright Daniel",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 40,
-      "potentialHidden": 90
+      "potentialHidden": 90,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

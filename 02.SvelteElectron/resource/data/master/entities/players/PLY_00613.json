@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00613",
   "name": "김상민",
   "nameEn": "Ha Woo-jin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 56
+      "potentialHidden": 56,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

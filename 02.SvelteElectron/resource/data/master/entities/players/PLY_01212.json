@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01212",
   "name": "화이트 앤드류",
   "nameEn": "White Andrew",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 70
+      "potentialHidden": 70,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01995",
   "name": "사이토 히카루",
   "nameEn": "Saito Hikaru",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 48,
-      "potentialHidden": 84
+      "potentialHidden": 84,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

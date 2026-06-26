@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01276",
   "name": "앨런 노아",
   "nameEn": "Allen Noah",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 35,
-      "potentialHidden": 60
+      "potentialHidden": 60,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

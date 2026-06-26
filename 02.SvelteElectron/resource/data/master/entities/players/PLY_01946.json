@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01946",
   "name": "나카무라 마나부",
   "nameEn": "Nakamura Manabu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 72
+      "potentialHidden": 72,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

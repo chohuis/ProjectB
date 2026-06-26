@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01460",
   "name": "토머스 이선",
   "nameEn": "Thomas Ethan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 90
+      "potentialHidden": 90,
+      "proServiceYears": 3
     },
     "coach": {
       "specialty": "-",

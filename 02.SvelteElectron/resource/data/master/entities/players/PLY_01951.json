@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01951",
   "name": "이토 켄타",
   "nameEn": "Ito Kenta",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 35,
-      "potentialHidden": 79
+      "potentialHidden": 79,
+      "proServiceYears": 1
     },
     "coach": {
       "specialty": "-",

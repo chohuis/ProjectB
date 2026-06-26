@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01848",
   "name": "나카무라 켄타",
   "nameEn": "Nakamura Kenta",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 41,
-      "potentialHidden": 72
+      "potentialHidden": 72,
+      "proServiceYears": 9
     },
     "coach": {
       "specialty": "-",

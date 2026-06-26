@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01475",
   "name": "스콧 로버트",
   "nameEn": "Scott Robert",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 42,
-      "potentialHidden": 72
+      "potentialHidden": 72,
+      "proServiceYears": 17
     },
     "coach": {
       "specialty": "-",

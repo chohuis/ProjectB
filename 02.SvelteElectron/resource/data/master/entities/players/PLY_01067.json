@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01067",
   "name": "톰프슨 제임스",
   "nameEn": "Thompson James",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 43,
-      "potentialHidden": 64
+      "potentialHidden": 64,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

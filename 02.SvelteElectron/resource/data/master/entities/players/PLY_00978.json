@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00978",
   "name": "가르시아 케빈",
   "nameEn": "Garcia Kevin",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 45,
-      "potentialHidden": 76
+      "potentialHidden": 76,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

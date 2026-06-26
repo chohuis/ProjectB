@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_00844",
   "name": "클라크 앤드류",
   "nameEn": "Clark Andrew",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 32,
-      "potentialHidden": 85
+      "potentialHidden": 85,
+      "proServiceYears": 6
     },
     "coach": {
       "specialty": "-",

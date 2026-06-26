@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02070",
   "name": "야마모토 다이키",
   "nameEn": "Yamamoto Daiki",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 50,
-      "potentialHidden": 62
+      "potentialHidden": 62,
+      "proServiceYears": 2
     },
     "coach": {
       "specialty": "-",

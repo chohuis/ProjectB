@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01405",
   "name": "라미레스 카를로스",
   "nameEn": "Ramirez Carlos",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 37,
-      "potentialHidden": 82
+      "potentialHidden": 82,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

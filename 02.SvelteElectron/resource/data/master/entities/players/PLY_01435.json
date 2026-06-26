@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01435",
   "name": "가르시아 로건",
   "nameEn": "Garcia Logan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 37,
-      "potentialHidden": 59
+      "potentialHidden": 59,
+      "proServiceYears": 0
     },
     "coach": {
       "specialty": "-",

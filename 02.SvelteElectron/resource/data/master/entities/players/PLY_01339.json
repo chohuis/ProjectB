@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01339",
   "name": "스미스 프란시스코",
   "nameEn": "Smith Francisco",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 38,
-      "potentialHidden": 59
+      "potentialHidden": 59,
+      "proServiceYears": 8
     },
     "coach": {
       "specialty": "-",

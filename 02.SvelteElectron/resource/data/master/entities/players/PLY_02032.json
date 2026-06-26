@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_02032",
   "name": "오타 이사무",
   "nameEn": "Ota Isamu",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 39,
-      "potentialHidden": 75
+      "potentialHidden": 75,
+      "proServiceYears": 4
     },
     "coach": {
       "specialty": "-",

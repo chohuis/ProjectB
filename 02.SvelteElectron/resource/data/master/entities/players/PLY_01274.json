@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01274",
   "name": "토머스 에이든",
   "nameEn": "Thomas Aiden",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 44,
-      "potentialHidden": 59
+      "potentialHidden": 59,
+      "proServiceYears": 10
     },
     "coach": {
       "specialty": "-",

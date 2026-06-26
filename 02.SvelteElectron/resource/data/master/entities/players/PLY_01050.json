@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "PLY_01050",
   "name": "미첼 조너선",
   "nameEn": "Mitchell Jonathan",
@@ -44,7 +44,8 @@
         "platoon": 50
       },
       "developmentRate": 36,
-      "potentialHidden": 89
+      "potentialHidden": 89,
+      "proServiceYears": 19
     },
     "coach": {
       "specialty": "-",
