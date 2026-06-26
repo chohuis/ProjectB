@@ -17,7 +17,7 @@
     "gen:contacts": "node scripts/gen-manifest.mjs --force",
     "gen:index": "node scripts/rebuild_entity_index.cjs",
     "dev:ui": "npm run gen:manifest && vite --config vite.config.ts",
-    "dev:desktop": "npm run build:packages && node scripts/wait-for-port.cjs 5173 && cross-env VITE_DEV_SERVER_URL=http://localhost:5173 electron apps/desktop/main.cjs",
+    "dev:desktop": "npm run build:masterdb && npm run build:packages && node scripts/wait-for-port.cjs 5173 && cross-env VITE_DEV_SERVER_URL=http://localhost:5173 electron apps/desktop/main.cjs",
     "predev": "npm run build:native || echo [engine-native] Rust 빌드 실패 - match engine stubs 사용 (dev 전용)",
     "dev": "concurrently -k \"npm:dev:ui\" \"npm:dev:desktop\"",
     "build:ui": "npm run gen:manifest && vite build --config vite.config.ts",

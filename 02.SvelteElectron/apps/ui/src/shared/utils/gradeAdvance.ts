@@ -70,7 +70,8 @@ export function entityToProNpcState(
   const pl = entity.details?.player;
   const isMilitary =
     entity.militaryStatus === "현역" || pl?.militaryStatus === "현역";
-  const enlistYear = pl?.militaryEnlistYear;
+  // militaryEnlistYear는 entity 루트에 있고 details.player에는 없으므로 루트 우선
+  const enlistYear = entity.militaryEnlistYear ?? pl?.militaryEnlistYear;
   const careerStatus: NpcSaveState["careerStatus"] =
     entity.status === "retired" ? "retired"
     : isMilitary               ? "military"
@@ -87,14 +88,16 @@ export function entityToProNpcState(
     schoolId:       "",
     graduationYear: 0,
     careerStatus,
-    currentLeague:  isMilitary ? (pl?.originalLeagueId ?? entity.leagueId) : entity.leagueId,
-    currentTeam:    isMilitary ? (pl?.originalTeamId   ?? entity.teamId)   : entity.teamId,
+    // 군 복무 중: currentLeague/Team은 상무(LEAGUE_UNIVERSITY/TEAM_SPORTS_UNIT) 유지
+    currentLeague:  entity.leagueId,
+    currentTeam:    entity.teamId,
     militaryStatus: entity.militaryStatus ?? pl?.militaryStatus ?? "미필",
-    militaryUnit:   isMilitary ? (pl?.militaryUnit ?? "general") : undefined,
+    militaryUnit:   isMilitary ? (pl?.militaryUnit ?? "sports") : undefined,
     militaryEnlistYear:    enlistYear,
     militaryDischargeYear: enlistYear ? enlistYear + 2 : undefined,
-    originalLeagueId: isMilitary ? entity.leagueId : undefined,
-    originalTeamId:   isMilitary ? entity.teamId   : undefined,
+    // 전역 후 복귀 리그/팀: originLeagueId(KBL) + clubId(원래 구단)
+    originalLeagueId: isMilitary ? (entity.originLeagueId ?? entity.leagueId) : undefined,
+    originalTeamId:   isMilitary ? (entity.clubId ?? entity.teamId) : undefined,
     developmentRate:  pl?.developmentRate ?? 50,
     potentialHidden:  pl?.potentialHidden ?? 75,
     proServiceYears:  pl?.proServiceYears ?? 0,

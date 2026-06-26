@@ -1215,8 +1215,7 @@ async function processProTeamCallupCalldown(weekNum: number): Promise<string[]> 
   for (const team of proTeams1) {
     const teamId1 = team.id;
     const teamId2 = teamId1.replace(/_1$/, "_2");
-    const profile  = getTeamProfile(teamId1, g, m);
-    if (!profile) continue;
+    const profile  = getTeamProfile(teamId1, g, m) ?? DEFAULT_TEAM_PROFILE;
 
     const { active, farm } = getTeamEntityRefs(teamId1, teamId2, m.entities, get(npcLiveStatsStore), namedMap);
     const teamShort = teamId1.replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "");
@@ -1312,8 +1311,7 @@ async function processWinNowPressureUpdate(weekNum: number): Promise<void> {
   const proTeams = m.teams.filter(t => proLeagues.includes(t.leagueId) && t.id.endsWith("_1"));
 
   for (const team of proTeams) {
-    const profile = getTeamProfile(team.id, g, m);
-    if (!profile) continue;
+    const profile = getTeamProfile(team.id, g, m) ?? DEFAULT_TEAM_PROFILE;
 
     // 각 팀의 소속 리그 순위 조회 (주인공 리그가 아닐 수 있으므로 leagueState 우선)
     const leagueStandings = s.leagueState[team.leagueId]?.standings ?? s.standings;
@@ -1375,8 +1373,7 @@ async function processOffseasonNpcDecisions(weekNum: number): Promise<string[]> 
     const entity = m.entities.find(e => e.id === npc.npcId);
     if (!entity) continue;
     const liveOvr = npcOvr(entity, get(npcLiveStatsStore));
-    const profile  = getTeamProfile(npc.currentTeam, g, m);
-    if (!profile) continue;
+    const profile  = getTeamProfile(npc.currentTeam, g, m) ?? DEFAULT_TEAM_PROFILE;
 
     // 은퇴 제안
     const retSuggest = JSON.parse(
@@ -1646,8 +1643,7 @@ async function processScoutingImprovement(): Promise<void> {
   const proTeams = m.teams.filter(t => proLeagues.includes(t.leagueId) && t.id.endsWith("_1"));
 
   for (const team of proTeams) {
-    const profile = getTeamProfile(team.id, g, m);
-    if (!profile) continue;
+    const profile = getTeamProfile(team.id, g, m) ?? DEFAULT_TEAM_PROFILE;
 
     const res = JSON.parse(
       await window.projectB!.calcScoutingImprovementNative(JSON.stringify({

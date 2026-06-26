@@ -232,9 +232,20 @@
     return result;
   };
 
+  const SPECIAL_TEAM_NAMES: Record<string, string> = {
+    "TEAM_SPORTS_UNIT": "상무",
+  };
+
   function txTeamName(id?: string | null): string {
     if (!id) return "";
-    return $teamMap.get(id)?.name ?? id;
+    const direct = $teamMap.get(id)?.name;
+    if (direct) return direct;
+    if (SPECIAL_TEAM_NAMES[id]) return SPECIAL_TEAM_NAMES[id];
+    if (id.endsWith("_2")) {
+      const base = $teamMap.get(id.slice(0, -2) + "_1")?.name;
+      if (base) return base + " 2군";
+    }
+    return id;
   }
 
   function tName(id: string): string {

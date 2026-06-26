@@ -857,13 +857,14 @@ function createGameStore() {
       const existingIds = new Set(s.npcs.map(n => n.npcId));
       const newProNpcs = entities.filter(e =>
         e.role === "player" &&
-        e.leagueId === "LEAGUE_KBL" &&
         e.status !== "retired" &&
-        !existingIds.has(e.id)
+        !existingIds.has(e.id) &&
+        (e.leagueId === "LEAGUE_KBL" ||
+         (e.militaryStatus === "현역" && e.originLeagueId === "LEAGUE_KBL"))
       ).map(e => entityToProNpcState(e, seasonYear));
 
       if (newProNpcs.length === 0) return;
-      autoLog(`[프로NPC초기화] KBL ${newProNpcs.length}명 → gameStore.npcs 추가 (Y${seasonYear})`);
+      autoLog(`[프로NPC초기화] KBL+상무 ${newProNpcs.length}명 → gameStore.npcs 추가 (Y${seasonYear})`);
       update((st) => ({ ...st, npcs: [...st.npcs, ...newProNpcs] }));
     },
 
@@ -2499,6 +2500,20 @@ function createGameStore() {
         );
         if (draftRes.error) { autoLog(`[NPC드래프트오류] ${draftRes.error}`); _draftDbOk = false; }
         else autoLog(`[NPC드래프트] DB 저장 ${rows.length}건 ✓`);
+
+        // 지명 선수 entity를 overlay DB에 반영 (다음 시즌 W1 reload 시 유지)
+        const mEntities = get(masterStore).entities;
+        const entitiesToUpsert = simResult.picks.flatMap(pick => {
+          const e = mEntities.find(x => x.id === pick.npcId);
+          if (!e) return [];
+          return [{ ...e, leagueId: "LEAGUE_KBL", teamId: pick.teamId, clubId: pick.teamId }];
+        });
+        if (entitiesToUpsert.length > 0) {
+          await window.projectB!.masterBulkUpsertEntities(
+            JSON.stringify({ slotId, entities: entitiesToUpsert })
+          );
+          autoLog(`[NPC드래프트] entity overlay 반영 ${entitiesToUpsert.length}건 ✓`);
+        }
       }
 
       logEvent({
