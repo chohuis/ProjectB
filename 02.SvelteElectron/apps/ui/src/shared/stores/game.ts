@@ -2108,8 +2108,54 @@ function createGameStore() {
           e.age >= 26
         );
 
-        const generalPool = [...generalPoolPro, ...generalPoolNonPro];
-        autoLog(`[일반병후보] 프로 ${generalPoolPro.length}명 + 독립/대학26세+ ${generalPoolNonPro.length}명 = ${generalPool.length}명`);
+        // KBL 조기 입대 자발적 선택 (25~27세, 주전 경쟁 탈락 선수)
+        const earlyEnlistPool = mGeneral.entities.filter(e =>
+          isEnlistEligible(e) &&
+          e.leagueId === "LEAGUE_KBL" &&
+          (e.age ?? 0) >= 25 && (e.age ?? 0) <= 27
+        );
+        const earlyEnlistEntities = await (async () => {
+          if (earlyEnlistPool.length === 0) return [];
+          // KBL 전체 OVR 정렬 → 상대 순위 계산
+          const kblOvrs = mGeneral.entities
+            .filter(e2 => e2.leagueId === "LEAGUE_KBL" && e2.role === "player")
+            .map(e2 => {
+              const ls = npcLiveStats[e2.id];
+              return ls?.pitchOvr ?? ls?.batOvr
+                ?? (e2.details?.player as any)?.pitching?.ovr
+                ?? (e2.details?.player as any)?.batting?.ovr ?? 50;
+            })
+            .sort((a, b) => a - b);
+          const res = JSON.parse(
+            await window.projectB!.militaryEarlyEnlistDecisions(JSON.stringify({
+              candidates: earlyEnlistPool.map(e => {
+                const ls = npcLiveStats[e.id];
+                const ovr = ls?.pitchOvr ?? ls?.batOvr
+                  ?? (e.details?.player as any)?.pitching?.ovr
+                  ?? (e.details?.player as any)?.batting?.ovr ?? 50;
+                const idx = kblOvrs.findIndex(v => v >= ovr);
+                const ovrRankPct = kblOvrs.length > 0 ? (idx < 0 ? 1 : idx / kblOvrs.length) : 0.5;
+                const dp = e.details?.player as any;
+                return {
+                  id: e.id,
+                  age: e.age ?? 26,
+                  ovrRankPct,
+                  playingTimePct: 0.5,
+                  contractYearsLeft: dp?.contract?.remainingYears ?? 2,
+                };
+              }),
+              seed: seasonYear + 100,
+            }))
+          ) as { earlyEnlistIds?: string[]; error?: string };
+          if (res.error || !res.earlyEnlistIds) return [];
+          const earlySet = new Set(res.earlyEnlistIds);
+          return earlyEnlistPool.filter(e => earlySet.has(e.id));
+        })();
+        if (earlyEnlistEntities.length > 0)
+          autoLog(`[조기입대] KBL 25~27세 후보 ${earlyEnlistPool.length}명 → 자발적 선택 ${earlyEnlistEntities.length}명`);
+
+        const generalPool = [...generalPoolPro, ...generalPoolNonPro, ...earlyEnlistEntities];
+        autoLog(`[일반병후보] 강제28세+ ${generalPoolPro.length}명 + 독립/대학26세+ ${generalPoolNonPro.length}명 + 조기입대 ${earlyEnlistEntities.length}명 = ${generalPool.length}명`);
 
         // Rust LCG로 최대 30명 랜덤 선택
         const generalEnlistEntities = await (async () => {

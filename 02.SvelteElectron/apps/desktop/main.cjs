@@ -948,6 +948,10 @@ app.whenReady().then(() => {
     try { return engineNative.pickGeneralEnlisteesNative(paramsJson); }
     catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
+  ipcMain.handle("military:earlyEnlistDecisions", (_event, paramsJson) => {
+    try { return engineNative.calcEarlyEnlistDecisionsNative(paramsJson); }
+    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
   ipcMain.handle("npc:calcRenewalSalary", (_event, paramsJson) => {
     try { return engineNative.calcNpcRenewalSalaryNative(paramsJson); }
     catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }

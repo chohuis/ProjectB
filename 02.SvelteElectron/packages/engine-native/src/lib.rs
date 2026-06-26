@@ -549,6 +549,17 @@ pub fn pick_general_enlistees_native(params_json: String) -> String {
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("pickGeneralEnlisteesNative/serialize", e))
 }
 
+/// 조기 입대 자발적 선택 결정 (25~27세 주전 경쟁 탈락 KBL 선수)
+#[napi]
+pub fn calc_early_enlist_decisions_native(params_json: String) -> String {
+    let params: CalcEarlyEnlistParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("calcEarlyEnlistDecisionsNative", e),
+    };
+    let result = npc_sim::calc_early_enlist_decisions(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("calcEarlyEnlistDecisionsNative/serialize", e))
+}
+
 /// 독립리그 KBL 스카우트 제의 계산
 #[napi]
 pub fn calc_indie_scout_offer_native(params_json: String) -> String {

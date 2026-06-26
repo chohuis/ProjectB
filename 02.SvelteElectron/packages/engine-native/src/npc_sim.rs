@@ -1417,6 +1417,52 @@ pub fn pick_general_enlistees(params: PickGeneralEnlisteesParams) -> PickGeneral
     PickGeneralEnlisteesResult { selected_ids: ids }
 }
 
+// ── 조기 입대 자발적 선택 결정 (25~27세, 주전 경쟁 탈락 선수) ─────────────────
+
+pub fn calc_early_enlist_decisions(params: CalcEarlyEnlistParams) -> CalcEarlyEnlistResult {
+    let mut rng = LcgRand::new(params.seed.wrapping_mul(1_234_567_891));
+    let mut early_enlist_ids = Vec::new();
+
+    for c in &params.candidates {
+        let mut prob: f64 = 0.0;
+
+        // 나이 보정: 나이 들수록 군대 미루는 게 손해
+        prob += match c.age {
+            27 => 0.20,
+            26 => 0.12,
+            25 => 0.05,
+            _ => 0.0,
+        };
+
+        // OVR 하위권: 주전 경쟁에서 밀림
+        if c.ovr_rank_pct < 0.20 {
+            prob += 0.35;
+        } else if c.ovr_rank_pct < 0.35 {
+            prob += 0.20;
+        }
+
+        // 출장 시간 부족: 사실상 벤치 신세
+        if c.playing_time_pct < 0.20 {
+            prob += 0.30;
+        } else if c.playing_time_pct < 0.35 {
+            prob += 0.15;
+        }
+
+        // 계약 만료 임박: 재계약 불확실
+        if c.contract_years_left <= 1 {
+            prob += 0.20;
+        }
+
+        prob = prob.min(0.85);
+
+        if rng.next() < prob {
+            early_enlist_ids.push(c.id.clone());
+        }
+    }
+
+    CalcEarlyEnlistResult { early_enlist_ids }
+}
+
 pub fn run_draft_board(params: DraftBoardParams) -> DraftBoardResult {
     let teams = &params.team_ids;
     let n_teams = teams.len() as i32;

@@ -326,6 +326,31 @@ pub struct PickGeneralEnlisteesResult {
     pub selected_ids: Vec<String>,
 }
 
+// ── 조기 입대 자발적 선택 ─────────────────────────────────────────────────────
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct EarlyEnlistCandidate {
+    pub id: String,
+    pub age: u32,
+    pub ovr_rank_pct: f64,     // 0=최하위, 1=최상위 (리그 내 상대적 위치)
+    pub playing_time_pct: f64, // 0=출장 없음, 1=전경기 출장
+    pub contract_years_left: u32,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CalcEarlyEnlistParams {
+    pub candidates: Vec<EarlyEnlistCandidate>,
+    pub seed: u32,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CalcEarlyEnlistResult {
+    pub early_enlist_ids: Vec<String>,
+}
+
 // ── 드래프트 보드 (커리어 선택 화면) ──────────────────────────────────────────
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

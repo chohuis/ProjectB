@@ -97,6 +97,8 @@ export declare function calcSportsUnitCandidatesNative(paramsJson: string): stri
 export declare function calcSportsUnitSelectionNative(paramsJson: string): string
 /** 일반병 입대 대상 랜덤 선택 (시즌당 max_count명 상한) */
 export declare function pickGeneralEnlisteesNative(paramsJson: string): string
+/** 조기 입대 자발적 선택 결정 (25~27세 주전 경쟁 탈락 KBL 선수) */
+export declare function calcEarlyEnlistDecisionsNative(paramsJson: string): string
 /** 독립리그 KBL 스카우트 제의 계산 */
 export declare function calcIndieScoutOfferNative(paramsJson: string): string
 export declare function generateScheduleNative(p: string): string
