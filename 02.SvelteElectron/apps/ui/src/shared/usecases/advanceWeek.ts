@@ -818,8 +818,8 @@ async function processTradeWindow(weekInYear: number, leagueId: string): Promise
           currentSalary:  (n as any).currentSalary ?? 2000,
           contractYears:  (n as any).contractYears ?? 2,
           proServiceYears: n.proServiceYears ?? 0,
-          pitchOvr:       ls?.pitchOvr ?? null,
-          batOvr:         ls?.batOvr   ?? null,
+          pitchOvr:       ls?.pitching?.ovr ?? null,
+          batOvr:         ls?.batting?.ovr  ?? null,
           age:            n.age ?? 25,
         };
       });

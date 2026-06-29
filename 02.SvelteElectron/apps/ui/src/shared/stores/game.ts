@@ -2121,7 +2121,7 @@ function createGameStore() {
             .filter(e2 => e2.leagueId === "LEAGUE_KBL" && e2.role === "player")
             .map(e2 => {
               const ls = npcLiveStats[e2.id];
-              return ls?.pitchOvr ?? ls?.batOvr
+              return ls?.pitching?.ovr ?? ls?.batting?.ovr
                 ?? (e2.details?.player as any)?.pitching?.ovr
                 ?? (e2.details?.player as any)?.batting?.ovr ?? 50;
             })
@@ -2130,7 +2130,7 @@ function createGameStore() {
             await window.projectB!.militaryEarlyEnlistDecisions(JSON.stringify({
               candidates: earlyEnlistPool.map(e => {
                 const ls = npcLiveStats[e.id];
-                const ovr = ls?.pitchOvr ?? ls?.batOvr
+                const ovr = ls?.pitching?.ovr ?? ls?.batting?.ovr
                   ?? (e.details?.player as any)?.pitching?.ovr
                   ?? (e.details?.player as any)?.batting?.ovr ?? 50;
                 const idx = kblOvrs.findIndex(v => v >= ovr);
