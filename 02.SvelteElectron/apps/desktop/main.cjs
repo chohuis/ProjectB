@@ -323,40 +323,16 @@ app.whenReady().then(() => {
     }
   });
 
-  ipcMain.handle("master:loadEntities", (_event, leagueId, seasonYear, slotId) => {
+  ipcMain.handle("master:loadEntities", (_event, leagueId, seasonYear) => {
     try {
-      const sy  = typeof seasonYear === "number" ? seasonYear : 9999;
-      const sid = typeof slotId === "string" && slotId ? slotId : DEFAULT_SLOT_ID;
-      const entryFilter = "AND (entry_year IS NULL OR entry_year <= ?)";
+      // NPC 런타임 상태는 npc_runtime(projectb_v2.db)에서 관리; master.db는 read-only 마스터 데이터
+      const sy = typeof seasonYear === "number" ? seasonYear : 9999;
       const baseRows = masterDb
         ? (typeof leagueId === "string" && leagueId
-            ? masterDb.prepare(`SELECT * FROM npc_master WHERE league_id = ? ${entryFilter}`).all(leagueId, sy)
+            ? masterDb.prepare(`SELECT * FROM npc_master WHERE league_id = ? AND (entry_year IS NULL OR entry_year <= ?)`).all(leagueId, sy)
             : masterDb.prepare(`SELECT * FROM npc_master WHERE entry_year IS NULL OR entry_year <= ?`).all(sy))
         : [];
-      const deletedRows = typeof leagueId === "string" && leagueId
-        ? masterOverlayDb.prepare(
-            "SELECT id FROM entity_overlay_deleted WHERE slot_id = ? AND (league_id = ? OR league_id IS NULL)"
-          ).all(sid, leagueId)
-        : masterOverlayDb.prepare(
-            "SELECT id FROM entity_overlay_deleted WHERE slot_id = ?"
-          ).all(sid);
-      const deletedIds = new Set(deletedRows.map((r) => r.id));
-      const overlayRows = typeof leagueId === "string" && leagueId
-        ? masterOverlayDb.prepare(
-            "SELECT payload_json FROM entity_overlay WHERE slot_id = ? AND league_id = ?"
-          ).all(sid, leagueId)
-        : masterOverlayDb.prepare(
-            "SELECT payload_json FROM entity_overlay WHERE slot_id = ?"
-          ).all(sid);
-      const byId = new Map();
-      for (const row of baseRows.map(masterRowToEntityRow)) {
-        if (!deletedIds.has(row.id)) byId.set(row.id, row);
-      }
-      for (const row of overlayRows) {
-        const entity = JSON.parse(row.payload_json);
-        if (!deletedIds.has(entity.id)) byId.set(entity.id, entity);
-      }
-      return [...byId.values()];
+      return baseRows.map(masterRowToEntityRow);
     } catch (e) {
       console.error("[master:loadEntities] error:", e);
       return [];
@@ -412,31 +388,9 @@ app.whenReady().then(() => {
     }
   });
 
-  ipcMain.handle("master:bulkUpsertEntities", (_event, p) => {
-    try {
-      const { slotId = DEFAULT_SLOT_ID, entities } = JSON.parse(p);
-      if (!Array.isArray(entities) || entities.length === 0)
-        return JSON.stringify({ ok: true, count: 0 });
-      const now  = new Date().toISOString();
-      const stmt = masterOverlayDb.prepare(`
-        INSERT INTO entity_overlay (slot_id, id, league_id, payload_json, updated_at)
-        VALUES (?, ?, ?, ?, ?)
-        ON CONFLICT(slot_id, id) DO UPDATE SET
-          league_id=excluded.league_id,
-          payload_json=excluded.payload_json,
-          updated_at=excluded.updated_at
-      `);
-      const run = masterOverlayDb.transaction((rows) => {
-        for (const e of rows) {
-          const { slotId: _sid, ...entityData } = e;
-          stmt.run(slotId, e.id, e.leagueId, JSON.stringify(entityData), now);
-        }
-      });
-      run(entities);
-      return JSON.stringify({ ok: true, count: entities.length });
-    } catch (e) {
-      return JSON.stringify({ error: String(e?.message ?? e) });
-    }
+  // Phase 5: NPC 상태는 npc_runtime에서 관리 — overlay 쓰기 no-op (call site 정리는 Phase 7)
+  ipcMain.handle("master:bulkUpsertEntities", (_event, _p) => {
+    return JSON.stringify({ ok: true, count: 0 });
   });
 
   // ── NPC 시뮬 IPC ─────────────────────────────────────────────────────────────
