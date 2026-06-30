@@ -1743,9 +1743,11 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       if (proEntrants.length > 0) seasonStore.initNpcLiveStats(proEntrants);
     }
 
-    // 기존 선수 전체 (gameStore.npcs 파생) → npcLiveStats 초기화 (미등록 항목만)
+    // 기존 선수 전체 → npcLiveStats 초기화 (미등록 항목만)
     const currentEntities = get(masterStore).entities;
     seasonStore.initNpcLiveStats(currentEntities, currentSeasonYear);
+    // 프로 NPC 초기화: KBL/ABL/JBL 선수가 npcs에 없으면 master.db entities에서 변환·추가
+    gameStore.initProNpcsIfMissing(currentEntities, currentSeasonYear);
     seasonStore.snapNpcSeasonStart();
   }
 

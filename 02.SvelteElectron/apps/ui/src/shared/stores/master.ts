@@ -252,8 +252,9 @@ export interface MasterState {
   schools: SchoolRef[];
   clubs: ClubRef[];
   teams: TeamRef[];
-  staffEntities: EntityRow[];  // 코치·감독·구단주 (master.db에서만 로드)
-  entities: EntityRow[];       // 전체 (staffEntities + gameStore.npcs 변환 결과)
+  staffEntities: EntityRow[];       // 코치·감독·구단주 (master.db에서만 로드)
+  basePlayerEntities: EntityRow[]; // master.db 선수 전체 기본값 (HS/대학/독립/프로)
+  entities: EntityRow[];            // 전체 (staffEntities + basePlayerEntities/npcs 병합)
   eventRules: EventRule[];
   messageTmpls: MessageTemplate[];
   decisionTmpls: DecisionTemplate[];
@@ -618,6 +619,7 @@ function createMasterStore() {
     clubs: [],
     teams: [],
     staffEntities: [],
+    basePlayerEntities: [],
     entities: [],
     eventRules: [],
     messageTmpls: [],
@@ -788,12 +790,13 @@ function createMasterStore() {
         console.error("[masterStore] window.projectB 없음 — npm run dev (Electron 포함) 으로 실행하세요");
         return;
       }
-      // 코치·감독·구단주만 staffEntities에 저장; 선수는 connectToGameStore 구독이 담당
       const staffEntities = rows.filter(r => r.role !== "player");
+      const basePlayerEntities = rows.filter(r => r.role === "player");
       update((s) => ({
         ...s,
         staffEntities,
-        entities: [...staffEntities, ...s.entities.filter(e => e.role === "player")],
+        basePlayerEntities,
+        entities: [...staffEntities, ...basePlayerEntities],
       }));
     } catch (e) {
       console.warn("[masterStore] reloadEntities failed", e);
@@ -821,8 +824,12 @@ function createMasterStore() {
     let prevNpcs: import("../types/save").NpcSaveState[] | null = null;
 
     function rebuild() {
-      const playerEntities = currentNpcs.map(n => npcSaveStateToEntityRow(n, currentLiveStats));
-      update((s) => ({ ...s, entities: [...s.staffEntities, ...playerEntities] }));
+      const npcIds = new Set(currentNpcs.map(n => n.npcId));
+      update((s) => {
+        const baseOnly = s.basePlayerEntities.filter(e => !npcIds.has(e.id));
+        const npcPlayers = currentNpcs.map(n => npcSaveStateToEntityRow(n, currentLiveStats));
+        return { ...s, entities: [...s.staffEntities, ...baseOnly, ...npcPlayers] };
+      });
     }
 
     const unsub1 = gameStoreSubscribe((state) => {
