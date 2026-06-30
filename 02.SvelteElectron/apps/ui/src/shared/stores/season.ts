@@ -456,13 +456,7 @@ function createSeasonStore() {
       entities: EntityRow[],
     ): Promise<void> {
       const s = get({ subscribe });
-      let simEntities = entities;
-      if (simEntities.length === 0) {
-        await masterStore.loadEntities("");
-        simEntities = get(masterStore).entities;
-      }
-
-      const result = await BackgroundLeague.simulateBackgroundLeagues(s, week, protagonistLeagueId, simEntities, get(npcLiveStatsStore));
+      const result = await BackgroundLeague.simulateBackgroundLeagues(s, week, protagonistLeagueId, entities, get(npcLiveStatsStore));
       if (!result) return;
 
       update((st) => ({

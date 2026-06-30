@@ -143,9 +143,6 @@
     loading = true;
     try {
 
-    await masterStore.loadEntities("LEAGUE_UNIVERSITY");
-    await masterStore.loadEntities("LEAGUE_INDEPENDENT");
-
     // 전년도 KBL 순위 역순 (꼴지팀부터 지명) — 데이터 없으면 masterStore 순서 폴백
     const prevStandings = $seasonStore.prevSeasonKblStandings ?? [];
     if (prevStandings.length > 0) {
@@ -184,7 +181,6 @@
         rows.push(buildFromNpc(npc, !viewOnly && npc.npcId === heroId));
       }
     } else {
-      await masterStore.loadEntities("LEAGUE_HIGHSCHOOL");
       const hsEntities = $masterStore.entities
         .filter((e) => e.leagueId === "LEAGUE_HIGHSCHOOL" && e.role === "player" && e.grade === 3 && (!viewOnly || e.id !== heroId))
         .sort((a, b) => entityOvr(b) - entityOvr(a));

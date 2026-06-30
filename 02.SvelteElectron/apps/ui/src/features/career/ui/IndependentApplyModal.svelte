@@ -17,7 +17,6 @@
 
   onMount(async () => {
     selected = [...initialSelected].slice(0, 3);
-    await masterStore.loadEntities("LEAGUE_INDEPENDENT");
     loading = false;
   });
 

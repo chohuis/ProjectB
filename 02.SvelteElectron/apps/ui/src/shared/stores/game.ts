@@ -1919,19 +1919,13 @@ function createGameStore() {
           e.militaryStatus !== "현역"
         );
         if (foreignExempt.length > 0) {
-          const exemptPatched = foreignExempt.map(e => ({ ...e, militaryStatus: "면제" as const, slotId }));
-          const exemptRes = JSON.parse(
-            await window.projectB!.masterBulkUpsertEntities(JSON.stringify({ slotId, entities: exemptPatched }))
-          ) as { ok: boolean; error?: string };
-          if (!exemptRes.error) {
-            const exemptedIdSet = new Set(foreignExempt.map(e => e.id));
-            for (let i = 0; i < decayedNpcs.length; i++) {
-              if (exemptedIdSet.has(decayedNpcs[i].npcId) && decayedNpcs[i].militaryStatus === "미필") {
-                decayedNpcs[i] = { ...decayedNpcs[i], militaryStatus: "면제" };
-              }
+          const exemptedIdSet = new Set(foreignExempt.map(e => e.id));
+          for (let i = 0; i < decayedNpcs.length; i++) {
+            if (exemptedIdSet.has(decayedNpcs[i].npcId) && decayedNpcs[i].militaryStatus === "미필") {
+              decayedNpcs[i] = { ...decayedNpcs[i], militaryStatus: "면제" };
             }
-            autoLog(`[외국인면제] ${foreignExempt.length}명 면제 처리`);
           }
+          autoLog(`[외국인면제] ${foreignExempt.length}명 면제 처리`);
         }
 
         // 1. 전역: 2년 경과 모든 현역 선수 (top-level || 하위 호환 nested 체크)
@@ -1944,44 +1938,18 @@ function createGameStore() {
         const dischargedIds = new Set<string>();
 
         if (discharging.length > 0) {
-          const dischEntities = discharging.map(e => {
+          discharging.forEach(e => dischargedIds.add(e.id));
+          const txRows = discharging.map(e => {
             const op = e.details?.player;
-            const npc = npcMap.get(e.id);
-            const returnLeague = npc ? npc.currentLeague : (op?.originalLeagueId ?? "LEAGUE_INDEPENDENT");
-            const returnTeam   = npc ? npc.currentTeam   : (op?.originalTeamId   ?? "");
             return {
-              ...e,
-              militaryStatus: "군필" as const,
-              leagueId: returnLeague,
-              teamId:   returnTeam,
-              details: { ...e.details, player: {
-                ...op,
-                militaryEnlistYear:  undefined,
-                militaryStatus:      undefined,
-                militaryUnit:        undefined,
-                originalLeagueId:    undefined,
-                originalTeamId:      undefined,
-              }},
-              slotId,
+              seasonYear, category: "military" as const,
+              playerId: e.id, playerName: e.name,
+              fromLeagueId: op?.originalLeagueId ?? e.leagueId,
+              detail: "전역",
             };
           });
-          const disRes = JSON.parse(
-            await window.projectB!.masterBulkUpsertEntities(JSON.stringify({ slotId, entities: dischEntities }))
-          ) as { ok: boolean; error?: string };
-          if (!disRes.error) {
-            discharging.forEach(e => dischargedIds.add(e.id));
-            const txRows = discharging.map(e => {
-              const op = e.details?.player;
-              return {
-                seasonYear, category: "military" as const,
-                playerId: e.id, playerName: e.name,
-                fromLeagueId: op?.originalLeagueId ?? e.leagueId,
-                detail: "전역",
-              };
-            });
-            await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: txRows }));
-            autoLog(`[전역] 엔티티 ${discharging.length}명`);
-          }
+          await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: txRows }));
+          autoLog(`[전역] 엔티티 ${discharging.length}명`);
         }
 
         // 2. 체육부대 입대: 3개 프로리그 한국인 선수 후보
@@ -2054,34 +2022,29 @@ function createGameStore() {
               const _sportsEntries: PlayerEventEntry[] = [];
 
               if (sportsEnlistEntities.length > 0) {
-                const enlRes = JSON.parse(
-                  await window.projectB!.masterBulkUpsertEntities(JSON.stringify({ slotId, entities: sportsEnlistEntities }))
-                ) as { ok: boolean; error?: string };
-                if (!enlRes.error) {
-                  sportsEnlistEntities.forEach(e => {
-                    selectedSportsIds.add(e.id);
-                    militaryEnlistedSports.push(e.name);
-                    const orig = mNow.entities.find(o => o.id === e.id)!;
-                    const live = npcLiveStats[e.id];
-                    const dp = e.details?.player;
-                    const rawOvr = live?.pitching?.ovr ?? live?.batting?.ovr ?? (dp as any)?.pitching?.ovr ?? (dp as any)?.batting?.ovr;
-                    const ovr = Math.round((typeof rawOvr === "number" && isFinite(rawOvr)) ? rawOvr : 50);
-                    const fromShort = (orig.teamId ?? "").replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "");
-                    autoLog(`  [체육부대] ${e.name} | ${fromShort} | OVR:${ovr} | ${e.age ?? "?"}세`);
-                    _sportsEntries.push({
-                      npcId: e.id, name: e.name,
-                      fromTeamId: orig.teamId, fromLeagueId: orig.leagueId,
-                      toLeagueId: "LEAGUE_UNIVERSITY",
-                      detail: `OVR:${ovr} | ${e.age ?? "?"}세 | 제대예정 Y${seasonYear + 2}`,
-                    });
-                    enlTxRows.push({
-                      seasonYear, category: "military" as const,
-                      playerId: e.id, playerName: e.name,
-                      fromTeamId: orig.teamId, fromLeagueId: orig.leagueId,
-                      detail: "체육부대 입대",
-                    });
+                sportsEnlistEntities.forEach(e => {
+                  selectedSportsIds.add(e.id);
+                  militaryEnlistedSports.push(e.name);
+                  const orig = mNow.entities.find(o => o.id === e.id)!;
+                  const live = npcLiveStats[e.id];
+                  const dp = e.details?.player;
+                  const rawOvr = live?.pitching?.ovr ?? live?.batting?.ovr ?? (dp as any)?.pitching?.ovr ?? (dp as any)?.batting?.ovr;
+                  const ovr = Math.round((typeof rawOvr === "number" && isFinite(rawOvr)) ? rawOvr : 50);
+                  const fromShort = (orig.teamId ?? "").replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "");
+                  autoLog(`  [체육부대] ${e.name} | ${fromShort} | OVR:${ovr} | ${e.age ?? "?"}세`);
+                  _sportsEntries.push({
+                    npcId: e.id, name: e.name,
+                    fromTeamId: orig.teamId, fromLeagueId: orig.leagueId,
+                    toLeagueId: "LEAGUE_UNIVERSITY",
+                    detail: `OVR:${ovr} | ${e.age ?? "?"}세 | 제대예정 Y${seasonYear + 2}`,
                   });
-                }
+                  enlTxRows.push({
+                    seasonYear, category: "military" as const,
+                    playerId: e.id, playerName: e.name,
+                    fromTeamId: orig.teamId, fromLeagueId: orig.leagueId,
+                    detail: "체육부대 입대",
+                  });
+                });
               }
 
               // gameStore.npcs 동기화
@@ -2222,83 +2185,63 @@ function createGameStore() {
         })();
 
         if (generalEnlistEntities.length > 0) {
-          const genEntities = generalEnlistEntities.map(e => ({
-            ...e,
-            militaryStatus: "현역" as const,
-            leagueId: "LEAGUE_MILITARY",
-            teamId:   "",
-            details: { ...e.details, player: {
-              ...e.details?.player,
-              militaryStatus:     "현역",
-              militaryUnit:       "general",
-              militaryEnlistYear: seasonYear,
-              originalLeagueId:   e.leagueId,
-              originalTeamId:     e.teamId,
-            }},
-            slotId,
-          }));
-          const genRes = JSON.parse(
-            await window.projectB!.masterBulkUpsertEntities(JSON.stringify({ slotId, entities: genEntities }))
-          ) as { ok: boolean; error?: string };
           const _generalEntries: PlayerEventEntry[] = [];
-          if (!genRes.error) {
-            const genTxRows = generalEnlistEntities.map(e => ({
-              seasonYear, category: "military" as const,
-              playerId: e.id, playerName: e.name,
-              fromTeamId: e.teamId, fromLeagueId: e.leagueId,
-              detail: "일반병 입대",
-            }));
-            let _generalDbOk = true;
-            const genTxRes = JSON.parse(
-              await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: genTxRows }))
-            ) as { ok?: boolean; error?: string };
-            if (genTxRes.error) { autoLog(`[일반병입대오류] TX: ${genTxRes.error}`); _generalDbOk = false; }
+          const genTxRows = generalEnlistEntities.map(e => ({
+            seasonYear, category: "military" as const,
+            playerId: e.id, playerName: e.name,
+            fromTeamId: e.teamId, fromLeagueId: e.leagueId,
+            detail: "일반병 입대",
+          }));
+          let _generalDbOk = true;
+          const genTxRes = JSON.parse(
+            await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: genTxRows }))
+          ) as { ok?: boolean; error?: string };
+          if (genTxRes.error) { autoLog(`[일반병입대오류] TX: ${genTxRes.error}`); _generalDbOk = false; }
 
-            const genIdSet = new Set(generalEnlistEntities.map(e => e.id));
-            generalEnlistEntities.forEach(e => {
-              militaryEnlistedGeneral.push(e.name);
-              const fromShort = (e.teamId ?? "").replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "");
-              const live = npcLiveStats[e.id];
-              const dp = e.details?.player;
-              const rawOvr = live?.pitching?.ovr ?? live?.batting?.ovr ?? (dp as any)?.pitching?.ovr ?? (dp as any)?.batting?.ovr;
-              const ovr = Math.round((typeof rawOvr === "number" && isFinite(rawOvr)) ? rawOvr : 50);
-              autoLog(`  [일반병] ${e.name} | ${fromShort} | OVR:${ovr} | ${e.age ?? "?"}세`);
-              _generalEntries.push({
-                npcId: e.id, name: e.name,
-                fromTeamId: e.teamId, fromLeagueId: e.leagueId,
-                toLeagueId: "LEAGUE_MILITARY",
-                detail: `OVR:${ovr} | ${e.age ?? "?"}세 | 제대예정 Y${seasonYear + 2}`,
-              });
+          const genIdSet = new Set(generalEnlistEntities.map(e => e.id));
+          generalEnlistEntities.forEach(e => {
+            militaryEnlistedGeneral.push(e.name);
+            const fromShort = (e.teamId ?? "").replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "");
+            const live = npcLiveStats[e.id];
+            const dp = e.details?.player;
+            const rawOvr = live?.pitching?.ovr ?? live?.batting?.ovr ?? (dp as any)?.pitching?.ovr ?? (dp as any)?.batting?.ovr;
+            const ovr = Math.round((typeof rawOvr === "number" && isFinite(rawOvr)) ? rawOvr : 50);
+            autoLog(`  [일반병] ${e.name} | ${fromShort} | OVR:${ovr} | ${e.age ?? "?"}세`);
+            _generalEntries.push({
+              npcId: e.id, name: e.name,
+              fromTeamId: e.teamId, fromLeagueId: e.leagueId,
+              toLeagueId: "LEAGUE_MILITARY",
+              detail: `OVR:${ovr} | ${e.age ?? "?"}세 | 제대예정 Y${seasonYear + 2}`,
             });
-            for (let i = 0; i < decayedNpcs.length; i++) {
-              if (!genIdSet.has(decayedNpcs[i].npcId)) continue;
-              const n = decayedNpcs[i];
-              decayedNpcs[i] = {
-                ...n,
-                originalLeagueId:      n.currentLeague,
-                originalTeamId:        n.currentTeam,
-                careerStatus:          "military",
-                militaryStatus:        "현역",
-                militaryUnit:          "general",
-                militaryEnlistYear:    seasonYear,
-                militaryDischargeYear: seasonYear + 2,
-                currentLeague:         "LEAGUE_MILITARY",
-                currentTeam:           "",
-              };
-            }
-            autoLog(`[일반병입대] ${generalEnlistEntities.length}명 (후보 ${generalPool.length}명 중) ${_generalDbOk ? "DB ✓" : "DB ✗"}`);
-            if (_generalEntries.length > 0) {
-              logEvent({
-                id: `enlist-general-Y${seasonYear}`,
-                type: "enlist_general",
-                seasonYear,
-                players: _generalEntries,
-                counts: { input: generalPool.length, processed: _generalEntries.length, saved: _generalEntries.length },
-                dbOk: _generalDbOk,
-                durationMs: Date.now() - _t0SeasonEnd,
-                extra: `후보 ${generalPool.length}명 중 ${_generalEntries.length}명 입대`,
-              });
-            }
+          });
+          for (let i = 0; i < decayedNpcs.length; i++) {
+            if (!genIdSet.has(decayedNpcs[i].npcId)) continue;
+            const n = decayedNpcs[i];
+            decayedNpcs[i] = {
+              ...n,
+              originalLeagueId:      n.currentLeague,
+              originalTeamId:        n.currentTeam,
+              careerStatus:          "military",
+              militaryStatus:        "현역",
+              militaryUnit:          "general",
+              militaryEnlistYear:    seasonYear,
+              militaryDischargeYear: seasonYear + 2,
+              currentLeague:         "LEAGUE_MILITARY",
+              currentTeam:           "",
+            };
+          }
+          autoLog(`[일반병입대] ${generalEnlistEntities.length}명 (후보 ${generalPool.length}명 중) ${_generalDbOk ? "DB ✓" : "DB ✗"}`);
+          if (_generalEntries.length > 0) {
+            logEvent({
+              id: `enlist-general-Y${seasonYear}`,
+              type: "enlist_general",
+              seasonYear,
+              players: _generalEntries,
+              counts: { input: generalPool.length, processed: _generalEntries.length, saved: _generalEntries.length },
+              dbOk: _generalDbOk,
+              durationMs: Date.now() - _t0SeasonEnd,
+              extra: `후보 ${generalPool.length}명 중 ${_generalEntries.length}명 입대`,
+            });
           }
         }
       }
@@ -2610,19 +2553,6 @@ function createGameStore() {
         if (draftRes.error) { autoLog(`[NPC드래프트오류] ${draftRes.error}`); _draftDbOk = false; }
         else autoLog(`[NPC드래프트] DB 저장 ${rows.length}건 ✓`);
 
-        // 지명 선수 entity를 overlay DB에 반영 (다음 시즌 W1 reload 시 유지)
-        const mEntities = get(masterStore).entities;
-        const entitiesToUpsert = simResult.picks.flatMap(pick => {
-          const e = mEntities.find(x => x.id === pick.npcId);
-          if (!e) return [];
-          return [{ ...e, leagueId: "LEAGUE_KBL", teamId: pick.teamId, clubId: pick.teamId }];
-        });
-        if (entitiesToUpsert.length > 0) {
-          await window.projectB!.masterBulkUpsertEntities(
-            JSON.stringify({ slotId, entities: entitiesToUpsert })
-          );
-          autoLog(`[NPC드래프트] entity overlay 반영 ${entitiesToUpsert.length}건 ✓`);
-        }
       }
 
       logEvent({

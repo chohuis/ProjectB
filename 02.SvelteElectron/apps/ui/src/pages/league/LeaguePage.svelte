@@ -349,10 +349,6 @@
 
   $: if (!lbLeagueId && lbLeagueIds.length > 0) lbLeagueId = lbLeagueIds[0];
 
-  $: {
-    if (lbLeagueId) masterStore.loadEntities(lbLeagueId, $seasonStore.seasonYear);
-  }
-
   $: lbStats = (() => {
     if (!lbLeagueId) return {} as Record<string, PlayerSeasonStats>;
     const ls = $seasonStore.leagueState[lbLeagueId];

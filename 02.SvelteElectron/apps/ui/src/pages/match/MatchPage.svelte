@@ -676,9 +676,6 @@
     try {
       const state = get(gameStore);
       const player = state.player;
-      if (get(masterStore).entities.length === 0) {
-        await masterStore.loadEntities(toLeagueId(state.protagonist.careerStage));
-      }
       const myTeamId = matchContext?.protagonistTeamId ?? state.protagonist.teamId;
       const opponentTeamId = matchContext
         ? (matchContext.homeTeamId === myTeamId ? matchContext.awayTeamId : matchContext.homeTeamId)

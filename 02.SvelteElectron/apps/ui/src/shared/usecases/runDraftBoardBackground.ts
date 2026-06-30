@@ -22,9 +22,6 @@ function npcOvr(npc: NpcSaveState): number {
 async function collectViewOnlyDraftCandidates(): Promise<DraftBoardCandidate[]> {
   const game = get(gameStore);
 
-  await masterStore.loadEntities("LEAGUE_UNIVERSITY");
-  await masterStore.loadEntities("LEAGUE_INDEPENDENT");
-
   const seen = new Set<string>();
   const rows: DraftBoardCandidate[] = [];
   const hsNpcs = game.npcs.filter(
@@ -50,7 +47,6 @@ async function collectViewOnlyDraftCandidates(): Promise<DraftBoardCandidate[]> 
       });
     }
   } else {
-    await masterStore.loadEntities("LEAGUE_HIGHSCHOOL");
     const entities = get(masterStore).entities
       .filter((e) => e.leagueId === "LEAGUE_HIGHSCHOOL" && e.role === "player" && e.grade === 3 && e.id !== game.protagonist.id)
       .sort((a, b) => entityOvr(b) - entityOvr(a));

@@ -89,19 +89,11 @@
   $: coachCount = teamRows.filter((e) => e.role === "coach").length;
   $: managerCount = teamRows.filter((e) => e.role === "manager").length;
 
-  async function ensureLeagueEntities(leagueId: string) {
-    if (!leagueId) return;
-    await masterStore.loadEntities(leagueId, $seasonStore.seasonYear);
-  }
-
   onMount(async () => {
     const initialLeague = sortedTeams[0]?.leagueId ?? "LEAGUE_HIGHSCHOOL";
-    await ensureLeagueEntities(initialLeague);
   });
 
-  $: if (selectedTeamLeagueId) {
-    ensureLeagueEntities(selectedTeamLeagueId);
-  }
+
 </script>
 
 <section class="page">

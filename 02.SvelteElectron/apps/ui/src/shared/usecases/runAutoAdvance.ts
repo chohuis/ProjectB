@@ -43,9 +43,6 @@ async function handleGame(scheduleId: string): Promise<void> {
   const p = g.protagonist;
   const isHome = entry.homeTeamId === p.teamId;
 
-  if (get(masterStore).entities.length === 0) {
-    await masterStore.loadEntities("");
-  }
   const ents = get(masterStore).entities;
 
   const oppTeamId  = isHome ? entry.awayTeamId : entry.homeTeamId;
@@ -384,15 +381,7 @@ export async function runSeasonEndBgProcessing(now: number): Promise<void> {
         };
       });
 
-      const ageResNonPro = JSON.parse(
-        await window.projectB!.masterBulkUpsertEntities(
-          JSON.stringify({ slotId: slotIdNonPro, entities: agedNonPro })
-        )
-      ) as { ok: boolean; count?: number; error?: string };
-
-      if (ageResNonPro.error) autoLog(`[비프로에이징오류] ${ageResNonPro.error}`);
-      else autoLog(`[비프로에이징] 고교재학 ${hsOther.length}명 / 고교졸업 ${hsGrad.length}명 / 대학재학 ${univOther.length}명 / 대학졸업 ${univGrad.length}명 / 독립 ${indCount}명`);
-
+      autoLog(`[비프로에이징] 고교재학 ${hsOther.length}명 / 고교졸업 ${hsGrad.length}명 / 대학재학 ${univOther.length}명 / 대학졸업 ${univGrad.length}명 / 독립 ${indCount}명`);
       await masterStore.reloadEntities(now, slotIdNonPro);
     }
   }

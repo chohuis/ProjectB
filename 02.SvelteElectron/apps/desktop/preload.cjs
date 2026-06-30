@@ -29,7 +29,6 @@ contextBridge.exposeInMainWorld("projectB", {
   masterLoadEntities: (leagueId, seasonYear, slotId) => ipcRenderer.invoke("master:loadEntities", leagueId, seasonYear, slotId),
   masterUpsertEntity: (entity)  => ipcRenderer.invoke("master:upsertEntity",       entity),
   masterDeleteEntity: (payload) => ipcRenderer.invoke("master:deleteEntity",        payload),
-  masterBulkUpsertEntities: (p) => ipcRenderer.invoke("master:bulkUpsertEntities", p),
 
   // ── 마운드 방문 ─────────────────────────────────────────────────────────
   matchMoundVisit:        ()    => ipcRenderer.invoke("match:mound-visit"),

@@ -269,11 +269,7 @@ function makeExamMessage(week: number, subject: string, body: string): MessageIt
 }
 
 async function simulateNpcGame(homeTeamId: string, awayTeamId: string): Promise<MatchResult> {
-  let entities = get(masterStore).entities;
-  if (entities.length === 0) {
-    await masterStore.loadEntities("");
-    entities = get(masterStore).entities;
-  }
+  const entities = get(masterStore).entities;
   if (entities.length > 0) {
     return (await simulateGame(homeTeamId, awayTeamId, entities)).result;
   }
@@ -1294,22 +1290,6 @@ async function processProTeamCallupCalldown(weekNum: number): Promise<string[]> 
       .filter(n => moveMap.has(n.npcId))
       .map(n => ({ ...n, currentTeam: moveMap.get(n.npcId)! }));
     if (movedNpcs.length > 0) gameStore.updateNpcs(movedNpcs);
-    const slotId = get(gameStore).currentSlotId;
-    if (slotId) {
-      const mNow = get(masterStore);
-      const toUpsert = mNow.entities
-        .filter(e => moveMap.has(e.id))
-        .map(e => ({ ...e, teamId: moveMap.get(e.id)!, slotId }));
-      if (toUpsert.length > 0) {
-        const res = JSON.parse(
-          await window.projectB!.masterBulkUpsertEntities(
-            JSON.stringify({ slotId, entities: toUpsert })
-          )
-        ) as { ok: boolean; error?: string };
-        if (res.error) { autoLog(`[콜업콜다운overlay오류] ${res.error}`); _callupDbOk = false; }
-        else autoLog(`[콜업콜다운] overlay 저장 ${toUpsert.length}건 ✓`);
-      }
-    }
   }
 
   if (_callupEntries.length > 0) {
@@ -3266,8 +3246,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
               return { processedWeek: s.currentWeek, logs: accLogs, newMessages: [], matchResults: accResults, stoppedBy: briefAction };
             }
           } else {
-            let entities2 = get(masterStore).entities;
-            if (entities2.length === 0) { await masterStore.loadEntities(""); entities2 = get(masterStore).entities; }
+            const entities2 = get(masterStore).entities;
             const leagueId2   = gCurrent.protagonist.leagueId;
             const lState2     = get(seasonStore).leagueState[leagueId2];
             const homeRotIdx2 = lState2?.teamRotationIndex?.[game.homeTeamId] ?? 0;
@@ -3314,11 +3293,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
         const sorted = [...gamesToAutoSim].sort((a, b) => a.gameDate.localeCompare(b.gameDate));
         for (const game of sorted) {
           const gCurrent = get(gameStore);
-          let entities = get(masterStore).entities;
-          if (entities.length === 0) {
-            await masterStore.loadEntities("");
-            entities = get(masterStore).entities;
-          }
+          const entities = get(masterStore).entities;
           const leagueId    = gCurrent.protagonist.leagueId;
           const lStateSnap  = get(seasonStore).leagueState[leagueId];
           const homeRotIdx  = lStateSnap?.teamRotationIndex?.[game.homeTeamId] ?? 0;
@@ -3524,11 +3499,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
           return { processedWeek: nextWeekNum, logs: accLogs, newMessages: [], matchResults: accResults, stoppedBy: briefAction };
         }
       } else {
-        let entities = get(masterStore).entities;
-        if (entities.length === 0) {
-          await masterStore.loadEntities("");
-          entities = get(masterStore).entities;
-        }
+        const entities = get(masterStore).entities;
 
         const leagueId   = gCurrent.protagonist.leagueId;
         const lStateSnap = get(seasonStore).leagueState[leagueId];

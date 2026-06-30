@@ -186,9 +186,6 @@
       const p      = $gameStore.protagonist;
       const isHome = pendingGameEntry.homeTeamId === p.teamId;
 
-      if ($masterStore.entities.length === 0) {
-        await masterStore.loadEntities("");
-      }
       const entities        = $masterStore.entities;
       const opponentTeamId  = isHome ? pendingGameEntry.awayTeamId : pendingGameEntry.homeTeamId;
       const opponentLineup  = buildBatterLineup(opponentTeamId, entities);

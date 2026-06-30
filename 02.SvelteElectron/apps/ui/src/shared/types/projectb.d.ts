@@ -224,7 +224,6 @@ declare global {
       masterLoadEntities: (leagueId: string, seasonYear?: number, slotId?: string) => Promise<unknown[]>;
       masterUpsertEntity: (entity: unknown) => Promise<{ ok: boolean; error?: string }>;
       masterDeleteEntity: (payload: { id: string; leagueId?: string; slotId?: string }) => Promise<{ ok: boolean; error?: string }>;
-      masterBulkUpsertEntities: (p: string) => Promise<string>;
       masterSave: (payload: { relPath: string; data: unknown; backup?: boolean }) => Promise<{
         ok: boolean;
         error?: string;

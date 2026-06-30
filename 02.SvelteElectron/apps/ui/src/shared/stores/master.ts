@@ -800,12 +800,6 @@ function createMasterStore() {
     }
   }
 
-  // Phase 2 이후 no-op: entities는 connectToGameStore 구독에서 자동 갱신됨
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async function loadEntities(_leagueId: string, _seasonYear?: number, _slotId?: string) {
-    // 호출 사이트 정리는 Phase 7에서 일괄 처리
-  }
-
   // W1 신입생 활성화용: master.db에서 entryYear == seasonYear인 플레이어 직접 조회 (store 미갱신)
   async function fetchEntryEntities(seasonYear: number): Promise<EntityRow[]> {
     if (!window.projectB?.masterLoadEntities) return [];
@@ -863,7 +857,7 @@ function createMasterStore() {
   }
 
   return {
-    subscribe, load, loadEntities, reloadEntities,
+    subscribe, load, reloadEntities,
     reloadEvents, reloadAchievements,
     setupContentWatcher,
     connectToGameStore,

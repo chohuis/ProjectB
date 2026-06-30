@@ -49,13 +49,7 @@
     return v >= 70 ? "low" : v >= 40 ? "mid" : "good";
   }
 
-  async function loadLeagueEntities() {
-    const leagueId = toLeagueId($gameStore.protagonist.careerStage);
-    await masterStore.loadEntities(leagueId, $seasonStore.seasonYear);
-  }
-
   onMount(async () => {
-    await loadLeagueEntities();
   });
 
   $: currentLeagueId = toLeagueId($gameStore.protagonist.careerStage);

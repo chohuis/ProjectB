@@ -38,7 +38,7 @@
 
   // ── Step 2 상태 ────────────────────────────────────────────────
   let selectedTeamId = "";
-  let entitiesLoaded = false;
+
 
   // 전체 고교팀 (16개) — 리그 구성용
   $: hsAllTeams = $masterStore.teams.filter((t) => t.leagueId === "LEAGUE_HIGHSCHOOL");
@@ -48,12 +48,6 @@
     .filter((t) => HS_SELECTABLE_TEAMS.includes(t.id))
     .sort((a, b) => (DIFFICULTY_ORDER[b.profile?.difficulty ?? ""] ?? 0) - (DIFFICULTY_ORDER[a.profile?.difficulty ?? ""] ?? 0));
   $: selectedTeam = hsTeams.find((t) => t.id === selectedTeamId) ?? null;
-
-  // Step 2 진입 시 엔티티 로드
-  $: if (step === 2 && !entitiesLoaded) {
-    entitiesLoaded = true;
-    masterStore.loadEntities("LEAGUE_HIGHSCHOOL");
-  }
 
   // 선택된 팀의 감독·코치·선수 필터
   $: teamEntities = selectedTeamId
