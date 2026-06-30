@@ -8,6 +8,7 @@
   import { masterStore } from "./shared/stores/master";
   import { gameStore } from "./shared/stores/game";
   import { seasonStore } from "./shared/stores/season";
+  import { npcLiveStatsStore } from "./shared/stores/npcLiveStats";
 
   type GamePhase = "loading" | "intro" | "slotSelect" | "create" | "playing";
   let phase: GamePhase = "loading";
@@ -17,6 +18,11 @@
   onMount(async () => {
     await masterStore.load();
     masterStore.setupContentWatcher();
+    // gameStore.npcs 또는 npcLiveStats 변경 시 masterStore.entities 자동 재생성
+    masterStore.connectToGameStore(
+      (fn) => gameStore.subscribe(s => fn({ npcs: s.npcs })),
+      npcLiveStatsStore.subscribe,
+    );
     gameStore.initProTeamProfiles(get(masterStore).teams ?? []);
 
     try {
@@ -42,13 +48,9 @@
         else                 gameStore.setCurrentSlotId(slotId);
         if (envelope.season) {
           seasonStore.hydrateFromSlot(envelope.season);
-          // npcLiveStats → masterStore.entities 동기화 (월간 성장 반영)
-          masterStore.applyNpcLiveStats(envelope.season.npcLiveStats ?? {});
-          // 미래 선수 제외: 저장 시점 seasonYear 기준으로 entities 재필터
-          await masterStore.reloadEntities(envelope.season.seasonYear, slotId);
-          // KBL 프로 NPC가 gameStore.npcs에 없으면 초기화 (구버전 세이브 대응)
-          const loadedEntities = get(masterStore).entities;
-          gameStore.initProNpcsIfMissing(loadedEntities, envelope.season.seasonYear);
+          // hydrateFromSlot → npcLiveStatsStore.set() → connectToGameStore 구독 자동 반응
+          // initProNpcsIfMissing: Phase 2 이후 entities = gameStore.npcs 파생이므로 실질 no-op
+          gameStore.initProNpcsIfMissing(get(masterStore).entities, envelope.season.seasonYear);
         }
         phase = "playing";
       } catch (e) {

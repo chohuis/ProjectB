@@ -787,27 +787,51 @@ function createMasterStore() {
         console.error("[masterStore] window.projectB 없음 — npm run dev (Electron 포함) 으로 실행하세요");
         return;
       }
-      if (rows.length > 0) update((s) => ({ ...s, entities: rows }));
+      // 코치·감독·구단주만 staffEntities에 저장; 선수는 connectToGameStore 구독이 담당
+      const staffEntities = rows.filter(r => r.role !== "player");
+      update((s) => ({
+        ...s,
+        staffEntities,
+        entities: [...staffEntities, ...s.entities.filter(e => e.role === "player")],
+      }));
     } catch (e) {
       console.warn("[masterStore] reloadEntities failed", e);
     }
   }
 
-  async function loadEntities(leagueId: string, seasonYear?: number, slotId?: string) {
-    let rows: EntityRow[];
-    if (window.projectB?.masterLoadEntities) {
-      rows = (await window.projectB.masterLoadEntities(leagueId, seasonYear, slotId)) as EntityRow[];
-    } else {
-      console.error("[masterStore] window.projectB 없음 — npm run dev (Electron 포함) 으로 실행하세요");
-      return;
+  // Phase 2 이후 no-op: entities는 connectToGameStore 구독에서 자동 갱신됨
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async function loadEntities(_leagueId: string, _seasonYear?: number, _slotId?: string) {
+    // 호출 사이트 정리는 Phase 7에서 일괄 처리
+  }
+
+  function connectToGameStore(
+    gameStoreSubscribe: (fn: (state: { npcs: import("../types/save").NpcSaveState[] }) => void) => () => void,
+    npcLiveStatsSubscribe: (fn: (stats: Record<string, NpcLiveStat>) => void) => () => void,
+  ): () => void {
+    let currentNpcs: import("../types/save").NpcSaveState[] = [];
+    let currentLiveStats: Record<string, NpcLiveStat> = {};
+    let prevNpcs: import("../types/save").NpcSaveState[] | null = null;
+
+    function rebuild() {
+      const playerEntities = currentNpcs.map(n => npcSaveStateToEntityRow(n, currentLiveStats));
+      update((s) => ({ ...s, entities: [...s.staffEntities, ...playerEntities] }));
     }
-    update((s) => {
-      const freshIds = new Set(rows.map((r) => r.id));
-      const base = seasonYear !== undefined
-        ? s.entities.filter((e) => !freshIds.has(e.id) && (!e.entryYear || e.entryYear <= seasonYear))
-        : s.entities.filter((e) => !freshIds.has(e.id));
-      return { ...s, entities: [...base, ...rows] };
+
+    const unsub1 = gameStoreSubscribe((state) => {
+      if (state.npcs !== prevNpcs) {
+        prevNpcs = state.npcs;
+        currentNpcs = state.npcs;
+        rebuild();
+      }
     });
+
+    const unsub2 = npcLiveStatsSubscribe((stats) => {
+      currentLiveStats = stats;
+      rebuild();
+    });
+
+    return () => { unsub1(); unsub2(); };
   }
 
   // ?? ?ル━濡쒕뱶 由ъ뒪??(媛쒕컻 ?섍꼍: ?뚯씪 ?쒕∼ ???먮룞 諛섏쁺) ??
@@ -892,6 +916,7 @@ function createMasterStore() {
     subscribe, load, loadEntities, reloadEntities,
     reloadEvents, reloadAchievements,
     setupContentWatcher,
+    connectToGameStore,
     applyNpcLiveStats,
     patchEntityTeams,
     syncNpcsToEntities,
