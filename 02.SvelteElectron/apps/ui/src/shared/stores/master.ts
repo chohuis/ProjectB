@@ -862,78 +862,12 @@ function createMasterStore() {
     });
   }
 
-  // npcLiveStats??pitching/batting 媛믪쓣 entities???몃찓紐⑤━ ??뼱?곌린
-  function applyNpcLiveStats(npcLiveStats: Record<string, import("../types/season").NpcLiveStat>) {
-    update((s) => {
-      const entities = s.entities.map((e) => {
-        if (e.role !== "player") return e;
-        const live = npcLiveStats[e.id];
-        if (!live) return e;
-        const player = (e.details as EntityDetails)?.player;
-        if (!player) return e;
-        return {
-          ...e,
-          details: {
-            ...e.details,
-            player: {
-              ...player,
-              ...(live.pitching ? { pitching: { ...live.pitching } as unknown as import("../types/save").PitchingAttributes } : {}),
-              ...(live.batting  ? { batting:  { ...live.batting  } as unknown as import("../types/save").BattingAttributes  } : {}),
-            },
-          },
-        };
-      });
-      return { ...s, entities };
-    });
-  }
-
-  function patchEntityTeams(moves: Array<{ id: string; teamId: string }>) {
-    if (moves.length === 0) return;
-    const moveMap = new Map(moves.map((m) => [m.id, m.teamId]));
-    update((s) => ({
-      ...s,
-      entities: s.entities.map((e) => {
-        const newTeam = moveMap.get(e.id);
-        return newTeam ? { ...e, teamId: newTeam } : e;
-      }),
-    }));
-  }
-
-  function syncNpcsToEntities(npcs: import("../types/save").NpcSaveState[]) {
-    if (npcs.length === 0) return;
-    const npcMap = new Map(npcs.map((n) => [n.npcId, n]));
-    update((s) => ({
-      ...s,
-      entities: s.entities.map((e) => {
-        const npc = npcMap.get(e.id);
-        if (!npc) return e;
-        const statusMap: Record<string, EntityRow["status"]> = {
-          retired:    "retired",
-          military:   "military",
-          injured:    "injured",
-          free_agent: "inactive",
-        };
-        return {
-          ...e,
-          teamId:        npc.currentTeam,
-          leagueId:      npc.currentLeague,
-          age:           npc.age,
-          militaryStatus: npc.militaryStatus,
-          status:        statusMap[npc.careerStatus] ?? "active",
-        };
-      }),
-    }));
-  }
-
   return {
     subscribe, load, loadEntities, reloadEntities,
     reloadEvents, reloadAchievements,
     setupContentWatcher,
     connectToGameStore,
     fetchEntryEntities,
-    applyNpcLiveStats,
-    patchEntityTeams,
-    syncNpcsToEntities,
   };
 }
 
