@@ -48,7 +48,9 @@
         else                 gameStore.setCurrentSlotId(slotId);
         if (envelope.season) {
           seasonStore.hydrateFromSlot(envelope.season);
-          // hydrateFromSlot → npcLiveStatsStore.set() → connectToGameStore 구독 자동 반응
+          // entry_year <= seasonYear 선수만 로드 (미래 신입생 노출 차단)
+          const sy = (envelope.season as { seasonYear?: number }).seasonYear;
+          if (sy) await masterStore.reloadEntities(sy, slotId);
         }
         phase = "playing";
       } catch (e) {

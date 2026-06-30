@@ -791,7 +791,10 @@ function createMasterStore() {
         return;
       }
       const staffEntities = rows.filter(r => r.role !== "player");
-      const basePlayerEntities = rows.filter(r => r.role === "player");
+      // seasonYear 없이 호출되면 선수 로드 안 함 (미래 선수 노출 차단)
+      const basePlayerEntities = seasonYear !== undefined
+        ? rows.filter(r => r.role === "player")
+        : [];
       update((s) => ({
         ...s,
         staffEntities,

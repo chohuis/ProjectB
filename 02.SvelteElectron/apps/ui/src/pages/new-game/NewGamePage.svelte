@@ -169,6 +169,8 @@
     // 16팀 기준으로 시즌 초기화. A/B 두 그룹 스케줄은 initAllLeagues 내부에서 설정.
     seasonStore.initSeason("LEAGUE_HIGHSCHOOL", 2026, 52, [...groupA, ...groupB]);
     await seasonStore.initAllLeagues(2026, selectedTeamId, groupA, groupB);
+    // 시작 연도(2026) 이하 선수만 로드 (미래 신입생 노출 차단)
+    await masterStore.reloadEntities(2026);
 
     onComplete();
   }
