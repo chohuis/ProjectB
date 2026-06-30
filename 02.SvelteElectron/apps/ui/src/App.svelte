@@ -49,8 +49,6 @@
         if (envelope.season) {
           seasonStore.hydrateFromSlot(envelope.season);
           // hydrateFromSlot → npcLiveStatsStore.set() → connectToGameStore 구독 자동 반응
-          // initProNpcsIfMissing: Phase 2 이후 entities = gameStore.npcs 파생이므로 실질 no-op
-          gameStore.initProNpcsIfMissing(get(masterStore).entities, envelope.season.seasonYear);
         }
         phase = "playing";
       } catch (e) {

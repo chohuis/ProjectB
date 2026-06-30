@@ -805,6 +805,18 @@ function createMasterStore() {
     // 호출 사이트 정리는 Phase 7에서 일괄 처리
   }
 
+  // W1 신입생 활성화용: master.db에서 entryYear == seasonYear인 플레이어 직접 조회 (store 미갱신)
+  async function fetchEntryEntities(seasonYear: number): Promise<EntityRow[]> {
+    if (!window.projectB?.masterLoadEntities) return [];
+    try {
+      const all = (await window.projectB.masterLoadEntities("", seasonYear)) as EntityRow[];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return all.filter(e => e.role === "player" && (e as any).entryYear === seasonYear);
+    } catch {
+      return [];
+    }
+  }
+
   function connectToGameStore(
     gameStoreSubscribe: (fn: (state: { npcs: import("../types/save").NpcSaveState[] }) => void) => () => void,
     npcLiveStatsSubscribe: (fn: (stats: Record<string, NpcLiveStat>) => void) => () => void,
@@ -917,6 +929,7 @@ function createMasterStore() {
     reloadEvents, reloadAchievements,
     setupContentWatcher,
     connectToGameStore,
+    fetchEntryEntities,
     applyNpcLiveStats,
     patchEntityTeams,
     syncNpcsToEntities,

@@ -1739,40 +1739,34 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   if (weekNum === 1) {
     gameStore.saveSeasonStartSnapshot();
 
-    // entry_year == currentSeasonYear인 신규 NPC 활성화
     const currentSeasonYear = s.seasonYear;
-    await masterStore.loadEntities("", currentSeasonYear);
-    const updatedEntities = get(masterStore).entities;
 
-    const newEntrants = updatedEntities.filter(
-      (e) => (e as import("../stores/master").EntityRow & { entryYear?: number }).entryYear === currentSeasonYear,
-    );
-
-    if (newEntrants.length > 0) {
-      // HS 신입생 → gameStore.npcs에 Grade 1으로 추가
+    // entry_year == currentSeasonYear인 신규 NPC: master.db 직접 조회 (store 미갱신)
+    const yearEntrants = await masterStore.fetchEntryEntities(currentSeasonYear);
+    if (yearEntrants.length > 0) {
       const { entityToNpcState } = await import("../utils/gradeAdvance");
-      const hsEntrants = newEntrants.filter(
+      // HS 신입생 → gameStore.npcs에 Grade 1으로 추가
+      const hsEntrants = yearEntrants.filter(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (e) => (e as any).entryLeague === "LEAGUE_HIGHSCHOOL",
       );
       if (hsEntrants.length > 0) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const newNpcs = hsEntrants.map((e) => entityToNpcState(e as any, currentSeasonYear));
         gameStore.addNpcs(newNpcs);
       }
-
       // Pro 즉전감 (ABL/JBL) → npcLiveStats 초기화 (팀 배정은 오프시즌 FA 처리)
-      const proEntrants = newEntrants.filter(
+      const proEntrants = yearEntrants.filter(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (e) => ["LEAGUE_ABL", "LEAGUE_JBL"].includes((e as any).entryLeague ?? ""),
       );
-      if (proEntrants.length > 0) {
-        seasonStore.initNpcLiveStats(proEntrants);
-      }
+      if (proEntrants.length > 0) seasonStore.initNpcLiveStats(proEntrants);
     }
 
-    seasonStore.initNpcLiveStats(updatedEntities, currentSeasonYear);
+    // 기존 선수 전체 (gameStore.npcs 파생) → npcLiveStats 초기화 (미등록 항목만)
+    const currentEntities = get(masterStore).entities;
+    seasonStore.initNpcLiveStats(currentEntities, currentSeasonYear);
     seasonStore.snapNpcSeasonStart();
-
-    // KBL 프로 NPC가 gameStore.npcs에 없으면 초기화 (새 게임 첫 W1 또는 세이브 로드 후 첫 주)
-    gameStore.initProNpcsIfMissing(updatedEntities, currentSeasonYear);
   }
 
   const isUniversity = g.protagonist.careerStage === "university";
