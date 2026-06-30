@@ -34,11 +34,10 @@ import {
   makeSeriesGame, nextGameNum,
 } from "../utils/postseasonEngine";
 
-// ── NPC 상태 단일 업데이트 헬퍼 ──────────────────────────────
-// named NPC의 팀/상태 변경 시 gameStore + masterStore를 동시에 업데이트
+// ── NPC 상태 업데이트 헬퍼 ───────────────────────────────────
+// gameStore.updateNpcs → connectToGameStore 구독이 entities 자동 갱신
 function updateNpcsAndSync(npcs: import("../types/save").NpcSaveState[]): void {
   gameStore.updateNpcs(npcs);
-  masterStore.syncNpcsToEntities(npcs);
 }
 
 // ── 군입대 대상 판별 (nationality 기반) ──────────────────────
@@ -1289,11 +1288,15 @@ async function processProTeamCallupCalldown(weekNum: number): Promise<string[]> 
 
   let _callupDbOk = true;
   if (allMoves.length > 0) {
-    masterStore.patchEntityTeams(allMoves);
+    // 팀 이동을 gameStore.npcs에 반영 → connectToGameStore 구독이 entities 자동 갱신
+    const moveMap = new Map(allMoves.map(mv => [mv.id, mv.teamId]));
+    const movedNpcs = get(gameStore).npcs
+      .filter(n => moveMap.has(n.npcId))
+      .map(n => ({ ...n, currentTeam: moveMap.get(n.npcId)! }));
+    if (movedNpcs.length > 0) gameStore.updateNpcs(movedNpcs);
     const slotId = get(gameStore).currentSlotId;
     if (slotId) {
       const mNow = get(masterStore);
-      const moveMap = new Map(allMoves.map(mv => [mv.id, mv.teamId]));
       const toUpsert = mNow.entities
         .filter(e => moveMap.has(e.id))
         .map(e => ({ ...e, teamId: moveMap.get(e.id)!, slotId }));
@@ -2471,8 +2474,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   await processNpcInjuries(weekNum);
   seasonStore.applyWeeklyConditionRecovery(bgEntities);
   await seasonStore.simulateBackgroundLeaguesAsync(weekNum, gFinal.protagonist.leagueId, bgEntities);
-  // 성장 결과를 masterStore.entities에 반영 (bg 시뮬은 npcLiveStats 직접 참조로 처리됨)
-  masterStore.applyNpcLiveStats(get(npcLiveStatsStore));
+  // npcLiveStats 변경 → connectToGameStore 구독이 entities 자동 갱신 (applyNpcLiveStats 불필요)
 
   // 주차 → 월 레이블 헬퍼
   function weekToMonthLabel(wk: number): string {
