@@ -585,11 +585,12 @@ export function npcSaveStateToEntityRow(
     details: {
       player: {
         playerType:        npc.playerType,
-        handedness:        "R",   // Phase 6에서 NpcSaveState.handedness 추가 후 교체
+        handedness:        npc.handedness ?? "R",
         position:          npc.position,
-        jerseyNumber:      0,     // Phase 6에서 NpcSaveState.jerseyNumber 추가 후 교체
+        jerseyNumber:      npc.jerseyNumber ?? 0,
         pitching:          (live?.pitching ?? npc.pitching ?? _EMPTY_PITCHING) as import("../types/save").PitchingAttributes,
         batting:           (live?.batting  ?? npc.batting  ?? _EMPTY_BATTING)  as import("../types/save").BattingAttributes,
+        positionRatings:   npc.positionRatings,
         developmentRate:   npc.developmentRate,
         potentialHidden:   npc.potentialHidden ?? 75,
         proServiceYears:   npc.proServiceYears,

@@ -609,6 +609,9 @@ export interface NpcSaveState {
   nameEn?: string;
   playerType: PlayerType;
   position: string;
+  handedness?: Handedness;
+  jerseyNumber?: number;
+  positionRatings?: PositionRatings;
 
   age: number;
   grade?: 1 | 2 | 3;  // 고교/대학 재학 중일 때만 존재

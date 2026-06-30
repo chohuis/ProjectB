@@ -251,6 +251,9 @@ function openDatabase(dbPath) {
       name_en                  TEXT,
       player_type              TEXT NOT NULL DEFAULT 'pitcher',
       position                 TEXT NOT NULL DEFAULT '',
+      handedness               TEXT NOT NULL DEFAULT 'R',
+      jersey_number            INTEGER NOT NULL DEFAULT 0,
+      position_ratings_json    TEXT,
       age                      INTEGER NOT NULL DEFAULT 18,
       grade                    INTEGER,
       school_id                TEXT NOT NULL DEFAULT '',
@@ -683,6 +686,24 @@ function applySchemaPatches(db) {
       console.log("[db-patch] v7: history_standings group_label, history_postseason 추가");
     })();
   }
+
+  if (currentVersion < 8) {
+    db.transaction(() => {
+      for (const [col, def] of [
+        ["handedness",            "TEXT NOT NULL DEFAULT 'R'"],
+        ["jersey_number",         "INTEGER NOT NULL DEFAULT 0"],
+        ["position_ratings_json", "TEXT"],
+      ]) {
+        const has = db.prepare(`SELECT name FROM pragma_table_info('npc_runtime') WHERE name='${col}'`).get();
+        if (!has) {
+          db.exec(`ALTER TABLE npc_runtime ADD COLUMN ${col} ${def}`);
+          console.log(`[db-patch] v8: npc_runtime.${col} 컬럼 추가`);
+        }
+      }
+      db.pragma("user_version = 8");
+      console.log("[db-patch] v8: npc_runtime handedness/jersey_number/position_ratings_json 추가");
+    })();
+  }
 }
 
 function dbListSlots(db) {
@@ -925,14 +946,15 @@ function dbSaveSlot(db, slotId, game, season) {
 
     clr("npc_runtime"); clr("npc_career_history"); clr("npc_achievements");
     const npcStmt = db.prepare(`INSERT INTO npc_runtime (
-      slot_id,npc_id,name,name_en,player_type,position,age,grade,school_id,graduation_year,
+      slot_id,npc_id,name,name_en,player_type,position,handedness,jersey_number,position_ratings_json,
+      age,grade,school_id,graduation_year,
       career_status,current_league,current_team,military_status,military_enlist_year,military_discharge_year,
       pro_service_years,development_rate,current_salary,contract_years,
       pitch_ovr,pitch_stamina,pitch_velocity,pitch_command,pitch_control,pitch_movement,
       pitch_mentality,pitch_recovery,pitch_clutch,pitch_hold_runners,
       bat_ovr,bat_contact,bat_power,bat_eye,bat_discipline,bat_speed,
       bat_base_instinct,bat_bunting,bat_platoon,bat_fielding,bat_arm,bat_batting_clutch
-    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`);
+    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`);
     const npcHistStmt = db.prepare(`INSERT INTO npc_career_history (slot_id,npc_id,year,league_id,team_id,stat_line,highlights_json,sort_order) VALUES (?,?,?,?,?,?,?,?)`);
     const npcAchStmt  = db.prepare(`INSERT INTO npc_achievements (slot_id,npc_id,achievement_text,sort_order) VALUES (?,?,?,?)`);
     for (const npc of (game?.npcs ?? [])) {
@@ -940,7 +962,10 @@ function dbSaveSlot(db, slotId, game, season) {
       const ba = npc.batting  ?? {};
       npcStmt.run(
         slotId, npc.npcId, npc.name, npc.nameEn ?? null,
-        npc.playerType, npc.position, npc.age, npc.grade ?? null,
+        npc.playerType, npc.position,
+        npc.handedness ?? "R", npc.jerseyNumber ?? 0,
+        npc.positionRatings ? JSON.stringify(npc.positionRatings) : null,
+        npc.age, npc.grade ?? null,
         npc.schoolId ?? "", npc.graduationYear ?? 0,
         npc.careerStatus, npc.currentLeague, npc.currentTeam,
         npc.militaryStatus ?? "미필",
@@ -1089,7 +1114,11 @@ function dbLoadSlot(db, slotId) {
     }
     const npcs = npcRows.map((n) => ({
       npcId: n.npc_id, name: n.name, nameEn: n.name_en ?? undefined,
-      playerType: n.player_type, position: n.position, age: n.age, grade: n.grade ?? undefined,
+      playerType: n.player_type, position: n.position,
+      handedness: n.handedness ?? "R",
+      jerseyNumber: n.jersey_number ?? 0,
+      positionRatings: n.position_ratings_json ? JSON.parse(n.position_ratings_json) : undefined,
+      age: n.age, grade: n.grade ?? undefined,
       schoolId: n.school_id, graduationYear: n.graduation_year,
       careerStatus: n.career_status, currentLeague: n.current_league, currentTeam: n.current_team,
       militaryStatus: n.military_status,
