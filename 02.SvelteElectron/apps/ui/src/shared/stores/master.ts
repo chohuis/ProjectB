@@ -252,7 +252,8 @@ export interface MasterState {
   schools: SchoolRef[];
   clubs: ClubRef[];
   teams: TeamRef[];
-  entities: EntityRow[];
+  staffEntities: EntityRow[];  // 코치·감독·구단주 (master.db에서만 로드)
+  entities: EntityRow[];       // 전체 (staffEntities + gameStore.npcs 변환 결과)
   eventRules: EventRule[];
   messageTmpls: MessageTemplate[];
   decisionTmpls: DecisionTemplate[];
@@ -543,6 +544,68 @@ async function batchFetch<T>(ids: string[], pathFn: (id: string) => string): Pro
 }
 
 // ?? ?ㅽ넗???앹꽦 ???????????????????????????????????????????????
+// ── NpcSaveState → EntityRow 변환 브릿지 ─────────────────────
+const _EMPTY_PITCHING = {
+  ovr: 0, stamina: 0, velocity: 0, command: 0,
+  control: 0, movement: 0, mentality: 0, recovery: 0,
+  clutch: 0, holdRunners: 0,
+} as import("../types/save").PitchingAttributes;
+
+const _EMPTY_BATTING = {
+  ovr: 0, contact: 0, power: 0, eye: 0,
+  discipline: 0, speed: 0, baseInstinct: 0,
+  bunting: 0, platoon: 0, fielding: 0, arm: 0, battingClutch: 0,
+} as import("../types/save").BattingAttributes;
+
+export function npcSaveStateToEntityRow(
+  npc: import("../types/save").NpcSaveState,
+  liveStats?: Record<string, NpcLiveStat>,
+): EntityRow {
+  const live = liveStats?.[npc.npcId];
+  const statusMap: Record<string, EntityRow["status"]> = {
+    retired: "retired", military: "military",
+    injured: "injured", free_agent: "inactive",
+  };
+  return {
+    id:             npc.npcId,
+    name:           npc.name,
+    nameEn:         npc.nameEn,
+    role:           "player",
+    age:            npc.age,
+    status:         statusMap[npc.careerStatus] ?? "active",
+    originLeagueId: npc.originalLeagueId ?? npc.currentLeague,
+    leagueId:       npc.currentLeague,
+    clubId:         npc.currentTeam,
+    teamId:         npc.currentTeam,
+    schoolId:       npc.schoolId ?? "",
+    grade:          npc.grade,
+    notes:          "",
+    militaryStatus: npc.militaryStatus,
+    personality:    npc.personality,
+    details: {
+      player: {
+        playerType:        npc.playerType,
+        handedness:        "R",   // Phase 6에서 NpcSaveState.handedness 추가 후 교체
+        position:          npc.position,
+        jerseyNumber:      0,     // Phase 6에서 NpcSaveState.jerseyNumber 추가 후 교체
+        pitching:          (live?.pitching ?? npc.pitching ?? _EMPTY_PITCHING) as import("../types/save").PitchingAttributes,
+        batting:           (live?.batting  ?? npc.batting  ?? _EMPTY_BATTING)  as import("../types/save").BattingAttributes,
+        developmentRate:   npc.developmentRate,
+        potentialHidden:   npc.potentialHidden ?? 75,
+        proServiceYears:   npc.proServiceYears,
+        militaryStatus:    npc.militaryStatus,
+        militaryEnlistYear: npc.militaryEnlistYear,
+        militaryUnit:      npc.militaryUnit,
+        originalLeagueId:  npc.originalLeagueId,
+        originalTeamId:    npc.originalTeamId,
+      },
+      coach:   null,
+      manager: null,
+      owner:   null,
+    },
+  };
+}
+
 function createMasterStore() {
   const { subscribe, update } = writable<MasterState>({
     loaded: false,
@@ -553,6 +616,7 @@ function createMasterStore() {
     schools: [],
     clubs: [],
     teams: [],
+    staffEntities: [],
     entities: [],
     eventRules: [],
     messageTmpls: [],
