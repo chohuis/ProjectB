@@ -233,6 +233,7 @@
       psRows.push({ leagueId: $seasonStore.leagueId, championId: sorted[0].teamId, runnerUpId: "", playoffTeams: [] });
     }
     for (const [lid, ls] of Object.entries($seasonStore.leagueState)) {
+      if (lid === $seasonStore.leagueId) continue;
       const sorted = [...(ls.standings ?? [])].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
       if (sorted.length > 0) psRows.push({ leagueId: lid, championId: sorted[0].teamId, runnerUpId: "", playoffTeams: [] });
     }

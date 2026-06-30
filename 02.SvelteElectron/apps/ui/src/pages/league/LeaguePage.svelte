@@ -245,6 +245,7 @@
       const base = $teamMap.get(id.slice(0, -2) + "_1")?.name;
       if (base) return base + " 2군";
     }
+    if (id.startsWith("LEAGUE_")) return leagueName(id);
     return id;
   }
 

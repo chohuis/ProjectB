@@ -738,13 +738,11 @@ function createMasterStore() {
       return;
     }
     update((s) => {
-      // seasonYear媛 二쇱뼱吏硫? ?대? ?ㅽ넗?댁뿉 ?덈뒗 誘몃옒 ?좎닔(entryYear > seasonYear) ?쒓굅
+      const freshIds = new Set(rows.map((r) => r.id));
       const base = seasonYear !== undefined
-        ? s.entities.filter((e) => !e.entryYear || e.entryYear <= seasonYear)
-        : s.entities;
-      const existingIds = new Set(base.map((e) => e.id));
-      const fresh = rows.filter((r) => !existingIds.has(r.id));
-      return { ...s, entities: [...base, ...fresh] };
+        ? s.entities.filter((e) => !freshIds.has(e.id) && (!e.entryYear || e.entryYear <= seasonYear))
+        : s.entities.filter((e) => !freshIds.has(e.id));
+      return { ...s, entities: [...base, ...rows] };
     });
   }
 

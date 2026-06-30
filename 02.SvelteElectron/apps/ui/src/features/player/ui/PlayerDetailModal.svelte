@@ -348,6 +348,7 @@
 
   $: {
     const slotId = $gameStore.currentSlotId;
+    void $gameStore.npcs; // 드래프트·트레이드 후 npcs 갱신 시 재조회
     const myVersion = ++_txFetchVersion;
     if (entityId && slotId && !isProtagonistModal) {
       window.projectB!.leagueGetTransactions(
@@ -385,15 +386,21 @@
 
   function txLabel(cat: string) {
     const m: Record<string, string> = {
-      trade: "트레이드", fa: "FA", retirement: "은퇴",
-      military: "병역", draft: "드래프트", transfer: "이적",
+      trade: "트레이드", fa: "FA", fa_signed: "FA",
+      retirement: "은퇴", military: "병역",
+      draft: "드래프트", draft_undrafted: "미지명", transfer: "이적",
     };
     return m[cat] ?? cat;
   }
 
+  function resolveTeamOrLeague(id: string | null | undefined): string | null {
+    if (!id) return null;
+    return teamById.get(id) ?? LEAGUE_DISPLAY[id] ?? id;
+  }
+
   function txDesc(tx: PlayerTransaction): string {
-    const from = tx.fromTeamId ? (teamById.get(tx.fromTeamId) ?? tx.fromTeamId) : null;
-    const to   = tx.toTeamId   ? (teamById.get(tx.toTeamId)   ?? tx.toTeamId)   : null;
+    const from = resolveTeamOrLeague(tx.fromTeamId);
+    const to   = resolveTeamOrLeague(tx.toTeamId);
     if (from && to)  return `${from} → ${to}`;
     if (to)          return to;
     if (from)        return `${from} 퇴단`;
@@ -938,18 +945,23 @@
                           <tr>
                             <td>{ev.year}</td>
                             <td>{
-                              ev.eventType === "trade" ? "트레이드" :
-                              ev.eventType === "fa_signed" ? "FA" :
-                              ev.eventType === "military_enlist" ? "입대" :
-                              ev.eventType === "military_discharge" ? "전역" :
-                              ev.eventType === "draft_picked" ? "드래프트" :
-                              ev.eventType === "retirement" ? "은퇴" : ev.eventType
+                              ev.eventType === "trade"            ? "트레이드" :
+                              ev.eventType === "fa_signed"        ? "FA" :
+                              ev.eventType === "military_enlist"  ? "입대" :
+                              ev.eventType === "military_discharge"? "전역" :
+                              ev.eventType === "draft_picked"     ? "드래프트" :
+                              ev.eventType === "draft_undrafted"  ? "미지명" :
+                              ev.eventType === "retirement"       ? "은퇴" : ev.eventType
                             }</td>
                             <td>{
                               ev.eventType === "trade"
-                                ? `${teamById.get(ev.fromTeamId ?? "") ?? ev.fromTeamId ?? ""} → ${teamById.get(ev.toTeamId ?? "") ?? ev.toTeamId ?? ""}`
+                                ? `${resolveTeamOrLeague(ev.fromTeamId) ?? ""} → ${resolveTeamOrLeague(ev.toTeamId) ?? ""}`
                                 : ev.eventType === "fa_signed"
-                                ? `${teamById.get(ev.toTeamId ?? "") ?? ev.toTeamId ?? ""} 입단`
+                                ? (ev.toTeamId
+                                    ? `${resolveTeamOrLeague(ev.toTeamId)} 입단`
+                                    : `${resolveTeamOrLeague(ev.fromTeamId) ?? ""} 퇴단`)
+                                : ev.eventType === "draft_picked" || ev.eventType === "draft_undrafted"
+                                ? (resolveTeamOrLeague(ev.toTeamId) ?? ev.detail ?? "")
                                 : ev.detail ?? ""
                             }</td>
                           </tr>
@@ -1001,12 +1013,13 @@
                   <h4>경력</h4>
                   {#if (modalNpcSave?.careerHistory?.length ?? 0) > 0}
                     <table class="gtable">
-                      <thead><tr><th>연도</th><th>팀</th><th>기록</th><th>수상</th></tr></thead>
+                      <thead><tr><th>연도</th><th>리그</th><th>팀</th><th>기록</th><th>수상</th></tr></thead>
                       <tbody>
                         {#each [...(modalNpcSave?.careerHistory ?? [])].reverse() as entry}
                           <tr>
                             <td>{entry.year}</td>
-                            <td>{teamById.get(entry.teamId) ?? entry.teamId}</td>
+                            <td>{LEAGUE_DISPLAY[entry.leagueId] ?? entry.leagueId}</td>
+                            <td>{teamById.get(entry.teamId) ?? LEAGUE_DISPLAY[entry.teamId] ?? entry.teamId}</td>
                             <td>{entry.statLine}</td>
                             <td class="hl-cell">{entry.highlights.length > 0 ? entry.highlights.join(", ") : "-"}</td>
                           </tr>

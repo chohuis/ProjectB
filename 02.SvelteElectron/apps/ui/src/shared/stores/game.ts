@@ -847,25 +847,41 @@ function createGameStore() {
       });
     },
 
-    // 프로 NPC 초기화: KBL 선수가 gameStore.npcs에 없으면 entities에서 변환·추가
+    // 프로 NPC 초기화: KBL/ABL/JBL 선수가 gameStore.npcs에 없으면 entities에서 변환·추가
     // 세이브 로드 직후 또는 W1 season start 시 호출
     initProNpcsIfMissing(
       entities: import("../stores/master").EntityRow[],
       seasonYear: number,
     ) {
       const s = get({ subscribe });
+      const proLeagueSet = new Set(["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"]);
       const existingIds = new Set(s.npcs.map(n => n.npcId));
       const newProNpcs = entities.filter(e =>
         e.role === "player" &&
         e.status !== "retired" &&
         !existingIds.has(e.id) &&
-        (e.leagueId === "LEAGUE_KBL" ||
-         (e.militaryStatus === "현역" && e.originLeagueId === "LEAGUE_KBL"))
+        (proLeagueSet.has(e.leagueId ?? "") ||
+         (e.militaryStatus === "현역" && proLeagueSet.has(e.originLeagueId ?? "")))
       ).map(e => entityToProNpcState(e, seasonYear));
 
-      if (newProNpcs.length === 0) return;
-      autoLog(`[프로NPC초기화] KBL+상무 ${newProNpcs.length}명 → gameStore.npcs 추가 (Y${seasonYear})`);
-      update((st) => ({ ...st, npcs: [...st.npcs, ...newProNpcs] }));
+      // proServiceYears=0인 기존 NPC에 master entity 값 동기화 (Phase5 이전 세이브 대응)
+      const entityMap = new Map(entities.map(e => [e.id, e]));
+      const patchedNpcs = s.npcs.map(n => {
+        if ((n.proServiceYears ?? 0) > 0) return n;
+        const e = entityMap.get(n.npcId);
+        const psy = e?.details?.player?.proServiceYears;
+        if (!psy || psy <= 0) return n;
+        return { ...n, proServiceYears: psy };
+      });
+
+      const patched = patchedNpcs.filter((n, i) => n !== s.npcs[i]).length;
+      if (patched > 0) autoLog(`[proServiceYears동기화] ${patched}명 0→master값 갱신`);
+
+      if (newProNpcs.length > 0)
+        autoLog(`[프로NPC초기화] KBL/ABL/JBL+상무 ${newProNpcs.length}명 → gameStore.npcs 추가 (Y${seasonYear})`);
+
+      if (newProNpcs.length === 0 && patched === 0) return;
+      update((st) => ({ ...st, npcs: [...patchedNpcs, ...newProNpcs] }));
     },
 
     patchProTeamProfile(teamId: string, profile: import("../stores/master").ProTeamProfile) {
@@ -1720,6 +1736,38 @@ function createGameStore() {
         }
         return n;
       });
+
+      // 프로·독립리그 NPC 시즌 careerHistory 엔트리 추가 (_getSeasonData 통해 순환 의존 없이 접근)
+      {
+        const seasonData = _getSeasonData?.();
+        if (seasonData) {
+          const proIndLeagues = new Set(["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL", "LEAGUE_INDEPENDENT"]);
+          const npcPreState = new Map(
+            s.npcs
+              .filter(n => proIndLeagues.has(n.currentLeague ?? ""))
+              .map(n => [n.npcId, { league: n.currentLeague, team: n.currentTeam }]),
+          );
+          const buildStatLine = (stat: PlayerSeasonStats): string => {
+            if (stat.type === "pitcher") return `${stat.w}승 ${stat.l}패 ERA ${stat.era.toFixed(2)}`;
+            return `타율 .${Math.round(stat.avg * 1000).toString().padStart(3, "0")} ${stat.hr}홈런 ${stat.rbi}타점`;
+          };
+          for (let i = 0; i < decayedNpcs.length; i++) {
+            const npc = decayedNpcs[i];
+            const pre = npcPreState.get(npc.npcId);
+            if (!pre) continue;
+            if (npc.careerHistory.some(h => h.year === seasonYear)) continue;
+            const npcStat = seasonData.leagueState[pre.league]?.stats?.[npc.npcId];
+            const entry: NpcCareerEntry = {
+              year:       seasonYear,
+              leagueId:   pre.league,
+              teamId:     pre.team,
+              statLine:   npcStat ? buildStatLine(npcStat) : "-",
+              highlights: [],
+            };
+            decayedNpcs[i] = { ...npc, careerHistory: [...npc.careerHistory, entry] };
+          }
+        }
+      }
 
       const slotId = s.currentSlotId;
       const _t0SeasonEnd = Date.now();

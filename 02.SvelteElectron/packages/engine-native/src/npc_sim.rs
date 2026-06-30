@@ -929,14 +929,15 @@ pub fn advance_all_grades(params: AdvanceGradesParams) -> GradeAdvanceResult {
             && npc.grade.is_some()
         {
             let grade = npc.grade.unwrap();
+            // 매 학년 careerHistory 기록
+            let entry = NpcCareerEntry {
+                year: season_year,
+                league_id: "LEAGUE_HIGHSCHOOL".into(),
+                team_id: npc.current_team.clone(),
+                stat_line: "-".into(),
+                highlights: vec![],
+            };
             if grade >= 3 {
-                let entry = NpcCareerEntry {
-                    year: season_year,
-                    league_id: "LEAGUE_HIGHSCHOOL".into(),
-                    team_id: npc.current_team.clone(),
-                    stat_line: "-".into(),
-                    highlights: vec![],
-                };
                 let mut g = npc;
                 g.grade          = None;
                 g.current_league = "LEAGUE_DRAFT_POOL".into();
@@ -945,6 +946,7 @@ pub fn advance_all_grades(params: AdvanceGradesParams) -> GradeAdvanceResult {
             } else {
                 let mut n = npc;
                 n.grade = Some(grade + 1);
+                n.career_history.push(entry);
                 updated.push(n);
             }
             continue;
@@ -956,14 +958,15 @@ pub fn advance_all_grades(params: AdvanceGradesParams) -> GradeAdvanceResult {
             && npc.grade.is_some()
         {
             let grade = npc.grade.unwrap();
+            // 매 학년 careerHistory 기록
+            let entry = NpcCareerEntry {
+                year: season_year,
+                league_id: "LEAGUE_UNIVERSITY".into(),
+                team_id: npc.current_team.clone(),
+                stat_line: "-".into(),
+                highlights: vec![],
+            };
             if grade >= 4 {
-                let entry = NpcCareerEntry {
-                    year: season_year,
-                    league_id: "LEAGUE_UNIVERSITY".into(),
-                    team_id: npc.current_team.clone(),
-                    stat_line: "-".into(),
-                    highlights: vec![],
-                };
                 let mut g = npc;
                 g.grade          = None;
                 g.current_league = "LEAGUE_DRAFT_POOL".into();
@@ -972,6 +975,7 @@ pub fn advance_all_grades(params: AdvanceGradesParams) -> GradeAdvanceResult {
             } else {
                 let mut n = npc;
                 n.grade = Some(grade + 1);
+                n.career_history.push(entry);
                 updated.push(n);
             }
             continue;

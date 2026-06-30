@@ -1,6 +1,7 @@
 import type { EntityRow, EntityPlayerDetails } from "../stores/master";
 import type {
   BattingAttributes,
+  NpcCareerEntry,
   NpcEmotionRole,
   NpcSaveState,
   PitchingAttributes,
@@ -65,7 +66,7 @@ export function entityToNpcState(
 // ── 프로 선수 EntityRow → NpcSaveState 변환 ─────────────────
 export function entityToProNpcState(
   entity: EntityRow,
-  _seasonYear: number,
+  seasonYear: number,
 ): NpcSaveState {
   const pl = entity.details?.player;
   const isMilitary =
@@ -77,6 +78,24 @@ export function entityToProNpcState(
     : isMilitary               ? "military"
     : entity.status === "inactive" ? "free_agent"
     : "active";
+
+  // 게임 시작 전 프로 경력 placeholder (proServiceYears 기반)
+  const proSvcYrs  = pl?.proServiceYears ?? 0;
+  const clubId     = (entity as unknown as { clubId?: string }).clubId ?? "";
+  const proLeagueId = isMilitary ? (entity.originLeagueId ?? entity.leagueId) : entity.leagueId;
+  const proTeamId   = isMilitary
+    ? (clubId ? clubId.replace(/^CLUB_/, "TEAM_") + "_1" : entity.teamId)
+    : entity.teamId;
+  const placeholderHistory: NpcCareerEntry[] =
+    proSvcYrs > 0 && seasonYear > 0
+      ? Array.from({ length: proSvcYrs }, (_, i) => ({
+          year:       seasonYear - proSvcYrs + i,
+          leagueId:   proLeagueId,
+          teamId:     proTeamId,
+          statLine:   "-",
+          highlights: [],
+        }))
+      : [];
 
   return {
     npcId:          entity.id,
@@ -100,11 +119,11 @@ export function entityToProNpcState(
     originalTeamId:   isMilitary ? (entity.clubId ?? entity.teamId) : undefined,
     developmentRate:  pl?.developmentRate ?? 50,
     potentialHidden:  pl?.potentialHidden ?? 75,
-    proServiceYears:  pl?.proServiceYears ?? 0,
+    proServiceYears:  proSvcYrs,
     currentSalary:    pl?.contract?.salary,
     contractYears:    pl?.contract?.remainingYears,
     personality:      entity.personality,
-    careerHistory:    [],
+    careerHistory:    placeholderHistory,
     achievements:     [],
     fame:             0,
   };
