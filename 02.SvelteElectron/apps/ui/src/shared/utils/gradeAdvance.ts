@@ -119,7 +119,7 @@ export function entityToProNpcState(
     militaryDischargeYear: enlistYear ? enlistYear + 2 : undefined,
     // 전역 후 복귀 리그/팀: originLeagueId(KBL) + clubId(원래 구단)
     originalLeagueId: isMilitary ? (entity.originLeagueId ?? entity.leagueId) : undefined,
-    originalTeamId:   isMilitary ? (entity.clubId ?? entity.teamId) : undefined,
+    originalTeamId:   isMilitary ? (clubId ? clubId.replace(/^CLUB_/, "TEAM_") + "_1" : entity.teamId) : undefined,
     developmentRate:  pl?.developmentRate ?? 50,
     potentialHidden:  pl?.potentialHidden ?? 75,
     proServiceYears:  proSvcYrs,

@@ -1772,6 +1772,7 @@ function createGameStore() {
       const slotId = s.currentSlotId;
       const _t0SeasonEnd = Date.now();
       const _faEntries: PlayerEventEntry[] = [];
+      const _liveStats = get(npcLiveStatsStore);
 
       if (slotId) {
         // FA 재배치 기록: 오프시즌 처리 후 팀이 바뀐 FA 자격 선수
@@ -1779,7 +1780,8 @@ function createGameStore() {
         for (const n of result.npcs) {
           const prev = beforeTeam.get(n.npcId);
           if (prev && prev !== n.currentTeam && proLeagues.has(n.currentLeague) && n.careerStatus === "active") {
-            const ovr = n.pitching?.ovr ?? n.batting?.ovr ?? 0;
+            const _live = _liveStats[n.npcId];
+            const ovr = _live?.pitching?.ovr ?? _live?.batting?.ovr ?? 0;
             const prevShort = prev.replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "");
             const nextShort = n.currentTeam.replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "");
             autoLog(`  [FA이동] ${n.name} | ${prevShort}→${nextShort} | OVR:${ovr} | ${n.currentLeague.replace("LEAGUE_", "")}`);
@@ -1836,7 +1838,8 @@ function createGameStore() {
         if (before.status === "현역" && n.militaryStatus !== "현역") {
           militaryDischargedNames.push(before.name);
           const returnLeague = proLeagues.has(n.currentLeague) ? n.currentLeague : undefined;
-          const ovr = n.pitching?.ovr ?? n.batting?.ovr ?? 0;
+          const _liveDis = _liveStats[n.npcId];
+          const ovr = _liveDis?.pitching?.ovr ?? _liveDis?.batting?.ovr ?? 0;
           autoLog(`  [전역] ${before.name} | 군→${returnLeague?.replace("LEAGUE_", "") ?? "미확정"} | OVR:${ovr}`);
           _dischargeEntries.push({
             npcId: n.npcId, name: n.name,

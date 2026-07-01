@@ -784,13 +784,21 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
             if dy <= season_year {
                 n.career_status   = "active".into();
                 n.military_status = "군필".into();
+                // CLUB_ → TEAM_*_1 변환 (구버전 세이브 호환)
+                let fix_team_id = |id: Option<&String>| -> String {
+                    match id {
+                        Some(t) if t.starts_with("CLUB_") =>
+                            format!("TEAM_{}_1", &t["CLUB_".len()..]),
+                        Some(t) => t.clone(),
+                        None => String::new(),
+                    }
+                };
                 if n.military_unit.as_deref() == Some("sports") {
                     // 체육부대: 원소속팀 복귀 (KBL/ABL), 독립 출신은 독립리그
-                    // clone()으로 읽고 이후 별도 클리어 (take()는 이중 실행 시 데이터 손실)
                     n.current_league = n.original_league_id.clone()
                         .filter(|l| !l.is_empty())
                         .unwrap_or_else(|| "LEAGUE_INDEPENDENT".into());
-                    n.current_team   = n.original_team_id.clone().unwrap_or_default();
+                    n.current_team   = fix_team_id(n.original_team_id.as_ref());
                 } else {
                     // 일반부대: 계약 잔여 있으면 원소속팀 복귀, 없으면 FA
                     let has_contract = n.contract_years > 0;
@@ -798,7 +806,7 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
                         n.current_league = n.original_league_id.clone()
                             .filter(|l| !l.is_empty())
                             .unwrap_or_else(|| "LEAGUE_INDEPENDENT".into());
-                        n.current_team   = n.original_team_id.clone().unwrap_or_default();
+                        n.current_team   = fix_team_id(n.original_team_id.as_ref());
                     } else {
                         n.current_league = "LEAGUE_FREE_AGENT".into();
                         n.current_team   = "".into();
