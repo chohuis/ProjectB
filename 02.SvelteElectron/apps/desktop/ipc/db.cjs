@@ -960,6 +960,10 @@ function dbSaveSlot(db, slotId, game, season) {
     for (const npc of (game?.npcs ?? [])) {
       const pi = npc.pitching ?? {};
       const ba = npc.batting  ?? {};
+      // npcLiveStats에서 실제 OVR 우선 사용 (deprecated npc.pitching은 미설정)
+      const liveSt = season?.npcLiveStats?.[npc.npcId];
+      const livePi = liveSt?.pitching ?? {};
+      const liveBa = liveSt?.batting  ?? {};
       npcStmt.run(
         slotId, npc.npcId, npc.name, npc.nameEn ?? null,
         npc.playerType, npc.position,
@@ -973,13 +977,17 @@ function dbSaveSlot(db, slotId, game, season) {
         npc.proServiceYears ?? 0,
         npc.developmentRate ?? 60,
         npc.currentSalary ?? 0, npc.contractYears ?? 1,
-        pi.ovr ?? null, pi.stamina ?? null, pi.velocity ?? null, pi.command ?? null,
-        pi.control ?? null, pi.movement ?? null, pi.mentality ?? null,
-        pi.recovery ?? null, pi.clutch ?? null, pi.holdRunners ?? null,
-        ba.ovr ?? null, ba.contact ?? null, ba.power ?? null, ba.eye ?? null,
-        ba.discipline ?? null, ba.speed ?? null, ba.baseInstinct ?? null,
-        ba.bunting ?? null, ba.platoon ?? null, ba.fielding ?? null,
-        ba.arm ?? null, ba.battingClutch ?? null,
+        livePi.ovr ?? pi.ovr ?? null, livePi.stamina ?? pi.stamina ?? null,
+        livePi.velocity ?? pi.velocity ?? null, livePi.command ?? pi.command ?? null,
+        livePi.control ?? pi.control ?? null, livePi.movement ?? pi.movement ?? null,
+        livePi.mentality ?? pi.mentality ?? null, livePi.recovery ?? pi.recovery ?? null,
+        livePi.clutch ?? pi.clutch ?? null, livePi.holdRunners ?? pi.holdRunners ?? null,
+        liveBa.ovr ?? ba.ovr ?? null, liveBa.contact ?? ba.contact ?? null,
+        liveBa.power ?? ba.power ?? null, liveBa.eye ?? ba.eye ?? null,
+        liveBa.discipline ?? ba.discipline ?? null, liveBa.speed ?? ba.speed ?? null,
+        liveBa.baseInstinct ?? ba.baseInstinct ?? null, liveBa.bunting ?? ba.bunting ?? null,
+        liveBa.platoon ?? ba.platoon ?? null, liveBa.fielding ?? ba.fielding ?? null,
+        liveBa.arm ?? ba.arm ?? null, liveBa.battingClutch ?? ba.battingClutch ?? null,
       );
       for (let i = 0; i < (npc.careerHistory ?? []).length; i++) {
         const h = npc.careerHistory[i];

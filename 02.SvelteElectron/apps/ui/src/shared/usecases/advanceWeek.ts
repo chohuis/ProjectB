@@ -868,19 +868,22 @@ async function processTradeWindow(weekInYear: number, leagueId: string): Promise
   if (teamWithRosters.length < 2) return;
 
   // ③ TradeAsset 빌드 (NPC 전체 + 주인공)
+  const _tradeliveSt = get(npcLiveStatsStore);
   const buildNpcAsset = (n: typeof npcRows[number]) => {
     const named = namedMap.get(n.npcId);
     const inj = s.npcInjuries[n.npcId];
-    // gameStore NPC는 injuryStatus 필드 존재, entity 기반 NPC는 0으로 처리
+    // pitch_ovr/bat_ovr가 DB에 NULL인 경우(deprecated 필드) npcLiveStats로 폴백
+    const live = _tradeliveSt[n.npcId];
+    const actualOvr = n.pitchOvr ?? n.batOvr ?? live?.pitching?.ovr ?? live?.batting?.ovr ?? 50;
     const careerInjuryCount = named?.injuryStatus ? 1 : 0;
-    const hasSteroidHistory = false; // NPC 스테로이드 이력 미추적
+    const hasSteroidHistory = false;
     return {
       playerId: n.npcId,
       teamId: n.currentTeam,
       position: n.position,
       age: n.age,
-      ovr: n.pitchOvr ?? n.batOvr ?? 50,
-      trueOvr: n.pitchOvr ?? n.batOvr ?? 50,
+      ovr: actualOvr,
+      trueOvr: actualOvr,
       salary: n.currentSalary,
       remainingYears: n.contractYears,
       isProspect: n.proServiceYears <= 2,
