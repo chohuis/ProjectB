@@ -959,11 +959,15 @@ async function processTradeWindow(weekInYear: number, leagueId: string): Promise
   // ⑤ 각 proposal 처리
   let _tradeSuccess = 0, _tradeRejectValue = 0, _tradeRejectMedical = 0;
   const _tradeEventPlayers: PlayerEventEntry[] = [];
+  const _tradedPlayerIds = new Set<string>(); // 이미 트레이드된 선수 추적 (중복 방지)
+  const MAX_TRADES_PER_WINDOW = 3;
 
   for (const proposal of genResult.proposals) {
+    if (_tradeSuccess >= MAX_TRADES_PER_WINDOW) break;
     const offeredId   = proposal.offeringIds[0];
     const requestedId = proposal.requestingIds[0];
     if (!offeredId || !requestedId) continue;
+    if (_tradedPlayerIds.has(offeredId) || _tradedPlayerIds.has(requestedId)) continue;
 
     const offeredAsset  = allAssets.find((a) => a.playerId === offeredId);
     const requestedAsset = allAssets.find((a) => a.playerId === requestedId);
@@ -1131,6 +1135,8 @@ async function processTradeWindow(weekInYear: number, leagueId: string): Promise
       });
       updateNpcsAndSync(updatedNpcs);
     }
+    _tradedPlayerIds.add(offeredId);
+    _tradedPlayerIds.add(requestedId);
     _tradeSuccess++;
     const _p1Name = namedMap.get(offeredId)?.name   ?? m.entities.find(e => e.id === offeredId)?.name   ?? offeredId;
     const _p2Name = namedMap.get(requestedId)?.name ?? m.entities.find(e => e.id === requestedId)?.name ?? requestedId;
