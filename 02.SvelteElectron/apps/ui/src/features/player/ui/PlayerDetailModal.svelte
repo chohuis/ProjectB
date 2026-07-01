@@ -76,6 +76,13 @@
     if (s === "현역") return "mil-active";
     return "mil-pending";
   }
+  function militaryRankLabel(enlistYear: number | null | undefined, currentYear: number): string {
+    if (enlistYear == null) return "";
+    const served = currentYear - enlistYear;
+    if (served <= 0) return "이병";
+    if (served === 1) return "상병";
+    return "병장";
+  }
   function formatBirthday(bd: string) {
     const [, m, d] = bd.split("-");
     return `2010년 ${parseInt(m)}월 ${parseInt(d)}일`;
@@ -398,6 +405,23 @@
     return teamById.get(id) ?? LEAGUE_DISPLAY[id] ?? id;
   }
 
+  function groupCareerHistory(entries: import("../../../shared/types/save").NpcCareerEntry[]) {
+    const sorted = [...entries].sort((a, b) => a.year - b.year);
+    const groups: Array<{ startYear: number; endYear: number; teamId: string; statLine: string; highlights: string[] }> = [];
+    for (const entry of sorted) {
+      const last = groups[groups.length - 1];
+      if (last && last.teamId === entry.teamId && entry.year === last.endYear + 1) {
+        last.endYear = entry.year;
+        last.statLine = entry.statLine;
+        const seen = new Set(last.highlights);
+        for (const h of entry.highlights) { if (!seen.has(h)) last.highlights.push(h); }
+      } else {
+        groups.push({ startYear: entry.year, endYear: entry.year, teamId: entry.teamId, statLine: entry.statLine, highlights: [...entry.highlights] });
+      }
+    }
+    return groups.reverse();
+  }
+
   function txDesc(tx: PlayerTransaction): string {
     const from = resolveTeamOrLeague(tx.fromTeamId);
     const to   = resolveTeamOrLeague(tx.toTeamId);
@@ -582,6 +606,8 @@
                   {/if}
                   {#if contractSummary.isSchool}
                     <span class="cp-yrsin">{contractSummary.yearsIn}학년</span>
+                  {:else if modalNpcSave?.militaryUnit === "sports" && modalNpcSave?.militaryStatus === "현역"}
+                    <span class="cp-yrsin">{militaryRankLabel(modalNpcSave.militaryEnlistYear, curYear)}</span>
                   {:else}
                     <span class="cp-yrsin">{contractSummary.yearsIn}년차</span>
                   {/if}
@@ -603,6 +629,9 @@
                 <h5 class="lsec-title">병역</h5>
                 <div class="mil-row">
                   <span class="mil-badge {npcMilClass(modalNpcSave.militaryStatus)}">{npcMilText(modalNpcSave.militaryStatus)}</span>
+                  {#if modalNpcSave.militaryStatus === "현역" && modalNpcSave.militaryUnit === "sports"}
+                    <span class="mil-note">{militaryRankLabel(modalNpcSave.militaryEnlistYear, curYear)}</span>
+                  {/if}
                   {#if modalNpcSave.militaryStatus === "현역" && modalNpcSave.militaryDischargeYear}
                     <span class="mil-note">전역 예정 {modalNpcSave.militaryDischargeYear}년</span>
                   {/if}
@@ -921,12 +950,12 @@
                     <table class="gtable">
                       <thead><tr><th>연도</th><th>팀</th><th>기록</th><th>수상</th></tr></thead>
                       <tbody>
-                        {#each [...(modalNpcSave?.careerHistory ?? [])].reverse() as entry}
+                        {#each groupCareerHistory(modalNpcSave?.careerHistory ?? []) as group}
                           <tr>
-                            <td>{entry.year}</td>
-                            <td>{teamById.get(entry.teamId) ?? entry.teamId}</td>
-                            <td>{entry.statLine}</td>
-                            <td class="hl-cell">{entry.highlights.length > 0 ? entry.highlights.join(", ") : "-"}</td>
+                            <td>{group.startYear === group.endYear ? group.startYear : `${group.startYear}~${group.endYear}`}</td>
+                            <td>{teamById.get(group.teamId) ?? group.teamId}</td>
+                            <td>{group.statLine}</td>
+                            <td class="hl-cell">{group.highlights.length > 0 ? group.highlights.join(", ") : "-"}</td>
                           </tr>
                         {/each}
                       </tbody>
