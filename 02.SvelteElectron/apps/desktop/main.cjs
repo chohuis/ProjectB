@@ -650,7 +650,16 @@ app.whenReady().then(() => {
         currentTeam:    r.current_team,
         currentLeague:  r.current_league,
         currentSalary:  r.current_salary,
-        contractYears:  r.contract_years,
+        contractYears:  (() => {
+          const raw = r.contract_years ?? 1;
+          if (raw > 1) return raw;
+          const svc = r.pro_service_years ?? 0;
+          const h = r.npc_id.split('').reduce((s, c) => s + c.charCodeAt(0), 0);
+          if (svc <= 1) return 3;
+          if (svc <= 4) return 2 + (h % 2);
+          if (svc <= 7) return 1 + (h % 2);
+          return 1;
+        })(),
         proServiceYears: r.pro_service_years ?? 0,
         pitchOvr:       r.pitch_ovr ?? null,
         batOvr:         r.bat_ovr ?? null,

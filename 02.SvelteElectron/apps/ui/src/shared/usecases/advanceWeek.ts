@@ -887,7 +887,20 @@ async function processTradeWindow(weekInYear: number, leagueId: string): Promise
       salary: n.currentSalary,
       remainingYears: n.contractYears,
       isProspect: n.proServiceYears <= 2,
-      personality: named?.personality ?? null,
+      personality: named?.personality ?? (() => {
+        const h = n.npcId.split('').reduce((s, c) => s + c.charCodeAt(0), 0);
+        return {
+          loyalty:             40 + (h % 40),
+          ambition:            30 + ((h * 7) % 65),
+          greed:               25 + ((h * 3) % 55),
+          competitiveDrive:    40 + ((h * 11) % 45),
+          stabilityPreference: 25 + ((h * 13) % 60),
+          professionalism:     50 + ((h * 5) % 30),
+          overseasAmbition:     5 + ((h * 17) % 45),
+          marketPreference:    35 + ((h * 19) % 45),
+          homeTeamId:          null,
+        };
+      })(),
       injurySeverity: inj ? inj.severity : null,
       injuryWeeksLeft: inj?.weeksLeft ?? 0,
       careerInjuryCount,

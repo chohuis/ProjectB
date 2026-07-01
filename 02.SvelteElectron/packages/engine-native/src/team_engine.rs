@@ -416,10 +416,12 @@ pub fn generate_trade_proposals(p: GenerateTradeProposalsParams) -> GenerateTrad
     let n = p.teams.len();
     let positions = ["SP","RP","CP","C","1B","2B","3B","SS","LF","CF","RF","DH"];
 
-    // 팀 모드 판단: seller(<0.35) / buyer(>0.65 + win_now_pressure>70) / neutral
+    // 팀 모드 판단: 순위 기반 — 하위 30%=seller, 상위 30%+win_now>60=buyer
     let team_mode = |team: &TeamWithRoster| -> &str {
-        if team.win_pct < 0.35 { "seller" }
-        else if team.win_pct > 0.65 && team.profile.win_now_pressure > 70.0 { "buyer" }
+        let standing = p.season_standing.get(&team.team_id).copied().unwrap_or((n / 2) as i32);
+        let rank_pct = standing as f64 / n as f64;
+        if rank_pct > 0.70 { "seller" }
+        else if rank_pct <= 0.30 && team.profile.win_now_pressure > 60.0 { "buyer" }
         else { "neutral" }
     };
 
@@ -455,7 +457,7 @@ pub fn generate_trade_proposals(p: GenerateTradeProposalsParams) -> GenerateTrad
                     return_candidates.sort_by(|a, b| b.ovr.partial_cmp(&a.ovr).unwrap());
                     if let Some(prospect) = return_candidates.first() {
                         let score = exp_player.ovr * 0.8 + prospect.ovr * 0.6;
-                        if score > 100.0 {
+                        if score > 75.0 {
                             proposals.push(TradeProposal {
                                 proposing_team_id: ta.team_id.clone(),
                                 receiving_team_id: tb.team_id.clone(),
@@ -477,7 +479,7 @@ pub fn generate_trade_proposals(p: GenerateTradeProposalsParams) -> GenerateTrad
                     return_candidates.sort_by(|a, b| b.ovr.partial_cmp(&a.ovr).unwrap());
                     if let Some(prospect) = return_candidates.first() {
                         let score = exp_player.ovr * 0.8 + prospect.ovr * 0.6;
-                        if score > 100.0 {
+                        if score > 75.0 {
                             proposals.push(TradeProposal {
                                 proposing_team_id: tb.team_id.clone(),
                                 receiving_team_id: ta.team_id.clone(),
@@ -551,7 +553,7 @@ pub fn generate_trade_proposals(p: GenerateTradeProposalsParams) -> GenerateTrad
             for pl in &a_players {
                 if bottom_pct_a > 0.75 {
                     if let Some(pers) = &pl.personality {
-                        if pers.ambition > 70.0 && pl.ovr >= 62.0 {
+                        if pers.ambition > 60.0 && pl.ovr >= 62.0 {
                             // 이 선수가 이적 요청 → 상대팀에 제안
                             let mut recv: Vec<&&TradeAsset> = b_players.iter()
                                 .filter(|rp| rp.position == pl.position && rp.ovr >= pl.ovr - 8.0)
@@ -576,7 +578,7 @@ pub fn generate_trade_proposals(p: GenerateTradeProposalsParams) -> GenerateTrad
             for pl in &b_players {
                 if bottom_pct_b > 0.75 {
                     if let Some(pers) = &pl.personality {
-                        if pers.ambition > 70.0 && pl.ovr >= 62.0 {
+                        if pers.ambition > 60.0 && pl.ovr >= 62.0 {
                             let mut recv: Vec<&&TradeAsset> = a_players.iter()
                                 .filter(|rp| rp.position == pl.position && rp.ovr >= pl.ovr - 8.0)
                                 .collect();
@@ -649,7 +651,7 @@ pub fn generate_trade_proposals(p: GenerateTradeProposalsParams) -> GenerateTrad
                         recv_cands.sort_by(|a, b| b.ovr.partial_cmp(&a.ovr).unwrap());
                         if let Some(recv) = recv_cands.first() {
                             let score = offer_player.ovr * 0.6 + recv.ovr;
-                            if score > 110.0 {
+                            if score > 90.0 {
                                 proposals.push(TradeProposal {
                                     proposing_team_id: surplus_team.team_id.clone(),
                                     receiving_team_id: deficit_team.team_id.clone(),
