@@ -936,6 +936,8 @@ async function processTradeWindow(weekInYear: number, leagueId: string): Promise
     cash: number; mutualBenefitScore: number; reason: string;
   }> };
 
+  const rosterSizes = teamWithRosters.map(t => `${t.teamId}:${t.activeRoster.length}`).join(", ");
+  autoLog(`[트레이드] 팀로스터: ${rosterSizes}`);
   autoLog(`[트레이드] 제안 생성: ${genResult.proposals.length}건 | 자산풀: ${allAssets.length}명`);
 
   // ⑤ 각 proposal 처리
