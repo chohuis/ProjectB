@@ -388,9 +388,38 @@ app.whenReady().then(() => {
     }
   });
 
-  // Phase 5: NPC 상태는 npc_runtime에서 관리 — overlay 쓰기 no-op (call site 정리는 Phase 7)
-  ipcMain.handle("master:bulkUpsertEntities", (_event, _p) => {
-    return JSON.stringify({ ok: true, count: 0 });
+  ipcMain.handle("master:bulkUpsertEntities", (_event, payload) => {
+    try {
+      if (!payload || typeof payload !== "object") throw new Error("payload is required");
+      const slotId   = String(payload.slotId ?? DEFAULT_SLOT_ID).trim();
+      const entities = Array.isArray(payload.entities) ? payload.entities : [];
+      if (entities.length === 0) return JSON.stringify({ ok: true, count: 0 });
+      const now = new Date().toISOString();
+      const upsert = masterOverlayDb.prepare(`
+        INSERT INTO entity_overlay (slot_id, id, league_id, payload_json, updated_at)
+        VALUES (?, ?, ?, ?, ?)
+        ON CONFLICT(slot_id, id) DO UPDATE SET
+          league_id=excluded.league_id,
+          payload_json=excluded.payload_json,
+          updated_at=excluded.updated_at
+      `);
+      const undelete = masterOverlayDb.prepare(
+        "DELETE FROM entity_overlay_deleted WHERE slot_id = ? AND id = ?"
+      );
+      const runBulk = masterOverlayDb.transaction((rows) => {
+        for (const e of rows) {
+          const id       = String(e.id       ?? "").trim();
+          const leagueId = String(e.leagueId ?? "").trim();
+          if (!id || !leagueId) continue;
+          upsert.run(slotId, id, leagueId, JSON.stringify(e), now);
+          undelete.run(slotId, id);
+        }
+      });
+      runBulk(entities);
+      return JSON.stringify({ ok: true, count: entities.length });
+    } catch (e) {
+      return JSON.stringify({ ok: false, error: String(e?.message ?? e) });
+    }
   });
 
   // ── NPC 시뮬 IPC ─────────────────────────────────────────────────────────────

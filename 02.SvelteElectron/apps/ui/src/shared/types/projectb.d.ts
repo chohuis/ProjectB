@@ -222,7 +222,8 @@ declare global {
       // ── 마스터 데이터 (Electron 패키징 환경용 fallback) ──────
       masterFetch: (relPath: string) => Promise<unknown>;
       masterLoadEntities: (leagueId: string, seasonYear?: number, slotId?: string) => Promise<unknown[]>;
-      masterUpsertEntity: (entity: unknown) => Promise<{ ok: boolean; error?: string }>;
+      masterUpsertEntity:       (entity: unknown) => Promise<{ ok: boolean; error?: string }>;
+      masterBulkUpsertEntities: (p: { slotId: string; entities: unknown[] }) => Promise<string>;
       masterDeleteEntity: (payload: { id: string; leagueId?: string; slotId?: string }) => Promise<{ ok: boolean; error?: string }>;
       masterSave: (payload: { relPath: string; data: unknown; backup?: boolean }) => Promise<{
         ok: boolean;

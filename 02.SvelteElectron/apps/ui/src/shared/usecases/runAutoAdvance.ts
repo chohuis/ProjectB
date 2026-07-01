@@ -382,6 +382,7 @@ export async function runSeasonEndBgProcessing(now: number): Promise<void> {
       });
 
       autoLog(`[비프로에이징] 고교재학 ${hsOther.length}명 / 고교졸업 ${hsGrad.length}명 / 대학재학 ${univOther.length}명 / 대학졸업 ${univGrad.length}명 / 독립 ${indCount}명`);
+      await masterStore.bulkUpsertEntities(agedNonPro, slotIdNonPro);
       await masterStore.reloadEntities(now, slotIdNonPro);
     }
   }
