@@ -34,6 +34,7 @@ pub fn player_eval_fa_decision(p: FaDecisionParams) -> FaDecisionResult {
         return FaDecisionResult { apply_fa: false, willingness: 0.0 };
     }
     let pers = &p.personality;
+    let mut rng = rand::thread_rng();
     let mut w = 0.0_f64;
 
     let underpaid = ((p.market_value as f64 / p.current_salary.max(1) as f64) - 1.0).max(0.0);
@@ -52,7 +53,13 @@ pub fn player_eval_fa_decision(p: FaDecisionParams) -> FaDecisionResult {
     w -= pers.stability_preference * 0.08;
     if p.age >= 33 { w -= (p.age - 32) as f64 * 3.0; }
 
-    FaDecisionResult { apply_fa: w >= 20.0, willingness: w.clamp(0.0, 100.0) }
+    // FA 자격 취득 후 연차가 쌓일수록 시장 탐색 욕구 자연 증가
+    // salary 데이터 없이도 일정 비율 FA 발생 (ambition 높을수록 빠름)
+    let years_eligible = (p.pro_service_years - threshold) as f64;
+    w += years_eligible * 3.0 * (pers.ambition / 50.0);
+    w += rng.gen::<f64>() * 20.0;  // 0~20 랜덤 요소
+
+    FaDecisionResult { apply_fa: w >= 10.0, willingness: w.clamp(0.0, 100.0) }
 }
 
 // ── player_eval_trade_response ───────────────────────────────────────────────
