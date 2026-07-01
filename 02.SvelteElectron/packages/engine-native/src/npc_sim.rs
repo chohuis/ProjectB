@@ -755,6 +755,7 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
             n.pro_service_years = Some(n.pro_service_years.unwrap_or(0) + 1);
             let fa_threshold = fa_eligibility_years(&n.current_league);
             if n.pro_service_years.unwrap_or(0) >= fa_threshold && rng.gen::<f64>() < 0.6 {
+                n.original_league_id = Some(n.current_league.clone()); // FA 재배치 시 원래 리그로 복귀하기 위해 보존
                 n.current_league    = "LEAGUE_FREE_AGENT".into();
                 n.current_team      = "".into();
                 n.pro_service_years = Some(0);
@@ -808,13 +809,16 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
                             .unwrap_or_else(|| "LEAGUE_INDEPENDENT".into());
                         n.current_team   = fix_team_id(n.original_team_id.as_ref());
                     } else {
+                        // FA 전환 — original_league_id는 FA 재배치 시 사용하므로 여기서 클리어 안 함
                         n.current_league = "LEAGUE_FREE_AGENT".into();
                         n.current_team   = "".into();
                     }
                 }
-                // 복귀 완료 후 필드 클리어
-                n.original_league_id    = None;
-                n.original_team_id      = None;
+                // 복귀 완료 후 필드 클리어 (FA 전환 시 original_league_id는 재배치까지 보존)
+                if n.current_league != "LEAGUE_FREE_AGENT" {
+                    n.original_league_id = None;
+                    n.original_team_id   = None;
+                }
                 n.military_unit         = None;
                 n.military_discharge_year = None;
                 summary.military_discharged_count += 1;
@@ -830,7 +834,14 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     let mut after_normalize = normalize_offseason_npcs(processed, season_year, &mut summary, &mut logs, &mut rng);
 
     // 8. FA → 원래 리그별 재배치 (KBL→KBL, ABL→ABL, JBL→JBL, 기타→독립)
-    // 리그별 현역 팀 목록 수집
+    // 팀별 active NPC 수 집계 (유령 팀 필터링용 — 구 팀ID 잔존 방지)
+    let mut team_active_count: HashMap<String, usize> = HashMap::new();
+    for n in after_normalize.iter() {
+        if n.career_status == "active" && !n.current_team.is_empty() {
+            *team_active_count.entry(n.current_team.clone()).or_default() += 1;
+        }
+    }
+    // 리그별 현역 팀 목록 수집 (active NPC 5명 미만 팀 제외)
     let mut league_teams: HashMap<String, Vec<String>> = HashMap::new();
     for n in after_normalize.iter() {
         if n.career_status != "active" || n.current_team.is_empty() { continue; }
@@ -838,6 +849,7 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
             || n.current_league == "LEAGUE_ABL"
             || n.current_league == "LEAGUE_JBL";
         if !is_pro { continue; }
+        if team_active_count.get(&n.current_team).copied().unwrap_or(0) < 5 { continue; }
         league_teams
             .entry(n.current_league.clone())
             .or_default()

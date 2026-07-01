@@ -959,8 +959,15 @@ async function processTradeWindow(weekInYear: number, leagueId: string): Promise
   // ⑤ 각 proposal 처리
   let _tradeSuccess = 0, _tradeRejectValue = 0, _tradeRejectMedical = 0;
   const _tradeEventPlayers: PlayerEventEntry[] = [];
-  const _tradedPlayerIds = new Set<string>(); // 이미 트레이드된 선수 추적 (중복 방지)
-  const MAX_TRADES_PER_WINDOW = 3;
+  const MAX_TRADES_PER_WINDOW = 5;
+
+  // 이번 시즌 이미 트레이드된 선수 ID 수집 (시즌당 1회 제한)
+  const _seasonTxRaw = JSON.parse(
+    await window.projectB!.leagueGetTransactions(JSON.stringify({
+      slotId, seasonYear: s.seasonYear, category: "trade", leagueId, limit: 500,
+    }))
+  ) as { playerId: string }[];
+  const _tradedPlayerIds = new Set<string>(_seasonTxRaw.map((r) => r.playerId));
 
   for (const proposal of genResult.proposals) {
     if (_tradeSuccess >= MAX_TRADES_PER_WINDOW) break;
