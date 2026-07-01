@@ -720,10 +720,6 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     let mut summary = SeasonEndSummary::default();
     let mut new_pending: Vec<NpcSaveState> = Vec::new();
     let season_year = params.season_year;
-    // TS에서 FA/은퇴 결정 완료된 named NPC — Rust가 랜덤 FA 재결정하지 않도록 스킵
-    let named_npc_id_set: std::collections::HashSet<&str> =
-        params.named_npc_ids.iter().map(|s| s.as_str()).collect();
-
     let mut processed: Vec<NpcSaveState> = params.npcs.into_iter().map(|npc| {
         if npc.current_league == "LEAGUE_HIGHSCHOOL" { return npc; }
 
@@ -758,9 +754,7 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
         {
             n.pro_service_years = Some(n.pro_service_years.unwrap_or(0) + 1);
             let fa_threshold = fa_eligibility_years(&n.current_league);
-            // named_npc_id_set에 포함된 NPC는 TS에서 이미 FA/재계약 결정 완료 — 덮어쓰지 않음
-            let is_named = named_npc_id_set.contains(n.npc_id.as_str());
-            if !is_named && n.pro_service_years.unwrap_or(0) >= fa_threshold && rng.gen::<f64>() < 0.6 {
+            if n.pro_service_years.unwrap_or(0) >= fa_threshold && rng.gen::<f64>() < 0.6 {
                 n.current_league    = "LEAGUE_FREE_AGENT".into();
                 n.current_team      = "".into();
                 n.pro_service_years = Some(0);
