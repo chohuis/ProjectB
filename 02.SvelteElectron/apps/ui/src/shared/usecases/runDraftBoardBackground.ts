@@ -140,6 +140,21 @@ export async function runDraftBoardBackground(slotId: string, seasonYear: number
       groupId: null,
     }));
     await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows }));
+
+    // 배경 드래프트 지명 선수 → master_overlay.db 팀/리그 업데이트
+    const currentMaster = get(masterStore);
+    const entityMap = new Map(currentMaster.entities.map(e => [e.id, e]));
+    const pickedEntities = result.picks
+      .map(pick => {
+        const e = entityMap.get(pick.candidateId);
+        if (!e) return null;
+        return { ...e, leagueId: "LEAGUE_KBL", teamId: pick.teamId, clubId: pick.teamId };
+      })
+      .filter((e): e is NonNullable<typeof e> => e !== null);
+    if (pickedEntities.length > 0) {
+      await masterStore.bulkUpsertEntities(pickedEntities, slotId);
+      await masterStore.reloadEntities(seasonYear, slotId);
+    }
   }
 
   await gameStore.save();

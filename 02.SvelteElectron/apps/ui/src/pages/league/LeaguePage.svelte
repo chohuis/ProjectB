@@ -204,7 +204,14 @@
 
   $: txCategory, txLeagueId, selectedYear, tab === "transactions" && loadTransactions();
 
-  // 연도별 그룹핑
+  function parseDraftPickOrder(detail?: string | null): number {
+    if (!detail) return 999999;
+    const round = parseInt(detail.match(/(\d+)라운드/)?.[1] ?? "999");
+    const pick  = parseInt(detail.match(/(\d+)순위/)?.[1]  ?? "999");
+    return round * 1000 + pick;
+  }
+
+  // 연도별 그룹핑 (드래프트 항목은 라운드/순위 순 정렬)
   $: txByYear = (() => {
     const map = new Map<number, LeagueTransactionRow[]>();
     for (const r of txRows) {
@@ -212,7 +219,15 @@
       if (!map.has(yr)) map.set(yr, []);
       map.get(yr)!.push(r);
     }
-    return [...map.entries()].sort((a, b) => b[0] - a[0]);
+    return [...map.entries()].sort((a, b) => b[0] - a[0]).map(([yr, rows]) => {
+      const sorted = [...rows].sort((a, b) => {
+        if (a.category === "draft" && b.category === "draft") {
+          return parseDraftPickOrder(a.detail) - parseDraftPickOrder(b.detail);
+        }
+        return 0;
+      });
+      return [yr, sorted] as [number, LeagueTransactionRow[]];
+    });
   })();
 
   // 트레이드 양쪽 레코드를 groupId 기준으로 묶음
