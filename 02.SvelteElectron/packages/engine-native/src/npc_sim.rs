@@ -513,75 +513,9 @@ fn npc_core_ovr(npc: &NpcSaveState) -> f64 {
 }
 
 
-fn kbl_farm_team(team_id: &str) -> Option<&'static str> {
-    match team_id {
-        "PKT_Busan_GiantWhales"     => Some("TEAM_KBL_GIANTWHALES_2"),
-        "PKT_Changwon_SteelDinos"   => Some("TEAM_KBL_STEELDINOS_2"),
-        "PKT_Daegu_RoyalLions"      => Some("TEAM_KBL_ROYALLIONS_2"),
-        "PKT_Daejeon_SoaringEagles" => Some("TEAM_KBL_SOARINGEAGLES_2"),
-        "PKT_Gwangju_EmberTigers"   => Some("TEAM_KBL_EMBERTIGERS_2"),
-        "PKT_Incheon_SkyGulls"      => Some("TEAM_KBL_SKYGULLS_2"),
-        "PKT_Seoul_BearGuardians"   => Some("TEAM_KBL_BEARGUARDIANS_2"),
-        "PKT_Seoul_TwinWolves"      => Some("TEAM_KBL_TWINWOLVES_2"),
-        _ => None,
-    }
-}
-
-fn is_kbl_farm_team(team_id: &str) -> bool {
-    matches!(team_id,
-        "TEAM_KBL_GIANTWHALES_2"  | "TEAM_KBL_STEELDINOS_2"  |
-        "TEAM_KBL_ROYALLIONS_2"   | "TEAM_KBL_SOARINGEAGLES_2" |
-        "TEAM_KBL_EMBERTIGERS_2"  | "TEAM_KBL_SKYGULLS_2"    |
-        "TEAM_KBL_BEARGUARDIANS_2"| "TEAM_KBL_TWINWOLVES_2"
-    )
-}
-
-fn abl_farm_team(team_id: &str) -> Option<&'static str> {
-    match team_id {
-        "TEAM_ABL_EMPIRE_1"           => Some("TEAM_ABL_EMPIRE_2"),
-        "TEAM_ABL_HARBORHAWKS_1"      => Some("TEAM_ABL_HARBORHAWKS_2"),
-        "TEAM_ABL_SUNDRAGONS_1"       => Some("TEAM_ABL_SUNDRAGONS_2"),
-        "TEAM_ABL_WINDBEARS_1"        => Some("TEAM_ABL_WINDBEARS_2"),
-        "TEAM_ABL_SPACECOMETS_1"      => Some("TEAM_ABL_SPACECOMETS_2"),
-        "TEAM_ABL_PEACHTREEFALCONS_1" => Some("TEAM_ABL_PEACHTREEFALCONS_2"),
-        "TEAM_ABL_LONESTARS_1"        => Some("TEAM_ABL_LONESTARS_2"),
-        "TEAM_ABL_RAINARROWS_1"       => Some("TEAM_ABL_RAINARROWS_2"),
-        "TEAM_ABL_BAYSEALS_1"         => Some("TEAM_ABL_BAYSEALS_2"),
-        "TEAM_ABL_WAVERIDERS_1"       => Some("TEAM_ABL_WAVERIDERS_2"),
-        "TEAM_ABL_MOTORWOLVES_1"      => Some("TEAM_ABL_MOTORWOLVES_2"),
-        "TEAM_ABL_MOUNTAINPEAKS_1"    => Some("TEAM_ABL_MOUNTAINPEAKS_2"),
-        "TEAM_ABL_LAKESPIRITS_1"      => Some("TEAM_ABL_LAKESPIRITS_2"),
-        "TEAM_ABL_COASTALRAYS_1"      => Some("TEAM_ABL_COASTALRAYS_2"),
-        "TEAM_ABL_DESERTSERPENTS_1"   => Some("TEAM_ABL_DESERTSERPENTS_2"),
-        "TEAM_ABL_RIVERCARDINALS_1"   => Some("TEAM_ABL_RIVERCARDINALS_2"),
-        _ => None,
-    }
-}
-
-fn is_abl_farm_team(team_id: &str) -> bool {
-    team_id.starts_with("TEAM_ABL_") && team_id.ends_with("_2")
-}
-
-fn jbl_farm_team(team_id: &str) -> Option<&'static str> {
-    match team_id {
-        "TEAM_JBL_CL_NEONCRANES_1"     => Some("TEAM_JBL_CL_NEONCRANES_2"),
-        "TEAM_JBL_CL_TEMPOSTINGS_1"    => Some("TEAM_JBL_CL_TEMPOSTINGS_2"),
-        "TEAM_JBL_CL_IRONDRAKES_1"     => Some("TEAM_JBL_CL_IRONDRAKES_2"),
-        "TEAM_JBL_CL_TIDERAVES_1"      => Some("TEAM_JBL_CL_TIDERAVES_2"),
-        "TEAM_JBL_CL_SILVERWOLVES_1"   => Some("TEAM_JBL_CL_SILVERWOLVES_2"),
-        "TEAM_JBL_CL_IRONSTORMS_1"     => Some("TEAM_JBL_CL_IRONSTORMS_2"),
-        "TEAM_JBL_PL_THUNDERFALCONS_1" => Some("TEAM_JBL_PL_THUNDERFALCONS_2"),
-        "TEAM_JBL_PL_POLARBEARS_1"     => Some("TEAM_JBL_PL_POLARBEARS_2"),
-        "TEAM_JBL_PL_SPIRITBUFFALOS_1" => Some("TEAM_JBL_PL_SPIRITBUFFALOS_2"),
-        "TEAM_JBL_PL_MARINESOLDIERS_1" => Some("TEAM_JBL_PL_MARINESOLDIERS_2"),
-        "TEAM_JBL_PL_SEAGULLS_1"       => Some("TEAM_JBL_PL_SEAGULLS_2"),
-        "TEAM_JBL_PL_SUNS_1"           => Some("TEAM_JBL_PL_SUNS_2"),
-        _ => None,
-    }
-}
-
-fn is_jbl_farm_team(team_id: &str) -> bool {
-    team_id.starts_with("TEAM_JBL_") && team_id.ends_with("_2")
+/// 1군 팀 → 팜(2군) 팀 — ID 규칙: TEAM_X_1 → TEAM_X_2 (refs.json 정본 규칙)
+fn farm_team(team_id: &str) -> Option<String> {
+    team_id.strip_suffix("_1").map(|base| format!("{}_2", base))
 }
 
 fn roster_rule(league_id: &str) -> Option<(i32, i32)> {
@@ -666,18 +600,18 @@ fn normalize_offseason_npcs(
             for &idx in sorted_i.iter().take(overflow as usize) {
                 let npc = &mut next[idx];
                 if league_id == "LEAGUE_KBL" {
-                    if let Some(farm) = kbl_farm_team(&npc.current_team) {
+                    if let Some(farm) = farm_team(&npc.current_team) {
                         logs.push(format!("{} → 2군 강등", npc.name));
-                        npc.current_team = farm.into();
+                        npc.current_team = farm;
                     } else {
                         logs.push(format!("{} → 독립리그", npc.name));
                         npc.current_league = "LEAGUE_INDEPENDENT".into();
                         npc.current_team   = "".into();
                     }
                 } else if league_id == "LEAGUE_ABL" {
-                    if let Some(farm) = abl_farm_team(&npc.current_team) {
+                    if let Some(farm) = farm_team(&npc.current_team) {
                         logs.push(format!("{} → ABL 2군 강등", npc.name));
-                        npc.current_team = farm.into();
+                        npc.current_team = farm;
                     } else {
                         logs.push(format!("{} 은퇴 (ABL 로스터 초과)", npc.name));
                         npc.career_status  = "retired".into();
@@ -686,9 +620,9 @@ fn normalize_offseason_npcs(
                         summary.retired_count += 1;
                     }
                 } else if league_id == "LEAGUE_JBL" {
-                    if let Some(farm) = jbl_farm_team(&npc.current_team) {
+                    if let Some(farm) = farm_team(&npc.current_team) {
                         logs.push(format!("{} → JBL 2군 강등", npc.name));
-                        npc.current_team = farm.into();
+                        npc.current_team = farm;
                     } else {
                         logs.push(format!("{} 은퇴 (JBL 로스터 초과)", npc.name));
                         npc.career_status  = "retired".into();

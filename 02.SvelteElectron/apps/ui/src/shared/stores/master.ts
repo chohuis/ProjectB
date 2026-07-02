@@ -2,6 +2,12 @@
 import type { EventRule, EventPool, MessageTemplate, DecisionTemplate, DecisionTemplateOption } from "../types/event";
 import type { CareerStage, ManagerAttributes, CoachAttributes, CoachSpecialty } from "../types/save";
 import type { DecisionEffect } from "../types/main";
+import { validateTeamRefs } from "../utils/ids";
+import {
+  KBL_TEAMS, ABL_TEAMS, JBL_TEAMS,
+  KBL_FARM_TEAMS, ABL_FARM_TEAMS, JBL_FARM_TEAMS,
+  UNIV_TEAMS, IND_TEAMS, HS_ALL_TEAMS,
+} from "../utils/leagueScheduler";
 
 export type { ManagerAttributes, CoachAttributes, CoachSpecialty };
 
@@ -756,6 +762,16 @@ function createMasterStore() {
         militarySportsEvents:  militarySportsData?.events  ?? [],
         militaryGeneralEvents: militaryGeneralData?.events ?? [],
       }));
+
+      // 부팅 무결성 검증 — 코드 팀 상수 ⊆ refs.json + _1→_2 팜 규칙 (DESIGN.md §8.2 원칙 6)
+      validateTeamRefs(
+        new Set(mergedTeams.map((t) => t.id)),
+        {
+          KBL_TEAMS, ABL_TEAMS, JBL_TEAMS,
+          KBL_FARM_TEAMS, ABL_FARM_TEAMS, JBL_FARM_TEAMS,
+          UNIV_TEAMS, IND_TEAMS, HS_ALL_TEAMS,
+        },
+      );
 
       // ?꾩껜 ?뷀떚???ъ쟾 濡쒕뱶 ??諛곌꼍 由ш렇 ?쒕???紐⑤뱺 ? ?좎닔 ?곗씠???꾩슂
       // loaded: true ?댄썑???ㅽ뻾?섎?濡?寃뚯엫 吏꾩엯??釉붾줈?뱁븯吏 ?딆쓬

@@ -1,4 +1,5 @@
 import type { EntityRow, EntityPlayerDetails } from "../stores/master";
+import { clubToFirstTeam } from "./ids";
 import type {
   BattingAttributes,
   NpcCareerEntry,
@@ -29,9 +30,7 @@ export function entityToNpcState(
   const group = notes.includes("senior") ? "senior" : "junior";
   const clubId = (entity as unknown as { clubId?: string }).clubId ?? "";
   const originLeagueId = entity.originLeagueId ?? "";
-  const originalTeamId = clubId
-    ? clubId.replace(/^CLUB_/, "TEAM_") + "_1"
-    : undefined;
+  const originalTeamId = clubId ? clubToFirstTeam(clubId) : undefined;
   return {
     npcId:        entity.id,
     name:         entity.name,
@@ -84,7 +83,7 @@ export function entityToProNpcState(
   const clubId     = (entity as unknown as { clubId?: string }).clubId ?? "";
   const proLeagueId = isMilitary ? (entity.originLeagueId ?? entity.leagueId) : entity.leagueId;
   const proTeamId   = isMilitary
-    ? (clubId ? clubId.replace(/^CLUB_/, "TEAM_") + "_1" : entity.teamId)
+    ? (clubId ? clubToFirstTeam(clubId) : entity.teamId)
     : entity.teamId;
   const placeholderHistory: NpcCareerEntry[] =
     proSvcYrs > 0 && seasonYear > 0
@@ -119,7 +118,7 @@ export function entityToProNpcState(
     militaryDischargeYear: enlistYear ? enlistYear + 2 : undefined,
     // 전역 후 복귀 리그/팀: originLeagueId(KBL) + clubId(원래 구단)
     originalLeagueId: isMilitary ? (entity.originLeagueId ?? entity.leagueId) : undefined,
-    originalTeamId:   isMilitary ? (clubId ? clubId.replace(/^CLUB_/, "TEAM_") + "_1" : entity.teamId) : undefined,
+    originalTeamId:   isMilitary ? (clubId ? clubToFirstTeam(clubId) : entity.teamId) : undefined,
     developmentRate:  pl?.developmentRate ?? 50,
     potentialHidden:  pl?.potentialHidden ?? 75,
     proServiceYears:  proSvcYrs,

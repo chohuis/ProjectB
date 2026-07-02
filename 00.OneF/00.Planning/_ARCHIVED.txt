@@ -1,0 +1,12 @@
+[아카이브 안내 — 2026-07-02]
+
+이 폴더의 기획 문서들은 과거 이력으로만 보존한다.
+현행 기획의 단일 기준은 아래 문서다:
+
+  02.SvelteElectron/DESIGN.md
+
+이 폴더 내용과 DESIGN.md가 충돌하면 DESIGN.md를 따른다.
+
+주요 폐기 항목:
+- 02_Career_Framework.txt의 "최소 시간 단위는 시즌" → 주 단위로 확정
+- pro_usa_stage_flow.txt의 MLB 파이프라인(Rule5/40인/연봉조정) → 미구현, 이벤트 아이디어 풀로만 참조

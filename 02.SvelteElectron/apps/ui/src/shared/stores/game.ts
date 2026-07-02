@@ -45,10 +45,7 @@ import type {
 } from "../types/save";
 import type { CoreGameState } from "../types/projectb.d";
 import type { ProContract } from "../types/save";
-import {
-  KBL_FARM_MAP,
-  runOffseasonProcessing,
-} from "../utils/npcEngine";
+import { runOffseasonProcessing } from "../utils/npcEngine";
 import { getFaThreshold } from "../utils/faEngine";
 import { masterStore } from "./master";
 import { autoLog, logEvent, logVerify, type PlayerEventEntry } from "./autoAdvance";

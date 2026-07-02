@@ -1,5 +1,16 @@
 ﻿# ProjectB — AI 작업 규칙
 
+## 필독 — 작업 연속성 (세션이 바뀌어도 이것부터)
+
+**설계 정본은 `DESIGN.md`다.** 게임 방향(Lite 경량화)·리그 구조·데이터 아키텍처·로드맵은 전부 그 문서 기준이며, 이 문서(CLAUDE.md)는 코드 작업 규칙만 다룬다.
+
+- 작업 시작 전 **DESIGN.md §10 로드맵**에서 현재 단계를 확인하고 그 단계의 작업만 진행한다.
+- 단계(또는 하위 작업) 완료 시 DESIGN.md §10의 체크 표시와 아래 "진행 현황"을 갱신한다.
+- DESIGN.md §3 "육성 코어 보호 목록"의 시스템은 경량화 작업에서 수정 금지.
+- 아래 "데이터 계층 구조" 절은 **현행(R3 이전) 기준**이다 — R3(slot.db 재구축) 완료 시 DESIGN.md §8이 대체한다.
+
+**진행 현황**: R0 ✅ · R1 ✅ (ID 정본화, 2026-07-02) | **다음: R2 (IPC 단일 채널화)**
+
 ## 아키텍처 원칙 (필수 숙지)
 
 **Electron은 껍데기, Rust DLL이 프로그램 본체다.**
@@ -16,6 +27,7 @@
 - Electron에 암호화 키, 라이선스 판정, `bool isLicensed()` 단독 export 패턴
 - `window.projectB!.*()` 호출 시 `await` 누락
 - `packages/engine-native/index.d.ts`, `index.js` 직접 편집 — `npm run build:native` 자동 생성
+- 팀/구단/리그 ID 하드코딩 맵·인라인 변환(`.replace(/^CLUB_/...)` 류) 작성 — ID 파생 규칙은 `apps/ui/src/shared/utils/ids.ts`에만 둔다 (Rust는 `npc_sim.rs`의 `farm_team()` 접미사 규칙). 팀 ID 정본은 `refs.json`
 
 ## Rust에 새 게임 로직 추가 시 — 6단계
 
@@ -76,7 +88,7 @@ pub fn calc_my_thing(p: MyPayload) -> MyResult {
 - TS에서 Rust 결과 타입: `as MyType` 명시적 캐스팅
 - 주석은 WHY가 명확할 때만, 코드로 알 수 있는 내용은 생략
 
-## 데이터 계층 구조 (혼동 금지)
+## 데이터 계층 구조 (혼동 금지) — ⚠ 현행(R3 이전) 기준, R3 완료 시 DESIGN.md §8로 대체
 
 ### 세 가지 데이터 저장소
 
