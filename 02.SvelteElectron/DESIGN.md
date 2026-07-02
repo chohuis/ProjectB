@@ -342,12 +342,14 @@ military → 원 소속 복귀
 - [x] 부팅 무결성 assert — masterStore 로드 후 코드 팀 상수 ⊆ refs.json + 팜 규칙 검증 (104팀 사전검증 통과)
 - 잔여: Rust 전역 처리부·db.cjs의 CLUB_ 방어 변환 각 1곳 — R3 클린 브레이크 시 자연 소멸
 
-### R2. IPC 단일 채널화 ← 다음
-- [ ] main.cjs: `engine:call(fn, payload)` 범용 핸들러 (engine-native export 화이트리스트 기반)
-- [ ] preload.cjs: 단일 브릿지 노출 (`projectB.engineCall`)
-- [ ] projectb.d.ts: engineCall 타입 추가
-- [ ] 기존 ~90개 개별 채널 콜사이트를 도메인별 순차 이관 (Rust 호출分 우선, db/save 채널은 R3에서)
-- [ ] CLAUDE.md "6단계" 체크리스트 → 2단계(Rust 작성+빌드)로 개정
+### R2. IPC 단일 채널화 ✅ (2026-07-02)
+- [x] main.cjs: `engine:call(fn, payload)` 범용 핸들러 — 화이트리스트 = engine-native export 그 자체
+- [x] Rust 순수 포워딩 핸들러 81개 제거 (92 → 28) — 잔여 28개는 DB·파일·스테이트풀(R3 이관 대상)
+- [x] preload.cjs: 기존 메서드명 유지한 채 전부 engine:call 경유(호환 브릿지 81개) + `projectB.engine()` 제네릭 노출
+- [x] projectb.d.ts: `engine(fnName, payload)` 타입 추가
+- [x] CLAUDE.md "6단계" → **2단계**(Rust 작성 + build:native) 개정 — 신규 함수는 등록 자체가 불필요
+- 콜사이트 0건 수정 (기존 `window.projectB.xxx()` 호출 전부 무변경 호환) — 회귀 리스크 최소화
+- 예외 유지: `week:rollRandomBatch` (main에서 count 클램핑 검증), match:* (스테이트풀)
 
 ### R3. slot.db 재구축 (본체 — 클린 브레이크, 세이브 v3)
 - [ ] **선행: §4.2 배경 NPC 시뮬 범위(A/B안) 확정**

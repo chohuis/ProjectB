@@ -423,54 +423,19 @@ app.whenReady().then(() => {
   });
 
   // ── NPC 시뮬 IPC ─────────────────────────────────────────────────────────────
-  ipcMain.handle("npc:simGame", (_event, paramsJson) => {
-    try { return engineNative.simGameNative(paramsJson); }
+  // ── R2: Rust 엔진 호출 단일 채널 (DESIGN.md §8.2 원칙 5) ──────────────────
+  // 화이트리스트 = engine-native가 실제 export한 함수 목록 그 자체
+  const engineFns = new Set(
+    Object.keys(engineNative).filter((k) => typeof engineNative[k] === "function")
+  );
+  ipcMain.handle("engine:call", (_event, fnName, payload) => {
+    if (typeof fnName !== "string" || !engineFns.has(fnName)) {
+      return JSON.stringify({ error: `[engine:call] unknown fn: ${String(fnName)}` });
+    }
+    try { return engineNative[fnName](payload); }
     catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
-  ipcMain.handle("npc:calcWeeklyGrowth", (_event, p) => {
-    try { return engineNative.npcCalcWeeklyGrowth(p); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("npc:runOffseason", (_event, paramsJson) => {
-    try { return engineNative.runOffseasonNative(paramsJson); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("npc:advanceGrades", (_event, paramsJson) => {
-    try { return engineNative.advanceGradesNative(paramsJson); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("npc:generateFreshmen", (_event, paramsJson) => {
-    try { return engineNative.generateFreshmenNative(paramsJson); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("npc:runDraft", (_event, paramsJson) => {
-    try { return engineNative.runDraftNative(paramsJson); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("npc:applyDraft", (_event, paramsJson) => {
-    try { return engineNative.applyDraftNative(paramsJson); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("npc:bgHsGraduateDraft", (_event, paramsJson) => {
-    try { return engineNative.bgHsGraduateDraftNative(paramsJson); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("npc:determineProtagonistDraft", (_event, paramsJson) => {
-    try { return engineNative.determineProtagonistDraftNative(paramsJson); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("npc:advanceProtagonistGrade", (_event, paramsJson) => {
-    try { return engineNative.advanceProtagonistGradeNative(paramsJson); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("npc:advanceAllGrades", (_event, paramsJson) => {
-    try { return engineNative.advanceAllGradesNative(paramsJson); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("npc:advanceAllAges", (_event, paramsJson) => {
-    try { return engineNative.advanceAllAgesNative(paramsJson); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
+
 
   // ── NPC 경기 기록 IPC ─────────────────────────────────────────────────────────
   ipcMain.handle("npc:bulkInsertGameLogs", (_event, p) => {
@@ -870,214 +835,14 @@ app.whenReady().then(() => {
   });
 
   // ── 성장 엔진 ─────────────────────────────────────────────────────────────────
-  ipcMain.handle("growth:calcTraining", (_event, paramsJson) => {
-    try { return engineNative.calcTrainingGrowthNative(paramsJson); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("growth:calcGame", (_event, paramsJson) => {
-    try { return engineNative.calcGameGrowthNative(paramsJson); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("growth:calcProtagonistAging", (_event, paramsJson) => {
-    try { return engineNative.calcProtagonistAgingNative(paramsJson); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
 
   // ── 플레이어 엔진 ─────────────────────────────────────────────────────────────
-  ipcMain.handle("career:resolveChoice", (_event, paramsJson) => {
-    try { return engineNative.resolveCareerChoiceNative(paramsJson); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("pitcher:assignHighschoolPosition", (_event, paramsJson) => {
-    try { return engineNative.assignHighschoolPositionNative(paramsJson); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("pitcher:assignRole", (_event, paramsJson) => {
-    try { return engineNative.assignProtagonistRoleNative(paramsJson); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("pitcher:relieverWouldPitch", (_event, paramsJson) => {
-    try { return engineNative.relieverWouldPitchNative(paramsJson); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("salary:calcSeasonRating", (_event, paramsJson) => {
-    try { return engineNative.calcSeasonRatingNative(paramsJson); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("salary:calcMarketSalary", (_event, paramsJson) => {
-    try { return engineNative.calcMarketSalaryNative(paramsJson); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("salary:calcOfferedSalary", (_event, paramsJson) => {
-    try { return engineNative.calcOfferedSalaryNative(paramsJson); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("salary:calcOfferedSalaryForProtagonist", (_event, paramsJson) => {
-    try { return engineNative.calcOfferedSalaryForProtagonistNative(paramsJson); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("fa:generateOffers", (_event, paramsJson) => {
-    try { return engineNative.generateFaOffersNative(paramsJson); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("draft:calcDraftRank", (_event, paramsJson) => {
-    try { return engineNative.calcDraftRankNative(paramsJson); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("draft:runBoard", (_event, paramsJson) => {
-    try { return engineNative.runDraftBoardNative(paramsJson); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("military:calcCandidates", (_event, paramsJson) => {
-    try { return engineNative.calcSportsUnitCandidatesNative(paramsJson); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("military:calcSelection", (_event, paramsJson) => {
-    try { return engineNative.calcSportsUnitSelectionNative(paramsJson); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("military:pickGeneral", (_event, paramsJson) => {
-    try { return engineNative.pickGeneralEnlisteesNative(paramsJson); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("military:earlyEnlistDecisions", (_event, paramsJson) => {
-    try { return engineNative.calcEarlyEnlistDecisionsNative(paramsJson); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("npc:calcRenewalSalary", (_event, paramsJson) => {
-    try { return engineNative.calcNpcRenewalSalaryNative(paramsJson); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("npc:calcContractYears", (_event, paramsJson) => {
-    try { return engineNative.calcNpcContractYearsNative(paramsJson); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("indie:calcScoutOffer", (_event, paramsJson) => {
-    try { return engineNative.calcIndieScoutOfferNative(paramsJson); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
 
   // ── 스케줄 엔진 ──────────────────────────────────────────────────────────────
-  ipcMain.handle("schedule:generic", (_event, p) => {
-    try { return engineNative.generateScheduleNative(p); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("schedule:kbl", (_event, p) => {
-    try { return engineNative.generateKblScheduleNative(p); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("schedule:abl", (_event, p) => {
-    try { return engineNative.generateAblScheduleNative(p); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("schedule:jbl", (_event, p) => {
-    try { return engineNative.generateJblScheduleNative(p); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("schedule:hs", (_event, p) => {
-    try { return engineNative.generateHsScheduleNative(p); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("schedule:league", (_event, p) => {
-    try { return engineNative.generateLeagueScheduleNative(p); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("schedule:allLeagues", (_event, p) => {
-    try { return engineNative.generateAllLeagueSchedulesNative(p); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("schedule:hsPostseasonSemis", (_event, p) => {
-    try { return engineNative.generateHsPostseasonSemisNative(p); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("schedule:hsPostseasonFinal", (_event, p) => {
-    try { return engineNative.generateHsPostseasonFinalNative(p); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("schedule:shuffleHsGroups", (_event, p) => {
-    try { return engineNative.shuffleHsGroupsNative(p); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
 
   // ── 포스트시즌 엔진 ───────────────────────────────────────────────────────────
-  ipcMain.handle("postseason:buildKbl", (_event, p) => {
-    try { return engineNative.buildKblBracketNative(p); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("postseason:buildAbl", (_event, p) => {
-    try { return engineNative.buildAblBracketNative(p); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("postseason:buildUniv", (_event, p) => {
-    try { return engineNative.buildUnivBracketNative(p); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("postseason:buildInd", (_event, p) => {
-    try { return engineNative.buildIndBracketNative(p); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("postseason:buildJbl", (_event, p) => {
-    try { return engineNative.buildJblBracketNative(p); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("postseason:applyGame", (_event, p) => {
-    try { return engineNative.applyGameToSeriesNative(p); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("postseason:fillNext", (_event, p) => {
-    try { return engineNative.fillNextSeriesNative(p); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("postseason:resolveNpc", (_event, p) => {
-    try { return engineNative.resolveNonProtagonistSeriesNative(p); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("postseason:makeGame", (_event, p) => {
-    try { return engineNative.makeSeriesGameNative(p); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("postseason:shuffleAbl", (_event, p) => {
-    try { return engineNative.shuffleAblConferencesNative(p); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
 
   // ── 주간 계산 엔진 ────────────────────────────────────────────────────────────
-  ipcMain.handle("week:calcFacilityEff", (_event, p) => {
-    try { return engineNative.weekCalcFacilityEffNative(p); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("week:calcWeeklyNet", (_event, p) => {
-    try { return engineNative.weekCalcWeeklyNetNative(p); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("week:calcInjury", (_event, p) => {
-    try { return engineNative.weekCalcInjuryNative(p); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("week:calcHsAdmissions", (_event, p) => {
-    try { return engineNative.weekCalcHsAdmissionsNative(p); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("week:calcTradeRumor", (_event, p) => {
-    try { return engineNative.weekCalcTradeRumorNative(p); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("week:calcExamResult", (_event, p) => {
-    try { return engineNative.weekCalcExamResultNative(p); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("week:calcMilitary", (_event, p) => {
-    try { return engineNative.weekCalcMilitaryNative(p); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("week:calcNpcFallback", (_event, p) => {
-    try { return engineNative.weekCalcNpcFallbackNative(p); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-  ipcMain.handle("week:calcNpcInjuries", (_event, p) => {
-    try { return engineNative.weekCalcNpcInjuriesNative(p); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
   ipcMain.handle("week:rollRandomBatch", (_event, count) => {
     try {
       const safe = Math.min(Math.max(0, Number(count) || 0), 10000);
@@ -1101,49 +866,7 @@ app.whenReady().then(() => {
     }
   });
 
-  // ── scouting_engine ──────────────────────────────────────────────────────────
-  ipcMain.handle("scouting:applyNoise", (_e, p) => {
-    try { return engineNative.applyScoutingNoiseNative(p); }
-    catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-  });
-
-  // ── team_engine ──────────────────────────────────────────────────────────────
-  const teamHandles = [
-    ["team:evalCallup",          "evalCallupCandidatesNative"],
-    ["team:evalCalldown",        "evalCalldownCandidatesNative"],
-    ["team:evalRelease",         "evalReleasePriorityNative"],
-    ["team:evalFaBid",           "evalFaBidNative"],
-    ["team:evalRenewal",         "evalRenewalOfferNative"],
-    ["team:evalNewContract",     "evalNewContractNative"],
-    ["team:evalRetirement",      "evalRetirementSuggestionNative"],
-    ["team:generateTrade",       "generateTradeProposalsNative"],
-    ["team:evalTradeValue",      "evalTradeValueNative"],
-    ["team:evalMedical",         "evalMedicalTestNative"],
-    ["team:winNowUpdate",        "calcWinNowPressureUpdateNative"],
-    ["team:scoutingImprovement", "calcScoutingImprovementNative"],
-  ];
-  for (const [channel, fn] of teamHandles) {
-    ipcMain.handle(channel, (_e, p) => {
-      try { return engineNative[fn](p); }
-      catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-    });
-  }
-
-  // ── player_agent ─────────────────────────────────────────────────────────────
-  const playerHandles = [
-    ["player:evalFaDecision",      "playerEvalFaDecisionNative"],
-    ["player:evalTradeResponse",   "playerEvalTradeResponseNative"],
-    ["player:evalContractOffer",   "playerEvalContractOfferNative"],
-    ["player:evalRetirementResp",  "playerEvalRetirementResponseNative"],
-    ["player:rankFaOffers",        "playerRankFaOffersNative"],
-    ["player:updateLoyalty",       "updatePlayerLoyaltyNative"],
-  ];
-  for (const [channel, fn] of playerHandles) {
-    ipcMain.handle(channel, (_e, p) => {
-      try { return engineNative[fn](p); }
-      catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-    });
-  }
+  // scouting_engine / team_engine / player_agent 순수 포워딩은 engine:call 단일 채널로 이관됨 (R2)
 
   // ── CSP 헤더 주입 ────────────────────────────────────────────────────────────
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {

@@ -28,6 +28,12 @@ declare global {
   interface Window {
     projectB?: {
       version: string;
+
+      // ── R2: Rust 엔진 범용 호출 (engine:call 단일 채널) ─────
+      // 새 Rust 함수는 개별 브릿지 등록 없이 이것으로 호출한다.
+      // fnName = engine-native index.d.ts의 export 함수명 (camelCase)
+      engine: (fnName: string, payload?: string | number) => Promise<string>;
+
       // ── 경기 엔진 ──────────────────────────────────────────
       matchStart: (request?: {
         matchId?: string;

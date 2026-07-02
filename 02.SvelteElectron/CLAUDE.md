@@ -9,7 +9,7 @@
 - DESIGN.md §3 "육성 코어 보호 목록"의 시스템은 경량화 작업에서 수정 금지.
 - 아래 "데이터 계층 구조" 절은 **현행(R3 이전) 기준**이다 — R3(slot.db 재구축) 완료 시 DESIGN.md §8이 대체한다.
 
-**진행 현황**: R0 ✅ · R1 ✅ (ID 정본화, 2026-07-02) | **다음: R2 (IPC 단일 채널화)**
+**진행 현황**: R0 ✅ · R1 ✅ · R2 ✅ (IPC 단일 채널, 2026-07-02) | **다음: R3 (slot.db 재구축 — 착수 전 DESIGN.md §4.2 확정 필요)**
 
 ## 아키텍처 원칙 (필수 숙지)
 
@@ -29,34 +29,23 @@
 - `packages/engine-native/index.d.ts`, `index.js` 직접 편집 — `npm run build:native` 자동 생성
 - 팀/구단/리그 ID 하드코딩 맵·인라인 변환(`.replace(/^CLUB_/...)` 류) 작성 — ID 파생 규칙은 `apps/ui/src/shared/utils/ids.ts`에만 둔다 (Rust는 `npc_sim.rs`의 `farm_team()` 접미사 규칙). 팀 ID 정본은 `refs.json`
 
-## Rust에 새 게임 로직 추가 시 — 6단계
+## Rust에 새 게임 로직 추가 시 — 2단계 (R2에서 개정)
 
-1. `packages/engine-native/src/*.rs` — 함수 작성 (`#[serde(rename_all = "camelCase")]` 필수)
-2. `packages/engine-native/src/lib.rs` — `#[napi]` export 추가 (JSON 문자열 입출력)
-3. `npm run build:native` — `index.d.ts` / `index.js` 자동 재생성
-4. `apps/desktop/main.cjs` — `ipcMain.handle("채널명", ...)` 추가
-5. `apps/desktop/preload.cjs` — `ipcRenderer.invoke` 브릿지 추가
-6. `apps/ui/src/shared/types/projectb.d.ts` — `Window.projectB` 인터페이스에 타입 추가
+1. `packages/engine-native/src/*.rs` — 함수 작성 + `lib.rs`에 `#[napi]` export (`#[serde(rename_all = "camelCase")]` 필수)
+2. `npm run build:native` — `index.d.ts` / `index.js` 자동 재생성
 
-## IPC 호출 패턴 (TS에서)
+**끝.** main.cjs/preload.cjs/projectb.d.ts 등록 불필요 — `engine:call` 단일 채널이 engine-native export를 화이트리스트로 자동 노출한다.
 
 ```typescript
-// 호출
+// TS 호출 (신규 함수 — 등록 없이 바로)
 const result = JSON.parse(
-  await window.projectB!.myFuncNative(JSON.stringify({ someValue: 42 }))
+  await window.projectB!.engine("myFuncNative", JSON.stringify({ someValue: 42 }))
 ) as MyResultType;
-
-// Rust 구조체는 camelCase로 자동 변환됨 (serde rename_all)
+// fnName = index.d.ts의 export 함수명 (camelCase). serde가 camelCase 자동 변환.
 ```
 
-## Rust IPC 핸들러 패턴 (main.cjs)
-
-```js
-ipcMain.handle("ns:funcName", (_event, p) => {
-  try { return engineNative.myFuncNative(p); }
-  catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
-});
-```
+- 기존 개별 메서드(`window.projectB.simGameNative(p)` 등)는 내부적으로 engine:call을 경유하는 호환 브릿지 — 유지되지만 **신규 추가 금지**.
+- `ipcMain.handle` 개별 등록은 DB·파일 I/O·스테이트풀(match) 채널에만 허용 (R3에서 Repository로 재편 예정).
 
 ## Rust 함수 패턴
 
