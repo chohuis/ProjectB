@@ -361,9 +361,12 @@ military → 원 소속 복귀
 
 **R3a — 데이터 코어 (먼저, 단독 검증)**
 - [x] 선행: §4.2 시뮬 범위 확정 — **B안** (Named 전 리그 주간, 합성 생성기)
-- [ ] 신규 스키마: 파일=슬롯(`slot_<id>.db`), `npc` 단일 테이블(능력치·XP·폼 JSON 컬럼, is_named), `meta`(worldSeed·서명)
-- [ ] Repository 계층 (`npcRepo`/`seasonRepo`) — 상태 쓰기의 유일 경로
-- [ ] 커맨드형 변이: transfer/draft/signFa/enlist/discharge/retire/callup (각 1 트랜잭션)
+- [x] 신규 스키마: 파일=슬롯(`slot3_<id>.db`), `npc` 단일 테이블(능력치·XP·폼 JSON, is_named), `meta`(worldSeed) — `apps/desktop/ipc/slotdb.cjs`
+- [x] transactions 테이블로 리그 거래기록·선수 경력 이벤트 통합 (이중 기록 소멸)
+- [x] 커맨드형 변이: transfer/swapTeams/assignDraft/enlist/discharge/retire/updateWeekly (각 1 트랜잭션, 실패 시 전체 롤백 검증됨)
+- [x] `repo:call` 단일 IPC 채널 + `projectB.repo()` (직접 호출 금지 — shared/repo/* 전용)
+- [x] 검증 스위트 `npm run test:slotdb` — 23항목 (3자 일치·원자성·원소속 복귀 등)
+- [ ] TS Repository 계층 (`shared/repo/npcRepo.ts`·`seasonRepo.ts`) — 스토어 연동
 - [ ] Rust `generate_league_roster` — Lazy 리그 로스터 생성 (규모: §7 확정치 — 고교 10·ABL 12)
 - [ ] master_overlay.db 폐기 + game/season 블롭에서 npcs/npcLiveStats 제거
 - [ ] 사전 생성 파이프라인 폐기: gen:npc·migrate:entities·entities/players/*·_index.json

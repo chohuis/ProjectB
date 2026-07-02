@@ -34,6 +34,10 @@ declare global {
       // fnName = engine-native index.d.ts의 export 함수명 (camelCase)
       engine: (fnName: string, payload?: string | number) => Promise<string>;
 
+      // ── R3a: 슬롯 DB v3 커맨드 (repo:call 단일 채널) ────────
+      // 직접 호출 금지 — shared/repo/* 모듈만 사용한다 (DESIGN.md §8.2 원칙 3)
+      repo: (cmd: string, payload?: unknown) => Promise<string>;
+
       // ── 경기 엔진 ──────────────────────────────────────────
       matchStart: (request?: {
         matchId?: string;

@@ -40,7 +40,8 @@
     "test:db": "electron scripts/db-perf.mjs",
     "smoke": "node scripts/smoke-test.mjs",
     "audit": "npm audit --audit-level=high",
-    "postinstall": "electron-rebuild -f -w better-sqlite3"
+    "postinstall": "electron-rebuild -f -w better-sqlite3",
+    "test:slotdb": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-slotdb.cjs"
   },
   "build": {
     "appId": "com.projectb.desktop",

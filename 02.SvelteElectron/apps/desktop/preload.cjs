@@ -8,6 +8,10 @@ contextBridge.exposeInMainWorld("projectB", {
   // ── R2: Rust 엔진 범용 호출 — 새 Rust 함수는 등록 없이 이걸로 호출 ──────
   engine: (fnName, payload) => ipcRenderer.invoke("engine:call", fnName, payload),
 
+  // ── R3a: 슬롯 DB v3 커맨드 — 상태 변이/조회의 유일 경로 (repo 계층 전용) ──
+  repo: (cmd, payload) =>
+    ipcRenderer.invoke("repo:call", cmd, payload === undefined ? undefined : JSON.stringify(payload)),
+
   // ── 경기 엔진 ───────────────────────────────────────────────────────────
   matchStart:  (request)  => ipcRenderer.invoke("match:start",  request),
   matchStep:   (decision) => ipcRenderer.invoke("match:step",   decision),

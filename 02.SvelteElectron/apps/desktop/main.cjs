@@ -194,6 +194,19 @@ app.whenReady().then(() => {
   applySchemaPatches(db);
   migrateOldDb(db, oldDbPath);
 
+  // ── R3a: 슬롯 DB v3 (파일=슬롯) — repo:call 단일 채널 ──────────────────────
+  const slotdb = require("./ipc/slotdb.cjs");
+  const slotManager = slotdb.createManager(savesDir);
+  ipcMain.handle("repo:call", (_event, cmd, payloadJson) => {
+    try {
+      const payload = payloadJson ? JSON.parse(payloadJson) : {};
+      return JSON.stringify(slotdb.dispatch(slotManager, cmd, payload));
+    } catch (e) {
+      return JSON.stringify({ error: String(e?.message ?? e) });
+    }
+  });
+  app.on("before-quit", () => slotManager.closeAll());
+
   // master.db (read-only)
   let masterDb = null;
   try {
