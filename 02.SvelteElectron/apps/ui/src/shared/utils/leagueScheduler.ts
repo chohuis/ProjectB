@@ -101,6 +101,14 @@ export const HS_ALL_TEAMS = [
 export const HS_GROUP_A = HS_ALL_TEAMS.slice(0, 8);
 export const HS_GROUP_B = HS_ALL_TEAMS.slice(8);
 
+// ── R3a (Lite): 고교 10팀 단일리그 — 선택 8교 + 배경 2교 (DESIGN.md §7) ──
+// v3 새 게임은 이 목록만 활성화. A/B조 로직은 R4에서 제거 예정.
+export const HS_ACTIVE_TEAMS_V3 = [
+  ...HS_SELECTABLE_TEAMS,
+  "TEAM_HS_YEOSU_SHORE",
+  "TEAM_HS_CHUNCHEON_HIGHLAND",
+];
+
 export const UNIV_TEAMS = [
   "TEAM_UNIV_HANBBIT", "TEAM_UNIV_DONGMYUNG", "TEAM_UNIV_SEOHAE",
   "TEAM_UNIV_NAMGANG", "TEAM_UNIV_CHEONGUN", "TEAM_UNIV_MIRAE", "TEAM_UNIV_GAON",

@@ -370,7 +370,11 @@ military → 원 소속 복귀
   - worldSeed 결정적 + **팀별 독립 시드** (팀 구성 변경이 타 팀 로스터에 무영향)
   - 포지션 커버리지 보장 (야수 8포지션 + SP≥3) / 학년제·무학년 겸용 / 계약·국적·이름풀 파라미터화
   - personality 생성 시점 확정 (R1 부채 #8 해소) / 검증 `npm run test:rostergen` 25항목
-- [ ] TS Repository 계층 (`shared/repo/npcRepo.ts`·`seasonRepo.ts`) — 스토어 연동
+- [x] TS Repository 계층 `shared/repo/slotRepo.ts` — 상태 읽기/쓰기 유일 접점 (커맨드 실패 = RepoError throw, 부분 성공 없음)
+- [x] 새 게임 파이프라인 `shared/repo/newGameV3.ts` — 규칙(generation_rules.json v2 rosterRules) → Rust 생성 → createSlot / `activateLeagueV3` (Lazy, 재호출 안전)
+- [x] `HS_ACTIVE_TEAMS_V3` (10팀) + generation_rules.json v2 — 리그별 rosterRules 데이터화
+- [x] 검증 `npm run test:newgame` 14항목 — worldSeed 슬롯 간 재현성·Lazy KBL 활성화·세계 규모 474명(고교+KBL) 확인. 통합: `npm run test:v3`
+- [ ] UI 전환: NewGamePage → createNewGameV3 / 로드 경로 → slotRepo (R3a-4에서 스토어 연동과 함께)
 - [ ] master_overlay.db 폐기 + game/season 블롭에서 npcs/npcLiveStats 제거
 - [ ] 사전 생성 파이프라인 폐기: gen:npc·migrate:entities·entities/players/*·_index.json
 - [ ] 레거시 `"pro"` careerStage 제거 + deprecated 필드 제거 + SchoolState optional화

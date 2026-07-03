@@ -1,25 +1,144 @@
 {
-  "version": 1,
+  "version": 2,
   "description": "player generation baseline rules",
   "ageRangeByStage": {
-    "highschool": [16, 18],
-    "university": [19, 22],
-    "independent": [19, 30],
-    "kbo": [18, 38],
-    "mlb": [18, 42]
+    "highschool": [
+      16,
+      18
+    ],
+    "university": [
+      19,
+      22
+    ],
+    "independent": [
+      19,
+      30
+    ],
+    "kbo": [
+      18,
+      38
+    ],
+    "mlb": [
+      18,
+      42
+    ]
   },
   "overallRangeByStage": {
-    "highschool": [45, 70],
-    "university": [52, 76],
-    "independent": [50, 74],
-    "kbo": [58, 90],
-    "mlb": [62, 94]
+    "highschool": [
+      45,
+      70
+    ],
+    "university": [
+      52,
+      76
+    ],
+    "independent": [
+      50,
+      74
+    ],
+    "kbo": [
+      58,
+      90
+    ],
+    "mlb": [
+      62,
+      94
+    ]
   },
   "potentialRangeByStage": {
-    "highschool": [60, 95],
-    "university": [58, 92],
-    "independent": [54, 86],
-    "kbo": [56, 90],
-    "mlb": [58, 92]
+    "highschool": [
+      60,
+      95
+    ],
+    "university": [
+      58,
+      92
+    ],
+    "independent": [
+      54,
+      86
+    ],
+    "kbo": [
+      56,
+      90
+    ],
+    "mlb": [
+      58,
+      92
+    ]
+  },
+  "rosterRules": {
+    "LEAGUE_HIGHSCHOOL": {
+      "rosterSize": 25,
+      "pitchingOvrMin": 45,
+      "pitchingOvrMax": 70,
+      "battingOvrMin": 45,
+      "battingOvrMax": 70,
+      "devRateMin": 45,
+      "devRateMax": 75,
+      "gradeMax": 3,
+      "ageBase": 15
+    },
+    "LEAGUE_UNIVERSITY": {
+      "rosterSize": 22,
+      "pitchingOvrMin": 52,
+      "pitchingOvrMax": 76,
+      "battingOvrMin": 52,
+      "battingOvrMax": 76,
+      "devRateMin": 45,
+      "devRateMax": 72,
+      "gradeMax": 4,
+      "ageBase": 18
+    },
+    "LEAGUE_INDEPENDENT": {
+      "rosterSize": 20,
+      "pitchingOvrMin": 50,
+      "pitchingOvrMax": 74,
+      "battingOvrMin": 50,
+      "battingOvrMax": 74,
+      "devRateMin": 40,
+      "devRateMax": 70,
+      "ageMin": 19,
+      "ageMax": 30,
+      "withContract": true
+    },
+    "LEAGUE_KBL": {
+      "rosterSize": 28,
+      "pitchingOvrMin": 58,
+      "pitchingOvrMax": 88,
+      "battingOvrMin": 58,
+      "battingOvrMax": 88,
+      "devRateMin": 40,
+      "devRateMax": 70,
+      "ageMin": 20,
+      "ageMax": 36,
+      "withContract": true
+    },
+    "LEAGUE_ABL": {
+      "rosterSize": 28,
+      "pitchingOvrMin": 62,
+      "pitchingOvrMax": 92,
+      "battingOvrMin": 62,
+      "battingOvrMax": 92,
+      "devRateMin": 40,
+      "devRateMax": 70,
+      "ageMin": 21,
+      "ageMax": 38,
+      "withContract": true,
+      "nationality": "USA"
+    },
+    "LEAGUE_JBL": {
+      "rosterSize": 28,
+      "pitchingOvrMin": 60,
+      "pitchingOvrMax": 90,
+      "battingOvrMin": 60,
+      "battingOvrMax": 90,
+      "devRateMin": 40,
+      "devRateMax": 70,
+      "ageMin": 20,
+      "ageMax": 37,
+      "withContract": true,
+      "nationality": "JPN"
+    }
   }
 }
