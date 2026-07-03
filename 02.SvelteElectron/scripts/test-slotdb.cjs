@@ -129,6 +129,27 @@ check("syncNpcs: 신규 행 삽입", call("getNpc", { slotId: "T1", npcId: "P9" 
 check("syncNpcs: 거래기록 미오염 (벌크는 tx 기록 없음)",
   call("getTransactions", { slotId: "T1", npcId: "P9" }).length === 0);
 
+// ── 7.7 레거시 호환 커맨드 (main.cjs v3 라우팅용) ─────────────
+const compatRows = call("compatGetByLeague", { slotId: "T1", leagueId: "LEAGUE_KBL" });
+check("compat getByLeague: NpcTradeRow shape + OVR from abilities",
+  compatRows.length > 0 && compatRows.every((r) => r.pitchOvr !== undefined && r.currentSalary !== undefined),
+  JSON.stringify(compatRows[0] ?? {}));
+check("compat getByLeague: pitchOvr NULL 클래스 소멸 (abilities 직행)",
+  compatRows.find((r) => r.npcId === "P2")?.pitchOvr === 80);
+call("addTransactions", { slotId: "T1", rows: [
+  { seasonYear: 2026, week: 30, category: "fa", playerId: "P9", playerName: "선수P9", toTeamId: "TEAM_KBL_SKYGULLS_1", toLeagueId: "LEAGUE_KBL", detail: "레거시 채널 경유" },
+]});
+const legacyTx = call("compatGetTransactions", { slotId: "T1", playerId: "P9" });
+check("compat addTransactions→getTransactions 왕복 (camelCase)",
+  legacyTx.length === 1 && legacyTx[0].playerId === "P9" && legacyTx[0].toTeamId === "TEAM_KBL_SKYGULLS_1");
+call("compatMoveTeams", { slotId: "T1", moves: [{ npcId: "P9", toTeamId: "TEAM_KBL_TWINWOLVES_1" }] });
+check("compat moveTeams: 팀 갱신 (tx 기록 없음)",
+  call("getNpc", { slotId: "T1", npcId: "P9" }).currentTeam === "TEAM_KBL_TWINWOLVES_1"
+  && call("getTransactions", { slotId: "T1", npcId: "P9" }).length === 1);
+call("compatUpdateContracts", { slotId: "T1", updates: [{ npcId: "P9", currentSalary: 9000, contractYears: 3, proServiceYears: 5 }] });
+const p9c = call("getNpc", { slotId: "T1", npcId: "P9" });
+check("compat updateContracts", p9c.salary === 9000 && p9c.contractYears === 3 && p9c.proServiceYears === 5);
+
 // ── 8. 슬롯 목록/삭제 (파일=슬롯) ─────────────────────────────
 call("createSlot", { slotId: "T2", worldSeed: 999, protagonist: {}, season: {}, npcs: [] });
 check("listSlots 2개", call("listSlots").length === 2);

@@ -498,6 +498,80 @@ const commands = {
   },
 };
 
+// ── R3a-4c: 레거시 채널 호환 커맨드 ──────────────────────────────
+// 구 npc:*/league:* 채널의 payload/return shape를 그대로 유지하면서 v3 npc 테이블로 라우팅.
+// 렌더러 콜사이트 무수정 전환용 — 4d에서 콜사이트가 slotRepo로 이관되면 제거한다.
+const compatCommands = {
+  // npc:getByLeague — NpcTradeRow[] shape (능력치는 abilities JSON에서 — NULL 컬럼 클래스 소멸)
+  compatGetByLeague(db, p) {
+    return db.prepare(
+      "SELECT * FROM npc WHERE current_league = ? AND career_status = 'active'"
+    ).all(p.leagueId).map((r) => {
+      const ab = JSON.parse(r.abilities_json || "{}");
+      return {
+        npcId: r.npc_id, position: r.position,
+        currentTeam: r.current_team, currentLeague: r.current_league,
+        currentSalary: r.salary, contractYears: Math.max(1, r.contract_years),
+        proServiceYears: r.pro_service_years,
+        pitchOvr: ab.pitching?.ovr ?? null, batOvr: ab.batting?.ovr ?? null,
+        age: r.age,
+      };
+    });
+  },
+  // npc:swapTeams — 팀만 갱신 (tx 기록은 레거시 콜사이트가 addTransactions로 따로 보냄)
+  compatMoveTeams(db, p) {
+    const t = db.transaction(() => {
+      const stmt = db.prepare("UPDATE npc SET current_team = ? WHERE npc_id = ?");
+      for (const m of p.moves) stmt.run(m.toTeamId, m.npcId);
+    });
+    t();
+    return { ok: true };
+  },
+  // npc:updateContracts
+  compatUpdateContracts(db, p) {
+    const t = db.transaction(() => {
+      const stmt = db.prepare(
+        "UPDATE npc SET salary = ?, contract_years = ?, pro_service_years = ? WHERE npc_id = ?"
+      );
+      for (const u of p.updates) stmt.run(u.currentSalary ?? 0, u.contractYears ?? 0, u.proServiceYears ?? 0, u.npcId);
+    });
+    t();
+    return { ok: true };
+  },
+  // league:addTransactions — 레거시 row shape → v3 transactions
+  addTransactions(db, p) {
+    const t = db.transaction(() => {
+      const stmt = db.prepare(`
+        INSERT INTO transactions (season_year, week, category, npc_id, npc_name,
+          from_team_id, from_league_id, to_team_id, to_league_id, detail, group_id)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?)
+      `);
+      for (const r of p.rows) {
+        stmt.run(r.seasonYear, r.week ?? null, r.category, r.playerId ?? "", r.playerName ?? "",
+          r.fromTeamId ?? null, r.fromLeagueId ?? null, r.toTeamId ?? null, r.toLeagueId ?? null,
+          r.detail ?? null, r.groupId ?? null);
+      }
+    });
+    t();
+    return { ok: true };
+  },
+  // league:getTransactions — 레거시 camelCase shape
+  compatGetTransactions(db, p) {
+    const rows = commands.getTransactions(db, {
+      slotId: p.slotId, seasonYear: p.seasonYear, category: p.category,
+      leagueId: p.leagueId, npcId: p.playerId, limit: p.limit,
+    });
+    return rows.map((r) => ({
+      id: r.id, seasonYear: r.season_year, week: r.week, category: r.category,
+      playerId: r.npc_id, playerName: r.npc_name,
+      fromTeamId: r.from_team_id, fromLeagueId: r.from_league_id,
+      toTeamId: r.to_team_id, toLeagueId: r.to_league_id,
+      detail: r.detail, groupId: r.group_id,
+    }));
+  },
+};
+Object.assign(commands, compatCommands);
+
 // ── 슬롯 목록/삭제 (manager 수준 — db 핸들 밖) ───────────────────
 function listSlots(manager) {
   const out = [];
@@ -539,4 +613,10 @@ function dispatch(manager, cmd, payload) {
   }
 }
 
-module.exports = { createManager, dispatch, openSlot, SCHEMA_VERSION, _commands: commands };
+// v3 슬롯 파일 존재 여부 (레거시 채널 라우팅 판별용)
+function hasSlot(savesDir, slotId) {
+  try { return SLOT_ID_RE.test(slotId) && fs.existsSync(slotFilePath(savesDir, slotId)); }
+  catch { return false; }
+}
+
+module.exports = { createManager, dispatch, openSlot, hasSlot, SCHEMA_VERSION, _commands: commands };

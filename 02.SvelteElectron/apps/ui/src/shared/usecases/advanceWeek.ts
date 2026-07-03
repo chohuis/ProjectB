@@ -33,6 +33,8 @@ import {
   applyGameToSeries, fillNextSeries, resolveNonProtagonistSeries,
   makeSeriesGame, nextGameNum,
 } from "../utils/postseasonEngine";
+import { isV3SlotActive } from "../repo/v3Mode";
+import { generateFreshmenV3, ensureLeagueActivatedV3 } from "../repo/slotLifecycleV3";
 
 // ── NPC 상태 업데이트 헬퍼 ───────────────────────────────────
 // gameStore.updateNpcs → connectToGameStore 구독이 entities 자동 갱신
@@ -1752,7 +1754,12 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
 
     const currentSeasonYear = s.seasonYear;
 
-    // entry_year == currentSeasonYear인 신규 NPC: master.db 직접 조회 (store 미갱신)
+    if (isV3SlotActive()) {
+      // ── v3: 신입생은 Rust 생성 — 진급 후 grade 1이 빈 팀에 채움 ──
+      const created = await generateFreshmenV3(currentSeasonYear);
+      if (created > 0) logs.push(`[신입생] ${created}명 입학 (Rust 생성)`);
+    } else {
+    // (레거시) entry_year == currentSeasonYear인 신규 NPC: master.db 직접 조회 (store 미갱신)
     const yearEntrants = await masterStore.fetchEntryEntities(currentSeasonYear);
     if (yearEntrants.length > 0) {
       const { entityToNpcState } = await import("../utils/gradeAdvance");
@@ -1773,6 +1780,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       );
       if (proEntrants.length > 0) seasonStore.initNpcLiveStats(proEntrants);
     }
+    }
 
     // 기존 선수 전체 → npcLiveStats 초기화 (미등록 항목만)
     const currentEntities = get(masterStore).entities;
@@ -1785,8 +1793,8 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   const isUniversity = g.protagonist.careerStage === "university";
   const weekInYear   = ((weekNum - 1) % 52) + 1;
 
-  // W3: 고교 리그 A/B조 편성 추첨식 참가 안내 메시지
-  if (g.protagonist.careerStage === "highschool" && weekInYear === 3) {
+  // W3: 고교 리그 A/B조 편성 추첨식 참가 안내 메시지 (v3 단일리그에서는 조편성 없음)
+  if (!isV3SlotActive() && g.protagonist.careerStage === "highschool" && weekInYear === 3) {
     const drawMsgId = `msg-hs-group-draw-${s.seasonYear}`;
     if (!g.mailbox.some((m) => m.id === drawMsgId)) {
       gameStore.addMessage({
@@ -2887,6 +2895,16 @@ async function applyPostseasonResult(scheduleId: string, result: MatchResult): P
 export async function advanceWeek(): Promise<WeekAdvanceResult> {
   const accLogs: string[]       = [];
   const accResults: MatchResult[] = [];
+
+  // ── R3a-4c (v3): 주인공 소속 리그 Lazy 활성화 보장 ────────────
+  {
+    const g0 = get(gameStore);
+    const s0 = get(seasonStore);
+    if (g0.protagonist.careerStage !== "military") {
+      const activated = await ensureLeagueActivatedV3(g0.protagonist.leagueId, s0.seasonYear);
+      if (activated > 0) accLogs.push(`[리그 활성화] ${LEAGUE_NAMES[g0.protagonist.leagueId] ?? g0.protagonist.leagueId} 로스터 ${activated}명 생성`);
+    }
+  }
 
   // ── 군 복무 특수 처리 (주 1단위 반환) ────────────────────────
   {

@@ -197,6 +197,9 @@ app.whenReady().then(() => {
   // ── R3a: 슬롯 DB v3 (파일=슬롯) — repo:call 단일 채널 ──────────────────────
   const slotdb = require("./ipc/slotdb.cjs");
   const slotManager = slotdb.createManager(savesDir);
+  // R3a-4c: 레거시 채널 → v3 라우팅 판별 (렌더러 콜사이트 무수정 전환)
+  const isV3Slot = (slotId) => slotdb.hasSlot(savesDir, slotId);
+  const v3Compat = (cmd, payload) => JSON.stringify(slotdb.dispatch(slotManager, cmd, payload));
   ipcMain.handle("repo:call", (_event, cmd, payloadJson) => {
     try {
       const payload = payloadJson ? JSON.parse(payloadJson) : {};
@@ -615,6 +618,7 @@ app.whenReady().then(() => {
   ipcMain.handle("npc:getByLeague", (_event, p) => {
     try {
       const { slotId, leagueId } = JSON.parse(p);
+      if (isV3Slot(slotId)) return v3Compat("compatGetByLeague", { slotId, leagueId });
       const rows = db.prepare(`
         SELECT npc_id, position, current_team, current_league,
                current_salary, contract_years, pro_service_years,
@@ -649,6 +653,12 @@ app.whenReady().then(() => {
   ipcMain.handle("npc:swapTeams", (_event, p) => {
     try {
       const { slotId, npcId1, teamId1, npcId2, teamId2 } = JSON.parse(p);
+      if (isV3Slot(slotId)) {
+        return v3Compat("compatMoveTeams", {
+          slotId,
+          moves: [{ npcId: npcId1, toTeamId: teamId1 }, { npcId: npcId2, toTeamId: teamId2 }],
+        });
+      }
       const stmt = db.prepare(
         "UPDATE npc_runtime SET current_team = ? WHERE slot_id = ? AND npc_id = ?"
       );
@@ -663,6 +673,7 @@ app.whenReady().then(() => {
   ipcMain.handle("npc:updateContracts", (_event, p) => {
     try {
       const { slotId, updates } = JSON.parse(p);
+      if (isV3Slot(slotId)) return v3Compat("compatUpdateContracts", { slotId, updates });
       // updates: Array<{ npcId, currentSalary, contractYears, proServiceYears }>
       const stmt = db.prepare(`
         UPDATE npc_runtime
@@ -681,6 +692,7 @@ app.whenReady().then(() => {
   ipcMain.handle("league:addTransactions", (_event, p) => {
     try {
       const { slotId, rows } = JSON.parse(p);
+      if (isV3Slot(slotId)) return v3Compat("addTransactions", { slotId, rows });
       // save_slots에 슬롯이 없으면 placeholder 삽입 (FK 보장)
       db.prepare(
         "INSERT OR IGNORE INTO save_slots (slot_id, name, updated_at) VALUES (?, ?, ?)"
@@ -709,6 +721,9 @@ app.whenReady().then(() => {
   ipcMain.handle("league:getTransactions", (_event, p) => {
     try {
       const { slotId, seasonYear, category, leagueId, playerId, limit = 200 } = JSON.parse(p);
+      if (isV3Slot(slotId)) {
+        return v3Compat("compatGetTransactions", { slotId, seasonYear, category, leagueId, playerId, limit });
+      }
       let sql = `
         SELECT id, season_year, week, category, player_id, player_name,
                from_team_id, from_league_id, to_team_id, to_league_id, detail, group_id

@@ -63,7 +63,7 @@ export function buildRosterParams(
   };
 }
 
-async function loadRosterRules(): Promise<GenerationRulesFile> {
+export async function loadRosterRules(): Promise<GenerationRulesFile> {
   const raw = (await window.projectB!.masterFetch("players/generation_rules.json")) as GenerationRulesFile | null;
   if (!raw?.rosterRules) throw new Error("[newGameV3] generation_rules.json rosterRules 없음 — v2 데이터 필요");
   return raw;
