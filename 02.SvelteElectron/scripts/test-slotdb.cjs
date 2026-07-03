@@ -115,6 +115,20 @@ check("커리어 라인 왕복", call("getCareerHistory", { slotId: "T1", npcId:
 check("경력 이벤트 조회 (transactions 겸용)",
   call("getTransactions", { slotId: "T1", npcId: "P1" }).map((t) => t.category).sort().join(",") === "retirement,trade");
 
+// ── 7.5 getAllNpcs / syncNpcs (시즌 경계 벌크) ────────────────
+check("getAllNpcs: 전원 조회", call("getAllNpcs", { slotId: "T1" }).length === 4);
+call("syncNpcs", { slotId: "T1", npcs: [
+  mkNpc("P2", "TEAM_KBL_TWINWOLVES_1", "LEAGUE_KBL", {
+    age: 25, abilities: { pitching: { ovr: 80 } }, extra: { fame: 42 },
+  }),
+  mkNpc("P9", "TEAM_KBL_SKYGULLS_1", "LEAGUE_KBL"),  // 신규 upsert
+]});
+const p2s = call("getNpc", { slotId: "T1", npcId: "P2" });
+check("syncNpcs: 기존 행 교체", p2s.age === 25 && p2s.abilities.pitching.ovr === 80 && p2s.extra.fame === 42);
+check("syncNpcs: 신규 행 삽입", call("getNpc", { slotId: "T1", npcId: "P9" }) !== null);
+check("syncNpcs: 거래기록 미오염 (벌크는 tx 기록 없음)",
+  call("getTransactions", { slotId: "T1", npcId: "P9" }).length === 0);
+
 // ── 8. 슬롯 목록/삭제 (파일=슬롯) ─────────────────────────────
 call("createSlot", { slotId: "T2", worldSeed: 999, protagonist: {}, season: {}, npcs: [] });
 check("listSlots 2개", call("listSlots").length === 2);

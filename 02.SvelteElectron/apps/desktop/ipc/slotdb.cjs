@@ -446,8 +446,19 @@ const commands = {
     return { ok: true };
   },
 
+  // 시즌 경계 벌크 동기화 (오프시즌 일괄 처리 결과 반영 전용 — 주간 변이는 개별 커맨드 사용)
+  syncNpcs(db, p) {
+    const t = db.transaction(() => {
+      const up = db.prepare(INSERT_NPC_SQL.replace("INSERT INTO npc", "INSERT OR REPLACE INTO npc"));
+      for (const n of p.npcs) up.run(npcToInsertParams(n));
+    });
+    t();
+    return { ok: true, synced: p.npcs.length };
+  },
+
   // ---- 조회 ----
   getNpc(db, p) { return mapNpcRow(db.prepare("SELECT * FROM npc WHERE npc_id = ?").get(p.npcId)); },
+  getAllNpcs(db) { return db.prepare("SELECT * FROM npc").all().map(mapNpcRow); },
   getByLeague(db, p) {
     const sql = p.activeOnly
       ? "SELECT * FROM npc WHERE current_league = ? AND career_status = 'active'"

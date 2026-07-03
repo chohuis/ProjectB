@@ -179,8 +179,13 @@ export const slotRepo = {
   saveHistoryLeague: (p: { slotId: string; year: number; leagueId: string; kind: "standings" | "leaders" | "postseason"; data: unknown }) =>
     call<{ ok: true }>("saveHistoryLeague", p),
 
+  // 시즌 경계 벌크 동기화 (오프시즌 일괄 결과 반영 전용 — 주간 변이는 개별 커맨드)
+  syncNpcs: (slotId: string, npcs: RepoNpc[]) =>
+    call<{ ok: true; synced: number }>("syncNpcs", { slotId, npcs }),
+
   // ── 조회 ────────────────────────────────────────────────────
   getNpc: (slotId: string, npcId: string) => call<RepoNpc | null>("getNpc", { slotId, npcId }),
+  getAllNpcs: (slotId: string) => call<RepoNpc[]>("getAllNpcs", { slotId }),
   getByLeague: (slotId: string, leagueId: string, activeOnly = false) =>
     call<RepoNpc[]>("getByLeague", { slotId, leagueId, activeOnly }),
   getByTeam: (slotId: string, teamId: string) => call<RepoNpc[]>("getByTeam", { slotId, teamId }),
