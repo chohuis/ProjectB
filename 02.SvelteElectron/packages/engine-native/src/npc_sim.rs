@@ -947,19 +947,19 @@ pub fn advance_all_ages(params: AdvanceAllAgesParams) -> Vec<NpcSaveState> {
 
 // ── 신입생 생성 ───────────────────────────────────────────────────────────────
 
-const SURNAMES:    &[&str] = &["김","이","박","최","정","강","조","윤","장","임","한","오","서","신","권","황","안","송","류","전"];
-const SYLLABLES_A: &[&str] = &["민","준","현","재","우","지","도","성","진","동","태","수","영","혁","훈","기","상","정","세","찬"];
-const SYLLABLES_B: &[&str] = &["준","혁","원","환","빈","욱","식","윤","완","호","진","우","기","수","민","찬","훈","성","재","현"];
-const POSITIONS:   &[&str] = &["C","1B","2B","3B","SS","LF","CF","RF"];
+pub(crate) const SURNAMES:    &[&str] = &["김","이","박","최","정","강","조","윤","장","임","한","오","서","신","권","황","안","송","류","전"];
+pub(crate) const SYLLABLES_A: &[&str] = &["민","준","현","재","우","지","도","성","진","동","태","수","영","혁","훈","기","상","정","세","찬"];
+pub(crate) const SYLLABLES_B: &[&str] = &["준","혁","원","환","빈","욱","식","윤","완","호","진","우","기","수","민","찬","훈","성","재","현"];
+pub(crate) const POSITIONS:   &[&str] = &["C","1B","2B","3B","SS","LF","CF","RF"];
 
-fn gen_name(rng: &mut LcgRand) -> (String, String) {
+pub(crate) fn gen_name(rng: &mut LcgRand) -> (String, String) {
     let sur = SURNAMES[(rng.next() * SURNAMES.len() as f64) as usize % SURNAMES.len()];
     let a   = SYLLABLES_A[(rng.next() * SYLLABLES_A.len() as f64) as usize % SYLLABLES_A.len()];
     let b   = SYLLABLES_B[(rng.next() * SYLLABLES_B.len() as f64) as usize % SYLLABLES_B.len()];
     (format!("{}{}{}", sur, a, b), format!("{} {}{}", sur, a, b))
 }
 
-fn make_pitching(ovr: f64, rng: &mut LcgRand) -> NpcPitchingAttrs {
+pub(crate) fn make_pitching(ovr: f64, rng: &mut LcgRand) -> NpcPitchingAttrs {
     let stamina      = clamp_stat(ovr - 2.0  + (rng.next() - 0.5) * 12.0);
     let velocity     = clamp_stat(ovr + 4.0  + (rng.next() - 0.5) * 12.0);
     let command      = clamp_stat(ovr - 5.0  + (rng.next() - 0.5) * 12.0);
@@ -972,7 +972,7 @@ fn make_pitching(ovr: f64, rng: &mut LcgRand) -> NpcPitchingAttrs {
     NpcPitchingAttrs { ovr, stamina, velocity, command, control, movement, mentality, recovery, clutch, hold_runners }
 }
 
-fn make_batting(ovr: f64, rng: &mut LcgRand) -> NpcBattingAttrs {
+pub(crate) fn make_batting(ovr: f64, rng: &mut LcgRand) -> NpcBattingAttrs {
     let contact       = clamp_stat(ovr - 2.0  + (rng.next() - 0.5) * 12.0);
     let power         = clamp_stat(ovr - 5.0  + (rng.next() - 0.5) * 12.0);
     let eye           = clamp_stat(ovr - 3.0  + (rng.next() - 0.5) * 12.0);
@@ -1057,7 +1057,7 @@ fn league_salary_mult(league: &str) -> f64 {
     }
 }
 
-fn estimate_salary_and_contract(ovr: f64, league: &str, rng: &mut LcgRand) -> (i64, i32) {
+pub(crate) fn estimate_salary_and_contract(ovr: f64, league: &str, rng: &mut LcgRand) -> (i64, i32) {
     let base   = 1800.0 + (ovr - 50.0).max(0.0) * 220.0;
     let salary = (base * league_salary_mult(league)).round() as i64;
     let years  = if ovr >= 75.0      { 3 + (rng.next() * 3.0) as i32 }  // 3~5

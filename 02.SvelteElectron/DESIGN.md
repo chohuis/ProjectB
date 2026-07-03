@@ -366,8 +366,11 @@ military → 원 소속 복귀
 - [x] 커맨드형 변이: transfer/swapTeams/assignDraft/enlist/discharge/retire/updateWeekly (각 1 트랜잭션, 실패 시 전체 롤백 검증됨)
 - [x] `repo:call` 단일 IPC 채널 + `projectB.repo()` (직접 호출 금지 — shared/repo/* 전용)
 - [x] 검증 스위트 `npm run test:slotdb` — 23항목 (3자 일치·원자성·원소속 복귀 등)
+- [x] Rust `generate_league_roster_native` — Lazy 로스터 생성 (`roster_gen.rs`)
+  - worldSeed 결정적 + **팀별 독립 시드** (팀 구성 변경이 타 팀 로스터에 무영향)
+  - 포지션 커버리지 보장 (야수 8포지션 + SP≥3) / 학년제·무학년 겸용 / 계약·국적·이름풀 파라미터화
+  - personality 생성 시점 확정 (R1 부채 #8 해소) / 검증 `npm run test:rostergen` 25항목
 - [ ] TS Repository 계층 (`shared/repo/npcRepo.ts`·`seasonRepo.ts`) — 스토어 연동
-- [ ] Rust `generate_league_roster` — Lazy 리그 로스터 생성 (규모: §7 확정치 — 고교 10·ABL 12)
 - [ ] master_overlay.db 폐기 + game/season 블롭에서 npcs/npcLiveStats 제거
 - [ ] 사전 생성 파이프라인 폐기: gen:npc·migrate:entities·entities/players/*·_index.json
 - [ ] 레거시 `"pro"` careerStage 제거 + deprecated 필드 제거 + SchoolState optional화

@@ -131,6 +131,8 @@ export declare function weekCalcMilitaryNative(p: string): string
 export declare function weekCalcNpcFallbackNative(p: string): string
 export declare function weekRollRandomBatchNative(count: number): string
 export declare function weekCalcNpcInjuriesNative(p: string): string
+/** 리그 활성화 시점 로스터 생성 — worldSeed 결정적 (DESIGN.md §8.3) */
+export declare function generateLeagueRosterNative(paramsJson: string): string
 export declare function applyScoutingNoiseNative(paramsJson: string): string
 export declare function evalCallupCandidatesNative(paramsJson: string): string
 export declare function evalCalldownCandidatesNative(paramsJson: string): string

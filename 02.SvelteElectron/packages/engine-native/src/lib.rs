@@ -17,6 +17,7 @@ mod week_engine;
 mod team_engine;
 mod player_agent;
 mod scouting_engine;
+mod roster_gen;
 
 use types::*;
 use sim_types::*;
@@ -842,6 +843,19 @@ pub fn week_calc_npc_injuries_native(p: String) -> String {
     };
     serde_json::to_string(&week_engine::calc_npc_injuries(params))
         .unwrap_or_else(|e| parse_err("weekCalcNpcInjuriesNative/serialize", e))
+}
+
+// ── roster_gen (R3a: Lazy 리그 로스터 생성) ──────────────────────────────────
+
+/// 리그 활성화 시점 로스터 생성 — worldSeed 결정적 (DESIGN.md §8.3)
+#[napi]
+pub fn generate_league_roster_native(params_json: String) -> String {
+    let params: roster_gen::GenerateLeagueRosterParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("generateLeagueRosterNative", e),
+    };
+    let result = roster_gen::generate_league_roster(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("generateLeagueRosterNative/serialize", e))
 }
 
 // ── scouting_engine ───────────────────────────────────────────────────────────
