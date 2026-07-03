@@ -2,8 +2,8 @@
   import { get } from "svelte/store";
   import { masterStore } from "../../shared/stores/master";
   import { gameStore } from "../../shared/stores/game";
-  import { seasonStore } from "../../shared/stores/season";
-  import { HS_SELECTABLE_TEAMS, shuffleHsGroups } from "../../shared/utils/leagueScheduler";
+  import { HS_SELECTABLE_TEAMS } from "../../shared/utils/leagueScheduler";
+  import { startNewGameV3 } from "../../shared/repo/slotLifecycleV3";
   import { assignHighschoolPosition } from "../../shared/utils/pitcherRoleEngine";
   import type { Handedness, PitchEntry, PitchingForm, ProtagonistSave } from "../../shared/types/save";
 
@@ -162,15 +162,15 @@
       faUnsignedWeeks: 0,
     };
 
-    // 16개 팀을 A/B조로 랜덤 분배
-    const allHsIds = hsAllTeams.map((t) => t.id);
-    const { groupA, groupB } = await shuffleHsGroups(allHsIds);
-    gameStore.initNew(protagonist);
-    // 16팀 기준으로 시즌 초기화. A/B 두 그룹 스케줄은 initAllLeagues 내부에서 설정.
-    seasonStore.initSeason("LEAGUE_HIGHSCHOOL", 2026, 52, [...groupA, ...groupB]);
-    await seasonStore.initAllLeagues(2026, selectedTeamId, groupA, groupB);
-    // 시작 연도(2026) 이하 선수만 로드 (미래 신입생 노출 차단)
-    await masterStore.reloadEntities(2026);
+    // ── R3a-4 (v3): 고교 10팀 단일리그 + Rust 로스터 생성 + slot.db 생성 ──
+    const slotId = get(gameStore).currentSlotId ?? "A";
+    await startNewGameV3({
+      slotId,
+      slotName: playerName.trim(),
+      seasonYear: 2026,
+      protagonist,
+    });
+    await gameStore.save();
 
     onComplete();
   }

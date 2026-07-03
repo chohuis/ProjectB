@@ -9,6 +9,7 @@
   import { gameStore } from "./shared/stores/game";
   import { seasonStore } from "./shared/stores/season";
   import { npcLiveStatsStore } from "./shared/stores/npcLiveStats";
+  import { listSlotsV3, loadGameV3 } from "./shared/repo/slotLifecycleV3";
 
   type GamePhase = "loading" | "intro" | "slotSelect" | "create" | "playing";
   let phase: GamePhase = "loading";
@@ -26,8 +27,9 @@
     gameStore.initProTeamProfiles(get(masterStore).teams ?? []);
 
     try {
-      const slots = await window.projectB?.listSlots?.();
-      hasSave = (slots?.length ?? 0) > 0;
+      // v3 슬롯만 목록 (클린 브레이크 — 구 세이브는 새 구조에서 미지원)
+      const slots = await listSlotsV3();
+      hasSave = slots.length > 0;
     } catch {}
 
     phase = "intro";
@@ -40,18 +42,10 @@
       gameStore.setCurrentSlotId(slotId);
       phase = "create";
     } else {
-      // 이어하기: 슬롯 데이터 로드
+      // 이어하기: v3 슬롯 로드 (R3a-4 — 구 세이브는 클린 브레이크로 미지원)
       try {
-        const envelope = await window.projectB?.loadSlot?.(slotId);
-        if (!envelope) throw new Error("슬롯 데이터 없음");
-        if (envelope.game)   gameStore.hydrateFromSlot(envelope.game, slotId);
-        else                 gameStore.setCurrentSlotId(slotId);
-        if (envelope.season) {
-          seasonStore.hydrateFromSlot(envelope.season);
-          // entry_year <= seasonYear 선수만 로드 (미래 신입생 노출 차단)
-          const sy = (envelope.season as { seasonYear?: number }).seasonYear;
-          if (sy) await masterStore.reloadEntities(sy, slotId);
-        }
+        const ok = await loadGameV3(slotId);
+        if (!ok) throw new Error("v3 슬롯 아님");
         phase = "playing";
       } catch (e) {
         loadError = "저장 파일을 불러오지 못했습니다.";

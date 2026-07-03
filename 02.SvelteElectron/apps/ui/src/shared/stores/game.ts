@@ -50,6 +50,9 @@ import { getFaThreshold } from "../utils/faEngine";
 import { masterStore } from "./master";
 import { autoLog, logEvent, logVerify, type PlayerEventEntry } from "./autoAdvance";
 import { npcLiveStatsStore } from "./npcLiveStats";
+import { slotRepo } from "../repo/slotRepo";
+import { dehydrateToRepo } from "../repo/npcAdapter";
+import { isV3SlotActive } from "../repo/v3Mode";
 import type { SeasonEndSummary } from "../utils/npcEngine";
 export type { SeasonEndSummary } from "../utils/npcEngine";
 
@@ -585,15 +588,41 @@ function createGameStore() {
       update((s) => ({ ...s, currentSlotId: slotId }));
     },
 
-    // 저장: 슬롯 활성 시 saveSlot, 아니면 레거시 gameSave
+    // 저장: v3 슬롯 → slot.db / 아니면 레거시 saveSlot·gameSave
     async save() {
       const s = get({ subscribe });
-      const gameData = makeSaveGame(
-        s.protagonist, s.mailbox, s.trainingPlan,
-        s.schoolState, s.achievements, s.achievementMetrics, s.logs, s.upcoming,
-        s.npcs, s.trainingPresets,
-      );
       try {
+        // ── R3a-4: v3 경로 — slim 블롭 + npc 테이블 동기화 ──────
+        if (isV3SlotActive() && s.currentSlotId && _getSeasonData) {
+          const slotId = s.currentSlotId;
+          const slimGame = {
+            ...makeSaveGame(
+              s.protagonist, s.mailbox, s.trainingPlan,
+              s.schoolState, s.achievements, s.achievementMetrics, s.logs, s.upcoming,
+              [], s.trainingPresets,
+            ),
+          };
+          const season = _getSeasonData();
+          const slimSeason = { ...season, npcLiveStats: {} };
+          await slotRepo.setProtagonist(slotId, slimGame);
+          await slotRepo.setSeason(slotId, slimSeason);
+          // 전환기: 주간 변이가 repo 커맨드로 전면 이관(R3a-4c)되기 전까지 벌크 동기화
+          await slotRepo.syncNpcs(slotId, dehydrateToRepo(s.npcs, get(npcLiveStatsStore)));
+          await slotRepo.setMeta(slotId, {
+            career_stage: s.protagonist.careerStage,
+            season_year: season.seasonYear,
+            current_week: season.currentWeek,
+            team_id: s.protagonist.teamId,
+          });
+          return;
+        }
+
+        // ── 레거시 경로 (v2 이하) ────────────────────────────────
+        const gameData = makeSaveGame(
+          s.protagonist, s.mailbox, s.trainingPlan,
+          s.schoolState, s.achievements, s.achievementMetrics, s.logs, s.upcoming,
+          s.npcs, s.trainingPresets,
+        );
         if (s.currentSlotId && _getSeasonData) {
           const res = await window.projectB?.saveSlot?.({ slotId: s.currentSlotId, game: gameData, season: _getSeasonData() });
           if (res && !res.ok) console.error("[gameStore] saveSlot 실패:", res.error);

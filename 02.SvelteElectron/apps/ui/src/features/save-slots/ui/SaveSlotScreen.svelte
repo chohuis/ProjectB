@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount, tick } from "svelte";
   import type { SaveSlotMeta } from "../../../shared/types/projectb.d";
+  import { listSlotsV3, deleteSlotV3, renameSlotV3 } from "../../../shared/repo/slotLifecycleV3";
 
   export let onSelect: (slotId: string, isEmpty: boolean) => void;
   export let onBack: () => void;
@@ -31,7 +32,8 @@
   async function refreshSlots() {
     loading = true;
     try {
-      const list = (await window.projectB?.listSlots?.()) ?? [];
+      // R3a-4: v3 슬롯만 (클린 브레이크)
+      const list = await listSlotsV3();
       const map = new Map(list.map((slot) => [slot.slotId, slot]));
       slots = SLOT_IDS.map((id) => map.get(id) ?? null);
     } catch {}
@@ -64,7 +66,7 @@
     }
 
     busy = true;
-    await window.projectB?.renameSlot?.({ slotId: renamingSlotId, name: renameValue.trim() });
+    await renameSlotV3(renamingSlotId, renameValue.trim());
     renamingSlotId = null;
     await refreshSlots();
     busy = false;
@@ -74,7 +76,7 @@
     if (!confirmDeleteSlotId) return;
 
     busy = true;
-    await window.projectB?.deleteSlot?.(confirmDeleteSlotId);
+    await deleteSlotV3(confirmDeleteSlotId);
     confirmDeleteSlotId = null;
     await refreshSlots();
     busy = false;

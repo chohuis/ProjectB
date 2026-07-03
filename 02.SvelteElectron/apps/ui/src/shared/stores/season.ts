@@ -20,6 +20,8 @@ import {
   ALL_TEAMS_BY_LEAGUE,
   DEFAULT_LEAGUE_CONFIGS,
   generateAllLeagueSchedules,
+  generateLeagueSchedule,
+  HS_ACTIVE_TEAMS_V3,
   makeStandings,
   shuffleHsGroups,
 } from "../utils/leagueScheduler";
@@ -407,6 +409,37 @@ function createSeasonStore() {
         hsGroupA,
         hsGroupB,
         standings: makeStandings([...hsGroupA, ...hsGroupB]),
+      }));
+    },
+
+    // ── R3a-4 (v3): 고교 10팀 단일리그 초기화 — A/B조 없음 (DESIGN.md §7) ──
+    async initAllLeaguesV3(seasonYear: number, protagonistTeamId: string) {
+      const [hsEntries, otherSchedules] = await Promise.all([
+        generateLeagueSchedule("LEAGUE_HIGHSCHOOL", HS_ACTIVE_TEAMS_V3, 2, 45, 4, protagonistTeamId, seasonYear),
+        generateAllLeagueSchedules(DEFAULT_LEAGUE_CONFIGS.map((c) => ({ ...c })), protagonistTeamId),
+      ]);
+
+      const hsSchedule = hsEntries
+        .map((e) => ({ ...e, leagueId: "LEAGUE_HIGHSCHOOL", isFriendly: e.isFriendly ?? false }))
+        .sort((a, b) => a.gameDate.localeCompare(b.gameDate));
+
+      const leagueState: Record<string, LeagueSeasonState> = {
+        LEAGUE_HIGHSCHOOL: { standings: makeStandings(HS_ACTIVE_TEAMS_V3), stats: {}, playerConditions: {}, teamRotationIndex: {} },
+      };
+      for (const [lid, teams] of Object.entries(ALL_TEAMS_BY_LEAGUE)) {
+        if (lid === "LEAGUE_HIGHSCHOOL") continue;
+        leagueState[lid] = { standings: makeStandings(teams), stats: {}, playerConditions: {}, teamRotationIndex: {} };
+      }
+
+      update((s) => ({
+        ...s,
+        seasonYear,
+        schedule: hsSchedule,
+        leagueSchedules: otherSchedules,
+        leagueState,
+        hsGroupA: HS_ACTIVE_TEAMS_V3,  // 전환기 호환: 단일리그 = A조 전체, B조 없음
+        hsGroupB: [],
+        standings: makeStandings(HS_ACTIVE_TEAMS_V3),
       }));
     },
 
