@@ -377,8 +377,9 @@ military → 원 소속 복귀
 - [x] 전환기 어댑터 `npcAdapter.ts` (RepoNpc ↔ NpcSaveState+NpcLiveStat) + `getAllNpcs`/`syncNpcs` 벌크
 - [x] UI/런타임 전환: NewGamePage→startNewGameV3(고교 10팀 단일리그), App/SaveSlotScreen→v3 슬롯, gameStore.save() v3 분기(slim 블롭+syncNpcs), masterStore는 스태프만 로드
 - [x] **R3a-4c**: 레거시 채널 호환 심 (main.cjs — npc:getByLeague/swapTeams/updateContracts·league:add/getTransactions를 v3 슬롯이면 slot.db로 라우팅, 렌더러 12파일 무수정) + 신입생 Rust 생성(`generateFreshmenV3`, entry_year 의존 제거) + `ensureLeagueActivatedV3`(advanceWeek 진입 시 주인공 리그 Lazy 보장) + W3 조추첨 v3 게이트
-- [ ] **R3a-4d**: 구시스템 폐기 — master_overlay.db·npc_runtime 쓰기·gen:npc/migrate:entities 파이프라인·구 세이브 채널·v3Mode 플래그·호환 심 제거 (실행 스모크 통과 후)
-- [ ] 실행 스모크: 새 게임 → 1시즌 자동 진행 → 저장/로드 왕복 (**Electron 실행 — 사용자 확인 필요**)
+- [x] 실행 스모크 1차: 새 게임 생성 → 진행 → 저장/로드 왕복 정상 (2026-07-03 사용자 확인. UNIQUE 충돌 수정 커밋 639821761 — createSlot 덮어쓰기 의미론)
+- [ ] **R3a-4d**: 구시스템 폐기 — master_overlay.db·npc_runtime 쓰기·gen:npc/migrate:entities 파이프라인·구 세이브 채널·v3Mode 플래그 제거 (호환 심은 콜사이트 slotRepo 이관 후)
+- [ ] 실행 스모크 2차 (심화): 1시즌 완주 — 시즌 종료·진급·신입생·드래프트 경로 (auto-advance 활용)
 - ⚠ 전환기 알려진 제약: HS 포스트시즌(A/B조 기반)은 v3(hsGroupB=[])에서 미검증 — R4 정리 대상
 - [ ] master_overlay.db 폐기 + game/season 블롭에서 npcs/npcLiveStats 제거
 - [ ] 사전 생성 파이프라인 폐기: gen:npc·migrate:entities·entities/players/*·_index.json
