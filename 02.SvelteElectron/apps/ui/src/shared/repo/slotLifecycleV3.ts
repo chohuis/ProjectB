@@ -46,7 +46,7 @@ export async function renameSlotV3(slotId: string, name: string): Promise<void> 
 async function hydrateStoresFromSlot(slotId: string): Promise<void> {
   const rows = await slotRepo.getAllNpcs(slotId);
   const { npcs, liveStats } = hydrateFromRepo(rows);
-  gameStore.updateNpcs(npcs);
+  gameStore.setNpcs(npcs);  // 전체 교체 — updateNpcs(부분패치) 사용 금지
   npcLiveStatsStore.set(liveStats);
   // v3: 선수는 slot.db가 정본 — master.db에서는 스태프(코치/감독)만 로드
   await masterStore.reloadEntities();

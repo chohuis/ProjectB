@@ -855,13 +855,20 @@ function createGameStore() {
       }));
     },
 
-    // NPC 배열 업데이트
+    // NPC 배열 부분 패치 — 기존 s.npcs 중 id 일치 항목만 교체 (트레이드·성장 등)
+    // ⚠ 저장소에서 전체를 불러올 때는 setNpcs를 사용할 것 — 여기 쓰면 s.npcs가
+    //   비어있는 시점(새 게임/로드 직후)에 조용히 빈 배열이 되는 사고가 난다.
     updateNpcs(updatedNpcs: NpcSaveState[]) {
       const updatedMap = new Map(updatedNpcs.map(n => [n.npcId, n]));
       update((s) => ({
         ...s,
         npcs: s.npcs.map(n => updatedMap.get(n.npcId) ?? n),
       }));
+    },
+
+    // NPC 배열 전체 교체 — repo(slot.db) 로부터 전체 로드(hydrate) 전용
+    setNpcs(npcs: NpcSaveState[]) {
+      update((s) => ({ ...s, npcs }));
     },
 
     // 신규 NPC 추가 (entry_year 활성화 시 호출)
