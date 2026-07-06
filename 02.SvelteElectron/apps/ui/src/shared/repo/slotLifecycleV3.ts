@@ -46,10 +46,13 @@ export async function renameSlotV3(slotId: string, name: string): Promise<void> 
 async function hydrateStoresFromSlot(slotId: string): Promise<void> {
   const rows = await slotRepo.getAllNpcs(slotId);
   const { npcs, liveStats } = hydrateFromRepo(rows);
-  gameStore.setNpcs(npcs);  // 전체 교체 — updateNpcs(부분패치) 사용 금지
+  // v3: 선수는 slot.db가 정본. 스태프(코치/감독)는 App.svelte 부팅 시 masterStore.load()가
+  // 이미 1회 로드해둔 상태 — 여기서 reloadEntities()를 다시 부르면 staffEntities만으로
+  // entities를 덮어써서 connectToGameStore가 병합해둔 NPC 선수가 전부 지워진다
+  // (원인이었던 버그: 새 게임 직후 로스터에 주인공+코치+감독만 보이던 현상).
+  gameStore.setNpcs(npcs);  // 전체 교체 — updateNpcs(부분패치) 사용 금지. 이 호출이
+  // connectToGameStore 구독을 통해 masterStore.entities를 스태프+NPC로 반응형 재구성한다.
   npcLiveStatsStore.set(liveStats);
-  // v3: 선수는 slot.db가 정본 — master.db에서는 스태프(코치/감독)만 로드
-  await masterStore.reloadEntities();
   setV3SlotActive(true);
 }
 
