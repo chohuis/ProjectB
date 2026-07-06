@@ -58,7 +58,11 @@ export function repoNpcToSaveState(r: RepoNpc): NpcSaveState {
     emotion: emotionPack.emotion,
     memories: emotionPack.memories,
     emotionStatus: emotionPack.status,
-    // 능력치 deprecated 필드는 채우지 않는다 — 정본은 npcLiveStats (repoNpcToLiveStat)
+    // 읽기용 사본 — 정본은 npcLiveStats(주간 갱신)이며, 이 사본은 저장 시점마다
+    // dehydrate가 liveStats에서 다시 채운다 (최대 1세이브 지연).
+    // 레거시 읽기 경로(드래프트 보드·Rust 오프시즌 npc_core_ovr 등)가 이 필드를 참조한다.
+    pitching: r.abilities.pitching,
+    batting: r.abilities.batting,
   };
 }
 

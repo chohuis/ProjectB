@@ -825,6 +825,12 @@ async function processTradeWindow(weekInYear: number, leagueId: string): Promise
     npcRows = _npcRaw as NpcTradeRow[];
   }
 
+  // 비활성 리그(v3 Lazy 미생성)면 스킵 — 낭비 연산·로그 노이즈 방지
+  if (npcRows.length === 0) {
+    autoLog(`[트레이드윈도우] ${leagueId} 로스터 없음 (비활성 리그) → 스킵`);
+    return;
+  }
+
   const proTeams = m.teams.filter(
     (t) => t.leagueId === leagueId && t.id.endsWith("_1")
   );

@@ -637,9 +637,9 @@ export interface NpcSaveState {
   originalTeamId?: string;
 
   // 군적
-  /** @deprecated 능력치는 SaveSeason.npcLiveStats에서 관리됨. 로드 시 이관 후 무시. */
+  /** 읽기용 사본 — 정본은 npcLiveStats(주간 갱신). v3 어댑터가 로드/저장 시 abilities와 동기화. 쓰기 금지. */
   pitching?: PitchingAttributes;
-  /** @deprecated 능력치는 SaveSeason.npcLiveStats에서 관리됨. 로드 시 이관 후 무시. */
+  /** 읽기용 사본 — 정본은 npcLiveStats(주간 갱신). v3 어댑터가 로드/저장 시 abilities와 동기화. 쓰기 금지. */
   batting?: BattingAttributes;
   developmentRate: number;
   proServiceYears?: number;  // 프로 입단 후 연수 (KBL/ABL FA 자격 기준: 9년)
