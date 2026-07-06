@@ -150,6 +150,17 @@ call("compatUpdateContracts", { slotId: "T1", updates: [{ npcId: "P9", currentSa
 const p9c = call("getNpc", { slotId: "T1", npcId: "P9" });
 check("compat updateContracts", p9c.salary === 9000 && p9c.contractYears === 3 && p9c.proServiceYears === 5);
 
+// ── 7.9 createSlot 덮어쓰기 의미론 (같은 슬롯 재생성 = 초기화) ──
+const rRecreate = call("createSlot", {
+  slotId: "T1", worldSeed: 555, protagonist: { name: "재생성" }, season: {},
+  npcs: [mkNpc("P1", "TEAM_HS_SEOUL_INNOVATION", "LEAGUE_HIGHSCHOOL")],  // 기존과 같은 id
+});
+check("재생성: UNIQUE 충돌 없이 성공", rRecreate.ok === true, JSON.stringify(rRecreate));
+check("재생성: 이전 데이터 전부 소거", call("getAllNpcs", { slotId: "T1" }).length === 1
+  && call("getTransactions", { slotId: "T1" }).length === 0
+  && call("getProtagonist", { slotId: "T1" }).name === "재생성");
+check("재생성: worldSeed 갱신", call("getMeta", { slotId: "T1" }).world_seed === "555");
+
 // ── 8. 슬롯 목록/삭제 (파일=슬롯) ─────────────────────────────
 call("createSlot", { slotId: "T2", worldSeed: 999, protagonist: {}, season: {}, npcs: [] });
 check("listSlots 2개", call("listSlots").length === 2);

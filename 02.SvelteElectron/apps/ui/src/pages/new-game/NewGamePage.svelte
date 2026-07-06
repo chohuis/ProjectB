@@ -110,7 +110,21 @@
   }
 
   // ── 게임 시작 ──────────────────────────────────────────────────
+  let starting = false;  // 이중 클릭 가드 (중복 createSlot 방지)
+
   async function startGame() {
+    if (starting) return;
+    starting = true;
+    try {
+      await doStartGame();
+    } catch (e) {
+      console.error("[NewGamePage] 새 게임 생성 실패:", e);
+      starting = false;  // 실패 시 재시도 허용
+      throw e;
+    }
+  }
+
+  async function doStartGame() {
     const preset = PRESETS[selectedPreset];
     const potentialHidden = Math.floor(Math.random() * 31) + 60;
     const developmentRate = Math.floor(Math.random() * 16) + 55;
@@ -628,7 +642,9 @@
         다음
       </button>
     {:else}
-      <button class="btn start" on:click={startGame}>게임 시작</button>
+      <button class="btn start" on:click={startGame} disabled={starting}>
+        {starting ? "세계 생성 중..." : "게임 시작"}
+      </button>
     {/if}
   </footer>
 </div>

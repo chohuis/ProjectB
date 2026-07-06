@@ -246,8 +246,12 @@ function applyMove(db, npcId, to, tx) {
 // 각 커맨드: (db, payload) → 결과 객체. 쓰기 커맨드는 전부 db.transaction으로 감싼다.
 const commands = {
   // ---- 슬롯 수명 ----
+  // 새 게임 = 슬롯 초기화 의미론: 기존 데이터(이전 시도 잔재 포함)를 전부 비우고 새로 쓴다
   createSlot(db, p) {
     const t = db.transaction(() => {
+      for (const tbl of ["npc", "transactions", "career_history", "history_league", "protagonist", "season", "meta"]) {
+        db.prepare(`DELETE FROM ${tbl}`).run();
+      }
       const now = new Date().toISOString();
       const setMeta = db.prepare("INSERT OR REPLACE INTO meta (key, value) VALUES (?, ?)");
       setMeta.run("schema_version", String(SCHEMA_VERSION));
