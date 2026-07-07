@@ -197,8 +197,7 @@ app.whenReady().then(() => {
   // ── R3a: 슬롯 DB v3 (파일=슬롯) — repo:call 단일 채널 ──────────────────────
   const slotdb = require("./ipc/slotdb.cjs");
   const slotManager = slotdb.createManager(savesDir);
-  // R3a-4c: 레거시 채널 → v3 라우팅 판별 (렌더러 콜사이트 무수정 전환)
-  const isV3Slot = (slotId) => slotdb.hasSlot(savesDir, slotId);
+  // 레거시 채널(npc:*/league:*)을 slotdb 커맨드로 라우팅 — 콜사이트 무수정 전환
   const v3Compat = (cmd, payload) => JSON.stringify(slotdb.dispatch(slotManager, cmd, payload));
   ipcMain.handle("repo:call", (_event, cmd, payloadJson) => {
     try {
@@ -466,145 +465,36 @@ app.whenReady().then(() => {
     } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
 
-  // ── 트레이드 전용 NPC 쿼리 ──────────────────────────────────────────────────
+  // ── 트레이드 전용 NPC 쿼리 / 리그 거래기록 ──────────────────────────────────
+  // R3a-4d: v2 npc_runtime/league_transactions 폴백 제거 — 슬롯은 이제 전부 v3
+  // (slot.db)이므로 항상 slotdb로 라우팅한다. 채널명·payload/return shape는
+  // 렌더러 콜사이트(advanceWeek.ts 등 12파일) 무수정을 위해 그대로 유지.
   ipcMain.handle("npc:getByLeague", (_event, p) => {
-    try {
-      const { slotId, leagueId } = JSON.parse(p);
-      if (isV3Slot(slotId)) return v3Compat("compatGetByLeague", { slotId, leagueId });
-      const rows = db.prepare(`
-        SELECT npc_id, position, current_team, current_league,
-               current_salary, contract_years, pro_service_years,
-               pitch_ovr, bat_ovr, age, career_status
-        FROM npc_runtime
-        WHERE slot_id = ? AND current_league = ? AND career_status = 'active'
-      `).all(slotId, leagueId);
-      return JSON.stringify(rows.map((r) => ({
-        npcId:          r.npc_id,
-        position:       r.position,
-        currentTeam:    r.current_team,
-        currentLeague:  r.current_league,
-        currentSalary:  r.current_salary,
-        contractYears:  (() => {
-          const raw = r.contract_years ?? 1;
-          if (raw > 1) return raw;
-          const svc = r.pro_service_years ?? 0;
-          const h = r.npc_id.split('').reduce((s, c) => s + c.charCodeAt(0), 0);
-          if (svc <= 1) return 3;
-          if (svc <= 4) return 2 + (h % 2);
-          if (svc <= 7) return 1 + (h % 2);
-          return 1;
-        })(),
-        proServiceYears: r.pro_service_years ?? 0,
-        pitchOvr:       r.pitch_ovr ?? null,
-        batOvr:         r.bat_ovr ?? null,
-        age:            r.age,
-      })));
-    } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+    const { slotId, leagueId } = JSON.parse(p);
+    return v3Compat("compatGetByLeague", { slotId, leagueId });
   });
 
   ipcMain.handle("npc:swapTeams", (_event, p) => {
-    try {
-      const { slotId, npcId1, teamId1, npcId2, teamId2 } = JSON.parse(p);
-      if (isV3Slot(slotId)) {
-        return v3Compat("compatMoveTeams", {
-          slotId,
-          moves: [{ npcId: npcId1, toTeamId: teamId1 }, { npcId: npcId2, toTeamId: teamId2 }],
-        });
-      }
-      const stmt = db.prepare(
-        "UPDATE npc_runtime SET current_team = ? WHERE slot_id = ? AND npc_id = ?"
-      );
-      db.transaction(() => {
-        stmt.run(teamId1, slotId, npcId1);
-        stmt.run(teamId2, slotId, npcId2);
-      })();
-      return JSON.stringify({ ok: true });
-    } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+    const { slotId, npcId1, teamId1, npcId2, teamId2 } = JSON.parse(p);
+    return v3Compat("compatMoveTeams", {
+      slotId,
+      moves: [{ npcId: npcId1, toTeamId: teamId1 }, { npcId: npcId2, toTeamId: teamId2 }],
+    });
   });
 
   ipcMain.handle("npc:updateContracts", (_event, p) => {
-    try {
-      const { slotId, updates } = JSON.parse(p);
-      if (isV3Slot(slotId)) return v3Compat("compatUpdateContracts", { slotId, updates });
-      // updates: Array<{ npcId, currentSalary, contractYears, proServiceYears }>
-      const stmt = db.prepare(`
-        UPDATE npc_runtime
-        SET current_salary = ?, contract_years = ?, pro_service_years = ?
-        WHERE slot_id = ? AND npc_id = ?
-      `);
-      db.transaction(() => {
-        for (const u of updates)
-          stmt.run(u.currentSalary, u.contractYears, u.proServiceYears, slotId, u.npcId);
-      })();
-      return JSON.stringify({ ok: true });
-    } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+    const { slotId, updates } = JSON.parse(p);
+    return v3Compat("compatUpdateContracts", { slotId, updates });
   });
 
-  // ── 리그 거래 기록 ───────────────────────────────────────────────────────────
   ipcMain.handle("league:addTransactions", (_event, p) => {
-    try {
-      const { slotId, rows } = JSON.parse(p);
-      if (isV3Slot(slotId)) return v3Compat("addTransactions", { slotId, rows });
-      // save_slots에 슬롯이 없으면 placeholder 삽입 (FK 보장)
-      db.prepare(
-        "INSERT OR IGNORE INTO save_slots (slot_id, name, updated_at) VALUES (?, ?, ?)"
-      ).run(slotId, `Slot ${slotId}`, new Date().toISOString());
-      const stmt = db.prepare(`
-        INSERT INTO league_transactions
-          (slot_id, season_year, week, category, player_id, player_name,
-           from_team_id, from_league_id, to_team_id, to_league_id, detail, group_id)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
-      `);
-      db.transaction(() => {
-        for (const r of rows) {
-          stmt.run(
-            slotId, r.seasonYear, r.week ?? null, r.category,
-            r.playerId ?? '', r.playerName ?? '',
-            r.fromTeamId ?? null, r.fromLeagueId ?? null,
-            r.toTeamId ?? null, r.toLeagueId ?? null,
-            r.detail ?? null, r.groupId ?? null,
-          );
-        }
-      })();
-      return JSON.stringify({ ok: true });
-    } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+    const { slotId, rows } = JSON.parse(p);
+    return v3Compat("addTransactions", { slotId, rows });
   });
 
   ipcMain.handle("league:getTransactions", (_event, p) => {
-    try {
-      const { slotId, seasonYear, category, leagueId, playerId, limit = 200 } = JSON.parse(p);
-      if (isV3Slot(slotId)) {
-        return v3Compat("compatGetTransactions", { slotId, seasonYear, category, leagueId, playerId, limit });
-      }
-      let sql = `
-        SELECT id, season_year, week, category, player_id, player_name,
-               from_team_id, from_league_id, to_team_id, to_league_id, detail, group_id
-        FROM league_transactions
-        WHERE slot_id = ?
-      `;
-      const params = [slotId];
-      if (seasonYear != null) { sql += " AND season_year = ?"; params.push(seasonYear); }
-      if (category)           { sql += " AND category = ?";    params.push(category); }
-      if (leagueId)           { sql += " AND (from_league_id = ? OR to_league_id = ?)"; params.push(leagueId, leagueId); }
-      if (playerId)           { sql += " AND player_id = ?";   params.push(playerId); }
-      sql += " ORDER BY id DESC LIMIT ?";
-      params.push(Math.min(500, Math.max(1, Number(limit))));
-      const rows = db.prepare(sql).all(...params);
-      return JSON.stringify(rows.map(r => ({
-        id:           r.id,
-        seasonYear:   r.season_year,
-        week:         r.week,
-        category:     r.category,
-        playerId:     r.player_id,
-        playerName:   r.player_name,
-        fromTeamId:   r.from_team_id,
-        fromLeagueId: r.from_league_id,
-        toTeamId:     r.to_team_id,
-        toLeagueId:   r.to_league_id,
-        detail:       r.detail,
-        groupId:      r.group_id,
-      })));
-    } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+    const { slotId, seasonYear, category, leagueId, playerId, limit = 200 } = JSON.parse(p);
+    return v3Compat("compatGetTransactions", { slotId, seasonYear, category, leagueId, playerId, limit });
   });
 
   // ── 히스토리 순위/스탯 ────────────────────────────────────────────────────────

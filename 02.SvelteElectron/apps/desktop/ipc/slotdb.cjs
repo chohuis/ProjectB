@@ -617,10 +617,4 @@ function dispatch(manager, cmd, payload) {
   }
 }
 
-// v3 슬롯 파일 존재 여부 (레거시 채널 라우팅 판별용)
-function hasSlot(savesDir, slotId) {
-  try { return SLOT_ID_RE.test(slotId) && fs.existsSync(slotFilePath(savesDir, slotId)); }
-  catch { return false; }
-}
-
-module.exports = { createManager, dispatch, openSlot, hasSlot, SCHEMA_VERSION, _commands: commands };
+module.exports = { createManager, dispatch, openSlot, SCHEMA_VERSION, _commands: commands };
