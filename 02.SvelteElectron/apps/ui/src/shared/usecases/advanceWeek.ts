@@ -2245,9 +2245,14 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   }
 
   // W47: 배경 고교 졸업생 드래프트 (주인공 드래프트 결과 케이스가 아닐 때 항상 실행)
+  // 주인공 학년과 무관하게 매년 실행되는 세계 이벤트 — needsHsHub(주인공 3학년 전용)와
+  // 별개로 여기서도 대학/독립 리그를 Lazy 활성화해야 배경 드래프트 풀이 채워진다
   if (weekInYear === 47 && !isHsResultWeek && !isUnivResultWeek && !hasCareerPending) {
     const alreadyQueued = get(seasonStore).pendingActions.some(a => a.type === "draftObserve");
     if (!alreadyQueued) {
+      const seasonYearNow = get(seasonStore).seasonYear;
+      await ensureLeagueActivatedV3("LEAGUE_UNIVERSITY", seasonYearNow);
+      await ensureLeagueActivatedV3("LEAGUE_INDEPENDENT", seasonYearNow);
       seasonStore.pushPendingAction({ type: "draftObserve" });
     }
   }

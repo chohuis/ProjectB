@@ -380,7 +380,7 @@ military → 원 소속 복귀
 - [x] **드래프트 풀 규모 버그 수정** (실사용 스모크 3건 발견분):
   1. `gameStore.updateNpcs`(부분패치, 커밋 b58cd29f3에서 `setNpcs` 전체교체 신설로 분리) — hydrate에 오용돼 로드 직후 npcs가 항상 빈 배열
   2. `hydrateStoresFromSlot`의 중복 `masterStore.reloadEntities()` 호출(커밋 8434d9815에서 제거) — entities를 스태프만으로 덮어써 화면에 NPC가 안 보임
-  3. **고교 10팀 축소 + 대학/독립 리그 Lazy 미활성화로 드래프트 풀이 슬롯(KBL 8팀×10라운드=80) 대비 부족**(64 < 80) — W44 진로허브 트리거 시점에 `ensureLeagueActivatedV3`로 대학·독립 사전 활성화하여 해소(109 ≥ 80). 검증 `npm run test:draftpool` 5항목(§2.2 Lazy 활성화 원칙의 실전 적용 사례)
+  3. **고교 10팀 축소 + 대학/독립 리그 Lazy 미활성화로 드래프트 풀이 슬롯(KBL 8팀×10라운드=80) 대비 부족**(64 < 80). 1차 수정을 `needsHsHub`(주인공 3학년 전용, 시즌3 이후에만 발동) 안에 넣었다가 재현 실패 — **배경 드래프트(`draftObserve`)는 주인공 학년과 무관하게 매년 W47에 실행**되는 세계 이벤트라 별도 트리거였음. W47 배경 드래프트 블록에도 `ensureLeagueActivatedV3` 호출을 추가해 시즌1부터 대학·독립 리그가 활성화되도록 수정(109 ≥ 80). 검증 `npm run test:draftpool` 5항목(§2.2 Lazy 활성화 원칙의 실전 적용 사례)
 - [x] 실행 스모크 1차: 새 게임 생성 → 진행 → 저장/로드 왕복 정상 (2026-07-03 사용자 확인. UNIQUE 충돌 수정 커밋 639821761 — createSlot 덮어쓰기 의미론)
 - [ ] **R3a-4d**: 구시스템 폐기 — master_overlay.db·npc_runtime 쓰기·gen:npc/migrate:entities 파이프라인·구 세이브 채널·v3Mode 플래그 제거 (호환 심은 콜사이트 slotRepo 이관 후)
 - [ ] 실행 스모크 2차 (심화): 1시즌 완주 — 시즌 종료·진급·신입생·드래프트 경로 (auto-advance 활용)
