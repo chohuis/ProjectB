@@ -882,18 +882,8 @@ function createMasterStore() {
     });
   }
 
-  async function bulkUpsertEntities(entities: unknown[], slotId: string): Promise<void> {
-    if (!window.projectB?.masterBulkUpsertEntities || entities.length === 0) return;
-    try {
-      const res = JSON.parse(await window.projectB.masterBulkUpsertEntities({ slotId, entities })) as { ok: boolean; error?: string };
-      if (!res.ok) console.warn("[masterStore] bulkUpsertEntities 실패", res.error);
-    } catch (e) {
-      console.warn("[masterStore] bulkUpsertEntities 오류", e);
-    }
-  }
-
   return {
-    subscribe, load, reloadEntities, bulkUpsertEntities,
+    subscribe, load, reloadEntities,
     reloadEvents, reloadAchievements,
     setupContentWatcher,
     connectToGameStore,

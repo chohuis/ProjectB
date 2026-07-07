@@ -341,49 +341,15 @@ export async function runAutoAdvance(): Promise<void> {
 
 // ── 시즌 종료 배경 처리 (자동/수동 공통) ────────────────────────────────────
 // SeasonEndModal에서 호출 (시즌 종료 배경 처리)
-export async function runSeasonEndBgProcessing(now: number): Promise<void> {
-  // Phase 7-A: 고교/대학/독립 배경 선수 학년 진급 + 나이 +1
-  {
-    const gNonPro = get(gameStore);
-    const mNonPro = get(masterStore);
-    const slotIdNonPro = gNonPro.currentSlotId;
-    const namedIdsNonPro = new Set(gNonPro.npcs.map(n => n.npcId));
-    const nonProLeagues = new Set(["LEAGUE_HIGHSCHOOL", "LEAGUE_UNIVERSITY", "LEAGUE_INDEPENDENT"]);
-
-    const toAgeNonPro = mNonPro.entities.filter(e =>
-      e.role === "player" &&
-      e.leagueId && nonProLeagues.has(e.leagueId) &&
-      !namedIdsNonPro.has(e.id) &&
-      e.status !== "retired"
-    );
-
-    if (toAgeNonPro.length > 0 && slotIdNonPro) {
-      const hsGrad = toAgeNonPro.filter(e => e.leagueId === "LEAGUE_HIGHSCHOOL" && (e.grade ?? 0) >= 3);
-      const hsOther = toAgeNonPro.filter(e => e.leagueId === "LEAGUE_HIGHSCHOOL" && (e.grade ?? 0) < 3);
-      const univGrad = toAgeNonPro.filter(e => e.leagueId === "LEAGUE_UNIVERSITY" && (e.grade ?? 0) >= 4);
-      const univOther = toAgeNonPro.filter(e => e.leagueId === "LEAGUE_UNIVERSITY" && (e.grade ?? 0) < 4);
-      const indCount  = toAgeNonPro.filter(e => e.leagueId === "LEAGUE_INDEPENDENT").length;
-
-      const agedNonPro = toAgeNonPro.map(e => {
-        // HS grade ≥ 3: 졸업 → DRAFT_POOL
-        if (e.leagueId === "LEAGUE_HIGHSCHOOL" && (e.grade ?? 0) >= 3) {
-          return { ...e, age: e.age + 1, leagueId: "LEAGUE_DRAFT_POOL", grade: null };
-        }
-        // UNIV grade ≥ 4: 졸업 → DRAFT_POOL
-        if (e.leagueId === "LEAGUE_UNIVERSITY" && (e.grade ?? 0) >= 4) {
-          return { ...e, age: e.age + 1, leagueId: "LEAGUE_DRAFT_POOL", grade: null };
-        }
-        // HS/UNIV 재학: 학년+1, 나이+1
-        return {
-          ...e,
-          age: e.age + 1,
-          grade: e.grade != null ? e.grade + 1 : e.grade,
-        };
-      });
-
-      autoLog(`[비프로에이징] 고교재학 ${hsOther.length}명 / 고교졸업 ${hsGrad.length}명 / 대학재학 ${univOther.length}명 / 대학졸업 ${univGrad.length}명 / 독립 ${indCount}명`);
-      await masterStore.bulkUpsertEntities(agedNonPro, slotIdNonPro);
-      await masterStore.reloadEntities(now, slotIdNonPro);
-    }
-  }
+//
+// v3에서는 no-op이다: 고교/대학/독립 배경 선수의 학년 진급 + 나이 증가는
+// gameStore.processSeasonEnd()가 Rust advanceAllGrades/advanceAllAges를
+// gameStore.npcs 전체(Named + 배경 구분 없이)에 대해 이미 수행한다
+// (v3는 배경 선수도 전부 gameStore.npcs에 있음 — v2 시절의
+// "master.db 벌크 엔티티 vs 추적 NPC" 구분이 더 이상 존재하지 않는다).
+// 이 함수는 과거 master_overlay.db에 별도로 쓰던 경로였으나
+// master:loadEntities가 오버레이를 병합하지 않아 이미 죽은 코드였고,
+// 로직 자체도 processSeasonEnd와 중복이라 되살리면 이중 에이징이 된다.
+export async function runSeasonEndBgProcessing(_now: number): Promise<void> {
+  return;
 }

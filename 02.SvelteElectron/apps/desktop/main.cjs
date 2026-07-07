@@ -221,76 +221,6 @@ app.whenReady().then(() => {
     console.warn("[master.db] 열기 실패:", e.message);
   }
 
-  const masterOverlayDbPath = path.join(savesDir, "master_overlay.db");
-  const masterOverlayDb = new Database(masterOverlayDbPath);
-  masterOverlayDb.pragma("journal_mode = WAL");
-
-  // ── entity_overlay 스키마 설정 + 멀티슬롯 마이그레이션 ──────────────────────
-  {
-    const overlayTableExists = masterOverlayDb.prepare(
-      "SELECT COUNT(*) as c FROM sqlite_master WHERE type='table' AND name='entity_overlay'"
-    ).get()?.c > 0;
-
-    if (!overlayTableExists) {
-      masterOverlayDb.exec(`
-        CREATE TABLE entity_overlay (
-          slot_id      TEXT NOT NULL,
-          id           TEXT NOT NULL,
-          league_id    TEXT NOT NULL,
-          payload_json TEXT NOT NULL,
-          updated_at   TEXT NOT NULL,
-          PRIMARY KEY (slot_id, id)
-        );
-        CREATE INDEX idx_entity_overlay_slot_league ON entity_overlay(slot_id, league_id);
-        CREATE TABLE entity_overlay_deleted (
-          slot_id    TEXT NOT NULL,
-          id         TEXT NOT NULL,
-          league_id  TEXT,
-          deleted_at TEXT NOT NULL,
-          PRIMARY KEY (slot_id, id)
-        );
-        CREATE INDEX idx_entity_overlay_deleted_slot ON entity_overlay_deleted(slot_id);
-      `);
-    } else {
-      const hasSlotId = masterOverlayDb.prepare(
-        "SELECT COUNT(*) as c FROM pragma_table_info('entity_overlay') WHERE name='slot_id'"
-      ).get()?.c > 0;
-
-      if (!hasSlotId) {
-        // 기존 설치: slot_id 없는 테이블 → 기본 슬롯 'A'로 마이그레이션
-        masterOverlayDb.transaction(() => {
-          masterOverlayDb.exec(`
-            ALTER TABLE entity_overlay RENAME TO _entity_overlay_old;
-            ALTER TABLE entity_overlay_deleted RENAME TO _entity_overlay_deleted_old;
-
-            CREATE TABLE entity_overlay (
-              slot_id TEXT NOT NULL, id TEXT NOT NULL, league_id TEXT NOT NULL,
-              payload_json TEXT NOT NULL, updated_at TEXT NOT NULL,
-              PRIMARY KEY (slot_id, id)
-            );
-            CREATE INDEX idx_entity_overlay_slot_league ON entity_overlay(slot_id, league_id);
-
-            CREATE TABLE entity_overlay_deleted (
-              slot_id TEXT NOT NULL, id TEXT NOT NULL,
-              league_id TEXT, deleted_at TEXT NOT NULL,
-              PRIMARY KEY (slot_id, id)
-            );
-            CREATE INDEX idx_entity_overlay_deleted_slot ON entity_overlay_deleted(slot_id);
-
-            INSERT OR IGNORE INTO entity_overlay (slot_id, id, league_id, payload_json, updated_at)
-              SELECT 'A', id, league_id, payload_json, updated_at FROM _entity_overlay_old;
-            INSERT OR IGNORE INTO entity_overlay_deleted (slot_id, id, league_id, deleted_at)
-              SELECT 'A', id, league_id, deleted_at FROM _entity_overlay_deleted_old;
-
-            DROP TABLE _entity_overlay_old;
-            DROP TABLE _entity_overlay_deleted_old;
-          `);
-        })();
-        console.log("[master_overlay] slot_id 마이그레이션 완료 (기본 슬롯 A)");
-      }
-    }
-  }
-
   if (!isDev) checkMasterIntegrity(masterDbPath, userDataDir).catch((e) => {
     console.warn("[integrity] 체크섬 비동기 처리 실패:", e);
   });
@@ -303,7 +233,7 @@ app.whenReady().then(() => {
 
   // ── domain IPC 등록 ──────────────────────────────────────────────────────────
   matchIpc.register(ipcMain, { loadCoreModule, engineNative });
-  saveIpc.register(ipcMain, { db, dbListSlots, dbLoadSlot, dbSaveSlot, signSlot, verifySlot, DEFAULT_SLOT_ID, loadCoreModule, masterOverlayDb });
+  saveIpc.register(ipcMain, { db, dbListSlots, dbLoadSlot, dbSaveSlot, signSlot, verifySlot, DEFAULT_SLOT_ID, loadCoreModule });
   tuningIpc.register(ipcMain, { isDev, resourceBase, tuningSchema, loadCoreModule, isPathInside });
 
   // ── master:* ─────────────────────────────────────────────────────────────────
@@ -355,88 +285,10 @@ app.whenReady().then(() => {
     }
   });
 
-  ipcMain.handle("master:upsertEntity", (_event, payload) => {
-    try {
-      if (!payload || typeof payload !== "object" || Array.isArray(payload)) throw new Error("payload is required");
-      const slotId   = String(payload.slotId   ?? DEFAULT_SLOT_ID).trim();
-      const id       = String(payload.id       ?? "").trim();
-      const leagueId = String(payload.leagueId ?? "").trim();
-      if (!id)       throw new Error("id is required");
-      if (!leagueId) throw new Error("leagueId is required");
-      const now = new Date().toISOString();
-      const { slotId: _sid, ...entityData } = payload;
-      masterOverlayDb.prepare(`
-        INSERT INTO entity_overlay (slot_id, id, league_id, payload_json, updated_at)
-        VALUES (?, ?, ?, ?, ?)
-        ON CONFLICT(slot_id, id) DO UPDATE SET
-          league_id=excluded.league_id,
-          payload_json=excluded.payload_json,
-          updated_at=excluded.updated_at
-      `).run(slotId, id, leagueId, JSON.stringify(entityData), now);
-      masterOverlayDb.prepare(
-        "DELETE FROM entity_overlay_deleted WHERE slot_id = ? AND id = ?"
-      ).run(slotId, id);
-      return { ok: true };
-    } catch (e) {
-      return { ok: false, error: String(e?.message ?? e) };
-    }
-  });
-
-  ipcMain.handle("master:deleteEntity", (_event, payload) => {
-    try {
-      const slotId   = String(payload?.slotId   ?? DEFAULT_SLOT_ID).trim();
-      const id       = String(payload?.id       ?? "").trim();
-      const leagueId = payload?.leagueId ? String(payload.leagueId).trim() : null;
-      if (!id) throw new Error("id is required");
-      masterOverlayDb.prepare(
-        "DELETE FROM entity_overlay WHERE slot_id = ? AND id = ?"
-      ).run(slotId, id);
-      masterOverlayDb.prepare(`
-        INSERT INTO entity_overlay_deleted (slot_id, id, league_id, deleted_at)
-        VALUES (?, ?, ?, ?)
-        ON CONFLICT(slot_id, id) DO UPDATE SET
-          league_id=excluded.league_id,
-          deleted_at=excluded.deleted_at
-      `).run(slotId, id, leagueId, new Date().toISOString());
-      return { ok: true };
-    } catch (e) {
-      return { ok: false, error: String(e?.message ?? e) };
-    }
-  });
-
-  ipcMain.handle("master:bulkUpsertEntities", (_event, payload) => {
-    try {
-      if (!payload || typeof payload !== "object") throw new Error("payload is required");
-      const slotId   = String(payload.slotId ?? DEFAULT_SLOT_ID).trim();
-      const entities = Array.isArray(payload.entities) ? payload.entities : [];
-      if (entities.length === 0) return JSON.stringify({ ok: true, count: 0 });
-      const now = new Date().toISOString();
-      const upsert = masterOverlayDb.prepare(`
-        INSERT INTO entity_overlay (slot_id, id, league_id, payload_json, updated_at)
-        VALUES (?, ?, ?, ?, ?)
-        ON CONFLICT(slot_id, id) DO UPDATE SET
-          league_id=excluded.league_id,
-          payload_json=excluded.payload_json,
-          updated_at=excluded.updated_at
-      `);
-      const undelete = masterOverlayDb.prepare(
-        "DELETE FROM entity_overlay_deleted WHERE slot_id = ? AND id = ?"
-      );
-      const runBulk = masterOverlayDb.transaction((rows) => {
-        for (const e of rows) {
-          const id       = String(e.id       ?? "").trim();
-          const leagueId = String(e.leagueId ?? "").trim();
-          if (!id || !leagueId) continue;
-          upsert.run(slotId, id, leagueId, JSON.stringify(e), now);
-          undelete.run(slotId, id);
-        }
-      });
-      runBulk(entities);
-      return JSON.stringify({ ok: true, count: entities.length });
-    } catch (e) {
-      return JSON.stringify({ ok: false, error: String(e?.message ?? e) });
-    }
-  });
+  // master:upsertEntity / master:deleteEntity / master:bulkUpsertEntities (master_overlay.db 기반)
+  // R3a-4d에서 완전 제거 — v3에서는 NPC 상태가 전부 slot.db(repo:call)로 관리되며,
+  // master:loadEntities는 애초에 overlay를 병합하지 않아 이 쓰기 경로는 죽은 코드였다
+  // (DESIGN.md §8.2 원칙 1 — slot.db 단일 정본)
 
   // ── NPC 시뮬 IPC ─────────────────────────────────────────────────────────────
   // ── R2: Rust 엔진 호출 단일 채널 (DESIGN.md §8.2 원칙 5) ──────────────────
