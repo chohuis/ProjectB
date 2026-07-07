@@ -7,13 +7,10 @@ const { app, BrowserWindow, ipcMain, session, protocol, net } = require("electro
 const Database = require("better-sqlite3");
 
 const {
-  SLOT_SCHEMA_VERSION, DEFAULT_SLOT_ID,
   openDatabase, applySchemaPatches,
-  dbListSlots, dbSaveSlot, dbLoadSlot,
   masterRowToEntityRow, migrateOldDb,
 } = require("./ipc/db.cjs");
 const matchIpc   = require("./ipc/match.cjs");
-const saveIpc    = require("./ipc/save.cjs");
 const tuningIpc  = require("./ipc/tuning.cjs");
 
 // ── asarUnpack 경로 헬퍼 ─────────────────────────────────────────
@@ -47,32 +44,6 @@ function loadCoreModule() {
 function isPathInside(target, base) {
   const rel = path.relative(base, target);
   return rel && !rel.startsWith("..") && !path.isAbsolute(rel);
-}
-
-// ── 세이브 무결성 + 암호화 (Rust 바이너리 내부 키) ──────────────────────────
-function computeSig(data) {
-  return engineNative.computeSaveSig(data);
-}
-
-function signSlot(db, slotId, game, season) {
-  const plaintext = JSON.stringify({ game: game ?? null, season: season ?? null });
-  const encrypted = engineNative.encryptSaveNative(plaintext);
-  const sig = computeSig(encrypted);
-  db.prepare(`
-    INSERT INTO save_integrity (slot_id, snapshot, sig, updated_at)
-    VALUES (?, ?, ?, ?)
-    ON CONFLICT(slot_id) DO UPDATE SET
-      snapshot=excluded.snapshot, sig=excluded.sig, updated_at=excluded.updated_at
-  `).run(slotId, encrypted, sig, new Date().toISOString());
-}
-
-function verifySlot(db, slotId) {
-  const row = db.prepare("SELECT snapshot, sig FROM save_integrity WHERE slot_id = ?").get(slotId);
-  if (!row) return { ok: true, missing: true };
-  if (computeSig(row.snapshot) !== row.sig) return { ok: false, reason: "sig_mismatch" };
-  const plaintext = engineNative.decryptSaveNative(row.snapshot);
-  if (!plaintext) return { ok: false, reason: "decrypt_failed" };
-  return { ok: true, plaintext };
 }
 
 // ── 마스터 데이터 체크섬 (SHA-256) ──────────────────────────────────────────
@@ -231,8 +202,8 @@ app.whenReady().then(() => {
   });
 
   // ── domain IPC 등록 ──────────────────────────────────────────────────────────
+  // R3a-4d: save.cjs(v2 game/season 블롭 세이브) 폐기 — repo:call(slot.db)이 유일 경로
   matchIpc.register(ipcMain, { loadCoreModule, engineNative });
-  saveIpc.register(ipcMain, { db, dbListSlots, dbLoadSlot, dbSaveSlot, signSlot, verifySlot, DEFAULT_SLOT_ID, loadCoreModule });
   tuningIpc.register(ipcMain, { isDev, resourceBase, tuningSchema, loadCoreModule, isPathInside });
 
   // ── master:* ─────────────────────────────────────────────────────────────────

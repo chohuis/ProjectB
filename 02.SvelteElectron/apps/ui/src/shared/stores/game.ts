@@ -43,7 +43,6 @@ import type {
   ProtagonistDraftOutcome,
   SchoolScenario,
 } from "../types/save";
-import type { CoreGameState } from "../types/projectb.d";
 import type { ProContract } from "../types/save";
 import { runOffseasonProcessing } from "../utils/npcEngine";
 import { getFaThreshold } from "../utils/faEngine";
@@ -557,16 +556,6 @@ function createGameStore() {
   return {
     subscribe,
 
-    // 앱 시작 시 save_game.json에서 복원 (레거시 — 슬롯 미사용 시 폴백)
-    async load() {
-      try {
-        const raw = await window.projectB?.gameLoad?.();
-        if (raw) set(fromSaveGame(migrateSaveGame(raw as unknown as Record<string, unknown>)));
-      } catch (e) {
-        console.warn("[gameStore] load failed, using defaults", e);
-      }
-    },
-
     // 슬롯에서 복원 (game + slotId 설정)
     hydrateFromSlot(game: SaveGame, slotId: string) {
       const state = fromSaveGame(migrateSaveGame(game as unknown as Record<string, unknown>));
@@ -588,47 +577,31 @@ function createGameStore() {
       update((s) => ({ ...s, currentSlotId: slotId }));
     },
 
-    // 저장: v3 슬롯 → slot.db / 아니면 레거시 saveSlot·gameSave
+    // 저장: v3 슬롯 → slot.db (slim 블롭 + npc 테이블 동기화). 클린 브레이크 — v2 경로 없음.
     async save() {
       const s = get({ subscribe });
+      if (!isV3SlotActive() || !s.currentSlotId || !_getSeasonData) return;
       try {
-        // ── R3a-4: v3 경로 — slim 블롭 + npc 테이블 동기화 ──────
-        if (isV3SlotActive() && s.currentSlotId && _getSeasonData) {
-          const slotId = s.currentSlotId;
-          const slimGame = {
-            ...makeSaveGame(
-              s.protagonist, s.mailbox, s.trainingPlan,
-              s.schoolState, s.achievements, s.achievementMetrics, s.logs, s.upcoming,
-              [], s.trainingPresets,
-            ),
-          };
-          const season = _getSeasonData();
-          const slimSeason = { ...season, npcLiveStats: {} };
-          await slotRepo.setProtagonist(slotId, slimGame);
-          await slotRepo.setSeason(slotId, slimSeason);
-          // 전환기: 주간 변이가 repo 커맨드로 전면 이관(R3a-4c)되기 전까지 벌크 동기화
-          await slotRepo.syncNpcs(slotId, dehydrateToRepo(s.npcs, get(npcLiveStatsStore)));
-          await slotRepo.setMeta(slotId, {
-            career_stage: s.protagonist.careerStage,
-            season_year: season.seasonYear,
-            current_week: season.currentWeek,
-            team_id: s.protagonist.teamId,
-          });
-          return;
-        }
-
-        // ── 레거시 경로 (v2 이하) ────────────────────────────────
-        const gameData = makeSaveGame(
-          s.protagonist, s.mailbox, s.trainingPlan,
-          s.schoolState, s.achievements, s.achievementMetrics, s.logs, s.upcoming,
-          s.npcs, s.trainingPresets,
-        );
-        if (s.currentSlotId && _getSeasonData) {
-          const res = await window.projectB?.saveSlot?.({ slotId: s.currentSlotId, game: gameData, season: _getSeasonData() });
-          if (res && !res.ok) console.error("[gameStore] saveSlot 실패:", res.error);
-        } else {
-          await window.projectB?.gameSave?.(gameData);
-        }
+        const slotId = s.currentSlotId;
+        const slimGame = {
+          ...makeSaveGame(
+            s.protagonist, s.mailbox, s.trainingPlan,
+            s.schoolState, s.achievements, s.achievementMetrics, s.logs, s.upcoming,
+            [], s.trainingPresets,
+          ),
+        };
+        const season = _getSeasonData();
+        const slimSeason = { ...season, npcLiveStats: {} };
+        await slotRepo.setProtagonist(slotId, slimGame);
+        await slotRepo.setSeason(slotId, slimSeason);
+        // 전환기: 주간 변이가 repo 커맨드로 전면 이관(R3a-4c)되기 전까지 벌크 동기화
+        await slotRepo.syncNpcs(slotId, dehydrateToRepo(s.npcs, get(npcLiveStatsStore)));
+        await slotRepo.setMeta(slotId, {
+          career_stage: s.protagonist.careerStage,
+          season_year: season.seasonYear,
+          current_week: season.currentWeek,
+          team_id: s.protagonist.teamId,
+        });
       } catch (e) {
         console.error("[gameStore] save 예외:", e);
       }
@@ -698,21 +671,6 @@ function createGameStore() {
         return {
           ...s,
           protagonist: { ...s.protagonist, injury: updatedInj, money: newMoney },
-        };
-      });
-    },
-
-    // 하위 호환: dayAdvance IPC 결과 적용 (TopHeader)
-    applyDayResult(snapshot: CoreGameState, newLogs: string[]) {
-      update((s) => {
-        const week = snapshot.day ? Math.ceil(snapshot.day / 7) : 1;
-        const p    = { ...s.protagonist, morale: snapshot.morale };
-        return {
-          ...s,
-          protagonist: p,
-          dayLabel:    computeWeekLabel(week, snapshot.seasonYear ?? BASE_SEASON_YEAR),
-          player:      { ...s.player, morale: snapshot.morale },
-          logs:        [...newLogs, ...s.logs].slice(0, 30),
         };
       });
     },
@@ -2348,17 +2306,6 @@ function createGameStore() {
         };
         return { ...st, protagonist: updated, player: toPlayerCompat(updated) };
       });
-    },
-
-    toCoreState(): CoreGameState {
-      const s = get({ subscribe });
-      return {
-        day: 1, seasonYear: 2026,
-        stage: s.protagonist.careerStage,
-        playerName: s.protagonist.name,
-        teamName: s.protagonist.teamId,
-        morale: s.protagonist.morale,
-      };
     },
 
     // 새 게임 시작: 캐릭터 생성 완료 시 호출

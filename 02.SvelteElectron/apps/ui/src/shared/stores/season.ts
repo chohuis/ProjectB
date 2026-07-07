@@ -48,37 +48,6 @@ function createSeasonStore() {
   return {
     subscribe,
 
-    // 앱 시작 시 save_season.json에서 복원 (레거시 — 슬롯 미사용 시 폴백)
-    async load() {
-      try {
-        const raw = await window.projectB?.seasonLoad?.();
-        if (raw) {
-          const saved = raw as SaveSeason;
-          const sanitizedStats = sanitizeStatsRecord(saved.stats ?? {});
-          set({
-            ...saved,
-            stats: sanitizedStats,
-            currentDate:     saved.currentDate     ?? `${saved.seasonYear ?? 2026}-03-01`,
-            leagueSchedules: saved.leagueSchedules ?? {},
-            leagueState: Object.fromEntries(
-              Object.entries(saved.leagueState ?? {}).map(([lid, ls]) => [lid, migrateLeagueState(ls as Partial<LeagueSeasonState>)])
-            ),
-            hsGroupA:           saved.hsGroupA           ?? [],
-            hsGroupB:           saved.hsGroupB           ?? [],
-            postseasonBrackets: saved.postseasonBrackets  ?? {},
-            ablEastTeams:       saved.ablEastTeams        ?? [],
-            ablWestTeams:       saved.ablWestTeams        ?? [],
-            friendlyLog:        saved.friendlyLog         ?? [],
-            schedule: (saved.schedule ?? []).map((e) =>
-              e.gameDate ? e : { ...e, gameDate: `${saved.seasonYear ?? 2026}-03-01` }
-            ),
-          });
-        }
-      } catch (e) {
-        console.warn("[seasonStore] load failed, using defaults", e);
-      }
-    },
-
     toSaveSeason(): SaveSeason {
       const s = get({ subscribe });
       return { ...s, npcLiveStats: get(npcLiveStatsStore), savedAt: new Date().toISOString() };
@@ -177,15 +146,11 @@ function createSeasonStore() {
       });
     },
 
+    // v3(클린 브레이크)에서는 항상 currentSlotId가 있어 no-op —
+    // 시즌 저장은 gameStore.save()의 slotRepo.setSeason이 전담한다.
+    // 이 메서드는 40+ 콜사이트 호환을 위해 시그니처만 유지.
     async save() {
-      if (get(gameStore).currentSlotId) return;
-      const s = get({ subscribe });
-      const data: SaveSeason = { ...s, savedAt: new Date().toISOString() };
-      try {
-        await window.projectB?.seasonSave?.(data);
-      } catch (e) {
-        console.warn("[seasonStore] save failed", e);
-      }
+      return;
     },
 
     initSeason(leagueId: string, seasonYear: number, totalWeeks: number, teamIds: string[]) {
