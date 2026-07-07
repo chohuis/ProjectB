@@ -7,7 +7,7 @@
 - 작업 시작 전 **DESIGN.md §10 로드맵**에서 현재 단계를 확인하고 그 단계의 작업만 진행한다.
 - 단계(또는 하위 작업) 완료 시 DESIGN.md §10의 체크 표시와 아래 "진행 현황"을 갱신한다.
 - DESIGN.md §3 "육성 코어 보호 목록"의 시스템은 경량화 작업에서 수정 금지.
-- 아래 "데이터 계층 구조" 절은 **현행(R3 이전) 기준**이다 — R3(slot.db 재구축) 완료 시 DESIGN.md §8이 대체한다.
+- 아래 "데이터 계층 구조" 절은 R3a 완료 후 v3 확정 기준으로 갱신됨.
 
 **진행 현황**: R0 ✅ · R1 ✅ · R2 ✅ · R3a 전체 완료(데이터 코어 + 구시스템 철거 + 실행 스모크) ✅ (2026-07-07) | **다음: R4(advanceWeek 분해) → R3b(합성 생성기) → R5**
 - 세이브 무결성(HMAC) v3 미구현 상태 — 별도 작업 필요 (DESIGN.md §8.4)
@@ -78,40 +78,38 @@ pub fn calc_my_thing(p: MyPayload) -> MyResult {
 - TS에서 Rust 결과 타입: `as MyType` 명시적 캐스팅
 - 주석은 WHY가 명확할 때만, 코드로 알 수 있는 내용은 생략
 
-## 데이터 계층 구조 (혼동 금지) — ⚠ 현행(R3 이전) 기준, R3 완료 시 DESIGN.md §8로 대체
+## 데이터 계층 구조 (혼동 금지) — v3 확정 (R3a 완료, 2026-07-07). 상세는 DESIGN.md §8
 
 ### 세 가지 데이터 저장소
 
 | 저장소 | 위치 | 역할 | 수정 시점 |
 |--------|------|------|----------|
-| **소스 JSON** | `resource/data/staging/people_*.json` | NPC 생성 스크립트 출력물 | `gen:npc` / `gen:hs-roster` 스크립트만 씀 |
-| **개별 JSON** | `resource/data/master/entities/players/*.json` | master.db 빌드 소스 (16,155개) | `migrate-entities` 스크립트만 씀 |
-| **master.db** | `resource/master.db` | 런타임 NPC 전체 (read-only) | `build:masterdb` 스크립트만 씀 |
-| **master_overlay.db** | `userData/saves/master_overlay.db` | 슬롯별 NPC 변경분 (이적·성장·편집) | 런타임 IPC (`master:upsertEntity` 등) |
+| **master.db** | `resource/master.db` | 콘텐츠(이벤트·템플릿·밸런스) + **스태프**(코치/감독/구단주, `entities/players/COA_·MNG_·OWN_*.json` 373개가 소스) 전용. read-only | `npm run build:masterdb`만 씀 |
+| **slot.db** | `userData/saves/slot3_<id>.db` (파일=슬롯) | **선수(NPC) 전부의 유일한 정본**. 정체성+팀+계약+능력치+XP가 `npc` 테이블 1행에 동거 | `repo:call`(→`shared/repo/slotRepo.ts`) 커맨드만 씀 — 직접 접근 금지 |
+| (폐기됨) | ~~master_overlay.db~~ / ~~entities/players/PLY_*.json~~ / ~~projectb_v2.db~~ | — | R3a-4d에서 완전 제거. 재도입 금지 |
 
 ### 런타임에서 NPC 데이터 흐름
 
 ```
-loadEntities() 호출
-  → window.projectB.masterLoadEntities() IPC
-    → master.db (npc_master 베이스) + master_overlay.db (슬롯 변경분) 병합
-    → JS 메모리 반환
+새 게임/리그 활성화
+  → Rust generate_league_roster_native (worldSeed 결정적)
+    → slotRepo.createSlot / insertNpcs → slot.db npc 테이블 INSERT
+
+이후 모든 상태 변경 (이적/드래프트/FA/입대/은퇴/주간 성장)
+  → shared/repo/slotRepo.ts 의 타입드 커맨드
+    (transfer/swapTeams/assignDraft/enlist/discharge/retire/updateWeekly)
+    → main 프로세스 repo:call → apps/desktop/ipc/slotdb.cjs → SQLite 트랜잭션 1개
 ```
 
-**개별 JSON 파일(16,155개)은 런타임에서 절대 읽지 않는다.**
-
-### 빌드 파이프라인 (데이터 수정이 필요할 때만)
-
-```
-1. npm run gen:npc          → staging/people_*.json 재생성
-2. npm run migrate:entities → entities/players/*.json 재생성 + _index.json 갱신
-3. npm run build:masterdb   → master.db 재생성
-```
+**선수 데이터를 JSON 파일로 사전 생성하지 않는다. 전부 런타임에 Rust가 생성한다.**
+**overlay나 npc_runtime 같은 별도 "변경분" 저장소를 만들지 않는다 — slot.db가 유일 정본이다.**
 
 ### 작업 시 규칙
 
-- `entities/players/*.json` 을 직접 편집하거나 런타임에서 읽는 코드를 작성하지 않는다
-- `people_*.json` 은 `staging/` 에만 존재한다 (`master/entities/` 에 두지 않는다)
-- NPC 데이터를 런타임에서 변경해야 하면 `master:upsertEntity` IPC → `master_overlay.db` 를 사용한다
-- `master:fetch` IPC 는 이벤트·훈련·업적 등 콘텐츠 JSON 전용이다 (NPC 엔티티에 쓰지 않는다)
-- `window.projectB` 없는 환경(Vite 단독)에서는 엔티티 로딩이 동작하지 않는다 — `npm run dev` (Electron 포함)로 실행해야 한다
+- NPC(선수) 상태를 바꾸는 코드는 반드시 `shared/repo/slotRepo.ts`의 커맨드를 거친다. `window.projectB.repo(...)` 직접 호출 금지(레이어 우회).
+- 새로운 상태 변이가 필요하면 `apps/desktop/ipc/slotdb.cjs`의 `commands`에 커맨드를 추가하고(트랜잭션 1개로), `slotRepo.ts`에 타입드 래퍼를 노출한다.
+- `entities/players/`에는 스태프(COA_/MNG_/OWN_) 원본만 남아 있다. 여기에 선수(PLY_) JSON을 다시 추가하지 않는다.
+- `master:fetch` IPC는 이벤트·훈련·업적 등 콘텐츠 JSON 전용이다 (NPC에 쓰지 않는다 — 애초에 NPC는 master.db에 없음).
+- 레거시 채널(`npc:getByLeague`/`swapTeams`/`updateContracts`, `league:add/getTransactions`)은 내부적으로 slotdb 커맨드를 감싸는 호환 래퍼다 — 신규 코드는 여기 의존하지 말고 `slotRepo`를 직접 쓴다.
+- `window.projectB` 없는 환경(Vite 단독)에서는 저장/로드가 동작하지 않는다 — `npm run dev` (Electron 포함)로 실행해야 한다.
+- ⚠ **세이브 무결성(HMAC 변조 감지) 미구현** — v2의 signSlot/verifySlot은 R3a-4d에서 제거됐고 v3에 아직 대체 기능 없음. 필요 시 새로 설계할 것 (DESIGN.md §8.4 참고).
