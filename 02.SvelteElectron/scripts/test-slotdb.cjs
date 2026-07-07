@@ -82,11 +82,17 @@ check("롤백: 거래기록 오염 없음", call("getTransactions", { slotId: "T
 // ── 4. 드래프트 ───────────────────────────────────────────────
 call("assignDraft", {
   slotId: "T1", seasonYear: 2026, week: 51,
-  picks: [{ npcId: "P4", teamId: "TEAM_KBL_SKYGULLS_1", leagueId: "LEAGUE_KBL", round: 1, pickNo: 3, salary: 5000, contractYears: 3 }],
+  picks: [{
+    npcId: "P4", teamId: "TEAM_KBL_SKYGULLS_1", leagueId: "LEAGUE_KBL",
+    round: 1, pickNo: 3, salary: 5000, contractYears: 3,
+    detail: "1라운드 3순위",  // LeaguePage.svelte가 정규식으로 파싱하는 한글 포맷 (커스텀 지정 가능해야 함)
+  }],
 });
 const p4 = call("getNpc", { slotId: "T1", npcId: "P4" });
 check("드래프트: 팀/리그/학적 정리", p4.currentTeam === "TEAM_KBL_SKYGULLS_1" && p4.currentLeague === "LEAGUE_KBL" && p4.grade === undefined && p4.proServiceYears === 0);
-check("드래프트: 거래기록", call("getTransactions", { slotId: "T1", category: "draft" })[0].detail === "R1 P3");
+check("드래프트: 커스텀 detail 포맷 보존 (UI 정렬 파싱용)",
+  call("getTransactions", { slotId: "T1", npcId: "P4" })[0].detail === "1라운드 3순위");
+check("드래프트: 거래기록", call("getTransactions", { slotId: "T1", category: "draft" })[0].detail === "1라운드 3순위");
 
 // ── 5. 군입대/전역 — 원소속 복귀 ─────────────────────────────
 call("enlist", { slotId: "T1", npcId: "P2", unit: "sports", enlistYear: 2026, dischargeYear: 2028, seasonYear: 2026, week: 52 });

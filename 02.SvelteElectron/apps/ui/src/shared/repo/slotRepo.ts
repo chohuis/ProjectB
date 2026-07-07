@@ -152,7 +152,7 @@ export const slotRepo = {
 
   assignDraft: (p: {
     slotId: string; seasonYear: number; week?: number;
-    picks: { npcId: string; teamId: string; leagueId: string; round: number; pickNo: number; salary?: number; contractYears?: number }[];
+    picks: { npcId: string; teamId: string; leagueId: string; round: number; pickNo: number; salary?: number; contractYears?: number; detail?: string }[];
   }) => call<{ ok: true; assigned: number }>("assignDraft", p),
 
   enlist: (p: {

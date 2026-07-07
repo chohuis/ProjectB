@@ -2,6 +2,7 @@ import { get } from "svelte/store";
 import { gameStore } from "../stores/game";
 import { masterStore, type EntityDetails, type EntityRow } from "../stores/master";
 import { seasonStore } from "../stores/season";
+import { slotRepo } from "../repo/slotRepo";
 import type { NpcSaveState } from "../types/save";
 import {
   DRAFT_ROUNDS,
@@ -127,34 +128,38 @@ export async function runDraftBoardBackground(slotId: string, seasonYear: number
   }
 
   if (result.picks.length > 0) {
-    const rows = result.picks.map((pick) => ({
+    // v3: npc 테이블 갱신 + 거래기록을 단일 트랜잭션으로 (구 master_overlay.db 경로는
+    // master:loadEntities가 이미 overlay를 읽지 않아 실질적으로 유실되던 경로였음)
+    await slotRepo.assignDraft({
+      slotId,
       seasonYear,
-      category: "draft",
-      playerId: pick.candidateId,
-      playerName: playerNameById.get(pick.candidateId) ?? pick.candidateId,
-      fromTeamId: null,
-      fromLeagueId: null,
-      toTeamId: pick.teamId,
-      toLeagueId: "LEAGUE_KBL",
-      detail: `${pick.round}라운드 ${pick.pickNo}순위`,
-      groupId: null,
-    }));
-    await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows }));
+      picks: result.picks.map((pick) => ({
+        npcId: pick.candidateId,
+        teamId: pick.teamId,
+        leagueId: "LEAGUE_KBL",
+        round: pick.round,
+        pickNo: pick.pickNo,
+        detail: `${pick.round}라운드 ${pick.pickNo}순위`,
+      })),
+    });
 
-    // 배경 드래프트 지명 선수 → master_overlay.db 팀/리그 업데이트
-    const currentMaster = get(masterStore);
-    const entityMap = new Map(currentMaster.entities.map(e => [e.id, e]));
-    const pickedEntities = result.picks
-      .map(pick => {
-        const e = entityMap.get(pick.candidateId);
-        if (!e) return null;
-        return { ...e, leagueId: "LEAGUE_KBL", teamId: pick.teamId, clubId: pick.teamId };
-      })
-      .filter((e): e is NonNullable<typeof e> => e !== null);
-    if (pickedEntities.length > 0) {
-      await masterStore.bulkUpsertEntities(pickedEntities, slotId);
-      await masterStore.reloadEntities(seasonYear, slotId);
-    }
+    // gameStore.npcs 반응형 반영 (부분 패치 — updateNpcs가 정확한 용도)
+    const draftedIds = new Set(result.picks.map((p) => p.candidateId));
+    const pickByNpcId = new Map(result.picks.map((p) => [p.candidateId, p]));
+    const patched = game.npcs
+      .filter((n) => draftedIds.has(n.npcId))
+      .map((n) => {
+        const pick = pickByNpcId.get(n.npcId)!;
+        return {
+          ...n,
+          currentTeam: pick.teamId,
+          currentLeague: "LEAGUE_KBL",
+          grade: undefined,
+          schoolId: "",
+          proServiceYears: 0,
+        };
+      });
+    if (patched.length > 0) gameStore.updateNpcs(patched);
   }
 
   await gameStore.save();

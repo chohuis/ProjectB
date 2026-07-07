@@ -339,7 +339,7 @@ const commands = {
         applyMove(db, pick.npcId,
           { toTeamId: pick.teamId, toLeagueId: pick.leagueId, salary: pick.salary, contractYears: pick.contractYears, careerStatus: "active" },
           { seasonYear: p.seasonYear, week: p.week, category: "draft",
-            detail: `R${pick.round} P${pick.pickNo}`, groupId: `draft-${p.seasonYear}` });
+            detail: pick.detail ?? `R${pick.round} P${pick.pickNo}`, groupId: `draft-${p.seasonYear}` });
         db.prepare("UPDATE npc SET pro_service_years = 0, grade = NULL, school_id = '' WHERE npc_id = ?").run(pick.npcId);
       }
     });
