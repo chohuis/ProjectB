@@ -2180,6 +2180,13 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       (a) => a.type === "careerChoiceHub" || a.type === "careerResults" || a.type === "careerChoice"
     );
   if (needsHsHub || needsUnivHub || needsIndieHub) {
+    // v3: 드래프트 보드·폴백 지원(대학/독립) 표시 전에 두 리그를 Lazy 활성화
+    // 해두지 않으면 후보 풀이 고교 3학년만으로 국한돼 드래프트 라운드가 텅 빈다
+    // (KBL 8팀×10라운드=80 슬롯인데 고교만으로는 부족 — DESIGN.md §2.2)
+    if (needsHsHub) {
+      await ensureLeagueActivatedV3("LEAGUE_UNIVERSITY", s.seasonYear);
+      await ensureLeagueActivatedV3("LEAGUE_INDEPENDENT", s.seasonYear);
+    }
     gameStore.markCareerChoiceTriggered();
     seasonStore.pushPendingAction({ type: "careerChoiceHub" });
   }
