@@ -382,7 +382,17 @@ military → 원 소속 복귀
   2. `hydrateStoresFromSlot`의 중복 `masterStore.reloadEntities()` 호출(커밋 8434d9815에서 제거) — entities를 스태프만으로 덮어써 화면에 NPC가 안 보임
   3. **고교 10팀 축소 + 대학/독립 리그 Lazy 미활성화로 드래프트 풀이 슬롯(KBL 8팀×10라운드=80) 대비 부족**(64 < 80). 1차 수정을 `needsHsHub`(주인공 3학년 전용, 시즌3 이후에만 발동) 안에 넣었다가 재현 실패 — **배경 드래프트(`draftObserve`)는 주인공 학년과 무관하게 매년 W47에 실행**되는 세계 이벤트라 별도 트리거였음. W47 배경 드래프트 블록에도 `ensureLeagueActivatedV3` 호출을 추가해 시즌1부터 대학·독립 리그가 활성화되도록 수정(109 ≥ 80). 검증 `npm run test:draftpool` 5항목(§2.2 Lazy 활성화 원칙의 실전 적용 사례)
 - [x] 실행 스모크 1차: 새 게임 생성 → 진행 → 저장/로드 왕복 정상 (2026-07-03 사용자 확인. UNIQUE 충돌 수정 커밋 639821761 — createSlot 덮어쓰기 의미론)
-- [ ] **R3a-4d**: 구시스템 폐기 — master_overlay.db·npc_runtime 쓰기·gen:npc/migrate:entities 파이프라인·구 세이브 채널·v3Mode 플래그 제거 (호환 심은 콜사이트 slotRepo 이관 후)
+- [x] **R3a-4d 완료** (2026-07-07, 커밋 e71b370d7~9ccace1bf):
+  - **실버그 3건 발견·수정** (전부 "overlay 쓰기 + master:loadEntities가 안 읽음" 동일 패턴):
+    1. 배경 고교/대학/독립 선수의 KBL 드래프트 결과가 매년 유실 → `slotRepo.assignDraft`로 교체 (LeaguePage 정렬용 커스텀 detail 포맷 지원 추가)
+    2. 배경 선수 시즌종료 진급·에이징이 이미 no-op(필터 오류)이었고 되살리면 `gameStore.processSeasonEnd()`와 이중 에이징 위험 → 명시적 no-op 정리
+    3. `gameStore.updateNpcs`(부분패치)를 전체로드에 오용해 v3 hydrate가 상시 빈 배열 → `setNpcs` 신설로 분리 (스모크 중 발견, 이미 수정됨)
+  - master_overlay.db 완전 제거 (열기·스키마·마이그레이션·3개 IPC 핸들러)
+  - 5개 레거시 채널(npc:getByLeague 등) v2 SQL 폴백 제거 — v3 단일 구현으로 승격
+  - save.cjs 삭제(game:load/save·season:load/save·save:* 전부) + dbListSlots/dbSaveSlot/dbLoadSlot(db.cjs, ~600줄) 제거 + gameStore/seasonStore 죽은 load()/applyDayResult/toCoreState 제거
+  - PLY_* 16,075개 삭제(스태프 373개 유지) + gen:npc/migrate:entities 스크립트+staging 제거 + master.db 재빌드(coach 242/manager 103/owner 28 검증)
+  - 검증: tsc 15=15 유지, test:v3 4세트 ALL PASS, electron ipc 모듈 boot 스모크, **사용자 실행 스모크 1·2차 통과**
+  - 잔여(의도적 보류, 위험/효용 낮음): `npc:archiveRetired`/`queryRetiredArchive`(npc_career_arc) — UI 콜사이트 자체가 없던 기존 미연결 기능, 오늘 정리와 무관. EntityManagerModal.svelte 라이브 오버레이 편집 모드 — overlay 제거로 실패하지만 try/catch로 안전 처리, 파일 저장 모드는 정상. `applySchemaPatches`/history_* 테이블 — 여전히 활성 기능이라 미터치. **세이브 무결성(HMAC) 미구현** — v2 signSlot/verifySlot 제거 후 v3에는 아직 없음, DESIGN.md §8.4 계획 항목으로 남아있음(별도 작업 필요)
 - [x] 실행 스모크 2차: 드래프트 풀/대학·독립 로스터 정상 확인 (2026-07-07 사용자 확인 — 커밋 0dc44750e 반영 후)
 - ⚠ 전환기 알려진 제약: HS 포스트시즌(A/B조 기반)은 v3(hsGroupB=[])에서 미검증 — R4 정리 대상
 - [ ] master_overlay.db 폐기 + game/season 블롭에서 npcs/npcLiveStats 제거
