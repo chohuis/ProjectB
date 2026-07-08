@@ -587,8 +587,8 @@ export async function processProTeamCallupCalldown(weekNum: number): Promise<str
   const monthIndex = MONTH_STARTS_1.indexOf(s.schedule.find(e => e.week === weekNum)?.week ?? 0);
   const currentMonth = monthIndex >= 0 ? monthIndex + 1 : 6;
 
-  const proLeagues = ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"];
-  const proTeams1  = m.teams.filter(t => proLeagues.includes(t.leagueId) && t.id.endsWith("_1"));
+  // 주인공 리그만 (R5, DESIGN.md §5)
+  const proTeams1 = m.teams.filter(t => t.leagueId === g.protagonist.leagueId && t.id.endsWith("_1"));
 
   const injuredIds = Object.entries(s.npcInjuries ?? {})
     .filter(([, inj]) => (inj as any)?.severity !== "mild")

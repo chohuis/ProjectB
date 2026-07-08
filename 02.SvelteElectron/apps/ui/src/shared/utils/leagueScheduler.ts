@@ -162,14 +162,11 @@ export const ALL_TEAMS_BY_LEAGUE: Record<string, string[]> = {
   LEAGUE_JBL_FARM: JBL_FARM_TEAMS,
 };
 
+// 2군(팜) 리그는 스케줄을 생성하지 않는다 — 경기 시뮬 제거, 로스터·콜업 테이블 룩업만 (R5, DESIGN.md §5·§7)
 export const DEFAULT_LEAGUE_CONFIGS: LeagueConfig[] = [
   { leagueId: "LEAGUE_UNIVERSITY",  teams: UNIV_TEAMS,      startWeek: 8, endWeek: 40, cycles: 5,  seriesGames: 2 },
   { leagueId: "LEAGUE_INDEPENDENT", teams: IND_TEAMS,       startWeek: 6, endWeek: 38, cycles: 8,  seriesGames: 2 },
   { leagueId: "LEAGUE_KBL",         teams: KBL_TEAMS,       startWeek: 1, endWeek: 50, cycles: 16 },
   { leagueId: "LEAGUE_ABL",         teams: ABL_TEAMS,       startWeek: 1, endWeek: 50, cycles: 9  },
   { leagueId: "LEAGUE_JBL",         teams: JBL_TEAMS,       startWeek: 1, endWeek: 50, cycles: 10 },
-  // 2군: 포스트시즌 기간 활용, 플레이오프 없이 정규리그만 진행
-  { leagueId: "LEAGUE_KBL_FARM",    teams: KBL_FARM_TEAMS,  startWeek: 7, endWeek: 30, cycles: 18 },
-  { leagueId: "LEAGUE_ABL_FARM",    teams: ABL_FARM_TEAMS,  startWeek: 7, endWeek: 34, cycles: 10 },
-  { leagueId: "LEAGUE_JBL_FARM",    teams: JBL_FARM_TEAMS,  startWeek: 7, endWeek: 32, cycles: 13 },
 ];

@@ -435,8 +435,8 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   // NPC 주간 성장/하락 처리 (매주 실행)
   await processWeeklyNpcGrowth(weekNum, g.protagonist.careerStage);
 
-  // 프로 스테이지: 콜업/콜다운 처리 (월간 첫 주에만)
-  if (isMonthStart(weekInYear)) {
+  // 프로 스테이지: 콜업/콜다운 — 연 2회(시즌 중 W20 + 오프시즌 W43), 주인공 리그만 (R5, DESIGN.md §5)
+  if (weekInYear === 20 || weekInYear === 43) {
     const callupLogs = await processProTeamCallupCalldown(weekNum);
     logs.push(...callupLogs);
   }
@@ -595,18 +595,12 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     }
   }
 
-  // 프로 트레이드 윈도우 (W12~W38, 4주마다)
-  // 비프로 스테이지에서도 프로 3리그를 각각 시뮬해 거래 기록 유지
-  if (weekInYear >= 12 && weekInYear <= 38 && weekInYear % 4 === 0) {
+  // 프로 트레이드 윈도우 — 연 2회(시즌 중 데드라인 W36 + 오프시즌 W43), 주인공 리그만 (R5, DESIGN.md §5)
+  if (weekInYear === 36 || weekInYear === 43) {
     const proLeagueIds = ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"];
     const myLeague = get(gameStore).protagonist.leagueId;
-    const isProStage = proLeagueIds.includes(myLeague);
-    if (isProStage) {
+    if (proLeagueIds.includes(myLeague)) {
       await processTradeWindow(weekInYear, myLeague);
-    } else {
-      for (const lid of proLeagueIds) {
-        await processTradeWindow(weekInYear, lid);
-      }
     }
   }
 

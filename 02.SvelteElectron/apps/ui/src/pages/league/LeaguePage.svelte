@@ -318,11 +318,12 @@
     "LEAGUE_JBL",     "LEAGUE_JBL_FARM",
   ];
 
+  // 팜리그는 경기 시뮬을 하지 않아(R5) 순위표가 항상 0-0 — 순위표 탭에서 제외
   $: allLeagueIds = (() => {
     const keys = new Set([...Object.keys($seasonStore.leagueState).filter(Boolean), myLeagueId]);
-    const ordered  = LEAGUE_ORDER.filter((lid) => keys.has(lid) && !lockedLeagueSet.has(lid));
-    const extra    = [...keys].filter((lid) => !LEAGUE_ORDER.includes(lid) && !lockedLeagueSet.has(lid));
-    const locked   = [...keys].filter((lid) => lockedLeagueSet.has(lid));
+    const ordered  = LEAGUE_ORDER.filter((lid) => keys.has(lid) && !lockedLeagueSet.has(lid) && !isFarmLeague(lid));
+    const extra    = [...keys].filter((lid) => !LEAGUE_ORDER.includes(lid) && !lockedLeagueSet.has(lid) && !isFarmLeague(lid));
+    const locked   = [...keys].filter((lid) => lockedLeagueSet.has(lid) && !isFarmLeague(lid));
     return [...ordered, ...extra, ...locked];
   })();
 
