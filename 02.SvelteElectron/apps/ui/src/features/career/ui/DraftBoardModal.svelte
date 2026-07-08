@@ -164,32 +164,25 @@
     const seen = new Set<string>();
     const rows: Candidate[] = [];
 
-    // ── 고교: npcs에서 3학년 필터, 없으면 masterStore 폴백 ──
-    const hsNpcs = $gameStore.npcs.filter(
-      (n) =>
-        n.currentLeague === "LEAGUE_HIGHSCHOOL" &&
-        n.grade === 3 &&
-        n.careerStatus === "active"
-    );
-
-    if (hsNpcs.length > 0) {
-      const sorted = [...hsNpcs].sort((a, b) => npcOvr(b) - npcOvr(a));
-      const cutoff = Math.ceil(sorted.length * 0.8);
-      for (const npc of sorted.slice(0, cutoff)) {
-        if (seen.has(npc.npcId)) continue;
-        seen.add(npc.npcId);
-        rows.push(buildFromNpc(npc, !viewOnly && npc.npcId === heroId));
-      }
-    } else {
-      const hsEntities = $masterStore.entities
-        .filter((e) => e.leagueId === "LEAGUE_HIGHSCHOOL" && e.role === "player" && e.grade === 3 && (!viewOnly || e.id !== heroId))
-        .sort((a, b) => entityOvr(b) - entityOvr(a));
-      const cutoff = Math.ceil(hsEntities.length * 0.8);
-      for (const e of hsEntities.slice(0, cutoff)) {
-        if (seen.has(e.id)) continue;
-        seen.add(e.id);
-        rows.push(buildFromEntity(e, !viewOnly && e.id === heroId));
-      }
+    // ── 고교 3학년 전체(배경+Named 병합) — 이전엔 Named가 1명이라도 있으면
+    // 배경 선수 ~80명을 통째로 무시하고 Named 소수만 후보 풀로 썼던 버그가 있었음.
+    // Named는 실제 라이브 능력치를 쓰고, 나머지는 entity 정의치를 쓰되 풀 자체는 항상 전체 학년.
+    const namedById = new Map($gameStore.npcs.map((n) => [n.npcId, n]));
+    const hsEntities = $masterStore.entities
+      .filter((e) => e.leagueId === "LEAGUE_HIGHSCHOOL" && e.role === "player" && e.grade === 3 && (!viewOnly || e.id !== heroId));
+    const hsPool = hsEntities
+      .map((e) => {
+        const named = namedById.get(e.id);
+        return named
+          ? { id: e.id, ovr: npcOvr(named), cand: buildFromNpc(named, !viewOnly && e.id === heroId) }
+          : { id: e.id, ovr: entityOvr(e),  cand: buildFromEntity(e, !viewOnly && e.id === heroId) };
+      })
+      .sort((a, b) => b.ovr - a.ovr);
+    const hsCutoff = Math.ceil(hsPool.length * 0.8);
+    for (const { id, cand } of hsPool.slice(0, hsCutoff)) {
+      if (seen.has(id)) continue;
+      seen.add(id);
+      rows.push(cand);
     }
 
     // ── 주인공 (HS 풀에 없으면 별도 추가) ──

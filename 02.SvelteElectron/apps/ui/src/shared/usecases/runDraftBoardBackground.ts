@@ -22,47 +22,27 @@ function npcOvr(npc: NpcSaveState): number {
 
 async function collectViewOnlyDraftCandidates(): Promise<DraftBoardCandidate[]> {
   const game = get(gameStore);
+  const namedById = new Map(game.npcs.map((n) => [n.npcId, n]));
 
   const seen = new Set<string>();
   const rows: DraftBoardCandidate[] = [];
-  const hsNpcs = game.npcs.filter(
-    (n) =>
-      n.currentLeague === "LEAGUE_HIGHSCHOOL" &&
-      n.grade === 3 &&
-      n.careerStatus === "active" &&
-      n.npcId !== game.protagonist.id,
-  );
 
-  if (hsNpcs.length > 0) {
-    const sorted = [...hsNpcs].sort((a, b) => npcOvr(b) - npcOvr(a));
-    const cutoff = Math.ceil(sorted.length * 0.8);
-    for (const npc of sorted.slice(0, cutoff)) {
-      if (seen.has(npc.npcId)) continue;
-      seen.add(npc.npcId);
-      rows.push({
-        id: npc.npcId,
-        ovr: npcOvr(npc),
-        age: npc.age,
-        potential: npc.developmentRate,
-        isUser: false,
-      });
-    }
-  } else {
-    const entities = get(masterStore).entities
-      .filter((e) => e.leagueId === "LEAGUE_HIGHSCHOOL" && e.role === "player" && e.grade === 3 && e.id !== game.protagonist.id)
-      .sort((a, b) => entityOvr(b) - entityOvr(a));
-    const cutoff = Math.ceil(entities.length * 0.8);
-    for (const entity of entities.slice(0, cutoff)) {
-      if (seen.has(entity.id)) continue;
-      seen.add(entity.id);
-      rows.push({
-        id: entity.id,
-        ovr: entityOvr(entity),
-        age: entity.age,
-        potential: Number(entity.potentialHidden ?? 70),
-        isUser: false,
-      });
-    }
+  // 고교 3학년 전체(배경+Named 병합) — 이전엔 Named가 1명이라도 있으면 배경 선수
+  // ~80명을 통째로 무시하고 Named 소수(주로 10~20명)만 후보 풀로 썼던 버그가 있었음.
+  // Named는 실제 라이브 능력치를 쓰고, 나머지는 entity 정의치를 쓰되 풀 자체는 항상 전체 학년.
+  const hsEntities = get(masterStore).entities
+    .filter((e) => e.leagueId === "LEAGUE_HIGHSCHOOL" && e.role === "player" && e.grade === 3 && e.id !== game.protagonist.id);
+  const hsPool = hsEntities.map((e) => {
+    const named = namedById.get(e.id);
+    return named
+      ? { id: e.id, ovr: npcOvr(named), age: named.age, potential: named.developmentRate }
+      : { id: e.id, ovr: entityOvr(e), age: e.age, potential: Number(e.potentialHidden ?? 70) };
+  }).sort((a, b) => b.ovr - a.ovr);
+  const hsCutoff = Math.ceil(hsPool.length * 0.8);
+  for (const c of hsPool.slice(0, hsCutoff)) {
+    if (seen.has(c.id)) continue;
+    seen.add(c.id);
+    rows.push({ id: c.id, ovr: c.ovr, age: c.age, potential: c.potential, isUser: false });
   }
 
   const allPlayers = get(masterStore).entities.filter((e) => e.role === "player");

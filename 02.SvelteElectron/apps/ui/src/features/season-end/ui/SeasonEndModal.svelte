@@ -2,6 +2,7 @@
   import { gameStore } from "../../../shared/stores/game";
   import { seasonStore, currentStandings } from "../../../shared/stores/season";
   import { masterStore, teamMap } from "../../../shared/stores/master";
+  import { HS_ACTIVE_TEAMS_V3 } from "../../../shared/utils/leagueScheduler";
   import { runSeasonEndBgProcessing } from "../../../shared/usecases/runAutoAdvance";
   import type { PitcherSeasonStats, BatterSeasonStats, CareerAward, CareerGameLogEntry } from "../../../shared/types/save";
   import type { PitcherGameLine } from "../../../shared/types/season";
@@ -423,8 +424,9 @@
     // gradeBeforeAdvance 기준으로 판단: processSeasonEnd 후 p.grade는 이미 증가해 있으므로
     // grade 1→2 또는 2→3 진급 시에만 다음 HS 시즌 재초기화 (grade 3→졸업은 제외)
     if (p.careerStage === "highschool" && gradeBeforeAdvance != null && gradeBeforeAdvance < 3) {
-      const allHsIds = $masterStore.teams.filter((t) => t.leagueId === "LEAGUE_HIGHSCHOOL").map((t) => t.id);
-      await seasonStore.reinitHighschoolSeason(p.teamId, allHsIds);
+      // $masterStore.teams는 refs.json 정의(16팀) 전부를 담고 있음 — v3 활성 10팀은
+      // HS_ACTIVE_TEAMS_V3가 유일한 기준(새 게임 initAllLeaguesV3와 동일 소스여야 함)
+      await seasonStore.reinitHighschoolSeason(p.teamId, HS_ACTIVE_TEAMS_V3);
     }
 
     await gameStore.save();
