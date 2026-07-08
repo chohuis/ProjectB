@@ -312,13 +312,6 @@
   })();
   $: sortedStandings = [...$seasonStore.standings].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
 
-  // A/B조 분리
-  $: isHighschool = $gameStore.protagonist.careerStage === "highschool";
-  $: groupA = $seasonStore.hsGroupA ?? [];
-  $: groupB = $seasonStore.hsGroupB ?? [];
-  $: standingsA = sortedStandings.filter(s => groupA.includes(s.teamId));
-  $: standingsB = sortedStandings.filter(s => groupB.includes(s.teamId));
-
   // 주간 뷰 표시 상한 (이 수 초과 시 "+N 더" 표시)
   const WEEK_ITEM_LIMIT = 4;
 </script>
@@ -365,7 +358,7 @@
           {#if $seasonStore.totalWeeks === 0}
             <p class="no-season">시즌 일정이 설정되지 않았습니다.</p>
           {:else}
-            <div class="season-layout" class:two-group={isHighschool && standingsA.length > 0 && standingsB.length > 0}>
+            <div class="season-layout">
               <div class="week-timeline" use:dragScroll>
                 {#each allWeeks as week}
                   {@const phase    = weekPhase(week)}
@@ -435,57 +428,29 @@
                 {/each}
               </div>
 
-              <div class="standings-panel" class:two-group={isHighschool && standingsA.length > 0 && standingsB.length > 0}>
-                {#if isHighschool && standingsA.length > 0 && standingsB.length > 0}
-                  <!-- A/B조 분리 표시 -->
-                  {#each [{ label: "A조", rows: standingsA, isMine: groupA.includes(protagonistTeamId) }, { label: "B조", rows: standingsB, isMine: groupB.includes(protagonistTeamId) }] as grp}
-                    <div class="group-block">
-                      <p class="group-label" class:my-group={grp.isMine}>{grp.label}{grp.isMine ? " ★" : ""}</p>
-                      <div class="standings-scroll">
-                        <table class="standings-table">
-                          <thead>
-                            <tr><th>#</th><th>팀</th><th>승</th><th>패</th><th>승률</th></tr>
-                          </thead>
-                          <tbody>
-                            {#each grp.rows as s, i}
-                              <tr class:my-team={s.teamId === protagonistTeamId}>
-                                <td>{i + 1}</td>
-                                <td class="team-name">{teamLabel(s.teamId)}</td>
-                                <td>{s.wins}</td>
-                                <td>{s.losses}</td>
-                                <td>{s.winPct.toFixed(2)}</td>
-                              </tr>
-                            {/each}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  {/each}
+              <div class="standings-panel">
+                <h4>팀 순위</h4>
+                {#if sortedStandings.length === 0}
+                  <p class="no-standings">순위 데이터 없음</p>
                 {:else}
-                  <!-- 단일 순위표 (비고교) -->
-                  <h4>팀 순위</h4>
-                  {#if sortedStandings.length === 0}
-                    <p class="no-standings">순위 데이터 없음</p>
-                  {:else}
-                    <div class="standings-scroll">
-                      <table class="standings-table">
-                        <thead>
-                          <tr><th>#</th><th>팀</th><th>승</th><th>패</th><th>승률</th></tr>
-                        </thead>
-                        <tbody>
-                          {#each sortedStandings as s, i}
-                            <tr class:my-team={s.teamId === protagonistTeamId}>
-                              <td>{i + 1}</td>
-                              <td class="team-name">{teamLabel(s.teamId)}</td>
-                              <td>{s.wins}</td>
-                              <td>{s.losses}</td>
-                              <td>{s.winPct.toFixed(2)}</td>
-                            </tr>
-                          {/each}
-                        </tbody>
-                      </table>
-                    </div>
-                  {/if}
+                  <div class="standings-scroll">
+                    <table class="standings-table">
+                      <thead>
+                        <tr><th>#</th><th>팀</th><th>승</th><th>패</th><th>승률</th></tr>
+                      </thead>
+                      <tbody>
+                        {#each sortedStandings as s, i}
+                          <tr class:my-team={s.teamId === protagonistTeamId}>
+                            <td>{i + 1}</td>
+                            <td class="team-name">{teamLabel(s.teamId)}</td>
+                            <td>{s.wins}</td>
+                            <td>{s.losses}</td>
+                            <td>{s.winPct.toFixed(2)}</td>
+                          </tr>
+                        {/each}
+                      </tbody>
+                    </table>
+                  </div>
                 {/if}
               </div>
             </div>
@@ -866,9 +831,6 @@
     height: 100%;
     min-height: 0;
   }
-  .season-layout.two-group {
-    grid-template-columns: minmax(0, 1fr) 320px;
-  }
   .week-timeline {
     display: flex;
     flex-direction: column;
@@ -988,27 +950,6 @@
     min-height: 0;
     overflow: hidden;
   }
-  .standings-panel.two-group {
-    grid-template-rows: unset;
-    grid-template-columns: 1fr 1fr;
-    align-content: start;
-    overflow-y: auto;
-  }
-  .group-block {
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
-    gap: 4px;
-    min-height: 0;
-  }
-  .group-label {
-    margin: 0;
-    font-size: 10px;
-    font-weight: 700;
-    color: #506888;
-    letter-spacing: 0.5px;
-    padding: 0 2px;
-  }
-  .group-label.my-group { color: #80b0e0; }
   .standings-panel h4 { margin: 0; font-size: 12px; color: #c8d8f0; }
   .no-standings { color: #607898; font-size: 11px; }
   .standings-scroll { overflow-y: auto; height: 100%; }

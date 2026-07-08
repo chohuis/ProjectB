@@ -38,6 +38,15 @@ export async function buildUnivBracket(standings: Standing[]): Promise<Postseaso
   return JSON.parse(raw);
 }
 
+// 고교 10팀 단일리그 — 대학과 동일한 top4 준결승/결승 (구 A/B조 교차대진 대체, R4)
+export async function buildHsBracket(standings: Standing[]): Promise<PostseasonSeries[]> {
+  const raw = await window.projectB!.engine(
+    "buildHsBracketNative",
+    JSON.stringify({ standings }),
+  );
+  return JSON.parse(raw);
+}
+
 export async function buildIndBracket(standings: Standing[]): Promise<PostseasonSeries[]> {
   const raw = await window.projectB!.postseasonBuildInd(
     JSON.stringify({ standings })

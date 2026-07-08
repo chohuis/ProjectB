@@ -294,11 +294,6 @@ export async function runAutoAdvance(): Promise<void> {
           await seasonStore.save();
           break;
 
-        case "hsGroupDraw":
-          seasonStore.resolvePendingAction("hsGroupDraw");
-          await seasonStore.save();
-          break;
-
         case "injuryTreatment":
           gameStore.applyInjuryTreatment("conservative");
           seasonStore.resolvePendingAction("injuryTreatment");

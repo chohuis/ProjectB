@@ -1,5 +1,4 @@
 use serde::{Deserialize, Serialize};
-use rand::Rng;
 use std::collections::HashMap;
 
 // ── Shared output type ────────────────────────────────────────
@@ -284,107 +283,6 @@ pub fn generate_jbl_schedule(p: GenerateProScheduleParams) -> Vec<ScheduleEntry>
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct GenerateHsScheduleParams {
-    pub group_a: Vec<String>,
-    pub group_b: Vec<String>,
-    pub protagonist_team_id: String,
-    pub season_year: Option<u32>,
-}
-
-// ── 고교 조별 주 2경기 일정 생성 (월 offset=1, 금 offset=5) ──
-
-fn generate_hs_group_weekly(
-    teams: &[String],
-    protagonist_team_id: &str,
-    start_week: u32,
-    end_week: u32,
-    prefix: &str,
-    season_year: u32,
-) -> Vec<ScheduleEntry> {
-    if teams.len() < 2 { return vec![]; }
-
-    let base  = build_round_robin(teams);
-    let n_rnd = base.len();   // 7 rounds for 8 teams
-    let total_weeks = (end_week - start_week + 1) as usize;
-    let mut entries = Vec::new();
-
-    for w in 0..total_weeks {
-        let week = start_week + w as u32;
-
-        // 월요일(offset=1), 금요일(offset=5) 두 슬롯
-        for (slot, day_off) in [(0usize, 1u32), (1usize, 5u32)] {
-            let abs_idx = w * 2 + slot;
-            let round_idx = abs_idx % n_rnd;
-            let flip      = (abs_idx / n_rnd) % 2 == 1;
-
-            for (gi, (h, a)) in base[round_idx].iter().enumerate() {
-                let (home, away) = if flip { (a.clone(), h.clone()) } else { (h.clone(), a.clone()) };
-                entries.push(ScheduleEntry {
-                    id: format!("{}_W{:02}_S{}_G{}", prefix, week, slot + 1, gi + 1),
-                    week,
-                    game_date: to_game_date(season_year, week, day_off),
-                    league_id: Some("LEAGUE_HIGHSCHOOL".to_string()),
-                    home_team_id: home.clone(),
-                    away_team_id: away.clone(),
-                    is_protagonist_game: home == protagonist_team_id || away == protagonist_team_id,
-                    phase: "season".to_string(),
-                });
-            }
-        }
-    }
-    entries
-}
-
-// ── 프리시즌 친선경기 생성 (W4-W9, 월·수 각 1경기) ─────────────
-fn generate_hs_preseason_friendlies(
-    my_team_id: &str,
-    all_teams: &[String],
-    season_year: u32,
-) -> Vec<ScheduleEntry> {
-    let opponents: Vec<&String> = all_teams.iter().filter(|t| t.as_str() != my_team_id).collect();
-    if opponents.is_empty() { return vec![]; }
-
-    let mut entries = Vec::new();
-    for week in 4u32..=9u32 {
-        // 월요일(offset=1)·수요일(offset=3) 2경기
-        for (slot, day_off) in [(0usize, 1u32), (1usize, 3u32)] {
-            let hash = (my_team_id.len() as u32)
-                .wrapping_mul(97)
-                .wrapping_add(week.wrapping_mul(31))
-                .wrapping_add(slot as u32 * 17) as usize;
-            let opp  = opponents[hash % opponents.len()];
-            let (home, away) = if hash % 2 == 0 {
-                (my_team_id.to_string(), opp.clone())
-            } else {
-                (opp.clone(), my_team_id.to_string())
-            };
-            entries.push(ScheduleEntry {
-                id: format!("PRESN_W{:02}_S{}", week, slot + 1),
-                week,
-                game_date: to_game_date(season_year, week, day_off),
-                league_id: Some("LEAGUE_HIGHSCHOOL".to_string()),
-                home_team_id: home,
-                away_team_id: away,
-                is_protagonist_game: true,
-                phase: "preseason".to_string(),
-            });
-        }
-    }
-    entries
-}
-
-pub fn generate_hs_schedule(p: GenerateHsScheduleParams) -> Vec<ScheduleEntry> {
-    let sy = p.season_year.unwrap_or(2026);
-    let all_teams: Vec<String> = p.group_a.iter().chain(p.group_b.iter()).cloned().collect();
-
-    let mut out = generate_hs_group_weekly(&p.group_a, &p.protagonist_team_id, 10, 42, "HS_A", sy);
-    out.extend(generate_hs_group_weekly(&p.group_b, &p.protagonist_team_id, 10, 42, "HS_B", sy));
-    out.extend(generate_hs_preseason_friendlies(&p.protagonist_team_id, &all_teams, sy));
-    out
-}
-
-#[derive(Debug, Deserialize)]
-#[serde(rename_all = "camelCase")]
 pub struct GenerateLeagueScheduleParams {
     pub league_id: String,
     pub teams: Vec<String>,
@@ -465,8 +363,6 @@ pub struct LeagueConfigInput {
     pub start_week: u32,
     pub end_week: u32,
     pub cycles: u32,
-    pub group_a: Option<Vec<String>>,
-    pub group_b: Option<Vec<String>>,
     pub series_games: Option<u32>,
 }
 
@@ -482,93 +378,9 @@ pub fn generate_all_league_schedules(p: GenerateAllLeagueSchedulesParams) -> Has
     let sy = p.season_year.unwrap_or(2026);
     let mut result = HashMap::new();
     for cfg in p.configs {
-        let entries = if let (Some(ga), Some(gb)) = (cfg.group_a, cfg.group_b) {
-            generate_hs_schedule(GenerateHsScheduleParams { group_a: ga, group_b: gb, protagonist_team_id: p.protagonist_team_id.clone(), season_year: Some(sy) })
-        } else {
-            generate_league_schedule(GenerateLeagueScheduleParams { league_id: cfg.league_id.clone(), teams: cfg.teams, start_week: cfg.start_week, end_week: cfg.end_week, cycles: cfg.cycles, protagonist_team_id: p.protagonist_team_id.clone(), season_year: Some(sy), series_games: cfg.series_games })
-        };
+        let entries = generate_league_schedule(GenerateLeagueScheduleParams { league_id: cfg.league_id.clone(), teams: cfg.teams, start_week: cfg.start_week, end_week: cfg.end_week, cycles: cfg.cycles, protagonist_team_id: p.protagonist_team_id.clone(), season_year: Some(sy), series_games: cfg.series_games });
         result.insert(cfg.league_id, entries);
     }
     result
 }
 
-// ── HS Postseason ─────────────────────────────────────────────
-
-#[derive(Debug, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct GenerateHsPostseasonSemisParams {
-    pub top4: Vec<String>,
-    pub protagonist_team_id: String,
-    pub week: u32,
-    pub season_year: Option<u32>,
-}
-
-pub fn generate_hs_postseason_semis(p: GenerateHsPostseasonSemisParams) -> Vec<ScheduleEntry> {
-    if p.top4.len() < 4 { return vec![]; }
-    let sy = p.season_year.unwrap_or(2026);
-    let gdate = to_game_date(sy, p.week, 5);
-    let pt = &p.protagonist_team_id;
-    vec![
-        ScheduleEntry { id: format!("PS_SEMI1_W{:02}", p.week), week: p.week, game_date: gdate.clone(), league_id: None, home_team_id: p.top4[0].clone(), away_team_id: p.top4[3].clone(), is_protagonist_game: p.top4[0] == *pt || p.top4[3] == *pt, phase: "postseason".to_string() },
-        ScheduleEntry { id: format!("PS_SEMI2_W{:02}", p.week), week: p.week, game_date: gdate, league_id: None, home_team_id: p.top4[1].clone(), away_team_id: p.top4[2].clone(), is_protagonist_game: p.top4[1] == *pt || p.top4[2] == *pt, phase: "postseason".to_string() },
-    ]
-}
-
-#[derive(Debug, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct GenerateHsPostseasonFinalParams {
-    pub winner_a: String,
-    pub winner_b: String,
-    pub protagonist_team_id: String,
-    pub week: u32,
-    pub season_year: Option<u32>,
-}
-
-pub fn generate_hs_postseason_final(p: GenerateHsPostseasonFinalParams) -> ScheduleEntry {
-    let sy = p.season_year.unwrap_or(2026);
-    ScheduleEntry {
-        id: format!("PS_FINAL_W{:02}", p.week),
-        week: p.week,
-        game_date: to_game_date(sy, p.week, 5),
-        league_id: None,
-        home_team_id: p.winner_a.clone(),
-        away_team_id: p.winner_b.clone(),
-        is_protagonist_game: p.winner_a == p.protagonist_team_id || p.winner_b == p.protagonist_team_id,
-        phase: "postseason".to_string(),
-    }
-}
-
-// ── Shuffle ───────────────────────────────────────────────────
-
-const HS_ALL_TEAMS: &[&str] = &[
-    "TEAM_HS_SEOUL_INNOVATION", "TEAM_HS_BUSAN_WAVE", "TEAM_HS_DAEGU_HEAT",
-    "TEAM_HS_GWANGJU_VISION", "TEAM_HS_DAEJEON_RISE", "TEAM_HS_INCHEON_HARBOR",
-    "TEAM_HS_ULSAN_CHARGE", "TEAM_HS_SUWON_EDGE", "TEAM_HS_YEOSU_SHORE",
-    "TEAM_HS_CHUNCHEON_HIGHLAND", "TEAM_HS_JEJU_WIND", "TEAM_HS_GANGWON_PEAK",
-    "TEAM_HS_MASAN_HARBOR", "TEAM_HS_JECHEON_RIDGE", "TEAM_HS_GOYANG_ARROW",
-    "TEAM_HS_SUNCHEON_BAY",
-];
-
-#[derive(Debug, Serialize)]
-#[serde(rename_all = "camelCase")]
-pub struct HsGroups {
-    pub group_a: Vec<String>,
-    pub group_b: Vec<String>,
-}
-
-#[derive(Debug, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct ShuffleHsGroupsParams {
-    pub all_teams: Option<Vec<String>>,
-}
-
-pub fn shuffle_hs_groups(p: ShuffleHsGroupsParams) -> HsGroups {
-    let mut arr: Vec<String> = p.all_teams.unwrap_or_else(|| HS_ALL_TEAMS.iter().map(|s| s.to_string()).collect());
-    let mut rng = rand::thread_rng();
-    for i in (1..arr.len()).rev() {
-        let j = rng.gen_range(0..=i);
-        arr.swap(i, j);
-    }
-    let half = arr.len() / 2;
-    HsGroups { group_a: arr[..half].to_vec(), group_b: arr[half..].to_vec() }
-}

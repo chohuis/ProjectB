@@ -17,17 +17,6 @@
   $: myRank = $currentStandings.findIndex((s) => s.teamId === myTeamId) + 1;
   $: totalTeams = $seasonStore.standings.length;
 
-  // ── A/B조 분리 ─────────────────────────────────────────────────
-  $: isHighschool = p.careerStage === "highschool";
-  $: groupA = $seasonStore.hsGroupA ?? [];
-  $: groupB = $seasonStore.hsGroupB ?? [];
-  $: myIsGroupA = groupA.includes(myTeamId);
-  $: standingsA = $currentStandings.filter((s) => groupA.includes(s.teamId));
-  $: standingsB = $currentStandings.filter((s) => groupB.includes(s.teamId));
-  $: myGroupStandings = myIsGroupA ? standingsA : standingsB;
-  $: myGroupRank = myGroupStandings.findIndex((s) => s.teamId === myTeamId) + 1;
-  $: myGroupTotal = myGroupStandings.length;
-
   // ── 포스트시즌 결과 ─────────────────────────────────────────────
   $: postseasonResult = (() => {
     const psEntries = $seasonStore.schedule.filter((e) => e.phase === "postseason");
@@ -166,15 +155,9 @@
     const slotId = $gameStore.currentSlotId;
     if (!slotId) return;
 
-    const groupASet = new Set($seasonStore.hsGroupA ?? []);
-    const groupBSet = new Set($seasonStore.hsGroupB ?? []);
-
     const standingRows: object[] = [];
     for (const st of $seasonStore.standings) {
-      let groupLabel = "";
-      if ($seasonStore.leagueId === "LEAGUE_HIGHSCHOOL") {
-        groupLabel = groupASet.has(st.teamId) ? "A" : groupBSet.has(st.teamId) ? "B" : "";
-      }
+      const groupLabel = "";
       standingRows.push({ leagueId: $seasonStore.leagueId, teamId: st.teamId, groupLabel,
         wins: st.wins, losses: st.losses, draws: st.draws, winPct: st.winPct,
         runsFor: st.runsFor, runsAgainst: st.runsAgainst, streak: st.streak, last10: st.last10 });
@@ -462,7 +445,6 @@
       <p class="sub">
         {p.grade ? `${p.grade}학년` : p.careerStage}
         · {tName(myTeamId)}
-        {#if isHighschool}&nbsp;· {myIsGroupA ? "A조" : "B조"}{/if}
       </p>
     </header>
 
@@ -516,62 +498,29 @@
         <section class="section">
           <h4>리그 순위표</h4>
 
-          {#if isHighschool && standingsA.length > 0 && standingsB.length > 0}
-            <div class="two-col">
-              {#each [{ label: "A조", rows: standingsA, isMine: myIsGroupA }, { label: "B조", rows: standingsB, isMine: !myIsGroupA }] as grp}
-                <div class="group-block">
-                  <p class="group-label" class:my-group={grp.isMine}>{grp.label}{grp.isMine ? " ★" : ""}</p>
-                  <table>
-                    <thead><tr><th>#</th><th>팀</th><th>승</th><th>패</th><th>승률</th></tr></thead>
-                    <tbody>
-                      {#each grp.rows as s, i}
-                        <tr class:my-row={s.teamId === myTeamId}>
-                          <td class="rank-cell">
-                            {i + 1}
-                            {#if postseasonResult?.champion === s.teamId}
-                              <span class="badge badge-champ">우승</span>
-                            {:else if postseasonResult?.runnerUp === s.teamId}
-                              <span class="badge badge-runner">준우승</span>
-                            {:else if postseasonTeams.has(s.teamId)}
-                              <span class="badge badge-ps">PS</span>
-                            {/if}
-                          </td>
-                          <td class="team-name">{tName(s.teamId)}</td>
-                          <td>{s.wins}</td>
-                          <td>{s.losses}</td>
-                          <td>{pct(s.winPct)}</td>
-                        </tr>
-                      {/each}
-                    </tbody>
-                  </table>
-                </div>
+          <table>
+            <thead><tr><th>#</th><th>팀</th><th>승</th><th>패</th><th>무</th><th>승률</th><th>득실</th></tr></thead>
+            <tbody>
+              {#each $currentStandings as s, i}
+                <tr class:my-row={s.teamId === myTeamId}>
+                  <td class="rank-cell">
+                    {i + 1}
+                    {#if postseasonResult?.champion === s.teamId}
+                      <span class="badge badge-champ">우승</span>
+                    {:else if postseasonTeams.has(s.teamId)}
+                      <span class="badge badge-ps">PS</span>
+                    {/if}
+                  </td>
+                  <td class="team-name">{tName(s.teamId)}</td>
+                  <td>{s.wins}</td>
+                  <td>{s.losses}</td>
+                  <td>{s.draws ?? 0}</td>
+                  <td>{pct(s.winPct)}</td>
+                  <td>{s.runsFor}–{s.runsAgainst}</td>
+                </tr>
               {/each}
-            </div>
-          {:else}
-            <table>
-              <thead><tr><th>#</th><th>팀</th><th>승</th><th>패</th><th>무</th><th>승률</th><th>득실</th></tr></thead>
-              <tbody>
-                {#each $currentStandings as s, i}
-                  <tr class:my-row={s.teamId === myTeamId}>
-                    <td class="rank-cell">
-                      {i + 1}
-                      {#if postseasonResult?.champion === s.teamId}
-                        <span class="badge badge-champ">우승</span>
-                      {:else if postseasonTeams.has(s.teamId)}
-                        <span class="badge badge-ps">PS</span>
-                      {/if}
-                    </td>
-                    <td class="team-name">{tName(s.teamId)}</td>
-                    <td>{s.wins}</td>
-                    <td>{s.losses}</td>
-                    <td>{s.draws ?? 0}</td>
-                    <td>{pct(s.winPct)}</td>
-                    <td>{s.runsFor}–{s.runsAgainst}</td>
-                  </tr>
-                {/each}
-              </tbody>
-            </table>
-          {/if}
+            </tbody>
+          </table>
         </section>
 
         <!-- 시즌 시상 -->
@@ -619,9 +568,9 @@
           <h4>팀 최종 성적</h4>
           <div class="kpi-row">
             <div class="kpi">
-              <span>{isHighschool ? (myIsGroupA ? "A조 순위" : "B조 순위") : "최종 순위"}</span>
-              <strong class:gold={myGroupRank === 1} class:silver={myGroupRank === 2} class:bronze={myGroupRank === 3}>
-                {myGroupRank > 0 ? `${myGroupRank} / ${myGroupTotal}위` : "—"}
+              <span>최종 순위</span>
+              <strong class:gold={myRank === 1} class:silver={myRank === 2} class:bronze={myRank === 3}>
+                {myRank > 0 ? `${myRank} / ${totalTeams}위` : "—"}
               </strong>
             </div>
             <div class="kpi">
@@ -1128,21 +1077,6 @@
   .badge-champ  { background: #3a2a04; color: #f5d050; border: 1px solid #a08020; }
   .badge-runner { background: #1a2a40; color: #a0b8d8; border: 1px solid #607090; }
   .badge-ps     { background: #1a2a40; color: #7090b8; border: 1px solid #304a68; }
-
-  /* ── A/B조 2열 ───────────────────────────────────────────────── */
-  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-  .group-block { display: grid; gap: 6px; }
-
-  .group-label {
-    margin: 0;
-    font-size: 11px;
-    font-weight: 700;
-    color: #506888;
-    letter-spacing: 0.5px;
-  }
-
-  .group-label.my-group { color: #80b0e0; }
 
   /* ── 푸터 ────────────────────────────────────────────────────── */
   .modal-footer {

@@ -1,6 +1,6 @@
 import type { LeagueSeasonState, MatchResult, PlayerCondition, ScheduleEntry } from "../types/season";
-import type { NpcInjuryEntry } from "../types/save";
-import type { EntityRow } from "./master";
+import type { NpcInjuryEntry, CareerStage } from "../types/save";
+import type { EntityRow, TeamRef } from "./master";
 import type { SimWorkerRequest, SimWorkerResultItem } from "../workers/simWorker";
 import type { SeasonStoreState } from "./season";
 import { accumulateStats, migrateLeagueState, updateStandings } from "../utils/season-helpers";
@@ -8,6 +8,13 @@ import { makeStandings, ALL_TEAMS_BY_LEAGUE } from "../utils/leagueScheduler";
 import { simulateGame } from "../utils/gameSimulator";
 import { rotationSizeForLeague } from "../utils/rosterEngine";
 import { autoLog } from "./autoAdvance";
+import { getLeagueRadius } from "../utils/radiusGate";
+
+// 반경 게이트가 적용되는 리그만 — 팜리그 등 그 외 리그는 기존 풀시뮬 동작 그대로 둔다 (R5 대상)
+const RADIUS_GATED_LEAGUES = new Set([
+  "LEAGUE_HIGHSCHOOL", "LEAGUE_UNIVERSITY", "LEAGUE_INDEPENDENT",
+  "LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL",
+]);
 
 // 팀 소속 감독의 handlePersonnel 능력치 조회
 function getManagerHandlePersonnel(teamId: string, entities: EntityRow[]): number {
@@ -81,6 +88,7 @@ export async function simulateBackgroundLeagues(
   protagonistLeagueId: string,
   entities: EntityRow[],
   npcLiveStats?: Record<string, import("../types/season").NpcLiveStat>,
+  careerStage?: CareerStage,
 ): Promise<SimBatchResult | null> {
   const batch: SimWorkerRequest["games"] = [];
   if (Object.keys(s.leagueSchedules).length === 0) {
@@ -91,6 +99,11 @@ export async function simulateBackgroundLeagues(
     if (!Array.isArray(schedule)) {
       autoLog(`[배경리그오류] leagueSchedules 오염 — 배열 아님: ${lid}`);
       continue;
+    }
+    // 반경 게이트: 비활성(3)은 시뮬 스킵, 드리프트(2)는 별도 driftBackgroundLeagues가 처리
+    if (careerStage && RADIUS_GATED_LEAGUES.has(lid)) {
+      const radius = getLeagueRadius(careerStage, lid);
+      if (radius === 2 || radius === 3) continue;
     }
     const lState = migrateLeagueState(s.leagueState[lid] ?? {});
     for (const e of schedule) {
@@ -146,6 +159,63 @@ export async function simulateBackgroundLeagues(
   }
 
   return { nextSchedules, nextLeagueState, gameLogs };
+}
+
+// 반경 2(드리프트) 리그 순위표 주간 갱신 — 개인 선수 데이터 없이 팀 전력치(prestige)만 사용
+export async function driftBackgroundLeagues(
+  s: SeasonStoreState,
+  protagonistLeagueId: string,
+  careerStage: CareerStage,
+  teams: TeamRef[],
+): Promise<Record<string, LeagueSeasonState> | null> {
+  const driftLeagueIds = [...RADIUS_GATED_LEAGUES].filter(
+    (lid) => lid !== protagonistLeagueId && getLeagueRadius(careerStage, lid) === 2,
+  );
+  if (driftLeagueIds.length === 0) return null;
+
+  const teamPower = new Map(teams.map((t) => [t.id, t.proTeamProfile?.prestige ?? 50]));
+  const nextLeagueState: Record<string, LeagueSeasonState> = {};
+
+  for (const lid of driftLeagueIds) {
+    const teamIds = ALL_TEAMS_BY_LEAGUE[lid] ?? [];
+    if (teamIds.length === 0) continue;
+    const cur = migrateLeagueState(s.leagueState[lid] ?? { standings: makeStandings(teamIds) });
+    const standingsByTeam = new Map(cur.standings.map((st) => [st.teamId, st]));
+
+    const driftInput = teamIds.map((teamId) => {
+      const st = standingsByTeam.get(teamId);
+      return {
+        teamId,
+        power:  teamPower.get(teamId) ?? 50,
+        wins:   st?.wins ?? 0,
+        losses: st?.losses ?? 0,
+      };
+    });
+
+    const raw = await window.projectB!.engine(
+      "standingsDriftNative",
+      JSON.stringify({ teams: driftInput }),
+    );
+    const result = JSON.parse(raw) as { teams: { teamId: string; wins: number; losses: number }[] };
+    const resultByTeam = new Map(result.teams.map((t) => [t.teamId, t]));
+
+    nextLeagueState[lid] = {
+      ...cur,
+      standings: cur.standings.map((st) => {
+        const upd = resultByTeam.get(st.teamId);
+        if (!upd) return st;
+        const total = upd.wins + upd.losses;
+        return {
+          ...st,
+          wins: upd.wins,
+          losses: upd.losses,
+          winPct: total > 0 ? Math.round((upd.wins / total) * 1000) / 1000 : 0,
+        };
+      }),
+    };
+  }
+
+  return Object.keys(nextLeagueState).length > 0 ? nextLeagueState : null;
 }
 
 export function applyBackgroundLeagueUpdate(

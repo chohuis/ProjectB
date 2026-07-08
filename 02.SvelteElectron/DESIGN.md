@@ -179,7 +179,7 @@ military → 원 소속 복귀
 | `salaryNegotiation` | `optionClause` → salaryNegotiation의 컨텍스트로 |
 | `faMarket` | — |
 | `trade` | — |
-| `injuryTreatment` (중증 이상) | `hsGroupDraw` → 자동 처리 후 통보 |
+| `injuryTreatment` (중증 이상) | — |
 | | `sportsUnitApplication`/`militaryEnlistAsk` → 군복무 이벤트로 통합 |
 
 ---
@@ -188,7 +188,7 @@ military → 원 소속 복귀
 
 | 리그 | 현행 | **확정** | 비고 |
 |---|---|---|---|
-| LEAGUE_HIGHSCHOOL | 16팀 (A/B조) | **10팀 단일리그** (선택 8교 + 배경 2교, 최대 12까지 조정 가능) | **A/B조·조추첨·조별 포스트시즌 로직 전부 삭제** (hsGroupA/B, shuffleHsGroups, hsGroupDraw) |
+| LEAGUE_HIGHSCHOOL | 16팀 (A/B조) | **10팀 단일리그** (선택 8교 + 배경 2교, 최대 12까지 조정 가능) | A/B조·조추첨·조별 포스트시즌 로직 전부 삭제 완료 (R4, 2026-07-08) — 포스트시즌은 대학과 동일한 flat top4 브래킷(`build_hs_bracket`) 재사용 |
 | LEAGUE_UNIVERSITY | 7팀 + 상무 | 7팀 + 상무 유지 | 현행 유지 |
 | LEAGUE_INDEPENDENT | 8팀 | 8팀 유지 | 현행 유지 |
 | LEAGUE_KBL | 8팀 | 8팀 유지 | 핵심 무대 |
@@ -394,7 +394,7 @@ military → 원 소속 복귀
   - 검증: tsc 15=15 유지, test:v3 4세트 ALL PASS, electron ipc 모듈 boot 스모크, **사용자 실행 스모크 1·2차 통과**
   - 잔여(의도적 보류, 위험/효용 낮음): `npc:archiveRetired`/`queryRetiredArchive`(npc_career_arc) — UI 콜사이트 자체가 없던 기존 미연결 기능, 오늘 정리와 무관. EntityManagerModal.svelte 라이브 오버레이 편집 모드 — overlay 제거로 실패하지만 try/catch로 안전 처리, 파일 저장 모드는 정상. `applySchemaPatches`/history_* 테이블 — 여전히 활성 기능이라 미터치. **세이브 무결성(HMAC) 미구현** — v2 signSlot/verifySlot 제거 후 v3에는 아직 없음, DESIGN.md §8.4 계획 항목으로 남아있음(별도 작업 필요)
 - [x] 실행 스모크 2차: 드래프트 풀/대학·독립 로스터 정상 확인 (2026-07-07 사용자 확인 — 커밋 0dc44750e 반영 후)
-- ⚠ 전환기 알려진 제약: HS 포스트시즌(A/B조 기반)은 v3(hsGroupB=[])에서 미검증 — R4 정리 대상
+- ~~⚠ 전환기 알려진 제약: HS 포스트시즌(A/B조 기반)은 v3(hsGroupB=[])에서 미검증~~ → R4에서 해결 (아래 참고)
 - [ ] master_overlay.db 폐기 + game/season 블롭에서 npcs/npcLiveStats 제거
 - [ ] 사전 생성 파이프라인 폐기: gen:npc·migrate:entities·entities/players/*·_index.json
 - [ ] 레거시 `"pro"` careerStage 제거 + deprecated 필드 제거 + SchoolState optional화
@@ -408,11 +408,13 @@ military → 원 소속 복귀
 - [ ] 10시즌 분포 안정 검증 스크립트 (리그 ERA/OPS 분포 유지 확인)
 
 ### R4. advanceWeek 분해 + 반경 시뮬
-- [ ] `weekPhases/` 8모듈 분리 (training·academics·events·games·injuries·growth·market·digest)
-- [ ] 반경 게이트 — 비활성 리그 처리 스킵
-- [ ] 순위표 드리프트 (Rust 신규, 주 1회 저비용)
-- [ ] 고교 10팀 단일리그 전환 — A/B조·조추첨·조별 포스트시즌 로직 삭제
-- [ ] friendlyLog → schedule 통합, 세이브 커밋 원자화 마무리
+- [x] `weekPhases/` 8모듈 분리 (training·academics·events·games·injuries·growth·market·digest) — advanceWeek.ts 3,634→2,010줄, 정적 검증(tsc 15=15·test:v3·vite build) 통과. 사용자 런타임 재생 확인 대기 (2026-07-08)
+- [x] 반경 게이트 — `shared/utils/radiusGate.ts`(getLeagueRadius) 신설, `backgroundLeague.ts`의 전체 게임 시뮬 루프에 게이트 삽입 (2026-07-08)
+- [x] 순위표 드리프트 — Rust `standings_drift_native` 신규(팀 prestige+노이즈, 매주), `driftBackgroundLeagues` 연결 (2026-07-08)
+- [x] 고교 10팀 단일리그 전환 — A/B조·조추첨·조별 포스트시즌 로직 전부 삭제. 포스트시즌은 Rust `build_hs_bracket`(대학과 동일 top4 준결승/결승 패턴) 신규 + `injectLeaguePostseason`에 편입, `injectHsPostseason` 별도 함수 폐기. hsGroupA/B 필드·hsGroupDraw pendingAction·HsGroupDrawModal.svelte 등 10개 파일 전량 삭제 (2026-07-08)
+- [x] friendlyLog → schedule 통합 — `ScheduleEntry.friendlyStats`(ip/er/k/bb/rating) 신설, 별도 `friendlyLog` 배열·`FriendlyPerformanceLog` 세이브 필드 폐기. 세이브 커밋(`gameStore.save()`+`seasonStore.save()` 페어링)은 기존에 이미 일관되게 적용되어 있어 별도 조치 불요 (2026-07-08)
+
+**R4 전체 완료 (2026-07-08)** — 각 항목 정적 검증(tsc 15=15·test:v3 4세트·vite build) 통과. 사용자 실행 스모크(새 게임→고교 포스트시즌 포함 시즌 진행→저장/로드) 대기 중.
 
 ### R5. 시장 캐던스 + 마무리
 - [ ] NPC 트레이드 연 2회(데드라인+오프시즌)·주인공 리그만 / 콜업 연 2회

@@ -179,12 +179,8 @@ declare global {
       scheduleKbl:               (p: string) => Promise<string>;
       scheduleAbl:               (p: string) => Promise<string>;
       scheduleJbl:               (p: string) => Promise<string>;
-      scheduleHs:                (p: string) => Promise<string>;
       scheduleLeague:            (p: string) => Promise<string>;
       scheduleAllLeagues:        (p: string) => Promise<string>;
-      scheduleHsPostseasonSemis: (p: string) => Promise<string>;
-      scheduleHsPostseasonFinal: (p: string) => Promise<string>;
-      scheduleShuffleHsGroups:   (p: string) => Promise<string>;
       // ── 포스트시즌 엔진 ────────────────────────────────────
       postseasonBuildKbl:   (p: string) => Promise<string>;
       postseasonBuildAbl:   (p: string) => Promise<string>;

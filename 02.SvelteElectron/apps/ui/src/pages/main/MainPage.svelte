@@ -97,7 +97,6 @@
       case "optionClause":
       case "faMarket":
         return "messages";
-      case "hsGroupDraw":
       case "preGameBriefing":
         return "messages";
     }

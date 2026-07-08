@@ -1,4 +1,4 @@
-import type { ScheduleEntry, FriendlyPerformanceLog } from "../types/season";
+import type { ScheduleEntry } from "../types/season";
 import type { MessageItem } from "../types/main";
 
 // ── 월 경계 (1-indexed weekInYear) ───────────────────────────
@@ -407,7 +407,7 @@ export function buildFriendlyResultMessage(
   h: number,
   teamMap?: Map<string, string>,
   role: PitcherRole = "SP",
-): { message: MessageItem; log: FriendlyPerformanceLog } {
+): { message: MessageItem } {
   const myScore   = homeScore;
   const oppScore  = awayScore;
   const oppTeamId = scheduleEntry.awayTeamId;
@@ -432,14 +432,6 @@ export function buildFriendlyResultMessage(
     "[공식 기록 미포함 / 로테이션 1칸 전진]",
   ].join("\n");
 
-  const log: FriendlyPerformanceLog = {
-    scheduleId:     scheduleEntry.id,
-    week:           scheduleEntry.week,
-    opponentTeamId: oppTeamId,
-    ip, er, k, bb,
-    rating,
-  };
-
   return {
     message: {
       id:        `msg-friendly-result-w${scheduleEntry.week}-${Date.now()}`,
@@ -451,7 +443,6 @@ export function buildFriendlyResultMessage(
       createdAt: `W${scheduleEntry.week}`,
       readAt:    null,
     },
-    log,
   };
 }
 

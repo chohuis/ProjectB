@@ -18,6 +18,7 @@ mod team_engine;
 mod player_agent;
 mod scouting_engine;
 mod roster_gen;
+mod standings_drift;
 
 use types::*;
 use sim_types::*;
@@ -611,15 +612,6 @@ pub fn generate_jbl_schedule_native(p: String) -> String {
 }
 
 #[napi]
-pub fn generate_hs_schedule_native(p: String) -> String {
-    let params: GenerateHsScheduleParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("generateHsScheduleNative", e),
-    };
-    serde_json::to_string(&schedule_engine::generate_hs_schedule(params))
-        .unwrap_or_else(|e| parse_err("generateHsScheduleNative/serialize", e))
-}
-
-#[napi]
 pub fn generate_league_schedule_native(p: String) -> String {
     let params: GenerateLeagueScheduleParams = match serde_json::from_str(&p) {
         Ok(v) => v, Err(e) => return parse_err("generateLeagueScheduleNative", e),
@@ -635,33 +627,6 @@ pub fn generate_all_league_schedules_native(p: String) -> String {
     };
     serde_json::to_string(&schedule_engine::generate_all_league_schedules(params))
         .unwrap_or_else(|e| parse_err("generateAllLeagueSchedulesNative/serialize", e))
-}
-
-#[napi]
-pub fn generate_hs_postseason_semis_native(p: String) -> String {
-    let params: GenerateHsPostseasonSemisParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("generateHsPostseasonSemisNative", e),
-    };
-    serde_json::to_string(&schedule_engine::generate_hs_postseason_semis(params))
-        .unwrap_or_else(|e| parse_err("generateHsPostseasonSemisNative/serialize", e))
-}
-
-#[napi]
-pub fn generate_hs_postseason_final_native(p: String) -> String {
-    let params: GenerateHsPostseasonFinalParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("generateHsPostseasonFinalNative", e),
-    };
-    serde_json::to_string(&schedule_engine::generate_hs_postseason_final(params))
-        .unwrap_or_else(|e| parse_err("generateHsPostseasonFinalNative/serialize", e))
-}
-
-#[napi]
-pub fn shuffle_hs_groups_native(p: String) -> String {
-    let params: ShuffleHsGroupsParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("shuffleHsGroupsNative", e),
-    };
-    serde_json::to_string(&schedule_engine::shuffle_hs_groups(params))
-        .unwrap_or_else(|e| parse_err("shuffleHsGroupsNative/serialize", e))
 }
 
 // ── 포스트시즌 엔진 ───────────────────────────────────────────────────────────
@@ -691,6 +656,15 @@ pub fn build_univ_bracket_native(p: String) -> String {
     };
     serde_json::to_string(&postseason_engine::build_univ_bracket(params))
         .unwrap_or_else(|e| parse_err("buildUnivBracketNative/serialize", e))
+}
+
+#[napi]
+pub fn build_hs_bracket_native(p: String) -> String {
+    let params: BuildBracketParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("buildHsBracketNative", e),
+    };
+    serde_json::to_string(&postseason_engine::build_hs_bracket(params))
+        .unwrap_or_else(|e| parse_err("buildHsBracketNative/serialize", e))
 }
 
 #[napi]
@@ -856,6 +830,17 @@ pub fn generate_league_roster_native(params_json: String) -> String {
     };
     let result = roster_gen::generate_league_roster(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("generateLeagueRosterNative/serialize", e))
+}
+
+/// 반경 2(드리프트) 리그 순위표 주간 갱신 — 팀 전력치 + 노이즈로 승패만 누적 (DESIGN.md §2.1)
+#[napi]
+pub fn standings_drift_native(params_json: String) -> String {
+    let params: standings_drift::StandingsDriftParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("standingsDriftNative", e),
+    };
+    let result = standings_drift::standings_drift(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("standingsDriftNative/serialize", e))
 }
 
 // ── scouting_engine ───────────────────────────────────────────────────────────

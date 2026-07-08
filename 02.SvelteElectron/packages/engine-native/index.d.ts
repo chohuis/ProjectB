@@ -105,15 +105,12 @@ export declare function generateScheduleNative(p: string): string
 export declare function generateKblScheduleNative(p: string): string
 export declare function generateAblScheduleNative(p: string): string
 export declare function generateJblScheduleNative(p: string): string
-export declare function generateHsScheduleNative(p: string): string
 export declare function generateLeagueScheduleNative(p: string): string
 export declare function generateAllLeagueSchedulesNative(p: string): string
-export declare function generateHsPostseasonSemisNative(p: string): string
-export declare function generateHsPostseasonFinalNative(p: string): string
-export declare function shuffleHsGroupsNative(p: string): string
 export declare function buildKblBracketNative(p: string): string
 export declare function buildAblBracketNative(p: string): string
 export declare function buildUnivBracketNative(p: string): string
+export declare function buildHsBracketNative(p: string): string
 export declare function buildJblBracketNative(p: string): string
 export declare function buildIndBracketNative(p: string): string
 export declare function applyGameToSeriesNative(p: string): string
@@ -133,6 +130,8 @@ export declare function weekRollRandomBatchNative(count: number): string
 export declare function weekCalcNpcInjuriesNative(p: string): string
 /** 리그 활성화 시점 로스터 생성 — worldSeed 결정적 (DESIGN.md §8.3) */
 export declare function generateLeagueRosterNative(paramsJson: string): string
+/** 반경 2(드리프트) 리그 순위표 주간 갱신 — 팀 전력치 + 노이즈로 승패만 누적 (DESIGN.md §2.1) */
+export declare function standingsDriftNative(paramsJson: string): string
 export declare function applyScoutingNoiseNative(paramsJson: string): string
 export declare function evalCallupCandidatesNative(paramsJson: string): string
 export declare function evalCalldownCandidatesNative(paramsJson: string): string

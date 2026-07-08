@@ -99,6 +99,17 @@ pub fn build_univ_bracket(p: BuildBracketParams) -> Vec<PostseasonSeries> {
     ]
 }
 
+// 고교 10팀 단일리그 — 대학과 동일한 top4 준결승/결승 (구 A/B조 교차대진 대체, R4)
+pub fn build_hs_bracket(p: BuildBracketParams) -> Vec<PostseasonSeries> {
+    let t = sort_teams(&p.standings);
+    if t.len() < 4 { return vec![]; }
+    vec![
+        PostseasonSeries { id: "HS_SEMI1".into(), league_id: "LEAGUE_HIGHSCHOOL".into(), round: "준결승".into(), home_team_id: t[0].clone(), away_team_id: t[3].clone(), best_of: 1, home_wins: 0, away_wins: 0, winner: None, home_from: None, away_from: None, next_series_id: Some("HS_FINAL".into()), next_series_slot: Some("home".into()) },
+        PostseasonSeries { id: "HS_SEMI2".into(), league_id: "LEAGUE_HIGHSCHOOL".into(), round: "준결승".into(), home_team_id: t[1].clone(), away_team_id: t[2].clone(), best_of: 1, home_wins: 0, away_wins: 0, winner: None, home_from: None, away_from: None, next_series_id: Some("HS_FINAL".into()), next_series_slot: Some("away".into()) },
+        PostseasonSeries { id: "HS_FINAL".into(), league_id: "LEAGUE_HIGHSCHOOL".into(), round: "결승".into(),   home_team_id: "".into(),    away_team_id: "".into(),    best_of: 1, home_wins: 0, away_wins: 0, winner: None, home_from: Some("HS_SEMI1".into()), away_from: Some("HS_SEMI2".into()), next_series_id: None, next_series_slot: None },
+    ]
+}
+
 pub fn build_jbl_bracket(p: BuildBracketParams) -> Vec<PostseasonSeries> {
     let cl: Vec<Standing> = p.standings.iter().filter(|s| s.team_id.contains("_CL_")).cloned().collect();
     let pl: Vec<Standing> = p.standings.iter().filter(|s| s.team_id.contains("_PL_")).cloned().collect();

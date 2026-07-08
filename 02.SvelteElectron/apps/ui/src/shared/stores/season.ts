@@ -23,9 +23,7 @@ import {
   generateLeagueSchedule,
   HS_ACTIVE_TEAMS_V3,
   makeStandings,
-  shuffleHsGroups,
 } from "../utils/leagueScheduler";
-import { generateHsSchedule } from "../utils/scheduleGen";
 import * as BackgroundLeague from "./backgroundLeague";
 import * as NpcInjury from "./npcInjury";
 import * as Postseason from "./postseason";
@@ -64,10 +62,8 @@ function createSeasonStore() {
         leagueState: Object.fromEntries(
           Object.entries(season.leagueState ?? {}).map(([lid, ls]) => [lid, migrateLeagueState(ls as Partial<LeagueSeasonState>)])
         ),
-        hsGroupA: season.hsGroupA ?? [], hsGroupB: season.hsGroupB ?? [],
         postseasonBrackets: season.postseasonBrackets ?? {},
         ablEastTeams: season.ablEastTeams ?? [], ablWestTeams: season.ablWestTeams ?? [],
-        friendlyLog: season.friendlyLog ?? [],
         npcLiveStats: {},
         npcRetired: season.npcRetired ?? [],
         schedule: (season.schedule ?? []).map((e) => e.gameDate ? e : { ...e, gameDate: `${season.seasonYear ?? 2026}-03-01` }),
@@ -254,7 +250,9 @@ function createSeasonStore() {
     ) {
       update((s) => {
         const schedule = s.schedule.map((e) =>
-          e.id === scheduleId ? { ...e, result } : e,
+          e.id === scheduleId
+            ? { ...e, result, ...(log ? { friendlyStats: { ip: log.ip, er: log.er, k: log.k, bb: log.bb, rating: log.rating } } : {}) }
+            : e,
         );
         const cur = s.leagueState[leagueId] ?? { standings: [], stats: {}, playerConditions: {}, teamRotationIndex: {} };
         const leagueState = {
@@ -269,12 +267,7 @@ function createSeasonStore() {
             playerConditions: { ...cur.playerConditions, ...pitcherConditions },
           },
         };
-        return {
-          ...s,
-          schedule,
-          leagueState,
-          friendlyLog: log ? [...(s.friendlyLog ?? []), log] : (s.friendlyLog ?? []),
-        };
+        return { ...s, schedule, leagueState };
       });
     },
 
@@ -339,45 +332,7 @@ function createSeasonStore() {
       update((s) => ({ ...s, triggeredEvents: {} }));
     },
 
-    async initAllLeagues(seasonYear: number, protagonistTeamId: string, hsGroupA: string[], hsGroupB: string[]) {
-      const protagonistGroup = new Set(hsGroupA.includes(protagonistTeamId) ? hsGroupA : hsGroupB);
-      const npcGroup         = new Set(hsGroupA.includes(protagonistTeamId) ? hsGroupB : hsGroupA);
-
-      const [allHsEntries, otherSchedules] = await Promise.all([
-        generateHsSchedule(hsGroupA, hsGroupB, protagonistTeamId, seasonYear),
-        generateAllLeagueSchedules(DEFAULT_LEAGUE_CONFIGS.map((c) => ({ ...c })), protagonistTeamId),
-      ]);
-
-      // PRESN_ 접두사 항목 → 프리시즌 친선경기 마킹
-      const allHsSchedule = allHsEntries
-        .map((e) => ({
-          ...e,
-          leagueId: "LEAGUE_HIGHSCHOOL",
-          isFriendly: e.id.startsWith("PRESN_") ? true : (e.isFriendly ?? false),
-        }))
-        .sort((a, b) => a.gameDate.localeCompare(b.gameDate));
-
-      const leagueState: Record<string, LeagueSeasonState> = {
-        LEAGUE_HIGHSCHOOL: { standings: makeStandings([...hsGroupA, ...hsGroupB]), stats: {}, playerConditions: {}, teamRotationIndex: {} },
-      };
-      for (const [lid, teams] of Object.entries(ALL_TEAMS_BY_LEAGUE)) {
-        if (lid === "LEAGUE_HIGHSCHOOL") continue;
-        leagueState[lid] = { standings: makeStandings(teams), stats: {}, playerConditions: {}, teamRotationIndex: {} };
-      }
-
-      update((s) => ({
-        ...s,
-        seasonYear,
-        schedule: allHsSchedule,
-        leagueSchedules: otherSchedules,
-        leagueState,
-        hsGroupA,
-        hsGroupB,
-        standings: makeStandings([...hsGroupA, ...hsGroupB]),
-      }));
-    },
-
-    // ── R3a-4 (v3): 고교 10팀 단일리그 초기화 — A/B조 없음 (DESIGN.md §7) ──
+    // 고교 10팀 단일리그 초기화 — A/B조 없음 (DESIGN.md §7)
     async initAllLeaguesV3(seasonYear: number, protagonistTeamId: string) {
       const [hsEntries, otherSchedules] = await Promise.all([
         generateLeagueSchedule("LEAGUE_HIGHSCHOOL", HS_ACTIVE_TEAMS_V3, 2, 45, 4, protagonistTeamId, seasonYear),
@@ -402,31 +357,25 @@ function createSeasonStore() {
         schedule: hsSchedule,
         leagueSchedules: otherSchedules,
         leagueState,
-        hsGroupA: HS_ACTIVE_TEAMS_V3,  // 전환기 호환: 단일리그 = A조 전체, B조 없음
-        hsGroupB: [],
         standings: makeStandings(HS_ACTIVE_TEAMS_V3),
       }));
     },
 
+    // 학년 진급 시 다음 고교 시즌 재초기화 — 단일리그 플랫 스케줄 재생성
     async reinitHighschoolSeason(protagonistTeamId: string, allHsTeams: string[]): Promise<void> {
-      const { groupA, groupB } = await shuffleHsGroups(allHsTeams);
       const seasonYear = get({ subscribe }).seasonYear;
 
-      const [allHsEntries, otherSchedules] = await Promise.all([
-        generateHsSchedule(groupA, groupB, protagonistTeamId, seasonYear),
+      const [hsEntries, otherSchedules] = await Promise.all([
+        generateLeagueSchedule("LEAGUE_HIGHSCHOOL", allHsTeams, 2, 45, 4, protagonistTeamId, seasonYear),
         generateAllLeagueSchedules(DEFAULT_LEAGUE_CONFIGS.map((c) => ({ ...c })), protagonistTeamId),
       ]);
 
-      const allHsSchedule = allHsEntries
-        .map((e) => ({
-          ...e,
-          leagueId: "LEAGUE_HIGHSCHOOL",
-          isFriendly: e.id.startsWith("PRESN_") ? true : (e.isFriendly ?? false),
-        }))
+      const hsSchedule = hsEntries
+        .map((e) => ({ ...e, leagueId: "LEAGUE_HIGHSCHOOL", isFriendly: e.isFriendly ?? false }))
         .sort((a, b) => a.gameDate.localeCompare(b.gameDate));
 
       const leagueState: Record<string, LeagueSeasonState> = {
-        LEAGUE_HIGHSCHOOL: { standings: makeStandings([...groupA, ...groupB]), stats: {}, playerConditions: {}, teamRotationIndex: {} },
+        LEAGUE_HIGHSCHOOL: { standings: makeStandings(allHsTeams), stats: {}, playerConditions: {}, teamRotationIndex: {} },
       };
       for (const [lid, teams] of Object.entries(ALL_TEAMS_BY_LEAGUE)) {
         if (lid === "LEAGUE_HIGHSCHOOL") continue;
@@ -435,12 +384,10 @@ function createSeasonStore() {
 
       update((s) => ({
         ...s,
-        schedule: allHsSchedule,
-        standings: makeStandings([...groupA, ...groupB]),
+        schedule: hsSchedule,
+        standings: makeStandings(allHsTeams),
         leagueSchedules: otherSchedules,
         leagueState,
-        hsGroupA: groupA,
-        hsGroupB: groupB,
       }));
     },
 
@@ -452,9 +399,10 @@ function createSeasonStore() {
       week: number,
       protagonistLeagueId: string,
       entities: EntityRow[],
+      careerStage?: import("../types/save").CareerStage,
     ): Promise<void> {
       const s = get({ subscribe });
-      const result = await BackgroundLeague.simulateBackgroundLeagues(s, week, protagonistLeagueId, entities, get(npcLiveStatsStore));
+      const result = await BackgroundLeague.simulateBackgroundLeagues(s, week, protagonistLeagueId, entities, get(npcLiveStatsStore), careerStage);
       if (!result) return;
 
       update((st) => ({
@@ -468,6 +416,21 @@ function createSeasonStore() {
         await window.projectB.npcBulkInsertGameLogs(JSON.stringify({ slotId, season: s.seasonYear, week, logs: result.gameLogs }));
         void window.projectB.npcTrimGameLogs(JSON.stringify({ slotId, keep: 40 }));
       }
+    },
+
+    // 반경 2(드리프트) 리그 순위표 주간 갱신 — R4 반경 게이트
+    async driftBackgroundLeaguesAsync(
+      protagonistLeagueId: string,
+      careerStage: import("../types/save").CareerStage,
+      teams: import("./master").TeamRef[],
+    ): Promise<void> {
+      const s = get({ subscribe });
+      const nextLeagueState = await BackgroundLeague.driftBackgroundLeagues(s, protagonistLeagueId, careerStage, teams);
+      if (!nextLeagueState) return;
+      update((st) => ({
+        ...st,
+        leagueState: { ...st.leagueState, ...nextLeagueState },
+      }));
     },
 
     syncProtagonistLeagueResult(leagueId: string, result: MatchResult, homeTeamId: string, awayTeamId: string) {

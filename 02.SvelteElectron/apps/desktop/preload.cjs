@@ -108,12 +108,8 @@ contextBridge.exposeInMainWorld("projectB", {
   scheduleKbl:               (p) => ipcRenderer.invoke("engine:call", "generateKblScheduleNative",               p),
   scheduleAbl:               (p) => ipcRenderer.invoke("engine:call", "generateAblScheduleNative",               p),
   scheduleJbl:               (p) => ipcRenderer.invoke("engine:call", "generateJblScheduleNative",               p),
-  scheduleHs:                (p) => ipcRenderer.invoke("engine:call", "generateHsScheduleNative",                p),
   scheduleLeague:            (p) => ipcRenderer.invoke("engine:call", "generateLeagueScheduleNative",            p),
   scheduleAllLeagues:        (p) => ipcRenderer.invoke("engine:call", "generateAllLeagueSchedulesNative",        p),
-  scheduleHsPostseasonSemis: (p) => ipcRenderer.invoke("engine:call", "generateHsPostseasonSemisNative", p),
-  scheduleHsPostseasonFinal: (p) => ipcRenderer.invoke("engine:call", "generateHsPostseasonFinalNative", p),
-  scheduleShuffleHsGroups:   (p) => ipcRenderer.invoke("engine:call", "shuffleHsGroupsNative",   p),
 
   // ── 포스트시즌 엔진 (Phase 5) ──────────────────────────────────────────────
   postseasonBuildKbl:   (p) => ipcRenderer.invoke("engine:call", "buildKblBracketNative",   p),

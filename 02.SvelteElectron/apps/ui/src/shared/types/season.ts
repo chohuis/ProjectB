@@ -62,9 +62,16 @@ export interface ScheduleEntry {
   phase: SeasonPhase;       // 해당 경기의 시즌 페이즈
   result?: MatchResult;     // 경기 완료 후 채워짐
   isFriendly?: boolean;     // 친선경기 여부 (공식 기록 미집계)
+  friendlyStats?: {         // 친선경기 주인공 개인 성적 (isFriendly=true일 때만)
+    ip:     number;
+    er:     number;
+    k:      number;
+    bb:     number;
+    rating: 1 | 2 | 3 | 4 | 5;  // 코치 평가 별점
+  };
 }
 
-// ── 친선경기 성적 로그 ─────────────────────────────────────────
+// ── 친선경기 성적 로그 (applyFriendlyResult 전달용 — 저장은 ScheduleEntry.friendlyStats로) ──
 export interface FriendlyPerformanceLog {
   scheduleId:     string;
   week:           number;
@@ -152,7 +159,6 @@ export type PendingAction =
       exercised: boolean;
       nextSalary: number;
     }
-  | { type: "hsGroupDraw" }
   | {
       type: "injuryTreatment";
       injuryType: string;
@@ -300,9 +306,6 @@ export interface SaveSeason {
   // L1: 멀티리그 지원
   leagueSchedules: Record<string, ScheduleEntry[]>;      // leagueId → 경기 일정
   leagueState: Record<string, LeagueSeasonState>;        // leagueId → 순위·스탯
-  // 고교 A/B조 배정 (매 시즌 랜덤, protagonist 조는 schedule/standings에 반영)
-  hsGroupA: string[];
-  hsGroupB: string[];
   // 포스트시즌 브라켓 (leagueId → 시리즈 목록)
   postseasonBrackets: Record<string, PostseasonSeries[]>;
   // ABL 컨퍼런스 배정 (시즌 시작 시 랜덤)
@@ -312,8 +315,6 @@ export interface SaveSeason {
   npcInjuries: Record<string, import("../types/save").NpcInjuryEntry>;
   // 부상 은퇴 NPC 목록 (playerId)
   npcRetired: string[];
-  // 친선경기 성적 이력
-  friendlyLog: FriendlyPerformanceLog[];
   // 모든 선수 NPC 라이브 스탯 (월간 성장/하락 누적, entityId → NpcLiveStat)
   npcLiveStats: Record<string, NpcLiveStat>;
   // 전년도 KBL 최종 순위 — 드래프트 지명 순서 결정 (꼴지팀부터)
@@ -353,14 +354,11 @@ export function makeEmptySeason(
     triggeredEvents: {},
     leagueSchedules: {},
     leagueState: {},
-    hsGroupA: [],
-    hsGroupB: [],
     postseasonBrackets: {},
     ablEastTeams: [],
     ablWestTeams: [],
     npcInjuries: {},
     npcRetired: [],
-    friendlyLog: [],
     npcLiveStats: {},
     prevSeasonKblStandings: [],
   };

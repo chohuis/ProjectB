@@ -15,24 +15,10 @@ export interface LeagueConfig {
   startWeek: number;
   endWeek: number;
   cycles: number;
-  groupA?: string[];
-  groupB?: string[];
   seriesGames?: number;
 }
 
 // ── Rust IPC 래퍼 ────────────────────────────────────────────────
-export async function generateHsSchedule(
-  groupA: string[],
-  groupB: string[],
-  protagonistTeamId: string,
-  seasonYear = 2026,
-): Promise<ScheduleEntry[]> {
-  const raw = await window.projectB!.scheduleHs(
-    JSON.stringify({ groupA, groupB, protagonistTeamId, seasonYear })
-  );
-  return JSON.parse(raw);
-}
-
 export async function generateLeagueSchedule(
   leagueId: string,
   teams: string[],
@@ -65,15 +51,6 @@ export async function generateAllLeagueSchedules(
   return parsed;
 }
 
-export async function shuffleHsGroups(
-  allTeams: string[] = HS_ALL_TEAMS,
-): Promise<{ groupA: string[]; groupB: string[] }> {
-  const raw = await window.projectB!.scheduleShuffleHsGroups(
-    JSON.stringify({ allTeams })
-  );
-  return JSON.parse(raw);
-}
-
 // ── 고교 팀 목록 ──────────────────────────────────────────────
 export const HS_SELECTABLE_TEAMS = [
   "TEAM_HS_SEOUL_INNOVATION",
@@ -98,11 +75,7 @@ export const HS_ALL_TEAMS = [
   "TEAM_HS_SUNCHEON_BAY",
 ];
 
-export const HS_GROUP_A = HS_ALL_TEAMS.slice(0, 8);
-export const HS_GROUP_B = HS_ALL_TEAMS.slice(8);
-
-// ── R3a (Lite): 고교 10팀 단일리그 — 선택 8교 + 배경 2교 (DESIGN.md §7) ──
-// v3 새 게임은 이 목록만 활성화. A/B조 로직은 R4에서 제거 예정.
+// ── R4: 고교 10팀 단일리그 — 선택 8교 + 배경 2교 (DESIGN.md §7) ──
 export const HS_ACTIVE_TEAMS_V3 = [
   ...HS_SELECTABLE_TEAMS,
   "TEAM_HS_YEOSU_SHORE",
@@ -189,7 +162,7 @@ export const ALL_TEAMS_BY_LEAGUE: Record<string, string[]> = {
   LEAGUE_JBL_FARM: JBL_FARM_TEAMS,
 };
 
-export const DEFAULT_LEAGUE_CONFIGS: Omit<LeagueConfig, "groupA" | "groupB">[] = [
+export const DEFAULT_LEAGUE_CONFIGS: LeagueConfig[] = [
   { leagueId: "LEAGUE_UNIVERSITY",  teams: UNIV_TEAMS,      startWeek: 8, endWeek: 40, cycles: 5,  seriesGames: 2 },
   { leagueId: "LEAGUE_INDEPENDENT", teams: IND_TEAMS,       startWeek: 6, endWeek: 38, cycles: 8,  seriesGames: 2 },
   { leagueId: "LEAGUE_KBL",         teams: KBL_TEAMS,       startWeek: 1, endWeek: 50, cycles: 16 },

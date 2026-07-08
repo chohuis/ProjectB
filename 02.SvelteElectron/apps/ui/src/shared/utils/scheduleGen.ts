@@ -67,39 +67,3 @@ export async function generateJblSchedule(
   return JSON.parse(raw);
 }
 
-export async function generateHsSchedule(
-  groupA: string[],
-  groupB: string[],
-  protagonistTeamId: string,
-  seasonYear = 2026,
-): Promise<ScheduleEntry[]> {
-  const raw = await window.projectB!.scheduleHs(
-    JSON.stringify({ groupA, groupB, protagonistTeamId, seasonYear })
-  );
-  return JSON.parse(raw);
-}
-
-export async function generateHsPostseasonSemis(
-  top4: string[],
-  protagonistTeamId: string,
-  week: number,
-  seasonYear = 2026,
-): Promise<ScheduleEntry[]> {
-  const raw = await window.projectB!.scheduleHsPostseasonSemis(
-    JSON.stringify({ top4, protagonistTeamId, week, seasonYear })
-  );
-  return JSON.parse(raw);
-}
-
-export async function generateHsPostseasonFinal(
-  winnerA: string,
-  winnerB: string,
-  protagonistTeamId: string,
-  week: number,
-  seasonYear = 2026,
-): Promise<ScheduleEntry> {
-  const raw = await window.projectB!.scheduleHsPostseasonFinal(
-    JSON.stringify({ winnerA, winnerB, protagonistTeamId, week, seasonYear })
-  );
-  return JSON.parse(raw);
-}

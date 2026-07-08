@@ -3,7 +3,6 @@
   import { gameStore } from "../../shared/stores/game";
   import { seasonStore } from "../../shared/stores/season";
   import { masterStore } from "../../shared/stores/master";
-  import HsGroupDrawModal from "../../features/hs-group-draw/ui/HsGroupDrawModal.svelte";
   import TrainingStatBars from "../../features/messages/ui/TrainingStatBars.svelte";
   import ProspectTop10Panel from "../../features/messages/ui/ProspectTop10Panel.svelte";
   import type { Top10Metadata } from "../../shared/types/main";
@@ -31,10 +30,6 @@
   let activeFilter: FilterId = "all";
   let selectedId: string | null = null;
   let sortAsc = false;
-  let showHsDraw = false;
-
-  $: pendingHsGroupDraw = $seasonStore.pendingActions.some((a) => a.type === "hsGroupDraw");
-  $: if (!pendingHsGroupDraw) showHsDraw = false;
   let counts: Record<FilterId, number> = {
     all: 0,
     unread: 0,
@@ -88,38 +83,6 @@
 
   async function choose(optionId: string) {
     if (!selected) return;
-    // msg-hs-draft-invite 는 새 흐름에서 더 이상 사용되지 않음 (careerResults pendingAction으로 대체)
-    if (selected.id.startsWith("msg-hs-group-draw-")) {
-      if (optionId === "join_draw") {
-        seasonStore.pushPendingAction({ type: "hsGroupDraw" });
-        showHsDraw = true;
-      } else if (optionId === "skip_draw") {
-        const groupA = $seasonStore.hsGroupA ?? [];
-        const groupB = $seasonStore.hsGroupB ?? [];
-        const myTeamId = $gameStore.protagonist.teamId;
-        const tn = (id: string) => $masterStore.teams.find((t) => t.id === id)?.name ?? id;
-        const myGroup = groupA.includes(myTeamId) ? "A" : "B";
-        const myGroupLabel = myGroup === "A" ? "A조" : "B조";
-        gameStore.addMessage({
-          id: `msg-hs-group-draw-result-${$seasonStore.seasonYear}`,
-          category: "system",
-          sender: "고교야구연맹",
-          subject: `${$seasonStore.seasonYear} 고교리그 A/B조 편성 완료`,
-          preview: `${tn(myTeamId)}은(는) ${myGroupLabel}에 자동 배정되었습니다.`,
-          body: [
-            `${$seasonStore.seasonYear}년 고교 주말리그 A/B조 편성이 완료되었습니다.`,
-            "",
-            `[A조] ${groupA.map(tn).join(", ")}`,
-            "",
-            `[B조] ${groupB.map(tn).join(", ")}`,
-            "",
-            `귀 팀(${tn(myTeamId)})은 ${myGroupLabel}에 배정되었습니다.`,
-          ].join("\n"),
-          createdAt: `W${$seasonStore.currentWeek}`,
-          readAt: null,
-        });
-      }
-    }
     gameStore.resolveDecision(selected.id, optionId);
     seasonStore.resolvePendingAction("message", selected.id);
     await gameStore.save();
@@ -292,20 +255,11 @@
                 <span class="result-hint">{chosen.effectHint}</span>
               {/if}
             </div>
-            {#if selected.id.startsWith("msg-hs-group-draw-") && dec.selectedOptionId === "join_draw" && pendingHsGroupDraw}
-              <button class="btn-start-draw" type="button" on:click={() => showHsDraw = true}>
-                추첨 진행하기
-              </button>
-            {/if}
           {/if}
         </section>
       {/if}
 
     </article>
-  {/if}
-
-  {#if showHsDraw}
-    <HsGroupDrawModal />
   {/if}
 </section>
 
