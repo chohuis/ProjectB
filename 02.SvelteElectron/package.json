@@ -42,7 +42,8 @@
     "test:rostergen": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-roster-gen.cjs",
     "test:newgame": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-newgame-v3.cjs",
     "test:v3": "npm run test:slotdb && npm run test:rostergen && npm run test:newgame && npm run test:draftpool",
-    "test:draftpool": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-draft-pool.cjs"
+    "test:draftpool": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-draft-pool.cjs",
+    "test:synthetic": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-synthetic-trajectory.cjs"
   },
   "build": {
     "appId": "com.projectb.desktop",

@@ -2,6 +2,9 @@ import { get } from "svelte/store";
 import { seasonStore, npcLiveStatsStore } from "../../stores/season";
 import { gameStore } from "../../stores/game";
 import { masterStore } from "../../stores/master";
+import { getLeagueRadius } from "../../utils/radiusGate";
+import { slotRepo } from "../../repo/slotRepo";
+import type { CareerStage } from "../../types/save";
 
 // ── NPC 월간 성장 헬퍼 ────────────────────────────────────────
 
@@ -48,7 +51,7 @@ function aggregateMonthlyPerf(
 }
 
 // 모든 선수 NPC 주간 성장 처리 (매주 실행)
-export async function processWeeklyNpcGrowth(weekNum: number): Promise<void> {
+export async function processWeeklyNpcGrowth(weekNum: number, careerStage: CareerStage): Promise<void> {
   const g = get(gameStore);
   const s = get(seasonStore);
   const m = get(masterStore);
@@ -67,7 +70,7 @@ export async function processWeeklyNpcGrowth(weekNum: number): Promise<void> {
     };
   });
 
-  // 최근 4주 성적 집계 (1주 창은 미등판 선수를 누락시켜 성장 방향 왜곡)
+  // 최근 4주 성적 집계 (1주 창은 미등판 선수를 누락시켜 성장 방향 왜곡) — 반경 1(실제 경기)
   const prevWeek = weekNum - 1;
   const perfStartWeek = Math.max(1, prevWeek - 3);
   const allSchedule = [
@@ -78,10 +81,43 @@ export async function processWeeklyNpcGrowth(weekNum: number): Promise<void> {
   ];
   const perfData = aggregateMonthlyPerf(allSchedule, perfStartWeek, prevWeek);
 
-  // npcLiveStats에 있는 모든 NPC (master entity 기반)
   const namedFameMap = new Map(g.npcs.map(n => [n.npcId, n.fame ?? 0]));
+
+  // 반경 2/3 리그의 Named NPC — 합성 주간 성적으로 perfData 보강 (R3b, DESIGN.md §4.2)
+  const syntheticCandidates: { npcId: string; ovr: number; playerType: string }[] = [];
+  for (const e of m.entities) {
+    if (e.role !== "player" || !get(npcLiveStatsStore)[e.id]) continue;
+    if (!namedFameMap.has(e.id)) continue; // Named만 합성 대상
+    if (getLeagueRadius(careerStage, e.leagueId ?? "") === 1) continue; // 실제 경기로 이미 처리됨
+    if (perfData[e.id]) continue; // 이번 주 이미 실데이터 있음(예외 케이스 방어)
+    const live = get(npcLiveStatsStore)[e.id];
+    const p    = (e.details as import("../../stores/master").EntityDetails)?.player;
+    const ovr  = live?.pitching?.ovr ?? live?.batting?.ovr ?? p?.pitching?.ovr ?? p?.batting?.ovr ?? 50;
+    syntheticCandidates.push({ npcId: e.id, ovr, playerType: p?.playerType ?? "pitcher" });
+  }
+
+  if (syntheticCandidates.length > 0) {
+    const meta = await slotRepo.getMeta(g.currentSlotId ?? "");
+    const worldSeed = Number(meta.world_seed ?? 0) >>> 0;
+    const raw = await window.projectB!.engine("syntheticWeeklyPerfNative", JSON.stringify({
+      worldSeed, seasonYear: s.seasonYear, week: weekNum, npcs: syntheticCandidates,
+    }));
+    const synth = JSON.parse(raw) as { results?: Array<{ npcId: string; missed: boolean; era?: number; battingAvg?: number }> };
+    if (Array.isArray(synth.results)) {
+      for (const r of synth.results) {
+        if (r.missed) continue; // 결장 구간 — 합성 부상, perfData 미생성
+        perfData[r.npcId] = { gamesPlayed: 1, era: r.era, battingAvg: r.battingAvg };
+      }
+    }
+  }
+
+  // npcLiveStats에 있는 모든 NPC 중, 배경(비-Named)은 반경 1(주인공 리그)만 주간 처리 (§4.2 표)
   const npcs = m.entities
-    .filter((e) => e.role === "player" && get(npcLiveStatsStore)[e.id])
+    .filter((e) => {
+      if (e.role !== "player" || !get(npcLiveStatsStore)[e.id]) return false;
+      if (namedFameMap.has(e.id)) return true;
+      return getLeagueRadius(careerStage, e.leagueId ?? "") === 1;
+    })
     .map((e) => {
       const live = get(npcLiveStatsStore)[e.id];
       const p    = (e.details as import("../../stores/master").EntityDetails)?.player;

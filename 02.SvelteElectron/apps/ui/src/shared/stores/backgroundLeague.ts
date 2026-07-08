@@ -8,13 +8,7 @@ import { makeStandings, ALL_TEAMS_BY_LEAGUE } from "../utils/leagueScheduler";
 import { simulateGame } from "../utils/gameSimulator";
 import { rotationSizeForLeague } from "../utils/rosterEngine";
 import { autoLog } from "./autoAdvance";
-import { getLeagueRadius } from "../utils/radiusGate";
-
-// 반경 게이트가 적용되는 리그만 — 팜리그 등 그 외 리그는 기존 풀시뮬 동작 그대로 둔다 (R5 대상)
-const RADIUS_GATED_LEAGUES = new Set([
-  "LEAGUE_HIGHSCHOOL", "LEAGUE_UNIVERSITY", "LEAGUE_INDEPENDENT",
-  "LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL",
-]);
+import { getLeagueRadius, RADIUS_GATED_LEAGUES } from "../utils/radiusGate";
 
 // 팀 소속 감독의 handlePersonnel 능력치 조회
 function getManagerHandlePersonnel(teamId: string, entities: EntityRow[]): number {

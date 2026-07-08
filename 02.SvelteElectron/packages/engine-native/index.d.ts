@@ -132,6 +132,8 @@ export declare function weekCalcNpcInjuriesNative(p: string): string
 export declare function generateLeagueRosterNative(paramsJson: string): string
 /** 반경 2(드리프트) 리그 순위표 주간 갱신 — 팀 전력치 + 노이즈로 승패만 누적 (DESIGN.md §2.1) */
 export declare function standingsDriftNative(paramsJson: string): string
+/** 타 리그 Named NPC 주간 합성 성적 — worldSeed 결정적 (DESIGN.md §4.2, R3b) */
+export declare function syntheticWeeklyPerfNative(paramsJson: string): string
 export declare function applyScoutingNoiseNative(paramsJson: string): string
 export declare function evalCallupCandidatesNative(paramsJson: string): string
 export declare function evalCalldownCandidatesNative(paramsJson: string): string

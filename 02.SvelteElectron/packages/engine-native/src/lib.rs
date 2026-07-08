@@ -19,6 +19,7 @@ mod player_agent;
 mod scouting_engine;
 mod roster_gen;
 mod standings_drift;
+mod synthetic_trajectory;
 
 use types::*;
 use sim_types::*;
@@ -841,6 +842,17 @@ pub fn standings_drift_native(params_json: String) -> String {
     };
     let result = standings_drift::standings_drift(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("standingsDriftNative/serialize", e))
+}
+
+/// 타 리그 Named NPC 주간 합성 성적 — worldSeed 결정적 (DESIGN.md §4.2, R3b)
+#[napi]
+pub fn synthetic_weekly_perf_native(params_json: String) -> String {
+    let params: synthetic_trajectory::SyntheticWeeklyPerfParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("syntheticWeeklyPerfNative", e),
+    };
+    let result = synthetic_trajectory::synthetic_weekly_perf(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("syntheticWeeklyPerfNative/serialize", e))
 }
 
 // ── scouting_engine ───────────────────────────────────────────────────────────

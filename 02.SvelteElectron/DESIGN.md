@@ -401,11 +401,13 @@ military → 원 소속 복귀
 - [ ] proTeamProfiles 마스터 정적화 + personality 생성 시점 확정
 - [ ] 검증: 이적·드래프트·FA 결과가 npc 테이블/거래기록/화면 **3자 일치**
 
-**R3b — 합성 주간 성적 생성기 (코어 검증 통과 후 착수)**
-- [ ] Rust 시즌 궤적 생성 (worldSeed 결정적, 최종 라인 + 폼 곡선 + 결장 구간)
-- [ ] 주간 값 = 궤적 보간 (Named 타 리그分 주간 처리에 연결)
-- [ ] 합성 부상 = 궤적 결장 구간으로 표현
-- [ ] 10시즌 분포 안정 검증 스크립트 (리그 ERA/OPS 분포 유지 확인)
+**R3b — 합성 주간 성적 생성기 완료 (2026-07-08)**
+- [x] Rust 시즌 궤적 생성 (`packages/engine-native/src/synthetic_trajectory.rs`, `synthetic_weekly_perf_native`) — worldSeed+npcId+seasonYear 결정적. 궤적을 별도 저장하지 않고 `(worldSeed, npcId, seasonYear, week)`만으로 매번 재계산하는 순수 함수로 구현(같은 시드=같은 결과이므로 저장 불필요) — 최종 라인(OVR→ERA/AVG 선형 매핑) + 주간 폼 곡선(시드 파생 사인파 2개 합성) + 결장 구간(시드 해시로 직접 샘플링, 시즌당 최대 1구간)
+- [x] 주간 값 = 궤적에서 파생 — `weekPhases/growth.ts`의 `processWeeklyNpcGrowth`가 반경 게이트(`getLeagueRadius`)로 Named NPC를 분기: 반경1(주인공 리그)은 기존 실제 경기 perfData 그대로, 반경2/3의 Named는 합성 배치 호출 결과를 perfData에 병합해 **기존** `npcCalcWeeklyGrowth` 파이프라인에 무수정으로 흘려보냄. 배경(비-Named) NPC는 반경1이 아니면 이번 주 처리 대상에서 제외(§4.2 표와 일치)
+- [x] 합성 부상 = 궤적 결장 구간 — `missed=true`인 주는 perfData 자체를 생성하지 않음. 별도 InjuryState 없음(설계 요구사항대로 결장 자체가 부상 표현)
+- [x] 10시즌 분포 안정 검증 — `scripts/test-synthetic-trajectory.cjs` (`npm run test:synthetic`) 신규: 결정성, OVR-성적 단조관계, 결장비율(70~100% 출전), 10시즌 표준편차(ERA<0.5, AVG<0.03) 전부 통과
+
+**분포 파라미터 확정** (§11 미결 항목 해소): 투수 `targetEra = clamp(6.5 - (ovr-20)*4.5/70, 1.8, 7.5)`, 타자 `targetAvg = clamp(0.180 + (ovr-20)*0.150/70, 0.180, 0.340)` — `calcNpcPerfScore`(ERA 2.5=80pt/4.0=50pt/6.0=10pt, AVG 환산)의 역눈금과 감각을 맞춘 신규 선형 공식.
 
 ### R4. advanceWeek 분해 + 반경 시뮬
 - [x] `weekPhases/` 8모듈 분리 (training·academics·events·games·injuries·growth·market·digest) — advanceWeek.ts 3,634→2,010줄, 정적 검증(tsc 15=15·test:v3·vite build) 통과. 사용자 런타임 재생 확인 대기 (2026-07-08)
@@ -429,7 +431,7 @@ military → 원 소속 복귀
 
 - [x] ~~배경 NPC 주간 시뮬 범위~~ → **B안 확정** (§4.2, 2026-07-02)
 - [ ] npc 테이블 능력치 JSON 컬럼의 Rust 측 직렬화 규약 (serde camelCase 유지 여부) — R3a 설계 시 확정
-- [ ] 합성 궤적 모델의 분포 파라미터 상세 (포지션별 폼 곡선 형태) — R3b 설계 시 확정
+- [x] ~~합성 궤적 모델의 분포 파라미터 상세~~ → R3b에서 확정 (§10 R3b 참고, 2026-07-08)
 - [ ] 드리프트 리그의 시즌 종료 "리그 리더" 생성 규칙 상세 (합성 궤적과 통합 가능성 검토)
 - [ ] 감정 시스템 dormant 재정의 (Named 타 리그 준활성) — R5
 - [ ] 은퇴 후 인생 기록 화면 구성 (원 기획 07 계승 — 엔딩의 본체)

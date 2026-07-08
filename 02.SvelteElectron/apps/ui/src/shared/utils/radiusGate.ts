@@ -42,7 +42,14 @@ const RADIUS_TABLE: Partial<Record<CareerStage, { radius1: string[]; radius2: st
   },
 };
 
+// 반경 게이트가 적용되는 리그만 — 팜리그 등 그 외 리그는 항상 기존(반경 미적용) 동작 유지 (R5 대상)
+export const RADIUS_GATED_LEAGUES = new Set([
+  "LEAGUE_HIGHSCHOOL", "LEAGUE_UNIVERSITY", "LEAGUE_INDEPENDENT",
+  "LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL",
+]);
+
 export function getLeagueRadius(careerStage: CareerStage, leagueId: string): LeagueRadius {
+  if (!RADIUS_GATED_LEAGUES.has(leagueId)) return 1; // 게이트 대상 아님 — 항상 풀 처리
   const rules = RADIUS_TABLE[careerStage];
   if (!rules) return 3;
   if (rules.radius1.includes(leagueId)) return 1;

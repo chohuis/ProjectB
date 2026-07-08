@@ -433,7 +433,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   });
 
   // NPC 주간 성장/하락 처리 (매주 실행)
-  await processWeeklyNpcGrowth(weekNum);
+  await processWeeklyNpcGrowth(weekNum, g.protagonist.careerStage);
 
   // 프로 스테이지: 콜업/콜다운 처리 (월간 첫 주에만)
   if (isMonthStart(weekInYear)) {
