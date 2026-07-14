@@ -33,6 +33,9 @@ migrate_working_dir/
 /build/
 /coverage/
 
+# engine.dll copied to project root for headless `flutter test` (see 09_개발환경_세팅.md §3)
+/*.dll
+
 # Symbolication related
 app.*.symbols
 
