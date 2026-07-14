@@ -1,0 +1,7 @@
+.dart_tool/
+.packages
+
+# repo-root .gitignore has a blanket bin/ rule for other (.NET) subprojects —
+# bin/ here is the Dart CLI entrypoint (dart run tool bin/tool.dart), not build output.
+!/bin/
+!/bin/*

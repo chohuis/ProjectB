@@ -1,1 +1,7 @@
 /target
+/content.db
+
+# repo-root .gitignore has a blanket bin/ rule for other (.NET) subprojects —
+# src/bin/ here is real Rust source (extra [[bin]] targets), not build output.
+!/src/bin/
+!/src/bin/*

@@ -1,7 +1,7 @@
 # 구현 Phase 계획 (착수 로드맵 — 새 세션 온보딩 문서)
 
 > 근거: [00_결정_요약](00_결정_요약.md)(전체 결정 인덱스) · [03_구조](03_구조.md) §5-1(엔진 모듈 지도) · [05_밸런스](05_밸런스.md) §3(확정 순서) · [07_데이터관리](07_데이터관리.md) §7(초기구축순서) · [08_P7_체크리스트](08_P7_체크리스트.md)(실측 완료) · [09_개발환경_세팅](09_개발환경_세팅.md) · 대화 설계(2026-07-14)
-> 상태: **I1 완료, I0 부분 완료(Windows 빌드 이슈 보류)** — 2026-07-15
+> 상태: **I0·I1 완료, I2 착수 대기** — 2026-07-15
 > 목적: **이 문서 하나만 읽으면 새 대화 세션이 지금 상황을 전부 파악하고 이어서 구현을 진행**할 수 있게 한다. 기획·설계는 100% 끝났고(§1), 지금부터는 코드 작성 단계다.
 
 ## 0. 이 문서를 읽는 새 세션에게
@@ -27,9 +27,9 @@
 
 | Phase | 이름 | 스코프 | 완료 기준(산출물) | 근거 문서 | 상태 |
 |---|---|---|---|---|---|
-| **I0** | 리포지토리 스캐폴딩 | `app/`(Flutter)+`engine/`(Rust crate) 실제 생성, frb 배선, 최소 hello-world 커밋 | `flutter run -d windows`로 빈 화면이 실제로 뜸, git에 커밋됨 | [03_구조](03_구조.md) §6(폴더구조) · [09_개발환경_세팅](09_개발환경_세팅.md) | 🔶 부분 완료 — 스캐폴딩·frb hello-world·`cargo build` 완료·커밋됨(2026-07-14). `flutter build windows`는 **미검증**(아래 이슈) |
+| **I0** | 리포지토리 스캐폴딩 | `app/`(Flutter)+`engine/`(Rust crate) 실제 생성, frb 배선, 최소 hello-world 커밋 | `flutter run -d windows`로 빈 화면이 실제로 뜸, git에 커밋됨 | [03_구조](03_구조.md) §6(폴더구조) · [09_개발환경_세팅](09_개발환경_세팅.md) | ✅ 완료 (2026-07-15) — 스캐폴딩·frb hello-world·`cargo build`·`flutter build windows` 전부 성공 확인(아래 §6-1 갱신) |
 | **I1** | 데이터 레이어 | content.db·slot.db 스키마를 rusqlite 마이그레이션 코드로, Repository 커맨드 골격, HMAC 서명 골격 | 빈 DB 생성+v1 마이그레이션 성공, 유닛 테스트 통과 | [06_스키마](06_스키마.md) · [02_데이터](02_데이터.md) | ✅ 완료 (2026-07-15) — `cargo test` 9종 통과 |
-| **I2** | 초기 세계 데이터 구축 | `data/seed/*.csv·toml` 실제 작성(172팀 리그팀 markdown→트랜스크립션), `content seed` CLI 구현 | content.db에 172팀·리그·구장·특성·히스토리·생성규칙 전부 반영, `content validate` 통과 | [07_데이터관리](07_데이터관리.md) §3 | ⬜ 미착수 |
+| **I2** | 초기 세계 데이터 구축 | `data/seed/*.csv·toml` 실제 작성(172팀 리그팀 markdown→트랜스크립션), `content seed` CLI 구현 | content.db에 172팀·리그·구장·특성·히스토리·생성규칙 전부 반영, `content validate` 통과 | [07_데이터관리](07_데이터관리.md) §3 | 🔶 진행중 — CLI 파이프라인 완성+독립리그 10팀으로 검증 완료(2026-07-15), 나머지 162팀(고교102·대학50·프로10) 및 생성규칙·이름풀 이월(아래 §6-3) |
 | **I3** | 선수 생성 엔진(`sim/roster`) | canonical_seed 기반 결정적 로스터 생성(`generateInitialWorld`) | 새 게임 시작 시 172팀 ~3,700명이 slot.db에 생성, 동일 seed→동일 결과(재현성 테스트) | [07_데이터관리](07_데이터관리.md) §2 · [01_선수_능력치](../02_기획/육성코어/01_선수_능력치.md) | ⬜ 미착수 |
 | **I4** | 게임 루프 오케스트레이터(`api/advance`) | 일/주/월/시즌 경계 처리, PendingAction 7종 상태기계 | `advance()` 호출 시 여러 주 진행 후 정지점에서 올바로 멈춤 | [04_게임루프](04_게임루프.md) | ⬜ 미착수 |
 | **I5** | 나머지 sim 모듈 | `sim/growth`·`sim/injury`·`sim/eval`·`sim/match`(배경)·`sim/market`·`sim/npc`·`sim/schedule` — [05_밸런스](05_밸런스.md) §3 순서(A→B→C→{D,E,F}→G,H→I)로 구현+가밸런스 적용 | 배경 시뮬만으로 시즌 1개 완주 가능 | [03_구조](03_구조.md) §5-1 · 육성코어 01~09 각 문서 | ⬜ 미착수 |
@@ -42,12 +42,14 @@
 
 ## 3. 착수 범위 제안 — 다음 세션이 할 일
 
-**Phase I0 + I1을 한 세션의 목표로 잡을 것을 제안한다.** 이유:
-- I0(스캐폴딩)은 이번 P7 스파이크와 기술적으로 거의 동일한 작업이라 리스크가 낮고, 이미 실측 검증됨([08_P7_체크리스트](08_P7_체크리스트.md)).
-- I1(데이터 레이어)까지 묶으면 "빈 앱"이 아니라 "DB 마이그레이션이 실제로 도는 앱"이 되어 다음 세션(I2)이 바로 이어받기 좋다.
-- I2(세계 데이터 구축)는 172팀 트랜스크립션이라는 별도 성격의 큰 작업(코딩이 아니라 데이터 변환+검증)이라 분리하는 게 낫다.
+**I0·I1이 모두 완료됐으므로 다음은 Phase I2(초기 세계 데이터 구축)다.** 스코프:
+- `data/seed/*.csv·toml` 실제 작성 — 172팀 리그팀 markdown(`02_기획/`)을 구조화 데이터로 트랜스크립션.
+- `content seed` CLI 구현 — 위 시드 파일을 읽어 `content.db`에 172팀·리그·구장·특성·히스토리·생성규칙을 채워 넣음.
+- `content validate` 통과가 완료 기준([07_데이터관리](07_데이터관리.md) §3).
+- 이 Phase는 코딩보다 **데이터 변환+검증** 성격이 커서 다른 Phase와 작업 리듬이 다르다 — 172팀 분량을 한 세션에 다 끝내려 하지 말고 팀군 단위로 나눠 진행하는 것을 고려.
+- **172팀 균등원칙**([[onepitch-equal-team-treatment]]) 반드시 준수 — 시드 데이터·생성규칙에서 특정 팀군을 특별 취급하지 말 것.
 
-세션 시작 시 먼저 사용자에게 **"I0+I1로 진행할지, 범위를 다르게 잡을지"** 확인할 것 — 이 제안은 기본값이지 강제가 아니다.
+세션 시작 시 먼저 사용자에게 **"I2로 진행할지, 범위를 다르게 잡을지"** 확인할 것 — 이 제안은 기본값이지 강제가 아니다.
 
 ## 4. 작업 방식 원칙 (구현 단계 전반)
 
@@ -63,7 +65,6 @@
 - 기획 정합성 개선점 #5~#12(2026-07-13 전체 분석에서 발견, 아직 미해결) — 이벤트 XP 반영 누락, NPC 투수 로테이션 기준, 병역 국제대회 실명 문제 등. 각 Phase에서 해당 시스템을 구현할 때 원문서(§1의 기획 문서들)에서 확인.
 - [05_밸런스](05_밸런스.md) D그룹 실제 수치 — Phase I8까지 값 없음, 그 전까지는 임시값(placeholder)으로 구현하고 하네스로 나중에 조정.
 - [08_P7_체크리스트](08_P7_체크리스트.md) §6 — Android 실기기, Steam 실클라이언트, Mac/Linux 빌드 미검증.
-- **I0 잔여**: `flutter build windows` 실패 — 아래 §6-1 참고. 사용자가 직접 해결 예정.
 
 ## 6. 문서 갱신 규칙
 
@@ -71,11 +72,8 @@
 
 **I0(스캐폴딩)**: `flutter create --platforms=windows,android`로 `app/` 생성 → `flutter_rust_bridge_codegen integrate --rust-crate-name engine --rust-crate-dir ../engine`로 `engine/`(Rust crate)+`app/rust_builder`(cargokit) 배선. frb 기본 hello-world(`greet`)가 `app/lib/main.dart`에 이미 연결돼 있고, `cargo build`는 성공.
 
-- **새로 발견한 이슈(P7에서 못 잡음)**: 프로젝트 절대경로에 **한글**(`업무폴더`·`01.기획` 등)이 포함되면 `flutter build windows`가 실패한다. cargokit의 `run_build_tool.cmd`가 빌드 시점에 임시 `pubspec.yaml`(`app/build/windows/x64/plugins/engine/cargokit_build/tool/pubspec.yaml`)을 `cmd.exe echo`로 생성하는데, 이 시스템의 코드페이지(949)가 유니코드 경로를 깨뜨려(mojibake) `build_tool` 패키지 경로를 못 찾는다(`Couldn't resolve the package 'build_tool'`). P7 스파이크는 임시 ASCII 경로에서 실행해 이 문제를 안 겪었다 — **이 리포지토리의 실제 경로 조건에서 처음 드러난 이슈**.
-  - `cargo build`(엔진 단독)는 한글 경로와 무관하게 정상 동작 — 문제는 cargokit의 Windows 배치 스크립트 한정.
-  - 해결 후보: ① 짧은 ASCII 경로로 디렉토리 정션(`mklink /J`) 생성 후 그 경로에서 빌드 ② `run_build_tool.cmd` 상단에 `chcp 65001` 패치(단, frb `integrate` 재실행 시 다시 패치 필요) ③ (비권장) 리포지토리 자체를 영문 경로로 이동.
-  - **사용자가 직접 해결하기로 함**(2026-07-14) — 다음 세션은 `flutter build windows`/`flutter run -d windows`가 되는지부터 확인할 것. 해결되면 이 이슈를 [09_개발환경_세팅](09_개발환경_세팅.md) §3에도 반영.
-- `flutter test` 헤드리스 검증(P7 방식)은 위 빌드가 막혀 있어 **아직 실행 안 함**.
+- **한글 경로 이슈 — 해결됨(2026-07-15)**: 프로젝트 절대경로에 **한글**(`업무폴더`·`01.기획` 등)이 포함되면 `flutter build windows`가 실패하던 문제(cargokit `run_build_tool.cmd`가 `cmd.exe echo`로 임시 `pubspec.yaml`을 생성할 때 코드페이지 949가 유니코드 경로를 mojibake시켜 `build_tool` 패키지를 못 찾음). **사용자가 리포지토리 전체를 영문(ASCII) 경로로 이동**해 해결. 이동 직후엔 `app/build/`(CMake 캐시)가 옛 경로를 참조해 `CMakeCache.txt directory ... is different` 에러가 났는데, `app/build/`는 gitignore 대상 빌드 산출물이라 삭제 후 재빌드하면 정상 통과함을 확인(`flutter build windows` → `app.exe` 생성 성공). 상세는 [09_개발환경_세팅](09_개발환경_세팅.md) §3에 반영됨.
+- **`flutter test` 헤드리스 검증 — 완료(2026-07-15)**: `flutter build windows` 산출물 중 `build/windows/x64/runner/Release/engine.dll`을 `app/` 루트로 복사([09_개발환경_세팅](09_개발환경_세팅.md) §3 절차)한 뒤 `flutter test` 실행, 통과. 이 과정에서 `test/widget_test.dart`가 `flutter create` 기본 카운터 템플릿 그대로 남아있어(`lib/main.dart`는 frb greet 데모로 이미 교체됨) 실패하던 걸 발견 — 실제 `MyApp`(`greet("Tom")` 결과 텍스트) 기준으로 테스트를 재작성해 통과시킴. `app/.gitignore`에 `/*.dll` 추가(테스트용으로 복사한 `engine.dll`이 커밋되지 않도록).
 
 **I1(데이터 레이어)**: `engine/src/data/{migration,content,slot,repository}.rs` + `engine/src/integrity/mod.rs` 작성, `cargo test` 9개 전부 통과.
 
@@ -85,7 +83,18 @@
 - `integrity/mod.rs`: HMAC-SHA256 `sign`/`verify`는 실동작(서명 키는 개발용 플레이스홀더 상수 — 배포 전 교체 필요). 핵심 테이블을 실제로 직렬화해 해싱하는 `sign_core_state`는 스키마·데이터 형태가 더 정해진 뒤(I3~) 채울 `todo!()`.
 - Windows에서 SQLite `Connection`이 살아있는 동안 파일을 지우면 `다른 프로세스가 파일을 사용 중` 에러가 남 — 테스트에서 `drop(conn)` 후 `remove_file` 순서를 지킬 것.
 
-### 6-2. 문서 갱신 규칙
+### 6-2. I2 착수 기록 (2026-07-15, 진행중)
+
+**CLI 파이프라인 아키텍처 결정**: [01_환경](01_환경.md) §6은 `content seed`를 순수 Dart 툴로 명시했으나, Dart의 `sqlite3` 패키지는 런타임에 네이티브 `sqlite3.dll`을 요구(rusqlite는 `bundled` 피처로 정적 링크해 이 문제가 없음 — cargokit 한글경로 DLL 이슈와 같은 부류의 함정, [09_개발환경_세팅](09_개발환경_세팅.md) §3). **사용자 결정(2026-07-15)**: Dart는 CSV/TOML 파싱·검증만 담당하고, 실제 DB 쓰기는 `engine` crate의 신규 Rust 바이너리(`seed_content`)에 위임 — I1에서 이미 검증된 rusqlite 스키마·마이그레이션 코드를 재사용해 스키마 이중관리를 피함. `dart run tool content seed`가 여전히 단일 진입점이라는 사용자 관점의 "단일 CLI" 원칙은 유지됨.
+
+- **`engine/src/bin/seed_content.rs`(신규)**: `<db_path> <json_path> [--dry-run]` 또는 `<db_path> --validate` 두 모드. JSON(Dart가 CSV에서 조립) → `leagues`/`schools`/`stadiums`/`teams`/`team_traits`/`team_history`를 트랜잭션 1개로 upsert(`ON CONFLICT DO UPDATE`, 재실행해도 idempotent) → 커밋 직전 `PRAGMA foreign_key_check`로 FK 검증, 위반 시 무조건 롤백(`--dry-run`이 아니어도). `Cargo.toml`에 `[[bin]]` 추가 시 `[lib] crate-type`에 `rlib`이 없으면 내부 바이너리가 `use engine::...`를 못 하는 것을 발견 — `["cdylib","staticlib","rlib"]`로 수정(cdylib/staticlib은 frb·cargokit용, rlib은 내부 링크용, 상호 영향 없음).
+- **content.db 스키마 v2 마이그레이션 추가**: [06_스키마](06_스키마.md) v1 DDL에 `stadiums` 테이블과 `teams.stadium_id` 컬럼이 없어서(구장은 여러 팀이 공유하는 정규화 관계라 `teams.meta` JSON에 우겨넣기보다 FK 테이블이 맞다고 판단) `migration_v2`로 추가(`engine/src/data/content.rs`). `cargo test`로 검증(`v2_adds_stadiums_and_team_stadium_link`).
+- **`tool/`(신규 Dart 패키지)**: `bin/tool.dart`(진입점, `content seed|validate` 서브커맨드만 구현 — `gen`/`run`/`build`/`content import`/`content dump`/`test`/`release`는 I2 범위 밖, 필요해지는 Phase에서 추가) · `lib/src/seed_csv.dart`(CSV→행, 파일 없으면 빈 리스트 — 시드 파일은 점진적으로 채워지므로 없는 파일은 에러 아님) · `lib/src/content_seed.dart`(`team_rivals`/`team_season_ranks`/`team_titles` flat CSV를 `team_history`의 JSON 배열로 조립) · `lib/src/cargo_bridge.dart`(JSON을 임시파일로 써서 `cargo run --bin seed_content`를 shell-out). `dart test`·`dart analyze` 통과.
+- **독립리그 10팀으로 파일럿 검증(팀군 중 최소 규모)**: `data/seed/{leagues,teams,team_traits,team_org,team_rivals,team_season_ranks,team_titles,stadiums}.csv`를 [02_기획/리그팀](../02_기획/리그팀/) 04_독립·05_팀_특성_시스템·06_리그_히스토리·07_구장_파크팩터·08_팀_컬러에서 트랜스크립션. `content seed --dry-run` → `content seed` → `content validate` 전부 통과, 재실행해도 행 수 동일(idempotent 확인), UTF-8 데이터 왕복 확인(한글 깨짐 없음).
+- **발견한 기획 공백(데이터 갭)**: 04_독립.md에 독립리그 10팀의 **전력★(1~5) 수치가 없음** — [06_리그_히스토리](06_리그_히스토리.md) §1의 `budget = 하한 + (상한-하한)×(전력★÷5)` 공식을 적용할 데이터가 없어 `team_org.csv`의 `budget`을 전부 빈 값(NULL)으로 시드함(상무 피닉스는 애초에 국방부 예산 예외라 NULL이 의도된 값). **프로·대학·고교는 각 리그 문서에 전력★이 이미 있어 이 갭은 독립리그 한정**일 가능성이 높음 — 나머지 팀군 진행 시 재확인 필요. 기획 보완(전력★ 배정) 전까지 독립 9팀 budget은 미정 상태로 둘 것.
+- **다음 세션이 이어받을 것**: 고교(102)→대학(50)→프로(20, 1군10+2군10) 순으로 CSV 추가(팀군마다 `content seed` 재실행해 누적 검증 권장, 172팀 전체를 한 세션에 끝내려 하지 말 것). 이후 `pitch_types.csv`·`name_pools.csv`·`generation_rules.toml`·`personality_rules.toml`·`world_config.toml`(canonical_seed)은 팀 데이터와 무관하니 별도로 진행 가능.
+
+### 6-3. 문서 갱신 규칙
 
 **이 문서는 살아있는 문서다.** Phase를 하나 끝낼 때마다:
 1. §2 표의 해당 행 상태를 `⬜ 미착수` → `🔶 진행중` → `✅ 완료`로 갱신.

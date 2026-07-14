@@ -1,0 +1,15 @@
+name: tool
+description: OnePitch 개발·콘텐츠 CLI (dart run tool <cmd>)
+publish_to: none
+environment:
+  sdk: ^3.10.0
+
+dependencies:
+  args: ^2.5.0
+  csv: ^6.0.0
+  path: ^1.9.0
+  toml: ^0.16.0
+
+dev_dependencies:
+  test: ^1.25.0
+  lints: ^5.0.0

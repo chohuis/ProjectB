@@ -39,10 +39,26 @@ fn migration_v1(tx: &Transaction) -> anyhow::Result<()> {
     Ok(())
 }
 
-const MIGRATIONS: &[Migration] = &[Migration {
-    version: 1,
-    up: migration_v1,
-}];
+const V2_DDL: &str = r#"
+CREATE TABLE stadiums (id TEXT PRIMARY KEY, name TEXT, park_factor TEXT, meta TEXT);
+ALTER TABLE teams ADD COLUMN stadium_id TEXT REFERENCES stadiums(id);
+"#;
+
+fn migration_v2(tx: &Transaction) -> anyhow::Result<()> {
+    tx.execute_batch(V2_DDL)?;
+    Ok(())
+}
+
+const MIGRATIONS: &[Migration] = &[
+    Migration {
+        version: 1,
+        up: migration_v1,
+    },
+    Migration {
+        version: 2,
+        up: migration_v2,
+    },
+];
 
 fn init(mut conn: Connection) -> anyhow::Result<Connection> {
     conn.pragma_update(None, "foreign_keys", true)?;
@@ -63,12 +79,12 @@ mod tests {
     use super::*;
 
     #[test]
-    fn fresh_db_migrates_to_v1() {
+    fn fresh_db_migrates_to_v2() {
         let conn = open_in_memory().unwrap();
         let version: i64 = conn
             .pragma_query_value(None, "user_version", |row| row.get(0))
             .unwrap();
-        assert_eq!(version, 1);
+        assert_eq!(version, 2);
 
         let table_count: i64 = conn
             .query_row(
@@ -78,6 +94,35 @@ mod tests {
             )
             .unwrap();
         assert_eq!(table_count, 1);
+    }
+
+    #[test]
+    fn v2_adds_stadiums_and_team_stadium_link() {
+        let conn = open_in_memory().unwrap();
+        conn.execute(
+            "INSERT INTO leagues (id, meta) VALUES ('league:x', NULL)",
+            [],
+        )
+        .unwrap();
+        conn.execute(
+            "INSERT INTO stadiums (id, name, park_factor, meta) VALUES ('stadium:x', 'X구장', '중립', NULL)",
+            [],
+        )
+        .unwrap();
+        conn.execute(
+            "INSERT INTO teams (id, league_id, color, meta, stadium_id) VALUES ('team:x', 'league:x', NULL, NULL, 'stadium:x')",
+            [],
+        )
+        .unwrap();
+
+        let stadium_id: String = conn
+            .query_row(
+                "SELECT stadium_id FROM teams WHERE id = 'team:x'",
+                [],
+                |row| row.get(0),
+            )
+            .unwrap();
+        assert_eq!(stadium_id, "stadium:x");
     }
 
     #[test]

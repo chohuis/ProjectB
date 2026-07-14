@@ -1,0 +1,11 @@
+id,league_id,school_id,stadium_id,name,region,type,color
+team:seoul_ravens,league:independent,,stadium:gangbyeon,서울 레이븐스,서울,육성형,남색
+team:seoul_comets,league:independent,,stadium:gangbyeon,서울 코메츠,서울,도전형,초록
+team:paju_unicorns,league:independent,,stadium:gangbyeon,파주 유니콘스,파주,육성형,보라
+team:incheon_griffons,league:independent,,stadium:gangbyeon,인천 그리폰스,인천,도전형,하늘
+team:daejeon_blaze,league:independent,,stadium:gyebaek,대전 블레이즈,대전,육성형,주황
+team:gwangju_rhinos,league:independent,,stadium:namnyeok,광주 라이노스,광주,육성형,연두
+team:daegu_hawks,league:independent,,stadium:namnyeok,대구 호크스,대구,도전형,회색
+team:busan_sealions,league:independent,,stadium:namnyeok,부산 씨라이온스,부산,도전형,파랑
+team:wonju_winners,league:independent,,stadium:gyebaek,원주 위너스,원주,도전형,검정
+team:sangmu_phoenix,league:independent,,stadium:changgong,상무 피닉스,무연고(군소재),상무,카키
