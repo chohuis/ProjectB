@@ -1,7 +1,7 @@
 # 구현 Phase 계획 (착수 로드맵 — 새 세션 온보딩 문서)
 
 > 근거: [00_결정_요약](00_결정_요약.md)(전체 결정 인덱스) · [03_구조](03_구조.md) §5-1(엔진 모듈 지도) · [05_밸런스](05_밸런스.md) §3(확정 순서) · [07_데이터관리](07_데이터관리.md) §7(초기구축순서) · [08_P7_체크리스트](08_P7_체크리스트.md)(실측 완료) · [09_개발환경_세팅](09_개발환경_세팅.md) · 대화 설계(2026-07-14)
-> 상태: **착수 계획 확정** — Phase I0부터 실행 가능
+> 상태: **I1 완료, I0 부분 완료(Windows 빌드 이슈 보류)** — 2026-07-15
 > 목적: **이 문서 하나만 읽으면 새 대화 세션이 지금 상황을 전부 파악하고 이어서 구현을 진행**할 수 있게 한다. 기획·설계는 100% 끝났고(§1), 지금부터는 코드 작성 단계다.
 
 ## 0. 이 문서를 읽는 새 세션에게
@@ -27,8 +27,8 @@
 
 | Phase | 이름 | 스코프 | 완료 기준(산출물) | 근거 문서 | 상태 |
 |---|---|---|---|---|---|
-| **I0** | 리포지토리 스캐폴딩 | `app/`(Flutter)+`engine/`(Rust crate) 실제 생성, frb 배선, 최소 hello-world 커밋 | `flutter run -d windows`로 빈 화면이 실제로 뜸, git에 커밋됨 | [03_구조](03_구조.md) §6(폴더구조) · [09_개발환경_세팅](09_개발환경_세팅.md) | ⬜ 미착수 |
-| **I1** | 데이터 레이어 | content.db·slot.db 스키마를 rusqlite 마이그레이션 코드로, Repository 커맨드 골격, HMAC 서명 골격 | 빈 DB 생성+v1 마이그레이션 성공, 유닛 테스트 통과 | [06_스키마](06_스키마.md) · [02_데이터](02_데이터.md) | ⬜ 미착수 |
+| **I0** | 리포지토리 스캐폴딩 | `app/`(Flutter)+`engine/`(Rust crate) 실제 생성, frb 배선, 최소 hello-world 커밋 | `flutter run -d windows`로 빈 화면이 실제로 뜸, git에 커밋됨 | [03_구조](03_구조.md) §6(폴더구조) · [09_개발환경_세팅](09_개발환경_세팅.md) | 🔶 부분 완료 — 스캐폴딩·frb hello-world·`cargo build` 완료·커밋됨(2026-07-14). `flutter build windows`는 **미검증**(아래 이슈) |
+| **I1** | 데이터 레이어 | content.db·slot.db 스키마를 rusqlite 마이그레이션 코드로, Repository 커맨드 골격, HMAC 서명 골격 | 빈 DB 생성+v1 마이그레이션 성공, 유닛 테스트 통과 | [06_스키마](06_스키마.md) · [02_데이터](02_데이터.md) | ✅ 완료 (2026-07-15) — `cargo test` 9종 통과 |
 | **I2** | 초기 세계 데이터 구축 | `data/seed/*.csv·toml` 실제 작성(172팀 리그팀 markdown→트랜스크립션), `content seed` CLI 구현 | content.db에 172팀·리그·구장·특성·히스토리·생성규칙 전부 반영, `content validate` 통과 | [07_데이터관리](07_데이터관리.md) §3 | ⬜ 미착수 |
 | **I3** | 선수 생성 엔진(`sim/roster`) | canonical_seed 기반 결정적 로스터 생성(`generateInitialWorld`) | 새 게임 시작 시 172팀 ~3,700명이 slot.db에 생성, 동일 seed→동일 결과(재현성 테스트) | [07_데이터관리](07_데이터관리.md) §2 · [01_선수_능력치](../02_기획/육성코어/01_선수_능력치.md) | ⬜ 미착수 |
 | **I4** | 게임 루프 오케스트레이터(`api/advance`) | 일/주/월/시즌 경계 처리, PendingAction 7종 상태기계 | `advance()` 호출 시 여러 주 진행 후 정지점에서 올바로 멈춤 | [04_게임루프](04_게임루프.md) | ⬜ 미착수 |
@@ -63,8 +63,29 @@
 - 기획 정합성 개선점 #5~#12(2026-07-13 전체 분석에서 발견, 아직 미해결) — 이벤트 XP 반영 누락, NPC 투수 로테이션 기준, 병역 국제대회 실명 문제 등. 각 Phase에서 해당 시스템을 구현할 때 원문서(§1의 기획 문서들)에서 확인.
 - [05_밸런스](05_밸런스.md) D그룹 실제 수치 — Phase I8까지 값 없음, 그 전까지는 임시값(placeholder)으로 구현하고 하네스로 나중에 조정.
 - [08_P7_체크리스트](08_P7_체크리스트.md) §6 — Android 실기기, Steam 실클라이언트, Mac/Linux 빌드 미검증.
+- **I0 잔여**: `flutter build windows` 실패 — 아래 §6-1 참고. 사용자가 직접 해결 예정.
 
 ## 6. 문서 갱신 규칙
+
+### 6-1. I0/I1 착수 기록 (2026-07-14~15)
+
+**I0(스캐폴딩)**: `flutter create --platforms=windows,android`로 `app/` 생성 → `flutter_rust_bridge_codegen integrate --rust-crate-name engine --rust-crate-dir ../engine`로 `engine/`(Rust crate)+`app/rust_builder`(cargokit) 배선. frb 기본 hello-world(`greet`)가 `app/lib/main.dart`에 이미 연결돼 있고, `cargo build`는 성공.
+
+- **새로 발견한 이슈(P7에서 못 잡음)**: 프로젝트 절대경로에 **한글**(`업무폴더`·`01.기획` 등)이 포함되면 `flutter build windows`가 실패한다. cargokit의 `run_build_tool.cmd`가 빌드 시점에 임시 `pubspec.yaml`(`app/build/windows/x64/plugins/engine/cargokit_build/tool/pubspec.yaml`)을 `cmd.exe echo`로 생성하는데, 이 시스템의 코드페이지(949)가 유니코드 경로를 깨뜨려(mojibake) `build_tool` 패키지 경로를 못 찾는다(`Couldn't resolve the package 'build_tool'`). P7 스파이크는 임시 ASCII 경로에서 실행해 이 문제를 안 겪었다 — **이 리포지토리의 실제 경로 조건에서 처음 드러난 이슈**.
+  - `cargo build`(엔진 단독)는 한글 경로와 무관하게 정상 동작 — 문제는 cargokit의 Windows 배치 스크립트 한정.
+  - 해결 후보: ① 짧은 ASCII 경로로 디렉토리 정션(`mklink /J`) 생성 후 그 경로에서 빌드 ② `run_build_tool.cmd` 상단에 `chcp 65001` 패치(단, frb `integrate` 재실행 시 다시 패치 필요) ③ (비권장) 리포지토리 자체를 영문 경로로 이동.
+  - **사용자가 직접 해결하기로 함**(2026-07-14) — 다음 세션은 `flutter build windows`/`flutter run -d windows`가 되는지부터 확인할 것. 해결되면 이 이슈를 [09_개발환경_세팅](09_개발환경_세팅.md) §3에도 반영.
+- `flutter test` 헤드리스 검증(P7 방식)은 위 빌드가 막혀 있어 **아직 실행 안 함**.
+
+**I1(데이터 레이어)**: `engine/src/data/{migration,content,slot,repository}.rs` + `engine/src/integrity/mod.rs` 작성, `cargo test` 9개 전부 통과.
+
+- `migration.rs`: `PRAGMA user_version`으로 내부 스키마 버전을 추적하는 범용 단계별 마이그레이션 러너. **각 마이그레이션 `up` 함수가 `meta.save_version`을 직접 갱신해야 함**(러너는 `user_version`만 건드리고 애플리케이션 테이블은 안 건드림) — v2 마이그레이션 추가 시 잊지 말 것.
+- `content.db`·`slot.db` DDL은 [06_스키마](06_스키마.md) §3·§4를 그대로 옮김(변경 없음).
+- `repository.rs`는 [02_데이터](02_데이터.md) §4 커맨드 전체의 시그니처만 존재(`todo!()`) — `create_slot`/`load_slot`만 `slot::open`으로 실동작. 나머지 로직은 I3~I6.
+- `integrity/mod.rs`: HMAC-SHA256 `sign`/`verify`는 실동작(서명 키는 개발용 플레이스홀더 상수 — 배포 전 교체 필요). 핵심 테이블을 실제로 직렬화해 해싱하는 `sign_core_state`는 스키마·데이터 형태가 더 정해진 뒤(I3~) 채울 `todo!()`.
+- Windows에서 SQLite `Connection`이 살아있는 동안 파일을 지우면 `다른 프로세스가 파일을 사용 중` 에러가 남 — 테스트에서 `drop(conn)` 후 `remove_file` 순서를 지킬 것.
+
+### 6-2. 문서 갱신 규칙
 
 **이 문서는 살아있는 문서다.** Phase를 하나 끝낼 때마다:
 1. §2 표의 해당 행 상태를 `⬜ 미착수` → `🔶 진행중` → `✅ 완료`로 갱신.
