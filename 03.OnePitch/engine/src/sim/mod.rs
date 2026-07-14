@@ -1,0 +1,1 @@
+// match·growth·injury·eval·npc·roster·schedule·market — I3~I6에서 채움
