@@ -77,6 +77,35 @@ pub fn check_overuse_injury(rng: &mut impl Rng, fatigue: f64, philosophy: &str) 
     Some((part, severity))
 }
 
+/// PA당 급성 부상 기본 확률·피로도 가산 계수 — §3 "경기 중 특정 순간의
+/// 낮은 확률 랜덤 이벤트"·"피로가 높을수록 급성 부상 확률도 소폭 가산".
+/// §6 "발생 확률 기본치 및 상황별 가산치는 미확정"이라 placeholder.
+const ACUTE_BASE_PROB: f64 = 0.0006;
+const ACUTE_FATIGUE_COEF: f64 = 0.00002;
+
+/// 급성형(우발) 부상 판정 — §3 "무리한 투구 동작·강한 타구 피격·주루
+/// 충돌 등". 팀 철학은 이 표에서 누적형 행에만 연결돼 있어(§3 표) 급성형
+/// 확률에는 반영하지 않음 — 누적형(`check_overuse_injury`)과의 유일한
+/// 차이점. 심각도 분포는 과사용보다 중상 비중을 높게 잡음(§3 "발생 시 그
+/// 경기 즉시 강판"이 내포하는 급작스러움) — placeholder.
+pub fn check_acute_injury(rng: &mut impl Rng, fatigue: f64) -> Option<(&'static str, &'static str)> {
+    let prob = (ACUTE_BASE_PROB + fatigue * ACUTE_FATIGUE_COEF).clamp(0.0, 1.0);
+    if !rng.gen_bool(prob) {
+        return None;
+    }
+
+    let part = *BODY_PARTS.choose(rng).unwrap();
+    let roll: f64 = rng.gen_range(0.0..1.0);
+    let severity = if roll < 0.4 {
+        "경미"
+    } else if roll < 0.8 {
+        "중등"
+    } else {
+        "중상"
+    };
+    Some((part, severity))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -131,5 +160,43 @@ mod tests {
         assert!(recovery_days("중등") < recovery_days("중상"));
         assert!(severity_weight("경미") < severity_weight("중등"));
         assert!(severity_weight("중등") < severity_weight("중상"));
+    }
+
+    #[test]
+    fn acute_injury_is_rare_but_not_impossible_over_many_pas() {
+        let mut rng = ChaCha8Rng::seed_from_u64(3);
+        let mut hits = 0;
+        for _ in 0..20_000 {
+            if check_acute_injury(&mut rng, 30.0).is_some() {
+                hits += 1;
+            }
+        }
+        assert!(hits > 0, "expected at least one acute injury across 20,000 PAs");
+        assert!(hits < 100, "acute injuries should stay rare, got {hits} in 20,000 PAs");
+    }
+
+    #[test]
+    fn higher_fatigue_increases_acute_injury_probability() {
+        let trials = 2000;
+        let count = |fatigue: f64| -> usize {
+            let mut hits = 0;
+            for seed in 0..trials {
+                let mut rng = ChaCha8Rng::seed_from_u64(seed);
+                if check_acute_injury(&mut rng, fatigue).is_some() {
+                    hits += 1;
+                }
+            }
+            hits
+        };
+        let low = count(0.0);
+        let high = count(100.0);
+        assert!(high > low, "high fatigue={high} low fatigue={low}");
+    }
+
+    #[test]
+    fn acute_same_seed_produces_identical_result() {
+        let mut rng_a = ChaCha8Rng::seed_from_u64(7);
+        let mut rng_b = ChaCha8Rng::seed_from_u64(7);
+        assert_eq!(check_acute_injury(&mut rng_a, 80.0), check_acute_injury(&mut rng_b, 80.0));
     }
 }

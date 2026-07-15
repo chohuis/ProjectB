@@ -275,16 +275,20 @@ fn find_protagonist_game_today(conn: &Connection, day: i64) -> anyhow::Result<Op
 
 fn load_batting_lineup(slot_conn: &Connection, team_id: &str) -> anyhow::Result<Vec<match_sim::BatterStats>> {
     let mut stmt = slot_conn.prepare(
-        "SELECT stats FROM npc WHERE team_id = ?1 AND position NOT IN ('선발투수', '구원투수') ORDER BY id",
+        "SELECT id, stats, live_state FROM npc WHERE team_id = ?1 AND position NOT IN ('선발투수', '구원투수') ORDER BY id",
     )?;
-    let rows: Vec<String> = stmt.query_map([team_id], |row| row.get(0))?.collect::<Result<Vec<_>, _>>()?;
+    let rows: Vec<(String, String, String)> =
+        stmt.query_map([team_id], |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)))?.collect::<Result<Vec<_>, _>>()?;
     let mut lineup = Vec::with_capacity(rows.len());
-    for raw in rows {
-        let v: serde_json::Value = serde_json::from_str(&raw)?;
+    for (id, stats_raw, live_state_raw) in rows {
+        let v: serde_json::Value = serde_json::from_str(&stats_raw)?;
+        let live_state: serde_json::Value = serde_json::from_str(&live_state_raw)?;
         lineup.push(match_sim::BatterStats {
+            id,
             contact: v.get("컨택").and_then(|x| x.as_f64()).unwrap_or(50.0),
             eye: v.get("선구안").and_then(|x| x.as_f64()).unwrap_or(50.0),
             power: v.get("파워").and_then(|x| x.as_f64()).unwrap_or(50.0),
+            fatigue: live_state.get("피로도").and_then(|x| x.as_f64()).unwrap_or(0.0),
         });
     }
     Ok(lineup)
@@ -293,18 +297,21 @@ fn load_batting_lineup(slot_conn: &Connection, team_id: &str) -> anyhow::Result<
 /// 오늘의 선발투수 — 감독의 로테이션·불펜 운용은 스태프 시스템이 생기는
 /// 후속 Phase 스코프라, 지금은 그 팀의 (id 기준) 첫 선발투수가 매번 완투.
 fn load_starting_pitcher(slot_conn: &Connection, team_id: &str) -> anyhow::Result<match_sim::PitcherStats> {
-    let raw: Option<String> = slot_conn
+    let row: Option<(String, String, String)> = slot_conn
         .query_row(
-            "SELECT stats FROM npc WHERE team_id = ?1 AND position = '선발투수' ORDER BY id LIMIT 1",
+            "SELECT id, stats, live_state FROM npc WHERE team_id = ?1 AND position = '선발투수' ORDER BY id LIMIT 1",
             [team_id],
-            |row| row.get(0),
+            |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
         )
         .optional()?;
-    let raw = raw.ok_or_else(|| anyhow::anyhow!("no starting pitcher on roster for team {team_id}"))?;
-    let v: serde_json::Value = serde_json::from_str(&raw)?;
+    let (id, stats_raw, live_state_raw) = row.ok_or_else(|| anyhow::anyhow!("no starting pitcher on roster for team {team_id}"))?;
+    let v: serde_json::Value = serde_json::from_str(&stats_raw)?;
+    let live_state: serde_json::Value = serde_json::from_str(&live_state_raw)?;
     Ok(match_sim::PitcherStats {
+        id,
         control: v.get("제구").and_then(|x| x.as_f64()).unwrap_or(50.0),
         stuff: v.get("구위").and_then(|x| x.as_f64()).unwrap_or(50.0),
+        fatigue: live_state.get("피로도").and_then(|x| x.as_f64()).unwrap_or(0.0),
     })
 }
 
@@ -404,6 +411,7 @@ fn process_day(slot_conn: &Connection, content_conn: &Connection, world_seed: i6
         update_standings(slot_conn, &home, &away, result.home_runs, result.away_runs)?;
         accumulate_game_fatigue(slot_conn, &home)?;
         accumulate_game_fatigue(slot_conn, &away)?;
+        apply_injury_events(slot_conn, &result.injuries, day)?;
     }
     Ok(())
 }
@@ -434,6 +442,9 @@ fn simulate_series(
         let away_lineup = load_batting_lineup(slot_conn, away_id)?;
         let away_pitcher = load_starting_pitcher(slot_conn, away_id)?;
         let r = match_sim::simulate_game(rng, league_id, &home_lineup, &home_pitcher, &away_lineup, &away_pitcher);
+        // 다전제는 캘린더 없이 동기 시뮬(2·3차분에서 이미 확정한 단순화)이라
+        // 날짜 개념이 없음 — 챔피언 기록과 동일하게 day=0 placeholder를 씀.
+        apply_injury_events(slot_conn, &r.injuries, 0)?;
         games += 1;
         if r.home_runs != r.away_runs {
             let winner_is_a = (r.home_runs > r.away_runs) == a_home;
@@ -459,6 +470,7 @@ fn simulate_wild_card(slot_conn: &Connection, rng: &mut ChaCha8Rng, league_id: &
         let away_lineup = load_batting_lineup(slot_conn, fifth)?;
         let away_pitcher = load_starting_pitcher(slot_conn, fifth)?;
         let r = match_sim::simulate_game(rng, league_id, &home_lineup, &home_pitcher, &away_lineup, &away_pitcher);
+        apply_injury_events(slot_conn, &r.injuries, 0)?;
         if r.away_runs > r.home_runs {
             fifth_wins += 1;
             if fifth_wins >= 2 {
@@ -508,6 +520,7 @@ fn simulate_round_robin_stage(
             let away_lineup = load_batting_lineup(slot_conn, &away)?;
             let away_pitcher = load_starting_pitcher(slot_conn, &away)?;
             let r = match_sim::simulate_game(rng, league_id, &home_lineup, &home_pitcher, &away_lineup, &away_pitcher);
+            apply_injury_events(slot_conn, &r.injuries, day)?;
 
             let game_id = format!("{game_id_prefix}{seq}");
             seq += 1;
@@ -980,6 +993,24 @@ fn injury_severity_weight_sum(injury: &serde_json::Value) -> f64 {
                 .sum()
         })
         .unwrap_or(0.0)
+}
+
+/// `match_sim::simulate_game`이 판정한 급성형 부상(`GameResult.injuries`)을
+/// 해당 선수의 `npc.injury`에 기록 — `record_injury`를 그대로 재사용해
+/// 누적형(process_week)과 동일한 재발 승격·복귀일 규칙을 따른다.
+fn apply_injury_events(conn: &Connection, injuries: &[match_sim::InjuryEvent], day: i64) -> anyhow::Result<()> {
+    for event in injuries {
+        let injury_raw: Option<String> = conn
+            .query_row("SELECT injury FROM npc WHERE id = ?1", [&event.player_id], |r| r.get::<_, Option<String>>(0))
+            .optional()?
+            .flatten();
+        let mut injury: serde_json::Value = injury_raw
+            .and_then(|s| serde_json::from_str(&s).ok())
+            .unwrap_or_else(|| serde_json::json!({"current": null, "history": []}));
+        record_injury(&mut injury, event.part, event.severity, day);
+        conn.execute("UPDATE npc SET injury = ?1 WHERE id = ?2", params![injury.to_string(), event.player_id])?;
+    }
+    Ok(())
 }
 
 /// 주간 경계 — 은퇴하지 않은 전 NPC(172팀 균등원칙, 리그·팀 차별 없음)에
@@ -1546,6 +1577,44 @@ mod tests {
             .map(|raw| serde_json::from_str::<serde_json::Value>(&raw).unwrap().get("피로도").unwrap().as_f64().unwrap())
             .unwrap();
         assert!(batter_fatigue > 0.0, "batter in the lineup pool should accumulate fatigue after the game");
+    }
+
+    #[test]
+    fn process_day_records_acute_injuries_for_heavily_fatigued_participants() {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:x', NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:a', 'league:x', NULL, NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:b', 'league:x', NULL, NULL)", []).unwrap();
+
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_minimal_roster(&slot_conn, "team:a");
+        insert_minimal_roster(&slot_conn, "team:b");
+        slot_conn
+            .execute(
+                "UPDATE npc SET live_state = ?1",
+                params![serde_json::json!({"피로도": 5000.0, "사기": 50.0}).to_string()],
+            )
+            .unwrap();
+        slot_conn
+            .execute("INSERT INTO schedule (game_id, day, home, away, result) VALUES ('game:1', 10, 'team:a', 'team:b', NULL)", [])
+            .unwrap();
+
+        process_day(&slot_conn, &content_conn, 42, 10).unwrap();
+
+        let mut stmt = slot_conn.prepare("SELECT injury FROM npc").unwrap();
+        let injured_count = stmt
+            .query_map([], |r| r.get::<_, Option<String>>(0))
+            .unwrap()
+            .map(|raw| raw.unwrap())
+            .filter(|raw| match raw {
+                Some(raw) => {
+                    let injury: serde_json::Value = serde_json::from_str(raw).unwrap();
+                    !injury.get("history").unwrap().as_array().unwrap().is_empty()
+                }
+                None => false,
+            })
+            .count();
+        assert!(injured_count > 0, "expected at least one acute injury from a full game at fatigue=5000");
     }
 
     #[test]

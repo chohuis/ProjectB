@@ -1,16 +1,24 @@
 use rand::Rng;
 
+use crate::sim::injury;
+
 /// 07_매치_엔진.md §5·§6이 요구하는 입력 스탯만 뽑아온 얇은 뷰 — 실제
-/// npc.stats JSON 파싱은 repository.rs가 하고 여기는 순수 계산만.
+/// npc.stats JSON 파싱은 repository.rs가 하고 여기는 순수 계산만. `id`·
+/// `fatigue`는 급성형 부상 판정(§13, 08_부상_시스템.md §3)이 "누구에게"
+/// "얼마나 위험하게" 일어났는지 알아야 해서 I5 5차분 이후 추가됨.
 pub struct BatterStats {
+    pub id: String,
     pub contact: f64,
     pub eye: f64,
     pub power: f64,
+    pub fatigue: f64,
 }
 
 pub struct PitcherStats {
+    pub id: String,
     pub control: f64,
     pub stuff: f64,
+    pub fatigue: f64,
 }
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
@@ -23,6 +31,19 @@ pub enum PaOutcome {
     Double,
     Triple,
     HomeRun,
+}
+
+/// 급성형(우발) 부상 이벤트 — 08_부상_시스템.md §3 "경기 중 특정 순간의
+/// 낮은 확률 랜덤 이벤트". `sim::injury::check_acute_injury`가 판정한
+/// 부위·심각도를 어떤 선수(`player_id`)에게 귀속시킬지까지 포함해
+/// 호출부(repository.rs)가 그대로 `injury` 컬럼에 기록할 수 있게 한다.
+/// "발생 시 즉시 강판"의 로스터 결원 효과(불펜 교체 등)는 감독 AI가 아직
+/// 없어 스코프 밖 — 이번엔 판정·기록만(10_구현_Phase_계획.md §6-10 참고).
+#[derive(Debug, PartialEq, Eq, Clone)]
+pub struct InjuryEvent {
+    pub player_id: String,
+    pub part: &'static str,
+    pub severity: &'static str,
 }
 
 fn clamp01(x: f64) -> f64 {
@@ -106,6 +127,7 @@ fn simulate_half_inning(
     batter_idx: &mut usize,
     pitcher: &PitcherStats,
     initial_bases: [bool; 3],
+    injuries: &mut Vec<InjuryEvent>,
 ) -> u32 {
     if lineup.is_empty() {
         return 0;
@@ -123,6 +145,13 @@ fn simulate_half_inning(
             PaOutcome::Triple => runs += advance_runners(&mut bases, 3),
             PaOutcome::HomeRun => runs += advance_runners(&mut bases, 4),
         }
+
+        if let Some((part, severity)) = injury::check_acute_injury(rng, batter.fatigue) {
+            injuries.push(InjuryEvent { player_id: batter.id.clone(), part, severity });
+        }
+        if let Some((part, severity)) = injury::check_acute_injury(rng, pitcher.fatigue) {
+            injuries.push(InjuryEvent { player_id: pitcher.id.clone(), part, severity });
+        }
     }
     runs
 }
@@ -130,6 +159,7 @@ fn simulate_half_inning(
 pub struct GameResult {
     pub home_runs: u32,
     pub away_runs: u32,
+    pub injuries: Vec<InjuryEvent>,
 }
 
 const EMPTY_BASES: [bool; 3] = [false, false, false];
@@ -142,6 +172,8 @@ fn is_amateur(league_id: &str) -> bool {
 /// 경기 한 판 — 9이닝 기본, 리그별 콜드게임·연장전 규칙(07_매치_엔진.md
 /// §10-2) 적용. 선발투수가 완투한다고 가정(감독의 교체 판단은 스태프
 /// 시스템이 생기는 후속 Phase 스코프) — 타순은 로스터 순서대로 순환.
+/// 타석마다 급성형 부상도 함께 판정(§13) — 이벤트만 반환하고 실제 강판
+/// 처리는 안 함(로스터 결원 로직 스코프 밖, 위 InjuryEvent 문서 참고).
 pub fn simulate_game(
     rng: &mut impl Rng,
     league_id: &str,
@@ -156,15 +188,16 @@ pub fn simulate_game(
     let mut home_idx = 0usize;
     let mut away_idx = 0usize;
     let mut inning = 1u32;
+    let mut injuries = Vec::new();
 
     loop {
         let bases = if amateur && inning > 9 { TIEBREAK_BASES } else { EMPTY_BASES };
 
-        away_runs += simulate_half_inning(rng, away_lineup, &mut away_idx, home_pitcher, bases);
+        away_runs += simulate_half_inning(rng, away_lineup, &mut away_idx, home_pitcher, bases, &mut injuries);
 
         let walk_off = inning >= 9 && home_runs > away_runs;
         if !walk_off {
-            home_runs += simulate_half_inning(rng, home_lineup, &mut home_idx, away_pitcher, bases);
+            home_runs += simulate_half_inning(rng, home_lineup, &mut home_idx, away_pitcher, bases, &mut injuries);
         }
 
         if amateur {
@@ -186,7 +219,7 @@ pub fn simulate_game(
         inning += 1;
     }
 
-    GameResult { home_runs, away_runs }
+    GameResult { home_runs, away_runs, injuries }
 }
 
 #[cfg(test)]
@@ -196,27 +229,30 @@ mod tests {
     use rand_chacha::ChaCha8Rng;
 
     fn avg_batter() -> BatterStats {
-        BatterStats { contact: 50.0, eye: 50.0, power: 50.0 }
+        BatterStats { id: "b".to_string(), contact: 50.0, eye: 50.0, power: 50.0, fatigue: 0.0 }
     }
     fn avg_pitcher() -> PitcherStats {
-        PitcherStats { control: 50.0, stuff: 50.0 }
+        PitcherStats { id: "p".to_string(), control: 50.0, stuff: 50.0, fatigue: 0.0 }
     }
 
     #[test]
     fn same_seed_produces_identical_game_result() {
-        let lineup: Vec<BatterStats> = (0..8).map(|_| avg_batter()).collect();
+        let lineup: Vec<BatterStats> = (0..8).map(|i| BatterStats { id: format!("b{i}"), ..avg_batter() }).collect();
         let mut rng1 = ChaCha8Rng::seed_from_u64(11);
         let a = simulate_game(&mut rng1, "league:hs", &lineup, &avg_pitcher(), &lineup, &avg_pitcher());
         let mut rng2 = ChaCha8Rng::seed_from_u64(11);
         let b = simulate_game(&mut rng2, "league:hs", &lineup, &avg_pitcher(), &lineup, &avg_pitcher());
         assert_eq!(a.home_runs, b.home_runs);
         assert_eq!(a.away_runs, b.away_runs);
+        assert_eq!(a.injuries, b.injuries);
     }
 
     #[test]
     fn stronger_batting_lineup_scores_more_on_average() {
-        let weak_lineup: Vec<BatterStats> = (0..8).map(|_| BatterStats { contact: 25.0, eye: 25.0, power: 25.0 }).collect();
-        let strong_lineup: Vec<BatterStats> = (0..8).map(|_| BatterStats { contact: 75.0, eye: 75.0, power: 75.0 }).collect();
+        let weak_lineup: Vec<BatterStats> =
+            (0..8).map(|i| BatterStats { id: format!("w{i}"), contact: 25.0, eye: 25.0, power: 25.0, fatigue: 0.0 }).collect();
+        let strong_lineup: Vec<BatterStats> =
+            (0..8).map(|i| BatterStats { id: format!("s{i}"), contact: 75.0, eye: 75.0, power: 75.0, fatigue: 0.0 }).collect();
 
         let mut weak_total = 0u32;
         let mut strong_total = 0u32;
@@ -234,10 +270,12 @@ mod tests {
     #[test]
     fn amateur_cold_game_stops_before_nine_innings_on_blowout() {
         // extreme mismatch should trigger the 5-inning/15-run cold-game rule at least sometimes
-        let elite: Vec<BatterStats> = (0..8).map(|_| BatterStats { contact: 80.0, eye: 80.0, power: 80.0 }).collect();
-        let hapless: Vec<BatterStats> = (0..8).map(|_| BatterStats { contact: 20.0, eye: 20.0, power: 20.0 }).collect();
-        let elite_pitcher = PitcherStats { control: 80.0, stuff: 80.0 };
-        let hapless_pitcher = PitcherStats { control: 20.0, stuff: 20.0 };
+        let elite: Vec<BatterStats> =
+            (0..8).map(|i| BatterStats { id: format!("e{i}"), contact: 80.0, eye: 80.0, power: 80.0, fatigue: 0.0 }).collect();
+        let hapless: Vec<BatterStats> =
+            (0..8).map(|i| BatterStats { id: format!("h{i}"), contact: 20.0, eye: 20.0, power: 20.0, fatigue: 0.0 }).collect();
+        let elite_pitcher = PitcherStats { id: "ep".to_string(), control: 80.0, stuff: 80.0, fatigue: 0.0 };
+        let hapless_pitcher = PitcherStats { id: "hp".to_string(), control: 20.0, stuff: 20.0, fatigue: 0.0 };
 
         let mut saw_cold_game = false;
         for seed in 0..20u64 {
@@ -252,7 +290,7 @@ mod tests {
 
     #[test]
     fn pro_game_never_exceeds_twelve_innings_worth_of_scoring_pressure() {
-        let lineup: Vec<BatterStats> = (0..8).map(|_| avg_batter()).collect();
+        let lineup: Vec<BatterStats> = (0..8).map(|i| BatterStats { id: format!("b{i}"), ..avg_batter() }).collect();
         for seed in 0..10u64 {
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
             let r = simulate_game(&mut rng, "league:pro", &lineup, &avg_pitcher(), &lineup, &avg_pitcher());
@@ -260,5 +298,28 @@ mod tests {
             // guarantees termination even on repeated ties.
             assert!(r.home_runs < 100 && r.away_runs < 100);
         }
+    }
+
+    #[test]
+    fn high_fatigue_players_accumulate_injuries_over_many_games() {
+        let lineup: Vec<BatterStats> =
+            (0..8).map(|i| BatterStats { id: format!("fb{i}"), contact: 50.0, eye: 50.0, power: 50.0, fatigue: 200.0 }).collect();
+        let pitcher = PitcherStats { id: "fp".to_string(), control: 50.0, stuff: 50.0, fatigue: 200.0 };
+
+        let mut total_injuries = 0usize;
+        for seed in 0..50u64 {
+            let mut rng = ChaCha8Rng::seed_from_u64(seed);
+            let r = simulate_game(&mut rng, "league:pro", &lineup, &pitcher, &lineup, &pitcher);
+            total_injuries += r.injuries.len();
+        }
+        assert!(total_injuries > 0, "expected at least one acute injury across 50 games of heavily fatigued players");
+    }
+
+    #[test]
+    fn zero_fatigue_players_rarely_get_injured_in_a_single_game() {
+        let lineup: Vec<BatterStats> = (0..8).map(|i| BatterStats { id: format!("b{i}"), ..avg_batter() }).collect();
+        let mut rng = ChaCha8Rng::seed_from_u64(0);
+        let r = simulate_game(&mut rng, "league:pro", &lineup, &avg_pitcher(), &lineup, &avg_pitcher());
+        assert!(r.injuries.len() < 3, "a single low-fatigue game should almost never produce multiple injuries, got {}", r.injuries.len());
     }
 }
