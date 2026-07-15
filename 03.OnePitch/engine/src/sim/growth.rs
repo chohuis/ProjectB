@@ -112,6 +112,24 @@ pub fn apply_aging_decline(position: &str, age: i64, stats: &mut Map<String, Val
     }
 }
 
+/// 현역 공백 중 하락률 — [03_병역](../../../02_기획/03_병역.md) §8 "피지컬만
+/// 소폭 하락, 기술·멘탈은 안 늘지도 안 줄지도 않는다"의 수치화. 나이 기반
+/// 하락(`WEEKLY_DECLINE_RATE`)보다 다소 빠르게 잡음 — "감이 무뎌졌다"는
+/// 체감을 주는 서사적 의도. 정확한 하락률은 §10 "스탯 스케일 확정 후"라
+/// placeholder.
+const MILITARY_WEEKLY_DECLINE_RATE: f64 = 0.08;
+
+/// 복무 중인 선수의 피지컬 스탯만 매주 소폭 낮춘다(§8) — 나이 기반
+/// `apply_aging_decline`과 달리 복무 여부만으로 트리거되는 별도 경로.
+/// 복무 중에는 `apply_weekly_growth`를 아예 건너뛰므로(기술·멘탈 불변)
+/// 호출부(`process_week`)가 이 함수만 단독으로 호출한다.
+pub fn apply_military_decline(position: &str, stats: &mut Map<String, Value>) {
+    for stat in physical_stats_for(position) {
+        let v = stats.get(*stat).and_then(|x| x.as_f64()).unwrap_or(STAT_FLOOR);
+        stats.insert((*stat).to_string(), Value::from((v - MILITARY_WEEKLY_DECLINE_RATE).max(STAT_FLOOR)));
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -254,6 +272,30 @@ mod tests {
             apply_aging_decline("선발투수", 40, &mut stats, 0.0, 50.0);
         }
         for stat in PITCHER_PHYSICAL {
+            assert!(stats.get(stat).unwrap().as_f64().unwrap() >= 20.0);
+        }
+    }
+
+    #[test]
+    fn military_decline_only_touches_physical_stats() {
+        let mut stats = stats_at(50.0, &BATTER_EXPOSED);
+        apply_military_decline("타자", &mut stats);
+
+        for stat in BATTER_PHYSICAL {
+            assert!(stats.get(stat).unwrap().as_f64().unwrap() < 50.0, "{stat} should decline during service");
+        }
+        for stat in ["컨택", "선구안", "수비", "클러치", "침착함", "리더십"] {
+            assert_eq!(stats.get(stat).unwrap().as_f64().unwrap(), 50.0, "{stat} (technical/mental) must not change during service");
+        }
+    }
+
+    #[test]
+    fn military_decline_never_drops_below_stat_floor() {
+        let mut stats = stats_at(20.05, &BATTER_EXPOSED);
+        for _ in 0..100 {
+            apply_military_decline("타자", &mut stats);
+        }
+        for stat in BATTER_PHYSICAL {
             assert!(stats.get(stat).unwrap().as_f64().unwrap() >= 20.0);
         }
     }

@@ -68,6 +68,22 @@ fn migration_v2(tx: &Transaction) -> anyhow::Result<()> {
     Ok(())
 }
 
+const V3_DDL: &str = r#"
+ALTER TABLE npc ADD COLUMN military_return_day INTEGER;
+ALTER TABLE npc ADD COLUMN military_served INTEGER NOT NULL DEFAULT 0;
+"#;
+
+/// I5 8차분(병역) — [03_병역](../../../02_기획/03_병역.md). NPC는 §1 "타이밍
+/// = 플레이어 유연 선택"을 할 수 없어 §9의 강제편입 기본 경로(현역)만 재현
+/// — 다른 JSON blob 컬럼(injury 등)과 달리 단순 플래그라 plain 컬럼 2개로
+/// 충분: `military_return_day`(NULL=복무 중 아님, non-NULL=그 날 전역
+/// 예정) · `military_served`(평생 1회만 — 재입대 없음, 0/1).
+fn migration_v3(tx: &Transaction) -> anyhow::Result<()> {
+    tx.execute_batch(V3_DDL)?;
+    tx.execute("UPDATE meta SET save_version = 3", [])?;
+    Ok(())
+}
+
 const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 1,
@@ -76,6 +92,10 @@ const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 2,
         up: migration_v2,
+    },
+    Migration {
+        version: 3,
+        up: migration_v3,
     },
 ];
 
@@ -103,7 +123,23 @@ mod tests {
         let save_version: i64 = conn
             .query_row("SELECT save_version FROM meta", [], |row| row.get(0))
             .unwrap();
-        assert_eq!(save_version, 2);
+        assert_eq!(save_version, 3);
+    }
+
+    #[test]
+    fn v3_adds_military_columns_to_npc() {
+        let conn = open_in_memory().unwrap();
+        conn.execute(
+            "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches, injury, military_return_day, military_served)
+             VALUES ('npc:x', 'X', 'team:x', '타자', 28, 1, 0, 50.0, '{}', '{}', '{}', '{}', NULL, '{}', 700, 1)",
+            [],
+        )
+        .unwrap();
+        let (return_day, served): (i64, i64) = conn
+            .query_row("SELECT military_return_day, military_served FROM npc WHERE id = 'npc:x'", [], |r| Ok((r.get(0)?, r.get(1)?)))
+            .unwrap();
+        assert_eq!(return_day, 700);
+        assert_eq!(served, 1);
     }
 
     #[test]
