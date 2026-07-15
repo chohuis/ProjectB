@@ -102,6 +102,27 @@ pub fn load_teams_for_league(conn: &Connection, league_id: &str) -> anyhow::Resu
     Ok(rows.collect::<Result<Vec<_>, _>>()?)
 }
 
+/// Groups a league's teams for round-robin schedule generation. 프로/프로2군은
+/// 팀별 전용구장이라 그룹핑에 못 쓰므로 리그 전체를 단일 그룹으로; 대학·고교는
+/// I2에서 이미 확정된 stadium_id(대학 5조·고교 8권역, 각각 거점구장 공유)를
+/// 그대로 그룹 경계로 재사용 — 새로운 조편성 결정을 안 지어냄.
+pub fn load_team_groups_for_schedule(conn: &Connection, league_id: &str) -> anyhow::Result<Vec<Vec<String>>> {
+    let mut stmt = conn.prepare("SELECT id, stadium_id FROM teams WHERE league_id = ?1 ORDER BY id")?;
+    let rows: Vec<(String, Option<String>)> =
+        stmt.query_map([league_id], |row| Ok((row.get(0)?, row.get(1)?)))?.collect::<Result<Vec<_>, _>>()?;
+
+    if league_id == "league:pro" || league_id == "league:pro_farm" {
+        return Ok(vec![rows.into_iter().map(|(id, _)| id).collect()]);
+    }
+
+    let mut groups: std::collections::BTreeMap<String, Vec<String>> = std::collections::BTreeMap::new();
+    for (team_id, stadium_id) in rows {
+        let key = stadium_id.unwrap_or_else(|| "ungrouped".to_string());
+        groups.entry(key).or_default().push(team_id);
+    }
+    Ok(groups.into_values().collect())
+}
+
 pub fn load_generation_rule(conn: &Connection, league_id: &str) -> anyhow::Result<serde_json::Value> {
     let raw: String = conn.query_row(
         "SELECT rules FROM generation_rules WHERE league_id = ?1",
