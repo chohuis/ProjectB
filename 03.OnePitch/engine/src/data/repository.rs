@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 
+use rand::seq::SliceRandom;
 use rand::SeedableRng;
 use rand_chacha::ChaCha8Rng;
 use rusqlite::{params, Connection, OptionalExtension};
@@ -553,6 +554,340 @@ pub fn run_pro_postseason(slot_conn: &Connection, content_conn: &Connection, wor
         params![format!("txn:pro_champion_{world_seed}"), champion],
     )?;
     Ok(Some(champion))
+}
+
+fn record_champion(slot_conn: &Connection, kind_suffix: &str, world_seed: i64, champion: &str) -> anyhow::Result<()> {
+    slot_conn.execute(
+        "INSERT INTO league_transactions (id, day, kind, detail) VALUES (?1, 0, 'champion', ?2)",
+        params![format!("txn:{kind_suffix}_champion_{world_seed}"), champion],
+    )?;
+    Ok(())
+}
+
+/// 표준 시드 브래킷 순서 — 재귀적으로 절반씩 접어 상위 시드가 하위 시드와
+/// 최대한 늦게 만나도록 배치(1v16·2v15… 관행). 반환값은 1-indexed 시드
+/// 번호의 순열(브래킷 포지션 순서) — 길이는 항상 2의 거듭제곱.
+fn standard_seed_order(n: usize) -> Vec<usize> {
+    if n <= 1 {
+        return vec![1];
+    }
+    let half = standard_seed_order(n / 2);
+    let mut out = Vec::with_capacity(n);
+    for s in half {
+        out.push(s);
+        out.push(n + 1 - s);
+    }
+    out
+}
+
+/// 시드 순서(0번=최상위 시드)로 정렬된 팀 목록을 받아 단판 넉아웃 브래킷을
+/// 끝까지 시뮬 — 대학 3개 대회·고교 5개 전국대회가 전부 이 함수 하나로
+/// 커버된다(참가 인원·시드/WC 산정 방식만 다르고 브래킷 진행 로직은 동일).
+/// 브래킷 크기는 참가 인원보다 큰 최소 2의 거듭제곱이고, 남는 자리(부전승)는
+/// standard_seed_order의 성질상 항상 상위 시드부터 채워진다 — "48강 상위16
+/// 부전승", "국화기 128대진 26 부전승" 같은 문서 수치와 정확히 일치
+/// (bracket_size - n_teams = 부전승 수, 절대 서로 만나지 않음).
+fn simulate_knockout_bracket(
+    slot_conn: &Connection,
+    rng: &mut ChaCha8Rng,
+    league_id: &str,
+    seeded_teams: &[String],
+) -> anyhow::Result<String> {
+    let n = seeded_teams.len();
+    anyhow::ensure!(n >= 2, "bracket needs at least 2 teams, got {n}");
+    let mut bracket_size = 1usize;
+    while bracket_size < n {
+        bracket_size *= 2;
+    }
+
+    let order = standard_seed_order(bracket_size);
+    let mut current: Vec<Option<String>> = order.iter().map(|&seed| seeded_teams.get(seed - 1).cloned()).collect();
+
+    while current.len() > 1 {
+        let mut next: Vec<Option<String>> = Vec::with_capacity(current.len() / 2);
+        for pair in current.chunks(2) {
+            let winner = match (&pair[0], &pair[1]) {
+                (Some(a), Some(b)) => {
+                    let (w, _) = simulate_series(slot_conn, rng, league_id, a, b, 1)?;
+                    Some(w)
+                }
+                (Some(a), None) => Some(a.clone()),
+                (None, Some(b)) => Some(b.clone()),
+                (None, None) => None, // standard_seed_order의 성질상 실제로는 발생 안 함
+            };
+            next.push(winner);
+        }
+        current = next;
+    }
+    current.into_iter().next().flatten().ok_or_else(|| anyhow::anyhow!("bracket produced no champion"))
+}
+
+/// 조별 예선 라운드로빈을 그룹별로 동기 시뮬 후 조별 상위 N팀을 (team_id, w,
+/// l)로 반환 — 그룹 경계를 넘어 순위를 매기지 않고 그룹 내 승률만 매긴다.
+/// 호출부가 반환값을 다시 전체 승률로 재정렬해 본선 시드를 매긴다(은하기·
+/// 여명기 둘 다 "예선 조 편성 = 완전 랜덤 추첨"이라 예선 조 배정 자체엔
+/// 시드가 없음 — 03_대학.md §4-2).
+fn run_group_stage_and_advance(
+    slot_conn: &Connection,
+    rng: &mut ChaCha8Rng,
+    league_id: &str,
+    groups: &[Vec<String>],
+    advance_per_group: usize,
+    start_day: i64,
+    game_id_prefix: &str,
+) -> anyhow::Result<Vec<(String, i64, i64)>> {
+    let mut advancing = Vec::new();
+    for (gi, group) in groups.iter().enumerate() {
+        let record =
+            simulate_round_robin_stage(slot_conn, rng, league_id, group, 1, start_day, &format!("{game_id_prefix}g{gi}_"))?;
+        let mut ranked: Vec<(String, i64, i64)> = record.into_iter().map(|(id, (w, l))| (id, w as i64, l as i64)).collect();
+        ranked.sort_by(|a, b| win_pct(b.1, b.2).partial_cmp(&win_pct(a.1, a.2)).unwrap_or(std::cmp::Ordering::Equal));
+        advancing.extend(ranked.into_iter().take(advance_per_group));
+    }
+    Ok(advancing)
+}
+
+fn shuffle_and_split(rng: &mut ChaCha8Rng, mut teams: Vec<String>, group_count: usize) -> Vec<Vec<String>> {
+    teams.shuffle(rng);
+    let per_group = teams.len() / group_count;
+    teams.chunks(per_group).map(|c| c.to_vec()).collect()
+}
+
+fn wildcards_from_remainder(remainder: Vec<(String, i64, i64)>, n: usize) -> Vec<String> {
+    let mut r = remainder;
+    r.sort_by(|a, b| win_pct(b.1, b.2).partial_cmp(&win_pct(a.1, a.2)).unwrap_or(std::cmp::Ordering::Equal));
+    r.into_iter().take(n).map(|(id, _, _)| id).collect()
+}
+
+/// 대학 정규리그 5조(content::load_team_groups_for_schedule의 stadium_id
+/// 그룹) 각각을 승률 내림차순으로 정렬해 반환 — index 0 = 조1위. 왕중왕전·
+/// 은하기·여명기가 필요한 인원수만 다르게 잘라 씀.
+fn univ_group_ranked(slot_conn: &Connection, content_conn: &Connection) -> anyhow::Result<Vec<Vec<(String, i64, i64)>>> {
+    let groups = content::load_team_groups_for_schedule(content_conn, "league:univ")?;
+    let mut stmt = slot_conn.prepare("SELECT w, l FROM standings WHERE team_id = ?1")?;
+    let mut result = Vec::new();
+    for group in groups {
+        let mut ranked: Vec<(String, i64, i64)> = group
+            .into_iter()
+            .map(|team_id| {
+                let (w, l): (i64, i64) = stmt.query_row([&team_id], |r| Ok((r.get(0)?, r.get(1)?))).unwrap_or((0, 0));
+                (team_id, w, l)
+            })
+            .collect();
+        ranked.sort_by(|a, b| win_pct(b.1, b.2).partial_cmp(&win_pct(a.1, a.2)).unwrap_or(std::cmp::Ordering::Equal));
+        result.push(ranked);
+    }
+    Ok(result)
+}
+
+/// 대학 왕중왕전 — 03_대학.md §4-1. 조1위 5팀(자동, 상위시드) + 조2위 이하
+/// 중 전체 승률 WC 3팀(하위시드) = 8팀, 8강 단판 토너먼트(부전승 없음 —
+/// 8명이 정확히 8강을 채움).
+pub fn run_univ_wangjungwang(slot_conn: &Connection, content_conn: &Connection, world_seed: i64) -> anyhow::Result<String> {
+    let groups = univ_group_ranked(slot_conn, content_conn)?;
+    let mut leaders: Vec<(String, i64, i64)> = groups.iter().filter_map(|g| g.first().cloned()).collect();
+    let remainder: Vec<(String, i64, i64)> = groups.iter().flat_map(|g| g.iter().skip(1).cloned()).collect();
+    leaders.sort_by(|a, b| win_pct(b.1, b.2).partial_cmp(&win_pct(a.1, a.2)).unwrap_or(std::cmp::Ordering::Equal));
+
+    let mut seeds: Vec<String> = leaders.into_iter().map(|(id, _, _)| id).collect();
+    seeds.extend(wildcards_from_remainder(remainder, 3));
+
+    let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, "univ_wangjungwang"));
+    let champion = simulate_knockout_bracket(slot_conn, &mut rng, "league:univ", &seeds)?;
+    record_champion(slot_conn, "univ_wangjungwang", world_seed, &champion)?;
+    Ok(champion)
+}
+
+/// 대학 은하기 — 03_대학.md §4-2. 조상위4×5조(20)+WC4=24명 → 8조×3팀
+/// 완전 랜덤 추첨 예선 라운드로빈(조당 3경기) → 조1위만(8) 본선행, 예선
+/// 승률로 재시드 → 8강 단판 토너먼트.
+pub fn run_univ_eunhagi(
+    slot_conn: &Connection,
+    content_conn: &Connection,
+    world_seed: i64,
+    prelim_start_day: i64,
+) -> anyhow::Result<String> {
+    let groups = univ_group_ranked(slot_conn, content_conn)?;
+    let auto: Vec<(String, i64, i64)> = groups.iter().flat_map(|g| g.iter().take(4).cloned()).collect();
+    let remainder: Vec<(String, i64, i64)> = groups.iter().flat_map(|g| g.iter().skip(4).cloned()).collect();
+    let wc = wildcards_from_remainder(remainder, 4);
+
+    let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, "univ_eunhagi"));
+    let mut pool: Vec<String> = auto.into_iter().map(|(id, _, _)| id).collect();
+    pool.extend(wc);
+
+    let prelim_groups = shuffle_and_split(&mut rng, pool, 8);
+    let advancing =
+        run_group_stage_and_advance(slot_conn, &mut rng, "league:univ", &prelim_groups, 1, prelim_start_day, "game:univ_eunhagi_prelim_")?;
+
+    let mut ranked = advancing;
+    ranked.sort_by(|a, b| win_pct(b.1, b.2).partial_cmp(&win_pct(a.1, a.2)).unwrap_or(std::cmp::Ordering::Equal));
+    let seeds: Vec<String> = ranked.into_iter().map(|(id, _, _)| id).collect();
+
+    let champion = simulate_knockout_bracket(slot_conn, &mut rng, "league:univ", &seeds)?;
+    record_champion(slot_conn, "univ_eunhagi", world_seed, &champion)?;
+    Ok(champion)
+}
+
+/// 대학 여명기 — 03_대학.md §4-2. 조상위3×5조(15)+WC5=20명 → 4조×5팀 완전
+/// 랜덤 추첨 예선 라운드로빈(조당 10경기) → 상위2×4조(8) 본선행, 예선
+/// 승률로 재시드 → 8강 단판 토너먼트.
+pub fn run_univ_yeongmyeonggi(
+    slot_conn: &Connection,
+    content_conn: &Connection,
+    world_seed: i64,
+    prelim_start_day: i64,
+) -> anyhow::Result<String> {
+    let groups = univ_group_ranked(slot_conn, content_conn)?;
+    let auto: Vec<(String, i64, i64)> = groups.iter().flat_map(|g| g.iter().take(3).cloned()).collect();
+    let remainder: Vec<(String, i64, i64)> = groups.iter().flat_map(|g| g.iter().skip(3).cloned()).collect();
+    let wc = wildcards_from_remainder(remainder, 5);
+
+    let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, "univ_yeongmyeonggi"));
+    let mut pool: Vec<String> = auto.into_iter().map(|(id, _, _)| id).collect();
+    pool.extend(wc);
+
+    let prelim_groups = shuffle_and_split(&mut rng, pool, 4);
+    let advancing =
+        run_group_stage_and_advance(slot_conn, &mut rng, "league:univ", &prelim_groups, 2, prelim_start_day, "game:univ_yeongmyeonggi_prelim_")?;
+
+    let mut ranked = advancing;
+    ranked.sort_by(|a, b| win_pct(b.1, b.2).partial_cmp(&win_pct(a.1, a.2)).unwrap_or(std::cmp::Ordering::Equal));
+    let seeds: Vec<String> = ranked.into_iter().map(|(id, _, _)| id).collect();
+
+    let champion = simulate_knockout_bracket(slot_conn, &mut rng, "league:univ", &seeds)?;
+    record_champion(slot_conn, "univ_yeongmyeonggi", world_seed, &champion)?;
+    Ok(champion)
+}
+
+/// 고교 8권역(=`load_team_groups_for_schedule`의 stadium_id 그룹, 02_고교.md
+/// §4-1 정규시즌 스케줄이 이미 쓰는 그룹) 중 4개(서울·경기인천·호남·
+/// 부산경남울산)는 원래 문서의 12권역 표(서울A/B, 경인A/B, 호남A/B, 영남A/B,
+/// 충청·대구경북·강원·제주 단일권역)에서 소권역이 2개였던 대권역이다.
+/// 실제 A/B 세부 팀 편성은 미확정(1차분과 동일 이유로 스코프 밖)이라 8권역
+/// 그대로 시드를 매기되, "소권역당 N장" 원 공식을 정보 손실 없이 8권역에
+/// 접어 재현한다: 대권역(소권역 2개)은 2N장, 단일권역은 N장.
+const HS_SPLIT_REGION_STADIUMS: [&str; 4] = ["stadium:hangang", "stadium:mujigae", "stadium:yeongsan", "stadium:nakdong"];
+
+fn hs_region_quota(stadium_id: &str, per_subregion: usize) -> usize {
+    if HS_SPLIT_REGION_STADIUMS.contains(&stadium_id) {
+        per_subregion * 2
+    } else {
+        per_subregion
+    }
+}
+
+/// (team_id, w, l) 튜플 목록 — 어떤 그룹(대학 조/고교 권역)의 승률 정렬 결과.
+type RankedTeams = Vec<(String, i64, i64)>;
+
+fn hs_region_standings(slot_conn: &Connection, content_conn: &Connection) -> anyhow::Result<HashMap<String, RankedTeams>> {
+    let mut stmt = content_conn.prepare("SELECT id, stadium_id FROM teams WHERE league_id = 'league:hs' ORDER BY id")?;
+    let rows: Vec<(String, Option<String>)> = stmt.query_map([], |r| Ok((r.get(0)?, r.get(1)?)))?.collect::<Result<_, _>>()?;
+    drop(stmt);
+
+    let mut wl_stmt = slot_conn.prepare("SELECT w, l FROM standings WHERE team_id = ?1")?;
+    let mut groups: HashMap<String, RankedTeams> = HashMap::new();
+    for (team_id, stadium_id) in rows {
+        let key = stadium_id.unwrap_or_else(|| "ungrouped".to_string());
+        let (w, l): (i64, i64) = wl_stmt.query_row([&team_id], |r| Ok((r.get(0)?, r.get(1)?))).unwrap_or((0, 0));
+        groups.entry(key).or_default().push((team_id, w, l));
+    }
+    for v in groups.values_mut() {
+        v.sort_by(|a, b| win_pct(b.1, b.2).partial_cmp(&win_pct(a.1, a.2)).unwrap_or(std::cmp::Ordering::Equal));
+    }
+    Ok(groups)
+}
+
+/// 권역별 상위 per_subregion(×hs_region_quota 배율)장을 자동시드로, 나머지를
+/// WC 후보 풀로 분리. 자동시드는 전체 승률로 재정렬(상위시드 우선).
+fn hs_region_seeds(groups: &HashMap<String, RankedTeams>, per_subregion: usize) -> (Vec<String>, RankedTeams) {
+    let mut autos: Vec<(String, i64, i64)> = Vec::new();
+    let mut remainder: Vec<(String, i64, i64)> = Vec::new();
+    for (stadium_id, ranked) in groups {
+        let quota = hs_region_quota(stadium_id, per_subregion);
+        for (i, entry) in ranked.iter().enumerate() {
+            if i < quota {
+                autos.push(entry.clone());
+            } else {
+                remainder.push(entry.clone());
+            }
+        }
+    }
+    autos.sort_by(|a, b| win_pct(b.1, b.2).partial_cmp(&win_pct(a.1, a.2)).unwrap_or(std::cmp::Ordering::Equal));
+    (autos.into_iter().map(|(id, _, _)| id).collect(), remainder)
+}
+
+/// 고교 지역시드+WC 브래킷 대회(개나리기·장미기·무궁화기·패왕기) 공통 골격 —
+/// 4개 대회 전부 "권역 상위 N장 + 전체승률 WC M장 → 단판 넉아웃"이라 시드
+/// 산정 파라미터(per_subregion, wc_count)만 다르고 나머지 로직은 동일
+/// (02_고교.md §4-2). 개나리기(전년 권역순위)·장미기(전반기)·패왕기(후반기)의
+/// 시점 구분은 캘린더 동기화가 아직 없어(I5 2차분에서 이미 채택한 단순화)
+/// "호출 시점의 현재 standings"로 통일한다.
+fn run_hs_region_seeded_bracket(
+    slot_conn: &Connection,
+    content_conn: &Connection,
+    world_seed: i64,
+    purpose: &str,
+    per_subregion: usize,
+    wc_count: usize,
+) -> anyhow::Result<String> {
+    let groups = hs_region_standings(slot_conn, content_conn)?;
+    let (autos, remainder) = hs_region_seeds(&groups, per_subregion);
+    let mut seeds = autos;
+    seeds.extend(wildcards_from_remainder(remainder, wc_count));
+
+    let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, purpose));
+    let champion = simulate_knockout_bracket(slot_conn, &mut rng, "league:hs", &seeds)?;
+    record_champion(slot_conn, purpose, world_seed, &champion)?;
+    Ok(champion)
+}
+
+/// 고교 개나리기 — 지역시드 2×8권역(=24, 12권역 표 기준 소권역당2) + WC8 =
+/// 32명 → 32강 단판 토너먼트(부전승 없음).
+pub fn run_hs_gaenari(slot_conn: &Connection, content_conn: &Connection, world_seed: i64) -> anyhow::Result<String> {
+    run_hs_region_seeded_bracket(slot_conn, content_conn, world_seed, "hs_gaenari", 2, 8)
+}
+
+/// 고교 장미기 — 개나리기와 동일 산식(24+8=32, 32강 단판). 실제 문서는
+/// "전반기 권역 상위" 기준이나 캘린더 시점 구분은 스코프 밖(위 주석 참고).
+pub fn run_hs_jangmi(slot_conn: &Connection, content_conn: &Connection, world_seed: i64) -> anyhow::Result<String> {
+    run_hs_region_seeded_bracket(slot_conn, content_conn, world_seed, "hs_jangmi", 2, 8)
+}
+
+/// 고교 무궁화기 — 지역시드 3×8권역(=36, 소권역당3) + WC12 = 48명 → 48강
+/// 브래킷(bracket_size=64, 상위16 부전승 — 문서 수치와 정확히 일치).
+pub fn run_hs_mugunghwa(slot_conn: &Connection, content_conn: &Connection, world_seed: i64) -> anyhow::Result<String> {
+    run_hs_region_seeded_bracket(slot_conn, content_conn, world_seed, "hs_mugunghwa", 3, 12)
+}
+
+/// 고교 패왕기 — 지역시드 2×8권역(=24, 소권역당2) + WC 없음 = 24명 → 32대진
+/// 브래킷(bracket_size=32, 상위8 부전승 — 문서 수치와 정확히 일치). 실제
+/// 문서는 "후반기 권역 상위" 기준(캘린더 시점 구분은 스코프 밖).
+pub fn run_hs_paewang(slot_conn: &Connection, content_conn: &Connection, world_seed: i64) -> anyhow::Result<String> {
+    run_hs_region_seeded_bracket(slot_conn, content_conn, world_seed, "hs_paewang", 2, 0)
+}
+
+/// 고교 국화기 — 02_고교.md §4-2. 지역시드·WC 없이 102팀 전원 참가, 주말리그
+/// 순위(=현재 standings 승률)로 전체 시드 → 128대진 브래킷(상위26 부전승,
+/// 문서 수치와 정확히 일치) — "개방형" 취지대로 소규모 지역 팀도 전원 포함.
+pub fn run_hs_gukhwa(slot_conn: &Connection, content_conn: &Connection, world_seed: i64) -> anyhow::Result<String> {
+    let ids = content::load_team_ids_for_league(content_conn, "league:hs")?;
+    let mut stmt = slot_conn.prepare("SELECT w, l FROM standings WHERE team_id = ?1")?;
+    let mut ranked: Vec<(String, i64, i64)> = ids
+        .into_iter()
+        .map(|id| {
+            let (w, l): (i64, i64) = stmt.query_row([&id], |r| Ok((r.get(0)?, r.get(1)?))).unwrap_or((0, 0));
+            (id, w, l)
+        })
+        .collect();
+    drop(stmt);
+    ranked.sort_by(|a, b| win_pct(b.1, b.2).partial_cmp(&win_pct(a.1, a.2)).unwrap_or(std::cmp::Ordering::Equal));
+    let seeds: Vec<String> = ranked.into_iter().map(|(id, _, _)| id).collect();
+
+    let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, "hs_gukhwa"));
+    let champion = simulate_knockout_bracket(slot_conn, &mut rng, "league:hs", &seeds)?;
+    record_champion(slot_conn, "hs_gukhwa", world_seed, &champion)?;
+    Ok(champion)
 }
 
 /// I5가 채울 자리 — 주간 경계(훈련 XP→스탯, 누적형 부상체크, 라이브상태 갱신,
@@ -1180,5 +1515,206 @@ mod tests {
             .query_row("SELECT count(*) FROM league_transactions WHERE kind = 'champion'", [], |r| r.get(0))
             .unwrap();
         assert_eq!(champion_txn, 1);
+    }
+
+    #[test]
+    fn standard_seed_order_matches_known_bracket_layout() {
+        assert_eq!(standard_seed_order(1), vec![1]);
+        assert_eq!(standard_seed_order(2), vec![1, 2]);
+        assert_eq!(standard_seed_order(8), vec![1, 8, 4, 5, 2, 7, 3, 6]);
+    }
+
+    #[test]
+    fn standard_seed_order_byes_never_pair_with_each_other() {
+        // for every practical (n_teams, bracket_size) pair used by the 8
+        // tournaments (byes <= bracket_size/2), round-1 pairs must never be
+        // (bye, bye) — otherwise simulate_knockout_bracket would silently
+        // drop a bracket slot (the (None, None) arm).
+        for (n_teams, bracket_size) in [(48usize, 64usize), (102, 128), (24, 32), (5, 8)] {
+            let order = standard_seed_order(bracket_size);
+            for pair in order.chunks(2) {
+                let both_byes = pair[0] > n_teams && pair[1] > n_teams;
+                assert!(!both_byes, "byes {pair:?} paired together for n_teams={n_teams} bracket={bracket_size}");
+            }
+        }
+    }
+
+    fn insert_team_with_stadium(content_conn: &Connection, team_id: &str, league_id: &str, stadium_id: &str) {
+        content_conn
+            .execute(
+                "INSERT INTO teams (id, league_id, color, meta, stadium_id) VALUES (?1, ?2, NULL, NULL, ?3)",
+                params![team_id, league_id, stadium_id],
+            )
+            .unwrap();
+    }
+
+    fn set_standings(slot_conn: &Connection, team_id: &str, w: i64, l: i64) {
+        slot_conn
+            .execute(
+                "INSERT INTO standings (team_id, w, l, t, rank) VALUES (?1, ?2, ?3, 0, 0)
+                 ON CONFLICT(team_id) DO UPDATE SET w = excluded.w, l = excluded.l",
+                params![team_id, w, l],
+            )
+            .unwrap();
+    }
+
+    #[test]
+    fn simulate_knockout_bracket_reduces_any_team_count_to_one_champion() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        for n in [2usize, 3, 5, 8, 9] {
+            let teams: Vec<String> = (0..n).map(|i| format!("team:k{n}_{i}")).collect();
+            for t in &teams {
+                insert_minimal_roster(&slot_conn, t);
+            }
+            let mut rng = ChaCha8Rng::seed_from_u64(n as u64);
+            let champion = simulate_knockout_bracket(&slot_conn, &mut rng, "league:hs", &teams).unwrap();
+            assert!(teams.contains(&champion), "champion must be one of the {n} entrants");
+        }
+    }
+
+    /// 대학 5조 × 5팀(조당) = 25팀 — 왕중왕전(리더5+WC3=8)·은하기(상위4×5+WC4=24)·
+    /// 여명기(상위3×5+WC5=20) 세 대회 전부 remainder 풀이 바닥나지 않게 조당
+    /// 5팀으로 잡았다(조당 4팀이면 은하기 WC 후보가 0명이 됨).
+    fn build_univ_tournament_db() -> (Connection, Connection) {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:univ', NULL)", []).unwrap();
+        let stadiums = ["stadium:mireu", "stadium:byeolbit", "stadium:geumgang_univ", "stadium:noeul", "stadium:taejong"];
+        for s in stadiums {
+            content_conn.execute("INSERT INTO stadiums (id, name, park_factor, meta) VALUES (?1, ?1, '중립', NULL)", [s]).unwrap();
+        }
+
+        let slot_conn = slot::open_in_memory().unwrap();
+        for (gi, stadium) in stadiums.iter().enumerate() {
+            for i in 0..5 {
+                let team_id = format!("team:u{gi}_{i}");
+                insert_team_with_stadium(&content_conn, &team_id, "league:univ", stadium);
+                insert_minimal_roster(&slot_conn, &team_id);
+                // rank within group: i=0 is best (most wins)
+                set_standings(&slot_conn, &team_id, (10 - i) as i64, i as i64);
+            }
+        }
+        (content_conn, slot_conn)
+    }
+
+    #[test]
+    fn run_univ_wangjungwang_crowns_a_champion_from_eight_teams() {
+        let (content_conn, slot_conn) = build_univ_tournament_db();
+        let champion = run_univ_wangjungwang(&slot_conn, &content_conn, 1).unwrap();
+        assert!(champion.starts_with("team:u"));
+        let txn: i64 = slot_conn
+            .query_row(
+                "SELECT count(*) FROM league_transactions WHERE kind = 'champion' AND id LIKE 'txn:univ_wangjungwang%'",
+                [],
+                |r| r.get(0),
+            )
+            .unwrap();
+        assert_eq!(txn, 1);
+    }
+
+    #[test]
+    fn run_univ_eunhagi_runs_prelim_groups_then_crowns_a_champion() {
+        let (content_conn, slot_conn) = build_univ_tournament_db();
+        let champion = run_univ_eunhagi(&slot_conn, &content_conn, 2, 1).unwrap();
+        assert!(champion.starts_with("team:u"));
+
+        // 8 groups of 3 teams, single round robin -> 3 games/group = 24 games total.
+        let prelim_games: i64 = slot_conn
+            .query_row("SELECT count(*) FROM schedule WHERE game_id LIKE 'game:univ_eunhagi_prelim_%'", [], |r| r.get(0))
+            .unwrap();
+        assert_eq!(prelim_games, 24);
+    }
+
+    #[test]
+    fn run_univ_yeongmyeonggi_runs_prelim_groups_then_crowns_a_champion() {
+        let (content_conn, slot_conn) = build_univ_tournament_db();
+        let champion = run_univ_yeongmyeonggi(&slot_conn, &content_conn, 3, 1).unwrap();
+        assert!(champion.starts_with("team:u"));
+
+        // 4 groups of 5 teams, single round robin -> 10 games/group = 40 games total.
+        let prelim_games: i64 = slot_conn
+            .query_row("SELECT count(*) FROM schedule WHERE game_id LIKE 'game:univ_yeongmyeonggi_prelim_%'", [], |r| r.get(0))
+            .unwrap();
+        assert_eq!(prelim_games, 40);
+    }
+
+    /// 고교 8권역 — 4개 대권역(서울·경인·호남·부경울에 대응하는 split 구장)은
+    /// 8팀씩, 4개 단일권역(강원·충청·대구경북·제주에 대응)은 5팀씩(52팀 총).
+    /// 무궁화기(소권역당3 = 대권역쿼터6/단일쿼터3)가 WC12 후보 풀을 남기려면
+    /// 대권역 8팀(쿼터6→잔여2), 단일권역 5팀(쿼터3→잔여2)이 필요해 이 크기로
+    /// 잡았다.
+    fn build_hs_tournament_db() -> (Connection, Connection) {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:hs', NULL)", []).unwrap();
+        let split_regions = HS_SPLIT_REGION_STADIUMS;
+        let single_regions = ["stadium:seorak_hs", "stadium:gyeryong", "stadium:palgong", "stadium:halla"];
+        for s in split_regions.iter().chain(single_regions.iter()) {
+            content_conn.execute("INSERT INTO stadiums (id, name, park_factor, meta) VALUES (?1, ?1, '중립', NULL)", [s]).unwrap();
+        }
+
+        let slot_conn = slot::open_in_memory().unwrap();
+        for stadium in split_regions {
+            for i in 0..8 {
+                let team_id = format!("team:h_{stadium}_{i}");
+                insert_team_with_stadium(&content_conn, &team_id, "league:hs", stadium);
+                insert_minimal_roster(&slot_conn, &team_id);
+                set_standings(&slot_conn, &team_id, (16 - i) as i64, i as i64);
+            }
+        }
+        for stadium in single_regions {
+            for i in 0..5 {
+                let team_id = format!("team:h_{stadium}_{i}");
+                insert_team_with_stadium(&content_conn, &team_id, "league:hs", stadium);
+                insert_minimal_roster(&slot_conn, &team_id);
+                set_standings(&slot_conn, &team_id, (10 - i) as i64, i as i64);
+            }
+        }
+        (content_conn, slot_conn)
+    }
+
+    fn assert_single_champion_txn(slot_conn: &Connection, purpose: &str) -> String {
+        let champion: String = slot_conn
+            .query_row(
+                "SELECT detail FROM league_transactions WHERE kind = 'champion' AND id LIKE ?1",
+                [format!("txn:{purpose}_champion_%")],
+                |r| r.get(0),
+            )
+            .unwrap();
+        assert!(champion.starts_with("team:h_"));
+        champion
+    }
+
+    #[test]
+    fn run_hs_gaenari_crowns_a_champion_from_region_seeds_and_wildcards() {
+        let (content_conn, slot_conn) = build_hs_tournament_db();
+        run_hs_gaenari(&slot_conn, &content_conn, 10).unwrap();
+        assert_single_champion_txn(&slot_conn, "hs_gaenari");
+    }
+
+    #[test]
+    fn run_hs_jangmi_crowns_a_champion() {
+        let (content_conn, slot_conn) = build_hs_tournament_db();
+        run_hs_jangmi(&slot_conn, &content_conn, 11).unwrap();
+        assert_single_champion_txn(&slot_conn, "hs_jangmi");
+    }
+
+    #[test]
+    fn run_hs_mugunghwa_crowns_a_champion_with_full_forty_eight_field() {
+        let (content_conn, slot_conn) = build_hs_tournament_db();
+        run_hs_mugunghwa(&slot_conn, &content_conn, 12).unwrap();
+        assert_single_champion_txn(&slot_conn, "hs_mugunghwa");
+    }
+
+    #[test]
+    fn run_hs_paewang_crowns_a_champion_without_wildcards() {
+        let (content_conn, slot_conn) = build_hs_tournament_db();
+        run_hs_paewang(&slot_conn, &content_conn, 13).unwrap();
+        assert_single_champion_txn(&slot_conn, "hs_paewang");
+    }
+
+    #[test]
+    fn run_hs_gukhwa_crowns_a_champion_from_the_entire_league() {
+        let (content_conn, slot_conn) = build_hs_tournament_db();
+        run_hs_gukhwa(&slot_conn, &content_conn, 14).unwrap();
+        assert_single_champion_txn(&slot_conn, "hs_gukhwa");
     }
 }
