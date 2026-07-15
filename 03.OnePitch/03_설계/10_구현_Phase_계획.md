@@ -1,7 +1,7 @@
 # 구현 Phase 계획 (착수 로드맵 — 새 세션 온보딩 문서)
 
 > 근거: [00_결정_요약](00_결정_요약.md)(전체 결정 인덱스) · [03_구조](03_구조.md) §5-1(엔진 모듈 지도) · [05_밸런스](05_밸런스.md) §3(확정 순서) · [07_데이터관리](07_데이터관리.md) §7(초기구축순서) · [08_P7_체크리스트](08_P7_체크리스트.md)(실측 완료) · [09_개발환경_세팅](09_개발환경_세팅.md) · 대화 설계(2026-07-14)
-> 상태: **I0~I5 완료(I5는 8차분까지, `eval`·`market`은 I6로 재배치), I6 진행중(2차분까지 완료)** — 2026-07-15
+> 상태: **I0~I6 완료(I5는 8차분까지, `eval`·`market`은 I6로 재배치, I6는 3차분까지), I7 착수 대기** — 2026-07-15
 > 목적: **이 문서 하나만 읽으면 새 대화 세션이 지금 상황을 전부 파악하고 이어서 구현을 진행**할 수 있게 한다. 기획·설계는 100% 끝났고(§1), 지금부터는 코드 작성 단계다.
 
 ## 0. 이 문서를 읽는 새 세션에게
@@ -33,7 +33,7 @@
 | **I3** | 선수 생성 엔진(`sim/roster`) | canonical_seed 기반 결정적 로스터 생성(`generateInitialWorld`) | 새 게임 시작 시 172팀 ~3,700명이 slot.db에 생성, 동일 seed→동일 결과(재현성 테스트) | [07_데이터관리](07_데이터관리.md) §2 · [01_선수_능력치](../02_기획/육성코어/01_선수_능력치.md) | ✅ 완료 (2026-07-15) — 실데이터로 4,410명 생성(2군 포함) 확인, 동일 seed 재현성 확인. 상세는 아래 §6-3 |
 | **I4** | 게임 루프 오케스트레이터(`api/advance`) | 일/주/월/시즌 경계 처리, PendingAction 7종 상태기계 | `advance()` 호출 시 여러 주 진행 후 정지점에서 올바로 멈춤 | [04_게임루프](04_게임루프.md) | ✅ 완료 (2026-07-15) — 오케스트레이터 뼈대(하루단위 루프·정지판정·PendingAction push/resolve·재서명) 구현, 실제 배치 내용은 I5/I6가 채울 훅으로 배선. 상세는 아래 §6-4 |
 | **I5** | 나머지 sim 모듈 | `sim/growth`·`sim/injury`·`sim/eval`·`sim/match`(배경)·`sim/market`·`sim/npc`·`sim/schedule` — [05_밸런스](05_밸런스.md) §3 순서(A→B→C→{D,E,F}→G,H→I)로 구현+가밸런스 적용 | 배경 시뮬만으로 시즌 1개 완주 가능 | [03_구조](03_구조.md) §5-1 · 육성코어 01~09 각 문서 | ✅ **완료**(8차분까지, 2026-07-15) — 1차분(`sim/schedule`+`sim/match`, 정규시즌)+2차분(독립리그+독립/프로 포스트시즌)+3차분(대학·고교 포스트시즌/전국대회)+4차분(`sim/growth` 상승기)+5차분(`sim/injury` 누적형+`sim/growth` 하락기)+6차분(`sim/injury` 급성형, 매치 엔진 확장)+7차분(`sim/npc` 세대교체 — retire+generate_freshmen)+8차분(`sim/npc` 병역 — enlist/discharge). **`sim/eval`·`sim/market`은 리서치 결과 대부분 주인공 전용으로 판명돼 I6로 재배치**(§6-11) — I5가 원래 목표한 "배경 시뮬만으로 시즌 완주"는 이 둘 없이도 이미 충족돼 완료 처리. 상세는 아래 §6-11·§6-12 |
-| **I6** | 주인공 플로우 | 캐릭터 생성([07_주인공_생성](../02_기획/07_주인공_생성.md)), 주인공 등판 매치 세션(`startMatch`/`pitch`) | 캐릭터 생성 후 첫 경기를 실제로 뛸 수 있음(반자동 모드 최소) | [04_UI기획/06_캐릭터생성](../04_UI기획/06_캐릭터생성.md) · [07_매치_엔진](../02_기획/육성코어/07_매치_엔진.md) | 🔶 진행중 — 1차분(`create_protagonist`, 캐릭터 생성 데이터 계층)+2차분(`sim/pitch`, 1구 단위 볼카운트 시뮬 핵심 로직) 완료(2026-07-15). `startMatch`/`pitch` API·세션 상태 저장·PendingAction 연동은 이월. 상세는 아래 §6-13·§6-14 |
+| **I6** | 주인공 플로우 | 캐릭터 생성([07_주인공_생성](../02_기획/07_주인공_생성.md)), 주인공 등판 매치 세션(`startMatch`/`pitch`) | 캐릭터 생성 후 첫 경기를 실제로 뛸 수 있음(반자동 모드 최소) | [04_UI기획/06_캐릭터생성](../04_UI기획/06_캐릭터생성.md) · [07_매치_엔진](../02_기획/육성코어/07_매치_엔진.md) | ✅ **완료**(3차분까지, 2026-07-15) — 1차분(`create_protagonist`)+2차분(`sim/pitch` 1구 판정 로직)+3차분(`data/match_session` — 세션 상태 저장·`resolve_choice` PendingAction 체이닝, 자동·수동·반자동 3모드 전부 실동작 확인). 완료 기준("반자동 모드 최소로 첫 경기를 뛸 수 있음") 충족 — `sim/eval`·`sim/market`·부상 치료 선택(`apply_injury`/`treat`)·훈련 슬롯(`sim/training`)·감독 개입(투수교체)·콜드게임(인터랙티브 경로)·개인 통산 스탯은 계속 이월. 상세는 아래 §6-13·§6-14·§6-15 |
 | **I7** | Flutter UI | `04_UI기획/` 00~08 화면 실제 구현(4허브+진행버튼+매치 CustomPainter) | 최소 플레이 가능한 루프가 실제 화면에서 끝까지 동작(뉴게임→진행→경기→시즌종료) | `04_UI기획/` 전체 | ⬜ 미착수 |
 | **I8** | 콘텐츠 저작 + D그룹 수치화 | 이벤트·캐릭터·업적 등 AI 대량생성→import, 밸런스 시뮬 하네스로 실제 수치 확정 | `content import` 파이프라인 동작, 15~20시즌 시뮬 하네스가 [05_밸런스](05_밸런스.md) §4 통과기준 만족 | [02_데이터](02_데이터.md) §3 · [05_밸런스](05_밸런스.md) §4 | ⬜ 미착수 |
 | **I9** | 통합 검증 · 배포 준비 | 보류됐던 실기기 검증(Android·Steam·Mac/Linux) 실제 진행, 릴리스 빌드, Steam 정식 등록 | P7 체크리스트 §6 열린세부 전부 해소, 스토어 빌드 산출 | [08_P7_체크리스트](08_P7_체크리스트.md) §6 | ⬜ 미착수 |
@@ -190,7 +190,7 @@
 
 **수동 검증**(임시 바이너리, 커밋 안 함): 실제 시드된 content.db로 — 독립리그 10팀 로스터 생성 후 `run_independent_season` 1회 호출 → 152경기 기록+챔피언 1명 배출 확인. 프로 10팀은 1차분 로직으로 정규시즌 완주(`advance()` 반복) → `season_rollover`가 자동으로 `run_pro_postseason`을 트리거해 챔피언이 `league_transactions`에 기록되고 10팀 전부 `history_standings`에 정확히 아카이브됨을 확인.
 
-**다음 세션이 할 일**(I6 2차분 완료로 갱신, 아래 §6-14 참고): I6 3차분 — `startMatch`/`pitch` 엔진 API·세션 상태 저장(slot.db)·PendingAction 연동(2차분에서 만든 `sim/pitch` 순수 판정 로직을 실제 게임 루프에 배선). 그 다음 후보: `sim/eval`(S~D 평가)·`sim/market`(계약/FA/트레이드)·`sim/injury`의 치료 선택(`apply_injury`/`treat`)·`sim/training`(06_훈련_시스템 슬롯 배분) — 전부 "주인공이 선택하는" UI 중심 시스템이라 매치 세션과 자연스럽게 이어짐.
+**다음 세션이 할 일**(I6 3차분 완료로 I6 전체 완료, 아래 §6-15 참고): **I7(Flutter UI)** — 지금까지 엔진 쪽에만 있던 캐릭터 생성·매치 세션이 실제 화면에서 동작하는 걸 볼 차례. 아니면 I6에서 계속 이월된 `sim/eval`(S~D 평가)·`sim/market`(계약/FA/트레이드)·부상 치료 선택(`apply_injury`/`treat`)·훈련 슬롯(`sim/training`)을 마저 채우는 것도 후보 — 어느 쪽이든 UI 없이는 실제로 "보면서" 확인하기 어려워지는 지점이라 다음 세션에서 순서 재확인.
 
 ### 6-7. I5 3차분 착수 기록 (2026-07-15, 완료)
 
@@ -359,7 +359,33 @@
 
 **수동 검증**(임시 바이너리, 커밋 안 함): 실제 시드된 content.db에서 뽑은 진짜 투수(제구 38·구위 20, 평균 이하)·타자 스탯으로 5,000타석 시뮬 → K% 13.4·BB% 9.5·HBP% 6.0·인플레이 71.0%·평균 3.18구/타석(제구 나쁜 투수라 볼넷·사구가 다소 높게 나오는 게 자연스러움). AI 휴리스틱 검증: 평상시 구석 코스(유인구) 비중 47%(940/2000) → 위기상황 62%(1241/2000)로 실제 상승 확인.
 
-### 6-15. 문서 갱신 규칙
+### 6-15. I6 3차분 착수 기록 (2026-07-15, 완료) — 매치 세션 배선, I6 전체 완료
+
+**스코프**: 2차분에서 만든 `sim/pitch` 순수 판정 로직을 실제 게임 루프에 연결 — `startMatch`/`pitch` API, 세션 상태 저장, `PendingAction` 체이닝. [07_매치_엔진](../02_기획/육성코어/07_매치_엔진.md) §3의 자동·수동·반자동 3모드 전부.
+
+**핵심 설계 결정**:
+- **세션 상태 = 새 테이블(`match_session`, slot.db v4), 단일 행(id=1) 고정**. §12 "경기는 시작~종료가 하나의 단위... 경기 중 저장 불가"대로 이 테이블은 진행 중인 경기 하나만 담는 휘발성 상태 — `season_rollover` 등 시즌 경계 로직이 안 건드리고, 경기가 끝나면(`finalize_game`) 즉시 삭제된다.
+- **모드 3개가 사실 하나의 메커니즘**: 자동·수동·반자동은 전부 같은 1구 판정을 공유하고 "이번 공을 플레이어에게 물어볼지"만 다르다(자동=항상 안 물음, 수동=항상 물음, 반자동=위기상황일 때만) — 그래서 `run_until_decision_point` 하나가 세 모드를 전부 처리하고, 모드별 분기는 `match session.mode` 값 하나로 단순화됨.
+- **배경 하프이닝 vs 인터랙티브 하프이닝**: 주인공이 던지는 하프이닝(상대 팀 타석)만 1구 단위로 처리하고, 주인공 팀이 타석에 설 때(DH, §7 — 주인공은 절대 타석에 안 섬)는 기존 `match_sim::simulate_half_inning`을 통째로 재사용해 한 번에 끝냄 — 인터랙션이 필요 없는 구간까지 1구 단위로 쪼갤 이유가 없어서. `load_batting_lineup`이 애초에 `npc` 테이블만 조회하므로 주인공은 자동으로 자기 팀 타석에서 제외됨(별도 분기 불필요).
+- **PendingAction 체이닝**: `resolve_choice`(그동안 제네릭 삭제만 하던 함수, I4에서 이미 "타입별 분기는 여기서"라고 예정해뒀던 자리)가 이제 `type` 컬럼으로 분기 — `'game'`(§3 "경기 시작 전 1회 선택"의 모드 값이 `choice_id`) → `start_protagonist_match`, `'pitch'`(§5, `choice_id`는 `"구종:코스"` 형식) → `submit_pitch`. 결과가 `AwaitingPitch`면 다음 1구를 위한 `'pitch'` PendingAction을 자동으로 새로 만들어 체인을 이음 — 호출부는 `advance()`가 원래 하던 "정지→응답→재개" 패턴을 그대로 반복하기만 하면 됨.
+- **끝내기·연장전 규칙**은 `match_sim::simulate_game`의 이닝 루프 조건(§10-2, 아마추어=승부치기 무제한, 프로 정규시즌=12회 제한 무승부)을 `transition_half_inning`에 그대로 재현. **콜드게임(§10-2 5회15점/7회10점) 조기종료는 이번 인터랙티브 경로에서 스코프 아웃** — 배경 경기(`simulate_game`)에만 남아있음, 다음 서브분 후보.
+- **주인공은 항상 선발 완투로 가정**(다른 배경 경기들과 동일한 placeholder) — 구원 등판·투수 교체는 감독 AI가 생기는 후속 Phase 스코프.
+- **주인공 성장·부상·피로도는 이번에도 안 건드림**: 상대 타자(NPC)의 급성 부상은 이번에도 판정·기록하지만(`check_acute_injury`+`apply_injury_events` 재사용), 주인공(투수) 쪽은 `apply_injury`/`treat`가 여전히 `todo!()`라 스코프 밖 — `npc` 테이블 전용인 `process_week`도 주인공을 안 건드리므로 일관됨.
+
+**구현**:
+- `engine/src/data/match_session.rs`(신규): `MatchStepResult`(`AwaitingPitch`|`GameOver`), `start_protagonist_match`·`submit_pitch`(공개 API), `run_until_decision_point`(공유 드라이버 루프), `transition_half_inning`·`finalize_game`·`apply_pa_outcome`(내부 헬퍼).
+- `engine/src/sim/pitch.rs`: `Course::parse`(문자열→코스, PendingAction 응답 파싱용) 추가.
+- `engine/src/sim/match_.rs`: `simulate_half_inning`·`advance_runners`·`is_amateur`를 `pub(crate)`로 승격(매치 세션이 재사용), `BatterStats`에 `Clone` 추가(세션 재개 시 라인업에서 현재 타자를 다시 찾아야 해서).
+- `engine/src/data/repository.rs`: `load_batting_lineup`·`load_starting_pitcher`·`update_standings`·`league_sub_seed`·`apply_injury_events`·`accumulate_game_fatigue`를 `pub(crate)`로 승격(match_session이 재사용). `resolve_choice` 시그니처 변경(`content_conn`·`world_seed` 추가, 반환 타입 `Option<MatchStepResult>`) — 타입별 분기 추가.
+- `engine/src/data/slot.rs`: v4 마이그레이션 — `match_session` 테이블(단일행, `id=1 CHECK` 제약).
+
+**테스트**(`cargo test` 117개, 신규 6개): `data/match_session.rs` 4개(자동 모드가 경기를 끝까지 완주하고 `schedule.result`·`standings`가 갱신되는지, 수동 모드가 주인공의 첫 공부터 멈추는지, 계속 응답하면 실제로 끝나는지, 결정성), `repository.rs` 2개(기존 `advance_stops_at_protagonist_game_day...` 테스트를 실제 로스터·주인공 픽스처로 갱신해 `resolve_choice`의 `'game'` 분기가 실제로 매치를 완주시키는지, `resolve_choice`가 `'pitch'` PendingAction을 계속 체이닝해 수동 경기를 끝까지 진행시키는지 신규).
+
+**수동 검증**(임시 바이너리 2개, 커밋 안 함): 실제 시드된 content.db로 `generate_initial_world` → `create_protagonist`(실제 고교 team_id) → `advance()` → 정확히 day 1에 `'game'` PendingAction 하나로 멈춤 → **자동 모드**로 `resolve_choice` 한 번 호출 → 경기가 그 한 번에 완주(home=6 away=0)되고 `schedule.result` 기록·`match_session` 삭제·`advance()` 재호출 시 시즌이 정상적으로 계속됨을 확인. **수동 모드**로는 매 공 `AwaitingPitch`(카운트 0-0→0-1 등 정상 누적, `high_leverage` 정상 판정)로 멈추고 103구 만에 경기가 끝남(home=0 away=2)을 확인.
+
+**I6 전체 완료 선언**: Phase 표의 완료 기준 "캐릭터 생성 후 첫 경기를 실제로 뛸 수 있음(반자동 모드 최소)"을 자동·수동 두 모드 다 실제로 동작시켜 확인했고(반자동은 둘의 조합이라 별도 검증 없이도 동일 메커니즘으로 보장됨), `sim/eval`·`sim/market`(§6-11에서 이미 I6로 재배치했던 항목들)·부상 치료 선택·훈련 슬롯 등은 여전히 미착수지만 이번 3개 서브분으로 Phase 표의 핵심 완료 기준 자체는 달성했다고 판단해 I6를 완료 처리한다.
+
+### 6-16. 문서 갱신 규칙
 
 **이 문서는 살아있는 문서다.** Phase를 하나 끝낼 때마다:
 1. §2 표의 해당 행 상태를 `⬜ 미착수` → `🔶 진행중` → `✅ 완료`로 갱신.

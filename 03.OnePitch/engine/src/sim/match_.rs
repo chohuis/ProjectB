@@ -6,6 +6,7 @@ use crate::sim::injury;
 /// npc.stats JSON 파싱은 repository.rs가 하고 여기는 순수 계산만. `id`·
 /// `fatigue`는 급성형 부상 판정(§13, 08_부상_시스템.md §3)이 "누구에게"
 /// "얼마나 위험하게" 일어났는지 알아야 해서 I5 5차분 이후 추가됨.
+#[derive(Clone)]
 pub struct BatterStats {
     pub id: String,
     pub contact: f64,
@@ -106,8 +107,10 @@ pub fn resolve_in_play_result(rng: &mut impl Rng, batter: &BatterStats, pitcher:
 
 /// 주자를 hit_bases만큼 진루시키고 득점 수를 반환. 강제진루 규칙(§9 도루,
 /// 병살 등)은 스코프 밖 — 볼넷/사구도 안타와 동일한 단순 진루 모델을 씀
-/// (기존 주자 전원 1루씩 무조건 진루) — I5 후속에서 정교화.
-fn advance_runners(bases: &mut [bool; 3], hit_bases: u32) -> u32 {
+/// (기존 주자 전원 1루씩 무조건 진루) — I5 후속에서 정교화. `pub(crate)`
+/// — `data::match_session`(I6 3차분)이 주인공 등판 이닝의 주자 진루를
+/// 계산할 때 재사용.
+pub(crate) fn advance_runners(bases: &mut [bool; 3], hit_bases: u32) -> u32 {
     let mut runs = 0;
     let mut new_bases = [false; 3];
     for i in (0..3).rev() {
@@ -129,7 +132,9 @@ fn advance_runners(bases: &mut [bool; 3], hit_bases: u32) -> u32 {
     runs
 }
 
-fn simulate_half_inning(
+/// `pub(crate)` — `data::match_session`이 주인공 팀 타석(DH 배경 시뮬,
+/// 절대 개입 없음 — §7)을 통째로 돌릴 때 재사용.
+pub(crate) fn simulate_half_inning(
     rng: &mut impl Rng,
     lineup: &[BatterStats],
     batter_idx: &mut usize,
@@ -173,7 +178,9 @@ pub struct GameResult {
 const EMPTY_BASES: [bool; 3] = [false, false, false];
 const TIEBREAK_BASES: [bool; 3] = [true, true, false]; // 승부치기: 무사 1·2루
 
-fn is_amateur(league_id: &str) -> bool {
+/// `pub(crate)` — `data::match_session`이 연장전 규칙(§10-2)을 판단할 때
+/// 재사용.
+pub(crate) fn is_amateur(league_id: &str) -> bool {
     league_id != "league:pro" && league_id != "league:pro_farm"
 }
 

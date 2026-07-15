@@ -36,6 +36,12 @@ impl Course {
     /// 4개 구석 코스 — AI 유인구 선택(§3)이 여기서 고른다.
     pub const CORNERS: [Course; 4] = [Course::HighInside, Course::HighOutside, Course::LowInside, Course::LowOutside];
 
+    /// 이름(예: "MidCenter")으로 코스를 찾는다 — `data::match_session`이
+    /// 플레이어의 선택(문자열로 직렬화된 pending action 응답)을 파싱할 때 씀.
+    pub fn parse(name: &str) -> Option<Course> {
+        Course::ALL.into_iter().find(|c| format!("{c:?}") == name)
+    }
+
     /// 몸쪽(안쪽 열) 여부 — §5 "사구 확률... 코스가 3×3 그리드의 몸쪽
     /// (안쪽 열)일수록↑".
     fn is_inside(self) -> bool {

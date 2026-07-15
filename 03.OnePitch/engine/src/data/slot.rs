@@ -84,6 +84,32 @@ fn migration_v3(tx: &Transaction) -> anyhow::Result<()> {
     Ok(())
 }
 
+const V4_DDL: &str = r#"
+CREATE TABLE match_session (
+  id INTEGER PRIMARY KEY CHECK (id = 1),
+  game_id TEXT NOT NULL, home TEXT NOT NULL, away TEXT NOT NULL, league_id TEXT NOT NULL,
+  mode TEXT NOT NULL,
+  inning INTEGER NOT NULL, top_of_inning INTEGER NOT NULL, outs INTEGER NOT NULL,
+  bases TEXT NOT NULL,
+  home_runs INTEGER NOT NULL, away_runs INTEGER NOT NULL,
+  home_batter_idx INTEGER NOT NULL, away_batter_idx INTEGER NOT NULL,
+  balls INTEGER NOT NULL, strikes INTEGER NOT NULL,
+  current_batter_id TEXT,
+  pitch_seq INTEGER NOT NULL DEFAULT 0
+);
+"#;
+
+/// I6 3차분(주인공 등판 매치 세션) — [07_매치_엔진](../../../02_기획/육성코어/07_매치_엔진.md)
+/// §12 "경기는 시작~종료가 하나의 단위... 경기 중 저장 불가"대로 이 테이블은
+/// 진행 중인 경기 하나(단일 행, `id=1` 고정)만 담는 휘발성 상태 — 시즌
+/// 경계 그룹(`schedule` 등)과 달리 season_rollover가 안 건드리고, 경기가
+/// 끝나거나(정상 종료) 중단되면(재접속 등) 그때그때 지워진다.
+fn migration_v4(tx: &Transaction) -> anyhow::Result<()> {
+    tx.execute_batch(V4_DDL)?;
+    tx.execute("UPDATE meta SET save_version = 4", [])?;
+    Ok(())
+}
+
 const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 1,
@@ -96,6 +122,10 @@ const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 3,
         up: migration_v3,
+    },
+    Migration {
+        version: 4,
+        up: migration_v4,
     },
 ];
 
@@ -123,7 +153,28 @@ mod tests {
         let save_version: i64 = conn
             .query_row("SELECT save_version FROM meta", [], |row| row.get(0))
             .unwrap();
-        assert_eq!(save_version, 3);
+        assert_eq!(save_version, 4);
+    }
+
+    #[test]
+    fn v4_adds_match_session_table() {
+        let conn = open_in_memory().unwrap();
+        conn.execute(
+            "INSERT INTO match_session (id, game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases, home_runs, away_runs, home_batter_idx, away_batter_idx, balls, strikes, current_batter_id)
+             VALUES (1, 'game:1', 'team:a', 'team:b', 'league:hs', '자동', 1, 1, 0, '[false,false,false]', 0, 0, 0, 0, 0, 0, NULL)",
+            [],
+        )
+        .unwrap();
+        let game_id: String = conn.query_row("SELECT game_id FROM match_session WHERE id = 1", [], |r| r.get(0)).unwrap();
+        assert_eq!(game_id, "game:1");
+
+        // singleton constraint
+        let result = conn.execute(
+            "INSERT INTO match_session (id, game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases, home_runs, away_runs, home_batter_idx, away_batter_idx, balls, strikes, current_batter_id)
+             VALUES (2, 'game:2', 'team:a', 'team:b', 'league:hs', '자동', 1, 1, 0, '[false,false,false]', 0, 0, 0, 0, 0, 0, NULL)",
+            [],
+        );
+        assert!(result.is_err(), "match_session must stay a single row (id=1 CHECK constraint)");
     }
 
     #[test]

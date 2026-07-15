@@ -6,7 +6,7 @@ use rand_chacha::ChaCha8Rng;
 use rusqlite::{params, Connection, OptionalExtension};
 use sha2::{Digest, Sha256};
 
-use super::{content, slot};
+use super::{content, match_session, slot};
 use crate::sim::match_sim;
 use crate::sim::roster::{self, PersonalityWeights};
 use crate::sim::schedule;
@@ -40,7 +40,7 @@ const LEAGUE_IDS: [&str; 5] = [
 /// Derives a per-league RNG sub-seed from world_seed so leagues don't share
 /// (and therefore don't correlate) RNG state, while staying fully
 /// reproducible for a given (world_seed, league_id) pair.
-fn league_sub_seed(world_seed: i64, league_id: &str) -> u64 {
+pub(crate) fn league_sub_seed(world_seed: i64, league_id: &str) -> u64 {
     let mut hasher = Sha256::new();
     hasher.update(world_seed.to_le_bytes());
     hasher.update(league_id.as_bytes());
@@ -435,7 +435,7 @@ fn find_protagonist_game_today(conn: &Connection, day: i64) -> anyhow::Result<Op
     Ok(game)
 }
 
-fn load_batting_lineup(slot_conn: &Connection, team_id: &str) -> anyhow::Result<Vec<match_sim::BatterStats>> {
+pub(crate) fn load_batting_lineup(slot_conn: &Connection, team_id: &str) -> anyhow::Result<Vec<match_sim::BatterStats>> {
     let mut stmt = slot_conn.prepare(
         "SELECT id, stats, live_state FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position NOT IN ('선발투수', '구원투수') ORDER BY id",
     )?;
@@ -458,7 +458,7 @@ fn load_batting_lineup(slot_conn: &Connection, team_id: &str) -> anyhow::Result<
 
 /// 오늘의 선발투수 — 감독의 로테이션·불펜 운용은 스태프 시스템이 생기는
 /// 후속 Phase 스코프라, 지금은 그 팀의 (id 기준) 첫 선발투수가 매번 완투.
-fn load_starting_pitcher(slot_conn: &Connection, team_id: &str) -> anyhow::Result<match_sim::PitcherStats> {
+pub(crate) fn load_starting_pitcher(slot_conn: &Connection, team_id: &str) -> anyhow::Result<match_sim::PitcherStats> {
     let row: Option<(String, String, String)> = slot_conn
         .query_row(
             "SELECT id, stats, live_state FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position = '선발투수' ORDER BY id LIMIT 1",
@@ -486,7 +486,7 @@ fn ensure_standings_row(conn: &Connection, team_id: &str) -> anyhow::Result<()> 
     Ok(())
 }
 
-fn update_standings(conn: &Connection, home: &str, away: &str, home_runs: u32, away_runs: u32) -> anyhow::Result<()> {
+pub(crate) fn update_standings(conn: &Connection, home: &str, away: &str, home_runs: u32, away_runs: u32) -> anyhow::Result<()> {
     ensure_standings_row(conn, home)?;
     ensure_standings_row(conn, away)?;
     use std::cmp::Ordering;
@@ -527,7 +527,7 @@ fn bump_fatigue(conn: &Connection, id: &str, live_state_raw: &str, amount: f64) 
 /// (`simulate_series`·`simulate_round_robin_stage`)는 건드리지 않음 — 그쪽은
 /// 이미 "캘린더 없이 동기 시뮬"로 단순화돼 있어 날짜 단위 피로 누적 개념이
 /// 안 맞음(10_구현_Phase_계획.md §6-6).
-fn accumulate_game_fatigue(conn: &Connection, team_id: &str) -> anyhow::Result<()> {
+pub(crate) fn accumulate_game_fatigue(conn: &Connection, team_id: &str) -> anyhow::Result<()> {
     const BATTER_FATIGUE_PER_GAME: f64 = 4.0;
     const PITCHER_FATIGUE_PER_GAME: f64 = 12.0;
 
@@ -1161,7 +1161,7 @@ fn injury_severity_weight_sum(injury: &serde_json::Value) -> f64 {
 /// `match_sim::simulate_game`이 판정한 급성형 부상(`GameResult.injuries`)을
 /// 해당 선수의 `npc.injury`에 기록 — `record_injury`를 그대로 재사용해
 /// 누적형(process_week)과 동일한 재발 승격·복귀일 규칙을 따른다.
-fn apply_injury_events(conn: &Connection, injuries: &[match_sim::InjuryEvent], day: i64) -> anyhow::Result<()> {
+pub(crate) fn apply_injury_events(conn: &Connection, injuries: &[match_sim::InjuryEvent], day: i64) -> anyhow::Result<()> {
     for event in injuries {
         let injury_raw: Option<String> = conn
             .query_row("SELECT injury FROM npc WHERE id = ?1", [&event.player_id], |r| r.get::<_, Option<String>>(0))
@@ -1447,9 +1447,59 @@ pub fn advance(slot_conn: &mut Connection, content_conn: &Connection) -> anyhow:
 /// pending_actions에서 해당 행을 제거해 다음 advance()가 진행되게 한다.
 /// 타입별 실제 효과(트레이드 성사, 계약 체결 등)는 그 효과를 낼 시스템
 /// (sim/market 등)이 생겼을 때 여기서 분기 — 지금은 제네릭 처리뿐.
-pub fn resolve_choice(conn: &Connection, action_id: &str, _choice_id: &str) -> anyhow::Result<()> {
-    conn.execute("DELETE FROM pending_actions WHERE id = ?1", params![action_id])?;
-    Ok(())
+/// `pending_actions`에서 해당 행을 제거해 다음 진행이 가능하게 한다.
+/// 타입별 실제 효과는 여기서 분기(I4에서 이미 이렇게 하기로 예정해둔
+/// 자리) — `'game'`(§3 "경기 시작 전 1회 선택"의 그 모드 값이 `choice_id`
+/// 로 들어옴) → `match_session::start_protagonist_match` 호출, `'pitch'`
+/// (§5 1구 선택, `choice_id`는 `"구종:코스"` 형식) → `match_session::submit_pitch`
+/// 호출. 그 결과가 `AwaitingPitch`면 다음 1구를 위한 `'pitch'` PendingAction
+/// 을 새로 만들어 체인을 잇는다. 그 외 타입은 여전히 제네릭 처리(효과를
+/// 낼 시스템이 아직 없음).
+pub fn resolve_choice(
+    slot_conn: &Connection,
+    content_conn: &Connection,
+    world_seed: i64,
+    action_id: &str,
+    choice_id: &str,
+) -> anyhow::Result<Option<match_session::MatchStepResult>> {
+    let row: Option<(String, String)> =
+        slot_conn.query_row("SELECT type, payload FROM pending_actions WHERE id = ?1", [action_id], |r| Ok((r.get(0)?, r.get(1)?))).optional()?;
+    slot_conn.execute("DELETE FROM pending_actions WHERE id = ?1", params![action_id])?;
+
+    let Some((kind, payload_raw)) = row else {
+        return Ok(None);
+    };
+
+    let step = match kind.as_str() {
+        "game" => {
+            let payload: serde_json::Value = serde_json::from_str(&payload_raw)?;
+            let game_id = payload.get("game_id").and_then(|v| v.as_str()).ok_or_else(|| anyhow::anyhow!("pending game action missing game_id"))?;
+            let home = payload.get("home").and_then(|v| v.as_str()).ok_or_else(|| anyhow::anyhow!("pending game action missing home"))?;
+            let away = payload.get("away").and_then(|v| v.as_str()).ok_or_else(|| anyhow::anyhow!("pending game action missing away"))?;
+            Some(match_session::start_protagonist_match(slot_conn, content_conn, world_seed, game_id, home, away, choice_id)?)
+        }
+        "pitch" => {
+            let (pitch_name, course_name) =
+                choice_id.split_once(':').ok_or_else(|| anyhow::anyhow!("expected 'pitch_name:course' choice_id, got {choice_id}"))?;
+            let course = crate::sim::pitch::Course::parse(course_name).ok_or_else(|| anyhow::anyhow!("unknown course: {course_name}"))?;
+            Some(match_session::submit_pitch(slot_conn, world_seed, pitch_name, course)?)
+        }
+        _ => None,
+    };
+
+    if let Some(match_session::MatchStepResult::AwaitingPitch { batter_id, balls, strikes, high_leverage }) = &step {
+        let today: i64 = slot_conn.query_row("SELECT current_day FROM meta", [], |r| r.get(0))?;
+        // pitch_seq는 match_session이 이미 증가시켜둔 뒤라, 한 경기 안에서
+        // 절대 안 겹치는 고유 접미사로 그대로 재사용.
+        let pitch_seq: i64 = slot_conn.query_row("SELECT pitch_seq FROM match_session WHERE id = 1", [], |r| r.get(0))?;
+        let payload = serde_json::json!({"batter_id": batter_id, "balls": balls, "strikes": strikes, "high_leverage": high_leverage}).to_string();
+        slot_conn.execute(
+            "INSERT INTO pending_actions (id, type, urgency, created_day, payload) VALUES (?1, 'pitch', 'urgent', ?2, ?3)",
+            params![format!("pending:pitch:{pitch_seq}"), today, payload],
+        )?;
+    }
+
+    Ok(step)
 }
 
 #[cfg(test)]
@@ -1686,11 +1736,16 @@ mod tests {
     fn advance_stops_at_protagonist_game_day_and_resolve_unblocks_it() {
         let mut slot_conn = slot::open_in_memory().unwrap();
         let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:hs', NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:x', 'league:hs', NULL, NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:y', 'league:hs', NULL, NULL)", []).unwrap();
+        insert_minimal_roster(&slot_conn, "team:x");
+        insert_minimal_roster(&slot_conn, "team:y");
         slot_conn
             .execute(
                 "INSERT INTO protagonist (id, name, handedness, archetype, stats, xp, live_state, finance, pitches, contract, injury)
-                 VALUES ('proto:1', '주인공', '우투', '강속구형', '{}', '{}', '{}', '{}', '[]', '{\"team_id\":\"team:x\"}', '{}')",
-                [],
+                 VALUES ('proto:1', '주인공', '우투', '강속구형', ?1, '{}', '{\"피로도\":0}', '{}', '[\"포심 패스트볼\"]', '{\"team_id\":\"team:x\"}', '{}')",
+                params![serde_json::json!({"제구": 50.0, "구위": 50.0}).to_string()],
             )
             .unwrap();
         slot_conn
@@ -1707,14 +1762,70 @@ mod tests {
         assert_eq!(pending[0].created_day, 5);
         assert_eq!(current_day(&slot_conn), 5, "must stop exactly on game day, not run past it");
 
-        resolve_choice(&slot_conn, &pending[0].id, "ack").unwrap();
+        // "자동" 모드 — 매치 세션이 한 번에 끝까지 진행돼 GameOver로 귀결된다.
+        let step = resolve_choice(&slot_conn, &content_conn, 999, &pending[0].id, "자동").unwrap();
+        assert!(matches!(step, Some(match_session::MatchStepResult::GameOver { .. })));
         let remaining: i64 = slot_conn.query_row("SELECT count(*) FROM pending_actions", [], |r| r.get(0)).unwrap();
         assert_eq!(remaining, 0);
+        let result_raw: Option<String> = slot_conn.query_row("SELECT result FROM schedule WHERE game_id = 'game:1'", [], |r| r.get(0)).unwrap();
+        assert!(result_raw.is_some(), "the protagonist's own game should now have a recorded result");
 
         // no more scheduled games — next advance() runs forward again (bounded by the safety cap).
         let pending2 = advance(&mut slot_conn, &content_conn).unwrap();
         assert!(pending2.is_empty());
         assert!(current_day(&slot_conn) > 5);
+    }
+
+    #[test]
+    fn resolve_choice_chains_pitch_pending_actions_through_a_manual_game() {
+        let mut slot_conn = slot::open_in_memory().unwrap();
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:hs', NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:x', 'league:hs', NULL, NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:y', 'league:hs', NULL, NULL)", []).unwrap();
+        insert_minimal_roster(&slot_conn, "team:x");
+        insert_minimal_roster(&slot_conn, "team:y");
+        slot_conn
+            .execute(
+                "INSERT INTO protagonist (id, name, handedness, archetype, stats, xp, live_state, finance, pitches, contract, injury)
+                 VALUES ('proto:1', '주인공', '우투', '강속구형', ?1, '{}', '{\"피로도\":0}', '{}', '[\"포심 패스트볼\"]', '{\"team_id\":\"team:x\"}', '{}')",
+                params![serde_json::json!({"제구": 50.0, "구위": 50.0}).to_string()],
+            )
+            .unwrap();
+        slot_conn
+            .execute("INSERT INTO schedule (game_id, day, home, away, result) VALUES ('game:1', 5, 'team:x', 'team:y', NULL)", [])
+            .unwrap();
+
+        let pending = advance(&mut slot_conn, &content_conn).unwrap();
+        assert_eq!(pending[0].kind, "game");
+
+        // "수동" 모드로 응답 — 매 구 AwaitingPitch로 멈추고 'pitch' PendingAction이 새로 생겨야 한다.
+        let step = resolve_choice(&slot_conn, &content_conn, 1234, &pending[0].id, "수동").unwrap();
+        assert!(matches!(step, Some(match_session::MatchStepResult::AwaitingPitch { .. })));
+        let pitch_pending: Vec<PendingActionRow> = list_pending_actions(&slot_conn).unwrap();
+        assert_eq!(pitch_pending.len(), 1);
+        assert_eq!(pitch_pending[0].kind, "pitch");
+
+        // 계속 같은 코스로 응답해가며 경기가 실제로 끝나는지 확인.
+        let mut action_id = pitch_pending[0].id.clone();
+        let mut guard = 0;
+        loop {
+            let step = resolve_choice(&slot_conn, &content_conn, 1234, &action_id, "포심 패스트볼:MidCenter").unwrap();
+            match step {
+                Some(match_session::MatchStepResult::GameOver { .. }) => break,
+                Some(match_session::MatchStepResult::AwaitingPitch { .. }) => {
+                    let next: Vec<PendingActionRow> = list_pending_actions(&slot_conn).unwrap();
+                    assert_eq!(next.len(), 1, "exactly one live 'pitch' PendingAction should exist at a time");
+                    action_id = next[0].id.clone();
+                }
+                None => panic!("expected a match_session step result"),
+            }
+            guard += 1;
+            assert!(guard < 5000, "manual game via resolve_choice did not finish in time");
+        }
+
+        let remaining: i64 = slot_conn.query_row("SELECT count(*) FROM pending_actions", [], |r| r.get(0)).unwrap();
+        assert_eq!(remaining, 0, "no dangling pending actions once the game ends");
     }
 
     #[test]
