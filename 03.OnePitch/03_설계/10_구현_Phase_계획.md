@@ -32,7 +32,7 @@
 | **I2** | 초기 세계 데이터 구축 | `data/seed/*.csv·toml` 실제 작성(172팀 리그팀 markdown→트랜스크립션), `content seed` CLI 구현 | content.db에 172팀·리그·구장·특성·히스토리·생성규칙 전부 반영, `content validate` 통과 | [07_데이터관리](07_데이터관리.md) §3 | ✅ 완료 (2026-07-15) — 172팀(+2군10=182팀) + `pitch_types`·`name_pools`·`generation_rules`·`personality_rules`·`world_config` 전부 시드, `content seed`+`content validate` 통과(아래 §6-2) |
 | **I3** | 선수 생성 엔진(`sim/roster`) | canonical_seed 기반 결정적 로스터 생성(`generateInitialWorld`) | 새 게임 시작 시 172팀 ~3,700명이 slot.db에 생성, 동일 seed→동일 결과(재현성 테스트) | [07_데이터관리](07_데이터관리.md) §2 · [01_선수_능력치](../02_기획/육성코어/01_선수_능력치.md) | ✅ 완료 (2026-07-15) — 실데이터로 4,410명 생성(2군 포함) 확인, 동일 seed 재현성 확인. 상세는 아래 §6-3 |
 | **I4** | 게임 루프 오케스트레이터(`api/advance`) | 일/주/월/시즌 경계 처리, PendingAction 7종 상태기계 | `advance()` 호출 시 여러 주 진행 후 정지점에서 올바로 멈춤 | [04_게임루프](04_게임루프.md) | ✅ 완료 (2026-07-15) — 오케스트레이터 뼈대(하루단위 루프·정지판정·PendingAction push/resolve·재서명) 구현, 실제 배치 내용은 I5/I6가 채울 훅으로 배선. 상세는 아래 §6-4 |
-| **I5** | 나머지 sim 모듈 | `sim/growth`·`sim/injury`·`sim/eval`·`sim/match`(배경)·`sim/market`·`sim/npc`·`sim/schedule` — [05_밸런스](05_밸런스.md) §3 순서(A→B→C→{D,E,F}→G,H→I)로 구현+가밸런스 적용 | 배경 시뮬만으로 시즌 1개 완주 가능 | [03_구조](03_구조.md) §5-1 · 육성코어 01~09 각 문서 | 🔶 진행중 — 1차분(`sim/schedule`+`sim/match`, 프로/2군/대학/고교 정규시즌) 완료(2026-07-15), 실데이터로 대학 225경기 시즌 완주 확인. `growth`·`injury`·`eval`·`market`·`npc`, 독립리그 일정, 전 리그 포스트시즌은 이월. 상세는 아래 §6-5 |
+| **I5** | 나머지 sim 모듈 | `sim/growth`·`sim/injury`·`sim/eval`·`sim/match`(배경)·`sim/market`·`sim/npc`·`sim/schedule` — [05_밸런스](05_밸런스.md) §3 순서(A→B→C→{D,E,F}→G,H→I)로 구현+가밸런스 적용 | 배경 시뮬만으로 시즌 1개 완주 가능 | [03_구조](03_구조.md) §5-1 · 육성코어 01~09 각 문서 | 🔶 진행중 — 1차분(`sim/schedule`+`sim/match`, 프로/2군/대학/고교 정규시즌)+2차분(독립리그 4단계 전체+독립/프로 포스트시즌) 완료(2026-07-15). `growth`·`injury`·`eval`·`market`·`npc`, 대학·고교 포스트시즌/전국대회는 이월. 상세는 아래 §6-6 |
 | **I6** | 주인공 플로우 | 캐릭터 생성([07_주인공_생성](../02_기획/07_주인공_생성.md)), 주인공 등판 매치 세션(`startMatch`/`pitch`) | 캐릭터 생성 후 첫 경기를 실제로 뛸 수 있음(반자동 모드 최소) | [04_UI기획/06_캐릭터생성](../04_UI기획/06_캐릭터생성.md) · [07_매치_엔진](../02_기획/육성코어/07_매치_엔진.md) | ⬜ 미착수 |
 | **I7** | Flutter UI | `04_UI기획/` 00~08 화면 실제 구현(4허브+진행버튼+매치 CustomPainter) | 최소 플레이 가능한 루프가 실제 화면에서 끝까지 동작(뉴게임→진행→경기→시즌종료) | `04_UI기획/` 전체 | ⬜ 미착수 |
 | **I8** | 콘텐츠 저작 + D그룹 수치화 | 이벤트·캐릭터·업적 등 AI 대량생성→import, 밸런스 시뮬 하네스로 실제 수치 확정 | `content import` 파이프라인 동작, 15~20시즌 시뮬 하네스가 [05_밸런스](05_밸런스.md) §4 통과기준 만족 | [02_데이터](02_데이터.md) §3 · [05_밸런스](05_밸런스.md) §4 | ⬜ 미착수 |
@@ -175,9 +175,24 @@
 
 **수동 검증**(임시 바이너리, 커밋 안 함): 실제 시드된 content.db로 대학리그(가장 작고 깔끔한 5조 구조) 로스터+일정 생성 → **225경기**(문서의 "225경기"와 정확히 일치) → `advance()` 1회 호출로 시즌(364일) 전체 완주 → `history_standings`에 50개 팀 전부 순위 1~50(빈틈 없는 순열)으로 아카이브 확인.
 
-**다음 세션이 할 일**: I5 2차분(독립리그 일정+전 리그 포스트시즌) 또는 `sim/growth`(주간 XP→스탯) 중 택 — 성장이 있어야 시즌을 넘길수록 로스터가 실제로 달라지는 게 보이고, 포스트시즌은 "시즌 1개 완주"를 더 완결성 있게 만듦. 아니면 I6(주인공 플로우)로 먼저 넘어가 `sign_core_state`·`find_protagonist_game_today`가 실제 주인공으로 동작하는 걸 볼 수도 있음 — 순서는 다음 세션 시작 시 확인.
+### 6-6. I5 2차분 착수 기록 (2026-07-15, 완료)
 
-### 6-6. 문서 갱신 규칙
+**스코프 재조정**: 원래 "독립리그 일정+전 리그 포스트시즌"으로 잡았으나, 포스트시즌이 리그마다 완전히 다른 포맷(프로 5강 사다리 1종 · 독립 4단계 자체가 사다리 1종 · **대학은 3개 대회**(왕중왕전 8강토너먼트·은하기 8조예선+8강·여명기 4조예선+8강) · **고교는 5개 전국대회**(32강~128강, 대회마다 시드·WC 계산법이 다름))라 전부 하면 8가지 브래킷을 새로 설계해야 해서 스코프 초과 판정 — **독립(정규+포스트)와 프로 포스트시즌까지만 끝내고 대학·고교 포스트시즌/전국대회는 3차분으로 재이월**.
+
+**구현**:
+- `engine/src/data/repository.rs`: `simulate_series`(다전제, 과반수 승리 시 종료, 홈/원정 매 경기 교대) · `simulate_wild_card`(프로 WC전 — "5위 2연승 필요, 4위 1승만 있으면 진출"이라는 표의 "단판" 표기와 실제 다른 특수룰을 최대 2경기로 모델링) · `simulate_round_robin_stage`(라운드로빈 한 단계를 동기적으로 다 시뮬 — advance()의 하루단위 페이싱을 기다리지 않음) · `run_independent_season`(1~4차 전체, 기존 `sim::schedule::generate_round_robin_rounds` 그대로 재사용해 팀수·laps만 바꿔가며 10→8→4로 컷다운 후 포스트시즌 사다리) · `run_pro_postseason`(현재 `standings`에서 league:pro만 필터링해 상위 5팀 시드).
+- `season_rollover` 시그니처에 `content_conn` 추가 — ①리그별 순위 계산(1차분의 "전체 뭉쳐서 순위" placeholder를 이번에 리그별 정확한 순위로 개선) ②`standings` 지우기 전에 `run_pro_postseason` 자동 트리거.
+- **실제 버그 발견·수정**: `content::load_teams_for_league`가 `team_traits`와 INNER JOIN이라, 팀 ID만 필요한 곳(포스트시즌 시드 계산 등)에서 `team_traits`가 없으면 **조용히 빈 리스트를 반환**해 포스트시즌이 항상 스킵되는 버그를 테스트 작성 중 발견 — `load_team_ids_for_league`(JOIN 없는 경량 버전)를 새로 추가해 `run_independent_season`·`run_pro_postseason`이 그쪽을 쓰게 교체. `load_teams_for_league`는 `sim::roster`처럼 실제로 philosophy/status가 필요한 곳에서만 유지.
+- **독립 시즌은 `generate_initial_world`에 자동 배선 안 함** — 캘린더 동기화가 아직 없어 "새 게임 시작하자마자 독립 시즌이 통째로 끝나있는" 어색함을 피함. 별도 호출 가능한 함수로만 존재(`run_independent_season`).
+- 챔피언은 `league_transactions`(kind='champion')에 기록만 — 시상식 텍스트·`history_leaders` 등 서사 요소는 스코프 밖.
+
+**테스트**(`cargo test` 38개, 신규 6개): `simulate_series`가 best_of 범위 안에서 끝나는지, `run_independent_season`이 4단계를 다 거쳐 챔피언 1명을 내고 최소 152경기(90+56+6)가 기록되는지, `run_pro_postseason`이 standings 5팀 미만이면 None을 반환하는지·5팀 있으면 챔피언을 내는지, `season_rollover`가 리그별로 순위를 매기는지.
+
+**수동 검증**(임시 바이너리, 커밋 안 함): 실제 시드된 content.db로 — 독립리그 10팀 로스터 생성 후 `run_independent_season` 1회 호출 → 152경기 기록+챔피언 1명 배출 확인. 프로 10팀은 1차분 로직으로 정규시즌 완주(`advance()` 반복) → `season_rollover`가 자동으로 `run_pro_postseason`을 트리거해 챔피언이 `league_transactions`에 기록되고 10팀 전부 `history_standings`에 정확히 아카이브됨을 확인.
+
+**다음 세션이 할 일**: I5 3차분(대학 3개 대회+고교 5개 전국대회 포스트시즌) 또는 `sim/growth`(주간 XP→스탯 — 있어야 시즌을 넘길수록 로스터가 실제로 달라지는 게 보임) 중 택. 아니면 I6(주인공 플로우)로 넘어가 `sign_core_state`·`find_protagonist_game_today`가 실제 주인공으로 동작하는 걸 볼 수도 있음 — 순서는 다음 세션 시작 시 확인.
+
+### 6-7. 문서 갱신 규칙
 
 **이 문서는 살아있는 문서다.** Phase를 하나 끝낼 때마다:
 1. §2 표의 해당 행 상태를 `⬜ 미착수` → `🔶 진행중` → `✅ 완료`로 갱신.

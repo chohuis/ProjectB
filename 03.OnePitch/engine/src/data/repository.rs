@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use rand::SeedableRng;
 use rand_chacha::ChaCha8Rng;
 use rusqlite::{params, Connection, OptionalExtension};
@@ -362,6 +364,197 @@ fn process_day(slot_conn: &Connection, content_conn: &Connection, world_seed: i6
     Ok(())
 }
 
+/// 다전제 시리즈 — 매 경기 로스터를 다시 조회(향후 부상·로테이션 반영 여지를
+/// 남김)하고 홈/원정을 경기마다 교대(2-3-2 같은 실제 포맷 아님 — 단순
+/// placeholder). 과반수(best_of/2+1승)를 먼저 채우면 종료. 동점(프로 12회
+/// 제한 무승부)이 나오면 그 경기는 무효로 치고 다시 진행 — safety_cap으로
+/// 무한루프만 방지.
+fn simulate_series(
+    slot_conn: &Connection,
+    rng: &mut ChaCha8Rng,
+    league_id: &str,
+    team_a: &str,
+    team_b: &str,
+    best_of: u32,
+) -> anyhow::Result<(String, u32)> {
+    let need = best_of / 2 + 1;
+    let mut wins_a = 0u32;
+    let mut wins_b = 0u32;
+    let mut games = 0u32;
+    let safety_cap = best_of * 3 + 5;
+    while wins_a < need && wins_b < need && games < safety_cap {
+        let a_home = games.is_multiple_of(2);
+        let (home_id, away_id) = if a_home { (team_a, team_b) } else { (team_b, team_a) };
+        let home_lineup = load_batting_lineup(slot_conn, home_id)?;
+        let home_pitcher = load_starting_pitcher(slot_conn, home_id)?;
+        let away_lineup = load_batting_lineup(slot_conn, away_id)?;
+        let away_pitcher = load_starting_pitcher(slot_conn, away_id)?;
+        let r = match_sim::simulate_game(rng, league_id, &home_lineup, &home_pitcher, &away_lineup, &away_pitcher);
+        games += 1;
+        if r.home_runs != r.away_runs {
+            let winner_is_a = (r.home_runs > r.away_runs) == a_home;
+            if winner_is_a {
+                wins_a += 1;
+            } else {
+                wins_b += 1;
+            }
+        }
+    }
+    let winner = if wins_a >= need { team_a.to_string() } else { team_b.to_string() };
+    Ok((winner, games))
+}
+
+/// 프로 WC전 — 표는 "단판"이라 적혀 있지만 실제 규칙은 "5위가 2연승해야
+/// 진출, 4위는 1승만 해도 진출"이라 최대 2경기짜리 특수 시리즈([리그팀/01_프로](
+/// ../../02_기획/리그팀/01_프로.md) §4).
+fn simulate_wild_card(slot_conn: &Connection, rng: &mut ChaCha8Rng, league_id: &str, fourth: &str, fifth: &str) -> anyhow::Result<String> {
+    let mut fifth_wins = 0u32;
+    for _ in 0..2 {
+        let home_lineup = load_batting_lineup(slot_conn, fourth)?;
+        let home_pitcher = load_starting_pitcher(slot_conn, fourth)?;
+        let away_lineup = load_batting_lineup(slot_conn, fifth)?;
+        let away_pitcher = load_starting_pitcher(slot_conn, fifth)?;
+        let r = match_sim::simulate_game(rng, league_id, &home_lineup, &home_pitcher, &away_lineup, &away_pitcher);
+        if r.away_runs > r.home_runs {
+            fifth_wins += 1;
+            if fifth_wins >= 2 {
+                return Ok(fifth.to_string());
+            }
+        } else if r.home_runs > r.away_runs {
+            return Ok(fourth.to_string());
+        }
+        // 무승부면 그 경기는 안 세고 계속(2경기 한도 안에서는 사실상 안 일어남 — 아마추어 룰이 아니라 프로 룰이라 12회 제한 무승부 가능성은 남아 있음)
+    }
+    Ok(fourth.to_string()) // 5위가 2연승 못 하면(1승1패 등) 4위 진출
+}
+
+fn win_pct(w: i64, l: i64) -> f64 {
+    w as f64 / (w + l).max(1) as f64
+}
+
+fn rank_by_win_pct(record: &HashMap<String, (u32, u32)>) -> Vec<String> {
+    let mut v: Vec<(String, u32, u32)> = record.iter().map(|(k, (w, l))| (k.clone(), *w, *l)).collect();
+    v.sort_by(|a, b| win_pct(b.1 as i64, b.2 as i64).partial_cmp(&win_pct(a.1 as i64, a.2 as i64)).unwrap_or(std::cmp::Ordering::Equal));
+    v.into_iter().map(|(k, _, _)| k).collect()
+}
+
+/// 라운드로빈 한 스테이지를 전부 동기적으로 시뮬(하루씩 advance()를 기다리지
+/// 않음 — 독립리그는 단계 전환이 이전 단계 결과에 의존해 정적 스케줄을 미리
+/// 못 만들기 때문에 채택한 단순화, 10_구현_Phase_계획.md §6 참고). `schedule`
+/// 테이블에 기록은 남기되(day는 start_day부터 라운드 수만큼), **`standings`
+/// 전역 테이블은 건드리지 않는다** — 독립 4단계는 그 자체로 임시 순위라
+/// 다른 리그의 정규시즌 순위와 섞이면 안 됨.
+fn simulate_round_robin_stage(
+    slot_conn: &Connection,
+    rng: &mut ChaCha8Rng,
+    league_id: &str,
+    teams: &[String],
+    laps: u32,
+    start_day: i64,
+    game_id_prefix: &str,
+) -> anyhow::Result<HashMap<String, (u32, u32)>> {
+    let rounds = schedule::generate_round_robin_rounds(teams, laps, rng);
+    let mut record: HashMap<String, (u32, u32)> = teams.iter().map(|t| (t.clone(), (0, 0))).collect();
+    let mut seq: u64 = 0;
+    for (i, round) in rounds.into_iter().enumerate() {
+        let day = start_day + i as i64;
+        for (home, away) in round {
+            let home_lineup = load_batting_lineup(slot_conn, &home)?;
+            let home_pitcher = load_starting_pitcher(slot_conn, &home)?;
+            let away_lineup = load_batting_lineup(slot_conn, &away)?;
+            let away_pitcher = load_starting_pitcher(slot_conn, &away)?;
+            let r = match_sim::simulate_game(rng, league_id, &home_lineup, &home_pitcher, &away_lineup, &away_pitcher);
+
+            let game_id = format!("{game_id_prefix}{seq}");
+            seq += 1;
+            let result_json = serde_json::json!({"home": r.home_runs, "away": r.away_runs}).to_string();
+            slot_conn.execute(
+                "INSERT INTO schedule (game_id, day, home, away, result) VALUES (?1, ?2, ?3, ?4, ?5)",
+                params![game_id, day, home, away, result_json],
+            )?;
+
+            if r.home_runs > r.away_runs {
+                record.get_mut(&home).unwrap().0 += 1;
+                record.get_mut(&away).unwrap().1 += 1;
+            } else if r.away_runs > r.home_runs {
+                record.get_mut(&away).unwrap().0 += 1;
+                record.get_mut(&home).unwrap().1 += 1;
+            }
+        }
+    }
+    Ok(record)
+}
+
+/// 독립리그 전체(4단계)를 한 번에 동기적으로 시뮬 — 04_독립.md §3·§6. 1차
+/// 10팀(더블라운드18경기)→하위2탈락, 2차 8팀(더블라운드14경기)→하위4탈락,
+/// 3차 4팀(싱글라운드3경기)→최종순위, 4차 준PO(단판)→PO(단판)→
+/// 챔피언결정전(3전2승). `generate_initial_world`엔 배선 안 함 — 캘린더
+/// 동기화가 아직 없어 "새 게임 시작하자마자 시즌이 끝나있는" 어색함을 피함
+/// (10_구현_Phase_계획.md §6 참고). 챔피언은 `league_transactions`에 기록.
+pub fn run_independent_season(slot_conn: &Connection, content_conn: &Connection, world_seed: i64, start_day: i64) -> anyhow::Result<String> {
+    let league_id = "league:independent";
+    let teams = content::load_team_ids_for_league(content_conn, league_id)?;
+    let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, "independent_season"));
+
+    let stage1 = simulate_round_robin_stage(slot_conn, &mut rng, league_id, &teams, 2, start_day, "game:indep_s1_")?;
+    let mut survivors = rank_by_win_pct(&stage1);
+    survivors.truncate(8);
+    let stage2_start = start_day + 18; // laps=2 * (10-1)라운드 = 18일
+
+    let stage2 = simulate_round_robin_stage(slot_conn, &mut rng, league_id, &survivors, 2, stage2_start, "game:indep_s2_")?;
+    let mut finalists = rank_by_win_pct(&stage2);
+    finalists.truncate(4);
+    let stage3_start = stage2_start + 14; // laps=2 * (8-1)라운드 = 14일
+
+    let stage3 = simulate_round_robin_stage(slot_conn, &mut rng, league_id, &finalists, 1, stage3_start, "game:indep_s3_")?;
+    let final_rank = rank_by_win_pct(&stage3);
+    let postseason_day = stage3_start + 3; // laps=1 * (4-1)라운드 = 3일
+
+    let (semi_winner, _) = simulate_series(slot_conn, &mut rng, league_id, &final_rank[2], &final_rank[3], 1)?;
+    let (po_winner, _) = simulate_series(slot_conn, &mut rng, league_id, &final_rank[1], &semi_winner, 1)?;
+    let (champion, _) = simulate_series(slot_conn, &mut rng, league_id, &final_rank[0], &po_winner, 3)?;
+
+    slot_conn.execute(
+        "INSERT INTO league_transactions (id, day, kind, detail) VALUES (?1, ?2, 'champion', ?3)",
+        params![format!("txn:indep_champion_{world_seed}"), postseason_day, champion],
+    )?;
+    Ok(champion)
+}
+
+/// 프로 5강 와일드카드 사다리 — 01_프로.md §4. `standings`에 league:pro 팀이
+/// 5개 미만이면(정규시즌이 아직 안 끝났거나 합성 테스트 데이터) None. 챔피언은
+/// `league_transactions`에 기록.
+pub fn run_pro_postseason(slot_conn: &Connection, content_conn: &Connection, world_seed: i64) -> anyhow::Result<Option<String>> {
+    let league_id = "league:pro";
+    let pro_ids: std::collections::HashSet<String> =
+        content::load_team_ids_for_league(content_conn, league_id)?.into_iter().collect();
+    if pro_ids.is_empty() {
+        return Ok(None);
+    }
+
+    let mut stmt = slot_conn.prepare("SELECT team_id, w, l FROM standings")?;
+    let all: Vec<(String, i64, i64)> = stmt.query_map([], |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)))?.collect::<Result<Vec<_>, _>>()?;
+    drop(stmt);
+    let mut seeded: Vec<(String, i64, i64)> = all.into_iter().filter(|(id, _, _)| pro_ids.contains(id)).collect();
+    if seeded.len() < 5 {
+        return Ok(None);
+    }
+    seeded.sort_by(|a, b| win_pct(b.1, b.2).partial_cmp(&win_pct(a.1, a.2)).unwrap_or(std::cmp::Ordering::Equal));
+    let seeds: Vec<String> = seeded.into_iter().map(|(id, _, _)| id).collect();
+
+    let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, "pro_postseason"));
+    let wc_winner = simulate_wild_card(slot_conn, &mut rng, league_id, &seeds[3], &seeds[4])?;
+    let (jpo_winner, _) = simulate_series(slot_conn, &mut rng, league_id, &seeds[2], &wc_winner, 5)?;
+    let (po_winner, _) = simulate_series(slot_conn, &mut rng, league_id, &seeds[1], &jpo_winner, 5)?;
+    let (champion, _) = simulate_series(slot_conn, &mut rng, league_id, &seeds[0], &po_winner, 7)?;
+
+    slot_conn.execute(
+        "INSERT INTO league_transactions (id, day, kind, detail) VALUES (?1, 0, 'champion', ?2)",
+        params![format!("txn:pro_champion_{world_seed}"), champion],
+    )?;
+    Ok(Some(champion))
+}
+
 /// I5가 채울 자리 — 주간 경계(훈련 XP→스탯, 누적형 부상체크, 라이브상태 갱신,
 /// 폴링형 이벤트 평가, 개인 트레이너 과금).
 fn process_week(_conn: &Connection, _day: i64) -> anyhow::Result<()> {
@@ -373,13 +566,15 @@ fn process_month(_conn: &Connection, _day: i64) -> anyhow::Result<()> {
     Ok(())
 }
 
-/// 시즌 경계 — 지금 실제로 할 수 있는 것만: 시즌 카운터 증가, 인박스 비움
-/// (04_게임루프.md §1), standings를 history_standings로 압축 후 다음 시즌을
-/// 위해 standings·schedule·season_stats 초기화(I5에서 추가). 시즌 평가·
-/// 주목도 확정·방출판정·재계약/FA/드래프트·로스터 세대교체·투자정산은
-/// sim/eval·sim/market·generate_freshmen이 생긴 뒤 여기 채울 것 — 지금
-/// 호출하면 todo!() 패닉이라 안 부름.
-pub fn season_rollover(conn: &Connection) -> anyhow::Result<()> {
+/// 시즌 경계 — 시즌 카운터 증가, 인박스 비움(04_게임루프.md §1), **프로
+/// 포스트시즌 실행**(I5 2차분 추가 — standings가 지워지기 전에 트리거),
+/// standings를 **리그별로** history_standings에 압축(1차분의 "전체 뭉쳐서
+/// 순위" placeholder를 이번에 리그별 정확한 순위로 개선) 후 다음 시즌을 위해
+/// standings·schedule·season_stats 초기화. 시즌 평가·주목도 확정·방출판정·
+/// 재계약/FA/드래프트·로스터 세대교체·투자정산은 sim/eval·sim/market·
+/// generate_freshmen이 생긴 뒤 여기 채울 것 — 지금 호출하면 todo!() 패닉이라
+/// 안 부름.
+pub fn season_rollover(conn: &Connection, content_conn: &Connection) -> anyhow::Result<()> {
     let current: i64 = conn
         .query_row("SELECT value FROM season_meta WHERE key = 'season'", [], |row| row.get::<_, String>(0))
         .optional()?
@@ -392,22 +587,38 @@ pub fn season_rollover(conn: &Connection) -> anyhow::Result<()> {
     )?;
     conn.execute("DELETE FROM inbox", [])?;
 
-    // standings 압축 — rank는 승률 기준 전체(리그 구분 없이) 순위 placeholder,
-    // 리그별 정확한 순위는 content.db 조회가 필요해 이번 스코프 밖.
+    let world_seed: i64 = conn.query_row("SELECT world_seed FROM meta", [], |row| row.get(0))?;
+    run_pro_postseason(conn, content_conn, world_seed)?;
+
+    // standings 압축 — 리그별로 묶어서(content.db team_id→league_id 조회) 순위 계산.
     let mut stmt = conn.prepare("SELECT team_id, w, l FROM standings")?;
-    let mut rows: Vec<(String, i64, i64)> = stmt.query_map([], |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)))?.collect::<Result<Vec<_>, _>>()?;
+    let rows: Vec<(String, i64, i64)> = stmt.query_map([], |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)))?.collect::<Result<Vec<_>, _>>()?;
     drop(stmt);
-    rows.sort_by(|a, b| {
-        let pct_a = a.1 as f64 / (a.1 + a.2).max(1) as f64;
-        let pct_b = b.1 as f64 / (b.1 + b.2).max(1) as f64;
-        pct_b.partial_cmp(&pct_a).unwrap_or(std::cmp::Ordering::Equal)
-    });
-    for (i, (team_id, _, _)) in rows.iter().enumerate() {
-        conn.execute(
-            "INSERT INTO history_standings (season, team_id, rank) VALUES (?1, ?2, ?3)
-             ON CONFLICT(season, team_id) DO UPDATE SET rank = excluded.rank",
-            params![current, team_id, i as i64 + 1],
-        )?;
+
+    let mut league_by_team: HashMap<String, String> = HashMap::new();
+    {
+        let mut stmt = content_conn.prepare("SELECT id, league_id FROM teams")?;
+        let all: Vec<(String, String)> = stmt.query_map([], |row| Ok((row.get(0)?, row.get(1)?)))?.collect::<Result<Vec<_>, _>>()?;
+        for (id, league_id) in all {
+            league_by_team.insert(id, league_id);
+        }
+    }
+
+    let mut by_league: HashMap<String, Vec<(String, i64, i64)>> = HashMap::new();
+    for (team_id, w, l) in rows {
+        let league = league_by_team.get(&team_id).cloned().unwrap_or_else(|| "unknown".to_string());
+        by_league.entry(league).or_default().push((team_id, w, l));
+    }
+
+    for teams in by_league.values_mut() {
+        teams.sort_by(|a, b| win_pct(b.1, b.2).partial_cmp(&win_pct(a.1, a.2)).unwrap_or(std::cmp::Ordering::Equal));
+        for (i, (team_id, _, _)) in teams.iter().enumerate() {
+            conn.execute(
+                "INSERT INTO history_standings (season, team_id, rank) VALUES (?1, ?2, ?3)
+                 ON CONFLICT(season, team_id) DO UPDATE SET rank = excluded.rank",
+                params![current, team_id, i as i64 + 1],
+            )?;
+        }
     }
 
     conn.execute("DELETE FROM standings", [])?;
@@ -466,7 +677,7 @@ pub fn advance(slot_conn: &mut Connection, content_conn: &Connection) -> anyhow:
             process_month(&tx, today)?;
         }
         if today % 364 == 0 {
-            season_rollover(&tx)?;
+            season_rollover(&tx, content_conn)?;
         }
 
         let pending_count: i64 = tx.query_row("SELECT count(*) FROM pending_actions", [], |row| row.get(0))?;
@@ -843,6 +1054,11 @@ mod tests {
 
     #[test]
     fn season_rollover_archives_standings_and_resets_season_tables() {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:x', NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:a', 'league:x', NULL, NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:b', 'league:x', NULL, NULL)", []).unwrap();
+
         let conn = slot::open_in_memory().unwrap();
         conn.execute("INSERT INTO standings (team_id, w, l, t, rank) VALUES ('team:a', 10, 5, 0, 0)", []).unwrap();
         conn.execute("INSERT INTO standings (team_id, w, l, t, rank) VALUES ('team:b', 3, 12, 0, 0)", []).unwrap();
@@ -852,7 +1068,7 @@ mod tests {
         )
         .unwrap();
 
-        season_rollover(&conn).unwrap();
+        season_rollover(&conn, &content_conn).unwrap();
 
         let standings_count: i64 = conn.query_row("SELECT count(*) FROM standings", [], |r| r.get(0)).unwrap();
         assert_eq!(standings_count, 0);
@@ -863,5 +1079,106 @@ mod tests {
             .query_row("SELECT rank FROM history_standings WHERE season = 0 AND team_id = 'team:a'", [], |r| r.get(0))
             .unwrap();
         assert_eq!(rank_a, 1, "team:a has the better win% and should rank 1st");
+    }
+
+    #[test]
+    fn simulate_series_stops_as_soon_as_majority_is_reached() {
+        let content_conn = content::open_in_memory().unwrap();
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_minimal_roster(&slot_conn, "team:a");
+        insert_minimal_roster(&slot_conn, "team:b");
+        let _ = &content_conn; // unused here — simulate_series only needs slot_conn
+
+        let mut rng = ChaCha8Rng::seed_from_u64(5);
+        let (winner, games) = simulate_series(&slot_conn, &mut rng, "league:pro", "team:a", "team:b", 7).unwrap();
+        assert!(winner == "team:a" || winner == "team:b");
+        assert!(games >= 4 && games <= 7, "best-of-7 must end between 4 and 7 games, got {games}");
+    }
+
+    fn build_independent_content_db() -> Connection {
+        let conn = content::open_in_memory().unwrap();
+        conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:independent', NULL)", []).unwrap();
+        for i in 0..10 {
+            conn.execute(
+                "INSERT INTO teams (id, league_id, color, meta) VALUES (?1, 'league:independent', NULL, NULL)",
+                params![format!("team:i{i}")],
+            )
+            .unwrap();
+            conn.execute(
+                "INSERT INTO team_traits (team_id, philosophy, resource, status) VALUES (?1, '전통/정통', '안정', '중견')",
+                params![format!("team:i{i}")],
+            )
+            .unwrap();
+        }
+        conn
+    }
+
+    #[test]
+    fn run_independent_season_narrows_ten_teams_down_to_one_champion() {
+        let content_conn = build_independent_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        for i in 0..10 {
+            insert_minimal_roster(&slot_conn, &format!("team:i{i}"));
+        }
+
+        let champion = run_independent_season(&slot_conn, &content_conn, 4242, 1).unwrap();
+        assert!(champion.starts_with("team:i"));
+
+        // 3단계 게임 수: 1차 10팀 laps2(18일*5경기=90) + 2차 8팀 laps2(14일*4경기=56)
+        // + 3차 4팀 laps1(3일*2경기=6) = 152, 포스트시즌(준PO+PO+챔피언 최대 5경기)은
+        // schedule에 안 남으므로(4차는 series라 별도 기록) 최소 152개는 있어야 함.
+        let scheduled_games: i64 = slot_conn.query_row("SELECT count(*) FROM schedule", [], |r| r.get(0)).unwrap();
+        assert!(scheduled_games >= 90 + 56 + 6, "expected at least 152 recorded stage games, got {scheduled_games}");
+
+        let champion_txn: i64 = slot_conn
+            .query_row("SELECT count(*) FROM league_transactions WHERE kind = 'champion'", [], |r| r.get(0))
+            .unwrap();
+        assert_eq!(champion_txn, 1);
+    }
+
+    #[test]
+    fn run_pro_postseason_returns_none_without_enough_standings() {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:pro', NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:p0', 'league:pro', NULL, NULL)", []).unwrap();
+
+        let slot_conn = slot::open_in_memory().unwrap();
+        let result = run_pro_postseason(&slot_conn, &content_conn, 1).unwrap();
+        assert!(result.is_none(), "fewer than 5 standings rows should skip the postseason");
+    }
+
+    #[test]
+    fn run_pro_postseason_crowns_a_champion_from_top_five_standings() {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:pro', NULL)", []).unwrap();
+
+        let slot_conn = slot::open_in_memory().unwrap();
+        for i in 0..5 {
+            let team_id = format!("team:p{i}");
+            content_conn
+                .execute(
+                    "INSERT INTO teams (id, league_id, color, meta) VALUES (?1, 'league:pro', NULL, NULL)",
+                    params![team_id],
+                )
+                .unwrap();
+            insert_minimal_roster(&slot_conn, &team_id);
+            // seed win% so team:p0 is 1st seed .. team:p4 is 5th seed
+            let wins = 20 - (i * 2);
+            slot_conn
+                .execute(
+                    "INSERT INTO standings (team_id, w, l, t, rank) VALUES (?1, ?2, ?3, 0, 0)",
+                    params![team_id, wins, 20 - wins],
+                )
+                .unwrap();
+        }
+
+        let champion = run_pro_postseason(&slot_conn, &content_conn, 99).unwrap();
+        assert!(champion.is_some());
+        assert!(champion.unwrap().starts_with("team:p"));
+
+        let champion_txn: i64 = slot_conn
+            .query_row("SELECT count(*) FROM league_transactions WHERE kind = 'champion'", [], |r| r.get(0))
+            .unwrap();
+        assert_eq!(champion_txn, 1);
     }
 }

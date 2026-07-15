@@ -102,6 +102,16 @@ pub fn load_teams_for_league(conn: &Connection, league_id: &str) -> anyhow::Resu
     Ok(rows.collect::<Result<Vec<_>, _>>()?)
 }
 
+/// Just the team ids in a league — no team_traits JOIN, so callers that only
+/// need ids (schedule/postseason orchestration) don't silently get an empty
+/// list if traits haven't been seeded for some reason. `load_teams_for_league`
+/// stays JOIN-based because sim::roster genuinely needs philosophy/status.
+pub fn load_team_ids_for_league(conn: &Connection, league_id: &str) -> anyhow::Result<Vec<String>> {
+    let mut stmt = conn.prepare("SELECT id FROM teams WHERE league_id = ?1 ORDER BY id")?;
+    let rows = stmt.query_map([league_id], |row| row.get(0))?;
+    Ok(rows.collect::<Result<Vec<_>, _>>()?)
+}
+
 /// Groups a league's teams for round-robin schedule generation. 프로/프로2군은
 /// 팀별 전용구장이라 그룹핑에 못 쓰므로 리그 전체를 단일 그룹으로; 대학·고교는
 /// I2에서 이미 확정된 stadium_id(대학 5조·고교 8권역, 각각 거점구장 공유)를
