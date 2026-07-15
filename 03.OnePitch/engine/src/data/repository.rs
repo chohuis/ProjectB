@@ -890,9 +890,33 @@ pub fn run_hs_gukhwa(slot_conn: &Connection, content_conn: &Connection, world_se
     Ok(champion)
 }
 
-/// I5가 채울 자리 — 주간 경계(훈련 XP→스탯, 누적형 부상체크, 라이브상태 갱신,
-/// 폴링형 이벤트 평가, 개인 트레이너 과금).
-fn process_week(_conn: &Connection, _day: i64) -> anyhow::Result<()> {
+/// 주간 경계 — 은퇴하지 않은 전 NPC(172팀 균등원칙, 리그·팀 차별 없음)에
+/// `sim::growth::apply_weekly_growth`를 적용해 노출 스탯 9종을 XP 누적→
+/// 임계값 돌파 시 +1로 성장시킨다(04_성장_곡선.md §2 "상승기"). 노쇠(하락기)
+/// ·누적형 부상체크·라이브상태 갱신·폴링형 이벤트 평가·개인 트레이너
+/// 과금은 여전히 스코프 밖 — 노쇠는 부상 이력에 의존한다고 문서에 명시돼
+/// (04_성장_곡선.md §5 "부상 이력이 어떻게 반영되는지 — 08_부상_시스템
+/// 확정 후") 08_부상_시스템 구현과 함께 다음 서브분에서 묶어 처리.
+fn process_week(conn: &Connection, world_seed: i64, day: i64) -> anyhow::Result<()> {
+    let mut stmt = conn.prepare("SELECT id, position, stats, xp FROM npc WHERE retired = 0")?;
+    let rows: Vec<(String, String, String, String)> =
+        stmt.query_map([], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?)))?.collect::<Result<_, _>>()?;
+    drop(stmt);
+
+    for (id, position, stats_raw, xp_raw) in rows {
+        let mut stats: serde_json::Map<String, serde_json::Value> = serde_json::from_str(&stats_raw)?;
+        let mut xp: serde_json::Map<String, serde_json::Value> = serde_json::from_str(&xp_raw)?;
+        let genius = stats.get("천재성").and_then(|v| v.as_f64()).unwrap_or(50.0);
+        let exposed = crate::sim::growth::exposed_stats_for(&position);
+
+        let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("growth:{id}:{day}")));
+        crate::sim::growth::apply_weekly_growth(&mut rng, exposed, &mut stats, &mut xp, genius);
+
+        conn.execute(
+            "UPDATE npc SET stats = ?1, xp = ?2 WHERE id = ?3",
+            params![serde_json::Value::Object(stats).to_string(), serde_json::Value::Object(xp).to_string(), id],
+        )?;
+    }
     Ok(())
 }
 
@@ -1006,7 +1030,7 @@ pub fn advance(slot_conn: &mut Connection, content_conn: &Connection) -> anyhow:
         // (04_게임루프.md §2). 월=4주(28일)는 문서에 정확한 일수가 없어 잡은
         // placeholder — 1시즌=52주=364일은 §1에 명시.
         if today % 7 == 0 {
-            process_week(&tx, today)?;
+            process_week(&tx, world_seed, today)?;
         }
         if today % 28 == 0 {
             process_month(&tx, today)?;
@@ -1716,5 +1740,52 @@ mod tests {
         let (content_conn, slot_conn) = build_hs_tournament_db();
         run_hs_gukhwa(&slot_conn, &content_conn, 14).unwrap();
         assert_single_champion_txn(&slot_conn, "hs_gukhwa");
+    }
+
+    fn read_stats(conn: &Connection, id: &str) -> serde_json::Value {
+        let raw: String = conn.query_row("SELECT stats FROM npc WHERE id = ?1", [id], |r| r.get(0)).unwrap();
+        serde_json::from_str(&raw).unwrap()
+    }
+
+    #[test]
+    fn process_week_grows_active_npc_stats_over_many_weeks() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_test_player(
+            &slot_conn,
+            "npc:grow1",
+            "team:a",
+            "타자",
+            serde_json::json!({"파워": 20.0, "스피드": 20.0, "체력": 20.0, "컨택": 20.0, "선구안": 20.0, "수비": 20.0, "클러치": 20.0, "침착함": 20.0, "리더십": 20.0, "천재성": 80.0, "인성": 50.0, "성실함": 50.0}),
+        );
+
+        for week in 0..30i64 {
+            process_week(&slot_conn, 1234, week * 7).unwrap();
+        }
+
+        let stats = read_stats(&slot_conn, "npc:grow1");
+        let grew = stats.as_object().unwrap().iter().any(|(k, v)| {
+            k != "천재성" && k != "인성" && k != "성실함" && v.as_f64().unwrap() > 20.0
+        });
+        assert!(grew, "expected at least one exposed stat to grow over 30 weeks, got {stats:?}");
+    }
+
+    #[test]
+    fn process_week_skips_retired_players() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        let initial = serde_json::json!({"파워": 20.0, "스피드": 20.0, "체력": 20.0, "컨택": 20.0, "선구안": 20.0, "수비": 20.0, "클러치": 20.0, "침착함": 20.0, "리더십": 20.0, "천재성": 80.0, "인성": 50.0, "성실함": 50.0});
+        slot_conn
+            .execute(
+                "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches)
+                 VALUES ('npc:retired1', '은퇴선수', 'team:a', '타자', 40, 1, 1, 50.0, '{}', ?1, '{}', '{}', NULL)",
+                params![initial.to_string()],
+            )
+            .unwrap();
+
+        for week in 0..30i64 {
+            process_week(&slot_conn, 1234, week * 7).unwrap();
+        }
+
+        let stats = read_stats(&slot_conn, "npc:retired1");
+        assert_eq!(stats, initial, "retired player's stats should never change");
     }
 }
