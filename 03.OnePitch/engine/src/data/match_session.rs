@@ -2,6 +2,7 @@ use rand::SeedableRng;
 use rand_chacha::ChaCha8Rng;
 use rusqlite::{params, Connection, OptionalExtension};
 
+use crate::sim::eval;
 use crate::sim::match_sim::{self, BatterStats, PaOutcome, PitcherStats};
 use crate::sim::pitch::{self, Course};
 
@@ -225,12 +226,63 @@ fn transition_half_inning(session: &mut SessionRow) -> Transition {
     }
 }
 
-fn finalize_game(slot_conn: &Connection, session: &SessionRow) -> anyhow::Result<MatchStepResult> {
+fn finalize_game(slot_conn: &Connection, session: &SessionRow, protagonist_team_id: &str) -> anyhow::Result<MatchStepResult> {
     let result_json = serde_json::json!({"home": session.home_runs, "away": session.away_runs}).to_string();
     slot_conn.execute("UPDATE schedule SET result = ?1 WHERE game_id = ?2", params![result_json, session.game_id])?;
     repository::update_standings(slot_conn, &session.home, &session.away, session.home_runs as u32, session.away_runs as u32)?;
+    apply_protagonist_evaluation(slot_conn, session, protagonist_team_id)?;
     slot_conn.execute("DELETE FROM match_session WHERE id = 1", [])?;
     Ok(MatchStepResult::GameOver { home_runs: session.home_runs as u32, away_runs: session.away_runs as u32 })
+}
+
+/// 주인공 등판 평가([09_평가_시스템](../../../02_기획/육성코어/09_평가_시스템.md)
+/// §5-4 "역할별 계산 트리거") — 이번 스코프는 항상 선발 완투(match_session
+/// 공통 placeholder)라 "강판 시점"이 곧 경기 종료 시점과 같다. §5-3
+/// "최소 등판 기준"(선발 1이닝 이상)은 완투라 항상 자동 충족 — "미달
+/// (부상강판 등)" 케이스는 중도 강판 자체가 없어 이번 스코프에선 발생
+/// 안 함. 감독 신뢰도(§4)는 스태프 시스템이 없어(I3에서 이미 스코프
+/// 아웃) 반영 안 함 — 사기·주목도·`game_log` 기록만.
+fn apply_protagonist_evaluation(slot_conn: &Connection, session: &SessionRow, protagonist_team_id: &str) -> anyhow::Result<()> {
+    let protagonist_is_home = session.home == protagonist_team_id;
+    let (runs_allowed, opponent_team) =
+        if protagonist_is_home { (session.away_runs as u32, session.away.clone()) } else { (session.home_runs as u32, session.home.clone()) };
+
+    let opponent_lineup = repository::load_batting_lineup(slot_conn, &opponent_team)?;
+    let opponent_avg = if opponent_lineup.is_empty() {
+        50.0
+    } else {
+        opponent_lineup.iter().map(|b| (b.contact + b.eye + b.power) / 3.0).sum::<f64>() / opponent_lineup.len() as f64
+    };
+
+    let pitcher = load_protagonist_as_pitcher(slot_conn)?;
+    let own_skill = (pitcher.control + pitcher.stuff) / 2.0;
+
+    let grade = eval::grade_outing(runs_allowed, opponent_avg, own_skill);
+
+    let live_state_raw: String = slot_conn.query_row("SELECT live_state FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0))?;
+    let mut live_state: serde_json::Map<String, serde_json::Value> = serde_json::from_str(&live_state_raw)?;
+    let morale = live_state.get("사기").and_then(|v| v.as_f64()).unwrap_or(50.0);
+    let attention = live_state.get("주목도").and_then(|v| v.as_f64()).unwrap_or(0.0);
+    live_state.insert("사기".to_string(), serde_json::json!((morale + eval::morale_delta(grade)).clamp(0.0, 100.0)));
+    live_state.insert("주목도".to_string(), serde_json::json!(attention + eval::attention_gain(grade)));
+    slot_conn.execute(
+        "UPDATE protagonist SET live_state = ?1 WHERE id = 'proto:1'",
+        params![serde_json::Value::Object(live_state).to_string()],
+    )?;
+
+    let season: i64 = slot_conn
+        .query_row("SELECT value FROM season_meta WHERE key = 'season'", [], |r| r.get::<_, String>(0))
+        .optional()?
+        .and_then(|s| s.parse().ok())
+        .unwrap_or(0);
+    let detail = serde_json::json!({"grade": grade, "runs_allowed": runs_allowed, "opponent": opponent_team}).to_string();
+    slot_conn.execute(
+        "INSERT INTO game_log (game_id, season, detail) VALUES (?1, ?2, ?3)
+         ON CONFLICT(game_id) DO UPDATE SET season = excluded.season, detail = excluded.detail",
+        params![session.game_id, season, detail],
+    )?;
+
+    Ok(())
 }
 
 /// 주인공 등판 경기 시작(§1 축1 유형A) — `advance()`가 오늘 주인공 경기를
@@ -289,7 +341,7 @@ fn run_until_decision_point(slot_conn: &Connection, world_seed: i64, mut player_
 
         if session.outs >= 3 {
             match transition_half_inning(&mut session) {
-                Transition::GameOver => return finalize_game(slot_conn, &session),
+                Transition::GameOver => return finalize_game(slot_conn, &session, &protagonist_team_id),
                 Transition::Continue => {
                     save_session(slot_conn, &session)?;
                     continue;
@@ -494,6 +546,33 @@ mod tests {
         let (w, l, t): (i64, i64, i64) =
             slot_conn.query_row("SELECT w, l, t FROM standings WHERE team_id = 'team:home'", [], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?))).unwrap();
         assert_eq!(w + l + t, 1);
+    }
+
+    #[test]
+    fn game_completion_records_an_evaluation_grade_and_updates_live_state() {
+        let content_conn = build_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_roster(&slot_conn, "team:home");
+        insert_roster(&slot_conn, "team:away");
+        insert_protagonist(&slot_conn, "team:home");
+        insert_schedule(&slot_conn, "game:1");
+
+        let before_live_state: String = slot_conn.query_row("SELECT live_state FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+        let before: serde_json::Value = serde_json::from_str(&before_live_state).unwrap();
+        let before_morale = before.get("사기").and_then(|v| v.as_f64()).unwrap_or(50.0);
+
+        start_protagonist_match(&slot_conn, &content_conn, 1, "game:1", "team:home", "team:away", "자동").unwrap();
+
+        let after_live_state: String = slot_conn.query_row("SELECT live_state FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+        let after: serde_json::Value = serde_json::from_str(&after_live_state).unwrap();
+        assert_ne!(before_morale, after.get("사기").unwrap().as_f64().unwrap(), "morale should shift after an evaluated outing");
+        assert!(after.get("주목도").unwrap().as_f64().unwrap() > 0.0, "attention should have accrued from the outing");
+
+        let (season, detail_raw): (i64, String) =
+            slot_conn.query_row("SELECT season, detail FROM game_log WHERE game_id = 'game:1'", [], |r| Ok((r.get(0)?, r.get(1)?))).unwrap();
+        assert_eq!(season, 0);
+        let detail: serde_json::Value = serde_json::from_str(&detail_raw).unwrap();
+        assert!(crate::sim::eval::GRADES.contains(&detail.get("grade").unwrap().as_str().unwrap()));
     }
 
     #[test]
