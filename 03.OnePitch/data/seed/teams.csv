@@ -161,3 +161,23 @@ team:tongyeong_univ,league:univ,school:tongyeong_univ,stadium:taejong,통영대,
 team:chiak_univ,league:univ,school:chiak_univ,stadium:geumgang_univ,치악대,원주,⭐,검정
 team:seorak_univ,league:univ,school:seorak_univ,stadium:geumgang_univ,설악대,춘천,배경,빨강
 team:seogwi_univ,league:univ,school:seogwi_univ,stadium:taejong,서귀대,서귀포,배경,주황
+team:seoul_royals,league:pro,,stadium:seoul_royals,서울 로열스,서울,1군,남색
+team:seoul_guardians,league:pro,,stadium:seoul_guardians,서울 가디언스,서울,1군,빨강
+team:seoul_cobras,league:pro,,stadium:seoul_cobras,서울 코브라스,서울,1군,초록
+team:incheon_sharks,league:pro,,stadium:incheon_sharks,인천 샤크스,인천,1군,파랑
+team:suwon_knights,league:pro,,stadium:suwon_knights,수원 나이츠,수원,1군,검정
+team:daejeon_phantoms,league:pro,,stadium:daejeon_phantoms,대전 팬텀스,대전,1군,주황
+team:gwangju_panthers,league:pro,,stadium:gwangju_panthers,광주 팬서스,광주,1군,노랑
+team:daegu_sabers,league:pro,,stadium:daegu_sabers,대구 세이버스,대구,1군,회색
+team:busan_waves,league:pro,,stadium:busan_waves,부산 웨이브스,부산,1군,남색
+team:changwon_stars,league:pro,,stadium:changwon_stars,창원 스타스,창원,1군,하늘
+team:seoul_royals_farm,league:pro_farm,,stadium:seoul_royals,서울 로열스 (2군),서울,2군,남색
+team:seoul_guardians_farm,league:pro_farm,,stadium:seoul_guardians,서울 가디언스 (2군),서울,2군,빨강
+team:seoul_cobras_farm,league:pro_farm,,stadium:seoul_cobras,서울 코브라스 (2군),서울,2군,초록
+team:incheon_sharks_farm,league:pro_farm,,stadium:incheon_sharks,인천 샤크스 (2군),인천,2군,파랑
+team:suwon_knights_farm,league:pro_farm,,stadium:suwon_knights,수원 나이츠 (2군),수원,2군,검정
+team:daejeon_phantoms_farm,league:pro_farm,,stadium:daejeon_phantoms,대전 팬텀스 (2군),대전,2군,주황
+team:gwangju_panthers_farm,league:pro_farm,,stadium:gwangju_panthers,광주 팬서스 (2군),광주,2군,노랑
+team:daegu_sabers_farm,league:pro_farm,,stadium:daegu_sabers,대구 세이버스 (2군),대구,2군,회색
+team:busan_waves_farm,league:pro_farm,,stadium:busan_waves,부산 웨이브스 (2군),부산,2군,남색
+team:changwon_stars_farm,league:pro_farm,,stadium:changwon_stars,창원 스타스 (2군),창원,2군,하늘

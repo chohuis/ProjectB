@@ -49,3 +49,13 @@ competition,season,team_id,result
 대학 여명기,S-3,team:baekje_univ,우승
 대학 여명기,S-2,team:haedong_univ,우승
 대학 여명기,S-1,team:baeksan_univ,우승
+한국시리즈,S-5,team:seoul_royals,우승
+한국시리즈,S-5,team:gwangju_panthers,준우승
+한국시리즈,S-4,team:seoul_royals,우승
+한국시리즈,S-4,team:seoul_guardians,준우승
+한국시리즈,S-3,team:seoul_guardians,우승
+한국시리즈,S-3,team:seoul_royals,준우승
+한국시리즈,S-2,team:seoul_guardians,우승
+한국시리즈,S-2,team:suwon_knights,준우승
+한국시리즈,S-1,team:seoul_royals,우승
+한국시리즈,S-1,team:suwon_knights,준우승
