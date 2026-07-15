@@ -1,0 +1,40 @@
+# 플레이스홀더 — 실제 값은 Phase I8 시뮬 하네스로 재조정(05_밸런스.md D그룹, "F. 팀·전력" 인접).
+# 구조(리그별 로스터 규모·투수비율·스탯범위 차등)는 프로토타입(02.SvelteElectron
+# roster_gen.rs/generate_league_roster)에서 포팅, 수치는 01_선수_능력치.md §7의 확정 스케일
+# (20~80, 50=평균 — 실제 MLB 스카우팅 스케일과 동일 관례)로 재매핑.
+# stat_min/stat_max = 해당 리그 NPC 능력치 생성 시 뽑을 구간(전 능력치 공통, 세부 스탯별 차등은 I3 구현 시).
+
+[league."league:hs"]
+roster_size = 25
+pitcher_ratio = 0.45   # 로스터 중 투수 비율
+sp_ratio = 0.45        # 투수 중 선발(SP) 비율, 나머지 구원(RP)
+stat_min = 20
+stat_max = 50
+
+[league."league:univ"]
+roster_size = 22
+pitcher_ratio = 0.45
+sp_ratio = 0.45
+stat_min = 25
+stat_max = 55
+
+[league."league:independent"]
+roster_size = 20
+pitcher_ratio = 0.45
+sp_ratio = 0.45
+stat_min = 28
+stat_max = 58
+
+[league."league:pro_farm"]
+roster_size = 28
+pitcher_ratio = 0.45
+sp_ratio = 0.45
+stat_min = 32
+stat_max = 62
+
+[league."league:pro"]
+roster_size = 28
+pitcher_ratio = 0.45
+sp_ratio = 0.45
+stat_min = 35
+stat_max = 80

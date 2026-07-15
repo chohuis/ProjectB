@@ -55,6 +55,39 @@ struct TeamHistory {
     titles: serde_json::Value,
 }
 
+#[derive(Deserialize)]
+struct PitchType {
+    id: String,
+    family: String,
+    name: String,
+}
+
+#[derive(Deserialize)]
+struct NamePool {
+    id: String,
+    locale: String,
+    kind: String,
+    names: serde_json::Value,
+}
+
+#[derive(Deserialize)]
+struct GenerationRule {
+    league_id: String,
+    rules: serde_json::Value,
+}
+
+#[derive(Deserialize)]
+struct PersonalityRule {
+    context: String,
+    trait_weights: serde_json::Value,
+}
+
+#[derive(Deserialize)]
+struct WorldConfigEntry {
+    key: String,
+    value: String,
+}
+
 #[derive(Deserialize, Default)]
 struct SeedPayload {
     #[serde(default)]
@@ -69,6 +102,16 @@ struct SeedPayload {
     team_traits: Vec<TeamTraits>,
     #[serde(default)]
     team_history: Vec<TeamHistory>,
+    #[serde(default)]
+    pitch_types: Vec<PitchType>,
+    #[serde(default)]
+    name_pools: Vec<NamePool>,
+    #[serde(default)]
+    generation_rules: Vec<GenerationRule>,
+    #[serde(default)]
+    personality_rules: Vec<PersonalityRule>,
+    #[serde(default)]
+    world_config: Vec<WorldConfigEntry>,
 }
 
 fn foreign_key_violations(conn: &Connection) -> Result<Vec<String>> {
@@ -146,6 +189,43 @@ fn seed(conn: &mut Connection, payload: &SeedPayload, dry_run: bool) -> Result<V
         )?;
     }
 
+    for pt in &payload.pitch_types {
+        tx.execute(
+            "INSERT INTO pitch_types (id, family, name) VALUES (?1, ?2, ?3)
+             ON CONFLICT(id) DO UPDATE SET family = excluded.family, name = excluded.name",
+            params![pt.id, pt.family, pt.name],
+        )?;
+    }
+    for np in &payload.name_pools {
+        tx.execute(
+            "INSERT INTO name_pools (id, locale, kind, names) VALUES (?1, ?2, ?3, ?4)
+             ON CONFLICT(id) DO UPDATE SET locale = excluded.locale, kind = excluded.kind, names = excluded.names",
+            params![np.id, np.locale, np.kind, np.names.to_string()],
+        )?;
+    }
+    // generation_rules.league_id references leagues(id) — leagues are already inserted above.
+    for gr in &payload.generation_rules {
+        tx.execute(
+            "INSERT INTO generation_rules (league_id, rules) VALUES (?1, ?2)
+             ON CONFLICT(league_id) DO UPDATE SET rules = excluded.rules",
+            params![gr.league_id, gr.rules.to_string()],
+        )?;
+    }
+    for pr in &payload.personality_rules {
+        tx.execute(
+            "INSERT INTO personality_rules (context, trait_weights) VALUES (?1, ?2)
+             ON CONFLICT(context) DO UPDATE SET trait_weights = excluded.trait_weights",
+            params![pr.context, pr.trait_weights.to_string()],
+        )?;
+    }
+    for wc in &payload.world_config {
+        tx.execute(
+            "INSERT INTO world_config (key, value) VALUES (?1, ?2)
+             ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+            params![wc.key, wc.value],
+        )?;
+    }
+
     let violations = foreign_key_violations(&tx)?;
 
     if dry_run || !violations.is_empty() {
@@ -193,13 +273,18 @@ fn main() -> Result<()> {
     }
 
     let summary = format!(
-        "leagues={} schools={} stadiums={} teams={} team_traits={} team_history={}",
+        "leagues={} schools={} stadiums={} teams={} team_traits={} team_history={} pitch_types={} name_pools={} generation_rules={} personality_rules={} world_config={}",
         payload.leagues.len(),
         payload.schools.len(),
         payload.stadiums.len(),
         payload.teams.len(),
         payload.team_traits.len(),
-        payload.team_history.len()
+        payload.team_history.len(),
+        payload.pitch_types.len(),
+        payload.name_pools.len(),
+        payload.generation_rules.len(),
+        payload.personality_rules.len(),
+        payload.world_config.len()
     );
     if dry_run {
         println!("OK (dry-run, no changes committed): {summary}");

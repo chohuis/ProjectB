@@ -1,0 +1,11 @@
+id,family,name
+pitch:four_seam,패스트볼류,포심 패스트볼
+pitch:two_seam,패스트볼류,투심 패스트볼
+pitch:cutter,패스트볼류,커터
+pitch:slider,브레이킹볼류,슬라이더
+pitch:curve,브레이킹볼류,커브
+pitch:sweeper,브레이킹볼류,스위퍼
+pitch:changeup,오프스피드류,체인지업
+pitch:forkball,오프스피드류,포크볼
+pitch:sinker,오프스피드류,싱커
+pitch:knuckleball,특수구,너클볼

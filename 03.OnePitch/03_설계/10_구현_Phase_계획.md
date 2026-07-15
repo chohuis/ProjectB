@@ -29,7 +29,7 @@
 |---|---|---|---|---|---|
 | **I0** | 리포지토리 스캐폴딩 | `app/`(Flutter)+`engine/`(Rust crate) 실제 생성, frb 배선, 최소 hello-world 커밋 | `flutter run -d windows`로 빈 화면이 실제로 뜸, git에 커밋됨 | [03_구조](03_구조.md) §6(폴더구조) · [09_개발환경_세팅](09_개발환경_세팅.md) | ✅ 완료 (2026-07-15) — 스캐폴딩·frb hello-world·`cargo build`·`flutter build windows` 전부 성공 확인(아래 §6-1 갱신) |
 | **I1** | 데이터 레이어 | content.db·slot.db 스키마를 rusqlite 마이그레이션 코드로, Repository 커맨드 골격, HMAC 서명 골격 | 빈 DB 생성+v1 마이그레이션 성공, 유닛 테스트 통과 | [06_스키마](06_스키마.md) · [02_데이터](02_데이터.md) | ✅ 완료 (2026-07-15) — `cargo test` 9종 통과 |
-| **I2** | 초기 세계 데이터 구축 | `data/seed/*.csv·toml` 실제 작성(172팀 리그팀 markdown→트랜스크립션), `content seed` CLI 구현 | content.db에 172팀·리그·구장·특성·히스토리·생성규칙 전부 반영, `content validate` 통과 | [07_데이터관리](07_데이터관리.md) §3 | ✅ 완료 (2026-07-15) — 172팀(+2군10=182팀) 전부 시드, `content seed`+`content validate` 통과. `generation_rules`·`name_pools`·`pitch_types`·`world_config`(canonical_seed)는 팀 데이터와 무관해 I3 착수 시로 이월(아래 §6-2) |
+| **I2** | 초기 세계 데이터 구축 | `data/seed/*.csv·toml` 실제 작성(172팀 리그팀 markdown→트랜스크립션), `content seed` CLI 구현 | content.db에 172팀·리그·구장·특성·히스토리·생성규칙 전부 반영, `content validate` 통과 | [07_데이터관리](07_데이터관리.md) §3 | ✅ 완료 (2026-07-15) — 172팀(+2군10=182팀) + `pitch_types`·`name_pools`·`generation_rules`·`personality_rules`·`world_config` 전부 시드, `content seed`+`content validate` 통과(아래 §6-2) |
 | **I3** | 선수 생성 엔진(`sim/roster`) | canonical_seed 기반 결정적 로스터 생성(`generateInitialWorld`) | 새 게임 시작 시 172팀 ~3,700명이 slot.db에 생성, 동일 seed→동일 결과(재현성 테스트) | [07_데이터관리](07_데이터관리.md) §2 · [01_선수_능력치](../02_기획/육성코어/01_선수_능력치.md) | ⬜ 미착수 |
 | **I4** | 게임 루프 오케스트레이터(`api/advance`) | 일/주/월/시즌 경계 처리, PendingAction 7종 상태기계 | `advance()` 호출 시 여러 주 진행 후 정지점에서 올바로 멈춤 | [04_게임루프](04_게임루프.md) | ⬜ 미착수 |
 | **I5** | 나머지 sim 모듈 | `sim/growth`·`sim/injury`·`sim/eval`·`sim/match`(배경)·`sim/market`·`sim/npc`·`sim/schedule` — [05_밸런스](05_밸런스.md) §3 순서(A→B→C→{D,E,F}→G,H→I)로 구현+가밸런스 적용 | 배경 시뮬만으로 시즌 1개 완주 가능 | [03_구조](03_구조.md) §5-1 · 육성코어 01~09 각 문서 | ⬜ 미착수 |
@@ -101,7 +101,15 @@
   2. 대학 경기·인천(14, A조4/B조10)·대구·경북(5, D조3/E조2) 조배정 — 전력★ 상위 순으로 A/D조(서울·호남과 합류하는 조)에 배정, 동급은 S-1순위로 타이브레이크. `teams.csv` 갱신, stadium_id NULL 0건.
   3. [07_구장_파크팩터](07_구장_파크팩터.md) §1·§6 텍스트 오기("독립 5구장"→"4구장", "4지역"→"3지역", "28개"→"27개") 수정 완료 — 문서·시드 데이터(27구장) 일치.
   - 반영 후 `content seed`+`content validate` 재실행, `budget IS NULL` 11건(상무1+2군10, 전부 의도된 예외)·`stadium_id IS NULL` 0건 확인.
-- **다음 세션이 할 일**: I3(선수 생성 엔진) 착수 전에 `pitch_types.csv`·`name_pools.csv`·`generation_rules.toml`·`personality_rules.toml`·`world_config.toml`(canonical_seed)를 채워야 함 — 이건 팀 데이터가 아니라 [07_데이터관리](07_데이터관리.md) §3-1 스펙대로 새로 설계·저작해야 하는 영역이라 별도 세션으로 분리 권장.
+- **`pitch_types`·`name_pools`·`generation_rules`·`personality_rules`·`world_config` 전부 완료(2026-07-15)**:
+  - `pitch_types.csv`: [육성코어/05_구종_시스템](../02_기획/육성코어/05_구종_시스템.md) §1의 10종 카탈로그 그대로(추가 확인 결과 더 넣을 것 없음 — "습득 조건" 등은 content.db 데이터가 아니라 `balance/training`(Rust 은닉 상수, [05_밸런스](05_밸런스.md) §2-E) 소관이라 I8로 별도 이월).
+  - `world_config.toml`: `canonical_seed = 20260714` 고정.
+  - `name_pools.csv`: **`02.SvelteElectron`(이 프로젝트들이 계속 언급해온 "프로토타입")**의 `resource/data/master/players/name_pool_{kr,en,jp}.json`을 포팅(한글 성40+이름60, 영어 성40+이름60, 일본어 성40+이름40×hangul/roman 이중). 외국인 선수 기능이 지금은 없지만 사용자 지시로 3개 로케일 전부 포팅해둠.
+  - `generation_rules.toml`: 프로토타입 `roster_gen.rs`(리그별 로스터규모·투수비율·OVR범위 구조)를 포팅하되, 수치는 프로토타입의 45~92 스케일이 아니라 [05_밸런스](05_밸런스.md) §1에서 이미 확정된 **20~80(50=평균)** 스케일로 재매핑. 5개 리그(고교/대학/독립/프로2군/프로1군) 순으로 구간이 점점 높아지도록 배치, 실제 값은 여전히 D그룹(Phase I8 시뮬 하네스) 재조정 대상.
+  - `personality_rules.toml`: `06_스키마.md`의 `personality_rules(context PK, trait_weights)`가 **172팀 개별이 아니라 철학(12)·위상(7)·역할(7) = 26개 컨텍스트** 단위 룩업임을 확인 — I3 생성 로직이 팀의 이미 시드된 철학/위상(`team_traits.csv`)과 역할을 조합해 이 컨텍스트를 찾아 블렌딩하는 구조. [콘텐츠/01_캐릭터](../02_기획/콘텐츠/01_캐릭터.md) §3이 실제로 명시한 방향성 힌트("스파르타→승부사·완벽주의 쏠림")만 반영하고 나머지 25개는 균등 placeholder — 나머지를 임의로 차등화하면 문서에 없는 걸 지어내는 것이라 하지 않음.
+  - Rust `seed_content.rs`·Dart `content_seed.dart`/`seed_toml.dart`(TOML 파싱 신규)를 확장해 이 5개 파일도 실제로 content.db에 반영되도록 파이프라인 완성 — `content seed`+`content validate` 통과 확인.
+  - **버그 발견·수정**: `content_seed.dart`의 `name_pools` 그룹핑 키 조합 문자열에 정상 공백(U+0020) 대신 **널바이트(`\x00`)**가 섞여 들어가 있어(Edit 도구 사용 중 발생 추정) `split(' ')`가 항상 1개 파트만 반환 — `RangeError` 크래시. 원인 특정에 여러 단계 디버깅 필요했음(단순 로직 재확인으로는 안 잡히고 바이트 단위 점검(`repr()`)에서 발견). 재발 방지용 회귀 테스트(`content_seed_test.dart`) 추가.
+- **다음 세션이 할 일**: I3(선수 생성 엔진, `sim/roster`) 착수 — `07_데이터관리](07_데이터관리.md) §2·[01_선수_능력치](../02_기획/육성코어/01_선수_능력치.md) 기준. 이제 172팀 시드 데이터가 전부 갖춰졌으니 바로 시작 가능.
 
 ### 6-3. 문서 갱신 규칙
 

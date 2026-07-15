@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'seed_csv.dart';
+import 'seed_toml.dart';
 
 /// Assembles the JSON payload consumed by `engine`'s `seed_content` Rust
 /// binary from the flat, git-diffable CSVs under data/seed/ (07_데이터관리.md
@@ -17,6 +18,11 @@ Map<String, dynamic> buildSeedPayload(String seedDir) {
   final teamRivals = readSeedCsv('$seedDir/team_rivals.csv');
   final teamSeasonRanks = readSeedCsv('$seedDir/team_season_ranks.csv');
   final teamTitles = readSeedCsv('$seedDir/team_titles.csv');
+  final pitchTypes = readSeedCsv('$seedDir/pitch_types.csv');
+  final namePools = readSeedCsv('$seedDir/name_pools.csv');
+  final generationRules = readSeedToml('$seedDir/generation_rules.toml')['league'] as Map<String, dynamic>? ?? {};
+  final personalityRules = readSeedToml('$seedDir/personality_rules.toml')['context'] as Map<String, dynamic>? ?? {};
+  final worldConfig = readSeedToml('$seedDir/world_config.toml');
 
   final teamOrgById = {for (final r in teamOrg) r['team_id']!: r};
 
@@ -41,6 +47,12 @@ Map<String, dynamic> buildSeedPayload(String seedDir) {
       'season': r['season'] ?? '',
       'result': r['result'] ?? '',
     });
+  }
+
+  final namePoolGroups = <String, List<String>>{};
+  for (final r in namePools) {
+    final key = '${r['locale']} ${r['kind']}';
+    namePoolGroups.putIfAbsent(key, () => []).add(r['name'] ?? '');
   }
 
   return {
@@ -88,6 +100,32 @@ Map<String, dynamic> buildSeedPayload(String seedDir) {
           'season_ranks': seasonRanksByTeam[r['id']] ?? {},
           'titles': titlesByTeam[r['id']] ?? [],
         }
+    ],
+    'pitch_types': [
+      for (final r in pitchTypes) {'id': r['id'], 'family': r['family'], 'name': r['name']}
+    ],
+    'name_pools': [
+      for (final entry in namePoolGroups.entries)
+        () {
+          final parts = entry.key.split(' ');
+          final locale = parts[0];
+          final kind = parts[1];
+          return {
+            'id': 'namepool:${locale}_$kind',
+            'locale': locale,
+            'kind': kind,
+            'names': entry.value,
+          };
+        }()
+    ],
+    'generation_rules': [
+      for (final e in generationRules.entries) {'league_id': e.key, 'rules': e.value}
+    ],
+    'personality_rules': [
+      for (final e in personalityRules.entries) {'context': e.key, 'trait_weights': e.value}
+    ],
+    'world_config': [
+      for (final e in worldConfig.entries) {'key': e.key, 'value': e.value.toString()}
     ],
   };
 }
