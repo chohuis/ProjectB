@@ -39,7 +39,7 @@ const HIDDEN_STATS: [&str; 3] = ["천재성", "인성", "성실함"];
 
 /// 07_주인공_생성.md §0 고교1년=17세와 일관되게 리그 성격에 맞춰 잡은 나이 구간
 /// — generation_rules처럼 확정 소스가 없는 placeholder(I3 계획 문서 참고).
-fn age_range(league_id: &str) -> (i64, i64) {
+pub fn age_range(league_id: &str) -> (i64, i64) {
     match league_id {
         "league:hs" => (15, 18),
         "league:univ" => (19, 22),

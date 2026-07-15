@@ -175,8 +175,92 @@ pub fn generate_initial_world(slot_conn: &mut Connection, content_conn: &Connect
     Ok(())
 }
 
-pub fn generate_freshmen(_conn: &Connection, _world_seed: i64) -> anyhow::Result<()> {
-    todo!()
+/// 팀별 활성(retired=0) 로스터가 `generation_rules.roster_size`보다 모자란
+/// 만큼만 새 선수를 생성해 채운다 — `sim::roster::generate_team`을 그대로
+/// 재사용하되 `roster_size`만 부족분으로 바꿔 호출(투수/타자 비율 등 나머지
+/// 규칙은 그대로 적용). **고교→대학/독립/프로 드래프트 같은 리그간 실제
+/// 진로 이동은 모델링하지 않음** — [01_커리어_구조](../../02_기획/01_커리어_구조.md)
+/// §5의 갈림길은 근본적으로 주인공이 선택하는 서사 이벤트라 I6 이후 스코프
+/// (10_구현_Phase_계획.md §6-11). NPC는 같은 팀 안에서 "은퇴 후 신인 충원"
+/// 만 반복하는 제자리 순환 placeholder.
+/// 이름풀·리그별 생성규칙이 없는 리그(content.db가 전부 안 채워진 합성
+/// 테스트 픽스처 등)는 "생성할 게 없음"으로 조용히 건너뛴다 — 실제 시드된
+/// content.db는 I2에서 5개 리그 전부 채워져 있어 이 분기를 실제로 안 탐,
+/// season_rollover가 늘 이 함수를 호출하게 되면서(8차분) 이름풀조차 없는
+/// 구식 테스트 픽스처들이 깨지는 걸 막기 위한 방어적 처리.
+pub fn generate_freshmen(conn: &Connection, content_conn: &Connection, world_seed: i64, season: i64) -> anyhow::Result<()> {
+    let Ok(kr_surnames) = content::load_name_pool(content_conn, "kr", "surname") else {
+        return Ok(());
+    };
+    let Ok(kr_given) = content::load_name_pool(content_conn, "kr", "given") else {
+        return Ok(());
+    };
+    let secondary_pitches = content::load_secondary_pitch_names(content_conn)?;
+    let role_ctx = content::load_personality_rule(content_conn, "role:선수")?;
+
+    for league_id in LEAGUE_IDS {
+        let Ok(rule) = content::load_generation_rule(content_conn, league_id) else {
+            continue;
+        };
+        let roster_size = rule.get("roster_size").and_then(|v| v.as_u64()).unwrap_or(25);
+        let teams = content::load_teams_for_league(content_conn, league_id)?;
+
+        let league_slug = league_id.strip_prefix("league:").unwrap_or(league_id);
+        let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("freshmen:{league_id}:{season}")));
+        let id_prefix = format!("npc:{world_seed}_{league_slug}_freshman_{season}_");
+        let mut seq: u64 = 0;
+
+        for team in &teams {
+            let active: u64 =
+                conn.query_row("SELECT count(*) FROM npc WHERE team_id = ?1 AND retired = 0", [&team.id], |r| r.get::<_, i64>(0))? as u64;
+            let missing = roster_size.saturating_sub(active);
+            if missing == 0 {
+                continue;
+            }
+
+            let philosophy_ctx = content::load_personality_rule(content_conn, &format!("philosophy:{}", team.philosophy))?;
+            let status_ctx = content::load_personality_rule(content_conn, &format!("status:{}", team.status))?;
+            let weights = PersonalityWeights::merge(&[philosophy_ctx, status_ctx, role_ctx.clone()]);
+
+            let mut topup_rule = rule.clone();
+            topup_rule["roster_size"] = serde_json::json!(missing);
+
+            let players = roster::generate_team(
+                &mut rng,
+                team,
+                league_id,
+                &topup_rule,
+                &kr_surnames,
+                &kr_given,
+                &secondary_pitches,
+                &weights,
+                &id_prefix,
+                &mut seq,
+            );
+
+            for p in &players {
+                conn.execute(
+                    "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches, injury)
+                     VALUES (?1, ?2, ?3, ?4, ?5, 1, 0, ?6, ?7, ?8, ?9, ?10, ?11, ?12)",
+                    params![
+                        p.id,
+                        p.name,
+                        p.team_id,
+                        p.position,
+                        p.age,
+                        p.form,
+                        p.personality.to_string(),
+                        p.stats.to_string(),
+                        p.xp.to_string(),
+                        p.live_state.to_string(),
+                        p.pitches.as_ref().map(|v| v.to_string()),
+                        serde_json::json!({"current": null, "history": []}).to_string(),
+                    ],
+                )?;
+            }
+        }
+    }
+    Ok(())
 }
 
 pub fn transfer(_conn: &Connection, _npc_id: &str, _to_team_id: &str) -> anyhow::Result<()> {
@@ -203,8 +287,13 @@ pub fn discharge(_conn: &Connection, _npc_id: &str) -> anyhow::Result<()> {
     todo!()
 }
 
-pub fn retire(_conn: &Connection, _npc_id: &str) -> anyhow::Result<()> {
-    todo!()
+/// 은퇴 처리 — `retired=1`만 설정(§자동 판정 로직은 `season_rollover`가
+/// `sim::npc::check_retirement`으로 호출). 은퇴한 선수는 `load_batting_lineup`
+/// ·`load_starting_pitcher`의 `WHERE retired = 0` 필터에 걸려 이후 경기에
+/// 더 이상 등장하지 않는다.
+pub fn retire(conn: &Connection, npc_id: &str) -> anyhow::Result<()> {
+    conn.execute("UPDATE npc SET retired = 1 WHERE id = ?1", params![npc_id])?;
+    Ok(())
 }
 
 pub fn update_weekly(_conn: &Connection, _npc_id: &str) -> anyhow::Result<()> {
@@ -275,7 +364,7 @@ fn find_protagonist_game_today(conn: &Connection, day: i64) -> anyhow::Result<Op
 
 fn load_batting_lineup(slot_conn: &Connection, team_id: &str) -> anyhow::Result<Vec<match_sim::BatterStats>> {
     let mut stmt = slot_conn.prepare(
-        "SELECT id, stats, live_state FROM npc WHERE team_id = ?1 AND position NOT IN ('선발투수', '구원투수') ORDER BY id",
+        "SELECT id, stats, live_state FROM npc WHERE team_id = ?1 AND retired = 0 AND position NOT IN ('선발투수', '구원투수') ORDER BY id",
     )?;
     let rows: Vec<(String, String, String)> =
         stmt.query_map([team_id], |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)))?.collect::<Result<Vec<_>, _>>()?;
@@ -299,7 +388,7 @@ fn load_batting_lineup(slot_conn: &Connection, team_id: &str) -> anyhow::Result<
 fn load_starting_pitcher(slot_conn: &Connection, team_id: &str) -> anyhow::Result<match_sim::PitcherStats> {
     let row: Option<(String, String, String)> = slot_conn
         .query_row(
-            "SELECT id, stats, live_state FROM npc WHERE team_id = ?1 AND position = '선발투수' ORDER BY id LIMIT 1",
+            "SELECT id, stats, live_state FROM npc WHERE team_id = ?1 AND retired = 0 AND position = '선발투수' ORDER BY id LIMIT 1",
             [team_id],
             |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
         )
@@ -369,7 +458,8 @@ fn accumulate_game_fatigue(conn: &Connection, team_id: &str) -> anyhow::Result<(
     const BATTER_FATIGUE_PER_GAME: f64 = 4.0;
     const PITCHER_FATIGUE_PER_GAME: f64 = 12.0;
 
-    let mut stmt = conn.prepare("SELECT id, live_state FROM npc WHERE team_id = ?1 AND position NOT IN ('선발투수', '구원투수')")?;
+    let mut stmt =
+        conn.prepare("SELECT id, live_state FROM npc WHERE team_id = ?1 AND retired = 0 AND position NOT IN ('선발투수', '구원투수')")?;
     let batters: Vec<(String, String)> = stmt.query_map([team_id], |r| Ok((r.get(0)?, r.get(1)?)))?.collect::<Result<_, _>>()?;
     drop(stmt);
     for (id, live_state_raw) in batters {
@@ -378,7 +468,7 @@ fn accumulate_game_fatigue(conn: &Connection, team_id: &str) -> anyhow::Result<(
 
     let starter: Option<(String, String)> = conn
         .query_row(
-            "SELECT id, live_state FROM npc WHERE team_id = ?1 AND position = '선발투수' ORDER BY id LIMIT 1",
+            "SELECT id, live_state FROM npc WHERE team_id = ?1 AND retired = 0 AND position = '선발투수' ORDER BY id LIMIT 1",
             [team_id],
             |r| Ok((r.get(0)?, r.get(1)?)),
         )
@@ -1159,6 +1249,26 @@ pub fn season_rollover(conn: &Connection, content_conn: &Connection) -> anyhow::
     conn.execute("DELETE FROM standings", [])?;
     conn.execute("DELETE FROM schedule", [])?;
     conn.execute("DELETE FROM season_stats", [])?;
+
+    // NPC 세대교체(I5 8차분) — 나이 증가 → 리그별 적정연령대 기준 은퇴 판정
+    // → 빈 자리 신인 충원. 01_커리어_구조.md §5의 실제 진로 갈림길(드래프트
+    // 등)은 주인공 전용 서사라 스코프 밖(10_구현_Phase_계획.md §6-11) — 같은
+    // 팀 안에서 은퇴→신인이 반복되는 placeholder. `league_by_team`은 위
+    // standings 압축 단계에서 이미 만들어둔 걸 재사용.
+    conn.execute("UPDATE npc SET age = age + 1 WHERE retired = 0", [])?;
+    let mut stmt = conn.prepare("SELECT id, team_id, age FROM npc WHERE retired = 0")?;
+    let candidates: Vec<(String, String, i64)> = stmt.query_map([], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)))?.collect::<Result<_, _>>()?;
+    drop(stmt);
+    for (id, team_id, age) in candidates {
+        let league_id = league_by_team.get(&team_id).cloned().unwrap_or_default();
+        let max_age = roster::age_range(&league_id).1;
+        let mut retire_rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("retire:{id}:{current}")));
+        if crate::sim::npc::check_retirement(&mut retire_rng, age, max_age) {
+            retire(conn, &id)?;
+        }
+    }
+    generate_freshmen(conn, content_conn, world_seed, current + 1)?;
+
     Ok(())
 }
 
@@ -1681,6 +1791,108 @@ mod tests {
             .query_row("SELECT rank FROM history_standings WHERE season = 0 AND team_id = 'team:a'", [], |r| r.get(0))
             .unwrap();
         assert_eq!(rank_a, 1, "team:a has the better win% and should rank 1st");
+    }
+
+    #[test]
+    fn retire_excludes_player_from_batting_lineup() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_minimal_roster(&slot_conn, "team:a");
+        let before = load_batting_lineup(&slot_conn, "team:a").unwrap();
+        assert_eq!(before.len(), 8);
+
+        retire(&slot_conn, "team:a_b0").unwrap();
+
+        let after = load_batting_lineup(&slot_conn, "team:a").unwrap();
+        assert_eq!(after.len(), 7);
+        assert!(!after.iter().any(|b| b.id == "team:a_b0"));
+    }
+
+    fn build_freshmen_content_db(league_id: &str, team_id: &str, rules: &str) -> Connection {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES (?1, NULL)", [league_id]).unwrap();
+        content_conn
+            .execute("INSERT INTO teams (id, league_id, color, meta) VALUES (?1, ?2, NULL, NULL)", params![team_id, league_id])
+            .unwrap();
+        content_conn
+            .execute(
+                "INSERT INTO team_traits (team_id, philosophy, resource, status) VALUES (?1, '전통/정통', '안정', '중견')",
+                [team_id],
+            )
+            .unwrap();
+        content_conn.execute("INSERT INTO generation_rules (league_id, rules) VALUES (?1, ?2)", params![league_id, rules]).unwrap();
+        content_conn
+            .execute("INSERT INTO name_pools (id, locale, kind, names) VALUES ('namepool:kr_surname', 'kr', 'surname', '[\"김\"]')", [])
+            .unwrap();
+        content_conn
+            .execute("INSERT INTO name_pools (id, locale, kind, names) VALUES ('namepool:kr_given', 'kr', 'given', '[\"민준\"]')", [])
+            .unwrap();
+        content_conn
+            .execute("INSERT INTO pitch_types (id, family, name, meta) VALUES ('pitch:four_seam', '패스트볼류', '포심 패스트볼', NULL)", [])
+            .unwrap();
+        content_conn
+    }
+
+    #[test]
+    fn generate_freshmen_tops_up_missing_roster_slots() {
+        let content_conn = build_freshmen_content_db(
+            "league:hs",
+            "team:h1",
+            r#"{"roster_size":6,"pitcher_ratio":0.5,"sp_ratio":0.5,"stat_min":20.0,"stat_max":80.0}"#,
+        );
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_test_player(&slot_conn, "npc:h1_existing1", "team:h1", "타자", serde_json::json!({"파워": 50.0}));
+        insert_test_player(&slot_conn, "npc:h1_existing2", "team:h1", "타자", serde_json::json!({"파워": 50.0}));
+
+        generate_freshmen(&slot_conn, &content_conn, 42, 5).unwrap();
+
+        let active_count: i64 =
+            slot_conn.query_row("SELECT count(*) FROM npc WHERE team_id = 'team:h1' AND retired = 0", [], |r| r.get(0)).unwrap();
+        assert_eq!(active_count, 6, "2 existing + 4 freshmen should fill the 6-player roster");
+    }
+
+    #[test]
+    fn season_rollover_retires_ancient_players_and_backfills_active_roster() {
+        let content_conn = build_freshmen_content_db(
+            "league:pro",
+            "team:p1",
+            r#"{"roster_size":3,"pitcher_ratio":0.34,"sp_ratio":1.0,"stat_min":20.0,"stat_max":80.0}"#,
+        );
+
+        let slot_conn = slot::open_in_memory().unwrap();
+        let stats = serde_json::json!({"파워": 50.0, "스피드": 50.0, "체력": 50.0, "컨택": 50.0, "선구안": 50.0, "수비": 50.0, "클러치": 50.0, "침착함": 50.0, "리더십": 50.0, "천재성": 50.0, "인성": 50.0, "성실함": 50.0});
+        let injury = serde_json::json!({"current": null, "history": []});
+        slot_conn
+            .execute(
+                "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches, injury)
+                 VALUES ('npc:ancient', '노장', 'team:p1', '타자', 70, 1, 0, 50.0, '{}', ?1, '{}', '{}', NULL, ?2)",
+                params![stats.to_string(), injury.to_string()],
+            )
+            .unwrap();
+        slot_conn
+            .execute(
+                "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches, injury)
+                 VALUES ('npc:other1', '기타1', 'team:p1', '타자', 25, 1, 0, 50.0, '{}', ?1, '{}', '{}', NULL, ?2)",
+                params![stats.to_string(), injury.to_string()],
+            )
+            .unwrap();
+        slot_conn
+            .execute(
+                "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches, injury)
+                 VALUES ('npc:other2', '기타2', 'team:p1', '선발투수', 25, 1, 0, 50.0, '{}', ?1, '{}', '{}', NULL, ?2)",
+                params![stats.to_string(), injury.to_string()],
+            )
+            .unwrap();
+
+        for _ in 0..15 {
+            season_rollover(&slot_conn, &content_conn).unwrap();
+        }
+
+        let retired: i64 = slot_conn.query_row("SELECT retired FROM npc WHERE id = 'npc:ancient'", [], |r| r.get(0)).unwrap();
+        assert_eq!(retired, 1, "a 70+yo player in a max-age-40 league should retire within 15 seasons");
+
+        let active_count: i64 =
+            slot_conn.query_row("SELECT count(*) FROM npc WHERE team_id = 'team:p1' AND retired = 0", [], |r| r.get(0)).unwrap();
+        assert_eq!(active_count, 3, "roster should stay backfilled to roster_size after retirements");
     }
 
     #[test]
