@@ -74,6 +74,71 @@ pub fn open_in_memory() -> anyhow::Result<Connection> {
     init(Connection::open_in_memory()?)
 }
 
+/// A team as needed by roster generation — just the bits generation_rules/
+/// personality_rules need (id + the two trait slots used as personality
+/// context keys). Not the full `teams` row.
+pub struct TeamForRoster {
+    pub id: String,
+    pub philosophy: String,
+    pub status: String,
+}
+
+/// Teams in a league, ordered by id — the fixed iteration order the
+/// deterministic RNG stream in sim::roster relies on.
+pub fn load_teams_for_league(conn: &Connection, league_id: &str) -> anyhow::Result<Vec<TeamForRoster>> {
+    let mut stmt = conn.prepare(
+        "SELECT t.id, tt.philosophy, tt.status
+         FROM teams t JOIN team_traits tt ON tt.team_id = t.id
+         WHERE t.league_id = ?1
+         ORDER BY t.id",
+    )?;
+    let rows = stmt.query_map([league_id], |row| {
+        Ok(TeamForRoster {
+            id: row.get(0)?,
+            philosophy: row.get(1)?,
+            status: row.get(2)?,
+        })
+    })?;
+    Ok(rows.collect::<Result<Vec<_>, _>>()?)
+}
+
+pub fn load_generation_rule(conn: &Connection, league_id: &str) -> anyhow::Result<serde_json::Value> {
+    let raw: String = conn.query_row(
+        "SELECT rules FROM generation_rules WHERE league_id = ?1",
+        [league_id],
+        |row| row.get(0),
+    )?;
+    Ok(serde_json::from_str(&raw)?)
+}
+
+pub fn load_name_pool(conn: &Connection, locale: &str, kind: &str) -> anyhow::Result<Vec<String>> {
+    let id = format!("namepool:{locale}_{kind}");
+    let raw: String = conn.query_row("SELECT names FROM name_pools WHERE id = ?1", [id], |row| row.get(0))?;
+    Ok(serde_json::from_str(&raw)?)
+}
+
+/// Merges the philosophy/status/role personality_rules contexts relevant to a
+/// generated player. Missing contexts (not yet seeded) are silently skipped —
+/// callers get whatever weight is available rather than an error.
+pub fn load_personality_rule(conn: &Connection, context: &str) -> anyhow::Result<Option<serde_json::Value>> {
+    let raw: Option<String> = conn
+        .query_row(
+            "SELECT trait_weights FROM personality_rules WHERE context = ?1",
+            [context],
+            |row| row.get(0),
+        )
+        .ok();
+    Ok(raw.map(|r| serde_json::from_str(&r)).transpose()?)
+}
+
+/// All pitch names besides 포심 패스트볼 (fastball is every pitcher's fixed
+/// starting pitch per 07_주인공_생성.md §6 — this pool is for the 0~1 extra).
+pub fn load_secondary_pitch_names(conn: &Connection) -> anyhow::Result<Vec<String>> {
+    let mut stmt = conn.prepare("SELECT name FROM pitch_types WHERE name != '포심 패스트볼' ORDER BY id")?;
+    let rows = stmt.query_map([], |row| row.get(0))?;
+    Ok(rows.collect::<Result<Vec<_>, _>>()?)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

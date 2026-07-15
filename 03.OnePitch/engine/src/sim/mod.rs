@@ -1,1 +1,2 @@
-// match·growth·injury·eval·npc·roster·schedule·market — I3~I6에서 채움
+// match·growth·injury·eval·npc·schedule·market — I4~I6에서 채움
+pub mod roster;
