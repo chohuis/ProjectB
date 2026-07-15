@@ -175,6 +175,64 @@ pub fn generate_initial_world(slot_conn: &mut Connection, content_conn: &Connect
     Ok(())
 }
 
+/// 뉴게임 — 주인공 생성([07_주인공_생성](../../02_기획/07_주인공_생성.md)
+/// §1의 7단계 플로우 중 실제로 데이터를 만드는 마지막 단계, 나머지는 화면
+/// 흐름이라 I7(Flutter UI) 소관). `school_team_id`·`archetype`·
+/// `second_pitch`는 전부 사용자가 직접 고르는 값이라 시스템 경계로 보고
+/// content.db에 실제 존재·소속 리그가 맞는지, 그 타입의 2구종 후보 풀에
+/// 속하는지 검증한다(다른 생성 로직들이 content.db·호출부를 무조건
+/// 신뢰하는 것과 다른 지점).
+#[allow(clippy::too_many_arguments)]
+pub fn create_protagonist(
+    slot_conn: &Connection,
+    content_conn: &Connection,
+    world_seed: i64,
+    name: &str,
+    handedness: &str,
+    school_team_id: &str,
+    archetype: &str,
+    second_pitch: Option<&str>,
+) -> anyhow::Result<()> {
+    let league_id: Option<String> = content_conn
+        .query_row("SELECT league_id FROM teams WHERE id = ?1", [school_team_id], |r| r.get(0))
+        .optional()?;
+    if league_id.as_deref() != Some("league:hs") {
+        anyhow::bail!("school_team_id {school_team_id} is not a league:hs team");
+    }
+
+    let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, "protagonist"));
+    let stats = crate::sim::protagonist::generate_starting_stats(&mut rng, archetype)?;
+
+    let mut pitches = vec!["포심 패스트볼".to_string()];
+    if let Some(second) = second_pitch {
+        if !crate::sim::protagonist::is_valid_second_pitch(archetype, second)? {
+            anyhow::bail!("{second} is not a valid second pitch for archetype {archetype}");
+        }
+        pitches.push(second.to_string());
+    }
+
+    let exposed = crate::sim::growth::exposed_stats_for("선발투수");
+    let xp: serde_json::Map<String, serde_json::Value> = exposed.iter().map(|s| (s.to_string(), serde_json::json!(0))).collect();
+
+    slot_conn.execute(
+        "INSERT INTO protagonist (id, name, handedness, archetype, stats, xp, live_state, finance, pitches, contract, injury)
+         VALUES ('proto:1', ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)",
+        params![
+            name,
+            handedness,
+            archetype,
+            serde_json::Value::Object(stats).to_string(),
+            serde_json::Value::Object(xp).to_string(),
+            serde_json::json!({"피로도": 0, "사기": 50, "폼": 50}).to_string(),
+            serde_json::json!({}).to_string(),
+            serde_json::json!(pitches).to_string(),
+            serde_json::json!({"team_id": school_team_id}).to_string(),
+            serde_json::json!({"current": null, "history": []}).to_string(),
+        ],
+    )?;
+    Ok(())
+}
+
 /// 팀별 활성(retired=0) 로스터가 `generation_rules.roster_size`보다 모자란
 /// 만큼만 새 선수를 생성해 채운다 — `sim::roster::generate_team`을 그대로
 /// 재사용하되 `roster_size`만 부족분으로 바꿔 호출(투수/타자 비율 등 나머지
@@ -1447,6 +1505,73 @@ mod tests {
         )
         .unwrap();
         conn
+    }
+
+    fn build_hs_school_content_db() -> Connection {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:hs', NULL)", []).unwrap();
+        content_conn
+            .execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:hanseong_hs', 'league:hs', NULL, NULL)", [])
+            .unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:univ', NULL)", []).unwrap();
+        content_conn
+            .execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:some_univ', 'league:univ', NULL, NULL)", [])
+            .unwrap();
+        content_conn
+    }
+
+    #[test]
+    fn create_protagonist_inserts_expected_row() {
+        let content_conn = build_hs_school_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+
+        create_protagonist(&slot_conn, &content_conn, 1, "테스트타자", "좌완", "team:hanseong_hs", "강속구형", Some("커터")).unwrap();
+
+        let (name, handedness, archetype, pitches_raw, contract_raw): (String, String, String, String, String) = slot_conn
+            .query_row("SELECT name, handedness, archetype, pitches, contract FROM protagonist WHERE id = 'proto:1'", [], |r| {
+                Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?, r.get(4)?))
+            })
+            .unwrap();
+        assert_eq!(name, "테스트타자");
+        assert_eq!(handedness, "좌완");
+        assert_eq!(archetype, "강속구형");
+
+        let pitches: Vec<String> = serde_json::from_str(&pitches_raw).unwrap();
+        assert_eq!(pitches, vec!["포심 패스트볼".to_string(), "커터".to_string()]);
+
+        let contract: serde_json::Value = serde_json::from_str(&contract_raw).unwrap();
+        assert_eq!(contract.get("team_id").unwrap().as_str().unwrap(), "team:hanseong_hs");
+    }
+
+    #[test]
+    fn create_protagonist_without_second_pitch_starts_fastball_only() {
+        let content_conn = build_hs_school_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+
+        create_protagonist(&slot_conn, &content_conn, 1, "포심만", "우완", "team:hanseong_hs", "제구형", None).unwrap();
+
+        let pitches_raw: String = slot_conn.query_row("SELECT pitches FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+        let pitches: Vec<String> = serde_json::from_str(&pitches_raw).unwrap();
+        assert_eq!(pitches, vec!["포심 패스트볼".to_string()]);
+    }
+
+    #[test]
+    fn create_protagonist_rejects_non_hs_school() {
+        let content_conn = build_hs_school_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+
+        let result = create_protagonist(&slot_conn, &content_conn, 1, "실수", "우완", "team:some_univ", "강속구형", None);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn create_protagonist_rejects_second_pitch_outside_archetype_pool() {
+        let content_conn = build_hs_school_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+
+        // 슬라이더는 제구형 전용 후보 — 강속구형에게는 유효하지 않음.
+        let result = create_protagonist(&slot_conn, &content_conn, 1, "잘못된선택", "우완", "team:hanseong_hs", "강속구형", Some("슬라이더"));
+        assert!(result.is_err());
     }
 
     #[test]
