@@ -73,7 +73,15 @@ pub fn simulate_plate_appearance(rng: &mut impl Rng, batter: &BatterStats, pitch
         return PaOutcome::HitByPitch;
     }
 
-    // 인플레이 — 안타 여부(§6)
+    resolve_in_play_result(rng, batter, pitcher)
+}
+
+/// 인플레이(공을 맞힘) 발생 이후의 결과 세분화(§6) — 아웃 여부 → 안타
+/// 종류. `simulate_plate_appearance`(PA레벨 배경 시뮬)와
+/// `sim::pitch::simulate_at_bat_automatically`(주인공 1구 단위 매치
+/// 세션, I6 2차분)가 이 판정을 공유해 "인플레이 이후"의 확률식이 두
+/// 엔진 사이에서 갈라지지 않게 한다.
+pub fn resolve_in_play_result(rng: &mut impl Rng, batter: &BatterStats, pitcher: &PitcherStats) -> PaOutcome {
     let power_edge = batter.power - pitcher.stuff;
     let hit_prob = clamp01(0.30 + power_edge * 0.002);
     if rng.gen::<f64>() >= hit_prob {

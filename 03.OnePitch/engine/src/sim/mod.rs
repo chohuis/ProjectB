@@ -3,6 +3,7 @@
 pub mod growth;
 pub mod injury;
 pub mod npc;
+pub mod pitch;
 pub mod protagonist;
 pub mod roster;
 pub mod schedule;
