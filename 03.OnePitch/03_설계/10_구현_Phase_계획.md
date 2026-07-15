@@ -1,7 +1,7 @@
 # 구현 Phase 계획 (착수 로드맵 — 새 세션 온보딩 문서)
 
 > 근거: [00_결정_요약](00_결정_요약.md)(전체 결정 인덱스) · [03_구조](03_구조.md) §5-1(엔진 모듈 지도) · [05_밸런스](05_밸런스.md) §3(확정 순서) · [07_데이터관리](07_데이터관리.md) §7(초기구축순서) · [08_P7_체크리스트](08_P7_체크리스트.md)(실측 완료) · [09_개발환경_세팅](09_개발환경_세팅.md) · 대화 설계(2026-07-14)
-> 상태: **I0·I1·I2·I3 완료** — 2026-07-15
+> 상태: **I0·I1·I2·I3·I4 완료** — 2026-07-15
 > 목적: **이 문서 하나만 읽으면 새 대화 세션이 지금 상황을 전부 파악하고 이어서 구현을 진행**할 수 있게 한다. 기획·설계는 100% 끝났고(§1), 지금부터는 코드 작성 단계다.
 
 ## 0. 이 문서를 읽는 새 세션에게
@@ -31,7 +31,7 @@
 | **I1** | 데이터 레이어 | content.db·slot.db 스키마를 rusqlite 마이그레이션 코드로, Repository 커맨드 골격, HMAC 서명 골격 | 빈 DB 생성+v1 마이그레이션 성공, 유닛 테스트 통과 | [06_스키마](06_스키마.md) · [02_데이터](02_데이터.md) | ✅ 완료 (2026-07-15) — `cargo test` 9종 통과 |
 | **I2** | 초기 세계 데이터 구축 | `data/seed/*.csv·toml` 실제 작성(172팀 리그팀 markdown→트랜스크립션), `content seed` CLI 구현 | content.db에 172팀·리그·구장·특성·히스토리·생성규칙 전부 반영, `content validate` 통과 | [07_데이터관리](07_데이터관리.md) §3 | ✅ 완료 (2026-07-15) — 172팀(+2군10=182팀) + `pitch_types`·`name_pools`·`generation_rules`·`personality_rules`·`world_config` 전부 시드, `content seed`+`content validate` 통과(아래 §6-2) |
 | **I3** | 선수 생성 엔진(`sim/roster`) | canonical_seed 기반 결정적 로스터 생성(`generateInitialWorld`) | 새 게임 시작 시 172팀 ~3,700명이 slot.db에 생성, 동일 seed→동일 결과(재현성 테스트) | [07_데이터관리](07_데이터관리.md) §2 · [01_선수_능력치](../02_기획/육성코어/01_선수_능력치.md) | ✅ 완료 (2026-07-15) — 실데이터로 4,410명 생성(2군 포함) 확인, 동일 seed 재현성 확인. 상세는 아래 §6-3 |
-| **I4** | 게임 루프 오케스트레이터(`api/advance`) | 일/주/월/시즌 경계 처리, PendingAction 7종 상태기계 | `advance()` 호출 시 여러 주 진행 후 정지점에서 올바로 멈춤 | [04_게임루프](04_게임루프.md) | ⬜ 미착수 |
+| **I4** | 게임 루프 오케스트레이터(`api/advance`) | 일/주/월/시즌 경계 처리, PendingAction 7종 상태기계 | `advance()` 호출 시 여러 주 진행 후 정지점에서 올바로 멈춤 | [04_게임루프](04_게임루프.md) | ✅ 완료 (2026-07-15) — 오케스트레이터 뼈대(하루단위 루프·정지판정·PendingAction push/resolve·재서명) 구현, 실제 배치 내용은 I5/I6가 채울 훅으로 배선. 상세는 아래 §6-4 |
 | **I5** | 나머지 sim 모듈 | `sim/growth`·`sim/injury`·`sim/eval`·`sim/match`(배경)·`sim/market`·`sim/npc`·`sim/schedule` — [05_밸런스](05_밸런스.md) §3 순서(A→B→C→{D,E,F}→G,H→I)로 구현+가밸런스 적용 | 배경 시뮬만으로 시즌 1개 완주 가능 | [03_구조](03_구조.md) §5-1 · 육성코어 01~09 각 문서 | ⬜ 미착수 |
 | **I6** | 주인공 플로우 | 캐릭터 생성([07_주인공_생성](../02_기획/07_주인공_생성.md)), 주인공 등판 매치 세션(`startMatch`/`pitch`) | 캐릭터 생성 후 첫 경기를 실제로 뛸 수 있음(반자동 모드 최소) | [04_UI기획/06_캐릭터생성](../04_UI기획/06_캐릭터생성.md) · [07_매치_엔진](../02_기획/육성코어/07_매치_엔진.md) | ⬜ 미착수 |
 | **I7** | Flutter UI | `04_UI기획/` 00~08 화면 실제 구현(4허브+진행버튼+매치 CustomPainter) | 최소 플레이 가능한 루프가 실제 화면에서 끝까지 동작(뉴게임→진행→경기→시즌종료) | `04_UI기획/` 전체 | ⬜ 미착수 |
@@ -131,9 +131,26 @@
 
 **수동 검증**(커밋 안 한 임시 바이너리로 1회 실행): 실제 시드된 `content.db`에 `generate_initial_world` 실행 → **총 4,410명**(고교25×102+대학22×50+독립20×10+프로2군28×10+프로1군28×10) 생성, 동일 `canonical_seed`로 두 번 실행해 완전히 같은 `npc` 행 확인(id·name·stats 전부 일치). "~3,700명" 추정치와 차이 나는 건 I2에서 정한 `generation_rules`의 로스터 크기 placeholder 값 때문(I8 재조정 대상) — 버그 아님.
 
-**다음 세션이 할 일**: I4(게임 루프 오케스트레이터, `api/advance`) 착수 — [04_게임루프](04_게임루프.md) 기준. `sign_core_state`·`generate_freshmen`·스태프 생성도 자연스러운 시점에 다시 검토할 것.
+### 6-4. I4 착수 기록 (2026-07-15, 완료)
 
-### 6-4. 문서 갱신 규칙
+**핵심 판단**: PendingAction 7종 중 실제로 "무언가를 하는" 타입은 전부 아직 없는 시스템(I5 sim/match·sim/schedule·sim/market·sim/injury, I6 주인공 플로우)에 의존한다 — `season_rollover`가 해야 할 방출판정·재계약·드래프트·로스터세대교체도 마찬가지. 그래서 I4는 **"오케스트레이터" 그 자체만** 구현 — 하루씩 진행하며 정지 조건을 감지하고 PendingAction을 push/resolve하는 상태기계 뼈대를 만들고, 각 경계(일/주/월/시즌)의 실제 내용은 지금 대부분 no-op 훅으로 남겨 I5/I6가 채우기만 하면 되는 구조로 배선.
+
+**이번에 같이 처리한 이월 항목**: `integrity::sign_core_state`(I3에서 "세이브 생명주기와 엮여 I4가 적합"이라 미뤘던 것) — `engine/src/integrity/mod.rs`에 구현, protagonist(0~1행)+npc(전체, id 정렬)+meta 핵심필드를 직렬화해 해싱. `advance()`가 매 정지마다 재서명해 `meta.integrity_sig` 갱신.
+
+**여전히 미룬 것**(이유는 위 §스코프 참고): `generate_freshmen` 실구현, 스태프 생성, 팀 실전력 계산.
+
+**구현**:
+- `engine/src/data/repository.rs`: `advance_week`(옛 스텁명) → `advance(slot_conn) -> Vec<PendingActionRow>`로 교체 — 하루씩 전진하며 ①그날 주인공 경기 있으면 `game` PendingAction push 후 정지 ②`process_day`(매일)→`process_week`(7일마다)→`process_month`(28일마다, 월 정확한 일수가 문서에 없어 잡은 placeholder)→`season_rollover`(364일마다) 순서로 배치 호출 ③이 중 하나라도 PendingAction을 만들면 정지, 아니면 다음 날로. 정지마다 `sign_core_state`로 재서명.
+  - `process_day`/`process_week`/`process_month`: 지금은 완전 no-op — I5가 채울 자리라는 주석만.
+  - `season_rollover`: 지금 실제로 할 수 있는 것만(시즌 카운터 `season_meta` 증가, `inbox` 비움) 구현, 나머지(평가·방출·재계약·드래프트·로스터세대교체·투자정산)는 TODO 주석.
+  - `resolve_choice`: `pending_actions`에서 해당 행 삭제(제네릭 처리) — 타입별 실제 효과 적용은 그 효과를 낼 시스템이 생겼을 때.
+- **버그 발견·수정**: 주인공도 없고(I6 이전) 실제 이벤트/일정 콘텐츠도 없는 지금 상태에서는 정지 조건이 영영 안 걸려 `advance()`가 무한 루프에 빠질 뻔했음 — 설계 검토 중 실제로 코드를 돌리기 전에 발견. `MAX_DAYS_PER_CALL`(364일, 1시즌) 안전장치를 추가해 그 안에 정지점을 못 찾으면 빈 목록을 반환하고 제어를 호출자에게 돌려줌. 실제 콘텐츠(I5)가 들어오면 정지점이 훨씬 자주 걸려 이 캡은 사실상 발동 안 함 — 순수 방어용.
+
+**테스트**(`cargo test` 22개, 신규 5개): `integrity::sign_core_state`가 빈 슬롯에서도 동작·npc 변경 시 값이 바뀌는지 2개, `repository::advance`가 (a) 주인공 없이 한 시즌(364일) 다 돌고 인박스 비움+시즌카운터 증가하는지 (b) 합성 `schedule`+`protagonist`로 정확히 그 날짜에 `game` PendingAction으로 멈추는지, `resolve_choice` 후 다시 진행되는지 (c) 동일 시작 상태 두 벌을 각각 advance()해도 `integrity_sig`가 완전히 같은지(재현성) 3개.
+
+**다음 세션이 할 일**: I5(나머지 sim 모듈) 착수 — [03_구조](03_구조.md) §5-1·[05_밸런스](05_밸런스.md) §3 순서(A→B→C→{D,E,F}→G,H→I) 기준. `sim/schedule`이 먼저 있어야 I4의 `game` 정지 로직이 실제로 동작하는 걸 볼 수 있고, `sim/eval`·`sim/market` 등이 들어오면서 `season_rollover`·`process_day/week/month` 훅을 하나씩 채우게 됨.
+
+### 6-5. 문서 갱신 규칙
 
 **이 문서는 살아있는 문서다.** Phase를 하나 끝낼 때마다:
 1. §2 표의 해당 행 상태를 `⬜ 미착수` → `🔶 진행중` → `✅ 완료`로 갱신.
