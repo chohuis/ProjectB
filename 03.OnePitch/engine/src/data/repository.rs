@@ -94,8 +94,8 @@ pub fn generate_league_roster(
 
         for p in &players {
             tx.execute(
-                "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches)
-                 VALUES (?1, ?2, ?3, ?4, ?5, 1, 0, ?6, ?7, ?8, ?9, ?10, ?11)",
+                "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches, injury)
+                 VALUES (?1, ?2, ?3, ?4, ?5, 1, 0, ?6, ?7, ?8, ?9, ?10, ?11, ?12)",
                 params![
                     p.id,
                     p.name,
@@ -108,6 +108,7 @@ pub fn generate_league_roster(
                     p.xp.to_string(),
                     p.live_state.to_string(),
                     p.pitches.as_ref().map(|v| v.to_string()),
+                    serde_json::json!({"current": null, "history": []}).to_string(),
                 ],
             )?;
         }
@@ -341,6 +342,46 @@ fn update_standings(conn: &Connection, home: &str, away: &str, home_runs: u32, a
 /// 전부 sim::match_sim으로 돌려 schedule.result·standings를 갱신한다.
 /// sim/injury·콜백형 이벤트 등 나머지 "매일 경계" 항목은 여전히 스코프 밖
 /// (플랜 문서 참고) — 여기는 배경 경기 시뮬만.
+fn bump_fatigue(conn: &Connection, id: &str, live_state_raw: &str, amount: f64) -> anyhow::Result<()> {
+    let mut live_state: serde_json::Map<String, serde_json::Value> = serde_json::from_str(live_state_raw)?;
+    let current = live_state.get("피로도").and_then(|v| v.as_f64()).unwrap_or(0.0);
+    live_state.insert("피로도".to_string(), serde_json::Value::from(current + amount));
+    conn.execute("UPDATE npc SET live_state = ?1 WHERE id = ?2", params![serde_json::Value::Object(live_state).to_string(), id])?;
+    Ok(())
+}
+
+/// 경기 참여로 인한 피로도 누적 — `sim::injury::check_overuse_injury`(누적형
+/// 부상)이 매주 읽는 `live_state.피로도`의 유일한 증가 소스(process_week은
+/// 감소만 시킴). 타자는 그 경기에 실제로 쓰인 라인업 풀 전체(`load_batting_lineup`
+/// 과 동일 정의 — 선발투수 아닌 전원), 투수는 그날의 선발투수 1명만(완투
+/// placeholder라 실제로 던지는 건 그 한 명뿐). 다전제·브래킷 경기
+/// (`simulate_series`·`simulate_round_robin_stage`)는 건드리지 않음 — 그쪽은
+/// 이미 "캘린더 없이 동기 시뮬"로 단순화돼 있어 날짜 단위 피로 누적 개념이
+/// 안 맞음(10_구현_Phase_계획.md §6-6).
+fn accumulate_game_fatigue(conn: &Connection, team_id: &str) -> anyhow::Result<()> {
+    const BATTER_FATIGUE_PER_GAME: f64 = 4.0;
+    const PITCHER_FATIGUE_PER_GAME: f64 = 12.0;
+
+    let mut stmt = conn.prepare("SELECT id, live_state FROM npc WHERE team_id = ?1 AND position NOT IN ('선발투수', '구원투수')")?;
+    let batters: Vec<(String, String)> = stmt.query_map([team_id], |r| Ok((r.get(0)?, r.get(1)?)))?.collect::<Result<_, _>>()?;
+    drop(stmt);
+    for (id, live_state_raw) in batters {
+        bump_fatigue(conn, &id, &live_state_raw, BATTER_FATIGUE_PER_GAME)?;
+    }
+
+    let starter: Option<(String, String)> = conn
+        .query_row(
+            "SELECT id, live_state FROM npc WHERE team_id = ?1 AND position = '선발투수' ORDER BY id LIMIT 1",
+            [team_id],
+            |r| Ok((r.get(0)?, r.get(1)?)),
+        )
+        .optional()?;
+    if let Some((id, live_state_raw)) = starter {
+        bump_fatigue(conn, &id, &live_state_raw, PITCHER_FATIGUE_PER_GAME)?;
+    }
+    Ok(())
+}
+
 fn process_day(slot_conn: &Connection, content_conn: &Connection, world_seed: i64, day: i64) -> anyhow::Result<()> {
     let mut stmt = slot_conn.prepare("SELECT game_id, home, away FROM schedule WHERE day = ?1 AND result IS NULL")?;
     let games: Vec<(String, String, String)> =
@@ -361,6 +402,8 @@ fn process_day(slot_conn: &Connection, content_conn: &Connection, world_seed: i6
         let result_json = serde_json::json!({"home": result.home_runs, "away": result.away_runs}).to_string();
         slot_conn.execute("UPDATE schedule SET result = ?1 WHERE game_id = ?2", params![result_json, game_id])?;
         update_standings(slot_conn, &home, &away, result.home_runs, result.away_runs)?;
+        accumulate_game_fatigue(slot_conn, &home)?;
+        accumulate_game_fatigue(slot_conn, &away)?;
     }
     Ok(())
 }
@@ -897,24 +940,126 @@ pub fn run_hs_gukhwa(slot_conn: &Connection, content_conn: &Connection, world_se
 /// 과금은 여전히 스코프 밖 — 노쇠는 부상 이력에 의존한다고 문서에 명시돼
 /// (04_성장_곡선.md §5 "부상 이력이 어떻게 반영되는지 — 08_부상_시스템
 /// 확정 후") 08_부상_시스템 구현과 함께 다음 서브분에서 묶어 처리.
-fn process_week(conn: &Connection, world_seed: i64, day: i64) -> anyhow::Result<()> {
-    let mut stmt = conn.prepare("SELECT id, position, stats, xp FROM npc WHERE retired = 0")?;
-    let rows: Vec<(String, String, String, String)> =
-        stmt.query_map([], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?)))?.collect::<Result<_, _>>()?;
+/// injury JSON(`{"current": ..., "history": [...]}`)에 새 부상을 기록 —
+/// 같은 부위 재발이면 심각도 자동 한 단계 상승(08_부상_시스템.md §5),
+/// 치료법은 감독/매니저 AI가 아직 없어 항상 "재활"(중간 옵션)로 고정하는
+/// placeholder(§4 — "무리한 복귀"·"수술" 선택은 실제 의사결정 주체가
+/// 필요해 I6 이후 스코프). 예상 복귀일 = day + 심각도별 이탈기간.
+fn record_injury(injury: &mut serde_json::Value, part: &str, severity: &str, day: i64) {
+    let obj = injury.as_object_mut().expect("injury must be a JSON object");
+    if !obj.contains_key("history") {
+        obj.insert("history".to_string(), serde_json::json!([]));
+    }
+    let history_arr = obj.get_mut("history").unwrap().as_array_mut().expect("history must be an array");
+
+    let final_severity = match history_arr.iter().rev().find(|h| h.get("부위").and_then(|v| v.as_str()) == Some(part)) {
+        Some(prev) => crate::sim::injury::escalate_severity(prev.get("심각도").and_then(|v| v.as_str()).unwrap_or(severity)),
+        None => severity,
+    };
+
+    history_arr.push(serde_json::json!({"부위": part, "심각도": final_severity, "day": day}));
+    obj.insert(
+        "current".to_string(),
+        serde_json::json!({
+            "부위": part,
+            "심각도": final_severity,
+            "치료": "재활",
+            "start_day": day,
+            "return_day": day + crate::sim::injury::recovery_days(final_severity),
+        }),
+    );
+}
+
+fn injury_severity_weight_sum(injury: &serde_json::Value) -> f64 {
+    injury
+        .get("history")
+        .and_then(|h| h.as_array())
+        .map(|arr| {
+            arr.iter()
+                .map(|h| crate::sim::injury::severity_weight(h.get("심각도").and_then(|v| v.as_str()).unwrap_or("경미")))
+                .sum()
+        })
+        .unwrap_or(0.0)
+}
+
+/// 주간 경계 — 은퇴하지 않은 전 NPC(172팀 균등원칙, 리그·팀 차별 없음)에
+/// 순서대로 ①`sim::growth::apply_weekly_growth`(상승기) ②피로도 회복(주간
+/// 절반 감소 placeholder)+`sim::injury::check_overuse_injury`(누적형 부상
+/// 체크) ③`sim::growth::apply_aging_decline`(하락기, 방금 갱신된 부상
+/// 이력을 그대로 반영)를 적용한다 — 04_성장_곡선.md §1 "상승분과 하락분의
+/// 순합이 그 해 변화"를 같은 주 안에서 순서대로 실행해 자연히 만족시킨다.
+/// 급성형(경기 중 우발) 부상은 `sim::match_sim`을 건드려야 하는 별도
+/// 스코프라 이번엔 제외(다음 서브분 후보, 10_구현_Phase_계획.md §6-9 참고).
+struct WeeklyNpcRow {
+    id: String,
+    team_id: String,
+    position: String,
+    age: i64,
+    stats_raw: String,
+    xp_raw: String,
+    live_state_raw: String,
+    injury_raw: Option<String>,
+}
+
+fn process_week(conn: &Connection, content_conn: &Connection, world_seed: i64, day: i64) -> anyhow::Result<()> {
+    let mut philosophy_by_team: HashMap<String, String> = HashMap::new();
+    {
+        let mut stmt = content_conn.prepare("SELECT team_id, philosophy FROM team_traits")?;
+        let rows: Vec<(String, String)> = stmt.query_map([], |r| Ok((r.get(0)?, r.get(1)?)))?.collect::<Result<_, _>>()?;
+        philosophy_by_team.extend(rows);
+    }
+
+    let mut stmt = conn.prepare("SELECT id, team_id, position, age, stats, xp, live_state, injury FROM npc WHERE retired = 0")?;
+    let rows: Vec<WeeklyNpcRow> = stmt
+        .query_map([], |r| {
+            Ok(WeeklyNpcRow {
+                id: r.get(0)?,
+                team_id: r.get(1)?,
+                position: r.get(2)?,
+                age: r.get(3)?,
+                stats_raw: r.get(4)?,
+                xp_raw: r.get(5)?,
+                live_state_raw: r.get(6)?,
+                injury_raw: r.get(7)?,
+            })
+        })?
+        .collect::<Result<_, _>>()?;
     drop(stmt);
 
-    for (id, position, stats_raw, xp_raw) in rows {
+    for WeeklyNpcRow { id, team_id, position, age, stats_raw, xp_raw, live_state_raw, injury_raw } in rows {
         let mut stats: serde_json::Map<String, serde_json::Value> = serde_json::from_str(&stats_raw)?;
         let mut xp: serde_json::Map<String, serde_json::Value> = serde_json::from_str(&xp_raw)?;
+        let mut live_state: serde_json::Map<String, serde_json::Value> = serde_json::from_str(&live_state_raw)?;
+        let mut injury: serde_json::Value =
+            injury_raw.and_then(|s| serde_json::from_str(&s).ok()).unwrap_or_else(|| serde_json::json!({"current": null, "history": []}));
+
         let genius = stats.get("천재성").and_then(|v| v.as_f64()).unwrap_or(50.0);
+        let conscientiousness = stats.get("성실함").and_then(|v| v.as_f64()).unwrap_or(50.0);
         let exposed = crate::sim::growth::exposed_stats_for(&position);
 
-        let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("growth:{id}:{day}")));
-        crate::sim::growth::apply_weekly_growth(&mut rng, exposed, &mut stats, &mut xp, genius);
+        let mut growth_rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("growth:{id}:{day}")));
+        crate::sim::growth::apply_weekly_growth(&mut growth_rng, exposed, &mut stats, &mut xp, genius);
+
+        let fatigue = live_state.get("피로도").and_then(|v| v.as_f64()).unwrap_or(0.0);
+        let philosophy = philosophy_by_team.get(&team_id).cloned().unwrap_or_default();
+        let mut injury_rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("injury:{id}:{day}")));
+        if let Some((part, severity)) = crate::sim::injury::check_overuse_injury(&mut injury_rng, fatigue, &philosophy) {
+            record_injury(&mut injury, part, severity, day);
+        }
+        live_state.insert("피로도".to_string(), serde_json::Value::from(fatigue * 0.5));
+
+        let injury_weight = injury_severity_weight_sum(&injury);
+        crate::sim::growth::apply_aging_decline(&position, age, &mut stats, injury_weight, conscientiousness);
 
         conn.execute(
-            "UPDATE npc SET stats = ?1, xp = ?2 WHERE id = ?3",
-            params![serde_json::Value::Object(stats).to_string(), serde_json::Value::Object(xp).to_string(), id],
+            "UPDATE npc SET stats = ?1, xp = ?2, live_state = ?3, injury = ?4 WHERE id = ?5",
+            params![
+                serde_json::Value::Object(stats).to_string(),
+                serde_json::Value::Object(xp).to_string(),
+                serde_json::Value::Object(live_state).to_string(),
+                injury.to_string(),
+                id,
+            ],
         )?;
     }
     Ok(())
@@ -1030,7 +1175,7 @@ pub fn advance(slot_conn: &mut Connection, content_conn: &Connection) -> anyhow:
         // (04_게임루프.md §2). 월=4주(28일)는 문서에 정확한 일수가 없어 잡은
         // placeholder — 1시즌=52주=364일은 §1에 명시.
         if today % 7 == 0 {
-            process_week(&tx, world_seed, today)?;
+            process_week(&tx, content_conn, world_seed, today)?;
         }
         if today % 28 == 0 {
             process_month(&tx, today)?;
@@ -1372,6 +1517,35 @@ mod tests {
             .query_row("SELECT w, l, t FROM standings WHERE team_id = 'team:a'", [], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)))
             .unwrap();
         assert_eq!(w_a + l_a + t_a, 1);
+    }
+
+    #[test]
+    fn process_day_accumulates_fatigue_for_the_starting_pitcher_and_batters() {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:x', NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:a', 'league:x', NULL, NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:b', 'league:x', NULL, NULL)", []).unwrap();
+
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_minimal_roster(&slot_conn, "team:a");
+        insert_minimal_roster(&slot_conn, "team:b");
+        slot_conn
+            .execute("INSERT INTO schedule (game_id, day, home, away, result) VALUES ('game:1', 10, 'team:a', 'team:b', NULL)", [])
+            .unwrap();
+
+        process_day(&slot_conn, &content_conn, 777, 10).unwrap();
+
+        let pitcher_fatigue: f64 = slot_conn
+            .query_row("SELECT live_state FROM npc WHERE id = 'team:a_sp'", [], |r| r.get::<_, String>(0))
+            .map(|raw| serde_json::from_str::<serde_json::Value>(&raw).unwrap().get("피로도").unwrap().as_f64().unwrap())
+            .unwrap();
+        assert!(pitcher_fatigue > 0.0, "starting pitcher should accumulate fatigue after pitching");
+
+        let batter_fatigue: f64 = slot_conn
+            .query_row("SELECT live_state FROM npc WHERE id = 'team:a_b0'", [], |r| r.get::<_, String>(0))
+            .map(|raw| serde_json::from_str::<serde_json::Value>(&raw).unwrap().get("피로도").unwrap().as_f64().unwrap())
+            .unwrap();
+        assert!(batter_fatigue > 0.0, "batter in the lineup pool should accumulate fatigue after the game");
     }
 
     #[test]
@@ -1749,6 +1923,7 @@ mod tests {
 
     #[test]
     fn process_week_grows_active_npc_stats_over_many_weeks() {
+        let content_conn = content::open_in_memory().unwrap();
         let slot_conn = slot::open_in_memory().unwrap();
         insert_test_player(
             &slot_conn,
@@ -1759,7 +1934,7 @@ mod tests {
         );
 
         for week in 0..30i64 {
-            process_week(&slot_conn, 1234, week * 7).unwrap();
+            process_week(&slot_conn, &content_conn, 1234, week * 7).unwrap();
         }
 
         let stats = read_stats(&slot_conn, "npc:grow1");
@@ -1771,6 +1946,7 @@ mod tests {
 
     #[test]
     fn process_week_skips_retired_players() {
+        let content_conn = content::open_in_memory().unwrap();
         let slot_conn = slot::open_in_memory().unwrap();
         let initial = serde_json::json!({"파워": 20.0, "스피드": 20.0, "체력": 20.0, "컨택": 20.0, "선구안": 20.0, "수비": 20.0, "클러치": 20.0, "침착함": 20.0, "리더십": 20.0, "천재성": 80.0, "인성": 50.0, "성실함": 50.0});
         slot_conn
@@ -1782,10 +1958,78 @@ mod tests {
             .unwrap();
 
         for week in 0..30i64 {
-            process_week(&slot_conn, 1234, week * 7).unwrap();
+            process_week(&slot_conn, &content_conn, 1234, week * 7).unwrap();
         }
 
         let stats = read_stats(&slot_conn, "npc:retired1");
         assert_eq!(stats, initial, "retired player's stats should never change");
+    }
+
+    fn read_injury(conn: &Connection, id: &str) -> serde_json::Value {
+        let raw: String = conn.query_row("SELECT injury FROM npc WHERE id = ?1", [id], |r| r.get(0)).unwrap();
+        serde_json::from_str(&raw).unwrap()
+    }
+
+    #[test]
+    fn process_week_records_overuse_injury_for_fatigued_sparta_players() {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:x', NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:sparta', 'league:x', NULL, NULL)", []).unwrap();
+        content_conn
+            .execute(
+                "INSERT INTO team_traits (team_id, philosophy, resource, status) VALUES ('team:sparta', '스파르타(혹독훈련)', '안정', '중견')",
+                [],
+            )
+            .unwrap();
+
+        let slot_conn = slot::open_in_memory().unwrap();
+        for i in 0..50 {
+            let id = format!("npc:fatigued{i}");
+            slot_conn
+                .execute(
+                    "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches, injury)
+                     VALUES (?1, ?1, 'team:sparta', '타자', 25, 1, 0, 50.0, '{}', ?2, '{}', ?3, NULL, ?4)",
+                    params![
+                        id,
+                        serde_json::json!({"파워": 50.0, "스피드": 50.0, "체력": 50.0, "컨택": 50.0, "선구안": 50.0, "수비": 50.0, "클러치": 50.0, "침착함": 50.0, "리더십": 50.0, "천재성": 50.0, "인성": 50.0, "성실함": 50.0}).to_string(),
+                        serde_json::json!({"피로도": 100.0, "사기": 50.0}).to_string(),
+                        serde_json::json!({"current": null, "history": []}).to_string(),
+                    ],
+                )
+                .unwrap();
+        }
+
+        process_week(&slot_conn, &content_conn, 555, 7).unwrap();
+
+        let injured_count: usize = (0..50)
+            .filter(|i| {
+                let injury = read_injury(&slot_conn, &format!("npc:fatigued{i}"));
+                !injury.get("history").unwrap().as_array().unwrap().is_empty()
+            })
+            .count();
+        assert!(injured_count > 0, "expected at least one overuse injury among 50 heavily-fatigued sparta players");
+    }
+
+    #[test]
+    fn process_week_applies_aging_decline_to_physical_stats_only() {
+        let content_conn = content::open_in_memory().unwrap();
+        let slot_conn = slot::open_in_memory().unwrap();
+        slot_conn
+            .execute(
+                "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches, injury)
+                 VALUES ('npc:veteran', '베테랑', 'team:a', '선발투수', 35, 1, 0, 50.0, '{}', ?1, '{}', '{}', NULL, ?2)",
+                params![
+                    serde_json::json!({"구속": 50.0, "체력": 50.0, "회복력": 50.0, "제구": 50.0, "구위": 50.0, "경기운영": 50.0, "클러치": 50.0, "침착함": 50.0, "리더십": 50.0, "천재성": 20.0, "인성": 50.0, "성실함": 50.0}).to_string(),
+                    serde_json::json!({"current": null, "history": []}).to_string(),
+                ],
+            )
+            .unwrap();
+
+        process_week(&slot_conn, &content_conn, 1, 7).unwrap();
+
+        let stats = read_stats(&slot_conn, "npc:veteran");
+        let velocity = stats.get("구속").unwrap().as_f64().unwrap();
+        assert!((velocity - 49.95).abs() < 1e-9, "physical stat should decline for a 35yo past decline start age, got {velocity}");
+        assert_eq!(stats.get("제구").unwrap().as_f64().unwrap(), 50.0, "technical stat must not decline");
     }
 }

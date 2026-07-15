@@ -62,6 +62,56 @@ pub fn apply_weekly_growth(rng: &mut impl Rng, exposed: &[&str; 9], stats: &mut 
     }
 }
 
+/// [01_선수_능력치](../../../02_기획/육성코어/01_선수_능력치.md) §2·§3의
+/// "피지컬" 카테고리 3종 — [04_성장_곡선](../../../02_기획/육성코어/04_성장_곡선.md)
+/// §3이 "피지컬은 먼저 꺾이고 기술·멘탈은 유지·성장 가능"이라 확정한 대로,
+/// 하락(노쇠)은 이 서브셋에만 적용된다.
+pub const PITCHER_PHYSICAL: [&str; 3] = ["구속", "체력", "회복력"];
+pub const BATTER_PHYSICAL: [&str; 3] = ["파워", "스피드", "체력"];
+
+fn physical_stats_for(position: &str) -> &'static [&'static str; 3] {
+    if position == "선발투수" || position == "구원투수" {
+        &PITCHER_PHYSICAL
+    } else {
+        &BATTER_PHYSICAL
+    }
+}
+
+const STAT_FLOOR: f64 = 20.0;
+
+/// 하락 시작 나이 기본값 — §5 "정확한 하락률은 스탯 스케일 확정 후"라
+/// placeholder. 부상 이력(가중합, `sim::injury::severity_weight` 누적)이
+/// 많을수록 앞당겨지고(§4 "부상 이력 누적될수록 조기 하락"), 성실함이
+/// 높을수록 늦춰진다(§4 "성실함... 자기관리 잘하는 선수는 하락 지연").
+const BASE_DECLINE_START_AGE: f64 = 30.0;
+const MIN_DECLINE_START_AGE: f64 = 22.0;
+
+fn decline_start_age(injury_weight: f64, conscientiousness: f64) -> f64 {
+    let injury_penalty = injury_weight * 0.3;
+    let conscientious_bonus = (conscientiousness - 50.0) / 50.0 * 2.0;
+    (BASE_DECLINE_START_AGE - injury_penalty + conscientious_bonus).max(MIN_DECLINE_START_AGE)
+}
+
+/// 주간 하락률 — placeholder(§5 "하락기 정확한 하락률(연간 몇% 등)은 스탯
+/// 스케일 확정 후"). 하한은 [01_선수_능력치](../../../02_기획/육성코어/01_선수_능력치.md)
+/// §7의 스케일 최저치 20.
+const WEEKLY_DECLINE_RATE: f64 = 0.05;
+
+/// 나이가 개인별 하락 시작 연령을 넘긴 선수의 피지컬 스탯 3종을 매주
+/// 소폭 낮춘다(§3 "하락기 — 나이 → 노쇠"). 기술·멘탈 스탯은 이 함수가
+/// 건드리지 않음 — `apply_weekly_growth`가 계속 그쪽을 성장시킨다
+/// (같은 주에 두 함수를 순서대로 호출하면 §1 "상승분과 하락분의 순합이
+/// 그 해 변화"가 자연히 성립).
+pub fn apply_aging_decline(position: &str, age: i64, stats: &mut Map<String, Value>, injury_weight: f64, conscientiousness: f64) {
+    if (age as f64) < decline_start_age(injury_weight, conscientiousness) {
+        return;
+    }
+    for stat in physical_stats_for(position) {
+        let v = stats.get(*stat).and_then(|x| x.as_f64()).unwrap_or(STAT_FLOOR);
+        stats.insert((*stat).to_string(), Value::from((v - WEEKLY_DECLINE_RATE).max(STAT_FLOOR)));
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -152,6 +202,59 @@ mod tests {
         for stat in BATTER_EXPOSED {
             let v = stats.get(stat).unwrap().as_f64().unwrap();
             assert!((69.9..=71.0).contains(&v), "{stat} moved further than one week of XP allows: {v}");
+        }
+    }
+
+    #[test]
+    fn no_decline_before_start_age() {
+        let mut stats = stats_at(50.0, &PITCHER_EXPOSED);
+        apply_aging_decline("선발투수", 25, &mut stats, 0.0, 50.0);
+        assert_eq!(stats.get("구속").unwrap().as_f64().unwrap(), 50.0);
+    }
+
+    #[test]
+    fn decline_only_touches_physical_stats() {
+        let mut stats = stats_at(50.0, &PITCHER_EXPOSED);
+        apply_aging_decline("선발투수", 35, &mut stats, 0.0, 50.0);
+
+        for stat in PITCHER_PHYSICAL {
+            assert!(stats.get(stat).unwrap().as_f64().unwrap() < 50.0, "{stat} should have declined");
+        }
+        for stat in ["제구", "구위", "경기운영", "클러치", "침착함", "리더십"] {
+            assert_eq!(stats.get(stat).unwrap().as_f64().unwrap(), 50.0, "{stat} (technical/mental) must not decline");
+        }
+    }
+
+    #[test]
+    fn higher_injury_weight_brings_decline_start_earlier() {
+        let mut low_injury = stats_at(50.0, &PITCHER_EXPOSED);
+        apply_aging_decline("선발투수", 28, &mut low_injury, 0.0, 50.0);
+        let mut high_injury = stats_at(50.0, &PITCHER_EXPOSED);
+        apply_aging_decline("선발투수", 28, &mut high_injury, 20.0, 50.0);
+
+        assert_eq!(low_injury.get("구속").unwrap().as_f64().unwrap(), 50.0, "no injury history -> too young to decline yet");
+        assert!(high_injury.get("구속").unwrap().as_f64().unwrap() < 50.0, "heavy injury history should push decline earlier");
+    }
+
+    #[test]
+    fn higher_conscientiousness_delays_decline() {
+        let mut low_c = stats_at(50.0, &PITCHER_EXPOSED);
+        apply_aging_decline("선발투수", 30, &mut low_c, 0.0, 20.0);
+        let mut high_c = stats_at(50.0, &PITCHER_EXPOSED);
+        apply_aging_decline("선발투수", 30, &mut high_c, 0.0, 80.0);
+
+        assert!(low_c.get("구속").unwrap().as_f64().unwrap() < 50.0, "low conscientiousness -> already declining at 30");
+        assert_eq!(high_c.get("구속").unwrap().as_f64().unwrap(), 50.0, "high conscientiousness delays decline past 30");
+    }
+
+    #[test]
+    fn decline_never_drops_below_stat_floor() {
+        let mut stats = stats_at(20.05, &PITCHER_EXPOSED);
+        for _ in 0..100 {
+            apply_aging_decline("선발투수", 40, &mut stats, 0.0, 50.0);
+        }
+        for stat in PITCHER_PHYSICAL {
+            assert!(stats.get(stat).unwrap().as_f64().unwrap() >= 20.0);
         }
     }
 }

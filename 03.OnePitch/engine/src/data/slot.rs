@@ -54,10 +54,30 @@ fn migration_v1(tx: &Transaction) -> anyhow::Result<()> {
     Ok(())
 }
 
-const MIGRATIONS: &[Migration] = &[Migration {
-    version: 1,
-    up: migration_v1,
-}];
+const V2_DDL: &str = r#"
+ALTER TABLE npc ADD COLUMN injury TEXT;
+"#;
+
+/// I5 5차분(부상 시스템) — npc.injury는 `{"current": null|{...}, "history": [...]}`
+/// 형태(08_부상_시스템.md). 신규 생성되는 NPC는 항상 값을 채워 넣지만
+/// (repository::generate_league_roster), 컬럼 자체엔 NOT NULL을 안 걸어
+/// 기존 스키마 관례(다른 npc 컬럼도 전부 nullable TEXT)를 따름.
+fn migration_v2(tx: &Transaction) -> anyhow::Result<()> {
+    tx.execute_batch(V2_DDL)?;
+    tx.execute("UPDATE meta SET save_version = 2", [])?;
+    Ok(())
+}
+
+const MIGRATIONS: &[Migration] = &[
+    Migration {
+        version: 1,
+        up: migration_v1,
+    },
+    Migration {
+        version: 2,
+        up: migration_v2,
+    },
+];
 
 fn init(mut conn: Connection) -> anyhow::Result<Connection> {
     conn.pragma_update(None, "foreign_keys", true)?;
@@ -83,7 +103,20 @@ mod tests {
         let save_version: i64 = conn
             .query_row("SELECT save_version FROM meta", [], |row| row.get(0))
             .unwrap();
-        assert_eq!(save_version, 1);
+        assert_eq!(save_version, 2);
+    }
+
+    #[test]
+    fn v2_adds_injury_column_to_npc() {
+        let conn = open_in_memory().unwrap();
+        conn.execute(
+            "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches, injury)
+             VALUES ('npc:x', 'X', 'team:x', '타자', 20, 1, 0, 50.0, '{}', '{}', '{}', '{}', NULL, '{\"current\":null,\"history\":[]}')",
+            [],
+        )
+        .unwrap();
+        let injury: String = conn.query_row("SELECT injury FROM npc WHERE id = 'npc:x'", [], |r| r.get(0)).unwrap();
+        assert_eq!(injury, "{\"current\":null,\"history\":[]}");
     }
 
     #[test]
