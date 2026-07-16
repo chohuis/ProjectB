@@ -291,32 +291,57 @@ pub fn set_protagonist_training(
 }
 
 /// 주인공 주간 훈련 적용 — `process_week`(NPC 전용)과 별도로 둔다(협/한
-/// 주인공은 `npc` 테이블에 없어 그쪽 쿼리에 안 걸림). 훈련 설정을 한
-/// 번도 안 했으면(§`training IS NULL`) 조용히 아무 것도 안 함 — 플레이어가
-/// 최소 1회는 설정해야 성장이 시작된다는 뜻이라 첫 세션엔 자연스러운
-/// "아직 훈련 계획을 안 짰다"는 상태.
-fn process_protagonist_week(slot_conn: &Connection, world_seed: i64, day: i64) -> anyhow::Result<()> {
-    let row: Option<(String, String, String, Option<String>, String, String)> = slot_conn
-        .query_row("SELECT stats, xp, live_state, training, pitches, contract FROM protagonist WHERE id = 'proto:1'", [], |r| {
-            Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?, r.get(4)?, r.get(5)?))
+/// 주인공은 `npc` 테이블에 없어 그쪽 쿼리에 안 걸림). 부상 완치 처리·
+/// 누적형(과사용) 부상 체크(08_부상_시스템.md §3 "체크 시점 = 매주")는
+/// 훈련 설정 여부와 무관하게 항상 적용 — NPC(`process_week`)와 동일한
+/// 무조건(ungated) 주간 롤이고, 이중 부상 방지는 `apply_injury` 내부
+/// 가드가 담당한다. 그 아래 훈련 XP 적용은 훈련 설정을 한 번도 안 했으면
+/// (`training IS NULL`) 조용히 건너뜀 — 플레이어가 최소 1회는 설정해야
+/// 성장이 시작된다는 뜻이라 첫 세션엔 자연스러운 "아직 훈련 계획을 안
+/// 짰다"는 상태.
+#[allow(clippy::type_complexity)]
+fn process_protagonist_week(slot_conn: &Connection, content_conn: &Connection, world_seed: i64, day: i64) -> anyhow::Result<()> {
+    let row: Option<(String, String, String, Option<String>, String, String, String)> = slot_conn
+        .query_row("SELECT stats, xp, live_state, training, pitches, contract, injury FROM protagonist WHERE id = 'proto:1'", [], |r| {
+            Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?, r.get(4)?, r.get(5)?, r.get(6)?))
         })
         .optional()?;
-    let Some((stats_raw, xp_raw, live_state_raw, training_raw, pitches_raw, contract_raw)) = row else {
+    let Some((stats_raw, xp_raw, live_state_raw, training_raw, pitches_raw, contract_raw, injury_raw)) = row else {
         return Ok(()); // 아직 캐릭터 생성 전
     };
+
+    let mut live_state: serde_json::Map<String, serde_json::Value> = serde_json::from_str(&live_state_raw)?;
+    let contract: serde_json::Value = serde_json::from_str(&contract_raw)?;
+    let team_id = contract.get("team_id").and_then(|v| v.as_str()).map(str::to_string);
+
+    let mut injury: serde_json::Value = serde_json::from_str(&injury_raw)?;
+    clear_healed_injury(&mut injury, day);
+    update_protagonist_injury(slot_conn, &injury)?;
+
+    let philosophy = match &team_id {
+        Some(t) => content_conn
+            .query_row("SELECT philosophy FROM team_traits WHERE team_id = ?1", [t], |r| r.get::<_, String>(0))
+            .optional()?
+            .unwrap_or_default(),
+        None => String::new(),
+    };
+    let fatigue_before_training = live_state.get("피로도").and_then(|v| v.as_f64()).unwrap_or(0.0);
+    let mut injury_rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("injury:proto:{day}")));
+    if let Some((part, severity)) = crate::sim::injury::check_overuse_injury(&mut injury_rng, fatigue_before_training, &philosophy) {
+        apply_injury(slot_conn, part, severity, day)?;
+    }
+
     let Some(training_raw) = training_raw else {
         return Ok(()); // 훈련 설정을 아직 한 번도 안 함
     };
 
     let mut stats: serde_json::Map<String, serde_json::Value> = serde_json::from_str(&stats_raw)?;
     let mut xp: serde_json::Map<String, serde_json::Value> = serde_json::from_str(&xp_raw)?;
-    let mut live_state: serde_json::Map<String, serde_json::Value> = serde_json::from_str(&live_state_raw)?;
     let mut training: serde_json::Value = serde_json::from_str(&training_raw)?;
 
     let genius = stats.get("천재성").and_then(|v| v.as_f64()).unwrap_or(50.0);
 
-    let contract: serde_json::Value = serde_json::from_str(&contract_raw)?;
-    let has_upcoming_start = match contract.get("team_id").and_then(|v| v.as_str()) {
+    let has_upcoming_start = match team_id.as_deref() {
         Some(team_id) => {
             slot_conn.query_row(
                 "SELECT count(*) FROM schedule WHERE (home = ?1 OR away = ?1) AND day BETWEEN ?2 AND ?3",
@@ -532,14 +557,6 @@ pub fn sign_contract(_conn: &Connection, _team_id: &str) -> anyhow::Result<()> {
 }
 
 pub fn negotiate_salary(_conn: &Connection, _team_id: &str) -> anyhow::Result<()> {
-    todo!()
-}
-
-pub fn apply_injury(_conn: &Connection, _npc_id: &str) -> anyhow::Result<()> {
-    todo!()
-}
-
-pub fn treat(_conn: &Connection, _npc_id: &str) -> anyhow::Result<()> {
     todo!()
 }
 
@@ -1271,10 +1288,12 @@ pub fn run_hs_gukhwa(slot_conn: &Connection, content_conn: &Connection, world_se
 /// (04_성장_곡선.md §5 "부상 이력이 어떻게 반영되는지 — 08_부상_시스템
 /// 확정 후") 08_부상_시스템 구현과 함께 다음 서브분에서 묶어 처리.
 /// injury JSON(`{"current": ..., "history": [...]}`)에 새 부상을 기록 —
-/// 같은 부위 재발이면 심각도 자동 한 단계 상승(08_부상_시스템.md §5),
-/// 치료법은 감독/매니저 AI가 아직 없어 항상 "재활"(중간 옵션)로 고정하는
-/// placeholder(§4 — "무리한 복귀"·"수술" 선택은 실제 의사결정 주체가
-/// 필요해 I6 이후 스코프). 예상 복귀일 = day + 심각도별 이탈기간.
+/// 같은 부위 재발이면 심각도 자동 한 단계 상승(08_부상_시스템.md §5).
+/// 치료법은 일단 항상 "재활"(중간 옵션)로 채워둔다 — NPC는 실제 의사결정
+/// 주체가 없어 이 기본값 그대로 확정되지만(`apply_injury_events`), 주인공은
+/// `apply_injury`가 이 함수 호출 직후 `치료`를 `null`로 되돌려 §4 세 옵션
+/// 중 하나를 플레이어가 직접 고르게 한다(`injuryTreatment` PendingAction).
+/// 예상 복귀일 = day + 심각도별 이탈기간(치료법 확정 시 `treat`가 재계산).
 fn record_injury(injury: &mut serde_json::Value, part: &str, severity: &str, day: i64) {
     let obj = injury.as_object_mut().expect("injury must be a JSON object");
     if !obj.contains_key("history") {
@@ -1327,6 +1346,94 @@ pub(crate) fn apply_injury_events(conn: &Connection, injuries: &[match_sim::Inju
         record_injury(&mut injury, event.part, event.severity, day);
         conn.execute("UPDATE npc SET injury = ?1 WHERE id = ?2", params![injury.to_string(), event.player_id])?;
     }
+    Ok(())
+}
+
+/// 회복일이 지난 부상을 완치 처리 — `current`를 `null`로(사고 이력인
+/// `history`는 그대로 유지). NPC(`process_week`, 치료 자동 "재활")·주인공
+/// (`process_protagonist_week`, 치료 직접 선택) 양쪽 다 "복귀일이 되면
+/// current가 비워진다"는 전제를 공유해 함수 하나로 처리한다.
+fn clear_healed_injury(injury: &mut serde_json::Value, day: i64) {
+    let healed = injury
+        .get("current")
+        .filter(|c| !c.is_null())
+        .and_then(|c| c.get("return_day"))
+        .and_then(|v| v.as_i64())
+        .is_some_and(|return_day| day >= return_day);
+    if healed {
+        injury["current"] = serde_json::Value::Null;
+    }
+}
+
+fn update_protagonist_injury(conn: &Connection, injury: &serde_json::Value) -> anyhow::Result<()> {
+    conn.execute("UPDATE protagonist SET injury = ?1 WHERE id = 'proto:1'", params![injury.to_string()])?;
+    Ok(())
+}
+
+/// 주인공 부상 발생 — [08_부상_시스템](../../02_기획/육성코어/08_부상_시스템.md)
+/// §4. NPC용 `apply_injury_events`(항상 "재활" 자동 확정)와 달리 실제
+/// 의사결정 주체(플레이어)가 있어 `치료`를 `null`로 남기고 `injuryTreatment`
+/// PendingAction을 만들어 §4 세 옵션 중 하나를 직접 고르게 한다. 이미
+/// 처리 중인 부상(`current`가 `null`이 아님 — 치료 미선택 또는 회복 중)이
+/// 있으면 새 판정을 스킵 — 이중 부상과 PendingAction 중복 생성을 함께
+/// 막는다.
+pub fn apply_injury(conn: &Connection, part: &str, severity: &str, day: i64) -> anyhow::Result<()> {
+    let injury_raw: String = conn.query_row("SELECT injury FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0))?;
+    let mut injury: serde_json::Value = serde_json::from_str(&injury_raw)?;
+    if !injury.get("current").map(serde_json::Value::is_null).unwrap_or(true) {
+        return Ok(());
+    }
+
+    record_injury(&mut injury, part, severity, day);
+    injury["current"]["치료"] = serde_json::Value::Null;
+    update_protagonist_injury(conn, &injury)?;
+
+    let final_severity = injury["current"]["심각도"].as_str().unwrap_or(severity).to_string();
+    let payload = serde_json::json!({"부위": part, "심각도": final_severity, "day": day}).to_string();
+    conn.execute(
+        "INSERT INTO pending_actions (id, type, urgency, created_day, payload) VALUES (?1, 'injuryTreatment', 'urgent', ?2, ?3)",
+        params![format!("injury:{day}"), day, payload],
+    )?;
+    Ok(())
+}
+
+/// `injuryTreatment` PendingAction 응답 처리 — §4 세 치료 옵션의 트레이드
+/// 오프(이탈기간·재발위험·완치도)를 실제 수치로 확정한다. 수술은 성공률
+/// <100%(§4 "합병증 리스크") — 실패 시 심각도가 `escalate_severity`로 한
+/// 단계 악화. 무리한 복귀는 "재발위험 매우 높음"을 즉시 악화 판정으로
+/// 표현(`sim::injury::rushed_return_aggravates`). 재활은 기준점이라 추가
+/// 판정 없음.
+pub fn treat(conn: &Connection, world_seed: i64, treatment: &str, day: i64) -> anyhow::Result<()> {
+    if !crate::sim::injury::TREATMENTS.contains(&treatment) {
+        anyhow::bail!("unknown treatment: {treatment}");
+    }
+    let injury_raw: String = conn.query_row("SELECT injury FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0))?;
+    let mut injury: serde_json::Value = serde_json::from_str(&injury_raw)?;
+    let current = injury
+        .get_mut("current")
+        .filter(|c| !c.is_null())
+        .and_then(|c| c.as_object_mut())
+        .ok_or_else(|| anyhow::anyhow!("no active injury to treat"))?;
+
+    let mut severity = current.get("심각도").and_then(|v| v.as_str()).unwrap_or("경미").to_string();
+    let start_day = current.get("start_day").and_then(|v| v.as_i64()).unwrap_or(day);
+
+    let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("treat:{day}")));
+    let worsens = match treatment {
+        "수술" => !crate::sim::injury::surgery_succeeds(&mut rng, &severity),
+        "무리한 복귀" => crate::sim::injury::rushed_return_aggravates(&mut rng, &severity),
+        _ => false,
+    };
+    if worsens {
+        severity = crate::sim::injury::escalate_severity(&severity).to_string();
+    }
+
+    let return_day = start_day + crate::sim::injury::treated_recovery_days(&severity, treatment);
+    current.insert("치료".to_string(), serde_json::json!(treatment));
+    current.insert("심각도".to_string(), serde_json::json!(severity));
+    current.insert("return_day".to_string(), serde_json::json!(return_day));
+
+    update_protagonist_injury(conn, &injury)?;
     Ok(())
 }
 
@@ -1383,6 +1490,7 @@ fn process_week(conn: &Connection, content_conn: &Connection, world_seed: i64, d
         let mut live_state: serde_json::Map<String, serde_json::Value> = serde_json::from_str(&live_state_raw)?;
         let mut injury: serde_json::Value =
             injury_raw.and_then(|s| serde_json::from_str(&s).ok()).unwrap_or_else(|| serde_json::json!({"current": null, "history": []}));
+        clear_healed_injury(&mut injury, day);
 
         if let Some(return_day) = military_return_day {
             if day >= return_day {
@@ -1573,7 +1681,7 @@ pub fn advance(slot_conn: &mut Connection, content_conn: &Connection) -> anyhow:
         // placeholder — 1시즌=52주=364일은 §1에 명시.
         if today % 7 == 0 {
             process_week(&tx, content_conn, world_seed, today)?;
-            process_protagonist_week(&tx, world_seed, today)?;
+            process_protagonist_week(&tx, content_conn, world_seed, today)?;
         }
         if today % 28 == 0 {
             process_month(&tx, today)?;
@@ -1638,6 +1746,11 @@ pub fn resolve_choice(
                 choice_id.split_once(':').ok_or_else(|| anyhow::anyhow!("expected 'pitch_name:course' choice_id, got {choice_id}"))?;
             let course = crate::sim::pitch::Course::parse(course_name).ok_or_else(|| anyhow::anyhow!("unknown course: {course_name}"))?;
             Some(match_session::submit_pitch(slot_conn, world_seed, pitch_name, course)?)
+        }
+        "injuryTreatment" => {
+            let today: i64 = slot_conn.query_row("SELECT current_day FROM meta", [], |r| r.get(0))?;
+            treat(slot_conn, world_seed, choice_id, today)?;
+            None
         }
         _ => None,
     };
@@ -1808,7 +1921,7 @@ mod tests {
 
         let before: String = slot_conn.query_row("SELECT stats FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
         for week in 0..10i64 {
-            process_protagonist_week(&slot_conn, 1, week * 7).unwrap();
+            process_protagonist_week(&slot_conn, &content_conn, 1, week * 7).unwrap();
         }
         let after: String = slot_conn.query_row("SELECT stats FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
         assert_eq!(before, after, "no training config set -> stats should never change");
@@ -1822,7 +1935,7 @@ mod tests {
         set_protagonist_training(&slot_conn, "구속", ["구위", "경기운영"], "보통", None).unwrap();
 
         for week in 0..30i64 {
-            process_protagonist_week(&slot_conn, 1, week * 7).unwrap();
+            process_protagonist_week(&slot_conn, &content_conn, 1, week * 7).unwrap();
         }
 
         let stats_raw: String = slot_conn.query_row("SELECT stats FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
@@ -1841,7 +1954,7 @@ mod tests {
 
         // "강" 강도는 sim::training::weeks_required_to_learn_pitch("강") == 8주.
         for week in 0..8i64 {
-            process_protagonist_week(&slot_conn, 1, week * 7).unwrap();
+            process_protagonist_week(&slot_conn, &content_conn, 1, week * 7).unwrap();
         }
 
         let pitches_raw: String = slot_conn.query_row("SELECT pitches FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
@@ -1863,13 +1976,178 @@ mod tests {
             .execute("INSERT INTO schedule (game_id, day, home, away, result) VALUES ('game:1', 3, 'team:hanseong_hs', 'team:y', NULL)", [])
             .unwrap();
 
-        process_protagonist_week(&slot_conn, 1, 0).unwrap();
+        process_protagonist_week(&slot_conn, &content_conn, 1, 0).unwrap();
 
         let live_state_raw: String = slot_conn.query_row("SELECT live_state FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
         let live_state: serde_json::Value = serde_json::from_str(&live_state_raw).unwrap();
         let fatigue = live_state.get("피로도").unwrap().as_f64().unwrap();
         // "강"이었다면 +8이어야 하지만, 등판 예정 주라 "보통"으로 캡돼 +0.
         assert_eq!(fatigue, 0.0, "requested 강 during a start week should be capped to 보통 (no fatigue increase)");
+    }
+
+    fn read_protagonist_injury(conn: &Connection) -> serde_json::Value {
+        let raw: String = conn.query_row("SELECT injury FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+        serde_json::from_str(&raw).unwrap()
+    }
+
+    #[test]
+    fn apply_injury_creates_pending_treatment_action_and_leaves_treatment_unset() {
+        let content_conn = build_hs_school_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        create_protagonist(&slot_conn, &content_conn, 1, "부상테스트", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
+
+        apply_injury(&slot_conn, "어깨", "중등", 10).unwrap();
+
+        let injury = read_protagonist_injury(&slot_conn);
+        assert_eq!(injury["current"]["부위"], "어깨");
+        assert_eq!(injury["current"]["심각도"], "중등");
+        assert!(injury["current"]["치료"].is_null(), "치료법은 플레이어가 고를 때까지 미정이어야 함");
+
+        let pending = list_pending_actions(&slot_conn).unwrap();
+        assert_eq!(pending.len(), 1);
+        assert_eq!(pending[0].kind, "injuryTreatment");
+        assert_eq!(pending[0].created_day, 10);
+    }
+
+    #[test]
+    fn apply_injury_skips_if_protagonist_already_has_unresolved_injury() {
+        let content_conn = build_hs_school_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        create_protagonist(&slot_conn, &content_conn, 1, "이중부상", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
+
+        apply_injury(&slot_conn, "어깨", "경미", 5).unwrap();
+        apply_injury(&slot_conn, "팔꿈치", "중상", 6).unwrap();
+
+        let injury = read_protagonist_injury(&slot_conn);
+        assert_eq!(injury["current"]["부위"], "어깨", "이미 미해결 부상이 있으면 두 번째 판정은 무시돼야 함");
+
+        let pending = list_pending_actions(&slot_conn).unwrap();
+        assert_eq!(pending.len(), 1, "PendingAction도 중복 생성되면 안 됨");
+    }
+
+    #[test]
+    fn treat_rejects_unknown_treatment() {
+        let content_conn = build_hs_school_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        create_protagonist(&slot_conn, &content_conn, 1, "치료테스트", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
+        apply_injury(&slot_conn, "어깨", "경미", 1).unwrap();
+
+        assert!(treat(&slot_conn, 1, "굿판", 1).is_err());
+    }
+
+    #[test]
+    fn treat_errors_without_an_active_injury() {
+        let content_conn = build_hs_school_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        create_protagonist(&slot_conn, &content_conn, 1, "무부상", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
+
+        assert!(treat(&slot_conn, 1, "재활", 1).is_err());
+    }
+
+    #[test]
+    fn treat_rehab_uses_baseline_recovery_without_extra_rolls() {
+        let content_conn = build_hs_school_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        create_protagonist(&slot_conn, &content_conn, 1, "재활테스트", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
+        apply_injury(&slot_conn, "어깨", "중등", 10).unwrap();
+
+        treat(&slot_conn, 1, "재활", 10).unwrap();
+
+        let injury = read_protagonist_injury(&slot_conn);
+        assert_eq!(injury["current"]["치료"], "재활");
+        assert_eq!(injury["current"]["심각도"], "중등", "재활은 추가 악화 판정이 없어 심각도가 그대로 유지돼야 함");
+        assert_eq!(injury["current"]["return_day"], 10 + crate::sim::injury::recovery_days("중등"));
+    }
+
+    #[test]
+    fn treat_surgery_either_keeps_or_escalates_severity_and_recomputes_return_day() {
+        let content_conn = build_hs_school_content_db();
+        for seed in 0..30i64 {
+            let slot_conn = slot::open_in_memory().unwrap();
+            create_protagonist(&slot_conn, &content_conn, 1, "수술테스트", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
+            apply_injury(&slot_conn, "팔꿈치", "경미", 0).unwrap();
+            treat(&slot_conn, seed, "수술", 0).unwrap();
+
+            let injury = read_protagonist_injury(&slot_conn);
+            let severity = injury["current"]["심각도"].as_str().unwrap().to_string();
+            assert!(severity == "경미" || severity == "중등", "수술은 경미를 유지하거나 중등으로 악화만 가능, got {severity}");
+            let expected_return = crate::sim::injury::treated_recovery_days(&severity, "수술");
+            assert_eq!(injury["current"]["return_day"].as_i64().unwrap(), expected_return);
+        }
+    }
+
+    #[test]
+    fn treat_rushed_return_has_a_shorter_average_recovery_window_than_rehab() {
+        let content_conn = build_hs_school_content_db();
+        let recovery_total = |treatment: &str| -> i64 {
+            (0..30i64)
+                .map(|seed| {
+                    let slot_conn = slot::open_in_memory().unwrap();
+                    create_protagonist(&slot_conn, &content_conn, 1, "비교", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
+                    apply_injury(&slot_conn, "다리/무릎", "중등", 0).unwrap();
+                    treat(&slot_conn, seed, treatment, 0).unwrap();
+                    read_protagonist_injury(&slot_conn)["current"]["return_day"].as_i64().unwrap()
+                })
+                .sum()
+        };
+        let rushed_total = recovery_total("무리한 복귀");
+        let rehab_total = recovery_total("재활");
+        assert!(rushed_total < rehab_total, "rushed={rushed_total} rehab={rehab_total}");
+    }
+
+    #[test]
+    fn resolve_choice_dispatches_injury_treatment_and_applies_it() {
+        let content_conn = build_hs_school_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        create_protagonist(&slot_conn, &content_conn, 1, "치료선택", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
+        apply_injury(&slot_conn, "어깨", "경미", 3).unwrap();
+
+        let pending = list_pending_actions(&slot_conn).unwrap();
+        assert_eq!(pending.len(), 1);
+        assert_eq!(pending[0].kind, "injuryTreatment");
+
+        let step = resolve_choice(&slot_conn, &content_conn, 1, &pending[0].id, "재활").unwrap();
+        assert!(step.is_none());
+
+        let remaining: i64 = slot_conn.query_row("SELECT count(*) FROM pending_actions", [], |r| r.get(0)).unwrap();
+        assert_eq!(remaining, 0);
+        assert_eq!(read_protagonist_injury(&slot_conn)["current"]["치료"], "재활");
+    }
+
+    #[test]
+    fn process_protagonist_week_clears_healed_injury_once_return_day_passes() {
+        let content_conn = build_hs_school_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        create_protagonist(&slot_conn, &content_conn, 1, "완치테스트", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
+        apply_injury(&slot_conn, "어깨", "경미", 0).unwrap();
+        treat(&slot_conn, 1, "재활", 0).unwrap(); // return_day = 0 + recovery_days(경미) = 7
+
+        process_protagonist_week(&slot_conn, &content_conn, 1, 7).unwrap();
+
+        let injury = read_protagonist_injury(&slot_conn);
+        assert!(injury["current"].is_null(), "return_day가 지나면 current가 비워져야 함");
+        assert_eq!(injury["history"].as_array().unwrap().len(), 1, "history는 그대로 유지돼야 함");
+    }
+
+    #[test]
+    fn process_protagonist_week_can_trigger_overuse_injury_pending_action() {
+        let content_conn = build_hs_school_content_db();
+        let mut triggered = false;
+        for seed in 0..50i64 {
+            let slot_conn = slot::open_in_memory().unwrap();
+            create_protagonist(&slot_conn, &content_conn, 1, "과사용테스트", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
+            slot_conn
+                .execute("UPDATE protagonist SET live_state = ?1 WHERE id = 'proto:1'", params![serde_json::json!({"피로도": 100.0}).to_string()])
+                .unwrap();
+
+            process_protagonist_week(&slot_conn, &content_conn, seed, 7).unwrap();
+
+            if list_pending_actions(&slot_conn).unwrap().iter().any(|p| p.kind == "injuryTreatment") {
+                triggered = true;
+                break;
+            }
+        }
+        assert!(triggered, "expected at least one seed to trigger an overuse injury at fatigue=100");
     }
 
     #[test]

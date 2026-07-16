@@ -326,6 +326,7 @@ pub fn submit_pitch(slot_conn: &Connection, world_seed: i64, pitch_name: &str, c
 /// 제출된 선택 — 있으면 이번 루프의 **첫 판정에만** 소비되고, 이후
 /// 반복에서는 다시 정상적인 AI/프롬프트 로직을 탄다.
 fn run_until_decision_point(slot_conn: &Connection, world_seed: i64, mut player_pitch: Option<(String, Course)>) -> anyhow::Result<MatchStepResult> {
+    let today: i64 = slot_conn.query_row("SELECT current_day FROM meta", [], |r| r.get(0))?;
     let protagonist_team_id: String = {
         let contract_raw: String = slot_conn.query_row("SELECT contract FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0))?;
         let contract: serde_json::Value = serde_json::from_str(&contract_raw)?;
@@ -367,7 +368,7 @@ fn run_until_decision_point(slot_conn: &Connection, world_seed: i64, mut player_
             ));
             let mut injuries = Vec::new();
             let runs = match_sim::simulate_half_inning(&mut rng, &lineup, &mut idx, &pitcher, session.bases, &mut injuries);
-            repository::apply_injury_events(slot_conn, &injuries, 0)?;
+            repository::apply_injury_events(slot_conn, &injuries, today)?;
             repository::accumulate_game_fatigue(slot_conn, &batting_team)?;
             repository::accumulate_game_fatigue(slot_conn, &pitching_team)?;
 
@@ -448,7 +449,16 @@ fn run_until_decision_point(slot_conn: &Connection, world_seed: i64, mut player_
         session.strikes = count.strikes as i64;
 
         if let Some((part, severity)) = crate::sim::injury::check_acute_injury(&mut rng, batter.fatigue) {
-            repository::apply_injury_events(slot_conn, &[match_sim::InjuryEvent { player_id: batter.id.clone(), part, severity }], 0)?;
+            repository::apply_injury_events(slot_conn, &[match_sim::InjuryEvent { player_id: batter.id.clone(), part, severity }], today)?;
+        }
+        // 주인공 본인(투수)의 급성형 부상 — 07_매치_엔진.md §13·08_부상_시스템.md
+        // §3. NPC 배터와 달리 주인공은 실제 선택 주체가 있어 `apply_injury`
+        // (injuryTreatment PendingAction 생성)로 간다. "즉시 강판"은 구원투수
+        // 로테이션이 없어(선발 완투 placeholder, 이 파일 전역 전제) 이번
+        // 스코프에선 반영 안 함 — 부상은 기록되지만 이번 경기는 그대로
+        // 완투로 이어진다(배경 경기의 급성 부상도 동일하게 즉시 교체 없음).
+        if let Some((part, severity)) = crate::sim::injury::check_acute_injury(&mut rng, pitcher.fatigue) {
+            repository::apply_injury(slot_conn, part, severity, today)?;
         }
 
         match outcome {
@@ -573,6 +583,29 @@ mod tests {
         assert_eq!(season, 0);
         let detail: serde_json::Value = serde_json::from_str(&detail_raw).unwrap();
         assert!(crate::sim::eval::GRADES.contains(&detail.get("grade").unwrap().as_str().unwrap()));
+    }
+
+    #[test]
+    fn protagonist_pitcher_can_suffer_an_acute_injury_during_their_own_start() {
+        let content_conn = build_content_db();
+        let mut triggered = false;
+        for seed in 0..150i64 {
+            let slot_conn = slot::open_in_memory().unwrap();
+            insert_roster(&slot_conn, "team:home");
+            insert_roster(&slot_conn, "team:away");
+            insert_protagonist(&slot_conn, "team:home");
+            insert_schedule(&slot_conn, "game:1");
+
+            start_protagonist_match(&slot_conn, &content_conn, seed, "game:1", "team:home", "team:away", "자동").unwrap();
+
+            let injury_raw: String = slot_conn.query_row("SELECT injury FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+            let injury: serde_json::Value = serde_json::from_str(&injury_raw).unwrap();
+            if !injury["current"].is_null() {
+                triggered = true;
+                break;
+            }
+        }
+        assert!(triggered, "expected at least one seed across 150 trials to injure the protagonist pitcher during their own start");
     }
 
     #[test]

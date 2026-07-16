@@ -39,6 +39,48 @@ pub fn severity_weight(severity: &str) -> f64 {
     }
 }
 
+/// [08_부상_시스템](../../../02_기획/육성코어/08_부상_시스템.md) §4 치료
+/// 옵션 3종 — 주인공 전용(NPC는 실제 의사결정 주체가 없어 항상 "재활"
+/// 자동 확정, `data::repository::record_injury`).
+pub const TREATMENTS: [&str; 3] = ["수술", "재활", "무리한 복귀"];
+
+/// 치료법별 실제 이탈 기간 — §4 "수술=김·재활=중간·무리한 복귀=최소".
+/// `recovery_days`(심각도 기준 이탈기간, "재활"과 동일한 기준점)에 배율을
+/// 곱한 placeholder(§6 "정확한 수치는 스탯 스케일 확정 후").
+pub fn treated_recovery_days(severity: &str, treatment: &str) -> i64 {
+    let mult = match treatment {
+        "수술" => 1.8,
+        "무리한 복귀" => 0.3,
+        _ => 1.0,
+    };
+    ((recovery_days(severity) as f64) * mult).round().max(1.0) as i64
+}
+
+/// 수술 성공률 — §4 "성공 시 높음, 단 성공률<100%(합병증 리스크)". 실패
+/// 시 호출부(`data::repository::treat`)가 `escalate_severity`로 합병증을
+/// 반영한다. 심각도가 클수록 성공률이 낮아지는 placeholder.
+pub fn surgery_succeeds(rng: &mut impl Rng, severity: &str) -> bool {
+    let prob = match severity {
+        "경미" => 0.95,
+        "중등" => 0.85,
+        _ => 0.7,
+    };
+    rng.gen_bool(prob)
+}
+
+/// "무리한 복귀" 선택 시 즉시 악화 확률 — §4 "재발 위험 매우 높음"을
+/// 장기 확률 배율 대신 치료 선택 시점의 단일 판정으로 표현(스탯 스케일이
+/// 없는 지금 가장 단순하게 "재발위험 차등"을 살리는 방식). 심각도가
+/// 클수록(더 무리한 상태일수록) 악화 확률도 커짐.
+pub fn rushed_return_aggravates(rng: &mut impl Rng, severity: &str) -> bool {
+    let prob = match severity {
+        "경미" => 0.3,
+        "중등" => 0.45,
+        _ => 0.6,
+    };
+    rng.gen_bool(prob)
+}
+
 const FATIGUE_INJURY_THRESHOLD: f64 = 70.0;
 const BASE_OVERUSE_PROB: f64 = 0.05;
 
@@ -198,5 +240,63 @@ mod tests {
         let mut rng_a = ChaCha8Rng::seed_from_u64(7);
         let mut rng_b = ChaCha8Rng::seed_from_u64(7);
         assert_eq!(check_acute_injury(&mut rng_a, 80.0), check_acute_injury(&mut rng_b, 80.0));
+    }
+
+    #[test]
+    fn treated_recovery_days_matches_documented_tradeoffs() {
+        for severity in SEVERITIES {
+            let surgery = treated_recovery_days(severity, "수술");
+            let rehab = treated_recovery_days(severity, "재활");
+            let rushed = treated_recovery_days(severity, "무리한 복귀");
+            assert!(rushed < rehab, "severity={severity} rushed={rushed} rehab={rehab}");
+            assert!(rehab < surgery, "severity={severity} rehab={rehab} surgery={surgery}");
+        }
+    }
+
+    #[test]
+    fn treated_recovery_days_rehab_matches_baseline_recovery_days() {
+        for severity in SEVERITIES {
+            assert_eq!(treated_recovery_days(severity, "재활"), recovery_days(severity));
+        }
+    }
+
+    #[test]
+    fn surgery_success_rate_decreases_with_severity() {
+        let trials = 2000;
+        let count = |severity: &str| -> usize {
+            let mut hits = 0;
+            for seed in 0..trials {
+                let mut rng = ChaCha8Rng::seed_from_u64(seed);
+                if surgery_succeeds(&mut rng, severity) {
+                    hits += 1;
+                }
+            }
+            hits
+        };
+        let minor = count("경미");
+        let severe = count("중상");
+        assert!(minor > severe, "minor={minor} severe={severe}");
+    }
+
+    #[test]
+    fn rushed_return_aggravation_is_more_likely_for_worse_severity_and_deterministic() {
+        let mut rng_a = ChaCha8Rng::seed_from_u64(11);
+        let mut rng_b = ChaCha8Rng::seed_from_u64(11);
+        assert_eq!(rushed_return_aggravates(&mut rng_a, "중상"), rushed_return_aggravates(&mut rng_b, "중상"));
+
+        let trials = 2000;
+        let count = |severity: &str| -> usize {
+            let mut hits = 0;
+            for seed in 0..trials {
+                let mut rng = ChaCha8Rng::seed_from_u64(seed);
+                if rushed_return_aggravates(&mut rng, severity) {
+                    hits += 1;
+                }
+            }
+            hits
+        };
+        let minor = count("경미");
+        let severe = count("중상");
+        assert!(severe > minor, "minor={minor} severe={severe}");
     }
 }
