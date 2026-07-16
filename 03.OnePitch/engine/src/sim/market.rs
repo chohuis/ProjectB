@@ -89,6 +89,34 @@ pub fn fa_offer_count(rng: &mut impl Rng) -> usize {
     rng.gen_range(2..=4)
 }
 
+/// 일반(선수대선수) 트레이드 발생 확률 — §4-1 "NPC간 캐던스는 연 2회
+/// (트레이드 데드라인+오프시즌)"를 캘린더에 그 지점이 없어 **시즌 1회**
+/// 판정으로 단순화. 낮은 기본확률 + 궁핍한 팀일수록 로스터 정리 동기로
+/// 소폭 상승(§7류 정확한 수치 미정 placeholder).
+pub fn trade_probability(resource: &str) -> f64 {
+    let resource_mult: f64 = match resource {
+        "궁핍" => 1.4,
+        "알뜰" => 1.15,
+        "부유" => 0.7,
+        _ => 1.0,
+    };
+    (0.06 * resource_mult).clamp(0.0, 0.3)
+}
+
+/// 현금 트레이드 발생 확률 — §4-2 "발생 조건: 팀특성 ②자원=궁핍 + 주인공이
+/// 말년(노쇠기)이라 연봉 대비 가치가 떨어졌을 때". 주인공 나이 자체가
+/// 아직 트래킹 안 돼(01_커리어_구조.md §5 진로 갈림길과 함께 후속 스코프,
+/// §6-19에서 이미 확정한 것과 동일한 제약) "노쇠기" 조건은 반영 못 함 —
+/// 연봉 부담만으로 근사(`release_probability`와 같은 축). §4-2가 명시한
+/// 발생 조건 자체가 "②자원=궁핍"뿐이라 그 외 자원 축에선 0.
+pub fn cash_trade_probability(salary: i64, resource: &str) -> f64 {
+    if resource != "궁핍" {
+        return 0.0;
+    }
+    let salary_pressure = (salary as f64 / 20000.0).clamp(0.0, 1.0);
+    (0.03 + salary_pressure * 0.12).clamp(0.0, 0.2)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -169,5 +197,27 @@ mod tests {
             let n = offer_years(&mut rng);
             assert!((1..=3).contains(&n), "n={n}");
         }
+    }
+
+    #[test]
+    fn trade_probability_is_higher_for_poor_teams_than_rich_teams() {
+        let poor = trade_probability("궁핍");
+        let rich = trade_probability("부유");
+        assert!(poor > rich, "poor={poor} rich={rich}");
+    }
+
+    #[test]
+    fn cash_trade_probability_is_zero_outside_poor_teams() {
+        assert_eq!(cash_trade_probability(20000, "안정"), 0.0);
+        assert_eq!(cash_trade_probability(20000, "부유"), 0.0);
+        assert_eq!(cash_trade_probability(20000, "알뜰"), 0.0);
+    }
+
+    #[test]
+    fn cash_trade_probability_rises_with_salary_for_poor_teams() {
+        let low = cash_trade_probability(0, "궁핍");
+        let high = cash_trade_probability(20000, "궁핍");
+        assert!(high > low, "low={low} high={high}");
+        assert!(high > 0.0);
     }
 }

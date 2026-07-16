@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 
 use rand::seq::SliceRandom;
+use rand::Rng;
 use rand::SeedableRng;
 use rand_chacha::ChaCha8Rng;
 use rusqlite::{params, Connection, OptionalExtension};
@@ -1745,12 +1746,132 @@ fn resolve_contract_nego(conn: &Connection, content_conn: &Connection, world_see
     Ok(())
 }
 
+/// 주인공 트레이드 판정 — 06_시장_계약.md §4-1(선수대선수)·§4-2(현금
+/// 트레이드)·§4-3(노트레이드 조항). `process_protagonist_contract`가 이번
+/// 시즌 `contractNego`를 하나도 안 띄운 경우(방출도 재계약만료도 아니고
+/// 계약이 그대로 유지된 경우)에만 호출돼야 한다 — season_rollover가 그
+/// 순서를 보장한다. 이미 협상 중(방출→FA, 재계약만료)인 선수를 같은
+/// 시즌에 또 트레이드하면 안 되므로, 함수 자체도 `pending_actions`에
+/// `contractNego`가 있으면 방어적으로 스킵한다.
+///
+/// **적용 범위는 §1과 동일하게 프로·독립 소속뿐.** "노쇠기"(§4-2 발생
+/// 조건)는 주인공 나이 트래킹이 없어(01_커리어_구조.md §5 진로 갈림길과
+/// 함께 후속 스코프, §6-19에서 이미 확정한 것과 같은 제약) 반영 못 함 —
+/// 연봉 부담만으로 근사(`sim::market::cash_trade_probability`). "받는 쪽
+/// NPC"(§4-1의 교환 상대)는 실제 로스터를 조작하지 않는다 — 문서가
+/// 정확한 가치매칭 규칙을 정의하지 않았고, 주인공 1인칭 시점에서는
+/// "누구와 트레이드됐다"는 결과가 중요하지 배경 로스터 균형은 크리티컬
+/// 하지 않아 통보용 텍스트(`counterpart`)로만 남긴다. `no_trade_clause`
+/// 필드는 지원하지만 그 조항을 **요청하는 협상 인터랙션은 이번 스코프에
+/// 없음**(§2 계약 오퍼에 이 옵션이 없음) — 필드 존재·소비 로직만 갖추고
+/// 실제로 채워 넣는 건 테스트·수동설정 전용.
+fn process_protagonist_trade(conn: &Connection, content_conn: &Connection, world_seed: i64, day: i64) -> anyhow::Result<()> {
+    let already_negotiating: i64 = conn.query_row("SELECT count(*) FROM pending_actions WHERE type = 'contractNego'", [], |r| r.get(0))?;
+    if already_negotiating > 0 {
+        return Ok(());
+    }
+
+    let row: Option<String> = conn.query_row("SELECT contract FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).optional()?;
+    let Some(contract_raw) = row else {
+        return Ok(()); // 아직 캐릭터 생성 전
+    };
+    let contract: serde_json::Value = serde_json::from_str(&contract_raw)?;
+    let Some(team_id) = contract.get("team_id").and_then(|v| v.as_str()).map(str::to_string) else {
+        return Ok(()); // 무소속 — 트레이드 대상 아님
+    };
+
+    let league_id: Option<String> = content_conn.query_row("SELECT league_id FROM teams WHERE id = ?1", [&team_id], |r| r.get(0)).optional()?;
+    if !matches!(league_id.as_deref(), Some("league:pro") | Some("league:independent")) {
+        return Ok(()); // 아마추어 소속 — §1과 동일하게 적용 범위 밖
+    }
+
+    let resource: String =
+        content_conn.query_row("SELECT resource FROM team_traits WHERE team_id = ?1", [&team_id], |r| r.get(0)).optional()?.unwrap_or_default();
+    let salary = contract.get("salary").and_then(|v| v.as_i64()).unwrap_or(3000);
+
+    let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("trade:{day}")));
+    let is_cash = rng.gen_bool(crate::sim::market::cash_trade_probability(salary, &resource));
+    let is_player = !is_cash && rng.gen_bool(crate::sim::market::trade_probability(&resource));
+    if !is_cash && !is_player {
+        return Ok(());
+    }
+
+    let mut stmt = content_conn.prepare("SELECT id FROM teams WHERE league_id IN ('league:pro', 'league:independent') AND id != ?1")?;
+    let candidates: Vec<String> = stmt.query_map([&team_id], |r| r.get(0))?.collect::<Result<_, _>>()?;
+    drop(stmt);
+    let Some(to_team) = candidates.choose(&mut rng) else {
+        return Ok(()); // 갈 곳이 없음(합성 테스트 등) — 실제 172팀 데이터에선 사실상 안 일어남
+    };
+
+    let counterpart = if is_cash {
+        None
+    } else {
+        let mut stmt = conn.prepare("SELECT id FROM npc WHERE team_id = ?1 AND retired = 0")?;
+        let npcs: Vec<String> = stmt.query_map([to_team], |r| r.get(0))?.collect::<Result<_, _>>()?;
+        npcs.choose(&mut rng).cloned()
+    };
+
+    let no_trade_clause = contract.get("no_trade_clause").and_then(|v| v.as_bool()).unwrap_or(false);
+    let payload = serde_json::json!({
+        "from_team_id": team_id,
+        "to_team_id": to_team,
+        "kind": if is_cash { "현금" } else { "선수" },
+        "counterpart": counterpart,
+        "can_reject": no_trade_clause,
+    })
+    .to_string();
+    conn.execute(
+        "INSERT INTO pending_actions (id, type, urgency, created_day, payload) VALUES (?1, 'tradeDecision', 'urgent', ?2, ?3)",
+        params![format!("trade:{day}"), day, payload],
+    )?;
+    Ok(())
+}
+
+/// `tradeDecision` PendingAction 응답 처리 — §4-3 "조항이 있으면 트레이드
+/// 거부 가능, 없으면 구단 결정에 따름". `payload.can_reject`가 `false`인데
+/// `"reject"`를 보내면 에러(거부권이 없다는 걸 UI가 먼저 걸러야 하는
+/// 잘못된 상호작용). `"accept"`(노트레이드 조항이 있어 수락한 경우든,
+/// 조항이 없어 사실상 강제인 경우든)면 계약의 `team_id`만 새 팀으로
+/// 바꾼다(연봉·잔여연수는 그대로 승계 — 실제 트레이드도 계약은 대개
+/// 그대로 넘어감) 후 `league_transactions`에 `'trade'`로 기록한다.
+fn resolve_trade_decision(conn: &Connection, payload_raw: &str, choice_id: &str, day: i64) -> anyhow::Result<()> {
+    let payload: serde_json::Value = serde_json::from_str(payload_raw)?;
+    let can_reject = payload.get("can_reject").and_then(|v| v.as_bool()).unwrap_or(false);
+
+    if choice_id == "reject" {
+        if !can_reject {
+            anyhow::bail!("no-trade clause not present — this trade cannot be rejected");
+        }
+        return Ok(()); // 노트레이드 조항으로 거부 — 계약 그대로 유지
+    }
+    if choice_id != "accept" {
+        anyhow::bail!("unknown tradeDecision choice: {choice_id}");
+    }
+
+    let to_team = payload.get("to_team_id").and_then(|v| v.as_str()).ok_or_else(|| anyhow::anyhow!("trade payload missing to_team_id"))?;
+
+    let contract_raw: String = conn.query_row("SELECT contract FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0))?;
+    let mut contract: serde_json::Value = serde_json::from_str(&contract_raw)?;
+    let from_team = contract.get("team_id").and_then(|v| v.as_str()).unwrap_or_default().to_string();
+    contract["team_id"] = serde_json::json!(to_team);
+    conn.execute("UPDATE protagonist SET contract = ?1 WHERE id = 'proto:1'", params![contract.to_string()])?;
+
+    let detail = serde_json::json!({"player": "proto:1", "from": from_team, "to": to_team}).to_string();
+    conn.execute(
+        "INSERT INTO league_transactions (id, day, kind, detail) VALUES (?1, ?2, 'trade', ?3)",
+        params![format!("txn:trade:{day}"), day, detail],
+    )?;
+    Ok(())
+}
+
 /// 시즌 경계 — 시즌 카운터 증가, 인박스 비움(04_게임루프.md §1), **프로
 /// 포스트시즌 실행**(I5 2차분 추가 — standings가 지워지기 전에 트리거),
 /// **방출·재계약/FA 판정**(`process_protagonist_contract`, I6 7차분 추가),
+/// **트레이드 판정**(`process_protagonist_trade`, I6 8차분 추가 — 계약
+/// 처리 직후에 호출해 이미 협상 중인 선수를 또 건드리지 않게 함),
 /// standings를 **리그별로** history_standings에 압축(1차분의 "전체 뭉쳐서
 /// 순위" placeholder를 이번에 리그별 정확한 순위로 개선) 후 다음 시즌을 위해
-/// standings·schedule·season_stats 초기화. 트레이드·로스터 세대교체·
+/// standings·schedule·season_stats 초기화. 로스터 세대교체·
 /// 투자정산은 계속 이월.
 pub fn season_rollover(conn: &Connection, content_conn: &Connection, day: i64) -> anyhow::Result<()> {
     let current: i64 = conn
@@ -1768,6 +1889,7 @@ pub fn season_rollover(conn: &Connection, content_conn: &Connection, day: i64) -
     let world_seed: i64 = conn.query_row("SELECT world_seed FROM meta", [], |row| row.get(0))?;
     run_pro_postseason(conn, content_conn, world_seed)?;
     process_protagonist_contract(conn, content_conn, world_seed, current, day)?;
+    process_protagonist_trade(conn, content_conn, world_seed, day)?;
 
     // standings 압축 — 리그별로 묶어서(content.db team_id→league_id 조회) 순위 계산.
     let mut stmt = conn.prepare("SELECT team_id, w, l FROM standings")?;
@@ -1954,6 +2076,11 @@ pub fn resolve_choice(
         "contractNego" => {
             let today: i64 = slot_conn.query_row("SELECT current_day FROM meta", [], |r| r.get(0))?;
             resolve_contract_nego(slot_conn, content_conn, world_seed, &payload_raw, choice_id, today)?;
+            None
+        }
+        "tradeDecision" => {
+            let today: i64 = slot_conn.query_row("SELECT current_day FROM meta", [], |r| r.get(0))?;
+            resolve_trade_decision(slot_conn, &payload_raw, choice_id, today)?;
             None
         }
         _ => None,
@@ -2599,6 +2726,177 @@ mod tests {
         let contract = read_contract(&slot_conn);
         assert_eq!(contract["team_id"], "team:poor_a");
         assert_eq!(contract["salary"], 6000);
+    }
+
+    fn insert_trade_pending(conn: &Connection, day: i64, payload: &serde_json::Value) -> String {
+        let id = format!("trade:{day}");
+        conn.execute(
+            "INSERT INTO pending_actions (id, type, urgency, created_day, payload) VALUES (?1, 'tradeDecision', 'urgent', ?2, ?3)",
+            params![id, day, payload.to_string()],
+        )
+        .unwrap();
+        id
+    }
+
+    #[test]
+    fn process_protagonist_trade_skips_when_contract_negotiation_is_pending() {
+        let content_conn = build_market_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_market_protagonist(&slot_conn, &serde_json::json!({"team_id": "team:poor_a", "salary": 20000, "years_remaining": 3}), 0.0);
+        push_contract_nego(&slot_conn, 10, "재계약", &[("team:poor_a".to_string(), 8000, 3)]).unwrap();
+
+        process_protagonist_trade(&slot_conn, &content_conn, 1, 10).unwrap();
+
+        let pending = list_pending_actions(&slot_conn).unwrap();
+        assert_eq!(pending.len(), 1, "no tradeDecision should be added on top of a pending contractNego");
+        assert_eq!(pending[0].kind, "contractNego");
+    }
+
+    #[test]
+    fn process_protagonist_trade_skips_unsigned_and_amateur_contracts() {
+        let content_conn = build_market_content_db();
+
+        let unsigned = slot::open_in_memory().unwrap();
+        insert_market_protagonist(&unsigned, &serde_json::json!({"team_id": null, "status": "FA", "salary": 5000}), 0.0);
+        process_protagonist_trade(&unsigned, &content_conn, 1, 10).unwrap();
+        assert!(list_pending_actions(&unsigned).unwrap().is_empty());
+
+        let amateur = slot::open_in_memory().unwrap();
+        insert_market_protagonist(&amateur, &serde_json::json!({"team_id": "team:hs_a"}), 0.0);
+        process_protagonist_trade(&amateur, &content_conn, 1, 10).unwrap();
+        assert!(list_pending_actions(&amateur).unwrap().is_empty());
+    }
+
+    #[test]
+    fn process_protagonist_trade_can_produce_a_player_trade_with_a_counterpart() {
+        let content_conn = build_market_content_db();
+        let mut triggered = false;
+        for seed in 0..60i64 {
+            let slot_conn = slot::open_in_memory().unwrap();
+            insert_minimal_roster(&slot_conn, "team:rich_a");
+            insert_minimal_roster(&slot_conn, "team:rich_b");
+            insert_minimal_roster(&slot_conn, "team:indep_a");
+            insert_market_protagonist(&slot_conn, &serde_json::json!({"team_id": "team:poor_a", "salary": 5000, "years_remaining": 3}), 0.0);
+
+            process_protagonist_trade(&slot_conn, &content_conn, seed, 10).unwrap();
+
+            let pending = list_pending_actions(&slot_conn).unwrap();
+            if let Some(action) = pending.iter().find(|p| p.kind == "tradeDecision") {
+                let payload: serde_json::Value = serde_json::from_str(&action.payload).unwrap();
+                assert_eq!(payload["from_team_id"], "team:poor_a");
+                assert_ne!(payload["to_team_id"], "team:poor_a");
+                assert!(matches!(payload["kind"].as_str().unwrap(), "현금" | "선수"));
+                if payload["kind"] == "선수" {
+                    assert!(payload["counterpart"].is_string(), "player-for-player trades should name a counterpart NPC");
+                }
+                assert_eq!(payload["can_reject"], false, "no no_trade_clause set — trade should not be rejectable");
+                triggered = true;
+                break;
+            }
+        }
+        assert!(triggered, "expected at least one seed to produce a trade for a poor-team, low-salary protagonist");
+    }
+
+    #[test]
+    fn process_protagonist_trade_marks_can_reject_when_no_trade_clause_is_set() {
+        let content_conn = build_market_content_db();
+        let mut triggered = false;
+        for seed in 0..60i64 {
+            let slot_conn = slot::open_in_memory().unwrap();
+            insert_minimal_roster(&slot_conn, "team:rich_a");
+            insert_minimal_roster(&slot_conn, "team:rich_b");
+            insert_market_protagonist(
+                &slot_conn,
+                &serde_json::json!({"team_id": "team:poor_a", "salary": 20000, "years_remaining": 3, "no_trade_clause": true}),
+                0.0,
+            );
+
+            process_protagonist_trade(&slot_conn, &content_conn, seed, 10).unwrap();
+
+            if let Some(action) = list_pending_actions(&slot_conn).unwrap().into_iter().find(|p| p.kind == "tradeDecision") {
+                let payload: serde_json::Value = serde_json::from_str(&action.payload).unwrap();
+                assert_eq!(payload["can_reject"], true);
+                triggered = true;
+                break;
+            }
+        }
+        assert!(triggered, "expected at least one seed to produce a trade for testing the no_trade_clause flag");
+    }
+
+    #[test]
+    fn resolve_trade_decision_accept_moves_the_player_and_records_a_transaction() {
+        let content_conn = build_market_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_market_protagonist(&slot_conn, &serde_json::json!({"team_id": "team:poor_a", "salary": 5000, "years_remaining": 2}), 0.0);
+        let action_id = insert_trade_pending(
+            &slot_conn,
+            10,
+            &serde_json::json!({"from_team_id": "team:poor_a", "to_team_id": "team:rich_a", "kind": "현금", "counterpart": null, "can_reject": false}),
+        );
+
+        resolve_choice(&slot_conn, &content_conn, 1, &action_id, "accept").unwrap();
+
+        let contract = read_contract(&slot_conn);
+        assert_eq!(contract["team_id"], "team:rich_a");
+        assert_eq!(contract["salary"], 5000, "salary carries over unchanged through a trade");
+        assert!(list_pending_actions(&slot_conn).unwrap().is_empty());
+
+        let txn_count: i64 = slot_conn.query_row("SELECT count(*) FROM league_transactions WHERE kind = 'trade'", [], |r| r.get(0)).unwrap();
+        assert_eq!(txn_count, 1);
+    }
+
+    #[test]
+    fn resolve_trade_decision_reject_without_no_trade_clause_errors() {
+        let content_conn = build_market_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_market_protagonist(&slot_conn, &serde_json::json!({"team_id": "team:poor_a", "salary": 5000, "years_remaining": 2}), 0.0);
+        let action_id = insert_trade_pending(
+            &slot_conn,
+            10,
+            &serde_json::json!({"from_team_id": "team:poor_a", "to_team_id": "team:rich_a", "kind": "현금", "counterpart": null, "can_reject": false}),
+        );
+
+        let result = resolve_choice(&slot_conn, &content_conn, 1, &action_id, "reject");
+        assert!(result.is_err(), "rejecting a trade without a no-trade clause should be an error");
+    }
+
+    #[test]
+    fn resolve_trade_decision_reject_with_no_trade_clause_keeps_the_old_team() {
+        let content_conn = build_market_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_market_protagonist(&slot_conn, &serde_json::json!({"team_id": "team:poor_a", "salary": 5000, "years_remaining": 2}), 0.0);
+        let action_id = insert_trade_pending(
+            &slot_conn,
+            10,
+            &serde_json::json!({"from_team_id": "team:poor_a", "to_team_id": "team:rich_a", "kind": "현금", "counterpart": null, "can_reject": true}),
+        );
+
+        resolve_choice(&slot_conn, &content_conn, 1, &action_id, "reject").unwrap();
+
+        let contract = read_contract(&slot_conn);
+        assert_eq!(contract["team_id"], "team:poor_a", "rejecting via a no-trade clause should keep the player on the original team");
+    }
+
+    #[test]
+    fn season_rollover_wires_up_protagonist_trade_processing() {
+        let content_conn = build_market_content_db();
+        let mut triggered = false;
+        for seed in 0..60i64 {
+            let slot_conn = slot::open_in_memory().unwrap();
+            slot_conn.execute("UPDATE meta SET world_seed = ?1", params![seed]).unwrap();
+            insert_minimal_roster(&slot_conn, "team:rich_a");
+            insert_minimal_roster(&slot_conn, "team:rich_b");
+            insert_minimal_roster(&slot_conn, "team:indep_a");
+            insert_market_protagonist(&slot_conn, &serde_json::json!({"team_id": "team:poor_a", "salary": 5000, "years_remaining": 3}), 0.0);
+
+            season_rollover(&slot_conn, &content_conn, 364).unwrap();
+
+            if list_pending_actions(&slot_conn).unwrap().iter().any(|p| p.kind == "tradeDecision") {
+                triggered = true;
+                break;
+            }
+        }
+        assert!(triggered, "expected season_rollover to invoke process_protagonist_trade and eventually produce a trade");
     }
 
     #[test]
