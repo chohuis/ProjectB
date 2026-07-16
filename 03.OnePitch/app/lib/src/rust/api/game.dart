@@ -10,7 +10,7 @@ part 'game.freezed.dart';
 
 // These functions are ignored because they are not marked as `pub`: `with_state_mut`, `with_state`, `world_seed`
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `GameState`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
 
 /// 뉴게임 — [07_주인공_생성](../../../02_기획/07_주인공_생성.md) §1의 7단계
 /// 흐름 중 실제 데이터를 만드는 마지막 단계(스텝 1~6은 Dart 쪽 폼 상태일
@@ -75,6 +75,40 @@ List<String> courseNames() => RustLib.instance.api.crateApiGameCourseNames();
 
 Future<List<TeamOption>> listHsTeams({required String contentDbPath}) =>
     RustLib.instance.api.crateApiGameListHsTeams(contentDbPath: contentDbPath);
+
+/// 지금 세션(전역 상태가 이미 content_conn을 들고 있음)에서 주인공의
+/// 현재 소속팀 정보 — [01_내선수](../../../04_UI기획/01_내선수.md) 상단
+/// 요약바의 "소속팀" 표시용. 무소속(FA·아직 프로 미진입)이면 `None`.
+Future<TeamOption?> getCurrentTeamInfo() =>
+    RustLib.instance.api.crateApiGameGetCurrentTeamInfo();
+
+/// [06_훈련_시스템](../../../02_기획/육성코어/06_훈련_시스템.md) §2 능력치
+/// 노출 스탯 9종 — 훈련 탭의 주/보조 슬롯 드롭다운용. 순수 상수라 동기.
+List<String> exposedStatNames() =>
+    RustLib.instance.api.crateApiGameExposedStatNames();
+
+/// §4 강도 다이얼 3단계 — 순수 상수라 동기.
+List<String> trainingIntensityNames() =>
+    RustLib.instance.api.crateApiGameTrainingIntensityNames();
+
+Future<TrainingConfigInfo?> getTrainingConfig() =>
+    RustLib.instance.api.crateApiGameGetTrainingConfig();
+
+/// 훈련 슬롯 설정 — [01_내선수](../../../04_UI기획/01_내선수.md) §3 훈련
+/// 탭이 호출. `repository::set_protagonist_training`을 그대로 감싼다(구종
+/// 슬롯·신규 습득은 이번 서브분 스코프 밖 — 전체 구종 카탈로그를 조회할
+/// 엔진 쿼리가 아직 없어 `new_pitch`는 항상 `None`으로 고정).
+Future<void> setTraining({
+  required String primaryStat,
+  required String secondaryStat1,
+  required String secondaryStat2,
+  required String intensity,
+}) => RustLib.instance.api.crateApiGameSetTraining(
+  primaryStat: primaryStat,
+  secondaryStat1: secondaryStat1,
+  secondaryStat2: secondaryStat2,
+  intensity: intensity,
+);
 
 @freezed
 sealed class MatchStepInfo with _$MatchStepInfo {
@@ -230,4 +264,37 @@ class TeamOption {
           philosophy == other.philosophy &&
           resource == other.resource &&
           status == other.status;
+}
+
+/// 현재 훈련 설정 — 한 번도 설정 안 했으면 `None`(§1 "훈련 계획을 아직
+/// 안 짰다"는 자연스러운 초기 상태, `set_protagonist_training` 문서 참고).
+class TrainingConfigInfo {
+  final String primaryStat;
+  final List<String> secondaryStats;
+  final String intensity;
+  final String? newPitch;
+
+  const TrainingConfigInfo({
+    required this.primaryStat,
+    required this.secondaryStats,
+    required this.intensity,
+    this.newPitch,
+  });
+
+  @override
+  int get hashCode =>
+      primaryStat.hashCode ^
+      secondaryStats.hashCode ^
+      intensity.hashCode ^
+      newPitch.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TrainingConfigInfo &&
+          runtimeType == other.runtimeType &&
+          primaryStat == other.primaryStat &&
+          secondaryStats == other.secondaryStats &&
+          intensity == other.intensity &&
+          newPitch == other.newPitch;
 }

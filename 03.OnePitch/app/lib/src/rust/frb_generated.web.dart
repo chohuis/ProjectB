@@ -34,6 +34,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   MatchStepInfo dco_decode_box_autoadd_match_step_info(dynamic raw);
 
   @protected
+  TeamOption dco_decode_box_autoadd_team_option(dynamic raw);
+
+  @protected
+  TrainingConfigInfo dco_decode_box_autoadd_training_config_info(dynamic raw);
+
+  @protected
   PlatformInt64 dco_decode_i_64(dynamic raw);
 
   @protected
@@ -61,6 +67,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   MatchStepInfo? dco_decode_opt_box_autoadd_match_step_info(dynamic raw);
 
   @protected
+  TeamOption? dco_decode_opt_box_autoadd_team_option(dynamic raw);
+
+  @protected
+  TrainingConfigInfo? dco_decode_opt_box_autoadd_training_config_info(
+    dynamic raw,
+  );
+
+  @protected
   PendingActionInfo dco_decode_pending_action_info(dynamic raw);
 
   @protected
@@ -68,6 +82,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   TeamOption dco_decode_team_option(dynamic raw);
+
+  @protected
+  TrainingConfigInfo dco_decode_training_config_info(dynamic raw);
 
   @protected
   int dco_decode_u_32(dynamic raw);
@@ -89,6 +106,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   MatchStepInfo sse_decode_box_autoadd_match_step_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  TeamOption sse_decode_box_autoadd_team_option(SseDeserializer deserializer);
+
+  @protected
+  TrainingConfigInfo sse_decode_box_autoadd_training_config_info(
     SseDeserializer deserializer,
   );
 
@@ -124,6 +149,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  TeamOption? sse_decode_opt_box_autoadd_team_option(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  TrainingConfigInfo? sse_decode_opt_box_autoadd_training_config_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   PendingActionInfo sse_decode_pending_action_info(
     SseDeserializer deserializer,
   );
@@ -135,6 +170,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   TeamOption sse_decode_team_option(SseDeserializer deserializer);
+
+  @protected
+  TrainingConfigInfo sse_decode_training_config_info(
+    SseDeserializer deserializer,
+  );
 
   @protected
   int sse_decode_u_32(SseDeserializer deserializer);
@@ -163,6 +203,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_box_autoadd_match_step_info(
     MatchStepInfo self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_box_autoadd_team_option(
+    TeamOption self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_box_autoadd_training_config_info(
+    TrainingConfigInfo self,
     SseSerializer serializer,
   );
 
@@ -209,6 +261,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_opt_box_autoadd_team_option(
+    TeamOption? self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_opt_box_autoadd_training_config_info(
+    TrainingConfigInfo? self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_pending_action_info(
     PendingActionInfo self,
     SseSerializer serializer,
@@ -222,6 +286,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_team_option(TeamOption self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_training_config_info(
+    TrainingConfigInfo self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_u_32(int self, SseSerializer serializer);

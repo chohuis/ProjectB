@@ -264,6 +264,93 @@ pub fn list_hs_teams(content_db_path: String) -> anyhow::Result<Vec<TeamOption>>
     Ok(rows)
 }
 
+/// 지금 세션(전역 상태가 이미 content_conn을 들고 있음)에서 주인공의
+/// 현재 소속팀 정보 — [01_내선수](../../../04_UI기획/01_내선수.md) 상단
+/// 요약바의 "소속팀" 표시용. 무소속(FA·아직 프로 미진입)이면 `None`.
+pub fn get_current_team_info() -> anyhow::Result<Option<TeamOption>> {
+    with_state(|state| {
+        let contract_raw: String = state.slot_conn.query_row("SELECT contract FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0))?;
+        let contract: serde_json::Value = serde_json::from_str(&contract_raw)?;
+        let Some(team_id) = contract.get("team_id").and_then(|v| v.as_str()) else {
+            return Ok(None);
+        };
+        let row: Option<(String, Option<String>, String, String, String)> = state
+            .content_conn
+            .query_row(
+                "SELECT teams.id, teams.meta, team_traits.philosophy, team_traits.resource, team_traits.status
+                 FROM teams JOIN team_traits ON team_traits.team_id = teams.id WHERE teams.id = ?1",
+                [team_id],
+                |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?, r.get(4)?)),
+            )
+            .optional()?;
+        Ok(row.map(|(team_id, meta, philosophy, resource, status)| TeamOption {
+            team_id,
+            meta_json: meta.unwrap_or_else(|| "null".to_string()),
+            philosophy,
+            resource,
+            status,
+        }))
+    })
+}
+
+/// [06_훈련_시스템](../../../02_기획/육성코어/06_훈련_시스템.md) §2 능력치
+/// 노출 스탯 9종 — 훈련 탭의 주/보조 슬롯 드롭다운용. 순수 상수라 동기.
+#[flutter_rust_bridge::frb(sync)]
+pub fn exposed_stat_names() -> Vec<String> {
+    crate::sim::growth::PITCHER_EXPOSED.iter().map(|s| s.to_string()).collect()
+}
+
+/// §4 강도 다이얼 3단계 — 순수 상수라 동기.
+#[flutter_rust_bridge::frb(sync)]
+pub fn training_intensity_names() -> Vec<String> {
+    crate::sim::training::INTENSITIES.iter().map(|s| s.to_string()).collect()
+}
+
+/// 현재 훈련 설정 — 한 번도 설정 안 했으면 `None`(§1 "훈련 계획을 아직
+/// 안 짰다"는 자연스러운 초기 상태, `set_protagonist_training` 문서 참고).
+#[derive(Debug, Clone)]
+pub struct TrainingConfigInfo {
+    pub primary_stat: String,
+    pub secondary_stats: Vec<String>,
+    pub intensity: String,
+    pub new_pitch: Option<String>,
+}
+
+pub fn get_training_config() -> anyhow::Result<Option<TrainingConfigInfo>> {
+    with_state(|state| {
+        let raw: Option<String> = state
+            .slot_conn
+            .query_row("SELECT training FROM protagonist WHERE id = 'proto:1'", [], |r| r.get::<_, Option<String>>(0))
+            .optional()?
+            .flatten();
+        let Some(raw) = raw else {
+            return Ok(None);
+        };
+        let v: serde_json::Value = serde_json::from_str(&raw)?;
+        let secondary_stats = v
+            .get("secondary_stats")
+            .and_then(|s| s.as_array())
+            .map(|arr| arr.iter().filter_map(|x| x.as_str().map(str::to_string)).collect())
+            .unwrap_or_default();
+        Ok(Some(TrainingConfigInfo {
+            primary_stat: v.get("primary_stat").and_then(|s| s.as_str()).unwrap_or("").to_string(),
+            secondary_stats,
+            intensity: v.get("intensity").and_then(|s| s.as_str()).unwrap_or("보통").to_string(),
+            new_pitch: v.get("new_pitch").and_then(|s| s.as_str()).map(str::to_string),
+        }))
+    })
+}
+
+/// 훈련 슬롯 설정 — [01_내선수](../../../04_UI기획/01_내선수.md) §3 훈련
+/// 탭이 호출. `repository::set_protagonist_training`을 그대로 감싼다(구종
+/// 슬롯·신규 습득은 이번 서브분 스코프 밖 — 전체 구종 카탈로그를 조회할
+/// 엔진 쿼리가 아직 없어 `new_pitch`는 항상 `None`으로 고정).
+pub fn set_training(primary_stat: String, secondary_stat_1: String, secondary_stat_2: String, intensity: String) -> anyhow::Result<()> {
+    with_state(|state| {
+        repository::set_protagonist_training(&state.slot_conn, &primary_stat, [&secondary_stat_1, &secondary_stat_2], &intensity, None)
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -324,5 +411,38 @@ mod tests {
         let names = course_names();
         assert_eq!(names.len(), 9);
         assert!(names.contains(&"MidCenter".to_string()));
+    }
+
+    #[test]
+    fn exposed_stat_names_and_training_intensity_names_match_engine_constants() {
+        assert_eq!(exposed_stat_names().len(), 9);
+        assert_eq!(training_intensity_names(), vec!["약", "보통", "강"]);
+    }
+
+    #[test]
+    fn team_and_training_queries_work_end_to_end_after_new_game() {
+        let _guard = TEST_SERIAL.lock().unwrap();
+        reset_state();
+
+        let hs_team = {
+            let conn = content::open("content.db").unwrap();
+            conn.query_row("SELECT id FROM teams WHERE league_id = 'league:hs' LIMIT 1", [], |r| r.get::<_, String>(0)).unwrap()
+        };
+
+        new_game("content.db".to_string(), 43, "훈련테스트".to_string(), "우완".to_string(), hs_team.clone(), "강속구형".to_string(), None).unwrap();
+
+        let team = get_current_team_info().unwrap();
+        assert_eq!(team.unwrap().team_id, hs_team);
+
+        assert!(get_training_config().unwrap().is_none(), "no training configured yet");
+
+        set_training("구속".to_string(), "구위".to_string(), "제구".to_string(), "보통".to_string()).unwrap();
+        let config = get_training_config().unwrap().unwrap();
+        assert_eq!(config.primary_stat, "구속");
+        assert_eq!(config.secondary_stats, vec!["구위", "제구"]);
+        assert_eq!(config.intensity, "보통");
+        assert!(config.new_pitch.is_none());
+
+        reset_state();
     }
 }

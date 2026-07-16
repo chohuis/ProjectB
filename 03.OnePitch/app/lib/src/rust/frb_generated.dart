@@ -67,7 +67,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.12.0';
 
   @override
-  int get rustContentHash => 1406952019;
+  int get rustContentHash => -268764926;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -83,11 +83,17 @@ abstract class RustLibApi extends BaseApi {
 
   List<String> crateApiGameCourseNames();
 
+  List<String> crateApiGameExposedStatNames();
+
+  Future<TeamOption?> crateApiGameGetCurrentTeamInfo();
+
   Future<MetaStatusInfo> crateApiGameGetMetaStatus();
 
   Future<List<PendingActionInfo>> crateApiGameGetPendingActions();
 
   Future<ProtagonistStatusInfo> crateApiGameGetProtagonistStatus();
+
+  Future<TrainingConfigInfo?> crateApiGameGetTrainingConfig();
 
   String crateApiSimpleGreet({required String name});
 
@@ -111,6 +117,15 @@ abstract class RustLibApi extends BaseApi {
     required String actionId,
     required String choiceId,
   });
+
+  Future<void> crateApiGameSetTraining({
+    required String primaryStat,
+    required String secondaryStat1,
+    required String secondaryStat2,
+    required String intensity,
+  });
+
+  List<String> crateApiGameTrainingIntensityNames();
 }
 
 class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
@@ -171,6 +186,55 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "course_names", argNames: []);
 
   @override
+  List<String> crateApiGameExposedStatNames() {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 3)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_list_String,
+          decodeErrorData: null,
+        ),
+        constMeta: kCrateApiGameExposedStatNamesConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiGameExposedStatNamesConstMeta =>
+      const TaskConstMeta(debugName: "exposed_stat_names", argNames: []);
+
+  @override
+  Future<TeamOption?> crateApiGameGetCurrentTeamInfo() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 4,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_opt_box_autoadd_team_option,
+          decodeErrorData: sse_decode_AnyhowException,
+        ),
+        constMeta: kCrateApiGameGetCurrentTeamInfoConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiGameGetCurrentTeamInfoConstMeta =>
+      const TaskConstMeta(debugName: "get_current_team_info", argNames: []);
+
+  @override
   Future<MetaStatusInfo> crateApiGameGetMetaStatus() {
     return handler.executeNormal(
       NormalTask(
@@ -179,7 +243,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 3,
+            funcId: 5,
             port: port_,
           );
         },
@@ -206,7 +270,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 4,
+            funcId: 6,
             port: port_,
           );
         },
@@ -233,7 +297,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 5,
+            funcId: 7,
             port: port_,
           );
         },
@@ -252,13 +316,40 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "get_protagonist_status", argNames: []);
 
   @override
+  Future<TrainingConfigInfo?> crateApiGameGetTrainingConfig() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 8,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_opt_box_autoadd_training_config_info,
+          decodeErrorData: sse_decode_AnyhowException,
+        ),
+        constMeta: kCrateApiGameGetTrainingConfigConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiGameGetTrainingConfigConstMeta =>
+      const TaskConstMeta(debugName: "get_training_config", argNames: []);
+
+  @override
   String crateApiSimpleGreet({required String name}) {
     return handler.executeSync(
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_String(name, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 6)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 9)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_String,
@@ -283,7 +374,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 7,
+            funcId: 10,
             port: port_,
           );
         },
@@ -313,7 +404,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 8,
+            funcId: 11,
             port: port_,
           );
         },
@@ -357,7 +448,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 9,
+            funcId: 12,
             port: port_,
           );
         },
@@ -407,7 +498,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 10,
+            funcId: 13,
             port: port_,
           );
         },
@@ -426,6 +517,66 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     debugName: "resolve_choice",
     argNames: ["actionId", "choiceId"],
   );
+
+  @override
+  Future<void> crateApiGameSetTraining({
+    required String primaryStat,
+    required String secondaryStat1,
+    required String secondaryStat2,
+    required String intensity,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(primaryStat, serializer);
+          sse_encode_String(secondaryStat1, serializer);
+          sse_encode_String(secondaryStat2, serializer);
+          sse_encode_String(intensity, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 14,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_unit,
+          decodeErrorData: sse_decode_AnyhowException,
+        ),
+        constMeta: kCrateApiGameSetTrainingConstMeta,
+        argValues: [primaryStat, secondaryStat1, secondaryStat2, intensity],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiGameSetTrainingConstMeta => const TaskConstMeta(
+    debugName: "set_training",
+    argNames: ["primaryStat", "secondaryStat1", "secondaryStat2", "intensity"],
+  );
+
+  @override
+  List<String> crateApiGameTrainingIntensityNames() {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 15)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_list_String,
+          decodeErrorData: null,
+        ),
+        constMeta: kCrateApiGameTrainingIntensityNamesConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiGameTrainingIntensityNamesConstMeta =>
+      const TaskConstMeta(debugName: "training_intensity_names", argNames: []);
 
   @protected
   AnyhowException dco_decode_AnyhowException(dynamic raw) {
@@ -449,6 +600,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   MatchStepInfo dco_decode_box_autoadd_match_step_info(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_match_step_info(raw);
+  }
+
+  @protected
+  TeamOption dco_decode_box_autoadd_team_option(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_team_option(raw);
+  }
+
+  @protected
+  TrainingConfigInfo dco_decode_box_autoadd_training_config_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_training_config_info(raw);
   }
 
   @protected
@@ -527,6 +690,22 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  TeamOption? dco_decode_opt_box_autoadd_team_option(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_team_option(raw);
+  }
+
+  @protected
+  TrainingConfigInfo? dco_decode_opt_box_autoadd_training_config_info(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null
+        ? null
+        : dco_decode_box_autoadd_training_config_info(raw);
+  }
+
+  @protected
   PendingActionInfo dco_decode_pending_action_info(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -569,6 +748,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       philosophy: dco_decode_String(arr[2]),
       resource: dco_decode_String(arr[3]),
       status: dco_decode_String(arr[4]),
+    );
+  }
+
+  @protected
+  TrainingConfigInfo dco_decode_training_config_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 4)
+      throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
+    return TrainingConfigInfo(
+      primaryStat: dco_decode_String(arr[0]),
+      secondaryStats: dco_decode_list_String(arr[1]),
+      intensity: dco_decode_String(arr[2]),
+      newPitch: dco_decode_opt_String(arr[3]),
     );
   }
 
@@ -616,6 +809,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return (sse_decode_match_step_info(deserializer));
+  }
+
+  @protected
+  TeamOption sse_decode_box_autoadd_team_option(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_team_option(deserializer));
+  }
+
+  @protected
+  TrainingConfigInfo sse_decode_box_autoadd_training_config_info(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_training_config_info(deserializer));
   }
 
   @protected
@@ -731,6 +938,32 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  TeamOption? sse_decode_opt_box_autoadd_team_option(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_team_option(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
+  TrainingConfigInfo? sse_decode_opt_box_autoadd_training_config_info(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_training_config_info(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
   PendingActionInfo sse_decode_pending_action_info(
     SseDeserializer deserializer,
   ) {
@@ -788,6 +1021,23 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  TrainingConfigInfo sse_decode_training_config_info(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_primaryStat = sse_decode_String(deserializer);
+    var var_secondaryStats = sse_decode_list_String(deserializer);
+    var var_intensity = sse_decode_String(deserializer);
+    var var_newPitch = sse_decode_opt_String(deserializer);
+    return TrainingConfigInfo(
+      primaryStat: var_primaryStat,
+      secondaryStats: var_secondaryStats,
+      intensity: var_intensity,
+      newPitch: var_newPitch,
+    );
+  }
+
+  @protected
   int sse_decode_u_32(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return deserializer.buffer.getUint32();
@@ -838,6 +1088,24 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_match_step_info(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_team_option(
+    TeamOption self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_team_option(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_training_config_info(
+    TrainingConfigInfo self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_training_config_info(self, serializer);
   }
 
   @protected
@@ -951,6 +1219,32 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_opt_box_autoadd_team_option(
+    TeamOption? self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_team_option(self, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_opt_box_autoadd_training_config_info(
+    TrainingConfigInfo? self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_training_config_info(self, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_pending_action_info(
     PendingActionInfo self,
     SseSerializer serializer,
@@ -985,6 +1279,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_String(self.philosophy, serializer);
     sse_encode_String(self.resource, serializer);
     sse_encode_String(self.status, serializer);
+  }
+
+  @protected
+  void sse_encode_training_config_info(
+    TrainingConfigInfo self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.primaryStat, serializer);
+    sse_encode_list_String(self.secondaryStats, serializer);
+    sse_encode_String(self.intensity, serializer);
+    sse_encode_opt_String(self.newPitch, serializer);
   }
 
   @protected

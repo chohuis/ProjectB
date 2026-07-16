@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:app/src/rust/api/game.dart';
 import 'game_provider.dart';
 
@@ -26,7 +27,10 @@ class GameScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text(state.status?.name ?? '')),
+      appBar: AppBar(
+        title: Text(state.status?.name ?? ''),
+        actions: [IconButton(icon: const Icon(Icons.person), tooltip: '내 선수', onPressed: () => context.push('/game/my-player'))],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
