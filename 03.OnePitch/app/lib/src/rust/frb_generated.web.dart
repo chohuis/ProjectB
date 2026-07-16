@@ -52,6 +52,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
 
   @protected
+  List<RosterPlayerInfo> dco_decode_list_roster_player_info(dynamic raw);
+
+  @protected
+  List<ScheduleGameInfo> dco_decode_list_schedule_game_info(dynamic raw);
+
+  @protected
+  List<StandingsRowInfo> dco_decode_list_standings_row_info(dynamic raw);
+
+  @protected
   List<TeamOption> dco_decode_list_team_option(dynamic raw);
 
   @protected
@@ -79,6 +88,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ProtagonistStatusInfo dco_decode_protagonist_status_info(dynamic raw);
+
+  @protected
+  RosterPlayerInfo dco_decode_roster_player_info(dynamic raw);
+
+  @protected
+  ScheduleGameInfo dco_decode_schedule_game_info(dynamic raw);
+
+  @protected
+  StandingsRowInfo dco_decode_standings_row_info(dynamic raw);
 
   @protected
   TeamOption dco_decode_team_option(dynamic raw);
@@ -132,6 +150,21 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
 
   @protected
+  List<RosterPlayerInfo> sse_decode_list_roster_player_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  List<ScheduleGameInfo> sse_decode_list_schedule_game_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  List<StandingsRowInfo> sse_decode_list_standings_row_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   List<TeamOption> sse_decode_list_team_option(SseDeserializer deserializer);
 
   @protected
@@ -167,6 +200,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ProtagonistStatusInfo sse_decode_protagonist_status_info(
     SseDeserializer deserializer,
   );
+
+  @protected
+  RosterPlayerInfo sse_decode_roster_player_info(SseDeserializer deserializer);
+
+  @protected
+  ScheduleGameInfo sse_decode_schedule_game_info(SseDeserializer deserializer);
+
+  @protected
+  StandingsRowInfo sse_decode_standings_row_info(SseDeserializer deserializer);
 
   @protected
   TeamOption sse_decode_team_option(SseDeserializer deserializer);
@@ -237,6 +279,24 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_list_roster_player_info(
+    List<RosterPlayerInfo> self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_list_schedule_game_info(
+    List<ScheduleGameInfo> self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_list_standings_row_info(
+    List<StandingsRowInfo> self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_list_team_option(
     List<TeamOption> self,
     SseSerializer serializer,
@@ -281,6 +341,24 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_protagonist_status_info(
     ProtagonistStatusInfo self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_roster_player_info(
+    RosterPlayerInfo self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_schedule_game_info(
+    ScheduleGameInfo self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_standings_row_info(
+    StandingsRowInfo self,
     SseSerializer serializer,
   );
 

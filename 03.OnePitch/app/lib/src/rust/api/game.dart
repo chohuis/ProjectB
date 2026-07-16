@@ -10,7 +10,7 @@ part 'game.freezed.dart';
 
 // These functions are ignored because they are not marked as `pub`: `with_state_mut`, `with_state`, `world_seed`
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `GameState`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
 
 /// 뉴게임 — [07_주인공_생성](../../../02_기획/07_주인공_생성.md) §1의 7단계
 /// 흐름 중 실제 데이터를 만드는 마지막 단계(스텝 1~6은 Dart 쪽 폼 상태일
@@ -109,6 +109,32 @@ Future<void> setTraining({
   secondaryStat2: secondaryStat2,
   intensity: intensity,
 );
+
+/// [02_리그](../../../04_UI기획/02_리그.md) 결정5 "전 팀 풀 스카우팅"용 —
+/// `league_id`를 주면 그 리그만, `None`이면 172팀 전부. 세션의
+/// `content_conn`을 그대로 쓰므로(뉴게임 이후에만 호출 가능) 경로를 또
+/// 안 받는다(`list_hs_teams`는 뉴게임 이전 캐릭터 생성 화면에서 쓰여
+/// 경로가 필요했던 것과 다른 지점).
+Future<List<TeamOption>> listTeams({String? leagueId}) =>
+    RustLib.instance.api.crateApiGameListTeams(leagueId: leagueId);
+
+Future<List<RosterPlayerInfo>> listRoster({required String teamId}) =>
+    RustLib.instance.api.crateApiGameListRoster(teamId: teamId);
+
+Future<List<ScheduleGameInfo>> getTeamSchedule({required String teamId}) =>
+    RustLib.instance.api.crateApiGameGetTeamSchedule(teamId: teamId);
+
+Future<List<StandingsRowInfo>> getStandings({required String leagueId}) =>
+    RustLib.instance.api.crateApiGameGetStandings(leagueId: leagueId);
+
+/// [02_리그](../../../04_UI기획/02_리그.md) §4 라이벌 탭 — `team_history.rivals`
+/// (정적 콘텐츠, 지역·서사 페어링)만 반환한다. **개인 라이벌 관계
+/// (관계도·아크단계 비교)는 이번 스코프에 없음** — `relationships`
+/// 테이블이 스키마만 있고 실제로 채우는 로직이 엔진 어디에도 없어서다
+/// (관계 시스템 자체가 아직 미구현, 05_히스토리_엔딩과 함께 후속 스코프).
+/// 정확한 JSON 형태가 팀마다 다를 수 있어 원시 통과.
+Future<String?> getTeamRivals({required String teamId}) =>
+    RustLib.instance.api.crateApiGameGetTeamRivals(teamId: teamId);
 
 @freezed
 sealed class MatchStepInfo with _$MatchStepInfo {
@@ -227,12 +253,135 @@ class ProtagonistStatusInfo {
           pitchesJson == other.pitchesJson;
 }
 
+/// 로스터 한 명 — [02_리그](../../../04_UI기획/02_리그.md) §1. NPC는
+/// S~D 등급이 없다(§1 "등급은 주인공 전용") — 능력치+포지션+보유구종만.
+/// 개인 통산 성적은 그 자체가 엔진에 없어(계속 이월 항목) 이번에도 없음.
+class RosterPlayerInfo {
+  final String id;
+  final String name;
+  final String position;
+  final PlatformInt64 age;
+  final String statsJson;
+  final String? pitchesJson;
+
+  const RosterPlayerInfo({
+    required this.id,
+    required this.name,
+    required this.position,
+    required this.age,
+    required this.statsJson,
+    this.pitchesJson,
+  });
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      name.hashCode ^
+      position.hashCode ^
+      age.hashCode ^
+      statsJson.hashCode ^
+      pitchesJson.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RosterPlayerInfo &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          name == other.name &&
+          position == other.position &&
+          age == other.age &&
+          statsJson == other.statsJson &&
+          pitchesJson == other.pitchesJson;
+}
+
+/// [02_리그](../../../04_UI기획/02_리그.md) §2 일정 탭 — `team_id`의 전체
+/// 스케줄(지난 결과 + 다가오는 경기). `result_json`이 `None`이면 아직 안
+/// 열린 경기.
+class ScheduleGameInfo {
+  final String gameId;
+  final PlatformInt64 day;
+  final String home;
+  final String away;
+  final String? resultJson;
+
+  const ScheduleGameInfo({
+    required this.gameId,
+    required this.day,
+    required this.home,
+    required this.away,
+    this.resultJson,
+  });
+
+  @override
+  int get hashCode =>
+      gameId.hashCode ^
+      day.hashCode ^
+      home.hashCode ^
+      away.hashCode ^
+      resultJson.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ScheduleGameInfo &&
+          runtimeType == other.runtimeType &&
+          gameId == other.gameId &&
+          day == other.day &&
+          home == other.home &&
+          away == other.away &&
+          resultJson == other.resultJson;
+}
+
+/// [02_리그](../../../04_UI기획/02_리그.md) §3 순위 탭 — `league_id` 소속
+/// 팀들의 승률 내림차순 순위. `standings.rank` 컬럼은 시즌 중엔 갱신 안
+/// 되고 `season_rollover` 때만 확정되므로(`repository::update_standings`
+/// 참고), 여기 `rank`는 이 조회 시점에 재계산한 값 — 정렬·표시 포맷팅일
+/// 뿐 승패 판정 자체가 아니라 "UI가 해도 됨: 정렬"(03_구조.md §3)에 해당.
+/// 로스터가 없어(방금 뉴게임 직후 등) `standings` 행이 아직 없는 팀은
+/// 0승0패로 취급.
+class StandingsRowInfo {
+  final String teamId;
+  final PlatformInt64 rank;
+  final PlatformInt64 wins;
+  final PlatformInt64 losses;
+  final PlatformInt64 ties;
+
+  const StandingsRowInfo({
+    required this.teamId,
+    required this.rank,
+    required this.wins,
+    required this.losses,
+    required this.ties,
+  });
+
+  @override
+  int get hashCode =>
+      teamId.hashCode ^
+      rank.hashCode ^
+      wins.hashCode ^
+      losses.hashCode ^
+      ties.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is StandingsRowInfo &&
+          runtimeType == other.runtimeType &&
+          teamId == other.teamId &&
+          rank == other.rank &&
+          wins == other.wins &&
+          losses == other.losses &&
+          ties == other.ties;
+}
+
 /// 캐릭터 생성 스텝3~4(지역·학교 선택)용 — 고교 리그 팀 전부와 팀특성
 /// 3슬롯. 지역별 그룹핑·학교 카드 비주얼은 06_캐릭터생성.md 자체가
 /// "열린 세부 — 아트 단계"로 이미 미뤄둔 항목이라, 이번 스코프는 평평한
 /// 목록만 준다 — Dart가 `meta_json`에서 이름 등 표시 필드를 꺼내 쓴다.
 class TeamOption {
   final String teamId;
+  final String leagueId;
   final String metaJson;
   final String philosophy;
   final String resource;
@@ -240,6 +389,7 @@ class TeamOption {
 
   const TeamOption({
     required this.teamId,
+    required this.leagueId,
     required this.metaJson,
     required this.philosophy,
     required this.resource,
@@ -249,6 +399,7 @@ class TeamOption {
   @override
   int get hashCode =>
       teamId.hashCode ^
+      leagueId.hashCode ^
       metaJson.hashCode ^
       philosophy.hashCode ^
       resource.hashCode ^
@@ -260,6 +411,7 @@ class TeamOption {
       other is TeamOption &&
           runtimeType == other.runtimeType &&
           teamId == other.teamId &&
+          leagueId == other.leagueId &&
           metaJson == other.metaJson &&
           philosophy == other.philosophy &&
           resource == other.resource &&

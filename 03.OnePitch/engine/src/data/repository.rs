@@ -819,7 +819,7 @@ fn simulate_wild_card(slot_conn: &Connection, rng: &mut ChaCha8Rng, league_id: &
     Ok(fourth.to_string()) // 5위가 2연승 못 하면(1승1패 등) 4위 진출
 }
 
-fn win_pct(w: i64, l: i64) -> f64 {
+pub(crate) fn win_pct(w: i64, l: i64) -> f64 {
     w as f64 / (w + l).max(1) as f64
 }
 

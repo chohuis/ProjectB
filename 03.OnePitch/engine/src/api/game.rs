@@ -236,6 +236,7 @@ pub fn course_names() -> Vec<String> {
 #[derive(Debug, Clone)]
 pub struct TeamOption {
     pub team_id: String,
+    pub league_id: String,
     pub meta_json: String,
     pub philosophy: String,
     pub resource: String,
@@ -245,7 +246,7 @@ pub struct TeamOption {
 pub fn list_hs_teams(content_db_path: String) -> anyhow::Result<Vec<TeamOption>> {
     let conn = content::open(&content_db_path)?;
     let mut stmt = conn.prepare(
-        "SELECT teams.id, teams.meta, team_traits.philosophy, team_traits.resource, team_traits.status
+        "SELECT teams.id, teams.league_id, teams.meta, team_traits.philosophy, team_traits.resource, team_traits.status
          FROM teams JOIN team_traits ON team_traits.team_id = teams.id
          WHERE teams.league_id = 'league:hs'
          ORDER BY teams.id",
@@ -254,10 +255,11 @@ pub fn list_hs_teams(content_db_path: String) -> anyhow::Result<Vec<TeamOption>>
         .query_map([], |r| {
             Ok(TeamOption {
                 team_id: r.get(0)?,
-                meta_json: r.get::<_, Option<String>>(1)?.unwrap_or_else(|| "null".to_string()),
-                philosophy: r.get(2)?,
-                resource: r.get(3)?,
-                status: r.get(4)?,
+                league_id: r.get(1)?,
+                meta_json: r.get::<_, Option<String>>(2)?.unwrap_or_else(|| "null".to_string()),
+                philosophy: r.get(3)?,
+                resource: r.get(4)?,
+                status: r.get(5)?,
             })
         })?
         .collect::<Result<_, _>>()?;
@@ -274,17 +276,18 @@ pub fn get_current_team_info() -> anyhow::Result<Option<TeamOption>> {
         let Some(team_id) = contract.get("team_id").and_then(|v| v.as_str()) else {
             return Ok(None);
         };
-        let row: Option<(String, Option<String>, String, String, String)> = state
+        let row: Option<(String, String, Option<String>, String, String, String)> = state
             .content_conn
             .query_row(
-                "SELECT teams.id, teams.meta, team_traits.philosophy, team_traits.resource, team_traits.status
+                "SELECT teams.id, teams.league_id, teams.meta, team_traits.philosophy, team_traits.resource, team_traits.status
                  FROM teams JOIN team_traits ON team_traits.team_id = teams.id WHERE teams.id = ?1",
                 [team_id],
-                |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?, r.get(4)?)),
+                |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?, r.get(4)?, r.get(5)?)),
             )
             .optional()?;
-        Ok(row.map(|(team_id, meta, philosophy, resource, status)| TeamOption {
+        Ok(row.map(|(team_id, league_id, meta, philosophy, resource, status)| TeamOption {
             team_id,
+            league_id,
             meta_json: meta.unwrap_or_else(|| "null".to_string()),
             philosophy,
             resource,
@@ -349,6 +352,151 @@ pub fn set_training(primary_stat: String, secondary_stat_1: String, secondary_st
     with_state(|state| {
         repository::set_protagonist_training(&state.slot_conn, &primary_stat, [&secondary_stat_1, &secondary_stat_2], &intensity, None)
     })
+}
+
+/// [02_리그](../../../04_UI기획/02_리그.md) 결정5 "전 팀 풀 스카우팅"용 —
+/// `league_id`를 주면 그 리그만, `None`이면 172팀 전부. 세션의
+/// `content_conn`을 그대로 쓰므로(뉴게임 이후에만 호출 가능) 경로를 또
+/// 안 받는다(`list_hs_teams`는 뉴게임 이전 캐릭터 생성 화면에서 쓰여
+/// 경로가 필요했던 것과 다른 지점).
+pub fn list_teams(league_id: Option<String>) -> anyhow::Result<Vec<TeamOption>> {
+    with_state(|state| {
+        let (sql, params): (&str, Vec<&dyn rusqlite::ToSql>) = match &league_id {
+            Some(l) => (
+                "SELECT teams.id, teams.league_id, teams.meta, team_traits.philosophy, team_traits.resource, team_traits.status
+                 FROM teams JOIN team_traits ON team_traits.team_id = teams.id WHERE teams.league_id = ?1 ORDER BY teams.id",
+                vec![l],
+            ),
+            None => (
+                "SELECT teams.id, teams.league_id, teams.meta, team_traits.philosophy, team_traits.resource, team_traits.status
+                 FROM teams JOIN team_traits ON team_traits.team_id = teams.id ORDER BY teams.id",
+                vec![],
+            ),
+        };
+        let mut stmt = state.content_conn.prepare(sql)?;
+        let rows: Vec<TeamOption> = stmt
+            .query_map(params.as_slice(), |r| {
+                Ok(TeamOption {
+                    team_id: r.get(0)?,
+                    league_id: r.get(1)?,
+                    meta_json: r.get::<_, Option<String>>(2)?.unwrap_or_else(|| "null".to_string()),
+                    philosophy: r.get(3)?,
+                    resource: r.get(4)?,
+                    status: r.get(5)?,
+                })
+            })?
+            .collect::<Result<_, _>>()?;
+        Ok(rows)
+    })
+}
+
+/// 로스터 한 명 — [02_리그](../../../04_UI기획/02_리그.md) §1. NPC는
+/// S~D 등급이 없다(§1 "등급은 주인공 전용") — 능력치+포지션+보유구종만.
+/// 개인 통산 성적은 그 자체가 엔진에 없어(계속 이월 항목) 이번에도 없음.
+#[derive(Debug, Clone)]
+pub struct RosterPlayerInfo {
+    pub id: String,
+    pub name: String,
+    pub position: String,
+    pub age: i64,
+    pub stats_json: String,
+    pub pitches_json: Option<String>,
+}
+
+pub fn list_roster(team_id: String) -> anyhow::Result<Vec<RosterPlayerInfo>> {
+    with_state(|state| {
+        let mut stmt = state
+            .slot_conn
+            .prepare("SELECT id, name, position, age, stats, pitches FROM npc WHERE team_id = ?1 AND retired = 0 ORDER BY position, id")?;
+        let rows: Vec<RosterPlayerInfo> = stmt
+            .query_map([&team_id], |r| {
+                Ok(RosterPlayerInfo {
+                    id: r.get(0)?,
+                    name: r.get(1)?,
+                    position: r.get(2)?,
+                    age: r.get(3)?,
+                    stats_json: r.get(4)?,
+                    pitches_json: r.get(5)?,
+                })
+            })?
+            .collect::<Result<_, _>>()?;
+        Ok(rows)
+    })
+}
+
+/// [02_리그](../../../04_UI기획/02_리그.md) §2 일정 탭 — `team_id`의 전체
+/// 스케줄(지난 결과 + 다가오는 경기). `result_json`이 `None`이면 아직 안
+/// 열린 경기.
+#[derive(Debug, Clone)]
+pub struct ScheduleGameInfo {
+    pub game_id: String,
+    pub day: i64,
+    pub home: String,
+    pub away: String,
+    pub result_json: Option<String>,
+}
+
+pub fn get_team_schedule(team_id: String) -> anyhow::Result<Vec<ScheduleGameInfo>> {
+    with_state(|state| {
+        let mut stmt = state
+            .slot_conn
+            .prepare("SELECT game_id, day, home, away, result FROM schedule WHERE home = ?1 OR away = ?1 ORDER BY day")?;
+        let rows: Vec<ScheduleGameInfo> = stmt
+            .query_map([&team_id], |r| {
+                Ok(ScheduleGameInfo { game_id: r.get(0)?, day: r.get(1)?, home: r.get(2)?, away: r.get(3)?, result_json: r.get(4)? })
+            })?
+            .collect::<Result<_, _>>()?;
+        Ok(rows)
+    })
+}
+
+/// [02_리그](../../../04_UI기획/02_리그.md) §3 순위 탭 — `league_id` 소속
+/// 팀들의 승률 내림차순 순위. `standings.rank` 컬럼은 시즌 중엔 갱신 안
+/// 되고 `season_rollover` 때만 확정되므로(`repository::update_standings`
+/// 참고), 여기 `rank`는 이 조회 시점에 재계산한 값 — 정렬·표시 포맷팅일
+/// 뿐 승패 판정 자체가 아니라 "UI가 해도 됨: 정렬"(03_구조.md §3)에 해당.
+/// 로스터가 없어(방금 뉴게임 직후 등) `standings` 행이 아직 없는 팀은
+/// 0승0패로 취급.
+#[derive(Debug, Clone)]
+pub struct StandingsRowInfo {
+    pub team_id: String,
+    pub rank: i64,
+    pub wins: i64,
+    pub losses: i64,
+    pub ties: i64,
+}
+
+pub fn get_standings(league_id: String) -> anyhow::Result<Vec<StandingsRowInfo>> {
+    with_state(|state| {
+        let mut team_stmt = state.content_conn.prepare("SELECT id FROM teams WHERE league_id = ?1")?;
+        let team_ids: Vec<String> = team_stmt.query_map([&league_id], |r| r.get(0))?.collect::<Result<_, _>>()?;
+
+        let mut rows: Vec<(String, i64, i64, i64)> = Vec::with_capacity(team_ids.len());
+        for team_id in team_ids {
+            let record: Option<(i64, i64, i64)> = state
+                .slot_conn
+                .query_row("SELECT w, l, t FROM standings WHERE team_id = ?1", [&team_id], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)))
+                .optional()?;
+            let (w, l, t) = record.unwrap_or((0, 0, 0));
+            rows.push((team_id, w, l, t));
+        }
+        rows.sort_by(|a, b| repository::win_pct(b.1, b.2).partial_cmp(&repository::win_pct(a.1, a.2)).unwrap_or(std::cmp::Ordering::Equal));
+        Ok(rows
+            .into_iter()
+            .enumerate()
+            .map(|(i, (team_id, w, l, t))| StandingsRowInfo { team_id, rank: i as i64 + 1, wins: w, losses: l, ties: t })
+            .collect())
+    })
+}
+
+/// [02_리그](../../../04_UI기획/02_리그.md) §4 라이벌 탭 — `team_history.rivals`
+/// (정적 콘텐츠, 지역·서사 페어링)만 반환한다. **개인 라이벌 관계
+/// (관계도·아크단계 비교)는 이번 스코프에 없음** — `relationships`
+/// 테이블이 스키마만 있고 실제로 채우는 로직이 엔진 어디에도 없어서다
+/// (관계 시스템 자체가 아직 미구현, 05_히스토리_엔딩과 함께 후속 스코프).
+/// 정확한 JSON 형태가 팀마다 다를 수 있어 원시 통과.
+pub fn get_team_rivals(team_id: String) -> anyhow::Result<Option<String>> {
+    with_state(|state| Ok(state.content_conn.query_row("SELECT rivals FROM team_history WHERE team_id = ?1", [&team_id], |r| r.get(0)).optional()?))
 }
 
 #[cfg(test)]
@@ -442,6 +590,41 @@ mod tests {
         assert_eq!(config.secondary_stats, vec!["구위", "제구"]);
         assert_eq!(config.intensity, "보통");
         assert!(config.new_pitch.is_none());
+
+        reset_state();
+    }
+
+    #[test]
+    fn league_hub_queries_work_end_to_end_after_new_game() {
+        let _guard = TEST_SERIAL.lock().unwrap();
+        reset_state();
+
+        let hs_team = {
+            let conn = content::open("content.db").unwrap();
+            conn.query_row("SELECT id FROM teams WHERE league_id = 'league:hs' LIMIT 1", [], |r| r.get::<_, String>(0)).unwrap()
+        };
+
+        new_game("content.db".to_string(), 44, "리그테스트".to_string(), "우완".to_string(), hs_team.clone(), "강속구형".to_string(), None).unwrap();
+
+        let hs_teams = list_teams(Some("league:hs".to_string())).unwrap();
+        assert!(hs_teams.iter().any(|t| t.team_id == hs_team));
+        let all_teams = list_teams(None).unwrap();
+        assert!(all_teams.len() > hs_teams.len(), "unfiltered list should include every league");
+
+        let roster = list_roster(hs_team.clone()).unwrap();
+        assert!(!roster.is_empty());
+        assert!(roster.iter().any(|p| p.position == "선발투수"));
+
+        let schedule = get_team_schedule(hs_team.clone()).unwrap();
+        assert!(!schedule.is_empty());
+        assert!(schedule.iter().all(|g| g.home == hs_team || g.away == hs_team));
+
+        let standings = get_standings("league:hs".to_string()).unwrap();
+        assert!(standings.iter().any(|s| s.team_id == hs_team));
+        assert_eq!(standings[0].rank, 1);
+
+        // rivals는 콘텐츠가 있으면 Some, 없으면 None — 둘 다 패닉 없이 동작하는지만 확인.
+        let _ = get_team_rivals(hs_team).unwrap();
 
         reset_state();
     }

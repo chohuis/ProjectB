@@ -67,7 +67,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.12.0';
 
   @override
-  int get rustContentHash => -268764926;
+  int get rustContentHash => 1616752493;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -93,6 +93,16 @@ abstract class RustLibApi extends BaseApi {
 
   Future<ProtagonistStatusInfo> crateApiGameGetProtagonistStatus();
 
+  Future<List<StandingsRowInfo>> crateApiGameGetStandings({
+    required String leagueId,
+  });
+
+  Future<String?> crateApiGameGetTeamRivals({required String teamId});
+
+  Future<List<ScheduleGameInfo>> crateApiGameGetTeamSchedule({
+    required String teamId,
+  });
+
   Future<TrainingConfigInfo?> crateApiGameGetTrainingConfig();
 
   String crateApiSimpleGreet({required String name});
@@ -102,6 +112,12 @@ abstract class RustLibApi extends BaseApi {
   Future<List<TeamOption>> crateApiGameListHsTeams({
     required String contentDbPath,
   });
+
+  Future<List<RosterPlayerInfo>> crateApiGameListRoster({
+    required String teamId,
+  });
+
+  Future<List<TeamOption>> crateApiGameListTeams({String? leagueId});
 
   Future<void> crateApiGameNewGame({
     required String contentDbPath,
@@ -316,6 +332,94 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "get_protagonist_status", argNames: []);
 
   @override
+  Future<List<StandingsRowInfo>> crateApiGameGetStandings({
+    required String leagueId,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(leagueId, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 8,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_list_standings_row_info,
+          decodeErrorData: sse_decode_AnyhowException,
+        ),
+        constMeta: kCrateApiGameGetStandingsConstMeta,
+        argValues: [leagueId],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiGameGetStandingsConstMeta =>
+      const TaskConstMeta(debugName: "get_standings", argNames: ["leagueId"]);
+
+  @override
+  Future<String?> crateApiGameGetTeamRivals({required String teamId}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(teamId, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 9,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_opt_String,
+          decodeErrorData: sse_decode_AnyhowException,
+        ),
+        constMeta: kCrateApiGameGetTeamRivalsConstMeta,
+        argValues: [teamId],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiGameGetTeamRivalsConstMeta =>
+      const TaskConstMeta(debugName: "get_team_rivals", argNames: ["teamId"]);
+
+  @override
+  Future<List<ScheduleGameInfo>> crateApiGameGetTeamSchedule({
+    required String teamId,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(teamId, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 10,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_list_schedule_game_info,
+          decodeErrorData: sse_decode_AnyhowException,
+        ),
+        constMeta: kCrateApiGameGetTeamScheduleConstMeta,
+        argValues: [teamId],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiGameGetTeamScheduleConstMeta =>
+      const TaskConstMeta(debugName: "get_team_schedule", argNames: ["teamId"]);
+
+  @override
   Future<TrainingConfigInfo?> crateApiGameGetTrainingConfig() {
     return handler.executeNormal(
       NormalTask(
@@ -324,7 +428,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 8,
+            funcId: 11,
             port: port_,
           );
         },
@@ -349,7 +453,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_String(name, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 9)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 12)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_String,
@@ -374,7 +478,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 10,
+            funcId: 13,
             port: port_,
           );
         },
@@ -404,7 +508,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 11,
+            funcId: 14,
             port: port_,
           );
         },
@@ -423,6 +527,64 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     debugName: "list_hs_teams",
     argNames: ["contentDbPath"],
   );
+
+  @override
+  Future<List<RosterPlayerInfo>> crateApiGameListRoster({
+    required String teamId,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(teamId, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 15,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_list_roster_player_info,
+          decodeErrorData: sse_decode_AnyhowException,
+        ),
+        constMeta: kCrateApiGameListRosterConstMeta,
+        argValues: [teamId],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiGameListRosterConstMeta =>
+      const TaskConstMeta(debugName: "list_roster", argNames: ["teamId"]);
+
+  @override
+  Future<List<TeamOption>> crateApiGameListTeams({String? leagueId}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_opt_String(leagueId, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 16,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_list_team_option,
+          decodeErrorData: sse_decode_AnyhowException,
+        ),
+        constMeta: kCrateApiGameListTeamsConstMeta,
+        argValues: [leagueId],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiGameListTeamsConstMeta =>
+      const TaskConstMeta(debugName: "list_teams", argNames: ["leagueId"]);
 
   @override
   Future<void> crateApiGameNewGame({
@@ -448,7 +610,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 12,
+            funcId: 17,
             port: port_,
           );
         },
@@ -498,7 +660,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 13,
+            funcId: 18,
             port: port_,
           );
         },
@@ -536,7 +698,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 14,
+            funcId: 19,
             port: port_,
           );
         },
@@ -562,7 +724,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 15)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 20)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_list_String,
@@ -636,6 +798,24 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as Uint8List;
+  }
+
+  @protected
+  List<RosterPlayerInfo> dco_decode_list_roster_player_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_roster_player_info).toList();
+  }
+
+  @protected
+  List<ScheduleGameInfo> dco_decode_list_schedule_game_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_schedule_game_info).toList();
+  }
+
+  @protected
+  List<StandingsRowInfo> dco_decode_list_standings_row_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_standings_row_info).toList();
   }
 
   @protected
@@ -737,17 +917,64 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  TeamOption dco_decode_team_option(dynamic raw) {
+  RosterPlayerInfo dco_decode_roster_player_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 6)
+      throw Exception('unexpected arr length: expect 6 but see ${arr.length}');
+    return RosterPlayerInfo(
+      id: dco_decode_String(arr[0]),
+      name: dco_decode_String(arr[1]),
+      position: dco_decode_String(arr[2]),
+      age: dco_decode_i_64(arr[3]),
+      statsJson: dco_decode_String(arr[4]),
+      pitchesJson: dco_decode_opt_String(arr[5]),
+    );
+  }
+
+  @protected
+  ScheduleGameInfo dco_decode_schedule_game_info(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
     if (arr.length != 5)
       throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
+    return ScheduleGameInfo(
+      gameId: dco_decode_String(arr[0]),
+      day: dco_decode_i_64(arr[1]),
+      home: dco_decode_String(arr[2]),
+      away: dco_decode_String(arr[3]),
+      resultJson: dco_decode_opt_String(arr[4]),
+    );
+  }
+
+  @protected
+  StandingsRowInfo dco_decode_standings_row_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 5)
+      throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
+    return StandingsRowInfo(
+      teamId: dco_decode_String(arr[0]),
+      rank: dco_decode_i_64(arr[1]),
+      wins: dco_decode_i_64(arr[2]),
+      losses: dco_decode_i_64(arr[3]),
+      ties: dco_decode_i_64(arr[4]),
+    );
+  }
+
+  @protected
+  TeamOption dco_decode_team_option(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 6)
+      throw Exception('unexpected arr length: expect 6 but see ${arr.length}');
     return TeamOption(
       teamId: dco_decode_String(arr[0]),
-      metaJson: dco_decode_String(arr[1]),
-      philosophy: dco_decode_String(arr[2]),
-      resource: dco_decode_String(arr[3]),
-      status: dco_decode_String(arr[4]),
+      leagueId: dco_decode_String(arr[1]),
+      metaJson: dco_decode_String(arr[2]),
+      philosophy: dco_decode_String(arr[3]),
+      resource: dco_decode_String(arr[4]),
+      status: dco_decode_String(arr[5]),
     );
   }
 
@@ -862,6 +1089,48 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var len_ = sse_decode_i_32(deserializer);
     return deserializer.buffer.getUint8List(len_);
+  }
+
+  @protected
+  List<RosterPlayerInfo> sse_decode_list_roster_player_info(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <RosterPlayerInfo>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_roster_player_info(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<ScheduleGameInfo> sse_decode_list_schedule_game_info(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <ScheduleGameInfo>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_schedule_game_info(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<StandingsRowInfo> sse_decode_list_standings_row_info(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <StandingsRowInfo>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_standings_row_info(deserializer));
+    }
+    return ans_;
   }
 
   @protected
@@ -1004,15 +1273,70 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  RosterPlayerInfo sse_decode_roster_player_info(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_id = sse_decode_String(deserializer);
+    var var_name = sse_decode_String(deserializer);
+    var var_position = sse_decode_String(deserializer);
+    var var_age = sse_decode_i_64(deserializer);
+    var var_statsJson = sse_decode_String(deserializer);
+    var var_pitchesJson = sse_decode_opt_String(deserializer);
+    return RosterPlayerInfo(
+      id: var_id,
+      name: var_name,
+      position: var_position,
+      age: var_age,
+      statsJson: var_statsJson,
+      pitchesJson: var_pitchesJson,
+    );
+  }
+
+  @protected
+  ScheduleGameInfo sse_decode_schedule_game_info(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_gameId = sse_decode_String(deserializer);
+    var var_day = sse_decode_i_64(deserializer);
+    var var_home = sse_decode_String(deserializer);
+    var var_away = sse_decode_String(deserializer);
+    var var_resultJson = sse_decode_opt_String(deserializer);
+    return ScheduleGameInfo(
+      gameId: var_gameId,
+      day: var_day,
+      home: var_home,
+      away: var_away,
+      resultJson: var_resultJson,
+    );
+  }
+
+  @protected
+  StandingsRowInfo sse_decode_standings_row_info(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_teamId = sse_decode_String(deserializer);
+    var var_rank = sse_decode_i_64(deserializer);
+    var var_wins = sse_decode_i_64(deserializer);
+    var var_losses = sse_decode_i_64(deserializer);
+    var var_ties = sse_decode_i_64(deserializer);
+    return StandingsRowInfo(
+      teamId: var_teamId,
+      rank: var_rank,
+      wins: var_wins,
+      losses: var_losses,
+      ties: var_ties,
+    );
+  }
+
+  @protected
   TeamOption sse_decode_team_option(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_teamId = sse_decode_String(deserializer);
+    var var_leagueId = sse_decode_String(deserializer);
     var var_metaJson = sse_decode_String(deserializer);
     var var_philosophy = sse_decode_String(deserializer);
     var var_resource = sse_decode_String(deserializer);
     var var_status = sse_decode_String(deserializer);
     return TeamOption(
       teamId: var_teamId,
+      leagueId: var_leagueId,
       metaJson: var_metaJson,
       philosophy: var_philosophy,
       resource: var_resource,
@@ -1146,6 +1470,42 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_list_roster_player_info(
+    List<RosterPlayerInfo> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_roster_player_info(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_schedule_game_info(
+    List<ScheduleGameInfo> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_schedule_game_info(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_standings_row_info(
+    List<StandingsRowInfo> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_standings_row_info(item, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_list_team_option(
     List<TeamOption> self,
     SseSerializer serializer,
@@ -1272,9 +1632,50 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_roster_player_info(
+    RosterPlayerInfo self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.id, serializer);
+    sse_encode_String(self.name, serializer);
+    sse_encode_String(self.position, serializer);
+    sse_encode_i_64(self.age, serializer);
+    sse_encode_String(self.statsJson, serializer);
+    sse_encode_opt_String(self.pitchesJson, serializer);
+  }
+
+  @protected
+  void sse_encode_schedule_game_info(
+    ScheduleGameInfo self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.gameId, serializer);
+    sse_encode_i_64(self.day, serializer);
+    sse_encode_String(self.home, serializer);
+    sse_encode_String(self.away, serializer);
+    sse_encode_opt_String(self.resultJson, serializer);
+  }
+
+  @protected
+  void sse_encode_standings_row_info(
+    StandingsRowInfo self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.teamId, serializer);
+    sse_encode_i_64(self.rank, serializer);
+    sse_encode_i_64(self.wins, serializer);
+    sse_encode_i_64(self.losses, serializer);
+    sse_encode_i_64(self.ties, serializer);
+  }
+
+  @protected
   void sse_encode_team_option(TeamOption self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_String(self.teamId, serializer);
+    sse_encode_String(self.leagueId, serializer);
     sse_encode_String(self.metaJson, serializer);
     sse_encode_String(self.philosophy, serializer);
     sse_encode_String(self.resource, serializer);

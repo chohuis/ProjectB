@@ -29,7 +29,10 @@ class GameScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(state.status?.name ?? ''),
-        actions: [IconButton(icon: const Icon(Icons.person), tooltip: '내 선수', onPressed: () => context.push('/game/my-player'))],
+        actions: [
+          IconButton(icon: const Icon(Icons.person), tooltip: '내 선수', onPressed: () => context.push('/game/my-player')),
+          IconButton(icon: const Icon(Icons.emoji_events), tooltip: '리그', onPressed: () => context.push('/game/league')),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
