@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:app/main.dart';
@@ -9,9 +9,10 @@ void main() {
     await RustLib.init();
   });
 
-  testWidgets('frb greet smoke test', (WidgetTester tester) async {
-    await tester.pumpWidget(const MyApp());
+  testWidgets('app boots into the new-game screen', (WidgetTester tester) async {
+    await tester.pumpWidget(const ProviderScope(child: OnePitchApp()));
+    await tester.pump();
 
-    expect(find.textContaining('Hello, Tom'), findsOneWidget);
+    expect(find.text('뉴게임 — 캐릭터 생성'), findsOneWidget);
   });
 }

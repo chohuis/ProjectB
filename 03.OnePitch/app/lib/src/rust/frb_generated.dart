@@ -3,6 +3,7 @@
 
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables, unused_field
 
+import 'api/game.dart';
 import 'api/simple.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -66,21 +67,50 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.12.0';
 
   @override
-  int get rustContentHash => -1918914929;
+  int get rustContentHash => 1406952019;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
         stem: 'engine',
-        ioDirectory: 'rust/target/release/',
+        ioDirectory: '../engine/target/release/',
         webPrefix: 'pkg/',
         wasmBindgenName: 'wasm_bindgen',
       );
 }
 
 abstract class RustLibApi extends BaseApi {
+  Future<List<PendingActionInfo>> crateApiGameAdvance();
+
+  List<String> crateApiGameCourseNames();
+
+  Future<MetaStatusInfo> crateApiGameGetMetaStatus();
+
+  Future<List<PendingActionInfo>> crateApiGameGetPendingActions();
+
+  Future<ProtagonistStatusInfo> crateApiGameGetProtagonistStatus();
+
   String crateApiSimpleGreet({required String name});
 
   Future<void> crateApiSimpleInitApp();
+
+  Future<List<TeamOption>> crateApiGameListHsTeams({
+    required String contentDbPath,
+  });
+
+  Future<void> crateApiGameNewGame({
+    required String contentDbPath,
+    required PlatformInt64 canonicalSeed,
+    required String name,
+    required String handedness,
+    required String schoolTeamId,
+    required String archetype,
+    String? secondPitch,
+  });
+
+  Future<MatchStepInfo?> crateApiGameResolveChoice({
+    required String actionId,
+    required String choiceId,
+  });
 }
 
 class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
@@ -92,13 +122,143 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   });
 
   @override
+  Future<List<PendingActionInfo>> crateApiGameAdvance() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 1,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_list_pending_action_info,
+          decodeErrorData: sse_decode_AnyhowException,
+        ),
+        constMeta: kCrateApiGameAdvanceConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiGameAdvanceConstMeta =>
+      const TaskConstMeta(debugName: "advance", argNames: []);
+
+  @override
+  List<String> crateApiGameCourseNames() {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 2)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_list_String,
+          decodeErrorData: null,
+        ),
+        constMeta: kCrateApiGameCourseNamesConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiGameCourseNamesConstMeta =>
+      const TaskConstMeta(debugName: "course_names", argNames: []);
+
+  @override
+  Future<MetaStatusInfo> crateApiGameGetMetaStatus() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 3,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_meta_status_info,
+          decodeErrorData: sse_decode_AnyhowException,
+        ),
+        constMeta: kCrateApiGameGetMetaStatusConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiGameGetMetaStatusConstMeta =>
+      const TaskConstMeta(debugName: "get_meta_status", argNames: []);
+
+  @override
+  Future<List<PendingActionInfo>> crateApiGameGetPendingActions() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 4,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_list_pending_action_info,
+          decodeErrorData: sse_decode_AnyhowException,
+        ),
+        constMeta: kCrateApiGameGetPendingActionsConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiGameGetPendingActionsConstMeta =>
+      const TaskConstMeta(debugName: "get_pending_actions", argNames: []);
+
+  @override
+  Future<ProtagonistStatusInfo> crateApiGameGetProtagonistStatus() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 5,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_protagonist_status_info,
+          decodeErrorData: sse_decode_AnyhowException,
+        ),
+        constMeta: kCrateApiGameGetProtagonistStatusConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiGameGetProtagonistStatusConstMeta =>
+      const TaskConstMeta(debugName: "get_protagonist_status", argNames: []);
+
+  @override
   String crateApiSimpleGreet({required String name}) {
     return handler.executeSync(
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_String(name, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 1)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 6)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_String,
@@ -123,7 +283,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 2,
+            funcId: 7,
             port: port_,
           );
         },
@@ -141,6 +301,138 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   TaskConstMeta get kCrateApiSimpleInitAppConstMeta =>
       const TaskConstMeta(debugName: "init_app", argNames: []);
 
+  @override
+  Future<List<TeamOption>> crateApiGameListHsTeams({
+    required String contentDbPath,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(contentDbPath, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 8,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_list_team_option,
+          decodeErrorData: sse_decode_AnyhowException,
+        ),
+        constMeta: kCrateApiGameListHsTeamsConstMeta,
+        argValues: [contentDbPath],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiGameListHsTeamsConstMeta => const TaskConstMeta(
+    debugName: "list_hs_teams",
+    argNames: ["contentDbPath"],
+  );
+
+  @override
+  Future<void> crateApiGameNewGame({
+    required String contentDbPath,
+    required PlatformInt64 canonicalSeed,
+    required String name,
+    required String handedness,
+    required String schoolTeamId,
+    required String archetype,
+    String? secondPitch,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(contentDbPath, serializer);
+          sse_encode_i_64(canonicalSeed, serializer);
+          sse_encode_String(name, serializer);
+          sse_encode_String(handedness, serializer);
+          sse_encode_String(schoolTeamId, serializer);
+          sse_encode_String(archetype, serializer);
+          sse_encode_opt_String(secondPitch, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 9,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_unit,
+          decodeErrorData: sse_decode_AnyhowException,
+        ),
+        constMeta: kCrateApiGameNewGameConstMeta,
+        argValues: [
+          contentDbPath,
+          canonicalSeed,
+          name,
+          handedness,
+          schoolTeamId,
+          archetype,
+          secondPitch,
+        ],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiGameNewGameConstMeta => const TaskConstMeta(
+    debugName: "new_game",
+    argNames: [
+      "contentDbPath",
+      "canonicalSeed",
+      "name",
+      "handedness",
+      "schoolTeamId",
+      "archetype",
+      "secondPitch",
+    ],
+  );
+
+  @override
+  Future<MatchStepInfo?> crateApiGameResolveChoice({
+    required String actionId,
+    required String choiceId,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(actionId, serializer);
+          sse_encode_String(choiceId, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 10,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_opt_box_autoadd_match_step_info,
+          decodeErrorData: sse_decode_AnyhowException,
+        ),
+        constMeta: kCrateApiGameResolveChoiceConstMeta,
+        argValues: [actionId, choiceId],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiGameResolveChoiceConstMeta => const TaskConstMeta(
+    debugName: "resolve_choice",
+    argNames: ["actionId", "choiceId"],
+  );
+
+  @protected
+  AnyhowException dco_decode_AnyhowException(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return AnyhowException(raw as String);
+  }
+
   @protected
   String dco_decode_String(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
@@ -148,9 +440,142 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  bool dco_decode_bool(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw as bool;
+  }
+
+  @protected
+  MatchStepInfo dco_decode_box_autoadd_match_step_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_match_step_info(raw);
+  }
+
+  @protected
+  PlatformInt64 dco_decode_i_64(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dcoDecodeI64(raw);
+  }
+
+  @protected
+  List<String> dco_decode_list_String(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_String).toList();
+  }
+
+  @protected
+  List<PendingActionInfo> dco_decode_list_pending_action_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_pending_action_info).toList();
+  }
+
+  @protected
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as Uint8List;
+  }
+
+  @protected
+  List<TeamOption> dco_decode_list_team_option(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_team_option).toList();
+  }
+
+  @protected
+  MatchStepInfo dco_decode_match_step_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    switch (raw[0]) {
+      case 0:
+        return MatchStepInfo_AwaitingPitch(
+          batterId: dco_decode_String(raw[1]),
+          balls: dco_decode_u_32(raw[2]),
+          strikes: dco_decode_u_32(raw[3]),
+          highLeverage: dco_decode_bool(raw[4]),
+        );
+      case 1:
+        return MatchStepInfo_GameOver(
+          homeRuns: dco_decode_u_32(raw[1]),
+          awayRuns: dco_decode_u_32(raw[2]),
+        );
+      default:
+        throw Exception("unreachable");
+    }
+  }
+
+  @protected
+  MetaStatusInfo dco_decode_meta_status_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return MetaStatusInfo(
+      currentDay: dco_decode_i_64(arr[0]),
+      season: dco_decode_i_64(arr[1]),
+    );
+  }
+
+  @protected
+  String? dco_decode_opt_String(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_String(raw);
+  }
+
+  @protected
+  MatchStepInfo? dco_decode_opt_box_autoadd_match_step_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_match_step_info(raw);
+  }
+
+  @protected
+  PendingActionInfo dco_decode_pending_action_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 5)
+      throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
+    return PendingActionInfo(
+      id: dco_decode_String(arr[0]),
+      kind: dco_decode_String(arr[1]),
+      urgency: dco_decode_String(arr[2]),
+      createdDay: dco_decode_i_64(arr[3]),
+      payloadJson: dco_decode_String(arr[4]),
+    );
+  }
+
+  @protected
+  ProtagonistStatusInfo dco_decode_protagonist_status_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 6)
+      throw Exception('unexpected arr length: expect 6 but see ${arr.length}');
+    return ProtagonistStatusInfo(
+      name: dco_decode_String(arr[0]),
+      statsJson: dco_decode_String(arr[1]),
+      liveStateJson: dco_decode_String(arr[2]),
+      contractJson: dco_decode_String(arr[3]),
+      injuryJson: dco_decode_String(arr[4]),
+      pitchesJson: dco_decode_String(arr[5]),
+    );
+  }
+
+  @protected
+  TeamOption dco_decode_team_option(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 5)
+      throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
+    return TeamOption(
+      teamId: dco_decode_String(arr[0]),
+      metaJson: dco_decode_String(arr[1]),
+      philosophy: dco_decode_String(arr[2]),
+      resource: dco_decode_String(arr[3]),
+      status: dco_decode_String(arr[4]),
+    );
+  }
+
+  @protected
+  int dco_decode_u_32(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw as int;
   }
 
   @protected
@@ -166,6 +591,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  AnyhowException sse_decode_AnyhowException(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_String(deserializer);
+    return AnyhowException(inner);
+  }
+
+  @protected
   String sse_decode_String(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var inner = sse_decode_list_prim_u_8_strict(deserializer);
@@ -173,10 +605,192 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  bool sse_decode_bool(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return deserializer.buffer.getUint8() != 0;
+  }
+
+  @protected
+  MatchStepInfo sse_decode_box_autoadd_match_step_info(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_match_step_info(deserializer));
+  }
+
+  @protected
+  PlatformInt64 sse_decode_i_64(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return deserializer.buffer.getPlatformInt64();
+  }
+
+  @protected
+  List<String> sse_decode_list_String(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <String>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_String(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<PendingActionInfo> sse_decode_list_pending_action_info(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <PendingActionInfo>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_pending_action_info(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var len_ = sse_decode_i_32(deserializer);
     return deserializer.buffer.getUint8List(len_);
+  }
+
+  @protected
+  List<TeamOption> sse_decode_list_team_option(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <TeamOption>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_team_option(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  MatchStepInfo sse_decode_match_step_info(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var tag_ = sse_decode_i_32(deserializer);
+    switch (tag_) {
+      case 0:
+        var var_batterId = sse_decode_String(deserializer);
+        var var_balls = sse_decode_u_32(deserializer);
+        var var_strikes = sse_decode_u_32(deserializer);
+        var var_highLeverage = sse_decode_bool(deserializer);
+        return MatchStepInfo_AwaitingPitch(
+          batterId: var_batterId,
+          balls: var_balls,
+          strikes: var_strikes,
+          highLeverage: var_highLeverage,
+        );
+      case 1:
+        var var_homeRuns = sse_decode_u_32(deserializer);
+        var var_awayRuns = sse_decode_u_32(deserializer);
+        return MatchStepInfo_GameOver(
+          homeRuns: var_homeRuns,
+          awayRuns: var_awayRuns,
+        );
+      default:
+        throw UnimplementedError('');
+    }
+  }
+
+  @protected
+  MetaStatusInfo sse_decode_meta_status_info(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_currentDay = sse_decode_i_64(deserializer);
+    var var_season = sse_decode_i_64(deserializer);
+    return MetaStatusInfo(currentDay: var_currentDay, season: var_season);
+  }
+
+  @protected
+  String? sse_decode_opt_String(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_String(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
+  MatchStepInfo? sse_decode_opt_box_autoadd_match_step_info(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_match_step_info(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
+  PendingActionInfo sse_decode_pending_action_info(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_id = sse_decode_String(deserializer);
+    var var_kind = sse_decode_String(deserializer);
+    var var_urgency = sse_decode_String(deserializer);
+    var var_createdDay = sse_decode_i_64(deserializer);
+    var var_payloadJson = sse_decode_String(deserializer);
+    return PendingActionInfo(
+      id: var_id,
+      kind: var_kind,
+      urgency: var_urgency,
+      createdDay: var_createdDay,
+      payloadJson: var_payloadJson,
+    );
+  }
+
+  @protected
+  ProtagonistStatusInfo sse_decode_protagonist_status_info(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_name = sse_decode_String(deserializer);
+    var var_statsJson = sse_decode_String(deserializer);
+    var var_liveStateJson = sse_decode_String(deserializer);
+    var var_contractJson = sse_decode_String(deserializer);
+    var var_injuryJson = sse_decode_String(deserializer);
+    var var_pitchesJson = sse_decode_String(deserializer);
+    return ProtagonistStatusInfo(
+      name: var_name,
+      statsJson: var_statsJson,
+      liveStateJson: var_liveStateJson,
+      contractJson: var_contractJson,
+      injuryJson: var_injuryJson,
+      pitchesJson: var_pitchesJson,
+    );
+  }
+
+  @protected
+  TeamOption sse_decode_team_option(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_teamId = sse_decode_String(deserializer);
+    var var_metaJson = sse_decode_String(deserializer);
+    var var_philosophy = sse_decode_String(deserializer);
+    var var_resource = sse_decode_String(deserializer);
+    var var_status = sse_decode_String(deserializer);
+    return TeamOption(
+      teamId: var_teamId,
+      metaJson: var_metaJson,
+      philosophy: var_philosophy,
+      resource: var_resource,
+      status: var_status,
+    );
+  }
+
+  @protected
+  int sse_decode_u_32(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return deserializer.buffer.getUint32();
   }
 
   @protected
@@ -197,15 +811,60 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  bool sse_decode_bool(SseDeserializer deserializer) {
+  void sse_encode_AnyhowException(
+    AnyhowException self,
+    SseSerializer serializer,
+  ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    return deserializer.buffer.getUint8() != 0;
+    sse_encode_String(self.message, serializer);
   }
 
   @protected
   void sse_encode_String(String self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_list_prim_u_8_strict(utf8.encoder.convert(self), serializer);
+  }
+
+  @protected
+  void sse_encode_bool(bool self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    serializer.buffer.putUint8(self ? 1 : 0);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_match_step_info(
+    MatchStepInfo self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_match_step_info(self, serializer);
+  }
+
+  @protected
+  void sse_encode_i_64(PlatformInt64 self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    serializer.buffer.putPlatformInt64(self);
+  }
+
+  @protected
+  void sse_encode_list_String(List<String> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_String(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_pending_action_info(
+    List<PendingActionInfo> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_pending_action_info(item, serializer);
+    }
   }
 
   @protected
@@ -216,6 +875,122 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_i_32(self.length, serializer);
     serializer.buffer.putUint8List(self);
+  }
+
+  @protected
+  void sse_encode_list_team_option(
+    List<TeamOption> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_team_option(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_match_step_info(
+    MatchStepInfo self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    switch (self) {
+      case MatchStepInfo_AwaitingPitch(
+        batterId: final batterId,
+        balls: final balls,
+        strikes: final strikes,
+        highLeverage: final highLeverage,
+      ):
+        sse_encode_i_32(0, serializer);
+        sse_encode_String(batterId, serializer);
+        sse_encode_u_32(balls, serializer);
+        sse_encode_u_32(strikes, serializer);
+        sse_encode_bool(highLeverage, serializer);
+      case MatchStepInfo_GameOver(
+        homeRuns: final homeRuns,
+        awayRuns: final awayRuns,
+      ):
+        sse_encode_i_32(1, serializer);
+        sse_encode_u_32(homeRuns, serializer);
+        sse_encode_u_32(awayRuns, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_meta_status_info(
+    MetaStatusInfo self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_64(self.currentDay, serializer);
+    sse_encode_i_64(self.season, serializer);
+  }
+
+  @protected
+  void sse_encode_opt_String(String? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_String(self, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_opt_box_autoadd_match_step_info(
+    MatchStepInfo? self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_match_step_info(self, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_pending_action_info(
+    PendingActionInfo self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.id, serializer);
+    sse_encode_String(self.kind, serializer);
+    sse_encode_String(self.urgency, serializer);
+    sse_encode_i_64(self.createdDay, serializer);
+    sse_encode_String(self.payloadJson, serializer);
+  }
+
+  @protected
+  void sse_encode_protagonist_status_info(
+    ProtagonistStatusInfo self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.name, serializer);
+    sse_encode_String(self.statsJson, serializer);
+    sse_encode_String(self.liveStateJson, serializer);
+    sse_encode_String(self.contractJson, serializer);
+    sse_encode_String(self.injuryJson, serializer);
+    sse_encode_String(self.pitchesJson, serializer);
+  }
+
+  @protected
+  void sse_encode_team_option(TeamOption self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.teamId, serializer);
+    sse_encode_String(self.metaJson, serializer);
+    sse_encode_String(self.philosophy, serializer);
+    sse_encode_String(self.resource, serializer);
+    sse_encode_String(self.status, serializer);
+  }
+
+  @protected
+  void sse_encode_u_32(int self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    serializer.buffer.putUint32(self);
   }
 
   @protected
@@ -233,11 +1008,5 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   void sse_encode_i_32(int self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     serializer.buffer.putInt32(self);
-  }
-
-  @protected
-  void sse_encode_bool(bool self, SseSerializer serializer) {
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    serializer.buffer.putUint8(self ? 1 : 0);
   }
 }

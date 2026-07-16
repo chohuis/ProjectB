@@ -3,6 +3,7 @@
 
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables, unused_field
 
+import 'api/game.dart';
 import 'api/simple.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -19,10 +20,55 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   });
 
   @protected
+  AnyhowException dco_decode_AnyhowException(dynamic raw);
+
+  @protected
   String dco_decode_String(dynamic raw);
 
   @protected
+  bool dco_decode_bool(dynamic raw);
+
+  @protected
+  MatchStepInfo dco_decode_box_autoadd_match_step_info(dynamic raw);
+
+  @protected
+  PlatformInt64 dco_decode_i_64(dynamic raw);
+
+  @protected
+  List<String> dco_decode_list_String(dynamic raw);
+
+  @protected
+  List<PendingActionInfo> dco_decode_list_pending_action_info(dynamic raw);
+
+  @protected
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
+
+  @protected
+  List<TeamOption> dco_decode_list_team_option(dynamic raw);
+
+  @protected
+  MatchStepInfo dco_decode_match_step_info(dynamic raw);
+
+  @protected
+  MetaStatusInfo dco_decode_meta_status_info(dynamic raw);
+
+  @protected
+  String? dco_decode_opt_String(dynamic raw);
+
+  @protected
+  MatchStepInfo? dco_decode_opt_box_autoadd_match_step_info(dynamic raw);
+
+  @protected
+  PendingActionInfo dco_decode_pending_action_info(dynamic raw);
+
+  @protected
+  ProtagonistStatusInfo dco_decode_protagonist_status_info(dynamic raw);
+
+  @protected
+  TeamOption dco_decode_team_option(dynamic raw);
+
+  @protected
+  int dco_decode_u_32(dynamic raw);
 
   @protected
   int dco_decode_u_8(dynamic raw);
@@ -31,10 +77,65 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void dco_decode_unit(dynamic raw);
 
   @protected
+  AnyhowException sse_decode_AnyhowException(SseDeserializer deserializer);
+
+  @protected
   String sse_decode_String(SseDeserializer deserializer);
 
   @protected
+  bool sse_decode_bool(SseDeserializer deserializer);
+
+  @protected
+  MatchStepInfo sse_decode_box_autoadd_match_step_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  PlatformInt64 sse_decode_i_64(SseDeserializer deserializer);
+
+  @protected
+  List<String> sse_decode_list_String(SseDeserializer deserializer);
+
+  @protected
+  List<PendingActionInfo> sse_decode_list_pending_action_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
+
+  @protected
+  List<TeamOption> sse_decode_list_team_option(SseDeserializer deserializer);
+
+  @protected
+  MatchStepInfo sse_decode_match_step_info(SseDeserializer deserializer);
+
+  @protected
+  MetaStatusInfo sse_decode_meta_status_info(SseDeserializer deserializer);
+
+  @protected
+  String? sse_decode_opt_String(SseDeserializer deserializer);
+
+  @protected
+  MatchStepInfo? sse_decode_opt_box_autoadd_match_step_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  PendingActionInfo sse_decode_pending_action_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  ProtagonistStatusInfo sse_decode_protagonist_status_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  TeamOption sse_decode_team_option(SseDeserializer deserializer);
+
+  @protected
+  int sse_decode_u_32(SseDeserializer deserializer);
 
   @protected
   int sse_decode_u_8(SseDeserializer deserializer);
@@ -46,16 +147,82 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   int sse_decode_i_32(SseDeserializer deserializer);
 
   @protected
-  bool sse_decode_bool(SseDeserializer deserializer);
+  void sse_encode_AnyhowException(
+    AnyhowException self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_String(String self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_bool(bool self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_match_step_info(
+    MatchStepInfo self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_i_64(PlatformInt64 self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_String(List<String> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_pending_action_info(
+    List<PendingActionInfo> self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_list_prim_u_8_strict(
     Uint8List self,
     SseSerializer serializer,
   );
+
+  @protected
+  void sse_encode_list_team_option(
+    List<TeamOption> self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_match_step_info(MatchStepInfo self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_meta_status_info(
+    MetaStatusInfo self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_opt_String(String? self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_opt_box_autoadd_match_step_info(
+    MatchStepInfo? self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_pending_action_info(
+    PendingActionInfo self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_protagonist_status_info(
+    ProtagonistStatusInfo self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_team_option(TeamOption self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_u_32(int self, SseSerializer serializer);
 
   @protected
   void sse_encode_u_8(int self, SseSerializer serializer);
@@ -65,9 +232,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_i_32(int self, SseSerializer serializer);
-
-  @protected
-  void sse_encode_bool(bool self, SseSerializer serializer);
 }
 
 // Section: wire_class
