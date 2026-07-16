@@ -2,6 +2,7 @@
 pub mod eval;
 pub mod growth;
 pub mod injury;
+pub mod market;
 pub mod npc;
 pub mod pitch;
 pub mod protagonist;
