@@ -110,6 +110,21 @@ fn migration_v4(tx: &Transaction) -> anyhow::Result<()> {
     Ok(())
 }
 
+const V5_DDL: &str = r#"
+ALTER TABLE protagonist ADD COLUMN training TEXT;
+"#;
+
+/// I6 잔여(훈련 슬롯) — [06_훈련_시스템](../../../02_기획/육성코어/06_훈련_시스템.md).
+/// `training`은 `{"primary_stat","secondary_stats","intensity","new_pitch","pitch_weeks"}`
+/// 형태 — 다른 protagonist JSON 컬럼(live_state 등)과 같은 관례로 nullable
+/// TEXT. NULL = "아직 훈련 설정을 한 번도 안 함"(플레이어가 최소 1회는
+/// `set_protagonist_training`을 호출해야 주간 성장이 시작됨).
+fn migration_v5(tx: &Transaction) -> anyhow::Result<()> {
+    tx.execute_batch(V5_DDL)?;
+    tx.execute("UPDATE meta SET save_version = 5", [])?;
+    Ok(())
+}
+
 const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 1,
@@ -126,6 +141,10 @@ const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 4,
         up: migration_v4,
+    },
+    Migration {
+        version: 5,
+        up: migration_v5,
     },
 ];
 
@@ -153,7 +172,21 @@ mod tests {
         let save_version: i64 = conn
             .query_row("SELECT save_version FROM meta", [], |row| row.get(0))
             .unwrap();
-        assert_eq!(save_version, 4);
+        assert_eq!(save_version, 5);
+    }
+
+    #[test]
+    fn v5_adds_training_column_to_protagonist() {
+        let conn = open_in_memory().unwrap();
+        conn.execute(
+            "INSERT INTO protagonist (id, name, handedness, archetype, stats, xp, live_state, finance, pitches, contract, injury, training)
+             VALUES ('proto:1', 'X', '우투', '강속구형', '{}', '{}', '{}', '{}', '[]', '{}', '{}', ?1)",
+            [serde_json::json!({"primary_stat": "구속", "secondary_stats": ["구위", "제구"], "intensity": "보통", "new_pitch": null, "pitch_weeks": 0}).to_string()],
+        )
+        .unwrap();
+        let training: String = conn.query_row("SELECT training FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+        let v: serde_json::Value = serde_json::from_str(&training).unwrap();
+        assert_eq!(v.get("primary_stat").unwrap().as_str().unwrap(), "구속");
     }
 
     #[test]

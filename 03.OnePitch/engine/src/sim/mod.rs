@@ -6,6 +6,7 @@ pub mod npc;
 pub mod pitch;
 pub mod protagonist;
 pub mod roster;
+pub mod training;
 pub mod schedule;
 #[path = "match_.rs"]
 pub mod match_sim;

@@ -233,6 +233,160 @@ pub fn create_protagonist(
     Ok(())
 }
 
+/// 훈련 슬롯 설정([06_훈련_시스템](../../02_기획/육성코어/06_훈련_시스템.md)
+/// §1 코어루프 "훈련·접근법은 지속 설정" — 매주 다시 안 짜고 계속 적용됨).
+/// 사용자가 직접 고르는 값이라 시스템 경계로 보고 검증한다: 주슬롯·보조
+/// 슬롯이 실제 투수 노출 스탯인지, 강도가 3단계 중 하나인지, 신규 구종이
+/// 이미 아는 구종이 아닌지(§3 "신규 습득"과 "기존 다듬기"는 부담이
+/// 달라 구분이 의미 있음 — 이미 아는 걸 "신규"로 잘못 설정하는 걸 막음).
+/// 같은 구종을 계속 훈련 중이면 진행도(`pitch_weeks`)를 이어가고, 구종을
+/// 바꾸면 0부터 다시 시작.
+pub fn set_protagonist_training(
+    slot_conn: &Connection,
+    primary_stat: &str,
+    secondary_stats: [&str; 2],
+    intensity: &str,
+    new_pitch: Option<&str>,
+) -> anyhow::Result<()> {
+    if !crate::sim::training::INTENSITIES.contains(&intensity) {
+        anyhow::bail!("unknown training intensity: {intensity}");
+    }
+    if !crate::sim::growth::PITCHER_EXPOSED.contains(&primary_stat) {
+        anyhow::bail!("unknown primary stat: {primary_stat}");
+    }
+    for s in secondary_stats {
+        if !crate::sim::growth::PITCHER_EXPOSED.contains(&s) {
+            anyhow::bail!("unknown secondary stat: {s}");
+        }
+    }
+
+    let pitches_raw: String = slot_conn.query_row("SELECT pitches FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0))?;
+    let pitches: Vec<String> = serde_json::from_str(&pitches_raw)?;
+    if let Some(pitch) = new_pitch {
+        if pitches.iter().any(|p| p == pitch) {
+            anyhow::bail!("{pitch} is already known — new_pitch is for learning a pitch not yet in the repertoire");
+        }
+    }
+
+    let existing_training: Option<String> = slot_conn
+        .query_row("SELECT training FROM protagonist WHERE id = 'proto:1'", [], |r| r.get::<_, Option<String>>(0))
+        .optional()?
+        .flatten();
+    let pitch_weeks = existing_training
+        .as_deref()
+        .and_then(|raw| serde_json::from_str::<serde_json::Value>(raw).ok())
+        .filter(|v| v.get("new_pitch").and_then(|p| p.as_str()) == new_pitch)
+        .and_then(|v| v.get("pitch_weeks").and_then(|w| w.as_u64()))
+        .unwrap_or(0);
+
+    let training = serde_json::json!({
+        "primary_stat": primary_stat,
+        "secondary_stats": secondary_stats,
+        "intensity": intensity,
+        "new_pitch": new_pitch,
+        "pitch_weeks": pitch_weeks,
+    });
+    slot_conn.execute("UPDATE protagonist SET training = ?1 WHERE id = 'proto:1'", params![training.to_string()])?;
+    Ok(())
+}
+
+/// 주인공 주간 훈련 적용 — `process_week`(NPC 전용)과 별도로 둔다(협/한
+/// 주인공은 `npc` 테이블에 없어 그쪽 쿼리에 안 걸림). 훈련 설정을 한
+/// 번도 안 했으면(§`training IS NULL`) 조용히 아무 것도 안 함 — 플레이어가
+/// 최소 1회는 설정해야 성장이 시작된다는 뜻이라 첫 세션엔 자연스러운
+/// "아직 훈련 계획을 안 짰다"는 상태.
+fn process_protagonist_week(slot_conn: &Connection, world_seed: i64, day: i64) -> anyhow::Result<()> {
+    let row: Option<(String, String, String, Option<String>, String, String)> = slot_conn
+        .query_row("SELECT stats, xp, live_state, training, pitches, contract FROM protagonist WHERE id = 'proto:1'", [], |r| {
+            Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?, r.get(4)?, r.get(5)?))
+        })
+        .optional()?;
+    let Some((stats_raw, xp_raw, live_state_raw, training_raw, pitches_raw, contract_raw)) = row else {
+        return Ok(()); // 아직 캐릭터 생성 전
+    };
+    let Some(training_raw) = training_raw else {
+        return Ok(()); // 훈련 설정을 아직 한 번도 안 함
+    };
+
+    let mut stats: serde_json::Map<String, serde_json::Value> = serde_json::from_str(&stats_raw)?;
+    let mut xp: serde_json::Map<String, serde_json::Value> = serde_json::from_str(&xp_raw)?;
+    let mut live_state: serde_json::Map<String, serde_json::Value> = serde_json::from_str(&live_state_raw)?;
+    let mut training: serde_json::Value = serde_json::from_str(&training_raw)?;
+
+    let genius = stats.get("천재성").and_then(|v| v.as_f64()).unwrap_or(50.0);
+
+    let contract: serde_json::Value = serde_json::from_str(&contract_raw)?;
+    let has_upcoming_start = match contract.get("team_id").and_then(|v| v.as_str()) {
+        Some(team_id) => {
+            slot_conn.query_row(
+                "SELECT count(*) FROM schedule WHERE (home = ?1 OR away = ?1) AND day BETWEEN ?2 AND ?3",
+                params![team_id, day, day + 6],
+                |r| r.get::<_, i64>(0),
+            )? > 0
+        }
+        None => false,
+    };
+
+    let requested_intensity = training.get("intensity").and_then(|v| v.as_str()).unwrap_or("보통").to_string();
+    let intensity = crate::sim::training::effective_intensity(&requested_intensity, has_upcoming_start);
+    let primary_stat = training.get("primary_stat").and_then(|v| v.as_str()).unwrap_or("구속").to_string();
+    let secondary_stats: Vec<String> = training
+        .get("secondary_stats")
+        .and_then(|v| v.as_array())
+        .map(|arr| arr.iter().filter_map(|x| x.as_str().map(str::to_string)).collect())
+        .unwrap_or_default();
+    let secondary_refs: [&str; 2] = [
+        secondary_stats.first().map(String::as_str).unwrap_or(""),
+        secondary_stats.get(1).map(String::as_str).unwrap_or(""),
+    ];
+    let new_pitch = training.get("new_pitch").and_then(|v| v.as_str()).map(str::to_string);
+
+    let config = crate::sim::training::TrainingConfig {
+        primary_stat: &primary_stat,
+        secondary_stats: secondary_refs,
+        intensity,
+        new_pitch: new_pitch.as_deref(),
+    };
+
+    let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("training:{day}")));
+    crate::sim::training::apply_weekly_training(&mut rng, &crate::sim::growth::PITCHER_EXPOSED, &mut stats, &mut xp, genius, &config);
+
+    if let Some(pitch) = &new_pitch {
+        let weeks = training.get("pitch_weeks").and_then(|v| v.as_u64()).unwrap_or(0) + 1;
+        let required = crate::sim::training::weeks_required_to_learn_pitch(intensity) as u64;
+        if weeks >= required {
+            let mut pitches: Vec<String> = serde_json::from_str(&pitches_raw)?;
+            if !pitches.iter().any(|p| p == pitch) {
+                pitches.push(pitch.clone());
+            }
+            slot_conn.execute("UPDATE protagonist SET pitches = ?1 WHERE id = 'proto:1'", params![serde_json::json!(pitches).to_string()])?;
+            training["new_pitch"] = serde_json::Value::Null;
+            training["pitch_weeks"] = serde_json::json!(0);
+        } else {
+            training["pitch_weeks"] = serde_json::json!(weeks);
+        }
+    }
+
+    let fatigue = live_state.get("피로도").and_then(|v| v.as_f64()).unwrap_or(0.0);
+    let fatigue_delta = match intensity {
+        "강" => 8.0,
+        "약" => -10.0,
+        _ => 0.0,
+    };
+    live_state.insert("피로도".to_string(), serde_json::json!((fatigue + fatigue_delta).max(0.0)));
+
+    slot_conn.execute(
+        "UPDATE protagonist SET stats = ?1, xp = ?2, live_state = ?3, training = ?4 WHERE id = 'proto:1'",
+        params![
+            serde_json::Value::Object(stats).to_string(),
+            serde_json::Value::Object(xp).to_string(),
+            serde_json::Value::Object(live_state).to_string(),
+            training.to_string(),
+        ],
+    )?;
+    Ok(())
+}
+
 /// 팀별 활성(retired=0) 로스터가 `generation_rules.roster_size`보다 모자란
 /// 만큼만 새 선수를 생성해 채운다 — `sim::roster::generate_team`을 그대로
 /// 재사용하되 `roster_size`만 부족분으로 바꿔 호출(투수/타자 비율 등 나머지
@@ -1419,6 +1573,7 @@ pub fn advance(slot_conn: &mut Connection, content_conn: &Connection) -> anyhow:
         // placeholder — 1시즌=52주=364일은 §1에 명시.
         if today % 7 == 0 {
             process_week(&tx, content_conn, world_seed, today)?;
+            process_protagonist_week(&tx, world_seed, today)?;
         }
         if today % 28 == 0 {
             process_month(&tx, today)?;
@@ -1622,6 +1777,99 @@ mod tests {
         // 슬라이더는 제구형 전용 후보 — 강속구형에게는 유효하지 않음.
         let result = create_protagonist(&slot_conn, &content_conn, 1, "잘못된선택", "우완", "team:hanseong_hs", "강속구형", Some("슬라이더"));
         assert!(result.is_err());
+    }
+
+    #[test]
+    fn set_protagonist_training_rejects_unknown_stat() {
+        let content_conn = build_hs_school_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        create_protagonist(&slot_conn, &content_conn, 1, "훈련테스트", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
+
+        let result = set_protagonist_training(&slot_conn, "존재안함", ["구위", "제구"], "보통", None);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn set_protagonist_training_rejects_already_known_pitch_as_new() {
+        let content_conn = build_hs_school_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        create_protagonist(&slot_conn, &content_conn, 1, "훈련테스트", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
+
+        // 강속구형은 포심 패스트볼로 시작 — 그걸 "신규"로 다시 설정하면 거부돼야 함.
+        let result = set_protagonist_training(&slot_conn, "구속", ["구위", "제구"], "보통", Some("포심 패스트볼"));
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn process_protagonist_week_does_nothing_without_training_config() {
+        let content_conn = build_hs_school_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        create_protagonist(&slot_conn, &content_conn, 1, "미설정", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
+
+        let before: String = slot_conn.query_row("SELECT stats FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+        for week in 0..10i64 {
+            process_protagonist_week(&slot_conn, 1, week * 7).unwrap();
+        }
+        let after: String = slot_conn.query_row("SELECT stats FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+        assert_eq!(before, after, "no training config set -> stats should never change");
+    }
+
+    #[test]
+    fn process_protagonist_week_grows_the_primary_slot_over_many_weeks() {
+        let content_conn = build_hs_school_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        create_protagonist(&slot_conn, &content_conn, 1, "훈련중", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
+        set_protagonist_training(&slot_conn, "구속", ["구위", "경기운영"], "보통", None).unwrap();
+
+        for week in 0..30i64 {
+            process_protagonist_week(&slot_conn, 1, week * 7).unwrap();
+        }
+
+        let stats_raw: String = slot_conn.query_row("SELECT stats FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+        let stats: serde_json::Value = serde_json::from_str(&stats_raw).unwrap();
+        let primary = stats.get("구속").unwrap().as_f64().unwrap();
+        let unfocused = stats.get("클러치").unwrap().as_f64().unwrap();
+        assert!(primary > unfocused, "primary(구속)={primary} unfocused(클러치)={unfocused}");
+    }
+
+    #[test]
+    fn process_protagonist_week_learns_a_new_pitch_after_enough_weeks() {
+        let content_conn = build_hs_school_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        create_protagonist(&slot_conn, &content_conn, 1, "구종연마", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
+        set_protagonist_training(&slot_conn, "구속", ["구위", "경기운영"], "강", Some("커터")).unwrap();
+
+        // "강" 강도는 sim::training::weeks_required_to_learn_pitch("강") == 8주.
+        for week in 0..8i64 {
+            process_protagonist_week(&slot_conn, 1, week * 7).unwrap();
+        }
+
+        let pitches_raw: String = slot_conn.query_row("SELECT pitches FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+        let pitches: Vec<String> = serde_json::from_str(&pitches_raw).unwrap();
+        assert!(pitches.contains(&"커터".to_string()), "pitches={pitches:?}");
+
+        let training_raw: String = slot_conn.query_row("SELECT training FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+        let training: serde_json::Value = serde_json::from_str(&training_raw).unwrap();
+        assert!(training.get("new_pitch").unwrap().is_null(), "new_pitch should reset to null once learned");
+    }
+
+    #[test]
+    fn process_protagonist_week_caps_intensity_to_normal_during_a_start_week() {
+        let content_conn = build_hs_school_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        create_protagonist(&slot_conn, &content_conn, 1, "등판주간", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
+        set_protagonist_training(&slot_conn, "구속", ["구위", "경기운영"], "강", None).unwrap();
+        slot_conn
+            .execute("INSERT INTO schedule (game_id, day, home, away, result) VALUES ('game:1', 3, 'team:hanseong_hs', 'team:y', NULL)", [])
+            .unwrap();
+
+        process_protagonist_week(&slot_conn, 1, 0).unwrap();
+
+        let live_state_raw: String = slot_conn.query_row("SELECT live_state FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+        let live_state: serde_json::Value = serde_json::from_str(&live_state_raw).unwrap();
+        let fatigue = live_state.get("피로도").unwrap().as_f64().unwrap();
+        // "강"이었다면 +8이어야 하지만, 등판 예정 주라 "보통"으로 캡돼 +0.
+        assert_eq!(fatigue, 0.0, "requested 강 during a start week should be capped to 보통 (no fatigue increase)");
     }
 
     #[test]

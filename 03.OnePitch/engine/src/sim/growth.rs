@@ -45,9 +45,25 @@ fn xp_threshold(stat_value: f64, genius: f64) -> f64 {
 /// 주간 XP 획득 자체도 더 많다(§2 "천재성이... 기울기(성장 속도) 영향").
 /// `stats`/`xp`는 in-place로 갱신된다.
 pub fn apply_weekly_growth(rng: &mut impl Rng, exposed: &[&str; 9], stats: &mut Map<String, Value>, xp: &mut Map<String, Value>, genius: f64) {
+    apply_weekly_growth_with_focus(rng, exposed, stats, xp, genius, |_| 1.0);
+}
+
+/// `apply_weekly_growth`와 동일하지만 스탯별 XP 배율을 `focus`로 조정할
+/// 수 있다 — [sim::training](../../../02_기획/육성코어/06_훈련_시스템.md)
+/// (주인공 훈련 슬롯, 주슬롯·보조슬롯이 다른 배율을 받음)이 재사용.
+/// NPC 배경 성장(`apply_weekly_growth`)은 전 스탯 배율 1.0으로 이 함수를
+/// 감싼 것뿐 — 판정식 자체는 절대 갈라지지 않는다.
+pub fn apply_weekly_growth_with_focus(
+    rng: &mut impl Rng,
+    exposed: &[&str; 9],
+    stats: &mut Map<String, Value>,
+    xp: &mut Map<String, Value>,
+    genius: f64,
+    focus: impl Fn(&str) -> f64,
+) {
     let xp_multiplier = 0.5 + genius / 80.0; // 20~80 스케일에서 대략 0.75~1.5배
     for stat in exposed {
-        let gained = rng.gen_range(0.0..=WEEKLY_XP_MAX) * xp_multiplier;
+        let gained = rng.gen_range(0.0..=WEEKLY_XP_MAX) * xp_multiplier * focus(stat);
         let mut stat_value = stats.get(*stat).and_then(|v| v.as_f64()).unwrap_or(20.0);
         let mut remaining_xp = xp.get(*stat).and_then(|v| v.as_f64()).unwrap_or(0.0) + gained;
 
