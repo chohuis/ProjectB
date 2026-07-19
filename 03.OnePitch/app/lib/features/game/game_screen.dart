@@ -6,16 +6,17 @@ import 'package:go_router/go_router.dart';
 import 'package:app/src/rust/api/game.dart';
 import 'game_provider.dart';
 import 'injury_treatment_view.dart';
+import 'career_choice_view.dart';
+import 'contract_nego_view.dart';
+import 'trade_decision_view.dart';
 
 /// 진행(Continue) + 매치 + 결과요약을 한 화면에 압축한 I7 1차분 최소
 /// 슬라이스 — [05_매치](../../../../04_UI기획/05_매치.md)의 다이아몬드·
 /// 존그리드 비주얼(CustomPainter)은 후속 서브분("최소 루프가 실제로
 /// 동작"이라는 완료 기준엔 텍스트/버튼으로도 충분). `game`·
-/// `injuryTreatment`([InjuryTreatmentView] 참고, I7 5차분에서 전용화면
-/// 추가)는 전용 화면이 있고, 나머지 4종(`contractNego`·`tradeDecision`·
-/// `careerChoice`·`draft`)은 진로 갈림길이 엔진에 없어 실전에서 아직
-/// 발동 자체가 안 돼(§6-19·§6-24에서 이미 확인) 원시 payload 조회
-/// 폴백(개발자용)으로만 남겨둔다.
+/// `injuryTreatment`·`contractNego`·`tradeDecision`·`careerChoice`·
+/// `draft` — PendingAction 7종 전부 전용 화면을 갖췄다(I6 9차분에서
+/// 갈림길A 엔진이 갖춰져 나머지 4종도 실전 발동 가능해짐, I7 6차분).
 class GameScreen extends ConsumerWidget {
   const GameScreen({super.key});
 
@@ -105,13 +106,22 @@ class _MainArea extends StatelessWidget {
       return const Center(child: Text('다음 정지점까지 진행할 준비가 됐습니다.'));
     }
     final action = state.pending.first;
-    if (action.kind == 'game') {
-      return _PregameModePicker(action: action, controller: controller);
+    switch (action.kind) {
+      case 'game':
+        return _PregameModePicker(action: action, controller: controller);
+      case 'injuryTreatment':
+        return InjuryTreatmentView(action: action, controller: controller);
+      case 'careerChoice':
+        return CareerChoiceView(action: action, controller: controller);
+      case 'draft':
+        return DraftResultView(action: action, controller: controller);
+      case 'contractNego':
+        return ContractNegoView(action: action, controller: controller);
+      case 'tradeDecision':
+        return TradeDecisionView(action: action, controller: controller);
+      default:
+        return _GenericPendingActionView(action: action, controller: controller);
     }
-    if (action.kind == 'injuryTreatment') {
-      return InjuryTreatmentView(action: action, controller: controller);
-    }
-    return _GenericPendingActionView(action: action, controller: controller);
   }
 }
 
