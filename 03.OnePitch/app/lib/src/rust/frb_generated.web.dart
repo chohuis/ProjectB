@@ -40,10 +40,30 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   TrainingConfigInfo dco_decode_box_autoadd_training_config_info(dynamic raw);
 
   @protected
+  GameLogEntry dco_decode_game_log_entry(dynamic raw);
+
+  @protected
   PlatformInt64 dco_decode_i_64(dynamic raw);
 
   @protected
+  InjuryLogEntry dco_decode_injury_log_entry(dynamic raw);
+
+  @protected
+  LeagueTransactionEntry dco_decode_league_transaction_entry(dynamic raw);
+
+  @protected
   List<String> dco_decode_list_String(dynamic raw);
+
+  @protected
+  List<GameLogEntry> dco_decode_list_game_log_entry(dynamic raw);
+
+  @protected
+  List<InjuryLogEntry> dco_decode_list_injury_log_entry(dynamic raw);
+
+  @protected
+  List<LeagueTransactionEntry> dco_decode_list_league_transaction_entry(
+    dynamic raw,
+  );
 
   @protected
   List<PendingActionInfo> dco_decode_list_pending_action_info(dynamic raw);
@@ -136,10 +156,36 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  GameLogEntry sse_decode_game_log_entry(SseDeserializer deserializer);
+
+  @protected
   PlatformInt64 sse_decode_i_64(SseDeserializer deserializer);
 
   @protected
+  InjuryLogEntry sse_decode_injury_log_entry(SseDeserializer deserializer);
+
+  @protected
+  LeagueTransactionEntry sse_decode_league_transaction_entry(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   List<String> sse_decode_list_String(SseDeserializer deserializer);
+
+  @protected
+  List<GameLogEntry> sse_decode_list_game_log_entry(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  List<InjuryLogEntry> sse_decode_list_injury_log_entry(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  List<LeagueTransactionEntry> sse_decode_list_league_transaction_entry(
+    SseDeserializer deserializer,
+  );
 
   @protected
   List<PendingActionInfo> sse_decode_list_pending_action_info(
@@ -261,10 +307,43 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_game_log_entry(GameLogEntry self, SseSerializer serializer);
+
+  @protected
   void sse_encode_i_64(PlatformInt64 self, SseSerializer serializer);
 
   @protected
+  void sse_encode_injury_log_entry(
+    InjuryLogEntry self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_league_transaction_entry(
+    LeagueTransactionEntry self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_list_String(List<String> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_game_log_entry(
+    List<GameLogEntry> self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_list_injury_log_entry(
+    List<InjuryLogEntry> self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_list_league_transaction_entry(
+    List<LeagueTransactionEntry> self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_list_pending_action_info(

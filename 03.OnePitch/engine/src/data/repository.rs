@@ -1664,6 +1664,12 @@ fn process_protagonist_contract(conn: &Connection, content_conn: &Connection, wo
         contract["status"] = serde_json::json!("FA");
         conn.execute("UPDATE protagonist SET contract = ?1 WHERE id = 'proto:1'", params![contract.to_string()])?;
 
+        let detail = serde_json::json!({"event": "release", "team_id": team_id, "salary": salary}).to_string();
+        conn.execute(
+            "INSERT INTO league_transactions (id, day, kind, detail) VALUES (?1, ?2, 'contract', ?3)",
+            params![format!("txn:contract:{day}"), day, detail],
+        )?;
+
         let offers = build_fa_offers(&mut rng, content_conn, &team_id, salary, avg_grade_score, attention)?;
         push_contract_nego(conn, day, "FA", &offers)?;
         return Ok(());
@@ -1743,6 +1749,13 @@ fn resolve_contract_nego(conn: &Connection, content_conn: &Connection, world_see
 
     let contract = serde_json::json!({"team_id": team_id, "salary": final_salary, "years_remaining": years});
     conn.execute("UPDATE protagonist SET contract = ?1 WHERE id = 'proto:1'", params![contract.to_string()])?;
+
+    let negotiation_kind = payload.get("kind").and_then(|v| v.as_str()).unwrap_or("");
+    let detail = serde_json::json!({"event": "sign", "team_id": team_id, "salary": final_salary, "years": years, "negotiation_kind": negotiation_kind}).to_string();
+    conn.execute(
+        "INSERT INTO league_transactions (id, day, kind, detail) VALUES (?1, ?2, 'contract', ?3)",
+        params![format!("txn:contract:{day}"), day, detail],
+    )?;
     Ok(())
 }
 
@@ -2571,6 +2584,50 @@ mod tests {
             }
         }
         assert!(triggered, "expected at least one seed to release a poorly-performing, expensive, poor-team player");
+    }
+
+    #[test]
+    fn process_protagonist_contract_logs_a_release_to_league_transactions() {
+        let content_conn = build_market_content_db();
+        let mut triggered = false;
+        for seed in 0..30i64 {
+            let slot_conn = slot::open_in_memory().unwrap();
+            insert_market_protagonist(&slot_conn, &serde_json::json!({"team_id": "team:poor_a", "salary": 20000, "years_remaining": 3}), 0.0);
+            insert_game_log_grades(&slot_conn, 0, &["F", "F", "F"]);
+
+            process_protagonist_contract(&slot_conn, &content_conn, seed, 0, 364).unwrap();
+
+            let contract = read_contract(&slot_conn);
+            if contract.get("team_id").map(serde_json::Value::is_null).unwrap_or(false) {
+                let detail: String = slot_conn
+                    .query_row("SELECT detail FROM league_transactions WHERE kind = 'contract'", [], |r| r.get(0))
+                    .unwrap();
+                let detail: serde_json::Value = serde_json::from_str(&detail).unwrap();
+                assert_eq!(detail["event"], "release");
+                assert_eq!(detail["team_id"], "team:poor_a");
+                triggered = true;
+                break;
+            }
+        }
+        assert!(triggered, "expected at least one seed to release and log the event");
+    }
+
+    #[test]
+    fn resolve_contract_nego_accept_logs_a_sign_to_league_transactions() {
+        let content_conn = build_market_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_market_protagonist(&slot_conn, &serde_json::json!({"team_id": null, "status": "FA", "salary": 5000}), 0.0);
+        push_contract_nego(&slot_conn, 10, "FA", &[("team:rich_a".to_string(), 8000, 3)]).unwrap();
+        let action_id = list_pending_actions(&slot_conn).unwrap()[0].id.clone();
+
+        resolve_choice(&slot_conn, &content_conn, 1, &action_id, "accept:team:rich_a").unwrap();
+
+        let detail: String = slot_conn.query_row("SELECT detail FROM league_transactions WHERE kind = 'contract'", [], |r| r.get(0)).unwrap();
+        let detail: serde_json::Value = serde_json::from_str(&detail).unwrap();
+        assert_eq!(detail["event"], "sign");
+        assert_eq!(detail["team_id"], "team:rich_a");
+        assert_eq!(detail["salary"], 8000);
+        assert_eq!(detail["negotiation_kind"], "FA");
     }
 
     #[test]

@@ -32,6 +32,7 @@ class GameScreen extends ConsumerWidget {
         actions: [
           IconButton(icon: const Icon(Icons.person), tooltip: '내 선수', onPressed: () => context.push('/game/my-player')),
           IconButton(icon: const Icon(Icons.emoji_events), tooltip: '리그', onPressed: () => context.push('/game/league')),
+          IconButton(icon: const Icon(Icons.history_edu), tooltip: '기록', onPressed: () => context.push('/game/records')),
         ],
       ),
       body: Padding(

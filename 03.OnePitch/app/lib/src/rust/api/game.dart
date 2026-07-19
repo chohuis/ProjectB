@@ -10,7 +10,7 @@ part 'game.freezed.dart';
 
 // These functions are ignored because they are not marked as `pub`: `with_state_mut`, `with_state`, `world_seed`
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `GameState`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
 
 /// 뉴게임 — [07_주인공_생성](../../../02_기획/07_주인공_생성.md) §1의 7단계
 /// 흐름 중 실제 데이터를 만드는 마지막 단계(스텝 1~6은 Dart 쪽 폼 상태일
@@ -135,6 +135,109 @@ Future<List<StandingsRowInfo>> getStandings({required String leagueId}) =>
 /// 정확한 JSON 형태가 팀마다 다를 수 있어 원시 통과.
 Future<String?> getTeamRivals({required String teamId}) =>
     RustLib.instance.api.crateApiGameGetTeamRivals(teamId: teamId);
+
+Future<List<GameLogEntry>> getGameLog() =>
+    RustLib.instance.api.crateApiGameGetGameLog();
+
+Future<List<LeagueTransactionEntry>> getContractHistory() =>
+    RustLib.instance.api.crateApiGameGetContractHistory();
+
+Future<List<InjuryLogEntry>> getInjuryHistory() =>
+    RustLib.instance.api.crateApiGameGetInjuryHistory();
+
+/// [03_기록](../../../04_UI기획/03_기록.md) §1 "경기 로그" 탭 — `game_log`는
+/// 압축 없이 경기별 전체 보존(07_매치_엔진.md §12). `detail_json`은
+/// `{"grade","runs_allowed","opponent"}`(`apply_protagonist_evaluation`
+/// 참고).
+class GameLogEntry {
+  final String gameId;
+  final PlatformInt64 season;
+  final String detailJson;
+
+  const GameLogEntry({
+    required this.gameId,
+    required this.season,
+    required this.detailJson,
+  });
+
+  @override
+  int get hashCode => gameId.hashCode ^ season.hashCode ^ detailJson.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is GameLogEntry &&
+          runtimeType == other.runtimeType &&
+          gameId == other.gameId &&
+          season == other.season &&
+          detailJson == other.detailJson;
+}
+
+/// [03_기록](../../../04_UI기획/03_기록.md) §1 "부상·재활" 탭 —
+/// `protagonist.injury.history`(08_부상_시스템.md §5, 부위·심각도·발생일).
+/// **치료 선택·복귀 확정 시점은 이 로그에 없음** — `record_injury`가
+/// 기록하는 `history` 항목은 발생 시점 스냅샷뿐이고, 치료법 확정
+/// (`treat`)·완치(`clear_healed_injury`)는 `current` 필드만 갱신하고
+/// `history`에 별도로 남기지 않는다(엔진 쪽에 그 로그를 추가하는 건
+/// 이번 스코프 밖).
+class InjuryLogEntry {
+  final String part_;
+  final String severity;
+  final PlatformInt64 day;
+
+  const InjuryLogEntry({
+    required this.part_,
+    required this.severity,
+    required this.day,
+  });
+
+  @override
+  int get hashCode => part_.hashCode ^ severity.hashCode ^ day.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is InjuryLogEntry &&
+          runtimeType == other.runtimeType &&
+          part_ == other.part_ &&
+          severity == other.severity &&
+          day == other.day;
+}
+
+/// [03_기록](../../../04_UI기획/03_기록.md) §1 "계약·이력" 탭 — `league_transactions`
+/// 중 `'contract'`(방출/체결, `process_protagonist_contract`·
+/// `resolve_contract_nego`가 기록)·`'trade'`(`resolve_trade_decision`이
+/// 기록) 종류만. `'champion'`(리그 전체 우승팀 기록)은 주인공 개인 이력이
+/// 아니라 제외. **드래프트 로그는 없음** — 진로 갈림길(고교→프로 진입)
+/// 자체가 엔진에 없어(§6-19에서 이미 확인) 드래프트 이벤트가 발생할
+/// 수가 없다.
+class LeagueTransactionEntry {
+  final String id;
+  final PlatformInt64 day;
+  final String kind;
+  final String detailJson;
+
+  const LeagueTransactionEntry({
+    required this.id,
+    required this.day,
+    required this.kind,
+    required this.detailJson,
+  });
+
+  @override
+  int get hashCode =>
+      id.hashCode ^ day.hashCode ^ kind.hashCode ^ detailJson.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is LeagueTransactionEntry &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          day == other.day &&
+          kind == other.kind &&
+          detailJson == other.detailJson;
+}
 
 @freezed
 sealed class MatchStepInfo with _$MatchStepInfo {

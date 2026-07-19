@@ -499,6 +499,89 @@ pub fn get_team_rivals(team_id: String) -> anyhow::Result<Option<String>> {
     with_state(|state| Ok(state.content_conn.query_row("SELECT rivals FROM team_history WHERE team_id = ?1", [&team_id], |r| r.get(0)).optional()?))
 }
 
+/// [03_기록](../../../04_UI기획/03_기록.md) §1 "경기 로그" 탭 — `game_log`는
+/// 압축 없이 경기별 전체 보존(07_매치_엔진.md §12). `detail_json`은
+/// `{"grade","runs_allowed","opponent"}`(`apply_protagonist_evaluation`
+/// 참고).
+#[derive(Debug, Clone)]
+pub struct GameLogEntry {
+    pub game_id: String,
+    pub season: i64,
+    pub detail_json: String,
+}
+
+pub fn get_game_log() -> anyhow::Result<Vec<GameLogEntry>> {
+    with_state(|state| {
+        let mut stmt = state.slot_conn.prepare("SELECT game_id, season, detail FROM game_log ORDER BY season, game_id")?;
+        let rows: Vec<GameLogEntry> = stmt
+            .query_map([], |r| Ok(GameLogEntry { game_id: r.get(0)?, season: r.get(1)?, detail_json: r.get(2)? }))?
+            .collect::<Result<_, _>>()?;
+        Ok(rows)
+    })
+}
+
+/// [03_기록](../../../04_UI기획/03_기록.md) §1 "계약·이력" 탭 — `league_transactions`
+/// 중 `'contract'`(방출/체결, `process_protagonist_contract`·
+/// `resolve_contract_nego`가 기록)·`'trade'`(`resolve_trade_decision`이
+/// 기록) 종류만. `'champion'`(리그 전체 우승팀 기록)은 주인공 개인 이력이
+/// 아니라 제외. **드래프트 로그는 없음** — 진로 갈림길(고교→프로 진입)
+/// 자체가 엔진에 없어(§6-19에서 이미 확인) 드래프트 이벤트가 발생할
+/// 수가 없다.
+#[derive(Debug, Clone)]
+pub struct LeagueTransactionEntry {
+    pub id: String,
+    pub day: i64,
+    pub kind: String,
+    pub detail_json: String,
+}
+
+pub fn get_contract_history() -> anyhow::Result<Vec<LeagueTransactionEntry>> {
+    with_state(|state| {
+        let mut stmt = state
+            .slot_conn
+            .prepare("SELECT id, day, kind, detail FROM league_transactions WHERE kind IN ('contract', 'trade') ORDER BY day")?;
+        let rows: Vec<LeagueTransactionEntry> = stmt
+            .query_map([], |r| Ok(LeagueTransactionEntry { id: r.get(0)?, day: r.get(1)?, kind: r.get(2)?, detail_json: r.get(3)? }))?
+            .collect::<Result<_, _>>()?;
+        Ok(rows)
+    })
+}
+
+/// [03_기록](../../../04_UI기획/03_기록.md) §1 "부상·재활" 탭 —
+/// `protagonist.injury.history`(08_부상_시스템.md §5, 부위·심각도·발생일).
+/// **치료 선택·복귀 확정 시점은 이 로그에 없음** — `record_injury`가
+/// 기록하는 `history` 항목은 발생 시점 스냅샷뿐이고, 치료법 확정
+/// (`treat`)·완치(`clear_healed_injury`)는 `current` 필드만 갱신하고
+/// `history`에 별도로 남기지 않는다(엔진 쪽에 그 로그를 추가하는 건
+/// 이번 스코프 밖).
+#[derive(Debug, Clone)]
+pub struct InjuryLogEntry {
+    pub part: String,
+    pub severity: String,
+    pub day: i64,
+}
+
+pub fn get_injury_history() -> anyhow::Result<Vec<InjuryLogEntry>> {
+    with_state(|state| {
+        let raw: String = state.slot_conn.query_row("SELECT injury FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0))?;
+        let v: serde_json::Value = serde_json::from_str(&raw)?;
+        let entries = v
+            .get("history")
+            .and_then(|h| h.as_array())
+            .map(|arr| {
+                arr.iter()
+                    .map(|h| InjuryLogEntry {
+                        part: h.get("부위").and_then(|x| x.as_str()).unwrap_or("").to_string(),
+                        severity: h.get("심각도").and_then(|x| x.as_str()).unwrap_or("").to_string(),
+                        day: h.get("day").and_then(|x| x.as_i64()).unwrap_or(0),
+                    })
+                    .collect()
+            })
+            .unwrap_or_default();
+        Ok(entries)
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -625,6 +708,56 @@ mod tests {
 
         // rivals는 콘텐츠가 있으면 Some, 없으면 None — 둘 다 패닉 없이 동작하는지만 확인.
         let _ = get_team_rivals(hs_team).unwrap();
+
+        reset_state();
+    }
+
+    #[test]
+    fn record_hub_queries_return_seeded_history_after_new_game() {
+        let _guard = TEST_SERIAL.lock().unwrap();
+        reset_state();
+
+        let hs_team = {
+            let conn = content::open("content.db").unwrap();
+            conn.query_row("SELECT id FROM teams WHERE league_id = 'league:hs' LIMIT 1", [], |r| r.get::<_, String>(0)).unwrap()
+        };
+        new_game("content.db".to_string(), 45, "기록테스트".to_string(), "우완".to_string(), hs_team, "제구형".to_string(), None).unwrap();
+
+        // 새 게임 직후엔 전부 비어있어야 함(패닉 없이).
+        assert!(get_game_log().unwrap().is_empty());
+        assert!(get_contract_history().unwrap().is_empty());
+        assert!(get_injury_history().unwrap().is_empty());
+
+        with_state(|state| {
+            state.slot_conn.execute(
+                "INSERT INTO game_log (game_id, season, detail) VALUES ('game:1', 0, ?1)",
+                [serde_json::json!({"grade": "A", "runs_allowed": 1, "opponent": "team:x"}).to_string()],
+            )?;
+            state.slot_conn.execute(
+                "INSERT INTO league_transactions (id, day, kind, detail) VALUES ('txn:1', 10, 'contract', ?1)",
+                [serde_json::json!({"event": "sign", "team_id": "team:x", "salary": 5000}).to_string()],
+            )?;
+            state.slot_conn.execute(
+                "UPDATE protagonist SET injury = ?1 WHERE id = 'proto:1'",
+                [serde_json::json!({"current": null, "history": [{"부위": "어깨", "심각도": "경미", "day": 5}]}).to_string()],
+            )?;
+            Ok(())
+        })
+        .unwrap();
+
+        let logs = get_game_log().unwrap();
+        assert_eq!(logs.len(), 1);
+        assert_eq!(logs[0].game_id, "game:1");
+
+        let history = get_contract_history().unwrap();
+        assert_eq!(history.len(), 1);
+        assert_eq!(history[0].kind, "contract");
+
+        let injuries = get_injury_history().unwrap();
+        assert_eq!(injuries.len(), 1);
+        assert_eq!(injuries[0].part, "어깨");
+        assert_eq!(injuries[0].severity, "경미");
+        assert_eq!(injuries[0].day, 5);
 
         reset_state();
     }
