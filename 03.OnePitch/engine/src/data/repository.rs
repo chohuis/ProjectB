@@ -216,8 +216,8 @@ pub fn create_protagonist(
     let xp: serde_json::Map<String, serde_json::Value> = exposed.iter().map(|s| (s.to_string(), serde_json::json!(0))).collect();
 
     slot_conn.execute(
-        "INSERT INTO protagonist (id, name, handedness, archetype, stats, xp, live_state, finance, pitches, contract, injury)
-         VALUES ('proto:1', ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)",
+        "INSERT INTO protagonist (id, name, handedness, archetype, stats, xp, live_state, finance, pitches, contract, injury, age)
+         VALUES ('proto:1', ?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11)",
         params![
             name,
             handedness,
@@ -229,6 +229,7 @@ pub fn create_protagonist(
             serde_json::json!(pitches).to_string(),
             serde_json::json!({"team_id": school_team_id}).to_string(),
             serde_json::json!({"current": null, "history": []}).to_string(),
+            17, // 02_아마_고교.md §A-1 "고교 1학년, 17세"
         ],
     )?;
     Ok(())
@@ -1877,13 +1878,143 @@ fn resolve_trade_decision(conn: &Connection, payload_raw: &str, choice_id: &str,
     Ok(())
 }
 
+/// 후보 팀 중 무작위 하나(리그 필터) — 드래프트 지명팀·대학/독립 진학·
+/// 병역 만료 후 독립 재도전 배정에 공용으로 쓴다.
+fn pick_random_team_in_league(content_conn: &Connection, rng: &mut ChaCha8Rng, league_id: &str) -> anyhow::Result<Option<String>> {
+    let mut stmt = content_conn.prepare("SELECT id FROM teams WHERE league_id = ?1")?;
+    let teams: Vec<String> = stmt.query_map([league_id], |r| r.get(0))?.collect::<Result<_, _>>()?;
+    Ok(crate::sim::career::pick_team(rng, &teams).cloned())
+}
+
+/// 병역 복무 만료 체크 — [01_커리어_구조](../../02_기획/01_커리어_구조.md)
+/// §5 "입대(병역) → ~2년 병역 조기 이행". 복무가 끝나면 독립리그
+/// 재도전으로 자동 복귀시킨다(06_시장_계약.md §1-2 "독립리그 재도전"과
+/// 같은 결 — 병역 조기 이행 후 다시 실전에 뛰어드는 경로가 자연스럽다는
+/// 판단). `careerChoice`를 다시 띄우는 대신 자동 배정한 이유: 프로 지명
+/// 창구(고교 3학년 드래프트)는 이미 지났고, 남은 선택지 중 "대학"은
+/// 병역을 마친 나이대엔 서사적으로 안 맞아 굳이 다시 물을 필요가 없다고
+/// 판단했다.
+fn process_protagonist_military_discharge(conn: &Connection, content_conn: &Connection, world_seed: i64, day: i64) -> anyhow::Result<()> {
+    let return_day: Option<i64> = conn
+        .query_row("SELECT military_return_day FROM protagonist WHERE id = 'proto:1'", [], |r| r.get::<_, Option<i64>>(0))
+        .optional()?
+        .flatten();
+    let Some(return_day) = return_day else {
+        return Ok(());
+    };
+    if day < return_day {
+        return Ok(());
+    }
+
+    let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("discharge:{day}")));
+    let team = pick_random_team_in_league(content_conn, &mut rng, "league:independent")?;
+    let contract = serde_json::json!({"team_id": team});
+    conn.execute("UPDATE protagonist SET contract = ?1, military_return_day = NULL WHERE id = 'proto:1'", params![contract.to_string()])?;
+    Ok(())
+}
+
+/// 갈림길 A — [01_커리어_구조](../../02_기획/01_커리어_구조.md) §5,
+/// [02_아마_고교](../../02_기획/02_아마_고교.md) §D·E. 고교 3학년 시즌이
+/// 끝나는 시점(나이 `HS_GRADUATION_AGE`=20세 도달)에 드래프트 판정 —
+/// 지명되면 자동으로 프로 계약까지 확정하고 `draft` PendingAction으로
+/// 통보만(§D "지명 → 프로", 거부 개념 없음), 미지명이면 `careerChoice`
+/// PendingAction으로 나머지 3경로(대학/독립/입대)를 플레이어가 직접
+/// 고르게 한다. **`age`가 NULL이면(이 서브분 이전 세이브·나이 트래킹
+/// 없는 합성 테스트) 전부 스킵** — 방어적 설계.
+fn process_protagonist_career_path(conn: &Connection, content_conn: &Connection, world_seed: i64, season: i64, day: i64) -> anyhow::Result<()> {
+    let row: Option<(Option<i64>, String, String)> = conn
+        .query_row("SELECT age, contract, live_state FROM protagonist WHERE id = 'proto:1'", [], |r| {
+            Ok((r.get::<_, Option<i64>>(0)?, r.get(1)?, r.get(2)?))
+        })
+        .optional()?;
+    let Some((age, contract_raw, live_state_raw)) = row else {
+        return Ok(());
+    };
+    let Some(age) = age else {
+        return Ok(());
+    };
+
+    let new_age = age + 1;
+    conn.execute("UPDATE protagonist SET age = ?1 WHERE id = 'proto:1'", params![new_age])?;
+
+    if new_age != crate::sim::career::HS_GRADUATION_AGE {
+        return Ok(());
+    }
+
+    let contract: serde_json::Value = serde_json::from_str(&contract_raw)?;
+    let Some(team_id) = contract.get("team_id").and_then(|v| v.as_str()) else {
+        return Ok(()); // 무소속(방출·병역 중 등) — 갈림길 A는 고교 재학 중에만 적용
+    };
+    let league_id: Option<String> = content_conn.query_row("SELECT league_id FROM teams WHERE id = ?1", [team_id], |r| r.get(0)).optional()?;
+    if league_id.as_deref() != Some("league:hs") {
+        return Ok(()); // 이미 다른 리그로 넘어간 상태(중복 트리거 방지)
+    }
+
+    let avg_grade_score = season_avg_grade_score(conn, season)?;
+    let live_state: serde_json::Value = serde_json::from_str(&live_state_raw)?;
+    let attention = live_state.get("주목도").and_then(|v| v.as_f64()).unwrap_or(0.0);
+    let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("draft:{day}")));
+
+    if crate::sim::career::is_drafted(&mut rng, avg_grade_score, attention) {
+        let Some(drafted_team) = pick_random_team_in_league(content_conn, &mut rng, "league:pro")? else {
+            return Ok(());
+        };
+        let salary = crate::sim::career::draft_initial_salary(avg_grade_score, attention);
+        let new_contract = serde_json::json!({"team_id": drafted_team, "salary": salary, "years_remaining": 2});
+        conn.execute("UPDATE protagonist SET contract = ?1 WHERE id = 'proto:1'", params![new_contract.to_string()])?;
+
+        let payload = serde_json::json!({"drafted": true, "team_id": drafted_team, "salary": salary}).to_string();
+        conn.execute(
+            "INSERT INTO pending_actions (id, type, urgency, created_day, payload) VALUES (?1, 'draft', 'urgent', ?2, ?3)",
+            params![format!("draft:{day}"), day, payload],
+        )?;
+    } else {
+        let payload = serde_json::json!({"drafted": false, "options": ["대학", "독립", "입대"]}).to_string();
+        conn.execute(
+            "INSERT INTO pending_actions (id, type, urgency, created_day, payload) VALUES (?1, 'careerChoice', 'urgent', ?2, ?3)",
+            params![format!("career:{day}"), day, payload],
+        )?;
+    }
+    Ok(())
+}
+
+/// `careerChoice` PendingAction 응답 처리 — `choice_id` ∈ {"대학","독립",
+/// "입대"}(드래프트 미지명 시에만 뜨는 선택지, §E). 대학/독립은 그 리그
+/// 팀 중 무작위 배정(§F "정확한 팀 선택 UI는 열린 세부" — 06_캐릭터생성
+/// 처럼 지역/카드 브라우징은 후속, 이번엔 자동 배정), 입대는 병역
+/// 복무를 시작시킨다(`sim::npc::MILITARY_SERVICE_DAYS` 재사용).
+fn resolve_career_choice(conn: &Connection, content_conn: &Connection, world_seed: i64, choice_id: &str, day: i64) -> anyhow::Result<()> {
+    let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("career:{day}")));
+    match choice_id {
+        "대학" | "독립" => {
+            let league_id = if choice_id == "대학" { "league:univ" } else { "league:independent" };
+            let Some(team) = pick_random_team_in_league(content_conn, &mut rng, league_id)? else {
+                anyhow::bail!("no teams found for league {league_id}");
+            };
+            let contract = serde_json::json!({"team_id": team});
+            conn.execute("UPDATE protagonist SET contract = ?1 WHERE id = 'proto:1'", params![contract.to_string()])?;
+        }
+        "입대" => {
+            let contract = serde_json::json!({"team_id": null, "status": "military"});
+            conn.execute(
+                "UPDATE protagonist SET contract = ?1, military_return_day = ?2 WHERE id = 'proto:1'",
+                params![contract.to_string(), day + crate::sim::npc::MILITARY_SERVICE_DAYS],
+            )?;
+        }
+        _ => anyhow::bail!("unknown careerChoice: {choice_id}"),
+    }
+    Ok(())
+}
+
 /// 시즌 경계 — 시즌 카운터 증가, 인박스 비움(04_게임루프.md §1), **프로
 /// 포스트시즌 실행**(I5 2차분 추가 — standings가 지워지기 전에 트리거),
 /// **방출·재계약/FA 판정**(`process_protagonist_contract`, I6 7차분 추가),
 /// **트레이드 판정**(`process_protagonist_trade`, I6 8차분 추가 — 계약
 /// 처리 직후에 호출해 이미 협상 중인 선수를 또 건드리지 않게 함),
-/// standings를 **리그별로** history_standings에 압축(1차분의 "전체 뭉쳐서
-/// 순위" placeholder를 이번에 리그별 정확한 순위로 개선) 후 다음 시즌을 위해
+/// **병역 만료·갈림길 A 판정**(`process_protagonist_military_discharge`·
+/// `process_protagonist_career_path`, I7 6차분 추가), standings를
+/// **리그별로** history_standings에 압축(1차분의 "전체 뭉쳐서 순위"
+/// placeholder를 이번에 리그별 정확한 순위로 개선) 후 다음 시즌을 위해
 /// standings·schedule·season_stats 초기화. 로스터 세대교체·
 /// 투자정산은 계속 이월.
 pub fn season_rollover(conn: &Connection, content_conn: &Connection, day: i64) -> anyhow::Result<()> {
@@ -1903,6 +2034,8 @@ pub fn season_rollover(conn: &Connection, content_conn: &Connection, day: i64) -
     run_pro_postseason(conn, content_conn, world_seed)?;
     process_protagonist_contract(conn, content_conn, world_seed, current, day)?;
     process_protagonist_trade(conn, content_conn, world_seed, day)?;
+    process_protagonist_military_discharge(conn, content_conn, world_seed, day)?;
+    process_protagonist_career_path(conn, content_conn, world_seed, current, day)?;
 
     // standings 압축 — 리그별로 묶어서(content.db team_id→league_id 조회) 순위 계산.
     let mut stmt = conn.prepare("SELECT team_id, w, l FROM standings")?;
@@ -2094,6 +2227,14 @@ pub fn resolve_choice(
         "tradeDecision" => {
             let today: i64 = slot_conn.query_row("SELECT current_day FROM meta", [], |r| r.get(0))?;
             resolve_trade_decision(slot_conn, &payload_raw, choice_id, today)?;
+            None
+        }
+        // 지명 통보뿐 — 계약은 `process_protagonist_career_path`가 이미
+        // 확정해뒀다(§D "지명 → 프로", 거부 개념 없음). 확인만 하면 소비.
+        "draft" => None,
+        "careerChoice" => {
+            let today: i64 = slot_conn.query_row("SELECT current_day FROM meta", [], |r| r.get(0))?;
+            resolve_career_choice(slot_conn, content_conn, world_seed, choice_id, today)?;
             None
         }
         _ => None,
@@ -2954,6 +3095,179 @@ mod tests {
             }
         }
         assert!(triggered, "expected season_rollover to invoke process_protagonist_trade and eventually produce a trade");
+    }
+
+    fn build_career_content_db() -> Connection {
+        let conn = content::open_in_memory().unwrap();
+        for league_id in ["league:hs", "league:univ", "league:independent", "league:pro"] {
+            conn.execute("INSERT INTO leagues (id, meta) VALUES (?1, NULL)", [league_id]).unwrap();
+        }
+        for (team_id, league_id) in [
+            ("team:hs_a", "league:hs"),
+            ("team:univ_a", "league:univ"),
+            ("team:indep_a", "league:independent"),
+            ("team:pro_a", "league:pro"),
+            ("team:pro_b", "league:pro"),
+        ] {
+            conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES (?1, ?2, NULL, NULL)", params![team_id, league_id]).unwrap();
+        }
+        conn
+    }
+
+    fn insert_career_protagonist(slot_conn: &Connection, team_id: &str, age: i64, attention: f64) {
+        slot_conn
+            .execute(
+                "INSERT INTO protagonist (id, name, handedness, archetype, stats, xp, live_state, finance, pitches, contract, injury, age)
+                 VALUES ('proto:1', '갈림길테스트', '우완', '강속구형', '{}', '{}', ?1, '{}', '[\"포심 패스트볼\"]', ?2, '{\"current\":null,\"history\":[]}', ?3)",
+                params![
+                    serde_json::json!({"피로도": 0, "주목도": attention}).to_string(),
+                    serde_json::json!({"team_id": team_id}).to_string(),
+                    age,
+                ],
+            )
+            .unwrap();
+    }
+
+    #[test]
+    fn process_protagonist_career_path_skips_when_age_is_untracked() {
+        let content_conn = build_career_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_market_protagonist(&slot_conn, &serde_json::json!({"team_id": "team:hs_a"}), 0.0);
+
+        process_protagonist_career_path(&slot_conn, &content_conn, 1, 0, 364).unwrap();
+
+        assert!(list_pending_actions(&slot_conn).unwrap().is_empty());
+    }
+
+    #[test]
+    fn process_protagonist_career_path_just_increments_age_before_graduation() {
+        let content_conn = build_career_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_career_protagonist(&slot_conn, "team:hs_a", 17, 0.0);
+
+        process_protagonist_career_path(&slot_conn, &content_conn, 1, 0, 364).unwrap();
+
+        let age: i64 = slot_conn.query_row("SELECT age FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+        assert_eq!(age, 18);
+        assert!(list_pending_actions(&slot_conn).unwrap().is_empty());
+    }
+
+    #[test]
+    fn process_protagonist_career_path_drafted_player_gets_a_pro_contract() {
+        let content_conn = build_career_content_db();
+        let mut triggered = false;
+        for seed in 0..30i64 {
+            let slot_conn = slot::open_in_memory().unwrap();
+            insert_career_protagonist(&slot_conn, "team:hs_a", 19, 1000.0);
+            insert_game_log_grades(&slot_conn, 0, &["S", "S", "S"]);
+
+            process_protagonist_career_path(&slot_conn, &content_conn, seed, 0, 364).unwrap();
+
+            let pending = list_pending_actions(&slot_conn).unwrap();
+            if let Some(action) = pending.iter().find(|p| p.kind == "draft") {
+                let payload: serde_json::Value = serde_json::from_str(&action.payload).unwrap();
+                assert_eq!(payload["drafted"], true);
+                let team_id = payload["team_id"].as_str().unwrap().to_string();
+                assert!(team_id == "team:pro_a" || team_id == "team:pro_b");
+
+                let contract = read_contract(&slot_conn);
+                assert_eq!(contract["team_id"], team_id);
+                assert_eq!(contract["years_remaining"], 2);
+                triggered = true;
+                break;
+            }
+        }
+        assert!(triggered, "expected at least one seed to draft a high-performing, high-attention HS senior");
+    }
+
+    #[test]
+    fn process_protagonist_career_path_undrafted_player_gets_a_career_choice() {
+        let content_conn = build_career_content_db();
+        let mut triggered = false;
+        for seed in 0..30i64 {
+            let slot_conn = slot::open_in_memory().unwrap();
+            insert_career_protagonist(&slot_conn, "team:hs_a", 19, 0.0);
+            insert_game_log_grades(&slot_conn, 0, &["F", "F", "F"]);
+
+            process_protagonist_career_path(&slot_conn, &content_conn, seed, 0, 364).unwrap();
+
+            let pending = list_pending_actions(&slot_conn).unwrap();
+            if let Some(action) = pending.iter().find(|p| p.kind == "careerChoice") {
+                let payload: serde_json::Value = serde_json::from_str(&action.payload).unwrap();
+                assert_eq!(payload["drafted"], false);
+                assert_eq!(payload["options"], serde_json::json!(["대학", "독립", "입대"]));
+                assert_eq!(read_contract(&slot_conn)["team_id"], "team:hs_a", "contract stays put until the player chooses");
+                triggered = true;
+                break;
+            }
+        }
+        assert!(triggered, "expected at least one seed to leave a poorly-performing, unnoticed HS senior undrafted");
+    }
+
+    #[test]
+    fn resolve_career_choice_university_and_independent_assign_a_team_in_that_league() {
+        let content_conn = build_career_content_db();
+
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_career_protagonist(&slot_conn, "team:hs_a", 20, 0.0);
+        resolve_career_choice(&slot_conn, &content_conn, 1, "대학", 364).unwrap();
+        assert_eq!(read_contract(&slot_conn)["team_id"], "team:univ_a");
+
+        let slot_conn2 = slot::open_in_memory().unwrap();
+        insert_career_protagonist(&slot_conn2, "team:hs_a", 20, 0.0);
+        resolve_career_choice(&slot_conn2, &content_conn, 1, "독립", 364).unwrap();
+        assert_eq!(read_contract(&slot_conn2)["team_id"], "team:indep_a");
+    }
+
+    #[test]
+    fn resolve_career_choice_military_starts_service_and_clears_the_team() {
+        let content_conn = build_career_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_career_protagonist(&slot_conn, "team:hs_a", 20, 0.0);
+
+        resolve_career_choice(&slot_conn, &content_conn, 1, "입대", 100).unwrap();
+
+        let contract = read_contract(&slot_conn);
+        assert!(contract["team_id"].is_null());
+        assert_eq!(contract["status"], "military");
+        let return_day: i64 = slot_conn.query_row("SELECT military_return_day FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+        assert_eq!(return_day, 100 + crate::sim::npc::MILITARY_SERVICE_DAYS);
+    }
+
+    #[test]
+    fn process_protagonist_military_discharge_reassigns_to_independent_league_once_service_ends() {
+        let content_conn = build_career_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_career_protagonist(&slot_conn, "team:hs_a", 20, 0.0);
+        resolve_career_choice(&slot_conn, &content_conn, 1, "입대", 100).unwrap();
+        let return_day: i64 = slot_conn.query_row("SELECT military_return_day FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+
+        process_protagonist_military_discharge(&slot_conn, &content_conn, 1, return_day).unwrap();
+
+        assert_eq!(read_contract(&slot_conn)["team_id"], "team:indep_a");
+        let return_day_after: Option<i64> =
+            slot_conn.query_row("SELECT military_return_day FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+        assert!(return_day_after.is_none());
+    }
+
+    #[test]
+    fn season_rollover_wires_up_protagonist_career_path_processing() {
+        let content_conn = build_career_content_db();
+        let mut triggered = false;
+        for seed in 0..30i64 {
+            let slot_conn = slot::open_in_memory().unwrap();
+            slot_conn.execute("UPDATE meta SET world_seed = ?1", params![seed]).unwrap();
+            insert_career_protagonist(&slot_conn, "team:hs_a", 19, 0.0);
+            insert_game_log_grades(&slot_conn, 0, &["F", "F", "F"]);
+
+            season_rollover(&slot_conn, &content_conn, 364).unwrap();
+
+            if list_pending_actions(&slot_conn).unwrap().iter().any(|p| p.kind == "careerChoice" || p.kind == "draft") {
+                triggered = true;
+                break;
+            }
+        }
+        assert!(triggered, "expected season_rollover to invoke process_protagonist_career_path and eventually trigger 갈림길A");
     }
 
     #[test]

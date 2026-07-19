@@ -125,6 +125,24 @@ fn migration_v5(tx: &Transaction) -> anyhow::Result<()> {
     Ok(())
 }
 
+const V6_DDL: &str = r#"
+ALTER TABLE protagonist ADD COLUMN age INTEGER;
+ALTER TABLE protagonist ADD COLUMN military_return_day INTEGER;
+"#;
+
+/// I7 6차분(진로 갈림길, 01_커리어_구조.md §5) — `age`는 `create_protagonist`
+/// 가 17세(고교 1학년, 02_아마_고교.md §A-1)로 채우고 매 시즌 경계마다
+/// +1. NULL이면(구세이브·합성 테스트) "나이 트래킹 대상 아님"으로 갈림길
+/// 판정 자체를 스킵 — 이번 서브분 전까지 존재하던 모든 protagonist 행이
+/// 이 값을 몰라도 깨지지 않게 하는 방어적 설계. `military_return_day`는
+/// `npc` 테이블의 동명 컬럼과 같은 관례(NULL=복무 안 함) — 갈림길 A에서
+/// "입대"를 고르면 채워지고, 복무 만료 시 독립리그 재도전으로 자동 전환.
+fn migration_v6(tx: &Transaction) -> anyhow::Result<()> {
+    tx.execute_batch(V6_DDL)?;
+    tx.execute("UPDATE meta SET save_version = 6", [])?;
+    Ok(())
+}
+
 const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 1,
@@ -145,6 +163,10 @@ const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 5,
         up: migration_v5,
+    },
+    Migration {
+        version: 6,
+        up: migration_v6,
     },
 ];
 
@@ -172,7 +194,7 @@ mod tests {
         let save_version: i64 = conn
             .query_row("SELECT save_version FROM meta", [], |row| row.get(0))
             .unwrap();
-        assert_eq!(save_version, 5);
+        assert_eq!(save_version, 6);
     }
 
     #[test]
@@ -187,6 +209,22 @@ mod tests {
         let training: String = conn.query_row("SELECT training FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
         let v: serde_json::Value = serde_json::from_str(&training).unwrap();
         assert_eq!(v.get("primary_stat").unwrap().as_str().unwrap(), "구속");
+    }
+
+    #[test]
+    fn v6_adds_age_and_military_return_day_columns_to_protagonist() {
+        let conn = open_in_memory().unwrap();
+        conn.execute(
+            "INSERT INTO protagonist (id, name, handedness, archetype, stats, xp, live_state, finance, pitches, contract, injury, age, military_return_day)
+             VALUES ('proto:1', 'X', '우투', '강속구형', '{}', '{}', '{}', '{}', '[]', '{}', '{}', 17, NULL)",
+            [],
+        )
+        .unwrap();
+        let (age, military_return_day): (i64, Option<i64>) = conn
+            .query_row("SELECT age, military_return_day FROM protagonist WHERE id = 'proto:1'", [], |r| Ok((r.get(0)?, r.get(1)?)))
+            .unwrap();
+        assert_eq!(age, 17);
+        assert!(military_return_day.is_none());
     }
 
     #[test]
