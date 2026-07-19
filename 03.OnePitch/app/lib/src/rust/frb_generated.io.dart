@@ -82,6 +82,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<TeamOption> dco_decode_list_team_option(dynamic raw);
 
   @protected
+  List<TreatmentOption> dco_decode_list_treatment_option(dynamic raw);
+
+  @protected
   MatchStepInfo dco_decode_match_step_info(dynamic raw);
 
   @protected
@@ -121,6 +124,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   TrainingConfigInfo dco_decode_training_config_info(dynamic raw);
+
+  @protected
+  TreatmentOption dco_decode_treatment_option(dynamic raw);
 
   @protected
   int dco_decode_u_32(dynamic raw);
@@ -212,6 +218,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<TeamOption> sse_decode_list_team_option(SseDeserializer deserializer);
 
   @protected
+  List<TreatmentOption> sse_decode_list_treatment_option(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   MatchStepInfo sse_decode_match_step_info(SseDeserializer deserializer);
 
   @protected
@@ -261,6 +272,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   TrainingConfigInfo sse_decode_training_config_info(
     SseDeserializer deserializer,
   );
+
+  @protected
+  TreatmentOption sse_decode_treatment_option(SseDeserializer deserializer);
 
   @protected
   int sse_decode_u_32(SseDeserializer deserializer);
@@ -380,6 +394,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_list_treatment_option(
+    List<TreatmentOption> self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_match_step_info(MatchStepInfo self, SseSerializer serializer);
 
   @protected
@@ -445,6 +465,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_training_config_info(
     TrainingConfigInfo self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_treatment_option(
+    TreatmentOption self,
     SseSerializer serializer,
   );
 

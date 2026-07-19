@@ -5,15 +5,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:app/src/rust/api/game.dart';
 import 'game_provider.dart';
+import 'injury_treatment_view.dart';
 
 /// 진행(Continue) + 매치 + 결과요약을 한 화면에 압축한 I7 1차분 최소
 /// 슬라이스 — [05_매치](../../../../04_UI기획/05_매치.md)의 다이아몬드·
 /// 존그리드 비주얼(CustomPainter)은 후속 서브분("최소 루프가 실제로
-/// 동작"이라는 완료 기준엔 텍스트/버튼으로도 충분). `game`을 제외한
-/// 4종 PendingAction(`injuryTreatment`·`contractNego`·`tradeDecision`·
-/// `careerChoice`·`draft`)은 전용 화면이 아직 없어 원시 payload 조회
-/// 폴백(개발자용)으로만 표시 — 실제로 자주 안 걸리는 경로라 루프 증명
-/// 자체를 막지 않는다.
+/// 동작"이라는 완료 기준엔 텍스트/버튼으로도 충분). `game`·
+/// `injuryTreatment`([InjuryTreatmentView] 참고, I7 5차분에서 전용화면
+/// 추가)는 전용 화면이 있고, 나머지 4종(`contractNego`·`tradeDecision`·
+/// `careerChoice`·`draft`)은 진로 갈림길이 엔진에 없어 실전에서 아직
+/// 발동 자체가 안 돼(§6-19·§6-24에서 이미 확인) 원시 payload 조회
+/// 폴백(개발자용)으로만 남겨둔다.
 class GameScreen extends ConsumerWidget {
   const GameScreen({super.key});
 
@@ -105,6 +107,9 @@ class _MainArea extends StatelessWidget {
     final action = state.pending.first;
     if (action.kind == 'game') {
       return _PregameModePicker(action: action, controller: controller);
+    }
+    if (action.kind == 'injuryTreatment') {
+      return InjuryTreatmentView(action: action, controller: controller);
     }
     return _GenericPendingActionView(action: action, controller: controller);
   }

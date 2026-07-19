@@ -229,6 +229,42 @@ pub fn course_names() -> Vec<String> {
     crate::sim::pitch::Course::ALL.iter().map(|c| format!("{c:?}")).collect()
 }
 
+/// [07_전환화면](../../../04_UI기획/07_전환화면.md) §5 "3옵션 비교표" —
+/// `injuryTreatment` PendingAction의 `choice_id`로 그대로 쓸 수 있는
+/// `name`(`resolve_choice`가 기대하는 정확한 문자열, `sim::injury::TREATMENTS`)
+/// 과 함께 이탈기간(`sim::injury::treated_recovery_days`, 실제 계산값)·
+/// 재발위험·완치도(08_부상_시스템.md §4 표의 정성적 설명 — 수술/재활/
+/// 무리한복귀 셋 다 즉시-판정형이라 정확한 확률은 선택 시점(`treat`)에야
+/// 나오므로 사전 비교표는 문서가 확정해둔 상대적 설명 문구로 표시).
+/// 순수 계산이라 동기.
+#[derive(Debug, Clone)]
+pub struct TreatmentOption {
+    pub name: String,
+    pub recovery_days: i64,
+    pub risk_label: String,
+    pub recovery_quality_label: String,
+}
+
+#[flutter_rust_bridge::frb(sync)]
+pub fn treatment_options(severity: String) -> Vec<TreatmentOption> {
+    crate::sim::injury::TREATMENTS
+        .iter()
+        .map(|t| {
+            let (risk_label, recovery_quality_label) = match *t {
+                "수술" => ("낮음", "높음(성공 시 — 실패하면 합병증으로 악화)"),
+                "재활" => ("있음(기준)", "중간"),
+                _ => ("매우 높음", "낮음"),
+            };
+            TreatmentOption {
+                name: t.to_string(),
+                recovery_days: crate::sim::injury::treated_recovery_days(&severity, t),
+                risk_label: risk_label.to_string(),
+                recovery_quality_label: recovery_quality_label.to_string(),
+            }
+        })
+        .collect()
+}
+
 /// 캐릭터 생성 스텝3~4(지역·학교 선택)용 — 고교 리그 팀 전부와 팀특성
 /// 3슬롯. 지역별 그룹핑·학교 카드 비주얼은 06_캐릭터생성.md 자체가
 /// "열린 세부 — 아트 단계"로 이미 미뤄둔 항목이라, 이번 스코프는 평평한
@@ -760,5 +796,20 @@ mod tests {
         assert_eq!(injuries[0].day, 5);
 
         reset_state();
+    }
+
+    #[test]
+    fn treatment_options_are_named_for_resolve_choice_and_recovery_grows_with_severity() {
+        let options = treatment_options("경미".to_string());
+        assert_eq!(options.len(), 3);
+        assert_eq!(options.iter().map(|o| o.name.clone()).collect::<Vec<_>>(), vec!["수술", "재활", "무리한 복귀"]);
+
+        let surgery_minor = treatment_options("경미".to_string()).into_iter().find(|o| o.name == "수술").unwrap();
+        let surgery_severe = treatment_options("중상".to_string()).into_iter().find(|o| o.name == "수술").unwrap();
+        assert!(surgery_severe.recovery_days > surgery_minor.recovery_days);
+
+        let rushed = treatment_options("경미".to_string()).into_iter().find(|o| o.name == "무리한 복귀").unwrap();
+        let rehab = treatment_options("경미".to_string()).into_iter().find(|o| o.name == "재활").unwrap();
+        assert!(rushed.recovery_days < rehab.recovery_days);
     }
 }

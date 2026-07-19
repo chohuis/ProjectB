@@ -67,7 +67,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.12.0';
 
   @override
-  int get rustContentHash => 447620168;
+  int get rustContentHash => 1483180792;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -148,6 +148,10 @@ abstract class RustLibApi extends BaseApi {
   });
 
   List<String> crateApiGameTrainingIntensityNames();
+
+  List<TreatmentOption> crateApiGameTreatmentOptions({
+    required String severity,
+  });
 }
 
 class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
@@ -827,6 +831,34 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   TaskConstMeta get kCrateApiGameTrainingIntensityNamesConstMeta =>
       const TaskConstMeta(debugName: "training_intensity_names", argNames: []);
 
+  @override
+  List<TreatmentOption> crateApiGameTreatmentOptions({
+    required String severity,
+  }) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(severity, serializer);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 24)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_list_treatment_option,
+          decodeErrorData: null,
+        ),
+        constMeta: kCrateApiGameTreatmentOptionsConstMeta,
+        argValues: [severity],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiGameTreatmentOptionsConstMeta =>
+      const TaskConstMeta(
+        debugName: "treatment_options",
+        argNames: ["severity"],
+      );
+
   @protected
   AnyhowException dco_decode_AnyhowException(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
@@ -971,6 +1003,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   List<TeamOption> dco_decode_list_team_option(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return (raw as List<dynamic>).map(dco_decode_team_option).toList();
+  }
+
+  @protected
+  List<TreatmentOption> dco_decode_list_treatment_option(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_treatment_option).toList();
   }
 
   @protected
@@ -1138,6 +1176,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       secondaryStats: dco_decode_list_String(arr[1]),
       intensity: dco_decode_String(arr[2]),
       newPitch: dco_decode_opt_String(arr[3]),
+    );
+  }
+
+  @protected
+  TreatmentOption dco_decode_treatment_option(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 4)
+      throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
+    return TreatmentOption(
+      name: dco_decode_String(arr[0]),
+      recoveryDays: dco_decode_i_64(arr[1]),
+      riskLabel: dco_decode_String(arr[2]),
+      recoveryQualityLabel: dco_decode_String(arr[3]),
     );
   }
 
@@ -1380,6 +1432,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  List<TreatmentOption> sse_decode_list_treatment_option(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <TreatmentOption>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_treatment_option(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
   MatchStepInfo sse_decode_match_step_info(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
 
@@ -1592,6 +1658,21 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       secondaryStats: var_secondaryStats,
       intensity: var_intensity,
       newPitch: var_newPitch,
+    );
+  }
+
+  @protected
+  TreatmentOption sse_decode_treatment_option(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_name = sse_decode_String(deserializer);
+    var var_recoveryDays = sse_decode_i_64(deserializer);
+    var var_riskLabel = sse_decode_String(deserializer);
+    var var_recoveryQualityLabel = sse_decode_String(deserializer);
+    return TreatmentOption(
+      name: var_name,
+      recoveryDays: var_recoveryDays,
+      riskLabel: var_riskLabel,
+      recoveryQualityLabel: var_recoveryQualityLabel,
     );
   }
 
@@ -1819,6 +1900,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_list_treatment_option(
+    List<TreatmentOption> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_treatment_option(item, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_match_step_info(
     MatchStepInfo self,
     SseSerializer serializer,
@@ -1993,6 +2086,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_list_String(self.secondaryStats, serializer);
     sse_encode_String(self.intensity, serializer);
     sse_encode_opt_String(self.newPitch, serializer);
+  }
+
+  @protected
+  void sse_encode_treatment_option(
+    TreatmentOption self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.name, serializer);
+    sse_encode_i_64(self.recoveryDays, serializer);
+    sse_encode_String(self.riskLabel, serializer);
+    sse_encode_String(self.recoveryQualityLabel, serializer);
   }
 
   @protected

@@ -38,7 +38,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.12.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 447620168;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1483180792;
 
 // Section: executor
 
@@ -842,6 +842,37 @@ fn wire__crate__api__game__training_intensity_names_impl(
         },
     )
 }
+fn wire__crate__api__game__treatment_options_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "treatment_options",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_severity = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            transform_result_sse::<_, ()>((move || {
+                let output_ok =
+                    Result::<_, ()>::Ok(crate::api::game::treatment_options(api_severity))?;
+                Ok(output_ok)
+            })())
+        },
+    )
+}
 
 // Section: dart2rust
 
@@ -1044,6 +1075,20 @@ impl SseDecode for Vec<crate::api::game::TeamOption> {
         let mut ans_ = Vec::with_capacity(len_ as usize);
         for idx_ in 0..len_ {
             ans_.push(<crate::api::game::TeamOption>::sse_decode(deserializer));
+        }
+        return ans_;
+    }
+}
+
+impl SseDecode for Vec<crate::api::game::TreatmentOption> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = Vec::with_capacity(len_ as usize);
+        for idx_ in 0..len_ {
+            ans_.push(<crate::api::game::TreatmentOption>::sse_decode(
+                deserializer,
+            ));
         }
         return ans_;
     }
@@ -1269,6 +1314,22 @@ impl SseDecode for crate::api::game::TrainingConfigInfo {
     }
 }
 
+impl SseDecode for crate::api::game::TreatmentOption {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_name = <String>::sse_decode(deserializer);
+        let mut var_recoveryDays = <i64>::sse_decode(deserializer);
+        let mut var_riskLabel = <String>::sse_decode(deserializer);
+        let mut var_recoveryQualityLabel = <String>::sse_decode(deserializer);
+        return crate::api::game::TreatmentOption {
+            name: var_name,
+            recovery_days: var_recoveryDays,
+            risk_label: var_riskLabel,
+            recovery_quality_label: var_recoveryQualityLabel,
+        };
+    }
+}
+
 impl SseDecode for u32 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -1341,6 +1402,7 @@ fn pde_ffi_dispatcher_sync_impl(
         3 => wire__crate__api__game__exposed_stat_names_impl(ptr, rust_vec_len, data_len),
         15 => wire__crate__api__simple__greet_impl(ptr, rust_vec_len, data_len),
         23 => wire__crate__api__game__training_intensity_names_impl(ptr, rust_vec_len, data_len),
+        24 => wire__crate__api__game__treatment_options_impl(ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -1645,6 +1707,29 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::game::TrainingConfigInfo>
         self
     }
 }
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::game::TreatmentOption {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.name.into_into_dart().into_dart(),
+            self.recovery_days.into_into_dart().into_dart(),
+            self.risk_label.into_into_dart().into_dart(),
+            self.recovery_quality_label.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::game::TreatmentOption
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::game::TreatmentOption>
+    for crate::api::game::TreatmentOption
+{
+    fn into_into_dart(self) -> crate::api::game::TreatmentOption {
+        self
+    }
+}
 
 impl SseEncode for flutter_rust_bridge::for_generated::anyhow::Error {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -1798,6 +1883,16 @@ impl SseEncode for Vec<crate::api::game::TeamOption> {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
             <crate::api::game::TeamOption>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for Vec<crate::api::game::TreatmentOption> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::api::game::TreatmentOption>::sse_encode(item, serializer);
         }
     }
 }
@@ -1957,6 +2052,16 @@ impl SseEncode for crate::api::game::TrainingConfigInfo {
         <Vec<String>>::sse_encode(self.secondary_stats, serializer);
         <String>::sse_encode(self.intensity, serializer);
         <Option<String>>::sse_encode(self.new_pitch, serializer);
+    }
+}
+
+impl SseEncode for crate::api::game::TreatmentOption {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.name, serializer);
+        <i64>::sse_encode(self.recovery_days, serializer);
+        <String>::sse_encode(self.risk_label, serializer);
+        <String>::sse_encode(self.recovery_quality_label, serializer);
     }
 }
 

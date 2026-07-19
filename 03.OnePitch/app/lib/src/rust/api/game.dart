@@ -10,7 +10,7 @@ part 'game.freezed.dart';
 
 // These functions are ignored because they are not marked as `pub`: `with_state_mut`, `with_state`, `world_seed`
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `GameState`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
 
 /// 뉴게임 — [07_주인공_생성](../../../02_기획/07_주인공_생성.md) §1의 7단계
 /// 흐름 중 실제 데이터를 만드는 마지막 단계(스텝 1~6은 Dart 쪽 폼 상태일
@@ -72,6 +72,9 @@ Future<MetaStatusInfo> getMetaStatus() =>
 /// 그대로 넣으면 된다). 순수 계산(I/O·락 없음)이라 동기 호출로 둔다 —
 /// Dart 쪽에서 `FutureBuilder` 없이 바로 리스트를 쓸 수 있다.
 List<String> courseNames() => RustLib.instance.api.crateApiGameCourseNames();
+
+List<TreatmentOption> treatmentOptions({required String severity}) =>
+    RustLib.instance.api.crateApiGameTreatmentOptions(severity: severity);
 
 Future<List<TeamOption>> listHsTeams({required String contentDbPath}) =>
     RustLib.instance.api.crateApiGameListHsTeams(contentDbPath: contentDbPath);
@@ -552,4 +555,43 @@ class TrainingConfigInfo {
           secondaryStats == other.secondaryStats &&
           intensity == other.intensity &&
           newPitch == other.newPitch;
+}
+
+/// [07_전환화면](../../../04_UI기획/07_전환화면.md) §5 "3옵션 비교표" —
+/// `injuryTreatment` PendingAction의 `choice_id`로 그대로 쓸 수 있는
+/// `name`(`resolve_choice`가 기대하는 정확한 문자열, `sim::injury::TREATMENTS`)
+/// 과 함께 이탈기간(`sim::injury::treated_recovery_days`, 실제 계산값)·
+/// 재발위험·완치도(08_부상_시스템.md §4 표의 정성적 설명 — 수술/재활/
+/// 무리한복귀 셋 다 즉시-판정형이라 정확한 확률은 선택 시점(`treat`)에야
+/// 나오므로 사전 비교표는 문서가 확정해둔 상대적 설명 문구로 표시).
+/// 순수 계산이라 동기.
+class TreatmentOption {
+  final String name;
+  final PlatformInt64 recoveryDays;
+  final String riskLabel;
+  final String recoveryQualityLabel;
+
+  const TreatmentOption({
+    required this.name,
+    required this.recoveryDays,
+    required this.riskLabel,
+    required this.recoveryQualityLabel,
+  });
+
+  @override
+  int get hashCode =>
+      name.hashCode ^
+      recoveryDays.hashCode ^
+      riskLabel.hashCode ^
+      recoveryQualityLabel.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TreatmentOption &&
+          runtimeType == other.runtimeType &&
+          name == other.name &&
+          recoveryDays == other.recoveryDays &&
+          riskLabel == other.riskLabel &&
+          recoveryQualityLabel == other.recoveryQualityLabel;
 }
