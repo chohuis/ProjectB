@@ -176,9 +176,17 @@ pub fn generate_initial_world(slot_conn: &mut Connection, content_conn: &Connect
     for league_id in LEAGUE_IDS {
         generate_league_roster(slot_conn, content_conn, canonical_seed, league_id)?;
     }
+    // generate_schedule은 (season_rollover의 기존 트랜잭션 안에서 중첩되지
+    // 않도록) 자체 트랜잭션이 없다 — 여기서는 그런 바깥 트랜잭션이 없으므로
+    // 안 감싸면 경기 하나하나가 실제 파일에 개별 autocommit(=매번 fsync)
+    // 된다. 리그당 수백 경기 × 4개 리그가 그렇게 커밋되면 실제 디스크에서
+    // 수십 초가 걸려(새 게임 시작 지연의 실측 주범) 여기서 한 트랜잭션으로
+    // 묶는다.
+    let tx = slot_conn.transaction()?;
     for league_id in SCHEDULED_LEAGUE_IDS {
-        generate_schedule(slot_conn, content_conn, canonical_seed, league_id, 0, 1)?;
+        generate_schedule(&tx, content_conn, canonical_seed, league_id, 0, 1)?;
     }
+    tx.commit()?;
     Ok(())
 }
 
@@ -2295,9 +2303,8 @@ pub fn advance(slot_conn: &mut Connection, content_conn: &Connection) -> anyhow:
                 params![format!("pending:{game_id}"), today, payload],
             )?;
             tx.execute("UPDATE meta SET current_day = ?1", params![today])?;
-            let sig = crate::integrity::sign_core_state(&tx)?;
-            tx.execute("UPDATE meta SET integrity_sig = ?1", params![sig])?;
             tx.commit()?;
+            resign_core_state(slot_conn)?;
             return list_pending_actions(slot_conn);
         }
 
@@ -2319,12 +2326,10 @@ pub fn advance(slot_conn: &mut Connection, content_conn: &Connection) -> anyhow:
         }
 
         let pending_count: i64 = tx.query_row("SELECT count(*) FROM pending_actions", [], |row| row.get(0))?;
-
-        let sig = crate::integrity::sign_core_state(&tx)?;
-        tx.execute("UPDATE meta SET integrity_sig = ?1", params![sig])?;
         tx.commit()?;
 
         if pending_count > 0 {
+            resign_core_state(slot_conn)?;
             return list_pending_actions(slot_conn);
         }
         // 새 PendingAction도, 경기도 없으면 다음 날로 계속.
@@ -2332,7 +2337,20 @@ pub fn advance(slot_conn: &mut Connection, content_conn: &Connection) -> anyhow:
     // MAX_DAYS_PER_CALL만큼 돌았는데도 정지점을 못 찾음 — 안전장치 발동,
     // 호출자에게 제어를 돌려준다(보통 빈 목록; 실제로는 I5 콘텐츠가 있으면
     // 이 경로를 거의 안 탐).
+    resign_core_state(slot_conn)?;
     list_pending_actions(slot_conn)
+}
+
+/// `sign_core_state`는 전체 npc 테이블(수천 행)을 스캔·직렬화하는 O(n)
+/// 연산이라 — advance()가 하루씩 조용히(pending 없이) 여러 날을 통과하는
+/// 동안 매 날짜마다 다시 서명하면 그 스캔이 그대로 여러 번 중복된다.
+/// `integrity_sig`는 지금 어디서도 로드 시 검증하지 않는(I3 이후 미뤄둔
+/// placeholder) 값이라 중간 날짜의 서명이 최신일 필요가 없다 — advance()가
+/// 실제로 호출자에게 제어를 돌려주는 시점에 한 번만 최종 상태를 서명한다.
+fn resign_core_state(slot_conn: &Connection) -> anyhow::Result<()> {
+    let sig = crate::integrity::sign_core_state(slot_conn)?;
+    slot_conn.execute("UPDATE meta SET integrity_sig = ?1", params![sig])?;
+    Ok(())
 }
 
 /// pending_actions에서 해당 행을 제거해 다음 advance()가 진행되게 한다.
