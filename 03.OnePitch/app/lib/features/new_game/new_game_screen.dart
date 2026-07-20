@@ -22,7 +22,10 @@ import 'hs_school_region_map.dart';
 /// 지역(8권역) 선택 → 그 지역 학교 목록 2단계로 나뉘며, 팀특성 3슬롯은
 /// 화면에 안 보인다 — [07_주인공_생성](../../../../02_기획/07_주인공_생성.md)
 /// §3-2 "정보 전부 공개" 원칙(강점·약점을 알고 고르는 전략적 선택)을
-/// 사용자 요청으로 이번 서브분부터 뒤집은 것(대화 2026-07-20).
+/// 사용자 요청으로 뒤집은 것(대화 2026-07-20). 학교 리스트는 이름+고유
+/// 색+실측 별점만 보이고, 탭하면 상세 다이얼로그(최근 5시즌 순위·우승
+/// 기록·라이벌)가 뜨고 거기서 "확인"을 눌러야 실제로 선택된다(대화
+/// 2026-07-21) — 리스트 한 줄로는 담을 수 없는 정보라 2단계로 분리.
 class NewGameScreen extends ConsumerStatefulWidget {
   const NewGameScreen({super.key});
 
@@ -49,9 +52,9 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
   String _handedness = '우완';
   String _archetype = '강속구형';
 
-  // 학교 선택(지역 → 학교)
+  // 학교 선택(지역 → 학교 → 상세 확인)
   String? _contentDbPath;
-  List<TeamOption> _schools = [];
+  List<HsSchoolDetail> _schools = [];
   String? _selectedRegion;
   String? _selectedSchoolId;
   bool _loading = true;
@@ -81,7 +84,7 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
   Future<void> _loadSchools() async {
     try {
       final path = await resolveContentDbPath();
-      final schools = await listHsTeams(contentDbPath: path);
+      final schools = await listHsSchoolDetails(contentDbPath: path);
       setState(() {
         _contentDbPath = path;
         _schools = schools;
@@ -95,34 +98,22 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
     }
   }
 
-  String? _cityOf(TeamOption t) {
-    try {
-      final meta = jsonDecode(t.metaJson);
-      return meta is Map ? meta['region']?.toString() : null;
-    } catch (_) {
-      return null;
-    }
-  }
-
-  String _schoolName(TeamOption t) {
-    try {
-      final meta = jsonDecode(t.metaJson);
-      final name = meta is Map ? meta['name'] : null;
-      return name?.toString() ?? t.teamId;
-    } catch (_) {
-      return t.teamId;
-    }
-  }
-
   /// 8권역(§3-1) 순서 그대로 그룹핑 — 순서는 `hometownRegionNames()`와
   /// 동일한 엔진 상수(`HOMETOWN_REGIONS`)를 그대로 재사용.
-  Map<String, List<TeamOption>> _schoolsByRegion() {
-    final grouped = <String, List<TeamOption>>{};
+  Map<String, List<HsSchoolDetail>> _schoolsByRegion() {
+    final grouped = <String, List<HsSchoolDetail>>{};
     for (final t in _schools) {
-      final region = hsRegionOf(_cityOf(t));
+      final region = hsRegionOf(t.region);
       grouped.putIfAbsent(region, () => []).add(t);
     }
     return grouped;
+  }
+
+  String? _schoolNameOf(String teamId) {
+    for (final t in _schools) {
+      if (t.teamId == teamId) return t.name;
+    }
+    return null;
   }
 
   static int _maxDayFor(int month) {
@@ -297,6 +288,7 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
 
   Widget _buildSchoolPage(GameState gameState) {
     final grouped = _schoolsByRegion();
+    final selectedName = _selectedSchoolId == null ? null : _schoolNameOf(_selectedSchoolId!);
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -306,6 +298,10 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
             _selectedRegion == null ? '학교 선택 — 지역' : '학교 선택 — $_selectedRegion',
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
           ),
+          if (selectedName != null) ...[
+            const SizedBox(height: 4),
+            Text('선택됨: $selectedName', style: Theme.of(context).textTheme.bodyMedium),
+          ],
           const SizedBox(height: 16),
           Expanded(
             child: _selectedRegion == null
@@ -323,10 +319,15 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
                   )
                 : ListView(
                     children: [
-                      for (final t in grouped[_selectedRegion] ?? const <TeamOption>[])
+                      for (final t in grouped[_selectedRegion] ?? const <HsSchoolDetail>[])
                         Card(
                           color: t.teamId == _selectedSchoolId ? Theme.of(context).colorScheme.primaryContainer : null,
-                          child: ListTile(title: Text(_schoolName(t)), onTap: () => setState(() => _selectedSchoolId = t.teamId)),
+                          child: ListTile(
+                            leading: CircleAvatar(backgroundColor: hsSchoolColor(t.teamId), radius: 8),
+                            title: Text(t.name),
+                            trailing: Text(hsStarString(t.stars.toInt())),
+                            onTap: () => _openSchoolDetail(t),
+                          ),
                         ),
                     ],
                   ),
@@ -353,6 +354,101 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
                 child: gameState.busy ? const CircularProgressIndicator() : const Text('게임 시작'),
               ),
             ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<(String season, int rank)> _parseSeasonRanks(String json) {
+    try {
+      final v = jsonDecode(json);
+      if (v is! Map) return const [];
+      final entries = v.entries.map((e) => (e.key as String, (e.value as num).toInt())).toList();
+      entries.sort((a, b) => b.$1.compareTo(a.$1)); // S-5 → S-1(오래된 → 최신)
+      return entries;
+    } catch (_) {
+      return const [];
+    }
+  }
+
+  List<String> _parseTitles(String json) {
+    try {
+      final v = jsonDecode(json);
+      if (v is! List) return const [];
+      return v
+          .whereType<Map>()
+          .map((m) => '${m['season'] ?? '?'} ${m['competition'] ?? ''} ${m['result'] ?? ''}'.trim())
+          .toList();
+    } catch (_) {
+      return const [];
+    }
+  }
+
+  List<(String desc, String? rivalName)> _parseRivals(String json) {
+    try {
+      final v = jsonDecode(json);
+      if (v is! List) return const [];
+      return v.whereType<Map>().map((m) {
+        final desc = m['description']?.toString() ?? '';
+        final withId = m['with']?.toString();
+        return (desc, withId == null ? null : _schoolNameOf(withId));
+      }).toList();
+    } catch (_) {
+      return const [];
+    }
+  }
+
+  void _openSchoolDetail(HsSchoolDetail t) {
+    final ranks = _parseSeasonRanks(t.seasonRanksJson);
+    final titles = _parseTitles(t.titlesJson);
+    final rivals = _parseRivals(t.rivalsJson);
+
+    showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: [
+            CircleAvatar(backgroundColor: hsSchoolColor(t.teamId), radius: 8),
+            const SizedBox(width: 8),
+            Expanded(child: Text(t.name)),
+          ],
+        ),
+        content: SizedBox(
+          width: 360,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('${t.region} · ${hsStarString(t.stars.toInt())}'),
+                const SizedBox(height: 16),
+                const Text('최근 5시즌 순위', style: TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 4),
+                Text(ranks.isEmpty ? '기록 없음' : ranks.map((r) => '${r.$1} ${r.$2}위').join(' → ')),
+                const SizedBox(height: 16),
+                const Text('우승 기록', style: TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 4),
+                Text(titles.isEmpty ? '없음' : titles.join(', ')),
+                const SizedBox(height: 16),
+                const Text('라이벌', style: TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 4),
+                if (rivals.isEmpty)
+                  const Text('없음')
+                else
+                  for (final r in rivals) Text('${r.$2 ?? '?'} — ${r.$1}'),
+              ],
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('취소')),
+          ElevatedButton(
+            onPressed: () {
+              setState(() => _selectedSchoolId = t.teamId);
+              Navigator.pop(context);
+            },
+            child: const Text('확인'),
           ),
         ],
       ),

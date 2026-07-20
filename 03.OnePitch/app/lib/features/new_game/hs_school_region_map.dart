@@ -1,3 +1,5 @@
+import 'package:flutter/painting.dart' show Color, HSLColor;
+
 /// 고교 102팀의 연고 도시 → 8권역 매핑 — [02_고교](../../../../02_기획/리그팀/02_고교.md)
 /// §3 "전체 팀 표(권역별)"를 그대로 옮겼다. 실제 시드된 content.db의
 /// hs 102팀·53개 도시와 대조 검증 완료(드리프트 없음, 대화 2026-07-20).
@@ -69,3 +71,16 @@ const Map<String, String> hsCityToRegion = {
 const String hsUnknownRegion = '기타';
 
 String hsRegionOf(String? city) => hsCityToRegion[city] ?? hsUnknownRegion;
+
+/// 학교별 고유 색 — `teams.color`(17가지를 102개교가 나눠 씀, 대화
+/// 2026-07-21 확인)는 고유성이 없어 학교 선택 리스트용으로는 못 쓴다.
+/// 대신 `team_id`를 시드로 결정적 해시 색을 만든다 — 같은 학교는 항상
+/// 같은 색, 별도 데이터·엔진 변경 불필요. 채도·명도는 다크 배경에서
+/// 잘 보이도록 고정.
+Color hsSchoolColor(String teamId) {
+  final hue = (teamId.hashCode % 360).abs().toDouble();
+  return HSLColor.fromAHSL(1.0, hue, 0.55, 0.55).toColor();
+}
+
+/// `HsSchoolDetail.stars`(1~5)를 `★★★☆☆` 형태로.
+String hsStarString(int stars) => '★' * stars + '☆' * (5 - stars);

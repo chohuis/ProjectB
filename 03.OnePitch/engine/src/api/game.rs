@@ -395,6 +395,97 @@ pub fn list_hs_teams(content_db_path: String) -> anyhow::Result<Vec<TeamOption>>
     Ok(rows)
 }
 
+/// 캐릭터 생성 "학교 선택" 상세 카드용 — [02_고교](../../../02_기획/리그팀/02_고교.md)
+/// §3의 "전력★"은 실제로는 content.db에 옮겨진 적이 없는 설계문서
+/// 전용값이라(확인 완료, 대화 2026-07-21), 대신 이미 시드된
+/// `team_history.season_ranks`(최근 5시즌 순위)에서 별점을 계산한다 —
+/// 시드마다 달라질 수 있는 "살아있는" 값이라 정적 문서값보다 게임
+/// 데이터에 충실하다. `teams.stadium_id`(권역별 거점구장 공유 —
+/// `content::load_team_groups_for_schedule`가 스케줄링에 쓰는 것과 동일
+/// 그룹)로 묶은 뒤 그 안에서의 상대 순위로 별점을 매겨, 6팀 권역과
+/// 20팀 권역을 공정하게 비교한다.
+#[derive(Debug, Clone)]
+pub struct HsSchoolDetail {
+    pub team_id: String,
+    pub name: String,
+    pub region: String,
+    pub stars: i64,
+    pub season_ranks_json: String,
+    pub titles_json: String,
+    pub rivals_json: String,
+}
+
+fn stars_from_group_position(position_zero_based: usize, group_size: usize) -> i64 {
+    if group_size == 0 {
+        return 3;
+    }
+    let band = (position_zero_based * 5) / group_size;
+    (5 - band as i64).clamp(1, 5)
+}
+
+fn avg_rank_from_season_ranks(raw: &str) -> f64 {
+    let Ok(v) = serde_json::from_str::<serde_json::Value>(raw) else {
+        return f64::MAX;
+    };
+    let Some(obj) = v.as_object() else {
+        return f64::MAX;
+    };
+    let values: Vec<f64> = obj.values().filter_map(|x| x.as_f64()).collect();
+    if values.is_empty() {
+        return f64::MAX;
+    }
+    values.iter().sum::<f64>() / values.len() as f64
+}
+
+type HsSchoolHistoryRow = (String, Option<String>, Option<String>, Option<String>, Option<String>, Option<String>);
+
+pub fn list_hs_school_details(content_db_path: String) -> anyhow::Result<Vec<HsSchoolDetail>> {
+    let conn = content::open(&content_db_path)?;
+    let mut stmt = conn.prepare(
+        "SELECT teams.id, teams.meta, teams.stadium_id, team_history.season_ranks, team_history.titles, team_history.rivals
+         FROM teams JOIN team_history ON team_history.team_id = teams.id
+         WHERE teams.league_id = 'league:hs'
+         ORDER BY teams.id",
+    )?;
+    let rows: Vec<HsSchoolHistoryRow> =
+        stmt.query_map([], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?, r.get(4)?, r.get(5)?)))?.collect::<Result<_, _>>()?;
+    drop(stmt);
+
+    // stadium_id(권역)별로 묶어 그룹 내 평균순위 오름차순 위치를 구한다.
+    let mut by_group: std::collections::BTreeMap<String, Vec<(usize, f64)>> = std::collections::BTreeMap::new();
+    let avg_ranks: Vec<f64> = rows.iter().map(|(_, _, _, ranks, _, _)| avg_rank_from_season_ranks(ranks.as_deref().unwrap_or("{}"))).collect();
+    for (i, (_, _, stadium_id, ..)) in rows.iter().enumerate() {
+        let key = stadium_id.clone().unwrap_or_else(|| "ungrouped".to_string());
+        by_group.entry(key).or_default().push((i, avg_ranks[i]));
+    }
+    let mut stars_by_index = vec![3i64; rows.len()];
+    for group in by_group.values() {
+        let mut sorted = group.clone();
+        sorted.sort_by(|a, b| a.1.total_cmp(&b.1));
+        for (pos, (idx, _)) in sorted.iter().enumerate() {
+            stars_by_index[*idx] = stars_from_group_position(pos, sorted.len());
+        }
+    }
+
+    let details = rows
+        .into_iter()
+        .enumerate()
+        .map(|(i, (team_id, meta, _, season_ranks, titles, rivals))| {
+            let meta_v: serde_json::Value = meta.as_deref().and_then(|m| serde_json::from_str(m).ok()).unwrap_or(serde_json::Value::Null);
+            HsSchoolDetail {
+                name: meta_v.get("name").and_then(|x| x.as_str()).unwrap_or(&team_id).to_string(),
+                region: meta_v.get("region").and_then(|x| x.as_str()).unwrap_or("").to_string(),
+                team_id,
+                stars: stars_by_index[i],
+                season_ranks_json: season_ranks.unwrap_or_else(|| "{}".to_string()),
+                titles_json: titles.unwrap_or_else(|| "[]".to_string()),
+                rivals_json: rivals.unwrap_or_else(|| "[]".to_string()),
+            }
+        })
+        .collect();
+    Ok(details)
+}
+
 /// 지금 세션(전역 상태가 이미 content_conn을 들고 있음)에서 주인공의
 /// 현재 소속팀 정보 — [01_내선수](../../../04_UI기획/01_내선수.md) 상단
 /// 요약바의 "소속팀" 표시용. 무소속(FA·아직 프로 미진입)이면 `None`.
@@ -898,6 +989,26 @@ mod tests {
             assert!(t.team_id.starts_with("team:"));
             assert!(!t.philosophy.is_empty());
         }
+    }
+
+    #[test]
+    fn list_hs_school_details_returns_all_102_schools_with_stars_in_range() {
+        let details = list_hs_school_details("content.db".to_string()).unwrap();
+        assert_eq!(details.len(), 102);
+        for d in &details {
+            assert!(d.team_id.starts_with("team:"));
+            assert!(!d.name.is_empty());
+            assert!(!d.region.is_empty());
+            assert!((1..=5).contains(&d.stars), "stars must be 1..=5, got {} for {}", d.stars, d.team_id);
+        }
+    }
+
+    #[test]
+    fn stars_from_group_position_gives_best_school_the_most_stars() {
+        assert_eq!(stars_from_group_position(0, 6), 5);
+        assert_eq!(stars_from_group_position(5, 6), 1);
+        assert_eq!(stars_from_group_position(0, 20), 5);
+        assert_eq!(stars_from_group_position(19, 20), 1);
     }
 
     #[test]

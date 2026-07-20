@@ -8,9 +8,9 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
 part 'game.freezed.dart';
 
-// These functions are ignored because they are not marked as `pub`: `with_state_mut`, `with_state`, `world_seed`
+// These functions are ignored because they are not marked as `pub`: `avg_rank_from_season_ranks`, `stars_from_group_position`, `with_state_mut`, `with_state`, `world_seed`
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `GameState`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
 
 /// 뉴게임 — [07_주인공_생성](../../../02_기획/07_주인공_생성.md) §1의 7단계
 /// 흐름 중 실제 데이터를 만드는 마지막 단계(스텝 1~6은 Dart 쪽 폼 상태일
@@ -106,6 +106,12 @@ List<TreatmentOption> treatmentOptions({required String severity}) =>
 
 Future<List<TeamOption>> listHsTeams({required String contentDbPath}) =>
     RustLib.instance.api.crateApiGameListHsTeams(contentDbPath: contentDbPath);
+
+Future<List<HsSchoolDetail>> listHsSchoolDetails({
+  required String contentDbPath,
+}) => RustLib.instance.api.crateApiGameListHsSchoolDetails(
+  contentDbPath: contentDbPath,
+);
 
 /// 지금 세션(전역 상태가 이미 content_conn을 들고 있음)에서 주인공의
 /// 현재 소속팀 정보 — [01_내선수](../../../04_UI기획/01_내선수.md) 상단
@@ -302,6 +308,58 @@ class GameLogEntry {
           gameId == other.gameId &&
           season == other.season &&
           detailJson == other.detailJson;
+}
+
+/// 캐릭터 생성 "학교 선택" 상세 카드용 — [02_고교](../../../02_기획/리그팀/02_고교.md)
+/// §3의 "전력★"은 실제로는 content.db에 옮겨진 적이 없는 설계문서
+/// 전용값이라(확인 완료, 대화 2026-07-21), 대신 이미 시드된
+/// `team_history.season_ranks`(최근 5시즌 순위)에서 별점을 계산한다 —
+/// 시드마다 달라질 수 있는 "살아있는" 값이라 정적 문서값보다 게임
+/// 데이터에 충실하다. `teams.stadium_id`(권역별 거점구장 공유 —
+/// `content::load_team_groups_for_schedule`가 스케줄링에 쓰는 것과 동일
+/// 그룹)로 묶은 뒤 그 안에서의 상대 순위로 별점을 매겨, 6팀 권역과
+/// 20팀 권역을 공정하게 비교한다.
+class HsSchoolDetail {
+  final String teamId;
+  final String name;
+  final String region;
+  final PlatformInt64 stars;
+  final String seasonRanksJson;
+  final String titlesJson;
+  final String rivalsJson;
+
+  const HsSchoolDetail({
+    required this.teamId,
+    required this.name,
+    required this.region,
+    required this.stars,
+    required this.seasonRanksJson,
+    required this.titlesJson,
+    required this.rivalsJson,
+  });
+
+  @override
+  int get hashCode =>
+      teamId.hashCode ^
+      name.hashCode ^
+      region.hashCode ^
+      stars.hashCode ^
+      seasonRanksJson.hashCode ^
+      titlesJson.hashCode ^
+      rivalsJson.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is HsSchoolDetail &&
+          runtimeType == other.runtimeType &&
+          teamId == other.teamId &&
+          name == other.name &&
+          region == other.region &&
+          stars == other.stars &&
+          seasonRanksJson == other.seasonRanksJson &&
+          titlesJson == other.titlesJson &&
+          rivalsJson == other.rivalsJson;
 }
 
 /// [03_기록](../../../04_UI기획/03_기록.md) §1 "부상·재활" 탭 —

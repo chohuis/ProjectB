@@ -67,7 +67,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.12.0';
 
   @override
-  int get rustContentHash => -1795843952;
+  int get rustContentHash => -1365004602;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -128,6 +128,10 @@ abstract class RustLibApi extends BaseApi {
   List<String> crateApiGameHometownRegionNames();
 
   Future<void> crateApiSimpleInitApp();
+
+  Future<List<HsSchoolDetail>> crateApiGameListHsSchoolDetails({
+    required String contentDbPath,
+  });
 
   Future<List<TeamOption>> crateApiGameListHsTeams({
     required String contentDbPath,
@@ -801,7 +805,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "init_app", argNames: []);
 
   @override
-  Future<List<TeamOption>> crateApiGameListHsTeams({
+  Future<List<HsSchoolDetail>> crateApiGameListHsSchoolDetails({
     required String contentDbPath,
   }) {
     return handler.executeNormal(
@@ -813,6 +817,39 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             generalizedFrbRustBinding,
             serializer,
             funcId: 24,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_list_hs_school_detail,
+          decodeErrorData: sse_decode_AnyhowException,
+        ),
+        constMeta: kCrateApiGameListHsSchoolDetailsConstMeta,
+        argValues: [contentDbPath],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiGameListHsSchoolDetailsConstMeta =>
+      const TaskConstMeta(
+        debugName: "list_hs_school_details",
+        argNames: ["contentDbPath"],
+      );
+
+  @override
+  Future<List<TeamOption>> crateApiGameListHsTeams({
+    required String contentDbPath,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(contentDbPath, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 25,
             port: port_,
           );
         },
@@ -844,7 +881,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 25,
+            funcId: 26,
             port: port_,
           );
         },
@@ -872,7 +909,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 26,
+            funcId: 27,
             port: port_,
           );
         },
@@ -900,7 +937,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 27,
+            funcId: 28,
             port: port_,
           );
         },
@@ -932,7 +969,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 28,
+            funcId: 29,
             port: port_,
           );
         },
@@ -978,7 +1015,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 29,
+            funcId: 30,
             port: port_,
           );
         },
@@ -1030,7 +1067,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 30,
+            funcId: 31,
             port: port_,
           );
         },
@@ -1074,7 +1111,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 31,
+            funcId: 32,
             port: port_,
           );
         },
@@ -1129,7 +1166,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 32,
+            funcId: 33,
             port: port_,
           );
         },
@@ -1155,7 +1192,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 33)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 34)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_list_String,
@@ -1180,7 +1217,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_String(severity, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 34)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 35)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_list_treatment_option,
@@ -1282,6 +1319,23 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  HsSchoolDetail dco_decode_hs_school_detail(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 7)
+      throw Exception('unexpected arr length: expect 7 but see ${arr.length}');
+    return HsSchoolDetail(
+      teamId: dco_decode_String(arr[0]),
+      name: dco_decode_String(arr[1]),
+      region: dco_decode_String(arr[2]),
+      stars: dco_decode_i_64(arr[3]),
+      seasonRanksJson: dco_decode_String(arr[4]),
+      titlesJson: dco_decode_String(arr[5]),
+      rivalsJson: dco_decode_String(arr[6]),
+    );
+  }
+
+  @protected
   PlatformInt64 dco_decode_i_64(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dcoDecodeI64(raw);
@@ -1330,6 +1384,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   List<GameLogEntry> dco_decode_list_game_log_entry(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return (raw as List<dynamic>).map(dco_decode_game_log_entry).toList();
+  }
+
+  @protected
+  List<HsSchoolDetail> dco_decode_list_hs_school_detail(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_hs_school_detail).toList();
   }
 
   @protected
@@ -1758,6 +1818,27 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  HsSchoolDetail sse_decode_hs_school_detail(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_teamId = sse_decode_String(deserializer);
+    var var_name = sse_decode_String(deserializer);
+    var var_region = sse_decode_String(deserializer);
+    var var_stars = sse_decode_i_64(deserializer);
+    var var_seasonRanksJson = sse_decode_String(deserializer);
+    var var_titlesJson = sse_decode_String(deserializer);
+    var var_rivalsJson = sse_decode_String(deserializer);
+    return HsSchoolDetail(
+      teamId: var_teamId,
+      name: var_name,
+      region: var_region,
+      stars: var_stars,
+      seasonRanksJson: var_seasonRanksJson,
+      titlesJson: var_titlesJson,
+      rivalsJson: var_rivalsJson,
+    );
+  }
+
+  @protected
   PlatformInt64 sse_decode_i_64(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return deserializer.buffer.getPlatformInt64();
@@ -1827,6 +1908,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var ans_ = <GameLogEntry>[];
     for (var idx_ = 0; idx_ < len_; ++idx_) {
       ans_.add(sse_decode_game_log_entry(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<HsSchoolDetail> sse_decode_list_hs_school_detail(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <HsSchoolDetail>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_hs_school_detail(deserializer));
     }
     return ans_;
   }
@@ -2387,6 +2482,21 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_hs_school_detail(
+    HsSchoolDetail self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.teamId, serializer);
+    sse_encode_String(self.name, serializer);
+    sse_encode_String(self.region, serializer);
+    sse_encode_i_64(self.stars, serializer);
+    sse_encode_String(self.seasonRanksJson, serializer);
+    sse_encode_String(self.titlesJson, serializer);
+    sse_encode_String(self.rivalsJson, serializer);
+  }
+
+  @protected
   void sse_encode_i_64(PlatformInt64 self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     serializer.buffer.putPlatformInt64(self);
@@ -2442,6 +2552,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_i_32(self.length, serializer);
     for (final item in self) {
       sse_encode_game_log_entry(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_hs_school_detail(
+    List<HsSchoolDetail> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_hs_school_detail(item, serializer);
     }
   }
 
