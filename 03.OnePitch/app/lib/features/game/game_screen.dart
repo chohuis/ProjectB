@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:app/src/rust/api/game.dart';
 import 'game_provider.dart';
 import 'injury_treatment_view.dart';
@@ -36,9 +35,6 @@ class GameScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(state.status?.name ?? ''),
         actions: [
-          IconButton(icon: const Icon(Icons.person), tooltip: '내 선수', onPressed: () => context.push('/game/my-player')),
-          IconButton(icon: const Icon(Icons.emoji_events), tooltip: '리그', onPressed: () => context.push('/game/league')),
-          IconButton(icon: const Icon(Icons.history_edu), tooltip: '기록', onPressed: () => context.push('/game/records')),
           IconButton(
             icon: const Icon(Icons.flag_circle_outlined),
             tooltip: '은퇴',
