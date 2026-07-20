@@ -21,6 +21,7 @@ class MainMenuScreen extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // 로고 자리 — 위쪽 여백을 버튼 블록보다 크게 잡아 화면 상단~
             // 중앙을 비워둔다. 지금은 빈 자리, 로고 에셋이 생기면 여기에.
