@@ -38,6 +38,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   TrainingConfigInfo dco_decode_box_autoadd_training_config_info(dynamic raw);
 
   @protected
+  CareerSummary dco_decode_career_summary(dynamic raw);
+
+  @protected
+  double dco_decode_f_64(dynamic raw);
+
+  @protected
   GameLogEntry dco_decode_game_log_entry(dynamic raw);
 
   @protected
@@ -74,6 +80,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<ScheduleGameInfo> dco_decode_list_schedule_game_info(dynamic raw);
+
+  @protected
+  List<SeasonLine> dco_decode_list_season_line(dynamic raw);
 
   @protected
   List<StandingsRowInfo> dco_decode_list_standings_row_info(dynamic raw);
@@ -117,6 +126,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ScheduleGameInfo dco_decode_schedule_game_info(dynamic raw);
 
   @protected
+  SeasonLine dco_decode_season_line(dynamic raw);
+
+  @protected
   StandingsRowInfo dco_decode_standings_row_info(dynamic raw);
 
   @protected
@@ -158,6 +170,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   TrainingConfigInfo sse_decode_box_autoadd_training_config_info(
     SseDeserializer deserializer,
   );
+
+  @protected
+  CareerSummary sse_decode_career_summary(SseDeserializer deserializer);
+
+  @protected
+  double sse_decode_f_64(SseDeserializer deserializer);
 
   @protected
   GameLogEntry sse_decode_game_log_entry(SseDeserializer deserializer);
@@ -208,6 +226,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<ScheduleGameInfo> sse_decode_list_schedule_game_info(
     SseDeserializer deserializer,
   );
+
+  @protected
+  List<SeasonLine> sse_decode_list_season_line(SseDeserializer deserializer);
 
   @protected
   List<StandingsRowInfo> sse_decode_list_standings_row_info(
@@ -261,6 +282,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ScheduleGameInfo sse_decode_schedule_game_info(SseDeserializer deserializer);
+
+  @protected
+  SeasonLine sse_decode_season_line(SseDeserializer deserializer);
 
   @protected
   StandingsRowInfo sse_decode_standings_row_info(SseDeserializer deserializer);
@@ -317,6 +341,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
     TrainingConfigInfo self,
     SseSerializer serializer,
   );
+
+  @protected
+  void sse_encode_career_summary(CareerSummary self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_f_64(double self, SseSerializer serializer);
 
   @protected
   void sse_encode_game_log_entry(GameLogEntry self, SseSerializer serializer);
@@ -378,6 +408,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_list_schedule_game_info(
     List<ScheduleGameInfo> self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_list_season_line(
+    List<SeasonLine> self,
     SseSerializer serializer,
   );
 
@@ -452,6 +488,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
     ScheduleGameInfo self,
     SseSerializer serializer,
   );
+
+  @protected
+  void sse_encode_season_line(SeasonLine self, SseSerializer serializer);
 
   @protected
   void sse_encode_standings_row_info(

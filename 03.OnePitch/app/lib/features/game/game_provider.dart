@@ -65,6 +65,21 @@ class GameController extends Notifier<GameState> {
     state = state.copyWith(clearMatchStep: true);
   }
 
+  /// 자발적 은퇴(08_은퇴.md §1) — 플레이어가 임의 시점에 직접 선언한다.
+  /// 엔진이 `retirement` PendingAction을 만들어두므로, 여기선 그걸
+  /// `pending`에 반영해 `RetirementView`로 라우팅되게만 한다.
+  Future<void> retire() async {
+    state = state.copyWith(busy: true, clearError: true);
+    try {
+      await declareRetirement();
+      final pending = await getPendingActions();
+      await _refresh();
+      state = state.copyWith(pending: pending, busy: false);
+    } catch (e) {
+      state = state.copyWith(busy: false, error: '$e');
+    }
+  }
+
   Future<void> _refresh() async {
     final status = await getProtagonistStatus();
     final meta = await getMetaStatus();

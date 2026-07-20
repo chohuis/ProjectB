@@ -9,6 +9,7 @@ import 'injury_treatment_view.dart';
 import 'career_choice_view.dart';
 import 'contract_nego_view.dart';
 import 'trade_decision_view.dart';
+import 'retirement_view.dart';
 
 /// 진행(Continue) + 매치 + 결과요약을 한 화면에 압축한 I7 1차분 최소
 /// 슬라이스 — [05_매치](../../../../04_UI기획/05_매치.md)의 다이아몬드·
@@ -36,6 +37,11 @@ class GameScreen extends ConsumerWidget {
           IconButton(icon: const Icon(Icons.person), tooltip: '내 선수', onPressed: () => context.push('/game/my-player')),
           IconButton(icon: const Icon(Icons.emoji_events), tooltip: '리그', onPressed: () => context.push('/game/league')),
           IconButton(icon: const Icon(Icons.history_edu), tooltip: '기록', onPressed: () => context.push('/game/records')),
+          IconButton(
+            icon: const Icon(Icons.flag_circle_outlined),
+            tooltip: '은퇴',
+            onPressed: state.busy || state.pending.isNotEmpty || state.matchStep != null ? null : () => _confirmRetirement(context, controller),
+          ),
         ],
       ),
       body: Padding(
@@ -57,6 +63,25 @@ class GameScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+}
+
+/// 자발적 은퇴(08_은퇴.md §1) 확인 다이얼로그 — 되돌릴 수 없는 선택이라
+/// 아이콘 탭 한 번으로 바로 실행하지 않고 한 번 더 묻는다.
+Future<void> _confirmRetirement(BuildContext context, GameController controller) async {
+  final confirmed = await showDialog<bool>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('은퇴하시겠습니까?'),
+      content: const Text('지금 마운드를 내려옵니다. 이 선택은 되돌릴 수 없습니다.'),
+      actions: [
+        TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('취소')),
+        TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('은퇴')),
+      ],
+    ),
+  );
+  if (confirmed == true) {
+    await controller.retire();
   }
 }
 
@@ -119,6 +144,8 @@ class _MainArea extends StatelessWidget {
         return ContractNegoView(action: action, controller: controller);
       case 'tradeDecision':
         return TradeDecisionView(action: action, controller: controller);
+      case 'retirement':
+        return RetirementView(action: action, controller: controller);
       default:
         return _GenericPendingActionView(action: action, controller: controller);
     }

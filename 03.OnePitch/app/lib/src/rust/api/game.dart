@@ -10,7 +10,7 @@ part 'game.freezed.dart';
 
 // These functions are ignored because they are not marked as `pub`: `with_state_mut`, `with_state`, `world_seed`
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `GameState`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
 
 /// 뉴게임 — [07_주인공_생성](../../../02_기획/07_주인공_생성.md) §1의 7단계
 /// 흐름 중 실제 데이터를 만드는 마지막 단계(스텝 1~6은 Dart 쪽 폼 상태일
@@ -147,6 +147,75 @@ Future<List<LeagueTransactionEntry>> getContractHistory() =>
 
 Future<List<InjuryLogEntry>> getInjuryHistory() =>
     RustLib.instance.api.crateApiGameGetInjuryHistory();
+
+/// 자발적 은퇴(§4 진입 3종 중 유일하게 플레이어가 임의 시점에 직접
+/// 호출) — [08_은퇴](../../../04_UI기획/08_은퇴.md) §1. 나머지 두 트리거
+/// (노쇠·부상)는 `advance()` 내부(시즌 경계·부상 판정)에서 엔진이 알아서
+/// 감지해 `retirement` PendingAction을 만든다.
+Future<void> declareRetirement() =>
+    RustLib.instance.api.crateApiGameDeclareRetirement();
+
+Future<CareerSummary> careerSummary() =>
+    RustLib.instance.api.crateApiGameCareerSummary();
+
+Future<List<SeasonLine>> careerTimeline() =>
+    RustLib.instance.api.crateApiGameCareerTimeline();
+
+/// [08_은퇴](../../../04_UI기획/08_은퇴.md) §2 "통산 기록 대시보드" —
+/// **등급 매김 없이 순수 숫자**(05_히스토리_엔딩.md §4 "인생은 점수로
+/// 판정하지 않는다"). "최종 자산"(08_개인_재정)·업적·라이벌전 하이라이트는
+/// 해당 시스템 자체가 아직 엔진에 없어 이번 스코프엔 없음(10_구현_Phase_계획.md
+/// §6-28 스코프 판단 참고).
+class CareerSummary {
+  final PlatformInt64 games;
+  final PlatformInt64 wins;
+  final PlatformInt64 losses;
+  final PlatformInt64 noDecisions;
+  final PlatformInt64 strikeouts;
+  final PlatformInt64 inningsPitched;
+  final double era;
+  final bool retired;
+  final String? retirementReason;
+
+  const CareerSummary({
+    required this.games,
+    required this.wins,
+    required this.losses,
+    required this.noDecisions,
+    required this.strikeouts,
+    required this.inningsPitched,
+    required this.era,
+    required this.retired,
+    this.retirementReason,
+  });
+
+  @override
+  int get hashCode =>
+      games.hashCode ^
+      wins.hashCode ^
+      losses.hashCode ^
+      noDecisions.hashCode ^
+      strikeouts.hashCode ^
+      inningsPitched.hashCode ^
+      era.hashCode ^
+      retired.hashCode ^
+      retirementReason.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CareerSummary &&
+          runtimeType == other.runtimeType &&
+          games == other.games &&
+          wins == other.wins &&
+          losses == other.losses &&
+          noDecisions == other.noDecisions &&
+          strikeouts == other.strikeouts &&
+          inningsPitched == other.inningsPitched &&
+          era == other.era &&
+          retired == other.retired &&
+          retirementReason == other.retirementReason;
+}
 
 /// [03_기록](../../../04_UI기획/03_기록.md) §1 "경기 로그" 탭 — `game_log`는
 /// 압축 없이 경기별 전체 보존(07_매치_엔진.md §12). `detail_json`은
@@ -437,6 +506,28 @@ class ScheduleGameInfo {
           home == other.home &&
           away == other.away &&
           resultJson == other.resultJson;
+}
+
+/// [08_은퇴](../../../04_UI기획/08_은퇴.md) §2 "커리어 타임라인 그래프" —
+/// `career_history`(시즌별 한 줄, `season_rollover`가 채움)를 그대로
+/// 노출. `line_json`은 `{"games","wins","losses","no_decisions",
+/// "strikeouts","innings_pitched","era"}` 형태.
+class SeasonLine {
+  final PlatformInt64 season;
+  final String lineJson;
+
+  const SeasonLine({required this.season, required this.lineJson});
+
+  @override
+  int get hashCode => season.hashCode ^ lineJson.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SeasonLine &&
+          runtimeType == other.runtimeType &&
+          season == other.season &&
+          lineJson == other.lineJson;
 }
 
 /// [02_리그](../../../04_UI기획/02_리그.md) §3 순위 탭 — `league_id` 소속

@@ -1,7 +1,7 @@
 # 구현 Phase 계획 (착수 로드맵 — 새 세션 온보딩 문서)
 
 > 근거: [00_결정_요약](00_결정_요약.md)(전체 결정 인덱스) · [03_구조](03_구조.md) §5-1(엔진 모듈 지도) · [05_밸런스](05_밸런스.md) §3(확정 순서) · [07_데이터관리](07_데이터관리.md) §7(초기구축순서) · [08_P7_체크리스트](08_P7_체크리스트.md)(실측 완료) · [09_개발환경_세팅](09_개발환경_세팅.md) · 대화 설계(2026-07-14)
-> 상태: **I0~I6 완료(I5는 8차분까지, `eval`·`market`은 I6로 재배치, I6는 10차분까지 — 갈림길A 진로 전환 엔진 + 은퇴 엔진 추가), I7 착수(6차분 완료 — 엔진 api 레이어+뉴게임/진행/매치 최소 화면+내 선수/리그/기록 허브 3개+PendingAction 7종 전용화면 전부 확보)** — 2026-07-20
+> 상태: **I0~I6 완료(I5는 8차분까지, `eval`·`market`은 I6로 재배치, I6는 10차분까지 — 갈림길A 진로 전환 엔진 + 은퇴 엔진 추가), I7 착수(7차분 완료 — 엔진 api 레이어+뉴게임/진행/매치 최소 화면+내 선수/리그/기록 허브 3개+PendingAction 8종 전용화면 전부 확보)** — 2026-07-20
 > 목적: **이 문서 하나만 읽으면 새 대화 세션이 지금 상황을 전부 파악하고 이어서 구현을 진행**할 수 있게 한다. 기획·설계는 100% 끝났고(§1), 지금부터는 코드 작성 단계다.
 
 ## 0. 이 문서를 읽는 새 세션에게
@@ -34,7 +34,7 @@
 | **I4** | 게임 루프 오케스트레이터(`api/advance`) | 일/주/월/시즌 경계 처리, PendingAction 7종 상태기계 | `advance()` 호출 시 여러 주 진행 후 정지점에서 올바로 멈춤 | [04_게임루프](04_게임루프.md) | ✅ 완료 (2026-07-15) — 오케스트레이터 뼈대(하루단위 루프·정지판정·PendingAction push/resolve·재서명) 구현, 실제 배치 내용은 I5/I6가 채울 훅으로 배선. 상세는 아래 §6-4 |
 | **I5** | 나머지 sim 모듈 | `sim/growth`·`sim/injury`·`sim/eval`·`sim/match`(배경)·`sim/market`·`sim/npc`·`sim/schedule` — [05_밸런스](05_밸런스.md) §3 순서(A→B→C→{D,E,F}→G,H→I)로 구현+가밸런스 적용 | 배경 시뮬만으로 시즌 1개 완주 가능 | [03_구조](03_구조.md) §5-1 · 육성코어 01~09 각 문서 | ✅ **완료**(8차분까지, 2026-07-15) — 1차분(`sim/schedule`+`sim/match`, 정규시즌)+2차분(독립리그+독립/프로 포스트시즌)+3차분(대학·고교 포스트시즌/전국대회)+4차분(`sim/growth` 상승기)+5차분(`sim/injury` 누적형+`sim/growth` 하락기)+6차분(`sim/injury` 급성형, 매치 엔진 확장)+7차분(`sim/npc` 세대교체 — retire+generate_freshmen)+8차분(`sim/npc` 병역 — enlist/discharge). **`sim/eval`·`sim/market`은 리서치 결과 대부분 주인공 전용으로 판명돼 I6로 재배치**(§6-11) — I5가 원래 목표한 "배경 시뮬만으로 시즌 완주"는 이 둘 없이도 이미 충족돼 완료 처리. 상세는 아래 §6-11·§6-12 |
 | **I6** | 주인공 플로우 | 캐릭터 생성([07_주인공_생성](../02_기획/07_주인공_생성.md)), 주인공 등판 매치 세션(`startMatch`/`pitch`) | 캐릭터 생성 후 첫 경기를 실제로 뛸 수 있음(반자동 모드 최소) | [04_UI기획/06_캐릭터생성](../04_UI기획/06_캐릭터생성.md) · [07_매치_엔진](../02_기획/육성코어/07_매치_엔진.md) | ✅ **완료**(3차분에서 핵심 기준 달성, 2026-07-15) — 1차분(`create_protagonist`)+2차분(`sim/pitch` 1구 판정 로직)+3차분(`data/match_session`)+4차분(`sim/eval` 경기단위 S~D 평가, `finalize_game`에 배선 — 사기·주목도·`game_log` 반영)+5차분(`sim/training` 훈련 슬롯 — 능력치 주/보조 슬롯 + 신규 구종 습득)+6차분(부상 치료 선택 — `apply_injury`/`treat`, `injuryTreatment` PendingAction)+7차분(`sim/market` 방출·재계약·FA — `contractNego` PendingAction)+8차분(`sim/market` 트레이드 — `tradeDecision` PendingAction, `sim/market` 전체 완료)+9차분(갈림길 A — 고교 졸업 시 드래프트/대학/독립/입대, `draft`·`careerChoice` PendingAction — I7이 그 4종 전용화면을 만들려면 선행 필요해 재착수)+10차분(은퇴 — 자발적/노쇠·방출압박/부상강제 3트리거 + 통산 기록 집계, `retirement` PendingAction — I7 은퇴 화면 선행 필요해 재착수). 감독 개입·콜드게임(인터랙티브 경로)·월/시즌 단위 평가·갈림길 B 전용화면·대학 4년 후 재드래프트는 계속 이월. 상세는 아래 §6-13~§6-20·§6-26·§6-29 |
-| **I7** | Flutter UI | `04_UI기획/` 00~08 화면 실제 구현(4허브+진행버튼+매치 CustomPainter) | 최소 플레이 가능한 루프가 실제 화면에서 끝까지 동작(뉴게임→진행→경기→시즌종료) | `04_UI기획/` 전체 | 🟨 **착수**(6차분 완료, 2026-07-16) — 1차분(엔진 api 레이어+최소 화면)+2차분(내 선수 허브)+3차분(리그 허브)+4차분(기록 허브)+5차분(`injuryTreatment` 전용화면)+6차분(나머지 전용화면 4종 — `careerChoice`·`draft`·`contractNego`·`tradeDecision`, PendingAction 7종 전부 전용 화면 확보). `메시지함`은 I8 콘텐츠 저작 전제라 보류. 은퇴 화면 엔진 선행작업(I6 10차분)은 끝났으니 다음은 그 UI(§6-29). 그 외 남은 건 매치 CustomPainter 비주얼·세이브 슬롯 영속성·반응형 레이아웃. 상세는 아래 §6-21~§6-25·§6-27 |
+| **I7** | Flutter UI | `04_UI기획/` 00~08 화면 실제 구현(4허브+진행버튼+매치 CustomPainter) | 최소 플레이 가능한 루프가 실제 화면에서 끝까지 동작(뉴게임→진행→경기→시즌종료) | `04_UI기획/` 전체 | 🟨 **착수**(7차분 완료, 2026-07-20) — 1차분(엔진 api 레이어+최소 화면)+2차분(내 선수 허브)+3차분(리그 허브)+4차분(기록 허브)+5차분(`injuryTreatment` 전용화면)+6차분(나머지 전용화면 4종 — `careerChoice`·`draft`·`contractNego`·`tradeDecision`)+7차분(은퇴 화면 `RetirementView`+자발적 은퇴 트리거 UI, PendingAction 8종 전부 전용 화면 확보). `메시지함`은 I8 콘텐츠 저작 전제라 보류. 남은 건 매치 CustomPainter 비주얼·세이브 슬롯 영속성·반응형 레이아웃. 상세는 아래 §6-21~§6-25·§6-27·§6-30 |
 | **I8** | 콘텐츠 저작 + D그룹 수치화 | 이벤트·캐릭터·업적 등 AI 대량생성→import, 밸런스 시뮬 하네스로 실제 수치 확정 | `content import` 파이프라인 동작, 15~20시즌 시뮬 하네스가 [05_밸런스](05_밸런스.md) §4 통과기준 만족 | [02_데이터](02_데이터.md) §3 · [05_밸런스](05_밸런스.md) §4 | ⬜ 미착수 |
 | **I9** | 통합 검증 · 배포 준비 | 보류됐던 실기기 검증(Android·Steam·Mac/Linux) 실제 진행, 릴리스 빌드, Steam 정식 등록 | P7 체크리스트 §6 열린세부 전부 해소, 스토어 빌드 산출 | [08_P7_체크리스트](08_P7_체크리스트.md) §6 | ⬜ 미착수 |
 
@@ -42,7 +42,7 @@
 
 ## 3. 착수 범위 제안 — 다음 세션이 할 일
 
-**I0~I6 완료(I6는 10차분까지 — 은퇴 엔진 3트리거+통산 기록 집계, §6-29), I7은 6차분까지 완료(PendingAction 7종 전부 전용화면 확보, §6-21~§6-25·§6-27).** 추천 다음 스텝: **은퇴 화면 UI(I7 7차분)** — 엔진 선행작업(§6-29)이 이미 끝났으니 바로 이어서. `flutter_rust_bridge_codegen generate` 재실행(신규 `CareerSummary`·`SeasonLine` 구조체, enum 아님이라 non-blocking) 먼저 필요. 그 외 I7 후보:
+**I0~I6 완료(I6는 10차분까지 — 은퇴 엔진 3트리거+통산 기록 집계, §6-29), I7은 7차분까지 완료(PendingAction 8종 전부 전용화면 확보, §6-21~§6-25·§6-27·§6-30).** I7 남은 후보:
 - **매치 CustomPainter 비주얼**([05_매치](../04_UI기획/05_매치.md)) — 지금은 텍스트/버튼뿐인 다이아몬드·존그리드를 실제로 그림.
 - **세이브 슬롯 영속성** — 지금은 슬롯 선택/목록 UI가 없음(엔진 쪽 slot.db는 이미 있음).
 - **반응형 레이아웃** — 지금까지의 화면은 고정 크기 기준으로만 만들어짐.
@@ -609,7 +609,21 @@
 
 **API 계층 참고**: 이번 서브분은 `api/game.rs`에 새 frb 함수(`declare_retirement`·`career_summary`·`career_timeline`)와 구조체(`CareerSummary`·`SeasonLine`)를 추가했지만 **frb codegen은 아직 재실행하지 않음** — Dart 쪽에서 실제로 이 함수들을 호출하는 건 다음 서브분(I7 7차분, 은퇴 화면 UI)이 할 일이라 그때 `flutter_rust_bridge_codegen generate`를 함께 돌린다(구조체만 추가했으니 §6-22의 "새 enum 타입만 없으면 non-blocking" 조건 충족 예정).
 
-### 6-30. 문서 갱신 규칙
+### 6-30. I7 7차분 착수 기록 (2026-07-20, 완료) — 은퇴 화면(RetirementView) + 자발적 은퇴 트리거 UI
+
+**스코프**: [08_은퇴](../04_UI기획/08_은퇴.md) — I6 10차분(§6-29) 엔진 선행작업 직후 바로 이어서. `frb_generated.*` 재생성(신규 `CareerSummary`·`SeasonLine` 구조체, enum 없어 §6-22 non-blocking 조건대로 build_runner 경고만 뜨고 정상 완료) + Dart 전용화면 1개 + 트리거 UI(앱바 버튼) + 라우팅.
+
+**스코프 판단**: §6-29에서 이미 확정한 대로 구성요소 6종 중 **통산 기록 대시보드**·**커리어 타임라인**만 실제 데이터(`careerSummary`/`careerTimeline`)로 채움. 나머지(하이라이트 자동선정·명예 요소·명성 등급 비례 은퇴식 연출·서술형 내레이션 템플릿)는 업적·라이벌 아크·명성 세부 연출이 전부 I8 콘텐츠 저작 전제라 트리거별 고정 문구 한 줄로 최소화. 커리어 타임라인 "그래프"는 정식 차트 라이브러리 없이 `LinearProgressIndicator` 막대로 근사(§4 "그래프 형태"는 열린 세부, 08_은퇴.md §4). 자발적 은퇴는 언제든 가능하다는 설계(§1)를 그대로 살려 게임 화면 앱바에 상시 버튼을 두되, 되돌릴 수 없는 선택이라 확인 다이얼로그를 한 번 거치게 함.
+
+**구현**:
+- `flutter_rust_bridge_codegen generate` 재실행 — `app/lib/src/rust/api/game.dart`·`frb_generated.{dart,io.dart,web.dart}`·`engine/src/frb_generated.rs` 갱신(`.freezed.dart`는 새 enum이 없어 변경 없음).
+- `app/lib/features/game/retirement_view.dart`(신규): `RetirementView` — 트리거별 고정 문구 + 통산 기록(경기/승패/노디시전/탈삼진/이닝/평균자책) + 시즌별 막대 타임라인 + "확인 — 메인 메뉴로" 버튼(`respond` 후 `context.go('/')`).
+- `app/lib/features/game/game_provider.dart`: `GameController.retire()`(신규) — `declareRetirement()` 호출 후 `pending` 갱신.
+- `app/lib/features/game/game_screen.dart`: `_MainArea` 라우팅에 `retirement` 분기 추가(PendingAction 8종 전부 전용화면 확보 — 최초 계획엔 없던 트리거지만 은퇴가 7번째 화면으로 늘어남). 앱바에 은퇴 버튼(진행 중 pending·매치 세션 있으면 비활성화) + `_confirmRetirement` 확인 다이얼로그.
+
+**테스트**: `flutter analyze` 클린. `flutter test` 15/15 통과(신규 1개, `retirement_view_widget_test.dart` — 다른 전용화면 테스트들과 달리 합성 payload가 아니라 **실제** `newGame`+`declareRetirement()`로 진짜 `retirement` PendingAction을 만들어 사용: `careerSummary()`가 활성 엔진 세션을 요구해 순수 합성 패턴을 못 쓰기 때문. `GoRouter` 실제 라우팅까지 검증 — 확인 버튼 탭 후 root route로 돌아가는지 확인). `engine.dll` 재빌드(`flutter build windows --debug` → 루트로 복사) 후 실행 — Rust 쪽 변경은 없었지만(§6-29에서 이미 완료) codegen이 만든 새 API 시그니처와 DLL의 content hash가 맞는지 재확인 차원.
+
+### 6-31. 문서 갱신 규칙
 
 **이 문서는 살아있는 문서다.** Phase를 하나 끝낼 때마다:
 1. §2 표의 해당 행 상태를 `⬜ 미착수` → `🔶 진행중` → `✅ 완료`로 갱신.
