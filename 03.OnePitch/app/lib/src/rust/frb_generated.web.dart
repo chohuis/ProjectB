@@ -90,6 +90,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<SeasonLine> dco_decode_list_season_line(dynamic raw);
 
   @protected
+  List<SlotSummary> dco_decode_list_slot_summary(dynamic raw);
+
+  @protected
   List<StandingsRowInfo> dco_decode_list_standings_row_info(dynamic raw);
 
   @protected
@@ -132,6 +135,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   SeasonLine dco_decode_season_line(dynamic raw);
+
+  @protected
+  SlotSummary dco_decode_slot_summary(dynamic raw);
 
   @protected
   StandingsRowInfo dco_decode_standings_row_info(dynamic raw);
@@ -239,6 +245,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<SeasonLine> sse_decode_list_season_line(SseDeserializer deserializer);
 
   @protected
+  List<SlotSummary> sse_decode_list_slot_summary(SseDeserializer deserializer);
+
+  @protected
   List<StandingsRowInfo> sse_decode_list_standings_row_info(
     SseDeserializer deserializer,
   );
@@ -293,6 +302,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   SeasonLine sse_decode_season_line(SseDeserializer deserializer);
+
+  @protected
+  SlotSummary sse_decode_slot_summary(SseDeserializer deserializer);
 
   @protected
   StandingsRowInfo sse_decode_standings_row_info(SseDeserializer deserializer);
@@ -429,6 +441,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_list_slot_summary(
+    List<SlotSummary> self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_list_standings_row_info(
     List<StandingsRowInfo> self,
     SseSerializer serializer,
@@ -502,6 +520,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_season_line(SeasonLine self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_slot_summary(SlotSummary self, SseSerializer serializer);
 
   @protected
   void sse_encode_standings_row_info(

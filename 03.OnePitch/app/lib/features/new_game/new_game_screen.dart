@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:app/src/rust/api/game.dart';
 import 'package:app/features/game/game_provider.dart';
 import 'package:app/shared/content_db.dart';
+import 'package:app/shared/slot_paths.dart';
 
 /// 뉴게임 — [06_캐릭터생성](../../../../04_UI기획/06_캐릭터생성.md) 7단계를
 /// 이번 서브분은 하나의 폼으로 압축했다(지역별 학교 브라우징·2구종 선택
@@ -117,16 +118,21 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
                   ElevatedButton(
                     onPressed: gameState.busy || _selectedSchoolId == null || _contentDbPath == null
                         ? null
-                        : () => ref
-                              .read(gameControllerProvider.notifier)
-                              .startNewGame(
-                                contentDbPath: _contentDbPath!,
-                                canonicalSeed: Random().nextInt(1 << 31),
-                                name: _nameController.text.trim().isEmpty ? '무명' : _nameController.text.trim(),
-                                handedness: _handedness,
-                                schoolTeamId: _selectedSchoolId!,
-                                archetype: _archetype,
-                              ),
+                        : () async {
+                            final slotPath = await newSlotPath();
+                            if (!context.mounted) return;
+                            await ref
+                                .read(gameControllerProvider.notifier)
+                                .startNewGame(
+                                  contentDbPath: _contentDbPath!,
+                                  canonicalSeed: Random().nextInt(1 << 31),
+                                  name: _nameController.text.trim().isEmpty ? '무명' : _nameController.text.trim(),
+                                  handedness: _handedness,
+                                  schoolTeamId: _selectedSchoolId!,
+                                  archetype: _archetype,
+                                  slotPath: slotPath,
+                                );
+                          },
                     child: gameState.busy ? const CircularProgressIndicator() : const Text('게임 시작'),
                   ),
                 ],

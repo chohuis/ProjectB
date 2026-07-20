@@ -1,10 +1,7 @@
-//! I7 1차분 — [03_구조](../../../03_설계/03_구조.md) §5 "엔진 API 표면 =
-//! 범용 쿼리 + 커맨드"의 최소 슬라이스. 목표는 [10_구현_Phase_계획](../../../03_설계/10_구현_Phase_계획.md)
-//! I7 행의 완료 기준 "뉴게임→진행→경기→시즌종료가 실제 화면에서 끝까지
-//! 동작"을 만족하는 딱 그만큼의 커맨드·쿼리만 — 4허브·전용화면(협상·
-//! 트레이드·진로·드래프트·치료·은퇴)·매치의 다이아몬드/존그리드 비주얼은
-//! 전부 후속 서브분(00_개요.md §5가 이미 "아트 단계"로 이월 명시한 항목들
-//! 다수 포함).
+//! I7 1차분에서 시작해 계속 확장돼온 엔진 API 표면 — [03_구조](../../../03_설계/03_구조.md)
+//! §5 "엔진 API 표면 = 범용 쿼리 + 커맨드". [10_구현_Phase_계획](../../../03_설계/10_구현_Phase_계획.md)
+//! §6-21~ 각 서브분 기록 참고(4허브·전용화면 8종·매치 CustomPainter
+//! 비주얼·세이브 슬롯 영속성 등 순차 추가).
 //!
 //! **세션 모델 — 전역 싱글톤, 이번 스코프의 의도적 단순화**: 여러 세이브
 //! 슬롯을 동시에 열고 전환하는 것([02_데이터](../../../03_설계/02_데이터.md)
@@ -13,10 +10,12 @@
 //! 상태 하나로 충분하다. 여러 슬롯 관리가 실제로 필요해지면(로드 화면 등)
 //! 이 자리를 frb opaque 핸들로 승격하면 된다.
 //!
-//! **세이브 파일 영속성도 이번 스코프 밖** — `new_game`이 파일이 아니라
-//! **인메모리** slot 연결을 만든다. "뉴게임→진행→경기→시즌종료"라는 완료
-//! 기준 자체가 한 세션 안에서 끝까지 도달 가능한지만 증명하면 되고,
-//! 앱 재시작 후 이어하기(`loadSlot`)는 별도 관심사라 후속으로 미룬다.
+//! **세이브 파일 영속성**(I7 9차분): `new_game`의 `slot_path`가 `Some`
+//! 이면 실제 파일에 쓴다(§4 "파일=슬롯"). `list_slots`/`load_slot`/
+//! `delete_slot`이 그 파일들을 스캔·재개·삭제한다. 다만 **"여러 슬롯을
+//! 동시에 열고 전환"은 여전히 스코프 밖** — 위 전역 싱글톤 세션 모델은
+//! 그대로다(한 번에 슬롯 하나만 로드돼 있음, `load_slot`이 기존 세션을
+//! 갈아치운다).
 //!
 //! **JSON 원시 통과**: `stats`·`contract`·`injury`·`live_state`·`pitches`
 //! 같은 유연한 블롭은 아직 전용 frb 구조체로 안 쪼갰다 — 필드가 상태에
@@ -121,6 +120,13 @@ impl From<match_session::MatchStepResult> for MatchStepInfo {
 /// 흐름 중 실제 데이터를 만드는 마지막 단계(스텝 1~6은 Dart 쪽 폼 상태일
 /// 뿐 엔진 호출이 아님). 결정적 seed로 배경 세계(172팀 로스터+일정)를
 /// 먼저 만든 뒤 주인공을 생성해 전역 세션에 올린다.
+///
+/// `slot_path`가 `Some`이면 [02_데이터](../../../03_설계/02_데이터.md) §4
+/// "파일=슬롯"대로 그 경로에 실제 파일을 만들어 세이브가 영속된다(I7
+/// 9차분) — `None`이면 이전처럼 인메모리(테스트·일회성 검증용). 실제
+/// 파일 경로 생성(앱 데이터 폴더 하위 `slot_<id>.db`)은 Dart가 담당 —
+/// 엔진은 플랫폼 경로 규칙을 모른다(다른 `*_db_path` 인자들과 같은 관례).
+#[allow(clippy::too_many_arguments)]
 pub fn new_game(
     content_db_path: String,
     canonical_seed: i64,
@@ -129,9 +135,13 @@ pub fn new_game(
     school_team_id: String,
     archetype: String,
     second_pitch: Option<String>,
+    slot_path: Option<String>,
 ) -> anyhow::Result<()> {
     let content_conn = content::open(&content_db_path)?;
-    let mut slot_conn = slot::open_in_memory()?;
+    let mut slot_conn = match &slot_path {
+        Some(path) => slot::open(path)?,
+        None => slot::open_in_memory()?,
+    };
     slot_conn.execute("UPDATE meta SET world_seed = ?1", [canonical_seed])?;
     repository::generate_initial_world(&mut slot_conn, &content_conn, canonical_seed)?;
     repository::create_protagonist(
@@ -147,6 +157,69 @@ pub fn new_game(
 
     let mut guard = STATE.lock().map_err(|_| anyhow::anyhow!("game state lock poisoned"))?;
     *guard = Some(GameState { slot_conn, content_conn });
+    Ok(())
+}
+
+/// [02_데이터](../../../03_설계/02_데이터.md) §4 슬롯 수명주기 — 메인
+/// 메뉴 "이어하기" 목록 한 줄. `slot::open`이 마이그레이션까지 자동
+/// 적용하므로 구버전 슬롯도 그대로 읽힌다.
+#[derive(Debug, Clone)]
+pub struct SlotSummary {
+    pub path: String,
+    pub name: String,
+    pub current_day: i64,
+    pub season: i64,
+    pub retired: bool,
+}
+
+/// `dir` 아래 `.db` 파일을 전부 슬롯으로 훑는다. **손상되거나 아직
+/// 캐릭터 생성 전인 파일은 조용히 건너뛴다** — 슬롯 하나가 깨졌다고
+/// 목록 전체가 에러로 죽으면 안 되고, `new_game`이 캐릭터 생성까지
+/// 원자적으로 끝내므로 "생성 중" 상태의 파일도 사실상 없다.
+pub fn list_slots(dir: String) -> anyhow::Result<Vec<SlotSummary>> {
+    let mut out = Vec::new();
+    let Ok(entries) = std::fs::read_dir(&dir) else {
+        return Ok(out); // 폴더가 아직 없으면(첫 실행) 빈 목록
+    };
+    for entry in entries.flatten() {
+        let path = entry.path();
+        if path.extension().and_then(|e| e.to_str()) != Some("db") {
+            continue;
+        }
+        let path_str = path.to_string_lossy().to_string();
+        let Ok(conn) = slot::open(&path_str) else { continue };
+        let Ok(current_day) = conn.query_row("SELECT current_day FROM meta", [], |r| r.get::<_, i64>(0)) else { continue };
+        let season: i64 = conn
+            .query_row("SELECT value FROM season_meta WHERE key = 'season'", [], |r| r.get::<_, String>(0))
+            .optional()
+            .ok()
+            .flatten()
+            .and_then(|s| s.parse().ok())
+            .unwrap_or(0);
+        let Ok(Some((name, retired))) =
+            conn.query_row("SELECT name, retired FROM protagonist WHERE id = 'proto:1'", [], |r| Ok((r.get::<_, String>(0)?, r.get::<_, i64>(1)?)))
+                .optional()
+        else {
+            continue;
+        };
+        out.push(SlotSummary { path: path_str, name, current_day, season, retired: retired == 1 });
+    }
+    out.sort_by_key(|s| std::cmp::Reverse(s.current_day));
+    Ok(out)
+}
+
+/// 메인 메뉴 "이어하기" — 기존 슬롯 파일을 열어 전역 세션에 올린다.
+pub fn load_slot(slot_path: String, content_db_path: String) -> anyhow::Result<()> {
+    let content_conn = content::open(&content_db_path)?;
+    let slot_conn = slot::open(&slot_path)?;
+    let mut guard = STATE.lock().map_err(|_| anyhow::anyhow!("game state lock poisoned"))?;
+    *guard = Some(GameState { slot_conn, content_conn });
+    Ok(())
+}
+
+/// [02_데이터](../../../03_설계/02_데이터.md) §4 "삭제 = 파일 삭제".
+pub fn delete_slot(slot_path: String) -> anyhow::Result<()> {
+    std::fs::remove_file(&slot_path)?;
     Ok(())
 }
 
@@ -740,7 +813,7 @@ mod tests {
             conn.query_row("SELECT id FROM teams WHERE league_id = 'league:hs' LIMIT 1", [], |r| r.get::<_, String>(0)).unwrap()
         };
 
-        new_game("content.db".to_string(), 42, "API테스트".to_string(), "우완".to_string(), hs_team, "강속구형".to_string(), None).unwrap();
+        new_game("content.db".to_string(), 42, "API테스트".to_string(), "우완".to_string(), hs_team, "강속구형".to_string(), None, None).unwrap();
 
         let status = get_protagonist_status().unwrap();
         assert_eq!(status.name, "API테스트");
@@ -783,7 +856,7 @@ mod tests {
             conn.query_row("SELECT id FROM teams WHERE league_id = 'league:hs' LIMIT 1", [], |r| r.get::<_, String>(0)).unwrap()
         };
 
-        new_game("content.db".to_string(), 43, "훈련테스트".to_string(), "우완".to_string(), hs_team.clone(), "강속구형".to_string(), None).unwrap();
+        new_game("content.db".to_string(), 43, "훈련테스트".to_string(), "우완".to_string(), hs_team.clone(), "강속구형".to_string(), None, None).unwrap();
 
         let team = get_current_team_info().unwrap();
         assert_eq!(team.unwrap().team_id, hs_team);
@@ -810,7 +883,7 @@ mod tests {
             conn.query_row("SELECT id FROM teams WHERE league_id = 'league:hs' LIMIT 1", [], |r| r.get::<_, String>(0)).unwrap()
         };
 
-        new_game("content.db".to_string(), 44, "리그테스트".to_string(), "우완".to_string(), hs_team.clone(), "강속구형".to_string(), None).unwrap();
+        new_game("content.db".to_string(), 44, "리그테스트".to_string(), "우완".to_string(), hs_team.clone(), "강속구형".to_string(), None, None).unwrap();
 
         let hs_teams = list_teams(Some("league:hs".to_string())).unwrap();
         assert!(hs_teams.iter().any(|t| t.team_id == hs_team));
@@ -844,7 +917,7 @@ mod tests {
             let conn = content::open("content.db").unwrap();
             conn.query_row("SELECT id FROM teams WHERE league_id = 'league:hs' LIMIT 1", [], |r| r.get::<_, String>(0)).unwrap()
         };
-        new_game("content.db".to_string(), 45, "기록테스트".to_string(), "우완".to_string(), hs_team, "제구형".to_string(), None).unwrap();
+        new_game("content.db".to_string(), 45, "기록테스트".to_string(), "우완".to_string(), hs_team, "제구형".to_string(), None, None).unwrap();
 
         // 새 게임 직후엔 전부 비어있어야 함(패닉 없이).
         assert!(get_game_log().unwrap().is_empty());
@@ -894,7 +967,7 @@ mod tests {
             let conn = content::open("content.db").unwrap();
             conn.query_row("SELECT id FROM teams WHERE league_id = 'league:hs' LIMIT 1", [], |r| r.get::<_, String>(0)).unwrap()
         };
-        new_game("content.db".to_string(), 46, "은퇴테스트".to_string(), "우완".to_string(), hs_team, "제구형".to_string(), None).unwrap();
+        new_game("content.db".to_string(), 46, "은퇴테스트".to_string(), "우완".to_string(), hs_team, "제구형".to_string(), None, None).unwrap();
 
         let before = career_summary().unwrap();
         assert!(!before.retired);
@@ -934,6 +1007,60 @@ mod tests {
         assert_eq!(pending[0].kind, "retirement");
 
         reset_state();
+    }
+
+    #[test]
+    fn slot_lifecycle_persists_to_a_real_file_and_can_be_listed_loaded_and_deleted() {
+        let _guard = TEST_SERIAL.lock().unwrap();
+        reset_state();
+
+        let dir = std::env::temp_dir().join(format!("onepitch_slots_test_{}", std::process::id()));
+        let _ = std::fs::create_dir_all(&dir);
+        let slot_path = dir.join("slot_test.db").to_string_lossy().to_string();
+        let _ = std::fs::remove_file(&slot_path);
+
+        let hs_team = {
+            let conn = content::open("content.db").unwrap();
+            conn.query_row("SELECT id FROM teams WHERE league_id = 'league:hs' LIMIT 1", [], |r| r.get::<_, String>(0)).unwrap()
+        };
+
+        new_game(
+            "content.db".to_string(),
+            999,
+            "슬롯테스트".to_string(),
+            "우완".to_string(),
+            hs_team,
+            "강속구형".to_string(),
+            None,
+            Some(slot_path.clone()),
+        )
+        .unwrap();
+        assert!(std::path::Path::new(&slot_path).exists(), "new_game with slot_path should write a real file");
+
+        let slots = list_slots(dir.to_string_lossy().to_string()).unwrap();
+        assert_eq!(slots.len(), 1);
+        assert_eq!(slots[0].name, "슬롯테스트");
+        assert!(!slots[0].retired);
+
+        reset_state(); // 파일 핸들을 닫아야 load_slot/delete_slot이 같은 파일을 다시 열 수 있음
+        load_slot(slot_path.clone(), "content.db".to_string()).unwrap();
+        let status = get_protagonist_status().unwrap();
+        assert_eq!(status.name, "슬롯테스트");
+
+        reset_state();
+        delete_slot(slot_path.clone()).unwrap();
+        assert!(!std::path::Path::new(&slot_path).exists());
+        assert!(list_slots(dir.to_string_lossy().to_string()).unwrap().is_empty());
+
+        let _ = std::fs::remove_dir_all(&dir);
+        reset_state();
+    }
+
+    #[test]
+    fn list_slots_on_a_missing_directory_returns_an_empty_list_instead_of_erroring() {
+        let dir = std::env::temp_dir().join("onepitch_slots_definitely_missing_dir");
+        let _ = std::fs::remove_dir_all(&dir);
+        assert!(list_slots(dir.to_string_lossy().to_string()).unwrap().is_empty());
     }
 
     #[test]

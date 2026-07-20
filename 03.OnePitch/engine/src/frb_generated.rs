@@ -38,7 +38,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.12.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1647274868;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -2104580884;
 
 // Section: executor
 
@@ -204,6 +204,41 @@ fn wire__crate__api__game__declare_retirement_impl(
                 transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
                     (move || {
                         let output_ok = crate::api::game::declare_retirement()?;
+                        Ok(output_ok)
+                    })(),
+                )
+            }
+        },
+    )
+}
+fn wire__crate__api__game__delete_slot_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "delete_slot",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_slot_path = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| {
+                transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
+                    (move || {
+                        let output_ok = crate::api::game::delete_slot(api_slot_path)?;
                         Ok(output_ok)
                     })(),
                 )
@@ -751,6 +786,41 @@ fn wire__crate__api__game__list_roster_impl(
         },
     )
 }
+fn wire__crate__api__game__list_slots_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "list_slots",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_dir = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| {
+                transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
+                    (move || {
+                        let output_ok = crate::api::game::list_slots(api_dir)?;
+                        Ok(output_ok)
+                    })(),
+                )
+            }
+        },
+    )
+}
 fn wire__crate__api__game__list_teams_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -779,6 +849,43 @@ fn wire__crate__api__game__list_teams_impl(
                 transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
                     (move || {
                         let output_ok = crate::api::game::list_teams(api_league_id)?;
+                        Ok(output_ok)
+                    })(),
+                )
+            }
+        },
+    )
+}
+fn wire__crate__api__game__load_slot_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "load_slot",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_slot_path = <String>::sse_decode(&mut deserializer);
+            let api_content_db_path = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| {
+                transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
+                    (move || {
+                        let output_ok =
+                            crate::api::game::load_slot(api_slot_path, api_content_db_path)?;
                         Ok(output_ok)
                     })(),
                 )
@@ -815,6 +922,7 @@ fn wire__crate__api__game__new_game_impl(
             let api_school_team_id = <String>::sse_decode(&mut deserializer);
             let api_archetype = <String>::sse_decode(&mut deserializer);
             let api_second_pitch = <Option<String>>::sse_decode(&mut deserializer);
+            let api_slot_path = <Option<String>>::sse_decode(&mut deserializer);
             deserializer.end();
             move |context| {
                 transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
@@ -827,6 +935,7 @@ fn wire__crate__api__game__new_game_impl(
                             api_school_team_id,
                             api_archetype,
                             api_second_pitch,
+                            api_slot_path,
                         )?;
                         Ok(output_ok)
                     })(),
@@ -1213,6 +1322,18 @@ impl SseDecode for Vec<crate::api::game::SeasonLine> {
     }
 }
 
+impl SseDecode for Vec<crate::api::game::SlotSummary> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = Vec::with_capacity(len_ as usize);
+        for idx_ in 0..len_ {
+            ans_.push(<crate::api::game::SlotSummary>::sse_decode(deserializer));
+        }
+        return ans_;
+    }
+}
+
 impl SseDecode for Vec<crate::api::game::StandingsRowInfo> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -1443,6 +1564,24 @@ impl SseDecode for crate::api::game::SeasonLine {
     }
 }
 
+impl SseDecode for crate::api::game::SlotSummary {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_path = <String>::sse_decode(deserializer);
+        let mut var_name = <String>::sse_decode(deserializer);
+        let mut var_currentDay = <i64>::sse_decode(deserializer);
+        let mut var_season = <i64>::sse_decode(deserializer);
+        let mut var_retired = <bool>::sse_decode(deserializer);
+        return crate::api::game::SlotSummary {
+            path: var_path,
+            name: var_name,
+            current_day: var_currentDay,
+            season: var_season,
+            retired: var_retired,
+        };
+    }
+}
+
 impl SseDecode for crate::api::game::StandingsRowInfo {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -1552,26 +1691,29 @@ fn pde_ffi_dispatcher_primary_impl(
         2 => wire__crate__api__game__career_summary_impl(port, ptr, rust_vec_len, data_len),
         3 => wire__crate__api__game__career_timeline_impl(port, ptr, rust_vec_len, data_len),
         5 => wire__crate__api__game__declare_retirement_impl(port, ptr, rust_vec_len, data_len),
-        7 => wire__crate__api__game__get_contract_history_impl(port, ptr, rust_vec_len, data_len),
-        8 => wire__crate__api__game__get_current_team_info_impl(port, ptr, rust_vec_len, data_len),
-        9 => wire__crate__api__game__get_game_log_impl(port, ptr, rust_vec_len, data_len),
-        10 => wire__crate__api__game__get_injury_history_impl(port, ptr, rust_vec_len, data_len),
-        11 => wire__crate__api__game__get_meta_status_impl(port, ptr, rust_vec_len, data_len),
-        12 => wire__crate__api__game__get_pending_actions_impl(port, ptr, rust_vec_len, data_len),
-        13 => {
+        6 => wire__crate__api__game__delete_slot_impl(port, ptr, rust_vec_len, data_len),
+        8 => wire__crate__api__game__get_contract_history_impl(port, ptr, rust_vec_len, data_len),
+        9 => wire__crate__api__game__get_current_team_info_impl(port, ptr, rust_vec_len, data_len),
+        10 => wire__crate__api__game__get_game_log_impl(port, ptr, rust_vec_len, data_len),
+        11 => wire__crate__api__game__get_injury_history_impl(port, ptr, rust_vec_len, data_len),
+        12 => wire__crate__api__game__get_meta_status_impl(port, ptr, rust_vec_len, data_len),
+        13 => wire__crate__api__game__get_pending_actions_impl(port, ptr, rust_vec_len, data_len),
+        14 => {
             wire__crate__api__game__get_protagonist_status_impl(port, ptr, rust_vec_len, data_len)
         }
-        14 => wire__crate__api__game__get_standings_impl(port, ptr, rust_vec_len, data_len),
-        15 => wire__crate__api__game__get_team_rivals_impl(port, ptr, rust_vec_len, data_len),
-        16 => wire__crate__api__game__get_team_schedule_impl(port, ptr, rust_vec_len, data_len),
-        17 => wire__crate__api__game__get_training_config_impl(port, ptr, rust_vec_len, data_len),
-        19 => wire__crate__api__simple__init_app_impl(port, ptr, rust_vec_len, data_len),
-        20 => wire__crate__api__game__list_hs_teams_impl(port, ptr, rust_vec_len, data_len),
-        21 => wire__crate__api__game__list_roster_impl(port, ptr, rust_vec_len, data_len),
-        22 => wire__crate__api__game__list_teams_impl(port, ptr, rust_vec_len, data_len),
-        23 => wire__crate__api__game__new_game_impl(port, ptr, rust_vec_len, data_len),
-        24 => wire__crate__api__game__resolve_choice_impl(port, ptr, rust_vec_len, data_len),
-        25 => wire__crate__api__game__set_training_impl(port, ptr, rust_vec_len, data_len),
+        15 => wire__crate__api__game__get_standings_impl(port, ptr, rust_vec_len, data_len),
+        16 => wire__crate__api__game__get_team_rivals_impl(port, ptr, rust_vec_len, data_len),
+        17 => wire__crate__api__game__get_team_schedule_impl(port, ptr, rust_vec_len, data_len),
+        18 => wire__crate__api__game__get_training_config_impl(port, ptr, rust_vec_len, data_len),
+        20 => wire__crate__api__simple__init_app_impl(port, ptr, rust_vec_len, data_len),
+        21 => wire__crate__api__game__list_hs_teams_impl(port, ptr, rust_vec_len, data_len),
+        22 => wire__crate__api__game__list_roster_impl(port, ptr, rust_vec_len, data_len),
+        23 => wire__crate__api__game__list_slots_impl(port, ptr, rust_vec_len, data_len),
+        24 => wire__crate__api__game__list_teams_impl(port, ptr, rust_vec_len, data_len),
+        25 => wire__crate__api__game__load_slot_impl(port, ptr, rust_vec_len, data_len),
+        26 => wire__crate__api__game__new_game_impl(port, ptr, rust_vec_len, data_len),
+        27 => wire__crate__api__game__resolve_choice_impl(port, ptr, rust_vec_len, data_len),
+        28 => wire__crate__api__game__set_training_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -1585,10 +1727,10 @@ fn pde_ffi_dispatcher_sync_impl(
     // Codec=Pde (Serialization + dispatch), see doc to use other codecs
     match func_id {
         4 => wire__crate__api__game__course_names_impl(ptr, rust_vec_len, data_len),
-        6 => wire__crate__api__game__exposed_stat_names_impl(ptr, rust_vec_len, data_len),
-        18 => wire__crate__api__simple__greet_impl(ptr, rust_vec_len, data_len),
-        26 => wire__crate__api__game__training_intensity_names_impl(ptr, rust_vec_len, data_len),
-        27 => wire__crate__api__game__treatment_options_impl(ptr, rust_vec_len, data_len),
+        7 => wire__crate__api__game__exposed_stat_names_impl(ptr, rust_vec_len, data_len),
+        19 => wire__crate__api__simple__greet_impl(ptr, rust_vec_len, data_len),
+        29 => wire__crate__api__game__training_intensity_names_impl(ptr, rust_vec_len, data_len),
+        30 => wire__crate__api__game__treatment_options_impl(ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -1883,6 +2025,27 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::game::SeasonLine>
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::game::SlotSummary {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.path.into_into_dart().into_dart(),
+            self.name.into_into_dart().into_dart(),
+            self.current_day.into_into_dart().into_dart(),
+            self.season.into_into_dart().into_dart(),
+            self.retired.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::api::game::SlotSummary {}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::game::SlotSummary>
+    for crate::api::game::SlotSummary
+{
+    fn into_into_dart(self) -> crate::api::game::SlotSummary {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::api::game::StandingsRowInfo {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
@@ -2153,6 +2316,16 @@ impl SseEncode for Vec<crate::api::game::SeasonLine> {
     }
 }
 
+impl SseEncode for Vec<crate::api::game::SlotSummary> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::api::game::SlotSummary>::sse_encode(item, serializer);
+        }
+    }
+}
+
 impl SseEncode for Vec<crate::api::game::StandingsRowInfo> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -2325,6 +2498,17 @@ impl SseEncode for crate::api::game::SeasonLine {
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <i64>::sse_encode(self.season, serializer);
         <String>::sse_encode(self.line_json, serializer);
+    }
+}
+
+impl SseEncode for crate::api::game::SlotSummary {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.path, serializer);
+        <String>::sse_encode(self.name, serializer);
+        <i64>::sse_encode(self.current_day, serializer);
+        <i64>::sse_encode(self.season, serializer);
+        <bool>::sse_encode(self.retired, serializer);
     }
 }
 

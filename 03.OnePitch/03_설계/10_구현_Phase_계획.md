@@ -1,7 +1,7 @@
 # 구현 Phase 계획 (착수 로드맵 — 새 세션 온보딩 문서)
 
 > 근거: [00_결정_요약](00_결정_요약.md)(전체 결정 인덱스) · [03_구조](03_구조.md) §5-1(엔진 모듈 지도) · [05_밸런스](05_밸런스.md) §3(확정 순서) · [07_데이터관리](07_데이터관리.md) §7(초기구축순서) · [08_P7_체크리스트](08_P7_체크리스트.md)(실측 완료) · [09_개발환경_세팅](09_개발환경_세팅.md) · 대화 설계(2026-07-14)
-> 상태: **I0~I6 완료(I5는 8차분까지, `eval`·`market`은 I6로 재배치, I6는 10차분까지 — 갈림길A 진로 전환 엔진 + 은퇴 엔진 추가), I7 착수(8차분 완료 — 엔진 api 레이어+뉴게임/진행/매치 최소 화면+내 선수/리그/기록 허브 3개+PendingAction 8종 전용화면 전부 확보+매치 CustomPainter 비주얼)** — 2026-07-20
+> 상태: **I0~I6 완료(I5는 8차분까지, `eval`·`market`은 I6로 재배치, I6는 10차분까지 — 갈림길A 진로 전환 엔진 + 은퇴 엔진 추가), I7 착수(9차분 완료 — 엔진 api 레이어+뉴게임/진행/매치 최소 화면+내 선수/리그/기록 허브 3개+PendingAction 8종 전용화면 전부 확보+매치 CustomPainter 비주얼+세이브 슬롯 영속성)** — 2026-07-20
 > 목적: **이 문서 하나만 읽으면 새 대화 세션이 지금 상황을 전부 파악하고 이어서 구현을 진행**할 수 있게 한다. 기획·설계는 100% 끝났고(§1), 지금부터는 코드 작성 단계다.
 
 ## 0. 이 문서를 읽는 새 세션에게
@@ -34,7 +34,7 @@
 | **I4** | 게임 루프 오케스트레이터(`api/advance`) | 일/주/월/시즌 경계 처리, PendingAction 7종 상태기계 | `advance()` 호출 시 여러 주 진행 후 정지점에서 올바로 멈춤 | [04_게임루프](04_게임루프.md) | ✅ 완료 (2026-07-15) — 오케스트레이터 뼈대(하루단위 루프·정지판정·PendingAction push/resolve·재서명) 구현, 실제 배치 내용은 I5/I6가 채울 훅으로 배선. 상세는 아래 §6-4 |
 | **I5** | 나머지 sim 모듈 | `sim/growth`·`sim/injury`·`sim/eval`·`sim/match`(배경)·`sim/market`·`sim/npc`·`sim/schedule` — [05_밸런스](05_밸런스.md) §3 순서(A→B→C→{D,E,F}→G,H→I)로 구현+가밸런스 적용 | 배경 시뮬만으로 시즌 1개 완주 가능 | [03_구조](03_구조.md) §5-1 · 육성코어 01~09 각 문서 | ✅ **완료**(8차분까지, 2026-07-15) — 1차분(`sim/schedule`+`sim/match`, 정규시즌)+2차분(독립리그+독립/프로 포스트시즌)+3차분(대학·고교 포스트시즌/전국대회)+4차분(`sim/growth` 상승기)+5차분(`sim/injury` 누적형+`sim/growth` 하락기)+6차분(`sim/injury` 급성형, 매치 엔진 확장)+7차분(`sim/npc` 세대교체 — retire+generate_freshmen)+8차분(`sim/npc` 병역 — enlist/discharge). **`sim/eval`·`sim/market`은 리서치 결과 대부분 주인공 전용으로 판명돼 I6로 재배치**(§6-11) — I5가 원래 목표한 "배경 시뮬만으로 시즌 완주"는 이 둘 없이도 이미 충족돼 완료 처리. 상세는 아래 §6-11·§6-12 |
 | **I6** | 주인공 플로우 | 캐릭터 생성([07_주인공_생성](../02_기획/07_주인공_생성.md)), 주인공 등판 매치 세션(`startMatch`/`pitch`) | 캐릭터 생성 후 첫 경기를 실제로 뛸 수 있음(반자동 모드 최소) | [04_UI기획/06_캐릭터생성](../04_UI기획/06_캐릭터생성.md) · [07_매치_엔진](../02_기획/육성코어/07_매치_엔진.md) | ✅ **완료**(3차분에서 핵심 기준 달성, 2026-07-15) — 1차분(`create_protagonist`)+2차분(`sim/pitch` 1구 판정 로직)+3차분(`data/match_session`)+4차분(`sim/eval` 경기단위 S~D 평가, `finalize_game`에 배선 — 사기·주목도·`game_log` 반영)+5차분(`sim/training` 훈련 슬롯 — 능력치 주/보조 슬롯 + 신규 구종 습득)+6차분(부상 치료 선택 — `apply_injury`/`treat`, `injuryTreatment` PendingAction)+7차분(`sim/market` 방출·재계약·FA — `contractNego` PendingAction)+8차분(`sim/market` 트레이드 — `tradeDecision` PendingAction, `sim/market` 전체 완료)+9차분(갈림길 A — 고교 졸업 시 드래프트/대학/독립/입대, `draft`·`careerChoice` PendingAction — I7이 그 4종 전용화면을 만들려면 선행 필요해 재착수)+10차분(은퇴 — 자발적/노쇠·방출압박/부상강제 3트리거 + 통산 기록 집계, `retirement` PendingAction — I7 은퇴 화면 선행 필요해 재착수). 감독 개입·콜드게임(인터랙티브 경로)·월/시즌 단위 평가·갈림길 B 전용화면·대학 4년 후 재드래프트는 계속 이월. 상세는 아래 §6-13~§6-20·§6-26·§6-29 |
-| **I7** | Flutter UI | `04_UI기획/` 00~08 화면 실제 구현(4허브+진행버튼+매치 CustomPainter) | 최소 플레이 가능한 루프가 실제 화면에서 끝까지 동작(뉴게임→진행→경기→시즌종료) | `04_UI기획/` 전체 | 🟨 **착수**(8차분 완료, 2026-07-20) — 1차분(엔진 api 레이어+최소 화면)+2차분(내 선수 허브)+3차분(리그 허브)+4차분(기록 허브)+5차분(`injuryTreatment` 전용화면)+6차분(나머지 전용화면 4종 — `careerChoice`·`draft`·`contractNego`·`tradeDecision`)+7차분(은퇴 화면 `RetirementView`+자발적 은퇴 트리거 UI, PendingAction 8종 전부 전용 화면 확보)+8차분(매치 CustomPainter 비주얼 — 다이아몬드 상황판+존그리드, 수동·반자동에서만 실제로 뜸). `메시지함`은 I8 콘텐츠 저작 전제라 보류. 남은 건 세이브 슬롯 영속성·반응형 레이아웃. 상세는 아래 §6-21~§6-25·§6-27·§6-30·§6-31 |
+| **I7** | Flutter UI | `04_UI기획/` 00~08 화면 실제 구현(4허브+진행버튼+매치 CustomPainter) | 최소 플레이 가능한 루프가 실제 화면에서 끝까지 동작(뉴게임→진행→경기→시즌종료) | `04_UI기획/` 전체 | 🟨 **착수**(9차분 완료, 2026-07-20) — 1차분(엔진 api 레이어+최소 화면)+2차분(내 선수 허브)+3차분(리그 허브)+4차분(기록 허브)+5차분(`injuryTreatment` 전용화면)+6차분(나머지 전용화면 4종 — `careerChoice`·`draft`·`contractNego`·`tradeDecision`)+7차분(은퇴 화면 `RetirementView`+자발적 은퇴 트리거 UI, PendingAction 8종 전부 전용 화면 확보)+8차분(매치 CustomPainter 비주얼 — 다이아몬드 상황판+존그리드, 수동·반자동에서만 실제로 뜸)+9차분(세이브 슬롯 영속성 — `MainMenuScreen`+이어하기+삭제, 파일=슬롯 실제 동작). `메시지함`은 I8 콘텐츠 저작 전제라 보류. 남은 건 반응형 레이아웃뿐. 상세는 아래 §6-21~§6-25·§6-27·§6-30~§6-32 |
 | **I8** | 콘텐츠 저작 + D그룹 수치화 | 이벤트·캐릭터·업적 등 AI 대량생성→import, 밸런스 시뮬 하네스로 실제 수치 확정 | `content import` 파이프라인 동작, 15~20시즌 시뮬 하네스가 [05_밸런스](05_밸런스.md) §4 통과기준 만족 | [02_데이터](02_데이터.md) §3 · [05_밸런스](05_밸런스.md) §4 | ⬜ 미착수 |
 | **I9** | 통합 검증 · 배포 준비 | 보류됐던 실기기 검증(Android·Steam·Mac/Linux) 실제 진행, 릴리스 빌드, Steam 정식 등록 | P7 체크리스트 §6 열린세부 전부 해소, 스토어 빌드 산출 | [08_P7_체크리스트](08_P7_체크리스트.md) §6 | ⬜ 미착수 — **범위 결정(2026-07-20, 대화 설계)**: 1차로 Android+Steam(PC/Windows 빌드) 검증까지만 진행, Mac/Linux 크로스빌드는 별도 환경이 필요해 추후로 이월 |
 
@@ -42,8 +42,7 @@
 
 ## 3. 착수 범위 제안 — 다음 세션이 할 일
 
-**I0~I6 완료(I6는 10차분까지 — 은퇴 엔진 3트리거+통산 기록 집계, §6-29), I7은 8차분까지 완료(PendingAction 8종 전부 전용화면 확보+매치 CustomPainter 비주얼, §6-21~§6-25·§6-27·§6-30·§6-31).** **확정된 순서(2026-07-20, 대화 설계)**: I7 남은 후보 2개를 마저 끝내고 → 자동화 테스트가 아니라 **실제로 앱을 띄워 플레이해보며 동작을 직접 확인** → 그 결과를 보고 다음(I6 잔여 / I8 / I9 중 어디로 갈지)을 정한다. I7 남은 후보:
-- **세이브 슬롯 영속성** — 지금은 슬롯 선택/목록 UI가 없음(엔진 쪽 slot.db는 이미 있음).
+**I0~I6 완료(I6는 10차분까지 — 은퇴 엔진 3트리거+통산 기록 집계, §6-29), I7은 9차분까지 완료(PendingAction 8종 전부 전용화면 확보+매치 CustomPainter 비주얼+세이브 슬롯 영속성, §6-21~§6-25·§6-27·§6-30~§6-32).** **확정된 순서(2026-07-20, 대화 설계)**: I7 마지막 후보(반응형 레이아웃)를 끝내고 → 자동화 테스트가 아니라 **실제로 앱을 띄워 플레이해보며 동작을 직접 확인** → 그 결과를 보고 다음(I6 잔여 / I8 / I9 중 어디로 갈지)을 정한다. I7 남은 후보:
 - **반응형 레이아웃** — 지금까지의 화면은 고정 크기 기준으로만 만들어짐.
 
 그 외 계속 이월 중인 것들: I6 잔여(감독 개입·콜드게임 인터랙티브 경로·월/시즌 단위 평가·갈림길 B 전용 UX 다듬기·대학 4년 후 재드래프트, §6-20·§6-26), I8(콘텐츠 저작+D그룹 밸런스 수치), I9(실기기 검증 — Android+Steam/PC 우선, Mac/Linux는 이월).
@@ -640,7 +639,29 @@
 
 **테스트**: `cargo test --lib` 225개 전부 통과(시그니처 변경뿐, 신규 테스트 없음 — 기존 `manual_mode_pauses_on_every_pitch_the_protagonist_throws` 등이 `..`로 필드를 무시하고 있어 그대로 통과). `cargo clippy --lib --tests` 클린(기존 무관 경고 1개만). `flutter analyze` 클린. `flutter test` 18/18 통과(신규 3개, `match_visuals_widget_test.dart` — 엔진 세션이 필요 없는 순수 위젯이라 `RustLib.init`/`runAsync` 없이 바로 렌더링 검증: 스코어보드 텍스트, 존그리드 9칸 라벨+탭 콜백, `enabled: false`일 때 탭 무시). `engine.dll` 재빌드 후 확인.
 
-### 6-32. 문서 갱신 규칙
+### 6-32. I7 9차분 착수 기록 (2026-07-20, 완료) — 세이브 슬롯 영속성(메인 메뉴+이어하기+삭제)
+
+**스코프**: [02_데이터](../03_설계/02_데이터.md) §4 "슬롯 수명주기". 사용자가 확정한 추천 순서의 두 번째 항목. 은퇴 화면(§6-30)이 "확인 후 메인 메뉴로 복귀"를 가정하고 있었는데 그 "메인 메뉴"가 실제로 존재하지 않던 것도 자연히 해소.
+
+**스코프 판단**:
+- `createSlot`·`loadSlot`은 구현, **`migrateSlot`은 별도 커맨드 불필요** — `slot::open`이 이미 파일을 열 때마다 마이그레이션 체인을 자동 적용해와서(I1부터의 기존 설계) 로드 시점에 저절로 최신 버전이 됨.
+- **`rollingBackup`(자동 백업)은 스코프 밖** — 세이브 손상 방지는 이번 "슬롯 선택/목록 UI가 없다"는 원래 문제와 별개의 안정성 과제라 판단, 필요해지면 후속.
+- **"여러 슬롯을 동시에 열고 전환"은 여전히 스코프 밖** — `api::game`의 전역 싱글톤 세션 모델(`Mutex<Option<GameState>>`)은 그대로 유지, `load_slot`이 기존 세션을 통째로 교체하는 방식. 한 프로세스 안에서 슬롯 하나만 활성.
+- 슬롯 파일 경로 생성(`slot_<타임스탬프>.db`)은 Dart가 담당 — 엔진은 플랫폼 경로 규칙을 모른다는 기존 관례(`*_db_path` 인자들)를 그대로 따름.
+
+**구현**:
+- `engine/src/api/game.rs`: `new_game`에 `slot_path: Option<String>` 추가(`Some`이면 `slot::open`으로 실제 파일에, `None`이면 기존처럼 인메모리 — 기존 테스트 전부 `None`으로 무변경 유지). `SlotSummary`(path/name/current_day/season/retired)·`list_slots(dir)`(손상·미생성 슬롯은 조용히 스킵)·`load_slot(path, content_db_path)`·`delete_slot(path)` 신규.
+- `app/lib/shared/slot_paths.dart`(신규): `resolveSlotsDirectory()`(앱 지원 폴더 하위 `slots/`)·`newSlotPath()`.
+- `app/lib/features/main_menu/main_menu_screen.dart`(신규): `MainMenuScreen` — 슬롯 목록(이어하기 탭+삭제 아이콘) + "새로 시작" 버튼. `slotsDirectoryResolver`/`contentDbPathResolver`를 생성자로 주입 가능하게 해 `path_provider` 없는 테스트 환경도 지원.
+- `app/lib/features/game/game_provider.dart`: `GameController.openSlot()`(신규, `loadSlot` 엔진 함수와 이름이 겹치지 않게 명명 — `retire()`/`declareRetirement()`와 같은 이유) · `startNewGame`에 `slotPath` 파라미터 추가.
+- `app/lib/features/new_game/new_game_screen.dart`: "게임 시작" 버튼이 먼저 `newSlotPath()`로 경로를 만들고 그걸 넘겨 실제 파일로 세이브.
+- `app/lib/shared/router.dart`: 루트(`/`)가 `NewGameScreen`이 아니라 `MainMenuScreen`으로 바뀜, `/new-game`이 새로 생김.
+
+**테스트**: `cargo test --lib` 227개 전부 통과(신규 2개: 실제 임시파일로 새게임→목록→이어하기→삭제 전체 수명주기, 없는 폴더는 에러 대신 빈 목록). `cargo clippy --lib --tests` 클린(`too_many_arguments`는 기존 관례대로 `#[allow]`, `sort_by`→`sort_by_key`로 자체 수정). `flutter analyze` 클린. `flutter test` 19/19 통과(신규 1개 `main_menu_widget_test.dart` — 실제 `newGame(slotPath: ...)`로 파일 슬롯을 만들고 `MainMenuScreen`이 찾아 이어하기까지 실제로 되는지 `GoRouter` 라우팅 포함 검증; 기존 `widget_test.dart`의 부팅 스모크 테스트는 루트 화면이 바뀐 데 맞춰 갱신).
+
+**도구 이슈**: `path_provider`는 `flutter test` 환경(순수 pumpWidget)에 플러그인이 등록돼 있지 않아 `MissingPluginException`을 던진다 — `resolveContentDbPath`를 쓰는 기존 화면들은 지금까지 이 경로를 테스트한 적이 없어(전부 `contentDbPath: '../engine/content.db'`를 직접 하드코딩) 몰랐던 사실. `MainMenuScreen`은 리졸버 주입으로 우회했지만, `widget_test.dart`의 부팅 스모크 테스트처럼 **실제 `OnePitchApp`을 그대로 띄우는 테스트는 이 함정을 못 피한다** — 화면이 자체적으로 에러를 흡수해 죽지는 않지만 로딩 스피너에 멈춰있게 되므로, 그 이상(예: 버튼 탭)을 검증하려면 화면별 리졸버 주입 패턴이 필요.
+
+### 6-33. 문서 갱신 규칙
 
 **이 문서는 살아있는 문서다.** Phase를 하나 끝낼 때마다:
 1. §2 표의 해당 행 상태를 `⬜ 미착수` → `🔶 진행중` → `✅ 완료`로 갱신.

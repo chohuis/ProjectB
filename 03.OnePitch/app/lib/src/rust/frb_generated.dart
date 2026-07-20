@@ -67,7 +67,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.12.0';
 
   @override
-  int get rustContentHash => 1647274868;
+  int get rustContentHash => -2104580884;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -88,6 +88,8 @@ abstract class RustLibApi extends BaseApi {
   List<String> crateApiGameCourseNames();
 
   Future<void> crateApiGameDeclareRetirement();
+
+  Future<void> crateApiGameDeleteSlot({required String slotPath});
 
   List<String> crateApiGameExposedStatNames();
 
@@ -129,7 +131,14 @@ abstract class RustLibApi extends BaseApi {
     required String teamId,
   });
 
+  Future<List<SlotSummary>> crateApiGameListSlots({required String dir});
+
   Future<List<TeamOption>> crateApiGameListTeams({String? leagueId});
+
+  Future<void> crateApiGameLoadSlot({
+    required String slotPath,
+    required String contentDbPath,
+  });
 
   Future<void> crateApiGameNewGame({
     required String contentDbPath,
@@ -139,6 +148,7 @@ abstract class RustLibApi extends BaseApi {
     required String schoolTeamId,
     required String archetype,
     String? secondPitch,
+    String? slotPath,
   });
 
   Future<MatchStepInfo?> crateApiGameResolveChoice({
@@ -299,12 +309,40 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "declare_retirement", argNames: []);
 
   @override
+  Future<void> crateApiGameDeleteSlot({required String slotPath}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(slotPath, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 6,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_unit,
+          decodeErrorData: sse_decode_AnyhowException,
+        ),
+        constMeta: kCrateApiGameDeleteSlotConstMeta,
+        argValues: [slotPath],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiGameDeleteSlotConstMeta =>
+      const TaskConstMeta(debugName: "delete_slot", argNames: ["slotPath"]);
+
+  @override
   List<String> crateApiGameExposedStatNames() {
     return handler.executeSync(
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 6)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 7)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_list_String,
@@ -329,7 +367,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 7,
+            funcId: 8,
             port: port_,
           );
         },
@@ -356,7 +394,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 8,
+            funcId: 9,
             port: port_,
           );
         },
@@ -383,7 +421,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 9,
+            funcId: 10,
             port: port_,
           );
         },
@@ -410,7 +448,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 10,
+            funcId: 11,
             port: port_,
           );
         },
@@ -437,7 +475,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 11,
+            funcId: 12,
             port: port_,
           );
         },
@@ -464,7 +502,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 12,
+            funcId: 13,
             port: port_,
           );
         },
@@ -491,7 +529,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 13,
+            funcId: 14,
             port: port_,
           );
         },
@@ -521,7 +559,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 14,
+            funcId: 15,
             port: port_,
           );
         },
@@ -549,7 +587,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 15,
+            funcId: 16,
             port: port_,
           );
         },
@@ -579,7 +617,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 16,
+            funcId: 17,
             port: port_,
           );
         },
@@ -606,7 +644,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 17,
+            funcId: 18,
             port: port_,
           );
         },
@@ -631,7 +669,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_String(name, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 18)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 19)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_String,
@@ -656,7 +694,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 19,
+            funcId: 20,
             port: port_,
           );
         },
@@ -686,7 +724,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 20,
+            funcId: 21,
             port: port_,
           );
         },
@@ -718,7 +756,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 21,
+            funcId: 22,
             port: port_,
           );
         },
@@ -737,6 +775,34 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "list_roster", argNames: ["teamId"]);
 
   @override
+  Future<List<SlotSummary>> crateApiGameListSlots({required String dir}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(dir, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 23,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_list_slot_summary,
+          decodeErrorData: sse_decode_AnyhowException,
+        ),
+        constMeta: kCrateApiGameListSlotsConstMeta,
+        argValues: [dir],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiGameListSlotsConstMeta =>
+      const TaskConstMeta(debugName: "list_slots", argNames: ["dir"]);
+
+  @override
   Future<List<TeamOption>> crateApiGameListTeams({String? leagueId}) {
     return handler.executeNormal(
       NormalTask(
@@ -746,7 +812,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 22,
+            funcId: 24,
             port: port_,
           );
         },
@@ -765,6 +831,40 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "list_teams", argNames: ["leagueId"]);
 
   @override
+  Future<void> crateApiGameLoadSlot({
+    required String slotPath,
+    required String contentDbPath,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(slotPath, serializer);
+          sse_encode_String(contentDbPath, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 25,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_unit,
+          decodeErrorData: sse_decode_AnyhowException,
+        ),
+        constMeta: kCrateApiGameLoadSlotConstMeta,
+        argValues: [slotPath, contentDbPath],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiGameLoadSlotConstMeta => const TaskConstMeta(
+    debugName: "load_slot",
+    argNames: ["slotPath", "contentDbPath"],
+  );
+
+  @override
   Future<void> crateApiGameNewGame({
     required String contentDbPath,
     required PlatformInt64 canonicalSeed,
@@ -773,6 +873,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     required String schoolTeamId,
     required String archetype,
     String? secondPitch,
+    String? slotPath,
   }) {
     return handler.executeNormal(
       NormalTask(
@@ -785,10 +886,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           sse_encode_String(schoolTeamId, serializer);
           sse_encode_String(archetype, serializer);
           sse_encode_opt_String(secondPitch, serializer);
+          sse_encode_opt_String(slotPath, serializer);
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 23,
+            funcId: 26,
             port: port_,
           );
         },
@@ -805,6 +907,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           schoolTeamId,
           archetype,
           secondPitch,
+          slotPath,
         ],
         apiImpl: this,
       ),
@@ -821,6 +924,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       "schoolTeamId",
       "archetype",
       "secondPitch",
+      "slotPath",
     ],
   );
 
@@ -838,7 +942,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 24,
+            funcId: 27,
             port: port_,
           );
         },
@@ -876,7 +980,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 25,
+            funcId: 28,
             port: port_,
           );
         },
@@ -902,7 +1006,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 26)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 29)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_list_String,
@@ -927,7 +1031,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_String(severity, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 27)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 30)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_list_treatment_option,
@@ -1118,6 +1222,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  List<SlotSummary> dco_decode_list_slot_summary(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_slot_summary).toList();
+  }
+
+  @protected
   List<StandingsRowInfo> dco_decode_list_standings_row_info(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return (raw as List<dynamic>).map(dco_decode_standings_row_info).toList();
@@ -1273,6 +1383,21 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     return SeasonLine(
       season: dco_decode_i_64(arr[0]),
       lineJson: dco_decode_String(arr[1]),
+    );
+  }
+
+  @protected
+  SlotSummary dco_decode_slot_summary(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 5)
+      throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
+    return SlotSummary(
+      path: dco_decode_String(arr[0]),
+      name: dco_decode_String(arr[1]),
+      currentDay: dco_decode_i_64(arr[2]),
+      season: dco_decode_i_64(arr[3]),
+      retired: dco_decode_bool(arr[4]),
     );
   }
 
@@ -1603,6 +1728,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  List<SlotSummary> sse_decode_list_slot_summary(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <SlotSummary>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_slot_summary(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
   List<StandingsRowInfo> sse_decode_list_standings_row_info(
     SseDeserializer deserializer,
   ) {
@@ -1823,6 +1960,23 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_season = sse_decode_i_64(deserializer);
     var var_lineJson = sse_decode_String(deserializer);
     return SeasonLine(season: var_season, lineJson: var_lineJson);
+  }
+
+  @protected
+  SlotSummary sse_decode_slot_summary(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_path = sse_decode_String(deserializer);
+    var var_name = sse_decode_String(deserializer);
+    var var_currentDay = sse_decode_i_64(deserializer);
+    var var_season = sse_decode_i_64(deserializer);
+    var var_retired = sse_decode_bool(deserializer);
+    return SlotSummary(
+      path: var_path,
+      name: var_name,
+      currentDay: var_currentDay,
+      season: var_season,
+      retired: var_retired,
+    );
   }
 
   @protected
@@ -2134,6 +2288,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_list_slot_summary(
+    List<SlotSummary> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_slot_summary(item, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_list_standings_row_info(
     List<StandingsRowInfo> self,
     SseSerializer serializer,
@@ -2327,6 +2493,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_i_64(self.season, serializer);
     sse_encode_String(self.lineJson, serializer);
+  }
+
+  @protected
+  void sse_encode_slot_summary(SlotSummary self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.path, serializer);
+    sse_encode_String(self.name, serializer);
+    sse_encode_i_64(self.currentDay, serializer);
+    sse_encode_i_64(self.season, serializer);
+    sse_encode_bool(self.retired, serializer);
   }
 
   @protected

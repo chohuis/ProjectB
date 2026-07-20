@@ -10,12 +10,18 @@ part 'game.freezed.dart';
 
 // These functions are ignored because they are not marked as `pub`: `with_state_mut`, `with_state`, `world_seed`
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `GameState`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
 
 /// 뉴게임 — [07_주인공_생성](../../../02_기획/07_주인공_생성.md) §1의 7단계
 /// 흐름 중 실제 데이터를 만드는 마지막 단계(스텝 1~6은 Dart 쪽 폼 상태일
 /// 뿐 엔진 호출이 아님). 결정적 seed로 배경 세계(172팀 로스터+일정)를
 /// 먼저 만든 뒤 주인공을 생성해 전역 세션에 올린다.
+///
+/// `slot_path`가 `Some`이면 [02_데이터](../../../03_설계/02_데이터.md) §4
+/// "파일=슬롯"대로 그 경로에 실제 파일을 만들어 세이브가 영속된다(I7
+/// 9차분) — `None`이면 이전처럼 인메모리(테스트·일회성 검증용). 실제
+/// 파일 경로 생성(앱 데이터 폴더 하위 `slot_<id>.db`)은 Dart가 담당 —
+/// 엔진은 플랫폼 경로 규칙을 모른다(다른 `*_db_path` 인자들과 같은 관례).
 Future<void> newGame({
   required String contentDbPath,
   required PlatformInt64 canonicalSeed,
@@ -24,6 +30,7 @@ Future<void> newGame({
   required String schoolTeamId,
   required String archetype,
   String? secondPitch,
+  String? slotPath,
 }) => RustLib.instance.api.crateApiGameNewGame(
   contentDbPath: contentDbPath,
   canonicalSeed: canonicalSeed,
@@ -32,7 +39,28 @@ Future<void> newGame({
   schoolTeamId: schoolTeamId,
   archetype: archetype,
   secondPitch: secondPitch,
+  slotPath: slotPath,
 );
+
+/// `dir` 아래 `.db` 파일을 전부 슬롯으로 훑는다. **손상되거나 아직
+/// 캐릭터 생성 전인 파일은 조용히 건너뛴다** — 슬롯 하나가 깨졌다고
+/// 목록 전체가 에러로 죽으면 안 되고, `new_game`이 캐릭터 생성까지
+/// 원자적으로 끝내므로 "생성 중" 상태의 파일도 사실상 없다.
+Future<List<SlotSummary>> listSlots({required String dir}) =>
+    RustLib.instance.api.crateApiGameListSlots(dir: dir);
+
+/// 메인 메뉴 "이어하기" — 기존 슬롯 파일을 열어 전역 세션에 올린다.
+Future<void> loadSlot({
+  required String slotPath,
+  required String contentDbPath,
+}) => RustLib.instance.api.crateApiGameLoadSlot(
+  slotPath: slotPath,
+  contentDbPath: contentDbPath,
+);
+
+/// [02_데이터](../../../03_설계/02_데이터.md) §4 "삭제 = 파일 삭제".
+Future<void> deleteSlot({required String slotPath}) =>
+    RustLib.instance.api.crateApiGameDeleteSlot(slotPath: slotPath);
 
 /// 진행(Continue) — [04_게임루프](../../../03_설계/04_게임루프.md) §2
 /// `advance()`를 그대로 노출. 정지점(새 PendingAction 또는 주인공 경기)
@@ -534,6 +562,44 @@ class SeasonLine {
           runtimeType == other.runtimeType &&
           season == other.season &&
           lineJson == other.lineJson;
+}
+
+/// [02_데이터](../../../03_설계/02_데이터.md) §4 슬롯 수명주기 — 메인
+/// 메뉴 "이어하기" 목록 한 줄. `slot::open`이 마이그레이션까지 자동
+/// 적용하므로 구버전 슬롯도 그대로 읽힌다.
+class SlotSummary {
+  final String path;
+  final String name;
+  final PlatformInt64 currentDay;
+  final PlatformInt64 season;
+  final bool retired;
+
+  const SlotSummary({
+    required this.path,
+    required this.name,
+    required this.currentDay,
+    required this.season,
+    required this.retired,
+  });
+
+  @override
+  int get hashCode =>
+      path.hashCode ^
+      name.hashCode ^
+      currentDay.hashCode ^
+      season.hashCode ^
+      retired.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SlotSummary &&
+          runtimeType == other.runtimeType &&
+          path == other.path &&
+          name == other.name &&
+          currentDay == other.currentDay &&
+          season == other.season &&
+          retired == other.retired;
 }
 
 /// [02_리그](../../../04_UI기획/02_리그.md) §3 순위 탭 — `league_id` 소속

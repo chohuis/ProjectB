@@ -16,6 +16,7 @@ class GameController extends Notifier<GameState> {
     required String handedness,
     required String schoolTeamId,
     required String archetype,
+    String? slotPath,
   }) async {
     state = state.copyWith(busy: true, clearError: true);
     try {
@@ -26,11 +27,29 @@ class GameController extends Notifier<GameState> {
         handedness: handedness,
         schoolTeamId: schoolTeamId,
         archetype: archetype,
+        slotPath: slotPath,
       );
       await _refresh();
       state = state.copyWith(hasActiveGame: true, busy: false);
     } catch (e) {
       state = state.copyWith(busy: false, error: '$e');
+    }
+  }
+
+  /// [02_데이터](../../../03_설계/02_데이터.md) §4 "이어하기" — 메인
+  /// 메뉴에서 기존 슬롯 파일을 골랐을 때. 성공 여부를 반환해 호출부가
+  /// 라우팅을 직접 결정하게 한다(`respond`류와 달리 여기선 화면 전환이
+  /// 필요해서).
+  Future<bool> openSlot({required String slotPath, required String contentDbPath}) async {
+    state = state.copyWith(busy: true, clearError: true);
+    try {
+      await loadSlot(slotPath: slotPath, contentDbPath: contentDbPath);
+      await _refresh();
+      state = state.copyWith(hasActiveGame: true, busy: false);
+      return true;
+    } catch (e) {
+      state = state.copyWith(busy: false, error: '$e');
+      return false;
     }
   }
 
