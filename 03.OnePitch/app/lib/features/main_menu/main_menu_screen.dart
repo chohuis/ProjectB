@@ -20,24 +20,31 @@ class MainMenuScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // 로고 자리 — 위쪽 여백을 버튼 블록보다 크게 잡아 화면 상단~
-            // 중앙을 비워둔다. 지금은 빈 자리, 로고 에셋이 생기면 여기에.
-            const Expanded(flex: 5, child: SizedBox.shrink()),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _MenuButton(label: '새로하기', onPressed: () => context.push('/new-game')),
-                const SizedBox(height: 16),
-                _MenuButton(label: '이어하기', onPressed: () => context.push('/continue')),
-                const SizedBox(height: 16),
-                _MenuButton(label: '종료', onPressed: onExit),
-              ],
-            ),
-            const SizedBox(height: 80),
-          ],
+        // Column은 기본적으로 가장 넓은 자식만큼만 폭을 차지해(자식들이
+        // 안 늘어나면) crossAxisAlignment.center가 그 좁은 상자 "안에서만"
+        // 가운데를 잡는다 — 화면 전체 기준 가운데로 오게 하려면 이 폭을
+        // 명시적으로 화면 전체로 늘려야 한다.
+        child: SizedBox(
+          width: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // 로고 자리 — 위쪽 여백을 버튼 블록보다 크게 잡아 화면 상단~
+              // 중앙을 비워둔다. 지금은 빈 자리, 로고 에셋이 생기면 여기에.
+              const Expanded(flex: 5, child: SizedBox.shrink()),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _MenuButton(label: '새로하기', onPressed: () => context.push('/new-game')),
+                  const SizedBox(height: 16),
+                  _MenuButton(label: '이어하기', onPressed: () => context.push('/continue')),
+                  const SizedBox(height: 16),
+                  _MenuButton(label: '종료', onPressed: onExit),
+                ],
+              ),
+              const SizedBox(height: 80),
+            ],
+          ),
         ),
       ),
     );
