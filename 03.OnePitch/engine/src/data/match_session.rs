@@ -14,7 +14,26 @@ use super::repository;
 pub enum MatchStepResult {
     /// 주인공이 다음 공을 던질 차례이고, 모드상 플레이어 입력이 필요한
     /// 시점 — `submit_pitch`로 구종·코스를 제출해야 진행된다.
-    AwaitingPitch { batter_id: String, balls: u32, strikes: u32, high_leverage: bool },
+    /// `inning`~`away_runs`는 [05_매치](../../../04_UI기획/05_매치.md) §2
+    /// "상시 경기 상황판"(다이아몬드+주자+이닝+스코어+B-S-O)을 그리는 데
+    /// 필요한 세션 스냅샷 — 이 시점(수동 매 구·반자동 결정적 순간)에만
+    /// 노출된다. **"자동" 모드는 한 번의 호출로 경기 전체가 끝까지
+    /// 시뮬레이션되어 중간 정지점이 아예 없어**, 자동 모드 도중엔 이
+    /// 스냅샷을 볼 방법이 구조적으로 없다(엔진을 매 구·매 하프이닝마다
+    /// 멈추도록 재설계해야 하는 별도 스코프 — 10_구현_Phase_계획.md
+    /// §6-31 스코프 판단 참고).
+    AwaitingPitch {
+        batter_id: String,
+        balls: u32,
+        strikes: u32,
+        high_leverage: bool,
+        inning: u32,
+        top_of_inning: bool,
+        outs: u32,
+        bases: Vec<bool>,
+        home_runs: u32,
+        away_runs: u32,
+    },
     /// 경기 종료 — `schedule.result`·`standings`가 이미 반영됐고
     /// `match_session` 행도 삭제됨.
     GameOver { home_runs: u32, away_runs: u32 },
@@ -460,6 +479,12 @@ fn run_until_decision_point(slot_conn: &Connection, world_seed: i64, mut player_
                     balls: session.balls as u32,
                     strikes: session.strikes as u32,
                     high_leverage,
+                    inning: session.inning as u32,
+                    top_of_inning: session.top_of_inning,
+                    outs: session.outs as u32,
+                    bases: session.bases.to_vec(),
+                    home_runs: session.home_runs as u32,
+                    away_runs: session.away_runs as u32,
                 });
             }
             let pitches = load_protagonist_pitches(slot_conn)?;

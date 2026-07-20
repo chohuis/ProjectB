@@ -82,16 +82,36 @@ impl From<repository::PendingActionRow> for PendingActionInfo {
 /// 매치 세션이 진행 중이면 둘 중 하나가 온다(매치 세션이 아니면 `None`).
 #[derive(Debug, Clone)]
 pub enum MatchStepInfo {
-    AwaitingPitch { batter_id: String, balls: u32, strikes: u32, high_leverage: bool },
+    AwaitingPitch {
+        batter_id: String,
+        balls: u32,
+        strikes: u32,
+        high_leverage: bool,
+        inning: u32,
+        top_of_inning: bool,
+        outs: u32,
+        bases: Vec<bool>,
+        home_runs: u32,
+        away_runs: u32,
+    },
     GameOver { home_runs: u32, away_runs: u32 },
 }
 
 impl From<match_session::MatchStepResult> for MatchStepInfo {
     fn from(step: match_session::MatchStepResult) -> Self {
         match step {
-            match_session::MatchStepResult::AwaitingPitch { batter_id, balls, strikes, high_leverage } => {
-                MatchStepInfo::AwaitingPitch { batter_id, balls, strikes, high_leverage }
-            }
+            match_session::MatchStepResult::AwaitingPitch {
+                batter_id,
+                balls,
+                strikes,
+                high_leverage,
+                inning,
+                top_of_inning,
+                outs,
+                bases,
+                home_runs,
+                away_runs,
+            } => MatchStepInfo::AwaitingPitch { batter_id, balls, strikes, high_leverage, inning, top_of_inning, outs, bases, home_runs, away_runs },
             match_session::MatchStepResult::GameOver { home_runs, away_runs } => MatchStepInfo::GameOver { home_runs, away_runs },
         }
     }

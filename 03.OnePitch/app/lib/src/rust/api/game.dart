@@ -320,6 +320,12 @@ sealed class MatchStepInfo with _$MatchStepInfo {
     required int balls,
     required int strikes,
     required bool highLeverage,
+    required int inning,
+    required bool topOfInning,
+    required int outs,
+    required List<bool> bases,
+    required int homeRuns,
+    required int awayRuns,
   }) = MatchStepInfo_AwaitingPitch;
   const factory MatchStepInfo.gameOver({
     required int homeRuns,

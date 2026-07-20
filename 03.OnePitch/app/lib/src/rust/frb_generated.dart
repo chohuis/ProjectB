@@ -1060,6 +1060,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  List<bool> dco_decode_list_bool(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_bool).toList();
+  }
+
+  @protected
   List<GameLogEntry> dco_decode_list_game_log_entry(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return (raw as List<dynamic>).map(dco_decode_game_log_entry).toList();
@@ -1139,6 +1145,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           balls: dco_decode_u_32(raw[2]),
           strikes: dco_decode_u_32(raw[3]),
           highLeverage: dco_decode_bool(raw[4]),
+          inning: dco_decode_u_32(raw[5]),
+          topOfInning: dco_decode_bool(raw[6]),
+          outs: dco_decode_u_32(raw[7]),
+          bases: dco_decode_list_bool(raw[8]),
+          homeRuns: dco_decode_u_32(raw[9]),
+          awayRuns: dco_decode_u_32(raw[10]),
         );
       case 1:
         return MatchStepInfo_GameOver(
@@ -1476,6 +1488,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  List<bool> sse_decode_list_bool(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <bool>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_bool(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
   List<GameLogEntry> sse_decode_list_game_log_entry(
     SseDeserializer deserializer,
   ) {
@@ -1629,11 +1653,23 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         var var_balls = sse_decode_u_32(deserializer);
         var var_strikes = sse_decode_u_32(deserializer);
         var var_highLeverage = sse_decode_bool(deserializer);
+        var var_inning = sse_decode_u_32(deserializer);
+        var var_topOfInning = sse_decode_bool(deserializer);
+        var var_outs = sse_decode_u_32(deserializer);
+        var var_bases = sse_decode_list_bool(deserializer);
+        var var_homeRuns = sse_decode_u_32(deserializer);
+        var var_awayRuns = sse_decode_u_32(deserializer);
         return MatchStepInfo_AwaitingPitch(
           batterId: var_batterId,
           balls: var_balls,
           strikes: var_strikes,
           highLeverage: var_highLeverage,
+          inning: var_inning,
+          topOfInning: var_topOfInning,
+          outs: var_outs,
+          bases: var_bases,
+          homeRuns: var_homeRuns,
+          awayRuns: var_awayRuns,
         );
       case 1:
         var var_homeRuns = sse_decode_u_32(deserializer);
@@ -1995,6 +2031,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_list_bool(List<bool> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_bool(item, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_list_game_log_entry(
     List<GameLogEntry> self,
     SseSerializer serializer,
@@ -2136,12 +2181,24 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         balls: final balls,
         strikes: final strikes,
         highLeverage: final highLeverage,
+        inning: final inning,
+        topOfInning: final topOfInning,
+        outs: final outs,
+        bases: final bases,
+        homeRuns: final homeRuns,
+        awayRuns: final awayRuns,
       ):
         sse_encode_i_32(0, serializer);
         sse_encode_String(batterId, serializer);
         sse_encode_u_32(balls, serializer);
         sse_encode_u_32(strikes, serializer);
         sse_encode_bool(highLeverage, serializer);
+        sse_encode_u_32(inning, serializer);
+        sse_encode_bool(topOfInning, serializer);
+        sse_encode_u_32(outs, serializer);
+        sse_encode_list_bool(bases, serializer);
+        sse_encode_u_32(homeRuns, serializer);
+        sse_encode_u_32(awayRuns, serializer);
       case MatchStepInfo_GameOver(
         homeRuns: final homeRuns,
         awayRuns: final awayRuns,

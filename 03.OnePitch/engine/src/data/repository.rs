@@ -2388,7 +2388,7 @@ pub fn resolve_choice(
         _ => None,
     };
 
-    if let Some(match_session::MatchStepResult::AwaitingPitch { batter_id, balls, strikes, high_leverage }) = &step {
+    if let Some(match_session::MatchStepResult::AwaitingPitch { batter_id, balls, strikes, high_leverage, .. }) = &step {
         let today: i64 = slot_conn.query_row("SELECT current_day FROM meta", [], |r| r.get(0))?;
         // pitch_seq는 match_session이 이미 증가시켜둔 뒤라, 한 경기 안에서
         // 절대 안 겹치는 고유 접미사로 그대로 재사용.

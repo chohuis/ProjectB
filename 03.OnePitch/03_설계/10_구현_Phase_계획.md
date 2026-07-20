@@ -1,7 +1,7 @@
 # 구현 Phase 계획 (착수 로드맵 — 새 세션 온보딩 문서)
 
 > 근거: [00_결정_요약](00_결정_요약.md)(전체 결정 인덱스) · [03_구조](03_구조.md) §5-1(엔진 모듈 지도) · [05_밸런스](05_밸런스.md) §3(확정 순서) · [07_데이터관리](07_데이터관리.md) §7(초기구축순서) · [08_P7_체크리스트](08_P7_체크리스트.md)(실측 완료) · [09_개발환경_세팅](09_개발환경_세팅.md) · 대화 설계(2026-07-14)
-> 상태: **I0~I6 완료(I5는 8차분까지, `eval`·`market`은 I6로 재배치, I6는 10차분까지 — 갈림길A 진로 전환 엔진 + 은퇴 엔진 추가), I7 착수(7차분 완료 — 엔진 api 레이어+뉴게임/진행/매치 최소 화면+내 선수/리그/기록 허브 3개+PendingAction 8종 전용화면 전부 확보)** — 2026-07-20
+> 상태: **I0~I6 완료(I5는 8차분까지, `eval`·`market`은 I6로 재배치, I6는 10차분까지 — 갈림길A 진로 전환 엔진 + 은퇴 엔진 추가), I7 착수(8차분 완료 — 엔진 api 레이어+뉴게임/진행/매치 최소 화면+내 선수/리그/기록 허브 3개+PendingAction 8종 전용화면 전부 확보+매치 CustomPainter 비주얼)** — 2026-07-20
 > 목적: **이 문서 하나만 읽으면 새 대화 세션이 지금 상황을 전부 파악하고 이어서 구현을 진행**할 수 있게 한다. 기획·설계는 100% 끝났고(§1), 지금부터는 코드 작성 단계다.
 
 ## 0. 이 문서를 읽는 새 세션에게
@@ -34,20 +34,19 @@
 | **I4** | 게임 루프 오케스트레이터(`api/advance`) | 일/주/월/시즌 경계 처리, PendingAction 7종 상태기계 | `advance()` 호출 시 여러 주 진행 후 정지점에서 올바로 멈춤 | [04_게임루프](04_게임루프.md) | ✅ 완료 (2026-07-15) — 오케스트레이터 뼈대(하루단위 루프·정지판정·PendingAction push/resolve·재서명) 구현, 실제 배치 내용은 I5/I6가 채울 훅으로 배선. 상세는 아래 §6-4 |
 | **I5** | 나머지 sim 모듈 | `sim/growth`·`sim/injury`·`sim/eval`·`sim/match`(배경)·`sim/market`·`sim/npc`·`sim/schedule` — [05_밸런스](05_밸런스.md) §3 순서(A→B→C→{D,E,F}→G,H→I)로 구현+가밸런스 적용 | 배경 시뮬만으로 시즌 1개 완주 가능 | [03_구조](03_구조.md) §5-1 · 육성코어 01~09 각 문서 | ✅ **완료**(8차분까지, 2026-07-15) — 1차분(`sim/schedule`+`sim/match`, 정규시즌)+2차분(독립리그+독립/프로 포스트시즌)+3차분(대학·고교 포스트시즌/전국대회)+4차분(`sim/growth` 상승기)+5차분(`sim/injury` 누적형+`sim/growth` 하락기)+6차분(`sim/injury` 급성형, 매치 엔진 확장)+7차분(`sim/npc` 세대교체 — retire+generate_freshmen)+8차분(`sim/npc` 병역 — enlist/discharge). **`sim/eval`·`sim/market`은 리서치 결과 대부분 주인공 전용으로 판명돼 I6로 재배치**(§6-11) — I5가 원래 목표한 "배경 시뮬만으로 시즌 완주"는 이 둘 없이도 이미 충족돼 완료 처리. 상세는 아래 §6-11·§6-12 |
 | **I6** | 주인공 플로우 | 캐릭터 생성([07_주인공_생성](../02_기획/07_주인공_생성.md)), 주인공 등판 매치 세션(`startMatch`/`pitch`) | 캐릭터 생성 후 첫 경기를 실제로 뛸 수 있음(반자동 모드 최소) | [04_UI기획/06_캐릭터생성](../04_UI기획/06_캐릭터생성.md) · [07_매치_엔진](../02_기획/육성코어/07_매치_엔진.md) | ✅ **완료**(3차분에서 핵심 기준 달성, 2026-07-15) — 1차분(`create_protagonist`)+2차분(`sim/pitch` 1구 판정 로직)+3차분(`data/match_session`)+4차분(`sim/eval` 경기단위 S~D 평가, `finalize_game`에 배선 — 사기·주목도·`game_log` 반영)+5차분(`sim/training` 훈련 슬롯 — 능력치 주/보조 슬롯 + 신규 구종 습득)+6차분(부상 치료 선택 — `apply_injury`/`treat`, `injuryTreatment` PendingAction)+7차분(`sim/market` 방출·재계약·FA — `contractNego` PendingAction)+8차분(`sim/market` 트레이드 — `tradeDecision` PendingAction, `sim/market` 전체 완료)+9차분(갈림길 A — 고교 졸업 시 드래프트/대학/독립/입대, `draft`·`careerChoice` PendingAction — I7이 그 4종 전용화면을 만들려면 선행 필요해 재착수)+10차분(은퇴 — 자발적/노쇠·방출압박/부상강제 3트리거 + 통산 기록 집계, `retirement` PendingAction — I7 은퇴 화면 선행 필요해 재착수). 감독 개입·콜드게임(인터랙티브 경로)·월/시즌 단위 평가·갈림길 B 전용화면·대학 4년 후 재드래프트는 계속 이월. 상세는 아래 §6-13~§6-20·§6-26·§6-29 |
-| **I7** | Flutter UI | `04_UI기획/` 00~08 화면 실제 구현(4허브+진행버튼+매치 CustomPainter) | 최소 플레이 가능한 루프가 실제 화면에서 끝까지 동작(뉴게임→진행→경기→시즌종료) | `04_UI기획/` 전체 | 🟨 **착수**(7차분 완료, 2026-07-20) — 1차분(엔진 api 레이어+최소 화면)+2차분(내 선수 허브)+3차분(리그 허브)+4차분(기록 허브)+5차분(`injuryTreatment` 전용화면)+6차분(나머지 전용화면 4종 — `careerChoice`·`draft`·`contractNego`·`tradeDecision`)+7차분(은퇴 화면 `RetirementView`+자발적 은퇴 트리거 UI, PendingAction 8종 전부 전용 화면 확보). `메시지함`은 I8 콘텐츠 저작 전제라 보류. 남은 건 매치 CustomPainter 비주얼·세이브 슬롯 영속성·반응형 레이아웃. 상세는 아래 §6-21~§6-25·§6-27·§6-30 |
+| **I7** | Flutter UI | `04_UI기획/` 00~08 화면 실제 구현(4허브+진행버튼+매치 CustomPainter) | 최소 플레이 가능한 루프가 실제 화면에서 끝까지 동작(뉴게임→진행→경기→시즌종료) | `04_UI기획/` 전체 | 🟨 **착수**(8차분 완료, 2026-07-20) — 1차분(엔진 api 레이어+최소 화면)+2차분(내 선수 허브)+3차분(리그 허브)+4차분(기록 허브)+5차분(`injuryTreatment` 전용화면)+6차분(나머지 전용화면 4종 — `careerChoice`·`draft`·`contractNego`·`tradeDecision`)+7차분(은퇴 화면 `RetirementView`+자발적 은퇴 트리거 UI, PendingAction 8종 전부 전용 화면 확보)+8차분(매치 CustomPainter 비주얼 — 다이아몬드 상황판+존그리드, 수동·반자동에서만 실제로 뜸). `메시지함`은 I8 콘텐츠 저작 전제라 보류. 남은 건 세이브 슬롯 영속성·반응형 레이아웃. 상세는 아래 §6-21~§6-25·§6-27·§6-30·§6-31 |
 | **I8** | 콘텐츠 저작 + D그룹 수치화 | 이벤트·캐릭터·업적 등 AI 대량생성→import, 밸런스 시뮬 하네스로 실제 수치 확정 | `content import` 파이프라인 동작, 15~20시즌 시뮬 하네스가 [05_밸런스](05_밸런스.md) §4 통과기준 만족 | [02_데이터](02_데이터.md) §3 · [05_밸런스](05_밸런스.md) §4 | ⬜ 미착수 |
-| **I9** | 통합 검증 · 배포 준비 | 보류됐던 실기기 검증(Android·Steam·Mac/Linux) 실제 진행, 릴리스 빌드, Steam 정식 등록 | P7 체크리스트 §6 열린세부 전부 해소, 스토어 빌드 산출 | [08_P7_체크리스트](08_P7_체크리스트.md) §6 | ⬜ 미착수 |
+| **I9** | 통합 검증 · 배포 준비 | 보류됐던 실기기 검증(Android·Steam·Mac/Linux) 실제 진행, 릴리스 빌드, Steam 정식 등록 | P7 체크리스트 §6 열린세부 전부 해소, 스토어 빌드 산출 | [08_P7_체크리스트](08_P7_체크리스트.md) §6 | ⬜ 미착수 — **범위 결정(2026-07-20, 대화 설계)**: 1차로 Android+Steam(PC/Windows 빌드) 검증까지만 진행, Mac/Linux 크로스빌드는 별도 환경이 필요해 추후로 이월 |
 
 **의존성**: I0→I1→I2→I3→I4→I5는 순서대로(각 단계가 다음의 전제). I6은 I4·I5 이후 아무 때나. I7은 I3~I6이 뭔가 보여줄 게 있어야 의미 있지만 화면 뼈대(레이아웃)만은 I0 직후에도 병행 가능. I8은 엔진 코드가 어느 정도 갖춰진 후(I5 이후). I9은 항상 맨 마지막.
 
 ## 3. 착수 범위 제안 — 다음 세션이 할 일
 
-**I0~I6 완료(I6는 10차분까지 — 은퇴 엔진 3트리거+통산 기록 집계, §6-29), I7은 7차분까지 완료(PendingAction 8종 전부 전용화면 확보, §6-21~§6-25·§6-27·§6-30).** I7 남은 후보:
-- **매치 CustomPainter 비주얼**([05_매치](../04_UI기획/05_매치.md)) — 지금은 텍스트/버튼뿐인 다이아몬드·존그리드를 실제로 그림.
+**I0~I6 완료(I6는 10차분까지 — 은퇴 엔진 3트리거+통산 기록 집계, §6-29), I7은 8차분까지 완료(PendingAction 8종 전부 전용화면 확보+매치 CustomPainter 비주얼, §6-21~§6-25·§6-27·§6-30·§6-31).** **확정된 순서(2026-07-20, 대화 설계)**: I7 남은 후보 2개를 마저 끝내고 → 자동화 테스트가 아니라 **실제로 앱을 띄워 플레이해보며 동작을 직접 확인** → 그 결과를 보고 다음(I6 잔여 / I8 / I9 중 어디로 갈지)을 정한다. I7 남은 후보:
 - **세이브 슬롯 영속성** — 지금은 슬롯 선택/목록 UI가 없음(엔진 쪽 slot.db는 이미 있음).
 - **반응형 레이아웃** — 지금까지의 화면은 고정 크기 기준으로만 만들어짐.
 
-그 외 계속 이월 중인 것들: I6 잔여(감독 개입·콜드게임 인터랙티브 경로·월/시즌 단위 평가·갈림길 B 전용 UX 다듬기·대학 4년 후 재드래프트, §6-20·§6-26), I8(콘텐츠 저작+D그룹 밸런스 수치), I9(실기기 검증).
+그 외 계속 이월 중인 것들: I6 잔여(감독 개입·콜드게임 인터랙티브 경로·월/시즌 단위 평가·갈림길 B 전용 UX 다듬기·대학 4년 후 재드래프트, §6-20·§6-26), I8(콘텐츠 저작+D그룹 밸런스 수치), I9(실기기 검증 — Android+Steam/PC 우선, Mac/Linux는 이월).
 
 세션 시작 시 먼저 사용자에게 **"위 I7 후보 중 어느 걸 먼저 할지, 아니면 I6/I8로 넘어갈지"** 확인할 것 — 이 목록은 기본값이지 강제가 아니다.
 
@@ -507,7 +506,7 @@
 
 **테스트**: `cargo test --lib` 188개 전부 통과(신규 2개: `api::game`의 상수/왕복 테스트). `cargo clippy --lib --tests` 클린(기존 무관 경고 1개만). `flutter analyze` 클린. `flutter test` 4개 전부 통과 — 기존 2개(부팅·전체 루프) + 신규 2개: `my_player_test.dart`(UI 없이 `api::game` 직접 호출로 팀정보·훈련설정 왕복 검증), `my_player_widget_test.dart`(실제 위젯 트리를 띄워 3탭 라벨·능력치 3분류 헤더가 렌더되는지 확인).
 
-**구현 중 발견한 도구 이슈**: `flutter_rust_bridge_codegen generate`가 내부적으로 돌리는 `build_runner`(freezed 코드 재생성용)가 이 환경의 Dart SDK(3.10.3)와 호환 문제로 실패(`'dart compile' does not support build hooks`) — 타입 shape가 안 바뀌는 변경(이번 서브분처럼 구조체/함수만 추가, 새 enum 없음)은 기존 `game.freezed.dart`가 그대로 유효해 영향 없었지만, **새 frb enum을 추가하는 다음 서브분에서는 이 문제를 직접 해결해야 할 수 있음**(build_runner 버전 다운그레이드 또는 수동 패치) — 기록해둠.
+**구현 중 발견한 도구 이슈**: `flutter_rust_bridge_codegen generate`가 내부적으로 돌리는 `build_runner`(freezed 코드 재생성용)가 이 환경의 Dart SDK(3.10.3)와 호환 문제로 실패(`'dart compile' does not support build hooks`) — 타입 shape가 안 바뀌는 변경(이번 서브분처럼 구조체/함수만 추가, 새 enum 없음)은 기존 `game.freezed.dart`가 그대로 유효해 영향 없었지만, **새 frb enum을 추가하는 다음 서브분에서는 이 문제를 직접 해결해야 할 수 있음**(build_runner 버전 다운그레이드 또는 수동 패치) — 기록해둠. **해결됨(§6-31)**: `app/`에서 `dart run build_runner build --delete-conflicting-outputs --force-jit`을 직접 실행하면 AOT 대신 JIT 모드로 우회돼 정상 작동.
 
 ### 6-23. I7 3차분 착수 기록 (2026-07-16, 완료) — 리그 허브(로스터·일정·순위·라이벌)
 
@@ -623,7 +622,25 @@
 
 **테스트**: `flutter analyze` 클린. `flutter test` 15/15 통과(신규 1개, `retirement_view_widget_test.dart` — 다른 전용화면 테스트들과 달리 합성 payload가 아니라 **실제** `newGame`+`declareRetirement()`로 진짜 `retirement` PendingAction을 만들어 사용: `careerSummary()`가 활성 엔진 세션을 요구해 순수 합성 패턴을 못 쓰기 때문. `GoRouter` 실제 라우팅까지 검증 — 확인 버튼 탭 후 root route로 돌아가는지 확인). `engine.dll` 재빌드(`flutter build windows --debug` → 루트로 복사) 후 실행 — Rust 쪽 변경은 없었지만(§6-29에서 이미 완료) codegen이 만든 새 API 시그니처와 DLL의 content hash가 맞는지 재확인 차원.
 
-### 6-31. 문서 갱신 규칙
+### 6-31. I7 8차분 착수 기록 (2026-07-20, 완료) — 매치 CustomPainter 비주얼(다이아몬드+존그리드)
+
+**스코프**: [05_매치](../04_UI기획/05_매치.md) §2(상시 경기 상황판)·§4(1구 조작 집중뷰 존그리드). 사용자가 확정한 추천 순서의 첫 번째 항목.
+
+**스코프 판단**:
+- **"자동" 모드는 상황판을 못 띄운다** — 조사해보니 `AwaitingPitch`(수동 매 구·반자동 결정적 순간)에만 세션 스냅샷(이닝·아웃·주자·스코어)이 존재하고, "자동" 모드는 `run_until_decision_point`가 경기 전체를 한 번의 `resolveChoice` 호출 안에서 끝까지 돌려버려 Dart가 볼 수 있는 중간 상태 자체가 없다. §2 "상시(3모드 공통)"를 문자 그대로 만족시키려면 엔진을 매 구·매 하프이닝마다 멈추도록 재설계해야 하는데(자동 모드의 "빠른 진행" 이점을 사실상 없애는 큰 구조 변경), 이번 스코프에선 하지 않음 — 수동·반자동에서 실제로 보이는 것으로 충분하다고 판단(어차피 이 두 모드가 "직접 플레이" 경험의 전부).
+- **감독 개입(§5, 투수 교체)은 여전히 스코프 밖** — 스태프 시스템 자체가 없어 I3부터 계속 이월돼온 것과 동일 사유.
+- 존그리드는 `Course::ALL`이 이미 행 우선(위→중간→아래, 안쪽→가운데→바깥쪽) 순서로 정의돼 있어(`sim/pitch.rs`) 별도 매핑 없이 그대로 3×3에 배치.
+
+**구현**:
+- `engine/src/data/match_session.rs`·`engine/src/api/game.rs`: `MatchStepResult`/`MatchStepInfo`의 `AwaitingPitch` variant에 `inning`·`top_of_inning`·`outs`·`bases`·`home_runs`·`away_runs` 6개 필드 추가(상시 상황판을 그리는 데 필요한 세션 스냅샷). `data/repository.rs`의 기존 정확 패턴매치(`resolve_choice` 내부)에 `..` 추가해 컴파일 유지.
+- `app/lib/features/game/match_visuals.dart`(신규): `MatchScoreboard`(다이아몬드 CustomPainter + 이닝/스코어/B-S-O 텍스트) · `StrikeZoneGrid`(스트라이크존 3×3 CustomPainter 배경 + 탭 가능한 오버레이, 코스명 한국어 라벨).
+- `app/lib/features/game/game_screen.dart`: `_PitchPicker`가 기존 GridView 버튼 대신 `MatchScoreboard`+`StrikeZoneGrid` 사용.
+
+**도구 이슈 해결**(§6-22에서 "다음 서브분에서 직접 해결해야 할 수 있음"으로 남겨뒀던 것): 이번처럼 **기존 frb enum variant에 필드를 추가**하는 변경은 `.freezed.dart` 재생성이 실제로 필요한데, `flutter_rust_bridge_codegen generate`가 내부적으로 돌리는 `build_runner`의 AOT 컴파일 단계가 이 Dart SDK(3.10.3)에서 여전히 실패(`'dart compile' does not support build hooks`)했음. **해결책을 찾음**: `dart run build_runner build --delete-conflicting-outputs --force-jit`을 직접 실행하면 AOT 대신 JIT 모드로 빌더를 컴파일해 문제를 우회 — `.freezed.dart`가 정확히 재생성됨. 앞으로 새 frb enum이나 기존 enum의 필드 변경이 있을 때는 `flutter_rust_bridge_codegen generate`(Rust 쪽 `frb_generated.rs`용) 실행 후, `.freezed.dart`가 갱신 안 됐으면 이 `--force-jit` 커맨드를 `app/`에서 추가로 돌리면 된다.
+
+**테스트**: `cargo test --lib` 225개 전부 통과(시그니처 변경뿐, 신규 테스트 없음 — 기존 `manual_mode_pauses_on_every_pitch_the_protagonist_throws` 등이 `..`로 필드를 무시하고 있어 그대로 통과). `cargo clippy --lib --tests` 클린(기존 무관 경고 1개만). `flutter analyze` 클린. `flutter test` 18/18 통과(신규 3개, `match_visuals_widget_test.dart` — 엔진 세션이 필요 없는 순수 위젯이라 `RustLib.init`/`runAsync` 없이 바로 렌더링 검증: 스코어보드 텍스트, 존그리드 9칸 라벨+탭 콜백, `enabled: false`일 때 탭 무시). `engine.dll` 재빌드 후 확인.
+
+### 6-32. 문서 갱신 규칙
 
 **이 문서는 살아있는 문서다.** Phase를 하나 끝낼 때마다:
 1. §2 표의 해당 행 상태를 `⬜ 미착수` → `🔶 진행중` → `✅ 완료`로 갱신.

@@ -1097,6 +1097,18 @@ impl SseDecode for Vec<String> {
     }
 }
 
+impl SseDecode for Vec<bool> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = Vec::with_capacity(len_ as usize);
+        for idx_ in 0..len_ {
+            ans_.push(<bool>::sse_decode(deserializer));
+        }
+        return ans_;
+    }
+}
+
 impl SseDecode for Vec<crate::api::game::GameLogEntry> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -1251,11 +1263,23 @@ impl SseDecode for crate::api::game::MatchStepInfo {
                 let mut var_balls = <u32>::sse_decode(deserializer);
                 let mut var_strikes = <u32>::sse_decode(deserializer);
                 let mut var_highLeverage = <bool>::sse_decode(deserializer);
+                let mut var_inning = <u32>::sse_decode(deserializer);
+                let mut var_topOfInning = <bool>::sse_decode(deserializer);
+                let mut var_outs = <u32>::sse_decode(deserializer);
+                let mut var_bases = <Vec<bool>>::sse_decode(deserializer);
+                let mut var_homeRuns = <u32>::sse_decode(deserializer);
+                let mut var_awayRuns = <u32>::sse_decode(deserializer);
                 return crate::api::game::MatchStepInfo::AwaitingPitch {
                     batter_id: var_batterId,
                     balls: var_balls,
                     strikes: var_strikes,
                     high_leverage: var_highLeverage,
+                    inning: var_inning,
+                    top_of_inning: var_topOfInning,
+                    outs: var_outs,
+                    bases: var_bases,
+                    home_runs: var_homeRuns,
+                    away_runs: var_awayRuns,
                 };
             }
             1 => {
@@ -1675,12 +1699,24 @@ impl flutter_rust_bridge::IntoDart for crate::api::game::MatchStepInfo {
                 balls,
                 strikes,
                 high_leverage,
+                inning,
+                top_of_inning,
+                outs,
+                bases,
+                home_runs,
+                away_runs,
             } => [
                 0.into_dart(),
                 batter_id.into_into_dart().into_dart(),
                 balls.into_into_dart().into_dart(),
                 strikes.into_into_dart().into_dart(),
                 high_leverage.into_into_dart().into_dart(),
+                inning.into_into_dart().into_dart(),
+                top_of_inning.into_into_dart().into_dart(),
+                outs.into_into_dart().into_dart(),
+                bases.into_into_dart().into_dart(),
+                home_runs.into_into_dart().into_dart(),
+                away_runs.into_into_dart().into_dart(),
             ]
             .into_dart(),
             crate::api::game::MatchStepInfo::GameOver {
@@ -2027,6 +2063,16 @@ impl SseEncode for Vec<String> {
     }
 }
 
+impl SseEncode for Vec<bool> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <bool>::sse_encode(item, serializer);
+        }
+    }
+}
+
 impl SseEncode for Vec<crate::api::game::GameLogEntry> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -2146,12 +2192,24 @@ impl SseEncode for crate::api::game::MatchStepInfo {
                 balls,
                 strikes,
                 high_leverage,
+                inning,
+                top_of_inning,
+                outs,
+                bases,
+                home_runs,
+                away_runs,
             } => {
                 <i32>::sse_encode(0, serializer);
                 <String>::sse_encode(batter_id, serializer);
                 <u32>::sse_encode(balls, serializer);
                 <u32>::sse_encode(strikes, serializer);
                 <bool>::sse_encode(high_leverage, serializer);
+                <u32>::sse_encode(inning, serializer);
+                <bool>::sse_encode(top_of_inning, serializer);
+                <u32>::sse_encode(outs, serializer);
+                <Vec<bool>>::sse_encode(bases, serializer);
+                <u32>::sse_encode(home_runs, serializer);
+                <u32>::sse_encode(away_runs, serializer);
             }
             crate::api::game::MatchStepInfo::GameOver {
                 home_runs,

@@ -10,14 +10,16 @@ import 'career_choice_view.dart';
 import 'contract_nego_view.dart';
 import 'trade_decision_view.dart';
 import 'retirement_view.dart';
+import 'match_visuals.dart';
 
 /// 진행(Continue) + 매치 + 결과요약을 한 화면에 압축한 I7 1차분 최소
-/// 슬라이스 — [05_매치](../../../../04_UI기획/05_매치.md)의 다이아몬드·
-/// 존그리드 비주얼(CustomPainter)은 후속 서브분("최소 루프가 실제로
-/// 동작"이라는 완료 기준엔 텍스트/버튼으로도 충분). `game`·
+/// 슬라이스. [05_매치](../../../../04_UI기획/05_매치.md)의 다이아몬드·
+/// 존그리드 CustomPainter 비주얼은 I7 8차분에서 `match_visuals.dart`로
+/// 추가됨 — 단, "자동" 모드는 엔진이 경기 전체를 한 번에 시뮬레이션해
+/// 중간 스냅샷이 없어 상황판이 안 뜬다(수동 매 구·반자동 결정적
+/// 순간에서만 실제로 보임, 10_구현_Phase_계획.md §6-31 참고). `game`·
 /// `injuryTreatment`·`contractNego`·`tradeDecision`·`careerChoice`·
-/// `draft` — PendingAction 7종 전부 전용 화면을 갖췄다(I6 9차분에서
-/// 갈림길A 엔진이 갖춰져 나머지 4종도 실전 발동 가능해짐, I7 6차분).
+/// `draft`·`retirement` — PendingAction 8종 전부 전용 화면을 갖췄다.
 class GameScreen extends ConsumerWidget {
   const GameScreen({super.key});
 
@@ -196,32 +198,37 @@ class _PitchPicker extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        MatchScoreboard(
+          inning: awaiting.inning,
+          topOfInning: awaiting.topOfInning,
+          outs: awaiting.outs,
+          bases: awaiting.bases,
+          homeRuns: awaiting.homeRuns,
+          awayRuns: awaiting.awayRuns,
+          balls: awaiting.balls,
+          strikes: awaiting.strikes,
+        ),
+        const SizedBox(height: 8),
         Text(
-          '${awaiting.batterId} 상대 · B${awaiting.balls}-S${awaiting.strikes}'
-          '${awaiting.highLeverage ? ' · 클러치 상황' : ''}',
+          '${awaiting.batterId} 상대${awaiting.highLeverage ? ' · 클러치 상황' : ''}',
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),
         const Text('구종'),
         Wrap(spacing: 8, children: _pitches().map((p) => ChoiceChip(label: Text(p), selected: false, onSelected: (_) {})).toList()),
         const SizedBox(height: 12),
-        const Text('코스 (3×3)'),
+        const Text('코스'),
+        const SizedBox(height: 4),
         Expanded(
-          child: GridView.count(
-            crossAxisCount: 3,
-            children: courseNames()
-                .map(
-                  (course) => Padding(
-                    padding: const EdgeInsets.all(2),
-                    child: ElevatedButton(
-                      onPressed: pitchAction == null
-                          ? null
-                          : () => controller.respond(pitchAction.id, '${_pitches().first}:$course'),
-                      child: Text(course, style: const TextStyle(fontSize: 11)),
-                    ),
-                  ),
-                )
-                .toList(),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 280, maxHeight: 280),
+              child: StrikeZoneGrid(
+                courses: courseNames(),
+                enabled: pitchAction != null,
+                onSelect: (course) => controller.respond(pitchAction!.id, '${_pitches().first}:$course'),
+              ),
+            ),
           ),
         ),
       ],
