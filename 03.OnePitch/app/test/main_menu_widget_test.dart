@@ -7,19 +7,63 @@ import 'package:go_router/go_router.dart';
 
 import 'package:app/features/game/game_provider.dart';
 import 'package:app/features/main_menu/main_menu_screen.dart';
+import 'package:app/features/main_menu/continue_game_screen.dart';
 import 'package:app/src/rust/api/game.dart';
 import 'package:app/src/rust/frb_generated.dart';
 
-/// [08_은퇴](../../../04_UI기획/08_은퇴.md) §4-1 "메인 메뉴로 복귀" +
-/// [02_데이터](../../../03_설계/02_데이터.md) §4 슬롯 수명주기(I7 9차분) —
-/// 실제 `newGame(slotPath: ...)`로 진짜 파일 슬롯을 만들고, `MainMenuScreen`
-/// 이 그걸 목록에서 찾아 이어하기까지 되는지 검증한다. `resolveSlotsDirectory`
-/// (path_provider 필요, `flutter test`엔 플러그인이 없음)는 순수 임시
-/// 디렉터리로 갈아끼워(`slotsDirectoryResolver` 주입) 우회.
 void main() {
   setUpAll(() async => await RustLib.init());
 
-  testWidgets('MainMenuScreen lists an existing slot and continuing it activates the game', (tester) async {
+  Widget buildMenu({VoidCallback? onExit}) => MaterialApp.router(
+    routerConfig: GoRouter(
+      initialLocation: '/',
+      routes: [
+        GoRoute(path: '/', builder: (context, state) => MainMenuScreen(onExit: onExit ?? () {})),
+        GoRoute(path: '/continue', builder: (context, state) => const Scaffold(body: Text('이어하기 화면'))),
+        GoRoute(path: '/new-game', builder: (context, state) => const Scaffold(body: Text('새로하기 화면'))),
+      ],
+    ),
+  );
+
+  testWidgets('MainMenuScreen shows 3 buttons and no header title', (tester) async {
+    await tester.pumpWidget(buildMenu());
+    await tester.pump();
+
+    expect(find.text('새로하기'), findsOneWidget);
+    expect(find.text('이어하기'), findsOneWidget);
+    expect(find.text('종료'), findsOneWidget);
+    expect(find.text('OnePitch'), findsNothing, reason: '헤더 타이틀은 표시되지 않아야 함');
+  });
+
+  testWidgets('MainMenuScreen 새로하기 navigates to /new-game', (tester) async {
+    await tester.pumpWidget(buildMenu());
+    await tester.tap(find.text('새로하기'));
+    await tester.pumpAndSettle();
+    expect(find.text('새로하기 화면'), findsOneWidget);
+  });
+
+  testWidgets('MainMenuScreen 이어하기 navigates to /continue', (tester) async {
+    await tester.pumpWidget(buildMenu());
+    await tester.tap(find.text('이어하기'));
+    await tester.pumpAndSettle();
+    expect(find.text('이어하기 화면'), findsOneWidget);
+  });
+
+  testWidgets('MainMenuScreen 종료 triggers onExit', (tester) async {
+    var exited = false;
+    await tester.pumpWidget(buildMenu(onExit: () => exited = true));
+    await tester.tap(find.text('종료'));
+    await tester.pump();
+    expect(exited, isTrue);
+  });
+
+  /// [08_은퇴](../../../04_UI기획/08_은퇴.md) §4-1 "메인 메뉴로 복귀" +
+  /// [02_데이터](../../../03_설계/02_데이터.md) §4 슬롯 수명주기(I7 9차분) —
+  /// 실제 `newGame(slotPath: ...)`로 진짜 파일 슬롯을 만들고, `ContinueGameScreen`
+  /// 이 그걸 목록에서 찾아 이어하기까지 되는지 검증한다. `resolveSlotsDirectory`
+  /// (path_provider 필요, `flutter test`엔 플러그인이 없음)는 순수 임시
+  /// 디렉터리로 갈아끼워(`slotsDirectoryResolver` 주입) 우회.
+  testWidgets('ContinueGameScreen lists an existing slot and continuing it activates the game', (tester) async {
     late ProviderContainer container;
     late String slotPath;
     final tempDir = Directory.systemTemp.createTempSync('onepitch_main_menu_test_');
@@ -49,7 +93,7 @@ void main() {
               routes: [
                 GoRoute(
                   path: '/',
-                  builder: (context, state) => MainMenuScreen(
+                  builder: (context, state) => ContinueGameScreen(
                     slotsDirectoryResolver: () async => tempDir,
                     contentDbPathResolver: () async => '../engine/content.db',
                   ),

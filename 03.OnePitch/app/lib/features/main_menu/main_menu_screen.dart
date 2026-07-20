@@ -1,129 +1,49 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:app/features/game/game_provider.dart';
-import 'package:app/shared/content_db.dart';
-import 'package:app/shared/slot_paths.dart';
-import 'package:app/shared/error_banner.dart';
-import 'package:app/shared/loading_indicator.dart';
-import 'package:app/src/rust/api/game.dart';
+/// 앱 최초 진입점(루트 `/`) — 타이틀 없이 새로하기·이어하기·종료 3버튼만
+/// 가운데 배치. 슬롯 목록·로딩 등 "이어하기"의 실제 내용은
+/// `continue_game_screen.dart`(I7 9차분 로직 이전)로 분리됐다.
+class MainMenuScreen extends StatelessWidget {
+  const MainMenuScreen({super.key, this.onExit = _defaultExit});
 
-/// [08_은퇴](../../../04_UI기획/08_은퇴.md) §4-1 "확인 후 메인 메뉴로
-/// 복귀" — 은퇴든 앱 최초 실행이든 이 화면(루트 라우트)이 종착점.
-/// [02_데이터](../../../03_설계/02_데이터.md) §4 슬롯 수명주기(I7 9차분) —
-/// 기존 슬롯 "이어하기" 목록 + "새로 시작"(캐릭터 생성 폼으로 이동).
-class MainMenuScreen extends ConsumerStatefulWidget {
-  /// `slotsDirectoryResolver`·`contentDbPathResolver`는 기본적으로
-  /// `resolveSlotsDirectory`/`resolveContentDbPath`(둘 다 실제 앱 데이터
-  /// 폴더, `path_provider` 필요)를 쓴다 — `flutter test` 환경엔 그
-  /// 플러그인이 없어(`MissingPluginException`), 위젯 테스트는 이 생성자
-  /// 파라미터로 순수 임시 경로를 주입한다.
-  const MainMenuScreen({super.key, this.slotsDirectoryResolver = resolveSlotsDirectory, this.contentDbPathResolver = resolveContentDbPath});
+  /// 위젯 테스트에서 실제 프로세스 종료를 막기 위한 주입 지점.
+  final VoidCallback onExit;
 
-  final Future<Directory> Function() slotsDirectoryResolver;
-  final Future<String> Function() contentDbPathResolver;
-
-  @override
-  ConsumerState<MainMenuScreen> createState() => _MainMenuScreenState();
-}
-
-class _MainMenuScreenState extends ConsumerState<MainMenuScreen> {
-  List<SlotSummary> _slots = const [];
-  bool _loading = true;
-  String? _error;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadSlots();
-  }
-
-  Future<void> _loadSlots() async {
-    setState(() => _loading = true);
-    try {
-      final dir = await widget.slotsDirectoryResolver();
-      final slots = await listSlots(dir: dir.path);
-      if (!mounted) return;
-      setState(() {
-        _slots = slots;
-        _loading = false;
-      });
-    } catch (e) {
-      if (!mounted) return;
-      setState(() {
-        _error = '$e';
-        _loading = false;
-      });
-    }
-  }
-
-  Future<void> _continueSlot(SlotSummary slot) async {
-    final contentDbPath = await widget.contentDbPathResolver();
-    final ok = await ref.read(gameControllerProvider.notifier).openSlot(slotPath: slot.path, contentDbPath: contentDbPath);
-    if (ok && mounted) context.go('/game');
-  }
-
-  Future<void> _deleteSlot(SlotSummary slot) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('슬롯을 삭제하시겠습니까?'),
-        content: Text('"${slot.name}" 세이브가 영구히 삭제됩니다.'),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('취소')),
-          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('삭제')),
-        ],
-      ),
-    );
-    if (confirmed == true) {
-      await deleteSlot(slotPath: slot.path);
-      await _loadSlots();
-    }
-  }
+  static void _defaultExit() => exit(0);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('OnePitch')),
-      body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 200),
-        child: _loading
-            ? const LoadingIndicator(key: ValueKey('loading'))
-            : Padding(
-                key: const ValueKey('loaded'),
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (_error != null) ErrorBanner(message: '슬롯 목록을 불러오지 못했습니다: $_error'),
-                    Text('이어하기', style: Theme.of(context).textTheme.titleMedium),
-                    const SizedBox(height: 8),
-                    Expanded(
-                      child: _slots.isEmpty
-                          ? const Center(child: Text('저장된 세이브가 없습니다.'))
-                          : ListView(
-                              children: [
-                                for (final slot in _slots)
-                                  Card(
-                                    child: ListTile(
-                                      title: Text(slot.name),
-                                      subtitle: Text('Day ${slot.currentDay} · 시즌 ${slot.season}${slot.retired ? ' · 은퇴' : ''}'),
-                                      onTap: () => _continueSlot(slot),
-                                      trailing: IconButton(icon: const Icon(Icons.delete_outline), onPressed: () => _deleteSlot(slot)),
-                                    ),
-                                  ),
-                              ],
-                            ),
-                    ),
-                    const SizedBox(height: 8),
-                    SizedBox(width: double.infinity, child: ElevatedButton(onPressed: () => context.push('/new-game'), child: const Text('새로 시작'))),
-                  ],
-                ),
-              ),
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _MenuButton(label: '새로하기', onPressed: () => context.push('/new-game')),
+            const SizedBox(height: 16),
+            _MenuButton(label: '이어하기', onPressed: () => context.push('/continue')),
+            const SizedBox(height: 16),
+            _MenuButton(label: '종료', onPressed: onExit),
+          ],
+        ),
       ),
+    );
+  }
+}
+
+class _MenuButton extends StatelessWidget {
+  const _MenuButton({required this.label, required this.onPressed});
+  final String label;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 240,
+      height: 56,
+      child: ElevatedButton(onPressed: onPressed, child: Text(label, style: const TextStyle(fontSize: 18))),
     );
   }
 }
