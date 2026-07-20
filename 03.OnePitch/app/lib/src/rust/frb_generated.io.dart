@@ -32,6 +32,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   MatchStepInfo dco_decode_box_autoadd_match_step_info(dynamic raw);
 
   @protected
+  ProtagonistProfileInfo dco_decode_box_autoadd_protagonist_profile_info(
+    dynamic raw,
+  );
+
+  @protected
   TeamOption dco_decode_box_autoadd_team_option(dynamic raw);
 
   @protected
@@ -112,6 +117,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   MatchStepInfo? dco_decode_opt_box_autoadd_match_step_info(dynamic raw);
 
   @protected
+  ProtagonistProfileInfo? dco_decode_opt_box_autoadd_protagonist_profile_info(
+    dynamic raw,
+  );
+
+  @protected
   TeamOption? dco_decode_opt_box_autoadd_team_option(dynamic raw);
 
   @protected
@@ -121,6 +131,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   PendingActionInfo dco_decode_pending_action_info(dynamic raw);
+
+  @protected
+  ProtagonistProfileInfo dco_decode_protagonist_profile_info(dynamic raw);
 
   @protected
   ProtagonistStatusInfo dco_decode_protagonist_status_info(dynamic raw);
@@ -169,6 +182,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   MatchStepInfo sse_decode_box_autoadd_match_step_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  ProtagonistProfileInfo sse_decode_box_autoadd_protagonist_profile_info(
     SseDeserializer deserializer,
   );
 
@@ -273,6 +291,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  ProtagonistProfileInfo? sse_decode_opt_box_autoadd_protagonist_profile_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   TeamOption? sse_decode_opt_box_autoadd_team_option(
     SseDeserializer deserializer,
   );
@@ -284,6 +307,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   PendingActionInfo sse_decode_pending_action_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  ProtagonistProfileInfo sse_decode_protagonist_profile_info(
     SseDeserializer deserializer,
   );
 
@@ -345,6 +373,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_box_autoadd_match_step_info(
     MatchStepInfo self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_box_autoadd_protagonist_profile_info(
+    ProtagonistProfileInfo self,
     SseSerializer serializer,
   );
 
@@ -481,6 +515,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_opt_box_autoadd_protagonist_profile_info(
+    ProtagonistProfileInfo? self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_opt_box_autoadd_team_option(
     TeamOption? self,
     SseSerializer serializer,
@@ -495,6 +535,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_pending_action_info(
     PendingActionInfo self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_protagonist_profile_info(
+    ProtagonistProfileInfo self,
     SseSerializer serializer,
   );
 

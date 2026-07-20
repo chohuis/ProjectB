@@ -306,6 +306,70 @@ pub fn set_protagonist_training(
     Ok(())
 }
 
+/// 캐릭터 생성 "개인 신체" 페이지(대화 2026-07-20) — 4종 혈액형.
+pub const BLOOD_TYPES: [&str; 4] = ["A", "B", "O", "AB"];
+
+/// 출신지역 8권역 — [07_주인공_생성](../../../02_기획/07_주인공_생성.md)
+/// §3-1이 학교 선택용으로 이미 확정해둔 8권역을 그대로 재사용(고향은
+/// 진학 학교와 별개 선택이라 겹치는 지역이어도 됨).
+pub const HOMETOWN_REGIONS: [&str; 8] =
+    ["서울", "경기·인천", "강원", "충청", "호남", "대구·경북", "부산·경남·울산", "제주"];
+
+/// 캐릭터 생성 "개인 신체" 페이지 — 이름·좌우완·학교·투수타입과 달리
+/// 시뮬레이션에 쓰이지 않는 순수 표시용 데이터(생일·키·몸무게·혈액형·
+/// 출신지역·등번호)라 `create_protagonist` 시그니처에 얹지 않고
+/// `set_protagonist_training`과 같은 패턴으로 생성 직후 별도 호출한다.
+/// 생년은 항상 2010년 고정(세계관 시작 시점에 17세, [01_커리어_구조]
+/// (../../../02_기획/01_커리어_구조.md) §1) — UI는 월/일만 받는다.
+#[allow(clippy::too_many_arguments)]
+pub fn set_protagonist_profile(
+    slot_conn: &Connection,
+    birth_month: i64,
+    birth_day: i64,
+    height_cm: f64,
+    weight_kg: f64,
+    blood_type: &str,
+    hometown: &str,
+    jersey_number: i64,
+) -> anyhow::Result<()> {
+    if !(1..=12).contains(&birth_month) {
+        anyhow::bail!("birth_month must be 1..=12, got {birth_month}");
+    }
+    let max_day = match birth_month {
+        4 | 6 | 9 | 11 => 30,
+        2 => 28, // 2010년은 윤년 아님(생년 고정) — §1 참고.
+        _ => 31,
+    };
+    if !(1..=max_day).contains(&birth_day) {
+        anyhow::bail!("birth_day {birth_day} is not valid for month {birth_month}");
+    }
+    if height_cm <= 0.0 || weight_kg <= 0.0 {
+        anyhow::bail!("height_cm/weight_kg must be positive, got {height_cm}/{weight_kg}");
+    }
+    if !BLOOD_TYPES.contains(&blood_type) {
+        anyhow::bail!("unknown blood type: {blood_type}");
+    }
+    if !HOMETOWN_REGIONS.contains(&hometown) {
+        anyhow::bail!("unknown hometown region: {hometown}");
+    }
+    if !(1..=99).contains(&jersey_number) {
+        anyhow::bail!("jersey_number must be 1..=99, got {jersey_number}");
+    }
+
+    let profile = serde_json::json!({
+        "birth_year": 2010,
+        "birth_month": birth_month,
+        "birth_day": birth_day,
+        "height_cm": height_cm,
+        "weight_kg": weight_kg,
+        "blood_type": blood_type,
+        "hometown": hometown,
+        "jersey_number": jersey_number,
+    });
+    slot_conn.execute("UPDATE protagonist SET profile = ?1 WHERE id = 'proto:1'", params![profile.to_string()])?;
+    Ok(())
+}
+
 /// 주인공 주간 훈련 적용 — `process_week`(NPC 전용)과 별도로 둔다(협/한
 /// 주인공은 `npc` 테이블에 없어 그쪽 쿼리에 안 걸림). 부상 완치 처리·
 /// 누적형(과사용) 부상 체크(08_부상_시스템.md §3 "체크 시점 = 매주")는
@@ -2579,6 +2643,34 @@ mod tests {
         // 강속구형은 포심 패스트볼로 시작 — 그걸 "신규"로 다시 설정하면 거부돼야 함.
         let result = set_protagonist_training(&slot_conn, "구속", ["구위", "제구"], "보통", Some("포심 패스트볼"));
         assert!(result.is_err());
+    }
+
+    #[test]
+    fn set_protagonist_profile_round_trips_through_the_profile_column() {
+        let content_conn = build_hs_school_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        create_protagonist(&slot_conn, &content_conn, 1, "신체테스트", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
+
+        set_protagonist_profile(&slot_conn, 3, 15, 178.0, 70.0, "O", "서울", 18).unwrap();
+
+        let raw: String = slot_conn.query_row("SELECT profile FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+        let v: serde_json::Value = serde_json::from_str(&raw).unwrap();
+        assert_eq!(v["birth_year"], 2010);
+        assert_eq!(v["birth_month"], 3);
+        assert_eq!(v["hometown"], "서울");
+        assert_eq!(v["jersey_number"], 18);
+    }
+
+    #[test]
+    fn set_protagonist_profile_rejects_invalid_day_for_month_and_unknown_enums() {
+        let content_conn = build_hs_school_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        create_protagonist(&slot_conn, &content_conn, 1, "신체테스트", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
+
+        assert!(set_protagonist_profile(&slot_conn, 2, 30, 178.0, 70.0, "O", "서울", 18).is_err(), "2월 30일은 없음");
+        assert!(set_protagonist_profile(&slot_conn, 3, 15, 178.0, 70.0, "Z", "서울", 18).is_err(), "존재 안 하는 혈액형");
+        assert!(set_protagonist_profile(&slot_conn, 3, 15, 178.0, 70.0, "O", "부산", 18).is_err(), "8권역 표기와 다른 지역명");
+        assert!(set_protagonist_profile(&slot_conn, 3, 15, 178.0, 70.0, "O", "서울", 100).is_err(), "등번호 범위 밖(1~99)");
     }
 
     #[test]

@@ -483,6 +483,73 @@ pub fn set_training(primary_stat: String, secondary_stat_1: String, secondary_st
     })
 }
 
+/// 캐릭터 생성 "개인 신체" 페이지 혈액형 드롭다운용 — 순수 상수라 동기.
+#[flutter_rust_bridge::frb(sync)]
+pub fn blood_type_names() -> Vec<String> {
+    repository::BLOOD_TYPES.iter().map(|s| s.to_string()).collect()
+}
+
+/// 캐릭터 생성 "개인 신체" 페이지 출신지역 드롭다운용(8권역) — 순수 상수라 동기.
+#[flutter_rust_bridge::frb(sync)]
+pub fn hometown_region_names() -> Vec<String> {
+    repository::HOMETOWN_REGIONS.iter().map(|s| s.to_string()).collect()
+}
+
+/// [01_내선수](../../../04_UI기획/01_내선수.md) 상태 탭 등에서 표시할 개인
+/// 신체 정보 — 한 번도 설정 안 했으면(구세이브 포함) `None`.
+#[derive(Debug, Clone)]
+pub struct ProtagonistProfileInfo {
+    pub birth_year: i64,
+    pub birth_month: i64,
+    pub birth_day: i64,
+    pub height_cm: f64,
+    pub weight_kg: f64,
+    pub blood_type: String,
+    pub hometown: String,
+    pub jersey_number: i64,
+}
+
+pub fn get_protagonist_profile() -> anyhow::Result<Option<ProtagonistProfileInfo>> {
+    with_state(|state| {
+        let raw: Option<String> = state
+            .slot_conn
+            .query_row("SELECT profile FROM protagonist WHERE id = 'proto:1'", [], |r| r.get::<_, Option<String>>(0))
+            .optional()?
+            .flatten();
+        let Some(raw) = raw else {
+            return Ok(None);
+        };
+        let v: serde_json::Value = serde_json::from_str(&raw)?;
+        Ok(Some(ProtagonistProfileInfo {
+            birth_year: v.get("birth_year").and_then(|x| x.as_i64()).unwrap_or(2010),
+            birth_month: v.get("birth_month").and_then(|x| x.as_i64()).unwrap_or(1),
+            birth_day: v.get("birth_day").and_then(|x| x.as_i64()).unwrap_or(1),
+            height_cm: v.get("height_cm").and_then(|x| x.as_f64()).unwrap_or(0.0),
+            weight_kg: v.get("weight_kg").and_then(|x| x.as_f64()).unwrap_or(0.0),
+            blood_type: v.get("blood_type").and_then(|x| x.as_str()).unwrap_or("").to_string(),
+            hometown: v.get("hometown").and_then(|x| x.as_str()).unwrap_or("").to_string(),
+            jersey_number: v.get("jersey_number").and_then(|x| x.as_i64()).unwrap_or(0),
+        }))
+    })
+}
+
+/// 캐릭터 생성 화면이 `newGame` 직후 호출 — `set_training`과 동일하게
+/// `repository::set_protagonist_profile`을 그대로 감싼다.
+#[allow(clippy::too_many_arguments)]
+pub fn set_protagonist_profile(
+    birth_month: i64,
+    birth_day: i64,
+    height_cm: f64,
+    weight_kg: f64,
+    blood_type: String,
+    hometown: String,
+    jersey_number: i64,
+) -> anyhow::Result<()> {
+    with_state(|state| {
+        repository::set_protagonist_profile(&state.slot_conn, birth_month, birth_day, height_cm, weight_kg, &blood_type, &hometown, jersey_number)
+    })
+}
+
 /// [02_리그](../../../04_UI기획/02_리그.md) 결정5 "전 팀 풀 스카우팅"용 —
 /// `league_id`를 주면 그 리그만, `None`이면 172팀 전부. 세션의
 /// `content_conn`을 그대로 쓰므로(뉴게임 이후에만 호출 가능) 경로를 또

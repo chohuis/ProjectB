@@ -160,6 +160,21 @@ fn migration_v7(tx: &Transaction) -> anyhow::Result<()> {
     Ok(())
 }
 
+const V8_DDL: &str = r#"
+ALTER TABLE protagonist ADD COLUMN profile TEXT;
+"#;
+
+/// I7 15차분(캐릭터 생성 개인 신체 정보, 대화 2026-07-20) — `profile`은
+/// 시뮬레이션에 쓰이는 값이 아니라 순수 표시용 플레이버 데이터(생일·키·
+/// 몸무게·혈액형·출신지역·등번호)라 `training` 컬럼과 같은 패턴으로 JSON
+/// 하나에 다 묶는다(`data::repository::set_protagonist_profile`). NULL이면
+/// (이번 서브분 전 구세이브) "미입력"으로 UI가 처리.
+fn migration_v8(tx: &Transaction) -> anyhow::Result<()> {
+    tx.execute_batch(V8_DDL)?;
+    tx.execute("UPDATE meta SET save_version = 8", [])?;
+    Ok(())
+}
+
 const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 1,
@@ -189,6 +204,10 @@ const MIGRATIONS: &[Migration] = &[
         version: 7,
         up: migration_v7,
     },
+    Migration {
+        version: 8,
+        up: migration_v8,
+    },
 ];
 
 fn init(mut conn: Connection) -> anyhow::Result<Connection> {
@@ -215,7 +234,25 @@ mod tests {
         let save_version: i64 = conn
             .query_row("SELECT save_version FROM meta", [], |row| row.get(0))
             .unwrap();
-        assert_eq!(save_version, 7);
+        assert_eq!(save_version, 8);
+    }
+
+    #[test]
+    fn v8_adds_profile_column_to_protagonist() {
+        let conn = open_in_memory().unwrap();
+        conn.execute(
+            "INSERT INTO protagonist (id, name, handedness, archetype, stats, xp, live_state, finance, pitches, contract, injury, profile)
+             VALUES ('proto:1', 'X', '우투', '강속구형', '{}', '{}', '{}', '{}', '[]', '{}', '{}', ?1)",
+            [serde_json::json!({
+                "birth_year": 2010, "birth_month": 3, "birth_day": 15,
+                "height_cm": 178.0, "weight_kg": 70.0, "blood_type": "O",
+                "hometown": "서울", "jersey_number": 18
+            })
+            .to_string()],
+        )
+        .unwrap();
+        let profile: String = conn.query_row("SELECT profile FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+        assert!(profile.contains("\"hometown\":\"서울\""));
     }
 
     #[test]

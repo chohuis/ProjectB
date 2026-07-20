@@ -10,7 +10,7 @@ part 'game.freezed.dart';
 
 // These functions are ignored because they are not marked as `pub`: `with_state_mut`, `with_state`, `world_seed`
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `GameState`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
 
 /// 뉴게임 — [07_주인공_생성](../../../02_기획/07_주인공_생성.md) §1의 7단계
 /// 흐름 중 실제 데이터를 만드는 마지막 단계(스텝 1~6은 Dart 쪽 폼 상태일
@@ -139,6 +139,37 @@ Future<void> setTraining({
   secondaryStat1: secondaryStat1,
   secondaryStat2: secondaryStat2,
   intensity: intensity,
+);
+
+/// 캐릭터 생성 "개인 신체" 페이지 혈액형 드롭다운용 — 순수 상수라 동기.
+List<String> bloodTypeNames() =>
+    RustLib.instance.api.crateApiGameBloodTypeNames();
+
+/// 캐릭터 생성 "개인 신체" 페이지 출신지역 드롭다운용(8권역) — 순수 상수라 동기.
+List<String> hometownRegionNames() =>
+    RustLib.instance.api.crateApiGameHometownRegionNames();
+
+Future<ProtagonistProfileInfo?> getProtagonistProfile() =>
+    RustLib.instance.api.crateApiGameGetProtagonistProfile();
+
+/// 캐릭터 생성 화면이 `newGame` 직후 호출 — `set_training`과 동일하게
+/// `repository::set_protagonist_profile`을 그대로 감싼다.
+Future<void> setProtagonistProfile({
+  required PlatformInt64 birthMonth,
+  required PlatformInt64 birthDay,
+  required double heightCm,
+  required double weightKg,
+  required String bloodType,
+  required String hometown,
+  required PlatformInt64 jerseyNumber,
+}) => RustLib.instance.api.crateApiGameSetProtagonistProfile(
+  birthMonth: birthMonth,
+  birthDay: birthDay,
+  heightCm: heightCm,
+  weightKg: weightKg,
+  bloodType: bloodType,
+  hometown: hometown,
+  jerseyNumber: jerseyNumber,
 );
 
 /// [02_리그](../../../04_UI기획/02_리그.md) 결정5 "전 팀 풀 스카우팅"용 —
@@ -419,6 +450,55 @@ class PendingActionInfo {
           urgency == other.urgency &&
           createdDay == other.createdDay &&
           payloadJson == other.payloadJson;
+}
+
+/// [01_내선수](../../../04_UI기획/01_내선수.md) 상태 탭 등에서 표시할 개인
+/// 신체 정보 — 한 번도 설정 안 했으면(구세이브 포함) `None`.
+class ProtagonistProfileInfo {
+  final PlatformInt64 birthYear;
+  final PlatformInt64 birthMonth;
+  final PlatformInt64 birthDay;
+  final double heightCm;
+  final double weightKg;
+  final String bloodType;
+  final String hometown;
+  final PlatformInt64 jerseyNumber;
+
+  const ProtagonistProfileInfo({
+    required this.birthYear,
+    required this.birthMonth,
+    required this.birthDay,
+    required this.heightCm,
+    required this.weightKg,
+    required this.bloodType,
+    required this.hometown,
+    required this.jerseyNumber,
+  });
+
+  @override
+  int get hashCode =>
+      birthYear.hashCode ^
+      birthMonth.hashCode ^
+      birthDay.hashCode ^
+      heightCm.hashCode ^
+      weightKg.hashCode ^
+      bloodType.hashCode ^
+      hometown.hashCode ^
+      jerseyNumber.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ProtagonistProfileInfo &&
+          runtimeType == other.runtimeType &&
+          birthYear == other.birthYear &&
+          birthMonth == other.birthMonth &&
+          birthDay == other.birthDay &&
+          heightCm == other.heightCm &&
+          weightKg == other.weightKg &&
+          bloodType == other.bloodType &&
+          hometown == other.hometown &&
+          jerseyNumber == other.jerseyNumber;
 }
 
 /// 주인공 상태 — 이름·능력치·라이브상태·계약·부상·보유구종. 유연한

@@ -9,6 +9,12 @@ class GameController extends Notifier<GameState> {
   @override
   GameState build() => const GameState();
 
+  /// 개인 신체 필드(`birthMonth`~`jerseyNumber`)는 전부 주거나 전부
+  /// 생략해야 한다 — 캐릭터 생성 화면의 "개인 신체" 페이지에서만 값이
+  /// 있고, 기존 테스트 호출부는 그 페이지 자체가 없어 전부 생략한다.
+  /// `newGame` 직후·`hasActiveGame` 확정 전에 순서대로 적용되므로, 신체
+  /// 정보 저장이 실패하면 `hasActiveGame`도 안 켜지고 같은 오류 배너로
+  /// 표시된다(별도 에러 경로 불필요).
   Future<void> startNewGame({
     required String contentDbPath,
     required int canonicalSeed,
@@ -17,6 +23,13 @@ class GameController extends Notifier<GameState> {
     required String schoolTeamId,
     required String archetype,
     String? slotPath,
+    int? birthMonth,
+    int? birthDay,
+    double? heightCm,
+    double? weightKg,
+    String? bloodType,
+    String? hometown,
+    int? jerseyNumber,
   }) async {
     state = state.copyWith(busy: true, clearError: true);
     try {
@@ -29,6 +42,23 @@ class GameController extends Notifier<GameState> {
         archetype: archetype,
         slotPath: slotPath,
       );
+      if (birthMonth != null &&
+          birthDay != null &&
+          heightCm != null &&
+          weightKg != null &&
+          bloodType != null &&
+          hometown != null &&
+          jerseyNumber != null) {
+        await setProtagonistProfile(
+          birthMonth: birthMonth,
+          birthDay: birthDay,
+          heightCm: heightCm,
+          weightKg: weightKg,
+          bloodType: bloodType,
+          hometown: hometown,
+          jerseyNumber: jerseyNumber,
+        );
+      }
       await _refresh();
       state = state.copyWith(hasActiveGame: true, busy: false);
     } catch (e) {
