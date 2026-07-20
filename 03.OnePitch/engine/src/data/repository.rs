@@ -136,28 +136,34 @@ fn regular_season_laps(league_id: &str) -> u32 {
 
 /// 한 리그의 정규시즌 일정을 결정적으로 생성해 slot.db `schedule`에 삽입.
 /// 독립리그·전 리그 포스트시즌/전국대회는 스코프 밖(플랜 문서 참고).
+/// `&Connection`(트랜잭션 안 필요) — `season_rollover`가 이미 `advance()`의
+/// 외부 트랜잭션 안에서 호출하므로(§6-36 버그 수정으로 새로 생긴 호출부),
+/// 자체 트랜잭션을 열면 중첩이 돼 충돌한다. `generate_initial_world`(새
+/// 게임, 트랜잭션 밖)에서도 `&mut Connection`을 그대로 넘기면 자동
+/// reborrow돼 문제없다. `season`을 시드에 섞어(§6-36) 시즌마다 대진
+/// 순서가 달라지게 함 — 이전엔 같은 리그면 매 시즌 똑같은 대진표가
+/// 나왔었음(고정 시드).
 pub fn generate_schedule(
-    slot_conn: &mut Connection,
+    slot_conn: &Connection,
     content_conn: &Connection,
     world_seed: i64,
     league_id: &str,
+    season: i64,
     start_day: i64,
 ) -> anyhow::Result<()> {
     let groups = content::load_team_groups_for_schedule(content_conn, league_id)?;
     let laps = regular_season_laps(league_id);
     let league_slug = league_id.strip_prefix("league:").unwrap_or(league_id);
-    let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("schedule:{league_id}")));
+    let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("schedule:{league_id}:{season}")));
 
     let entries = schedule::generate_regular_season(league_slug, &groups, laps, start_day, &mut rng);
 
-    let tx = slot_conn.transaction()?;
     for e in &entries {
-        tx.execute(
+        slot_conn.execute(
             "INSERT INTO schedule (game_id, day, home, away, result) VALUES (?1, ?2, ?3, ?4, NULL)",
             params![e.game_id, e.day, e.home, e.away],
         )?;
     }
-    tx.commit()?;
     Ok(())
 }
 
@@ -171,7 +177,7 @@ pub fn generate_initial_world(slot_conn: &mut Connection, content_conn: &Connect
         generate_league_roster(slot_conn, content_conn, canonical_seed, league_id)?;
     }
     for league_id in SCHEDULED_LEAGUE_IDS {
-        generate_schedule(slot_conn, content_conn, canonical_seed, league_id, 1)?;
+        generate_schedule(slot_conn, content_conn, canonical_seed, league_id, 0, 1)?;
     }
     Ok(())
 }
@@ -909,15 +915,18 @@ pub fn run_independent_season(slot_conn: &Connection, content_conn: &Connection,
 
     slot_conn.execute(
         "INSERT INTO league_transactions (id, day, kind, detail) VALUES (?1, ?2, 'champion', ?3)",
-        params![format!("txn:indep_champion_{world_seed}"), postseason_day, champion],
+        params![format!("txn:indep_champion_{world_seed}_{postseason_day}"), postseason_day, champion],
     )?;
     Ok(champion)
 }
 
 /// 프로 5강 와일드카드 사다리 — 01_프로.md §4. `standings`에 league:pro 팀이
 /// 5개 미만이면(정규시즌이 아직 안 끝났거나 합성 테스트 데이터) None. 챔피언은
-/// `league_transactions`에 기록.
-pub fn run_pro_postseason(slot_conn: &Connection, content_conn: &Connection, world_seed: i64) -> anyhow::Result<Option<String>> {
+/// `league_transactions`에 기록 — id에 `day`를 반드시 섞어야 한다(§6-36에서
+/// 발견한 버그: `world_seed`만 넣었더니 시즌마다 같은 id라 두 번째 시즌부터
+/// UNIQUE 제약 위반으로 `season_rollover` 자체가 죽었음 — 밸런스 하네스로
+/// 실제 여러 시즌을 처음 돌려보고서야 드러남).
+pub fn run_pro_postseason(slot_conn: &Connection, content_conn: &Connection, world_seed: i64, day: i64) -> anyhow::Result<Option<String>> {
     let league_id = "league:pro";
     let pro_ids: std::collections::HashSet<String> =
         content::load_team_ids_for_league(content_conn, league_id)?.into_iter().collect();
@@ -942,8 +951,8 @@ pub fn run_pro_postseason(slot_conn: &Connection, content_conn: &Connection, wor
     let (champion, _) = simulate_series(slot_conn, &mut rng, league_id, &seeds[0], &po_winner, 7)?;
 
     slot_conn.execute(
-        "INSERT INTO league_transactions (id, day, kind, detail) VALUES (?1, 0, 'champion', ?2)",
-        params![format!("txn:pro_champion_{world_seed}"), champion],
+        "INSERT INTO league_transactions (id, day, kind, detail) VALUES (?1, ?2, 'champion', ?3)",
+        params![format!("txn:pro_champion_{world_seed}_{day}"), day, champion],
     )?;
     Ok(Some(champion))
 }
@@ -2145,7 +2154,7 @@ pub fn season_rollover(conn: &Connection, content_conn: &Connection, day: i64) -
     conn.execute("DELETE FROM inbox", [])?;
 
     let world_seed: i64 = conn.query_row("SELECT world_seed FROM meta", [], |row| row.get(0))?;
-    run_pro_postseason(conn, content_conn, world_seed)?;
+    run_pro_postseason(conn, content_conn, world_seed, day)?;
 
     // 방금 끝난 시즌(`current`)의 주인공 통산 집계를 커리어 타임라인에
     // 한 줄 남긴다(05_히스토리_엔딩.md §4 "커리어 타임라인 그래프") —
@@ -2234,6 +2243,14 @@ pub fn season_rollover(conn: &Connection, content_conn: &Connection, day: i64) -
         }
     }
     generate_freshmen(conn, content_conn, world_seed, current + 1)?;
+
+    // 시즌마다 새 정규시즌 일정을 다시 만들어야 한다 — 이 호출이 원래
+    // 없어서(발견된 버그, 10_구현_Phase_계획.md §6-36 — 밸런스 하네스
+    // 첫 실행에서 드러남) 첫 시즌 일정만 생기고 그 뒤로는 영원히 재생성이
+    // 안 돼 시즌 2부터 어떤 경기도(배경 경기도 주인공 경기도) 안 열렸다.
+    for league_id in SCHEDULED_LEAGUE_IDS {
+        generate_schedule(conn, content_conn, world_seed, league_id, current + 1, day + 1)?;
+    }
 
     Ok(())
 }
@@ -3779,9 +3796,14 @@ mod tests {
         let result_raw: Option<String> = slot_conn.query_row("SELECT result FROM schedule WHERE game_id = 'game:1'", [], |r| r.get(0)).unwrap();
         assert!(result_raw.is_some(), "the protagonist's own game should now have a recorded result");
 
-        // no more scheduled games — next advance() runs forward again (bounded by the safety cap).
+        // 시즌 경계(364일)를 넘기면 season_rollover가 다음 시즌 일정을
+        // 다시 만든다(§6-36에서 고친 버그 — 예전엔 이 재생성이 없어서
+        // 시즌 2부터 영원히 경기가 안 열렸다) — 그래서 이 2팀짜리 리그도
+        // 새 시즌에 또 한 번 맞대결이 잡혀야 한다.
         let pending2 = advance(&mut slot_conn, &content_conn).unwrap();
-        assert!(pending2.is_empty());
+        assert_eq!(pending2.len(), 1);
+        assert_eq!(pending2[0].kind, "game");
+        assert!(pending2[0].created_day > 364, "새로 생성된 경기는 다음 시즌(365일 이후)이어야 함");
         assert!(current_day(&slot_conn) > 5);
     }
 
@@ -3909,8 +3931,8 @@ mod tests {
                 .unwrap();
         }
 
-        let mut slot_conn = slot::open_in_memory().unwrap();
-        generate_schedule(&mut slot_conn, &content_conn, 42, "league:univ", 1).unwrap();
+        let slot_conn = slot::open_in_memory().unwrap();
+        generate_schedule(&slot_conn, &content_conn, 42, "league:univ", 0, 1).unwrap();
 
         let count: i64 = slot_conn.query_row("SELECT count(*) FROM schedule", [], |r| r.get(0)).unwrap();
         assert_eq!(count, 6 * 5 / 2); // single round robin, 6 teams -> 15 unique pairs
@@ -4362,7 +4384,7 @@ mod tests {
         content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:p0', 'league:pro', NULL, NULL)", []).unwrap();
 
         let slot_conn = slot::open_in_memory().unwrap();
-        let result = run_pro_postseason(&slot_conn, &content_conn, 1).unwrap();
+        let result = run_pro_postseason(&slot_conn, &content_conn, 1, 364).unwrap();
         assert!(result.is_none(), "fewer than 5 standings rows should skip the postseason");
     }
 
@@ -4391,7 +4413,7 @@ mod tests {
                 .unwrap();
         }
 
-        let champion = run_pro_postseason(&slot_conn, &content_conn, 99).unwrap();
+        let champion = run_pro_postseason(&slot_conn, &content_conn, 99, 364).unwrap();
         assert!(champion.is_some());
         assert!(champion.unwrap().starts_with("team:p"));
 
