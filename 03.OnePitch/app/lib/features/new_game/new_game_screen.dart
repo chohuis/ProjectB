@@ -80,7 +80,7 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
     });
 
     return Scaffold(
-      appBar: AppBar(title: const Text('뉴게임 — 캐릭터 생성')),
+      appBar: AppBar(title: const Text('캐릭터 생성')),
       body: _loading
           ? const LoadingIndicator()
           : _loadError != null
