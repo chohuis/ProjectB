@@ -10,7 +10,10 @@ import 'package:app/shared/content_db.dart';
 import 'package:app/shared/slot_paths.dart';
 import 'package:app/shared/error_banner.dart';
 import 'package:app/shared/loading_indicator.dart';
+import 'package:app/shared/design/colors.dart';
+import 'package:app/shared/design/widgets.dart';
 import 'hs_school_region_map.dart';
+import 'hs_rank_trend_chart.dart';
 
 /// 캐릭터 생성 — [06_캐릭터생성](../../../../04_UI기획/06_캐릭터생성.md) 7단계를
 /// 이번 서브분은 3페이지(개인 신체 → 야구 정보 → 학교 선택)로 압축했다
@@ -23,9 +26,16 @@ import 'hs_school_region_map.dart';
 /// 화면에 안 보인다 — [07_주인공_생성](../../../../02_기획/07_주인공_생성.md)
 /// §3-2 "정보 전부 공개" 원칙(강점·약점을 알고 고르는 전략적 선택)을
 /// 사용자 요청으로 뒤집은 것(대화 2026-07-20). 학교 리스트는 이름+고유
-/// 색+실측 별점만 보이고, 탭하면 상세 다이얼로그(최근 5시즌 순위·우승
-/// 기록·라이벌)가 뜨고 거기서 "확인"을 눌러야 실제로 선택된다(대화
-/// 2026-07-21) — 리스트 한 줄로는 담을 수 없는 정보라 2단계로 분리.
+/// 색+실측 별점만 보이고(권역 안에서 별점 내림차순), 탭하면 상세
+/// 다이얼로그가 뜨고 거기서 "확인"을 눌러야 실제로 선택된다 — 리스트
+/// 한 줄로는 담을 수 없는 정보라 2단계로 분리. 다이얼로그는 기존
+/// 디자인 시스템(`AppPanel`/`KpiTile`)으로 대시보드처럼 구성 —
+/// `HsRankTrendChart`(최근 5시즌 순위 라인차트)·우승기록(최신순 칩)·
+/// 라이벌·예산(KpiTile). "선수단·코칭스태프"는 자리만 예약하고 안내
+/// 문구만 둠 — 실제 로스터는 뉴게임 이후에야 생성되고 감독·코치
+/// 시스템 자체가 아직 없어(I6 이월) 지금 채우면 나중에 걷어낼 가짜
+/// 데이터가 될 뿐이라 `RecordsScreen`의 "미구현 안내" 패턴을 그대로
+/// 따름(대화 2026-07-21).
 class NewGameScreen extends ConsumerStatefulWidget {
   const NewGameScreen({super.key});
 
@@ -387,15 +397,19 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
     }
   }
 
-  List<String> _parseTitles(String json) {
+  /// 최신순 정렬(대화 2026-07-21) — 대시보드는 "최근 성과부터" 훑어보는
+  /// 용도라 최근 5시즌 그래프(오래된→최신)와는 반대 방향이 자연스럽다.
+  List<(int year, String competition, String result)> _parseTitles(String json) {
     try {
       final v = jsonDecode(json);
       if (v is! List) return const [];
-      return v.whereType<Map>().map((m) {
+      final entries = v.whereType<Map>().map((m) {
         final label = m['season']?.toString();
-        final year = label == null ? null : _yearForSeasonLabel(label);
-        return '${year ?? label ?? '?'}년 ${m['competition'] ?? ''} ${m['result'] ?? ''}'.trim();
+        final year = (label == null ? null : _yearForSeasonLabel(label)) ?? 0;
+        return (year, m['competition']?.toString() ?? '', m['result']?.toString() ?? '');
       }).toList();
+      entries.sort((a, b) => b.$1.compareTo(a.$1));
+      return entries;
     } catch (_) {
       return const [];
     }
@@ -433,32 +447,84 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
           ],
         ),
         content: SizedBox(
-          width: 440,
+          width: 460,
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('${t.region} · ${hsStarString(t.stars.toInt())}'),
-                const SizedBox(height: 16),
-                const Text('최근 5시즌 순위', style: TextStyle(fontWeight: FontWeight.bold)),
-                const SizedBox(height: 4),
-                Text(ranks.isEmpty ? '기록 없음' : ranks.map((r) => '${r.$1}년 ${r.$2}위').join(' → ')),
-                const SizedBox(height: 16),
-                const Text('우승 기록', style: TextStyle(fontWeight: FontWeight.bold)),
-                const SizedBox(height: 4),
-                Text(titles.isEmpty ? '없음' : titles.join(', ')),
-                const SizedBox(height: 16),
-                const Text('라이벌', style: TextStyle(fontWeight: FontWeight.bold)),
-                const SizedBox(height: 4),
-                if (rivals.isEmpty)
-                  const Text('없음')
-                else
-                  for (final r in rivals) Text('${r.$2 ?? '?'} — ${r.$1}'),
-                const SizedBox(height: 16),
-                const Text('연간 예산', style: TextStyle(fontWeight: FontWeight.bold)),
-                const SizedBox(height: 4),
-                Text(_formatBudget(t.budget)),
+                Text(t.region, style: const TextStyle(color: AppColors.textSecondary)),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(child: KpiTile(label: '별점', value: hsStarString(t.stars.toInt()))),
+                    const SizedBox(width: 8),
+                    Expanded(child: KpiTile(label: '연간 예산', value: _formatBudget(t.budget))),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                AppPanel(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [const Text('최근 5시즌 순위', style: TextStyle(fontWeight: FontWeight.bold)), const SizedBox(height: 4), HsRankTrendChart(ranks: ranks)],
+                  ),
+                ),
+                const SizedBox(height: 12),
+                AppPanel(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text('우승 기록', style: TextStyle(fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 8),
+                      if (titles.isEmpty)
+                        const Text('없음', style: TextStyle(color: AppColors.textSecondary))
+                      else
+                        Wrap(
+                          spacing: 6,
+                          runSpacing: 6,
+                          children: [
+                            for (final title in titles)
+                              Chip(
+                                avatar: const Icon(Icons.emoji_events, size: 16, color: AppColors.gold),
+                                label: Text('${title.$1}년 ${title.$2} ${title.$3}'),
+                              ),
+                          ],
+                        ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
+                AppPanel(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text('라이벌', style: TextStyle(fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 4),
+                      if (rivals.isEmpty)
+                        const Text('없음', style: TextStyle(color: AppColors.textSecondary))
+                      else
+                        for (final r in rivals) Text('${r.$2 ?? '?'} — ${r.$1}'),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
+                AppPanel(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      Text('선수단 · 코칭스태프', style: TextStyle(fontWeight: FontWeight.bold)),
+                      SizedBox(height: 4),
+                      Text(
+                        '추후 공개 — 실제 선수단은 게임 시작 후 생성되고, 감독·코치 시스템은 아직 준비 중입니다.',
+                        style: TextStyle(color: AppColors.textSecondary),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
