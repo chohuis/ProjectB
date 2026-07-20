@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app/src/rust/api/game.dart';
 import 'package:app/features/game/game_provider.dart';
+import 'package:app/shared/team_names.dart';
+import 'package:app/shared/loading_indicator.dart';
 
 const _leagueLabels = {
   'league:hs': '고교',
@@ -70,7 +72,7 @@ class _LeagueScreenState extends ConsumerState<LeagueScreen> {
       return const Scaffold(body: Center(child: Text('활성 게임이 없습니다.')));
     }
     if (_loading || _selectedTeamId == null) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const Scaffold(body: LoadingIndicator());
     }
 
     return DefaultTabController(
@@ -162,7 +164,7 @@ class _RosterTabState extends State<_RosterTab> {
   @override
   Widget build(BuildContext context) {
     final roster = _roster;
-    if (roster == null) return const Center(child: CircularProgressIndicator());
+    if (roster == null) return const LoadingIndicator();
     if (roster.isEmpty) return const Center(child: Text('로스터가 없습니다.'));
     return ListView.builder(
       itemCount: roster.length,
@@ -227,21 +229,27 @@ class _ScheduleTabState extends State<_ScheduleTab> {
   @override
   Widget build(BuildContext context) {
     final games = _games;
-    if (games == null) return const Center(child: CircularProgressIndicator());
+    if (games == null) return const LoadingIndicator();
     if (games.isEmpty) return const Center(child: Text('일정이 없습니다.'));
     final nextDay = games.map((g) => g.day).where((d) => d > _currentDay).fold<int?>(null, (min, d) => min == null || d < min ? d : min);
-    return ListView.builder(
-      itemCount: games.length,
-      itemBuilder: (context, i) {
-        final g = games[i];
-        final opponent = g.home == widget.teamId ? g.away : g.home;
-        final isNext = g.day == nextDay;
-        final scoreText = _scoreText(g);
-        return ListTile(
-          tileColor: isNext ? Colors.amber.withValues(alpha: 0.15) : null,
-          title: Text('Day ${g.day} — vs $opponent (${g.home == widget.teamId ? '홈' : '원정'})'),
-          subtitle: Text(scoreText),
-          trailing: isNext ? const Text('다음 경기', style: TextStyle(fontWeight: FontWeight.bold)) : null,
+    return Consumer(
+      builder: (context, ref, _) {
+        final names = ref.watch(teamNamesProvider).value ?? const {};
+        return ListView.builder(
+          itemCount: games.length,
+          itemBuilder: (context, i) {
+            final g = games[i];
+            final opponentId = g.home == widget.teamId ? g.away : g.home;
+            final opponent = names[opponentId] ?? opponentId;
+            final isNext = g.day == nextDay;
+            final scoreText = _scoreText(g);
+            return ListTile(
+              tileColor: isNext ? Colors.amber.withValues(alpha: 0.15) : null,
+              title: Text('Day ${g.day} — vs $opponent (${g.home == widget.teamId ? '홈' : '원정'})'),
+              subtitle: Text(scoreText),
+              trailing: isNext ? const Text('다음 경기', style: TextStyle(fontWeight: FontWeight.bold)) : null,
+            );
+          },
         );
       },
     );
@@ -291,16 +299,21 @@ class _StandingsTabState extends State<_StandingsTab> {
   @override
   Widget build(BuildContext context) {
     final rows = _rows;
-    if (rows == null) return const Center(child: CircularProgressIndicator());
-    return ListView.builder(
-      itemCount: rows.length,
-      itemBuilder: (context, i) {
-        final r = rows[i];
-        return ListTile(
-          tileColor: r.teamId == widget.highlightTeamId ? Colors.amber.withValues(alpha: 0.15) : null,
-          leading: Text('${r.rank}'),
-          title: Text(r.teamId),
-          trailing: Text('${r.wins}승 ${r.losses}패 ${r.ties}무'),
+    if (rows == null) return const LoadingIndicator();
+    return Consumer(
+      builder: (context, ref, _) {
+        final names = ref.watch(teamNamesProvider).value ?? const {};
+        return ListView.builder(
+          itemCount: rows.length,
+          itemBuilder: (context, i) {
+            final r = rows[i];
+            return ListTile(
+              tileColor: r.teamId == widget.highlightTeamId ? Colors.amber.withValues(alpha: 0.15) : null,
+              leading: Text('${r.rank}'),
+              title: Text(names[r.teamId] ?? r.teamId),
+              trailing: Text('${r.wins}승 ${r.losses}패 ${r.ties}무'),
+            );
+          },
         );
       },
     );
@@ -347,31 +360,55 @@ class _RivalsTabState extends State<_RivalsTab> {
 
   @override
   Widget build(BuildContext context) {
-    if (!_loaded) return const Center(child: CircularProgressIndicator());
-    final rivalNames = _parseRivals(_rivalsJson);
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        const Text('팀 라이벌', style: TextStyle(fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
-        if (rivalNames.isEmpty) const Text('등록된 라이벌 팀이 없습니다.') else Wrap(spacing: 8, children: rivalNames.map((r) => Chip(label: Text(r))).toList()),
-        const SizedBox(height: 24),
-        const Text(
-          '개인 라이벌(관계도·아크 진행) 시스템은 아직 엔진에 구현되지 않았습니다.\n후속 서브분에서 추가됩니다.',
-          style: TextStyle(color: Colors.grey),
-        ),
-      ],
+    if (!_loaded) return const LoadingIndicator();
+    final rivals = _parseRivals(_rivalsJson);
+    return Consumer(
+      builder: (context, ref, _) {
+        final names = ref.watch(teamNamesProvider).value ?? const {};
+        return ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            const Text('팀 라이벌', style: TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            if (rivals.isEmpty)
+              const Text('등록된 라이벌 팀이 없습니다.')
+            else
+              Wrap(
+                spacing: 8,
+                children: [
+                  for (final r in rivals)
+                    Tooltip(
+                      message: r.description,
+                      child: Chip(label: Text(names[r.withTeamId] ?? r.withTeamId)),
+                    ),
+                ],
+              ),
+            const SizedBox(height: 24),
+            const Text(
+              '개인 라이벌(관계도·아크 진행) 시스템은 아직 엔진에 구현되지 않았습니다.\n후속 서브분에서 추가됩니다.',
+              style: TextStyle(color: Colors.grey),
+            ),
+          ],
+        );
+      },
     );
   }
 
-  List<String> _parseRivals(String? json) {
-    if (json == null) return [];
+  /// `team_history.rivals`는 `[{"description","with"(team_id)}]` 형태
+  /// (`with`는 team_id라 표시하려면 `teamNamesProvider`로 이름을 조회해야
+  /// 함) — 예전엔 이 구조를 그냥 `.toString()`해버려 Dart Map 덤프가
+  /// 그대로 칩에 찍히던 버그가 있었음.
+  List<({String withTeamId, String description})> _parseRivals(String? json) {
+    if (json == null) return const [];
     try {
       final v = jsonDecode(json);
-      if (v is List) return v.map((e) => e.toString()).toList();
-      return [json];
+      if (v is! List) return const [];
+      return v
+          .whereType<Map>()
+          .map((e) => (withTeamId: e['with']?.toString() ?? '?', description: e['description']?.toString() ?? ''))
+          .toList();
     } catch (_) {
-      return [json];
+      return const [];
     }
   }
 }

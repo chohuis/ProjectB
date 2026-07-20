@@ -1,7 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app/src/rust/api/game.dart';
+import 'package:app/shared/team_names.dart';
+import 'package:app/shared/loading_indicator.dart';
 
 /// 기록 허브 — [03_기록](../../../../04_UI기획/03_기록.md) 히스토리 로그
 /// 6종 + 업적 = 7탭. **엔진에 실제 데이터가 있는 3개만 실제로 채운다**:
@@ -95,17 +98,23 @@ class _GameLogTabState extends State<_GameLogTab> {
   @override
   Widget build(BuildContext context) {
     final entries = _entries;
-    if (entries == null) return const Center(child: CircularProgressIndicator());
+    if (entries == null) return const LoadingIndicator();
     if (entries.isEmpty) return const Center(child: Text('아직 등판 기록이 없습니다.'));
-    return ListView.builder(
-      itemCount: entries.length,
-      itemBuilder: (context, i) {
-        final e = entries[i];
-        final detail = _decode(e.detailJson);
-        return ListTile(
-          leading: CircleAvatar(child: Text('${detail['grade'] ?? '?'}')),
-          title: Text('시즌 ${e.season} · vs ${detail['opponent'] ?? '?'}'),
-          subtitle: Text('실점 ${detail['runs_allowed'] ?? '?'}'),
+    return Consumer(
+      builder: (context, ref, _) {
+        final names = ref.watch(teamNamesProvider).value ?? const {};
+        return ListView.builder(
+          itemCount: entries.length,
+          itemBuilder: (context, i) {
+            final e = entries[i];
+            final detail = _decode(e.detailJson);
+            final opponentId = detail['opponent']?.toString();
+            return ListTile(
+              leading: CircleAvatar(child: Text('${detail['grade'] ?? '?'}')),
+              title: Text('시즌 ${e.season} · vs ${opponentId == null ? '?' : (names[opponentId] ?? opponentId)}'),
+              subtitle: Text('실점 ${detail['runs_allowed'] ?? '?'}'),
+            );
+          },
         );
       },
     );
@@ -145,23 +154,34 @@ class _ContractHistoryTabState extends State<_ContractHistoryTab> {
   @override
   Widget build(BuildContext context) {
     final entries = _entries;
-    if (entries == null) return const Center(child: CircularProgressIndicator());
+    if (entries == null) return const LoadingIndicator();
     if (entries.isEmpty) return const Center(child: Text('아직 계약·트레이드 이력이 없습니다.'));
-    return ListView.builder(
-      itemCount: entries.length,
-      itemBuilder: (context, i) {
-        final e = entries[i];
-        final detail = _decode(e.detailJson);
-        return ListTile(title: Text('Day ${e.day} · ${_summary(e.kind, detail)}'));
+    return Consumer(
+      builder: (context, ref, _) {
+        final names = ref.watch(teamNamesProvider).value ?? const {};
+        return ListView.builder(
+          itemCount: entries.length,
+          itemBuilder: (context, i) {
+            final e = entries[i];
+            final detail = _decode(e.detailJson);
+            return ListTile(title: Text('Day ${e.day} · ${_summary(e.kind, detail, names)}'));
+          },
+        );
       },
     );
   }
 
-  String _summary(String kind, Map<String, dynamic> detail) {
-    if (kind == 'trade') return '트레이드: ${detail['from']} → ${detail['to']}';
+  String _name(Map<String, String> names, dynamic teamId) {
+    final id = teamId?.toString();
+    if (id == null) return '?';
+    return names[id] ?? id;
+  }
+
+  String _summary(String kind, Map<String, dynamic> detail, Map<String, String> names) {
+    if (kind == 'trade') return '트레이드: ${_name(names, detail['from'])} → ${_name(names, detail['to'])}';
     final event = detail['event'];
-    if (event == 'release') return '방출: ${detail['team_id']} (연봉 ${detail['salary']})';
-    if (event == 'sign') return '계약 체결: ${detail['team_id']} (연봉 ${detail['salary']}, ${detail['years']}년)';
+    if (event == 'release') return '방출: ${_name(names, detail['team_id'])} (연봉 ${detail['salary']})';
+    if (event == 'sign') return '계약 체결: ${_name(names, detail['team_id'])} (연봉 ${detail['salary']}, ${detail['years']}년)';
     return kind;
   }
 
@@ -199,7 +219,7 @@ class _InjuryHistoryTabState extends State<_InjuryHistoryTab> {
   @override
   Widget build(BuildContext context) {
     final entries = _entries;
-    if (entries == null) return const Center(child: CircularProgressIndicator());
+    if (entries == null) return const LoadingIndicator();
     if (entries.isEmpty) return const Center(child: Text('아직 부상 이력이 없습니다.'));
     return ListView.builder(
       itemCount: entries.length,

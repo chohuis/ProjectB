@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app/src/rust/api/game.dart';
+import 'package:app/shared/team_names.dart';
 import 'game_provider.dart';
 
 /// [07_전환화면](../../../../04_UI기획/07_전환화면.md) §1 FA·재계약 협상
@@ -30,10 +32,15 @@ class ContractNegoView extends StatelessWidget {
         Text(kind == 'FA' ? 'FA 오퍼 비교' : '재계약 제안', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
         const SizedBox(height: 12),
         Expanded(
-          child: ListView(
-            children: [
-              for (final o in offers) _OfferCard(offer: o, action: action, controller: controller),
-            ],
+          child: Consumer(
+            builder: (context, ref, _) {
+              final names = ref.watch(teamNamesProvider).value ?? const {};
+              return ListView(
+                children: [
+                  for (final o in offers) _OfferCard(offer: o, action: action, controller: controller, teamNames: names),
+                ],
+              );
+            },
           ),
         ),
         const SizedBox(height: 8),
@@ -53,10 +60,11 @@ class ContractNegoView extends StatelessWidget {
 }
 
 class _OfferCard extends StatefulWidget {
-  const _OfferCard({required this.offer, required this.action, required this.controller});
+  const _OfferCard({required this.offer, required this.action, required this.controller, required this.teamNames});
   final Map<String, dynamic> offer;
   final PendingActionInfo action;
   final GameController controller;
+  final Map<String, String> teamNames;
 
   @override
   State<_OfferCard> createState() => _OfferCardState();
@@ -69,6 +77,7 @@ class _OfferCardState extends State<_OfferCard> {
   @override
   Widget build(BuildContext context) {
     final teamId = widget.offer['team_id']?.toString() ?? '?';
+    final teamName = widget.teamNames[teamId] ?? teamId;
     final salary = widget.offer['salary']?.toString() ?? '?';
     final years = widget.offer['years']?.toString() ?? '?';
     return Card(
@@ -77,7 +86,7 @@ class _OfferCardState extends State<_OfferCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(teamId, style: const TextStyle(fontWeight: FontWeight.bold)),
+            Text(teamName, style: const TextStyle(fontWeight: FontWeight.bold)),
             Text('연봉 $salary · $years년'),
             const SizedBox(height: 8),
             if (!_countering)

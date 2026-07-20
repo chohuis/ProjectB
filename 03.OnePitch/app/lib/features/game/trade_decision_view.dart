@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app/src/rust/api/game.dart';
+import 'package:app/shared/team_names.dart';
 import 'game_provider.dart';
 
 /// [07_전환화면](../../../../04_UI기획/07_전환화면.md) §2 트레이드 오퍼
@@ -18,37 +20,45 @@ class TradeDecisionView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final payload = _decode(action.payloadJson);
-    final fromTeam = payload['from_team_id']?.toString() ?? '?';
-    final toTeam = payload['to_team_id']?.toString() ?? '?';
+    final fromTeamId = payload['from_team_id']?.toString() ?? '?';
+    final toTeamId = payload['to_team_id']?.toString() ?? '?';
     final kind = payload['kind']?.toString() ?? '';
     final counterpart = payload['counterpart']?.toString();
     final canReject = payload['can_reject'] == true;
 
-    return Center(
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('트레이드 오퍼 — $kind', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-              const SizedBox(height: 8),
-              Text('$fromTeam → $toTeam'),
-              if (counterpart != null) Text('교환 상대: $counterpart'),
-              if (!canReject) const Padding(padding: EdgeInsets.only(top: 8), child: Text('노트레이드 조항이 없어 거부할 수 없습니다.', style: TextStyle(color: Colors.grey))),
-              const SizedBox(height: 16),
-              Wrap(
-                spacing: 8,
+    return Consumer(
+      builder: (context, ref, _) {
+        final names = ref.watch(teamNamesProvider).value ?? const {};
+        final fromTeam = names[fromTeamId] ?? fromTeamId;
+        final toTeam = names[toTeamId] ?? toTeamId;
+        return Center(
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ElevatedButton(onPressed: () => controller.respond(action.id, 'accept'), child: const Text('수락')),
-                  if (canReject) OutlinedButton(onPressed: () => controller.respond(action.id, 'reject'), child: const Text('거부')),
+                  Text('트레이드 오퍼 — $kind', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  const SizedBox(height: 8),
+                  Text('$fromTeam → $toTeam'),
+                  if (counterpart != null) Text('교환 상대: $counterpart'),
+                  if (!canReject)
+                    const Padding(padding: EdgeInsets.only(top: 8), child: Text('노트레이드 조항이 없어 거부할 수 없습니다.', style: TextStyle(color: Colors.grey))),
+                  const SizedBox(height: 16),
+                  Wrap(
+                    spacing: 8,
+                    children: [
+                      ElevatedButton(onPressed: () => controller.respond(action.id, 'accept'), child: const Text('수락')),
+                      if (canReject) OutlinedButton(onPressed: () => controller.respond(action.id, 'reject'), child: const Text('거부')),
+                    ],
+                  ),
                 ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 

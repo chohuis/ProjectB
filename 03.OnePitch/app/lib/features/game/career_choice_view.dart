@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app/src/rust/api/game.dart';
+import 'package:app/shared/team_names.dart';
 import 'game_provider.dart';
 
 /// [07_전환화면](../../../../04_UI기획/07_전환화면.md) §3 진로선택
@@ -56,18 +58,23 @@ class DraftResultView extends StatelessWidget {
     final payload = _decode(action.payloadJson);
     final teamId = payload['team_id']?.toString() ?? '?';
     final salary = payload['salary']?.toString() ?? '?';
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Text('🎉 드래프트 지명!', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-          const SizedBox(height: 8),
-          Text('지명 구단: $teamId'),
-          Text('계약 연봉: $salary'),
-          const SizedBox(height: 16),
-          ElevatedButton(onPressed: () => controller.respond(action.id, '확인'), child: const Text('확인')),
-        ],
-      ),
+    return Consumer(
+      builder: (context, ref, _) {
+        final names = ref.watch(teamNamesProvider).value ?? const {};
+        return Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('🎉 드래프트 지명!', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+              const SizedBox(height: 8),
+              Text('지명 구단: ${names[teamId] ?? teamId}'),
+              Text('계약 연봉: $salary'),
+              const SizedBox(height: 16),
+              ElevatedButton(onPressed: () => controller.respond(action.id, '확인'), child: const Text('확인')),
+            ],
+          ),
+        );
+      },
     );
   }
 

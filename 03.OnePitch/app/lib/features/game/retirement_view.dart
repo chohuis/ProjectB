@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:app/src/rust/api/game.dart';
 import 'game_provider.dart';
+import 'package:app/shared/loading_indicator.dart';
 
 /// [08_은퇴](../../../../04_UI기획/08_은퇴.md) — 은퇴 트리거 3종(자발적/
 /// 노쇠·방출압박/부상강제) 전부 이 화면 하나로 귀결(`retirement`
@@ -66,7 +67,7 @@ class _RetirementViewState extends State<RetirementView> {
   Widget build(BuildContext context) {
     final summary = _summary;
     if (summary == null) {
-      return const Center(child: CircularProgressIndicator());
+      return const LoadingIndicator();
     }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

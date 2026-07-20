@@ -8,6 +8,8 @@ import 'package:app/src/rust/api/game.dart';
 import 'package:app/features/game/game_provider.dart';
 import 'package:app/shared/content_db.dart';
 import 'package:app/shared/slot_paths.dart';
+import 'package:app/shared/error_banner.dart';
+import 'package:app/shared/loading_indicator.dart';
 
 /// 뉴게임 — [06_캐릭터생성](../../../../04_UI기획/06_캐릭터생성.md) 7단계를
 /// 이번 서브분은 하나의 폼으로 압축했다(지역별 학교 브라우징·2구종 선택
@@ -80,7 +82,7 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('뉴게임 — 캐릭터 생성')),
       body: _loading
-          ? const Center(child: CircularProgressIndicator())
+          ? const LoadingIndicator()
           : _loadError != null
           ? Center(child: Text('content.db 로드 실패: $_loadError'))
           : Padding(
@@ -114,7 +116,7 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
                     onChanged: (v) => setState(() => _selectedSchoolId = v),
                   ),
                   const SizedBox(height: 32),
-                  if (gameState.error != null) Text('오류: ${gameState.error}', style: const TextStyle(color: Colors.red)),
+                  if (gameState.error != null) ErrorBanner(message: '오류: ${gameState.error}'),
                   ElevatedButton(
                     onPressed: gameState.busy || _selectedSchoolId == null || _contentDbPath == null
                         ? null

@@ -7,6 +7,8 @@ import 'package:go_router/go_router.dart';
 import 'package:app/features/game/game_provider.dart';
 import 'package:app/shared/content_db.dart';
 import 'package:app/shared/slot_paths.dart';
+import 'package:app/shared/error_banner.dart';
+import 'package:app/shared/loading_indicator.dart';
 import 'package:app/src/rust/api/game.dart';
 
 /// [08_은퇴](../../../04_UI기획/08_은퇴.md) §4-1 "확인 후 메인 메뉴로
@@ -86,38 +88,42 @@ class _MainMenuScreenState extends ConsumerState<MainMenuScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('OnePitch')),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (_error != null) Text('슬롯 목록을 불러오지 못했습니다: $_error', style: const TextStyle(color: Colors.red)),
-                  Text('이어하기', style: Theme.of(context).textTheme.titleMedium),
-                  const SizedBox(height: 8),
-                  Expanded(
-                    child: _slots.isEmpty
-                        ? const Center(child: Text('저장된 세이브가 없습니다.'))
-                        : ListView(
-                            children: [
-                              for (final slot in _slots)
-                                Card(
-                                  child: ListTile(
-                                    title: Text(slot.name),
-                                    subtitle: Text('Day ${slot.currentDay} · 시즌 ${slot.season}${slot.retired ? ' · 은퇴' : ''}'),
-                                    onTap: () => _continueSlot(slot),
-                                    trailing: IconButton(icon: const Icon(Icons.delete_outline), onPressed: () => _deleteSlot(slot)),
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 200),
+        child: _loading
+            ? const LoadingIndicator(key: ValueKey('loading'))
+            : Padding(
+                key: const ValueKey('loaded'),
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (_error != null) ErrorBanner(message: '슬롯 목록을 불러오지 못했습니다: $_error'),
+                    Text('이어하기', style: Theme.of(context).textTheme.titleMedium),
+                    const SizedBox(height: 8),
+                    Expanded(
+                      child: _slots.isEmpty
+                          ? const Center(child: Text('저장된 세이브가 없습니다.'))
+                          : ListView(
+                              children: [
+                                for (final slot in _slots)
+                                  Card(
+                                    child: ListTile(
+                                      title: Text(slot.name),
+                                      subtitle: Text('Day ${slot.currentDay} · 시즌 ${slot.season}${slot.retired ? ' · 은퇴' : ''}'),
+                                      onTap: () => _continueSlot(slot),
+                                      trailing: IconButton(icon: const Icon(Icons.delete_outline), onPressed: () => _deleteSlot(slot)),
+                                    ),
                                   ),
-                                ),
-                            ],
-                          ),
-                  ),
-                  const SizedBox(height: 8),
-                  SizedBox(width: double.infinity, child: ElevatedButton(onPressed: () => context.push('/new-game'), child: const Text('새로 시작'))),
-                ],
+                              ],
+                            ),
+                    ),
+                    const SizedBox(height: 8),
+                    SizedBox(width: double.infinity, child: ElevatedButton(onPressed: () => context.push('/new-game'), child: const Text('새로 시작'))),
+                  ],
+                ),
               ),
-            ),
+      ),
     );
   }
 }

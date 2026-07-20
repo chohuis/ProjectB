@@ -10,6 +10,7 @@ import 'contract_nego_view.dart';
 import 'trade_decision_view.dart';
 import 'retirement_view.dart';
 import 'match_visuals.dart';
+import 'package:app/shared/error_banner.dart';
 
 /// 진행(Continue) + 매치 + 결과요약을 한 화면에 압축한 I7 1차분 최소
 /// 슬라이스. [05_매치](../../../../04_UI기획/05_매치.md)의 다이아몬드·
@@ -49,7 +50,7 @@ class GameScreen extends ConsumerWidget {
           children: [
             _StatusBar(state: state),
             const SizedBox(height: 16),
-            if (state.error != null) Text('오류: ${state.error}', style: const TextStyle(color: Colors.red)),
+            if (state.error != null) ErrorBanner(message: '오류: ${state.error}'),
             Expanded(child: _MainArea(state: state, controller: controller)),
             const SizedBox(height: 8),
             if (state.matchStep == null)
@@ -111,6 +112,9 @@ class _StatusBar extends StatelessWidget {
   }
 }
 
+/// PendingAction·매치 단계가 바뀔 때마다 화면이 순간적으로 뚝 끊겨
+/// 바뀌던 걸 완충 — 내용을 고를 때 같이 정한 `key`(상태 종류별로 다름)
+/// 가 달라지면 `AnimatedSwitcher`가 짧은 크로스페이드로 넘어간다.
 class _MainArea extends StatelessWidget {
   const _MainArea({required this.state, required this.controller});
   final GameState state;
@@ -118,34 +122,43 @@ class _MainArea extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final (key, child) = _content();
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 200),
+      child: KeyedSubtree(key: ValueKey(key), child: child),
+    );
+  }
+
+  (String, Widget) _content() {
     final step = state.matchStep;
     if (step is MatchStepInfo_AwaitingPitch) {
-      return _PitchPicker(state: state, controller: controller, awaiting: step);
+      return ('pitch', _PitchPicker(state: state, controller: controller, awaiting: step));
     }
     if (step is MatchStepInfo_GameOver) {
-      return _GameOverSummary(step: step, controller: controller);
+      return ('gameOver', _GameOverSummary(step: step, controller: controller));
     }
     if (state.pending.isEmpty) {
-      return const Center(child: Text('다음 정지점까지 진행할 준비가 됐습니다.'));
+      return ('idle', const Center(child: Text('다음 정지점까지 진행할 준비가 됐습니다.')));
     }
     final action = state.pending.first;
+    final key = '${action.kind}:${action.id}';
     switch (action.kind) {
       case 'game':
-        return _PregameModePicker(action: action, controller: controller);
+        return (key, _PregameModePicker(action: action, controller: controller));
       case 'injuryTreatment':
-        return InjuryTreatmentView(action: action, controller: controller);
+        return (key, InjuryTreatmentView(action: action, controller: controller));
       case 'careerChoice':
-        return CareerChoiceView(action: action, controller: controller);
+        return (key, CareerChoiceView(action: action, controller: controller));
       case 'draft':
-        return DraftResultView(action: action, controller: controller);
+        return (key, DraftResultView(action: action, controller: controller));
       case 'contractNego':
-        return ContractNegoView(action: action, controller: controller);
+        return (key, ContractNegoView(action: action, controller: controller));
       case 'tradeDecision':
-        return TradeDecisionView(action: action, controller: controller);
+        return (key, TradeDecisionView(action: action, controller: controller));
       case 'retirement':
-        return RetirementView(action: action, controller: controller);
+        return (key, RetirementView(action: action, controller: controller));
       default:
-        return _GenericPendingActionView(action: action, controller: controller);
+        return (key, _GenericPendingActionView(action: action, controller: controller));
     }
   }
 }
