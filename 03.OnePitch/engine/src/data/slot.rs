@@ -143,6 +143,23 @@ fn migration_v6(tx: &Transaction) -> anyhow::Result<()> {
     Ok(())
 }
 
+const V7_DDL: &str = r#"
+ALTER TABLE protagonist ADD COLUMN retired INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE protagonist ADD COLUMN retirement_reason TEXT;
+ALTER TABLE match_session ADD COLUMN strikeouts INTEGER NOT NULL DEFAULT 0;
+"#;
+
+/// I6 10차분(은퇴, 05_히스토리_엔딩.md §3) — `retired`/`retirement_reason`
+/// (`voluntary`|`decline`|`injury`)은 `data::repository::mark_protagonist_retired`
+/// 하나가 세 트리거 전부에서 공통으로 채운다. `match_session.strikeouts`는
+/// 주인공이 던지는 하프이닝에서만 누적되는 카운터 — 경기 종료 시
+/// `game_log`에 통산 기록(ERA·탈삼진) 집계용으로 옮겨 적힌다.
+fn migration_v7(tx: &Transaction) -> anyhow::Result<()> {
+    tx.execute_batch(V7_DDL)?;
+    tx.execute("UPDATE meta SET save_version = 7", [])?;
+    Ok(())
+}
+
 const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 1,
@@ -167,6 +184,10 @@ const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 6,
         up: migration_v6,
+    },
+    Migration {
+        version: 7,
+        up: migration_v7,
     },
 ];
 
@@ -194,7 +215,32 @@ mod tests {
         let save_version: i64 = conn
             .query_row("SELECT save_version FROM meta", [], |row| row.get(0))
             .unwrap();
-        assert_eq!(save_version, 6);
+        assert_eq!(save_version, 7);
+    }
+
+    #[test]
+    fn v7_adds_retirement_columns_to_protagonist_and_strikeouts_to_match_session() {
+        let conn = open_in_memory().unwrap();
+        conn.execute(
+            "INSERT INTO protagonist (id, name, handedness, archetype, stats, xp, live_state, finance, pitches, contract, injury, retired, retirement_reason)
+             VALUES ('proto:1', 'X', '우투', '강속구형', '{}', '{}', '{}', '{}', '[]', '{}', '{}', 1, 'injury')",
+            [],
+        )
+        .unwrap();
+        let (retired, reason): (i64, String) = conn
+            .query_row("SELECT retired, retirement_reason FROM protagonist WHERE id = 'proto:1'", [], |r| Ok((r.get(0)?, r.get(1)?)))
+            .unwrap();
+        assert_eq!(retired, 1);
+        assert_eq!(reason, "injury");
+
+        conn.execute(
+            "INSERT INTO match_session (id, game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases, home_runs, away_runs, home_batter_idx, away_batter_idx, balls, strikes, current_batter_id)
+             VALUES (1, 'game:1', 'team:a', 'team:b', 'league:hs', '자동', 1, 1, 0, '[false,false,false]', 0, 0, 0, 0, 0, 0, NULL)",
+            [],
+        )
+        .unwrap();
+        let strikeouts: i64 = conn.query_row("SELECT strikeouts FROM match_session WHERE id = 1", [], |r| r.get(0)).unwrap();
+        assert_eq!(strikeouts, 0);
     }
 
     #[test]

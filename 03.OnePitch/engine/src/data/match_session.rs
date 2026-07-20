@@ -38,14 +38,15 @@ struct SessionRow {
     strikes: i64,
     current_batter_id: Option<String>,
     pitch_seq: i64,
+    strikeouts: i64,
 }
 
 #[allow(clippy::type_complexity)]
 fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
-    let row: Option<(String, String, String, String, String, i64, i64, i64, String, i64, i64, i64, i64, i64, i64, Option<String>, i64)> = conn
+    let row: Option<(String, String, String, String, String, i64, i64, i64, String, i64, i64, i64, i64, i64, i64, Option<String>, i64, i64)> = conn
         .query_row(
             "SELECT game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases, home_runs, away_runs,
-                    home_batter_idx, away_batter_idx, balls, strikes, current_batter_id, pitch_seq
+                    home_batter_idx, away_batter_idx, balls, strikes, current_batter_id, pitch_seq, strikeouts
              FROM match_session WHERE id = 1",
             [],
             |r| {
@@ -67,6 +68,7 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
                     r.get(14)?,
                     r.get(15)?,
                     r.get(16)?,
+                    r.get(17)?,
                 ))
             },
         )
@@ -89,6 +91,7 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
         strikes,
         current_batter_id,
         pitch_seq,
+        strikeouts,
     )) = row
     else {
         return Ok(None);
@@ -112,13 +115,15 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
         strikes,
         current_batter_id,
         pitch_seq,
+        strikeouts,
     }))
 }
 
 fn save_session(conn: &Connection, s: &SessionRow) -> anyhow::Result<()> {
     conn.execute(
         "UPDATE match_session SET inning = ?1, top_of_inning = ?2, outs = ?3, bases = ?4, home_runs = ?5, away_runs = ?6,
-             home_batter_idx = ?7, away_batter_idx = ?8, balls = ?9, strikes = ?10, current_batter_id = ?11, pitch_seq = ?12
+             home_batter_idx = ?7, away_batter_idx = ?8, balls = ?9, strikes = ?10, current_batter_id = ?11, pitch_seq = ?12,
+             strikeouts = ?13
          WHERE id = 1",
         params![
             s.inning,
@@ -133,6 +138,7 @@ fn save_session(conn: &Connection, s: &SessionRow) -> anyhow::Result<()> {
             s.strikes,
             s.current_batter_id,
             s.pitch_seq,
+            s.strikeouts,
         ],
     )?;
     Ok(())
@@ -275,7 +281,26 @@ fn apply_protagonist_evaluation(slot_conn: &Connection, session: &SessionRow, pr
         .optional()?
         .and_then(|s| s.parse().ok())
         .unwrap_or(0);
-    let detail = serde_json::json!({"grade": grade, "runs_allowed": runs_allowed, "opponent": opponent_team}).to_string();
+    // 승/패/무승부 — 항상 선발완투 placeholder라 팀 최종 득실이 곧 주인공의
+    // 결정(decision)과 같다. 이닝(`innings_pitched`)도 같은 이유로 세션이
+    // 도달한 최종 `inning` 값을 그대로 쓴다(실제 야구의 이닝 소수점 아웃
+    // 카운트는 반영 안 함 — 다른 박스스코어 항목들과 같은 수준의 근사).
+    let decision = if session.home_runs == session.away_runs {
+        "무승부"
+    } else if protagonist_is_home == (session.home_runs > session.away_runs) {
+        "승"
+    } else {
+        "패"
+    };
+    let detail = serde_json::json!({
+        "grade": grade,
+        "runs_allowed": runs_allowed,
+        "opponent": opponent_team,
+        "decision": decision,
+        "strikeouts": session.strikeouts,
+        "innings_pitched": session.inning,
+    })
+    .to_string();
     slot_conn.execute(
         "INSERT INTO game_log (game_id, season, detail) VALUES (?1, ?2, ?3)
          ON CONFLICT(game_id) DO UPDATE SET season = excluded.season, detail = excluded.detail",
@@ -307,8 +332,8 @@ pub fn start_protagonist_match(
 
     slot_conn.execute(
         "INSERT INTO match_session (id, game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases,
-                                     home_runs, away_runs, home_batter_idx, away_batter_idx, balls, strikes, current_batter_id, pitch_seq)
-         VALUES (1, ?1, ?2, ?3, ?4, ?5, 1, 1, 0, '[false,false,false]', 0, 0, 0, 0, 0, 0, NULL, 0)",
+                                     home_runs, away_runs, home_batter_idx, away_batter_idx, balls, strikes, current_batter_id, pitch_seq, strikeouts)
+         VALUES (1, ?1, ?2, ?3, ?4, ?5, 1, 1, 0, '[false,false,false]', 0, 0, 0, 0, 0, 0, NULL, 0, 0)",
         params![game_id, home, away, league_id, mode],
     )?;
 
@@ -463,7 +488,10 @@ fn run_until_decision_point(slot_conn: &Connection, world_seed: i64, mut player_
 
         match outcome {
             pitch::AtBatOutcome::InProgress => {}
-            pitch::AtBatOutcome::Strikeout => apply_pa_outcome(&mut session, batting_team_is_home, PaOutcome::Strikeout),
+            pitch::AtBatOutcome::Strikeout => {
+                session.strikeouts += 1;
+                apply_pa_outcome(&mut session, batting_team_is_home, PaOutcome::Strikeout);
+            }
             pitch::AtBatOutcome::Walk => apply_pa_outcome(&mut session, batting_team_is_home, PaOutcome::Walk),
             pitch::AtBatOutcome::HitByPitch => apply_pa_outcome(&mut session, batting_team_is_home, PaOutcome::HitByPitch),
             pitch::AtBatOutcome::InPlay => {
@@ -583,6 +611,38 @@ mod tests {
         assert_eq!(season, 0);
         let detail: serde_json::Value = serde_json::from_str(&detail_raw).unwrap();
         assert!(crate::sim::eval::GRADES.contains(&detail.get("grade").unwrap().as_str().unwrap()));
+    }
+
+    #[test]
+    fn game_completion_records_strikeouts_innings_and_a_win_loss_decision() {
+        let content_conn = build_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_roster(&slot_conn, "team:home");
+        insert_roster(&slot_conn, "team:away");
+        insert_protagonist(&slot_conn, "team:home");
+        insert_schedule(&slot_conn, "game:1");
+
+        start_protagonist_match(&slot_conn, &content_conn, 1, "game:1", "team:home", "team:away", "자동").unwrap();
+
+        let (home_runs, away_runs): (i64, i64) = {
+            let result_raw: String = slot_conn.query_row("SELECT result FROM schedule WHERE game_id = 'game:1'", [], |r| r.get(0)).unwrap();
+            let v: serde_json::Value = serde_json::from_str(&result_raw).unwrap();
+            (v["home"].as_i64().unwrap(), v["away"].as_i64().unwrap())
+        };
+
+        let detail_raw: String = slot_conn.query_row("SELECT detail FROM game_log WHERE game_id = 'game:1'", [], |r| r.get(0)).unwrap();
+        let detail: serde_json::Value = serde_json::from_str(&detail_raw).unwrap();
+        assert!(detail.get("strikeouts").and_then(|v| v.as_i64()).unwrap() >= 0);
+        assert!(detail.get("innings_pitched").and_then(|v| v.as_i64()).unwrap() >= 1);
+
+        let expected_decision = if home_runs == away_runs {
+            "무승부"
+        } else if home_runs > away_runs {
+            "승" // 주인공은 team:home 소속
+        } else {
+            "패"
+        };
+        assert_eq!(detail.get("decision").and_then(|v| v.as_str()).unwrap(), expected_decision);
     }
 
     #[test]

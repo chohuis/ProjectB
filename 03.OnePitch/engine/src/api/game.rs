@@ -618,6 +618,73 @@ pub fn get_injury_history() -> anyhow::Result<Vec<InjuryLogEntry>> {
     })
 }
 
+/// 자발적 은퇴(§4 진입 3종 중 유일하게 플레이어가 임의 시점에 직접
+/// 호출) — [08_은퇴](../../../04_UI기획/08_은퇴.md) §1. 나머지 두 트리거
+/// (노쇠·부상)는 `advance()` 내부(시즌 경계·부상 판정)에서 엔진이 알아서
+/// 감지해 `retirement` PendingAction을 만든다.
+pub fn declare_retirement() -> anyhow::Result<()> {
+    with_state(|state| {
+        let today: i64 = state.slot_conn.query_row("SELECT current_day FROM meta", [], |r| r.get(0))?;
+        repository::declare_protagonist_retirement(&state.slot_conn, today)
+    })
+}
+
+/// [08_은퇴](../../../04_UI기획/08_은퇴.md) §2 "통산 기록 대시보드" —
+/// **등급 매김 없이 순수 숫자**(05_히스토리_엔딩.md §4 "인생은 점수로
+/// 판정하지 않는다"). "최종 자산"(08_개인_재정)·업적·라이벌전 하이라이트는
+/// 해당 시스템 자체가 아직 엔진에 없어 이번 스코프엔 없음(10_구현_Phase_계획.md
+/// §6-28 스코프 판단 참고).
+#[derive(Debug, Clone)]
+pub struct CareerSummary {
+    pub games: i64,
+    pub wins: i64,
+    pub losses: i64,
+    pub no_decisions: i64,
+    pub strikeouts: i64,
+    pub innings_pitched: i64,
+    pub era: f64,
+    pub retired: bool,
+    pub retirement_reason: Option<String>,
+}
+
+pub fn career_summary() -> anyhow::Result<CareerSummary> {
+    with_state(|state| {
+        let line = repository::aggregate_game_log(&state.slot_conn, None)?;
+        let (retired, retirement_reason): (i64, Option<String>) = state
+            .slot_conn
+            .query_row("SELECT retired, retirement_reason FROM protagonist WHERE id = 'proto:1'", [], |r| Ok((r.get(0)?, r.get(1)?)))?;
+        Ok(CareerSummary {
+            games: line.games,
+            wins: line.wins,
+            losses: line.losses,
+            no_decisions: line.no_decisions,
+            strikeouts: line.strikeouts,
+            innings_pitched: line.innings_pitched,
+            era: line.era(),
+            retired: retired == 1,
+            retirement_reason,
+        })
+    })
+}
+
+/// [08_은퇴](../../../04_UI기획/08_은퇴.md) §2 "커리어 타임라인 그래프" —
+/// `career_history`(시즌별 한 줄, `season_rollover`가 채움)를 그대로
+/// 노출. `line_json`은 `{"games","wins","losses","no_decisions",
+/// "strikeouts","innings_pitched","era"}` 형태.
+#[derive(Debug, Clone)]
+pub struct SeasonLine {
+    pub season: i64,
+    pub line_json: String,
+}
+
+pub fn career_timeline() -> anyhow::Result<Vec<SeasonLine>> {
+    with_state(|state| {
+        let mut stmt = state.slot_conn.prepare("SELECT season, line FROM career_history ORDER BY season")?;
+        let rows: Vec<SeasonLine> = stmt.query_map([], |r| Ok(SeasonLine { season: r.get(0)?, line_json: r.get(1)? }))?.collect::<Result<_, _>>()?;
+        Ok(rows)
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -794,6 +861,57 @@ mod tests {
         assert_eq!(injuries[0].part, "어깨");
         assert_eq!(injuries[0].severity, "경미");
         assert_eq!(injuries[0].day, 5);
+
+        reset_state();
+    }
+
+    #[test]
+    fn career_summary_and_timeline_reflect_declared_retirement() {
+        let _guard = TEST_SERIAL.lock().unwrap();
+        reset_state();
+
+        let hs_team = {
+            let conn = content::open("content.db").unwrap();
+            conn.query_row("SELECT id FROM teams WHERE league_id = 'league:hs' LIMIT 1", [], |r| r.get::<_, String>(0)).unwrap()
+        };
+        new_game("content.db".to_string(), 46, "은퇴테스트".to_string(), "우완".to_string(), hs_team, "제구형".to_string(), None).unwrap();
+
+        let before = career_summary().unwrap();
+        assert!(!before.retired);
+        assert_eq!(before.games, 0);
+        assert!(career_timeline().unwrap().is_empty());
+
+        with_state(|state| {
+            state.slot_conn.execute(
+                "INSERT INTO game_log (game_id, season, detail) VALUES ('game:1', 0, ?1)",
+                [serde_json::json!({"grade": "A", "runs_allowed": 2, "opponent": "team:x", "decision": "승", "strikeouts": 7, "innings_pitched": 9})
+                    .to_string()],
+            )?;
+            state.slot_conn.execute(
+                "INSERT INTO career_history (season, line) VALUES (0, ?1)",
+                [serde_json::json!({"games": 1, "wins": 1, "losses": 0, "no_decisions": 0, "strikeouts": 7, "innings_pitched": 9, "era": 2.0})
+                    .to_string()],
+            )?;
+            Ok(())
+        })
+        .unwrap();
+
+        let mid = career_summary().unwrap();
+        assert_eq!((mid.games, mid.wins, mid.strikeouts), (1, 1, 7));
+
+        declare_retirement().unwrap();
+
+        let after = career_summary().unwrap();
+        assert!(after.retired);
+        assert_eq!(after.retirement_reason.as_deref(), Some("voluntary"));
+
+        let timeline = career_timeline().unwrap();
+        assert_eq!(timeline.len(), 1);
+        assert_eq!(timeline[0].season, 0);
+
+        let pending = get_pending_actions().unwrap();
+        assert_eq!(pending.len(), 1);
+        assert_eq!(pending[0].kind, "retirement");
 
         reset_state();
     }

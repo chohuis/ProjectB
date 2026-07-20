@@ -1390,6 +1390,12 @@ pub fn apply_injury(conn: &Connection, part: &str, severity: &str, day: i64) -> 
     injury["current"]["치료"] = serde_json::Value::Null;
     update_protagonist_injury(conn, &injury)?;
 
+    // 부상으로 인한 강제 은퇴(§3) — 누적 심각도가 재기불가 기준을 넘기면
+    // 치료 선택지 없이 곧장 은퇴로 확정한다.
+    if crate::sim::retirement::is_forced_retirement_from_injury(injury_severity_weight_sum(&injury)) {
+        return mark_protagonist_retired(conn, day, "injury");
+    }
+
     let final_severity = injury["current"]["심각도"].as_str().unwrap_or(severity).to_string();
     let payload = serde_json::json!({"부위": part, "심각도": final_severity, "day": day}).to_string();
     conn.execute(
@@ -1569,6 +1575,100 @@ fn season_avg_grade_score(conn: &Connection, season: i64) -> anyhow::Result<f64>
     Ok(scores.iter().sum::<f64>() / scores.len() as f64)
 }
 
+/// 주인공 은퇴 확정 — [05_히스토리_엔딩](../../../02_기획/05_히스토리_엔딩.md)
+/// §3 세 트리거(`voluntary`|`decline`|`injury`) 전부 이 함수 하나로
+/// 수렴한다. 남은 진행형 협상(`game`/`pitch` 제외 — 진행 중인 매치는
+/// 건드리지 않음)은 은퇴하는 마당에 더 이상 의미가 없어 전부 정리하고,
+/// `retirement` PendingAction 하나로 대체해 UI가 은퇴 화면으로 안내한다.
+fn mark_protagonist_retired(conn: &Connection, day: i64, reason: &str) -> anyhow::Result<()> {
+    conn.execute("UPDATE protagonist SET retired = 1, retirement_reason = ?1 WHERE id = 'proto:1'", params![reason])?;
+    conn.execute("DELETE FROM pending_actions WHERE type NOT IN ('game', 'pitch')", [])?;
+    conn.execute(
+        "INSERT INTO pending_actions (id, type, urgency, created_day, payload) VALUES (?1, 'retirement', 'urgent', ?2, ?3)",
+        params![format!("retirement:{day}"), day, serde_json::json!({"reason": reason}).to_string()],
+    )?;
+    Ok(())
+}
+
+/// 자발적 은퇴(§3 "플레이어가 원하는 시점에 언제든 직접 선택") — 다른 두
+/// 트리거(노쇠·부상)와 달리 시즌 경계가 아니라 플레이어가 임의 시점에
+/// 직접 호출한다. 이미 은퇴한 상태면 멱등하게 무시.
+pub fn declare_protagonist_retirement(conn: &Connection, day: i64) -> anyhow::Result<()> {
+    let retired: Option<i64> = conn.query_row("SELECT retired FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).optional()?;
+    if retired == Some(1) {
+        return Ok(());
+    }
+    mark_protagonist_retired(conn, day, "voluntary")
+}
+
+/// `game_log`를 통산 집계한 결과 — 은퇴 화면 "통산 기록 대시보드"
+/// (05_히스토리_엔딩.md §4)와 커리어 타임라인(시즌별)의 공통 입력.
+/// decision·strikeouts·innings_pitched는 이번 서브분에서 처음 기록되기
+/// 시작한 필드라(구세이브·합성 테스트 game_log 행엔 없을 수 있음) 전부
+/// `unwrap_or` 기본값으로 방어적으로 읽는다.
+pub struct CareerLine {
+    pub games: i64,
+    pub wins: i64,
+    pub losses: i64,
+    pub no_decisions: i64,
+    pub strikeouts: i64,
+    pub innings_pitched: i64,
+    pub runs_allowed: i64,
+}
+
+impl CareerLine {
+    pub fn era(&self) -> f64 {
+        if self.innings_pitched == 0 {
+            0.0
+        } else {
+            self.runs_allowed as f64 * 9.0 / self.innings_pitched as f64
+        }
+    }
+}
+
+pub fn aggregate_game_log(conn: &Connection, season: Option<i64>) -> anyhow::Result<CareerLine> {
+    let details: Vec<String> = match season {
+        Some(s) => {
+            let mut stmt = conn.prepare("SELECT detail FROM game_log WHERE season = ?1")?;
+            let rows = stmt.query_map([s], |r| r.get(0))?.collect::<Result<_, _>>()?;
+            rows
+        }
+        None => {
+            let mut stmt = conn.prepare("SELECT detail FROM game_log")?;
+            let rows = stmt.query_map([], |r| r.get(0))?.collect::<Result<_, _>>()?;
+            rows
+        }
+    };
+
+    let mut line = CareerLine { games: 0, wins: 0, losses: 0, no_decisions: 0, strikeouts: 0, innings_pitched: 0, runs_allowed: 0 };
+    for raw in details {
+        let Ok(v) = serde_json::from_str::<serde_json::Value>(&raw) else { continue };
+        line.games += 1;
+        match v.get("decision").and_then(|d| d.as_str()) {
+            Some("승") => line.wins += 1,
+            Some("패") => line.losses += 1,
+            _ => line.no_decisions += 1,
+        }
+        line.strikeouts += v.get("strikeouts").and_then(|x| x.as_i64()).unwrap_or(0);
+        line.innings_pitched += v.get("innings_pitched").and_then(|x| x.as_i64()).unwrap_or(0);
+        line.runs_allowed += v.get("runs_allowed").and_then(|x| x.as_i64()).unwrap_or(0);
+    }
+    Ok(line)
+}
+
+/// 시즌 경계 은퇴 판정(§3 "노쇠·방출 압박"·"부상으로 인한 강제 은퇴") —
+/// 자발적 은퇴는 `declare_protagonist_retirement`가 별도로 처리한다.
+/// 나이 트래킹이 없는 행(구세이브·합성 테스트)은 노쇠 판정을 스킵 —
+/// `process_protagonist_career_path`(§6-26)와 같은 방어 원칙.
+fn check_decline_retirement(conn: &Connection, rng: &mut ChaCha8Rng, day: i64, age: Option<i64>, avg_grade_score: f64) -> anyhow::Result<bool> {
+    let Some(age) = age else { return Ok(false) };
+    if crate::sim::retirement::is_forced_retirement_from_decline(rng, age, avg_grade_score) {
+        mark_protagonist_retired(conn, day, "decline")?;
+        return Ok(true);
+    }
+    Ok(false)
+}
+
 /// FA 오퍼 — 프로·독립 소속 팀(§1 "적용 범위") 중 `exclude_team`을 뺀
 /// 후보에서 `sim::market::fa_offer_count`개를 랜덤 추첨해 팀별 자원 축으로
 /// 초기 제안액을 계산한다(§3-3 "여러 구단이 오퍼 제시").
@@ -1629,9 +1729,10 @@ fn push_contract_nego(conn: &Connection, day: i64, kind: &str, offers: &[(String
 /// 매 시즌 재도전 기회를 준다 — 그렇지 않으면 한 번 거절한 뒤 영원히
 /// 시장에서 사라지는 막다른 상태가 된다.
 fn process_protagonist_contract(conn: &Connection, content_conn: &Connection, world_seed: i64, season: i64, day: i64) -> anyhow::Result<()> {
-    let row: Option<(String, String)> =
-        conn.query_row("SELECT contract, live_state FROM protagonist WHERE id = 'proto:1'", [], |r| Ok((r.get(0)?, r.get(1)?))).optional()?;
-    let Some((contract_raw, live_state_raw)) = row else {
+    let row: Option<(String, String, Option<i64>)> = conn
+        .query_row("SELECT contract, live_state, age FROM protagonist WHERE id = 'proto:1'", [], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)))
+        .optional()?;
+    let Some((contract_raw, live_state_raw, age)) = row else {
         return Ok(()); // 아직 캐릭터 생성 전
     };
     let mut contract: serde_json::Value = serde_json::from_str(&contract_raw)?;
@@ -1646,6 +1747,12 @@ fn process_protagonist_contract(conn: &Connection, content_conn: &Connection, wo
 
     let Some(team_id) = team_id_opt else {
         if status.as_deref() == Some("FA") {
+            // 노쇠·방출 압박 은퇴(05_히스토리_엔딩.md §3) — FA 오퍼를 다시
+            // 띄우기 직전에 먼저 판정한다: "구단들이 다음 시즌 계약을 안
+            // 해주는 상황"을 오퍼 0개가 아니라 은퇴 트리거로 직접 표현.
+            if check_decline_retirement(conn, &mut rng, day, age, avg_grade_score)? {
+                return Ok(());
+            }
             let offers = build_fa_offers(&mut rng, content_conn, "", salary, avg_grade_score, attention)?;
             push_contract_nego(conn, day, "FA", &offers)?;
         }
@@ -1661,6 +1768,13 @@ fn process_protagonist_contract(conn: &Connection, content_conn: &Connection, wo
         content_conn.query_row("SELECT resource FROM team_traits WHERE team_id = ?1", [&team_id], |r| r.get(0)).optional()?.unwrap_or_default();
 
     if crate::sim::market::is_released(&mut rng, avg_grade_score, salary, &resource) {
+        // 방출당하는 시점에도 노쇠 은퇴를 먼저 판정 — 나이 든 저성과자가
+        // 방출되면 그대로 FA 시장을 떠도는 대신 은퇴로 이어지는 경우가
+        // 서사적으로 자연스럽다(§3 "노쇠·방출 압박").
+        if check_decline_retirement(conn, &mut rng, day, age, avg_grade_score)? {
+            return Ok(());
+        }
+
         contract["team_id"] = serde_json::Value::Null;
         contract["status"] = serde_json::json!("FA");
         conn.execute("UPDATE protagonist SET contract = ?1 WHERE id = 'proto:1'", params![contract.to_string()])?;
@@ -2032,6 +2146,27 @@ pub fn season_rollover(conn: &Connection, content_conn: &Connection, day: i64) -
 
     let world_seed: i64 = conn.query_row("SELECT world_seed FROM meta", [], |row| row.get(0))?;
     run_pro_postseason(conn, content_conn, world_seed)?;
+
+    // 방금 끝난 시즌(`current`)의 주인공 통산 집계를 커리어 타임라인에
+    // 한 줄 남긴다(05_히스토리_엔딩.md §4 "커리어 타임라인 그래프") —
+    // `career_history` 테이블은 I1부터 스키마만 있었고 이번에 처음 채움.
+    let season_line = aggregate_game_log(conn, Some(current))?;
+    let season_line_json = serde_json::json!({
+        "games": season_line.games,
+        "wins": season_line.wins,
+        "losses": season_line.losses,
+        "no_decisions": season_line.no_decisions,
+        "strikeouts": season_line.strikeouts,
+        "innings_pitched": season_line.innings_pitched,
+        "era": season_line.era(),
+    })
+    .to_string();
+    conn.execute(
+        "INSERT INTO career_history (season, line) VALUES (?1, ?2)
+         ON CONFLICT(season) DO UPDATE SET line = excluded.line",
+        params![current, season_line_json],
+    )?;
+
     process_protagonist_contract(conn, content_conn, world_seed, current, day)?;
     process_protagonist_trade(conn, content_conn, world_seed, day)?;
     process_protagonist_military_discharge(conn, content_conn, world_seed, day)?;
@@ -2120,6 +2255,15 @@ const MAX_DAYS_PER_CALL: i64 = 364;
 /// 읽으려면 content.db가 필요해짐.
 pub fn advance(slot_conn: &mut Connection, content_conn: &Connection) -> anyhow::Result<Vec<PendingActionRow>> {
     let world_seed: i64 = slot_conn.query_row("SELECT world_seed FROM meta", [], |row| row.get(0))?;
+
+    // 이미 은퇴한 주인공이면 더 이상 하루도 전진하지 않는다 — 은퇴 화면
+    // 확인 후 Flutter가 메인 메뉴로 나가는 게 정상 흐름(§4-1)이지만, 혹시
+    // advance()가 다시 호출돼도 경기 스케줄·시즌 롤오버가 계속 도는 걸
+    // 막는 방어선.
+    let retired: Option<i64> = slot_conn.query_row("SELECT retired FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).optional()?;
+    if retired == Some(1) {
+        return list_pending_actions(slot_conn);
+    }
 
     for _ in 0..MAX_DAYS_PER_CALL {
         let current_day: i64 = slot_conn.query_row("SELECT current_day FROM meta", [], |row| row.get(0))?;
@@ -2237,6 +2381,10 @@ pub fn resolve_choice(
             resolve_career_choice(slot_conn, content_conn, world_seed, choice_id, today)?;
             None
         }
+        // 은퇴 연출 확인뿐 — 은퇴 자체는 이미 `mark_protagonist_retired`가
+        // 확정해뒀다(§4-1 "확인 후 메인 메뉴로 복귀"는 Flutter의 내비게이션
+        // 관심사). 소비만 하면 됨.
+        "retirement" => None,
         _ => None,
     };
 
@@ -2511,6 +2659,68 @@ mod tests {
     }
 
     #[test]
+    fn apply_injury_forces_retirement_once_accumulated_severity_crosses_the_threshold() {
+        let content_conn = build_hs_school_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        create_protagonist(&slot_conn, &content_conn, 1, "재기불가테스트", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
+        // 과거에 이미 "중상" 부상 이력 1건(weight=8)이 있다고 세팅 —
+        // 이번 두 번째 "중상"(다른 부위)까지 겹치면 임계값(16)을 넘긴다.
+        let seeded = serde_json::json!({"current": null, "history": [{"부위": "어깨", "심각도": "중상", "day": 0}]});
+        slot_conn.execute("UPDATE protagonist SET injury = ?1 WHERE id = 'proto:1'", params![seeded.to_string()]).unwrap();
+
+        apply_injury(&slot_conn, "허리/코어", "중상", 30).unwrap();
+
+        let (retired, reason): (i64, Option<String>) =
+            slot_conn.query_row("SELECT retired, retirement_reason FROM protagonist WHERE id = 'proto:1'", [], |r| Ok((r.get(0)?, r.get(1)?))).unwrap();
+        assert_eq!(retired, 1);
+        assert_eq!(reason.as_deref(), Some("injury"));
+
+        let pending = list_pending_actions(&slot_conn).unwrap();
+        assert_eq!(pending.len(), 1);
+        assert_eq!(pending[0].kind, "retirement");
+        assert!(pending.iter().all(|p| p.kind != "injuryTreatment"), "재기불가 은퇴는 치료 선택지를 만들지 않아야 함");
+    }
+
+    #[test]
+    fn declare_protagonist_retirement_pushes_a_retirement_pending_action_and_clears_others() {
+        let content_conn = build_hs_school_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        create_protagonist(&slot_conn, &content_conn, 1, "자진은퇴", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
+        slot_conn
+            .execute(
+                "INSERT INTO pending_actions (id, type, urgency, created_day, payload) VALUES ('pending:x', 'contractNego', 'urgent', 1, '{}')",
+                [],
+            )
+            .unwrap();
+
+        declare_protagonist_retirement(&slot_conn, 100).unwrap();
+
+        let (retired, reason): (i64, Option<String>) =
+            slot_conn.query_row("SELECT retired, retirement_reason FROM protagonist WHERE id = 'proto:1'", [], |r| Ok((r.get(0)?, r.get(1)?))).unwrap();
+        assert_eq!(retired, 1);
+        assert_eq!(reason.as_deref(), Some("voluntary"));
+
+        let pending = list_pending_actions(&slot_conn).unwrap();
+        assert_eq!(pending.len(), 1);
+        assert_eq!(pending[0].kind, "retirement");
+    }
+
+    #[test]
+    fn declare_protagonist_retirement_is_idempotent() {
+        let content_conn = build_hs_school_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        create_protagonist(&slot_conn, &content_conn, 1, "중복은퇴", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
+
+        declare_protagonist_retirement(&slot_conn, 100).unwrap();
+        declare_protagonist_retirement(&slot_conn, 200).unwrap();
+
+        let reason: Option<String> = slot_conn.query_row("SELECT retirement_reason FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+        assert_eq!(reason.as_deref(), Some("voluntary"), "이미 은퇴한 상태에서 다시 불러도 최초 사유가 유지돼야 함");
+        let pending = list_pending_actions(&slot_conn).unwrap();
+        assert_eq!(pending.len(), 1, "중복 호출이 pending_actions를 추가로 쌓으면 안 됨");
+    }
+
+    #[test]
     fn treat_rejects_unknown_treatment() {
         let content_conn = build_hs_school_content_db();
         let slot_conn = slot::open_in_memory().unwrap();
@@ -2672,6 +2882,16 @@ mod tests {
             .unwrap();
     }
 
+    fn insert_market_protagonist_with_age(slot_conn: &Connection, contract: &serde_json::Value, attention: f64, age: i64) {
+        slot_conn
+            .execute(
+                "INSERT INTO protagonist (id, name, handedness, archetype, stats, xp, live_state, finance, pitches, contract, injury, age)
+                 VALUES ('proto:1', '시장테스트', '우완', '강속구형', '{}', '{}', ?1, '{}', '[\"포심 패스트볼\"]', ?2, '{\"current\":null,\"history\":[]}', ?3)",
+                params![serde_json::json!({"피로도": 0, "주목도": attention}).to_string(), contract.to_string(), age],
+            )
+            .unwrap();
+    }
+
     fn insert_game_log_grades(slot_conn: &Connection, season: i64, grades: &[&str]) {
         for (i, grade) in grades.iter().enumerate() {
             slot_conn
@@ -2686,6 +2906,51 @@ mod tests {
     fn read_contract(conn: &Connection) -> serde_json::Value {
         let raw: String = conn.query_row("SELECT contract FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
         serde_json::from_str(&raw).unwrap()
+    }
+
+    #[test]
+    fn aggregate_game_log_computes_decision_tallies_strikeouts_innings_and_era() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        let insert = |game_id: &str, season: i64, decision: &str, runs_allowed: i64, strikeouts: i64, innings: i64| {
+            slot_conn
+                .execute(
+                    "INSERT INTO game_log (game_id, season, detail) VALUES (?1, ?2, ?3)",
+                    params![
+                        game_id,
+                        season,
+                        serde_json::json!({
+                            "grade": "B", "runs_allowed": runs_allowed, "opponent": "team:x",
+                            "decision": decision, "strikeouts": strikeouts, "innings_pitched": innings,
+                        })
+                        .to_string()
+                    ],
+                )
+                .unwrap();
+        };
+        insert("g1", 0, "승", 2, 8, 9);
+        insert("g2", 0, "패", 5, 3, 9);
+        insert("g3", 1, "무승부", 4, 4, 9);
+
+        let career = aggregate_game_log(&slot_conn, None).unwrap();
+        assert_eq!((career.games, career.wins, career.losses, career.no_decisions), (3, 1, 1, 1));
+        assert_eq!(career.strikeouts, 15);
+        assert_eq!(career.innings_pitched, 27);
+        assert_eq!(career.runs_allowed, 11);
+        assert!((career.era() - 11.0 * 9.0 / 27.0).abs() < 1e-9);
+
+        let season0 = aggregate_game_log(&slot_conn, Some(0)).unwrap();
+        assert_eq!((season0.games, season0.wins, season0.losses), (2, 1, 1));
+    }
+
+    #[test]
+    fn aggregate_game_log_treats_legacy_rows_without_decision_fields_as_no_decisions() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_game_log_grades(&slot_conn, 0, &["S", "F"]); // decision/strikeouts/innings_pitched 없는 구형 shape
+        let career = aggregate_game_log(&slot_conn, None).unwrap();
+        assert_eq!(career.games, 2);
+        assert_eq!(career.no_decisions, 2);
+        assert_eq!(career.strikeouts, 0);
+        assert_eq!(career.innings_pitched, 0);
     }
 
     #[test]
@@ -2725,6 +2990,46 @@ mod tests {
             }
         }
         assert!(triggered, "expected at least one seed to release a poorly-performing, expensive, poor-team player");
+    }
+
+    #[test]
+    fn process_protagonist_contract_can_trigger_decline_retirement_for_an_old_underperforming_fa() {
+        let content_conn = build_market_content_db();
+        let mut triggered = false;
+        for seed in 0..20i64 {
+            let slot_conn = slot::open_in_memory().unwrap();
+            insert_market_protagonist_with_age(&slot_conn, &serde_json::json!({"team_id": null, "status": "FA", "salary": 5000}), 0.0, 50);
+            insert_game_log_grades(&slot_conn, 0, &["F", "F", "F"]);
+
+            process_protagonist_contract(&slot_conn, &content_conn, seed, 0, 364).unwrap();
+
+            let (retired, reason): (i64, Option<String>) =
+                slot_conn.query_row("SELECT retired, retirement_reason FROM protagonist WHERE id = 'proto:1'", [], |r| Ok((r.get(0)?, r.get(1)?))).unwrap();
+            if retired == 1 {
+                assert_eq!(reason.as_deref(), Some("decline"));
+                let pending = list_pending_actions(&slot_conn).unwrap();
+                assert_eq!(pending.len(), 1);
+                assert_eq!(pending[0].kind, "retirement");
+                triggered = true;
+                break;
+            }
+        }
+        assert!(triggered, "expected at least one seed to force decline retirement for a 50-year-old FA with F-grade form");
+    }
+
+    #[test]
+    fn process_protagonist_contract_never_retires_a_young_fa_regardless_of_performance() {
+        let content_conn = build_market_content_db();
+        for seed in 0..10i64 {
+            let slot_conn = slot::open_in_memory().unwrap();
+            insert_market_protagonist_with_age(&slot_conn, &serde_json::json!({"team_id": null, "status": "FA", "salary": 5000}), 0.0, 22);
+            insert_game_log_grades(&slot_conn, 0, &["F", "F", "F"]);
+
+            process_protagonist_contract(&slot_conn, &content_conn, seed, 0, 364).unwrap();
+
+            let retired: i64 = slot_conn.query_row("SELECT retired FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+            assert_eq!(retired, 0, "22세는 위험연령 미만이라 은퇴 판정 자체가 안 일어나야 함");
+        }
     }
 
     #[test]
@@ -3271,6 +3576,21 @@ mod tests {
     }
 
     #[test]
+    fn season_rollover_writes_a_career_history_line_for_the_finished_season() {
+        let content_conn = build_market_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        slot_conn.execute("UPDATE meta SET world_seed = ?1", params![1i64]).unwrap();
+        insert_market_protagonist(&slot_conn, &serde_json::json!({"team_id": "team:hs_a"}), 0.0);
+        insert_game_log_grades(&slot_conn, 0, &["S", "B"]);
+
+        season_rollover(&slot_conn, &content_conn, 364).unwrap();
+
+        let line_raw: String = slot_conn.query_row("SELECT line FROM career_history WHERE season = 0", [], |r| r.get(0)).unwrap();
+        let line: serde_json::Value = serde_json::from_str(&line_raw).unwrap();
+        assert_eq!(line["games"], 2);
+    }
+
+    #[test]
     fn generate_league_roster_inserts_expected_npc_count() {
         let content_conn = build_test_content_db();
         let mut slot_conn = slot::open_in_memory().unwrap();
@@ -3376,6 +3696,49 @@ mod tests {
             .unwrap();
         assert_eq!(season, "1");
         assert!(integrity_sig(&slot_conn).is_some());
+    }
+
+    #[test]
+    fn advance_short_circuits_once_the_protagonist_has_retired() {
+        let mut slot_conn = slot::open_in_memory().unwrap();
+        let content_conn = content::open_in_memory().unwrap();
+        slot_conn
+            .execute(
+                "INSERT INTO protagonist (id, name, handedness, archetype, stats, xp, live_state, finance, pitches, contract, injury, retired, retirement_reason)
+                 VALUES ('proto:1', '은퇴선수', '우투', '강속구형', '{}', '{}', '{}', '{}', '[]', '{}', '{}', 1, 'voluntary')",
+                [],
+            )
+            .unwrap();
+        slot_conn
+            .execute(
+                "INSERT INTO pending_actions (id, type, urgency, created_day, payload) VALUES ('retirement:1', 'retirement', 'urgent', 1, '{}')",
+                [],
+            )
+            .unwrap();
+
+        let pending = advance(&mut slot_conn, &content_conn).unwrap();
+
+        assert_eq!(pending.len(), 1);
+        assert_eq!(pending[0].kind, "retirement");
+        assert_eq!(current_day(&slot_conn), 0, "은퇴 후엔 advance()가 하루도 더 전진하면 안 됨");
+    }
+
+    #[test]
+    fn resolve_choice_retirement_just_dismisses_the_pending_action() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        let content_conn = content::open_in_memory().unwrap();
+        slot_conn
+            .execute(
+                "INSERT INTO pending_actions (id, type, urgency, created_day, payload) VALUES ('retirement:1', 'retirement', 'urgent', 1, '{\"reason\":\"voluntary\"}')",
+                [],
+            )
+            .unwrap();
+
+        let step = resolve_choice(&slot_conn, &content_conn, 1, "retirement:1", "확인").unwrap();
+
+        assert!(step.is_none());
+        let count: i64 = slot_conn.query_row("SELECT count(*) FROM pending_actions", [], |r| r.get(0)).unwrap();
+        assert_eq!(count, 0);
     }
 
     #[test]

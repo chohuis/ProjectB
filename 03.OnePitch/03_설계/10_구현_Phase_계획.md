@@ -1,7 +1,7 @@
 # 구현 Phase 계획 (착수 로드맵 — 새 세션 온보딩 문서)
 
 > 근거: [00_결정_요약](00_결정_요약.md)(전체 결정 인덱스) · [03_구조](03_구조.md) §5-1(엔진 모듈 지도) · [05_밸런스](05_밸런스.md) §3(확정 순서) · [07_데이터관리](07_데이터관리.md) §7(초기구축순서) · [08_P7_체크리스트](08_P7_체크리스트.md)(실측 완료) · [09_개발환경_세팅](09_개발환경_세팅.md) · 대화 설계(2026-07-14)
-> 상태: **I0~I6 완료(I5는 8차분까지, `eval`·`market`은 I6로 재배치, I6는 9차분까지 — 갈림길A 진로 전환 엔진 추가), I7 착수(6차분 완료 — 엔진 api 레이어+뉴게임/진행/매치 최소 화면+내 선수/리그/기록 허브 3개+PendingAction 7종 전용화면 전부 확보)** — 2026-07-16
+> 상태: **I0~I6 완료(I5는 8차분까지, `eval`·`market`은 I6로 재배치, I6는 10차분까지 — 갈림길A 진로 전환 엔진 + 은퇴 엔진 추가), I7 착수(6차분 완료 — 엔진 api 레이어+뉴게임/진행/매치 최소 화면+내 선수/리그/기록 허브 3개+PendingAction 7종 전용화면 전부 확보)** — 2026-07-20
 > 목적: **이 문서 하나만 읽으면 새 대화 세션이 지금 상황을 전부 파악하고 이어서 구현을 진행**할 수 있게 한다. 기획·설계는 100% 끝났고(§1), 지금부터는 코드 작성 단계다.
 
 ## 0. 이 문서를 읽는 새 세션에게
@@ -33,8 +33,8 @@
 | **I3** | 선수 생성 엔진(`sim/roster`) | canonical_seed 기반 결정적 로스터 생성(`generateInitialWorld`) | 새 게임 시작 시 172팀 ~3,700명이 slot.db에 생성, 동일 seed→동일 결과(재현성 테스트) | [07_데이터관리](07_데이터관리.md) §2 · [01_선수_능력치](../02_기획/육성코어/01_선수_능력치.md) | ✅ 완료 (2026-07-15) — 실데이터로 4,410명 생성(2군 포함) 확인, 동일 seed 재현성 확인. 상세는 아래 §6-3 |
 | **I4** | 게임 루프 오케스트레이터(`api/advance`) | 일/주/월/시즌 경계 처리, PendingAction 7종 상태기계 | `advance()` 호출 시 여러 주 진행 후 정지점에서 올바로 멈춤 | [04_게임루프](04_게임루프.md) | ✅ 완료 (2026-07-15) — 오케스트레이터 뼈대(하루단위 루프·정지판정·PendingAction push/resolve·재서명) 구현, 실제 배치 내용은 I5/I6가 채울 훅으로 배선. 상세는 아래 §6-4 |
 | **I5** | 나머지 sim 모듈 | `sim/growth`·`sim/injury`·`sim/eval`·`sim/match`(배경)·`sim/market`·`sim/npc`·`sim/schedule` — [05_밸런스](05_밸런스.md) §3 순서(A→B→C→{D,E,F}→G,H→I)로 구현+가밸런스 적용 | 배경 시뮬만으로 시즌 1개 완주 가능 | [03_구조](03_구조.md) §5-1 · 육성코어 01~09 각 문서 | ✅ **완료**(8차분까지, 2026-07-15) — 1차분(`sim/schedule`+`sim/match`, 정규시즌)+2차분(독립리그+독립/프로 포스트시즌)+3차분(대학·고교 포스트시즌/전국대회)+4차분(`sim/growth` 상승기)+5차분(`sim/injury` 누적형+`sim/growth` 하락기)+6차분(`sim/injury` 급성형, 매치 엔진 확장)+7차분(`sim/npc` 세대교체 — retire+generate_freshmen)+8차분(`sim/npc` 병역 — enlist/discharge). **`sim/eval`·`sim/market`은 리서치 결과 대부분 주인공 전용으로 판명돼 I6로 재배치**(§6-11) — I5가 원래 목표한 "배경 시뮬만으로 시즌 완주"는 이 둘 없이도 이미 충족돼 완료 처리. 상세는 아래 §6-11·§6-12 |
-| **I6** | 주인공 플로우 | 캐릭터 생성([07_주인공_생성](../02_기획/07_주인공_생성.md)), 주인공 등판 매치 세션(`startMatch`/`pitch`) | 캐릭터 생성 후 첫 경기를 실제로 뛸 수 있음(반자동 모드 최소) | [04_UI기획/06_캐릭터생성](../04_UI기획/06_캐릭터생성.md) · [07_매치_엔진](../02_기획/육성코어/07_매치_엔진.md) | ✅ **완료**(3차분에서 핵심 기준 달성, 2026-07-15) — 1차분(`create_protagonist`)+2차분(`sim/pitch` 1구 판정 로직)+3차분(`data/match_session`)+4차분(`sim/eval` 경기단위 S~D 평가, `finalize_game`에 배선 — 사기·주목도·`game_log` 반영)+5차분(`sim/training` 훈련 슬롯 — 능력치 주/보조 슬롯 + 신규 구종 습득)+6차분(부상 치료 선택 — `apply_injury`/`treat`, `injuryTreatment` PendingAction)+7차분(`sim/market` 방출·재계약·FA — `contractNego` PendingAction)+8차분(`sim/market` 트레이드 — `tradeDecision` PendingAction, `sim/market` 전체 완료)+9차분(갈림길 A — 고교 졸업 시 드래프트/대학/독립/입대, `draft`·`careerChoice` PendingAction — I7이 그 4종 전용화면을 만들려면 선행 필요해 재착수). 감독 개입·콜드게임(인터랙티브 경로)·개인 통산 스탯·월/시즌 단위 평가·갈림길 B 전용화면·대학 4년 후 재드래프트는 계속 이월. 상세는 아래 §6-13~§6-20·§6-26 |
-| **I7** | Flutter UI | `04_UI기획/` 00~08 화면 실제 구현(4허브+진행버튼+매치 CustomPainter) | 최소 플레이 가능한 루프가 실제 화면에서 끝까지 동작(뉴게임→진행→경기→시즌종료) | `04_UI기획/` 전체 | 🟨 **착수**(6차분 완료, 2026-07-16) — 1차분(엔진 api 레이어+최소 화면)+2차분(내 선수 허브)+3차분(리그 허브)+4차분(기록 허브)+5차분(`injuryTreatment` 전용화면)+6차분(나머지 전용화면 4종 — `careerChoice`·`draft`·`contractNego`·`tradeDecision`, PendingAction 7종 전부 전용 화면 확보). `메시지함`은 I8 콘텐츠 저작 전제라 보류. 남은 건 매치 CustomPainter 비주얼·세이브 슬롯 영속성·반응형 레이아웃·은퇴 화면. 상세는 아래 §6-21~§6-25·§6-27 |
+| **I6** | 주인공 플로우 | 캐릭터 생성([07_주인공_생성](../02_기획/07_주인공_생성.md)), 주인공 등판 매치 세션(`startMatch`/`pitch`) | 캐릭터 생성 후 첫 경기를 실제로 뛸 수 있음(반자동 모드 최소) | [04_UI기획/06_캐릭터생성](../04_UI기획/06_캐릭터생성.md) · [07_매치_엔진](../02_기획/육성코어/07_매치_엔진.md) | ✅ **완료**(3차분에서 핵심 기준 달성, 2026-07-15) — 1차분(`create_protagonist`)+2차분(`sim/pitch` 1구 판정 로직)+3차분(`data/match_session`)+4차분(`sim/eval` 경기단위 S~D 평가, `finalize_game`에 배선 — 사기·주목도·`game_log` 반영)+5차분(`sim/training` 훈련 슬롯 — 능력치 주/보조 슬롯 + 신규 구종 습득)+6차분(부상 치료 선택 — `apply_injury`/`treat`, `injuryTreatment` PendingAction)+7차분(`sim/market` 방출·재계약·FA — `contractNego` PendingAction)+8차분(`sim/market` 트레이드 — `tradeDecision` PendingAction, `sim/market` 전체 완료)+9차분(갈림길 A — 고교 졸업 시 드래프트/대학/독립/입대, `draft`·`careerChoice` PendingAction — I7이 그 4종 전용화면을 만들려면 선행 필요해 재착수)+10차분(은퇴 — 자발적/노쇠·방출압박/부상강제 3트리거 + 통산 기록 집계, `retirement` PendingAction — I7 은퇴 화면 선행 필요해 재착수). 감독 개입·콜드게임(인터랙티브 경로)·월/시즌 단위 평가·갈림길 B 전용화면·대학 4년 후 재드래프트는 계속 이월. 상세는 아래 §6-13~§6-20·§6-26·§6-29 |
+| **I7** | Flutter UI | `04_UI기획/` 00~08 화면 실제 구현(4허브+진행버튼+매치 CustomPainter) | 최소 플레이 가능한 루프가 실제 화면에서 끝까지 동작(뉴게임→진행→경기→시즌종료) | `04_UI기획/` 전체 | 🟨 **착수**(6차분 완료, 2026-07-16) — 1차분(엔진 api 레이어+최소 화면)+2차분(내 선수 허브)+3차분(리그 허브)+4차분(기록 허브)+5차분(`injuryTreatment` 전용화면)+6차분(나머지 전용화면 4종 — `careerChoice`·`draft`·`contractNego`·`tradeDecision`, PendingAction 7종 전부 전용 화면 확보). `메시지함`은 I8 콘텐츠 저작 전제라 보류. 은퇴 화면 엔진 선행작업(I6 10차분)은 끝났으니 다음은 그 UI(§6-29). 그 외 남은 건 매치 CustomPainter 비주얼·세이브 슬롯 영속성·반응형 레이아웃. 상세는 아래 §6-21~§6-25·§6-27 |
 | **I8** | 콘텐츠 저작 + D그룹 수치화 | 이벤트·캐릭터·업적 등 AI 대량생성→import, 밸런스 시뮬 하네스로 실제 수치 확정 | `content import` 파이프라인 동작, 15~20시즌 시뮬 하네스가 [05_밸런스](05_밸런스.md) §4 통과기준 만족 | [02_데이터](02_데이터.md) §3 · [05_밸런스](05_밸런스.md) §4 | ⬜ 미착수 |
 | **I9** | 통합 검증 · 배포 준비 | 보류됐던 실기기 검증(Android·Steam·Mac/Linux) 실제 진행, 릴리스 빌드, Steam 정식 등록 | P7 체크리스트 §6 열린세부 전부 해소, 스토어 빌드 산출 | [08_P7_체크리스트](08_P7_체크리스트.md) §6 | ⬜ 미착수 |
 
@@ -42,13 +42,12 @@
 
 ## 3. 착수 범위 제안 — 다음 세션이 할 일
 
-**I0~I6 완료, I7은 6차분까지 완료(PendingAction 7종 전부 전용화면 확보, §6-21~§6-25·§6-27).** I7 남은 항목 중 후보:
+**I0~I6 완료(I6는 10차분까지 — 은퇴 엔진 3트리거+통산 기록 집계, §6-29), I7은 6차분까지 완료(PendingAction 7종 전부 전용화면 확보, §6-21~§6-25·§6-27).** 추천 다음 스텝: **은퇴 화면 UI(I7 7차분)** — 엔진 선행작업(§6-29)이 이미 끝났으니 바로 이어서. `flutter_rust_bridge_codegen generate` 재실행(신규 `CareerSummary`·`SeasonLine` 구조체, enum 아님이라 non-blocking) 먼저 필요. 그 외 I7 후보:
 - **매치 CustomPainter 비주얼**([05_매치](../04_UI기획/05_매치.md)) — 지금은 텍스트/버튼뿐인 다이아몬드·존그리드를 실제로 그림.
 - **세이브 슬롯 영속성** — 지금은 슬롯 선택/목록 UI가 없음(엔진 쪽 slot.db는 이미 있음).
 - **반응형 레이아웃** — 지금까지의 화면은 고정 크기 기준으로만 만들어짐.
-- **은퇴 화면** — [04_UI기획](../04_UI기획/) 08번, 아직 손 안 댐.
 
-그 외 계속 이월 중인 것들: I6 잔여(감독 개입·콜드게임 인터랙티브 경로·개인 통산 스탯·월/시즌 단위 평가·갈림길 B 전용 UX 다듬기·대학 4년 후 재드래프트, §6-20·§6-26), I8(콘텐츠 저작+D그룹 밸런스 수치), I9(실기기 검증).
+그 외 계속 이월 중인 것들: I6 잔여(감독 개입·콜드게임 인터랙티브 경로·월/시즌 단위 평가·갈림길 B 전용 UX 다듬기·대학 4년 후 재드래프트, §6-20·§6-26), I8(콘텐츠 저작+D그룹 밸런스 수치), I9(실기기 검증).
 
 세션 시작 시 먼저 사용자에게 **"위 I7 후보 중 어느 걸 먼저 할지, 아니면 I6/I8로 넘어갈지"** 확인할 것 — 이 목록은 기본값이지 강제가 아니다.
 
@@ -587,7 +586,30 @@
 
 **테스트**: `flutter analyze` 클린. `flutter test` 14개 전부 통과(신규 4개, `career_and_market_views_widget_test.dart` 하나에 합성 payload로 4개 화면 전부 — `CareerChoiceView` 3옵션 렌더+응답, `DraftResultView` 지명팀·연봉 렌더, `ContractNegoView` 오퍼 2개 렌더+수락, `TradeDecisionView`가 `can_reject=false`일 때 거부 버튼을 실제로 숨기는지). 엔진 쪽 변경이 없어 `cargo test`는 재실행 불필요(직전 §6-26에서 이미 207개 통과 확인).
 
-### 6-28. 문서 갱신 규칙
+### 6-29. I6 10차분 착수 기록 (2026-07-20, 완료) — 은퇴(자발적/노쇠·방출압박/부상강제) 엔진 + 통산 기록 집계
+
+**스코프**: [08_은퇴](../04_UI기획/08_은퇴.md)·[05_히스토리_엔딩](../02_기획/05_히스토리_엔딩.md) §3(트리거 3종)·§4(구성요소 6종). I7의 다음 후보(매치 CustomPainter·세이브 슬롯 영속성·반응형 레이아웃·은퇴 화면) 중 은퇴 화면을 사용자가 선택 — "루프가 실제로 끝까지 동작"하려면 인생 시뮬의 종료 지점이 있어야 한다는 판단(§6-26 갈림길A 때와 같은 이유로, UI 착수 전 엔진부터 먼저 재착수). I6가 이미 "완료" 처리된 뒤 재오픈하는 것도 §6-26과 동일한 패턴.
+
+**스코프 판단**(사전 조사로 확정, 상세 근거는 코드 주석):
+- **은퇴 트리거 자체가 엔진에 전혀 없었음** — NPC용 `sim::npc::check_retirement`은 있었지만 주인공 전용 3종(자발적/노쇠·방출압박/부상강제)은 미구현. FA 오퍼는 항상 2~4개 확정 생성(`fa_offer_count`)이라 "구단이 아무도 안 데려가는" 상황 자체가 없었고, 부상 심각도는 "중상"이 최고 등급이라 "재기 불가"가 없었음.
+- **통산 기록(ERA·탈삼진 등)도 사실상 기록되고 있지 않았음** — `game_log`엔 등급·실점·상대팀만 있고 승패·탈삼진·이닝이 없어 "통산 ERA" 자체가 계산 불가능한 상태였음(코드 조사로 발견, 최초 스코프 제안보다 더 깊이 들어감). 주인공 등판은 `sim::match_::simulate_game`(배경 경기 전용)이 아니라 `data::match_session`이 인터랙티브하게(1구 단위) 직접 굴리므로, 매치엔진(match_.rs)이 아니라 세션(match_session.rs) 쪽에 탈삼진 카운터·승패 판정을 추가하는 게 정확한 자리 — 배경 NPC 경기는 건드릴 필요가 아예 없었음(스코프가 최초 예상보다 오히려 좁아짐).
+- **최종 자산(08_개인_재정)·업적·라이벌전 하이라이트·국가대표는 이번에도 생략** — 프로젝트 조사로 재확인: `protagonist.finance` 컬럼은 존재하지만 한 번도 안 쓰임, `achievement_progress`·`relationships` 테이블은 스키마만 있고 미채움, 국대 로직 자체가 없음(`npc.rs`에 "감독AI·평가시스템 갖춰질 때까지 보류" 명시). 은퇴 화면 구성요소 6종 중 "통산 기록 대시보드"(등급 없는 순수 숫자)·"커리어 타임라인"(시즌별)만 실제 데이터로 채우고, "하이라이트 모음"·"명예 요소"·"은퇴식 연출"(명성 등급 비례)은 I8 콘텐츠 저작 전제라 이월.
+- **노쇠·방출압박 위험연령(35세)·부상 재기불가 임계값(중상 2회 누적=16)은 [05_밸런스] D그룹 미정 placeholder** — 설계 문서 어디에도 정확한 수치가 없어 다른 D그룹 값들과 같은 방식(코드에 상수+주석으로 근거 남기고 I8 하네스로 재조정 대상 표시)으로 처리.
+
+**구현**:
+- `engine/src/sim/retirement.rs`(신규): `AGING_RETIREMENT_RISK_AGE`(35)·`INJURY_RETIREMENT_WEIGHT_THRESHOLD`(16, `severity_weight` 중상×2)·`decline_retirement_probability`/`is_forced_retirement_from_decline`(나이·성적 기반 확률)·`is_forced_retirement_from_injury`.
+- `engine/src/data/slot.rs`: v7 마이그레이션 — `protagonist.retired`·`retirement_reason`, `match_session.strikeouts`.
+- `engine/src/data/match_session.rs`: 주인공이 던지는 하프이닝에서 탈삼진 발생 시 `session.strikeouts` 누적. `apply_protagonist_evaluation`이 `game_log.detail`에 `decision`(승/패/무승부 — 팀 최종 득실로 판정)·`strikeouts`·`innings_pitched`(세션 최종 inning)를 추가로 기록.
+- `engine/src/data/repository.rs`: `mark_protagonist_retired`(3트리거 공통 종착점 — 남은 협상류 PendingAction 정리 후 `retirement` PendingAction 생성)·`declare_protagonist_retirement`(자발적, 멱등)·`check_decline_retirement`(`process_protagonist_contract`의 FA오퍼 재생성·방출 두 지점에 배선)·`apply_injury`에 부상강제 판정 추가·`aggregate_game_log`/`CareerLine`(통산·시즌별 집계, ERA 계산)·`season_rollover`가 매 시즌 `career_history`에 한 줄 기록(그동안 스키마만 있고 비어있던 테이블을 처음 채움)·`advance()`가 이미 은퇴한 주인공이면 더 진행 안 하는 방어 가드·`resolve_choice`에 `retirement`(확인만) 분기.
+- `engine/src/api/game.rs`: `declare_retirement()`·`career_summary()`(`CareerSummary` — 통산 games/wins/losses/no_decisions/strikeouts/innings_pitched/era + retired/retirement_reason)·`career_timeline()`(`SeasonLine` — `career_history` 그대로 노출).
+
+**테스트**(`cargo test --lib` 225개 전부 통과, 신규 21개: `sim::retirement` 5개(임계값 경계·나이 이하 확률 0·나이/성적에 따른 확률 증가·확률이 0~1 범위·결정적) + `data::slot` 1개(v7 컬럼) + `data::match_session` 1개(탈삼진·이닝·승패 판정) + `data::repository` 12개(노쇠 은퇴 트리거·22세는 트리거 안 됨·부상 재기불가 트리거·자발적 은퇴 생성+멱등 2개·통산 집계 정상/구형 game_log 방어 2개·`season_rollover`가 `career_history` 기록·`advance()` 은퇴 후 정지·`resolve_choice` retirement 소비 등) + `api::game` 1개(새 게임→career_summary/timeline→declare_retirement 흐름 end-to-end) + 기존 함수 시그니처 변경에 따른 조정 없음(전부 순수 추가). `cargo clippy --lib --tests` 클린(기존 무관 경고 1개만).
+
+**수동 검증**(임시 바이너리 `src/bin/verify_retirement.rs`, 커밋 안 함): 실제 시드된 content.db로 3가지 시나리오 확인 — ①새 게임 후 자발적 은퇴 선언 → `career_summary().retired=true`, `retirement_reason="voluntary"`, `retirement` PendingAction 1건. ②50세 FA + F등급 3경기 시드로 `season_rollover`를 30개 시드에 걸쳐 반복 → 노쇠 은퇴가 실제로 트리거되고 `reason="decline"`. ③"중상" 부상 이력 1건 보유 상태에서 다른 부위에 "중상" 재발 → 누적 가중치 16 도달, `reason="injury"`로 즉시 은퇴 확정(치료 PendingAction 없이).
+
+**API 계층 참고**: 이번 서브분은 `api/game.rs`에 새 frb 함수(`declare_retirement`·`career_summary`·`career_timeline`)와 구조체(`CareerSummary`·`SeasonLine`)를 추가했지만 **frb codegen은 아직 재실행하지 않음** — Dart 쪽에서 실제로 이 함수들을 호출하는 건 다음 서브분(I7 7차분, 은퇴 화면 UI)이 할 일이라 그때 `flutter_rust_bridge_codegen generate`를 함께 돌린다(구조체만 추가했으니 §6-22의 "새 enum 타입만 없으면 non-blocking" 조건 충족 예정).
+
+### 6-30. 문서 갱신 규칙
 
 **이 문서는 살아있는 문서다.** Phase를 하나 끝낼 때마다:
 1. §2 표의 해당 행 상태를 `⬜ 미착수` → `🔶 진행중` → `✅ 완료`로 갱신.

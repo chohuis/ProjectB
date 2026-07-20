@@ -7,6 +7,7 @@ pub mod market;
 pub mod npc;
 pub mod pitch;
 pub mod protagonist;
+pub mod retirement;
 pub mod roster;
 pub mod training;
 pub mod schedule;
