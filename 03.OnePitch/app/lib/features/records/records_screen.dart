@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app/src/rust/api/game.dart';
 import 'package:app/shared/team_names.dart';
 import 'package:app/shared/loading_indicator.dart';
+import 'package:app/shared/design/colors.dart';
 
 /// 기록 허브 — [03_기록](../../../../04_UI기획/03_기록.md) 히스토리 로그
 /// 6종 + 업적 = 7탭. **엔진에 실제 데이터가 있는 3개만 실제로 채운다**:
@@ -68,7 +69,7 @@ class _UnimplementedTab extends StatelessWidget {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
-        child: Text(message, textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey)),
+        child: Text(message, textAlign: TextAlign.center, style: const TextStyle(color: AppColors.textSecondary)),
       ),
     );
   }

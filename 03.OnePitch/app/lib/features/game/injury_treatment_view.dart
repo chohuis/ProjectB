@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:app/src/rust/api/game.dart';
+import 'package:app/shared/design/colors.dart';
 import 'game_provider.dart';
 
 /// [07_전환화면](../../../../04_UI기획/07_전환화면.md) §5 부상 치료 선택
@@ -29,28 +30,28 @@ class InjuryTreatmentView extends StatelessWidget {
         children: [
           Text('부상 발생: $part ($severity)', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
           const SizedBox(height: 4),
-          const Text('치료법을 선택하세요 — 선택은 즉시 확정되고, 효과(복귀일)는 회복 기간이 지나야 나타납니다.', style: TextStyle(color: Colors.grey)),
+          const Text('치료법을 선택하세요 — 선택은 즉시 확정되고, 효과(복귀일)는 회복 기간이 지나야 나타납니다.', style: TextStyle(color: AppColors.textSecondary)),
           const SizedBox(height: 16),
           Table(
-            border: TableBorder.all(color: Colors.grey.shade300),
+            border: TableBorder.all(color: AppColors.border),
             columnWidths: const {0: FlexColumnWidth(1.2), 1: FlexColumnWidth(1), 2: FlexColumnWidth(1), 3: FlexColumnWidth(1)},
             children: [
               const TableRow(
-                decoration: BoxDecoration(color: Color(0x11000000)),
+                decoration: BoxDecoration(color: AppColors.surfaceLow),
                 children: [
-                  Padding(padding: EdgeInsets.all(8), child: Text('치료법', style: TextStyle(fontWeight: FontWeight.bold))),
-                  Padding(padding: EdgeInsets.all(8), child: Text('이탈기간', style: TextStyle(fontWeight: FontWeight.bold))),
-                  Padding(padding: EdgeInsets.all(8), child: Text('재발위험', style: TextStyle(fontWeight: FontWeight.bold))),
-                  Padding(padding: EdgeInsets.all(8), child: Text('완치도', style: TextStyle(fontWeight: FontWeight.bold))),
+                  Padding(padding: EdgeInsets.all(8), child: Text('치료법', style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.textPrimary))),
+                  Padding(padding: EdgeInsets.all(8), child: Text('이탈기간', style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.textPrimary))),
+                  Padding(padding: EdgeInsets.all(8), child: Text('재발위험', style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.textPrimary))),
+                  Padding(padding: EdgeInsets.all(8), child: Text('완치도', style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.textPrimary))),
                 ],
               ),
               for (final o in options)
                 TableRow(
                   children: [
-                    Padding(padding: const EdgeInsets.all(8), child: Text(o.name)),
-                    Padding(padding: const EdgeInsets.all(8), child: Text('${o.recoveryDays}일')),
-                    Padding(padding: const EdgeInsets.all(8), child: Text(o.riskLabel)),
-                    Padding(padding: const EdgeInsets.all(8), child: Text(o.recoveryQualityLabel)),
+                    Padding(padding: const EdgeInsets.all(8), child: Text(o.name, style: const TextStyle(color: AppColors.textMuted))),
+                    Padding(padding: const EdgeInsets.all(8), child: Text('${o.recoveryDays}일', style: const TextStyle(color: AppColors.textMuted))),
+                    Padding(padding: const EdgeInsets.all(8), child: Text(o.riskLabel, style: const TextStyle(color: AppColors.textMuted))),
+                    Padding(padding: const EdgeInsets.all(8), child: Text(o.recoveryQualityLabel, style: const TextStyle(color: AppColors.textMuted))),
                   ],
                 ),
             ],

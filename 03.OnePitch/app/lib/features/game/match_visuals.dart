@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:app/shared/design/colors.dart';
+
 /// [05_매치](../../../../04_UI기획/05_매치.md) §2 "상시 경기 상황판" —
 /// 다이아몬드+주자·이닝·스코어·B-S-O를 CustomPainter로 그린다. **"자동"
 /// 모드 도중엔 이 위젯을 못 씀** — 엔진이 자동 모드 전체를 한 번의 호출로
@@ -41,17 +43,17 @@ class MatchScoreboard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('${topOfInning ? '▲' : '▼'} $inning회', style: const TextStyle(fontWeight: FontWeight.bold)),
-              Text('원정 $awayRuns : 홈 $homeRuns'),
+              Text('${topOfInning ? '▲' : '▼'} $inning회', style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+              Text('원정 $awayRuns : 홈 $homeRuns', style: const TextStyle(color: AppColors.textMuted)),
               Row(
                 children: [
-                  Text('B$balls-S$strikes'),
+                  Text('B$balls-S$strikes', style: const TextStyle(color: AppColors.textMuted)),
                   const SizedBox(width: 10),
                   ...List.generate(
                     3,
                     (i) => Padding(
                       padding: const EdgeInsets.only(right: 2),
-                      child: Icon(Icons.circle, size: 10, color: i < outs ? Colors.redAccent : Colors.grey.shade300),
+                      child: Icon(Icons.circle, size: 10, color: i < outs ? AppColors.danger : AppColors.border),
                     ),
                   ),
                 ],
@@ -82,7 +84,7 @@ class _DiamondPainter extends CustomPainter {
     final third = Offset(cx - r, cy);
 
     final linePaint = Paint()
-      ..color = Colors.grey.shade500
+      ..color = AppColors.borderStrong
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
     final path = Path()
@@ -94,13 +96,13 @@ class _DiamondPainter extends CustomPainter {
     canvas.drawPath(path, linePaint);
 
     void drawBase(Offset pos, bool occupied) {
-      canvas.drawCircle(pos, 6, Paint()..color = occupied ? Colors.orangeAccent : Colors.grey.shade300);
+      canvas.drawCircle(pos, 6, Paint()..color = occupied ? AppColors.accent : AppColors.border);
     }
 
     drawBase(first, _occupied(0));
     drawBase(second, _occupied(1));
     drawBase(third, _occupied(2));
-    canvas.drawCircle(home, 4, Paint()..color = Colors.grey.shade600);
+    canvas.drawCircle(home, 4, Paint()..color = AppColors.textSecondary);
   }
 
   @override
@@ -146,7 +148,7 @@ class StrikeZoneGrid extends StatelessWidget {
                   InkWell(
                     onTap: enabled ? () => onSelect(course) : null,
                     child: Center(
-                      child: Text(_labels[course] ?? course, style: const TextStyle(fontSize: 11, color: Colors.black87), textAlign: TextAlign.center),
+                      child: Text(_labels[course] ?? course, style: const TextStyle(fontSize: 11, color: AppColors.textMuted), textAlign: TextAlign.center),
                     ),
                   ),
               ],
@@ -164,13 +166,13 @@ class _ZoneGridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final outer = Paint()
-      ..color = Colors.blueGrey.shade400
+      ..color = AppColors.borderStrong
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.5;
     canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), outer);
 
     final inner = Paint()
-      ..color = Colors.blueGrey.shade200
+      ..color = AppColors.border
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1;
     for (var i = 1; i < 3; i++) {

@@ -16,9 +16,8 @@ class OnePitchApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'OnePitch',
-      theme: onePitchTheme(Brightness.light),
-      darkTheme: onePitchTheme(Brightness.dark),
-      themeMode: ThemeMode.system,
+      theme: onePitchTheme(),
+      themeMode: ThemeMode.dark,
       routerConfig: appRouter,
     );
   }

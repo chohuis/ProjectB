@@ -1,7 +1,7 @@
 # 구현 Phase 계획 (착수 로드맵 — 새 세션 온보딩 문서)
 
 > 근거: [00_결정_요약](00_결정_요약.md)(전체 결정 인덱스) · [03_구조](03_구조.md) §5-1(엔진 모듈 지도) · [05_밸런스](05_밸런스.md) §3(확정 순서) · [07_데이터관리](07_데이터관리.md) §7(초기구축순서) · [08_P7_체크리스트](08_P7_체크리스트.md)(실측 완료) · [09_개발환경_세팅](09_개발환경_세팅.md) · 대화 설계(2026-07-14)
-> 상태: **I0~I6 완료(I5는 8차분까지, `eval`·`market`은 I6로 재배치, I6는 10차분까지 — 갈림길A 진로 전환 엔진 + 은퇴 엔진 추가), I7 착수(12차분 완료 — 엔진 api 레이어+뉴게임/진행/매치 최소 화면+내 선수/리그/기록 허브 3개+PendingAction 8종 전용화면 전부 확보+매치 CustomPainter 비주얼+세이브 슬롯 영속성+반응형 셸+UX 폴리시 층위1+테마), I8 착수(1차분 완료 — 밸런스 시뮬 하네스 + 여러 시즌 최초 실행으로 발견한 엔진 버그 2건 수정)** — 2026-07-20
+> 상태: **I0~I6 완료(I5는 8차분까지, `eval`·`market`은 I6로 재배치, I6는 10차분까지 — 갈림길A 진로 전환 엔진 + 은퇴 엔진 추가), I7 착수(13차분 완료 — 엔진 api 레이어+뉴게임/진행/매치 최소 화면+내 선수/리그/기록 허브 3개+PendingAction 8종 전용화면 전부 확보+매치 CustomPainter 비주얼+세이브 슬롯 영속성+반응형 셸+UX 폴리시 층위1+디자인 시스템 전면 재작업), I8 착수(1차분 완료 — 밸런스 시뮬 하네스 + 여러 시즌 최초 실행으로 발견한 엔진 버그 2건 수정)** — 2026-07-20
 > 목적: **이 문서 하나만 읽으면 새 대화 세션이 지금 상황을 전부 파악하고 이어서 구현을 진행**할 수 있게 한다. 기획·설계는 100% 끝났고(§1), 지금부터는 코드 작성 단계다.
 
 ## 0. 이 문서를 읽는 새 세션에게
@@ -34,7 +34,7 @@
 | **I4** | 게임 루프 오케스트레이터(`api/advance`) | 일/주/월/시즌 경계 처리, PendingAction 7종 상태기계 | `advance()` 호출 시 여러 주 진행 후 정지점에서 올바로 멈춤 | [04_게임루프](04_게임루프.md) | ✅ 완료 (2026-07-15) — 오케스트레이터 뼈대(하루단위 루프·정지판정·PendingAction push/resolve·재서명) 구현, 실제 배치 내용은 I5/I6가 채울 훅으로 배선. 상세는 아래 §6-4 |
 | **I5** | 나머지 sim 모듈 | `sim/growth`·`sim/injury`·`sim/eval`·`sim/match`(배경)·`sim/market`·`sim/npc`·`sim/schedule` — [05_밸런스](05_밸런스.md) §3 순서(A→B→C→{D,E,F}→G,H→I)로 구현+가밸런스 적용 | 배경 시뮬만으로 시즌 1개 완주 가능 | [03_구조](03_구조.md) §5-1 · 육성코어 01~09 각 문서 | ✅ **완료**(8차분까지, 2026-07-15) — 1차분(`sim/schedule`+`sim/match`, 정규시즌)+2차분(독립리그+독립/프로 포스트시즌)+3차분(대학·고교 포스트시즌/전국대회)+4차분(`sim/growth` 상승기)+5차분(`sim/injury` 누적형+`sim/growth` 하락기)+6차분(`sim/injury` 급성형, 매치 엔진 확장)+7차분(`sim/npc` 세대교체 — retire+generate_freshmen)+8차분(`sim/npc` 병역 — enlist/discharge). **`sim/eval`·`sim/market`은 리서치 결과 대부분 주인공 전용으로 판명돼 I6로 재배치**(§6-11) — I5가 원래 목표한 "배경 시뮬만으로 시즌 완주"는 이 둘 없이도 이미 충족돼 완료 처리. 상세는 아래 §6-11·§6-12 |
 | **I6** | 주인공 플로우 | 캐릭터 생성([07_주인공_생성](../02_기획/07_주인공_생성.md)), 주인공 등판 매치 세션(`startMatch`/`pitch`) | 캐릭터 생성 후 첫 경기를 실제로 뛸 수 있음(반자동 모드 최소) | [04_UI기획/06_캐릭터생성](../04_UI기획/06_캐릭터생성.md) · [07_매치_엔진](../02_기획/육성코어/07_매치_엔진.md) | ✅ **완료**(3차분에서 핵심 기준 달성, 2026-07-15) — 1차분(`create_protagonist`)+2차분(`sim/pitch` 1구 판정 로직)+3차분(`data/match_session`)+4차분(`sim/eval` 경기단위 S~D 평가, `finalize_game`에 배선 — 사기·주목도·`game_log` 반영)+5차분(`sim/training` 훈련 슬롯 — 능력치 주/보조 슬롯 + 신규 구종 습득)+6차분(부상 치료 선택 — `apply_injury`/`treat`, `injuryTreatment` PendingAction)+7차분(`sim/market` 방출·재계약·FA — `contractNego` PendingAction)+8차분(`sim/market` 트레이드 — `tradeDecision` PendingAction, `sim/market` 전체 완료)+9차분(갈림길 A — 고교 졸업 시 드래프트/대학/독립/입대, `draft`·`careerChoice` PendingAction — I7이 그 4종 전용화면을 만들려면 선행 필요해 재착수)+10차분(은퇴 — 자발적/노쇠·방출압박/부상강제 3트리거 + 통산 기록 집계, `retirement` PendingAction — I7 은퇴 화면 선행 필요해 재착수). 감독 개입·콜드게임(인터랙티브 경로)·월/시즌 단위 평가·갈림길 B 전용화면·대학 4년 후 재드래프트는 계속 이월. 상세는 아래 §6-13~§6-20·§6-26·§6-29 |
-| **I7** | Flutter UI | `04_UI기획/` 00~08 화면 실제 구현(4허브+진행버튼+매치 CustomPainter) | 최소 플레이 가능한 루프가 실제 화면에서 끝까지 동작(뉴게임→진행→경기→시즌종료) | `04_UI기획/` 전체 | 🟨 **착수**(12차분 완료, 2026-07-20) — 1차분(엔진 api 레이어+최소 화면)+2차분(내 선수 허브)+3차분(리그 허브)+4차분(기록 허브)+5차분(`injuryTreatment` 전용화면)+6차분(나머지 전용화면 4종 — `careerChoice`·`draft`·`contractNego`·`tradeDecision`)+7차분(은퇴 화면 `RetirementView`+자발적 은퇴 트리거 UI, PendingAction 8종 전부 전용 화면 확보)+8차분(매치 CustomPainter 비주얼 — 다이아몬드 상황판+존그리드, 수동·반자동에서만 실제로 뜸)+9차분(세이브 슬롯 영속성 — `MainMenuScreen`+이어하기+삭제, 파일=슬롯 실제 동작)+10차분(반응형 셸 — 사이드/바텀 내비 `AppShell`, Continue 상시노출 세부는 이월)+11차분(사용자 실플레이 피드백 기반 UX 폴리시 층위1 — 팀명 ID 노출 버그 전면 수정+에러 배너+로딩 통일+전환 애니메이션)+12차분(테마 — "그라운드 그린" `ColorScheme.fromSeed`). `메시지함`은 실제 콘텐츠 없이 placeholder만(I8 이후 채움). 남은 건 사실상 콘텐츠 공백(I8)뿐. 상세는 아래 §6-21~§6-25·§6-27·§6-30~§6-35 |
+| **I7** | Flutter UI | `04_UI기획/` 00~08 화면 실제 구현(4허브+진행버튼+매치 CustomPainter) | 최소 플레이 가능한 루프가 실제 화면에서 끝까지 동작(뉴게임→진행→경기→시즌종료) | `04_UI기획/` 전체 | 🟨 **착수**(13차분 완료, 2026-07-20) — 1차분(엔진 api 레이어+최소 화면)+2차분(내 선수 허브)+3차분(리그 허브)+4차분(기록 허브)+5차분(`injuryTreatment` 전용화면)+6차분(나머지 전용화면 4종 — `careerChoice`·`draft`·`contractNego`·`tradeDecision`)+7차분(은퇴 화면 `RetirementView`+자발적 은퇴 트리거 UI, PendingAction 8종 전부 전용 화면 확보)+8차분(매치 CustomPainter 비주얼 — 다이아몬드 상황판+존그리드, 수동·반자동에서만 실제로 뜸)+9차분(세이브 슬롯 영속성 — `MainMenuScreen`+이어하기+삭제, 파일=슬롯 실제 동작)+10차분(반응형 셸 — 사이드/바텀 내비 `AppShell`, Continue 상시노출 세부는 이월)+11차분(사용자 실플레이 피드백 기반 UX 폴리시 층위1 — 팀명 ID 노출 버그 전면 수정+에러 배너+로딩 통일+전환 애니메이션)+12차분("그라운드 그린" 시드 테마, 1차 시도)+13차분(디자인 시스템 전면 재작업 — `02.SvelteElectron` 프로토타입의 다크 네이비 톤을 실제 CSS 값 기반으로 이식, 12차분 대체). `메시지함`은 실제 콘텐츠 없이 placeholder만(I8 이후 채움). 남은 건 사실상 콘텐츠 공백(I8)뿐. 상세는 아래 §6-21~§6-25·§6-27·§6-30~§6-37 |
 | **I8** | 콘텐츠 저작 + D그룹 수치화 | 이벤트·캐릭터·업적 등 AI 대량생성→import, 밸런스 시뮬 하네스로 실제 수치 확정 | `content import` 파이프라인 동작, 15~20시즌 시뮬 하네스가 [05_밸런스](05_밸런스.md) §4 통과기준 만족 | [02_데이터](02_데이터.md) §3 · [05_밸런스](05_밸런스.md) §4 | 🟨 **착수**(1차분 완료, 2026-07-20) — `engine/src/bin/balance_harness.rs`(영구 도구) 구축. 첫 실행에서 "시즌 2부터 일정이 영원히 안 생김"·"두 번째 시즌부터 season_rollover가 UNIQUE 제약 위반으로 패닉" 두 버그를 실제로 여러 시즌 이어 돌려본 것 자체가 처음이라 발견해 수정. 예비 관측(N=1)은 부상 은퇴가 목표(15~20시즌)보다 훨씬 이르게 발생 — 통계적으로 유의미한 대규모 실행(N 수십~수백)은 다음 세션 과제. 콘텐츠 저작(이벤트·업적 등)·`content import` 파이프라인은 아직 미착수. 상세는 아래 §6-36 |
 | **I9** | 통합 검증 · 배포 준비 | 보류됐던 실기기 검증(Android·Steam·Mac/Linux) 실제 진행, 릴리스 빌드, Steam 정식 등록 | P7 체크리스트 §6 열린세부 전부 해소, 스토어 빌드 산출 | [08_P7_체크리스트](08_P7_체크리스트.md) §6 | ⬜ 미착수 — **범위 결정(2026-07-20, 대화 설계)**: 1차로 Android+Steam(PC/Windows 빌드) 검증까지만 진행, Mac/Linux 크로스빌드는 별도 환경이 필요해 추후로 이월 |
 
@@ -732,7 +732,27 @@
 
 **예비 관측**(N=1, 참고용 — 통계적 결론 아님): 훈련 설정 후 한 시행에서 구속 33.9→54.9·제구 23.0→41.0으로 성장은 확인됐으나, **부상 3건 누적 후 2시즌 만에 은퇴**(목표 15~20시즌에 크게 못 미침) — `sim::retirement::INJURY_RETIREMENT_WEIGHT_THRESHOLD`(§6-29, 중상 2회=16)가 너무 낮거나 부상 발생확률(D그룹, 여전히 placeholder)이 너무 높을 가능성. 등급은 26경기 표본에서 S 11.5%·F 다수로 하위등급 편중(§4 "S등급 희소성" 자체는 만족하지만 F 편중은 별도 확인 필요). **N=1이라 신뢰 불가 — 후속 세션에서 N을 훨씬 늘려(수십~수백 회, 시간을 감수하고 백그라운드로) 실제 경향인지 확인 필요.**
 
-### 6-37. 문서 갱신 규칙
+### 6-37. I7 13차분 착수 기록 (2026-07-20, 완료) — 디자인 시스템 전면 재작업(프로토타입 다크 네이비 톤 이식)
+
+**스코프**: §6-35 "그라운드 그린"(`ColorScheme.fromSeed`)이 색만 바꿨을 뿐 Material 3 기본 라운딩+그림자 elevation은 그대로라 "안드로이드 기본 앱" 느낌이 여전하다는 사용자 피드백(대화 2026-07-20) — `02.SvelteElectron`(이 게임의 이전 Svelte+Electron 프로토타입, `프로토타입_분석서.md`의 그 프로토타입)의 실제 CSS를 조사해 다크 네이비 스포츠매니지먼트 톤(Football Manager류)을 Flutter로 이식하기로 확정.
+
+**스코프 판단**:
+- **라이트 테마 폐기, 다크 전용으로 전환** — 참고 대상(프로토타입) 자체가 다크 하나뿐이라 그걸 충실히 옮기는 데 집중. `ThemeMode.system`+라이트/다크 자동 파생 대신 `ThemeMode.dark` 고정. 라이트 테마가 필요해지면 별도 세션에서 새로 설계.
+- **Material 위젯을 갈아엎지 않고 `ThemeData` 컴포넌트 테마로 최대한 흡수** — `Card`/`ElevatedButton`/`NavigationRail`/`NavigationBar`/`Chip`/`TextField`/`Dialog` 등 기존 코드가 쓰는 표준 위젯은 그대로 두고, `cardTheme`·`navigationRailTheme` 등을 프로토타입 값(색상 레이어링+얇은 테두리+작은 라운딩 8~10px, 그림자 0)에 맞춰 전역으로 갈아끼움 — 화면 코드를 거의 안 건드리고도 앱 전체가 한 번에 바뀜.
+- **완전 커스텀이 필요한 자리만 전용 위젯 신설** — `AppPanel`(`.card`/`.action-box` 대응, `Card`의 그림자 모델로는 "그림자 없이 테두리만" 표현이 어려움)·`KpiTile`(`.kpi` 대응, 라벨+큰 숫자 타일)·`AppBadge`(`.badge`류, 아직 실사용처는 없지만 자리만 통일). 지금 당장 전 화면에 다 입히지 않고 **가장 상시 노출되는 자리 하나**(`GameScreen._StatusBar`)만 `KpiTile`로 교체해 패턴을 증명 — 나머지 화면은 전역 테마 상속만으로 우선 커버.
+- **다크 배경에서 눈에 안 띄거나 대비가 깨지는 하드코딩 색 전수 수정** — 조사해보니 `match_visuals.dart`의 존그리드 라벨이 `Colors.black87`(밝은 배경 전제, 다크 배경에서 거의 안 보임)였던 것 등 6개 파일에서 발견 — 전부 `AppColors` 토큰으로 교체.
+
+**구현**:
+- `app/lib/shared/design/colors.dart`(신규): `AppColors` — 프로토타입 `apps/ui/src/styles.css`+각 `.svelte` 컴포넌트 실제 CSS 값에서 추출한 팔레트(배경 레이어 5단계·테두리 2단계·텍스트 3단계·강조 3단계·시맨틱 6종).
+- `app/lib/shared/design/widgets.dart`(신규): `AppPanel`·`AppBadge`·`KpiTile`.
+- `app/lib/shared/theme.dart`(전면 재작성): `ColorScheme.dark(...)`를 시드가 아니라 `AppColors`로 전부 명시 매핑 + `cardTheme`·`navigationRailTheme`·`navigationBarTheme`·`elevatedButtonTheme`·`outlinedButtonTheme`·`textButtonTheme`·`chipTheme`·`inputDecorationTheme`·`dialogTheme`·`tabBarTheme`·`progressIndicatorTheme` 전부 무그림자+얇은 테두리+8~10px 라운딩으로 통일.
+- `app/lib/main.dart`: `theme`만 남기고 `darkTheme`/`ThemeMode.system` 제거, `ThemeMode.dark` 고정.
+- `app/lib/features/game/game_screen.dart`: `_StatusBar`를 `KpiTile` 4개(Day·시즌·피로도·사기) 행으로 교체.
+- 하드코딩 색 수정: `match_visuals.dart`(존그리드 라벨 대비 버그 포함, 다이아몬드·존그리드 라인 색도 팔레트로 통일) · `injury_treatment_view.dart`(치료 비교표) · `trade_decision_view.dart` · `league_screen.dart` · `my_player_screen.dart` · `records_screen.dart` — 전부 `Colors.grey` 등 하드코딩을 `AppColors.textSecondary` 등으로 교체.
+
+**테스트**: `flutter analyze` 클린. `flutter test` 22/22 통과(테마는 시각적 변경이라 위젯 테스트로 색상 자체를 검증하진 못함 — 회귀만 확인). `flutter build windows --debug` 성공. **실제 화면 확인은 사용자가 직접 실행해서 봐야 함**(이 환경은 네이티브 창 스크린샷 불가) — 대비 버그(존그리드 라벨)처럼 코드만 봐서는 못 잡는 문제가 또 있을 수 있어 특히 확인 필요.
+
+### 6-38. 문서 갱신 규칙
 
 **이 문서는 살아있는 문서다.** Phase를 하나 끝낼 때마다:
 1. §2 표의 해당 행 상태를 `⬜ 미착수` → `🔶 진행중` → `✅ 완료`로 갱신.

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app/src/rust/api/game.dart';
 import 'package:app/shared/team_names.dart';
+import 'package:app/shared/design/colors.dart';
 import 'game_provider.dart';
 
 /// [07_전환화면](../../../../04_UI기획/07_전환화면.md) §2 트레이드 오퍼
@@ -44,7 +45,10 @@ class TradeDecisionView extends StatelessWidget {
                   Text('$fromTeam → $toTeam'),
                   if (counterpart != null) Text('교환 상대: $counterpart'),
                   if (!canReject)
-                    const Padding(padding: EdgeInsets.only(top: 8), child: Text('노트레이드 조항이 없어 거부할 수 없습니다.', style: TextStyle(color: Colors.grey))),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 8),
+                      child: Text('노트레이드 조항이 없어 거부할 수 없습니다.', style: TextStyle(color: AppColors.textSecondary)),
+                    ),
                   const SizedBox(height: 16),
                   Wrap(
                     spacing: 8,

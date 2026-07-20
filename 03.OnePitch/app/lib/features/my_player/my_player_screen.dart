@@ -6,6 +6,7 @@ import 'package:app/src/rust/api/game.dart';
 import 'package:app/features/game/game_provider.dart';
 import 'package:app/shared/error_banner.dart';
 import 'package:app/shared/loading_indicator.dart';
+import 'package:app/shared/design/colors.dart';
 
 /// 내 선수 허브 — [01_내선수](../../../../04_UI기획/01_내선수.md) 상태·훈련·
 /// 재정 3탭. 능력치 3분류 그룹핑·색상은 UI 표시 포맷일 뿐(계산·판정 아님
@@ -259,7 +260,7 @@ class _TrainingTabState extends State<_TrainingTab> {
                 .toList(),
           ),
           const SizedBox(height: 8),
-          const Text('구종 슬롯(신규 습득)은 후속 서브분에서 추가됩니다.', style: TextStyle(color: Colors.grey)),
+          const Text('구종 슬롯(신규 습득)은 후속 서브분에서 추가됩니다.', style: TextStyle(color: AppColors.textSecondary)),
           const SizedBox(height: 20),
           if (_error != null) ErrorBanner(message: '오류: $_error'),
           ElevatedButton(

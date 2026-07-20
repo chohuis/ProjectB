@@ -6,6 +6,7 @@ import 'package:app/src/rust/api/game.dart';
 import 'package:app/features/game/game_provider.dart';
 import 'package:app/shared/team_names.dart';
 import 'package:app/shared/loading_indicator.dart';
+import 'package:app/shared/design/colors.dart';
 
 const _leagueLabels = {
   'league:hs': '고교',
@@ -386,7 +387,7 @@ class _RivalsTabState extends State<_RivalsTab> {
             const SizedBox(height: 24),
             const Text(
               '개인 라이벌(관계도·아크 진행) 시스템은 아직 엔진에 구현되지 않았습니다.\n후속 서브분에서 추가됩니다.',
-              style: TextStyle(color: Colors.grey),
+              style: TextStyle(color: AppColors.textSecondary),
             ),
           ],
         );

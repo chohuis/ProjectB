@@ -11,6 +11,7 @@ import 'trade_decision_view.dart';
 import 'retirement_view.dart';
 import 'match_visuals.dart';
 import 'package:app/shared/error_banner.dart';
+import 'package:app/shared/design/widgets.dart';
 
 /// 진행(Continue) + 매치 + 결과요약을 한 화면에 압축한 I7 1차분 최소
 /// 슬라이스. [05_매치](../../../../04_UI기획/05_매치.md)의 다이아몬드·
@@ -84,6 +85,8 @@ Future<void> _confirmRetirement(BuildContext context, GameController controller)
   }
 }
 
+/// 프로토타입 `.kpi-row`(HomeDashboard.svelte) — 라벨+큰 숫자 타일을
+/// 가로로 나열. Day·시즌·피로·사기를 항상 한눈에 보이게.
 class _StatusBar extends StatelessWidget {
   const _StatusBar({required this.state});
   final GameState state;
@@ -91,23 +94,33 @@ class _StatusBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final meta = state.meta;
+    final liveState = _liveState(state.status?.liveStateJson);
+    final fatigue = liveState['피로도'];
+    final morale = liveState['사기'];
+
     return Row(
       children: [
-        if (meta != null) Text('Day ${meta.currentDay} · 시즌 ${meta.season}'),
-        const Spacer(),
-        if (state.status != null) Text(_liveStateSummary(state.status!.liveStateJson)),
+        if (meta != null) ...[
+          Expanded(child: KpiTile(label: 'Day', value: '${meta.currentDay}')),
+          const SizedBox(width: 8),
+          Expanded(child: KpiTile(label: '시즌', value: '${meta.season}')),
+          const SizedBox(width: 8),
+        ],
+        if (fatigue != null) ...[
+          Expanded(child: KpiTile(label: '피로도', value: '$fatigue')),
+          const SizedBox(width: 8),
+        ],
+        if (morale != null) Expanded(child: KpiTile(label: '사기', value: '$morale')),
       ],
     );
   }
 
-  String _liveStateSummary(String json) {
+  Map _liveState(String? json) {
+    if (json == null) return const {};
     try {
-      final v = jsonDecode(json) as Map;
-      final fatigue = v['피로도'];
-      final morale = v['사기'];
-      return [if (fatigue != null) '피로 $fatigue', if (morale != null) '사기 $morale'].join(' · ');
+      return jsonDecode(json) as Map;
     } catch (_) {
-      return '';
+      return const {};
     }
   }
 }
