@@ -413,6 +413,7 @@ pub struct HsSchoolDetail {
     pub season_ranks_json: String,
     pub titles_json: String,
     pub rivals_json: String,
+    pub budget: f64,
 }
 
 fn stars_from_group_position(position_zero_based: usize, group_size: usize) -> i64 {
@@ -437,23 +438,23 @@ fn avg_rank_from_season_ranks(raw: &str) -> f64 {
     values.iter().sum::<f64>() / values.len() as f64
 }
 
-type HsSchoolHistoryRow = (String, Option<String>, Option<String>, Option<String>, Option<String>, Option<String>);
+type HsSchoolHistoryRow = (String, Option<String>, Option<String>, Option<String>, Option<String>, Option<String>, Option<f64>);
 
 pub fn list_hs_school_details(content_db_path: String) -> anyhow::Result<Vec<HsSchoolDetail>> {
     let conn = content::open(&content_db_path)?;
     let mut stmt = conn.prepare(
-        "SELECT teams.id, teams.meta, teams.stadium_id, team_history.season_ranks, team_history.titles, team_history.rivals
+        "SELECT teams.id, teams.meta, teams.stadium_id, team_history.season_ranks, team_history.titles, team_history.rivals, team_history.budget
          FROM teams JOIN team_history ON team_history.team_id = teams.id
          WHERE teams.league_id = 'league:hs'
          ORDER BY teams.id",
     )?;
     let rows: Vec<HsSchoolHistoryRow> =
-        stmt.query_map([], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?, r.get(4)?, r.get(5)?)))?.collect::<Result<_, _>>()?;
+        stmt.query_map([], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?, r.get(4)?, r.get(5)?, r.get(6)?)))?.collect::<Result<_, _>>()?;
     drop(stmt);
 
     // stadium_id(권역)별로 묶어 그룹 내 평균순위 오름차순 위치를 구한다.
     let mut by_group: std::collections::BTreeMap<String, Vec<(usize, f64)>> = std::collections::BTreeMap::new();
-    let avg_ranks: Vec<f64> = rows.iter().map(|(_, _, _, ranks, _, _)| avg_rank_from_season_ranks(ranks.as_deref().unwrap_or("{}"))).collect();
+    let avg_ranks: Vec<f64> = rows.iter().map(|(_, _, _, ranks, ..)| avg_rank_from_season_ranks(ranks.as_deref().unwrap_or("{}"))).collect();
     for (i, (_, _, stadium_id, ..)) in rows.iter().enumerate() {
         let key = stadium_id.clone().unwrap_or_else(|| "ungrouped".to_string());
         by_group.entry(key).or_default().push((i, avg_ranks[i]));
@@ -470,7 +471,7 @@ pub fn list_hs_school_details(content_db_path: String) -> anyhow::Result<Vec<HsS
     let details = rows
         .into_iter()
         .enumerate()
-        .map(|(i, (team_id, meta, _, season_ranks, titles, rivals))| {
+        .map(|(i, (team_id, meta, _, season_ranks, titles, rivals, budget))| {
             let meta_v: serde_json::Value = meta.as_deref().and_then(|m| serde_json::from_str(m).ok()).unwrap_or(serde_json::Value::Null);
             HsSchoolDetail {
                 name: meta_v.get("name").and_then(|x| x.as_str()).unwrap_or(&team_id).to_string(),
@@ -480,6 +481,7 @@ pub fn list_hs_school_details(content_db_path: String) -> anyhow::Result<Vec<HsS
                 season_ranks_json: season_ranks.unwrap_or_else(|| "{}".to_string()),
                 titles_json: titles.unwrap_or_else(|| "[]".to_string()),
                 rivals_json: rivals.unwrap_or_else(|| "[]".to_string()),
+                budget: budget.unwrap_or(0.0),
             }
         })
         .collect();

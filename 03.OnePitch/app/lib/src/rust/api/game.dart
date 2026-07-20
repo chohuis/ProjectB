@@ -327,6 +327,7 @@ class HsSchoolDetail {
   final String seasonRanksJson;
   final String titlesJson;
   final String rivalsJson;
+  final double budget;
 
   const HsSchoolDetail({
     required this.teamId,
@@ -336,6 +337,7 @@ class HsSchoolDetail {
     required this.seasonRanksJson,
     required this.titlesJson,
     required this.rivalsJson,
+    required this.budget,
   });
 
   @override
@@ -346,7 +348,8 @@ class HsSchoolDetail {
       stars.hashCode ^
       seasonRanksJson.hashCode ^
       titlesJson.hashCode ^
-      rivalsJson.hashCode;
+      rivalsJson.hashCode ^
+      budget.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -359,7 +362,8 @@ class HsSchoolDetail {
           stars == other.stars &&
           seasonRanksJson == other.seasonRanksJson &&
           titlesJson == other.titlesJson &&
-          rivalsJson == other.rivalsJson;
+          rivalsJson == other.rivalsJson &&
+          budget == other.budget;
 }
 
 /// [03_기록](../../../04_UI기획/03_기록.md) §1 "부상·재활" 탭 —

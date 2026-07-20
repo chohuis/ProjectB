@@ -99,12 +99,16 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
   }
 
   /// 8권역(§3-1) 순서 그대로 그룹핑 — 순서는 `hometownRegionNames()`와
-  /// 동일한 엔진 상수(`HOMETOWN_REGIONS`)를 그대로 재사용.
+  /// 동일한 엔진 상수(`HOMETOWN_REGIONS`)를 그대로 재사용. 권역 안에서는
+  /// 별점 내림차순(대화 2026-07-21).
   Map<String, List<HsSchoolDetail>> _schoolsByRegion() {
     final grouped = <String, List<HsSchoolDetail>>{};
     for (final t in _schools) {
       final region = hsRegionOf(t.region);
       grouped.putIfAbsent(region, () => []).add(t);
+    }
+    for (final list in grouped.values) {
+      list.sort((a, b) => b.stars.compareTo(a.stars));
     }
     return grouped;
   }
@@ -360,12 +364,23 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
     );
   }
 
-  List<(String season, int rank)> _parseSeasonRanks(String json) {
+  /// "S-n" 시즌 라벨(게임 내부 실제 식별자, 엔진 쪽은 안 건드림) → 실제
+  /// 연표 표시로 변환하는 순수 포맷팅. 2026년을 기준으로 역산(S-1=2025
+  /// ... S-5=2021, 대화 2026-07-21) — 형식이 안 맞으면 원본 라벨 그대로.
+  static const _seasonAnchorYear = 2026;
+
+  int? _yearForSeasonLabel(String label) {
+    final match = RegExp(r'^S-(\d+)$').firstMatch(label);
+    if (match == null) return null;
+    return _seasonAnchorYear - int.parse(match.group(1)!);
+  }
+
+  List<(int year, int rank)> _parseSeasonRanks(String json) {
     try {
       final v = jsonDecode(json);
       if (v is! Map) return const [];
-      final entries = v.entries.map((e) => (e.key as String, (e.value as num).toInt())).toList();
-      entries.sort((a, b) => b.$1.compareTo(a.$1)); // S-5 → S-1(오래된 → 최신)
+      final entries = v.entries.map((e) => (_yearForSeasonLabel(e.key as String) ?? 0, (e.value as num).toInt())).toList();
+      entries.sort((a, b) => a.$1.compareTo(b.$1)); // 오래된 → 최신
       return entries;
     } catch (_) {
       return const [];
@@ -376,14 +391,17 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
     try {
       final v = jsonDecode(json);
       if (v is! List) return const [];
-      return v
-          .whereType<Map>()
-          .map((m) => '${m['season'] ?? '?'} ${m['competition'] ?? ''} ${m['result'] ?? ''}'.trim())
-          .toList();
+      return v.whereType<Map>().map((m) {
+        final label = m['season']?.toString();
+        final year = label == null ? null : _yearForSeasonLabel(label);
+        return '${year ?? label ?? '?'}년 ${m['competition'] ?? ''} ${m['result'] ?? ''}'.trim();
+      }).toList();
     } catch (_) {
       return const [];
     }
   }
+
+  String _formatBudget(double won) => '${(won / 100000000).toStringAsFixed(1)}억원';
 
   List<(String desc, String? rivalName)> _parseRivals(String json) {
     try {
@@ -415,7 +433,7 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
           ],
         ),
         content: SizedBox(
-          width: 360,
+          width: 440,
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -425,7 +443,7 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
                 const SizedBox(height: 16),
                 const Text('최근 5시즌 순위', style: TextStyle(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 4),
-                Text(ranks.isEmpty ? '기록 없음' : ranks.map((r) => '${r.$1} ${r.$2}위').join(' → ')),
+                Text(ranks.isEmpty ? '기록 없음' : ranks.map((r) => '${r.$1}년 ${r.$2}위').join(' → ')),
                 const SizedBox(height: 16),
                 const Text('우승 기록', style: TextStyle(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 4),
@@ -437,6 +455,10 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
                   const Text('없음')
                 else
                   for (final r in rivals) Text('${r.$2 ?? '?'} — ${r.$1}'),
+                const SizedBox(height: 16),
+                const Text('연간 예산', style: TextStyle(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 4),
+                Text(_formatBudget(t.budget)),
               ],
             ),
           ),
