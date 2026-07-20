@@ -10,14 +10,19 @@ import 'package:app/shared/content_db.dart';
 import 'package:app/shared/slot_paths.dart';
 import 'package:app/shared/error_banner.dart';
 import 'package:app/shared/loading_indicator.dart';
+import 'hs_school_region_map.dart';
 
 /// 캐릭터 생성 — [06_캐릭터생성](../../../../04_UI기획/06_캐릭터생성.md) 7단계를
-/// 이번 서브분은 2페이지(개인 신체 → 야구 정보)로 압축했다(지역별 학교
-/// 브라우징·2구종 선택 단계는 그 문서 자체가 "열린 세부 — 아트 단계"로
-/// 이미 미뤄둔 항목이라 뒤로 미룸). 1페이지(개인 신체 — 이름·생일·키·
-/// 몸무게·혈액형·출신지역·등번호)는 시뮬레이션에 쓰이지 않는 순수 표시용
+/// 이번 서브분은 3페이지(개인 신체 → 야구 정보 → 학교 선택)로 압축했다
+/// (2구종 선택 단계는 그 문서 자체가 "열린 세부 — 아트 단계"로 이미
+/// 미뤄둔 항목이라 뒤로 미룸). 1페이지(개인 신체 — 이름·생일·키·몸무게·
+/// 혈액형·출신지역·등번호)는 시뮬레이션에 쓰이지 않는 순수 표시용
 /// 플레이버 데이터(대화 2026-07-20)라 `newGame` 직후 `setProtagonistProfile`
-/// 로 별도 저장된다.
+/// 로 별도 저장된다. 3페이지(학교 선택)는 원래 설계(§1 3~4단계)대로
+/// 지역(8권역) 선택 → 그 지역 학교 목록 2단계로 나뉘며, 팀특성 3슬롯은
+/// 화면에 안 보인다 — [07_주인공_생성](../../../../02_기획/07_주인공_생성.md)
+/// §3-2 "정보 전부 공개" 원칙(강점·약점을 알고 고르는 전략적 선택)을
+/// 사용자 요청으로 이번 서브분부터 뒤집은 것(대화 2026-07-20).
 class NewGameScreen extends ConsumerStatefulWidget {
   const NewGameScreen({super.key});
 
@@ -43,8 +48,11 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
   // 야구 정보
   String _handedness = '우완';
   String _archetype = '강속구형';
+
+  // 학교 선택(지역 → 학교)
   String? _contentDbPath;
   List<TeamOption> _schools = [];
+  String? _selectedRegion;
   String? _selectedSchoolId;
   bool _loading = true;
   String? _loadError;
@@ -77,7 +85,6 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
       setState(() {
         _contentDbPath = path;
         _schools = schools;
-        _selectedSchoolId = schools.isNotEmpty ? schools.first.teamId : null;
         _loading = false;
       });
     } catch (e) {
@@ -88,14 +95,34 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
     }
   }
 
-  String _schoolLabel(TeamOption t) {
+  String? _cityOf(TeamOption t) {
+    try {
+      final meta = jsonDecode(t.metaJson);
+      return meta is Map ? meta['region']?.toString() : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  String _schoolName(TeamOption t) {
     try {
       final meta = jsonDecode(t.metaJson);
       final name = meta is Map ? meta['name'] : null;
-      return '${name ?? t.teamId} (${t.philosophy}·${t.resource}·${t.status})';
+      return name?.toString() ?? t.teamId;
     } catch (_) {
-      return '${t.teamId} (${t.philosophy}·${t.resource}·${t.status})';
+      return t.teamId;
     }
+  }
+
+  /// 8권역(§3-1) 순서 그대로 그룹핑 — 순서는 `hometownRegionNames()`와
+  /// 동일한 엔진 상수(`HOMETOWN_REGIONS`)를 그대로 재사용.
+  Map<String, List<TeamOption>> _schoolsByRegion() {
+    final grouped = <String, List<TeamOption>>{};
+    for (final t in _schools) {
+      final region = hsRegionOf(_cityOf(t));
+      grouped.putIfAbsent(region, () => []).add(t);
+    }
+    return grouped;
   }
 
   static int _maxDayFor(int month) {
@@ -140,9 +167,11 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
           ? Center(child: Text('content.db 로드 실패: $_loadError'))
           : AnimatedSwitcher(
               duration: const Duration(milliseconds: 200),
-              child: _page == 0
-                  ? KeyedSubtree(key: const ValueKey('personal'), child: _buildPersonalPage())
-                  : KeyedSubtree(key: const ValueKey('baseball'), child: _buildBaseballPage(gameState)),
+              child: switch (_page) {
+                0 => KeyedSubtree(key: const ValueKey('personal'), child: _buildPersonalPage()),
+                1 => KeyedSubtree(key: const ValueKey('baseball'), child: _buildBaseballPage()),
+                _ => KeyedSubtree(key: ValueKey('school:$_selectedRegion'), child: _buildSchoolPage(gameState)),
+              },
             ),
     );
   }
@@ -229,7 +258,7 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
     );
   }
 
-  Widget _buildBaseballPage(GameState gameState) {
+  Widget _buildBaseballPage() {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -253,18 +282,71 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
             items: _archetypes.map((a) => DropdownMenuItem(value: a, child: Text(a))).toList(),
             onChanged: (v) => setState(() => _archetype = v ?? _archetype),
           ),
-          const SizedBox(height: 16),
-          DropdownButtonFormField<String>(
-            initialValue: _selectedSchoolId,
-            decoration: const InputDecoration(labelText: '학교 (고교 리그)'),
-            items: _schools.map((t) => DropdownMenuItem(value: t.teamId, child: Text(_schoolLabel(t)))).toList(),
-            onChanged: (v) => setState(() => _selectedSchoolId = v),
-          ),
           const SizedBox(height: 32),
+          Row(
+            children: [
+              OutlinedButton(onPressed: () => setState(() => _page = 0), child: const Text('이전')),
+              const Spacer(),
+              ElevatedButton(onPressed: () => setState(() => _page = 2), child: const Text('다음')),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSchoolPage(GameState gameState) {
+    final grouped = _schoolsByRegion();
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            _selectedRegion == null ? '학교 선택 — 지역' : '학교 선택 — $_selectedRegion',
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          ),
+          const SizedBox(height: 16),
+          Expanded(
+            child: _selectedRegion == null
+                ? ListView(
+                    children: [
+                      for (final region in [..._hometowns, hsUnknownRegion].where(grouped.containsKey))
+                        Card(
+                          child: ListTile(
+                            title: Text(region),
+                            trailing: Text('${grouped[region]!.length}개교'),
+                            onTap: () => setState(() => _selectedRegion = region),
+                          ),
+                        ),
+                    ],
+                  )
+                : ListView(
+                    children: [
+                      for (final t in grouped[_selectedRegion] ?? const <TeamOption>[])
+                        Card(
+                          color: t.teamId == _selectedSchoolId ? Theme.of(context).colorScheme.primaryContainer : null,
+                          child: ListTile(title: Text(_schoolName(t)), onTap: () => setState(() => _selectedSchoolId = t.teamId)),
+                        ),
+                    ],
+                  ),
+          ),
+          const SizedBox(height: 16),
           if (gameState.error != null) ErrorBanner(message: '오류: ${gameState.error}'),
           Row(
             children: [
-              OutlinedButton(onPressed: gameState.busy ? null : () => setState(() => _page = 0), child: const Text('이전')),
+              OutlinedButton(
+                onPressed: gameState.busy
+                    ? null
+                    : () => setState(() {
+                        if (_selectedRegion != null) {
+                          _selectedRegion = null;
+                        } else {
+                          _page = 1;
+                        }
+                      }),
+                child: const Text('이전'),
+              ),
               const Spacer(),
               ElevatedButton(
                 onPressed: gameState.busy || _selectedSchoolId == null || _contentDbPath == null ? null : _submit,
