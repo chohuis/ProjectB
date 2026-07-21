@@ -42,9 +42,8 @@ void main() {
     expect(find.text('상태'), findsOneWidget);
     expect(find.text('훈련'), findsOneWidget);
     expect(find.text('재정'), findsOneWidget);
-    expect(find.text('피지컬'), findsOneWidget);
-    expect(find.text('기술'), findsOneWidget);
-    expect(find.text('멘탈'), findsOneWidget);
+    expect(find.text('능력치'), findsOneWidget);
+    expect(find.text('구속'), findsOneWidget, reason: '3열 표에 라벨로 뜸 — 레이더 차트 쪽 라벨은 Canvas에 직접 그려서 위젯 트리엔 안 잡힘');
     expect(find.text('보유 구종'), findsOneWidget);
   });
 }

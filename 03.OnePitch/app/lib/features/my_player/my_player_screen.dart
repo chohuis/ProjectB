@@ -7,6 +7,7 @@ import 'package:app/features/game/game_provider.dart';
 import 'package:app/shared/error_banner.dart';
 import 'package:app/shared/loading_indicator.dart';
 import 'package:app/shared/design/colors.dart';
+import 'stat_radar_chart.dart';
 
 /// 내 선수 허브 — [01_내선수](../../../../04_UI기획/01_내선수.md) 상태·훈련·
 /// 재정 3탭. 능력치 3분류 그룹핑·색상은 UI 표시 포맷일 뿐(계산·판정 아님
@@ -112,25 +113,24 @@ class _StatusTab extends StatelessWidget {
     final liveState = _decodeMap(status.liveStateJson);
     final pitches = _decodeList(status.pitchesJson);
 
+    final statEntries = [
+      for (final category in _statCategories.values) for (final name in category) (name, (stats[name] as num?)?.toDouble() ?? 50.0),
+    ];
+
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        for (final entry in _statCategories.entries) ...[
-          Text(entry.key, style: const TextStyle(fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 16,
-            runSpacing: 8,
-            children: entry.value.map((name) {
-              final v = (stats[name] as num?)?.toDouble() ?? 50.0;
-              return Chip(
-                label: Text('$name ${_bucketed(v)}'),
-                backgroundColor: _statColor(v).withValues(alpha: 0.25),
-              );
-            }).toList(),
-          ),
-          const SizedBox(height: 16),
-        ],
+        const Text('능력치', style: TextStyle(fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(flex: 3, child: _StatTable(entries: statEntries)),
+            const SizedBox(width: 16),
+            Expanded(flex: 2, child: StatRadarChart(stats: statEntries)),
+          ],
+        ),
+        const SizedBox(height: 16),
         const Text('보유 구종', style: TextStyle(fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         Wrap(spacing: 8, children: pitches.map((p) => Chip(label: Text(p))).toList()),
@@ -160,6 +160,50 @@ class _StatusTab extends StatelessWidget {
     } catch (_) {
       return [];
     }
+  }
+}
+
+/// 능력치 9종을 3열 표로 — 예전엔 피지컬/기술/멘탈 3개 그룹으로 나눠
+/// `Chip`을 `Wrap`했는데, 칩 너비가 텍스트 길이마다 달라 줄이 안 맞았다
+/// (대화 2026-07-21). `Table`(기본 테두리 없음)로 바꿔 각 칸 폭을 열
+/// 단위로 맞추고, 칸 안에서 라벨은 왼쪽·수치는 오른쪽에 정렬한다. 행
+/// 순서는 원래 카테고리 순서(피지컬→기술→멘탈)를 그대로 유지해 헤더
+/// 없이도 자연스럽게 묶여 보이게 한다.
+class _StatTable extends StatelessWidget {
+  const _StatTable({required this.entries});
+  final List<(String name, double value)> entries;
+
+  static const _columns = 3;
+
+  @override
+  Widget build(BuildContext context) {
+    final rows = <TableRow>[];
+    for (var i = 0; i < entries.length; i += _columns) {
+      rows.add(
+        TableRow(
+          children: [for (var c = 0; c < _columns; c++) if (i + c < entries.length) _statCell(entries[i + c]) else const SizedBox.shrink()],
+        ),
+      );
+    }
+    return Table(
+      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+      columnWidths: const {0: FlexColumnWidth(), 1: FlexColumnWidth(), 2: FlexColumnWidth()},
+      children: rows,
+    );
+  }
+
+  Widget _statCell((String, double) entry) {
+    final (name, v) = entry;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+      child: Row(
+        children: [
+          Text(name, style: const TextStyle(color: AppColors.textSecondary)),
+          const Spacer(),
+          Text('${_bucketed(v)}', style: TextStyle(fontWeight: FontWeight.bold, color: _statColor(v))),
+        ],
+      ),
+    );
   }
 }
 

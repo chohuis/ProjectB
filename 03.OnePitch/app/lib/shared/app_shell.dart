@@ -25,9 +25,17 @@ class AppShell extends StatelessWidget {
 
   static const wideBreakpoint = 600.0;
 
+  /// 정확히 일치하는 목적지를 먼저 찾는다 — '/game'(홈)이 다른 모든
+  /// 목적지의 URL 접두어라(예: '/game/my-player'), prefix 매칭만 하면
+  /// '/game'이 리스트 맨 앞이라 항상 먼저 걸려서 다른 탭을 눌러도
+  /// 선택 표시가 홈에 고정되는 버그가 있었다(대화 2026-07-21). exact
+  /// match를 우선하고, 그래도 없을 때만(하위 라우트가 생기면 대비)
+  /// prefix로 폴백한다.
   int _indexFor(String location) {
-    final i = _destinations.indexWhere((d) => location == d.path || location.startsWith('${d.path}/'));
-    return i < 0 ? 0 : i;
+    final exact = _destinations.indexWhere((d) => location == d.path);
+    if (exact >= 0) return exact;
+    final prefix = _destinations.indexWhere((d) => location.startsWith('${d.path}/'));
+    return prefix < 0 ? 0 : prefix;
   }
 
   void _onSelect(BuildContext context, int index) => context.go(_destinations[index].path);

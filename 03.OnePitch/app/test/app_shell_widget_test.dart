@@ -37,11 +37,17 @@ void main() {
     expect(find.byType(NavigationRail), findsOneWidget);
     expect(find.byType(NavigationBar), findsNothing);
     expect(find.text('진행 화면'), findsOneWidget);
+    expect(tester.widget<NavigationRail>(find.byType(NavigationRail)).selectedIndex, 0);
 
     await tester.tap(find.text('내 정보'));
     await tester.pumpAndSettle();
 
     expect(find.text('내 선수 화면'), findsOneWidget);
+    expect(
+      tester.widget<NavigationRail>(find.byType(NavigationRail)).selectedIndex,
+      1,
+      reason: "'/game'이 다른 모든 목적지의 URL 접두어라 prefix 매칭만 쓰면 선택 표시가 항상 홈에 고정되는 버그가 있었음(대화 2026-07-21)",
+    );
   });
 
   testWidgets('shows a bottom NavigationBar on narrow screens', (tester) async {
