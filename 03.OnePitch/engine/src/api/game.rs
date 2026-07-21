@@ -1032,6 +1032,78 @@ pub fn get_career_events() -> anyhow::Result<Vec<CareerEventInfo>> {
     })
 }
 
+/// 기록 허브 "업적" 탭용(이월 부채 정리, 대화 2026-07-22) — content.db
+/// `achievements`(정의, 아직 한 번도 안 달성됐어도 나와야 함)가 기준이고
+/// slot.db `achievement_progress`(달성 여부·카운터)는 있으면 덧붙이는
+/// 보조 조회. `unlock_achievement`(`data::repository`)가 이미 이 두
+/// 테이블을 채우는 로직이라 여긴 순수 조회만.
+#[derive(Debug, Clone)]
+pub struct AchievementInfo {
+    pub id: String,
+    pub category: String,
+    pub label: String,
+    pub achieved: bool,
+    pub achieved_day: Option<i64>,
+    pub counter: i64,
+}
+
+pub fn get_achievements() -> anyhow::Result<Vec<AchievementInfo>> {
+    with_state(|state| {
+        let mut def_stmt = state.content_conn.prepare("SELECT id, category, meta FROM achievements ORDER BY id")?;
+        let defs: Vec<(String, String, String)> = def_stmt.query_map([], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)))?.collect::<Result<_, _>>()?;
+        drop(def_stmt);
+
+        let mut out = Vec::with_capacity(defs.len());
+        for (id, category, meta_raw) in defs {
+            let meta: serde_json::Value = serde_json::from_str(&meta_raw).unwrap_or_default();
+            let label = meta.get("label").and_then(|v| v.as_str()).unwrap_or(&id).to_string();
+            let progress: Option<(i64, Option<i64>)> = state
+                .slot_conn
+                .query_row("SELECT counter, achieved_day FROM achievement_progress WHERE ach_id = ?1", [&id], |r| Ok((r.get(0)?, r.get(1)?)))
+                .optional()?;
+            let (counter, achieved_day) = progress.unwrap_or((0, None));
+            out.push(AchievementInfo { id, category, label, achieved: achieved_day.is_some(), achieved_day, counter });
+        }
+        Ok(out)
+    })
+}
+
+/// 기록 허브 "관계" 탭용(이월 부채 정리, 대화 2026-07-22) — 팀동료 관계
+/// 데이터 자체가 엔진에 없어(§6-59 이후 반복 확인) **감독 관계만** 정직하게
+/// 보여준다. 무소속(입대·미배정)이면 빈 목록.
+#[derive(Debug, Clone)]
+pub struct RelationshipInfo {
+    pub npc_id: String,
+    pub name: String,
+    pub role: String,
+    pub value: i64,
+    pub arc_stage: i64,
+}
+
+pub fn get_relationships() -> anyhow::Result<Vec<RelationshipInfo>> {
+    with_state(|state| {
+        let contract_raw: String = state.slot_conn.query_row("SELECT contract FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0))?;
+        let contract: serde_json::Value = serde_json::from_str(&contract_raw)?;
+        let Some(team_id) = contract.get("team_id").and_then(|v| v.as_str()) else {
+            return Ok(vec![]);
+        };
+        let manager_id = format!("manager:{team_id}");
+        let row: Option<(String, i64, i64)> = state
+            .slot_conn
+            .query_row(
+                "SELECT npc.name, relationships.value, relationships.arc_stage
+                 FROM relationships JOIN npc ON npc.id = relationships.npc_id
+                 WHERE relationships.npc_id = ?1",
+                [&manager_id],
+                |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)),
+            )
+            .optional()?;
+        Ok(row
+            .map(|(name, value, arc_stage)| vec![RelationshipInfo { npc_id: manager_id, name, role: "감독".to_string(), value, arc_stage }])
+            .unwrap_or_default())
+    })
+}
+
 /// 메시지함(`inbox`) — I8 이전 첫 실사용(§6-64 부상 전조 경고, `process_protagonist_week`
 /// 가 유일한 생산자). AI 콘텐츠 저작이 아니라 시스템이 직접 생성하는
 /// 경고 메시지라 I8 의존 없음.
@@ -1272,6 +1344,79 @@ mod tests {
         assert_eq!(injuries[0].part, "어깨");
         assert_eq!(injuries[0].severity, "경미");
         assert_eq!(injuries[0].day, 5);
+
+        reset_state();
+    }
+
+    #[test]
+    fn get_achievements_reflects_real_definitions_and_progress_after_new_game() {
+        let _guard = TEST_SERIAL.lock().unwrap();
+        reset_state();
+
+        let hs_team = {
+            let conn = content::open("content.db").unwrap();
+            conn.query_row("SELECT id FROM teams WHERE league_id = 'league:hs' LIMIT 1", [], |r| r.get::<_, String>(0)).unwrap()
+        };
+        new_game("content.db".to_string(), 47, "업적테스트".to_string(), "우완".to_string(), hs_team, "제구형".to_string(), None, None).unwrap();
+
+        // I8 3차분에서 실제로 seed된 3개 업적(ach:career_100_wins·ach:shutout·
+        // ach:pitch_arsenal_3)이 전부 "미달성"으로 먼저 나와야 한다.
+        let before = get_achievements().unwrap();
+        assert_eq!(before.len(), 3);
+        assert!(before.iter().all(|a| !a.achieved && a.achieved_day.is_none()));
+        assert!(before.iter().any(|a| a.id == "ach:shutout" && a.label == "완봉승"));
+
+        with_state(|state| {
+            state.slot_conn.execute(
+                "INSERT INTO achievement_progress (ach_id, counter, achieved_day) VALUES ('ach:shutout', 1, 30)",
+                [],
+            )?;
+            Ok(())
+        })
+        .unwrap();
+
+        let after = get_achievements().unwrap();
+        let shutout = after.iter().find(|a| a.id == "ach:shutout").unwrap();
+        assert!(shutout.achieved);
+        assert_eq!(shutout.achieved_day, Some(30));
+        let untouched = after.iter().find(|a| a.id == "ach:career_100_wins").unwrap();
+        assert!(!untouched.achieved);
+
+        reset_state();
+    }
+
+    #[test]
+    fn get_relationships_returns_empty_before_manager_relationship_exists_and_reflects_it_after() {
+        let _guard = TEST_SERIAL.lock().unwrap();
+        reset_state();
+
+        let hs_team = {
+            let conn = content::open("content.db").unwrap();
+            conn.query_row("SELECT id FROM teams WHERE league_id = 'league:hs' LIMIT 1", [], |r| r.get::<_, String>(0)).unwrap()
+        };
+        new_game("content.db".to_string(), 48, "관계테스트".to_string(), "우완".to_string(), hs_team.clone(), "제구형".to_string(), None, None).unwrap();
+
+        // 고교 소속 상태엔 관계도가 아직 안 쌓여있어도(값 0) 감독 npc 자체는
+        // 뉴게임 로스터 생성 때 이미 만들어져 있다 — relationships 행이 없으면
+        // 빈 목록.
+        assert!(get_relationships().unwrap().is_empty());
+
+        with_state(|state| {
+            state.slot_conn.execute(
+                "INSERT INTO relationships (npc_id, value, arc_stage) VALUES (?1, 15, 1)
+                 ON CONFLICT(npc_id) DO UPDATE SET value = excluded.value, arc_stage = excluded.arc_stage",
+                [format!("manager:{hs_team}")],
+            )?;
+            Ok(())
+        })
+        .unwrap();
+
+        let relationships = get_relationships().unwrap();
+        assert_eq!(relationships.len(), 1);
+        assert_eq!(relationships[0].role, "감독");
+        assert_eq!(relationships[0].value, 15);
+        assert_eq!(relationships[0].arc_stage, 1);
+        assert!(!relationships[0].name.is_empty());
 
         reset_state();
     }

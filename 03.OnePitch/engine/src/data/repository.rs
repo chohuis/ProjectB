@@ -206,6 +206,15 @@ pub fn generate_initial_world(slot_conn: &mut Connection, content_conn: &Connect
     for league_id in SCHEDULED_LEAGUE_IDS {
         generate_schedule(&tx, content_conn, canonical_seed, league_id, 0, 1)?;
     }
+    // 선발 로테이션(04_프로_커리어.md §22) — 5개 리그 전체(독립리그 포함,
+    // SCHEDULED_LEAGUE_IDS보다 넓음) 팀에 배정. 같은 트랜잭션에 묶는 이유는
+    // 위 스케줄 생성과 동일(개별 autocommit이면 182팀분 디스크 fsync로
+    // 새 게임 시작이 다시 느려짐, §6-38에서 이미 한 번 발견된 문제).
+    for league_id in LEAGUE_IDS {
+        for team_id in content::load_team_ids_for_league(content_conn, league_id)? {
+            assign_rotation(&tx, &team_id)?;
+        }
+    }
     tx.commit()?;
     Ok(())
 }
@@ -1051,16 +1060,85 @@ pub(crate) fn load_batting_lineup(slot_conn: &Connection, team_id: &str) -> anyh
     Ok(lineup)
 }
 
-/// 오늘의 선발투수 — 감독의 로테이션·불펜 운용은 스태프 시스템이 생기는
-/// 후속 Phase 스코프라, 지금은 그 팀의 (id 기준) 첫 선발투수가 매번 완투.
+/// 시즌 시작 시 팀별 선발 로테이션 확정(04_프로_커리어.md §22, 감독 AI
+/// 능력치 서열화, 이월 부채 정리 대화 2026-07-22) — `season_meta`에
+/// `rotation:{team_id}` 키로 순서(JSON 배열)를 저장한다. 새 테이블 없이
+/// 기존 `season_meta`(key TEXT PRIMARY KEY, value TEXT) upsert 관례 재사용.
+/// 후보가 0명이면 no-op(그 리그 팀에 선발투수가 아직 없는 극단적 케이스 —
+/// `load_starting_pitcher`가 기존 폴백으로 처리).
+fn assign_rotation(conn: &Connection, team_id: &str) -> anyhow::Result<()> {
+    let mut stmt = conn.prepare(
+        "SELECT id, stats FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position = '선발투수'",
+    )?;
+    let rows: Vec<(String, String)> = stmt.query_map([team_id], |r| Ok((r.get(0)?, r.get(1)?)))?.collect::<Result<Vec<_>, _>>()?;
+    drop(stmt);
+    if rows.is_empty() {
+        return Ok(());
+    }
+
+    let candidates: Vec<(String, f64)> = rows
+        .into_iter()
+        .map(|(id, stats_raw)| {
+            let v: serde_json::Value = serde_json::from_str(&stats_raw).unwrap_or_default();
+            let control = v.get("제구").and_then(|x| x.as_f64()).unwrap_or(50.0);
+            let stuff = v.get("구위").and_then(|x| x.as_f64()).unwrap_or(50.0);
+            (id, (control + stuff) / 2.0)
+        })
+        .collect();
+
+    let rotation = manager::rank_rotation_candidates(&candidates);
+    conn.execute(
+        "INSERT INTO season_meta (key, value) VALUES (?1, ?2)
+         ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+        params![format!("rotation:{team_id}"), serde_json::json!(rotation).to_string()],
+    )?;
+    Ok(())
+}
+
+/// 오늘의 선발투수 — `assign_rotation`이 확정해둔 순번(`season_meta`) 중
+/// 그 팀이 이번 시즌 이미 치른 경기 수(`schedule.result IS NOT NULL` 카운트
+/// — `schedule`은 시즌 경계마다 비워지므로 이 카운트 자체가 "이번 시즌
+/// 몇 경기째"와 같아 별도 카운터가 필요 없다) % 로테이션 길이로 순번을
+/// 고른다. 로테이션이 없거나(구세이브·아직 배정 전) 로테이션 투수가
+/// 은퇴·병역·트레이드로 로스터에서 사라졌으면 예전 방식("id 기준 첫
+/// 명")으로 폴백 — 하위호환. 불펜 서열·시즌 중 재편은 스코프 밖(이월
+/// 레지스트리 참고).
 pub(crate) fn load_starting_pitcher(slot_conn: &Connection, team_id: &str) -> anyhow::Result<match_sim::PitcherStats> {
-    let row: Option<(String, String, String)> = slot_conn
-        .query_row(
-            "SELECT id, stats, live_state FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position = '선발투수' ORDER BY id LIMIT 1",
-            [team_id],
-            |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
-        )
-        .optional()?;
+    let rotation_raw: Option<String> =
+        slot_conn.query_row("SELECT value FROM season_meta WHERE key = ?1", [format!("rotation:{team_id}")], |r| r.get(0)).optional()?;
+
+    let rotation_pick: Option<String> = rotation_raw.and_then(|raw| {
+        let rotation: Vec<String> = serde_json::from_str(&raw).unwrap_or_default();
+        if rotation.is_empty() {
+            return None;
+        }
+        let played: i64 = slot_conn
+            .query_row("SELECT count(*) FROM schedule WHERE (home = ?1 OR away = ?1) AND result IS NOT NULL", [team_id], |r| r.get(0))
+            .unwrap_or(0);
+        rotation.get((played as usize) % rotation.len()).cloned()
+    });
+
+    let row: Option<(String, String, String)> = match &rotation_pick {
+        Some(id) => slot_conn
+            .query_row(
+                "SELECT id, stats, live_state FROM npc WHERE id = ?1 AND retired = 0 AND military_return_day IS NULL",
+                [id],
+                |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
+            )
+            .optional()?,
+        None => None,
+    };
+    let row = match row {
+        Some(r) => Some(r),
+        None => slot_conn
+            .query_row(
+                "SELECT id, stats, live_state FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position = '선발투수' ORDER BY id LIMIT 1",
+                [team_id],
+                |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
+            )
+            .optional()?,
+    };
+
     let (id, stats_raw, live_state_raw) = row.ok_or_else(|| anyhow::anyhow!("no starting pitcher on roster for team {team_id}"))?;
     let v: serde_json::Value = serde_json::from_str(&stats_raw)?;
     let live_state: serde_json::Value = serde_json::from_str(&live_state_raw)?;
@@ -2952,6 +3030,15 @@ pub fn season_rollover(conn: &Connection, content_conn: &Connection, day: i64) -
     // 안 돼 시즌 2부터 어떤 경기도(배경 경기도 주인공 경기도) 안 열렸다.
     for league_id in SCHEDULED_LEAGUE_IDS {
         generate_schedule(conn, content_conn, world_seed, league_id, current + 1, day + 1)?;
+    }
+
+    // 선발 로테이션 재편성(04_프로_커리어.md §22, 이월 부채 정리 대화
+    // 2026-07-22) — 방금 끝난 `generate_freshmen`으로 로스터가 확정된
+    // 뒤라야 의미가 있다. 5개 리그 전체(독립리그 포함) 대상.
+    for league_id in LEAGUE_IDS {
+        for team_id in content::load_team_ids_for_league(content_conn, league_id)? {
+            assign_rotation(conn, &team_id)?;
+        }
     }
 
     Ok(())
@@ -5257,6 +5344,72 @@ mod tests {
 
         let count: i64 = slot_conn.query_row("SELECT count(*) FROM schedule", [], |r| r.get(0)).unwrap();
         assert_eq!(count, 6 * 5 / 2); // single round robin, 6 teams -> 15 unique pairs
+    }
+
+    #[test]
+    fn assign_rotation_stores_ordered_rotation_in_season_meta() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_test_player(&slot_conn, "team:a_sp1", "team:a", "선발투수", serde_json::json!({"제구": 40.0, "구위": 40.0}));
+        insert_test_player(&slot_conn, "team:a_sp2", "team:a", "선발투수", serde_json::json!({"제구": 70.0, "구위": 70.0}));
+        insert_test_player(&slot_conn, "team:a_sp3", "team:a", "선발투수", serde_json::json!({"제구": 55.0, "구위": 55.0}));
+
+        assign_rotation(&slot_conn, "team:a").unwrap();
+
+        let raw: String = slot_conn.query_row("SELECT value FROM season_meta WHERE key = 'rotation:team:a'", [], |r| r.get(0)).unwrap();
+        let rotation: Vec<String> = serde_json::from_str(&raw).unwrap();
+        assert_eq!(rotation, vec!["team:a_sp2", "team:a_sp3", "team:a_sp1"], "능력치 내림차순이어야 함");
+    }
+
+    #[test]
+    fn load_starting_pitcher_cycles_through_the_rotation_as_games_complete() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_test_player(&slot_conn, "team:a_sp1", "team:a", "선발투수", serde_json::json!({"제구": 70.0, "구위": 70.0}));
+        insert_test_player(&slot_conn, "team:a_sp2", "team:a", "선발투수", serde_json::json!({"제구": 40.0, "구위": 40.0}));
+        assign_rotation(&slot_conn, "team:a").unwrap();
+
+        // 완료 경기 0개 — 로테이션 0번째(team:a_sp1, 능력치가 더 높음).
+        assert_eq!(load_starting_pitcher(&slot_conn, "team:a").unwrap().id, "team:a_sp1");
+
+        // 완료 경기 1개를 기록 — 로테이션 1번째로 넘어가야 함.
+        slot_conn
+            .execute(
+                "INSERT INTO schedule (game_id, day, home, away, result) VALUES ('game:1', 1, 'team:a', 'team:x', ?1)",
+                [serde_json::json!({"home": 3, "away": 1}).to_string()],
+            )
+            .unwrap();
+        assert_eq!(load_starting_pitcher(&slot_conn, "team:a").unwrap().id, "team:a_sp2");
+
+        // 완료 경기 2개 — 로테이션 길이(2)만큼 돌았으니 다시 0번째로.
+        slot_conn
+            .execute(
+                "INSERT INTO schedule (game_id, day, home, away, result) VALUES ('game:2', 2, 'team:a', 'team:x', ?1)",
+                [serde_json::json!({"home": 2, "away": 5}).to_string()],
+            )
+            .unwrap();
+        assert_eq!(load_starting_pitcher(&slot_conn, "team:a").unwrap().id, "team:a_sp1");
+    }
+
+    #[test]
+    fn load_starting_pitcher_falls_back_when_no_rotation_assigned() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_minimal_roster(&slot_conn, "team:a");
+        // assign_rotation을 아예 안 부름(구세이브 시뮬레이션) — 기존 "id
+        // 기준 첫 명" 방식으로 그대로 동작해야 함.
+        assert_eq!(load_starting_pitcher(&slot_conn, "team:a").unwrap().id, "team:a_sp");
+    }
+
+    #[test]
+    fn load_starting_pitcher_falls_back_when_rotation_pitcher_becomes_unavailable() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_test_player(&slot_conn, "team:a_sp1", "team:a", "선발투수", serde_json::json!({"제구": 70.0, "구위": 70.0}));
+        insert_test_player(&slot_conn, "team:a_sp2", "team:a", "선발투수", serde_json::json!({"제구": 40.0, "구위": 40.0}));
+        assign_rotation(&slot_conn, "team:a").unwrap();
+
+        retire(&slot_conn, "team:a_sp1").unwrap();
+
+        // 로테이션 0번째(team:a_sp1)가 이탈했어도 크래시 없이 폴백(id 기준
+        // 첫 명 — 남은 유일한 후보 team:a_sp2)으로 계속 등판 가능해야 함.
+        assert_eq!(load_starting_pitcher(&slot_conn, "team:a").unwrap().id, "team:a_sp2");
     }
 
     #[test]

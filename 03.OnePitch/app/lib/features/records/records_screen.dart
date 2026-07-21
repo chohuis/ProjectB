@@ -6,21 +6,21 @@ import 'package:app/src/rust/api/game.dart';
 import 'package:app/shared/team_names.dart';
 import 'package:app/shared/loading_indicator.dart';
 import 'package:app/shared/design/colors.dart';
+import 'package:app/shared/career_timeline_view.dart';
 
 /// 기록 허브 — [03_기록](../../../../04_UI기획/03_기록.md) 히스토리 로그
-/// 6종 + 업적 = 7탭. **엔진에 실제 데이터가 있는 3개만 실제로 채운다**:
-/// 경기 로그(`game_log`, 매 등판 전체 보존) · 계약·이력(`league_transactions`
-/// 의 `contract`/`trade` 종류 — 이번 서브분에서 계약 이벤트 로깅을 새로
-/// 추가함) · 부상·재활(`protagonist.injury.history`, 발생 시점만 —
-/// 치료법·복귀 확정은 로그에 안 남음).
+/// 6종 + 업적 = 7탭. **5개는 실제 데이터로 채운다**: 경기 로그(`game_log`,
+/// 매 등판 전체 보존) · 계약·이력(`league_transactions`의 `contract`/`trade`
+/// 종류) · 부상·재활(`protagonist.injury.history`, 발생 시점만 — 치료법·
+/// 복귀 확정은 로그에 안 남음) · 커리어(`career_events`, `CareerTimelineView`
+/// 공용 위젯 — 내 정보 "커리어" 탭과 동일, I7 27차분에서 이미 만들어져
+/// 있었는데 이 화면에만 안 물려 있었음) · 업적(`achievement_progress` +
+/// content.db `achievements`, I8 3차분부터 실제 달성 로직이 동작).
 ///
-/// **나머지 4탭은 "미구현" 안내만**: 관계(`relationships` 테이블이
-/// 스키마만 있고 채우는 로직 없음 — 관계 시스템 자체 미구현) · 수상·기록
-/// (개인기록·시상 판정 로직 없음) · 커리어(진로선택/병역/은퇴결정을
-/// 영구 로그로 남기는 코드가 없음 — `enlist`/`discharge`/`retire`도
-/// NPC 전용이라 주인공에겐 아직 적용도 안 됨) · 업적(`achievement_progress`
-/// 테이블이 스키마만 있고 달성 조건 정의·체크 로직이 없음 — I8 콘텐츠
-/// 저작 단계 전제).
+/// **나머지 2탭은 "미구현"/부분 구현**: 관계는 `relationships`가 감독
+/// 관계도만 채워지고 있어(§6-59) 팀동료 관계까지는 여전히 없음 —
+/// 정직하게 스코프를 한정해 보여준다(관계 탭 부분 구현). 수상·기록
+/// (개인기록·시상 판정 로직 자체가 없음)만 완전 미구현으로 남는다.
 class RecordsScreen extends StatelessWidget {
   const RecordsScreen({super.key});
 
@@ -49,10 +49,10 @@ class RecordsScreen extends StatelessWidget {
             _GameLogTab(),
             _ContractHistoryTab(),
             _InjuryHistoryTab(),
-            _UnimplementedTab(message: '관계 시스템(라이벌·멘토·코치와의 관계도·아크)은 아직 엔진에 구현되지 않았습니다.'),
+            _RelationshipsTab(),
             _UnimplementedTab(message: '개인기록·시상식 판정 로직은 아직 엔진에 구현되지 않았습니다.'),
-            _UnimplementedTab(message: '진로선택·병역·은퇴 등 커리어 분기점을 영구 기록으로 남기는 로직은 아직 없습니다.'),
-            _UnimplementedTab(message: '업적(달성 조건·진행도) 시스템은 콘텐츠 저작 단계와 함께 후속 구현됩니다.'),
+            CareerTimelineView(),
+            _AchievementsTab(),
           ],
         ),
       ),
@@ -227,6 +227,107 @@ class _InjuryHistoryTabState extends State<_InjuryHistoryTab> {
       itemBuilder: (context, i) {
         final e = entries[i];
         return ListTile(title: Text('Day ${e.day} · ${e.part_} (${e.severity})'));
+      },
+    );
+  }
+}
+
+/// 관계 탭 — 팀동료 관계 데이터 자체가 엔진에 없어(§6-59 이후 반복 확인)
+/// **감독 관계만** 정직하게 보여준다. `getRelationships()`는 현재
+/// 소속팀이 없으면(입대·미배정 등) 빈 목록을 준다.
+class _RelationshipsTab extends StatefulWidget {
+  const _RelationshipsTab();
+
+  @override
+  State<_RelationshipsTab> createState() => _RelationshipsTabState();
+}
+
+class _RelationshipsTabState extends State<_RelationshipsTab> {
+  List<RelationshipInfo>? _relationships;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final relationships = await getRelationships();
+    if (mounted) setState(() => _relationships = relationships);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final relationships = _relationships;
+    if (relationships == null) return const LoadingIndicator();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.all(16),
+          child: Text('팀동료와의 관계는 아직 없습니다 — 지금은 감독과의 관계만 보여줍니다.', style: TextStyle(color: AppColors.textSecondary)),
+        ),
+        if (relationships.isEmpty)
+          const Expanded(child: Center(child: Text('현재 소속팀이 없습니다.')))
+        else
+          Expanded(
+            child: ListView.builder(
+              itemCount: relationships.length,
+              itemBuilder: (context, i) {
+                final r = relationships[i];
+                return ListTile(
+                  leading: const Icon(Icons.groups_outlined, color: AppColors.accent),
+                  title: Text('${r.name} (${r.role})'),
+                  subtitle: Text('관계도 ${r.value} · 아크 단계 ${r.arcStage}'),
+                );
+              },
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+/// 업적 탭 — `getAchievements()`는 content.db `achievements` 정의 전부를
+/// 기준으로(아직 한 번도 달성 못 한 것도 포함) 반환한다.
+class _AchievementsTab extends StatefulWidget {
+  const _AchievementsTab();
+
+  @override
+  State<_AchievementsTab> createState() => _AchievementsTabState();
+}
+
+class _AchievementsTabState extends State<_AchievementsTab> {
+  List<AchievementInfo>? _achievements;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final achievements = await getAchievements();
+    if (mounted) setState(() => _achievements = achievements);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final achievements = _achievements;
+    if (achievements == null) return const LoadingIndicator();
+    if (achievements.isEmpty) return const Center(child: Text('아직 등록된 업적이 없습니다.'));
+    return ListView.builder(
+      itemCount: achievements.length,
+      itemBuilder: (context, i) {
+        final a = achievements[i];
+        return ListTile(
+          leading: Icon(
+            a.achieved ? Icons.emoji_events : Icons.emoji_events_outlined,
+            color: a.achieved ? AppColors.gold : AppColors.textSecondary,
+          ),
+          title: Text(a.label, style: TextStyle(color: a.achieved ? AppColors.textPrimary : AppColors.textSecondary)),
+          subtitle: Text(a.achieved ? '${a.category} · Day ${a.achievedDay}에 달성' : '${a.category} · 미달성'),
+        );
       },
     );
   }

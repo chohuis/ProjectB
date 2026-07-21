@@ -129,6 +129,22 @@ pub fn should_pull_pitcher(rng: &mut impl Rng, pitches_thrown: u32, fatigue: f64
     rng.gen_bool(p)
 }
 
+/// 선발 로테이션 크기(04_프로_커리어.md §22 "능력치·누적성적으로 감독 AI가
+/// 서열화" — 로스터 반영 인원은 05_밸런스.md §2-D에 미정으로 남아있던
+/// 항목, 이번에 확정) — D그룹 placeholder, I8 밸런스 하네스 재조정 대상.
+pub const ROTATION_SIZE: usize = 5;
+
+/// 로테이션 서열화 — `(투수 id, 능력치 점수)` 목록을 점수 내림차순 정렬해
+/// 상위 `ROTATION_SIZE`만 id로 반환한다. 동점은 id 오름차순으로 묶어
+/// 결정론을 보장(부동소수 동점이 실제로 발생할 수 있음 — 같은 스탯으로
+/// 생성된 신인 등). 누적성적(`season_stats`) 반영은 그 인프라 자체가
+/// 없어 이월 — 능력치만으로 근사.
+pub fn rank_rotation_candidates(candidates: &[(String, f64)]) -> Vec<String> {
+    let mut sorted = candidates.to_vec();
+    sorted.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal).then_with(|| a.0.cmp(&b.0)));
+    sorted.into_iter().map(|(id, _)| id).take(ROTATION_SIZE).collect()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -256,5 +272,24 @@ mod tests {
     fn relationship_delta_from_pull_agreement_rewards_agreement() {
         assert!(relationship_delta_from_pull_agreement(true) > 0);
         assert!(relationship_delta_from_pull_agreement(false) < 0);
+    }
+
+    #[test]
+    fn rank_rotation_candidates_sorts_by_skill_descending_with_deterministic_tiebreak() {
+        let candidates = vec![
+            ("npc:c".to_string(), 60.0),
+            ("npc:a".to_string(), 80.0),
+            ("npc:b".to_string(), 60.0),
+        ];
+        let ranked = rank_rotation_candidates(&candidates);
+        assert_eq!(ranked, vec!["npc:a", "npc:b", "npc:c"], "동점(60.0)은 id 오름차순으로 묶여야 함");
+    }
+
+    #[test]
+    fn rank_rotation_candidates_caps_at_rotation_size() {
+        let candidates: Vec<(String, f64)> = (0..10).map(|i| (format!("npc:{i}"), i as f64)).collect();
+        let ranked = rank_rotation_candidates(&candidates);
+        assert_eq!(ranked.len(), ROTATION_SIZE);
+        assert_eq!(ranked[0], "npc:9", "가장 능력치 높은 후보가 1번이어야 함");
     }
 }

@@ -28,7 +28,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   String dco_decode_String(dynamic raw);
 
   @protected
+  AchievementInfo dco_decode_achievement_info(dynamic raw);
+
+  @protected
   bool dco_decode_bool(dynamic raw);
+
+  @protected
+  PlatformInt64 dco_decode_box_autoadd_i_64(dynamic raw);
 
   @protected
   MatchStepInfo dco_decode_box_autoadd_match_step_info(dynamic raw);
@@ -78,6 +84,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<String> dco_decode_list_String(dynamic raw);
 
   @protected
+  List<AchievementInfo> dco_decode_list_achievement_info(dynamic raw);
+
+  @protected
   List<bool> dco_decode_list_bool(dynamic raw);
 
   @protected
@@ -105,6 +114,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
+
+  @protected
+  List<RelationshipInfo> dco_decode_list_relationship_info(dynamic raw);
 
   @protected
   List<RosterPlayerInfo> dco_decode_list_roster_player_info(dynamic raw);
@@ -137,6 +149,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   String? dco_decode_opt_String(dynamic raw);
 
   @protected
+  PlatformInt64? dco_decode_opt_box_autoadd_i_64(dynamic raw);
+
+  @protected
   MatchStepInfo? dco_decode_opt_box_autoadd_match_step_info(dynamic raw);
 
   @protected
@@ -160,6 +175,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ProtagonistStatusInfo dco_decode_protagonist_status_info(dynamic raw);
+
+  @protected
+  RelationshipInfo dco_decode_relationship_info(dynamic raw);
 
   @protected
   RosterPlayerInfo dco_decode_roster_player_info(dynamic raw);
@@ -201,7 +219,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   String sse_decode_String(SseDeserializer deserializer);
 
   @protected
+  AchievementInfo sse_decode_achievement_info(SseDeserializer deserializer);
+
+  @protected
   bool sse_decode_bool(SseDeserializer deserializer);
+
+  @protected
+  PlatformInt64 sse_decode_box_autoadd_i_64(SseDeserializer deserializer);
 
   @protected
   MatchStepInfo sse_decode_box_autoadd_match_step_info(
@@ -257,6 +281,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<String> sse_decode_list_String(SseDeserializer deserializer);
 
   @protected
+  List<AchievementInfo> sse_decode_list_achievement_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   List<bool> sse_decode_list_bool(SseDeserializer deserializer);
 
   @protected
@@ -298,6 +327,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
 
   @protected
+  List<RelationshipInfo> sse_decode_list_relationship_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   List<RosterPlayerInfo> sse_decode_list_roster_player_info(
     SseDeserializer deserializer,
   );
@@ -336,6 +370,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   String? sse_decode_opt_String(SseDeserializer deserializer);
 
   @protected
+  PlatformInt64? sse_decode_opt_box_autoadd_i_64(SseDeserializer deserializer);
+
+  @protected
   MatchStepInfo? sse_decode_opt_box_autoadd_match_step_info(
     SseDeserializer deserializer,
   );
@@ -369,6 +406,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   ProtagonistStatusInfo sse_decode_protagonist_status_info(
     SseDeserializer deserializer,
   );
+
+  @protected
+  RelationshipInfo sse_decode_relationship_info(SseDeserializer deserializer);
 
   @protected
   RosterPlayerInfo sse_decode_roster_player_info(SseDeserializer deserializer);
@@ -418,7 +458,19 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_String(String self, SseSerializer serializer);
 
   @protected
+  void sse_encode_achievement_info(
+    AchievementInfo self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_bool(bool self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_i_64(
+    PlatformInt64 self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_box_autoadd_match_step_info(
@@ -496,6 +548,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_list_String(List<String> self, SseSerializer serializer);
 
   @protected
+  void sse_encode_list_achievement_info(
+    List<AchievementInfo> self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_list_bool(List<bool> self, SseSerializer serializer);
 
   @protected
@@ -543,6 +601,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_list_prim_u_8_strict(
     Uint8List self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_list_relationship_info(
+    List<RelationshipInfo> self,
     SseSerializer serializer,
   );
 
@@ -601,6 +665,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_opt_String(String? self, SseSerializer serializer);
 
   @protected
+  void sse_encode_opt_box_autoadd_i_64(
+    PlatformInt64? self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_opt_box_autoadd_match_step_info(
     MatchStepInfo? self,
     SseSerializer serializer,
@@ -639,6 +709,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_protagonist_status_info(
     ProtagonistStatusInfo self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_relationship_info(
+    RelationshipInfo self,
     SseSerializer serializer,
   );
 

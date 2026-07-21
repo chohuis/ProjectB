@@ -10,7 +10,7 @@ part 'game.freezed.dart';
 
 // These functions are ignored because they are not marked as `pub`: `avg_rank_from_season_ranks`, `stars_from_group_position`, `with_state_mut`, `with_state`, `world_seed`
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `GameState`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
 
 /// 뉴게임 — [07_주인공_생성](../../../02_기획/07_주인공_생성.md) §1의 7단계
 /// 흐름 중 실제 데이터를 만드는 마지막 단계(스텝 1~6은 Dart 쪽 폼 상태일
@@ -243,12 +243,62 @@ Future<List<SeasonLine>> careerTimeline() =>
 Future<List<CareerEventInfo>> getCareerEvents() =>
     RustLib.instance.api.crateApiGameGetCareerEvents();
 
+Future<List<AchievementInfo>> getAchievements() =>
+    RustLib.instance.api.crateApiGameGetAchievements();
+
+Future<List<RelationshipInfo>> getRelationships() =>
+    RustLib.instance.api.crateApiGameGetRelationships();
+
 Future<List<InboxMessageInfo>> getInbox() =>
     RustLib.instance.api.crateApiGameGetInbox();
 
 /// 메시지함 화면(I7)의 읽음 처리 — `repository::mark_inbox_read` 그대로.
 Future<void> markInboxRead({required String id}) =>
     RustLib.instance.api.crateApiGameMarkInboxRead(id: id);
+
+/// 기록 허브 "업적" 탭용(이월 부채 정리, 대화 2026-07-22) — content.db
+/// `achievements`(정의, 아직 한 번도 안 달성됐어도 나와야 함)가 기준이고
+/// slot.db `achievement_progress`(달성 여부·카운터)는 있으면 덧붙이는
+/// 보조 조회. `unlock_achievement`(`data::repository`)가 이미 이 두
+/// 테이블을 채우는 로직이라 여긴 순수 조회만.
+class AchievementInfo {
+  final String id;
+  final String category;
+  final String label;
+  final bool achieved;
+  final PlatformInt64? achievedDay;
+  final PlatformInt64 counter;
+
+  const AchievementInfo({
+    required this.id,
+    required this.category,
+    required this.label,
+    required this.achieved,
+    this.achievedDay,
+    required this.counter,
+  });
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      category.hashCode ^
+      label.hashCode ^
+      achieved.hashCode ^
+      achievedDay.hashCode ^
+      counter.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AchievementInfo &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          category == other.category &&
+          label == other.label &&
+          achieved == other.achieved &&
+          achievedDay == other.achievedDay &&
+          counter == other.counter;
+}
 
 /// 홈 화면 실제 날짜 표시용(대화 2026-07-21) — `crate::calendar`를 그대로
 /// 감싼다. 순수 계산이라 동기 호출.
@@ -748,6 +798,44 @@ class ProtagonistStatusInfo {
           contractJson == other.contractJson &&
           injuryJson == other.injuryJson &&
           pitchesJson == other.pitchesJson;
+}
+
+/// 기록 허브 "관계" 탭용(이월 부채 정리, 대화 2026-07-22) — 팀동료 관계
+/// 데이터 자체가 엔진에 없어(§6-59 이후 반복 확인) **감독 관계만** 정직하게
+/// 보여준다. 무소속(입대·미배정)이면 빈 목록.
+class RelationshipInfo {
+  final String npcId;
+  final String name;
+  final String role;
+  final PlatformInt64 value;
+  final PlatformInt64 arcStage;
+
+  const RelationshipInfo({
+    required this.npcId,
+    required this.name,
+    required this.role,
+    required this.value,
+    required this.arcStage,
+  });
+
+  @override
+  int get hashCode =>
+      npcId.hashCode ^
+      name.hashCode ^
+      role.hashCode ^
+      value.hashCode ^
+      arcStage.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RelationshipInfo &&
+          runtimeType == other.runtimeType &&
+          npcId == other.npcId &&
+          name == other.name &&
+          role == other.role &&
+          value == other.value &&
+          arcStage == other.arcStage;
 }
 
 /// 로스터 한 명 — [02_리그](../../../04_UI기획/02_리그.md) §1. NPC는

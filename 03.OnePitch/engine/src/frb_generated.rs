@@ -38,7 +38,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.12.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 956603721;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1688303705;
 
 // Section: executor
 
@@ -332,6 +332,40 @@ fn wire__crate__api__game__exposed_stat_names_impl(
                 let output_ok = Result::<_, ()>::Ok(crate::api::game::exposed_stat_names())?;
                 Ok(output_ok)
             })())
+        },
+    )
+}
+fn wire__crate__api__game__get_achievements_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "get_achievements",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            move |context| {
+                transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
+                    (move || {
+                        let output_ok = crate::api::game::get_achievements()?;
+                        Ok(output_ok)
+                    })(),
+                )
+            }
         },
     )
 }
@@ -668,6 +702,40 @@ fn wire__crate__api__game__get_protagonist_status_impl(
                 transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
                     (move || {
                         let output_ok = crate::api::game::get_protagonist_status()?;
+                        Ok(output_ok)
+                    })(),
+                )
+            }
+        },
+    )
+}
+fn wire__crate__api__game__get_relationships_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "get_relationships",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            move |context| {
+                transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
+                    (move || {
+                        let output_ok = crate::api::game::get_relationships()?;
                         Ok(output_ok)
                     })(),
                 )
@@ -1450,6 +1518,26 @@ impl SseDecode for String {
     }
 }
 
+impl SseDecode for crate::api::game::AchievementInfo {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_id = <String>::sse_decode(deserializer);
+        let mut var_category = <String>::sse_decode(deserializer);
+        let mut var_label = <String>::sse_decode(deserializer);
+        let mut var_achieved = <bool>::sse_decode(deserializer);
+        let mut var_achievedDay = <Option<i64>>::sse_decode(deserializer);
+        let mut var_counter = <i64>::sse_decode(deserializer);
+        return crate::api::game::AchievementInfo {
+            id: var_id,
+            category: var_category,
+            label: var_label,
+            achieved: var_achieved,
+            achieved_day: var_achievedDay,
+            counter: var_counter,
+        };
+    }
+}
+
 impl SseDecode for bool {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -1631,6 +1719,20 @@ impl SseDecode for Vec<String> {
     }
 }
 
+impl SseDecode for Vec<crate::api::game::AchievementInfo> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = Vec::with_capacity(len_ as usize);
+        for idx_ in 0..len_ {
+            ans_.push(<crate::api::game::AchievementInfo>::sse_decode(
+                deserializer,
+            ));
+        }
+        return ans_;
+    }
+}
+
 impl SseDecode for Vec<bool> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -1742,6 +1844,20 @@ impl SseDecode for Vec<u8> {
         let mut ans_ = Vec::with_capacity(len_ as usize);
         for idx_ in 0..len_ {
             ans_.push(<u8>::sse_decode(deserializer));
+        }
+        return ans_;
+    }
+}
+
+impl SseDecode for Vec<crate::api::game::RelationshipInfo> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = Vec::with_capacity(len_ as usize);
+        for idx_ in 0..len_ {
+            ans_.push(<crate::api::game::RelationshipInfo>::sse_decode(
+                deserializer,
+            ));
         }
         return ans_;
     }
@@ -1924,6 +2040,17 @@ impl SseDecode for Option<String> {
     }
 }
 
+impl SseDecode for Option<i64> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(<i64>::sse_decode(deserializer));
+        } else {
+            return None;
+        }
+    }
+}
+
 impl SseDecode for Option<crate::api::game::MatchStepInfo> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -2030,6 +2157,24 @@ impl SseDecode for crate::api::game::ProtagonistStatusInfo {
             contract_json: var_contractJson,
             injury_json: var_injuryJson,
             pitches_json: var_pitchesJson,
+        };
+    }
+}
+
+impl SseDecode for crate::api::game::RelationshipInfo {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_npcId = <String>::sse_decode(deserializer);
+        let mut var_name = <String>::sse_decode(deserializer);
+        let mut var_role = <String>::sse_decode(deserializer);
+        let mut var_value = <i64>::sse_decode(deserializer);
+        let mut var_arcStage = <i64>::sse_decode(deserializer);
+        return crate::api::game::RelationshipInfo {
+            npc_id: var_npcId,
+            name: var_name,
+            role: var_role,
+            value: var_value,
+            arc_stage: var_arcStage,
         };
     }
 }
@@ -2212,41 +2357,43 @@ fn pde_ffi_dispatcher_primary_impl(
         5 => wire__crate__api__game__career_timeline_impl(port, ptr, rust_vec_len, data_len),
         7 => wire__crate__api__game__declare_retirement_impl(port, ptr, rust_vec_len, data_len),
         8 => wire__crate__api__game__delete_slot_impl(port, ptr, rust_vec_len, data_len),
-        10 => wire__crate__api__game__get_career_events_impl(port, ptr, rust_vec_len, data_len),
-        11 => wire__crate__api__game__get_contract_history_impl(port, ptr, rust_vec_len, data_len),
-        12 => wire__crate__api__game__get_current_team_info_impl(port, ptr, rust_vec_len, data_len),
-        13 => wire__crate__api__game__get_game_log_impl(port, ptr, rust_vec_len, data_len),
-        14 => wire__crate__api__game__get_inbox_impl(port, ptr, rust_vec_len, data_len),
-        15 => wire__crate__api__game__get_injury_history_impl(port, ptr, rust_vec_len, data_len),
-        16 => wire__crate__api__game__get_meta_status_impl(port, ptr, rust_vec_len, data_len),
-        17 => wire__crate__api__game__get_pending_actions_impl(port, ptr, rust_vec_len, data_len),
-        18 => {
+        10 => wire__crate__api__game__get_achievements_impl(port, ptr, rust_vec_len, data_len),
+        11 => wire__crate__api__game__get_career_events_impl(port, ptr, rust_vec_len, data_len),
+        12 => wire__crate__api__game__get_contract_history_impl(port, ptr, rust_vec_len, data_len),
+        13 => wire__crate__api__game__get_current_team_info_impl(port, ptr, rust_vec_len, data_len),
+        14 => wire__crate__api__game__get_game_log_impl(port, ptr, rust_vec_len, data_len),
+        15 => wire__crate__api__game__get_inbox_impl(port, ptr, rust_vec_len, data_len),
+        16 => wire__crate__api__game__get_injury_history_impl(port, ptr, rust_vec_len, data_len),
+        17 => wire__crate__api__game__get_meta_status_impl(port, ptr, rust_vec_len, data_len),
+        18 => wire__crate__api__game__get_pending_actions_impl(port, ptr, rust_vec_len, data_len),
+        19 => {
             wire__crate__api__game__get_protagonist_profile_impl(port, ptr, rust_vec_len, data_len)
         }
-        19 => {
+        20 => {
             wire__crate__api__game__get_protagonist_status_impl(port, ptr, rust_vec_len, data_len)
         }
-        20 => wire__crate__api__game__get_standings_impl(port, ptr, rust_vec_len, data_len),
-        21 => wire__crate__api__game__get_team_rivals_impl(port, ptr, rust_vec_len, data_len),
-        22 => wire__crate__api__game__get_team_schedule_impl(port, ptr, rust_vec_len, data_len),
-        23 => wire__crate__api__game__get_training_config_impl(port, ptr, rust_vec_len, data_len),
-        26 => wire__crate__api__simple__init_app_impl(port, ptr, rust_vec_len, data_len),
-        27 => {
+        21 => wire__crate__api__game__get_relationships_impl(port, ptr, rust_vec_len, data_len),
+        22 => wire__crate__api__game__get_standings_impl(port, ptr, rust_vec_len, data_len),
+        23 => wire__crate__api__game__get_team_rivals_impl(port, ptr, rust_vec_len, data_len),
+        24 => wire__crate__api__game__get_team_schedule_impl(port, ptr, rust_vec_len, data_len),
+        25 => wire__crate__api__game__get_training_config_impl(port, ptr, rust_vec_len, data_len),
+        28 => wire__crate__api__simple__init_app_impl(port, ptr, rust_vec_len, data_len),
+        29 => {
             wire__crate__api__game__list_hs_school_details_impl(port, ptr, rust_vec_len, data_len)
         }
-        28 => wire__crate__api__game__list_hs_teams_impl(port, ptr, rust_vec_len, data_len),
-        29 => wire__crate__api__game__list_roster_impl(port, ptr, rust_vec_len, data_len),
-        30 => wire__crate__api__game__list_slots_impl(port, ptr, rust_vec_len, data_len),
-        31 => wire__crate__api__game__list_teams_impl(port, ptr, rust_vec_len, data_len),
-        32 => wire__crate__api__game__load_slot_impl(port, ptr, rust_vec_len, data_len),
-        33 => wire__crate__api__game__mark_inbox_read_impl(port, ptr, rust_vec_len, data_len),
-        34 => wire__crate__api__game__new_game_impl(port, ptr, rust_vec_len, data_len),
-        35 => wire__crate__api__game__pitch_type_names_impl(port, ptr, rust_vec_len, data_len),
-        36 => wire__crate__api__game__resolve_choice_impl(port, ptr, rust_vec_len, data_len),
-        37 => {
+        30 => wire__crate__api__game__list_hs_teams_impl(port, ptr, rust_vec_len, data_len),
+        31 => wire__crate__api__game__list_roster_impl(port, ptr, rust_vec_len, data_len),
+        32 => wire__crate__api__game__list_slots_impl(port, ptr, rust_vec_len, data_len),
+        33 => wire__crate__api__game__list_teams_impl(port, ptr, rust_vec_len, data_len),
+        34 => wire__crate__api__game__load_slot_impl(port, ptr, rust_vec_len, data_len),
+        35 => wire__crate__api__game__mark_inbox_read_impl(port, ptr, rust_vec_len, data_len),
+        36 => wire__crate__api__game__new_game_impl(port, ptr, rust_vec_len, data_len),
+        37 => wire__crate__api__game__pitch_type_names_impl(port, ptr, rust_vec_len, data_len),
+        38 => wire__crate__api__game__resolve_choice_impl(port, ptr, rust_vec_len, data_len),
+        39 => {
             wire__crate__api__game__set_protagonist_profile_impl(port, ptr, rust_vec_len, data_len)
         }
-        38 => wire__crate__api__game__set_training_impl(port, ptr, rust_vec_len, data_len),
+        40 => wire__crate__api__game__set_training_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -2263,16 +2410,41 @@ fn pde_ffi_dispatcher_sync_impl(
         3 => wire__crate__api__game__calendar_date_for_day_impl(ptr, rust_vec_len, data_len),
         6 => wire__crate__api__game__course_names_impl(ptr, rust_vec_len, data_len),
         9 => wire__crate__api__game__exposed_stat_names_impl(ptr, rust_vec_len, data_len),
-        24 => wire__crate__api__simple__greet_impl(ptr, rust_vec_len, data_len),
-        25 => wire__crate__api__game__hometown_region_names_impl(ptr, rust_vec_len, data_len),
-        39 => wire__crate__api__game__training_intensity_names_impl(ptr, rust_vec_len, data_len),
-        40 => wire__crate__api__game__treatment_options_impl(ptr, rust_vec_len, data_len),
+        26 => wire__crate__api__simple__greet_impl(ptr, rust_vec_len, data_len),
+        27 => wire__crate__api__game__hometown_region_names_impl(ptr, rust_vec_len, data_len),
+        41 => wire__crate__api__game__training_intensity_names_impl(ptr, rust_vec_len, data_len),
+        42 => wire__crate__api__game__treatment_options_impl(ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
 
 // Section: rust2dart
 
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::game::AchievementInfo {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.id.into_into_dart().into_dart(),
+            self.category.into_into_dart().into_dart(),
+            self.label.into_into_dart().into_dart(),
+            self.achieved.into_into_dart().into_dart(),
+            self.achieved_day.into_into_dart().into_dart(),
+            self.counter.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::game::AchievementInfo
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::game::AchievementInfo>
+    for crate::api::game::AchievementInfo
+{
+    fn into_into_dart(self) -> crate::api::game::AchievementInfo {
+        self
+    }
+}
 // Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::api::game::CalendarDateInfo {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
@@ -2639,6 +2811,30 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::game::ProtagonistStatusInfo>
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::game::RelationshipInfo {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.npc_id.into_into_dart().into_dart(),
+            self.name.into_into_dart().into_dart(),
+            self.role.into_into_dart().into_dart(),
+            self.value.into_into_dart().into_dart(),
+            self.arc_stage.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::game::RelationshipInfo
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::game::RelationshipInfo>
+    for crate::api::game::RelationshipInfo
+{
+    fn into_into_dart(self) -> crate::api::game::RelationshipInfo {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::api::game::RosterPlayerInfo {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
@@ -2833,6 +3029,18 @@ impl SseEncode for String {
     }
 }
 
+impl SseEncode for crate::api::game::AchievementInfo {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.id, serializer);
+        <String>::sse_encode(self.category, serializer);
+        <String>::sse_encode(self.label, serializer);
+        <bool>::sse_encode(self.achieved, serializer);
+        <Option<i64>>::sse_encode(self.achieved_day, serializer);
+        <i64>::sse_encode(self.counter, serializer);
+    }
+}
+
 impl SseEncode for bool {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -2954,6 +3162,16 @@ impl SseEncode for Vec<String> {
     }
 }
 
+impl SseEncode for Vec<crate::api::game::AchievementInfo> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::api::game::AchievementInfo>::sse_encode(item, serializer);
+        }
+    }
+}
+
 impl SseEncode for Vec<bool> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -3040,6 +3258,16 @@ impl SseEncode for Vec<u8> {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
             <u8>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for Vec<crate::api::game::RelationshipInfo> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::api::game::RelationshipInfo>::sse_encode(item, serializer);
         }
     }
 }
@@ -3193,6 +3421,16 @@ impl SseEncode for Option<String> {
     }
 }
 
+impl SseEncode for Option<i64> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <i64>::sse_encode(value, serializer);
+        }
+    }
+}
+
 impl SseEncode for Option<crate::api::game::MatchStepInfo> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -3267,6 +3505,17 @@ impl SseEncode for crate::api::game::ProtagonistStatusInfo {
         <String>::sse_encode(self.contract_json, serializer);
         <String>::sse_encode(self.injury_json, serializer);
         <String>::sse_encode(self.pitches_json, serializer);
+    }
+}
+
+impl SseEncode for crate::api::game::RelationshipInfo {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.npc_id, serializer);
+        <String>::sse_encode(self.name, serializer);
+        <String>::sse_encode(self.role, serializer);
+        <i64>::sse_encode(self.value, serializer);
+        <i64>::sse_encode(self.arc_stage, serializer);
     }
 }
 
