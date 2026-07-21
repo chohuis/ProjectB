@@ -537,6 +537,18 @@ sealed class MatchStepInfo with _$MatchStepInfo {
     required int homeRuns,
     required int awayRuns,
   }) = MatchStepInfo_GameOver;
+
+  /// 감독 개입(§8) 수동 모드 판단 요청 — `resolveChoice`에 `"유지"`/
+  /// `"교체"`/`"맡기기"`를 응답해야 진행된다.
+  const factory MatchStepInfo.pitcherChangeDecision({
+    required int inning,
+    required bool topOfInning,
+    required int homeRuns,
+    required int awayRuns,
+    required int pitchesThrown,
+    required double fatigue,
+    required bool managerRecommendsPull,
+  }) = MatchStepInfo_PitcherChangeDecision;
 }
 
 /// 현재 진행일·시즌 — 전용 화면 없이도 "시즌종료"를 넘겼는지 UI가 배지로

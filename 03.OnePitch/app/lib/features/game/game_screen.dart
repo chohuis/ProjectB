@@ -13,6 +13,7 @@ import 'match_visuals.dart';
 import 'home_dashboard.dart';
 import 'package:app/shared/error_banner.dart';
 import 'package:app/shared/design/widgets.dart';
+import 'package:app/shared/design/colors.dart';
 
 /// 진행(Continue) + 매치 + 결과요약을 한 화면에 압축한 I7 1차분 최소
 /// 슬라이스. [05_매치](../../../../04_UI기획/05_매치.md)의 다이아몬드·
@@ -116,6 +117,9 @@ class _MainArea extends StatelessWidget {
     final step = state.matchStep;
     if (step is MatchStepInfo_AwaitingPitch) {
       return ('pitch', _PitchPicker(state: state, controller: controller, awaiting: step));
+    }
+    if (step is MatchStepInfo_PitcherChangeDecision) {
+      return ('pitcherChange', _PitcherChangeDecisionView(state: state, controller: controller, decision: step));
     }
     if (step is MatchStepInfo_GameOver) {
       return ('gameOver', _GameOverSummary(step: step, controller: controller));
@@ -222,6 +226,42 @@ class _PitchPicker extends StatelessWidget {
               ),
             ),
           ),
+        ),
+      ],
+    );
+  }
+}
+
+/// 감독 개입(§8) 수동 모드 — [07_매치_엔진](../../../../02_기획/육성코어/07_매치_엔진.md)
+/// §8 "이닝 종료마다 판단 기회". `MatchScoreboard`는 재사용하지 않는다 —
+/// 하프이닝 경계라 outs·bases가 항상 리셋 상태라 보여줄 게 없다.
+class _PitcherChangeDecisionView extends StatelessWidget {
+  const _PitcherChangeDecisionView({required this.state, required this.controller, required this.decision});
+  final GameState state;
+  final GameController controller;
+  final MatchStepInfo_PitcherChangeDecision decision;
+
+  @override
+  Widget build(BuildContext context) {
+    final action = state.pending.where((p) => p.kind == 'pitcherChange').firstOrNull;
+    final inningLabel = '${decision.inning}회 ${decision.topOfInning ? '초' : '말'}';
+    final opinion = decision.managerRecommendsPull ? '감독 의견: 교체 권장' : '감독 의견: 유지 권장';
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('투수 교체', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+        const SizedBox(height: 8),
+        Text('$inningLabel · 홈 ${decision.homeRuns} : 원정 ${decision.awayRuns}'),
+        const SizedBox(height: 4),
+        Text('투구수 ${decision.pitchesThrown}구 · 피로도 ${decision.fatigue.toStringAsFixed(0)}'),
+        const SizedBox(height: 4),
+        Text(opinion, style: const TextStyle(color: AppColors.textSecondary)),
+        const SizedBox(height: 16),
+        Wrap(
+          spacing: 8,
+          children: ['유지', '교체', '감독에게 맡기기']
+              .map((label) => ElevatedButton(onPressed: action == null ? null : () => controller.respond(action.id, label), child: Text(label)))
+              .toList(),
         ),
       ],
     );

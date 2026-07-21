@@ -94,6 +94,17 @@ pub enum MatchStepInfo {
         away_runs: u32,
     },
     GameOver { home_runs: u32, away_runs: u32 },
+    /// 감독 개입(§8) 수동 모드 판단 요청 — `resolveChoice`에 `"유지"`/
+    /// `"교체"`/`"맡기기"`를 응답해야 진행된다.
+    PitcherChangeDecision {
+        inning: u32,
+        top_of_inning: bool,
+        home_runs: u32,
+        away_runs: u32,
+        pitches_thrown: u32,
+        fatigue: f64,
+        manager_recommends_pull: bool,
+    },
 }
 
 impl From<match_session::MatchStepResult> for MatchStepInfo {
@@ -112,6 +123,15 @@ impl From<match_session::MatchStepResult> for MatchStepInfo {
                 away_runs,
             } => MatchStepInfo::AwaitingPitch { batter_id, balls, strikes, high_leverage, inning, top_of_inning, outs, bases, home_runs, away_runs },
             match_session::MatchStepResult::GameOver { home_runs, away_runs } => MatchStepInfo::GameOver { home_runs, away_runs },
+            match_session::MatchStepResult::PitcherChangeDecision {
+                inning,
+                top_of_inning,
+                home_runs,
+                away_runs,
+                pitches_thrown,
+                fatigue,
+                manager_recommends_pull,
+            } => MatchStepInfo::PitcherChangeDecision { inning, top_of_inning, home_runs, away_runs, pitches_thrown, fatigue, manager_recommends_pull },
         }
     }
 }

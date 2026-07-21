@@ -1623,6 +1623,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           homeRuns: dco_decode_u_32(raw[1]),
           awayRuns: dco_decode_u_32(raw[2]),
         );
+      case 2:
+        return MatchStepInfo_PitcherChangeDecision(
+          inning: dco_decode_u_32(raw[1]),
+          topOfInning: dco_decode_bool(raw[2]),
+          homeRuns: dco_decode_u_32(raw[3]),
+          awayRuns: dco_decode_u_32(raw[4]),
+          pitchesThrown: dco_decode_u_32(raw[5]),
+          fatigue: dco_decode_f_64(raw[6]),
+          managerRecommendsPull: dco_decode_bool(raw[7]),
+        );
       default:
         throw Exception("unreachable");
     }
@@ -2285,6 +2295,23 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         return MatchStepInfo_GameOver(
           homeRuns: var_homeRuns,
           awayRuns: var_awayRuns,
+        );
+      case 2:
+        var var_inning = sse_decode_u_32(deserializer);
+        var var_topOfInning = sse_decode_bool(deserializer);
+        var var_homeRuns = sse_decode_u_32(deserializer);
+        var var_awayRuns = sse_decode_u_32(deserializer);
+        var var_pitchesThrown = sse_decode_u_32(deserializer);
+        var var_fatigue = sse_decode_f_64(deserializer);
+        var var_managerRecommendsPull = sse_decode_bool(deserializer);
+        return MatchStepInfo_PitcherChangeDecision(
+          inning: var_inning,
+          topOfInning: var_topOfInning,
+          homeRuns: var_homeRuns,
+          awayRuns: var_awayRuns,
+          pitchesThrown: var_pitchesThrown,
+          fatigue: var_fatigue,
+          managerRecommendsPull: var_managerRecommendsPull,
         );
       default:
         throw UnimplementedError('');
@@ -2955,6 +2982,23 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_i_32(1, serializer);
         sse_encode_u_32(homeRuns, serializer);
         sse_encode_u_32(awayRuns, serializer);
+      case MatchStepInfo_PitcherChangeDecision(
+        inning: final inning,
+        topOfInning: final topOfInning,
+        homeRuns: final homeRuns,
+        awayRuns: final awayRuns,
+        pitchesThrown: final pitchesThrown,
+        fatigue: final fatigue,
+        managerRecommendsPull: final managerRecommendsPull,
+      ):
+        sse_encode_i_32(2, serializer);
+        sse_encode_u_32(inning, serializer);
+        sse_encode_bool(topOfInning, serializer);
+        sse_encode_u_32(homeRuns, serializer);
+        sse_encode_u_32(awayRuns, serializer);
+        sse_encode_u_32(pitchesThrown, serializer);
+        sse_encode_f_64(fatigue, serializer);
+        sse_encode_bool(managerRecommendsPull, serializer);
     }
   }
 

@@ -9,7 +9,7 @@ use crate::sim::pitch::{self, Course};
 use super::repository;
 
 /// `startMatch`/`pitch`(I6 3차분) 호출 결과 — [07_매치_엔진](../../../02_기획/육성코어/07_매치_엔진.md)
-/// §3의 세 모드(자동·수동·반자동)가 전부 이 두 상태 중 하나로 귀결된다.
+/// §3의 세 모드(자동·수동·반자동)가 전부 이 상태들 중 하나로 귀결된다.
 #[derive(Debug, Clone, PartialEq)]
 pub enum MatchStepResult {
     /// 주인공이 다음 공을 던질 차례이고, 모드상 플레이어 입력이 필요한
@@ -37,6 +37,20 @@ pub enum MatchStepResult {
     /// 경기 종료 — `schedule.result`·`standings`가 이미 반영됐고
     /// `match_session` 행도 삭제됨.
     GameOver { home_runs: u32, away_runs: u32 },
+    /// 감독 개입(§8) 수동 모드 — 하프이닝 경계에서 투구수가 "고려 구간"
+    /// (`sim::manager::pull_probability` > 0)에 들어서면 자동·반자동처럼
+    /// AI가 바로 판단하지 않고 플레이어에게 묻는다. `submit_pitcher_change_decision`
+    /// 으로 "유지"/"교체"/"맡기기"(=AI 판정 그대로) 중 하나를 제출해야
+    /// 진행된다.
+    PitcherChangeDecision {
+        inning: u32,
+        top_of_inning: bool,
+        home_runs: u32,
+        away_runs: u32,
+        pitches_thrown: u32,
+        fatigue: f64,
+        manager_recommends_pull: bool,
+    },
 }
 
 struct SessionRow {
@@ -416,20 +430,33 @@ pub fn start_protagonist_match(
         params![game_id, home, away, league_id, mode],
     )?;
 
-    run_until_decision_point(slot_conn, world_seed, None)
+    run_until_decision_point(slot_conn, world_seed, None, None)
 }
 
 /// 1구 제출(§5) — `AwaitingPitch`로 멈춘 세션에 플레이어의 구종·코스
 /// 선택을 반영하고 다음 결정 지점(또는 경기 종료)까지 진행한다.
 pub fn submit_pitch(slot_conn: &Connection, world_seed: i64, pitch_name: &str, course: Course) -> anyhow::Result<MatchStepResult> {
-    run_until_decision_point(slot_conn, world_seed, Some((pitch_name.to_string(), course)))
+    run_until_decision_point(slot_conn, world_seed, Some((pitch_name.to_string(), course)), None)
+}
+
+/// 감독 개입 수동 모드(§8) 응답 — `PitcherChangeDecision`으로 멈춘
+/// 세션에 `"유지"`/`"교체"`/그 외(="맡기기", AI 판정에 위임)를 반영하고
+/// 다음 결정 지점까지 진행한다.
+pub fn submit_pitcher_change_decision(slot_conn: &Connection, world_seed: i64, choice: &str) -> anyhow::Result<MatchStepResult> {
+    run_until_decision_point(slot_conn, world_seed, None, Some(choice))
 }
 
 /// 세션이 있는 동안 계속 진행하다가 ①플레이어 입력이 필요하거나(§3 모드에
 /// 따라) ②경기가 끝나면 멈춘다. `player_pitch`는 `submit_pitch`로 막
-/// 제출된 선택 — 있으면 이번 루프의 **첫 판정에만** 소비되고, 이후
-/// 반복에서는 다시 정상적인 AI/프롬프트 로직을 탄다.
-fn run_until_decision_point(slot_conn: &Connection, world_seed: i64, mut player_pitch: Option<(String, Course)>) -> anyhow::Result<MatchStepResult> {
+/// 제출된 선택, `pitcher_decision`은 `submit_pitcher_change_decision`으로
+/// 막 제출된 선택 — 둘 다 있으면 이번 루프의 **첫 판정에만** 소비되고,
+/// 이후 반복에서는 다시 정상적인 AI/프롬프트 로직을 탄다.
+fn run_until_decision_point(
+    slot_conn: &Connection,
+    world_seed: i64,
+    mut player_pitch: Option<(String, Course)>,
+    mut pitcher_decision: Option<&str>,
+) -> anyhow::Result<MatchStepResult> {
     let today: i64 = slot_conn.query_row("SELECT current_day FROM meta", [], |r| r.get(0))?;
     let protagonist_team_id: String = {
         let contract_raw: String = slot_conn.query_row("SELECT contract FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0))?;
@@ -459,23 +486,54 @@ fn run_until_decision_point(slot_conn: &Connection, world_seed: i64, mut player_
         let batting_team_is_home = batting_team == session.home;
         let protagonist_pitching_team = pitching_team == protagonist_team_id;
 
-        // 감독 개입(§8, I7 29차분) — 하프이닝 경계마다(수동 모드 제외) 판단.
-        // 강판되면 이후 이 팀의 투구는 배경 하프이닝 경로로 넘어간다(아래).
-        if protagonist_pitching_team && !session.protagonist_pulled && session.mode != "수동" {
+        // 감독 개입(§8) — 하프이닝 경계마다 판단. 강판되면 이후 이 팀의
+        // 투구는 배경 하프이닝 경로로 넘어간다(아래). 자동·반자동은 AI가
+        // 즉시 판단(기존 로직 그대로), 수동은 "고려 구간"(소프트캡 이상)
+        // 에서만 플레이어에게 먼저 묻고(§8 "이닝 종료마다 판단 기회") —
+        // 위기상황(`high_leverage`)마다 추가로 묻는 건 이번 스코프에서
+        // 제외(10_구현_Phase_계획.md §6-58 스코프 판단 참고).
+        if protagonist_pitching_team && !session.protagonist_pulled {
             let manager = crate::sim::manager::manager_stats(&protagonist_team_id);
             let pitcher_fatigue = load_protagonist_as_pitcher(slot_conn)?.fatigue;
-            let mut pull_rng = ChaCha8Rng::seed_from_u64(repository::league_sub_seed(
-                world_seed,
-                &format!("pull:{}:{}:{}", session.game_id, session.inning, session.top_of_inning),
-            ));
-            let should_pull = crate::sim::manager::should_pull_pitcher(
-                &mut pull_rng,
-                session.pitch_seq as u32,
-                pitcher_fatigue,
-                manager.tactics,
-                manager.trust,
-            );
-            if should_pull {
+            let pitches_thrown = session.pitch_seq as u32;
+
+            let pull_now = if session.mode == "수동" {
+                let prob = crate::sim::manager::pull_probability(pitches_thrown, pitcher_fatigue, manager.tactics, manager.trust);
+                if prob <= 0.0 {
+                    false // 아직 고려 구간 아님 — 묻지도 않고 계속 진행.
+                } else {
+                    match pitcher_decision.take() {
+                        None => {
+                            return Ok(MatchStepResult::PitcherChangeDecision {
+                                inning: session.inning as u32,
+                                top_of_inning: session.top_of_inning,
+                                home_runs: session.home_runs as u32,
+                                away_runs: session.away_runs as u32,
+                                pitches_thrown,
+                                fatigue: pitcher_fatigue,
+                                manager_recommends_pull: prob >= 0.5,
+                            });
+                        }
+                        Some("교체") => true,
+                        Some("유지") => false,
+                        Some(_) /* "맡기기" — AI 판정에 그대로 맡김 */ => {
+                            let mut pull_rng = ChaCha8Rng::seed_from_u64(repository::league_sub_seed(
+                                world_seed,
+                                &format!("pull:{}:{}:{}", session.game_id, session.inning, session.top_of_inning),
+                            ));
+                            crate::sim::manager::should_pull_pitcher(&mut pull_rng, pitches_thrown, pitcher_fatigue, manager.tactics, manager.trust)
+                        }
+                    }
+                }
+            } else {
+                let mut pull_rng = ChaCha8Rng::seed_from_u64(repository::league_sub_seed(
+                    world_seed,
+                    &format!("pull:{}:{}:{}", session.game_id, session.inning, session.top_of_inning),
+                ));
+                crate::sim::manager::should_pull_pitcher(&mut pull_rng, pitches_thrown, pitcher_fatigue, manager.tactics, manager.trust)
+            };
+
+            if pull_now {
                 if let Some(reliever) = repository::load_relief_pitcher(slot_conn, &protagonist_team_id)? {
                     let protagonist_is_home = session.home == protagonist_team_id;
                     let opponent_runs_so_far = if protagonist_is_home { session.away_runs } else { session.home_runs };
@@ -898,6 +956,9 @@ mod tests {
                 MatchStepResult::AwaitingPitch { .. } => {
                     result = submit_pitch(&slot_conn, 1, "포심 패스트볼", Course::MidCenter).unwrap();
                 }
+                MatchStepResult::PitcherChangeDecision { .. } => {
+                    result = submit_pitcher_change_decision(&slot_conn, 1, "맡기기").unwrap();
+                }
             }
             guard += 1;
             assert!(guard < 5000, "manual game did not finish within a reasonable number of pitches");
@@ -946,7 +1007,7 @@ mod tests {
             )
             .unwrap();
 
-        let result = run_until_decision_point(&slot_conn, 1, None).unwrap();
+        let result = run_until_decision_point(&slot_conn, 1, None, None).unwrap();
         assert!(matches!(result, MatchStepResult::GameOver { .. }), "automatic mode should still run to completion after a mid-game pull");
 
         let detail_raw: String = slot_conn.query_row("SELECT detail FROM game_log WHERE game_id = 'game:1'", [], |r| r.get(0)).unwrap();
@@ -957,7 +1018,7 @@ mod tests {
     }
 
     #[test]
-    fn manager_never_pulls_in_manual_mode() {
+    fn manager_never_auto_pulls_in_manual_mode_but_asks_the_player_instead() {
         let slot_conn = slot::open_in_memory().unwrap();
         insert_roster(&slot_conn, "team:home");
         insert_reliever(&slot_conn, "team:home");
@@ -976,10 +1037,129 @@ mod tests {
             )
             .unwrap();
 
-        let result = run_until_decision_point(&slot_conn, 1, None).unwrap();
-        assert!(matches!(result, MatchStepResult::AwaitingPitch { .. }), "manual mode keeps pausing on the protagonist's own pitch regardless of pitch count");
+        let result = run_until_decision_point(&slot_conn, 1, None, None).unwrap();
+        match result {
+            MatchStepResult::PitcherChangeDecision { pitches_thrown, manager_recommends_pull, .. } => {
+                assert_eq!(pitches_thrown, 200);
+                assert!(manager_recommends_pull, "well past the hard cap, the manager's advisory opinion should be to pull");
+            }
+            other => panic!("manual mode past the soft cap should ask the player instead of silently pausing on the next pitch, got {other:?}"),
+        }
 
         let pulled: i64 = slot_conn.query_row("SELECT protagonist_pulled FROM match_session WHERE id = 1", [], |r| r.get(0)).unwrap();
+        assert_eq!(pulled, 0, "no auto-pull should happen until the player actually responds");
+    }
+
+    #[test]
+    fn manual_mode_does_not_prompt_before_the_soft_cap() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_roster(&slot_conn, "team:home");
+        insert_reliever(&slot_conn, "team:home");
+        insert_roster(&slot_conn, "team:away");
+        insert_protagonist(&slot_conn, "team:home");
+        insert_schedule(&slot_conn, "game:1");
+
+        slot_conn
+            .execute(
+                "INSERT INTO match_session (id, game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases,
+                                             home_runs, away_runs, home_batter_idx, away_batter_idx, balls, strikes,
+                                             current_batter_id, pitch_seq, strikeouts)
+                 VALUES (1, 'game:1', 'team:home', 'team:away', 'league:hs', '수동', 1, 1, 0, '[false,false,false]',
+                         0, 0, 0, 0, 0, 0, NULL, 10, 0)",
+                [],
+            )
+            .unwrap();
+
+        let result = run_until_decision_point(&slot_conn, 1, None, None).unwrap();
+        assert!(matches!(result, MatchStepResult::AwaitingPitch { .. }), "well below the soft cap, manual mode should not ask about a pitcher change yet");
+    }
+
+    #[test]
+    fn player_choosing_keep_does_not_pull_the_pitcher() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_roster(&slot_conn, "team:home");
+        insert_reliever(&slot_conn, "team:home");
+        insert_roster(&slot_conn, "team:away");
+        insert_protagonist(&slot_conn, "team:home");
+        insert_schedule(&slot_conn, "game:1");
+
+        slot_conn
+            .execute(
+                "INSERT INTO match_session (id, game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases,
+                                             home_runs, away_runs, home_batter_idx, away_batter_idx, balls, strikes,
+                                             current_batter_id, pitch_seq, strikeouts)
+                 VALUES (1, 'game:1', 'team:home', 'team:away', 'league:hs', '수동', 1, 1, 0, '[false,false,false]',
+                         0, 0, 0, 0, 0, 0, NULL, 200, 0)",
+                [],
+            )
+            .unwrap();
+
+        run_until_decision_point(&slot_conn, 1, None, None).unwrap(); // 프롬프트 발생
+        let result = submit_pitcher_change_decision(&slot_conn, 1, "유지").unwrap();
+
+        assert!(matches!(result, MatchStepResult::AwaitingPitch { .. }), "keeping the pitcher should let the manual pitch loop continue as normal");
+        let pulled: i64 = slot_conn.query_row("SELECT protagonist_pulled FROM match_session WHERE id = 1", [], |r| r.get(0)).unwrap();
         assert_eq!(pulled, 0);
+    }
+
+    #[test]
+    fn player_choosing_pull_now_pulls_the_pitcher_with_a_snapshot() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_roster(&slot_conn, "team:home");
+        insert_reliever(&slot_conn, "team:home");
+        insert_roster(&slot_conn, "team:away");
+        insert_protagonist(&slot_conn, "team:home");
+        insert_schedule(&slot_conn, "game:1");
+
+        slot_conn
+            .execute(
+                "INSERT INTO match_session (id, game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases,
+                                             home_runs, away_runs, home_batter_idx, away_batter_idx, balls, strikes,
+                                             current_batter_id, pitch_seq, strikeouts)
+                 VALUES (1, 'game:1', 'team:home', 'team:away', 'league:hs', '수동', 1, 1, 0, '[false,false,false]',
+                         0, 0, 0, 0, 0, 0, NULL, 200, 0)",
+                [],
+            )
+            .unwrap();
+
+        run_until_decision_point(&slot_conn, 1, None, None).unwrap(); // 프롬프트 발생
+        let result = submit_pitcher_change_decision(&slot_conn, 1, "교체").unwrap();
+
+        assert!(matches!(result, MatchStepResult::GameOver { .. }), "team:home is pitching in the top of inning 1 — pulling here hands the rest of the game to the background half-inning path");
+        let detail_raw: String = slot_conn.query_row("SELECT detail FROM game_log WHERE game_id = 'game:1'", [], |r| r.get(0)).unwrap();
+        let detail: serde_json::Value = serde_json::from_str(&detail_raw).unwrap();
+        assert_eq!(detail.get("pulled_by_manager").and_then(|v| v.as_bool()), Some(true));
+        assert_eq!(detail.get("innings_pitched").and_then(|v| v.as_i64()), Some(1), "should freeze at the inning the pull happened in");
+    }
+
+    #[test]
+    fn player_deferring_to_the_manager_uses_the_automatic_decision() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_roster(&slot_conn, "team:home");
+        insert_reliever(&slot_conn, "team:home");
+        insert_roster(&slot_conn, "team:away");
+        insert_protagonist(&slot_conn, "team:home");
+        insert_schedule(&slot_conn, "game:1");
+
+        slot_conn
+            .execute(
+                "INSERT INTO match_session (id, game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases,
+                                             home_runs, away_runs, home_batter_idx, away_batter_idx, balls, strikes,
+                                             current_batter_id, pitch_seq, strikeouts)
+                 VALUES (1, 'game:1', 'team:home', 'team:away', 'league:hs', '수동', 1, 1, 0, '[false,false,false]',
+                         0, 0, 0, 0, 0, 0, NULL, 200, 0)",
+                [],
+            )
+            .unwrap();
+
+        run_until_decision_point(&slot_conn, 1, None, None).unwrap(); // 프롬프트 발생
+        // 200구는 하드캡을 훨씬 넘겨 should_pull_pitcher가 RNG 없이도
+        // 무조건 true라, "맡기기"의 결과가 결정적으로 강판이어야 한다.
+        let result = submit_pitcher_change_decision(&slot_conn, 1, "맡기기").unwrap();
+
+        assert!(matches!(result, MatchStepResult::GameOver { .. }));
+        let detail_raw: String = slot_conn.query_row("SELECT detail FROM game_log WHERE game_id = 'game:1'", [], |r| r.get(0)).unwrap();
+        let detail: serde_json::Value = serde_json::from_str(&detail_raw).unwrap();
+        assert_eq!(detail.get("pulled_by_manager").and_then(|v| v.as_bool()), Some(true));
     }
 }

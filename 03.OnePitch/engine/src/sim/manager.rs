@@ -32,7 +32,11 @@ fn hashed_stat(team_id: &str, salt: &str) -> f64 {
 const SOFT_CAP: f64 = 90.0;
 const HARD_CAP: f64 = 120.0;
 
-pub fn should_pull_pitcher(rng: &mut impl Rng, pitches_thrown: u32, fatigue: f64, tactics: f64, trust: f64) -> bool {
+/// 강판 확률(0.0~1.0) — 소프트캡 미만은 0.0(고려 대상조차 아님), 하드캡
+/// 이상은 1.0(무조건). 수동 모드(§8 "이닝 종료마다 판단 기회")가 "AI라면
+/// 지금 고려라도 해볼 구간인가"를 RNG 없이 물을 수 있도록 `should_pull_pitcher`
+/// 에서 분리했다 — 이 함수 자체는 순수 계산, 굴리는 건 호출부 책임.
+pub fn pull_probability(pitches_thrown: u32, fatigue: f64, tactics: f64, trust: f64) -> f64 {
     let cap_shift = (tactics - 50.0) * -0.15 + (trust - 50.0) * 0.1;
     let fatigue_shift = -(fatigue - 30.0).max(0.0) * 0.3;
     let soft = (SOFT_CAP + cap_shift + fatigue_shift).max(60.0);
@@ -40,13 +44,23 @@ pub fn should_pull_pitcher(rng: &mut impl Rng, pitches_thrown: u32, fatigue: f64
 
     let pitches = pitches_thrown as f64;
     if pitches >= hard {
-        return true;
+        return 1.0;
     }
     if pitches < soft {
+        return 0.0;
+    }
+    ((pitches - soft) / (hard - soft)).clamp(0.0, 1.0)
+}
+
+pub fn should_pull_pitcher(rng: &mut impl Rng, pitches_thrown: u32, fatigue: f64, tactics: f64, trust: f64) -> bool {
+    let p = pull_probability(pitches_thrown, fatigue, tactics, trust);
+    if p >= 1.0 {
+        return true;
+    }
+    if p <= 0.0 {
         return false;
     }
-    let progress = (pitches - soft) / (hard - soft);
-    rng.gen_bool(progress.clamp(0.0, 1.0))
+    rng.gen_bool(p)
 }
 
 #[cfg(test)]
@@ -86,6 +100,25 @@ mod tests {
         for _ in 0..100 {
             assert!(should_pull_pitcher(&mut rng, 130, 20.0, 50.0, 50.0));
         }
+    }
+
+    #[test]
+    fn pull_probability_is_zero_below_soft_cap() {
+        assert_eq!(pull_probability(50, 20.0, 50.0, 50.0), 0.0);
+    }
+
+    #[test]
+    fn pull_probability_is_one_at_or_above_hard_cap() {
+        assert_eq!(pull_probability(130, 20.0, 50.0, 50.0), 1.0);
+        assert_eq!(pull_probability(200, 20.0, 50.0, 50.0), 1.0);
+    }
+
+    #[test]
+    fn pull_probability_increases_monotonically_between_caps() {
+        let at_95 = pull_probability(95, 20.0, 50.0, 50.0);
+        let at_110 = pull_probability(110, 20.0, 50.0, 50.0);
+        assert!(at_95 > 0.0 && at_95 < 1.0);
+        assert!(at_110 > at_95, "at_95={at_95} at_110={at_110}");
     }
 
     #[test]

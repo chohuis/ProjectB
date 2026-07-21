@@ -1773,6 +1773,24 @@ impl SseDecode for crate::api::game::MatchStepInfo {
                     away_runs: var_awayRuns,
                 };
             }
+            2 => {
+                let mut var_inning = <u32>::sse_decode(deserializer);
+                let mut var_topOfInning = <bool>::sse_decode(deserializer);
+                let mut var_homeRuns = <u32>::sse_decode(deserializer);
+                let mut var_awayRuns = <u32>::sse_decode(deserializer);
+                let mut var_pitchesThrown = <u32>::sse_decode(deserializer);
+                let mut var_fatigue = <f64>::sse_decode(deserializer);
+                let mut var_managerRecommendsPull = <bool>::sse_decode(deserializer);
+                return crate::api::game::MatchStepInfo::PitcherChangeDecision {
+                    inning: var_inning,
+                    top_of_inning: var_topOfInning,
+                    home_runs: var_homeRuns,
+                    away_runs: var_awayRuns,
+                    pitches_thrown: var_pitchesThrown,
+                    fatigue: var_fatigue,
+                    manager_recommends_pull: var_managerRecommendsPull,
+                };
+            }
             _ => {
                 unimplemented!("");
             }
@@ -2355,6 +2373,25 @@ impl flutter_rust_bridge::IntoDart for crate::api::game::MatchStepInfo {
                 1.into_dart(),
                 home_runs.into_into_dart().into_dart(),
                 away_runs.into_into_dart().into_dart(),
+            ]
+            .into_dart(),
+            crate::api::game::MatchStepInfo::PitcherChangeDecision {
+                inning,
+                top_of_inning,
+                home_runs,
+                away_runs,
+                pitches_thrown,
+                fatigue,
+                manager_recommends_pull,
+            } => [
+                2.into_dart(),
+                inning.into_into_dart().into_dart(),
+                top_of_inning.into_into_dart().into_dart(),
+                home_runs.into_into_dart().into_dart(),
+                away_runs.into_into_dart().into_dart(),
+                pitches_thrown.into_into_dart().into_dart(),
+                fatigue.into_into_dart().into_dart(),
+                manager_recommends_pull.into_into_dart().into_dart(),
             ]
             .into_dart(),
             _ => {
@@ -2960,6 +2997,24 @@ impl SseEncode for crate::api::game::MatchStepInfo {
                 <i32>::sse_encode(1, serializer);
                 <u32>::sse_encode(home_runs, serializer);
                 <u32>::sse_encode(away_runs, serializer);
+            }
+            crate::api::game::MatchStepInfo::PitcherChangeDecision {
+                inning,
+                top_of_inning,
+                home_runs,
+                away_runs,
+                pitches_thrown,
+                fatigue,
+                manager_recommends_pull,
+            } => {
+                <i32>::sse_encode(2, serializer);
+                <u32>::sse_encode(inning, serializer);
+                <bool>::sse_encode(top_of_inning, serializer);
+                <u32>::sse_encode(home_runs, serializer);
+                <u32>::sse_encode(away_runs, serializer);
+                <u32>::sse_encode(pitches_thrown, serializer);
+                <f64>::sse_encode(fatigue, serializer);
+                <bool>::sse_encode(manager_recommends_pull, serializer);
             }
             _ => {
                 unimplemented!("");

@@ -87,12 +87,13 @@ extension MatchStepInfoPatterns on MatchStepInfo {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( MatchStepInfo_AwaitingPitch value)?  awaitingPitch,TResult Function( MatchStepInfo_GameOver value)?  gameOver,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( MatchStepInfo_AwaitingPitch value)?  awaitingPitch,TResult Function( MatchStepInfo_GameOver value)?  gameOver,TResult Function( MatchStepInfo_PitcherChangeDecision value)?  pitcherChangeDecision,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case MatchStepInfo_AwaitingPitch() when awaitingPitch != null:
 return awaitingPitch(_that);case MatchStepInfo_GameOver() when gameOver != null:
-return gameOver(_that);case _:
+return gameOver(_that);case MatchStepInfo_PitcherChangeDecision() when pitcherChangeDecision != null:
+return pitcherChangeDecision(_that);case _:
   return orElse();
 
 }
@@ -110,12 +111,13 @@ return gameOver(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( MatchStepInfo_AwaitingPitch value)  awaitingPitch,required TResult Function( MatchStepInfo_GameOver value)  gameOver,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( MatchStepInfo_AwaitingPitch value)  awaitingPitch,required TResult Function( MatchStepInfo_GameOver value)  gameOver,required TResult Function( MatchStepInfo_PitcherChangeDecision value)  pitcherChangeDecision,}){
 final _that = this;
 switch (_that) {
 case MatchStepInfo_AwaitingPitch():
 return awaitingPitch(_that);case MatchStepInfo_GameOver():
-return gameOver(_that);}
+return gameOver(_that);case MatchStepInfo_PitcherChangeDecision():
+return pitcherChangeDecision(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -129,12 +131,13 @@ return gameOver(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( MatchStepInfo_AwaitingPitch value)?  awaitingPitch,TResult? Function( MatchStepInfo_GameOver value)?  gameOver,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( MatchStepInfo_AwaitingPitch value)?  awaitingPitch,TResult? Function( MatchStepInfo_GameOver value)?  gameOver,TResult? Function( MatchStepInfo_PitcherChangeDecision value)?  pitcherChangeDecision,}){
 final _that = this;
 switch (_that) {
 case MatchStepInfo_AwaitingPitch() when awaitingPitch != null:
 return awaitingPitch(_that);case MatchStepInfo_GameOver() when gameOver != null:
-return gameOver(_that);case _:
+return gameOver(_that);case MatchStepInfo_PitcherChangeDecision() when pitcherChangeDecision != null:
+return pitcherChangeDecision(_that);case _:
   return null;
 
 }
@@ -151,11 +154,12 @@ return gameOver(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String batterId,  int balls,  int strikes,  bool highLeverage,  int inning,  bool topOfInning,  int outs,  List<bool> bases,  int homeRuns,  int awayRuns)?  awaitingPitch,TResult Function( int homeRuns,  int awayRuns)?  gameOver,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String batterId,  int balls,  int strikes,  bool highLeverage,  int inning,  bool topOfInning,  int outs,  List<bool> bases,  int homeRuns,  int awayRuns)?  awaitingPitch,TResult Function( int homeRuns,  int awayRuns)?  gameOver,TResult Function( int inning,  bool topOfInning,  int homeRuns,  int awayRuns,  int pitchesThrown,  double fatigue,  bool managerRecommendsPull)?  pitcherChangeDecision,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case MatchStepInfo_AwaitingPitch() when awaitingPitch != null:
 return awaitingPitch(_that.batterId,_that.balls,_that.strikes,_that.highLeverage,_that.inning,_that.topOfInning,_that.outs,_that.bases,_that.homeRuns,_that.awayRuns);case MatchStepInfo_GameOver() when gameOver != null:
-return gameOver(_that.homeRuns,_that.awayRuns);case _:
+return gameOver(_that.homeRuns,_that.awayRuns);case MatchStepInfo_PitcherChangeDecision() when pitcherChangeDecision != null:
+return pitcherChangeDecision(_that.inning,_that.topOfInning,_that.homeRuns,_that.awayRuns,_that.pitchesThrown,_that.fatigue,_that.managerRecommendsPull);case _:
   return orElse();
 
 }
@@ -173,11 +177,12 @@ return gameOver(_that.homeRuns,_that.awayRuns);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String batterId,  int balls,  int strikes,  bool highLeverage,  int inning,  bool topOfInning,  int outs,  List<bool> bases,  int homeRuns,  int awayRuns)  awaitingPitch,required TResult Function( int homeRuns,  int awayRuns)  gameOver,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String batterId,  int balls,  int strikes,  bool highLeverage,  int inning,  bool topOfInning,  int outs,  List<bool> bases,  int homeRuns,  int awayRuns)  awaitingPitch,required TResult Function( int homeRuns,  int awayRuns)  gameOver,required TResult Function( int inning,  bool topOfInning,  int homeRuns,  int awayRuns,  int pitchesThrown,  double fatigue,  bool managerRecommendsPull)  pitcherChangeDecision,}) {final _that = this;
 switch (_that) {
 case MatchStepInfo_AwaitingPitch():
 return awaitingPitch(_that.batterId,_that.balls,_that.strikes,_that.highLeverage,_that.inning,_that.topOfInning,_that.outs,_that.bases,_that.homeRuns,_that.awayRuns);case MatchStepInfo_GameOver():
-return gameOver(_that.homeRuns,_that.awayRuns);}
+return gameOver(_that.homeRuns,_that.awayRuns);case MatchStepInfo_PitcherChangeDecision():
+return pitcherChangeDecision(_that.inning,_that.topOfInning,_that.homeRuns,_that.awayRuns,_that.pitchesThrown,_that.fatigue,_that.managerRecommendsPull);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -191,11 +196,12 @@ return gameOver(_that.homeRuns,_that.awayRuns);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String batterId,  int balls,  int strikes,  bool highLeverage,  int inning,  bool topOfInning,  int outs,  List<bool> bases,  int homeRuns,  int awayRuns)?  awaitingPitch,TResult? Function( int homeRuns,  int awayRuns)?  gameOver,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String batterId,  int balls,  int strikes,  bool highLeverage,  int inning,  bool topOfInning,  int outs,  List<bool> bases,  int homeRuns,  int awayRuns)?  awaitingPitch,TResult? Function( int homeRuns,  int awayRuns)?  gameOver,TResult? Function( int inning,  bool topOfInning,  int homeRuns,  int awayRuns,  int pitchesThrown,  double fatigue,  bool managerRecommendsPull)?  pitcherChangeDecision,}) {final _that = this;
 switch (_that) {
 case MatchStepInfo_AwaitingPitch() when awaitingPitch != null:
 return awaitingPitch(_that.batterId,_that.balls,_that.strikes,_that.highLeverage,_that.inning,_that.topOfInning,_that.outs,_that.bases,_that.homeRuns,_that.awayRuns);case MatchStepInfo_GameOver() when gameOver != null:
-return gameOver(_that.homeRuns,_that.awayRuns);case _:
+return gameOver(_that.homeRuns,_that.awayRuns);case MatchStepInfo_PitcherChangeDecision() when pitcherChangeDecision != null:
+return pitcherChangeDecision(_that.inning,_that.topOfInning,_that.homeRuns,_that.awayRuns,_that.pitchesThrown,_that.fatigue,_that.managerRecommendsPull);case _:
   return null;
 
 }
@@ -355,6 +361,84 @@ class _$MatchStepInfo_GameOverCopyWithImpl<$Res>
 homeRuns: null == homeRuns ? _self.homeRuns : homeRuns // ignore: cast_nullable_to_non_nullable
 as int,awayRuns: null == awayRuns ? _self.awayRuns : awayRuns // ignore: cast_nullable_to_non_nullable
 as int,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class MatchStepInfo_PitcherChangeDecision extends MatchStepInfo {
+  const MatchStepInfo_PitcherChangeDecision({required this.inning, required this.topOfInning, required this.homeRuns, required this.awayRuns, required this.pitchesThrown, required this.fatigue, required this.managerRecommendsPull}): super._();
+  
+
+ final  int inning;
+ final  bool topOfInning;
+@override final  int homeRuns;
+@override final  int awayRuns;
+ final  int pitchesThrown;
+ final  double fatigue;
+ final  bool managerRecommendsPull;
+
+/// Create a copy of MatchStepInfo
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$MatchStepInfo_PitcherChangeDecisionCopyWith<MatchStepInfo_PitcherChangeDecision> get copyWith => _$MatchStepInfo_PitcherChangeDecisionCopyWithImpl<MatchStepInfo_PitcherChangeDecision>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MatchStepInfo_PitcherChangeDecision&&(identical(other.inning, inning) || other.inning == inning)&&(identical(other.topOfInning, topOfInning) || other.topOfInning == topOfInning)&&(identical(other.homeRuns, homeRuns) || other.homeRuns == homeRuns)&&(identical(other.awayRuns, awayRuns) || other.awayRuns == awayRuns)&&(identical(other.pitchesThrown, pitchesThrown) || other.pitchesThrown == pitchesThrown)&&(identical(other.fatigue, fatigue) || other.fatigue == fatigue)&&(identical(other.managerRecommendsPull, managerRecommendsPull) || other.managerRecommendsPull == managerRecommendsPull));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,inning,topOfInning,homeRuns,awayRuns,pitchesThrown,fatigue,managerRecommendsPull);
+
+@override
+String toString() {
+  return 'MatchStepInfo.pitcherChangeDecision(inning: $inning, topOfInning: $topOfInning, homeRuns: $homeRuns, awayRuns: $awayRuns, pitchesThrown: $pitchesThrown, fatigue: $fatigue, managerRecommendsPull: $managerRecommendsPull)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $MatchStepInfo_PitcherChangeDecisionCopyWith<$Res> implements $MatchStepInfoCopyWith<$Res> {
+  factory $MatchStepInfo_PitcherChangeDecisionCopyWith(MatchStepInfo_PitcherChangeDecision value, $Res Function(MatchStepInfo_PitcherChangeDecision) _then) = _$MatchStepInfo_PitcherChangeDecisionCopyWithImpl;
+@override @useResult
+$Res call({
+ int inning, bool topOfInning, int homeRuns, int awayRuns, int pitchesThrown, double fatigue, bool managerRecommendsPull
+});
+
+
+
+
+}
+/// @nodoc
+class _$MatchStepInfo_PitcherChangeDecisionCopyWithImpl<$Res>
+    implements $MatchStepInfo_PitcherChangeDecisionCopyWith<$Res> {
+  _$MatchStepInfo_PitcherChangeDecisionCopyWithImpl(this._self, this._then);
+
+  final MatchStepInfo_PitcherChangeDecision _self;
+  final $Res Function(MatchStepInfo_PitcherChangeDecision) _then;
+
+/// Create a copy of MatchStepInfo
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? inning = null,Object? topOfInning = null,Object? homeRuns = null,Object? awayRuns = null,Object? pitchesThrown = null,Object? fatigue = null,Object? managerRecommendsPull = null,}) {
+  return _then(MatchStepInfo_PitcherChangeDecision(
+inning: null == inning ? _self.inning : inning // ignore: cast_nullable_to_non_nullable
+as int,topOfInning: null == topOfInning ? _self.topOfInning : topOfInning // ignore: cast_nullable_to_non_nullable
+as bool,homeRuns: null == homeRuns ? _self.homeRuns : homeRuns // ignore: cast_nullable_to_non_nullable
+as int,awayRuns: null == awayRuns ? _self.awayRuns : awayRuns // ignore: cast_nullable_to_non_nullable
+as int,pitchesThrown: null == pitchesThrown ? _self.pitchesThrown : pitchesThrown // ignore: cast_nullable_to_non_nullable
+as int,fatigue: null == fatigue ? _self.fatigue : fatigue // ignore: cast_nullable_to_non_nullable
+as double,managerRecommendsPull: null == managerRecommendsPull ? _self.managerRecommendsPull : managerRecommendsPull // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

@@ -2619,6 +2619,7 @@ pub fn resolve_choice(
             let course = crate::sim::pitch::Course::parse(course_name).ok_or_else(|| anyhow::anyhow!("unknown course: {course_name}"))?;
             Some(match_session::submit_pitch(slot_conn, world_seed, pitch_name, course)?)
         }
+        "pitcherChange" => Some(match_session::submit_pitcher_change_decision(slot_conn, world_seed, choice_id)?),
         "injuryTreatment" => {
             let today: i64 = slot_conn.query_row("SELECT current_day FROM meta", [], |r| r.get(0))?;
             treat(slot_conn, world_seed, choice_id, today)?;
@@ -2658,6 +2659,19 @@ pub fn resolve_choice(
         slot_conn.execute(
             "INSERT INTO pending_actions (id, type, urgency, created_day, payload) VALUES (?1, 'pitch', 'urgent', ?2, ?3)",
             params![format!("pending:pitch:{pitch_seq}"), today, payload],
+        )?;
+    }
+
+    if let Some(match_session::MatchStepResult::PitcherChangeDecision { inning, pitches_thrown, fatigue, manager_recommends_pull, .. }) = &step {
+        let today: i64 = slot_conn.query_row("SELECT current_day FROM meta", [], |r| r.get(0))?;
+        // pitches_thrown은 이 프롬프트가 뜰 때마다 더 커져 있어야 정상이라
+        // (수동 모드가 소프트캡 이상에서만 묻고, 매 하프이닝 최소 1구는
+        // 더 던진 뒤에야 다음 경계에 도달) 'pitch'와 같은 이유로 안전하게
+        // 고유 접미사로 쓴다.
+        let payload = serde_json::json!({"inning": inning, "pitches_thrown": pitches_thrown, "fatigue": fatigue, "manager_recommends_pull": manager_recommends_pull}).to_string();
+        slot_conn.execute(
+            "INSERT INTO pending_actions (id, type, urgency, created_day, payload) VALUES (?1, 'pitcherChange', 'urgent', ?2, ?3)",
+            params![format!("pending:pitcherChange:{pitches_thrown}"), today, payload],
         )?;
     }
 
@@ -4268,6 +4282,65 @@ mod tests {
     }
 
     #[test]
+    fn resolve_choice_wraps_a_pitcher_change_decision_into_a_pending_action() {
+        let mut triggered = false;
+        for seed in 0..30i64 {
+            let mut slot_conn = slot::open_in_memory().unwrap();
+            let content_conn = content::open_in_memory().unwrap();
+            content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:hs', NULL)", []).unwrap();
+            content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:x', 'league:hs', NULL, NULL)", []).unwrap();
+            content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:y', 'league:hs', NULL, NULL)", []).unwrap();
+            insert_minimal_roster(&slot_conn, "team:x");
+            insert_minimal_roster(&slot_conn, "team:y");
+            slot_conn
+                .execute(
+                    "INSERT INTO protagonist (id, name, handedness, archetype, stats, xp, live_state, finance, pitches, contract, injury)
+                     VALUES ('proto:1', '주인공', '우투', '강속구형', ?1, '{}', '{\"피로도\":0}', '{}', '[\"포심 패스트볼\"]', '{\"team_id\":\"team:x\"}', '{}')",
+                    params![serde_json::json!({"제구": 50.0, "구위": 50.0}).to_string()],
+                )
+                .unwrap();
+            slot_conn.execute("INSERT INTO schedule (game_id, day, home, away, result) VALUES ('game:1', 5, 'team:x', 'team:y', NULL)", []).unwrap();
+
+            let pending = advance(&mut slot_conn, &content_conn).unwrap();
+            let step = resolve_choice(&slot_conn, &content_conn, seed, &pending[0].id, "수동").unwrap();
+            assert!(matches!(step, Some(match_session::MatchStepResult::AwaitingPitch { .. })));
+
+            // 소프트캡을 이미 넘긴 상태로 미리 채워 다음 하프이닝 경계에서
+            // 반드시 PitcherChangeDecision이 뜨게 만든다.
+            slot_conn.execute("UPDATE match_session SET pitch_seq = 200 WHERE id = 1", []).unwrap();
+
+            let mut action_id = list_pending_actions(&slot_conn).unwrap()[0].id.clone();
+            for _ in 0..200 {
+                let step = resolve_choice(&slot_conn, &content_conn, seed, &action_id, "포심 패스트볼:MidCenter").unwrap();
+                match step {
+                    Some(match_session::MatchStepResult::PitcherChangeDecision { pitches_thrown, .. }) => {
+                        let pending = list_pending_actions(&slot_conn).unwrap();
+                        assert_eq!(pending.len(), 1);
+                        assert_eq!(pending[0].kind, "pitcherChange");
+                        let payload: serde_json::Value = serde_json::from_str(&pending[0].payload).unwrap();
+                        assert_eq!(payload["pitches_thrown"], pitches_thrown);
+                        assert!(payload.get("manager_recommends_pull").is_some());
+                        triggered = true;
+                        break;
+                    }
+                    Some(match_session::MatchStepResult::AwaitingPitch { .. }) | Some(match_session::MatchStepResult::GameOver { .. }) => {
+                        let next = list_pending_actions(&slot_conn).unwrap();
+                        if next.is_empty() {
+                            break; // 게임 종료
+                        }
+                        action_id = next[0].id.clone();
+                    }
+                    None => break,
+                }
+            }
+            if triggered {
+                break;
+            }
+        }
+        assert!(triggered, "expected at least one seed to reach a half-inning boundary and surface a pitcherChange pending action");
+    }
+
+    #[test]
     fn resolve_choice_chains_pitch_pending_actions_through_a_manual_game() {
         let mut slot_conn = slot::open_in_memory().unwrap();
         let content_conn = content::open_in_memory().unwrap();
@@ -4307,6 +4380,14 @@ mod tests {
                 Some(match_session::MatchStepResult::AwaitingPitch { .. }) => {
                     let next: Vec<PendingActionRow> = list_pending_actions(&slot_conn).unwrap();
                     assert_eq!(next.len(), 1, "exactly one live 'pitch' PendingAction should exist at a time");
+                    action_id = next[0].id.clone();
+                }
+                // 이 루프는 매번 같은 문자열("포심 패스트볼:MidCenter")을 보내는데,
+                // 'pitcherChange' 액션엔 "교체"/"유지"가 아닌 임의 문자열이 곧
+                // "맡기기"(AI 판정에 위임)라 그대로 재사용해도 안전하게 진행된다.
+                Some(match_session::MatchStepResult::PitcherChangeDecision { .. }) => {
+                    let next: Vec<PendingActionRow> = list_pending_actions(&slot_conn).unwrap();
+                    assert_eq!(next.len(), 1, "exactly one live PendingAction should exist at a time");
                     action_id = next[0].id.clone();
                 }
                 None => panic!("expected a match_session step result"),
