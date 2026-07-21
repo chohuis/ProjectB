@@ -42,6 +42,8 @@ struct TrialResult {
     end_speed: f64,
     start_control: f64,
     end_control: f64,
+    events_fired: i64,
+    achievements_unlocked: i64,
 }
 
 /// PendingAction 하나에 대한 결정적 기본 응답 — 실제 플레이어 판단은
@@ -60,6 +62,12 @@ fn default_choice(kind: &str, payload_raw: &str) -> anyhow::Result<String> {
         "careerChoice" => {
             let payload: Value = serde_json::from_str(payload_raw)?;
             payload["options"][0].as_str().unwrap_or("독립").to_string()
+        }
+        // I8 1차분(콘텐츠 저작 파이프라인) — 항상 첫 번째 선택지(다른 다중
+        // 선택 kind와 같은 결의 단순화, 실제 플레이어 편차는 반영 못 함).
+        "event" => {
+            let payload: Value = serde_json::from_str(payload_raw)?;
+            payload["choices"][0]["id"].as_str().unwrap_or("").to_string()
         }
         _ => "확인".to_string(), // draft·retirement — 통보 확인뿐
     })
@@ -164,6 +172,13 @@ fn run_trial(content_conn: &Connection, seed: i64, archetype: &str, max_seasons:
     let end_speed = stat(&slot_conn, "구속")?;
     let end_control = stat(&slot_conn, "제구")?;
 
+    // I8 1차분(콘텐츠 저작 파이프라인) 실증 — 이벤트가 실제로 발동하는지·
+    // 업적이 실제로 달성되는지를 하네스 리포트에서도 확인할 수 있게.
+    let events_fired: i64 =
+        slot_conn.query_row("SELECT count(*) FROM career_events WHERE kind LIKE 'event:%'", [], |r| r.get(0))?;
+    let achievements_unlocked: i64 =
+        slot_conn.query_row("SELECT count(*) FROM achievement_progress WHERE achieved_day IS NOT NULL", [], |r| r.get(0))?;
+
     Ok(TrialResult {
         archetype: archetype.to_string(),
         finished,
@@ -176,6 +191,8 @@ fn run_trial(content_conn: &Connection, seed: i64, archetype: &str, max_seasons:
         end_speed,
         start_control,
         end_control,
+        events_fired,
+        achievements_unlocked,
     })
 }
 
@@ -192,8 +209,18 @@ fn main() -> anyhow::Result<()> {
         let seed = 900_000 + i;
         let r = run_trial(&content_conn, seed, archetype, max_seasons)?;
         println!(
-            "trial {i:>4} seed={seed} archetype={archetype} finished={} reason={:?} seasons={} games={} injuries={} speed {:.1}->{:.1} control {:.1}->{:.1}",
-            r.finished, r.retirement_reason, r.seasons_reached, r.total_games, r.injury_count, r.start_speed, r.end_speed, r.start_control, r.end_control
+            "trial {i:>4} seed={seed} archetype={archetype} finished={} reason={:?} seasons={} games={} injuries={} speed {:.1}->{:.1} control {:.1}->{:.1} events={} achievements={}",
+            r.finished,
+            r.retirement_reason,
+            r.seasons_reached,
+            r.total_games,
+            r.injury_count,
+            r.start_speed,
+            r.end_speed,
+            r.start_control,
+            r.end_control,
+            r.events_fired,
+            r.achievements_unlocked
         );
         results.push(r);
     }
@@ -231,6 +258,11 @@ fn main() -> anyhow::Result<()> {
 
     let total_injuries: i64 = results.iter().map(|r| r.injury_count).sum();
     println!("평균 부상 이력 수: {:.2}건/커리어", total_injuries as f64 / trials as f64);
+
+    let total_events: i64 = results.iter().map(|r| r.events_fired).sum();
+    let total_achievements: i64 = results.iter().map(|r| r.achievements_unlocked).sum();
+    println!("평균 이벤트 발동 수: {:.2}건/커리어 (I8 1차분 콘텐츠 파이프라인 실증)", total_events as f64 / trials as f64);
+    println!("평균 업적 달성 수: {:.2}건/커리어", total_achievements as f64 / trials as f64);
 
     println!("\n--- 아키타입별 피지컬 하락(구속) ---");
     for archetype in ARCHETYPES {

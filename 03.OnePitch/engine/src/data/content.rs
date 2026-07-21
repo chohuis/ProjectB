@@ -49,6 +49,21 @@ fn migration_v2(tx: &Transaction) -> anyhow::Result<()> {
     Ok(())
 }
 
+const V3_DDL: &str = r#"
+ALTER TABLE events ADD COLUMN choices TEXT;
+"#;
+
+/// I8 1차분(콘텐츠 저작 파이프라인) — [02_이벤트](../../../02_기획/콘텐츠/02_이벤트.md)
+/// §2 선택지 구조. `choices`는 `[{"id","label","effects":[...]}]` 형태(빈
+/// 배열/NULL = 선택지 없음 = [03_메시지_알림](../../../02_기획/콘텐츠/03_메시지_알림.md)
+/// §7 판별기준의 "메시지"). `trigger`(기존 컬럼)는 폴링형 조건만 채우고
+/// 콜백형은 계속 NULL — 호출부(`data::repository`)가 조건을 이미 다
+/// 체크했으므로.
+fn migration_v3(tx: &Transaction) -> anyhow::Result<()> {
+    tx.execute_batch(V3_DDL)?;
+    Ok(())
+}
+
 const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 1,
@@ -57,6 +72,10 @@ const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 2,
         up: migration_v2,
+    },
+    Migration {
+        version: 3,
+        up: migration_v3,
     },
 ];
 
@@ -175,12 +194,12 @@ mod tests {
     use super::*;
 
     #[test]
-    fn fresh_db_migrates_to_v2() {
+    fn fresh_db_migrates_to_v3() {
         let conn = open_in_memory().unwrap();
         let version: i64 = conn
             .pragma_query_value(None, "user_version", |row| row.get(0))
             .unwrap();
-        assert_eq!(version, 2);
+        assert_eq!(version, 3);
 
         let table_count: i64 = conn
             .query_row(
@@ -190,6 +209,19 @@ mod tests {
             )
             .unwrap();
         assert_eq!(table_count, 1);
+    }
+
+    #[test]
+    fn v3_adds_choices_column_to_events() {
+        let conn = open_in_memory().unwrap();
+        conn.execute(
+            "INSERT INTO events (id, stage, week, type, urgency, trigger, body, choices)
+             VALUES ('event:x', NULL, NULL, 'personal', 'normal', NULL, '본문', '[{\"id\":\"a\",\"label\":\"A\"}]')",
+            [],
+        )
+        .unwrap();
+        let choices: String = conn.query_row("SELECT choices FROM events WHERE id = 'event:x'", [], |r| r.get(0)).unwrap();
+        assert!(choices.contains("\"id\":\"a\""));
     }
 
     #[test]

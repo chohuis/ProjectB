@@ -1,0 +1,279 @@
+# 이벤트 콘텐츠 — 02_기획/콘텐츠/02_이벤트.md. I8 1차분(콘텐츠 저작
+# 파이프라인) 대표 배치: §1의 6개 트리거 유형(캘린더·본인상태·팀상태·
+# 동료상태·콜백·확률) 전부를 최소 1개씩 실증한다. 나머지 이벤트 아이디어
+# (§1 인벤토리 38개 중 다루지 않은 항목)는 이후 반복 저작 트랙으로 이월.
+#
+# 필드:
+#   type    = "calendar" | "personal" | "team" | "peer" | "probability" | "callback"
+#   week    = 캘린더형만: season_start_day 기준 경과 주차(0-based)
+#   stage   = 리그 필터(league_id 그대로). 비우면 전 리그 적용
+#   trigger = 폴링형만(콜백형은 호출부가 이미 조건을 다 체크, 이 파일엔
+#             안 채움). "확률" 변수는 op/value 대신 chance만 가짐
+#   choices = 없으면 선택지 없는 순수 알림(03_메시지_알림.md §7 판별기준)
+#   effects.target = "live_state"(field 아무거나, 사기·피로도·주목도 등
+#             전부 여기 포함) | "xp"(stat) | "manager_relationship"
+
+[[event]]
+id = "event:season_opener"
+type = "calendar"
+week = 0
+urgency = "normal"
+body = "새 시즌이 시작됐다. 올 한 해, 어떤 마음가짐으로 임할까."
+
+[[event.choices]]
+id = "각오"
+label = "각오를 다진다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 10.0
+
+[[event.choices]]
+id = "평소처럼"
+label = "평소처럼 담담하게"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "침착함"
+delta = 5.0
+
+[[event]]
+id = "event:allstar_break"
+type = "calendar"
+week = 13
+stage = "league:pro"
+urgency = "normal"
+body = "올스타 휴식기가 찾아왔다. 이 시간을 어떻게 쓸까."
+
+[[event.choices]]
+id = "휴식"
+label = "푹 쉰다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "피로도"
+delta = -15.0
+
+[[event.choices]]
+id = "개인훈련"
+label = "개인 훈련에 매진한다"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "구위"
+delta = 4.0
+
+[[event.choices.effects]]
+target = "live_state"
+field = "피로도"
+delta = 5.0
+
+[[event]]
+id = "event:slump"
+type = "personal"
+urgency = "normal"
+body = "요즘 좀처럼 기운이 나지 않는다. 슬럼프인 걸까."
+
+[event.trigger]
+var = "사기"
+op = "<="
+value = 30.0
+
+[[event.choices]]
+id = "휴식"
+label = "휴식을 취한다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "피로도"
+delta = -20.0
+
+[[event.choices]]
+id = "훈련강행"
+label = "훈련을 강행한다"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "구위"
+delta = 5.0
+
+[[event.choices.effects]]
+target = "live_state"
+field = "피로도"
+delta = 10.0
+
+[[event]]
+id = "event:peak_form"
+type = "personal"
+urgency = "normal"
+body = "몸이 가볍고 공이 손에서 잘 빠져나간다. 지금이 절정기다."
+
+[event.trigger]
+var = "사기"
+op = ">="
+value = 80.0
+
+[[event.choices]]
+id = "훈련강화"
+label = "여세를 몰아 훈련을 강화한다"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "구속"
+delta = 6.0
+
+[[event.choices]]
+id = "무리안함"
+label = "무리하지 않는다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "피로도"
+delta = -5.0
+
+[[event]]
+id = "event:losing_streak"
+type = "team"
+urgency = "normal"
+body = "팀이 연패에 빠졌다. 분위기가 무겁다."
+
+[event.trigger]
+var = "연패"
+op = ">="
+value = 4
+
+[[event.choices]]
+id = "분위기다잡기"
+label = "팀 분위기를 다잡는다"
+
+[[event.choices.effects]]
+target = "manager_relationship"
+delta = 3
+
+[[event.choices]]
+id = "묵묵히"
+label = "묵묵히 내 할 일만 한다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 2.0
+
+[[event]]
+id = "event:manager_trust_milestone"
+type = "peer"
+urgency = "normal"
+body = "감독이 최근 부쩍 신뢰를 보이고 있다."
+
+[event.trigger]
+var = "감독관계도"
+op = ">="
+value = 50
+
+[[event.choices]]
+id = "감사인사"
+label = "감사 인사를 전한다"
+
+[[event.choices.effects]]
+target = "manager_relationship"
+delta = 5
+
+[[event.choices]]
+id = "겸손"
+label = "겸손하게 넘긴다"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "침착함"
+delta = 3.0
+
+[[event]]
+id = "event:media_interview"
+type = "probability"
+urgency = "normal"
+body = "언론에서 인터뷰를 요청해왔다."
+
+[event.trigger]
+var = "확률"
+chance = 0.02
+
+[[event.choices]]
+id = "솔직하게"
+label = "솔직하게 답한다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "주목도"
+delta = 10.0
+
+[[event.choices]]
+id = "안전하게"
+label = "안전하게 답한다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "주목도"
+delta = 3.0
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 3.0
+
+[[event]]
+id = "event:fan_signing"
+type = "probability"
+urgency = "normal"
+body = "팬 사인회 요청이 들어왔다."
+
+[event.trigger]
+var = "확률"
+chance = 0.02
+
+[[event.choices]]
+id = "적극적으로"
+label = "적극적으로 응한다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 8.0
+
+[[event.choices.effects]]
+target = "live_state"
+field = "피로도"
+delta = 3.0
+
+[[event.choices]]
+id = "짧게"
+label = "짧게 마친다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 2.0
+
+[[event]]
+id = "event:career_path_committed"
+type = "callback"
+urgency = "normal"
+body = "새로운 곳에서의 여정이 시작됐다."
+
+[[event.choices]]
+id = "각오"
+label = "새 출발에 대한 각오를 다진다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 8.0
+
+[[event.choices]]
+id = "담담히"
+label = "담담히 받아들인다"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "침착함"
+delta = 4.0

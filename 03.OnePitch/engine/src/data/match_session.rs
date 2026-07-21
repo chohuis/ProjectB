@@ -416,6 +416,16 @@ fn apply_protagonist_evaluation(slot_conn: &Connection, session: &SessionRow, pr
         params![session.game_id, season, detail],
     )?;
 
+    // 업적(특수달성형, 04_업적.md §2) — "퍼펙트게임" 원안은 타자 아웃·안타·
+    // 볼넷까지 매치 엔진이 추적해야 해(현재는 실점만 기록) 이번 1차 배치는
+    // 이미 있는 값(무실점 + 완투)만으로 판정 가능한 "완봉승"으로 단순화한
+    // D그룹 placeholder — `apply_protagonist_evaluation`이 이미 이 값들을
+    // 계산해뒀으니 별도 조회 없이 그대로 판정.
+    if decision == "승" && runs_allowed == 0 && session.protagonist_pull_inning.is_none() {
+        let today: i64 = slot_conn.query_row("SELECT current_day FROM meta", [], |r| r.get(0))?;
+        repository::unlock_achievement(slot_conn, "ach:shutout", "완봉승", 1, today)?;
+    }
+
     Ok(())
 }
 

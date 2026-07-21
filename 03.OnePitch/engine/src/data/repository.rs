@@ -541,6 +541,12 @@ fn process_protagonist_week(slot_conn: &Connection, content_conn: &Connection, w
                 pitches.push(pitch.clone());
             }
             slot_conn.execute("UPDATE protagonist SET pitches = ?1 WHERE id = 'proto:1'", params![serde_json::json!(pitches).to_string()])?;
+            // 업적(수집형, 04_업적.md §2) — "전 구종 마스터리" 원안은 구종별
+            // 숙련도 개념이 없어(pitches는 이름 목록뿐) 이번 1차 배치는
+            // "보유 구종 3종 이상"으로 단순화한 D그룹 placeholder.
+            if pitches.len() >= ACH_PITCH_ARSENAL_THRESHOLD {
+                unlock_achievement(slot_conn, "ach:pitch_arsenal_3", "다양한 무기(보유 구종 3종)", pitches.len() as i64, day)?;
+            }
             training["new_pitch"] = serde_json::Value::Null;
             training["pitch_weeks"] = serde_json::json!(0);
         } else {
@@ -564,6 +570,261 @@ fn process_protagonist_week(slot_conn: &Connection, content_conn: &Connection, w
             serde_json::Value::Object(live_state).to_string(),
             training.to_string(),
         ],
+    )?;
+    Ok(())
+}
+
+/// 업적 임계값(04_업적.md §7 "정확한 임계값은 스탯 스케일 확정 후") — D그룹
+/// placeholder, I8 밸런스 하네스 재조정 대상. 호출부가 이 상수로 먼저
+/// 걸러야 `unlock_achievement`가 호출된다(이 함수 자체는 임계값을 모름 —
+/// "달성 여부"가 아니라 "새로 달성됐을 때 1회만 기록"만 책임진다).
+const ACH_CAREER_WINS_THRESHOLD: i64 = 100;
+const ACH_PITCH_ARSENAL_THRESHOLD: usize = 3;
+
+/// 업적 달성 처리(04_업적.md §3 "전부 콜백형") — 이미 달성된 업적은 조용히
+/// 무시(트로피는 1회성, §4 "게임플레이 효과 없음"이라 재발동 의미가 없음).
+/// 라벨은 이번 배치가 콜백을 match_session(콘텐츠 DB 커넥션이 없는 자리)
+/// 에서도 호출해야 해서 호출부가 직접 넘긴다 — content.db `achievements.meta`
+/// 는 향후 UI 표시용 정의로 남지만 이 판정 경로의 소스오브트루스는 아니다.
+/// §7 "달성 시 알림 방식"을 이번에 inbox 알림으로 확정.
+pub(crate) fn unlock_achievement(conn: &Connection, ach_id: &str, label: &str, counter: i64, day: i64) -> anyhow::Result<()> {
+    let already_achieved: bool = conn
+        .query_row("SELECT achieved_day FROM achievement_progress WHERE ach_id = ?1", [ach_id], |r| r.get::<_, Option<i64>>(0))
+        .optional()?
+        .flatten()
+        .is_some();
+    if already_achieved {
+        return Ok(());
+    }
+    conn.execute(
+        "INSERT INTO achievement_progress (ach_id, counter, achieved_day) VALUES (?1, ?2, ?3)
+         ON CONFLICT(ach_id) DO UPDATE SET counter = excluded.counter, achieved_day = excluded.achieved_day",
+        params![ach_id, counter, day],
+    )?;
+    conn.execute(
+        "INSERT INTO inbox (id, kind, urgency, read, day, body) VALUES (?1, 'achievement', 'normal', 0, ?2, ?3)",
+        params![format!("inbox:achievement:{ach_id}:{day}"), day, format!("업적 달성 — {label}")],
+    )?;
+    Ok(())
+}
+
+/// 이벤트 재발동 최소 간격(§5 "상태형 — 필요, 정확한 수치는 스탯 스케일
+/// 처럼 이월") — 8주 placeholder, I8 밸런스 하네스 재조정 대상. 캘린더형은
+/// 리그 일정 자체가 반복 주기라 이 상수를 안 쓰고, 확률형은 낮은 확률이
+/// 자연 쿨다운이라 마찬가지로 안 씀(§5).
+const EVENT_COOLDOWN_DAYS: i64 = 56;
+
+/// `career_events.kind = "event:{event_id}"` 로그를 재발동 쿨다운 판정에도
+/// 재사용 — 이벤트 전용 새 테이블을 만들지 않는다(career_events가 이미
+/// day 순 이력 테이블이라 `MAX(day)` 하나로 충분).
+fn last_event_day(conn: &Connection, event_id: &str) -> anyhow::Result<Option<i64>> {
+    Ok(conn.query_row("SELECT MAX(day) FROM career_events WHERE kind = ?1", [format!("event:{event_id}")], |r| r.get(0))?)
+}
+
+/// 시즌이 시작된(=이번 시즌 첫 경기가 잡힌) 절대 day — 캘린더형 이벤트의
+/// "week"(시즌 경과 주차) 계산 기준점. `season_meta`에 아직 없으면(첫
+/// 시즌 진행 중이거나 구버전 세이브) 게임 시작일(1)로 근사.
+fn season_start_day(conn: &Connection) -> anyhow::Result<i64> {
+    Ok(conn
+        .query_row("SELECT value FROM season_meta WHERE key = 'season_start_day'", [], |row| row.get::<_, String>(0))
+        .optional()?
+        .and_then(|s| s.parse().ok())
+        .unwrap_or(1))
+}
+
+/// 소속팀 최근 경기(최대 10경기) 중 가장 최근부터 이어지는 연패 수 —
+/// [02_이벤트](../../02_기획/콘텐츠/02_이벤트.md) §1 "팀 상태" 트리거
+/// 변수(연패 스트릭) 계산. 새 스키마 없이 `schedule.result`(이미 있는
+/// JSON `{"home":N,"away":N}`)만으로 근사.
+fn team_losing_streak(conn: &Connection, team_id: &str) -> anyhow::Result<i64> {
+    let mut stmt =
+        conn.prepare("SELECT home, away, result FROM schedule WHERE (home = ?1 OR away = ?1) AND result IS NOT NULL ORDER BY day DESC LIMIT 10")?;
+    let rows: Vec<(String, String, String)> =
+        stmt.query_map([team_id], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)))?.collect::<Result<Vec<_>, _>>()?;
+    let mut streak = 0;
+    for (home, _away, result) in rows {
+        let v: serde_json::Value = serde_json::from_str(&result)?;
+        let (home_runs, away_runs) = (v["home"].as_i64().unwrap_or(0), v["away"].as_i64().unwrap_or(0));
+        let lost = if home == team_id { home_runs < away_runs } else { away_runs < home_runs };
+        if lost {
+            streak += 1;
+        } else {
+            break;
+        }
+    }
+    Ok(streak)
+}
+
+struct PollingEventRow {
+    id: String,
+    stage: Option<String>,
+    week: Option<i64>,
+    event_type: String,
+    trigger: Option<String>,
+}
+
+/// 콜백형(호출부가 조건을 직접 판단)은 폴링 대상이 아니라 제외.
+fn load_polling_events(content_conn: &Connection) -> anyhow::Result<Vec<PollingEventRow>> {
+    let mut stmt = content_conn.prepare("SELECT id, stage, week, type, trigger FROM events WHERE type != 'callback' ORDER BY id")?;
+    let rows = stmt.query_map([], |r| {
+        Ok(PollingEventRow { id: r.get(0)?, stage: r.get(1)?, week: r.get(2)?, event_type: r.get(3)?, trigger: r.get(4)? })
+    })?;
+    Ok(rows.collect::<Result<Vec<_>, _>>()?)
+}
+
+/// 이벤트를 실제로 발동시킨다 — 선택지가 있으면(§2) `pending_actions`
+/// (`type='event'`), 없으면(§7 "메시지" 판별기준) `inbox`에 직접 삽입.
+/// 폴링·콜백 양쪽에서 공용으로 쓴다(콜백은 조건 판단만 건너뛰고 발동은
+/// 똑같은 경로).
+fn fire_event(slot_conn: &Connection, content_conn: &Connection, event_id: &str, day: i64) -> anyhow::Result<()> {
+    let row: Option<(String, String, Option<String>)> = content_conn
+        .query_row("SELECT body, urgency, choices FROM events WHERE id = ?1", [event_id], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)))
+        .optional()?;
+    let Some((body, urgency, choices_raw)) = row else {
+        return Ok(());
+    };
+
+    match &choices_raw {
+        None => {
+            slot_conn.execute(
+                "INSERT INTO inbox (id, kind, urgency, read, day, body) VALUES (?1, 'event', ?2, 0, ?3, ?4)",
+                params![format!("inbox:event:{event_id}:{day}"), urgency, day, body],
+            )?;
+        }
+        Some(raw) => {
+            let choices: Vec<crate::sim::event::EventChoice> = serde_json::from_str(raw)?;
+            if choices.is_empty() {
+                slot_conn.execute(
+                    "INSERT INTO inbox (id, kind, urgency, read, day, body) VALUES (?1, 'event', ?2, 0, ?3, ?4)",
+                    params![format!("inbox:event:{event_id}:{day}"), urgency, day, body],
+                )?;
+            } else {
+                let choice_summaries: Vec<serde_json::Value> =
+                    choices.iter().map(|c| serde_json::json!({"id": c.id, "label": c.label})).collect();
+                let payload = serde_json::json!({"event_id": event_id, "body": body, "choices": choice_summaries}).to_string();
+                slot_conn.execute(
+                    "INSERT INTO pending_actions (id, type, urgency, created_day, payload) VALUES (?1, 'event', ?2, ?3, ?4)",
+                    params![format!("pending:event:{event_id}:{day}"), urgency, day, payload],
+                )?;
+            }
+        }
+    }
+
+    let season = current_season_value(slot_conn)?;
+    log_career_event(slot_conn, day, season, &format!("event:{event_id}"), serde_json::json!({}))?;
+    Ok(())
+}
+
+/// 폴링형 이벤트 판정 — [02_이벤트](../../02_기획/콘텐츠/02_이벤트.md)
+/// §1의 5변수(캘린더·본인·팀·동료·확률) 중 콜백형을 뺀 4종을 매주 평가한다.
+/// `process_protagonist_week`와 같은 주기(day % 7 == 0)로 `advance()`가
+/// 호출 — 별도 함수로 분리한 이유는 부상 경고 등 기존 로직과 관심사를
+/// 안 섞기 위함(§6-64와 같은 결).
+fn process_protagonist_events(slot_conn: &Connection, content_conn: &Connection, world_seed: i64, day: i64) -> anyhow::Result<()> {
+    let row: Option<(String, String)> = slot_conn
+        .query_row("SELECT live_state, contract FROM protagonist WHERE id = 'proto:1'", [], |r| Ok((r.get(0)?, r.get(1)?)))
+        .optional()?;
+    let Some((live_state_raw, contract_raw)) = row else {
+        return Ok(()); // 아직 캐릭터 생성 전
+    };
+
+    let live_state: serde_json::Value = serde_json::from_str(&live_state_raw)?;
+    let contract: serde_json::Value = serde_json::from_str(&contract_raw)?;
+    let Some(team_id) = contract.get("team_id").and_then(|v| v.as_str()) else {
+        return Ok(()); // 무소속(입대 등) — 팀 상태·감독 관계도 변수를 못 구해 스킵
+    };
+
+    let league_id: Option<String> =
+        content_conn.query_row("SELECT league_id FROM teams WHERE id = ?1", [team_id], |r| r.get(0)).optional()?;
+
+    let ctx = crate::sim::event::EventContext {
+        fatigue: live_state.get("피로도").and_then(|v| v.as_f64()).unwrap_or(0.0),
+        morale: live_state.get("사기").and_then(|v| v.as_f64()).unwrap_or(50.0),
+        losing_streak: team_losing_streak(slot_conn, team_id)?,
+        manager_relationship: relationship_value(slot_conn, &format!("manager:{team_id}"))?,
+    };
+
+    let start_day = season_start_day(slot_conn)?;
+    let week_in_season = (day - start_day).max(0) / 7;
+
+    for event in load_polling_events(content_conn)? {
+        if let Some(stage) = &event.stage {
+            if Some(stage.as_str()) != league_id.as_deref() {
+                continue;
+            }
+        }
+
+        let triggered = if event.event_type == "calendar" {
+            event.week == Some(week_in_season)
+        } else {
+            let Some(trigger_raw) = &event.trigger else { continue };
+            if event.event_type != "probability" {
+                if let Some(last) = last_event_day(slot_conn, &event.id)? {
+                    if day - last < EVENT_COOLDOWN_DAYS {
+                        continue;
+                    }
+                }
+            }
+            let trigger: crate::sim::event::EventTrigger = serde_json::from_str(trigger_raw)?;
+            let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("event:{}:{day}", event.id)));
+            crate::sim::event::evaluate_trigger(&trigger, &ctx, &mut rng)
+        };
+
+        if triggered {
+            fire_event(slot_conn, content_conn, &event.id, day)?;
+        }
+    }
+    Ok(())
+}
+
+/// 이벤트 선택 결과 반영 — `resolve_choice`의 `'event'` kind가 호출.
+/// content.db에서 선택지 정의(효과 포함)를 다시 읽어(§2 pending_actions
+/// payload엔 id·label만 있고 효과는 없음 — 서버 권위) 매칭되는 선택지의
+/// 효과만 적용한다.
+fn resolve_event_choice(slot_conn: &Connection, content_conn: &Connection, event_id: &str, choice_id: &str) -> anyhow::Result<()> {
+    let choices_raw: Option<String> =
+        content_conn.query_row("SELECT choices FROM events WHERE id = ?1", [event_id], |r| r.get(0)).optional()?.flatten();
+    let Some(choices_raw) = choices_raw else {
+        return Ok(());
+    };
+    let choices: Vec<crate::sim::event::EventChoice> = serde_json::from_str(&choices_raw)?;
+    let Some(choice) = choices.iter().find(|c| c.id == choice_id) else {
+        return Ok(());
+    };
+
+    let row: Option<(String, String, String)> = slot_conn
+        .query_row("SELECT xp, live_state, contract FROM protagonist WHERE id = 'proto:1'", [], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)))
+        .optional()?;
+    let Some((xp_raw, live_state_raw, contract_raw)) = row else {
+        return Ok(());
+    };
+
+    let mut xp: serde_json::Map<String, serde_json::Value> = serde_json::from_str(&xp_raw)?;
+    let mut live_state: serde_json::Map<String, serde_json::Value> = serde_json::from_str(&live_state_raw)?;
+    let contract: serde_json::Value = serde_json::from_str(&contract_raw)?;
+    let team_id = contract.get("team_id").and_then(|v| v.as_str());
+
+    for effect in &choice.effects {
+        match effect {
+            crate::sim::event::EventEffect::LiveState { field, delta } => {
+                let current = live_state.get(field).and_then(|v| v.as_f64()).unwrap_or(0.0);
+                live_state.insert(field.clone(), serde_json::json!((current + delta).max(0.0)));
+            }
+            crate::sim::event::EventEffect::Xp { stat, delta } => {
+                let current = xp.get(stat).and_then(|v| v.as_f64()).unwrap_or(0.0);
+                xp.insert(stat.clone(), serde_json::json!((current + delta).max(0.0)));
+            }
+            crate::sim::event::EventEffect::ManagerRelationship { delta } => {
+                if let Some(team_id) = team_id {
+                    adjust_relationship(slot_conn, &format!("manager:{team_id}"), *delta)?;
+                }
+            }
+        }
+    }
+
+    slot_conn.execute(
+        "UPDATE protagonist SET xp = ?1, live_state = ?2 WHERE id = 'proto:1'",
+        params![serde_json::Value::Object(xp).to_string(), serde_json::Value::Object(live_state).to_string()],
     )?;
     Ok(())
 }
@@ -2529,6 +2790,10 @@ fn resolve_career_choice(conn: &Connection, content_conn: &Connection, world_see
         }
         _ => anyhow::bail!("unknown careerChoice: {choice_id}"),
     }
+    // I8 1차분 콜백형 이벤트 실증(02_이벤트.md §1 "콜백 — 호출부가 이미
+    // 조건을 다 체크") — 대학/독립/입대 세 갈래 전부 "새로운 곳에서의
+    // 여정"이라는 공통 순간이라 조건 분기 없이 그대로 발동.
+    fire_event(conn, content_conn, "event:career_path_committed", day)?;
     Ok(())
 }
 
@@ -2554,6 +2819,14 @@ pub fn season_rollover(conn: &Connection, content_conn: &Connection, day: i64) -
          ON CONFLICT(key) DO UPDATE SET value = excluded.value",
         params![(current + 1).to_string()],
     )?;
+    // 캘린더형 이벤트(§1)의 "week"(시즌 경과 주차) 계산 기준점 — 다음
+    // 시즌의 첫 경기가 day+1에 열리므로(아래 generate_schedule 호출과
+    // 동일 기준) 그대로 저장.
+    conn.execute(
+        "INSERT INTO season_meta (key, value) VALUES ('season_start_day', ?1)
+         ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+        params![(day + 1).to_string()],
+    )?;
     conn.execute("DELETE FROM inbox", [])?;
 
     let world_seed: i64 = conn.query_row("SELECT world_seed FROM meta", [], |row| row.get(0))?;
@@ -2578,6 +2851,21 @@ pub fn season_rollover(conn: &Connection, content_conn: &Connection, day: i64) -
          ON CONFLICT(season) DO UPDATE SET line = excluded.line",
         params![current, season_line_json],
     )?;
+
+    // 업적(누적형, 04_업적.md §2·§3 "카운터가 갱신되는 순간") — 방금 넣은
+    // 이번 시즌 줄까지 포함해 통산 승수를 합산.
+    let total_wins: i64 = {
+        let mut stmt = conn.prepare("SELECT line FROM career_history")?;
+        let lines: Vec<String> = stmt.query_map([], |r| r.get(0))?.collect::<Result<Vec<_>, _>>()?;
+        lines
+            .iter()
+            .filter_map(|l| serde_json::from_str::<serde_json::Value>(l).ok())
+            .filter_map(|v| v.get("wins").and_then(|w| w.as_i64()))
+            .sum()
+    };
+    if total_wins >= ACH_CAREER_WINS_THRESHOLD {
+        unlock_achievement(conn, "ach:career_100_wins", "통산 100승", total_wins, day)?;
+    }
 
     process_protagonist_contract(conn, content_conn, world_seed, current, day)?;
     process_protagonist_trade(conn, content_conn, world_seed, day)?;
@@ -2718,6 +3006,7 @@ pub fn advance(slot_conn: &mut Connection, content_conn: &Connection) -> anyhow:
         if today % 7 == 0 {
             process_week(&tx, content_conn, world_seed, today)?;
             process_protagonist_week(&tx, content_conn, world_seed, today)?;
+            process_protagonist_events(&tx, content_conn, world_seed, today)?;
         }
         if today % 28 == 0 {
             process_month(&tx, content_conn, world_seed, today)?;
@@ -2822,6 +3111,16 @@ pub fn resolve_choice(
         // 확정해뒀다(§4-1 "확인 후 메인 메뉴로 복귀"는 Flutter의 내비게이션
         // 관심사). 소비만 하면 됨.
         "retirement" => None,
+        // I8 1차분(콘텐츠 저작 파이프라인, 02_이벤트.md §2) — 선택지 효과는
+        // pending_actions payload가 아니라 content.db가 소스오브트루스라
+        // event_id로 다시 조회해서 적용한다(`fire_event`가 payload에는
+        // id·label만 남겨뒀다).
+        "event" => {
+            let payload: serde_json::Value = serde_json::from_str(&payload_raw)?;
+            let event_id = payload.get("event_id").and_then(|v| v.as_str()).ok_or_else(|| anyhow::anyhow!("event payload missing event_id"))?;
+            resolve_event_choice(slot_conn, content_conn, event_id, choice_id)?;
+            None
+        }
         _ => None,
     };
 

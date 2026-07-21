@@ -23,6 +23,9 @@ Map<String, dynamic> buildSeedPayload(String seedDir) {
   final generationRules = readSeedToml('$seedDir/generation_rules.toml')['league'] as Map<String, dynamic>? ?? {};
   final personalityRules = readSeedToml('$seedDir/personality_rules.toml')['context'] as Map<String, dynamic>? ?? {};
   final worldConfig = readSeedToml('$seedDir/world_config.toml');
+  final events = readSeedToml('$seedDir/events.toml')['event'] as List<dynamic>? ?? [];
+  final achievements = readSeedToml('$seedDir/achievements.toml')['achievement'] as List<dynamic>? ?? [];
+  final narrativeTemplates = readSeedToml('$seedDir/narrative_templates.toml')['template'] as List<dynamic>? ?? [];
 
   final teamOrgById = {for (final r in teamOrg) r['team_id']!: r};
 
@@ -126,6 +129,41 @@ Map<String, dynamic> buildSeedPayload(String seedDir) {
     ],
     'world_config': [
       for (final e in worldConfig.entries) {'key': e.key, 'value': e.value.toString()}
+    ],
+    // I8 1차분(콘텐츠 저작 파이프라인) — events/achievements는 trigger·
+    // choices·effects가 중첩 구조라 CSV 대신 나머지 nested 콘텐츠(generation_rules
+    // 등)와 같은 TOML 소스를 쓴다([[event]] 배열-of-테이블, §02_이벤트.md §2).
+    // 캐릭터는 절차적 생성이라(01_캐릭터.md §6) seed 대상이 아님.
+    'events': [
+      for (final e in events)
+        {
+          'id': e['id'],
+          'stage': e['stage'],
+          'week': e['week'],
+          'type': e['type'],
+          'urgency': e['urgency'],
+          'trigger': e['trigger'],
+          'body': e['body'],
+          'choices': e['choices'],
+        }
+    ],
+    'achievements': [
+      for (final a in achievements)
+        {
+          'id': a['id'],
+          'category': a['category'],
+          'condition': a['condition'],
+          'meta': a['meta'],
+        }
+    ],
+    'narrative_templates': [
+      for (final t in narrativeTemplates)
+        {
+          'id': t['id'],
+          'category': t['category'],
+          'template': t['template'],
+          'variants': t['variants'],
+        }
     ],
   };
 }

@@ -1,0 +1,45 @@
+# 업적 콘텐츠 — 02_기획/콘텐츠/04_업적.md §2 카테고리 4종 중 3종을 실증
+# (서사형은 이후 콘텐츠 저작 트랙, 02_이벤트.md 선택 히스토리가 더 쌓인
+# 뒤가 자연스러움). 실제 판정 로직(카운터 갱신 시점 콜백)은 D그룹
+# placeholder 상수로 engine/src/data/repository.rs에 있고, 여기 condition은
+# 향후 UI 표시용 정의 — 이 파일만 바꿔서는 임계값이 안 바뀐다.
+
+[[achievement]]
+id = "ach:career_100_wins"
+category = "누적형"
+
+[achievement.condition]
+metric = "wins"
+threshold = 100
+
+[achievement.meta]
+label = "통산 100승"
+progress_visible = true
+
+[[achievement]]
+id = "ach:shutout"
+category = "특수달성형"
+
+# "퍼펙트게임" 원안은 매치 엔진이 안타·볼넷까지 추적해야 해(현재는
+# 실점만 기록) 이번 1차 배치는 완봉승으로 단순화(D그룹 placeholder).
+[achievement.condition]
+metric = "shutout"
+threshold = 1
+
+[achievement.meta]
+label = "완봉승"
+progress_visible = false
+
+[[achievement]]
+id = "ach:pitch_arsenal_3"
+category = "수집형"
+
+# "전 구종 마스터리" 원안은 구종별 숙련도 개념이 없어(pitches는 이름
+# 목록뿐) "보유 구종 3종 이상"으로 단순화(D그룹 placeholder).
+[achievement.condition]
+metric = "pitch_count"
+threshold = 3
+
+[achievement.meta]
+label = "다양한 무기"
+progress_visible = true

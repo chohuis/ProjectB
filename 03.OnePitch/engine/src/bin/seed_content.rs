@@ -88,6 +88,38 @@ struct WorldConfigEntry {
     value: String,
 }
 
+#[derive(Deserialize)]
+struct EventSeed {
+    id: String,
+    stage: Option<String>,
+    week: Option<i64>,
+    #[serde(rename = "type")]
+    kind: String,
+    urgency: String,
+    #[serde(default)]
+    trigger: Option<serde_json::Value>,
+    body: String,
+    #[serde(default)]
+    choices: Option<serde_json::Value>,
+}
+
+#[derive(Deserialize)]
+struct AchievementSeed {
+    id: String,
+    category: String,
+    condition: serde_json::Value,
+    meta: serde_json::Value,
+}
+
+#[derive(Deserialize)]
+struct NarrativeTemplateSeed {
+    id: String,
+    category: String,
+    template: String,
+    #[serde(default)]
+    variants: Option<serde_json::Value>,
+}
+
 #[derive(Deserialize, Default)]
 struct SeedPayload {
     #[serde(default)]
@@ -112,6 +144,12 @@ struct SeedPayload {
     personality_rules: Vec<PersonalityRule>,
     #[serde(default)]
     world_config: Vec<WorldConfigEntry>,
+    #[serde(default)]
+    events: Vec<EventSeed>,
+    #[serde(default)]
+    achievements: Vec<AchievementSeed>,
+    #[serde(default)]
+    narrative_templates: Vec<NarrativeTemplateSeed>,
 }
 
 fn foreign_key_violations(conn: &Connection) -> Result<Vec<String>> {
@@ -226,6 +264,42 @@ fn seed(conn: &mut Connection, payload: &SeedPayload, dry_run: bool) -> Result<V
         )?;
     }
 
+    // I8 1차분(콘텐츠 저작 파이프라인) — 캐릭터는 절차적 생성이라(01_캐릭터.md
+    // §6) 여기 없음. events.choices가 없으면 03_메시지_알림 판별기준대로
+    // "선택지 없는 메시지"라 NULL 그대로 둔다(빈 배열과 동치, evaluate 쪽이
+    // 둘 다 "선택지 없음"으로 처리).
+    for e in &payload.events {
+        tx.execute(
+            "INSERT INTO events (id, stage, week, type, urgency, trigger, body, choices) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)
+             ON CONFLICT(id) DO UPDATE SET stage = excluded.stage, week = excluded.week, type = excluded.type,
+                urgency = excluded.urgency, trigger = excluded.trigger, body = excluded.body, choices = excluded.choices",
+            params![
+                e.id,
+                e.stage,
+                e.week,
+                e.kind,
+                e.urgency,
+                e.trigger.as_ref().map(|v| v.to_string()),
+                e.body,
+                e.choices.as_ref().map(|v| v.to_string())
+            ],
+        )?;
+    }
+    for a in &payload.achievements {
+        tx.execute(
+            "INSERT INTO achievements (id, category, condition, meta) VALUES (?1, ?2, ?3, ?4)
+             ON CONFLICT(id) DO UPDATE SET category = excluded.category, condition = excluded.condition, meta = excluded.meta",
+            params![a.id, a.category, a.condition.to_string(), a.meta.to_string()],
+        )?;
+    }
+    for n in &payload.narrative_templates {
+        tx.execute(
+            "INSERT INTO narrative_templates (id, category, template, variants) VALUES (?1, ?2, ?3, ?4)
+             ON CONFLICT(id) DO UPDATE SET category = excluded.category, template = excluded.template, variants = excluded.variants",
+            params![n.id, n.category, n.template, n.variants.as_ref().map(|v| v.to_string())],
+        )?;
+    }
+
     let violations = foreign_key_violations(&tx)?;
 
     if dry_run || !violations.is_empty() {
@@ -273,7 +347,7 @@ fn main() -> Result<()> {
     }
 
     let summary = format!(
-        "leagues={} schools={} stadiums={} teams={} team_traits={} team_history={} pitch_types={} name_pools={} generation_rules={} personality_rules={} world_config={}",
+        "leagues={} schools={} stadiums={} teams={} team_traits={} team_history={} pitch_types={} name_pools={} generation_rules={} personality_rules={} world_config={} events={} achievements={} narrative_templates={}",
         payload.leagues.len(),
         payload.schools.len(),
         payload.stadiums.len(),
@@ -284,7 +358,10 @@ fn main() -> Result<()> {
         payload.name_pools.len(),
         payload.generation_rules.len(),
         payload.personality_rules.len(),
-        payload.world_config.len()
+        payload.world_config.len(),
+        payload.events.len(),
+        payload.achievements.len(),
+        payload.narrative_templates.len()
     );
     if dry_run {
         println!("OK (dry-run, no changes committed): {summary}");

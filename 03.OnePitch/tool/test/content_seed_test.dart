@@ -118,4 +118,75 @@ void main() {
       {'key': 'canonical_seed', 'value': '42'}
     ]);
   });
+
+  test('events.toml/achievements.toml parse nested trigger/choices/effects into payload', () {
+    final dir = Directory.systemTemp.createTempSync('onepitch_seed_test_events_');
+    addTearDown(() => dir.deleteSync(recursive: true));
+
+    File('${dir.path}/events.toml').writeAsStringSync('''
+[[event]]
+id = "event:slump"
+type = "personal"
+urgency = "normal"
+body = "슬럼프인 걸까."
+
+[event.trigger]
+var = "사기"
+op = "<="
+value = 30.0
+
+[[event.choices]]
+id = "휴식"
+label = "휴식을 취한다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "피로도"
+delta = -20.0
+''');
+    File('${dir.path}/achievements.toml').writeAsStringSync('''
+[[achievement]]
+id = "ach:career_100_wins"
+category = "누적형"
+
+[achievement.condition]
+metric = "wins"
+threshold = 100
+
+[achievement.meta]
+label = "통산 100승"
+''');
+
+    final payload = buildSeedPayload(dir.path);
+
+    expect(payload['events'], hasLength(1));
+    final event = (payload['events'] as List).first as Map<String, dynamic>;
+    expect(event['id'], 'event:slump');
+    expect(event['trigger'], {'var': '사기', 'op': '<=', 'value': 30.0});
+    final choices = event['choices'] as List;
+    expect(choices, hasLength(1));
+    expect((choices.first as Map)['effects'], [
+      {'target': 'live_state', 'field': '피로도', 'delta': -20.0}
+    ]);
+
+    expect(payload['achievements'], [
+      {
+        'id': 'ach:career_100_wins',
+        'category': '누적형',
+        'condition': {'metric': 'wins', 'threshold': 100},
+        'meta': {'label': '통산 100승'},
+      }
+    ]);
+  });
+
+  test('missing events.toml/achievements.toml yield empty lists', () {
+    final dir = Directory.systemTemp.createTempSync('onepitch_seed_test_events_empty_');
+    addTearDown(() => dir.deleteSync(recursive: true));
+
+    final payload = buildSeedPayload(dir.path);
+
+    expect(payload['events'], isEmpty);
+    expect(payload['achievements'], isEmpty);
+    expect(payload['narrative_templates'], isEmpty);
+  });
 }
