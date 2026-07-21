@@ -8,6 +8,7 @@ use rusqlite::{params, Connection, OptionalExtension};
 use sha2::{Digest, Sha256};
 
 use super::{content, match_session, slot};
+use crate::sim::manager;
 use crate::sim::match_sim;
 use crate::sim::roster::{self, PersonalityWeights};
 use crate::sim::schedule;
@@ -65,6 +66,7 @@ pub fn generate_league_roster(
     let kr_given = content::load_name_pool(content_conn, "kr", "given")?;
     let secondary_pitches = content::load_secondary_pitch_names(content_conn)?;
     let role_ctx = content::load_personality_rule(content_conn, "role:선수")?;
+    let manager_role_ctx = content::load_personality_rule(content_conn, "role:감독")?;
 
     let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, league_id));
     // league_id folded into the id prefix so ids stay unique across leagues
@@ -78,7 +80,7 @@ pub fn generate_league_roster(
     for team in &teams {
         let philosophy_ctx = content::load_personality_rule(content_conn, &format!("philosophy:{}", team.philosophy))?;
         let status_ctx = content::load_personality_rule(content_conn, &format!("status:{}", team.status))?;
-        let weights = PersonalityWeights::merge(&[philosophy_ctx, status_ctx, role_ctx.clone()]);
+        let weights = PersonalityWeights::merge(&[philosophy_ctx.clone(), status_ctx.clone(), role_ctx.clone()]);
 
         let players = roster::generate_team(
             &mut rng,
@@ -113,6 +115,24 @@ pub fn generate_league_roster(
                 ],
             )?;
         }
+
+        // 감독(§6-59) — 정식 스태프 시스템의 최소 조각. 팀당 1명, 코치·구단주는
+        // 계속 이월(10_구현_Phase_계획.md §6-59 스코프 판단).
+        let manager_weights = PersonalityWeights::merge(&[philosophy_ctx, status_ctx, manager_role_ctx.clone()]);
+        let m = manager::generate_manager(&mut rng, &team.id, &kr_surnames, &kr_given, &manager_weights);
+        tx.execute(
+            "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches, injury)
+             VALUES (?1, ?2, ?3, '감독', ?4, 0, 0, 50.0, ?5, ?6, '{}', '{}', NULL, ?7)",
+            params![
+                m.id,
+                m.name,
+                m.team_id,
+                m.age,
+                m.personality.to_string(),
+                m.stats.to_string(),
+                serde_json::json!({"current": null, "history": []}).to_string(),
+            ],
+        )?;
     }
     tx.commit()?;
     Ok(())
@@ -553,7 +573,7 @@ pub fn generate_freshmen(conn: &Connection, content_conn: &Connection, world_see
 
         for team in &teams {
             let active: u64 = conn.query_row(
-                "SELECT count(*) FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL",
+                "SELECT count(*) FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position != '감독'",
                 [&team.id],
                 |r| r.get::<_, i64>(0),
             )? as u64;
@@ -792,6 +812,51 @@ pub(crate) fn load_pitcher_by_id(slot_conn: &Connection, npc_id: &str) -> anyhow
         stuff: v.get("구위").and_then(|x| x.as_f64()).unwrap_or(50.0),
         fatigue: live_state.get("피로도").and_then(|x| x.as_f64()).unwrap_or(0.0),
     })
+}
+
+/// 감독 스탯(§6-59) — 실제로 생성된 감독 npc 행(`manager:{team_id}`)이
+/// 있으면 그 값, 없으면(구버전 세이브·감독을 안 만드는 합성 테스트)
+/// 기존 해시 근사(`sim::manager::manager_stats`)로 조용히 폴백한다 —
+/// 이 폴백 덕분에 감독을 생성하지 않는 기존 테스트가 전부 그대로
+/// 통과한다.
+pub(crate) fn load_manager_stats(conn: &Connection, team_id: &str) -> anyhow::Result<manager::ManagerStats> {
+    let stats_raw: Option<String> =
+        conn.query_row("SELECT stats FROM npc WHERE id = ?1", [format!("manager:{team_id}")], |r| r.get(0)).optional()?;
+    let Some(stats_raw) = stats_raw else {
+        return Ok(manager::manager_stats(team_id));
+    };
+    let v: serde_json::Value = serde_json::from_str(&stats_raw)?;
+    Ok(manager::ManagerStats {
+        tactics: v.get("전술력").and_then(|x| x.as_f64()).unwrap_or(50.0),
+        trust: v.get("신뢰형성력").and_then(|x| x.as_f64()).unwrap_or(50.0),
+    })
+}
+
+/// 관계도(§6-59, `콘텐츠/01_캐릭터.md` §5) — 없으면 "신규 관계는 항상
+/// 0에서 시작"(§5) 원칙대로 0.
+pub(crate) fn relationship_value(conn: &Connection, npc_id: &str) -> anyhow::Result<i64> {
+    Ok(conn.query_row("SELECT value FROM relationships WHERE npc_id = ?1", [npc_id], |r| r.get(0)).optional()?.unwrap_or(0))
+}
+
+/// 관계도 가감(upsert) — `-100..=100`으로 clamp(§5 "범위: -100~100").
+/// `relationships.npc_id`는 `npc(id)`를 FK로 강제하므로(`slot.rs`가
+/// `PRAGMA foreign_keys=ON`), 감독이 아직 생성 안 된 세이브(구버전·감독을
+/// 안 만드는 합성 테스트)에서 호출되면 조용히 no-op — `load_manager_stats`
+/// 의 해시 폴백과 같은 결로, 감독 관계 갱신이 실전에선 항상 성공하되
+/// 감독 없는 상태를 에러로 만들지 않는다.
+pub(crate) fn adjust_relationship(conn: &Connection, npc_id: &str, delta: i64) -> anyhow::Result<()> {
+    let exists: bool = conn.query_row("SELECT EXISTS(SELECT 1 FROM npc WHERE id = ?1)", [npc_id], |r| r.get(0))?;
+    if !exists {
+        return Ok(());
+    }
+    let current = relationship_value(conn, npc_id)?;
+    let next = (current + delta).clamp(-100, 100);
+    conn.execute(
+        "INSERT INTO relationships (npc_id, value, arc_stage) VALUES (?1, ?2, 0)
+         ON CONFLICT(npc_id) DO UPDATE SET value = excluded.value",
+        params![npc_id, next],
+    )?;
+    Ok(())
 }
 
 fn ensure_standings_row(conn: &Connection, team_id: &str) -> anyhow::Result<()> {
@@ -1620,8 +1685,8 @@ fn process_week(conn: &Connection, content_conn: &Connection, world_seed: i64, d
         philosophy_by_team.extend(rows);
     }
 
-    let mut stmt =
-        conn.prepare("SELECT id, team_id, position, age, stats, xp, live_state, injury, military_return_day FROM npc WHERE retired = 0")?;
+    let mut stmt = conn
+        .prepare("SELECT id, team_id, position, age, stats, xp, live_state, injury, military_return_day FROM npc WHERE retired = 0 AND position != '감독'")?;
     let rows: Vec<WeeklyNpcRow> = stmt
         .query_map([], |r| {
             Ok(WeeklyNpcRow {
@@ -2119,7 +2184,7 @@ fn process_protagonist_trade(conn: &Connection, content_conn: &Connection, world
     let counterpart = if is_cash {
         None
     } else {
-        let mut stmt = conn.prepare("SELECT id FROM npc WHERE team_id = ?1 AND retired = 0")?;
+        let mut stmt = conn.prepare("SELECT id FROM npc WHERE team_id = ?1 AND retired = 0 AND position != '감독'")?;
         let npcs: Vec<String> = stmt.query_map([to_team], |r| r.get(0))?.collect::<Result<_, _>>()?;
         npcs.choose(&mut rng).cloned()
     };
@@ -2453,10 +2518,13 @@ pub fn season_rollover(conn: &Connection, content_conn: &Connection, day: i64) -
     // 등)은 주인공 전용 서사라 스코프 밖(10_구현_Phase_계획.md §6-11) — 같은
     // 팀 안에서 은퇴→신인이 반복되는 placeholder. `league_by_team`은 위
     // standings 압축 단계에서 이미 만들어둔 걸 재사용.
-    conn.execute("UPDATE npc SET age = age + 1 WHERE retired = 0", [])?;
+    // 감독(§6-59)은 나이·은퇴·병역 생애주기 대상이 아니라 이 세대교체
+    // 파이프라인 전체에서 제외한다 — position != '감독' 가드.
+    conn.execute("UPDATE npc SET age = age + 1 WHERE retired = 0 AND position != '감독'", [])?;
     // 복무 중(military_return_day가 NULL이 아님)인 선수는 은퇴·입대 판정
     // 둘 다 대상에서 뺀다 — 이미 다른 생애주기 이벤트가 진행 중.
-    let mut stmt = conn.prepare("SELECT id, team_id, age, military_served FROM npc WHERE retired = 0 AND military_return_day IS NULL")?;
+    let mut stmt =
+        conn.prepare("SELECT id, team_id, age, military_served FROM npc WHERE retired = 0 AND military_return_day IS NULL AND position != '감독'")?;
     let candidates: Vec<(String, String, i64, i64)> =
         stmt.query_map([], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?)))?.collect::<Result<_, _>>()?;
     drop(stmt);
@@ -4089,7 +4157,135 @@ mod tests {
         generate_league_roster(&mut slot_conn, &content_conn, 123, "league:x").unwrap();
 
         let count: i64 = slot_conn.query_row("SELECT count(*) FROM npc", [], |r| r.get(0)).unwrap();
-        assert_eq!(count, 16); // 2 teams * roster_size 8
+        assert_eq!(count, 18); // 2 teams * (roster_size 8 + 감독 1명)
+    }
+
+    #[test]
+    fn generate_league_roster_creates_one_manager_per_team_within_the_documented_stat_band() {
+        let content_conn = build_test_content_db();
+        let mut slot_conn = slot::open_in_memory().unwrap();
+
+        generate_league_roster(&mut slot_conn, &content_conn, 123, "league:x").unwrap();
+
+        for team_id in ["team:a", "team:b"] {
+            let (position, stats_raw): (String, String) = slot_conn
+                .query_row("SELECT position, stats FROM npc WHERE id = ?1", [format!("manager:{team_id}")], |r| Ok((r.get(0)?, r.get(1)?)))
+                .unwrap();
+            assert_eq!(position, "감독");
+            let stats: serde_json::Value = serde_json::from_str(&stats_raw).unwrap();
+            for key in ["전술력", "신뢰형성력", "육성안목", "카리스마"] {
+                let v = stats[key].as_f64().unwrap();
+                assert!((20.0..=80.0).contains(&v), "{key}={v} out of band");
+            }
+        }
+    }
+
+    #[test]
+    fn load_manager_stats_reads_the_generated_manager_row() {
+        let content_conn = build_test_content_db();
+        let mut slot_conn = slot::open_in_memory().unwrap();
+        generate_league_roster(&mut slot_conn, &content_conn, 123, "league:x").unwrap();
+
+        let stats_raw: String = slot_conn.query_row("SELECT stats FROM npc WHERE id = 'manager:team:a'", [], |r| r.get(0)).unwrap();
+        let expected: serde_json::Value = serde_json::from_str(&stats_raw).unwrap();
+
+        let loaded = load_manager_stats(&slot_conn, "team:a").unwrap();
+        assert_eq!(loaded.tactics, expected["전술력"].as_f64().unwrap());
+        assert_eq!(loaded.trust, expected["신뢰형성력"].as_f64().unwrap());
+    }
+
+    #[test]
+    fn load_manager_stats_falls_back_to_the_hash_approximation_when_no_manager_row_exists() {
+        let slot_conn = slot::open_in_memory().unwrap(); // 감독을 만들지 않은 세이브(구버전·합성 테스트 상황 재현)
+
+        let loaded = load_manager_stats(&slot_conn, "team:never_generated").unwrap();
+        let expected = manager::manager_stats("team:never_generated");
+        assert_eq!(loaded.tactics, expected.tactics);
+        assert_eq!(loaded.trust, expected.trust);
+    }
+
+    #[test]
+    fn relationship_value_defaults_to_zero_for_an_untouched_relationship() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        assert_eq!(relationship_value(&slot_conn, "manager:team:a").unwrap(), 0);
+    }
+
+    #[test]
+    fn adjust_relationship_upserts_and_clamps_within_the_documented_range() {
+        let content_conn = build_test_content_db();
+        let mut slot_conn = slot::open_in_memory().unwrap();
+        generate_league_roster(&mut slot_conn, &content_conn, 123, "league:x").unwrap();
+
+        adjust_relationship(&slot_conn, "manager:team:a", 40).unwrap();
+        assert_eq!(relationship_value(&slot_conn, "manager:team:a").unwrap(), 40);
+
+        adjust_relationship(&slot_conn, "manager:team:a", 40).unwrap();
+        assert_eq!(relationship_value(&slot_conn, "manager:team:a").unwrap(), 80);
+
+        adjust_relationship(&slot_conn, "manager:team:a", 1000).unwrap();
+        assert_eq!(relationship_value(&slot_conn, "manager:team:a").unwrap(), 100, "관계도는 100을 넘지 않아야 한다");
+
+        adjust_relationship(&slot_conn, "manager:team:a", -1000).unwrap();
+        assert_eq!(relationship_value(&slot_conn, "manager:team:a").unwrap(), -100, "관계도는 -100 밑으로 내려가지 않아야 한다");
+    }
+
+    #[test]
+    fn adjust_relationship_is_a_no_op_when_the_manager_does_not_exist() {
+        let slot_conn = slot::open_in_memory().unwrap(); // 감독 npc 행 없음(FK 대상 부재)
+
+        adjust_relationship(&slot_conn, "manager:team:ghost", 10).unwrap(); // 에러 없이 조용히 무시돼야 함
+
+        assert_eq!(relationship_value(&slot_conn, "manager:team:ghost").unwrap(), 0);
+    }
+
+    #[test]
+    fn process_week_does_not_apply_player_growth_to_the_manager() {
+        let content_conn = build_test_content_db();
+        let mut slot_conn = slot::open_in_memory().unwrap();
+        generate_league_roster(&mut slot_conn, &content_conn, 123, "league:x").unwrap();
+
+        let before: String = slot_conn.query_row("SELECT stats FROM npc WHERE id = 'manager:team:a'", [], |r| r.get(0)).unwrap();
+
+        process_week(&slot_conn, &content_conn, 123, 7).unwrap();
+
+        let after: String = slot_conn.query_row("SELECT stats FROM npc WHERE id = 'manager:team:a'", [], |r| r.get(0)).unwrap();
+        assert_eq!(before, after, "process_week의 성장 처리가 감독 스탯을 건드리면 안 된다");
+    }
+
+    #[test]
+    fn season_rollover_does_not_age_retire_or_conscript_the_manager() {
+        let content_conn = build_test_content_db();
+        let mut slot_conn = slot::open_in_memory().unwrap();
+        generate_league_roster(&mut slot_conn, &content_conn, 123, "league:x").unwrap();
+        // 가드가 없다면 확실히 은퇴 판정을 받도록 나이를 극단값으로 미리 올려둔다
+        // (league:x의 age_range 폴백은 18~35 — 200살은 어느 기준으로도 은퇴권).
+        slot_conn.execute("UPDATE npc SET age = 200 WHERE id = 'manager:team:a'", []).unwrap();
+
+        season_rollover(&slot_conn, &content_conn, 364).unwrap();
+
+        let (age, retired, military_return_day): (i64, i64, Option<i64>) = slot_conn
+            .query_row("SELECT age, retired, military_return_day FROM npc WHERE id = 'manager:team:a'", [], |r| {
+                Ok((r.get(0)?, r.get(1)?, r.get(2)?))
+            })
+            .unwrap();
+        assert_eq!(age, 200, "감독은 세대교체의 나이 증가 대상이 아니어야 한다");
+        assert_eq!(retired, 0, "감독은 은퇴 판정 대상이 아니어야 한다");
+        assert!(military_return_day.is_none(), "감독은 병역 편입 대상이 아니어야 한다");
+    }
+
+    #[test]
+    fn generate_freshmen_does_not_count_the_manager_toward_the_active_roster() {
+        let content_conn = build_test_content_db();
+        let mut slot_conn = slot::open_in_memory().unwrap();
+        generate_league_roster(&mut slot_conn, &content_conn, 123, "league:x").unwrap(); // roster_size 8 + 감독 1명
+
+        generate_freshmen(&slot_conn, &content_conn, 123, 0).unwrap();
+
+        // 감독을 활성 로스터에 잘못 포함시키면(9명으로 카운트) 정원 미달 판정이
+        // 흔들릴 수 있다 — 감독 행 자체는 여전히 팀당 1개여야 한다(중복 생성 없음).
+        let manager_count: i64 =
+            slot_conn.query_row("SELECT count(*) FROM npc WHERE team_id = 'team:a' AND position = '감독'", [], |r| r.get(0)).unwrap();
+        assert_eq!(manager_count, 1);
     }
 
     #[test]
@@ -4154,7 +4350,7 @@ mod tests {
         generate_initial_world(&mut slot_conn, &conn, 555).unwrap();
 
         let count: i64 = slot_conn.query_row("SELECT count(*) FROM npc", [], |r| r.get(0)).unwrap();
-        assert_eq!(count, (LEAGUE_IDS.len() as i64) * 4); // 1 team * roster_size 4 per league
+        assert_eq!(count, (LEAGUE_IDS.len() as i64) * 5); // 1 team * (roster_size 4 + 감독 1명) per league
     }
 
     fn current_day(conn: &Connection) -> i64 {

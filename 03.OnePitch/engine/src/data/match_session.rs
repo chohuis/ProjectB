@@ -368,6 +368,10 @@ fn apply_protagonist_evaluation(slot_conn: &Connection, session: &SessionRow, pr
         params![serde_json::Value::Object(live_state).to_string()],
     )?;
 
+    // 감독 관계도(§6-59) — 좋은 등급 누적이 관계를 쌓는다(04_프로_커리어.md
+    // §Phase3). 감독이 없는 세이브에선 `adjust_relationship`이 조용히 no-op.
+    repository::adjust_relationship(slot_conn, &format!("manager:{protagonist_team_id}"), crate::sim::manager::relationship_delta_from_grade(grade))?;
+
     let season: i64 = slot_conn
         .query_row("SELECT value FROM season_meta WHERE key = 'season'", [], |r| r.get::<_, String>(0))
         .optional()?
@@ -493,12 +497,18 @@ fn run_until_decision_point(
         // 위기상황(`high_leverage`)마다 추가로 묻는 건 이번 스코프에서
         // 제외(10_구현_Phase_계획.md §6-58 스코프 판단 참고).
         if protagonist_pitching_team && !session.protagonist_pulled {
-            let manager = crate::sim::manager::manager_stats(&protagonist_team_id);
+            let manager = repository::load_manager_stats(slot_conn, &protagonist_team_id)?;
+            let manager_npc_id = format!("manager:{protagonist_team_id}");
+            // 관계도(§6-59, 04_프로_커리어.md §Phase3 "감독 신뢰도 = 관계도
+            // 재사용")로 감독의 정적 신뢰형성력을 보정 — 실제 그동안 쌓은
+            // 관계가 강판 판단에 반영된다. 0.3 계수는 D그룹 placeholder.
+            let relationship = repository::relationship_value(slot_conn, &manager_npc_id)? as f64;
+            let effective_trust = (manager.trust + relationship * 0.3).clamp(0.0, 100.0);
             let pitcher_fatigue = load_protagonist_as_pitcher(slot_conn)?.fatigue;
             let pitches_thrown = session.pitch_seq as u32;
 
             let pull_now = if session.mode == "수동" {
-                let prob = crate::sim::manager::pull_probability(pitches_thrown, pitcher_fatigue, manager.tactics, manager.trust);
+                let prob = crate::sim::manager::pull_probability(pitches_thrown, pitcher_fatigue, manager.tactics, effective_trust);
                 if prob <= 0.0 {
                     false // 아직 고려 구간 아님 — 묻지도 않고 계속 진행.
                 } else {
@@ -514,14 +524,20 @@ fn run_until_decision_point(
                                 manager_recommends_pull: prob >= 0.5,
                             });
                         }
-                        Some("교체") => true,
-                        Some("유지") => false,
+                        Some(choice @ ("교체" | "유지")) => {
+                            let pulled = choice == "교체";
+                            // "맡기기"는 플레이어의 판단이 아니라 동의/반대 자체가
+                            // 성립하지 않는다 — 이 두 분기에서만 관계도를 조정.
+                            let agreed = pulled == (prob >= 0.5);
+                            repository::adjust_relationship(slot_conn, &manager_npc_id, crate::sim::manager::relationship_delta_from_pull_agreement(agreed))?;
+                            pulled
+                        }
                         Some(_) /* "맡기기" — AI 판정에 그대로 맡김 */ => {
                             let mut pull_rng = ChaCha8Rng::seed_from_u64(repository::league_sub_seed(
                                 world_seed,
                                 &format!("pull:{}:{}:{}", session.game_id, session.inning, session.top_of_inning),
                             ));
-                            crate::sim::manager::should_pull_pitcher(&mut pull_rng, pitches_thrown, pitcher_fatigue, manager.tactics, manager.trust)
+                            crate::sim::manager::should_pull_pitcher(&mut pull_rng, pitches_thrown, pitcher_fatigue, manager.tactics, effective_trust)
                         }
                     }
                 }
@@ -530,7 +546,7 @@ fn run_until_decision_point(
                     world_seed,
                     &format!("pull:{}:{}:{}", session.game_id, session.inning, session.top_of_inning),
                 ));
-                crate::sim::manager::should_pull_pitcher(&mut pull_rng, pitches_thrown, pitcher_fatigue, manager.tactics, manager.trust)
+                crate::sim::manager::should_pull_pitcher(&mut pull_rng, pitches_thrown, pitcher_fatigue, manager.tactics, effective_trust)
             };
 
             if pull_now {
@@ -741,6 +757,19 @@ mod tests {
             "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches, injury)
              VALUES (?1, ?1, ?2, '구원투수', 20, 1, 0, 50.0, '{}', ?3, '{}', '{\"피로도\":0}', '[\"포심 패스트볼\"]', '{\"current\":null,\"history\":[]}')",
             params![format!("{team_id}_rp"), team_id, serde_json::json!({"제구": 50.0, "구위": 50.0}).to_string()],
+        )
+        .unwrap();
+    }
+
+    fn insert_manager(conn: &Connection, team_id: &str, tactics: f64, trust: f64) {
+        conn.execute(
+            "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches, injury)
+             VALUES (?1, ?1, ?2, '감독', 50, 0, 0, 50.0, '{}', ?3, '{}', '{}', NULL, '{\"current\":null,\"history\":[]}')",
+            params![
+                format!("manager:{team_id}"),
+                team_id,
+                serde_json::json!({"전술력": tactics, "신뢰형성력": trust, "육성안목": 50.0, "카리스마": 50.0}).to_string(),
+            ],
         )
         .unwrap();
     }
@@ -1161,5 +1190,98 @@ mod tests {
         let detail_raw: String = slot_conn.query_row("SELECT detail FROM game_log WHERE game_id = 'game:1'", [], |r| r.get(0)).unwrap();
         let detail: serde_json::Value = serde_json::from_str(&detail_raw).unwrap();
         assert_eq!(detail.get("pulled_by_manager").and_then(|v| v.as_bool()), Some(true));
+    }
+
+    fn relationship_of(conn: &Connection, npc_id: &str) -> Option<i64> {
+        conn.query_row("SELECT value FROM relationships WHERE npc_id = ?1", [npc_id], |r| r.get(0)).optional().unwrap()
+    }
+
+    #[test]
+    fn apply_protagonist_evaluation_moves_manager_relationship_with_the_grade() {
+        let good = {
+            let slot_conn = slot::open_in_memory().unwrap();
+            insert_roster(&slot_conn, "team:home");
+            insert_roster(&slot_conn, "team:away");
+            insert_protagonist(&slot_conn, "team:home");
+            insert_manager(&slot_conn, "team:home", 50.0, 50.0);
+            insert_schedule(&slot_conn, "game:1");
+            let session = bottom_of_inning_end_session("league:hs", 9, 0, 0); // 완봉 페이스
+            apply_protagonist_evaluation(&slot_conn, &session, "team:home").unwrap();
+            relationship_of(&slot_conn, "manager:team:home")
+        };
+
+        let bad = {
+            let slot_conn = slot::open_in_memory().unwrap();
+            insert_roster(&slot_conn, "team:home");
+            insert_roster(&slot_conn, "team:away");
+            insert_protagonist(&slot_conn, "team:home");
+            insert_manager(&slot_conn, "team:home", 50.0, 50.0);
+            insert_schedule(&slot_conn, "game:1");
+            let session = bottom_of_inning_end_session("league:hs", 9, 0, 20); // 대량 실점
+            apply_protagonist_evaluation(&slot_conn, &session, "team:home").unwrap();
+            relationship_of(&slot_conn, "manager:team:home")
+        };
+
+        assert!(good.unwrap_or(0) > 0, "완봉급 등판은 관계도를 올려야 한다, got {good:?}");
+        assert!(bad.unwrap_or(0) < 0, "대량 실점 등판은 관계도를 내려야 한다, got {bad:?}");
+    }
+
+    fn setup_manual_hard_cap_session(mode_conn: &Connection) {
+        insert_roster(mode_conn, "team:home");
+        insert_reliever(mode_conn, "team:home");
+        insert_roster(mode_conn, "team:away");
+        insert_protagonist(mode_conn, "team:home");
+        insert_manager(mode_conn, "team:home", 50.0, 50.0);
+        insert_schedule(mode_conn, "game:1");
+        mode_conn
+            .execute(
+                "INSERT INTO match_session (id, game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases,
+                                             home_runs, away_runs, home_batter_idx, away_batter_idx, balls, strikes,
+                                             current_batter_id, pitch_seq, strikeouts)
+                 VALUES (1, 'game:1', 'team:home', 'team:away', 'league:hs', '수동', 1, 1, 0, '[false,false,false]',
+                         0, 0, 0, 0, 0, 0, NULL, 200, 0)",
+                [],
+            )
+            .unwrap();
+    }
+
+    #[test]
+    fn agreeing_with_the_manager_raises_relationship_and_defying_it_lowers_it() {
+        // 200구는 하드캡을 훨씬 넘겨 manager_recommends_pull이 결정적으로
+        // true — "교체"는 동의, "유지"는 반대가 된다.
+        let slot_conn_agree = slot::open_in_memory().unwrap();
+        setup_manual_hard_cap_session(&slot_conn_agree);
+        run_until_decision_point(&slot_conn_agree, 1, None, None).unwrap();
+        submit_pitcher_change_decision(&slot_conn_agree, 1, "교체").unwrap();
+        let rel_agree = relationship_of(&slot_conn_agree, "manager:team:home").unwrap_or(0);
+
+        let slot_conn_defy = slot::open_in_memory().unwrap();
+        setup_manual_hard_cap_session(&slot_conn_defy);
+        run_until_decision_point(&slot_conn_defy, 1, None, None).unwrap();
+        submit_pitcher_change_decision(&slot_conn_defy, 1, "유지").unwrap();
+        let rel_defy = relationship_of(&slot_conn_defy, "manager:team:home").unwrap_or(0);
+
+        assert!(rel_agree > 0, "감독 권고(교체)에 동의하면 관계도가 올라야 한다, got {rel_agree}");
+        assert!(rel_defy < 0, "감독 권고(교체)에 반해 유지하면 관계도가 내려가야 한다, got {rel_defy}");
+    }
+
+    #[test]
+    fn deferring_to_the_manager_does_not_add_a_pull_agreement_delta() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        setup_manual_hard_cap_session(&slot_conn);
+        run_until_decision_point(&slot_conn, 1, None, None).unwrap();
+
+        submit_pitcher_change_decision(&slot_conn, 1, "맡기기").unwrap();
+
+        // 강판 자체는 게임을 곧장 끝내(배경 하프이닝 경로) 등급 평가가
+        // 뒤이어 관계도를 건드린다 — "맡기기"가 결백함을 보이려면 최종
+        // 관계도가 "등급 델타만큼"인지(=동의/반대 보너스가 안 더해졌는지)
+        // 확인해야 한다.
+        let detail_raw: String = slot_conn.query_row("SELECT detail FROM game_log WHERE game_id = 'game:1'", [], |r| r.get(0)).unwrap();
+        let detail: serde_json::Value = serde_json::from_str(&detail_raw).unwrap();
+        let grade = detail["grade"].as_str().unwrap();
+        let expected = crate::sim::manager::relationship_delta_from_grade(grade);
+
+        assert_eq!(relationship_of(&slot_conn, "manager:team:home"), Some(expected), "맡기기는 등급에 따른 변화만 남겨야 한다(동의/반대 델타 없음)");
     }
 }

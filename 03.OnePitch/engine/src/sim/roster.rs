@@ -101,7 +101,9 @@ fn weighted_pick(rng: &mut impl Rng, weights: &HashMap<String, f64>, options: &[
     options[options.len() - 1].to_string()
 }
 
-fn pick_personality(rng: &mut impl Rng, weights: &PersonalityWeights) -> Value {
+/// `sim::manager`가 감독 성격 생성에도 그대로 재사용(팀 특성 3슬롯과
+/// 동일한 가중 랜덤 패턴 — `콘텐츠/01_캐릭터.md` §3 "역할·소속 가중 랜덤").
+pub(crate) fn pick_personality(rng: &mut impl Rng, weights: &PersonalityWeights) -> Value {
     json!({
         "relation": weighted_pick(rng, &weights.relation, &RELATION_OPTIONS),
         "competitive": weighted_pick(rng, &weights.competitive, &COMPETITIVE_OPTIONS),
@@ -128,7 +130,7 @@ fn zero_xp(exposed: &[&str; 9]) -> Value {
     Value::Object(map)
 }
 
-fn gen_name(rng: &mut impl Rng, surnames: &[String], given: &[String]) -> String {
+pub(crate) fn gen_name(rng: &mut impl Rng, surnames: &[String], given: &[String]) -> String {
     let surname = surnames.choose(rng).cloned().unwrap_or_default();
     let g = given.choose(rng).cloned().unwrap_or_default();
     format!("{surname}{g}")
