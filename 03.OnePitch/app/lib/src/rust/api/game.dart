@@ -10,7 +10,7 @@ part 'game.freezed.dart';
 
 // These functions are ignored because they are not marked as `pub`: `avg_rank_from_season_ranks`, `stars_from_group_position`, `with_state_mut`, `with_state`, `world_seed`
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `GameState`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
 
 /// 뉴게임 — [07_주인공_생성](../../../02_기획/07_주인공_생성.md) §1의 7단계
 /// 흐름 중 실제 데이터를 만드는 마지막 단계(스텝 1~6은 Dart 쪽 폼 상태일
@@ -135,20 +135,31 @@ Future<TrainingConfigInfo?> getTrainingConfig() =>
     RustLib.instance.api.crateApiGameGetTrainingConfig();
 
 /// 훈련 슬롯 설정 — [01_내선수](../../../04_UI기획/01_내선수.md) §3 훈련
-/// 탭이 호출. `repository::set_protagonist_training`을 그대로 감싼다(구종
-/// 슬롯·신규 습득은 이번 서브분 스코프 밖 — 전체 구종 카탈로그를 조회할
-/// 엔진 쿼리가 아직 없어 `new_pitch`는 항상 `None`으로 고정).
+/// 탭이 호출. `repository::set_protagonist_training`을 그대로 감싼다.
+/// `new_pitch`는 신규 구종 습득 슬롯(대화 2026-07-21) — `pitch_type_names`
+/// 로 받은 카탈로그 중 아직 안 배운 구종 하나를 골라 넘기면 그 주부터
+/// `pitch_weeks` 진행도가 쌓인다(엔진 로직 자체는 이미 있었고, 그동안
+/// 카탈로그 조회 API가 없어서 UI에서 한 번도 안 쓰였을 뿐).
 Future<void> setTraining({
   required String primaryStat,
   required String secondaryStat1,
   required String secondaryStat2,
   required String intensity,
+  String? newPitch,
 }) => RustLib.instance.api.crateApiGameSetTraining(
   primaryStat: primaryStat,
   secondaryStat1: secondaryStat1,
   secondaryStat2: secondaryStat2,
   intensity: intensity,
+  newPitch: newPitch,
 );
+
+/// 신규 구종 습득 슬롯 드롭다운용 — [05_구종_시스템](../../../02_기획/육성코어/05_구종_시스템.md)
+/// §1의 10종 카탈로그(`content.db`의 `pitch_types`). 세션이 이미 열려있는
+/// 상태(내 정보 화면)에서만 호출되므로 `list_hs_teams`처럼 경로를 따로 안
+/// 받고 세션의 `content_conn`을 그대로 씀.
+Future<List<String>> pitchTypeNames() =>
+    RustLib.instance.api.crateApiGamePitchTypeNames();
 
 /// 캐릭터 생성 "개인 신체" 페이지 혈액형 드롭다운용 — 순수 상수라 동기.
 List<String> bloodTypeNames() =>
@@ -229,6 +240,9 @@ Future<CareerSummary> careerSummary() =>
 Future<List<SeasonLine>> careerTimeline() =>
     RustLib.instance.api.crateApiGameCareerTimeline();
 
+Future<List<CareerEventInfo>> getCareerEvents() =>
+    RustLib.instance.api.crateApiGameGetCareerEvents();
+
 /// 홈 화면 실제 날짜 표시용(대화 2026-07-21) — `crate::calendar`를 그대로
 /// 감싼다. 순수 계산이라 동기 호출.
 class CalendarDateInfo {
@@ -253,6 +267,38 @@ class CalendarDateInfo {
           year == other.year &&
           month == other.month &&
           day == other.day;
+}
+
+/// 내 정보 "커리어" 탭용(대화 2026-07-21) — 입학·진로선택 갈림길(드래프트/
+/// 대학/독립/입대)·병역 만료·은퇴를 시간순으로. `repository::log_career_event`
+/// 가 남긴 `career_events`를 그대로 조회. 트레이드·계약은 이미
+/// `getContractHistory`(`league_transactions`)에 있어 여기 안 겹침.
+class CareerEventInfo {
+  final PlatformInt64 day;
+  final PlatformInt64 season;
+  final String kind;
+  final String detailJson;
+
+  const CareerEventInfo({
+    required this.day,
+    required this.season,
+    required this.kind,
+    required this.detailJson,
+  });
+
+  @override
+  int get hashCode =>
+      day.hashCode ^ season.hashCode ^ kind.hashCode ^ detailJson.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CareerEventInfo &&
+          runtimeType == other.runtimeType &&
+          day == other.day &&
+          season == other.season &&
+          kind == other.kind &&
+          detailJson == other.detailJson;
 }
 
 /// [08_은퇴](../../../04_UI기획/08_은퇴.md) §2 "통산 기록 대시보드" —

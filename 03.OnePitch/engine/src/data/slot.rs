@@ -175,6 +175,23 @@ fn migration_v8(tx: &Transaction) -> anyhow::Result<()> {
     Ok(())
 }
 
+const V9_DDL: &str = r#"
+CREATE TABLE career_events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT, day INTEGER NOT NULL, season INTEGER NOT NULL,
+  kind TEXT NOT NULL, detail TEXT NOT NULL
+);
+"#;
+
+/// I7 27차분(내 정보 "커리어" 탭, 대화 2026-07-21) — 입학·진로선택 갈림길
+/// (드래프트/대학/독립/입대)·병역 만료·은퇴, 트레이드·계약처럼 이미
+/// `league_transactions`에 남던 것 말고 지금까지 어디에도 안 남던 커리어
+/// 분기점들을 시간순으로 기록(`data::repository::log_career_event`).
+fn migration_v9(tx: &Transaction) -> anyhow::Result<()> {
+    tx.execute_batch(V9_DDL)?;
+    tx.execute("UPDATE meta SET save_version = 9", [])?;
+    Ok(())
+}
+
 const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 1,
@@ -208,6 +225,10 @@ const MIGRATIONS: &[Migration] = &[
         version: 8,
         up: migration_v8,
     },
+    Migration {
+        version: 9,
+        up: migration_v9,
+    },
 ];
 
 fn init(mut conn: Connection) -> anyhow::Result<Connection> {
@@ -227,6 +248,7 @@ pub fn open_in_memory() -> anyhow::Result<Connection> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use rusqlite::params;
 
     #[test]
     fn fresh_db_migrates_to_v1_with_seeded_meta_row() {
@@ -234,7 +256,21 @@ mod tests {
         let save_version: i64 = conn
             .query_row("SELECT save_version FROM meta", [], |row| row.get(0))
             .unwrap();
-        assert_eq!(save_version, 8);
+        assert_eq!(save_version, 9);
+    }
+
+    #[test]
+    fn v9_adds_career_events_table() {
+        let conn = open_in_memory().unwrap();
+        conn.execute(
+            "INSERT INTO career_events (day, season, kind, detail) VALUES (?1, ?2, ?3, ?4)",
+            params![1, 0, "enrollment", serde_json::json!({"school_team_id": "team:x"}).to_string()],
+        )
+        .unwrap();
+        let (kind, detail): (String, String) =
+            conn.query_row("SELECT kind, detail FROM career_events WHERE day = 1", [], |r| Ok((r.get(0)?, r.get(1)?))).unwrap();
+        assert_eq!(kind, "enrollment");
+        assert!(detail.contains("team:x"));
     }
 
     #[test]

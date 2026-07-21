@@ -593,12 +593,38 @@ pub fn get_training_config() -> anyhow::Result<Option<TrainingConfigInfo>> {
 }
 
 /// 훈련 슬롯 설정 — [01_내선수](../../../04_UI기획/01_내선수.md) §3 훈련
-/// 탭이 호출. `repository::set_protagonist_training`을 그대로 감싼다(구종
-/// 슬롯·신규 습득은 이번 서브분 스코프 밖 — 전체 구종 카탈로그를 조회할
-/// 엔진 쿼리가 아직 없어 `new_pitch`는 항상 `None`으로 고정).
-pub fn set_training(primary_stat: String, secondary_stat_1: String, secondary_stat_2: String, intensity: String) -> anyhow::Result<()> {
+/// 탭이 호출. `repository::set_protagonist_training`을 그대로 감싼다.
+/// `new_pitch`는 신규 구종 습득 슬롯(대화 2026-07-21) — `pitch_type_names`
+/// 로 받은 카탈로그 중 아직 안 배운 구종 하나를 골라 넘기면 그 주부터
+/// `pitch_weeks` 진행도가 쌓인다(엔진 로직 자체는 이미 있었고, 그동안
+/// 카탈로그 조회 API가 없어서 UI에서 한 번도 안 쓰였을 뿐).
+pub fn set_training(
+    primary_stat: String,
+    secondary_stat_1: String,
+    secondary_stat_2: String,
+    intensity: String,
+    new_pitch: Option<String>,
+) -> anyhow::Result<()> {
     with_state(|state| {
-        repository::set_protagonist_training(&state.slot_conn, &primary_stat, [&secondary_stat_1, &secondary_stat_2], &intensity, None)
+        repository::set_protagonist_training(
+            &state.slot_conn,
+            &primary_stat,
+            [&secondary_stat_1, &secondary_stat_2],
+            &intensity,
+            new_pitch.as_deref(),
+        )
+    })
+}
+
+/// 신규 구종 습득 슬롯 드롭다운용 — [05_구종_시스템](../../../02_기획/육성코어/05_구종_시스템.md)
+/// §1의 10종 카탈로그(`content.db`의 `pitch_types`). 세션이 이미 열려있는
+/// 상태(내 정보 화면)에서만 호출되므로 `list_hs_teams`처럼 경로를 따로 안
+/// 받고 세션의 `content_conn`을 그대로 씀.
+pub fn pitch_type_names() -> anyhow::Result<Vec<String>> {
+    with_state(|state| {
+        let mut stmt = state.content_conn.prepare("SELECT name FROM pitch_types ORDER BY id")?;
+        let rows: Vec<String> = stmt.query_map([], |r| r.get(0))?.collect::<Result<_, _>>()?;
+        Ok(rows)
     })
 }
 
@@ -964,6 +990,28 @@ pub fn career_timeline() -> anyhow::Result<Vec<SeasonLine>> {
     })
 }
 
+/// 내 정보 "커리어" 탭용(대화 2026-07-21) — 입학·진로선택 갈림길(드래프트/
+/// 대학/독립/입대)·병역 만료·은퇴를 시간순으로. `repository::log_career_event`
+/// 가 남긴 `career_events`를 그대로 조회. 트레이드·계약은 이미
+/// `getContractHistory`(`league_transactions`)에 있어 여기 안 겹침.
+#[derive(Debug, Clone)]
+pub struct CareerEventInfo {
+    pub day: i64,
+    pub season: i64,
+    pub kind: String,
+    pub detail_json: String,
+}
+
+pub fn get_career_events() -> anyhow::Result<Vec<CareerEventInfo>> {
+    with_state(|state| {
+        let mut stmt = state.slot_conn.prepare("SELECT day, season, kind, detail FROM career_events ORDER BY id")?;
+        let rows: Vec<CareerEventInfo> = stmt
+            .query_map([], |r| Ok(CareerEventInfo { day: r.get(0)?, season: r.get(1)?, kind: r.get(2)?, detail_json: r.get(3)? }))?
+            .collect::<Result<_, _>>()?;
+        Ok(rows)
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -1069,12 +1117,19 @@ mod tests {
 
         assert!(get_training_config().unwrap().is_none(), "no training configured yet");
 
-        set_training("구속".to_string(), "구위".to_string(), "제구".to_string(), "보통".to_string()).unwrap();
+        set_training("구속".to_string(), "구위".to_string(), "제구".to_string(), "보통".to_string(), None).unwrap();
         let config = get_training_config().unwrap().unwrap();
         assert_eq!(config.primary_stat, "구속");
         assert_eq!(config.secondary_stats, vec!["구위", "제구"]);
         assert_eq!(config.intensity, "보통");
         assert!(config.new_pitch.is_none());
+
+        let catalog = pitch_type_names().unwrap();
+        assert_eq!(catalog.len(), 10, "05_구종_시스템.md §1의 10종 카탈로그");
+        assert!(catalog.contains(&"너클볼".to_string()));
+
+        set_training("구속".to_string(), "구위".to_string(), "제구".to_string(), "보통".to_string(), Some("슬라이더".to_string())).unwrap();
+        assert_eq!(get_training_config().unwrap().unwrap().new_pitch.as_deref(), Some("슬라이더"));
 
         reset_state();
     }

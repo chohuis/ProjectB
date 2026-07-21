@@ -8,19 +8,24 @@ import 'package:app/shared/error_banner.dart';
 import 'package:app/shared/loading_indicator.dart';
 import 'package:app/shared/design/colors.dart';
 import 'package:app/shared/design/widgets.dart';
+import 'package:app/shared/team_names.dart';
 import 'stat_radar_chart.dart';
 
 /// 내 선수 허브 — [01_내선수](../../../../04_UI기획/01_내선수.md) 상태·훈련·
-/// 재정 3탭. 능력치 3분류 그룹핑·색상은 UI 표시 포맷일 뿐(계산·판정 아님
-/// — 03_구조.md §3 "UI가 해도 됨: 숫자 포맷"에 해당)이라 엔진을 거치지
-/// 않고 여기서 직접 반올림·색 매핑한다.
+/// 재정 3탭 + 커리어 탭(대화 2026-07-21 신설). 능력치 3분류 그룹핑·색상은
+/// UI 표시 포맷일 뿐(계산·판정 아님 — 03_구조.md §3 "UI가 해도 됨: 숫자
+/// 포맷"에 해당)이라 엔진을 거치지 않고 여기서 직접 반올림·색 매핑한다.
 ///
-/// **엔진에 아직 없는 파생값은 명시적으로 생략**: 나이·역할(선발/불펜/
-/// 마무리)·명성 라벨은 그 값 자체가 엔진에 없다(나이는 진로 갈림길과
-/// 함께 후속, 역할은 항상 선발 완투 placeholder, 명성은 09_평가_시스템
-/// §4-1이 이미 미구현으로 명시). 구종 마스터리 라벨도 05_구종_시스템의
-/// 마스터리 시스템 자체가 엔진에 없어 이름만 표시. 재정 탭은
-/// 08_개인_재정 시스템 전체가 미구현이라 안내 문구만 둔다.
+/// **엔진에 아직 없는 파생값은 명시적으로 생략**: 역할(선발/불펜/마무리)·
+/// 명성 라벨은 그 값 자체가 엔진에 없다(역할은 항상 선발 완투 placeholder,
+/// 명성은 09_평가_시스템 §4-1이 이미 미구현으로 명시). 구종 마스터리
+/// 라벨도 05_구종_시스템의 마스터리 단계·코치 보너스 시스템 자체가
+/// 엔진에 없어(코치 시스템 자체가 I6 이월 항목) 이름만 표시 — 신규 습득
+/// (카탈로그에서 골라 훈련 슬롯에 배정)까지만 이번에 지원. 재정 탭은
+/// 08_개인_재정 시스템 전체가 미구현이라 안내 문구만 둔다. 커리어 탭은
+/// 입학·진로선택 갈림길(드래프트/대학/독립/입대)·병역 만료·은퇴를
+/// 시간순으로 — 트레이드·계약은 이미 기록 허브 "계약·이력" 탭이 보여줘
+/// 여기 안 겹친다.
 class MyPlayerScreen extends ConsumerStatefulWidget {
   const MyPlayerScreen({super.key});
 
@@ -62,11 +67,11 @@ class _MyPlayerScreenState extends ConsumerState<MyPlayerScreen> {
     }
 
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         appBar: AppBar(
           title: Text(status.name),
-          bottom: const TabBar(tabs: [Tab(text: '상태'), Tab(text: '훈련'), Tab(text: '재정')]),
+          bottom: const TabBar(tabs: [Tab(text: '상태'), Tab(text: '훈련'), Tab(text: '커리어'), Tab(text: '재정')]),
         ),
         body: Column(
           children: [
@@ -76,7 +81,7 @@ class _MyPlayerScreenState extends ConsumerState<MyPlayerScreen> {
             ),
             Expanded(
               child: TabBarView(
-                children: [_StatusTab(status: status), _TrainingTab(), const _FinanceTab()],
+                children: [_StatusTab(status: status), _TrainingTab(knownPitchesJson: status.pitchesJson), const _CareerTab(), const _FinanceTab()],
               ),
             ),
           ],
@@ -259,7 +264,16 @@ class _LiveGauge extends StatelessWidget {
   }
 }
 
+/// 훈련 탭 — "능력치 훈련"과 "신규 구종 습득"을 별도 카드로 나눴다(대화
+/// 2026-07-21). 신규 구종 습득의 엔진 로직(`pitch_weeks` 진행도 추적)
+/// 자체는 이미 있었고, 막혀있던 유일한 이유는 전체 구종 카탈로그를 조회할
+/// API가 없었던 것뿐 — `pitchTypeNames()` 신설로 그 공백만 메운다.
+/// 마스터리 5단계·코치 전문 보너스(05_구종_시스템.md §2·§3)는 코치
+/// 시스템 자체가 없어(I6 이월) 훨씬 큰 별도 과제로 이월.
 class _TrainingTab extends StatefulWidget {
+  const _TrainingTab({required this.knownPitchesJson});
+  final String knownPitchesJson;
+
   @override
   State<_TrainingTab> createState() => _TrainingTabState();
 }
@@ -267,10 +281,12 @@ class _TrainingTab extends StatefulWidget {
 class _TrainingTabState extends State<_TrainingTab> {
   List<String> _stats = [];
   List<String> _intensities = [];
+  List<String> _learnablePitches = [];
   String? _primary;
   String? _secondary1;
   String? _secondary2;
   String _intensity = '보통';
+  String? _newPitch;
   bool _loading = true;
   bool _saving = false;
   String? _error;
@@ -281,17 +297,30 @@ class _TrainingTabState extends State<_TrainingTab> {
     _load();
   }
 
+  List<String> _knownPitches() {
+    try {
+      final v = jsonDecode(widget.knownPitchesJson);
+      return v is List ? v.map((e) => e.toString()).toList() : [];
+    } catch (_) {
+      return [];
+    }
+  }
+
   Future<void> _load() async {
     final stats = exposedStatNames();
     final intensities = trainingIntensityNames();
+    final catalog = await pitchTypeNames();
+    final known = _knownPitches().toSet();
     final config = await getTrainingConfig();
     setState(() {
       _stats = stats;
       _intensities = intensities;
+      _learnablePitches = catalog.where((p) => !known.contains(p)).toList();
       _primary = config?.primaryStat ?? stats.first;
       _secondary1 = config != null && config.secondaryStats.isNotEmpty ? config.secondaryStats[0] : stats[1];
       _secondary2 = config != null && config.secondaryStats.length > 1 ? config.secondaryStats[1] : stats[2];
       _intensity = config?.intensity ?? '보통';
+      _newPitch = config?.newPitch;
       _loading = false;
     });
   }
@@ -302,7 +331,13 @@ class _TrainingTabState extends State<_TrainingTab> {
       _error = null;
     });
     try {
-      await setTraining(primaryStat: _primary!, secondaryStat1: _secondary1!, secondaryStat2: _secondary2!, intensity: _intensity);
+      await setTraining(
+        primaryStat: _primary!,
+        secondaryStat1: _secondary1!,
+        secondaryStat2: _secondary2!,
+        intensity: _intensity,
+        newPitch: _newPitch,
+      );
     } catch (e) {
       setState(() => _error = '$e');
     } finally {
@@ -313,45 +348,174 @@ class _TrainingTabState extends State<_TrainingTab> {
   @override
   Widget build(BuildContext context) {
     if (_loading) return const LoadingIndicator();
-    return Padding(
+    return ListView(
       padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('능력치 주슬롯', style: TextStyle(fontWeight: FontWeight.bold)),
-          _statDropdown(_primary, (v) => setState(() => _primary = v)),
-          const SizedBox(height: 12),
-          const Text('능력치 보조슬롯 1', style: TextStyle(fontWeight: FontWeight.bold)),
-          _statDropdown(_secondary1, (v) => setState(() => _secondary1 = v)),
-          const SizedBox(height: 12),
-          const Text('능력치 보조슬롯 2', style: TextStyle(fontWeight: FontWeight.bold)),
-          _statDropdown(_secondary2, (v) => setState(() => _secondary2 = v)),
-          const SizedBox(height: 12),
-          const Text('강도', style: TextStyle(fontWeight: FontWeight.bold)),
-          Wrap(
-            spacing: 8,
-            children: _intensities
-                .map((i) => ChoiceChip(label: Text(i), selected: _intensity == i, onSelected: (_) => setState(() => _intensity = i)))
-                .toList(),
+      children: [
+        AppPanel(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('능력치 훈련', style: TextStyle(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 12),
+              const Text('주슬롯', style: TextStyle(color: AppColors.textSecondary)),
+              _statDropdown(_primary, (v) => setState(() => _primary = v)),
+              const SizedBox(height: 8),
+              const Text('보조슬롯 1', style: TextStyle(color: AppColors.textSecondary)),
+              _statDropdown(_secondary1, (v) => setState(() => _secondary1 = v)),
+              const SizedBox(height: 8),
+              const Text('보조슬롯 2', style: TextStyle(color: AppColors.textSecondary)),
+              _statDropdown(_secondary2, (v) => setState(() => _secondary2 = v)),
+              const SizedBox(height: 8),
+              const Text('강도', style: TextStyle(color: AppColors.textSecondary)),
+              Wrap(
+                spacing: 8,
+                children: _intensities
+                    .map((i) => ChoiceChip(label: Text(i), selected: _intensity == i, onSelected: (_) => setState(() => _intensity = i)))
+                    .toList(),
+              ),
+            ],
           ),
-          const SizedBox(height: 8),
-          const Text('구종 슬롯(신규 습득)은 후속 서브분에서 추가됩니다.', style: TextStyle(color: AppColors.textSecondary)),
-          const SizedBox(height: 20),
-          if (_error != null) ErrorBanner(message: '오류: $_error'),
-          ElevatedButton(
-            onPressed: _saving ? null : _save,
-            child: _saving ? const CircularProgressIndicator() : const Text('저장'),
+        ),
+        const SizedBox(height: 16),
+        AppPanel(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('신규 구종 습득', style: TextStyle(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              if (_learnablePitches.isEmpty)
+                const Text('이미 카탈로그 10종을 전부 익혔습니다.', style: TextStyle(color: AppColors.textSecondary))
+              else
+                DropdownButtonFormField<String?>(
+                  initialValue: _newPitch,
+                  decoration: const InputDecoration(labelText: '연마할 구종'),
+                  items: [
+                    const DropdownMenuItem(value: null, child: Text('선택 안 함')),
+                    for (final p in _learnablePitches) DropdownMenuItem(value: p, child: Text(p)),
+                  ],
+                  onChanged: (v) => setState(() => _newPitch = v),
+                ),
+            ],
           ),
-        ],
-      ),
+        ),
+        const SizedBox(height: 20),
+        if (_error != null) ErrorBanner(message: '오류: $_error'),
+        ElevatedButton(
+          onPressed: _saving ? null : _save,
+          child: _saving ? const CircularProgressIndicator() : const Text('저장'),
+        ),
+      ],
     );
   }
 
   Widget _statDropdown(String? value, ValueChanged<String?> onChanged) {
     return DropdownButton<String>(
       value: value,
+      isExpanded: true,
       items: _stats.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
       onChanged: onChanged,
+    );
+  }
+}
+
+/// 커리어 탭 — 입학·진로선택 갈림길(드래프트/대학/독립/입대)·병역 만료·
+/// 은퇴를 시간순으로. `getCareerEvents()`가 반환하는 각 항목의
+/// `detailJson` 구조는 `kind`별로 다르므로 종류마다 따로 포맷한다.
+class _CareerTab extends ConsumerStatefulWidget {
+  const _CareerTab();
+
+  @override
+  ConsumerState<_CareerTab> createState() => _CareerTabState();
+}
+
+class _CareerTabState extends ConsumerState<_CareerTab> {
+  List<CareerEventInfo>? _events;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final events = await getCareerEvents();
+    if (mounted) setState(() => _events = events);
+  }
+
+  Map<String, dynamic> _decode(String json) {
+    try {
+      final v = jsonDecode(json);
+      return v is Map<String, dynamic> ? v : {};
+    } catch (_) {
+      return {};
+    }
+  }
+
+  IconData _iconFor(String kind) => switch (kind) {
+    'enrollment' => Icons.school,
+    'career_choice' => Icons.route,
+    'military_discharge' => Icons.military_tech,
+    'retirement' => Icons.flag_circle_outlined,
+    _ => Icons.circle,
+  };
+
+  String _reasonLabel(String reason) => switch (reason) {
+    'voluntary' => '자발적',
+    'decline' => '노쇠',
+    'injury' => '부상',
+    _ => reason,
+  };
+
+  String _describe(CareerEventInfo e, Map<String, String> names) {
+    final detail = _decode(e.detailJson);
+    String name(String? id) => id == null ? '?' : (names[id] ?? id);
+    switch (e.kind) {
+      case 'enrollment':
+        return '${name(detail['school_team_id']?.toString())} 입학';
+      case 'career_choice':
+        final choice = detail['choice']?.toString();
+        switch (choice) {
+          case '프로':
+            return '${name(detail['team_id']?.toString())} 프로 지명(연봉 ${detail['salary'] ?? '?'})';
+          case '대학':
+            return '${name(detail['team_id']?.toString())} 진학';
+          case '독립':
+            return '${name(detail['team_id']?.toString())} 독립구단 입단';
+          case '입대':
+            return '군 입대';
+          default:
+            return choice ?? '진로 선택';
+        }
+      case 'military_discharge':
+        return '전역 — ${name(detail['team_id']?.toString())} 복귀';
+      case 'retirement':
+        return '은퇴(${_reasonLabel(detail['reason']?.toString() ?? '')})';
+      default:
+        return e.kind;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final events = _events;
+    if (events == null) return const LoadingIndicator();
+    if (events.isEmpty) return const Center(child: Text('아직 커리어 기록이 없습니다.'));
+    final names = ref.watch(teamNamesProvider).value ?? const {};
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: events.length,
+      itemBuilder: (context, i) {
+        final e = events[i];
+        final date = calendarDateForDay(day: e.day);
+        return ListTile(
+          leading: Icon(_iconFor(e.kind), color: AppColors.accent),
+          title: Text(_describe(e, names)),
+          subtitle: Text('${date.year}년 ${date.month}월 ${date.day}일'),
+        );
+      },
     );
   }
 }

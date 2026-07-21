@@ -190,6 +190,29 @@ pub fn generate_initial_world(slot_conn: &mut Connection, content_conn: &Connect
     Ok(())
 }
 
+/// 지금 시즌 값 — `season_meta`에 아직 한 번도 안 쓰였으면(첫 시즌 도중)
+/// 0. `season_rollover`가 이미 매번 이 패턴으로 읽던 걸 커리어 이벤트
+/// 기록에도 그대로 재사용.
+fn current_season_value(conn: &Connection) -> anyhow::Result<i64> {
+    Ok(conn
+        .query_row("SELECT value FROM season_meta WHERE key = 'season'", [], |row| row.get::<_, String>(0))
+        .optional()?
+        .and_then(|s| s.parse().ok())
+        .unwrap_or(0))
+}
+
+/// 내 정보 "커리어" 탭용 — 트레이드·계약처럼 이미 `league_transactions`에
+/// 남던 것과 달리 지금까지 어디에도 안 남던 커리어 분기점(입학·갈림길A
+/// 결과·병역 만료·은퇴)을 시간순으로 기록한다(대화 2026-07-21). `kind`는
+/// "enrollment"|"career_choice"|"military_discharge"|"retirement".
+fn log_career_event(conn: &Connection, day: i64, season: i64, kind: &str, detail: serde_json::Value) -> anyhow::Result<()> {
+    conn.execute(
+        "INSERT INTO career_events (day, season, kind, detail) VALUES (?1, ?2, ?3, ?4)",
+        params![day, season, kind, detail.to_string()],
+    )?;
+    Ok(())
+}
+
 /// 뉴게임 — 주인공 생성([07_주인공_생성](../../02_기획/07_주인공_생성.md)
 /// §1의 7단계 플로우 중 실제로 데이터를 만드는 마지막 단계, 나머지는 화면
 /// 흐름이라 I7(Flutter UI) 소관). `school_team_id`·`archetype`·
@@ -246,6 +269,7 @@ pub fn create_protagonist(
             17, // 02_아마_고교.md §A-1 "고교 1학년, 17세"
         ],
     )?;
+    log_career_event(slot_conn, 0, 0, "enrollment", serde_json::json!({"school_team_id": school_team_id}))?;
     Ok(())
 }
 
@@ -1668,6 +1692,7 @@ fn mark_protagonist_retired(conn: &Connection, day: i64, reason: &str) -> anyhow
         "INSERT INTO pending_actions (id, type, urgency, created_day, payload) VALUES (?1, 'retirement', 'urgent', ?2, ?3)",
         params![format!("retirement:{day}"), day, serde_json::json!({"reason": reason}).to_string()],
     )?;
+    log_career_event(conn, day, current_season_value(conn)?, "retirement", serde_json::json!({"reason": reason}))?;
     Ok(())
 }
 
@@ -2105,6 +2130,7 @@ fn process_protagonist_military_discharge(conn: &Connection, content_conn: &Conn
     let team = pick_random_team_in_league(content_conn, &mut rng, "league:independent")?;
     let contract = serde_json::json!({"team_id": team});
     conn.execute("UPDATE protagonist SET contract = ?1, military_return_day = NULL WHERE id = 'proto:1'", params![contract.to_string()])?;
+    log_career_event(conn, day, current_season_value(conn)?, "military_discharge", serde_json::json!({"team_id": team}))?;
     Ok(())
 }
 
@@ -2163,6 +2189,7 @@ fn process_protagonist_career_path(conn: &Connection, content_conn: &Connection,
             "INSERT INTO pending_actions (id, type, urgency, created_day, payload) VALUES (?1, 'draft', 'urgent', ?2, ?3)",
             params![format!("draft:{day}"), day, payload],
         )?;
+        log_career_event(conn, day, season, "career_choice", serde_json::json!({"choice": "프로", "team_id": drafted_team, "salary": salary}))?;
     } else {
         let payload = serde_json::json!({"drafted": false, "options": ["대학", "독립", "입대"]}).to_string();
         conn.execute(
@@ -2180,6 +2207,7 @@ fn process_protagonist_career_path(conn: &Connection, content_conn: &Connection,
 /// 복무를 시작시킨다(`sim::npc::MILITARY_SERVICE_DAYS` 재사용).
 fn resolve_career_choice(conn: &Connection, content_conn: &Connection, world_seed: i64, choice_id: &str, day: i64) -> anyhow::Result<()> {
     let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("career:{day}")));
+    let season = current_season_value(conn)?;
     match choice_id {
         "대학" | "독립" => {
             let league_id = if choice_id == "대학" { "league:univ" } else { "league:independent" };
@@ -2188,6 +2216,7 @@ fn resolve_career_choice(conn: &Connection, content_conn: &Connection, world_see
             };
             let contract = serde_json::json!({"team_id": team});
             conn.execute("UPDATE protagonist SET contract = ?1 WHERE id = 'proto:1'", params![contract.to_string()])?;
+            log_career_event(conn, day, season, "career_choice", serde_json::json!({"choice": choice_id, "team_id": team}))?;
         }
         "입대" => {
             let contract = serde_json::json!({"team_id": null, "status": "military"});
@@ -2195,6 +2224,7 @@ fn resolve_career_choice(conn: &Connection, content_conn: &Connection, world_see
                 "UPDATE protagonist SET contract = ?1, military_return_day = ?2 WHERE id = 'proto:1'",
                 params![contract.to_string(), day + crate::sim::npc::MILITARY_SERVICE_DAYS],
             )?;
+            log_career_event(conn, day, season, "career_choice", serde_json::json!({"choice": "입대"}))?;
         }
         _ => anyhow::bail!("unknown careerChoice: {choice_id}"),
     }
@@ -2832,6 +2862,10 @@ mod tests {
         let pending = list_pending_actions(&slot_conn).unwrap();
         assert_eq!(pending.len(), 1);
         assert_eq!(pending[0].kind, "retirement");
+
+        // 내 정보 "커리어" 탭용 — create_protagonist가 남긴 "enrollment"와
+        // 이번 은퇴가 남긴 "retirement"가 시간순으로 둘 다 있어야 한다.
+        assert_eq!(career_event_kinds(&slot_conn), vec!["enrollment", "retirement"]);
     }
 
     #[test]
@@ -3562,6 +3596,11 @@ mod tests {
             .unwrap();
     }
 
+    fn career_event_kinds(conn: &Connection) -> Vec<String> {
+        let mut stmt = conn.prepare("SELECT kind FROM career_events ORDER BY id").unwrap();
+        stmt.query_map([], |r| r.get(0)).unwrap().collect::<Result<_, _>>().unwrap()
+    }
+
     #[test]
     fn process_protagonist_career_path_skips_when_age_is_untracked() {
         let content_conn = build_career_content_db();
@@ -3607,6 +3646,7 @@ mod tests {
                 let contract = read_contract(&slot_conn);
                 assert_eq!(contract["team_id"], team_id);
                 assert_eq!(contract["years_remaining"], 2);
+                assert_eq!(career_event_kinds(&slot_conn), vec!["career_choice"], "지명은 자동 확정이라 즉시 기록돼야 함");
                 triggered = true;
                 break;
             }
@@ -3631,6 +3671,7 @@ mod tests {
                 assert_eq!(payload["drafted"], false);
                 assert_eq!(payload["options"], serde_json::json!(["대학", "독립", "입대"]));
                 assert_eq!(read_contract(&slot_conn)["team_id"], "team:hs_a", "contract stays put until the player chooses");
+                assert!(career_event_kinds(&slot_conn).is_empty(), "미지명은 플레이어가 아직 선택 안 해서 기록할 게 없어야 함");
                 triggered = true;
                 break;
             }
@@ -3646,11 +3687,13 @@ mod tests {
         insert_career_protagonist(&slot_conn, "team:hs_a", 20, 0.0);
         resolve_career_choice(&slot_conn, &content_conn, 1, "대학", 364).unwrap();
         assert_eq!(read_contract(&slot_conn)["team_id"], "team:univ_a");
+        assert_eq!(career_event_kinds(&slot_conn), vec!["career_choice"]);
 
         let slot_conn2 = slot::open_in_memory().unwrap();
         insert_career_protagonist(&slot_conn2, "team:hs_a", 20, 0.0);
         resolve_career_choice(&slot_conn2, &content_conn, 1, "독립", 364).unwrap();
         assert_eq!(read_contract(&slot_conn2)["team_id"], "team:indep_a");
+        assert_eq!(career_event_kinds(&slot_conn2), vec!["career_choice"]);
     }
 
     #[test]
@@ -3666,6 +3709,7 @@ mod tests {
         assert_eq!(contract["status"], "military");
         let return_day: i64 = slot_conn.query_row("SELECT military_return_day FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
         assert_eq!(return_day, 100 + crate::sim::npc::MILITARY_SERVICE_DAYS);
+        assert_eq!(career_event_kinds(&slot_conn), vec!["career_choice"]);
     }
 
     #[test]
@@ -3682,6 +3726,7 @@ mod tests {
         let return_day_after: Option<i64> =
             slot_conn.query_row("SELECT military_return_day FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
         assert!(return_day_after.is_none());
+        assert_eq!(career_event_kinds(&slot_conn), vec!["career_choice", "military_discharge"]);
     }
 
     #[test]

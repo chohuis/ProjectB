@@ -10,7 +10,7 @@ import 'package:app/src/rust/frb_generated.dart';
 void main() {
   setUpAll(() async => await RustLib.init());
 
-  testWidgets('my player screen renders the 3 tabs and status content for a live game', (tester) async {
+  testWidgets('my player screen renders the 4 tabs and status content for a live game', (tester) async {
     final container = ProviderContainer();
     addTearDown(container.dispose);
 
@@ -41,9 +41,22 @@ void main() {
 
     expect(find.text('상태'), findsOneWidget);
     expect(find.text('훈련'), findsOneWidget);
+    expect(find.text('커리어'), findsOneWidget);
     expect(find.text('재정'), findsOneWidget);
     expect(find.text('능력치'), findsOneWidget);
     expect(find.text('구속'), findsOneWidget, reason: '3열 표에 라벨로 뜸 — 레이더 차트 쪽 라벨은 Canvas에 직접 그려서 위젯 트리엔 안 잡힘');
     expect(find.text('보유 구종'), findsOneWidget);
+
+    // 커리어 탭 — 뉴게임 직후라 "입학" 한 건만 있어야 함(create_protagonist
+    // 가 남긴 enrollment 이벤트, §6-52). `pumpAndSettle` 대신 이 파일
+    // 위쪽과 같은 패턴(진짜 이벤트 루프로 델레이 후 일반 `pump`) — 이
+    // 탭은 `teamNamesProvider`(frb 비동기 호출)를 처음 구독해서
+    // `pumpAndSettle`이 그 native 호출을 기다리다 타임아웃남.
+    await tester.tap(find.text('커리어'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400)); // TabBarView 전환 애니메이션(기본 300ms) 완료까지
+    await tester.runAsync(() => Future.delayed(const Duration(milliseconds: 500)));
+    await tester.pump();
+    expect(find.textContaining('입학'), findsOneWidget);
   });
 }

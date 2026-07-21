@@ -48,6 +48,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   CalendarDateInfo dco_decode_calendar_date_info(dynamic raw);
 
   @protected
+  CareerEventInfo dco_decode_career_event_info(dynamic raw);
+
+  @protected
   CareerSummary dco_decode_career_summary(dynamic raw);
 
   @protected
@@ -73,6 +76,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<bool> dco_decode_list_bool(dynamic raw);
+
+  @protected
+  List<CareerEventInfo> dco_decode_list_career_event_info(dynamic raw);
 
   @protected
   List<GameLogEntry> dco_decode_list_game_log_entry(dynamic raw);
@@ -213,6 +219,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   CalendarDateInfo sse_decode_calendar_date_info(SseDeserializer deserializer);
 
   @protected
+  CareerEventInfo sse_decode_career_event_info(SseDeserializer deserializer);
+
+  @protected
   CareerSummary sse_decode_career_summary(SseDeserializer deserializer);
 
   @protected
@@ -240,6 +249,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<bool> sse_decode_list_bool(SseDeserializer deserializer);
+
+  @protected
+  List<CareerEventInfo> sse_decode_list_career_event_info(
+    SseDeserializer deserializer,
+  );
 
   @protected
   List<GameLogEntry> sse_decode_list_game_log_entry(
@@ -423,6 +437,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_career_event_info(
+    CareerEventInfo self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_career_summary(CareerSummary self, SseSerializer serializer);
 
   @protected
@@ -457,6 +477,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_list_bool(List<bool> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_career_event_info(
+    List<CareerEventInfo> self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_list_game_log_entry(
