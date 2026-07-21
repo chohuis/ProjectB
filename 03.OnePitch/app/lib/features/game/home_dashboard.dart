@@ -9,9 +9,10 @@ import 'package:app/shared/design/colors.dart';
 import 'package:app/shared/design/widgets.dart';
 import 'package:app/shared/loading_indicator.dart';
 
-/// 홈 대시보드 1순위 카드 3종(대화 2026-07-21) — 다음 경기·최근 등판·
-/// 우리팀 순위. 전부 이미 있던 엔진 API(`getTeamSchedule`·`getGameLog`·
-/// `getStandings`) 조합일 뿐, 새 엔진 작업은 없다. `currentDay`를 키로
+/// 홈 대시보드 — 1순위 3종(다음 경기·최근 등판·우리팀 순위)+2순위 2종
+/// (훈련 현황·커리어 스냅샷, 대화 2026-07-21). 전부 이미 있던 엔진
+/// API(`getTeamSchedule`·`getGameLog`·`getStandings`·`getTrainingConfig`·
+/// `careerSummary`) 조합일 뿐, 새 엔진 작업은 없다. `currentDay`를 키로
 /// 하는 `FutureProvider.family`라 "진행"을 눌러 날짜가 바뀔 때마다
 /// 자연스럽게 다시 조회된다.
 class HomeSummary {
@@ -24,6 +25,8 @@ class HomeSummary {
     this.recentGameRunsAllowed,
     this.teamRank,
     this.leagueTeamCount,
+    this.training,
+    this.career,
   });
 
   final ScheduleGameInfo? nextGame;
@@ -36,6 +39,9 @@ class HomeSummary {
 
   final int? teamRank;
   final int? leagueTeamCount;
+
+  final TrainingConfigInfo? training;
+  final CareerSummary? career;
 }
 
 final homeSummaryProvider = FutureProvider.family<HomeSummary, int>((ref, currentDay) async {
@@ -86,6 +92,16 @@ final homeSummaryProvider = FutureProvider.family<HomeSummary, int>((ref, curren
     }
   } catch (_) {}
 
+  TrainingConfigInfo? training;
+  try {
+    training = await getTrainingConfig();
+  } catch (_) {}
+
+  CareerSummary? career;
+  try {
+    career = await careerSummary();
+  } catch (_) {}
+
   return HomeSummary(
     nextGame: nextGame,
     nextGameOpponentId: nextGameOpponentId,
@@ -95,6 +111,8 @@ final homeSummaryProvider = FutureProvider.family<HomeSummary, int>((ref, curren
     recentGameRunsAllowed: recentGameRunsAllowed,
     teamRank: teamRank,
     leagueTeamCount: leagueTeamCount,
+    training: training,
+    career: career,
   );
 });
 
@@ -108,17 +126,33 @@ class HomeDashboardCards extends ConsumerWidget {
     final names = ref.watch(teamNamesProvider).value ?? const {};
 
     return summaryAsync.when(
-      data: (summary) => IntrinsicHeight(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(child: _NextGameCard(summary: summary, names: names)),
-            const SizedBox(width: 12),
-            Expanded(child: _RecentGameCard(summary: summary, names: names)),
-            const SizedBox(width: 12),
-            Expanded(child: _StandingCard(summary: summary)),
-          ],
-        ),
+      data: (summary) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(child: _NextGameCard(summary: summary, names: names)),
+                const SizedBox(width: 12),
+                Expanded(child: _RecentGameCard(summary: summary, names: names)),
+                const SizedBox(width: 12),
+                Expanded(child: _StandingCard(summary: summary)),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(child: _TrainingCard(summary: summary)),
+                const SizedBox(width: 12),
+                Expanded(child: _CareerCard(summary: summary)),
+              ],
+            ),
+          ),
+        ],
       ),
       loading: () => const SizedBox(height: 88, child: Center(child: LoadingIndicator())),
       error: (_, _) => const SizedBox.shrink(),
@@ -203,6 +237,62 @@ class _StandingCard extends StatelessWidget {
             const Text('순위 정보 없음', style: TextStyle(color: AppColors.textSecondary))
           else
             Text('$rank위${summary.leagueTeamCount != null ? ' / ${summary.leagueTeamCount}팀' : ''}', style: const TextStyle(fontWeight: FontWeight.w600)),
+        ],
+      ),
+    );
+  }
+}
+
+class _TrainingCard extends StatelessWidget {
+  const _TrainingCard({required this.summary});
+  final HomeSummary summary;
+
+  @override
+  Widget build(BuildContext context) {
+    final training = summary.training;
+    return AppPanel(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Text('훈련 현황', style: TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 6),
+          if (training == null)
+            const Text('훈련 미설정 — 내 정보에서 설정하세요', style: TextStyle(color: AppColors.textSecondary))
+          else ...[
+            Text('주력: ${training.primaryStat} · 강도 ${training.intensity}', style: const TextStyle(fontWeight: FontWeight.w600)),
+            if (training.secondaryStats.isNotEmpty) ...[
+              const SizedBox(height: 2),
+              Text('보조: ${training.secondaryStats.join(', ')}', style: const TextStyle(color: AppColors.textSecondary)),
+            ],
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _CareerCard extends StatelessWidget {
+  const _CareerCard({required this.summary});
+  final HomeSummary summary;
+
+  @override
+  Widget build(BuildContext context) {
+    final career = summary.career;
+    return AppPanel(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Text('커리어 스냅샷', style: TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 6),
+          if (career == null || career.games == 0)
+            const Text('등판 기록 없음', style: TextStyle(color: AppColors.textSecondary))
+          else ...[
+            Text('${career.games}경기 ${career.wins}승 ${career.losses}패', style: const TextStyle(fontWeight: FontWeight.w600)),
+            const SizedBox(height: 2),
+            Text('ERA ${career.era.toStringAsFixed(2)} · 탈삼진 ${career.strikeouts}', style: const TextStyle(color: AppColors.textSecondary)),
+          ],
         ],
       ),
     );
