@@ -92,7 +92,7 @@ fn run_trial(content_conn: &Connection, seed: i64, archetype: &str, max_seasons:
     loop {
         let pending = repository::advance(&mut slot_conn, content_conn)?;
         if pending.is_empty() {
-            // advance()의 MAX_DAYS_PER_CALL(364일)은 "이 호출"의 안전장치일
+            // advance()의 MAX_DAYS_PER_CALL(366일, 시즌 최대 길이)은 "이 호출"의 안전장치일
             // 뿐 진짜 끝이 아니다 — 한동안 정지점이 없어도(예: 고교 대회
             // 조기 탈락 후 다음 시즌 일정이 새로 생기기 전까지) 계속
             // 부르면 다시 진행된다. 여러 번 연속으로 비어있으면 그때는
@@ -121,7 +121,7 @@ fn run_trial(content_conn: &Connection, seed: i64, archetype: &str, max_seasons:
         }
         // 시즌 상한·연속 공백 상한은 pending이 비어있었든 아니든 매
         // 반복마다 확인해야 한다 — 비어있던 호출 안에서도 advance()가
-        // 내부적으로 최대 364일(시즌 하나 분량)을 조용히 전진시킬 수
+        // 내부적으로 최대 366일(시즌 하나 분량)을 조용히 전진시킬 수
         // 있어, 여기서 안 걸러지면 상한을 몇 시즌씩 건너뛸 수 있음.
         let season: i64 = slot_conn
             .query_row("SELECT value FROM season_meta WHERE key = 'season'", [], |r| r.get::<_, String>(0))

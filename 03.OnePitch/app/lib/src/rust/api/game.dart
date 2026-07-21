@@ -10,7 +10,7 @@ part 'game.freezed.dart';
 
 // These functions are ignored because they are not marked as `pub`: `avg_rank_from_season_ranks`, `stars_from_group_position`, `with_state_mut`, `with_state`, `world_seed`
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `GameState`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
 
 /// 뉴게임 — [07_주인공_생성](../../../02_기획/07_주인공_생성.md) §1의 7단계
 /// 흐름 중 실제 데이터를 만드는 마지막 단계(스텝 1~6은 Dart 쪽 폼 상태일
@@ -100,6 +100,9 @@ Future<MetaStatusInfo> getMetaStatus() =>
 /// 그대로 넣으면 된다). 순수 계산(I/O·락 없음)이라 동기 호출로 둔다 —
 /// Dart 쪽에서 `FutureBuilder` 없이 바로 리스트를 쓸 수 있다.
 List<String> courseNames() => RustLib.instance.api.crateApiGameCourseNames();
+
+CalendarDateInfo calendarDateForDay({required PlatformInt64 day}) =>
+    RustLib.instance.api.crateApiGameCalendarDateForDay(day: day);
 
 List<TreatmentOption> treatmentOptions({required String severity}) =>
     RustLib.instance.api.crateApiGameTreatmentOptions(severity: severity);
@@ -225,6 +228,32 @@ Future<CareerSummary> careerSummary() =>
 
 Future<List<SeasonLine>> careerTimeline() =>
     RustLib.instance.api.crateApiGameCareerTimeline();
+
+/// 홈 화면 실제 날짜 표시용(대화 2026-07-21) — `crate::calendar`를 그대로
+/// 감싼다. 순수 계산이라 동기 호출.
+class CalendarDateInfo {
+  final PlatformInt64 year;
+  final PlatformInt64 month;
+  final PlatformInt64 day;
+
+  const CalendarDateInfo({
+    required this.year,
+    required this.month,
+    required this.day,
+  });
+
+  @override
+  int get hashCode => year.hashCode ^ month.hashCode ^ day.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CalendarDateInfo &&
+          runtimeType == other.runtimeType &&
+          year == other.year &&
+          month == other.month &&
+          day == other.day;
+}
 
 /// [08_은퇴](../../../04_UI기획/08_은퇴.md) §2 "통산 기록 대시보드" —
 /// **등급 매김 없이 순수 숫자**(05_히스토리_엔딩.md §4 "인생은 점수로

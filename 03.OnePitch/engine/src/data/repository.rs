@@ -2330,10 +2330,11 @@ pub fn season_rollover(conn: &Connection, content_conn: &Connection, day: i64) -
 /// 정지 조건(새 PendingAction, 주인공 경기)이 한 번도 안 걸리면 advance()가
 /// 무한 루프에 빠진다 — 지금(I5 이전)은 process_day/week/month가 전부
 /// no-op이고 주인공도 없어서 실제로 이 경로를 탄다. 안전장치로 한 시즌
-/// (364일)만큼만 내부 전진하고, 그래도 안 멈추면 빈 목록을 반환해 호출자에게
+/// 분량만큼만 내부 전진하고, 그래도 안 멈추면 빈 목록을 반환해 호출자에게
 /// 제어를 돌려준다. 실제 콘텐츠(I5 일정·이벤트)가 들어오면 정지점이 훨씬
-/// 자주 걸려 이 캡은 사실상 발동 안 함 — 순수 방어용.
-const MAX_DAYS_PER_CALL: i64 = 364;
+/// 자주 걸려 이 캡은 사실상 발동 안 함 — 순수 방어용. 366(윤년 포함 최대
+/// 시즌 길이, `calendar::season_length`)으로 여유를 둠.
+const MAX_DAYS_PER_CALL: i64 = 366;
 
 /// 04_게임루프.md §2의 `advance()` — 프로토의 advanceWeek를 대체하는 단일
 /// 진행 커맨드(설계 문서가 그 이름을 의도적으로 버렸다는 점이 이름 자체가
@@ -2377,7 +2378,8 @@ pub fn advance(slot_conn: &mut Connection, content_conn: &Connection) -> anyhow:
 
         // 경계 겹침 처리 순서 = 경기(위에서 이미 처리) → 주간 → 월간 → 시즌
         // (04_게임루프.md §2). 월=4주(28일)는 문서에 정확한 일수가 없어 잡은
-        // placeholder — 1시즌=52주=364일은 §1에 명시.
+        // placeholder(실제 달력 월과 무관한 내부 처리 주기) — 시즌 경계는
+        // `calendar::is_season_boundary`로 실제 연도 길이(365/366일)를 반영.
         if today % 7 == 0 {
             process_week(&tx, content_conn, world_seed, today)?;
             process_protagonist_week(&tx, content_conn, world_seed, today)?;
@@ -2385,7 +2387,7 @@ pub fn advance(slot_conn: &mut Connection, content_conn: &Connection) -> anyhow:
         if today % 28 == 0 {
             process_month(&tx, today)?;
         }
-        if today % 364 == 0 {
+        if crate::calendar::is_season_boundary(today) {
             season_rollover(&tx, content_conn, today)?;
         }
 
@@ -3815,7 +3817,7 @@ mod tests {
         let pending = advance(&mut slot_conn, &content_conn).unwrap();
 
         assert!(pending.is_empty(), "no stop condition exists yet without I5 content");
-        assert_eq!(current_day(&slot_conn), 364);
+        assert_eq!(current_day(&slot_conn), crate::calendar::season_length(1), "시즌 1 길이만큼 정확히 전진 후 롤오버해야 함");
         let inbox_count: i64 = slot_conn.query_row("SELECT count(*) FROM inbox", [], |r| r.get(0)).unwrap();
         assert_eq!(inbox_count, 0, "season boundary should clear inbox");
         let season: String = slot_conn

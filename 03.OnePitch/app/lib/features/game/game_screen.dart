@@ -10,6 +10,7 @@ import 'contract_nego_view.dart';
 import 'trade_decision_view.dart';
 import 'retirement_view.dart';
 import 'match_visuals.dart';
+import 'home_dashboard.dart';
 import 'package:app/shared/error_banner.dart';
 import 'package:app/shared/design/widgets.dart';
 
@@ -57,6 +58,7 @@ class GameScreen extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _StatusBar(state: state),
+            if (state.meta != null) ...[const SizedBox(height: 12), HomeDashboardCards(currentDay: state.meta!.currentDay.toInt())],
             const SizedBox(height: 16),
             if (state.error != null) ErrorBanner(message: '오류: ${state.error}'),
             Expanded(child: _MainArea(state: state, controller: controller)),
@@ -68,7 +70,11 @@ class GameScreen extends ConsumerWidget {
 }
 
 /// 프로토타입 `.kpi-row`(HomeDashboard.svelte) — 라벨+큰 숫자 타일을
-/// 가로로 나열. Day·시즌·피로·사기를 항상 한눈에 보이게.
+/// 가로로 나열. 피로도·사기는 뺐다(대화 2026-07-21) — 내 정보 탭의
+/// `_LiveGauge` 3종(피로도·폼·사기)이 이미 결정 4(게이지 바) 그대로
+/// 보여주고 있어 홈에서 중복시킬 필요가 없다고 판단, 그 자리는 실제
+/// 게임 정보 카드(`HomeDashboardCards`)로 돌림. Day 숫자 대신 실제
+/// 날짜(캘린더 시스템, `calendarDateForDay`)를 보여준다.
 class _StatusBar extends StatelessWidget {
   const _StatusBar({required this.state});
   final GameState state;
@@ -76,34 +82,16 @@ class _StatusBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final meta = state.meta;
-    final liveState = _liveState(state.status?.liveStateJson);
-    final fatigue = liveState['피로도'];
-    final morale = liveState['사기'];
+    if (meta == null) return const SizedBox.shrink();
+    final date = calendarDateForDay(day: meta.currentDay);
 
     return Row(
       children: [
-        if (meta != null) ...[
-          Expanded(child: KpiTile(label: 'Day', value: '${meta.currentDay}')),
-          const SizedBox(width: 8),
-          Expanded(child: KpiTile(label: '시즌', value: '${meta.season}')),
-          const SizedBox(width: 8),
-        ],
-        if (fatigue != null) ...[
-          Expanded(child: KpiTile(label: '피로도', value: '$fatigue')),
-          const SizedBox(width: 8),
-        ],
-        if (morale != null) Expanded(child: KpiTile(label: '사기', value: '$morale')),
+        Expanded(child: KpiTile(label: '오늘', value: '${date.year}년 ${date.month}월 ${date.day}일')),
+        const SizedBox(width: 8),
+        Expanded(child: KpiTile(label: '시즌', value: '${meta.season}')),
       ],
     );
-  }
-
-  Map _liveState(String? json) {
-    if (json == null) return const {};
-    try {
-      return jsonDecode(json) as Map;
-    } catch (_) {
-      return const {};
-    }
   }
 }
 

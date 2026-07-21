@@ -45,6 +45,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   TrainingConfigInfo dco_decode_box_autoadd_training_config_info(dynamic raw);
 
   @protected
+  CalendarDateInfo dco_decode_calendar_date_info(dynamic raw);
+
+  @protected
   CareerSummary dco_decode_career_summary(dynamic raw);
 
   @protected
@@ -205,6 +208,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   TrainingConfigInfo sse_decode_box_autoadd_training_config_info(
     SseDeserializer deserializer,
   );
+
+  @protected
+  CalendarDateInfo sse_decode_calendar_date_info(SseDeserializer deserializer);
 
   @protected
   CareerSummary sse_decode_career_summary(SseDeserializer deserializer);
@@ -407,6 +413,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_box_autoadd_training_config_info(
     TrainingConfigInfo self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_calendar_date_info(
+    CalendarDateInfo self,
     SseSerializer serializer,
   );
 

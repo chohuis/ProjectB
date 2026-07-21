@@ -322,6 +322,21 @@ pub fn course_names() -> Vec<String> {
     crate::sim::pitch::Course::ALL.iter().map(|c| format!("{c:?}")).collect()
 }
 
+/// 홈 화면 실제 날짜 표시용(대화 2026-07-21) — `crate::calendar`를 그대로
+/// 감싼다. 순수 계산이라 동기 호출.
+#[derive(Debug, Clone)]
+pub struct CalendarDateInfo {
+    pub year: i64,
+    pub month: i64,
+    pub day: i64,
+}
+
+#[flutter_rust_bridge::frb(sync)]
+pub fn calendar_date_for_day(day: i64) -> CalendarDateInfo {
+    let (year, month, day) = crate::calendar::calendar_date_for_day(day);
+    CalendarDateInfo { year, month: month as i64, day: day as i64 }
+}
+
 /// [07_전환화면](../../../04_UI기획/07_전환화면.md) §5 "3옵션 비교표" —
 /// `injuryTreatment` PendingAction의 `choice_id`로 그대로 쓸 수 있는
 /// `name`(`resolve_choice`가 기대하는 정확한 문자열, `sim::injury::TREATMENTS`)
