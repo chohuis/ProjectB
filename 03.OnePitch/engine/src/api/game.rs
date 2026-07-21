@@ -1064,6 +1064,11 @@ pub fn get_inbox() -> anyhow::Result<Vec<InboxMessageInfo>> {
     })
 }
 
+/// 메시지함 화면(I7)의 읽음 처리 — `repository::mark_inbox_read` 그대로.
+pub fn mark_inbox_read(id: String) -> anyhow::Result<()> {
+    with_state(|state| repository::mark_inbox_read(&state.slot_conn, &id))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
@@ -7,7 +8,10 @@ import 'package:app/shared/app_shell.dart';
 /// [00_개요](../../../04_UI기획/00_개요.md) §5 "반응형 원칙" — 데스크톱은
 /// 사이드 내비(`NavigationRail`), 모바일은 바텀 내비(`NavigationBar`).
 /// 실제 허브 화면 대신 더미 텍스트 화면으로 셸의 반응형 전환·목적지
-/// 이동 로직만 순수하게 검증(엔진 세션 불필요).
+/// 이동 로직만 순수하게 검증(엔진 세션 불필요). `AppShell`이 메시지함
+/// 뱃지(I7)를 위해 `ConsumerWidget`이 되면서 `ProviderScope`가 필요해짐
+/// — 엔진 세션이 없으면 `gameControllerProvider.meta`는 항상 null이라
+/// 뱃지 조회 자체가 안 일어나므로(currentDay 없음) 이 테스트엔 영향 없음.
 void main() {
   Widget buildApp() {
     final router = GoRouter(
@@ -22,7 +26,7 @@ void main() {
         ),
       ],
     );
-    return MaterialApp.router(routerConfig: router);
+    return ProviderScope(child: MaterialApp.router(routerConfig: router));
   }
 
   testWidgets('shows a NavigationRail on wide screens and switches destinations', (tester) async {

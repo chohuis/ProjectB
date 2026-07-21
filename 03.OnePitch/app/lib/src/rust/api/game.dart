@@ -246,6 +246,10 @@ Future<List<CareerEventInfo>> getCareerEvents() =>
 Future<List<InboxMessageInfo>> getInbox() =>
     RustLib.instance.api.crateApiGameGetInbox();
 
+/// 메시지함 화면(I7)의 읽음 처리 — `repository::mark_inbox_read` 그대로.
+Future<void> markInboxRead({required String id}) =>
+    RustLib.instance.api.crateApiGameMarkInboxRead(id: id);
+
 /// 홈 화면 실제 날짜 표시용(대화 2026-07-21) — `crate::calendar`를 그대로
 /// 감싼다. 순수 계산이라 동기 호출.
 class CalendarDateInfo {

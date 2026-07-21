@@ -6,7 +6,7 @@ import 'package:app/features/game/game_screen.dart';
 import 'package:app/features/my_player/my_player_screen.dart';
 import 'package:app/features/league/league_screen.dart';
 import 'package:app/features/records/records_screen.dart';
-import 'package:app/features/inbox/inbox_placeholder_screen.dart';
+import 'package:app/features/inbox/inbox_screen.dart';
 import 'package:app/shared/app_shell.dart';
 
 /// 루트(`/`)는 새로하기·이어하기·종료 3버튼 메인 메뉴 — 은퇴 화면의
@@ -29,7 +29,7 @@ final appRouter = GoRouter(
         GoRoute(path: '/game/my-player', builder: (context, state) => const MyPlayerScreen()),
         GoRoute(path: '/game/league', builder: (context, state) => const LeagueScreen()),
         GoRoute(path: '/game/records', builder: (context, state) => const RecordsScreen()),
-        GoRoute(path: '/game/inbox', builder: (context, state) => const InboxPlaceholderScreen()),
+        GoRoute(path: '/game/inbox', builder: (context, state) => const InboxScreen()),
       ],
     ),
   ],

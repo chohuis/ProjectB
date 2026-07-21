@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:app/src/rust/api/game.dart';
 import 'package:app/shared/team_names.dart';
@@ -176,8 +177,8 @@ class HomeDashboardCards extends ConsumerWidget {
   }
 }
 
-/// 부상 전조 경고 배너(§6-64) — 전용 메시지함 UI는 I7/I8 범위라 이번엔
-/// 홈 대시보드에 최소한으로만 노출.
+/// 부상 전조 경고 배너(§6-64) — 탭하면 메시지함(I7)으로 이동해 전체
+/// 목록에서 확인·읽음 처리할 수 있다.
 class _InjuryWarningBanner extends StatelessWidget {
   const _InjuryWarningBanner({required this.message});
   final InboxMessageInfo message;
@@ -185,17 +186,21 @@ class _InjuryWarningBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      decoration: BoxDecoration(color: scheme.errorContainer, borderRadius: BorderRadius.circular(8)),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(Icons.warning_amber_rounded, color: scheme.onErrorContainer, size: 20),
-          const SizedBox(width: 8),
-          Expanded(child: Text(message.body, style: TextStyle(color: scheme.onErrorContainer))),
-        ],
+    return InkWell(
+      onTap: () => context.go('/game/inbox'),
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(color: scheme.errorContainer, borderRadius: BorderRadius.circular(8)),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(Icons.warning_amber_rounded, color: scheme.onErrorContainer, size: 20),
+            const SizedBox(width: 8),
+            Expanded(child: Text(message.body, style: TextStyle(color: scheme.onErrorContainer))),
+          ],
+        ),
       ),
     );
   }

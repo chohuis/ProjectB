@@ -965,6 +965,13 @@ pub fn retire(conn: &Connection, npc_id: &str) -> anyhow::Result<()> {
     Ok(())
 }
 
+/// 인박스 읽음 처리(I7 메시지함 화면) — 존재하지 않는 id는 조용히 no-op
+/// (다른 단순 UPDATE 헬퍼들과 같은 관례, 예: `discharge`).
+pub fn mark_inbox_read(conn: &Connection, id: &str) -> anyhow::Result<()> {
+    conn.execute("UPDATE inbox SET read = 1 WHERE id = ?1", params![id])?;
+    Ok(())
+}
+
 pub fn update_weekly(_conn: &Connection, _npc_id: &str) -> anyhow::Result<()> {
     todo!()
 }
@@ -4763,6 +4770,28 @@ mod tests {
     fn relationship_value_defaults_to_zero_for_an_untouched_relationship() {
         let slot_conn = slot::open_in_memory().unwrap();
         assert_eq!(relationship_value(&slot_conn, "manager:team:a").unwrap(), 0);
+    }
+
+    #[test]
+    fn mark_inbox_read_flips_read_flag() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        slot_conn
+            .execute(
+                "INSERT INTO inbox (id, kind, urgency, read, day, body) VALUES ('inbox:x', 'event', 'normal', 0, 1, '본문')",
+                [],
+            )
+            .unwrap();
+
+        mark_inbox_read(&slot_conn, "inbox:x").unwrap();
+
+        let read: i64 = slot_conn.query_row("SELECT read FROM inbox WHERE id = 'inbox:x'", [], |r| r.get(0)).unwrap();
+        assert_eq!(read, 1);
+    }
+
+    #[test]
+    fn mark_inbox_read_is_a_no_op_for_an_unknown_id() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        mark_inbox_read(&slot_conn, "inbox:missing").unwrap();
     }
 
     #[test]
