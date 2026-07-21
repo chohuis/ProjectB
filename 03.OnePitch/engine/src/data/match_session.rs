@@ -255,6 +255,7 @@ fn apply_pa_outcome(session: &mut SessionRow, batting_team_is_home: bool, outcom
     session.strikes = 0;
 }
 
+#[derive(Debug, PartialEq)]
 enum Transition {
     Continue,
     GameOver,
@@ -263,9 +264,10 @@ enum Transition {
 /// 하프이닝 경계 처리 — §10-2 콜드게임(아마추어)·연장전 규칙(아마추어=
 /// 승부치기 무제한, 프로 정규시즌=12회 제한 무승부)을 그대로 재현.
 /// `match_sim::simulate_game`의 이닝 루프와 같은 조건을 세션 상태에 대해
-/// 반복 적용한 것 — 콜드게임 조기종료(§10-2 5회15점/7회10점)는 이번
-/// 인터랙티브 경로에서는 스코프 아웃(10_구현_Phase_계획.md 참고, 배경
-/// 경기 쪽 `simulate_game`에만 남아있음).
+/// 반복 적용한 것 — 콜드게임 조기종료(§10-2 5회15점/7회10점)도
+/// `match_sim::simulate_game`(line 218~223)과 동일한 조건식을 그대로
+/// 복제해 인터랙티브 경로에도 반영한다(예전엔 스코프 아웃이었으나
+/// I6 이월 항목 처리로 이번에 채움).
 fn transition_half_inning(session: &mut SessionRow) -> Transition {
     let amateur = match_sim::is_amateur(&session.league_id);
     session.outs = 0;
@@ -286,6 +288,12 @@ fn transition_half_inning(session: &mut SessionRow) -> Transition {
         // 홈(bottom) 종료 — 이닝 완전 종료, 게임 종료 조건 판정.
         if session.inning >= 9 && session.home_runs != session.away_runs {
             return Transition::GameOver;
+        }
+        if amateur {
+            let margin = (session.home_runs - session.away_runs).unsigned_abs();
+            if (session.inning >= 5 && margin >= 15) || (session.inning >= 7 && margin >= 10) {
+                return Transition::GameOver; // 콜드게임(§10-2, match_.rs와 동일 조건)
+            }
         }
         if !amateur && session.inning >= 12 {
             return Transition::GameOver; // 프로 정규시즌 12회 제한(무승부)
@@ -685,6 +693,63 @@ mod tests {
             [game_id],
         )
         .unwrap();
+    }
+
+    fn bottom_of_inning_end_session(league_id: &str, inning: i64, home_runs: i64, away_runs: i64) -> SessionRow {
+        SessionRow {
+            game_id: "game:1".to_string(),
+            home: "team:home".to_string(),
+            away: "team:away".to_string(),
+            league_id: league_id.to_string(),
+            mode: "자동".to_string(),
+            inning,
+            top_of_inning: false,
+            outs: 3,
+            bases: [false; 3],
+            home_runs,
+            away_runs,
+            home_batter_idx: 0,
+            away_batter_idx: 0,
+            balls: 0,
+            strikes: 0,
+            current_batter_id: None,
+            pitch_seq: 0,
+            strikeouts: 0,
+            protagonist_pulled: false,
+            relief_pitcher_id: None,
+            protagonist_pull_inning: None,
+            protagonist_pull_opponent_runs: None,
+        }
+    }
+
+    #[test]
+    fn cold_game_ends_amateur_match_at_5th_inning_with_15_run_margin() {
+        let mut session = bottom_of_inning_end_session("league:hs", 5, 20, 3);
+        assert_eq!(transition_half_inning(&mut session), Transition::GameOver);
+    }
+
+    #[test]
+    fn cold_game_ends_amateur_match_at_7th_inning_with_10_run_margin() {
+        let mut session = bottom_of_inning_end_session("league:hs", 7, 12, 2);
+        assert_eq!(transition_half_inning(&mut session), Transition::GameOver);
+    }
+
+    #[test]
+    fn cold_game_does_not_trigger_before_5th_inning_even_with_a_big_margin() {
+        let mut session = bottom_of_inning_end_session("league:hs", 4, 20, 1);
+        assert_eq!(transition_half_inning(&mut session), Transition::Continue);
+    }
+
+    #[test]
+    fn cold_game_does_not_trigger_with_margin_below_threshold() {
+        let mut session = bottom_of_inning_end_session("league:hs", 6, 12, 5);
+        assert_eq!(transition_half_inning(&mut session), Transition::Continue);
+    }
+
+    #[test]
+    fn cold_game_never_triggers_in_the_pro_league_regardless_of_margin_or_inning() {
+        let mut session = bottom_of_inning_end_session("league:pro", 7, 20, 1);
+        assert_eq!(transition_half_inning(&mut session), Transition::Continue);
     }
 
     #[test]

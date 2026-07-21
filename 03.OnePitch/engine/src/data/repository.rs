@@ -1697,8 +1697,45 @@ fn process_week(conn: &Connection, content_conn: &Connection, world_seed: i64, d
 }
 
 /// I5가 채울 자리 — 월간 경계("이달의 페이스" 평가).
-fn process_month(_conn: &Connection, _day: i64) -> anyhow::Result<()> {
+/// 월 단위 평가(§5-1) — `advance()`가 28일마다 호출하는 자리(내부 처리
+/// 주기, 실제 달력 월과 무관 — 위 주석 참고). 이번 28일 구간 주인공
+/// 등판들의 평균 등급("이달의 페이스")으로 사기를 보정한다. 팬/미디어
+/// 반응 이벤트(§5-1)는 I8 콘텐츠(뉴스·이벤트)가 아직 없어 생성할
+/// 콘텐츠 자체가 없음 — 이번엔 사기 보정까지만(스코프 아웃).
+fn process_month(conn: &Connection, day: i64) -> anyhow::Result<()> {
+    let Some(avg_grade_score) = monthly_avg_grade_score(conn, day - 27, day)? else {
+        return Ok(()); // 이번 달 등판 기록이 없으면 보정하지 않는다(§5-3과 같은 결).
+    };
+    let live_state_raw: Option<String> =
+        conn.query_row("SELECT live_state FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).optional()?;
+    let Some(live_state_raw) = live_state_raw else {
+        return Ok(());
+    };
+    let mut live_state: serde_json::Map<String, serde_json::Value> = serde_json::from_str(&live_state_raw)?;
+    let morale = live_state.get("사기").and_then(|v| v.as_f64()).unwrap_or(50.0);
+    let adjustment = crate::sim::eval::monthly_morale_adjustment(avg_grade_score);
+    live_state.insert("사기".to_string(), serde_json::json!((morale + adjustment).clamp(0.0, 100.0)));
+    conn.execute("UPDATE protagonist SET live_state = ?1 WHERE id = 'proto:1'", params![serde_json::Value::Object(live_state).to_string()])?;
     Ok(())
+}
+
+/// 최근 28일(§process_month) 구간 주인공 등판들의 평균 등급 점수 —
+/// `game_log`엔 day 컬럼이 없어 `schedule`과 `game_id`로 조인해 필터한다.
+/// `season_avg_grade_score`와 달리 등판 기록이 없으면 중간값(2.0)이
+/// 아니라 `None`을 반환 — "이번 달엔 안 던졌다"는 사기 보정 자체를
+/// 스킵할 신호이지, 부진(C)으로 칠 근거가 아니기 때문이다.
+fn monthly_avg_grade_score(conn: &Connection, from_day: i64, to_day: i64) -> anyhow::Result<Option<f64>> {
+    let mut stmt = conn.prepare("SELECT gl.detail FROM game_log gl JOIN schedule s ON gl.game_id = s.game_id WHERE s.day BETWEEN ?1 AND ?2")?;
+    let details: Vec<String> = stmt.query_map(params![from_day, to_day], |r| r.get(0))?.collect::<Result<_, _>>()?;
+    let scores: Vec<f64> = details
+        .iter()
+        .filter_map(|d| serde_json::from_str::<serde_json::Value>(d).ok())
+        .filter_map(|v| v.get("grade").and_then(|g| g.as_str()).map(crate::sim::market::grade_score))
+        .collect();
+    if scores.is_empty() {
+        return Ok(None);
+    }
+    Ok(Some(scores.iter().sum::<f64>() / scores.len() as f64))
 }
 
 /// 이번 시즌 game_log에 남은 등급들의 평균 점수 — 06_시장_계약.md §1
@@ -2242,6 +2279,56 @@ fn process_protagonist_career_path(conn: &Connection, content_conn: &Connection,
     Ok(())
 }
 
+/// 대학·독립 재적 중 매년 드래프트 신청 — [02_아마_고교](../../02_기획/02_아마_고교.md)
+/// §D(2026-07-21 정정: "대학4년/독립 시점"이 아니라 재적 중 매 시즌
+/// 신청 가능). 위 `process_protagonist_career_path`(고교 3학년 나이
+/// 게이트)와 달리 나이가 아니라 **현재 소속 리그**로만 게이팅한다 —
+/// 대학·독립 재적 중이면 몇 년째든 매 시즌 롤오버마다 지명 여부를
+/// 판정한다. 판정식(주목도·평가등급→확률, 팀 배정)은 고교 드래프트와
+/// 완전히 동일한 로직을 재사용 — "재도전"이라고 판정 방식이 다를 이유가
+/// 없다. RNG 시드 접두사(`redraft:`)를 고교 드래프트(`draft:`)와
+/// 분리해 pending_actions id 충돌을 원천 차단한다. 미지명이어도
+/// `careerChoice`를 다시 띄우지 않는다 — 대학/독립 소속을 그대로
+/// 유지하며 내년에 이 함수가 다시 자동으로 재도전을 판정하기 때문에
+/// 새로 고를 경로 자체가 없다.
+fn process_amateur_annual_redraft(conn: &Connection, content_conn: &Connection, world_seed: i64, season: i64, day: i64) -> anyhow::Result<()> {
+    let row: Option<(String, String)> =
+        conn.query_row("SELECT contract, live_state FROM protagonist WHERE id = 'proto:1'", [], |r| Ok((r.get(0)?, r.get(1)?))).optional()?;
+    let Some((contract_raw, live_state_raw)) = row else {
+        return Ok(());
+    };
+    let contract: serde_json::Value = serde_json::from_str(&contract_raw)?;
+    let Some(team_id) = contract.get("team_id").and_then(|v| v.as_str()) else {
+        return Ok(());
+    };
+    let league_id: Option<String> = content_conn.query_row("SELECT league_id FROM teams WHERE id = ?1", [team_id], |r| r.get(0)).optional()?;
+    if league_id.as_deref() != Some("league:univ") && league_id.as_deref() != Some("league:independent") {
+        return Ok(());
+    }
+
+    let avg_grade_score = season_avg_grade_score(conn, season)?;
+    let live_state: serde_json::Value = serde_json::from_str(&live_state_raw)?;
+    let attention = live_state.get("주목도").and_then(|v| v.as_f64()).unwrap_or(0.0);
+    let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("redraft:{day}")));
+
+    if crate::sim::career::is_drafted(&mut rng, avg_grade_score, attention) {
+        let Some(drafted_team) = pick_random_team_in_league(content_conn, &mut rng, "league:pro")? else {
+            return Ok(());
+        };
+        let salary = crate::sim::career::draft_initial_salary(avg_grade_score, attention);
+        let new_contract = serde_json::json!({"team_id": drafted_team, "salary": salary, "years_remaining": 2});
+        conn.execute("UPDATE protagonist SET contract = ?1 WHERE id = 'proto:1'", params![new_contract.to_string()])?;
+
+        let payload = serde_json::json!({"drafted": true, "team_id": drafted_team, "salary": salary}).to_string();
+        conn.execute(
+            "INSERT INTO pending_actions (id, type, urgency, created_day, payload) VALUES (?1, 'draft', 'urgent', ?2, ?3)",
+            params![format!("redraft:{day}"), day, payload],
+        )?;
+        log_career_event(conn, day, season, "career_choice", serde_json::json!({"choice": "프로", "team_id": drafted_team, "salary": salary, "from": league_id}))?;
+    }
+    Ok(())
+}
+
 /// `careerChoice` PendingAction 응답 처리 — `choice_id` ∈ {"대학","독립",
 /// "입대"}(드래프트 미지명 시에만 뜨는 선택지, §E). 대학/독립은 그 리그
 /// 팀 중 무작위 배정(§F "정확한 팀 선택 UI는 열린 세부" — 06_캐릭터생성
@@ -2324,6 +2411,7 @@ pub fn season_rollover(conn: &Connection, content_conn: &Connection, day: i64) -
     process_protagonist_trade(conn, content_conn, world_seed, day)?;
     process_protagonist_military_discharge(conn, content_conn, world_seed, day)?;
     process_protagonist_career_path(conn, content_conn, world_seed, current, day)?;
+    process_amateur_annual_redraft(conn, content_conn, world_seed, current, day)?;
 
     // standings 압축 — 리그별로 묶어서(content.db team_id→league_id 조회) 순위 계산.
     let mut stmt = conn.prepare("SELECT team_id, w, l FROM standings")?;
@@ -3108,6 +3196,89 @@ mod tests {
         }
     }
 
+    fn insert_game_log_grade_on_day(slot_conn: &Connection, game_id: &str, day: i64, grade: &str) {
+        slot_conn
+            .execute("INSERT INTO schedule (game_id, day, home, away, result) VALUES (?1, ?2, 'team:home', 'team:away', NULL)", params![game_id, day])
+            .unwrap();
+        slot_conn
+            .execute(
+                "INSERT INTO game_log (game_id, season, detail) VALUES (?1, 0, ?2)",
+                params![game_id, serde_json::json!({"grade": grade, "runs_allowed": 1, "opponent": "team:x"}).to_string()],
+            )
+            .unwrap();
+    }
+
+    #[test]
+    fn monthly_avg_grade_score_only_counts_outings_inside_the_day_window() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_game_log_grade_on_day(&slot_conn, "g_out", 1, "F"); // 범위 밖(day 28~56 미포함)
+        insert_game_log_grade_on_day(&slot_conn, "g_in1", 30, "S");
+        insert_game_log_grade_on_day(&slot_conn, "g_in2", 40, "A");
+
+        let avg = monthly_avg_grade_score(&slot_conn, 28, 56).unwrap();
+        assert_eq!(avg, Some((5.0 + 4.0) / 2.0), "F(day1) 경기는 범위 밖이라 평균에서 제외돼야 한다");
+    }
+
+    #[test]
+    fn monthly_avg_grade_score_is_none_when_no_outings_in_window() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_game_log_grade_on_day(&slot_conn, "g1", 1, "B");
+
+        assert_eq!(monthly_avg_grade_score(&slot_conn, 28, 56).unwrap(), None);
+    }
+
+    #[test]
+    fn process_month_raises_morale_after_a_good_month() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_market_protagonist(&slot_conn, &serde_json::json!({"team_id": "team:home"}), 0.0);
+        insert_game_log_grade_on_day(&slot_conn, "g1", 10, "S");
+        insert_game_log_grade_on_day(&slot_conn, "g2", 15, "S");
+
+        process_month(&slot_conn, 28).unwrap();
+
+        let live_state: serde_json::Value = serde_json::from_str(&slot_conn.query_row::<String, _, _>("SELECT live_state FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap()).unwrap();
+        assert!(live_state["사기"].as_f64().unwrap() > 50.0, "좋은 한 달을 보내면 사기가 올라야 한다");
+    }
+
+    #[test]
+    fn process_month_lowers_morale_after_a_bad_month() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_market_protagonist(&slot_conn, &serde_json::json!({"team_id": "team:home"}), 0.0);
+        insert_game_log_grade_on_day(&slot_conn, "g1", 10, "F");
+        insert_game_log_grade_on_day(&slot_conn, "g2", 15, "F");
+
+        process_month(&slot_conn, 28).unwrap();
+
+        let live_state: serde_json::Value = serde_json::from_str(&slot_conn.query_row::<String, _, _>("SELECT live_state FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap()).unwrap();
+        assert!(live_state["사기"].as_f64().unwrap() < 50.0, "나쁜 한 달을 보내면 사기가 내려가야 한다");
+    }
+
+    #[test]
+    fn process_month_is_a_no_op_when_the_protagonist_did_not_pitch_that_month() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_market_protagonist(&slot_conn, &serde_json::json!({"team_id": "team:home"}), 0.0);
+
+        let before: String = slot_conn.query_row("SELECT live_state FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+
+        process_month(&slot_conn, 28).unwrap();
+
+        let after: String = slot_conn.query_row("SELECT live_state FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+        assert_eq!(before, after, "이번 달 등판이 없으면 live_state 자체를 건드리지 않아야 한다");
+    }
+
+    #[test]
+    fn process_month_clamps_morale_at_the_upper_bound() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_market_protagonist(&slot_conn, &serde_json::json!({"team_id": "team:home"}), 0.0);
+        slot_conn.execute("UPDATE protagonist SET live_state = ?1 WHERE id = 'proto:1'", params![serde_json::json!({"피로도": 0, "사기": 95.0}).to_string()]).unwrap();
+        insert_game_log_grade_on_day(&slot_conn, "g1", 10, "S");
+
+        process_month(&slot_conn, 28).unwrap();
+
+        let live_state: serde_json::Value = serde_json::from_str(&slot_conn.query_row::<String, _, _>("SELECT live_state FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap()).unwrap();
+        assert_eq!(live_state["사기"].as_f64().unwrap(), 100.0, "사기는 100을 넘지 않아야 한다");
+    }
+
     fn read_contract(conn: &Connection) -> serde_json::Value {
         let raw: String = conn.query_row("SELECT contract FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
         serde_json::from_str(&raw).unwrap()
@@ -3736,6 +3907,96 @@ mod tests {
         resolve_career_choice(&slot_conn2, &content_conn, 1, "독립", 364).unwrap();
         assert_eq!(read_contract(&slot_conn2)["team_id"], "team:indep_a");
         assert_eq!(career_event_kinds(&slot_conn2), vec!["career_choice"]);
+    }
+
+    #[test]
+    fn process_amateur_annual_redraft_drafts_a_high_performing_university_player() {
+        let content_conn = build_career_content_db();
+        let mut triggered = false;
+        for seed in 0..30i64 {
+            let slot_conn = slot::open_in_memory().unwrap();
+            insert_career_protagonist(&slot_conn, "team:univ_a", 18, 1000.0); // 1학년이어도 즉시 신청 가능
+            insert_game_log_grades(&slot_conn, 0, &["S", "S", "S"]);
+
+            process_amateur_annual_redraft(&slot_conn, &content_conn, seed, 0, 364).unwrap();
+
+            let pending = list_pending_actions(&slot_conn).unwrap();
+            if let Some(action) = pending.iter().find(|p| p.kind == "draft") {
+                let payload: serde_json::Value = serde_json::from_str(&action.payload).unwrap();
+                assert_eq!(payload["drafted"], true);
+                assert_eq!(read_contract(&slot_conn)["team_id"], payload["team_id"]);
+                triggered = true;
+                break;
+            }
+        }
+        assert!(triggered, "expected at least one seed to draft a high-performing, high-attention university freshman");
+    }
+
+    #[test]
+    fn process_amateur_annual_redraft_drafts_a_high_performing_independent_player() {
+        let content_conn = build_career_content_db();
+        let mut triggered = false;
+        for seed in 0..30i64 {
+            let slot_conn = slot::open_in_memory().unwrap();
+            insert_career_protagonist(&slot_conn, "team:indep_a", 22, 1000.0);
+            insert_game_log_grades(&slot_conn, 0, &["S", "S", "S"]);
+
+            process_amateur_annual_redraft(&slot_conn, &content_conn, seed, 0, 364).unwrap();
+
+            if list_pending_actions(&slot_conn).unwrap().iter().any(|p| p.kind == "draft") {
+                triggered = true;
+                break;
+            }
+        }
+        assert!(triggered, "expected at least one seed to draft a high-performing, high-attention independent-league player");
+    }
+
+    #[test]
+    fn process_amateur_annual_redraft_is_a_no_op_for_a_poorly_performing_player() {
+        let content_conn = build_career_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_career_protagonist(&slot_conn, "team:univ_a", 18, 0.0);
+        insert_game_log_grades(&slot_conn, 0, &["F", "F", "F"]);
+
+        process_amateur_annual_redraft(&slot_conn, &content_conn, 1, 0, 364).unwrap();
+
+        assert!(list_pending_actions(&slot_conn).unwrap().is_empty(), "미지명이면 careerChoice도 안 뜨고 조용히 재적을 유지해야 한다");
+        assert_eq!(read_contract(&slot_conn)["team_id"], "team:univ_a", "미지명이면 소속 팀이 그대로여야 한다");
+    }
+
+    #[test]
+    fn process_amateur_annual_redraft_never_fires_outside_university_or_independent() {
+        let content_conn = build_career_content_db();
+        for team_id in ["team:hs_a", "team:pro_a"] {
+            let slot_conn = slot::open_in_memory().unwrap();
+            insert_career_protagonist(&slot_conn, team_id, 18, 1000.0);
+            insert_game_log_grades(&slot_conn, 0, &["S", "S", "S"]);
+
+            for seed in 0..30i64 {
+                process_amateur_annual_redraft(&slot_conn, &content_conn, seed, 0, 364).unwrap();
+                assert!(list_pending_actions(&slot_conn).unwrap().is_empty(), "league:{team_id}는 이 함수의 대상이 아니어야 한다");
+            }
+        }
+    }
+
+    #[test]
+    fn season_rollover_wires_up_amateur_annual_redraft_processing() {
+        let content_conn = build_career_content_db();
+        let mut triggered = false;
+        for seed in 0..30i64 {
+            let slot_conn = slot::open_in_memory().unwrap();
+            slot_conn.execute("UPDATE meta SET world_seed = ?1", params![seed]).unwrap();
+            insert_career_protagonist(&slot_conn, "team:univ_a", 18, 1000.0);
+            insert_game_log_grades(&slot_conn, 0, &["S", "S", "S"]);
+
+            season_rollover(&slot_conn, &content_conn, 364).unwrap();
+
+            if list_pending_actions(&slot_conn).unwrap().iter().any(|p| p.kind == "draft") {
+                triggered = true;
+                break;
+            }
+        }
+        assert!(triggered, "season_rollover should invoke process_amateur_annual_redraft for a university protagonist");
     }
 
     #[test]

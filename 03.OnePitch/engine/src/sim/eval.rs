@@ -72,6 +72,16 @@ pub fn attention_gain(grade: &str) -> f64 {
     }
 }
 
+/// §5-1 "월 단위" 이달의 페이스 → 사기 보정폭. `market::grade_score`
+/// 스케일(F=0.0~S=5.0, 중간 C=2.0)을 기준으로 중간값(2.0)에서 벗어난
+/// 만큼 가감 — 경기 단위 `morale_delta`와 달리 한 달 전체 흐름에 대한
+/// 완만한 보정이라 폭을 작게 잡았다(D그룹 placeholder, I8 밸런스
+/// 패스에서 재조정 대상). 팬/미디어 반응 이벤트(§5-1)는 I8 콘텐츠(뉴스·
+/// 이벤트) 부재로 이번엔 스코프 아웃 — 사기 보정만 다룬다.
+pub fn monthly_morale_adjustment(avg_grade_score: f64) -> f64 {
+    ((avg_grade_score - 2.0) * 3.0).clamp(-10.0, 10.0)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -113,5 +123,24 @@ mod tests {
             assert!(attention_gain(pair[0]) >= attention_gain(pair[1]), "attention should not increase from a better grade to a worse one");
         }
         assert!(attention_gain("F") > 0.0, "even a bad outing should gain some attention (exposure != skill, §4-1)");
+    }
+
+    #[test]
+    fn monthly_morale_adjustment_is_neutral_at_the_midpoint_grade() {
+        assert_eq!(monthly_morale_adjustment(2.0), 0.0);
+    }
+
+    #[test]
+    fn monthly_morale_adjustment_rewards_a_good_month_and_punishes_a_bad_one() {
+        assert!(monthly_morale_adjustment(4.0) > 0.0, "an above-average month should raise morale");
+        assert!(monthly_morale_adjustment(0.5) < 0.0, "a below-average month should lower morale");
+    }
+
+    #[test]
+    fn monthly_morale_adjustment_is_clamped() {
+        assert_eq!(monthly_morale_adjustment(5.0), 9.0, "S-average month (grade_score max) doesn't actually reach the clamp");
+        assert_eq!(monthly_morale_adjustment(0.0), -6.0, "F-average month is only -6 before hitting the clamp");
+        assert_eq!(monthly_morale_adjustment(10.0), 10.0, "out-of-range inputs stay within the clamp");
+        assert_eq!(monthly_morale_adjustment(-10.0), -10.0, "out-of-range inputs stay within the clamp");
     }
 }
