@@ -338,6 +338,16 @@ fn finalize_game(slot_conn: &Connection, session: &SessionRow, protagonist_team_
 /// 강판된 경우(`protagonist_pulled`) `runs_allowed`·`innings_pitched`는
 /// 강판 시점 스냅샷을 우선 써서, 불펜이 강판 이후 내준 점수가 주인공
 /// 개인 성적에 안 섞이게 한다.
+/// 등판 1구당 주인공 피로도 누적(§6-62, 대화 설계 2026-07-21) — 예전엔
+/// 주인공 피로도가 훈련 강도로만 결정되고 실제 등판과는 무관했다(NPC는
+/// `repository::accumulate_game_fatigue`로 경기당 고정 피로도가 쌓이는데
+/// 주인공에겐 그 연결이 없었음). 매 구 단위로 세밀하게 추적하는 주인공
+/// 세션 특성을 살려 경기당 고정치 대신 투구수 비례로 반영 — 한 등판
+/// (90~120구, §6-54 소프트·하드캡)이면 대략 NPC 경기당 고정치(12)와
+/// 비슷한 13.5~18 사이가 쌓인다. 주간 회복은 `process_protagonist_week`
+/// (repository.rs)의 절반 감소가 담당.
+const PROTAGONIST_FATIGUE_PER_PITCH: f64 = 0.15;
+
 fn apply_protagonist_evaluation(slot_conn: &Connection, session: &SessionRow, protagonist_team_id: &str) -> anyhow::Result<()> {
     let protagonist_is_home = session.home == protagonist_team_id;
     let (full_game_runs, opponent_team) =
@@ -361,8 +371,10 @@ fn apply_protagonist_evaluation(slot_conn: &Connection, session: &SessionRow, pr
     let mut live_state: serde_json::Map<String, serde_json::Value> = serde_json::from_str(&live_state_raw)?;
     let morale = live_state.get("사기").and_then(|v| v.as_f64()).unwrap_or(50.0);
     let attention = live_state.get("주목도").and_then(|v| v.as_f64()).unwrap_or(0.0);
+    let fatigue = live_state.get("피로도").and_then(|v| v.as_f64()).unwrap_or(0.0);
     live_state.insert("사기".to_string(), serde_json::json!((morale + eval::morale_delta(grade)).clamp(0.0, 100.0)));
     live_state.insert("주목도".to_string(), serde_json::json!(attention + eval::attention_gain(grade)));
+    live_state.insert("피로도".to_string(), serde_json::json!(fatigue + session.pitch_seq as f64 * PROTAGONIST_FATIGUE_PER_PITCH));
     slot_conn.execute(
         "UPDATE protagonist SET live_state = ?1 WHERE id = 'proto:1'",
         params![serde_json::Value::Object(live_state).to_string()],

@@ -455,8 +455,17 @@ fn process_protagonist_week(slot_conn: &Connection, content_conn: &Connection, w
         apply_injury(slot_conn, part, severity, day)?;
     }
 
+    // 주간 자연 회복(§6-62) — NPC 쪽 `process_week`과 동일하게 매주 절반
+    // 감소. 훈련 설정 여부와 무관하게 항상 적용해야 하므로 조기 반환보다
+    // 먼저 반영 — 이 값이 아래 훈련 강도 가감의 새 기준치가 된다.
+    live_state.insert("피로도".to_string(), serde_json::json!(fatigue_before_training * 0.5));
+
     let Some(training_raw) = training_raw else {
-        return Ok(()); // 훈련 설정을 아직 한 번도 안 함
+        slot_conn.execute(
+            "UPDATE protagonist SET live_state = ?1 WHERE id = 'proto:1'",
+            params![serde_json::Value::Object(live_state).to_string()],
+        )?;
+        return Ok(()); // 훈련 설정을 아직 한 번도 안 함 — 피로도 회복만 반영하고 끝
     };
 
     let mut stats: serde_json::Map<String, serde_json::Value> = serde_json::from_str(&stats_raw)?;
@@ -2029,10 +2038,15 @@ fn process_protagonist_contract(conn: &Connection, content_conn: &Connection, wo
         contract["status"] = serde_json::json!("FA");
         conn.execute("UPDATE protagonist SET contract = ?1 WHERE id = 'proto:1'", params![contract.to_string()])?;
 
+        // id에 "release" 접두사 필수 — 방출 직후 같은 날 FA 오퍼를 즉시
+        // 수락하면 아래 `resolve_contract_nego`의 "sign" 이벤트가 같은
+        // day에 발생한다. 예전엔 둘 다 `txn:contract:{day}`를 써서 그
+        // 경우 UNIQUE 제약 위반으로 패닉 — 밸런스 하네스를 대량 실행해서
+        // 처음 발견(10_구현_Phase_계획.md §6-61).
         let detail = serde_json::json!({"event": "release", "team_id": team_id, "salary": salary}).to_string();
         conn.execute(
             "INSERT INTO league_transactions (id, day, kind, detail) VALUES (?1, ?2, 'contract', ?3)",
-            params![format!("txn:contract:{day}"), day, detail],
+            params![format!("txn:contract:release:{day}"), day, detail],
         )?;
 
         let offers = build_fa_offers(&mut rng, content_conn, &team_id, salary, avg_grade_score, attention)?;
@@ -2119,7 +2133,7 @@ fn resolve_contract_nego(conn: &Connection, content_conn: &Connection, world_see
     let detail = serde_json::json!({"event": "sign", "team_id": team_id, "salary": final_salary, "years": years, "negotiation_kind": negotiation_kind}).to_string();
     conn.execute(
         "INSERT INTO league_transactions (id, day, kind, detail) VALUES (?1, ?2, 'contract', ?3)",
-        params![format!("txn:contract:{day}"), day, detail],
+        params![format!("txn:contract:sign:{day}"), day, detail],
     )?;
     Ok(())
 }
@@ -3532,6 +3546,39 @@ mod tests {
         assert_eq!(detail["team_id"], "team:rich_a");
         assert_eq!(detail["salary"], 8000);
         assert_eq!(detail["negotiation_kind"], "FA");
+    }
+
+    #[test]
+    fn release_and_same_day_fa_acceptance_do_not_collide_in_league_transactions() {
+        // §6-61 — 밸런스 하네스 대량 실행으로 처음 발견한 크래시 재현:
+        // 방출 로그와 그 직후(같은 day) FA 오퍼 수락 로그가 예전엔 같은
+        // id(`txn:contract:{day}`)를 써서 UNIQUE 제약 위반으로 패닉했다.
+        let content_conn = build_market_content_db();
+        let mut triggered = false;
+        for seed in 0..30i64 {
+            let slot_conn = slot::open_in_memory().unwrap();
+            insert_market_protagonist(&slot_conn, &serde_json::json!({"team_id": "team:poor_a", "salary": 20000, "years_remaining": 3}), 0.0);
+            insert_game_log_grades(&slot_conn, 0, &["F", "F", "F"]);
+            slot_conn.execute("UPDATE meta SET current_day = 364", []).unwrap();
+
+            process_protagonist_contract(&slot_conn, &content_conn, seed, 0, 364).unwrap();
+
+            let pending = list_pending_actions(&slot_conn).unwrap();
+            if let Some(action) = pending.iter().find(|p| p.kind == "contractNego") {
+                let payload: serde_json::Value = serde_json::from_str(&action.payload).unwrap();
+                let team = payload["offers"][0]["team_id"].as_str().unwrap();
+
+                // 예전엔 이 호출에서 UNIQUE 제약 위반으로 패닉했다.
+                resolve_choice(&slot_conn, &content_conn, seed, &action.id, &format!("accept:{team}")).unwrap();
+
+                let count: i64 =
+                    slot_conn.query_row("SELECT count(*) FROM league_transactions WHERE kind = 'contract'", [], |r| r.get(0)).unwrap();
+                assert_eq!(count, 2, "release·sign 두 이벤트가 서로 덮어쓰지 않고 둘 다 남아야 한다");
+                triggered = true;
+                break;
+            }
+        }
+        assert!(triggered, "expected at least one seed to release then immediately get and accept an FA offer on the same day");
     }
 
     #[test]

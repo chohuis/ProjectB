@@ -119,17 +119,24 @@ pub fn check_overuse_injury(rng: &mut impl Rng, fatigue: f64, philosophy: &str) 
     Some((part, severity))
 }
 
-/// PA당 급성 부상 기본 확률·피로도 가산 계수 — §3 "경기 중 특정 순간의
+/// 투구당 급성 부상 기본 확률·피로도 가산 계수 — §3 "경기 중 특정 순간의
 /// 낮은 확률 랜덤 이벤트"·"피로가 높을수록 급성 부상 확률도 소폭 가산".
-/// §6 "발생 확률 기본치 및 상황별 가산치는 미확정"이라 placeholder.
-const ACUTE_BASE_PROB: f64 = 0.0006;
-const ACUTE_FATIGUE_COEF: f64 = 0.00002;
+/// 밸런스 하네스 대량 실행(10_구현_Phase_계획.md §6-62)으로 이 확률이
+/// "투구 1개당"이라는 노출 단위에 안 맞게 잡혀 있었음을 발견 — 목표
+/// 커리어(15~20시즌, 총 투구 약 4.5~5만 개) 동안 부상 이벤트가 6~10회
+/// 나오게 역산해 재조정(대화 설계 2026-07-21). 예전 값(0.0006/0.00002)은
+/// 같은 커리어 규모에서 부상 이벤트가 20건을 훌쩍 넘겨 사실상 매번 부상
+/// 은퇴로 끝났다.
+const ACUTE_BASE_PROB: f64 = 0.0001;
+const ACUTE_FATIGUE_COEF: f64 = 0.000003;
 
 /// 급성형(우발) 부상 판정 — §3 "무리한 투구 동작·강한 타구 피격·주루
 /// 충돌 등". 팀 철학은 이 표에서 누적형 행에만 연결돼 있어(§3 표) 급성형
 /// 확률에는 반영하지 않음 — 누적형(`check_overuse_injury`)과의 유일한
-/// 차이점. 심각도 분포는 과사용보다 중상 비중을 높게 잡음(§3 "발생 시 그
-/// 경기 즉시 강판"이 내포하는 급작스러움) — placeholder.
+/// 차이점. **심각도 분포의 중상 비중을 20%→5%로 재조정**(§6-62) —
+/// 은퇴 임계값(16 = 중상 2회 상당)까지 쌓일 확률을 "커리어 100번 중
+/// 6~7번" 수준으로 낮추기 위한 결정(대화 설계 2026-07-21). 과사용
+/// (`check_overuse_injury`)의 중상 비중(5%)과도 이제 일치.
 pub fn check_acute_injury(rng: &mut impl Rng, fatigue: f64) -> Option<(&'static str, &'static str)> {
     let prob = (ACUTE_BASE_PROB + fatigue * ACUTE_FATIGUE_COEF).clamp(0.0, 1.0);
     if !rng.gen_bool(prob) {
@@ -140,7 +147,7 @@ pub fn check_acute_injury(rng: &mut impl Rng, fatigue: f64) -> Option<(&'static 
     let roll: f64 = rng.gen_range(0.0..1.0);
     let severity = if roll < 0.4 {
         "경미"
-    } else if roll < 0.8 {
+    } else if roll < 0.95 {
         "중등"
     } else {
         "중상"
@@ -219,7 +226,9 @@ mod tests {
 
     #[test]
     fn higher_fatigue_increases_acute_injury_probability() {
-        let trials = 2000;
+        // §6-62 재조정 이후 확률이 훨씬 작아져(0.0001~0.0004대) 2,000회로는
+        // 둘 다 0건이 나올 수 있음 — 신뢰성 있게 갈리도록 시행 수 확대.
+        let trials = 50_000;
         let count = |fatigue: f64| -> usize {
             let mut hits = 0;
             for seed in 0..trials {
