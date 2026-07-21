@@ -16,11 +16,11 @@ class AppShell extends StatelessWidget {
   final Widget child;
 
   static const _destinations = [
-    (path: '/game', icon: Icons.sports_baseball, label: '진행'),
-    (path: '/game/my-player', icon: Icons.person, label: '내 선수'),
+    (path: '/game', icon: Icons.sports_baseball, label: '홈'),
+    (path: '/game/my-player', icon: Icons.person, label: '내 정보'),
+    (path: '/game/inbox', icon: Icons.mail_outline, label: '메시지함'),
     (path: '/game/league', icon: Icons.emoji_events, label: '리그'),
     (path: '/game/records', icon: Icons.history_edu, label: '기록'),
-    (path: '/game/inbox', icon: Icons.mail_outline, label: '메시지함'),
   ];
 
   static const wideBreakpoint = 600.0;

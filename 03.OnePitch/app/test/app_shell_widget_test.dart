@@ -38,7 +38,7 @@ void main() {
     expect(find.byType(NavigationBar), findsNothing);
     expect(find.text('진행 화면'), findsOneWidget);
 
-    await tester.tap(find.text('내 선수'));
+    await tester.tap(find.text('내 정보'));
     await tester.pumpAndSettle();
 
     expect(find.text('내 선수 화면'), findsOneWidget);

@@ -21,6 +21,10 @@ import 'package:app/shared/design/widgets.dart';
 /// 순간에서만 실제로 보임, 10_구현_Phase_계획.md §6-31 참고). `game`·
 /// `injuryTreatment`·`contractNego`·`tradeDecision`·`careerChoice`·
 /// `draft`·`retirement` — PendingAction 8종 전부 전용 화면을 갖췄다.
+/// "▶ 진행" 버튼은 하단 대신 AppBar 우측(이전엔 은퇴 아이콘 자리)으로
+/// 옮겼다 — 자발적 은퇴 트리거는 이번에 같이 뺐음(대화 2026-07-21,
+/// "우선" 없앤다고 해서 다른 자리로의 이전은 아직 안 함 — 강제 은퇴
+/// PendingAction(`retirement_view.dart`)은 그대로 남아 영향 없음).
 class GameScreen extends ConsumerWidget {
   const GameScreen({super.key});
 
@@ -37,11 +41,14 @@ class GameScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(state.status?.name ?? ''),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.flag_circle_outlined),
-            tooltip: '은퇴',
-            onPressed: state.busy || state.pending.isNotEmpty || state.matchStep != null ? null : () => _confirmRetirement(context, controller),
-          ),
+          if (state.matchStep == null)
+            IconButton(
+              icon: state.busy
+                  ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                  : const Icon(Icons.play_arrow),
+              tooltip: '진행',
+              onPressed: state.busy || state.pending.isNotEmpty ? null : controller.continueGame,
+            ),
         ],
       ),
       body: Padding(
@@ -53,35 +60,10 @@ class GameScreen extends ConsumerWidget {
             const SizedBox(height: 16),
             if (state.error != null) ErrorBanner(message: '오류: ${state.error}'),
             Expanded(child: _MainArea(state: state, controller: controller)),
-            const SizedBox(height: 8),
-            if (state.matchStep == null)
-              ElevatedButton(
-                onPressed: state.busy || state.pending.isNotEmpty ? null : controller.continueGame,
-                child: state.busy ? const CircularProgressIndicator() : const Text('▶ 진행'),
-              ),
           ],
         ),
       ),
     );
-  }
-}
-
-/// 자발적 은퇴(08_은퇴.md §1) 확인 다이얼로그 — 되돌릴 수 없는 선택이라
-/// 아이콘 탭 한 번으로 바로 실행하지 않고 한 번 더 묻는다.
-Future<void> _confirmRetirement(BuildContext context, GameController controller) async {
-  final confirmed = await showDialog<bool>(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: const Text('은퇴하시겠습니까?'),
-      content: const Text('지금 마운드를 내려옵니다. 이 선택은 되돌릴 수 없습니다.'),
-      actions: [
-        TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('취소')),
-        TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('은퇴')),
-      ],
-    ),
-  );
-  if (confirmed == true) {
-    await controller.retire();
   }
 }
 
