@@ -7,6 +7,7 @@ import 'package:app/features/game/game_provider.dart';
 import 'package:app/shared/error_banner.dart';
 import 'package:app/shared/loading_indicator.dart';
 import 'package:app/shared/design/colors.dart';
+import 'package:app/shared/design/widgets.dart';
 import 'stat_radar_chart.dart';
 
 /// 내 선수 허브 — [01_내선수](../../../../04_UI기획/01_내선수.md) 상태·훈련·
@@ -125,21 +126,51 @@ class _StatusTab extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(flex: 3, child: _StatTable(entries: statEntries)),
+            Expanded(child: _StatTable(entries: statEntries)),
             const SizedBox(width: 16),
-            Expanded(flex: 2, child: StatRadarChart(stats: statEntries)),
+            SizedBox(width: 200, height: 200, child: StatRadarChart(stats: statEntries)),
           ],
         ),
         const SizedBox(height: 16),
-        const Text('보유 구종', style: TextStyle(fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
-        Wrap(spacing: 8, children: pitches.map((p) => Chip(label: Text(p))).toList()),
-        const SizedBox(height: 16),
-        const Text('라이브상태', style: TextStyle(fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
-        _LiveGauge(label: '피로도', value: (liveState['피로도'] as num?)?.toDouble() ?? 0.0),
-        _LiveGauge(label: '컨디션(폼)', value: (liveState['폼'] as num?)?.toDouble() ?? 50.0),
-        _LiveGauge(label: '사기', value: (liveState['사기'] as num?)?.toDouble() ?? 50.0),
+        // 구종·라이브상태를 세로로 각각 화면 끝까지 늘어놓지 않고 카드
+        // 2개를 나란히 — 세로 공간을 훨씬 덜 쓰게 돼 탭 안에서 스크롤
+        // 없이 다 보이는 게 목적(대화 2026-07-21).
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: AppPanel(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text('보유 구종', style: TextStyle(fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 8),
+                      Wrap(spacing: 6, runSpacing: 6, children: pitches.map((p) => Chip(label: Text(p))).toList()),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: AppPanel(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text('라이브상태', style: TextStyle(fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 8),
+                      _LiveGauge(label: '피로도', value: (liveState['피로도'] as num?)?.toDouble() ?? 0.0),
+                      _LiveGauge(label: '컨디션(폼)', value: (liveState['폼'] as num?)?.toDouble() ?? 50.0),
+                      _LiveGauge(label: '사기', value: (liveState['사기'] as num?)?.toDouble() ?? 50.0),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
