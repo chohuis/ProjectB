@@ -403,7 +403,9 @@ pub fn list_hs_teams(content_db_path: String) -> anyhow::Result<Vec<TeamOption>>
 /// 데이터에 충실하다. `teams.stadium_id`(권역별 거점구장 공유 —
 /// `content::load_team_groups_for_schedule`가 스케줄링에 쓰는 것과 동일
 /// 그룹)로 묶은 뒤 그 안에서의 상대 순위로 별점을 매겨, 6팀 권역과
-/// 20팀 권역을 공정하게 비교한다.
+/// 20팀 권역을 공정하게 비교한다. `stadium_name`/`park_factor`는 그
+/// 권역이 공유하는 거점구장 정보(`stadiums` 테이블) — 학교마다 고유
+/// 구장이 아니라 같은 권역이면 값이 같다(대화 2026-07-21).
 #[derive(Debug, Clone)]
 pub struct HsSchoolDetail {
     pub team_id: String,
@@ -414,6 +416,8 @@ pub struct HsSchoolDetail {
     pub titles_json: String,
     pub rivals_json: String,
     pub budget: f64,
+    pub stadium_name: String,
+    pub park_factor: String,
 }
 
 fn stars_from_group_position(position_zero_based: usize, group_size: usize) -> i64 {
@@ -438,18 +442,23 @@ fn avg_rank_from_season_ranks(raw: &str) -> f64 {
     values.iter().sum::<f64>() / values.len() as f64
 }
 
-type HsSchoolHistoryRow = (String, Option<String>, Option<String>, Option<String>, Option<String>, Option<String>, Option<f64>);
+type HsSchoolHistoryRow =
+    (String, Option<String>, Option<String>, Option<String>, Option<String>, Option<String>, Option<f64>, Option<String>, Option<String>);
 
 pub fn list_hs_school_details(content_db_path: String) -> anyhow::Result<Vec<HsSchoolDetail>> {
     let conn = content::open(&content_db_path)?;
     let mut stmt = conn.prepare(
-        "SELECT teams.id, teams.meta, teams.stadium_id, team_history.season_ranks, team_history.titles, team_history.rivals, team_history.budget
-         FROM teams JOIN team_history ON team_history.team_id = teams.id
+        "SELECT teams.id, teams.meta, teams.stadium_id, team_history.season_ranks, team_history.titles, team_history.rivals, team_history.budget,
+                stadiums.name, stadiums.park_factor
+         FROM teams
+         JOIN team_history ON team_history.team_id = teams.id
+         LEFT JOIN stadiums ON stadiums.id = teams.stadium_id
          WHERE teams.league_id = 'league:hs'
          ORDER BY teams.id",
     )?;
-    let rows: Vec<HsSchoolHistoryRow> =
-        stmt.query_map([], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?, r.get(4)?, r.get(5)?, r.get(6)?)))?.collect::<Result<_, _>>()?;
+    let rows: Vec<HsSchoolHistoryRow> = stmt
+        .query_map([], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?, r.get(4)?, r.get(5)?, r.get(6)?, r.get(7)?, r.get(8)?)))?
+        .collect::<Result<_, _>>()?;
     drop(stmt);
 
     // stadium_id(권역)별로 묶어 그룹 내 평균순위 오름차순 위치를 구한다.
@@ -471,7 +480,7 @@ pub fn list_hs_school_details(content_db_path: String) -> anyhow::Result<Vec<HsS
     let details = rows
         .into_iter()
         .enumerate()
-        .map(|(i, (team_id, meta, _, season_ranks, titles, rivals, budget))| {
+        .map(|(i, (team_id, meta, _, season_ranks, titles, rivals, budget, stadium_name, park_factor))| {
             let meta_v: serde_json::Value = meta.as_deref().and_then(|m| serde_json::from_str(m).ok()).unwrap_or(serde_json::Value::Null);
             HsSchoolDetail {
                 name: meta_v.get("name").and_then(|x| x.as_str()).unwrap_or(&team_id).to_string(),
@@ -482,6 +491,8 @@ pub fn list_hs_school_details(content_db_path: String) -> anyhow::Result<Vec<HsS
                 titles_json: titles.unwrap_or_else(|| "[]".to_string()),
                 rivals_json: rivals.unwrap_or_else(|| "[]".to_string()),
                 budget: budget.unwrap_or(0.0),
+                stadium_name: stadium_name.unwrap_or_default(),
+                park_factor: park_factor.unwrap_or_default(),
             }
         })
         .collect();

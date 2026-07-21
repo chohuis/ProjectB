@@ -318,7 +318,9 @@ class GameLogEntry {
 /// 데이터에 충실하다. `teams.stadium_id`(권역별 거점구장 공유 —
 /// `content::load_team_groups_for_schedule`가 스케줄링에 쓰는 것과 동일
 /// 그룹)로 묶은 뒤 그 안에서의 상대 순위로 별점을 매겨, 6팀 권역과
-/// 20팀 권역을 공정하게 비교한다.
+/// 20팀 권역을 공정하게 비교한다. `stadium_name`/`park_factor`는 그
+/// 권역이 공유하는 거점구장 정보(`stadiums` 테이블) — 학교마다 고유
+/// 구장이 아니라 같은 권역이면 값이 같다(대화 2026-07-21).
 class HsSchoolDetail {
   final String teamId;
   final String name;
@@ -328,6 +330,8 @@ class HsSchoolDetail {
   final String titlesJson;
   final String rivalsJson;
   final double budget;
+  final String stadiumName;
+  final String parkFactor;
 
   const HsSchoolDetail({
     required this.teamId,
@@ -338,6 +342,8 @@ class HsSchoolDetail {
     required this.titlesJson,
     required this.rivalsJson,
     required this.budget,
+    required this.stadiumName,
+    required this.parkFactor,
   });
 
   @override
@@ -349,7 +355,9 @@ class HsSchoolDetail {
       seasonRanksJson.hashCode ^
       titlesJson.hashCode ^
       rivalsJson.hashCode ^
-      budget.hashCode;
+      budget.hashCode ^
+      stadiumName.hashCode ^
+      parkFactor.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -363,7 +371,9 @@ class HsSchoolDetail {
           seasonRanksJson == other.seasonRanksJson &&
           titlesJson == other.titlesJson &&
           rivalsJson == other.rivalsJson &&
-          budget == other.budget;
+          budget == other.budget &&
+          stadiumName == other.stadiumName &&
+          parkFactor == other.parkFactor;
 }
 
 /// [03_기록](../../../04_UI기획/03_기록.md) §1 "부상·재활" 탭 —

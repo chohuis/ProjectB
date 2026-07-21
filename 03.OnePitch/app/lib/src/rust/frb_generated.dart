@@ -1322,8 +1322,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   HsSchoolDetail dco_decode_hs_school_detail(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 8)
-      throw Exception('unexpected arr length: expect 8 but see ${arr.length}');
+    if (arr.length != 10)
+      throw Exception('unexpected arr length: expect 10 but see ${arr.length}');
     return HsSchoolDetail(
       teamId: dco_decode_String(arr[0]),
       name: dco_decode_String(arr[1]),
@@ -1333,6 +1333,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       titlesJson: dco_decode_String(arr[5]),
       rivalsJson: dco_decode_String(arr[6]),
       budget: dco_decode_f_64(arr[7]),
+      stadiumName: dco_decode_String(arr[8]),
+      parkFactor: dco_decode_String(arr[9]),
     );
   }
 
@@ -1829,6 +1831,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_titlesJson = sse_decode_String(deserializer);
     var var_rivalsJson = sse_decode_String(deserializer);
     var var_budget = sse_decode_f_64(deserializer);
+    var var_stadiumName = sse_decode_String(deserializer);
+    var var_parkFactor = sse_decode_String(deserializer);
     return HsSchoolDetail(
       teamId: var_teamId,
       name: var_name,
@@ -1838,6 +1842,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       titlesJson: var_titlesJson,
       rivalsJson: var_rivalsJson,
       budget: var_budget,
+      stadiumName: var_stadiumName,
+      parkFactor: var_parkFactor,
     );
   }
 
@@ -2498,6 +2504,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_String(self.titlesJson, serializer);
     sse_encode_String(self.rivalsJson, serializer);
     sse_encode_f_64(self.budget, serializer);
+    sse_encode_String(self.stadiumName, serializer);
+    sse_encode_String(self.parkFactor, serializer);
   }
 
   @protected

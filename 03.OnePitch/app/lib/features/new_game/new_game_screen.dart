@@ -123,9 +123,9 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
     return grouped;
   }
 
-  String? _schoolNameOf(String teamId) {
+  HsSchoolDetail? _schoolOf(String teamId) {
     for (final t in _schools) {
-      if (t.teamId == teamId) return t.name;
+      if (t.teamId == teamId) return t;
     }
     return null;
   }
@@ -302,7 +302,7 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
 
   Widget _buildSchoolPage(GameState gameState) {
     final grouped = _schoolsByRegion();
-    final selectedName = _selectedSchoolId == null ? null : _schoolNameOf(_selectedSchoolId!);
+    final selectedName = _selectedSchoolId == null ? null : _schoolOf(_selectedSchoolId!)?.name;
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -417,14 +417,17 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
 
   String _formatBudget(double won) => '${(won / 100000000).toStringAsFixed(1)}억원';
 
-  List<(String desc, String? rivalName)> _parseRivals(String json) {
+  /// "학교명(지역)"만 — 설명 문구는 뺌(대화 2026-07-21, §6-44의 서사형
+  /// 문구가 정보 과다라는 피드백).
+  List<String> _parseRivals(String json) {
     try {
       final v = jsonDecode(json);
       if (v is! List) return const [];
       return v.whereType<Map>().map((m) {
-        final desc = m['description']?.toString() ?? '';
         final withId = m['with']?.toString();
-        return (desc, withId == null ? null : _schoolNameOf(withId));
+        final rival = withId == null ? null : _schoolOf(withId);
+        if (rival == null) return '?';
+        return '${rival.name}(${hsRegionOf(rival.region)})';
       }).toList();
     } catch (_) {
       return const [];
@@ -447,7 +450,7 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
           ],
         ),
         content: SizedBox(
-          width: 460,
+          width: 520,
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -460,6 +463,8 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
                     Expanded(child: KpiTile(label: '별점', value: hsStarString(t.stars.toInt()))),
                     const SizedBox(width: 8),
                     Expanded(child: KpiTile(label: '연간 예산', value: _formatBudget(t.budget))),
+                    const SizedBox(width: 8),
+                    Expanded(child: KpiTile(label: '홈구장', value: '${t.stadiumName}(${t.parkFactor})')),
                   ],
                 ),
                 const SizedBox(height: 12),
@@ -481,17 +486,17 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
                       if (titles.isEmpty)
                         const Text('없음', style: TextStyle(color: AppColors.textSecondary))
                       else
-                        Wrap(
-                          spacing: 6,
-                          runSpacing: 6,
-                          children: [
-                            for (final title in titles)
-                              Chip(
-                                avatar: const Icon(Icons.emoji_events, size: 16, color: AppColors.gold),
-                                label: Text('${title.$1}년 ${title.$2} ${title.$3}'),
-                              ),
-                          ],
-                        ),
+                        for (final title in titles)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 2),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.emoji_events, size: 16, color: AppColors.gold),
+                                const SizedBox(width: 6),
+                                Text('${title.$1}년 ${title.$2} ${title.$3}'),
+                              ],
+                            ),
+                          ),
                     ],
                   ),
                 ),
@@ -506,7 +511,7 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
                       if (rivals.isEmpty)
                         const Text('없음', style: TextStyle(color: AppColors.textSecondary))
                       else
-                        for (final r in rivals) Text('${r.$2 ?? '?'} — ${r.$1}'),
+                        for (final r in rivals) Text(r),
                     ],
                   ),
                 ),

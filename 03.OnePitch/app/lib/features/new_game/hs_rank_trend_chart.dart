@@ -9,6 +9,9 @@ import 'package:app/shared/design/colors.dart';
 /// 존그리드와 같은 CustomPainter 패턴을 재사용 — 서드파티 차트 라이브러리
 /// 없이 점 5개짜리 선 하나만 그리면 충분해서 새 의존성을 안 들인다.
 /// Y축은 순위를 반전(1위가 위)해서 "위로 갈수록 좋다"는 직관을 살린다.
+/// 위·아래에 라벨 전용 여백(`_topLabelSpace`/`_bottomLabelSpace`)을 따로
+/// 잡아둬야 1위(맨 위) 점의 "n위" 라벨이 패널 상단에 안 잘린다(첫
+/// 구현에서 겹쳐 보이던 버그 수정, 대화 2026-07-21).
 class HsRankTrendChart extends StatelessWidget {
   const HsRankTrendChart({super.key, required this.ranks});
 
@@ -17,9 +20,9 @@ class HsRankTrendChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (ranks.isEmpty) {
-      return const SizedBox(height: 80, child: Center(child: Text('기록 없음', style: TextStyle(color: AppColors.textSecondary))));
+      return const SizedBox(height: 100, child: Center(child: Text('기록 없음', style: TextStyle(color: AppColors.textSecondary))));
     }
-    return SizedBox(height: 90, width: double.infinity, child: CustomPaint(painter: _RankTrendPainter(ranks: ranks)));
+    return SizedBox(height: 110, width: double.infinity, child: CustomPaint(painter: _RankTrendPainter(ranks: ranks)));
   }
 }
 
@@ -27,17 +30,18 @@ class _RankTrendPainter extends CustomPainter {
   _RankTrendPainter({required this.ranks});
   final List<(int year, int rank)> ranks;
 
-  static const _labelSpace = 18.0;
+  static const _topLabelSpace = 20.0;
+  static const _bottomLabelSpace = 18.0;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final chartHeight = size.height - _labelSpace;
+    final chartHeight = size.height - _topLabelSpace - _bottomLabelSpace;
     final minRank = ranks.map((r) => r.$2).reduce(min).toDouble();
     final maxRank = ranks.map((r) => r.$2).reduce(max).toDouble();
     final range = maxRank - minRank < 1 ? 1.0 : maxRank - minRank;
 
     double xFor(int i) => ranks.length == 1 ? size.width / 2 : size.width * i / (ranks.length - 1);
-    double yFor(int rank) => 14 + (rank - minRank) / range * (chartHeight - 28);
+    double yFor(int rank) => _topLabelSpace + (rank - minRank) / range * chartHeight;
 
     final linePaint = Paint()
       ..color = AppColors.accent
@@ -63,13 +67,13 @@ class _RankTrendPainter extends CustomPainter {
         text: TextSpan(text: '$rank위', style: const TextStyle(color: AppColors.textPrimary, fontSize: 10)),
         textDirection: TextDirection.ltr,
       )..layout();
-      rankPainter.paint(canvas, Offset(p.dx - rankPainter.width / 2, p.dy - rankPainter.height - 4));
+      rankPainter.paint(canvas, Offset(p.dx - rankPainter.width / 2, p.dy - rankPainter.height - 6));
 
       final yearPainter = TextPainter(
         text: TextSpan(text: '$year', style: const TextStyle(color: AppColors.textSecondary, fontSize: 10)),
         textDirection: TextDirection.ltr,
       )..layout();
-      yearPainter.paint(canvas, Offset(p.dx - yearPainter.width / 2, size.height - _labelSpace + 2));
+      yearPainter.paint(canvas, Offset(p.dx - yearPainter.width / 2, size.height - _bottomLabelSpace + 4));
     }
   }
 

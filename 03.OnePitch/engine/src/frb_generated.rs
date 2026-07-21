@@ -1345,6 +1345,8 @@ impl SseDecode for crate::api::game::HsSchoolDetail {
         let mut var_titlesJson = <String>::sse_decode(deserializer);
         let mut var_rivalsJson = <String>::sse_decode(deserializer);
         let mut var_budget = <f64>::sse_decode(deserializer);
+        let mut var_stadiumName = <String>::sse_decode(deserializer);
+        let mut var_parkFactor = <String>::sse_decode(deserializer);
         return crate::api::game::HsSchoolDetail {
             team_id: var_teamId,
             name: var_name,
@@ -1354,6 +1356,8 @@ impl SseDecode for crate::api::game::HsSchoolDetail {
             titles_json: var_titlesJson,
             rivals_json: var_rivalsJson,
             budget: var_budget,
+            stadium_name: var_stadiumName,
+            park_factor: var_parkFactor,
         };
     }
 }
@@ -2060,6 +2064,8 @@ impl flutter_rust_bridge::IntoDart for crate::api::game::HsSchoolDetail {
             self.titles_json.into_into_dart().into_dart(),
             self.rivals_json.into_into_dart().into_dart(),
             self.budget.into_into_dart().into_dart(),
+            self.stadium_name.into_into_dart().into_dart(),
+            self.park_factor.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
@@ -2516,6 +2522,8 @@ impl SseEncode for crate::api::game::HsSchoolDetail {
         <String>::sse_encode(self.titles_json, serializer);
         <String>::sse_encode(self.rivals_json, serializer);
         <f64>::sse_encode(self.budget, serializer);
+        <String>::sse_encode(self.stadium_name, serializer);
+        <String>::sse_encode(self.park_factor, serializer);
     }
 }
 
