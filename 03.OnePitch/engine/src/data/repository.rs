@@ -450,9 +450,32 @@ fn process_protagonist_week(slot_conn: &Connection, content_conn: &Connection, w
         None => String::new(),
     };
     let fatigue_before_training = live_state.get("피로도").and_then(|v| v.as_f64()).unwrap_or(0.0);
+    let already_warned = live_state.get("부상경고").and_then(|v| v.as_bool()).unwrap_or(false);
     let mut injury_rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("injury:proto:{day}")));
-    if let Some((part, severity)) = crate::sim::injury::check_overuse_injury(&mut injury_rng, fatigue_before_training, &philosophy) {
-        apply_injury(slot_conn, part, severity, day)?;
+    // 전조 경고(§3, §6-64) — 임계 초과 첫 주는 확률판정 없이 경고만 발생,
+    // 그 다음 주에도 방치되면(=강행) 비로소 실제 판정. 메시지함(`inbox`
+    // 테이블)의 첫 실사용 — I8 콘텐츠 저작 없이 시스템이 직접 생성.
+    match crate::sim::injury::check_overuse_injury(&mut injury_rng, fatigue_before_training, &philosophy, already_warned) {
+        crate::sim::injury::OveruseOutcome::Warning => {
+            live_state.insert("부상경고".to_string(), serde_json::json!(true));
+            slot_conn.execute(
+                "INSERT INTO inbox (id, kind, urgency, read, day, body) VALUES (?1, 'injury_warning', 'normal', 0, ?2, ?3)",
+                params![
+                    format!("inbox:injury_warning:{day}"),
+                    day,
+                    "최근 몸 상태가 심상치 않다 — 무리한 일정이 이어지면 부상으로 이어질 수 있다. 훈련 강도를 낮추거나 휴식을 취하는 게 좋겠다.",
+                ],
+            )?;
+        }
+        crate::sim::injury::OveruseOutcome::Injury(part, severity) => {
+            apply_injury(slot_conn, part, severity, day)?;
+            live_state.insert("부상경고".to_string(), serde_json::json!(false));
+        }
+        crate::sim::injury::OveruseOutcome::None => {
+            if fatigue_before_training < crate::sim::injury::FATIGUE_INJURY_THRESHOLD {
+                live_state.insert("부상경고".to_string(), serde_json::json!(false)); // 위험 구간을 벗어나 경고 해제
+            }
+        }
     }
 
     // 주간 자연 회복(§6-62) — NPC 쪽 `process_week`과 동일하게 매주 절반
@@ -1751,7 +1774,12 @@ fn process_week(conn: &Connection, content_conn: &Connection, world_seed: i64, d
         let fatigue = live_state.get("피로도").and_then(|v| v.as_f64()).unwrap_or(0.0);
         let philosophy = philosophy_by_team.get(&team_id).cloned().unwrap_or_default();
         let mut injury_rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("injury:{id}:{day}")));
-        if let Some((part, severity)) = crate::sim::injury::check_overuse_injury(&mut injury_rng, fatigue, &philosophy) {
+        // NPC는 "전조 경고"를 읽고 반응할 의사결정 주체가 없어(§6-64 —
+        // 경고는 주인공 전용 서사) 항상 already_warned=true로 넘겨 경고
+        // 단계를 건너뛰고 곧장 확률판정으로 간다 — 기존 동작과 동일.
+        if let crate::sim::injury::OveruseOutcome::Injury(part, severity) =
+            crate::sim::injury::check_overuse_injury(&mut injury_rng, fatigue, &philosophy, true)
+        {
             record_injury(&mut injury, part, severity, day);
         }
         live_state.insert("피로도".to_string(), serde_json::Value::from(fatigue * 0.5));
@@ -3214,7 +3242,28 @@ mod tests {
     }
 
     #[test]
-    fn process_protagonist_week_can_trigger_overuse_injury_pending_action() {
+    fn process_protagonist_week_first_overuse_week_only_warns() {
+        let content_conn = build_hs_school_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        create_protagonist(&slot_conn, &content_conn, 1, "과사용테스트", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
+        slot_conn
+            .execute("UPDATE protagonist SET live_state = ?1 WHERE id = 'proto:1'", params![serde_json::json!({"피로도": 100.0}).to_string()])
+            .unwrap();
+
+        process_protagonist_week(&slot_conn, &content_conn, 1, 7).unwrap();
+
+        assert!(list_pending_actions(&slot_conn).unwrap().iter().all(|p| p.kind != "injuryTreatment"), "첫 주는 경고만, 실제 부상은 아직 아니어야 한다");
+        let inbox_count: i64 = slot_conn.query_row("SELECT count(*) FROM inbox WHERE kind = 'injury_warning'", [], |r| r.get(0)).unwrap();
+        assert_eq!(inbox_count, 1);
+        let warned: bool = {
+            let raw: String = slot_conn.query_row("SELECT live_state FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+            serde_json::from_str::<serde_json::Value>(&raw).unwrap()["부상경고"].as_bool().unwrap()
+        };
+        assert!(warned);
+    }
+
+    #[test]
+    fn process_protagonist_week_can_trigger_overuse_injury_after_a_warned_week() {
         let content_conn = build_hs_school_content_db();
         let mut triggered = false;
         for seed in 0..50i64 {
@@ -3224,14 +3273,21 @@ mod tests {
                 .execute("UPDATE protagonist SET live_state = ?1 WHERE id = 'proto:1'", params![serde_json::json!({"피로도": 100.0}).to_string()])
                 .unwrap();
 
-            process_protagonist_week(&slot_conn, &content_conn, seed, 7).unwrap();
+            process_protagonist_week(&slot_conn, &content_conn, seed, 7).unwrap(); // 1주차 — 경고만
+            // 피로도가 계속 임계 초과 상태를 유지하도록(회복 절반 감소를
+            // 상쇄) 다시 100으로 되돌려 강행 상황을 재현.
+            let live_state_raw: String = slot_conn.query_row("SELECT live_state FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+            let mut live_state: serde_json::Value = serde_json::from_str(&live_state_raw).unwrap();
+            live_state["피로도"] = serde_json::json!(100.0);
+            slot_conn.execute("UPDATE protagonist SET live_state = ?1 WHERE id = 'proto:1'", params![live_state.to_string()]).unwrap();
+            process_protagonist_week(&slot_conn, &content_conn, seed, 14).unwrap(); // 2주차 — 실제 판정
 
             if list_pending_actions(&slot_conn).unwrap().iter().any(|p| p.kind == "injuryTreatment") {
                 triggered = true;
                 break;
             }
         }
-        assert!(triggered, "expected at least one seed to trigger an overuse injury at fatigue=100");
+        assert!(triggered, "expected at least one seed to trigger an overuse injury on the second consecutive over-threshold week");
     }
 
     fn build_market_content_db() -> Connection {

@@ -1140,7 +1140,25 @@
 
 **다음 세션 과제**: `balance_harness`로 재조정된 상수 검증(N=20~30 재실행) — 목표는 "부상 은퇴 100커리어 중 6~7회, 평균 커리어 길이 15~20시즌 근접".
 
-### 6-63. 문서 갱신 규칙
+### 6-64. I6 부상 시스템 전조 경고 (2026-07-21, 완료) — 메시지함(`inbox`) 첫 실사용
+
+**스코프**: [08_부상_시스템](../02_기획/육성코어/08_부상_시스템.md) §3 "누적형은 실제 발생 전에 '요즘 어깨가 뻐근하다' 같은 경고 신호가 먼저 뜨고, 무시하고 강행하면 실제 부상으로 발전". §6-61/62 조사 과정에서 부상 시스템 열린 항목 4개 중 3개(수술 성공률·합병증·이탈기간·재발상승)는 이미 구현돼 있었고 문서 체크리스트만 안 갱신된 상태였음을 발견 — 진짜 미구현은 이 전조 경고 하나였다.
+
+**스코프 판단**:
+- `inbox` 테이블(slot.rs)이 스키마만 있고 프로덕션 코드에서 단 한 번도 안 쓰이고 있었음(테스트 픽스처에만 등장) — 이번이 첫 실사용. I8 콘텐츠 저작(이벤트 텍스트) 없이도 **시스템이 직접 생성하는 경고 메시지**로 채울 수 있어 I8 의존 없음.
+- 전용 메시지함 UI(I7/I8 범위)는 이번에 안 만든다 — 홈 대시보드에 최소 배너 1개만 연결.
+- NPC는 경고를 읽고 반응할 의사결정 주체가 없어(§5-2와 같은 원리 — 서사적 피드백은 주인공 전용) 경고 단계 자체를 안 타고 기존처럼 곧장 확률판정으로 감(`already_warned=true` 고정).
+
+**구현**:
+- `engine/src/sim/injury.rs`: `check_overuse_injury`가 `Option<(&str,&str)>` 대신 `OveruseOutcome{None,Warning,Injury(part,severity)}`를 반환하도록 변경, `already_warned: bool` 파라미터 추가. `FATIGUE_INJURY_THRESHOLD`를 `pub(crate)`로 승격(호출부가 "위험구간을 벗어났는지" 직접 판단해야 해서).
+- `engine/src/data/repository.rs`: `process_protagonist_week`가 `protagonist.live_state.부상경고`(bool) 상태를 관리 — 임계 초과 첫 주는 `Warning` → `inbox`에 `kind='injury_warning'` 행 삽입 + 플래그 true. 다음 주도 임계 초과면 `Injury`(실제 판정) → 플래그 false로 리셋. 임계 미만으로 내려가면 플래그 해제. `process_week`(NPC 전용)는 `already_warned=true`로 고정 호출해 기존 동작 그대로 유지.
+- `engine/src/api/game.rs`: `InboxMessageInfo`·`get_inbox()` 신규(다른 `get_*`/`list_*` 함수와 동일하게 `state.slot_conn` 직접 조회).
+- frb 재생성(`flutter_rust_bridge_codegen generate` + `dart run build_runner build --delete-conflicting-outputs --force-jit`) — 신규 API 함수라 필요.
+- `app/lib/features/game/home_dashboard.dart`: `HomeSummary.unreadInjuryWarning`(신규 필드) + `_InjuryWarningBanner`(신규, `ErrorBanner`와 같은 컨테이너 배너 패턴) — 미확인 `injury_warning` 메시지가 있으면 카드 위에 배너로 노출.
+
+**테스트**(`cargo test --lib` 294개 전부 통과, 신규 5개): `sim::injury` 2개(`already_warned=false`면 RNG 무관하게 항상 `Warning`, 기존 확률판정 테스트들은 `already_warned=true`로 갱신). `repository` 2개(첫 주는 경고만+inbox 1건+플래그 true, 경고 받은 뒤 임계 초과 유지 상태에서 두 번째 주에 실제 부상 발생). 기존 `process_protagonist_week_can_trigger_overuse_injury_pending_action`은 1회 호출로는 더 이상 못 걸려(구조 변경) `process_protagonist_week_can_trigger_overuse_injury_after_a_warned_week`로 2주 연속 호출 방식으로 갱신. `cargo clippy --lib --tests` 클린(무관 기존 경고 1개만). `flutter analyze` 클린, `flutter test` 재확인. `flutter build windows --debug` 성공, `engine.dll` 갱신.
+
+### 6-65. 문서 갱신 규칙
 
 **이 문서는 살아있는 문서다.** Phase를 하나 끝낼 때마다:
 1. §2 표의 해당 행 상태를 `⬜ 미착수` → `🔶 진행중` → `✅ 완료`로 갱신.

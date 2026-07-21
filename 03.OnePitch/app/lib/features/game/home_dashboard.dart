@@ -27,6 +27,7 @@ class HomeSummary {
     this.leagueTeamCount,
     this.training,
     this.career,
+    this.unreadInjuryWarning,
   });
 
   final ScheduleGameInfo? nextGame;
@@ -42,6 +43,10 @@ class HomeSummary {
 
   final TrainingConfigInfo? training;
   final CareerSummary? career;
+
+  /// 부상 전조 경고(§6-64) — 메시지함(`inbox`)의 첫 실사용. 전용 메시지함
+  /// 화면은 I7/I8 범위라 이번엔 최소한으로 홈에 배너 1개만 노출.
+  final InboxMessageInfo? unreadInjuryWarning;
 }
 
 final homeSummaryProvider = FutureProvider.family<HomeSummary, int>((ref, currentDay) async {
@@ -102,6 +107,12 @@ final homeSummaryProvider = FutureProvider.family<HomeSummary, int>((ref, curren
     career = await careerSummary();
   } catch (_) {}
 
+  InboxMessageInfo? unreadInjuryWarning;
+  try {
+    final inbox = await getInbox();
+    unreadInjuryWarning = inbox.where((m) => m.kind == 'injury_warning' && !m.read).firstOrNull;
+  } catch (_) {}
+
   return HomeSummary(
     nextGame: nextGame,
     nextGameOpponentId: nextGameOpponentId,
@@ -113,6 +124,7 @@ final homeSummaryProvider = FutureProvider.family<HomeSummary, int>((ref, curren
     leagueTeamCount: leagueTeamCount,
     training: training,
     career: career,
+    unreadInjuryWarning: unreadInjuryWarning,
   );
 });
 
@@ -129,6 +141,10 @@ class HomeDashboardCards extends ConsumerWidget {
       data: (summary) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if (summary.unreadInjuryWarning != null) ...[
+            _InjuryWarningBanner(message: summary.unreadInjuryWarning!),
+            const SizedBox(height: 12),
+          ],
           IntrinsicHeight(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -156,6 +172,31 @@ class HomeDashboardCards extends ConsumerWidget {
       ),
       loading: () => const SizedBox(height: 88, child: Center(child: LoadingIndicator())),
       error: (_, _) => const SizedBox.shrink(),
+    );
+  }
+}
+
+/// 부상 전조 경고 배너(§6-64) — 전용 메시지함 UI는 I7/I8 범위라 이번엔
+/// 홈 대시보드에 최소한으로만 노출.
+class _InjuryWarningBanner extends StatelessWidget {
+  const _InjuryWarningBanner({required this.message});
+  final InboxMessageInfo message;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(color: scheme.errorContainer, borderRadius: BorderRadius.circular(8)),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.warning_amber_rounded, color: scheme.onErrorContainer, size: 20),
+          const SizedBox(width: 8),
+          Expanded(child: Text(message.body, style: TextStyle(color: scheme.onErrorContainer))),
+        ],
+      ),
     );
   }
 }

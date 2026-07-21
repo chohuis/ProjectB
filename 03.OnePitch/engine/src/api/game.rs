@@ -1032,6 +1032,38 @@ pub fn get_career_events() -> anyhow::Result<Vec<CareerEventInfo>> {
     })
 }
 
+/// 메시지함(`inbox`) — I8 이전 첫 실사용(§6-64 부상 전조 경고, `process_protagonist_week`
+/// 가 유일한 생산자). AI 콘텐츠 저작이 아니라 시스템이 직접 생성하는
+/// 경고 메시지라 I8 의존 없음.
+#[derive(Debug, Clone)]
+pub struct InboxMessageInfo {
+    pub id: String,
+    pub kind: String,
+    pub urgency: String,
+    pub read: bool,
+    pub day: i64,
+    pub body: String,
+}
+
+pub fn get_inbox() -> anyhow::Result<Vec<InboxMessageInfo>> {
+    with_state(|state| {
+        let mut stmt = state.slot_conn.prepare("SELECT id, kind, urgency, read, day, body FROM inbox ORDER BY day DESC, id DESC")?;
+        let rows: Vec<InboxMessageInfo> = stmt
+            .query_map([], |r| {
+                Ok(InboxMessageInfo {
+                    id: r.get(0)?,
+                    kind: r.get(1)?,
+                    urgency: r.get(2)?,
+                    read: r.get::<_, i64>(3)? != 0,
+                    day: r.get(4)?,
+                    body: r.get(5)?,
+                })
+            })?
+            .collect::<Result<_, _>>()?;
+        Ok(rows)
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

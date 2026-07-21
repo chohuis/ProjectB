@@ -66,6 +66,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   PlatformInt64 dco_decode_i_64(dynamic raw);
 
   @protected
+  InboxMessageInfo dco_decode_inbox_message_info(dynamic raw);
+
+  @protected
   InjuryLogEntry dco_decode_injury_log_entry(dynamic raw);
 
   @protected
@@ -85,6 +88,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<HsSchoolDetail> dco_decode_list_hs_school_detail(dynamic raw);
+
+  @protected
+  List<InboxMessageInfo> dco_decode_list_inbox_message_info(dynamic raw);
 
   @protected
   List<InjuryLogEntry> dco_decode_list_injury_log_entry(dynamic raw);
@@ -237,6 +243,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   PlatformInt64 sse_decode_i_64(SseDeserializer deserializer);
 
   @protected
+  InboxMessageInfo sse_decode_inbox_message_info(SseDeserializer deserializer);
+
+  @protected
   InjuryLogEntry sse_decode_injury_log_entry(SseDeserializer deserializer);
 
   @protected
@@ -262,6 +271,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<HsSchoolDetail> sse_decode_list_hs_school_detail(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  List<InboxMessageInfo> sse_decode_list_inbox_message_info(
     SseDeserializer deserializer,
   );
 
@@ -461,6 +475,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_i_64(PlatformInt64 self, SseSerializer serializer);
 
   @protected
+  void sse_encode_inbox_message_info(
+    InboxMessageInfo self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_injury_log_entry(
     InjuryLogEntry self,
     SseSerializer serializer,
@@ -493,6 +513,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_list_hs_school_detail(
     List<HsSchoolDetail> self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_list_inbox_message_info(
+    List<InboxMessageInfo> self,
     SseSerializer serializer,
   );
 

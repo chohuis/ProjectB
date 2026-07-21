@@ -81,19 +81,37 @@ pub fn rushed_return_aggravates(rng: &mut impl Rng, severity: &str) -> bool {
     rng.gen_bool(prob)
 }
 
-const FATIGUE_INJURY_THRESHOLD: f64 = 70.0;
+pub(crate) const FATIGUE_INJURY_THRESHOLD: f64 = 70.0;
 const BASE_OVERUSE_PROB: f64 = 0.05;
+
+/// 누적형 부상 판정 결과 — §3 "전조 경고" 2단계 모델(대화 설계
+/// 2026-07-21, §6-64). `check_overuse_injury`가 이 세 상태 중 하나로
+/// 귀결된다.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum OveruseOutcome {
+    /// 피로도가 임계 미만이거나, 임계 초과라도 이번 주 확률판정에서
+    /// 실제로는 안 걸림.
+    None,
+    /// 임계 초과 상태에 **처음** 진입 — 아직 확률판정 없이 경고만.
+    Warning,
+    /// 경고를 받고도 계속 임계 초과 상태로 방치(=강행)해서 실제로 부상.
+    Injury(&'static str, &'static str),
+}
 
 /// 누적형(과사용) 부상 판정 — §3 "피로도가 임계 초과 상태에서 계속 등판·
 /// 훈련 강행". 팀 철학(부상방지/재활특화=완화, 스파르타(혹독훈련)=가중,
 /// [05_팀_특성_시스템](../../../02_기획/리그팀/05_팀_특성_시스템.md) §1)이
-/// 확률을 보정한다. 매주 체크(§3에서 이미 확정)하되, "전조 경고" 단계는
-/// 인박스·알림 시스템과 엮여야 해서 이번 스코프 밖 — 임계 초과 시 곧바로
-/// 확률 판정으로 단순화(다음 서브분 후보). 확률 계수 자체는 §6 "정확한
-/// 확률... 스탯 스케일 확정 후"라 placeholder.
-pub fn check_overuse_injury(rng: &mut impl Rng, fatigue: f64, philosophy: &str) -> Option<(&'static str, &'static str)> {
+/// 확률을 보정한다. 매주 체크(§3에서 이미 확정). `already_warned`는
+/// 호출부(주인공은 `protagonist.live_state.부상경고`, NPC는 실제 의사결정
+/// 주체가 없어 항상 `true`로 넘겨 경고 단계를 건너뜀)가 관리하는 상태 —
+/// 이 함수 자체는 순수 판정만 한다. 확률 계수 자체는 §6 "정확한 확률...
+/// 스탯 스케일 확정 후"라 placeholder.
+pub fn check_overuse_injury(rng: &mut impl Rng, fatigue: f64, philosophy: &str, already_warned: bool) -> OveruseOutcome {
     if fatigue < FATIGUE_INJURY_THRESHOLD {
-        return None;
+        return OveruseOutcome::None;
+    }
+    if !already_warned {
+        return OveruseOutcome::Warning;
     }
     let philosophy_mult = match philosophy {
         "부상방지/재활특화" => 0.5,
@@ -103,7 +121,7 @@ pub fn check_overuse_injury(rng: &mut impl Rng, fatigue: f64, philosophy: &str) 
     let excess = (fatigue - FATIGUE_INJURY_THRESHOLD) / 30.0;
     let prob = ((BASE_OVERUSE_PROB + excess * 0.15) * philosophy_mult).clamp(0.0, 0.9);
     if !rng.gen_bool(prob) {
-        return None;
+        return OveruseOutcome::None;
     }
 
     let part = *BODY_PARTS.choose(rng).unwrap();
@@ -116,7 +134,7 @@ pub fn check_overuse_injury(rng: &mut impl Rng, fatigue: f64, philosophy: &str) 
     } else {
         "중상"
     };
-    Some((part, severity))
+    OveruseOutcome::Injury(part, severity)
 }
 
 /// 투구당 급성 부상 기본 확률·피로도 가산 계수 — §3 "경기 중 특정 순간의
@@ -165,7 +183,15 @@ mod tests {
     fn no_injury_below_fatigue_threshold() {
         let mut rng = ChaCha8Rng::seed_from_u64(1);
         for _ in 0..100 {
-            assert!(check_overuse_injury(&mut rng, 69.9, "전통/정통").is_none());
+            assert_eq!(check_overuse_injury(&mut rng, 69.9, "전통/정통", true), OveruseOutcome::None);
+        }
+    }
+
+    #[test]
+    fn first_time_over_threshold_only_warns_regardless_of_rng() {
+        let mut rng = ChaCha8Rng::seed_from_u64(1);
+        for _ in 0..100 {
+            assert_eq!(check_overuse_injury(&mut rng, 100.0, "전통/정통", false), OveruseOutcome::Warning);
         }
     }
 
@@ -173,8 +199,8 @@ mod tests {
     fn same_seed_produces_identical_result() {
         let mut rng_a = ChaCha8Rng::seed_from_u64(42);
         let mut rng_b = ChaCha8Rng::seed_from_u64(42);
-        let a = check_overuse_injury(&mut rng_a, 100.0, "전통/정통");
-        let b = check_overuse_injury(&mut rng_b, 100.0, "전통/정통");
+        let a = check_overuse_injury(&mut rng_a, 100.0, "전통/정통", true);
+        let b = check_overuse_injury(&mut rng_b, 100.0, "전통/정통", true);
         assert_eq!(a, b);
     }
 
@@ -185,7 +211,7 @@ mod tests {
             let mut hits = 0;
             for seed in 0..trials {
                 let mut rng = ChaCha8Rng::seed_from_u64(seed);
-                if check_overuse_injury(&mut rng, 100.0, philosophy).is_some() {
+                if matches!(check_overuse_injury(&mut rng, 100.0, philosophy, true), OveruseOutcome::Injury(..)) {
                     hits += 1;
                 }
             }
