@@ -32,6 +32,15 @@ pub fn draft_initial_salary(avg_grade_score: f64, attention: f64) -> i64 {
     (base * (1.0 + avg_grade_score / 5.0 + attention / 1000.0)).round() as i64
 }
 
+/// 1군 직행 조건("특급 신인") — 02_아마_고교.md §D·04_프로_커리어.md
+/// Phase2 둘 다 "특급 신인은 1군 직행 여지(조건부)"라고만 하고 정확한
+/// 기준은 열린 세부(§F)로 남겨뒀다 — 지명 확률(`draft_probability`)보다
+/// 훨씬 엄격한 임계값으로 확정(D그룹 placeholder, §6-65). 지명 자체는
+/// 확률 판정이지만 이건 "충족하면 곧장"이라는 조건부 판정이라 RNG 없음.
+pub fn is_elite_prospect(avg_grade_score: f64, attention: f64) -> bool {
+    avg_grade_score >= 4.5 && attention >= 800.0
+}
+
 /// 후보 팀 중 무작위 하나 — 드래프트 지명팀·대학/독립 진학 시 배정팀
 /// 선택에 공용으로 쓰는 placeholder(팀별 정확한 지명 확률·니즈 기반
 /// 선택은 §F "라운드·픽 조건 열린 세부"라 균등 랜덤으로 단순화).
@@ -64,6 +73,21 @@ mod tests {
         let low = draft_initial_salary(0.0, 0.0);
         let high = draft_initial_salary(5.0, 1000.0);
         assert!(high > low, "low={low} high={high}");
+    }
+
+    #[test]
+    fn is_elite_prospect_requires_both_high_grade_and_high_attention() {
+        assert!(!is_elite_prospect(5.0, 100.0), "주목도가 낮으면 특급이 아님");
+        assert!(!is_elite_prospect(2.0, 1000.0), "성적이 낮으면 특급이 아님");
+        assert!(is_elite_prospect(5.0, 1000.0));
+    }
+
+    #[test]
+    fn is_elite_prospect_is_deterministic_and_stricter_than_average_draftee() {
+        // 특급 조건 근처는 지명 확률표에서도 거의 최상단이어야 자연스럽다.
+        assert!(draft_probability(4.5, 800.0) > draft_probability(2.5, 200.0));
+        assert!(is_elite_prospect(4.5, 800.0));
+        assert!(!is_elite_prospect(3.0, 800.0), "평범한 지명 후보는 특급이 아니어야 함");
     }
 
     #[test]
