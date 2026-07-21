@@ -351,52 +351,65 @@ class _TrainingTabState extends State<_TrainingTab> {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        AppPanel(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
+        // 좌측 훈련·우측 구종 — 위아래로 쌓지 않고 반으로 나눠 나란히
+        // (대화 2026-07-21).
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text('능력치 훈련', style: TextStyle(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 12),
-              const Text('주슬롯', style: TextStyle(color: AppColors.textSecondary)),
-              _statDropdown(_primary, (v) => setState(() => _primary = v)),
-              const SizedBox(height: 8),
-              const Text('보조슬롯 1', style: TextStyle(color: AppColors.textSecondary)),
-              _statDropdown(_secondary1, (v) => setState(() => _secondary1 = v)),
-              const SizedBox(height: 8),
-              const Text('보조슬롯 2', style: TextStyle(color: AppColors.textSecondary)),
-              _statDropdown(_secondary2, (v) => setState(() => _secondary2 = v)),
-              const SizedBox(height: 8),
-              const Text('강도', style: TextStyle(color: AppColors.textSecondary)),
-              Wrap(
-                spacing: 8,
-                children: _intensities
-                    .map((i) => ChoiceChip(label: Text(i), selected: _intensity == i, onSelected: (_) => setState(() => _intensity = i)))
-                    .toList(),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 16),
-        AppPanel(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text('신규 구종 습득', style: TextStyle(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-              if (_learnablePitches.isEmpty)
-                const Text('이미 카탈로그 10종을 전부 익혔습니다.', style: TextStyle(color: AppColors.textSecondary))
-              else
-                DropdownButtonFormField<String?>(
-                  initialValue: _newPitch,
-                  decoration: const InputDecoration(labelText: '연마할 구종'),
-                  items: [
-                    const DropdownMenuItem(value: null, child: Text('선택 안 함')),
-                    for (final p in _learnablePitches) DropdownMenuItem(value: p, child: Text(p)),
-                  ],
-                  onChanged: (v) => setState(() => _newPitch = v),
+              Expanded(
+                child: AppPanel(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text('능력치 훈련', style: TextStyle(fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 12),
+                      const Text('주슬롯', style: TextStyle(color: AppColors.textSecondary)),
+                      _statDropdown(_primary, (v) => setState(() => _primary = v)),
+                      const SizedBox(height: 8),
+                      const Text('보조슬롯 1', style: TextStyle(color: AppColors.textSecondary)),
+                      _statDropdown(_secondary1, (v) => setState(() => _secondary1 = v)),
+                      const SizedBox(height: 8),
+                      const Text('보조슬롯 2', style: TextStyle(color: AppColors.textSecondary)),
+                      _statDropdown(_secondary2, (v) => setState(() => _secondary2 = v)),
+                      const SizedBox(height: 8),
+                      const Text('강도', style: TextStyle(color: AppColors.textSecondary)),
+                      Wrap(
+                        spacing: 8,
+                        children: _intensities
+                            .map((i) => ChoiceChip(label: Text(i), selected: _intensity == i, onSelected: (_) => setState(() => _intensity = i)))
+                            .toList(),
+                      ),
+                    ],
+                  ),
                 ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: AppPanel(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text('신규 구종 습득', style: TextStyle(fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 8),
+                      if (_learnablePitches.isEmpty)
+                        const Text('이미 카탈로그 10종을 전부 익혔습니다.', style: TextStyle(color: AppColors.textSecondary))
+                      else
+                        DropdownButtonFormField<String?>(
+                          initialValue: _newPitch,
+                          decoration: const InputDecoration(labelText: '연마할 구종'),
+                          items: [
+                            const DropdownMenuItem(value: null, child: Text('선택 안 함')),
+                            for (final p in _learnablePitches) DropdownMenuItem(value: p, child: Text(p)),
+                          ],
+                          onChanged: (v) => setState(() => _newPitch = v),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
