@@ -3,6 +3,7 @@ pub mod career;
 pub mod eval;
 pub mod growth;
 pub mod injury;
+pub mod manager;
 pub mod market;
 pub mod npc;
 pub mod pitch;

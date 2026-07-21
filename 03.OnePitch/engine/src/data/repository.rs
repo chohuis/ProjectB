@@ -752,6 +752,48 @@ pub(crate) fn load_starting_pitcher(slot_conn: &Connection, team_id: &str) -> an
     })
 }
 
+/// 감독 개입(§8) — 주인공이 강판된 뒤 나머지 이닝을 던질 구원투수.
+/// 로스터에 `position = '구원투수'`가 여럿이면 (id 기준) 첫 명 고정 —
+/// 실제 불펜 로테이션·복수 교체는 스코프 밖(1차 축소안). 로스터에 구원
+/// 투수가 아예 없으면 None(호출부가 방어적으로 강판 자체를 건너뜀).
+pub(crate) fn load_relief_pitcher(slot_conn: &Connection, team_id: &str) -> anyhow::Result<Option<match_sim::PitcherStats>> {
+    let row: Option<(String, String, String)> = slot_conn
+        .query_row(
+            "SELECT id, stats, live_state FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position = '구원투수' ORDER BY id LIMIT 1",
+            [team_id],
+            |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
+        )
+        .optional()?;
+    let Some((id, stats_raw, live_state_raw)) = row else {
+        return Ok(None);
+    };
+    let v: serde_json::Value = serde_json::from_str(&stats_raw)?;
+    let live_state: serde_json::Value = serde_json::from_str(&live_state_raw)?;
+    Ok(Some(match_sim::PitcherStats {
+        id,
+        control: v.get("제구").and_then(|x| x.as_f64()).unwrap_or(50.0),
+        stuff: v.get("구위").and_then(|x| x.as_f64()).unwrap_or(50.0),
+        fatigue: live_state.get("피로도").and_then(|x| x.as_f64()).unwrap_or(0.0),
+    }))
+}
+
+/// 강판 이후 세션에 이미 정해진 불펜 투수를 id로 다시 불러온다(감독
+/// 개입, §8) — `load_relief_pitcher`는 강판되는 그 순간 후보를 고르는
+/// 용도고, 이후 하프이닝마다는 그 투수로 고정해서 계속 불러와야 하므로
+/// 별도 함수로 분리.
+pub(crate) fn load_pitcher_by_id(slot_conn: &Connection, npc_id: &str) -> anyhow::Result<match_sim::PitcherStats> {
+    let (stats_raw, live_state_raw): (String, String) =
+        slot_conn.query_row("SELECT stats, live_state FROM npc WHERE id = ?1", [npc_id], |row| Ok((row.get(0)?, row.get(1)?)))?;
+    let v: serde_json::Value = serde_json::from_str(&stats_raw)?;
+    let live_state: serde_json::Value = serde_json::from_str(&live_state_raw)?;
+    Ok(match_sim::PitcherStats {
+        id: npc_id.to_string(),
+        control: v.get("제구").and_then(|x| x.as_f64()).unwrap_or(50.0),
+        stuff: v.get("구위").and_then(|x| x.as_f64()).unwrap_or(50.0),
+        fatigue: live_state.get("피로도").and_then(|x| x.as_f64()).unwrap_or(0.0),
+    })
+}
+
 fn ensure_standings_row(conn: &Connection, team_id: &str) -> anyhow::Result<()> {
     conn.execute(
         "INSERT INTO standings (team_id, w, l, t, rank) VALUES (?1, 0, 0, 0, 0)

@@ -192,6 +192,27 @@ fn migration_v9(tx: &Transaction) -> anyhow::Result<()> {
     Ok(())
 }
 
+const V10_DDL: &str = r#"
+ALTER TABLE match_session ADD COLUMN protagonist_pulled INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE match_session ADD COLUMN relief_pitcher_id TEXT;
+ALTER TABLE match_session ADD COLUMN protagonist_pull_inning INTEGER;
+ALTER TABLE match_session ADD COLUMN protagonist_pull_opponent_runs INTEGER;
+"#;
+
+/// I7 29차분(감독 개입 — 투수 교체 타이밍, 07_매치_엔진.md §8, 대화
+/// 2026-07-21) — 자동·반자동 강판 여부(`protagonist_pulled`)·이후 등판하는
+/// 불펜 투수(`relief_pitcher_id`)·강판 시점 이닝(`protagonist_pull_inning`)·
+/// 강판 시점 상대 득점(`protagonist_pull_opponent_runs`). `apply_protagonist_evaluation`
+/// 의 `innings_pitched`·`runs_allowed` 계산이 완투 가정 대신 이 두 값을
+/// 우선 사용해, 강판 이후 불펜이 내준 점수를 주인공 성적에 안 섞는다.
+/// 수동 모드 플레이어 개입 UI·감독 신뢰도 형성은 이번 스코프 밖(1차
+/// 축소안, 대화 설계).
+fn migration_v10(tx: &Transaction) -> anyhow::Result<()> {
+    tx.execute_batch(V10_DDL)?;
+    tx.execute("UPDATE meta SET save_version = 10", [])?;
+    Ok(())
+}
+
 const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 1,
@@ -229,6 +250,10 @@ const MIGRATIONS: &[Migration] = &[
         version: 9,
         up: migration_v9,
     },
+    Migration {
+        version: 10,
+        up: migration_v10,
+    },
 ];
 
 fn init(mut conn: Connection) -> anyhow::Result<Connection> {
@@ -256,7 +281,7 @@ mod tests {
         let save_version: i64 = conn
             .query_row("SELECT save_version FROM meta", [], |row| row.get(0))
             .unwrap();
-        assert_eq!(save_version, 9);
+        assert_eq!(save_version, 10);
     }
 
     #[test]
@@ -271,6 +296,47 @@ mod tests {
             conn.query_row("SELECT kind, detail FROM career_events WHERE day = 1", [], |r| Ok((r.get(0)?, r.get(1)?))).unwrap();
         assert_eq!(kind, "enrollment");
         assert!(detail.contains("team:x"));
+    }
+
+    #[test]
+    fn v10_adds_manager_intervention_columns_to_match_session() {
+        let conn = open_in_memory().unwrap();
+        conn.execute(
+            "INSERT INTO match_session (id, game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases,
+                                         home_runs, away_runs, home_batter_idx, away_batter_idx, balls, strikes, current_batter_id)
+             VALUES (1, 'g', 'h', 'a', 'league:pro', '자동', 1, 1, 0, '[false,false,false]', 0, 0, 0, 0, 0, 0, NULL)",
+            [],
+        )
+        .unwrap();
+        let (pulled, relief, pull_inning, pull_runs): (i64, Option<String>, Option<i64>, Option<i64>) = conn
+            .query_row(
+                "SELECT protagonist_pulled, relief_pitcher_id, protagonist_pull_inning, protagonist_pull_opponent_runs FROM match_session WHERE id = 1",
+                [],
+                |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?)),
+            )
+            .unwrap();
+        assert_eq!(pulled, 0);
+        assert_eq!(relief, None);
+        assert_eq!(pull_inning, None);
+        assert_eq!(pull_runs, None);
+
+        conn.execute(
+            "UPDATE match_session SET protagonist_pulled = 1, relief_pitcher_id = 'npc:relief', protagonist_pull_inning = 6,
+                                       protagonist_pull_opponent_runs = 2 WHERE id = 1",
+            [],
+        )
+        .unwrap();
+        let (pulled, relief, pull_inning, pull_runs): (i64, Option<String>, Option<i64>, Option<i64>) = conn
+            .query_row(
+                "SELECT protagonist_pulled, relief_pitcher_id, protagonist_pull_inning, protagonist_pull_opponent_runs FROM match_session WHERE id = 1",
+                [],
+                |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?)),
+            )
+            .unwrap();
+        assert_eq!(pulled, 1);
+        assert_eq!(relief.as_deref(), Some("npc:relief"));
+        assert_eq!(pull_inning, Some(6));
+        assert_eq!(pull_runs, Some(2));
     }
 
     #[test]
