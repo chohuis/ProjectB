@@ -161,15 +161,21 @@ pub fn preserve_next_turn(new_ranked: Vec<String>, next_pitcher_id: Option<&str>
     rest
 }
 
-/// 로테이션 서열화 — `(투수 id, 점수)` 목록을 점수 내림차순 정렬해 상위
-/// `ROTATION_SIZE`만 id로 반환한다. 동점은 id 오름차순으로 묶어 결정론을
-/// 보장(부동소수 동점이 실제로 발생할 수 있음 — 같은 스탯으로 생성된 신인
-/// 등). 점수 자체(능력치만 vs 능력치+누적성적 블렌딩)는 호출부 책임 —
-/// `blend_rotation_score` 참고.
-pub fn rank_rotation_candidates(candidates: &[(String, f64)]) -> Vec<String> {
+/// `(id, 점수)` 목록을 점수 내림차순 정렬해 id만 반환한다. 동점은 id
+/// 오름차순으로 묶어 결정론을 보장(부동소수 동점이 실제로 발생할 수 있음
+/// — 같은 스탯으로 생성된 신인 등). 정원 제한이 없는 서열화(타순 등)가
+/// 재사용 — 정원이 있는 로테이션은 `rank_rotation_candidates` 참고.
+pub(crate) fn rank_all_candidates(candidates: &[(String, f64)]) -> Vec<String> {
     let mut sorted = candidates.to_vec();
     sorted.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal).then_with(|| a.0.cmp(&b.0)));
-    sorted.into_iter().map(|(id, _)| id).take(ROTATION_SIZE).collect()
+    sorted.into_iter().map(|(id, _)| id).collect()
+}
+
+/// 로테이션 서열화 — `rank_all_candidates`로 정렬 후 상위 `ROTATION_SIZE`만
+/// 자른다. 점수 자체(능력치만 vs 능력치+누적성적 블렌딩)는 호출부 책임 —
+/// `blend_rotation_score` 참고.
+pub fn rank_rotation_candidates(candidates: &[(String, f64)]) -> Vec<String> {
+    rank_all_candidates(candidates).into_iter().take(ROTATION_SIZE).collect()
 }
 
 #[cfg(test)]

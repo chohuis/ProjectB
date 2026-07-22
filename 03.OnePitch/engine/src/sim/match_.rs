@@ -8,7 +8,7 @@ use crate::sim::injury;
 /// npc.stats JSON 파싱은 repository.rs가 하고 여기는 순수 계산만. `id`·
 /// `fatigue`는 급성형 부상 판정(§13, 08_부상_시스템.md §3)이 "누구에게"
 /// "얼마나 위험하게" 일어났는지 알아야 해서 I5 5차분 이후 추가됨.
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct BatterStats {
     pub id: String,
     pub contact: f64,

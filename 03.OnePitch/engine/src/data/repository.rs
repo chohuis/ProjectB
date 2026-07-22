@@ -247,6 +247,7 @@ pub fn generate_initial_world(slot_conn: &mut Connection, content_conn: &Connect
     // 위 스케줄 생성과 동일(개별 autocommit이면 182팀분 디스크 fsync로
     // 새 게임 시작이 다시 느려짐, §6-38에서 이미 한 번 발견된 문제).
     for_each_team_in_all_leagues(&tx, content_conn, assign_rotation)?;
+    for_each_team_in_all_leagues(&tx, content_conn, assign_batting_order)?;
     tx.commit()?;
     Ok(())
 }
@@ -1114,23 +1115,51 @@ fn find_protagonist_game_today(conn: &Connection, day: i64) -> anyhow::Result<Op
     Ok(game)
 }
 
+/// `assign_batting_order`가 `season_meta['lineup:{team_id}']`에 저장해둔
+/// 순서가 있으면 그대로 따르고, 저장된 목록에 없는 선수(신규 콜업 등)는
+/// 기존 id순으로 끝에 붙인다. 저장된 순서 자체가 없으면(첫 배정 전) id순
+/// 그대로 — 기존 동작과 동일.
 pub(crate) fn load_batting_lineup(slot_conn: &Connection, team_id: &str) -> anyhow::Result<Vec<match_sim::BatterStats>> {
     let mut stmt = slot_conn.prepare(
-        "SELECT id, stats, live_state FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position NOT IN ('선발투수', '구원투수') ORDER BY id",
+        "SELECT id, stats, live_state FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position NOT IN ('선발투수', '구원투수', '감독', '코치', '구단주') ORDER BY id",
     )?;
     let rows: Vec<(String, String, String)> =
         stmt.query_map([team_id], |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)))?.collect::<Result<Vec<_>, _>>()?;
-    let mut lineup = Vec::with_capacity(rows.len());
+    let mut id_order: Vec<String> = Vec::with_capacity(rows.len());
+    let mut by_id: HashMap<String, match_sim::BatterStats> = HashMap::with_capacity(rows.len());
     for (id, stats_raw, live_state_raw) in rows {
         let v: serde_json::Value = serde_json::from_str(&stats_raw)?;
         let live_state: serde_json::Value = serde_json::from_str(&live_state_raw)?;
-        lineup.push(match_sim::BatterStats {
-            id,
-            contact: v.get("컨택").and_then(|x| x.as_f64()).unwrap_or(50.0),
-            eye: v.get("선구안").and_then(|x| x.as_f64()).unwrap_or(50.0),
-            power: v.get("파워").and_then(|x| x.as_f64()).unwrap_or(50.0),
-            fatigue: live_state.get("피로도").and_then(|x| x.as_f64()).unwrap_or(0.0),
-        });
+        id_order.push(id.clone());
+        by_id.insert(
+            id.clone(),
+            match_sim::BatterStats {
+                id,
+                contact: v.get("컨택").and_then(|x| x.as_f64()).unwrap_or(50.0),
+                eye: v.get("선구안").and_then(|x| x.as_f64()).unwrap_or(50.0),
+                power: v.get("파워").and_then(|x| x.as_f64()).unwrap_or(50.0),
+                fatigue: live_state.get("피로도").and_then(|x| x.as_f64()).unwrap_or(0.0),
+            },
+        );
+    }
+
+    let stored_order: Option<Vec<String>> = slot_conn
+        .query_row("SELECT value FROM season_meta WHERE key = ?1", [format!("lineup:{team_id}")], |r| r.get::<_, String>(0))
+        .optional()?
+        .and_then(|raw| serde_json::from_str(&raw).ok());
+
+    let mut lineup = Vec::with_capacity(by_id.len());
+    if let Some(order) = stored_order {
+        for id in &order {
+            if let Some(b) = by_id.remove(id) {
+                lineup.push(b);
+            }
+        }
+    }
+    for id in id_order {
+        if let Some(b) = by_id.remove(&id) {
+            lineup.push(b);
+        }
     }
     Ok(lineup)
 }
@@ -1231,6 +1260,77 @@ fn reassign_rotation_preserving_next_turn(conn: &Connection, team_id: &str) -> a
         "INSERT INTO season_meta (key, value) VALUES (?1, ?2)
          ON CONFLICT(key) DO UPDATE SET value = excluded.value",
         params![format!("rotation:{team_id}"), serde_json::json!(rotation).to_string()],
+    )?;
+    Ok(())
+}
+
+/// 타자의 season_stats 누적을 요약 점수로 압축 — `season_stats_score`(투수)
+/// 와 같은 관례, 표본이 너무 적으면(10타석 미만) None. D그룹 placeholder
+/// (계수·기준선 모두 밸런스 하네스 재조정 대상).
+fn season_stats_batter_score(conn: &Connection, player_id: &str) -> anyhow::Result<Option<f64>> {
+    let mut stmt = conn.prepare("SELECT line FROM season_stats WHERE player_id = ?1")?;
+    let lines: Vec<String> = stmt.query_map([player_id], |r| r.get(0))?.collect::<Result<Vec<_>, _>>()?;
+    let (mut pa, mut ab, mut hits, mut doubles, mut triples, mut hr, mut walks) = (0i64, 0i64, 0i64, 0i64, 0i64, 0i64, 0i64);
+    for line in lines {
+        let v: serde_json::Value = serde_json::from_str(&line).unwrap_or_default();
+        pa += v.get("plate_appearances").and_then(|x| x.as_i64()).unwrap_or(0);
+        ab += v.get("at_bats").and_then(|x| x.as_i64()).unwrap_or(0);
+        hits += v.get("hits").and_then(|x| x.as_i64()).unwrap_or(0);
+        doubles += v.get("doubles").and_then(|x| x.as_i64()).unwrap_or(0);
+        triples += v.get("triples").and_then(|x| x.as_i64()).unwrap_or(0);
+        hr += v.get("home_runs").and_then(|x| x.as_i64()).unwrap_or(0);
+        walks += v.get("walks").and_then(|x| x.as_i64()).unwrap_or(0);
+    }
+    if pa < 10 || ab == 0 {
+        return Ok(None);
+    }
+    let obp_like = (hits + walks) as f64 / (ab + walks) as f64 * 100.0;
+    let total_bases = hits + doubles + 2 * triples + 3 * hr;
+    let slg_like = total_bases as f64 / ab as f64 * 100.0;
+    Ok(Some((50.0 + (obp_like - 33.0) + (slg_like - 40.0) * 0.5).clamp(0.0, 100.0)))
+}
+
+/// 팀의 타순 후보를 능력치+season_stats 블렌딩 점수로 서열화한 id 목록 —
+/// `ranked_rotation_candidates_for_team`과 같은 패턴. `load_batting_lineup`
+/// 과 동일한 필터(감독·코치·구단주·투수 제외)를 써서 실제 타순 후보와
+/// 일치시킨다. 타순은 로테이션과 달리 정원 제한이 없어(로스터 타자 전원
+/// 배치) `manager::rank_all_candidates`를 쓴다.
+fn ranked_batting_order_for_team(conn: &Connection, team_id: &str) -> anyhow::Result<Vec<String>> {
+    let mut stmt = conn.prepare(
+        "SELECT id, stats FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position NOT IN ('선발투수', '구원투수', '감독', '코치', '구단주')",
+    )?;
+    let rows: Vec<(String, String)> = stmt.query_map([team_id], |r| Ok((r.get(0)?, r.get(1)?)))?.collect::<Result<Vec<_>, _>>()?;
+    drop(stmt);
+
+    let mut candidates: Vec<(String, f64)> = Vec::new();
+    for (id, stats_raw) in rows {
+        let v: serde_json::Value = serde_json::from_str(&stats_raw).unwrap_or_default();
+        let contact = v.get("컨택").and_then(|x| x.as_f64()).unwrap_or(50.0);
+        let eye = v.get("선구안").and_then(|x| x.as_f64()).unwrap_or(50.0);
+        let power = v.get("파워").and_then(|x| x.as_f64()).unwrap_or(50.0);
+        let skill_score = (contact + eye + power) / 3.0;
+        let score = match season_stats_batter_score(conn, &id)? {
+            Some(season_score) => manager::blend_rotation_score(skill_score, season_score),
+            None => skill_score,
+        };
+        candidates.push((id, score));
+    }
+
+    Ok(manager::rank_all_candidates(&candidates))
+}
+
+/// 타순 재배정 — 로테이션과 달리 "다음 등판 보존" 같은 연속성 제약이
+/// 없어(어떤 순서로 배치해도 부작용 없음) 시즌 경계·시즌 중 구분 없이
+/// 이 함수 하나만 쓴다.
+fn assign_batting_order(conn: &Connection, team_id: &str) -> anyhow::Result<()> {
+    let order = ranked_batting_order_for_team(conn, team_id)?;
+    if order.is_empty() {
+        return Ok(());
+    }
+    conn.execute(
+        "INSERT INTO season_meta (key, value) VALUES (?1, ?2)
+         ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+        params![format!("lineup:{team_id}"), serde_json::json!(order).to_string()],
     )?;
     Ok(())
 }
@@ -3376,6 +3476,7 @@ pub fn season_rollover(conn: &Connection, content_conn: &Connection, day: i64) -
     // 플레인 재배정(`assign_rotation`)을 쓴다 — 시즌 경계는 직전 시즌
     // 순번을 보존할 이유가 없다(로스터 자체가 갈림, 시즌 중 재편과 다름).
     for_each_team_in_all_leagues(conn, content_conn, assign_rotation)?;
+    for_each_team_in_all_leagues(conn, content_conn, assign_batting_order)?;
     conn.execute("DELETE FROM season_stats", [])?;
 
     Ok(())
@@ -3446,6 +3547,10 @@ pub fn advance(slot_conn: &mut Connection, content_conn: &Connection) -> anyhow:
             // 반영. "다음 등판" 자리는 `preserve_next_turn`으로 보존해
             // 휴식 없는 재등판을 막는다.
             for_each_team_in_all_leagues(&tx, content_conn, reassign_rotation_preserving_next_turn)?;
+            // 타순 최적화(10_구현_Phase_계획.md §6-N) — 로테이션과 달리
+            // "다음 등판 보존" 같은 연속성 제약이 없어 플레인 재배정 하나면
+            // 충분하다.
+            for_each_team_in_all_leagues(&tx, content_conn, assign_batting_order)?;
         }
         if crate::calendar::is_season_boundary(today) {
             season_rollover(&tx, content_conn, today)?;
@@ -5848,6 +5953,96 @@ mod tests {
     }
 
     #[test]
+    fn season_stats_batter_score_returns_none_for_a_tiny_sample() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        let stats = match_sim::BatterGameStats {
+            plate_appearances: 3,
+            at_bats: 3,
+            hits: 2,
+            doubles: 0,
+            triples: 0,
+            home_runs: 0,
+            walks: 0,
+            strikeouts: 0,
+            rbi: 1,
+        };
+        upsert_batter_season_stats(&slot_conn, "npc:1", 1, &stats).unwrap();
+        assert_eq!(season_stats_batter_score(&slot_conn, "npc:1").unwrap(), None);
+    }
+
+    #[test]
+    fn ranked_batting_order_for_team_prefers_a_batter_with_a_better_season_line_over_equal_skill() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_test_player(&slot_conn, "team:a_b0", "team:a", "타자", serde_json::json!({"컨택": 50.0, "선구안": 50.0, "파워": 50.0}));
+        insert_test_player(&slot_conn, "team:a_b1", "team:a", "타자", serde_json::json!({"컨택": 50.0, "선구안": 50.0, "파워": 50.0}));
+
+        // b0: 좋은 성적, b1: 나쁜 성적 — 능력치는 동일.
+        let good = match_sim::BatterGameStats {
+            plate_appearances: 40,
+            at_bats: 35,
+            hits: 15,
+            doubles: 4,
+            triples: 1,
+            home_runs: 3,
+            walks: 5,
+            strikeouts: 5,
+            rbi: 12,
+        };
+        let bad = match_sim::BatterGameStats {
+            plate_appearances: 40,
+            at_bats: 38,
+            hits: 5,
+            doubles: 0,
+            triples: 0,
+            home_runs: 0,
+            walks: 2,
+            strikeouts: 15,
+            rbi: 1,
+        };
+        upsert_batter_season_stats(&slot_conn, "team:a_b0", 1, &good).unwrap();
+        upsert_batter_season_stats(&slot_conn, "team:a_b1", 1, &bad).unwrap();
+
+        let order = ranked_batting_order_for_team(&slot_conn, "team:a").unwrap();
+        assert_eq!(order[0], "team:a_b0", "성적이 좋은 타자가 능력치 동률에서도 앞서야 함");
+    }
+
+    #[test]
+    fn load_batting_lineup_reflects_the_stored_order() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_minimal_roster(&slot_conn, "team:a");
+        let reversed: Vec<String> = (0..8).rev().map(|i| format!("team:a_b{i}")).collect();
+        slot_conn
+            .execute(
+                "INSERT INTO season_meta (key, value) VALUES ('lineup:team:a', ?1)",
+                params![serde_json::json!(reversed).to_string()],
+            )
+            .unwrap();
+
+        let lineup = load_batting_lineup(&slot_conn, "team:a").unwrap();
+        let ids: Vec<String> = lineup.iter().map(|b| b.id.clone()).collect();
+        assert_eq!(ids, reversed);
+    }
+
+    #[test]
+    fn load_batting_lineup_appends_unranked_players_at_the_end() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_minimal_roster(&slot_conn, "team:a");
+        // 저장된 순서엔 3명만 있음 — 나머지는 id순으로 끝에 붙어야 함.
+        let partial = vec!["team:a_b2".to_string(), "team:a_b1".to_string(), "team:a_b0".to_string()];
+        slot_conn
+            .execute(
+                "INSERT INTO season_meta (key, value) VALUES ('lineup:team:a', ?1)",
+                params![serde_json::json!(partial).to_string()],
+            )
+            .unwrap();
+
+        let lineup = load_batting_lineup(&slot_conn, "team:a").unwrap();
+        let ids: Vec<String> = lineup.iter().map(|b| b.id.clone()).collect();
+        assert_eq!(&ids[0..3], &partial[..]);
+        assert_eq!(&ids[3..], &["team:a_b3", "team:a_b4", "team:a_b5", "team:a_b6", "team:a_b7"]);
+    }
+
+    #[test]
     fn reassign_rotation_preserving_next_turn_keeps_the_immediately_due_pitcher() {
         let slot_conn = slot::open_in_memory().unwrap();
         insert_test_player(&slot_conn, "team:a_sp1", "team:a", "선발투수", serde_json::json!({"제구": 40.0, "구위": 40.0}));
@@ -6263,6 +6458,19 @@ mod tests {
         let after = load_batting_lineup(&slot_conn, "team:a").unwrap();
         assert_eq!(after.len(), 7);
         assert!(!after.iter().any(|b| b.id == "team:a_b0"));
+    }
+
+    #[test]
+    fn load_batting_lineup_excludes_manager_coach_and_owner() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_test_player(&slot_conn, "team:a_b0", "team:a", "타자", serde_json::json!({"컨택": 50.0, "선구안": 50.0, "파워": 50.0}));
+        insert_test_player(&slot_conn, "manager:team:a", "team:a", "감독", serde_json::json!({}));
+        insert_test_player(&slot_conn, "coach:team:a", "team:a", "코치", serde_json::json!({}));
+        insert_test_player(&slot_conn, "owner:team:a", "team:a", "구단주", serde_json::json!({}));
+
+        let lineup = load_batting_lineup(&slot_conn, "team:a").unwrap();
+        assert_eq!(lineup.len(), 1, "only the real batter should be in the lineup, got {lineup:?}");
+        assert_eq!(lineup[0].id, "team:a_b0");
     }
 
     #[test]
