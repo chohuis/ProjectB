@@ -134,11 +134,19 @@ pub fn should_pull_pitcher(rng: &mut impl Rng, pitches_thrown: u32, fatigue: f64
 /// 항목, 이번에 확정) — D그룹 placeholder, I8 밸런스 하네스 재조정 대상.
 pub const ROTATION_SIZE: usize = 5;
 
-/// 로테이션 서열화 — `(투수 id, 능력치 점수)` 목록을 점수 내림차순 정렬해
-/// 상위 `ROTATION_SIZE`만 id로 반환한다. 동점은 id 오름차순으로 묶어
-/// 결정론을 보장(부동소수 동점이 실제로 발생할 수 있음 — 같은 스탯으로
-/// 생성된 신인 등). 누적성적(`season_stats`) 반영은 그 인프라 자체가
-/// 없어 이월 — 능력치만으로 근사.
+/// season_stats 누적성적을 능력치 점수와 섞는 가중치(D그룹 — 밸런스
+/// 하네스 재조정 대상). 표본이 부족한 후보(시즌 초반 등)는 호출부
+/// (`data::repository::assign_rotation`)가 season_score 없이 skill_score만
+/// 넘겨 이 함수를 건너뛴다.
+pub fn blend_rotation_score(skill_score: f64, season_score: f64) -> f64 {
+    skill_score * 0.6 + season_score * 0.4
+}
+
+/// 로테이션 서열화 — `(투수 id, 점수)` 목록을 점수 내림차순 정렬해 상위
+/// `ROTATION_SIZE`만 id로 반환한다. 동점은 id 오름차순으로 묶어 결정론을
+/// 보장(부동소수 동점이 실제로 발생할 수 있음 — 같은 스탯으로 생성된 신인
+/// 등). 점수 자체(능력치만 vs 능력치+누적성적 블렌딩)는 호출부 책임 —
+/// `blend_rotation_score` 참고.
 pub fn rank_rotation_candidates(candidates: &[(String, f64)]) -> Vec<String> {
     let mut sorted = candidates.to_vec();
     sorted.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal).then_with(|| a.0.cmp(&b.0)));
@@ -272,6 +280,13 @@ mod tests {
     fn relationship_delta_from_pull_agreement_rewards_agreement() {
         assert!(relationship_delta_from_pull_agreement(true) > 0);
         assert!(relationship_delta_from_pull_agreement(false) < 0);
+    }
+
+    #[test]
+    fn blend_rotation_score_is_monotonic_in_the_season_score() {
+        let low = blend_rotation_score(60.0, 20.0);
+        let high = blend_rotation_score(60.0, 80.0);
+        assert!(high > low, "high={high} low={low}");
     }
 
     #[test]

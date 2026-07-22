@@ -93,6 +93,13 @@ pub fn is_season_boundary(current_day: i64) -> bool {
     day_of_season == season_length(season)
 }
 
+/// `season_stats`가 주 단위로 누적되는 기준(1부터 시작) — 시즌 안에서
+/// 몇 번째 날인지를 7로 나눠 구한다.
+pub fn week_for_day(current_day: i64) -> i64 {
+    let (_, day_of_season) = season_and_day_of_season(current_day);
+    (day_of_season - 1) / 7 + 1
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -138,5 +145,17 @@ mod tests {
         assert!(is_leap_year(2028));
         assert!(!is_leap_year(2027));
         assert!(!is_leap_year(2029));
+    }
+
+    #[test]
+    fn week_for_day_groups_seven_days_per_week_and_resets_at_season_boundary() {
+        assert_eq!(week_for_day(1), 1);
+        assert_eq!(week_for_day(7), 1);
+        assert_eq!(week_for_day(8), 2);
+        assert_eq!(week_for_day(14), 2);
+        assert_eq!(week_for_day(15), 3);
+
+        let len1 = season_length(1);
+        assert_eq!(week_for_day(len1 + 1), 1);
     }
 }

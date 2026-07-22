@@ -1145,6 +1145,28 @@ pub(crate) fn load_batting_lineup(slot_conn: &Connection, team_id: &str) -> anyh
 /// 기존 `season_meta`(key TEXT PRIMARY KEY, value TEXT) upsert 관례 재사용.
 /// 후보가 0명이면 no-op(그 리그 팀에 선발투수가 아직 없는 극단적 케이스 —
 /// `load_starting_pitcher`가 기존 폴백으로 처리).
+/// 투수의 season_stats 누적을 요약 점수로 압축 — 표본이 너무 적으면
+/// (3이닝 미만) `None`으로 "이 후보는 능력치만으로 판단"을 호출부에
+/// 알린다. D그룹 placeholder(계수·기준선 모두 밸런스 하네스 재조정 대상).
+fn season_stats_score(conn: &Connection, player_id: &str) -> anyhow::Result<Option<f64>> {
+    let mut stmt = conn.prepare("SELECT line FROM season_stats WHERE player_id = ?1")?;
+    let lines: Vec<String> = stmt.query_map([player_id], |r| r.get(0))?.collect::<Result<Vec<_>, _>>()?;
+    let (mut outs, mut runs, mut ks) = (0i64, 0i64, 0i64);
+    for line in lines {
+        let v: serde_json::Value = serde_json::from_str(&line).unwrap_or_default();
+        outs += v.get("outs_recorded").and_then(|x| x.as_i64()).unwrap_or(0);
+        runs += v.get("runs_allowed").and_then(|x| x.as_i64()).unwrap_or(0);
+        ks += v.get("strikeouts").and_then(|x| x.as_i64()).unwrap_or(0);
+    }
+    if outs < 9 {
+        return Ok(None);
+    }
+    let innings = outs as f64 / 3.0;
+    let era_like = runs as f64 * 9.0 / innings;
+    let k_per_9 = ks as f64 * 9.0 / innings;
+    Ok(Some((50.0 - (era_like - 4.5) * 4.0 + (k_per_9 - 7.0)).clamp(0.0, 100.0)))
+}
+
 fn assign_rotation(conn: &Connection, team_id: &str) -> anyhow::Result<()> {
     let mut stmt = conn.prepare(
         "SELECT id, stats FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position = '선발투수'",
@@ -1155,15 +1177,18 @@ fn assign_rotation(conn: &Connection, team_id: &str) -> anyhow::Result<()> {
         return Ok(());
     }
 
-    let candidates: Vec<(String, f64)> = rows
-        .into_iter()
-        .map(|(id, stats_raw)| {
-            let v: serde_json::Value = serde_json::from_str(&stats_raw).unwrap_or_default();
-            let control = v.get("제구").and_then(|x| x.as_f64()).unwrap_or(50.0);
-            let stuff = v.get("구위").and_then(|x| x.as_f64()).unwrap_or(50.0);
-            (id, (control + stuff) / 2.0)
-        })
-        .collect();
+    let mut candidates: Vec<(String, f64)> = Vec::new();
+    for (id, stats_raw) in rows {
+        let v: serde_json::Value = serde_json::from_str(&stats_raw).unwrap_or_default();
+        let control = v.get("제구").and_then(|x| x.as_f64()).unwrap_or(50.0);
+        let stuff = v.get("구위").and_then(|x| x.as_f64()).unwrap_or(50.0);
+        let skill_score = (control + stuff) / 2.0;
+        let score = match season_stats_score(conn, &id)? {
+            Some(season_score) => manager::blend_rotation_score(skill_score, season_score),
+            None => skill_score,
+        };
+        candidates.push((id, score));
+    }
 
     let rotation = manager::rank_rotation_candidates(&candidates);
     conn.execute(
@@ -1460,6 +1485,65 @@ pub(crate) fn accumulate_game_fatigue(conn: &Connection, team_id: &str) -> anyho
     Ok(())
 }
 
+/// `season_stats.line`의 특정 필드들을 누적 가산하는 공용 upsert — 투수·
+/// 타자 라인 둘 다 이 위에 얹힌다(PK가 `(player_id, week)`라서 한 선수는
+/// 한 주에 한 줄만 가지며, 실제로 투수 필드·타자 필드가 같은 줄에 섞일 일은
+/// 없다 — 이 엔진에 양방향 선수가 없어 한 선수는 항상 한쪽 역할만 뛴다).
+fn upsert_season_stats_fields(conn: &Connection, player_id: &str, week: i64, fields: &[(&str, u32)]) -> anyhow::Result<()> {
+    let existing: Option<String> = conn
+        .query_row("SELECT line FROM season_stats WHERE player_id = ?1 AND week = ?2", params![player_id, week], |r| r.get(0))
+        .optional()?;
+    let mut merged: serde_json::Map<String, serde_json::Value> =
+        existing.and_then(|s| serde_json::from_str(&s).ok()).unwrap_or_default();
+    for (key, delta) in fields {
+        let current = merged.get(*key).and_then(|v| v.as_i64()).unwrap_or(0);
+        merged.insert(key.to_string(), serde_json::Value::from(current + *delta as i64));
+    }
+    conn.execute(
+        "INSERT INTO season_stats (player_id, week, line) VALUES (?1, ?2, ?3)
+         ON CONFLICT(player_id, week) DO UPDATE SET line = excluded.line",
+        params![player_id, week, serde_json::Value::Object(merged).to_string()],
+    )?;
+    Ok(())
+}
+
+/// `pub(crate)` — 배경 경기(`process_day`, 이 파일)와 주인공 경기의 배경
+/// 하프이닝(`data::match_session`)이 둘 다 호출한다.
+pub(crate) fn upsert_pitcher_season_stats(conn: &Connection, player_id: &str, week: i64, s: &match_sim::PitcherGameStats) -> anyhow::Result<()> {
+    upsert_season_stats_fields(
+        conn,
+        player_id,
+        week,
+        &[
+            ("outs_recorded", s.outs_recorded),
+            ("runs_allowed", s.runs_allowed),
+            ("strikeouts", s.strikeouts),
+            ("hits_allowed", s.hits_allowed),
+            ("walks", s.walks),
+        ],
+    )
+}
+
+/// `pub(crate)` — `upsert_pitcher_season_stats`와 동일한 이유로 공개.
+pub(crate) fn upsert_batter_season_stats(conn: &Connection, player_id: &str, week: i64, s: &match_sim::BatterGameStats) -> anyhow::Result<()> {
+    upsert_season_stats_fields(
+        conn,
+        player_id,
+        week,
+        &[
+            ("plate_appearances", s.plate_appearances),
+            ("at_bats", s.at_bats),
+            ("hits", s.hits),
+            ("doubles", s.doubles),
+            ("triples", s.triples),
+            ("home_runs", s.home_runs),
+            ("walks", s.walks),
+            ("strikeouts", s.strikeouts),
+            ("rbi", s.rbi),
+        ],
+    )
+}
+
 fn process_day(slot_conn: &Connection, content_conn: &Connection, world_seed: i64, day: i64) -> anyhow::Result<()> {
     let mut stmt = slot_conn.prepare("SELECT game_id, home, away FROM schedule WHERE day = ?1 AND result IS NULL")?;
     let games: Vec<(String, String, String)> =
@@ -1483,6 +1567,16 @@ fn process_day(slot_conn: &Connection, content_conn: &Connection, world_seed: i6
         accumulate_game_fatigue(slot_conn, &home)?;
         accumulate_game_fatigue(slot_conn, &away)?;
         apply_injury_events(slot_conn, &result.injuries, day)?;
+
+        let week = crate::calendar::week_for_day(day);
+        upsert_pitcher_season_stats(slot_conn, &home_pitcher.id, week, &result.home_pitcher_stats)?;
+        upsert_pitcher_season_stats(slot_conn, &away_pitcher.id, week, &result.away_pitcher_stats)?;
+        for (batter_id, s) in &result.home_batter_stats {
+            upsert_batter_season_stats(slot_conn, batter_id, week, s)?;
+        }
+        for (batter_id, s) in &result.away_batter_stats {
+            upsert_batter_season_stats(slot_conn, batter_id, week, s)?;
+        }
     }
     Ok(())
 }
@@ -3182,7 +3276,6 @@ pub fn season_rollover(conn: &Connection, content_conn: &Connection, day: i64) -
 
     conn.execute("DELETE FROM standings", [])?;
     conn.execute("DELETE FROM schedule", [])?;
-    conn.execute("DELETE FROM season_stats", [])?;
 
     // NPC 세대교체(I5 8차분) — 나이 증가 → 리그별 적정연령대 기준 은퇴 판정
     // → 빈 자리 신인 충원. 01_커리어_구조.md §5의 실제 진로 갈림길(드래프트
@@ -3226,12 +3319,16 @@ pub fn season_rollover(conn: &Connection, content_conn: &Connection, day: i64) -
 
     // 선발 로테이션 재편성(04_프로_커리어.md §22, 이월 부채 정리 대화
     // 2026-07-22) — 방금 끝난 `generate_freshmen`으로 로스터가 확정된
-    // 뒤라야 의미가 있다. 5개 리그 전체(독립리그 포함) 대상.
+    // 뒤라야 의미가 있다. 5개 리그 전체(독립리그 포함) 대상. season_stats
+    // (season_stats 누적성적 트랙, 10_구현_Phase_계획.md §6-N)를 참고해
+    // 서열을 매기므로, 방금 끝난 시즌의 누적치가 남아있는 지금 시점에
+    // 실행해야 한다 — 그래서 season_stats 삭제는 이 루프 뒤로 미룬다.
     for league_id in LEAGUE_IDS {
         for team_id in content::load_team_ids_for_league(content_conn, league_id)? {
             assign_rotation(conn, &team_id)?;
         }
     }
+    conn.execute("DELETE FROM season_stats", [])?;
 
     Ok(())
 }
@@ -5671,6 +5768,33 @@ mod tests {
     }
 
     #[test]
+    fn season_stats_score_returns_none_for_a_tiny_sample() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        let stats = match_sim::PitcherGameStats { outs_recorded: 3, runs_allowed: 0, strikeouts: 3, hits_allowed: 0, walks: 0 };
+        upsert_pitcher_season_stats(&slot_conn, "npc:1", 1, &stats).unwrap();
+        assert_eq!(season_stats_score(&slot_conn, "npc:1").unwrap(), None);
+    }
+
+    #[test]
+    fn assign_rotation_prefers_a_pitcher_with_a_better_season_line_over_equal_skill() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_test_player(&slot_conn, "team:a_sp1", "team:a", "선발투수", serde_json::json!({"제구": 55.0, "구위": 55.0}));
+        insert_test_player(&slot_conn, "team:a_sp2", "team:a", "선발투수", serde_json::json!({"제구": 55.0, "구위": 55.0}));
+
+        // sp1: 좋은 성적(무실점 27이닝), sp2: 나쁜 성적(다실점 27이닝) — 능력치는 동일.
+        let good = match_sim::PitcherGameStats { outs_recorded: 81, runs_allowed: 3, strikeouts: 30, hits_allowed: 15, walks: 5 };
+        let bad = match_sim::PitcherGameStats { outs_recorded: 81, runs_allowed: 30, strikeouts: 10, hits_allowed: 40, walks: 15 };
+        upsert_pitcher_season_stats(&slot_conn, "team:a_sp1", 1, &good).unwrap();
+        upsert_pitcher_season_stats(&slot_conn, "team:a_sp2", 1, &bad).unwrap();
+
+        assign_rotation(&slot_conn, "team:a").unwrap();
+
+        let raw: String = slot_conn.query_row("SELECT value FROM season_meta WHERE key = 'rotation:team:a'", [], |r| r.get(0)).unwrap();
+        let rotation: Vec<String> = serde_json::from_str(&raw).unwrap();
+        assert_eq!(rotation[0], "team:a_sp1", "성적이 좋은 투수가 능력치 동률에서도 앞서야 함");
+    }
+
+    #[test]
     fn load_starting_pitcher_cycles_through_the_rotation_as_games_complete() {
         let slot_conn = slot::open_in_memory().unwrap();
         insert_test_player(&slot_conn, "team:a_sp1", "team:a", "선발투수", serde_json::json!({"제구": 70.0, "구위": 70.0}));
@@ -5753,6 +5877,59 @@ mod tests {
             .query_row("SELECT w, l, t FROM standings WHERE team_id = 'team:a'", [], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)))
             .unwrap();
         assert_eq!(w_a + l_a + t_a, 1);
+    }
+
+    #[test]
+    fn process_day_records_season_stats_for_both_pitchers_and_all_batters() {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:x', NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:a', 'league:x', NULL, NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:b', 'league:x', NULL, NULL)", []).unwrap();
+
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_minimal_roster(&slot_conn, "team:a");
+        insert_minimal_roster(&slot_conn, "team:b");
+        slot_conn
+            .execute("INSERT INTO schedule (game_id, day, home, away, result) VALUES ('game:1', 10, 'team:a', 'team:b', NULL)", [])
+            .unwrap();
+
+        process_day(&slot_conn, &content_conn, 777, 10).unwrap();
+
+        let week = crate::calendar::week_for_day(10);
+        let pitcher_rows: i64 = slot_conn
+            .query_row(
+                "SELECT COUNT(*) FROM season_stats WHERE player_id IN ('team:a_sp', 'team:b_sp') AND week = ?1",
+                [week],
+                |r| r.get(0),
+            )
+            .unwrap();
+        assert_eq!(pitcher_rows, 2);
+
+        let batter_rows: i64 = slot_conn
+            .query_row(
+                "SELECT COUNT(*) FROM season_stats WHERE player_id LIKE 'team:a_b%' OR player_id LIKE 'team:b_b%'",
+                [],
+                |r| r.get(0),
+            )
+            .unwrap();
+        assert!(batter_rows > 0, "expected at least one batter season_stats row, got {batter_rows}");
+    }
+
+    #[test]
+    fn upsert_season_stats_fields_accumulates_across_multiple_calls() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        let stats1 = match_sim::PitcherGameStats { outs_recorded: 9, runs_allowed: 2, strikeouts: 5, hits_allowed: 4, walks: 1 };
+        let stats2 = match_sim::PitcherGameStats { outs_recorded: 12, runs_allowed: 1, strikeouts: 7, hits_allowed: 3, walks: 2 };
+        upsert_pitcher_season_stats(&slot_conn, "npc:1", 1, &stats1).unwrap();
+        upsert_pitcher_season_stats(&slot_conn, "npc:1", 1, &stats2).unwrap();
+
+        let line: String = slot_conn
+            .query_row("SELECT line FROM season_stats WHERE player_id = 'npc:1' AND week = 1", [], |r| r.get(0))
+            .unwrap();
+        let v: serde_json::Value = serde_json::from_str(&line).unwrap();
+        assert_eq!(v["outs_recorded"], 21);
+        assert_eq!(v["runs_allowed"], 3);
+        assert_eq!(v["strikeouts"], 12);
     }
 
     #[test]
@@ -5886,6 +6063,43 @@ mod tests {
             .query_row("SELECT rank FROM history_standings WHERE season = 0 AND team_id = 'team:a'", [], |r| r.get(0))
             .unwrap();
         assert_eq!(rank_a, 1, "team:a has the better win% and should rank 1st");
+    }
+
+    #[test]
+    fn season_rollover_uses_the_just_finished_seasons_season_stats_before_deleting_them() {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:pro', NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:a', 'league:pro', NULL, NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:b', 'league:pro', NULL, NULL)", []).unwrap();
+
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_minimal_roster(&slot_conn, "team:a");
+        insert_minimal_roster(&slot_conn, "team:b");
+        // team:a_sp(기존)와 새로 추가하는 team:a_sp2의 능력치를 동일하게 맞춰
+        // season_stats만 차이 나게 한다.
+        slot_conn
+            .execute(
+                "UPDATE npc SET stats = ?1 WHERE id = 'team:a_sp'",
+                params![serde_json::json!({"제구": 55.0, "구위": 55.0}).to_string()],
+            )
+            .unwrap();
+        insert_test_player(&slot_conn, "team:a_sp2", "team:a", "선발투수", serde_json::json!({"제구": 55.0, "구위": 55.0}));
+
+        let good = match_sim::PitcherGameStats { outs_recorded: 81, runs_allowed: 3, strikeouts: 30, hits_allowed: 15, walks: 5 };
+        let bad = match_sim::PitcherGameStats { outs_recorded: 81, runs_allowed: 30, strikeouts: 10, hits_allowed: 40, walks: 15 };
+        upsert_pitcher_season_stats(&slot_conn, "team:a_sp", 1, &good).unwrap();
+        upsert_pitcher_season_stats(&slot_conn, "team:a_sp2", 1, &bad).unwrap();
+
+        season_rollover(&slot_conn, &content_conn, 364).unwrap();
+
+        let raw: String = slot_conn.query_row("SELECT value FROM season_meta WHERE key = 'rotation:team:a'", [], |r| r.get(0)).unwrap();
+        let rotation: Vec<String> = serde_json::from_str(&raw).unwrap();
+        let pos_good = rotation.iter().position(|id| id == "team:a_sp").unwrap();
+        let pos_bad = rotation.iter().position(|id| id == "team:a_sp2").unwrap();
+        assert!(pos_good < pos_bad, "better season_stats performer should rank ahead even with equal skill: {rotation:?}");
+
+        let remaining: i64 = slot_conn.query_row("SELECT COUNT(*) FROM season_stats", [], |r| r.get(0)).unwrap();
+        assert_eq!(remaining, 0, "season_stats should be cleared after being consumed by rotation reassignment");
     }
 
     #[test]

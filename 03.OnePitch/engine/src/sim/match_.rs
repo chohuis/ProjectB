@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use rand::Rng;
 
 use crate::sim::injury;
@@ -132,6 +134,43 @@ pub(crate) fn advance_runners(bases: &mut [bool; 3], hit_bases: u32) -> u32 {
     runs
 }
 
+/// 투수 개인 경기 기록(`season_stats` 적재용, 10_구현_Phase_계획.md §6-N) —
+/// 자책점(자책/비자책 구분)은 이 엔진에 에러 판정 자체가 없어
+/// `runs_allowed`와 동일값이 될 뿐이라 별도 필드를 만들지 않는다. 사구(HBP)
+/// 는 세분화하지 않고 무시(1% 확률의 미세 항목, D그룹).
+#[derive(Debug, Default, Clone, PartialEq)]
+pub struct PitcherGameStats {
+    pub outs_recorded: u32,
+    pub runs_allowed: u32,
+    pub strikeouts: u32,
+    pub hits_allowed: u32,
+    pub walks: u32,
+}
+
+/// 타자 개인 경기 기록(`season_stats` 적재용) — HBP는 투수 쪽과 동일하게
+/// 무시.
+#[derive(Debug, Default, Clone, PartialEq)]
+pub struct BatterGameStats {
+    pub plate_appearances: u32,
+    pub at_bats: u32,
+    pub hits: u32,
+    pub doubles: u32,
+    pub triples: u32,
+    pub home_runs: u32,
+    pub walks: u32,
+    pub strikeouts: u32,
+    pub rbi: u32,
+}
+
+/// 하프이닝 1회 분량의 누산기 — 그 이닝에서 던진 투수 1명 + 타석에 선 타자
+/// 전원을 함께 담는다("누가 던지고 누가 쳤는지"가 한 호출 안에서 항상 한
+/// 팀씩 짝지어지므로).
+#[derive(Debug, Default)]
+pub struct HalfInningStats {
+    pub pitcher: PitcherGameStats,
+    pub batters: HashMap<String, BatterGameStats>,
+}
+
 /// `pub(crate)` — `data::match_session`이 주인공 팀 타석(DH 배경 시뮬,
 /// 절대 개입 없음 — §7)을 통째로 돌릴 때 재사용.
 pub(crate) fn simulate_half_inning(
@@ -141,6 +180,7 @@ pub(crate) fn simulate_half_inning(
     pitcher: &PitcherStats,
     initial_bases: [bool; 3],
     injuries: &mut Vec<InjuryEvent>,
+    stats: &mut HalfInningStats,
 ) -> u32 {
     if lineup.is_empty() {
         return 0;
@@ -151,13 +191,61 @@ pub(crate) fn simulate_half_inning(
     while outs < 3 {
         let batter = &lineup[*batter_idx % lineup.len()];
         *batter_idx += 1;
-        match simulate_plate_appearance(rng, batter, pitcher) {
-            PaOutcome::Strikeout | PaOutcome::Out => outs += 1,
-            PaOutcome::Walk | PaOutcome::HitByPitch | PaOutcome::Single => runs += advance_runners(&mut bases, 1),
-            PaOutcome::Double => runs += advance_runners(&mut bases, 2),
-            PaOutcome::Triple => runs += advance_runners(&mut bases, 3),
-            PaOutcome::HomeRun => runs += advance_runners(&mut bases, 4),
+        let outcome = simulate_plate_appearance(rng, batter, pitcher);
+        let pa_runs = match outcome {
+            PaOutcome::Strikeout | PaOutcome::Out => {
+                outs += 1;
+                0
+            }
+            PaOutcome::Walk | PaOutcome::HitByPitch | PaOutcome::Single => advance_runners(&mut bases, 1),
+            PaOutcome::Double => advance_runners(&mut bases, 2),
+            PaOutcome::Triple => advance_runners(&mut bases, 3),
+            PaOutcome::HomeRun => advance_runners(&mut bases, 4),
+        };
+        runs += pa_runs;
+
+        match outcome {
+            PaOutcome::Strikeout => {
+                stats.pitcher.outs_recorded += 1;
+                stats.pitcher.strikeouts += 1;
+            }
+            PaOutcome::Out => stats.pitcher.outs_recorded += 1,
+            PaOutcome::Walk => stats.pitcher.walks += 1,
+            PaOutcome::HitByPitch => {}
+            PaOutcome::Single | PaOutcome::Double | PaOutcome::Triple | PaOutcome::HomeRun => stats.pitcher.hits_allowed += 1,
         }
+        stats.pitcher.runs_allowed += pa_runs;
+
+        let batter_line = stats.batters.entry(batter.id.clone()).or_default();
+        batter_line.plate_appearances += 1;
+        match outcome {
+            PaOutcome::Strikeout => {
+                batter_line.at_bats += 1;
+                batter_line.strikeouts += 1;
+            }
+            PaOutcome::Out => batter_line.at_bats += 1,
+            PaOutcome::Walk | PaOutcome::HitByPitch => {}
+            PaOutcome::Single => {
+                batter_line.at_bats += 1;
+                batter_line.hits += 1;
+            }
+            PaOutcome::Double => {
+                batter_line.at_bats += 1;
+                batter_line.hits += 1;
+                batter_line.doubles += 1;
+            }
+            PaOutcome::Triple => {
+                batter_line.at_bats += 1;
+                batter_line.hits += 1;
+                batter_line.triples += 1;
+            }
+            PaOutcome::HomeRun => {
+                batter_line.at_bats += 1;
+                batter_line.hits += 1;
+                batter_line.home_runs += 1;
+            }
+        }
+        batter_line.rbi += pa_runs;
 
         if let Some((part, severity)) = injury::check_acute_injury(rng, batter.fatigue) {
             injuries.push(InjuryEvent { player_id: batter.id.clone(), part, severity });
@@ -173,6 +261,10 @@ pub struct GameResult {
     pub home_runs: u32,
     pub away_runs: u32,
     pub injuries: Vec<InjuryEvent>,
+    pub home_pitcher_stats: PitcherGameStats,
+    pub away_pitcher_stats: PitcherGameStats,
+    pub home_batter_stats: HashMap<String, BatterGameStats>,
+    pub away_batter_stats: HashMap<String, BatterGameStats>,
 }
 
 const EMPTY_BASES: [bool; 3] = [false, false, false];
@@ -204,15 +296,19 @@ pub fn simulate_game(
     let mut away_idx = 0usize;
     let mut inning = 1u32;
     let mut injuries = Vec::new();
+    // top_half_stats: away 타순이 home_pitcher를 상대하는 하프이닝 누산 —
+    // pitcher는 홈 투수, batters는 원정 타자들. bottom_half_stats는 반대.
+    let mut top_half_stats = HalfInningStats::default();
+    let mut bottom_half_stats = HalfInningStats::default();
 
     loop {
         let bases = if amateur && inning > 9 { TIEBREAK_BASES } else { EMPTY_BASES };
 
-        away_runs += simulate_half_inning(rng, away_lineup, &mut away_idx, home_pitcher, bases, &mut injuries);
+        away_runs += simulate_half_inning(rng, away_lineup, &mut away_idx, home_pitcher, bases, &mut injuries, &mut top_half_stats);
 
         let walk_off = inning >= 9 && home_runs > away_runs;
         if !walk_off {
-            home_runs += simulate_half_inning(rng, home_lineup, &mut home_idx, away_pitcher, bases, &mut injuries);
+            home_runs += simulate_half_inning(rng, home_lineup, &mut home_idx, away_pitcher, bases, &mut injuries, &mut bottom_half_stats);
         }
 
         if amateur {
@@ -234,7 +330,15 @@ pub fn simulate_game(
         inning += 1;
     }
 
-    GameResult { home_runs, away_runs, injuries }
+    GameResult {
+        home_runs,
+        away_runs,
+        injuries,
+        home_pitcher_stats: top_half_stats.pitcher,
+        away_pitcher_stats: bottom_half_stats.pitcher,
+        home_batter_stats: bottom_half_stats.batters,
+        away_batter_stats: top_half_stats.batters,
+    }
 }
 
 #[cfg(test)]
@@ -260,6 +364,53 @@ mod tests {
         assert_eq!(a.home_runs, b.home_runs);
         assert_eq!(a.away_runs, b.away_runs);
         assert_eq!(a.injuries, b.injuries);
+        assert_eq!(a.home_pitcher_stats, b.home_pitcher_stats);
+        assert_eq!(a.away_pitcher_stats, b.away_pitcher_stats);
+        assert_eq!(a.home_batter_stats, b.home_batter_stats);
+        assert_eq!(a.away_batter_stats, b.away_batter_stats);
+    }
+
+    #[test]
+    fn pitcher_stats_runs_allowed_matches_the_opposing_teams_score() {
+        let lineup: Vec<BatterStats> = (0..8).map(|i| BatterStats { id: format!("b{i}"), ..avg_batter() }).collect();
+        for seed in 0..20u64 {
+            let mut rng = ChaCha8Rng::seed_from_u64(seed);
+            let r = simulate_game(&mut rng, "league:pro", &lineup, &avg_pitcher(), &lineup, &avg_pitcher());
+            assert_eq!(r.away_pitcher_stats.runs_allowed, r.home_runs, "seed={seed}");
+            assert_eq!(r.home_pitcher_stats.runs_allowed, r.away_runs, "seed={seed}");
+        }
+    }
+
+    #[test]
+    fn batter_rbi_sums_to_the_teams_runs_scored() {
+        let lineup: Vec<BatterStats> = (0..8).map(|i| BatterStats { id: format!("b{i}"), ..avg_batter() }).collect();
+        for seed in 0..20u64 {
+            let mut rng = ChaCha8Rng::seed_from_u64(seed);
+            let r = simulate_game(&mut rng, "league:pro", &lineup, &avg_pitcher(), &lineup, &avg_pitcher());
+            let home_rbi: u32 = r.home_batter_stats.values().map(|b| b.rbi).sum();
+            let away_rbi: u32 = r.away_batter_stats.values().map(|b| b.rbi).sum();
+            assert_eq!(home_rbi, r.home_runs, "seed={seed}");
+            assert_eq!(away_rbi, r.away_runs, "seed={seed}");
+        }
+    }
+
+    #[test]
+    fn stronger_pitcher_allows_fewer_hits_on_average() {
+        let lineup: Vec<BatterStats> = (0..8).map(|i| BatterStats { id: format!("b{i}"), ..avg_batter() }).collect();
+        let weak_pitcher = PitcherStats { id: "wp".to_string(), control: 25.0, stuff: 25.0, fatigue: 0.0 };
+        let strong_pitcher = PitcherStats { id: "sp".to_string(), control: 75.0, stuff: 75.0, fatigue: 0.0 };
+
+        let mut weak_hits = 0u32;
+        let mut strong_hits = 0u32;
+        for seed in 0..50u64 {
+            let mut rng = ChaCha8Rng::seed_from_u64(seed);
+            let r1 = simulate_game(&mut rng, "league:pro", &lineup, &weak_pitcher, &lineup, &weak_pitcher);
+            weak_hits += r1.home_pitcher_stats.hits_allowed + r1.away_pitcher_stats.hits_allowed;
+            let mut rng2 = ChaCha8Rng::seed_from_u64(seed);
+            let r2 = simulate_game(&mut rng2, "league:pro", &lineup, &strong_pitcher, &lineup, &strong_pitcher);
+            strong_hits += r2.home_pitcher_stats.hits_allowed + r2.away_pitcher_stats.hits_allowed;
+        }
+        assert!(strong_hits < weak_hits, "strong={strong_hits} weak={weak_hits}");
     }
 
     #[test]

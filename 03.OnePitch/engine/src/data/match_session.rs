@@ -614,9 +614,21 @@ fn run_until_decision_point(
                 &format!("match:{}:{}:{}", session.game_id, session.inning, session.top_of_inning),
             ));
             let mut injuries = Vec::new();
-            let runs = match_sim::simulate_half_inning(&mut rng, &lineup, &mut idx, &pitcher, session.bases, &mut injuries);
+            let mut half_inning_stats = match_sim::HalfInningStats::default();
+            let runs = match_sim::simulate_half_inning(&mut rng, &lineup, &mut idx, &pitcher, session.bases, &mut injuries, &mut half_inning_stats);
             repository::apply_injury_events(slot_conn, &injuries, today)?;
             repository::accumulate_game_fatigue(slot_conn, &batting_team)?;
+            // 이 하프이닝의 투수(상대 선발 또는 주인공 강판 후 구원투수)와
+            // 타석에 선 타자 전원(주인공 팀 동료 또는 상대 타자) 모두
+            // season_stats에 즉시 반영 — 배경 경기(process_day)와 동일한
+            // upsert 헬퍼를 재사용해 게임 종료를 기다리지 않고 하프이닝마다
+            // 누적한다(10_구현_Phase_계획.md §6-N, 원래 초안이 주인공 자신의
+            // 경기에서 이 기록을 통째로 버리고 있었던 걸 바로잡음).
+            let week = crate::calendar::week_for_day(today);
+            repository::upsert_pitcher_season_stats(slot_conn, &pitcher.id, week, &half_inning_stats.pitcher)?;
+            for (batter_id, s) in &half_inning_stats.batters {
+                repository::upsert_batter_season_stats(slot_conn, batter_id, week, s)?;
+            }
             if !protagonist_pitching_team {
                 // 주인공이 강판된 뒤의 불펜 투수는 이번 스코프에서 피로도
                 // 누적 대상 아님(§8 스코프 판단) — `accumulate_game_fatigue`는
@@ -907,6 +919,59 @@ mod tests {
         let (w, l, t): (i64, i64, i64) =
             slot_conn.query_row("SELECT w, l, t FROM standings WHERE team_id = 'team:home'", [], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?))).unwrap();
         assert_eq!(w + l + t, 1);
+    }
+
+    #[test]
+    fn game_completion_records_season_stats_for_the_opposing_pitcher_and_teammates() {
+        // 주인공 자신의 경기에서 배경 하프이닝(주인공 팀 타석)이 상대 선발
+        // 투수와 주인공 팀 동료 타자들의 기록을 통째로 버리던 문제(초안 발견
+        // 사항) — season_stats에 실제로 남는지 확인.
+        let content_conn = build_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_roster(&slot_conn, "team:home");
+        insert_roster(&slot_conn, "team:away");
+        insert_protagonist(&slot_conn, "team:home");
+        insert_schedule(&slot_conn, "game:1");
+
+        start_protagonist_match(&slot_conn, &content_conn, 1, "game:1", "team:home", "team:away", "자동").unwrap();
+
+        let line: String =
+            slot_conn.query_row("SELECT line FROM season_stats WHERE player_id = 'team:away_sp' AND week = 1", [], |r| r.get(0)).unwrap();
+        let v: serde_json::Value = serde_json::from_str(&line).unwrap();
+        assert!(v["outs_recorded"].as_i64().unwrap() > 0, "opposing starter's innings should be recorded from the protagonist's own game");
+
+        let home_batter_rows: i64 =
+            slot_conn.query_row("SELECT COUNT(*) FROM season_stats WHERE player_id LIKE 'team:home_b%'", [], |r| r.get(0)).unwrap();
+        assert!(home_batter_rows > 0, "protagonist's teammates' batting lines should be recorded");
+    }
+
+    #[test]
+    fn pulling_the_protagonist_records_season_stats_for_the_reliever() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_roster(&slot_conn, "team:home");
+        insert_reliever(&slot_conn, "team:home");
+        insert_roster(&slot_conn, "team:away");
+        insert_protagonist(&slot_conn, "team:home");
+        insert_schedule(&slot_conn, "game:1");
+
+        slot_conn
+            .execute(
+                "INSERT INTO match_session (id, game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases,
+                                             home_runs, away_runs, home_batter_idx, away_batter_idx, balls, strikes,
+                                             current_batter_id, pitch_seq, strikeouts)
+                 VALUES (1, 'game:1', 'team:home', 'team:away', 'league:hs', '수동', 1, 1, 0, '[false,false,false]',
+                         0, 0, 0, 0, 0, 0, NULL, 200, 0)",
+                [],
+            )
+            .unwrap();
+
+        run_until_decision_point(&slot_conn, 1, None, None).unwrap(); // 프롬프트 발생
+        submit_pitcher_change_decision(&slot_conn, 1, "교체").unwrap();
+
+        let line: String =
+            slot_conn.query_row("SELECT line FROM season_stats WHERE player_id = 'team:home_rp' AND week = 1", [], |r| r.get(0)).unwrap();
+        let v: serde_json::Value = serde_json::from_str(&line).unwrap();
+        assert!(v["outs_recorded"].as_i64().unwrap() > 0, "the reliever who finishes the game should have recorded innings");
     }
 
     #[test]
