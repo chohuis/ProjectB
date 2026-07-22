@@ -11,6 +11,7 @@ pub mod pitch;
 pub mod protagonist;
 pub mod retirement;
 pub mod roster;
+pub mod staff;
 pub mod training;
 pub mod schedule;
 #[path = "match_.rs"]

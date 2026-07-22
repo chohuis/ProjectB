@@ -22,11 +22,15 @@ pub fn grade_score(grade: &str) -> f64 {
 /// 방출 위험 확률 — §1 "종합지표"(평가등급누적+노쇠곡선+연봉대비성과+
 /// 구단주인내심)의 placeholder 근사. 노쇠곡선은 스킵(주인공 나이 자체가
 /// 아직 트래킹 안 됨 — 01_커리어_구조.md §5 진로 갈림길과 함께 후속
-/// 스코프), 구단주 인내심은 전담 스태프 엔티티가 없어(02_스태프_능력치
-/// §3, I3에서 이미 스코프아웃) `team_traits`의 **②자원**으로 대체(궁핍
-/// =인내심 낮음). "경고"(§1-1, 7월말 트레이드데드라인) 단계는 캘린더에
-/// 그 지점이 없어 생략 — 시즌종료 시점의 최종판정만 반영.
-pub fn release_probability(avg_grade_score: f64, salary: i64, resource: &str) -> f64 {
+/// 스코프), 구단주 인내심은 `team_traits`의 **②자원**(팀 일반 재정)에
+/// **추가 레이어**로 얹는다 — 대체가 아니라 "이 팀은 부유한데, 이 구단주
+/// 개인은 유난히 인내심이 강하다/약하다" 같은 개인 성향(이월 부채 정리,
+/// 대화 2026-07-22). `owner_patience_mult`는 `sim::staff::owner_patience_factor`
+/// 가 이미 계산해 넘긴 배율(코치·구단주 데이터를 모르는 이 모듈은 순수
+/// 배율만 받는다) — 코치·구단주가 없는 세이브는 호출부가 1.0(무보정)을
+/// 넘겨 기존 동작과 동일. "경고"(§1-1, 7월말 트레이드데드라인) 단계는
+/// 캘린더에 그 지점이 없어 생략 — 시즌종료 시점의 최종판정만 반영.
+pub fn release_probability(avg_grade_score: f64, salary: i64, resource: &str, owner_patience_mult: f64) -> f64 {
     let performance_risk = ((2.5 - avg_grade_score) / 2.5).clamp(0.0, 1.0);
     let salary_pressure = (salary as f64 / 20000.0).clamp(0.0, 1.0);
     let resource_mult = match resource {
@@ -35,18 +39,21 @@ pub fn release_probability(avg_grade_score: f64, salary: i64, resource: &str) ->
         "부유" => 0.6,
         _ => 1.0,
     };
-    ((0.03 + performance_risk * 0.35 + salary_pressure * 0.15) * resource_mult).clamp(0.0, 0.85)
+    ((0.03 + performance_risk * 0.35 + salary_pressure * 0.15) * resource_mult * owner_patience_mult).clamp(0.0, 0.85)
 }
 
-pub fn is_released(rng: &mut impl Rng, avg_grade_score: f64, salary: i64, resource: &str) -> bool {
-    rng.gen_bool(release_probability(avg_grade_score, salary, resource))
+pub fn is_released(rng: &mut impl Rng, avg_grade_score: f64, salary: i64, resource: &str, owner_patience_mult: f64) -> bool {
+    rng.gen_bool(release_probability(avg_grade_score, salary, resource, owner_patience_mult))
 }
 
 /// 구단 초기 제안 연봉 — §2-1 "구단의 제안·반응은 팀특성 ②자원(부유=
 /// 후하게, 궁핍=박하게) + 주인공 최근 주목도·평가 등급 흐름에 좌우".
 /// 정확한 계산식은 §7 "협상 라운드 상한, 정확한 금액 계산식... 미정"
 /// 이라 placeholder — 최근 연봉 기준 성과·주목도·자원 배율을 곱한다.
-pub fn initial_offer(previous_salary: i64, avg_grade_score: f64, attention: f64, resource: &str) -> i64 {
+/// `owner_offer_mult`는 `sim::staff::owner_offer_multiplier`(재력+투자성향)
+/// 가 이미 계산해 넘긴 배율 — `release_probability`와 같은 원칙(이 모듈은
+/// 순수 배율만 받음), 재계약 단일오퍼 경로에서만 쓴다(FA 다중오퍼는 이월).
+pub fn initial_offer(previous_salary: i64, avg_grade_score: f64, attention: f64, resource: &str, owner_offer_mult: f64) -> i64 {
     let performance_mult = 0.85 + avg_grade_score * 0.1; // 0.85(F)~1.35(S)
     let attention_mult = 1.0 + (attention / 1000.0).min(0.3);
     let resource_mult = match resource {
@@ -55,7 +62,7 @@ pub fn initial_offer(previous_salary: i64, avg_grade_score: f64, attention: f64,
         "궁핍" => 0.75,
         _ => 1.0,
     };
-    (previous_salary.max(1) as f64 * performance_mult * attention_mult * resource_mult).round() as i64
+    (previous_salary.max(1) as f64 * performance_mult * attention_mult * resource_mult * owner_offer_mult).round() as i64
 }
 
 /// 계약 기간 — §2-2 "1~5년" 중 이번 오퍼가 제시하는 값. 정확한 분포는
@@ -125,35 +132,49 @@ mod tests {
 
     #[test]
     fn release_probability_rises_as_performance_and_pay_worsen() {
-        let good = release_probability(5.0, 1000, "안정");
-        let bad = release_probability(0.0, 20000, "안정");
+        let good = release_probability(5.0, 1000, "안정", 1.0);
+        let bad = release_probability(0.0, 20000, "안정", 1.0);
         assert!(bad > good, "good={good} bad={bad}");
     }
 
     #[test]
     fn release_probability_is_harsher_for_poor_teams() {
-        let rich = release_probability(1.0, 10000, "부유");
-        let poor = release_probability(1.0, 10000, "궁핍");
+        let rich = release_probability(1.0, 10000, "부유", 1.0);
+        let poor = release_probability(1.0, 10000, "궁핍", 1.0);
         assert!(poor > rich, "rich={rich} poor={poor}");
+    }
+
+    #[test]
+    fn release_probability_is_lower_for_a_patient_owner() {
+        let impatient = release_probability(1.0, 10000, "안정", 1.3);
+        let patient = release_probability(1.0, 10000, "안정", 0.7);
+        assert!(patient < impatient, "patient={patient} impatient={impatient}");
     }
 
     #[test]
     fn is_released_same_seed_is_deterministic() {
         let mut a = ChaCha8Rng::seed_from_u64(5);
         let mut b = ChaCha8Rng::seed_from_u64(5);
-        assert_eq!(is_released(&mut a, 1.0, 10000, "궁핍"), is_released(&mut b, 1.0, 10000, "궁핍"));
+        assert_eq!(is_released(&mut a, 1.0, 10000, "궁핍", 1.0), is_released(&mut b, 1.0, 10000, "궁핍", 1.0));
     }
 
     #[test]
     fn initial_offer_is_higher_for_richer_teams_and_better_performance() {
-        let base = initial_offer(5000, 2.0, 0.0, "안정");
-        let rich = initial_offer(5000, 2.0, 0.0, "부유");
-        let poor = initial_offer(5000, 2.0, 0.0, "궁핍");
+        let base = initial_offer(5000, 2.0, 0.0, "안정", 1.0);
+        let rich = initial_offer(5000, 2.0, 0.0, "부유", 1.0);
+        let poor = initial_offer(5000, 2.0, 0.0, "궁핍", 1.0);
         assert!(rich > base && base > poor, "rich={rich} base={base} poor={poor}");
 
-        let strong_perf = initial_offer(5000, 5.0, 0.0, "안정");
-        let weak_perf = initial_offer(5000, 0.0, 0.0, "안정");
+        let strong_perf = initial_offer(5000, 5.0, 0.0, "안정", 1.0);
+        let weak_perf = initial_offer(5000, 0.0, 0.0, "안정", 1.0);
         assert!(strong_perf > weak_perf, "strong={strong_perf} weak={weak_perf}");
+    }
+
+    #[test]
+    fn initial_offer_is_higher_for_a_wealthy_aggressive_owner() {
+        let generous = initial_offer(5000, 2.0, 0.0, "안정", 1.2);
+        let stingy = initial_offer(5000, 2.0, 0.0, "안정", 0.9);
+        assert!(generous > stingy, "generous={generous} stingy={stingy}");
     }
 
     #[test]

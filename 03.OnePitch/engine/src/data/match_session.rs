@@ -363,7 +363,11 @@ fn apply_protagonist_evaluation(slot_conn: &Connection, session: &SessionRow, pr
     };
 
     let pitcher = load_protagonist_as_pitcher(slot_conn)?;
-    let own_skill = (pitcher.control + pitcher.stuff) / 2.0;
+    // 투수지도력 코치 보너스(이월 부채 정리, 대화 2026-07-22) — 코치 없으면
+    // (구버전 세이브 등) 0(무보정).
+    let coach = repository::load_coach_stats(slot_conn, protagonist_team_id)?;
+    let eval_bonus = coach.as_ref().map(|c| crate::sim::staff::coach_eval_bonus(c.pitching)).unwrap_or(0.0);
+    let own_skill = (pitcher.control + pitcher.stuff) / 2.0 + eval_bonus;
 
     let grade = eval::grade_outing(runs_allowed, opponent_avg, own_skill);
 
@@ -372,7 +376,13 @@ fn apply_protagonist_evaluation(slot_conn: &Connection, session: &SessionRow, pr
     let morale = live_state.get("사기").and_then(|v| v.as_f64()).unwrap_or(50.0);
     let attention = live_state.get("주목도").and_then(|v| v.as_f64()).unwrap_or(0.0);
     let fatigue = live_state.get("피로도").and_then(|v| v.as_f64()).unwrap_or(0.0);
-    live_state.insert("사기".to_string(), serde_json::json!((morale + eval::morale_delta(grade)).clamp(0.0, 100.0)));
+    // 멘탈코칭 코치 보너스 — 나쁜 등급의 사기 하락폭만 완화(좋은 등급엔
+    // 영향 없음, sim::staff::coach_mental_dampening 문서 참고).
+    let mut morale_delta = eval::morale_delta(grade);
+    if morale_delta < 0.0 {
+        morale_delta *= coach.as_ref().map(|c| crate::sim::staff::coach_mental_dampening(c.mental)).unwrap_or(1.0);
+    }
+    live_state.insert("사기".to_string(), serde_json::json!((morale + morale_delta).clamp(0.0, 100.0)));
     live_state.insert("주목도".to_string(), serde_json::json!(attention + eval::attention_gain(grade)));
     live_state.insert("피로도".to_string(), serde_json::json!(fatigue + session.pitch_seq as f64 * PROTAGONIST_FATIGUE_PER_PITCH));
     slot_conn.execute(
@@ -792,6 +802,15 @@ mod tests {
                 team_id,
                 serde_json::json!({"전술력": tactics, "신뢰형성력": trust, "육성안목": 50.0, "카리스마": 50.0}).to_string(),
             ],
+        )
+        .unwrap();
+    }
+
+    fn insert_coach(conn: &Connection, team_id: &str, stats: serde_json::Value) {
+        conn.execute(
+            "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches, injury)
+             VALUES (?1, ?1, ?2, '코치', 50, 0, 0, 50.0, '{}', ?3, '{}', '{}', NULL, '{\"current\":null,\"history\":[]}')",
+            params![format!("coach:{team_id}"), team_id, stats.to_string()],
         )
         .unwrap();
     }
@@ -1246,6 +1265,48 @@ mod tests {
 
         assert!(good.unwrap_or(0) > 0, "완봉급 등판은 관계도를 올려야 한다, got {good:?}");
         assert!(bad.unwrap_or(0) < 0, "대량 실점 등판은 관계도를 내려야 한다, got {bad:?}");
+    }
+
+    fn morale_of(conn: &Connection) -> f64 {
+        let raw: String = conn.query_row("SELECT live_state FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+        serde_json::from_str::<serde_json::Value>(&raw).unwrap().get("사기").and_then(|v| v.as_f64()).unwrap_or(50.0)
+    }
+
+    #[test]
+    fn apply_protagonist_evaluation_a_strong_mental_coach_dampens_bad_outing_morale_drop() {
+        let bad_session = || bottom_of_inning_end_session("league:hs", 9, 0, 20); // 대량 실점
+
+        let without_coach = {
+            let slot_conn = slot::open_in_memory().unwrap();
+            insert_roster(&slot_conn, "team:home");
+            insert_roster(&slot_conn, "team:away");
+            insert_protagonist(&slot_conn, "team:home");
+            insert_manager(&slot_conn, "team:home", 50.0, 50.0);
+            insert_schedule(&slot_conn, "game:1");
+            apply_protagonist_evaluation(&slot_conn, &bad_session(), "team:home").unwrap();
+            morale_of(&slot_conn)
+        };
+
+        let with_strong_mental_coach = {
+            let slot_conn = slot::open_in_memory().unwrap();
+            insert_roster(&slot_conn, "team:home");
+            insert_roster(&slot_conn, "team:away");
+            insert_protagonist(&slot_conn, "team:home");
+            insert_manager(&slot_conn, "team:home", 50.0, 50.0);
+            insert_coach(
+                &slot_conn,
+                "team:home",
+                serde_json::json!({"투수지도력": 50.0, "타격지도력": 50.0, "주루지도력": 50.0, "컨디셔닝": 50.0, "멘탈코칭": 80.0, "스카우팅안목": 50.0, "종합지도력": 50.0}),
+            );
+            insert_schedule(&slot_conn, "game:1");
+            apply_protagonist_evaluation(&slot_conn, &bad_session(), "team:home").unwrap();
+            morale_of(&slot_conn)
+        };
+
+        assert!(
+            with_strong_mental_coach > without_coach,
+            "with_coach={with_strong_mental_coach} without_coach={without_coach} — strong mental coaching should dampen the morale drop"
+        );
     }
 
     fn setup_manual_hard_cap_session(mode_conn: &Connection) {
