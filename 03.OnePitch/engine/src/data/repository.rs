@@ -2651,6 +2651,81 @@ fn process_protagonist_promotion(conn: &Connection, content_conn: &Connection, w
     Ok(())
 }
 
+/// NPC 콜업/강등(10_구현_Phase_계획.md §6-N) — `process_protagonist_promotion`
+/// 과 같은 단순화(로스터 공백 트리거 대신 season_stats 요약 점수 확률판정)
+/// 를 그대로 따른다. `season_stats_score`/`season_stats_batter_score`는
+/// 0~100 스케일이라 `avg_grade_score`(0~5)와 별개 임계값이 필요.
+const NPC_PROMOTION_SCORE_THRESHOLD: f64 = 65.0;
+const NPC_DEMOTION_SCORE_THRESHOLD: f64 = 35.0;
+
+fn npc_performance_score(conn: &Connection, player_id: &str, position: &str) -> anyhow::Result<Option<f64>> {
+    if position == "선발투수" || position == "구원투수" {
+        season_stats_score(conn, player_id)
+    } else {
+        season_stats_batter_score(conn, player_id)
+    }
+}
+
+fn best_promotion_candidate(conn: &Connection, farm_team_id: &str) -> anyhow::Result<Option<String>> {
+    let mut stmt = conn.prepare(
+        "SELECT id, position FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position NOT IN ('감독', '코치', '구단주')",
+    )?;
+    let rows: Vec<(String, String)> = stmt.query_map([farm_team_id], |r| Ok((r.get(0)?, r.get(1)?)))?.collect::<Result<Vec<_>, _>>()?;
+    drop(stmt);
+
+    let mut best: Option<(String, f64)> = None;
+    for (id, position) in rows {
+        let Some(score) = npc_performance_score(conn, &id, &position)? else { continue };
+        if score >= NPC_PROMOTION_SCORE_THRESHOLD && best.as_ref().is_none_or(|(_, best_score)| score > *best_score) {
+            best = Some((id, score));
+        }
+    }
+    Ok(best.map(|(id, _)| id))
+}
+
+fn worst_demotion_candidate(conn: &Connection, pro_team_id: &str) -> anyhow::Result<Option<String>> {
+    let mut stmt = conn.prepare(
+        "SELECT id, position FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position NOT IN ('감독', '코치', '구단주')",
+    )?;
+    let rows: Vec<(String, String)> = stmt.query_map([pro_team_id], |r| Ok((r.get(0)?, r.get(1)?)))?.collect::<Result<Vec<_>, _>>()?;
+    drop(stmt);
+
+    let mut worst: Option<(String, f64)> = None;
+    for (id, position) in rows {
+        let Some(score) = npc_performance_score(conn, &id, &position)? else { continue };
+        if score <= NPC_DEMOTION_SCORE_THRESHOLD && worst.as_ref().is_none_or(|(_, worst_score)| score < *worst_score) {
+            worst = Some((id, score));
+        }
+    }
+    Ok(worst.map(|(id, _)| id))
+}
+
+/// 1군-2군 팀당 월 최대 콜업 1건+강등 1건 — `PROMOTION_BASE_PROB`/
+/// `DEMOTION_BASE_PROB`(위, 주인공 경로와 공유)를 그대로 재사용. 감독 AI
+/// 의사결정 구조가 없어 로스터 공백 판정은 하지 않는다(주인공 경로와 동일
+/// 단순화). `league_transactions`/inbox 기록은 하지 않음 — 현재 이 테이블의
+/// 소비처(내 정보 커리어 탭)가 주인공 전용이라 NPC 거래를 표시할 화면
+/// 자체가 없다(나중에 "리그 소식" 화면이 생기면 추가 검토).
+fn process_npc_promotion(conn: &Connection, content_conn: &Connection, world_seed: i64, day: i64) -> anyhow::Result<()> {
+    for pro_team_id in content::load_team_ids_for_league(content_conn, "league:pro")? {
+        let farm_team_id = format!("{pro_team_id}_farm");
+
+        if let Some(id) = best_promotion_candidate(conn, &farm_team_id)? {
+            let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("npc_callup:{day}:{pro_team_id}")));
+            if rng.gen_bool(PROMOTION_BASE_PROB) {
+                conn.execute("UPDATE npc SET team_id = ?1 WHERE id = ?2", params![pro_team_id, id])?;
+            }
+        }
+        if let Some(id) = worst_demotion_candidate(conn, &pro_team_id)? {
+            let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("npc_demotion:{day}:{pro_team_id}")));
+            if rng.gen_bool(DEMOTION_BASE_PROB) {
+                conn.execute("UPDATE npc SET team_id = ?1 WHERE id = ?2", params![farm_team_id, id])?;
+            }
+        }
+    }
+    Ok(())
+}
+
 /// 최근 28일(§process_month) 구간 주인공 등판들의 평균 등급 점수 —
 /// `game_log`엔 day 컬럼이 없어 `schedule`과 `game_id`로 조인해 필터한다.
 /// `season_avg_grade_score`와 달리 등판 기록이 없으면 중간값(2.0)이
@@ -3551,6 +3626,11 @@ pub fn advance(slot_conn: &mut Connection, content_conn: &Connection) -> anyhow:
             // "다음 등판 보존" 같은 연속성 제약이 없어 플레인 재배정 하나면
             // 충분하다.
             for_each_team_in_all_leagues(&tx, content_conn, assign_batting_order)?;
+            // NPC 콜업/강등(10_구현_Phase_계획.md §6-N) — process_month 안이
+            // 아니라 여기 형제 호출로 둔다: process_month는 주인공이 이번 달
+            // 안 던졌으면 맨 위에서 즉시 return하는데, NPC 승강은 주인공
+            // 등판 여부와 무관하게 항상 돌아야 한다.
+            process_npc_promotion(&tx, content_conn, world_seed, today)?;
         }
         if crate::calendar::is_season_boundary(today) {
             season_rollover(&tx, content_conn, today)?;
@@ -4447,6 +4527,81 @@ mod tests {
         }
 
         assert_eq!(read_contract(&slot_conn)["team_id"], "team:hs_a", "고교 소속은 콜업/강등 대상이 아니어야 한다");
+    }
+
+    #[test]
+    fn npc_performance_score_dispatches_to_pitcher_or_batter_summary() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        let pitcher_stats = match_sim::PitcherGameStats { outs_recorded: 30, runs_allowed: 2, strikeouts: 15, hits_allowed: 8, walks: 3 };
+        upsert_pitcher_season_stats(&slot_conn, "npc:p1", 1, &pitcher_stats).unwrap();
+        let batter_stats = match_sim::BatterGameStats {
+            plate_appearances: 20,
+            at_bats: 18,
+            hits: 8,
+            doubles: 2,
+            triples: 0,
+            home_runs: 1,
+            walks: 2,
+            strikeouts: 3,
+            rbi: 5,
+        };
+        upsert_batter_season_stats(&slot_conn, "npc:b1", 1, &batter_stats).unwrap();
+
+        assert!(npc_performance_score(&slot_conn, "npc:p1", "선발투수").unwrap().is_some());
+        assert!(npc_performance_score(&slot_conn, "npc:b1", "타자").unwrap().is_some());
+        // npc:p1은 투수 라인만 있으므로 타자 요약으로 조회하면 표본 미달(None).
+        assert_eq!(npc_performance_score(&slot_conn, "npc:p1", "타자").unwrap(), None);
+    }
+
+    #[test]
+    fn process_npc_promotion_calls_up_a_hot_farm_player_and_demotes_a_cold_pro_player() {
+        let content_conn = build_career_content_db();
+        let mut called_up = false;
+        let mut demoted = false;
+        for seed in 0..30i64 {
+            let slot_conn = slot::open_in_memory().unwrap();
+            insert_test_player(&slot_conn, "team:pro_a_farm_sp", "team:pro_a_farm", "선발투수", serde_json::json!({"제구": 50.0, "구위": 50.0}));
+            insert_test_player(&slot_conn, "team:pro_a_sp", "team:pro_a", "선발투수", serde_json::json!({"제구": 50.0, "구위": 50.0}));
+
+            let good = match_sim::PitcherGameStats { outs_recorded: 81, runs_allowed: 2, strikeouts: 30, hits_allowed: 10, walks: 3 };
+            let bad = match_sim::PitcherGameStats { outs_recorded: 81, runs_allowed: 35, strikeouts: 5, hits_allowed: 45, walks: 20 };
+            upsert_pitcher_season_stats(&slot_conn, "team:pro_a_farm_sp", 1, &good).unwrap();
+            upsert_pitcher_season_stats(&slot_conn, "team:pro_a_sp", 1, &bad).unwrap();
+
+            process_npc_promotion(&slot_conn, &content_conn, seed, 28).unwrap();
+
+            let farm_pitcher_team: String = slot_conn.query_row("SELECT team_id FROM npc WHERE id = 'team:pro_a_farm_sp'", [], |r| r.get(0)).unwrap();
+            let pro_pitcher_team: String = slot_conn.query_row("SELECT team_id FROM npc WHERE id = 'team:pro_a_sp'", [], |r| r.get(0)).unwrap();
+            if farm_pitcher_team == "team:pro_a" {
+                called_up = true;
+            }
+            if pro_pitcher_team == "team:pro_a_farm" {
+                demoted = true;
+            }
+            if called_up && demoted {
+                break;
+            }
+        }
+        assert!(called_up, "expected at least one seed to call up the hot farm pitcher");
+        assert!(demoted, "expected at least one seed to demote the cold pro pitcher");
+    }
+
+    #[test]
+    fn process_npc_promotion_is_a_no_op_when_no_candidate_crosses_the_threshold() {
+        let content_conn = build_career_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_test_player(&slot_conn, "team:pro_a_farm_sp", "team:pro_a_farm", "선발투수", serde_json::json!({"제구": 50.0, "구위": 50.0}));
+        insert_test_player(&slot_conn, "team:pro_a_sp", "team:pro_a", "선발투수", serde_json::json!({"제구": 50.0, "구위": 50.0}));
+        // season_stats가 아예 없으므로 표본 부족(None) — 어떤 후보도 임계값을 통과할 수 없다.
+
+        for seed in 0..10i64 {
+            process_npc_promotion(&slot_conn, &content_conn, seed, 28).unwrap();
+        }
+
+        let farm_pitcher_team: String = slot_conn.query_row("SELECT team_id FROM npc WHERE id = 'team:pro_a_farm_sp'", [], |r| r.get(0)).unwrap();
+        let pro_pitcher_team: String = slot_conn.query_row("SELECT team_id FROM npc WHERE id = 'team:pro_a_sp'", [], |r| r.get(0)).unwrap();
+        assert_eq!(farm_pitcher_team, "team:pro_a_farm");
+        assert_eq!(pro_pitcher_team, "team:pro_a");
     }
 
     fn read_contract(conn: &Connection) -> serde_json::Value {
