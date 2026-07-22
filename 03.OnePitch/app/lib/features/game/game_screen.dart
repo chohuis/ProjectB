@@ -44,12 +44,15 @@ class GameScreen extends ConsumerWidget {
         title: Text(state.status?.name ?? ''),
         actions: [
           if (state.matchStep == null)
-            IconButton(
-              icon: state.busy
-                  ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
-                  : const Icon(Icons.play_arrow),
-              tooltip: '진행',
-              onPressed: state.busy || state.pending.isNotEmpty ? null : controller.continueGame,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: FilledButton.icon(
+                icon: state.busy
+                    ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
+                    : const Icon(Icons.play_arrow),
+                label: const Text('진행'),
+                onPressed: state.busy || state.pending.isNotEmpty ? null : controller.continueGame,
+              ),
             ),
         ],
       ),

@@ -18,7 +18,7 @@ import 'hs_rank_trend_chart.dart';
 String _formatBudget(double won) => '${(won / 100000000).toStringAsFixed(1)}억원';
 
 /// 캐릭터 생성 — [06_캐릭터생성](../../../../04_UI기획/06_캐릭터생성.md) 7단계를
-/// 이번 서브분은 3페이지(개인 신체 → 야구 정보 → 학교 선택)로 압축했다
+/// 이번 서브분은 3페이지(개인 신체 → 투수 정보 → 학교 선택)로 압축했다
 /// (2구종 선택 단계는 그 문서 자체가 "열린 세부 — 아트 단계"로 이미
 /// 미뤄둔 항목이라 뒤로 미룸). 1페이지(개인 신체 — 이름·생일·키·몸무게·
 /// 혈액형·출신지역·등번호)는 시뮬레이션에 쓰이지 않는 순수 표시용
@@ -60,7 +60,7 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
   List<String> _bloodTypes = const [];
   List<String> _hometowns = const [];
 
-  // 야구 정보
+  // 투수 정보
   String _handedness = '우완';
   String _archetype = '강속구형';
 
@@ -271,11 +271,11 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('야구 정보', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+          const Text('투수 정보', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
           const SizedBox(height: 16),
           DropdownButtonFormField<String>(
             initialValue: _handedness,
-            decoration: const InputDecoration(labelText: '투구/타격'),
+            decoration: const InputDecoration(labelText: '투구'),
             items: const [
               DropdownMenuItem(value: '우완', child: Text('우완')),
               DropdownMenuItem(value: '좌완', child: Text('좌완')),
@@ -450,8 +450,8 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
           ],
         ),
         content: SizedBox(
-          width: 560,
-          height: 640,
+          width: 640,
+          height: 760,
           child: DefaultTabController(
             length: 2,
             child: Column(
@@ -556,40 +556,46 @@ class _SchoolBasicTab extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          AppPanel(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text('우승 기록', style: TextStyle(fontWeight: FontWeight.bold)),
-                const SizedBox(height: 8),
-                if (titles.isEmpty)
-                  const Text('없음', style: TextStyle(color: AppColors.textSecondary))
-                else
-                  for (final title in titles)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 2),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.emoji_events, size: 16, color: AppColors.gold),
-                          const SizedBox(width: 6),
-                          Text('${title.$1}년 ${title.$2} ${title.$3}'),
-                        ],
+          ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 72),
+            child: AppPanel(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('우승 기록', style: TextStyle(fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 8),
+                  if (titles.isEmpty)
+                    const Text('없음', style: TextStyle(color: AppColors.textSecondary))
+                  else
+                    for (final title in titles)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 2),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.emoji_events, size: 16, color: AppColors.gold),
+                            const SizedBox(width: 6),
+                            Text('${title.$1}년 ${title.$2} ${title.$3}'),
+                          ],
+                        ),
                       ),
-                    ),
-              ],
+                ],
+              ),
             ),
           ),
           const SizedBox(height: 12),
-          AppPanel(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text('라이벌', style: TextStyle(fontWeight: FontWeight.bold)),
-                const SizedBox(height: 4),
-                if (rivals.isEmpty) const Text('없음', style: TextStyle(color: AppColors.textSecondary)) else for (final r in rivals) Text(r),
-              ],
+          ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 72),
+            child: AppPanel(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('라이벌', style: TextStyle(fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 4),
+                  if (rivals.isEmpty) const Text('없음', style: TextStyle(color: AppColors.textSecondary)) else for (final r in rivals) Text(r),
+                ],
+              ),
             ),
           ),
         ],
