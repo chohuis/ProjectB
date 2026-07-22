@@ -1601,6 +1601,15 @@ fn bump_fatigue(conn: &Connection, id: &str, live_state_raw: &str, amount: f64) 
     Ok(())
 }
 
+/// `bump_fatigue`는 이미 로드해둔 `live_state`가 있는 자리에서 쓰는 저수준
+/// 버전 — 구원투수처럼 강판됐는지 여부에 따라 조건부로만 피로도를 올려야
+/// 하는 자리(`load_starting_pitcher`처럼 매치 시작 전에 미리 로드해두지
+/// 않는 경우)에서는 id로 바로 조회해 올리는 이 버전이 더 간단하다.
+fn bump_fatigue_by_id(conn: &Connection, id: &str, amount: f64) -> anyhow::Result<()> {
+    let live_state_raw: String = conn.query_row("SELECT live_state FROM npc WHERE id = ?1", [id], |r| r.get(0))?;
+    bump_fatigue(conn, id, &live_state_raw, amount)
+}
+
 /// 경기 참여로 인한 피로도 누적 — `sim::injury::check_overuse_injury`(누적형
 /// 부상)이 매주 읽는 `live_state.피로도`의 유일한 증가 소스(process_week은
 /// 감소만 시킴). 타자는 그 경기에 실제로 쓰인 라인업 풀 전체(`load_batting_lineup`
@@ -1694,6 +1703,17 @@ pub(crate) fn upsert_batter_season_stats(conn: &Connection, player_id: &str, wee
     )
 }
 
+/// 다전제·브래킷 경기(`simulate_series`·`simulate_wild_card`·
+/// `simulate_round_robin_stage`)용 — 이 경로들은 이미 "캘린더 없이 동기
+/// 시뮬"로 단순화돼 있어(§6-6) 날짜 단위 피로·season_stats 개념이 안 맞고,
+/// 강판 로직도 이번 스코프에 포함하지 않는다(정규시즌 배경 경기만 강판
+/// 지원 — `process_day` 참고). `reliever: None`이라 절대 강판되지 않는다.
+fn no_pull_plan(starter: &match_sim::PitcherStats) -> match_sim::TeamPitchingPlan<'_> {
+    match_sim::TeamPitchingPlan { starter, reliever: None, tactics: 50.0, trust: 50.0 }
+}
+
+const RELIEVER_FATIGUE_PER_GAME: f64 = 6.0; // 선발(12.0)의 절반 — D그룹 placeholder.
+
 fn process_day(slot_conn: &Connection, content_conn: &Connection, world_seed: i64, day: i64) -> anyhow::Result<()> {
     let mut stmt = slot_conn.prepare("SELECT game_id, home, away FROM schedule WHERE day = ?1 AND result IS NULL")?;
     let games: Vec<(String, String, String)> =
@@ -1705,11 +1725,28 @@ fn process_day(slot_conn: &Connection, content_conn: &Connection, world_seed: i6
 
         let home_lineup = load_batting_lineup(slot_conn, &home)?;
         let home_pitcher = load_starting_pitcher(slot_conn, &home)?;
+        let home_reliever = load_relief_pitcher(slot_conn, &home)?;
+        let home_manager = load_manager_stats(slot_conn, &home)?;
         let away_lineup = load_batting_lineup(slot_conn, &away)?;
         let away_pitcher = load_starting_pitcher(slot_conn, &away)?;
+        let away_reliever = load_relief_pitcher(slot_conn, &away)?;
+        let away_manager = load_manager_stats(slot_conn, &away)?;
+
+        let home_plan = match_sim::TeamPitchingPlan {
+            starter: &home_pitcher,
+            reliever: home_reliever.as_ref(),
+            tactics: home_manager.tactics,
+            trust: home_manager.trust,
+        };
+        let away_plan = match_sim::TeamPitchingPlan {
+            starter: &away_pitcher,
+            reliever: away_reliever.as_ref(),
+            tactics: away_manager.tactics,
+            trust: away_manager.trust,
+        };
 
         let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("match:{game_id}")));
-        let result = match_sim::simulate_game(&mut rng, &league_id, &home_lineup, &home_pitcher, &away_lineup, &away_pitcher);
+        let result = match_sim::simulate_game(&mut rng, &league_id, &home_lineup, &home_plan, &away_lineup, &away_plan);
 
         let result_json = serde_json::json!({"home": result.home_runs, "away": result.away_runs}).to_string();
         slot_conn.execute("UPDATE schedule SET result = ?1 WHERE game_id = ?2", params![result_json, game_id])?;
@@ -1721,6 +1758,16 @@ fn process_day(slot_conn: &Connection, content_conn: &Connection, world_seed: i6
         let week = crate::calendar::week_for_day(day);
         upsert_pitcher_season_stats(slot_conn, &home_pitcher.id, week, &result.home_pitcher_stats)?;
         upsert_pitcher_season_stats(slot_conn, &away_pitcher.id, week, &result.away_pitcher_stats)?;
+        // 강판돼 실제로 등판한 구원투수만 season_stats·피로도 반영 —
+        // 구원투수가 로스터에 있어도 강판이 안 일어났으면 아무 일도 없다.
+        if let (Some(reliever), Some(stats)) = (&home_reliever, &result.home_reliever_stats) {
+            upsert_pitcher_season_stats(slot_conn, &reliever.id, week, stats)?;
+            bump_fatigue_by_id(slot_conn, &reliever.id, RELIEVER_FATIGUE_PER_GAME)?;
+        }
+        if let (Some(reliever), Some(stats)) = (&away_reliever, &result.away_reliever_stats) {
+            upsert_pitcher_season_stats(slot_conn, &reliever.id, week, stats)?;
+            bump_fatigue_by_id(slot_conn, &reliever.id, RELIEVER_FATIGUE_PER_GAME)?;
+        }
         for (batter_id, s) in &result.home_batter_stats {
             upsert_batter_season_stats(slot_conn, batter_id, week, s)?;
         }
@@ -1756,7 +1803,7 @@ fn simulate_series(
         let home_pitcher = load_starting_pitcher(slot_conn, home_id)?;
         let away_lineup = load_batting_lineup(slot_conn, away_id)?;
         let away_pitcher = load_starting_pitcher(slot_conn, away_id)?;
-        let r = match_sim::simulate_game(rng, league_id, &home_lineup, &home_pitcher, &away_lineup, &away_pitcher);
+        let r = match_sim::simulate_game(rng, league_id, &home_lineup, &no_pull_plan(&home_pitcher), &away_lineup, &no_pull_plan(&away_pitcher));
         // 다전제는 캘린더 없이 동기 시뮬(2·3차분에서 이미 확정한 단순화)이라
         // 날짜 개념이 없음 — 챔피언 기록과 동일하게 day=0 placeholder를 씀.
         apply_injury_events(slot_conn, &r.injuries, 0)?;
@@ -1784,7 +1831,7 @@ fn simulate_wild_card(slot_conn: &Connection, rng: &mut ChaCha8Rng, league_id: &
         let home_pitcher = load_starting_pitcher(slot_conn, fourth)?;
         let away_lineup = load_batting_lineup(slot_conn, fifth)?;
         let away_pitcher = load_starting_pitcher(slot_conn, fifth)?;
-        let r = match_sim::simulate_game(rng, league_id, &home_lineup, &home_pitcher, &away_lineup, &away_pitcher);
+        let r = match_sim::simulate_game(rng, league_id, &home_lineup, &no_pull_plan(&home_pitcher), &away_lineup, &no_pull_plan(&away_pitcher));
         apply_injury_events(slot_conn, &r.injuries, 0)?;
         if r.away_runs > r.home_runs {
             fifth_wins += 1;
@@ -1834,7 +1881,7 @@ fn simulate_round_robin_stage(
             let home_pitcher = load_starting_pitcher(slot_conn, &home)?;
             let away_lineup = load_batting_lineup(slot_conn, &away)?;
             let away_pitcher = load_starting_pitcher(slot_conn, &away)?;
-            let r = match_sim::simulate_game(rng, league_id, &home_lineup, &home_pitcher, &away_lineup, &away_pitcher);
+            let r = match_sim::simulate_game(rng, league_id, &home_lineup, &no_pull_plan(&home_pitcher), &away_lineup, &no_pull_plan(&away_pitcher));
             apply_injury_events(slot_conn, &r.injuries, day)?;
 
             let game_id = format!("{game_id_prefix}{seq}");
@@ -6414,6 +6461,69 @@ mod tests {
             .map(|raw| serde_json::from_str::<serde_json::Value>(&raw).unwrap().get("피로도").unwrap().as_f64().unwrap())
             .unwrap();
         assert!(batter_fatigue > 0.0, "batter in the lineup pool should accumulate fatigue after the game");
+    }
+
+    #[test]
+    fn process_day_records_season_stats_for_a_reliever_who_finishes_the_game() {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:x', NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:a', 'league:x', NULL, NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:b', 'league:x', NULL, NULL)", []).unwrap();
+
+        let mut pulled = false;
+        for seed in 0..30i64 {
+            let slot_conn = slot::open_in_memory().unwrap();
+            insert_minimal_roster(&slot_conn, "team:a");
+            insert_minimal_roster(&slot_conn, "team:b");
+            insert_test_player(&slot_conn, "team:a_rp", "team:a", "구원투수", serde_json::json!({"제구": 50.0, "구위": 50.0}));
+            slot_conn
+                .execute("INSERT INTO schedule (game_id, day, home, away, result) VALUES ('game:1', 10, 'team:a', 'team:b', NULL)", [])
+                .unwrap();
+
+            process_day(&slot_conn, &content_conn, seed, 10).unwrap();
+
+            let week = crate::calendar::week_for_day(10);
+            let reliever_line: Option<String> = slot_conn
+                .query_row("SELECT line FROM season_stats WHERE player_id = 'team:a_rp' AND week = ?1", [week], |r| r.get(0))
+                .optional()
+                .unwrap();
+            if reliever_line.is_some() {
+                pulled = true;
+                break;
+            }
+        }
+        assert!(pulled, "expected at least one seed to pull team:a's starter and record the reliever's season_stats");
+    }
+
+    #[test]
+    fn process_day_accumulates_fatigue_for_a_reliever_who_pitched() {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:x', NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:a', 'league:x', NULL, NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:b', 'league:x', NULL, NULL)", []).unwrap();
+
+        let mut pulled = false;
+        for seed in 0..30i64 {
+            let slot_conn = slot::open_in_memory().unwrap();
+            insert_minimal_roster(&slot_conn, "team:a");
+            insert_minimal_roster(&slot_conn, "team:b");
+            insert_test_player(&slot_conn, "team:a_rp", "team:a", "구원투수", serde_json::json!({"제구": 50.0, "구위": 50.0}));
+            slot_conn
+                .execute("INSERT INTO schedule (game_id, day, home, away, result) VALUES ('game:1', 10, 'team:a', 'team:b', NULL)", [])
+                .unwrap();
+
+            process_day(&slot_conn, &content_conn, seed, 10).unwrap();
+
+            let fatigue: f64 = slot_conn
+                .query_row("SELECT live_state FROM npc WHERE id = 'team:a_rp'", [], |r| r.get::<_, String>(0))
+                .map(|raw| serde_json::from_str::<serde_json::Value>(&raw).unwrap().get("피로도").and_then(|v| v.as_f64()).unwrap_or(0.0))
+                .unwrap();
+            if fatigue > 0.0 {
+                pulled = true;
+                break;
+            }
+        }
+        assert!(pulled, "expected at least one seed to pull team:a's starter and accumulate the reliever's fatigue");
     }
 
     #[test]
