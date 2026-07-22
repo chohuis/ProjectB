@@ -83,6 +83,45 @@ pub struct EventChoice {
     pub effects: Vec<EventEffect>,
 }
 
+/// 선택지 버튼 색상용 — `effects`의 부호만 보고 판정(메시지함 UI가 굳이
+/// 손으로 저작된 힌트 문자열을 파싱하지 않고 이미 구조화된 데이터에서
+/// 바로 뽑아 쓰게, 대화 2026-07-22).
+pub fn effect_tone(effects: &[EventEffect]) -> &'static str {
+    let (mut pos, mut neg) = (false, false);
+    for e in effects {
+        let delta = match e {
+            EventEffect::LiveState { delta, .. } | EventEffect::Xp { delta, .. } => *delta,
+            EventEffect::ManagerRelationship { delta } | EventEffect::Finance { delta } => *delta as f64,
+        };
+        if delta > 0.0 {
+            pos = true;
+        }
+        if delta < 0.0 {
+            neg = true;
+        }
+    }
+    match (pos, neg) {
+        (true, true) => "mixed",
+        (true, false) => "positive",
+        (false, true) => "negative",
+        (false, false) => "neutral",
+    }
+}
+
+/// 선택지 버튼 아래 표시할 요약 문구(예: "사기 +10, 잔액 -500원").
+pub fn effect_hint(effects: &[EventEffect]) -> String {
+    effects
+        .iter()
+        .map(|e| match e {
+            EventEffect::LiveState { field, delta } => format!("{field} {delta:+}"),
+            EventEffect::Xp { stat, delta } => format!("{stat} {delta:+}"),
+            EventEffect::ManagerRelationship { delta } => format!("감독 관계 {delta:+}"),
+            EventEffect::Finance { delta } => format!("잔액 {delta:+}원"),
+        })
+        .collect::<Vec<_>>()
+        .join(", ")
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -142,5 +181,25 @@ mod tests {
         let raw = r#"{"target":"finance","delta":-500}"#;
         let effect: EventEffect = serde_json::from_str(raw).unwrap();
         assert!(matches!(effect, EventEffect::Finance { delta: -500 }));
+    }
+
+    #[test]
+    fn effect_tone_classifies_by_sign() {
+        assert_eq!(effect_tone(&[EventEffect::LiveState { field: "사기".to_string(), delta: 10.0 }]), "positive");
+        assert_eq!(effect_tone(&[EventEffect::Finance { delta: -500 }]), "negative");
+        assert_eq!(
+            effect_tone(&[EventEffect::LiveState { field: "사기".to_string(), delta: 10.0 }, EventEffect::Finance { delta: -500 }]),
+            "mixed"
+        );
+        assert_eq!(effect_tone(&[]), "neutral");
+    }
+
+    #[test]
+    fn effect_hint_joins_a_human_readable_summary() {
+        let effects = vec![
+            EventEffect::LiveState { field: "사기".to_string(), delta: 10.0 },
+            EventEffect::Finance { delta: -500 },
+        ];
+        assert_eq!(effect_hint(&effects), "사기 +10, 잔액 -500원");
     }
 }

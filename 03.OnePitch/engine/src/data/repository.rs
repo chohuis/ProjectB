@@ -771,8 +771,17 @@ fn fire_event(slot_conn: &Connection, content_conn: &Connection, event_id: &str,
                     params![format!("inbox:event:{event_id}:{day}"), urgency, day, body],
                 )?;
             } else {
-                let choice_summaries: Vec<serde_json::Value> =
-                    choices.iter().map(|c| serde_json::json!({"id": c.id, "label": c.label})).collect();
+                let choice_summaries: Vec<serde_json::Value> = choices
+                    .iter()
+                    .map(|c| {
+                        serde_json::json!({
+                            "id": c.id,
+                            "label": c.label,
+                            "tone": crate::sim::event::effect_tone(&c.effects),
+                            "hint": crate::sim::event::effect_hint(&c.effects),
+                        })
+                    })
+                    .collect();
                 let payload = serde_json::json!({"event_id": event_id, "body": body, "choices": choice_summaries}).to_string();
                 slot_conn.execute(
                     "INSERT INTO pending_actions (id, type, urgency, created_day, payload) VALUES (?1, 'event', ?2, ?3, ?4)",

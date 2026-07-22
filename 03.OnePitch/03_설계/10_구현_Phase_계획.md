@@ -1373,7 +1373,21 @@
 
 **테스트**(`cargo test --lib` 367개 전부 통과, 신규 4개): `sim::match_.rs`에 `simulate_game_pulls_a_starter_over_a_full_game_when_a_reliever_is_available`(여러 시드 중 최소 1회는 강판이 일어나는지, 강판 후에도 실점·rbi 불변식이 유지되는지)·`simulate_game_never_pulls_when_no_reliever_is_available`(`reliever: None`이면 극단적 피로도에서도 절대 강판 안 함, 기존 완투 동작 회귀 확인). `data::repository`에 `process_day_records_season_stats_for_a_reliever_who_finishes_the_game`·`process_day_accumulates_fatigue_for_a_reliever_who_pitched`. `cargo clippy --lib --tests --bins` 클린(무관 기존 경고 1개만). frb 변경 없음. `flutter test`(26개) 클린, `flutter build windows --debug` 성공, `engine.dll` 갱신. `balance_harness`(20회 시행, 시즌 상한 5) 크래시 없이 완주 — 매치 엔진 핵심부 변경이라 특히 중요한 확인.
 
-### 6-82. 문서 갱신 규칙
+### 6-82. 메시지함(인박스) 메일함형 리디자인 (2026-07-22, 완료) — UI 피드백 9번
+
+**Context**: "메세지함이 카톡 채팅방처럼 보인다, 메일함(`02.SvelteElectron`의 `MessagesPage.svelte`·FM·OOTP 참고)처럼 카테고리·필터·선택지 톤 표시가 있었으면 한다"는 피드백. 콘텐츠 저작 파이프라인(`data/seed/events.toml`)에 영향이 있는지 질문받아, 톤/힌트를 손저작 문자열 파싱이 아니라 **이미 구조화된 `EventChoice.effects`로부터 런타임에 자동 계산**하는 방식으로 설계 — 저작자는 지금처럼 `effects`만 채우면 되고 아무것도 안 바뀐다.
+
+**구현**:
+- `sim::event.rs`: `effect_tone(&[EventEffect]) -> &'static str`(양수/음수 델타 존재 여부로 `positive`/`negative`/`mixed`/`neutral` 판정)·`effect_hint(&[EventEffect]) -> String`(예: `"사기 +10, 잔액 -500원"`) 신규 순수 함수.
+- `data::repository::fire_event`의 `choice_summaries`에 `tone`/`hint` 필드 추가(JSON payload 내부만 — frb 시그니처 변경 없음, frb 재생성 스킵).
+- `inbox_screen.dart` 전면 재구성: `_categoryFor(kind)`(순수 Dart, `enrollment→학교`/`callup·demotion→구단`/`event→이벤트`/그 외→시스템, 기존 색상 토큰만 재사용 — 새 색 추가 안 함)로 카드 상단 카테고리 칩 표시. 상단 필터 칩(전체/읽지않음/카테고리별, 카운트 표시)+정렬 토글(최신순/오래된순)+모두읽음(벌크 API 없어 `markInboxRead` 개별 호출을 `Future.wait`로 병렬 실행 — 엔진에 새 API 안 만듦). 목록 탭 시 인라인 펼치기 대신 `AlertDialog` 모달(기존 `new_game_screen.dart`/`continue_game_screen.dart`가 이미 쓰는 패턴)로 본문+선택지 표시, 선택지 버튼은 톤 색상(긍정=`safe`/부정=`danger`/혼합=`warn`/중립=`textSecondary`) 테두리+힌트 텍스트. 선택 후 `SnackBar`로 짧게 확인(참고 디자인의 "선택 완료" 체크마크를 단순화).
+- 발신자(sender) 필드는 스키마에 없어(코치별 발신 데이터 없음) 카테고리 라벨로 대신함 — 나중에 실제 발신 데이터가 생기면 확장 가능.
+
+**스코프 판단**: 목록/필터/정렬/모달/톤 표시까지만 — 발신자 아바타·첨부파일류 프로토타입 디테일은 데이터가 없어 제외. 구버전 세이브의 pending_actions payload에 `tone`/`hint`가 없을 수 있어 Dart 파싱에서 기본값(neutral/빈 문자열) 방어, 별도 마이그레이션 없음.
+
+**테스트**(`cargo test --lib` 370개 전부 통과, 신규 2개): `effect_tone_classifies_by_sign`(양수만/음수만/혼합/빈 배열 4케이스)·`effect_hint_joins_a_human_readable_summary`. `cargo clippy --lib --tests --bins` 클린(무관 기존 경고 1개만). frb 변경 없음. `flutter analyze` 클린, `flutter test`(26개) 클린, `flutter build windows --debug` 성공, `engine.dll` 갱신.
+
+### 6-83. 문서 갱신 규칙
 
 **이 문서는 살아있는 문서다.** Phase를 하나 끝낼 때마다:
 1. §2 표의 해당 행 상태를 `⬜ 미착수` → `🔶 진행중` → `✅ 완료`로 갱신.
