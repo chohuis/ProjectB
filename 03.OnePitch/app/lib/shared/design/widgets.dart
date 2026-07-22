@@ -62,26 +62,46 @@ class AppBadge extends StatelessWidget {
 /// 상단 KPI 행). 진행 화면 상태바·내 선수 요약 등 "숫자 하나를 크게
 /// 보여주는" 자리에 공통으로 씀.
 class KpiTile extends StatelessWidget {
-  const KpiTile({super.key, required this.label, required this.value, this.valueColor});
+  const KpiTile({super.key, required this.label, required this.value, this.valueColor, this.icon, this.iconColor});
 
   final String label;
   final String value;
   final Color? valueColor;
 
+  /// 참고 디자인(대화 2026-07-22)의 "숫자 옆 색깔 아이콘 사각형" — 없으면
+  /// 기존 라벨+숫자만 보이는 동작 그대로(하위호환).
+  final IconData? icon;
+  final Color? iconColor;
+
   @override
   Widget build(BuildContext context) {
+    final labelColumn = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 11)),
+        const SizedBox(height: 3),
+        Text(value, style: TextStyle(color: valueColor ?? AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.w600)),
+      ],
+    );
     return AppPanel(
       color: AppColors.surfaceLow,
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 11)),
-          const SizedBox(height: 3),
-          Text(value, style: TextStyle(color: valueColor ?? AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.w600)),
-        ],
-      ),
+      child: icon == null
+          ? labelColumn
+          : Row(
+              children: [
+                Container(
+                  width: 36,
+                  height: 36,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(color: (iconColor ?? AppColors.accent).withValues(alpha: 0.15), borderRadius: BorderRadius.circular(8)),
+                  child: Icon(icon, color: iconColor ?? AppColors.accent, size: 18),
+                ),
+                const SizedBox(width: 10),
+                Expanded(child: labelColumn),
+              ],
+            ),
     );
   }
 }

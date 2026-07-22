@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:app/src/rust/api/game.dart';
 import 'package:app/features/game/game_provider.dart';
+import 'package:app/shared/design/colors.dart';
 import 'package:app/shared/design/widgets.dart';
 
 /// 메시지함 탭 미확인 뱃지(I7) — [04_메시지함](../../../04_UI기획/04_메시지함.md)
@@ -80,15 +81,7 @@ class AppShell extends ConsumerWidget {
       return Scaffold(
         body: Row(
           children: [
-            NavigationRail(
-              selectedIndex: index,
-              onDestinationSelected: (i) => _onSelect(context, i),
-              labelType: NavigationRailLabelType.all,
-              destinations: [
-                for (var i = 0; i < _destinations.length; i++)
-                  NavigationRailDestination(icon: _icon(_destinations[i].icon, i, unreadCount), label: Text(_destinations[i].label)),
-              ],
-            ),
+            AppSidebar(destinations: _destinations, selectedIndex: index, unreadCount: unreadCount, onSelect: (i) => _onSelect(context, i)),
             const VerticalDivider(width: 1),
             Expanded(child: child),
           ],
@@ -105,6 +98,86 @@ class AppShell extends ConsumerWidget {
           for (var i = 0; i < _destinations.length; i++)
             NavigationDestination(icon: _icon(_destinations[i].icon, i, unreadCount), label: _destinations[i].label),
         ],
+      ),
+    );
+  }
+}
+
+/// 와이드(데스크톱) 전용 사이드바 — 참고 디자인(대화 2026-07-22)의 "로고+
+/// 앱이름 헤더 → 아이콘+라벨이 한 줄에, 뱃지는 오른쪽 정렬"을 재현한
+/// 리스트형 레이아웃. 기존 Material `NavigationRail`(아이콘 위·라벨
+/// 아래, 좁은 폭)을 대체 — 모바일 `NavigationBar`는 이미 적절한 모바일
+/// 관례라 그대로 둔다. 공개 클래스인 이유: 위젯 테스트(`app_shell_widget_test.dart`)
+/// 가 `find.byType`으로 이 타입을 직접 찾아야 함.
+class AppSidebar extends StatelessWidget {
+  const AppSidebar({super.key, required this.destinations, required this.selectedIndex, required this.unreadCount, required this.onSelect});
+
+  final List<({String path, IconData icon, String label})> destinations;
+  final int selectedIndex;
+  final int unreadCount;
+  final ValueChanged<int> onSelect;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 220,
+      color: AppColors.surfaceHigh,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const Padding(
+            padding: EdgeInsets.fromLTRB(16, 20, 16, 16),
+            child: Row(
+              children: [
+                Icon(Icons.sports_baseball, color: AppColors.accent),
+                SizedBox(width: 10),
+                Text('OnePitch', style: TextStyle(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold)),
+              ],
+            ),
+          ),
+          const Divider(height: 1),
+          const SizedBox(height: 8),
+          for (var i = 0; i < destinations.length; i++)
+            _SidebarItem(
+              icon: destinations[i].icon,
+              label: destinations[i].label,
+              selected: i == selectedIndex,
+              badgeCount: destinations[i].path == '/game/inbox' ? unreadCount : 0,
+              onTap: () => onSelect(i),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SidebarItem extends StatelessWidget {
+  const _SidebarItem({required this.icon, required this.label, required this.selected, required this.badgeCount, required this.onTap});
+
+  final IconData icon;
+  final String label;
+  final bool selected;
+  final int badgeCount;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = selected ? AppColors.accent : AppColors.textSecondary;
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(color: selected ? AppColors.accentContainer : Colors.transparent, borderRadius: BorderRadius.circular(8)),
+        child: Row(
+          children: [
+            Icon(icon, color: color, size: 20),
+            const SizedBox(width: 12),
+            Expanded(child: Text(label, style: TextStyle(color: color, fontSize: 13, fontWeight: selected ? FontWeight.w600 : FontWeight.normal))),
+            if (badgeCount > 0) AppBadge(count: badgeCount),
+          ],
+        ),
       ),
     );
   }

@@ -88,9 +88,9 @@ class _StatusBar extends StatelessWidget {
 
     return Row(
       children: [
-        Expanded(child: KpiTile(label: '오늘', value: '${date.year}년 ${date.month}월 ${date.day}일')),
+        Expanded(child: KpiTile(label: '오늘', value: '${date.year}년 ${date.month}월 ${date.day}일', icon: Icons.calendar_today, iconColor: AppColors.accent)),
         const SizedBox(width: 8),
-        Expanded(child: KpiTile(label: '시즌', value: '${meta.season}')),
+        Expanded(child: KpiTile(label: '시즌', value: '${meta.season}', icon: Icons.flag, iconColor: AppColors.gold)),
       ],
     );
   }

@@ -531,11 +531,20 @@ class _SchoolBasicTab extends StatelessWidget {
           const SizedBox(height: 12),
           Row(
             children: [
-              Expanded(child: KpiTile(label: '별점', value: hsStarString(school.stars.toInt()))),
+              Expanded(child: KpiTile(label: '별점', value: hsStarString(school.stars.toInt()), icon: Icons.star, iconColor: AppColors.gold)),
               const SizedBox(width: 8),
-              Expanded(child: KpiTile(label: '연간 예산', value: _formatBudget(school.budget))),
+              Expanded(
+                child: KpiTile(label: '연간 예산', value: _formatBudget(school.budget), icon: Icons.account_balance_wallet, iconColor: AppColors.safe),
+              ),
               const SizedBox(width: 8),
-              Expanded(child: KpiTile(label: '홈구장', value: '${school.stadiumName}(${school.parkFactor})')),
+              Expanded(
+                child: KpiTile(
+                  label: '홈구장',
+                  value: '${school.stadiumName}(${school.parkFactor})',
+                  icon: Icons.stadium,
+                  iconColor: AppColors.accent,
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 12),
