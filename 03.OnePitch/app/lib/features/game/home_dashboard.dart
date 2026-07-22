@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:app/src/rust/api/game.dart';
 import 'package:app/shared/team_names.dart';
+import 'package:app/shared/content_db.dart';
 import 'package:app/shared/design/colors.dart';
 import 'package:app/shared/design/widgets.dart';
 import 'package:app/shared/loading_indicator.dart';
@@ -24,8 +25,10 @@ class HomeSummary {
     this.recentGameOpponentId,
     this.recentGameGrade,
     this.recentGameRunsAllowed,
-    this.teamRank,
-    this.leagueTeamCount,
+    this.nationalRank,
+    this.nationalTeamCount,
+    this.regionalRank,
+    this.regionalTeamCount,
     this.training,
     this.career,
     this.unreadInjuryWarning,
@@ -39,8 +42,14 @@ class HomeSummary {
   final String? recentGameGrade;
   final int? recentGameRunsAllowed;
 
-  final int? teamRank;
-  final int? leagueTeamCount;
+  final int? nationalRank;
+  final int? nationalTeamCount;
+
+  /// 지역(권역) 내 순위 — `league:hs`만 지역 데이터가 있어 그 외 리그(대학·
+  /// 독립·프로 진출 이후)는 null, 홈 화면은 그럴 땐 전국 순위만 보여준다
+  /// (대화 2026-07-22).
+  final int? regionalRank;
+  final int? regionalTeamCount;
 
   final TrainingConfigInfo? training;
   final CareerSummary? career;
@@ -85,15 +94,31 @@ final homeSummaryProvider = FutureProvider.family<HomeSummary, int>((ref, curren
     }
   } catch (_) {}
 
-  int? teamRank;
-  int? leagueTeamCount;
+  int? nationalRank;
+  int? nationalTeamCount;
+  int? regionalRank;
+  int? regionalTeamCount;
   try {
     final standings = await getStandings(leagueId: team.leagueId);
-    leagueTeamCount = standings.length;
+    nationalTeamCount = standings.length;
     for (final row in standings) {
       if (row.teamId == team.teamId) {
-        teamRank = row.rank.toInt();
+        nationalRank = row.rank.toInt();
         break;
+      }
+    }
+
+    if (team.leagueId == 'league:hs') {
+      final contentDbPath = await resolveContentDbPath();
+      final schools = await listHsSchoolDetails(contentDbPath: contentDbPath);
+      final myRegion = schools.where((s) => s.teamId == team.teamId).firstOrNull?.region;
+      if (myRegion != null) {
+        final regionTeamIds = schools.where((s) => s.region == myRegion).map((s) => s.teamId).toSet();
+        // standings는 이미 승률 내림차순 정렬돼 있으므로 지역 팀만 걸러도 순서가 유지된다.
+        final regionStandings = standings.where((s) => regionTeamIds.contains(s.teamId)).toList();
+        regionalTeamCount = regionStandings.length;
+        final myIndex = regionStandings.indexWhere((s) => s.teamId == team.teamId);
+        if (myIndex >= 0) regionalRank = myIndex + 1;
       }
     }
   } catch (_) {}
@@ -121,8 +146,10 @@ final homeSummaryProvider = FutureProvider.family<HomeSummary, int>((ref, curren
     recentGameOpponentId: recentGameOpponentId,
     recentGameGrade: recentGameGrade,
     recentGameRunsAllowed: recentGameRunsAllowed,
-    teamRank: teamRank,
-    leagueTeamCount: leagueTeamCount,
+    nationalRank: nationalRank,
+    nationalTeamCount: nationalTeamCount,
+    regionalRank: regionalRank,
+    regionalTeamCount: regionalTeamCount,
     training: training,
     career: career,
     unreadInjuryWarning: unreadInjuryWarning,
@@ -271,7 +298,8 @@ class _StandingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final rank = summary.teamRank;
+    final rank = summary.nationalRank;
+    final regionalRank = summary.regionalRank;
     return AppPanel(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -281,8 +309,19 @@ class _StandingCard extends StatelessWidget {
           const SizedBox(height: 6),
           if (rank == null)
             const Text('순위 정보 없음', style: TextStyle(color: AppColors.textSecondary))
-          else
-            Text('$rank위${summary.leagueTeamCount != null ? ' / ${summary.leagueTeamCount}팀' : ''}', style: const TextStyle(fontWeight: FontWeight.w600)),
+          else ...[
+            Text(
+              '전국 $rank위${summary.nationalTeamCount != null ? ' / ${summary.nationalTeamCount}팀' : ''}',
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
+            if (regionalRank != null) ...[
+              const SizedBox(height: 2),
+              Text(
+                '지역 $regionalRank위${summary.regionalTeamCount != null ? ' / ${summary.regionalTeamCount}팀' : ''}',
+                style: const TextStyle(color: AppColors.textSecondary),
+              ),
+            ],
+          ],
         ],
       ),
     );

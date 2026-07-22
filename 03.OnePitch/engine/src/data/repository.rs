@@ -332,6 +332,22 @@ pub fn create_protagonist(
         ],
     )?;
     log_career_event(slot_conn, 0, 0, "enrollment", serde_json::json!({"school_team_id": school_team_id}))?;
+
+    // 입학 축하 메시지(대화 2026-07-22) — 위 커리어 기록은 이미 있었지만
+    // 메시지함(`inbox`)엔 아무것도 안 남아서 새 게임을 막 시작하면 메시지함이
+    // 늘 비어 보였다. 학교 이름은 `HsSchoolDetail`이 이름을 뽑을 때와 같은
+    // 패턴(`teams.meta.name`)으로 조회.
+    let school_name: String = content_conn
+        .query_row("SELECT meta FROM teams WHERE id = ?1", [school_team_id], |r| r.get::<_, Option<String>>(0))
+        .optional()?
+        .flatten()
+        .and_then(|m| serde_json::from_str::<serde_json::Value>(&m).ok())
+        .and_then(|v| v.get("name").and_then(|n| n.as_str()).map(str::to_string))
+        .unwrap_or_else(|| school_team_id.to_string());
+    slot_conn.execute(
+        "INSERT INTO inbox (id, kind, urgency, read, day, body) VALUES (?1, 'enrollment', 'normal', 0, 0, ?2)",
+        params![format!("inbox:enrollment:{school_team_id}"), format!("{school_name}에 입학했다. 새로운 야구 인생이 시작된다.")],
+    )?;
     Ok(())
 }
 
@@ -3909,6 +3925,26 @@ mod tests {
 
         let contract: serde_json::Value = serde_json::from_str(&contract_raw).unwrap();
         assert_eq!(contract.get("team_id").unwrap().as_str().unwrap(), "team:hanseong_hs");
+    }
+
+    #[test]
+    fn create_protagonist_writes_a_welcome_message_to_inbox() {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:hs', NULL)", []).unwrap();
+        content_conn
+            .execute(
+                "INSERT INTO teams (id, league_id, color, meta) VALUES ('team:hanseong_hs', 'league:hs', NULL, ?1)",
+                params![serde_json::json!({"name": "한성고"}).to_string()],
+            )
+            .unwrap();
+        let slot_conn = slot::open_in_memory().unwrap();
+
+        create_protagonist(&slot_conn, &content_conn, 1, "테스트타자", "좌완", "team:hanseong_hs", "강속구형", None).unwrap();
+
+        let (kind, body): (String, String) =
+            slot_conn.query_row("SELECT kind, body FROM inbox WHERE id = 'inbox:enrollment:team:hanseong_hs'", [], |r| Ok((r.get(0)?, r.get(1)?))).unwrap();
+        assert_eq!(kind, "enrollment");
+        assert!(body.contains("한성고"), "expected the school name in the welcome message, got: {body}");
     }
 
     #[test]
