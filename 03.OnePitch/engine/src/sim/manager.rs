@@ -142,6 +142,25 @@ pub fn blend_rotation_score(skill_score: f64, season_score: f64) -> f64 {
     skill_score * 0.6 + season_score * 0.4
 }
 
+/// 시즌 중 재배정(§6-N) 전용 — 새로 계산된 순위(`new_ranked`)를 그대로
+/// 쓰면 "바로 다음 등판" 투수가 갑자기 바뀌어 휴식 없이 재등판할 수 있다.
+/// `next_pitcher_id`(재배정 직전 기준 다음 차례였던 투수)가 새 순위에도
+/// 여전히 있으면 그 투수를 `played % new_ranked.len()` 자리에 고정하고
+/// 나머지는 새 순위 그대로 채운다. 로테이션 길이가 `len`인 한 이 자리를
+/// 고정하는 것만으로 한 바퀴(=len 경기) 안에는 같은 투수가 두 번 나올 수
+/// 없다는 게 보장된다. `next_pitcher_id`가 없거나(첫 배정) 새 순위에서
+/// 빠졌으면(은퇴·트레이드 등) 보존 불가 — 새 순위를 그대로 반환한다.
+pub fn preserve_next_turn(new_ranked: Vec<String>, next_pitcher_id: Option<&str>, played: i64) -> Vec<String> {
+    let Some(next_id) = next_pitcher_id else { return new_ranked };
+    if !new_ranked.iter().any(|id| id == next_id) {
+        return new_ranked;
+    }
+    let len = new_ranked.len();
+    let mut rest: Vec<String> = new_ranked.into_iter().filter(|id| id != next_id).collect();
+    rest.insert((played as usize) % len, next_id.to_string());
+    rest
+}
+
 /// 로테이션 서열화 — `(투수 id, 점수)` 목록을 점수 내림차순 정렬해 상위
 /// `ROTATION_SIZE`만 id로 반환한다. 동점은 id 오름차순으로 묶어 결정론을
 /// 보장(부동소수 동점이 실제로 발생할 수 있음 — 같은 스탯으로 생성된 신인
@@ -287,6 +306,30 @@ mod tests {
         let low = blend_rotation_score(60.0, 20.0);
         let high = blend_rotation_score(60.0, 80.0);
         assert!(high > low, "high={high} low={low}");
+    }
+
+    #[test]
+    fn preserve_next_turn_pins_the_due_pitcher_at_the_expected_index() {
+        let new_ranked = vec!["npc:c".to_string(), "npc:a".to_string(), "npc:b".to_string()];
+        // played=4, len=3 -> target index 1. npc:b가 다음 차례였다면 그 자리에 고정돼야 함.
+        let result = preserve_next_turn(new_ranked, Some("npc:b"), 4);
+        assert_eq!(result[1], "npc:b");
+        assert_eq!(result.len(), 3);
+        assert!(result.contains(&"npc:a".to_string()) && result.contains(&"npc:c".to_string()));
+    }
+
+    #[test]
+    fn preserve_next_turn_falls_back_when_there_is_no_previous_rotation() {
+        let new_ranked = vec!["npc:a".to_string(), "npc:b".to_string()];
+        let result = preserve_next_turn(new_ranked.clone(), None, 3);
+        assert_eq!(result, new_ranked);
+    }
+
+    #[test]
+    fn preserve_next_turn_falls_back_when_the_due_pitcher_left_the_pool() {
+        let new_ranked = vec!["npc:a".to_string(), "npc:b".to_string()];
+        let result = preserve_next_turn(new_ranked.clone(), Some("npc:retired"), 1);
+        assert_eq!(result, new_ranked);
     }
 
     #[test]
