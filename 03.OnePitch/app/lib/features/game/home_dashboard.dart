@@ -111,9 +111,14 @@ final homeSummaryProvider = FutureProvider.family<HomeSummary, int>((ref, curren
     if (team.leagueId == 'league:hs') {
       final contentDbPath = await resolveContentDbPath();
       final schools = await listHsSchoolDetails(contentDbPath: contentDbPath);
-      final myRegion = schools.where((s) => s.teamId == team.teamId).firstOrNull?.region;
-      if (myRegion != null) {
-        final regionTeamIds = schools.where((s) => s.region == myRegion).map((s) => s.teamId).toSet();
+      // `region`은 학교 소재 도시(예: "전주", 53개 값 — 대부분 1~3팀뿐이라
+      // "지역 순위"로 쓰기엔 너무 잘게 쪼개져 있다, 대화 2026-07-22 발견).
+      // 실제 8권역은 거점구장 공유 그룹(`stadium_id`, 6~20팀/권역) — frb가
+      // 그 raw id는 안 주지만 `stadiumName`이 그 그룹 안에서 1:1로 같은
+      // 값이라(같은 권역=같은 거점구장) 대신 쓸 수 있다.
+      final myStadium = schools.where((s) => s.teamId == team.teamId).firstOrNull?.stadiumName;
+      if (myStadium != null && myStadium.isNotEmpty) {
+        final regionTeamIds = schools.where((s) => s.stadiumName == myStadium).map((s) => s.teamId).toSet();
         // standings는 이미 승률 내림차순 정렬돼 있으므로 지역 팀만 걸러도 순서가 유지된다.
         final regionStandings = standings.where((s) => regionTeamIds.contains(s.teamId)).toList();
         regionalTeamCount = regionStandings.length;
