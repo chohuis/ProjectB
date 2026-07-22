@@ -450,7 +450,7 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
           ],
         ),
         content: SizedBox(
-          width: 640,
+          width: 760,
           height: 760,
           child: DefaultTabController(
             length: 2,
@@ -511,7 +511,11 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
 /// 학교 상세 다이얼로그 "기본" 탭 — 최근성적·우승기록·라이벌·예산·구장.
 /// 로스터는 별 탭(`_SchoolRosterTab`)으로 분리(대화 2026-07-21) — 한
 /// 화면에 다 몰아넣으면 스크롤이 생겨 "드래그 휠"이 보이던 걸 탭으로
-/// 나눠 각 탭이 다이얼로그 높이(640) 안에 다 들어오게 함.
+/// 나눠 각 탭이 다이얼로그 높이(760) 안에 다 들어오게 함. 우승기록·라이벌
+/// 학교는 세로로 쌓지 않고 `IntrinsicHeight`+`Row`로 나란히 배치 —
+/// 내용 개수가 학교마다 달라도 둘 중 더 큰 쪽에 자동으로 높이가
+/// 맞춰지고, 세로 스택보다 전체 높이가 줄어 스크롤도 덜 생김(대화
+/// 2026-07-22).
 class _SchoolBasicTab extends StatelessWidget {
   const _SchoolBasicTab({required this.school, required this.ranks, required this.titles, required this.rivals});
 
@@ -556,46 +560,51 @@ class _SchoolBasicTab extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 72),
-            child: AppPanel(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('우승 기록', style: TextStyle(fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 8),
-                  if (titles.isEmpty)
-                    const Text('없음', style: TextStyle(color: AppColors.textSecondary))
-                  else
-                    for (final title in titles)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 2),
-                        child: Row(
-                          children: [
-                            const Icon(Icons.emoji_events, size: 16, color: AppColors.gold),
-                            const SizedBox(width: 6),
-                            Text('${title.$1}년 ${title.$2} ${title.$3}'),
-                          ],
-                        ),
-                      ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 12),
-          ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 72),
-            child: AppPanel(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('라이벌', style: TextStyle(fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 4),
-                  if (rivals.isEmpty) const Text('없음', style: TextStyle(color: AppColors.textSecondary)) else for (final r in rivals) Text(r),
-                ],
-              ),
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: AppPanel(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text('우승 기록', style: TextStyle(fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 8),
+                        if (titles.isEmpty)
+                          const Text('없음', style: TextStyle(color: AppColors.textSecondary))
+                        else
+                          for (final title in titles)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 2),
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.emoji_events, size: 16, color: AppColors.gold),
+                                  const SizedBox(width: 6),
+                                  Expanded(child: Text('${title.$1}년 ${title.$2} ${title.$3}')),
+                                ],
+                              ),
+                            ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: AppPanel(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text('라이벌 학교', style: TextStyle(fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 4),
+                        if (rivals.isEmpty) const Text('없음', style: TextStyle(color: AppColors.textSecondary)) else for (final r in rivals) Text(r),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
