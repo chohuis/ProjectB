@@ -22,7 +22,9 @@ import 'stat_radar_chart.dart';
 /// 라벨도 05_구종_시스템의 마스터리 단계·코치 보너스 시스템 자체가
 /// 엔진에 없어(코치 시스템 자체가 I6 이월 항목) 이름만 표시 — 신규 습득
 /// (카탈로그에서 골라 훈련 슬롯에 배정)까지만 이번에 지원. 재정 탭은
-/// 08_개인_재정 시스템 전체가 미구현이라 안내 문구만 둔다. 커리어 탭은
+/// 08_개인_재정 최소 골격(잔액만, 이월 부채 정리 대화 2026-07-22) —
+/// 세금·개인 트레이닝·투자·스폰서 수입은 여전히 미구현이라 안내만 곁들인다.
+/// 커리어 탭은
 /// 입학·진로선택 갈림길(드래프트/대학/독립/입대)·병역 만료·은퇴를
 /// 시간순으로 — 트레이드·계약은 이미 기록 허브 "계약·이력" 탭이 보여줘
 /// 여기 안 겹친다.
@@ -85,7 +87,7 @@ class _MyPlayerScreenState extends ConsumerState<MyPlayerScreen> {
                   _StatusTab(status: status),
                   _TrainingTab(knownPitchesJson: status.pitchesJson),
                   const CareerTimelineView(),
-                  const _FinanceTab(),
+                  _FinanceTab(financeJson: status.financeJson),
                 ],
               ),
             ),
@@ -438,15 +440,41 @@ class _TrainingTabState extends State<_TrainingTab> {
   }
 }
 
+/// 재정 탭 — [08_개인_재정](../../../../02_기획/08_개인_재정.md) 최소
+/// 골격(§5 "잔액"만, 이월 부채 정리 대화 2026-07-22). 세금·개인 트레이닝
+/// 구독·투자·스폰서 수입은 여전히 없어 정직하게 안내만 덧붙인다.
 class _FinanceTab extends StatelessWidget {
-  const _FinanceTab();
+  const _FinanceTab({required this.financeJson});
+  final String financeJson;
+
+  int _balance() {
+    try {
+      final v = jsonDecode(financeJson);
+      return v is Map ? ((v['잔액'] as num?)?.toInt() ?? 0) : 0;
+    } catch (_) {
+      return 0;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    return Center(
       child: Padding(
-        padding: EdgeInsets.all(24),
-        child: Text('재정 시스템(08_개인_재정)은 아직 엔진에 구현되지 않았습니다.\n후속 서브분에서 추가됩니다.', textAlign: TextAlign.center),
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('잔액', style: TextStyle(color: AppColors.textSecondary)),
+            const SizedBox(height: 4),
+            Text('${_balance()}원', style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 16),
+            const Text(
+              '세금·개인 트레이닝·투자·스폰서 수입은 아직 없습니다 — 이벤트로 들고 나는 잔액만 표시됩니다.',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: AppColors.textSecondary),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1904,8 +1904,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ProtagonistStatusInfo dco_decode_protagonist_status_info(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 6)
-      throw Exception('unexpected arr length: expect 6 but see ${arr.length}');
+    if (arr.length != 7)
+      throw Exception('unexpected arr length: expect 7 but see ${arr.length}');
     return ProtagonistStatusInfo(
       name: dco_decode_String(arr[0]),
       statsJson: dco_decode_String(arr[1]),
@@ -1913,6 +1913,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       contractJson: dco_decode_String(arr[3]),
       injuryJson: dco_decode_String(arr[4]),
       pitchesJson: dco_decode_String(arr[5]),
+      financeJson: dco_decode_String(arr[6]),
     );
   }
 
@@ -2735,6 +2736,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_contractJson = sse_decode_String(deserializer);
     var var_injuryJson = sse_decode_String(deserializer);
     var var_pitchesJson = sse_decode_String(deserializer);
+    var var_financeJson = sse_decode_String(deserializer);
     return ProtagonistStatusInfo(
       name: var_name,
       statsJson: var_statsJson,
@@ -2742,6 +2744,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       contractJson: var_contractJson,
       injuryJson: var_injuryJson,
       pitchesJson: var_pitchesJson,
+      financeJson: var_financeJson,
     );
   }
 
@@ -3509,6 +3512,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_String(self.contractJson, serializer);
     sse_encode_String(self.injuryJson, serializer);
     sse_encode_String(self.pitchesJson, serializer);
+    sse_encode_String(self.financeJson, serializer);
   }
 
   @protected

@@ -11,7 +11,9 @@
 #             안 채움). "확률" 변수는 op/value 대신 chance만 가짐
 #   choices = 없으면 선택지 없는 순수 알림(03_메시지_알림.md §7 판별기준)
 #   effects.target = "live_state"(field 아무거나, 사기·피로도·주목도 등
-#             전부 여기 포함) | "xp"(stat) | "manager_relationship"
+#             전부 여기 포함) | "xp"(stat) | "manager_relationship" |
+#             "finance"(08_개인_재정.md §5 "잔액" 골격만 — 세금·개인
+#             트레이너·투자성향은 이월, 잔액 마이너스는 0으로 clamp)
 
 [[event]]
 id = "event:season_opener"
@@ -277,3 +279,59 @@ label = "담담히 받아들인다"
 target = "xp"
 stat = "침착함"
 delta = 4.0
+
+[[event]]
+id = "event:sponsor_gift"
+type = "probability"
+urgency = "normal"
+body = "작은 용품 브랜드에서 응원 물품을 보내왔다."
+
+[event.trigger]
+var = "확률"
+chance = 0.02
+
+[[event.choices]]
+id = "감사히받기"
+label = "감사히 받는다"
+
+[[event.choices.effects]]
+target = "finance"
+delta = 300
+
+[[event.choices]]
+id = "정중히거절"
+label = "정중히 거절한다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 2.0
+
+# 08_개인_재정.md §3-1 "동료·스태프 소비는 그 NPC와의 관계도도 소폭
+# 상승" — 후배 개인과의 관계 추적이 없어(팀동료 관계 시스템 자체가
+# 없음, §5 이월 레지스트리) 감독 관계도로 근사(§6-70 이후 반복된 패턴).
+[[event]]
+id = "event:junior_gift"
+type = "probability"
+urgency = "normal"
+body = "후배가 장비를 구하지 못해 곤란해하는 걸 봤다."
+
+[event.trigger]
+var = "확률"
+chance = 0.02
+
+[[event.choices]]
+id = "선물한다"
+label = "장비를 선물한다"
+
+[[event.choices.effects]]
+target = "finance"
+delta = -300
+
+[[event.choices.effects]]
+target = "manager_relationship"
+delta = 2
+
+[[event.choices]]
+id = "모르는척"
+label = "모르는 척한다"

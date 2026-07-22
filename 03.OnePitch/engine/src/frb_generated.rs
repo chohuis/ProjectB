@@ -2150,6 +2150,7 @@ impl SseDecode for crate::api::game::ProtagonistStatusInfo {
         let mut var_contractJson = <String>::sse_decode(deserializer);
         let mut var_injuryJson = <String>::sse_decode(deserializer);
         let mut var_pitchesJson = <String>::sse_decode(deserializer);
+        let mut var_financeJson = <String>::sse_decode(deserializer);
         return crate::api::game::ProtagonistStatusInfo {
             name: var_name,
             stats_json: var_statsJson,
@@ -2157,6 +2158,7 @@ impl SseDecode for crate::api::game::ProtagonistStatusInfo {
             contract_json: var_contractJson,
             injury_json: var_injuryJson,
             pitches_json: var_pitchesJson,
+            finance_json: var_financeJson,
         };
     }
 }
@@ -2795,6 +2797,7 @@ impl flutter_rust_bridge::IntoDart for crate::api::game::ProtagonistStatusInfo {
             self.contract_json.into_into_dart().into_dart(),
             self.injury_json.into_into_dart().into_dart(),
             self.pitches_json.into_into_dart().into_dart(),
+            self.finance_json.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
@@ -3505,6 +3508,7 @@ impl SseEncode for crate::api::game::ProtagonistStatusInfo {
         <String>::sse_encode(self.contract_json, serializer);
         <String>::sse_encode(self.injury_json, serializer);
         <String>::sse_encode(self.pitches_json, serializer);
+        <String>::sse_encode(self.finance_json, serializer);
     }
 }
 

@@ -851,10 +851,12 @@ fn resolve_event_choice(slot_conn: &Connection, content_conn: &Connection, event
         return Ok(());
     };
 
-    let row: Option<(String, String, String)> = slot_conn
-        .query_row("SELECT xp, live_state, contract FROM protagonist WHERE id = 'proto:1'", [], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)))
+    let row: Option<(String, String, String, String)> = slot_conn
+        .query_row("SELECT xp, live_state, contract, finance FROM protagonist WHERE id = 'proto:1'", [], |r| {
+            Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?))
+        })
         .optional()?;
-    let Some((xp_raw, live_state_raw, contract_raw)) = row else {
+    let Some((xp_raw, live_state_raw, contract_raw, finance_raw)) = row else {
         return Ok(());
     };
 
@@ -862,6 +864,7 @@ fn resolve_event_choice(slot_conn: &Connection, content_conn: &Connection, event
     let mut live_state: serde_json::Map<String, serde_json::Value> = serde_json::from_str(&live_state_raw)?;
     let contract: serde_json::Value = serde_json::from_str(&contract_raw)?;
     let team_id = contract.get("team_id").and_then(|v| v.as_str());
+    let mut finance: serde_json::Map<String, serde_json::Value> = serde_json::from_str(&finance_raw)?;
 
     for effect in &choice.effects {
         match effect {
@@ -878,12 +881,24 @@ fn resolve_event_choice(slot_conn: &Connection, content_conn: &Connection, event
                     adjust_relationship(slot_conn, &format!("manager:{team_id}"), *delta)?;
                 }
             }
+            // 개인 재정 최소 골격(08_개인_재정.md §5 "잔액", 이월 부채 정리
+            // 대화 2026-07-22) — 세금·개인트레이너·투자성향은 이월, 잔액
+            // 하나만. 마이너스 허용 안 함(초과 지출 이벤트는 콘텐츠 저작
+            // 시 현재 잔액 이하로만 설계해야 함).
+            crate::sim::event::EventEffect::Finance { delta } => {
+                let current = finance.get("잔액").and_then(|v| v.as_i64()).unwrap_or(0);
+                finance.insert("잔액".to_string(), serde_json::json!((current + delta).max(0)));
+            }
         }
     }
 
     slot_conn.execute(
-        "UPDATE protagonist SET xp = ?1, live_state = ?2 WHERE id = 'proto:1'",
-        params![serde_json::Value::Object(xp).to_string(), serde_json::Value::Object(live_state).to_string()],
+        "UPDATE protagonist SET xp = ?1, live_state = ?2, finance = ?3 WHERE id = 'proto:1'",
+        params![
+            serde_json::Value::Object(xp).to_string(),
+            serde_json::Value::Object(live_state).to_string(),
+            serde_json::Value::Object(finance).to_string()
+        ],
     )?;
     Ok(())
 }
@@ -2531,6 +2546,7 @@ fn check_decline_retirement(conn: &Connection, rng: &mut ChaCha8Rng, day: i64, a
 /// 후보에서 `sim::market::fa_offer_count`개를 랜덤 추첨해 팀별 자원 축으로
 /// 초기 제안액을 계산한다(§3-3 "여러 구단이 오퍼 제시").
 fn build_fa_offers(
+    conn: &Connection,
     rng: &mut ChaCha8Rng,
     content_conn: &Connection,
     exclude_team: &str,
@@ -2547,17 +2563,19 @@ fn build_fa_offers(
         return Ok(vec![]);
     }
     let count = crate::sim::market::fa_offer_count(rng).min(candidates.len());
-    Ok(candidates
-        .choose_multiple(rng, count)
-        .map(|(team_id, resource)| {
-            // FA 다중오퍼는 팀마다 구단주가 달라 개인화하려면 오퍼 후보
-            // 팀별로 owner 조회가 필요해 구조가 커진다 — 이번엔 이월(재계약
-            // 단일오퍼만 owner_offer_multiplier 반영, process_protagonist_contract
-            // 참고), 여기는 무보정(1.0).
-            let salary = crate::sim::market::initial_offer(previous_salary, avg_grade_score, attention, resource, 1.0);
-            (team_id.clone(), salary, crate::sim::market::offer_years(rng))
-        })
-        .collect())
+    let chosen: Vec<(String, String)> = candidates.choose_multiple(rng, count).cloned().collect();
+    let mut offers = Vec::with_capacity(chosen.len());
+    for (team_id, resource) in &chosen {
+        // 구단주 재력·투자성향(이월 부채 정리, 대화 2026-07-22) — FA 후보가
+        // 최대 4개뿐(fa_offer_count)이라 팀별 조회 비용은 무시할 만함
+        // (process_week 같은 대량 순회와 다른 자리라 사전 로드 불필요).
+        let owner_mult = load_owner_stats(conn, team_id)?
+            .map(|o| crate::sim::staff::owner_offer_multiplier(o.wealth, o.aggressiveness))
+            .unwrap_or(1.0);
+        let salary = crate::sim::market::initial_offer(previous_salary, avg_grade_score, attention, resource, owner_mult);
+        offers.push((team_id.clone(), salary, crate::sim::market::offer_years(rng)));
+    }
+    Ok(offers)
 }
 
 fn push_contract_nego(conn: &Connection, day: i64, kind: &str, offers: &[(String, i64, i64)]) -> anyhow::Result<()> {
@@ -2615,7 +2633,7 @@ fn process_protagonist_contract(conn: &Connection, content_conn: &Connection, wo
             if check_decline_retirement(conn, &mut rng, day, age, avg_grade_score)? {
                 return Ok(());
             }
-            let offers = build_fa_offers(&mut rng, content_conn, "", salary, avg_grade_score, attention)?;
+            let offers = build_fa_offers(conn, &mut rng, content_conn, "", salary, avg_grade_score, attention)?;
             push_contract_nego(conn, day, "FA", &offers)?;
         }
         return Ok(()); // status도 없으면 프로 진입 이력 자체가 없는 아마추어 — 스코프 밖
@@ -2656,7 +2674,7 @@ fn process_protagonist_contract(conn: &Connection, content_conn: &Connection, wo
             params![format!("txn:contract:release:{day}"), day, detail],
         )?;
 
-        let offers = build_fa_offers(&mut rng, content_conn, &team_id, salary, avg_grade_score, attention)?;
+        let offers = build_fa_offers(conn, &mut rng, content_conn, &team_id, salary, avg_grade_score, attention)?;
         push_contract_nego(conn, day, "FA", &offers)?;
         return Ok(());
     }
@@ -3973,6 +3991,31 @@ mod tests {
         conn
     }
 
+    #[test]
+    fn resolve_event_choice_applies_finance_effect_and_never_goes_negative() {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn
+            .execute(
+                "INSERT INTO events (id, stage, week, type, urgency, trigger, body, choices) VALUES
+                 ('event:gift', NULL, NULL, 'probability', 'normal', NULL, '후배에게 장비를 선물했다.', ?1)",
+                [serde_json::json!([
+                    {"id": "선물", "label": "선물한다", "effects": [{"target": "finance", "delta": -500}]}
+                ])
+                .to_string()],
+            )
+            .unwrap();
+
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_market_protagonist(&slot_conn, &serde_json::json!({"team_id": null}), 0.0);
+        slot_conn.execute("UPDATE protagonist SET finance = ?1 WHERE id = 'proto:1'", [serde_json::json!({"잔액": 300}).to_string()]).unwrap();
+
+        resolve_event_choice(&slot_conn, &content_conn, "event:gift", "선물").unwrap();
+
+        let finance_raw: String = slot_conn.query_row("SELECT finance FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+        let finance: serde_json::Value = serde_json::from_str(&finance_raw).unwrap();
+        assert_eq!(finance["잔액"], 0, "300 - 500 should clamp at 0, not go negative");
+    }
+
     fn insert_market_protagonist(slot_conn: &Connection, contract: &serde_json::Value, attention: f64) {
         slot_conn
             .execute(
@@ -4448,6 +4491,43 @@ mod tests {
         assert_eq!(pending[0].kind, "contractNego");
         let payload: serde_json::Value = serde_json::from_str(&pending[0].payload).unwrap();
         assert_eq!(payload["kind"], "FA");
+    }
+
+    #[test]
+    fn build_fa_offers_gives_a_wealthy_aggressive_owner_team_a_higher_offer() {
+        // 후보팀을 정확히 2개만 둬서(fa_offer_count의 2~4개 추첨과 무관하게)
+        // 항상 둘 다 오퍼에 포함되게 한다.
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:pro', NULL)", []).unwrap();
+        for (team_id, resource) in [("team:owned", "안정"), ("team:plain", "안정")] {
+            content_conn
+                .execute("INSERT INTO teams (id, league_id, color, meta) VALUES (?1, 'league:pro', NULL, NULL)", [team_id])
+                .unwrap();
+            content_conn
+                .execute(
+                    "INSERT INTO team_traits (team_id, philosophy, resource, status) VALUES (?1, '전통/정통', ?2, '중견')",
+                    params![team_id, resource],
+                )
+                .unwrap();
+        }
+
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_test_player(
+            &slot_conn,
+            "owner:team:owned",
+            "team:owned",
+            "구단주",
+            serde_json::json!({"재력": 80.0, "투자성향": 80.0, "인내심": 50.0}),
+        );
+        // team:plain은 구단주 npc 자체가 없음 — 무보정(1.0) 케이스.
+
+        let mut rng = ChaCha8Rng::seed_from_u64(1);
+        let offers = build_fa_offers(&slot_conn, &mut rng, &content_conn, "", 10000, 2.0, 0.0).unwrap();
+        assert_eq!(offers.len(), 2);
+
+        let owned_salary = offers.iter().find(|(id, _, _)| id == "team:owned").unwrap().1;
+        let plain_salary = offers.iter().find(|(id, _, _)| id == "team:plain").unwrap().1;
+        assert!(owned_salary > plain_salary, "owned={owned_salary} plain={plain_salary}");
     }
 
     #[test]

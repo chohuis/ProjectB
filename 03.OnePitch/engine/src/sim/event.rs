@@ -56,11 +56,12 @@ pub fn evaluate_trigger(trigger: &EventTrigger, ctx: &EventContext, rng: &mut im
     }
 }
 
-/// §3 효과 대상 9종 중 이번 1차 배치가 실제로 쓰는 3종 — 주목도는
-/// live_state의 한 필드일 뿐이라 별도 target 없이 `LiveState`로 표현된다.
-/// 부상 진행·계약/시장 상태·재정·후속 이벤트 플래그는 이미 전용 시스템이
-/// 있거나(부상·계약) 검증된 기존 헬퍼가 없어(재정) 이번 배치가 안 씀 —
-/// 새 target을 추가할 때 이 문서(§3)를 그대로 따라가면 된다.
+/// §3 효과 대상 9종 중 이번 배치가 쓰는 4종 — 주목도는 live_state의
+/// 한 필드일 뿐이라 별도 target 없이 `LiveState`로 표현된다. `Finance`는
+/// `08_개인_재정.md` §5 "잔액" 골격만(세금·개인트레이너·투자성향은 이월,
+/// 이월 부채 정리 대화 2026-07-22). 부상 진행·계약/시장 상태·후속 이벤트
+/// 플래그는 여전히 이미 전용 시스템이 있거나 이번 배치가 안 씀 — 새
+/// target을 추가할 때 이 문서(§3)를 그대로 따라가면 된다.
 #[derive(Debug, Clone, Deserialize)]
 #[serde(tag = "target")]
 pub enum EventEffect {
@@ -70,6 +71,8 @@ pub enum EventEffect {
     Xp { stat: String, delta: f64 },
     #[serde(rename = "manager_relationship")]
     ManagerRelationship { delta: i64 },
+    #[serde(rename = "finance")]
+    Finance { delta: i64 },
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -132,5 +135,12 @@ mod tests {
         assert_eq!(choices.len(), 1);
         assert_eq!(choices[0].effects.len(), 1);
         assert!(matches!(choices[0].effects[0], EventEffect::LiveState { .. }));
+    }
+
+    #[test]
+    fn finance_effect_deserializes_from_the_expected_json_shape() {
+        let raw = r#"{"target":"finance","delta":-500}"#;
+        let effect: EventEffect = serde_json::from_str(raw).unwrap();
+        assert!(matches!(effect, EventEffect::Finance { delta: -500 }));
     }
 }

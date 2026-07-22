@@ -268,8 +268,10 @@ pub fn resolve_choice(action_id: String, choice_id: String) -> anyhow::Result<Op
     })
 }
 
-/// 주인공 상태 — 이름·능력치·라이브상태·계약·부상·보유구종. 유연한
+/// 주인공 상태 — 이름·능력치·라이브상태·계약·부상·보유구종·재정. 유연한
 /// 블롭은 JSON 원시 통과(모듈 문서 참고) — Dart는 표시용으로만 읽는다.
+/// `finance_json`은 개인 재정 최소 골격(08_개인_재정.md §5 "잔액"만,
+/// 이월 부채 정리 대화 2026-07-22)의 표시용 필드.
 #[derive(Debug, Clone)]
 pub struct ProtagonistStatusInfo {
     pub name: String,
@@ -278,15 +280,25 @@ pub struct ProtagonistStatusInfo {
     pub contract_json: String,
     pub injury_json: String,
     pub pitches_json: String,
+    pub finance_json: String,
 }
 
 pub fn get_protagonist_status() -> anyhow::Result<ProtagonistStatusInfo> {
     with_state(|state| {
-        let (name, stats_json, live_state_json, contract_json, injury_json, pitches_json): (String, String, String, String, String, String) =
-            state.slot_conn.query_row("SELECT name, stats, live_state, contract, injury, pitches FROM protagonist WHERE id = 'proto:1'", [], |r| {
-                Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?, r.get(4)?, r.get(5)?))
-            })?;
-        Ok(ProtagonistStatusInfo { name, stats_json, live_state_json, contract_json, injury_json, pitches_json })
+        let (name, stats_json, live_state_json, contract_json, injury_json, pitches_json, finance_json): (
+            String,
+            String,
+            String,
+            String,
+            String,
+            String,
+            String,
+        ) = state.slot_conn.query_row(
+            "SELECT name, stats, live_state, contract, injury, pitches, finance FROM protagonist WHERE id = 'proto:1'",
+            [],
+            |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?, r.get(4)?, r.get(5)?, r.get(6)?)),
+        )?;
+        Ok(ProtagonistStatusInfo { name, stats_json, live_state_json, contract_json, injury_json, pitches_json, finance_json })
     })
 }
 
@@ -1182,6 +1194,8 @@ mod tests {
         assert_eq!(status.name, "API테스트");
         let stats: serde_json::Value = serde_json::from_str(&status.stats_json).unwrap();
         assert!(stats.is_object(), "stats_json should decode to a JSON object");
+        let finance: serde_json::Value = serde_json::from_str(&status.finance_json).unwrap();
+        assert!(finance.is_object(), "finance_json should decode to a JSON object (empty at creation)");
 
         reset_state();
     }

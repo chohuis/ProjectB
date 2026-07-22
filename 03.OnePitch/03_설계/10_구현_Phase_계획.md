@@ -84,13 +84,15 @@
 |---|---|---|---|
 | ~~코치·구단주 정식 스태프~~ | **해소됨(§6-72, 2026-07-22)** — 팀당 1명씩, 능력치 10종 전부 배선 | — | 해소 |
 | 코치 가변 슬롯 수(0~8명)·적성배치/미스매치/복수배치 | §6-72가 팀당 1명 고정으로 단순화 — "누가 어느 보직인지"를 정하는 판정 시스템 자체가 새로 필요 | 팀 전력 공식(05_밸런스.md §2-D) 확정 후 배치 로직 신설 | 엔진 확장 |
-| 구단주 재력·투자성향의 FA 다중오퍼 반영 | §6-72는 재계약 단일오퍼만 반영 — 여러 팀 오퍼 각각에 그 팀 구단주 성향을 개별 반영하려면 `build_fa_offers` 구조 확장 필요 | `build_fa_offers` 후보팀 순회 시 팀별 owner 조회 추가 | 소형 |
+| ~~구단주 재력·투자성향의 FA 다중오퍼 반영~~ | **해소됨(§6-74, 2026-07-22)** — 후보팀이 2~4개뿐이라 조회 비용 무시할 만해 바로 반영 | — | 해소 |
+| ~~개인 재정 — 잔액 골격~~ | **해소됨(§6-74, 2026-07-22)** — `EventEffect::Finance`+재정 탭 UI, 확률형 이벤트 2개(`event:sponsor_gift`·`event:junior_gift`)로 실증 | — | 해소 |
 | `season_stats` 누적성적 | 인프라 자체 없음(INSERT 코드 0, DELETE만 존재) — NPC 로테이션 서열화(§22)의 "누적성적" 요소·향후 수상기록의 공통 전제 | NPC 주간/월간 성적 집계 파이프라인 신설 | 인프라 |
 | 불펜 서열(마무리/셋업/추격조) | 배경 경기(`process_day`)가 완투만 가정 — 구원투수를 등판시키는 메커니즘 자체가 없음(§6-70 조사로 확인) | 배경 매치 엔진에 강판 개념이 먼저 생겨야 함(주인공 매치엔 이미 있음) | 엔진 확장 |
-| 나머지 이벤트 29개(38개 중 9개만 저작)·서사형 업적·뉴스·미디어 | 저작 시간 문제 — 파이프라인 자체는 I8 3차분에 이미 있음 | 반복 저작 세션(인프라 재사용, 매번 대표 배치처럼 진행) | 콘텐츠 저작(반복) |
-| 개인 재정(`protagonist.finance`) | 컬럼만 있고 소비할 시스템(사치품 이벤트 등)이 없음 | 확률형 이벤트 저작 때 재정 effect를 같이 추가하며 자연 확장 — 콘텐츠 저작 트랙과 합류 가능 | 소형·합류 가능 |
+| 나머지 이벤트 27개(38개 중 11개만 저작)·서사형 업적·뉴스·미디어 | 저작 시간 문제 — 파이프라인 자체는 I8 3차분에 이미 있음 | 반복 저작 세션(인프라 재사용, 매번 대표 배치처럼 진행) | 콘텐츠 저작(반복) |
+| 개인 재정 나머지(세금 누진, 개인 트레이닝 구독, 투자, 스폰서/CF 수입원, 최종자산 은퇴화면) | §6-74는 "잔액" 골격만 — `08_개인_재정.md`가 대부분 "정확한 수치는 스탯 스케일 확정 후"로 남겨둠 | 스탯 스케일 확정 후 각 항목 순차 배선 | 콘텐츠·수치 |
 | NPC 로테이션 시즌 중 실시간 재편(부상·부진 강등) | 매 시즌 1회 고정 배정(§6-70)으로 단순화한 상태 | `season_stats`가 먼저 생겨야 "부진"을 판정할 데이터가 생김(같은 블로커) | 인프라 의존 |
 | 코치·구단주 관계도(`relationships`) 추적 | §6-72가 감독만 유지하기로 명시적 축소 | 팀동료 관계 시스템과 함께 확장 검토 | 소형 |
+| 코치 가변 슬롯 수(0~8명)·적성배치/미스매치/복수배치 | §6-72가 팀당 1명 고정으로 단순화 — "누가 어느 보직인지"를 정하는 판정 시스템 자체가 새로 필요 | 팀 전력 공식(05_밸런스.md §2-D) 확정 후 배치 로직 신설 | 엔진 확장 |
 | Android 실기기·Steam 실클라이언트·Mac/Linux 빌드 검증 | 이 개발 환경(Windows 샌드박스)에서 검증 불가 | I9 착수 시점에 실기기 확보 | 환경 제약 |
 
 ## 6. 문서 갱신 규칙
@@ -1274,7 +1276,23 @@
 
 **테스트**(`cargo test --lib` 334개 전부 통과, 신규 20개 이상 — `sim::staff` 11개, `repository`/`match_session`/`market` 각 수 개씩): 핵심 검증 — **NPC 타자가 코치 배정 팀에서 더 빨리 성장**(`process_week_grows_batters_faster_on_teams_with_a_stronger_batting_coach`), 스카우팅안목 높은 팀 신인 스탯 우위, 구종습득 단축, 멘탈코칭이 나쁜 등급에서만 사기 하락 완화, 구단주 인내심이 방출 확률을 낮춤. `cargo clippy --lib --tests --bins` 클린(무관 기존 경고 1개만). `flutter analyze`/`flutter test`(27개) 클린 — 엔진 내부 전용 변경이라 frb 재생성 불필요. `flutter build windows --debug` 성공, `engine.dll` 갱신. `balance_harness` 스모크 테스트로 크래시 없음 확인(코치·구단주 npc 추가가 전체 파이프라인에 부작용 없음).
 
-### 6-73. 문서 갱신 규칙
+### 6-74. 소형 작업 2건 (2026-07-22, 완료) — FA 다중오퍼 구단주 반영 + 개인 재정 최소 골격
+
+**Context**: 이월 레지스트리(§5)의 "즉시 가능" 소형 항목 2개를 진행. ①`build_fa_offers`(FA 다중오퍼)는 §6-72에서 "팀별 구단주 조회가 필요해 구조가 커진다"며 이월했지만, 실제로 후보팀이 `fa_offer_count`(2~4개)로 이미 적어 조회 비용이 무시할 만함을 확인 — 이월 사유가 실제로는 작았다. ②`protagonist.finance` 컬럼은 처음부터 `'{}'`로만 채워지고 한 번도 안 쓰였다. `08_개인_재정.md`를 읽어보니 스폰서/CF·세금 누진·개인 트레이닝 구독·투자까지 원안이 커서, 이번엔 "잔액이 실제로 움직인다"는 최소 골격만 만들고 나머지는 이월 등록. `my_player_screen.dart`의 "재정" 탭이 이미 안내 문구만 있는 placeholder였다 — 커리어·업적·관계 탭과 같은 "가짜 이월" 패턴.
+
+**구현**:
+- `build_fa_offers`(`data::repository`)에 `conn` 파라미터 추가 — 후보팀별 `load_owner_stats`+`owner_offer_multiplier`를 `initial_offer`에 반영(기존 하드코드 `1.0` 제거). 호출부 2곳 갱신.
+- `sim::event.rs`: `EventEffect::Finance { delta: i64 }` 신규.
+- `resolve_event_choice`: `finance` 컬럼 조회·갱신 추가, `Finance` effect가 `잔액`을 가감(0 미만 clamp).
+- `data/seed/events.toml`: 확률형 이벤트 2개 실제 저작 — `event:sponsor_gift`(+300, 소소한 용품 지원)·`event:junior_gift`(-300, 후배 선물 + 감독관계도 소폭 상승 — 후배 개인 관계 추적이 없어 감독 관계도로 근사, §6-70 이후 반복 패턴).
+- `engine/src/api/game.rs`: `ProtagonistStatusInfo`에 `finance_json` 필드 추가(기존 JSON 원시 통과 관례), frb 재생성.
+- `my_player_screen.dart`의 `_FinanceTab`(placeholder)을 잔액 표시로 교체 — 세금·개인 트레이닝·투자는 아직 없다고 화면에 정직하게 명시.
+
+**스코프 판단**: `08_개인_재정.md`의 나머지 전부(세금 누진, 개인 트레이닝 구독, 투자, 스폰서/CF, 최종자산 은퇴화면)는 이월 레지스트리(§5)에 새로 등록 — 문서 자체가 "정확한 수치는 스탯 스케일 확정 후"로 대부분 미정.
+
+**테스트**(`cargo test --lib` 337개 전부 통과, 신규 5개): `build_fa_offers_gives_a_wealthy_aggressive_owner_team_a_higher_offer`(2개 후보팀만 둬서 fa_offer_count 추첨과 무관하게 결정론 확보), `finance_effect_deserializes_from_the_expected_json_shape`, `resolve_event_choice_applies_finance_effect_and_never_goes_negative`, `get_protagonist_status`에 `finance_json` 포함 확인. `cargo clippy` 클린(무관 기존 경고 1개만). `flutter analyze`/`flutter test` 클린. `dart run tool content seed` 정식 반영(FK 위반 없음, events=11). `flutter build windows --debug` 성공, `engine.dll` 갱신.
+
+### 6-75. 문서 갱신 규칙
 
 **이 문서는 살아있는 문서다.** Phase를 하나 끝낼 때마다:
 1. §2 표의 해당 행 상태를 `⬜ 미착수` → `🔶 진행중` → `✅ 완료`로 갱신.

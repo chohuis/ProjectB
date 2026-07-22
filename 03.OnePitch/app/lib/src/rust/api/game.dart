@@ -759,8 +759,10 @@ class ProtagonistProfileInfo {
           jerseyNumber == other.jerseyNumber;
 }
 
-/// 주인공 상태 — 이름·능력치·라이브상태·계약·부상·보유구종. 유연한
+/// 주인공 상태 — 이름·능력치·라이브상태·계약·부상·보유구종·재정. 유연한
 /// 블롭은 JSON 원시 통과(모듈 문서 참고) — Dart는 표시용으로만 읽는다.
+/// `finance_json`은 개인 재정 최소 골격(08_개인_재정.md §5 "잔액"만,
+/// 이월 부채 정리 대화 2026-07-22)의 표시용 필드.
 class ProtagonistStatusInfo {
   final String name;
   final String statsJson;
@@ -768,6 +770,7 @@ class ProtagonistStatusInfo {
   final String contractJson;
   final String injuryJson;
   final String pitchesJson;
+  final String financeJson;
 
   const ProtagonistStatusInfo({
     required this.name,
@@ -776,6 +779,7 @@ class ProtagonistStatusInfo {
     required this.contractJson,
     required this.injuryJson,
     required this.pitchesJson,
+    required this.financeJson,
   });
 
   @override
@@ -785,7 +789,8 @@ class ProtagonistStatusInfo {
       liveStateJson.hashCode ^
       contractJson.hashCode ^
       injuryJson.hashCode ^
-      pitchesJson.hashCode;
+      pitchesJson.hashCode ^
+      financeJson.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -797,7 +802,8 @@ class ProtagonistStatusInfo {
           liveStateJson == other.liveStateJson &&
           contractJson == other.contractJson &&
           injuryJson == other.injuryJson &&
-          pitchesJson == other.pitchesJson;
+          pitchesJson == other.pitchesJson &&
+          financeJson == other.financeJson;
 }
 
 /// 기록 허브 "관계" 탭용(이월 부채 정리, 대화 2026-07-22) — 팀동료 관계
