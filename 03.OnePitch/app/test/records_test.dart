@@ -1,6 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:app/src/rust/api/game.dart';
 import 'package:app/src/rust/frb_generated.dart';
+
+/// 'game'이 아닌 PendingAction(청백전 로테이션 경쟁에서 밀려 벤치된 날
+/// 다른 이벤트가 먼저 뜰 수 있음, 대화 2026-07-26)을 첫 선택지로 넘기고
+/// 계속 진행.
+Future<void> _resolveNonGamePendingAction(PendingActionInfo action) async {
+  final payload = jsonDecode(action.payloadJson);
+  final choices = payload is Map ? payload['choices'] as List<dynamic>? : null;
+  final choiceId = (choices != null && choices.isNotEmpty) ? (choices.first as Map)['id'] as String : '자동';
+  await resolveChoice(actionId: action.id, choiceId: choiceId);
+}
 
 /// 기록 허브가 호출하는 엔진 함수들을 UI 없이 직접 검증.
 void main() {
@@ -25,7 +37,10 @@ void main() {
     // advance() + resolveChoice("자동")로 실제 경기를 완주시키면 game_log가 채워진다.
     var pending = await advance();
     var guard = 0;
-    while (pending.isEmpty && guard < 10) {
+    while ((pending.isEmpty || pending.first.kind != 'game') && guard < 20) {
+      if (pending.isNotEmpty) {
+        await _resolveNonGamePendingAction(pending.first);
+      }
       pending = await advance();
       guard++;
     }
@@ -35,6 +50,10 @@ void main() {
 
     final logs = await getGameLog();
     expect(logs, isNotEmpty);
-    expect(logs.first.season, 0);
+    // 로테이션 경쟁에서 밀리면 첫 실제 등판이 시즌 0이 아니라 그 다음
+    // 시즌으로 넘어갈 수 있다(대화 2026-07-26) — 이 테스트가 검증하려는
+    // 건 "game_log가 브리지를 왕복한다"지 "반드시 시즌 0에 첫 등판한다"가
+    // 아니므로 정확한 시즌 값 대신 유효한 범위인지만 확인한다.
+    expect(logs.first.season, greaterThanOrEqualTo(0));
   }, timeout: const Timeout(Duration(minutes: 2)));
 }

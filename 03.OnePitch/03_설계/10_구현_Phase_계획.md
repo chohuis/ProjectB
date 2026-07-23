@@ -1562,7 +1562,18 @@
 
 **테스트**: `cargo test --lib` 438개 전부 통과(신규 다수 — practice_stats 테이블·청백전 시뮬레이션 3개(비공식 기록 검증·주인공 순환 참가 검증·소규모 로스터 no-op)·3-way 블렌드 유닛 3개·practice_stats가 실제로 로테이션 순위에 반영되는지 통합 1). `cargo clippy` 클린. frb 재생성 불필요. `flutter test` 27개 전부 통과.
 
-### 6-96. 문서 갱신 규칙
+### 6-96. 주인공도 로테이션 경쟁에 포함 — Part D(청백전 결과가 주인공 본인 선발 여부에도 영향) (2026-07-26, 완료)
+
+**Context**: Part C 계획 시 사용자가 "주인공도 경쟁에 포함(벤치될 수 있음)"을 명시적으로 선택 — 지금까지 엔진은 주인공이 투수면 팀 경기마다 무조건 본인이 선발이라고 가정했다(로테이션 경쟁 없음).
+
+**구현**:
+- `ranked_rotation_candidates_for_team`이 주인공 소속팀이 고교·대학이면(청백전이 도는 리그, `run_monthly_scrimmages`와 동일 게이팅) 주인공도 skill(제구+구위)+season(주인공 전용 `protagonist_season_score` — `game_log` 기반, NPC의 `season_stats_score`와 계산식은 동일하고 소스만 다름)+practice(`practice_stats`, 주인공도 청백전에 참가하니 그대로 조회) 3중 블렌드로 경쟁에 합류. `ranked_rotation_candidates_for_team`/`assign_rotation`/`reassign_rotation_preserving_next_turn`에 `content_conn` 파라미터 추가(리그 게이팅에 필요) — `for_each_team_in_all_leagues` 호출부 3곳을 클로저로 감싸 대응.
+- `find_protagonist_game_today`에 로테이션 게이팅 추가 — 오늘 로테이션 차례(`load_starting_pitcher`와 동일한 `played % rotation.len()` 인덱싱)가 주인공이 아니면 인터랙티브 `game` PendingAction을 생략하고 인박스에 벤치 통지(`kind='benched'`)만 남긴 채 배경 자동시뮬로 넘긴다(§6-91 `eligibility_blocked` 게이팅과 같은 패턴).
+- **실측 진단 중 발견한 심각한 버그**: 위 두 가지만 넣고 `flutter test`를 돌렸더니 `game_loop_test.dart`/`records_test.dart`가 실패 — 첫 PendingAction이 `game`이 아니라 `event`였다. Rust 쪽에 직접 진단 테스트를 만들어 30회 `advance()`를 반복 추적한 결과, **주인공이 798일(2시즌 넘게) 동안 단 한 번도 `game` PendingAction을 못 받았다** — 고교 로스터의 전형적인 SP 정원이 정확히 5명(`ROTATION_SIZE`)이라, 신입 주인공이 그 5명보다 조금이라도 약하면 상위 5명 컷에서 통째로 밀려나 로테이션 배열 자체에 이름이 없고, 그러면 등판 기회 자체가 없으니 practice_stats도 못 쌓아 영원히 못 따라잡는 죽은 순환에 빠졌다. **수정**: `ranked_rotation_candidates_for_team`이 주인공이 유효 후보였는데 자연 경쟁으론 컷됐으면 6번째 자리로 강제 포함(정원 밖으로 완전히 밀려나는 것만 막고, 등판 "빈도"는 여전히 순위로 갈림). 수정 후 재진단 — 798일 동안도 못 받던 게 372일째(시즌 2 시작 직후)에 `game`을 받는 것으로 확인.
+
+**테스트**: `cargo test --lib` 443개 전부 통과(신규 다수 — 로테이션 경쟁 포함/제외/리그 게이팅 3개 + "정원 밖으로 완전히 밀려나도 6번째 자리는 보장" 1개 + 벤치 게이팅 통합 1개). `cargo clippy` 클린. frb 재생성 불필요. `flutter test` 27개 전부 통과 — 단 `game_loop_test.dart`/`records_test.dart`가 "첫 PendingAction은 반드시 game"이라는 이제는 깨진 가정에 의존하고 있어서, "game이 아닌 PendingAction은 첫 선택지로 넘기고 계속 진행"하도록 두 파일 다 루프를 일반화했다(`records_test.dart`의 "첫 등판은 반드시 시즌 0"이라는 가정도 함께 완화).
+
+### 6-97. 문서 갱신 규칙
 
 **이 문서는 살아있는 문서다.** Phase를 하나 끝낼 때마다:
 1. §2 표의 해당 행 상태를 `⬜ 미착수` → `🔶 진행중` → `✅ 완료`로 갱신.
