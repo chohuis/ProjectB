@@ -209,8 +209,18 @@ Future<void> setProtagonistProfile({
 Future<List<TeamOption>> listTeams({String? leagueId}) =>
     RustLib.instance.api.crateApiGameListTeams(leagueId: leagueId);
 
+/// 리그 화면 "로스터" 탭용 — 선수만(감독/코치/구단주 제외, 대화
+/// 2026-07-24에서 발견한 버그 수정: 예전엔 이 가드가 없어 스태프가
+/// 전술력·신뢰형성력 같은 낯선 숫자를 달고 선수단 목록에 섞여 나왔다).
+/// 스태프는 `list_team_staff`로 따로 조회.
 Future<List<RosterPlayerInfo>> listRoster({required String teamId}) =>
     RustLib.instance.api.crateApiGameListRoster(teamId: teamId);
+
+/// 리그 화면 "로스터" 탭의 스태프 카드용(대화 2026-07-24) — 감독/코치/
+/// 구단주만. `list_roster`와 같은 모양(`RosterPlayerInfo`)을 그대로
+/// 재사용해 Dart 쪽 파싱 로직을 공유할 수 있게 한다.
+Future<List<RosterPlayerInfo>> listTeamStaff({required String teamId}) =>
+    RustLib.instance.api.crateApiGameListTeamStaff(teamId: teamId);
 
 /// 캐릭터 생성 화면 "학교 선택" 미리보기(대화 2026-07-23) — 아직 새 게임을
 /// 시작하지 않아 슬롯이 없는 상태에서도 `world_seed`(캐릭터 생성 화면

@@ -8,6 +8,7 @@ import 'package:app/shared/error_banner.dart';
 import 'package:app/shared/loading_indicator.dart';
 import 'package:app/shared/design/colors.dart';
 import 'package:app/shared/design/widgets.dart';
+import 'package:app/shared/design/player_badges.dart';
 import 'package:app/shared/career_timeline_view.dart';
 import 'stat_radar_chart.dart';
 
@@ -120,7 +121,7 @@ class _StatusTab extends StatelessWidget {
   const _StatusTab({required this.status});
   final ProtagonistStatusInfo status;
 
-  // `_PitchMasteryRow` 한 줄의 실측 높이(패딩 14 + 텍스트 줄높이 약 20 +
+  // `PitchMasteryRow` 한 줄의 실측 높이(패딩 14 + 텍스트 줄높이 약 20 +
   // 아래 여백 6) + 카드 헤더/패딩 몫 — `maxKnownPitches()`개를 처음부터
   // 다 담을 수 있는 고정 카드 높이를 계산한다(리뷰 피드백 2026-07-24).
   static const _pitchRowHeight = 40.0;
@@ -171,7 +172,7 @@ class _StatusTab extends StatelessWidget {
                     children: [
                       const Text('보유 구종', style: TextStyle(fontWeight: FontWeight.bold)),
                       const SizedBox(height: 8),
-                      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [for (final p in pitches) _PitchMasteryRow(pitch: p)]),
+                      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [for (final p in pitches) PitchMasteryRow(pitch: p)]),
                     ],
                   ),
                 ),
@@ -206,67 +207,6 @@ class _StatusTab extends StatelessWidget {
     } catch (_) {
       return {};
     }
-  }
-}
-
-/// `protagonist.pitches`(05_구종_시스템.md §2, 대화 2026-07-23) —
-/// `{name, stage(1~5), weeks}` 객체 배열. `stage`는 1=습작·2=연마·3=실전·
-/// 4=주무기·5=필살기.
-typedef PitchMastery = ({String name, int stage, int weeks});
-
-List<PitchMastery> decodePitchMastery(String json) {
-  try {
-    final v = jsonDecode(json);
-    if (v is! List) return [];
-    return v.whereType<Map>().map((m) {
-      return (
-        name: m['name']?.toString() ?? '',
-        stage: (m['stage'] as num?)?.toInt() ?? 1,
-        weeks: (m['weeks'] as num?)?.toInt() ?? 0,
-      );
-    }).toList();
-  } catch (_) {
-    return [];
-  }
-}
-
-const _masteryStageLabels = {1: '습작', 2: '연마', 3: '실전', 4: '주무기', 5: '필살기'};
-
-Color _masteryStageColor(int stage) {
-  if (stage >= 4) return AppColors.safe;
-  if (stage >= 2) return AppColors.accent;
-  return AppColors.textSecondary;
-}
-
-/// 구종명 좌측·마스터리 단계 우측(리뷰 피드백 2026-07-24) — 예전엔
-/// `Wrap`으로 알약형 칩을 나열해 구종마다 너비가 들쭉날쭉했다. 카드
-/// 전체 너비를 그대로 쓰는 한 줄짜리 행으로 바꿔 이름 길이와 무관하게
-/// 모든 행이 같은 너비를 갖는다(가장 긴 이름에 맞추는 효과를 텍스트
-/// 폭 계산 없이 얻음).
-class _PitchMasteryRow extends StatelessWidget {
-  const _PitchMasteryRow({required this.pitch});
-  final PitchMastery pitch;
-
-  @override
-  Widget build(BuildContext context) {
-    final color = _masteryStageColor(pitch.stage);
-    final label = _masteryStageLabels[pitch.stage] ?? '습작';
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.only(bottom: 6),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
-        border: Border.all(color: color),
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Row(
-        children: [
-          Expanded(child: Text(pitch.name, style: const TextStyle(color: AppColors.textPrimary, fontSize: 13))),
-          Text(label, style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.bold)),
-        ],
-      ),
-    );
   }
 }
 
@@ -510,7 +450,7 @@ class _TrainingTabState extends State<_TrainingTab> {
                   items: [
                     const DropdownMenuItem(value: null, child: Text('선택 안 함')),
                     for (final p in _masterablePitches)
-                      DropdownMenuItem(value: p.name, child: Text('${p.name} (${_masteryStageLabels[p.stage] ?? '습작'} → 다음 단계)')),
+                      DropdownMenuItem(value: p.name, child: Text('${p.name} (${masteryStageLabels[p.stage] ?? '습작'} → 다음 단계)')),
                   ],
                   onChanged: (v) => setState(() {
                     _masteryPitch = v;

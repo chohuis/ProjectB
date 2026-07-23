@@ -1437,7 +1437,35 @@
 
 **테스트**(`cargo test --lib` 384개 전부 통과, 신규 5개): `set_protagonist_training_rejects_both_new_and_mastery_pitch_at_once`·`set_protagonist_training_rejects_mastery_pitch_not_yet_known`·`set_protagonist_training_rejects_mastery_pitch_already_at_max_stage`·`process_protagonist_week_advances_pitch_mastery_stage_after_enough_weeks`·`process_protagonist_week_pitch_mastery_never_exceeds_stage_five`·`weeks_required_to_master_pitch_is_lighter_than_learning_a_new_pitch`·`mastering_an_existing_pitch_slows_stat_growth_less_than_learning_a_new_one`. 기존 `create_protagonist_inserts_expected_row`·`process_protagonist_week_learns_a_new_pitch_after_enough_weeks` 등 새 JSON 모양에 맞게 갱신. `cargo clippy --lib --tests --bins` 클린(무관 기존 경고 1개만). `flutter analyze` 클린, `flutter test`(26개, `game_loop_test.dart`는 전체 스위트 동시 실행 시 환경적 타임아웃 1회 재현 — 단독 실행 시 3:24에 통과 확인, 이 세션에서 이미 문서화된 동일 패턴) 클린, `flutter build windows --debug` 성공, `engine.dll` 갱신.
 
-### 6-86. 문서 갱신 규칙
+### 6-86. 리그 화면 로스터 탭 재정비 (2026-07-24, 완료) — UI 피드백 10번(마지막)
+
+**Context**: 10항목 UI 피드백의 마지막 항목("리그도 정리가 안 되어 있음"). 조사 결과 `04_UI기획/02_리그.md` §1 설계 문서 대비 실제 구현이 크게 벌어져 있었고, **진짜 버그도 하나 있었다**: `list_roster`가 스태프 제외 가드가 없어 감독/코치/구단주가 전술력·신뢰형성력 같은 낯선 숫자를 달고 선수 목록에 섞여 나오고 있었다(이 세션 앞부분에서 찾은 `load_batting_lineup` 버그와 같은 패턴). 사용자 확인: 4탭(로스터/일정/순위/라이벌) 내비게이션은 그대로 두고 **로스터 탭 내용물만** 재정비.
+
+**구현**:
+- `api::game::list_roster`에 `AND position NOT IN ('감독', '코치', '구단주')` 가드 추가(버그 수정). `list_team_staff`(신규) — 같은 `RosterPlayerInfo` 구조체로 스태프만 따로 조회. **frb 재생성**.
+- `app/lib/shared/design/player_badges.dart`(신규) — `new_game_screen.dart`/`my_player_screen.dart`에 각자 있던 OVR 배지(`ovrOf`/`ovrColor`/`OvrBadge`)·구종 마스터리 헬퍼(`PitchMastery`/`decodePitchMastery`/`masteryStageLabels`/`masteryStageColor`/`PitchMasteryRow`)를 세 번째로 필요해진 시점에 공유 파일로 추출(로직 변경 없이 이동+공개화), 두 파일도 여기서 import하도록 교체.
+- `league_screen.dart::_RosterTab` — 캐릭터 생성 화면의 로스터 미리보기(`_SchoolRosterTab`)와 같은 카드형 배치로 재구성: 좌측 구단주(이름만)/감독/코치 카드(OVR 배지), 우측 투수/타자 카드(이름·포지션·나이·OVR, 투수는 보유 구종을 "이름(단계)" 압축 텍스트로 한 줄 더 — §1 "색코딩된 숫자"·"투수 보유 구종" 요구사항 반영).
+
+**스코프 판단**: 일정·순위·라이벌 탭은 이번에 안 건드림(사용자가 로스터 탭으로 범위 확정). 순위 탭 "전력★ 대비 순위 이변"은 `HsSchoolDetail.stars`(이미 있는 `team_history.season_ranks` 기반 계산값, 전력★ 자체는 content.db에 없는 설계문서 전용값)를 재사용할 여지가 있으나 고교 외 4개 리그로 일반화가 필요해 이월. 개인 라이벌(관계도·아크)·타자 유형 태그는 기존 이월 유지(엔진에 계산 로직 자체가 없음).
+
+**테스트**(`cargo test --lib` 385개 전부 통과, 신규 없음 — 기존 `league_hub_queries_work_end_to_end_after_new_game`에 스태프 분리 어서션 추가): `list_roster`가 스태프를 안 섞는지, `list_team_staff`가 정확히 3명(감독+코치+구단주)만 반환하는지. `cargo clippy --lib --tests --bins` 클린(무관 기존 경고 1개만). `flutter analyze` 클린, `flutter test`(26개) 클린, `flutter build windows --debug` 성공, `engine.dll` 갱신.
+
+### 6-87. 세이브 슬롯 3개 상한 + 새로하기 슬롯 선택 (2026-07-24, 완료)
+
+**Context**: "자동저장으로 슬롯이 무한이 늘어난다"는 지적 — 조사 결과 자동저장 자체는 없고, `newSlotPath()`(`slot_paths.dart`)가 밀리초 타임스탬프로 파일명을 지어 "새로하기"를 누를 때마다 새 `.db` 파일이 생기고 아무것도 안 지우는 구조라, 이 세션 동안 반복 테스트하며 9개가 쌓여 있었다(`%APPDATA%\com.onepitch.app\app\slots\`).
+
+**구현**:
+- `slot_paths.dart`: 타임스탬프 `newSlotPath()`를 없애고 `maxSlots = 3` + `slotPathForIndex(dir, index)`(고정 `slot_1.db`~`slot_3.db`)로 교체.
+- `NewGameSlotScreen`(신규, `app/lib/features/main_menu/new_game_slot_screen.dart`) — "새로하기"가 캐릭터 생성으로 바로 안 가고 여기부터 시작. `ContinueGameScreen`과 같은 위젯 테스트 주입 패턴(`slotsDirectoryResolver`). 항상 정확히 3행 — 빈 슬롯은 탭하면 바로 `/new-game`, 이미 세이브가 있는 슬롯은 덮어쓰기 확인 다이얼로그(`ContinueGameScreen._deleteSlot`과 같은 패턴) 후 `deleteSlot`+`/new-game` 이동.
+- `router.dart`: `/new-game-slot` 라우트 추가, `/new-game`이 이제 `state.extra`(슬롯 경로)를 받음. `NewGameScreen`에 `required slotPath` 생성자 파라미터 추가, `_submit()`이 더 이상 직접 경로를 안 만듦.
+- 엔진 변경 없음 — `list_slots`/`delete_slot`/`load_slot`/`new_game`이 이미 임의 경로를 받아 그대로 재사용.
+- 기존 세이브 9개(전부 이 세션 테스트 중 생긴 것) 전부 삭제 — 새 고정 3슬롯 스킴과 이름 형식이 안 맞아 마이그레이션 대상이 아님.
+
+**스코프 판단**: "이어하기"(`ContinueGameScreen`)는 구조 변경 없음. 슬롯 커스텀 이름 짓기 기능은 이번 요청에 없어 안 만듦 — 슬롯 번호+캐릭터 이름/Day/시즌으로 구분.
+
+**테스트**: `flutter analyze` 클린. `flutter test`(27개, 신규 1개 `NewGameSlotScreen shows 3 empty slots and picking one navigates to /new-game with its path`) 전부 통과, 기존 `main_menu_widget_test.dart`의 "새로하기" 네비게이션 테스트를 `/new-game-slot`으로 갱신. `flutter build windows --debug` 성공. 엔진 변경 없어 `cargo test`/`engine.dll` 교체 불필요.
+
+### 6-88. 문서 갱신 규칙
 
 **이 문서는 살아있는 문서다.** Phase를 하나 끝낼 때마다:
 1. §2 표의 해당 행 상태를 `⬜ 미착수` → `🔶 진행중` → `✅ 완료`로 갱신.

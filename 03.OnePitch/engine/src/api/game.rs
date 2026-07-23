@@ -827,11 +827,43 @@ pub struct RosterPlayerInfo {
     pub pitches_json: Option<String>,
 }
 
+/// 리그 화면 "로스터" 탭용 — 선수만(감독/코치/구단주 제외, 대화
+/// 2026-07-24에서 발견한 버그 수정: 예전엔 이 가드가 없어 스태프가
+/// 전술력·신뢰형성력 같은 낯선 숫자를 달고 선수단 목록에 섞여 나왔다).
+/// 스태프는 `list_team_staff`로 따로 조회.
 pub fn list_roster(team_id: String) -> anyhow::Result<Vec<RosterPlayerInfo>> {
     with_state(|state| {
-        let mut stmt = state
-            .slot_conn
-            .prepare("SELECT id, name, position, age, stats, pitches FROM npc WHERE team_id = ?1 AND retired = 0 ORDER BY position, id")?;
+        let mut stmt = state.slot_conn.prepare(
+            "SELECT id, name, position, age, stats, pitches FROM npc
+             WHERE team_id = ?1 AND retired = 0 AND position NOT IN ('감독', '코치', '구단주')
+             ORDER BY position, id",
+        )?;
+        let rows: Vec<RosterPlayerInfo> = stmt
+            .query_map([&team_id], |r| {
+                Ok(RosterPlayerInfo {
+                    id: r.get(0)?,
+                    name: r.get(1)?,
+                    position: r.get(2)?,
+                    age: r.get(3)?,
+                    stats_json: r.get(4)?,
+                    pitches_json: r.get(5)?,
+                })
+            })?
+            .collect::<Result<_, _>>()?;
+        Ok(rows)
+    })
+}
+
+/// 리그 화면 "로스터" 탭의 스태프 카드용(대화 2026-07-24) — 감독/코치/
+/// 구단주만. `list_roster`와 같은 모양(`RosterPlayerInfo`)을 그대로
+/// 재사용해 Dart 쪽 파싱 로직을 공유할 수 있게 한다.
+pub fn list_team_staff(team_id: String) -> anyhow::Result<Vec<RosterPlayerInfo>> {
+    with_state(|state| {
+        let mut stmt = state.slot_conn.prepare(
+            "SELECT id, name, position, age, stats, pitches FROM npc
+             WHERE team_id = ?1 AND retired = 0 AND position IN ('감독', '코치', '구단주')
+             ORDER BY position",
+        )?;
         let rows: Vec<RosterPlayerInfo> = stmt
             .query_map([&team_id], |r| {
                 Ok(RosterPlayerInfo {
@@ -1383,6 +1415,14 @@ mod tests {
         let roster = list_roster(hs_team.clone()).unwrap();
         assert!(!roster.is_empty());
         assert!(roster.iter().any(|p| p.position == "선발투수"));
+        assert!(
+            roster.iter().all(|p| !["감독", "코치", "구단주"].contains(&p.position.as_str())),
+            "list_roster must not mix staff into the player list"
+        );
+
+        let staff = list_team_staff(hs_team.clone()).unwrap();
+        assert_eq!(staff.len(), 3, "감독+코치+구단주 3명");
+        assert!(staff.iter().all(|p| ["감독", "코치", "구단주"].contains(&p.position.as_str())));
 
         let schedule = get_team_schedule(hs_team.clone()).unwrap();
         assert!(!schedule.is_empty());

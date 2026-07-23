@@ -7,11 +7,11 @@ import 'package:go_router/go_router.dart';
 import 'package:app/src/rust/api/game.dart';
 import 'package:app/features/game/game_provider.dart';
 import 'package:app/shared/content_db.dart';
-import 'package:app/shared/slot_paths.dart';
 import 'package:app/shared/error_banner.dart';
 import 'package:app/shared/loading_indicator.dart';
 import 'package:app/shared/design/colors.dart';
 import 'package:app/shared/design/widgets.dart';
+import 'package:app/shared/design/player_badges.dart';
 import 'hs_school_region_map.dart';
 import 'hs_rank_trend_chart.dart';
 
@@ -36,7 +36,12 @@ String _formatBudget(double won) => '${(won / 100000000).toStringAsFixed(1)}억�
 /// 라이벌·예산(KpiTile)·"로스터" 탭(`_SchoolRosterTab`, 실제 게임 시작 후
 /// 나올 로스터를 `_worldSeed`로 미리 계산해서 보여줌, 대화 2026-07-23).
 class NewGameScreen extends ConsumerStatefulWidget {
-  const NewGameScreen({super.key});
+  /// `slotPath`는 `/new-game-slot`(`NewGameSlotScreen`)에서 미리 고른
+  /// 고정 슬롯 경로 — 세이브 슬롯 상한 도입(대화 2026-07-24) 이후로는
+  /// 이 화면이 직접 새 경로를 만들지 않는다.
+  const NewGameScreen({super.key, required this.slotPath});
+
+  final String slotPath;
 
   @override
   ConsumerState<NewGameScreen> createState() => _NewGameScreenState();
@@ -502,8 +507,6 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
   }
 
   Future<void> _submit() async {
-    final slotPath = await newSlotPath();
-    if (!mounted) return;
     await ref
         .read(gameControllerProvider.notifier)
         .startNewGame(
@@ -513,7 +516,7 @@ class _NewGameScreenState extends ConsumerState<NewGameScreen> {
           handedness: _handedness,
           schoolTeamId: _selectedSchoolId!,
           archetype: _archetype,
-          slotPath: slotPath,
+          slotPath: widget.slotPath,
           birthMonth: _birthMonth,
           birthDay: _birthDay,
           heightCm: _parsePositive(_heightController, 175),
@@ -635,42 +638,6 @@ class _SchoolBasicTab extends StatelessWidget {
 /// 이미 01_선수_능력치.md §7 "실제 MLB 스카우팅 스케일(20~80)과 동일
 /// 관례"라 평균 반올림만으로 바로 그 스케일의 OVR이 된다 — 새 계산식
 /// 필요 없음.
-int _ovr(String statsJson) {
-  try {
-    final v = jsonDecode(statsJson);
-    if (v is! Map) return 0;
-    final nums = v.values.whereType<num>().toList();
-    if (nums.isEmpty) return 0;
-    return (nums.reduce((a, b) => a + b) / nums.length).round();
-  } catch (_) {
-    return 0;
-  }
-}
-
-Color _ovrColor(int ovr) {
-  if (ovr >= 55) return AppColors.safe;
-  if (ovr >= 40) return AppColors.accent;
-  return AppColors.textSecondary;
-}
-
-class _OvrBadge extends StatelessWidget {
-  const _OvrBadge({required this.ovr});
-
-  final int ovr;
-
-  @override
-  Widget build(BuildContext context) {
-    final color = _ovrColor(ovr);
-    return Container(
-      width: 30,
-      height: 20,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(color: color.withValues(alpha: 0.15), border: Border.all(color: color), borderRadius: BorderRadius.circular(4)),
-      child: Text('$ovr', style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.bold)),
-    );
-  }
-}
-
 /// "로스터" 탭(대화 2026-07-23) — `_worldSeed`(캐릭터 생성 화면 진입 시
 /// 고정)로 실제 게임 시작 후 생성될 로스터를 그대로 미리 계산해 보여준다
 /// (`preview_hs_roster`, `generate_league_roster`와 완전히 같은 값이 나옴을
@@ -778,7 +745,7 @@ class _StaffCard extends StatelessWidget {
               children: [
                 Expanded(child: Text(p.name, style: const TextStyle(color: AppColors.textPrimary, fontSize: 12), overflow: TextOverflow.ellipsis)),
                 // 구단주는 상세 능력치를 안 보여줌(요청 2026-07-23) — 이름만.
-                if (label != '구단주') ...[const SizedBox(width: 6), _OvrBadge(ovr: _ovr(p.statsJson))],
+                if (label != '구단주') ...[const SizedBox(width: 6), OvrBadge(ovr: ovrOf(p.statsJson))],
               ],
             ),
         ],
@@ -819,7 +786,7 @@ class _PlayerListCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      _OvrBadge(ovr: _ovr(p.statsJson)),
+                      OvrBadge(ovr: ovrOf(p.statsJson)),
                     ],
                   ),
                 );

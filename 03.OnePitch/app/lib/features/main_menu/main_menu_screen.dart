@@ -35,7 +35,7 @@ class MainMenuScreen extends StatelessWidget {
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  _MenuButton(label: '새로하기', onPressed: () => context.push('/new-game')),
+                  _MenuButton(label: '새로하기', onPressed: () => context.push('/new-game-slot')),
                   const SizedBox(height: 16),
                   _MenuButton(label: '이어하기', onPressed: () => context.push('/continue')),
                   const SizedBox(height: 16),

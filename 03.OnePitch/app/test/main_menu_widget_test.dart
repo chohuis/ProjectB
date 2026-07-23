@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:app/features/game/game_provider.dart';
 import 'package:app/features/main_menu/main_menu_screen.dart';
 import 'package:app/features/main_menu/continue_game_screen.dart';
+import 'package:app/features/main_menu/new_game_slot_screen.dart';
 import 'package:app/src/rust/api/game.dart';
 import 'package:app/src/rust/frb_generated.dart';
 
@@ -20,7 +21,7 @@ void main() {
       routes: [
         GoRoute(path: '/', builder: (context, state) => MainMenuScreen(onExit: onExit ?? () {})),
         GoRoute(path: '/continue', builder: (context, state) => const Scaffold(body: Text('이어하기 화면'))),
-        GoRoute(path: '/new-game', builder: (context, state) => const Scaffold(body: Text('새로하기 화면'))),
+        GoRoute(path: '/new-game-slot', builder: (context, state) => const Scaffold(body: Text('새로하기 슬롯 화면'))),
       ],
     ),
   );
@@ -35,11 +36,11 @@ void main() {
     expect(find.text('OnePitch'), findsNothing, reason: '헤더 타이틀은 표시되지 않아야 함');
   });
 
-  testWidgets('MainMenuScreen 새로하기 navigates to /new-game', (tester) async {
+  testWidgets('MainMenuScreen 새로하기 navigates to /new-game-slot', (tester) async {
     await tester.pumpWidget(buildMenu());
     await tester.tap(find.text('새로하기'));
     await tester.pumpAndSettle();
-    expect(find.text('새로하기 화면'), findsOneWidget);
+    expect(find.text('새로하기 슬롯 화면'), findsOneWidget);
   });
 
   testWidgets('MainMenuScreen 이어하기 navigates to /continue', (tester) async {
@@ -126,5 +127,42 @@ void main() {
     // 삭제가 항상 파일잠금 에러가 난다. 유일 이름 OS 임시폴더(`createTempSync`)
     // 라 남겨둬도 다른 테스트·다음 실행에 영향 없음.
     container.dispose();
+  });
+
+  /// 세이브 슬롯 상한(대화 2026-07-24) — 빈 디렉터리를 주입하면 3슬롯 전부
+  /// "비어 있음"으로 보이고, 하나를 고르면 `/new-game`에 그 슬롯의 고정
+  /// 경로가 `extra`로 그대로 전달되는지 확인.
+  testWidgets('NewGameSlotScreen shows 3 empty slots and picking one navigates to /new-game with its path', (tester) async {
+    final tempDir = Directory.systemTemp.createTempSync('onepitch_new_game_slot_test_');
+
+    await tester.runAsync(() async {
+      await tester.pumpWidget(
+        MaterialApp.router(
+          routerConfig: GoRouter(
+            initialLocation: '/',
+            routes: [
+              GoRoute(
+                path: '/',
+                builder: (context, state) => NewGameSlotScreen(slotsDirectoryResolver: () async => tempDir),
+              ),
+              GoRoute(path: '/new-game', builder: (context, state) => Scaffold(body: Text('새 게임: ${state.extra}'))),
+            ],
+          ),
+        ),
+      );
+      await Future.delayed(const Duration(milliseconds: 300));
+      await tester.pump();
+    });
+    await tester.pump();
+
+    expect(find.text('슬롯 1'), findsOneWidget);
+    expect(find.text('슬롯 2'), findsOneWidget);
+    expect(find.text('슬롯 3'), findsOneWidget);
+    expect(find.text('비어 있음'), findsNWidgets(3));
+
+    await tester.tap(find.text('슬롯 1'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('새 게임: ${tempDir.path}/slot_1.db'), findsOneWidget);
   });
 }

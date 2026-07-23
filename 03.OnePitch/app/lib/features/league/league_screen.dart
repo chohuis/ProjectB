@@ -7,6 +7,8 @@ import 'package:app/features/game/game_provider.dart';
 import 'package:app/shared/team_names.dart';
 import 'package:app/shared/loading_indicator.dart';
 import 'package:app/shared/design/colors.dart';
+import 'package:app/shared/design/widgets.dart';
+import 'package:app/shared/design/player_badges.dart';
 
 const _leagueLabels = {
   'league:hs': '고교',
@@ -133,6 +135,12 @@ class _LeagueScreenState extends ConsumerState<LeagueScreen> {
   }
 }
 
+/// "로스터" 탭(재정비 대화 2026-07-24) — 예전엔 감독/코치/구단주가
+/// `list_roster`에 필터 없이 섞여 나와(발견한 버그, 스탯도 전술력 같은
+/// 낯선 필드) 선수단 리스트 사이에 낯선 항목이 끼어 있었다. 지금은
+/// `listRoster`(선수만)와 `listTeamStaff`(스태프만)로 분리해서 받고,
+/// 캐릭터 생성 화면의 로스터 미리보기(`new_game_screen.dart`의
+/// `_SchoolRosterTab`)와 같은 카드형 배치를 재사용한다.
 class _RosterTab extends StatefulWidget {
   const _RosterTab({required this.teamId});
   final String teamId;
@@ -143,6 +151,7 @@ class _RosterTab extends StatefulWidget {
 
 class _RosterTabState extends State<_RosterTab> {
   List<RosterPlayerInfo>? _roster;
+  List<RosterPlayerInfo>? _staff;
 
   @override
   void didUpdateWidget(covariant _RosterTab oldWidget) {
@@ -157,37 +166,161 @@ class _RosterTabState extends State<_RosterTab> {
   }
 
   Future<void> _load() async {
-    setState(() => _roster = null);
-    final roster = await listRoster(teamId: widget.teamId);
-    if (mounted) setState(() => _roster = roster);
+    setState(() {
+      _roster = null;
+      _staff = null;
+    });
+    final results = await Future.wait([listRoster(teamId: widget.teamId), listTeamStaff(teamId: widget.teamId)]);
+    if (mounted) {
+      setState(() {
+        _roster = results[0];
+        _staff = results[1];
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final roster = _roster;
-    if (roster == null) return const LoadingIndicator();
-    if (roster.isEmpty) return const Center(child: Text('로스터가 없습니다.'));
-    return ListView.builder(
-      itemCount: roster.length,
-      itemBuilder: (context, i) {
-        final p = roster[i];
-        return ListTile(
-          title: Text('${p.name} (${p.position}, ${p.age}세)'),
-          subtitle: Text(_statsSummary(p.statsJson)),
-        );
-      },
+    final staff = _staff;
+    if (roster == null || staff == null) return const LoadingIndicator();
+    if (roster.isEmpty && staff.isEmpty) return const Center(child: Text('로스터가 없습니다.'));
+
+    final owner = staff.where((p) => p.position == '구단주').firstOrNull;
+    final manager = staff.where((p) => p.position == '감독').firstOrNull;
+    final coach = staff.where((p) => p.position == '코치').firstOrNull;
+    final pitchers = roster.where((p) => p.position == '선발투수' || p.position == '구원투수').toList();
+    final batters = roster.where((p) => p.position != '선발투수' && p.position != '구원투수').toList();
+
+    return Padding(
+      padding: const EdgeInsets.all(12),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            flex: 2,
+            child: Column(
+              children: [
+                Expanded(child: _StaffCard(label: '구단주', person: owner)),
+                const SizedBox(height: 8),
+                Expanded(child: _StaffCard(label: '감독', person: manager)),
+                const SizedBox(height: 8),
+                Expanded(child: _StaffCard(label: '코치', person: coach)),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            flex: 3,
+            child: Column(
+              children: [
+                Expanded(child: _PlayerListCard(label: '투수', players: pitchers)),
+                const SizedBox(height: 8),
+                Expanded(child: _PlayerListCard(label: '타자', players: batters)),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _StaffCard extends StatelessWidget {
+  const _StaffCard({required this.label, required this.person});
+
+  final String label;
+  final RosterPlayerInfo? person;
+
+  @override
+  Widget build(BuildContext context) {
+    final p = person;
+    return AppPanel(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 10)),
+          const SizedBox(height: 4),
+          if (p == null)
+            const Text('-', style: TextStyle(color: AppColors.textSecondary, fontSize: 12))
+          else
+            Row(
+              children: [
+                Expanded(child: Text(p.name, style: const TextStyle(color: AppColors.textPrimary, fontSize: 12), overflow: TextOverflow.ellipsis)),
+                if (label != '구단주') ...[const SizedBox(width: 6), OvrBadge(ovr: ovrOf(p.statsJson))],
+              ],
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PlayerListCard extends StatelessWidget {
+  const _PlayerListCard({required this.label, required this.players});
+
+  final String label;
+  final List<RosterPlayerInfo> players;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppPanel(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('$label (${players.length})', style: const TextStyle(color: AppColors.textSecondary, fontSize: 10)),
+          const SizedBox(height: 4),
+          Expanded(
+            child: ListView.builder(
+              itemCount: players.length,
+              itemBuilder: (context, i) {
+                final p = players[i];
+                final pitchSummary = _pitchSummary(p.pitchesJson);
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 3),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              '${p.name} · ${p.position} · ${p.age}세',
+                              style: const TextStyle(color: AppColors.textPrimary, fontSize: 12),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          OvrBadge(ovr: ovrOf(p.statsJson)),
+                        ],
+                      ),
+                      if (pitchSummary.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 1),
+                          child: Text(pitchSummary, style: const TextStyle(color: AppColors.textSecondary, fontSize: 10)),
+                        ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  String _statsSummary(String statsJson) {
-    try {
-      final v = jsonDecode(statsJson);
-      if (v is! Map) return '';
-      final entries = v.entries.where((e) => e.value is num).take(4);
-      return entries.map((e) => '${e.key} ${(e.value as num).round()}').join(' · ');
-    } catch (_) {
-      return '';
-    }
+  // 투수 보유 구종을 마스터리 단계와 함께 압축 표시(04_UI기획/02_리그.md
+  // §1 "투수 보유 구종") — 목록 화면이라 `PitchMasteryRow`(내 정보 화면용
+  // 큰 배지)를 그대로 쓰면 너무 길어져서, 한 줄 요약 텍스트로 축약.
+  String _pitchSummary(String? pitchesJson) {
+    if (pitchesJson == null) return '';
+    final pitches = decodePitchMastery(pitchesJson);
+    if (pitches.isEmpty) return '';
+    return pitches.map((p) => '${p.name}(${masteryStageLabels[p.stage] ?? '습작'})').join(' · ');
   }
 }
 
