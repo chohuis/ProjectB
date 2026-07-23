@@ -457,6 +457,13 @@ pub fn set_university_major(major: String) -> anyhow::Result<()> {
     with_state(|state| repository::set_university_major(&state.slot_conn, &major))
 }
 
+/// 과목 석차백분율(1=상위)을 9등급으로 — 학업 탭 과목별 표에서 순수 계산이라
+/// I/O·락 없이 동기 호출로 둔다(`course_names()`와 같은 패턴).
+#[flutter_rust_bridge::frb(sync)]
+pub fn percentile_to_grade(percentile: f64) -> i64 {
+    crate::sim::academics::percentile_to_grade(percentile) as i64
+}
+
 /// 1구 조작 집중뷰의 3×3 코스 그리드 버튼 이름 — `sim::pitch::Course`의
 /// 9개 값 그대로(`resolve_choice`의 `"구종:코스"` choice_id에 이 이름을
 /// 그대로 넣으면 된다). 순수 계산(I/O·락 없음)이라 동기 호출로 둔다 —

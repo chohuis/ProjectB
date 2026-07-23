@@ -10,7 +10,7 @@ import 'package:app/src/rust/frb_generated.dart';
 void main() {
   setUpAll(() async => await RustLib.init());
 
-  testWidgets('my player screen renders the 4 tabs and status content for a live game', (tester) async {
+  testWidgets('my player screen renders the 5 tabs(including academics for a high schooler) and status content for a live game', (tester) async {
     final container = ProviderContainer();
     addTearDown(container.dispose);
 
@@ -43,9 +43,22 @@ void main() {
     expect(find.text('훈련'), findsOneWidget);
     expect(find.text('커리어'), findsOneWidget);
     expect(find.text('재정'), findsOneWidget);
+    expect(find.text('학업'), findsOneWidget, reason: '고교 소속 새 게임이라 학업 탭이 보여야 함(대화 2026-07-26)');
     expect(find.text('능력치'), findsOneWidget);
     expect(find.text('구속'), findsOneWidget, reason: '3열 표에 라벨로 뜸 — 레이더 차트 쪽 라벨은 Canvas에 직접 그려서 위젯 트리엔 안 잡힘');
     expect(find.text('보유 구종'), findsOneWidget);
+
+    // 학업 탭 — 과목별 현황·주간 학업 선택·시험 준비 현황 3패널이 렌더돼야 함.
+    await tester.tap(find.text('학업'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400)); // TabBarView 전환 애니메이션
+    await tester.runAsync(() => Future.delayed(const Duration(milliseconds: 300)));
+    await tester.pump();
+    expect(find.text('과목별 현황'), findsOneWidget);
+    expect(find.text('국어'), findsOneWidget);
+    expect(find.text('주간 학업 선택'), findsOneWidget);
+    expect(find.text('일반 수업'), findsOneWidget);
+    expect(find.text('시험 준비 현황'), findsOneWidget);
 
     // 커리어 탭 — 뉴게임 직후라 "입학" 한 건만 있어야 함(create_protagonist
     // 가 남긴 enrollment 이벤트, §6-52). `pumpAndSettle` 대신 이 파일

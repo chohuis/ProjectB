@@ -110,6 +110,11 @@ Future<void> setWeeklyStudyMode({required String mode}) =>
 Future<void> setUniversityMajor({required String major}) =>
     RustLib.instance.api.crateApiGameSetUniversityMajor(major: major);
 
+/// 과목 석차백분율(1=상위)을 9등급으로 — 학업 탭 과목별 표에서 순수 계산이라
+/// I/O·락 없이 동기 호출로 둔다(`course_names()`와 같은 패턴).
+PlatformInt64 percentileToGrade({required double percentile}) =>
+    RustLib.instance.api.crateApiGamePercentileToGrade(percentile: percentile);
+
 /// 1구 조작 집중뷰의 3×3 코스 그리드 버튼 이름 — `sim::pitch::Course`의
 /// 9개 값 그대로(`resolve_choice`의 `"구종:코스"` choice_id에 이 이름을
 /// 그대로 넣으면 된다). 순수 계산(I/O·락 없음)이라 동기 호출로 둔다 —

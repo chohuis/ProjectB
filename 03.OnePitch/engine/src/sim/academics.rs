@@ -173,6 +173,31 @@ pub fn raw_to_grade(raw: u32) -> u32 {
     }
 }
 
+/// 과목 하나의 석차백분율(1=상위 1%, 100=하위)을 9등급 상대평가로 —
+/// `academicsEngine.ts::percentileToGrade` 그대로. `raw_to_grade`(시험
+/// 원점수 채점용)와는 방향·컷라인이 다른 별개 함수 — 헷갈리지 않게 주의.
+pub fn percentile_to_grade(percentile: f64) -> u32 {
+    if percentile <= 4.0 {
+        1
+    } else if percentile <= 11.0 {
+        2
+    } else if percentile <= 23.0 {
+        3
+    } else if percentile <= 40.0 {
+        4
+    } else if percentile <= 60.0 {
+        5
+    } else if percentile <= 77.0 {
+        6
+    } else if percentile <= 89.0 {
+        7
+    } else if percentile <= 96.0 {
+        8
+    } else {
+        9
+    }
+}
+
 pub fn risk_level_for_grade(grade: u32) -> &'static str {
     if grade <= 6 {
         "ok"
@@ -270,6 +295,22 @@ mod tests {
         let mut scores = initial_hs_subject_scores();
         let gain = apply_weekly_study(&mut scores, "focus", 1.0, 97.0);
         assert_eq!(gain, 3.0, "97 누적 + 8점 획득분은 100을 넘으니 3만 인정돼야 함");
+    }
+
+    #[test]
+    fn percentile_to_grade_matches_the_documented_cutoffs() {
+        assert_eq!(percentile_to_grade(1.0), 1);
+        assert_eq!(percentile_to_grade(4.0), 1);
+        assert_eq!(percentile_to_grade(4.1), 2);
+        assert_eq!(percentile_to_grade(11.0), 2);
+        assert_eq!(percentile_to_grade(23.0), 3);
+        assert_eq!(percentile_to_grade(40.0), 4);
+        assert_eq!(percentile_to_grade(60.0), 5);
+        assert_eq!(percentile_to_grade(77.0), 6);
+        assert_eq!(percentile_to_grade(89.0), 7);
+        assert_eq!(percentile_to_grade(96.0), 8);
+        assert_eq!(percentile_to_grade(96.1), 9);
+        assert_eq!(percentile_to_grade(100.0), 9);
     }
 
     #[test]

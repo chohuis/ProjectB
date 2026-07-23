@@ -38,7 +38,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.12.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -2078233910;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 2137852351;
 
 // Section: executor
 
@@ -1474,6 +1474,37 @@ fn wire__crate__api__game__new_game_impl(
                     })(),
                 )
             }
+        },
+    )
+}
+fn wire__crate__api__game__percentile_to_grade_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "percentile_to_grade",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_percentile = <f64>::sse_decode(&mut deserializer);
+            deserializer.end();
+            transform_result_sse::<_, ()>((move || {
+                let output_ok =
+                    Result::<_, ()>::Ok(crate::api::game::percentile_to_grade(api_percentile))?;
+                Ok(output_ok)
+            })())
         },
     )
 }
@@ -2992,15 +3023,15 @@ fn pde_ffi_dispatcher_primary_impl(
         39 => wire__crate__api__game__load_slot_impl(port, ptr, rust_vec_len, data_len),
         40 => wire__crate__api__game__mark_inbox_read_impl(port, ptr, rust_vec_len, data_len),
         42 => wire__crate__api__game__new_game_impl(port, ptr, rust_vec_len, data_len),
-        43 => wire__crate__api__game__pitch_type_names_impl(port, ptr, rust_vec_len, data_len),
-        45 => wire__crate__api__game__preview_hs_roster_impl(port, ptr, rust_vec_len, data_len),
-        46 => wire__crate__api__game__resolve_choice_impl(port, ptr, rust_vec_len, data_len),
-        47 => {
+        44 => wire__crate__api__game__pitch_type_names_impl(port, ptr, rust_vec_len, data_len),
+        46 => wire__crate__api__game__preview_hs_roster_impl(port, ptr, rust_vec_len, data_len),
+        47 => wire__crate__api__game__resolve_choice_impl(port, ptr, rust_vec_len, data_len),
+        48 => {
             wire__crate__api__game__set_protagonist_profile_impl(port, ptr, rust_vec_len, data_len)
         }
-        48 => wire__crate__api__game__set_training_impl(port, ptr, rust_vec_len, data_len),
-        49 => wire__crate__api__game__set_university_major_impl(port, ptr, rust_vec_len, data_len),
-        50 => wire__crate__api__game__set_weekly_study_mode_impl(port, ptr, rust_vec_len, data_len),
+        49 => wire__crate__api__game__set_training_impl(port, ptr, rust_vec_len, data_len),
+        50 => wire__crate__api__game__set_university_major_impl(port, ptr, rust_vec_len, data_len),
+        51 => wire__crate__api__game__set_weekly_study_mode_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -3020,9 +3051,10 @@ fn pde_ffi_dispatcher_sync_impl(
         28 => wire__crate__api__simple__greet_impl(ptr, rust_vec_len, data_len),
         29 => wire__crate__api__game__hometown_region_names_impl(ptr, rust_vec_len, data_len),
         41 => wire__crate__api__game__max_known_pitches_impl(ptr, rust_vec_len, data_len),
-        44 => wire__crate__api__game__pitcher_archetype_info_impl(ptr, rust_vec_len, data_len),
-        51 => wire__crate__api__game__training_intensity_names_impl(ptr, rust_vec_len, data_len),
-        52 => wire__crate__api__game__treatment_options_impl(ptr, rust_vec_len, data_len),
+        43 => wire__crate__api__game__percentile_to_grade_impl(ptr, rust_vec_len, data_len),
+        45 => wire__crate__api__game__pitcher_archetype_info_impl(ptr, rust_vec_len, data_len),
+        52 => wire__crate__api__game__training_intensity_names_impl(ptr, rust_vec_len, data_len),
+        53 => wire__crate__api__game__treatment_options_impl(ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }

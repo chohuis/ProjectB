@@ -10,6 +10,7 @@ import 'package:app/shared/design/colors.dart';
 import 'package:app/shared/design/widgets.dart';
 import 'package:app/shared/design/player_badges.dart';
 import 'package:app/shared/career_timeline_view.dart';
+import 'academics_tab.dart';
 import 'stat_radar_chart.dart';
 
 /// 내 선수 허브 — [01_내선수](../../../../04_UI기획/01_내선수.md) 상태·훈련·
@@ -28,7 +29,13 @@ import 'stat_radar_chart.dart';
 /// 커리어 탭은
 /// 입학·진로선택 갈림길(드래프트/대학/독립/입대)·병역 만료·은퇴를
 /// 시간순으로 — 트레이드·계약은 이미 기록 허브 "계약·이력" 탭이 보여줘
-/// 여기 안 겹친다.
+/// 여기 안 겹친다. 학업 탭(대화 2026-07-26)은 고교(`league:hs`)·대학
+/// (`league:univ`) 스테이지에서만 보인다 — `getAcademicsStatus()`가 그 외
+/// 스테이지엔 `null`을 돌려주는 걸 그대로 탭 노출 여부로 쓴다. 탭 개수가
+/// 이 값에 따라 달라져 `DefaultTabController`(고정 길이) 대신 직접 만든
+/// `TabController`로 바꿨다 — 노출 여부는 화면이 열려 있는 동안 안 바뀐다고
+/// 가정(진로 갈림길로 스테이지가 바뀌면 그 즉시 다른 화면으로 전환되지
+/// 여기 머문 채로 안 바뀜)하고 최초 조회 시점에 한 번만 고정한다.
 class MyPlayerScreen extends ConsumerStatefulWidget {
   const MyPlayerScreen({super.key});
 
@@ -36,20 +43,38 @@ class MyPlayerScreen extends ConsumerStatefulWidget {
   ConsumerState<MyPlayerScreen> createState() => _MyPlayerScreenState();
 }
 
-class _MyPlayerScreenState extends ConsumerState<MyPlayerScreen> {
+class _MyPlayerScreenState extends ConsumerState<MyPlayerScreen> with SingleTickerProviderStateMixin {
   TeamOption? _team;
   bool _loadingTeam = true;
+  bool _showAcademicsTab = false;
+  TabController? _tabController;
 
   @override
   void initState() {
     super.initState();
     _loadTeam();
+    _loadAcademicsVisibility();
+  }
+
+  @override
+  void dispose() {
+    _tabController?.dispose();
+    super.dispose();
   }
 
   Future<void> _loadTeam() async {
     final team = await getCurrentTeamInfo();
     if (mounted) setState(() => _team = team);
     setState(() => _loadingTeam = false);
+  }
+
+  Future<void> _loadAcademicsVisibility() async {
+    final academics = await getAcademicsStatus();
+    if (!mounted) return;
+    setState(() {
+      _showAcademicsTab = academics != null;
+      _tabController = TabController(length: _showAcademicsTab ? 5 : 4, vsync: this);
+    });
   }
 
   String _teamName() {
@@ -68,32 +93,44 @@ class _MyPlayerScreenState extends ConsumerState<MyPlayerScreen> {
     if (status == null) {
       return const Scaffold(body: Center(child: Text('활성 게임이 없습니다.')));
     }
+    final tabController = _tabController;
+    if (tabController == null) {
+      return const Scaffold(body: LoadingIndicator());
+    }
 
-    return DefaultTabController(
-      length: 4,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(status.name),
-          bottom: const TabBar(tabs: [Tab(text: '상태'), Tab(text: '훈련'), Tab(text: '커리어'), Tab(text: '재정')]),
-        ),
-        body: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Text(_loadingTeam ? '소속팀 조회 중…' : _teamName()),
-            ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  _StatusTab(status: status),
-                  _TrainingTab(knownPitchesJson: status.pitchesJson),
-                  const CareerTimelineView(),
-                  _FinanceTab(financeJson: status.financeJson),
-                ],
-              ),
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(status.name),
+        bottom: TabBar(
+          controller: tabController,
+          tabs: [
+            const Tab(text: '상태'),
+            const Tab(text: '훈련'),
+            const Tab(text: '커리어'),
+            const Tab(text: '재정'),
+            if (_showAcademicsTab) const Tab(text: '학업'),
           ],
         ),
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Text(_loadingTeam ? '소속팀 조회 중…' : _teamName()),
+          ),
+          Expanded(
+            child: TabBarView(
+              controller: tabController,
+              children: [
+                _StatusTab(status: status),
+                _TrainingTab(knownPitchesJson: status.pitchesJson),
+                const CareerTimelineView(),
+                _FinanceTab(financeJson: status.financeJson),
+                if (_showAcademicsTab) const AcademicsTab(),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
