@@ -120,6 +120,15 @@ pub(crate) fn pick_personality(rng: &mut impl Rng, weights: &PersonalityWeights)
     })
 }
 
+/// 마무리 승격 판정용 — 로테이션 랭킹(`repository.rs::ranked_rotation_candidates_for_team`)
+/// 이 쓰는 "제구+구위" 스킬 점수와 같은 정의(합만, 평균 안 냄 — 상대
+/// 비교라 정규화 불필요).
+fn pitcher_skill(stats: &Value) -> f64 {
+    let control = stats.get("제구").and_then(|v| v.as_f64()).unwrap_or(0.0);
+    let stuff = stats.get("구위").and_then(|v| v.as_f64()).unwrap_or(0.0);
+    control + stuff
+}
+
 fn gen_stats(rng: &mut impl Rng, exposed: &[&str; 9], stat_min: f64, stat_max: f64) -> Value {
     let mut map = serde_json::Map::new();
     for s in exposed {
@@ -187,8 +196,12 @@ pub fn generate_team(
 
     // pitchers first (SP block then RP block), then batters round-robin over
     // field positions — order is part of the deterministic RNG contract.
+    // RP block is provisionally labeled "중계투수" during generation (position
+    // label doesn't consume RNG, so relabeling one of them "마무리투수"
+    // afterward — see below — never perturbs the RNG sequence/determinism).
+    let rp_start = players.len() + sp_n as usize;
     for i in 0..pitcher_n {
-        let position = if i < sp_n { "선발투수" } else { "구원투수" };
+        let position = if i < sp_n { "선발투수" } else { "중계투수" };
         players.push(GeneratedPlayer {
             id: format!("{id_prefix}{seq}"),
             name: gen_name(rng, kr_surnames, kr_given),
@@ -203,6 +216,25 @@ pub fn generate_team(
             pitches: Some(gen_pitches(rng, secondary_pitches)),
         });
         *seq += 1;
+    }
+
+    // 투수 3분류(선발/중계/마무리, 대화 2026-07-26) — 중계 풀(RP block)
+    // 중 (제구+구위)가 가장 높은 1명을 "마무리투수"로 승격한다. 순수
+    // 후처리라 RNG 순서에 전혀 영향 없음 — 나중에 성적이 쌓이면 매달
+    // (`repository.rs::reassign_closer`가) 다시 서열을 매겨 승격/강등되니
+    // 이건 어디까지나 "새 게임 시작 시점의 초기값"일 뿐이다. `sp_n`이
+    // `.max(1.0)`로 최소 1을 보장하는 탓에 `pitcher_n`이 0~sp_n 사이인
+    // 극단적으로 작은 로스터 규칙(합성 테스트 등)에서는 RP block 자체가
+    // 없을 수 있어 방어적으로 범위를 확인한다.
+    if rp_start < players.len() {
+        if let Some(closer_idx) = players[rp_start..]
+            .iter()
+            .enumerate()
+            .max_by(|(_, a), (_, b)| pitcher_skill(&a.stats).partial_cmp(&pitcher_skill(&b.stats)).unwrap_or(std::cmp::Ordering::Equal))
+            .map(|(i, _)| rp_start + i)
+        {
+            players[closer_idx].position = "마무리투수".to_string();
+        }
     }
 
     for i in 0..batter_n {
@@ -289,7 +321,10 @@ mod tests {
         let pitchers = players.iter().filter(|p| p.pitches.is_some()).count();
         assert_eq!(pitchers, 4); // roster 10 * pitcher_ratio 0.4 = 4
         assert_eq!(players.iter().filter(|p| p.position == "선발투수").count(), 2);
-        assert_eq!(players.iter().filter(|p| p.position == "구원투수").count(), 2);
+        // RP block(2명) 중 (제구+구위) 최고 1명은 "마무리투수"로 승격,
+        // 나머지 1명은 "중계투수"로 남는다(대화 2026-07-26, 투수 3분류).
+        assert_eq!(players.iter().filter(|p| p.position == "중계투수").count(), 1);
+        assert_eq!(players.iter().filter(|p| p.position == "마무리투수").count(), 1);
     }
 
     #[test]

@@ -275,8 +275,8 @@ const TIEBREAK_BASES: [bool; 3] = [true, true, false]; // 승부치기: 무사 1
 
 /// 배경 경기(`simulate_game`)의 팀별 투수 운용 계획 — 강판 판정에 필요한
 /// 입력을 한 번에 묶는다(파라미터 폭발 방지). `reliever`가 `None`이면 그
-/// 팀은 강판 없이 완투(로스터에 구원투수가 없을 때의 방어적 폴백, 기존
-/// 동작과 동일).
+/// 팀은 강판 없이 완투(로스터에 중계·마무리투수가 없을 때의 방어적 폴백,
+/// 기존 동작과 동일).
 pub struct TeamPitchingPlan<'a> {
     pub starter: &'a PitcherStats,
     pub reliever: Option<&'a PitcherStats>,
@@ -318,8 +318,10 @@ fn merge_batter_stats(mut a: HashMap<String, BatterGameStats>, b: HashMap<String
 /// should_pull_pitcher`로 판단, 팀당 게임 1회까지만(주인공 매치와 동일
 /// 제약). 배경 경기는 타석 단위 시뮬이라 실제 볼카운트가 없어 "던진 타자
 /// 수 × 3.8"로 투구수를 근사한다(D그룹 — 밸런스 하네스 재조정 대상).
-/// 구원투수가 여러 명일 때의 서열(마무리/셋업/추격조)은 이번 스코프 밖 —
-/// `home_plan.reliever`/`away_plan.reliever` 딱 1명만 받는다.
+/// 구원투수 포지션은 선발/중계/마무리 3분류까지 나뉘었지만(§6-N Part F)
+/// 상황별 서열(세이브 상황엔 마무리, 아니면 중계)·복수 교체는 여전히
+/// 이 함수 밖(호출부가 `home_plan.reliever`/`away_plan.reliever`로 이미
+/// 골라온 딱 1명만 받는다) — Part G가 그 선택 로직을 채운다.
 pub fn simulate_game(
     rng: &mut impl Rng,
     league_id: &str,

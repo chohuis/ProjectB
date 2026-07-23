@@ -1490,7 +1490,7 @@ fn insert_benched_notice(conn: &Connection, day: i64) -> anyhow::Result<()> {
 /// 그대로 — 기존 동작과 동일.
 pub(crate) fn load_batting_lineup(slot_conn: &Connection, team_id: &str) -> anyhow::Result<Vec<match_sim::BatterStats>> {
     let mut stmt = slot_conn.prepare(
-        "SELECT id, stats, live_state FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position NOT IN ('선발투수', '구원투수', '감독', '코치', '구단주') ORDER BY id",
+        "SELECT id, stats, live_state FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position NOT IN ('선발투수', '중계투수', '마무리투수', '감독', '코치', '구단주') ORDER BY id",
     )?;
     let rows: Vec<(String, String, String)> =
         stmt.query_map([team_id], |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)))?.collect::<Result<Vec<_>, _>>()?;
@@ -1739,7 +1739,7 @@ fn practice_stats_batter_score(conn: &Connection, player_id: &str) -> anyhow::Re
 /// (로스터 타자 전원 배치) `manager::rank_all_candidates`를 쓴다.
 fn ranked_batting_order_for_team(conn: &Connection, team_id: &str) -> anyhow::Result<Vec<String>> {
     let mut stmt = conn.prepare(
-        "SELECT id, stats FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position NOT IN ('선발투수', '구원투수', '감독', '코치', '구단주')",
+        "SELECT id, stats FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position NOT IN ('선발투수', '중계투수', '마무리투수', '감독', '코치', '구단주')",
     )?;
     let rows: Vec<(String, String)> = stmt.query_map([team_id], |r| Ok((r.get(0)?, r.get(1)?)))?.collect::<Result<Vec<_>, _>>()?;
     drop(stmt);
@@ -1844,13 +1844,14 @@ pub(crate) fn load_starting_pitcher(slot_conn: &Connection, team_id: &str) -> an
 }
 
 /// 감독 개입(§8) — 주인공이 강판된 뒤 나머지 이닝을 던질 구원투수.
-/// 로스터에 `position = '구원투수'`가 여럿이면 (id 기준) 첫 명 고정 —
-/// 실제 불펜 로테이션·복수 교체는 스코프 밖(1차 축소안). 로스터에 구원
-/// 투수가 아예 없으면 None(호출부가 방어적으로 강판 자체를 건너뜀).
+/// 로스터에 `position IN ('중계투수', '마무리투수')`가 여럿이면 (id 기준)
+/// 첫 명 고정 — 상황(세이브 상황 등)에 따라 마무리/중계를 가려 쓰는
+/// 로직·복수 교체는 Part G(대화 2026-07-26)에서 마저 채운다. 로스터에
+/// 구원 투수가 아예 없으면 None(호출부가 방어적으로 강판 자체를 건너뜀).
 pub(crate) fn load_relief_pitcher(slot_conn: &Connection, team_id: &str) -> anyhow::Result<Option<match_sim::PitcherStats>> {
     let row: Option<(String, String, String)> = slot_conn
         .query_row(
-            "SELECT id, stats, live_state FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position = '구원투수' ORDER BY id LIMIT 1",
+            "SELECT id, stats, live_state FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position IN ('중계투수', '마무리투수') ORDER BY id LIMIT 1",
             [team_id],
             |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
         )
@@ -2042,8 +2043,8 @@ fn bump_fatigue(conn: &Connection, id: &str, live_state_raw: &str, amount: f64) 
 }
 
 /// `bump_fatigue`는 이미 로드해둔 `live_state`가 있는 자리에서 쓰는 저수준
-/// 버전 — 구원투수처럼 강판됐는지 여부에 따라 조건부로만 피로도를 올려야
-/// 하는 자리(`load_starting_pitcher`처럼 매치 시작 전에 미리 로드해두지
+/// 버전 — 중계/마무리투수처럼 강판됐는지 여부에 따라 조건부로만 피로도를
+/// 올려야 하는 자리(`load_starting_pitcher`처럼 매치 시작 전에 미리 로드해두지
 /// 않는 경우)에서는 id로 바로 조회해 올리는 이 버전이 더 간단하다.
 fn bump_fatigue_by_id(conn: &Connection, id: &str, amount: f64) -> anyhow::Result<()> {
     let live_state_raw: String = conn.query_row("SELECT live_state FROM npc WHERE id = ?1", [id], |r| r.get(0))?;
@@ -2080,7 +2081,7 @@ pub(crate) fn accumulate_game_fatigue(conn: &Connection, team_id: &str) -> anyho
     const PITCHER_FATIGUE_PER_GAME: f64 = 12.0;
 
     let mut stmt = conn.prepare(
-        "SELECT id, live_state FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position NOT IN ('선발투수', '구원투수', '감독', '코치', '구단주')",
+        "SELECT id, live_state FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position NOT IN ('선발투수', '중계투수', '마무리투수', '감독', '코치', '구단주')",
     )?;
     let batters: Vec<(String, String)> = stmt.query_map([team_id], |r| Ok((r.get(0)?, r.get(1)?)))?.collect::<Result<_, _>>()?;
     drop(stmt);
@@ -2217,8 +2218,8 @@ fn process_day(slot_conn: &Connection, content_conn: &Connection, world_seed: i6
         let week = crate::calendar::week_for_day(day);
         upsert_pitcher_season_stats(slot_conn, &home_pitcher.id, week, &result.home_pitcher_stats)?;
         upsert_pitcher_season_stats(slot_conn, &away_pitcher.id, week, &result.away_pitcher_stats)?;
-        // 강판돼 실제로 등판한 구원투수만 season_stats·피로도 반영 —
-        // 구원투수가 로스터에 있어도 강판이 안 일어났으면 아무 일도 없다.
+        // 강판돼 실제로 등판한 중계/마무리투수만 season_stats·피로도 반영 —
+        // 구원 투수가 로스터에 있어도 강판이 안 일어났으면 아무 일도 없다.
         if let (Some(reliever), Some(stats)) = (&home_reliever, &result.home_reliever_stats) {
             upsert_pitcher_season_stats(slot_conn, &reliever.id, week, stats)?;
             bump_fatigue_by_id(slot_conn, &reliever.id, RELIEVER_FATIGUE_PER_GAME)?;
@@ -2293,7 +2294,7 @@ fn run_intrasquad_scrimmage(slot_conn: &Connection, content_conn: &Connection, w
         let v: serde_json::Value = serde_json::from_str(&stats_raw)?;
         let live_state: serde_json::Value = serde_json::from_str(&live_state_raw)?;
         let fatigue = live_state.get("피로도").and_then(|x| x.as_f64()).unwrap_or(0.0);
-        if position == "선발투수" || position == "구원투수" {
+        if position == "선발투수" || position == "중계투수" || position == "마무리투수" {
             pitchers.push(match_sim::PitcherStats {
                 id,
                 control: v.get("제구").and_then(|x| x.as_f64()).unwrap_or(50.0),
@@ -2369,8 +2370,8 @@ fn run_intrasquad_scrimmage(slot_conn: &Connection, content_conn: &Connection, w
         upsert_batter_practice_stats(slot_conn, batter_id, week, s)?;
     }
 
-    // 청백전도 실제로 체력을 쓴다(대화 2026-07-26) — 실전 구원투수와 같은
-    // 강도(6.0)를 등판 투수 2명에게, 배터는 실전 배터(4.0)의 절반(2.0)만
+    // 청백전도 실제로 체력을 쓴다(대화 2026-07-26) — 실전 중계/마무리투수와
+    // 같은 강도(6.0)를 등판 투수 2명에게, 배터는 실전 배터(4.0)의 절반(2.0)만
     // (완전한 9이닝 실전이 아니라는 전제). 부상 판정은 여전히 생략.
     const SCRIMMAGE_PITCHER_FATIGUE: f64 = RELIEVER_FATIGUE_PER_GAME;
     const SCRIMMAGE_BATTER_FATIGUE: f64 = 2.0;
@@ -3484,7 +3485,7 @@ fn process_week(conn: &Connection, content_conn: &Connection, world_seed: i64, d
             // (구버전 세이브·합성 테스트) 전부 50.0 기본값이라 배율이 1.0으로
             // 떨어져 기존 동작과 동일 — 하위호환.
             let coach = coach_by_team.get(&team_id);
-            let is_pitcher = position == "선발투수" || position == "구원투수";
+            let is_pitcher = position == "선발투수" || position == "중계투수" || position == "마무리투수";
             let specialized = coach.map(|c| if is_pitcher { c.pitching } else { c.batting }).unwrap_or(50.0);
             let general = coach.map(|c| c.general).unwrap_or(50.0);
             let running = coach.map(|c| c.running).unwrap_or(50.0);
@@ -3637,7 +3638,7 @@ const NPC_PROMOTION_SCORE_THRESHOLD: f64 = 65.0;
 const NPC_DEMOTION_SCORE_THRESHOLD: f64 = 35.0;
 
 fn npc_performance_score(conn: &Connection, player_id: &str, position: &str) -> anyhow::Result<Option<f64>> {
-    if position == "선발투수" || position == "구원투수" {
+    if position == "선발투수" || position == "중계투수" || position == "마무리투수" {
         season_stats_score(conn, player_id)
     } else {
         season_stats_batter_score(conn, player_id)
@@ -8231,7 +8232,7 @@ mod tests {
             let slot_conn = slot::open_in_memory().unwrap();
             insert_minimal_roster(&slot_conn, "team:a");
             insert_minimal_roster(&slot_conn, "team:b");
-            insert_test_player(&slot_conn, "team:a_rp", "team:a", "구원투수", serde_json::json!({"제구": 50.0, "구위": 50.0}));
+            insert_test_player(&slot_conn, "team:a_rp", "team:a", "중계투수", serde_json::json!({"제구": 50.0, "구위": 50.0}));
             slot_conn
                 .execute("INSERT INTO schedule (game_id, day, home, away, result) VALUES ('game:1', 10, 'team:a', 'team:b', NULL)", [])
                 .unwrap();
@@ -8263,7 +8264,7 @@ mod tests {
             let slot_conn = slot::open_in_memory().unwrap();
             insert_minimal_roster(&slot_conn, "team:a");
             insert_minimal_roster(&slot_conn, "team:b");
-            insert_test_player(&slot_conn, "team:a_rp", "team:a", "구원투수", serde_json::json!({"제구": 50.0, "구위": 50.0}));
+            insert_test_player(&slot_conn, "team:a_rp", "team:a", "중계투수", serde_json::json!({"제구": 50.0, "구위": 50.0}));
             slot_conn
                 .execute("INSERT INTO schedule (game_id, day, home, away, result) VALUES ('game:1', 10, 'team:a', 'team:b', NULL)", [])
                 .unwrap();

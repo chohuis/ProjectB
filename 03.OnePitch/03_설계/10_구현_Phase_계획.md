@@ -1584,7 +1584,22 @@
 
 **테스트**: `cargo test --lib` 446개 전부 통과(신규 4개 — 등판자 피로도 상승·주인공 본인 피로도 상승(protagonist 테이블 경로 검증)·고피로 후보 스킵). `cargo clippy` 클린. frb 재생성 불필요. `flutter test` 27개 전부 통과.
 
-### 6-98. 문서 갱신 규칙
+### 6-98. 투수 포지션 3분류(선발/중계/마무리) — Part F (2026-07-26, 완료)
+
+**Context**: 구원투수가 로스터 id순 첫 명으로 평생 고정돼 랭킹도 상황별 구분(세이브 상황 vs 아님)도 없었다. `02_기획/04_프로_커리어.md`/`01_커리어_구조.md`가 이미 "선발/불펜(추격조→셋업)/마무리/스윙맨"이라는 더 큰 그림을 갖고 있었지만, 이번엔 그중 3단계(선발/중계/마무리)까지만 먼저 구현하고 나머지(추격조 세분화·스윙맨)는 계속 이월.
+
+**구현**(`engine/src/sim/roster.rs`):
+- `pitcher_skill(stats)` 신규 — 제구+구위 합산.
+- `generate_team`의 투수 생성 루프: SP 블록까지는 그대로, 나머지(RP) 블록은 생성 중엔 잠정 "중계투수"로 채운 뒤(RNG 시퀀스에 영향 없는 순수 후처리), 루프가 끝나면 그 풀에서 `pitcher_skill` 최고 1명을 "마무리투수"로 승격. 팀이 작아 RP 풀이 비어있는 경우(`rp_start >= players.len()`) 방어적으로 승격을 건너뛴다(마무리 0명인 채로 종료, 억지로 만들지 않음).
+
+**구현**(`engine/src/data/repository.rs`, `engine/src/sim/growth.rs`, `engine/src/sim/match_.rs`, `engine/src/data/match_session.rs`):
+- 엔진 전역에서 `position == '구원투수'` 리터럴 비교를 쓰던 자리(배터 제외 필터, 피로도 누적 필터, 투수 판정(`growth::exposed_stats_for`/`physical_stats_for`), `load_relief_pitcher` SQL, 테스트 헬퍼)를 전부 `IN ('중계투수', '마무리투수')`(또는 동등한 `||` 비교)로 교체. `load_relief_pitcher`는 이번엔 문자열만 갱신 — "id순 첫 명" 단순 선택은 그대로 유지하고, 상황 인지형 선택(세이브 상황엔 마무리, 아니면 중계)은 Part G로 명시적으로 이월.
+- `ranked_rotation_candidates_for_team`(선발 전용 로테이션)은 변경 없음.
+- 구버전 세이브 마이그레이션 없음(배포 전 판단 유지) — 다음 새 게임부터 3분류로 생성.
+
+**테스트**: `cargo test --lib` 446개 전부 통과(`roster::` 6개 중 `roster_size_and_position_split_match_rule`을 중계 1명/마무리 1명 분리 검증으로 갱신). `cargo clippy` 클린. frb 재생성 불필요(스키마·position 값만 변경, 새 frb 함수 없음). `cargo build --release` 갱신 후 `flutter test` 27개 전부 통과.
+
+### 6-99. 문서 갱신 규칙
 
 **이 문서는 살아있는 문서다.** Phase를 하나 끝낼 때마다:
 1. §2 표의 해당 행 상태를 `⬜ 미착수` → `🔶 진행중` → `✅ 완료`로 갱신.

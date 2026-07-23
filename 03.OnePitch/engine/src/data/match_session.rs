@@ -623,7 +623,7 @@ fn run_until_decision_point(
             let runs = match_sim::simulate_half_inning(&mut rng, &lineup, &mut idx, &pitcher, session.bases, &mut injuries, &mut half_inning_stats);
             repository::apply_injury_events(slot_conn, &injuries, today)?;
             repository::accumulate_game_fatigue(slot_conn, &batting_team)?;
-            // 이 하프이닝의 투수(상대 선발 또는 주인공 강판 후 구원투수)와
+            // 이 하프이닝의 투수(상대 선발 또는 주인공 강판 후 중계/마무리투수)와
             // 타석에 선 타자 전원(주인공 팀 동료 또는 상대 타자) 모두
             // season_stats에 즉시 반영 — 배경 경기(process_day)와 동일한
             // upsert 헬퍼를 재사용해 게임 종료를 기다리지 않고 하프이닝마다
@@ -804,7 +804,7 @@ mod tests {
     fn insert_reliever(conn: &Connection, team_id: &str) {
         conn.execute(
             "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches, injury)
-             VALUES (?1, ?1, ?2, '구원투수', 20, 1, 0, 50.0, '{}', ?3, '{}', '{\"피로도\":0}', '[\"포심 패스트볼\"]', '{\"current\":null,\"history\":[]}')",
+             VALUES (?1, ?1, ?2, '중계투수', 20, 1, 0, 50.0, '{}', ?3, '{}', '{\"피로도\":0}', '[\"포심 패스트볼\"]', '{\"current\":null,\"history\":[]}')",
             params![format!("{team_id}_rp"), team_id, serde_json::json!({"제구": 50.0, "구위": 50.0}).to_string()],
         )
         .unwrap();

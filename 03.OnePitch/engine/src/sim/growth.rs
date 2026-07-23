@@ -9,7 +9,7 @@ pub const PITCHER_EXPOSED: [&str; 9] = ["구속", "체력", "회복력", "제구
 pub const BATTER_EXPOSED: [&str; 9] = ["파워", "스피드", "체력", "컨택", "선구안", "수비", "클러치", "침착함", "리더십"];
 
 pub fn exposed_stats_for(position: &str) -> &'static [&'static str; 9] {
-    if position == "선발투수" || position == "구원투수" {
+    if position == "선발투수" || position == "중계투수" || position == "마무리투수" {
         &PITCHER_EXPOSED
     } else {
         &BATTER_EXPOSED
@@ -86,7 +86,7 @@ pub const PITCHER_PHYSICAL: [&str; 3] = ["구속", "체력", "회복력"];
 pub const BATTER_PHYSICAL: [&str; 3] = ["파워", "스피드", "체력"];
 
 fn physical_stats_for(position: &str) -> &'static [&'static str; 3] {
-    if position == "선발투수" || position == "구원투수" {
+    if position == "선발투수" || position == "중계투수" || position == "마무리투수" {
         &PITCHER_PHYSICAL
     } else {
         &BATTER_PHYSICAL
@@ -163,7 +163,8 @@ mod tests {
     #[test]
     fn exposed_stats_for_distinguishes_pitcher_and_batter() {
         assert_eq!(exposed_stats_for("선발투수"), &PITCHER_EXPOSED);
-        assert_eq!(exposed_stats_for("구원투수"), &PITCHER_EXPOSED);
+        assert_eq!(exposed_stats_for("중계투수"), &PITCHER_EXPOSED);
+        assert_eq!(exposed_stats_for("마무리투수"), &PITCHER_EXPOSED);
         assert_eq!(exposed_stats_for("타자"), &BATTER_EXPOSED);
         assert_eq!(exposed_stats_for("유격수"), &BATTER_EXPOSED);
     }
