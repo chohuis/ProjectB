@@ -631,6 +631,12 @@ pub struct TrainingConfigInfo {
     pub secondary_stats: Vec<String>,
     pub intensity: String,
     pub new_pitch: Option<String>,
+    /// 기존 구종 마스터리업 대상(05_구종_시스템.md §2, 대화 2026-07-23) —
+    /// `new_pitch`와 상호 배타.
+    pub mastery_pitch: Option<String>,
+    /// `new_pitch`/`mastery_pitch` 진행도(주 단위) — 둘 다 `None`이면 0.
+    /// 화면에서 "N/M주 진행 중" 표시용.
+    pub pitch_weeks: i64,
 }
 
 pub fn get_training_config() -> anyhow::Result<Option<TrainingConfigInfo>> {
@@ -654,6 +660,8 @@ pub fn get_training_config() -> anyhow::Result<Option<TrainingConfigInfo>> {
             secondary_stats,
             intensity: v.get("intensity").and_then(|s| s.as_str()).unwrap_or("보통").to_string(),
             new_pitch: v.get("new_pitch").and_then(|s| s.as_str()).map(str::to_string),
+            mastery_pitch: v.get("mastery_pitch").and_then(|s| s.as_str()).map(str::to_string),
+            pitch_weeks: v.get("pitch_weeks").and_then(|w| w.as_i64()).unwrap_or(0),
         }))
     })
 }
@@ -662,14 +670,16 @@ pub fn get_training_config() -> anyhow::Result<Option<TrainingConfigInfo>> {
 /// 탭이 호출. `repository::set_protagonist_training`을 그대로 감싼다.
 /// `new_pitch`는 신규 구종 습득 슬롯(대화 2026-07-21) — `pitch_type_names`
 /// 로 받은 카탈로그 중 아직 안 배운 구종 하나를 골라 넘기면 그 주부터
-/// `pitch_weeks` 진행도가 쌓인다(엔진 로직 자체는 이미 있었고, 그동안
-/// 카탈로그 조회 API가 없어서 UI에서 한 번도 안 쓰였을 뿐).
+/// `pitch_weeks` 진행도가 쌓인다. `mastery_pitch`는 이미 아는 구종의
+/// 마스터리 단계를 올리는 슬롯(05_구종_시스템.md §2, 대화 2026-07-23) —
+/// 둘 중 하나만 넘길 수 있다.
 pub fn set_training(
     primary_stat: String,
     secondary_stat_1: String,
     secondary_stat_2: String,
     intensity: String,
     new_pitch: Option<String>,
+    mastery_pitch: Option<String>,
 ) -> anyhow::Result<()> {
     with_state(|state| {
         repository::set_protagonist_training(
@@ -678,6 +688,7 @@ pub fn set_training(
             [&secondary_stat_1, &secondary_stat_2],
             &intensity,
             new_pitch.as_deref(),
+            mastery_pitch.as_deref(),
         )
     })
 }
@@ -692,6 +703,12 @@ pub fn pitch_type_names() -> anyhow::Result<Vec<String>> {
         let rows: Vec<String> = stmt.query_map([], |r| r.get(0))?.collect::<Result<_, _>>()?;
         Ok(rows)
     })
+}
+
+/// 보유 구종 상한(05_구종_시스템.md §3, 대화 2026-07-24) — 순수 상수라 동기.
+#[flutter_rust_bridge::frb(sync)]
+pub fn max_known_pitches() -> u32 {
+    repository::MAX_KNOWN_PITCHES as u32
 }
 
 /// 캐릭터 생성 "개인 신체" 페이지 혈액형 드롭다운용 — 순수 상수라 동기.
@@ -1328,18 +1345,19 @@ mod tests {
 
         assert!(get_training_config().unwrap().is_none(), "no training configured yet");
 
-        set_training("구속".to_string(), "구위".to_string(), "제구".to_string(), "보통".to_string(), None).unwrap();
+        set_training("구속".to_string(), "구위".to_string(), "제구".to_string(), "보통".to_string(), None, None).unwrap();
         let config = get_training_config().unwrap().unwrap();
         assert_eq!(config.primary_stat, "구속");
         assert_eq!(config.secondary_stats, vec!["구위", "제구"]);
         assert_eq!(config.intensity, "보통");
         assert!(config.new_pitch.is_none());
+        assert!(config.mastery_pitch.is_none());
 
         let catalog = pitch_type_names().unwrap();
         assert_eq!(catalog.len(), 10, "05_구종_시스템.md §1의 10종 카탈로그");
         assert!(catalog.contains(&"너클볼".to_string()));
 
-        set_training("구속".to_string(), "구위".to_string(), "제구".to_string(), "보통".to_string(), Some("슬라이더".to_string())).unwrap();
+        set_training("구속".to_string(), "구위".to_string(), "제구".to_string(), "보통".to_string(), Some("슬라이더".to_string()), None).unwrap();
         assert_eq!(get_training_config().unwrap().unwrap().new_pitch.as_deref(), Some("슬라이더"));
 
         reset_state();

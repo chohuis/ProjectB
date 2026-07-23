@@ -96,6 +96,9 @@
 | 코치·구단주 관계도(`relationships`) 추적 | §6-72가 감독만 유지하기로 명시적 축소 | 팀동료 관계 시스템과 함께 확장 검토 | 소형 |
 | 코치 가변 슬롯 수(0~8명)·적성배치/미스매치/복수배치 | §6-72가 팀당 1명 고정으로 단순화 — "누가 어느 보직인지"를 정하는 판정 시스템 자체가 새로 필요 | 팀 전력 공식(05_밸런스.md §2-D) 확정 후 배치 로직 신설 | 엔진 확장 |
 | Android 실기기·Steam 실클라이언트·Mac/Linux 빌드 검증 | 이 개발 환경(Windows 샌드박스)에서 검증 불가 | I9 착수 시점에 실기기 확보 | 환경 제약 |
+| ~~구종 마스터리 5단계(습작~필살기) 데이터 모델·주간 진행~~ | **해소됨(§6-85, 2026-07-23)** — `protagonist.pitches`가 `{name,stage,weeks}` 객체 배열로, 구종 슬롯이 "신규습득 or 기존 마스터리업" 중 선택 가능 | — | 해소 |
+| 코치별 "가르칠 수 있는 구종" 전문 목록(05_구종_시스템.md §3) | 새 코치 속성(팀당 1명 고정 스탯 외 "전문 구종 리스트") + 콘텐츠 저작 필요 — 일반 `coach_pitch_learning_bonus`(투수지도력)만 §6-85에서 재사용, 구종별 차등은 아직 없음 | 코치 데이터 모델에 구종 리스트 필드 추가 후 배선 | 엔진 확장·콘텐츠 |
+| 구종 마스터리의 매치 엔진 연동(단계→피안타율·헛스윙, 05_구종_시스템.md §4)·레퍼토리 다양성 보너스 | "정확한 수치는 매치 엔진에서"라고 문서 자체가 이미 이월 — 밸런스 튜닝 별도 과제 | 밸런스 하네스로 수치 확정 후 `sim::pitch.rs` 연동 | 밸런스·엔진 확장 |
 
 ## 6. 문서 갱신 규칙
 
@@ -1417,7 +1420,24 @@
 
 **테스트**(`cargo test --lib` 376개 전부 통과, 신규 4개): `age_range_hs_matches_the_protagonist_graduation_convention`·`batter_positions_favor_catcher_roughly_two_to_one`·`generate_league_roster_data_scales_hs_roster_size_by_resource`(부유/안정/알뜰/궁핍 4팀 각각 45/38/33/30명)·`generate_freshmen_tops_up_hs_teams_to_the_resource_scaled_target`. 기존 `generate_initial_world_covers_all_five_leagues`·`generate_freshmen_tops_up_missing_roster_slots`(→league:pro로 변경, 고교 자원 스케일링과 분리해 flat-rule 경로만 검증) 갱신. `cargo clippy --lib --tests --bins` 클린(무관 기존 경고 1개만). frb 변경 없음. `flutter analyze` 클린, `flutter test`(26개) 클린, `flutter build windows --debug` 성공, `engine.dll` 갱신.
 
-### 6-85. 문서 갱신 규칙
+### 6-85. 구종 숙련도 표시 — 5단계 마스터리 시스템 (2026-07-23, 완료) — UI 피드백 8번(마지막)
+
+**Context**: 10항목 UI 피드백의 마지막 항목. "문서 참고해볼 것"이라는 원 요청대로 `05_구종_시스템.md`·`06_훈련_시스템.md`를 조사한 결과, 5단계 마스터리(습작→연마→실전→주무기→필살기)는 문서에만 있고 엔진 구현이 전혀 없었다(`protagonist.pitches`가 이름 문자열 배열뿐, 단계를 저장할 자리 자체가 없음). 표시만 만들면 가짜 데이터가 되므로 데이터 모델+주간 진행 로직까지 함께 구현.
+
+**구현**:
+- `protagonist.pitches` JSON 모양을 `["포심 패스트볼", ...]` → `[{"name":"포심 패스트볼","stage":1,"weeks":0}, ...]`로 변경(NPC의 `npc.pitches`는 그대로 문자열 배열 — 주간 훈련 슬롯이 없어 마스터리 추적 대상이 아님).
+- `sim::training.rs`: `weeks_required_to_master_pitch(intensity)`(신규, 강4/보통6/약10 — `weeks_required_to_learn_pitch`의 절반 수준 D그룹 placeholder) + `TrainingConfig.mastery_pitch` 필드(능력치 슬롯 -5% 페널티, §3 "기존 다듬기는 거의 영향 없음").
+- `repository::set_protagonist_training`에 `mastery_pitch: Option<&str>` 파라미터 — `new_pitch`와 상호 배타 검증, 이미 5단계인 구종은 거부.
+- `repository::process_protagonist_week`: `mastery_pitch` 분기 신설 — 임계 주수 도달 시(코치 `coach_pitch_learning_bonus` 재사용, 신규습득과 동일 취급) 해당 구종의 `stage`를 1단계 올림(5 상한).
+- **발견한 버그**: `match_session.rs::load_protagonist_pitches`가 여전히 `Vec<String>`으로 파싱하고 있어(라이브 매치의 구종 선택 로직, `pitch::choose_pitch_and_course`가 씀) 새 JSON 모양과 충돌 — 런타임 디코드 에러로 `resolveChoice`가 깨지는 걸 `flutter test`(`records_test.dart`)로 발견해 수정(`repository::pitch_names_from_mastery`를 `pub(crate)`로 승격해 재사용).
+- `api::game.rs::TrainingConfigInfo`에 `mastery_pitch`·`pitch_weeks` 필드 추가, `set_training`도 대응. **frb 재생성**(파라미터·필드 변경).
+- `my_player_screen.dart`: "보유 구종" 표시를 단순 `Chip` 나열에서 단계 배지(습작/연마/실전/주무기/필살기, 단계별 색상)로 교체. 훈련 탭에 "기존 구종 다듬기" 카드 신설(신규 구종 습득과 상호 배타), 진행 중인 대상은 "N주째 진행 중" 표시.
+
+**스코프 판단**: 코치별 "가르칠 수 있는 구종" 전문 목록(새 코치 속성+콘텐츠 저작 필요)·매치 엔진 연동(마스터리 단계가 실제 피안타율에 영향, §4 "정확한 수치는 매치 엔진에서"라고 문서가 이미 이월)·레퍼토리 다양성 보너스·구종 슬롯 2번째 확장(문서 §6 열린 세부)은 전부 이번에 안 함 — §5 이월 레지스트리에 등록. 구버전 세이브 마이그레이션 없음(배포 전, 이 세션에서 반복된 판단과 동일).
+
+**테스트**(`cargo test --lib` 384개 전부 통과, 신규 5개): `set_protagonist_training_rejects_both_new_and_mastery_pitch_at_once`·`set_protagonist_training_rejects_mastery_pitch_not_yet_known`·`set_protagonist_training_rejects_mastery_pitch_already_at_max_stage`·`process_protagonist_week_advances_pitch_mastery_stage_after_enough_weeks`·`process_protagonist_week_pitch_mastery_never_exceeds_stage_five`·`weeks_required_to_master_pitch_is_lighter_than_learning_a_new_pitch`·`mastering_an_existing_pitch_slows_stat_growth_less_than_learning_a_new_one`. 기존 `create_protagonist_inserts_expected_row`·`process_protagonist_week_learns_a_new_pitch_after_enough_weeks` 등 새 JSON 모양에 맞게 갱신. `cargo clippy --lib --tests --bins` 클린(무관 기존 경고 1개만). `flutter analyze` 클린, `flutter test`(26개, `game_loop_test.dart`는 전체 스위트 동시 실행 시 환경적 타임아웃 1회 재현 — 단독 실행 시 3:24에 통과 확인, 이 세션에서 이미 문서화된 동일 패턴) 클린, `flutter build windows --debug` 성공, `engine.dll` 갱신.
+
+### 6-86. 문서 갱신 규칙
 
 **이 문서는 살아있는 문서다.** Phase를 하나 끝낼 때마다:
 1. §2 표의 해당 행 상태를 `⬜ 미착수` → `🔶 진행중` → `✅ 완료`로 갱신.

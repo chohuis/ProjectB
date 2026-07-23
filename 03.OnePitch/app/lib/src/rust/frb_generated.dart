@@ -67,7 +67,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.12.0';
 
   @override
-  int get rustContentHash => -1815852937;
+  int get rustContentHash => -1052464678;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -162,6 +162,8 @@ abstract class RustLibApi extends BaseApi {
 
   Future<void> crateApiGameMarkInboxRead({required String id});
 
+  int crateApiGameMaxKnownPitches();
+
   Future<void> crateApiGameNewGame({
     required String contentDbPath,
     required PlatformInt64 canonicalSeed,
@@ -204,6 +206,7 @@ abstract class RustLibApi extends BaseApi {
     required String secondaryStat2,
     required String intensity,
     String? newPitch,
+    String? masteryPitch,
   });
 
   List<String> crateApiGameTrainingIntensityNames();
@@ -1177,6 +1180,28 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "mark_inbox_read", argNames: ["id"]);
 
   @override
+  int crateApiGameMaxKnownPitches() {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 36)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_u_32,
+          decodeErrorData: null,
+        ),
+        constMeta: kCrateApiGameMaxKnownPitchesConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiGameMaxKnownPitchesConstMeta =>
+      const TaskConstMeta(debugName: "max_known_pitches", argNames: []);
+
+  @override
   Future<void> crateApiGameNewGame({
     required String contentDbPath,
     required PlatformInt64 canonicalSeed,
@@ -1202,7 +1227,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 36,
+            funcId: 37,
             port: port_,
           );
         },
@@ -1249,7 +1274,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 37,
+            funcId: 38,
             port: port_,
           );
         },
@@ -1273,7 +1298,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 38)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 39)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_list_pitcher_archetype_info,
@@ -1305,7 +1330,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 39,
+            funcId: 40,
             port: port_,
           );
         },
@@ -1340,7 +1365,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 40,
+            funcId: 41,
             port: port_,
           );
         },
@@ -1384,7 +1409,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 41,
+            funcId: 42,
             port: port_,
           );
         },
@@ -1428,6 +1453,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     required String secondaryStat2,
     required String intensity,
     String? newPitch,
+    String? masteryPitch,
   }) {
     return handler.executeNormal(
       NormalTask(
@@ -1438,10 +1464,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           sse_encode_String(secondaryStat2, serializer);
           sse_encode_String(intensity, serializer);
           sse_encode_opt_String(newPitch, serializer);
+          sse_encode_opt_String(masteryPitch, serializer);
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 42,
+            funcId: 43,
             port: port_,
           );
         },
@@ -1456,6 +1483,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           secondaryStat2,
           intensity,
           newPitch,
+          masteryPitch,
         ],
         apiImpl: this,
       ),
@@ -1470,6 +1498,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       "secondaryStat2",
       "intensity",
       "newPitch",
+      "masteryPitch",
     ],
   );
 
@@ -1479,7 +1508,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 43)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 44)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_list_String,
@@ -1504,7 +1533,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_String(severity, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 44)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 45)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_list_treatment_option,
@@ -2123,13 +2152,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   TrainingConfigInfo dco_decode_training_config_info(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 4)
-      throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
+    if (arr.length != 6)
+      throw Exception('unexpected arr length: expect 6 but see ${arr.length}');
     return TrainingConfigInfo(
       primaryStat: dco_decode_String(arr[0]),
       secondaryStats: dco_decode_list_String(arr[1]),
       intensity: dco_decode_String(arr[2]),
       newPitch: dco_decode_opt_String(arr[3]),
+      masteryPitch: dco_decode_opt_String(arr[4]),
+      pitchWeeks: dco_decode_i_64(arr[5]),
     );
   }
 
@@ -3009,11 +3040,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_secondaryStats = sse_decode_list_String(deserializer);
     var var_intensity = sse_decode_String(deserializer);
     var var_newPitch = sse_decode_opt_String(deserializer);
+    var var_masteryPitch = sse_decode_opt_String(deserializer);
+    var var_pitchWeeks = sse_decode_i_64(deserializer);
     return TrainingConfigInfo(
       primaryStat: var_primaryStat,
       secondaryStats: var_secondaryStats,
       intensity: var_intensity,
       newPitch: var_newPitch,
+      masteryPitch: var_masteryPitch,
+      pitchWeeks: var_pitchWeeks,
     );
   }
 
@@ -3779,6 +3814,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_list_String(self.secondaryStats, serializer);
     sse_encode_String(self.intensity, serializer);
     sse_encode_opt_String(self.newPitch, serializer);
+    sse_encode_opt_String(self.masteryPitch, serializer);
+    sse_encode_i_64(self.pitchWeeks, serializer);
   }
 
   @protected

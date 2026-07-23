@@ -18,10 +18,10 @@ import 'stat_radar_chart.dart';
 ///
 /// **엔진에 아직 없는 파생값은 명시적으로 생략**: 역할(선발/불펜/마무리)·
 /// 명성 라벨은 그 값 자체가 엔진에 없다(역할은 항상 선발 완투 placeholder,
-/// 명성은 09_평가_시스템 §4-1이 이미 미구현으로 명시). 구종 마스터리
-/// 라벨도 05_구종_시스템의 마스터리 단계·코치 보너스 시스템 자체가
-/// 엔진에 없어(코치 시스템 자체가 I6 이월 항목) 이름만 표시 — 신규 습득
-/// (카탈로그에서 골라 훈련 슬롯에 배정)까지만 이번에 지원. 재정 탭은
+/// 명성은 09_평가_시스템 §4-1이 이미 미구현으로 명시). 구종 마스터리는
+/// 05_구종_시스템 §2의 5단계(습작~필살기)가 실제로 엔진에 있다(대화
+/// 2026-07-23로 신설 — `protagonist.pitches`가 이름 문자열이 아니라
+/// `{name, stage, weeks}` 객체 배열). 재정 탭은
 /// 08_개인_재정 최소 골격(잔액만, 이월 부채 정리 대화 2026-07-22) —
 /// 세금·개인 트레이닝·투자·스폰서 수입은 여전히 미구현이라 안내만 곁들인다.
 /// 커리어 탭은
@@ -120,11 +120,18 @@ class _StatusTab extends StatelessWidget {
   const _StatusTab({required this.status});
   final ProtagonistStatusInfo status;
 
+  // `_PitchMasteryRow` 한 줄의 실측 높이(패딩 14 + 텍스트 줄높이 약 20 +
+  // 아래 여백 6) + 카드 헤더/패딩 몫 — `maxKnownPitches()`개를 처음부터
+  // 다 담을 수 있는 고정 카드 높이를 계산한다(리뷰 피드백 2026-07-24).
+  static const _pitchRowHeight = 40.0;
+  static const _pitchCardChrome = 56.0;
+  double get _pitchCardHeight => _pitchCardChrome + _pitchRowHeight * maxKnownPitches();
+
   @override
   Widget build(BuildContext context) {
     final stats = _decodeMap(status.statsJson);
     final liveState = _decodeMap(status.liveStateJson);
-    final pitches = _decodeList(status.pitchesJson);
+    final pitches = decodePitchMastery(status.pitchesJson);
 
     final statEntries = [
       for (final category in _statCategories.values) for (final name in category) (name, (stats[name] as num?)?.toDouble() ?? 50.0),
@@ -146,8 +153,13 @@ class _StatusTab extends StatelessWidget {
         const SizedBox(height: 16),
         // 구종·라이브상태를 세로로 각각 화면 끝까지 늘어놓지 않고 카드
         // 2개를 나란히 — 세로 공간을 훨씬 덜 쓰게 돼 탭 안에서 스크롤
-        // 없이 다 보이는 게 목적(대화 2026-07-21).
-        IntrinsicHeight(
+        // 없이 다 보이는 게 목적(대화 2026-07-21). 카드 높이는 지금 보유한
+        // 구종 개수(`IntrinsicHeight`)가 아니라 **상한(`maxKnownPitches()`)
+        // 개를 처음부터 다 담을 수 있는 고정 높이**로 잡는다 — 구종이
+        // 1~2개뿐인 초반에도 나중에 5개가 찼을 때와 같은 크기라 카드가
+        // 커졌다 작아졌다 하지 않는다(리뷰 피드백 2026-07-24).
+        SizedBox(
+          height: _pitchCardHeight,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -159,7 +171,7 @@ class _StatusTab extends StatelessWidget {
                     children: [
                       const Text('보유 구종', style: TextStyle(fontWeight: FontWeight.bold)),
                       const SizedBox(height: 8),
-                      Wrap(spacing: 6, runSpacing: 6, children: pitches.map((p) => Chip(label: Text(p))).toList()),
+                      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [for (final p in pitches) _PitchMasteryRow(pitch: p)]),
                     ],
                   ),
                 ),
@@ -195,14 +207,66 @@ class _StatusTab extends StatelessWidget {
       return {};
     }
   }
+}
 
-  List<String> _decodeList(String json) {
-    try {
-      final v = jsonDecode(json);
-      return v is List ? v.map((e) => e.toString()).toList() : [];
-    } catch (_) {
-      return [];
-    }
+/// `protagonist.pitches`(05_구종_시스템.md §2, 대화 2026-07-23) —
+/// `{name, stage(1~5), weeks}` 객체 배열. `stage`는 1=습작·2=연마·3=실전·
+/// 4=주무기·5=필살기.
+typedef PitchMastery = ({String name, int stage, int weeks});
+
+List<PitchMastery> decodePitchMastery(String json) {
+  try {
+    final v = jsonDecode(json);
+    if (v is! List) return [];
+    return v.whereType<Map>().map((m) {
+      return (
+        name: m['name']?.toString() ?? '',
+        stage: (m['stage'] as num?)?.toInt() ?? 1,
+        weeks: (m['weeks'] as num?)?.toInt() ?? 0,
+      );
+    }).toList();
+  } catch (_) {
+    return [];
+  }
+}
+
+const _masteryStageLabels = {1: '습작', 2: '연마', 3: '실전', 4: '주무기', 5: '필살기'};
+
+Color _masteryStageColor(int stage) {
+  if (stage >= 4) return AppColors.safe;
+  if (stage >= 2) return AppColors.accent;
+  return AppColors.textSecondary;
+}
+
+/// 구종명 좌측·마스터리 단계 우측(리뷰 피드백 2026-07-24) — 예전엔
+/// `Wrap`으로 알약형 칩을 나열해 구종마다 너비가 들쭉날쭉했다. 카드
+/// 전체 너비를 그대로 쓰는 한 줄짜리 행으로 바꿔 이름 길이와 무관하게
+/// 모든 행이 같은 너비를 갖는다(가장 긴 이름에 맞추는 효과를 텍스트
+/// 폭 계산 없이 얻음).
+class _PitchMasteryRow extends StatelessWidget {
+  const _PitchMasteryRow({required this.pitch});
+  final PitchMastery pitch;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = _masteryStageColor(pitch.stage);
+    final label = _masteryStageLabels[pitch.stage] ?? '습작';
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.12),
+        border: Border.all(color: color),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Row(
+        children: [
+          Expanded(child: Text(pitch.name, style: const TextStyle(color: AppColors.textPrimary, fontSize: 13))),
+          Text(label, style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.bold)),
+        ],
+      ),
+    );
   }
 }
 
@@ -271,12 +335,10 @@ class _LiveGauge extends StatelessWidget {
   }
 }
 
-/// 훈련 탭 — "능력치 훈련"과 "신규 구종 습득"을 별도 카드로 나눴다(대화
-/// 2026-07-21). 신규 구종 습득의 엔진 로직(`pitch_weeks` 진행도 추적)
-/// 자체는 이미 있었고, 막혀있던 유일한 이유는 전체 구종 카탈로그를 조회할
-/// API가 없었던 것뿐 — `pitchTypeNames()` 신설로 그 공백만 메운다.
-/// 마스터리 5단계·코치 전문 보너스(05_구종_시스템.md §2·§3)는 코치
-/// 시스템 자체가 없어(I6 이월) 훨씬 큰 별도 과제로 이월.
+/// 훈련 탭 — "능력치 훈련"·"신규 구종 습득"·"기존 구종 다듬기" 3개 카드
+/// (대화 2026-07-21, 마스터리업 카드는 2026-07-23 신설). 구종 슬롯은
+/// 06_훈련_시스템.md §2 "신규습득 or 기존 마스터리업" 중 하나만 배정
+/// 가능 — 한쪽을 고르면 다른 쪽은 자동 해제된다.
 class _TrainingTab extends StatefulWidget {
   const _TrainingTab({required this.knownPitchesJson});
   final String knownPitchesJson;
@@ -289,11 +351,16 @@ class _TrainingTabState extends State<_TrainingTab> {
   List<String> _stats = [];
   List<String> _intensities = [];
   List<String> _learnablePitches = [];
+  List<PitchMastery> _masterablePitches = [];
+  int _knownCount = 0;
+  final int _maxPitches = maxKnownPitches();
   String? _primary;
   String? _secondary1;
   String? _secondary2;
   String _intensity = '보통';
   String? _newPitch;
+  String? _masteryPitch;
+  int _pitchWeeks = 0;
   bool _loading = true;
   bool _saving = false;
   String? _error;
@@ -304,30 +371,26 @@ class _TrainingTabState extends State<_TrainingTab> {
     _load();
   }
 
-  List<String> _knownPitches() {
-    try {
-      final v = jsonDecode(widget.knownPitchesJson);
-      return v is List ? v.map((e) => e.toString()).toList() : [];
-    } catch (_) {
-      return [];
-    }
-  }
-
   Future<void> _load() async {
     final stats = exposedStatNames();
     final intensities = trainingIntensityNames();
     final catalog = await pitchTypeNames();
-    final known = _knownPitches().toSet();
+    final known = decodePitchMastery(widget.knownPitchesJson);
+    final knownNames = known.map((p) => p.name).toSet();
     final config = await getTrainingConfig();
     setState(() {
       _stats = stats;
       _intensities = intensities;
-      _learnablePitches = catalog.where((p) => !known.contains(p)).toList();
+      _knownCount = known.length;
+      _learnablePitches = _knownCount >= _maxPitches ? [] : catalog.where((p) => !knownNames.contains(p)).toList();
+      _masterablePitches = known.where((p) => p.stage < 5).toList();
       _primary = config?.primaryStat ?? stats.first;
       _secondary1 = config != null && config.secondaryStats.isNotEmpty ? config.secondaryStats[0] : stats[1];
       _secondary2 = config != null && config.secondaryStats.length > 1 ? config.secondaryStats[1] : stats[2];
       _intensity = config?.intensity ?? '보통';
       _newPitch = config?.newPitch;
+      _masteryPitch = config?.masteryPitch;
+      _pitchWeeks = config?.pitchWeeks.toInt() ?? 0;
       _loading = false;
     });
   }
@@ -344,6 +407,7 @@ class _TrainingTabState extends State<_TrainingTab> {
         secondaryStat2: _secondary2!,
         intensity: _intensity,
         newPitch: _newPitch,
+        masteryPitch: _masteryPitch,
       );
     } catch (e) {
       setState(() => _error = '$e');
@@ -355,6 +419,7 @@ class _TrainingTabState extends State<_TrainingTab> {
   @override
   Widget build(BuildContext context) {
     if (_loading) return const LoadingIndicator();
+    final activeTarget = _newPitch ?? _masteryPitch;
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
@@ -402,7 +467,12 @@ class _TrainingTabState extends State<_TrainingTab> {
                       const Text('신규 구종 습득', style: TextStyle(fontWeight: FontWeight.bold)),
                       const SizedBox(height: 8),
                       if (_learnablePitches.isEmpty)
-                        const Text('이미 카탈로그 10종을 전부 익혔습니다.', style: TextStyle(color: AppColors.textSecondary))
+                        Text(
+                          _knownCount >= _maxPitches
+                              ? '보유 구종 상한($_maxPitches개)에 도달했습니다 — 기존 구종을 다듬어보세요.'
+                              : '이미 카탈로그 10종을 전부 익혔습니다.',
+                          style: const TextStyle(color: AppColors.textSecondary),
+                        )
                       else
                         DropdownButtonFormField<String?>(
                           initialValue: _newPitch,
@@ -411,12 +481,46 @@ class _TrainingTabState extends State<_TrainingTab> {
                             const DropdownMenuItem(value: null, child: Text('선택 안 함')),
                             for (final p in _learnablePitches) DropdownMenuItem(value: p, child: Text(p)),
                           ],
-                          onChanged: (v) => setState(() => _newPitch = v),
+                          onChanged: (v) => setState(() {
+                            _newPitch = v;
+                            if (v != null) _masteryPitch = null;
+                          }),
                         ),
                     ],
                   ),
                 ),
               ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+        AppPanel(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('기존 구종 다듬기', style: TextStyle(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              if (_masterablePitches.isEmpty)
+                const Text('다듬을 수 있는 구종이 없습니다(전부 필살기이거나 보유 구종이 없음).', style: TextStyle(color: AppColors.textSecondary))
+              else
+                DropdownButtonFormField<String?>(
+                  initialValue: _masteryPitch,
+                  decoration: const InputDecoration(labelText: '마스터리업할 구종'),
+                  items: [
+                    const DropdownMenuItem(value: null, child: Text('선택 안 함')),
+                    for (final p in _masterablePitches)
+                      DropdownMenuItem(value: p.name, child: Text('${p.name} (${_masteryStageLabels[p.stage] ?? '습작'} → 다음 단계)')),
+                  ],
+                  onChanged: (v) => setState(() {
+                    _masteryPitch = v;
+                    if (v != null) _newPitch = null;
+                  }),
+                ),
+              if (activeTarget != null) ...[
+                const SizedBox(height: 8),
+                Text('$activeTarget — $_pitchWeeks주째 진행 중', style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+              ],
             ],
           ),
         ),

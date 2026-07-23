@@ -141,20 +141,23 @@ Future<TrainingConfigInfo?> getTrainingConfig() =>
 /// 탭이 호출. `repository::set_protagonist_training`을 그대로 감싼다.
 /// `new_pitch`는 신규 구종 습득 슬롯(대화 2026-07-21) — `pitch_type_names`
 /// 로 받은 카탈로그 중 아직 안 배운 구종 하나를 골라 넘기면 그 주부터
-/// `pitch_weeks` 진행도가 쌓인다(엔진 로직 자체는 이미 있었고, 그동안
-/// 카탈로그 조회 API가 없어서 UI에서 한 번도 안 쓰였을 뿐).
+/// `pitch_weeks` 진행도가 쌓인다. `mastery_pitch`는 이미 아는 구종의
+/// 마스터리 단계를 올리는 슬롯(05_구종_시스템.md §2, 대화 2026-07-23) —
+/// 둘 중 하나만 넘길 수 있다.
 Future<void> setTraining({
   required String primaryStat,
   required String secondaryStat1,
   required String secondaryStat2,
   required String intensity,
   String? newPitch,
+  String? masteryPitch,
 }) => RustLib.instance.api.crateApiGameSetTraining(
   primaryStat: primaryStat,
   secondaryStat1: secondaryStat1,
   secondaryStat2: secondaryStat2,
   intensity: intensity,
   newPitch: newPitch,
+  masteryPitch: masteryPitch,
 );
 
 /// 신규 구종 습득 슬롯 드롭다운용 — [05_구종_시스템](../../../02_기획/육성코어/05_구종_시스템.md)
@@ -163,6 +166,9 @@ Future<void> setTraining({
 /// 받고 세션의 `content_conn`을 그대로 씀.
 Future<List<String>> pitchTypeNames() =>
     RustLib.instance.api.crateApiGamePitchTypeNames();
+
+/// 보유 구종 상한(05_구종_시스템.md §3, 대화 2026-07-24) — 순수 상수라 동기.
+int maxKnownPitches() => RustLib.instance.api.crateApiGameMaxKnownPitches();
 
 /// 캐릭터 생성 "개인 신체" 페이지 혈액형 드롭다운용 — 순수 상수라 동기.
 List<String> bloodTypeNames() =>
@@ -1138,11 +1144,21 @@ class TrainingConfigInfo {
   final String intensity;
   final String? newPitch;
 
+  /// 기존 구종 마스터리업 대상(05_구종_시스템.md §2, 대화 2026-07-23) —
+  /// `new_pitch`와 상호 배타.
+  final String? masteryPitch;
+
+  /// `new_pitch`/`mastery_pitch` 진행도(주 단위) — 둘 다 `None`이면 0.
+  /// 화면에서 "N/M주 진행 중" 표시용.
+  final PlatformInt64 pitchWeeks;
+
   const TrainingConfigInfo({
     required this.primaryStat,
     required this.secondaryStats,
     required this.intensity,
     this.newPitch,
+    this.masteryPitch,
+    required this.pitchWeeks,
   });
 
   @override
@@ -1150,7 +1166,9 @@ class TrainingConfigInfo {
       primaryStat.hashCode ^
       secondaryStats.hashCode ^
       intensity.hashCode ^
-      newPitch.hashCode;
+      newPitch.hashCode ^
+      masteryPitch.hashCode ^
+      pitchWeeks.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -1160,7 +1178,9 @@ class TrainingConfigInfo {
           primaryStat == other.primaryStat &&
           secondaryStats == other.secondaryStats &&
           intensity == other.intensity &&
-          newPitch == other.newPitch;
+          newPitch == other.newPitch &&
+          masteryPitch == other.masteryPitch &&
+          pitchWeeks == other.pitchWeeks;
 }
 
 /// [07_전환화면](../../../04_UI기획/07_전환화면.md) §5 "3옵션 비교표" —

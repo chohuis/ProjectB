@@ -25,18 +25,21 @@ const SECONDARY_MULTIPLIER: f64 = 1.5;
 const UNFOCUSED_MULTIPLIER: f64 = 0.3;
 
 /// 훈련 설정(§1 "훈련·접근법은 지속 설정" — 매주 다시 안 짜고 계속
-/// 적용됨) 검증 + XP 배율 계산에 쓰는 얇은 뷰. `new_pitch`는 §6 "신규
-/// 습득 중"에 해당(있으면 능력치 슬롯 효율 -15%, §3), 없으면 "구종 슬롯
-/// 안 씀 또는 기존 다듬기" — 마스터리 시스템이 아직 없어(05_구종_시스템
-/// §3) 기존 구종 다듬기 자체는 이번 스코프에서 효과 없음.
+/// 적용됨) 검증 + XP 배율 계산에 쓰는 얇은 뷰. 구종 슬롯은 `new_pitch`
+/// ("신규 습득 중", -15%)와 `mastery_pitch`("기존 마스터리업", -5%,
+/// 05_구종_시스템.md §2 5단계 마스터리 시스템과 연동, 대화 2026-07-23)
+/// 둘 중 하나만 배정 가능 — 호출부(`repository::set_protagonist_training`)가
+/// 이미 상호 배타를 검증한다.
 pub struct TrainingConfig<'a> {
     pub primary_stat: &'a str,
     pub secondary_stats: [&'a str; 2],
     pub intensity: &'a str,
     pub new_pitch: Option<&'a str>,
+    pub mastery_pitch: Option<&'a str>,
 }
 
-/// 능력치 슬롯 XP 배율 — §3 "신규 습득 중이면 능력치 슬롯 효율 -15%".
+/// 능력치 슬롯 XP 배율 — §3 "신규 습득 중이면 능력치 슬롯 효율 -15%,
+/// 기존 구종 다듬기는 -5%(거의 영향 없음)".
 fn stat_focus_multiplier(stat: &str, config: &TrainingConfig) -> f64 {
     let slot_mult = if stat == config.primary_stat {
         PRIMARY_MULTIPLIER
@@ -45,8 +48,14 @@ fn stat_focus_multiplier(stat: &str, config: &TrainingConfig) -> f64 {
     } else {
         UNFOCUSED_MULTIPLIER
     };
-    let new_pitch_penalty = if config.new_pitch.is_some() { 0.85 } else { 1.0 };
-    slot_mult * intensity_multiplier(config.intensity) * new_pitch_penalty
+    let pitch_penalty = if config.new_pitch.is_some() {
+        0.85
+    } else if config.mastery_pitch.is_some() {
+        0.95
+    } else {
+        1.0
+    };
+    slot_mult * intensity_multiplier(config.intensity) * pitch_penalty
 }
 
 /// 주간 훈련 적용 — `sim::growth::apply_weekly_growth_with_focus`를 훈련
@@ -72,6 +81,18 @@ pub fn weeks_required_to_learn_pitch(intensity: &str) -> u32 {
         "강" => 8,
         "약" => 16,
         _ => 12,
+    }
+}
+
+/// 기존 구종 마스터리 한 단계(예: 연마→실전) 올리는 데 필요한 주 수 —
+/// 06_훈련_시스템.md §3 "기존 구종 다듬기는 거의 영향 없음"에 맞춰
+/// `weeks_required_to_learn_pitch`의 절반 수준 D그룹 placeholder(대화
+/// 2026-07-23). 정확한 수치는 마찬가지로 스탯 스케일 확정 후.
+pub fn weeks_required_to_master_pitch(intensity: &str) -> u32 {
+    match intensity {
+        "강" => 4,
+        "약" => 10,
+        _ => 6,
     }
 }
 
@@ -110,7 +131,7 @@ mod tests {
         use crate::sim::growth::PITCHER_EXPOSED;
         let mut stats = stats_at(20.0, &PITCHER_EXPOSED);
         let mut xp = zero_xp(&PITCHER_EXPOSED);
-        let config = TrainingConfig { primary_stat: "구속", secondary_stats: ["구위", "제구"], intensity: "보통", new_pitch: None };
+        let config = TrainingConfig { primary_stat: "구속", secondary_stats: ["구위", "제구"], intensity: "보통", new_pitch: None, mastery_pitch: None };
 
         let mut rng = ChaCha8Rng::seed_from_u64(1);
         for _ in 0..30 {
@@ -127,7 +148,7 @@ mod tests {
         use crate::sim::growth::PITCHER_EXPOSED;
         let mut stats = stats_at(20.0, &PITCHER_EXPOSED);
         let mut xp = zero_xp(&PITCHER_EXPOSED);
-        let config = TrainingConfig { primary_stat: "구속", secondary_stats: ["구위", "제구"], intensity: "보통", new_pitch: None };
+        let config = TrainingConfig { primary_stat: "구속", secondary_stats: ["구위", "제구"], intensity: "보통", new_pitch: None, mastery_pitch: None };
 
         let mut rng = ChaCha8Rng::seed_from_u64(2);
         for _ in 0..30 {
@@ -147,7 +168,7 @@ mod tests {
         let run = |intensity: &str, seed: u64| -> f64 {
             let mut stats = stats_at(20.0, &PITCHER_EXPOSED);
             let mut xp = zero_xp(&PITCHER_EXPOSED);
-            let config = TrainingConfig { primary_stat: "구속", secondary_stats: ["구위", "제구"], intensity, new_pitch: None };
+            let config = TrainingConfig { primary_stat: "구속", secondary_stats: ["구위", "제구"], intensity, new_pitch: None, mastery_pitch: None };
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
             for _ in 0..15 {
                 apply_weekly_training(&mut rng, &PITCHER_EXPOSED, &mut stats, &mut xp, 80.0, &config);
@@ -169,7 +190,7 @@ mod tests {
         let run = |new_pitch: Option<&str>, seed: u64| -> f64 {
             let mut stats = stats_at(20.0, &PITCHER_EXPOSED);
             let mut xp = zero_xp(&PITCHER_EXPOSED);
-            let config = TrainingConfig { primary_stat: "구속", secondary_stats: ["구위", "제구"], intensity: "보통", new_pitch };
+            let config = TrainingConfig { primary_stat: "구속", secondary_stats: ["구위", "제구"], intensity: "보통", new_pitch, mastery_pitch: None };
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
             for _ in 0..15 {
                 apply_weekly_training(&mut rng, &PITCHER_EXPOSED, &mut stats, &mut xp, 80.0, &config);
@@ -190,7 +211,7 @@ mod tests {
         use crate::sim::growth::PITCHER_EXPOSED;
         let mut stats = stats_at(20.0, &PITCHER_EXPOSED);
         let mut xp = zero_xp(&PITCHER_EXPOSED);
-        let config = TrainingConfig { primary_stat: "구속", secondary_stats: ["구위", "제구"], intensity: "강", new_pitch: None };
+        let config = TrainingConfig { primary_stat: "구속", secondary_stats: ["구위", "제구"], intensity: "강", new_pitch: None, mastery_pitch: None };
         let mut rng = ChaCha8Rng::seed_from_u64(3);
         for _ in 0..500 {
             apply_weekly_training(&mut rng, &PITCHER_EXPOSED, &mut stats, &mut xp, 80.0, &config);
@@ -211,5 +232,39 @@ mod tests {
     fn weeks_required_to_learn_pitch_decreases_with_intensity() {
         assert!(weeks_required_to_learn_pitch("강") < weeks_required_to_learn_pitch("보통"));
         assert!(weeks_required_to_learn_pitch("보통") < weeks_required_to_learn_pitch("약"));
+    }
+
+    #[test]
+    fn weeks_required_to_master_pitch_is_lighter_than_learning_a_new_pitch() {
+        for intensity in INTENSITIES {
+            assert!(
+                weeks_required_to_master_pitch(intensity) < weeks_required_to_learn_pitch(intensity),
+                "{intensity}: mastery should take fewer weeks than learning a brand-new pitch"
+            );
+        }
+        assert!(weeks_required_to_master_pitch("강") < weeks_required_to_master_pitch("보통"));
+        assert!(weeks_required_to_master_pitch("보통") < weeks_required_to_master_pitch("약"));
+    }
+
+    #[test]
+    fn mastering_an_existing_pitch_slows_stat_growth_less_than_learning_a_new_one() {
+        use crate::sim::growth::PITCHER_EXPOSED;
+        let run = |new_pitch: Option<&str>, mastery_pitch: Option<&str>, seed: u64| -> f64 {
+            let mut stats = stats_at(20.0, &PITCHER_EXPOSED);
+            let mut xp = zero_xp(&PITCHER_EXPOSED);
+            let config = TrainingConfig { primary_stat: "구속", secondary_stats: ["구위", "제구"], intensity: "보통", new_pitch, mastery_pitch };
+            let mut rng = ChaCha8Rng::seed_from_u64(seed);
+            for _ in 0..15 {
+                apply_weekly_training(&mut rng, &PITCHER_EXPOSED, &mut stats, &mut xp, 80.0, &config);
+            }
+            stats.get("구속").unwrap().as_f64().unwrap()
+        };
+        let mut new_pitch_total = 0.0;
+        let mut mastery_total = 0.0;
+        for seed in 0..20 {
+            new_pitch_total += run(Some("슬라이더"), None, seed);
+            mastery_total += run(None, Some("슬라이더"), seed);
+        }
+        assert!(mastery_total >= new_pitch_total, "mastery={mastery_total} new_pitch={new_pitch_total}");
     }
 }

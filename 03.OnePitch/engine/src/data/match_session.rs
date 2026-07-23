@@ -238,9 +238,14 @@ fn load_protagonist_as_pitcher(conn: &Connection) -> anyhow::Result<PitcherStats
     })
 }
 
+/// 구종 마스터리(05_구종_시스템.md §2, 대화 2026-07-23) 도입 후
+/// `protagonist.pitches`는 `{name, stage, weeks}` 객체 배열 — 매치 엔진은
+/// 아직 마스터리 단계를 안 쓰므로(§4 "정확한 수치는 매치 엔진에서",
+/// 이번 배치는 스코프 밖) 이름만 뽑아 기존과 동일하게 넘긴다.
 fn load_protagonist_pitches(conn: &Connection) -> anyhow::Result<Vec<String>> {
     let raw: String = conn.query_row("SELECT pitches FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0))?;
-    Ok(serde_json::from_str(&raw)?)
+    let pitches: Vec<serde_json::Value> = serde_json::from_str(&raw)?;
+    Ok(repository::pitch_names_from_mastery(&pitches))
 }
 
 /// PA 결과를 세션에 반영 — 아웃 집계 또는 주자 진루+득점, 타석 종료 시
@@ -787,7 +792,7 @@ mod tests {
     fn insert_protagonist(conn: &Connection, team_id: &str) {
         conn.execute(
             "INSERT INTO protagonist (id, name, handedness, archetype, stats, xp, live_state, finance, pitches, contract, injury)
-             VALUES ('proto:1', '주인공', '우투', '강속구형', ?1, '{}', '{\"피로도\":0}', '{}', '[\"포심 패스트볼\"]', ?2, '{\"current\":null,\"history\":[]}')",
+             VALUES ('proto:1', '주인공', '우투', '강속구형', ?1, '{}', '{\"피로도\":0}', '{}', '[{\"name\":\"포심 패스트볼\",\"stage\":1,\"weeks\":0}]', ?2, '{\"current\":null,\"history\":[]}')",
             params![
                 serde_json::json!({"제구": 50.0, "구위": 50.0}).to_string(),
                 serde_json::json!({"team_id": team_id}).to_string(),
