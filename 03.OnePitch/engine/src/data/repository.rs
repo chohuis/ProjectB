@@ -2050,6 +2050,23 @@ fn bump_fatigue_by_id(conn: &Connection, id: &str, amount: f64) -> anyhow::Resul
     bump_fatigue(conn, id, &live_state_raw, amount)
 }
 
+/// `bump_fatigue_by_id`와 같지만 `id`가 `"proto:1"`이면 `npc`가 아니라
+/// `protagonist` 테이블에 쓴다 — 청백전(대화 2026-07-26)처럼 참가자 풀에
+/// 주인공이 섞여 있을 수 있는 자리에서 쓴다(주인공은 `npc`에 없어
+/// `bump_fatigue_by_id`를 그대로 쓰면 실패함).
+fn bump_fatigue_by_player_id(conn: &Connection, id: &str, amount: f64) -> anyhow::Result<()> {
+    if id == "proto:1" {
+        let live_state_raw: String = conn.query_row("SELECT live_state FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0))?;
+        let mut live_state: serde_json::Map<String, serde_json::Value> = serde_json::from_str(&live_state_raw)?;
+        let current = live_state.get("피로도").and_then(|v| v.as_f64()).unwrap_or(0.0);
+        live_state.insert("피로도".to_string(), serde_json::Value::from(current + amount));
+        conn.execute("UPDATE protagonist SET live_state = ?1 WHERE id = 'proto:1'", params![serde_json::Value::Object(live_state).to_string()])?;
+        Ok(())
+    } else {
+        bump_fatigue_by_id(conn, id, amount)
+    }
+}
+
 /// 경기 참여로 인한 피로도 누적 — `sim::injury::check_overuse_injury`(누적형
 /// 부상)이 매주 읽는 `live_state.피로도`의 유일한 증가 소스(process_week은
 /// 감소만 시킴). 타자는 그 경기에 실제로 쓰인 라인업 풀 전체(`load_batting_lineup`
@@ -2245,24 +2262,43 @@ fn split_alternating<T>(items: Vec<T>) -> (Vec<T>, Vec<T>) {
 /// 남긴다. 부상·피로도는 반영 안 함(연습경기는 부담이 적다는 설정).
 /// 팀에 주인공이 속해 있으면 주인공도 참가 — 주인공은 항상 투수
 /// 아키타입(`sim::protagonist::ARCHETYPES`)이라 투수풀에 합류시킨다.
+/// 정렬된 목록에서 `start`번째부터 순환하며 피로도가
+/// `sim::injury::FATIGUE_INJURY_THRESHOLD`(70) 미만인 첫 후보의 인덱스를
+/// 찾는다 — 전원이 그 이상이면(극단적 상황) 그냥 `start`를 그대로 써서
+/// "아무도 안 던지는" 상황은 안 만든다. 청백전 선발을 고를 때 방금 실전에서
+/// 던져 피로가 쌓인 투수(주인공 포함)를 자동으로 건너뛰기 위한 "체력
+/// 안배"(대화 2026-07-26).
+fn least_fatigued_from(pitchers: &[match_sim::PitcherStats], start: usize) -> usize {
+    for offset in 0..pitchers.len() {
+        let idx = (start + offset) % pitchers.len();
+        if pitchers[idx].fatigue < crate::sim::injury::FATIGUE_INJURY_THRESHOLD {
+            return idx;
+        }
+    }
+    start % pitchers.len()
+}
+
 fn run_intrasquad_scrimmage(slot_conn: &Connection, content_conn: &Connection, world_seed: i64, team_id: &str, day: i64) -> anyhow::Result<()> {
     let mut stmt = slot_conn.prepare(
-        "SELECT id, position, stats FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL
+        "SELECT id, position, stats, live_state FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL
          AND position NOT IN ('감독', '코치', '구단주')",
     )?;
-    let rows: Vec<(String, String, String)> = stmt.query_map([team_id], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)))?.collect::<Result<_, _>>()?;
+    let rows: Vec<(String, String, String, String)> =
+        stmt.query_map([team_id], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?)))?.collect::<Result<_, _>>()?;
     drop(stmt);
 
     let mut pitchers: Vec<match_sim::PitcherStats> = Vec::new();
     let mut batters: Vec<match_sim::BatterStats> = Vec::new();
-    for (id, position, stats_raw) in rows {
+    for (id, position, stats_raw, live_state_raw) in rows {
         let v: serde_json::Value = serde_json::from_str(&stats_raw)?;
+        let live_state: serde_json::Value = serde_json::from_str(&live_state_raw)?;
+        let fatigue = live_state.get("피로도").and_then(|x| x.as_f64()).unwrap_or(0.0);
         if position == "선발투수" || position == "구원투수" {
             pitchers.push(match_sim::PitcherStats {
                 id,
                 control: v.get("제구").and_then(|x| x.as_f64()).unwrap_or(50.0),
                 stuff: v.get("구위").and_then(|x| x.as_f64()).unwrap_or(50.0),
-                fatigue: 0.0,
+                fatigue,
             });
         } else {
             batters.push(match_sim::BatterStats {
@@ -2270,7 +2306,7 @@ fn run_intrasquad_scrimmage(slot_conn: &Connection, content_conn: &Connection, w
                 contact: v.get("컨택").and_then(|x| x.as_f64()).unwrap_or(50.0),
                 eye: v.get("선구안").and_then(|x| x.as_f64()).unwrap_or(50.0),
                 power: v.get("파워").and_then(|x| x.as_f64()).unwrap_or(50.0),
-                fatigue: 0.0,
+                fatigue,
             });
         }
     }
@@ -2279,13 +2315,15 @@ fn run_intrasquad_scrimmage(slot_conn: &Connection, content_conn: &Connection, w
     if let Some(contract_raw) = contract_raw {
         let contract: serde_json::Value = serde_json::from_str(&contract_raw).unwrap_or_default();
         if contract.get("team_id").and_then(|v| v.as_str()) == Some(team_id) {
-            let stats_raw: String = slot_conn.query_row("SELECT stats FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0))?;
+            let (stats_raw, live_state_raw): (String, String) =
+                slot_conn.query_row("SELECT stats, live_state FROM protagonist WHERE id = 'proto:1'", [], |r| Ok((r.get(0)?, r.get(1)?)))?;
             let v: serde_json::Value = serde_json::from_str(&stats_raw)?;
+            let live_state: serde_json::Value = serde_json::from_str(&live_state_raw)?;
             pitchers.push(match_sim::PitcherStats {
                 id: "proto:1".to_string(),
                 control: v.get("제구").and_then(|x| x.as_f64()).unwrap_or(50.0),
                 stuff: v.get("구위").and_then(|x| x.as_f64()).unwrap_or(50.0),
-                fatigue: 0.0,
+                fatigue: live_state.get("피로도").and_then(|x| x.as_f64()).unwrap_or(0.0),
             });
         }
     }
@@ -2309,9 +2347,12 @@ fn run_intrasquad_scrimmage(slot_conn: &Connection, content_conn: &Connection, w
     // 매번 제일 잘하는 투수만 등판시키면 청백전을 아무리 반복해도 그
     // 투수만 practice_stats가 쌓인다 — "기회가 부족한 선수(주인공 포함)도
     // 몇 번 하다 보면 등판"이 되게 day 기반으로 순환시킨다(한 달에 한 번
-    // 도는 트리거라 매달 다른 투수가 선발).
-    let blue_starter = &blue_pitchers[(day as usize) % blue_pitchers.len()];
-    let white_starter = &white_pitchers[(day as usize) % white_pitchers.len()];
+    // 도는 트리거라 매달 다른 투수가 선발). 다만 그 순번이 마침 방금
+    // 실전에서 던져 피로도가 높은 투수라면 체력 안배 차원에서 건너뛴다.
+    let blue_idx = least_fatigued_from(&blue_pitchers, (day as usize) % blue_pitchers.len());
+    let white_idx = least_fatigued_from(&white_pitchers, (day as usize) % white_pitchers.len());
+    let blue_starter = &blue_pitchers[blue_idx];
+    let white_starter = &white_pitchers[white_idx];
     let blue_plan = match_sim::TeamPitchingPlan { starter: blue_starter, reliever: None, tactics: manager.tactics, trust: manager.trust };
     let white_plan = match_sim::TeamPitchingPlan { starter: white_starter, reliever: None, tactics: manager.tactics, trust: manager.trust };
 
@@ -2326,6 +2367,17 @@ fn run_intrasquad_scrimmage(slot_conn: &Connection, content_conn: &Connection, w
     }
     for (batter_id, s) in &result.away_batter_stats {
         upsert_batter_practice_stats(slot_conn, batter_id, week, s)?;
+    }
+
+    // 청백전도 실제로 체력을 쓴다(대화 2026-07-26) — 실전 구원투수와 같은
+    // 강도(6.0)를 등판 투수 2명에게, 배터는 실전 배터(4.0)의 절반(2.0)만
+    // (완전한 9이닝 실전이 아니라는 전제). 부상 판정은 여전히 생략.
+    const SCRIMMAGE_PITCHER_FATIGUE: f64 = RELIEVER_FATIGUE_PER_GAME;
+    const SCRIMMAGE_BATTER_FATIGUE: f64 = 2.0;
+    bump_fatigue_by_player_id(slot_conn, &blue_starter.id, SCRIMMAGE_PITCHER_FATIGUE)?;
+    bump_fatigue_by_player_id(slot_conn, &white_starter.id, SCRIMMAGE_PITCHER_FATIGUE)?;
+    for b in blue_batters.iter().chain(white_batters.iter()) {
+        bump_fatigue_by_player_id(slot_conn, &b.id, SCRIMMAGE_BATTER_FATIGUE)?;
     }
 
     let body = format!("청백전 결과 — 청 {}:{} 백", result.home_runs, result.away_runs);
@@ -7575,6 +7627,83 @@ mod tests {
 
         let practice_rows: i64 = slot_conn.query_row("SELECT count(*) FROM practice_stats", [], |r| r.get(0)).unwrap();
         assert_eq!(practice_rows, 0);
+    }
+
+    fn npc_fatigue(conn: &Connection, id: &str) -> f64 {
+        let raw: String = conn.query_row("SELECT live_state FROM npc WHERE id = ?1", [id], |r| r.get(0)).unwrap();
+        serde_json::from_str::<serde_json::Value>(&raw).unwrap().get("피로도").and_then(|v| v.as_f64()).unwrap_or(0.0)
+    }
+
+    /// 청백전도 체력을 쓴다(대화 2026-07-26) — 이전엔 부상뿐 아니라
+    /// 피로도까지 아예 반영을 안 했었음.
+    #[test]
+    fn run_intrasquad_scrimmage_raises_fatigue_for_the_starters_and_batters_who_played() {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:hs', NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:x', 'league:hs', NULL, NULL)", []).unwrap();
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_scrimmage_ready_roster(&slot_conn, "team:x");
+
+        run_intrasquad_scrimmage(&slot_conn, &content_conn, 1, "team:x", 0).unwrap();
+
+        // day=0이면 순환 인덱스가 0번째 — 정렬 후 각 진영 0번째 투수가 등판.
+        let any_pitcher_fatigued =
+            (0..4).any(|i| npc_fatigue(&slot_conn, &format!("team:x_sp{i}")) > 0.0);
+        assert!(any_pitcher_fatigued, "등판한 투수 중 최소 1명은 피로도가 올라야 함");
+        let any_batter_fatigued = (0..8).any(|i| npc_fatigue(&slot_conn, &format!("team:x_b{i}")) > 0.0);
+        assert!(any_batter_fatigued, "참가한 타자 중 최소 1명은 피로도가 올라야 함");
+    }
+
+    /// 주인공도 청백전에서 체력을 쓴다 — `npc`가 아니라 `protagonist`
+    /// 테이블에 반영돼야 하므로 별도 헬퍼(`bump_fatigue_by_player_id`)를
+    /// 타는지 확인.
+    #[test]
+    fn run_intrasquad_scrimmage_raises_the_protagonists_own_fatigue_when_they_start() {
+        let content_conn = build_hs_school_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        create_protagonist(&slot_conn, &content_conn, 1, "청백전체력", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
+        insert_scrimmage_ready_roster(&slot_conn, "team:hanseong_hs");
+
+        // 주인공이 확실히 등판하도록 day를 몇 번 돌려본다(순환 선발).
+        let mut protagonist_ever_fatigued = false;
+        for day in 0..8i64 {
+            run_intrasquad_scrimmage(&slot_conn, &content_conn, 1, "team:hanseong_hs", day).unwrap();
+            let live_state_raw: String = slot_conn.query_row("SELECT live_state FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+            let fatigue = serde_json::from_str::<serde_json::Value>(&live_state_raw).unwrap().get("피로도").and_then(|v| v.as_f64()).unwrap_or(0.0);
+            if fatigue > 0.0 {
+                protagonist_ever_fatigued = true;
+                break;
+            }
+        }
+        assert!(protagonist_ever_fatigued, "주인공이 등판한 회차엔 피로도가 올라야 함");
+    }
+
+    /// 체력 안배 — 방금 실전에서 던져 피로도가 임계(70) 이상인 투수는
+    /// 청백전 순번이 와도 건너뛰고 다음으로 덜 지친 후보가 대신 등판한다.
+    #[test]
+    fn run_intrasquad_scrimmage_skips_an_overly_fatigued_pitcher_in_favor_of_a_fresher_one() {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:hs', NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:x', 'league:hs', NULL, NULL)", []).unwrap();
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_scrimmage_ready_roster(&slot_conn, "team:x");
+        // 정렬(제구+구위 내림차순) 후 청군(짝수 인덱스)은 [sp3, sp1] —
+        // sp3(가장 셈)를 극도로 피로하게 만들어 day=0의 청군 후보(index 0)
+        // 에서 제외되고 sp1(index 1)이 대신 뽑히는지 확인한다.
+        slot_conn
+            .execute(
+                "UPDATE npc SET live_state = ?1 WHERE id = 'team:x_sp3'",
+                params![serde_json::json!({"피로도": 95.0}).to_string()],
+            )
+            .unwrap();
+        let fatigue_before_sp1 = npc_fatigue(&slot_conn, "team:x_sp1");
+
+        run_intrasquad_scrimmage(&slot_conn, &content_conn, 1, "team:x", 0).unwrap();
+
+        // sp3(index 0)는 스킵되고 그 다음(index 1, sp1)이 대신 등판해야 함 —
+        // sp1의 피로도가 실제로 올랐는지로 간접 검증.
+        assert!(npc_fatigue(&slot_conn, "team:x_sp1") > fatigue_before_sp1, "덜 지친 다음 후보가 대신 등판해야 함");
+        assert_eq!(npc_fatigue(&slot_conn, "team:x_sp3"), 95.0, "지친 후보는 이번엔 안 던져서 피로도가 그대로여야 함");
     }
 
     #[test]

@@ -1573,7 +1573,18 @@
 
 **테스트**: `cargo test --lib` 443개 전부 통과(신규 다수 — 로테이션 경쟁 포함/제외/리그 게이팅 3개 + "정원 밖으로 완전히 밀려나도 6번째 자리는 보장" 1개 + 벤치 게이팅 통합 1개). `cargo clippy` 클린. frb 재생성 불필요. `flutter test` 27개 전부 통과 — 단 `game_loop_test.dart`/`records_test.dart`가 "첫 PendingAction은 반드시 game"이라는 이제는 깨진 가정에 의존하고 있어서, "game이 아닌 PendingAction은 첫 선택지로 넘기고 계속 진행"하도록 두 파일 다 루프를 일반화했다(`records_test.dart`의 "첫 등판은 반드시 시즌 0"이라는 가정도 함께 완화).
 
-### 6-97. 문서 갱신 규칙
+### 6-97. 청백전 체력 소모 + 체력 안배 — Part E (2026-07-26, 완료)
+
+**Context**: Part D 이후 사용자 지적 — 주인공은 항상 투수 아키타입이라 타석엔 절대 안 서는데, 청백전은 부상뿐 아니라 피로도까지 아예 반영을 안 하고 있었다(§6-95에서 "연습경기는 부담 적다"고 의도적으로 생략). 게다가 실전에서 방금 던진 직후 청백전 순번이 와도 그대로 등판시켰다 — 체력 안배가 필요.
+
+**구현**(`engine/src/data/repository.rs`):
+- `bump_fatigue_by_player_id` 신규 — 기존 `bump_fatigue_by_id`(`npc` 테이블 전용)를 감싸되 `id=="proto:1"`이면 `protagonist` 테이블에 쓴다(주인공은 `npc`에 없어 그대로 쓰면 실패).
+- `run_intrasquad_scrimmage`가 이제 실제 `live_state.피로도`를 읽어 `PitcherStats`/`BatterStats`에 채우고(예전엔 항상 0.0 하드코딩), 경기 후 등판 투수 2명에 `RELIEVER_FATIGUE_PER_GAME`(6.0, 실전 구원투수와 동일 강도)·참가 타자 전원에 절반(2.0)을 누적.
+- `least_fatigued_from(pitchers, start)` 신규 — day 기반 순환 선발 인덱스에서 시작해 `sim::injury::FATIGUE_INJURY_THRESHOLD`(70) 미만인 첫 후보를 찾는다(전원 70 이상이면 원래 인덱스 그대로 — 등판 자체가 없어지진 않음). 청/백 양쪽 스타터 선택에 적용 — 방금 실전에서 던져 피로한 투수(주인공 포함)는 자동으로 건너뛰고 덜 지친 다음 순번이 대신 등판.
+
+**테스트**: `cargo test --lib` 446개 전부 통과(신규 4개 — 등판자 피로도 상승·주인공 본인 피로도 상승(protagonist 테이블 경로 검증)·고피로 후보 스킵). `cargo clippy` 클린. frb 재생성 불필요. `flutter test` 27개 전부 통과.
+
+### 6-98. 문서 갱신 규칙
 
 **이 문서는 살아있는 문서다.** Phase를 하나 끝낼 때마다:
 1. §2 표의 해당 행 상태를 `⬜ 미착수` → `🔶 진행중` → `✅ 완료`로 갱신.
