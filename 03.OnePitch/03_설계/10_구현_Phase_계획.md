@@ -1511,7 +1511,25 @@
 
 **이월**: 매치업별 실시간 탈락 판정(지금은 대회 전체가 `status='done'`이 되기 전까지 개별 탈락 팀도 "진행 중"으로 보임) — 1차 축소안.
 
-### 6-91. 문서 갱신 규칙
+### 6-91. 학업 시스템 — 과목 성적·주간 학습모드·시험 자동채점·대학 전공 선택 (2026-07-26, 완료) — Part B
+
+**Context**: §6-90(Part A)와 같은 요청 묶음의 두 번째 절반. `02.SvelteElectron`(이전 프로토타입) 수준 그대로 이식하기로 확정(사용자 답변 "SvelteElectron 수준 그대로") — 과목 5종(국/영/수/사/과)·주간 학습모드 4종(집중/일반/휴식/수면)·중간·기말고사·대학 전공 3종 영구 보너스·성적 나쁘면 그 주 출전 제한. 고교(`league:hs`)·대학(`league:univ`) 스테이지에서만 학업 탭 노출.
+
+**수치 소스**: `academicsEngine.ts`(학습모드 효과·석차백분율→등급)는 TS에 있었지만 시험 채점 알고리즘(`calc_exam_result`)은 실제로 `packages/engine-native/src/week_engine.rs`(구 프로토타입의 진짜 Rust 백엔드)에만 있었다 — 직접 찾아 읽고 그대로 포팅.
+
+**구현**:
+- `engine/src/data/slot.rs`: migration v12 — `academics` 테이블(`protagonist`와 1:1, `id='proto:1'`).
+- `engine/src/sim/academics.rs`(신규): 학습모드 효과표·전공별 보너스·과목 초기값(고교/대학)·주간 처리(`apply_weekly_study`)·시험 채점(`calc_exam_result`, 누적점수-경고×8+랜덤(0~24)→9등급)·석차백분율→등급(`percentile_to_grade`, 시험 원점수용 `raw_to_grade`와는 별개 컷라인)·다음 시험 D-day(`weeks_until_next_exam`). 중간 12주차·기말 42주차(원본 캘린더 이벤트 `EVT_*_W12_MIDTERM`/`W4x_FINAL` 근사).
+- `engine/src/data/repository.rs`: `process_protagonist_academics_week`(주간 처리 — 훈련 설정 여부와 무관하게 항상 진행, 시험 주차엔 채점까지) → `TrainingConfig.academic_efficiency_mod`로 훈련 효율에 배선. `find_protagonist_game_today`가 `eligibility_blocked=1`이면 그 다음 경기 딱 한 번만 자동시뮬로 돌리고 즉시 해제(원본 `clearEligibilityBlock` — 계속 막아두지 않음). `resolve_career_choice`의 "대학" 분기에서 과목 성적·시험누적·경고·직전등급을 대학 초기값으로 리셋.
+- **설계 수정(원본 재확인 결과)**: 계획 초안은 시험·전공선택 둘 다 PendingAction으로 잡았으나, 원본(`advanceWeek.ts`/`AcademicsPage.svelte`)을 다시 읽어보니 시험은 선택지 없는 자동 반영(인박스 통지만)이었고 전공 선택도 PendingAction이 아니라 학업 탭에서 언제든 고르는 상시 UI였다 — 그대로 맞춰 구현(시험=인박스, 전공=`set_university_major` 상시 설정 API).
+- `engine/src/api/game.rs`: `get_academics_status()`(고교/대학 아니면 `None` — Dart가 이 값으로 탭 노출 판정)·`set_weekly_study_mode`·`set_university_major`·`percentile_to_grade`(순수 계산, `course_names()`와 같은 동기 frb 패턴).
+- Flutter: `my_player_screen.dart` — 탭 개수가 학업 탭 노출 여부에 따라 달라져 `DefaultTabController`(고정 길이)를 직접 만든 `TabController`로 교체(최초 조회 시점에 한 번만 길이 고정). `academics_tab.dart`(신규) — 과목별 표·주간 학습모드 4종 칩·시험 D-day+누적 진행바·대학 미선택 시 전공 선택 배너, 원본 `AcademicsPage.svelte` 레이아웃 그대로.
+
+**테스트**: `cargo build --lib`/`--release` 클린. `cargo test --lib` 423개 전부 통과(신규 학업 유닛테스트 다수 — 시험 채점·출전정지 원샷 소비·대학 진학 리셋·API 상태조회 포함). `cargo clippy --lib --tests --bins` 클린. frb 재생성(새 enum 없어 §6-22 non-blocking, `percentile_to_grade` 등 함수만 추가). `flutter analyze` 클린, `flutter test` 27개 전부 통과(`my_player_widget_test.dart`에 학업 탭 노출+렌더 검증 추가). `flutter build windows --debug` 성공.
+
+**이월**: 대학 GPA 4.5 환산(`toGpa45`)·학년/학기 라벨(`universityWeek` 기반) 등 원본의 부가 표시 항목은 스코프 밖(핵심 학업 루프에는 영향 없는 표시용 파생값). 시험 주차(12/42주)는 원본의 정확한 월/주-of-월 캘린더가 아니라 이 엔진의 시즌-내-주차로 근사 — 두 시스템의 날짜 모델이 달라(그레고리력 월 vs 52주 고정) 완전히 같은 수식은 아님.
+
+### 6-92. 문서 갱신 규칙
 
 **이 문서는 살아있는 문서다.** Phase를 하나 끝낼 때마다:
 1. §2 표의 해당 행 상태를 `⬜ 미착수` → `🔶 진행중` → `✅ 완료`로 갱신.
