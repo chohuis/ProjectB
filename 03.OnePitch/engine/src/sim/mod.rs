@@ -14,5 +14,6 @@ pub mod roster;
 pub mod staff;
 pub mod training;
 pub mod schedule;
+pub mod tournament;
 #[path = "match_.rs"]
 pub mod match_sim;

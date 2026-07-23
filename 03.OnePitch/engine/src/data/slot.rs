@@ -213,6 +213,38 @@ fn migration_v10(tx: &Transaction) -> anyhow::Result<()> {
     Ok(())
 }
 
+const V11_DDL: &str = r#"
+ALTER TABLE schedule ADD COLUMN tournament_id TEXT;
+ALTER TABLE schedule ADD COLUMN round INTEGER;
+
+CREATE TABLE tournaments (
+  id TEXT PRIMARY KEY, league_id TEXT, kind TEXT, season INTEGER,
+  format_json TEXT, stage_index INTEGER, round INTEGER, bracket_state TEXT,
+  participants TEXT, status TEXT, champion TEXT
+);
+"#;
+
+/// 리그 탭 "진행중인 대회"(대화 2026-07-26) — 대회(포스트시즌·대학 3개
+/// 대회·고교 5개 전국대회·독립리그)를 정규시즌과 같은 하루 단위 진행
+/// 인프라(`schedule`+`advance()`)에 태워 주인공이 자기 팀 대회 경기도
+/// 직접 뛸 수 있게 한다. `schedule`에 대회 소속 표시(`tournament_id`)와
+/// 라운드 번호(`round`)만 얹으면 `find_protagonist_game_today`/`process_day`
+/// 는 변경 없이 그대로 작동(둘 다 day+home/away로만 조회하는 범용 쿼리).
+/// `tournaments`는 대회 하나당 한 행 — `format_json`은 이 대회가 거칠
+/// 스테이지 파이프라인(예선 라운드로빈 0개 이상 + 본선 넉아웃/게이지
+/// 하나), `stage_index`는 지금 몇 번째 스테이지인지, `round`·`bracket_state`
+/// 는 넉아웃/게이지 스테이지 안에서의 진행 상태(예선 라운드로빈 스테이지는
+/// 정규시즌처럼 통째로 미리 스케줄되므로 안 씀). "지금 상태"는 이 행 +
+/// `schedule WHERE tournament_id = ?`를 라운드별로 묶어 즉석 파생(정규시즌 순위를
+/// schedule+standings에서 매번 계산하는 것과 같은 패턴, 별도 브래킷
+/// 상태 테이블 불필요). `participants`는 시드 순번 그대로의 team_id
+/// JSON 배열, `status`는 `"in_progress"` 또는 우승 team_id.
+fn migration_v11(tx: &Transaction) -> anyhow::Result<()> {
+    tx.execute_batch(V11_DDL)?;
+    tx.execute("UPDATE meta SET save_version = 11", [])?;
+    Ok(())
+}
+
 const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 1,
@@ -254,6 +286,10 @@ const MIGRATIONS: &[Migration] = &[
         version: 10,
         up: migration_v10,
     },
+    Migration {
+        version: 11,
+        up: migration_v11,
+    },
 ];
 
 fn init(mut conn: Connection) -> anyhow::Result<Connection> {
@@ -281,7 +317,7 @@ mod tests {
         let save_version: i64 = conn
             .query_row("SELECT save_version FROM meta", [], |row| row.get(0))
             .unwrap();
-        assert_eq!(save_version, 10);
+        assert_eq!(save_version, 11);
     }
 
     #[test]
@@ -337,6 +373,29 @@ mod tests {
         assert_eq!(relief.as_deref(), Some("npc:relief"));
         assert_eq!(pull_inning, Some(6));
         assert_eq!(pull_runs, Some(2));
+    }
+
+    #[test]
+    fn v11_adds_tournament_columns_to_schedule_and_creates_tournaments_table() {
+        let conn = open_in_memory().unwrap();
+        conn.execute(
+            "INSERT INTO schedule (game_id, day, home, away, result, tournament_id, round) VALUES ('g', 10, 'h', 'a', NULL, 'tourn:x', 1)",
+            [],
+        )
+        .unwrap();
+        let (tournament_id, round): (Option<String>, Option<i64>) =
+            conn.query_row("SELECT tournament_id, round FROM schedule WHERE game_id = 'g'", [], |r| Ok((r.get(0)?, r.get(1)?))).unwrap();
+        assert_eq!(tournament_id.as_deref(), Some("tourn:x"));
+        assert_eq!(round, Some(1));
+
+        conn.execute(
+            "INSERT INTO tournaments (id, league_id, kind, season, format_json, stage_index, round, bracket_state, participants, status, champion)
+             VALUES ('tourn:x', 'league:pro', 'pro_postseason', 0, '[]', 0, 1, '[]', '[]', 'in_progress', NULL)",
+            [],
+        )
+        .unwrap();
+        let status: String = conn.query_row("SELECT status FROM tournaments WHERE id = 'tourn:x'", [], |r| r.get(0)).unwrap();
+        assert_eq!(status, "in_progress");
     }
 
     #[test]
