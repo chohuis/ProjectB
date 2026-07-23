@@ -1,7 +1,12 @@
 use rand::seq::SliceRandom;
 use rand::Rng;
 
-use crate::sim::match_sim::{resolve_in_play_result, BatterStats, PaOutcome, PitcherStats};
+use crate::sim::match_sim::{fatigue_effective, resolve_in_play_result, BatterStats, PaOutcome, PitcherStats};
+
+/// 위기상황 판정 함수 자체는 `sim::match_sim`으로 옮겼다(Phase 1, 배경
+/// 시뮬도 재사용하기 위해) — 기존 호출부(`data::match_session` 등)가 계속
+/// `pitch::is_high_leverage_situation`으로 부를 수 있게 재노출.
+pub use crate::sim::match_sim::is_high_leverage_situation;
 
 /// 스트라이크존 3×3 그리드(9분할) — [07_매치_엔진](../../../02_기획/육성코어/07_매치_엔진.md)
 /// §5 "코스 선택: 스트라이크존 3×3 그리드(9분할)". 주인공 등판 매치
@@ -77,11 +82,16 @@ fn clamp01(x: f64) -> f64 {
 /// 스케일 확정 후"라 placeholder. 구종별 마스터리 차등은 마스터리 추적
 /// 시스템이 아직 없어(05_구종_시스템 §3, I8 이후 스코프) 이번엔 코스만
 /// 실제 판정에 반영 — 구종 자체는 기록만 되고 결과에 별도 가중을 안 줌.
-pub fn throw_pitch(rng: &mut impl Rng, pitcher: &PitcherStats, batter: &BatterStats, course: Course) -> PitchResult {
+/// `high_leverage`(Phase 1) — true면 클러치·침착함이 개입한다(§5 "상황
+/// 보정... 클러치"). 피로도는 `fatigue_effective`로 제구·구위 실효치를
+/// 미리 깎아서 씀(투수가 지칠수록 코스가 흔들린다는 자연스러운 결과).
+pub fn throw_pitch(rng: &mut impl Rng, pitcher: &PitcherStats, batter: &BatterStats, course: Course, high_leverage: bool) -> PitchResult {
     let edge = course.edge_level();
+    let effective_control = fatigue_effective(pitcher.control, pitcher.fatigue);
+    let effective_stuff = fatigue_effective(pitcher.stuff, pitcher.fatigue);
 
     // 사구 — §5 "제구 낮을수록↑, 몸쪽일수록↑".
-    let control_deficit = (50.0 - pitcher.control).max(0.0) * 0.0006;
+    let control_deficit = (50.0 - effective_control).max(0.0) * 0.0006;
     let inside_bonus = if course.is_inside() { 0.01 } else { 0.0 };
     let hbp_prob = (0.01 + control_deficit + inside_bonus).clamp(0.0, 0.15);
     if rng.gen::<f64>() < hbp_prob {
@@ -89,23 +99,32 @@ pub fn throw_pitch(rng: &mut impl Rng, pitcher: &PitcherStats, batter: &BatterSt
     }
 
     // 스트라이크존 통과 여부 — 구석일수록 존 밖으로 빠질 확률↑, 제구
-    // 좋을수록 원하는 위치(존 안)에 더 잘 넣음.
+    // 좋을수록 원하는 위치(존 안)에 더 잘 넣음. 경기운영도 소폭 거든다
+    // (§10 "경기운영 = 적은 구수로 아웃 잡는 능력"의 일부로 해석).
     let in_zone_base = clamp01(0.75 - edge * 0.5);
-    let control_bonus = (pitcher.control - 50.0) * 0.002;
+    let control_bonus = (effective_control - 50.0) * 0.002 + (pitcher.game_management - 50.0) * 0.001;
     let in_zone = rng.gen::<f64>() < clamp01(in_zone_base + control_bonus);
 
     if !in_zone {
         // 유인구에 속아 스윙하는지 — §5 "선구안 스탯이 그 역할을 흡수".
-        let chase_prob = clamp01(0.25 - (batter.eye - 50.0) * 0.003 + edge * 0.1);
+        // 위기상황에선 침착한 타자일수록 덜 낚임.
+        let mut chase_prob = clamp01(0.25 - (batter.eye - 50.0) * 0.003 + edge * 0.1);
+        if high_leverage {
+            chase_prob = clamp01(chase_prob - (batter.composure - 50.0) * 0.001);
+        }
         if rng.gen::<f64>() >= chase_prob {
             return PitchResult::Ball;
         }
-        let whiff_prob = clamp01(0.4 + edge * 0.3 - (batter.contact - 50.0) * 0.003);
+        let whiff_prob = clamp01(0.4 + edge * 0.3 - (batter.contact - 50.0) * 0.003 + (pitcher.velocity - 50.0) * 0.001);
         return if rng.gen::<f64>() < whiff_prob { PitchResult::Strike } else { PitchResult::Foul };
     }
 
-    // 존 안 — 구석에 걸칠수록(edge↑) 맞히기 어려움.
-    let contact_edge = (pitcher.stuff + edge * 20.0) - batter.contact;
+    // 존 안 — 구석에 걸칠수록(edge↑) 맞히기 어려움. 구속은 구위와 별개로
+    // 순수 헛스윙 유발력을 더한다. 위기상황에선 클러치 대결.
+    let mut contact_edge = (effective_stuff + edge * 20.0 + (pitcher.velocity - 50.0) * 0.3) - batter.contact;
+    if high_leverage {
+        contact_edge += (pitcher.clutch - batter.clutch) * 3.0;
+    }
     let whiff_prob = clamp01(0.15 + contact_edge * 0.004);
     if rng.gen::<f64>() < whiff_prob {
         return PitchResult::Strike;
@@ -180,15 +199,6 @@ pub fn choose_pitch_and_course(rng: &mut impl Rng, pitches: &[String], batter: &
     (pitch, course)
 }
 
-/// 반자동 모드(§3) 격상 트리거 — §4 "위기상황: 만루·동점·역전 기회 등
-/// 레버리지 높은 타석"만 구현. "개인기록 근접"·"라이벌 매치업"은 각각
-/// 기록 추적·관계도 시스템이 있어야 판단 가능해 스코프 밖
-/// (10_구현_Phase_계획.md 참고) — 다음 서브분 후보.
-pub fn is_high_leverage_situation(bases_loaded: bool, score_diff: i32, inning: u32) -> bool {
-    let late_and_close = inning >= 7 && score_diff.abs() <= 1;
-    bases_loaded || late_and_close
-}
-
 /// 완전 자동(§3 "자동" 모드) 방식으로 한 타석을 끝까지 진행 — 매 구
 /// `choose_pitch_and_course`로 AI가 구종·코스를 고르고 `throw_pitch`로
 /// 판정, `apply_pitch_result`로 카운트에 반영해 삼진/볼넷/사구/인플레이
@@ -209,14 +219,14 @@ pub fn simulate_at_bat_automatically(
     let mut pitch_count = 0u32;
     loop {
         let (_pitch_name, course) = choose_pitch_and_course(rng, pitches, batter, high_leverage);
-        let result = throw_pitch(rng, pitcher, batter, course);
+        let result = throw_pitch(rng, pitcher, batter, course, high_leverage);
         pitch_count += 1;
         match apply_pitch_result(&mut count, result) {
             AtBatOutcome::InProgress => continue,
             AtBatOutcome::Strikeout => return (PaOutcome::Strikeout, pitch_count),
             AtBatOutcome::Walk => return (PaOutcome::Walk, pitch_count),
             AtBatOutcome::HitByPitch => return (PaOutcome::HitByPitch, pitch_count),
-            AtBatOutcome::InPlay => return (resolve_in_play_result(rng, batter, pitcher), pitch_count),
+            AtBatOutcome::InPlay => return (resolve_in_play_result(rng, batter, pitcher, high_leverage), pitch_count),
         }
     }
 }
@@ -228,10 +238,10 @@ mod tests {
     use rand_chacha::ChaCha8Rng;
 
     fn avg_batter() -> BatterStats {
-        BatterStats { id: "b".to_string(), contact: 50.0, eye: 50.0, power: 50.0, fatigue: 0.0 }
+        BatterStats { id: "b".to_string(), contact: 50.0, eye: 50.0, power: 50.0, fatigue: 0.0, clutch: 50.0, composure: 50.0 }
     }
     fn avg_pitcher() -> PitcherStats {
-        PitcherStats { id: "p".to_string(), control: 50.0, stuff: 50.0, fatigue: 0.0 }
+        PitcherStats { id: "p".to_string(), control: 50.0, stuff: 50.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0 }
     }
 
     #[test]
@@ -239,20 +249,20 @@ mod tests {
         let mut rng_a = ChaCha8Rng::seed_from_u64(1);
         let mut rng_b = ChaCha8Rng::seed_from_u64(1);
         assert_eq!(
-            throw_pitch(&mut rng_a, &avg_pitcher(), &avg_batter(), Course::MidCenter),
-            throw_pitch(&mut rng_b, &avg_pitcher(), &avg_batter(), Course::MidCenter)
+            throw_pitch(&mut rng_a, &avg_pitcher(), &avg_batter(), Course::MidCenter, false),
+            throw_pitch(&mut rng_b, &avg_pitcher(), &avg_batter(), Course::MidCenter, false)
         );
     }
 
     #[test]
     fn inside_courses_raise_hit_by_pitch_rate_for_wild_pitchers() {
-        let wild = PitcherStats { id: "p".to_string(), control: 20.0, stuff: 50.0, fatigue: 0.0 };
+        let wild = PitcherStats { id: "p".to_string(), control: 20.0, stuff: 50.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0 };
         let trials = 3000;
         let count_hbp = |course: Course| -> usize {
             let mut hits = 0;
             for seed in 0..trials {
                 let mut rng = ChaCha8Rng::seed_from_u64(seed);
-                if throw_pitch(&mut rng, &wild, &avg_batter(), course) == PitchResult::HitByPitch {
+                if throw_pitch(&mut rng, &wild, &avg_batter(), course, false) == PitchResult::HitByPitch {
                     hits += 1;
                 }
             }
@@ -334,5 +344,36 @@ mod tests {
         let a = simulate_at_bat_automatically(&mut rng_a, &pitches, &avg_pitcher(), &avg_batter(), false);
         let b = simulate_at_bat_automatically(&mut rng_b, &pitches, &avg_pitcher(), &avg_batter(), false);
         assert_eq!(a, b);
+    }
+
+    #[test]
+    fn throw_pitch_clutch_only_shifts_outcomes_when_high_leverage_is_true() {
+        let clutch_pitcher = PitcherStats { clutch: 80.0, ..avg_pitcher() };
+        for seed in 0..30u64 {
+            let mut rng_a = ChaCha8Rng::seed_from_u64(seed);
+            let mut rng_b = ChaCha8Rng::seed_from_u64(seed);
+            let a = throw_pitch(&mut rng_a, &clutch_pitcher, &avg_batter(), Course::MidCenter, false);
+            let b = throw_pitch(&mut rng_b, &avg_pitcher(), &avg_batter(), Course::MidCenter, false);
+            assert_eq!(a, b, "seed={seed}: high_leverage=false면 클러치가 결과에 개입하면 안 됨");
+        }
+    }
+
+    #[test]
+    fn a_fatigued_pitcher_walks_the_batter_more_often_than_a_fresh_one() {
+        let fresh = PitcherStats { fatigue: 0.0, control: 30.0, ..avg_pitcher() };
+        let tired = PitcherStats { fatigue: 100.0, control: 30.0, ..avg_pitcher() };
+        let count_balls = |pitcher: &PitcherStats| -> u32 {
+            let mut balls = 0;
+            for seed in 0..2000u64 {
+                let mut rng = ChaCha8Rng::seed_from_u64(seed);
+                if throw_pitch(&mut rng, pitcher, &avg_batter(), Course::HighInside, false) == PitchResult::Ball {
+                    balls += 1;
+                }
+            }
+            balls
+        };
+        let fresh_balls = count_balls(&fresh);
+        let tired_balls = count_balls(&tired);
+        assert!(tired_balls >= fresh_balls, "tired={tired_balls} fresh={fresh_balls}");
     }
 }

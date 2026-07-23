@@ -1630,7 +1630,28 @@
 
 **테스트**: `cargo test --lib` 455개 전부 통과(신규 2개 — migration v14 컬럼 왕복, 하드캡을 훌쩍 넘긴 근사 투구수로 상대 투수가 실제로 강판돼 불펜이 season_stats를 기록하는지). `cargo clippy` 클린. frb 재생성 불필요(내부 로직·세션 스키마만 확장). `cargo build --release` 갱신 후 `flutter test` 27개 전부 통과.
 
-### 6-101. 문서 갱신 규칙
+### 6-102. 매치엔진 리얼리즘 강화 Phase 1 — 스탯→결과 연결 확장 (2026-07-26, 완료)
+
+**Context**: 매치엔진 실사용 스탯 점검 결과, 노출 스탯 9종 중 타자는 파워·컨택·선구안 3개, 투수는 제구·구위 2개만 실제 판정식(`simulate_plate_appearance`/`resolve_in_play_result`/`throw_pitch`)에 쓰이고 나머지(구속·경기운영·클러치·침착함·스피드·수비·리더십)는 훈련·성장만 되고 매치 결과엔 0% 반영됨을 확인 — 육성 시스템 절반이 승부와 분리된 상태. 게다가 `fatigue`조차 부상 확률에만 쓰이고 성능 저하엔 미반영이었다. 07_매치_엔진.md §5 "상황 보정(피로도·컨디션·클러치)"을 실제로 구현하는 Phase — 전체 7-Phase 계획(사용자 승인)의 1번째, 가장 저비용 고효과인 "새 스키마 없이 기존 함수 판정식만 확장" 범위.
+
+**구현**(`engine/src/sim/match_.rs`):
+- `PitcherStats`에 `velocity`(구속)·`game_management`(경기운영)·`clutch`·`composure` 필드, `BatterStats`에 `clutch`·`composure` 필드 추가. `스피드`·`수비`는 각각 Phase 3(주루)·Phase 2(실책)에서 쓸 예정이라 이번엔 필드로 안 받음(주석으로 명시) — `체력`·`회복력`·`리더십`은 매치 판정이 아니라 피로 누적·관계도 쪽이라 계속 스코프 밖.
+- `fatigue_effective(base, fatigue) -> f64` 신규 — 피로도가 제구·구위 실효치를 2차 곡선으로 깎는다(최대 -15, D그룹 placeholder). `simulate_plate_appearance`·`resolve_in_play_result`·`throw_pitch` 전부 이걸로 실효치를 먼저 구한 뒤 판정.
+- `is_high_leverage_situation`을 `sim::pitch`에서 이 파일로 이동(배경 시뮬도 재사용해야 해서) — `sim::pitch`는 `pub use`로 재노출해 기존 호출부 그대로 유지.
+- `simulate_plate_appearance`/`resolve_in_play_result`에 `high_leverage: bool` 파라미터 추가 — true일 때만 클러치(투수 vs 타자 대결)·침착함(볼넷 억제) 보정이 개입, 평상시엔 순수 능력치 싸움 그대로. 구속은 K%에, 경기운영은 볼넷 억제에 상시 소폭 가중.
+- `simulate_half_inning`에 `high_leverage_base: bool` 파라미터 추가(호출부가 이닝·스코어로 미리 계산) — 함수 내부에서 타석마다 실시간 만루 여부와 OR해 최종 위기상황을 판단(만루는 그 순간에만 알 수 있어서). 인자 8개로 `clippy::too_many_arguments` 걸려 기존 코드베이스 관례대로 `#[allow]` 추가.
+
+**구현**(`engine/src/sim/pitch.rs`):
+- `throw_pitch`에 `high_leverage: bool` 파라미터 추가 — `fatigue_effective`로 실효 제구·구위를 구하고, 경기운영이 존 안 제어에, 구속이 헛스윙 유발에 상시 가중. 위기상황에선 타자 침착함(유인구 회피)·클러치 대결(헛스윙 확률)이 추가로 개입.
+- `simulate_at_bat_automatically`가 이미 갖고 있던 `high_leverage`를 `throw_pitch`·`resolve_in_play_result` 호출에 그대로 전달.
+
+**구현**(`engine/src/data/repository.rs`, `engine/src/data/match_session.rs`):
+- `PitcherStats`/`BatterStats`를 만드는 모든 자리(`load_starting_pitcher`·`load_relief_pitcher`·`load_pitcher_by_id`·`load_batting_lineup`·`run_intrasquad_scrimmage`·`load_protagonist_as_pitcher`)에서 새 필드를 `npc.stats`/`protagonist.stats` JSON의 "구속"·"경기운영"·"클러치"·"침착함" 키로 파싱(기존 필드와 동일 패턴, 없으면 50.0 기본값).
+- `match_session.rs`의 배경 하프이닝·주인공 1구 조작 양쪽에서 이닝·스코어차로 위기상황을 계산해 `simulate_half_inning`/`throw_pitch`/`resolve_in_play_result`에 그대로 넘김.
+
+**테스트**: `cargo test --lib` 462개 전부 통과(신규 7개 — 피로도 실효치 감쇠 2개, 구속·경기운영 각 1개, 클러치 위기상황 게이팅 2개, 피로 투수 볼넷 증가 1개). `cargo clippy` 클린. frb 재생성 불필요(내부 계산 로직만 확장, 새 frb 함수 없음). `cargo build --release` 갱신 후 `flutter test` 27개 전부 통과. `balance_harness`로 극단적 쏠림 없는지 스모크 확인.
+
+### 6-103. 문서 갱신 규칙
 
 **이 문서는 살아있는 문서다.** Phase를 하나 끝낼 때마다:
 1. §2 표의 해당 행 상태를 `⬜ 미착수` → `🔶 진행중` → `✅ 완료`로 갱신.

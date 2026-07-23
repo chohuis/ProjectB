@@ -1511,6 +1511,8 @@ pub(crate) fn load_batting_lineup(slot_conn: &Connection, team_id: &str) -> anyh
                 eye: v.get("선구안").and_then(|x| x.as_f64()).unwrap_or(50.0),
                 power: v.get("파워").and_then(|x| x.as_f64()).unwrap_or(50.0),
                 fatigue: live_state.get("피로도").and_then(|x| x.as_f64()).unwrap_or(0.0),
+                clutch: v.get("클러치").and_then(|x| x.as_f64()).unwrap_or(50.0),
+                composure: v.get("침착함").and_then(|x| x.as_f64()).unwrap_or(50.0),
             },
         );
     }
@@ -1843,6 +1845,10 @@ pub(crate) fn load_starting_pitcher(slot_conn: &Connection, team_id: &str) -> an
         control: v.get("제구").and_then(|x| x.as_f64()).unwrap_or(50.0),
         stuff: v.get("구위").and_then(|x| x.as_f64()).unwrap_or(50.0),
         fatigue: live_state.get("피로도").and_then(|x| x.as_f64()).unwrap_or(0.0),
+        velocity: v.get("구속").and_then(|x| x.as_f64()).unwrap_or(50.0),
+        game_management: v.get("경기운영").and_then(|x| x.as_f64()).unwrap_or(50.0),
+        clutch: v.get("클러치").and_then(|x| x.as_f64()).unwrap_or(50.0),
+        composure: v.get("침착함").and_then(|x| x.as_f64()).unwrap_or(50.0),
     })
 }
 
@@ -1901,6 +1907,10 @@ pub(crate) fn load_relief_pitcher(slot_conn: &Connection, team_id: &str, is_save
         control: v.get("제구").and_then(|x| x.as_f64()).unwrap_or(50.0),
         stuff: v.get("구위").and_then(|x| x.as_f64()).unwrap_or(50.0),
         fatigue: live_state.get("피로도").and_then(|x| x.as_f64()).unwrap_or(0.0),
+        velocity: v.get("구속").and_then(|x| x.as_f64()).unwrap_or(50.0),
+        game_management: v.get("경기운영").and_then(|x| x.as_f64()).unwrap_or(50.0),
+        clutch: v.get("클러치").and_then(|x| x.as_f64()).unwrap_or(50.0),
+        composure: v.get("침착함").and_then(|x| x.as_f64()).unwrap_or(50.0),
     }))
 }
 
@@ -1962,6 +1972,10 @@ pub(crate) fn load_pitcher_by_id(slot_conn: &Connection, npc_id: &str) -> anyhow
         control: v.get("제구").and_then(|x| x.as_f64()).unwrap_or(50.0),
         stuff: v.get("구위").and_then(|x| x.as_f64()).unwrap_or(50.0),
         fatigue: live_state.get("피로도").and_then(|x| x.as_f64()).unwrap_or(0.0),
+        velocity: v.get("구속").and_then(|x| x.as_f64()).unwrap_or(50.0),
+        game_management: v.get("경기운영").and_then(|x| x.as_f64()).unwrap_or(50.0),
+        clutch: v.get("클러치").and_then(|x| x.as_f64()).unwrap_or(50.0),
+        composure: v.get("침착함").and_then(|x| x.as_f64()).unwrap_or(50.0),
     })
 }
 
@@ -2383,6 +2397,10 @@ fn run_intrasquad_scrimmage(slot_conn: &Connection, content_conn: &Connection, w
                 control: v.get("제구").and_then(|x| x.as_f64()).unwrap_or(50.0),
                 stuff: v.get("구위").and_then(|x| x.as_f64()).unwrap_or(50.0),
                 fatigue,
+                velocity: v.get("구속").and_then(|x| x.as_f64()).unwrap_or(50.0),
+                game_management: v.get("경기운영").and_then(|x| x.as_f64()).unwrap_or(50.0),
+                clutch: v.get("클러치").and_then(|x| x.as_f64()).unwrap_or(50.0),
+                composure: v.get("침착함").and_then(|x| x.as_f64()).unwrap_or(50.0),
             });
         } else {
             batters.push(match_sim::BatterStats {
@@ -2391,6 +2409,8 @@ fn run_intrasquad_scrimmage(slot_conn: &Connection, content_conn: &Connection, w
                 eye: v.get("선구안").and_then(|x| x.as_f64()).unwrap_or(50.0),
                 power: v.get("파워").and_then(|x| x.as_f64()).unwrap_or(50.0),
                 fatigue,
+                clutch: v.get("클러치").and_then(|x| x.as_f64()).unwrap_or(50.0),
+                composure: v.get("침착함").and_then(|x| x.as_f64()).unwrap_or(50.0),
             });
         }
     }
@@ -2408,6 +2428,10 @@ fn run_intrasquad_scrimmage(slot_conn: &Connection, content_conn: &Connection, w
                 control: v.get("제구").and_then(|x| x.as_f64()).unwrap_or(50.0),
                 stuff: v.get("구위").and_then(|x| x.as_f64()).unwrap_or(50.0),
                 fatigue: live_state.get("피로도").and_then(|x| x.as_f64()).unwrap_or(0.0),
+                velocity: v.get("구속").and_then(|x| x.as_f64()).unwrap_or(50.0),
+                game_management: v.get("경기운영").and_then(|x| x.as_f64()).unwrap_or(50.0),
+                clutch: v.get("클러치").and_then(|x| x.as_f64()).unwrap_or(50.0),
+                composure: v.get("침착함").and_then(|x| x.as_f64()).unwrap_or(50.0),
             });
         }
     }

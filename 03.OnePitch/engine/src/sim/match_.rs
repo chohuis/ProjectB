@@ -9,6 +9,10 @@ use crate::sim::manager;
 /// npc.stats JSON 파싱은 repository.rs가 하고 여기는 순수 계산만. `id`·
 /// `fatigue`는 급성형 부상 판정(§13, 08_부상_시스템.md §3)이 "누구에게"
 /// "얼마나 위험하게" 일어났는지 알아야 해서 I5 5차분 이후 추가됨.
+/// `clutch`(클러치)·`composure`(침착함)는 Phase 1(10_구현_Phase_계획.md
+/// §6-N, 매치엔진 리얼리즘 강화)에서 추가 — 위기상황(`is_high_leverage_situation`)
+/// 에서만 판정식에 개입한다(§5 "상황 보정... 클러치"). `스피드`·`수비`는
+/// 각각 Phase 3(주루)·Phase 2(실책)에서 쓸 예정이라 아직 필드로 안 받는다.
 #[derive(Debug, Clone)]
 pub struct BatterStats {
     pub id: String,
@@ -16,13 +20,24 @@ pub struct BatterStats {
     pub eye: f64,
     pub power: f64,
     pub fatigue: f64,
+    pub clutch: f64,
+    pub composure: f64,
 }
 
+/// `velocity`(구속)·`game_management`(경기운영)·`clutch`·`composure`는
+/// Phase 1에서 추가 — 구속은 K% 가중치를 구위와 분리해서 반영, 경기운영은
+/// 볼넷 억제(§5·§10 "견제도 경기운영에 흡수"), 클러치·침착함은 위기상황
+/// 전용 보정. `체력`·`회복력`·`리더십`은 매치 판정이 아니라 피로 누적·
+/// 관계도 쪽 스탯이라 이번 스코프에서도 필드로 안 받는다.
 pub struct PitcherStats {
     pub id: String,
     pub control: f64,
     pub stuff: f64,
     pub fatigue: f64,
+    pub velocity: f64,
+    pub game_management: f64,
+    pub clutch: f64,
+    pub composure: f64,
 }
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
@@ -54,14 +69,47 @@ fn clamp01(x: f64) -> f64 {
     x.clamp(0.0, 1.0)
 }
 
+/// 피로도가 능력치 실효치를 깎는다(Phase 1, §5 "상황 보정... 피로도") —
+/// `sim::injury::FATIGUE_INJURY_THRESHOLD`(70) 근처부터 체감되게 2차
+/// 곡선으로 감쇠, 최대 -15(피로도 100 기준). D그룹 placeholder(계수는
+/// I8 밸런스 하네스 재조정 대상). 피로도 0이면 원래 능력치 그대로.
+pub(crate) fn fatigue_effective(base: f64, fatigue: f64) -> f64 {
+    let decay = (fatigue / 100.0).clamp(0.0, 1.0).powi(2) * 15.0;
+    (base - decay).max(0.0)
+}
+
+/// 위기상황 판정 — 07_매치_엔진.md §4 "만루·동점·역전 기회 등 레버리지
+/// 높은 타석"만 구현. "개인기록 근접"·"라이벌 매치업"은 각각 기록 추적·
+/// 관계도 시스템이 있어야 판단 가능해 스코프 밖(10_구현_Phase_계획.md
+/// 참고) — 다음 서브분 후보. 원래 `sim::pitch`(반자동 격상 트리거)에서만
+/// 쓰였지만 Phase 1부터 배경 시뮬(`simulate_half_inning`)의 클러치·침착함
+/// 보정에도 재사용해 이 파일로 옮겼다 — `sim::pitch`는 재노출(`pub use`)로
+/// 기존 호출부를 그대로 유지.
+pub fn is_high_leverage_situation(bases_loaded: bool, score_diff: i32, inning: u32) -> bool {
+    let late_and_close = inning >= 7 && score_diff.abs() <= 1;
+    bases_loaded || late_and_close
+}
+
 /// 타석 1회 = 1회 확률판정(§11 "최소 타석 단위"를 만족하는 단순화 — 1구
 /// 단위 볼카운트는 I5 후속 스코프). 20~80 스탯 스케일 기준 placeholder
 /// 판정식 — 정확한 계수는 D그룹(05_밸런스.md), Phase I8 하네스에서 확정.
-pub fn simulate_plate_appearance(rng: &mut impl Rng, batter: &BatterStats, pitcher: &PitcherStats) -> PaOutcome {
-    let pitch_edge = (pitcher.control + pitcher.stuff) / 2.0 - (batter.contact + batter.eye) / 2.0;
+/// `high_leverage`(Phase 1) — `is_high_leverage_situation`이 true일 때만
+/// 클러치·침착함이 개입한다(§5 "상황 보정... 클러치"), 평상시엔 순수
+/// 능력치 싸움 그대로.
+pub fn simulate_plate_appearance(rng: &mut impl Rng, batter: &BatterStats, pitcher: &PitcherStats, high_leverage: bool) -> PaOutcome {
+    let effective_control = fatigue_effective(pitcher.control, pitcher.fatigue);
+    let effective_stuff = fatigue_effective(pitcher.stuff, pitcher.fatigue);
+    let mut pitch_edge = (effective_control + effective_stuff) / 2.0 - (batter.contact + batter.eye) / 2.0;
+    if high_leverage {
+        pitch_edge += (pitcher.clutch - batter.clutch) * 0.15;
+    }
 
-    let k_prob = clamp01(0.20 + pitch_edge * 0.004);
-    let bb_prob = clamp01(0.08 - pitch_edge * 0.003);
+    let mut k_prob = clamp01(0.20 + pitch_edge * 0.004 + (pitcher.velocity - 50.0) * 0.001);
+    let mut bb_prob = clamp01(0.08 - pitch_edge * 0.003 - (pitcher.game_management - 50.0) * 0.0004);
+    if high_leverage {
+        bb_prob = clamp01(bb_prob - (pitcher.composure - 50.0) * 0.0006);
+        k_prob = clamp01(k_prob - (batter.composure - 50.0) * 0.0003);
+    }
     let hbp_prob = 0.01;
     let in_play_prob = clamp01(1.0 - k_prob - bb_prob - hbp_prob);
     let total = k_prob + bb_prob + hbp_prob + in_play_prob;
@@ -77,7 +125,7 @@ pub fn simulate_plate_appearance(rng: &mut impl Rng, batter: &BatterStats, pitch
         return PaOutcome::HitByPitch;
     }
 
-    resolve_in_play_result(rng, batter, pitcher)
+    resolve_in_play_result(rng, batter, pitcher, high_leverage)
 }
 
 /// 인플레이(공을 맞힘) 발생 이후의 결과 세분화(§6) — 아웃 여부 → 안타
@@ -85,8 +133,11 @@ pub fn simulate_plate_appearance(rng: &mut impl Rng, batter: &BatterStats, pitch
 /// `sim::pitch::simulate_at_bat_automatically`(주인공 1구 단위 매치
 /// 세션, I6 2차분)가 이 판정을 공유해 "인플레이 이후"의 확률식이 두
 /// 엔진 사이에서 갈라지지 않게 한다.
-pub fn resolve_in_play_result(rng: &mut impl Rng, batter: &BatterStats, pitcher: &PitcherStats) -> PaOutcome {
-    let power_edge = batter.power - pitcher.stuff;
+pub fn resolve_in_play_result(rng: &mut impl Rng, batter: &BatterStats, pitcher: &PitcherStats, high_leverage: bool) -> PaOutcome {
+    let mut power_edge = batter.power - fatigue_effective(pitcher.stuff, pitcher.fatigue);
+    if high_leverage {
+        power_edge += (batter.clutch - pitcher.clutch) * 0.15;
+    }
     let hit_prob = clamp01(0.30 + power_edge * 0.002);
     if rng.gen::<f64>() >= hit_prob {
         return PaOutcome::Out;
@@ -173,13 +224,18 @@ pub struct HalfInningStats {
 }
 
 /// `pub(crate)` — `data::match_session`이 주인공 팀 타석(DH 배경 시뮬,
-/// 절대 개입 없음 — §7)을 통째로 돌릴 때 재사용.
+/// 절대 개입 없음 — §7)을 통째로 돌릴 때 재사용. `high_leverage_base`는
+/// 호출부(이닝·스코어를 아는 쪽)가 미리 계산해서 넘기는 "만루 제외" 위기
+/// 판정(Phase 1) — 이 함수 안에서 타석마다 실시간 만루 여부와 OR해
+/// 최종 `high_leverage`를 매 타석 다시 판단한다.
+#[allow(clippy::too_many_arguments)]
 pub(crate) fn simulate_half_inning(
     rng: &mut impl Rng,
     lineup: &[BatterStats],
     batter_idx: &mut usize,
     pitcher: &PitcherStats,
     initial_bases: [bool; 3],
+    high_leverage_base: bool,
     injuries: &mut Vec<InjuryEvent>,
     stats: &mut HalfInningStats,
 ) -> u32 {
@@ -192,7 +248,8 @@ pub(crate) fn simulate_half_inning(
     while outs < 3 {
         let batter = &lineup[*batter_idx % lineup.len()];
         *batter_idx += 1;
-        let outcome = simulate_plate_appearance(rng, batter, pitcher);
+        let bases_loaded = bases.iter().all(|&b| b);
+        let outcome = simulate_plate_appearance(rng, batter, pitcher, high_leverage_base || bases_loaded);
         let pa_runs = match outcome {
             PaOutcome::Strikeout | PaOutcome::Out => {
                 outs += 1;
@@ -360,6 +417,10 @@ pub fn simulate_game(
 
     loop {
         let bases = if amateur && inning > 9 { TIEBREAK_BASES } else { EMPTY_BASES };
+        // 위기상황 기저값(Phase 1) — 만루 여부는 `simulate_half_inning`이
+        // 타석마다 다시 판단하므로 여기선 항상 false로 넘긴다.
+        let home_leverage_base = is_high_leverage_situation(false, home_runs as i32 - away_runs as i32, inning);
+        let away_leverage_base = is_high_leverage_situation(false, away_runs as i32 - home_runs as i32, inning);
 
         away_runs += simulate_half_inning(
             rng,
@@ -367,6 +428,7 @@ pub fn simulate_game(
             &mut away_idx,
             home_pitcher,
             bases,
+            home_leverage_base,
             &mut injuries,
             if home_pulled { &mut home_reliever_stats_acc } else { &mut top_half_stats },
         );
@@ -379,6 +441,7 @@ pub fn simulate_game(
                 &mut home_idx,
                 away_pitcher,
                 bases,
+                away_leverage_base,
                 &mut injuries,
                 if away_pulled { &mut away_reliever_stats_acc } else { &mut bottom_half_stats },
             );
@@ -449,10 +512,10 @@ mod tests {
     use rand_chacha::ChaCha8Rng;
 
     fn avg_batter() -> BatterStats {
-        BatterStats { id: "b".to_string(), contact: 50.0, eye: 50.0, power: 50.0, fatigue: 0.0 }
+        BatterStats { id: "b".to_string(), contact: 50.0, eye: 50.0, power: 50.0, fatigue: 0.0, clutch: 50.0, composure: 50.0 }
     }
     fn avg_pitcher() -> PitcherStats {
-        PitcherStats { id: "p".to_string(), control: 50.0, stuff: 50.0, fatigue: 0.0 }
+        PitcherStats { id: "p".to_string(), control: 50.0, stuff: 50.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0 }
     }
     /// 강판을 신경 쓰지 않는 기존 테스트들이 계속 완투 동작을 보게 하는
     /// 헬퍼 — `reliever: None`이면 `simulate_game`이 절대 강판하지 않는다.
@@ -491,7 +554,7 @@ mod tests {
     fn simulate_game_pulls_a_starter_over_a_full_game_when_a_reliever_is_available() {
         let lineup: Vec<BatterStats> = (0..8).map(|i| BatterStats { id: format!("b{i}"), ..avg_batter() }).collect();
         let starter = avg_pitcher();
-        let reliever = PitcherStats { id: "reliever".to_string(), control: 50.0, stuff: 50.0, fatigue: 0.0 };
+        let reliever = PitcherStats { id: "reliever".to_string(), control: 50.0, stuff: 50.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0 };
         let mut pulled_at_least_once = false;
         for seed in 0..20u64 {
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
@@ -515,7 +578,7 @@ mod tests {
     fn simulate_game_pulls_a_starter_into_the_closer_slot_when_only_a_closer_is_available() {
         let lineup: Vec<BatterStats> = (0..8).map(|i| BatterStats { id: format!("b{i}"), ..avg_batter() }).collect();
         let starter = avg_pitcher();
-        let closer = PitcherStats { id: "closer".to_string(), control: 50.0, stuff: 50.0, fatigue: 0.0 };
+        let closer = PitcherStats { id: "closer".to_string(), control: 50.0, stuff: 50.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0 };
         let mut pulled_at_least_once = false;
         for seed in 0..20u64 {
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
@@ -535,7 +598,7 @@ mod tests {
     fn simulate_game_never_pulls_when_no_reliever_is_available() {
         let lineup: Vec<BatterStats> = (0..8).map(|i| BatterStats { id: format!("b{i}"), ..avg_batter() }).collect();
         // 극단적으로 지친 투수라도 reliever: None이면 강판이 아예 불가능해야 한다.
-        let exhausted = PitcherStats { id: "p".to_string(), control: 50.0, stuff: 50.0, fatigue: 200.0 };
+        let exhausted = PitcherStats { id: "p".to_string(), control: 50.0, stuff: 50.0, fatigue: 200.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0 };
         for seed in 0..10u64 {
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
             let r = simulate_game(&mut rng, "league:pro", &lineup, &no_pull_plan(&exhausted), &lineup, &no_pull_plan(&exhausted));
@@ -560,8 +623,8 @@ mod tests {
     #[test]
     fn stronger_pitcher_allows_fewer_hits_on_average() {
         let lineup: Vec<BatterStats> = (0..8).map(|i| BatterStats { id: format!("b{i}"), ..avg_batter() }).collect();
-        let weak_pitcher = PitcherStats { id: "wp".to_string(), control: 25.0, stuff: 25.0, fatigue: 0.0 };
-        let strong_pitcher = PitcherStats { id: "sp".to_string(), control: 75.0, stuff: 75.0, fatigue: 0.0 };
+        let weak_pitcher = PitcherStats { id: "wp".to_string(), control: 25.0, stuff: 25.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0 };
+        let strong_pitcher = PitcherStats { id: "sp".to_string(), control: 75.0, stuff: 75.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0 };
 
         let mut weak_hits = 0u32;
         let mut strong_hits = 0u32;
@@ -579,9 +642,9 @@ mod tests {
     #[test]
     fn stronger_batting_lineup_scores_more_on_average() {
         let weak_lineup: Vec<BatterStats> =
-            (0..8).map(|i| BatterStats { id: format!("w{i}"), contact: 25.0, eye: 25.0, power: 25.0, fatigue: 0.0 }).collect();
+            (0..8).map(|i| BatterStats { id: format!("w{i}"), contact: 25.0, eye: 25.0, power: 25.0, fatigue: 0.0, clutch: 50.0, composure: 50.0 }).collect();
         let strong_lineup: Vec<BatterStats> =
-            (0..8).map(|i| BatterStats { id: format!("s{i}"), contact: 75.0, eye: 75.0, power: 75.0, fatigue: 0.0 }).collect();
+            (0..8).map(|i| BatterStats { id: format!("s{i}"), contact: 75.0, eye: 75.0, power: 75.0, fatigue: 0.0, clutch: 50.0, composure: 50.0 }).collect();
 
         let mut weak_total = 0u32;
         let mut strong_total = 0u32;
@@ -600,11 +663,11 @@ mod tests {
     fn amateur_cold_game_stops_before_nine_innings_on_blowout() {
         // extreme mismatch should trigger the 5-inning/15-run cold-game rule at least sometimes
         let elite: Vec<BatterStats> =
-            (0..8).map(|i| BatterStats { id: format!("e{i}"), contact: 80.0, eye: 80.0, power: 80.0, fatigue: 0.0 }).collect();
+            (0..8).map(|i| BatterStats { id: format!("e{i}"), contact: 80.0, eye: 80.0, power: 80.0, fatigue: 0.0, clutch: 50.0, composure: 50.0 }).collect();
         let hapless: Vec<BatterStats> =
-            (0..8).map(|i| BatterStats { id: format!("h{i}"), contact: 20.0, eye: 20.0, power: 20.0, fatigue: 0.0 }).collect();
-        let elite_pitcher = PitcherStats { id: "ep".to_string(), control: 80.0, stuff: 80.0, fatigue: 0.0 };
-        let hapless_pitcher = PitcherStats { id: "hp".to_string(), control: 20.0, stuff: 20.0, fatigue: 0.0 };
+            (0..8).map(|i| BatterStats { id: format!("h{i}"), contact: 20.0, eye: 20.0, power: 20.0, fatigue: 0.0, clutch: 50.0, composure: 50.0 }).collect();
+        let elite_pitcher = PitcherStats { id: "ep".to_string(), control: 80.0, stuff: 80.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0 };
+        let hapless_pitcher = PitcherStats { id: "hp".to_string(), control: 20.0, stuff: 20.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0 };
 
         let mut saw_cold_game = false;
         for seed in 0..20u64 {
@@ -632,8 +695,8 @@ mod tests {
     #[test]
     fn high_fatigue_players_accumulate_injuries_over_many_games() {
         let lineup: Vec<BatterStats> =
-            (0..8).map(|i| BatterStats { id: format!("fb{i}"), contact: 50.0, eye: 50.0, power: 50.0, fatigue: 200.0 }).collect();
-        let pitcher = PitcherStats { id: "fp".to_string(), control: 50.0, stuff: 50.0, fatigue: 200.0 };
+            (0..8).map(|i| BatterStats { id: format!("fb{i}"), contact: 50.0, eye: 50.0, power: 50.0, fatigue: 200.0, clutch: 50.0, composure: 50.0 }).collect();
+        let pitcher = PitcherStats { id: "fp".to_string(), control: 50.0, stuff: 50.0, fatigue: 200.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0 };
 
         let mut total_injuries = 0usize;
         for seed in 0..50u64 {
@@ -650,5 +713,91 @@ mod tests {
         let mut rng = ChaCha8Rng::seed_from_u64(0);
         let r = simulate_game(&mut rng, "league:pro", &lineup, &no_pull_plan(&avg_pitcher()), &lineup, &no_pull_plan(&avg_pitcher()));
         assert!(r.injuries.len() < 3, "a single low-fatigue game should almost never produce multiple injuries, got {}", r.injuries.len());
+    }
+
+    #[test]
+    fn fatigue_effective_decays_toward_zero_as_fatigue_rises_but_never_below_zero() {
+        assert_eq!(fatigue_effective(70.0, 0.0), 70.0, "0 피로도는 원래 능력치 그대로여야 함");
+        let mid = fatigue_effective(70.0, 50.0);
+        let high = fatigue_effective(70.0, 100.0);
+        assert!(mid < 70.0 && high < mid, "mid={mid} high={high}");
+        assert!(fatigue_effective(5.0, 100.0) >= 0.0, "실효치는 0 밑으로 안 내려가야 함");
+    }
+
+    #[test]
+    fn fatigued_pitcher_allows_more_hits_than_a_fresh_pitcher_with_identical_base_stats() {
+        let lineup: Vec<BatterStats> = (0..8).map(|i| BatterStats { id: format!("b{i}"), ..avg_batter() }).collect();
+        let fresh = PitcherStats { id: "fresh".to_string(), fatigue: 0.0, ..avg_pitcher() };
+        let tired = PitcherStats { id: "tired".to_string(), fatigue: 100.0, ..avg_pitcher() };
+
+        let mut fresh_hits = 0u32;
+        let mut tired_hits = 0u32;
+        for seed in 0..50u64 {
+            let mut rng = ChaCha8Rng::seed_from_u64(seed);
+            let r1 = simulate_game(&mut rng, "league:pro", &lineup, &no_pull_plan(&fresh), &lineup, &no_pull_plan(&fresh));
+            fresh_hits += r1.home_pitcher_stats.hits_allowed + r1.away_pitcher_stats.hits_allowed;
+            let mut rng2 = ChaCha8Rng::seed_from_u64(seed);
+            let r2 = simulate_game(&mut rng2, "league:pro", &lineup, &no_pull_plan(&tired), &lineup, &no_pull_plan(&tired));
+            tired_hits += r2.home_pitcher_stats.hits_allowed + r2.away_pitcher_stats.hits_allowed;
+        }
+        assert!(tired_hits > fresh_hits, "tired={tired_hits} fresh={fresh_hits}");
+    }
+
+    #[test]
+    fn higher_velocity_pitcher_strikes_out_more_batters_on_average() {
+        let batter = avg_batter();
+        let low_velo = PitcherStats { velocity: 20.0, ..avg_pitcher() };
+        let high_velo = PitcherStats { velocity: 80.0, ..avg_pitcher() };
+
+        let count_strikeouts = |pitcher: &PitcherStats| -> u32 {
+            let mut k = 0;
+            for seed in 0..2000u64 {
+                let mut rng = ChaCha8Rng::seed_from_u64(seed);
+                if simulate_plate_appearance(&mut rng, &batter, pitcher, false) == PaOutcome::Strikeout {
+                    k += 1;
+                }
+            }
+            k
+        };
+        let low_k = count_strikeouts(&low_velo);
+        let high_k = count_strikeouts(&high_velo);
+        assert!(high_k > low_k, "high_velo_k={high_k} low_velo_k={low_k}");
+    }
+
+    #[test]
+    fn higher_game_management_pitcher_walks_fewer_batters_on_average() {
+        let batter = avg_batter();
+        let low_gm = PitcherStats { game_management: 20.0, ..avg_pitcher() };
+        let high_gm = PitcherStats { game_management: 80.0, ..avg_pitcher() };
+
+        let count_walks = |pitcher: &PitcherStats| -> u32 {
+            let mut bb = 0;
+            for seed in 0..2000u64 {
+                let mut rng = ChaCha8Rng::seed_from_u64(seed);
+                if simulate_plate_appearance(&mut rng, &batter, pitcher, false) == PaOutcome::Walk {
+                    bb += 1;
+                }
+            }
+            bb
+        };
+        let low_bb = count_walks(&low_gm);
+        let high_bb = count_walks(&high_gm);
+        assert!(high_bb < low_bb, "high_gm_bb={high_bb} low_gm_bb={low_bb}");
+    }
+
+    #[test]
+    fn clutch_only_shifts_outcomes_when_the_situation_is_high_leverage() {
+        let clutch_pitcher = PitcherStats { clutch: 80.0, ..avg_pitcher() };
+        let cold_batter = BatterStats { clutch: 20.0, ..avg_batter() };
+
+        // 평상시(high_leverage=false)엔 클러치가 개입하지 않으므로, 클러치
+        // 격차가 아무리 커도 평범한 상대와 결과가 완전히 동일해야 한다.
+        for seed in 0..30u64 {
+            let mut rng_a = ChaCha8Rng::seed_from_u64(seed);
+            let mut rng_b = ChaCha8Rng::seed_from_u64(seed);
+            let a = simulate_plate_appearance(&mut rng_a, &cold_batter, &clutch_pitcher, false);
+            let b = simulate_plate_appearance(&mut rng_b, &cold_batter, &avg_pitcher(), false);
+            assert_eq!(a, b, "seed={seed}: high_leverage=false면 클러치가 결과에 개입하면 안 됨");
+        }
     }
 }

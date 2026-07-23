@@ -259,6 +259,10 @@ fn load_protagonist_as_pitcher(conn: &Connection) -> anyhow::Result<PitcherStats
         control: v.get("제구").and_then(|x| x.as_f64()).unwrap_or(50.0),
         stuff: v.get("구위").and_then(|x| x.as_f64()).unwrap_or(50.0),
         fatigue: live_state.get("피로도").and_then(|x| x.as_f64()).unwrap_or(0.0),
+        velocity: v.get("구속").and_then(|x| x.as_f64()).unwrap_or(50.0),
+        game_management: v.get("경기운영").and_then(|x| x.as_f64()).unwrap_or(50.0),
+        clutch: v.get("클러치").and_then(|x| x.as_f64()).unwrap_or(50.0),
+        composure: v.get("침착함").and_then(|x| x.as_f64()).unwrap_or(50.0),
     })
 }
 
@@ -686,7 +690,20 @@ fn run_until_decision_point(
             ));
             let mut injuries = Vec::new();
             let mut half_inning_stats = match_sim::HalfInningStats::default();
-            let runs = match_sim::simulate_half_inning(&mut rng, &lineup, &mut idx, &pitcher, session.bases, &mut injuries, &mut half_inning_stats);
+            // 위기상황 기저값(Phase 1) — 만루 여부는 `simulate_half_inning`이
+            // 타석마다 다시 판단하므로 여기선 이닝·스코어차만 넘긴다.
+            let leverage_base =
+                pitch::is_high_leverage_situation(false, (session.home_runs - session.away_runs) as i32, session.inning as u32);
+            let runs = match_sim::simulate_half_inning(
+                &mut rng,
+                &lineup,
+                &mut idx,
+                &pitcher,
+                session.bases,
+                leverage_base,
+                &mut injuries,
+                &mut half_inning_stats,
+            );
             if !protagonist_pitching_team {
                 let faced_this_half =
                     half_inning_stats.pitcher.outs_recorded + half_inning_stats.pitcher.hits_allowed + half_inning_stats.pitcher.walks;
@@ -789,7 +806,7 @@ fn run_until_decision_point(
             pitch::choose_pitch_and_course(&mut rng, &pitches, &batter, high_leverage)
         };
 
-        let result = pitch::throw_pitch(&mut rng, &pitcher, &batter, course);
+        let result = pitch::throw_pitch(&mut rng, &pitcher, &batter, course, high_leverage);
         session.pitch_seq += 1;
         let mut count = pitch::Count { balls: session.balls as u32, strikes: session.strikes as u32 };
         let outcome = pitch::apply_pitch_result(&mut count, result);
@@ -819,7 +836,7 @@ fn run_until_decision_point(
             pitch::AtBatOutcome::Walk => apply_pa_outcome(&mut session, batting_team_is_home, PaOutcome::Walk),
             pitch::AtBatOutcome::HitByPitch => apply_pa_outcome(&mut session, batting_team_is_home, PaOutcome::HitByPitch),
             pitch::AtBatOutcome::InPlay => {
-                let pa = match_sim::resolve_in_play_result(&mut rng, &batter, &pitcher);
+                let pa = match_sim::resolve_in_play_result(&mut rng, &batter, &pitcher, high_leverage);
                 apply_pa_outcome(&mut session, batting_team_is_home, pa);
             }
         }
