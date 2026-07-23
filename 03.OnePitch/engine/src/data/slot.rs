@@ -245,6 +245,33 @@ fn migration_v11(tx: &Transaction) -> anyhow::Result<()> {
     Ok(())
 }
 
+const V12_DDL: &str = r#"
+CREATE TABLE academics (
+  id TEXT PRIMARY KEY,
+  attends_university INTEGER, university_major TEXT, major_selected INTEGER,
+  weekly_study_mode TEXT, subject_scores TEXT, exam_accum_score REAL,
+  last_grade INTEGER, last_grade_risk TEXT, eligibility_blocked INTEGER,
+  warning_count INTEGER, university_week INTEGER
+);
+"#;
+
+/// 학업 시스템(대화 2026-07-26) — 이 게임의 이전 Svelte+Electron
+/// 프로토타입(`02.SvelteElectron/apps/ui/src/pages/academics/`)을 그대로
+/// 이식: 과목 5종(국어/영어/수학/사회/과학, `kor/eng/math/soc/sci`) 성적
+/// 추적 + 주간 학습모드(집중/일반/휴식/수면) + 중간/기말고사 + 대학 전공
+/// 선택(영구 보너스). `protagonist`와 1:1(`id = 'proto:1'`) — 고교(`league:hs`)
+/// 입학 시 `create_protagonist`가 같이 생성, 대학 진학 시
+/// `attends_university`가 1로 바뀐다. `subject_scores`는
+/// `{"kor": {"percentile":50,"attendance":100,"assignment":100}, ...}`
+/// 형태(5과목 전부). 프로/독립/병역 등 고교·대학이 아닌 스테이지에서는
+/// 이 행이 있어도 UI가 안 보여줄 뿐(§6-9x Flutter 쪽에서 `leagueId`로
+/// 판정) — 엔진은 항상 최신 상태만 갖고 있으면 됨.
+fn migration_v12(tx: &Transaction) -> anyhow::Result<()> {
+    tx.execute_batch(V12_DDL)?;
+    tx.execute("UPDATE meta SET save_version = 12", [])?;
+    Ok(())
+}
+
 const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 1,
@@ -290,6 +317,10 @@ const MIGRATIONS: &[Migration] = &[
         version: 11,
         up: migration_v11,
     },
+    Migration {
+        version: 12,
+        up: migration_v12,
+    },
 ];
 
 fn init(mut conn: Connection) -> anyhow::Result<Connection> {
@@ -317,7 +348,7 @@ mod tests {
         let save_version: i64 = conn
             .query_row("SELECT save_version FROM meta", [], |row| row.get(0))
             .unwrap();
-        assert_eq!(save_version, 11);
+        assert_eq!(save_version, 12);
     }
 
     #[test]
@@ -396,6 +427,22 @@ mod tests {
         .unwrap();
         let status: String = conn.query_row("SELECT status FROM tournaments WHERE id = 'tourn:x'", [], |r| r.get(0)).unwrap();
         assert_eq!(status, "in_progress");
+    }
+
+    #[test]
+    fn v12_creates_academics_table() {
+        let conn = open_in_memory().unwrap();
+        conn.execute(
+            "INSERT INTO academics (id, attends_university, university_major, major_selected, weekly_study_mode, subject_scores,
+                                     exam_accum_score, last_grade, last_grade_risk, eligibility_blocked, warning_count, university_week)
+             VALUES ('proto:1', 0, NULL, 0, 'normal', '{}', 0.0, NULL, 'ok', 0, 0, 0)",
+            [],
+        )
+        .unwrap();
+        let (mode, blocked): (String, i64) =
+            conn.query_row("SELECT weekly_study_mode, eligibility_blocked FROM academics WHERE id = 'proto:1'", [], |r| Ok((r.get(0)?, r.get(1)?))).unwrap();
+        assert_eq!(mode, "normal");
+        assert_eq!(blocked, 0);
     }
 
     #[test]

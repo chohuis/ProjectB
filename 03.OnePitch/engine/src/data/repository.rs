@@ -447,6 +447,15 @@ pub fn create_protagonist(
         "INSERT INTO inbox (id, kind, urgency, read, day, body) VALUES (?1, 'enrollment', 'normal', 0, 0, ?2)",
         params![format!("inbox:enrollment:{school_team_id}"), format!("{school_name}에 입학했다. 새로운 야구 인생이 시작된다.")],
     )?;
+
+    // 학업 시스템(05_구종_시스템과 무관, 대화 2026-07-26) — 고교 입학과
+    // 동시에 시작. `academics`는 `protagonist`와 1:1.
+    slot_conn.execute(
+        "INSERT INTO academics (id, attends_university, university_major, major_selected, weekly_study_mode, subject_scores,
+                                 exam_accum_score, last_grade, last_grade_risk, eligibility_blocked, warning_count, university_week)
+         VALUES ('proto:1', 0, NULL, 0, 'normal', ?1, 0.0, NULL, 'ok', 0, 0, 0)",
+        params![crate::sim::academics::initial_hs_subject_scores().to_string()],
+    )?;
     Ok(())
 }
 
@@ -4411,6 +4420,31 @@ mod tests {
             slot_conn.query_row("SELECT kind, body FROM inbox WHERE id = 'inbox:enrollment:team:hanseong_hs'", [], |r| Ok((r.get(0)?, r.get(1)?))).unwrap();
         assert_eq!(kind, "enrollment");
         assert!(body.contains("한성고"), "expected the school name in the welcome message, got: {body}");
+    }
+
+    #[test]
+    fn create_protagonist_seeds_an_academics_row_with_five_subjects() {
+        let content_conn = build_hs_school_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+
+        create_protagonist(&slot_conn, &content_conn, 1, "학업테스트", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
+
+        let (attends_university, mode, subject_scores_raw, blocked, warnings): (i64, String, String, i64, i64) = slot_conn
+            .query_row(
+                "SELECT attends_university, weekly_study_mode, subject_scores, eligibility_blocked, warning_count FROM academics WHERE id = 'proto:1'",
+                [],
+                |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?, r.get(4)?)),
+            )
+            .unwrap();
+        assert_eq!(attends_university, 0);
+        assert_eq!(mode, "normal");
+        assert_eq!(blocked, 0);
+        assert_eq!(warnings, 0);
+
+        let subject_scores: serde_json::Value = serde_json::from_str(&subject_scores_raw).unwrap();
+        for subject in crate::sim::academics::ACADEMIC_SUBJECTS {
+            assert!(subject_scores.get(subject).is_some(), "missing subject {subject}: {subject_scores}");
+        }
     }
 
     #[test]
