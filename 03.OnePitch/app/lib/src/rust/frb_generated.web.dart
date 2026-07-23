@@ -54,6 +54,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   TrainingConfigInfo dco_decode_box_autoadd_training_config_info(dynamic raw);
 
   @protected
+  BracketMatchInfo dco_decode_bracket_match_info(dynamic raw);
+
+  @protected
   CalendarDateInfo dco_decode_calendar_date_info(dynamic raw);
 
   @protected
@@ -61,6 +64,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   CareerSummary dco_decode_career_summary(dynamic raw);
+
+  @protected
+  CompetitionCardInfo dco_decode_competition_card_info(dynamic raw);
 
   @protected
   double dco_decode_f_64(dynamic raw);
@@ -96,7 +102,13 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<bool> dco_decode_list_bool(dynamic raw);
 
   @protected
+  List<BracketMatchInfo> dco_decode_list_bracket_match_info(dynamic raw);
+
+  @protected
   List<CareerEventInfo> dco_decode_list_career_event_info(dynamic raw);
+
+  @protected
+  List<CompetitionCardInfo> dco_decode_list_competition_card_info(dynamic raw);
 
   @protected
   List<GameLogEntry> dco_decode_list_game_log_entry(dynamic raw);
@@ -229,6 +241,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   TeamOption dco_decode_team_option(dynamic raw);
 
   @protected
+  TournamentBracketInfo dco_decode_tournament_bracket_info(dynamic raw);
+
+  @protected
   TrainingConfigInfo dco_decode_training_config_info(dynamic raw);
 
   @protected
@@ -282,6 +297,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  BracketMatchInfo sse_decode_bracket_match_info(SseDeserializer deserializer);
+
+  @protected
   CalendarDateInfo sse_decode_calendar_date_info(SseDeserializer deserializer);
 
   @protected
@@ -289,6 +307,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   CareerSummary sse_decode_career_summary(SseDeserializer deserializer);
+
+  @protected
+  CompetitionCardInfo sse_decode_competition_card_info(
+    SseDeserializer deserializer,
+  );
 
   @protected
   double sse_decode_f_64(SseDeserializer deserializer);
@@ -330,7 +353,17 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<bool> sse_decode_list_bool(SseDeserializer deserializer);
 
   @protected
+  List<BracketMatchInfo> sse_decode_list_bracket_match_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   List<CareerEventInfo> sse_decode_list_career_event_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  List<CompetitionCardInfo> sse_decode_list_competition_card_info(
     SseDeserializer deserializer,
   );
 
@@ -501,6 +534,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   TeamOption sse_decode_team_option(SseDeserializer deserializer);
 
   @protected
+  TournamentBracketInfo sse_decode_tournament_bracket_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   TrainingConfigInfo sse_decode_training_config_info(
     SseDeserializer deserializer,
   );
@@ -575,6 +613,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_bracket_match_info(
+    BracketMatchInfo self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_calendar_date_info(
     CalendarDateInfo self,
     SseSerializer serializer,
@@ -588,6 +632,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_career_summary(CareerSummary self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_competition_card_info(
+    CompetitionCardInfo self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_f_64(double self, SseSerializer serializer);
@@ -641,8 +691,20 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_list_bool(List<bool> self, SseSerializer serializer);
 
   @protected
+  void sse_encode_list_bracket_match_info(
+    List<BracketMatchInfo> self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_list_career_event_info(
     List<CareerEventInfo> self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_list_competition_card_info(
+    List<CompetitionCardInfo> self,
     SseSerializer serializer,
   );
 
@@ -870,6 +932,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_team_option(TeamOption self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_tournament_bracket_info(
+    TournamentBracketInfo self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_training_config_info(

@@ -8,9 +8,9 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
 part 'game.freezed.dart';
 
-// These functions are ignored because they are not marked as `pub`: `avg_rank_from_season_ranks`, `stars_from_group_position`, `with_state_mut`, `with_state`, `world_seed`
+// These functions are ignored because they are not marked as `pub`: `avg_rank_from_season_ranks`, `standings_rows`, `stars_from_group_position`, `tournament_display_name`, `tournament_includes_team`, `with_state_mut`, `with_state`, `world_seed`
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `GameState`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
 
 /// 뉴게임 — [07_주인공_생성](../../../02_기획/07_주인공_생성.md) §1의 7단계
 /// 흐름 중 실제 데이터를 만드는 마지막 단계(스텝 1~6은 Dart 쪽 폼 상태일
@@ -258,6 +258,28 @@ Future<List<ScheduleGameInfo>> getTeamSchedule({required String teamId}) =>
 Future<List<StandingsRowInfo>> getStandings({required String leagueId}) =>
     RustLib.instance.api.crateApiGameGetStandings(leagueId: leagueId);
 
+/// 리그 탭 "진행중인 대회" 세션 — 팀이 소속된 리그 순위 카드(항상 1개) +
+/// 이번 시즌 참가한 대회 카드(있는 만큼, `tournaments.season`이 지금
+/// 시즌과 같고 `participants`에 이 팀이 포함된 것만). 대회 카드는
+/// 우승/탈락이 확정돼도(그 시즌 동안은) 그대로 유지되고, 시즌이
+/// 바뀌면 자연히 사라졌다가 다시 참가하면 새로 나타난다 — **중간에
+/// 대진에서 탈락해도(다른 팀들 경기가 아직 안 끝났으면) 대회 전체가
+/// `status='done'`이 되기 전까지는 "진행 중"으로 보임**(1차 축소안 —
+/// 매치업별 실시간 탈락 판정은 이월).
+Future<List<CompetitionCardInfo>> listActiveCompetitions({
+  required String teamId,
+}) => RustLib.instance.api.crateApiGameListActiveCompetitions(teamId: teamId);
+
+/// 대회 카드를 탭했을 때 — 라운드별 매치업 전부(진행 중인 라운드는 아직
+/// `home_runs`/`away_runs`가 `None`인 행으로, 이미 끝난 라운드는 채워진
+/// 채로) 반환. `round`·`day` 오름차순이라 UI가 그대로 라운드별로 묶어
+/// 그리면 된다.
+Future<TournamentBracketInfo> getTournamentBracket({
+  required String tournamentId,
+}) => RustLib.instance.api.crateApiGameGetTournamentBracket(
+  tournamentId: tournamentId,
+);
+
 /// [02_리그](../../../04_UI기획/02_리그.md) §4 라이벌 탭 — `team_history.rivals`
 /// (정적 콘텐츠, 지역·서사 페어링)만 반환한다. **개인 라이벌 관계
 /// (관계도·아크단계 비교)는 이번 스코프에 없음** — `relationships`
@@ -347,6 +369,48 @@ class AchievementInfo {
           achieved == other.achieved &&
           achievedDay == other.achievedDay &&
           counter == other.counter;
+}
+
+/// 대회 브래킷 경기 한 줄 — `get_tournament_bracket`용. 팀 이름은 여기서
+/// 안 채운다(UI가 이미 갖고 있는 팀 목록 조회 결과로 team_id→이름을
+/// 매핑하는 게 중복 왕복 없이 더 싸다).
+class BracketMatchInfo {
+  final PlatformInt64 round;
+  final String home;
+  final String away;
+  final PlatformInt64? homeRuns;
+  final PlatformInt64? awayRuns;
+  final PlatformInt64 day;
+
+  const BracketMatchInfo({
+    required this.round,
+    required this.home,
+    required this.away,
+    this.homeRuns,
+    this.awayRuns,
+    required this.day,
+  });
+
+  @override
+  int get hashCode =>
+      round.hashCode ^
+      home.hashCode ^
+      away.hashCode ^
+      homeRuns.hashCode ^
+      awayRuns.hashCode ^
+      day.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BracketMatchInfo &&
+          runtimeType == other.runtimeType &&
+          round == other.round &&
+          home == other.home &&
+          away == other.away &&
+          homeRuns == other.homeRuns &&
+          awayRuns == other.awayRuns &&
+          day == other.day;
 }
 
 /// 홈 화면 실제 날짜 표시용(대화 2026-07-21) — `crate::calendar`를 그대로
@@ -461,6 +525,48 @@ class CareerSummary {
           era == other.era &&
           retired == other.retired &&
           retirementReason == other.retirementReason;
+}
+
+/// 리그 탭 "진행중인 대회" 카드 하나(대화 2026-07-26) — `kind`가
+/// `"league"`면 리그 순위 카드(팀마다 항상 1개), `"tournament"`면 이번
+/// 시즌 참가한 대회 카드.
+class CompetitionCardInfo {
+  final String kind;
+  final String id;
+  final String name;
+  final String statusSummary;
+  final bool isEliminated;
+  final bool isChampion;
+
+  const CompetitionCardInfo({
+    required this.kind,
+    required this.id,
+    required this.name,
+    required this.statusSummary,
+    required this.isEliminated,
+    required this.isChampion,
+  });
+
+  @override
+  int get hashCode =>
+      kind.hashCode ^
+      id.hashCode ^
+      name.hashCode ^
+      statusSummary.hashCode ^
+      isEliminated.hashCode ^
+      isChampion.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CompetitionCardInfo &&
+          runtimeType == other.runtimeType &&
+          kind == other.kind &&
+          id == other.id &&
+          name == other.name &&
+          statusSummary == other.statusSummary &&
+          isEliminated == other.isEliminated &&
+          isChampion == other.isChampion;
 }
 
 /// [03_기록](../../../04_UI기획/03_기록.md) §1 "경기 로그" 탭 — `game_log`는
@@ -1231,6 +1337,41 @@ class TeamOption {
           philosophy == other.philosophy &&
           resource == other.resource &&
           status == other.status;
+}
+
+class TournamentBracketInfo {
+  final String kind;
+  final String displayName;
+  final String status;
+  final String? champion;
+  final List<BracketMatchInfo> matches;
+
+  const TournamentBracketInfo({
+    required this.kind,
+    required this.displayName,
+    required this.status,
+    this.champion,
+    required this.matches,
+  });
+
+  @override
+  int get hashCode =>
+      kind.hashCode ^
+      displayName.hashCode ^
+      status.hashCode ^
+      champion.hashCode ^
+      matches.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TournamentBracketInfo &&
+          runtimeType == other.runtimeType &&
+          kind == other.kind &&
+          displayName == other.displayName &&
+          status == other.status &&
+          champion == other.champion &&
+          matches == other.matches;
 }
 
 /// 현재 훈련 설정 — 한 번도 설정 안 했으면 `None`(§1 "훈련 계획을 아직

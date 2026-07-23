@@ -67,7 +67,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.12.0';
 
   @override
-  int get rustContentHash => -302671845;
+  int get rustContentHash => 1904751051;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -131,6 +131,10 @@ abstract class RustLibApi extends BaseApi {
     required String teamId,
   });
 
+  Future<TournamentBracketInfo> crateApiGameGetTournamentBracket({
+    required String tournamentId,
+  });
+
   Future<TrainingConfigInfo?> crateApiGameGetTrainingConfig();
 
   String crateApiSimpleGreet({required String name});
@@ -140,6 +144,10 @@ abstract class RustLibApi extends BaseApi {
   Future<void> crateApiSimpleInitApp();
 
   Future<LearnablePitchesInfo> crateApiGameLearnablePitches();
+
+  Future<List<CompetitionCardInfo>> crateApiGameListActiveCompetitions({
+    required String teamId,
+  });
 
   Future<List<HsSchoolDetail>> crateApiGameListHsSchoolDetails({
     required String contentDbPath,
@@ -874,6 +882,39 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "get_team_schedule", argNames: ["teamId"]);
 
   @override
+  Future<TournamentBracketInfo> crateApiGameGetTournamentBracket({
+    required String tournamentId,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(tournamentId, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 25,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_tournament_bracket_info,
+          decodeErrorData: sse_decode_AnyhowException,
+        ),
+        constMeta: kCrateApiGameGetTournamentBracketConstMeta,
+        argValues: [tournamentId],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiGameGetTournamentBracketConstMeta =>
+      const TaskConstMeta(
+        debugName: "get_tournament_bracket",
+        argNames: ["tournamentId"],
+      );
+
+  @override
   Future<TrainingConfigInfo?> crateApiGameGetTrainingConfig() {
     return handler.executeNormal(
       NormalTask(
@@ -882,7 +923,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 25,
+            funcId: 26,
             port: port_,
           );
         },
@@ -907,7 +948,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_String(name, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 26)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 27)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_String,
@@ -929,7 +970,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 27)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 28)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_list_String,
@@ -954,7 +995,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 28,
+            funcId: 29,
             port: port_,
           );
         },
@@ -981,7 +1022,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 29,
+            funcId: 30,
             port: port_,
           );
         },
@@ -1000,6 +1041,39 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "learnable_pitches", argNames: []);
 
   @override
+  Future<List<CompetitionCardInfo>> crateApiGameListActiveCompetitions({
+    required String teamId,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(teamId, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 31,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_list_competition_card_info,
+          decodeErrorData: sse_decode_AnyhowException,
+        ),
+        constMeta: kCrateApiGameListActiveCompetitionsConstMeta,
+        argValues: [teamId],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiGameListActiveCompetitionsConstMeta =>
+      const TaskConstMeta(
+        debugName: "list_active_competitions",
+        argNames: ["teamId"],
+      );
+
+  @override
   Future<List<HsSchoolDetail>> crateApiGameListHsSchoolDetails({
     required String contentDbPath,
   }) {
@@ -1011,7 +1085,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 30,
+            funcId: 32,
             port: port_,
           );
         },
@@ -1044,7 +1118,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 31,
+            funcId: 33,
             port: port_,
           );
         },
@@ -1076,7 +1150,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 32,
+            funcId: 34,
             port: port_,
           );
         },
@@ -1104,7 +1178,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 33,
+            funcId: 35,
             port: port_,
           );
         },
@@ -1134,7 +1208,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 34,
+            funcId: 36,
             port: port_,
           );
         },
@@ -1162,7 +1236,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 35,
+            funcId: 37,
             port: port_,
           );
         },
@@ -1194,7 +1268,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 36,
+            funcId: 38,
             port: port_,
           );
         },
@@ -1224,7 +1298,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 37,
+            funcId: 39,
             port: port_,
           );
         },
@@ -1248,7 +1322,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 38)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 40)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_u_32,
@@ -1290,7 +1364,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 39,
+            funcId: 41,
             port: port_,
           );
         },
@@ -1337,7 +1411,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 40,
+            funcId: 42,
             port: port_,
           );
         },
@@ -1361,7 +1435,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 41)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 43)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_list_pitcher_archetype_info,
@@ -1393,7 +1467,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 42,
+            funcId: 44,
             port: port_,
           );
         },
@@ -1428,7 +1502,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 43,
+            funcId: 45,
             port: port_,
           );
         },
@@ -1472,7 +1546,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 44,
+            funcId: 46,
             port: port_,
           );
         },
@@ -1531,7 +1605,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 45,
+            funcId: 47,
             port: port_,
           );
         },
@@ -1571,7 +1645,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 46)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 48)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_list_String,
@@ -1596,7 +1670,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_String(severity, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 47)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 49)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_list_treatment_option,
@@ -1688,6 +1762,22 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  BracketMatchInfo dco_decode_bracket_match_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 6)
+      throw Exception('unexpected arr length: expect 6 but see ${arr.length}');
+    return BracketMatchInfo(
+      round: dco_decode_i_64(arr[0]),
+      home: dco_decode_String(arr[1]),
+      away: dco_decode_String(arr[2]),
+      homeRuns: dco_decode_opt_box_autoadd_i_64(arr[3]),
+      awayRuns: dco_decode_opt_box_autoadd_i_64(arr[4]),
+      day: dco_decode_i_64(arr[5]),
+    );
+  }
+
+  @protected
   CalendarDateInfo dco_decode_calendar_date_info(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -1730,6 +1820,22 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       era: dco_decode_f_64(arr[6]),
       retired: dco_decode_bool(arr[7]),
       retirementReason: dco_decode_opt_String(arr[8]),
+    );
+  }
+
+  @protected
+  CompetitionCardInfo dco_decode_competition_card_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 6)
+      throw Exception('unexpected arr length: expect 6 but see ${arr.length}');
+    return CompetitionCardInfo(
+      kind: dco_decode_String(arr[0]),
+      id: dco_decode_String(arr[1]),
+      name: dco_decode_String(arr[2]),
+      statusSummary: dco_decode_String(arr[3]),
+      isEliminated: dco_decode_bool(arr[4]),
+      isChampion: dco_decode_bool(arr[5]),
     );
   }
 
@@ -1852,9 +1958,23 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  List<BracketMatchInfo> dco_decode_list_bracket_match_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_bracket_match_info).toList();
+  }
+
+  @protected
   List<CareerEventInfo> dco_decode_list_career_event_info(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return (raw as List<dynamic>).map(dco_decode_career_event_info).toList();
+  }
+
+  @protected
+  List<CompetitionCardInfo> dco_decode_list_competition_card_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>)
+        .map(dco_decode_competition_card_info)
+        .toList();
   }
 
   @protected
@@ -2272,6 +2392,21 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  TournamentBracketInfo dco_decode_tournament_bracket_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 5)
+      throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
+    return TournamentBracketInfo(
+      kind: dco_decode_String(arr[0]),
+      displayName: dco_decode_String(arr[1]),
+      status: dco_decode_String(arr[2]),
+      champion: dco_decode_opt_String(arr[3]),
+      matches: dco_decode_list_bracket_match_info(arr[4]),
+    );
+  }
+
+  @protected
   TrainingConfigInfo dco_decode_training_config_info(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
@@ -2403,6 +2538,25 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  BracketMatchInfo sse_decode_bracket_match_info(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_round = sse_decode_i_64(deserializer);
+    var var_home = sse_decode_String(deserializer);
+    var var_away = sse_decode_String(deserializer);
+    var var_homeRuns = sse_decode_opt_box_autoadd_i_64(deserializer);
+    var var_awayRuns = sse_decode_opt_box_autoadd_i_64(deserializer);
+    var var_day = sse_decode_i_64(deserializer);
+    return BracketMatchInfo(
+      round: var_round,
+      home: var_home,
+      away: var_away,
+      homeRuns: var_homeRuns,
+      awayRuns: var_awayRuns,
+      day: var_day,
+    );
+  }
+
+  @protected
   CalendarDateInfo sse_decode_calendar_date_info(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_year = sse_decode_i_64(deserializer);
@@ -2448,6 +2602,27 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       era: var_era,
       retired: var_retired,
       retirementReason: var_retirementReason,
+    );
+  }
+
+  @protected
+  CompetitionCardInfo sse_decode_competition_card_info(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_kind = sse_decode_String(deserializer);
+    var var_id = sse_decode_String(deserializer);
+    var var_name = sse_decode_String(deserializer);
+    var var_statusSummary = sse_decode_String(deserializer);
+    var var_isEliminated = sse_decode_bool(deserializer);
+    var var_isChampion = sse_decode_bool(deserializer);
+    return CompetitionCardInfo(
+      kind: var_kind,
+      id: var_id,
+      name: var_name,
+      statusSummary: var_statusSummary,
+      isEliminated: var_isEliminated,
+      isChampion: var_isChampion,
     );
   }
 
@@ -2606,6 +2781,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  List<BracketMatchInfo> sse_decode_list_bracket_match_info(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <BracketMatchInfo>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_bracket_match_info(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
   List<CareerEventInfo> sse_decode_list_career_event_info(
     SseDeserializer deserializer,
   ) {
@@ -2615,6 +2804,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var ans_ = <CareerEventInfo>[];
     for (var idx_ = 0; idx_ < len_; ++idx_) {
       ans_.add(sse_decode_career_event_info(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<CompetitionCardInfo> sse_decode_list_competition_card_info(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <CompetitionCardInfo>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_competition_card_info(deserializer));
     }
     return ans_;
   }
@@ -3230,6 +3433,25 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  TournamentBracketInfo sse_decode_tournament_bracket_info(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_kind = sse_decode_String(deserializer);
+    var var_displayName = sse_decode_String(deserializer);
+    var var_status = sse_decode_String(deserializer);
+    var var_champion = sse_decode_opt_String(deserializer);
+    var var_matches = sse_decode_list_bracket_match_info(deserializer);
+    return TournamentBracketInfo(
+      kind: var_kind,
+      displayName: var_displayName,
+      status: var_status,
+      champion: var_champion,
+      matches: var_matches,
+    );
+  }
+
+  @protected
   TrainingConfigInfo sse_decode_training_config_info(
     SseDeserializer deserializer,
   ) {
@@ -3378,6 +3600,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_bracket_match_info(
+    BracketMatchInfo self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_64(self.round, serializer);
+    sse_encode_String(self.home, serializer);
+    sse_encode_String(self.away, serializer);
+    sse_encode_opt_box_autoadd_i_64(self.homeRuns, serializer);
+    sse_encode_opt_box_autoadd_i_64(self.awayRuns, serializer);
+    sse_encode_i_64(self.day, serializer);
+  }
+
+  @protected
   void sse_encode_calendar_date_info(
     CalendarDateInfo self,
     SseSerializer serializer,
@@ -3412,6 +3648,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_f_64(self.era, serializer);
     sse_encode_bool(self.retired, serializer);
     sse_encode_opt_String(self.retirementReason, serializer);
+  }
+
+  @protected
+  void sse_encode_competition_card_info(
+    CompetitionCardInfo self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.kind, serializer);
+    sse_encode_String(self.id, serializer);
+    sse_encode_String(self.name, serializer);
+    sse_encode_String(self.statusSummary, serializer);
+    sse_encode_bool(self.isEliminated, serializer);
+    sse_encode_bool(self.isChampion, serializer);
   }
 
   @protected
@@ -3533,6 +3783,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_list_bracket_match_info(
+    List<BracketMatchInfo> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_bracket_match_info(item, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_list_career_event_info(
     List<CareerEventInfo> self,
     SseSerializer serializer,
@@ -3541,6 +3803,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_i_32(self.length, serializer);
     for (final item in self) {
       sse_encode_career_event_info(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_competition_card_info(
+    List<CompetitionCardInfo> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_competition_card_info(item, serializer);
     }
   }
 
@@ -4069,6 +4343,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_String(self.philosophy, serializer);
     sse_encode_String(self.resource, serializer);
     sse_encode_String(self.status, serializer);
+  }
+
+  @protected
+  void sse_encode_tournament_bracket_info(
+    TournamentBracketInfo self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.kind, serializer);
+    sse_encode_String(self.displayName, serializer);
+    sse_encode_String(self.status, serializer);
+    sse_encode_opt_String(self.champion, serializer);
+    sse_encode_list_bracket_match_info(self.matches, serializer);
   }
 
   @protected

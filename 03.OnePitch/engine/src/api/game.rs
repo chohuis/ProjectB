@@ -1042,26 +1042,186 @@ pub struct StandingsRowInfo {
     pub ties: i64,
 }
 
-pub fn get_standings(league_id: String) -> anyhow::Result<Vec<StandingsRowInfo>> {
-    with_state(|state| {
-        let mut team_stmt = state.content_conn.prepare("SELECT id FROM teams WHERE league_id = ?1")?;
-        let team_ids: Vec<String> = team_stmt.query_map([&league_id], |r| r.get(0))?.collect::<Result<_, _>>()?;
+/// `get_standings`의 실제 계산 — `&GameState`를 직접 받아 `STATE` 락을
+/// 새로 걸지 않는다. `list_active_competitions`처럼 이미 `with_state`
+/// 안에 있는 호출부가 이 함수를 재사용할 수 있게 분리(대화 2026-07-26)
+/// — `with_state` 안에서 `get_standings`(자체적으로 또 `with_state`를
+/// 거는 wire 함수)를 그대로 부르면 `Mutex`가 재진입 불가라 그 자리에서
+/// 영원히 멈춘다(실제로 겪은 데드락).
+fn standings_rows(state: &GameState, league_id: &str) -> anyhow::Result<Vec<StandingsRowInfo>> {
+    let mut team_stmt = state.content_conn.prepare("SELECT id FROM teams WHERE league_id = ?1")?;
+    let team_ids: Vec<String> = team_stmt.query_map([league_id], |r| r.get(0))?.collect::<Result<_, _>>()?;
 
-        let mut rows: Vec<(String, i64, i64, i64)> = Vec::with_capacity(team_ids.len());
-        for team_id in team_ids {
-            let record: Option<(i64, i64, i64)> = state
-                .slot_conn
-                .query_row("SELECT w, l, t FROM standings WHERE team_id = ?1", [&team_id], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)))
-                .optional()?;
-            let (w, l, t) = record.unwrap_or((0, 0, 0));
-            rows.push((team_id, w, l, t));
+    let mut rows: Vec<(String, i64, i64, i64)> = Vec::with_capacity(team_ids.len());
+    for team_id in team_ids {
+        let record: Option<(i64, i64, i64)> = state
+            .slot_conn
+            .query_row("SELECT w, l, t FROM standings WHERE team_id = ?1", [&team_id], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)))
+            .optional()?;
+        let (w, l, t) = record.unwrap_or((0, 0, 0));
+        rows.push((team_id, w, l, t));
+    }
+    rows.sort_by(|a, b| repository::win_pct(b.1, b.2).partial_cmp(&repository::win_pct(a.1, a.2)).unwrap_or(std::cmp::Ordering::Equal));
+    Ok(rows.into_iter().enumerate().map(|(i, (team_id, w, l, t))| StandingsRowInfo { team_id, rank: i as i64 + 1, wins: w, losses: l, ties: t }).collect())
+}
+
+pub fn get_standings(league_id: String) -> anyhow::Result<Vec<StandingsRowInfo>> {
+    with_state(|state| standings_rows(state, &league_id))
+}
+
+/// 대회 종류(kind)의 한국어 표시명 — `data::repository`가 만드는 tournament
+/// id/kind 문자열은 엔진 내부 식별자라 UI에 그대로 노출하면 안 됨.
+fn tournament_display_name(kind: &str) -> &str {
+    match kind {
+        "pro_postseason" => "프로 포스트시즌",
+        "independent" => "독립리그 플레이오프",
+        "univ_wangjungwang" => "왕중왕전",
+        "univ_eunhagi" => "은하기",
+        "univ_yeongmyeonggi" => "여명기",
+        "hs_gaenari" => "개나리기",
+        "hs_jangmi" => "장미기",
+        "hs_mugunghwa" => "무궁화기",
+        "hs_paewang" => "패왕기",
+        "hs_gukhwa" => "국화기",
+        other => other,
+    }
+}
+
+/// `tournaments.participants`가 넉아웃/게이지는 `["team:a", ...]`(평면),
+/// 예선 라운드로빈 스테이지는 `[["team:a", ...], [...]]`(조별 중첩) 두
+/// 형태 다 가능(대화 2026-07-26) — 어느 쪽이든 팀 하나가 포함돼 있는지만
+/// 재귀로 본다. 이 컬럼은 대회 시작 시점의 최초 참가 풀에서 이후 갱신되지
+/// 않으므로(스테이지가 진행돼도 그대로) "이 팀이 이 대회에 참가한 적
+/// 있는가"를 시즌 내내 안정적으로 답한다 — 리그 탭 카드가 탈락 후에도
+/// 유지돼야 한다는 요구와 자연히 맞아떨어짐.
+fn tournament_includes_team(participants_json: &str, team_id: &str) -> bool {
+    fn contains(v: &serde_json::Value, team_id: &str) -> bool {
+        match v {
+            serde_json::Value::String(s) => s == team_id,
+            serde_json::Value::Array(a) => a.iter().any(|x| contains(x, team_id)),
+            _ => false,
         }
-        rows.sort_by(|a, b| repository::win_pct(b.1, b.2).partial_cmp(&repository::win_pct(a.1, a.2)).unwrap_or(std::cmp::Ordering::Equal));
-        Ok(rows
+    }
+    serde_json::from_str::<serde_json::Value>(participants_json).map(|v| contains(&v, team_id)).unwrap_or(false)
+}
+
+/// 리그 탭 "진행중인 대회" 카드 하나(대화 2026-07-26) — `kind`가
+/// `"league"`면 리그 순위 카드(팀마다 항상 1개), `"tournament"`면 이번
+/// 시즌 참가한 대회 카드.
+#[derive(Debug, Clone)]
+pub struct CompetitionCardInfo {
+    pub kind: String,
+    pub id: String,
+    pub name: String,
+    pub status_summary: String,
+    pub is_eliminated: bool,
+    pub is_champion: bool,
+}
+
+/// 리그 탭 "진행중인 대회" 세션 — 팀이 소속된 리그 순위 카드(항상 1개) +
+/// 이번 시즌 참가한 대회 카드(있는 만큼, `tournaments.season`이 지금
+/// 시즌과 같고 `participants`에 이 팀이 포함된 것만). 대회 카드는
+/// 우승/탈락이 확정돼도(그 시즌 동안은) 그대로 유지되고, 시즌이
+/// 바뀌면 자연히 사라졌다가 다시 참가하면 새로 나타난다 — **중간에
+/// 대진에서 탈락해도(다른 팀들 경기가 아직 안 끝났으면) 대회 전체가
+/// `status='done'`이 되기 전까지는 "진행 중"으로 보임**(1차 축소안 —
+/// 매치업별 실시간 탈락 판정은 이월).
+pub fn list_active_competitions(team_id: String) -> anyhow::Result<Vec<CompetitionCardInfo>> {
+    with_state(|state| {
+        let league_id: String = state.content_conn.query_row("SELECT league_id FROM teams WHERE id = ?1", [&team_id], |r| r.get(0))?;
+        let standings = standings_rows(state, &league_id)?;
+        let status_summary = match standings.iter().find(|r| r.team_id == team_id) {
+            Some(r) => format!("{}위 ({}승 {}패)", r.rank, r.wins, r.losses),
+            None => "순위 정보 없음".to_string(),
+        };
+        let mut out = vec![CompetitionCardInfo {
+            kind: "league".to_string(),
+            id: league_id,
+            name: "리그".to_string(),
+            status_summary,
+            is_eliminated: false,
+            is_champion: false,
+        }];
+
+        let season = repository::current_season_value(&state.slot_conn)?;
+        let mut stmt = state.slot_conn.prepare("SELECT id, kind, status, champion, participants FROM tournaments WHERE season = ?1")?;
+        let rows: Vec<(String, String, String, Option<String>, String)> =
+            stmt.query_map([season], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?, r.get(4)?)))?.collect::<Result<_, _>>()?;
+        for (tid, kind, status, champion, participants_json) in rows {
+            if !tournament_includes_team(&participants_json, &team_id) {
+                continue;
+            }
+            let is_champion = champion.as_deref() == Some(team_id.as_str());
+            let is_done = status == "done";
+            let status_summary =
+                if is_done { if is_champion { "우승".to_string() } else { "탈락".to_string() } } else { "진행 중".to_string() };
+            out.push(CompetitionCardInfo {
+                kind: "tournament".to_string(),
+                id: tid,
+                name: tournament_display_name(&kind).to_string(),
+                status_summary,
+                is_eliminated: is_done && !is_champion,
+                is_champion,
+            });
+        }
+        Ok(out)
+    })
+}
+
+/// 대회 브래킷 경기 한 줄 — `get_tournament_bracket`용. 팀 이름은 여기서
+/// 안 채운다(UI가 이미 갖고 있는 팀 목록 조회 결과로 team_id→이름을
+/// 매핑하는 게 중복 왕복 없이 더 싸다).
+#[derive(Debug, Clone)]
+pub struct BracketMatchInfo {
+    pub round: i64,
+    pub home: String,
+    pub away: String,
+    pub home_runs: Option<i64>,
+    pub away_runs: Option<i64>,
+    pub day: i64,
+}
+
+#[derive(Debug, Clone)]
+pub struct TournamentBracketInfo {
+    pub kind: String,
+    pub display_name: String,
+    pub status: String,
+    pub champion: Option<String>,
+    pub matches: Vec<BracketMatchInfo>,
+}
+
+/// 대회 카드를 탭했을 때 — 라운드별 매치업 전부(진행 중인 라운드는 아직
+/// `home_runs`/`away_runs`가 `None`인 행으로, 이미 끝난 라운드는 채워진
+/// 채로) 반환. `round`·`day` 오름차순이라 UI가 그대로 라운드별로 묶어
+/// 그리면 된다.
+pub fn get_tournament_bracket(tournament_id: String) -> anyhow::Result<TournamentBracketInfo> {
+    with_state(|state| {
+        let (kind, status, champion): (String, String, Option<String>) = state.slot_conn.query_row(
+            "SELECT kind, status, champion FROM tournaments WHERE id = ?1",
+            [&tournament_id],
+            |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)),
+        )?;
+        let mut stmt = state.slot_conn.prepare("SELECT round, home, away, result, day FROM schedule WHERE tournament_id = ?1 ORDER BY round, day")?;
+        let matches: Vec<BracketMatchInfo> = stmt
+            .query_map([&tournament_id], |r| {
+                let round: i64 = r.get(0)?;
+                let home: String = r.get(1)?;
+                let away: String = r.get(2)?;
+                let result: Option<String> = r.get(3)?;
+                let day: i64 = r.get(4)?;
+                Ok((round, home, away, result, day))
+            })?
+            .collect::<Result<Vec<_>, _>>()?
             .into_iter()
-            .enumerate()
-            .map(|(i, (team_id, w, l, t))| StandingsRowInfo { team_id, rank: i as i64 + 1, wins: w, losses: l, ties: t })
-            .collect())
+            .map(|(round, home, away, result, day)| {
+                let (home_runs, away_runs) = result
+                    .and_then(|raw| serde_json::from_str::<serde_json::Value>(&raw).ok())
+                    .map(|v| (v.get("home").and_then(|x| x.as_i64()), v.get("away").and_then(|x| x.as_i64())))
+                    .unwrap_or((None, None));
+                BracketMatchInfo { round, home, away, home_runs, away_runs, day }
+            })
+            .collect();
+        Ok(TournamentBracketInfo { display_name: tournament_display_name(&kind).to_string(), kind, status, champion, matches })
     })
 }
 
@@ -1669,7 +1829,68 @@ mod tests {
         assert_eq!(standings[0].rank, 1);
 
         // rivals는 콘텐츠가 있으면 Some, 없으면 None — 둘 다 패닉 없이 동작하는지만 확인.
-        let _ = get_team_rivals(hs_team).unwrap();
+        let _ = get_team_rivals(hs_team.clone()).unwrap();
+
+        // "진행중인 대회" — 방금 새 게임을 시작했으면 대회는 아직 없고
+        // 리그 카드 하나만 있어야 함(대화 2026-07-26).
+        let competitions = list_active_competitions(hs_team).unwrap();
+        assert_eq!(competitions.len(), 1, "새 게임 직후엔 리그 카드 하나뿐: {competitions:?}");
+        assert_eq!(competitions[0].kind, "league");
+
+        reset_state();
+    }
+
+    /// `list_active_competitions`/`get_tournament_bracket`가 실제 대회
+    /// 진행(며칠씩 걸리는 `season_rollover`+`advance`)에 의존하지 않고도
+    /// 검증되도록, `tournaments`+`schedule`에 직접 합성 대회 하나를
+    /// 심어서 조회 API만 검증한다(대화 2026-07-26). 실제 대회 생성·진행
+    /// 로직 자체는 `data::repository`의 `run_*`/`advance_tournaments`
+    /// 테스트가 이미 충분히 덮음.
+    #[test]
+    fn competition_queries_surface_a_synthetic_in_progress_tournament() {
+        let _guard = TEST_SERIAL.lock().unwrap();
+        reset_state();
+
+        let hs_team = {
+            let conn = content::open("content.db").unwrap();
+            conn.query_row("SELECT id FROM teams WHERE league_id = 'league:hs' LIMIT 1", [], |r| r.get::<_, String>(0)).unwrap()
+        };
+        let opponent = {
+            let conn = content::open("content.db").unwrap();
+            conn.query_row("SELECT id FROM teams WHERE league_id = 'league:hs' AND id != ?1 LIMIT 1", [&hs_team], |r| r.get::<_, String>(0)).unwrap()
+        };
+
+        new_game("content.db".to_string(), 45, "대회테스트".to_string(), "우완".to_string(), hs_team.clone(), "강속구형".to_string(), None, None).unwrap();
+
+        with_state(|state| {
+            let season = repository::current_season_value(&state.slot_conn)?;
+            state.slot_conn.execute(
+                "INSERT INTO tournaments (id, league_id, kind, season, format_json, stage_index, round, bracket_state, participants, status, champion)
+                 VALUES ('tourn:test_1', 'league:hs', 'hs_gaenari', ?1, '{\"stage\":\"knockout\"}', 0, 1, '[]', ?2, 'in_progress', NULL)",
+                rusqlite::params![season, serde_json::json!([hs_team, opponent]).to_string()],
+            )?;
+            state.slot_conn.execute(
+                "INSERT INTO schedule (game_id, day, home, away, result, tournament_id, round) VALUES ('game:test_1', 5, ?1, ?2, NULL, 'tourn:test_1', 1)",
+                rusqlite::params![hs_team, opponent],
+            )?;
+            Ok(())
+        })
+        .unwrap();
+
+        let competitions = list_active_competitions(hs_team.clone()).unwrap();
+        assert_eq!(competitions.len(), 2, "리그 카드 + 대회 카드: {competitions:?}");
+        let card = competitions.iter().find(|c| c.kind == "tournament").unwrap();
+        assert_eq!(card.id, "tourn:test_1");
+        assert_eq!(card.name, "개나리기");
+        assert_eq!(card.status_summary, "진행 중");
+        assert!(!card.is_eliminated && !card.is_champion);
+
+        let bracket = get_tournament_bracket("tourn:test_1".to_string()).unwrap();
+        assert_eq!(bracket.status, "in_progress");
+        assert_eq!(bracket.display_name, "개나리기");
+        assert_eq!(bracket.matches.len(), 1);
+        assert_eq!(bracket.matches[0].round, 1);
+        assert!(bracket.matches[0].home_runs.is_none(), "아직 안 뛴 경기");
 
         reset_state();
     }

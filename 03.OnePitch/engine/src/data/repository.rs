@@ -325,7 +325,7 @@ pub fn generate_initial_world(slot_conn: &mut Connection, content_conn: &Connect
 /// 지금 시즌 값 — `season_meta`에 아직 한 번도 안 쓰였으면(첫 시즌 도중)
 /// 0. `season_rollover`가 이미 매번 이 패턴으로 읽던 걸 커리어 이벤트
 /// 기록에도 그대로 재사용.
-fn current_season_value(conn: &Connection) -> anyhow::Result<i64> {
+pub(crate) fn current_season_value(conn: &Connection) -> anyhow::Result<i64> {
     Ok(conn
         .query_row("SELECT value FROM season_meta WHERE key = 'season'", [], |row| row.get::<_, String>(0))
         .optional()?
