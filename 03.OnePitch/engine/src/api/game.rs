@@ -1169,6 +1169,7 @@ pub fn get_standings(league_id: String) -> anyhow::Result<Vec<StandingsRowInfo>>
 fn tournament_display_name(kind: &str) -> &str {
     match kind {
         "pro_postseason" => "프로 포스트시즌",
+        "pro_farm_postseason" => "퓨처스 포스트시즌",
         "independent" => "독립리그 플레이오프",
         "univ_wangjungwang" => "왕중왕전",
         "univ_eunhagi" => "은하기",

@@ -2605,11 +2605,46 @@ pub fn run_pro_postseason(slot_conn: &Connection, content_conn: &Connection, wor
         return Ok(false);
     }
     seeded.sort_by(|a, b| win_pct(b.1, b.2).partial_cmp(&win_pct(a.1, a.2)).unwrap_or(std::cmp::Ordering::Equal));
+    // "5강" — 01_프로.md §4는 정확히 상위 5팀(WC전 4위vs5위→준PO→PO→한국시리즈,
+    // best_ofs=[1,5,5,7]은 5팀=4라운드용으로 맞춘 값)만 진출한다. standings에
+    // 6팀 이상 있어도(실제 10팀 리그) 여기서 잘라야 한다 — 안 자르면
+    // gauntlet이 seeds.len()-1라운드를 요구해 best_ofs 밖 라운드가 전부
+    // 단판으로 폴백되고, 6~10위 팀까지 포스트시즌에 끌려 들어가는 버그가
+    // 있었다(대화 2026-07-26, 리그별 평균 경기수 계산 도중 발견).
+    seeded.truncate(5);
     let seeds: Vec<String> = seeded.into_iter().map(|(id, _, _)| id).collect();
 
     let season = current_season_value(slot_conn)?;
     let id = format!("tourn:pro_postseason_{world_seed}_{day}");
     begin_gauntlet(slot_conn, &id, league_id, "pro_postseason", season, &seeds, &[1, 5, 5, 7], day + 1)
+}
+
+/// 프로2군 축약 포스트시즌 — 01_프로.md §5 "단일 리그 10팀... 축약
+/// 포스트시즌: 상위 4팀, 단판 사다리(3위vs4위→승자vs2위→승자vs1위)".
+/// `run_pro_postseason`과 같은 게이지 골격이지만 5강이 아니라 4강, 전
+/// 라운드 단판이라 `best_ofs`가 전부 1 — "1군처럼 무겁게 안 감" 설계
+/// 그대로.
+pub fn run_pro_farm_postseason(slot_conn: &Connection, content_conn: &Connection, world_seed: i64, day: i64) -> anyhow::Result<bool> {
+    let league_id = "league:pro_farm";
+    let farm_ids: std::collections::HashSet<String> = content::load_team_ids_for_league(content_conn, league_id)?.into_iter().collect();
+    if farm_ids.is_empty() {
+        return Ok(false);
+    }
+
+    let mut stmt = slot_conn.prepare("SELECT team_id, w, l FROM standings")?;
+    let all: Vec<(String, i64, i64)> = stmt.query_map([], |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)))?.collect::<Result<Vec<_>, _>>()?;
+    drop(stmt);
+    let mut seeded: Vec<(String, i64, i64)> = all.into_iter().filter(|(id, _, _)| farm_ids.contains(id)).collect();
+    if seeded.len() < 4 {
+        return Ok(false);
+    }
+    seeded.sort_by(|a, b| win_pct(b.1, b.2).partial_cmp(&win_pct(a.1, a.2)).unwrap_or(std::cmp::Ordering::Equal));
+    seeded.truncate(4);
+    let seeds: Vec<String> = seeded.into_iter().map(|(id, _, _)| id).collect();
+
+    let season = current_season_value(slot_conn)?;
+    let id = format!("tourn:pro_farm_postseason_{world_seed}_{day}");
+    begin_gauntlet(slot_conn, &id, league_id, "pro_farm_postseason", season, &seeds, &[1, 1, 1], day + 1)
 }
 
 /// 독립리그 4단계 — 04_독립.md §3·§6. 1차 10팀(더블라운드)→상위8, 2차
@@ -4077,6 +4112,7 @@ pub fn season_rollover(conn: &Connection, content_conn: &Connection, day: i64) -
 
     let world_seed: i64 = conn.query_row("SELECT world_seed FROM meta", [], |row| row.get(0))?;
     run_pro_postseason(conn, content_conn, world_seed, day)?;
+    run_pro_farm_postseason(conn, content_conn, world_seed, day)?;
     // 나머지 9개 대회(대학 3·고교 5·독립리그) — 예전엔 함수만 있고 실제
     // 플레이 중엔 한 번도 안 불렸다(대화 2026-07-26 발견, `run_pro_postseason`
     // 만 여기 배선돼 있었음). 이제 전부 하루 단위로 진행되므로(§ 위 대회
@@ -8200,6 +8236,96 @@ mod tests {
         let champion_txn: i64 =
             slot_conn.query_row("SELECT count(*) FROM league_transactions WHERE kind = 'champion'", [], |r| r.get(0)).unwrap();
         assert_eq!(champion_txn, 1);
+    }
+
+    /// 실제 프로리그(10팀) 시나리오에서 6~10위가 포스트시즌에 안 들어가야
+    /// 함 — 예전엔 `standings` 전체를 게이지에 넣어 6~10위까지 끌려들어가고
+    /// 5라운드째부터 `best_ofs`(4라운드용) 밖이라 전부 단판으로 폴백되던
+    /// 버그(대화 2026-07-26)의 회귀 테스트.
+    #[test]
+    fn run_pro_postseason_excludes_sixth_through_tenth_place_from_a_ten_team_league() {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:pro', NULL)", []).unwrap();
+
+        let slot_conn = slot::open_in_memory().unwrap();
+        for i in 0..10 {
+            let team_id = format!("team:p{i}");
+            content_conn
+                .execute(
+                    "INSERT INTO teams (id, league_id, color, meta) VALUES (?1, 'league:pro', NULL, NULL)",
+                    params![team_id],
+                )
+                .unwrap();
+            insert_minimal_roster(&slot_conn, &team_id);
+            // team:p0 = 1위(최다승) .. team:p9 = 10위(최다패).
+            let wins = 40 - (i * 2);
+            slot_conn
+                .execute(
+                    "INSERT INTO standings (team_id, w, l, t, rank) VALUES (?1, ?2, ?3, 0, 0)",
+                    params![team_id, wins, 40 - wins],
+                )
+                .unwrap();
+        }
+
+        assert!(run_pro_postseason(&slot_conn, &content_conn, 7, 364).unwrap());
+
+        let participants_raw: String =
+            slot_conn.query_row("SELECT participants FROM tournaments WHERE id = 'tourn:pro_postseason_7_364'", [], |r| r.get(0)).unwrap();
+        let participants: Vec<String> = serde_json::from_str(&participants_raw).unwrap();
+        assert_eq!(participants.len(), 5, "5강만 진출해야 함");
+        for excluded in ["team:p5", "team:p6", "team:p7", "team:p8", "team:p9"] {
+            assert!(!participants.contains(&excluded.to_string()), "6~10위({excluded})는 포스트시즌에 없어야 함");
+        }
+
+        let champion = run_tournament_to_completion(&slot_conn, &content_conn, 7, "tourn:pro_postseason_7_364", 365);
+        assert!(["team:p0", "team:p1", "team:p2", "team:p3", "team:p4"].contains(&champion.as_str()), "champion={champion}");
+    }
+
+    #[test]
+    fn run_pro_farm_postseason_does_not_start_without_enough_standings() {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:pro_farm', NULL)", []).unwrap();
+        content_conn
+            .execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:f0', 'league:pro_farm', NULL, NULL)", [])
+            .unwrap();
+
+        let slot_conn = slot::open_in_memory().unwrap();
+        assert!(!run_pro_farm_postseason(&slot_conn, &content_conn, 1, 364).unwrap(), "4팀 미만이면 시작하면 안 됨");
+    }
+
+    #[test]
+    fn run_pro_farm_postseason_crowns_a_champion_from_top_four_standings_only() {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:pro_farm', NULL)", []).unwrap();
+
+        let slot_conn = slot::open_in_memory().unwrap();
+        for i in 0..10 {
+            let team_id = format!("team:f{i}");
+            content_conn
+                .execute(
+                    "INSERT INTO teams (id, league_id, color, meta) VALUES (?1, 'league:pro_farm', NULL, NULL)",
+                    params![team_id],
+                )
+                .unwrap();
+            insert_minimal_roster(&slot_conn, &team_id);
+            let wins = 40 - (i * 2);
+            slot_conn
+                .execute(
+                    "INSERT INTO standings (team_id, w, l, t, rank) VALUES (?1, ?2, ?3, 0, 0)",
+                    params![team_id, wins, 40 - wins],
+                )
+                .unwrap();
+        }
+
+        assert!(run_pro_farm_postseason(&slot_conn, &content_conn, 3, 364).unwrap());
+        let participants_raw: String = slot_conn
+            .query_row("SELECT participants FROM tournaments WHERE id = 'tourn:pro_farm_postseason_3_364'", [], |r| r.get(0))
+            .unwrap();
+        let participants: Vec<String> = serde_json::from_str(&participants_raw).unwrap();
+        assert_eq!(participants, vec!["team:f0", "team:f1", "team:f2", "team:f3"], "4강만 진출해야 함");
+
+        let champion = run_tournament_to_completion(&slot_conn, &content_conn, 3, "tourn:pro_farm_postseason_3_364", 365);
+        assert!(["team:f0", "team:f1", "team:f2", "team:f3"].contains(&champion.as_str()), "champion={champion}");
     }
 
     fn insert_team_with_stadium(content_conn: &Connection, team_id: &str, league_id: &str, stadium_id: &str) {
