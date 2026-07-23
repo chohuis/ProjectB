@@ -1616,7 +1616,21 @@
 
 **테스트**: `cargo test --lib` 453개 전부 통과(신규 7개 — `is_save_situation` 판정 6분기, 마무리 슬롯 폴백 강판 1개, `assign_closer` 2개, `load_relief_pitcher` 상황별 선택 3개). `cargo clippy` 클린. frb 재생성 불필요(내부 로직·기존 season_meta 테이블 재사용, 새 테이블 없음). `cargo build --release` 갱신 후 `flutter test` 27개 전부 통과.
 
-### 6-100. 문서 갱신 규칙
+### 6-100. 주인공 경기 상대팀 투수 강판 지원 — Part H (2026-07-26, 완료)
+
+**Context**: 이월 레지스트리(§5)에 "주인공 경기 속 상대팀 투수의 강판은 여전히 이월"이라고 명시돼 있던 항목 — `data::match_session`의 배경 하프이닝 처리부는 상대팀이 던질 때 `load_starting_pitcher`만 매 하프이닝 다시 불러올 뿐 강판 판정 자체가 아예 없었다(배경끼리 붙는 `process_day`는 이미 양쪽 다 강판 판정이 있는 것과 비대칭). 사용자가 "주인공 상대팀 투수 강판 쪽도 수정 가능한지 봐봐"로 짚은 항목.
+
+**구현**(`engine/src/data/slot.rs`, migration v14):
+- `match_session`에 `opponent_pulled`(기존 `protagonist_pulled`와 대칭)·`opponent_relief_pitcher_id`(기존 `relief_pitcher_id`와 대칭)·`opponent_pitcher_batters_faced`(신규 — 세션이 하프이닝마다 새로 로드돼도 "이번 게임 상대 투수 누적 상대 타자 수"가 끊기지 않게 지속시켜야 배경 경기와 동일한 "타자 수 × 3.8" 투구수 근사가 가능) 3개 컬럼 추가.
+
+**구현**(`engine/src/data/match_session.rs`):
+- 배경 하프이닝의 투수 선택 분기에 `else if session.opponent_pulled { 저장된 상대팀 불펜 } else { 강판 판정 후 선발 또는 새 불펜 }` 갈래 추가 — 강판 판정은 배경 경기(`process_day`)와 동일하게 `manager::should_pull_pitcher`(근사 투구수 = `opponent_pitcher_batters_faced × 3.8`)로 하고, 강판되면 그 시점 실제 스코어로 `manager::is_save_situation`을 계산해 Part G의 상황 인지형 `load_relief_pitcher`를 그대로 재사용. 게임당 1회만(주인공 쪽과 동일 제약) — 한번 `opponent_pulled`가 서면 이후 하프이닝은 판정 없이 그 불펜으로 고정.
+- 매 하프이닝 종료 후 `opponent_pitcher_batters_faced`를 이번 하프에 상대한 타자 수만큼 누적(강판 성사 시 0으로 리셋 — 새 투수의 투구수부터 다시 센다).
+- `accumulate_game_fatigue(pitching_team)` 호출에 `!session.opponent_pulled` 조건 추가 — 이미 강판된 뒤에는 건너뛴다(주인공 쪽에 있던 것과 같은 이유: 이 함수는 `position='선발투수'` 한 명만 찾아 이미 벤치로 물러난 원래 선발을 잘못 갱신하게 됨).
+
+**테스트**: `cargo test --lib` 455개 전부 통과(신규 2개 — migration v14 컬럼 왕복, 하드캡을 훌쩍 넘긴 근사 투구수로 상대 투수가 실제로 강판돼 불펜이 season_stats를 기록하는지). `cargo clippy` 클린. frb 재생성 불필요(내부 로직·세션 스키마만 확장). `cargo build --release` 갱신 후 `flutter test` 27개 전부 통과.
+
+### 6-101. 문서 갱신 규칙
 
 **이 문서는 살아있는 문서다.** Phase를 하나 끝낼 때마다:
 1. §2 표의 해당 행 상태를 `⬜ 미착수` → `🔶 진행중` → `✅ 완료`로 갱신.

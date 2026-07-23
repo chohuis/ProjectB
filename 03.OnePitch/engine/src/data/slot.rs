@@ -288,6 +288,26 @@ fn migration_v13(tx: &Transaction) -> anyhow::Result<()> {
     Ok(())
 }
 
+const V14_DDL: &str = r#"
+ALTER TABLE match_session ADD COLUMN opponent_pulled INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE match_session ADD COLUMN opponent_relief_pitcher_id TEXT;
+ALTER TABLE match_session ADD COLUMN opponent_pitcher_batters_faced INTEGER NOT NULL DEFAULT 0;
+"#;
+
+/// 상대팀 투수 강판 지원(10_구현_Phase_계획.md §6-N Part H, 대화
+/// 2026-07-26) — `protagonist_pulled`/`relief_pitcher_id`(v10)와 대칭이지만
+/// 반대쪽(주인공 팀이 아니라 상대팀)을 강판한 결과를 담는다. 상대팀은
+/// 배경 하프이닝 경로로만 던지므로(주인공이 직접 상대할 뿐 감독 개입
+/// UI는 없음) `protagonist_pull_inning`/`protagonist_pull_opponent_runs`
+/// 같은 표시용 필드는 필요 없음 — "누구로 고정됐는가"만 세션에 남기면
+/// 이후 하프이닝마다 다시 강판 판정을 반복하지 않고 그 투수로 계속
+/// 진행할 수 있다(기존 주인공 쪽과 동일한 "게임당 1회" 제약).
+fn migration_v14(tx: &Transaction) -> anyhow::Result<()> {
+    tx.execute_batch(V14_DDL)?;
+    tx.execute("UPDATE meta SET save_version = 14", [])?;
+    Ok(())
+}
+
 const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 1,
@@ -341,6 +361,10 @@ const MIGRATIONS: &[Migration] = &[
         version: 13,
         up: migration_v13,
     },
+    Migration {
+        version: 14,
+        up: migration_v14,
+    },
 ];
 
 fn init(mut conn: Connection) -> anyhow::Result<Connection> {
@@ -368,7 +392,7 @@ mod tests {
         let save_version: i64 = conn
             .query_row("SELECT save_version FROM meta", [], |row| row.get(0))
             .unwrap();
-        assert_eq!(save_version, 13);
+        assert_eq!(save_version, 14);
     }
 
     #[test]
@@ -475,6 +499,44 @@ mod tests {
         .unwrap();
         let line: String = conn.query_row("SELECT line FROM practice_stats WHERE player_id = 'npc:1'", [], |r| r.get(0)).unwrap();
         assert_eq!(line, "{\"outs_recorded\":3}");
+    }
+
+    #[test]
+    fn v14_adds_opponent_pull_columns_to_match_session() {
+        let conn = open_in_memory().unwrap();
+        conn.execute(
+            "INSERT INTO match_session (id, game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases,
+                                         home_runs, away_runs, home_batter_idx, away_batter_idx, balls, strikes, current_batter_id)
+             VALUES (1, 'g', 'h', 'a', 'league:pro', '자동', 1, 1, 0, '[false,false,false]', 0, 0, 0, 0, 0, 0, NULL)",
+            [],
+        )
+        .unwrap();
+        let (pulled, relief, faced): (i64, Option<String>, i64) = conn
+            .query_row(
+                "SELECT opponent_pulled, opponent_relief_pitcher_id, opponent_pitcher_batters_faced FROM match_session WHERE id = 1",
+                [],
+                |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)),
+            )
+            .unwrap();
+        assert_eq!(pulled, 0);
+        assert_eq!(relief, None);
+        assert_eq!(faced, 0);
+
+        conn.execute(
+            "UPDATE match_session SET opponent_pulled = 1, opponent_relief_pitcher_id = 'npc:relief', opponent_pitcher_batters_faced = 5 WHERE id = 1",
+            [],
+        )
+        .unwrap();
+        let (pulled, relief, faced): (i64, Option<String>, i64) = conn
+            .query_row(
+                "SELECT opponent_pulled, opponent_relief_pitcher_id, opponent_pitcher_batters_faced FROM match_session WHERE id = 1",
+                [],
+                |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)),
+            )
+            .unwrap();
+        assert_eq!(pulled, 1);
+        assert_eq!(relief.as_deref(), Some("npc:relief"));
+        assert_eq!(faced, 5);
     }
 
     #[test]

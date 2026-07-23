@@ -79,6 +79,13 @@ struct SessionRow {
     relief_pitcher_id: Option<String>,
     protagonist_pull_inning: Option<i64>,
     protagonist_pull_opponent_runs: Option<i64>,
+    /// 상대팀 투수 강판(§8 대칭, Part H, 대화 2026-07-26) — 주인공 쪽과
+    /// 달리 "지금까지 이 게임에서 상대 투수가 상대한 누적 타자 수"까지
+    /// 세션에 남겨야 하프이닝마다 새로 세션을 불러와도(§5 "1구 단위") 투구수
+    /// 근사(§8 "타자 수 × 3.8")가 끊기지 않는다.
+    opponent_pulled: bool,
+    opponent_relief_pitcher_id: Option<String>,
+    opponent_pitcher_batters_faced: i64,
 }
 
 #[allow(clippy::type_complexity)]
@@ -106,11 +113,15 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
         Option<String>,
         Option<i64>,
         Option<i64>,
+        i64,
+        Option<String>,
+        i64,
     )> = conn
         .query_row(
             "SELECT game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases, home_runs, away_runs,
                     home_batter_idx, away_batter_idx, balls, strikes, current_batter_id, pitch_seq, strikeouts,
-                    protagonist_pulled, relief_pitcher_id, protagonist_pull_inning, protagonist_pull_opponent_runs
+                    protagonist_pulled, relief_pitcher_id, protagonist_pull_inning, protagonist_pull_opponent_runs,
+                    opponent_pulled, opponent_relief_pitcher_id, opponent_pitcher_batters_faced
              FROM match_session WHERE id = 1",
             [],
             |r| {
@@ -137,6 +148,9 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
                     r.get(19)?,
                     r.get(20)?,
                     r.get(21)?,
+                    r.get(22)?,
+                    r.get(23)?,
+                    r.get(24)?,
                 ))
             },
         )
@@ -164,6 +178,9 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
         relief_pitcher_id,
         protagonist_pull_inning,
         protagonist_pull_opponent_runs,
+        opponent_pulled,
+        opponent_relief_pitcher_id,
+        opponent_pitcher_batters_faced,
     )) = row
     else {
         return Ok(None);
@@ -192,6 +209,9 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
         relief_pitcher_id,
         protagonist_pull_inning,
         protagonist_pull_opponent_runs,
+        opponent_pulled: opponent_pulled != 0,
+        opponent_relief_pitcher_id,
+        opponent_pitcher_batters_faced,
     }))
 }
 
@@ -200,7 +220,8 @@ fn save_session(conn: &Connection, s: &SessionRow) -> anyhow::Result<()> {
         "UPDATE match_session SET inning = ?1, top_of_inning = ?2, outs = ?3, bases = ?4, home_runs = ?5, away_runs = ?6,
              home_batter_idx = ?7, away_batter_idx = ?8, balls = ?9, strikes = ?10, current_batter_id = ?11, pitch_seq = ?12,
              strikeouts = ?13, protagonist_pulled = ?14, relief_pitcher_id = ?15, protagonist_pull_inning = ?16,
-             protagonist_pull_opponent_runs = ?17
+             protagonist_pull_opponent_runs = ?17, opponent_pulled = ?18, opponent_relief_pitcher_id = ?19,
+             opponent_pitcher_batters_faced = ?20
          WHERE id = 1",
         params![
             s.inning,
@@ -220,6 +241,9 @@ fn save_session(conn: &Connection, s: &SessionRow) -> anyhow::Result<()> {
             s.relief_pitcher_id,
             s.protagonist_pull_inning,
             s.protagonist_pull_opponent_runs,
+            s.opponent_pulled as i64,
+            s.opponent_relief_pitcher_id,
+            s.opponent_pitcher_batters_faced,
         ],
     )?;
     Ok(())
@@ -615,8 +639,45 @@ fn run_until_decision_point(
             let pitcher = if protagonist_pitching_team {
                 let relief_id = session.relief_pitcher_id.clone().expect("protagonist_pulled requires relief_pitcher_id");
                 repository::load_pitcher_by_id(slot_conn, &relief_id)?
+            } else if session.opponent_pulled {
+                let relief_id = session.opponent_relief_pitcher_id.clone().expect("opponent_pulled requires opponent_relief_pitcher_id");
+                repository::load_pitcher_by_id(slot_conn, &relief_id)?
             } else {
-                repository::load_starting_pitcher(slot_conn, &pitching_team)?
+                let starter = repository::load_starting_pitcher(slot_conn, &pitching_team)?;
+                // 상대팀 투수 강판(§8 대칭, Part H, 대화 2026-07-26) — 지금까지
+                // 이 게임에서 이 투수가 상대한 누적 타자 수(`opponent_pitcher_batters_faced`,
+                // 하프이닝마다 아래에서 누적)로 배경 경기(process_day)와 동일한
+                // "타자 수 × 3.8" 근사를 쓴다. 게임당 딱 1회만(주인공 쪽과 동일 제약).
+                let approx_pitches = (session.opponent_pitcher_batters_faced as f64 * 3.8) as u32;
+                let opponent_manager = repository::load_manager_stats(slot_conn, &pitching_team)?;
+                let mut pull_rng = ChaCha8Rng::seed_from_u64(repository::league_sub_seed(
+                    world_seed,
+                    &format!("opponent_pull:{}:{}:{}", session.game_id, session.inning, session.top_of_inning),
+                ));
+                let should_pull = crate::sim::manager::should_pull_pitcher(
+                    &mut pull_rng,
+                    approx_pitches,
+                    starter.fatigue,
+                    opponent_manager.tactics,
+                    opponent_manager.trust,
+                );
+                if should_pull {
+                    let pitching_team_is_home = pitching_team == session.home;
+                    let (team_runs_so_far, opponent_runs_so_far) =
+                        if pitching_team_is_home { (session.home_runs, session.away_runs) } else { (session.away_runs, session.home_runs) };
+                    let save_situation = crate::sim::manager::is_save_situation(session.inning, team_runs_so_far, opponent_runs_so_far);
+                    match repository::load_relief_pitcher(slot_conn, &pitching_team, save_situation)? {
+                        Some(reliever) => {
+                            session.opponent_pulled = true;
+                            session.opponent_relief_pitcher_id = Some(reliever.id.clone());
+                            session.opponent_pitcher_batters_faced = 0;
+                            reliever
+                        }
+                        None => starter,
+                    }
+                } else {
+                    starter
+                }
             };
             let mut idx = (if batting_team_is_home { session.home_batter_idx } else { session.away_batter_idx }) as usize;
             let mut rng = ChaCha8Rng::seed_from_u64(repository::league_sub_seed(
@@ -626,6 +687,11 @@ fn run_until_decision_point(
             let mut injuries = Vec::new();
             let mut half_inning_stats = match_sim::HalfInningStats::default();
             let runs = match_sim::simulate_half_inning(&mut rng, &lineup, &mut idx, &pitcher, session.bases, &mut injuries, &mut half_inning_stats);
+            if !protagonist_pitching_team {
+                let faced_this_half =
+                    half_inning_stats.pitcher.outs_recorded + half_inning_stats.pitcher.hits_allowed + half_inning_stats.pitcher.walks;
+                session.opponent_pitcher_batters_faced += faced_this_half as i64;
+            }
             repository::apply_injury_events(slot_conn, &injuries, today)?;
             repository::accumulate_game_fatigue(slot_conn, &batting_team)?;
             // 이 하프이닝의 투수(상대 선발 또는 주인공 강판 후 중계/마무리투수)와
@@ -639,11 +705,12 @@ fn run_until_decision_point(
             for (batter_id, s) in &half_inning_stats.batters {
                 repository::upsert_batter_season_stats(slot_conn, batter_id, week, s)?;
             }
-            if !protagonist_pitching_team {
-                // 주인공이 강판된 뒤의 불펜 투수는 이번 스코프에서 피로도
-                // 누적 대상 아님(§8 스코프 판단) — `accumulate_game_fatigue`는
-                // position='선발투수'만 찾아 이미 벤치로 물러난 주인공/선발을
-                // 잘못 갱신하게 되므로 호출 자체를 건너뛴다.
+            if !protagonist_pitching_team && !session.opponent_pulled {
+                // 주인공이 강판된 뒤의 불펜 투수와 동일한 이유(§8 스코프
+                // 판단, Part H에서 상대팀에도 대칭 적용) — `accumulate_game_fatigue`
+                // 는 position='선발투수'만 찾아 이미 벤치로 물러난 원래
+                // 선발을 잘못 갱신하게 되므로, 상대팀도 강판 후에는 호출
+                // 자체를 건너뛴다.
                 repository::accumulate_game_fatigue(slot_conn, &pitching_team)?;
             }
 
@@ -869,6 +936,9 @@ mod tests {
             relief_pitcher_id: None,
             protagonist_pull_inning: None,
             protagonist_pull_opponent_runs: None,
+            opponent_pulled: false,
+            opponent_relief_pitcher_id: None,
+            opponent_pitcher_batters_faced: 0,
         }
     }
 
@@ -1160,6 +1230,45 @@ mod tests {
         assert_eq!(detail.get("pulled_by_manager").and_then(|v| v.as_bool()), Some(true));
         assert_eq!(detail.get("innings_pitched").and_then(|v| v.as_i64()), Some(1), "should freeze at the inning the pull happened in");
         assert_eq!(detail.get("runs_allowed").and_then(|v| v.as_i64()), Some(0), "should freeze at the opponent score at pull time, not the final score");
+    }
+
+    /// 상대팀 투수 강판(§8 대칭, Part H, 대화 2026-07-26) — 상대(`team:away`)
+    /// 투수가 이번 게임에서 이미 많은 타자를 상대한 것으로 세션을 직접
+    /// 꾸며(근사 투구수가 하드캡을 훌쩍 넘기게) 첫 하프이닝 경계에서 반드시
+    /// 강판되도록 만든다(RNG에 기대지 않는 결정론적 시나리오). 세션 행은
+    /// 게임 종료 시 지워지므로(`finalize_game`) 강판 자체는 그 결과물인
+    /// season_stats로 검증 — Part H 이전엔 배경 쪽 상대 투수가 절대 안
+    /// 바뀌어 `team:away_rp`에 season_stats가 남을 일이 없었다.
+    #[test]
+    fn opponent_pitcher_gets_pulled_and_the_reliever_records_season_stats() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_roster(&slot_conn, "team:home");
+        insert_protagonist(&slot_conn, "team:home");
+        insert_roster(&slot_conn, "team:away");
+        insert_reliever(&slot_conn, "team:away");
+        insert_schedule(&slot_conn, "game:1");
+
+        // top_of_inning=0(하위 이닝) — team:home이 타석, team:away가 투구.
+        // opponent_pitcher_batters_faced=40 → 근사 투구수 152(40*3.8)로
+        // 하드캡(120) 훌쩍 초과, RNG와 무관하게 무조건 강판.
+        slot_conn
+            .execute(
+                "INSERT INTO match_session (id, game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases,
+                                             home_runs, away_runs, home_batter_idx, away_batter_idx, balls, strikes,
+                                             current_batter_id, pitch_seq, strikeouts, opponent_pitcher_batters_faced)
+                 VALUES (1, 'game:1', 'team:home', 'team:away', 'league:hs', '자동', 1, 0, 0, '[false,false,false]',
+                         0, 0, 0, 0, 0, 0, NULL, 0, 0, 40)",
+                [],
+            )
+            .unwrap();
+
+        let result = run_until_decision_point(&slot_conn, 1, None, None).unwrap();
+        assert!(matches!(result, MatchStepResult::GameOver { .. }), "automatic mode should still run to completion after an opponent pull");
+
+        let has_reliever_stats: bool = slot_conn
+            .query_row("SELECT EXISTS(SELECT 1 FROM season_stats WHERE player_id = 'team:away_rp')", [], |r| r.get(0))
+            .unwrap();
+        assert!(has_reliever_stats, "the opponent reliever should have pitched and recorded season_stats after being pulled in");
     }
 
     #[test]
