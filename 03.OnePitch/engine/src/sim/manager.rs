@@ -142,6 +142,31 @@ pub fn blend_rotation_score(skill_score: f64, season_score: f64) -> f64 {
     skill_score * 0.6 + season_score * 0.4
 }
 
+/// `blend_rotation_score`에 청백전(연습경기) 성적을 세 번째 축으로
+/// 더한 버전 — 02_고교.md §4-5 "[전 시즌 성적 + 청백전 결과 + 잠재력]"
+/// 그대로 세 요소를 섞는다. 기본 가중치는 skill 0.5 / season 0.3 /
+/// practice 0.2(D그룹 placeholder, `blend_rotation_score`와 동일하게
+/// 밸런스 하네스 재조정 대상) — `season_score`/`practice_score`가 없으면
+/// (표본 부족 등) 그 가중치를 skill 쪽으로 재분배해 항상 합이 1이 되게
+/// 정규화한다.
+pub fn blend_rotation_score_with_practice(skill_score: f64, season_score: Option<f64>, practice_score: Option<f64>) -> f64 {
+    const SKILL_W: f64 = 0.5;
+    const SEASON_W: f64 = 0.3;
+    const PRACTICE_W: f64 = 0.2;
+
+    let mut weighted = skill_score * SKILL_W;
+    let mut total_w = SKILL_W;
+    if let Some(s) = season_score {
+        weighted += s * SEASON_W;
+        total_w += SEASON_W;
+    }
+    if let Some(p) = practice_score {
+        weighted += p * PRACTICE_W;
+        total_w += PRACTICE_W;
+    }
+    weighted / total_w
+}
+
 /// 시즌 중 재배정(§6-N) 전용 — 새로 계산된 순위(`new_ranked`)를 그대로
 /// 쓰면 "바로 다음 등판" 투수가 갑자기 바뀌어 휴식 없이 재등판할 수 있다.
 /// `next_pitcher_id`(재배정 직전 기준 다음 차례였던 투수)가 새 순위에도
@@ -312,6 +337,28 @@ mod tests {
         let low = blend_rotation_score(60.0, 20.0);
         let high = blend_rotation_score(60.0, 80.0);
         assert!(high > low, "high={high} low={low}");
+    }
+
+    #[test]
+    fn blend_rotation_score_with_practice_falls_back_to_pure_skill_when_nothing_else_is_available() {
+        assert_eq!(blend_rotation_score_with_practice(70.0, None, None), 70.0);
+    }
+
+    #[test]
+    fn blend_rotation_score_with_practice_is_monotonic_in_each_available_axis() {
+        let base = blend_rotation_score_with_practice(50.0, Some(50.0), Some(50.0));
+        let better_season = blend_rotation_score_with_practice(50.0, Some(90.0), Some(50.0));
+        let better_practice = blend_rotation_score_with_practice(50.0, Some(50.0), Some(90.0));
+        assert!(better_season > base, "better_season={better_season} base={base}");
+        assert!(better_practice > base, "better_practice={better_practice} base={base}");
+    }
+
+    #[test]
+    fn blend_rotation_score_with_practice_handles_only_practice_present() {
+        // 시즌 표본은 없지만(초반) 청백전은 몇 번 뛴 상황 — 스킬+연습만
+        // 정규화해서 섞여야 함(중간에 0으로 새거나 하면 안 됨).
+        let result = blend_rotation_score_with_practice(50.0, None, Some(100.0));
+        assert!(result > 50.0 && result < 100.0, "result={result}");
     }
 
     #[test]

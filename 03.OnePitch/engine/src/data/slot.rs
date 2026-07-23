@@ -272,6 +272,22 @@ fn migration_v12(tx: &Transaction) -> anyhow::Result<()> {
     Ok(())
 }
 
+const V13_DDL: &str = r#"
+CREATE TABLE practice_stats (player_id TEXT, week INTEGER, line TEXT, PRIMARY KEY(player_id, week));
+"#;
+
+/// 청백전(연습경기, 대화 2026-07-26) 성적 — `season_stats`와 완전히 같은
+/// shape이지만 별도 테이블로 둔다. 02_고교.md §4-5 "청백전... 비공식
+/// 기록(개인 통산 스탯 미반영), 단 뎁스차트·코치 평가에는 반영"이라
+/// `season_stats`(공식 기록, 로테이션·타순 랭킹 외에 트레이드·방출
+/// 판정에도 쓰임)와 섞이면 안 된다. `season_rollover`가 `season_stats`를
+/// 비우는 자리에서 이 테이블도 같이 비운다("이번 시즌 청백전 성적").
+fn migration_v13(tx: &Transaction) -> anyhow::Result<()> {
+    tx.execute_batch(V13_DDL)?;
+    tx.execute("UPDATE meta SET save_version = 13", [])?;
+    Ok(())
+}
+
 const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 1,
@@ -321,6 +337,10 @@ const MIGRATIONS: &[Migration] = &[
         version: 12,
         up: migration_v12,
     },
+    Migration {
+        version: 13,
+        up: migration_v13,
+    },
 ];
 
 fn init(mut conn: Connection) -> anyhow::Result<Connection> {
@@ -348,7 +368,7 @@ mod tests {
         let save_version: i64 = conn
             .query_row("SELECT save_version FROM meta", [], |row| row.get(0))
             .unwrap();
-        assert_eq!(save_version, 12);
+        assert_eq!(save_version, 13);
     }
 
     #[test]
@@ -443,6 +463,18 @@ mod tests {
             conn.query_row("SELECT weekly_study_mode, eligibility_blocked FROM academics WHERE id = 'proto:1'", [], |r| Ok((r.get(0)?, r.get(1)?))).unwrap();
         assert_eq!(mode, "normal");
         assert_eq!(blocked, 0);
+    }
+
+    #[test]
+    fn v13_creates_practice_stats_table() {
+        let conn = open_in_memory().unwrap();
+        conn.execute(
+            "INSERT INTO practice_stats (player_id, week, line) VALUES ('npc:1', 1, '{\"outs_recorded\":3}')",
+            [],
+        )
+        .unwrap();
+        let line: String = conn.query_row("SELECT line FROM practice_stats WHERE player_id = 'npc:1'", [], |r| r.get(0)).unwrap();
+        assert_eq!(line, "{\"outs_recorded\":3}");
     }
 
     #[test]

@@ -1549,7 +1549,20 @@
 
 **테스트**: `cargo test --lib` 430개 전부 통과(신규 4개 — `generate_round_robin_rounds_targeted` 유닛테스트 2 + 실제 content.db로 고교 102팀·대학 50팀 전원이 정확히 20경기인지 검증하는 통합테스트 1 + 6팀 대학 그룹 게임수 재검증 1). `cargo clippy` 클린. frb 재생성 불필요. `flutter test` 27개 전부 통과.
 
-### 6-94. 문서 갱신 규칙
+### 6-95. 청백전(연습경기) 시스템 — Part C(고교·대학 월 1회 자체 스크리미지, 로테이션·타순 랭킹에 반영) (2026-07-26, 완료)
+
+**Context**: §6-92/93 계산에서 확인된 "선발투수 개인 등판수가 너무 적음" 문제를 정규시즌 확대만으로는 다 못 채운다고 판단 — `02_고교.md` §4-5에 이미 있던 "청백전(2월 말 1회, 비공식 기록, 뎁스차트·주전경쟁에만 반영)" 개념을 대학까지 확장하고 시즌 중 매달 반복해서 경기 체감을 늘리기로 함. 주인공도 이 경쟁에 포함시키기로 확정(사용자 결정) — 주인공이 항상 투수 아키타입(`sim::protagonist::ARCHETYPES` 4종 전부 투수)이라는 게 확인되면서 "타자 주인공" 예외를 걱정할 필요가 없어져 스코프가 단순해짐.
+
+**구현**:
+- `slot.rs` migration v13 — `practice_stats` 테이블(`season_stats`와 완전히 같은 shape). `season_rollover`가 `season_stats`를 비우는 자리에 같이 비움.
+- `repository.rs`: `upsert_stats_fields`/`pitcher_stats_score`/`batter_stats_score`를 테이블명 파라미터로 일반화(기존 `season_stats` 하드코딩 로직을 `season_stats`/`practice_stats` 공용으로) — `upsert_pitcher_practice_stats`·`upsert_batter_practice_stats`·`practice_stats_score`·`practice_stats_batter_score` 신설.
+- `run_intrasquad_scrimmage(team_id, day)` — 로스터(투수+타자, 주인공 소속팀이면 주인공도 투수풀에 합류)를 능력치 정렬 후 청/백으로 번갈아 분배(`split_alternating`), `match_sim::simulate_game`(배경 경기와 같은 엔진) 시뮬레이션. **매번 최고 스탯 투수만 선발시키면 청백전을 아무리 반복해도 그 투수만 practice_stats가 쌓이는 문제**를 발견해, day 기반 순환 선발(`day % 진영투수수`)로 고쳐 스탯 낮은 선수(주인공 포함)도 결국 순서가 오게 함. 결과는 `practice_stats`에만(season_stats/standings 미반영), 부상·피로도 미반영, 인박스 통지(`kind='scrimmage_result'`).
+- `run_monthly_scrimmages` — 고교·대학 팀 전체, `advance()`의 월간 훅(`today % 28 == 0`)에서 로테이션/타순 재배정 **직전** 실행(그 달 청백전 결과가 그 달 재배정에 곧바로 반영).
+- `manager::blend_rotation_score_with_practice(skill, season, practice)` — 기존 2-way(skill 0.6/season 0.4) 옆에 3-way(skill 0.5/season 0.3/practice 0.2, 없는 축은 재분배) 신설. `ranked_rotation_candidates_for_team`/`ranked_batting_order_for_team`이 이걸로 교체.
+
+**테스트**: `cargo test --lib` 438개 전부 통과(신규 다수 — practice_stats 테이블·청백전 시뮬레이션 3개(비공식 기록 검증·주인공 순환 참가 검증·소규모 로스터 no-op)·3-way 블렌드 유닛 3개·practice_stats가 실제로 로테이션 순위에 반영되는지 통합 1). `cargo clippy` 클린. frb 재생성 불필요. `flutter test` 27개 전부 통과.
+
+### 6-96. 문서 갱신 규칙
 
 **이 문서는 살아있는 문서다.** Phase를 하나 끝낼 때마다:
 1. §2 표의 해당 행 상태를 `⬜ 미착수` → `🔶 진행중` → `✅ 완료`로 갱신.
