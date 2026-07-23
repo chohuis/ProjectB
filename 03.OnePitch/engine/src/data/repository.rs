@@ -618,6 +618,29 @@ pub fn set_protagonist_profile(
     Ok(())
 }
 
+/// 주간 학습모드 변경 — 학업 탭에서 언제든 다시 고를 수 있다(원본
+/// `schoolState.weeklyStudyMode`처럼 다음 주 처리부터 바로 반영, 이번 주
+/// 이미 처리된 몫엔 소급 적용 없음).
+pub fn set_weekly_study_mode(slot_conn: &Connection, mode: &str) -> anyhow::Result<()> {
+    if !crate::sim::academics::STUDY_MODES.contains(&mode) {
+        anyhow::bail!("unknown study mode: {mode}");
+    }
+    slot_conn.execute("UPDATE academics SET weekly_study_mode = ?1 WHERE id = 'proto:1'", params![mode])?;
+    Ok(())
+}
+
+/// 대학 전공 확정 — 원본(`AcademicsPage.svelte`의 `gameStore.selectMajor`)
+/// 그대로 PendingAction 없이 학업 탭에서 즉시 고르고 즉시 반영된다.
+/// 대학 재학 중이 아니어도(과거 세이브 호환 등) 굳이 막지 않는다 — 실제
+/// 노출은 Flutter 쪽에서 `attends_university`로 이미 게이팅한다.
+pub fn set_university_major(slot_conn: &Connection, major: &str) -> anyhow::Result<()> {
+    if !crate::sim::academics::UNIVERSITY_MAJORS.contains(&major) {
+        anyhow::bail!("unknown university major: {major}");
+    }
+    slot_conn.execute("UPDATE academics SET university_major = ?1, major_selected = 1 WHERE id = 'proto:1'", params![major])?;
+    Ok(())
+}
+
 /// 학업 시스템 주간 처리(대화 2026-07-26, `sim::academics` 이식 원본
 /// 02.SvelteElectron 그대로) — 고교(`league:hs`)·대학(`league:univ`)
 /// 스테이지에서만 의미가 있다. 그 외(프로·독립·병역·무소속)엔 `academics`

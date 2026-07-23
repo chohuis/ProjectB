@@ -369,6 +369,94 @@ pub fn get_meta_status() -> anyhow::Result<MetaStatusInfo> {
     })
 }
 
+/// 학업 시스템 상태 — 고교(`league:hs`)·대학(`league:univ`) 스테이지가
+/// 아니면 `None`(Dart는 이 값 하나로 학업 탭 노출 여부를 그대로 판정 —
+/// 계획서 "고교·대학 스테이지에서만 탭 노출"). `subject_scores_json`은
+/// 과목 5개(국/영/수/사/과) 각각의 `percentile`/`attendance`/`assignment`
+/// 원시 JSON 통과(모듈 문서의 "JSON 원시 통과" 관례 그대로).
+#[derive(Debug, Clone)]
+pub struct AcademicsStatusInfo {
+    pub attends_university: bool,
+    pub weekly_study_mode: String,
+    pub subject_scores_json: String,
+    pub exam_accum_score: f64,
+    pub last_grade: Option<i64>,
+    pub last_grade_risk: String,
+    pub eligibility_blocked: bool,
+    pub university_major: Option<String>,
+    pub major_selected: bool,
+    pub next_exam_label: String,
+    pub weeks_until_next_exam: i64,
+}
+
+#[allow(clippy::type_complexity)]
+pub fn get_academics_status() -> anyhow::Result<Option<AcademicsStatusInfo>> {
+    with_state(|state| {
+        let contract: Option<String> =
+            state.slot_conn.query_row("SELECT contract FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).optional()?;
+        let Some(contract) = contract else { return Ok(None) };
+        let contract_json: serde_json::Value = serde_json::from_str(&contract).unwrap_or(serde_json::Value::Null);
+        let Some(team_id) = contract_json.get("team_id").and_then(|v| v.as_str()) else { return Ok(None) };
+        let league_id: Option<String> =
+            state.content_conn.query_row("SELECT league_id FROM teams WHERE id = ?1", [team_id], |r| r.get(0)).optional()?;
+        if !matches!(league_id.as_deref(), Some("league:hs") | Some("league:univ")) {
+            return Ok(None);
+        }
+
+        let row: Option<(i64, String, String, f64, Option<i64>, String, i64, Option<String>, i64)> = state
+            .slot_conn
+            .query_row(
+                "SELECT attends_university, weekly_study_mode, subject_scores, exam_accum_score, last_grade, last_grade_risk,
+                        eligibility_blocked, university_major, major_selected
+                 FROM academics WHERE id = 'proto:1'",
+                [],
+                |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?, r.get(4)?, r.get(5)?, r.get(6)?, r.get(7)?, r.get(8)?)),
+            )
+            .optional()?;
+        let Some((
+            attends_university,
+            weekly_study_mode,
+            subject_scores_json,
+            exam_accum_score,
+            last_grade,
+            last_grade_risk,
+            eligibility_blocked,
+            university_major,
+            major_selected,
+        )) = row
+        else {
+            return Ok(None); // academics 행이 없는 구버전 세이브
+        };
+
+        let current_day: i64 = state.slot_conn.query_row("SELECT current_day FROM meta", [], |r| r.get(0))?;
+        let (next_exam_label, weeks_until_next_exam) = crate::sim::academics::weeks_until_next_exam(crate::calendar::week_for_day(current_day));
+
+        Ok(Some(AcademicsStatusInfo {
+            attends_university: attends_university == 1,
+            weekly_study_mode,
+            subject_scores_json,
+            exam_accum_score,
+            last_grade,
+            last_grade_risk,
+            eligibility_blocked: eligibility_blocked == 1,
+            university_major,
+            major_selected: major_selected == 1,
+            next_exam_label: next_exam_label.to_string(),
+            weeks_until_next_exam,
+        }))
+    })
+}
+
+/// 주간 학습모드 변경 — `sim::academics::STUDY_MODES`(focus/normal/rest/sleep) 중 하나.
+pub fn set_weekly_study_mode(mode: String) -> anyhow::Result<()> {
+    with_state(|state| repository::set_weekly_study_mode(&state.slot_conn, &mode))
+}
+
+/// 대학 전공 확정 — `sim::academics::UNIVERSITY_MAJORS`(체육교육/스포츠과학/일반전공) 중 하나.
+pub fn set_university_major(major: String) -> anyhow::Result<()> {
+    with_state(|state| repository::set_university_major(&state.slot_conn, &major))
+}
+
 /// 1구 조작 집중뷰의 3×3 코스 그리드 버튼 이름 — `sim::pitch::Course`의
 /// 9개 값 그대로(`resolve_choice`의 `"구종:코스"` choice_id에 이 이름을
 /// 그대로 넣으면 된다). 순수 계산(I/O·락 없음)이라 동기 호출로 둔다 —
@@ -1711,6 +1799,65 @@ mod tests {
         // 슬라이더(제구 30+)는 강속구형에게 닿지 않는 스탯이라 교체.
         set_training("구속".to_string(), "구위".to_string(), "제구".to_string(), "보통".to_string(), Some("투심 패스트볼".to_string()), None).unwrap();
         assert_eq!(get_training_config().unwrap().unwrap().new_pitch.as_deref(), Some("투심 패스트볼"));
+
+        reset_state();
+    }
+
+    #[test]
+    fn academics_status_is_some_for_a_high_school_protagonist_and_settable() {
+        let _guard = TEST_SERIAL.lock().unwrap();
+        reset_state();
+
+        let hs_team = {
+            let conn = content::open("content.db").unwrap();
+            conn.query_row("SELECT id FROM teams WHERE league_id = 'league:hs' LIMIT 1", [], |r| r.get::<_, String>(0)).unwrap()
+        };
+        new_game("content.db".to_string(), 46, "학업테스트".to_string(), "우완".to_string(), hs_team, "강속구형".to_string(), None, None).unwrap();
+
+        let status = get_academics_status().unwrap().expect("고교 소속이면 학업 상태가 있어야 함");
+        assert!(!status.attends_university);
+        assert_eq!(status.weekly_study_mode, "normal");
+        assert!(status.last_grade.is_none(), "아직 시험 전");
+        assert!(!status.major_selected);
+
+        set_weekly_study_mode("focus".to_string()).unwrap();
+        assert_eq!(get_academics_status().unwrap().unwrap().weekly_study_mode, "focus");
+        assert!(set_weekly_study_mode("존재안함".to_string()).is_err());
+
+        set_university_major("스포츠과학".to_string()).unwrap();
+        let after_major = get_academics_status().unwrap().unwrap();
+        assert_eq!(after_major.university_major.as_deref(), Some("스포츠과학"));
+        assert!(after_major.major_selected);
+        assert!(set_university_major("없는전공".to_string()).is_err());
+
+        reset_state();
+    }
+
+    #[test]
+    fn academics_status_is_none_for_a_pro_league_protagonist() {
+        let _guard = TEST_SERIAL.lock().unwrap();
+        reset_state();
+
+        let (hs_team, pro_team) = {
+            let conn = content::open("content.db").unwrap();
+            (
+                conn.query_row("SELECT id FROM teams WHERE league_id = 'league:hs' LIMIT 1", [], |r| r.get::<_, String>(0)).unwrap(),
+                conn.query_row("SELECT id FROM teams WHERE league_id = 'league:pro' LIMIT 1", [], |r| r.get::<_, String>(0)).unwrap(),
+            )
+        };
+        // create_protagonist는 school_team_id가 항상 league:hs여야 하니
+        // (§ 캐릭터 생성 불변식) 프로 소속은 생성 뒤 계약을 직접 바꿔 흉내낸다.
+        new_game("content.db".to_string(), 47, "프로테스트".to_string(), "우완".to_string(), hs_team, "강속구형".to_string(), None, None).unwrap();
+        with_state(|state| {
+            state.slot_conn.execute(
+                "UPDATE protagonist SET contract = ?1 WHERE id = 'proto:1'",
+                rusqlite::params![serde_json::json!({"team_id": pro_team}).to_string()],
+            )?;
+            Ok(())
+        })
+        .unwrap();
+
+        assert!(get_academics_status().unwrap().is_none(), "프로 소속이면 학업 탭 자체가 없어야 함");
 
         reset_state();
     }

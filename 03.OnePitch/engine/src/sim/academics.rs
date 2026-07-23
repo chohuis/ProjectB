@@ -20,6 +20,18 @@ pub fn is_exam_week(week_of_season: i64) -> bool {
     week_of_season == MIDTERM_WEEK || week_of_season == FINAL_WEEK
 }
 
+/// 다음 시험까지 (라벨, 남은 주 수) — `academicsEngine.ts::weeksUntilNextExam`
+/// 그대로(시즌을 52주로 근사하는 것까지 포함).
+pub fn weeks_until_next_exam(week_of_season: i64) -> (&'static str, i64) {
+    if week_of_season < MIDTERM_WEEK {
+        ("중간고사", MIDTERM_WEEK - week_of_season)
+    } else if week_of_season < FINAL_WEEK {
+        ("기말고사", FINAL_WEEK - week_of_season)
+    } else {
+        ("다음 시즌 중간고사", 52 - week_of_season + MIDTERM_WEEK)
+    }
+}
+
 /// 주간 학습모드 하나의 효과 — `academicsEngine.ts`의
 /// `STUDY_MODE_EFFECTS` 그대로.
 pub struct StudyModeEffect {
@@ -313,5 +325,17 @@ mod tests {
         assert!(!is_exam_week(1));
         assert!(!is_exam_week(30));
         assert!(!is_exam_week(52));
+    }
+
+    #[test]
+    fn weeks_until_next_exam_counts_down_to_whichever_is_next() {
+        // `w < MIDTERM`/`w < FINAL` 경계 그대로(`academicsEngine.ts` 원본과
+        // 동일) — 시험 당일(w == 주차)엔 이미 그 시험을 지난 걸로 치고 다음
+        // 시험으로 넘어간다.
+        assert_eq!(weeks_until_next_exam(1), ("중간고사", MIDTERM_WEEK - 1));
+        assert_eq!(weeks_until_next_exam(MIDTERM_WEEK - 1), ("중간고사", 1));
+        assert_eq!(weeks_until_next_exam(MIDTERM_WEEK), ("기말고사", FINAL_WEEK - MIDTERM_WEEK));
+        assert_eq!(weeks_until_next_exam(FINAL_WEEK - 1), ("기말고사", 1));
+        assert_eq!(weeks_until_next_exam(FINAL_WEEK), ("다음 시즌 중간고사", 52 - FINAL_WEEK + MIDTERM_WEEK));
     }
 }

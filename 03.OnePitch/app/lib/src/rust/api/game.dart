@@ -10,7 +10,7 @@ part 'game.freezed.dart';
 
 // These functions are ignored because they are not marked as `pub`: `avg_rank_from_season_ranks`, `standings_rows`, `stars_from_group_position`, `tournament_display_name`, `tournament_includes_team`, `with_state_mut`, `with_state`, `world_seed`
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `GameState`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
 
 /// 뉴게임 — [07_주인공_생성](../../../02_기획/07_주인공_생성.md) §1의 7단계
 /// 흐름 중 실제 데이터를 만드는 마지막 단계(스텝 1~6은 Dart 쪽 폼 상태일
@@ -98,6 +98,17 @@ Future<List<PendingActionInfo>> getPendingActions() =>
 
 Future<MetaStatusInfo> getMetaStatus() =>
     RustLib.instance.api.crateApiGameGetMetaStatus();
+
+Future<AcademicsStatusInfo?> getAcademicsStatus() =>
+    RustLib.instance.api.crateApiGameGetAcademicsStatus();
+
+/// 주간 학습모드 변경 — `sim::academics::STUDY_MODES`(focus/normal/rest/sleep) 중 하나.
+Future<void> setWeeklyStudyMode({required String mode}) =>
+    RustLib.instance.api.crateApiGameSetWeeklyStudyMode(mode: mode);
+
+/// 대학 전공 확정 — `sim::academics::UNIVERSITY_MAJORS`(체육교육/스포츠과학/일반전공) 중 하나.
+Future<void> setUniversityMajor({required String major}) =>
+    RustLib.instance.api.crateApiGameSetUniversityMajor(major: major);
 
 /// 1구 조작 집중뷰의 3×3 코스 그리드 버튼 이름 — `sim::pitch::Course`의
 /// 9개 값 그대로(`resolve_choice`의 `"구종:코스"` choice_id에 이 이름을
@@ -326,6 +337,70 @@ Future<List<InboxMessageInfo>> getInbox() =>
 /// 메시지함 화면(I7)의 읽음 처리 — `repository::mark_inbox_read` 그대로.
 Future<void> markInboxRead({required String id}) =>
     RustLib.instance.api.crateApiGameMarkInboxRead(id: id);
+
+/// 학업 시스템 상태 — 고교(`league:hs`)·대학(`league:univ`) 스테이지가
+/// 아니면 `None`(Dart는 이 값 하나로 학업 탭 노출 여부를 그대로 판정 —
+/// 계획서 "고교·대학 스테이지에서만 탭 노출"). `subject_scores_json`은
+/// 과목 5개(국/영/수/사/과) 각각의 `percentile`/`attendance`/`assignment`
+/// 원시 JSON 통과(모듈 문서의 "JSON 원시 통과" 관례 그대로).
+class AcademicsStatusInfo {
+  final bool attendsUniversity;
+  final String weeklyStudyMode;
+  final String subjectScoresJson;
+  final double examAccumScore;
+  final PlatformInt64? lastGrade;
+  final String lastGradeRisk;
+  final bool eligibilityBlocked;
+  final String? universityMajor;
+  final bool majorSelected;
+  final String nextExamLabel;
+  final PlatformInt64 weeksUntilNextExam;
+
+  const AcademicsStatusInfo({
+    required this.attendsUniversity,
+    required this.weeklyStudyMode,
+    required this.subjectScoresJson,
+    required this.examAccumScore,
+    this.lastGrade,
+    required this.lastGradeRisk,
+    required this.eligibilityBlocked,
+    this.universityMajor,
+    required this.majorSelected,
+    required this.nextExamLabel,
+    required this.weeksUntilNextExam,
+  });
+
+  @override
+  int get hashCode =>
+      attendsUniversity.hashCode ^
+      weeklyStudyMode.hashCode ^
+      subjectScoresJson.hashCode ^
+      examAccumScore.hashCode ^
+      lastGrade.hashCode ^
+      lastGradeRisk.hashCode ^
+      eligibilityBlocked.hashCode ^
+      universityMajor.hashCode ^
+      majorSelected.hashCode ^
+      nextExamLabel.hashCode ^
+      weeksUntilNextExam.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AcademicsStatusInfo &&
+          runtimeType == other.runtimeType &&
+          attendsUniversity == other.attendsUniversity &&
+          weeklyStudyMode == other.weeklyStudyMode &&
+          subjectScoresJson == other.subjectScoresJson &&
+          examAccumScore == other.examAccumScore &&
+          lastGrade == other.lastGrade &&
+          lastGradeRisk == other.lastGradeRisk &&
+          eligibilityBlocked == other.eligibilityBlocked &&
+          universityMajor == other.universityMajor &&
+          majorSelected == other.majorSelected &&
+          nextExamLabel == other.nextExamLabel &&
+          weeksUntilNextExam == other.weeksUntilNextExam;
+}
 
 /// 기록 허브 "업적" 탭용(이월 부채 정리, 대화 2026-07-22) — content.db
 /// `achievements`(정의, 아직 한 번도 안 달성됐어도 나와야 함)가 기준이고
