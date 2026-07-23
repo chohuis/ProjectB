@@ -1514,6 +1514,7 @@ pub(crate) fn load_batting_lineup(slot_conn: &Connection, team_id: &str) -> anyh
                 clutch: v.get("클러치").and_then(|x| x.as_f64()).unwrap_or(50.0),
                 composure: v.get("침착함").and_then(|x| x.as_f64()).unwrap_or(50.0),
                 defense: v.get("수비").and_then(|x| x.as_f64()).unwrap_or(50.0),
+                speed: v.get("스피드").and_then(|x| x.as_f64()).unwrap_or(50.0),
             },
         );
     }
@@ -2237,7 +2238,7 @@ fn pitcher_stats_fields(s: &match_sim::PitcherGameStats) -> [(&'static str, u32)
     ]
 }
 
-fn batter_stats_fields(s: &match_sim::BatterGameStats) -> [(&'static str, u32); 9] {
+fn batter_stats_fields(s: &match_sim::BatterGameStats) -> [(&'static str, u32); 11] {
     [
         ("plate_appearances", s.plate_appearances),
         ("at_bats", s.at_bats),
@@ -2248,6 +2249,8 @@ fn batter_stats_fields(s: &match_sim::BatterGameStats) -> [(&'static str, u32); 
         ("walks", s.walks),
         ("strikeouts", s.strikeouts),
         ("rbi", s.rbi),
+        ("stolen_bases", s.stolen_bases),
+        ("caught_stealing", s.caught_stealing),
     ]
 }
 
@@ -2419,6 +2422,7 @@ fn run_intrasquad_scrimmage(slot_conn: &Connection, content_conn: &Connection, w
                 clutch: v.get("클러치").and_then(|x| x.as_f64()).unwrap_or(50.0),
                 composure: v.get("침착함").and_then(|x| x.as_f64()).unwrap_or(50.0),
                 defense: v.get("수비").and_then(|x| x.as_f64()).unwrap_or(50.0),
+                speed: v.get("스피드").and_then(|x| x.as_f64()).unwrap_or(50.0),
             });
         }
     }
@@ -6081,6 +6085,8 @@ mod tests {
             walks: 2,
             strikeouts: 3,
             rbi: 5,
+            stolen_bases: 0,
+            caught_stealing: 0,
         };
         upsert_batter_season_stats(&slot_conn, "npc:b1", 1, &batter_stats).unwrap();
 
@@ -7481,6 +7487,14 @@ mod tests {
         // "자동" 모드 — 매치 세션이 한 번에 끝까지 진행돼 GameOver로 귀결된다.
         let step = resolve_choice(&slot_conn, &content_conn, 999, &pending[0].id, "자동").unwrap();
         assert!(matches!(step, Some(match_session::MatchStepResult::GameOver { .. })));
+        // 이 경기 도중 주인공이 급성 부상을 당했을 수도 있다(§13 "낮은
+        // 확률 랜덤 이벤트") — 이 테스트의 목적은 "경기 자체가 pending
+        // action을 깔끔하게 정리하는지"이지 "부상이 절대 없어야 한다"가
+        // 아니므로, 남아있는 게 딱 그 치료 선택뿐이면 마저 해결하고 넘어간다.
+        let pending_after_game = list_pending_actions(&slot_conn).unwrap();
+        if let Some(injury) = pending_after_game.iter().find(|p| p.kind == "injuryTreatment") {
+            resolve_choice(&slot_conn, &content_conn, 999, &injury.id, "재활").unwrap();
+        }
         let remaining: i64 = slot_conn.query_row("SELECT count(*) FROM pending_actions", [], |r| r.get(0)).unwrap();
         assert_eq!(remaining, 0);
         let result_raw: Option<String> = slot_conn.query_row("SELECT result FROM schedule WHERE game_id = 'game:1'", [], |r| r.get(0)).unwrap();
@@ -8105,6 +8119,8 @@ mod tests {
             walks: 0,
             strikeouts: 0,
             rbi: 1,
+            stolen_bases: 0,
+            caught_stealing: 0,
         };
         upsert_batter_season_stats(&slot_conn, "npc:1", 1, &stats).unwrap();
         assert_eq!(season_stats_batter_score(&slot_conn, "npc:1").unwrap(), None);
@@ -8127,6 +8143,8 @@ mod tests {
             walks: 5,
             strikeouts: 5,
             rbi: 12,
+            stolen_bases: 0,
+            caught_stealing: 0,
         };
         let bad = match_sim::BatterGameStats {
             plate_appearances: 40,
@@ -8138,6 +8156,8 @@ mod tests {
             walks: 2,
             strikeouts: 15,
             rbi: 1,
+            stolen_bases: 0,
+            caught_stealing: 0,
         };
         upsert_batter_season_stats(&slot_conn, "team:a_b0", 1, &good).unwrap();
         upsert_batter_season_stats(&slot_conn, "team:a_b1", 1, &bad).unwrap();

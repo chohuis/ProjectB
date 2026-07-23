@@ -1,4 +1,4 @@
-use rand::SeedableRng;
+use rand::{Rng, SeedableRng};
 use rand_chacha::ChaCha8Rng;
 use rusqlite::{params, Connection, OptionalExtension};
 
@@ -86,6 +86,15 @@ struct SessionRow {
     opponent_pulled: bool,
     opponent_relief_pitcher_id: Option<String>,
     opponent_pitcher_batters_faced: i64,
+    /// 수동 모드 감독 개입 핑퐁 버그 수정(Phase 3, migration v15) — 특정
+    /// 투구수(`pitch_seq`)에서 "불풀"로 확정되면 그 투구수를 기록해둔다.
+    /// `run_until_decision_point`가 매 루프 패스마다 강판 소프트캡
+    /// "고려 구간" 판정을 다시 타는데, 이 값이 현재 투구수와 같으면
+    /// "이미 이 투구수에서 물어봤고 안 뽑기로 했다"로 보고 다시 안 묻는다
+    /// — 없으면 `submit_pitcher_change_decision`으로 "유지/맡기기"를
+    /// 답해도 바로 다음 `submit_pitch` 호출에서 투구수가 아직 그대로라
+    /// 또 `PitcherChangeDecision`을 돌려주는 무한 핑퐁에 빠진다.
+    pull_decision_settled_at_pitch_count: Option<i64>,
 }
 
 #[allow(clippy::type_complexity)]
@@ -116,12 +125,14 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
         i64,
         Option<String>,
         i64,
+        Option<i64>,
     )> = conn
         .query_row(
             "SELECT game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases, home_runs, away_runs,
                     home_batter_idx, away_batter_idx, balls, strikes, current_batter_id, pitch_seq, strikeouts,
                     protagonist_pulled, relief_pitcher_id, protagonist_pull_inning, protagonist_pull_opponent_runs,
-                    opponent_pulled, opponent_relief_pitcher_id, opponent_pitcher_batters_faced
+                    opponent_pulled, opponent_relief_pitcher_id, opponent_pitcher_batters_faced,
+                    pull_decision_settled_at_pitch_count
              FROM match_session WHERE id = 1",
             [],
             |r| {
@@ -151,6 +162,7 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
                     r.get(22)?,
                     r.get(23)?,
                     r.get(24)?,
+                    r.get(25)?,
                 ))
             },
         )
@@ -181,6 +193,7 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
         opponent_pulled,
         opponent_relief_pitcher_id,
         opponent_pitcher_batters_faced,
+        pull_decision_settled_at_pitch_count,
     )) = row
     else {
         return Ok(None);
@@ -212,6 +225,7 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
         opponent_pulled: opponent_pulled != 0,
         opponent_relief_pitcher_id,
         opponent_pitcher_batters_faced,
+        pull_decision_settled_at_pitch_count,
     }))
 }
 
@@ -221,7 +235,7 @@ fn save_session(conn: &Connection, s: &SessionRow) -> anyhow::Result<()> {
              home_batter_idx = ?7, away_batter_idx = ?8, balls = ?9, strikes = ?10, current_batter_id = ?11, pitch_seq = ?12,
              strikeouts = ?13, protagonist_pulled = ?14, relief_pitcher_id = ?15, protagonist_pull_inning = ?16,
              protagonist_pull_opponent_runs = ?17, opponent_pulled = ?18, opponent_relief_pitcher_id = ?19,
-             opponent_pitcher_batters_faced = ?20
+             opponent_pitcher_batters_faced = ?20, pull_decision_settled_at_pitch_count = ?21
          WHERE id = 1",
         params![
             s.inning,
@@ -244,6 +258,7 @@ fn save_session(conn: &Connection, s: &SessionRow) -> anyhow::Result<()> {
             s.opponent_pulled as i64,
             s.opponent_relief_pitcher_id,
             s.opponent_pitcher_batters_faced,
+            s.pull_decision_settled_at_pitch_count,
         ],
     )?;
     Ok(())
@@ -280,8 +295,13 @@ fn load_protagonist_pitches(conn: &Connection) -> anyhow::Result<Vec<String>> {
 /// 카운트·타자 정보를 리셋해 다음 타자를 맞을 준비를 한다.
 /// `match_sim::simulate_half_inning`의 내부 스위치와 동일한 분기를
 /// 세션 상태에 대해 재현한 것 — 로직 자체는 그쪽과 절대 갈라지지 않게
-/// 유지해야 한다(둘 다 `PaOutcome`을 공유하는 이유).
-fn apply_pa_outcome(session: &mut SessionRow, batting_team_is_home: bool, outcome: PaOutcome) {
+/// 유지해야 한다(둘 다 `PaOutcome`을 공유하는 이유). `team_speed`(Phase 3)
+/// 는 단타·2루타의 무리한 추가진루 판정(`advance_runners_realistic`)에
+/// 쓰인다 — 도루 이벤트 자체는 이 인터랙티브 경로(주인공이 직접 던지는
+/// 하프이닝)에선 스코프 밖(배경 하프이닝인 `simulate_half_inning`에만
+/// 있음, 1구 단위 루프에 끼워 넣으면 매 구마다 중복 판정될 위험이 있어
+/// 이번엔 보류 — 10_구현_Phase_계획.md 참고).
+fn apply_pa_outcome(rng: &mut impl Rng, session: &mut SessionRow, batting_team_is_home: bool, outcome: PaOutcome, team_speed: f64) {
     let runs = match outcome {
         PaOutcome::Strikeout | PaOutcome::Out => {
             session.outs += 1;
@@ -301,10 +321,9 @@ fn apply_pa_outcome(session: &mut SessionRow, batting_team_is_home: bool, outcom
                 0
             }
         }
-        PaOutcome::ReachOnError | PaOutcome::Walk | PaOutcome::HitByPitch | PaOutcome::Single => {
-            match_sim::advance_runners(&mut session.bases, 1)
-        }
-        PaOutcome::Double => match_sim::advance_runners(&mut session.bases, 2),
+        PaOutcome::ReachOnError | PaOutcome::Walk | PaOutcome::HitByPitch => match_sim::advance_runners(&mut session.bases, 1),
+        PaOutcome::Single => match_sim::advance_runners_realistic(rng, &mut session.bases, 1, session.outs as u32, team_speed),
+        PaOutcome::Double => match_sim::advance_runners_realistic(rng, &mut session.bases, 2, session.outs as u32, team_speed),
         PaOutcome::Triple => match_sim::advance_runners(&mut session.bases, 3),
         PaOutcome::HomeRun => match_sim::advance_runners(&mut session.bases, 4),
     };
@@ -588,7 +607,17 @@ fn run_until_decision_point(
             let pitcher_fatigue = load_protagonist_as_pitcher(slot_conn)?.fatigue;
             let pitches_thrown = session.pitch_seq as u32;
 
-            let pull_now = if session.mode == "수동" {
+            // 수동 모드 핑퐁 버그 수정(Phase 3, migration v15) — 이 투구수에서
+            // 이미 "불풀"로 확정된 적이 있으면 다시 안 묻는다. 없으면
+            // `submit_pitcher_change_decision`으로 "유지"/"맡기기"를 답해도
+            // 투구수(`pitch_seq`)가 아직 그대로인 채 바로 다음 `submit_pitch`
+            // 호출이 이 게이트를 처음부터 다시 타서, 소프트캡을 넘긴 채로
+            // 오래 던지는 어떤 경기든 `PitcherChangeDecision`↔`AwaitingPitch`
+            // 사이를 영원히 왕복하는 무한 루프에 빠졌다(실측 진단으로 발견).
+            let already_settled_no_pull = session.pull_decision_settled_at_pitch_count == Some(pitches_thrown as i64);
+            let pull_now = if already_settled_no_pull {
+                false
+            } else if session.mode == "수동" {
                 let prob = crate::sim::manager::pull_probability(pitches_thrown, pitcher_fatigue, manager.tactics, effective_trust);
                 if prob <= 0.0 {
                     false // 아직 고려 구간 아님 — 묻지도 않고 계속 진행.
@@ -611,6 +640,10 @@ fn run_until_decision_point(
                             // 성립하지 않는다 — 이 두 분기에서만 관계도를 조정.
                             let agreed = pulled == (prob >= 0.5);
                             repository::adjust_relationship(slot_conn, &manager_npc_id, crate::sim::manager::relationship_delta_from_pull_agreement(agreed))?;
+                            if !pulled {
+                                session.pull_decision_settled_at_pitch_count = Some(pitches_thrown as i64);
+                                save_session(slot_conn, &session)?;
+                            }
                             pulled
                         }
                         Some(_) /* "맡기기" — AI 판정에 그대로 맡김 */ => {
@@ -618,7 +651,13 @@ fn run_until_decision_point(
                                 world_seed,
                                 &format!("pull:{}:{}:{}", session.game_id, session.inning, session.top_of_inning),
                             ));
-                            crate::sim::manager::should_pull_pitcher(&mut pull_rng, pitches_thrown, pitcher_fatigue, manager.tactics, effective_trust)
+                            let pulled =
+                                crate::sim::manager::should_pull_pitcher(&mut pull_rng, pitches_thrown, pitcher_fatigue, manager.tactics, effective_trust);
+                            if !pulled {
+                                session.pull_decision_settled_at_pitch_count = Some(pitches_thrown as i64);
+                                save_session(slot_conn, &session)?;
+                            }
+                            pulled
                         }
                     }
                 }
@@ -643,6 +682,15 @@ fn run_until_decision_point(
                     session.relief_pitcher_id = Some(reliever.id);
                     session.protagonist_pull_inning = Some(session.inning);
                     session.protagonist_pull_opponent_runs = Some(opponent_runs_so_far);
+                    save_session(slot_conn, &session)?;
+                } else {
+                    // 로스터에 불펜이 아예 없어(구원투수 부재) 강판하고 싶어도
+                    // 못 하는 방어적 폴백(§6-N, `sim::match_.rs`의
+                    // `TeamPitchingPlan.reliever: None` 완투 폴백과 동일 철학) —
+                    // 이것도 "settled"로 남겨야 한다. 안 남기면 이 투구수에서
+                    // 매번 다시 강판을 시도하고 매번 불펜이 없어 실패하는
+                    // 무한 루프에 빠진다(실측 진단으로 발견, Phase 3).
+                    session.pull_decision_settled_at_pitch_count = Some(pitches_thrown as i64);
                     save_session(slot_conn, &session)?;
                 }
             }
@@ -847,14 +895,19 @@ fn run_until_decision_point(
             repository::apply_injury(slot_conn, part, severity, today)?;
         }
 
+        // 타석에 선 팀(=주인공 상대편)의 평균 주력(Phase 3) — 추가진루 판정에 씀.
+        let team_speed = match_sim::average_speed(&lineup);
+
         match outcome {
             pitch::AtBatOutcome::InProgress => {}
             pitch::AtBatOutcome::Strikeout => {
                 session.strikeouts += 1;
-                apply_pa_outcome(&mut session, batting_team_is_home, PaOutcome::Strikeout);
+                apply_pa_outcome(&mut rng, &mut session, batting_team_is_home, PaOutcome::Strikeout, team_speed);
             }
-            pitch::AtBatOutcome::Walk => apply_pa_outcome(&mut session, batting_team_is_home, PaOutcome::Walk),
-            pitch::AtBatOutcome::HitByPitch => apply_pa_outcome(&mut session, batting_team_is_home, PaOutcome::HitByPitch),
+            pitch::AtBatOutcome::Walk => apply_pa_outcome(&mut rng, &mut session, batting_team_is_home, PaOutcome::Walk, team_speed),
+            pitch::AtBatOutcome::HitByPitch => {
+                apply_pa_outcome(&mut rng, &mut session, batting_team_is_home, PaOutcome::HitByPitch, team_speed)
+            }
             pitch::AtBatOutcome::InPlay => {
                 // 수비 중인 팀은 주인공 자신의 팀(투구 중이므로, Phase 2).
                 let fielding_lineup = repository::load_batting_lineup(slot_conn, &protagonist_team_id)?;
@@ -868,7 +921,7 @@ fn run_until_decision_point(
                     team_defense,
                     high_leverage,
                 );
-                apply_pa_outcome(&mut session, batting_team_is_home, pa);
+                apply_pa_outcome(&mut rng, &mut session, batting_team_is_home, pa, team_speed);
             }
         }
         save_session(slot_conn, &session)?;
@@ -987,6 +1040,7 @@ mod tests {
             opponent_pulled: false,
             opponent_relief_pitcher_id: None,
             opponent_pitcher_batters_faced: 0,
+            pull_decision_settled_at_pitch_count: None,
         }
     }
 
@@ -1355,6 +1409,100 @@ mod tests {
 
         let pulled: i64 = slot_conn.query_row("SELECT protagonist_pulled FROM match_session WHERE id = 1", [], |r| r.get(0)).unwrap();
         assert_eq!(pulled, 0, "no auto-pull should happen until the player actually responds");
+    }
+
+    /// 감독 개입 핑퐁 무한 루프 회귀 테스트(Phase 3, migration v15, 실측
+    /// 진단으로 발견) — "유지"로 불풀을 확정해도 그 결정이 세션에 안
+    /// 남으면, 바로 다음 실제 투구 제출에서 투구수가 아직 그대로라
+    /// 강판 소프트캡 판정을 처음부터 다시 타서 `PitcherChangeDecision`을
+    /// 또 돌려주고, 그걸 다시 답해도 또 물어보는 무한 핑퐁에 빠졌다.
+    #[test]
+    fn keeping_the_pitcher_in_manual_mode_settles_the_decision_so_the_next_pitch_actually_throws() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_roster(&slot_conn, "team:home");
+        insert_reliever(&slot_conn, "team:home");
+        insert_roster(&slot_conn, "team:away");
+        insert_protagonist(&slot_conn, "team:home");
+        insert_schedule(&slot_conn, "game:1");
+
+        slot_conn
+            .execute(
+                "INSERT INTO match_session (id, game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases,
+                                             home_runs, away_runs, home_batter_idx, away_batter_idx, balls, strikes,
+                                             current_batter_id, pitch_seq, strikeouts)
+                 VALUES (1, 'game:1', 'team:home', 'team:away', 'league:hs', '수동', 1, 1, 0, '[false,false,false]',
+                         0, 0, 0, 0, 0, 0, NULL, 200, 0)",
+                [],
+            )
+            .unwrap();
+
+        let first = run_until_decision_point(&slot_conn, 1, None, None).unwrap();
+        assert!(matches!(first, MatchStepResult::PitcherChangeDecision { .. }), "got {first:?}");
+
+        // "유지"로 확정 — 버그 수정 전엔 여기서 아무 것도 세션에 안 남았다.
+        let after_keep = submit_pitcher_change_decision(&slot_conn, 1, "유지").unwrap();
+        assert!(matches!(after_keep, MatchStepResult::AwaitingPitch { .. }), "got {after_keep:?}");
+
+        let settled: Option<i64> =
+            slot_conn.query_row("SELECT pull_decision_settled_at_pitch_count FROM match_session WHERE id = 1", [], |r| r.get(0)).unwrap();
+        assert_eq!(settled, Some(200), "the no-pull decision at pitch 200 must be persisted");
+
+        // 같은 투구수(200)에서 실제 공을 제출하면 그 공은 진짜로 던져져야
+        // 한다(pitch_seq가 201로 증가) — 버그가 있었다면 이 공 자체가
+        // 던져지지도 않고 pitch_seq가 200에 멈춘 채 또 PitcherChangeDecision
+        // 만 반복됐다. (201구째도 여전히 "고려 구간"이라 그 시점에 새
+        // PitcherChangeDecision이 뜨는 것 자체는 정상 — 매 투구마다 다시
+        // 묻는 게 UX상 과함은 이미 아는 이월 이슈, 10_구현_Phase_계획.md 참고.)
+        let after_pitch = submit_pitch(&slot_conn, 1, "포심 패스트볼", Course::MidCenter).unwrap();
+        let pitch_seq: i64 = slot_conn.query_row("SELECT pitch_seq FROM match_session WHERE id = 1", [], |r| r.get(0)).unwrap();
+        assert_eq!(pitch_seq, 201, "the pitch should have actually been thrown, advancing pitch_seq — got step {after_pitch:?}");
+    }
+
+    /// 감독 개입 핑퐁 무한 루프 회귀 테스트의 두 번째 시나리오 — AI가
+    /// 강판을 원해도(하드캡 훌쩍 넘김, `should_pull_pitcher`가 무조건
+    /// true) 로스터에 불펜이 아예 없으면 강판 자체가 불발되는데, 이것도
+    /// "settled"로 안 남으면 다음 투구 제출마다 매번 다시 강판을 시도했다
+    /// 실패하는 무한 루프에 빠졌다.
+    #[test]
+    fn deferring_to_the_manager_when_no_reliever_exists_settles_the_decision_instead_of_looping() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_roster(&slot_conn, "team:home"); // insert_reliever 생략 — 불펜이 아예 없는 로스터.
+        insert_roster(&slot_conn, "team:away");
+        insert_protagonist(&slot_conn, "team:home");
+        insert_schedule(&slot_conn, "game:1");
+
+        slot_conn
+            .execute(
+                "INSERT INTO match_session (id, game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases,
+                                             home_runs, away_runs, home_batter_idx, away_batter_idx, balls, strikes,
+                                             current_batter_id, pitch_seq, strikeouts)
+                 VALUES (1, 'game:1', 'team:home', 'team:away', 'league:hs', '수동', 1, 1, 0, '[false,false,false]',
+                         0, 0, 0, 0, 0, 0, NULL, 300, 0)",
+                [],
+            )
+            .unwrap();
+
+        let first = run_until_decision_point(&slot_conn, 1, None, None).unwrap();
+        assert!(matches!(first, MatchStepResult::PitcherChangeDecision { .. }), "got {first:?}");
+
+        // "맡기기" — 300구는 하드캡을 훌쩍 넘겨 AI가 무조건 강판을 시도하지만
+        // (`should_pull_pitcher`는 확률 1.0이면 무조건 true), 불펜이 없어
+        // 실제로는 강판이 불발된다.
+        let after_defer = submit_pitcher_change_decision(&slot_conn, 1, "맡기기").unwrap();
+        assert!(matches!(after_defer, MatchStepResult::AwaitingPitch { .. }), "got {after_defer:?}");
+
+        let pulled: i64 = slot_conn.query_row("SELECT protagonist_pulled FROM match_session WHERE id = 1", [], |r| r.get(0)).unwrap();
+        assert_eq!(pulled, 0, "no reliever available means the pull can't actually happen");
+        let settled: Option<i64> =
+            slot_conn.query_row("SELECT pull_decision_settled_at_pitch_count FROM match_session WHERE id = 1", [], |r| r.get(0)).unwrap();
+        assert_eq!(settled, Some(300), "the failed-pull attempt at pitch 300 must still be persisted as settled");
+
+        // 같은 투구수(300)에서 실제 공을 제출하면 그 공은 진짜로 던져져야
+        // 한다 — 버그가 있었다면 매번 다시 강판을 시도했다 실패하며
+        // pitch_seq가 300에 멈춘 채 무한 반복됐다.
+        let after_pitch = submit_pitch(&slot_conn, 1, "포심 패스트볼", Course::MidCenter).unwrap();
+        let pitch_seq: i64 = slot_conn.query_row("SELECT pitch_seq FROM match_session WHERE id = 1", [], |r| r.get(0)).unwrap();
+        assert_eq!(pitch_seq, 301, "the pitch should have actually been thrown, advancing pitch_seq — got step {after_pitch:?}");
     }
 
     #[test]

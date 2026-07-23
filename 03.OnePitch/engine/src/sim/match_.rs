@@ -14,8 +14,10 @@ use crate::sim::manager;
 /// 클러치"). `defense`(수비)는 Phase 2에서 추가 — 타자 개인이 아니라
 /// 타석에 선 팀 전체를 대표하는 "그 팀 지금 수비 라인업의 평균 수비력"
 /// 으로 쓰인다(`resolve_in_play_result`의 `team_defense` 인자, §3
-/// "수비 전력 = 수비 스탯 가중합" 단순화). `스피드`는 Phase 3(주루)에서
-/// 쓸 예정이라 아직 필드로 안 받는다.
+/// "수비 전력 = 수비 스탯 가중합" 단순화). `speed`(스피드)는 Phase 3에서
+/// 추가 — 마찬가지로 개인이 아니라 `average_speed(lineup)`로 뽑은 "그
+/// 팀 지금 타석 라인업의 평균 주력"으로 쓰인다(추가진루·도루 판정,
+/// §9 "스피드 vs 경기운영+수비").
 #[derive(Debug, Clone)]
 pub struct BatterStats {
     pub id: String,
@@ -26,6 +28,7 @@ pub struct BatterStats {
     pub clutch: f64,
     pub composure: f64,
     pub defense: f64,
+    pub speed: f64,
 }
 
 /// `velocity`(구속)·`game_management`(경기운영)·`clutch`·`composure`는
@@ -241,11 +244,12 @@ pub(crate) fn average_defense(lineup: &[BatterStats]) -> f64 {
     lineup.iter().map(|b| b.defense).sum::<f64>() / lineup.len() as f64
 }
 
-/// 주자를 hit_bases만큼 진루시키고 득점 수를 반환. 강제진루 규칙(§9 도루,
-/// 병살 등)은 스코프 밖 — 볼넷/사구도 안타와 동일한 단순 진루 모델을 씀
-/// (기존 주자 전원 1루씩 무조건 진루) — I5 후속에서 정교화. `pub(crate)`
-/// — `data::match_session`(I6 3차분)이 주인공 등판 이닝의 주자 진루를
-/// 계산할 때 재사용.
+/// 주자를 hit_bases만큼 진루시키고 득점 수를 반환. 강제진루(볼넷·사구·
+/// 실책 출루)와 3루타·홈런(어차피 전원 홈)에 쓴다 — 이 경우들은 "더
+/// 뛸지 말지" 판단 자체가 없거나 무의미하므로 고정 진루가 정확한 모델.
+/// 단타·2루타의 "무리한 추가진루" 판단은 `advance_runners_realistic`
+/// (Phase 3)로 분리. `pub(crate)` — `data::match_session`(I6 3차분)이
+/// 주인공 등판 이닝의 주자 진루를 계산할 때 재사용.
 pub(crate) fn advance_runners(bases: &mut [bool; 3], hit_bases: u32) -> u32 {
     let mut runs = 0;
     let mut new_bases = [false; 3];
@@ -268,6 +272,69 @@ pub(crate) fn advance_runners(bases: &mut [bool; 3], hit_bases: u32) -> u32 {
     runs
 }
 
+/// 타석에 선 팀의 평균 주력(Phase 3, §9 "스피드") — 라인업 전원 단순
+/// 평균(수비력과 동일한 단순화). 지금 누가 어느 베이스에 있는지 개인별로
+/// 추적하지 않으므로(§9 "강제진루 규칙... 스코프 밖"이 남긴 단순화를
+/// 이번에도 그대로 유지), "타석에 선 팀 전체의 평균 발"로 그 이닝
+/// 주자들의 대표 스피드를 근사한다.
+pub(crate) fn average_speed(lineup: &[BatterStats]) -> f64 {
+    if lineup.is_empty() {
+        return 50.0;
+    }
+    lineup.iter().map(|b| b.speed).sum::<f64>() / lineup.len() as f64
+}
+
+/// 단타·2루타에서 주자가 한 베이스 더 무리해서 뛸 확률(Phase 3, §9) —
+/// 평균 주력이 높을수록, 아웃카운트가 2일수록(더 잃을 게 없어 과감해진다는
+/// 근사) 확률↑. D그룹 placeholder.
+fn extra_base_prob(team_speed: f64, outs: u32) -> f64 {
+    let base = 0.35 + (team_speed - 50.0) * 0.006;
+    let outs_bonus = if outs == 2 { 0.15 } else { 0.0 };
+    clamp01(base + outs_bonus)
+}
+
+/// `advance_runners`와 달리 단타·2루타에서만 쓴다(3루타·홈런은 이미
+/// 전원 홈이라 "더 뛸지" 판단 자체가 없음) — 이미 베이스에 있던 주자
+/// 각자가 `extra_base_prob`로 한 베이스씩 더 뛸지 개별 판정한다. 타자
+/// 본인은 항상 `hit_bases`까지만(자기 타구로 자기 자신이 무리하게 더
+/// 뛰는 건 이번 스코프 밖).
+pub(crate) fn advance_runners_realistic(rng: &mut impl Rng, bases: &mut [bool; 3], hit_bases: u32, outs: u32, team_speed: f64) -> u32 {
+    let mut runs = 0;
+    let mut new_bases = [false; 3];
+    for i in (0..3).rev() {
+        if bases[i] {
+            let mut advance = hit_bases;
+            if rng.gen::<f64>() < extra_base_prob(team_speed, outs) {
+                advance += 1;
+            }
+            let pos = (i as u32 + 1) + advance;
+            if pos >= 4 {
+                runs += 1;
+            } else {
+                new_bases[(pos - 1) as usize] = true;
+            }
+        }
+    }
+    new_bases[(hit_bases - 1) as usize] = true;
+    *bases = new_bases;
+    runs
+}
+
+/// 도루 시도 판정(Phase 3, §9 "도루") — 1루 주자만 대상(2·3루 동시 도루는
+/// 스코프 밖). 시도 자체도 스피드에 비례(느린 팀은 거의 안 뜀). 성공률은
+/// 스피드 vs 투수 "경기운영"(견제 흡수, §10)·수비 중인 팀의 평균 수비력
+/// (포수 대리)로 판정. `None`=시도 안 함, `Some(true)`=성공, `Some(false)`
+/// =실패(도루사). D그룹 placeholder.
+pub(crate) fn attempt_steal(rng: &mut impl Rng, team_speed: f64, pitcher_game_management: f64, team_defense: f64) -> Option<bool> {
+    let attempt_prob = clamp01((team_speed - 50.0) * 0.01 + 0.1);
+    if !rng.gen_bool(attempt_prob) {
+        return None;
+    }
+    let success_prob =
+        clamp01(0.65 + (team_speed - 50.0) * 0.004 - (pitcher_game_management - 50.0) * 0.002 - (team_defense - 50.0) * 0.002);
+    Some(rng.gen_bool(success_prob))
+}
+
 /// 투수 개인 경기 기록(`season_stats` 적재용, 10_구현_Phase_계획.md §6-N).
 /// `unearned_runs`(비자책점)·`errors`는 Phase 2에서 추가(§12 "자책점/
 /// 비자책점 구분... ERA 등 투수 기록의 정확성에 필수") — `ReachOnError`가
@@ -287,7 +354,7 @@ pub struct PitcherGameStats {
 }
 
 /// 타자 개인 경기 기록(`season_stats` 적재용) — HBP는 투수 쪽과 동일하게
-/// 무시.
+/// 무시. `stolen_bases`·`caught_stealing`은 Phase 3에서 추가(§9 "도루").
 #[derive(Debug, Default, Clone, PartialEq)]
 pub struct BatterGameStats {
     pub plate_appearances: u32,
@@ -299,6 +366,8 @@ pub struct BatterGameStats {
     pub walks: u32,
     pub strikeouts: u32,
     pub rbi: u32,
+    pub stolen_bases: u32,
+    pub caught_stealing: u32,
 }
 
 /// 하프이닝 1회 분량의 누산기 — 그 이닝에서 던진 투수 1명 + 타석에 선 타자
@@ -335,7 +404,37 @@ pub(crate) fn simulate_half_inning(
     let mut outs = 0;
     let mut bases = initial_bases;
     let mut runs = 0;
+    let team_speed = average_speed(lineup);
+    // 1루 주자의 "지금 이 사람이 누구인지"만 곁다리로 추적(Phase 3, §9
+    // 도루) — `bases`는 여전히 점유 여부만 담는 단순 모델이라 2·3루로
+    // 넘어간 뒤에는 신원을 놓친다(도루는 1루→2루만 다루므로 이거면 충분).
+    let mut runner_on_first_id: Option<String> = None;
     while outs < 3 {
+        // 도루 시도(§9) — 다음 타자의 타석이 시작되기 전, 1루에 주자가
+        // 있고 2루가 비어 있을 때만. 성공/실패 모두 그 자리에서 아웃카운트·
+        // 베이스 상태를 바로 반영하고, 실패해 3아웃이 차면 이 하프이닝은
+        // 그 타자를 상대해보지도 못하고 끝난다(실제 야구와 동일).
+        if bases[0] && !bases[1] {
+            if let Some(runner_id) = runner_on_first_id.clone() {
+                if let Some(success) = attempt_steal(rng, team_speed, pitcher.game_management, team_defense) {
+                    let line = stats.batters.entry(runner_id).or_default();
+                    if success {
+                        bases[0] = false;
+                        bases[1] = true;
+                        line.stolen_bases += 1;
+                    } else {
+                        bases[0] = false;
+                        outs += 1;
+                        line.caught_stealing += 1;
+                    }
+                    runner_on_first_id = None;
+                    if outs >= 3 {
+                        break;
+                    }
+                }
+            }
+        }
+
         let batter = &lineup[*batter_idx % lineup.len()];
         *batter_idx += 1;
         let bases_loaded = bases.iter().all(|&b| b);
@@ -359,12 +458,21 @@ pub(crate) fn simulate_half_inning(
                     0
                 }
             }
-            PaOutcome::ReachOnError | PaOutcome::Walk | PaOutcome::HitByPitch | PaOutcome::Single => advance_runners(&mut bases, 1),
-            PaOutcome::Double => advance_runners(&mut bases, 2),
+            PaOutcome::ReachOnError | PaOutcome::Walk | PaOutcome::HitByPitch => advance_runners(&mut bases, 1),
+            PaOutcome::Single => advance_runners_realistic(rng, &mut bases, 1, outs, team_speed),
+            PaOutcome::Double => advance_runners_realistic(rng, &mut bases, 2, outs, team_speed),
             PaOutcome::Triple => advance_runners(&mut bases, 3),
             PaOutcome::HomeRun => advance_runners(&mut bases, 4),
         };
         runs += pa_runs;
+        // 1루 주자 신원 갱신 — 병살로 1루가 비거나, 새로 누군가 1루에
+        // 도착했으면 그 타자로 교체. 그 외(아웃·희생플라이 등 1루를 안
+        // 건드리는 결과)는 기존 주자가 계속 1루에 남아있으므로 그대로 둔다.
+        if !bases[0] {
+            runner_on_first_id = None;
+        } else if matches!(outcome, PaOutcome::Walk | PaOutcome::HitByPitch | PaOutcome::ReachOnError | PaOutcome::Single) {
+            runner_on_first_id = Some(batter.id.clone());
+        }
 
         match outcome {
             PaOutcome::Strikeout => {
@@ -480,6 +588,8 @@ fn merge_batter_stats(mut a: HashMap<String, BatterGameStats>, b: HashMap<String
         entry.walks += s.walks;
         entry.strikeouts += s.strikeouts;
         entry.rbi += s.rbi;
+        entry.stolen_bases += s.stolen_bases;
+        entry.caught_stealing += s.caught_stealing;
     }
     a
 }
@@ -630,7 +740,7 @@ mod tests {
     use rand_chacha::ChaCha8Rng;
 
     fn avg_batter() -> BatterStats {
-        BatterStats { id: "b".to_string(), contact: 50.0, eye: 50.0, power: 50.0, fatigue: 0.0, clutch: 50.0, composure: 50.0, defense: 50.0 }
+        BatterStats { id: "b".to_string(), contact: 50.0, eye: 50.0, power: 50.0, fatigue: 0.0, clutch: 50.0, composure: 50.0, defense: 50.0, speed: 50.0 }
     }
     fn avg_pitcher() -> PitcherStats {
         PitcherStats { id: "p".to_string(), control: 50.0, stuff: 50.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0 }
@@ -767,9 +877,9 @@ mod tests {
     #[test]
     fn stronger_batting_lineup_scores_more_on_average() {
         let weak_lineup: Vec<BatterStats> =
-            (0..8).map(|i| BatterStats { id: format!("w{i}"), contact: 25.0, eye: 25.0, power: 25.0, fatigue: 0.0, clutch: 50.0, composure: 50.0, defense: 50.0 }).collect();
+            (0..8).map(|i| BatterStats { id: format!("w{i}"), contact: 25.0, eye: 25.0, power: 25.0, fatigue: 0.0, clutch: 50.0, composure: 50.0, defense: 50.0, speed: 50.0 }).collect();
         let strong_lineup: Vec<BatterStats> =
-            (0..8).map(|i| BatterStats { id: format!("s{i}"), contact: 75.0, eye: 75.0, power: 75.0, fatigue: 0.0, clutch: 50.0, composure: 50.0, defense: 50.0 }).collect();
+            (0..8).map(|i| BatterStats { id: format!("s{i}"), contact: 75.0, eye: 75.0, power: 75.0, fatigue: 0.0, clutch: 50.0, composure: 50.0, defense: 50.0, speed: 50.0 }).collect();
 
         let mut weak_total = 0u32;
         let mut strong_total = 0u32;
@@ -788,9 +898,9 @@ mod tests {
     fn amateur_cold_game_stops_before_nine_innings_on_blowout() {
         // extreme mismatch should trigger the 5-inning/15-run cold-game rule at least sometimes
         let elite: Vec<BatterStats> =
-            (0..8).map(|i| BatterStats { id: format!("e{i}"), contact: 80.0, eye: 80.0, power: 80.0, fatigue: 0.0, clutch: 50.0, composure: 50.0, defense: 50.0 }).collect();
+            (0..8).map(|i| BatterStats { id: format!("e{i}"), contact: 80.0, eye: 80.0, power: 80.0, fatigue: 0.0, clutch: 50.0, composure: 50.0, defense: 50.0, speed: 50.0 }).collect();
         let hapless: Vec<BatterStats> =
-            (0..8).map(|i| BatterStats { id: format!("h{i}"), contact: 20.0, eye: 20.0, power: 20.0, fatigue: 0.0, clutch: 50.0, composure: 50.0, defense: 50.0 }).collect();
+            (0..8).map(|i| BatterStats { id: format!("h{i}"), contact: 20.0, eye: 20.0, power: 20.0, fatigue: 0.0, clutch: 50.0, composure: 50.0, defense: 50.0, speed: 50.0 }).collect();
         let elite_pitcher = PitcherStats { id: "ep".to_string(), control: 80.0, stuff: 80.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0 };
         let hapless_pitcher = PitcherStats { id: "hp".to_string(), control: 20.0, stuff: 20.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0 };
 
@@ -820,7 +930,7 @@ mod tests {
     #[test]
     fn high_fatigue_players_accumulate_injuries_over_many_games() {
         let lineup: Vec<BatterStats> =
-            (0..8).map(|i| BatterStats { id: format!("fb{i}"), contact: 50.0, eye: 50.0, power: 50.0, fatigue: 200.0, clutch: 50.0, composure: 50.0, defense: 50.0 }).collect();
+            (0..8).map(|i| BatterStats { id: format!("fb{i}"), contact: 50.0, eye: 50.0, power: 50.0, fatigue: 200.0, clutch: 50.0, composure: 50.0, defense: 50.0, speed: 50.0 }).collect();
         let pitcher = PitcherStats { id: "fp".to_string(), control: 50.0, stuff: 50.0, fatigue: 200.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0 };
 
         let mut total_injuries = 0usize;
@@ -1003,5 +1113,86 @@ mod tests {
     #[test]
     fn average_defense_falls_back_to_neutral_for_an_empty_lineup() {
         assert_eq!(average_defense(&[]), 50.0);
+    }
+
+    #[test]
+    fn average_speed_falls_back_to_neutral_for_an_empty_lineup() {
+        assert_eq!(average_speed(&[]), 50.0);
+    }
+
+    #[test]
+    fn faster_teams_take_the_extra_base_more_often_on_a_single() {
+        let count_extra_base_scores = |team_speed: f64| -> u32 {
+            let mut scores = 0;
+            for seed in 0..2000u64 {
+                let mut rng = ChaCha8Rng::seed_from_u64(seed);
+                // 2루 주자 + 단타 — 기본 진루는 3루까지, 추가진루(홈)만 득점으로 잡힌다.
+                let mut bases = [false, true, false];
+                let runs = advance_runners_realistic(&mut rng, &mut bases, 1, 0, team_speed);
+                scores += runs;
+            }
+            scores
+        };
+        let slow_scores = count_extra_base_scores(20.0);
+        let fast_scores = count_extra_base_scores(80.0);
+        assert!(fast_scores > slow_scores, "fast={fast_scores} slow={slow_scores}");
+    }
+
+    #[test]
+    fn attempt_steal_never_fires_for_a_very_slow_team() {
+        let mut none_count = 0;
+        for seed in 0..500u64 {
+            let mut rng = ChaCha8Rng::seed_from_u64(seed);
+            if attempt_steal(&mut rng, 0.0, 50.0, 50.0).is_none() {
+                none_count += 1;
+            }
+        }
+        assert!(none_count > 450, "a team with 0 speed should almost never attempt a steal, got {none_count}/500 no-attempts");
+    }
+
+    #[test]
+    fn attempt_steal_fires_often_for_a_very_fast_team() {
+        let some_count = (0..500u64)
+            .filter(|&seed| {
+                let mut rng = ChaCha8Rng::seed_from_u64(seed);
+                attempt_steal(&mut rng, 100.0, 50.0, 50.0).is_some()
+            })
+            .count();
+        assert!(some_count > 0, "a team with 100 speed should attempt steals at least sometimes");
+    }
+
+    #[test]
+    fn higher_pitcher_game_management_lowers_the_steal_success_rate() {
+        let count_successes = |game_management: f64| -> u32 {
+            let mut successes = 0;
+            for seed in 0..3000u64 {
+                let mut rng = ChaCha8Rng::seed_from_u64(seed);
+                if attempt_steal(&mut rng, 90.0, game_management, 50.0) == Some(true) {
+                    successes += 1;
+                }
+            }
+            successes
+        };
+        let low_gm_successes = count_successes(20.0);
+        let high_gm_successes = count_successes(80.0);
+        assert!(low_gm_successes > high_gm_successes, "low_gm={low_gm_successes} high_gm={high_gm_successes}");
+    }
+
+    #[test]
+    fn simulate_half_inning_records_stolen_bases_over_many_games_with_a_fast_lineup() {
+        // 빠른 팀(스피드 90) vs 평범한 투수 — 여러 하프이닝을 굴려 도루가
+        // 실제로 발생하고 season_stats 라인에 기록되는지 확인.
+        let fast_lineup: Vec<BatterStats> = (0..8).map(|i| BatterStats { id: format!("b{i}"), speed: 90.0, ..avg_batter() }).collect();
+        let pitcher = avg_pitcher();
+        let mut total_sb = 0u32;
+        for seed in 0..300u64 {
+            let mut rng = ChaCha8Rng::seed_from_u64(seed);
+            let mut idx = 0usize;
+            let mut injuries = Vec::new();
+            let mut stats = HalfInningStats::default();
+            simulate_half_inning(&mut rng, &fast_lineup, &mut idx, &pitcher, EMPTY_BASES, false, 50.0, &mut injuries, &mut stats);
+            total_sb += stats.batters.values().map(|b| b.stolen_bases).sum::<u32>();
+        }
+        assert!(total_sb > 0, "expected at least one stolen base across 300 half-innings with a fast lineup");
     }
 }

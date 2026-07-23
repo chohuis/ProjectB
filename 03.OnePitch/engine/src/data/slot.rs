@@ -308,6 +308,25 @@ fn migration_v14(tx: &Transaction) -> anyhow::Result<()> {
     Ok(())
 }
 
+const V15_DDL: &str = r#"
+ALTER TABLE match_session ADD COLUMN pull_decision_settled_at_pitch_count INTEGER;
+"#;
+
+/// 수동 모드 감독 개입 무한 루프 버그 수정(Phase 3, 매치엔진 리얼리즘
+/// 강화 실측 진단 중 발견) — `submit_pitcher_change_decision`으로
+/// "유지"/"맡기기(불풀)"을 확정해도 그 판단이 세션에 안 남아, 바로 다음
+/// `submit_pitch` 호출에서 투구수(`pitch_seq`)가 아직 그대로라 강판
+/// 소프트캡 "고려 구간" 판정을 처음부터 다시 타서 또 `PitcherChangeDecision`
+/// 을 돌려주고, 그걸 다시 답해도 또 `AwaitingPitch`로 돌아오는 핑퐁이
+/// 무한 반복됐다(만루 세이브 상황에서만 아니라, 소프트캡 넘긴 채로
+/// 오래 던지는 어떤 경기든 재현 가능). 이번 투구수 값으로 "불풀 확정"을
+/// 세션에 남겨 같은 투구수에서는 다시 안 묻게 한다.
+fn migration_v15(tx: &Transaction) -> anyhow::Result<()> {
+    tx.execute_batch(V15_DDL)?;
+    tx.execute("UPDATE meta SET save_version = 15", [])?;
+    Ok(())
+}
+
 const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 1,
@@ -365,6 +384,10 @@ const MIGRATIONS: &[Migration] = &[
         version: 14,
         up: migration_v14,
     },
+    Migration {
+        version: 15,
+        up: migration_v15,
+    },
 ];
 
 fn init(mut conn: Connection) -> anyhow::Result<Connection> {
@@ -392,7 +415,7 @@ mod tests {
         let save_version: i64 = conn
             .query_row("SELECT save_version FROM meta", [], |row| row.get(0))
             .unwrap();
-        assert_eq!(save_version, 14);
+        assert_eq!(save_version, 15);
     }
 
     #[test]
@@ -537,6 +560,26 @@ mod tests {
         assert_eq!(pulled, 1);
         assert_eq!(relief.as_deref(), Some("npc:relief"));
         assert_eq!(faced, 5);
+    }
+
+    #[test]
+    fn v15_adds_pull_decision_settled_column_to_match_session() {
+        let conn = open_in_memory().unwrap();
+        conn.execute(
+            "INSERT INTO match_session (id, game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases,
+                                         home_runs, away_runs, home_batter_idx, away_batter_idx, balls, strikes, current_batter_id)
+             VALUES (1, 'g', 'h', 'a', 'league:pro', '수동', 1, 1, 0, '[false,false,false]', 0, 0, 0, 0, 0, 0, NULL)",
+            [],
+        )
+        .unwrap();
+        let settled: Option<i64> =
+            conn.query_row("SELECT pull_decision_settled_at_pitch_count FROM match_session WHERE id = 1", [], |r| r.get(0)).unwrap();
+        assert_eq!(settled, None);
+
+        conn.execute("UPDATE match_session SET pull_decision_settled_at_pitch_count = 91 WHERE id = 1", []).unwrap();
+        let settled: Option<i64> =
+            conn.query_row("SELECT pull_decision_settled_at_pitch_count FROM match_session WHERE id = 1", [], |r| r.get(0)).unwrap();
+        assert_eq!(settled, Some(91));
     }
 
     #[test]
