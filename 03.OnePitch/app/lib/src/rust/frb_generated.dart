@@ -67,7 +67,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.12.0';
 
   @override
-  int get rustContentHash => 461145972;
+  int get rustContentHash => -302671845;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -138,6 +138,8 @@ abstract class RustLibApi extends BaseApi {
   List<String> crateApiGameHometownRegionNames();
 
   Future<void> crateApiSimpleInitApp();
+
+  Future<LearnablePitchesInfo> crateApiGameLearnablePitches();
 
   Future<List<HsSchoolDetail>> crateApiGameListHsSchoolDetails({
     required String contentDbPath,
@@ -971,6 +973,33 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "init_app", argNames: []);
 
   @override
+  Future<LearnablePitchesInfo> crateApiGameLearnablePitches() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 29,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_learnable_pitches_info,
+          decodeErrorData: sse_decode_AnyhowException,
+        ),
+        constMeta: kCrateApiGameLearnablePitchesConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiGameLearnablePitchesConstMeta =>
+      const TaskConstMeta(debugName: "learnable_pitches", argNames: []);
+
+  @override
   Future<List<HsSchoolDetail>> crateApiGameListHsSchoolDetails({
     required String contentDbPath,
   }) {
@@ -982,7 +1011,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 29,
+            funcId: 30,
             port: port_,
           );
         },
@@ -1015,7 +1044,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 30,
+            funcId: 31,
             port: port_,
           );
         },
@@ -1047,7 +1076,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 31,
+            funcId: 32,
             port: port_,
           );
         },
@@ -1075,7 +1104,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 32,
+            funcId: 33,
             port: port_,
           );
         },
@@ -1105,7 +1134,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 33,
+            funcId: 34,
             port: port_,
           );
         },
@@ -1133,7 +1162,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 34,
+            funcId: 35,
             port: port_,
           );
         },
@@ -1165,7 +1194,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 35,
+            funcId: 36,
             port: port_,
           );
         },
@@ -1195,7 +1224,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 36,
+            funcId: 37,
             port: port_,
           );
         },
@@ -1219,7 +1248,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 37)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 38)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_u_32,
@@ -1261,7 +1290,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 38,
+            funcId: 39,
             port: port_,
           );
         },
@@ -1308,7 +1337,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 39,
+            funcId: 40,
             port: port_,
           );
         },
@@ -1332,7 +1361,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 40)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 41)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_list_pitcher_archetype_info,
@@ -1364,7 +1393,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 41,
+            funcId: 42,
             port: port_,
           );
         },
@@ -1399,7 +1428,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 42,
+            funcId: 43,
             port: port_,
           );
         },
@@ -1443,7 +1472,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 43,
+            funcId: 44,
             port: port_,
           );
         },
@@ -1502,7 +1531,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 44,
+            funcId: 45,
             port: port_,
           );
         },
@@ -1542,7 +1571,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 45)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 46)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_list_String,
@@ -1567,7 +1596,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_String(severity, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 46)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 47)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_list_treatment_option,
@@ -1624,6 +1653,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   PlatformInt64 dco_decode_box_autoadd_i_64(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_i_64(raw);
+  }
+
+  @protected
+  LockedPitchInfo dco_decode_box_autoadd_locked_pitch_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_locked_pitch_info(raw);
   }
 
   @protected
@@ -1787,6 +1822,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  LearnablePitchesInfo dco_decode_learnable_pitches_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return LearnablePitchesInfo(
+      eligible: dco_decode_list_String(arr[0]),
+      nextCandidate: dco_decode_opt_box_autoadd_locked_pitch_info(arr[1]),
+    );
+  }
+
+  @protected
   List<String> dco_decode_list_String(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return (raw as List<dynamic>).map(dco_decode_String).toList();
@@ -1848,6 +1895,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   List<PendingActionInfo> dco_decode_list_pending_action_info(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return (raw as List<dynamic>).map(dco_decode_pending_action_info).toList();
+  }
+
+  @protected
+  List<PitchRequirementInfo> dco_decode_list_pitch_requirement_info(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>)
+        .map(dco_decode_pitch_requirement_info)
+        .toList();
   }
 
   @protected
@@ -1921,6 +1978,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  LockedPitchInfo dco_decode_locked_pitch_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return LockedPitchInfo(
+      name: dco_decode_String(arr[0]),
+      requirements: dco_decode_list_pitch_requirement_info(arr[1]),
+    );
+  }
+
+  @protected
   MatchStepInfo dco_decode_match_step_info(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     switch (raw[0]) {
@@ -1982,6 +2051,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  LockedPitchInfo? dco_decode_opt_box_autoadd_locked_pitch_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_locked_pitch_info(raw);
+  }
+
+  @protected
   MatchStepInfo? dco_decode_opt_box_autoadd_match_step_info(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw == null ? null : dco_decode_box_autoadd_match_step_info(raw);
@@ -2025,6 +2100,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       urgency: dco_decode_String(arr[2]),
       createdDay: dco_decode_i_64(arr[3]),
       payloadJson: dco_decode_String(arr[4]),
+    );
+  }
+
+  @protected
+  PitchRequirementInfo dco_decode_pitch_requirement_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 4)
+      throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
+    return PitchRequirementInfo(
+      stat: dco_decode_String(arr[0]),
+      minValue: dco_decode_f_64(arr[1]),
+      currentValue: dco_decode_f_64(arr[2]),
+      met: dco_decode_bool(arr[3]),
     );
   }
 
@@ -2276,6 +2365,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  LockedPitchInfo sse_decode_box_autoadd_locked_pitch_info(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_locked_pitch_info(deserializer));
+  }
+
+  @protected
   MatchStepInfo sse_decode_box_autoadd_match_step_info(
     SseDeserializer deserializer,
   ) {
@@ -2456,6 +2553,21 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  LearnablePitchesInfo sse_decode_learnable_pitches_info(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_eligible = sse_decode_list_String(deserializer);
+    var var_nextCandidate = sse_decode_opt_box_autoadd_locked_pitch_info(
+      deserializer,
+    );
+    return LearnablePitchesInfo(
+      eligible: var_eligible,
+      nextCandidate: var_nextCandidate,
+    );
+  }
+
+  @protected
   List<String> sse_decode_list_String(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
 
@@ -2587,6 +2699,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var ans_ = <PendingActionInfo>[];
     for (var idx_ = 0; idx_ < len_; ++idx_) {
       ans_.add(sse_decode_pending_action_info(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<PitchRequirementInfo> sse_decode_list_pitch_requirement_info(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <PitchRequirementInfo>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_pitch_requirement_info(deserializer));
     }
     return ans_;
   }
@@ -2726,6 +2852,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  LockedPitchInfo sse_decode_locked_pitch_info(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_name = sse_decode_String(deserializer);
+    var var_requirements = sse_decode_list_pitch_requirement_info(deserializer);
+    return LockedPitchInfo(name: var_name, requirements: var_requirements);
+  }
+
+  @protected
   MatchStepInfo sse_decode_match_step_info(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
 
@@ -2814,6 +2948,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  LockedPitchInfo? sse_decode_opt_box_autoadd_locked_pitch_info(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_locked_pitch_info(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
   MatchStepInfo? sse_decode_opt_box_autoadd_match_step_info(
     SseDeserializer deserializer,
   ) {
@@ -2881,6 +3028,23 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       urgency: var_urgency,
       createdDay: var_createdDay,
       payloadJson: var_payloadJson,
+    );
+  }
+
+  @protected
+  PitchRequirementInfo sse_decode_pitch_requirement_info(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_stat = sse_decode_String(deserializer);
+    var var_minValue = sse_decode_f_64(deserializer);
+    var var_currentValue = sse_decode_f_64(deserializer);
+    var var_met = sse_decode_bool(deserializer);
+    return PitchRequirementInfo(
+      stat: var_stat,
+      minValue: var_minValue,
+      currentValue: var_currentValue,
+      met: var_met,
     );
   }
 
@@ -3169,6 +3333,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_box_autoadd_locked_pitch_info(
+    LockedPitchInfo self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_locked_pitch_info(self, serializer);
+  }
+
+  @protected
   void sse_encode_box_autoadd_match_step_info(
     MatchStepInfo self,
     SseSerializer serializer,
@@ -3317,6 +3490,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_learnable_pitches_info(
+    LearnablePitchesInfo self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_list_String(self.eligible, serializer);
+    sse_encode_opt_box_autoadd_locked_pitch_info(
+      self.nextCandidate,
+      serializer,
+    );
+  }
+
+  @protected
   void sse_encode_list_String(List<String> self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_i_32(self.length, serializer);
@@ -3427,6 +3613,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_i_32(self.length, serializer);
     for (final item in self) {
       sse_encode_pending_action_info(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_pitch_requirement_info(
+    List<PitchRequirementInfo> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_pitch_requirement_info(item, serializer);
     }
   }
 
@@ -3559,6 +3757,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_locked_pitch_info(
+    LockedPitchInfo self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.name, serializer);
+    sse_encode_list_pitch_requirement_info(self.requirements, serializer);
+  }
+
+  @protected
   void sse_encode_match_step_info(
     MatchStepInfo self,
     SseSerializer serializer,
@@ -3649,6 +3857,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_opt_box_autoadd_locked_pitch_info(
+    LockedPitchInfo? self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_locked_pitch_info(self, serializer);
+    }
+  }
+
+  @protected
   void sse_encode_opt_box_autoadd_match_step_info(
     MatchStepInfo? self,
     SseSerializer serializer,
@@ -3711,6 +3932,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_String(self.urgency, serializer);
     sse_encode_i_64(self.createdDay, serializer);
     sse_encode_String(self.payloadJson, serializer);
+  }
+
+  @protected
+  void sse_encode_pitch_requirement_info(
+    PitchRequirementInfo self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.stat, serializer);
+    sse_encode_f_64(self.minValue, serializer);
+    sse_encode_f_64(self.currentValue, serializer);
+    sse_encode_bool(self.met, serializer);
   }
 
   @protected

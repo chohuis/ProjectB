@@ -40,6 +40,46 @@ pub fn is_valid_second_pitch(archetype: &str, pitch: &str) -> anyhow::Result<boo
     Ok(full_second_pitch_pool(archetype)?.contains(&pitch))
 }
 
+/// 구종별 습득 조건([05_구종_시스템](../../../02_기획/육성코어/05_구종_시스템.md)
+/// §3 "습득 조건: 관련 능력치 임계 이상") — 시작 구종(포심 패스트볼)은
+/// 항상 보유하므로 여기 없음. 조건 개수 자체로 난이도 계단을 매김(대화
+/// 2026-07-25): 1조건 4종·2조건 4종·너클볼만 4조건. 임계값은 시작 스탯
+/// 밴드(20~35, `LOWER_BAND`~`UPPER_BAND`)와 성장 상한(80)을 기준으로
+/// 계단화 — 낮은 임계는 시작 시점에 이미 손이 닿고, 높은 임계(스위퍼·
+/// 포크볼·너클볼)는 실제 성장을 요구한다. 한 구종의 조건은 전부 AND로
+/// 충족해야 한다.
+const PITCH_ACQUISITION_REQUIREMENTS: &[(&str, &[(&str, f64)])] = &[
+    ("투심 패스트볼", &[("구위", 25.0)]),
+    ("커터", &[("구위", 30.0)]),
+    ("슬라이더", &[("제구", 30.0)]),
+    ("체인지업", &[("구위", 30.0)]),
+    ("커브", &[("제구", 35.0), ("경기운영", 30.0)]),
+    // 싱커=땅볼 유도·경기운영 시너지(§4)를 습득 조건에도 반영.
+    ("싱커", &[("구위", 35.0), ("경기운영", 35.0)]),
+    ("스위퍼", &[("제구", 40.0), ("구위", 35.0)]),
+    // 팔꿈치 부담이 큰 구종이라 체력을 함께 요구.
+    ("포크볼", &[("구위", 40.0), ("체력", 35.0)]),
+    // 특수구(이질적 메커니즘, §1) — 다방면 능력치를 종합적으로 요구하는
+    // 유일한 4조건 구종.
+    ("너클볼", &[("제구", 55.0), ("구위", 40.0), ("침착함", 40.0), ("경기운영", 45.0)]),
+];
+
+/// `pitch`의 습득 조건 목록(스탯명, 임계값) — 시작 구종이거나 알 수 없는
+/// 이름이면 빈 슬라이스.
+pub fn pitch_acquisition_requirements(pitch: &str) -> &'static [(&'static str, f64)] {
+    PITCH_ACQUISITION_REQUIREMENTS.iter().find(|(name, _)| *name == pitch).map(|(_, reqs)| *reqs).unwrap_or(&[])
+}
+
+/// `pitch`를 지금 스탯으로 신규 습득할 수 있는지 — 조건이 없는 이름(포심
+/// 포함)은 항상 `false`(신규 습득 대상이 아님), 있으면 전 조건 AND 충족.
+pub fn is_pitch_acquirable(pitch: &str, stats: &Map<String, Value>) -> bool {
+    let reqs = pitch_acquisition_requirements(pitch);
+    if reqs.is_empty() {
+        return false;
+    }
+    reqs.iter().all(|(stat, min)| stats.get(*stat).and_then(Value::as_f64).is_some_and(|v| v >= *min))
+}
+
 /// 화면에 보여줄 2구종 후보 목록 — §6 "제구형은 3~4개 제시, 나머지는 2개
 /// 그대로". 코치 가중("학교 코치 보너스가 후보 노출 확률에 반영")은 스태프
 /// 시스템이 아직 없어(I3에서 스코프 아웃) 균등 랜덤으로 단순화 —
@@ -190,6 +230,68 @@ mod tests {
                 let candidates = second_pitch_candidates(&mut rng, archetype).unwrap();
                 assert!(!candidates.contains(&"너클볼".to_string()));
             }
+        }
+    }
+
+    fn stats_with(overrides: &[(&str, f64)]) -> Map<String, Value> {
+        let mut stats = Map::new();
+        for stat in PITCHER_EXPOSED {
+            stats.insert(stat.to_string(), json!(20.0));
+        }
+        for (stat, v) in overrides {
+            stats.insert(stat.to_string(), json!(*v));
+        }
+        stats
+    }
+
+    #[test]
+    fn starting_pitch_has_no_acquisition_requirement_and_is_never_acquirable() {
+        assert!(pitch_acquisition_requirements("포심 패스트볼").is_empty());
+        assert!(!is_pitch_acquirable("포심 패스트볼", &stats_with(&[])));
+    }
+
+    #[test]
+    fn single_requirement_pitch_is_acquirable_once_its_one_stat_clears_the_bar() {
+        assert_eq!(pitch_acquisition_requirements("투심 패스트볼"), &[("구위", 25.0)]);
+        assert!(!is_pitch_acquirable("투심 패스트볼", &stats_with(&[("구위", 24.9)])));
+        assert!(is_pitch_acquirable("투심 패스트볼", &stats_with(&[("구위", 25.0)])));
+    }
+
+    #[test]
+    fn two_requirement_pitch_needs_both_stats_and_partial_credit_is_not_enough() {
+        assert_eq!(pitch_acquisition_requirements("커브"), &[("제구", 35.0), ("경기운영", 30.0)]);
+        assert!(!is_pitch_acquirable("커브", &stats_with(&[("제구", 35.0)])), "경기운영 미달인데 통과하면 안 됨");
+        assert!(!is_pitch_acquirable("커브", &stats_with(&[("경기운영", 30.0)])), "제구 미달인데 통과하면 안 됨");
+        assert!(is_pitch_acquirable("커브", &stats_with(&[("제구", 35.0), ("경기운영", 30.0)])));
+    }
+
+    #[test]
+    fn knuckleball_requires_all_four_of_its_stats() {
+        let reqs = pitch_acquisition_requirements("너클볼");
+        assert_eq!(reqs, &[("제구", 55.0), ("구위", 40.0), ("침착함", 40.0), ("경기운영", 45.0)]);
+        assert!(
+            !is_pitch_acquirable("너클볼", &stats_with(&[("제구", 55.0), ("구위", 40.0), ("침착함", 40.0)])),
+            "경기운영 하나만 미달이어도 거부해야 함"
+        );
+        assert!(is_pitch_acquirable("너클볼", &stats_with(&[("제구", 55.0), ("구위", 40.0), ("침착함", 40.0), ("경기운영", 45.0)])));
+    }
+
+    #[test]
+    fn every_non_starter_catalog_pitch_has_a_requirement_entry_matching_the_planned_condition_count() {
+        let expected_counts = [
+            ("투심 패스트볼", 1),
+            ("커터", 1),
+            ("슬라이더", 1),
+            ("체인지업", 1),
+            ("커브", 2),
+            ("싱커", 2),
+            ("스위퍼", 2),
+            ("포크볼", 2),
+            ("너클볼", 4),
+        ];
+        for (pitch, count) in expected_counts {
+            let reqs = pitch_acquisition_requirements(pitch);
+            assert_eq!(reqs.len(), count, "{pitch} expected {count} requirement(s), got {}", reqs.len());
         }
     }
 }

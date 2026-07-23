@@ -38,7 +38,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.12.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 461145972;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -302671845;
 
 // Section: executor
 
@@ -975,6 +975,40 @@ fn wire__crate__api__simple__init_app_impl(
         },
     )
 }
+fn wire__crate__api__game__learnable_pitches_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "learnable_pitches",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            move |context| {
+                transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
+                    (move || {
+                        let output_ok = crate::api::game::learnable_pitches()?;
+                        Ok(output_ok)
+                    })(),
+                )
+            }
+        },
+    )
+}
 fn wire__crate__api__game__list_hs_school_details_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -1845,6 +1879,19 @@ impl SseDecode for crate::api::game::LeagueTransactionEntry {
     }
 }
 
+impl SseDecode for crate::api::game::LearnablePitchesInfo {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_eligible = <Vec<String>>::sse_decode(deserializer);
+        let mut var_nextCandidate =
+            <Option<crate::api::game::LockedPitchInfo>>::sse_decode(deserializer);
+        return crate::api::game::LearnablePitchesInfo {
+            eligible: var_eligible,
+            next_candidate: var_nextCandidate,
+        };
+    }
+}
+
 impl SseDecode for Vec<String> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -1968,6 +2015,20 @@ impl SseDecode for Vec<crate::api::game::PendingActionInfo> {
         let mut ans_ = Vec::with_capacity(len_ as usize);
         for idx_ in 0..len_ {
             ans_.push(<crate::api::game::PendingActionInfo>::sse_decode(
+                deserializer,
+            ));
+        }
+        return ans_;
+    }
+}
+
+impl SseDecode for Vec<crate::api::game::PitchRequirementInfo> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = Vec::with_capacity(len_ as usize);
+        for idx_ in 0..len_ {
+            ans_.push(<crate::api::game::PitchRequirementInfo>::sse_decode(
                 deserializer,
             ));
         }
@@ -2119,6 +2180,19 @@ impl SseDecode for Vec<crate::api::game::TreatmentOption> {
     }
 }
 
+impl SseDecode for crate::api::game::LockedPitchInfo {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_name = <String>::sse_decode(deserializer);
+        let mut var_requirements =
+            <Vec<crate::api::game::PitchRequirementInfo>>::sse_decode(deserializer);
+        return crate::api::game::LockedPitchInfo {
+            name: var_name,
+            requirements: var_requirements,
+        };
+    }
+}
+
 impl SseDecode for crate::api::game::MatchStepInfo {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -2215,6 +2289,19 @@ impl SseDecode for Option<i64> {
     }
 }
 
+impl SseDecode for Option<crate::api::game::LockedPitchInfo> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(<crate::api::game::LockedPitchInfo>::sse_decode(
+                deserializer,
+            ));
+        } else {
+            return None;
+        }
+    }
+}
+
 impl SseDecode for Option<crate::api::game::MatchStepInfo> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -2277,6 +2364,22 @@ impl SseDecode for crate::api::game::PendingActionInfo {
             urgency: var_urgency,
             created_day: var_createdDay,
             payload_json: var_payloadJson,
+        };
+    }
+}
+
+impl SseDecode for crate::api::game::PitchRequirementInfo {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_stat = <String>::sse_decode(deserializer);
+        let mut var_minValue = <f64>::sse_decode(deserializer);
+        let mut var_currentValue = <f64>::sse_decode(deserializer);
+        let mut var_met = <bool>::sse_decode(deserializer);
+        return crate::api::game::PitchRequirementInfo {
+            stat: var_stat,
+            min_value: var_minValue,
+            current_value: var_currentValue,
+            met: var_met,
         };
     }
 }
@@ -2566,24 +2669,25 @@ fn pde_ffi_dispatcher_primary_impl(
         24 => wire__crate__api__game__get_team_schedule_impl(port, ptr, rust_vec_len, data_len),
         25 => wire__crate__api__game__get_training_config_impl(port, ptr, rust_vec_len, data_len),
         28 => wire__crate__api__simple__init_app_impl(port, ptr, rust_vec_len, data_len),
-        29 => {
+        29 => wire__crate__api__game__learnable_pitches_impl(port, ptr, rust_vec_len, data_len),
+        30 => {
             wire__crate__api__game__list_hs_school_details_impl(port, ptr, rust_vec_len, data_len)
         }
-        30 => wire__crate__api__game__list_hs_teams_impl(port, ptr, rust_vec_len, data_len),
-        31 => wire__crate__api__game__list_roster_impl(port, ptr, rust_vec_len, data_len),
-        32 => wire__crate__api__game__list_slots_impl(port, ptr, rust_vec_len, data_len),
-        33 => wire__crate__api__game__list_team_staff_impl(port, ptr, rust_vec_len, data_len),
-        34 => wire__crate__api__game__list_teams_impl(port, ptr, rust_vec_len, data_len),
-        35 => wire__crate__api__game__load_slot_impl(port, ptr, rust_vec_len, data_len),
-        36 => wire__crate__api__game__mark_inbox_read_impl(port, ptr, rust_vec_len, data_len),
-        38 => wire__crate__api__game__new_game_impl(port, ptr, rust_vec_len, data_len),
-        39 => wire__crate__api__game__pitch_type_names_impl(port, ptr, rust_vec_len, data_len),
-        41 => wire__crate__api__game__preview_hs_roster_impl(port, ptr, rust_vec_len, data_len),
-        42 => wire__crate__api__game__resolve_choice_impl(port, ptr, rust_vec_len, data_len),
-        43 => {
+        31 => wire__crate__api__game__list_hs_teams_impl(port, ptr, rust_vec_len, data_len),
+        32 => wire__crate__api__game__list_roster_impl(port, ptr, rust_vec_len, data_len),
+        33 => wire__crate__api__game__list_slots_impl(port, ptr, rust_vec_len, data_len),
+        34 => wire__crate__api__game__list_team_staff_impl(port, ptr, rust_vec_len, data_len),
+        35 => wire__crate__api__game__list_teams_impl(port, ptr, rust_vec_len, data_len),
+        36 => wire__crate__api__game__load_slot_impl(port, ptr, rust_vec_len, data_len),
+        37 => wire__crate__api__game__mark_inbox_read_impl(port, ptr, rust_vec_len, data_len),
+        39 => wire__crate__api__game__new_game_impl(port, ptr, rust_vec_len, data_len),
+        40 => wire__crate__api__game__pitch_type_names_impl(port, ptr, rust_vec_len, data_len),
+        42 => wire__crate__api__game__preview_hs_roster_impl(port, ptr, rust_vec_len, data_len),
+        43 => wire__crate__api__game__resolve_choice_impl(port, ptr, rust_vec_len, data_len),
+        44 => {
             wire__crate__api__game__set_protagonist_profile_impl(port, ptr, rust_vec_len, data_len)
         }
-        44 => wire__crate__api__game__set_training_impl(port, ptr, rust_vec_len, data_len),
+        45 => wire__crate__api__game__set_training_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -2602,10 +2706,10 @@ fn pde_ffi_dispatcher_sync_impl(
         9 => wire__crate__api__game__exposed_stat_names_impl(ptr, rust_vec_len, data_len),
         26 => wire__crate__api__simple__greet_impl(ptr, rust_vec_len, data_len),
         27 => wire__crate__api__game__hometown_region_names_impl(ptr, rust_vec_len, data_len),
-        37 => wire__crate__api__game__max_known_pitches_impl(ptr, rust_vec_len, data_len),
-        40 => wire__crate__api__game__pitcher_archetype_info_impl(ptr, rust_vec_len, data_len),
-        45 => wire__crate__api__game__training_intensity_names_impl(ptr, rust_vec_len, data_len),
-        46 => wire__crate__api__game__treatment_options_impl(ptr, rust_vec_len, data_len),
+        38 => wire__crate__api__game__max_known_pitches_impl(ptr, rust_vec_len, data_len),
+        41 => wire__crate__api__game__pitcher_archetype_info_impl(ptr, rust_vec_len, data_len),
+        46 => wire__crate__api__game__training_intensity_names_impl(ptr, rust_vec_len, data_len),
+        47 => wire__crate__api__game__treatment_options_impl(ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -2832,6 +2936,48 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::game::LeagueTransactionEntry>
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::game::LearnablePitchesInfo {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.eligible.into_into_dart().into_dart(),
+            self.next_candidate.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::game::LearnablePitchesInfo
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::game::LearnablePitchesInfo>
+    for crate::api::game::LearnablePitchesInfo
+{
+    fn into_into_dart(self) -> crate::api::game::LearnablePitchesInfo {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::game::LockedPitchInfo {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.name.into_into_dart().into_dart(),
+            self.requirements.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::game::LockedPitchInfo
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::game::LockedPitchInfo>
+    for crate::api::game::LockedPitchInfo
+{
+    fn into_into_dart(self) -> crate::api::game::LockedPitchInfo {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::api::game::MatchStepInfo {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         match self {
@@ -2947,6 +3093,29 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::game::PendingActionInfo>
     for crate::api::game::PendingActionInfo
 {
     fn into_into_dart(self) -> crate::api::game::PendingActionInfo {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::game::PitchRequirementInfo {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.stat.into_into_dart().into_dart(),
+            self.min_value.into_into_dart().into_dart(),
+            self.current_value.into_into_dart().into_dart(),
+            self.met.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::game::PitchRequirementInfo
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::game::PitchRequirementInfo>
+    for crate::api::game::PitchRequirementInfo
+{
+    fn into_into_dart(self) -> crate::api::game::PitchRequirementInfo {
         self
     }
 }
@@ -3371,6 +3540,14 @@ impl SseEncode for crate::api::game::LeagueTransactionEntry {
     }
 }
 
+impl SseEncode for crate::api::game::LearnablePitchesInfo {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <Vec<String>>::sse_encode(self.eligible, serializer);
+        <Option<crate::api::game::LockedPitchInfo>>::sse_encode(self.next_candidate, serializer);
+    }
+}
+
 impl SseEncode for Vec<String> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -3467,6 +3644,16 @@ impl SseEncode for Vec<crate::api::game::PendingActionInfo> {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
             <crate::api::game::PendingActionInfo>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for Vec<crate::api::game::PitchRequirementInfo> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::api::game::PitchRequirementInfo>::sse_encode(item, serializer);
         }
     }
 }
@@ -3581,6 +3768,14 @@ impl SseEncode for Vec<crate::api::game::TreatmentOption> {
     }
 }
 
+impl SseEncode for crate::api::game::LockedPitchInfo {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.name, serializer);
+        <Vec<crate::api::game::PitchRequirementInfo>>::sse_encode(self.requirements, serializer);
+    }
+}
+
 impl SseEncode for crate::api::game::MatchStepInfo {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -3670,6 +3865,16 @@ impl SseEncode for Option<i64> {
     }
 }
 
+impl SseEncode for Option<crate::api::game::LockedPitchInfo> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <crate::api::game::LockedPitchInfo>::sse_encode(value, serializer);
+        }
+    }
+}
+
 impl SseEncode for Option<crate::api::game::MatchStepInfo> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -3718,6 +3923,16 @@ impl SseEncode for crate::api::game::PendingActionInfo {
         <String>::sse_encode(self.urgency, serializer);
         <i64>::sse_encode(self.created_day, serializer);
         <String>::sse_encode(self.payload_json, serializer);
+    }
+}
+
+impl SseEncode for crate::api::game::PitchRequirementInfo {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.stat, serializer);
+        <f64>::sse_encode(self.min_value, serializer);
+        <f64>::sse_encode(self.current_value, serializer);
+        <bool>::sse_encode(self.met, serializer);
     }
 }
 

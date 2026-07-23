@@ -1478,7 +1478,22 @@
 
 **테스트**: `cargo build --lib` 클린. `cargo test --lib` 387개 전부 통과(신규 2개 포함). `cargo clippy --lib --tests --bins` 기존 무관 warning 1개 외 없음. frb 시그니처 변경 없음(파라미터 그대로, 본문만 수정)이라 재생성 불필요. `flutter analyze` 클린, `flutter build windows --debug` 성공, `engine.dll` 교체 후 `flutter test` 27개 전부 통과.
 
-### 6-89. 문서 갱신 규칙
+### 6-89. 내 정보 — 구종 훈련 카드 통합 + 습득 조건 게이팅 (2026-07-25, 완료)
+
+**Context**: 훈련 탭이 "신규 구종 습득"(위)·"기존 구종 다듬기"(아래 별도 전체너비 카드) 둘로 나뉘어 있었고, "신규 구종 습득" 드롭다운은 능력치·성장 단계와 무관하게 카탈로그 10종 중 이미 보유한 것만 뺀 나머지 전부를 항상 그대로 보여줬다. `05_구종_시스템.md` §3은 "습득 조건: 관련 능력치 임계 이상"이라고 방향만 잡아두고 정확한 수치는 "스탯 스케일 확정 후"로 미뤄둔 열린 세부였다. 사용자 요청: (1) 두 카드를 하나로 합치고 "신규 구종 습득"을 "구종 훈련"으로 개명, (2) 구종별 습득 조건을 실제로 추가해 지금 배울 수 있는 것만 나오게, (3) 드롭다운 대신 더 정리된 표시 방식. 조건 개수 분포는 사용자가 직접 지정: 1조건 4종·2조건 4종·너클볼만 4조건.
+
+**구현**:
+- `engine/src/sim/protagonist.rs`: `PITCH_ACQUISITION_REQUIREMENTS`(구종별 (스탯,임계값) 슬라이스, 1~4개) + `pitch_acquisition_requirements()`/`is_pitch_acquirable()`(전 조건 AND). 임계값은 시작 스탯 밴드(20~35)·성장 상한(80) 기준 계단화 — 투심 패스트볼(구위25)~너클볼(제구55·구위40·침착함40·경기운영45, 4조건) — 전체 표는 `05_구종_시스템.md` §3 참고.
+- `engine/src/data/repository.rs::set_protagonist_training`: `new_pitch` 검증에 습득 조건 미달 시 bail 추가(엔진이 최종 방어선 — UI가 숨긴 걸 우회 제출해도 막힘). 기존 테스트 3개가 습득 조건을 못 채우는 구종(커터·슬라이더)을 새 pitch로 쓰고 있어 강속구형이 항상 닿는 투심 패스트볼로 교체.
+- `engine/src/api/game.rs`: `learnable_pitches()` 신규 fn + `PitchRequirementInfo`/`LockedPitchInfo`/`LearnablePitchesInfo` struct — 보유 구종 상한 도달 시 빈 값, 아니면 조건 전부 충족한 구종을 `eligible`에, 하나도 없으면 조건 격차(충족 못한 (임계-현재) 합)가 가장 작은 구종 하나만 `next_candidate`로(조건 줄 전부 met 플래그 포함) 반환 — 카탈로그 전체를 드러내지 않으면서도 완전히 깜깜이는 아니게. frb 2단계 재생성.
+- `app/lib/features/my_player/my_player_screen.dart`: `_TrainingTab` 우측 카드를 "구종 훈련" 하나로 통합(신규 습득/기존 다듬기 소제목 + `Divider`로 구분), 아래 전체너비 카드 제거. 두 섹션 다 `DropdownButtonFormField` 대신 `Wrap<ChoiceChip>`(강도 선택과 같은 패턴)로 교체. 조건 미달로 아무것도 없으면 `next_candidate`의 조건 줄마다 충족 여부 아이콘과 함께 "다음 목표" 안내.
+- `02_기획/육성코어/05_구종_시스템.md` §3: 습득 조건 표 확정 반영, §6 열린 세부 체크 해제.
+
+**버그 발견(엔진 무관, 빌드 인프라)**: `flutter test`가 실제로 로드하는 `engine.dll`은 `app/build/windows/.../plugins/engine/Debug/engine.dll`(cargokit, `flutter build windows --debug`가 만드는 것)이 아니라 `frb_generated.dart`의 `ExternalLibraryLoaderConfig.ioDirectory = '../engine/target/release/'`가 가리키는 **`engine/target/release/engine.dll`**이었다 — 즉 평범한 `cargo build --release`가 만드는 파일. 이번 서브분 도중 `flutter test` 전체가 "Content hash on Dart side ... different from Rust side"로 실패해 한참 헤맸는데, `flutter clean`+전체 재빌드로도 안 고쳐지길래 콘텐츠 해시 상수를 일부러 다른 값으로 바꿔가며 컴파일된 dll의 실제 바이트를 뒤진 끝에(`python -c "open(...).read().count(struct.pack('<i', val))"`) 범인을 찾음 — `engine/target/release/engine.dll`이 이 세션 훨씬 전(§6-88 npc.id 버그 수정 때)에 마지막으로 빌드된 채 방치돼 있었던 것. **교훈**: 엔진 API 시그니처를 바꿨으면 `cargo build --lib`/`cargo test`만으로는 부족하고, `flutter test`를 돌리기 전에 **`cargo build --release`를 `engine/`에서 직접 실행**해 `engine/target/release/engine.dll`을 갱신해야 한다(`flutter build windows --debug`+`app/engine.dll` 복사는 실제 `app.exe` 수동 확인용으로는 여전히 유효하지만 `flutter test`엔 영향 없음).
+
+**테스트**: `cargo build --lib`/`cargo build --release` 클린. `cargo test --lib` 396개 전부 통과(신규 6개: 습득 조건 유닛테스트 5개+`set_protagonist_training` 리그레션 1개, `learnable_pitches` API 테스트 3개 포함하면 총 9개 신규). `cargo clippy --lib --tests --bins` 기존 무관 warning 1개 외 없음. frb 재생성(`flutter_rust_bridge_codegen generate`, 새 enum 없어 §6-22 non-blocking) 완료. `flutter analyze` 클린, `flutter test` 27개 전부 통과(단 `engine/target/release/engine.dll` 갱신 후에야).
+
+### 6-90. 문서 갱신 규칙
 
 **이 문서는 살아있는 문서다.** Phase를 하나 끝낼 때마다:
 1. §2 표의 해당 행 상태를 `⬜ 미착수` → `🔶 진행중` → `✅ 완료`로 갱신.

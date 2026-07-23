@@ -10,7 +10,7 @@ part 'game.freezed.dart';
 
 // These functions are ignored because they are not marked as `pub`: `avg_rank_from_season_ranks`, `stars_from_group_position`, `with_state_mut`, `with_state`, `world_seed`
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `GameState`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
 
 /// 뉴게임 — [07_주인공_생성](../../../02_기획/07_주인공_생성.md) §1의 7단계
 /// 흐름 중 실제 데이터를 만드는 마지막 단계(스텝 1~6은 Dart 쪽 폼 상태일
@@ -58,7 +58,11 @@ Future<void> loadSlot({
   contentDbPath: contentDbPath,
 );
 
-/// [02_데이터](../../../03_설계/02_데이터.md) §4 "삭제 = 파일 삭제".
+/// [02_데이터](../../../03_설계/02_데이터.md) §4 "삭제 = 파일 삭제". 지울
+/// 슬롯이 마침 지금 활성 세션이 열어둔 그 파일이면(예: 슬롯 1을 플레이
+/// 중 메인 메뉴로 돌아가 "새로하기"로 슬롯 1을 다시 고름) `STATE`가
+/// 핸들을 쥐고 있어 Windows에서 삭제가 "다른 프로세스가 사용 중"으로
+/// 실패한다(대화 2026-07-25) — 먼저 전역 세션을 비워 핸들을 놓아준다.
 Future<void> deleteSlot({required String slotPath}) =>
     RustLib.instance.api.crateApiGameDeleteSlot(slotPath: slotPath);
 
@@ -166,6 +170,16 @@ Future<void> setTraining({
 /// 받고 세션의 `content_conn`을 그대로 씀.
 Future<List<String>> pitchTypeNames() =>
     RustLib.instance.api.crateApiGamePitchTypeNames();
+
+/// "신규 구종 습득" 슬롯 후보 조회 — [05_구종_시스템](../../../02_기획/육성코어/05_구종_시스템.md)
+/// §3 습득 조건(스탯 임계값)을 실제로 반영한다(대화 2026-07-25, 이전엔
+/// `pitch_type_names`에서 이미 보유한 것만 뺀 카탈로그 전체를 그대로
+/// 드롭다운에 뿌렸음). 보유 구종 상한 도달 시 둘 다 빈 값(카드가 "상한"
+/// 안내를 보여줌). `eligible`이 비었으면 `next_candidate`로 가장 가까운
+/// 목표 하나만 안내 — 카탈로그 전체를 드러내지 않으면서도 완전히
+/// 깜깜이는 아니게.
+Future<LearnablePitchesInfo> learnablePitches() =>
+    RustLib.instance.api.crateApiGameLearnablePitches();
 
 /// 보유 구종 상한(05_구종_시스템.md §3, 대화 2026-07-24) — 순수 상수라 동기.
 int maxKnownPitches() => RustLib.instance.api.crateApiGameMaxKnownPitches();
@@ -651,6 +665,49 @@ class LeagueTransactionEntry {
           detailJson == other.detailJson;
 }
 
+/// `learnable_pitches` 조회 결과.
+class LearnablePitchesInfo {
+  /// 조건을 전부 충족해 바로 "신규 습득" 슬롯에 배정 가능한 구종.
+  final List<String> eligible;
+
+  /// `eligible`이 비었을 때만 채워지는, 조건 격차(충족 못한 조건들의
+  /// (임계-현재) 합)가 가장 작은 다음 목표 하나.
+  final LockedPitchInfo? nextCandidate;
+
+  const LearnablePitchesInfo({required this.eligible, this.nextCandidate});
+
+  @override
+  int get hashCode => eligible.hashCode ^ nextCandidate.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is LearnablePitchesInfo &&
+          runtimeType == other.runtimeType &&
+          eligible == other.eligible &&
+          nextCandidate == other.nextCandidate;
+}
+
+/// 아직 습득 조건을 다 못 채운 구종 하나 — 조건 줄 전부(이미 채운 것
+/// 포함)를 담아 UI가 "다음 목표" 진행 상황을 여러 줄로 보여줄 수 있게 함.
+class LockedPitchInfo {
+  final String name;
+  final List<PitchRequirementInfo> requirements;
+
+  const LockedPitchInfo({required this.name, required this.requirements});
+
+  @override
+  int get hashCode => name.hashCode ^ requirements.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is LockedPitchInfo &&
+          runtimeType == other.runtimeType &&
+          name == other.name &&
+          requirements == other.requirements;
+}
+
 @freezed
 sealed class MatchStepInfo with _$MatchStepInfo {
   const MatchStepInfo._();
@@ -743,6 +800,36 @@ class PendingActionInfo {
           urgency == other.urgency &&
           createdDay == other.createdDay &&
           payloadJson == other.payloadJson;
+}
+
+/// 습득 조건 한 줄(05_구종_시스템.md §3, 대화 2026-07-25) — `LockedPitchInfo`
+/// 안에서만 쓰인다.
+class PitchRequirementInfo {
+  final String stat;
+  final double minValue;
+  final double currentValue;
+  final bool met;
+
+  const PitchRequirementInfo({
+    required this.stat,
+    required this.minValue,
+    required this.currentValue,
+    required this.met,
+  });
+
+  @override
+  int get hashCode =>
+      stat.hashCode ^ minValue.hashCode ^ currentValue.hashCode ^ met.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PitchRequirementInfo &&
+          runtimeType == other.runtimeType &&
+          stat == other.stat &&
+          minValue == other.minValue &&
+          currentValue == other.currentValue &&
+          met == other.met;
 }
 
 /// 캐릭터 생성 화면 "투수 타입" 카드용(대화 2026-07-23) — 타입별 우세

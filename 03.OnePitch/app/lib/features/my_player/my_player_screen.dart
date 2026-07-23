@@ -275,10 +275,15 @@ class _LiveGauge extends StatelessWidget {
   }
 }
 
-/// 훈련 탭 — "능력치 훈련"·"신규 구종 습득"·"기존 구종 다듬기" 3개 카드
-/// (대화 2026-07-21, 마스터리업 카드는 2026-07-23 신설). 구종 슬롯은
-/// 06_훈련_시스템.md §2 "신규습득 or 기존 마스터리업" 중 하나만 배정
-/// 가능 — 한쪽을 고르면 다른 쪽은 자동 해제된다.
+/// 훈련 탭 — "능력치 훈련"·"구종 훈련" 2개 카드(대화 2026-07-21, 마스터리업은
+/// 2026-07-23 신설, "신규 구종 습득"+"기존 구종 다듬기" 통합·습득 조건
+/// 게이팅은 2026-07-25). 구종 슬롯은 06_훈련_시스템.md §2 "신규습득 or
+/// 기존 마스터리업" 중 하나만 배정 가능 — 한쪽을 고르면 다른 쪽은 자동
+/// 해제된다. "신규 습득" 후보는 더 이상 카탈로그 전체가 아니라
+/// `learnablePitches()`가 05_구종_시스템.md §3 습득 조건(스탯 임계값)으로
+/// 걸러준 것만 — 지금 아무것도 못 배우면 조건 격차가 가장 적은 다음
+/// 목표 하나만 안내한다(카탈로그 전체를 드러내지 않으면서도 완전히
+/// 깜깜이는 아니게).
 class _TrainingTab extends StatefulWidget {
   const _TrainingTab({required this.knownPitchesJson});
   final String knownPitchesJson;
@@ -290,7 +295,8 @@ class _TrainingTab extends StatefulWidget {
 class _TrainingTabState extends State<_TrainingTab> {
   List<String> _stats = [];
   List<String> _intensities = [];
-  List<String> _learnablePitches = [];
+  List<String> _eligiblePitches = [];
+  LockedPitchInfo? _nextCandidate;
   List<PitchMastery> _masterablePitches = [];
   int _knownCount = 0;
   final int _maxPitches = maxKnownPitches();
@@ -314,15 +320,15 @@ class _TrainingTabState extends State<_TrainingTab> {
   Future<void> _load() async {
     final stats = exposedStatNames();
     final intensities = trainingIntensityNames();
-    final catalog = await pitchTypeNames();
+    final learnable = await learnablePitches();
     final known = decodePitchMastery(widget.knownPitchesJson);
-    final knownNames = known.map((p) => p.name).toSet();
     final config = await getTrainingConfig();
     setState(() {
       _stats = stats;
       _intensities = intensities;
       _knownCount = known.length;
-      _learnablePitches = _knownCount >= _maxPitches ? [] : catalog.where((p) => !knownNames.contains(p)).toList();
+      _eligiblePitches = learnable.eligible;
+      _nextCandidate = learnable.nextCandidate;
       _masterablePitches = known.where((p) => p.stage < 5).toList();
       _primary = config?.primaryStat ?? stats.first;
       _secondary1 = config != null && config.secondaryStats.isNotEmpty ? config.secondaryStats[0] : stats[1];
@@ -404,63 +410,25 @@ class _TrainingTabState extends State<_TrainingTab> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text('신규 구종 습득', style: TextStyle(fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 8),
-                      if (_learnablePitches.isEmpty)
-                        Text(
-                          _knownCount >= _maxPitches
-                              ? '보유 구종 상한($_maxPitches개)에 도달했습니다 — 기존 구종을 다듬어보세요.'
-                              : '이미 카탈로그 10종을 전부 익혔습니다.',
-                          style: const TextStyle(color: AppColors.textSecondary),
-                        )
-                      else
-                        DropdownButtonFormField<String?>(
-                          initialValue: _newPitch,
-                          decoration: const InputDecoration(labelText: '연마할 구종'),
-                          items: [
-                            const DropdownMenuItem(value: null, child: Text('선택 안 함')),
-                            for (final p in _learnablePitches) DropdownMenuItem(value: p, child: Text(p)),
-                          ],
-                          onChanged: (v) => setState(() {
-                            _newPitch = v;
-                            if (v != null) _masteryPitch = null;
-                          }),
-                        ),
+                      const Text('구종 훈련', style: TextStyle(fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 12),
+                      const Text('신규 습득', style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+                      const SizedBox(height: 6),
+                      _newPitchSection(),
+                      const SizedBox(height: 16),
+                      const Divider(height: 1),
+                      const SizedBox(height: 16),
+                      const Text('기존 다듬기', style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+                      const SizedBox(height: 6),
+                      _masterySection(),
+                      if (activeTarget != null) ...[
+                        const SizedBox(height: 12),
+                        Text('$activeTarget — $_pitchWeeks주째 진행 중', style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+                      ],
                     ],
                   ),
                 ),
               ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 16),
-        AppPanel(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text('기존 구종 다듬기', style: TextStyle(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
-              if (_masterablePitches.isEmpty)
-                const Text('다듬을 수 있는 구종이 없습니다(전부 필살기이거나 보유 구종이 없음).', style: TextStyle(color: AppColors.textSecondary))
-              else
-                DropdownButtonFormField<String?>(
-                  initialValue: _masteryPitch,
-                  decoration: const InputDecoration(labelText: '마스터리업할 구종'),
-                  items: [
-                    const DropdownMenuItem(value: null, child: Text('선택 안 함')),
-                    for (final p in _masterablePitches)
-                      DropdownMenuItem(value: p.name, child: Text('${p.name} (${masteryStageLabels[p.stage] ?? '습작'} → 다음 단계)')),
-                  ],
-                  onChanged: (v) => setState(() {
-                    _masteryPitch = v;
-                    if (v != null) _newPitch = null;
-                  }),
-                ),
-              if (activeTarget != null) ...[
-                const SizedBox(height: 8),
-                Text('$activeTarget — $_pitchWeeks주째 진행 중', style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
-              ],
             ],
           ),
         ),
@@ -480,6 +448,88 @@ class _TrainingTabState extends State<_TrainingTab> {
       isExpanded: true,
       items: _stats.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
       onChanged: onChanged,
+    );
+  }
+
+  /// 신규 습득 후보 — 드롭다운 대신 칩 나열(대화 2026-07-25, 강도 선택과
+  /// 같은 패턴). `learnablePitches()`가 이미 습득 조건을 걸러줘서 여기선
+  /// eligible 목록을 그대로 칩으로 보여주기만 하면 됨 — 아무것도 없으면
+  /// 카탈로그 전체를 나열하는 대신 조건 격차가 가장 적은 다음 목표
+  /// 하나만(조건 줄마다 충족 여부 표시) 안내한다.
+  Widget _newPitchSection() {
+    if (_knownCount >= _maxPitches) {
+      return const Text('보유 구종 상한(5개)에 도달했습니다 — 기존 구종을 다듬어보세요.', style: TextStyle(color: AppColors.textSecondary, fontSize: 12));
+    }
+    if (_eligiblePitches.isNotEmpty) {
+      return Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: _eligiblePitches
+            .map(
+              (p) => ChoiceChip(
+                label: Text(p),
+                selected: _newPitch == p,
+                onSelected: (selected) => setState(() {
+                  _newPitch = selected ? p : null;
+                  if (_newPitch != null) _masteryPitch = null;
+                }),
+              ),
+            )
+            .toList(),
+      );
+    }
+    final candidate = _nextCandidate;
+    if (candidate == null) {
+      return const Text('지금 조건을 충족하는 구종이 없습니다.', style: TextStyle(color: AppColors.textSecondary, fontSize: 12));
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('다음 목표: ${candidate.name}', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 4),
+        for (final req in candidate.requirements)
+          Padding(
+            padding: const EdgeInsets.only(left: 4, top: 2),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  req.met ? Icons.check_circle : Icons.radio_button_unchecked,
+                  size: 12,
+                  color: req.met ? AppColors.safe : AppColors.textSecondary,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  '${req.stat} ${req.minValue.round()} 필요 (현재 ${req.currentValue.round()})',
+                  style: TextStyle(fontSize: 12, color: req.met ? AppColors.safe : AppColors.textSecondary),
+                ),
+              ],
+            ),
+          ),
+      ],
+    );
+  }
+
+  /// 마스터리업 대상 — 역시 드롭다운 대신 칩(대화 2026-07-25).
+  Widget _masterySection() {
+    if (_masterablePitches.isEmpty) {
+      return const Text('다듬을 수 있는 구종이 없습니다(전부 필살기이거나 보유 구종이 없음).', style: TextStyle(color: AppColors.textSecondary, fontSize: 12));
+    }
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: _masterablePitches
+          .map(
+            (p) => ChoiceChip(
+              label: Text('${p.name} (${masteryStageLabels[p.stage] ?? '습작'} → 다음 단계)'),
+              selected: _masteryPitch == p.name,
+              onSelected: (selected) => setState(() {
+                _masteryPitch = selected ? p.name : null;
+                if (_masteryPitch != null) _newPitch = null;
+              }),
+            ),
+          )
+          .toList(),
     );
   }
 }

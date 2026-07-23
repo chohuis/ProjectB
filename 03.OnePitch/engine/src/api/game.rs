@@ -729,6 +729,87 @@ pub fn pitch_type_names() -> anyhow::Result<Vec<String>> {
     })
 }
 
+/// 습득 조건 한 줄(05_구종_시스템.md §3, 대화 2026-07-25) — `LockedPitchInfo`
+/// 안에서만 쓰인다.
+#[derive(Debug, Clone)]
+pub struct PitchRequirementInfo {
+    pub stat: String,
+    pub min_value: f64,
+    pub current_value: f64,
+    pub met: bool,
+}
+
+/// 아직 습득 조건을 다 못 채운 구종 하나 — 조건 줄 전부(이미 채운 것
+/// 포함)를 담아 UI가 "다음 목표" 진행 상황을 여러 줄로 보여줄 수 있게 함.
+#[derive(Debug, Clone)]
+pub struct LockedPitchInfo {
+    pub name: String,
+    pub requirements: Vec<PitchRequirementInfo>,
+}
+
+/// `learnable_pitches` 조회 결과.
+#[derive(Debug, Clone)]
+pub struct LearnablePitchesInfo {
+    /// 조건을 전부 충족해 바로 "신규 습득" 슬롯에 배정 가능한 구종.
+    pub eligible: Vec<String>,
+    /// `eligible`이 비었을 때만 채워지는, 조건 격차(충족 못한 조건들의
+    /// (임계-현재) 합)가 가장 작은 다음 목표 하나.
+    pub next_candidate: Option<LockedPitchInfo>,
+}
+
+/// "신규 구종 습득" 슬롯 후보 조회 — [05_구종_시스템](../../../02_기획/육성코어/05_구종_시스템.md)
+/// §3 습득 조건(스탯 임계값)을 실제로 반영한다(대화 2026-07-25, 이전엔
+/// `pitch_type_names`에서 이미 보유한 것만 뺀 카탈로그 전체를 그대로
+/// 드롭다운에 뿌렸음). 보유 구종 상한 도달 시 둘 다 빈 값(카드가 "상한"
+/// 안내를 보여줌). `eligible`이 비었으면 `next_candidate`로 가장 가까운
+/// 목표 하나만 안내 — 카탈로그 전체를 드러내지 않으면서도 완전히
+/// 깜깜이는 아니게.
+pub fn learnable_pitches() -> anyhow::Result<LearnablePitchesInfo> {
+    with_state(|state| {
+        let (pitches_raw, stats_raw): (String, String) = state
+            .slot_conn
+            .query_row("SELECT pitches, stats FROM protagonist WHERE id = 'proto:1'", [], |r| Ok((r.get(0)?, r.get(1)?)))?;
+        let pitches: Vec<serde_json::Value> = serde_json::from_str(&pitches_raw)?;
+        let known_names = repository::pitch_names_from_mastery(&pitches);
+        if known_names.len() >= repository::MAX_KNOWN_PITCHES {
+            return Ok(LearnablePitchesInfo { eligible: Vec::new(), next_candidate: None });
+        }
+        let stats: serde_json::Map<String, serde_json::Value> = serde_json::from_str(&stats_raw)?;
+
+        let mut stmt = state.content_conn.prepare("SELECT name FROM pitch_types ORDER BY id")?;
+        let catalog: Vec<String> = stmt.query_map([], |r| r.get(0))?.collect::<Result<_, _>>()?;
+
+        let mut eligible = Vec::new();
+        let mut best_candidate: Option<(f64, LockedPitchInfo)> = None;
+        for pitch in catalog {
+            if known_names.contains(&pitch) {
+                continue;
+            }
+            let reqs = crate::sim::protagonist::pitch_acquisition_requirements(&pitch);
+            if reqs.is_empty() {
+                continue; // 시작 구종이거나 조건 미정의 — 습득 대상 아님
+            }
+            let lines: Vec<PitchRequirementInfo> = reqs
+                .iter()
+                .map(|(stat, min)| {
+                    let current = stats.get(*stat).and_then(|v| v.as_f64()).unwrap_or(0.0);
+                    PitchRequirementInfo { stat: stat.to_string(), min_value: *min, current_value: current, met: current >= *min }
+                })
+                .collect();
+            if lines.iter().all(|l| l.met) {
+                eligible.push(pitch);
+            } else {
+                let gap: f64 = lines.iter().map(|l| (l.min_value - l.current_value).max(0.0)).sum();
+                if best_candidate.as_ref().is_none_or(|(best_gap, _)| gap < *best_gap) {
+                    best_candidate = Some((gap, LockedPitchInfo { name: pitch, requirements: lines }));
+                }
+            }
+        }
+
+        Ok(LearnablePitchesInfo { eligible, next_candidate: best_candidate.map(|(_, info)| info) })
+    })
+}
+
 /// 보유 구종 상한(05_구종_시스템.md §3, 대화 2026-07-24) — 순수 상수라 동기.
 #[flutter_rust_bridge::frb(sync)]
 pub fn max_known_pitches() -> u32 {
@@ -1465,8 +1546,87 @@ mod tests {
         assert_eq!(catalog.len(), 10, "05_구종_시스템.md §1의 10종 카탈로그");
         assert!(catalog.contains(&"너클볼".to_string()));
 
-        set_training("구속".to_string(), "구위".to_string(), "제구".to_string(), "보통".to_string(), Some("슬라이더".to_string()), None).unwrap();
-        assert_eq!(get_training_config().unwrap().unwrap().new_pitch.as_deref(), Some("슬라이더"));
+        // 투심 패스트볼(구위 25+)은 강속구형 시작 구위 밴드(26~30)에서
+        // 항상 손이 닿는 습득 조건(05_구종_시스템.md §3, 대화 2026-07-25) —
+        // 슬라이더(제구 30+)는 강속구형에게 닿지 않는 스탯이라 교체.
+        set_training("구속".to_string(), "구위".to_string(), "제구".to_string(), "보통".to_string(), Some("투심 패스트볼".to_string()), None).unwrap();
+        assert_eq!(get_training_config().unwrap().unwrap().new_pitch.as_deref(), Some("투심 패스트볼"));
+
+        reset_state();
+    }
+
+    #[test]
+    fn learnable_pitches_reflects_the_current_archetypes_stats_after_new_game() {
+        let _guard = TEST_SERIAL.lock().unwrap();
+        reset_state();
+
+        let hs_team = {
+            let conn = content::open("content.db").unwrap();
+            conn.query_row("SELECT id FROM teams WHERE league_id = 'league:hs' LIMIT 1", [], |r| r.get::<_, String>(0)).unwrap()
+        };
+
+        // 강속구형은 구위가 미들밴드(26~30)에서 시작 — 투심 패스트볼(구위
+        // 25+)은 항상 손이 닿지만 커터(구위 30+)는 아직 안 닿는다.
+        new_game("content.db".to_string(), 45, "습득테스트".to_string(), "우완".to_string(), hs_team, "강속구형".to_string(), None, None).unwrap();
+
+        let result = learnable_pitches().unwrap();
+        assert!(result.eligible.contains(&"투심 패스트볼".to_string()), "eligible={:?}", result.eligible);
+        assert!(!result.eligible.contains(&"커터".to_string()), "eligible={:?}", result.eligible);
+        assert!(!result.eligible.contains(&"포심 패스트볼".to_string()), "이미 시작 구종이라 후보에 없어야 함");
+
+        reset_state();
+    }
+
+    #[test]
+    fn learnable_pitches_returns_a_next_candidate_when_nothing_is_eligible_yet() {
+        let _guard = TEST_SERIAL.lock().unwrap();
+        reset_state();
+
+        let hs_team = {
+            let conn = content::open("content.db").unwrap();
+            conn.query_row("SELECT id FROM teams WHERE league_id = 'league:hs' LIMIT 1", [], |r| r.get::<_, String>(0)).unwrap()
+        };
+
+        // 돌부처형은 구위·제구 둘 다 하단 밴드(20~26)에서 시작 — 어떤
+        // 구종도 바로 습득할 수 없어야 하고, 대신 next_candidate가 채워짐.
+        new_game("content.db".to_string(), 46, "다음목표테스트".to_string(), "우완".to_string(), hs_team, "돌부처형".to_string(), None, None).unwrap();
+
+        let result = learnable_pitches().unwrap();
+        assert!(result.eligible.is_empty(), "eligible={:?}", result.eligible);
+        let candidate = result.next_candidate.expect("아무것도 습득 못하면 next_candidate가 채워져야 함");
+        assert!(!candidate.requirements.is_empty());
+
+        reset_state();
+    }
+
+    #[test]
+    fn learnable_pitches_is_empty_once_the_five_pitch_cap_is_reached() {
+        let _guard = TEST_SERIAL.lock().unwrap();
+        reset_state();
+
+        let hs_team = {
+            let conn = content::open("content.db").unwrap();
+            conn.query_row("SELECT id FROM teams WHERE league_id = 'league:hs' LIMIT 1", [], |r| r.get::<_, String>(0)).unwrap()
+        };
+
+        new_game("content.db".to_string(), 47, "상한테스트".to_string(), "우완".to_string(), hs_team, "제구형".to_string(), None, None).unwrap();
+        with_state(|state| {
+            let five_pitches = serde_json::json!([
+                {"name": "포심 패스트볼", "stage": 1, "weeks": 0},
+                {"name": "체인지업", "stage": 1, "weeks": 0},
+                {"name": "포크볼", "stage": 1, "weeks": 0},
+                {"name": "싱커", "stage": 1, "weeks": 0},
+                {"name": "슬라이더", "stage": 1, "weeks": 0},
+            ])
+            .to_string();
+            state.slot_conn.execute("UPDATE protagonist SET pitches = ?1 WHERE id = 'proto:1'", [five_pitches])?;
+            Ok(())
+        })
+        .unwrap();
+
+        let result = learnable_pitches().unwrap();
+        assert!(result.eligible.is_empty());
+        assert!(result.next_candidate.is_none());
 
         reset_state();
     }

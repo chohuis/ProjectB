@@ -35,6 +35,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   PlatformInt64 dco_decode_box_autoadd_i_64(dynamic raw);
 
   @protected
+  LockedPitchInfo dco_decode_box_autoadd_locked_pitch_info(dynamic raw);
+
+  @protected
   MatchStepInfo dco_decode_box_autoadd_match_step_info(dynamic raw);
 
   @protected
@@ -79,6 +82,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   LeagueTransactionEntry dco_decode_league_transaction_entry(dynamic raw);
 
   @protected
+  LearnablePitchesInfo dco_decode_learnable_pitches_info(dynamic raw);
+
+  @protected
   List<String> dco_decode_list_String(dynamic raw);
 
   @protected
@@ -109,6 +115,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<PendingActionInfo> dco_decode_list_pending_action_info(dynamic raw);
+
+  @protected
+  List<PitchRequirementInfo> dco_decode_list_pitch_requirement_info(
+    dynamic raw,
+  );
 
   @protected
   List<PitcherArchetypeInfo> dco_decode_list_pitcher_archetype_info(
@@ -146,6 +157,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<TreatmentOption> dco_decode_list_treatment_option(dynamic raw);
 
   @protected
+  LockedPitchInfo dco_decode_locked_pitch_info(dynamic raw);
+
+  @protected
   MatchStepInfo dco_decode_match_step_info(dynamic raw);
 
   @protected
@@ -156,6 +170,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   PlatformInt64? dco_decode_opt_box_autoadd_i_64(dynamic raw);
+
+  @protected
+  LockedPitchInfo? dco_decode_opt_box_autoadd_locked_pitch_info(dynamic raw);
 
   @protected
   MatchStepInfo? dco_decode_opt_box_autoadd_match_step_info(dynamic raw);
@@ -175,6 +192,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   PendingActionInfo dco_decode_pending_action_info(dynamic raw);
+
+  @protected
+  PitchRequirementInfo dco_decode_pitch_requirement_info(dynamic raw);
 
   @protected
   PitcherArchetypeInfo dco_decode_pitcher_archetype_info(dynamic raw);
@@ -237,6 +257,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   PlatformInt64 sse_decode_box_autoadd_i_64(SseDeserializer deserializer);
 
   @protected
+  LockedPitchInfo sse_decode_box_autoadd_locked_pitch_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   MatchStepInfo sse_decode_box_autoadd_match_step_info(
     SseDeserializer deserializer,
   );
@@ -287,6 +312,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  LearnablePitchesInfo sse_decode_learnable_pitches_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   List<String> sse_decode_list_String(SseDeserializer deserializer);
 
   @protected
@@ -329,6 +359,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<PendingActionInfo> sse_decode_list_pending_action_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  List<PitchRequirementInfo> sse_decode_list_pitch_requirement_info(
     SseDeserializer deserializer,
   );
 
@@ -378,6 +413,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  LockedPitchInfo sse_decode_locked_pitch_info(SseDeserializer deserializer);
+
+  @protected
   MatchStepInfo sse_decode_match_step_info(SseDeserializer deserializer);
 
   @protected
@@ -388,6 +426,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   PlatformInt64? sse_decode_opt_box_autoadd_i_64(SseDeserializer deserializer);
+
+  @protected
+  LockedPitchInfo? sse_decode_opt_box_autoadd_locked_pitch_info(
+    SseDeserializer deserializer,
+  );
 
   @protected
   MatchStepInfo? sse_decode_opt_box_autoadd_match_step_info(
@@ -411,6 +454,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   PendingActionInfo sse_decode_pending_action_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  PitchRequirementInfo sse_decode_pitch_requirement_info(
     SseDeserializer deserializer,
   );
 
@@ -495,6 +543,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_box_autoadd_locked_pitch_info(
+    LockedPitchInfo self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_box_autoadd_match_step_info(
     MatchStepInfo self,
     SseSerializer serializer,
@@ -567,6 +621,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_learnable_pitches_info(
+    LearnablePitchesInfo self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_list_String(List<String> self, SseSerializer serializer);
 
   @protected
@@ -617,6 +677,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_list_pending_action_info(
     List<PendingActionInfo> self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_list_pitch_requirement_info(
+    List<PitchRequirementInfo> self,
     SseSerializer serializer,
   );
 
@@ -687,6 +753,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_locked_pitch_info(
+    LockedPitchInfo self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_match_step_info(MatchStepInfo self, SseSerializer serializer);
 
   @protected
@@ -701,6 +773,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_opt_box_autoadd_i_64(
     PlatformInt64? self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_opt_box_autoadd_locked_pitch_info(
+    LockedPitchInfo? self,
     SseSerializer serializer,
   );
 
@@ -731,6 +809,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_pending_action_info(
     PendingActionInfo self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_pitch_requirement_info(
+    PitchRequirementInfo self,
     SseSerializer serializer,
   );
 

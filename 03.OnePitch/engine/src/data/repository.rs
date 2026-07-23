@@ -482,7 +482,8 @@ pub fn set_protagonist_training(
         anyhow::bail!("new_pitch and mastery_pitch cannot both be set — a pitch is either newly learned or refined, not both");
     }
 
-    let pitches_raw: String = slot_conn.query_row("SELECT pitches FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0))?;
+    let (pitches_raw, stats_raw): (String, String) =
+        slot_conn.query_row("SELECT pitches, stats FROM protagonist WHERE id = 'proto:1'", [], |r| Ok((r.get(0)?, r.get(1)?)))?;
     let pitches: Vec<serde_json::Value> = serde_json::from_str(&pitches_raw)?;
     let known_names = pitch_names_from_mastery(&pitches);
     if let Some(pitch) = new_pitch {
@@ -491,6 +492,17 @@ pub fn set_protagonist_training(
         }
         if known_names.len() >= MAX_KNOWN_PITCHES {
             anyhow::bail!("repertoire is already at the {MAX_KNOWN_PITCHES}-pitch cap — refine an existing pitch instead of learning a new one");
+        }
+        // 습득 조건(05_구종_시스템.md §3, 대화 2026-07-25) — UI가 숨긴 걸
+        // 우회 제출하는 경로를 막는 시스템 경계 체크.
+        let stats: serde_json::Map<String, serde_json::Value> = serde_json::from_str(&stats_raw)?;
+        if !crate::sim::protagonist::is_pitch_acquirable(pitch, &stats) {
+            let unmet: Vec<String> = crate::sim::protagonist::pitch_acquisition_requirements(pitch)
+                .iter()
+                .filter(|(stat, min)| stats.get(*stat).and_then(|v| v.as_f64()).is_none_or(|v| v < *min))
+                .map(|(stat, min)| format!("{stat} {min} 이상"))
+                .collect();
+            anyhow::bail!("{pitch} acquisition requirement not met — needs {}", unmet.join(", "));
         }
     }
     if let Some(pitch) = mastery_pitch {
@@ -4203,6 +4215,20 @@ mod tests {
     }
 
     #[test]
+    fn set_protagonist_training_rejects_new_pitch_below_its_acquisition_threshold() {
+        // 05_구종_시스템.md §3 습득 조건(대화 2026-07-25) — UI가 숨긴 걸
+        // 우회 제출해도 엔진이 최종 방어선 역할을 해야 한다.
+        let content_conn = build_hs_school_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        // 돌부처형은 구위·제구 둘 다 하단 밴드(20~26)에서 시작 — 너클볼
+        // (제구 55+·구위 40+·침착함 40+·경기운영 45+, 4조건) 근처에도 못 감.
+        create_protagonist(&slot_conn, &content_conn, 1, "조건미달", "우완", "team:hanseong_hs", "돌부처형", None).unwrap();
+
+        let result = set_protagonist_training(&slot_conn, "구속", ["구위", "제구"], "보통", Some("너클볼"), None);
+        assert!(result.is_err(), "acquisition requirement not met — should be rejected");
+    }
+
+    #[test]
     fn set_protagonist_training_rejects_new_pitch_once_the_five_pitch_cap_is_reached() {
         let content_conn = build_hs_school_content_db();
         let slot_conn = slot::open_in_memory().unwrap();
@@ -4296,7 +4322,9 @@ mod tests {
         let content_conn = build_hs_school_content_db();
         let slot_conn = slot::open_in_memory().unwrap();
         create_protagonist(&slot_conn, &content_conn, 1, "구종연마", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
-        set_protagonist_training(&slot_conn, "구속", ["구위", "경기운영"], "강", Some("커터"), None).unwrap();
+        // 투심 패스트볼(구위 25+)은 강속구형 시작 구위 밴드(26~30)에서
+        // 항상 손이 닿는 습득 조건(05_구종_시스템.md §3, 대화 2026-07-25).
+        set_protagonist_training(&slot_conn, "구속", ["구위", "경기운영"], "강", Some("투심 패스트볼"), None).unwrap();
 
         // "강" 강도는 sim::training::weeks_required_to_learn_pitch("강") == 8주.
         for week in 0..8i64 {
@@ -4306,9 +4334,9 @@ mod tests {
         let pitches_raw: String = slot_conn.query_row("SELECT pitches FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
         let pitches: Vec<serde_json::Value> = serde_json::from_str(&pitches_raw).unwrap();
         let names = pitch_names_from_mastery(&pitches);
-        assert!(names.contains(&"커터".to_string()), "pitches={pitches:?}");
-        let cutter = pitches.iter().find(|p| p.get("name").and_then(|n| n.as_str()) == Some("커터")).unwrap();
-        assert_eq!(cutter.get("stage").and_then(|s| s.as_u64()), Some(1), "newly learned pitch should start at mastery stage 1");
+        assert!(names.contains(&"투심 패스트볼".to_string()), "pitches={pitches:?}");
+        let two_seam = pitches.iter().find(|p| p.get("name").and_then(|n| n.as_str()) == Some("투심 패스트볼")).unwrap();
+        assert_eq!(two_seam.get("stage").and_then(|s| s.as_u64()), Some(1), "newly learned pitch should start at mastery stage 1");
 
         let training_raw: String = slot_conn.query_row("SELECT training FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
         let training: serde_json::Value = serde_json::from_str(&training_raw).unwrap();
@@ -4320,7 +4348,7 @@ mod tests {
         let content_conn = build_hs_school_content_db();
         let slot_conn = slot::open_in_memory().unwrap();
         create_protagonist(&slot_conn, &content_conn, 1, "코치테스트", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
-        set_protagonist_training(&slot_conn, "구속", ["구위", "경기운영"], "강", Some("커터"), None).unwrap();
+        set_protagonist_training(&slot_conn, "구속", ["구위", "경기운영"], "강", Some("투심 패스트볼"), None).unwrap();
         insert_test_player(
             &slot_conn,
             "coach:team:hanseong_hs",
@@ -4337,7 +4365,7 @@ mod tests {
         let pitches_raw: String = slot_conn.query_row("SELECT pitches FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
         let pitches: Vec<serde_json::Value> = serde_json::from_str(&pitches_raw).unwrap();
         assert!(
-            pitch_names_from_mastery(&pitches).contains(&"커터".to_string()),
+            pitch_names_from_mastery(&pitches).contains(&"투심 패스트볼".to_string()),
             "expected pitch learned early with a strong pitching coach, pitches={pitches:?}"
         );
     }
