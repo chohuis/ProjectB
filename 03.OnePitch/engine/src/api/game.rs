@@ -158,6 +158,25 @@ pub fn new_game(
     slot_path: Option<String>,
 ) -> anyhow::Result<()> {
     let content_conn = content::open(&content_db_path)?;
+    if let Some(path) = &slot_path {
+        // 항상 빈 슬레이트에서 시작 — Dart의 `delete_slot`이 먼저 지웠어야
+        // 정상이지만, 그걸 믿지 않고 여기서 한 번 더 확실히 비운다(대화
+        // 2026-07-25: 고정 3슬롯 "덮어쓰기" 재시도 시 이전 시도의 npc 행이
+        // 남아있으면 `generate_initial_world`가 똑같은 결정적 id를 다시
+        // 넣으려다 `UNIQUE constraint failed: npc.id`로 죽는 버그).
+        //
+        // 지금 다시 고르는 슬롯이 **현재 활성 세션이 이미 열어둔 그 파일**일
+        // 수도 있다(예: 슬롯 1을 플레이하다 메인 메뉴로 돌아가서 "새로하기"로
+        // 슬롯 1을 다시 고름) — `STATE`가 그 파일 핸들을 계속 쥐고 있으면
+        // Windows에서 `remove_file`이 "다른 프로세스가 사용 중"(os error 32)
+        // 으로 실패한다. 먼저 전역 세션을 비워 핸들을 놓아준 뒤 지운다.
+        *STATE.lock().map_err(|_| anyhow::anyhow!("game state lock poisoned"))? = None;
+        match std::fs::remove_file(path) {
+            Ok(()) => {}
+            Err(e) if e.kind() == std::io::ErrorKind::NotFound => {}
+            Err(e) => return Err(e.into()),
+        }
+    }
     let mut slot_conn = match &slot_path {
         Some(path) => slot::open(path)?,
         None => slot::open_in_memory()?,
@@ -237,8 +256,13 @@ pub fn load_slot(slot_path: String, content_db_path: String) -> anyhow::Result<(
     Ok(())
 }
 
-/// [02_데이터](../../../03_설계/02_데이터.md) §4 "삭제 = 파일 삭제".
+/// [02_데이터](../../../03_설계/02_데이터.md) §4 "삭제 = 파일 삭제". 지울
+/// 슬롯이 마침 지금 활성 세션이 열어둔 그 파일이면(예: 슬롯 1을 플레이
+/// 중 메인 메뉴로 돌아가 "새로하기"로 슬롯 1을 다시 고름) `STATE`가
+/// 핸들을 쥐고 있어 Windows에서 삭제가 "다른 프로세스가 사용 중"으로
+/// 실패한다(대화 2026-07-25) — 먼저 전역 세션을 비워 핸들을 놓아준다.
 pub fn delete_slot(slot_path: String) -> anyhow::Result<()> {
+    *STATE.lock().map_err(|_| anyhow::anyhow!("game state lock poisoned"))? = None;
     std::fs::remove_file(&slot_path)?;
     Ok(())
 }
@@ -1317,6 +1341,58 @@ mod tests {
         reset_state();
     }
 
+    /// 고정 3슬롯 "덮어쓰기" 재시도 버그(대화 2026-07-25) — 같은 `slot_path`로
+    /// `new_game`을 두 번 부르면(예: Dart의 `delete_slot`이 실패했거나,
+    /// 첫 시도가 부분 커밋된 채 죽은 뒤 재시도) 예전엔 이전 시도가 넣은
+    /// npc 행이 그대로 남아 있어 두 번째 `generate_initial_world`가 똑같은
+    /// 결정적 id를 다시 넣으려다 `UNIQUE constraint failed: npc.id`로
+    /// 죽었다. `new_game`이 이제 파일을 매번 지우고 시작하므로 두 번째
+    /// 호출도 첫 번째와 동일하게 성공해야 한다.
+    #[test]
+    fn new_game_reusing_the_same_slot_path_does_not_collide_on_npc_id() {
+        let _guard = TEST_SERIAL.lock().unwrap();
+        reset_state();
+
+        let hs_team = {
+            let conn = content::open("content.db").unwrap();
+            conn.query_row("SELECT id FROM teams WHERE league_id = 'league:hs' LIMIT 1", [], |r| r.get::<_, String>(0)).unwrap()
+        };
+
+        let path = std::env::temp_dir().join(format!("onepitch_new_game_reuse_test_{}.db", std::process::id()));
+        let path_str = path.to_string_lossy().to_string();
+        let _ = std::fs::remove_file(&path);
+
+        new_game(
+            "content.db".to_string(),
+            42,
+            "첫시도".to_string(),
+            "우완".to_string(),
+            hs_team.clone(),
+            "강속구형".to_string(),
+            None,
+            Some(path_str.clone()),
+        )
+        .unwrap();
+
+        new_game(
+            "content.db".to_string(),
+            42,
+            "재시도".to_string(),
+            "우완".to_string(),
+            hs_team,
+            "강속구형".to_string(),
+            None,
+            Some(path_str.clone()),
+        )
+        .expect("같은 슬롯 경로로 재시도해도 npc.id 충돌 없이 성공해야 함");
+
+        let status = get_protagonist_status().unwrap();
+        assert_eq!(status.name, "재시도", "두 번째 new_game이 슬롯을 완전히 새로 덮어써야 함");
+
+        reset_state();
+        let _ = std::fs::remove_file(&path);
+    }
+
     #[test]
     fn list_hs_teams_returns_real_teams_with_traits_from_content_db() {
         let teams = list_hs_teams("content.db".to_string()).unwrap();
@@ -1654,6 +1730,47 @@ mod tests {
         delete_slot(slot_path.clone()).unwrap();
         assert!(!std::path::Path::new(&slot_path).exists());
         assert!(list_slots(dir.to_string_lossy().to_string()).unwrap().is_empty());
+
+        let _ = std::fs::remove_dir_all(&dir);
+        reset_state();
+    }
+
+    /// 슬롯 "덮어쓰기" 흐름(`NewGameSlotScreen._pickSlot`)은 지금 활성
+    /// 세션이 열어둔 바로 그 슬롯을 `reset_state()` 없이 곧장 `delete_slot`
+    /// 한다 — 위 `slot_lifecycle_...` 테스트처럼 미리 세션을 닫아주는
+    /// 코드가 실제 앱엔 없다. `delete_slot`이 내부적으로 세션을 먼저
+    /// 비우지 않으면 Windows에서 "다른 프로세스가 사용 중"으로 실패한다
+    /// (대화 2026-07-25).
+    #[test]
+    fn delete_slot_succeeds_even_while_that_slot_is_the_active_session() {
+        let _guard = TEST_SERIAL.lock().unwrap();
+        reset_state();
+
+        let dir = std::env::temp_dir().join(format!("onepitch_delete_active_slot_test_{}", std::process::id()));
+        let _ = std::fs::create_dir_all(&dir);
+        let slot_path = dir.join("slot_test.db").to_string_lossy().to_string();
+        let _ = std::fs::remove_file(&slot_path);
+
+        let hs_team = {
+            let conn = content::open("content.db").unwrap();
+            conn.query_row("SELECT id FROM teams WHERE league_id = 'league:hs' LIMIT 1", [], |r| r.get::<_, String>(0)).unwrap()
+        };
+
+        new_game(
+            "content.db".to_string(),
+            123,
+            "삭제테스트".to_string(),
+            "우완".to_string(),
+            hs_team,
+            "강속구형".to_string(),
+            None,
+            Some(slot_path.clone()),
+        )
+        .unwrap();
+
+        // reset_state() 없이 곧장 삭제 — 실제 `_pickSlot`이 하는 그대로.
+        delete_slot(slot_path.clone()).expect("활성 세션이 쥔 슬롯도 delete_slot이 알아서 세션을 놓고 지워야 함");
+        assert!(!std::path::Path::new(&slot_path).exists());
 
         let _ = std::fs::remove_dir_all(&dir);
         reset_state();

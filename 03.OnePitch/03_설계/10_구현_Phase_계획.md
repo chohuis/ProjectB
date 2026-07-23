@@ -1465,7 +1465,20 @@
 
 **테스트**: `flutter analyze` 클린. `flutter test`(27개, 신규 1개 `NewGameSlotScreen shows 3 empty slots and picking one navigates to /new-game with its path`) 전부 통과, 기존 `main_menu_widget_test.dart`의 "새로하기" 네비게이션 테스트를 `/new-game-slot`으로 갱신. `flutter build windows --debug` 성공. 엔진 변경 없어 `cargo test`/`engine.dll` 교체 불필요.
 
-### 6-88. 문서 갱신 규칙
+### 6-88. 고정 3슬롯 "덮어쓰기" 재시도 시 `UNIQUE constraint failed: npc.id` 크래시 수정 (2026-07-25, 완료)
+
+**Context**: §6-87(세이브 슬롯 3개 상한) 직후 실사용 중 발견 — "새로하기"에서 학교(예: 팔공고)를 골라 캐릭터 생성을 확정하면 `AnyhowException(UNIQUE constraint failed: npc.id ... A PRIMARY KEY constraint failed)`로 죽는 버그. `generate_initial_world`+`create_protagonist`만 단독으로(임시 리그레션 테스트로) 여러 시드 반복 실행해보면 절대 충돌이 안 나(단일 클린 생성은 결정적으로 유일한 id만 만듦, 확인 후 테스트는 삭제) — 즉 새로 만든 고정 3슬롯 스킴이 원인. §6-87 이전엔 "새로하기"마다 타임스탬프 파일명이라 항상 새 파일이었지만, 이제 같은 `slot_1.db`~`slot_3.db`를 재사용하는 "덮어쓰기" 흐름이 생겨 **이미 활성 세션이 열어둔 그 슬롯 파일을 다시 대상으로 삼는 경우**가 처음 등장했다.
+
+**근본 원인**: 엔진은 전역 싱글톤 세션(`STATE: Mutex<Option<GameState>>`)이 파일 핸들을 계속 쥔 채로만 새 세션으로 교체된다(명시적으로 닫는 API가 없었음 — 이미 `slot_lifecycle_...` 테스트에 "파일 핸들을 닫아야 load_slot/delete_slot이 같은 파일을 다시 열 수 있음"이라는 주석으로 알려져 있던 제약, 실제 API엔 한 번도 반영이 안 됐던 것). 슬롯 1을 플레이하다 메인 메뉴로 돌아가 "새로하기"로 슬롯 1을 다시 고르면: `NewGameSlotScreen._pickSlot`이 `deleteSlot`으로 파일을 지우려 하지만 Windows에서 활성 세션이 그 파일을 쥐고 있어 `remove_file`이 "다른 프로세스가 사용 중"(os error 32)으로 실패할 수 있고, 그게 성공하더라도 `new_game`이 그 뒤 재생성 시 예전 상태가 남아있으면 감독/코치/구단주 id(`format!("manager:{team_id}")` 등, world_seed와 무관하게 team_id로만 결정됨)가 그대로 다시 충돌한다.
+
+**구현**:
+- `engine/src/api/game.rs::new_game` — `slot_path`가 있으면 생성 전에 항상 전역 `STATE`를 먼저 비우고(핸들 반납) 파일을 지운 뒤(`NotFound`는 무시) 새로 연다. Dart의 `delete_slot`이 이미 지웠어야 정상이지만 그걸 신뢰하지 않고 엔진 자체에서 한 번 더 확실히 빈 슬레이트를 보장.
+- `engine/src/api/game.rs::delete_slot` — 같은 이유로 파일 삭제 전에 `STATE`를 먼저 비움(지울 슬롯이 마침 활성 세션의 파일인 경우 대비).
+- 리그레션 테스트 2개 추가: `new_game_reusing_the_same_slot_path_does_not_collide_on_npc_id`(같은 slot_path로 `new_game` 두 번 연속 호출해도 성공), `delete_slot_succeeds_even_while_that_slot_is_the_active_session`(`reset_state()` 없이 활성 세션의 슬롯을 곧장 `delete_slot`해도 성공) — 둘 다 수정 전엔 실패(전자는 `UNIQUE constraint failed: npc.id`, 후자는 os error 32)했음을 확인 후 수정.
+
+**테스트**: `cargo build --lib` 클린. `cargo test --lib` 387개 전부 통과(신규 2개 포함). `cargo clippy --lib --tests --bins` 기존 무관 warning 1개 외 없음. frb 시그니처 변경 없음(파라미터 그대로, 본문만 수정)이라 재생성 불필요. `flutter analyze` 클린, `flutter build windows --debug` 성공, `engine.dll` 교체 후 `flutter test` 27개 전부 통과.
+
+### 6-89. 문서 갱신 규칙
 
 **이 문서는 살아있는 문서다.** Phase를 하나 끝낼 때마다:
 1. §2 표의 해당 행 상태를 `⬜ 미착수` → `🔶 진행중` → `✅ 완료`로 갱신.
