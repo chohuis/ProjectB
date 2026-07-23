@@ -323,6 +323,9 @@ pub fn generate_initial_world(slot_conn: &mut Connection, content_conn: &Connect
     // 새 게임 시작이 다시 느려짐, §6-38에서 이미 한 번 발견된 문제).
     for_each_team_in_all_leagues(&tx, content_conn, |conn, team_id| assign_rotation(conn, content_conn, team_id))?;
     for_each_team_in_all_leagues(&tx, content_conn, assign_batting_order)?;
+    // 마무리 랭킹(10_구현_Phase_계획.md §6-N Part G) — 로테이션과 같은
+    // 트랜잭션에 묶는 이유도 동일(개별 autocommit 방지).
+    for_each_team_in_all_leagues(&tx, content_conn, assign_closer)?;
     tx.commit()?;
     Ok(())
 }
@@ -1843,22 +1846,54 @@ pub(crate) fn load_starting_pitcher(slot_conn: &Connection, team_id: &str) -> an
     })
 }
 
-/// 감독 개입(§8) — 주인공이 강판된 뒤 나머지 이닝을 던질 구원투수.
-/// 로스터에 `position IN ('중계투수', '마무리투수')`가 여럿이면 (id 기준)
-/// 첫 명 고정 — 상황(세이브 상황 등)에 따라 마무리/중계를 가려 쓰는
-/// 로직·복수 교체는 Part G(대화 2026-07-26)에서 마저 채운다. 로스터에
-/// 구원 투수가 아예 없으면 None(호출부가 방어적으로 강판 자체를 건너뜀).
-pub(crate) fn load_relief_pitcher(slot_conn: &Connection, team_id: &str) -> anyhow::Result<Option<match_sim::PitcherStats>> {
-    let row: Option<(String, String, String)> = slot_conn
-        .query_row(
-            "SELECT id, stats, live_state FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position IN ('중계투수', '마무리투수') ORDER BY id LIMIT 1",
-            [team_id],
-            |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
-        )
-        .optional()?;
-    let Some((id, stats_raw, live_state_raw)) = row else {
+/// 감독 개입(§8) — 주인공이 강판된 뒤(또는 배경 경기에서 상대가) 나머지
+/// 이닝을 던질 구원투수. `is_save_situation`이 true면 `assign_closer`가
+/// `season_meta['closer:{team_id}']`에 정해둔 마무리를 최우선으로 찾고
+/// (은퇴·트레이드 등으로 이미 로스터에 없으면 무시), 아니면 중계 풀
+/// (마무리 제외) 중 id순 첫 명 — 중계가 여럿일 때의 세부 서열(셋업·
+/// 추격조)은 여전히 스코프 밖(마무리만 우선 랭킹화, Part G). 어느 쪽도
+/// 못 찾으면(지정 마무리 소실·중계 전무 등) 중계+마무리 전체 풀에서
+/// id순 첫 명으로 방어적 폴백. 그마저 없으면 None(호출부가 강판 자체를
+/// 건너뜀).
+pub(crate) fn load_relief_pitcher(slot_conn: &Connection, team_id: &str, is_save_situation: bool) -> anyhow::Result<Option<match_sim::PitcherStats>> {
+    let mut picked_id: Option<String> = if is_save_situation {
+        let closer_id: Option<String> =
+            slot_conn.query_row("SELECT value FROM season_meta WHERE key = ?1", [format!("closer:{team_id}")], |r| r.get(0)).optional()?;
+        match closer_id {
+            Some(id) => slot_conn
+                .query_row(
+                    "SELECT id FROM npc WHERE id = ?1 AND team_id = ?2 AND retired = 0 AND military_return_day IS NULL",
+                    params![id, team_id],
+                    |r| r.get(0),
+                )
+                .optional()?,
+            None => None,
+        }
+    } else {
+        slot_conn
+            .query_row(
+                "SELECT id FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position = '중계투수' ORDER BY id LIMIT 1",
+                [team_id],
+                |r| r.get(0),
+            )
+            .optional()?
+    };
+
+    if picked_id.is_none() {
+        picked_id = slot_conn
+            .query_row(
+                "SELECT id FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position IN ('중계투수', '마무리투수') ORDER BY id LIMIT 1",
+                [team_id],
+                |r| r.get(0),
+            )
+            .optional()?;
+    }
+
+    let Some(id) = picked_id else {
         return Ok(None);
     };
+    let (stats_raw, live_state_raw): (String, String) =
+        slot_conn.query_row("SELECT stats, live_state FROM npc WHERE id = ?1", [&id], |row| Ok((row.get(0)?, row.get(1)?)))?;
     let v: serde_json::Value = serde_json::from_str(&stats_raw)?;
     let live_state: serde_json::Value = serde_json::from_str(&live_state_raw)?;
     Ok(Some(match_sim::PitcherStats {
@@ -1867,6 +1902,50 @@ pub(crate) fn load_relief_pitcher(slot_conn: &Connection, team_id: &str) -> anyh
         stuff: v.get("구위").and_then(|x| x.as_f64()).unwrap_or(50.0),
         fatigue: live_state.get("피로도").and_then(|x| x.as_f64()).unwrap_or(0.0),
     }))
+}
+
+/// 팀의 중계+마무리 투수 후보를 능력치+season_stats+practice_stats 3중
+/// 블렌딩 점수로 서열화 — `ranked_rotation_candidates_for_team`(선발
+/// 전용)과 같은 블렌드 공식·가중치(사용자 확인 "현재값 유지")를 재사용
+/// 하되 포지션 필터만 다르다. 주인공은 항상 선발 로테이션 전용 아키타입
+/// 이라 이 후보군엔 들어오지 않는다(고교·대학이라도 마무리 후보로 안 뜀).
+fn ranked_closer_candidates_for_team(conn: &Connection, team_id: &str) -> anyhow::Result<Vec<String>> {
+    let mut stmt = conn.prepare(
+        "SELECT id, stats FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position IN ('중계투수', '마무리투수')",
+    )?;
+    let rows: Vec<(String, String)> = stmt.query_map([team_id], |r| Ok((r.get(0)?, r.get(1)?)))?.collect::<Result<Vec<_>, _>>()?;
+    drop(stmt);
+
+    let mut candidates: Vec<(String, f64)> = Vec::new();
+    for (id, stats_raw) in rows {
+        let v: serde_json::Value = serde_json::from_str(&stats_raw).unwrap_or_default();
+        let control = v.get("제구").and_then(|x| x.as_f64()).unwrap_or(50.0);
+        let stuff = v.get("구위").and_then(|x| x.as_f64()).unwrap_or(50.0);
+        let skill_score = (control + stuff) / 2.0;
+        let season_score = season_stats_score(conn, &id)?;
+        let practice_score = practice_stats_score(conn, &id)?;
+        candidates.push((id, manager::blend_rotation_score_with_practice(skill_score, season_score, practice_score)));
+    }
+    Ok(manager::rank_rotation_candidates(&candidates))
+}
+
+/// 마무리 랭킹 갱신 — 로테이션(`assign_rotation`)과 같은 함정(정적으로
+/// 굳어버리면 성적이 아무리 좋아져도 영원히 마무리가 못 바뀜)을 피하려고
+/// 시즌 경계·월간 훅 양쪽에서 동일하게 재호출한다. 로테이션과 달리
+/// "다음 등판 보존" 같은 연속성 제약이 없어(마무리는 순번이 아니라 단일
+/// 지정 역할) 별도 "reassign_*" 변형이 필요 없다 — 이 함수 하나로 충분.
+/// 후보가 0명이면 no-op(`load_relief_pitcher`가 폴백으로 처리).
+fn assign_closer(conn: &Connection, team_id: &str) -> anyhow::Result<()> {
+    let ranked = ranked_closer_candidates_for_team(conn, team_id)?;
+    let Some(top) = ranked.into_iter().next() else {
+        return Ok(());
+    };
+    conn.execute(
+        "INSERT INTO season_meta (key, value) VALUES (?1, ?2)
+         ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+        params![format!("closer:{team_id}"), top],
+    )?;
+    Ok(())
 }
 
 /// 강판 이후 세션에 이미 정해진 불펜 투수를 id로 다시 불러온다(감독
@@ -2185,22 +2264,26 @@ fn process_day(slot_conn: &Connection, content_conn: &Connection, world_seed: i6
 
         let home_lineup = load_batting_lineup(slot_conn, &home)?;
         let home_pitcher = load_starting_pitcher(slot_conn, &home)?;
-        let home_reliever = load_relief_pitcher(slot_conn, &home)?;
+        let home_reliever = load_relief_pitcher(slot_conn, &home, false)?;
+        let home_closer = load_relief_pitcher(slot_conn, &home, true)?;
         let home_manager = load_manager_stats(slot_conn, &home)?;
         let away_lineup = load_batting_lineup(slot_conn, &away)?;
         let away_pitcher = load_starting_pitcher(slot_conn, &away)?;
-        let away_reliever = load_relief_pitcher(slot_conn, &away)?;
+        let away_reliever = load_relief_pitcher(slot_conn, &away, false)?;
+        let away_closer = load_relief_pitcher(slot_conn, &away, true)?;
         let away_manager = load_manager_stats(slot_conn, &away)?;
 
         let home_plan = match_sim::TeamPitchingPlan {
             starter: &home_pitcher,
             reliever: home_reliever.as_ref(),
+            closer: home_closer.as_ref(),
             tactics: home_manager.tactics,
             trust: home_manager.trust,
         };
         let away_plan = match_sim::TeamPitchingPlan {
             starter: &away_pitcher,
             reliever: away_reliever.as_ref(),
+            closer: away_closer.as_ref(),
             tactics: away_manager.tactics,
             trust: away_manager.trust,
         };
@@ -2354,8 +2437,8 @@ fn run_intrasquad_scrimmage(slot_conn: &Connection, content_conn: &Connection, w
     let white_idx = least_fatigued_from(&white_pitchers, (day as usize) % white_pitchers.len());
     let blue_starter = &blue_pitchers[blue_idx];
     let white_starter = &white_pitchers[white_idx];
-    let blue_plan = match_sim::TeamPitchingPlan { starter: blue_starter, reliever: None, tactics: manager.tactics, trust: manager.trust };
-    let white_plan = match_sim::TeamPitchingPlan { starter: white_starter, reliever: None, tactics: manager.tactics, trust: manager.trust };
+    let blue_plan = match_sim::TeamPitchingPlan { starter: blue_starter, reliever: None, closer: None, tactics: manager.tactics, trust: manager.trust };
+    let white_plan = match_sim::TeamPitchingPlan { starter: white_starter, reliever: None, closer: None, tactics: manager.tactics, trust: manager.trust };
 
     let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("scrimmage:{team_id}:{day}")));
     let result = match_sim::simulate_game(&mut rng, &league_id, &blue_batters, &blue_plan, &white_batters, &white_plan);
@@ -4562,6 +4645,9 @@ pub fn season_rollover(conn: &Connection, content_conn: &Connection, day: i64) -
     // 순번을 보존할 이유가 없다(로스터 자체가 갈림, 시즌 중 재편과 다름).
     for_each_team_in_all_leagues(conn, content_conn, |c, team_id| assign_rotation(c, content_conn, team_id))?;
     for_each_team_in_all_leagues(conn, content_conn, assign_batting_order)?;
+    // 마무리 랭킹도 시즌 경계마다 재계산(10_구현_Phase_계획.md §6-N Part G) —
+    // 방금 끝난 시즌의 season_stats가 아직 남아있는 지금이라야 반영된다.
+    for_each_team_in_all_leagues(conn, content_conn, assign_closer)?;
     conn.execute("DELETE FROM season_stats", [])?;
     // 청백전(연습경기) 성적도 "이번 시즌" 단위 — season_stats와 같은
     // 타이밍에 비운다(대화 2026-07-26).
@@ -4655,6 +4741,10 @@ pub fn advance(slot_conn: &mut Connection, content_conn: &Connection) -> anyhow:
             // "다음 등판 보존" 같은 연속성 제약이 없어 플레인 재배정 하나면
             // 충분하다.
             for_each_team_in_all_leagues(&tx, content_conn, assign_batting_order)?;
+            // 마무리 랭킹 월간 재계산(10_구현_Phase_계획.md §6-N Part G) —
+            // 이번 달 청백전(practice_stats)·이번 시즌 성적(season_stats)
+            // 모두 반영해 더 잘 던진 중계가 마무리로 승격될 수 있게 한다.
+            for_each_team_in_all_leagues(&tx, content_conn, assign_closer)?;
             // NPC 콜업/강등(10_구현_Phase_계획.md §6-N) — process_month 안이
             // 아니라 여기 형제 호출로 둔다: process_month는 주인공이 이번 달
             // 안 던졌으면 맨 위에서 즉시 return하는데, NPC 승강은 주인공
@@ -7821,6 +7911,68 @@ mod tests {
         let raw: String = slot_conn.query_row("SELECT value FROM season_meta WHERE key = 'rotation:team:a'", [], |r| r.get(0)).unwrap();
         let rotation: Vec<String> = serde_json::from_str(&raw).unwrap();
         assert_eq!(rotation[0], "team:a_sp1", "청백전 성적이 좋은 투수가 능력치 동률에서도 앞서야 함");
+    }
+
+    #[test]
+    fn assign_closer_picks_the_higher_skill_reliever_and_stores_it_in_season_meta() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_test_player(&slot_conn, "team:a_rp1", "team:a", "중계투수", serde_json::json!({"제구": 40.0, "구위": 40.0}));
+        insert_test_player(&slot_conn, "team:a_rp2", "team:a", "마무리투수", serde_json::json!({"제구": 70.0, "구위": 70.0}));
+
+        assign_closer(&slot_conn, "team:a").unwrap();
+
+        let closer: String = slot_conn.query_row("SELECT value FROM season_meta WHERE key = 'closer:team:a'", [], |r| r.get(0)).unwrap();
+        assert_eq!(closer, "team:a_rp2");
+    }
+
+    #[test]
+    fn assign_closer_is_a_no_op_when_the_team_has_no_relievers() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_test_player(&slot_conn, "team:a_sp", "team:a", "선발투수", serde_json::json!({"제구": 50.0, "구위": 50.0}));
+
+        assign_closer(&slot_conn, "team:a").unwrap();
+
+        let closer: Option<String> =
+            slot_conn.query_row("SELECT value FROM season_meta WHERE key = 'closer:team:a'", [], |r| r.get(0)).optional().unwrap();
+        assert_eq!(closer, None);
+    }
+
+    #[test]
+    fn load_relief_pitcher_returns_the_designated_closer_in_a_save_situation() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_test_player(&slot_conn, "team:a_rp", "team:a", "중계투수", serde_json::json!({"제구": 40.0, "구위": 40.0}));
+        insert_test_player(&slot_conn, "team:a_closer", "team:a", "마무리투수", serde_json::json!({"제구": 70.0, "구위": 70.0}));
+        assign_closer(&slot_conn, "team:a").unwrap();
+
+        let picked = load_relief_pitcher(&slot_conn, "team:a", true).unwrap().unwrap();
+        assert_eq!(picked.id, "team:a_closer");
+    }
+
+    #[test]
+    fn load_relief_pitcher_returns_a_setup_reliever_outside_a_save_situation() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_test_player(&slot_conn, "team:a_rp", "team:a", "중계투수", serde_json::json!({"제구": 40.0, "구위": 40.0}));
+        insert_test_player(&slot_conn, "team:a_closer", "team:a", "마무리투수", serde_json::json!({"제구": 70.0, "구위": 70.0}));
+        assign_closer(&slot_conn, "team:a").unwrap();
+
+        let picked = load_relief_pitcher(&slot_conn, "team:a", false).unwrap().unwrap();
+        assert_eq!(picked.id, "team:a_rp", "세이브 상황이 아니면 마무리 대신 중계 풀에서 골라야 함");
+    }
+
+    #[test]
+    fn load_relief_pitcher_falls_back_to_any_reliever_when_the_designated_closer_left_the_roster() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_test_player(&slot_conn, "team:a_rp", "team:a", "중계투수", serde_json::json!({"제구": 40.0, "구위": 40.0}));
+        // closer:team:a를 가리키는 season_meta는 있지만 그 선수는 로스터에 없다(은퇴·트레이드 등).
+        slot_conn
+            .execute(
+                "INSERT INTO season_meta (key, value) VALUES ('closer:team:a', 'team:a_gone')",
+                [],
+            )
+            .unwrap();
+
+        let picked = load_relief_pitcher(&slot_conn, "team:a", true).unwrap().unwrap();
+        assert_eq!(picked.id, "team:a_rp", "지정 마무리가 로스터에 없으면 남은 구원 풀로 폴백해야 함");
     }
 
     /// 주인공도 로테이션 경쟁에 낀다(대화 2026-07-26, 청백전이 주인공 본인

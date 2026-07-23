@@ -274,12 +274,18 @@ const EMPTY_BASES: [bool; 3] = [false, false, false];
 const TIEBREAK_BASES: [bool; 3] = [true, true, false]; // 승부치기: 무사 1·2루
 
 /// 배경 경기(`simulate_game`)의 팀별 투수 운용 계획 — 강판 판정에 필요한
-/// 입력을 한 번에 묶는다(파라미터 폭발 방지). `reliever`가 `None`이면 그
-/// 팀은 강판 없이 완투(로스터에 중계·마무리투수가 없을 때의 방어적 폴백,
-/// 기존 동작과 동일).
+/// 입력을 한 번에 묶는다(파라미터 폭발 방지). `reliever`는 세이브 상황이
+/// 아닐 때 쓸 중계, `closer`는 세이브 상황(`manager::is_save_situation`,
+/// Part G)일 때 쓸 마무리 — 강판이 일어나는 그 이닝의 실제 스코어를
+/// 보고 둘 중 하나를 고른다(`load_relief_pitcher`가 미리 채워온다).
+/// 둘 다 `None`이면 그 팀은 강판 없이 완투(로스터에 중계·마무리투수가
+/// 없을 때의 방어적 폴백, 기존 동작과 동일). 한쪽만 있으면 상황과
+/// 무관하게 있는 쪽을 쓴다(예: 마무리는 있는데 중계가 없는 극단적으로
+/// 작은 로스터).
 pub struct TeamPitchingPlan<'a> {
     pub starter: &'a PitcherStats,
     pub reliever: Option<&'a PitcherStats>,
+    pub closer: Option<&'a PitcherStats>,
     pub tactics: f64,
     pub trust: f64,
 }
@@ -318,10 +324,10 @@ fn merge_batter_stats(mut a: HashMap<String, BatterGameStats>, b: HashMap<String
 /// should_pull_pitcher`로 판단, 팀당 게임 1회까지만(주인공 매치와 동일
 /// 제약). 배경 경기는 타석 단위 시뮬이라 실제 볼카운트가 없어 "던진 타자
 /// 수 × 3.8"로 투구수를 근사한다(D그룹 — 밸런스 하네스 재조정 대상).
-/// 구원투수 포지션은 선발/중계/마무리 3분류까지 나뉘었지만(§6-N Part F)
-/// 상황별 서열(세이브 상황엔 마무리, 아니면 중계)·복수 교체는 여전히
-/// 이 함수 밖(호출부가 `home_plan.reliever`/`away_plan.reliever`로 이미
-/// 골라온 딱 1명만 받는다) — Part G가 그 선택 로직을 채운다.
+/// 강판이 결정되는 그 이닝의 실제 스코어로 `manager::is_save_situation`을
+/// 판단해 `home_plan.closer`(세이브 상황)와 `home_plan.reliever`(그 외)
+/// 중 하나를 고른다(Part G) — 다만 팀당 여전히 딱 1회만 교체하므로 중계가
+/// 여럿일 때의 세부 서열(셋업·추격조)까지는 이번에도 스코프 밖.
 pub fn simulate_game(
     rng: &mut impl Rng,
     league_id: &str,
@@ -396,7 +402,9 @@ pub fn simulate_game(
         }
 
         if !home_pulled {
-            if let Some(reliever) = home_plan.reliever {
+            let save_situation = manager::is_save_situation(inning as i64, home_runs as i64, away_runs as i64);
+            let candidate = if save_situation { home_plan.closer.or(home_plan.reliever) } else { home_plan.reliever.or(home_plan.closer) };
+            if let Some(reliever) = candidate {
                 let faced = top_half_stats.pitcher.outs_recorded + top_half_stats.pitcher.hits_allowed + top_half_stats.pitcher.walks;
                 let approx_pitches = (faced as f64 * 3.8) as u32;
                 if manager::should_pull_pitcher(rng, approx_pitches, home_plan.starter.fatigue, home_plan.tactics, home_plan.trust) {
@@ -406,7 +414,9 @@ pub fn simulate_game(
             }
         }
         if !away_pulled {
-            if let Some(reliever) = away_plan.reliever {
+            let save_situation = manager::is_save_situation(inning as i64, away_runs as i64, home_runs as i64);
+            let candidate = if save_situation { away_plan.closer.or(away_plan.reliever) } else { away_plan.reliever.or(away_plan.closer) };
+            if let Some(reliever) = candidate {
                 let faced = bottom_half_stats.pitcher.outs_recorded + bottom_half_stats.pitcher.hits_allowed + bottom_half_stats.pitcher.walks;
                 let approx_pitches = (faced as f64 * 3.8) as u32;
                 if manager::should_pull_pitcher(rng, approx_pitches, away_plan.starter.fatigue, away_plan.tactics, away_plan.trust) {
@@ -447,7 +457,7 @@ mod tests {
     /// 강판을 신경 쓰지 않는 기존 테스트들이 계속 완투 동작을 보게 하는
     /// 헬퍼 — `reliever: None`이면 `simulate_game`이 절대 강판하지 않는다.
     fn no_pull_plan(starter: &PitcherStats) -> TeamPitchingPlan<'_> {
-        TeamPitchingPlan { starter, reliever: None, tactics: 50.0, trust: 50.0 }
+        TeamPitchingPlan { starter, reliever: None, closer: None, tactics: 50.0, trust: 50.0 }
     }
 
     #[test]
@@ -485,7 +495,7 @@ mod tests {
         let mut pulled_at_least_once = false;
         for seed in 0..20u64 {
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
-            let home_plan = TeamPitchingPlan { starter: &starter, reliever: Some(&reliever), tactics: 50.0, trust: 50.0 };
+            let home_plan = TeamPitchingPlan { starter: &starter, reliever: Some(&reliever), closer: None, tactics: 50.0, trust: 50.0 };
             let away_starter = avg_pitcher();
             let away_plan = no_pull_plan(&away_starter);
             let r = simulate_game(&mut rng, "league:pro", &lineup, &home_plan, &lineup, &away_plan);
@@ -499,6 +509,26 @@ mod tests {
             }
         }
         assert!(pulled_at_least_once, "expected at least one seed to pull the starter over a full 9-inning game");
+    }
+
+    #[test]
+    fn simulate_game_pulls_a_starter_into_the_closer_slot_when_only_a_closer_is_available() {
+        let lineup: Vec<BatterStats> = (0..8).map(|i| BatterStats { id: format!("b{i}"), ..avg_batter() }).collect();
+        let starter = avg_pitcher();
+        let closer = PitcherStats { id: "closer".to_string(), control: 50.0, stuff: 50.0, fatigue: 0.0 };
+        let mut pulled_at_least_once = false;
+        for seed in 0..20u64 {
+            let mut rng = ChaCha8Rng::seed_from_u64(seed);
+            let home_plan = TeamPitchingPlan { starter: &starter, reliever: None, closer: Some(&closer), tactics: 50.0, trust: 50.0 };
+            let away_starter = avg_pitcher();
+            let away_plan = no_pull_plan(&away_starter);
+            let r = simulate_game(&mut rng, "league:pro", &lineup, &home_plan, &lineup, &away_plan);
+            if r.home_reliever_stats.is_some() {
+                pulled_at_least_once = true;
+                break;
+            }
+        }
+        assert!(pulled_at_least_once, "reliever가 없어도 closer가 비세이브 상황 폴백으로 쓰여 강판이 일어나야 함");
     }
 
     #[test]

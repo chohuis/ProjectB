@@ -129,6 +129,19 @@ pub fn should_pull_pitcher(rng: &mut impl Rng, pitches_thrown: u32, fatigue: f64
     rng.gen_bool(p)
 }
 
+/// 세이브 상황 판정 placeholder(D그룹, 대화 2026-07-26 Part G) — 실제
+/// KBO/MLB 세이브 규정(동점 등판·타이 브레이크 등 세부 조건)을 단순화해
+/// "7회 이상 + 3점 이내 리드"만 본다. `team_runs`는 강판을 고려하는 그
+/// 팀(리드를 지키는 쪽) 관점 — 리드가 0 이하(동점·역전당함)면 세이브
+/// 상황 아님. `load_relief_pitcher`가 이 판정으로 마무리/중계 풀을 가른다.
+const SAVE_SITUATION_MIN_INNING: i64 = 7;
+const SAVE_SITUATION_MAX_LEAD: i64 = 3;
+
+pub fn is_save_situation(inning: i64, team_runs: i64, opponent_runs: i64) -> bool {
+    let lead = team_runs - opponent_runs;
+    inning >= SAVE_SITUATION_MIN_INNING && lead > 0 && lead <= SAVE_SITUATION_MAX_LEAD
+}
+
 /// 선발 로테이션 크기(04_프로_커리어.md §22 "능력치·누적성적으로 감독 AI가
 /// 서열화" — 로스터 반영 인원은 05_밸런스.md §2-D에 미정으로 남아있던
 /// 항목, 이번에 확정) — D그룹 placeholder, I8 밸런스 하네스 재조정 대상.
@@ -402,5 +415,15 @@ mod tests {
         let ranked = rank_rotation_candidates(&candidates);
         assert_eq!(ranked.len(), ROTATION_SIZE);
         assert_eq!(ranked[0], "npc:9", "가장 능력치 높은 후보가 1번이어야 함");
+    }
+
+    #[test]
+    fn is_save_situation_requires_both_late_inning_and_a_narrow_lead() {
+        assert!(is_save_situation(7, 3, 1), "7회+2점차 리드는 세이브 상황");
+        assert!(is_save_situation(9, 5, 4), "동점에 가까운 1점차도 세이브 상황");
+        assert!(!is_save_situation(6, 1, 0), "이닝이 이르면 리드가 있어도 세이브 상황 아님");
+        assert!(!is_save_situation(9, 10, 0), "리드가 너무 크면 세이브 상황 아님");
+        assert!(!is_save_situation(9, 3, 3), "동점은 세이브 상황 아님(리드 0)");
+        assert!(!is_save_situation(9, 2, 5), "역전당한(뒤지는) 팀은 세이브 상황 아님");
     }
 }

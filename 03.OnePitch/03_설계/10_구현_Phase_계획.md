@@ -1599,7 +1599,24 @@
 
 **테스트**: `cargo test --lib` 446개 전부 통과(`roster::` 6개 중 `roster_size_and_position_split_match_rule`을 중계 1명/마무리 1명 분리 검증으로 갱신). `cargo clippy` 클린. frb 재생성 불필요(스키마·position 값만 변경, 새 frb 함수 없음). `cargo build --release` 갱신 후 `flutter test` 27개 전부 통과.
 
-### 6-99. 문서 갱신 규칙
+### 6-99. 마무리 동적 랭킹 + 상황별 불펜 투입 — Part G (2026-07-26, 완료)
+
+**Context**: Part F까지는 구원투수가 선발/중계/마무리 3분류로 나뉘었지만, `load_relief_pitcher`는 여전히 "중계+마무리 통틀어 id순 첫 명" 고정이라 마무리 지정 자체가 없었고 세이브 상황 구분도 없었다. 사용자가 짚은 "로테이션 랭킹 가중치 쪽도 수정 가능한지"에 대한 답이 바로 이 마무리 랭킹 재사용 — 가중치 자체는 확인대로 그대로(0.5/0.3/0.2) 두고 같은 블렌드 공식을 마무리 서열에도 적용.
+
+**구현**(`engine/src/sim/manager.rs`):
+- `is_save_situation(inning, team_runs, opponent_runs) -> bool` 신규 — "7회 이상 + 3점 이내 리드"(D그룹 placeholder, `SAVE_SITUATION_MIN_INNING`/`SAVE_SITUATION_MAX_LEAD`). 리드가 0 이하(동점·역전당함)면 항상 false.
+
+**구현**(`engine/src/data/repository.rs`):
+- `ranked_closer_candidates_for_team`/`assign_closer` 신규 — `ranked_rotation_candidates_for_team`과 같은 skill+season_stats+practice_stats 3중 블렌드(`manager::blend_rotation_score_with_practice` 그대로 재사용)를 중계+마무리 풀에 적용해 1위 id를 `season_meta['closer:{team_id}']`에 저장. 로테이션과 달리 "다음 등판 보존" 개념이 없어(마무리는 순번이 아니라 단일 지정 역할) `reassign_*` 변형 없이 이 함수 하나를 시즌 경계(`generate_initial_world`/`season_rollover`)·월간 훅(`advance()`) 세 곳 모두에서 재사용 — 정적으로 굳어버려 성적이 좋아진 중계가 영원히 못 올라가는 함정을 로테이션과 동일하게 피한다.
+- `load_relief_pitcher`가 `is_save_situation: bool` 파라미터를 받도록 재작성 — true면 지정 마무리(로스터에서 사라졌으면 무시), false면 중계 풀(마무리 제외) id순 첫 명. 어느 쪽도 못 찾으면 중계+마무리 전체 풀로 방어적 폴백.
+
+**구현**(`engine/src/sim/match_.rs`):
+- `TeamPitchingPlan`에 `closer` 필드 추가 — `reliever`(세이브 아닐 때)와 `closer`(세이브일 때)를 둘 다 받는다. `simulate_game`의 강판 판정 루프가 그 이닝의 실제 스코어로 `manager::is_save_situation`을 매번 계산해 둘 중 하나를 고른다(한쪽만 있으면 상황과 무관하게 있는 쪽 사용). 배경 경기(`process_day`)는 이제 팀당 reliever·closer 둘 다 미리 로드해서 넘긴다.
+- `data::match_session`(주인공 자신이 강판되는 순간)도 그 시점의 실제 이닝·점수차로 `is_save_situation`을 계산해 `load_relief_pitcher`에 넘긴다 — 배경 경기와 동일한 판정 기준.
+
+**테스트**: `cargo test --lib` 453개 전부 통과(신규 7개 — `is_save_situation` 판정 6분기, 마무리 슬롯 폴백 강판 1개, `assign_closer` 2개, `load_relief_pitcher` 상황별 선택 3개). `cargo clippy` 클린. frb 재생성 불필요(내부 로직·기존 season_meta 테이블 재사용, 새 테이블 없음). `cargo build --release` 갱신 후 `flutter test` 27개 전부 통과.
+
+### 6-100. 문서 갱신 규칙
 
 **이 문서는 살아있는 문서다.** Phase를 하나 끝낼 때마다:
 1. §2 표의 해당 행 상태를 `⬜ 미착수` → `🔶 진행중` → `✅ 완료`로 갱신.

@@ -587,9 +587,14 @@ fn run_until_decision_point(
             };
 
             if pull_now {
-                if let Some(reliever) = repository::load_relief_pitcher(slot_conn, &protagonist_team_id)? {
-                    let protagonist_is_home = session.home == protagonist_team_id;
-                    let opponent_runs_so_far = if protagonist_is_home { session.away_runs } else { session.home_runs };
+                let protagonist_is_home = session.home == protagonist_team_id;
+                let (team_runs_so_far, opponent_runs_so_far) =
+                    if protagonist_is_home { (session.home_runs, session.away_runs) } else { (session.away_runs, session.home_runs) };
+                // 이 강판 시점의 실제 이닝·점수차로 세이브 상황을 판단(Part G) —
+                // 세이브 상황이면 마무리(`season_meta['closer:{team_id}']`)를,
+                // 아니면 중계 풀을 우선한다.
+                let save_situation = crate::sim::manager::is_save_situation(session.inning, team_runs_so_far, opponent_runs_so_far);
+                if let Some(reliever) = repository::load_relief_pitcher(slot_conn, &protagonist_team_id, save_situation)? {
                     session.protagonist_pulled = true;
                     session.relief_pitcher_id = Some(reliever.id);
                     session.protagonist_pull_inning = Some(session.inning);
