@@ -1,7 +1,46 @@
 use rand::seq::SliceRandom;
 use rand::Rng;
 
-use crate::sim::match_sim::{fatigue_effective, resolve_in_play_result, BatterStats, PaOutcome, PitcherStats};
+use crate::sim::match_sim::{fatigue_effective, platoon_edge_for_pitcher, resolve_in_play_result, BatterStats, PaOutcome, PitcherStats};
+
+/// 구종 마스터리 항목(05_구종_시스템.md §2) — `repository::pitch_mastery_entries`가
+/// `protagonist.pitches`(`{name, stage, weeks}` JSON)에서 만들어 넘긴다.
+/// `stage`는 1(습작)~5(필살기).
+#[derive(Debug, Clone)]
+pub struct PitchMastery {
+    pub name: String,
+    pub stage: u8,
+}
+
+/// 구종 3계열(05_구종_시스템.md §1 카탈로그) — 레퍼토리 다양성 보너스
+/// (§4 "3계열 골고루 보유가 유리")와 좌우 상성 등 구종별 분기에 재사용.
+/// 너클볼은 3계열 어디에도 안 속하는 특수구라 다양성 판정에선 안 셈.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum PitchFamily {
+    Fastball,
+    Breaking,
+    Offspeed,
+    Special,
+}
+
+fn pitch_family(name: &str) -> PitchFamily {
+    match name {
+        "포심 패스트볼" | "투심 패스트볼" | "커터" => PitchFamily::Fastball,
+        "슬라이더" | "커브" | "스위퍼" => PitchFamily::Breaking,
+        "체인지업" | "포크볼" | "싱커" => PitchFamily::Offspeed,
+        _ => PitchFamily::Special,
+    }
+}
+
+/// 레퍼토리 다양성 보너스 발동 조건(§4 "3계열 골고루 보유") — 패스트볼·
+/// 브레이킹볼·오프스피드 3계열을 전부 갖췄는지. 보유 구종 상한이 5개뿐이라
+/// (05_구종_시스템.md §3) 최소 3개 이상부터나 성립.
+pub fn repertoire_is_diverse(pitches: &[PitchMastery]) -> bool {
+    let has_fastball = pitches.iter().any(|p| pitch_family(&p.name) == PitchFamily::Fastball);
+    let has_breaking = pitches.iter().any(|p| pitch_family(&p.name) == PitchFamily::Breaking);
+    let has_offspeed = pitches.iter().any(|p| pitch_family(&p.name) == PitchFamily::Offspeed);
+    has_fastball && has_breaking && has_offspeed
+}
 
 /// 위기상황 판정 함수 자체는 `sim::match_sim`으로 옮겼다(Phase 1, 배경
 /// 시뮬도 재사용하기 위해) — 기존 호출부(`data::match_session` 등)가 계속
@@ -78,14 +117,25 @@ fn clamp01(x: f64) -> f64 {
 }
 
 /// 1구 판정 — §5 "판정 = 선택 구종 마스터리 단계 + 관련 능력치(제구·구위)
-/// vs 타자 능력치(컨택·선구안·파워) + 상황 보정... 정확한 판정식은 스탯
-/// 스케일 확정 후"라 placeholder. 구종별 마스터리 차등은 마스터리 추적
-/// 시스템이 아직 없어(05_구종_시스템 §3, I8 이후 스코프) 이번엔 코스만
-/// 실제 판정에 반영 — 구종 자체는 기록만 되고 결과에 별도 가중을 안 줌.
-/// `high_leverage`(Phase 1) — true면 클러치·침착함이 개입한다(§5 "상황
-/// 보정... 클러치"). 피로도는 `fatigue_effective`로 제구·구위 실효치를
-/// 미리 깎아서 씀(투수가 지칠수록 코스가 흔들린다는 자연스러운 결과).
-pub fn throw_pitch(rng: &mut impl Rng, pitcher: &PitcherStats, batter: &BatterStats, course: Course, high_leverage: bool) -> PitchResult {
+/// vs 타자 능력치(컨택·선구안·파워) + 상황 보정". `high_leverage`(Phase 1)
+/// — true면 클러치·침착함이 개입한다(§5 "상황 보정... 클러치"). 피로도는
+/// `fatigue_effective`로 제구·구위 실효치를 미리 깎아서 씀(투수가 지칠수록
+/// 코스가 흔들린다는 자연스러운 결과). `mastery_stage`(Phase 4, 1~5)는
+/// 지금 던진 그 구종의 마스터리 단계 — 3(실전)을 기준점으로 삼아 단계당
+/// 소폭 가감(§4 "개별 구종 위력... 마스터리 단계가 피안타율·헛스윙에
+/// 직결"). `repertoire_diverse`(Phase 4)는 3계열 골고루 보유 시 발동하는
+/// 레퍼토리 다양성 보너스(§4) — 코스 상관없이 항상 소폭 헛스윙 유도력을
+/// 더한다. 좌우 상성(Phase 4, 신규 설계)은 `platoon_edge_for_pitcher`로
+/// `simulate_plate_appearance`(배경)와 같은 계산을 공유.
+pub fn throw_pitch(
+    rng: &mut impl Rng,
+    pitcher: &PitcherStats,
+    batter: &BatterStats,
+    course: Course,
+    high_leverage: bool,
+    mastery_stage: u8,
+    repertoire_diverse: bool,
+) -> PitchResult {
     let edge = course.edge_level();
     let effective_control = fatigue_effective(pitcher.control, pitcher.fatigue);
     let effective_stuff = fatigue_effective(pitcher.stuff, pitcher.fatigue);
@@ -120,12 +170,21 @@ pub fn throw_pitch(rng: &mut impl Rng, pitcher: &PitcherStats, batter: &BatterSt
     }
 
     // 존 안 — 구석에 걸칠수록(edge↑) 맞히기 어려움. 구속은 구위와 별개로
-    // 순수 헛스윙 유발력을 더한다. 위기상황에선 클러치 대결.
-    let mut contact_edge = (effective_stuff + edge * 20.0 + (pitcher.velocity - 50.0) * 0.3) - batter.contact;
+    // 순수 헛스윙 유발력을 더한다. 위기상황에선 클러치 대결. 마스터리
+    // 단계(Phase 4)는 3(실전)을 기준점으로 단계당 ±2.5, 좌우 상성(Phase 4)은
+    // `platoon_edge_for_pitcher` 공유 계산. D그룹 placeholder(계수는 I8
+    // 재조정 대상).
+    let mastery_bonus = (mastery_stage as f64 - 3.0) * 2.5;
+    let mut contact_edge = (effective_stuff + edge * 20.0 + (pitcher.velocity - 50.0) * 0.3) - batter.contact + mastery_bonus;
+    contact_edge += platoon_edge_for_pitcher(pitcher.handedness, batter.handedness);
     if high_leverage {
         contact_edge += (pitcher.clutch - batter.clutch) * 3.0;
     }
-    let whiff_prob = clamp01(0.15 + contact_edge * 0.004);
+    // 레퍼토리 다양성 보너스(Phase 4, §4) — 3계열 골고루 보유한 투수는
+    // 타자가 다음 구종을 예측하기 어려워 코스와 무관하게 헛스윙 확률이
+    // 소폭 오른다.
+    let diversity_bonus = if repertoire_diverse { 0.02 } else { 0.0 };
+    let whiff_prob = clamp01(0.15 + contact_edge * 0.004 + diversity_bonus);
     if rng.gen::<f64>() < whiff_prob {
         return PitchResult::Strike;
     }
@@ -184,10 +243,12 @@ pub fn apply_pitch_result(count: &mut Count, result: PitchResult) -> AtBatOutcom
 
 /// 자동 모드(§3) AI의 구종·코스 대리 선택 — "가벼운 휴리스틱... 위기상황
 /// 일수록 유인구(구석 코스) 비중↑, 강타자 상대일수록 정면승부 비중↓"를
-/// 그대로 반영. 구종은 보유 구종 중 균등 랜덤(마스터리 기반 선구는 스코프
-/// 밖 — 위 `throw_pitch` 주석 참고).
-pub fn choose_pitch_and_course(rng: &mut impl Rng, pitches: &[String], batter: &BatterStats, high_leverage: bool) -> (String, Course) {
-    let pitch = pitches.choose(rng).cloned().unwrap_or_else(|| "포심 패스트볼".to_string());
+/// 그대로 반영. 구종은 보유 구종 중 균등 랜덤(마스터리에 따른 가중 선구는
+/// 스코프 밖 — 어떤 구종을 던지든 `throw_pitch`가 그 구종의 마스터리
+/// 단계를 실제로 반영하는 게 이번 Phase 4의 핵심이라, "어떤 구종을 고를지"
+/// 자체는 안 건드림).
+pub fn choose_pitch_and_course(rng: &mut impl Rng, pitches: &[PitchMastery], batter: &BatterStats, high_leverage: bool) -> (PitchMastery, Course) {
+    let pitch = pitches.choose(rng).cloned().unwrap_or(PitchMastery { name: "포심 패스트볼".to_string(), stage: 1 });
 
     let strong_batter = batter.power >= 60.0;
     let lure_bias = (if high_leverage { 0.3 } else { 0.0 }) + (if strong_batter { 0.2 } else { 0.0 });
@@ -213,7 +274,7 @@ pub fn choose_pitch_and_course(rng: &mut impl Rng, pitches: &[String], batter: &
 #[allow(clippy::too_many_arguments)]
 pub fn simulate_at_bat_automatically(
     rng: &mut impl Rng,
-    pitches: &[String],
+    pitches: &[PitchMastery],
     pitcher: &PitcherStats,
     batter: &BatterStats,
     bases: [bool; 3],
@@ -223,9 +284,10 @@ pub fn simulate_at_bat_automatically(
 ) -> (PaOutcome, u32) {
     let mut count = Count::default();
     let mut pitch_count = 0u32;
+    let diverse = repertoire_is_diverse(pitches);
     loop {
-        let (_pitch_name, course) = choose_pitch_and_course(rng, pitches, batter, high_leverage);
-        let result = throw_pitch(rng, pitcher, batter, course, high_leverage);
+        let (pitch, course) = choose_pitch_and_course(rng, pitches, batter, high_leverage);
+        let result = throw_pitch(rng, pitcher, batter, course, high_leverage, pitch.stage, diverse);
         pitch_count += 1;
         match apply_pitch_result(&mut count, result) {
             AtBatOutcome::InProgress => continue,
@@ -246,10 +308,31 @@ mod tests {
     use rand_chacha::ChaCha8Rng;
 
     fn avg_batter() -> BatterStats {
-        BatterStats { id: "b".to_string(), contact: 50.0, eye: 50.0, power: 50.0, fatigue: 0.0, clutch: 50.0, composure: 50.0, defense: 50.0, speed: 50.0 }
+        BatterStats {
+            id: "b".to_string(),
+            contact: 50.0,
+            eye: 50.0,
+            power: 50.0,
+            fatigue: 0.0,
+            clutch: 50.0,
+            composure: 50.0,
+            defense: 50.0,
+            speed: 50.0,
+            handedness: crate::sim::match_sim::Handedness::Right,
+        }
     }
     fn avg_pitcher() -> PitcherStats {
-        PitcherStats { id: "p".to_string(), control: 50.0, stuff: 50.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0 }
+        PitcherStats {
+            id: "p".to_string(),
+            control: 50.0,
+            stuff: 50.0,
+            fatigue: 0.0,
+            velocity: 50.0,
+            game_management: 50.0,
+            clutch: 50.0,
+            composure: 50.0,
+            handedness: crate::sim::match_sim::Handedness::Right,
+        }
     }
 
     #[test]
@@ -257,20 +340,20 @@ mod tests {
         let mut rng_a = ChaCha8Rng::seed_from_u64(1);
         let mut rng_b = ChaCha8Rng::seed_from_u64(1);
         assert_eq!(
-            throw_pitch(&mut rng_a, &avg_pitcher(), &avg_batter(), Course::MidCenter, false),
-            throw_pitch(&mut rng_b, &avg_pitcher(), &avg_batter(), Course::MidCenter, false)
+            throw_pitch(&mut rng_a, &avg_pitcher(), &avg_batter(), Course::MidCenter, false, 3, false),
+            throw_pitch(&mut rng_b, &avg_pitcher(), &avg_batter(), Course::MidCenter, false, 3, false)
         );
     }
 
     #[test]
     fn inside_courses_raise_hit_by_pitch_rate_for_wild_pitchers() {
-        let wild = PitcherStats { id: "p".to_string(), control: 20.0, stuff: 50.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0 };
+        let wild = PitcherStats { id: "p".to_string(), control: 20.0, stuff: 50.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0, handedness: crate::sim::match_sim::Handedness::Right };
         let trials = 3000;
         let count_hbp = |course: Course| -> usize {
             let mut hits = 0;
             for seed in 0..trials {
                 let mut rng = ChaCha8Rng::seed_from_u64(seed);
-                if throw_pitch(&mut rng, &wild, &avg_batter(), course, false) == PitchResult::HitByPitch {
+                if throw_pitch(&mut rng, &wild, &avg_batter(), course, false, 3, false) == PitchResult::HitByPitch {
                     hits += 1;
                 }
             }
@@ -325,7 +408,7 @@ mod tests {
 
     #[test]
     fn automatic_at_bat_terminates_and_produces_a_valid_outcome() {
-        let pitches = vec!["포심 패스트볼".to_string(), "슬라이더".to_string()];
+        let pitches = vec![PitchMastery { name: "포심 패스트볼".to_string(), stage: 3 }, PitchMastery { name: "슬라이더".to_string(), stage: 3 }];
         for seed in 0..100u64 {
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
             let (outcome, pitch_count) =
@@ -350,7 +433,7 @@ mod tests {
 
     #[test]
     fn automatic_at_bat_is_deterministic_given_the_same_seed() {
-        let pitches = vec!["포심 패스트볼".to_string()];
+        let pitches = vec![PitchMastery { name: "포심 패스트볼".to_string(), stage: 3 }];
         let mut rng_a = ChaCha8Rng::seed_from_u64(42);
         let mut rng_b = ChaCha8Rng::seed_from_u64(42);
         let a = simulate_at_bat_automatically(&mut rng_a, &pitches, &avg_pitcher(), &avg_batter(), [false; 3], 0, 50.0, false);
@@ -364,8 +447,8 @@ mod tests {
         for seed in 0..30u64 {
             let mut rng_a = ChaCha8Rng::seed_from_u64(seed);
             let mut rng_b = ChaCha8Rng::seed_from_u64(seed);
-            let a = throw_pitch(&mut rng_a, &clutch_pitcher, &avg_batter(), Course::MidCenter, false);
-            let b = throw_pitch(&mut rng_b, &avg_pitcher(), &avg_batter(), Course::MidCenter, false);
+            let a = throw_pitch(&mut rng_a, &clutch_pitcher, &avg_batter(), Course::MidCenter, false, 3, false);
+            let b = throw_pitch(&mut rng_b, &avg_pitcher(), &avg_batter(), Course::MidCenter, false, 3, false);
             assert_eq!(a, b, "seed={seed}: high_leverage=false면 클러치가 결과에 개입하면 안 됨");
         }
     }
@@ -378,7 +461,7 @@ mod tests {
             let mut balls = 0;
             for seed in 0..2000u64 {
                 let mut rng = ChaCha8Rng::seed_from_u64(seed);
-                if throw_pitch(&mut rng, pitcher, &avg_batter(), Course::HighInside, false) == PitchResult::Ball {
+                if throw_pitch(&mut rng, pitcher, &avg_batter(), Course::HighInside, false, 3, false) == PitchResult::Ball {
                     balls += 1;
                 }
             }
@@ -387,5 +470,83 @@ mod tests {
         let fresh_balls = count_balls(&fresh);
         let tired_balls = count_balls(&tired);
         assert!(tired_balls >= fresh_balls, "tired={tired_balls} fresh={fresh_balls}");
+    }
+
+    /// Phase 4 — 마스터리 단계가 높을수록(필살기=5) 습작(1)보다 헛스윙을
+    /// 더 잘 유도해야 한다(§4 "개별 구종 위력... 피안타율·헛스윙에 직결").
+    #[test]
+    fn higher_mastery_stage_induces_more_whiffs() {
+        let count_strikes = |stage: u8| -> u32 {
+            let mut strikes = 0;
+            for seed in 0..3000u64 {
+                let mut rng = ChaCha8Rng::seed_from_u64(seed);
+                if throw_pitch(&mut rng, &avg_pitcher(), &avg_batter(), Course::MidCenter, false, stage, false) == PitchResult::Strike {
+                    strikes += 1;
+                }
+            }
+            strikes
+        };
+        let novice = count_strikes(1);
+        let signature = count_strikes(5);
+        assert!(signature > novice, "novice={novice} signature={signature}");
+    }
+
+    /// Phase 4 — 레퍼토리 다양성 보너스가 켜지면(3계열 골고루) 꺼졌을 때보다
+    /// 헛스윙 확률이 소폭 더 높아야 한다(§4 "레퍼토리 조합 효과").
+    #[test]
+    fn repertoire_diversity_bonus_induces_more_whiffs() {
+        let count_strikes = |diverse: bool| -> u32 {
+            let mut strikes = 0;
+            for seed in 0..3000u64 {
+                let mut rng = ChaCha8Rng::seed_from_u64(seed);
+                if throw_pitch(&mut rng, &avg_pitcher(), &avg_batter(), Course::MidCenter, false, 3, diverse) == PitchResult::Strike {
+                    strikes += 1;
+                }
+            }
+            strikes
+        };
+        let without = count_strikes(false);
+        let with = count_strikes(true);
+        assert!(with > without, "without={without} with={with}");
+    }
+
+    #[test]
+    fn repertoire_is_diverse_requires_all_three_pitch_families() {
+        let two_families = vec![
+            PitchMastery { name: "포심 패스트볼".to_string(), stage: 1 },
+            PitchMastery { name: "슬라이더".to_string(), stage: 1 },
+        ];
+        assert!(!repertoire_is_diverse(&two_families));
+
+        let three_families = vec![
+            PitchMastery { name: "포심 패스트볼".to_string(), stage: 1 },
+            PitchMastery { name: "슬라이더".to_string(), stage: 1 },
+            PitchMastery { name: "체인지업".to_string(), stage: 1 },
+        ];
+        assert!(repertoire_is_diverse(&three_families));
+    }
+
+    /// Phase 4 좌우 상성(신규 설계) — 동타(투수·타자 같은 손)일수록
+    /// 투수가 유리해 헛스윙을 더 잘 유도해야 한다.
+    #[test]
+    fn same_handed_matchup_favors_the_pitcher() {
+        use crate::sim::match_sim::Handedness;
+        let lefty_pitcher = PitcherStats { handedness: Handedness::Left, ..avg_pitcher() };
+        let count_strikes = |batter_handedness: Handedness| -> u32 {
+            let batter = BatterStats { handedness: batter_handedness, ..avg_batter() };
+            let mut strikes = 0;
+            for seed in 0..3000u64 {
+                let mut rng = ChaCha8Rng::seed_from_u64(seed);
+                if throw_pitch(&mut rng, &lefty_pitcher, &batter, Course::MidCenter, false, 3, false) == PitchResult::Strike {
+                    strikes += 1;
+                }
+            }
+            strikes
+        };
+        let same_side = count_strikes(Handedness::Left);
+        let opposite_side = count_strikes(Handedness::Right);
+        let switch = count_strikes(Handedness::Switch);
+        assert!(same_side > opposite_side, "same={same_side} opposite={opposite_side}");
+        assert!(same_side > switch, "same={same_side} switch={switch}");
     }
 }

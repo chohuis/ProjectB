@@ -327,6 +327,22 @@ fn migration_v15(tx: &Transaction) -> anyhow::Result<()> {
     Ok(())
 }
 
+const V16_DDL: &str = r#"
+ALTER TABLE npc ADD COLUMN handedness TEXT;
+"#;
+
+/// 좌우 상성(Phase 4, 매치엔진 리얼리즘 강화 — 기획 문서에 없는 신규 설계)
+/// — `protagonist.handedness`(v1부터 있던 투수 전용 컬럼)와 대칭으로 NPC도
+/// 던지는 손(투수)·타석(타자)을 갖게 한다. 신규 NPC는 `sim::roster::generate_team`
+/// 이 항상 채워 넣지만, 컬럼 자체는 다른 npc 컬럼과 같은 관례로 nullable —
+/// 구세이브의 기존 NPC는 NULL로 남고, `match_sim::Handedness::parse`가
+/// NULL/미기록을 안전하게 "우완/우타"로 폴백한다.
+fn migration_v16(tx: &Transaction) -> anyhow::Result<()> {
+    tx.execute_batch(V16_DDL)?;
+    tx.execute("UPDATE meta SET save_version = 16", [])?;
+    Ok(())
+}
+
 const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 1,
@@ -388,6 +404,10 @@ const MIGRATIONS: &[Migration] = &[
         version: 15,
         up: migration_v15,
     },
+    Migration {
+        version: 16,
+        up: migration_v16,
+    },
 ];
 
 fn init(mut conn: Connection) -> anyhow::Result<Connection> {
@@ -415,7 +435,29 @@ mod tests {
         let save_version: i64 = conn
             .query_row("SELECT save_version FROM meta", [], |row| row.get(0))
             .unwrap();
-        assert_eq!(save_version, 15);
+        assert_eq!(save_version, 16);
+    }
+
+    #[test]
+    fn v16_adds_handedness_column_to_npc() {
+        let conn = open_in_memory().unwrap();
+        conn.execute(
+            "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches, injury, handedness)
+             VALUES ('npc:x', 'X', 'team:x', '투수', 20, 1, 0, 50.0, '{}', '{}', '{}', '{}', '[]', '{}', '좌완')",
+            [],
+        )
+        .unwrap();
+        let handedness: String = conn.query_row("SELECT handedness FROM npc WHERE id = 'npc:x'", [], |r| r.get(0)).unwrap();
+        assert_eq!(handedness, "좌완");
+
+        conn.execute(
+            "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches, injury)
+             VALUES ('npc:y', 'Y', 'team:x', '타자', 20, 1, 0, 50.0, '{}', '{}', '{}', '{}', NULL, '{}')",
+            [],
+        )
+        .unwrap();
+        let missing: Option<String> = conn.query_row("SELECT handedness FROM npc WHERE id = 'npc:y'", [], |r| r.get(0)).unwrap();
+        assert_eq!(missing, None, "구세이브 NPC는 NULL로 남아야 함(폴백은 애플리케이션 코드 책임)");
     }
 
     #[test]

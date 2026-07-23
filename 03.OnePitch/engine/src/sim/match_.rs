@@ -29,6 +29,7 @@ pub struct BatterStats {
     pub composure: f64,
     pub defense: f64,
     pub speed: f64,
+    pub handedness: Handedness,
 }
 
 /// `velocity`(구속)·`game_management`(경기운영)·`clutch`·`composure`는
@@ -45,6 +46,87 @@ pub struct PitcherStats {
     pub game_management: f64,
     pub clutch: f64,
     pub composure: f64,
+    pub handedness: Handedness,
+}
+
+/// 좌우 상성(Phase 4, 기획 문서에 없는 신규 설계) — 투수 던지는 손(`좌완`/
+/// `우완`)·타자 타석(`좌타`/`우타`/`양타`). `protagonist.handedness`(투수
+/// 전용, 이미 저장만 되던 값)와 신규 `npc.handedness`(v16 migration)를
+/// 여기서 하나의 타입으로 통일해 판정식에 넣는다. `Switch`는 항상 상대
+/// 투수 반대편에 서는 실제 야구 관례상 "동타 없음"으로 취급.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Handedness {
+    Left,
+    Right,
+    Switch,
+}
+
+impl Handedness {
+    /// `"좌완"`/`"좌타"` → Left, `"양타"` → Switch, 그 외(우완·우타·미기록
+    /// NULL 등)는 전부 Right로 폴백 — 기존 npc 컬럼 관례(새 컬럼은 nullable,
+    /// 파싱 실패는 안전한 기본값)와 동일.
+    pub fn parse(raw: &str) -> Handedness {
+        match raw {
+            "좌완" | "좌타" => Handedness::Left,
+            "양타" => Handedness::Switch,
+            _ => Handedness::Right,
+        }
+    }
+}
+
+/// 판정식에 더할 "투수 유리도" — 동타(스위치 타자 제외)면 양수(투수
+/// 유리), 반대면 음수(타자 유리). D그룹 placeholder(계수는 I8 밸런스
+/// 하네스 재조정 대상) — `simulate_plate_appearance`(배경)와
+/// `sim::pitch::throw_pitch`(주인공 1구 단위) 양쪽이 이 함수 하나를
+/// 공유해 두 엔진 사이에서 상성 판정이 갈라지지 않게 한다.
+const PLATOON_EDGE: f64 = 3.0;
+
+pub(crate) fn platoon_edge_for_pitcher(pitcher: Handedness, batter: Handedness) -> f64 {
+    let same_side = match batter {
+        Handedness::Switch => false,
+        b => b == pitcher,
+    };
+    if same_side {
+        PLATOON_EDGE
+    } else {
+        -PLATOON_EDGE
+    }
+}
+
+/// 타격 유형 태그(Phase 4, 05_구종_시스템.md §5) — 전용 스탯 신설 없이
+/// 지배적인 스탯 조합으로 자동 분류하는 "서사·해설용" 라벨. 이번 Phase는
+/// Phase 5(수비 시프트)의 입력으로 쓸 헬퍼만 만들어두고 실제 판정식엔
+/// 아직 연결하지 않는다(플랜 문서 그대로).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum BattingTypeTag {
+    Power,
+    Contact,
+    Spray,
+    Speed,
+    Patient,
+    AllRound,
+}
+
+/// 4개 지표(파워·컨택·스피드·선구안) 중 하나가 나머지 평균보다
+/// `DOMINANCE_GAP` 이상 높으면 그 스탯의 태그로, 파워·컨택이 둘 다 평균
+/// 이상이면서 서로 비슷하면 스프레이형, 그 외(전부 고르게 높거나 낮음)는
+/// 올라운드형. D그룹 placeholder(임계값은 I8 재조정 대상).
+const DOMINANCE_GAP: f64 = 15.0;
+
+pub fn classify_batting_type(batter: &BatterStats) -> BattingTypeTag {
+    let (power, contact, speed, eye) = (batter.power, batter.contact, batter.speed, batter.eye);
+    let avg = (power + contact + speed + eye) / 4.0;
+    let stats = [(BattingTypeTag::Power, power), (BattingTypeTag::Contact, contact), (BattingTypeTag::Speed, speed), (BattingTypeTag::Patient, eye)];
+    if let Some(&(tag, value)) = stats.iter().max_by(|a, b| a.1.partial_cmp(&b.1).unwrap_or(std::cmp::Ordering::Equal)) {
+        let rest_avg = (power + contact + speed + eye - value) / 3.0;
+        if value - rest_avg >= DOMINANCE_GAP {
+            return tag;
+        }
+    }
+    if power >= avg && contact >= avg && (power - contact).abs() < DOMINANCE_GAP {
+        return BattingTypeTag::Spray;
+    }
+    BattingTypeTag::AllRound
 }
 
 /// `DoublePlay`(병살타)·`SacFly`(희생플라이)·`ReachOnError`(실책 출루)는
@@ -148,6 +230,7 @@ pub fn simulate_plate_appearance(
     let effective_control = fatigue_effective(pitcher.control, pitcher.fatigue);
     let effective_stuff = fatigue_effective(pitcher.stuff, pitcher.fatigue);
     let mut pitch_edge = (effective_control + effective_stuff) / 2.0 - (batter.contact + batter.eye) / 2.0;
+    pitch_edge += platoon_edge_for_pitcher(pitcher.handedness, batter.handedness);
     if high_leverage {
         pitch_edge += (pitcher.clutch - batter.clutch) * 0.15;
     }
@@ -740,10 +823,10 @@ mod tests {
     use rand_chacha::ChaCha8Rng;
 
     fn avg_batter() -> BatterStats {
-        BatterStats { id: "b".to_string(), contact: 50.0, eye: 50.0, power: 50.0, fatigue: 0.0, clutch: 50.0, composure: 50.0, defense: 50.0, speed: 50.0 }
+        BatterStats { id: "b".to_string(), contact: 50.0, eye: 50.0, power: 50.0, fatigue: 0.0, clutch: 50.0, composure: 50.0, defense: 50.0, speed: 50.0, handedness: Handedness::Right }
     }
     fn avg_pitcher() -> PitcherStats {
-        PitcherStats { id: "p".to_string(), control: 50.0, stuff: 50.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0 }
+        PitcherStats { id: "p".to_string(), control: 50.0, stuff: 50.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0, handedness: Handedness::Right }
     }
     /// 강판을 신경 쓰지 않는 기존 테스트들이 계속 완투 동작을 보게 하는
     /// 헬퍼 — `reliever: None`이면 `simulate_game`이 절대 강판하지 않는다.
@@ -782,7 +865,7 @@ mod tests {
     fn simulate_game_pulls_a_starter_over_a_full_game_when_a_reliever_is_available() {
         let lineup: Vec<BatterStats> = (0..8).map(|i| BatterStats { id: format!("b{i}"), ..avg_batter() }).collect();
         let starter = avg_pitcher();
-        let reliever = PitcherStats { id: "reliever".to_string(), control: 50.0, stuff: 50.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0 };
+        let reliever = PitcherStats { id: "reliever".to_string(), control: 50.0, stuff: 50.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0, handedness: Handedness::Right };
         let mut pulled_at_least_once = false;
         for seed in 0..20u64 {
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
@@ -806,7 +889,7 @@ mod tests {
     fn simulate_game_pulls_a_starter_into_the_closer_slot_when_only_a_closer_is_available() {
         let lineup: Vec<BatterStats> = (0..8).map(|i| BatterStats { id: format!("b{i}"), ..avg_batter() }).collect();
         let starter = avg_pitcher();
-        let closer = PitcherStats { id: "closer".to_string(), control: 50.0, stuff: 50.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0 };
+        let closer = PitcherStats { id: "closer".to_string(), control: 50.0, stuff: 50.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0, handedness: Handedness::Right };
         let mut pulled_at_least_once = false;
         for seed in 0..20u64 {
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
@@ -826,7 +909,7 @@ mod tests {
     fn simulate_game_never_pulls_when_no_reliever_is_available() {
         let lineup: Vec<BatterStats> = (0..8).map(|i| BatterStats { id: format!("b{i}"), ..avg_batter() }).collect();
         // 극단적으로 지친 투수라도 reliever: None이면 강판이 아예 불가능해야 한다.
-        let exhausted = PitcherStats { id: "p".to_string(), control: 50.0, stuff: 50.0, fatigue: 200.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0 };
+        let exhausted = PitcherStats { id: "p".to_string(), control: 50.0, stuff: 50.0, fatigue: 200.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0, handedness: Handedness::Right };
         for seed in 0..10u64 {
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
             let r = simulate_game(&mut rng, "league:pro", &lineup, &no_pull_plan(&exhausted), &lineup, &no_pull_plan(&exhausted));
@@ -858,8 +941,8 @@ mod tests {
     #[test]
     fn stronger_pitcher_allows_fewer_hits_on_average() {
         let lineup: Vec<BatterStats> = (0..8).map(|i| BatterStats { id: format!("b{i}"), ..avg_batter() }).collect();
-        let weak_pitcher = PitcherStats { id: "wp".to_string(), control: 25.0, stuff: 25.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0 };
-        let strong_pitcher = PitcherStats { id: "sp".to_string(), control: 75.0, stuff: 75.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0 };
+        let weak_pitcher = PitcherStats { id: "wp".to_string(), control: 25.0, stuff: 25.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0, handedness: Handedness::Right };
+        let strong_pitcher = PitcherStats { id: "sp".to_string(), control: 75.0, stuff: 75.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0, handedness: Handedness::Right };
 
         let mut weak_hits = 0u32;
         let mut strong_hits = 0u32;
@@ -877,9 +960,9 @@ mod tests {
     #[test]
     fn stronger_batting_lineup_scores_more_on_average() {
         let weak_lineup: Vec<BatterStats> =
-            (0..8).map(|i| BatterStats { id: format!("w{i}"), contact: 25.0, eye: 25.0, power: 25.0, fatigue: 0.0, clutch: 50.0, composure: 50.0, defense: 50.0, speed: 50.0 }).collect();
+            (0..8).map(|i| BatterStats { id: format!("w{i}"), contact: 25.0, eye: 25.0, power: 25.0, fatigue: 0.0, clutch: 50.0, composure: 50.0, defense: 50.0, speed: 50.0, handedness: Handedness::Right }).collect();
         let strong_lineup: Vec<BatterStats> =
-            (0..8).map(|i| BatterStats { id: format!("s{i}"), contact: 75.0, eye: 75.0, power: 75.0, fatigue: 0.0, clutch: 50.0, composure: 50.0, defense: 50.0, speed: 50.0 }).collect();
+            (0..8).map(|i| BatterStats { id: format!("s{i}"), contact: 75.0, eye: 75.0, power: 75.0, fatigue: 0.0, clutch: 50.0, composure: 50.0, defense: 50.0, speed: 50.0, handedness: Handedness::Right }).collect();
 
         let mut weak_total = 0u32;
         let mut strong_total = 0u32;
@@ -898,11 +981,11 @@ mod tests {
     fn amateur_cold_game_stops_before_nine_innings_on_blowout() {
         // extreme mismatch should trigger the 5-inning/15-run cold-game rule at least sometimes
         let elite: Vec<BatterStats> =
-            (0..8).map(|i| BatterStats { id: format!("e{i}"), contact: 80.0, eye: 80.0, power: 80.0, fatigue: 0.0, clutch: 50.0, composure: 50.0, defense: 50.0, speed: 50.0 }).collect();
+            (0..8).map(|i| BatterStats { id: format!("e{i}"), contact: 80.0, eye: 80.0, power: 80.0, fatigue: 0.0, clutch: 50.0, composure: 50.0, defense: 50.0, speed: 50.0, handedness: Handedness::Right }).collect();
         let hapless: Vec<BatterStats> =
-            (0..8).map(|i| BatterStats { id: format!("h{i}"), contact: 20.0, eye: 20.0, power: 20.0, fatigue: 0.0, clutch: 50.0, composure: 50.0, defense: 50.0, speed: 50.0 }).collect();
-        let elite_pitcher = PitcherStats { id: "ep".to_string(), control: 80.0, stuff: 80.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0 };
-        let hapless_pitcher = PitcherStats { id: "hp".to_string(), control: 20.0, stuff: 20.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0 };
+            (0..8).map(|i| BatterStats { id: format!("h{i}"), contact: 20.0, eye: 20.0, power: 20.0, fatigue: 0.0, clutch: 50.0, composure: 50.0, defense: 50.0, speed: 50.0, handedness: Handedness::Right }).collect();
+        let elite_pitcher = PitcherStats { id: "ep".to_string(), control: 80.0, stuff: 80.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0, handedness: Handedness::Right };
+        let hapless_pitcher = PitcherStats { id: "hp".to_string(), control: 20.0, stuff: 20.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0, handedness: Handedness::Right };
 
         let mut saw_cold_game = false;
         for seed in 0..20u64 {
@@ -930,8 +1013,8 @@ mod tests {
     #[test]
     fn high_fatigue_players_accumulate_injuries_over_many_games() {
         let lineup: Vec<BatterStats> =
-            (0..8).map(|i| BatterStats { id: format!("fb{i}"), contact: 50.0, eye: 50.0, power: 50.0, fatigue: 200.0, clutch: 50.0, composure: 50.0, defense: 50.0, speed: 50.0 }).collect();
-        let pitcher = PitcherStats { id: "fp".to_string(), control: 50.0, stuff: 50.0, fatigue: 200.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0 };
+            (0..8).map(|i| BatterStats { id: format!("fb{i}"), contact: 50.0, eye: 50.0, power: 50.0, fatigue: 200.0, clutch: 50.0, composure: 50.0, defense: 50.0, speed: 50.0, handedness: Handedness::Right }).collect();
+        let pitcher = PitcherStats { id: "fp".to_string(), control: 50.0, stuff: 50.0, fatigue: 200.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0, handedness: Handedness::Right };
 
         let mut total_injuries = 0usize;
         for seed in 0..50u64 {

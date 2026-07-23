@@ -152,8 +152,8 @@ pub fn generate_league_roster(slot_conn: &mut Connection, content_conn: &Connect
     for team in &teams {
         for p in &team.players {
             tx.execute(
-                "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches, injury)
-                 VALUES (?1, ?2, ?3, ?4, ?5, 1, 0, ?6, ?7, ?8, ?9, ?10, ?11, ?12)",
+                "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches, injury, handedness)
+                 VALUES (?1, ?2, ?3, ?4, ?5, 1, 0, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
                 params![
                     p.id,
                     p.name,
@@ -167,6 +167,7 @@ pub fn generate_league_roster(slot_conn: &mut Connection, content_conn: &Connect
                     p.live_state.to_string(),
                     p.pitches.as_ref().map(|v| v.to_string()),
                     serde_json::json!({"current": null, "history": []}).to_string(),
+                    p.handedness,
                 ],
             )?;
         }
@@ -369,6 +370,21 @@ fn new_pitch_mastery_entry(name: &str) -> serde_json::Value {
 /// `protagonist.pitches`(마스터리 객체 배열)에서 구종 이름만 뽑는다.
 pub(crate) fn pitch_names_from_mastery(pitches: &[serde_json::Value]) -> Vec<String> {
     pitches.iter().filter_map(|p| p.get("name").and_then(|n| n.as_str()).map(str::to_string)).collect()
+}
+
+/// `protagonist.pitches`(마스터리 객체 배열)를 `pitch::PitchMastery`(name+stage)로
+/// 변환 — Phase 4부터 매치 엔진이 마스터리 단계를 실제로 쓰므로
+/// (`pitch::throw_pitch`), 이름만 남기는 `pitch_names_from_mastery`와 달리
+/// stage를 보존한다. `stage`가 없거나 파싱 실패하면 1(습작)로 방어적 폴백.
+pub(crate) fn pitch_mastery_entries(pitches: &[serde_json::Value]) -> Vec<crate::sim::pitch::PitchMastery> {
+    pitches
+        .iter()
+        .filter_map(|p| {
+            let name = p.get("name").and_then(|n| n.as_str())?.to_string();
+            let stage = p.get("stage").and_then(|s| s.as_u64()).unwrap_or(1) as u8;
+            Some(crate::sim::pitch::PitchMastery { name, stage })
+        })
+        .collect()
 }
 
 /// 뉴게임 — 주인공 생성([07_주인공_생성](../../02_기획/07_주인공_생성.md)
@@ -1302,8 +1318,8 @@ pub fn generate_freshmen(conn: &Connection, content_conn: &Connection, world_see
 
             for p in &players {
                 conn.execute(
-                    "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches, injury)
-                     VALUES (?1, ?2, ?3, ?4, ?5, 1, 0, ?6, ?7, ?8, ?9, ?10, ?11, ?12)",
+                    "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches, injury, handedness)
+                     VALUES (?1, ?2, ?3, ?4, ?5, 1, 0, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13)",
                     params![
                         p.id,
                         p.name,
@@ -1317,6 +1333,7 @@ pub fn generate_freshmen(conn: &Connection, content_conn: &Connection, world_see
                         p.live_state.to_string(),
                         p.pitches.as_ref().map(|v| v.to_string()),
                         serde_json::json!({"current": null, "history": []}).to_string(),
+                        p.handedness,
                     ],
                 )?;
             }
@@ -1493,13 +1510,13 @@ fn insert_benched_notice(conn: &Connection, day: i64) -> anyhow::Result<()> {
 /// 그대로 — 기존 동작과 동일.
 pub(crate) fn load_batting_lineup(slot_conn: &Connection, team_id: &str) -> anyhow::Result<Vec<match_sim::BatterStats>> {
     let mut stmt = slot_conn.prepare(
-        "SELECT id, stats, live_state FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position NOT IN ('선발투수', '중계투수', '마무리투수', '감독', '코치', '구단주') ORDER BY id",
+        "SELECT id, stats, live_state, handedness FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position NOT IN ('선발투수', '중계투수', '마무리투수', '감독', '코치', '구단주') ORDER BY id",
     )?;
-    let rows: Vec<(String, String, String)> =
-        stmt.query_map([team_id], |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)))?.collect::<Result<Vec<_>, _>>()?;
+    let rows: Vec<(String, String, String, Option<String>)> =
+        stmt.query_map([team_id], |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?)))?.collect::<Result<Vec<_>, _>>()?;
     let mut id_order: Vec<String> = Vec::with_capacity(rows.len());
     let mut by_id: HashMap<String, match_sim::BatterStats> = HashMap::with_capacity(rows.len());
-    for (id, stats_raw, live_state_raw) in rows {
+    for (id, stats_raw, live_state_raw, handedness_raw) in rows {
         let v: serde_json::Value = serde_json::from_str(&stats_raw)?;
         let live_state: serde_json::Value = serde_json::from_str(&live_state_raw)?;
         id_order.push(id.clone());
@@ -1515,6 +1532,7 @@ pub(crate) fn load_batting_lineup(slot_conn: &Connection, team_id: &str) -> anyh
                 composure: v.get("침착함").and_then(|x| x.as_f64()).unwrap_or(50.0),
                 defense: v.get("수비").and_then(|x| x.as_f64()).unwrap_or(50.0),
                 speed: v.get("스피드").and_then(|x| x.as_f64()).unwrap_or(50.0),
+                handedness: match_sim::Handedness::parse(handedness_raw.as_deref().unwrap_or("")),
             },
         );
     }
@@ -1822,12 +1840,12 @@ pub(crate) fn load_starting_pitcher(slot_conn: &Connection, team_id: &str) -> an
         rotation.get((played as usize) % rotation.len()).cloned()
     });
 
-    let row: Option<(String, String, String)> = match &rotation_pick {
+    let row: Option<(String, String, String, Option<String>)> = match &rotation_pick {
         Some(id) => slot_conn
             .query_row(
-                "SELECT id, stats, live_state FROM npc WHERE id = ?1 AND retired = 0 AND military_return_day IS NULL",
+                "SELECT id, stats, live_state, handedness FROM npc WHERE id = ?1 AND retired = 0 AND military_return_day IS NULL",
                 [id],
-                |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
+                |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?)),
             )
             .optional()?,
         None => None,
@@ -1836,14 +1854,14 @@ pub(crate) fn load_starting_pitcher(slot_conn: &Connection, team_id: &str) -> an
         Some(r) => Some(r),
         None => slot_conn
             .query_row(
-                "SELECT id, stats, live_state FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position = '선발투수' ORDER BY id LIMIT 1",
+                "SELECT id, stats, live_state, handedness FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position = '선발투수' ORDER BY id LIMIT 1",
                 [team_id],
-                |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
+                |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?)),
             )
             .optional()?,
     };
 
-    let (id, stats_raw, live_state_raw) = row.ok_or_else(|| anyhow::anyhow!("no starting pitcher on roster for team {team_id}"))?;
+    let (id, stats_raw, live_state_raw, handedness_raw) = row.ok_or_else(|| anyhow::anyhow!("no starting pitcher on roster for team {team_id}"))?;
     let v: serde_json::Value = serde_json::from_str(&stats_raw)?;
     let live_state: serde_json::Value = serde_json::from_str(&live_state_raw)?;
     Ok(match_sim::PitcherStats {
@@ -1855,6 +1873,7 @@ pub(crate) fn load_starting_pitcher(slot_conn: &Connection, team_id: &str) -> an
         game_management: v.get("경기운영").and_then(|x| x.as_f64()).unwrap_or(50.0),
         clutch: v.get("클러치").and_then(|x| x.as_f64()).unwrap_or(50.0),
         composure: v.get("침착함").and_then(|x| x.as_f64()).unwrap_or(50.0),
+        handedness: match_sim::Handedness::parse(handedness_raw.as_deref().unwrap_or("")),
     })
 }
 
@@ -1904,8 +1923,11 @@ pub(crate) fn load_relief_pitcher(slot_conn: &Connection, team_id: &str, is_save
     let Some(id) = picked_id else {
         return Ok(None);
     };
-    let (stats_raw, live_state_raw): (String, String) =
-        slot_conn.query_row("SELECT stats, live_state FROM npc WHERE id = ?1", [&id], |row| Ok((row.get(0)?, row.get(1)?)))?;
+    let (stats_raw, live_state_raw, handedness_raw): (String, String, Option<String>) = slot_conn.query_row(
+        "SELECT stats, live_state, handedness FROM npc WHERE id = ?1",
+        [&id],
+        |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
+    )?;
     let v: serde_json::Value = serde_json::from_str(&stats_raw)?;
     let live_state: serde_json::Value = serde_json::from_str(&live_state_raw)?;
     Ok(Some(match_sim::PitcherStats {
@@ -1917,6 +1939,7 @@ pub(crate) fn load_relief_pitcher(slot_conn: &Connection, team_id: &str, is_save
         game_management: v.get("경기운영").and_then(|x| x.as_f64()).unwrap_or(50.0),
         clutch: v.get("클러치").and_then(|x| x.as_f64()).unwrap_or(50.0),
         composure: v.get("침착함").and_then(|x| x.as_f64()).unwrap_or(50.0),
+        handedness: match_sim::Handedness::parse(handedness_raw.as_deref().unwrap_or("")),
     }))
 }
 
@@ -1969,8 +1992,11 @@ fn assign_closer(conn: &Connection, team_id: &str) -> anyhow::Result<()> {
 /// 용도고, 이후 하프이닝마다는 그 투수로 고정해서 계속 불러와야 하므로
 /// 별도 함수로 분리.
 pub(crate) fn load_pitcher_by_id(slot_conn: &Connection, npc_id: &str) -> anyhow::Result<match_sim::PitcherStats> {
-    let (stats_raw, live_state_raw): (String, String) =
-        slot_conn.query_row("SELECT stats, live_state FROM npc WHERE id = ?1", [npc_id], |row| Ok((row.get(0)?, row.get(1)?)))?;
+    let (stats_raw, live_state_raw, handedness_raw): (String, String, Option<String>) = slot_conn.query_row(
+        "SELECT stats, live_state, handedness FROM npc WHERE id = ?1",
+        [npc_id],
+        |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
+    )?;
     let v: serde_json::Value = serde_json::from_str(&stats_raw)?;
     let live_state: serde_json::Value = serde_json::from_str(&live_state_raw)?;
     Ok(match_sim::PitcherStats {
@@ -1982,6 +2008,7 @@ pub(crate) fn load_pitcher_by_id(slot_conn: &Connection, npc_id: &str) -> anyhow
         game_management: v.get("경기운영").and_then(|x| x.as_f64()).unwrap_or(50.0),
         clutch: v.get("클러치").and_then(|x| x.as_f64()).unwrap_or(50.0),
         composure: v.get("침착함").and_then(|x| x.as_f64()).unwrap_or(50.0),
+        handedness: match_sim::Handedness::parse(handedness_raw.as_deref().unwrap_or("")),
     })
 }
 
@@ -2388,19 +2415,20 @@ fn least_fatigued_from(pitchers: &[match_sim::PitcherStats], start: usize) -> us
 
 fn run_intrasquad_scrimmage(slot_conn: &Connection, content_conn: &Connection, world_seed: i64, team_id: &str, day: i64) -> anyhow::Result<()> {
     let mut stmt = slot_conn.prepare(
-        "SELECT id, position, stats, live_state FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL
+        "SELECT id, position, stats, live_state, handedness FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL
          AND position NOT IN ('감독', '코치', '구단주')",
     )?;
-    let rows: Vec<(String, String, String, String)> =
-        stmt.query_map([team_id], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?)))?.collect::<Result<_, _>>()?;
+    let rows: Vec<(String, String, String, String, Option<String>)> =
+        stmt.query_map([team_id], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?, r.get(4)?)))?.collect::<Result<_, _>>()?;
     drop(stmt);
 
     let mut pitchers: Vec<match_sim::PitcherStats> = Vec::new();
     let mut batters: Vec<match_sim::BatterStats> = Vec::new();
-    for (id, position, stats_raw, live_state_raw) in rows {
+    for (id, position, stats_raw, live_state_raw, handedness_raw) in rows {
         let v: serde_json::Value = serde_json::from_str(&stats_raw)?;
         let live_state: serde_json::Value = serde_json::from_str(&live_state_raw)?;
         let fatigue = live_state.get("피로도").and_then(|x| x.as_f64()).unwrap_or(0.0);
+        let handedness = match_sim::Handedness::parse(handedness_raw.as_deref().unwrap_or(""));
         if position == "선발투수" || position == "중계투수" || position == "마무리투수" {
             pitchers.push(match_sim::PitcherStats {
                 id,
@@ -2411,6 +2439,7 @@ fn run_intrasquad_scrimmage(slot_conn: &Connection, content_conn: &Connection, w
                 game_management: v.get("경기운영").and_then(|x| x.as_f64()).unwrap_or(50.0),
                 clutch: v.get("클러치").and_then(|x| x.as_f64()).unwrap_or(50.0),
                 composure: v.get("침착함").and_then(|x| x.as_f64()).unwrap_or(50.0),
+                handedness,
             });
         } else {
             batters.push(match_sim::BatterStats {
@@ -2423,6 +2452,7 @@ fn run_intrasquad_scrimmage(slot_conn: &Connection, content_conn: &Connection, w
                 composure: v.get("침착함").and_then(|x| x.as_f64()).unwrap_or(50.0),
                 defense: v.get("수비").and_then(|x| x.as_f64()).unwrap_or(50.0),
                 speed: v.get("스피드").and_then(|x| x.as_f64()).unwrap_or(50.0),
+                handedness,
             });
         }
     }
@@ -2431,8 +2461,11 @@ fn run_intrasquad_scrimmage(slot_conn: &Connection, content_conn: &Connection, w
     if let Some(contract_raw) = contract_raw {
         let contract: serde_json::Value = serde_json::from_str(&contract_raw).unwrap_or_default();
         if contract.get("team_id").and_then(|v| v.as_str()) == Some(team_id) {
-            let (stats_raw, live_state_raw): (String, String) =
-                slot_conn.query_row("SELECT stats, live_state FROM protagonist WHERE id = 'proto:1'", [], |r| Ok((r.get(0)?, r.get(1)?)))?;
+            let (stats_raw, live_state_raw, handedness_raw): (String, String, String) = slot_conn.query_row(
+                "SELECT stats, live_state, handedness FROM protagonist WHERE id = 'proto:1'",
+                [],
+                |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)),
+            )?;
             let v: serde_json::Value = serde_json::from_str(&stats_raw)?;
             let live_state: serde_json::Value = serde_json::from_str(&live_state_raw)?;
             pitchers.push(match_sim::PitcherStats {
@@ -2444,6 +2477,7 @@ fn run_intrasquad_scrimmage(slot_conn: &Connection, content_conn: &Connection, w
                 game_management: v.get("경기운영").and_then(|x| x.as_f64()).unwrap_or(50.0),
                 clutch: v.get("클러치").and_then(|x| x.as_f64()).unwrap_or(50.0),
                 composure: v.get("침착함").and_then(|x| x.as_f64()).unwrap_or(50.0),
+                handedness: match_sim::Handedness::parse(&handedness_raw),
             });
         }
     }

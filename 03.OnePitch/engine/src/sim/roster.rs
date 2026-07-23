@@ -19,6 +19,10 @@ pub struct GeneratedPlayer {
     pub live_state: Value,
     /// Some for pitchers only — batters don't have a pitch repertoire.
     pub pitches: Option<Value>,
+    /// 좌우 상성(Phase 4, 매치엔진 리얼리즘 강화) — 투수는 `"좌완"`/`"우완"`,
+    /// 타자는 `"좌타"`/`"우타"`/`"양타"`. `gen_handedness`가 실제 야구 비율
+    /// 근사치로 생성(D그룹 placeholder).
+    pub handedness: String,
 }
 
 const RELATION_OPTIONS: [&str; 5] = ["사교적", "내성적", "타산적", "온화함", "무뚝뚝"];
@@ -154,6 +158,28 @@ pub(crate) fn gen_name(rng: &mut impl Rng, surnames: &[String], given: &[String]
     format!("{surname}{g}")
 }
 
+/// 좌우 상성(Phase 4) 생성 — 실제 야구 비율 근사치(투수 약 25% 좌완,
+/// 타자 약 25% 좌타·8% 스위치, D그룹 placeholder). `is_pitcher`로 후보
+/// 풀을 나눈다 — 투수는 스위치가 없는 개념(던지는 손은 하나뿐).
+fn gen_handedness(rng: &mut impl Rng, is_pitcher: bool) -> String {
+    if is_pitcher {
+        if rng.gen_bool(0.25) {
+            "좌완".to_string()
+        } else {
+            "우완".to_string()
+        }
+    } else {
+        let roll = rng.gen::<f64>();
+        if roll < 0.08 {
+            "양타".to_string()
+        } else if roll < 0.33 {
+            "좌타".to_string()
+        } else {
+            "우타".to_string()
+        }
+    }
+}
+
 fn gen_pitches(rng: &mut impl Rng, secondary: &[String]) -> Value {
     let mut pitches = vec!["포심 패스트볼".to_string()];
     if !secondary.is_empty() && rng.gen_bool(0.5) {
@@ -214,6 +240,7 @@ pub fn generate_team(
             xp: zero_xp(&PITCHER_STATS),
             live_state: json!({"피로도": 0, "사기": 50}),
             pitches: Some(gen_pitches(rng, secondary_pitches)),
+            handedness: gen_handedness(rng, true),
         });
         *seq += 1;
     }
@@ -251,6 +278,7 @@ pub fn generate_team(
             xp: zero_xp(&BATTER_STATS),
             live_state: json!({"피로도": 0, "사기": 50}),
             pitches: None,
+            handedness: gen_handedness(rng, false),
         });
         *seq += 1;
     }
@@ -306,6 +334,7 @@ mod tests {
             assert_eq!(pa.name, pb.name);
             assert_eq!(pa.position, pb.position);
             assert_eq!(pa.stats, pb.stats);
+            assert_eq!(pa.handedness, pb.handedness);
         }
     }
 
@@ -355,6 +384,32 @@ mod tests {
         assert_eq!(players[0].id, "npc:99_5");
         assert_eq!(players[1].id, "npc:99_6");
         assert_eq!(seq, 5 + players.len() as u64);
+    }
+
+    /// Phase 4 — 투수는 좌완/우완만, 타자는 좌타/우타/양타만 생성돼야
+    /// 한다(`match_sim::Handedness::parse`가 이 값들만 인식).
+    #[test]
+    fn generated_handedness_stays_within_the_valid_domain() {
+        let (surnames, given) = names();
+        let w = uniform_weights();
+        let big_rule = json!({"roster_size": 60, "pitcher_ratio": 0.4, "sp_ratio": 0.5, "stat_min": 20.0, "stat_max": 80.0});
+        let mut rng = ChaCha8Rng::seed_from_u64(9);
+        let mut seq = 0u64;
+        let players = generate_team(&mut rng, &team(), "league:hs", &big_rule, &surnames, &given, &[], &w, "npc:1_", &mut seq);
+
+        let mut saw_lefty_pitcher = false;
+        let mut saw_switch_batter = false;
+        for p in &players {
+            if p.pitches.is_some() {
+                assert!(["좌완", "우완"].contains(&p.handedness.as_str()), "pitcher handedness={}", p.handedness);
+                saw_lefty_pitcher |= p.handedness == "좌완";
+            } else {
+                assert!(["좌타", "우타", "양타"].contains(&p.handedness.as_str()), "batter handedness={}", p.handedness);
+                saw_switch_batter |= p.handedness == "양타";
+            }
+        }
+        assert!(saw_lefty_pitcher, "60명 규모에서 좌완 투수가 최소 1명은 나와야 함");
+        assert!(saw_switch_batter, "60명 규모에서 스위치 타자가 최소 1명은 나와야 함");
     }
 
     #[test]

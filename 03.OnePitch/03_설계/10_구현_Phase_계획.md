@@ -1699,3 +1699,30 @@
 1. §2 표의 해당 행 상태를 `⬜ 미착수` → `🔶 진행중` → `✅ 완료`로 갱신.
 2. 완료 시 실제로 무엇을 만들었는지, 다음 세션이 알아야 할 특이사항(발견한 버그·우회법 등, P7 때처럼)을 이 문서나 관련 문서에 남긴다.
 3. 커밋 메시지에 Phase 번호를 명시(예: "impl: I0 리포지토리 스캐폴딩").
+
+### 6-106. 매치엔진 리얼리즘 강화 Phase 4 — 구종 마스터리 실전 반영 + 좌우 상성 (2026-07-26, 완료)
+
+**Context**: `throw_pitch`가 구종 이름을 받고도 판정에 전혀 반영하지 않던 상태(05_구종_시스템.md §4 "개별 구종 위력... 마스터리 단계가 피안타율·헛스윙에 직결"이 미구현)를 실제로 연결. 좌우 상성은 기획 문서에 없는 신규 설계 — `protagonist.handedness`(투수 전용, v1부터 있던 컬럼)만 존재하고 **NPC는 handedness 컬럼 자체가 없다**는 게 조사로 확인돼, platoon을 실제로 계산하려면 `npc` 테이블에 컬럼 신설(migration v16)부터 필요했다.
+
+**구현**(`engine/src/sim/match_.rs`):
+- `Handedness` enum(`Left`/`Right`/`Switch`) + `Handedness::parse` — `"좌완"/"좌타"`→Left, `"양타"`→Switch, 그 외(우완·우타·NULL)는 Right로 안전 폴백.
+- `platoon_edge_for_pitcher(pitcher, batter)` — 동타(스위치 제외)면 +3, 반대면 -3(D그룹 placeholder). `simulate_plate_appearance`(배경)와 `sim::pitch::throw_pitch`(주인공 1구 단위) 양쪽이 이 함수 하나를 공유해 판정이 갈라지지 않게 함.
+- `BatterStats`·`PitcherStats`에 `handedness` 필드 추가, `simulate_plate_appearance`의 `pitch_edge`에 반영.
+- `BattingTypeTag`(파워형/컨택형/스프레이형/스피드형/인내형/올라운드형) + `classify_batting_type` 헬퍼 — 05_구종_시스템.md §5. Phase 5(수비 시프트) 입력용으로 헬퍼만 만들어두고 이번 Phase의 판정식엔 아직 연결 안 함(플랜 그대로).
+
+**구현**(`engine/src/sim/pitch.rs`):
+- `PitchMastery{name, stage}` + `PitchFamily`(패스트볼/브레이킹볼/오프스피드/특수구) + `pitch_family` 카탈로그 + `repertoire_is_diverse`(3계열 골고루 보유 여부, §4 "레퍼토리 조합 효과").
+- `throw_pitch`에 `mastery_stage: u8`·`repertoire_diverse: bool` 파라미터 추가 — 마스터리는 3(실전)을 기준점으로 단계당 ±2.5를 `contact_edge`에 가산, 다양성 보너스는 켜지면 헛스윙 확률 +0.02, 좌우 상성은 `match_sim::platoon_edge_for_pitcher` 공유.
+- `choose_pitch_and_course`/`simulate_at_bat_automatically`가 `&[String]` 대신 `&[PitchMastery]`를 받도록 시그니처 변경 — 예전엔 고른 구종 이름을 그냥 버렸는데(`_pitch_name`) 이제 그 구종의 실제 마스터리 단계를 `throw_pitch`에 넘긴다.
+
+**구현**(`engine/src/data/slot.rs`, `engine/src/sim/roster.rs`):
+- migration v16: `npc.handedness TEXT` 추가(nullable, 다른 npc 컬럼과 같은 관례 — 구세이브는 NULL로 남고 `Handedness::parse`가 폴백).
+- `GeneratedPlayer.handedness` 필드 + `gen_handedness`(투수 25% 좌완, 타자 25% 좌타·8% 스위치, D그룹 placeholder) — `generate_team`의 기존 결정론적 RNG 순서(name→age→stats→personality→pitches)에 이어서 소비.
+
+**구현**(`engine/src/data/repository.rs`, `engine/src/data/match_session.rs`):
+- `pitch_mastery_entries` 신규(기존 `pitch_names_from_mastery`는 이름만 뽑아 유지 — 다른 호출부가 여전히 이름만 필요) — `protagonist.pitches`(`{name,stage,weeks}`)에서 stage까지 보존해 변환.
+- `PitcherStats`/`BatterStats`를 만드는 6개 지점(`load_batting_lineup`·`load_starting_pitcher`·`load_relief_pitcher`·`load_pitcher_by_id`·`run_intrasquad_scrimmage`의 NPC/주인공 분기) 전부 `handedness` SELECT+파싱 추가.
+- NPC 생성 INSERT 2곳(`generate_league_roster`·`generate_freshmen`)에 `p.handedness` 배선.
+- `data::match_session::load_protagonist_as_pitcher`에 `protagonist.handedness` 추가, `load_protagonist_pitches`가 이름 대신 `PitchMastery` 목록을 반환하도록 변경. 수동 모드(플레이어가 직접 고른 구종)는 이름만 넘어오므로 레퍼토리에서 다시 마스터리 단계를 찾아 씀(방어적 폴백: 못 찾으면 1단계).
+
+**테스트**: `cargo test --lib` 484개 전부 통과(신규 6개 — 마스터리 단계별 헛스윙 차이 1개, 레퍼토리 다양성 보너스 1개, 3계열 판정 로직 1개, 좌우 상성 동타/반대/스위치 비교 1개, NPC 좌우 도메인 검증 1개, migration v16 1개). `cargo clippy --lib --tests --bins` 클린. `cargo build --release` 갱신 후 `flutter test` 27개 전부 통과. `balance_harness -- 2 2` 스모크 확인(크래시·행 없음).

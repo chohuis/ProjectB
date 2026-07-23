@@ -265,8 +265,11 @@ fn save_session(conn: &Connection, s: &SessionRow) -> anyhow::Result<()> {
 }
 
 fn load_protagonist_as_pitcher(conn: &Connection) -> anyhow::Result<PitcherStats> {
-    let (stats_raw, live_state_raw): (String, String) =
-        conn.query_row("SELECT stats, live_state FROM protagonist WHERE id = 'proto:1'", [], |r| Ok((r.get(0)?, r.get(1)?)))?;
+    let (stats_raw, live_state_raw, handedness_raw): (String, String, String) = conn.query_row(
+        "SELECT stats, live_state, handedness FROM protagonist WHERE id = 'proto:1'",
+        [],
+        |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)),
+    )?;
     let v: serde_json::Value = serde_json::from_str(&stats_raw)?;
     let live_state: serde_json::Value = serde_json::from_str(&live_state_raw)?;
     Ok(PitcherStats {
@@ -278,17 +281,18 @@ fn load_protagonist_as_pitcher(conn: &Connection) -> anyhow::Result<PitcherStats
         game_management: v.get("경기운영").and_then(|x| x.as_f64()).unwrap_or(50.0),
         clutch: v.get("클러치").and_then(|x| x.as_f64()).unwrap_or(50.0),
         composure: v.get("침착함").and_then(|x| x.as_f64()).unwrap_or(50.0),
+        handedness: match_sim::Handedness::parse(&handedness_raw),
     })
 }
 
-/// 구종 마스터리(05_구종_시스템.md §2, 대화 2026-07-23) 도입 후
-/// `protagonist.pitches`는 `{name, stage, weeks}` 객체 배열 — 매치 엔진은
-/// 아직 마스터리 단계를 안 쓰므로(§4 "정확한 수치는 매치 엔진에서",
-/// 이번 배치는 스코프 밖) 이름만 뽑아 기존과 동일하게 넘긴다.
-fn load_protagonist_pitches(conn: &Connection) -> anyhow::Result<Vec<String>> {
+/// 구종 마스터리(05_구종_시스템.md §2, 대화 2026-07-23) — `protagonist.pitches`는
+/// `{name, stage, weeks}` 객체 배열. Phase 4부터 매치 엔진이 마스터리
+/// 단계를 실제로 쓰므로(`pitch::throw_pitch`) 이름만 뽑던 예전과 달리
+/// stage를 그대로 보존해서 넘긴다.
+fn load_protagonist_pitches(conn: &Connection) -> anyhow::Result<Vec<pitch::PitchMastery>> {
     let raw: String = conn.query_row("SELECT pitches FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0))?;
     let pitches: Vec<serde_json::Value> = serde_json::from_str(&raw)?;
-    Ok(repository::pitch_names_from_mastery(&pitches))
+    Ok(repository::pitch_mastery_entries(&pitches))
 }
 
 /// PA 결과를 세션에 반영 — 아웃 집계 또는 주자 진루+득점, 타석 종료 시
@@ -848,7 +852,12 @@ fn run_until_decision_point(
             &format!("pitch:{}:{}", session.game_id, session.pitch_seq),
         ));
 
-        let (_pitch_name, course) = if let Some(choice) = player_pitch.take() {
+        // 마스터리 단계·레퍼토리 다양성(Phase 4)은 어느 분기든(플레이어
+        // 직접 선택 또는 AI 자동 선택) 필요해 분기 진입 전에 미리 불러온다.
+        let repertoire = load_protagonist_pitches(slot_conn)?;
+        let repertoire_diverse = pitch::repertoire_is_diverse(&repertoire);
+
+        let (pitch_name, course) = if let Some(choice) = player_pitch.take() {
             choice
         } else {
             let should_prompt = match session.mode.as_str() {
@@ -870,11 +879,15 @@ fn run_until_decision_point(
                     away_runs: session.away_runs as u32,
                 });
             }
-            let pitches = load_protagonist_pitches(slot_conn)?;
-            pitch::choose_pitch_and_course(&mut rng, &pitches, &batter, high_leverage)
+            let (pitch, course) = pitch::choose_pitch_and_course(&mut rng, &repertoire, &batter, high_leverage);
+            (pitch.name, course)
         };
+        // 플레이어가 직접 고른 구종은 이름만 넘어오므로(§5 UI가 known
+        // 구종 중에서만 고르게 함) 마스터리 단계를 레퍼토리에서 다시
+        // 찾는다 — 못 찾으면(방어적 폴백) 습작(1단계) 취급.
+        let mastery_stage = repertoire.iter().find(|p| p.name == pitch_name).map(|p| p.stage).unwrap_or(1);
 
-        let result = pitch::throw_pitch(&mut rng, &pitcher, &batter, course, high_leverage);
+        let result = pitch::throw_pitch(&mut rng, &pitcher, &batter, course, high_leverage, mastery_stage, repertoire_diverse);
         session.pitch_seq += 1;
         let mut count = pitch::Count { balls: session.balls as u32, strikes: session.strikes as u32 };
         let outcome = pitch::apply_pitch_result(&mut count, result);
