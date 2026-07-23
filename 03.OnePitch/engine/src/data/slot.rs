@@ -343,6 +343,26 @@ fn migration_v16(tx: &Transaction) -> anyhow::Result<()> {
     Ok(())
 }
 
+const V17_DDL: &str = r#"
+ALTER TABLE match_session ADD COLUMN park_factor REAL NOT NULL DEFAULT 1.0;
+ALTER TABLE match_session ADD COLUMN weather_control_mod REAL NOT NULL DEFAULT 0.0;
+ALTER TABLE match_session ADD COLUMN weather_power_mod REAL NOT NULL DEFAULT 0.0;
+ALTER TABLE match_session ADD COLUMN weather_fatigue_mult REAL NOT NULL DEFAULT 1.0;
+"#;
+
+/// 환경 요소(Phase 5, 매치엔진 리얼리즘 강화 — 파크팩터·날씨, §10-1) —
+/// `start_protagonist_match`가 게임 시작 시점에 `match_sim::roll_game_conditions`로
+/// 한 번만 굴려서 세션에 저장한다. `content_conn`은 매 `submit_pitch`
+/// 호출마다 넘어오지 않으므로(세션 시작 이후엔 slot_conn만으로 진행하는
+/// 기존 관례) 여기에 영속시켜야 이후 하프이닝·1구 판정에서 다시 조회
+/// 없이 재사용 가능. 기본값(1.0/0.0/0.0/1.0)은 "중립·모디파이어 없음" —
+/// 구세이브(마이그레이션만 거친 기존 세션 행)에도 안전.
+fn migration_v17(tx: &Transaction) -> anyhow::Result<()> {
+    tx.execute_batch(V17_DDL)?;
+    tx.execute("UPDATE meta SET save_version = 17", [])?;
+    Ok(())
+}
+
 const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 1,
@@ -408,6 +428,10 @@ const MIGRATIONS: &[Migration] = &[
         version: 16,
         up: migration_v16,
     },
+    Migration {
+        version: 17,
+        up: migration_v17,
+    },
 ];
 
 fn init(mut conn: Connection) -> anyhow::Result<Connection> {
@@ -435,7 +459,41 @@ mod tests {
         let save_version: i64 = conn
             .query_row("SELECT save_version FROM meta", [], |row| row.get(0))
             .unwrap();
-        assert_eq!(save_version, 16);
+        assert_eq!(save_version, 17);
+    }
+
+    #[test]
+    fn v17_adds_game_conditions_columns_to_match_session_with_neutral_defaults() {
+        let conn = open_in_memory().unwrap();
+        conn.execute(
+            "INSERT INTO match_session (id, game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases,
+                                         home_runs, away_runs, home_batter_idx, away_batter_idx, balls, strikes, current_batter_id)
+             VALUES (1, 'g', 'h', 'a', 'league:pro', '자동', 1, 1, 0, '[false,false,false]', 0, 0, 0, 0, 0, 0, NULL)",
+            [],
+        )
+        .unwrap();
+        let (park_factor, control_mod, power_mod, fatigue_mult): (f64, f64, f64, f64) = conn
+            .query_row(
+                "SELECT park_factor, weather_control_mod, weather_power_mod, weather_fatigue_mult FROM match_session WHERE id = 1",
+                [],
+                |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?)),
+            )
+            .unwrap();
+        assert_eq!((park_factor, control_mod, power_mod, fatigue_mult), (1.0, 0.0, 0.0, 1.0));
+
+        conn.execute(
+            "UPDATE match_session SET park_factor = 1.15, weather_control_mod = -6.0, weather_power_mod = 5.0, weather_fatigue_mult = 1.2 WHERE id = 1",
+            [],
+        )
+        .unwrap();
+        let (park_factor, control_mod, power_mod, fatigue_mult): (f64, f64, f64, f64) = conn
+            .query_row(
+                "SELECT park_factor, weather_control_mod, weather_power_mod, weather_fatigue_mult FROM match_session WHERE id = 1",
+                [],
+                |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?)),
+            )
+            .unwrap();
+        assert_eq!((park_factor, control_mod, power_mod, fatigue_mult), (1.15, -6.0, 5.0, 1.2));
     }
 
     #[test]

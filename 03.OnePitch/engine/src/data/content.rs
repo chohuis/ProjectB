@@ -1,4 +1,4 @@
-use rusqlite::{Connection, Transaction};
+use rusqlite::{Connection, OptionalExtension, Transaction};
 
 use super::migration::{apply_migrations, Migration};
 
@@ -131,6 +131,17 @@ pub fn load_team_ids_for_league(conn: &Connection, league_id: &str) -> anyhow::R
     let mut stmt = conn.prepare("SELECT id FROM teams WHERE league_id = ?1 ORDER BY id")?;
     let rows = stmt.query_map([league_id], |row| row.get(0))?;
     Ok(rows.collect::<Result<Vec<_>, _>>()?)
+}
+
+/// 팀의 홈구장 파크팩터 원문("중립"/"타자친화"/"투수친화") — Phase 5,
+/// [07_구장_파크팩터](../../../02_기획/리그팀/07_구장_파크팩터.md). `stadium_id`가
+/// NULL이거나(구세이브·합성 테스트) 구장 행 자체가 없으면 `None` — 호출부
+/// (`sim::match_sim::park_factor_multiplier`)가 "중립"과 동일하게 안전 폴백.
+pub fn load_team_park_factor(conn: &Connection, team_id: &str) -> anyhow::Result<Option<String>> {
+    let result: Option<Option<String>> = conn
+        .query_row("SELECT s.park_factor FROM teams t JOIN stadiums s ON s.id = t.stadium_id WHERE t.id = ?1", [team_id], |row| row.get(0))
+        .optional()?;
+    Ok(result.flatten())
 }
 
 /// Groups a league's teams for round-robin schedule generation. 프로/프로2군은

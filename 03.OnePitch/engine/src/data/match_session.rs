@@ -95,6 +95,10 @@ struct SessionRow {
     /// 답해도 바로 다음 `submit_pitch` 호출에서 투구수가 아직 그대로라
     /// 또 `PitcherChangeDecision`을 돌려주는 무한 핑퐁에 빠진다.
     pull_decision_settled_at_pitch_count: Option<i64>,
+    /// 환경 요소(Phase 5, §10-1) — `start_protagonist_match`가 게임 시작
+    /// 시점에 딱 한 번 굴려 저장한 값(migration v17). 이후 하프이닝·1구
+    /// 판정 내내 고정.
+    conditions: match_sim::GameConditions,
 }
 
 #[allow(clippy::type_complexity)]
@@ -126,13 +130,18 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
         Option<String>,
         i64,
         Option<i64>,
+        f64,
+        f64,
+        f64,
+        f64,
     )> = conn
         .query_row(
             "SELECT game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases, home_runs, away_runs,
                     home_batter_idx, away_batter_idx, balls, strikes, current_batter_id, pitch_seq, strikeouts,
                     protagonist_pulled, relief_pitcher_id, protagonist_pull_inning, protagonist_pull_opponent_runs,
                     opponent_pulled, opponent_relief_pitcher_id, opponent_pitcher_batters_faced,
-                    pull_decision_settled_at_pitch_count
+                    pull_decision_settled_at_pitch_count,
+                    park_factor, weather_control_mod, weather_power_mod, weather_fatigue_mult
              FROM match_session WHERE id = 1",
             [],
             |r| {
@@ -163,6 +172,10 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
                     r.get(23)?,
                     r.get(24)?,
                     r.get(25)?,
+                    r.get(26)?,
+                    r.get(27)?,
+                    r.get(28)?,
+                    r.get(29)?,
                 ))
             },
         )
@@ -194,6 +207,10 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
         opponent_relief_pitcher_id,
         opponent_pitcher_batters_faced,
         pull_decision_settled_at_pitch_count,
+        park_factor,
+        weather_control_mod,
+        weather_power_mod,
+        weather_fatigue_mult,
     )) = row
     else {
         return Ok(None);
@@ -226,6 +243,7 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
         opponent_relief_pitcher_id,
         opponent_pitcher_batters_faced,
         pull_decision_settled_at_pitch_count,
+        conditions: match_sim::GameConditions { park_factor, weather_control_mod, weather_power_mod, weather_fatigue_mult },
     }))
 }
 
@@ -531,11 +549,30 @@ pub fn start_protagonist_match(
     }
     let league_id: String = content_conn.query_row("SELECT league_id FROM teams WHERE id = ?1", [home], |r| r.get(0))?;
 
+    // 환경 요소(Phase 5, §10-1) — 홈팀 구장의 파크팩터 + 게임당 1회 굴리는
+    // 날씨. `content_conn`은 이후 `submit_pitch` 호출마다 넘어오지 않으므로
+    // (세션 시작 이후엔 slot_conn만으로 진행하는 기존 관례) 여기서 한 번만
+    // 계산해 세션에 영속시킨다(migration v17).
+    let park_factor_raw = crate::data::content::load_team_park_factor(content_conn, home)?;
+    let mut weather_rng = ChaCha8Rng::seed_from_u64(repository::league_sub_seed(world_seed, &format!("weather:{game_id}")));
+    let conditions = match_sim::roll_game_conditions(&mut weather_rng, park_factor_raw.as_deref());
+
     slot_conn.execute(
         "INSERT INTO match_session (id, game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases,
-                                     home_runs, away_runs, home_batter_idx, away_batter_idx, balls, strikes, current_batter_id, pitch_seq, strikeouts)
-         VALUES (1, ?1, ?2, ?3, ?4, ?5, 1, 1, 0, '[false,false,false]', 0, 0, 0, 0, 0, 0, NULL, 0, 0)",
-        params![game_id, home, away, league_id, mode],
+                                     home_runs, away_runs, home_batter_idx, away_batter_idx, balls, strikes, current_batter_id, pitch_seq, strikeouts,
+                                     park_factor, weather_control_mod, weather_power_mod, weather_fatigue_mult)
+         VALUES (1, ?1, ?2, ?3, ?4, ?5, 1, 1, 0, '[false,false,false]', 0, 0, 0, 0, 0, 0, NULL, 0, 0, ?6, ?7, ?8, ?9)",
+        params![
+            game_id,
+            home,
+            away,
+            league_id,
+            mode,
+            conditions.park_factor,
+            conditions.weather_control_mod,
+            conditions.weather_power_mod,
+            conditions.weather_fatigue_mult,
+        ],
     )?;
 
     run_until_decision_point(slot_conn, world_seed, None, None)
@@ -762,9 +799,11 @@ fn run_until_decision_point(
             // 타석마다 다시 판단하므로 여기선 이닝·스코어차만 넘긴다.
             let leverage_base =
                 pitch::is_high_leverage_situation(false, (session.home_runs - session.away_runs) as i32, session.inning as u32);
-            // 수비 중인 팀(투구 중인 팀)의 평균 수비력(Phase 2) — 실책 판정에 씀.
+            // 수비 중인 팀(투구 중인 팀)의 평균 수비력(Phase 2)·감독 전술력
+            // (Phase 5, 수비 시프트 적중도) — 실책·시프트 판정에 씀.
             let fielding_lineup = repository::load_batting_lineup(slot_conn, &pitching_team)?;
             let team_defense = match_sim::average_defense(&fielding_lineup);
+            let fielding_tactics = repository::load_manager_stats(slot_conn, &pitching_team)?.tactics;
             let runs = match_sim::simulate_half_inning(
                 &mut rng,
                 &lineup,
@@ -773,6 +812,8 @@ fn run_until_decision_point(
                 session.bases,
                 leverage_base,
                 team_defense,
+                fielding_tactics,
+                &session.conditions,
                 &mut injuries,
                 &mut half_inning_stats,
             );
@@ -782,7 +823,7 @@ fn run_until_decision_point(
                 session.opponent_pitcher_batters_faced += faced_this_half as i64;
             }
             repository::apply_injury_events(slot_conn, &injuries, today)?;
-            repository::accumulate_game_fatigue(slot_conn, &batting_team)?;
+            repository::accumulate_game_fatigue(slot_conn, &batting_team, session.conditions.weather_fatigue_mult)?;
             // 이 하프이닝의 투수(상대 선발 또는 주인공 강판 후 중계/마무리투수)와
             // 타석에 선 타자 전원(주인공 팀 동료 또는 상대 타자) 모두
             // season_stats에 즉시 반영 — 배경 경기(process_day)와 동일한
@@ -800,7 +841,7 @@ fn run_until_decision_point(
                 // 는 position='선발투수'만 찾아 이미 벤치로 물러난 원래
                 // 선발을 잘못 갱신하게 되므로, 상대팀도 강판 후에는 호출
                 // 자체를 건너뛴다.
-                repository::accumulate_game_fatigue(slot_conn, &pitching_team)?;
+                repository::accumulate_game_fatigue(slot_conn, &pitching_team, session.conditions.weather_fatigue_mult)?;
             }
 
             if batting_team_is_home {
@@ -887,7 +928,7 @@ fn run_until_decision_point(
         // 찾는다 — 못 찾으면(방어적 폴백) 습작(1단계) 취급.
         let mastery_stage = repertoire.iter().find(|p| p.name == pitch_name).map(|p| p.stage).unwrap_or(1);
 
-        let result = pitch::throw_pitch(&mut rng, &pitcher, &batter, course, high_leverage, mastery_stage, repertoire_diverse);
+        let result = pitch::throw_pitch(&mut rng, &pitcher, &batter, course, high_leverage, mastery_stage, repertoire_diverse, &session.conditions);
         session.pitch_seq += 1;
         let mut count = pitch::Count { balls: session.balls as u32, strikes: session.strikes as u32 };
         let outcome = pitch::apply_pitch_result(&mut count, result);
@@ -923,8 +964,10 @@ fn run_until_decision_point(
             }
             pitch::AtBatOutcome::InPlay => {
                 // 수비 중인 팀은 주인공 자신의 팀(투구 중이므로, Phase 2).
+                // 감독 전술력(Phase 5, 수비 시프트)도 같은 팀 것.
                 let fielding_lineup = repository::load_batting_lineup(slot_conn, &protagonist_team_id)?;
                 let team_defense = match_sim::average_defense(&fielding_lineup);
+                let fielding_tactics = repository::load_manager_stats(slot_conn, &protagonist_team_id)?.tactics;
                 let pa = match_sim::resolve_in_play_result(
                     &mut rng,
                     &batter,
@@ -932,7 +975,9 @@ fn run_until_decision_point(
                     session.bases,
                     session.outs as u32,
                     team_defense,
+                    fielding_tactics,
                     high_leverage,
+                    &session.conditions,
                 );
                 apply_pa_outcome(&mut rng, &mut session, batting_team_is_home, pa, team_speed);
             }
@@ -1054,6 +1099,7 @@ mod tests {
             opponent_relief_pitcher_id: None,
             opponent_pitcher_batters_faced: 0,
             pull_decision_settled_at_pitch_count: None,
+            conditions: match_sim::GameConditions::default(),
         }
     }
 

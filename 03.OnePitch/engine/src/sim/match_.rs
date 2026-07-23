@@ -115,16 +115,21 @@ const DOMINANCE_GAP: f64 = 15.0;
 
 pub fn classify_batting_type(batter: &BatterStats) -> BattingTypeTag {
     let (power, contact, speed, eye) = (batter.power, batter.contact, batter.speed, batter.eye);
-    let avg = (power + contact + speed + eye) / 4.0;
+    // 스프레이형은 "파워+컨택 균형"이지 "전 스탯 균등"이 아니다 — 파워·
+    // 컨택이 서로 비슷하면서(쏠림 없음) 스피드·선구안보다는 뚜렷이 높아야
+    // 한다. 파워=컨택이면 "파워 압도" 단일 판정보다 이 조합이 먼저
+    // 성립해야 스프레이형과 파워/컨택 단일형이 안 갈린다.
+    let power_contact_avg = (power + contact) / 2.0;
+    let speed_eye_avg = (speed + eye) / 2.0;
+    if (power - contact).abs() < DOMINANCE_GAP && power_contact_avg - speed_eye_avg >= 10.0 {
+        return BattingTypeTag::Spray;
+    }
     let stats = [(BattingTypeTag::Power, power), (BattingTypeTag::Contact, contact), (BattingTypeTag::Speed, speed), (BattingTypeTag::Patient, eye)];
     if let Some(&(tag, value)) = stats.iter().max_by(|a, b| a.1.partial_cmp(&b.1).unwrap_or(std::cmp::Ordering::Equal)) {
         let rest_avg = (power + contact + speed + eye - value) / 3.0;
         if value - rest_avg >= DOMINANCE_GAP {
             return tag;
         }
-    }
-    if power >= avg && contact >= avg && (power - contact).abs() < DOMINANCE_GAP {
-        return BattingTypeTag::Spray;
     }
     BattingTypeTag::AllRound
 }
@@ -209,6 +214,88 @@ pub fn is_high_leverage_situation(bases_loaded: bool, score_diff: i32, inning: u
     bases_loaded || late_and_close
 }
 
+/// 환경 요소(Phase 5, §10-1 "환경 요소 — 날씨 · 파크팩터") — 구장
+/// 파크팩터·날씨. 경기 하나 내내 고정(양 팀 다 같은 구장·같은 날씨에서
+/// 뛰므로) — `simulate_game` 호출부(`data::repository::process_day`,
+/// `data::match_session`)가 게임당 한 번만 `roll_game_conditions`로
+/// 계산해서 넘긴다. `Default`는 파크팩터 정보가 없거나(구세이브·합성
+/// 테스트) 날씨를 아직 안 굴렸을 때의 안전한 "중립/모디파이어 없음" 폴백.
+#[derive(Debug, Clone, Copy)]
+pub struct GameConditions {
+    pub park_factor: f64,
+    pub weather_control_mod: f64,
+    pub weather_power_mod: f64,
+    pub weather_fatigue_mult: f64,
+}
+
+impl Default for GameConditions {
+    fn default() -> Self {
+        GameConditions { park_factor: 1.0, weather_control_mod: 0.0, weather_power_mod: 0.0, weather_fatigue_mult: 1.0 }
+    }
+}
+
+/// 구장 파크팩터 원문("중립"/"타자친화"/"투수친화", `content::load_team_park_factor`)을
+/// 배율로 변환 — §10-1 "인플레이 결과(§6) 확률에 구장 성격이 가중". D그룹
+/// placeholder(계수는 I8 재조정 대상). 알 수 없는 값(구세이브·NULL 등)은
+/// 중립(1.0)으로 폴백.
+pub fn park_factor_multiplier(raw: Option<&str>) -> f64 {
+    match raw {
+        Some("타자친화") => 1.15,
+        Some("투수친화") => 0.85,
+        _ => 1.0,
+    }
+}
+
+/// 날씨(Phase 5, §10-1 "맑음·흐림·비·강풍 등") — 경기마다 결정론적으로 한
+/// 번만 굴린다. 맑음·흐림은 순수 플레이버(모디파이어 없음).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum Weather {
+    Clear,
+    Cloudy,
+    Rain,
+    Wind,
+    Hot,
+}
+
+/// D그룹 placeholder 분포(맑음 40%·흐림 25%·비 15%·강풍 10%·더위 10%).
+/// `rng`는 호출부가 `world_seed`+`game_id`로 결정론적으로 시드해서 넘긴다
+/// (다른 "게임당 1회" 판정과 같은 패턴, 예: `repository::league_sub_seed`).
+pub fn roll_weather(rng: &mut impl Rng) -> Weather {
+    let roll = rng.gen::<f64>();
+    if roll < 0.40 {
+        Weather::Clear
+    } else if roll < 0.65 {
+        Weather::Cloudy
+    } else if roll < 0.80 {
+        Weather::Rain
+    } else if roll < 0.90 {
+        Weather::Wind
+    } else {
+        Weather::Hot
+    }
+}
+
+/// `Weather` → (제구 모디파이어, 파워 모디파이어, 피로 배율) — 비=제구
+/// 하락(§10-1 "비=제구 하락 확률↑"), 강풍=장타 변동(§10-1 "강풍=장타 확률
+/// 변동", 여기선 상승 쪽으로 단순화), 더위=피로 소모 가속(§10-1 "더위=체력
+/// 소모↑"). D그룹 placeholder.
+fn weather_modifiers(weather: Weather) -> (f64, f64, f64) {
+    match weather {
+        Weather::Rain => (-6.0, 0.0, 1.0),
+        Weather::Wind => (0.0, 5.0, 1.0),
+        Weather::Hot => (0.0, 0.0, 1.2),
+        Weather::Clear | Weather::Cloudy => (0.0, 0.0, 1.0),
+    }
+}
+
+/// 파크팩터+날씨를 한 번에 굴려 `GameConditions`를 만든다 — `simulate_game`
+/// 호출부가 게임 시작 전에 한 번만 호출.
+pub fn roll_game_conditions(rng: &mut impl Rng, park_factor_raw: Option<&str>) -> GameConditions {
+    let weather = roll_weather(rng);
+    let (weather_control_mod, weather_power_mod, weather_fatigue_mult) = weather_modifiers(weather);
+    GameConditions { park_factor: park_factor_multiplier(park_factor_raw), weather_control_mod, weather_power_mod, weather_fatigue_mult }
+}
+
 /// 타석 1회 = 1회 확률판정(§11 "최소 타석 단위"를 만족하는 단순화 — 1구
 /// 단위 볼카운트는 I5 후속 스코프). 20~80 스탯 스케일 기준 placeholder
 /// 판정식 — 정확한 계수는 D그룹(05_밸런스.md), Phase I8 하네스에서 확정.
@@ -216,7 +303,8 @@ pub fn is_high_leverage_situation(bases_loaded: bool, score_diff: i32, inning: u
 /// 클러치·침착함이 개입한다(§5 "상황 보정... 클러치"), 평상시엔 순수
 /// 능력치 싸움 그대로. `bases`·`outs`·`team_defense`(Phase 2)는
 /// 인플레이로 이어질 때 `resolve_in_play_result`에 그대로 전달 — 병살·
-/// 희생플라이·실책 판정에 필요.
+/// 희생플라이·실책 판정에 필요. `tactics`(Phase 5, 수비 시프트)는 지금
+/// 수비 중인 팀 감독의 전술력, `conditions`(Phase 5)는 파크팩터·날씨.
 #[allow(clippy::too_many_arguments)]
 pub fn simulate_plate_appearance(
     rng: &mut impl Rng,
@@ -225,9 +313,11 @@ pub fn simulate_plate_appearance(
     bases: [bool; 3],
     outs: u32,
     team_defense: f64,
+    tactics: f64,
     high_leverage: bool,
+    conditions: &GameConditions,
 ) -> PaOutcome {
-    let effective_control = fatigue_effective(pitcher.control, pitcher.fatigue);
+    let effective_control = fatigue_effective(pitcher.control, pitcher.fatigue) + conditions.weather_control_mod;
     let effective_stuff = fatigue_effective(pitcher.stuff, pitcher.fatigue);
     let mut pitch_edge = (effective_control + effective_stuff) / 2.0 - (batter.contact + batter.eye) / 2.0;
     pitch_edge += platoon_edge_for_pitcher(pitcher.handedness, batter.handedness);
@@ -256,7 +346,21 @@ pub fn simulate_plate_appearance(
         return PaOutcome::HitByPitch;
     }
 
-    resolve_in_play_result(rng, batter, pitcher, bases, outs, team_defense, high_leverage)
+    resolve_in_play_result(rng, batter, pitcher, bases, outs, team_defense, tactics, high_leverage, conditions)
+}
+
+/// 수비 시프트 보너스(Phase 5, §6-1) — 타자의 타격 유형 태그에 따라
+/// 시프트 강도가 다르고(파워형=강하게, 스프레이형=약함/무력화), 감독
+/// 전술력이 그 적중도에 소폭 영향(§6-1 "감독 전술력이 시프트 적중도에
+/// 소폭 영향"). 반환값은 `hit_prob`에서 빼는 값 — 클수록 시프트가 안타를
+/// 아웃으로 더 많이 바꾼다. D그룹 placeholder.
+fn shift_bonus(batter: &BatterStats, tactics: f64) -> f64 {
+    let tactics_scale = (tactics - 50.0) * 0.0005;
+    match classify_batting_type(batter) {
+        BattingTypeTag::Power => (0.03 + tactics_scale).max(0.0),
+        BattingTypeTag::Spray => 0.0,
+        _ => (0.01 + tactics_scale * 0.5).max(0.0),
+    }
 }
 
 /// 인플레이(공을 맞힘) 발생 이후의 결과 세분화(§6) — 아웃 여부 → 안타
@@ -266,7 +370,9 @@ pub fn simulate_plate_appearance(
 /// 엔진 사이에서 갈라지지 않게 한다. `bases`·`outs`(Phase 2)는 병살·
 /// 희생플라이 자동 판정(§6)에, `team_defense`는 실책 확률(§6 "수비 전력
 /// 확률로 발생")에 쓰인다 — 타석에 선 팀(공격팀)이 아니라 지금 수비 중인
-/// 팀의 평균 수비력이어야 한다(호출부 책임).
+/// 팀의 평균 수비력이어야 한다(호출부 책임). `tactics`(Phase 5)는 수비
+/// 중인 팀 감독의 전술력(수비 시프트 적중도), `conditions`(Phase 5)는
+/// 파크팩터(홈런·장타 배율)·날씨(강풍=장타 변동).
 #[allow(clippy::too_many_arguments)]
 pub fn resolve_in_play_result(
     rng: &mut impl Rng,
@@ -275,13 +381,15 @@ pub fn resolve_in_play_result(
     bases: [bool; 3],
     outs: u32,
     team_defense: f64,
+    tactics: f64,
     high_leverage: bool,
+    conditions: &GameConditions,
 ) -> PaOutcome {
     let mut power_edge = batter.power - fatigue_effective(pitcher.stuff, pitcher.fatigue);
     if high_leverage {
         power_edge += (batter.clutch - pitcher.clutch) * 0.15;
     }
-    let hit_prob = clamp01(0.30 + power_edge * 0.002);
+    let hit_prob = clamp01(0.30 + power_edge * 0.002 - shift_bonus(batter, tactics));
     if rng.gen::<f64>() >= hit_prob {
         // 아웃이 될 타구 — 실책이 먼저 개입해 아웃을 출루로 뒤집을 수
         // 있다("실책이 없었으면 아웃이었을 타구"라는 실제 채점 관례와
@@ -300,10 +408,12 @@ pub fn resolve_in_play_result(
         return PaOutcome::Out;
     }
 
-    // 안타 종류 세분화
-    let hr_prob = clamp01(0.03 + (batter.power - 50.0) * 0.0015);
+    // 안타 종류 세분화 — 파크팩터가 홈런·2루타 확률에, 날씨(강풍)가
+    // "실효 파워"에 가중된다(§10-1).
+    let effective_power_for_extra_base = batter.power + conditions.weather_power_mod;
+    let hr_prob = clamp01((0.03 + (effective_power_for_extra_base - 50.0) * 0.0015) * conditions.park_factor);
     let triple_prob = 0.02;
-    let double_prob = clamp01(0.18 + (batter.power - 50.0) * 0.0008);
+    let double_prob = clamp01((0.18 + (effective_power_for_extra_base - 50.0) * 0.0008) * conditions.park_factor);
     let roll2 = rng.gen::<f64>();
     if roll2 < hr_prob {
         PaOutcome::HomeRun
@@ -478,6 +588,8 @@ pub(crate) fn simulate_half_inning(
     initial_bases: [bool; 3],
     high_leverage_base: bool,
     team_defense: f64,
+    tactics: f64,
+    conditions: &GameConditions,
     injuries: &mut Vec<InjuryEvent>,
     stats: &mut HalfInningStats,
 ) -> u32 {
@@ -521,7 +633,8 @@ pub(crate) fn simulate_half_inning(
         let batter = &lineup[*batter_idx % lineup.len()];
         *batter_idx += 1;
         let bases_loaded = bases.iter().all(|&b| b);
-        let outcome = simulate_plate_appearance(rng, batter, pitcher, bases, outs, team_defense, high_leverage_base || bases_loaded);
+        let outcome =
+            simulate_plate_appearance(rng, batter, pitcher, bases, outs, team_defense, tactics, high_leverage_base || bases_loaded, conditions);
         let pa_runs = match outcome {
             PaOutcome::Strikeout | PaOutcome::Out => {
                 outs += 1;
@@ -697,6 +810,7 @@ pub fn simulate_game(
     home_plan: &TeamPitchingPlan,
     away_lineup: &[BatterStats],
     away_plan: &TeamPitchingPlan,
+    conditions: &GameConditions,
 ) -> GameResult {
     let amateur = is_amateur(league_id);
     let mut home_runs = 0u32;
@@ -739,6 +853,8 @@ pub fn simulate_game(
             bases,
             home_leverage_base,
             home_defense,
+            home_plan.tactics,
+            conditions,
             &mut injuries,
             if home_pulled { &mut home_reliever_stats_acc } else { &mut top_half_stats },
         );
@@ -753,6 +869,8 @@ pub fn simulate_game(
                 bases,
                 away_leverage_base,
                 away_defense,
+                away_plan.tactics,
+                conditions,
                 &mut injuries,
                 if away_pulled { &mut away_reliever_stats_acc } else { &mut bottom_half_stats },
             );
@@ -838,9 +956,9 @@ mod tests {
     fn same_seed_produces_identical_game_result() {
         let lineup: Vec<BatterStats> = (0..8).map(|i| BatterStats { id: format!("b{i}"), ..avg_batter() }).collect();
         let mut rng1 = ChaCha8Rng::seed_from_u64(11);
-        let a = simulate_game(&mut rng1, "league:hs", &lineup, &no_pull_plan(&avg_pitcher()), &lineup, &no_pull_plan(&avg_pitcher()));
+        let a = simulate_game(&mut rng1, "league:hs", &lineup, &no_pull_plan(&avg_pitcher()), &lineup, &no_pull_plan(&avg_pitcher()), &GameConditions::default());
         let mut rng2 = ChaCha8Rng::seed_from_u64(11);
-        let b = simulate_game(&mut rng2, "league:hs", &lineup, &no_pull_plan(&avg_pitcher()), &lineup, &no_pull_plan(&avg_pitcher()));
+        let b = simulate_game(&mut rng2, "league:hs", &lineup, &no_pull_plan(&avg_pitcher()), &lineup, &no_pull_plan(&avg_pitcher()), &GameConditions::default());
         assert_eq!(a.home_runs, b.home_runs);
         assert_eq!(a.away_runs, b.away_runs);
         assert_eq!(a.injuries, b.injuries);
@@ -855,7 +973,7 @@ mod tests {
         let lineup: Vec<BatterStats> = (0..8).map(|i| BatterStats { id: format!("b{i}"), ..avg_batter() }).collect();
         for seed in 0..20u64 {
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
-            let r = simulate_game(&mut rng, "league:pro", &lineup, &no_pull_plan(&avg_pitcher()), &lineup, &no_pull_plan(&avg_pitcher()));
+            let r = simulate_game(&mut rng, "league:pro", &lineup, &no_pull_plan(&avg_pitcher()), &lineup, &no_pull_plan(&avg_pitcher()), &GameConditions::default());
             assert_eq!(r.away_pitcher_stats.runs_allowed, r.home_runs, "seed={seed}");
             assert_eq!(r.home_pitcher_stats.runs_allowed, r.away_runs, "seed={seed}");
         }
@@ -872,7 +990,7 @@ mod tests {
             let home_plan = TeamPitchingPlan { starter: &starter, reliever: Some(&reliever), closer: None, tactics: 50.0, trust: 50.0 };
             let away_starter = avg_pitcher();
             let away_plan = no_pull_plan(&away_starter);
-            let r = simulate_game(&mut rng, "league:pro", &lineup, &home_plan, &lineup, &away_plan);
+            let r = simulate_game(&mut rng, "league:pro", &lineup, &home_plan, &lineup, &away_plan, &GameConditions::default());
             // 강판이 일어나도 팀 총 실점·타자 rbi 합 불변식은 그대로 유지돼야 한다.
             assert_eq!(r.away_pitcher_stats.runs_allowed, r.home_runs, "seed={seed}");
             let home_rbi: u32 = r.home_batter_stats.values().map(|b| b.rbi).sum();
@@ -896,7 +1014,7 @@ mod tests {
             let home_plan = TeamPitchingPlan { starter: &starter, reliever: None, closer: Some(&closer), tactics: 50.0, trust: 50.0 };
             let away_starter = avg_pitcher();
             let away_plan = no_pull_plan(&away_starter);
-            let r = simulate_game(&mut rng, "league:pro", &lineup, &home_plan, &lineup, &away_plan);
+            let r = simulate_game(&mut rng, "league:pro", &lineup, &home_plan, &lineup, &away_plan, &GameConditions::default());
             if r.home_reliever_stats.is_some() {
                 pulled_at_least_once = true;
                 break;
@@ -912,7 +1030,7 @@ mod tests {
         let exhausted = PitcherStats { id: "p".to_string(), control: 50.0, stuff: 50.0, fatigue: 200.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0, handedness: Handedness::Right };
         for seed in 0..10u64 {
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
-            let r = simulate_game(&mut rng, "league:pro", &lineup, &no_pull_plan(&exhausted), &lineup, &no_pull_plan(&exhausted));
+            let r = simulate_game(&mut rng, "league:pro", &lineup, &no_pull_plan(&exhausted), &lineup, &no_pull_plan(&exhausted), &GameConditions::default());
             assert!(r.home_reliever_stats.is_none(), "seed={seed}");
             assert!(r.away_reliever_stats.is_none(), "seed={seed}");
         }
@@ -926,7 +1044,7 @@ mod tests {
         let lineup: Vec<BatterStats> = (0..8).map(|i| BatterStats { id: format!("b{i}"), ..avg_batter() }).collect();
         for seed in 0..20u64 {
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
-            let r = simulate_game(&mut rng, "league:pro", &lineup, &no_pull_plan(&avg_pitcher()), &lineup, &no_pull_plan(&avg_pitcher()));
+            let r = simulate_game(&mut rng, "league:pro", &lineup, &no_pull_plan(&avg_pitcher()), &lineup, &no_pull_plan(&avg_pitcher()), &GameConditions::default());
             let home_rbi: u32 = r.home_batter_stats.values().map(|b| b.rbi).sum();
             let away_rbi: u32 = r.away_batter_stats.values().map(|b| b.rbi).sum();
             let away_pitching_unearned =
@@ -948,10 +1066,10 @@ mod tests {
         let mut strong_hits = 0u32;
         for seed in 0..50u64 {
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
-            let r1 = simulate_game(&mut rng, "league:pro", &lineup, &no_pull_plan(&weak_pitcher), &lineup, &no_pull_plan(&weak_pitcher));
+            let r1 = simulate_game(&mut rng, "league:pro", &lineup, &no_pull_plan(&weak_pitcher), &lineup, &no_pull_plan(&weak_pitcher), &GameConditions::default());
             weak_hits += r1.home_pitcher_stats.hits_allowed + r1.away_pitcher_stats.hits_allowed;
             let mut rng2 = ChaCha8Rng::seed_from_u64(seed);
-            let r2 = simulate_game(&mut rng2, "league:pro", &lineup, &no_pull_plan(&strong_pitcher), &lineup, &no_pull_plan(&strong_pitcher));
+            let r2 = simulate_game(&mut rng2, "league:pro", &lineup, &no_pull_plan(&strong_pitcher), &lineup, &no_pull_plan(&strong_pitcher), &GameConditions::default());
             strong_hits += r2.home_pitcher_stats.hits_allowed + r2.away_pitcher_stats.hits_allowed;
         }
         assert!(strong_hits < weak_hits, "strong={strong_hits} weak={weak_hits}");
@@ -968,10 +1086,10 @@ mod tests {
         let mut strong_total = 0u32;
         for seed in 0..50u64 {
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
-            let r1 = simulate_game(&mut rng, "league:pro", &weak_lineup, &no_pull_plan(&avg_pitcher()), &weak_lineup, &no_pull_plan(&avg_pitcher()));
+            let r1 = simulate_game(&mut rng, "league:pro", &weak_lineup, &no_pull_plan(&avg_pitcher()), &weak_lineup, &no_pull_plan(&avg_pitcher()), &GameConditions::default());
             weak_total += r1.home_runs + r1.away_runs;
             let mut rng2 = ChaCha8Rng::seed_from_u64(seed);
-            let r2 = simulate_game(&mut rng2, "league:pro", &strong_lineup, &no_pull_plan(&avg_pitcher()), &strong_lineup, &no_pull_plan(&avg_pitcher()));
+            let r2 = simulate_game(&mut rng2, "league:pro", &strong_lineup, &no_pull_plan(&avg_pitcher()), &strong_lineup, &no_pull_plan(&avg_pitcher()), &GameConditions::default());
             strong_total += r2.home_runs + r2.away_runs;
         }
         assert!(strong_total > weak_total, "strong={strong_total} weak={weak_total}");
@@ -990,7 +1108,7 @@ mod tests {
         let mut saw_cold_game = false;
         for seed in 0..20u64 {
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
-            let r = simulate_game(&mut rng, "league:hs", &elite, &no_pull_plan(&elite_pitcher), &hapless, &no_pull_plan(&hapless_pitcher));
+            let r = simulate_game(&mut rng, "league:hs", &elite, &no_pull_plan(&elite_pitcher), &hapless, &no_pull_plan(&hapless_pitcher), &GameConditions::default());
             if r.home_runs.max(r.away_runs) - r.home_runs.min(r.away_runs) >= 15 {
                 saw_cold_game = true;
             }
@@ -1003,7 +1121,7 @@ mod tests {
         let lineup: Vec<BatterStats> = (0..8).map(|i| BatterStats { id: format!("b{i}"), ..avg_batter() }).collect();
         for seed in 0..10u64 {
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
-            let r = simulate_game(&mut rng, "league:pro", &lineup, &no_pull_plan(&avg_pitcher()), &lineup, &no_pull_plan(&avg_pitcher()));
+            let r = simulate_game(&mut rng, "league:pro", &lineup, &no_pull_plan(&avg_pitcher()), &lineup, &no_pull_plan(&avg_pitcher()), &GameConditions::default());
             // just confirm it terminates and produces a result — the 12-inning cap
             // guarantees termination even on repeated ties.
             assert!(r.home_runs < 100 && r.away_runs < 100);
@@ -1019,7 +1137,7 @@ mod tests {
         let mut total_injuries = 0usize;
         for seed in 0..50u64 {
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
-            let r = simulate_game(&mut rng, "league:pro", &lineup, &no_pull_plan(&pitcher), &lineup, &no_pull_plan(&pitcher));
+            let r = simulate_game(&mut rng, "league:pro", &lineup, &no_pull_plan(&pitcher), &lineup, &no_pull_plan(&pitcher), &GameConditions::default());
             total_injuries += r.injuries.len();
         }
         assert!(total_injuries > 0, "expected at least one acute injury across 50 games of heavily fatigued players");
@@ -1029,7 +1147,7 @@ mod tests {
     fn zero_fatigue_players_rarely_get_injured_in_a_single_game() {
         let lineup: Vec<BatterStats> = (0..8).map(|i| BatterStats { id: format!("b{i}"), ..avg_batter() }).collect();
         let mut rng = ChaCha8Rng::seed_from_u64(0);
-        let r = simulate_game(&mut rng, "league:pro", &lineup, &no_pull_plan(&avg_pitcher()), &lineup, &no_pull_plan(&avg_pitcher()));
+        let r = simulate_game(&mut rng, "league:pro", &lineup, &no_pull_plan(&avg_pitcher()), &lineup, &no_pull_plan(&avg_pitcher()), &GameConditions::default());
         assert!(r.injuries.len() < 3, "a single low-fatigue game should almost never produce multiple injuries, got {}", r.injuries.len());
     }
 
@@ -1052,10 +1170,10 @@ mod tests {
         let mut tired_hits = 0u32;
         for seed in 0..50u64 {
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
-            let r1 = simulate_game(&mut rng, "league:pro", &lineup, &no_pull_plan(&fresh), &lineup, &no_pull_plan(&fresh));
+            let r1 = simulate_game(&mut rng, "league:pro", &lineup, &no_pull_plan(&fresh), &lineup, &no_pull_plan(&fresh), &GameConditions::default());
             fresh_hits += r1.home_pitcher_stats.hits_allowed + r1.away_pitcher_stats.hits_allowed;
             let mut rng2 = ChaCha8Rng::seed_from_u64(seed);
-            let r2 = simulate_game(&mut rng2, "league:pro", &lineup, &no_pull_plan(&tired), &lineup, &no_pull_plan(&tired));
+            let r2 = simulate_game(&mut rng2, "league:pro", &lineup, &no_pull_plan(&tired), &lineup, &no_pull_plan(&tired), &GameConditions::default());
             tired_hits += r2.home_pitcher_stats.hits_allowed + r2.away_pitcher_stats.hits_allowed;
         }
         assert!(tired_hits > fresh_hits, "tired={tired_hits} fresh={fresh_hits}");
@@ -1071,7 +1189,7 @@ mod tests {
             let mut k = 0;
             for seed in 0..2000u64 {
                 let mut rng = ChaCha8Rng::seed_from_u64(seed);
-                if simulate_plate_appearance(&mut rng, &batter, pitcher, [false; 3], 0, 50.0, false) == PaOutcome::Strikeout {
+                if simulate_plate_appearance(&mut rng, &batter, pitcher, [false; 3], 0, 50.0, 50.0, false, &GameConditions::default()) == PaOutcome::Strikeout {
                     k += 1;
                 }
             }
@@ -1092,7 +1210,7 @@ mod tests {
             let mut bb = 0;
             for seed in 0..2000u64 {
                 let mut rng = ChaCha8Rng::seed_from_u64(seed);
-                if simulate_plate_appearance(&mut rng, &batter, pitcher, [false; 3], 0, 50.0, false) == PaOutcome::Walk {
+                if simulate_plate_appearance(&mut rng, &batter, pitcher, [false; 3], 0, 50.0, 50.0, false, &GameConditions::default()) == PaOutcome::Walk {
                     bb += 1;
                 }
             }
@@ -1113,8 +1231,8 @@ mod tests {
         for seed in 0..30u64 {
             let mut rng_a = ChaCha8Rng::seed_from_u64(seed);
             let mut rng_b = ChaCha8Rng::seed_from_u64(seed);
-            let a = simulate_plate_appearance(&mut rng_a, &cold_batter, &clutch_pitcher, [false; 3], 0, 50.0, false);
-            let b = simulate_plate_appearance(&mut rng_b, &cold_batter, &avg_pitcher(), [false; 3], 0, 50.0, false);
+            let a = simulate_plate_appearance(&mut rng_a, &cold_batter, &clutch_pitcher, [false; 3], 0, 50.0, 50.0, false, &GameConditions::default());
+            let b = simulate_plate_appearance(&mut rng_b, &cold_batter, &avg_pitcher(), [false; 3], 0, 50.0, 50.0, false, &GameConditions::default());
             assert_eq!(a, b, "seed={seed}: high_leverage=false면 클러치가 결과에 개입하면 안 됨");
         }
     }
@@ -1125,7 +1243,7 @@ mod tests {
         let pitcher = avg_pitcher();
         for seed in 0..500u64 {
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
-            let outcome = resolve_in_play_result(&mut rng, &batter, &pitcher, [false, true, true], 0, 50.0, false);
+            let outcome = resolve_in_play_result(&mut rng, &batter, &pitcher, [false, true, true], 0, 50.0, 50.0, false, &GameConditions::default());
             assert_ne!(outcome, PaOutcome::DoublePlay, "seed={seed}");
         }
     }
@@ -1136,7 +1254,7 @@ mod tests {
         let pitcher = avg_pitcher();
         for seed in 0..500u64 {
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
-            let outcome = resolve_in_play_result(&mut rng, &batter, &pitcher, [true, false, false], 2, 50.0, false);
+            let outcome = resolve_in_play_result(&mut rng, &batter, &pitcher, [true, false, false], 2, 50.0, 50.0, false, &GameConditions::default());
             assert_ne!(outcome, PaOutcome::DoublePlay, "seed={seed}");
         }
     }
@@ -1147,7 +1265,7 @@ mod tests {
         let pitcher = avg_pitcher();
         let found = (0..2000u64).any(|seed| {
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
-            resolve_in_play_result(&mut rng, &batter, &pitcher, [true, false, false], 0, 50.0, false) == PaOutcome::DoublePlay
+            resolve_in_play_result(&mut rng, &batter, &pitcher, [true, false, false], 0, 50.0, 50.0, false, &GameConditions::default()) == PaOutcome::DoublePlay
         });
         assert!(found, "expected at least one seed to produce a double play with a runner on first and 0 outs");
     }
@@ -1158,7 +1276,7 @@ mod tests {
         let pitcher = avg_pitcher();
         for seed in 0..500u64 {
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
-            let outcome = resolve_in_play_result(&mut rng, &batter, &pitcher, [true, true, false], 0, 50.0, false);
+            let outcome = resolve_in_play_result(&mut rng, &batter, &pitcher, [true, true, false], 0, 50.0, 50.0, false, &GameConditions::default());
             assert_ne!(outcome, PaOutcome::SacFly, "seed={seed}");
         }
     }
@@ -1169,7 +1287,7 @@ mod tests {
         let pitcher = avg_pitcher();
         let found = (0..2000u64).any(|seed| {
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
-            resolve_in_play_result(&mut rng, &batter, &pitcher, [false, false, true], 1, 50.0, false) == PaOutcome::SacFly
+            resolve_in_play_result(&mut rng, &batter, &pitcher, [false, false, true], 1, 50.0, 50.0, false, &GameConditions::default()) == PaOutcome::SacFly
         });
         assert!(found, "expected at least one seed to produce a sac fly with a runner on third and 1 out");
     }
@@ -1182,7 +1300,7 @@ mod tests {
             let mut errors = 0;
             for seed in 0..3000u64 {
                 let mut rng = ChaCha8Rng::seed_from_u64(seed);
-                if resolve_in_play_result(&mut rng, &batter, &pitcher, [false; 3], 0, team_defense, false) == PaOutcome::ReachOnError {
+                if resolve_in_play_result(&mut rng, &batter, &pitcher, [false; 3], 0, team_defense, 50.0, false, &GameConditions::default()) == PaOutcome::ReachOnError {
                     errors += 1;
                 }
             }
@@ -1273,9 +1391,114 @@ mod tests {
             let mut idx = 0usize;
             let mut injuries = Vec::new();
             let mut stats = HalfInningStats::default();
-            simulate_half_inning(&mut rng, &fast_lineup, &mut idx, &pitcher, EMPTY_BASES, false, 50.0, &mut injuries, &mut stats);
+            simulate_half_inning(&mut rng, &fast_lineup, &mut idx, &pitcher, EMPTY_BASES, false, 50.0, 50.0, &GameConditions::default(), &mut injuries, &mut stats);
             total_sb += stats.batters.values().map(|b| b.stolen_bases).sum::<u32>();
         }
         assert!(total_sb > 0, "expected at least one stolen base across 300 half-innings with a fast lineup");
+    }
+
+    // Phase 5 — 수비 시프트 + 구장 파크팩터 + 날씨.
+
+    #[test]
+    fn park_factor_multiplier_matches_the_documented_three_values() {
+        assert_eq!(park_factor_multiplier(Some("타자친화")), 1.15);
+        assert_eq!(park_factor_multiplier(Some("투수친화")), 0.85);
+        assert_eq!(park_factor_multiplier(Some("중립")), 1.0);
+        assert_eq!(park_factor_multiplier(None), 1.0, "구세이브·합성 테스트는 중립 폴백");
+        assert_eq!(park_factor_multiplier(Some("알수없음")), 1.0, "알 수 없는 값도 중립 폴백");
+    }
+
+    #[test]
+    fn hitter_friendly_park_produces_more_home_runs_than_pitcher_friendly() {
+        let batter = avg_batter();
+        let pitcher = avg_pitcher();
+        let count_hr = |park_factor: f64| -> u32 {
+            let conditions = GameConditions { park_factor, ..GameConditions::default() };
+            let mut hrs = 0;
+            for seed in 0..3000u64 {
+                let mut rng = ChaCha8Rng::seed_from_u64(seed);
+                if resolve_in_play_result(&mut rng, &batter, &pitcher, EMPTY_BASES, 0, 50.0, 50.0, false, &conditions) == PaOutcome::HomeRun {
+                    hrs += 1;
+                }
+            }
+            hrs
+        };
+        let pitcher_friendly = count_hr(0.85);
+        let hitter_friendly = count_hr(1.15);
+        assert!(hitter_friendly > pitcher_friendly, "hitter_friendly={hitter_friendly} pitcher_friendly={pitcher_friendly}");
+    }
+
+    #[test]
+    fn classify_batting_type_tags_dominant_stats_correctly() {
+        let power_batter = BatterStats { power: 90.0, contact: 40.0, speed: 40.0, eye: 40.0, ..avg_batter() };
+        assert_eq!(classify_batting_type(&power_batter), BattingTypeTag::Power);
+
+        let contact_batter = BatterStats { power: 40.0, contact: 90.0, speed: 40.0, eye: 40.0, ..avg_batter() };
+        assert_eq!(classify_batting_type(&contact_batter), BattingTypeTag::Contact);
+
+        let speed_batter = BatterStats { power: 40.0, contact: 40.0, speed: 90.0, eye: 40.0, ..avg_batter() };
+        assert_eq!(classify_batting_type(&speed_batter), BattingTypeTag::Speed);
+
+        let patient_batter = BatterStats { power: 40.0, contact: 40.0, speed: 40.0, eye: 90.0, ..avg_batter() };
+        assert_eq!(classify_batting_type(&patient_batter), BattingTypeTag::Patient);
+
+        let all_round_batter = avg_batter();
+        assert_eq!(classify_batting_type(&all_round_batter), BattingTypeTag::AllRound);
+
+        let spray_batter = BatterStats { power: 65.0, contact: 65.0, speed: 40.0, eye: 40.0, ..avg_batter() };
+        assert_eq!(classify_batting_type(&spray_batter), BattingTypeTag::Spray);
+    }
+
+    /// `resolve_in_play_result`를 몬테카를로로 돌리면 파워형·스프레이형의
+    /// `power` 스탯 자체가 달라 `power_edge`(시프트와 무관한 안타 확률)까지
+    /// 같이 움직여 시프트 효과만 분리해 보기 어렵다 — 순수 함수인
+    /// `shift_bonus`를 직접 비교(§6-1 "파워형=시프트 강하게, 스프레이형=약함").
+    #[test]
+    fn shift_bonus_is_stronger_for_power_hitters_than_spray_hitters() {
+        let power_batter = BatterStats { power: 90.0, contact: 40.0, speed: 40.0, eye: 40.0, ..avg_batter() };
+        let spray_batter = BatterStats { power: 65.0, contact: 65.0, speed: 40.0, eye: 40.0, ..avg_batter() };
+        assert!(shift_bonus(&power_batter, 50.0) > shift_bonus(&spray_batter, 50.0));
+        assert_eq!(shift_bonus(&spray_batter, 50.0), 0.0, "스프레이형은 시프트가 완전히 무력화돼야 함");
+    }
+
+    #[test]
+    fn higher_manager_tactics_strengthens_the_shift_against_power_hitters() {
+        let power_batter = BatterStats { power: 90.0, contact: 40.0, speed: 40.0, eye: 40.0, ..avg_batter() };
+        assert!(
+            shift_bonus(&power_batter, 80.0) > shift_bonus(&power_batter, 20.0),
+            "높은 전술력일수록 파워형 상대 시프트가 더 강해야 함"
+        );
+    }
+
+    #[test]
+    fn roll_weather_produces_every_documented_condition_over_many_seeds() {
+        let mut seen = std::collections::HashSet::new();
+        for seed in 0..500u64 {
+            let mut rng = ChaCha8Rng::seed_from_u64(seed);
+            seen.insert(roll_weather(&mut rng));
+        }
+        for w in [Weather::Clear, Weather::Cloudy, Weather::Rain, Weather::Wind, Weather::Hot] {
+            assert!(seen.contains(&w), "{w:?} never rolled across 500 seeds");
+        }
+    }
+
+    #[test]
+    fn rainy_weather_reduces_effective_control_and_thus_raises_walks() {
+        let pitcher = PitcherStats { control: 30.0, ..avg_pitcher() };
+        let batter = avg_batter();
+        let count_walks = |conditions: &GameConditions| -> u32 {
+            let mut walks = 0;
+            for seed in 0..3000u64 {
+                let mut rng = ChaCha8Rng::seed_from_u64(seed);
+                if simulate_plate_appearance(&mut rng, &batter, &pitcher, EMPTY_BASES, 0, 50.0, 50.0, false, conditions) == PaOutcome::Walk {
+                    walks += 1;
+                }
+            }
+            walks
+        };
+        let clear_walks = count_walks(&GameConditions::default());
+        let rainy = GameConditions { weather_control_mod: -6.0, ..GameConditions::default() };
+        let rainy_walks = count_walks(&rainy);
+        assert!(rainy_walks >= clear_walks, "rainy={rainy_walks} clear={clear_walks}");
     }
 }

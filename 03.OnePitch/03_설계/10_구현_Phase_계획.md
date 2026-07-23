@@ -1726,3 +1726,22 @@
 - `data::match_session::load_protagonist_as_pitcher`에 `protagonist.handedness` 추가, `load_protagonist_pitches`가 이름 대신 `PitchMastery` 목록을 반환하도록 변경. 수동 모드(플레이어가 직접 고른 구종)는 이름만 넘어오므로 레퍼토리에서 다시 마스터리 단계를 찾아 씀(방어적 폴백: 못 찾으면 1단계).
 
 **테스트**: `cargo test --lib` 484개 전부 통과(신규 6개 — 마스터리 단계별 헛스윙 차이 1개, 레퍼토리 다양성 보너스 1개, 3계열 판정 로직 1개, 좌우 상성 동타/반대/스위치 비교 1개, NPC 좌우 도메인 검증 1개, migration v16 1개). `cargo clippy --lib --tests --bins` 클린. `cargo build --release` 갱신 후 `flutter test` 27개 전부 통과. `balance_harness -- 2 2` 스모크 확인(크래시·행 없음).
+
+### 6-107. 매치엔진 리얼리즘 강화 Phase 5 — 수비 시프트 + 구장 파크팩터 + 날씨 (2026-07-26, 완료)
+
+**Context**: `content.db`에 `stadiums.park_factor`(TEXT, "중립"/"타자친화"/"투수친화")가 이미 있고 팀-구장 배정(`teams.stadium_id`)도 끝나 있었지만 순수 "권역 그룹핑" 용도로만 쓰이고 매치 결과엔 전혀 반영 안 됐다(§10-1). 수비 시프트(§6-1)는 Phase 4의 `classify_batting_type` 헬퍼가 이미 준비돼 있어 그대로 소비. 날씨(§10-1)는 아예 없던 개념이라 새로 설계 — 계획 문서는 "schedule 컬럼 또는 결정론적 시드 기반 즉석 산출" 둘 중 하나를 제안했는데, 조사 결과 게임 시작 이후 `submit_pitch` 등 반복 호출부가 `content_conn`을 안 받는(세션 시작 이후 slot_conn만으로 진행) 기존 관례가 있어, 매 호출 재계산 대신 `match_session`에 한 번 굴려 영속시키는 쪽(migration v17)으로 확정.
+
+**구현**(`engine/src/sim/match_.rs`):
+- `GameConditions{park_factor, weather_control_mod, weather_power_mod, weather_fatigue_mult}` — 파크팩터·날씨를 하나로 묶은 값 객체(`Default`=중립/모디파이어 없음). `park_factor_multiplier`(중립 1.0·타자친화 1.15·투수친화 0.85, D그룹 placeholder), `Weather` enum(맑음·흐림·비·강풍·더위, 분포 40/25/15/10/10%) + `roll_weather` + `weather_modifiers`(비=제구 -6·강풍=파워 +5·더위=피로 배율 1.2) + `roll_game_conditions`(게임당 1회 호출).
+- `simulate_plate_appearance`·`resolve_in_play_result`·`simulate_half_inning`·`simulate_game`에 `tactics: f64`(수비 시프트 적중도)·`conditions: &GameConditions` 파라미터 추가. `resolve_in_play_result`의 `hit_prob`에 `shift_bonus`(파워형=강함, 스프레이형=완전 무력화, 그 외=약함, 감독 전술력이 소폭 가감)를 빼고, 홈런·2루타 확률에 파크팩터를 곱하고 강풍 파워 모디파이어를 얹는다. `simulate_plate_appearance`의 실효 제구에 비 모디파이어 가산.
+- `classify_batting_type`의 스프레이형 판정 순서를 재조정(파워=컨택 동률이면서 스피드·선구안보다 뚜렷이 높을 때만 스프레이형 — 안 그러면 4스탯 전부 고른 올라운드형과 안 갈림, 유닛 테스트로 발견).
+
+**구현**(`engine/src/sim/pitch.rs`): `throw_pitch`·`simulate_at_bat_automatically`에 `conditions: &GameConditions`(비=실효 제구 하락) 추가, `simulate_at_bat_automatically`에 `tactics: f64` 추가해 `resolve_in_play_result`로 전달.
+
+**구현**(`engine/src/data/content.rs`): `load_team_park_factor(conn, team_id)` 신규 — `teams JOIN stadiums`로 홈구장 파크팩터 원문 조회, 구장 미배정·구세이브는 `None`(호출부가 중립 폴백).
+
+**구현**(`engine/src/data/slot.rs`): migration v17 — `match_session`에 `park_factor`·`weather_control_mod`·`weather_power_mod`·`weather_fatigue_mult` 4컬럼(전부 NOT NULL DEFAULT 중립값). `start_protagonist_match`가 게임 시작 시 홈팀 파크팩터+굴린 날씨를 여기 저장, 이후 `submit_pitch` 등은 세션에서 다시 읽기만 함(`content_conn` 재조회 불필요).
+
+**구현**(`engine/src/data/repository.rs`, `engine/src/data/match_session.rs`): `process_day`가 게임마다 `content::load_team_park_factor`+`weather:{game_id}` 시드로 `GameConditions`를 굴려 `simulate_game`에 전달(`match:{game_id}`와 별도 RNG 스트림). `accumulate_game_fatigue`에 `fatigue_mult: f64` 파라미터 추가(더위 시 배터·투수 피로 누적 가속) — 배경 경기(2곳)·주인공 인터랙티브 하프이닝(2곳) 전부 배선. 청백전(`run_intrasquad_scrimmage`)은 자체 날씨 개념이 없어 `GameConditions::default()`로 진행. 인터랙티브 경로(`resolve_in_play_result`·`throw_pitch` 호출부)는 수비 중인 팀(주인공 팀 또는 상대팀) 감독의 `tactics`를 그때그때 조회해 넘김.
+
+**테스트**: `cargo test --lib` 492개 전부 통과(신규 8개 — 파크팩터 배율 매핑 1개, 타자친화 구장 홈런 증가 1개, 타격 유형 태그 분류 1개, 파워형 시프트가 스프레이형보다 강함 1개, 감독 전술력이 시프트를 강화 1개, 날씨 5종 전부 등장 확인 1개, 비 날씨가 볼넷 증가 1개, migration v17 1개). `cargo clippy --lib --tests --bins` 클린. `cargo build --release` 갱신 후 `flutter test` 27개 전부 통과(한 차례 `records_test.dart`가 다른 백그라운드 프로세스와의 리소스 경합으로 2분 타임아웃 났었지만 단독 재실행·전체 재실행 모두 정상 통과 확인 — 코드 문제 아님). `balance_harness -- 2 2` 스모크 확인.

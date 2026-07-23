@@ -2202,7 +2202,9 @@ fn bump_fatigue_by_player_id(conn: &Connection, id: &str, amount: f64) -> anyhow
 /// (`simulate_series`·`simulate_round_robin_stage`)는 건드리지 않음 — 그쪽은
 /// 이미 "캘린더 없이 동기 시뮬"로 단순화돼 있어 날짜 단위 피로 누적 개념이
 /// 안 맞음(10_구현_Phase_계획.md §6-6).
-pub(crate) fn accumulate_game_fatigue(conn: &Connection, team_id: &str) -> anyhow::Result<()> {
+/// `fatigue_mult`(Phase 5, §10-1 "더위=체력 소모↑") — `GameConditions.weather_fatigue_mult`
+/// 그대로 넘겨받는다(더위면 1.2, 그 외 1.0). D그룹 placeholder.
+pub(crate) fn accumulate_game_fatigue(conn: &Connection, team_id: &str, fatigue_mult: f64) -> anyhow::Result<()> {
     const BATTER_FATIGUE_PER_GAME: f64 = 4.0;
     const PITCHER_FATIGUE_PER_GAME: f64 = 12.0;
 
@@ -2212,7 +2214,7 @@ pub(crate) fn accumulate_game_fatigue(conn: &Connection, team_id: &str) -> anyho
     let batters: Vec<(String, String)> = stmt.query_map([team_id], |r| Ok((r.get(0)?, r.get(1)?)))?.collect::<Result<_, _>>()?;
     drop(stmt);
     for (id, live_state_raw) in batters {
-        bump_fatigue(conn, &id, &live_state_raw, BATTER_FATIGUE_PER_GAME)?;
+        bump_fatigue(conn, &id, &live_state_raw, BATTER_FATIGUE_PER_GAME * fatigue_mult)?;
     }
 
     let starter: Option<(String, String)> = conn
@@ -2223,7 +2225,7 @@ pub(crate) fn accumulate_game_fatigue(conn: &Connection, team_id: &str) -> anyho
         )
         .optional()?;
     if let Some((id, live_state_raw)) = starter {
-        bump_fatigue(conn, &id, &live_state_raw, PITCHER_FATIGUE_PER_GAME)?;
+        bump_fatigue(conn, &id, &live_state_raw, PITCHER_FATIGUE_PER_GAME * fatigue_mult)?;
     }
     Ok(())
 }
@@ -2339,14 +2341,21 @@ fn process_day(slot_conn: &Connection, content_conn: &Connection, world_seed: i6
             trust: away_manager.trust,
         };
 
+        // 환경 요소(Phase 5, §10-1) — 홈팀 구장 파크팩터 + 게임당 1회 굴리는
+        // 날씨. 별도 시드 키("weather:")로 게임 진행 RNG("match:")와 분리해
+        // 둘이 서로 간섭하지 않게 한다.
+        let park_factor_raw = content::load_team_park_factor(content_conn, &home)?;
+        let mut weather_rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("weather:{game_id}")));
+        let conditions = match_sim::roll_game_conditions(&mut weather_rng, park_factor_raw.as_deref());
+
         let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("match:{game_id}")));
-        let result = match_sim::simulate_game(&mut rng, &league_id, &home_lineup, &home_plan, &away_lineup, &away_plan);
+        let result = match_sim::simulate_game(&mut rng, &league_id, &home_lineup, &home_plan, &away_lineup, &away_plan, &conditions);
 
         let result_json = serde_json::json!({"home": result.home_runs, "away": result.away_runs}).to_string();
         slot_conn.execute("UPDATE schedule SET result = ?1 WHERE game_id = ?2", params![result_json, game_id])?;
         update_standings(slot_conn, &home, &away, result.home_runs, result.away_runs)?;
-        accumulate_game_fatigue(slot_conn, &home)?;
-        accumulate_game_fatigue(slot_conn, &away)?;
+        accumulate_game_fatigue(slot_conn, &home, conditions.weather_fatigue_mult)?;
+        accumulate_game_fatigue(slot_conn, &away, conditions.weather_fatigue_mult)?;
         apply_injury_events(slot_conn, &result.injuries, day)?;
 
         let week = crate::calendar::week_for_day(day);
@@ -2510,8 +2519,11 @@ fn run_intrasquad_scrimmage(slot_conn: &Connection, content_conn: &Connection, w
     let blue_plan = match_sim::TeamPitchingPlan { starter: blue_starter, reliever: None, closer: None, tactics: manager.tactics, trust: manager.trust };
     let white_plan = match_sim::TeamPitchingPlan { starter: white_starter, reliever: None, closer: None, tactics: manager.tactics, trust: manager.trust };
 
+    // 청백전은 자체 구장·날씨 개념이 없는 연습경기라 파크팩터·날씨 없이
+    // 중립 조건(`GameConditions::default`)으로 진행.
     let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("scrimmage:{team_id}:{day}")));
-    let result = match_sim::simulate_game(&mut rng, &league_id, &blue_batters, &blue_plan, &white_batters, &white_plan);
+    let result =
+        match_sim::simulate_game(&mut rng, &league_id, &blue_batters, &blue_plan, &white_batters, &white_plan, &match_sim::GameConditions::default());
 
     let week = crate::calendar::week_for_day(day);
     upsert_pitcher_practice_stats(slot_conn, &blue_starter.id, week, &result.home_pitcher_stats)?;
@@ -8529,7 +8541,7 @@ mod tests {
         insert_test_player(&slot_conn, "coach:team:a", "team:a", "코치", serde_json::json!({}));
         insert_test_player(&slot_conn, "owner:team:a", "team:a", "구단주", serde_json::json!({}));
 
-        accumulate_game_fatigue(&slot_conn, "team:a").unwrap();
+        accumulate_game_fatigue(&slot_conn, "team:a", 1.0).unwrap();
 
         let batter_fatigue: f64 = slot_conn
             .query_row("SELECT live_state FROM npc WHERE id = 'team:a_b0'", [], |r| r.get::<_, String>(0))

@@ -1,7 +1,7 @@
 use rand::seq::SliceRandom;
 use rand::Rng;
 
-use crate::sim::match_sim::{fatigue_effective, platoon_edge_for_pitcher, resolve_in_play_result, BatterStats, PaOutcome, PitcherStats};
+use crate::sim::match_sim::{fatigue_effective, platoon_edge_for_pitcher, resolve_in_play_result, BatterStats, GameConditions, PaOutcome, PitcherStats};
 
 /// 구종 마스터리 항목(05_구종_시스템.md §2) — `repository::pitch_mastery_entries`가
 /// `protagonist.pitches`(`{name, stage, weeks}` JSON)에서 만들어 넘긴다.
@@ -126,7 +126,10 @@ fn clamp01(x: f64) -> f64 {
 /// 직결"). `repertoire_diverse`(Phase 4)는 3계열 골고루 보유 시 발동하는
 /// 레퍼토리 다양성 보너스(§4) — 코스 상관없이 항상 소폭 헛스윙 유도력을
 /// 더한다. 좌우 상성(Phase 4, 신규 설계)은 `platoon_edge_for_pitcher`로
-/// `simulate_plate_appearance`(배경)와 같은 계산을 공유.
+/// `simulate_plate_appearance`(배경)와 같은 계산을 공유. `conditions`
+/// (Phase 5)의 `weather_control_mod`(비=제구 하락, §10-1)를 실효 제구에
+/// 더한다.
+#[allow(clippy::too_many_arguments)]
 pub fn throw_pitch(
     rng: &mut impl Rng,
     pitcher: &PitcherStats,
@@ -135,9 +138,10 @@ pub fn throw_pitch(
     high_leverage: bool,
     mastery_stage: u8,
     repertoire_diverse: bool,
+    conditions: &GameConditions,
 ) -> PitchResult {
     let edge = course.edge_level();
-    let effective_control = fatigue_effective(pitcher.control, pitcher.fatigue);
+    let effective_control = fatigue_effective(pitcher.control, pitcher.fatigue) + conditions.weather_control_mod;
     let effective_stuff = fatigue_effective(pitcher.stuff, pitcher.fatigue);
 
     // 사구 — §5 "제구 낮을수록↑, 몸쪽일수록↑".
@@ -269,8 +273,8 @@ pub fn choose_pitch_and_course(rng: &mut impl Rng, pitches: &[PitchMastery], bat
 /// 수동·반자동 모드(플레이어가 직접/가끔 구종·코스를 고름)는 `throw_pitch`
 /// ·`apply_pitch_result`를 그대로 재사용하되 세션 상태를 slot.db에 유지해야
 /// 해서 별도 서브분 스코프(10_구현_Phase_계획.md 참고). `bases`·`outs`·
-/// `team_defense`(Phase 2)는 인플레이로 이어질 때 `resolve_in_play_result`
-/// 에 그대로 전달.
+/// `team_defense`(Phase 2)·`tactics`·`conditions`(Phase 5)는 인플레이로
+/// 이어질 때 `resolve_in_play_result`에 그대로 전달.
 #[allow(clippy::too_many_arguments)]
 pub fn simulate_at_bat_automatically(
     rng: &mut impl Rng,
@@ -280,14 +284,16 @@ pub fn simulate_at_bat_automatically(
     bases: [bool; 3],
     outs: u32,
     team_defense: f64,
+    tactics: f64,
     high_leverage: bool,
+    conditions: &GameConditions,
 ) -> (PaOutcome, u32) {
     let mut count = Count::default();
     let mut pitch_count = 0u32;
     let diverse = repertoire_is_diverse(pitches);
     loop {
         let (pitch, course) = choose_pitch_and_course(rng, pitches, batter, high_leverage);
-        let result = throw_pitch(rng, pitcher, batter, course, high_leverage, pitch.stage, diverse);
+        let result = throw_pitch(rng, pitcher, batter, course, high_leverage, pitch.stage, diverse, conditions);
         pitch_count += 1;
         match apply_pitch_result(&mut count, result) {
             AtBatOutcome::InProgress => continue,
@@ -295,7 +301,10 @@ pub fn simulate_at_bat_automatically(
             AtBatOutcome::Walk => return (PaOutcome::Walk, pitch_count),
             AtBatOutcome::HitByPitch => return (PaOutcome::HitByPitch, pitch_count),
             AtBatOutcome::InPlay => {
-                return (resolve_in_play_result(rng, batter, pitcher, bases, outs, team_defense, high_leverage), pitch_count)
+                return (
+                    resolve_in_play_result(rng, batter, pitcher, bases, outs, team_defense, tactics, high_leverage, conditions),
+                    pitch_count,
+                )
             }
         }
     }
@@ -340,8 +349,8 @@ mod tests {
         let mut rng_a = ChaCha8Rng::seed_from_u64(1);
         let mut rng_b = ChaCha8Rng::seed_from_u64(1);
         assert_eq!(
-            throw_pitch(&mut rng_a, &avg_pitcher(), &avg_batter(), Course::MidCenter, false, 3, false),
-            throw_pitch(&mut rng_b, &avg_pitcher(), &avg_batter(), Course::MidCenter, false, 3, false)
+            throw_pitch(&mut rng_a, &avg_pitcher(), &avg_batter(), Course::MidCenter, false, 3, false, &GameConditions::default()),
+            throw_pitch(&mut rng_b, &avg_pitcher(), &avg_batter(), Course::MidCenter, false, 3, false, &GameConditions::default())
         );
     }
 
@@ -353,7 +362,7 @@ mod tests {
             let mut hits = 0;
             for seed in 0..trials {
                 let mut rng = ChaCha8Rng::seed_from_u64(seed);
-                if throw_pitch(&mut rng, &wild, &avg_batter(), course, false, 3, false) == PitchResult::HitByPitch {
+                if throw_pitch(&mut rng, &wild, &avg_batter(), course, false, 3, false, &GameConditions::default()) == PitchResult::HitByPitch {
                     hits += 1;
                 }
             }
@@ -412,7 +421,7 @@ mod tests {
         for seed in 0..100u64 {
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
             let (outcome, pitch_count) =
-                simulate_at_bat_automatically(&mut rng, &pitches, &avg_pitcher(), &avg_batter(), [false; 3], 0, 50.0, false);
+                simulate_at_bat_automatically(&mut rng, &pitches, &avg_pitcher(), &avg_batter(), [false; 3], 0, 50.0, 50.0, false, &GameConditions::default());
             assert!((1..50).contains(&pitch_count), "unreasonable pitch count: {pitch_count}");
             assert!(matches!(
                 outcome,
@@ -436,8 +445,8 @@ mod tests {
         let pitches = vec![PitchMastery { name: "포심 패스트볼".to_string(), stage: 3 }];
         let mut rng_a = ChaCha8Rng::seed_from_u64(42);
         let mut rng_b = ChaCha8Rng::seed_from_u64(42);
-        let a = simulate_at_bat_automatically(&mut rng_a, &pitches, &avg_pitcher(), &avg_batter(), [false; 3], 0, 50.0, false);
-        let b = simulate_at_bat_automatically(&mut rng_b, &pitches, &avg_pitcher(), &avg_batter(), [false; 3], 0, 50.0, false);
+        let a = simulate_at_bat_automatically(&mut rng_a, &pitches, &avg_pitcher(), &avg_batter(), [false; 3], 0, 50.0, 50.0, false, &GameConditions::default());
+        let b = simulate_at_bat_automatically(&mut rng_b, &pitches, &avg_pitcher(), &avg_batter(), [false; 3], 0, 50.0, 50.0, false, &GameConditions::default());
         assert_eq!(a, b);
     }
 
@@ -447,8 +456,8 @@ mod tests {
         for seed in 0..30u64 {
             let mut rng_a = ChaCha8Rng::seed_from_u64(seed);
             let mut rng_b = ChaCha8Rng::seed_from_u64(seed);
-            let a = throw_pitch(&mut rng_a, &clutch_pitcher, &avg_batter(), Course::MidCenter, false, 3, false);
-            let b = throw_pitch(&mut rng_b, &avg_pitcher(), &avg_batter(), Course::MidCenter, false, 3, false);
+            let a = throw_pitch(&mut rng_a, &clutch_pitcher, &avg_batter(), Course::MidCenter, false, 3, false, &GameConditions::default());
+            let b = throw_pitch(&mut rng_b, &avg_pitcher(), &avg_batter(), Course::MidCenter, false, 3, false, &GameConditions::default());
             assert_eq!(a, b, "seed={seed}: high_leverage=false면 클러치가 결과에 개입하면 안 됨");
         }
     }
@@ -461,7 +470,7 @@ mod tests {
             let mut balls = 0;
             for seed in 0..2000u64 {
                 let mut rng = ChaCha8Rng::seed_from_u64(seed);
-                if throw_pitch(&mut rng, pitcher, &avg_batter(), Course::HighInside, false, 3, false) == PitchResult::Ball {
+                if throw_pitch(&mut rng, pitcher, &avg_batter(), Course::HighInside, false, 3, false, &GameConditions::default()) == PitchResult::Ball {
                     balls += 1;
                 }
             }
@@ -480,7 +489,7 @@ mod tests {
             let mut strikes = 0;
             for seed in 0..3000u64 {
                 let mut rng = ChaCha8Rng::seed_from_u64(seed);
-                if throw_pitch(&mut rng, &avg_pitcher(), &avg_batter(), Course::MidCenter, false, stage, false) == PitchResult::Strike {
+                if throw_pitch(&mut rng, &avg_pitcher(), &avg_batter(), Course::MidCenter, false, stage, false, &GameConditions::default()) == PitchResult::Strike {
                     strikes += 1;
                 }
             }
@@ -499,7 +508,7 @@ mod tests {
             let mut strikes = 0;
             for seed in 0..3000u64 {
                 let mut rng = ChaCha8Rng::seed_from_u64(seed);
-                if throw_pitch(&mut rng, &avg_pitcher(), &avg_batter(), Course::MidCenter, false, 3, diverse) == PitchResult::Strike {
+                if throw_pitch(&mut rng, &avg_pitcher(), &avg_batter(), Course::MidCenter, false, 3, diverse, &GameConditions::default()) == PitchResult::Strike {
                     strikes += 1;
                 }
             }
@@ -537,7 +546,7 @@ mod tests {
             let mut strikes = 0;
             for seed in 0..3000u64 {
                 let mut rng = ChaCha8Rng::seed_from_u64(seed);
-                if throw_pitch(&mut rng, &lefty_pitcher, &batter, Course::MidCenter, false, 3, false) == PitchResult::Strike {
+                if throw_pitch(&mut rng, &lefty_pitcher, &batter, Course::MidCenter, false, 3, false, &GameConditions::default()) == PitchResult::Strike {
                     strikes += 1;
                 }
             }
