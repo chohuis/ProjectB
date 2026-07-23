@@ -36,6 +36,11 @@ pub struct TrainingConfig<'a> {
     pub intensity: &'a str,
     pub new_pitch: Option<&'a str>,
     pub mastery_pitch: Option<&'a str>,
+    /// 학업 주간 학습모드의 훈련 효율 배율(`sim::academics::study_mode_effect`
+    /// 의 `efficiency_mod`, 대화 2026-07-26) — 고교·대학 스테이지에서만
+    /// 의미 있고, 그 외(프로·독립·병역)에는 항상 1.0(변화 없음). 집중
+    /// 수업(0.70)일수록 이 배율이 가장 크게 깎인다.
+    pub academic_efficiency_mod: f64,
 }
 
 /// 능력치 슬롯 XP 배율 — §3 "신규 습득 중이면 능력치 슬롯 효율 -15%,
@@ -55,7 +60,7 @@ fn stat_focus_multiplier(stat: &str, config: &TrainingConfig) -> f64 {
     } else {
         1.0
     };
-    slot_mult * intensity_multiplier(config.intensity) * pitch_penalty
+    slot_mult * intensity_multiplier(config.intensity) * pitch_penalty * config.academic_efficiency_mod
 }
 
 /// 주간 훈련 적용 — `sim::growth::apply_weekly_growth_with_focus`를 훈련
@@ -131,7 +136,7 @@ mod tests {
         use crate::sim::growth::PITCHER_EXPOSED;
         let mut stats = stats_at(20.0, &PITCHER_EXPOSED);
         let mut xp = zero_xp(&PITCHER_EXPOSED);
-        let config = TrainingConfig { primary_stat: "구속", secondary_stats: ["구위", "제구"], intensity: "보통", new_pitch: None, mastery_pitch: None };
+        let config = TrainingConfig { primary_stat: "구속", secondary_stats: ["구위", "제구"], intensity: "보통", new_pitch: None, mastery_pitch: None, academic_efficiency_mod: 1.0 };
 
         let mut rng = ChaCha8Rng::seed_from_u64(1);
         for _ in 0..30 {
@@ -148,7 +153,7 @@ mod tests {
         use crate::sim::growth::PITCHER_EXPOSED;
         let mut stats = stats_at(20.0, &PITCHER_EXPOSED);
         let mut xp = zero_xp(&PITCHER_EXPOSED);
-        let config = TrainingConfig { primary_stat: "구속", secondary_stats: ["구위", "제구"], intensity: "보통", new_pitch: None, mastery_pitch: None };
+        let config = TrainingConfig { primary_stat: "구속", secondary_stats: ["구위", "제구"], intensity: "보통", new_pitch: None, mastery_pitch: None, academic_efficiency_mod: 1.0 };
 
         let mut rng = ChaCha8Rng::seed_from_u64(2);
         for _ in 0..30 {
@@ -168,7 +173,7 @@ mod tests {
         let run = |intensity: &str, seed: u64| -> f64 {
             let mut stats = stats_at(20.0, &PITCHER_EXPOSED);
             let mut xp = zero_xp(&PITCHER_EXPOSED);
-            let config = TrainingConfig { primary_stat: "구속", secondary_stats: ["구위", "제구"], intensity, new_pitch: None, mastery_pitch: None };
+            let config = TrainingConfig { primary_stat: "구속", secondary_stats: ["구위", "제구"], intensity, new_pitch: None, mastery_pitch: None, academic_efficiency_mod: 1.0 };
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
             for _ in 0..15 {
                 apply_weekly_training(&mut rng, &PITCHER_EXPOSED, &mut stats, &mut xp, 80.0, &config);
@@ -190,7 +195,7 @@ mod tests {
         let run = |new_pitch: Option<&str>, seed: u64| -> f64 {
             let mut stats = stats_at(20.0, &PITCHER_EXPOSED);
             let mut xp = zero_xp(&PITCHER_EXPOSED);
-            let config = TrainingConfig { primary_stat: "구속", secondary_stats: ["구위", "제구"], intensity: "보통", new_pitch, mastery_pitch: None };
+            let config = TrainingConfig { primary_stat: "구속", secondary_stats: ["구위", "제구"], intensity: "보통", new_pitch, mastery_pitch: None, academic_efficiency_mod: 1.0 };
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
             for _ in 0..15 {
                 apply_weekly_training(&mut rng, &PITCHER_EXPOSED, &mut stats, &mut xp, 80.0, &config);
@@ -207,11 +212,34 @@ mod tests {
     }
 
     #[test]
+    fn academic_efficiency_mod_scales_growth_like_intensity_and_pitch_penalties_do() {
+        use crate::sim::growth::PITCHER_EXPOSED;
+        let run = |academic_efficiency_mod: f64, seed: u64| -> f64 {
+            let mut stats = stats_at(20.0, &PITCHER_EXPOSED);
+            let mut xp = zero_xp(&PITCHER_EXPOSED);
+            let config =
+                TrainingConfig { primary_stat: "구속", secondary_stats: ["구위", "제구"], intensity: "보통", new_pitch: None, mastery_pitch: None, academic_efficiency_mod };
+            let mut rng = ChaCha8Rng::seed_from_u64(seed);
+            for _ in 0..15 {
+                apply_weekly_training(&mut rng, &PITCHER_EXPOSED, &mut stats, &mut xp, 80.0, &config);
+            }
+            stats.get("구속").unwrap().as_f64().unwrap()
+        };
+        let mut full_total = 0.0;
+        let mut focus_total = 0.0; // "집중 수업"의 efficiency_mod(0.70)를 흉내
+        for seed in 0..20 {
+            full_total += run(1.0, seed);
+            focus_total += run(0.70, seed);
+        }
+        assert!(full_total > focus_total, "1.0 배율이 0.70 배율보다 더 커야 함: full={full_total} focus={focus_total}");
+    }
+
+    #[test]
     fn stat_growth_never_exceeds_hard_cap() {
         use crate::sim::growth::PITCHER_EXPOSED;
         let mut stats = stats_at(20.0, &PITCHER_EXPOSED);
         let mut xp = zero_xp(&PITCHER_EXPOSED);
-        let config = TrainingConfig { primary_stat: "구속", secondary_stats: ["구위", "제구"], intensity: "강", new_pitch: None, mastery_pitch: None };
+        let config = TrainingConfig { primary_stat: "구속", secondary_stats: ["구위", "제구"], intensity: "강", new_pitch: None, mastery_pitch: None, academic_efficiency_mod: 1.0 };
         let mut rng = ChaCha8Rng::seed_from_u64(3);
         for _ in 0..500 {
             apply_weekly_training(&mut rng, &PITCHER_EXPOSED, &mut stats, &mut xp, 80.0, &config);
@@ -252,7 +280,7 @@ mod tests {
         let run = |new_pitch: Option<&str>, mastery_pitch: Option<&str>, seed: u64| -> f64 {
             let mut stats = stats_at(20.0, &PITCHER_EXPOSED);
             let mut xp = zero_xp(&PITCHER_EXPOSED);
-            let config = TrainingConfig { primary_stat: "구속", secondary_stats: ["구위", "제구"], intensity: "보통", new_pitch, mastery_pitch };
+            let config = TrainingConfig { primary_stat: "구속", secondary_stats: ["구위", "제구"], intensity: "보통", new_pitch, mastery_pitch, academic_efficiency_mod: 1.0 };
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
             for _ in 0..15 {
                 apply_weekly_training(&mut rng, &PITCHER_EXPOSED, &mut stats, &mut xp, 80.0, &config);

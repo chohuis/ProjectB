@@ -618,6 +618,45 @@ pub fn set_protagonist_profile(
     Ok(())
 }
 
+/// 학업 시스템 주간 처리(대화 2026-07-26, `sim::academics` 이식 원본
+/// 02.SvelteElectron 그대로) — 고교(`league:hs`)·대학(`league:univ`)
+/// 스테이지에서만 의미가 있다. 그 외(프로·독립·병역·무소속)엔 `academics`
+/// 행이 있어도 조용히 지나가고 훈련 효율 배율 1.0(변화 없음)을 돌려준다.
+/// 과목 5개 성적·시험 누적점수를 갱신하고, 주간 학습모드에 대응하는
+/// 훈련 효율 배율을 반환 — 호출부가 `TrainingConfig`에 바로 꽂는다.
+fn process_protagonist_academics_week(slot_conn: &Connection, content_conn: &Connection, team_id: Option<&str>) -> anyhow::Result<f64> {
+    let Some(team_id) = team_id else { return Ok(1.0) };
+    let league_id: Option<String> = content_conn.query_row("SELECT league_id FROM teams WHERE id = ?1", [team_id], |r| r.get(0)).optional()?;
+    if !matches!(league_id.as_deref(), Some("league:hs") | Some("league:univ")) {
+        return Ok(1.0);
+    }
+
+    let row: Option<(String, String, f64, i64, i64, Option<String>)> = slot_conn
+        .query_row(
+            "SELECT weekly_study_mode, subject_scores, exam_accum_score, warning_count, attends_university, university_major FROM academics WHERE id = 'proto:1'",
+            [],
+            |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?, r.get(4)?, r.get(5)?)),
+        )
+        .optional()?;
+    let Some((mode, subject_scores_raw, accum, warning_count, attends_university, major)) = row else {
+        return Ok(1.0); // academics 행이 없는 구버전 세이브 — 영향 없음
+    };
+
+    let mut subject_scores: serde_json::Value = serde_json::from_str(&subject_scores_raw)?;
+    let exam_gain_mult =
+        if attends_university == 1 { crate::sim::academics::university_major_effects(major.as_deref().unwrap_or("")).1 } else { 1.0 };
+    let gain = crate::sim::academics::apply_weekly_study(&mut subject_scores, &mode, exam_gain_mult, accum);
+    let new_accum = (accum + gain).min(100.0);
+    let effect = crate::sim::academics::study_mode_effect(&mode);
+    let new_warning_count = if effect.warning_increment { warning_count + 1 } else { warning_count };
+
+    slot_conn.execute(
+        "UPDATE academics SET subject_scores = ?1, exam_accum_score = ?2, warning_count = ?3 WHERE id = 'proto:1'",
+        params![subject_scores.to_string(), new_accum, new_warning_count],
+    )?;
+    Ok(effect.efficiency_mod)
+}
+
 /// 주인공 주간 훈련 적용 — `process_week`(NPC 전용)과 별도로 둔다(협/한
 /// 주인공은 `npc` 테이블에 없어 그쪽 쿼리에 안 걸림). 부상 완치 처리·
 /// 누적형(과사용) 부상 체크(08_부상_시스템.md §3 "체크 시점 = 매주")는
@@ -696,6 +735,12 @@ fn process_protagonist_week(slot_conn: &Connection, content_conn: &Connection, w
     // 먼저 반영 — 이 값이 아래 훈련 강도 가감의 새 기준치가 된다.
     live_state.insert("피로도".to_string(), serde_json::json!(fatigue_before_training * 0.5));
 
+    // 학업 주간 처리(대화 2026-07-26) — 훈련 설정 여부와 무관하게 매주
+    // 진행(학생은 훈련 계획이 없어도 수업은 듣는다), 그래서 아래 훈련
+    // 설정 조기 반환보다 먼저 둔다. 고교·대학이 아니면 내부에서 조용히
+    // 1.0(영향 없음)을 돌려준다.
+    let academic_efficiency_mod = process_protagonist_academics_week(slot_conn, content_conn, team_id.as_deref())?;
+
     let Some(training_raw) = training_raw else {
         slot_conn.execute(
             "UPDATE protagonist SET live_state = ?1 WHERE id = 'proto:1'",
@@ -745,6 +790,7 @@ fn process_protagonist_week(slot_conn: &Connection, content_conn: &Connection, w
         intensity,
         new_pitch: new_pitch.as_deref(),
         mastery_pitch: mastery_pitch.as_deref(),
+        academic_efficiency_mod,
     };
 
     let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("training:{day}")));
@@ -4620,6 +4666,45 @@ mod tests {
         }
         let after: String = slot_conn.query_row("SELECT stats FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
         assert_eq!(before, after, "no training config set -> stats should never change");
+    }
+
+    #[test]
+    fn process_protagonist_week_advances_academics_even_without_a_training_config() {
+        let content_conn = build_hs_school_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        create_protagonist(&slot_conn, &content_conn, 1, "학업진행", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
+
+        let before_raw: String = slot_conn.query_row("SELECT subject_scores FROM academics WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+        process_protagonist_week(&slot_conn, &content_conn, 1, 0).unwrap();
+        let (after_raw, accum): (String, f64) =
+            slot_conn.query_row("SELECT subject_scores, exam_accum_score FROM academics WHERE id = 'proto:1'", [], |r| Ok((r.get(0)?, r.get(1)?))).unwrap();
+
+        assert_ne!(before_raw, after_raw, "기본 학습모드(normal)도 매주 과목 성적을 바꿔야 함(학업은 훈련 설정과 무관하게 진행)");
+        assert_eq!(accum, 4.0, "normal 모드는 주당 4점, 대학 전공 배율 없음(고교)");
+    }
+
+    #[test]
+    fn process_protagonist_week_does_not_touch_academics_for_non_school_leagues() {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:pro', NULL)", []).unwrap();
+        content_conn
+            .execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:pro_x', 'league:pro', NULL, NULL)", [])
+            .unwrap();
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_market_protagonist(&slot_conn, &serde_json::json!({"team_id": "team:pro_x", "salary": 1000, "years_remaining": 1}), 0.0);
+        slot_conn
+            .execute(
+                "INSERT INTO academics (id, attends_university, university_major, major_selected, weekly_study_mode, subject_scores,
+                                         exam_accum_score, last_grade, last_grade_risk, eligibility_blocked, warning_count, university_week)
+                 VALUES ('proto:1', 0, NULL, 0, 'normal', ?1, 0.0, NULL, 'ok', 0, 0, 0)",
+                params![crate::sim::academics::initial_hs_subject_scores().to_string()],
+            )
+            .unwrap();
+
+        process_protagonist_week(&slot_conn, &content_conn, 1, 0).unwrap();
+
+        let accum: f64 = slot_conn.query_row("SELECT exam_accum_score FROM academics WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+        assert_eq!(accum, 0.0, "프로 소속이면 학업이 진행되면 안 됨");
     }
 
     #[test]
