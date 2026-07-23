@@ -10,7 +10,7 @@ part 'game.freezed.dart';
 
 // These functions are ignored because they are not marked as `pub`: `avg_rank_from_season_ranks`, `stars_from_group_position`, `with_state_mut`, `with_state`, `world_seed`
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `GameState`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
 
 /// 뉴게임 — [07_주인공_생성](../../../02_기획/07_주인공_생성.md) §1의 7단계
 /// 흐름 중 실제 데이터를 만드는 마지막 단계(스텝 1~6은 Dart 쪽 폼 상태일
@@ -131,6 +131,9 @@ List<String> exposedStatNames() =>
 List<String> trainingIntensityNames() =>
     RustLib.instance.api.crateApiGameTrainingIntensityNames();
 
+List<PitcherArchetypeInfo> pitcherArchetypeInfo() =>
+    RustLib.instance.api.crateApiGamePitcherArchetypeInfo();
+
 Future<TrainingConfigInfo?> getTrainingConfig() =>
     RustLib.instance.api.crateApiGameGetTrainingConfig();
 
@@ -202,6 +205,22 @@ Future<List<TeamOption>> listTeams({String? leagueId}) =>
 
 Future<List<RosterPlayerInfo>> listRoster({required String teamId}) =>
     RustLib.instance.api.crateApiGameListRoster(teamId: teamId);
+
+/// 캐릭터 생성 화면 "학교 선택" 미리보기(대화 2026-07-23) — 아직 새 게임을
+/// 시작하지 않아 슬롯이 없는 상태에서도 `world_seed`(캐릭터 생성 화면
+/// 진입 시 한 번 고정된 시드, Dart가 `new_game`에도 그대로 넘김)만 있으면
+/// `list_roster`와 같은 모양의 결과를 미리 보여줄 수 있다. `list_roster`와
+/// 달리 활성 세션이 필요 없다(`list_hs_school_details`와 같은 패턴 —
+/// `content_db_path`로 독립 커넥션만 연다).
+Future<List<RosterPlayerInfo>> previewHsRoster({
+  required String contentDbPath,
+  required PlatformInt64 worldSeed,
+  required String teamId,
+}) => RustLib.instance.api.crateApiGamePreviewHsRoster(
+  contentDbPath: contentDbPath,
+  worldSeed: worldSeed,
+  teamId: teamId,
+);
 
 Future<List<ScheduleGameInfo>> getTeamSchedule({required String teamId}) =>
     RustLib.instance.api.crateApiGameGetTeamSchedule(teamId: teamId);
@@ -708,6 +727,48 @@ class PendingActionInfo {
           urgency == other.urgency &&
           createdDay == other.createdDay &&
           payloadJson == other.payloadJson;
+}
+
+/// 캐릭터 생성 화면 "투수 타입" 카드용(대화 2026-07-23) — 타입별 우세
+/// 스탯(`exposed_stat_names()`의 9종 중 어느 것이 상단/중간 밴드인지)과
+/// 습득 가능 2구종 후보 풀. `sim::protagonist::archetype_bands`/
+/// `full_second_pitch_pool`을 그대로 노출 — RNG·DB 없는 순수 조회라 동기.
+class PitcherArchetypeInfo {
+  final String name;
+  final List<String> primaryStats;
+  final List<String> minorStats;
+  final List<String> pitchPool;
+
+  /// `exposed_stat_names()`와 같은 순서(9종)의 밴드 중앙값 — 카드
+  /// 그래프 길이를 실제 생성값 근처로 보정하는 용도(대화 2026-07-23).
+  final Float64List statMidpoints;
+
+  const PitcherArchetypeInfo({
+    required this.name,
+    required this.primaryStats,
+    required this.minorStats,
+    required this.pitchPool,
+    required this.statMidpoints,
+  });
+
+  @override
+  int get hashCode =>
+      name.hashCode ^
+      primaryStats.hashCode ^
+      minorStats.hashCode ^
+      pitchPool.hashCode ^
+      statMidpoints.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PitcherArchetypeInfo &&
+          runtimeType == other.runtimeType &&
+          name == other.name &&
+          primaryStats == other.primaryStats &&
+          minorStats == other.minorStats &&
+          pitchPool == other.pitchPool &&
+          statMidpoints == other.statMidpoints;
 }
 
 /// [01_내선수](../../../04_UI기획/01_내선수.md) 상태 탭 등에서 표시할 개인

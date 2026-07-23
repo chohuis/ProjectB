@@ -589,6 +589,40 @@ pub fn training_intensity_names() -> Vec<String> {
     crate::sim::training::INTENSITIES.iter().map(|s| s.to_string()).collect()
 }
 
+/// 캐릭터 생성 화면 "투수 타입" 카드용(대화 2026-07-23) — 타입별 우세
+/// 스탯(`exposed_stat_names()`의 9종 중 어느 것이 상단/중간 밴드인지)과
+/// 습득 가능 2구종 후보 풀. `sim::protagonist::archetype_bands`/
+/// `full_second_pitch_pool`을 그대로 노출 — RNG·DB 없는 순수 조회라 동기.
+#[derive(Debug, Clone)]
+pub struct PitcherArchetypeInfo {
+    pub name: String,
+    pub primary_stats: Vec<String>,
+    pub minor_stats: Vec<String>,
+    pub pitch_pool: Vec<String>,
+    /// `exposed_stat_names()`와 같은 순서(9종)의 밴드 중앙값 — 카드
+    /// 그래프 길이를 실제 생성값 근처로 보정하는 용도(대화 2026-07-23).
+    pub stat_midpoints: Vec<f64>,
+}
+
+#[flutter_rust_bridge::frb(sync)]
+pub fn pitcher_archetype_info() -> anyhow::Result<Vec<PitcherArchetypeInfo>> {
+    crate::sim::protagonist::ARCHETYPES
+        .iter()
+        .map(|&name| {
+            let (primary, minor) = crate::sim::protagonist::archetype_bands(name)?;
+            let pool = crate::sim::protagonist::full_second_pitch_pool(name)?;
+            let stat_midpoints = crate::sim::protagonist::archetype_stat_midpoints(name)?;
+            Ok(PitcherArchetypeInfo {
+                name: name.to_string(),
+                primary_stats: primary.iter().map(|s| s.to_string()).collect(),
+                minor_stats: minor.iter().map(|s| s.to_string()).collect(),
+                pitch_pool: pool.iter().map(|s| s.to_string()).collect(),
+                stat_midpoints,
+            })
+        })
+        .collect()
+}
+
 /// 현재 훈련 설정 — 한 번도 설정 안 했으면 `None`(§1 "훈련 계획을 아직
 /// 안 짰다"는 자연스러운 초기 상태, `set_protagonist_training` 문서 참고).
 #[derive(Debug, Clone)]
@@ -795,6 +829,21 @@ pub fn list_roster(team_id: String) -> anyhow::Result<Vec<RosterPlayerInfo>> {
             .collect::<Result<_, _>>()?;
         Ok(rows)
     })
+}
+
+/// 캐릭터 생성 화면 "학교 선택" 미리보기(대화 2026-07-23) — 아직 새 게임을
+/// 시작하지 않아 슬롯이 없는 상태에서도 `world_seed`(캐릭터 생성 화면
+/// 진입 시 한 번 고정된 시드, Dart가 `new_game`에도 그대로 넘김)만 있으면
+/// `list_roster`와 같은 모양의 결과를 미리 보여줄 수 있다. `list_roster`와
+/// 달리 활성 세션이 필요 없다(`list_hs_school_details`와 같은 패턴 —
+/// `content_db_path`로 독립 커넥션만 연다).
+pub fn preview_hs_roster(content_db_path: String, world_seed: i64, team_id: String) -> anyhow::Result<Vec<RosterPlayerInfo>> {
+    let content_conn = content::open(&content_db_path)?;
+    let rows = repository::preview_hs_roster(&content_conn, world_seed, &team_id)?;
+    Ok(rows
+        .into_iter()
+        .map(|(id, name, position, age, stats_json, pitches_json)| RosterPlayerInfo { id, name, position, age, stats_json, pitches_json })
+        .collect())
 }
 
 /// [02_리그](../../../04_UI기획/02_리그.md) §2 일정 탭 — `team_id`의 전체
@@ -1165,6 +1214,25 @@ mod tests {
 
     fn reset_state() {
         *STATE.lock().unwrap() = None;
+    }
+
+    #[test]
+    fn pitcher_archetype_info_covers_all_four_archetypes_with_known_bands() {
+        let info = pitcher_archetype_info().unwrap();
+        assert_eq!(info.len(), 4);
+
+        let fastball = info.iter().find(|a| a.name == "강속구형").unwrap();
+        assert_eq!(fastball.primary_stats, vec!["구속".to_string()]);
+        assert_eq!(fastball.minor_stats, vec!["구위".to_string()]);
+        assert_eq!(fastball.pitch_pool, vec!["투심 패스트볼".to_string(), "커터".to_string()]);
+        // exposed_stat_names() 순서: 구속(0)=primary, 구위(4)=minor, 나머지=lower.
+        assert_eq!(fastball.stat_midpoints.len(), 9);
+        assert_eq!(fastball.stat_midpoints[0], 32.5); // 구속 — UPPER_BAND 중앙값
+        assert_eq!(fastball.stat_midpoints[4], 28.0); // 구위 — MINOR_BAND 중앙값
+        assert_eq!(fastball.stat_midpoints[1], 23.0); // 체력 — LOWER_BAND 중앙값
+
+        let control = info.iter().find(|a| a.name == "제구형").unwrap();
+        assert_eq!(control.pitch_pool.len(), 6);
     }
 
     #[test]

@@ -111,6 +111,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<PendingActionInfo> dco_decode_list_pending_action_info(dynamic raw);
 
   @protected
+  List<PitcherArchetypeInfo> dco_decode_list_pitcher_archetype_info(
+    dynamic raw,
+  );
+
+  @protected
+  Float64List dco_decode_list_prim_f_64_strict(dynamic raw);
+
+  @protected
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
 
   @protected
@@ -167,6 +175,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   PendingActionInfo dco_decode_pending_action_info(dynamic raw);
+
+  @protected
+  PitcherArchetypeInfo dco_decode_pitcher_archetype_info(dynamic raw);
 
   @protected
   ProtagonistProfileInfo dco_decode_protagonist_profile_info(dynamic raw);
@@ -322,6 +333,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  List<PitcherArchetypeInfo> sse_decode_list_pitcher_archetype_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  Float64List sse_decode_list_prim_f_64_strict(SseDeserializer deserializer);
+
+  @protected
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
 
   @protected
@@ -392,6 +411,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   PendingActionInfo sse_decode_pending_action_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  PitcherArchetypeInfo sse_decode_pitcher_archetype_info(
     SseDeserializer deserializer,
   );
 
@@ -597,6 +621,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_list_pitcher_archetype_info(
+    List<PitcherArchetypeInfo> self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_list_prim_f_64_strict(
+    Float64List self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_list_prim_u_8_strict(
     Uint8List self,
     SseSerializer serializer,
@@ -695,6 +731,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_pending_action_info(
     PendingActionInfo self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_pitcher_archetype_info(
+    PitcherArchetypeInfo self,
     SseSerializer serializer,
   );
 

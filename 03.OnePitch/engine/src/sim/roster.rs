@@ -25,9 +25,13 @@ const RELATION_OPTIONS: [&str; 5] = ["사교적", "내성적", "타산적", "온
 const COMPETITIVE_OPTIONS: [&str; 5] = ["승부사", "완벽주의", "안분", "야심가", "헌신형"];
 const EMOTIONAL_OPTIONS: [&str; 5] = ["침착형", "열정형", "예민형", "낙천형", "완고함"];
 
-const FIELD_POSITIONS: [&str; 8] = [
-    "포수", "1루수", "2루수", "3루수", "유격수", "좌익수", "중견수", "우익수",
-];
+/// 타자 포지션 배정 순환 — 포수는 체력 소모가 커 백업이 더 필요하다는
+/// 현실적 이유로 다른 포지션의 약 2배 비중을 준다(대화 2026-07-23).
+/// `batter_n` 크기와 무관하게(전체 생성이든 `generate_freshmen`의 소량
+/// 충원이든) 항상 같은 비율을 유지하도록 라운드로빈 사이클 자체에
+/// 포수를 두 번 넣는 단순한 방식 — 현재 로스터의 포지션별 부족분을
+/// 추적하는 상태 기반 방식보다 훨씬 가볍다(D그룹 placeholder 수준).
+const BATTER_POSITION_CYCLE: [&str; 9] = ["포수", "1루수", "2루수", "3루수", "유격수", "좌익수", "중견수", "우익수", "포수"];
 
 const PITCHER_STATS: [&str; 9] = [
     "구속", "체력", "회복력", "제구", "구위", "경기운영", "클러치", "침착함", "리더십",
@@ -39,9 +43,14 @@ const HIDDEN_STATS: [&str; 3] = ["천재성", "인성", "성실함"];
 
 /// 07_주인공_생성.md §0 고교1년=17세와 일관되게 리그 성격에 맞춰 잡은 나이 구간
 /// — generation_rules처럼 확정 소스가 없는 placeholder(I3 계획 문서 참고).
+/// `league:hs`는 17/18/19세=1/2/3학년, `sim::career::HS_GRADUATION_AGE=20`(졸업
+/// 시점)과 정확히 맞물린다(대화 2026-07-23 — 예전엔 `(15,18)`이라 주인공
+/// 학년 체계와 안 맞았음). `season_rollover`의 나이 증가→`sim::npc::check_retirement`
+/// (이 함수의 상한을 그대로 씀)→`generate_freshmen` 파이프라인이 이 범위만으로
+/// "매년 3학년 은퇴, 신입생 충원"을 자연스럽게 수행한다.
 pub fn age_range(league_id: &str) -> (i64, i64) {
     match league_id {
-        "league:hs" => (15, 18),
+        "league:hs" => (17, 19),
         "league:univ" => (19, 22),
         "league:independent" => (19, 29),
         "league:pro_farm" => (19, 27),
@@ -197,7 +206,7 @@ pub fn generate_team(
     }
 
     for i in 0..batter_n {
-        let position = FIELD_POSITIONS[(i as usize) % FIELD_POSITIONS.len()];
+        let position = BATTER_POSITION_CYCLE[(i as usize) % BATTER_POSITION_CYCLE.len()];
         players.push(GeneratedPlayer {
             id: format!("{id_prefix}{seq}"),
             name: gen_name(rng, kr_surnames, kr_given),
@@ -227,6 +236,7 @@ mod tests {
         TeamForRoster {
             id: "team:x".to_string(),
             philosophy: "전통/정통".to_string(),
+            resource: "안정".to_string(),
             status: "중견".to_string(),
         }
     }
@@ -310,5 +320,31 @@ mod tests {
         assert_eq!(players[0].id, "npc:99_5");
         assert_eq!(players[1].id, "npc:99_6");
         assert_eq!(seq, 5 + players.len() as u64);
+    }
+
+    #[test]
+    fn age_range_hs_matches_the_protagonist_graduation_convention() {
+        // 17/18/19세 = 1/2/3학년, `sim::career::HS_GRADUATION_AGE`(20세 졸업)와
+        // 정확히 맞물려야 `season_rollover`의 세대교체 파이프라인이 "매년
+        // 3학년 은퇴, 신입생 충원"으로 자연스럽게 동작한다(대화 2026-07-23).
+        assert_eq!(age_range("league:hs"), (17, 19));
+        assert_eq!(crate::sim::career::HS_GRADUATION_AGE, 20);
+    }
+
+    #[test]
+    fn batter_positions_favor_catcher_roughly_two_to_one() {
+        let (surnames, given) = names();
+        let w = uniform_weights();
+        let rule = json!({"roster_size": 45, "pitcher_ratio": 0.0, "sp_ratio": 0.5, "stat_min": 20.0, "stat_max": 50.0});
+        let mut rng = ChaCha8Rng::seed_from_u64(11);
+        let mut seq = 0u64;
+        let players = generate_team(&mut rng, &team(), "league:hs", &rule, &surnames, &given, &[], &w, "npc:1_", &mut seq);
+
+        assert_eq!(players.len(), 45);
+        let catchers = players.iter().filter(|p| p.position == "포수").count();
+        let first_basemen = players.iter().filter(|p| p.position == "1루수").count();
+        assert_eq!(catchers, 10);
+        assert_eq!(first_basemen, 5);
+        assert_eq!(catchers, first_basemen * 2);
     }
 }

@@ -51,16 +51,36 @@ pub(crate) fn league_sub_seed(world_seed: i64, league_id: &str) -> u64 {
     u64::from_le_bytes(digest[0..8].try_into().unwrap())
 }
 
-/// Generates every team's roster in one league and inserts them into
-/// slot.db's `npc` table in one transaction. `world_seed` is `canonical_seed`
-/// for the initial world, or a save's own `meta.world_seed` for later
-/// freshman intake (once generate_freshmen exists — I3 scope is initial gen).
-pub fn generate_league_roster(
-    slot_conn: &mut Connection,
-    content_conn: &Connection,
-    world_seed: i64,
-    league_id: &str,
-) -> anyhow::Result<()> {
+/// 팀 하나가 생성해내는 로스터 묶음 — `generate_league_roster_data`의 순수
+/// 결과물(DB 미접근). 학교 선택 미리보기(`preview_hs_roster`)와 실제 새
+/// 게임 시작(`generate_league_roster`)이 이 구조체를 공유해, 같은
+/// world_seed면 항상 같은 결과가 나옴을 보장한다(대화 2026-07-23).
+struct GeneratedTeamRoster {
+    team_id: String,
+    players: Vec<roster::GeneratedPlayer>,
+    manager: manager::GeneratedManager,
+    coach: staff::GeneratedCoach,
+    owner: staff::GeneratedOwner,
+}
+
+/// 고교 로스터 총원을 팀 자원(자본)에 연동 — `02_기획/리그팀/05_팀_특성_시스템.md`
+/// §2 "② 자원 → 로스터 뎁스(백업 질)"를 처음으로 실제 수치화한 것(대화
+/// 2026-07-23, D그룹 placeholder 수치). 사용자 확인: 30~45명 사이에서
+/// 자본에 맞춰 넉넉하게 — 다른 리그(대학·프로 등)는 이 스케일링 없이
+/// `generation_rules.toml`의 고정값을 그대로 쓴다.
+fn hs_target_roster_size(resource: &str) -> u64 {
+    match resource {
+        "부유" => 45,
+        "안정" => 38,
+        "알뜰" => 33,
+        _ => 30, // 궁핍 + 미인식 값
+    }
+}
+
+/// 리그 하나의 전체 로스터(선수+감독+코치+구단주)를 결정적으로 생성 —
+/// DB에 아무것도 쓰지 않는 순수 함수. `generate_league_roster`(DB 삽입)와
+/// `preview_hs_roster`(학교 선택 화면 미리보기)가 이 함수를 공유한다.
+fn generate_league_roster_data(content_conn: &Connection, world_seed: i64, league_id: &str) -> anyhow::Result<Vec<GeneratedTeamRoster>> {
     let rule = content::load_generation_rule(content_conn, league_id)?;
     let teams = content::load_teams_for_league(content_conn, league_id)?;
     let kr_surnames = content::load_name_pool(content_conn, "kr", "surname")?;
@@ -79,17 +99,22 @@ pub fn generate_league_roster(
     let id_prefix = format!("npc:{world_seed}_{league_slug}_");
     let mut seq: u64 = 0;
 
-    let tx = slot_conn.transaction()?;
+    let mut out = Vec::with_capacity(teams.len());
     for team in &teams {
         let philosophy_ctx = content::load_personality_rule(content_conn, &format!("philosophy:{}", team.philosophy))?;
         let status_ctx = content::load_personality_rule(content_conn, &format!("status:{}", team.status))?;
         let weights = PersonalityWeights::merge(&[philosophy_ctx.clone(), status_ctx.clone(), role_ctx.clone()]);
 
+        let mut team_rule = rule.clone();
+        if league_id == "league:hs" {
+            team_rule["roster_size"] = serde_json::json!(hs_target_roster_size(&team.resource));
+        }
+
         let players = roster::generate_team(
             &mut rng,
             team,
             league_id,
-            &rule,
+            &team_rule,
             &kr_surnames,
             &kr_given,
             &secondary_pitches,
@@ -98,7 +123,33 @@ pub fn generate_league_roster(
             &mut seq,
         );
 
-        for p in &players {
+        // 감독(§6-59) — 정식 스태프 시스템의 최소 조각. 팀당 1명.
+        let manager_weights = PersonalityWeights::merge(&[philosophy_ctx.clone(), status_ctx.clone(), manager_role_ctx.clone()]);
+        let manager = manager::generate_manager(&mut rng, &team.id, &kr_surnames, &kr_given, &manager_weights);
+
+        // 코치·구단주(이월 부채 정리, 대화 2026-07-22) — 팀당 1명씩(기획
+        // 원안의 0~8명 가변·적성배치는 1차 축소안, sim::staff.rs 문서 참고).
+        let coach_weights = PersonalityWeights::merge(&[philosophy_ctx.clone(), status_ctx.clone(), coach_role_ctx.clone()]);
+        let coach = staff::generate_coach(&mut rng, &team.id, &kr_surnames, &kr_given, &coach_weights);
+
+        let owner_weights = PersonalityWeights::merge(&[philosophy_ctx, status_ctx, owner_role_ctx.clone()]);
+        let owner = staff::generate_owner(&mut rng, &team.id, &kr_surnames, &kr_given, &owner_weights);
+
+        out.push(GeneratedTeamRoster { team_id: team.id.clone(), players, manager, coach, owner });
+    }
+    Ok(out)
+}
+
+/// Generates every team's roster in one league and inserts them into
+/// slot.db's `npc` table in one transaction. `world_seed` is `canonical_seed`
+/// for the initial world, or a save's own `meta.world_seed` for later
+/// freshman intake (once generate_freshmen exists — I3 scope is initial gen).
+pub fn generate_league_roster(slot_conn: &mut Connection, content_conn: &Connection, world_seed: i64, league_id: &str) -> anyhow::Result<()> {
+    let teams = generate_league_roster_data(content_conn, world_seed, league_id)?;
+
+    let tx = slot_conn.transaction()?;
+    for team in &teams {
+        for p in &team.players {
             tx.execute(
                 "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches, injury)
                  VALUES (?1, ?2, ?3, ?4, ?5, 1, 0, ?6, ?7, ?8, ?9, ?10, ?11, ?12)",
@@ -119,9 +170,7 @@ pub fn generate_league_roster(
             )?;
         }
 
-        // 감독(§6-59) — 정식 스태프 시스템의 최소 조각. 팀당 1명.
-        let manager_weights = PersonalityWeights::merge(&[philosophy_ctx.clone(), status_ctx.clone(), manager_role_ctx.clone()]);
-        let m = manager::generate_manager(&mut rng, &team.id, &kr_surnames, &kr_given, &manager_weights);
+        let m = &team.manager;
         tx.execute(
             "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches, injury)
              VALUES (?1, ?2, ?3, '감독', ?4, 0, 0, 50.0, ?5, ?6, '{}', '{}', NULL, ?7)",
@@ -136,10 +185,7 @@ pub fn generate_league_roster(
             ],
         )?;
 
-        // 코치·구단주(이월 부채 정리, 대화 2026-07-22) — 팀당 1명씩(기획
-        // 원안의 0~8명 가변·적성배치는 1차 축소안, sim::staff.rs 문서 참고).
-        let coach_weights = PersonalityWeights::merge(&[philosophy_ctx.clone(), status_ctx.clone(), coach_role_ctx.clone()]);
-        let c = staff::generate_coach(&mut rng, &team.id, &kr_surnames, &kr_given, &coach_weights);
+        let c = &team.coach;
         tx.execute(
             "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches, injury)
              VALUES (?1, ?2, ?3, '코치', ?4, 0, 0, 50.0, ?5, ?6, '{}', '{}', NULL, ?7)",
@@ -154,8 +200,7 @@ pub fn generate_league_roster(
             ],
         )?;
 
-        let owner_weights = PersonalityWeights::merge(&[philosophy_ctx, status_ctx, owner_role_ctx.clone()]);
-        let o = staff::generate_owner(&mut rng, &team.id, &kr_surnames, &kr_given, &owner_weights);
+        let o = &team.owner;
         tx.execute(
             "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches, injury)
              VALUES (?1, ?2, ?3, '구단주', ?4, 0, 0, 50.0, ?5, ?6, '{}', '{}', NULL, ?7)",
@@ -172,6 +217,30 @@ pub fn generate_league_roster(
     }
     tx.commit()?;
     Ok(())
+}
+
+/// (id, name, position, age, stats_json, pitches_json) — `api::game::RosterPlayerInfo`로
+/// 그대로 옮겨 담을 수 있는 모양.
+type PreviewRosterRow = (String, String, String, i64, String, Option<String>);
+
+/// 학교 선택 화면 로스터 미리보기(대화 2026-07-23) — 아직 슬롯이 없는
+/// 상태(새 게임 시작 전)에서 `league:hs`의 특정 팀 로스터를 `generate_league_roster`가
+/// 나중에 만들 것과 완전히 같은 값으로 미리 계산한다. DB에 아무것도 안 씀.
+pub fn preview_hs_roster(content_conn: &Connection, world_seed: i64, team_id: &str) -> anyhow::Result<Vec<PreviewRosterRow>> {
+    let teams = generate_league_roster_data(content_conn, world_seed, "league:hs")?;
+    let Some(team) = teams.into_iter().find(|t| t.team_id == team_id) else {
+        return Ok(Vec::new());
+    };
+
+    let mut rows: Vec<PreviewRosterRow> = team
+        .players
+        .iter()
+        .map(|p| (p.id.clone(), p.name.clone(), p.position.clone(), p.age, p.stats.to_string(), p.pitches.as_ref().map(|v| v.to_string())))
+        .collect();
+    rows.push((team.manager.id, team.manager.name, "감독".to_string(), team.manager.age, team.manager.stats.to_string(), None));
+    rows.push((team.coach.id, team.coach.name, "코치".to_string(), team.coach.age, team.coach.stats.to_string(), None));
+    rows.push((team.owner.id, team.owner.name, "구단주".to_string(), team.owner.age, team.owner.stats.to_string(), None));
+    Ok(rows)
 }
 
 /// 정적 라운드로빈으로 만들 수 있는 리그만(독립은 4단계 생존리그라 이전
@@ -309,6 +378,14 @@ pub fn create_protagonist(
             anyhow::bail!("{second} is not a valid second pitch for archetype {archetype}");
         }
         pitches.push(second.to_string());
+    } else if archetype == "제구형" {
+        // 제구형은 정체성상 항상 2구종 이상(보조 구종 6종 풀에 접근하는
+        // 유일한 타입) — 2구종 선택 UI는 아직 없어(이월, "열린 세부 —
+        // 아트 단계") 후보 중 하나를 결정적으로 자동 배정한다(대화
+        // 2026-07-23). 강속구/체력/돌부처형은 여전히 포심 1개뿐.
+        if let Some(auto) = crate::sim::protagonist::second_pitch_candidates(&mut rng, archetype)?.into_iter().next() {
+            pitches.push(auto);
+        }
     }
 
     let exposed = crate::sim::growth::exposed_stats_for("선발투수");
@@ -952,7 +1029,7 @@ pub fn generate_freshmen(conn: &Connection, content_conn: &Connection, world_see
         let Ok(rule) = content::load_generation_rule(content_conn, league_id) else {
             continue;
         };
-        let roster_size = rule.get("roster_size").and_then(|v| v.as_u64()).unwrap_or(25);
+        let default_roster_size = rule.get("roster_size").and_then(|v| v.as_u64()).unwrap_or(25);
         let teams = content::load_teams_for_league(content_conn, league_id)?;
 
         let league_slug = league_id.strip_prefix("league:").unwrap_or(league_id);
@@ -961,6 +1038,12 @@ pub fn generate_freshmen(conn: &Connection, content_conn: &Connection, world_see
         let mut seq: u64 = 0;
 
         for team in &teams {
+            // 고교는 팀별 자원(자본)에 연동된 목표치를 씀 — `generate_league_roster_data`와
+            // 같은 기준(`hs_target_roster_size`)이어야 한다. 여길 flat
+            // `default_roster_size`로 두면 시즌이 한 번만 지나도 자본별로
+            // 키워둔 로스터가 25명으로 다시 깎여나간다(대화 2026-07-23,
+            // 발견한 잠재 회귀 포인트).
+            let roster_size = if league_id == "league:hs" { hs_target_roster_size(&team.resource) } else { default_roster_size };
             let active: u64 = conn.query_row(
                 "SELECT count(*) FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position NOT IN ('감독', '코치', '구단주')",
                 [&team.id],
@@ -3957,15 +4040,32 @@ mod tests {
     }
 
     #[test]
-    fn create_protagonist_without_second_pitch_starts_fastball_only() {
+    fn create_protagonist_without_second_pitch_starts_fastball_only_for_non_control_archetypes() {
+        let content_conn = build_hs_school_content_db();
+        for archetype in ["강속구형", "체력형", "돌부처형"] {
+            let slot_conn = slot::open_in_memory().unwrap();
+            create_protagonist(&slot_conn, &content_conn, 1, "포심만", "우완", "team:hanseong_hs", archetype, None).unwrap();
+
+            let pitches_raw: String = slot_conn.query_row("SELECT pitches FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+            let pitches: Vec<String> = serde_json::from_str(&pitches_raw).unwrap();
+            assert_eq!(pitches, vec!["포심 패스트볼".to_string()], "{archetype} should start with fastball only");
+        }
+    }
+
+    #[test]
+    fn create_protagonist_control_archetype_auto_gets_a_second_pitch_without_explicit_choice() {
+        // 제구형은 정체성상 항상 2구종 이상 — 2구종 선택 UI가 없는 지금도
+        // 자동으로 후보 하나를 배정해야 한다(대화 2026-07-23).
         let content_conn = build_hs_school_content_db();
         let slot_conn = slot::open_in_memory().unwrap();
 
-        create_protagonist(&slot_conn, &content_conn, 1, "포심만", "우완", "team:hanseong_hs", "제구형", None).unwrap();
+        create_protagonist(&slot_conn, &content_conn, 1, "제구왕", "우완", "team:hanseong_hs", "제구형", None).unwrap();
 
         let pitches_raw: String = slot_conn.query_row("SELECT pitches FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
         let pitches: Vec<String> = serde_json::from_str(&pitches_raw).unwrap();
-        assert_eq!(pitches, vec!["포심 패스트볼".to_string()]);
+        assert_eq!(pitches.len(), 2);
+        assert_eq!(pitches[0], "포심 패스트볼");
+        assert!(crate::sim::protagonist::is_valid_second_pitch("제구형", &pitches[1]).unwrap());
     }
 
     #[test]
@@ -5642,6 +5742,94 @@ mod tests {
     }
 
     #[test]
+    fn preview_hs_roster_matches_a_real_generate_league_roster_insert() {
+        let conn = content::open_in_memory().unwrap();
+        conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:hs', NULL)", []).unwrap();
+        for team_id in ["team:a", "team:b"] {
+            conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES (?1, 'league:hs', NULL, NULL)", [team_id]).unwrap();
+            conn.execute("INSERT INTO team_traits (team_id, philosophy, resource, status) VALUES (?1, '전통/정통', '안정', '중견')", [team_id])
+                .unwrap();
+        }
+        conn.execute(
+            "INSERT INTO generation_rules (league_id, rules) VALUES ('league:hs', '{\"roster_size\":4,\"pitcher_ratio\":0.5,\"sp_ratio\":0.5,\"stat_min\":20.0,\"stat_max\":80.0}')",
+            [],
+        )
+        .unwrap();
+        conn.execute(
+            "INSERT INTO name_pools (id, locale, kind, names) VALUES ('namepool:kr_surname', 'kr', 'surname', '[\"김\"]')",
+            [],
+        )
+        .unwrap();
+        conn.execute(
+            "INSERT INTO name_pools (id, locale, kind, names) VALUES ('namepool:kr_given', 'kr', 'given', '[\"민준\"]')",
+            [],
+        )
+        .unwrap();
+        conn.execute(
+            "INSERT INTO pitch_types (id, family, name, meta) VALUES ('pitch:four_seam', '패스트볼류', '포심 패스트볼', NULL)",
+            [],
+        )
+        .unwrap();
+
+        let mut slot_conn = slot::open_in_memory().unwrap();
+        generate_league_roster(&mut slot_conn, &conn, 777, "league:hs").unwrap();
+
+        let mut preview = preview_hs_roster(&conn, 777, "team:b").unwrap();
+        assert!(!preview.is_empty());
+        preview.sort_by(|a, b| a.0.cmp(&b.0));
+
+        let mut stmt = slot_conn.prepare("SELECT id, name, position, age, stats, pitches FROM npc WHERE team_id = 'team:b' ORDER BY id").unwrap();
+        let mut actual: Vec<(String, String, String, i64, String, Option<String>)> = stmt
+            .query_map([], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?, r.get(4)?, r.get(5)?)))
+            .unwrap()
+            .collect::<Result<_, _>>()
+            .unwrap();
+        actual.sort_by(|a, b| a.0.cmp(&b.0));
+
+        assert_eq!(preview, actual);
+    }
+
+    #[test]
+    fn generate_league_roster_data_scales_hs_roster_size_by_resource() {
+        let conn = content::open_in_memory().unwrap();
+        conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:hs', NULL)", []).unwrap();
+        for (team_id, resource) in [("team:rich", "부유"), ("team:stable", "안정"), ("team:frugal", "알뜰"), ("team:poor", "궁핍")] {
+            conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES (?1, 'league:hs', NULL, NULL)", [team_id]).unwrap();
+            conn.execute(
+                "INSERT INTO team_traits (team_id, philosophy, resource, status) VALUES (?1, '전통/정통', ?2, '중견')",
+                params![team_id, resource],
+            )
+            .unwrap();
+        }
+        conn.execute(
+            "INSERT INTO generation_rules (league_id, rules) VALUES ('league:hs', '{\"roster_size\":4,\"pitcher_ratio\":0.5,\"sp_ratio\":0.5,\"stat_min\":20.0,\"stat_max\":80.0}')",
+            [],
+        )
+        .unwrap();
+        conn.execute(
+            "INSERT INTO name_pools (id, locale, kind, names) VALUES ('namepool:kr_surname', 'kr', 'surname', '[\"김\"]')",
+            [],
+        )
+        .unwrap();
+        conn.execute(
+            "INSERT INTO name_pools (id, locale, kind, names) VALUES ('namepool:kr_given', 'kr', 'given', '[\"민준\"]')",
+            [],
+        )
+        .unwrap();
+        conn.execute(
+            "INSERT INTO pitch_types (id, family, name, meta) VALUES ('pitch:four_seam', '패스트볼류', '포심 패스트볼', NULL)",
+            [],
+        )
+        .unwrap();
+
+        for (team_id, resource) in [("team:rich", "부유"), ("team:stable", "안정"), ("team:frugal", "알뜰"), ("team:poor", "궁핍")] {
+            let rows = preview_hs_roster(&conn, 888, team_id).unwrap();
+            let player_count = rows.iter().filter(|(_, _, position, ..)| !["감독", "코치", "구단주"].contains(&position.as_str())).count();
+            assert_eq!(player_count as u64, hs_target_roster_size(resource), "{team_id}({resource}) player count mismatch");
+        }
+    }
+
+    #[test]
     fn load_manager_stats_reads_the_generated_manager_row() {
         let content_conn = build_test_content_db();
         let mut slot_conn = slot::open_in_memory().unwrap();
@@ -5833,7 +6021,11 @@ mod tests {
         generate_initial_world(&mut slot_conn, &conn, 555).unwrap();
 
         let count: i64 = slot_conn.query_row("SELECT count(*) FROM npc", [], |r| r.get(0)).unwrap();
-        assert_eq!(count, (LEAGUE_IDS.len() as i64) * 7); // 1 team * (roster_size 4 + 감독·코치·구단주 3명) per league
+        // 고교는 자원('안정') 기반 목표치(hs_target_roster_size)로 flat
+        // roster_size:4를 덮어쓰므로(대화 2026-07-23) 다른 4개 리그와 다르게 센다.
+        let non_hs_count = (LEAGUE_IDS.len() as i64 - 1) * (4 + 3); // roster_size 4 + 감독·코치·구단주 3명
+        let hs_count = hs_target_roster_size("안정") as i64 + 3;
+        assert_eq!(count, non_hs_count + hs_count);
     }
 
     fn current_day(conn: &Connection) -> i64 {
@@ -6897,8 +7089,12 @@ mod tests {
 
     #[test]
     fn generate_freshmen_tops_up_missing_roster_slots() {
+        // league:hs가 아닌 리그를 씀 — 고교는 `hs_target_roster_size`(팀
+        // 자원 기반)로 목표치를 정하므로(대화 2026-07-23), flat
+        // `generation_rules.roster_size`를 그대로 목표치로 쓰는 일반
+        // 충원 경로는 다른 리그로 검증한다.
         let content_conn = build_freshmen_content_db(
-            "league:hs",
+            "league:pro",
             "team:h1",
             r#"{"roster_size":6,"pitcher_ratio":0.5,"sp_ratio":0.5,"stat_min":20.0,"stat_max":80.0}"#,
         );
@@ -6911,6 +7107,25 @@ mod tests {
         let active_count: i64 =
             slot_conn.query_row("SELECT count(*) FROM npc WHERE team_id = 'team:h1' AND retired = 0", [], |r| r.get(0)).unwrap();
         assert_eq!(active_count, 6, "2 existing + 4 freshmen should fill the 6-player roster");
+    }
+
+    #[test]
+    fn generate_freshmen_tops_up_hs_teams_to_the_resource_scaled_target() {
+        let content_conn = build_freshmen_content_db(
+            "league:hs",
+            "team:h1",
+            r#"{"roster_size":6,"pitcher_ratio":0.5,"sp_ratio":0.5,"stat_min":20.0,"stat_max":80.0}"#,
+        );
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_test_player(&slot_conn, "npc:h1_existing1", "team:h1", "타자", serde_json::json!({"파워": 50.0}));
+
+        generate_freshmen(&slot_conn, &content_conn, 42, 5).unwrap();
+
+        // `build_freshmen_content_db`는 team_traits.resource='안정'로 고정(38명) —
+        // flat rule의 roster_size:6이 아니라 이 값이 목표치가 돼야 한다.
+        let active_count: i64 =
+            slot_conn.query_row("SELECT count(*) FROM npc WHERE team_id = 'team:h1' AND retired = 0", [], |r| r.get(0)).unwrap();
+        assert_eq!(active_count, hs_target_roster_size("안정") as i64);
     }
 
     #[test]

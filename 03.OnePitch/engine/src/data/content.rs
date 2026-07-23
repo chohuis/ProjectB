@@ -99,6 +99,7 @@ pub fn open_in_memory() -> anyhow::Result<Connection> {
 pub struct TeamForRoster {
     pub id: String,
     pub philosophy: String,
+    pub resource: String,
     pub status: String,
 }
 
@@ -106,7 +107,7 @@ pub struct TeamForRoster {
 /// deterministic RNG stream in sim::roster relies on.
 pub fn load_teams_for_league(conn: &Connection, league_id: &str) -> anyhow::Result<Vec<TeamForRoster>> {
     let mut stmt = conn.prepare(
-        "SELECT t.id, tt.philosophy, tt.status
+        "SELECT t.id, tt.philosophy, tt.resource, tt.status
          FROM teams t JOIN team_traits tt ON tt.team_id = t.id
          WHERE t.league_id = ?1
          ORDER BY t.id",
@@ -115,7 +116,8 @@ pub fn load_teams_for_league(conn: &Connection, league_id: &str) -> anyhow::Resu
         Ok(TeamForRoster {
             id: row.get(0)?,
             philosophy: row.get(1)?,
-            status: row.get(2)?,
+            resource: row.get(2)?,
+            status: row.get(3)?,
         })
     })?;
     Ok(rows.collect::<Result<Vec<_>, _>>()?)

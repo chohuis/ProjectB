@@ -67,7 +67,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.12.0';
 
   @override
-  int get rustContentHash => 1688303705;
+  int get rustContentHash => -1815852937;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -174,6 +174,14 @@ abstract class RustLibApi extends BaseApi {
   });
 
   Future<List<String>> crateApiGamePitchTypeNames();
+
+  List<PitcherArchetypeInfo> crateApiGamePitcherArchetypeInfo();
+
+  Future<List<RosterPlayerInfo>> crateApiGamePreviewHsRoster({
+    required String contentDbPath,
+    required PlatformInt64 worldSeed,
+    required String teamId,
+  });
 
   Future<MatchStepInfo?> crateApiGameResolveChoice({
     required String actionId,
@@ -1260,6 +1268,65 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "pitch_type_names", argNames: []);
 
   @override
+  List<PitcherArchetypeInfo> crateApiGamePitcherArchetypeInfo() {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 38)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_list_pitcher_archetype_info,
+          decodeErrorData: sse_decode_AnyhowException,
+        ),
+        constMeta: kCrateApiGamePitcherArchetypeInfoConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiGamePitcherArchetypeInfoConstMeta =>
+      const TaskConstMeta(debugName: "pitcher_archetype_info", argNames: []);
+
+  @override
+  Future<List<RosterPlayerInfo>> crateApiGamePreviewHsRoster({
+    required String contentDbPath,
+    required PlatformInt64 worldSeed,
+    required String teamId,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(contentDbPath, serializer);
+          sse_encode_i_64(worldSeed, serializer);
+          sse_encode_String(teamId, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 39,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_list_roster_player_info,
+          decodeErrorData: sse_decode_AnyhowException,
+        ),
+        constMeta: kCrateApiGamePreviewHsRosterConstMeta,
+        argValues: [contentDbPath, worldSeed, teamId],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiGamePreviewHsRosterConstMeta =>
+      const TaskConstMeta(
+        debugName: "preview_hs_roster",
+        argNames: ["contentDbPath", "worldSeed", "teamId"],
+      );
+
+  @override
   Future<MatchStepInfo?> crateApiGameResolveChoice({
     required String actionId,
     required String choiceId,
@@ -1273,7 +1340,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 38,
+            funcId: 40,
             port: port_,
           );
         },
@@ -1317,7 +1384,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 39,
+            funcId: 41,
             port: port_,
           );
         },
@@ -1374,7 +1441,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 40,
+            funcId: 42,
             port: port_,
           );
         },
@@ -1412,7 +1479,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 41)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 43)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_list_String,
@@ -1437,7 +1504,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_String(severity, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 42)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 44)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_list_treatment_option,
@@ -1721,6 +1788,22 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  List<PitcherArchetypeInfo> dco_decode_list_pitcher_archetype_info(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>)
+        .map(dco_decode_pitcher_archetype_info)
+        .toList();
+  }
+
+  @protected
+  Float64List dco_decode_list_prim_f_64_strict(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw as Float64List;
+  }
+
+  @protected
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as Uint8List;
@@ -1879,6 +1962,21 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       urgency: dco_decode_String(arr[2]),
       createdDay: dco_decode_i_64(arr[3]),
       payloadJson: dco_decode_String(arr[4]),
+    );
+  }
+
+  @protected
+  PitcherArchetypeInfo dco_decode_pitcher_archetype_info(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 5)
+      throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
+    return PitcherArchetypeInfo(
+      name: dco_decode_String(arr[0]),
+      primaryStats: dco_decode_list_String(arr[1]),
+      minorStats: dco_decode_list_String(arr[2]),
+      pitchPool: dco_decode_list_String(arr[3]),
+      statMidpoints: dco_decode_list_prim_f_64_strict(arr[4]),
     );
   }
 
@@ -2429,6 +2527,27 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  List<PitcherArchetypeInfo> sse_decode_list_pitcher_archetype_info(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <PitcherArchetypeInfo>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_pitcher_archetype_info(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  Float64List sse_decode_list_prim_f_64_strict(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var len_ = sse_decode_i_32(deserializer);
+    return deserializer.buffer.getFloat64List(len_);
+  }
+
+  @protected
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var len_ = sse_decode_i_32(deserializer);
@@ -2697,6 +2816,25 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       urgency: var_urgency,
       createdDay: var_createdDay,
       payloadJson: var_payloadJson,
+    );
+  }
+
+  @protected
+  PitcherArchetypeInfo sse_decode_pitcher_archetype_info(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_name = sse_decode_String(deserializer);
+    var var_primaryStats = sse_decode_list_String(deserializer);
+    var var_minorStats = sse_decode_list_String(deserializer);
+    var var_pitchPool = sse_decode_list_String(deserializer);
+    var var_statMidpoints = sse_decode_list_prim_f_64_strict(deserializer);
+    return PitcherArchetypeInfo(
+      name: var_name,
+      primaryStats: var_primaryStats,
+      minorStats: var_minorStats,
+      pitchPool: var_pitchPool,
+      statMidpoints: var_statMidpoints,
     );
   }
 
@@ -3224,6 +3362,28 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_list_pitcher_archetype_info(
+    List<PitcherArchetypeInfo> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_pitcher_archetype_info(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_prim_f_64_strict(
+    Float64List self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    serializer.buffer.putFloat64List(self);
+  }
+
+  @protected
   void sse_encode_list_prim_u_8_strict(
     Uint8List self,
     SseSerializer serializer,
@@ -3482,6 +3642,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_String(self.urgency, serializer);
     sse_encode_i_64(self.createdDay, serializer);
     sse_encode_String(self.payloadJson, serializer);
+  }
+
+  @protected
+  void sse_encode_pitcher_archetype_info(
+    PitcherArchetypeInfo self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.name, serializer);
+    sse_encode_list_String(self.primaryStats, serializer);
+    sse_encode_list_String(self.minorStats, serializer);
+    sse_encode_list_String(self.pitchPool, serializer);
+    sse_encode_list_prim_f_64_strict(self.statMidpoints, serializer);
   }
 
   @protected

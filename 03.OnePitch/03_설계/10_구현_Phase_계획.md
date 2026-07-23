@@ -1387,7 +1387,37 @@
 
 **테스트**(`cargo test --lib` 370개 전부 통과, 신규 2개): `effect_tone_classifies_by_sign`(양수만/음수만/혼합/빈 배열 4케이스)·`effect_hint_joins_a_human_readable_summary`. `cargo clippy --lib --tests --bins` 클린(무관 기존 경고 1개만). frb 변경 없음. `flutter analyze` 클린, `flutter test`(26개) 클린, `flutter build windows --debug` 성공, `engine.dll` 갱신.
 
-### 6-83. 문서 갱신 규칙
+### 6-83. 캐릭터 생성 — 투수 타입 카드형 UI + 학교 로스터 미리보기 (2026-07-23, 완료) — UI 피드백 3·5번
+
+**Context**: 투수 타입(강속구형/제구형/체력형/돌부처형) 선택이 드롭다운뿐이라 타입별 차이를 알기 어렵다는 피드백(3번), 학교 선택 다이얼로그 "로스터" 탭이 "추후 공개" placeholder라는 피드백(5번). 조사 결과 `new_game()`이 `generate_initial_world`+`create_protagonist`를 한 호출로 묶어서 실행해 학교 선택 시점엔 로스터가 아직 없었다 — 사용자 확인(대화 2026-07-23): 미리보기 로스터는 실제 시작 후 로스터와 **완전히 같아야 함**.
+
+**구현**:
+- `repository.rs::generate_league_roster`를 리팩터링 — "생성+즉시 INSERT"이던 걸 순수 `generate_league_roster_data`(DB 미접근, `GeneratedTeamRoster` 반환)로 분리하고 `generate_league_roster`는 그 결과를 INSERT만 하도록 변경(RNG 소비 순서 불변, 기존 동작·테스트 그대로).
+- `repository::preview_hs_roster(content_conn, world_seed, team_id)` 신규 — `generate_league_roster_data(..., "league:hs")`를 호출해 해당 팀만 골라 반환. 리그별로 독립 시드(`league_sub_seed`)를 쓰기 때문에 `league:hs`만 다시 생성해도 다른 리그를 안 건드리고 정확히 같은 결과가 나옴.
+- `api::game::preview_hs_roster`(신규, `RosterPlayerInfo` 재사용) — `list_hs_school_details`와 같은 패턴(활성 세션 불필요, `content_db_path`로 독립 커넥션).
+- `sim::protagonist::archetype_bands`/`full_second_pitch_pool`을 `pub` 승격 + `api::game::PitcherArchetypeInfo`(name/primary_stats/minor_stats/pitch_pool)·`pitcher_archetype_info()`(신규, `#[frb(sync)]`) — 타입별 우세 스탯 밴드+습득 가능 구종 후보 풀 노출. 스탯 축 순서는 기존 `exposed_stat_names()`(§6-22 훈련 탭용, 재사용) 그대로 씀 — 새 상수 안 만듦.
+- **frb 재생성**(새 노출 함수 2개: `preview_hs_roster`, `pitcher_archetype_info`).
+- `new_game_screen.dart`: `_worldSeed`를 `initState()`에서 한 번 확정(기존엔 `_submit()` 시점에 매번 새로 뽑았음) — 미리보기와 실제 시작이 같은 시드를 쓰게 함. `_SchoolRosterTab`을 `league_screen.dart`의 `_RosterTab`과 같은 구조(`ListTile`+스탯 요약)로 교체, `listRoster` 대신 `previewHsRoster` 호출. 투수 타입 드롭다운을 4장의 `_ArchetypeCard`(9개 노출 스탯 미니 바 그래프 + 습득 가능 구종 칩)로 교체.
+
+**스코프 판단**: 2구종 선택 UI 자체는 여전히 범위 밖(이미 이월된 "아트 단계" 항목) — 카드는 후보 풀 안내만. 로스터 미리보기는 학교 상세를 열 때마다 `league:hs` 전체(102팀)를 다시 생성하지만 인메모리 순수 계산이라 캐싱 없이도 체감 지연 없음.
+
+**테스트**(`cargo test --lib` 372개 전부 통과, 신규 2개): `preview_hs_roster_matches_a_real_generate_league_roster_insert`(같은 world_seed로 DB 삽입 결과와 미리보기 결과가 완전히 일치하는지 — 이번 배치 핵심 불변식)·`pitcher_archetype_info_covers_all_four_archetypes_with_known_bands`. `cargo clippy --lib --tests --bins` 클린(무관 기존 경고 1개만). `flutter analyze` 클린, `flutter test`(26개) 클린, `flutter build windows --debug` 성공, `engine.dll` 갱신.
+
+### 6-84. 고교 로스터 구성 재설계 — 총원(자본 연동)·포지션 뎁스·학년(나이) 매핑 (2026-07-23, 완료)
+
+**Context**: §6-83 로스터 미리보기 확인 중 "왜 8명뿐이냐" 질문 — 조사 결과 실제로는 25명(+감독·코치·구단주 3명)이 이미 생성 중이었고(다이얼로그 `ListView`가 스크롤 없이 위 8명만 보인 것으로 추정), 진짜 문제는 **로스터가 현실적인 구성 원칙 없이(포지션 단순 라운드로빈, 나이 무작위) 만들어진다는 것**이었다. 사용자 확인(대화 2026-07-23): 총원은 30~45명 사이에서 팀 자본(자원)에 맞춰, 학년은 1·2·3학년 균등.
+
+**구현**:
+- `sim::roster.rs`: `age_range("league:hs")`를 `(15,18)` → `(17,19)`로 수정 — 주인공 커리어 경로가 이미 확정한 "17세=1학년, `HS_GRADUATION_AGE=20`(20세 졸업)"과 불일치하던 기존 버그. `season_rollover`의 나이 증가→`sim::npc::check_retirement`(이 함수의 상한을 그대로 씀)→`generate_freshmen` 파이프라인이 **이미 완전히 동작**하고 있어서, 이 한 줄만으로 "매년 3학년 은퇴, 신입생(17세) 충원"이 자연스럽게 이뤄짐(새 시즌 로직 불필요).
+- `generate_team`의 타자 포지션 배정을 `FIELD_POSITIONS` 단순 라운드로빈에서 `BATTER_POSITION_CYCLE`(포수가 9칸 중 2칸)로 교체 — 포수 체력 소모가 커 백업이 더 필요하다는 현실 반영. `batter_n` 크기와 무관하게 항상 같은 비율 유지(전체 생성이든 `generate_freshmen`의 소량 충원이든). 전 리그 공통 개선.
+- `content.rs::TeamForRoster`에 `resource` 필드 추가(`team_traits` 테이블엔 이미 있던 컬럼, 지금까지 안 읽어옴). `repository.rs::hs_target_roster_size(resource)`(부유45/안정38/알뜰33/궁핍30, D그룹 placeholder 수치 — `02_기획/리그팀/05_팀_특성_시스템.md` §2 "자원→로스터 뎁스" 매핑을 처음으로 실제 수치화) 신설, `generate_league_roster_data`(초기 생성)와 `generate_freshmen`(시즌마다 충원 목표치) **양쪽 다** 이 함수로 고교 팀 목표 총원을 계산하도록 수정 — 초기 생성만 고치고 충원 쪽을 안 고치면 시즌이 한 번만 지나도 flat `roster_size:25`로 다시 깎여나가는 회귀가 있었을 것(구현 중 발견).
+- `new_game_screen.dart`: `_SchoolRosterTab`의 나이 표시를 `${p.age}세` → 선수는 `${p.age-16}학년`(감독/코치/구단주는 나이대가 달라 `${p.age}세` 유지).
+
+**스코프 판단**: `sim::npc::check_retirement`의 은퇴 확률 곡선(`eligible_from = league_max_age-5`)은 프로(상한 40대) 기준으로 잡힌 걸 그대로 재사용 중이라 고교(상한 19)에 적용하면 17세부터 이미 "5년 이내 상한" 범위에 들어가 첫 시즌부터 은퇴 확률이 꽤 높게 나올 수 있음(발견한 부작용, D그룹 수치 미조정) — 이번 배치는 로스터 "구성" 설계가 목적이라 곡선 자체 밸런싱은 별도 이월. 포지션 뎁스는 포수만 가중(유격수 등 세분화는 과설계 방지로 스킵). `league_screen.dart`(게임 시작 후 일반 로스터 화면)엔 학년 표시 안 넣음 — 이번 요청은 학교 선택 미리보기 범위.
+
+**테스트**(`cargo test --lib` 376개 전부 통과, 신규 4개): `age_range_hs_matches_the_protagonist_graduation_convention`·`batter_positions_favor_catcher_roughly_two_to_one`·`generate_league_roster_data_scales_hs_roster_size_by_resource`(부유/안정/알뜰/궁핍 4팀 각각 45/38/33/30명)·`generate_freshmen_tops_up_hs_teams_to_the_resource_scaled_target`. 기존 `generate_initial_world_covers_all_five_leagues`·`generate_freshmen_tops_up_missing_roster_slots`(→league:pro로 변경, 고교 자원 스케일링과 분리해 flat-rule 경로만 검증) 갱신. `cargo clippy --lib --tests --bins` 클린(무관 기존 경고 1개만). frb 변경 없음. `flutter analyze` 클린, `flutter test`(26개) 클린, `flutter build windows --debug` 성공, `engine.dll` 갱신.
+
+### 6-85. 문서 갱신 규칙
 
 **이 문서는 살아있는 문서다.** Phase를 하나 끝낼 때마다:
 1. §2 표의 해당 행 상태를 `⬜ 미착수` → `🔶 진행중` → `✅ 완료`로 갱신.

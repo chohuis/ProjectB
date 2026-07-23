@@ -13,7 +13,7 @@ const CONTROL_TYPE_SECOND_PITCH_CANDIDATES: [&str; 6] = ["체인지업", "포크
 /// 타입별 우세 스탯 — §4 표. `primary`는 상단 밴드, `minor`는 "(+구위
 /// 소폭)" 같은 괄호 표기를 반영한 중간 가산 밴드(체력형·돌부처형은 우세
 /// 스탯이 2개뿐이라 minor 없음).
-fn archetype_bands(archetype: &str) -> anyhow::Result<(&'static [&'static str], &'static [&'static str])> {
+pub fn archetype_bands(archetype: &str) -> anyhow::Result<(&'static [&'static str], &'static [&'static str])> {
     match archetype {
         "강속구형" => Ok((&["구속"], &["구위"])),
         "제구형" => Ok((&["제구"], &["경기운영"])),
@@ -26,7 +26,7 @@ fn archetype_bands(archetype: &str) -> anyhow::Result<(&'static [&'static str], 
 /// 타입별 2구종 후보 풀(전체) — §6 표. 강속구형·체력형·돌부처형은 패스트볼류
 /// (투심·커터)만, 제구형만 오프스피드·브레이킹볼 6종에 접근. 너클볼은
 /// §6 "이질적 메커니즘이라 항상 후보 제외"에 따라 어느 풀에도 없음.
-fn full_second_pitch_pool(archetype: &str) -> anyhow::Result<&'static [&'static str]> {
+pub fn full_second_pitch_pool(archetype: &str) -> anyhow::Result<&'static [&'static str]> {
     match archetype {
         "강속구형" | "체력형" | "돌부처형" => Ok(&FASTBALL_SECOND_PITCH_CANDIDATES),
         "제구형" => Ok(&CONTROL_TYPE_SECOND_PITCH_CANDIDATES),
@@ -84,6 +84,28 @@ pub fn generate_starting_stats(rng: &mut impl Rng, archetype: &str) -> anyhow::R
         stats.insert(hidden.to_string(), json!(rng.gen_range(HIDDEN_BAND.0..HIDDEN_BAND.1)));
     }
     Ok(stats)
+}
+
+/// 캐릭터 생성 화면 투수 타입 카드 그래프용(대화 2026-07-23) — 노출 스탯
+/// 9종 각각의 밴드 중앙값(실제로 뽑히는 값의 중심). 그래프 길이를
+/// "이론상 최대"가 아니라 실제 생성값 근처로 보정하기 위함 — 밴드 자체가
+/// 20~35 구간(전체 스케일 20~80의 일부)이라 막대가 끝까지 안 채워지는
+/// 게 정상이다.
+pub fn archetype_stat_midpoints(archetype: &str) -> anyhow::Result<Vec<f64>> {
+    let (primary, minor) = archetype_bands(archetype)?;
+    Ok(PITCHER_EXPOSED
+        .iter()
+        .map(|&stat| {
+            let (lo, hi) = if primary.contains(&stat) {
+                UPPER_BAND
+            } else if minor.contains(&stat) {
+                MINOR_BAND
+            } else {
+                LOWER_BAND
+            };
+            (lo + hi) / 2.0
+        })
+        .collect())
 }
 
 #[cfg(test)]
