@@ -624,7 +624,23 @@ pub fn set_protagonist_profile(
 /// 행이 있어도 조용히 지나가고 훈련 효율 배율 1.0(변화 없음)을 돌려준다.
 /// 과목 5개 성적·시험 누적점수를 갱신하고, 주간 학습모드에 대응하는
 /// 훈련 효율 배율을 반환 — 호출부가 `TrainingConfig`에 바로 꽂는다.
-fn process_protagonist_academics_week(slot_conn: &Connection, content_conn: &Connection, team_id: Option<&str>) -> anyhow::Result<f64> {
+///
+/// 중간(12주차)·기말(42주차, `sim::academics::MIDTERM_WEEK`/`FINAL_WEEK`
+/// — 원본 캘린더 이벤트의 주차 그대로)엔 `calc_exam_result`로 채점해
+/// `academics.last_grade`/`eligibility_blocked`를 갱신하고 사기(`live_state`)
+/// 반영 + 인박스 통지까지 한다(원본 `gameStore.applyExamResult`가 PendingAction
+/// 없이 바로 반영하는 것과 동일 — 시험엔 플레이어가 고를 선택지가 없다).
+/// `live_state`는 호출부(`process_protagonist_week`)가 나중에 통째로 DB에
+/// 쓰는 그 메모리 상의 맵을 그대로 받아 여기서 사기만 더해두는 것 — 별도로
+/// DB에 즉시 쓰면 호출부의 뒤늦은 쓰기가 이 갱신을 덮어써버리기 때문.
+fn process_protagonist_academics_week(
+    slot_conn: &Connection,
+    content_conn: &Connection,
+    team_id: Option<&str>,
+    world_seed: i64,
+    day: i64,
+    live_state: &mut serde_json::Map<String, serde_json::Value>,
+) -> anyhow::Result<f64> {
     let Some(team_id) = team_id else { return Ok(1.0) };
     let league_id: Option<String> = content_conn.query_row("SELECT league_id FROM teams WHERE id = ?1", [team_id], |r| r.get(0)).optional()?;
     if !matches!(league_id.as_deref(), Some("league:hs") | Some("league:univ")) {
@@ -654,6 +670,33 @@ fn process_protagonist_academics_week(slot_conn: &Connection, content_conn: &Con
         "UPDATE academics SET subject_scores = ?1, exam_accum_score = ?2, warning_count = ?3 WHERE id = 'proto:1'",
         params![subject_scores.to_string(), new_accum, new_warning_count],
     )?;
+
+    let week = crate::calendar::week_for_day(day);
+    if crate::sim::academics::is_exam_week(week) {
+        let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("exam:{day}")));
+        let result = crate::sim::academics::calc_exam_result(&mut rng, new_accum, new_warning_count);
+        slot_conn.execute(
+            "UPDATE academics SET last_grade = ?1, last_grade_risk = ?2, eligibility_blocked = ?3 WHERE id = 'proto:1'",
+            params![result.grade, result.risk_level, result.eligibility_blocked as i64],
+        )?;
+
+        let morale = live_state.get("사기").and_then(|v| v.as_f64()).unwrap_or(50.0);
+        live_state.insert("사기".to_string(), serde_json::json!((morale + result.morale_delta as f64).clamp(0.0, 100.0)));
+
+        let exam_label = if week == crate::sim::academics::MIDTERM_WEEK { "중간고사" } else { "기말고사" };
+        let body = format!(
+            "{exam_label} 결과 — {}등급(원점수 {}점, 위험도: {}).{}",
+            result.grade,
+            result.raw,
+            result.risk_level,
+            if result.eligibility_blocked { " 학사 경고로 다음 경기는 출전할 수 없다." } else { "" },
+        );
+        slot_conn.execute(
+            "INSERT INTO inbox (id, kind, urgency, read, day, body) VALUES (?1, 'exam_result', 'normal', 0, ?2, ?3)",
+            params![format!("inbox:exam:{day}"), day, body],
+        )?;
+    }
+
     Ok(effect.efficiency_mod)
 }
 
@@ -739,7 +782,7 @@ fn process_protagonist_week(slot_conn: &Connection, content_conn: &Connection, w
     // 진행(학생은 훈련 계획이 없어도 수업은 듣는다), 그래서 아래 훈련
     // 설정 조기 반환보다 먼저 둔다. 고교·대학이 아니면 내부에서 조용히
     // 1.0(영향 없음)을 돌려준다.
-    let academic_efficiency_mod = process_protagonist_academics_week(slot_conn, content_conn, team_id.as_deref())?;
+    let academic_efficiency_mod = process_protagonist_academics_week(slot_conn, content_conn, team_id.as_deref(), world_seed, day, &mut live_state)?;
 
     let Some(training_raw) = training_raw else {
         slot_conn.execute(
@@ -1351,13 +1394,25 @@ fn find_protagonist_game_today(conn: &Connection, day: i64) -> anyhow::Result<Op
         return Ok(None);
     };
 
-    let game = conn
+    let game: Option<(String, String, String)> = conn
         .query_row(
             "SELECT game_id, home, away FROM schedule WHERE day = ?1 AND (home = ?2 OR away = ?2)",
             params![day, team_id],
             |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
         )
         .optional()?;
+
+    // 학사 경고(9등급 낙제) — 원본(`clearEligibilityBlock`)과 동일하게
+    // 바로 다음 경기 딱 한 번만 자동시뮬로 돌리고 즉시 해제한다(계속
+    // 막아두지 않음). 경기가 없는 날엔 소비할 게 없으니 그대로 둔다.
+    if game.is_some() {
+        let eligibility_blocked: i64 =
+            conn.query_row("SELECT eligibility_blocked FROM academics WHERE id = 'proto:1'", [], |r| r.get(0)).optional()?.unwrap_or(0);
+        if eligibility_blocked == 1 {
+            conn.execute("UPDATE academics SET eligibility_blocked = 0 WHERE id = 'proto:1'", [])?;
+            return Ok(None);
+        }
+    }
     Ok(game)
 }
 
@@ -3930,6 +3985,22 @@ fn resolve_career_choice(conn: &Connection, content_conn: &Connection, world_see
             };
             let contract = serde_json::json!({"team_id": team});
             conn.execute("UPDATE protagonist SET contract = ?1 WHERE id = 'proto:1'", params![contract.to_string()])?;
+            if choice_id == "대학" {
+                // 대학 진학 — 과목 성적을 대학 초기값으로 리셋하고 시험
+                // 누적·경고·직전 등급도 함께 지운다(`game.ts` setCareerStage의
+                // "university" 분기 그대로). 전공은 PendingAction이 아니라
+                // 학업 탭에서 언제든 고르는 원본 UX 그대로라 여기선 미선택
+                // 상태(NULL/major_selected=0)로만 남겨둔다(Phase 8/9에서
+                // `set_university_major`로 확정).
+                conn.execute(
+                    "UPDATE academics SET attends_university = 1, university_major = NULL, major_selected = 0,
+                                            subject_scores = ?1, exam_accum_score = 0, last_grade = NULL,
+                                            last_grade_risk = 'ok', eligibility_blocked = 0, warning_count = 0,
+                                            university_week = 0
+                     WHERE id = 'proto:1'",
+                    params![crate::sim::academics::initial_university_subject_scores().to_string()],
+                )?;
+            }
             log_career_event(conn, day, season, "career_choice", serde_json::json!({"choice": choice_id, "team_id": team}))?;
         }
         "입대" => {
@@ -4705,6 +4776,103 @@ mod tests {
 
         let accum: f64 = slot_conn.query_row("SELECT exam_accum_score FROM academics WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
         assert_eq!(accum, 0.0, "프로 소속이면 학업이 진행되면 안 됨");
+    }
+
+    #[test]
+    fn process_protagonist_week_grades_a_midterm_exam_at_week_twelve_and_notifies_the_inbox() {
+        let content_conn = build_hs_school_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        create_protagonist(&slot_conn, &content_conn, 1, "시험대상", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
+        slot_conn.execute("UPDATE academics SET exam_accum_score = 80.0 WHERE id = 'proto:1'", []).unwrap();
+
+        // 84일 = 12주차(MIDTERM_WEEK) — 시험 채점이 이 주에만 일어나야 함.
+        process_protagonist_week(&slot_conn, &content_conn, 1, 84).unwrap();
+
+        let (last_grade, risk): (Option<i64>, String) =
+            slot_conn.query_row("SELECT last_grade, last_grade_risk FROM academics WHERE id = 'proto:1'", [], |r| Ok((r.get(0)?, r.get(1)?))).unwrap();
+        assert!(last_grade.is_some(), "12주차엔 중간고사가 채점돼야 함");
+        assert!(!risk.is_empty());
+
+        let inbox_count: i64 =
+            slot_conn.query_row("SELECT count(*) FROM inbox WHERE kind = 'exam_result' AND day = 84", [], |r| r.get(0)).unwrap();
+        assert_eq!(inbox_count, 1, "시험 결과는 PendingAction이 아니라 인박스 통지로만 나가야 함(원본과 동일)");
+    }
+
+    #[test]
+    fn process_protagonist_week_does_not_grade_an_exam_outside_exam_weeks() {
+        let content_conn = build_hs_school_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        create_protagonist(&slot_conn, &content_conn, 1, "평범한주", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
+
+        process_protagonist_week(&slot_conn, &content_conn, 1, 7).unwrap(); // 1주차
+
+        let last_grade: Option<i64> = slot_conn.query_row("SELECT last_grade FROM academics WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+        assert!(last_grade.is_none());
+    }
+
+    #[test]
+    fn a_failing_exam_blocks_only_the_very_next_protagonist_game_then_clears() {
+        let content_conn = build_hs_school_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        create_protagonist(&slot_conn, &content_conn, 1, "낙제생", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
+        // 누적점수 0 + 경고 20회(패널티 160점)면 랜덤을 더해도 raw는 항상
+        // 0으로 클램프돼 결정적으로 9등급(낙제)이 나온다.
+        slot_conn.execute("UPDATE academics SET exam_accum_score = 0.0, warning_count = 20 WHERE id = 'proto:1'", []).unwrap();
+        process_protagonist_week(&slot_conn, &content_conn, 1, 84).unwrap(); // 12주차 — 중간고사 낙제
+
+        let eligibility_blocked: i64 =
+            slot_conn.query_row("SELECT eligibility_blocked FROM academics WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+        assert_eq!(eligibility_blocked, 1, "9등급이면 출전 자격이 정지돼야 함");
+
+        slot_conn
+            .execute("INSERT INTO schedule (game_id, day, home, away, result) VALUES ('game:1', 90, 'team:hanseong_hs', 'team:y', NULL)", [])
+            .unwrap();
+        let game = find_protagonist_game_today(&slot_conn, 90).unwrap();
+        assert!(game.is_none(), "출전 정지 중엔 주인공 인터랙티브 경기가 뜨면 안 됨(배경 자동시뮬로 대체)");
+
+        let cleared: i64 =
+            slot_conn.query_row("SELECT eligibility_blocked FROM academics WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
+        assert_eq!(cleared, 0, "그 경기 한 번으로 소비되고 해제돼야 함(원본 clearEligibilityBlock)");
+
+        slot_conn
+            .execute("INSERT INTO schedule (game_id, day, home, away, result) VALUES ('game:2', 91, 'team:hanseong_hs', 'team:y', NULL)", [])
+            .unwrap();
+        let next_game = find_protagonist_game_today(&slot_conn, 91).unwrap();
+        assert!(next_game.is_some(), "해제된 뒤 다음 경기는 다시 인터랙티브로 떠야 함");
+    }
+
+    #[test]
+    fn entering_university_resets_academics_to_university_baseline() {
+        let content_conn = build_hs_school_content_db(); // league:univ/team:some_univ 이미 포함
+        let slot_conn = slot::open_in_memory().unwrap();
+        create_protagonist(&slot_conn, &content_conn, 1, "대학진학", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
+        slot_conn
+            .execute("UPDATE academics SET exam_accum_score = 55.0, warning_count = 3, last_grade = 4, eligibility_blocked = 1 WHERE id = 'proto:1'", [])
+            .unwrap();
+        slot_conn
+            .execute(
+                "INSERT INTO pending_actions (id, type, urgency, created_day, payload) VALUES ('career:1', 'careerChoice', 'urgent', 1, '{\"drafted\":false,\"options\":[\"대학\",\"독립\",\"입대\"]}')",
+                [],
+            )
+            .unwrap();
+
+        resolve_career_choice(&slot_conn, &content_conn, 1, "대학", 1).unwrap();
+
+        let (attends, major, selected, accum, warning, grade, blocked, subject_scores_raw): (i64, Option<String>, i64, f64, i64, Option<i64>, i64, String) = slot_conn
+            .query_row(
+                "SELECT attends_university, university_major, major_selected, exam_accum_score, warning_count, last_grade, eligibility_blocked, subject_scores FROM academics WHERE id = 'proto:1'",
+                [],
+                |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?, r.get(4)?, r.get(5)?, r.get(6)?, r.get(7)?)),
+            )
+            .unwrap();
+        assert_eq!(attends, 1);
+        assert_eq!(major, None, "전공은 학업 탭에서 나중에 고르는 것이라 진학 시점엔 미선택");
+        assert_eq!(selected, 0);
+        assert_eq!(accum, 0.0);
+        assert_eq!(warning, 0);
+        assert_eq!(grade, None);
+        assert_eq!(blocked, 0);
+        assert_eq!(subject_scores_raw, crate::sim::academics::initial_university_subject_scores().to_string());
     }
 
     #[test]

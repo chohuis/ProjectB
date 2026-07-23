@@ -11,6 +11,15 @@ pub const ACADEMIC_SUBJECTS: [&str; 5] = ["kor", "eng", "math", "soc", "sci"];
 pub const STUDY_MODES: [&str; 4] = ["focus", "normal", "rest", "sleep"];
 pub const UNIVERSITY_MAJORS: [&str; 3] = ["체육교육", "스포츠과학", "일반전공"];
 
+/// 중간/기말고사가 열리는 시즌 내 주차 — `academicsEngine.ts`/캘린더
+/// 이벤트(`EVT_*_W12_MIDTERM`, `EVT_*_W4x_FINAL`)의 주차를 그대로 옮김.
+pub const MIDTERM_WEEK: i64 = 12;
+pub const FINAL_WEEK: i64 = 42;
+
+pub fn is_exam_week(week_of_season: i64) -> bool {
+    week_of_season == MIDTERM_WEEK || week_of_season == FINAL_WEEK
+}
+
 /// 주간 학습모드 하나의 효과 — `academicsEngine.ts`의
 /// `STUDY_MODE_EFFECTS` 그대로.
 pub struct StudyModeEffect {
@@ -295,5 +304,14 @@ mod tests {
         assert_eq!(zero_result.raw, 0);
         assert_eq!(zero_result.grade, 9);
         assert!(zero_result.eligibility_blocked);
+    }
+
+    #[test]
+    fn is_exam_week_only_matches_midterm_and_final() {
+        assert!(is_exam_week(MIDTERM_WEEK));
+        assert!(is_exam_week(FINAL_WEEK));
+        assert!(!is_exam_week(1));
+        assert!(!is_exam_week(30));
+        assert!(!is_exam_week(52));
     }
 }
