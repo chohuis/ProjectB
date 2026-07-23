@@ -1651,7 +1651,26 @@
 
 **테스트**: `cargo test --lib` 462개 전부 통과(신규 7개 — 피로도 실효치 감쇠 2개, 구속·경기운영 각 1개, 클러치 위기상황 게이팅 2개, 피로 투수 볼넷 증가 1개). `cargo clippy` 클린. frb 재생성 불필요(내부 계산 로직만 확장, 새 frb 함수 없음). `cargo build --release` 갱신 후 `flutter test` 27개 전부 통과. `balance_harness`로 극단적 쏠림 없는지 스모크 확인.
 
-### 6-103. 문서 갱신 규칙
+### 6-103. 매치엔진 리얼리즘 강화 Phase 2 — 인플레이 결과 세분화 (2026-07-26, 완료)
+
+**Context**: Phase 1 다음 단계 — 07_매치_엔진.md §6 "타석 결과 확장"이 요구하는 병살타·희생플라이·실책(비자책점 구분)이 전혀 없어서, 아웃이 주자를 절대 진루시키지 않고(3루 주자+1아웃에도 그냥 아웃) 실책 개념 자체가 없어 실점이 항상 자책점 취급되던 문제(`match_.rs:139-141` 옛 주석에서 스스로 인정)를 해소.
+
+**구현**(`engine/src/sim/match_.rs`):
+- `BatterStats`에 `defense`(수비) 필드 추가 — 개인 스탯이 아니라 `average_defense(lineup)`로 계산한 "그 팀 지금 수비 라인업의 평균 수비력"으로 `resolve_in_play_result`의 `team_defense` 인자에 쓰인다(§3 "수비 전력 = 수비 스탯 가중합" 단순화).
+- `PaOutcome`에 `DoublePlay`·`SacFly`·`ReachOnError` 3종 추가. `BattedBallType`(땅볼/뜬공/직선타, D그룹 비율 45/35/20) + `roll_batted_ball_type` 신규.
+- `resolve_in_play_result`가 `bases`·`outs`·`team_defense` 파라미터를 받아, 아웃이 될 타구에서 먼저 실책 확률(수비력 낮을수록↑)을 굴리고, 실책이 아니면 타구 유형+주자상황+아웃카운트로 병살(주자 1루+2아웃 미만+땅볼)·희생플라이(주자 3루+2아웃 미만+뜬공)를 자동 판정. `simulate_plate_appearance`도 같은 파라미터를 받아 그대로 전달.
+- `simulate_half_inning`에 `team_defense: f64` 파라미터 추가(호출부가 매 하프이닝 시작 전 계산해 고정 전달) — 내부에서 병살(아웃 2개+1루주자 제거)·희생플라이(아웃 1개+3루주자 득점)·실책출루(안타처럼 진루, RBI는 배터에 안 줌 — 실제 채점 규칙)를 각각 처리.
+- `PitcherGameStats`에 `unearned_runs`(비자책점)·`errors` 필드 추가 — `ReachOnError`가 발생한 바로 그 타석에서 곧바로 스코어링된 득점만 비자책으로 잡는다(그 주자가 나중에 다른 안타로 득점하는 완전한 자책 소급 귀속은 스코프 밖, D그룹).
+
+**구현**(`engine/src/sim/pitch.rs`, `engine/src/data/match_session.rs`, `engine/src/data/repository.rs`):
+- `resolve_in_play_result`/`simulate_at_bat_automatically`가 같은 파라미터를 받아 배경·인터랙티브 두 엔진의 판정을 계속 공유.
+- `match_session.rs`의 배경 하프이닝·주인공 1구 조작 양쪽에서 "수비 중인 팀"의 라인업을 `load_batting_lineup`으로 불러와 `average_defense`로 넘김(배경 쪽은 상대팀, 주인공 투구 쪽은 주인공 자신의 팀).
+- `PitcherStats`/`BatterStats`를 만드는 모든 자리에서 `defense`(타자)를 "수비" JSON 키로 파싱.
+- `repository.rs`의 `pitcher_stats_fields`에 `unearned_runs`·`errors` 추가해 season_stats에 영구 반영, `pitcher_stats_score`(로테이션·마무리 랭킹의 ERA-like 점수)가 이제 `runs_allowed - unearned_runs`(자책점)만 보도록 갱신 — §12 "ERA 등 투수 기록의 정확성에 필수"를 실제로 충족.
+
+**테스트**: `cargo test --lib` 469개 전부 통과(신규 7개 — 병살·희생플라이 발생/불발 조건 4개, 수비력에 따른 실책률 차이 1개, `average_defense` 빈 라인업 폴백 1개; 기존 `batter_rbi_sums_to_the_teams_runs_scored`는 "RBI 합 + 상대 비자책점 = 득점" 불변식으로 갱신, `protagonist_pitcher_can_suffer_an_acute_injury...`는 새 RNG 굴림으로 시드 시퀀스가 바뀌어 150→350회로 여유 확보). `cargo clippy` 클린. frb 재생성 불필요. `cargo build --release` 갱신 후 `flutter test` 27개 전부 통과. `balance_harness` 스모크로 극단적 쏠림 없음 확인.
+
+### 6-104. 문서 갱신 규칙
 
 **이 문서는 살아있는 문서다.** Phase를 하나 끝낼 때마다:
 1. §2 표의 해당 행 상태를 `⬜ 미착수` → `🔶 진행중` → `✅ 완료`로 갱신.

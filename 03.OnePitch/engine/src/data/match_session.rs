@@ -287,7 +287,23 @@ fn apply_pa_outcome(session: &mut SessionRow, batting_team_is_home: bool, outcom
             session.outs += 1;
             0
         }
-        PaOutcome::Walk | PaOutcome::HitByPitch | PaOutcome::Single => match_sim::advance_runners(&mut session.bases, 1),
+        PaOutcome::DoublePlay => {
+            session.outs += 2;
+            session.bases[0] = false;
+            0
+        }
+        PaOutcome::SacFly => {
+            session.outs += 1;
+            if session.bases[2] {
+                session.bases[2] = false;
+                1
+            } else {
+                0
+            }
+        }
+        PaOutcome::ReachOnError | PaOutcome::Walk | PaOutcome::HitByPitch | PaOutcome::Single => {
+            match_sim::advance_runners(&mut session.bases, 1)
+        }
         PaOutcome::Double => match_sim::advance_runners(&mut session.bases, 2),
         PaOutcome::Triple => match_sim::advance_runners(&mut session.bases, 3),
         PaOutcome::HomeRun => match_sim::advance_runners(&mut session.bases, 4),
@@ -694,6 +710,9 @@ fn run_until_decision_point(
             // 타석마다 다시 판단하므로 여기선 이닝·스코어차만 넘긴다.
             let leverage_base =
                 pitch::is_high_leverage_situation(false, (session.home_runs - session.away_runs) as i32, session.inning as u32);
+            // 수비 중인 팀(투구 중인 팀)의 평균 수비력(Phase 2) — 실책 판정에 씀.
+            let fielding_lineup = repository::load_batting_lineup(slot_conn, &pitching_team)?;
+            let team_defense = match_sim::average_defense(&fielding_lineup);
             let runs = match_sim::simulate_half_inning(
                 &mut rng,
                 &lineup,
@@ -701,6 +720,7 @@ fn run_until_decision_point(
                 &pitcher,
                 session.bases,
                 leverage_base,
+                team_defense,
                 &mut injuries,
                 &mut half_inning_stats,
             );
@@ -836,7 +856,18 @@ fn run_until_decision_point(
             pitch::AtBatOutcome::Walk => apply_pa_outcome(&mut session, batting_team_is_home, PaOutcome::Walk),
             pitch::AtBatOutcome::HitByPitch => apply_pa_outcome(&mut session, batting_team_is_home, PaOutcome::HitByPitch),
             pitch::AtBatOutcome::InPlay => {
-                let pa = match_sim::resolve_in_play_result(&mut rng, &batter, &pitcher, high_leverage);
+                // 수비 중인 팀은 주인공 자신의 팀(투구 중이므로, Phase 2).
+                let fielding_lineup = repository::load_batting_lineup(slot_conn, &protagonist_team_id)?;
+                let team_defense = match_sim::average_defense(&fielding_lineup);
+                let pa = match_sim::resolve_in_play_result(
+                    &mut rng,
+                    &batter,
+                    &pitcher,
+                    session.bases,
+                    session.outs as u32,
+                    team_defense,
+                    high_leverage,
+                );
                 apply_pa_outcome(&mut session, batting_team_is_home, pa);
             }
         }
@@ -1132,9 +1163,14 @@ mod tests {
 
     #[test]
     fn protagonist_pitcher_can_suffer_an_acute_injury_during_their_own_start() {
+        // Phase 2가 `resolve_in_play_result` 안에 새 RNG 굴림(실책·타구
+        // 유형)을 추가하면서 각 시드의 이후 난수 시퀀스가 통째로 바뀌었다
+        // — 어느 시드가 부상을 "뽑는지"는 달라져도 350회 시행이면 여전히
+        // 안정적으로 최소 1건은 걸린다(원래 150회도 낮은 확률 이벤트
+        // 대비 넉넉한 여유를 둔 값이었음).
         let content_conn = build_content_db();
         let mut triggered = false;
-        for seed in 0..150i64 {
+        for seed in 0..350i64 {
             let slot_conn = slot::open_in_memory().unwrap();
             insert_roster(&slot_conn, "team:home");
             insert_roster(&slot_conn, "team:away");
@@ -1150,7 +1186,7 @@ mod tests {
                 break;
             }
         }
-        assert!(triggered, "expected at least one seed across 150 trials to injure the protagonist pitcher during their own start");
+        assert!(triggered, "expected at least one seed across 350 trials to injure the protagonist pitcher during their own start");
     }
 
     #[test]

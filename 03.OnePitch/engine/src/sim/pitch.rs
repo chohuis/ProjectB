@@ -207,12 +207,18 @@ pub fn choose_pitch_and_course(rng: &mut impl Rng, pitches: &[String], batter: &
 /// 배경 시뮬과 같은 결과 처리 로직(주자 진루 등)을 그대로 재사용하게 한다.
 /// 수동·반자동 모드(플레이어가 직접/가끔 구종·코스를 고름)는 `throw_pitch`
 /// ·`apply_pitch_result`를 그대로 재사용하되 세션 상태를 slot.db에 유지해야
-/// 해서 별도 서브분 스코프(10_구현_Phase_계획.md 참고).
+/// 해서 별도 서브분 스코프(10_구현_Phase_계획.md 참고). `bases`·`outs`·
+/// `team_defense`(Phase 2)는 인플레이로 이어질 때 `resolve_in_play_result`
+/// 에 그대로 전달.
+#[allow(clippy::too_many_arguments)]
 pub fn simulate_at_bat_automatically(
     rng: &mut impl Rng,
     pitches: &[String],
     pitcher: &PitcherStats,
     batter: &BatterStats,
+    bases: [bool; 3],
+    outs: u32,
+    team_defense: f64,
     high_leverage: bool,
 ) -> (PaOutcome, u32) {
     let mut count = Count::default();
@@ -226,7 +232,9 @@ pub fn simulate_at_bat_automatically(
             AtBatOutcome::Strikeout => return (PaOutcome::Strikeout, pitch_count),
             AtBatOutcome::Walk => return (PaOutcome::Walk, pitch_count),
             AtBatOutcome::HitByPitch => return (PaOutcome::HitByPitch, pitch_count),
-            AtBatOutcome::InPlay => return (resolve_in_play_result(rng, batter, pitcher, high_leverage), pitch_count),
+            AtBatOutcome::InPlay => {
+                return (resolve_in_play_result(rng, batter, pitcher, bases, outs, team_defense, high_leverage), pitch_count)
+            }
         }
     }
 }
@@ -238,7 +246,7 @@ mod tests {
     use rand_chacha::ChaCha8Rng;
 
     fn avg_batter() -> BatterStats {
-        BatterStats { id: "b".to_string(), contact: 50.0, eye: 50.0, power: 50.0, fatigue: 0.0, clutch: 50.0, composure: 50.0 }
+        BatterStats { id: "b".to_string(), contact: 50.0, eye: 50.0, power: 50.0, fatigue: 0.0, clutch: 50.0, composure: 50.0, defense: 50.0 }
     }
     fn avg_pitcher() -> PitcherStats {
         PitcherStats { id: "p".to_string(), control: 50.0, stuff: 50.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0 }
@@ -320,7 +328,8 @@ mod tests {
         let pitches = vec!["포심 패스트볼".to_string(), "슬라이더".to_string()];
         for seed in 0..100u64 {
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
-            let (outcome, pitch_count) = simulate_at_bat_automatically(&mut rng, &pitches, &avg_pitcher(), &avg_batter(), false);
+            let (outcome, pitch_count) =
+                simulate_at_bat_automatically(&mut rng, &pitches, &avg_pitcher(), &avg_batter(), [false; 3], 0, 50.0, false);
             assert!((1..50).contains(&pitch_count), "unreasonable pitch count: {pitch_count}");
             assert!(matches!(
                 outcome,
@@ -328,6 +337,9 @@ mod tests {
                     | PaOutcome::Walk
                     | PaOutcome::HitByPitch
                     | PaOutcome::Out
+                    | PaOutcome::DoublePlay
+                    | PaOutcome::SacFly
+                    | PaOutcome::ReachOnError
                     | PaOutcome::Single
                     | PaOutcome::Double
                     | PaOutcome::Triple
@@ -341,8 +353,8 @@ mod tests {
         let pitches = vec!["포심 패스트볼".to_string()];
         let mut rng_a = ChaCha8Rng::seed_from_u64(42);
         let mut rng_b = ChaCha8Rng::seed_from_u64(42);
-        let a = simulate_at_bat_automatically(&mut rng_a, &pitches, &avg_pitcher(), &avg_batter(), false);
-        let b = simulate_at_bat_automatically(&mut rng_b, &pitches, &avg_pitcher(), &avg_batter(), false);
+        let a = simulate_at_bat_automatically(&mut rng_a, &pitches, &avg_pitcher(), &avg_batter(), [false; 3], 0, 50.0, false);
+        let b = simulate_at_bat_automatically(&mut rng_b, &pitches, &avg_pitcher(), &avg_batter(), [false; 3], 0, 50.0, false);
         assert_eq!(a, b);
     }
 

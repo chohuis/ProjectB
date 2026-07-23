@@ -9,10 +9,13 @@ use crate::sim::manager;
 /// npc.stats JSON 파싱은 repository.rs가 하고 여기는 순수 계산만. `id`·
 /// `fatigue`는 급성형 부상 판정(§13, 08_부상_시스템.md §3)이 "누구에게"
 /// "얼마나 위험하게" 일어났는지 알아야 해서 I5 5차분 이후 추가됨.
-/// `clutch`(클러치)·`composure`(침착함)는 Phase 1(10_구현_Phase_계획.md
-/// §6-N, 매치엔진 리얼리즘 강화)에서 추가 — 위기상황(`is_high_leverage_situation`)
-/// 에서만 판정식에 개입한다(§5 "상황 보정... 클러치"). `스피드`·`수비`는
-/// 각각 Phase 3(주루)·Phase 2(실책)에서 쓸 예정이라 아직 필드로 안 받는다.
+/// `clutch`(클러치)·`composure`(침착함)는 Phase 1에서 추가 — 위기상황
+/// (`is_high_leverage_situation`)에서만 판정식에 개입한다(§5 "상황 보정...
+/// 클러치"). `defense`(수비)는 Phase 2에서 추가 — 타자 개인이 아니라
+/// 타석에 선 팀 전체를 대표하는 "그 팀 지금 수비 라인업의 평균 수비력"
+/// 으로 쓰인다(`resolve_in_play_result`의 `team_defense` 인자, §3
+/// "수비 전력 = 수비 스탯 가중합" 단순화). `스피드`는 Phase 3(주루)에서
+/// 쓸 예정이라 아직 필드로 안 받는다.
 #[derive(Debug, Clone)]
 pub struct BatterStats {
     pub id: String,
@@ -22,6 +25,7 @@ pub struct BatterStats {
     pub fatigue: f64,
     pub clutch: f64,
     pub composure: f64,
+    pub defense: f64,
 }
 
 /// `velocity`(구속)·`game_management`(경기운영)·`clutch`·`composure`는
@@ -40,16 +44,46 @@ pub struct PitcherStats {
     pub composure: f64,
 }
 
+/// `DoublePlay`(병살타)·`SacFly`(희생플라이)·`ReachOnError`(실책 출루)는
+/// Phase 2(§6 "타석 결과 확장")에서 추가 — `resolve_in_play_result`가
+/// 주자 상황·아웃카운트·타구 유형(`BattedBallType`)·팀 수비력을 보고
+/// 자동 판정한다(투수·타자의 능동 선택 아님, §6 "시스템 처리").
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub enum PaOutcome {
     Strikeout,
     Walk,
     HitByPitch,
     Out,
+    DoublePlay,
+    SacFly,
+    ReachOnError,
     Single,
     Double,
     Triple,
     HomeRun,
+}
+
+/// 타구 유형(Phase 2) — 병살·희생플라이 자동 판정(§6)과 수비 시프트
+/// (Phase 5)의 입력. `pub(crate)` — Phase 5에서 `data::match_session`
+/// 쪽 수비 시프트 판정에도 재사용할 여지를 남겨둠.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum BattedBallType {
+    GroundBall,
+    FlyBall,
+    LineDrive,
+}
+
+/// 땅볼 45%·뜬공 35%·직선타 20%(실제 야구 근사치) — D그룹 placeholder,
+/// 타자 스탯에 따른 편차(예: 파워형일수록 뜬공↑)는 이번 스코프 밖.
+fn roll_batted_ball_type(rng: &mut impl Rng) -> BattedBallType {
+    let roll = rng.gen::<f64>();
+    if roll < 0.45 {
+        BattedBallType::GroundBall
+    } else if roll < 0.80 {
+        BattedBallType::FlyBall
+    } else {
+        BattedBallType::LineDrive
+    }
 }
 
 /// 급성형(우발) 부상 이벤트 — 08_부상_시스템.md §3 "경기 중 특정 순간의
@@ -95,8 +129,19 @@ pub fn is_high_leverage_situation(bases_loaded: bool, score_diff: i32, inning: u
 /// 판정식 — 정확한 계수는 D그룹(05_밸런스.md), Phase I8 하네스에서 확정.
 /// `high_leverage`(Phase 1) — `is_high_leverage_situation`이 true일 때만
 /// 클러치·침착함이 개입한다(§5 "상황 보정... 클러치"), 평상시엔 순수
-/// 능력치 싸움 그대로.
-pub fn simulate_plate_appearance(rng: &mut impl Rng, batter: &BatterStats, pitcher: &PitcherStats, high_leverage: bool) -> PaOutcome {
+/// 능력치 싸움 그대로. `bases`·`outs`·`team_defense`(Phase 2)는
+/// 인플레이로 이어질 때 `resolve_in_play_result`에 그대로 전달 — 병살·
+/// 희생플라이·실책 판정에 필요.
+#[allow(clippy::too_many_arguments)]
+pub fn simulate_plate_appearance(
+    rng: &mut impl Rng,
+    batter: &BatterStats,
+    pitcher: &PitcherStats,
+    bases: [bool; 3],
+    outs: u32,
+    team_defense: f64,
+    high_leverage: bool,
+) -> PaOutcome {
     let effective_control = fatigue_effective(pitcher.control, pitcher.fatigue);
     let effective_stuff = fatigue_effective(pitcher.stuff, pitcher.fatigue);
     let mut pitch_edge = (effective_control + effective_stuff) / 2.0 - (batter.contact + batter.eye) / 2.0;
@@ -125,21 +170,47 @@ pub fn simulate_plate_appearance(rng: &mut impl Rng, batter: &BatterStats, pitch
         return PaOutcome::HitByPitch;
     }
 
-    resolve_in_play_result(rng, batter, pitcher, high_leverage)
+    resolve_in_play_result(rng, batter, pitcher, bases, outs, team_defense, high_leverage)
 }
 
 /// 인플레이(공을 맞힘) 발생 이후의 결과 세분화(§6) — 아웃 여부 → 안타
 /// 종류. `simulate_plate_appearance`(PA레벨 배경 시뮬)와
 /// `sim::pitch::simulate_at_bat_automatically`(주인공 1구 단위 매치
 /// 세션, I6 2차분)가 이 판정을 공유해 "인플레이 이후"의 확률식이 두
-/// 엔진 사이에서 갈라지지 않게 한다.
-pub fn resolve_in_play_result(rng: &mut impl Rng, batter: &BatterStats, pitcher: &PitcherStats, high_leverage: bool) -> PaOutcome {
+/// 엔진 사이에서 갈라지지 않게 한다. `bases`·`outs`(Phase 2)는 병살·
+/// 희생플라이 자동 판정(§6)에, `team_defense`는 실책 확률(§6 "수비 전력
+/// 확률로 발생")에 쓰인다 — 타석에 선 팀(공격팀)이 아니라 지금 수비 중인
+/// 팀의 평균 수비력이어야 한다(호출부 책임).
+#[allow(clippy::too_many_arguments)]
+pub fn resolve_in_play_result(
+    rng: &mut impl Rng,
+    batter: &BatterStats,
+    pitcher: &PitcherStats,
+    bases: [bool; 3],
+    outs: u32,
+    team_defense: f64,
+    high_leverage: bool,
+) -> PaOutcome {
     let mut power_edge = batter.power - fatigue_effective(pitcher.stuff, pitcher.fatigue);
     if high_leverage {
         power_edge += (batter.clutch - pitcher.clutch) * 0.15;
     }
     let hit_prob = clamp01(0.30 + power_edge * 0.002);
     if rng.gen::<f64>() >= hit_prob {
+        // 아웃이 될 타구 — 실책이 먼저 개입해 아웃을 출루로 뒤집을 수
+        // 있다("실책이 없었으면 아웃이었을 타구"라는 실제 채점 관례와
+        // 일치). 수비력이 낮을수록(50 미만) 확률↑, D그룹 placeholder.
+        let error_prob = clamp01(0.03 + (50.0 - team_defense) * 0.001);
+        if rng.gen::<f64>() < error_prob {
+            return PaOutcome::ReachOnError;
+        }
+        let batted = roll_batted_ball_type(rng);
+        if batted == BattedBallType::GroundBall && bases[0] && outs < 2 {
+            return PaOutcome::DoublePlay;
+        }
+        if batted == BattedBallType::FlyBall && bases[2] && outs < 2 {
+            return PaOutcome::SacFly;
+        }
         return PaOutcome::Out;
     }
 
@@ -157,6 +228,17 @@ pub fn resolve_in_play_result(rng: &mut impl Rng, batter: &BatterStats, pitcher:
     } else {
         PaOutcome::Single
     }
+}
+
+/// 수비 중인 팀의 평균 수비력(Phase 2, §3 "수비 전력 = 수비 스탯 가중합"
+/// 단순화 — 라인업 전원 단순 평균, 포지션별 가중치는 이번 스코프 밖).
+/// `resolve_in_play_result`의 `team_defense` 인자로 쓰인다. `pub(crate)`
+/// — `data::match_session`이 수비 중인 팀의 라인업을 불러와 넘길 때 재사용.
+pub(crate) fn average_defense(lineup: &[BatterStats]) -> f64 {
+    if lineup.is_empty() {
+        return 50.0;
+    }
+    lineup.iter().map(|b| b.defense).sum::<f64>() / lineup.len() as f64
 }
 
 /// 주자를 hit_bases만큼 진루시키고 득점 수를 반환. 강제진루 규칙(§9 도루,
@@ -186,10 +268,13 @@ pub(crate) fn advance_runners(bases: &mut [bool; 3], hit_bases: u32) -> u32 {
     runs
 }
 
-/// 투수 개인 경기 기록(`season_stats` 적재용, 10_구현_Phase_계획.md §6-N) —
-/// 자책점(자책/비자책 구분)은 이 엔진에 에러 판정 자체가 없어
-/// `runs_allowed`와 동일값이 될 뿐이라 별도 필드를 만들지 않는다. 사구(HBP)
-/// 는 세분화하지 않고 무시(1% 확률의 미세 항목, D그룹).
+/// 투수 개인 경기 기록(`season_stats` 적재용, 10_구현_Phase_계획.md §6-N).
+/// `unearned_runs`(비자책점)·`errors`는 Phase 2에서 추가(§12 "자책점/
+/// 비자책점 구분... ERA 등 투수 기록의 정확성에 필수") — `ReachOnError`가
+/// 발생한 그 타석에서 곧바로 스코어링된 득점만 비자책으로 잡는다(그
+/// 주자가 나중에 다른 타자의 안타로 득점하는 경우까지 소급 추적하는
+/// 완전한 자책 귀속은 이번 스코프 밖, D그룹). 사구(HBP)는 세분화하지
+/// 않고 무시(1% 확률의 미세 항목, D그룹).
 #[derive(Debug, Default, Clone, PartialEq)]
 pub struct PitcherGameStats {
     pub outs_recorded: u32,
@@ -197,6 +282,8 @@ pub struct PitcherGameStats {
     pub strikeouts: u32,
     pub hits_allowed: u32,
     pub walks: u32,
+    pub unearned_runs: u32,
+    pub errors: u32,
 }
 
 /// 타자 개인 경기 기록(`season_stats` 적재용) — HBP는 투수 쪽과 동일하게
@@ -227,7 +314,9 @@ pub struct HalfInningStats {
 /// 절대 개입 없음 — §7)을 통째로 돌릴 때 재사용. `high_leverage_base`는
 /// 호출부(이닝·스코어를 아는 쪽)가 미리 계산해서 넘기는 "만루 제외" 위기
 /// 판정(Phase 1) — 이 함수 안에서 타석마다 실시간 만루 여부와 OR해
-/// 최종 `high_leverage`를 매 타석 다시 판단한다.
+/// 최종 `high_leverage`를 매 타석 다시 판단한다. `team_defense`(Phase 2)
+/// 는 호출부가 미리 계산한 "지금 수비 중인 팀"의 평균 수비력
+/// (`average_defense`) — 이 하프이닝 내내 고정.
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn simulate_half_inning(
     rng: &mut impl Rng,
@@ -236,6 +325,7 @@ pub(crate) fn simulate_half_inning(
     pitcher: &PitcherStats,
     initial_bases: [bool; 3],
     high_leverage_base: bool,
+    team_defense: f64,
     injuries: &mut Vec<InjuryEvent>,
     stats: &mut HalfInningStats,
 ) -> u32 {
@@ -249,13 +339,27 @@ pub(crate) fn simulate_half_inning(
         let batter = &lineup[*batter_idx % lineup.len()];
         *batter_idx += 1;
         let bases_loaded = bases.iter().all(|&b| b);
-        let outcome = simulate_plate_appearance(rng, batter, pitcher, high_leverage_base || bases_loaded);
+        let outcome = simulate_plate_appearance(rng, batter, pitcher, bases, outs, team_defense, high_leverage_base || bases_loaded);
         let pa_runs = match outcome {
             PaOutcome::Strikeout | PaOutcome::Out => {
                 outs += 1;
                 0
             }
-            PaOutcome::Walk | PaOutcome::HitByPitch | PaOutcome::Single => advance_runners(&mut bases, 1),
+            PaOutcome::DoublePlay => {
+                outs += 2;
+                bases[0] = false;
+                0
+            }
+            PaOutcome::SacFly => {
+                outs += 1;
+                if bases[2] {
+                    bases[2] = false;
+                    1
+                } else {
+                    0
+                }
+            }
+            PaOutcome::ReachOnError | PaOutcome::Walk | PaOutcome::HitByPitch | PaOutcome::Single => advance_runners(&mut bases, 1),
             PaOutcome::Double => advance_runners(&mut bases, 2),
             PaOutcome::Triple => advance_runners(&mut bases, 3),
             PaOutcome::HomeRun => advance_runners(&mut bases, 4),
@@ -268,11 +372,17 @@ pub(crate) fn simulate_half_inning(
                 stats.pitcher.strikeouts += 1;
             }
             PaOutcome::Out => stats.pitcher.outs_recorded += 1,
+            PaOutcome::DoublePlay => stats.pitcher.outs_recorded += 2,
+            PaOutcome::SacFly => stats.pitcher.outs_recorded += 1,
+            PaOutcome::ReachOnError => stats.pitcher.errors += 1,
             PaOutcome::Walk => stats.pitcher.walks += 1,
             PaOutcome::HitByPitch => {}
             PaOutcome::Single | PaOutcome::Double | PaOutcome::Triple | PaOutcome::HomeRun => stats.pitcher.hits_allowed += 1,
         }
         stats.pitcher.runs_allowed += pa_runs;
+        if outcome == PaOutcome::ReachOnError {
+            stats.pitcher.unearned_runs += pa_runs;
+        }
 
         let batter_line = stats.batters.entry(batter.id.clone()).or_default();
         batter_line.plate_appearances += 1;
@@ -281,8 +391,8 @@ pub(crate) fn simulate_half_inning(
                 batter_line.at_bats += 1;
                 batter_line.strikeouts += 1;
             }
-            PaOutcome::Out => batter_line.at_bats += 1,
-            PaOutcome::Walk | PaOutcome::HitByPitch => {}
+            PaOutcome::Out | PaOutcome::DoublePlay | PaOutcome::ReachOnError => batter_line.at_bats += 1,
+            PaOutcome::SacFly | PaOutcome::Walk | PaOutcome::HitByPitch => {}
             PaOutcome::Single => {
                 batter_line.at_bats += 1;
                 batter_line.hits += 1;
@@ -303,7 +413,9 @@ pub(crate) fn simulate_half_inning(
                 batter_line.home_runs += 1;
             }
         }
-        batter_line.rbi += pa_runs;
+        if outcome != PaOutcome::ReachOnError {
+            batter_line.rbi += pa_runs;
+        }
 
         if let Some((part, severity)) = injury::check_acute_injury(rng, batter.fatigue) {
             injuries.push(InjuryEvent { player_id: batter.id.clone(), part, severity });
@@ -414,6 +526,10 @@ pub fn simulate_game(
     let mut bottom_half_stats = HalfInningStats::default();
     let mut home_reliever_stats_acc = HalfInningStats::default();
     let mut away_reliever_stats_acc = HalfInningStats::default();
+    // 수비 중인 팀의 평균 수비력(Phase 2) — 라인업이 게임 내내 안 바뀌므로
+    // 루프 밖에서 한 번만 계산.
+    let home_defense = average_defense(home_lineup);
+    let away_defense = average_defense(away_lineup);
 
     loop {
         let bases = if amateur && inning > 9 { TIEBREAK_BASES } else { EMPTY_BASES };
@@ -429,6 +545,7 @@ pub fn simulate_game(
             home_pitcher,
             bases,
             home_leverage_base,
+            home_defense,
             &mut injuries,
             if home_pulled { &mut home_reliever_stats_acc } else { &mut top_half_stats },
         );
@@ -442,6 +559,7 @@ pub fn simulate_game(
                 away_pitcher,
                 bases,
                 away_leverage_base,
+                away_defense,
                 &mut injuries,
                 if away_pulled { &mut away_reliever_stats_acc } else { &mut bottom_half_stats },
             );
@@ -512,7 +630,7 @@ mod tests {
     use rand_chacha::ChaCha8Rng;
 
     fn avg_batter() -> BatterStats {
-        BatterStats { id: "b".to_string(), contact: 50.0, eye: 50.0, power: 50.0, fatigue: 0.0, clutch: 50.0, composure: 50.0 }
+        BatterStats { id: "b".to_string(), contact: 50.0, eye: 50.0, power: 50.0, fatigue: 0.0, clutch: 50.0, composure: 50.0, defense: 50.0 }
     }
     fn avg_pitcher() -> PitcherStats {
         PitcherStats { id: "p".to_string(), control: 50.0, stuff: 50.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0 }
@@ -609,14 +727,21 @@ mod tests {
 
     #[test]
     fn batter_rbi_sums_to_the_teams_runs_scored() {
+        // Phase 2부터는 실책으로 들어온 득점(비자책, ReachOnError)엔 타자에게
+        // RBI를 안 주므로(실제 야구 규칙), "RBI 합 == 득점"이 아니라
+        // "RBI 합 + 상대 투수(+구원)의 비자책점 합 == 득점"이 불변식이 된다.
         let lineup: Vec<BatterStats> = (0..8).map(|i| BatterStats { id: format!("b{i}"), ..avg_batter() }).collect();
         for seed in 0..20u64 {
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
             let r = simulate_game(&mut rng, "league:pro", &lineup, &no_pull_plan(&avg_pitcher()), &lineup, &no_pull_plan(&avg_pitcher()));
             let home_rbi: u32 = r.home_batter_stats.values().map(|b| b.rbi).sum();
             let away_rbi: u32 = r.away_batter_stats.values().map(|b| b.rbi).sum();
-            assert_eq!(home_rbi, r.home_runs, "seed={seed}");
-            assert_eq!(away_rbi, r.away_runs, "seed={seed}");
+            let away_pitching_unearned =
+                r.away_pitcher_stats.unearned_runs + r.away_reliever_stats.as_ref().map(|s| s.unearned_runs).unwrap_or(0);
+            let home_pitching_unearned =
+                r.home_pitcher_stats.unearned_runs + r.home_reliever_stats.as_ref().map(|s| s.unearned_runs).unwrap_or(0);
+            assert_eq!(home_rbi + away_pitching_unearned, r.home_runs, "seed={seed}");
+            assert_eq!(away_rbi + home_pitching_unearned, r.away_runs, "seed={seed}");
         }
     }
 
@@ -642,9 +767,9 @@ mod tests {
     #[test]
     fn stronger_batting_lineup_scores_more_on_average() {
         let weak_lineup: Vec<BatterStats> =
-            (0..8).map(|i| BatterStats { id: format!("w{i}"), contact: 25.0, eye: 25.0, power: 25.0, fatigue: 0.0, clutch: 50.0, composure: 50.0 }).collect();
+            (0..8).map(|i| BatterStats { id: format!("w{i}"), contact: 25.0, eye: 25.0, power: 25.0, fatigue: 0.0, clutch: 50.0, composure: 50.0, defense: 50.0 }).collect();
         let strong_lineup: Vec<BatterStats> =
-            (0..8).map(|i| BatterStats { id: format!("s{i}"), contact: 75.0, eye: 75.0, power: 75.0, fatigue: 0.0, clutch: 50.0, composure: 50.0 }).collect();
+            (0..8).map(|i| BatterStats { id: format!("s{i}"), contact: 75.0, eye: 75.0, power: 75.0, fatigue: 0.0, clutch: 50.0, composure: 50.0, defense: 50.0 }).collect();
 
         let mut weak_total = 0u32;
         let mut strong_total = 0u32;
@@ -663,9 +788,9 @@ mod tests {
     fn amateur_cold_game_stops_before_nine_innings_on_blowout() {
         // extreme mismatch should trigger the 5-inning/15-run cold-game rule at least sometimes
         let elite: Vec<BatterStats> =
-            (0..8).map(|i| BatterStats { id: format!("e{i}"), contact: 80.0, eye: 80.0, power: 80.0, fatigue: 0.0, clutch: 50.0, composure: 50.0 }).collect();
+            (0..8).map(|i| BatterStats { id: format!("e{i}"), contact: 80.0, eye: 80.0, power: 80.0, fatigue: 0.0, clutch: 50.0, composure: 50.0, defense: 50.0 }).collect();
         let hapless: Vec<BatterStats> =
-            (0..8).map(|i| BatterStats { id: format!("h{i}"), contact: 20.0, eye: 20.0, power: 20.0, fatigue: 0.0, clutch: 50.0, composure: 50.0 }).collect();
+            (0..8).map(|i| BatterStats { id: format!("h{i}"), contact: 20.0, eye: 20.0, power: 20.0, fatigue: 0.0, clutch: 50.0, composure: 50.0, defense: 50.0 }).collect();
         let elite_pitcher = PitcherStats { id: "ep".to_string(), control: 80.0, stuff: 80.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0 };
         let hapless_pitcher = PitcherStats { id: "hp".to_string(), control: 20.0, stuff: 20.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0 };
 
@@ -695,7 +820,7 @@ mod tests {
     #[test]
     fn high_fatigue_players_accumulate_injuries_over_many_games() {
         let lineup: Vec<BatterStats> =
-            (0..8).map(|i| BatterStats { id: format!("fb{i}"), contact: 50.0, eye: 50.0, power: 50.0, fatigue: 200.0, clutch: 50.0, composure: 50.0 }).collect();
+            (0..8).map(|i| BatterStats { id: format!("fb{i}"), contact: 50.0, eye: 50.0, power: 50.0, fatigue: 200.0, clutch: 50.0, composure: 50.0, defense: 50.0 }).collect();
         let pitcher = PitcherStats { id: "fp".to_string(), control: 50.0, stuff: 50.0, fatigue: 200.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0 };
 
         let mut total_injuries = 0usize;
@@ -753,7 +878,7 @@ mod tests {
             let mut k = 0;
             for seed in 0..2000u64 {
                 let mut rng = ChaCha8Rng::seed_from_u64(seed);
-                if simulate_plate_appearance(&mut rng, &batter, pitcher, false) == PaOutcome::Strikeout {
+                if simulate_plate_appearance(&mut rng, &batter, pitcher, [false; 3], 0, 50.0, false) == PaOutcome::Strikeout {
                     k += 1;
                 }
             }
@@ -774,7 +899,7 @@ mod tests {
             let mut bb = 0;
             for seed in 0..2000u64 {
                 let mut rng = ChaCha8Rng::seed_from_u64(seed);
-                if simulate_plate_appearance(&mut rng, &batter, pitcher, false) == PaOutcome::Walk {
+                if simulate_plate_appearance(&mut rng, &batter, pitcher, [false; 3], 0, 50.0, false) == PaOutcome::Walk {
                     bb += 1;
                 }
             }
@@ -795,9 +920,88 @@ mod tests {
         for seed in 0..30u64 {
             let mut rng_a = ChaCha8Rng::seed_from_u64(seed);
             let mut rng_b = ChaCha8Rng::seed_from_u64(seed);
-            let a = simulate_plate_appearance(&mut rng_a, &cold_batter, &clutch_pitcher, false);
-            let b = simulate_plate_appearance(&mut rng_b, &cold_batter, &avg_pitcher(), false);
+            let a = simulate_plate_appearance(&mut rng_a, &cold_batter, &clutch_pitcher, [false; 3], 0, 50.0, false);
+            let b = simulate_plate_appearance(&mut rng_b, &cold_batter, &avg_pitcher(), [false; 3], 0, 50.0, false);
             assert_eq!(a, b, "seed={seed}: high_leverage=false면 클러치가 결과에 개입하면 안 됨");
         }
+    }
+
+    #[test]
+    fn double_play_never_happens_without_a_runner_on_first() {
+        let batter = avg_batter();
+        let pitcher = avg_pitcher();
+        for seed in 0..500u64 {
+            let mut rng = ChaCha8Rng::seed_from_u64(seed);
+            let outcome = resolve_in_play_result(&mut rng, &batter, &pitcher, [false, true, true], 0, 50.0, false);
+            assert_ne!(outcome, PaOutcome::DoublePlay, "seed={seed}");
+        }
+    }
+
+    #[test]
+    fn double_play_never_happens_with_two_outs_already() {
+        let batter = avg_batter();
+        let pitcher = avg_pitcher();
+        for seed in 0..500u64 {
+            let mut rng = ChaCha8Rng::seed_from_u64(seed);
+            let outcome = resolve_in_play_result(&mut rng, &batter, &pitcher, [true, false, false], 2, 50.0, false);
+            assert_ne!(outcome, PaOutcome::DoublePlay, "seed={seed}");
+        }
+    }
+
+    #[test]
+    fn double_play_can_happen_with_a_runner_on_first_and_fewer_than_two_outs() {
+        let batter = avg_batter();
+        let pitcher = avg_pitcher();
+        let found = (0..2000u64).any(|seed| {
+            let mut rng = ChaCha8Rng::seed_from_u64(seed);
+            resolve_in_play_result(&mut rng, &batter, &pitcher, [true, false, false], 0, 50.0, false) == PaOutcome::DoublePlay
+        });
+        assert!(found, "expected at least one seed to produce a double play with a runner on first and 0 outs");
+    }
+
+    #[test]
+    fn sac_fly_never_happens_without_a_runner_on_third() {
+        let batter = avg_batter();
+        let pitcher = avg_pitcher();
+        for seed in 0..500u64 {
+            let mut rng = ChaCha8Rng::seed_from_u64(seed);
+            let outcome = resolve_in_play_result(&mut rng, &batter, &pitcher, [true, true, false], 0, 50.0, false);
+            assert_ne!(outcome, PaOutcome::SacFly, "seed={seed}");
+        }
+    }
+
+    #[test]
+    fn sac_fly_can_happen_with_a_runner_on_third_and_fewer_than_two_outs() {
+        let batter = avg_batter();
+        let pitcher = avg_pitcher();
+        let found = (0..2000u64).any(|seed| {
+            let mut rng = ChaCha8Rng::seed_from_u64(seed);
+            resolve_in_play_result(&mut rng, &batter, &pitcher, [false, false, true], 1, 50.0, false) == PaOutcome::SacFly
+        });
+        assert!(found, "expected at least one seed to produce a sac fly with a runner on third and 1 out");
+    }
+
+    #[test]
+    fn lower_team_defense_produces_more_reach_on_error_outcomes_on_average() {
+        let batter = avg_batter();
+        let pitcher = avg_pitcher();
+        let count_errors = |team_defense: f64| -> u32 {
+            let mut errors = 0;
+            for seed in 0..3000u64 {
+                let mut rng = ChaCha8Rng::seed_from_u64(seed);
+                if resolve_in_play_result(&mut rng, &batter, &pitcher, [false; 3], 0, team_defense, false) == PaOutcome::ReachOnError {
+                    errors += 1;
+                }
+            }
+            errors
+        };
+        let bad_defense_errors = count_errors(20.0);
+        let good_defense_errors = count_errors(80.0);
+        assert!(bad_defense_errors > good_defense_errors, "bad={bad_defense_errors} good={good_defense_errors}");
+    }
+
+    #[test]
+    fn average_defense_falls_back_to_neutral_for_an_empty_lineup() {
+        assert_eq!(average_defense(&[]), 50.0);
     }
 }
