@@ -248,15 +248,20 @@ pub fn preview_hs_roster(content_conn: &Connection, world_seed: i64, team_id: &s
 /// 단계 결과에 대진이 달려있어 여기 못 들어감 — I5 후속 스코프).
 const SCHEDULED_LEAGUE_IDS: [&str; 4] = ["league:hs", "league:univ", "league:pro", "league:pro_farm"];
 
-/// 리그별 라운드로빈 바퀴수 — 프로/2군은 실제 "N차전" 총 경기수와 일치하게
-/// 역산(9팀 상대×N차전=팀당 총경기), 대학·고교는 조/권역 내 1바퀴만(정확한
-/// A/B 세부 조편성이 미확정이라 권역 전체를 한 그룹으로 뭉쳐 단순화한
-/// placeholder — 실제 "18~22경기" 같은 목표 경기수와는 안 맞을 수 있음).
-fn regular_season_laps(league_id: &str) -> u32 {
+/// 리그별 정규시즌 목표 경기수(팀당) — 프로/2군은 실제 "N차전" 총 경기수와
+/// 정확히 일치(9팀 상대×N차전=팀당 총경기, `(n-1)`의 배수라 잘림 없이
+/// 딱 맞음). 고교·대학은 권역/조 인원이 6~20으로 들쭉날쭉해 예전엔
+/// 1바퀴만 돌리는 placeholder였는데(5~19경기로 편차가 컸음, 대화
+/// 2026-07-26 계산에서 발견), 이제 `sim::schedule::generate_round_robin_rounds_targeted`
+/// 로 그룹 크기와 무관하게 20경기로 통일한다 — 대학은 `03_대학.md`의
+/// "정규리그는 승부처가 아니니 경기량 지양" 방침보다 경기수 확대를
+/// 우선한다는 사용자 결정(같은 대화)에 따름.
+fn regular_season_target_games(league_id: &str) -> u32 {
     match league_id {
-        "league:pro" => 16,
-        "league:pro_farm" => 11,
-        _ => 1,
+        "league:pro" => 144,
+        "league:pro_farm" => 99,
+        "league:hs" | "league:univ" => 20,
+        _ => 20,
     }
 }
 
@@ -278,11 +283,11 @@ pub fn generate_schedule(
     start_day: i64,
 ) -> anyhow::Result<()> {
     let groups = content::load_team_groups_for_schedule(content_conn, league_id)?;
-    let laps = regular_season_laps(league_id);
+    let target_games = regular_season_target_games(league_id);
     let league_slug = league_id.strip_prefix("league:").unwrap_or(league_id);
     let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("schedule:{league_id}:{season}")));
 
-    let entries = schedule::generate_regular_season(league_slug, &groups, laps, start_day, &mut rng);
+    let entries = schedule::generate_regular_season_targeted(league_slug, &groups, target_games, start_day, &mut rng);
 
     for e in &entries {
         slot_conn.execute(
@@ -7210,8 +7215,36 @@ mod tests {
         let slot_conn = slot::open_in_memory().unwrap();
         generate_schedule(&slot_conn, &content_conn, 42, "league:univ", 0, 1).unwrap();
 
+        // target_games=20(대화 2026-07-26), 6팀 그룹은 라운드당 3경기 ×
+        // 20라운드 = 60경기, 팀당 정확히 20경기(짝수 그룹이라 bye 없음).
         let count: i64 = slot_conn.query_row("SELECT count(*) FROM schedule", [], |r| r.get(0)).unwrap();
-        assert_eq!(count, 6 * 5 / 2); // single round robin, 6 teams -> 15 unique pairs
+        assert_eq!(count, 6 * 20 / 2);
+
+        let games_for_u0: i64 =
+            slot_conn.query_row("SELECT count(*) FROM schedule WHERE home = 'team:u0' OR away = 'team:u0'", [], |r| r.get(0)).unwrap();
+        assert_eq!(games_for_u0, 20, "팀당 정확히 목표 경기수만큼 나와야 함");
+    }
+
+    /// 실제 content.db(고교 8권역 6~20팀, 대학 5조 10팀씩)로 정규시즌을
+    /// 생성해도 권역/조 크기와 무관하게 전 팀이 정확히 20경기인지 —
+    /// 대화 2026-07-26에서 계산한 "고교 5~19경기 들쭉날쭉" 문제가
+    /// 실제로 해소됐는지 확인.
+    #[test]
+    fn generate_schedule_gives_every_real_hs_and_univ_team_exactly_twenty_games() {
+        let content_conn = content::open("content.db").unwrap();
+        let slot_conn = slot::open_in_memory().unwrap();
+
+        for league_id in ["league:hs", "league:univ"] {
+            generate_schedule(&slot_conn, &content_conn, 123, league_id, 0, 1).unwrap();
+            let team_ids = content::load_team_ids_for_league(&content_conn, league_id).unwrap();
+            assert!(!team_ids.is_empty(), "{league_id} should have teams in content.db");
+            for team_id in &team_ids {
+                let games: i64 = slot_conn
+                    .query_row("SELECT count(*) FROM schedule WHERE home = ?1 OR away = ?1", [team_id], |r| r.get(0))
+                    .unwrap();
+                assert_eq!(games, 20, "{league_id} team {team_id} should have exactly 20 games, got {games}");
+            }
+        }
     }
 
     #[test]

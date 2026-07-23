@@ -1539,7 +1539,17 @@
 
 **테스트**: `cargo test --lib` 427개 전부 통과(신규 3개 — 5강 게이팅 회귀 1 + 프로2군 PO 2). `cargo clippy` 클린. frb 재생성 불필요(새 frb 함수 없음). `flutter test` 27개 전부 통과.
 
-### 6-93. 문서 갱신 규칙
+### 6-93. 아마추어 경기수 확대 — Part B(고교·대학 정규시즌 목표 경기수 20으로 통일) (2026-07-26, 완료)
+
+**Context**: §6-92 계산에서 고교 정규시즌이 권역 크기(6~20팀)에 따라 5~19경기로 들쭉날쭉하고, 대학은 9경기/팀 고정이라 선발투수 개인 등판수가 너무 적다는 게 확인됐다(고교 SP 연 3.6경기, 대학 SP 연 2.5경기). 사용자가 대학도 고교와 같은 방식(목표 경기수)으로 경기수를 늘리기로 확정 — `03_대학.md`의 "정규리그는 승부처 아니니 경기량 지양" 명시적 방침보다 우선.
+
+**구현**:
+- `sim/schedule.rs`: `generate_round_robin_rounds_targeted(team_ids, target_games, rng)` 신규 — `laps = ceil(target_games/(n-1))`만큼 돌린 뒤 정확히 `target_games`라운드로 자름(그룹이 전부 짝수 팀수라 bye 없이 팀마다 정확히 목표치). 기존 `generate_regular_season`(laps 방식)은 **그대로 유지** — 대회 예선 라운드로빈(`begin_group_stage`, 은하기·여명기 등)이 균일한 그룹 크기에 "정확히 N바퀴" 의미로 쓰고 있어 건드리면 깨짐(처음엔 `generate_regular_season` 자체의 시그니처를 바꿨다가 예선 게임수가 24→8로 줄어드는 회귀를 발견하고 되돌림 — 대신 `generate_regular_season_targeted`를 형제 함수로 신설).
+- `repository.rs`: `regular_season_laps` → `regular_season_target_games`로 개명(반환값 전부 "목표 경기수" 단위로 통일) — 프로 144·프로2군 99(기존과 동일, `(n-1)`의 배수라 결과 불변)·**고교 20**(기존 5~19 통일)·**대학 20**(기존 9→확대). `generate_schedule`이 `generate_regular_season_targeted` 호출로 교체.
+
+**테스트**: `cargo test --lib` 430개 전부 통과(신규 4개 — `generate_round_robin_rounds_targeted` 유닛테스트 2 + 실제 content.db로 고교 102팀·대학 50팀 전원이 정확히 20경기인지 검증하는 통합테스트 1 + 6팀 대학 그룹 게임수 재검증 1). `cargo clippy` 클린. frb 재생성 불필요. `flutter test` 27개 전부 통과.
+
+### 6-94. 문서 갱신 규칙
 
 **이 문서는 살아있는 문서다.** Phase를 하나 끝낼 때마다:
 1. §2 표의 해당 행 상태를 `⬜ 미착수` → `🔶 진행중` → `✅ 완료`로 갱신.

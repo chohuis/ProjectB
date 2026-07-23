@@ -59,17 +59,56 @@ pub fn generate_round_robin_rounds(team_ids: &[String], laps: u32, rng: &mut imp
     all_rounds
 }
 
+/// `laps`바퀴로는 정확히 안 나눠떨어지는 목표 경기수(예: 고교 20경기)를
+/// 맞추기 위해 필요한 만큼 바퀴를 돌린 뒤 정확히 `target_games`라운드로
+/// 자른다. 그룹 크기가 짝수(bye 없음)면 잘라도 모든 팀이 정확히
+/// `target_games`경기를 갖는다 — 홀수 그룹이면 라운드마다 누가 bye인지가
+/// 순환하므로 마지막에 잘리는 라운드에 따라 팀별로 ±1경기 오차가 생길 수
+/// 있음(지금 실제 리그 그룹은 전부 짝수라 해당 없음, 유닛테스트로 확인).
+pub fn generate_round_robin_rounds_targeted(team_ids: &[String], target_games: u32, rng: &mut impl Rng) -> Vec<Vec<(String, String)>> {
+    let n = team_ids.len();
+    if n < 2 || target_games == 0 {
+        return Vec::new();
+    }
+    let games_per_lap = (n - 1) as u32;
+    let laps = target_games.div_ceil(games_per_lap).max(1);
+    let mut rounds = generate_round_robin_rounds(team_ids, laps, rng);
+    rounds.truncate(target_games as usize);
+    rounds
+}
+
 /// Generates one league's regular season across however many independent
 /// groups it has (프로/프로2군 = 1 group, 대학 = 5 stadium-derived 조,
 /// 고교 = 8 region-derived 권역 — 07_구장_파크팩터.md의 이미 확정된 구장
 /// 배정을 그대로 그룹 경계로 재사용해 조편성 미확정 문제를 피함).
 /// 모든 그룹이 같은 start_day부터 나란히 진행(그룹마다 라운드 수가 달라도
 /// 각자 도는 것 — 요일 규칙은 문서에 근거가 없어 매일 1라운드씩 촘촘히
-/// 배정하는 placeholder).
-pub fn generate_regular_season(
+/// 배정하는 placeholder). `laps`는 모든 그룹에 그대로 적용 — 대회 예선
+/// 라운드로빈(`begin_group_stage`)처럼 그룹 크기가 균일한 호출부용. 그룹
+/// 크기가 리그 내에서 들쭉날쭉한 정규시즌(고교 8권역 등)엔 대신
+/// `generate_regular_season_targeted`를 쓴다.
+pub fn generate_regular_season(league_slug: &str, groups: &[Vec<String>], laps: u32, start_day: i64, rng: &mut impl Rng) -> Vec<ScheduleEntry> {
+    let mut entries = Vec::new();
+    let mut seq: u64 = 0;
+    for group in groups {
+        if group.len() < 2 {
+            continue;
+        }
+        let rounds = generate_round_robin_rounds(group, laps, rng);
+        push_entries(&mut entries, &mut seq, league_slug, start_day, rounds);
+    }
+    entries
+}
+
+/// `generate_regular_season`과 동일하지만 그룹마다 크기가 달라도(고교
+/// 6~20팀, 대학 10팀) **팀당 정확히 `target_games`경기**로 통일한다 —
+/// `generate_round_robin_rounds_targeted` 참고. 정규시즌 스케줄 생성
+/// (`repository.rs::generate_schedule`) 전용, 대회 예선 라운드로빈은 그룹
+/// 크기가 균일해 원래 `laps` 방식(`generate_regular_season`)을 그대로 쓴다.
+pub fn generate_regular_season_targeted(
     league_slug: &str,
     groups: &[Vec<String>],
-    laps: u32,
+    target_games: u32,
     start_day: i64,
     rng: &mut impl Rng,
 ) -> Vec<ScheduleEntry> {
@@ -79,21 +118,20 @@ pub fn generate_regular_season(
         if group.len() < 2 {
             continue;
         }
-        let rounds = generate_round_robin_rounds(group, laps, rng);
-        for (i, round) in rounds.into_iter().enumerate() {
-            let day = start_day + i as i64;
-            for (home, away) in round {
-                entries.push(ScheduleEntry {
-                    game_id: format!("game:{league_slug}_{seq}"),
-                    day,
-                    home,
-                    away,
-                });
-                seq += 1;
-            }
-        }
+        let rounds = generate_round_robin_rounds_targeted(group, target_games, rng);
+        push_entries(&mut entries, &mut seq, league_slug, start_day, rounds);
     }
     entries
+}
+
+fn push_entries(entries: &mut Vec<ScheduleEntry>, seq: &mut u64, league_slug: &str, start_day: i64, rounds: Vec<Vec<(String, String)>>) {
+    for (i, round) in rounds.into_iter().enumerate() {
+        let day = start_day + i as i64;
+        for (home, away) in round {
+            entries.push(ScheduleEntry { game_id: format!("game:{league_slug}_{seq}"), day, home, away });
+            *seq += 1;
+        }
+    }
 }
 
 #[cfg(test)]
@@ -147,6 +185,35 @@ mod tests {
         let lap2_reversed: std::collections::HashSet<(String, String)> =
             lap2.iter().map(|(h, a)| (a.clone(), h.clone())).collect();
         assert_eq!(lap1, lap2_reversed);
+    }
+
+    #[test]
+    fn targeted_rounds_give_every_team_exactly_the_target_game_count_for_even_groups() {
+        // 짝수 그룹(bye 없음)이면 목표 경기수가 (n-1)의 배수든 아니든 팀마다
+        // 정확히 target_games경기가 나와야 함(고교 8권역·대학 5조가 전부
+        // 짝수라 실제로 이 경로만 탄다).
+        for (n, target) in [(6usize, 20u32), (12, 20), (20, 20), (10, 144)] {
+            let mut rng = ChaCha8Rng::seed_from_u64(42);
+            let rounds = generate_round_robin_rounds_targeted(&teams(n), target, &mut rng);
+            let mut games_per_team: std::collections::HashMap<String, u32> = std::collections::HashMap::new();
+            for round in &rounds {
+                for (h, a) in round {
+                    *games_per_team.entry(h.clone()).or_insert(0) += 1;
+                    *games_per_team.entry(a.clone()).or_insert(0) += 1;
+                }
+            }
+            assert_eq!(games_per_team.len(), n, "n={n} target={target}");
+            for count in games_per_team.values() {
+                assert_eq!(*count, target, "n={n} target={target}");
+            }
+        }
+    }
+
+    #[test]
+    fn targeted_rounds_returns_nothing_for_a_single_team_or_zero_target() {
+        let mut rng = ChaCha8Rng::seed_from_u64(1);
+        assert!(generate_round_robin_rounds_targeted(&teams(1), 20, &mut rng).is_empty());
+        assert!(generate_round_robin_rounds_targeted(&teams(6), 0, &mut rng).is_empty());
     }
 
     #[test]
