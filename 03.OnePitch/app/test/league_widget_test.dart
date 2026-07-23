@@ -44,7 +44,7 @@ void main() {
 
     expect(find.text('로스터'), findsOneWidget);
     expect(find.text('일정'), findsOneWidget);
-    expect(find.text('순위'), findsOneWidget);
+    expect(find.text('진행중인 대회'), findsOneWidget);
     expect(find.text('라이벌'), findsOneWidget);
   });
 }

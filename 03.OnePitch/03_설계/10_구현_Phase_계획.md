@@ -1493,7 +1493,25 @@
 
 **테스트**: `cargo build --lib`/`cargo build --release` 클린. `cargo test --lib` 396개 전부 통과(신규 6개: 습득 조건 유닛테스트 5개+`set_protagonist_training` 리그레션 1개, `learnable_pitches` API 테스트 3개 포함하면 총 9개 신규). `cargo clippy --lib --tests --bins` 기존 무관 warning 1개 외 없음. frb 재생성(`flutter_rust_bridge_codegen generate`, 새 enum 없어 §6-22 non-blocking) 완료. `flutter analyze` 클린, `flutter test` 27개 전부 통과(단 `engine/target/release/engine.dll` 갱신 후에야).
 
-### 6-90. 문서 갱신 규칙
+### 6-90. 리그 탭 "진행중인 대회" — 대회 10종 하루 단위 라운드제 전환 + 조회 API + UI (2026-07-26, 완료) — Part A
+
+**Context**: 사용자 요청 3건을 하나로 묶어 진행 — (1) 리그 탭 "일정" 탭 분리는 조사 결과 이미 완료 상태(로스터/일정/순위/라이벌 4탭이 이미 분리돼 있었음, 작업 없음). (2) "순위" 세션을 "진행중인 대회" 세션으로 — 리그 카드(항상 존재) + 대회 참가 카드(참가 중일 때만, 우승/탈락 확정돼도 그 시즌 동안 카드 유지) 나열, 카드 탭하면 리그는 순위·대회는 브래킷. (3) 학업 시스템(Part B, 별도 절). 사용자가 "대회도 주인공이 직접 플레이 가능하게"를 명시적으로 선택해 스코프가 커짐.
+
+**핵심 발견**: 대회 시뮬레이션(`run_pro_postseason` 등 10종)이 전부 "호출 한 번에 즉시 전체 계산"이었고(`simulate_series`도 "캘린더 없이 동기 시뮬"), `run_pro_postseason` **하나만** `season_rollover`에 실제로 배선돼 있었음 — 나머지 9개(대학 3·고교 5·독립리그)는 함수+테스트만 있고 실제 플레이 중엔 한 번도 안 불렸다.
+
+**구현**:
+- `engine/src/data/slot.rs`: migration v11 — `schedule`에 `tournament_id`/`round` 컬럼(둘 다 nullable, 기존 로직 무변경), `tournaments` 테이블(대회 하나당 한 행 — `format_json`에 스테이지 파이프라인, `stage_index`·`round`·`bracket_state`로 진행 상태).
+- `engine/src/sim/tournament.rs`(신규): 브래킷 시드 배치(`standard_seed_order`/`initial_bracket_state`)·라운드 전진(`next_bracket_state`)·게이지 사다리 매치업(`gauntlet_matchup`) — DB 없이 순수 계산, 유닛테스트 8개.
+- `engine/src/data/repository.rs`: 10개 `run_*` 함수를 "초기 시드 계산 후 1스테이지만 스케줄"로 축소, 새 `advance_tournaments()`가 매일(`advance()`의 하루 루프, `process_day` 직후) 진행 중인 대회를 스테이지 종류(라운드로빈 예선/넉아웃/게이지)별로 갈라 라운드 완료를 확인하고 다음 라운드를 스케줄. `schedule.tournament_id`/`round`만 채우므로 `find_protagonist_game_today`/`process_day`는 변경 없이 그대로 작동 — 주인공 팀이 대회에 진출하면 자기 경기를 직접 뛴다. `season_rollover`가 이제 10개 전부 호출.
+  - 라운드 진행 중 발견한 버그 2개: (1) 동점 게임이 승수를 못 채워 미리 깔아둔 `best_of`개를 다 써도 결판 안 나는 경우 게임을 이어붙이지 않던 문제(`resolve_matchup` 수정), (2) 예선 라운드로빈 뒤 게이지 스테이지가 시작될 때 대회 전역 라운드 번호를 게이지 내부 라운드 번호로 착각해 영원히 멈추던 문제(`gauntlet_start_round` 오프셋 추가).
+- `engine/src/api/game.rs`: `list_active_competitions(team_id)`(리그 카드 + 참가 대회 카드), `get_tournament_bracket(tournament_id)`(라운드별 매치업). `standings_rows(&GameState, ...)` 분리 — `get_standings`(자체 락) 원본을 `with_state` 안에서 그대로 불렀다가 `STATE` 뮤텍스 재진입 데드락 겪고 수정.
+- Flutter: `league_screen.dart` "순위" 탭 → "진행중인 대회"(카드 목록, 리그 카드는 기존 `_StandingsTab`을 다이얼로그로), `tournament_bracket_screen.dart`(신규 — 라운드별 대진표, 우승 배너).
+
+**테스트**: `cargo build --lib`/`--release` 클린. `cargo test --lib` 403개 전부 통과(신규 pure-logic 8 + repository 통합 재작성 다수 + API 2). `cargo clippy` 클린. frb 재생성. `flutter analyze` 클린, `flutter test` 27개 전부 통과(기존 `league_widget_test.dart`의 "순위" 텍스트 기대값을 "진행중인 대회"로 갱신). `flutter build windows --debug` 성공.
+
+**이월**: 매치업별 실시간 탈락 판정(지금은 대회 전체가 `status='done'`이 되기 전까지 개별 탈락 팀도 "진행 중"으로 보임) — 1차 축소안.
+
+### 6-91. 문서 갱신 규칙
 
 **이 문서는 살아있는 문서다.** Phase를 하나 끝낼 때마다:
 1. §2 표의 해당 행 상태를 `⬜ 미착수` → `🔶 진행중` → `✅ 완료`로 갱신.

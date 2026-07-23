@@ -9,6 +9,7 @@ import 'package:app/shared/loading_indicator.dart';
 import 'package:app/shared/design/colors.dart';
 import 'package:app/shared/design/widgets.dart';
 import 'package:app/shared/design/player_badges.dart';
+import 'tournament_bracket_screen.dart';
 
 const _leagueLabels = {
   'league:hs': '고교',
@@ -83,7 +84,7 @@ class _LeagueScreenState extends ConsumerState<LeagueScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('리그'),
-          bottom: const TabBar(tabs: [Tab(text: '로스터'), Tab(text: '일정'), Tab(text: '순위'), Tab(text: '라이벌')]),
+          bottom: const TabBar(tabs: [Tab(text: '로스터'), Tab(text: '일정'), Tab(text: '진행중인 대회'), Tab(text: '라이벌')]),
         ),
         body: Column(
           children: [
@@ -113,7 +114,7 @@ class _LeagueScreenState extends ConsumerState<LeagueScreen> {
                 children: [
                   _RosterTab(teamId: _selectedTeamId!),
                   _ScheduleTab(teamId: _selectedTeamId!),
-                  _StandingsTab(leagueId: _selectedLeague!, highlightTeamId: _selectedTeamId!),
+                  _CompetitionsTab(teamId: _selectedTeamId!),
                   _RivalsTab(teamId: _selectedTeamId!),
                 ],
               ),
@@ -397,6 +398,129 @@ class _ScheduleTabState extends State<_ScheduleTab> {
     } catch (_) {
       return '결과 있음';
     }
+  }
+}
+
+/// "진행중인 대회" 탭(대화 2026-07-26, 예전 "순위" 탭을 대체) — 리그
+/// 순위 카드(항상 1개, 탭하면 기존 `_StandingsTab`을 다이얼로그로) +
+/// 이번 시즌 참가한 대회 카드(탭하면 `TournamentBracketScreen`으로).
+/// 대회 카드는 우승/탈락이 확정돼도 그 시즌 동안 유지되고, 시즌이
+/// 바뀌면 자연히 사라졌다가 다시 참가하면 새로 나타난다(엔진이 이미
+/// `season`으로 걸러줌 — 여기선 그대로 표시만).
+class _CompetitionsTab extends StatefulWidget {
+  const _CompetitionsTab({required this.teamId});
+  final String teamId;
+
+  @override
+  State<_CompetitionsTab> createState() => _CompetitionsTabState();
+}
+
+class _CompetitionsTabState extends State<_CompetitionsTab> {
+  List<CompetitionCardInfo>? _cards;
+
+  @override
+  void didUpdateWidget(covariant _CompetitionsTab oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.teamId != widget.teamId) _load();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    setState(() => _cards = null);
+    final cards = await listActiveCompetitions(teamId: widget.teamId);
+    if (mounted) setState(() => _cards = cards);
+  }
+
+  void _openCard(CompetitionCardInfo card) {
+    if (card.kind == 'league') {
+      showDialog<void>(
+        context: context,
+        builder: (context) => Dialog(
+          child: SizedBox(
+            width: 480,
+            height: 560,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Row(
+                    children: [
+                      const Expanded(child: Text('리그 순위', style: TextStyle(fontWeight: FontWeight.bold))),
+                      IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(context)),
+                    ],
+                  ),
+                ),
+                Expanded(child: _StandingsTab(leagueId: card.id, highlightTeamId: widget.teamId)),
+              ],
+            ),
+          ),
+        ),
+      );
+    } else {
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => TournamentBracketScreen(tournamentId: card.id)));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cards = _cards;
+    if (cards == null) return const LoadingIndicator();
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        for (final card in cards) ...[
+          _CompetitionCard(card: card, onTap: () => _openCard(card)),
+          const SizedBox(height: 8),
+        ],
+        if (cards.length == 1)
+          const Padding(
+            padding: EdgeInsets.only(top: 8),
+            child: Text('아직 참가 중인 대회가 없습니다.', style: TextStyle(color: AppColors.textSecondary)),
+          ),
+      ],
+    );
+  }
+}
+
+class _CompetitionCard extends StatelessWidget {
+  const _CompetitionCard({required this.card, required this.onTap});
+  final CompetitionCardInfo card;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final statusColor = card.isChampion
+        ? AppColors.safe
+        : card.isEliminated
+        ? AppColors.textSecondary
+        : AppColors.accent;
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: AppPanel(
+        child: Row(
+          children: [
+            if (card.isChampion) const Padding(padding: EdgeInsets.only(right: 8), child: Icon(Icons.emoji_events, color: AppColors.safe)),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(card.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 4),
+                  Text(card.statusSummary, style: TextStyle(color: statusColor)),
+                ],
+              ),
+            ),
+            const Icon(Icons.chevron_right, color: AppColors.textSecondary),
+          ],
+        ),
+      ),
+    );
   }
 }
 
