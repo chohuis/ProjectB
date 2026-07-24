@@ -344,8 +344,10 @@ pub fn generate_initial_world(slot_conn: &mut Connection, content_conn: &Connect
     // 수십 초가 걸려(새 게임 시작 지연의 실측 주범) 여기서 한 트랜잭션으로
     // 묶는다.
     let tx = slot_conn.transaction()?;
-    for league_id in SCHEDULED_LEAGUE_IDS {
-        generate_schedule(&tx, content_conn, canonical_seed, league_id, 0, 1)?;
+    // 리그마다 시작일을 하루씩 어긋나게 한다(대화 2026-07-24, §6-116) —
+    // 예전엔 4개 리그가 전부 1일차에 동시 시작해 그날 부하가 몰렸다.
+    for (i, league_id) in SCHEDULED_LEAGUE_IDS.iter().enumerate() {
+        generate_schedule(&tx, content_conn, canonical_seed, league_id, 0, 1 + i as i64)?;
     }
     // 선발 로테이션(04_프로_커리어.md §22) — 5개 리그 전체(독립리그 포함,
     // SCHEDULED_LEAGUE_IDS보다 넓음) 팀에 배정. 같은 트랜잭션에 묶는 이유는
@@ -5081,8 +5083,10 @@ pub fn season_rollover(conn: &Connection, content_conn: &Connection, day: i64) -
     // 없어서(발견된 버그, 10_구현_Phase_계획.md §6-36 — 밸런스 하네스
     // 첫 실행에서 드러남) 첫 시즌 일정만 생기고 그 뒤로는 영원히 재생성이
     // 안 돼 시즌 2부터 어떤 경기도(배경 경기도 주인공 경기도) 안 열렸다.
-    for league_id in SCHEDULED_LEAGUE_IDS {
-        generate_schedule(conn, content_conn, world_seed, league_id, current + 1, day + 1)?;
+    // 리그마다 시작일을 하루씩 어긋나게 한다(대화 2026-07-24, §6-116) —
+    // `generate_initial_world`와 같은 오프셋 규칙.
+    for (i, league_id) in SCHEDULED_LEAGUE_IDS.iter().enumerate() {
+        generate_schedule(conn, content_conn, world_seed, league_id, current + 1, day + 1 + i as i64)?;
     }
 
     // 선발 로테이션 재편성(04_프로_커리어.md §22, 이월 부채 정리 대화
@@ -8357,6 +8361,28 @@ mod tests {
                 assert_eq!(games, 20, "{league_id} team {team_id} should have exactly 20 games, got {games}");
             }
         }
+    }
+
+    /// 스케줄 분산 Phase 2(대화 2026-07-24, §6-116) — 고교 8권역이 전부
+    /// 같은 날 나란히 시작하지 않고 요일 오프셋으로 퍼지는지, 실제
+    /// content.db(8권역)로 확인.
+    #[test]
+    fn generate_schedule_starts_real_hs_regions_on_different_days() {
+        let content_conn = content::open("content.db").unwrap();
+        let slot_conn = slot::open_in_memory().unwrap();
+
+        generate_schedule(&slot_conn, &content_conn, 123, "league:hs", 0, 1).unwrap();
+        let groups = content::load_team_groups_for_schedule(&content_conn, "league:hs").unwrap();
+        assert!(groups.len() >= 2, "고교는 권역이 여럿이어야 함");
+
+        let mut first_days: std::collections::HashSet<i64> = std::collections::HashSet::new();
+        for group in &groups {
+            let team = group.first().expect("group should not be empty");
+            let min_day: i64 =
+                slot_conn.query_row("SELECT MIN(day) FROM schedule WHERE home = ?1 OR away = ?1", [team], |r| r.get(0)).unwrap();
+            first_days.insert(min_day);
+        }
+        assert!(first_days.len() > 1, "고교 권역들의 최초 경기일이 전부 같으면 안 됨");
     }
 
     #[test]

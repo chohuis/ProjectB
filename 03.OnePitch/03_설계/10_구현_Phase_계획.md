@@ -1890,3 +1890,13 @@
 **테스트**(`schedule.rs`, 신규 5개): `series_based_schedule_gives_every_pro_team_exactly_144_games`(10팀 기준 팀당 정확히 144경기+`game_id` 유일성), `series_based_schedule_gives_every_pro_farm_team_exactly_99_games`, `series_based_schedule_groups_games_into_consecutive_three_game_series_with_alternating_home_away`(3경기 연속 날짜+홈/원정 교대), `series_based_schedule_never_schedules_a_game_on_the_weekly_rest_day`(7일 주기 중 6번째 날엔 경기 없음), `series_based_schedule_is_deterministic_with_same_seed`. `cargo test --lib` 519개 전부 통과(511+5 신규, 기존 대비 하나 더 늘어 519 — 이전 §6-114 기록 514는 그 사이 별도 세션 없이 이 세션 시작 시점 기준). `cargo clippy --lib --tests --bins` 클린. `cargo build --release` 갱신 후 `flutter test -j 1` 27개 전부 통과. `balance_harness -- 5 3` 스모크 — 5개 시행 크래시 없이 정상 종료, 등급 분포·아키타입별 성장치가 이번 세션 이전 실측치와 동일(주인공 성적 관련 로직은 안 건드렸으므로 예상대로).
 
 **남은 Phase**: Phase 2(고교/대학/독립리그 그룹·리그 시작일 오프셋), Phase 3(포스트시즌 11개 대회 시작일 분산), Phase 4(재측정 — `perf_probe`로 이번 세션 워스트케이스 46초 대비 개선폭 확인). 계획 전문은 대화 기록 참고(플랜 모드 승인, 2026-07-24).
+
+### 6-116. 스케줄 분산 Phase 2 — 고교/대학·리그 간 시작일 오프셋 (2026-07-24, 완료)
+
+**Context**: §6-115에 이은 2번째 — 프로/프로2군은 3연전+휴식일로 날짜를 현실화했지만, 고교 8권역·대학 5조는 여전히 한 리그 안의 모든 그룹이 같은 날 나란히 시작하고, 4개 `SCHEDULED_LEAGUE_IDS` 리그도 항상 같은 `start_day`로 동시 시작한다. 그룹 내부 페이스(라운드로빈 밀도·목표 경기 수 20)는 그대로 두고 "언제 시작하느냐"만 흩는 게 사용자가 명시한 스코프("지역마다 날을 조정하고 최대한 맞춰보자") — 시즌 길이·페이싱 변경 없음.
+
+**구현**(`engine/src/sim/schedule.rs`): `generate_regular_season_targeted`에 그룹 인덱스 기반 요일 오프셋 추가 — 그룹 `i`의 시작일을 `start_day + (i % 7)`로. RNG는 매치업 순서에만 쓰이고(기존 그대로) 오프셋 자체는 산술이라 시드 스트림 추가 없음. 이 함수는 이제 프로/프로2군 분기(§6-115) 밖의 고교/대학 전용이라 기존 호출부(`repository.rs::generate_schedule` 단 하나)만 영향받음.
+
+**구현**(`engine/src/data/repository.rs`): `generate_initial_world`(line 347)·`season_rollover`(line 5084)의 `SCHEDULED_LEAGUE_IDS` 순회에 리그 인덱스 오프셋 추가(`start_day + i`) — 고교·대학·프로·프로2군이 하루씩 어긋나게 시작. **독립리그 오프셋은 여기서 안 건드림** — 리서치 중 확인한바 `run_independent_season`은 `generate_schedule` 경로가 아니라 `season_rollover`가 부르는 "포스트시즌 11개 대회" 블록의 일원(그룹스테이지→넉아웃 대회 구조, §6-117 Phase 3 대상)이라 그쪽에서 같이 분산하는 게 자연스러움 — 계획 문서에 처음 적었던 "Phase 2에서 독립리그도" 부분은 구현 중 Phase 3로 재배치.
+
+**테스트**(`schedule.rs`, 신규 2개): `targeted_with_group_offsets_still_gives_every_team_the_target_game_count`(3그룹 6팀씩, 목표 경기수 20이 오프셋과 무관하게 유지), `targeted_with_group_offsets_starts_most_groups_on_different_days`(8그룹 합성 데이터, 최소 7개 그룹이 서로 다른 시작일). `repository.rs`(신규 1개): `generate_schedule_starts_real_hs_regions_on_different_days` — 실제 content.db 고교 8권역으로 최소 2개 이상 서로 다른 시작일 확인. `cargo test --lib` 522개 전부 통과. `cargo clippy --lib --tests --bins` 클린. `cargo build --release` 갱신 후 `flutter test -j 1` 27개 전부 통과. `balance_harness -- 5 3` 스모크 — 크래시 없이 정상 종료, 등급 분포·아키타입별 변화량 §6-115와 동일(예상대로, 순수 날짜 재배치라 주인공 성적에 영향 없음).

@@ -105,6 +105,12 @@ pub fn generate_regular_season(league_slug: &str, groups: &[Vec<String>], laps: 
 /// `generate_round_robin_rounds_targeted` 참고. 정규시즌 스케줄 생성
 /// (`repository.rs::generate_schedule`) 전용, 대회 예선 라운드로빈은 그룹
 /// 크기가 균일해 원래 `laps` 방식(`generate_regular_season`)을 그대로 쓴다.
+///
+/// 그룹마다 `start_day`에 `i % 7`을 더해 요일을 어긋나게 한다(대화
+/// 2026-07-24, §6-116 — 고교 8권역·대학 5조가 전부 같은 날 나란히 진행
+/// 되던 걸 분산). 그룹 내부 페이스(라운드로빈 밀도·목표 경기 수)는 그대로,
+/// 그룹이 "언제 시작하느냐"만 바뀐다 — RNG는 매치업 순서에만 쓰이고
+/// 요일 배정은 그룹 인덱스만의 결정론적 산술이라 시드 스트림 불필요.
 pub fn generate_regular_season_targeted(
     league_slug: &str,
     groups: &[Vec<String>],
@@ -114,12 +120,13 @@ pub fn generate_regular_season_targeted(
 ) -> Vec<ScheduleEntry> {
     let mut entries = Vec::new();
     let mut seq: u64 = 0;
-    for group in groups {
+    for (i, group) in groups.iter().enumerate() {
         if group.len() < 2 {
             continue;
         }
         let rounds = generate_round_robin_rounds_targeted(group, target_games, rng);
-        push_entries(&mut entries, &mut seq, league_slug, start_day, rounds);
+        let group_start_day = start_day + (i as i64 % 7);
+        push_entries(&mut entries, &mut seq, league_slug, group_start_day, rounds);
     }
     entries
 }
@@ -356,5 +363,42 @@ mod tests {
             assert_eq!(x.away, y.away);
             assert_eq!(x.day, y.day);
         }
+    }
+
+    #[test]
+    fn targeted_with_group_offsets_still_gives_every_team_the_target_game_count() {
+        let groups = vec![
+            teams(6),
+            teams(6).iter().map(|t| format!("g2_{t}")).collect(),
+            teams(6).iter().map(|t| format!("g3_{t}")).collect(),
+        ];
+        let mut rng = ChaCha8Rng::seed_from_u64(20);
+        let entries = generate_regular_season_targeted("test", &groups, 20, 1, &mut rng);
+
+        let mut games_per_team: std::collections::HashMap<String, u32> = std::collections::HashMap::new();
+        for e in &entries {
+            *games_per_team.entry(e.home.clone()).or_insert(0) += 1;
+            *games_per_team.entry(e.away.clone()).or_insert(0) += 1;
+        }
+        assert_eq!(games_per_team.len(), 18);
+        for count in games_per_team.values() {
+            assert_eq!(*count, 20);
+        }
+    }
+
+    #[test]
+    fn targeted_with_group_offsets_starts_most_groups_on_different_days() {
+        let groups: Vec<Vec<String>> = (0..8).map(|g| (0..6).map(|t| format!("g{g}_t{t}")).collect()).collect();
+        let mut rng = ChaCha8Rng::seed_from_u64(21);
+        let entries = generate_regular_season_targeted("hs", &groups, 20, 1, &mut rng);
+
+        let mut first_day_per_group: std::collections::HashSet<i64> = std::collections::HashSet::new();
+        for group in &groups {
+            let min_day = entries.iter().filter(|e| group.contains(&e.home)).map(|e| e.day).min().unwrap();
+            first_day_per_group.insert(min_day);
+        }
+        // 8권역이 7일 주기로 오프셋되므로 최소 7개는 서로 다른 시작일이어야
+        // 한다(8번째 그룹만 7일 뒤 첫 그룹과 요일이 겹침).
+        assert!(first_day_per_group.len() >= 7, "8권역 중 최소 7개는 서로 다른 시작일이어야 함, got {}", first_day_per_group.len());
     }
 }
