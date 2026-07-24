@@ -436,6 +436,21 @@ fn migration_v21(tx: &Transaction) -> anyhow::Result<()> {
     Ok(())
 }
 
+const V22_DDL: &str = r#"
+ALTER TABLE match_session ADD COLUMN runner_on_first_id TEXT;
+"#;
+
+/// 인터랙티브 하프이닝 도루 지원(Phase 3, 대화 2026-07-24) — 배경
+/// `simulate_half_inning`의 로컬 변수 `runner_on_first_id`와 같은 개념이지만,
+/// 인터랙티브 세션은 `submit_pitch` 호출마다 DB를 오가므로 세션에 영속시켜야
+/// 한다. 2루·3루로 넘어간 뒤에는 신원을 놓치는 것도 배경과 동일(도루는
+/// 1루→2루만 다루므로 이걸로 충분).
+fn migration_v22(tx: &Transaction) -> anyhow::Result<()> {
+    tx.execute_batch(V22_DDL)?;
+    tx.execute("UPDATE meta SET save_version = 22", [])?;
+    Ok(())
+}
+
 const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 1,
@@ -521,6 +536,10 @@ const MIGRATIONS: &[Migration] = &[
         version: 21,
         up: migration_v21,
     },
+    Migration {
+        version: 22,
+        up: migration_v22,
+    },
 ];
 
 fn init(mut conn: Connection) -> anyhow::Result<Connection> {
@@ -548,7 +567,25 @@ mod tests {
         let save_version: i64 = conn
             .query_row("SELECT save_version FROM meta", [], |row| row.get(0))
             .unwrap();
-        assert_eq!(save_version, 21);
+        assert_eq!(save_version, 22);
+    }
+
+    #[test]
+    fn v22_adds_runner_on_first_id_column_to_match_session() {
+        let conn = open_in_memory().unwrap();
+        conn.execute(
+            "INSERT INTO match_session (id, game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases,
+                                         home_runs, away_runs, home_batter_idx, away_batter_idx, balls, strikes, current_batter_id)
+             VALUES (1, 'g', 'h', 'a', 'league:pro', '자동', 1, 1, 0, '[false,false,false]', 0, 0, 0, 0, 0, 0, NULL)",
+            [],
+        )
+        .unwrap();
+        let missing: Option<String> = conn.query_row("SELECT runner_on_first_id FROM match_session WHERE id = 1", [], |r| r.get(0)).unwrap();
+        assert_eq!(missing, None);
+
+        conn.execute("UPDATE match_session SET runner_on_first_id = 'npc:runner' WHERE id = 1", []).unwrap();
+        let runner: String = conn.query_row("SELECT runner_on_first_id FROM match_session WHERE id = 1", [], |r| r.get(0)).unwrap();
+        assert_eq!(runner, "npc:runner");
     }
 
     #[test]

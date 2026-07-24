@@ -99,7 +99,7 @@
 | ~~코치별 "가르칠 수 있는 구종" 전문 목록(05_구종_시스템.md §3)~~ | **해소됨(§6-110, 2026-07-24)** — `GeneratedCoach.specialties`(투수 role 코치만, 1~3개), `coach_pitch_learning_bonus`(일반 보너스)와 별개로 `COACH_SPECIALTY_PITCH_BONUS_WEEKS` 가산 | — | 해소 |
 | ~~구종 마스터리의 매치 엔진 연동(단계→피안타율·헛스윙, 05_구종_시스템.md §4)·레퍼토리 다양성 보너스~~ | **해소됨(§6-106, Phase 4, 2026-07-26)** — `throw_pitch`가 마스터리 단계(3=실전 기준 ±2.5)와 3계열 다양성 보너스(+0.02 헛스윙)를 실제로 반영 | — | 해소 |
 | 수동 모드 감독 개입이 소프트캡 이후 매 투구마다 다시 물어봄(§6-104 Phase 3에서 발견) | §8 원 설계는 "이닝 종료마다 판단"인데 구현은 매 루프 패스(=매 투구)마다 게이트를 다시 탐 — 무한 루프(핑퐁) 자체는 migration v15로 고쳤지만, "매 투구 재질문"이라는 UX 과함은 별개 이슈로 남음 | 반자동처럼 "판정 지점"을 하프이닝 경계·투구수 임계 돌파 시점으로만 한정하는 게이팅 로직 재설계 | 엔진 개선(UX) |
-| 도루가 배경 하프이닝(`simulate_half_inning`)에만 있고 주인공이 직접 던지는 인터랙티브 하프이닝에는 없음(§6-104 Phase 3) | 1구 단위 루프에 끼워 넣으면 매 구마다 중복 판정될 위험 — 주인공 팀 타석은 항상 배경 경로라 대부분은 이미 커버되고, 주인공이 던지는 동안의 "상대팀 도루"만 빠짐 | 인터랙티브 루프에 "이 타석에서 이미 도루를 판정했는지" 상태 플래그 추가 후 이식 | 엔진 확장 |
+| ~~도루가 배경 하프이닝(`simulate_half_inning`)에만 있고 주인공이 직접 던지는 인터랙티브 하프이닝에는 없음(§6-104 Phase 3)~~ | **해소됨(§6-112, 2026-07-24)** — `SessionRow.runner_on_first_id`(migration v22)로 1루 주자 신원을 세션에 영속시켜, 매 `submit_pitch` 호출마다 배경과 동일한 `attempt_steal`을 재사용 | — | 해소 |
 | ~~홀드(Hold) 판정(§12 "기록 필드", §6-107 Phase 6에서 발견)~~ | **해소됨(§6-111, 2026-07-24)** — 배경(`simulate_game`)·인터랙티브(`data::match_session`) 양쪽 다 선발→중계→마무리 2회 교체 지원, `PitcherGameStats.holds`/`credit_pitcher_hold` 실제로 채워짐 | — | 해소 |
 | 타율·출루율·장타율·OPS 계산 함수는 구현됐지만 노출할 화면이 없음(§12, §6-107 Phase 6) | 주인공은 항상 투수 아키타입(§7 DH)이라 절대 타석에 안 서 본인 기록에 타격 스탯이 없음 — `BatterGameStats::batting_average`등은 테스트만 있고 실제 소비하는 API·화면이 아직 없음 | NPC 팀동료 시즌 스탯을 보여주는 로스터/리더보드 화면이 생기면 그때 연결 | 엔진 확장(소비처 대기) |
 
@@ -1842,3 +1842,13 @@
 **구현**(`engine/src/data/match_session.rs`): `SessionRow`에 2단계 필드 6개(`protagonist_second_pulled`·`second_relief_pitcher_id`·`protagonist_second_pull_was_save_situation`·상대팀 대칭 3개, migration v21) 추가. `run_until_decision_point`에 주인공·상대팀 각각 "1단계가 진짜 중계였고 새로 세이브 상황이 되면 즉시 마무리로 전환" 블록 신설(하프이닝 경계마다, 배경 엔진과 동일 판단 시점). 배경 하프이닝 위임 시 2단계가 발동됐으면 그 투수를 우선 사용하도록 pitcher 선택 로직 갱신. `credit_saves`를 2단계 인식하도록 확장(세이브는 마지막 투수, 홀드는 1단계 투수).
 
 **테스트**: `sim::match_sim::tests::a_reliever_promoted_to_closer_while_leading_earns_a_hold`(배경, 50시드 중 최소 1건)·`data::match_session::tests::a_reliever_promoted_to_closer_in_an_interactive_game_earns_a_hold`(인터랙티브, 99시드 중 최소 1건, `insert_designated_closer` 신규 테스트 헬퍼) 신설. 기존 강판 테스트 2개(`simulate_game_pulls_a_starter_into_the_closer_slot...`·`a_closer_entering_a_save_situation...`)가 `home_reliever_stats` 대신 `home_closer_stats`를 확인하도록 갱신(곧장 마무리로 가는 경우 `home_first_is_reliever`가 false라 `home_reliever_stats`는 이제 `None`으로 남는 게 맞는 동작이라 테스트 쪽을 고침). `cargo test --lib` 507개 전부 통과. `cargo clippy --lib --tests --bins` 클린. `cargo build --release` 갱신 후 `flutter test -j 1` 27개 전부 통과. `balance_harness -- 8 3` 실행 중 6개 시행까지 크래시 없이 정상 확인(시간 관계로 중단) 후 `balance_harness -- 5 2`로 완주 확인(크래시 없음, 배경 팀당 평균 득점 2.48 vs 인터랙티브 평균 실점 3.40 — Phase 1 스모크(격차 0.63)와 같은 자릿수 범위라 극단적 쏠림 없음).
+
+### 6-112. 엔진 확장 Phase 3 — 인터랙티브 하프이닝 도루 지원 (2026-07-24, 완료)
+
+**Context**: 이월 레지스트리 항목 — 도루(`attempt_steal`, Phase 3 매치엔진 리얼리즘 강화)가 배경 `simulate_half_inning`에만 있고, 주인공이 직접 던지는 인터랙티브 1구 루프(`data::match_session`)에는 없어 "주인공이 던지는 동안 상대팀 도루"가 통째로 빠져 있었다. 계획서에 이미 적힌 해법("이 타석에서 이미 도루를 판정했는지 상태 플래그") 그대로 구현.
+
+**구현**(`engine/src/data/match_session.rs`): `apply_pa_outcome`이 배경 `simulate_half_inning`과 동일한 "1루 주자 신원 갱신" 규칙(1루가 비면 놓침, 볼넷·사구·실책·단타로 새로 도착하면 그 타자로 교체, 그 외엔 유지)을 `session.runner_on_first_id`에 반영하도록 `batter_id` 인자 추가. "주인공이 던지는 하프이닝" 블록 최상단에 도루 시도 체크 신설 — `session.bases[0] && !session.bases[1]`이고 주자 신원이 있으면 매 `submit_pitch` 호출마다(계획서 "매 구") `match_sim::attempt_steal`(배경과 동일 함수, 별도 시드 네임스페이스 `"steal:{game_id}:{pitch_seq}"`)을 호출 — 시도 자체가 없으면(`None`) 그대로 통과해 정상 투구로 흘러가고, 성공/실패 어느 쪽이든 그 `submit_pitch` 호출을 소비(이번 구는 안 던짐)하고 SB/CS를 그 주자의 season_stats에 즉시 반영.
+
+**구현**(`engine/src/data/slot.rs`): migration v22 — `match_session.runner_on_first_id TEXT`.
+
+**테스트**: `data::match_session::tests::opposing_team_can_steal_bases_while_the_protagonist_pitches`(29시드 중 최소 1건 — `attempt_steal`의 시도확률 자체가 낮아(평균 스피드 매 구 10%) 기존 강판·세이브 테스트와 같은 "여러 시드 중 최소 1건" 패턴), migration v22 컬럼 검증 1개. `cargo test --lib` 509개 전부 통과(기존 테스트 전부 무변경 통과 — `apply_pa_outcome` 시그니처 변경은 호출부 4곳만 `&batter.id` 인자 추가, 동작 자체는 회귀 없음). `cargo clippy --lib --tests --bins` 클린. `cargo build --release` 갱신 후 `flutter test -j 1` 27개 전부 통과. `balance_harness -- 5 2` 스모크 확인(Phase 3은 계획상 분포 비교 필수 대상이 아님, 크래시 여부만 확인).

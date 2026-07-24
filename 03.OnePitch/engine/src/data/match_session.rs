@@ -128,6 +128,10 @@ struct SessionRow {
     /// 1구 루프 자체가 안 도니 `hits_allowed`처럼 그 시점에서 자연히
     /// 멈춘다.
     unearned_runs_allowed: i64,
+    /// 도루(Phase 3, §9) — 배경 `simulate_half_inning`의 로컬 변수
+    /// `runner_on_first_id`와 같은 개념, `submit_pitch` 호출마다 DB를
+    /// 오가는 인터랙티브 세션 특성상 여기 영속시켜야 한다(migration v22).
+    runner_on_first_id: Option<String>,
 }
 
 #[allow(clippy::type_complexity)]
@@ -174,6 +178,7 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
         i64,
         Option<String>,
         i64,
+        Option<String>,
     )> = conn
         .query_row(
             "SELECT game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases, home_runs, away_runs,
@@ -185,7 +190,8 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
                     hits_allowed, walks_allowed, protagonist_pull_was_save_situation, opponent_pull_was_save_situation,
                     unearned_runs_allowed,
                     protagonist_second_pulled, second_relief_pitcher_id, protagonist_second_pull_was_save_situation,
-                    opponent_second_pulled, opponent_second_relief_pitcher_id, opponent_second_pull_was_save_situation
+                    opponent_second_pulled, opponent_second_relief_pitcher_id, opponent_second_pull_was_save_situation,
+                    runner_on_first_id
              FROM match_session WHERE id = 1",
             [],
             |r| {
@@ -231,6 +237,7 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
                     r.get(38)?,
                     r.get(39)?,
                     r.get(40)?,
+                    r.get(41)?,
                 ))
             },
         )
@@ -277,6 +284,7 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
         opponent_second_pulled,
         opponent_second_relief_pitcher_id,
         opponent_second_pull_was_save_situation,
+        runner_on_first_id,
     )) = row
     else {
         return Ok(None);
@@ -321,6 +329,7 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
         opponent_second_relief_pitcher_id,
         opponent_second_pull_was_save_situation: opponent_second_pull_was_save_situation != 0,
         unearned_runs_allowed,
+        runner_on_first_id,
     }))
 }
 
@@ -334,7 +343,8 @@ fn save_session(conn: &Connection, s: &SessionRow) -> anyhow::Result<()> {
              hits_allowed = ?22, walks_allowed = ?23, protagonist_pull_was_save_situation = ?24,
              opponent_pull_was_save_situation = ?25, unearned_runs_allowed = ?26,
              protagonist_second_pulled = ?27, second_relief_pitcher_id = ?28, protagonist_second_pull_was_save_situation = ?29,
-             opponent_second_pulled = ?30, opponent_second_relief_pitcher_id = ?31, opponent_second_pull_was_save_situation = ?32
+             opponent_second_pulled = ?30, opponent_second_relief_pitcher_id = ?31, opponent_second_pull_was_save_situation = ?32,
+             runner_on_first_id = ?33
          WHERE id = 1",
         params![
             s.inning,
@@ -369,6 +379,7 @@ fn save_session(conn: &Connection, s: &SessionRow) -> anyhow::Result<()> {
             s.opponent_second_pulled as i64,
             s.opponent_second_relief_pitcher_id,
             s.opponent_second_pull_was_save_situation as i64,
+            s.runner_on_first_id,
         ],
     )?;
     Ok(())
@@ -411,11 +422,11 @@ fn load_protagonist_pitches(conn: &Connection) -> anyhow::Result<Vec<pitch::Pitc
 /// 세션 상태에 대해 재현한 것 — 로직 자체는 그쪽과 절대 갈라지지 않게
 /// 유지해야 한다(둘 다 `PaOutcome`을 공유하는 이유). `team_speed`(Phase 3)
 /// 는 단타·2루타의 무리한 추가진루 판정(`advance_runners_realistic`)에
-/// 쓰인다 — 도루 이벤트 자체는 이 인터랙티브 경로(주인공이 직접 던지는
-/// 하프이닝)에선 스코프 밖(배경 하프이닝인 `simulate_half_inning`에만
-/// 있음, 1구 단위 루프에 끼워 넣으면 매 구마다 중복 판정될 위험이 있어
-/// 이번엔 보류 — 10_구현_Phase_계획.md 참고).
-fn apply_pa_outcome(rng: &mut impl Rng, session: &mut SessionRow, batting_team_is_home: bool, outcome: PaOutcome, team_speed: f64) -> u32 {
+/// 쓰인다. `batter_id`(Phase 3, 도루 지원)는 이 타석 결과로 1루 주자
+/// 신원이 바뀌는지 판단하는 데 쓴다 — 배경 `simulate_half_inning`의
+/// "1루 주자 신원 갱신" 로직과 동일(1루가 비면 `None`, 볼넷·사구·실책·
+/// 단타로 새로 1루에 도착했으면 그 타자로 교체, 그 외엔 기존 주자 유지).
+fn apply_pa_outcome(rng: &mut impl Rng, session: &mut SessionRow, batting_team_is_home: bool, outcome: PaOutcome, team_speed: f64, batter_id: &str) -> u32 {
     let runs = match outcome {
         PaOutcome::Strikeout | PaOutcome::Out => {
             session.outs += 1;
@@ -445,6 +456,15 @@ fn apply_pa_outcome(rng: &mut impl Rng, session: &mut SessionRow, batting_team_i
         session.home_runs += runs as i64;
     } else {
         session.away_runs += runs as i64;
+    }
+    // 1루 주자 신원 갱신(Phase 3, §9 도루) — 배경 `simulate_half_inning`과
+    // 동일한 규칙: 1루가 비었으면 놓치고, 볼넷·사구·실책·단타로 새로
+    // 도착했으면 그 타자로 교체, 그 외(아웃·병살 등 1루를 안 건드리는
+    // 결과)는 기존 주자가 계속 1루에 남아있으므로 그대로 둔다.
+    if !session.bases[0] {
+        session.runner_on_first_id = None;
+    } else if matches!(outcome, PaOutcome::Walk | PaOutcome::HitByPitch | PaOutcome::ReachOnError | PaOutcome::Single) {
+        session.runner_on_first_id = Some(batter_id.to_string());
     }
     session.current_batter_id = None;
     session.balls = 0;
@@ -1078,6 +1098,43 @@ fn run_until_decision_point(
             continue;
         }
 
+        // 도루 시도(Phase 3, §9) — 다음 구를 던지기 전, 1루에 주자가 있고
+        // 2루가 비어 있을 때마다(매 구) 판정한다. 배경 `simulate_half_inning`
+        // 과 동일한 `attempt_steal` 함수를 재사용해 두 엔진이 갈라지지
+        // 않게 한다. 성공/실패 모두 이 `submit_pitch` 호출을 소비하고
+        // (이번 구는 실제로 안 던짐) 다음 호출에서 정상적으로 이어간다 —
+        // `attempt_steal`이 `None`(이번엔 시도 자체가 없음)이면 그대로
+        // 통과해 아래 정상 투구 로직으로 흘러간다.
+        if session.bases[0] && !session.bases[1] {
+            if let Some(runner_id) = session.runner_on_first_id.clone() {
+                let team_speed = match_sim::average_speed(&lineup);
+                let fielding_lineup = repository::load_batting_lineup(slot_conn, &protagonist_team_id)?;
+                let team_defense = match_sim::average_defense(&fielding_lineup);
+                let pitcher_game_management = load_protagonist_as_pitcher(slot_conn)?.game_management;
+                let mut steal_rng = ChaCha8Rng::seed_from_u64(repository::league_sub_seed(
+                    world_seed,
+                    &format!("steal:{}:{}", session.game_id, session.pitch_seq),
+                ));
+                if let Some(success) = match_sim::attempt_steal(&mut steal_rng, team_speed, pitcher_game_management, team_defense) {
+                    let mut line = match_sim::BatterGameStats::default();
+                    if success {
+                        session.bases[0] = false;
+                        session.bases[1] = true;
+                        line.stolen_bases += 1;
+                    } else {
+                        session.bases[0] = false;
+                        session.outs += 1;
+                        line.caught_stealing += 1;
+                    }
+                    session.runner_on_first_id = None;
+                    let week = crate::calendar::week_for_day(today);
+                    repository::upsert_batter_season_stats(slot_conn, &runner_id, week, &line)?;
+                    save_session(slot_conn, &session)?;
+                    continue;
+                }
+            }
+        }
+
         let batter: BatterStats = match &session.current_batter_id {
             Some(id) => lineup.iter().find(|b| &b.id == id).cloned().unwrap_or_else(|| lineup[0].clone()),
             None => {
@@ -1176,20 +1233,20 @@ fn run_until_decision_point(
             pitch::AtBatOutcome::InProgress => {}
             pitch::AtBatOutcome::Strikeout => {
                 session.strikeouts += 1;
-                let runs = apply_pa_outcome(&mut rng, &mut session, batting_team_is_home, PaOutcome::Strikeout, team_speed);
+                let runs = apply_pa_outcome(&mut rng, &mut session, batting_team_is_home, PaOutcome::Strikeout, team_speed, &batter.id);
                 let mut line = match_sim::BatterGameStats::default();
                 match_sim::record_batter_pa(&mut line, PaOutcome::Strikeout, runs);
                 repository::upsert_batter_season_stats(slot_conn, &batter.id, week, &line)?;
             }
             pitch::AtBatOutcome::Walk => {
                 session.walks_allowed += 1;
-                let runs = apply_pa_outcome(&mut rng, &mut session, batting_team_is_home, PaOutcome::Walk, team_speed);
+                let runs = apply_pa_outcome(&mut rng, &mut session, batting_team_is_home, PaOutcome::Walk, team_speed, &batter.id);
                 let mut line = match_sim::BatterGameStats::default();
                 match_sim::record_batter_pa(&mut line, PaOutcome::Walk, runs);
                 repository::upsert_batter_season_stats(slot_conn, &batter.id, week, &line)?;
             }
             pitch::AtBatOutcome::HitByPitch => {
-                let runs = apply_pa_outcome(&mut rng, &mut session, batting_team_is_home, PaOutcome::HitByPitch, team_speed);
+                let runs = apply_pa_outcome(&mut rng, &mut session, batting_team_is_home, PaOutcome::HitByPitch, team_speed, &batter.id);
                 let mut line = match_sim::BatterGameStats::default();
                 match_sim::record_batter_pa(&mut line, PaOutcome::HitByPitch, runs);
                 repository::upsert_batter_season_stats(slot_conn, &batter.id, week, &line)?;
@@ -1214,7 +1271,7 @@ fn run_until_decision_point(
                 if matches!(pa, PaOutcome::Single | PaOutcome::Double | PaOutcome::Triple | PaOutcome::HomeRun) {
                     session.hits_allowed += 1;
                 }
-                let runs = apply_pa_outcome(&mut rng, &mut session, batting_team_is_home, pa, team_speed);
+                let runs = apply_pa_outcome(&mut rng, &mut session, batting_team_is_home, pa, team_speed, &batter.id);
                 if pa == PaOutcome::ReachOnError {
                     // 비자책점(Phase 7, 정합성 점검에서 발견) — NPC는
                     // Phase 2부터 실책 실점을 비자책으로 구분해왔는데
@@ -1372,6 +1429,7 @@ mod tests {
             opponent_second_relief_pitcher_id: None,
             opponent_second_pull_was_save_situation: false,
             unearned_runs_allowed: 0,
+            runner_on_first_id: None,
         }
     }
 
@@ -1432,6 +1490,43 @@ mod tests {
         let (w, l, t): (i64, i64, i64) =
             slot_conn.query_row("SELECT w, l, t FROM standings WHERE team_id = 'team:home'", [], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?))).unwrap();
         assert_eq!(w + l + t, 1);
+    }
+
+    /// Phase 3(§9 "도루") — 주인공이 직접 던지는 인터랙티브 하프이닝에서도
+    /// 상대팀 도루가 발생해야 한다(예전엔 배경 하프이닝에만 있었음).
+    /// `attempt_steal`의 시도확률 자체가 낮아(평균 스피드면 매 구 10%) 한
+    /// 게임 안에서도 안 뜰 수 있으므로, 여러 시드 중 최소 1건을 확인하는
+    /// 기존 강판·세이브 테스트들과 같은 패턴을 쓴다.
+    #[test]
+    fn opposing_team_can_steal_bases_while_the_protagonist_pitches() {
+        let content_conn = build_content_db();
+        let mut stole_at_least_once = false;
+        for world_seed in 1..30i64 {
+            let slot_conn = slot::open_in_memory().unwrap();
+            insert_roster(&slot_conn, "team:home");
+            insert_roster(&slot_conn, "team:away");
+            insert_protagonist(&slot_conn, "team:home");
+            insert_schedule(&slot_conn, "game:1");
+
+            let result = start_protagonist_match(&slot_conn, &content_conn, world_seed, "game:1", "team:home", "team:away", "자동").unwrap();
+            assert!(matches!(result, MatchStepResult::GameOver { .. }));
+
+            let mut stmt = slot_conn.prepare("SELECT line FROM season_stats WHERE player_id LIKE 'team:away_b%'").unwrap();
+            let any_steal_activity = stmt
+                .query_map([], |r| r.get::<_, String>(0))
+                .unwrap()
+                .filter_map(|raw| raw.ok())
+                .filter_map(|raw| serde_json::from_str::<serde_json::Value>(&raw).ok())
+                .any(|v| {
+                    v.get("stolen_bases").and_then(|s| s.as_i64()).unwrap_or(0) > 0
+                        || v.get("caught_stealing").and_then(|s| s.as_i64()).unwrap_or(0) > 0
+                });
+            if any_steal_activity {
+                stole_at_least_once = true;
+                break;
+            }
+        }
+        assert!(stole_at_least_once, "29개 시드 내내 인터랙티브 경기에서 상대팀 도루 시도가 한 번도 기록되지 않음");
     }
 
     #[test]
