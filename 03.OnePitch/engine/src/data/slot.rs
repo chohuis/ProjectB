@@ -484,6 +484,26 @@ fn migration_v24(tx: &Transaction) -> anyhow::Result<()> {
     Ok(())
 }
 
+const V25_DDL: &str = r#"
+CREATE INDEX idx_schedule_day ON schedule(day);
+CREATE INDEX idx_schedule_home ON schedule(home);
+CREATE INDEX idx_schedule_away ON schedule(away);
+CREATE INDEX idx_npc_team_id ON npc(team_id);
+"#;
+
+/// 성능 조사(대화 2026-07-24, `perf_probe.rs` 실측·스케줄 분산 5-Phase
+/// §6-115~118)로 확인 — `schedule.day`(매일 `process_day`의 `WHERE day = ?1`),
+/// `schedule.home`/`schedule.away`(로테이션 재배정의 `WHERE home=?1 OR
+/// away=?1`), `npc.team_id`(로스터 로딩 전반) 전부 인덱스가 아예 없어
+/// 172팀 순회마다 풀스캔이었다. `season_stats`/`practice_stats`는 복합
+/// PK(`player_id`가 첫 컬럼)라 이미 자동 인덱스로 커버돼 제외. 쿼리
+/// 결과에는 영향 없는 순수 실행계획 최적화라 로직 변경 없음.
+fn migration_v25(tx: &Transaction) -> anyhow::Result<()> {
+    tx.execute_batch(V25_DDL)?;
+    tx.execute("UPDATE meta SET save_version = 25", [])?;
+    Ok(())
+}
+
 const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 1,
@@ -581,6 +601,10 @@ const MIGRATIONS: &[Migration] = &[
         version: 24,
         up: migration_v24,
     },
+    Migration {
+        version: 25,
+        up: migration_v25,
+    },
 ];
 
 fn init(mut conn: Connection) -> anyhow::Result<Connection> {
@@ -608,7 +632,22 @@ mod tests {
         let save_version: i64 = conn
             .query_row("SELECT save_version FROM meta", [], |row| row.get(0))
             .unwrap();
-        assert_eq!(save_version, 24);
+        assert_eq!(save_version, 25);
+    }
+
+    #[test]
+    fn v25_creates_indexes_on_schedule_and_npc() {
+        let conn = open_in_memory().unwrap();
+        let names: Vec<String> = conn
+            .prepare("SELECT name FROM sqlite_master WHERE type = 'index' AND name LIKE 'idx_%'")
+            .unwrap()
+            .query_map([], |r| r.get(0))
+            .unwrap()
+            .collect::<Result<_, _>>()
+            .unwrap();
+        for expected in ["idx_schedule_day", "idx_schedule_home", "idx_schedule_away", "idx_npc_team_id"] {
+            assert!(names.contains(&expected.to_string()), "missing index {expected}, got {names:?}");
+        }
     }
 
     #[test]

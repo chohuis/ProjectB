@@ -1926,3 +1926,13 @@
 **해석**: 총 소요 시간 개선은 15%대로 크지 않다 — 애초에 이 3개 Phase는 "계산량을 줄이는" 최적화가 아니라 "같은 계산량을 어느 날짜에 몰아넣을지"만 손댔으므로 당연한 결과. 반면 **워스트케이스 단일 호출은 46초→24초로 거의 절반**이 됐다 — 사용자가 실제로 신경 쓴 지점("한 번의 진행이 너무 길어지는 것")이 정확히 이 지표라 목표에 부합하는 개선. 남은 워스트케이스(24초, day 7→63 구간에서 56일이 압축 진행됨)는 `process_day`/`process_week`/월간 클러스터 자체의 계산 비용(이번 Phase들이 손대지 않은 부분)이 여전히 지배적이라는 뜻 — 더 줄이려면 이전에 제안했던 "시간 예산 기반 적응형 컷오프"(하루하루가 아니라 누적 경과시간으로 advance() 반환 시점을 정함)나 `schedule`/`npc` 테이블 인덱스 추가 같은 다음 단계가 필요.
 
 **5-Phase 계획("스케줄 분산 — 프로 3연전/휴식일 현실화 + 리그·PO 요일 조정") 전체 완료.** `perf_probe.rs`는 계속 진단에 쓸 수 있는 상태로 유지(§6-115에서 커밋 완료).
+
+### 6-119. schedule/npc 인덱스 추가 (migration v25) (2026-07-25, 완료)
+
+**Context**: §6-118 재측정에서 남은 워스트케이스(24초)의 원인으로 지목했던 가설 — `schedule`/`npc` 테이블에 인덱스가 전무해 172팀 순회마다 풀스캔이 났을 거라는 것 — 을 검증하는 후속 작업. 순수 실행계획 최적화라 쿼리 결과·게임 로직·결정론에는 영향이 없다는 점을 사용자에게 먼저 확인.
+
+**구현**(`engine/src/data/slot.rs`): migration v25 — `idx_schedule_day`(`process_day`의 `WHERE day = ?1`), `idx_schedule_home`+`idx_schedule_away`(로테이션 재배정의 `WHERE home=?1 OR away=?1` — SQLite가 두 인덱스를 각각 써서 OR을 최적화), `idx_npc_team_id`(로스터 로딩 전반). `season_stats`/`practice_stats`는 복합 PK(`player_id`가 첫 컬럼)라 이미 자동 인덱스로 커버돼 제외.
+
+**테스트**(`slot.rs`, 신규 1개): `v25_creates_indexes_on_schedule_and_npc` — `sqlite_master`에서 4개 인덱스 존재 확인. 기존 `fresh_db_migrates_to_v1_with_seeded_meta_row`를 v25로 갱신. `cargo test --lib` 524개 전부 통과. `cargo clippy --lib --tests --bins` 클린. `cargo build --release` 갱신 후 `flutter test -j 1` 27개 전부 통과. `balance_harness -- 5 3` — 등급 분포·아키타입별 변화량이 인덱스 적용 전과 완전히 동일(예상대로, 순수 실행계획 변경).
+
+**측정**(`perf_probe.exe 1`, 동일 조건): §6-118 대비 총 소요 61.88s→**24.75s**(-60%), 워스트케이스 단일 호출 24.02s→**5.10s**(-79%), 진행 일수당 평균 166.8ms→66.7ms(-60%). `generate_initial_world`도 332ms→174ms. **원래 baseline(스케줄 분산 전) 대비로는 73.03s→24.75s(-66%), 워스트케이스 46s→5.10s(-89%)** — 인덱스가 이번 성능 조사 전체에서 단연 가장 큰 단일 개선이었다. 가설(스키마에 인덱스가 아예 없어 풀스캔이 process_day·월간 클러스터 비용의 상당 부분을 차지)이 실측으로 확인됨.
