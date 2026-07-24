@@ -4952,22 +4952,26 @@ pub fn season_rollover(conn: &Connection, content_conn: &Connection, day: i64) -
     conn.execute("DELETE FROM inbox", [])?;
 
     let world_seed: i64 = conn.query_row("SELECT world_seed FROM meta", [], |row| row.get(0))?;
-    run_pro_postseason(conn, content_conn, world_seed, day)?;
-    run_pro_farm_postseason(conn, content_conn, world_seed, day)?;
     // 나머지 9개 대회(대학 3·고교 5·독립리그) — 예전엔 함수만 있고 실제
     // 플레이 중엔 한 번도 안 불렸다(대화 2026-07-26 발견, `run_pro_postseason`
-    // 만 여기 배선돼 있었음). 이제 전부 하루 단위로 진행되므로(§ 위 대회
-    // 섹션 설명) 시즌 종료 시점에 다 같이 시작 — 참가 인원이 모자라면
-    // (합성 테스트 데이터 등) 각자 조용히 `false`를 반환하고 넘어간다.
+    // 만 여기 배선돼 있었음). 이제 전부 하루 단위로 진행된다(§ 위 대회
+    // 섹션 설명) — 참가 인원이 모자라면(합성 테스트 데이터 등) 각자
+    // 조용히 `false`를 반환하고 넘어간다.
+    // 11개 대회 시작일을 고정 오프셋으로 분산(대화 2026-07-24, §6-117) —
+    // 예전엔 전부 `day`/`day+1` 근처로 동시에 1라운드를 스케줄해 시즌
+    // 경계 하루에 부하가 가장 크게 몰렸다. 프로/프로2군을 가장 먼저
+    // 시작시키고(표준 규격이라 우선), 나머지를 그 뒤로 이틀씩 겹쳐 배분.
+    run_pro_postseason(conn, content_conn, world_seed, day)?;
+    run_pro_farm_postseason(conn, content_conn, world_seed, day + 1)?;
     run_independent_season(conn, content_conn, world_seed, day + 1)?;
-    run_univ_wangjungwang(conn, content_conn, world_seed, day)?;
-    run_univ_eunhagi(conn, content_conn, world_seed, day)?;
-    run_univ_yeongmyeonggi(conn, content_conn, world_seed, day)?;
-    run_hs_gaenari(conn, content_conn, world_seed, day)?;
-    run_hs_jangmi(conn, content_conn, world_seed, day)?;
-    run_hs_mugunghwa(conn, content_conn, world_seed, day)?;
-    run_hs_paewang(conn, content_conn, world_seed, day)?;
-    run_hs_gukhwa(conn, content_conn, world_seed, day)?;
+    run_univ_wangjungwang(conn, content_conn, world_seed, day + 2)?;
+    run_univ_eunhagi(conn, content_conn, world_seed, day + 2)?;
+    run_univ_yeongmyeonggi(conn, content_conn, world_seed, day + 3)?;
+    run_hs_gaenari(conn, content_conn, world_seed, day + 3)?;
+    run_hs_jangmi(conn, content_conn, world_seed, day + 4)?;
+    run_hs_mugunghwa(conn, content_conn, world_seed, day + 4)?;
+    run_hs_paewang(conn, content_conn, world_seed, day + 5)?;
+    run_hs_gukhwa(conn, content_conn, world_seed, day + 5)?;
 
     // 방금 끝난 시즌(`current`)의 주인공 통산 집계를 커리어 타임라인에
     // 한 줄 남긴다(05_히스토리_엔딩.md §4 "커리어 타임라인 그래프") —
@@ -9106,6 +9110,57 @@ mod tests {
             .query_row("SELECT rank FROM history_standings WHERE season = 0 AND team_id = 'team:a'", [], |r| r.get(0))
             .unwrap();
         assert_eq!(rank_a, 1, "team:a has the better win% and should rank 1st");
+    }
+
+    /// 스케줄 분산 Phase 3(대화 2026-07-24, §6-117) — 예전엔 프로·프로2군
+    /// 포스트시즌이 둘 다 `day`로 동시에 시작했다. 고정 오프셋으로 갈라놓은
+    /// 뒤에도 각자 정상적으로 시작하는지, 그리고 실제로 서로 다른 날에
+    /// 시작하는지 확인.
+    #[test]
+    fn season_rollover_staggers_postseason_tournament_start_days() {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:pro', NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:pro_farm', NULL)", []).unwrap();
+
+        let slot_conn = slot::open_in_memory().unwrap();
+        for i in 0..5 {
+            let team_id = format!("team:p{i}");
+            content_conn
+                .execute("INSERT INTO teams (id, league_id, color, meta) VALUES (?1, 'league:pro', NULL, NULL)", params![team_id])
+                .unwrap();
+            insert_minimal_roster(&slot_conn, &team_id);
+            let wins = 20 - (i * 2);
+            slot_conn
+                .execute("INSERT INTO standings (team_id, w, l, t, rank) VALUES (?1, ?2, ?3, 0, 0)", params![team_id, wins, 20 - wins])
+                .unwrap();
+        }
+        for i in 0..4 {
+            let team_id = format!("team:f{i}");
+            content_conn
+                .execute("INSERT INTO teams (id, league_id, color, meta) VALUES (?1, 'league:pro_farm', NULL, NULL)", params![team_id])
+                .unwrap();
+            insert_minimal_roster(&slot_conn, &team_id);
+            let wins = 20 - (i * 2);
+            slot_conn
+                .execute("INSERT INTO standings (team_id, w, l, t, rank) VALUES (?1, ?2, ?3, 0, 0)", params![team_id, wins, 20 - wins])
+                .unwrap();
+        }
+
+        season_rollover(&slot_conn, &content_conn, 364).unwrap();
+
+        // `tournaments.id`가 `tourn:{kind}_{world_seed}_{day}` 형식으로
+        // 호출 시점의 day를 그대로 담고 있으므로(schedule 테이블은 이
+        // 시점 이후 season_rollover 자신이 시즌 재생성을 위해 통째로
+        // DELETE하므로 거기서는 확인 불가), id 접미사로 검증한다.
+        let pro_id: String =
+            slot_conn.query_row("SELECT id FROM tournaments WHERE id LIKE 'tourn:pro_postseason_%'", [], |r| r.get(0)).unwrap();
+        let farm_id: String =
+            slot_conn.query_row("SELECT id FROM tournaments WHERE id LIKE 'tourn:pro_farm_postseason_%'", [], |r| r.get(0)).unwrap();
+        let pro_day = pro_id.rsplit('_').next().unwrap();
+        let farm_day = farm_id.rsplit('_').next().unwrap();
+        assert_eq!(pro_day, "364");
+        assert_eq!(farm_day, "365", "프로2군 포스트시즌은 프로보다 하루 늦게 시작해야 함");
+        assert_ne!(pro_day, farm_day, "프로/프로2군 포스트시즌이 같은 날 동시에 시작하면 안 됨");
     }
 
     #[test]

@@ -1900,3 +1900,13 @@
 **구현**(`engine/src/data/repository.rs`): `generate_initial_world`(line 347)·`season_rollover`(line 5084)의 `SCHEDULED_LEAGUE_IDS` 순회에 리그 인덱스 오프셋 추가(`start_day + i`) — 고교·대학·프로·프로2군이 하루씩 어긋나게 시작. **독립리그 오프셋은 여기서 안 건드림** — 리서치 중 확인한바 `run_independent_season`은 `generate_schedule` 경로가 아니라 `season_rollover`가 부르는 "포스트시즌 11개 대회" 블록의 일원(그룹스테이지→넉아웃 대회 구조, §6-117 Phase 3 대상)이라 그쪽에서 같이 분산하는 게 자연스러움 — 계획 문서에 처음 적었던 "Phase 2에서 독립리그도" 부분은 구현 중 Phase 3로 재배치.
 
 **테스트**(`schedule.rs`, 신규 2개): `targeted_with_group_offsets_still_gives_every_team_the_target_game_count`(3그룹 6팀씩, 목표 경기수 20이 오프셋과 무관하게 유지), `targeted_with_group_offsets_starts_most_groups_on_different_days`(8그룹 합성 데이터, 최소 7개 그룹이 서로 다른 시작일). `repository.rs`(신규 1개): `generate_schedule_starts_real_hs_regions_on_different_days` — 실제 content.db 고교 8권역으로 최소 2개 이상 서로 다른 시작일 확인. `cargo test --lib` 522개 전부 통과. `cargo clippy --lib --tests --bins` 클린. `cargo build --release` 갱신 후 `flutter test -j 1` 27개 전부 통과. `balance_harness -- 5 3` 스모크 — 크래시 없이 정상 종료, 등급 분포·아키타입별 변화량 §6-115와 동일(예상대로, 순수 날짜 재배치라 주인공 성적에 영향 없음).
+
+### 6-117. 스케줄 분산 Phase 3 — 포스트시즌 11개 대회 시작일 분산 (2026-07-24, 완료)
+
+**Context**: §6-116에서 재배치해둔 항목 — `season_rollover`가 부르는 프로/프로2군/독립리그/대학 3개/고교 5개 포스트시즌 대회 11개가 전부 `day`/`day+1` 근처로 동시에 1라운드를 스케줄해, 시즌 경계 하루(새 정규시즌 1일차와 겹침)가 실측 워스트케이스(46초)의 유력한 원인 중 하나였다.
+
+**구현**(`engine/src/data/repository.rs`): `season_rollover`(line 4954)의 11개 `run_*` 호출 각각에 고정 오프셋을 부여 — 프로(`day`)→프로2군·독립리그(`day+1`)→대학 왕중왕전·은하기(`day+2`)→대학 영명기·고교 개나리기(`day+3`)→고교 장미기·무궁화기(`day+4`)→고교 패왕전·국화기(`day+5`). 함수 시그니처는 그대로 두고(각자 `day: i64`를 그대로 `begin_knockout`/`begin_group_stage`/`begin_gauntlet`의 `start_day`로 씀) 호출부 인자만 바꿔, 기존에 각 대회를 개별로 직접 부르는 단위 테스트(`run_pro_postseason_*` 등, `day=1`/`364` 하드코딩)는 전혀 안 건드림.
+
+**테스트**(`repository.rs`, 신규 1개): `season_rollover_staggers_postseason_tournament_start_days` — league:pro 5팀+league:pro_farm 4팀(각 대회 최소 참가 조건)으로 `season_rollover`를 실행한 뒤, `tournaments.id`(`tourn:{kind}_{world_seed}_{day}` 형식이라 호출 시점의 day를 그대로 담음)의 접미사로 프로는 364, 프로2군은 365로 실제로 갈라졌는지 확인. **구현 중 발견**: `schedule` 테이블은 `season_rollover` 자신이 끝 무렵 통째로 `DELETE`(다음 시즌 정규시즌 재생성 준비)하므로, 대회가 만든 경기 스케줄로는 검증 불가 — `tournaments.id` 문자열로 검증하도록 테스트 설계를 수정. `cargo test --lib` 523개 전부 통과. `cargo clippy --lib --tests --bins` 클린. `cargo build --release` 갱신 후 `flutter test -j 1` 27개 전부 통과. `balance_harness -- 5 3` 스모크 — 크래시 없이 정상 종료, 등급 분포 동일.
+
+**남은 Phase**: Phase 4(재측정 — `perf_probe`로 Phase 1~3 적용 전후 `advance()` 워스트케이스 개선폭 확인, 필요시 §6-115~117 종합 보고).
