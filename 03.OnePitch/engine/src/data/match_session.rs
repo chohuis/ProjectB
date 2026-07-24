@@ -539,7 +539,7 @@ fn apply_protagonist_evaluation(slot_conn: &Connection, session: &SessionRow, pr
     // 투수지도력 코치 보너스(이월 부채 정리, 대화 2026-07-22) — 코치 없으면
     // (구버전 세이브 등) 0(무보정).
     let coach = repository::load_coach_stats(slot_conn, protagonist_team_id)?;
-    let eval_bonus = coach.as_ref().map(|c| crate::sim::staff::coach_eval_bonus(c.pitching)).unwrap_or(0.0);
+    let eval_bonus = crate::sim::staff::coach_eval_bonus(repository::best_coach_stat(&coach, |c| c.pitching).unwrap_or(50.0));
     let own_skill = (pitcher.control + pitcher.stuff) / 2.0 + eval_bonus;
 
     let grade = eval::grade_outing(runs_allowed, opponent_avg, own_skill);
@@ -553,7 +553,7 @@ fn apply_protagonist_evaluation(slot_conn: &Connection, session: &SessionRow, pr
     // 영향 없음, sim::staff::coach_mental_dampening 문서 참고).
     let mut morale_delta = eval::morale_delta(grade);
     if morale_delta < 0.0 {
-        morale_delta *= coach.as_ref().map(|c| crate::sim::staff::coach_mental_dampening(c.mental)).unwrap_or(1.0);
+        morale_delta *= crate::sim::staff::coach_mental_dampening(repository::best_coach_stat(&coach, |c| c.mental).unwrap_or(50.0));
     }
     live_state.insert("사기".to_string(), serde_json::json!((morale + morale_delta).clamp(0.0, 100.0)));
     live_state.insert("주목도".to_string(), serde_json::json!(attention + eval::attention_gain(grade)));

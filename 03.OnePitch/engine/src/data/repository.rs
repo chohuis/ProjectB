@@ -60,7 +60,7 @@ struct GeneratedTeamRoster {
     team_id: String,
     players: Vec<roster::GeneratedPlayer>,
     manager: manager::GeneratedManager,
-    coach: staff::GeneratedCoach,
+    coaches: Vec<staff::GeneratedCoach>,
     owner: staff::GeneratedOwner,
 }
 
@@ -75,6 +75,21 @@ fn hs_target_roster_size(resource: &str) -> u64 {
         "안정" => 38,
         "알뜰" => 33,
         _ => 30, // 궁핍 + 미인식 값
+    }
+}
+
+/// 팀당 코치 수(가변 슬롯 0~8명) 범위 — 자원(resource) 등급별, `team_traits.resource`가
+/// 전 리그 공통 필드라 리그 특례 없이 전 팀에 동일 적용(172팀 균등원칙,
+/// `10_구현_Phase_계획.md` §1). `02_스태프_능력치.md` §2-2 원안("고교 궁핍
+/// 0~1, 프로 부유 6~8")의 중간 등급 보간은 D그룹 placeholder(대화
+/// 2026-07-24). `generate_league_roster_data`가 이 범위에서 시드 결정적으로
+/// 추첨한다.
+fn coach_count_range(resource: &str) -> (u64, u64) {
+    match resource {
+        "부유" => (6, 8),
+        "안정" => (4, 5),
+        "알뜰" => (2, 3),
+        _ => (0, 1), // 궁핍 + 미인식 값
     }
 }
 
@@ -128,15 +143,17 @@ fn generate_league_roster_data(content_conn: &Connection, world_seed: i64, leagu
         let manager_weights = PersonalityWeights::merge(&[philosophy_ctx.clone(), status_ctx.clone(), manager_role_ctx.clone()]);
         let manager = manager::generate_manager(&mut rng, &team.id, &kr_surnames, &kr_given, &manager_weights);
 
-        // 코치·구단주(이월 부채 정리, 대화 2026-07-22) — 팀당 1명씩(기획
-        // 원안의 0~8명 가변·적성배치는 1차 축소안, sim::staff.rs 문서 참고).
+        // 코치(가변 슬롯 0~8명, 대화 2026-07-24 — 1차 축소안(대화 2026-07-22)
+        // 확장, sim::staff.rs 문서 참고)·구단주(팀당 1명 그대로).
         let coach_weights = PersonalityWeights::merge(&[philosophy_ctx.clone(), status_ctx.clone(), coach_role_ctx.clone()]);
-        let coach = staff::generate_coach(&mut rng, &team.id, &kr_surnames, &kr_given, &coach_weights);
+        let (coach_min, coach_max) = coach_count_range(&team.resource);
+        let coach_count = rng.gen_range(coach_min..=coach_max);
+        let coaches = staff::generate_coaches(&mut rng, &team.id, coach_count, &kr_surnames, &kr_given, &coach_weights, &secondary_pitches);
 
         let owner_weights = PersonalityWeights::merge(&[philosophy_ctx, status_ctx, owner_role_ctx.clone()]);
         let owner = staff::generate_owner(&mut rng, &team.id, &kr_surnames, &kr_given, &owner_weights);
 
-        out.push(GeneratedTeamRoster { team_id: team.id.clone(), players, manager, coach, owner });
+        out.push(GeneratedTeamRoster { team_id: team.id.clone(), players, manager, coaches, owner });
     }
     Ok(out)
 }
@@ -187,20 +204,23 @@ pub fn generate_league_roster(slot_conn: &mut Connection, content_conn: &Connect
             ],
         )?;
 
-        let c = &team.coach;
-        tx.execute(
-            "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches, injury)
-             VALUES (?1, ?2, ?3, '코치', ?4, 0, 0, 50.0, ?5, ?6, '{}', '{}', NULL, ?7)",
-            params![
-                c.id,
-                c.name,
-                c.team_id,
-                c.age,
-                c.personality.to_string(),
-                c.stats.to_string(),
-                serde_json::json!({"current": null, "history": []}).to_string(),
-            ],
-        )?;
+        for c in &team.coaches {
+            tx.execute(
+                "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches, injury, coach_role, coach_specialties)
+                 VALUES (?1, ?2, ?3, '코치', ?4, 0, 0, 50.0, ?5, ?6, '{}', '{}', NULL, ?7, ?8, ?9)",
+                params![
+                    c.id,
+                    c.name,
+                    c.team_id,
+                    c.age,
+                    c.personality.to_string(),
+                    c.stats.to_string(),
+                    serde_json::json!({"current": null, "history": []}).to_string(),
+                    c.role,
+                    serde_json::json!(c.specialties).to_string(),
+                ],
+            )?;
+        }
 
         let o = &team.owner;
         tx.execute(
@@ -240,7 +260,9 @@ pub fn preview_hs_roster(content_conn: &Connection, world_seed: i64, team_id: &s
         .map(|p| (p.id.clone(), p.name.clone(), p.position.clone(), p.age, p.stats.to_string(), p.pitches.as_ref().map(|v| v.to_string())))
         .collect();
     rows.push((team.manager.id, team.manager.name, "감독".to_string(), team.manager.age, team.manager.stats.to_string(), None));
-    rows.push((team.coach.id, team.coach.name, "코치".to_string(), team.coach.age, team.coach.stats.to_string(), None));
+    for c in &team.coaches {
+        rows.push((c.id.clone(), c.name.clone(), "코치".to_string(), c.age, c.stats.to_string(), None));
+    }
     rows.push((team.owner.id, team.owner.name, "구단주".to_string(), team.owner.age, team.owner.stats.to_string(), None));
     Ok(rows)
 }
@@ -774,7 +796,7 @@ fn process_protagonist_week(slot_conn: &Connection, content_conn: &Connection, w
     // 코치가 없으면(구버전 세이브 등) None, 아래 각 지점이 중립값으로 처리.
     let coach = match &team_id {
         Some(t) => load_coach_stats(slot_conn, t)?,
-        None => None,
+        None => Vec::new(),
     };
 
     let mut injury: serde_json::Value = serde_json::from_str(&injury_raw)?;
@@ -793,7 +815,7 @@ fn process_protagonist_week(slot_conn: &Connection, content_conn: &Connection, w
     let mut injury_rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("injury:proto:{day}")));
     // 컨디셔닝 코치 보너스 — 부상 확률 계산에만 쓰는 체감 피로도(저장되는
     // 실제 피로도·경고 임계 비교는 원래 값을 그대로 씀).
-    let effective_fatigue = fatigue_before_training * coach.as_ref().map(|c| crate::sim::staff::coach_conditioning_factor(c.conditioning)).unwrap_or(1.0);
+    let effective_fatigue = fatigue_before_training * crate::sim::staff::coach_conditioning_factor(best_coach_stat(&coach, |c| c.conditioning).unwrap_or(50.0));
     // 전조 경고(§3, §6-64) — 임계 초과 첫 주는 확률판정 없이 경고만 발생,
     // 그 다음 주에도 방치되면(=강행) 비로소 실제 판정. 메시지함(`inbox`
     // 테이블)의 첫 실사용 — I8 콘텐츠 저작 없이 시스템이 직접 생성.
@@ -846,7 +868,8 @@ fn process_protagonist_week(slot_conn: &Connection, content_conn: &Connection, w
     let genius = stats.get("천재성").and_then(|v| v.as_f64()).unwrap_or(50.0);
     // 투수지도력+종합지도력 코치 보너스 — 훈련 genius 입력값에 가산(sim::training
     // 시그니처는 안 건드림).
-    let effective_genius = genius + coach.as_ref().map(|c| crate::sim::staff::coach_genius_bonus(c.pitching, c.general)).unwrap_or(0.0);
+    let effective_genius =
+        genius + crate::sim::staff::coach_genius_bonus(best_coach_stat(&coach, |c| c.pitching).unwrap_or(50.0), best_coach_stat(&coach, |c| c.general).unwrap_or(50.0));
 
     let has_upcoming_start = match team_id.as_deref() {
         Some(team_id) => {
@@ -889,7 +912,12 @@ fn process_protagonist_week(slot_conn: &Connection, content_conn: &Connection, w
     if let Some(pitch) = &new_pitch {
         let weeks = training.get("pitch_weeks").and_then(|v| v.as_u64()).unwrap_or(0) + 1;
         let base_required = crate::sim::training::weeks_required_to_learn_pitch(intensity) as i64;
-        let pitch_learning_bonus = coach.as_ref().map(|c| crate::sim::staff::coach_pitch_learning_bonus(c.pitching)).unwrap_or(0);
+        let specialty_bonus = if coach.iter().any(|c| c.role == "투수" && c.specialties.iter().any(|s| s == pitch)) {
+            crate::sim::staff::COACH_SPECIALTY_PITCH_BONUS_WEEKS
+        } else {
+            0
+        };
+        let pitch_learning_bonus = crate::sim::staff::coach_pitch_learning_bonus(best_coach_stat(&coach, |c| c.pitching).unwrap_or(50.0)) + specialty_bonus;
         let required = (base_required - pitch_learning_bonus).max(1) as u64;
         if weeks >= required {
             let mut pitches: Vec<serde_json::Value> = serde_json::from_str(&pitches_raw)?;
@@ -914,7 +942,12 @@ fn process_protagonist_week(slot_conn: &Connection, content_conn: &Connection, w
         // 시 새 배열에 추가하는 대신 이미 있는 항목의 `stage`를 올린다.
         let weeks = training.get("pitch_weeks").and_then(|v| v.as_u64()).unwrap_or(0) + 1;
         let base_required = crate::sim::training::weeks_required_to_master_pitch(intensity) as i64;
-        let mastery_bonus = coach.as_ref().map(|c| crate::sim::staff::coach_pitch_learning_bonus(c.pitching)).unwrap_or(0);
+        let specialty_bonus = if coach.iter().any(|c| c.role == "투수" && c.specialties.iter().any(|s| s == pitch)) {
+            crate::sim::staff::COACH_SPECIALTY_PITCH_BONUS_WEEKS
+        } else {
+            0
+        };
+        let mastery_bonus = crate::sim::staff::coach_pitch_learning_bonus(best_coach_stat(&coach, |c| c.pitching).unwrap_or(50.0)) + specialty_bonus;
         let required = (base_required - mastery_bonus).max(1) as u64;
         if weeks >= required {
             let mut pitches: Vec<serde_json::Value> = serde_json::from_str(&pitches_raw)?;
@@ -1293,14 +1326,13 @@ pub fn generate_freshmen(conn: &Connection, content_conn: &Connection, world_see
             // 신인 스탯 생성 구간(stat_min/stat_max)을 넓힌다("유망주 발굴",
             // 02_스태프_능력치.md §2-1). 코치가 없으면(구버전 세이브 등)
             // 가산치 0 — 기존 동작과 동일.
-            if let Some(coach) = load_coach_stats(conn, &team.id)? {
-                let bonus = crate::sim::staff::scouting_stat_bonus(coach.scouting);
-                if bonus > 0.0 {
-                    let stat_min = topup_rule.get("stat_min").and_then(|v| v.as_f64()).unwrap_or(20.0);
-                    let stat_max = topup_rule.get("stat_max").and_then(|v| v.as_f64()).unwrap_or(80.0);
-                    topup_rule["stat_min"] = serde_json::json!((stat_min + bonus).min(stat_max));
-                    topup_rule["stat_max"] = serde_json::json!((stat_max + bonus).min(80.0));
-                }
+            let coach = load_coach_stats(conn, &team.id)?;
+            let bonus = crate::sim::staff::scouting_stat_bonus(best_coach_stat(&coach, |c| c.scouting).unwrap_or(50.0));
+            if bonus > 0.0 {
+                let stat_min = topup_rule.get("stat_min").and_then(|v| v.as_f64()).unwrap_or(20.0);
+                let stat_max = topup_rule.get("stat_max").and_then(|v| v.as_f64()).unwrap_or(80.0);
+                topup_rule["stat_min"] = serde_json::json!((stat_min + bonus).min(stat_max));
+                topup_rule["stat_max"] = serde_json::json!((stat_max + bonus).min(80.0));
             }
 
             let players = roster::generate_team(
@@ -2042,11 +2074,14 @@ pub(crate) struct CoachStats {
     pub mental: f64,
     pub scouting: f64,
     pub general: f64,
+    pub role: String,
+    pub specialties: Vec<String>,
 }
 
-fn coach_stats_from_json(v: &serde_json::Value) -> CoachStats {
+fn coach_stats_from_row(stats_raw: &str, role_raw: Option<String>, specialties_raw: Option<String>) -> anyhow::Result<CoachStats> {
+    let v: serde_json::Value = serde_json::from_str(stats_raw)?;
     let get = |key: &str| v.get(key).and_then(|x| x.as_f64()).unwrap_or(50.0);
-    CoachStats {
+    Ok(CoachStats {
         pitching: get("투수지도력"),
         batting: get("타격지도력"),
         running: get("주루지도력"),
@@ -2054,29 +2089,40 @@ fn coach_stats_from_json(v: &serde_json::Value) -> CoachStats {
         mental: get("멘탈코칭"),
         scouting: get("스카우팅안목"),
         general: get("종합지도력"),
-    }
+        role: role_raw.unwrap_or_default(),
+        specialties: specialties_raw.and_then(|s| serde_json::from_str(&s).ok()).unwrap_or_default(),
+    })
 }
 
-pub(crate) fn load_coach_stats(conn: &Connection, team_id: &str) -> anyhow::Result<Option<CoachStats>> {
-    let stats_raw: Option<String> =
-        conn.query_row("SELECT stats FROM npc WHERE id = ?1", [format!("coach:{team_id}")], |r| r.get(0)).optional()?;
-    let Some(stats_raw) = stats_raw else {
-        return Ok(None);
-    };
-    let v: serde_json::Value = serde_json::from_str(&stats_raw)?;
-    Ok(Some(coach_stats_from_json(&v)))
+/// 팀 코치진(0~8명, 가변 슬롯 — 대화 2026-07-24) 스탯 전체 로드. `sim::staff`
+/// 함수들에 그대로 넣는 용도 — 감독과 달리 해시 폴백이 없다: 코치가 없는
+/// 팀(구버전 세이브·합성 테스트·궁핍 자원 최소치 0명)은 빈 벡터, 호출부가
+/// `best_coach_stat`으로 "코치 없으면 효과 없음"을 처리한다.
+pub(crate) fn load_coach_stats(conn: &Connection, team_id: &str) -> anyhow::Result<Vec<CoachStats>> {
+    let mut stmt = conn.prepare("SELECT stats, coach_role, coach_specialties FROM npc WHERE team_id = ?1 AND position = '코치'")?;
+    let rows: Vec<(String, Option<String>, Option<String>)> =
+        stmt.query_map([team_id], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)))?.collect::<Result<_, _>>()?;
+    rows.into_iter().map(|(stats_raw, role_raw, specialties_raw)| coach_stats_from_row(&stats_raw, role_raw, specialties_raw)).collect()
+}
+
+/// 팀 코치진 중 특정 스탯의 최댓값 — 소비처가 역할 매칭 없이 "팀에서
+/// 구할 수 있는 최선의 값"을 쓴다(코치가 1명뿐이던 1차 축소안과 수치상
+/// 동일하게 수렴). 코치가 없으면(빈 벡터) `None` — 호출부가 각 보정
+/// 함수의 중립 입력값(대개 50.0)으로 폴백한다.
+pub(crate) fn best_coach_stat(coaches: &[CoachStats], pick: impl Fn(&CoachStats) -> f64) -> Option<f64> {
+    coaches.iter().map(pick).reduce(f64::max)
 }
 
 /// 팀별 코치 스탯 일괄 로드 — `process_week`처럼 수천 NPC를 순회하며
 /// 팀당 반복 조회하면 안 되는 자리에서 `philosophy_by_team`과 같은
 /// 패턴으로 한 번만 불러 쓴다.
-fn load_coach_stats_by_team(conn: &Connection) -> anyhow::Result<HashMap<String, CoachStats>> {
-    let mut stmt = conn.prepare("SELECT team_id, stats FROM npc WHERE position = '코치'")?;
-    let rows: Vec<(String, String)> = stmt.query_map([], |r| Ok((r.get(0)?, r.get(1)?)))?.collect::<Result<_, _>>()?;
-    let mut out = HashMap::with_capacity(rows.len());
-    for (team_id, stats_raw) in rows {
-        let v: serde_json::Value = serde_json::from_str(&stats_raw)?;
-        out.insert(team_id, coach_stats_from_json(&v));
+fn load_coach_stats_by_team(conn: &Connection) -> anyhow::Result<HashMap<String, Vec<CoachStats>>> {
+    let mut stmt = conn.prepare("SELECT team_id, stats, coach_role, coach_specialties FROM npc WHERE position = '코치'")?;
+    let rows: Vec<(String, String, Option<String>, Option<String>)> =
+        stmt.query_map([], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?)))?.collect::<Result<_, _>>()?;
+    let mut out: HashMap<String, Vec<CoachStats>> = HashMap::new();
+    for (team_id, stats_raw, role_raw, specialties_raw) in rows {
+        out.entry(team_id).or_default().push(coach_stats_from_row(&stats_raw, role_raw, specialties_raw)?);
     }
     Ok(out)
 }
@@ -3639,6 +3685,7 @@ fn process_week(conn: &Connection, content_conn: &Connection, world_seed: i64, d
         let mut injury: serde_json::Value =
             injury_raw.and_then(|s| serde_json::from_str(&s).ok()).unwrap_or_else(|| serde_json::json!({"current": null, "history": []}));
         clear_healed_injury(&mut injury, day);
+        let coaches: &[CoachStats] = coach_by_team.get(&team_id).map(Vec::as_slice).unwrap_or(&[]);
 
         if let Some(return_day) = military_return_day {
             if day >= return_day {
@@ -3662,11 +3709,10 @@ fn process_week(conn: &Connection, content_conn: &Connection, world_seed: i64, d
             // 추가로 받는다(sim::staff::coach_growth_focus). 코치가 없으면
             // (구버전 세이브·합성 테스트) 전부 50.0 기본값이라 배율이 1.0으로
             // 떨어져 기존 동작과 동일 — 하위호환.
-            let coach = coach_by_team.get(&team_id);
             let is_pitcher = position == "선발투수" || position == "중계투수" || position == "마무리투수";
-            let specialized = coach.map(|c| if is_pitcher { c.pitching } else { c.batting }).unwrap_or(50.0);
-            let general = coach.map(|c| c.general).unwrap_or(50.0);
-            let running = coach.map(|c| c.running).unwrap_or(50.0);
+            let specialized = best_coach_stat(coaches, |c| if is_pitcher { c.pitching } else { c.batting }).unwrap_or(50.0);
+            let general = best_coach_stat(coaches, |c| c.general).unwrap_or(50.0);
+            let running = best_coach_stat(coaches, |c| c.running).unwrap_or(50.0);
 
             let mut growth_rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("growth:{id}:{day}")));
             crate::sim::growth::apply_weekly_growth_with_focus(&mut growth_rng, exposed, &mut stats, &mut xp, genius, |stat| {
@@ -3685,7 +3731,7 @@ fn process_week(conn: &Connection, content_conn: &Connection, world_seed: i64, d
         let mut injury_rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("injury:{id}:{day}")));
         // 컨디셔닝 코치 보너스 — 부상 확률 계산에만 쓰는 체감 피로도(저장되는
         // 실제 피로도 값 자체는 안 건드림).
-        let conditioning = coach_by_team.get(&team_id).map(|c| c.conditioning).unwrap_or(50.0);
+        let conditioning = best_coach_stat(coaches, |c| c.conditioning).unwrap_or(50.0);
         let effective_fatigue = fatigue * crate::sim::staff::coach_conditioning_factor(conditioning);
         // NPC는 "전조 경고"를 읽고 반응할 의사결정 주체가 없어(§6-64 —
         // 경고는 주인공 전용 서사) 항상 already_warned=true로 넘겨 경고
@@ -3737,9 +3783,8 @@ fn process_month(conn: &Connection, content_conn: &Connection, world_seed: i64, 
             .and_then(|raw| serde_json::from_str::<serde_json::Value>(&raw).ok())
             .and_then(|c| c.get("team_id").and_then(|v| v.as_str()).map(str::to_string));
         if let Some(team_id) = team_id {
-            if let Some(coach) = load_coach_stats(conn, &team_id)? {
-                adjustment *= crate::sim::staff::coach_mental_dampening(coach.mental);
-            }
+            let coach = load_coach_stats(conn, &team_id)?;
+            adjustment *= crate::sim::staff::coach_mental_dampening(best_coach_stat(&coach, |c| c.mental).unwrap_or(50.0));
         }
     }
     live_state.insert("사기".to_string(), serde_json::json!((morale + adjustment).clamp(0.0, 100.0)));
@@ -7200,7 +7245,10 @@ mod tests {
         generate_league_roster(&mut slot_conn, &content_conn, 123, "league:x").unwrap();
 
         let count: i64 = slot_conn.query_row("SELECT count(*) FROM npc", [], |r| r.get(0)).unwrap();
-        assert_eq!(count, 22); // 2 teams * (roster_size 8 + 감독·코치·구단주 3명)
+        // 2 teams * roster_size 8 = 16(선수) + 감독 2 + 구단주 2 + 코치(가변
+        // 슬롯, 대화 2026-07-24 — team:a 안정=coach_count_range(4,5), team:b
+        // 알뜰=coach_count_range(2,3), seed 123 결정적 추첨 결과 8명) = 28.
+        assert_eq!(count, 28);
     }
 
     #[test]
@@ -7505,9 +7553,15 @@ mod tests {
         let count: i64 = slot_conn.query_row("SELECT count(*) FROM npc", [], |r| r.get(0)).unwrap();
         // 고교는 자원('안정') 기반 목표치(hs_target_roster_size)로 flat
         // roster_size:4를 덮어쓰므로(대화 2026-07-23) 다른 4개 리그와 다르게 센다.
-        let non_hs_count = (LEAGUE_IDS.len() as i64 - 1) * (4 + 3); // roster_size 4 + 감독·코치·구단주 3명
-        let hs_count = hs_target_roster_size("안정") as i64 + 3;
-        assert_eq!(count, non_hs_count + hs_count);
+        // 코치는 이제 가변 슬롯(대화 2026-07-24, 자원 '안정' → coach_count_range
+        // 4~5명)이라 정확한 수 대신 범위로 검증한다.
+        let (coach_min, coach_max) = coach_count_range("안정");
+        let non_hs_teams = LEAGUE_IDS.len() as i64 - 1;
+        let non_hs_min = non_hs_teams * (4 + 2 + coach_min as i64); // roster_size 4 + 감독·구단주 2명 + 코치
+        let non_hs_max = non_hs_teams * (4 + 2 + coach_max as i64);
+        let hs_min = hs_target_roster_size("안정") as i64 + 2 + coach_min as i64;
+        let hs_max = hs_target_roster_size("안정") as i64 + 2 + coach_max as i64;
+        assert!(count >= non_hs_min + hs_min && count <= non_hs_max + hs_max, "count={count} out of documented range");
     }
 
     fn current_day(conn: &Connection) -> i64 {

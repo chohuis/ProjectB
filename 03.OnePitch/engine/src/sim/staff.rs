@@ -4,11 +4,15 @@
 //! 감독과 달리 여러 지점(훈련·구종습득·평가·NPC 성장·신인생성·계약)에
 //! 보정을 준다.
 //!
-//! **1차 축소안**(대화 2026-07-22): 기획 원안은 코치가 팀당 0~8명(자원·
-//! 리그별 가변)에 적성배치·미스매치·복수배치 판정까지 있는 미니 스태프
-//! 시뮬레이션이지만, 이번엔 **코치·구단주 각각 팀당 1명 고정**으로
-//! 단순화했다 — 그 대신 능력치 10개 전부를 실제 효과에 연결한다(감독처럼
-//! "생성만 되고 안 쓰이는" 스탯을 안 남긴다는 원칙).
+//! **1차 축소안**(대화 2026-07-22) → **가변 슬롯 확장**(대화 2026-07-24):
+//! 코치는 이제 팀당 0~8명(자원 등급별 가변, `repository::coach_count_range`)
+//! 이고 각자 `role`(적성 6종 중 하나)이 있지만, 능력치 7종은 여전히 코치
+//! 전원이 동시에 갖는다 — "생성만 되고 안 쓰이는 스탯을 안 남긴다"는
+//! 1차 축소안의 원칙을 그대로 유지하면서, role은 팀 구성·UI 표시와
+//! 구종 전문화(`specialties`, 투수 role 전용) 게이팅에만 쓴다. 소비처
+//! (`repository::best_coach_stat`)는 역할 매칭 없이 팀 코치진 전체에서
+//! 필요한 스탯의 최댓값을 취한다 — 코치 1명뿐이던 시절과 수치상 동일하게
+//! 수렴하는 하위호환 설계.
 //!
 //! 여기 함수들은 전부 **D그룹 placeholder**(정확한 계수는 05_밸런스.md에
 //! 없음) — I8 밸런스 하네스 재조정 대상.
@@ -22,6 +26,15 @@ use super::roster::{gen_name, pick_personality, PersonalityWeights};
 /// 리그별 구분 없음.
 pub const STAFF_AGE_RANGE: (i64, i64) = (35, 65);
 
+/// 코치 적성 6종(02_스태프_능력치.md §2-2 원안) — `generate_coaches`가
+/// 코치 수만큼 순환 배정한다.
+pub const COACH_ROLES: [&str; 6] = ["투수", "타격", "주루", "컨디셔닝", "멘탈", "전력분석"];
+
+/// 구종 전문 코치가 그 구종을 가르칠 때 붙는 추가 감산(주) —
+/// `coach_pitch_learning_bonus`(일반 보너스)와 별개로 가산되는
+/// D그룹 placeholder 상수(05_구종_시스템.md §3 "습득 속도·성공률 크게 상승").
+pub const COACH_SPECIALTY_PITCH_BONUS_WEEKS: i64 = 2;
+
 pub struct GeneratedCoach {
     pub id: String,
     pub name: String,
@@ -29,6 +42,8 @@ pub struct GeneratedCoach {
     pub age: i64,
     pub personality: Value,
     pub stats: Value,
+    pub role: String,
+    pub specialties: Vec<String>,
 }
 
 pub struct GeneratedOwner {
@@ -40,26 +55,53 @@ pub struct GeneratedOwner {
     pub stats: Value,
 }
 
-/// `sim::manager::generate_manager`와 대칭 — 팀당 코치 1명. `role:코치`
+/// 팀 하나의 코치진(`count`명, 0~8)을 생성 — `role`은 `COACH_ROLES`를
+/// 순환 배정(코치가 몇 명이든 전문 분야가 고르게 섞이도록). `specialties`
+/// (가르칠 수 있는 구종)는 투수 role 코치만 `pitch_catalog`에서 1~3개
+/// 무작위 샘플, 그 외 role은 항상 빈 벡터(05_구종_시스템.md §3). `role:코치`
 /// personality_rules 컨텍스트가 이미 시드돼 있음(`data/seed/personality_rules.toml`).
-pub fn generate_coach(rng: &mut impl Rng, team_id: &str, kr_surnames: &[String], kr_given: &[String], weights: &PersonalityWeights) -> GeneratedCoach {
+pub fn generate_coaches(
+    rng: &mut impl Rng,
+    team_id: &str,
+    count: u64,
+    kr_surnames: &[String],
+    kr_given: &[String],
+    weights: &PersonalityWeights,
+    pitch_catalog: &[String],
+) -> Vec<GeneratedCoach> {
     let (age_min, age_max) = STAFF_AGE_RANGE;
-    GeneratedCoach {
-        id: format!("coach:{team_id}"),
-        name: gen_name(rng, kr_surnames, kr_given),
-        team_id: team_id.to_string(),
-        age: rng.gen_range(age_min..=age_max),
-        personality: pick_personality(rng, weights),
-        stats: json!({
-            "투수지도력": rng.gen_range(20.0..=80.0),
-            "타격지도력": rng.gen_range(20.0..=80.0),
-            "주루지도력": rng.gen_range(20.0..=80.0),
-            "컨디셔닝": rng.gen_range(20.0..=80.0),
-            "멘탈코칭": rng.gen_range(20.0..=80.0),
-            "스카우팅안목": rng.gen_range(20.0..=80.0),
-            "종합지도력": rng.gen_range(20.0..=80.0),
-        }),
-    }
+    (0..count)
+        .map(|i| {
+            let role = COACH_ROLES[(i as usize) % COACH_ROLES.len()].to_string();
+            let specialties = if role == "투수" && !pitch_catalog.is_empty() {
+                let n = rng.gen_range(1..=pitch_catalog.len().min(3));
+                let mut pool = pitch_catalog.to_vec();
+                (0..n)
+                    .map(|_| pool.remove(rng.gen_range(0..pool.len())))
+                    .collect()
+            } else {
+                Vec::new()
+            };
+            GeneratedCoach {
+                id: format!("coach:{team_id}:{i}"),
+                name: gen_name(rng, kr_surnames, kr_given),
+                team_id: team_id.to_string(),
+                age: rng.gen_range(age_min..=age_max),
+                personality: pick_personality(rng, weights),
+                stats: json!({
+                    "투수지도력": rng.gen_range(20.0..=80.0),
+                    "타격지도력": rng.gen_range(20.0..=80.0),
+                    "주루지도력": rng.gen_range(20.0..=80.0),
+                    "컨디셔닝": rng.gen_range(20.0..=80.0),
+                    "멘탈코칭": rng.gen_range(20.0..=80.0),
+                    "스카우팅안목": rng.gen_range(20.0..=80.0),
+                    "종합지도력": rng.gen_range(20.0..=80.0),
+                }),
+                role,
+                specialties,
+            }
+        })
+        .collect()
 }
 
 /// 팀당 구단주 1명. `role:구단주` personality_rules 컨텍스트도 이미 시드돼
@@ -150,29 +192,74 @@ mod tests {
         (vec!["김".to_string(), "이".to_string()], vec!["민준".to_string(), "서준".to_string()])
     }
 
-    #[test]
-    fn generate_coach_is_deterministic_given_the_same_seed() {
-        let (surnames, given) = names();
-        let weights = PersonalityWeights::merge(&[]);
-        let mut rng1 = ChaCha8Rng::seed_from_u64(42);
-        let a = generate_coach(&mut rng1, "team:x", &surnames, &given, &weights);
-        let mut rng2 = ChaCha8Rng::seed_from_u64(42);
-        let b = generate_coach(&mut rng2, "team:x", &surnames, &given, &weights);
-        assert_eq!(a.name, b.name);
-        assert_eq!(a.stats, b.stats);
-        assert_eq!(a.age, b.age);
+    fn pitch_catalog() -> Vec<String> {
+        vec!["슬라이더".to_string(), "커브".to_string(), "포크볼".to_string(), "체인지업".to_string()]
     }
 
     #[test]
-    fn generate_coach_id_is_stable_per_team_and_stats_within_band() {
+    fn generate_coaches_is_deterministic_given_the_same_seed() {
         let (surnames, given) = names();
         let weights = PersonalityWeights::merge(&[]);
+        let catalog = pitch_catalog();
+        let mut rng1 = ChaCha8Rng::seed_from_u64(42);
+        let a = generate_coaches(&mut rng1, "team:x", 3, &surnames, &given, &weights, &catalog);
+        let mut rng2 = ChaCha8Rng::seed_from_u64(42);
+        let b = generate_coaches(&mut rng2, "team:x", 3, &surnames, &given, &weights, &catalog);
+        assert_eq!(a.len(), b.len());
+        for (x, y) in a.iter().zip(b.iter()) {
+            assert_eq!(x.name, y.name);
+            assert_eq!(x.stats, y.stats);
+            assert_eq!(x.age, y.age);
+            assert_eq!(x.role, y.role);
+            assert_eq!(x.specialties, y.specialties);
+        }
+    }
+
+    #[test]
+    fn generate_coaches_ids_are_stable_per_team_and_stats_within_band() {
+        let (surnames, given) = names();
+        let weights = PersonalityWeights::merge(&[]);
+        let catalog = pitch_catalog();
         let mut rng = ChaCha8Rng::seed_from_u64(1);
-        let c = generate_coach(&mut rng, "team:seoul_sharks", &surnames, &given, &weights);
-        assert_eq!(c.id, "coach:team:seoul_sharks");
-        for key in ["투수지도력", "타격지도력", "주루지도력", "컨디셔닝", "멘탈코칭", "스카우팅안목", "종합지도력"] {
-            let v = c.stats[key].as_f64().unwrap();
-            assert!((20.0..=80.0).contains(&v), "{key}={v} out of band");
+        let coaches = generate_coaches(&mut rng, "team:seoul_sharks", 8, &surnames, &given, &weights, &catalog);
+        assert_eq!(coaches.len(), 8);
+        for (i, c) in coaches.iter().enumerate() {
+            assert_eq!(c.id, format!("coach:team:seoul_sharks:{i}"));
+            for key in ["투수지도력", "타격지도력", "주루지도력", "컨디셔닝", "멘탈코칭", "스카우팅안목", "종합지도력"] {
+                let v = c.stats[key].as_f64().unwrap();
+                assert!((20.0..=80.0).contains(&v), "{key}={v} out of band");
+            }
+            assert!(COACH_ROLES.contains(&c.role.as_str()));
+        }
+    }
+
+    #[test]
+    fn generate_coaches_returns_empty_vec_for_zero_count() {
+        let (surnames, given) = names();
+        let weights = PersonalityWeights::merge(&[]);
+        let catalog = pitch_catalog();
+        let mut rng = ChaCha8Rng::seed_from_u64(1);
+        let coaches = generate_coaches(&mut rng, "team:x", 0, &surnames, &given, &weights, &catalog);
+        assert!(coaches.is_empty());
+    }
+
+    #[test]
+    fn generate_coaches_only_pitching_role_gets_specialties() {
+        let (surnames, given) = names();
+        let weights = PersonalityWeights::merge(&[]);
+        let catalog = pitch_catalog();
+        let mut rng = ChaCha8Rng::seed_from_u64(7);
+        let coaches = generate_coaches(&mut rng, "team:x", 8, &surnames, &given, &weights, &catalog);
+        for c in &coaches {
+            if c.role == "투수" {
+                assert!(!c.specialties.is_empty(), "투수 코치는 최소 1개 구종 전문을 가져야 함");
+                assert!(c.specialties.len() <= 3);
+                for s in &c.specialties {
+                    assert!(catalog.contains(s));
+                }
+            } else {
+                assert!(c.specialties.is_empty(), "{}는 구종 전문이 없어야 함", c.role);
+            }
         }
     }
 

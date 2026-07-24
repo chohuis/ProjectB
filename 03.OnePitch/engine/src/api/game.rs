@@ -1979,7 +1979,11 @@ mod tests {
         );
 
         let staff = list_team_staff(hs_team.clone()).unwrap();
-        assert_eq!(staff.len(), 3, "감독+코치+구단주 3명");
+        // 감독+구단주는 항상 1명씩, 코치는 자원 등급별 가변 슬롯(0~8명,
+        // 대화 2026-07-24 코치 시스템 확장) — 정확히 3명을 기대할 수 없다.
+        assert!(staff.len() >= 2, "최소 감독+구단주 2명은 있어야 함");
+        assert_eq!(staff.iter().filter(|p| p.position == "감독").count(), 1);
+        assert_eq!(staff.iter().filter(|p| p.position == "구단주").count(), 1);
         assert!(staff.iter().all(|p| ["감독", "코치", "구단주"].contains(&p.position.as_str())));
 
         let schedule = get_team_schedule(hs_team.clone()).unwrap();

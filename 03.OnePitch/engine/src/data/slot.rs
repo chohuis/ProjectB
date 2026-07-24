@@ -399,6 +399,22 @@ fn migration_v19(tx: &Transaction) -> anyhow::Result<()> {
     Ok(())
 }
 
+const V20_DDL: &str = r#"
+ALTER TABLE npc ADD COLUMN coach_role TEXT;
+ALTER TABLE npc ADD COLUMN coach_specialties TEXT;
+"#;
+
+/// 코치 가변 슬롯(0~8명)·적성배치·구종 전문화(대화 2026-07-24, `sim::staff`
+/// "1차 축소안" 확장) — `coach_role`(적성 6종 중 하나)과 `coach_specialties`
+/// (JSON 배열, 가르칠 수 있는 구종 목록)는 코치가 아닌 행은 항상 NULL로
+/// 남는다(`handedness`와 같은 관례). 구세이브의 기존 코치 행도 NULL로
+/// 남고, `repository::load_coach_stats`가 빈 문자열/빈 배열로 안전 폴백.
+fn migration_v20(tx: &Transaction) -> anyhow::Result<()> {
+    tx.execute_batch(V20_DDL)?;
+    tx.execute("UPDATE meta SET save_version = 20", [])?;
+    Ok(())
+}
+
 const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 1,
@@ -476,6 +492,10 @@ const MIGRATIONS: &[Migration] = &[
         version: 19,
         up: migration_v19,
     },
+    Migration {
+        version: 20,
+        up: migration_v20,
+    },
 ];
 
 fn init(mut conn: Connection) -> anyhow::Result<Connection> {
@@ -503,7 +523,31 @@ mod tests {
         let save_version: i64 = conn
             .query_row("SELECT save_version FROM meta", [], |row| row.get(0))
             .unwrap();
-        assert_eq!(save_version, 19);
+        assert_eq!(save_version, 20);
+    }
+
+    #[test]
+    fn v20_adds_coach_role_and_specialties_columns_to_npc() {
+        let conn = open_in_memory().unwrap();
+        conn.execute(
+            "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches, injury, coach_role, coach_specialties)
+             VALUES ('coach:team:x:0', 'X', 'team:x', '코치', 50, 0, 0, 50.0, '{}', '{}', '{}', '{}', NULL, '{}', '투수', '[\"슬라이더\"]')",
+            [],
+        )
+        .unwrap();
+        let (role, specialties): (String, String) =
+            conn.query_row("SELECT coach_role, coach_specialties FROM npc WHERE id = 'coach:team:x:0'", [], |r| Ok((r.get(0)?, r.get(1)?))).unwrap();
+        assert_eq!(role, "투수");
+        assert_eq!(specialties, "[\"슬라이더\"]");
+
+        conn.execute(
+            "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches, injury)
+             VALUES ('npc:y', 'Y', 'team:x', '타자', 20, 1, 0, 50.0, '{}', '{}', '{}', '{}', NULL, '{}')",
+            [],
+        )
+        .unwrap();
+        let missing: Option<String> = conn.query_row("SELECT coach_role FROM npc WHERE id = 'npc:y'", [], |r| r.get(0)).unwrap();
+        assert_eq!(missing, None, "코치가 아닌 행은 NULL로 남아야 함");
     }
 
     #[test]

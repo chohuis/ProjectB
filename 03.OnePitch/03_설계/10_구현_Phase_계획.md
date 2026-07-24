@@ -83,7 +83,7 @@
 | 항목 | 블로커 | 해소 조건 | 그룹 |
 |---|---|---|---|
 | ~~코치·구단주 정식 스태프~~ | **해소됨(§6-72, 2026-07-22)** — 팀당 1명씩, 능력치 10종 전부 배선 | — | 해소 |
-| 코치 가변 슬롯 수(0~8명)·적성배치/미스매치/복수배치 | §6-72가 팀당 1명 고정으로 단순화 — "누가 어느 보직인지"를 정하는 판정 시스템 자체가 새로 필요 | 팀 전력 공식(05_밸런스.md §2-D) 확정 후 배치 로직 신설 | 엔진 확장 |
+| ~~코치 가변 슬롯 수(0~8명)·적성배치/미스매치/복수배치~~ | **해소됨(§6-110, 2026-07-24)** — 자원 등급별 0~8명 가변 슬롯(팀 전력 공식 확정을 기다리지 않고 D그룹 placeholder로 구현), 미스매치 패널티는 도입 안 함(코치 전원이 여전히 능력치 7종을 동시에 가져 "안 쓰이는 스탯" 문제가 없어 불필요 판단) | — | 해소 |
 | ~~구단주 재력·투자성향의 FA 다중오퍼 반영~~ | **해소됨(§6-74, 2026-07-22)** — 후보팀이 2~4개뿐이라 조회 비용 무시할 만해 바로 반영 | — | 해소 |
 | ~~개인 재정 — 잔액 골격~~ | **해소됨(§6-74, 2026-07-22)** — `EventEffect::Finance`+재정 탭 UI, 확률형 이벤트 2개(`event:sponsor_gift`·`event:junior_gift`)로 실증 | — | 해소 |
 | ~~`season_stats` 누적성적~~ | **해소됨(§6-76, 2026-07-22)** — 배경 경기·주인공 경기 양쪽에서 투수·타자 전원 주간 누적 + 로테이션 서열화 반영 | — | 해소 |
@@ -94,10 +94,9 @@
 | ~~타순 최적화(성적 기반 라인업 재배치)~~ | **해소됨(§6-79, 2026-07-22)** — 능력치+누적성적 블렌딩으로 타순 서열화, 시즌 경계·월간 훅에서 재배정. `load_batting_lineup`이 감독·코치·구단주를 실제 타순에 섞어 넣던 버그도 같이 수정 | — | 해소 |
 | ~~NPC 콜업/강등(감독 AI 의사결정)~~ | **해소됨(§6-80, 2026-07-22)** — `process_protagonist_promotion`과 같은 단순화(season_stats 요약 점수 확률판정)로 팀당 월 최대 콜업 1건+강등 1건 | — | 해소 |
 | 코치·구단주 관계도(`relationships`) 추적 | §6-72가 감독만 유지하기로 명시적 축소 | 팀동료 관계 시스템과 함께 확장 검토 | 소형 |
-| 코치 가변 슬롯 수(0~8명)·적성배치/미스매치/복수배치 | §6-72가 팀당 1명 고정으로 단순화 — "누가 어느 보직인지"를 정하는 판정 시스템 자체가 새로 필요 | 팀 전력 공식(05_밸런스.md §2-D) 확정 후 배치 로직 신설 | 엔진 확장 |
 | Android 실기기·Steam 실클라이언트·Mac/Linux 빌드 검증 | 이 개발 환경(Windows 샌드박스)에서 검증 불가 | I9 착수 시점에 실기기 확보 | 환경 제약 |
 | ~~구종 마스터리 5단계(습작~필살기) 데이터 모델·주간 진행~~ | **해소됨(§6-85, 2026-07-23)** — `protagonist.pitches`가 `{name,stage,weeks}` 객체 배열로, 구종 슬롯이 "신규습득 or 기존 마스터리업" 중 선택 가능 | — | 해소 |
-| 코치별 "가르칠 수 있는 구종" 전문 목록(05_구종_시스템.md §3) | 새 코치 속성(팀당 1명 고정 스탯 외 "전문 구종 리스트") + 콘텐츠 저작 필요 — 일반 `coach_pitch_learning_bonus`(투수지도력)만 §6-85에서 재사용, 구종별 차등은 아직 없음 | 코치 데이터 모델에 구종 리스트 필드 추가 후 배선 | 엔진 확장·콘텐츠 |
+| ~~코치별 "가르칠 수 있는 구종" 전문 목록(05_구종_시스템.md §3)~~ | **해소됨(§6-110, 2026-07-24)** — `GeneratedCoach.specialties`(투수 role 코치만, 1~3개), `coach_pitch_learning_bonus`(일반 보너스)와 별개로 `COACH_SPECIALTY_PITCH_BONUS_WEEKS` 가산 | — | 해소 |
 | ~~구종 마스터리의 매치 엔진 연동(단계→피안타율·헛스윙, 05_구종_시스템.md §4)·레퍼토리 다양성 보너스~~ | **해소됨(§6-106, Phase 4, 2026-07-26)** — `throw_pitch`가 마스터리 단계(3=실전 기준 ±2.5)와 3계열 다양성 보너스(+0.02 헛스윙)를 실제로 반영 | — | 해소 |
 | 수동 모드 감독 개입이 소프트캡 이후 매 투구마다 다시 물어봄(§6-104 Phase 3에서 발견) | §8 원 설계는 "이닝 종료마다 판단"인데 구현은 매 루프 패스(=매 투구)마다 게이트를 다시 탐 — 무한 루프(핑퐁) 자체는 migration v15로 고쳤지만, "매 투구 재질문"이라는 UX 과함은 별개 이슈로 남음 | 반자동처럼 "판정 지점"을 하프이닝 경계·투구수 임계 돌파 시점으로만 한정하는 게이팅 로직 재설계 | 엔진 개선(UX) |
 | 도루가 배경 하프이닝(`simulate_half_inning`)에만 있고 주인공이 직접 던지는 인터랙티브 하프이닝에는 없음(§6-104 Phase 3) | 1구 단위 루프에 끼워 넣으면 매 구마다 중복 판정될 위험 — 주인공 팀 타석은 항상 배경 경로라 대부분은 이미 커버되고, 주인공이 던지는 동안의 "상대팀 도루"만 빠짐 | 인터랙티브 루프에 "이 타석에서 이미 도루를 판정했는지" 상태 플래그 추가 후 이식 | 엔진 확장 |
@@ -1807,5 +1806,23 @@
 **이월 레지스트리 갱신 없음** — 이번 Phase는 새 이월을 만들지 않고 기존 항목(Phase 6에서 등록한 홀드·타격 스탯 소비처 대기)을 그대로 유지.
 
 **테스트**: `cargo test --lib` 501개 전부 통과(신규 5개 — 위 3개 + migration v19 1개 + `aggregate_game_log`가 구형 행에서도 안전한지 확인하는 케이스 1개). `cargo clippy --lib --tests --bins` 클린. `cargo build --release` 갱신 후 `flutter test -j 1` 27개 전부 통과. `balance_harness -- 2 2` 스모크 확인 — 신설된 `[Phase 7]` 비교 라인도 정상 출력.
+
+### 6-110. 엔진 확장 Phase 1 — 코치 시스템 확장(가변 슬롯 0~8명 + 구종 전문화) (2026-07-24, 완료)
+
+**Context**: 매치엔진 리얼리즘 강화 7-Phase(§6-102~109) 완료 후 사용자가 요청한 이월 레지스트리 잔여 항목 정리 — "코치 가변 슬롯 수(0~8명)·적성배치"(§6-72 이후 미해결)와 "코치별 가르칠 수 있는 구종 전문 목록"(05_구종_시스템.md §3, 미구현)을 함께 처리. 5-Phase 계획("엔진 확장 — 코치 시스템·불펜/홀드·인터랙티브 도루·감독개입 UX·NPC 기록 아카이브")의 첫 Phase.
+
+**설계 조정(계획 대비)**: 원 계획은 `GeneratedCoach`에 `role`(적성 6종 중 하나만 배정) 필드를 추가해 "매칭되면 전체 가중치, 미스매치면 감쇠"하는 판정을 상정했으나, 착수 직전 `sim::staff.rs`를 다시 읽어보니 실제 코드는 "1차 축소안"(§6-72, 2026-07-22)에서 이미 **코치 1명이 능력치 7종을 전부 동시에 갖도록** 설계돼 있었다(감독처럼 "생성만 되고 안 쓰이는 스탯을 안 남긴다"는 원칙). role 단일 배정+미스매치 판정을 그대로 얹으면 이 원칙과 충돌(다른 role 코치의 나머지 6개 스탯이 죽는 데이터가 됨). 그래서 **역할 매칭 없이 "팀 코치진 전체에서 필요한 스탯의 최댓값을 취한다"**(`repository::best_coach_stat`)로 단순화 — 코치 1명뿐이던 시절과 수치상 정확히 수렴하는 하위호환 설계이면서, role은 팀 구성·UI 표시와 구종 전문화 게이팅에만 쓴다.
+
+**구현**(`engine/src/sim/staff.rs`): `GeneratedCoach`에 `role: String`(`COACH_ROLES` 6종: 투수·타격·주루·컨디셔닝·멘탈·전력분석 순환 배정) + `specialties: Vec<String>`(투수 role만 pitch_catalog에서 1~3개 무작위 샘플) 필드 추가. `generate_coach`(팀당 1명 고정) → `generate_coaches(rng, team_id, count, ...)`(팀 코치진 전체 생성)로 교체. `COACH_SPECIALTY_PITCH_BONUS_WEEKS`(D그룹 placeholder 상수) 신설.
+
+**구현**(`engine/src/data/repository.rs`): `coach_count_range(resource) -> (u64, u64)`(자원 등급별 0~8 범위, `hs_target_roster_size`와 같은 패턴이지만 `team_traits.resource`가 전 리그 공통 필드라 리그 특례 없이 전 팀에 동일 적용 — 172팀 균등원칙) 신설. `CoachStats`에 `role`·`specialties` 필드 추가, `load_coach_stats`를 `Option<CoachStats>` → `Vec<CoachStats>`로 변경(코치 0~8명), `load_coach_stats_by_team`을 `HashMap<String, Vec<CoachStats>>`로 변경. `best_coach_stat(coaches, pick) -> Option<f64>` 신설(팀 코치진 중 특정 스탯 최댓값, 코치 없으면 `None` — 각 소비처가 기존과 동일한 중립값(대개 50.0)으로 폴백). 기존 7개 소비처(`process_protagonist_week` 4곳·NPC 신인 스카우팅 1곳·`process_week` NPC 주간성장 2곳·`process_month` 멘탈보정 1곳) 전부 이 헬퍼를 쓰도록 갱신, `coach_pitch_learning_bonus` 호출부 2곳(신규습득·마스터리업)에 구종 전문 코치 매칭 시 `COACH_SPECIALTY_PITCH_BONUS_WEEKS` 추가 가산 배선. `generate_league_roster_data`/`generate_league_roster`/`preview_hs_roster`가 코치 1명 대신 `Vec<GeneratedCoach>`를 다루도록 갱신, INSERT에 `coach_role`·`coach_specialties` 컬럼 추가.
+
+**구현**(`engine/src/data/match_session.rs`): `apply_protagonist_evaluation`의 코치 보정 2곳(`coach_eval_bonus`·`coach_mental_dampening`)을 `repository::best_coach_stat` 경유로 갱신.
+
+**구현**(`engine/src/data/slot.rs`): migration v20 — `npc.coach_role TEXT`·`npc.coach_specialties TEXT`(코치가 아닌 행은 항상 NULL, `handedness`와 같은 관례).
+
+**스코프 판단**: 코치 역할별 UI 표시(Flutter `league_screen.dart`/`list_team_staff`)는 이번 Phase에서 손대지 않음 — 기존 `list_team_staff`/`RosterPlayerInfo`(§6-108 무렵 이미 커밋된 별개 기능)가 코치 행을 이미 개수 무관하게 그대로 나열하고 있어 가변 슬롯과 자연히 호환되고, `role`을 화면에 노출하려면 `RosterPlayerInfo`에 필드 추가+frb 재생성이 필요해 별도 이월(다음에 손댈 사람을 위해 여기 남김 — 급하지 않음, 코치 수만 늘어도 화면은 깨지지 않음).
+
+**테스트**: `cargo test --lib` 504개 전부 통과(신규 5개 — `sim::staff` 4개(결정성·id/스탯 범위·count=0 빈 벡터·투수 role만 specialties) + 기존 2개를 `generate_coaches` 시그니처에 맞춰 재작성, migration v20 컬럼 검증 1개). 코치 수 변화로 깨진 기존 테스트 2개(`generate_league_roster_inserts_expected_npc_count`·`generate_initial_world_covers_all_five_leagues`)를 새 코치 수 공식에 맞게 갱신(후자는 정확한 값 대신 `coach_count_range` 기반 범위 검증으로 변경), `api::game::tests::league_hub_queries_work_end_to_end_after_new_game`의 "스태프 정확히 3명" 단언도 "감독·구단주 각 1명+코치 가변" 검증으로 완화. `cargo clippy --lib --tests --bins` 클린. `cargo build --release` 갱신 후 `flutter test -j 1` 27개 전부 통과(records_test.dart 1회 타임아웃 발생 — 동시 실행 중이던 balance_harness와의 리소스 경합, 알려진 환경 특성, 단독 재실행 시 통과). `balance_harness -- 5 2` 스모크 확인(크래시 없음, 5개 시행 전부 정상 종료) — Phase 1은 계획상 분포 비교가 필수인 Phase가 아니라(Phase 2·5가 대상) 대규모(20×10) 시행 대신 가벼운 스모크로 대체.
 
 **7-Phase 계획 전체 완료.**
