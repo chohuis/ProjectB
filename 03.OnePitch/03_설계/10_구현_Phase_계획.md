@@ -98,7 +98,7 @@
 | ~~구종 마스터리 5단계(습작~필살기) 데이터 모델·주간 진행~~ | **해소됨(§6-85, 2026-07-23)** — `protagonist.pitches`가 `{name,stage,weeks}` 객체 배열로, 구종 슬롯이 "신규습득 or 기존 마스터리업" 중 선택 가능 | — | 해소 |
 | ~~코치별 "가르칠 수 있는 구종" 전문 목록(05_구종_시스템.md §3)~~ | **해소됨(§6-110, 2026-07-24)** — `GeneratedCoach.specialties`(투수 role 코치만, 1~3개), `coach_pitch_learning_bonus`(일반 보너스)와 별개로 `COACH_SPECIALTY_PITCH_BONUS_WEEKS` 가산 | — | 해소 |
 | ~~구종 마스터리의 매치 엔진 연동(단계→피안타율·헛스윙, 05_구종_시스템.md §4)·레퍼토리 다양성 보너스~~ | **해소됨(§6-106, Phase 4, 2026-07-26)** — `throw_pitch`가 마스터리 단계(3=실전 기준 ±2.5)와 3계열 다양성 보너스(+0.02 헛스윙)를 실제로 반영 | — | 해소 |
-| 수동 모드 감독 개입이 소프트캡 이후 매 투구마다 다시 물어봄(§6-104 Phase 3에서 발견) | §8 원 설계는 "이닝 종료마다 판단"인데 구현은 매 루프 패스(=매 투구)마다 게이트를 다시 탐 — 무한 루프(핑퐁) 자체는 migration v15로 고쳤지만, "매 투구 재질문"이라는 UX 과함은 별개 이슈로 남음 | 반자동처럼 "판정 지점"을 하프이닝 경계·투구수 임계 돌파 시점으로만 한정하는 게이팅 로직 재설계 | 엔진 개선(UX) |
+| ~~수동 모드 감독 개입이 소프트캡 이후 매 투구마다 다시 물어봄(§6-104 Phase 3에서 발견)~~ | **해소됨(§6-113, 2026-07-24)** — 게이팅 단위를 투구수(`pull_decision_settled_at_pitch_count`)에서 이닝+공수(`pull_decision_settled_inning`/`pull_decision_settled_top_of_inning`, migration v23)로 교체, 같은 하프이닝 안에서는 재질문 없음 | — | 해소 |
 | ~~도루가 배경 하프이닝(`simulate_half_inning`)에만 있고 주인공이 직접 던지는 인터랙티브 하프이닝에는 없음(§6-104 Phase 3)~~ | **해소됨(§6-112, 2026-07-24)** — `SessionRow.runner_on_first_id`(migration v22)로 1루 주자 신원을 세션에 영속시켜, 매 `submit_pitch` 호출마다 배경과 동일한 `attempt_steal`을 재사용 | — | 해소 |
 | ~~홀드(Hold) 판정(§12 "기록 필드", §6-107 Phase 6에서 발견)~~ | **해소됨(§6-111, 2026-07-24)** — 배경(`simulate_game`)·인터랙티브(`data::match_session`) 양쪽 다 선발→중계→마무리 2회 교체 지원, `PitcherGameStats.holds`/`credit_pitcher_hold` 실제로 채워짐 | — | 해소 |
 | 타율·출루율·장타율·OPS 계산 함수는 구현됐지만 노출할 화면이 없음(§12, §6-107 Phase 6) | 주인공은 항상 투수 아키타입(§7 DH)이라 절대 타석에 안 서 본인 기록에 타격 스탯이 없음 — `BatterGameStats::batting_average`등은 테스트만 있고 실제 소비하는 API·화면이 아직 없음 | NPC 팀동료 시즌 스탯을 보여주는 로스터/리더보드 화면이 생기면 그때 연결 | 엔진 확장(소비처 대기) |
@@ -1852,3 +1852,11 @@
 **구현**(`engine/src/data/slot.rs`): migration v22 — `match_session.runner_on_first_id TEXT`.
 
 **테스트**: `data::match_session::tests::opposing_team_can_steal_bases_while_the_protagonist_pitches`(29시드 중 최소 1건 — `attempt_steal`의 시도확률 자체가 낮아(평균 스피드 매 구 10%) 기존 강판·세이브 테스트와 같은 "여러 시드 중 최소 1건" 패턴), migration v22 컬럼 검증 1개. `cargo test --lib` 509개 전부 통과(기존 테스트 전부 무변경 통과 — `apply_pa_outcome` 시그니처 변경은 호출부 4곳만 `&batter.id` 인자 추가, 동작 자체는 회귀 없음). `cargo clippy --lib --tests --bins` 클린. `cargo build --release` 갱신 후 `flutter test -j 1` 27개 전부 통과. `balance_harness -- 5 2` 스모크 확인(Phase 3은 계획상 분포 비교 필수 대상이 아님, 크래시 여부만 확인).
+
+### 6-113. 엔진 확장 Phase 4 — 수동 모드 감독 개입 재질문 UX 개선 (2026-07-24, 완료)
+
+**Context**: 이월 레지스트리 항목(§6-104 Phase 3에서 발견) — `run_until_decision_point`의 강판 판단 블록이 매 `submit_pitch` 호출(=매 투구)마다 재평가되는데, 기존 `pull_decision_settled_at_pitch_count`(migration v15)는 "그 투구수에서" 결정됐는지만 기억해 소프트캡을 넘긴 채 몇 구만 더 던져도 바로 다음 구에서 또 물어봤다. §8 원 설계("이닝 종료마다 판단 기회")대로 게이팅 단위를 투구수에서 이닝+공수로 교체.
+
+**구현**(`engine/src/data/match_session.rs`): `pull_decision_settled_at_pitch_count: Option<i64>` → `pull_decision_settled_inning: Option<i64>` + `pull_decision_settled_top_of_inning: Option<bool>`로 교체(migration v23). "이미 이 시점에 결정됐는지" 체크를 `session.pitch_seq` 동등 비교에서 `session.inning`/`session.top_of_inning` 동등 비교로 변경 — 하프이닝이 바뀌면(다음 이닝 진입) 비교 기준 자체가 그 시점의 inning/top_of_inning이라 자동으로 새로 물어볼 수 있는 상태로 돌아온다(별도 리셋 코드 불필요). 옛 컬럼(`pull_decision_settled_at_pitch_count`)은 이 프로젝트의 마이그레이션 관례대로 DROP 없이 그대로 남겨두되(전례 없음) Rust 쪽에서는 더 이상 참조하지 않음(로드는 여전히 하되 `_` 프리픽스로 미사용 처리).
+
+**테스트**: `data::match_session::tests::manual_mode_does_not_reprompt_for_the_rest_of_the_half_inning_after_keeping_the_pitcher`(신규, 하드캡 투구수로 시작해 "유지" 확정 후 같은 하프이닝 안에서 최대 20구까지 반복 제출해도 재질문이 안 뜨는지 확인 — 하프이닝이 바뀌어 정당하게 새로 물어보는 경우는 버그로 안 침). 기존 두 회귀 테스트(`keeping_the_pitcher_in_manual_mode_settles_the_decision_so_the_next_pitch_actually_throws`·`deferring_to_the_manager_when_no_reliever_exists_settles_the_decision_instead_of_looping`)를 새 컬럼 기준으로 갱신 — 전자는 "다음 구 제출 시 재질문 없이 바로 던져짐"까지 명시적으로 단언하도록 강화(예전엔 "그 다음 구부터는 다시 물어보는 게 정상"이라던 주석이 이번에 고친 UX 과함 자체였음). migration v23 컬럼 검증 1개. `cargo test --lib` 511개 전부 통과. `cargo clippy --lib --tests --bins` 클린. `cargo build --release` 갱신 후 `flutter test -j 1` 27개 전부 통과. `balance_harness -- 5 2` 스모크 확인(순수 UX 게이팅 변경이라 분포 비교 불필요, 크래시 여부만).

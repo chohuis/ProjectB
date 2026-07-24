@@ -451,6 +451,24 @@ fn migration_v22(tx: &Transaction) -> anyhow::Result<()> {
     Ok(())
 }
 
+const V23_DDL: &str = r#"
+ALTER TABLE match_session ADD COLUMN pull_decision_settled_inning INTEGER;
+ALTER TABLE match_session ADD COLUMN pull_decision_settled_top_of_inning INTEGER;
+"#;
+
+/// 수동 모드 감독 개입 재질문 UX 개선(Phase 4, 대화 2026-07-24) — 기존
+/// `pull_decision_settled_at_pitch_count`(v15, 투구수 단위 게이팅)는 그
+/// 투구수에서만 재질문을 막아, 소프트캡을 넘긴 채 몇 구만 더 던져도 다시
+/// 물어보는 과함이 있었다(§8 원 설계 "이닝 종료마다 판단 기회"와 어긋남).
+/// 이닝+공수 단위 새 컬럼으로 게이팅 기준을 교체 — 옛 컬럼은 더 이상
+/// 안 쓰지만 컬럼 자체는 남겨둔다(이 프로젝트의 마이그레이션 관례,
+/// DROP COLUMN 쓴 전례 없음).
+fn migration_v23(tx: &Transaction) -> anyhow::Result<()> {
+    tx.execute_batch(V23_DDL)?;
+    tx.execute("UPDATE meta SET save_version = 23", [])?;
+    Ok(())
+}
+
 const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 1,
@@ -540,6 +558,10 @@ const MIGRATIONS: &[Migration] = &[
         version: 22,
         up: migration_v22,
     },
+    Migration {
+        version: 23,
+        up: migration_v23,
+    },
 ];
 
 fn init(mut conn: Connection) -> anyhow::Result<Connection> {
@@ -567,7 +589,33 @@ mod tests {
         let save_version: i64 = conn
             .query_row("SELECT save_version FROM meta", [], |row| row.get(0))
             .unwrap();
-        assert_eq!(save_version, 22);
+        assert_eq!(save_version, 23);
+    }
+
+    #[test]
+    fn v23_adds_pull_decision_settled_inning_columns_to_match_session() {
+        let conn = open_in_memory().unwrap();
+        conn.execute(
+            "INSERT INTO match_session (id, game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases,
+                                         home_runs, away_runs, home_batter_idx, away_batter_idx, balls, strikes, current_batter_id)
+             VALUES (1, 'g', 'h', 'a', 'league:pro', '자동', 1, 1, 0, '[false,false,false]', 0, 0, 0, 0, 0, 0, NULL)",
+            [],
+        )
+        .unwrap();
+        let (inning, top): (Option<i64>, Option<i64>) = conn
+            .query_row("SELECT pull_decision_settled_inning, pull_decision_settled_top_of_inning FROM match_session WHERE id = 1", [], |r| {
+                Ok((r.get(0)?, r.get(1)?))
+            })
+            .unwrap();
+        assert_eq!((inning, top), (None, None));
+
+        conn.execute("UPDATE match_session SET pull_decision_settled_inning = 7, pull_decision_settled_top_of_inning = 1 WHERE id = 1", []).unwrap();
+        let (inning, top): (i64, i64) = conn
+            .query_row("SELECT pull_decision_settled_inning, pull_decision_settled_top_of_inning FROM match_session WHERE id = 1", [], |r| {
+                Ok((r.get(0)?, r.get(1)?))
+            })
+            .unwrap();
+        assert_eq!((inning, top), (7, 1));
     }
 
     #[test]
