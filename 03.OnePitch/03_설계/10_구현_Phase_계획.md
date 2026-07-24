@@ -102,6 +102,8 @@
 | ~~도루가 배경 하프이닝(`simulate_half_inning`)에만 있고 주인공이 직접 던지는 인터랙티브 하프이닝에는 없음(§6-104 Phase 3)~~ | **해소됨(§6-112, 2026-07-24)** — `SessionRow.runner_on_first_id`(migration v22)로 1루 주자 신원을 세션에 영속시켜, 매 `submit_pitch` 호출마다 배경과 동일한 `attempt_steal`을 재사용 | — | 해소 |
 | ~~홀드(Hold) 판정(§12 "기록 필드", §6-107 Phase 6에서 발견)~~ | **해소됨(§6-111, 2026-07-24)** — 배경(`simulate_game`)·인터랙티브(`data::match_session`) 양쪽 다 선발→중계→마무리 2회 교체 지원, `PitcherGameStats.holds`/`credit_pitcher_hold` 실제로 채워짐 | — | 해소 |
 | ~~타율·출루율·장타율·OPS 계산 함수는 구현됐지만 노출할 화면이 없음(§12, §6-107 Phase 6)~~ | **해소됨(§6-114, 2026-07-24)** — `get_team_season_batting_stats`/`get_team_season_pitching_stats`/`get_player_career_*_stats` API + 로스터 카드 한 줄 요약(`league_screen.dart`)으로 실제 소비 | — | 해소 |
+| 코치 역할별(role) UI 표시(§6-110 Phase 1에서 발견) | `list_team_staff`는 코치 행을 개수 무관하게 나열은 하지만 `role`을 안 보여줌 — `RosterPlayerInfo`에 필드 추가 + frb 재생성 필요 | `RosterPlayerInfo`에 `coach_role` 필드 추가 후 `league_screen.dart` 스태프 카드 갱신 | UI(소형) |
+| NPC 통산 기록 상세 화면(§6-114 Phase 5에서 발견) | 로스터 카드 한 줄 요약(이번 시즌)까지만 구현 — 탭하면 펼쳐지는 통산(`npc_season_history`) 상세 다이얼로그는 스코프 아웃 | 카드 탭 → `get_player_career_*_stats` 호출하는 다이얼로그/바텀시트 추가 | UI(소형) |
 
 ## 6. 문서 갱신 규칙
 
@@ -1876,3 +1878,15 @@
 **테스트**: `data::repository::tests::season_rollover_archives_npc_season_stats_before_deleting_them`(2주치 season_stats가 합산돼 npc_season_history에 남고 원본은 비워지는지), `api::game::tests::season_and_career_stats_queries_work_end_to_end_after_new_game`(진행 중 시즌 스탯과 확정 통산 스탯이 각각 올바른 함수로 조회되는지, 통산 쪽이 이번 시즌 진행분과 안 섞이는지). migration v24 테이블 검증 1개. `cargo test --lib` 514개 전부 통과. `cargo clippy --lib --tests --bins` 클린. `flutter analyze lib/features/league/league_screen.dart` 클린. `cargo build --release`(frb 재생성 전후 각 1회) 갱신 후 `flutter test -j 1` 27개 전부 통과(`league_test.dart`·`league_widget_test.dart` 포함). `balance_harness -- 5 3`(시즌 상한을 3으로 잡아 시즌 경계 아카이빙 로직이 시행마다 최소 2회 이상 반복 실행되게 함) — 5개 시행 전부 크래시 없이 정상 종료.
 
 **5-Phase 계획("엔진 확장 — 코치 시스템·불펜/홀드·인터랙티브 도루·감독개입 UX·NPC 기록 아카이브") 전체 완료.**
+
+### 6-115. 스케줄 분산 Phase 1 — 프로/프로2군 3연전+휴식일 스케줄러 (2026-07-24, 완료)
+
+**Context**: `perf_probe.rs`(신규 진단 도구, 대화 2026-07-24)로 `advance()` 1회 호출 실측 결과 평균 6~8초·워스트케이스 46초가 나와, N+1 쿼리 배치(`StatScoreCache`)로 1차 대응했지만 개선폭이 기대(~22%)보다 훨씬 작았다(~4.5%). 재진단 결과 진짜 원인은 계산 로직이 아니라 **스케줄 생성이 리그·그룹·대회를 전부 같은 날짜에 몰아넣는 구조**였다 — `schedule.rs::push_entries`가 한 리그의 모든 그룹(고교 8권역 등)을 같은 날 나란히 진행시키고, `generate_schedule`이 4개 리그를 항상 같은 `start_day`로 동시 시작시킨다. 사용자가 "프로는 실제로 월요일 빼고 3연전 2번 뛴다"는 실제 KBO 스케줄 구조를 반영하자고 제안 — 총 경기 수(불변)는 그대로 두고 날짜 배치만 현실화해 성능과 리얼리즘을 동시에 개선하는 접근. 5-Phase 계획("스케줄 분산") 1번째.
+
+**구현**(`engine/src/sim/schedule.rs`): `generate_regular_season_series_based(league_slug, teams, target_games, start_day, rng)` 신설 — 기존 `generate_round_robin_rounds_targeted(teams, target_games/3, rng)`로 매치업 순서(48라운드=48시리즈, 프로 144/3, 프로2군 99/3 — 둘 다 3의 배수라 나머지 없이 정확히 떨어짐)를 그대로 얻고, 라운드 하나를 "1경기"가 아니라 "3연전"으로 펼친다. 날짜 공식은 순수 산술(RNG 불필요): `week_index = series_index/2`, `day_in_cycle = (series_index%2)*3 + game_offset(0~2)`, `day = start_day + week_index*7 + day_in_cycle` — 시리즈 2개(=6경기)가 7일 중 6일을 쓰고 나머지 1일(day_in_cycle=6)은 자동으로 휴식일이 된다. 홈/원정은 `schedule_series`(repository.rs, 대회 다전제)와 같은 `g % 2 == 0` 규칙.
+
+**구현**(`engine/src/data/repository.rs`): `generate_schedule`(line 300)에 분기 추가 — `league_id`가 `"league:pro"`/`"league:pro_farm"`이면 새 함수(팀 목록은 `load_team_groups_for_schedule`이 반환하는 유일한 그룹을 그대로 씀), 그 외(고교/대학)는 기존 `generate_regular_season_targeted` 그대로. 시드는 기존 `league_sub_seed(world_seed, "schedule:{league_id}:{season}")` 하나만 재사용 — 날짜 배치가 산술이라 새 시드 스트림 불필요.
+
+**테스트**(`schedule.rs`, 신규 5개): `series_based_schedule_gives_every_pro_team_exactly_144_games`(10팀 기준 팀당 정확히 144경기+`game_id` 유일성), `series_based_schedule_gives_every_pro_farm_team_exactly_99_games`, `series_based_schedule_groups_games_into_consecutive_three_game_series_with_alternating_home_away`(3경기 연속 날짜+홈/원정 교대), `series_based_schedule_never_schedules_a_game_on_the_weekly_rest_day`(7일 주기 중 6번째 날엔 경기 없음), `series_based_schedule_is_deterministic_with_same_seed`. `cargo test --lib` 519개 전부 통과(511+5 신규, 기존 대비 하나 더 늘어 519 — 이전 §6-114 기록 514는 그 사이 별도 세션 없이 이 세션 시작 시점 기준). `cargo clippy --lib --tests --bins` 클린. `cargo build --release` 갱신 후 `flutter test -j 1` 27개 전부 통과. `balance_harness -- 5 3` 스모크 — 5개 시행 크래시 없이 정상 종료, 등급 분포·아키타입별 성장치가 이번 세션 이전 실측치와 동일(주인공 성적 관련 로직은 안 건드렸으므로 예상대로).
+
+**남은 Phase**: Phase 2(고교/대학/독립리그 그룹·리그 시작일 오프셋), Phase 3(포스트시즌 11개 대회 시작일 분산), Phase 4(재측정 — `perf_probe`로 이번 세션 워스트케이스 46초 대비 개선폭 확인). 계획 전문은 대화 기록 참고(플랜 모드 승인, 2026-07-24).

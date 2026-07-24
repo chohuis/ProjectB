@@ -124,6 +124,50 @@ pub fn generate_regular_season_targeted(
     entries
 }
 
+/// 프로/프로2군 전용(대화 2026-07-24) — 라운드로빈이 만드는 매치업 순서는
+/// 그대로 쓰되, 매치업 하나를 "1경기"가 아니라 "3연전"으로 펼친다. 실제
+/// KBO처럼 시리즈 2개(=6경기)가 1주, 나머지 1일은 자동으로 휴식일이 된다
+/// (7일 주기에서 6일만 씀). `target_games`가 3의 배수여야 나머지 없이
+/// 딱 떨어지는데, `regular_season_target_games`(repository.rs)의 프로
+/// 144·프로2군 99가 둘 다 3의 배수라 항상 정확히 맞는다. 홈/원정은
+/// `schedule_series`(repository.rs, 대회 다전제)와 같은 규칙(짝수
+/// 인덱스=team_a 홈, 홀수=team_b 홈).
+pub fn generate_regular_season_series_based(
+    league_slug: &str,
+    teams: &[String],
+    target_games: u32,
+    start_day: i64,
+    rng: &mut impl Rng,
+) -> Vec<ScheduleEntry> {
+    const GAMES_PER_SERIES: u32 = 3;
+    const SERIES_PER_WEEK: i64 = 2;
+    const WEEK_LEN: i64 = 7;
+
+    if teams.len() < 2 || target_games == 0 {
+        return Vec::new();
+    }
+    let series_target = target_games / GAMES_PER_SERIES;
+    let rounds = generate_round_robin_rounds_targeted(teams, series_target, rng);
+
+    let mut entries = Vec::new();
+    let mut seq: u64 = 0;
+    for (series_index, round) in rounds.into_iter().enumerate() {
+        let series_index = series_index as i64;
+        let week_index = series_index / SERIES_PER_WEEK;
+        let series_in_week = series_index % SERIES_PER_WEEK;
+        for (team_a, team_b) in round {
+            for g in 0..GAMES_PER_SERIES {
+                let day_in_cycle = series_in_week * GAMES_PER_SERIES as i64 + g as i64;
+                let day = start_day + week_index * WEEK_LEN + day_in_cycle;
+                let (home, away) = if g.is_multiple_of(2) { (team_a.clone(), team_b.clone()) } else { (team_b.clone(), team_a.clone()) };
+                entries.push(ScheduleEntry { game_id: format!("game:{league_slug}_{seq}"), day, home, away });
+                seq += 1;
+            }
+        }
+    }
+    entries
+}
+
 fn push_entries(entries: &mut Vec<ScheduleEntry>, seq: &mut u64, league_slug: &str, start_day: i64, rounds: Vec<Vec<(String, String)>>) {
     for (i, round) in rounds.into_iter().enumerate() {
         let day = start_day + i as i64;
@@ -228,6 +272,84 @@ mod tests {
         assert_eq!(a.len(), b.len());
         let ids: std::collections::HashSet<&String> = a.iter().map(|e| &e.game_id).collect();
         assert_eq!(ids.len(), a.len(), "game_ids must be unique across groups");
+        for (x, y) in a.iter().zip(b.iter()) {
+            assert_eq!(x.game_id, y.game_id);
+            assert_eq!(x.home, y.home);
+            assert_eq!(x.away, y.away);
+            assert_eq!(x.day, y.day);
+        }
+    }
+
+    #[test]
+    fn series_based_schedule_gives_every_pro_team_exactly_144_games() {
+        let mut rng = ChaCha8Rng::seed_from_u64(11);
+        let entries = generate_regular_season_series_based("pro", &teams(10), 144, 1, &mut rng);
+
+        let mut games_per_team: std::collections::HashMap<String, u32> = std::collections::HashMap::new();
+        for e in &entries {
+            *games_per_team.entry(e.home.clone()).or_insert(0) += 1;
+            *games_per_team.entry(e.away.clone()).or_insert(0) += 1;
+        }
+        assert_eq!(games_per_team.len(), 10);
+        for count in games_per_team.values() {
+            assert_eq!(*count, 144);
+        }
+        let ids: std::collections::HashSet<&String> = entries.iter().map(|e| &e.game_id).collect();
+        assert_eq!(ids.len(), entries.len(), "game_ids must be unique");
+    }
+
+    #[test]
+    fn series_based_schedule_gives_every_pro_farm_team_exactly_99_games() {
+        let mut rng = ChaCha8Rng::seed_from_u64(12);
+        let entries = generate_regular_season_series_based("pro_farm", &teams(10), 99, 1, &mut rng);
+
+        let mut games_per_team: std::collections::HashMap<String, u32> = std::collections::HashMap::new();
+        for e in &entries {
+            *games_per_team.entry(e.home.clone()).or_insert(0) += 1;
+            *games_per_team.entry(e.away.clone()).or_insert(0) += 1;
+        }
+        assert_eq!(games_per_team.len(), 10);
+        for count in games_per_team.values() {
+            assert_eq!(*count, 99);
+        }
+    }
+
+    #[test]
+    fn series_based_schedule_groups_games_into_consecutive_three_game_series_with_alternating_home_away() {
+        let mut rng = ChaCha8Rng::seed_from_u64(13);
+        let entries = generate_regular_season_series_based("pro", &teams(10), 144, 1, &mut rng);
+
+        for chunk in entries.chunks(3) {
+            assert_eq!(chunk.len(), 3);
+            let (h0, a0, d0) = (chunk[0].home.clone(), chunk[0].away.clone(), chunk[0].day);
+            assert_eq!(chunk[1].day, d0 + 1);
+            assert_eq!(chunk[2].day, d0 + 2);
+            assert_eq!(chunk[1].home, a0, "2차전은 원정팀이 홈");
+            assert_eq!(chunk[1].away, h0);
+            assert_eq!(chunk[2].home, h0, "3차전은 다시 1차전 홈팀이 홈");
+            assert_eq!(chunk[2].away, a0);
+        }
+    }
+
+    #[test]
+    fn series_based_schedule_never_schedules_a_game_on_the_weekly_rest_day() {
+        let mut rng = ChaCha8Rng::seed_from_u64(14);
+        let start_day = 5;
+        let entries = generate_regular_season_series_based("pro", &teams(10), 144, start_day, &mut rng);
+
+        for e in &entries {
+            assert_ne!((e.day - start_day).rem_euclid(7), 6, "day {} lands on the rest-day slot", e.day);
+        }
+    }
+
+    #[test]
+    fn series_based_schedule_is_deterministic_with_same_seed() {
+        let mut rng1 = ChaCha8Rng::seed_from_u64(15);
+        let a = generate_regular_season_series_based("pro", &teams(10), 144, 1, &mut rng1);
+        let mut rng2 = ChaCha8Rng::seed_from_u64(15);
+        let b = generate_regular_season_series_based("pro", &teams(10), 144, 1, &mut rng2);
+
+        assert_eq!(a.len(), b.len());
         for (x, y) in a.iter().zip(b.iter()) {
             assert_eq!(x.game_id, y.game_id);
             assert_eq!(x.home, y.home);

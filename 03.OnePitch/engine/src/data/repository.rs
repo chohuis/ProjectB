@@ -310,7 +310,14 @@ pub fn generate_schedule(
     let league_slug = league_id.strip_prefix("league:").unwrap_or(league_id);
     let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("schedule:{league_id}:{season}")));
 
-    let entries = schedule::generate_regular_season_targeted(league_slug, &groups, target_games, start_day, &mut rng);
+    // 프로/프로2군은 실제 KBO처럼 3연전+주간 휴식일 구조(대화 2026-07-24,
+    // §6-N) — 팀이 한 그룹뿐이라 `groups`의 첫(유일한) 그룹을 그대로 쓴다.
+    let entries = if league_id == "league:pro" || league_id == "league:pro_farm" {
+        let teams = groups.into_iter().next().unwrap_or_default();
+        schedule::generate_regular_season_series_based(league_slug, &teams, target_games, start_day, &mut rng)
+    } else {
+        schedule::generate_regular_season_targeted(league_slug, &groups, target_games, start_day, &mut rng)
+    };
 
     for e in &entries {
         slot_conn.execute(
@@ -344,11 +351,15 @@ pub fn generate_initial_world(slot_conn: &mut Connection, content_conn: &Connect
     // SCHEDULED_LEAGUE_IDS보다 넓음) 팀에 배정. 같은 트랜잭션에 묶는 이유는
     // 위 스케줄 생성과 동일(개별 autocommit이면 182팀분 디스크 fsync로
     // 새 게임 시작이 다시 느려짐, §6-38에서 이미 한 번 발견된 문제).
-    for_each_team_in_all_leagues(&tx, content_conn, |conn, team_id| assign_rotation(conn, content_conn, team_id))?;
-    for_each_team_in_all_leagues(&tx, content_conn, assign_batting_order)?;
+    // 랭킹 배치 캐시(대화 2026-07-24) — 새 게임 시작 시점엔 season_stats·
+    // practice_stats가 비어있어 사실상 공짜지만, 아래 세 루프가 이 캐시
+    // 하나를 공유하는 패턴 자체는 월간/시즌 재편성과 동일하게 맞춘다.
+    let scores = StatScoreCache::load(&tx)?;
+    for_each_team_in_all_leagues(&tx, content_conn, |conn, team_id| assign_rotation(conn, content_conn, team_id, &scores))?;
+    for_each_team_in_all_leagues(&tx, content_conn, |conn, team_id| assign_batting_order(conn, team_id, &scores))?;
     // 마무리 랭킹(10_구현_Phase_계획.md §6-N Part G) — 로테이션과 같은
     // 트랜잭션에 묶는 이유도 동일(개별 autocommit 방지).
-    for_each_team_in_all_leagues(&tx, content_conn, assign_closer)?;
+    for_each_team_in_all_leagues(&tx, content_conn, |conn, team_id| assign_closer(conn, team_id, &scores))?;
     tx.commit()?;
     Ok(())
 }
@@ -1607,22 +1618,33 @@ pub(crate) fn load_batting_lineup(slot_conn: &Connection, team_id: &str) -> anyh
 fn pitcher_stats_score(conn: &Connection, table: &str, player_id: &str) -> anyhow::Result<Option<f64>> {
     let mut stmt = conn.prepare(&format!("SELECT line FROM {table} WHERE player_id = ?1"))?;
     let lines: Vec<String> = stmt.query_map([player_id], |r| r.get(0))?.collect::<Result<Vec<_>, _>>()?;
+    Ok(pitcher_stats_score_from_lines(&lines))
+}
+
+/// `pitcher_stats_score`의 순수 계산 부분(쿼리 없이 이미 불러온 라인만
+/// 처리) — 단일 선수 조회(`pitcher_stats_score`)와 172팀 일괄 배치
+/// (`StatScoreCache::load`) 양쪽이 공유해, 월간 재편성처럼 팀마다
+/// 반복 조회하면 N+1이 되는 자리에서 한 번의 전체 스캔으로 대체할 수
+/// 있게 한다(대화 2026-07-24, 실측 진단으로 발견 — 로테이션/타순/마무리
+/// 랭킹이 매달 172팀 전체를 순회하며 선수 개개인마다 별도 쿼리를 날려
+/// 월간 재편성 구간이 예상보다 훨씬 비쌌음).
+fn pitcher_stats_score_from_lines(lines: &[String]) -> Option<f64> {
     let (mut outs, mut runs, mut unearned_runs, mut ks) = (0i64, 0i64, 0i64, 0i64);
     for line in lines {
-        let v: serde_json::Value = serde_json::from_str(&line).unwrap_or_default();
+        let v: serde_json::Value = serde_json::from_str(line).unwrap_or_default();
         outs += v.get("outs_recorded").and_then(|x| x.as_i64()).unwrap_or(0);
         runs += v.get("runs_allowed").and_then(|x| x.as_i64()).unwrap_or(0);
         unearned_runs += v.get("unearned_runs").and_then(|x| x.as_i64()).unwrap_or(0);
         ks += v.get("strikeouts").and_then(|x| x.as_i64()).unwrap_or(0);
     }
     if outs < 9 {
-        return Ok(None);
+        return None;
     }
     let earned_runs = (runs - unearned_runs).max(0);
     let innings = outs as f64 / 3.0;
     let era_like = earned_runs as f64 * 9.0 / innings;
     let k_per_9 = ks as f64 * 9.0 / innings;
-    Ok(Some((50.0 - (era_like - 4.5) * 4.0 + (k_per_9 - 7.0)).clamp(0.0, 100.0)))
+    Some((50.0 - (era_like - 4.5) * 4.0 + (k_per_9 - 7.0)).clamp(0.0, 100.0))
 }
 
 fn season_stats_score(conn: &Connection, player_id: &str) -> anyhow::Result<Option<f64>> {
@@ -1651,6 +1673,54 @@ fn protagonist_season_score(conn: &Connection) -> anyhow::Result<Option<f64>> {
     Ok(Some((50.0 - (era_like - 4.5) * 4.0 + (k_per_9 - 7.0)).clamp(0.0, 100.0)))
 }
 
+/// 월간/시즌 재편성 배치 최적화(대화 2026-07-24, 실측 진단으로 발견) —
+/// `ranked_rotation_candidates_for_team`/`ranked_batting_order_for_team`/
+/// `ranked_closer_candidates_for_team`는 원래 후보 선수마다 `season_stats`·
+/// `practice_stats`를 개별 쿼리했는데, 이 세 함수가 매달 172팀 전체를
+/// 순회하며 호출되다 보니(`for_each_team_in_all_leagues`) N+1 쿼리가
+/// 쌓여 월간 재편성 구간이 예상보다 훨씬 비쌌다(전체 `advance()` 비용의
+/// ~22%). 두 테이블을 통째로 한 번씩만 읽어(`load_all_lines_by_player`)
+/// 투수·타자 점수를 전부 미리 계산해두고, 팀별 루프는 이 캐시에서
+/// `HashMap::get`만 하도록 바꿨다 — 쿼리 수가 (팀 수×선수 수×2)에서
+/// 고정 2회(season_stats·practice_stats 테이블 각 1번 풀스캔)로 준다.
+fn load_all_lines_by_player(conn: &Connection, table: &str) -> anyhow::Result<HashMap<String, Vec<String>>> {
+    let mut stmt = conn.prepare(&format!("SELECT player_id, line FROM {table}"))?;
+    let rows: Vec<(String, String)> = stmt.query_map([], |r| Ok((r.get(0)?, r.get(1)?)))?.collect::<Result<_, _>>()?;
+    let mut map: HashMap<String, Vec<String>> = HashMap::new();
+    for (player_id, line) in rows {
+        map.entry(player_id).or_default().push(line);
+    }
+    Ok(map)
+}
+
+struct StatScoreCache {
+    pitcher_season: HashMap<String, f64>,
+    pitcher_practice: HashMap<String, f64>,
+    batter_season: HashMap<String, f64>,
+    batter_practice: HashMap<String, f64>,
+}
+
+impl StatScoreCache {
+    /// 호출 시점의 `season_stats`/`practice_stats`를 통째로 한 번씩만
+    /// 읽어 투수·타자 점수를 전부 미리 계산 — 월간 재편성 훅(`advance()`)·
+    /// 시즌 경계(`season_rollover`) 진입 시 딱 한 번만 만들어 그 안의
+    /// `for_each_team_in_all_leagues` 루프 3개(로테이션·타순·마무리)가
+    /// 공유한다.
+    fn load(conn: &Connection) -> anyhow::Result<Self> {
+        let season_lines = load_all_lines_by_player(conn, "season_stats")?;
+        let practice_lines = load_all_lines_by_player(conn, "practice_stats")?;
+        let score_map = |lines_by_player: &HashMap<String, Vec<String>>, f: fn(&[String]) -> Option<f64>| -> HashMap<String, f64> {
+            lines_by_player.iter().filter_map(|(id, lines)| f(lines).map(|s| (id.clone(), s))).collect()
+        };
+        Ok(Self {
+            pitcher_season: score_map(&season_lines, pitcher_stats_score_from_lines),
+            pitcher_practice: score_map(&practice_lines, pitcher_stats_score_from_lines),
+            batter_season: score_map(&season_lines, batter_stats_score_from_lines),
+            batter_practice: score_map(&practice_lines, batter_stats_score_from_lines),
+        })
+    }
+}
+
 /// 팀의 선발투수 후보를 능력치+season_stats+practice_stats 3중 블렌딩
 /// 점수로 서열화한 id 목록 — `assign_rotation`(시즌 경계, 플레인 재배정)과
 /// `reassign_rotation_preserving_next_turn`(시즌 중 재배정, 다음 등판 보존)
@@ -1662,7 +1732,12 @@ fn protagonist_season_score(conn: &Connection) -> anyhow::Result<Option<f64>> {
 /// 수 있게 하면 원래 없던 훨씬 큰 변화라 이번엔 안 건드림).
 /// `find_protagonist_game_today`가 이 순위(`season_meta['rotation:{team_id}']`)
 /// 를 그대로 참고해 "오늘 로테이션 차례가 주인공이 아니면" 벤치시킨다.
-fn ranked_rotation_candidates_for_team(conn: &Connection, content_conn: &Connection, team_id: &str) -> anyhow::Result<Vec<String>> {
+fn ranked_rotation_candidates_for_team(
+    conn: &Connection,
+    content_conn: &Connection,
+    team_id: &str,
+    scores: &StatScoreCache,
+) -> anyhow::Result<Vec<String>> {
     let mut stmt = conn.prepare(
         "SELECT id, stats FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position = '선발투수'",
     )?;
@@ -1675,8 +1750,8 @@ fn ranked_rotation_candidates_for_team(conn: &Connection, content_conn: &Connect
         let control = v.get("제구").and_then(|x| x.as_f64()).unwrap_or(50.0);
         let stuff = v.get("구위").and_then(|x| x.as_f64()).unwrap_or(50.0);
         let skill_score = (control + stuff) / 2.0;
-        let season_score = season_stats_score(conn, &id)?;
-        let practice_score = practice_stats_score(conn, &id)?;
+        let season_score = scores.pitcher_season.get(&id).copied();
+        let practice_score = scores.pitcher_practice.get(&id).copied();
         candidates.push((id, manager::blend_rotation_score_with_practice(skill_score, season_score, practice_score)));
     }
 
@@ -1692,7 +1767,7 @@ fn ranked_rotation_candidates_for_team(conn: &Connection, content_conn: &Connect
                 let stuff = v.get("구위").and_then(|x| x.as_f64()).unwrap_or(50.0);
                 let skill_score = (control + stuff) / 2.0;
                 let season_score = protagonist_season_score(conn)?;
-                let practice_score = practice_stats_score(conn, "proto:1")?;
+                let practice_score = scores.pitcher_practice.get("proto:1").copied();
                 candidates.push(("proto:1".to_string(), manager::blend_rotation_score_with_practice(skill_score, season_score, practice_score)));
             }
         }
@@ -1714,8 +1789,8 @@ fn ranked_rotation_candidates_for_team(conn: &Connection, content_conn: &Connect
     Ok(rotation)
 }
 
-fn assign_rotation(conn: &Connection, content_conn: &Connection, team_id: &str) -> anyhow::Result<()> {
-    let rotation = ranked_rotation_candidates_for_team(conn, content_conn, team_id)?;
+fn assign_rotation(conn: &Connection, content_conn: &Connection, team_id: &str, scores: &StatScoreCache) -> anyhow::Result<()> {
+    let rotation = ranked_rotation_candidates_for_team(conn, content_conn, team_id, scores)?;
     if rotation.is_empty() {
         return Ok(());
     }
@@ -1732,8 +1807,8 @@ fn assign_rotation(conn: &Connection, content_conn: &Connection, team_id: &str) 
 /// 재등판하는 걸 막기 위해 `manager::preserve_next_turn`으로 그 자리만
 /// 고정한다. 시즌 경계(`assign_rotation`)는 직전 시즌 순번을 보존할 이유가
 /// 없어(로스터 자체가 갈림) 이 함수를 쓰지 않는다.
-fn reassign_rotation_preserving_next_turn(conn: &Connection, content_conn: &Connection, team_id: &str) -> anyhow::Result<()> {
-    let new_ranked = ranked_rotation_candidates_for_team(conn, content_conn, team_id)?;
+fn reassign_rotation_preserving_next_turn(conn: &Connection, content_conn: &Connection, team_id: &str, scores: &StatScoreCache) -> anyhow::Result<()> {
+    let new_ranked = ranked_rotation_candidates_for_team(conn, content_conn, team_id, scores)?;
     if new_ranked.is_empty() {
         return Ok(());
     }
@@ -1765,9 +1840,15 @@ fn reassign_rotation_preserving_next_turn(conn: &Connection, content_conn: &Conn
 fn batter_stats_score(conn: &Connection, table: &str, player_id: &str) -> anyhow::Result<Option<f64>> {
     let mut stmt = conn.prepare(&format!("SELECT line FROM {table} WHERE player_id = ?1"))?;
     let lines: Vec<String> = stmt.query_map([player_id], |r| r.get(0))?.collect::<Result<Vec<_>, _>>()?;
+    Ok(batter_stats_score_from_lines(&lines))
+}
+
+/// `batter_stats_score`의 순수 계산 부분 — `pitcher_stats_score_from_lines`
+/// 와 같은 이유로 분리(배치 스캔 재사용).
+fn batter_stats_score_from_lines(lines: &[String]) -> Option<f64> {
     let (mut pa, mut ab, mut hits, mut doubles, mut triples, mut hr, mut walks) = (0i64, 0i64, 0i64, 0i64, 0i64, 0i64, 0i64);
     for line in lines {
-        let v: serde_json::Value = serde_json::from_str(&line).unwrap_or_default();
+        let v: serde_json::Value = serde_json::from_str(line).unwrap_or_default();
         pa += v.get("plate_appearances").and_then(|x| x.as_i64()).unwrap_or(0);
         ab += v.get("at_bats").and_then(|x| x.as_i64()).unwrap_or(0);
         hits += v.get("hits").and_then(|x| x.as_i64()).unwrap_or(0);
@@ -1777,20 +1858,16 @@ fn batter_stats_score(conn: &Connection, table: &str, player_id: &str) -> anyhow
         walks += v.get("walks").and_then(|x| x.as_i64()).unwrap_or(0);
     }
     if pa < 10 || ab == 0 {
-        return Ok(None);
+        return None;
     }
     let obp_like = (hits + walks) as f64 / (ab + walks) as f64 * 100.0;
     let total_bases = hits + doubles + 2 * triples + 3 * hr;
     let slg_like = total_bases as f64 / ab as f64 * 100.0;
-    Ok(Some((50.0 + (obp_like - 33.0) + (slg_like - 40.0) * 0.5).clamp(0.0, 100.0)))
+    Some((50.0 + (obp_like - 33.0) + (slg_like - 40.0) * 0.5).clamp(0.0, 100.0))
 }
 
 fn season_stats_batter_score(conn: &Connection, player_id: &str) -> anyhow::Result<Option<f64>> {
     batter_stats_score(conn, "season_stats", player_id)
-}
-
-fn practice_stats_batter_score(conn: &Connection, player_id: &str) -> anyhow::Result<Option<f64>> {
-    batter_stats_score(conn, "practice_stats", player_id)
 }
 
 /// 선수 하나의 원시 스탯 라인(투수·타자 필드 전부, 필드명은 season_stats/
@@ -1952,7 +2029,7 @@ fn archive_npc_season_stats(conn: &Connection, season: i64) -> anyhow::Result<()
 /// `load_batting_lineup`과 동일한 필터(감독·코치·구단주·투수 제외)를 써서
 /// 실제 타순 후보와 일치시킨다. 타순은 로테이션과 달리 정원 제한이 없어
 /// (로스터 타자 전원 배치) `manager::rank_all_candidates`를 쓴다.
-fn ranked_batting_order_for_team(conn: &Connection, team_id: &str) -> anyhow::Result<Vec<String>> {
+fn ranked_batting_order_for_team(conn: &Connection, team_id: &str, scores: &StatScoreCache) -> anyhow::Result<Vec<String>> {
     let mut stmt = conn.prepare(
         "SELECT id, stats FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position NOT IN ('선발투수', '중계투수', '마무리투수', '감독', '코치', '구단주')",
     )?;
@@ -1966,8 +2043,8 @@ fn ranked_batting_order_for_team(conn: &Connection, team_id: &str) -> anyhow::Re
         let eye = v.get("선구안").and_then(|x| x.as_f64()).unwrap_or(50.0);
         let power = v.get("파워").and_then(|x| x.as_f64()).unwrap_or(50.0);
         let skill_score = (contact + eye + power) / 3.0;
-        let season_score = season_stats_batter_score(conn, &id)?;
-        let practice_score = practice_stats_batter_score(conn, &id)?;
+        let season_score = scores.batter_season.get(&id).copied();
+        let practice_score = scores.batter_practice.get(&id).copied();
         candidates.push((id, manager::blend_rotation_score_with_practice(skill_score, season_score, practice_score)));
     }
 
@@ -1977,8 +2054,8 @@ fn ranked_batting_order_for_team(conn: &Connection, team_id: &str) -> anyhow::Re
 /// 타순 재배정 — 로테이션과 달리 "다음 등판 보존" 같은 연속성 제약이
 /// 없어(어떤 순서로 배치해도 부작용 없음) 시즌 경계·시즌 중 구분 없이
 /// 이 함수 하나만 쓴다.
-fn assign_batting_order(conn: &Connection, team_id: &str) -> anyhow::Result<()> {
-    let order = ranked_batting_order_for_team(conn, team_id)?;
+fn assign_batting_order(conn: &Connection, team_id: &str, scores: &StatScoreCache) -> anyhow::Result<()> {
+    let order = ranked_batting_order_for_team(conn, team_id, scores)?;
     if order.is_empty() {
         return Ok(());
     }
@@ -2127,7 +2204,7 @@ pub(crate) fn load_relief_pitcher(slot_conn: &Connection, team_id: &str, is_save
 /// 전용)과 같은 블렌드 공식·가중치(사용자 확인 "현재값 유지")를 재사용
 /// 하되 포지션 필터만 다르다. 주인공은 항상 선발 로테이션 전용 아키타입
 /// 이라 이 후보군엔 들어오지 않는다(고교·대학이라도 마무리 후보로 안 뜀).
-fn ranked_closer_candidates_for_team(conn: &Connection, team_id: &str) -> anyhow::Result<Vec<String>> {
+fn ranked_closer_candidates_for_team(conn: &Connection, team_id: &str, scores: &StatScoreCache) -> anyhow::Result<Vec<String>> {
     let mut stmt = conn.prepare(
         "SELECT id, stats FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position IN ('중계투수', '마무리투수')",
     )?;
@@ -2140,8 +2217,8 @@ fn ranked_closer_candidates_for_team(conn: &Connection, team_id: &str) -> anyhow
         let control = v.get("제구").and_then(|x| x.as_f64()).unwrap_or(50.0);
         let stuff = v.get("구위").and_then(|x| x.as_f64()).unwrap_or(50.0);
         let skill_score = (control + stuff) / 2.0;
-        let season_score = season_stats_score(conn, &id)?;
-        let practice_score = practice_stats_score(conn, &id)?;
+        let season_score = scores.pitcher_season.get(&id).copied();
+        let practice_score = scores.pitcher_practice.get(&id).copied();
         candidates.push((id, manager::blend_rotation_score_with_practice(skill_score, season_score, practice_score)));
     }
     Ok(manager::rank_rotation_candidates(&candidates))
@@ -2176,8 +2253,8 @@ fn ranked_relief_candidates_for_team(conn: &Connection, team_id: &str) -> anyhow
 /// "다음 등판 보존" 같은 연속성 제약이 없어(마무리는 순번이 아니라 단일
 /// 지정 역할) 별도 "reassign_*" 변형이 필요 없다 — 이 함수 하나로 충분.
 /// 후보가 0명이면 no-op(`load_relief_pitcher`가 폴백으로 처리).
-fn assign_closer(conn: &Connection, team_id: &str) -> anyhow::Result<()> {
-    let ranked = ranked_closer_candidates_for_team(conn, team_id)?;
+fn assign_closer(conn: &Connection, team_id: &str, scores: &StatScoreCache) -> anyhow::Result<()> {
+    let ranked = ranked_closer_candidates_for_team(conn, team_id, scores)?;
     let Some(top) = ranked.into_iter().next() else {
         return Ok(());
     };
@@ -5016,11 +5093,16 @@ pub fn season_rollover(conn: &Connection, content_conn: &Connection, day: i64) -
     // 실행해야 한다 — 그래서 season_stats 삭제는 이 루프 뒤로 미룬다.
     // 플레인 재배정(`assign_rotation`)을 쓴다 — 시즌 경계는 직전 시즌
     // 순번을 보존할 이유가 없다(로스터 자체가 갈림, 시즌 중 재편과 다름).
-    for_each_team_in_all_leagues(conn, content_conn, |c, team_id| assign_rotation(c, content_conn, team_id))?;
-    for_each_team_in_all_leagues(conn, content_conn, assign_batting_order)?;
+    // 랭킹 배치 캐시(대화 2026-07-24, 실측 진단으로 발견) — 아래 세 루프가
+    // 172팀을 순회하며 선수마다 season_stats/practice_stats를 개별 쿼리하던
+    // N+1 패턴을, 이 시점의 두 테이블을 한 번씩만 통째로 읽어 만드는
+    // 캐시로 교체 — 세 루프가 이 캐시 하나를 공유한다.
+    let scores = StatScoreCache::load(conn)?;
+    for_each_team_in_all_leagues(conn, content_conn, |c, team_id| assign_rotation(c, content_conn, team_id, &scores))?;
+    for_each_team_in_all_leagues(conn, content_conn, |c, team_id| assign_batting_order(c, team_id, &scores))?;
     // 마무리 랭킹도 시즌 경계마다 재계산(10_구현_Phase_계획.md §6-N Part G) —
     // 방금 끝난 시즌의 season_stats가 아직 남아있는 지금이라야 반영된다.
-    for_each_team_in_all_leagues(conn, content_conn, assign_closer)?;
+    for_each_team_in_all_leagues(conn, content_conn, |c, team_id| assign_closer(c, team_id, &scores))?;
     // NPC 시즌 기록 아카이브(Phase 5) — 삭제 직전에 반드시 먼저.
     archive_npc_season_stats(conn, current)?;
     conn.execute("DELETE FROM season_stats", [])?;
@@ -5107,19 +5189,29 @@ pub fn advance(slot_conn: &mut Connection, content_conn: &Connection) -> anyhow:
             // 전에 실행해야 한다("이번 달 청백전 결과가 이번 달 로테이션에
             // 곧바로 반영"이라는 자연스러운 순서).
             run_monthly_scrimmages(&tx, content_conn, world_seed, today)?;
+            // 랭킹 배치 캐시(대화 2026-07-24, 실측 진단으로 발견) — 아래
+            // 세 루프가 172팀을 순회하며 선수마다 season_stats/practice_stats
+            // 를 개별 쿼리하던 N+1 패턴을, 이 시점(청백전 반영 후)의 두
+            // 테이블을 한 번씩만 통째로 읽어 세 루프가 공유하는 캐시로
+            // 교체(실측 결과 개선 폭은 기대보다 작았음 — `assign_batting_order`
+            // 는 눈에 띄게 빨라졌지만 `reassign_rotation_preserving_next_turn`
+            // 은 거의 그대로였다. 후자는 `schedule`/`season_meta` 개별
+            // 조회가 이미 있어 그쪽이 더 큰 비중이었을 가능성 — 다음
+            // 진단 대상은 `schedule`에 인덱스가 아예 없다는 점, §6-115 참고).
+            let scores = StatScoreCache::load(&tx)?;
             // NPC 로테이션 시즌 중 실시간 재편(10_구현_Phase_계획.md §6-N) —
             // season_stats가 그동안 쌓은 성적을 이 시점에 로테이션 순번에
             // 반영. "다음 등판" 자리는 `preserve_next_turn`으로 보존해
             // 휴식 없는 재등판을 막는다.
-            for_each_team_in_all_leagues(&tx, content_conn, |conn, team_id| reassign_rotation_preserving_next_turn(conn, content_conn, team_id))?;
+            for_each_team_in_all_leagues(&tx, content_conn, |conn, team_id| reassign_rotation_preserving_next_turn(conn, content_conn, team_id, &scores))?;
             // 타순 최적화(10_구현_Phase_계획.md §6-N) — 로테이션과 달리
             // "다음 등판 보존" 같은 연속성 제약이 없어 플레인 재배정 하나면
             // 충분하다.
-            for_each_team_in_all_leagues(&tx, content_conn, assign_batting_order)?;
+            for_each_team_in_all_leagues(&tx, content_conn, |conn, team_id| assign_batting_order(conn, team_id, &scores))?;
             // 마무리 랭킹 월간 재계산(10_구현_Phase_계획.md §6-N Part G) —
             // 이번 달 청백전(practice_stats)·이번 시즌 성적(season_stats)
             // 모두 반영해 더 잘 던진 중계가 마무리로 승격될 수 있게 한다.
-            for_each_team_in_all_leagues(&tx, content_conn, assign_closer)?;
+            for_each_team_in_all_leagues(&tx, content_conn, |conn, team_id| assign_closer(conn, team_id, &scores))?;
             // NPC 콜업/강등(10_구현_Phase_계획.md §6-N) — process_month 안이
             // 아니라 여기 형제 호출로 둔다: process_month는 주인공이 이번 달
             // 안 던졌으면 맨 위에서 즉시 return하는데, NPC 승강은 주인공
@@ -5695,7 +5787,7 @@ mod tests {
             .execute("UPDATE protagonist SET stats = ?1 WHERE id = 'proto:1'", params![serde_json::json!({"제구": 10.0, "구위": 10.0}).to_string()])
             .unwrap();
         insert_test_player(&slot_conn, "team:hanseong_hs_ace", "team:hanseong_hs", "선발투수", serde_json::json!({"제구": 95.0, "구위": 95.0}));
-        assign_rotation(&slot_conn, &content_conn, "team:hanseong_hs").unwrap();
+        assign_rotation(&slot_conn, &content_conn, "team:hanseong_hs", &StatScoreCache::load(&slot_conn).unwrap()).unwrap();
         let rotation_raw: String =
             slot_conn.query_row("SELECT value FROM season_meta WHERE key = 'rotation:team:hanseong_hs'", [], |r| r.get(0)).unwrap();
         let rotation: Vec<String> = serde_json::from_str(&rotation_raw).unwrap();
@@ -8275,7 +8367,7 @@ mod tests {
         insert_test_player(&slot_conn, "team:a_sp2", "team:a", "선발투수", serde_json::json!({"제구": 70.0, "구위": 70.0}));
         insert_test_player(&slot_conn, "team:a_sp3", "team:a", "선발투수", serde_json::json!({"제구": 55.0, "구위": 55.0}));
 
-        assign_rotation(&slot_conn, &content_conn, "team:a").unwrap();
+        assign_rotation(&slot_conn, &content_conn, "team:a", &StatScoreCache::load(&slot_conn).unwrap()).unwrap();
 
         let raw: String = slot_conn.query_row("SELECT value FROM season_meta WHERE key = 'rotation:team:a'", [], |r| r.get(0)).unwrap();
         let rotation: Vec<String> = serde_json::from_str(&raw).unwrap();
@@ -8303,7 +8395,7 @@ mod tests {
         upsert_pitcher_season_stats(&slot_conn, "team:a_sp1", 1, &good).unwrap();
         upsert_pitcher_season_stats(&slot_conn, "team:a_sp2", 1, &bad).unwrap();
 
-        assign_rotation(&slot_conn, &content_conn, "team:a").unwrap();
+        assign_rotation(&slot_conn, &content_conn, "team:a", &StatScoreCache::load(&slot_conn).unwrap()).unwrap();
 
         let raw: String = slot_conn.query_row("SELECT value FROM season_meta WHERE key = 'rotation:team:a'", [], |r| r.get(0)).unwrap();
         let rotation: Vec<String> = serde_json::from_str(&raw).unwrap();
@@ -8325,7 +8417,7 @@ mod tests {
         upsert_pitcher_practice_stats(&slot_conn, "team:a_sp1", 1, &good).unwrap();
         upsert_pitcher_practice_stats(&slot_conn, "team:a_sp2", 1, &bad).unwrap();
 
-        assign_rotation(&slot_conn, &content_conn, "team:a").unwrap();
+        assign_rotation(&slot_conn, &content_conn, "team:a", &StatScoreCache::load(&slot_conn).unwrap()).unwrap();
 
         let raw: String = slot_conn.query_row("SELECT value FROM season_meta WHERE key = 'rotation:team:a'", [], |r| r.get(0)).unwrap();
         let rotation: Vec<String> = serde_json::from_str(&raw).unwrap();
@@ -8338,7 +8430,7 @@ mod tests {
         insert_test_player(&slot_conn, "team:a_rp1", "team:a", "중계투수", serde_json::json!({"제구": 40.0, "구위": 40.0}));
         insert_test_player(&slot_conn, "team:a_rp2", "team:a", "마무리투수", serde_json::json!({"제구": 70.0, "구위": 70.0}));
 
-        assign_closer(&slot_conn, "team:a").unwrap();
+        assign_closer(&slot_conn, "team:a", &StatScoreCache::load(&slot_conn).unwrap()).unwrap();
 
         let closer: String = slot_conn.query_row("SELECT value FROM season_meta WHERE key = 'closer:team:a'", [], |r| r.get(0)).unwrap();
         assert_eq!(closer, "team:a_rp2");
@@ -8349,7 +8441,7 @@ mod tests {
         let slot_conn = slot::open_in_memory().unwrap();
         insert_test_player(&slot_conn, "team:a_sp", "team:a", "선발투수", serde_json::json!({"제구": 50.0, "구위": 50.0}));
 
-        assign_closer(&slot_conn, "team:a").unwrap();
+        assign_closer(&slot_conn, "team:a", &StatScoreCache::load(&slot_conn).unwrap()).unwrap();
 
         let closer: Option<String> =
             slot_conn.query_row("SELECT value FROM season_meta WHERE key = 'closer:team:a'", [], |r| r.get(0)).optional().unwrap();
@@ -8361,7 +8453,7 @@ mod tests {
         let slot_conn = slot::open_in_memory().unwrap();
         insert_test_player(&slot_conn, "team:a_rp", "team:a", "중계투수", serde_json::json!({"제구": 40.0, "구위": 40.0}));
         insert_test_player(&slot_conn, "team:a_closer", "team:a", "마무리투수", serde_json::json!({"제구": 70.0, "구위": 70.0}));
-        assign_closer(&slot_conn, "team:a").unwrap();
+        assign_closer(&slot_conn, "team:a", &StatScoreCache::load(&slot_conn).unwrap()).unwrap();
 
         let picked = load_relief_pitcher(&slot_conn, "team:a", true).unwrap().unwrap();
         assert_eq!(picked.id, "team:a_closer");
@@ -8372,7 +8464,7 @@ mod tests {
         let slot_conn = slot::open_in_memory().unwrap();
         insert_test_player(&slot_conn, "team:a_rp", "team:a", "중계투수", serde_json::json!({"제구": 40.0, "구위": 40.0}));
         insert_test_player(&slot_conn, "team:a_closer", "team:a", "마무리투수", serde_json::json!({"제구": 70.0, "구위": 70.0}));
-        assign_closer(&slot_conn, "team:a").unwrap();
+        assign_closer(&slot_conn, "team:a", &StatScoreCache::load(&slot_conn).unwrap()).unwrap();
 
         let picked = load_relief_pitcher(&slot_conn, "team:a", false).unwrap().unwrap();
         assert_eq!(picked.id, "team:a_rp", "세이브 상황이 아니면 마무리 대신 중계 풀에서 골라야 함");
@@ -8406,7 +8498,7 @@ mod tests {
         slot_conn.execute("UPDATE protagonist SET stats = ?1 WHERE id = 'proto:1'", params![serde_json::json!({"제구": 90.0, "구위": 90.0}).to_string()]).unwrap();
         insert_test_player(&slot_conn, "team:hanseong_hs_sp1", "team:hanseong_hs", "선발투수", serde_json::json!({"제구": 30.0, "구위": 30.0}));
 
-        let ranked = ranked_rotation_candidates_for_team(&slot_conn, &content_conn, "team:hanseong_hs").unwrap();
+        let ranked = ranked_rotation_candidates_for_team(&slot_conn, &content_conn, "team:hanseong_hs", &StatScoreCache::load(&slot_conn).unwrap()).unwrap();
         assert!(ranked.contains(&"proto:1".to_string()), "ranked={ranked:?}");
         assert_eq!(ranked[0], "proto:1", "능력치가 압도적으로 높으니 1순위여야 함");
     }
@@ -8435,7 +8527,7 @@ mod tests {
             );
         }
 
-        let ranked = ranked_rotation_candidates_for_team(&slot_conn, &content_conn, "team:hanseong_hs").unwrap();
+        let ranked = ranked_rotation_candidates_for_team(&slot_conn, &content_conn, "team:hanseong_hs", &StatScoreCache::load(&slot_conn).unwrap()).unwrap();
         assert_eq!(ranked.len(), 6, "NPC 5명(정원 꽉 참) + 주인공 보장 슬롯 1개 = 6명이어야 함: ranked={ranked:?}");
         assert!(ranked.contains(&"proto:1".to_string()), "ranked={ranked:?}");
         assert_ne!(ranked[0], "proto:1", "실력이 한참 밀리니 1순위는 아니어야 함");
@@ -8452,7 +8544,7 @@ mod tests {
         create_protagonist(&slot_conn, &content_conn, 1, "다른팀주인공", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
         insert_test_player(&slot_conn, "team:other_sp1", "team:other", "선발투수", serde_json::json!({"제구": 50.0, "구위": 50.0}));
 
-        let ranked = ranked_rotation_candidates_for_team(&slot_conn, &content_conn, "team:other").unwrap();
+        let ranked = ranked_rotation_candidates_for_team(&slot_conn, &content_conn, "team:other", &StatScoreCache::load(&slot_conn).unwrap()).unwrap();
         assert!(!ranked.contains(&"proto:1".to_string()), "다른 팀 로테이션엔 안 껴야 함: ranked={ranked:?}");
     }
 
@@ -8475,7 +8567,7 @@ mod tests {
             .unwrap();
         insert_test_player(&slot_conn, "team:pro_x_sp1", "team:pro_x", "선발투수", serde_json::json!({"제구": 10.0, "구위": 10.0}));
 
-        let ranked = ranked_rotation_candidates_for_team(&slot_conn, &content_conn, "team:pro_x").unwrap();
+        let ranked = ranked_rotation_candidates_for_team(&slot_conn, &content_conn, "team:pro_x", &StatScoreCache::load(&slot_conn).unwrap()).unwrap();
         assert!(!ranked.contains(&"proto:1".to_string()), "프로 리그엔 청백전이 안 돌아 경쟁에 안 껴야 함: ranked={ranked:?}");
     }
 
@@ -8535,7 +8627,7 @@ mod tests {
         upsert_batter_season_stats(&slot_conn, "team:a_b0", 1, &good).unwrap();
         upsert_batter_season_stats(&slot_conn, "team:a_b1", 1, &bad).unwrap();
 
-        let order = ranked_batting_order_for_team(&slot_conn, "team:a").unwrap();
+        let order = ranked_batting_order_for_team(&slot_conn, "team:a", &StatScoreCache::load(&slot_conn).unwrap()).unwrap();
         assert_eq!(order[0], "team:a_b0", "성적이 좋은 타자가 능력치 동률에서도 앞서야 함");
     }
 
@@ -8582,7 +8674,7 @@ mod tests {
         insert_test_player(&slot_conn, "team:a_sp1", "team:a", "선발투수", serde_json::json!({"제구": 40.0, "구위": 40.0}));
         insert_test_player(&slot_conn, "team:a_sp2", "team:a", "선발투수", serde_json::json!({"제구": 40.0, "구위": 40.0}));
         insert_test_player(&slot_conn, "team:a_sp3", "team:a", "선발투수", serde_json::json!({"제구": 40.0, "구위": 40.0}));
-        assign_rotation(&slot_conn, &content_conn, "team:a").unwrap();
+        assign_rotation(&slot_conn, &content_conn, "team:a", &StatScoreCache::load(&slot_conn).unwrap()).unwrap();
         let before: String = slot_conn.query_row("SELECT value FROM season_meta WHERE key = 'rotation:team:a'", [], |r| r.get(0)).unwrap();
         let before_rotation: Vec<String> = serde_json::from_str(&before).unwrap();
 
@@ -8600,7 +8692,7 @@ mod tests {
             .execute("UPDATE npc SET stats = ?1 WHERE id = 'team:a_sp3'", params![serde_json::json!({"제구": 90.0, "구위": 90.0}).to_string()])
             .unwrap();
 
-        reassign_rotation_preserving_next_turn(&slot_conn, &content_conn, "team:a").unwrap();
+        reassign_rotation_preserving_next_turn(&slot_conn, &content_conn, "team:a", &StatScoreCache::load(&slot_conn).unwrap()).unwrap();
 
         let after: String = slot_conn.query_row("SELECT value FROM season_meta WHERE key = 'rotation:team:a'", [], |r| r.get(0)).unwrap();
         let after_rotation: Vec<String> = serde_json::from_str(&after).unwrap();
@@ -8619,7 +8711,8 @@ mod tests {
         insert_test_player(&slot_conn, "team:hs_a_sp1", "team:hs_a", "선발투수", serde_json::json!({"제구": 50.0, "구위": 50.0}));
         insert_test_player(&slot_conn, "team:pro_a_sp1", "team:pro_a", "선발투수", serde_json::json!({"제구": 50.0, "구위": 50.0}));
 
-        for_each_team_in_all_leagues(&slot_conn, &content_conn, |conn, team_id| assign_rotation(conn, &content_conn, team_id)).unwrap();
+        let scores = StatScoreCache::load(&slot_conn).unwrap();
+        for_each_team_in_all_leagues(&slot_conn, &content_conn, |conn, team_id| assign_rotation(conn, &content_conn, team_id, &scores)).unwrap();
 
         let hs_raw: Option<String> =
             slot_conn.query_row("SELECT value FROM season_meta WHERE key = 'rotation:team:hs_a'", [], |r| r.get(0)).optional().unwrap();
@@ -8634,7 +8727,7 @@ mod tests {
         let slot_conn = slot::open_in_memory().unwrap();
         insert_test_player(&slot_conn, "team:a_sp1", "team:a", "선발투수", serde_json::json!({"제구": 70.0, "구위": 70.0}));
         insert_test_player(&slot_conn, "team:a_sp2", "team:a", "선발투수", serde_json::json!({"제구": 40.0, "구위": 40.0}));
-        assign_rotation(&slot_conn, &content_conn, "team:a").unwrap();
+        assign_rotation(&slot_conn, &content_conn, "team:a", &StatScoreCache::load(&slot_conn).unwrap()).unwrap();
 
         // 완료 경기 0개 — 로테이션 0번째(team:a_sp1, 능력치가 더 높음).
         assert_eq!(load_starting_pitcher(&slot_conn, "team:a").unwrap().id, "team:a_sp1");
@@ -8673,7 +8766,7 @@ mod tests {
         let slot_conn = slot::open_in_memory().unwrap();
         insert_test_player(&slot_conn, "team:a_sp1", "team:a", "선발투수", serde_json::json!({"제구": 70.0, "구위": 70.0}));
         insert_test_player(&slot_conn, "team:a_sp2", "team:a", "선발투수", serde_json::json!({"제구": 40.0, "구위": 40.0}));
-        assign_rotation(&slot_conn, &content_conn, "team:a").unwrap();
+        assign_rotation(&slot_conn, &content_conn, "team:a", &StatScoreCache::load(&slot_conn).unwrap()).unwrap();
 
         retire(&slot_conn, "team:a_sp1").unwrap();
 
