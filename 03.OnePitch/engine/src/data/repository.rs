@@ -3504,6 +3504,167 @@ pub fn run_independent_season(slot_conn: &Connection, content_conn: &Connection,
     Ok(true)
 }
 
+/// 리그의 그룹별(고교 8권역·대학 5조 등) 승률 순위 — `load_team_groups_for_schedule`
+/// 그대로 재사용. 단일 그룹 리그(프로·프로2군·독립리그)는 그룹이 하나뿐이라
+/// "권역"과 "리그 전체"가 자연히 같아진다(순위 변동 알림, 대화 2026-07-25,
+/// §6-N — `hs_region_standings`/`univ_group_ranked`는 각자의 포스트시즌
+/// 시딩 전용 반환 형태가 있어 건드리지 않고 별도로 둔다).
+fn league_group_standings(slot_conn: &Connection, content_conn: &Connection, league_id: &str) -> anyhow::Result<Vec<Vec<(String, i64, i64)>>> {
+    let groups = content::load_team_groups_for_schedule(content_conn, league_id)?;
+    let mut stmt = slot_conn.prepare("SELECT w, l FROM standings WHERE team_id = ?1")?;
+    let mut result = Vec::new();
+    for group in groups {
+        let mut ranked: Vec<(String, i64, i64)> = group
+            .into_iter()
+            .map(|team_id| {
+                let (w, l): (i64, i64) = stmt.query_row([&team_id], |r| Ok((r.get(0)?, r.get(1)?))).unwrap_or((0, 0));
+                (team_id, w, l)
+            })
+            .collect();
+        ranked.sort_by(|a, b| win_pct(b.1, b.2).partial_cmp(&win_pct(a.1, a.2)).unwrap_or(std::cmp::Ordering::Equal));
+        result.push(ranked);
+    }
+    Ok(result)
+}
+
+/// 순위 변동 알림 계산 결과 — 팀 순위(지역·전국)와, 투수 기대주 순위
+/// 계산에 쓸 팀 목록(지역·전국)을 한 번에 묶는다(같은 그룹핑을 두 번
+/// 계산하지 않으려고).
+struct TeamRankContext {
+    region_rank: Option<usize>,
+    national_rank: usize,
+    region_team_ids: Vec<String>,
+    national_team_ids: Vec<String>,
+}
+
+/// `team_id`가 속한 리그의 순위 컨텍스트 — `league_id`에 팀이 없으면(합성
+/// 테스트 데이터 등) `None`.
+fn team_rank_context(
+    slot_conn: &Connection,
+    content_conn: &Connection,
+    league_id: &str,
+    team_id: &str,
+) -> anyhow::Result<Option<TeamRankContext>> {
+    let groups = league_group_standings(slot_conn, content_conn, league_id)?;
+    let Some(region_group) = groups.iter().find(|g| g.iter().any(|(id, _, _)| id == team_id)).cloned() else {
+        return Ok(None);
+    };
+    let region_team_ids: Vec<String> = region_group.iter().map(|(id, _, _)| id.clone()).collect();
+
+    let mut national: Vec<(String, i64, i64)> = groups.into_iter().flatten().collect();
+    national.sort_by(|a, b| win_pct(b.1, b.2).partial_cmp(&win_pct(a.1, a.2)).unwrap_or(std::cmp::Ordering::Equal));
+    let national_team_ids: Vec<String> = national.iter().map(|(id, _, _)| id.clone()).collect();
+    let national_rank = national.iter().position(|(id, _, _)| id == team_id).map(|i| i + 1).unwrap_or(national.len());
+
+    // 그룹이 하나뿐이면(프로 등) region == national이라 "권역" 개념이 없음.
+    let region_rank = if region_team_ids.len() == national_team_ids.len() {
+        None
+    } else {
+        region_group.iter().position(|(id, _, _)| id == team_id).map(|i| i + 1)
+    };
+
+    Ok(Some(TeamRankContext { region_rank, national_rank, region_team_ids, national_team_ids }))
+}
+
+/// 주어진 팀 목록(지역 또는 전국) 안에서 주인공의 투수 기대주 순위 —
+/// `StatScoreCache.pitcher_season`(로테이션 서열화에 이미 쓰는 그 점수,
+/// ERA류+K9 블렌드)을 그대로 재사용해 새 공식을 발명하지 않는다. 주인공은
+/// `npc` 테이블에 없어 이 캐시에 안 잡히므로 `protagonist_season_score`로
+/// 따로 구해 비교. 표본 부족(3이닝 미만)이면 순위 자체가 무의미해 `None`.
+fn protagonist_pitcher_prospect_rank(conn: &Connection, team_ids: &[String], scores: &StatScoreCache) -> anyhow::Result<Option<usize>> {
+    let Some(proto_score) = protagonist_season_score(conn)? else {
+        return Ok(None);
+    };
+    let mut better = 0usize;
+    for team_id in team_ids {
+        let mut stmt = conn.prepare("SELECT id FROM npc WHERE team_id = ?1")?;
+        let npc_ids: Vec<String> = stmt.query_map([team_id], |r| r.get(0))?.collect::<Result<_, _>>()?;
+        for id in npc_ids {
+            if let Some(&score) = scores.pitcher_season.get(&id) {
+                if score > proto_score {
+                    better += 1;
+                }
+            }
+        }
+    }
+    Ok(Some(better + 1))
+}
+
+/// 순위 하나를 지난달 값과 비교해, 바뀌었으면(그리고 같은 팀/리그 소속
+/// 상태에서 비교 가능하면) inbox에 실제 숫자로 알린다 — 선택지 없는
+/// 순수 정보(§7 "메시지" 판별기준). `context`(리그+팀 id)가 지난번과
+/// 다르면 팀을 옮긴 것이라 순위 비교 자체가 무의미해(예: 고교 소권역
+/// 3위 → 프로 리그 45위는 "급락"이 아니라 그냥 다른 잣대) 알림 없이
+/// 새 기준점만 저장한다. `season_meta` 재사용(새 테이블·마이그레이션
+/// 불필요 — 시즌 넘어가도 안 지워지는 키-값 저장소, 대화 2026-07-25 확인).
+fn check_and_notify_rank(slot_conn: &Connection, day: i64, key: &str, context: &str, new_rank: i64, label: &str) -> anyhow::Result<()> {
+    let context_key = format!("{key}_context");
+    let old_rank: Option<i64> = slot_conn
+        .query_row("SELECT value FROM season_meta WHERE key = ?1", [key], |r| r.get::<_, String>(0))
+        .optional()?
+        .and_then(|s| s.parse().ok());
+    let old_context: Option<String> =
+        slot_conn.query_row("SELECT value FROM season_meta WHERE key = ?1", [&context_key], |r| r.get(0)).optional()?;
+
+    if let (Some(old_rank), Some(old_context)) = (old_rank, old_context.as_deref()) {
+        if old_context == context && old_rank != new_rank {
+            let body = format!("{label}가 {old_rank}위에서 {new_rank}위로 바뀌었다.");
+            slot_conn.execute(
+                "INSERT INTO inbox (id, kind, urgency, read, day, body) VALUES (?1, 'rank_update', 'normal', 0, ?2, ?3)",
+                params![format!("inbox:rank:{key}:{day}"), day, body],
+            )?;
+        }
+    }
+    slot_conn.execute(
+        "INSERT INTO season_meta (key, value) VALUES (?1, ?2) ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+        params![key, new_rank.to_string()],
+    )?;
+    slot_conn.execute(
+        "INSERT INTO season_meta (key, value) VALUES (?1, ?2) ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+        params![context_key, context],
+    )?;
+    Ok(())
+}
+
+/// 순위 변동 알림 월간 체크(대화 2026-07-25, §6-N) — 팀/학교 순위(지역·전국)
+/// 와 투수 기대주 순위(지역·전국) 4개를 계산해 지난달 대비 바뀐 것만 알린다.
+/// `scores`는 월간 재편성 훅이 이미 로드해둔 `StatScoreCache`를 그대로
+/// 받아 씀(재사용 — 이 함수만을 위해 다시 전체 스캔하지 않는다).
+fn process_protagonist_rank_updates(slot_conn: &Connection, content_conn: &Connection, day: i64, scores: &StatScoreCache) -> anyhow::Result<()> {
+    let contract_raw: Option<String> =
+        slot_conn.query_row("SELECT contract FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).optional()?;
+    let Some(contract_raw) = contract_raw else {
+        return Ok(());
+    };
+    let contract: serde_json::Value = serde_json::from_str(&contract_raw)?;
+    let Some(team_id) = contract.get("team_id").and_then(|v| v.as_str()) else {
+        return Ok(()); // 입대 등 무소속 — 순위 개념 자체가 없음
+    };
+    let league_id: Option<String> =
+        content_conn.query_row("SELECT league_id FROM teams WHERE id = ?1", [team_id], |r| r.get(0)).optional()?;
+    let Some(league_id) = league_id else {
+        return Ok(());
+    };
+    let Some(ctx) = team_rank_context(slot_conn, content_conn, &league_id, team_id)? else {
+        return Ok(());
+    };
+
+    let context = format!("{league_id}:{team_id}");
+    check_and_notify_rank(slot_conn, day, "team_national_rank", &context, ctx.national_rank as i64, "전국(리그) 팀 순위")?;
+    if let Some(region_rank) = ctx.region_rank {
+        check_and_notify_rank(slot_conn, day, "team_region_rank", &context, region_rank as i64, "지역 팀 순위")?;
+    }
+    if let Some(rank) = protagonist_pitcher_prospect_rank(slot_conn, &ctx.national_team_ids, scores)? {
+        check_and_notify_rank(slot_conn, day, "pitcher_national_prospect_rank", &context, rank as i64, "전국 투수 기대주 순위")?;
+    }
+    if ctx.region_rank.is_some() {
+        if let Some(rank) = protagonist_pitcher_prospect_rank(slot_conn, &ctx.region_team_ids, scores)? {
+            check_and_notify_rank(slot_conn, day, "pitcher_region_prospect_rank", &context, rank as i64, "지역 투수 기대주 순위")?;
+        }
+    }
+    Ok(())
+}
+
 /// 대학 5조(구장 기반) 승률 순위 — 03_대학.md §4-1. index 0 = 조1위.
 /// 왕중왕전·은하기·여명기가 필요한 인원수만 다르게 잘라 씀.
 fn univ_group_ranked(slot_conn: &Connection, content_conn: &Connection) -> anyhow::Result<Vec<Vec<(String, i64, i64)>>> {
@@ -5247,6 +5408,9 @@ pub fn advance(slot_conn: &mut Connection, content_conn: &Connection) -> anyhow:
             // 안 던졌으면 맨 위에서 즉시 return하는데, NPC 승강은 주인공
             // 등판 여부와 무관하게 항상 돌아야 한다.
             process_npc_promotion(&tx, content_conn, world_seed, today)?;
+            // 순위 변동 알림(대화 2026-07-25, §6-N) — 위에서 이미 로드한
+            // `scores`를 그대로 재사용, 새로 스캔하지 않는다.
+            process_protagonist_rank_updates(&tx, content_conn, today, &scores)?;
         }
         if crate::calendar::is_season_boundary(today) {
             season_rollover(&tx, content_conn, today)?;
@@ -8185,6 +8349,132 @@ mod tests {
 
         assert_eq!(integrity_sig(&a), integrity_sig(&b));
         assert_eq!(current_day(&a), current_day(&b));
+    }
+
+    fn insert_rank_test_team(content_conn: &Connection, slot_conn: &Connection, team_id: &str, league_id: &str, stadium_id: Option<&str>, w: i64, l: i64) {
+        content_conn
+            .execute(
+                "INSERT INTO teams (id, league_id, color, meta, stadium_id) VALUES (?1, ?2, NULL, NULL, ?3)",
+                params![team_id, league_id, stadium_id],
+            )
+            .unwrap();
+        slot_conn.execute("INSERT INTO standings (team_id, w, l, t, rank) VALUES (?1, ?2, ?3, 0, 0)", params![team_id, w, l]).unwrap();
+    }
+
+    #[test]
+    fn league_group_standings_ranks_hs_regions_by_win_pct() {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:hs', NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO stadiums (id, name, park_factor, meta) VALUES ('stad:1', 's1', '{}', NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO stadiums (id, name, park_factor, meta) VALUES ('stad:2', 's2', '{}', NULL)", []).unwrap();
+        let slot_conn = slot::open_in_memory().unwrap();
+
+        insert_rank_test_team(&content_conn, &slot_conn, "team:a1", "league:hs", Some("stad:1"), 10, 0);
+        insert_rank_test_team(&content_conn, &slot_conn, "team:a2", "league:hs", Some("stad:1"), 0, 10);
+        insert_rank_test_team(&content_conn, &slot_conn, "team:b1", "league:hs", Some("stad:2"), 5, 5);
+
+        let groups = league_group_standings(&slot_conn, &content_conn, "league:hs").unwrap();
+        assert_eq!(groups.len(), 2);
+        let region1 = groups.iter().find(|g| g.iter().any(|(id, ..)| id == "team:a1")).unwrap();
+        assert_eq!(region1.iter().map(|(id, ..)| id.clone()).collect::<Vec<_>>(), vec!["team:a1", "team:a2"]);
+    }
+
+    #[test]
+    fn team_rank_context_gives_region_and_national_rank_for_grouped_league() {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:hs', NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO stadiums (id, name, park_factor, meta) VALUES ('stad:1', 's1', '{}', NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO stadiums (id, name, park_factor, meta) VALUES ('stad:2', 's2', '{}', NULL)", []).unwrap();
+        let slot_conn = slot::open_in_memory().unwrap();
+
+        insert_rank_test_team(&content_conn, &slot_conn, "team:a1", "league:hs", Some("stad:1"), 10, 0); // 승률 1.0
+        insert_rank_test_team(&content_conn, &slot_conn, "team:a2", "league:hs", Some("stad:1"), 0, 10); // 승률 0.0
+        insert_rank_test_team(&content_conn, &slot_conn, "team:b1", "league:hs", Some("stad:2"), 5, 5); // 승률 0.5
+
+        let ctx = team_rank_context(&slot_conn, &content_conn, "league:hs", "team:a2").unwrap().unwrap();
+        assert_eq!(ctx.region_rank, Some(2), "team:a2는 자기 권역(2팀) 안에서 꼴찌");
+        assert_eq!(ctx.national_rank, 3, "전국 재정렬(a1=1.0, b1=0.5, a2=0.0)에서도 꼴찌");
+        assert_eq!(ctx.region_team_ids.len(), 2);
+        assert_eq!(ctx.national_team_ids.len(), 3);
+    }
+
+    #[test]
+    fn team_rank_context_has_no_region_rank_for_single_group_league() {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:pro', NULL)", []).unwrap();
+        let slot_conn = slot::open_in_memory().unwrap();
+
+        insert_rank_test_team(&content_conn, &slot_conn, "team:p1", "league:pro", None, 10, 0);
+        insert_rank_test_team(&content_conn, &slot_conn, "team:p2", "league:pro", None, 5, 5);
+        insert_rank_test_team(&content_conn, &slot_conn, "team:p3", "league:pro", None, 0, 10);
+
+        let ctx = team_rank_context(&slot_conn, &content_conn, "league:pro", "team:p3").unwrap().unwrap();
+        assert_eq!(ctx.region_rank, None, "단일 그룹 리그는 권역 개념이 없음");
+        assert_eq!(ctx.national_rank, 3);
+        assert_eq!(ctx.region_team_ids.len(), ctx.national_team_ids.len());
+    }
+
+    #[test]
+    fn protagonist_pitcher_prospect_rank_counts_better_npc_scores() {
+        let slot_conn = slot::open_in_memory().unwrap();
+
+        // 주인공: 9이닝 1자책, 9탈삼진 -> era_like=1.0, k9=9.0 -> score 66.
+        slot_conn
+            .execute(
+                "INSERT INTO game_log (game_id, season, detail) VALUES ('g1', 0, ?1)",
+                [serde_json::json!({"grade": "S", "runs_allowed": 1, "opponent": "team:x", "strikeouts": 9, "innings_pitched": 9}).to_string()],
+            )
+            .unwrap();
+
+        insert_test_player(&slot_conn, "npc:a", "team:a", "선발투수", serde_json::json!({}));
+        insert_test_player(&slot_conn, "npc:b", "team:b", "선발투수", serde_json::json!({}));
+        // npc:a: 3이닝(outs=9) 6실점 3탈삼진 -> era_like=18, k9=9 -> score 0(clamp) — 주인공보다 못함.
+        slot_conn
+            .execute(
+                "INSERT INTO season_stats (player_id, week, line) VALUES ('npc:a', 1, ?1)",
+                [serde_json::json!({"outs_recorded": 9, "runs_allowed": 6, "unearned_runs": 0, "strikeouts": 3}).to_string()],
+            )
+            .unwrap();
+        // npc:b: 3이닝(outs=9) 0실점 6탈삼진 -> era_like=0, k9=18 -> score 79 — 주인공보다 나음.
+        slot_conn
+            .execute(
+                "INSERT INTO season_stats (player_id, week, line) VALUES ('npc:b', 1, ?1)",
+                [serde_json::json!({"outs_recorded": 9, "runs_allowed": 0, "unearned_runs": 0, "strikeouts": 6}).to_string()],
+            )
+            .unwrap();
+
+        let scores = StatScoreCache::load(&slot_conn).unwrap();
+        let rank = protagonist_pitcher_prospect_rank(&slot_conn, &["team:a".to_string(), "team:b".to_string()], &scores).unwrap();
+        assert_eq!(rank, Some(2), "npc:b(79점)만 주인공(66점)보다 나아서 2위");
+    }
+
+    #[test]
+    fn process_protagonist_rank_updates_only_notifies_on_change_after_a_baseline_exists() {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:pro', NULL)", []).unwrap();
+        let slot_conn = slot::open_in_memory().unwrap();
+
+        insert_rank_test_team(&content_conn, &slot_conn, "team:p1", "league:pro", None, 10, 0);
+        insert_rank_test_team(&content_conn, &slot_conn, "team:p2", "league:pro", None, 5, 5);
+        insert_market_protagonist(&slot_conn, &serde_json::json!({"team_id": "team:p2"}), 0.0);
+
+        let scores = StatScoreCache::load(&slot_conn).unwrap();
+        let inbox_count = || -> i64 { slot_conn.query_row("SELECT count(*) FROM inbox WHERE kind = 'rank_update'", [], |r| r.get(0)).unwrap() };
+
+        // 1회차 — 기준점이 없어 알림 없이 저장만.
+        process_protagonist_rank_updates(&slot_conn, &content_conn, 28, &scores).unwrap();
+        assert_eq!(inbox_count(), 0, "첫 체크는 비교 대상이 없어 알림이 없어야 함");
+
+        // 변동 없이 2회차 — 여전히 알림 없음.
+        process_protagonist_rank_updates(&slot_conn, &content_conn, 56, &scores).unwrap();
+        assert_eq!(inbox_count(), 0, "순위가 그대로면 알림이 없어야 함");
+
+        // team:p1이 무너져 team:p2가 역전 1위로 — 3회차에서 알림 발생.
+        slot_conn.execute("UPDATE standings SET w = 0, l = 10 WHERE team_id = 'team:p1'", []).unwrap();
+        process_protagonist_rank_updates(&slot_conn, &content_conn, 84, &scores).unwrap();
+        assert_eq!(inbox_count(), 1, "순위가 바뀌면 알림이 하나 생겨야 함");
+        let body: String = slot_conn.query_row("SELECT body FROM inbox WHERE kind = 'rank_update'", [], |r| r.get(0)).unwrap();
+        assert!(body.contains("2위에서 1위"), "실제 이전/이후 숫자가 들어가야 함: {body}");
     }
 
     fn insert_test_player(conn: &Connection, id: &str, team_id: &str, position: &str, stats: serde_json::Value) {

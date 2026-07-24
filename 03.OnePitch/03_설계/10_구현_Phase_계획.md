@@ -1960,3 +1960,15 @@
 **테스트**: 신규 Rust/Dart 테스트 없음(순수 seed 데이터 추가, 기존 파이프라인 재검증만). `dart run bin/tool.dart content seed` — `events=25`(19+6) 커밋 성공, `content validate` FK 위반 0. `app/assets/content.db` 재동기화. `cargo run --release --bin balance_harness -- 5 3` — 평균 이벤트 발동 수 58.40→**80.80건/커리어**(확률형 6개 추가로 예상대로 증가), 등급 분포 변화는 노이즈 수준, 크래시 없음. `flutter test -j 1` 27개 전부 통과(§6-120에서 이미 60으로 올려둔 guard가 이번 증가분도 충분히 커버).
 
 **§5 이월 레지스트리 갱신**: 19개 남음 → **13개 남음**(38개 카탈로그 중 25개 완료). 남은 건 대부분 프로/대학 전용(FA·트레이드·콜업강등·스토브리그 등, 고교엔 해당 없음) + 콜백 훅이 필요한 데뷔전·대회우승.
+
+### 6-122. 순위 변동 알림 — 팀/학교 순위 + 투수 기대주 순위 (2026-07-25, 완료)
+
+**Context**: 사용자가 "정보 전달만"(선택지 없음, `inbox` 직행) 이벤트 경로를 실제로 써보고 싶다며 지역 기대 선수 순위·전국 순위·학교 순위변동 알림을 요청. 지금까지 저작한 25개 이벤트는 전부 선택지 있는 쪽만 써서 이 경로가 엔진엔 있어도 실제 콘텐츠로 검증된 적이 없었다. 실제 계산된 숫자를 보여줘야 해서 `events.toml` 문장 뱅크(정적 텍스트 랜덤 선택) 방식이 아니라, `exam_result`/`scrimmage_result`가 이미 쓰는 "Rust에서 `format!()`으로 조립해 `inbox`에 직접 삽입" 패턴을 재사용. 사용자 확정: 팀/선수 순위 둘 다 같이 설계, 월 1회 체크, 순위가 바뀌었을 때만 알림.
+
+**설계 판단**: 선수 기대주 순위는 아직 공식이 없는 `주목도`(가중치 TODO) 대신, **로테이션 서열화에 이미 실전에서 쓰이는 `pitcher_stats_score_from_lines`(ERA류+K9 블렌드)를 그대로 재사용** — 새 랭킹 공식을 발명하지 않고 "이 게임이 이미 실력을 판단하는 기준"을 노출. 주인공은 설계상 투수 전용 캐릭터라 투수 점수만 필요.
+
+**구현**(`engine/src/data/repository.rs`): `league_group_standings`(리그의 그룹별 승률 순위 — `load_team_groups_for_schedule` 재사용, 단일 그룹 리그는 자동으로 "권역=전국"이 됨; 기존 `hs_region_standings`/`univ_group_ranked`는 각자의 포스트시즌 시딩 전용 반환 형태가 있어 안 건드리고 별도 함수로 둠). `TeamRankContext`/`team_rank_context`(팀의 지역·전국 순위 + 두 스코프의 팀 목록을 한 번에 계산). `protagonist_pitcher_prospect_rank`(팀 목록 범위 안에서 `StatScoreCache.pitcher_season`과 `protagonist_season_score`(주인공은 `npc` 테이블에 없어 `game_log` 기반 별도 함수, 기존에 있던 것 재사용)를 비교해 순위 산출). `check_and_notify_rank`(순위 하나를 `season_meta`의 직전 값과 비교 — 새 테이블·마이그레이션 없이 재사용, 시즌 넘어가도 안 지워지는 키-값 저장소라 확인 후 채택 — 바뀌었고 팀/리그 컨텍스트가 지난번과 같으면(팀을 옮겼으면 비교 자체가 무의미해 스킵) `inbox`에 `format!()`으로 실제 숫자 박은 알림, `kind='rank_update'`, 선택지 없음). `process_protagonist_rank_updates`(4개 순위 종합 체크, `advance()`의 `today % 28 == 0` 블록에서 로테이션/타순 재배치가 이미 로드해둔 `StatScoreCache`를 그대로 재사용해 추가 스캔 없이 훅).
+
+**테스트**(신규 5개): `league_group_standings_ranks_hs_regions_by_win_pct`, `team_rank_context_gives_region_and_national_rank_for_grouped_league`, `team_rank_context_has_no_region_rank_for_single_group_league`(프로처럼 권역 없는 리그), `protagonist_pitcher_prospect_rank_counts_better_npc_scores`, `process_protagonist_rank_updates_only_notifies_on_change_after_a_baseline_exists`(1회차=알림 없이 저장만, 변동 없는 2회차=알림 없음, 순위 실제로 바뀐 3회차=올바른 이전/이후 숫자 포함 알림). `cargo test --lib` 534개 전부 통과. `cargo clippy --lib --tests --bins` 클린(닥코멘트 `+`로 시작하는 줄이 마크다운 리스트로 오인되던 것 한 번 수정). `cargo build --release` 갱신 후 `flutter test -j 1` 27개 전부 통과. `balance_harness -- 5 3` — 크래시 없음, 기존 추적 지표(이벤트 발동 수·등급 분포) 완전 동일(새 알림은 `career_events`가 아니라 `inbox`에만 남아 그 지표에 안 잡힘 — 의도대로).
+
+**영향 없음**: 신규 테이블·마이그레이션 없음(`season_meta`/`inbox` 재사용). 스코프는 `advance()`의 월간 훅 하나뿐 — `season_rollover`는 이미 다른 일이 많아 이번엔 안 건드림.
