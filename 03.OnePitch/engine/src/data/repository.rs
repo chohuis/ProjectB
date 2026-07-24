@@ -3967,6 +3967,12 @@ pub struct CareerLine {
     /// 없던 구형 game_log 행(이번 서브분 전)은 `unwrap_or(0)`로 방어.
     pub hits_allowed: i64,
     pub walks: i64,
+    /// Phase 7(정합성 점검에서 발견) — NPC는 Phase 2부터 `season_stats.unearned_runs`
+    /// 로 자책/비자책을 구분해왔는데, 주인공 본인 `game_log`엔 이 구분이
+    /// 없어 실책 실점까지 자책점처럼 ERA에 잡히고 있었다. `era()`가
+    /// `repository::pitcher_stats_score`의 `earned_runs = (runs - unearned_runs).max(0)`
+    /// 와 같은 공식을 쓰도록 바로잡음.
+    pub unearned_runs: i64,
 }
 
 impl CareerLine {
@@ -3974,7 +3980,8 @@ impl CareerLine {
         if self.innings_pitched == 0 {
             0.0
         } else {
-            self.runs_allowed as f64 * 9.0 / self.innings_pitched as f64
+            let earned_runs = (self.runs_allowed - self.unearned_runs).max(0);
+            earned_runs as f64 * 9.0 / self.innings_pitched as f64
         }
     }
 
@@ -4022,6 +4029,7 @@ pub fn aggregate_game_log(conn: &Connection, season: Option<i64>) -> anyhow::Res
         runs_allowed: 0,
         hits_allowed: 0,
         walks: 0,
+        unearned_runs: 0,
     };
     for raw in details {
         let Ok(v) = serde_json::from_str::<serde_json::Value>(&raw) else { continue };
@@ -4036,6 +4044,7 @@ pub fn aggregate_game_log(conn: &Connection, season: Option<i64>) -> anyhow::Res
         line.runs_allowed += v.get("runs_allowed").and_then(|x| x.as_i64()).unwrap_or(0);
         line.hits_allowed += v.get("hits_allowed").and_then(|x| x.as_i64()).unwrap_or(0);
         line.walks += v.get("walks").and_then(|x| x.as_i64()).unwrap_or(0);
+        line.unearned_runs += v.get("unearned_runs").and_then(|x| x.as_i64()).unwrap_or(0);
     }
     Ok(line)
 }
@@ -4664,6 +4673,7 @@ pub fn season_rollover(conn: &Connection, content_conn: &Connection, day: i64) -
         "era": season_line.era(),
         "whip": season_line.whip(),
         "k_per_9": season_line.k_per_9(),
+        "unearned_runs": season_line.unearned_runs,
     })
     .to_string();
     conn.execute(
@@ -6280,6 +6290,31 @@ mod tests {
 
         let season0 = aggregate_game_log(&slot_conn, Some(0)).unwrap();
         assert_eq!((season0.games, season0.wins, season0.losses), (2, 1, 1));
+    }
+
+    /// Phase 7(정합성 점검에서 발견) — 비자책점(실책으로 내준 점수)은
+    /// ERA에서 빠져야 한다. NPC는 Phase 2부터 `season_stats.unearned_runs`
+    /// 로 이미 이렇게 계산해왔는데, 주인공 본인 `game_log`엔 이 구분이
+    /// 없어 실책 실점까지 자책점처럼 잡히던 걸 바로잡음.
+    #[test]
+    fn aggregate_game_log_excludes_unearned_runs_from_era() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        slot_conn
+            .execute(
+                "INSERT INTO game_log (game_id, season, detail) VALUES ('g1', 0, ?1)",
+                [serde_json::json!({
+                    "grade": "B", "runs_allowed": 5, "opponent": "team:x",
+                    "decision": "패", "strikeouts": 5, "innings_pitched": 9, "unearned_runs": 2,
+                })
+                .to_string()],
+            )
+            .unwrap();
+
+        let career = aggregate_game_log(&slot_conn, None).unwrap();
+        assert_eq!(career.runs_allowed, 5);
+        assert_eq!(career.unearned_runs, 2);
+        // 자책점 = 5 - 2 = 3, ERA = 3*9/9 = 3.0 (비자책점을 그대로 뒀다면 5.0).
+        assert!((career.era() - 3.0).abs() < 1e-9, "era={}", career.era());
     }
 
     #[test]

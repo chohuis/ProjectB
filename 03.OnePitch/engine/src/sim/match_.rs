@@ -613,6 +613,47 @@ impl BatterGameStats {
     }
 }
 
+/// 타석 결과 1건을 타자 기록에 반영(§6·§12) — 배경 하프이닝(`simulate_half_inning`)
+/// 과 인터랙티브 1구 루프(`data::match_session`, 주인공이 던지는 동안
+/// 상대 타자들)가 이 함수 하나를 공유해, "상대 타자 개인 기록"이 어느
+/// 엔진으로 그 타석을 치렀느냐에 따라 갈리지 않게 한다(Phase 7 정합성
+/// 점검에서 발견 — 인터랙티브 쪽은 이 집계 자체가 아예 빠져 있었음).
+/// 희생플라이는 타수에 안 잡히고(실제 야구 규칙), 실책 출루는 타수엔
+/// 잡히지만 타점은 안 준다.
+pub(crate) fn record_batter_pa(line: &mut BatterGameStats, outcome: PaOutcome, runs: u32) {
+    line.plate_appearances += 1;
+    match outcome {
+        PaOutcome::Strikeout => {
+            line.at_bats += 1;
+            line.strikeouts += 1;
+        }
+        PaOutcome::Out | PaOutcome::DoublePlay | PaOutcome::ReachOnError => line.at_bats += 1,
+        PaOutcome::SacFly | PaOutcome::Walk | PaOutcome::HitByPitch => {}
+        PaOutcome::Single => {
+            line.at_bats += 1;
+            line.hits += 1;
+        }
+        PaOutcome::Double => {
+            line.at_bats += 1;
+            line.hits += 1;
+            line.doubles += 1;
+        }
+        PaOutcome::Triple => {
+            line.at_bats += 1;
+            line.hits += 1;
+            line.triples += 1;
+        }
+        PaOutcome::HomeRun => {
+            line.at_bats += 1;
+            line.hits += 1;
+            line.home_runs += 1;
+        }
+    }
+    if outcome != PaOutcome::ReachOnError {
+        line.rbi += runs;
+    }
+}
+
 /// 하프이닝 1회 분량의 누산기 — 그 이닝에서 던진 투수 1명 + 타석에 선 타자
 /// 전원을 함께 담는다("누가 던지고 누가 쳤는지"가 한 호출 안에서 항상 한
 /// 팀씩 짝지어지므로).
@@ -739,37 +780,7 @@ pub(crate) fn simulate_half_inning(
         }
 
         let batter_line = stats.batters.entry(batter.id.clone()).or_default();
-        batter_line.plate_appearances += 1;
-        match outcome {
-            PaOutcome::Strikeout => {
-                batter_line.at_bats += 1;
-                batter_line.strikeouts += 1;
-            }
-            PaOutcome::Out | PaOutcome::DoublePlay | PaOutcome::ReachOnError => batter_line.at_bats += 1,
-            PaOutcome::SacFly | PaOutcome::Walk | PaOutcome::HitByPitch => {}
-            PaOutcome::Single => {
-                batter_line.at_bats += 1;
-                batter_line.hits += 1;
-            }
-            PaOutcome::Double => {
-                batter_line.at_bats += 1;
-                batter_line.hits += 1;
-                batter_line.doubles += 1;
-            }
-            PaOutcome::Triple => {
-                batter_line.at_bats += 1;
-                batter_line.hits += 1;
-                batter_line.triples += 1;
-            }
-            PaOutcome::HomeRun => {
-                batter_line.at_bats += 1;
-                batter_line.hits += 1;
-                batter_line.home_runs += 1;
-            }
-        }
-        if outcome != PaOutcome::ReachOnError {
-            batter_line.rbi += pa_runs;
-        }
+        record_batter_pa(batter_line, outcome, pa_runs);
 
         if let Some((part, severity)) = injury::check_acute_injury(rng, batter.fatigue) {
             injuries.push(InjuryEvent { player_id: batter.id.clone(), part, severity });
@@ -1626,5 +1637,73 @@ mod tests {
         let rainy = GameConditions { weather_control_mod: -6.0, ..GameConditions::default() };
         let rainy_walks = count_walks(&rainy);
         assert!(rainy_walks >= clear_walks, "rainy={rainy_walks} clear={clear_walks}");
+    }
+
+    /// Phase 7(정합성 점검) — 배경 엔진(`simulate_plate_appearance`, PA레벨
+    /// 확률식)과 인터랙티브 엔진(`sim::pitch::simulate_at_bat_automatically`,
+    /// 1구 단위 볼카운트 시뮬)이 **완전히 다른 공식**(§11 "시뮬레이션
+    /// 해상도와 표시 해상도는 별개")이라는 걸 전제로, 그래도 같은 "평균적인
+    /// 투타 대결"을 넣었을 때 결과 분포가 극단적으로 안 갈라지는지 확인하는
+    /// 회귀 테스트. 마스터리 3단계(중립)·다양성 없음·평균 스탯·중립
+    /// 환경으로 맞춰 "배경 엔진엔 아예 없는 개념"(마스터리·다양성, Phase 4)
+    /// 을 배제하고 순수하게 공유 판정식(`resolve_in_play_result`·`fatigue_effective`·
+    /// `platoon_edge_for_pitcher` 등)만 비교 대상에 남긴다.
+    ///
+    /// 실측(2026-07-26, 5000시행): 배경 K=20.8%·BB=8.2%·Hit=19.5%, 인터랙티브
+    /// K=15.0%·BB=15.9%·Hit=20.1% — 두 엔진은 K/BB 배분이 상당히 다르지만
+    /// (1구 단위 볼카운트 시뮬 특유의 파울·유인구 누적 효과, PA레벨
+    /// 휴리스틱엔 없는 구조적 차이) **득점에 가장 직결되는 안타율은 거의
+    /// 일치**한다. 계수를 굳이 맞추러 들지 않음 — D그룹 placeholder라
+    /// 밸런스 조정은 I8 스코프(§4)이고, 이 테스트는 "많이" 갈라지는 회귀만
+    /// 잡는다(허용폭 10%p).
+    #[test]
+    fn background_and_interactive_engines_agree_within_a_reasonable_tolerance() {
+        use crate::sim::pitch::{self, PitchMastery};
+        let batter = avg_batter();
+        let pitcher = avg_pitcher();
+        let conditions = GameConditions::default();
+        let repertoire = vec![PitchMastery { name: "포심 패스트볼".to_string(), stage: 3 }];
+        let trials = 5000u64;
+
+        let (mut bg_k, mut bg_bb, mut bg_hit) = (0u32, 0u32, 0u32);
+        let (mut it_k, mut it_bb, mut it_hit) = (0u32, 0u32, 0u32);
+        for seed in 0..trials {
+            let mut rng = ChaCha8Rng::seed_from_u64(seed);
+            match simulate_plate_appearance(&mut rng, &batter, &pitcher, EMPTY_BASES, 0, 50.0, 50.0, false, &conditions) {
+                PaOutcome::Strikeout => bg_k += 1,
+                PaOutcome::Walk | PaOutcome::HitByPitch => bg_bb += 1,
+                PaOutcome::Single | PaOutcome::Double | PaOutcome::Triple | PaOutcome::HomeRun => bg_hit += 1,
+                _ => {}
+            }
+            // 배경 쪽과 시드를 겹치지 않게 오프셋을 줘서 같은 난수 스트림을
+            // 재사용하는 우연한 상관을 피한다.
+            let mut rng2 = ChaCha8Rng::seed_from_u64(seed + 10_000_000);
+            let (outcome, _pitch_count) =
+                pitch::simulate_at_bat_automatically(&mut rng2, &repertoire, &pitcher, &batter, EMPTY_BASES, 0, 50.0, 50.0, false, &conditions);
+            match outcome {
+                PaOutcome::Strikeout => it_k += 1,
+                PaOutcome::Walk | PaOutcome::HitByPitch => it_bb += 1,
+                PaOutcome::Single | PaOutcome::Double | PaOutcome::Triple | PaOutcome::HomeRun => it_hit += 1,
+                _ => {}
+            }
+        }
+
+        let rate = |c: u32| c as f64 / trials as f64;
+        let (bg_k_rate, bg_bb_rate, bg_hit_rate) = (rate(bg_k), rate(bg_bb), rate(bg_hit));
+        let (it_k_rate, it_bb_rate, it_hit_rate) = (rate(it_k), rate(it_bb), rate(it_hit));
+
+        const TOLERANCE: f64 = 0.10;
+        assert!(
+            (bg_k_rate - it_k_rate).abs() < TOLERANCE,
+            "삼진율이 두 엔진 사이에서 너무 크게 갈라짐: 배경={bg_k_rate:.3} 인터랙티브={it_k_rate:.3}"
+        );
+        assert!(
+            (bg_bb_rate - it_bb_rate).abs() < TOLERANCE,
+            "볼넷율이 두 엔진 사이에서 너무 크게 갈라짐: 배경={bg_bb_rate:.3} 인터랙티브={it_bb_rate:.3}"
+        );
+        assert!(
+            (bg_hit_rate - it_hit_rate).abs() < TOLERANCE,
+            "안타율이 두 엔진 사이에서 너무 크게 갈라짐: 배경={bg_hit_rate:.3} 인터랙티브={it_hit_rate:.3}"
+        );
     }
 }

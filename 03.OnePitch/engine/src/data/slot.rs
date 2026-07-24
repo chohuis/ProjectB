@@ -382,6 +382,23 @@ fn migration_v18(tx: &Transaction) -> anyhow::Result<()> {
     Ok(())
 }
 
+const V19_DDL: &str = r#"
+ALTER TABLE match_session ADD COLUMN unearned_runs_allowed INTEGER NOT NULL DEFAULT 0;
+"#;
+
+/// Phase 7(정합성 점검에서 발견) — NPC 투수는 Phase 2부터 `season_stats`의
+/// `unearned_runs`로 자책/비자책을 구분해왔는데, 주인공 본인의
+/// `game_log`(→`career_history`→"수상·기록" 탭, Phase 6)는 이 구분이
+/// 아예 없어 실책으로 내준 점수까지 통째로 자책점처럼 ERA에 잡히고
+/// 있었다. `hits_allowed`/`walks_allowed`(migration v18)와 같은 패턴 —
+/// 강판되면 인터랙티브 1구 루프 자체가 안 도니 자연히 그 시점에서
+/// 멈춘다(별도 스냅샷 불필요).
+fn migration_v19(tx: &Transaction) -> anyhow::Result<()> {
+    tx.execute_batch(V19_DDL)?;
+    tx.execute("UPDATE meta SET save_version = 19", [])?;
+    Ok(())
+}
+
 const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 1,
@@ -455,6 +472,10 @@ const MIGRATIONS: &[Migration] = &[
         version: 18,
         up: migration_v18,
     },
+    Migration {
+        version: 19,
+        up: migration_v19,
+    },
 ];
 
 fn init(mut conn: Connection) -> anyhow::Result<Connection> {
@@ -482,7 +503,25 @@ mod tests {
         let save_version: i64 = conn
             .query_row("SELECT save_version FROM meta", [], |row| row.get(0))
             .unwrap();
-        assert_eq!(save_version, 18);
+        assert_eq!(save_version, 19);
+    }
+
+    #[test]
+    fn v19_adds_unearned_runs_allowed_column_to_match_session() {
+        let conn = open_in_memory().unwrap();
+        conn.execute(
+            "INSERT INTO match_session (id, game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases,
+                                         home_runs, away_runs, home_batter_idx, away_batter_idx, balls, strikes, current_batter_id)
+             VALUES (1, 'g', 'h', 'a', 'league:pro', '자동', 1, 1, 0, '[false,false,false]', 0, 0, 0, 0, 0, 0, NULL)",
+            [],
+        )
+        .unwrap();
+        let unearned: i64 = conn.query_row("SELECT unearned_runs_allowed FROM match_session WHERE id = 1", [], |r| r.get(0)).unwrap();
+        assert_eq!(unearned, 0);
+
+        conn.execute("UPDATE match_session SET unearned_runs_allowed = 2 WHERE id = 1", []).unwrap();
+        let unearned: i64 = conn.query_row("SELECT unearned_runs_allowed FROM match_session WHERE id = 1", [], |r| r.get(0)).unwrap();
+        assert_eq!(unearned, 2);
     }
 
     #[test]

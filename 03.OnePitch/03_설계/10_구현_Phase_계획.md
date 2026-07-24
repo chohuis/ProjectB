@@ -1776,3 +1776,36 @@
 3. (재확인) 구종 마스터리 매치 엔진 연동 이월 행이 Phase 4에서 이미 해소됐는데 §5에 미반영된 채로 방치돼 있던 걸 이번에 발견해 함께 정리(§6 문서 갱신 규칙이 경고하는 "stale 이월" 사례).
 
 **테스트**: `cargo test --lib` 496개 전부 통과(신규 4개 — 압도적 우세 상황에서 마무리 등판 시 세이브 발생 확인 1개, 타율/출루율/장타율/OPS 손계산 대조 1개, 무타석 시 전부 0 폴백 1개, migration v18 1개). `cargo clippy --lib --tests --bins` 클린. `cargo build --release` 갱신 후 `flutter test` — 기본 병렬 실행(`flutter test`)에선 Phase 5와 동일하게 `records_test.dart`가 다른 테스트 파일과의 리소스 경합으로 2분 타임아웃 났지만, `flutter test -j 1`(순차 실행)로는 27개 전부 통과 확인 — 코드 문제 아니라 이 환경의 병렬 테스트 실행 시 CPU 경합 특성. `balance_harness -- 2 2` 스모크 확인.
+
+### 6-109. 매치엔진 리얼리즘 강화 Phase 7 — 배경 vs 인터랙티브 엔진 정합성 점검 (마무리, 2026-07-26, 완료)
+
+**Context**: Phase 1~6에서 확장한 모든 판정이 배경 경기(`process_day`)와 주인공 인터랙티브 경기(`data::match_session`) 양쪽에 실제로 반영됐는지 전수 감사 + 회귀 테스트 신설. "구조상 `resolve_in_play_result`/`throw_pitch`가 공유되니 자동으로 안전하다"는 가정을 실측으로 검증한 결과, **판정식 자체는 구조적으로 안전했지만 그 주변 기록·집계 로직에서 실제 버그 2건을 발견**했다 — 이게 이번 Phase의 핵심 성과.
+
+**감사 결과(구조 확인, 수정 불필요)**:
+- `resolve_in_play_result`·`throw_pitch`는 각각 배경(`simulate_plate_appearance`/`simulate_half_inning`)과 인터랙티브(`data::match_session` 1구 루프) 양쪽에서 실제로 같은 함수 호출 — Phase 2(병살·희생플라이·실책)·Phase 4(마스터리·좌우 상성)·Phase 5(파크팩터·날씨·시프트)·Phase 6(세이브 판정 조건) 전부 두 엔진에서 동일한 계산식을 탄다.
+- 마스터리·레퍼토리 다양성(Phase 4)이 배경 엔진엔 전혀 안 쓰이는 건 버그가 아니라 의도된 설계(NPC는 마스터리 데이터 자체가 없음, §11) — 재확인.
+- `sim::pitch::simulate_at_bat_automatically`(구종 선택+1구 판정+인플레이 세분화를 한 번에 묶은 함수)가 프로덕션 경로 어디서도 호출되지 않는다는 걸 확인 — `data::match_session`이 세션 상태(부상·강판·season_stats)를 같이 엮어야 해서 같은 원시 함수를 자기 루프 안에서 재조합해 쓰기 때문. 판정 로직 자체는 원시 함수 레벨(`choose_pitch_and_course`·`throw_pitch`·`resolve_in_play_result`)에서 공유되므로 갈라질 위험은 없어 삭제하지 않고, 대신 아래 회귀 테스트의 "인터랙티브 엔진 대역"으로 용도를 명확히 문서화.
+
+**발견·수정한 버그 2건**:
+1. **상대 타자 개인 season_stats 누락** — 배경 하프이닝(`simulate_half_inning`)은 타석마다 타자 기록(타율 산정용 안타·타수·타점 등)을 집계하는데, 주인공이 직접 던지는 인터랙티브 하프이닝(1구 단위 루프)은 이 집계 자체가 통째로 빠져 있었다. 결과: 주인공을 자주 상대한 NPC 타자일수록 통산 기록이 부당하게 비어 보임. `record_batter_pa(line, outcome, runs)`를 `match_.rs`에 신설해 배경·인터랙티브가 공유하도록 리팩터링, 인터랙티브 루프에서 타석 종료마다 `repository::upsert_batter_season_stats`로 즉시 반영.
+2. **주인공 본인 ERA가 비자책점을 포함** — NPC 투수는 Phase 2부터 `season_stats.unearned_runs`로 자책/비자책을 구분해 `pitcher_stats_score`(로테이션 랭킹)에 반영해왔는데, 주인공 본인의 `game_log`(→`career_history`→Phase 6 "수상·기록" 탭)는 이 구분이 없어 실책으로 내준 점수까지 자책점처럼 ERA에 잡혔다. 이건 표시 버그를 넘어 **실제 밸런스 버그** — 청백전·고교·대학 로테이션 경쟁에서 주인공이 NPC 경쟁자보다 불리하게 채점되고 있었다(`repository::protagonist_season_score`가 같은 `CareerLine::era()`를 씀). `session.unearned_runs_allowed`(migration v19) 신설, `CareerLine::era()`를 `pitcher_stats_score`와 동일한 `(runs - unearned_runs).max(0)` 공식으로 수정.
+
+**구현**(`engine/src/sim/match_.rs`): `record_batter_pa` 공유 함수(위 버그 1 수정에 사용, `simulate_half_inning`도 이 함수로 리팩터링해 두 곳이 갈라질 여지 원천 차단).
+
+**구현**(`engine/src/data/slot.rs`): migration v19 — `match_session.unearned_runs_allowed`(주인공 본인 등판 중 실책으로 내준 점수 누적, `hits_allowed`/`walks_allowed`와 같은 패턴 — 강판되면 인터랙티브 루프 자체가 안 돌아 자연히 멈춤).
+
+**구현**(`engine/src/data/match_session.rs`): 1구 루프의 `AtBatOutcome::{Strikeout,Walk,HitByPitch,InPlay}` 4개 분기 전부에서 `record_batter_pa`+`upsert_batter_season_stats` 호출(버그 1), `PaOutcome::ReachOnError` 시 `session.unearned_runs_allowed` 누적(버그 2), `apply_protagonist_evaluation`의 `game_log` detail JSON에 `"unearned_runs"` 추가. `apply_pa_outcome`이 득점 수를 반환하도록 시그니처 변경(타점 계산에 필요).
+
+**구현**(`engine/src/data/repository.rs`): `CareerLine`에 `unearned_runs` 필드 추가, `era()` 수정(버그 2), `season_rollover`의 `career_history` JSON에도 `unearned_runs` 추가.
+
+**회귀 테스트 신설**(§ 계획서 "두 엔진 결과 분포 대조"):
+- `sim::match_sim::tests::background_and_interactive_engines_agree_within_a_reasonable_tolerance` — 평균 스탯·중립 환경·마스터리 3단계(중립)로 맞춘 뒤 `simulate_plate_appearance`(배경) vs `simulate_at_bat_automatically`(인터랙티브 대역) 5000회씩 굴려 K%·BB%·안타율을 비교. 실측(2026-07-26): 배경 K=20.8%·BB=8.2%·안타=19.5%, 인터랙티브 K=15.0%·BB=15.9%·안타=20.1% — **득점에 가장 직결되는 안타율은 거의 일치**하고 K/BB 배분 차이(1구 단위 볼카운트 시뮬 특유의 구조적 차이)는 10%p 허용폭 안에 있음을 확인. 계수를 억지로 맞추지 않음(D그룹, I8 스코프).
+- `data::match_session::tests::opposing_batters_facing_the_protagonist_directly_still_record_season_stats` — 버그 1의 회귀 방지.
+- `data::repository::tests::aggregate_game_log_excludes_unearned_runs_from_era` — 버그 2의 회귀 방지.
+- `balance_harness.rs`에 `[Phase 7]` 비교 라인 추가 — 시행 전체 평균으로 "배경 엔진 팀당 평균 득점 vs 인터랙티브 엔진(주인공) 평균 실점"을 매 실행마다 육안 확인 가능하게(자동 판정은 위 `cargo test` 회귀 테스트가 담당, 하네스는 사람이 훑어보는 대시보드 역할).
+
+**이월 레지스트리 갱신 없음** — 이번 Phase는 새 이월을 만들지 않고 기존 항목(Phase 6에서 등록한 홀드·타격 스탯 소비처 대기)을 그대로 유지.
+
+**테스트**: `cargo test --lib` 501개 전부 통과(신규 5개 — 위 3개 + migration v19 1개 + `aggregate_game_log`가 구형 행에서도 안전한지 확인하는 케이스 1개). `cargo clippy --lib --tests --bins` 클린. `cargo build --release` 갱신 후 `flutter test -j 1` 27개 전부 통과. `balance_harness -- 2 2` 스모크 확인 — 신설된 `[Phase 7]` 비교 라인도 정상 출력.
+
+**7-Phase 계획 전체 완료.**

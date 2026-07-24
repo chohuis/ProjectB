@@ -275,6 +275,17 @@ pub fn choose_pitch_and_course(rng: &mut impl Rng, pitches: &[PitchMastery], bat
 /// 해서 별도 서브분 스코프(10_구현_Phase_계획.md 참고). `bases`·`outs`·
 /// `team_defense`(Phase 2)·`tactics`·`conditions`(Phase 5)는 인플레이로
 /// 이어질 때 `resolve_in_play_result`에 그대로 전달.
+///
+/// `data::match_session`은 세션 상태(부상 기록·강판 판정·season_stats
+/// upsert 등)를 같이 엮어야 해서 이 함수를 직접 호출하는 대신 같은
+/// 원시 함수(`choose_pitch_and_course`·`throw_pitch`·`resolve_in_play_result`)
+/// 를 자기 루프 안에서 다시 조합해 쓴다 — 그래서 프로덕션 경로에서는 이
+/// 함수 자체가 호출되지 않는다(Phase 7 정합성 점검에서 확인, 실제
+/// 판정 로직은 원시 함수 레벨에서 공유되므로 갈라질 위험은 없음). 대신
+/// "DB 세션 없이 순수하게 몇 트라이얼 돌려서 분포를 비교"하는 용도로
+/// 유용해, 배경 엔진(`match_sim::simulate_plate_appearance`)과의 결과
+/// 분포 회귀 테스트(`match_sim::tests::background_and_interactive_engines_agree_within_a_reasonable_tolerance`)
+/// 가 이 함수를 그 목적으로 재사용한다.
 #[allow(clippy::too_many_arguments)]
 pub fn simulate_at_bat_automatically(
     rng: &mut impl Rng,

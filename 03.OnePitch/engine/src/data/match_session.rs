@@ -111,6 +111,13 @@ struct SessionRow {
     /// 세이브를 준다.
     protagonist_pull_was_save_situation: bool,
     opponent_pull_was_save_situation: bool,
+    /// 비자책점(Phase 7, 정합성 점검에서 발견) — NPC는 Phase 2부터
+    /// `season_stats.unearned_runs`로 자책/비자책을 구분해왔는데
+    /// 주인공 본인 `game_log`엔 이 구분이 없어 실책 실점까지 통째로
+    /// ERA에 잡히던 걸 바로잡음(migration v19). 강판되면 인터랙티브
+    /// 1구 루프 자체가 안 도니 `hits_allowed`처럼 그 시점에서 자연히
+    /// 멈춘다.
+    unearned_runs_allowed: i64,
 }
 
 #[allow(clippy::type_complexity)]
@@ -150,6 +157,7 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
         i64,
         i64,
         i64,
+        i64,
     )> = conn
         .query_row(
             "SELECT game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases, home_runs, away_runs,
@@ -158,7 +166,8 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
                     opponent_pulled, opponent_relief_pitcher_id, opponent_pitcher_batters_faced,
                     pull_decision_settled_at_pitch_count,
                     park_factor, weather_control_mod, weather_power_mod, weather_fatigue_mult,
-                    hits_allowed, walks_allowed, protagonist_pull_was_save_situation, opponent_pull_was_save_situation
+                    hits_allowed, walks_allowed, protagonist_pull_was_save_situation, opponent_pull_was_save_situation,
+                    unearned_runs_allowed
              FROM match_session WHERE id = 1",
             [],
             |r| {
@@ -197,6 +206,7 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
                     r.get(31)?,
                     r.get(32)?,
                     r.get(33)?,
+                    r.get(34)?,
                 ))
             },
         )
@@ -236,6 +246,7 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
         walks_allowed,
         protagonist_pull_was_save_situation,
         opponent_pull_was_save_situation,
+        unearned_runs_allowed,
     )) = row
     else {
         return Ok(None);
@@ -273,6 +284,7 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
         walks_allowed,
         protagonist_pull_was_save_situation: protagonist_pull_was_save_situation != 0,
         opponent_pull_was_save_situation: opponent_pull_was_save_situation != 0,
+        unearned_runs_allowed,
     }))
 }
 
@@ -284,7 +296,7 @@ fn save_session(conn: &Connection, s: &SessionRow) -> anyhow::Result<()> {
              protagonist_pull_opponent_runs = ?17, opponent_pulled = ?18, opponent_relief_pitcher_id = ?19,
              opponent_pitcher_batters_faced = ?20, pull_decision_settled_at_pitch_count = ?21,
              hits_allowed = ?22, walks_allowed = ?23, protagonist_pull_was_save_situation = ?24,
-             opponent_pull_was_save_situation = ?25
+             opponent_pull_was_save_situation = ?25, unearned_runs_allowed = ?26
          WHERE id = 1",
         params![
             s.inning,
@@ -312,6 +324,7 @@ fn save_session(conn: &Connection, s: &SessionRow) -> anyhow::Result<()> {
             s.walks_allowed,
             s.protagonist_pull_was_save_situation as i64,
             s.opponent_pull_was_save_situation as i64,
+            s.unearned_runs_allowed,
         ],
     )?;
     Ok(())
@@ -358,7 +371,7 @@ fn load_protagonist_pitches(conn: &Connection) -> anyhow::Result<Vec<pitch::Pitc
 /// 하프이닝)에선 스코프 밖(배경 하프이닝인 `simulate_half_inning`에만
 /// 있음, 1구 단위 루프에 끼워 넣으면 매 구마다 중복 판정될 위험이 있어
 /// 이번엔 보류 — 10_구현_Phase_계획.md 참고).
-fn apply_pa_outcome(rng: &mut impl Rng, session: &mut SessionRow, batting_team_is_home: bool, outcome: PaOutcome, team_speed: f64) {
+fn apply_pa_outcome(rng: &mut impl Rng, session: &mut SessionRow, batting_team_is_home: bool, outcome: PaOutcome, team_speed: f64) -> u32 {
     let runs = match outcome {
         PaOutcome::Strikeout | PaOutcome::Out => {
             session.outs += 1;
@@ -392,6 +405,7 @@ fn apply_pa_outcome(rng: &mut impl Rng, session: &mut SessionRow, batting_team_i
     session.current_batter_id = None;
     session.balls = 0;
     session.strikes = 0;
+    runs
 }
 
 #[derive(Debug, PartialEq)]
@@ -579,6 +593,7 @@ fn apply_protagonist_evaluation(slot_conn: &Connection, session: &SessionRow, pr
         "pulled_by_manager": session.protagonist_pulled,
         "hits_allowed": session.hits_allowed,
         "walks": session.walks_allowed,
+        "unearned_runs": session.unearned_runs_allowed,
     })
     .to_string();
     slot_conn.execute(
@@ -1024,19 +1039,34 @@ fn run_until_decision_point(
 
         // 타석에 선 팀(=주인공 상대편)의 평균 주력(Phase 3) — 추가진루 판정에 씀.
         let team_speed = match_sim::average_speed(&lineup);
+        // 상대 타자 개인 기록(Phase 7 정합성 점검에서 발견 — 이 인터랙티브
+        // 루프가 `simulate_half_inning`과 달리 season_stats 집계 자체가
+        // 아예 빠져 있었다) — `record_batter_pa`(배경과 공유)로 델타를
+        // 만들어 그 자리에서 바로 upsert. `week`는 이 호출부 안에서는
+        // 날짜가 안 바뀌므로 한 번만 계산.
+        let week = crate::calendar::week_for_day(today);
 
         match outcome {
             pitch::AtBatOutcome::InProgress => {}
             pitch::AtBatOutcome::Strikeout => {
                 session.strikeouts += 1;
-                apply_pa_outcome(&mut rng, &mut session, batting_team_is_home, PaOutcome::Strikeout, team_speed);
+                let runs = apply_pa_outcome(&mut rng, &mut session, batting_team_is_home, PaOutcome::Strikeout, team_speed);
+                let mut line = match_sim::BatterGameStats::default();
+                match_sim::record_batter_pa(&mut line, PaOutcome::Strikeout, runs);
+                repository::upsert_batter_season_stats(slot_conn, &batter.id, week, &line)?;
             }
             pitch::AtBatOutcome::Walk => {
                 session.walks_allowed += 1;
-                apply_pa_outcome(&mut rng, &mut session, batting_team_is_home, PaOutcome::Walk, team_speed);
+                let runs = apply_pa_outcome(&mut rng, &mut session, batting_team_is_home, PaOutcome::Walk, team_speed);
+                let mut line = match_sim::BatterGameStats::default();
+                match_sim::record_batter_pa(&mut line, PaOutcome::Walk, runs);
+                repository::upsert_batter_season_stats(slot_conn, &batter.id, week, &line)?;
             }
             pitch::AtBatOutcome::HitByPitch => {
-                apply_pa_outcome(&mut rng, &mut session, batting_team_is_home, PaOutcome::HitByPitch, team_speed)
+                let runs = apply_pa_outcome(&mut rng, &mut session, batting_team_is_home, PaOutcome::HitByPitch, team_speed);
+                let mut line = match_sim::BatterGameStats::default();
+                match_sim::record_batter_pa(&mut line, PaOutcome::HitByPitch, runs);
+                repository::upsert_batter_season_stats(slot_conn, &batter.id, week, &line)?;
             }
             pitch::AtBatOutcome::InPlay => {
                 // 수비 중인 팀은 주인공 자신의 팀(투구 중이므로, Phase 2).
@@ -1058,7 +1088,16 @@ fn run_until_decision_point(
                 if matches!(pa, PaOutcome::Single | PaOutcome::Double | PaOutcome::Triple | PaOutcome::HomeRun) {
                     session.hits_allowed += 1;
                 }
-                apply_pa_outcome(&mut rng, &mut session, batting_team_is_home, pa, team_speed);
+                let runs = apply_pa_outcome(&mut rng, &mut session, batting_team_is_home, pa, team_speed);
+                if pa == PaOutcome::ReachOnError {
+                    // 비자책점(Phase 7, 정합성 점검에서 발견) — NPC는
+                    // Phase 2부터 실책 실점을 비자책으로 구분해왔는데
+                    // 주인공 본인 game_log엔 이 구분이 없었다.
+                    session.unearned_runs_allowed += runs as i64;
+                }
+                let mut line = match_sim::BatterGameStats::default();
+                match_sim::record_batter_pa(&mut line, pa, runs);
+                repository::upsert_batter_season_stats(slot_conn, &batter.id, week, &line)?;
             }
         }
         save_session(slot_conn, &session)?;
@@ -1183,6 +1222,7 @@ mod tests {
             walks_allowed: 0,
             protagonist_pull_was_save_situation: false,
             opponent_pull_was_save_situation: false,
+            unearned_runs_allowed: 0,
         }
     }
 
@@ -1518,6 +1558,79 @@ mod tests {
             .query_row("SELECT EXISTS(SELECT 1 FROM season_stats WHERE player_id = 'team:away_rp')", [], |r| r.get(0))
             .unwrap();
         assert!(has_reliever_stats, "the opponent reliever should have pitched and recorded season_stats after being pulled in");
+    }
+
+    /// Phase 7(정합성 점검) — 세이브 판정이 인터랙티브 엔진(`finalize_game`
+    /// → `credit_saves`)에서도 실제로 season_stats까지 왕복하는지 확인.
+    /// 7회·2점차 리드(세이브 상황, `manager::is_save_situation`)에서 하드캡
+    /// 투구수로 강제 강판시킨다 — 이후 남은 이닝은 배경 하프이닝(평균 대
+    /// 평균)이라 RNG에 따라 리드가 뒤집힐 수 있으므로, 여러 시드를 돌며
+    /// 최소 1번은 세이브가 실제로 적립되는지 확인(다른 강판 테스트들과
+    /// 같은 "여러 시드 중 최소 1건" 패턴).
+    #[test]
+    fn protagonist_pull_in_a_save_situation_eventually_credits_the_reliever_with_a_save() {
+        let mut saved_at_least_once = false;
+        for world_seed in 1..30i64 {
+            let slot_conn = slot::open_in_memory().unwrap();
+            insert_roster(&slot_conn, "team:home");
+            insert_reliever(&slot_conn, "team:home");
+            insert_roster(&slot_conn, "team:away");
+            insert_protagonist(&slot_conn, "team:home");
+            insert_schedule(&slot_conn, "game:1");
+
+            // team:home이 주인공 팀 — 7회 초(top_of_inning=1)에 던지는 중,
+            // 2점차 리드(세이브 상황: 7회 이상 + 1~3점차)로 하드캡 이상
+            // 투구수를 채워 첫 하프이닝 경계에서 반드시 강판되게 한다.
+            slot_conn
+                .execute(
+                    "INSERT INTO match_session (id, game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases,
+                                                 home_runs, away_runs, home_batter_idx, away_batter_idx, balls, strikes,
+                                                 current_batter_id, pitch_seq, strikeouts)
+                     VALUES (1, 'game:1', 'team:home', 'team:away', 'league:hs', '자동', 7, 1, 0, '[false,false,false]',
+                             2, 0, 0, 0, 0, 0, NULL, 200, 0)",
+                    [],
+                )
+                .unwrap();
+
+            let result = run_until_decision_point(&slot_conn, world_seed, None, None).unwrap();
+            assert!(matches!(result, MatchStepResult::GameOver { .. }));
+
+            let saves: Option<i64> = slot_conn
+                .query_row("SELECT line FROM season_stats WHERE player_id = 'team:home_rp'", [], |r| r.get::<_, String>(0))
+                .optional()
+                .unwrap()
+                .and_then(|raw| serde_json::from_str::<serde_json::Value>(&raw).ok())
+                .and_then(|v| v.get("saves").and_then(|s| s.as_i64()));
+            if saves == Some(1) {
+                saved_at_least_once = true;
+                break;
+            }
+        }
+        assert!(saved_at_least_once, "29개 시드 내내 인터랙티브 세이브가 한 번도 적립되지 않음");
+    }
+
+    /// Phase 7(정합성 점검에서 발견) — 주인공이 직접 던지는 인터랙티브
+    /// 하프이닝(1구 단위 루프)은 배경 하프이닝(`simulate_half_inning`)과
+    /// 달리 상대 타자 개인 season_stats 집계가 통째로 빠져 있었다. 이
+    /// 테스트가 없었다면 "주인공을 상대한 타석만 쏙 빠진 통산 기록"이
+    /// 조용히 굳어질 뻔했음 — `record_batter_pa` 공유 함수로 수정.
+    #[test]
+    fn opposing_batters_facing_the_protagonist_directly_still_record_season_stats() {
+        let content_conn = build_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_roster(&slot_conn, "team:home");
+        insert_protagonist(&slot_conn, "team:home");
+        insert_roster(&slot_conn, "team:away");
+        insert_schedule(&slot_conn, "game:1");
+
+        // team:home = 주인공 팀, 1회 초부터 던지므로 team:away 타자들이
+        // 주인공을 직접 상대한다.
+        start_protagonist_match(&slot_conn, &content_conn, 1, "game:1", "team:home", "team:away", "자동").unwrap();
+
+        let has_batter_stats: bool = slot_conn
+            .query_row("SELECT EXISTS(SELECT 1 FROM season_stats WHERE player_id LIKE 'team:away_b%')", [], |r| r.get(0))
+            .unwrap();
+        assert!(has_batter_stats, "주인공을 직접 상대한 타자도 season_stats가 남아야 함");
     }
 
     #[test]

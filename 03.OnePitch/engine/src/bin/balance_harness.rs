@@ -44,6 +44,16 @@ struct TrialResult {
     end_control: f64,
     events_fired: i64,
     achievements_unlocked: i64,
+    /// Phase 7(정합성 점검) — 배경 엔진(`process_day`, 171개 팀의 NPC vs
+    /// NPC 경기)과 인터랙티브 엔진(주인공 자신의 등판, `game_log`)의 득점
+    /// 환경이 서로 크게 안 갈리는지 비교하기 위한 값. `league_avg_runs_per_team`
+    /// 은 이번 시행에서 마지막으로 완주한 시즌의 `schedule.result`(양 팀
+    /// 다 배경 엔진으로 진행된 경기만)를 팀당 평균 득점으로 환산 —
+    /// `schedule`이 시즌 경계마다 비워지므로 항상 "가장 최근 시즌"의
+    /// 표본. `protagonist_avg_runs_allowed`는 `game_log`(전부 인터랙티브
+    /// 엔진 등판) 통산 평균 실점.
+    league_avg_runs_per_team: f64,
+    protagonist_avg_runs_allowed: f64,
 }
 
 /// PendingAction 하나에 대한 결정적 기본 응답 — 실제 플레이어 판단은
@@ -151,6 +161,7 @@ fn run_trial(content_conn: &Connection, seed: i64, archetype: &str, max_seasons:
 
     let mut grade_counts: HashMap<String, i64> = HashMap::new();
     let mut total_games = 0i64;
+    let mut total_runs_allowed = 0i64;
     {
         let mut stmt = slot_conn.prepare("SELECT detail FROM game_log")?;
         let details: Vec<String> = stmt.query_map([], |r| r.get(0))?.collect::<Result<_, _>>()?;
@@ -159,9 +170,28 @@ fn run_trial(content_conn: &Connection, seed: i64, archetype: &str, max_seasons:
             if let Ok(v) = serde_json::from_str::<Value>(&raw) {
                 let grade = v.get("grade").and_then(|g| g.as_str()).unwrap_or("?").to_string();
                 *grade_counts.entry(grade).or_insert(0) += 1;
+                total_runs_allowed += v.get("runs_allowed").and_then(|x| x.as_i64()).unwrap_or(0);
             }
         }
     }
+    let protagonist_avg_runs_allowed = if total_games == 0 { 0.0 } else { total_runs_allowed as f64 / total_games as f64 };
+
+    // Phase 7(정합성 점검) — 배경 엔진(NPC vs NPC, 171개 팀)의 팀당 평균
+    // 득점. `schedule`은 시즌 경계마다 비워지므로 이 시점엔 "가장 최근
+    // 시즌"의 경기만 남아있다 — 표본이 없으면(초반 중단 등) 0.0.
+    let league_avg_runs_per_team: f64 = {
+        let mut stmt = slot_conn.prepare("SELECT result FROM schedule WHERE result IS NOT NULL")?;
+        let results: Vec<String> = stmt.query_map([], |r| r.get(0))?.collect::<Result<_, _>>()?;
+        let mut total_runs = 0i64;
+        let mut games = 0i64;
+        for raw in &results {
+            if let Ok(v) = serde_json::from_str::<Value>(raw) {
+                total_runs += v.get("home").and_then(|x| x.as_i64()).unwrap_or(0) + v.get("away").and_then(|x| x.as_i64()).unwrap_or(0);
+                games += 1;
+            }
+        }
+        if games == 0 { 0.0 } else { total_runs as f64 / (games as f64 * 2.0) }
+    };
 
     let injury_raw: String = slot_conn.query_row("SELECT injury FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0))?;
     let injury_count = serde_json::from_str::<Value>(&injury_raw)
@@ -193,6 +223,8 @@ fn run_trial(content_conn: &Connection, seed: i64, archetype: &str, max_seasons:
         end_control,
         events_fired,
         achievements_unlocked,
+        league_avg_runs_per_team,
+        protagonist_avg_runs_allowed,
     })
 }
 
@@ -258,6 +290,20 @@ fn main() -> anyhow::Result<()> {
 
     let total_injuries: i64 = results.iter().map(|r| r.injury_count).sum();
     println!("평균 부상 이력 수: {:.2}건/커리어", total_injuries as f64 / trials as f64);
+
+    // Phase 7(배경 vs 인터랙티브 엔진 정합성 점검) — 두 엔진의 득점 환경이
+    // 서로 크게 안 갈리는지 시행 전체 평균으로 비교(팀당 평균 득점 =
+    // "상대에게 내준 평균 실점"과 같은 축이라 직접 대조 가능).
+    let league_samples: Vec<f64> = results.iter().map(|r| r.league_avg_runs_per_team).filter(|&v| v > 0.0).collect();
+    let protagonist_samples: Vec<f64> = results.iter().map(|r| r.protagonist_avg_runs_allowed).filter(|&v| v > 0.0).collect();
+    if !league_samples.is_empty() && !protagonist_samples.is_empty() {
+        let league_avg = league_samples.iter().sum::<f64>() / league_samples.len() as f64;
+        let protagonist_avg = protagonist_samples.iter().sum::<f64>() / protagonist_samples.len() as f64;
+        println!(
+            "\n[Phase 7] 배경 엔진 팀당 평균 득점 {league_avg:.2} vs 인터랙티브 엔진(주인공) 평균 실점 {protagonist_avg:.2} — 격차 {:.2} (극단적으로 안 갈리는지 육안 확인용, 자동 판정은 cargo test의 회귀 테스트 참고)",
+            (league_avg - protagonist_avg).abs()
+        );
+    }
 
     let total_events: i64 = results.iter().map(|r| r.events_fired).sum();
     let total_achievements: i64 = results.iter().map(|r| r.achievements_unlocked).sum();
