@@ -111,6 +111,16 @@ struct SessionRow {
     /// 세이브를 준다.
     protagonist_pull_was_save_situation: bool,
     opponent_pull_was_save_situation: bool,
+    /// 2단계 교체(선발→중계→마무리, Phase 2, 대화 2026-07-24) — 1단계가
+    /// 진짜 중계(마무리가 아님, 즉 `*_pull_was_save_situation == false`)
+    /// 였을 때만 의미가 있다. `sim::match_sim::simulate_game`의 배경
+    /// 로직과 동일한 원칙(migration v21).
+    protagonist_second_pulled: bool,
+    second_relief_pitcher_id: Option<String>,
+    protagonist_second_pull_was_save_situation: bool,
+    opponent_second_pulled: bool,
+    opponent_second_relief_pitcher_id: Option<String>,
+    opponent_second_pull_was_save_situation: bool,
     /// 비자책점(Phase 7, 정합성 점검에서 발견) — NPC는 Phase 2부터
     /// `season_stats.unearned_runs`로 자책/비자책을 구분해왔는데
     /// 주인공 본인 `game_log`엔 이 구분이 없어 실책 실점까지 통째로
@@ -158,6 +168,12 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
         i64,
         i64,
         i64,
+        i64,
+        Option<String>,
+        i64,
+        i64,
+        Option<String>,
+        i64,
     )> = conn
         .query_row(
             "SELECT game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases, home_runs, away_runs,
@@ -167,7 +183,9 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
                     pull_decision_settled_at_pitch_count,
                     park_factor, weather_control_mod, weather_power_mod, weather_fatigue_mult,
                     hits_allowed, walks_allowed, protagonist_pull_was_save_situation, opponent_pull_was_save_situation,
-                    unearned_runs_allowed
+                    unearned_runs_allowed,
+                    protagonist_second_pulled, second_relief_pitcher_id, protagonist_second_pull_was_save_situation,
+                    opponent_second_pulled, opponent_second_relief_pitcher_id, opponent_second_pull_was_save_situation
              FROM match_session WHERE id = 1",
             [],
             |r| {
@@ -207,6 +225,12 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
                     r.get(32)?,
                     r.get(33)?,
                     r.get(34)?,
+                    r.get(35)?,
+                    r.get(36)?,
+                    r.get(37)?,
+                    r.get(38)?,
+                    r.get(39)?,
+                    r.get(40)?,
                 ))
             },
         )
@@ -247,6 +271,12 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
         protagonist_pull_was_save_situation,
         opponent_pull_was_save_situation,
         unearned_runs_allowed,
+        protagonist_second_pulled,
+        second_relief_pitcher_id,
+        protagonist_second_pull_was_save_situation,
+        opponent_second_pulled,
+        opponent_second_relief_pitcher_id,
+        opponent_second_pull_was_save_situation,
     )) = row
     else {
         return Ok(None);
@@ -284,6 +314,12 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
         walks_allowed,
         protagonist_pull_was_save_situation: protagonist_pull_was_save_situation != 0,
         opponent_pull_was_save_situation: opponent_pull_was_save_situation != 0,
+        protagonist_second_pulled: protagonist_second_pulled != 0,
+        second_relief_pitcher_id,
+        protagonist_second_pull_was_save_situation: protagonist_second_pull_was_save_situation != 0,
+        opponent_second_pulled: opponent_second_pulled != 0,
+        opponent_second_relief_pitcher_id,
+        opponent_second_pull_was_save_situation: opponent_second_pull_was_save_situation != 0,
         unearned_runs_allowed,
     }))
 }
@@ -296,7 +332,9 @@ fn save_session(conn: &Connection, s: &SessionRow) -> anyhow::Result<()> {
              protagonist_pull_opponent_runs = ?17, opponent_pulled = ?18, opponent_relief_pitcher_id = ?19,
              opponent_pitcher_batters_faced = ?20, pull_decision_settled_at_pitch_count = ?21,
              hits_allowed = ?22, walks_allowed = ?23, protagonist_pull_was_save_situation = ?24,
-             opponent_pull_was_save_situation = ?25, unearned_runs_allowed = ?26
+             opponent_pull_was_save_situation = ?25, unearned_runs_allowed = ?26,
+             protagonist_second_pulled = ?27, second_relief_pitcher_id = ?28, protagonist_second_pull_was_save_situation = ?29,
+             opponent_second_pulled = ?30, opponent_second_relief_pitcher_id = ?31, opponent_second_pull_was_save_situation = ?32
          WHERE id = 1",
         params![
             s.inning,
@@ -325,6 +363,12 @@ fn save_session(conn: &Connection, s: &SessionRow) -> anyhow::Result<()> {
             s.protagonist_pull_was_save_situation as i64,
             s.opponent_pull_was_save_situation as i64,
             s.unearned_runs_allowed,
+            s.protagonist_second_pulled as i64,
+            s.second_relief_pitcher_id,
+            s.protagonist_second_pull_was_save_situation as i64,
+            s.opponent_second_pulled as i64,
+            s.opponent_second_relief_pitcher_id,
+            s.opponent_second_pull_was_save_situation as i64,
         ],
     )?;
     Ok(())
@@ -470,31 +514,60 @@ fn finalize_game(slot_conn: &Connection, session: &SessionRow, protagonist_team_
     Ok(MatchStepResult::GameOver { home_runs: session.home_runs as u32, away_runs: session.away_runs as u32 })
 }
 
-/// 세이브 판정(Phase 6, §12) — 배경 경기(`match_sim::simulate_game`)는
-/// 게임 종료 시점에 자체적으로 판정하지만, 인터랙티브 경기는 하프이닝마다
-/// 흩어져 진행돼 게임이 완전히 끝나야만 "리드를 지켰는지" 알 수 있어
-/// 여기 게임 종료 지점에서 한 번에 처리한다. 주인공 쪽·상대 쪽 둘 다
-/// 대상 — 강판된 그 순간 세이브 상황이었고(`*_pull_was_save_situation`),
-/// 그 팀이 최종적으로 리드를 지킨 채 이겼으면 구원투수에게 세이브 1개.
+/// 세이브·홀드 판정(Phase 6 §12 + Phase 2 2단계 교체) — 배경 경기
+/// (`match_sim::simulate_game`)는 게임 종료 시점에 자체적으로 판정하지만,
+/// 인터랙티브 경기는 하프이닝마다 흩어져 진행돼 게임이 완전히 끝나야만
+/// "리드를 지켰는지" 알 수 있어 여기 게임 종료 지점에서 한 번에 처리한다.
+/// 주인공 쪽·상대 쪽 둘 다 대상 — 2단계까지 갔으면(중계→마무리) 세이브는
+/// 마지막(2단계) 투수에게, 홀드는 중간에 빠진(1단계) 투수에게(팀이 리드를
+/// 지킨 채 이겼을 때만). 2단계로 안 갔으면 배경 엔진과 같은 규칙(1단계
+/// 투수가 세이브 상황에 등판했고 팀이 리드를 지킨 채 이겼으면 세이브).
 fn credit_saves(slot_conn: &Connection, session: &SessionRow, protagonist_team_id: &str) -> anyhow::Result<()> {
     let today: i64 = slot_conn.query_row("SELECT current_day FROM meta", [], |r| r.get(0))?;
     let week = crate::calendar::week_for_day(today);
 
-    if session.protagonist_pulled && session.protagonist_pull_was_save_situation {
-        let protagonist_is_home = session.home == protagonist_team_id;
-        let (team_runs, opponent_runs) =
-            if protagonist_is_home { (session.home_runs, session.away_runs) } else { (session.away_runs, session.home_runs) };
-        if team_runs > opponent_runs {
+    let protagonist_is_home = session.home == protagonist_team_id;
+    let (proto_team_runs, proto_opponent_runs) =
+        if protagonist_is_home { (session.home_runs, session.away_runs) } else { (session.away_runs, session.home_runs) };
+    let protagonist_team_won = proto_team_runs > proto_opponent_runs;
+
+    if session.protagonist_pulled {
+        if session.protagonist_second_pulled {
+            if session.protagonist_second_pull_was_save_situation && protagonist_team_won {
+                if let Some(closer_id) = &session.second_relief_pitcher_id {
+                    repository::credit_pitcher_save(slot_conn, closer_id, week)?;
+                }
+            }
+            if protagonist_team_won {
+                if let Some(reliever_id) = &session.relief_pitcher_id {
+                    repository::credit_pitcher_hold(slot_conn, reliever_id, week)?;
+                }
+            }
+        } else if session.protagonist_pull_was_save_situation && protagonist_team_won {
             if let Some(reliever_id) = &session.relief_pitcher_id {
                 repository::credit_pitcher_save(slot_conn, reliever_id, week)?;
             }
         }
     }
-    if session.opponent_pulled && session.opponent_pull_was_save_situation {
-        let opponent_is_home = session.home != protagonist_team_id;
-        let (team_runs, opponent_runs) =
-            if opponent_is_home { (session.home_runs, session.away_runs) } else { (session.away_runs, session.home_runs) };
-        if team_runs > opponent_runs {
+
+    let opponent_is_home = !protagonist_is_home;
+    let (opp_team_runs, opp_opponent_runs) =
+        if opponent_is_home { (session.home_runs, session.away_runs) } else { (session.away_runs, session.home_runs) };
+    let opponent_team_won = opp_team_runs > opp_opponent_runs;
+
+    if session.opponent_pulled {
+        if session.opponent_second_pulled {
+            if session.opponent_second_pull_was_save_situation && opponent_team_won {
+                if let Some(closer_id) = &session.opponent_second_relief_pitcher_id {
+                    repository::credit_pitcher_save(slot_conn, closer_id, week)?;
+                }
+            }
+            if opponent_team_won {
+                if let Some(reliever_id) = &session.opponent_relief_pitcher_id {
+                    repository::credit_pitcher_hold(slot_conn, reliever_id, week)?;
+                }
+            }
+        } else if session.opponent_pull_was_save_situation && opponent_team_won {
             if let Some(reliever_id) = &session.opponent_relief_pitcher_id {
                 repository::credit_pitcher_save(slot_conn, reliever_id, week)?;
             }
@@ -822,6 +895,50 @@ fn run_until_decision_point(
                     save_session(slot_conn, &session)?;
                 }
             }
+        } else if protagonist_pitching_team
+            && session.protagonist_pulled
+            && !session.protagonist_second_pulled
+            && !session.protagonist_pull_was_save_situation
+        {
+            // 2단계 전환(중계→마무리, Phase 2) — 배경 엔진(`sim::match_sim::
+            // simulate_game`)과 같은 원칙: 1단계가 진짜 중계(마무리가
+            // 아님, `protagonist_pull_was_save_situation == false`)였을
+            // 때만, 새로 세이브 상황이 되면 즉시 마무리로 넘긴다. 투구수
+            // 기반 판정(`should_pull_pitcher`)은 안 씀 — 중계가 보통
+            // 1~2이닝만 던지고 물러나 하드캡에 거의 안 닿는 문제를 배경
+            // 엔진 구현 중 실측으로 발견해 뺐다(같은 이유).
+            let protagonist_is_home = session.home == protagonist_team_id;
+            let (team_runs_so_far, opponent_runs_so_far) =
+                if protagonist_is_home { (session.home_runs, session.away_runs) } else { (session.away_runs, session.home_runs) };
+            if crate::sim::manager::is_save_situation(session.inning, team_runs_so_far, opponent_runs_so_far) {
+                if let Some(closer) = repository::load_relief_pitcher(slot_conn, &protagonist_team_id, true)? {
+                    if Some(&closer.id) != session.relief_pitcher_id.as_ref() {
+                        session.protagonist_second_pulled = true;
+                        session.second_relief_pitcher_id = Some(closer.id);
+                        session.protagonist_second_pull_was_save_situation = true;
+                        save_session(slot_conn, &session)?;
+                    }
+                }
+            }
+        }
+        if !protagonist_pitching_team && session.opponent_pulled && !session.opponent_second_pulled && !session.opponent_pull_was_save_situation {
+            // 상대팀 대칭(Part H와 같은 원칙) — `pitching_team`은 이 루프
+            // 패스에서 지금 던지고 있는 팀이므로, `!protagonist_pitching_team`
+            // 가드 안에서는 항상 상대팀을 가리킨다.
+            let pitching_team_is_home = pitching_team == session.home;
+            let (team_runs_so_far, opponent_runs_so_far) =
+                if pitching_team_is_home { (session.home_runs, session.away_runs) } else { (session.away_runs, session.home_runs) };
+            if crate::sim::manager::is_save_situation(session.inning, team_runs_so_far, opponent_runs_so_far) {
+                if let Some(closer) = repository::load_relief_pitcher(slot_conn, &pitching_team, true)? {
+                    if Some(&closer.id) != session.opponent_relief_pitcher_id.as_ref() {
+                        session.opponent_second_pulled = true;
+                        session.opponent_second_relief_pitcher_id = Some(closer.id);
+                        session.opponent_second_pull_was_save_situation = true;
+                        session.opponent_pitcher_batters_faced = 0;
+                        save_session(slot_conn, &session)?;
+                    }
+                }
+            }
         }
         let protagonist_pitching = protagonist_pitching_team && !session.protagonist_pulled;
 
@@ -833,10 +950,19 @@ fn run_until_decision_point(
             // 대신 던진다.
             let lineup = repository::load_batting_lineup(slot_conn, &batting_team)?;
             let pitcher = if protagonist_pitching_team {
-                let relief_id = session.relief_pitcher_id.clone().expect("protagonist_pulled requires relief_pitcher_id");
+                // 2단계까지 갔으면(중계→마무리, Phase 2) 그 투수를 우선.
+                let relief_id = if session.protagonist_second_pulled {
+                    session.second_relief_pitcher_id.clone().expect("protagonist_second_pulled requires second_relief_pitcher_id")
+                } else {
+                    session.relief_pitcher_id.clone().expect("protagonist_pulled requires relief_pitcher_id")
+                };
                 repository::load_pitcher_by_id(slot_conn, &relief_id)?
             } else if session.opponent_pulled {
-                let relief_id = session.opponent_relief_pitcher_id.clone().expect("opponent_pulled requires opponent_relief_pitcher_id");
+                let relief_id = if session.opponent_second_pulled {
+                    session.opponent_second_relief_pitcher_id.clone().expect("opponent_second_pulled requires opponent_second_relief_pitcher_id")
+                } else {
+                    session.opponent_relief_pitcher_id.clone().expect("opponent_pulled requires opponent_relief_pitcher_id")
+                };
                 repository::load_pitcher_by_id(slot_conn, &relief_id)?
             } else {
                 let starter = repository::load_starting_pitcher(slot_conn, &pitching_team)?;
@@ -1159,6 +1285,23 @@ mod tests {
         .unwrap();
     }
 
+    /// Phase 2(2단계 교체) 테스트용 — `insert_reliever`와 대칭, 지정 마무리
+    /// (`season_meta['closer:{team_id}']`)까지 같이 심어 `load_relief_pitcher(..., true)`
+    /// 가 이 투수를 확정적으로 고르게 한다.
+    fn insert_designated_closer(conn: &Connection, team_id: &str) {
+        conn.execute(
+            "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches, injury)
+             VALUES (?1, ?1, ?2, '마무리투수', 20, 1, 0, 50.0, '{}', ?3, '{}', '{\"피로도\":0}', '[\"포심 패스트볼\"]', '{\"current\":null,\"history\":[]}')",
+            params![format!("{team_id}_closer"), team_id, serde_json::json!({"제구": 50.0, "구위": 50.0}).to_string()],
+        )
+        .unwrap();
+        conn.execute(
+            "INSERT INTO season_meta (key, value) VALUES (?1, ?2)",
+            params![format!("closer:{team_id}"), format!("{team_id}_closer")],
+        )
+        .unwrap();
+    }
+
     fn insert_manager(conn: &Connection, team_id: &str, tactics: f64, trust: f64) {
         conn.execute(
             "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches, injury)
@@ -1222,6 +1365,12 @@ mod tests {
             walks_allowed: 0,
             protagonist_pull_was_save_situation: false,
             opponent_pull_was_save_situation: false,
+            protagonist_second_pulled: false,
+            second_relief_pitcher_id: None,
+            protagonist_second_pull_was_save_situation: false,
+            opponent_second_pulled: false,
+            opponent_second_relief_pitcher_id: None,
+            opponent_second_pull_was_save_situation: false,
             unearned_runs_allowed: 0,
         }
     }
@@ -1607,6 +1756,55 @@ mod tests {
             }
         }
         assert!(saved_at_least_once, "29개 시드 내내 인터랙티브 세이브가 한 번도 적립되지 않음");
+    }
+
+    /// Phase 2(2단계 교체, §12 "홀드") — 주인공이 이른 이닝(비세이브
+    /// 상황)에 강판돼 진짜 중계가 들어온 뒤, 게임이 진행되며 새로 세이브
+    /// 상황이 되면 지정 마무리로 2단계 전환이 일어나야 하고, 그 중계에게
+    /// 홀드가 붙어야 한다. 초반 강판은 하드캡 투구수(200)로 확정시키고,
+    /// 이후 스코어 전개는 배경 하프이닝 RNG에 맡기므로(세이브 테스트와
+    /// 같은 패턴) 여러 시드 중 최소 1건을 확인한다.
+    #[test]
+    fn a_reliever_promoted_to_closer_in_an_interactive_game_earns_a_hold() {
+        let mut held_at_least_once = false;
+        for world_seed in 1..100i64 {
+            let slot_conn = slot::open_in_memory().unwrap();
+            insert_roster(&slot_conn, "team:home");
+            insert_reliever(&slot_conn, "team:home");
+            insert_designated_closer(&slot_conn, "team:home");
+            insert_roster(&slot_conn, "team:away");
+            insert_protagonist(&slot_conn, "team:home");
+            insert_schedule(&slot_conn, "game:1");
+
+            // team:home = 주인공 팀, 1회 초부터 던지는 중 — 이닝이 이르니
+            // 세이브 상황이 될 수 없어(is_save_situation은 7회부터) 첫
+            // 강판은 반드시 중계(마무리 아님)로 간다.
+            slot_conn
+                .execute(
+                    "INSERT INTO match_session (id, game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases,
+                                                 home_runs, away_runs, home_batter_idx, away_batter_idx, balls, strikes,
+                                                 current_batter_id, pitch_seq, strikeouts)
+                     VALUES (1, 'game:1', 'team:home', 'team:away', 'league:hs', '자동', 1, 1, 0, '[false,false,false]',
+                             0, 0, 0, 0, 0, 0, NULL, 200, 0)",
+                    [],
+                )
+                .unwrap();
+
+            let result = run_until_decision_point(&slot_conn, world_seed, None, None).unwrap();
+            assert!(matches!(result, MatchStepResult::GameOver { .. }));
+
+            let holds: Option<i64> = slot_conn
+                .query_row("SELECT line FROM season_stats WHERE player_id = 'team:home_rp'", [], |r| r.get::<_, String>(0))
+                .optional()
+                .unwrap()
+                .and_then(|raw| serde_json::from_str::<serde_json::Value>(&raw).ok())
+                .and_then(|v| v.get("holds").and_then(|s| s.as_i64()));
+            if holds == Some(1) {
+                held_at_least_once = true;
+                break;
+            }
+        }
+        assert!(held_at_least_once, "99개 시드 내내 인터랙티브 홀드가 한 번도 적립되지 않음");
     }
 
     /// Phase 7(정합성 점검에서 발견) — 주인공이 직접 던지는 인터랙티브

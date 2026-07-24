@@ -1913,11 +1913,10 @@ pub(crate) fn load_starting_pitcher(slot_conn: &Connection, team_id: &str) -> an
 /// 이닝을 던질 구원투수. `is_save_situation`이 true면 `assign_closer`가
 /// `season_meta['closer:{team_id}']`에 정해둔 마무리를 최우선으로 찾고
 /// (은퇴·트레이드 등으로 이미 로스터에 없으면 무시), 아니면 중계 풀
-/// (마무리 제외) 중 id순 첫 명 — 중계가 여럿일 때의 세부 서열(셋업·
-/// 추격조)은 여전히 스코프 밖(마무리만 우선 랭킹화, Part G). 어느 쪽도
-/// 못 찾으면(지정 마무리 소실·중계 전무 등) 중계+마무리 전체 풀에서
-/// id순 첫 명으로 방어적 폴백. 그마저 없으면 None(호출부가 강판 자체를
-/// 건너뜀).
+/// (마무리 제외) 중 `ranked_relief_candidates_for_team` 서열 1위(Phase 2,
+/// 대화 2026-07-24 — 예전엔 id순 첫 명이었음). 어느 쪽도 못 찾으면
+/// (지정 마무리 소실·중계 전무 등) 중계+마무리 전체 풀에서 id순 첫 명으로
+/// 방어적 폴백. 그마저 없으면 None(호출부가 강판 자체를 건너뜀).
 pub(crate) fn load_relief_pitcher(slot_conn: &Connection, team_id: &str, is_save_situation: bool) -> anyhow::Result<Option<match_sim::PitcherStats>> {
     let mut picked_id: Option<String> = if is_save_situation {
         let closer_id: Option<String> =
@@ -1933,13 +1932,7 @@ pub(crate) fn load_relief_pitcher(slot_conn: &Connection, team_id: &str, is_save
             None => None,
         }
     } else {
-        slot_conn
-            .query_row(
-                "SELECT id FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position = '중계투수' ORDER BY id LIMIT 1",
-                [team_id],
-                |r| r.get(0),
-            )
-            .optional()?
+        ranked_relief_candidates_for_team(slot_conn, team_id)?.into_iter().next()
     };
 
     if picked_id.is_none() {
@@ -1984,6 +1977,29 @@ fn ranked_closer_candidates_for_team(conn: &Connection, team_id: &str) -> anyhow
     let mut stmt = conn.prepare(
         "SELECT id, stats FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position IN ('중계투수', '마무리투수')",
     )?;
+    let rows: Vec<(String, String)> = stmt.query_map([team_id], |r| Ok((r.get(0)?, r.get(1)?)))?.collect::<Result<Vec<_>, _>>()?;
+    drop(stmt);
+
+    let mut candidates: Vec<(String, f64)> = Vec::new();
+    for (id, stats_raw) in rows {
+        let v: serde_json::Value = serde_json::from_str(&stats_raw).unwrap_or_default();
+        let control = v.get("제구").and_then(|x| x.as_f64()).unwrap_or(50.0);
+        let stuff = v.get("구위").and_then(|x| x.as_f64()).unwrap_or(50.0);
+        let skill_score = (control + stuff) / 2.0;
+        let season_score = season_stats_score(conn, &id)?;
+        let practice_score = practice_stats_score(conn, &id)?;
+        candidates.push((id, manager::blend_rotation_score_with_practice(skill_score, season_score, practice_score)));
+    }
+    Ok(manager::rank_rotation_candidates(&candidates))
+}
+
+/// 팀의 중계투수(마무리 제외) 세부 서열 — `ranked_closer_candidates_for_team`과
+/// 같은 블렌드 공식이지만 포지션을 `중계투수`만으로 좁힌다(Phase 2,
+/// 대화 2026-07-24 — "불펜 세부 서열(셋업/추격조)" 이월 해소). 마무리는
+/// `assign_closer`가 별도로 관리하므로 여기 풀엔 안 섞인다.
+fn ranked_relief_candidates_for_team(conn: &Connection, team_id: &str) -> anyhow::Result<Vec<String>> {
+    let mut stmt =
+        conn.prepare("SELECT id, stats FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position = '중계투수'")?;
     let rows: Vec<(String, String)> = stmt.query_map([team_id], |r| Ok((r.get(0)?, r.get(1)?)))?.collect::<Result<Vec<_>, _>>()?;
     drop(stmt);
 
@@ -2353,6 +2369,13 @@ pub(crate) fn credit_pitcher_save(conn: &Connection, player_id: &str, week: i64)
     upsert_stats_fields(conn, "season_stats", player_id, week, &[("saves", 1)])
 }
 
+/// 홀드 단독 적립(Phase 2) — `credit_pitcher_save`와 같은 이유·같은 패턴.
+/// 인터랙티브 경기에서 2단계 교체(중계→마무리)가 실제로 일어났을 때만
+/// `data::match_session::credit_saves`가 1단계 투수에게 호출한다.
+pub(crate) fn credit_pitcher_hold(conn: &Connection, player_id: &str, week: i64) -> anyhow::Result<()> {
+    upsert_stats_fields(conn, "season_stats", player_id, week, &[("holds", 1)])
+}
+
 /// 청백전 전용 — `upsert_pitcher_season_stats`와 필드는 동일, 테이블만
 /// `practice_stats`(02_고교.md §4-5 "비공식 기록").
 fn upsert_pitcher_practice_stats(conn: &Connection, player_id: &str, week: i64, s: &match_sim::PitcherGameStats) -> anyhow::Result<()> {
@@ -2429,6 +2452,15 @@ fn process_day(slot_conn: &Connection, content_conn: &Connection, world_seed: i6
         if let (Some(reliever), Some(stats)) = (&away_reliever, &result.away_reliever_stats) {
             upsert_pitcher_season_stats(slot_conn, &reliever.id, week, stats)?;
             bump_fatigue_by_id(slot_conn, &reliever.id, RELIEVER_FATIGUE_PER_GAME)?;
+        }
+        // 2단계 교체(중계→마무리, Phase 2) — 마무리가 실제로 등판했을 때만.
+        if let (Some(closer), Some(stats)) = (&home_closer, &result.home_closer_stats) {
+            upsert_pitcher_season_stats(slot_conn, &closer.id, week, stats)?;
+            bump_fatigue_by_id(slot_conn, &closer.id, RELIEVER_FATIGUE_PER_GAME)?;
+        }
+        if let (Some(closer), Some(stats)) = (&away_closer, &result.away_closer_stats) {
+            upsert_pitcher_season_stats(slot_conn, &closer.id, week, stats)?;
+            bump_fatigue_by_id(slot_conn, &closer.id, RELIEVER_FATIGUE_PER_GAME)?;
         }
         for (batter_id, s) in &result.home_batter_stats {
             upsert_batter_season_stats(slot_conn, batter_id, week, s)?;

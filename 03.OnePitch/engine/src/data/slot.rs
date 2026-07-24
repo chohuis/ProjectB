@@ -415,6 +415,27 @@ fn migration_v20(tx: &Transaction) -> anyhow::Result<()> {
     Ok(())
 }
 
+const V21_DDL: &str = r#"
+ALTER TABLE match_session ADD COLUMN protagonist_second_pulled INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE match_session ADD COLUMN second_relief_pitcher_id TEXT;
+ALTER TABLE match_session ADD COLUMN protagonist_second_pull_was_save_situation INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE match_session ADD COLUMN opponent_second_pulled INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE match_session ADD COLUMN opponent_second_relief_pitcher_id TEXT;
+ALTER TABLE match_session ADD COLUMN opponent_second_pull_was_save_situation INTEGER NOT NULL DEFAULT 0;
+"#;
+
+/// 인터랙티브 2단계 교체(선발→중계→마무리, Phase 2, 대화 2026-07-24) —
+/// 기존 1단계 강판 필드(`protagonist_pulled`/`relief_pitcher_id`/
+/// `opponent_pulled`/`opponent_relief_pitcher_id`, migration v18)와 대칭
+/// 패턴으로 2단계 필드를 추가. 1단계가 이미 마무리였으면(세이브 상황에
+/// 곧장 등판) 2단계로 넘어갈 대상이 없어 계속 0/NULL로 남는다 —
+/// `sim::match_sim::simulate_game`의 배경 로직과 동일한 판단.
+fn migration_v21(tx: &Transaction) -> anyhow::Result<()> {
+    tx.execute_batch(V21_DDL)?;
+    tx.execute("UPDATE meta SET save_version = 21", [])?;
+    Ok(())
+}
+
 const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 1,
@@ -496,6 +517,10 @@ const MIGRATIONS: &[Migration] = &[
         version: 20,
         up: migration_v20,
     },
+    Migration {
+        version: 21,
+        up: migration_v21,
+    },
 ];
 
 fn init(mut conn: Connection) -> anyhow::Result<Connection> {
@@ -523,7 +548,49 @@ mod tests {
         let save_version: i64 = conn
             .query_row("SELECT save_version FROM meta", [], |row| row.get(0))
             .unwrap();
-        assert_eq!(save_version, 20);
+        assert_eq!(save_version, 21);
+    }
+
+    #[test]
+    fn v21_adds_second_stage_pull_columns_to_match_session() {
+        let conn = open_in_memory().unwrap();
+        conn.execute(
+            "INSERT INTO match_session (id, game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases,
+                                         home_runs, away_runs, home_batter_idx, away_batter_idx, balls, strikes, current_batter_id)
+             VALUES (1, 'g', 'h', 'a', 'league:pro', '자동', 1, 1, 0, '[false,false,false]', 0, 0, 0, 0, 0, 0, NULL)",
+            [],
+        )
+        .unwrap();
+        let (proto_second, second_id, proto_second_save, opp_second, opp_second_id, opp_second_save): (
+            i64,
+            Option<String>,
+            i64,
+            i64,
+            Option<String>,
+            i64,
+        ) = conn
+            .query_row(
+                "SELECT protagonist_second_pulled, second_relief_pitcher_id, protagonist_second_pull_was_save_situation,
+                        opponent_second_pulled, opponent_second_relief_pitcher_id, opponent_second_pull_was_save_situation
+                 FROM match_session WHERE id = 1",
+                [],
+                |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?, r.get(4)?, r.get(5)?)),
+            )
+            .unwrap();
+        assert_eq!((proto_second, second_id, proto_second_save, opp_second, opp_second_id, opp_second_save), (0, None, 0, 0, None, 0));
+
+        conn.execute(
+            "UPDATE match_session SET protagonist_second_pulled = 1, second_relief_pitcher_id = 'npc:closer',
+                                        protagonist_second_pull_was_save_situation = 1,
+                                        opponent_second_pulled = 1, opponent_second_relief_pitcher_id = 'npc:opp_closer',
+                                        opponent_second_pull_was_save_situation = 1
+             WHERE id = 1",
+            [],
+        )
+        .unwrap();
+        let (proto_second, second_id): (i64, String) =
+            conn.query_row("SELECT protagonist_second_pulled, second_relief_pitcher_id FROM match_session WHERE id = 1", [], |r| Ok((r.get(0)?, r.get(1)?))).unwrap();
+        assert_eq!((proto_second, second_id), (1, "npc:closer".to_string()));
     }
 
     #[test]

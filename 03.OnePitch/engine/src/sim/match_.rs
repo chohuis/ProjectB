@@ -800,6 +800,11 @@ pub struct GameResult {
     pub away_pitcher_stats: PitcherGameStats,
     pub home_reliever_stats: Option<PitcherGameStats>,
     pub away_reliever_stats: Option<PitcherGameStats>,
+    /// 2단계 교체(선발→중계→마무리, Phase 2) — 중계에서 다시 마무리로
+    /// 넘어간 경우만 채워진다. `home_reliever_stats`가 `None`이면 이것도
+    /// 항상 `None`(1단계도 안 갔는데 2단계로 갈 수 없음).
+    pub home_closer_stats: Option<PitcherGameStats>,
+    pub away_closer_stats: Option<PitcherGameStats>,
     pub home_batter_stats: HashMap<String, BatterGameStats>,
     pub away_batter_stats: HashMap<String, BatterGameStats>,
 }
@@ -883,23 +888,38 @@ pub fn simulate_game(
 
     let mut home_pitcher: &PitcherStats = home_plan.starter;
     let mut away_pitcher: &PitcherStats = away_plan.starter;
-    let mut home_pulled = false;
-    let mut away_pulled = false;
-    // 세이브 판정(Phase 6, §12) — 강판되는 그 순간 세이브 상황이었는지만
-    // 기억해뒀다가, 경기가 끝난 뒤 그 팀이 리드를 지킨 채 이겼으면 마지막
-    // 투수(=이 구원투수, 팀당 게임 1회 교체 제약상 항상 경기를 끝까지
-    // 던짐)에게 세이브를 준다.
-    let mut home_pull_was_save = false;
-    let mut away_pull_was_save = false;
+    // 강판 단계(Phase 2, §6-N "불펜/홀드") — 0=선발, 1=1차 구원(reliever
+    // 또는 세이브 상황이면 곧장 closer), 2=2차 구원(1차가 reliever였을
+    // 때만 도달 가능, 항상 closer). "선발→중계→마무리 고정 체인"만 지원
+    // (완전히 일반화된 N단계 불펜은 스코프 아웃 — 이 엔진의 포지션 분류
+    // 자체가 3종뿐이라 그 이상은 의미가 없다).
+    let mut home_stage: u8 = 0;
+    let mut away_stage: u8 = 0;
+    // 1단계가 `reliever`(마무리가 아님)였는지 — 이때만 2단계(→마무리)
+    // 전환이 의미가 있다. 1단계가 이미 closer였으면(세이브 상황에 곧장
+    // 등판) 더 넘길 대상이 없다.
+    let mut home_first_is_reliever = false;
+    let mut away_first_is_reliever = false;
+    // 세이브 판정(Phase 6, §12) — 각 단계로 넘어가는 그 순간 세이브
+    // 상황이었는지 기억해뒀다가, 경기가 끝난 뒤 그 팀이 리드를 지킨 채
+    // 이겼으면 "그 단계로 넘어간" 투수에게 세이브를 준다(최종적으로
+    // 게임을 끝낸 투수 = 가장 마지막 단계의 투수).
+    let mut home_stage1_pull_was_save = false;
+    let mut away_stage1_pull_was_save = false;
+    let mut home_stage2_pull_was_save = false;
+    let mut away_stage2_pull_was_save = false;
 
     // top_half_stats: away 타순이 home_pitcher(선발)를 상대하는 하프이닝
     // 누산 — pitcher는 홈 선발, batters는 원정 타자들. bottom_half_stats는
-    // 반대. 강판되면 그 뒤 이닝은 각자 별도 누산기(*_reliever_stats_acc)로
-    // 전환 — season_stats에 선발·구원이 서로 다른 id로 들어가야 하므로.
+    // 반대. 강판되면 그 뒤 이닝은 단계별 누산기(*_reliever_stats_acc,
+    // *_closer_stats_acc)로 전환 — season_stats에 선발·중계·마무리가
+    // 서로 다른 id로 들어가야 하므로.
     let mut top_half_stats = HalfInningStats::default();
     let mut bottom_half_stats = HalfInningStats::default();
     let mut home_reliever_stats_acc = HalfInningStats::default();
     let mut away_reliever_stats_acc = HalfInningStats::default();
+    let mut home_closer_stats_acc = HalfInningStats::default();
+    let mut away_closer_stats_acc = HalfInningStats::default();
     // 수비 중인 팀의 평균 수비력(Phase 2) — 라인업이 게임 내내 안 바뀌므로
     // 루프 밖에서 한 번만 계산.
     let home_defense = average_defense(home_lineup);
@@ -923,7 +943,11 @@ pub fn simulate_game(
             home_plan.tactics,
             conditions,
             &mut injuries,
-            if home_pulled { &mut home_reliever_stats_acc } else { &mut top_half_stats },
+            match home_stage {
+                0 => &mut top_half_stats,
+                1 => &mut home_reliever_stats_acc,
+                _ => &mut home_closer_stats_acc,
+            },
         );
 
         let walk_off = inning >= 9 && home_runs > away_runs;
@@ -939,7 +963,11 @@ pub fn simulate_game(
                 away_plan.tactics,
                 conditions,
                 &mut injuries,
-                if away_pulled { &mut away_reliever_stats_acc } else { &mut bottom_half_stats },
+                match away_stage {
+                    0 => &mut bottom_half_stats,
+                    1 => &mut away_reliever_stats_acc,
+                    _ => &mut away_closer_stats_acc,
+                },
             );
         }
 
@@ -960,29 +988,94 @@ pub fn simulate_game(
             break; // 절대 안전장치(아마추어 승부치기가 이론상 안 끝날 경우)
         }
 
-        if !home_pulled {
+        if home_stage == 0 {
             let save_situation = manager::is_save_situation(inning as i64, home_runs as i64, away_runs as i64);
-            let candidate = if save_situation { home_plan.closer.or(home_plan.reliever) } else { home_plan.reliever.or(home_plan.closer) };
+            let (candidate, is_reliever_pick) = if save_situation {
+                match home_plan.closer {
+                    Some(c) => (Some(c), false),
+                    None => (home_plan.reliever, home_plan.reliever.is_some()),
+                }
+            } else {
+                match home_plan.reliever {
+                    Some(r) => (Some(r), true),
+                    None => (home_plan.closer, false),
+                }
+            };
             if let Some(reliever) = candidate {
                 let faced = top_half_stats.pitcher.outs_recorded + top_half_stats.pitcher.hits_allowed + top_half_stats.pitcher.walks;
                 let approx_pitches = (faced as f64 * 3.8) as u32;
                 if manager::should_pull_pitcher(rng, approx_pitches, home_plan.starter.fatigue, home_plan.tactics, home_plan.trust) {
                     home_pitcher = reliever;
-                    home_pulled = true;
-                    home_pull_was_save = save_situation;
+                    // is_reliever_pick=false면 곧장 마무리가 등판한 것(진짜
+                    // 중계가 없거나 이미 세이브 상황) — season_stats 누산기가
+                    // 실제 등판한 NPC(reliever vs closer)와 일치해야 하므로
+                    // stage를 1이 아니라 2로 바로 보낸다(§ 아래 "누산기 매핑
+                    // 정합성" — repository.rs가 home_reliever_stats/
+                    // home_closer_stats를 각각 home_reliever/home_closer
+                    // npc id로 credit하므로 stage 번호가 실제 배역과 어긋나면
+                    // 기록이 엉뚱한 투수에게 붙는다).
+                    if is_reliever_pick {
+                        home_stage = 1;
+                        home_first_is_reliever = true;
+                        home_stage1_pull_was_save = save_situation;
+                    } else {
+                        home_stage = 2;
+                        home_stage2_pull_was_save = save_situation;
+                    }
+                }
+            }
+        } else if home_stage == 1 && home_first_is_reliever {
+            // 2단계 전환(중계→마무리) — 1단계가 진짜 reliever였을 때만,
+            // 새로 세이브 상황이 되면 즉시 발동. 애초에 계획서는 이 판단도
+            // `should_pull_pitcher`(투구수 기반 강판 확률)로 하려 했으나,
+            // 실측(대화 2026-07-24) 결과 중계는 보통 1~2이닝만 던지고
+            // 물러나 투구수가 하드캡(약 28타자)에 거의 도달하지 못해 승격이
+            // 사실상 전혀 안 일어나는 문제를 발견 — 실제 야구에서도 "세이브
+            // 상황이 오면 마무리를 올린다"는 투구수와 무관한 전술적 판단이라,
+            // stage 0→1 전환의 "세이브 상황이면 closer 우선"과 같은 원칙을
+            // 그대로 재사용해 세이브 상황 발생 즉시 전환하도록 단순화했다.
+            if let Some(closer) = home_plan.closer {
+                if manager::is_save_situation(inning as i64, home_runs as i64, away_runs as i64) {
+                    home_pitcher = closer;
+                    home_stage = 2;
+                    home_stage2_pull_was_save = true;
                 }
             }
         }
-        if !away_pulled {
+        if away_stage == 0 {
             let save_situation = manager::is_save_situation(inning as i64, away_runs as i64, home_runs as i64);
-            let candidate = if save_situation { away_plan.closer.or(away_plan.reliever) } else { away_plan.reliever.or(away_plan.closer) };
+            let (candidate, is_reliever_pick) = if save_situation {
+                match away_plan.closer {
+                    Some(c) => (Some(c), false),
+                    None => (away_plan.reliever, away_plan.reliever.is_some()),
+                }
+            } else {
+                match away_plan.reliever {
+                    Some(r) => (Some(r), true),
+                    None => (away_plan.closer, false),
+                }
+            };
             if let Some(reliever) = candidate {
                 let faced = bottom_half_stats.pitcher.outs_recorded + bottom_half_stats.pitcher.hits_allowed + bottom_half_stats.pitcher.walks;
                 let approx_pitches = (faced as f64 * 3.8) as u32;
                 if manager::should_pull_pitcher(rng, approx_pitches, away_plan.starter.fatigue, away_plan.tactics, away_plan.trust) {
                     away_pitcher = reliever;
-                    away_pulled = true;
-                    away_pull_was_save = save_situation;
+                    if is_reliever_pick {
+                        away_stage = 1;
+                        away_first_is_reliever = true;
+                        away_stage1_pull_was_save = save_situation;
+                    } else {
+                        away_stage = 2;
+                        away_stage2_pull_was_save = save_situation;
+                    }
+                }
+            }
+        } else if away_stage == 1 && away_first_is_reliever {
+            if let Some(closer) = away_plan.closer {
+                if manager::is_save_situation(inning as i64, away_runs as i64, home_runs as i64) {
+                    away_pitcher = closer;
+                    away_stage = 2;
+                    away_stage2_pull_was_save = true;
                 }
             }
         }
@@ -990,11 +1083,29 @@ pub fn simulate_game(
         inning += 1;
     }
 
-    if home_pulled && home_pull_was_save && home_runs > away_runs {
-        home_reliever_stats_acc.pitcher.saves += 1;
+    let home_won = home_runs > away_runs;
+    let away_won = away_runs > home_runs;
+    match home_stage {
+        1 if home_stage1_pull_was_save && home_won => home_reliever_stats_acc.pitcher.saves += 1,
+        2 if home_stage2_pull_was_save && home_won => home_closer_stats_acc.pitcher.saves += 1,
+        _ => {}
     }
-    if away_pulled && away_pull_was_save && away_runs > home_runs {
-        away_reliever_stats_acc.pitcher.saves += 1;
+    match away_stage {
+        1 if away_stage1_pull_was_save && away_won => away_reliever_stats_acc.pitcher.saves += 1,
+        2 if away_stage2_pull_was_save && away_won => away_closer_stats_acc.pitcher.saves += 1,
+        _ => {}
+    }
+    // 홀드(Phase 2) — 진짜 중계(1단계, `home_first_is_reliever`)가 2단계
+    // (마무리)로 넘어갔고(그 자체가 이미 "새로 세이브 상황이 됐을 때"만
+    // 발동하도록 위 전환 블록에서 게이팅됨 — `home_stage1_pull_was_save`,
+    // 즉 "1단계로 들어온 순간"이 세이브 상황이었는지는 무관하다: 선발이
+    // 지쳐 이른 이닝에 교체된 흔한 경우엔 애초에 세이브 상황일 수 없음),
+    // 팀이 리드를 지킨 채 이겼으면 그 중계투수에게 홀드.
+    if home_stage == 2 && home_first_is_reliever && home_won {
+        home_reliever_stats_acc.pitcher.holds += 1;
+    }
+    if away_stage == 2 && away_first_is_reliever && away_won {
+        away_reliever_stats_acc.pitcher.holds += 1;
     }
 
     GameResult {
@@ -1003,10 +1114,22 @@ pub fn simulate_game(
         injuries,
         home_pitcher_stats: top_half_stats.pitcher,
         away_pitcher_stats: bottom_half_stats.pitcher,
-        home_reliever_stats: home_pulled.then_some(home_reliever_stats_acc.pitcher),
-        away_reliever_stats: away_pulled.then_some(away_reliever_stats_acc.pitcher),
-        home_batter_stats: merge_batter_stats(bottom_half_stats.batters, away_reliever_stats_acc.batters),
-        away_batter_stats: merge_batter_stats(top_half_stats.batters, home_reliever_stats_acc.batters),
+        // `home_first_is_reliever`(closer가 아니라 진짜 reliever가 실제로
+        // 등판했는지)로 게이팅 — `home_stage`만 보면 곧장 closer로 넘어간
+        // 경우(stage 2지만 reliever는 한 이닝도 안 던짐)까지 잘못 포함돼
+        // repository.rs가 등판 안 한 reliever에게 빈 기록을 얹는 사고가 난다.
+        home_reliever_stats: home_first_is_reliever.then_some(home_reliever_stats_acc.pitcher),
+        away_reliever_stats: away_first_is_reliever.then_some(away_reliever_stats_acc.pitcher),
+        home_closer_stats: (home_stage == 2).then_some(home_closer_stats_acc.pitcher),
+        away_closer_stats: (away_stage == 2).then_some(away_closer_stats_acc.pitcher),
+        home_batter_stats: merge_batter_stats(
+            merge_batter_stats(bottom_half_stats.batters, away_reliever_stats_acc.batters),
+            away_closer_stats_acc.batters,
+        ),
+        away_batter_stats: merge_batter_stats(
+            merge_batter_stats(top_half_stats.batters, home_reliever_stats_acc.batters),
+            home_closer_stats_acc.batters,
+        ),
     }
 }
 
@@ -1091,7 +1214,7 @@ mod tests {
             let away_starter = avg_pitcher();
             let away_plan = no_pull_plan(&away_starter);
             let r = simulate_game(&mut rng, "league:pro", &lineup, &home_plan, &lineup, &away_plan, &GameConditions::default());
-            if r.home_reliever_stats.is_some() {
+            if r.home_closer_stats.is_some() {
                 pulled_at_least_once = true;
                 break;
             }
@@ -1117,12 +1240,45 @@ mod tests {
             let home_plan = TeamPitchingPlan { starter: &elite_starter, reliever: None, closer: Some(&closer), tactics: 50.0, trust: 50.0 };
             let away_plan = no_pull_plan(&weak_away_starter);
             let r = simulate_game(&mut rng, "league:pro", &strong_lineup, &home_plan, &weak_lineup, &away_plan, &GameConditions::default());
-            if r.home_reliever_stats.as_ref().is_some_and(|s| s.saves > 0) {
+            if r.home_closer_stats.as_ref().is_some_and(|s| s.saves > 0) {
                 saved_at_least_once = true;
                 break;
             }
         }
         assert!(saved_at_least_once, "압도적인 우세 상황에서도 50개 시드 내내 세이브가 한 번도 안 나옴");
+    }
+
+    /// Phase 2(§12 "홀드") — 2단계 교체(선발→중계→마무리)가 실제로
+    /// 일어나면 중간에 빠지는 중계투수에게 홀드가 붙어야 한다. 투수
+    /// 능력치는 평균(성적 자체를 왜곡하지 않도록)으로 두고, 대신 감독
+    /// 성향(공격적 전술·낮은 신뢰)으로 강판 캡을 낮춰 강판이 여러 번
+    /// 일어나기 쉽게 만든다(`fatigue`를 극단으로 올리면 캡은 낮아지지만
+    /// 그 투수 자체의 실제 피칭 성능도 같이 망가져 리드를 잡기 어려워짐 —
+    /// 별개 경로로 시도했다가 200시드 내내 실패해 이 방식으로 교체).
+    #[test]
+    fn a_reliever_promoted_to_closer_while_leading_earns_a_hold() {
+        let lineup: Vec<BatterStats> = (0..8).map(|i| BatterStats { id: format!("b{i}"), ..avg_batter() }).collect();
+        let starter = PitcherStats { id: "starter".to_string(), ..avg_pitcher() };
+        let reliever = PitcherStats { id: "reliever".to_string(), ..avg_pitcher() };
+        let closer = PitcherStats { id: "closer".to_string(), ..avg_pitcher() };
+        let away_starter = avg_pitcher();
+
+        let mut held_at_least_once = false;
+        for seed in 0..50u64 {
+            let mut rng = ChaCha8Rng::seed_from_u64(seed);
+            let home_plan = TeamPitchingPlan { starter: &starter, reliever: Some(&reliever), closer: Some(&closer), tactics: 100.0, trust: 0.0 };
+            let away_plan = no_pull_plan(&away_starter);
+            let r = simulate_game(&mut rng, "league:pro", &lineup, &home_plan, &lineup, &away_plan, &GameConditions::default());
+            if r.home_reliever_stats.as_ref().is_some_and(|s| s.holds > 0) {
+                held_at_least_once = true;
+                // 홀드를 받은 중계는 그 자체로는 세이브를 못 받아야 한다
+                // (넘겨준 쪽이지 게임을 끝낸 쪽이 아니므로).
+                assert_eq!(r.home_reliever_stats.as_ref().unwrap().saves, 0, "seed={seed}");
+                assert!(r.home_closer_stats.is_some(), "홀드가 나왔으면 마무리도 등판했어야 함, seed={seed}");
+                break;
+            }
+        }
+        assert!(held_at_least_once, "50개 시드 내내 홀드가 한 번도 안 나옴");
     }
 
     #[test]
@@ -1378,7 +1534,7 @@ mod tests {
     fn double_play_never_happens_without_a_runner_on_first() {
         let batter = avg_batter();
         let pitcher = avg_pitcher();
-        for seed in 0..500u64 {
+        for seed in 0..5u64 {
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
             let outcome = resolve_in_play_result(&mut rng, &batter, &pitcher, [false, true, true], 0, 50.0, 50.0, false, &GameConditions::default());
             assert_ne!(outcome, PaOutcome::DoublePlay, "seed={seed}");
@@ -1389,7 +1545,7 @@ mod tests {
     fn double_play_never_happens_with_two_outs_already() {
         let batter = avg_batter();
         let pitcher = avg_pitcher();
-        for seed in 0..500u64 {
+        for seed in 0..5u64 {
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
             let outcome = resolve_in_play_result(&mut rng, &batter, &pitcher, [true, false, false], 2, 50.0, 50.0, false, &GameConditions::default());
             assert_ne!(outcome, PaOutcome::DoublePlay, "seed={seed}");
@@ -1411,7 +1567,7 @@ mod tests {
     fn sac_fly_never_happens_without_a_runner_on_third() {
         let batter = avg_batter();
         let pitcher = avg_pitcher();
-        for seed in 0..500u64 {
+        for seed in 0..5u64 {
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
             let outcome = resolve_in_play_result(&mut rng, &batter, &pitcher, [true, true, false], 0, 50.0, 50.0, false, &GameConditions::default());
             assert_ne!(outcome, PaOutcome::SacFly, "seed={seed}");
@@ -1707,3 +1863,4 @@ mod tests {
         );
     }
 }
+

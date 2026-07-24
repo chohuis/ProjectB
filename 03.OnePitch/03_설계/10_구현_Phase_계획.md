@@ -87,7 +87,7 @@
 | ~~구단주 재력·투자성향의 FA 다중오퍼 반영~~ | **해소됨(§6-74, 2026-07-22)** — 후보팀이 2~4개뿐이라 조회 비용 무시할 만해 바로 반영 | — | 해소 |
 | ~~개인 재정 — 잔액 골격~~ | **해소됨(§6-74, 2026-07-22)** — `EventEffect::Finance`+재정 탭 UI, 확률형 이벤트 2개(`event:sponsor_gift`·`event:junior_gift`)로 실증 | — | 해소 |
 | ~~`season_stats` 누적성적~~ | **해소됨(§6-76, 2026-07-22)** — 배경 경기·주인공 경기 양쪽에서 투수·타자 전원 주간 누적 + 로테이션 서열화 반영 | — | 해소 |
-| 불펜 세부 서열(셋업/추격조, 중계 다수일 때의 순번) | §6-98~100(Part F~H, 2026-07-26)이 선발/중계/마무리 3분류·마무리 동적 랭킹·주인공 경기 상대팀 강판까지 해소 — 마무리는 이제 랭킹화·상황(세이브) 인지형으로 뽑히지만, 중계가 여럿일 때 그 안에서의 세부 서열(셋업/추격조)은 여전히 "id순 첫 명" 단순 선택 | 중계 풀 전용 서열 판정 로직 신설(마무리와 별도 랭킹) | 엔진 확장 |
+| ~~불펜 세부 서열(셋업/추격조, 중계 다수일 때의 순번)~~ | **해소됨(§6-111, 2026-07-24)** — `ranked_relief_candidates_for_team`(마무리 제외, 능력치+season_stats+practice_stats 블렌드)이 `load_relief_pitcher`의 비세이브 분기를 대체(예전엔 id순 첫 명) | — | 해소 |
 | 나머지 이벤트 27개(38개 중 11개만 저작)·서사형 업적·뉴스·미디어 | 저작 시간 문제 — 파이프라인 자체는 I8 3차분에 이미 있음 | 반복 저작 세션(인프라 재사용, 매번 대표 배치처럼 진행) | 콘텐츠 저작(반복) |
 | 개인 재정 나머지(세금 누진, 개인 트레이닝 구독, 투자, 스폰서/CF 수입원, 최종자산 은퇴화면) | §6-74는 "잔액" 골격만 — `08_개인_재정.md`가 대부분 "정확한 수치는 스탯 스케일 확정 후"로 남겨둠 | 스탯 스케일 확정 후 각 항목 순차 배선 | 콘텐츠·수치 |
 | ~~NPC 로테이션 시즌 중 실시간 재편(부상·부진 강등)~~ | **해소됨(§6-77, 2026-07-22)** — 월 경계마다 리그 전체 재배정, "다음 등판 보존" 로직으로 휴식일 충돌도 방지 | — | 해소 |
@@ -100,7 +100,7 @@
 | ~~구종 마스터리의 매치 엔진 연동(단계→피안타율·헛스윙, 05_구종_시스템.md §4)·레퍼토리 다양성 보너스~~ | **해소됨(§6-106, Phase 4, 2026-07-26)** — `throw_pitch`가 마스터리 단계(3=실전 기준 ±2.5)와 3계열 다양성 보너스(+0.02 헛스윙)를 실제로 반영 | — | 해소 |
 | 수동 모드 감독 개입이 소프트캡 이후 매 투구마다 다시 물어봄(§6-104 Phase 3에서 발견) | §8 원 설계는 "이닝 종료마다 판단"인데 구현은 매 루프 패스(=매 투구)마다 게이트를 다시 탐 — 무한 루프(핑퐁) 자체는 migration v15로 고쳤지만, "매 투구 재질문"이라는 UX 과함은 별개 이슈로 남음 | 반자동처럼 "판정 지점"을 하프이닝 경계·투구수 임계 돌파 시점으로만 한정하는 게이팅 로직 재설계 | 엔진 개선(UX) |
 | 도루가 배경 하프이닝(`simulate_half_inning`)에만 있고 주인공이 직접 던지는 인터랙티브 하프이닝에는 없음(§6-104 Phase 3) | 1구 단위 루프에 끼워 넣으면 매 구마다 중복 판정될 위험 — 주인공 팀 타석은 항상 배경 경로라 대부분은 이미 커버되고, 주인공이 던지는 동안의 "상대팀 도루"만 빠짐 | 인터랙티브 루프에 "이 타석에서 이미 도루를 판정했는지" 상태 플래그 추가 후 이식 | 엔진 확장 |
-| 홀드(Hold) 판정(§12 "기록 필드", §6-107 Phase 6에서 발견) | 이 엔진은 팀당 게임 1회 교체만 지원(§8) — 교체돼 들어온 투수가 항상 경기를 끝까지 던지므로 "리드를 지킨 채 다음 투수에게 넘김"이라는 홀드의 정의 자체가 구조적으로 성립 불가. 세이브는 이 제약 안에서도 성립해 Phase 6에서 구현 완료, `PitcherGameStats.holds` 필드는 만들어뒀지만 항상 0 | 팀당 2회 이상 교체(선발→중계→마무리 체인) 지원하도록 `simulate_game`·인터랙티브 강판 로직 확장 | 엔진 확장 |
+| ~~홀드(Hold) 판정(§12 "기록 필드", §6-107 Phase 6에서 발견)~~ | **해소됨(§6-111, 2026-07-24)** — 배경(`simulate_game`)·인터랙티브(`data::match_session`) 양쪽 다 선발→중계→마무리 2회 교체 지원, `PitcherGameStats.holds`/`credit_pitcher_hold` 실제로 채워짐 | — | 해소 |
 | 타율·출루율·장타율·OPS 계산 함수는 구현됐지만 노출할 화면이 없음(§12, §6-107 Phase 6) | 주인공은 항상 투수 아키타입(§7 DH)이라 절대 타석에 안 서 본인 기록에 타격 스탯이 없음 — `BatterGameStats::batting_average`등은 테스트만 있고 실제 소비하는 API·화면이 아직 없음 | NPC 팀동료 시즌 스탯을 보여주는 로스터/리더보드 화면이 생기면 그때 연결 | 엔진 확장(소비처 대기) |
 
 ## 6. 문서 갱신 규칙
@@ -1807,6 +1807,8 @@
 
 **테스트**: `cargo test --lib` 501개 전부 통과(신규 5개 — 위 3개 + migration v19 1개 + `aggregate_game_log`가 구형 행에서도 안전한지 확인하는 케이스 1개). `cargo clippy --lib --tests --bins` 클린. `cargo build --release` 갱신 후 `flutter test -j 1` 27개 전부 통과. `balance_harness -- 2 2` 스모크 확인 — 신설된 `[Phase 7]` 비교 라인도 정상 출력.
 
+**매치엔진 리얼리즘 강화 7-Phase 계획 전체 완료.**
+
 ### 6-110. 엔진 확장 Phase 1 — 코치 시스템 확장(가변 슬롯 0~8명 + 구종 전문화) (2026-07-24, 완료)
 
 **Context**: 매치엔진 리얼리즘 강화 7-Phase(§6-102~109) 완료 후 사용자가 요청한 이월 레지스트리 잔여 항목 정리 — "코치 가변 슬롯 수(0~8명)·적성배치"(§6-72 이후 미해결)와 "코치별 가르칠 수 있는 구종 전문 목록"(05_구종_시스템.md §3, 미구현)을 함께 처리. 5-Phase 계획("엔진 확장 — 코치 시스템·불펜/홀드·인터랙티브 도루·감독개입 UX·NPC 기록 아카이브")의 첫 Phase.
@@ -1825,4 +1827,18 @@
 
 **테스트**: `cargo test --lib` 504개 전부 통과(신규 5개 — `sim::staff` 4개(결정성·id/스탯 범위·count=0 빈 벡터·투수 role만 specialties) + 기존 2개를 `generate_coaches` 시그니처에 맞춰 재작성, migration v20 컬럼 검증 1개). 코치 수 변화로 깨진 기존 테스트 2개(`generate_league_roster_inserts_expected_npc_count`·`generate_initial_world_covers_all_five_leagues`)를 새 코치 수 공식에 맞게 갱신(후자는 정확한 값 대신 `coach_count_range` 기반 범위 검증으로 변경), `api::game::tests::league_hub_queries_work_end_to_end_after_new_game`의 "스태프 정확히 3명" 단언도 "감독·구단주 각 1명+코치 가변" 검증으로 완화. `cargo clippy --lib --tests --bins` 클린. `cargo build --release` 갱신 후 `flutter test -j 1` 27개 전부 통과(records_test.dart 1회 타임아웃 발생 — 동시 실행 중이던 balance_harness와의 리소스 경합, 알려진 환경 특성, 단독 재실행 시 통과). `balance_harness -- 5 2` 스모크 확인(크래시 없음, 5개 시행 전부 정상 종료) — Phase 1은 계획상 분포 비교가 필수인 Phase가 아니라(Phase 2·5가 대상) 대규모(20×10) 시행 대신 가벼운 스모크로 대체.
 
-**7-Phase 계획 전체 완료.**
+### 6-111. 엔진 확장 Phase 2 — 불펜 세부 서열 + 세이브/홀드 다중 교체 지원 (2026-07-24, 완료)
+
+**Context**: 5-Phase 계획의 최대 규모·최고 위험도 Phase(계획 문서에서 이미 명시) — "팀당 게임 1회 교체"를 "최대 2회 교체(선발→중계→마무리 고정 체인)"로 확장해 홀드를 구조적으로 가능하게 만들고, 중계가 여럿일 때의 세부 서열(§5 이월 레지스트리)도 함께 해소.
+
+**설계 조정(계획 대비, 실측으로 발견)**:
+1. **2단계 전환 트리거를 `should_pull_pitcher`(투구수 기반)에서 "세이브 상황이면 즉시 전환"으로 단순화** — 원 계획은 1단계→2단계 전환도 강판과 같은 투구수/하드캡 판정을 그대로 재사용하려 했으나, 실측(`sim::match_sim` 단위 테스트 설계 중 디버그 프로브로 확인) 결과 중계는 보통 1~2이닝만 던지고 물러나 하드캡(약 28타자 상당)에 도달하는 경우가 거의 없어 500시드를 굴려도 승격이 단 한 번도 안 일어났다. 실제 야구에서도 "세이브 상황이 오면 마무리를 올린다"는 투구수와 무관한 전술적 판단이라, stage 0→1 전환의 "세이브 상황이면 closer 우선" 원칙을 그대로 재사용해 세이브 상황 발생 즉시 전환하도록 바꿨다(배경·인터랙티브 둘 다 동일하게 적용).
+2. **`home_stage`가 실제 등판한 NPC(reliever vs closer)와 반드시 일치하도록 재설계** — 첫 강판이 이미 세이브 상황이라 마무리가 곧장 등판하는 경우(중계 없음 또는 애초에 세이브 상황), season_stats 누산기 매핑을 "몇 번째 교체인가(단계 번호)"가 아니라 "실제로 그 역할(reliever/closer)로 등판했는가"로 게이팅해야 함을 구현 중 발견 — 안 그러면 한 이닝도 안 던진 중계에게 빈(0) 기록이 붙거나, 실제로 던진 마무리의 기록이 중계 이름으로 잘못 적립될 뻔했다(`GameResult.home_reliever_stats`를 `home_stage >= 1`이 아니라 `home_first_is_reliever`로 게이팅).
+
+**구현**(`engine/src/sim/match_.rs`, `match_sim` 모듈): `simulate_game`의 `home_pulled: bool`/`away_pulled: bool`을 `home_stage: u8`/`away_stage: u8`(0=선발/1=중계/2=마무리)로 교체, `home_first_is_reliever`(1단계가 진짜 중계였는지) 플래그로 승격 가능 여부와 season_stats 매핑을 동시에 통제. `GameResult`에 `home_closer_stats`/`away_closer_stats` 3번째 슬롯 추가. 세이브는 마지막 단계 투수에게(`*_stageN_pull_was_save_situation` 게이팅), 홀드는 `stage==2 && first_is_reliever && 팀이 리드를 지킨 채 이김`일 때 1단계 투수에게.
+
+**구현**(`engine/src/data/repository.rs`): `ranked_relief_candidates_for_team`(마무리 제외, `ranked_closer_candidates_for_team`과 같은 블렌드 공식) 신설 — `load_relief_pitcher`의 비세이브 분기가 예전 "id순 첫 명" 대신 이 서열을 쓴다(불펜 세부 서열 이월 해소). `process_day`가 `result.home_closer_stats`/`away_closer_stats`를 `home_closer`/`away_closer` npc에 season_stats+피로도로 반영. `credit_pitcher_hold`(신규, `credit_pitcher_save`와 같은 패턴) 추가.
+
+**구현**(`engine/src/data/match_session.rs`): `SessionRow`에 2단계 필드 6개(`protagonist_second_pulled`·`second_relief_pitcher_id`·`protagonist_second_pull_was_save_situation`·상대팀 대칭 3개, migration v21) 추가. `run_until_decision_point`에 주인공·상대팀 각각 "1단계가 진짜 중계였고 새로 세이브 상황이 되면 즉시 마무리로 전환" 블록 신설(하프이닝 경계마다, 배경 엔진과 동일 판단 시점). 배경 하프이닝 위임 시 2단계가 발동됐으면 그 투수를 우선 사용하도록 pitcher 선택 로직 갱신. `credit_saves`를 2단계 인식하도록 확장(세이브는 마지막 투수, 홀드는 1단계 투수).
+
+**테스트**: `sim::match_sim::tests::a_reliever_promoted_to_closer_while_leading_earns_a_hold`(배경, 50시드 중 최소 1건)·`data::match_session::tests::a_reliever_promoted_to_closer_in_an_interactive_game_earns_a_hold`(인터랙티브, 99시드 중 최소 1건, `insert_designated_closer` 신규 테스트 헬퍼) 신설. 기존 강판 테스트 2개(`simulate_game_pulls_a_starter_into_the_closer_slot...`·`a_closer_entering_a_save_situation...`)가 `home_reliever_stats` 대신 `home_closer_stats`를 확인하도록 갱신(곧장 마무리로 가는 경우 `home_first_is_reliever`가 false라 `home_reliever_stats`는 이제 `None`으로 남는 게 맞는 동작이라 테스트 쪽을 고침). `cargo test --lib` 507개 전부 통과. `cargo clippy --lib --tests --bins` 클린. `cargo build --release` 갱신 후 `flutter test -j 1` 27개 전부 통과. `balance_harness -- 8 3` 실행 중 6개 시행까지 크래시 없이 정상 확인(시간 관계로 중단) 후 `balance_harness -- 5 2`로 완주 확인(크래시 없음, 배경 팀당 평균 득점 2.48 vs 인터랙티브 평균 실점 3.40 — Phase 1 스모크(격차 0.63)와 같은 자릿수 범위라 극단적 쏠림 없음).
