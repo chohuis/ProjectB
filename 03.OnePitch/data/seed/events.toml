@@ -660,3 +660,236 @@ label = "그냥 들어만 준다"
 target = "live_state"
 field = "사기"
 delta = 2.0
+
+# ---------------------------------------------------------------------------
+# 고교 2차 배치(대화 2026-07-25, §6-N) — 카탈로그 중 고교에 자연스럽게
+# 맞는 나머지 항목. "데뷔전"·"팀 우승/PO 진출 확정"은 실제 첫 등판·대회
+# 결과에 콜백을 새로 걸어야 해서 이번엔 스코프 아웃(다음 배치 후보).
+# 기존 5개 트리거만 사용, 새 엔진 작업 없음.
+# ---------------------------------------------------------------------------
+
+[[event]]
+id = "event:hs_role_shift"
+type = "probability"
+stage = "league:hs"
+urgency = "normal"
+bodies = [
+  "요즘 출전 기회가 눈에 띄게 늘었다. 감독의 기대가 달라진 걸 느낀다.",
+  "벤치에 있던 시간이 줄고, 그라운드에 서는 날이 많아졌다.",
+  "내 역할이 조금씩 달라지고 있다는 게 느껴진다.",
+]
+
+[event.trigger]
+var = "확률"
+chance = 0.02
+
+[[event.choices]]
+id = "부응하기"
+label = "기대에 부응하려 애쓴다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 6.0
+
+[[event.choices.effects]]
+target = "live_state"
+field = "피로도"
+delta = 3.0
+
+[[event.choices]]
+id = "부담느낌"
+label = "부담이 느껴진다"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "침착함"
+delta = 4.0
+
+[[event]]
+id = "event:hs_record_approaching"
+type = "probability"
+stage = "league:hs"
+urgency = "normal"
+bodies = [
+  "요즘 스탯이 착실히 쌓이고 있다는 걸 느낀다.",
+  "이번 시즌 개인 성적이 나쁘지 않게 흘러가고 있다.",
+  "차곡차곡 쌓인 숫자들이 눈에 들어오기 시작했다.",
+]
+
+[event.trigger]
+var = "확률"
+chance = 0.02
+
+[[event.choices]]
+id = "더욕심내기"
+label = "더 욕심을 내본다"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "구위"
+delta = 5.0
+
+[[event.choices.effects]]
+target = "live_state"
+field = "피로도"
+delta = 4.0
+
+[[event.choices]]
+id = "페이스유지"
+label = "지금 페이스를 유지한다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 4.0
+
+[[event]]
+id = "event:hs_freshman_joins"
+type = "probability"
+stage = "league:hs"
+urgency = "normal"
+bodies = [
+  "새 학기, 신입생들이 팀에 합류했다.",
+  "패기 넘치는 신입 부원들이 훈련장에 나타났다.",
+  "새로 들어온 1학년들이 눈에 띈다.",
+]
+
+[event.trigger]
+var = "확률"
+chance = 0.02
+
+[[event.choices]]
+id = "챙겨주기"
+label = "신입생들을 챙겨준다"
+
+[[event.choices.effects]]
+target = "manager_relationship"
+delta = 2
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 2.0
+
+[[event.choices]]
+id = "각자할일"
+label = "각자 할 일에 집중한다"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "침착함"
+delta = 3.0
+
+[[event]]
+id = "event:hs_rival_matchup"
+type = "probability"
+stage = "league:hs"
+urgency = "normal"
+bodies = [
+  "권역 라이벌 학교와의 경기가 다가온다. 자연히 신경이 쓰인다.",
+  "이번 상대는 늘 껄끄러운 라이벌 학교다.",
+  "라이벌전을 앞두니 평소보다 긴장된다.",
+]
+
+[event.trigger]
+var = "확률"
+chance = 0.02
+
+[[event.choices]]
+id = "투지불태우기"
+label = "투지를 불태운다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 7.0
+
+[[event.choices.effects]]
+target = "live_state"
+field = "피로도"
+delta = 3.0
+
+[[event.choices]]
+id = "평정심유지"
+label = "평정심을 유지한다"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "침착함"
+delta = 5.0
+
+[[event]]
+id = "event:hs_team_dinner"
+type = "probability"
+stage = "league:hs"
+urgency = "normal"
+bodies = [
+  "팀 회식이 열렸다. 다 같이 모여 밥을 먹는다.",
+  "감독님이 팀 전체 회식을 잡았다.",
+  "오랜만에 팀원들과 다 같이 식사할 자리가 생겼다.",
+]
+
+[event.trigger]
+var = "확률"
+chance = 0.02
+
+[[event.choices]]
+id = "적극참여"
+label = "적극적으로 어울린다"
+
+[[event.choices.effects]]
+target = "manager_relationship"
+delta = 3
+
+[[event.choices.effects]]
+target = "live_state"
+field = "피로도"
+delta = 2.0
+
+[[event.choices]]
+id = "조용히"
+label = "조용히 자리만 지킨다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 2.0
+
+[[event]]
+id = "event:hs_family_call"
+type = "probability"
+stage = "league:hs"
+urgency = "normal"
+bodies = [
+  "부모님에게서 안부 전화가 왔다.",
+  "집에서 걱정 섞인 연락이 왔다.",
+  "가족이 근황을 물으며 연락을 해왔다.",
+]
+
+[event.trigger]
+var = "확률"
+chance = 0.02
+
+[[event.choices]]
+id = "길게통화"
+label = "길게 통화하며 마음을 놓는다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 6.0
+
+[[event.choices.effects]]
+target = "live_state"
+field = "피로도"
+delta = -3.0
+
+[[event.choices]]
+id = "짧게안부"
+label = "짧게 안부만 전한다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "피로도"
+delta = -2.0
