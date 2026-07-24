@@ -1044,6 +1044,21 @@ fn last_event_day(conn: &Connection, event_id: &str) -> anyhow::Result<Option<i6
     Ok(conn.query_row("SELECT MAX(day) FROM career_events WHERE kind = ?1", [format!("event:{event_id}")], |r| r.get(0))?)
 }
 
+/// 문장 뱅크(대화 2026-07-25) — 이 이벤트가 가장 최근 발동했을 때 뽑혔던
+/// 문장을 `career_events.detail`(`{"body": "..."}`)에서 읽어온다. 이
+/// 필드가 생기기 전 로그(`{}`)나 기록 자체가 없으면 `None` — `pick_body_variant`
+/// 가 그 경우 제외 없이 전체 풀에서 뽑는다.
+fn last_event_body(conn: &Connection, event_id: &str) -> anyhow::Result<Option<String>> {
+    let detail_raw: Option<String> = conn
+        .query_row(
+            "SELECT detail FROM career_events WHERE kind = ?1 ORDER BY day DESC, id DESC LIMIT 1",
+            [format!("event:{event_id}")],
+            |r| r.get(0),
+        )
+        .optional()?;
+    Ok(detail_raw.and_then(|raw| serde_json::from_str::<serde_json::Value>(&raw).ok()).and_then(|v| v.get("body").and_then(|b| b.as_str()).map(str::to_string)))
+}
+
 /// 시즌이 시작된(=이번 시즌 첫 경기가 잡힌) 절대 day — 캘린더형 이벤트의
 /// "week"(시즌 경과 주차) 계산 기준점. `season_meta`에 아직 없으면(첫
 /// 시즌 진행 중이거나 구버전 세이브) 게임 시작일(1)로 근사.
@@ -1098,14 +1113,21 @@ fn load_polling_events(content_conn: &Connection) -> anyhow::Result<Vec<PollingE
 /// 이벤트를 실제로 발동시킨다 — 선택지가 있으면(§2) `pending_actions`
 /// (`type='event'`), 없으면(§7 "메시지" 판별기준) `inbox`에 직접 삽입.
 /// 폴링·콜백 양쪽에서 공용으로 쓴다(콜백은 조건 판단만 건너뛰고 발동은
-/// 똑같은 경로).
-fn fire_event(slot_conn: &Connection, content_conn: &Connection, event_id: &str, day: i64) -> anyhow::Result<()> {
+/// 똑같은 경로). 문장 뱅크(대화 2026-07-25, §6-N) — `bodies`(JSON 배열)
+/// 중 직전 발동 때 뽑혔던 문장(`career_events`의 가장 최근 로그에서 읽음)
+/// 을 제외하고 결정론적으로 하나를 골라, 같은 이벤트가 여러 번 떠도
+/// 매번 다른 문장이 나오게 한다.
+fn fire_event(slot_conn: &Connection, content_conn: &Connection, world_seed: i64, event_id: &str, day: i64) -> anyhow::Result<()> {
     let row: Option<(String, String, Option<String>)> = content_conn
-        .query_row("SELECT body, urgency, choices FROM events WHERE id = ?1", [event_id], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)))
+        .query_row("SELECT bodies, urgency, choices FROM events WHERE id = ?1", [event_id], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)))
         .optional()?;
-    let Some((body, urgency, choices_raw)) = row else {
+    let Some((bodies_raw, urgency, choices_raw)) = row else {
         return Ok(());
     };
+    let bodies: Vec<String> = serde_json::from_str(&bodies_raw)?;
+    let recent: Option<String> = last_event_body(slot_conn, event_id)?;
+    let mut body_rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("event_body:{event_id}:{day}")));
+    let body = crate::sim::event::pick_body_variant(&bodies, recent.as_deref(), &mut body_rng);
 
     match &choices_raw {
         None => {
@@ -1143,7 +1165,7 @@ fn fire_event(slot_conn: &Connection, content_conn: &Connection, event_id: &str,
     }
 
     let season = current_season_value(slot_conn)?;
-    log_career_event(slot_conn, day, season, &format!("event:{event_id}"), serde_json::json!({}))?;
+    log_career_event(slot_conn, day, season, &format!("event:{event_id}"), serde_json::json!({"body": body}))?;
     Ok(())
 }
 
@@ -1203,7 +1225,7 @@ fn process_protagonist_events(slot_conn: &Connection, content_conn: &Connection,
         };
 
         if triggered {
-            fire_event(slot_conn, content_conn, &event.id, day)?;
+            fire_event(slot_conn, content_conn, world_seed, &event.id, day)?;
         }
     }
     Ok(())
@@ -4915,7 +4937,7 @@ fn resolve_career_choice(conn: &Connection, content_conn: &Connection, world_see
     // I8 1차분 콜백형 이벤트 실증(02_이벤트.md §1 "콜백 — 호출부가 이미
     // 조건을 다 체크") — 대학/독립/입대 세 갈래 전부 "새로운 곳에서의
     // 여정"이라는 공통 순간이라 조건 분기 없이 그대로 발동.
-    fire_event(conn, content_conn, "event:career_path_committed", day)?;
+    fire_event(conn, content_conn, world_seed, "event:career_path_committed", day)?;
     Ok(())
 }
 
@@ -6311,8 +6333,8 @@ mod tests {
         let content_conn = content::open_in_memory().unwrap();
         content_conn
             .execute(
-                "INSERT INTO events (id, stage, week, type, urgency, trigger, body, choices) VALUES
-                 ('event:gift', NULL, NULL, 'probability', 'normal', NULL, '후배에게 장비를 선물했다.', ?1)",
+                "INSERT INTO events (id, stage, week, type, urgency, trigger, bodies, choices) VALUES
+                 ('event:gift', NULL, NULL, 'probability', 'normal', NULL, '[\"후배에게 장비를 선물했다.\"]', ?1)",
                 [serde_json::json!([
                     {"id": "선물", "label": "선물한다", "effects": [{"target": "finance", "delta": -500}]}
                 ])
@@ -6329,6 +6351,40 @@ mod tests {
         let finance_raw: String = slot_conn.query_row("SELECT finance FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
         let finance: serde_json::Value = serde_json::from_str(&finance_raw).unwrap();
         assert_eq!(finance["잔액"], 0, "300 - 500 should clamp at 0, not go negative");
+    }
+
+    /// 문장 뱅크(대화 2026-07-25, §6-N) — 같은 이벤트가 연속 발동해도
+    /// 매번 다른 문장이 뽑히는지. 문장 2개짜리 풀이라 직전 것을 제외하면
+    /// 후보가 정확히 1개만 남아 결과가 결정론적으로 갈린다.
+    #[test]
+    fn fire_event_avoids_repeating_the_previously_shown_body_variant() {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn
+            .execute(
+                "INSERT INTO events (id, stage, week, type, urgency, trigger, bodies, choices) VALUES
+                 ('event:test_bank', NULL, NULL, 'probability', 'normal', NULL, ?1, NULL)",
+                [serde_json::json!(["A", "B"]).to_string()],
+            )
+            .unwrap();
+
+        let slot_conn = slot::open_in_memory().unwrap();
+
+        fire_event(&slot_conn, &content_conn, 1, "event:test_bank", 10).unwrap();
+        fire_event(&slot_conn, &content_conn, 1, "event:test_bank", 20).unwrap();
+
+        let kind = "event:event:test_bank";
+        let rows: Vec<String> = slot_conn
+            .prepare("SELECT detail FROM career_events WHERE kind = ?1 ORDER BY day")
+            .unwrap()
+            .query_map([kind], |r| r.get::<_, String>(0))
+            .unwrap()
+            .collect::<Result<Vec<_>, _>>()
+            .unwrap();
+        let bodies: Vec<String> =
+            rows.iter().map(|raw| serde_json::from_str::<serde_json::Value>(raw).unwrap()["body"].as_str().unwrap().to_string()).collect();
+
+        assert_eq!(bodies.len(), 2);
+        assert_ne!(bodies[0], bodies[1], "두 번째 발동은 직전과 다른 문장을 골라야 함");
     }
 
     fn insert_market_protagonist(slot_conn: &Connection, contract: &serde_json::Value, attention: f64) {

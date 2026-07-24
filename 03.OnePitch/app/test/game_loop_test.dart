@@ -44,7 +44,9 @@ void main() {
     // 먼저 뜰 수 있어(대화 2026-07-26) 그런 것들은 넘기고 계속 진행한다.
     List<PendingActionInfo> pending = await advance();
     var guard = 0;
-    while ((pending.isEmpty || pending.first.kind != 'game') && guard < 20) {
+    // 이벤트 콘텐츠 확대(대화 2026-07-25, 고교 1차 배치 8개 추가)로 확률형
+    // 이벤트 발동 빈도가 늘어 guard를 20→60으로 올림(§6-N).
+    while ((pending.isEmpty || pending.first.kind != 'game') && guard < 60) {
       if (pending.isNotEmpty) {
         await _resolveNonGamePendingAction(pending.first);
       }

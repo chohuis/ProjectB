@@ -143,7 +143,7 @@ Map<String, dynamic> buildSeedPayload(String seedDir) {
           'type': e['type'],
           'urgency': e['urgency'],
           'trigger': e['trigger'],
-          'body': e['body'],
+          'bodies': e['bodies'],
           'choices': e['choices'],
         }
     ],

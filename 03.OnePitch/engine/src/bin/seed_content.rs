@@ -98,7 +98,7 @@ struct EventSeed {
     urgency: String,
     #[serde(default)]
     trigger: Option<serde_json::Value>,
-    body: String,
+    bodies: Vec<String>,
     #[serde(default)]
     choices: Option<serde_json::Value>,
 }
@@ -269,10 +269,16 @@ fn seed(conn: &mut Connection, payload: &SeedPayload, dry_run: bool) -> Result<V
     // "선택지 없는 메시지"라 NULL 그대로 둔다(빈 배열과 동치, evaluate 쪽이
     // 둘 다 "선택지 없음"으로 처리).
     for e in &payload.events {
+        // 문장 뱅크 최소 개수(대화 2026-07-25, §6-N) — 이벤트당 문장이
+        // 1~2개뿐이면 반복 발동 시 금방 티가 나서 FM/OOTP 식 다양성이
+        // 죽는다. 저작 시점에 강제해 실수로 섞여 들어가는 걸 막는다.
+        if e.bodies.len() < 3 {
+            bail!("event {} has only {} bodies, need at least 3 for variety", e.id, e.bodies.len());
+        }
         tx.execute(
-            "INSERT INTO events (id, stage, week, type, urgency, trigger, body, choices) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)
+            "INSERT INTO events (id, stage, week, type, urgency, trigger, bodies, choices) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)
              ON CONFLICT(id) DO UPDATE SET stage = excluded.stage, week = excluded.week, type = excluded.type,
-                urgency = excluded.urgency, trigger = excluded.trigger, body = excluded.body, choices = excluded.choices",
+                urgency = excluded.urgency, trigger = excluded.trigger, bodies = excluded.bodies, choices = excluded.choices",
             params![
                 e.id,
                 e.stage,
@@ -280,7 +286,7 @@ fn seed(conn: &mut Connection, payload: &SeedPayload, dry_run: bool) -> Result<V
                 e.kind,
                 e.urgency,
                 e.trigger.as_ref().map(|v| v.to_string()),
-                e.body,
+                serde_json::to_string(&e.bodies)?,
                 e.choices.as_ref().map(|v| v.to_string())
             ],
         )?;

@@ -83,6 +83,25 @@ pub struct EventChoice {
     pub effects: Vec<EventEffect>,
 }
 
+/// 문장 뱅크에서 이번에 보여줄 문장 하나를 고른다(대화 2026-07-25,
+/// `02_기획/콘텐츠/06_서술_템플릿.md` "조건별 문장 뱅크·최근 사용 회피"
+/// 최초 실체화) — `recent`(직전 발동 때 뽑혔던 문장)와 같은 후보는 풀에서
+/// 제외하고 그 나머지에서 뽑는다. 단 `bodies`가 1개뿐이면 예외적으로
+/// 그대로 재사용(제외하면 후보가 없어지므로). `bodies`가 비어있으면
+/// panic 대신 빈 문자열 — 호출부(`data::repository::fire_event`)가
+/// seed 단계에서 이미 3개 이상을 강제하므로 실전에서는 안 밟는 경로.
+pub fn pick_body_variant(bodies: &[String], recent: Option<&str>, rng: &mut impl Rng) -> String {
+    if bodies.is_empty() {
+        return String::new();
+    }
+    let pool: Vec<&String> = match recent {
+        Some(r) if bodies.len() > 1 => bodies.iter().filter(|b| b.as_str() != r).collect(),
+        _ => bodies.iter().collect(),
+    };
+    let idx = rng.gen_range(0..pool.len());
+    pool[idx].clone()
+}
+
 /// 선택지 버튼 색상용 — `effects`의 부호만 보고 판정(메시지함 UI가 굳이
 /// 손으로 저작된 힌트 문자열을 파싱하지 않고 이미 구조화된 데이터에서
 /// 바로 뽑아 쓰게, 대화 2026-07-22).
@@ -192,6 +211,31 @@ mod tests {
             "mixed"
         );
         assert_eq!(effect_tone(&[]), "neutral");
+    }
+
+    #[test]
+    fn pick_body_variant_never_repeats_the_recent_pick_when_pool_allows() {
+        let bodies = vec!["a".to_string(), "b".to_string(), "c".to_string()];
+        let mut rng = ChaCha8Rng::seed_from_u64(7);
+        for _ in 0..50 {
+            let picked = pick_body_variant(&bodies, Some("a"), &mut rng);
+            assert_ne!(picked, "a");
+        }
+    }
+
+    #[test]
+    fn pick_body_variant_reuses_the_only_candidate_when_pool_has_one() {
+        let bodies = vec!["only".to_string()];
+        let mut rng = ChaCha8Rng::seed_from_u64(3);
+        assert_eq!(pick_body_variant(&bodies, Some("only"), &mut rng), "only");
+    }
+
+    #[test]
+    fn pick_body_variant_is_deterministic_for_a_given_seed() {
+        let bodies = vec!["a".to_string(), "b".to_string(), "c".to_string()];
+        let mut rng_a = ChaCha8Rng::seed_from_u64(11);
+        let mut rng_b = ChaCha8Rng::seed_from_u64(11);
+        assert_eq!(pick_body_variant(&bodies, None, &mut rng_a), pick_body_variant(&bodies, None, &mut rng_b));
     }
 
     #[test]

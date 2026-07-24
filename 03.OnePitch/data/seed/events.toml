@@ -3,12 +3,17 @@
 # 동료상태·콜백·확률) 전부를 최소 1개씩 실증한다. 나머지 이벤트 아이디어
 # (§1 인벤토리 38개 중 다루지 않은 항목)는 이후 반복 저작 트랙으로 이월.
 #
+# 문장 뱅크(대화 2026-07-25, 06_서술_템플릿.md "조건별 문장 뱅크·최근
+# 사용 회피" 최초 실체화) — `bodies`는 문자열 배열, 발동 시 직전에
+# 뽑혔던 문장을 제외하고 랜덤 선택(seed_content가 3개 미만이면 에러).
+#
 # 필드:
 #   type    = "calendar" | "personal" | "team" | "peer" | "probability" | "callback"
 #   week    = 캘린더형만: season_start_day 기준 경과 주차(0-based)
 #   stage   = 리그 필터(league_id 그대로). 비우면 전 리그 적용
 #   trigger = 폴링형만(콜백형은 호출부가 이미 조건을 다 체크, 이 파일엔
 #             안 채움). "확률" 변수는 op/value 대신 chance만 가짐
+#   bodies  = 문장 뱅크(최소 3개, seed_content가 강제)
 #   choices = 없으면 선택지 없는 순수 알림(03_메시지_알림.md §7 판별기준)
 #   effects.target = "live_state"(field 아무거나, 사기·피로도·주목도 등
 #             전부 여기 포함) | "xp"(stat) | "manager_relationship" |
@@ -20,7 +25,11 @@ id = "event:season_opener"
 type = "calendar"
 week = 0
 urgency = "normal"
-body = "새 시즌이 시작됐다. 올 한 해, 어떤 마음가짐으로 임할까."
+bodies = [
+  "새 시즌이 시작됐다. 올 한 해, 어떤 마음가짐으로 임할까.",
+  "다시 시즌 개막이다. 그라운드에 서니 실감이 난다.",
+  "새 시즌 로스터가 발표됐다. 내 이름도 그 안에 있다.",
+]
 
 [[event.choices]]
 id = "각오"
@@ -46,7 +55,11 @@ type = "calendar"
 week = 13
 stage = "league:pro"
 urgency = "normal"
-body = "올스타 휴식기가 찾아왔다. 이 시간을 어떻게 쓸까."
+bodies = [
+  "올스타 휴식기가 찾아왔다. 이 시간을 어떻게 쓸까.",
+  "시즌 중반, 짧은 휴식기가 주어졌다.",
+  "올스타 브레이크. 한 박자 쉬어가는 타이밍이다.",
+]
 
 [[event.choices]]
 id = "휴식"
@@ -75,7 +88,11 @@ delta = 5.0
 id = "event:slump"
 type = "personal"
 urgency = "normal"
-body = "요즘 좀처럼 기운이 나지 않는다. 슬럼프인 걸까."
+bodies = [
+  "요즘 좀처럼 기운이 나지 않는다. 슬럼프인 걸까.",
+  "공이 손에서 뜻대로 빠져나가지 않는다.",
+  "요 며칠 몸이 무겁고 집중이 잘 안 된다.",
+]
 
 [event.trigger]
 var = "사기"
@@ -109,7 +126,11 @@ delta = 10.0
 id = "event:peak_form"
 type = "personal"
 urgency = "normal"
-body = "몸이 가볍고 공이 손에서 잘 빠져나간다. 지금이 절정기다."
+bodies = [
+  "몸이 가볍고 공이 손에서 잘 빠져나간다. 지금이 절정기다.",
+  "요즘따라 모든 게 잘 맞아떨어진다.",
+  "컨디션이 최고조다. 이 흐름을 놓치고 싶지 않다.",
+]
 
 [event.trigger]
 var = "사기"
@@ -138,7 +159,11 @@ delta = -5.0
 id = "event:losing_streak"
 type = "team"
 urgency = "normal"
-body = "팀이 연패에 빠졌다. 분위기가 무겁다."
+bodies = [
+  "팀이 연패에 빠졌다. 분위기가 무겁다.",
+  "패배가 계속 이어지고 있다. 라커룸 공기가 가라앉았다.",
+  "연패 탈출이 쉽지 않다. 다들 말수가 줄었다.",
+]
 
 [event.trigger]
 var = "연패"
@@ -166,7 +191,11 @@ delta = 2.0
 id = "event:manager_trust_milestone"
 type = "peer"
 urgency = "normal"
-body = "감독이 최근 부쩍 신뢰를 보이고 있다."
+bodies = [
+  "감독이 최근 부쩍 신뢰를 보이고 있다.",
+  "감독이 내 이름을 부르는 횟수가 늘었다.",
+  "요즘 감독과 대화가 부쩍 편해졌다.",
+]
 
 [event.trigger]
 var = "감독관계도"
@@ -194,7 +223,11 @@ delta = 3.0
 id = "event:media_interview"
 type = "probability"
 urgency = "normal"
-body = "언론에서 인터뷰를 요청해왔다."
+bodies = [
+  "언론에서 인터뷰를 요청해왔다.",
+  "기자가 경기 후 잠깐 시간을 내달라고 한다.",
+  "언론사에서 인터뷰 요청 연락이 왔다.",
+]
 
 [event.trigger]
 var = "확률"
@@ -227,7 +260,11 @@ delta = 3.0
 id = "event:fan_signing"
 type = "probability"
 urgency = "normal"
-body = "팬 사인회 요청이 들어왔다."
+bodies = [
+  "팬 사인회 요청이 들어왔다.",
+  "구단에서 팬 사인회 일정을 제안해왔다.",
+  "팬들이 사인회를 요청한다는 소식을 들었다.",
+]
 
 [event.trigger]
 var = "확률"
@@ -260,7 +297,11 @@ delta = 2.0
 id = "event:career_path_committed"
 type = "callback"
 urgency = "normal"
-body = "새로운 곳에서의 여정이 시작됐다."
+bodies = [
+  "새로운 곳에서의 여정이 시작됐다.",
+  "새로운 팀, 새로운 시작이다.",
+  "이제부터는 여기가 내 자리다.",
+]
 
 [[event.choices]]
 id = "각오"
@@ -284,7 +325,11 @@ delta = 4.0
 id = "event:sponsor_gift"
 type = "probability"
 urgency = "normal"
-body = "작은 용품 브랜드에서 응원 물품을 보내왔다."
+bodies = [
+  "작은 용품 브랜드에서 응원 물품을 보내왔다.",
+  "한 스포츠 브랜드가 응원 메시지와 함께 용품을 보내왔다.",
+  "작은 업체에서 후원 물품을 보내왔다.",
+]
 
 [event.trigger]
 var = "확률"
@@ -314,7 +359,11 @@ delta = 2.0
 id = "event:junior_gift"
 type = "probability"
 urgency = "normal"
-body = "후배가 장비를 구하지 못해 곤란해하는 걸 봤다."
+bodies = [
+  "후배가 장비를 구하지 못해 곤란해하는 걸 봤다.",
+  "후배 하나가 장비 문제로 난처해하는 모습을 봤다.",
+  "장비가 없어 곤란해하는 후배가 눈에 밟힌다.",
+]
 
 [event.trigger]
 var = "확률"
@@ -335,3 +384,279 @@ delta = 2
 [[event.choices]]
 id = "모르는척"
 label = "모르는 척한다"
+
+# ---------------------------------------------------------------------------
+# 고교 1차 배치(대화 2026-07-25, §6-N) — 38개 카탈로그 중 27개 남은 것을
+# 채워나가는 첫 배치. 고등학교부터 우선(사용자 지정), stage="league:hs"로
+# 스코프. 02_아마_고교.md 근거(3년 과정·5대 전국대회 개나리기/장미기/
+# 무궁화기/국화기/패왕기·후보→주전→에이스·갈림길 A) + 38개 카탈로그
+# 재구성 혼합. 새 트리거 변수·새 콜백 지점은 안 만듦(기존 5종만 사용).
+# ---------------------------------------------------------------------------
+
+[[event]]
+id = "event:hs_flower_season_opens"
+type = "calendar"
+week = 2
+stage = "league:hs"
+urgency = "normal"
+bodies = [
+  "개나리기 시즌이 다가온다. 첫 전국 무대에 선다는 게 실감 난다.",
+  "올해 첫 전국대회, 개나리기 시즌이 시작된다.",
+  "전국 무대 데뷔전이 될 개나리기가 다가왔다.",
+]
+
+[[event.choices]]
+id = "각오다짐"
+label = "각오를 다진다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 10.0
+
+[[event.choices]]
+id = "평소처럼"
+label = "평소처럼 준비한다"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "침착함"
+delta = 5.0
+
+[[event]]
+id = "event:hs_flower_season_finale"
+type = "calendar"
+week = 16
+stage = "league:hs"
+urgency = "normal"
+bodies = [
+  "패왕기 시즌이 다가온다. 올해 마지막 전국 무대다. 이 시즌이 끝나면 갈림길이 기다리고 있다.",
+  "마지막 전국대회 시즌이 다가왔다. 다음 발걸음을 슬슬 생각하게 된다.",
+  "올해의 마지막 전국 무대를 앞두고 있다. 이 대회가 끝나면 나는 어디로 가게 될까.",
+]
+
+[[event.choices]]
+id = "집중"
+label = "지금에 집중한다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 8.0
+
+[[event.choices]]
+id = "미래고민"
+label = "다음 진로를 생각해본다"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "침착함"
+delta = 6.0
+
+[[event]]
+id = "event:hs_crossroads_looms"
+type = "probability"
+stage = "league:hs"
+urgency = "normal"
+bodies = [
+  "3학년이 되고 보니, 졸업 후 진로가 자꾸 머릿속에 맴돈다.",
+  "프로, 대학, 독립리그... 선택의 순간이 다가오고 있음을 느낀다.",
+  "졸업이 가까워질수록 앞으로의 길이 궁금해진다.",
+]
+
+[event.trigger]
+var = "확률"
+chance = 0.02
+
+[[event.choices]]
+id = "정보수집"
+label = "여러 진로를 알아본다"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "침착함"
+delta = 4.0
+
+[[event.choices]]
+id = "현재집중"
+label = "지금 눈앞의 경기에 집중한다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 5.0
+
+[[event]]
+id = "event:hs_region_losing_skid"
+type = "team"
+stage = "league:hs"
+urgency = "normal"
+bodies = [
+  "권역 라이벌전에서 연달아 무너졌다. 학교 분위기가 좋지 않다.",
+  "요 몇 경기 연패가 이어지면서 다들 말이 없어졌다.",
+  "권역 순위가 흔들리고 있다. 교내에서도 걱정하는 눈치다.",
+]
+
+[event.trigger]
+var = "연패"
+op = ">="
+value = 3
+
+[[event.choices]]
+id = "분위기전환"
+label = "분위기를 다잡으려 애쓴다"
+
+[[event.choices.effects]]
+target = "manager_relationship"
+delta = 3
+
+[[event.choices]]
+id = "묵묵히"
+label = "묵묵히 내 몫을 한다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 2.0
+
+[[event]]
+id = "event:hs_senior_mentorship"
+type = "probability"
+stage = "league:hs"
+urgency = "normal"
+bodies = [
+  "졸업한 선배가 훈련장에 들러 조언을 건넸다.",
+  "3학년 선배가 지나가듯 요령 하나를 알려줬다.",
+  "선배가 자기 경험담을 들려주며 조언을 해줬다.",
+]
+
+[event.trigger]
+var = "확률"
+chance = 0.02
+
+[[event.choices]]
+id = "새겨듣기"
+label = "조언을 새겨듣는다"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "침착함"
+delta = 5.0
+
+[[event.choices]]
+id = "감사인사"
+label = "감사 인사만 전한다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 3.0
+
+[[event]]
+id = "event:hs_scout_visit"
+type = "probability"
+stage = "league:hs"
+urgency = "normal"
+bodies = [
+  "관중석에 낯선 얼굴이 보였다. 스카우트인 것 같다.",
+  "이번 경기, 스카우트가 지켜보고 있다는 얘기를 들었다.",
+  "어느 팀 스카우트가 경기를 보러 왔다는 소문이 돌았다.",
+]
+
+[event.trigger]
+var = "확률"
+chance = 0.02
+
+[[event.choices]]
+id = "평소대로"
+label = "평소처럼 플레이한다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "주목도"
+delta = 8.0
+
+[[event.choices]]
+id = "의식됨"
+label = "신경이 쓰여 힘이 들어간다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "주목도"
+delta = 4.0
+
+[[event.choices.effects]]
+target = "live_state"
+field = "피로도"
+delta = 5.0
+
+[[event]]
+id = "event:hs_study_pressure"
+type = "probability"
+stage = "league:hs"
+urgency = "normal"
+bodies = [
+  "시험 기간과 훈련이 겹쳐 몸이 두 개였으면 싶다.",
+  "숙제와 훈련을 병행하려니 시간이 빠듯하다.",
+  "학업과 운동을 같이 챙기기가 쉽지 않다.",
+]
+
+[event.trigger]
+var = "확률"
+chance = 0.02
+
+[[event.choices]]
+id = "훈련우선"
+label = "훈련을 우선한다"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "구위"
+delta = 4.0
+
+[[event.choices.effects]]
+target = "live_state"
+field = "피로도"
+delta = 5.0
+
+[[event.choices]]
+id = "균형잡기"
+label = "공부와 균형을 맞춘다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 3.0
+
+[[event]]
+id = "event:hs_teammate_counsel"
+type = "probability"
+stage = "league:hs"
+urgency = "normal"
+bodies = [
+  "동기 하나가 진로 고민을 털어놨다.",
+  "같은 학년 친구가 앞날에 대해 상담을 청해왔다.",
+  "동기가 나한테 진로 얘기를 꺼냈다.",
+]
+
+[event.trigger]
+var = "확률"
+chance = 0.02
+
+[[event.choices]]
+id = "진심조언"
+label = "진심으로 조언해준다"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "침착함"
+delta = 3.0
+
+[[event.choices]]
+id = "듣기만"
+label = "그냥 들어만 준다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 2.0

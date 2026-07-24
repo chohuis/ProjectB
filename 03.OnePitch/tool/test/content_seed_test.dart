@@ -128,7 +128,7 @@ void main() {
 id = "event:slump"
 type = "personal"
 urgency = "normal"
-body = "슬럼프인 걸까."
+bodies = ["슬럼프인 걸까.", "기운이 나지 않는다.", "요즘 몸이 무겁다."]
 
 [event.trigger]
 var = "사기"
@@ -162,6 +162,7 @@ label = "통산 100승"
     expect(payload['events'], hasLength(1));
     final event = (payload['events'] as List).first as Map<String, dynamic>;
     expect(event['id'], 'event:slump');
+    expect(event['bodies'], ['슬럼프인 걸까.', '기운이 나지 않는다.', '요즘 몸이 무겁다.']);
     expect(event['trigger'], {'var': '사기', 'op': '<=', 'value': 30.0});
     final choices = event['choices'] as List;
     expect(choices, hasLength(1));

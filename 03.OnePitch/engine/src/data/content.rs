@@ -64,6 +64,21 @@ fn migration_v3(tx: &Transaction) -> anyhow::Result<()> {
     Ok(())
 }
 
+const V4_DDL: &str = r#"
+ALTER TABLE events RENAME COLUMN body TO bodies;
+"#;
+
+/// 이벤트 문장 뱅크(대화 2026-07-25, `02_기획/콘텐츠/06_서술_템플릿.md`
+/// "변수 슬롯 템플릿 + 조건별 문장 뱅크" 최초 실체화) — `body`(단일 문자열)
+/// 였던 컬럼을 `bodies`로 이름만 바꾸고, 저장 내용을 JSON 문자열 배열로
+/// 바꾼다(컬럼 타입 자체는 그대로 TEXT — `trigger`/`choices`도 이미 TEXT에
+/// JSON을 담는 관례). 같은 이벤트가 여러 번 발동해도 매번 다른 문장이
+/// 뽑히게 해 FM/OOTP 스타일 반복 회피를 구현.
+fn migration_v4(tx: &Transaction) -> anyhow::Result<()> {
+    tx.execute_batch(V4_DDL)?;
+    Ok(())
+}
+
 const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 1,
@@ -76,6 +91,10 @@ const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 3,
         up: migration_v3,
+    },
+    Migration {
+        version: 4,
+        up: migration_v4,
     },
 ];
 
@@ -207,12 +226,12 @@ mod tests {
     use super::*;
 
     #[test]
-    fn fresh_db_migrates_to_v3() {
+    fn fresh_db_migrates_to_v4() {
         let conn = open_in_memory().unwrap();
         let version: i64 = conn
             .pragma_query_value(None, "user_version", |row| row.get(0))
             .unwrap();
-        assert_eq!(version, 3);
+        assert_eq!(version, 4);
 
         let table_count: i64 = conn
             .query_row(
@@ -225,11 +244,24 @@ mod tests {
     }
 
     #[test]
+    fn v4_renames_body_to_bodies_on_events() {
+        let conn = open_in_memory().unwrap();
+        conn.execute(
+            "INSERT INTO events (id, stage, week, type, urgency, trigger, bodies) VALUES ('event:x', NULL, NULL, 'personal', 'normal', NULL, ?1)",
+            [serde_json::json!(["문장1", "문장2", "문장3"]).to_string()],
+        )
+        .unwrap();
+        let bodies_raw: String = conn.query_row("SELECT bodies FROM events WHERE id = 'event:x'", [], |r| r.get(0)).unwrap();
+        let bodies: Vec<String> = serde_json::from_str(&bodies_raw).unwrap();
+        assert_eq!(bodies, vec!["문장1", "문장2", "문장3"]);
+    }
+
+    #[test]
     fn v3_adds_choices_column_to_events() {
         let conn = open_in_memory().unwrap();
         conn.execute(
-            "INSERT INTO events (id, stage, week, type, urgency, trigger, body, choices)
-             VALUES ('event:x', NULL, NULL, 'personal', 'normal', NULL, '본문', '[{\"id\":\"a\",\"label\":\"A\"}]')",
+            "INSERT INTO events (id, stage, week, type, urgency, trigger, bodies, choices)
+             VALUES ('event:x', NULL, NULL, 'personal', 'normal', NULL, '[\"본문\"]', '[{\"id\":\"a\",\"label\":\"A\"}]')",
             [],
         )
         .unwrap();
