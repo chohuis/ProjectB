@@ -98,9 +98,11 @@
 | Android 실기기·Steam 실클라이언트·Mac/Linux 빌드 검증 | 이 개발 환경(Windows 샌드박스)에서 검증 불가 | I9 착수 시점에 실기기 확보 | 환경 제약 |
 | ~~구종 마스터리 5단계(습작~필살기) 데이터 모델·주간 진행~~ | **해소됨(§6-85, 2026-07-23)** — `protagonist.pitches`가 `{name,stage,weeks}` 객체 배열로, 구종 슬롯이 "신규습득 or 기존 마스터리업" 중 선택 가능 | — | 해소 |
 | 코치별 "가르칠 수 있는 구종" 전문 목록(05_구종_시스템.md §3) | 새 코치 속성(팀당 1명 고정 스탯 외 "전문 구종 리스트") + 콘텐츠 저작 필요 — 일반 `coach_pitch_learning_bonus`(투수지도력)만 §6-85에서 재사용, 구종별 차등은 아직 없음 | 코치 데이터 모델에 구종 리스트 필드 추가 후 배선 | 엔진 확장·콘텐츠 |
-| 구종 마스터리의 매치 엔진 연동(단계→피안타율·헛스윙, 05_구종_시스템.md §4)·레퍼토리 다양성 보너스 | "정확한 수치는 매치 엔진에서"라고 문서 자체가 이미 이월 — 밸런스 튜닝 별도 과제 | 밸런스 하네스로 수치 확정 후 `sim::pitch.rs` 연동 | 밸런스·엔진 확장 |
+| ~~구종 마스터리의 매치 엔진 연동(단계→피안타율·헛스윙, 05_구종_시스템.md §4)·레퍼토리 다양성 보너스~~ | **해소됨(§6-106, Phase 4, 2026-07-26)** — `throw_pitch`가 마스터리 단계(3=실전 기준 ±2.5)와 3계열 다양성 보너스(+0.02 헛스윙)를 실제로 반영 | — | 해소 |
 | 수동 모드 감독 개입이 소프트캡 이후 매 투구마다 다시 물어봄(§6-104 Phase 3에서 발견) | §8 원 설계는 "이닝 종료마다 판단"인데 구현은 매 루프 패스(=매 투구)마다 게이트를 다시 탐 — 무한 루프(핑퐁) 자체는 migration v15로 고쳤지만, "매 투구 재질문"이라는 UX 과함은 별개 이슈로 남음 | 반자동처럼 "판정 지점"을 하프이닝 경계·투구수 임계 돌파 시점으로만 한정하는 게이팅 로직 재설계 | 엔진 개선(UX) |
 | 도루가 배경 하프이닝(`simulate_half_inning`)에만 있고 주인공이 직접 던지는 인터랙티브 하프이닝에는 없음(§6-104 Phase 3) | 1구 단위 루프에 끼워 넣으면 매 구마다 중복 판정될 위험 — 주인공 팀 타석은 항상 배경 경로라 대부분은 이미 커버되고, 주인공이 던지는 동안의 "상대팀 도루"만 빠짐 | 인터랙티브 루프에 "이 타석에서 이미 도루를 판정했는지" 상태 플래그 추가 후 이식 | 엔진 확장 |
+| 홀드(Hold) 판정(§12 "기록 필드", §6-107 Phase 6에서 발견) | 이 엔진은 팀당 게임 1회 교체만 지원(§8) — 교체돼 들어온 투수가 항상 경기를 끝까지 던지므로 "리드를 지킨 채 다음 투수에게 넘김"이라는 홀드의 정의 자체가 구조적으로 성립 불가. 세이브는 이 제약 안에서도 성립해 Phase 6에서 구현 완료, `PitcherGameStats.holds` 필드는 만들어뒀지만 항상 0 | 팀당 2회 이상 교체(선발→중계→마무리 체인) 지원하도록 `simulate_game`·인터랙티브 강판 로직 확장 | 엔진 확장 |
+| 타율·출루율·장타율·OPS 계산 함수는 구현됐지만 노출할 화면이 없음(§12, §6-107 Phase 6) | 주인공은 항상 투수 아키타입(§7 DH)이라 절대 타석에 안 서 본인 기록에 타격 스탯이 없음 — `BatterGameStats::batting_average`등은 테스트만 있고 실제 소비하는 API·화면이 아직 없음 | NPC 팀동료 시즌 스탯을 보여주는 로스터/리더보드 화면이 생기면 그때 연결 | 엔진 확장(소비처 대기) |
 
 ## 6. 문서 갱신 규칙
 
@@ -1745,3 +1747,32 @@
 **구현**(`engine/src/data/repository.rs`, `engine/src/data/match_session.rs`): `process_day`가 게임마다 `content::load_team_park_factor`+`weather:{game_id}` 시드로 `GameConditions`를 굴려 `simulate_game`에 전달(`match:{game_id}`와 별도 RNG 스트림). `accumulate_game_fatigue`에 `fatigue_mult: f64` 파라미터 추가(더위 시 배터·투수 피로 누적 가속) — 배경 경기(2곳)·주인공 인터랙티브 하프이닝(2곳) 전부 배선. 청백전(`run_intrasquad_scrimmage`)은 자체 날씨 개념이 없어 `GameConditions::default()`로 진행. 인터랙티브 경로(`resolve_in_play_result`·`throw_pitch` 호출부)는 수비 중인 팀(주인공 팀 또는 상대팀) 감독의 `tactics`를 그때그때 조회해 넘김.
 
 **테스트**: `cargo test --lib` 492개 전부 통과(신규 8개 — 파크팩터 배율 매핑 1개, 타자친화 구장 홈런 증가 1개, 타격 유형 태그 분류 1개, 파워형 시프트가 스프레이형보다 강함 1개, 감독 전술력이 시프트를 강화 1개, 날씨 5종 전부 등장 확인 1개, 비 날씨가 볼넷 증가 1개, migration v17 1개). `cargo clippy --lib --tests --bins` 클린. `cargo build --release` 갱신 후 `flutter test` 27개 전부 통과(한 차례 `records_test.dart`가 다른 백그라운드 프로세스와의 리소스 경합으로 2분 타임아웃 났었지만 단독 재실행·전체 재실행 모두 정상 통과 확인 — 코드 문제 아님). `balance_harness -- 2 2` 스모크 확인.
+
+### 6-108. 매치엔진 리얼리즘 강화 Phase 6 — 세이브·홀드 판정 + 기록 필드 확장 (2026-07-26, 완료)
+
+**Context**: §12 "기록 필드"의 세이브·홀드·WHIP 등 파생 스탯 계산을 실제로 채움. 조사 중 확인한 핵심 제약: 이 엔진은 팀당 게임 1회 교체만 지원(§8, Phase 3~5 내내 반복 확인된 기존 설계 경계) — 교체돼 들어온 투수가 항상 경기를 끝까지 던지므로, "세이브"(교체 투수가 리드를 지키고 경기를 끝냄)는 이 제약 안에서도 성립하지만 "홀드"(리드를 지킨 채 **다음 투수에게 넘김**)는 애초에 3번째 투수가 등판할 방법이 없어 구조적으로 발생 불가능하다는 게 확인됐다 — 그래서 홀드는 필드만 만들고 이월 등록.
+
+**구현**(`engine/src/sim/match_.rs`):
+- `PitcherGameStats`에 `saves`·`holds` 필드 추가. `simulate_game`이 강판되는 순간 `is_save_situation`이 참이었는지(`home_pull_was_save`/`away_pull_was_save`) 기억해뒀다가, 게임이 끝난 뒤 그 팀이 리드를 지킨 채 이겼으면(팀당 게임 1회 교체 제약상 그 구원투수가 항상 마지막 투수) 세이브 1개를 부여.
+- `BatterGameStats`에 `batting_average`·`on_base_percentage`·`slugging_percentage`·`ops` 메서드 추가(순수 계산 함수, 테스트 완비) — 주인공은 항상 투수 아키타입(§7 DH)이라 직접 소비하는 화면은 아직 없고, NPC 팀동료 시즌 스탯을 보여주는 화면이 생기면 그때 연결(이월 레지스트리 등록).
+
+**구현**(`engine/src/data/repository.rs`):
+- `pitcher_stats_fields`에 "saves"·"holds" 추가(season_stats 영구 반영, 배경 경기 경로).
+- `credit_pitcher_save(conn, player_id, week)` 신규 — 인터랙티브 경기는 하프이닝마다 흩어져 진행돼 게임이 완전히 끝나야만 세이브 여부를 알 수 있어, `upsert_stats_fields`의 누적(add) 방식을 이용해 게임 종료 시점에 1건만 별도로 얹는다.
+- `CareerLine`에 `hits_allowed`·`walks` 필드 + `whip()`·`k_per_9()` 메서드 추가(`era()`와 같은 패턴). `aggregate_game_log`가 `game_log` detail JSON에서 파싱, 없는 구형 행은 기존 관례대로 `unwrap_or(0)`. `season_rollover`의 `career_history` JSON에도 `whip`·`k_per_9` 추가.
+
+**구현**(`engine/src/data/slot.rs`): migration v18 — `match_session`에 `hits_allowed`·`walks_allowed`(주인공 본인 등판의 피안타·볼넷, `strikeouts`와 같은 패턴)·`protagonist_pull_was_save_situation`·`opponent_pull_was_save_situation`(강판 시점 세이브 상황 여부 기억) 4컬럼.
+
+**구현**(`engine/src/data/match_session.rs`):
+- 1구 단위 루프에서 Walk·안타(Single/Double/Triple/HomeRun) 발생 시 `session.walks_allowed`/`session.hits_allowed` 증가. `apply_protagonist_evaluation`의 `game_log` detail JSON에 `hits_allowed`·`walks` 추가(WHIP 계산용).
+- 주인공·상대 양쪽 강판 결정 지점에서 `save_situation` 계산값을 `session.protagonist_pull_was_save_situation`/`opponent_pull_was_save_situation`에 저장.
+- `finalize_game`에 `credit_saves` 신규 — 게임 종료 시점에 두 강판 모두 확인해 세이브 상황이었고 그 팀이 리드를 지킨 채 이겼으면 `repository::credit_pitcher_save` 호출.
+
+**구현**(`engine/src/api/game.rs`, Flutter): `CareerSummary`에 `whip`·`k_per_9` 필드 추가(frb 재생성 필요 — `flutter_rust_bridge_codegen generate`로 갱신, `dart build_runner` 2차 스텝은 이 환경의 기존 Dart 툴체인 이슈로 실패하지만 1차 codegen은 정상 완료돼 Rust·Dart 양쪽 바인딩 모두 갱신됨 확인). `records_screen.dart`의 "수상·기록" 탭(이전엔 완전 미구현 placeholder)을 `_PersonalRecordsTab`으로 채움 — 통산 ERA·WHIP·K/9 카드 + `career_timeline()` 기반 시즌별 목록. 시상식(리그 단위 MVP 등) 판정 로직은 여전히 없어 그 부분만 부분 구현으로 남김(주석에 명시).
+
+**이월 등록** (§5 이월 레지스트리):
+1. 홀드 판정 — 팀당 게임 1회 교체 제약상 구조적으로 불가능. 해소하려면 선발→중계→마무리 2회 이상 교체 체인 지원이 먼저 필요.
+2. 타율·출루율·장타율·OPS 계산 함수는 완성됐지만 소비할 화면이 없음(주인공은 절대 타석에 안 섬) — NPC 로스터/리더보드 화면이 생기면 연결.
+3. (재확인) 구종 마스터리 매치 엔진 연동 이월 행이 Phase 4에서 이미 해소됐는데 §5에 미반영된 채로 방치돼 있던 걸 이번에 발견해 함께 정리(§6 문서 갱신 규칙이 경고하는 "stale 이월" 사례).
+
+**테스트**: `cargo test --lib` 496개 전부 통과(신규 4개 — 압도적 우세 상황에서 마무리 등판 시 세이브 발생 확인 1개, 타율/출루율/장타율/OPS 손계산 대조 1개, 무타석 시 전부 0 폴백 1개, migration v18 1개). `cargo clippy --lib --tests --bins` 클린. `cargo build --release` 갱신 후 `flutter test` — 기본 병렬 실행(`flutter test`)에선 Phase 5와 동일하게 `records_test.dart`가 다른 테스트 파일과의 리소스 경합으로 2분 타임아웃 났지만, `flutter test -j 1`(순차 실행)로는 27개 전부 통과 확인 — 코드 문제 아니라 이 환경의 병렬 테스트 실행 시 CPU 경합 특성. `balance_harness -- 2 2` 스모크 확인.

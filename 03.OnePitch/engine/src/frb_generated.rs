@@ -2013,6 +2013,8 @@ impl SseDecode for crate::api::game::CareerSummary {
         let mut var_strikeouts = <i64>::sse_decode(deserializer);
         let mut var_inningsPitched = <i64>::sse_decode(deserializer);
         let mut var_era = <f64>::sse_decode(deserializer);
+        let mut var_whip = <f64>::sse_decode(deserializer);
+        let mut var_kPer9 = <f64>::sse_decode(deserializer);
         let mut var_retired = <bool>::sse_decode(deserializer);
         let mut var_retirementReason = <Option<String>>::sse_decode(deserializer);
         return crate::api::game::CareerSummary {
@@ -2023,6 +2025,8 @@ impl SseDecode for crate::api::game::CareerSummary {
             strikeouts: var_strikeouts,
             innings_pitched: var_inningsPitched,
             era: var_era,
+            whip: var_whip,
+            k_per_9: var_kPer9,
             retired: var_retired,
             retirement_reason: var_retirementReason,
         };
@@ -3197,6 +3201,8 @@ impl flutter_rust_bridge::IntoDart for crate::api::game::CareerSummary {
             self.strikeouts.into_into_dart().into_dart(),
             self.innings_pitched.into_into_dart().into_dart(),
             self.era.into_into_dart().into_dart(),
+            self.whip.into_into_dart().into_dart(),
+            self.k_per_9.into_into_dart().into_dart(),
             self.retired.into_into_dart().into_dart(),
             self.retirement_reason.into_into_dart().into_dart(),
         ]
@@ -3943,6 +3949,8 @@ impl SseEncode for crate::api::game::CareerSummary {
         <i64>::sse_encode(self.strikeouts, serializer);
         <i64>::sse_encode(self.innings_pitched, serializer);
         <f64>::sse_encode(self.era, serializer);
+        <f64>::sse_encode(self.whip, serializer);
+        <f64>::sse_encode(self.k_per_9, serializer);
         <bool>::sse_encode(self.retired, serializer);
         <Option<String>>::sse_encode(self.retirement_reason, serializer);
     }

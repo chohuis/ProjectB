@@ -19,8 +19,9 @@ import 'package:app/shared/career_timeline_view.dart';
 ///
 /// **나머지 2탭은 "미구현"/부분 구현**: 관계는 `relationships`가 감독
 /// 관계도만 채워지고 있어(§6-59) 팀동료 관계까지는 여전히 없음 —
-/// 정직하게 스코프를 한정해 보여준다(관계 탭 부분 구현). 수상·기록
-/// (개인기록·시상 판정 로직 자체가 없음)만 완전 미구현으로 남는다.
+/// 정직하게 스코프를 한정해 보여준다(관계 탭 부분 구현). 수상·기록은
+/// 개인기록(ERA·WHIP·K/9, Phase 6)은 이제 채워지지만 시상식(리그 단위
+/// MVP 등 판정 로직) 자체는 여전히 엔진에 없어 부분 구현으로 남는다.
 class RecordsScreen extends StatelessWidget {
   const RecordsScreen({super.key});
 
@@ -50,26 +51,11 @@ class RecordsScreen extends StatelessWidget {
             _ContractHistoryTab(),
             _InjuryHistoryTab(),
             _RelationshipsTab(),
-            _UnimplementedTab(message: '개인기록·시상식 판정 로직은 아직 엔진에 구현되지 않았습니다.'),
+            _PersonalRecordsTab(),
             CareerTimelineView(),
             _AchievementsTab(),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _UnimplementedTab extends StatelessWidget {
-  const _UnimplementedTab({required this.message});
-  final String message;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Text(message, textAlign: TextAlign.center, style: const TextStyle(color: AppColors.textSecondary)),
       ),
     );
   }
@@ -282,6 +268,97 @@ class _RelationshipsTabState extends State<_RelationshipsTab> {
                 );
               },
             ),
+          ),
+      ],
+    );
+  }
+}
+
+/// 개인기록 탭(Phase 6, §12 "기록 필드") — `career_summary()`(통산)·
+/// `career_timeline()`(시즌별)의 ERA·WHIP·K/9. 주인공은 항상 투수
+/// 아키타입(§7 DH — 절대 타석에 안 섬)이라 타율·출루율 같은 타격 스탯은
+/// 애초에 성립하지 않아 투수 기록만 보여준다. 시상식(리그 단위 MVP 등)
+/// 판정 로직은 여전히 없어 이 탭엔 안 들어감(부분 구현, 위 클래스 문서
+/// 참고).
+class _PersonalRecordsTab extends StatefulWidget {
+  const _PersonalRecordsTab();
+
+  @override
+  State<_PersonalRecordsTab> createState() => _PersonalRecordsTabState();
+}
+
+class _PersonalRecordsTabState extends State<_PersonalRecordsTab> {
+  CareerSummary? _summary;
+  List<SeasonLine>? _seasons;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final summary = await careerSummary();
+    final seasons = await careerTimeline();
+    if (mounted) {
+      setState(() {
+        _summary = summary;
+        _seasons = seasons.reversed.toList();
+      });
+    }
+  }
+
+  Map<String, dynamic> _decode(String json) {
+    try {
+      final v = jsonDecode(json);
+      return v is Map<String, dynamic> ? v : {};
+    } catch (_) {
+      return {};
+    }
+  }
+
+  String _fmt(num? v, int digits) => v == null ? '-' : v.toStringAsFixed(digits);
+
+  @override
+  Widget build(BuildContext context) {
+    final summary = _summary;
+    final seasons = _seasons;
+    if (summary == null || seasons == null) return const LoadingIndicator();
+    if (summary.games == 0) return const Center(child: Text('아직 등판 기록이 없습니다.'));
+
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('통산 기록', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                const SizedBox(height: 8),
+                Text('${summary.games}경기 ${summary.wins}승 ${summary.losses}패 ${summary.noDecisions}노디시전'),
+                Text('탈삼진 ${summary.strikeouts} · 이닝 ${summary.inningsPitched}'),
+                Text('ERA ${_fmt(summary.era, 2)} · WHIP ${_fmt(summary.whip, 2)} · K/9 ${_fmt(summary.kPer9, 2)}'),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        const Text('시즌별 기록', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+        if (seasons.isEmpty) const Padding(padding: EdgeInsets.all(16), child: Text('아직 완결된 시즌이 없습니다.')),
+        for (final s in seasons)
+          Builder(
+            builder: (context) {
+              final line = _decode(s.lineJson);
+              return ListTile(
+                title: Text('시즌 ${s.season} — ${line['wins'] ?? 0}승 ${line['losses'] ?? 0}패'),
+                subtitle: Text(
+                  'ERA ${_fmt((line['era'] as num?), 2)} · WHIP ${_fmt((line['whip'] as num?), 2)} · '
+                  'K/9 ${_fmt((line['k_per_9'] as num?), 2)} · 탈삼진 ${line['strikeouts'] ?? 0}',
+                ),
+              );
+            },
           ),
       ],
     );

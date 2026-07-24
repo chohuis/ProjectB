@@ -363,6 +363,25 @@ fn migration_v17(tx: &Transaction) -> anyhow::Result<()> {
     Ok(())
 }
 
+const V18_DDL: &str = r#"
+ALTER TABLE match_session ADD COLUMN hits_allowed INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE match_session ADD COLUMN walks_allowed INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE match_session ADD COLUMN protagonist_pull_was_save_situation INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE match_session ADD COLUMN opponent_pull_was_save_situation INTEGER NOT NULL DEFAULT 0;
+"#;
+
+/// 세이브 판정 + 기록 필드 확장(Phase 6, §12) — `hits_allowed`/`walks_allowed`는
+/// 주인공 본인 등판의 피안타·볼넷 누적(`session.strikeouts`와 같은 패턴,
+/// `game_log` detail JSON에 WHIP 계산용으로 실어 보낸다). `*_pull_was_save_situation`
+/// 은 강판되는 그 순간 `manager::is_save_situation`이 참이었는지 기억해뒀다가
+/// (`data::match_session::finalize_game`), 경기가 끝난 뒤 그 팀이 리드를
+/// 지킨 채 이겼으면 강판돼 들어온 구원투수에게 세이브를 준다.
+fn migration_v18(tx: &Transaction) -> anyhow::Result<()> {
+    tx.execute_batch(V18_DDL)?;
+    tx.execute("UPDATE meta SET save_version = 18", [])?;
+    Ok(())
+}
+
 const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 1,
@@ -432,6 +451,10 @@ const MIGRATIONS: &[Migration] = &[
         version: 17,
         up: migration_v17,
     },
+    Migration {
+        version: 18,
+        up: migration_v18,
+    },
 ];
 
 fn init(mut conn: Connection) -> anyhow::Result<Connection> {
@@ -459,7 +482,41 @@ mod tests {
         let save_version: i64 = conn
             .query_row("SELECT save_version FROM meta", [], |row| row.get(0))
             .unwrap();
-        assert_eq!(save_version, 17);
+        assert_eq!(save_version, 18);
+    }
+
+    #[test]
+    fn v18_adds_save_and_whip_tracking_columns_to_match_session() {
+        let conn = open_in_memory().unwrap();
+        conn.execute(
+            "INSERT INTO match_session (id, game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases,
+                                         home_runs, away_runs, home_batter_idx, away_batter_idx, balls, strikes, current_batter_id)
+             VALUES (1, 'g', 'h', 'a', 'league:pro', '자동', 1, 1, 0, '[false,false,false]', 0, 0, 0, 0, 0, 0, NULL)",
+            [],
+        )
+        .unwrap();
+        let (hits, walks, proto_save, opp_save): (i64, i64, i64, i64) = conn
+            .query_row(
+                "SELECT hits_allowed, walks_allowed, protagonist_pull_was_save_situation, opponent_pull_was_save_situation FROM match_session WHERE id = 1",
+                [],
+                |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?)),
+            )
+            .unwrap();
+        assert_eq!((hits, walks, proto_save, opp_save), (0, 0, 0, 0));
+
+        conn.execute(
+            "UPDATE match_session SET hits_allowed = 5, walks_allowed = 2, protagonist_pull_was_save_situation = 1, opponent_pull_was_save_situation = 1 WHERE id = 1",
+            [],
+        )
+        .unwrap();
+        let (hits, walks, proto_save, opp_save): (i64, i64, i64, i64) = conn
+            .query_row(
+                "SELECT hits_allowed, walks_allowed, protagonist_pull_was_save_situation, opponent_pull_was_save_situation FROM match_session WHERE id = 1",
+                [],
+                |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?)),
+            )
+            .unwrap();
+        assert_eq!((hits, walks, proto_save, opp_save), (5, 2, 1, 1));
     }
 
     #[test]

@@ -1439,6 +1439,11 @@ pub struct CareerSummary {
     pub strikeouts: i64,
     pub innings_pitched: i64,
     pub era: f64,
+    /// Phase 6(§12 "기록 필드") — WHIP·K/9. 주인공은 항상 투수 아키타입
+    /// (§7 DH)이라 타율 등 타격 스탯은 애초에 성립하지 않아, "개인기록"
+    /// 탭엔 투수 기록만 노출한다.
+    pub whip: f64,
+    pub k_per_9: f64,
     pub retired: bool,
     pub retirement_reason: Option<String>,
 }
@@ -1457,6 +1462,8 @@ pub fn career_summary() -> anyhow::Result<CareerSummary> {
             strikeouts: line.strikeouts,
             innings_pitched: line.innings_pitched,
             era: line.era(),
+            whip: line.whip(),
+            k_per_9: line.k_per_9(),
             retired: retired == 1,
             retirement_reason,
         })

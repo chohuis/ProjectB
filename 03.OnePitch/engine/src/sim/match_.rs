@@ -544,6 +544,17 @@ pub struct PitcherGameStats {
     pub walks: u32,
     pub unearned_runs: u32,
     pub errors: u32,
+    /// Phase 6(§12 "세이브·홀드") — `simulate_game`이 게임 종료 시점에
+    /// 딱 1회만 부여(§8 "게임당 1회 강판" 제약과 동일 선상 — 마무리 등판
+    /// 뒤 리드를 지키고 경기를 끝내면 세이브).
+    pub saves: u32,
+    /// 홀드 — 실제 야구에서는 "세이브 상황에 등판해 리드를 지킨 채 다음
+    /// 투수에게 넘김"이지만, 이 엔진은 팀당 게임 1회 교체만 지원해(§8)
+    /// 교체된 투수가 항상 경기를 끝까지 던진다 — 즉 "다음 투수에게 넘기는"
+    /// 상황 자체가 구조적으로 발생할 수 없다. 필드는 기록 스키마 완결성과
+    /// 향후(2회 이상 교체 지원 시) 재사용을 위해 남겨두되, 이번 Phase에선
+    /// 항상 0(이월 레지스트리 §5 참고).
+    pub holds: u32,
 }
 
 /// 타자 개인 경기 기록(`season_stats` 적재용) — HBP는 투수 쪽과 동일하게
@@ -561,6 +572,45 @@ pub struct BatterGameStats {
     pub rbi: u32,
     pub stolen_bases: u32,
     pub caught_stealing: u32,
+}
+
+impl BatterGameStats {
+    /// 타율 — 안타/타수. Phase 6(§12 "기록 필드", 시즌 통산 파생 스탯).
+    pub fn batting_average(&self) -> f64 {
+        if self.at_bats == 0 {
+            0.0
+        } else {
+            self.hits as f64 / self.at_bats as f64
+        }
+    }
+
+    /// 출루율 — (안타+볼넷)/(타수+볼넷). 사구·희생플라이는 세분화하지
+    /// 않는 기존 관례(§12 "사구는 1% 확률의 미세 항목이라 무시")를 그대로
+    /// 따라 분모에서 뺀다.
+    pub fn on_base_percentage(&self) -> f64 {
+        let denom = self.at_bats + self.walks;
+        if denom == 0 {
+            0.0
+        } else {
+            (self.hits + self.walks) as f64 / denom as f64
+        }
+    }
+
+    /// 장타율 — 총루타/타수. 총루타 = 단타×1 + 2루타×2 + 3루타×3 + 홈런×4
+    /// (단타 수는 안타에서 2·3루타·홈런을 뺀 나머지로 역산).
+    pub fn slugging_percentage(&self) -> f64 {
+        if self.at_bats == 0 {
+            return 0.0;
+        }
+        let singles = self.hits.saturating_sub(self.doubles + self.triples + self.home_runs);
+        let total_bases = singles + self.doubles * 2 + self.triples * 3 + self.home_runs * 4;
+        total_bases as f64 / self.at_bats as f64
+    }
+
+    /// OPS — 출루율+장타율.
+    pub fn ops(&self) -> f64 {
+        self.on_base_percentage() + self.slugging_percentage()
+    }
 }
 
 /// 하프이닝 1회 분량의 누산기 — 그 이닝에서 던진 투수 1명 + 타석에 선 타자
@@ -824,6 +874,12 @@ pub fn simulate_game(
     let mut away_pitcher: &PitcherStats = away_plan.starter;
     let mut home_pulled = false;
     let mut away_pulled = false;
+    // 세이브 판정(Phase 6, §12) — 강판되는 그 순간 세이브 상황이었는지만
+    // 기억해뒀다가, 경기가 끝난 뒤 그 팀이 리드를 지킨 채 이겼으면 마지막
+    // 투수(=이 구원투수, 팀당 게임 1회 교체 제약상 항상 경기를 끝까지
+    // 던짐)에게 세이브를 준다.
+    let mut home_pull_was_save = false;
+    let mut away_pull_was_save = false;
 
     // top_half_stats: away 타순이 home_pitcher(선발)를 상대하는 하프이닝
     // 누산 — pitcher는 홈 선발, batters는 원정 타자들. bottom_half_stats는
@@ -902,6 +958,7 @@ pub fn simulate_game(
                 if manager::should_pull_pitcher(rng, approx_pitches, home_plan.starter.fatigue, home_plan.tactics, home_plan.trust) {
                     home_pitcher = reliever;
                     home_pulled = true;
+                    home_pull_was_save = save_situation;
                 }
             }
         }
@@ -914,11 +971,19 @@ pub fn simulate_game(
                 if manager::should_pull_pitcher(rng, approx_pitches, away_plan.starter.fatigue, away_plan.tactics, away_plan.trust) {
                     away_pitcher = reliever;
                     away_pulled = true;
+                    away_pull_was_save = save_situation;
                 }
             }
         }
 
         inning += 1;
+    }
+
+    if home_pulled && home_pull_was_save && home_runs > away_runs {
+        home_reliever_stats_acc.pitcher.saves += 1;
+    }
+    if away_pulled && away_pull_was_save && away_runs > home_runs {
+        away_reliever_stats_acc.pitcher.saves += 1;
     }
 
     GameResult {
@@ -1023,6 +1088,32 @@ mod tests {
         assert!(pulled_at_least_once, "reliever가 없어도 closer가 비세이브 상황 폴백으로 쓰여 강판이 일어나야 함");
     }
 
+    /// Phase 6(§12 "세이브") — 마무리가 세이브 상황에 등판해 리드를
+    /// 지키고 경기를 끝내면 세이브가 기록돼야 한다.
+    #[test]
+    fn a_closer_entering_a_save_situation_and_finishing_ahead_earns_a_save() {
+        let strong_lineup: Vec<BatterStats> =
+            (0..8).map(|i| BatterStats { id: format!("sb{i}"), power: 80.0, contact: 80.0, ..avg_batter() }).collect();
+        let weak_lineup: Vec<BatterStats> =
+            (0..8).map(|i| BatterStats { id: format!("wb{i}"), power: 20.0, contact: 20.0, ..avg_batter() }).collect();
+        let elite_starter = PitcherStats { id: "starter".to_string(), control: 80.0, stuff: 80.0, ..avg_pitcher() };
+        let closer = PitcherStats { id: "closer".to_string(), control: 80.0, stuff: 80.0, ..avg_pitcher() };
+        let weak_away_starter = PitcherStats { id: "away".to_string(), control: 20.0, stuff: 20.0, ..avg_pitcher() };
+
+        let mut saved_at_least_once = false;
+        for seed in 0..50u64 {
+            let mut rng = ChaCha8Rng::seed_from_u64(seed);
+            let home_plan = TeamPitchingPlan { starter: &elite_starter, reliever: None, closer: Some(&closer), tactics: 50.0, trust: 50.0 };
+            let away_plan = no_pull_plan(&weak_away_starter);
+            let r = simulate_game(&mut rng, "league:pro", &strong_lineup, &home_plan, &weak_lineup, &away_plan, &GameConditions::default());
+            if r.home_reliever_stats.as_ref().is_some_and(|s| s.saves > 0) {
+                saved_at_least_once = true;
+                break;
+            }
+        }
+        assert!(saved_at_least_once, "압도적인 우세 상황에서도 50개 시드 내내 세이브가 한 번도 안 나옴");
+    }
+
     #[test]
     fn simulate_game_never_pulls_when_no_reliever_is_available() {
         let lineup: Vec<BatterStats> = (0..8).map(|i| BatterStats { id: format!("b{i}"), ..avg_batter() }).collect();
@@ -1054,6 +1145,41 @@ mod tests {
             assert_eq!(home_rbi + away_pitching_unearned, r.home_runs, "seed={seed}");
             assert_eq!(away_rbi + home_pitching_unearned, r.away_runs, "seed={seed}");
         }
+    }
+
+    /// Phase 6(§12) — 타율·출루율·장타율·OPS 파생 스탯 계산이 정석 야구
+    /// 공식과 일치하는지 손으로 계산한 값과 대조.
+    #[test]
+    fn batter_game_stats_derived_percentages_match_hand_calculated_values() {
+        // 10타수 4안타(2루타 1·3루타 1·홈런 1·단타 1)·2볼넷.
+        let s = BatterGameStats {
+            plate_appearances: 12,
+            at_bats: 10,
+            hits: 4,
+            doubles: 1,
+            triples: 1,
+            home_runs: 1,
+            walks: 2,
+            strikeouts: 0,
+            rbi: 0,
+            stolen_bases: 0,
+            caught_stealing: 0,
+        };
+        assert!((s.batting_average() - 0.4).abs() < 1e-9, "avg={}", s.batting_average());
+        // OBP = (4+2)/(10+2) = 0.5
+        assert!((s.on_base_percentage() - 0.5).abs() < 1e-9, "obp={}", s.on_base_percentage());
+        // 총루타 = 단타1×1 + 2루타1×2 + 3루타1×3 + 홈런1×4 = 10, SLG = 10/10 = 1.0
+        assert!((s.slugging_percentage() - 1.0).abs() < 1e-9, "slg={}", s.slugging_percentage());
+        assert!((s.ops() - 1.5).abs() < 1e-9, "ops={}", s.ops());
+    }
+
+    #[test]
+    fn batter_game_stats_derived_percentages_are_zero_with_no_at_bats() {
+        let s = BatterGameStats::default();
+        assert_eq!(s.batting_average(), 0.0);
+        assert_eq!(s.on_base_percentage(), 0.0);
+        assert_eq!(s.slugging_percentage(), 0.0);
+        assert_eq!(s.ops(), 0.0);
     }
 
     #[test]

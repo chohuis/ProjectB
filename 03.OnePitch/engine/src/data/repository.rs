@@ -2255,7 +2255,7 @@ fn upsert_stats_fields(conn: &Connection, table: &str, player_id: &str, week: i6
     Ok(())
 }
 
-fn pitcher_stats_fields(s: &match_sim::PitcherGameStats) -> [(&'static str, u32); 7] {
+fn pitcher_stats_fields(s: &match_sim::PitcherGameStats) -> [(&'static str, u32); 9] {
     [
         ("outs_recorded", s.outs_recorded),
         ("runs_allowed", s.runs_allowed),
@@ -2264,6 +2264,8 @@ fn pitcher_stats_fields(s: &match_sim::PitcherGameStats) -> [(&'static str, u32)
         ("walks", s.walks),
         ("unearned_runs", s.unearned_runs),
         ("errors", s.errors),
+        ("saves", s.saves),
+        ("holds", s.holds),
     ]
 }
 
@@ -2292,6 +2294,17 @@ pub(crate) fn upsert_pitcher_season_stats(conn: &Connection, player_id: &str, we
 /// `pub(crate)` — `upsert_pitcher_season_stats`와 동일한 이유로 공개.
 pub(crate) fn upsert_batter_season_stats(conn: &Connection, player_id: &str, week: i64, s: &match_sim::BatterGameStats) -> anyhow::Result<()> {
     upsert_stats_fields(conn, "season_stats", player_id, week, &batter_stats_fields(s))
+}
+
+/// 세이브 단독 적립(Phase 6, §12) — `data::match_session::finalize_game`가
+/// 인터랙티브 경기 종료 시점에 쓴다. 배경 경기(`simulate_game`)는 세이브
+/// 판정이 `PitcherGameStats.saves`에 이미 녹아든 채로 일반 `upsert_pitcher_season_stats`
+/// 경로를 타지만, 인터랙티브 경로의 구원투수 성적은 하프이닝마다 이미
+/// 별도로 upsert가 끝난 뒤(게임 종료 전에는 세이브 여부를 알 수 없으므로)
+/// 라 여기서 1건만 가산한다 — `upsert_stats_fields`가 누적(add) 방식이라
+/// 안전하게 별도 호출로 얹을 수 있다.
+pub(crate) fn credit_pitcher_save(conn: &Connection, player_id: &str, week: i64) -> anyhow::Result<()> {
+    upsert_stats_fields(conn, "season_stats", player_id, week, &[("saves", 1)])
 }
 
 /// 청백전 전용 — `upsert_pitcher_season_stats`와 필드는 동일, 테이블만
@@ -3950,6 +3963,10 @@ pub struct CareerLine {
     pub strikeouts: i64,
     pub innings_pitched: i64,
     pub runs_allowed: i64,
+    /// Phase 6(§12 "기록 필드") — WHIP 계산용. `hits_allowed`/`walks`가
+    /// 없던 구형 game_log 행(이번 서브분 전)은 `unwrap_or(0)`로 방어.
+    pub hits_allowed: i64,
+    pub walks: i64,
 }
 
 impl CareerLine {
@@ -3958,6 +3975,25 @@ impl CareerLine {
             0.0
         } else {
             self.runs_allowed as f64 * 9.0 / self.innings_pitched as f64
+        }
+    }
+
+    /// WHIP(이닝당 출루 허용) — (피안타+볼넷)/이닝.
+    pub fn whip(&self) -> f64 {
+        if self.innings_pitched == 0 {
+            0.0
+        } else {
+            (self.hits_allowed + self.walks) as f64 / self.innings_pitched as f64
+        }
+    }
+
+    /// K/9(9이닝당 탈삼진) — `pitcher_stats_score`가 이미 쓰던 것과
+    /// 동일한 공식을 game_log 기반 통산치에 그대로 적용.
+    pub fn k_per_9(&self) -> f64 {
+        if self.innings_pitched == 0 {
+            0.0
+        } else {
+            self.strikeouts as f64 * 9.0 / self.innings_pitched as f64
         }
     }
 }
@@ -3976,7 +4012,17 @@ pub fn aggregate_game_log(conn: &Connection, season: Option<i64>) -> anyhow::Res
         }
     };
 
-    let mut line = CareerLine { games: 0, wins: 0, losses: 0, no_decisions: 0, strikeouts: 0, innings_pitched: 0, runs_allowed: 0 };
+    let mut line = CareerLine {
+        games: 0,
+        wins: 0,
+        losses: 0,
+        no_decisions: 0,
+        strikeouts: 0,
+        innings_pitched: 0,
+        runs_allowed: 0,
+        hits_allowed: 0,
+        walks: 0,
+    };
     for raw in details {
         let Ok(v) = serde_json::from_str::<serde_json::Value>(&raw) else { continue };
         line.games += 1;
@@ -3988,6 +4034,8 @@ pub fn aggregate_game_log(conn: &Connection, season: Option<i64>) -> anyhow::Res
         line.strikeouts += v.get("strikeouts").and_then(|x| x.as_i64()).unwrap_or(0);
         line.innings_pitched += v.get("innings_pitched").and_then(|x| x.as_i64()).unwrap_or(0);
         line.runs_allowed += v.get("runs_allowed").and_then(|x| x.as_i64()).unwrap_or(0);
+        line.hits_allowed += v.get("hits_allowed").and_then(|x| x.as_i64()).unwrap_or(0);
+        line.walks += v.get("walks").and_then(|x| x.as_i64()).unwrap_or(0);
     }
     Ok(line)
 }
@@ -4614,6 +4662,8 @@ pub fn season_rollover(conn: &Connection, content_conn: &Connection, day: i64) -
         "strikeouts": season_line.strikeouts,
         "innings_pitched": season_line.innings_pitched,
         "era": season_line.era(),
+        "whip": season_line.whip(),
+        "k_per_9": season_line.k_per_9(),
     })
     .to_string();
     conn.execute(
@@ -6119,7 +6169,7 @@ mod tests {
     #[test]
     fn npc_performance_score_dispatches_to_pitcher_or_batter_summary() {
         let slot_conn = slot::open_in_memory().unwrap();
-        let pitcher_stats = match_sim::PitcherGameStats { outs_recorded: 30, runs_allowed: 2, strikeouts: 15, hits_allowed: 8, walks: 3, unearned_runs: 0, errors: 0 };
+        let pitcher_stats = match_sim::PitcherGameStats { outs_recorded: 30, runs_allowed: 2, strikeouts: 15, hits_allowed: 8, walks: 3, unearned_runs: 0, errors: 0, saves: 0, holds: 0 };
         upsert_pitcher_season_stats(&slot_conn, "npc:p1", 1, &pitcher_stats).unwrap();
         let batter_stats = match_sim::BatterGameStats {
             plate_appearances: 20,
@@ -6152,8 +6202,8 @@ mod tests {
             insert_test_player(&slot_conn, "team:pro_a_farm_sp", "team:pro_a_farm", "선발투수", serde_json::json!({"제구": 50.0, "구위": 50.0}));
             insert_test_player(&slot_conn, "team:pro_a_sp", "team:pro_a", "선발투수", serde_json::json!({"제구": 50.0, "구위": 50.0}));
 
-            let good = match_sim::PitcherGameStats { outs_recorded: 81, runs_allowed: 2, strikeouts: 30, hits_allowed: 10, walks: 3, unearned_runs: 0, errors: 0 };
-            let bad = match_sim::PitcherGameStats { outs_recorded: 81, runs_allowed: 35, strikeouts: 5, hits_allowed: 45, walks: 20, unearned_runs: 0, errors: 0 };
+            let good = match_sim::PitcherGameStats { outs_recorded: 81, runs_allowed: 2, strikeouts: 30, hits_allowed: 10, walks: 3, unearned_runs: 0, errors: 0, saves: 0, holds: 0 };
+            let bad = match_sim::PitcherGameStats { outs_recorded: 81, runs_allowed: 35, strikeouts: 5, hits_allowed: 45, walks: 20, unearned_runs: 0, errors: 0, saves: 0, holds: 0 };
             upsert_pitcher_season_stats(&slot_conn, "team:pro_a_farm_sp", 1, &good).unwrap();
             upsert_pitcher_season_stats(&slot_conn, "team:pro_a_sp", 1, &bad).unwrap();
 
@@ -7958,7 +8008,7 @@ mod tests {
     #[test]
     fn season_stats_score_returns_none_for_a_tiny_sample() {
         let slot_conn = slot::open_in_memory().unwrap();
-        let stats = match_sim::PitcherGameStats { outs_recorded: 3, runs_allowed: 0, strikeouts: 3, hits_allowed: 0, walks: 0, unearned_runs: 0, errors: 0 };
+        let stats = match_sim::PitcherGameStats { outs_recorded: 3, runs_allowed: 0, strikeouts: 3, hits_allowed: 0, walks: 0, unearned_runs: 0, errors: 0, saves: 0, holds: 0 };
         upsert_pitcher_season_stats(&slot_conn, "npc:1", 1, &stats).unwrap();
         assert_eq!(season_stats_score(&slot_conn, "npc:1").unwrap(), None);
     }
@@ -7971,8 +8021,8 @@ mod tests {
         insert_test_player(&slot_conn, "team:a_sp2", "team:a", "선발투수", serde_json::json!({"제구": 55.0, "구위": 55.0}));
 
         // sp1: 좋은 성적(무실점 27이닝), sp2: 나쁜 성적(다실점 27이닝) — 능력치는 동일.
-        let good = match_sim::PitcherGameStats { outs_recorded: 81, runs_allowed: 3, strikeouts: 30, hits_allowed: 15, walks: 5, unearned_runs: 0, errors: 0 };
-        let bad = match_sim::PitcherGameStats { outs_recorded: 81, runs_allowed: 30, strikeouts: 10, hits_allowed: 40, walks: 15, unearned_runs: 0, errors: 0 };
+        let good = match_sim::PitcherGameStats { outs_recorded: 81, runs_allowed: 3, strikeouts: 30, hits_allowed: 15, walks: 5, unearned_runs: 0, errors: 0, saves: 0, holds: 0 };
+        let bad = match_sim::PitcherGameStats { outs_recorded: 81, runs_allowed: 30, strikeouts: 10, hits_allowed: 40, walks: 15, unearned_runs: 0, errors: 0, saves: 0, holds: 0 };
         upsert_pitcher_season_stats(&slot_conn, "team:a_sp1", 1, &good).unwrap();
         upsert_pitcher_season_stats(&slot_conn, "team:a_sp2", 1, &bad).unwrap();
 
@@ -7993,8 +8043,8 @@ mod tests {
         insert_test_player(&slot_conn, "team:a_sp1", "team:a", "선발투수", serde_json::json!({"제구": 55.0, "구위": 55.0}));
         insert_test_player(&slot_conn, "team:a_sp2", "team:a", "선발투수", serde_json::json!({"제구": 55.0, "구위": 55.0}));
 
-        let good = match_sim::PitcherGameStats { outs_recorded: 81, runs_allowed: 3, strikeouts: 30, hits_allowed: 15, walks: 5, unearned_runs: 0, errors: 0 };
-        let bad = match_sim::PitcherGameStats { outs_recorded: 81, runs_allowed: 30, strikeouts: 10, hits_allowed: 40, walks: 15, unearned_runs: 0, errors: 0 };
+        let good = match_sim::PitcherGameStats { outs_recorded: 81, runs_allowed: 3, strikeouts: 30, hits_allowed: 15, walks: 5, unearned_runs: 0, errors: 0, saves: 0, holds: 0 };
+        let bad = match_sim::PitcherGameStats { outs_recorded: 81, runs_allowed: 30, strikeouts: 10, hits_allowed: 40, walks: 15, unearned_runs: 0, errors: 0, saves: 0, holds: 0 };
         upsert_pitcher_practice_stats(&slot_conn, "team:a_sp1", 1, &good).unwrap();
         upsert_pitcher_practice_stats(&slot_conn, "team:a_sp2", 1, &bad).unwrap();
 
@@ -8427,8 +8477,8 @@ mod tests {
     #[test]
     fn upsert_season_stats_fields_accumulates_across_multiple_calls() {
         let slot_conn = slot::open_in_memory().unwrap();
-        let stats1 = match_sim::PitcherGameStats { outs_recorded: 9, runs_allowed: 2, strikeouts: 5, hits_allowed: 4, walks: 1, unearned_runs: 0, errors: 0 };
-        let stats2 = match_sim::PitcherGameStats { outs_recorded: 12, runs_allowed: 1, strikeouts: 7, hits_allowed: 3, walks: 2, unearned_runs: 0, errors: 0 };
+        let stats1 = match_sim::PitcherGameStats { outs_recorded: 9, runs_allowed: 2, strikeouts: 5, hits_allowed: 4, walks: 1, unearned_runs: 0, errors: 0, saves: 0, holds: 0 };
+        let stats2 = match_sim::PitcherGameStats { outs_recorded: 12, runs_allowed: 1, strikeouts: 7, hits_allowed: 3, walks: 2, unearned_runs: 0, errors: 0, saves: 0, holds: 0 };
         upsert_pitcher_season_stats(&slot_conn, "npc:1", 1, &stats1).unwrap();
         upsert_pitcher_season_stats(&slot_conn, "npc:1", 1, &stats2).unwrap();
 
@@ -8682,8 +8732,8 @@ mod tests {
             .unwrap();
         insert_test_player(&slot_conn, "team:a_sp2", "team:a", "선발투수", serde_json::json!({"제구": 55.0, "구위": 55.0}));
 
-        let good = match_sim::PitcherGameStats { outs_recorded: 81, runs_allowed: 3, strikeouts: 30, hits_allowed: 15, walks: 5, unearned_runs: 0, errors: 0 };
-        let bad = match_sim::PitcherGameStats { outs_recorded: 81, runs_allowed: 30, strikeouts: 10, hits_allowed: 40, walks: 15, unearned_runs: 0, errors: 0 };
+        let good = match_sim::PitcherGameStats { outs_recorded: 81, runs_allowed: 3, strikeouts: 30, hits_allowed: 15, walks: 5, unearned_runs: 0, errors: 0, saves: 0, holds: 0 };
+        let bad = match_sim::PitcherGameStats { outs_recorded: 81, runs_allowed: 30, strikeouts: 10, hits_allowed: 40, walks: 15, unearned_runs: 0, errors: 0, saves: 0, holds: 0 };
         upsert_pitcher_season_stats(&slot_conn, "team:a_sp", 1, &good).unwrap();
         upsert_pitcher_season_stats(&slot_conn, "team:a_sp2", 1, &bad).unwrap();
 

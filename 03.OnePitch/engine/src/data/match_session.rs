@@ -99,6 +99,18 @@ struct SessionRow {
     /// 시점에 딱 한 번 굴려 저장한 값(migration v17). 이후 하프이닝·1구
     /// 판정 내내 고정.
     conditions: match_sim::GameConditions,
+    /// 주인공 본인 등판의 피안타·볼넷 누적(Phase 6, §12 "WHIP") —
+    /// `strikeouts`와 같은 패턴으로 1구 단위 루프에서 직접 증가시킨다.
+    /// `game_log` detail JSON에 실어 `CareerLine::whip()`이 통산·시즌
+    /// 집계에 쓴다(migration v18).
+    hits_allowed: i64,
+    walks_allowed: i64,
+    /// 세이브 판정(Phase 6, §12) — 강판되는 그 순간 `manager::is_save_situation`
+    /// 이 참이었는지 기억해둔다(migration v18). `finalize_game`이 게임
+    /// 종료 시점에 그 팀이 리드를 지킨 채 이겼는지 보고 구원투수에게
+    /// 세이브를 준다.
+    protagonist_pull_was_save_situation: bool,
+    opponent_pull_was_save_situation: bool,
 }
 
 #[allow(clippy::type_complexity)]
@@ -134,6 +146,10 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
         f64,
         f64,
         f64,
+        i64,
+        i64,
+        i64,
+        i64,
     )> = conn
         .query_row(
             "SELECT game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases, home_runs, away_runs,
@@ -141,7 +157,8 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
                     protagonist_pulled, relief_pitcher_id, protagonist_pull_inning, protagonist_pull_opponent_runs,
                     opponent_pulled, opponent_relief_pitcher_id, opponent_pitcher_batters_faced,
                     pull_decision_settled_at_pitch_count,
-                    park_factor, weather_control_mod, weather_power_mod, weather_fatigue_mult
+                    park_factor, weather_control_mod, weather_power_mod, weather_fatigue_mult,
+                    hits_allowed, walks_allowed, protagonist_pull_was_save_situation, opponent_pull_was_save_situation
              FROM match_session WHERE id = 1",
             [],
             |r| {
@@ -176,6 +193,10 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
                     r.get(27)?,
                     r.get(28)?,
                     r.get(29)?,
+                    r.get(30)?,
+                    r.get(31)?,
+                    r.get(32)?,
+                    r.get(33)?,
                 ))
             },
         )
@@ -211,6 +232,10 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
         weather_control_mod,
         weather_power_mod,
         weather_fatigue_mult,
+        hits_allowed,
+        walks_allowed,
+        protagonist_pull_was_save_situation,
+        opponent_pull_was_save_situation,
     )) = row
     else {
         return Ok(None);
@@ -244,6 +269,10 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
         opponent_pitcher_batters_faced,
         pull_decision_settled_at_pitch_count,
         conditions: match_sim::GameConditions { park_factor, weather_control_mod, weather_power_mod, weather_fatigue_mult },
+        hits_allowed,
+        walks_allowed,
+        protagonist_pull_was_save_situation: protagonist_pull_was_save_situation != 0,
+        opponent_pull_was_save_situation: opponent_pull_was_save_situation != 0,
     }))
 }
 
@@ -253,7 +282,9 @@ fn save_session(conn: &Connection, s: &SessionRow) -> anyhow::Result<()> {
              home_batter_idx = ?7, away_batter_idx = ?8, balls = ?9, strikes = ?10, current_batter_id = ?11, pitch_seq = ?12,
              strikeouts = ?13, protagonist_pulled = ?14, relief_pitcher_id = ?15, protagonist_pull_inning = ?16,
              protagonist_pull_opponent_runs = ?17, opponent_pulled = ?18, opponent_relief_pitcher_id = ?19,
-             opponent_pitcher_batters_faced = ?20, pull_decision_settled_at_pitch_count = ?21
+             opponent_pitcher_batters_faced = ?20, pull_decision_settled_at_pitch_count = ?21,
+             hits_allowed = ?22, walks_allowed = ?23, protagonist_pull_was_save_situation = ?24,
+             opponent_pull_was_save_situation = ?25
          WHERE id = 1",
         params![
             s.inning,
@@ -277,6 +308,10 @@ fn save_session(conn: &Connection, s: &SessionRow) -> anyhow::Result<()> {
             s.opponent_relief_pitcher_id,
             s.opponent_pitcher_batters_faced,
             s.pull_decision_settled_at_pitch_count,
+            s.hits_allowed,
+            s.walks_allowed,
+            s.protagonist_pull_was_save_situation as i64,
+            s.opponent_pull_was_save_situation as i64,
         ],
     )?;
     Ok(())
@@ -416,8 +451,42 @@ fn finalize_game(slot_conn: &Connection, session: &SessionRow, protagonist_team_
     slot_conn.execute("UPDATE schedule SET result = ?1 WHERE game_id = ?2", params![result_json, session.game_id])?;
     repository::update_standings(slot_conn, &session.home, &session.away, session.home_runs as u32, session.away_runs as u32)?;
     apply_protagonist_evaluation(slot_conn, session, protagonist_team_id)?;
+    credit_saves(slot_conn, session, protagonist_team_id)?;
     slot_conn.execute("DELETE FROM match_session WHERE id = 1", [])?;
     Ok(MatchStepResult::GameOver { home_runs: session.home_runs as u32, away_runs: session.away_runs as u32 })
+}
+
+/// 세이브 판정(Phase 6, §12) — 배경 경기(`match_sim::simulate_game`)는
+/// 게임 종료 시점에 자체적으로 판정하지만, 인터랙티브 경기는 하프이닝마다
+/// 흩어져 진행돼 게임이 완전히 끝나야만 "리드를 지켰는지" 알 수 있어
+/// 여기 게임 종료 지점에서 한 번에 처리한다. 주인공 쪽·상대 쪽 둘 다
+/// 대상 — 강판된 그 순간 세이브 상황이었고(`*_pull_was_save_situation`),
+/// 그 팀이 최종적으로 리드를 지킨 채 이겼으면 구원투수에게 세이브 1개.
+fn credit_saves(slot_conn: &Connection, session: &SessionRow, protagonist_team_id: &str) -> anyhow::Result<()> {
+    let today: i64 = slot_conn.query_row("SELECT current_day FROM meta", [], |r| r.get(0))?;
+    let week = crate::calendar::week_for_day(today);
+
+    if session.protagonist_pulled && session.protagonist_pull_was_save_situation {
+        let protagonist_is_home = session.home == protagonist_team_id;
+        let (team_runs, opponent_runs) =
+            if protagonist_is_home { (session.home_runs, session.away_runs) } else { (session.away_runs, session.home_runs) };
+        if team_runs > opponent_runs {
+            if let Some(reliever_id) = &session.relief_pitcher_id {
+                repository::credit_pitcher_save(slot_conn, reliever_id, week)?;
+            }
+        }
+    }
+    if session.opponent_pulled && session.opponent_pull_was_save_situation {
+        let opponent_is_home = session.home != protagonist_team_id;
+        let (team_runs, opponent_runs) =
+            if opponent_is_home { (session.home_runs, session.away_runs) } else { (session.away_runs, session.home_runs) };
+        if team_runs > opponent_runs {
+            if let Some(reliever_id) = &session.opponent_relief_pitcher_id {
+                repository::credit_pitcher_save(slot_conn, reliever_id, week)?;
+            }
+        }
+    }
+    Ok(())
 }
 
 /// 주인공 등판 평가([09_평가_시스템](../../../02_기획/육성코어/09_평가_시스템.md)
@@ -508,6 +577,8 @@ fn apply_protagonist_evaluation(slot_conn: &Connection, session: &SessionRow, pr
         "strikeouts": session.strikeouts,
         "innings_pitched": innings_pitched,
         "pulled_by_manager": session.protagonist_pulled,
+        "hits_allowed": session.hits_allowed,
+        "walks": session.walks_allowed,
     })
     .to_string();
     slot_conn.execute(
@@ -723,6 +794,7 @@ fn run_until_decision_point(
                     session.relief_pitcher_id = Some(reliever.id);
                     session.protagonist_pull_inning = Some(session.inning);
                     session.protagonist_pull_opponent_runs = Some(opponent_runs_so_far);
+                    session.protagonist_pull_was_save_situation = save_situation;
                     save_session(slot_conn, &session)?;
                 } else {
                     // 로스터에 불펜이 아예 없어(구원투수 부재) 강판하고 싶어도
@@ -780,6 +852,7 @@ fn run_until_decision_point(
                             session.opponent_pulled = true;
                             session.opponent_relief_pitcher_id = Some(reliever.id.clone());
                             session.opponent_pitcher_batters_faced = 0;
+                            session.opponent_pull_was_save_situation = save_situation;
                             reliever
                         }
                         None => starter,
@@ -958,7 +1031,10 @@ fn run_until_decision_point(
                 session.strikeouts += 1;
                 apply_pa_outcome(&mut rng, &mut session, batting_team_is_home, PaOutcome::Strikeout, team_speed);
             }
-            pitch::AtBatOutcome::Walk => apply_pa_outcome(&mut rng, &mut session, batting_team_is_home, PaOutcome::Walk, team_speed),
+            pitch::AtBatOutcome::Walk => {
+                session.walks_allowed += 1;
+                apply_pa_outcome(&mut rng, &mut session, batting_team_is_home, PaOutcome::Walk, team_speed);
+            }
             pitch::AtBatOutcome::HitByPitch => {
                 apply_pa_outcome(&mut rng, &mut session, batting_team_is_home, PaOutcome::HitByPitch, team_speed)
             }
@@ -979,6 +1055,9 @@ fn run_until_decision_point(
                     high_leverage,
                     &session.conditions,
                 );
+                if matches!(pa, PaOutcome::Single | PaOutcome::Double | PaOutcome::Triple | PaOutcome::HomeRun) {
+                    session.hits_allowed += 1;
+                }
                 apply_pa_outcome(&mut rng, &mut session, batting_team_is_home, pa, team_speed);
             }
         }
@@ -1100,6 +1179,10 @@ mod tests {
             opponent_pitcher_batters_faced: 0,
             pull_decision_settled_at_pitch_count: None,
             conditions: match_sim::GameConditions::default(),
+            hits_allowed: 0,
+            walks_allowed: 0,
+            protagonist_pull_was_save_situation: false,
+            opponent_pull_was_save_situation: false,
         }
     }
 

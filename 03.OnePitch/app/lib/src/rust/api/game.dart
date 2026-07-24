@@ -564,6 +564,12 @@ class CareerSummary {
   final PlatformInt64 strikeouts;
   final PlatformInt64 inningsPitched;
   final double era;
+
+  /// Phase 6(§12 "기록 필드") — WHIP·K/9. 주인공은 항상 투수 아키타입
+  /// (§7 DH)이라 타율 등 타격 스탯은 애초에 성립하지 않아, "개인기록"
+  /// 탭엔 투수 기록만 노출한다.
+  final double whip;
+  final double kPer9;
   final bool retired;
   final String? retirementReason;
 
@@ -575,6 +581,8 @@ class CareerSummary {
     required this.strikeouts,
     required this.inningsPitched,
     required this.era,
+    required this.whip,
+    required this.kPer9,
     required this.retired,
     this.retirementReason,
   });
@@ -588,6 +596,8 @@ class CareerSummary {
       strikeouts.hashCode ^
       inningsPitched.hashCode ^
       era.hashCode ^
+      whip.hashCode ^
+      kPer9.hashCode ^
       retired.hashCode ^
       retirementReason.hashCode;
 
@@ -603,6 +613,8 @@ class CareerSummary {
           strikeouts == other.strikeouts &&
           inningsPitched == other.inningsPitched &&
           era == other.era &&
+          whip == other.whip &&
+          kPer9 == other.kPer9 &&
           retired == other.retired &&
           retirementReason == other.retirementReason;
 }

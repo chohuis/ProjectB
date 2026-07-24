@@ -1960,8 +1960,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   CareerSummary dco_decode_career_summary(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 9)
-      throw Exception('unexpected arr length: expect 9 but see ${arr.length}');
+    if (arr.length != 11)
+      throw Exception('unexpected arr length: expect 11 but see ${arr.length}');
     return CareerSummary(
       games: dco_decode_i_64(arr[0]),
       wins: dco_decode_i_64(arr[1]),
@@ -1970,8 +1970,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       strikeouts: dco_decode_i_64(arr[4]),
       inningsPitched: dco_decode_i_64(arr[5]),
       era: dco_decode_f_64(arr[6]),
-      retired: dco_decode_bool(arr[7]),
-      retirementReason: dco_decode_opt_String(arr[8]),
+      whip: dco_decode_f_64(arr[7]),
+      kPer9: dco_decode_f_64(arr[8]),
+      retired: dco_decode_bool(arr[9]),
+      retirementReason: dco_decode_opt_String(arr[10]),
     );
   }
 
@@ -2791,6 +2793,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_strikeouts = sse_decode_i_64(deserializer);
     var var_inningsPitched = sse_decode_i_64(deserializer);
     var var_era = sse_decode_f_64(deserializer);
+    var var_whip = sse_decode_f_64(deserializer);
+    var var_kPer9 = sse_decode_f_64(deserializer);
     var var_retired = sse_decode_bool(deserializer);
     var var_retirementReason = sse_decode_opt_String(deserializer);
     return CareerSummary(
@@ -2801,6 +2805,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       strikeouts: var_strikeouts,
       inningsPitched: var_inningsPitched,
       era: var_era,
+      whip: var_whip,
+      kPer9: var_kPer9,
       retired: var_retired,
       retirementReason: var_retirementReason,
     );
@@ -3888,6 +3894,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_i_64(self.strikeouts, serializer);
     sse_encode_i_64(self.inningsPitched, serializer);
     sse_encode_f_64(self.era, serializer);
+    sse_encode_f_64(self.whip, serializer);
+    sse_encode_f_64(self.kPer9, serializer);
     sse_encode_bool(self.retired, serializer);
     sse_encode_opt_String(self.retirementReason, serializer);
   }
