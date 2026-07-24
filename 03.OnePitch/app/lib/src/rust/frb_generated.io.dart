@@ -145,6 +145,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  List<PlayerBattingStats> dco_decode_list_player_batting_stats(dynamic raw);
+
+  @protected
+  List<PlayerPitchingStats> dco_decode_list_player_pitching_stats(dynamic raw);
+
+  @protected
   Float64List dco_decode_list_prim_f_64_strict(dynamic raw);
 
   @protected
@@ -221,6 +227,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   PitcherArchetypeInfo dco_decode_pitcher_archetype_info(dynamic raw);
+
+  @protected
+  PlayerBattingStats dco_decode_player_batting_stats(dynamic raw);
+
+  @protected
+  PlayerPitchingStats dco_decode_player_pitching_stats(dynamic raw);
 
   @protected
   ProtagonistProfileInfo dco_decode_protagonist_profile_info(dynamic raw);
@@ -427,6 +439,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  List<PlayerBattingStats> sse_decode_list_player_batting_stats(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  List<PlayerPitchingStats> sse_decode_list_player_pitching_stats(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   Float64List sse_decode_list_prim_f_64_strict(SseDeserializer deserializer);
 
   @protected
@@ -523,6 +545,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   PitcherArchetypeInfo sse_decode_pitcher_archetype_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  PlayerBattingStats sse_decode_player_batting_stats(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  PlayerPitchingStats sse_decode_player_pitching_stats(
     SseDeserializer deserializer,
   );
 
@@ -793,6 +825,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_list_player_batting_stats(
+    List<PlayerBattingStats> self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_list_player_pitching_stats(
+    List<PlayerPitchingStats> self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_list_prim_f_64_strict(
     Float64List self,
     SseSerializer serializer,
@@ -927,6 +971,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_pitcher_archetype_info(
     PitcherArchetypeInfo self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_player_batting_stats(
+    PlayerBattingStats self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_player_pitching_stats(
+    PlayerPitchingStats self,
     SseSerializer serializer,
   );
 

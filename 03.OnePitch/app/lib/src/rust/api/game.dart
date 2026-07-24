@@ -8,9 +8,9 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
 part 'game.freezed.dart';
 
-// These functions are ignored because they are not marked as `pub`: `avg_rank_from_season_ranks`, `standings_rows`, `stars_from_group_position`, `tournament_display_name`, `tournament_includes_team`, `with_state_mut`, `with_state`, `world_seed`
+// These functions are ignored because they are not marked as `pub`: `avg_rank_from_season_ranks`, `from_line`, `from_line`, `standings_rows`, `stars_from_group_position`, `tournament_display_name`, `tournament_includes_team`, `with_state_mut`, `with_state`, `world_seed`
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `GameState`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
 
 /// 뉴게임 — [07_주인공_생성](../../../02_기획/07_주인공_생성.md) §1의 7단계
 /// 흐름 중 실제 데이터를 만드는 마지막 단계(스텝 1~6은 Dart 쪽 폼 상태일
@@ -251,6 +251,37 @@ Future<List<RosterPlayerInfo>> listRoster({required String teamId}) =>
 /// 재사용해 Dart 쪽 파싱 로직을 공유할 수 있게 한다.
 Future<List<RosterPlayerInfo>> listTeamStaff({required String teamId}) =>
     RustLib.instance.api.crateApiGameListTeamStaff(teamId: teamId);
+
+/// 리그 화면 로스터 탭의 "이번 시즌" 타자 성적(Phase 5) — 그 팀 타자
+/// 전원(포지션이 투수 3종이 아닌 선수)의 진행 중 `season_stats` 합산.
+Future<List<PlayerBattingStats>> getTeamSeasonBattingStats({
+  required String teamId,
+}) =>
+    RustLib.instance.api.crateApiGameGetTeamSeasonBattingStats(teamId: teamId);
+
+/// 리그 화면 로스터 탭의 "이번 시즌" 투수 성적(Phase 5) — 그 팀 투수
+/// 전원(선발/중계/마무리)의 진행 중 `season_stats` 합산.
+Future<List<PlayerPitchingStats>> getTeamSeasonPitchingStats({
+  required String teamId,
+}) =>
+    RustLib.instance.api.crateApiGameGetTeamSeasonPitchingStats(teamId: teamId);
+
+/// 선수 한 명의 통산(시즌 아카이브 전체 합산) 타자 기록(Phase 5) —
+/// `npc_season_history`(과거 확정 시즌들) 전체를 합산. 이번 시즌 진행분은
+/// 아직 아카이브되지 않았으므로(시즌 종료 시점에만 archive) 포함 안 됨 —
+/// `get_team_season_batting_stats`가 그 몫을 담당.
+Future<PlayerBattingStats> getPlayerCareerBattingStats({
+  required String playerId,
+}) => RustLib.instance.api.crateApiGameGetPlayerCareerBattingStats(
+  playerId: playerId,
+);
+
+/// `get_player_career_batting_stats`와 대칭인 투수 쪽.
+Future<PlayerPitchingStats> getPlayerCareerPitchingStats({
+  required String playerId,
+}) => RustLib.instance.api.crateApiGameGetPlayerCareerPitchingStats(
+  playerId: playerId,
+);
 
 /// 캐릭터 생성 화면 "학교 선택" 미리보기(대화 2026-07-23) — 아직 새 게임을
 /// 시작하지 않아 슬롯이 없는 상태에서도 `world_seed`(캐릭터 생성 화면
@@ -1072,6 +1103,148 @@ class PitcherArchetypeInfo {
           statMidpoints == other.statMidpoints;
 }
 
+/// 타자 시즌/통산 기록(Phase 5, 대화 2026-07-24) — `RosterPlayerInfo`와
+/// 짝지어 로스터 화면에 성적을 보여주는 용도. `repository::NpcBattingLine`
+/// 계산식을 그대로 노출.
+class PlayerBattingStats {
+  final String playerId;
+  final String name;
+  final PlatformInt64 plateAppearances;
+  final PlatformInt64 atBats;
+  final PlatformInt64 hits;
+  final PlatformInt64 homeRuns;
+  final PlatformInt64 rbi;
+  final PlatformInt64 stolenBases;
+  final PlatformInt64 caughtStealing;
+  final PlatformInt64 strikeouts;
+  final double battingAverage;
+  final double onBasePercentage;
+  final double sluggingPercentage;
+  final double ops;
+
+  const PlayerBattingStats({
+    required this.playerId,
+    required this.name,
+    required this.plateAppearances,
+    required this.atBats,
+    required this.hits,
+    required this.homeRuns,
+    required this.rbi,
+    required this.stolenBases,
+    required this.caughtStealing,
+    required this.strikeouts,
+    required this.battingAverage,
+    required this.onBasePercentage,
+    required this.sluggingPercentage,
+    required this.ops,
+  });
+
+  @override
+  int get hashCode =>
+      playerId.hashCode ^
+      name.hashCode ^
+      plateAppearances.hashCode ^
+      atBats.hashCode ^
+      hits.hashCode ^
+      homeRuns.hashCode ^
+      rbi.hashCode ^
+      stolenBases.hashCode ^
+      caughtStealing.hashCode ^
+      strikeouts.hashCode ^
+      battingAverage.hashCode ^
+      onBasePercentage.hashCode ^
+      sluggingPercentage.hashCode ^
+      ops.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PlayerBattingStats &&
+          runtimeType == other.runtimeType &&
+          playerId == other.playerId &&
+          name == other.name &&
+          plateAppearances == other.plateAppearances &&
+          atBats == other.atBats &&
+          hits == other.hits &&
+          homeRuns == other.homeRuns &&
+          rbi == other.rbi &&
+          stolenBases == other.stolenBases &&
+          caughtStealing == other.caughtStealing &&
+          strikeouts == other.strikeouts &&
+          battingAverage == other.battingAverage &&
+          onBasePercentage == other.onBasePercentage &&
+          sluggingPercentage == other.sluggingPercentage &&
+          ops == other.ops;
+}
+
+/// `PlayerBattingStats`와 대칭인 투수 쪽.
+class PlayerPitchingStats {
+  final String playerId;
+  final String name;
+  final double inningsPitched;
+  final PlatformInt64 strikeouts;
+  final PlatformInt64 walks;
+  final PlatformInt64 hitsAllowed;
+  final PlatformInt64 runsAllowed;
+  final PlatformInt64 saves;
+  final PlatformInt64 holds;
+  final PlatformInt64 errors;
+  final double era;
+  final double whip;
+  final double kPer9;
+
+  const PlayerPitchingStats({
+    required this.playerId,
+    required this.name,
+    required this.inningsPitched,
+    required this.strikeouts,
+    required this.walks,
+    required this.hitsAllowed,
+    required this.runsAllowed,
+    required this.saves,
+    required this.holds,
+    required this.errors,
+    required this.era,
+    required this.whip,
+    required this.kPer9,
+  });
+
+  @override
+  int get hashCode =>
+      playerId.hashCode ^
+      name.hashCode ^
+      inningsPitched.hashCode ^
+      strikeouts.hashCode ^
+      walks.hashCode ^
+      hitsAllowed.hashCode ^
+      runsAllowed.hashCode ^
+      saves.hashCode ^
+      holds.hashCode ^
+      errors.hashCode ^
+      era.hashCode ^
+      whip.hashCode ^
+      kPer9.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PlayerPitchingStats &&
+          runtimeType == other.runtimeType &&
+          playerId == other.playerId &&
+          name == other.name &&
+          inningsPitched == other.inningsPitched &&
+          strikeouts == other.strikeouts &&
+          walks == other.walks &&
+          hitsAllowed == other.hitsAllowed &&
+          runsAllowed == other.runsAllowed &&
+          saves == other.saves &&
+          holds == other.holds &&
+          errors == other.errors &&
+          era == other.era &&
+          whip == other.whip &&
+          kPer9 == other.kPer9;
+}
+
 /// [01_내선수](../../../04_UI기획/01_내선수.md) 상태 탭 등에서 표시할 개인
 /// 신체 정보 — 한 번도 설정 안 했으면(구세이브 포함) `None`.
 class ProtagonistProfileInfo {
@@ -1208,7 +1381,9 @@ class RelationshipInfo {
 
 /// 로스터 한 명 — [02_리그](../../../04_UI기획/02_리그.md) §1. NPC는
 /// S~D 등급이 없다(§1 "등급은 주인공 전용") — 능력치+포지션+보유구종만.
-/// 개인 통산 성적은 그 자체가 엔진에 없어(계속 이월 항목) 이번에도 없음.
+/// 개인 시즌/통산 성적은 `get_team_season_batting_stats`/`get_team_season_pitching_stats`/
+/// `get_player_career_batting_stats`/`get_player_career_pitching_stats`(Phase 5,
+/// 대화 2026-07-24)로 별도 조회.
 class RosterPlayerInfo {
   final String id;
   final String name;

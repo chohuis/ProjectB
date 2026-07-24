@@ -469,6 +469,21 @@ fn migration_v23(tx: &Transaction) -> anyhow::Result<()> {
     Ok(())
 }
 
+const V24_DDL: &str = r#"
+CREATE TABLE npc_season_history (player_id TEXT, season INTEGER, line TEXT, PRIMARY KEY(player_id, season));
+"#;
+
+/// NPC 시즌/통산 기록 아카이브(Phase 5, 대화 2026-07-24) — `career_history`
+/// (주인공 전용)와 같은 모양이지만 `player_id`가 더해진 복합키. `season_stats`
+/// 는 시즌 경계마다 `DELETE`되는(§ "season_rollover") 진행 중 집계라 NPC
+/// 개인 기록이 시즌이 넘어가면 통째로 사라졌었다 — `season_rollover`가
+/// 삭제 직전에 그 시즌 `season_stats`를 이 테이블에 합산 저장한다.
+fn migration_v24(tx: &Transaction) -> anyhow::Result<()> {
+    tx.execute_batch(V24_DDL)?;
+    tx.execute("UPDATE meta SET save_version = 24", [])?;
+    Ok(())
+}
+
 const MIGRATIONS: &[Migration] = &[
     Migration {
         version: 1,
@@ -562,6 +577,10 @@ const MIGRATIONS: &[Migration] = &[
         version: 23,
         up: migration_v23,
     },
+    Migration {
+        version: 24,
+        up: migration_v24,
+    },
 ];
 
 fn init(mut conn: Connection) -> anyhow::Result<Connection> {
@@ -589,7 +608,28 @@ mod tests {
         let save_version: i64 = conn
             .query_row("SELECT save_version FROM meta", [], |row| row.get(0))
             .unwrap();
-        assert_eq!(save_version, 23);
+        assert_eq!(save_version, 24);
+    }
+
+    #[test]
+    fn v24_creates_npc_season_history_table() {
+        let conn = open_in_memory().unwrap();
+        conn.execute(
+            "INSERT INTO npc_season_history (player_id, season, line) VALUES ('npc:x', 3, '{\"hits\":10}')",
+            [],
+        )
+        .unwrap();
+        let line: String = conn.query_row("SELECT line FROM npc_season_history WHERE player_id = 'npc:x' AND season = 3", [], |r| r.get(0)).unwrap();
+        assert_eq!(line, "{\"hits\":10}");
+
+        conn.execute(
+            "INSERT INTO npc_season_history (player_id, season, line) VALUES ('npc:x', 3, '{\"hits\":99}')
+             ON CONFLICT(player_id, season) DO UPDATE SET line = excluded.line",
+            [],
+        )
+        .unwrap();
+        let line: String = conn.query_row("SELECT line FROM npc_season_history WHERE player_id = 'npc:x' AND season = 3", [], |r| r.get(0)).unwrap();
+        assert_eq!(line, "{\"hits\":99}", "upsert should overwrite, not duplicate");
     }
 
     #[test]

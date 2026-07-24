@@ -1793,6 +1793,160 @@ fn practice_stats_batter_score(conn: &Connection, player_id: &str) -> anyhow::Re
     batter_stats_score(conn, "practice_stats", player_id)
 }
 
+/// 선수 하나의 원시 스탯 라인(투수·타자 필드 전부, 필드명은 season_stats/
+/// npc_season_history의 JSON과 동일)을 그 테이블의 모든 행에서 합산 —
+/// "점수"(스카우팅 랭킹용, `pitcher_stats_score` 등)가 아니라 원시
+/// 합산치 자체를 남긴다(Phase 5, NPC 기록 아카이브·리더보드). `season_stats`
+/// (진행 중 이번 시즌)와 `npc_season_history`(확정된 과거 시즌들, `season`
+/// 컬럼으로 필터 없이 전체 통산 합산) 양쪽에 같은 모양으로 쓸 수 있다.
+pub(crate) fn aggregate_stats_line(conn: &Connection, table: &str, player_id: &str) -> anyhow::Result<serde_json::Value> {
+    let mut stmt = conn.prepare(&format!("SELECT line FROM {table} WHERE player_id = ?1"))?;
+    let lines: Vec<String> = stmt.query_map([player_id], |r| r.get(0))?.collect::<Result<Vec<_>, _>>()?;
+    let mut merged: serde_json::Map<String, serde_json::Value> = serde_json::Map::new();
+    for line in lines {
+        if let Ok(serde_json::Value::Object(obj)) = serde_json::from_str::<serde_json::Value>(&line) {
+            for (k, v) in obj {
+                let current = merged.get(&k).and_then(|x| x.as_i64()).unwrap_or(0);
+                merged.insert(k, serde_json::Value::from(current + v.as_i64().unwrap_or(0)));
+            }
+        }
+    }
+    Ok(serde_json::Value::Object(merged))
+}
+
+/// `aggregate_stats_line`이 뽑아준 원시 JSON에서 타율·출루율·장타율·OPS를
+/// 계산 — `match_sim::BatterGameStats`와 동일한 공식(그 구조체를 그대로
+/// 못 쓰는 이유는 이 값이 DB 경계를 넘나드는 순수 JSON이라, `pitcher_stats_score`/
+/// `batter_stats_score`와 같은 관례로 `serde_json::Value`에서 직접 뽑는다).
+pub(crate) struct NpcBattingLine {
+    pub plate_appearances: i64,
+    pub at_bats: i64,
+    pub hits: i64,
+    pub doubles: i64,
+    pub triples: i64,
+    pub home_runs: i64,
+    pub walks: i64,
+    pub strikeouts: i64,
+    pub rbi: i64,
+    pub stolen_bases: i64,
+    pub caught_stealing: i64,
+}
+
+impl NpcBattingLine {
+    pub(crate) fn from_json(v: &serde_json::Value) -> Self {
+        let get = |k: &str| v.get(k).and_then(|x| x.as_i64()).unwrap_or(0);
+        Self {
+            plate_appearances: get("plate_appearances"),
+            at_bats: get("at_bats"),
+            hits: get("hits"),
+            doubles: get("doubles"),
+            triples: get("triples"),
+            home_runs: get("home_runs"),
+            walks: get("walks"),
+            strikeouts: get("strikeouts"),
+            rbi: get("rbi"),
+            stolen_bases: get("stolen_bases"),
+            caught_stealing: get("caught_stealing"),
+        }
+    }
+
+    pub(crate) fn batting_average(&self) -> f64 {
+        if self.at_bats == 0 { 0.0 } else { self.hits as f64 / self.at_bats as f64 }
+    }
+
+    pub(crate) fn on_base_percentage(&self) -> f64 {
+        let denom = self.at_bats + self.walks;
+        if denom == 0 { 0.0 } else { (self.hits + self.walks) as f64 / denom as f64 }
+    }
+
+    pub(crate) fn slugging_percentage(&self) -> f64 {
+        if self.at_bats == 0 {
+            return 0.0;
+        }
+        let singles = (self.hits - self.doubles - self.triples - self.home_runs).max(0);
+        let total_bases = singles + self.doubles * 2 + self.triples * 3 + self.home_runs * 4;
+        total_bases as f64 / self.at_bats as f64
+    }
+
+    pub(crate) fn ops(&self) -> f64 {
+        self.on_base_percentage() + self.slugging_percentage()
+    }
+}
+
+/// `NpcBattingLine`과 대칭인 투수 쪽 — ERA·WHIP·K/9. `earned_runs`는
+/// `pitcher_stats_score`/`CareerLine::era()`와 동일하게 `unearned_runs`를
+/// 뺀 값.
+pub(crate) struct NpcPitchingLine {
+    pub outs_recorded: i64,
+    pub runs_allowed: i64,
+    pub strikeouts: i64,
+    pub hits_allowed: i64,
+    pub walks: i64,
+    pub unearned_runs: i64,
+    pub errors: i64,
+    pub saves: i64,
+    pub holds: i64,
+}
+
+impl NpcPitchingLine {
+    pub(crate) fn from_json(v: &serde_json::Value) -> Self {
+        let get = |k: &str| v.get(k).and_then(|x| x.as_i64()).unwrap_or(0);
+        Self {
+            outs_recorded: get("outs_recorded"),
+            runs_allowed: get("runs_allowed"),
+            strikeouts: get("strikeouts"),
+            hits_allowed: get("hits_allowed"),
+            walks: get("walks"),
+            unearned_runs: get("unearned_runs"),
+            errors: get("errors"),
+            saves: get("saves"),
+            holds: get("holds"),
+        }
+    }
+
+    pub(crate) fn innings_pitched(&self) -> f64 {
+        self.outs_recorded as f64 / 3.0
+    }
+
+    pub(crate) fn era(&self) -> f64 {
+        if self.outs_recorded == 0 {
+            0.0
+        } else {
+            let earned_runs = (self.runs_allowed - self.unearned_runs).max(0);
+            earned_runs as f64 * 9.0 / self.innings_pitched()
+        }
+    }
+
+    pub(crate) fn whip(&self) -> f64 {
+        if self.outs_recorded == 0 { 0.0 } else { (self.hits_allowed + self.walks) as f64 / self.innings_pitched() }
+    }
+
+    pub(crate) fn k_per_9(&self) -> f64 {
+        if self.outs_recorded == 0 { 0.0 } else { self.strikeouts as f64 * 9.0 / self.innings_pitched() }
+    }
+}
+
+/// NPC 시즌 기록 아카이브(Phase 5) — `season_rollover`가 `DELETE FROM
+/// season_stats` 직전에 호출. 그 시즌 `season_stats`에 등장한 모든
+/// player_id를 순회해 합산 라인을 `npc_season_history`에 upsert한다.
+/// `career_history`(주인공 전용)의 NPC 대응판 — 시즌이 넘어가도 개인
+/// 기록이 사라지지 않게 한다.
+fn archive_npc_season_stats(conn: &Connection, season: i64) -> anyhow::Result<()> {
+    let mut stmt = conn.prepare("SELECT DISTINCT player_id FROM season_stats")?;
+    let player_ids: Vec<String> = stmt.query_map([], |r| r.get(0))?.collect::<Result<Vec<_>, _>>()?;
+    drop(stmt);
+
+    for player_id in player_ids {
+        let line = aggregate_stats_line(conn, "season_stats", &player_id)?;
+        conn.execute(
+            "INSERT INTO npc_season_history (player_id, season, line) VALUES (?1, ?2, ?3)
+             ON CONFLICT(player_id, season) DO UPDATE SET line = excluded.line",
+            params![player_id, season, line.to_string()],
+        )?;
+    }
+    Ok(())
+}
+
 /// 팀의 타순 후보를 능력치+season_stats+practice_stats 3중 블렌딩 점수로
 /// 서열화한 id 목록 — `ranked_rotation_candidates_for_team`과 같은 패턴.
 /// `load_batting_lineup`과 동일한 필터(감독·코치·구단주·투수 제외)를 써서
@@ -4867,6 +5021,8 @@ pub fn season_rollover(conn: &Connection, content_conn: &Connection, day: i64) -
     // 마무리 랭킹도 시즌 경계마다 재계산(10_구현_Phase_계획.md §6-N Part G) —
     // 방금 끝난 시즌의 season_stats가 아직 남아있는 지금이라야 반영된다.
     for_each_team_in_all_leagues(conn, content_conn, assign_closer)?;
+    // NPC 시즌 기록 아카이브(Phase 5) — 삭제 직전에 반드시 먼저.
+    archive_npc_season_stats(conn, current)?;
     conn.execute("DELETE FROM season_stats", [])?;
     // 청백전(연습경기) 성적도 "이번 시즌" 단위 — season_stats와 같은
     // 타이밍에 비운다(대화 2026-07-26).
@@ -8868,6 +9024,38 @@ mod tests {
 
         let remaining: i64 = slot_conn.query_row("SELECT COUNT(*) FROM season_stats", [], |r| r.get(0)).unwrap();
         assert_eq!(remaining, 0, "season_stats should be cleared after being consumed by rotation reassignment");
+    }
+
+    /// Phase 5(NPC 시즌/통산 기록 아카이브, 대화 2026-07-24) — `season_rollover`
+    /// 가 `season_stats`를 지우기 전에 그 시즌의 합산치를 `npc_season_history`
+    /// 에 남겨야 한다 — 이게 없으면 NPC 개인 기록이 시즌 경계마다 사라진다.
+    #[test]
+    fn season_rollover_archives_npc_season_stats_before_deleting_them() {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:pro', NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:a', 'league:pro', NULL, NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:b', 'league:pro', NULL, NULL)", []).unwrap();
+
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_minimal_roster(&slot_conn, "team:a");
+        insert_minimal_roster(&slot_conn, "team:b");
+
+        let week1 = match_sim::PitcherGameStats { outs_recorded: 27, runs_allowed: 3, strikeouts: 9, hits_allowed: 5, walks: 2, unearned_runs: 1, errors: 0, saves: 0, holds: 0 };
+        let week2 = match_sim::PitcherGameStats { outs_recorded: 27, runs_allowed: 2, strikeouts: 9, hits_allowed: 4, walks: 1, unearned_runs: 0, errors: 0, saves: 1, holds: 0 };
+        upsert_pitcher_season_stats(&slot_conn, "team:a_sp", 1, &week1).unwrap();
+        upsert_pitcher_season_stats(&slot_conn, "team:a_sp", 2, &week2).unwrap();
+
+        season_rollover(&slot_conn, &content_conn, 364).unwrap();
+
+        let archived: String =
+            slot_conn.query_row("SELECT line FROM npc_season_history WHERE player_id = 'team:a_sp' AND season = 0", [], |r| r.get(0)).unwrap();
+        let v: serde_json::Value = serde_json::from_str(&archived).unwrap();
+        assert_eq!(v.get("outs_recorded").and_then(|x| x.as_i64()), Some(54), "두 주차 합산(27+27)이어야 함");
+        assert_eq!(v.get("strikeouts").and_then(|x| x.as_i64()), Some(18));
+        assert_eq!(v.get("saves").and_then(|x| x.as_i64()), Some(1));
+
+        let remaining: i64 = slot_conn.query_row("SELECT COUNT(*) FROM season_stats", [], |r| r.get(0)).unwrap();
+        assert_eq!(remaining, 0, "아카이브 후에는 원본 season_stats가 그대로 비워져야 함");
     }
 
     #[test]

@@ -23,11 +23,11 @@ const _leagueLabels = {
 /// 순위·라이벌 4탭. 결정5 "전 팀 풀 스카우팅"에 따라 소속팀뿐 아니라
 /// 172팀 전부 열람 가능(리그 선택→팀 선택 드롭다운 2단).
 ///
-/// **엔진에 없는 값은 생략**: 코치/감독/구단주(스태프 시스템 자체가
-/// 미구현, I3 스코프아웃) · NPC 개인 통산 성적(계속 이월 항목) · 타자
-/// 유형 태그(엔진에 계산 로직 없음) · 전력★ 대비 순위 이변 강조(★ 조회
-/// 없음) · 개인 라이벌 관계·아크 비교(`relationships` 테이블이 스키마만
-/// 있고 채우는 로직이 없음 — 팀 레벨 라이벌 목록만 표시).
+/// **엔진에 없는 값은 생략**: 타자 유형 태그(엔진에 계산 로직 없음) ·
+/// 전력★ 대비 순위 이변 강조(★ 조회 없음) · 개인 라이벌 관계·아크 비교
+/// (`relationships` 테이블이 스키마만 있고 채우는 로직이 없음 — 팀 레벨
+/// 라이벌 목록만 표시). NPC 개인 시즌/통산 성적은 Phase 5(대화 2026-07-24)
+/// 부터 로스터 카드 한 줄 요약으로 표시.
 class LeagueScreen extends ConsumerStatefulWidget {
   const LeagueScreen({super.key});
 
@@ -150,9 +150,13 @@ class _RosterTab extends StatefulWidget {
   State<_RosterTab> createState() => _RosterTabState();
 }
 
+const _pitcherPositions = {'선발투수', '중계투수', '마무리투수'};
+
 class _RosterTabState extends State<_RosterTab> {
   List<RosterPlayerInfo>? _roster;
   List<RosterPlayerInfo>? _staff;
+  Map<String, PlayerPitchingStats>? _pitchingStats;
+  Map<String, PlayerBattingStats>? _battingStats;
 
   @override
   void didUpdateWidget(covariant _RosterTab oldWidget) {
@@ -170,12 +174,21 @@ class _RosterTabState extends State<_RosterTab> {
     setState(() {
       _roster = null;
       _staff = null;
+      _pitchingStats = null;
+      _battingStats = null;
     });
-    final results = await Future.wait([listRoster(teamId: widget.teamId), listTeamStaff(teamId: widget.teamId)]);
+    final results = await Future.wait([
+      listRoster(teamId: widget.teamId),
+      listTeamStaff(teamId: widget.teamId),
+      getTeamSeasonPitchingStats(teamId: widget.teamId),
+      getTeamSeasonBattingStats(teamId: widget.teamId),
+    ]);
     if (mounted) {
       setState(() {
-        _roster = results[0];
-        _staff = results[1];
+        _roster = results[0] as List<RosterPlayerInfo>;
+        _staff = results[1] as List<RosterPlayerInfo>;
+        _pitchingStats = {for (final s in results[2] as List<PlayerPitchingStats>) s.playerId: s};
+        _battingStats = {for (final s in results[3] as List<PlayerBattingStats>) s.playerId: s};
       });
     }
   }
@@ -184,14 +197,16 @@ class _RosterTabState extends State<_RosterTab> {
   Widget build(BuildContext context) {
     final roster = _roster;
     final staff = _staff;
-    if (roster == null || staff == null) return const LoadingIndicator();
+    final pitchingStats = _pitchingStats;
+    final battingStats = _battingStats;
+    if (roster == null || staff == null || pitchingStats == null || battingStats == null) return const LoadingIndicator();
     if (roster.isEmpty && staff.isEmpty) return const Center(child: Text('로스터가 없습니다.'));
 
     final owner = staff.where((p) => p.position == '구단주').firstOrNull;
     final manager = staff.where((p) => p.position == '감독').firstOrNull;
     final coach = staff.where((p) => p.position == '코치').firstOrNull;
-    final pitchers = roster.where((p) => p.position == '선발투수' || p.position == '구원투수').toList();
-    final batters = roster.where((p) => p.position != '선발투수' && p.position != '구원투수').toList();
+    final pitchers = roster.where((p) => _pitcherPositions.contains(p.position)).toList();
+    final batters = roster.where((p) => !_pitcherPositions.contains(p.position)).toList();
 
     return Padding(
       padding: const EdgeInsets.all(12),
@@ -215,9 +230,9 @@ class _RosterTabState extends State<_RosterTab> {
             flex: 3,
             child: Column(
               children: [
-                Expanded(child: _PlayerListCard(label: '투수', players: pitchers)),
+                Expanded(child: _PlayerListCard(label: '투수', players: pitchers, pitchingStats: pitchingStats)),
                 const SizedBox(height: 8),
-                Expanded(child: _PlayerListCard(label: '타자', players: batters)),
+                Expanded(child: _PlayerListCard(label: '타자', players: batters, battingStats: battingStats)),
               ],
             ),
           ),
@@ -261,10 +276,12 @@ class _StaffCard extends StatelessWidget {
 }
 
 class _PlayerListCard extends StatelessWidget {
-  const _PlayerListCard({required this.label, required this.players});
+  const _PlayerListCard({required this.label, required this.players, this.pitchingStats, this.battingStats});
 
   final String label;
   final List<RosterPlayerInfo> players;
+  final Map<String, PlayerPitchingStats>? pitchingStats;
+  final Map<String, PlayerBattingStats>? battingStats;
 
   @override
   Widget build(BuildContext context) {
@@ -281,6 +298,7 @@ class _PlayerListCard extends StatelessWidget {
               itemBuilder: (context, i) {
                 final p = players[i];
                 final pitchSummary = _pitchSummary(p.pitchesJson);
+                final statSummary = _statSummary(p.id);
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 3),
                   child: Column(
@@ -303,6 +321,11 @@ class _PlayerListCard extends StatelessWidget {
                           padding: const EdgeInsets.only(top: 1),
                           child: Text(pitchSummary, style: const TextStyle(color: AppColors.textSecondary, fontSize: 10)),
                         ),
+                      if (statSummary.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 1),
+                          child: Text(statSummary, style: const TextStyle(color: AppColors.textSecondary, fontSize: 10)),
+                        ),
                     ],
                   ),
                 );
@@ -322,6 +345,23 @@ class _PlayerListCard extends StatelessWidget {
     final pitches = decodePitchMastery(pitchesJson);
     if (pitches.isEmpty) return '';
     return pitches.map((p) => '${p.name}(${masteryStageLabels[p.stage] ?? '습작'})').join(' · ');
+  }
+
+  // 이번 시즌 성적 한 줄 요약(Phase 5, 대화 2026-07-24) — 표본이 아직
+  // 없으면(타석/이닝 0) 빈 문자열로 아무것도 안 보여준다.
+  String _statSummary(String playerId) {
+    final pitching = pitchingStats?[playerId];
+    if (pitching != null && pitching.inningsPitched > 0) {
+      final era = pitching.era.toStringAsFixed(2);
+      return '${pitching.inningsPitched.toStringAsFixed(1)}이닝 ERA $era 탈삼진 ${pitching.strikeouts} 세이브 ${pitching.saves} 홀드 ${pitching.holds}';
+    }
+    final batting = battingStats?[playerId];
+    if (batting != null && batting.atBats > 0) {
+      final avg = batting.battingAverage.toStringAsFixed(3).replaceFirst('0.', '.');
+      final ops = batting.ops.toStringAsFixed(3).replaceFirst('0.', '.');
+      return '타율 $avg OPS $ops 홈런 ${batting.homeRuns} 타점 ${batting.rbi}';
+    }
+    return '';
   }
 }
 

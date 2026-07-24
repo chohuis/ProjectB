@@ -1016,7 +1016,9 @@ pub fn list_teams(league_id: Option<String>) -> anyhow::Result<Vec<TeamOption>> 
 
 /// 로스터 한 명 — [02_리그](../../../04_UI기획/02_리그.md) §1. NPC는
 /// S~D 등급이 없다(§1 "등급은 주인공 전용") — 능력치+포지션+보유구종만.
-/// 개인 통산 성적은 그 자체가 엔진에 없어(계속 이월 항목) 이번에도 없음.
+/// 개인 시즌/통산 성적은 `get_team_season_batting_stats`/`get_team_season_pitching_stats`/
+/// `get_player_career_batting_stats`/`get_player_career_pitching_stats`(Phase 5,
+/// 대화 2026-07-24)로 별도 조회.
 #[derive(Debug, Clone)]
 pub struct RosterPlayerInfo {
     pub id: String,
@@ -1077,6 +1079,155 @@ pub fn list_team_staff(team_id: String) -> anyhow::Result<Vec<RosterPlayerInfo>>
             })?
             .collect::<Result<_, _>>()?;
         Ok(rows)
+    })
+}
+
+/// 타자 시즌/통산 기록(Phase 5, 대화 2026-07-24) — `RosterPlayerInfo`와
+/// 짝지어 로스터 화면에 성적을 보여주는 용도. `repository::NpcBattingLine`
+/// 계산식을 그대로 노출.
+#[derive(Debug, Clone)]
+pub struct PlayerBattingStats {
+    pub player_id: String,
+    pub name: String,
+    pub plate_appearances: i64,
+    pub at_bats: i64,
+    pub hits: i64,
+    pub home_runs: i64,
+    pub rbi: i64,
+    pub stolen_bases: i64,
+    pub caught_stealing: i64,
+    pub strikeouts: i64,
+    pub batting_average: f64,
+    pub on_base_percentage: f64,
+    pub slugging_percentage: f64,
+    pub ops: f64,
+}
+
+impl PlayerBattingStats {
+    fn from_line(player_id: String, name: String, line: &repository::NpcBattingLine) -> Self {
+        Self {
+            player_id,
+            name,
+            plate_appearances: line.plate_appearances,
+            at_bats: line.at_bats,
+            hits: line.hits,
+            home_runs: line.home_runs,
+            rbi: line.rbi,
+            stolen_bases: line.stolen_bases,
+            caught_stealing: line.caught_stealing,
+            strikeouts: line.strikeouts,
+            batting_average: line.batting_average(),
+            on_base_percentage: line.on_base_percentage(),
+            slugging_percentage: line.slugging_percentage(),
+            ops: line.ops(),
+        }
+    }
+}
+
+/// `PlayerBattingStats`와 대칭인 투수 쪽.
+#[derive(Debug, Clone)]
+pub struct PlayerPitchingStats {
+    pub player_id: String,
+    pub name: String,
+    pub innings_pitched: f64,
+    pub strikeouts: i64,
+    pub walks: i64,
+    pub hits_allowed: i64,
+    pub runs_allowed: i64,
+    pub saves: i64,
+    pub holds: i64,
+    pub errors: i64,
+    pub era: f64,
+    pub whip: f64,
+    pub k_per_9: f64,
+}
+
+impl PlayerPitchingStats {
+    fn from_line(player_id: String, name: String, line: &repository::NpcPitchingLine) -> Self {
+        Self {
+            player_id,
+            name,
+            innings_pitched: line.innings_pitched(),
+            strikeouts: line.strikeouts,
+            walks: line.walks,
+            hits_allowed: line.hits_allowed,
+            runs_allowed: line.runs_allowed,
+            saves: line.saves,
+            holds: line.holds,
+            errors: line.errors,
+            era: line.era(),
+            whip: line.whip(),
+            k_per_9: line.k_per_9(),
+        }
+    }
+}
+
+/// 리그 화면 로스터 탭의 "이번 시즌" 타자 성적(Phase 5) — 그 팀 타자
+/// 전원(포지션이 투수 3종이 아닌 선수)의 진행 중 `season_stats` 합산.
+pub fn get_team_season_batting_stats(team_id: String) -> anyhow::Result<Vec<PlayerBattingStats>> {
+    with_state(|state| {
+        let mut stmt = state.slot_conn.prepare(
+            "SELECT id, name FROM npc
+             WHERE team_id = ?1 AND retired = 0 AND position NOT IN ('감독', '코치', '구단주', '선발투수', '중계투수', '마무리투수')
+             ORDER BY id",
+        )?;
+        let batters: Vec<(String, String)> = stmt.query_map([&team_id], |r| Ok((r.get(0)?, r.get(1)?)))?.collect::<Result<_, _>>()?;
+        drop(stmt);
+
+        batters
+            .into_iter()
+            .map(|(id, name)| {
+                let raw = repository::aggregate_stats_line(&state.slot_conn, "season_stats", &id)?;
+                let line = repository::NpcBattingLine::from_json(&raw);
+                Ok(PlayerBattingStats::from_line(id, name, &line))
+            })
+            .collect()
+    })
+}
+
+/// 리그 화면 로스터 탭의 "이번 시즌" 투수 성적(Phase 5) — 그 팀 투수
+/// 전원(선발/중계/마무리)의 진행 중 `season_stats` 합산.
+pub fn get_team_season_pitching_stats(team_id: String) -> anyhow::Result<Vec<PlayerPitchingStats>> {
+    with_state(|state| {
+        let mut stmt = state
+            .slot_conn
+            .prepare("SELECT id, name FROM npc WHERE team_id = ?1 AND retired = 0 AND position IN ('선발투수', '중계투수', '마무리투수') ORDER BY id")?;
+        let pitchers: Vec<(String, String)> = stmt.query_map([&team_id], |r| Ok((r.get(0)?, r.get(1)?)))?.collect::<Result<_, _>>()?;
+        drop(stmt);
+
+        pitchers
+            .into_iter()
+            .map(|(id, name)| {
+                let raw = repository::aggregate_stats_line(&state.slot_conn, "season_stats", &id)?;
+                let line = repository::NpcPitchingLine::from_json(&raw);
+                Ok(PlayerPitchingStats::from_line(id, name, &line))
+            })
+            .collect()
+    })
+}
+
+/// 선수 한 명의 통산(시즌 아카이브 전체 합산) 타자 기록(Phase 5) —
+/// `npc_season_history`(과거 확정 시즌들) 전체를 합산. 이번 시즌 진행분은
+/// 아직 아카이브되지 않았으므로(시즌 종료 시점에만 archive) 포함 안 됨 —
+/// `get_team_season_batting_stats`가 그 몫을 담당.
+pub fn get_player_career_batting_stats(player_id: String) -> anyhow::Result<PlayerBattingStats> {
+    with_state(|state| {
+        let name: String =
+            state.slot_conn.query_row("SELECT name FROM npc WHERE id = ?1", [&player_id], |r| r.get(0)).optional()?.unwrap_or_default();
+        let raw = repository::aggregate_stats_line(&state.slot_conn, "npc_season_history", &player_id)?;
+        let line = repository::NpcBattingLine::from_json(&raw);
+        Ok(PlayerBattingStats::from_line(player_id, name, &line))
+    })
+}
+
+/// `get_player_career_batting_stats`와 대칭인 투수 쪽.
+pub fn get_player_career_pitching_stats(player_id: String) -> anyhow::Result<PlayerPitchingStats> {
+    with_state(|state| {
+        let name: String =
+            state.slot_conn.query_row("SELECT name FROM npc WHERE id = ?1", [&player_id], |r| r.get(0)).optional()?.unwrap_or_default();
+        let raw = repository::aggregate_stats_line(&state.slot_conn, "npc_season_history", &player_id)?;
+        let line = repository::NpcPitchingLine::from_json(&raw);
+        Ok(PlayerPitchingStats::from_line(player_id, name, &line))
     })
 }
 
@@ -1814,6 +1965,70 @@ mod tests {
         // 슬라이더(제구 30+)는 강속구형에게 닿지 않는 스탯이라 교체.
         set_training("구속".to_string(), "구위".to_string(), "제구".to_string(), "보통".to_string(), Some("투심 패스트볼".to_string()), None).unwrap();
         assert_eq!(get_training_config().unwrap().unwrap().new_pitch.as_deref(), Some("투심 패스트볼"));
+
+        reset_state();
+    }
+
+    /// Phase 5(NPC 시즌/통산 기록 아카이브, 대화 2026-07-24) — 이번 시즌
+    /// 진행 중 성적(`season_stats`)과 통산 아카이브(`npc_season_history`)
+    /// 양쪽이 각각 올바른 API 함수로 조회되는지 왕복 확인.
+    #[test]
+    fn season_and_career_stats_queries_work_end_to_end_after_new_game() {
+        let _guard = TEST_SERIAL.lock().unwrap();
+        reset_state();
+
+        let hs_team = {
+            let conn = content::open("content.db").unwrap();
+            conn.query_row("SELECT id FROM teams WHERE league_id = 'league:hs' LIMIT 1", [], |r| r.get::<_, String>(0)).unwrap()
+        };
+        new_game("content.db".to_string(), 46, "기록테스트".to_string(), "우완".to_string(), hs_team.clone(), "강속구형".to_string(), None, None).unwrap();
+
+        let roster = list_roster(hs_team.clone()).unwrap();
+        let pitcher = roster.iter().find(|p| p.position == "선발투수").unwrap().id.clone();
+        let batter = roster.iter().find(|p| p.position != "선발투수" && p.position != "중계투수" && p.position != "마무리투수").unwrap().id.clone();
+
+        with_state(|state| {
+            state
+                .slot_conn
+                .execute(
+                    "INSERT INTO season_stats (player_id, week, line) VALUES (?1, 1, ?2)",
+                    rusqlite::params![pitcher, serde_json::json!({"outs_recorded": 27, "runs_allowed": 3, "strikeouts": 9, "hits_allowed": 5, "walks": 2, "unearned_runs": 0, "saves": 1, "holds": 0}).to_string()],
+                )
+                .unwrap();
+            state
+                .slot_conn
+                .execute(
+                    "INSERT INTO season_stats (player_id, week, line) VALUES (?1, 1, ?2)",
+                    rusqlite::params![batter, serde_json::json!({"plate_appearances": 10, "at_bats": 8, "hits": 4, "doubles": 1, "home_runs": 1, "walks": 2, "rbi": 3}).to_string()],
+                )
+                .unwrap();
+            state
+                .slot_conn
+                .execute(
+                    "INSERT INTO npc_season_history (player_id, season, line) VALUES (?1, 0, ?2)",
+                    rusqlite::params![pitcher, serde_json::json!({"outs_recorded": 54, "runs_allowed": 10, "strikeouts": 18, "hits_allowed": 12, "walks": 4, "unearned_runs": 1, "saves": 2, "holds": 1}).to_string()],
+                )
+                .unwrap();
+            Ok(())
+        })
+        .unwrap();
+
+        let season_pitching = get_team_season_pitching_stats(hs_team.clone()).unwrap();
+        let p = season_pitching.iter().find(|s| s.player_id == pitcher).unwrap();
+        assert_eq!(p.strikeouts, 9);
+        assert_eq!(p.saves, 1);
+        assert!((p.innings_pitched - 9.0).abs() < 1e-9);
+        assert!(p.era > 0.0);
+
+        let season_batting = get_team_season_batting_stats(hs_team.clone()).unwrap();
+        let b = season_batting.iter().find(|s| s.player_id == batter).unwrap();
+        assert_eq!(b.hits, 4);
+        assert_eq!(b.rbi, 3);
+        assert!((b.batting_average - 0.5).abs() < 1e-9, "avg={}", b.batting_average);
+
+        let career_pitching = get_player_career_pitching_stats(pitcher.clone()).unwrap();
+        assert_eq!(career_pitching.strikeouts, 18, "career should reflect npc_season_history, not the in-progress season");
+        assert_eq!(career_pitching.saves, 2);
 
         reset_state();
     }
