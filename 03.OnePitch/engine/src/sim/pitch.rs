@@ -47,58 +47,68 @@ pub fn repertoire_is_diverse(pitches: &[PitchMastery]) -> bool {
 /// `pitch::is_high_leverage_situation`으로 부를 수 있게 재노출.
 pub use crate::sim::match_sim::is_high_leverage_situation;
 
-/// 스트라이크존 3×3 그리드(9분할) — [07_매치_엔진](../../../02_기획/육성코어/07_매치_엔진.md)
-/// §5 "코스 선택: 스트라이크존 3×3 그리드(9분할)". 주인공 등판 매치
-/// 세션(§3)의 1구 조작 전용 — 기존 PA레벨 배경 시뮬(`match_sim::simulate_plate_appearance`)
-/// 은 안 건드림(둘 다 남겨두는 이유는 이 파일 최상단 모듈 주석 참고).
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum Course {
-    HighInside,
-    HighCenter,
-    HighOutside,
-    MidInside,
-    MidCenter,
-    MidOutside,
-    LowInside,
-    LowCenter,
-    LowOutside,
+/// 투구 위치 연속좌표(대화 2026-07-25, 매치 화면 재설계) — x,y는 스트라이크존
+/// 기준 -1.0~1.0(존 경계), 그 밖(절댓값 1.0 초과)은 "볼 영역"으로 자연스럽게
+/// 확장된다. 예전 3×3 그리드(9칸) 시절엔 `Course` enum이었지만, 실제로
+/// 판정식이 그 9칸에서 뽑아 쓰던 값은 딱 둘 — "존 중심에서 얼마나 먼가"
+/// (`edge_level`)와 "몸쪽 여부"(`is_inside`) — 뿐이었다. 옛 9칸의 edge_level
+/// (중앙 0.0·컴퍼스 4칸 0.5·모서리 4칸 1.0)을 좌표로 환산하면 정확히
+/// `(|x|+|y|)/2` 공식과 같아, 이 공식으로 바꿔도 기존 밸런스 수치가
+/// 그대로 재현되면서 볼 영역까지 자연 확장된다(별도 "고의 볼" 분기 불필요
+/// — edge가 1.0을 넘어갈수록 `in_zone_base`가 0에 수렴해 저절로 볼이 됨).
+fn edge_level(x: f64, y: f64) -> f64 {
+    (x.abs() + y.abs()) / 2.0
 }
 
-impl Course {
-    pub const ALL: [Course; 9] = [
-        Course::HighInside,
-        Course::HighCenter,
-        Course::HighOutside,
-        Course::MidInside,
-        Course::MidCenter,
-        Course::MidOutside,
-        Course::LowInside,
-        Course::LowCenter,
-        Course::LowOutside,
-    ];
+/// 몸쪽(안쪽) 여부 — §5 "사구 확률... 코스가 몸쪽일수록↑". 타자 타석
+/// 방향은 안 따진다(9칸 그리드 시절과 동일한 단순화, 정확한 좌우 상성은
+/// `platoon_edge_for_pitcher`가 별도로 처리).
+fn is_inside(x: f64) -> bool {
+    x < 0.0
+}
 
-    /// 4개 구석 코스 — AI 유인구 선택(§3)이 여기서 고른다.
-    pub const CORNERS: [Course; 4] = [Course::HighInside, Course::HighOutside, Course::LowInside, Course::LowOutside];
+/// 구위 다이얼 3단계(대화 2026-07-25, 매치 화면 재설계) — "얼마나 세게
+/// 던지는가"의 즉석 트레이드오프(위력↔제구). 피로도는 게임당 1회 값이라
+/// (경기 중 구 단위로 누적되지 않음) "강하게 던질수록 피로 누적"은 세션
+/// 상태를 새로 추적해야 하는 별도 스코프 — 대신 그 자리에서 바로 나는
+/// 위력·제구 트레이드오프로 설계했다(실제 투구 상식 그대로: 전력투구는
+/// 위력은 늘지만 커맨드가 흔들림).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Power {
+    Low,
+    Normal,
+    High,
+}
 
-    /// 이름(예: "MidCenter")으로 코스를 찾는다 — `data::match_session`이
-    /// 플레이어의 선택(문자열로 직렬화된 pending action 응답)을 파싱할 때 씀.
-    pub fn parse(name: &str) -> Option<Course> {
-        Course::ALL.into_iter().find(|c| format!("{c:?}") == name)
+impl Power {
+    pub const ALL: [Power; 3] = [Power::Low, Power::Normal, Power::High];
+
+    /// 훈련 강도 다이얼(`sim::training::INTENSITIES`)과 같은 3라벨("약"/
+    /// "보통"/"강")을 재사용 — UI 관례 통일, 의미상으로는 별개 다이얼.
+    pub fn parse(name: &str) -> Option<Power> {
+        match name {
+            "약" => Some(Power::Low),
+            "보통" => Some(Power::Normal),
+            "강" => Some(Power::High),
+            _ => None,
+        }
     }
 
-    /// 몸쪽(안쪽 열) 여부 — §5 "사구 확률... 코스가 3×3 그리드의 몸쪽
-    /// (안쪽 열)일수록↑".
-    fn is_inside(self) -> bool {
-        matches!(self, Course::HighInside | Course::MidInside | Course::LowInside)
-    }
-
-    /// 존 중앙에서 얼마나 먼가(0.0=정중앙, 1.0=구석) — 존 판정 난이도·
-    /// 컨택 난이도 둘 다에 쓰는 placeholder 축.
-    fn edge_level(self) -> f64 {
+    pub fn label(self) -> &'static str {
         match self {
-            Course::MidCenter => 0.0,
-            Course::HighCenter | Course::LowCenter | Course::MidInside | Course::MidOutside => 0.5,
-            _ => 1.0,
+            Power::Low => "약",
+            Power::Normal => "보통",
+            Power::High => "강",
+        }
+    }
+
+    /// (제구 보정, 구위 보정, 구속 보정) — 강할수록 위력·구속은 오르지만
+    /// 제구가 깎인다.
+    fn deltas(self) -> (f64, f64, f64) {
+        match self {
+            Power::Low => (3.0, -3.0, -3.0),
+            Power::Normal => (0.0, 0.0, 0.0),
+            Power::High => (-3.0, 3.0, 3.0),
         }
     }
 }
@@ -128,33 +138,38 @@ fn clamp01(x: f64) -> f64 {
 /// 더한다. 좌우 상성(Phase 4, 신규 설계)은 `platoon_edge_for_pitcher`로
 /// `simulate_plate_appearance`(배경)와 같은 계산을 공유. `conditions`
 /// (Phase 5)의 `weather_control_mod`(비=제구 하락, §10-1)를 실효 제구에
-/// 더한다.
+/// 더한다. `power`(대화 2026-07-25)는 구위 다이얼 트레이드오프를 실효
+/// 제구·구위·구속에 얹는다.
 #[allow(clippy::too_many_arguments)]
 pub fn throw_pitch(
     rng: &mut impl Rng,
     pitcher: &PitcherStats,
     batter: &BatterStats,
-    course: Course,
+    target_x: f64,
+    target_y: f64,
+    power: Power,
     high_leverage: bool,
     mastery_stage: u8,
     repertoire_diverse: bool,
     conditions: &GameConditions,
 ) -> PitchResult {
-    let edge = course.edge_level();
-    let effective_control = fatigue_effective(pitcher.control, pitcher.fatigue) + conditions.weather_control_mod;
-    let effective_stuff = fatigue_effective(pitcher.stuff, pitcher.fatigue);
+    let edge = edge_level(target_x, target_y);
+    let (control_delta, stuff_delta, velocity_delta) = power.deltas();
+    let effective_control = fatigue_effective(pitcher.control, pitcher.fatigue) + conditions.weather_control_mod + control_delta;
+    let effective_stuff = fatigue_effective(pitcher.stuff, pitcher.fatigue) + stuff_delta;
+    let effective_velocity = pitcher.velocity + velocity_delta;
 
     // 사구 — §5 "제구 낮을수록↑, 몸쪽일수록↑".
     let control_deficit = (50.0 - effective_control).max(0.0) * 0.0006;
-    let inside_bonus = if course.is_inside() { 0.01 } else { 0.0 };
+    let inside_bonus = if is_inside(target_x) { 0.01 } else { 0.0 };
     let hbp_prob = (0.01 + control_deficit + inside_bonus).clamp(0.0, 0.15);
     if rng.gen::<f64>() < hbp_prob {
         return PitchResult::HitByPitch;
     }
 
-    // 스트라이크존 통과 여부 — 구석일수록 존 밖으로 빠질 확률↑, 제구
-    // 좋을수록 원하는 위치(존 안)에 더 잘 넣음. 경기운영도 소폭 거든다
-    // (§10 "경기운영 = 적은 구수로 아웃 잡는 능력"의 일부로 해석).
+    // 스트라이크존 통과 여부 — 구석일수록(볼 영역이면 더더욱) 존 밖으로
+    // 빠질 확률↑, 제구 좋을수록 원하는 위치(존 안)에 더 잘 넣음. 경기운영도
+    // 소폭 거든다(§10 "경기운영 = 적은 구수로 아웃 잡는 능력"의 일부로 해석).
     let in_zone_base = clamp01(0.75 - edge * 0.5);
     let control_bonus = (effective_control - 50.0) * 0.002 + (pitcher.game_management - 50.0) * 0.001;
     let in_zone = rng.gen::<f64>() < clamp01(in_zone_base + control_bonus);
@@ -169,7 +184,7 @@ pub fn throw_pitch(
         if rng.gen::<f64>() >= chase_prob {
             return PitchResult::Ball;
         }
-        let whiff_prob = clamp01(0.4 + edge * 0.3 - (batter.contact - 50.0) * 0.003 + (pitcher.velocity - 50.0) * 0.001);
+        let whiff_prob = clamp01(0.4 + edge * 0.3 - (batter.contact - 50.0) * 0.003 + (effective_velocity - 50.0) * 0.001);
         return if rng.gen::<f64>() < whiff_prob { PitchResult::Strike } else { PitchResult::Foul };
     }
 
@@ -179,7 +194,7 @@ pub fn throw_pitch(
     // `platoon_edge_for_pitcher` 공유 계산. D그룹 placeholder(계수는 I8
     // 재조정 대상).
     let mastery_bonus = (mastery_stage as f64 - 3.0) * 2.5;
-    let mut contact_edge = (effective_stuff + edge * 20.0 + (pitcher.velocity - 50.0) * 0.3) - batter.contact + mastery_bonus;
+    let mut contact_edge = (effective_stuff + edge * 20.0 + (effective_velocity - 50.0) * 0.3) - batter.contact + mastery_bonus;
     contact_edge += platoon_edge_for_pitcher(pitcher.handedness, batter.handedness);
     if high_leverage {
         contact_edge += (pitcher.clutch - batter.clutch) * 3.0;
@@ -245,40 +260,45 @@ pub fn apply_pitch_result(count: &mut Count, result: PitchResult) -> AtBatOutcom
     }
 }
 
-/// 자동 모드(§3) AI의 구종·코스 대리 선택 — "가벼운 휴리스틱... 위기상황
-/// 일수록 유인구(구석 코스) 비중↑, 강타자 상대일수록 정면승부 비중↓"를
-/// 그대로 반영. 구종은 보유 구종 중 균등 랜덤(마스터리에 따른 가중 선구는
-/// 스코프 밖 — 어떤 구종을 던지든 `throw_pitch`가 그 구종의 마스터리
-/// 단계를 실제로 반영하는 게 이번 Phase 4의 핵심이라, "어떤 구종을 고를지"
-/// 자체는 안 건드림).
-pub fn choose_pitch_and_course(rng: &mut impl Rng, pitches: &[PitchMastery], batter: &BatterStats, high_leverage: bool) -> (PitchMastery, Course) {
+/// 자동 모드(§3) AI의 구종·위치·구위 대리 선택 — "가벼운 휴리스틱... 위기상황
+/// 일수록 유인구(구석 근처) 비중↑, 강타자 상대일수록 정면승부 비중↓"를
+/// 그대로 반영(대화 2026-07-25, 좌표 기반으로 재작성). 구종은 보유 구종 중
+/// 균등 랜덤(마스터리에 따른 가중 선구는 스코프 밖 — 어떤 구종을 던지든
+/// `throw_pitch`가 그 구종의 마스터리 단계를 실제로 반영하는 게 이번
+/// Phase 4의 핵심이라, "어떤 구종을 고를지" 자체는 안 건드림). 구위는
+/// 위기상황에서만 가끔 "강"을 섞는 정도로 소박하게.
+pub fn choose_pitch_and_target(rng: &mut impl Rng, pitches: &[PitchMastery], batter: &BatterStats, high_leverage: bool) -> (PitchMastery, f64, f64, Power) {
     let pitch = pitches.choose(rng).cloned().unwrap_or(PitchMastery { name: "포심 패스트볼".to_string(), stage: 1 });
 
     let strong_batter = batter.power >= 60.0;
     let lure_bias = (if high_leverage { 0.3 } else { 0.0 }) + (if strong_batter { 0.2 } else { 0.0 });
-    let course = if rng.gen::<f64>() < lure_bias {
-        *Course::CORNERS.choose(rng).unwrap()
+    let (x, y) = if rng.gen::<f64>() < lure_bias {
+        // 유인구 — 존 구석 근처(옛 CORNERS 대응)를 랜덤 샘플.
+        let sx = if rng.gen_bool(0.5) { 1.0 } else { -1.0 };
+        let sy = if rng.gen_bool(0.5) { 1.0 } else { -1.0 };
+        (sx * rng.gen_range(0.7..=1.1), sy * rng.gen_range(0.7..=1.1))
     } else {
-        *Course::ALL.choose(rng).unwrap()
+        (rng.gen_range(-1.0..=1.0), rng.gen_range(-1.0..=1.0))
     };
-    (pitch, course)
+    let power = if high_leverage && rng.gen_bool(0.35) { Power::High } else { Power::Normal };
+    (pitch, x, y, power)
 }
 
 /// 완전 자동(§3 "자동" 모드) 방식으로 한 타석을 끝까지 진행 — 매 구
-/// `choose_pitch_and_course`로 AI가 구종·코스를 고르고 `throw_pitch`로
+/// `choose_pitch_and_target`로 AI가 구종·위치·구위를 고르고 `throw_pitch`로
 /// 판정, `apply_pitch_result`로 카운트에 반영해 삼진/볼넷/사구/인플레이
 /// 중 하나가 나올 때까지 반복(인플레이면 `resolve_in_play_result`로 세분화
 /// 까지 마침). 반환 타입을 `match_sim::PaOutcome`으로 통일해 호출부가
 /// 배경 시뮬과 같은 결과 처리 로직(주자 진루 등)을 그대로 재사용하게 한다.
-/// 수동·반자동 모드(플레이어가 직접/가끔 구종·코스를 고름)는 `throw_pitch`
-/// ·`apply_pitch_result`를 그대로 재사용하되 세션 상태를 slot.db에 유지해야
-/// 해서 별도 서브분 스코프(10_구현_Phase_계획.md 참고). `bases`·`outs`·
-/// `team_defense`(Phase 2)·`tactics`·`conditions`(Phase 5)는 인플레이로
-/// 이어질 때 `resolve_in_play_result`에 그대로 전달.
+/// 수동 모드(플레이어가 직접 구종·위치·구위를 고름)는
+/// `throw_pitch`·`apply_pitch_result`를 그대로 재사용하되 세션 상태를
+/// slot.db에 유지해야 해서 별도 서브분 스코프(10_구현_Phase_계획.md 참고).
+/// `bases`·`outs`·`team_defense`(Phase 2)·`tactics`·`conditions`(Phase 5)는
+/// 인플레이로 이어질 때 `resolve_in_play_result`에 그대로 전달.
 ///
 /// `data::match_session`은 세션 상태(부상 기록·강판 판정·season_stats
 /// upsert 등)를 같이 엮어야 해서 이 함수를 직접 호출하는 대신 같은
-/// 원시 함수(`choose_pitch_and_course`·`throw_pitch`·`resolve_in_play_result`)
+/// 원시 함수(`choose_pitch_and_target`·`throw_pitch`·`resolve_in_play_result`)
 /// 를 자기 루프 안에서 다시 조합해 쓴다 — 그래서 프로덕션 경로에서는 이
 /// 함수 자체가 호출되지 않는다(Phase 7 정합성 점검에서 확인, 실제
 /// 판정 로직은 원시 함수 레벨에서 공유되므로 갈라질 위험은 없음). 대신
@@ -303,8 +323,8 @@ pub fn simulate_at_bat_automatically(
     let mut pitch_count = 0u32;
     let diverse = repertoire_is_diverse(pitches);
     loop {
-        let (pitch, course) = choose_pitch_and_course(rng, pitches, batter, high_leverage);
-        let result = throw_pitch(rng, pitcher, batter, course, high_leverage, pitch.stage, diverse, conditions);
+        let (pitch, x, y, power) = choose_pitch_and_target(rng, pitches, batter, high_leverage);
+        let result = throw_pitch(rng, pitcher, batter, x, y, power, high_leverage, pitch.stage, diverse, conditions);
         pitch_count += 1;
         match apply_pitch_result(&mut count, result) {
             AtBatOutcome::InProgress => continue,
@@ -360,8 +380,8 @@ mod tests {
         let mut rng_a = ChaCha8Rng::seed_from_u64(1);
         let mut rng_b = ChaCha8Rng::seed_from_u64(1);
         assert_eq!(
-            throw_pitch(&mut rng_a, &avg_pitcher(), &avg_batter(), Course::MidCenter, false, 3, false, &GameConditions::default()),
-            throw_pitch(&mut rng_b, &avg_pitcher(), &avg_batter(), Course::MidCenter, false, 3, false, &GameConditions::default())
+            throw_pitch(&mut rng_a, &avg_pitcher(), &avg_batter(), 0.0, 0.0, Power::Normal, false, 3, false, &GameConditions::default()),
+            throw_pitch(&mut rng_b, &avg_pitcher(), &avg_batter(), 0.0, 0.0, Power::Normal, false, 3, false, &GameConditions::default())
         );
     }
 
@@ -369,19 +389,43 @@ mod tests {
     fn inside_courses_raise_hit_by_pitch_rate_for_wild_pitchers() {
         let wild = PitcherStats { id: "p".to_string(), control: 20.0, stuff: 50.0, fatigue: 0.0, velocity: 50.0, game_management: 50.0, clutch: 50.0, composure: 50.0, handedness: crate::sim::match_sim::Handedness::Right };
         let trials = 3000;
-        let count_hbp = |course: Course| -> usize {
+        let count_hbp = |x: f64, y: f64| -> usize {
             let mut hits = 0;
             for seed in 0..trials {
                 let mut rng = ChaCha8Rng::seed_from_u64(seed);
-                if throw_pitch(&mut rng, &wild, &avg_batter(), course, false, 3, false, &GameConditions::default()) == PitchResult::HitByPitch {
+                if throw_pitch(&mut rng, &wild, &avg_batter(), x, y, Power::Normal, false, 3, false, &GameConditions::default()) == PitchResult::HitByPitch {
                     hits += 1;
                 }
             }
             hits
         };
-        let inside = count_hbp(Course::MidInside);
-        let outside = count_hbp(Course::MidOutside);
+        let inside = count_hbp(-1.0, 0.0);
+        let outside = count_hbp(1.0, 0.0);
         assert!(inside > outside, "inside={inside} outside={outside}");
+    }
+
+    #[test]
+    fn ball_zone_targets_beyond_the_strike_box_are_rarely_put_in_play() {
+        // 볼 영역(|x|=|y|=1.8, 존 경계 훌쩍 넘음)을 노리면 존 진입 확률이
+        // 거의 0에 수렴해(별도 "고의 볼" 분기 없이 edge_level 공식만으로)
+        // 타자가 실제로 맞혀 인플레이가 되는 일이 한가운데를 노릴 때보다
+        // 훨씬 드물어야 한다. 유인구에 헛스윙하는 것 자체는(PitchResult::
+        // Strike) 존 밖에서도 실제 야구처럼 일어날 수 있어 그건 이 테스트의
+        // 기준이 아니다 — "맞혀서 인플레이가 되는가"만 본다.
+        let trials = 3000;
+        let count_in_play = |x: f64, y: f64| -> usize {
+            let mut in_play = 0;
+            for seed in 0..trials {
+                let mut rng = ChaCha8Rng::seed_from_u64(seed);
+                if throw_pitch(&mut rng, &avg_pitcher(), &avg_batter(), x, y, Power::Normal, false, 3, false, &GameConditions::default()) == PitchResult::InPlay {
+                    in_play += 1;
+                }
+            }
+            in_play
+        };
+        let center = count_in_play(0.0, 0.0);
+        let ball_zone = count_in_play(1.8, 1.8);
+        assert!(ball_zone < center / 5, "center={center} ball_zone={ball_zone} (볼 영역이 훨씬 적어야 함)");
     }
 
     #[test]
@@ -467,8 +511,8 @@ mod tests {
         for seed in 0..30u64 {
             let mut rng_a = ChaCha8Rng::seed_from_u64(seed);
             let mut rng_b = ChaCha8Rng::seed_from_u64(seed);
-            let a = throw_pitch(&mut rng_a, &clutch_pitcher, &avg_batter(), Course::MidCenter, false, 3, false, &GameConditions::default());
-            let b = throw_pitch(&mut rng_b, &avg_pitcher(), &avg_batter(), Course::MidCenter, false, 3, false, &GameConditions::default());
+            let a = throw_pitch(&mut rng_a, &clutch_pitcher, &avg_batter(), 0.0, 0.0, Power::Normal, false, 3, false, &GameConditions::default());
+            let b = throw_pitch(&mut rng_b, &avg_pitcher(), &avg_batter(), 0.0, 0.0, Power::Normal, false, 3, false, &GameConditions::default());
             assert_eq!(a, b, "seed={seed}: high_leverage=false면 클러치가 결과에 개입하면 안 됨");
         }
     }
@@ -481,7 +525,7 @@ mod tests {
             let mut balls = 0;
             for seed in 0..2000u64 {
                 let mut rng = ChaCha8Rng::seed_from_u64(seed);
-                if throw_pitch(&mut rng, pitcher, &avg_batter(), Course::HighInside, false, 3, false, &GameConditions::default()) == PitchResult::Ball {
+                if throw_pitch(&mut rng, pitcher, &avg_batter(), -1.0, 1.0, Power::Normal, false, 3, false, &GameConditions::default()) == PitchResult::Ball {
                     balls += 1;
                 }
             }
@@ -500,7 +544,7 @@ mod tests {
             let mut strikes = 0;
             for seed in 0..3000u64 {
                 let mut rng = ChaCha8Rng::seed_from_u64(seed);
-                if throw_pitch(&mut rng, &avg_pitcher(), &avg_batter(), Course::MidCenter, false, stage, false, &GameConditions::default()) == PitchResult::Strike {
+                if throw_pitch(&mut rng, &avg_pitcher(), &avg_batter(), 0.0, 0.0, Power::Normal, false, stage, false, &GameConditions::default()) == PitchResult::Strike {
                     strikes += 1;
                 }
             }
@@ -519,7 +563,7 @@ mod tests {
             let mut strikes = 0;
             for seed in 0..3000u64 {
                 let mut rng = ChaCha8Rng::seed_from_u64(seed);
-                if throw_pitch(&mut rng, &avg_pitcher(), &avg_batter(), Course::MidCenter, false, 3, diverse, &GameConditions::default()) == PitchResult::Strike {
+                if throw_pitch(&mut rng, &avg_pitcher(), &avg_batter(), 0.0, 0.0, Power::Normal, false, 3, diverse, &GameConditions::default()) == PitchResult::Strike {
                     strikes += 1;
                 }
             }
@@ -557,7 +601,7 @@ mod tests {
             let mut strikes = 0;
             for seed in 0..3000u64 {
                 let mut rng = ChaCha8Rng::seed_from_u64(seed);
-                if throw_pitch(&mut rng, &lefty_pitcher, &batter, Course::MidCenter, false, 3, false, &GameConditions::default()) == PitchResult::Strike {
+                if throw_pitch(&mut rng, &lefty_pitcher, &batter, 0.0, 0.0, Power::Normal, false, 3, false, &GameConditions::default()) == PitchResult::Strike {
                     strikes += 1;
                 }
             }
@@ -568,5 +612,52 @@ mod tests {
         let switch = count_strikes(Handedness::Switch);
         assert!(same_side > opposite_side, "same={same_side} opposite={opposite_side}");
         assert!(same_side > switch, "same={same_side} switch={switch}");
+    }
+
+    /// 대화 2026-07-25 — 구위(강)는 위력↑ 대신 제구↓ 트레이드오프라 존
+    /// 안에서 맞았을 때 헛스윙을 더 잘 유도해야 한다.
+    #[test]
+    fn high_power_induces_more_whiffs_than_low_power_when_in_zone() {
+        let count_strikes = |power: Power| -> u32 {
+            let mut strikes = 0;
+            for seed in 0..3000u64 {
+                let mut rng = ChaCha8Rng::seed_from_u64(seed);
+                if throw_pitch(&mut rng, &avg_pitcher(), &avg_batter(), 0.0, 0.0, power, false, 3, false, &GameConditions::default()) == PitchResult::Strike {
+                    strikes += 1;
+                }
+            }
+            strikes
+        };
+        let low = count_strikes(Power::Low);
+        let high = count_strikes(Power::High);
+        assert!(high > low, "low={low} high={high}");
+    }
+
+    /// 대화 2026-07-25 — 구위(약)는 제구↑ 대신 위력↓라 제구 나쁜 투수가
+    /// 약하게 던지면 몸에 맞는 공이 줄어야 한다.
+    #[test]
+    fn low_power_reduces_hit_by_pitch_rate_for_a_control_challenged_pitcher() {
+        let wild = PitcherStats { control: 20.0, ..avg_pitcher() };
+        let count_hbp = |power: Power| -> u32 {
+            let mut hits = 0;
+            for seed in 0..3000u64 {
+                let mut rng = ChaCha8Rng::seed_from_u64(seed);
+                if throw_pitch(&mut rng, &wild, &avg_batter(), -1.0, 0.0, power, false, 3, false, &GameConditions::default()) == PitchResult::HitByPitch {
+                    hits += 1;
+                }
+            }
+            hits
+        };
+        let high = count_hbp(Power::High);
+        let low = count_hbp(Power::Low);
+        assert!(low <= high, "low={low} high={high}");
+    }
+
+    #[test]
+    fn power_parse_round_trips_all_three_labels() {
+        for power in Power::ALL {
+            assert_eq!(Power::parse(power.label()), Some(power));
+        }
+        assert_eq!(Power::parse("모름"), None);
     }
 }

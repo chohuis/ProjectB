@@ -163,6 +163,14 @@ pub fn load_team_park_factor(conn: &Connection, team_id: &str) -> anyhow::Result
     Ok(result.flatten())
 }
 
+/// 매치 화면 구장 도트아트(대화 2026-07-25) — 팀의 홈구장 id 그대로
+/// 반환(예: `"stadium:busan_waves"`). Dart가 `:` 뒤쪽을 잘라
+/// `assets/stadium/{key}.png` 자산 키로 쓴다. `stadium_id`가 없거나
+/// 구장 행 자체가 없으면 `None`(호출부가 "default" 자산으로 폴백).
+pub fn load_team_stadium_id(conn: &Connection, team_id: &str) -> anyhow::Result<Option<String>> {
+    Ok(conn.query_row("SELECT s.id FROM teams t JOIN stadiums s ON s.id = t.stadium_id WHERE t.id = ?1", [team_id], |row| row.get(0)).optional()?)
+}
+
 /// Groups a league's teams for round-robin schedule generation. 프로/프로2군은
 /// 팀별 전용구장이라 그룹핑에 못 쓰므로 리그 전체를 단일 그룹으로; 대학·고교는
 /// I2에서 이미 확정된 stadium_id(대학 5조·고교 8권역, 각각 거점구장 공유)를

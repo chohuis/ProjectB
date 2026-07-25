@@ -520,18 +520,20 @@ pub fn create_protagonist(
 
 /// 훈련 슬롯 설정([06_훈련_시스템](../../02_기획/육성코어/06_훈련_시스템.md)
 /// §1 코어루프 "훈련·접근법은 지속 설정" — 매주 다시 안 짜고 계속 적용됨).
-/// 사용자가 직접 고르는 값이라 시스템 경계로 보고 검증한다: 주슬롯·보조
-/// 슬롯이 실제 투수 노출 스탯인지, 강도가 3단계 중 하나인지, `new_pitch`
-/// (§3 "신규 습득")가 이미 아는 구종이 아닌지, `mastery_pitch`(§3 "기존
-/// 다듬기", 05_구종_시스템.md §2 마스터리업)가 이미 아는 구종이면서 아직
-/// 5단계("필살기")가 아닌지. 구종 슬롯은 `new_pitch`·`mastery_pitch` 중
-/// 하나만 배정 가능(대화 2026-07-23) — 동시 설정은 거부. 같은 대상을
-/// 계속 훈련 중이면 진행도(`pitch_weeks`)를 이어가고, 대상을 바꾸면
-/// 0부터 다시 시작.
+/// §2-1(대화 2026-07-25)부터 스탯 직접선택 대신 훈련종류(6종 카탈로그,
+/// `sim::training::TRAINING_TYPES`) 중 주훈련·보조훈련을 고른다. 사용자가
+/// 직접 고르는 값이라 시스템 경계로 보고 검증한다: 주훈련·보조훈련이
+/// 실제 카탈로그 항목인지·서로 다른지, 강도가 3단계 중 하나인지,
+/// `new_pitch`(§3 "신규 습득")가 이미 아는 구종이 아닌지, `mastery_pitch`
+/// (§3 "기존 다듬기", 05_구종_시스템.md §2 마스터리업)가 이미 아는
+/// 구종이면서 아직 5단계("필살기")가 아닌지. 구종 슬롯은
+/// `new_pitch`·`mastery_pitch` 중 하나만 배정 가능(대화 2026-07-23) —
+/// 동시 설정은 거부. 같은 대상을 계속 훈련 중이면 진행도(`pitch_weeks`)를
+/// 이어가고, 대상을 바꾸면 0부터 다시 시작.
 pub fn set_protagonist_training(
     slot_conn: &Connection,
-    primary_stat: &str,
-    secondary_stats: [&str; 2],
+    primary_training: &str,
+    secondary_training: &str,
     intensity: &str,
     new_pitch: Option<&str>,
     mastery_pitch: Option<&str>,
@@ -539,13 +541,14 @@ pub fn set_protagonist_training(
     if !crate::sim::training::INTENSITIES.contains(&intensity) {
         anyhow::bail!("unknown training intensity: {intensity}");
     }
-    if !crate::sim::growth::PITCHER_EXPOSED.contains(&primary_stat) {
-        anyhow::bail!("unknown primary stat: {primary_stat}");
+    if crate::sim::training::training_type_by_id(primary_training).is_none() {
+        anyhow::bail!("unknown primary training: {primary_training}");
     }
-    for s in secondary_stats {
-        if !crate::sim::growth::PITCHER_EXPOSED.contains(&s) {
-            anyhow::bail!("unknown secondary stat: {s}");
-        }
+    if crate::sim::training::training_type_by_id(secondary_training).is_none() {
+        anyhow::bail!("unknown secondary training: {secondary_training}");
+    }
+    if primary_training == secondary_training {
+        anyhow::bail!("primary_training and secondary_training must differ — picking the same one twice wastes a slot");
     }
     if new_pitch.is_some() && mastery_pitch.is_some() {
         anyhow::bail!("new_pitch and mastery_pitch cannot both be set — a pitch is either newly learned or refined, not both");
@@ -602,8 +605,8 @@ pub fn set_protagonist_training(
         .unwrap_or(0);
 
     let training = serde_json::json!({
-        "primary_stat": primary_stat,
-        "secondary_stats": secondary_stats,
+        "primary_training": primary_training,
+        "secondary_training": secondary_training,
         "intensity": intensity,
         "new_pitch": new_pitch,
         "mastery_pitch": mastery_pitch,
@@ -897,22 +900,14 @@ fn process_protagonist_week(slot_conn: &Connection, content_conn: &Connection, w
 
     let requested_intensity = training.get("intensity").and_then(|v| v.as_str()).unwrap_or("보통").to_string();
     let intensity = crate::sim::training::effective_intensity(&requested_intensity, has_upcoming_start);
-    let primary_stat = training.get("primary_stat").and_then(|v| v.as_str()).unwrap_or("구속").to_string();
-    let secondary_stats: Vec<String> = training
-        .get("secondary_stats")
-        .and_then(|v| v.as_array())
-        .map(|arr| arr.iter().filter_map(|x| x.as_str().map(str::to_string)).collect())
-        .unwrap_or_default();
-    let secondary_refs: [&str; 2] = [
-        secondary_stats.first().map(String::as_str).unwrap_or(""),
-        secondary_stats.get(1).map(String::as_str).unwrap_or(""),
-    ];
+    let primary_training = training.get("primary_training").and_then(|v| v.as_str()).unwrap_or("strength").to_string();
+    let secondary_training = training.get("secondary_training").and_then(|v| v.as_str()).unwrap_or("bullpen").to_string();
     let new_pitch = training.get("new_pitch").and_then(|v| v.as_str()).map(str::to_string);
     let mastery_pitch = training.get("mastery_pitch").and_then(|v| v.as_str()).map(str::to_string);
 
     let config = crate::sim::training::TrainingConfig {
-        primary_stat: &primary_stat,
-        secondary_stats: secondary_refs,
+        primary_training: &primary_training,
+        secondary_training: &secondary_training,
         intensity,
         new_pitch: new_pitch.as_deref(),
         mastery_pitch: mastery_pitch.as_deref(),
@@ -2907,7 +2902,7 @@ fn run_intrasquad_scrimmage(slot_conn: &Connection, content_conn: &Connection, w
 }
 
 /// `team_id`가 주인공의 현재 소속팀인지 — 무소속(입대 등)이면 항상 `false`.
-fn is_protagonist_team(slot_conn: &Connection, team_id: &str) -> anyhow::Result<bool> {
+pub(crate) fn is_protagonist_team(slot_conn: &Connection, team_id: &str) -> anyhow::Result<bool> {
     let contract_raw: Option<String> =
         slot_conn.query_row("SELECT contract FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).optional()?;
     let Some(contract_raw) = contract_raw else {
@@ -5496,10 +5491,17 @@ pub fn resolve_choice(
             Some(match_session::start_protagonist_match(slot_conn, content_conn, world_seed, game_id, home, away, choice_id)?)
         }
         "pitch" => {
-            let (pitch_name, course_name) =
-                choice_id.split_once(':').ok_or_else(|| anyhow::anyhow!("expected 'pitch_name:course' choice_id, got {choice_id}"))?;
-            let course = crate::sim::pitch::Course::parse(course_name).ok_or_else(|| anyhow::anyhow!("unknown course: {course_name}"))?;
-            Some(match_session::submit_pitch(slot_conn, world_seed, pitch_name, course)?)
+            // "pitch_name:x:y:power" — 연속좌표 조준(대화 2026-07-25, 매치
+            // 화면 재설계) + 구위 다이얼. `pitch_name`에 ':'가 없다는 전제
+            // (구종 카탈로그 이름엔 안 씀)로 정확히 4파트만 받는다.
+            let parts: Vec<&str> = choice_id.splitn(4, ':').collect();
+            let [pitch_name, x_str, y_str, power_str] = parts[..] else {
+                anyhow::bail!("expected 'pitch_name:x:y:power' choice_id, got {choice_id}");
+            };
+            let target_x: f64 = x_str.parse().map_err(|_| anyhow::anyhow!("invalid target x: {x_str}"))?;
+            let target_y: f64 = y_str.parse().map_err(|_| anyhow::anyhow!("invalid target y: {y_str}"))?;
+            let power = crate::sim::pitch::Power::parse(power_str).ok_or_else(|| anyhow::anyhow!("unknown power: {power_str}"))?;
+            Some(match_session::submit_pitch(slot_conn, world_seed, pitch_name, target_x, target_y, power)?)
         }
         "pitcherChange" => Some(match_session::submit_pitcher_change_decision(slot_conn, world_seed, choice_id)?),
         "injuryTreatment" => {
@@ -5759,12 +5761,22 @@ mod tests {
     }
 
     #[test]
-    fn set_protagonist_training_rejects_unknown_stat() {
+    fn set_protagonist_training_rejects_unknown_training_id() {
         let content_conn = build_hs_school_content_db();
         let slot_conn = slot::open_in_memory().unwrap();
         create_protagonist(&slot_conn, &content_conn, 1, "훈련테스트", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
 
-        let result = set_protagonist_training(&slot_conn, "존재안함", ["구위", "제구"], "보통", None, None);
+        let result = set_protagonist_training(&slot_conn, "존재안함", "bullpen", "보통", None, None);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn set_protagonist_training_rejects_same_training_for_primary_and_secondary() {
+        let content_conn = build_hs_school_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        create_protagonist(&slot_conn, &content_conn, 1, "훈련테스트", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
+
+        let result = set_protagonist_training(&slot_conn, "strength", "strength", "보통", None, None);
         assert!(result.is_err());
     }
 
@@ -5775,7 +5787,7 @@ mod tests {
         create_protagonist(&slot_conn, &content_conn, 1, "훈련테스트", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
 
         // 강속구형은 포심 패스트볼로 시작 — 그걸 "신규"로 다시 설정하면 거부돼야 함.
-        let result = set_protagonist_training(&slot_conn, "구속", ["구위", "제구"], "보통", Some("포심 패스트볼"), None);
+        let result = set_protagonist_training(&slot_conn, "strength", "bullpen", "보통", Some("포심 패스트볼"), None);
         assert!(result.is_err());
     }
 
@@ -5785,7 +5797,7 @@ mod tests {
         let slot_conn = slot::open_in_memory().unwrap();
         create_protagonist(&slot_conn, &content_conn, 1, "훈련테스트", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
 
-        let result = set_protagonist_training(&slot_conn, "구속", ["구위", "제구"], "보통", Some("커터"), Some("포심 패스트볼"));
+        let result = set_protagonist_training(&slot_conn, "strength", "bullpen", "보통", Some("커터"), Some("포심 패스트볼"));
         assert!(result.is_err());
     }
 
@@ -5795,7 +5807,7 @@ mod tests {
         let slot_conn = slot::open_in_memory().unwrap();
         create_protagonist(&slot_conn, &content_conn, 1, "훈련테스트", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
 
-        let result = set_protagonist_training(&slot_conn, "구속", ["구위", "제구"], "보통", None, Some("커터"));
+        let result = set_protagonist_training(&slot_conn, "strength", "bullpen", "보통", None, Some("커터"));
         assert!(result.is_err(), "커터 is not in the starting repertoire yet");
     }
 
@@ -5809,7 +5821,7 @@ mod tests {
         // (제구 55+·구위 40+·침착함 40+·경기운영 45+, 4조건) 근처에도 못 감.
         create_protagonist(&slot_conn, &content_conn, 1, "조건미달", "우완", "team:hanseong_hs", "돌부처형", None).unwrap();
 
-        let result = set_protagonist_training(&slot_conn, "구속", ["구위", "제구"], "보통", Some("너클볼"), None);
+        let result = set_protagonist_training(&slot_conn, "strength", "bullpen", "보통", Some("너클볼"), None);
         assert!(result.is_err(), "acquisition requirement not met — should be rejected");
     }
 
@@ -5834,11 +5846,11 @@ mod tests {
             )
             .unwrap();
 
-        let result = set_protagonist_training(&slot_conn, "구속", ["구위", "제구"], "보통", Some("커브"), None);
+        let result = set_protagonist_training(&slot_conn, "strength", "bullpen", "보통", Some("커브"), None);
         assert!(result.is_err(), "5개를 이미 채웠으면 신규 습득이 막혀야 함");
 
         // 다듬기(기존 마스터리업)는 여전히 허용돼야 함.
-        let ok = set_protagonist_training(&slot_conn, "구속", ["구위", "제구"], "보통", None, Some("체인지업"));
+        let ok = set_protagonist_training(&slot_conn, "strength", "bullpen", "보통", None, Some("체인지업"));
         assert!(ok.is_ok(), "5개 상한이어도 기존 구종 다듬기는 계속 가능해야 함");
     }
 
@@ -6066,7 +6078,7 @@ mod tests {
         let content_conn = build_hs_school_content_db();
         let slot_conn = slot::open_in_memory().unwrap();
         create_protagonist(&slot_conn, &content_conn, 1, "훈련중", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
-        set_protagonist_training(&slot_conn, "구속", ["구위", "경기운영"], "보통", None, None).unwrap();
+        set_protagonist_training(&slot_conn, "strength", "bullpen", "보통", None, None).unwrap();
 
         for week in 0..30i64 {
             process_protagonist_week(&slot_conn, &content_conn, 1, week * 7).unwrap();
@@ -6086,7 +6098,7 @@ mod tests {
         create_protagonist(&slot_conn, &content_conn, 1, "구종연마", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
         // 투심 패스트볼(구위 25+)은 강속구형 시작 구위 밴드(26~30)에서
         // 항상 손이 닿는 습득 조건(05_구종_시스템.md §3, 대화 2026-07-25).
-        set_protagonist_training(&slot_conn, "구속", ["구위", "경기운영"], "강", Some("투심 패스트볼"), None).unwrap();
+        set_protagonist_training(&slot_conn, "strength", "bullpen", "강", Some("투심 패스트볼"), None).unwrap();
 
         // "강" 강도는 sim::training::weeks_required_to_learn_pitch("강") == 8주.
         for week in 0..8i64 {
@@ -6110,7 +6122,7 @@ mod tests {
         let content_conn = build_hs_school_content_db();
         let slot_conn = slot::open_in_memory().unwrap();
         create_protagonist(&slot_conn, &content_conn, 1, "코치테스트", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
-        set_protagonist_training(&slot_conn, "구속", ["구위", "경기운영"], "강", Some("투심 패스트볼"), None).unwrap();
+        set_protagonist_training(&slot_conn, "strength", "bullpen", "강", Some("투심 패스트볼"), None).unwrap();
         insert_test_player(
             &slot_conn,
             "coach:team:hanseong_hs",
@@ -6137,7 +6149,7 @@ mod tests {
         let content_conn = build_hs_school_content_db();
         let slot_conn = slot::open_in_memory().unwrap();
         create_protagonist(&slot_conn, &content_conn, 1, "마스터리테스트", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
-        set_protagonist_training(&slot_conn, "구속", ["구위", "경기운영"], "보통", None, Some("포심 패스트볼")).unwrap();
+        set_protagonist_training(&slot_conn, "strength", "bullpen", "보통", None, Some("포심 패스트볼")).unwrap();
 
         // "보통" 강도는 sim::training::weeks_required_to_master_pitch("보통") == 6주.
         for week in 0..6i64 {
@@ -6166,7 +6178,7 @@ mod tests {
             )
             .unwrap();
 
-        let result = set_protagonist_training(&slot_conn, "구속", ["구위", "경기운영"], "보통", None, Some("포심 패스트볼"));
+        let result = set_protagonist_training(&slot_conn, "strength", "bullpen", "보통", None, Some("포심 패스트볼"));
         assert!(result.is_err(), "a pitch already at 필살기(stage 5) should not be trainable further");
     }
 
@@ -6188,7 +6200,7 @@ mod tests {
             .execute(
                 "UPDATE protagonist SET training = ?1 WHERE id = 'proto:1'",
                 params![
-                    serde_json::json!({"primary_stat": "구속", "secondary_stats": ["구위", "경기운영"], "intensity": "보통", "new_pitch": null, "mastery_pitch": "포심 패스트볼", "pitch_weeks": 0})
+                    serde_json::json!({"primary_training": "strength", "secondary_training": "bullpen", "intensity": "보통", "new_pitch": null, "mastery_pitch": "포심 패스트볼", "pitch_weeks": 0})
                         .to_string()
                 ],
             )
@@ -6209,7 +6221,7 @@ mod tests {
         let content_conn = build_hs_school_content_db();
         let slot_conn = slot::open_in_memory().unwrap();
         create_protagonist(&slot_conn, &content_conn, 1, "등판주간", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
-        set_protagonist_training(&slot_conn, "구속", ["구위", "경기운영"], "강", None, None).unwrap();
+        set_protagonist_training(&slot_conn, "strength", "bullpen", "강", None, None).unwrap();
         slot_conn
             .execute("INSERT INTO schedule (game_id, day, home, away, result) VALUES ('game:1', 3, 'team:hanseong_hs', 'team:y', NULL)", [])
             .unwrap();
@@ -8251,7 +8263,7 @@ mod tests {
 
             let mut action_id = list_pending_actions(&slot_conn).unwrap()[0].id.clone();
             for _ in 0..200 {
-                let step = resolve_choice(&slot_conn, &content_conn, seed, &action_id, "포심 패스트볼:MidCenter").unwrap();
+                let step = resolve_choice(&slot_conn, &content_conn, seed, &action_id, "포심 패스트볼:0.0:0.0:보통").unwrap();
                 match step {
                     Some(match_session::MatchStepResult::PitcherChangeDecision { pitches_thrown, .. }) => {
                         let pending = list_pending_actions(&slot_conn).unwrap();
@@ -8314,7 +8326,7 @@ mod tests {
         let mut action_id = pitch_pending[0].id.clone();
         let mut guard = 0;
         loop {
-            let step = resolve_choice(&slot_conn, &content_conn, 1234, &action_id, "포심 패스트볼:MidCenter").unwrap();
+            let step = resolve_choice(&slot_conn, &content_conn, 1234, &action_id, "포심 패스트볼:0.0:0.0:보통").unwrap();
             match step {
                 Some(match_session::MatchStepResult::GameOver { .. }) => break,
                 Some(match_session::MatchStepResult::AwaitingPitch { .. }) => {
@@ -8322,7 +8334,7 @@ mod tests {
                     assert_eq!(next.len(), 1, "exactly one live 'pitch' PendingAction should exist at a time");
                     action_id = next[0].id.clone();
                 }
-                // 이 루프는 매번 같은 문자열("포심 패스트볼:MidCenter")을 보내는데,
+                // 이 루프는 매번 같은 문자열("포심 패스트볼:0.0:0.0:보통")을 보내는데,
                 // 'pitcherChange' 액션엔 "교체"/"유지"가 아닌 임의 문자열이 곧
                 // "맡기기"(AI 판정에 위임)라 그대로 재사용해도 안전하게 진행된다.
                 Some(match_session::MatchStepResult::PitcherChangeDecision { .. }) => {

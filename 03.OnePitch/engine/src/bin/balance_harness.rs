@@ -99,8 +99,8 @@ fn run_trial(content_conn: &Connection, seed: i64, archetype: &str, max_seasons:
     // 훈련 슬롯을 안 정하면 process_protagonist_week가 아무것도 안 키운다
     // (기존 테스트 문서: "no training config set -> stats should never
     // change") — 실제 플레이어라면 반드시 한 번은 정하므로, 하네스도
-    // 균형 잡힌 기본 배분 하나로 계속 고정(구속 주력·구위/제구 보조).
-    repository::set_protagonist_training(&slot_conn, "구속", ["구위", "제구"], "보통", None, None)?;
+    // 균형 잡힌 기본 배분 하나로 계속 고정(근력훈련 주력·불펜피칭 보조).
+    repository::set_protagonist_training(&slot_conn, "strength", "bullpen", "보통", None, None)?;
 
     let start_speed = stat(&slot_conn, "구속")?;
     let start_control = stat(&slot_conn, "제구")?;

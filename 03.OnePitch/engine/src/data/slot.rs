@@ -115,8 +115,9 @@ ALTER TABLE protagonist ADD COLUMN training TEXT;
 "#;
 
 /// I6 잔여(훈련 슬롯) — [06_훈련_시스템](../../../02_기획/육성코어/06_훈련_시스템.md).
-/// `training`은 `{"primary_stat","secondary_stats","intensity","new_pitch","pitch_weeks"}`
-/// 형태 — 다른 protagonist JSON 컬럼(live_state 등)과 같은 관례로 nullable
+/// `training`은 `{"primary_training","secondary_training","intensity","new_pitch","pitch_weeks"}`
+/// 형태(훈련종류 id 2개, 대화 2026-07-25부터 — 이전엔 스탯 직접선택) —
+/// 다른 protagonist JSON 컬럼(live_state 등)과 같은 관례로 nullable
 /// TEXT. NULL = "아직 훈련 설정을 한 번도 안 함"(플레이어가 최소 1회는
 /// `set_protagonist_training`을 호출해야 주간 성장이 시작됨).
 fn migration_v5(tx: &Transaction) -> anyhow::Result<()> {
@@ -200,7 +201,7 @@ ALTER TABLE match_session ADD COLUMN protagonist_pull_opponent_runs INTEGER;
 "#;
 
 /// I7 29차분(감독 개입 — 투수 교체 타이밍, 07_매치_엔진.md §8, 대화
-/// 2026-07-21) — 자동·반자동 강판 여부(`protagonist_pulled`)·이후 등판하는
+/// 2026-07-21) — 자동 모드 강판 여부(`protagonist_pulled`)·이후 등판하는
 /// 불펜 투수(`relief_pitcher_id`)·강판 시점 이닝(`protagonist_pull_inning`)·
 /// 강판 시점 상대 득점(`protagonist_pull_opponent_runs`). `apply_protagonist_evaluation`
 /// 의 `innings_pitched`·`runs_allowed` 계산이 완투 가정 대신 이 두 값을
@@ -491,6 +492,28 @@ CREATE INDEX idx_schedule_away ON schedule(away);
 CREATE INDEX idx_npc_team_id ON npc(team_id);
 "#;
 
+const V26_DDL: &str = r#"
+ALTER TABLE match_session ADD COLUMN inning_log TEXT NOT NULL DEFAULT '[]';
+ALTER TABLE match_session ADD COLUMN batter_game_stats TEXT NOT NULL DEFAULT '{}';
+ALTER TABLE match_session ADD COLUMN current_half_runs INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE match_session ADD COLUMN current_half_hits INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE match_session ADD COLUMN current_half_walks INTEGER NOT NULL DEFAULT 0;
+"#;
+
+/// 매치 화면 박스스코어(대화 2026-07-25) — `inning_log`는 하프이닝 경계마다
+/// `[{"inning","top_of_inning","runs","hits","walks"}, ...]`로 한 건씩
+/// 쌓이는 JSON 배열(`data::match_session::transition_half_inning`이 씀).
+/// `batter_game_stats`는 `{npc_id: {"plate_appearances","at_bats","hits",...}}`
+/// — 이번 경기 한정 개인기록(시즌 전체는 기존 `season_stats` 테이블).
+/// `current_half_*`는 지금 진행 중인 하프이닝의 누적치(하프이닝 경계에서
+/// `inning_log`로 flush되고 0으로 리셋) — 배경 하프이닝은 `HalfInningStats`
+/// 를 한 번에 대입, 인터랙티브(주인공 투구) 하프이닝은 매 타석마다 누적.
+fn migration_v26(tx: &Transaction) -> anyhow::Result<()> {
+    tx.execute_batch(V26_DDL)?;
+    tx.execute("UPDATE meta SET save_version = 26", [])?;
+    Ok(())
+}
+
 /// 성능 조사(대화 2026-07-24, `perf_probe.rs` 실측·스케줄 분산 5-Phase
 /// §6-115~118)로 확인 — `schedule.day`(매일 `process_day`의 `WHERE day = ?1`),
 /// `schedule.home`/`schedule.away`(로테이션 재배정의 `WHERE home=?1 OR
@@ -605,6 +628,10 @@ const MIGRATIONS: &[Migration] = &[
         version: 25,
         up: migration_v25,
     },
+    Migration {
+        version: 26,
+        up: migration_v26,
+    },
 ];
 
 fn init(mut conn: Connection) -> anyhow::Result<Connection> {
@@ -632,7 +659,7 @@ mod tests {
         let save_version: i64 = conn
             .query_row("SELECT save_version FROM meta", [], |row| row.get(0))
             .unwrap();
-        assert_eq!(save_version, 25);
+        assert_eq!(save_version, 26);
     }
 
     #[test]
@@ -648,6 +675,28 @@ mod tests {
         for expected in ["idx_schedule_day", "idx_schedule_home", "idx_schedule_away", "idx_npc_team_id"] {
             assert!(names.contains(&expected.to_string()), "missing index {expected}, got {names:?}");
         }
+    }
+
+    #[test]
+    fn v26_adds_box_score_columns_to_match_session_with_empty_defaults() {
+        let conn = open_in_memory().unwrap();
+        conn.execute(
+            "INSERT INTO match_session (id, game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases,
+                                         home_runs, away_runs, home_batter_idx, away_batter_idx, balls, strikes, current_batter_id)
+             VALUES (1, 'g', 'h', 'a', 'league:pro', '자동', 1, 1, 0, '[false,false,false]', 0, 0, 0, 0, 0, 0, NULL)",
+            [],
+        )
+        .unwrap();
+        let (inning_log, batter_game_stats, half_runs, half_hits, half_walks): (String, String, i64, i64, i64) = conn
+            .query_row(
+                "SELECT inning_log, batter_game_stats, current_half_runs, current_half_hits, current_half_walks FROM match_session WHERE id = 1",
+                [],
+                |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?, r.get(4)?)),
+            )
+            .unwrap();
+        assert_eq!(inning_log, "[]");
+        assert_eq!(batter_game_stats, "{}");
+        assert_eq!((half_runs, half_hits, half_walks), (0, 0, 0));
     }
 
     #[test]
@@ -1102,12 +1151,12 @@ mod tests {
         conn.execute(
             "INSERT INTO protagonist (id, name, handedness, archetype, stats, xp, live_state, finance, pitches, contract, injury, training)
              VALUES ('proto:1', 'X', '우투', '강속구형', '{}', '{}', '{}', '{}', '[]', '{}', '{}', ?1)",
-            [serde_json::json!({"primary_stat": "구속", "secondary_stats": ["구위", "제구"], "intensity": "보통", "new_pitch": null, "pitch_weeks": 0}).to_string()],
+            [serde_json::json!({"primary_training": "strength", "secondary_training": "bullpen", "intensity": "보통", "new_pitch": null, "pitch_weeks": 0}).to_string()],
         )
         .unwrap();
         let training: String = conn.query_row("SELECT training FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).unwrap();
         let v: serde_json::Value = serde_json::from_str(&training).unwrap();
-        assert_eq!(v.get("primary_stat").unwrap().as_str().unwrap(), "구속");
+        assert_eq!(v.get("primary_training").unwrap().as_str().unwrap(), "strength");
     }
 
     #[test]

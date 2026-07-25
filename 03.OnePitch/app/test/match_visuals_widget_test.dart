@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:app/features/game/match_visuals.dart';
 
 /// [05_매치](../../../04_UI기획/05_매치.md) §2·§4 CustomPainter 비주얼
-/// (`MatchScoreboard`·`StrikeZoneGrid`) — 순수 Flutter 위젯(엔진 세션
+/// (`MatchScoreboard`·`PitchTargetCanvas`) — 순수 Flutter 위젯(엔진 세션
 /// 불필요)이라 다른 전용화면 테스트와 달리 `RustLib.init`/`runAsync` 없이
 /// 바로 `pumpWidget`.
 void main() {
@@ -31,38 +31,34 @@ void main() {
     expect(find.text('B2-S1'), findsOneWidget);
   });
 
-  testWidgets('StrikeZoneGrid renders all 9 courses and reports the tapped one', (tester) async {
-    String? tapped;
-    const courses = [
-      'HighInside', 'HighCenter', 'HighOutside',
-      'MidInside', 'MidCenter', 'MidOutside',
-      'LowInside', 'LowCenter', 'LowOutside',
-    ];
-
+  testWidgets('PitchTargetCanvas reports the tapped position as a zone coordinate', (tester) async {
+    Offset? target;
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: StrikeZoneGrid(courses: courses, onSelect: (c) => tapped = c),
+          body: PitchTargetCanvas(target: null, onTargetChanged: (t) => target = t),
         ),
       ),
     );
 
-    expect(find.text('한가운데'), findsOneWidget);
-    await tester.tap(find.text('한가운데'));
-    expect(tapped, 'MidCenter');
+    // 캔버스 정중앙을 탭하면 존 좌표 (0,0)(한가운데)이 나와야 한다.
+    await tester.tapAt(tester.getCenter(find.byType(PitchTargetCanvas)));
+    expect(target, isNotNull);
+    expect(target!.dx, closeTo(0.0, 0.01));
+    expect(target!.dy, closeTo(0.0, 0.01));
   });
 
-  testWidgets('StrikeZoneGrid ignores taps when disabled', (tester) async {
-    String? tapped;
+  testWidgets('PitchTargetCanvas ignores taps when disabled', (tester) async {
+    Offset? target;
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
-          body: StrikeZoneGrid(courses: const ['MidCenter'], enabled: false, onSelect: (c) => tapped = c),
+          body: PitchTargetCanvas(target: null, enabled: false, onTargetChanged: (t) => target = t),
         ),
       ),
     );
 
-    await tester.tap(find.text('한가운데'));
-    expect(tapped, isNull);
+    await tester.tapAt(tester.getCenter(find.byType(PitchTargetCanvas)));
+    expect(target, isNull);
   });
 }

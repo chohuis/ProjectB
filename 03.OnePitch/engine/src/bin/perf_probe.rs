@@ -44,7 +44,7 @@ fn main() -> anyhow::Result<()> {
 
     let hs_team: String = content_conn.query_row("SELECT id FROM teams WHERE league_id = 'league:hs' ORDER BY id LIMIT 1", [], |r| r.get(0))?;
     repository::create_protagonist(&slot_conn, &content_conn, seed, "벤치", "우완", &hs_team, "강속구형", None)?;
-    repository::set_protagonist_training(&slot_conn, "구속", ["구위", "제구"], "보통", None, None)?;
+    repository::set_protagonist_training(&slot_conn, "strength", "bullpen", "보통", None, None)?;
 
     let mut call_count = 0u32;
     let mut total = Duration::ZERO;

@@ -38,7 +38,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.12.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1086095671;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1709418977;
 
 // Section: executor
 
@@ -208,35 +208,6 @@ fn wire__crate__api__game__career_timeline_impl(
         },
     )
 }
-fn wire__crate__api__game__course_names_impl(
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "course_names",
-            port: None,
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            deserializer.end();
-            transform_result_sse::<_, ()>((move || {
-                let output_ok = Result::<_, ()>::Ok(crate::api::game::course_names())?;
-                Ok(output_ok)
-            })())
-        },
-    )
-}
 fn wire__crate__api__game__declare_retirement_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -396,6 +367,76 @@ fn wire__crate__api__game__get_achievements_impl(
                 transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
                     (move || {
                         let output_ok = crate::api::game::get_achievements()?;
+                        Ok(output_ok)
+                    })(),
+                )
+            }
+        },
+    )
+}
+fn wire__crate__api__game__get_batter_game_stats_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "get_batter_game_stats",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_npc_id = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| {
+                transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
+                    (move || {
+                        let output_ok = crate::api::game::get_batter_game_stats(api_npc_id)?;
+                        Ok(output_ok)
+                    })(),
+                )
+            }
+        },
+    )
+}
+fn wire__crate__api__game__get_batter_profile_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "get_batter_profile",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_npc_id = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| {
+                transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
+                    (move || {
+                        let output_ok = crate::api::game::get_batter_profile(api_npc_id)?;
                         Ok(output_ok)
                     })(),
                 )
@@ -607,6 +648,74 @@ fn wire__crate__api__game__get_injury_history_impl(
         },
     )
 }
+fn wire__crate__api__game__get_inning_log_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "get_inning_log",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            move |context| {
+                transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
+                    (move || {
+                        let output_ok = crate::api::game::get_inning_log()?;
+                        Ok(output_ok)
+                    })(),
+                )
+            }
+        },
+    )
+}
+fn wire__crate__api__game__get_match_venue_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "get_match_venue",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            move |context| {
+                transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
+                    (move || {
+                        let output_ok = crate::api::game::get_match_venue()?;
+                        Ok(output_ok)
+                    })(),
+                )
+            }
+        },
+    )
+}
 fn wire__crate__api__game__get_meta_status_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -747,6 +856,83 @@ fn wire__crate__api__game__get_player_career_pitching_stats_impl(
         },
     )
 }
+fn wire__crate__api__game__get_player_season_batting_stats_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "get_player_season_batting_stats",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_npc_id = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| {
+                transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
+                    (move || {
+                        let output_ok =
+                            crate::api::game::get_player_season_batting_stats(api_npc_id)?;
+                        Ok(output_ok)
+                    })(),
+                )
+            }
+        },
+    )
+}
+fn wire__crate__api__game__get_pregame_scouting_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "get_pregame_scouting",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_game_id = <String>::sse_decode(&mut deserializer);
+            let api_home_team_id = <String>::sse_decode(&mut deserializer);
+            let api_away_team_id = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| {
+                transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
+                    (move || {
+                        let output_ok = crate::api::game::get_pregame_scouting(
+                            api_game_id,
+                            api_home_team_id,
+                            api_away_team_id,
+                        )?;
+                        Ok(output_ok)
+                    })(),
+                )
+            }
+        },
+    )
+}
 fn wire__crate__api__game__get_protagonist_profile_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -774,6 +960,40 @@ fn wire__crate__api__game__get_protagonist_profile_impl(
                 transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
                     (move || {
                         let output_ok = crate::api::game::get_protagonist_profile()?;
+                        Ok(output_ok)
+                    })(),
+                )
+            }
+        },
+    )
+}
+fn wire__crate__api__game__get_protagonist_season_summary_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "get_protagonist_season_summary",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            move |context| {
+                transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
+                    (move || {
+                        let output_ok = crate::api::game::get_protagonist_season_summary()?;
                         Ok(output_ok)
                     })(),
                 )
@@ -1717,6 +1937,35 @@ fn wire__crate__api__game__pitcher_archetype_info_impl(
         },
     )
 }
+fn wire__crate__api__game__power_names_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "power_names",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            transform_result_sse::<_, ()>((move || {
+                let output_ok = Result::<_, ()>::Ok(crate::api::game::power_names())?;
+                Ok(output_ok)
+            })())
+        },
+    )
+}
 fn wire__crate__api__game__preview_hs_roster_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -1866,9 +2115,8 @@ fn wire__crate__api__game__set_training_impl(
             };
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_primary_stat = <String>::sse_decode(&mut deserializer);
-            let api_secondary_stat_1 = <String>::sse_decode(&mut deserializer);
-            let api_secondary_stat_2 = <String>::sse_decode(&mut deserializer);
+            let api_primary_training = <String>::sse_decode(&mut deserializer);
+            let api_secondary_training = <String>::sse_decode(&mut deserializer);
             let api_intensity = <String>::sse_decode(&mut deserializer);
             let api_new_pitch = <Option<String>>::sse_decode(&mut deserializer);
             let api_mastery_pitch = <Option<String>>::sse_decode(&mut deserializer);
@@ -1877,9 +2125,8 @@ fn wire__crate__api__game__set_training_impl(
                 transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
                     (move || {
                         let output_ok = crate::api::game::set_training(
-                            api_primary_stat,
-                            api_secondary_stat_1,
-                            api_secondary_stat_2,
+                            api_primary_training,
+                            api_secondary_training,
                             api_intensity,
                             api_new_pitch,
                             api_mastery_pitch,
@@ -1990,6 +2237,35 @@ fn wire__crate__api__game__training_intensity_names_impl(
         },
     )
 }
+fn wire__crate__api__game__training_type_options_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "training_type_options",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end();
+            transform_result_sse::<_, ()>((move || {
+                let output_ok = Result::<_, ()>::Ok(crate::api::game::training_type_options())?;
+                Ok(output_ok)
+            })())
+        },
+    )
+}
 fn wire__crate__api__game__treatment_options_impl(
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -2086,6 +2362,22 @@ impl SseDecode for crate::api::game::AchievementInfo {
             achieved: var_achieved,
             achieved_day: var_achievedDay,
             counter: var_counter,
+        };
+    }
+}
+
+impl SseDecode for crate::api::game::BatterProfileInfo {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_name = <String>::sse_decode(deserializer);
+        let mut var_contact = <f64>::sse_decode(deserializer);
+        let mut var_power = <f64>::sse_decode(deserializer);
+        let mut var_eye = <f64>::sse_decode(deserializer);
+        return crate::api::game::BatterProfileInfo {
+            name: var_name,
+            contact: var_contact,
+            power: var_power,
+            eye: var_eye,
         };
     }
 }
@@ -2596,6 +2888,20 @@ impl SseDecode for Vec<crate::api::game::ScheduleGameInfo> {
     }
 }
 
+impl SseDecode for Vec<crate::api::game::ScoutedBatterInfo> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = Vec::with_capacity(len_ as usize);
+        for idx_ in 0..len_ {
+            ans_.push(<crate::api::game::ScoutedBatterInfo>::sse_decode(
+                deserializer,
+            ));
+        }
+        return ans_;
+    }
+}
+
 impl SseDecode for Vec<crate::api::game::SeasonLine> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -2646,6 +2952,20 @@ impl SseDecode for Vec<crate::api::game::TeamOption> {
     }
 }
 
+impl SseDecode for Vec<crate::api::game::TrainingTypeInfo> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = Vec::with_capacity(len_ as usize);
+        for idx_ in 0..len_ {
+            ans_.push(<crate::api::game::TrainingTypeInfo>::sse_decode(
+                deserializer,
+            ));
+        }
+        return ans_;
+    }
+}
+
 impl SseDecode for Vec<crate::api::game::TreatmentOption> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -2689,6 +3009,8 @@ impl SseDecode for crate::api::game::MatchStepInfo {
                 let mut var_bases = <Vec<bool>>::sse_decode(deserializer);
                 let mut var_homeRuns = <u32>::sse_decode(deserializer);
                 let mut var_awayRuns = <u32>::sse_decode(deserializer);
+                let mut var_fatigue = <f64>::sse_decode(deserializer);
+                let mut var_pitchesThrown = <u32>::sse_decode(deserializer);
                 return crate::api::game::MatchStepInfo::AwaitingPitch {
                     batter_id: var_batterId,
                     balls: var_balls,
@@ -2700,6 +3022,8 @@ impl SseDecode for crate::api::game::MatchStepInfo {
                     bases: var_bases,
                     home_runs: var_homeRuns,
                     away_runs: var_awayRuns,
+                    fatigue: var_fatigue,
+                    pitches_thrown: var_pitchesThrown,
                 };
             }
             1 => {
@@ -2732,6 +3056,20 @@ impl SseDecode for crate::api::game::MatchStepInfo {
                 unimplemented!("");
             }
         }
+    }
+}
+
+impl SseDecode for crate::api::game::MatchVenueInfo {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_homeTeamId = <String>::sse_decode(deserializer);
+        let mut var_awayTeamId = <String>::sse_decode(deserializer);
+        let mut var_stadiumId = <String>::sse_decode(deserializer);
+        return crate::api::game::MatchVenueInfo {
+            home_team_id: var_homeTeamId,
+            away_team_id: var_awayTeamId,
+            stadium_id: var_stadiumId,
+        };
     }
 }
 
@@ -2800,6 +3138,17 @@ impl SseDecode for Option<crate::api::game::MatchStepInfo> {
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         if (<bool>::sse_decode(deserializer)) {
             return Some(<crate::api::game::MatchStepInfo>::sse_decode(deserializer));
+        } else {
+            return None;
+        }
+    }
+}
+
+impl SseDecode for Option<crate::api::game::MatchVenueInfo> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        if (<bool>::sse_decode(deserializer)) {
+            return Some(<crate::api::game::MatchVenueInfo>::sse_decode(deserializer));
         } else {
             return None;
         }
@@ -2904,6 +3253,7 @@ impl SseDecode for crate::api::game::PlayerBattingStats {
         let mut var_atBats = <i64>::sse_decode(deserializer);
         let mut var_hits = <i64>::sse_decode(deserializer);
         let mut var_homeRuns = <i64>::sse_decode(deserializer);
+        let mut var_walks = <i64>::sse_decode(deserializer);
         let mut var_rbi = <i64>::sse_decode(deserializer);
         let mut var_stolenBases = <i64>::sse_decode(deserializer);
         let mut var_caughtStealing = <i64>::sse_decode(deserializer);
@@ -2919,6 +3269,7 @@ impl SseDecode for crate::api::game::PlayerBattingStats {
             at_bats: var_atBats,
             hits: var_hits,
             home_runs: var_homeRuns,
+            walks: var_walks,
             rbi: var_rbi,
             stolen_bases: var_stolenBases,
             caught_stealing: var_caughtStealing,
@@ -2961,6 +3312,31 @@ impl SseDecode for crate::api::game::PlayerPitchingStats {
             era: var_era,
             whip: var_whip,
             k_per_9: var_kPer9,
+        };
+    }
+}
+
+impl SseDecode for crate::api::game::PregameScoutingInfo {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_opponentTeamId = <String>::sse_decode(deserializer);
+        let mut var_starterName = <String>::sse_decode(deserializer);
+        let mut var_starterVelocity = <f64>::sse_decode(deserializer);
+        let mut var_starterControl = <f64>::sse_decode(deserializer);
+        let mut var_starterStuff = <f64>::sse_decode(deserializer);
+        let mut var_topBatters =
+            <Vec<crate::api::game::ScoutedBatterInfo>>::sse_decode(deserializer);
+        let mut var_weather = <String>::sse_decode(deserializer);
+        let mut var_parkFactorLabel = <String>::sse_decode(deserializer);
+        return crate::api::game::PregameScoutingInfo {
+            opponent_team_id: var_opponentTeamId,
+            starter_name: var_starterName,
+            starter_velocity: var_starterVelocity,
+            starter_control: var_starterControl,
+            starter_stuff: var_starterStuff,
+            top_batters: var_topBatters,
+            weather: var_weather,
+            park_factor_label: var_parkFactorLabel,
         };
     }
 }
@@ -3067,6 +3443,22 @@ impl SseDecode for crate::api::game::ScheduleGameInfo {
     }
 }
 
+impl SseDecode for crate::api::game::ScoutedBatterInfo {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_name = <String>::sse_decode(deserializer);
+        let mut var_contact = <f64>::sse_decode(deserializer);
+        let mut var_power = <f64>::sse_decode(deserializer);
+        let mut var_eye = <f64>::sse_decode(deserializer);
+        return crate::api::game::ScoutedBatterInfo {
+            name: var_name,
+            contact: var_contact,
+            power: var_power,
+            eye: var_eye,
+        };
+    }
+}
+
 impl SseDecode for crate::api::game::SeasonLine {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -3156,19 +3548,33 @@ impl SseDecode for crate::api::game::TournamentBracketInfo {
 impl SseDecode for crate::api::game::TrainingConfigInfo {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut var_primaryStat = <String>::sse_decode(deserializer);
-        let mut var_secondaryStats = <Vec<String>>::sse_decode(deserializer);
+        let mut var_primaryTraining = <String>::sse_decode(deserializer);
+        let mut var_secondaryTraining = <String>::sse_decode(deserializer);
         let mut var_intensity = <String>::sse_decode(deserializer);
         let mut var_newPitch = <Option<String>>::sse_decode(deserializer);
         let mut var_masteryPitch = <Option<String>>::sse_decode(deserializer);
         let mut var_pitchWeeks = <i64>::sse_decode(deserializer);
         return crate::api::game::TrainingConfigInfo {
-            primary_stat: var_primaryStat,
-            secondary_stats: var_secondaryStats,
+            primary_training: var_primaryTraining,
+            secondary_training: var_secondaryTraining,
             intensity: var_intensity,
             new_pitch: var_newPitch,
             mastery_pitch: var_masteryPitch,
             pitch_weeks: var_pitchWeeks,
+        };
+    }
+}
+
+impl SseDecode for crate::api::game::TrainingTypeInfo {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_id = <String>::sse_decode(deserializer);
+        let mut var_name = <String>::sse_decode(deserializer);
+        let mut var_stats = <Vec<String>>::sse_decode(deserializer);
+        return crate::api::game::TrainingTypeInfo {
+            id: var_id,
+            name: var_name,
+            stats: var_stats,
         };
     }
 }
@@ -3227,81 +3633,98 @@ fn pde_ffi_dispatcher_primary_impl(
         1 => wire__crate__api__game__advance_impl(port, ptr, rust_vec_len, data_len),
         4 => wire__crate__api__game__career_summary_impl(port, ptr, rust_vec_len, data_len),
         5 => wire__crate__api__game__career_timeline_impl(port, ptr, rust_vec_len, data_len),
-        7 => wire__crate__api__game__declare_retirement_impl(port, ptr, rust_vec_len, data_len),
-        8 => wire__crate__api__game__delete_slot_impl(port, ptr, rust_vec_len, data_len),
-        10 => wire__crate__api__game__get_academics_status_impl(port, ptr, rust_vec_len, data_len),
-        11 => wire__crate__api__game__get_achievements_impl(port, ptr, rust_vec_len, data_len),
-        12 => wire__crate__api__game__get_career_events_impl(port, ptr, rust_vec_len, data_len),
-        13 => wire__crate__api__game__get_contract_history_impl(port, ptr, rust_vec_len, data_len),
-        14 => wire__crate__api__game__get_current_team_info_impl(port, ptr, rust_vec_len, data_len),
-        15 => wire__crate__api__game__get_game_log_impl(port, ptr, rust_vec_len, data_len),
-        16 => wire__crate__api__game__get_inbox_impl(port, ptr, rust_vec_len, data_len),
-        17 => wire__crate__api__game__get_injury_history_impl(port, ptr, rust_vec_len, data_len),
-        18 => wire__crate__api__game__get_meta_status_impl(port, ptr, rust_vec_len, data_len),
-        19 => wire__crate__api__game__get_pending_actions_impl(port, ptr, rust_vec_len, data_len),
-        20 => wire__crate__api__game__get_player_career_batting_stats_impl(
+        6 => wire__crate__api__game__declare_retirement_impl(port, ptr, rust_vec_len, data_len),
+        7 => wire__crate__api__game__delete_slot_impl(port, ptr, rust_vec_len, data_len),
+        9 => wire__crate__api__game__get_academics_status_impl(port, ptr, rust_vec_len, data_len),
+        10 => wire__crate__api__game__get_achievements_impl(port, ptr, rust_vec_len, data_len),
+        11 => wire__crate__api__game__get_batter_game_stats_impl(port, ptr, rust_vec_len, data_len),
+        12 => wire__crate__api__game__get_batter_profile_impl(port, ptr, rust_vec_len, data_len),
+        13 => wire__crate__api__game__get_career_events_impl(port, ptr, rust_vec_len, data_len),
+        14 => wire__crate__api__game__get_contract_history_impl(port, ptr, rust_vec_len, data_len),
+        15 => wire__crate__api__game__get_current_team_info_impl(port, ptr, rust_vec_len, data_len),
+        16 => wire__crate__api__game__get_game_log_impl(port, ptr, rust_vec_len, data_len),
+        17 => wire__crate__api__game__get_inbox_impl(port, ptr, rust_vec_len, data_len),
+        18 => wire__crate__api__game__get_injury_history_impl(port, ptr, rust_vec_len, data_len),
+        19 => wire__crate__api__game__get_inning_log_impl(port, ptr, rust_vec_len, data_len),
+        20 => wire__crate__api__game__get_match_venue_impl(port, ptr, rust_vec_len, data_len),
+        21 => wire__crate__api__game__get_meta_status_impl(port, ptr, rust_vec_len, data_len),
+        22 => wire__crate__api__game__get_pending_actions_impl(port, ptr, rust_vec_len, data_len),
+        23 => wire__crate__api__game__get_player_career_batting_stats_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        21 => wire__crate__api__game__get_player_career_pitching_stats_impl(
+        24 => wire__crate__api__game__get_player_career_pitching_stats_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        22 => {
+        25 => wire__crate__api__game__get_player_season_batting_stats_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        26 => wire__crate__api__game__get_pregame_scouting_impl(port, ptr, rust_vec_len, data_len),
+        27 => {
             wire__crate__api__game__get_protagonist_profile_impl(port, ptr, rust_vec_len, data_len)
         }
-        23 => {
+        28 => wire__crate__api__game__get_protagonist_season_summary_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        29 => {
             wire__crate__api__game__get_protagonist_status_impl(port, ptr, rust_vec_len, data_len)
         }
-        24 => wire__crate__api__game__get_relationships_impl(port, ptr, rust_vec_len, data_len),
-        25 => wire__crate__api__game__get_standings_impl(port, ptr, rust_vec_len, data_len),
-        26 => wire__crate__api__game__get_team_rivals_impl(port, ptr, rust_vec_len, data_len),
-        27 => wire__crate__api__game__get_team_schedule_impl(port, ptr, rust_vec_len, data_len),
-        28 => wire__crate__api__game__get_team_season_batting_stats_impl(
+        30 => wire__crate__api__game__get_relationships_impl(port, ptr, rust_vec_len, data_len),
+        31 => wire__crate__api__game__get_standings_impl(port, ptr, rust_vec_len, data_len),
+        32 => wire__crate__api__game__get_team_rivals_impl(port, ptr, rust_vec_len, data_len),
+        33 => wire__crate__api__game__get_team_schedule_impl(port, ptr, rust_vec_len, data_len),
+        34 => wire__crate__api__game__get_team_season_batting_stats_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        29 => wire__crate__api__game__get_team_season_pitching_stats_impl(
+        35 => wire__crate__api__game__get_team_season_pitching_stats_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        30 => {
+        36 => {
             wire__crate__api__game__get_tournament_bracket_impl(port, ptr, rust_vec_len, data_len)
         }
-        31 => wire__crate__api__game__get_training_config_impl(port, ptr, rust_vec_len, data_len),
-        34 => wire__crate__api__simple__init_app_impl(port, ptr, rust_vec_len, data_len),
-        35 => wire__crate__api__game__learnable_pitches_impl(port, ptr, rust_vec_len, data_len),
-        36 => {
+        37 => wire__crate__api__game__get_training_config_impl(port, ptr, rust_vec_len, data_len),
+        40 => wire__crate__api__simple__init_app_impl(port, ptr, rust_vec_len, data_len),
+        41 => wire__crate__api__game__learnable_pitches_impl(port, ptr, rust_vec_len, data_len),
+        42 => {
             wire__crate__api__game__list_active_competitions_impl(port, ptr, rust_vec_len, data_len)
         }
-        37 => {
+        43 => {
             wire__crate__api__game__list_hs_school_details_impl(port, ptr, rust_vec_len, data_len)
         }
-        38 => wire__crate__api__game__list_hs_teams_impl(port, ptr, rust_vec_len, data_len),
-        39 => wire__crate__api__game__list_roster_impl(port, ptr, rust_vec_len, data_len),
-        40 => wire__crate__api__game__list_slots_impl(port, ptr, rust_vec_len, data_len),
-        41 => wire__crate__api__game__list_team_staff_impl(port, ptr, rust_vec_len, data_len),
-        42 => wire__crate__api__game__list_teams_impl(port, ptr, rust_vec_len, data_len),
-        43 => wire__crate__api__game__load_slot_impl(port, ptr, rust_vec_len, data_len),
-        44 => wire__crate__api__game__mark_inbox_read_impl(port, ptr, rust_vec_len, data_len),
-        46 => wire__crate__api__game__new_game_impl(port, ptr, rust_vec_len, data_len),
-        48 => wire__crate__api__game__pitch_type_names_impl(port, ptr, rust_vec_len, data_len),
-        50 => wire__crate__api__game__preview_hs_roster_impl(port, ptr, rust_vec_len, data_len),
-        51 => wire__crate__api__game__resolve_choice_impl(port, ptr, rust_vec_len, data_len),
-        52 => {
+        44 => wire__crate__api__game__list_hs_teams_impl(port, ptr, rust_vec_len, data_len),
+        45 => wire__crate__api__game__list_roster_impl(port, ptr, rust_vec_len, data_len),
+        46 => wire__crate__api__game__list_slots_impl(port, ptr, rust_vec_len, data_len),
+        47 => wire__crate__api__game__list_team_staff_impl(port, ptr, rust_vec_len, data_len),
+        48 => wire__crate__api__game__list_teams_impl(port, ptr, rust_vec_len, data_len),
+        49 => wire__crate__api__game__load_slot_impl(port, ptr, rust_vec_len, data_len),
+        50 => wire__crate__api__game__mark_inbox_read_impl(port, ptr, rust_vec_len, data_len),
+        52 => wire__crate__api__game__new_game_impl(port, ptr, rust_vec_len, data_len),
+        54 => wire__crate__api__game__pitch_type_names_impl(port, ptr, rust_vec_len, data_len),
+        57 => wire__crate__api__game__preview_hs_roster_impl(port, ptr, rust_vec_len, data_len),
+        58 => wire__crate__api__game__resolve_choice_impl(port, ptr, rust_vec_len, data_len),
+        59 => {
             wire__crate__api__game__set_protagonist_profile_impl(port, ptr, rust_vec_len, data_len)
         }
-        53 => wire__crate__api__game__set_training_impl(port, ptr, rust_vec_len, data_len),
-        54 => wire__crate__api__game__set_university_major_impl(port, ptr, rust_vec_len, data_len),
-        55 => wire__crate__api__game__set_weekly_study_mode_impl(port, ptr, rust_vec_len, data_len),
+        60 => wire__crate__api__game__set_training_impl(port, ptr, rust_vec_len, data_len),
+        61 => wire__crate__api__game__set_university_major_impl(port, ptr, rust_vec_len, data_len),
+        62 => wire__crate__api__game__set_weekly_study_mode_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -3316,15 +3739,16 @@ fn pde_ffi_dispatcher_sync_impl(
     match func_id {
         2 => wire__crate__api__game__blood_type_names_impl(ptr, rust_vec_len, data_len),
         3 => wire__crate__api__game__calendar_date_for_day_impl(ptr, rust_vec_len, data_len),
-        6 => wire__crate__api__game__course_names_impl(ptr, rust_vec_len, data_len),
-        9 => wire__crate__api__game__exposed_stat_names_impl(ptr, rust_vec_len, data_len),
-        32 => wire__crate__api__simple__greet_impl(ptr, rust_vec_len, data_len),
-        33 => wire__crate__api__game__hometown_region_names_impl(ptr, rust_vec_len, data_len),
-        45 => wire__crate__api__game__max_known_pitches_impl(ptr, rust_vec_len, data_len),
-        47 => wire__crate__api__game__percentile_to_grade_impl(ptr, rust_vec_len, data_len),
-        49 => wire__crate__api__game__pitcher_archetype_info_impl(ptr, rust_vec_len, data_len),
-        56 => wire__crate__api__game__training_intensity_names_impl(ptr, rust_vec_len, data_len),
-        57 => wire__crate__api__game__treatment_options_impl(ptr, rust_vec_len, data_len),
+        8 => wire__crate__api__game__exposed_stat_names_impl(ptr, rust_vec_len, data_len),
+        38 => wire__crate__api__simple__greet_impl(ptr, rust_vec_len, data_len),
+        39 => wire__crate__api__game__hometown_region_names_impl(ptr, rust_vec_len, data_len),
+        51 => wire__crate__api__game__max_known_pitches_impl(ptr, rust_vec_len, data_len),
+        53 => wire__crate__api__game__percentile_to_grade_impl(ptr, rust_vec_len, data_len),
+        55 => wire__crate__api__game__pitcher_archetype_info_impl(ptr, rust_vec_len, data_len),
+        56 => wire__crate__api__game__power_names_impl(ptr, rust_vec_len, data_len),
+        63 => wire__crate__api__game__training_intensity_names_impl(ptr, rust_vec_len, data_len),
+        64 => wire__crate__api__game__training_type_options_impl(ptr, rust_vec_len, data_len),
+        65 => wire__crate__api__game__treatment_options_impl(ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -3383,6 +3807,29 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::game::AchievementInfo>
     for crate::api::game::AchievementInfo
 {
     fn into_into_dart(self) -> crate::api::game::AchievementInfo {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::game::BatterProfileInfo {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.name.into_into_dart().into_dart(),
+            self.contact.into_into_dart().into_dart(),
+            self.power.into_into_dart().into_dart(),
+            self.eye.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::game::BatterProfileInfo
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::game::BatterProfileInfo>
+    for crate::api::game::BatterProfileInfo
+{
+    fn into_into_dart(self) -> crate::api::game::BatterProfileInfo {
         self
     }
 }
@@ -3689,6 +4136,8 @@ impl flutter_rust_bridge::IntoDart for crate::api::game::MatchStepInfo {
                 bases,
                 home_runs,
                 away_runs,
+                fatigue,
+                pitches_thrown,
             } => [
                 0.into_dart(),
                 batter_id.into_into_dart().into_dart(),
@@ -3701,6 +4150,8 @@ impl flutter_rust_bridge::IntoDart for crate::api::game::MatchStepInfo {
                 bases.into_into_dart().into_dart(),
                 home_runs.into_into_dart().into_dart(),
                 away_runs.into_into_dart().into_dart(),
+                fatigue.into_into_dart().into_dart(),
+                pitches_thrown.into_into_dart().into_dart(),
             ]
             .into_dart(),
             crate::api::game::MatchStepInfo::GameOver {
@@ -3745,6 +4196,28 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::game::MatchStepInfo>
     for crate::api::game::MatchStepInfo
 {
     fn into_into_dart(self) -> crate::api::game::MatchStepInfo {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::game::MatchVenueInfo {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.home_team_id.into_into_dart().into_dart(),
+            self.away_team_id.into_into_dart().into_dart(),
+            self.stadium_id.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::game::MatchVenueInfo
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::game::MatchVenueInfo>
+    for crate::api::game::MatchVenueInfo
+{
+    fn into_into_dart(self) -> crate::api::game::MatchVenueInfo {
         self
     }
 }
@@ -3850,6 +4323,7 @@ impl flutter_rust_bridge::IntoDart for crate::api::game::PlayerBattingStats {
             self.at_bats.into_into_dart().into_dart(),
             self.hits.into_into_dart().into_dart(),
             self.home_runs.into_into_dart().into_dart(),
+            self.walks.into_into_dart().into_dart(),
             self.rbi.into_into_dart().into_dart(),
             self.stolen_bases.into_into_dart().into_dart(),
             self.caught_stealing.into_into_dart().into_dart(),
@@ -3902,6 +4376,33 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::game::PlayerPitchingStats>
     for crate::api::game::PlayerPitchingStats
 {
     fn into_into_dart(self) -> crate::api::game::PlayerPitchingStats {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::game::PregameScoutingInfo {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.opponent_team_id.into_into_dart().into_dart(),
+            self.starter_name.into_into_dart().into_dart(),
+            self.starter_velocity.into_into_dart().into_dart(),
+            self.starter_control.into_into_dart().into_dart(),
+            self.starter_stuff.into_into_dart().into_dart(),
+            self.top_batters.into_into_dart().into_dart(),
+            self.weather.into_into_dart().into_dart(),
+            self.park_factor_label.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::game::PregameScoutingInfo
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::game::PregameScoutingInfo>
+    for crate::api::game::PregameScoutingInfo
+{
+    fn into_into_dart(self) -> crate::api::game::PregameScoutingInfo {
         self
     }
 }
@@ -4032,6 +4533,29 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::game::ScheduleGameInfo>
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::game::ScoutedBatterInfo {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.name.into_into_dart().into_dart(),
+            self.contact.into_into_dart().into_dart(),
+            self.power.into_into_dart().into_dart(),
+            self.eye.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::game::ScoutedBatterInfo
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::game::ScoutedBatterInfo>
+    for crate::api::game::ScoutedBatterInfo
+{
+    fn into_into_dart(self) -> crate::api::game::ScoutedBatterInfo {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::api::game::SeasonLine {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
@@ -4144,8 +4668,8 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::game::TournamentBracketInfo>
 impl flutter_rust_bridge::IntoDart for crate::api::game::TrainingConfigInfo {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
-            self.primary_stat.into_into_dart().into_dart(),
-            self.secondary_stats.into_into_dart().into_dart(),
+            self.primary_training.into_into_dart().into_dart(),
+            self.secondary_training.into_into_dart().into_dart(),
             self.intensity.into_into_dart().into_dart(),
             self.new_pitch.into_into_dart().into_dart(),
             self.mastery_pitch.into_into_dart().into_dart(),
@@ -4162,6 +4686,28 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::game::TrainingConfigInfo>
     for crate::api::game::TrainingConfigInfo
 {
     fn into_into_dart(self) -> crate::api::game::TrainingConfigInfo {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::game::TrainingTypeInfo {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.id.into_into_dart().into_dart(),
+            self.name.into_into_dart().into_dart(),
+            self.stats.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::game::TrainingTypeInfo
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::game::TrainingTypeInfo>
+    for crate::api::game::TrainingTypeInfo
+{
+    fn into_into_dart(self) -> crate::api::game::TrainingTypeInfo {
         self
     }
 }
@@ -4229,6 +4775,16 @@ impl SseEncode for crate::api::game::AchievementInfo {
         <bool>::sse_encode(self.achieved, serializer);
         <Option<i64>>::sse_encode(self.achieved_day, serializer);
         <i64>::sse_encode(self.counter, serializer);
+    }
+}
+
+impl SseEncode for crate::api::game::BatterProfileInfo {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.name, serializer);
+        <f64>::sse_encode(self.contact, serializer);
+        <f64>::sse_encode(self.power, serializer);
+        <f64>::sse_encode(self.eye, serializer);
     }
 }
 
@@ -4587,6 +5143,16 @@ impl SseEncode for Vec<crate::api::game::ScheduleGameInfo> {
     }
 }
 
+impl SseEncode for Vec<crate::api::game::ScoutedBatterInfo> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::api::game::ScoutedBatterInfo>::sse_encode(item, serializer);
+        }
+    }
+}
+
 impl SseEncode for Vec<crate::api::game::SeasonLine> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -4627,6 +5193,16 @@ impl SseEncode for Vec<crate::api::game::TeamOption> {
     }
 }
 
+impl SseEncode for Vec<crate::api::game::TrainingTypeInfo> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::api::game::TrainingTypeInfo>::sse_encode(item, serializer);
+        }
+    }
+}
+
 impl SseEncode for Vec<crate::api::game::TreatmentOption> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -4660,6 +5236,8 @@ impl SseEncode for crate::api::game::MatchStepInfo {
                 bases,
                 home_runs,
                 away_runs,
+                fatigue,
+                pitches_thrown,
             } => {
                 <i32>::sse_encode(0, serializer);
                 <String>::sse_encode(batter_id, serializer);
@@ -4672,6 +5250,8 @@ impl SseEncode for crate::api::game::MatchStepInfo {
                 <Vec<bool>>::sse_encode(bases, serializer);
                 <u32>::sse_encode(home_runs, serializer);
                 <u32>::sse_encode(away_runs, serializer);
+                <f64>::sse_encode(fatigue, serializer);
+                <u32>::sse_encode(pitches_thrown, serializer);
             }
             crate::api::game::MatchStepInfo::GameOver {
                 home_runs,
@@ -4703,6 +5283,15 @@ impl SseEncode for crate::api::game::MatchStepInfo {
                 unimplemented!("");
             }
         }
+    }
+}
+
+impl SseEncode for crate::api::game::MatchVenueInfo {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.home_team_id, serializer);
+        <String>::sse_encode(self.away_team_id, serializer);
+        <String>::sse_encode(self.stadium_id, serializer);
     }
 }
 
@@ -4760,6 +5349,16 @@ impl SseEncode for Option<crate::api::game::MatchStepInfo> {
         <bool>::sse_encode(self.is_some(), serializer);
         if let Some(value) = self {
             <crate::api::game::MatchStepInfo>::sse_encode(value, serializer);
+        }
+    }
+}
+
+impl SseEncode for Option<crate::api::game::MatchVenueInfo> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <bool>::sse_encode(self.is_some(), serializer);
+        if let Some(value) = self {
+            <crate::api::game::MatchVenueInfo>::sse_encode(value, serializer);
         }
     }
 }
@@ -4835,6 +5434,7 @@ impl SseEncode for crate::api::game::PlayerBattingStats {
         <i64>::sse_encode(self.at_bats, serializer);
         <i64>::sse_encode(self.hits, serializer);
         <i64>::sse_encode(self.home_runs, serializer);
+        <i64>::sse_encode(self.walks, serializer);
         <i64>::sse_encode(self.rbi, serializer);
         <i64>::sse_encode(self.stolen_bases, serializer);
         <i64>::sse_encode(self.caught_stealing, serializer);
@@ -4862,6 +5462,20 @@ impl SseEncode for crate::api::game::PlayerPitchingStats {
         <f64>::sse_encode(self.era, serializer);
         <f64>::sse_encode(self.whip, serializer);
         <f64>::sse_encode(self.k_per_9, serializer);
+    }
+}
+
+impl SseEncode for crate::api::game::PregameScoutingInfo {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.opponent_team_id, serializer);
+        <String>::sse_encode(self.starter_name, serializer);
+        <f64>::sse_encode(self.starter_velocity, serializer);
+        <f64>::sse_encode(self.starter_control, serializer);
+        <f64>::sse_encode(self.starter_stuff, serializer);
+        <Vec<crate::api::game::ScoutedBatterInfo>>::sse_encode(self.top_batters, serializer);
+        <String>::sse_encode(self.weather, serializer);
+        <String>::sse_encode(self.park_factor_label, serializer);
     }
 }
 
@@ -4926,6 +5540,16 @@ impl SseEncode for crate::api::game::ScheduleGameInfo {
     }
 }
 
+impl SseEncode for crate::api::game::ScoutedBatterInfo {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.name, serializer);
+        <f64>::sse_encode(self.contact, serializer);
+        <f64>::sse_encode(self.power, serializer);
+        <f64>::sse_encode(self.eye, serializer);
+    }
+}
+
 impl SseEncode for crate::api::game::SeasonLine {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -4982,12 +5606,21 @@ impl SseEncode for crate::api::game::TournamentBracketInfo {
 impl SseEncode for crate::api::game::TrainingConfigInfo {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <String>::sse_encode(self.primary_stat, serializer);
-        <Vec<String>>::sse_encode(self.secondary_stats, serializer);
+        <String>::sse_encode(self.primary_training, serializer);
+        <String>::sse_encode(self.secondary_training, serializer);
         <String>::sse_encode(self.intensity, serializer);
         <Option<String>>::sse_encode(self.new_pitch, serializer);
         <Option<String>>::sse_encode(self.mastery_pitch, serializer);
         <i64>::sse_encode(self.pitch_weeks, serializer);
+    }
+}
+
+impl SseEncode for crate::api::game::TrainingTypeInfo {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.id, serializer);
+        <String>::sse_encode(self.name, serializer);
+        <Vec<String>>::sse_encode(self.stats, serializer);
     }
 }
 

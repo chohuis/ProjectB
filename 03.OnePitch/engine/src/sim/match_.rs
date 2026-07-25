@@ -205,8 +205,9 @@ pub(crate) fn fatigue_effective(base: f64, fatigue: f64) -> f64 {
 /// 위기상황 판정 — 07_매치_엔진.md §4 "만루·동점·역전 기회 등 레버리지
 /// 높은 타석"만 구현. "개인기록 근접"·"라이벌 매치업"은 각각 기록 추적·
 /// 관계도 시스템이 있어야 판단 가능해 스코프 밖(10_구현_Phase_계획.md
-/// 참고) — 다음 서브분 후보. 원래 `sim::pitch`(반자동 격상 트리거)에서만
-/// 쓰였지만 Phase 1부터 배경 시뮬(`simulate_half_inning`)의 클러치·침착함
+/// 참고) — 다음 서브분 후보. 원래 `sim::pitch`(반자동 모드 격상 트리거,
+/// 대화 2026-07-25에서 반자동 모드 자체가 폐지됨)에서만 쓰였지만 Phase 1부터
+/// 배경 시뮬(`simulate_half_inning`)의 클러치·침착함
 /// 보정에도 재사용해 이 파일로 옮겼다 — `sim::pitch`는 재노출(`pub use`)로
 /// 기존 호출부를 그대로 유지.
 pub fn is_high_leverage_situation(bases_loaded: bool, score_diff: i32, inning: u32) -> bool {

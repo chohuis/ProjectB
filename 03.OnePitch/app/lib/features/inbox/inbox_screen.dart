@@ -2,12 +2,14 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:app/src/rust/api/game.dart';
 import 'package:app/features/game/game_provider.dart';
 import 'package:app/shared/design/colors.dart';
 import 'package:app/shared/design/widgets.dart';
 import 'package:app/shared/loading_indicator.dart';
+import 'package:app/shared/team_names.dart';
 
 /// [04_메시지함](../../../../04_UI기획/04_메시지함.md) — "단일 채널": 선택지
 /// 없는 알림(`inbox` 테이블, `getInbox()`)과 선택지 있는 이벤트
@@ -30,20 +32,22 @@ class InboxScreen extends ConsumerStatefulWidget {
   ConsumerState<InboxScreen> createState() => _InboxScreenState();
 }
 
-enum _RowKind { message, event }
+enum _RowKind { message, event, game }
 
-enum _Category { event, system, general }
+enum _Category { event, game, system, general }
 
 enum _Sort { newest, oldest }
 
 ({String label, Color color}) _categoryInfo(_Category c) => switch (c) {
       _Category.event => (label: '이벤트', color: AppColors.warn),
+      _Category.game => (label: '경기', color: AppColors.accentStrong),
       _Category.system => (label: '시스템', color: AppColors.accent),
       _Category.general => (label: '일반', color: AppColors.gold),
     };
 
 _Category _categoryFor(String kind) => switch (kind) {
       'event' => _Category.event,
+      'game' => _Category.game,
       'injury_warning' => _Category.system,
       _ => _Category.general,
     };
@@ -56,6 +60,7 @@ String _senderFor(String kind) => switch (kind) {
       'injury_warning' => '의무팀',
       'achievement' => '기록실',
       'event' => '이벤트',
+      'game' => '구단',
       _ => '시스템',
     };
 
@@ -68,6 +73,7 @@ String _subjectFor(String kind) => switch (kind) {
       'injury_warning' => '부상 경고',
       'achievement' => '기록 달성',
       'event' => '이벤트 발생',
+      'game' => '경기 안내',
       _ => '알림',
     };
 
@@ -93,6 +99,9 @@ class _InboxRow {
     required this.read,
     required this.blocking,
     this.choices = const [],
+    this.gameId,
+    this.homeTeamId,
+    this.awayTeamId,
   });
 
   final String id;
@@ -103,6 +112,12 @@ class _InboxRow {
   final bool read;
   final bool blocking; // pending_actions 유래 — 응답 전까지 진행을 막음
   final List<({String id, String label, String tone, String hint})> choices;
+
+  // `_RowKind.game` 전용 — 프리게임 브리핑(`_GameScoutingSection`)이
+  // `getPregameScouting`을 호출하는 데 필요한 원본 payload 필드.
+  final String? gameId;
+  final String? homeTeamId;
+  final String? awayTeamId;
 
   _Category get category => _categoryFor(kind);
   String get sender => _senderFor(kind);
@@ -124,11 +139,16 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
   Future<void> _load() async {
     final messages = await getInbox();
     final pending = await getPendingActions();
+    // 'game' 행 본문에 상대팀 이름을 넣기 위한 조회 — 팀 목록은 세션당
+    // 한 번만 로드되는 캐시(`teamNamesProvider`)라 매번 불러도 부담 없음.
+    final teamNames = await ref.read(teamNamesProvider.future);
+    final myTeam = await getCurrentTeamInfo();
 
     final rows = <_InboxRow>[
       for (final m in messages)
         _InboxRow(id: m.id, rowKind: _RowKind.message, kind: m.kind, day: m.day.toInt(), body: m.body, read: m.read, blocking: false),
       for (final p in pending.where((p) => p.kind == 'event')) ..._eventRows(p),
+      for (final p in pending.where((p) => p.kind == 'game')) ..._gameRows(p, teamNames, myTeam?.teamId),
     ];
 
     if (mounted) setState(() => _rows = rows);
@@ -163,6 +183,40 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
     }
   }
 
+  /// 경기 진입 메시지(대화 2026-07-25 재설계) — 예전엔 `GameScreen`이
+  /// 자동/수동 선택을 인라인으로 보여줬지만, 이제 그 선택 자체가 여기서
+  /// 이뤄진다. 고른 뒤 매치 세션이 실제로 시작되면(`matchStep`이 채워지면)
+  /// `_openMessage`가 `/game/match`로 넘긴다. 반자동 모드는 폐지(대화
+  /// 2026-07-25, 07_매치_엔진.md §4)돼 자동/수동 둘만 남았다.
+  Iterable<_InboxRow> _gameRows(PendingActionInfo action, Map<String, String> teamNames, String? myTeamId) sync* {
+    try {
+      final payload = jsonDecode(action.payloadJson) as Map<String, dynamic>;
+      final home = payload['home']?.toString() ?? '';
+      final away = payload['away']?.toString() ?? '';
+      final isHome = myTeamId != null && home == myTeamId;
+      final opponentId = isHome ? away : home;
+      final opponentName = teamNames[opponentId] ?? opponentId;
+      yield _InboxRow(
+        id: action.id,
+        rowKind: _RowKind.game,
+        kind: 'game',
+        day: action.createdDay.toInt(),
+        body: 'vs $opponentName (${isHome ? '홈' : '원정'}) — 경기 진행 방식을 선택하세요.',
+        read: false,
+        blocking: true,
+        choices: const [
+          (id: '자동', label: '자동 진행', tone: 'neutral', hint: 'AI가 경기를 전부 진행합니다'),
+          (id: '수동', label: '수동 플레이', tone: 'neutral', hint: '매 구 직접 결정합니다'),
+        ],
+        gameId: payload['game_id']?.toString(),
+        homeTeamId: home,
+        awayTeamId: away,
+      );
+    } catch (_) {
+      // payload가 예상 형태가 아니면 목록에서 조용히 뺀다(_eventRows와 동일 방어).
+    }
+  }
+
   List<_InboxRow> _visibleRows(List<_InboxRow> rows) {
     var filtered = rows.toList();
     if (_unreadOnly) {
@@ -189,6 +243,17 @@ class _InboxScreenState extends ConsumerState<InboxScreen> {
       context: context,
       builder: (_) => _MessageDetailDialog(row: row, onRespond: (choiceId) => _respond(row.id, choiceId)),
     );
+    if (!mounted) return;
+    // 경기 모드를 골라 매치 세션이 실제로 시작됐으면(자동/수동 둘 다
+    // `resolveChoice`가 `matchStep`을 채워 돌려준다) 전용 화면으로 이동 —
+    // "경기 화면 진입도 메시지로" 요청의 마지막 연결 지점.
+    if (row.rowKind == _RowKind.game) {
+      final step = ref.read(gameControllerProvider).matchStep;
+      if (step != null) {
+        context.push('/game/match');
+        return;
+      }
+    }
     await _load();
   }
 
@@ -424,6 +489,13 @@ class _MessageDetailDialogState extends State<_MessageDetailDialog> {
     setState(() => _resolving = true);
     await widget.onRespond(choice.id);
     if (!mounted) return;
+    if (widget.row.rowKind == _RowKind.game) {
+      // "선택 완료" 패널을 보여줄 필요 없이 바로 매치 화면으로 넘어간다 —
+      // 다이얼로그 자신의 context로 닫아야 `_openMessage`의 `showDialog`
+      // 대기가 풀리고 그 다음 라우팅 분기를 탈 수 있다.
+      Navigator.pop(context);
+      return;
+    }
     setState(() {
       _resolving = false;
       _resolved = choice;
@@ -473,7 +545,16 @@ class _MessageDetailDialogState extends State<_MessageDetailDialog> {
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                child: Text(row.body, style: const TextStyle(color: AppColors.textMuted, fontSize: 14, height: 1.5)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(row.body, style: const TextStyle(color: AppColors.textMuted, fontSize: 14, height: 1.5)),
+                    if (row.rowKind == _RowKind.game && row.gameId != null && row.homeTeamId != null && row.awayTeamId != null) ...[
+                      const SizedBox(height: 12),
+                      _GameScoutingSection(gameId: row.gameId!, homeTeamId: row.homeTeamId!, awayTeamId: row.awayTeamId!),
+                    ],
+                  ],
+                ),
               ),
             ),
             if (row.blocking && row.choices.isNotEmpty) ...[
@@ -502,6 +583,77 @@ class _MessageDetailDialogState extends State<_MessageDetailDialog> {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// 프리게임 브리핑(대화 2026-07-25) — `02.SvelteElectron`의
+/// `PreGameBriefingModal.svelte` 참고, 모바일 메시지 다이얼로그 안에
+/// 들어갈 만큼 축약: 상대 선발 1명 + 상위 타자 3명 + 날씨·파크팩터.
+/// `getPregameScouting`이 실제 매치가 시작될 때와 같은 결정적 값(로테이션
+/// 순번·시드 고정 날씨)을 미리 계산해주므로 여기서 새 판정을 하지 않는다.
+class _GameScoutingSection extends StatefulWidget {
+  const _GameScoutingSection({required this.gameId, required this.homeTeamId, required this.awayTeamId});
+
+  final String gameId;
+  final String homeTeamId;
+  final String awayTeamId;
+
+  @override
+  State<_GameScoutingSection> createState() => _GameScoutingSectionState();
+}
+
+class _GameScoutingSectionState extends State<_GameScoutingSection> {
+  late final Future<PregameScoutingInfo> _future =
+      getPregameScouting(gameId: widget.gameId, homeTeamId: widget.homeTeamId, awayTeamId: widget.awayTeamId);
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<PregameScoutingInfo>(
+      future: _future,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const Padding(padding: EdgeInsets.symmetric(vertical: 8), child: LoadingIndicator());
+        }
+        final scouting = snapshot.data!;
+        return Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(color: AppColors.surfaceLow, border: Border.all(color: AppColors.border), borderRadius: BorderRadius.circular(8)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  const Text('스카우팅 리포트', style: TextStyle(color: AppColors.textSecondary, fontSize: 11, fontWeight: FontWeight.w700)),
+                  const Spacer(),
+                  _TagChip(label: scouting.weather, color: AppColors.accent),
+                  const SizedBox(width: 6),
+                  _TagChip(label: scouting.parkFactorLabel, color: AppColors.gold),
+                ],
+              ),
+              const SizedBox(height: 10),
+              const Text('상대 선발', style: TextStyle(color: AppColors.textSecondary, fontSize: 11, fontWeight: FontWeight.w600)),
+              const SizedBox(height: 2),
+              Text(
+                '${scouting.starterName} — 구속 ${scouting.starterVelocity.round()} · 제구 ${scouting.starterControl.round()} · 구위 ${scouting.starterStuff.round()}',
+                style: const TextStyle(color: AppColors.textPrimary, fontSize: 13),
+              ),
+              const SizedBox(height: 10),
+              const Text('주의 타자', style: TextStyle(color: AppColors.textSecondary, fontSize: 11, fontWeight: FontWeight.w600)),
+              const SizedBox(height: 2),
+              for (final batter in scouting.topBatters)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 1),
+                  child: Text(
+                    '${batter.name} — 파워 ${batter.power.round()} · 컨택 ${batter.contact.round()} · 선구 ${batter.eye.round()}',
+                    style: const TextStyle(color: AppColors.textPrimary, fontSize: 13),
+                  ),
+                ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

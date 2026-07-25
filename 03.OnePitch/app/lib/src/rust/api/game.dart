@@ -10,7 +10,46 @@ part 'game.freezed.dart';
 
 // These functions are ignored because they are not marked as `pub`: `avg_rank_from_season_ranks`, `from_line`, `from_line`, `standings_rows`, `stars_from_group_position`, `tournament_display_name`, `tournament_includes_team`, `with_state_mut`, `with_state`, `world_seed`
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `GameState`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
+
+Future<PregameScoutingInfo> getPregameScouting({
+  required String gameId,
+  required String homeTeamId,
+  required String awayTeamId,
+}) => RustLib.instance.api.crateApiGameGetPregameScouting(
+  gameId: gameId,
+  homeTeamId: homeTeamId,
+  awayTeamId: awayTeamId,
+);
+
+Future<BatterProfileInfo> getBatterProfile({required String npcId}) =>
+    RustLib.instance.api.crateApiGameGetBatterProfile(npcId: npcId);
+
+/// 매치 화면 박스스코어(migration v26, 대화 2026-07-25) — 이닝별
+/// `[{"inning","top_of_inning","runs","hits","walks"}, ...]` JSON 배열.
+/// 진행 중인 매치 세션이 없으면 `None`(모듈 문서 "JSON 원시 통과" 관례 —
+/// Dart가 dart:convert로 표시용으로만 읽는다).
+Future<String?> getInningLog() =>
+    RustLib.instance.api.crateApiGameGetInningLog();
+
+Future<MatchVenueInfo?> getMatchVenue() =>
+    RustLib.instance.api.crateApiGameGetMatchVenue();
+
+/// 매치 화면 타자 카드 "이번 경기" 라인(migration v26, 대화 2026-07-25) —
+/// `PlayerBattingStats`와 대칭이지만 시즌 전체가 아니라 지금 진행 중인
+/// 경기 하나만. 그 선수가 이번 경기에 아직 타석에 서지 않았거나 매치
+/// 세션이 없으면 0으로 채운 라인.
+Future<PlayerBattingStats> getBatterGameStats({required String npcId}) =>
+    RustLib.instance.api.crateApiGameGetBatterGameStats(npcId: npcId);
+
+/// 매치 화면 타자 카드 "시즌 전체" 라인(대화 2026-07-25) — `get_team_season_batting_stats`
+/// 와 같은 소스(진행 중인 `season_stats` 합산)를 선수 한 명만 뽑는 얇은
+/// 래퍼. `get_player_career_batting_stats`(과거 확정 시즌들 통산)와는
+/// 시즌 범위가 다르다.
+Future<PlayerBattingStats> getPlayerSeasonBattingStats({
+  required String npcId,
+}) =>
+    RustLib.instance.api.crateApiGameGetPlayerSeasonBattingStats(npcId: npcId);
 
 /// 뉴게임 — [07_주인공_생성](../../../02_기획/07_주인공_생성.md) §1의 7단계
 /// 흐름 중 실제 데이터를 만드는 마지막 단계(스텝 1~6은 Dart 쪽 폼 상태일
@@ -111,15 +150,17 @@ Future<void> setUniversityMajor({required String major}) =>
     RustLib.instance.api.crateApiGameSetUniversityMajor(major: major);
 
 /// 과목 석차백분율(1=상위)을 9등급으로 — 학업 탭 과목별 표에서 순수 계산이라
-/// I/O·락 없이 동기 호출로 둔다(`course_names()`와 같은 패턴).
+/// I/O·락 없이 동기 호출로 둔다(`power_names()`와 같은 패턴).
 PlatformInt64 percentileToGrade({required double percentile}) =>
     RustLib.instance.api.crateApiGamePercentileToGrade(percentile: percentile);
 
-/// 1구 조작 집중뷰의 3×3 코스 그리드 버튼 이름 — `sim::pitch::Course`의
-/// 9개 값 그대로(`resolve_choice`의 `"구종:코스"` choice_id에 이 이름을
-/// 그대로 넣으면 된다). 순수 계산(I/O·락 없음)이라 동기 호출로 둔다 —
-/// Dart 쪽에서 `FutureBuilder` 없이 바로 리스트를 쓸 수 있다.
-List<String> courseNames() => RustLib.instance.api.crateApiGameCourseNames();
+/// 1구 조작 집중뷰의 구위 다이얼 3단계 — `sim::pitch::Power`의 라벨
+/// 그대로(`resolve_choice`의 `"구종:x:y:구위"` choice_id 마지막 파트에
+/// 이 이름을 그대로 넣으면 된다). 투구 위치는 더 이상 고정 목록이 아니라
+/// 연속좌표(대화 2026-07-25, 매치 화면 재설계)라 별도 이름 목록이 없다 —
+/// Dart 쪽 코스 캔버스가 탭 위치를 직접 x,y로 변환해 보낸다. 순수 계산
+/// (I/O·락 없음)이라 동기 호출로 둔다.
+List<String> powerNames() => RustLib.instance.api.crateApiGamePowerNames();
 
 CalendarDateInfo calendarDateForDay({required PlatformInt64 day}) =>
     RustLib.instance.api.crateApiGameCalendarDateForDay(day: day);
@@ -151,6 +192,10 @@ List<String> exposedStatNames() =>
 List<String> trainingIntensityNames() =>
     RustLib.instance.api.crateApiGameTrainingIntensityNames();
 
+/// 순수 상수라 동기.
+List<TrainingTypeInfo> trainingTypeOptions() =>
+    RustLib.instance.api.crateApiGameTrainingTypeOptions();
+
 List<PitcherArchetypeInfo> pitcherArchetypeInfo() =>
     RustLib.instance.api.crateApiGamePitcherArchetypeInfo();
 
@@ -165,16 +210,14 @@ Future<TrainingConfigInfo?> getTrainingConfig() =>
 /// 마스터리 단계를 올리는 슬롯(05_구종_시스템.md §2, 대화 2026-07-23) —
 /// 둘 중 하나만 넘길 수 있다.
 Future<void> setTraining({
-  required String primaryStat,
-  required String secondaryStat1,
-  required String secondaryStat2,
+  required String primaryTraining,
+  required String secondaryTraining,
   required String intensity,
   String? newPitch,
   String? masteryPitch,
 }) => RustLib.instance.api.crateApiGameSetTraining(
-  primaryStat: primaryStat,
-  secondaryStat1: secondaryStat1,
-  secondaryStat2: secondaryStat2,
+  primaryTraining: primaryTraining,
+  secondaryTraining: secondaryTraining,
   intensity: intensity,
   newPitch: newPitch,
   masteryPitch: masteryPitch,
@@ -355,6 +398,12 @@ Future<void> declareRetirement() =>
 Future<CareerSummary> careerSummary() =>
     RustLib.instance.api.crateApiGameCareerSummary();
 
+/// 매치 화면 투수 카드 "이번 시즌" 성적(대화 2026-07-25) — `career_summary`와
+/// 같은 모양이지만 통산 전체가 아니라 진행 중인 시즌만(`aggregate_game_log`의
+/// `season` 필터, `get_meta_status().season`과 동일한 값 사용).
+Future<CareerSummary> getProtagonistSeasonSummary() =>
+    RustLib.instance.api.crateApiGameGetProtagonistSeasonSummary();
+
 Future<List<SeasonLine>> careerTimeline() =>
     RustLib.instance.api.crateApiGameCareerTimeline();
 
@@ -480,6 +529,38 @@ class AchievementInfo {
           achieved == other.achieved &&
           achievedDay == other.achievedDay &&
           counter == other.counter;
+}
+
+/// 매치 화면 "타자 정보" 카드(대화 2026-07-25, 좌/우 레이아웃 재설계)용 —
+/// `MatchStepInfo_AwaitingPitch.batter_id`는 raw npc id뿐이라 이름·능력치를
+/// 못 보여줬다. `npc.stats`가 이미 컨택/파워/선구안을 갖고 있어(§01_선수_능력치)
+/// 원라이너 조회로 충분 — 새 시뮬레이션 로직 없음.
+class BatterProfileInfo {
+  final String name;
+  final double contact;
+  final double power;
+  final double eye;
+
+  const BatterProfileInfo({
+    required this.name,
+    required this.contact,
+    required this.power,
+    required this.eye,
+  });
+
+  @override
+  int get hashCode =>
+      name.hashCode ^ contact.hashCode ^ power.hashCode ^ eye.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is BatterProfileInfo &&
+          runtimeType == other.runtimeType &&
+          name == other.name &&
+          contact == other.contact &&
+          power == other.power &&
+          eye == other.eye;
 }
 
 /// 대회 브래킷 경기 한 줄 — `get_tournament_bracket`용. 팀 이름은 여기서
@@ -952,6 +1033,11 @@ sealed class MatchStepInfo with _$MatchStepInfo {
     required List<bool> bases,
     required int homeRuns,
     required int awayRuns,
+
+    /// 매치 화면 스태미나 게이지용(§6-N) — `PitcherChangeDecision.fatigue`
+    /// 와 같은 값 출처.
+    required double fatigue,
+    required int pitchesThrown,
   }) = MatchStepInfo_AwaitingPitch;
   const factory MatchStepInfo.gameOver({
     required int homeRuns,
@@ -969,6 +1055,36 @@ sealed class MatchStepInfo with _$MatchStepInfo {
     required double fatigue,
     required bool managerRecommendsPull,
   }) = MatchStepInfo_PitcherChangeDecision;
+}
+
+/// 매치 화면 박스스코어 라벨·주자 팀색·구장 그림(대화 2026-07-25) — 홈/
+/// 원정 팀 id(Dart `hsSchoolColor`로 학교색 해시)와 홈 구장 id. 구장 id는
+/// Dart가 `assets/stadium/{id}.png`(구장별로 미리 절차 생성해둔 도트아트,
+/// content.db의 27개 stadium 행 하나당 하나씩) 자산 키로 그대로 쓴다.
+/// 진행 중인 매치 세션이 없으면 `None`.
+class MatchVenueInfo {
+  final String homeTeamId;
+  final String awayTeamId;
+  final String stadiumId;
+
+  const MatchVenueInfo({
+    required this.homeTeamId,
+    required this.awayTeamId,
+    required this.stadiumId,
+  });
+
+  @override
+  int get hashCode =>
+      homeTeamId.hashCode ^ awayTeamId.hashCode ^ stadiumId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is MatchVenueInfo &&
+          runtimeType == other.runtimeType &&
+          homeTeamId == other.homeTeamId &&
+          awayTeamId == other.awayTeamId &&
+          stadiumId == other.stadiumId;
 }
 
 /// 현재 진행일·시즌 — 전용 화면 없이도 "시즌종료"를 넘겼는지 UI가 배지로
@@ -1113,6 +1229,7 @@ class PlayerBattingStats {
   final PlatformInt64 atBats;
   final PlatformInt64 hits;
   final PlatformInt64 homeRuns;
+  final PlatformInt64 walks;
   final PlatformInt64 rbi;
   final PlatformInt64 stolenBases;
   final PlatformInt64 caughtStealing;
@@ -1129,6 +1246,7 @@ class PlayerBattingStats {
     required this.atBats,
     required this.hits,
     required this.homeRuns,
+    required this.walks,
     required this.rbi,
     required this.stolenBases,
     required this.caughtStealing,
@@ -1147,6 +1265,7 @@ class PlayerBattingStats {
       atBats.hashCode ^
       hits.hashCode ^
       homeRuns.hashCode ^
+      walks.hashCode ^
       rbi.hashCode ^
       stolenBases.hashCode ^
       caughtStealing.hashCode ^
@@ -1167,6 +1286,7 @@ class PlayerBattingStats {
           atBats == other.atBats &&
           hits == other.hits &&
           homeRuns == other.homeRuns &&
+          walks == other.walks &&
           rbi == other.rbi &&
           stolenBases == other.stolenBases &&
           caughtStealing == other.caughtStealing &&
@@ -1243,6 +1363,61 @@ class PlayerPitchingStats {
           era == other.era &&
           whip == other.whip &&
           kPer9 == other.kPer9;
+}
+
+/// 프리게임 브리핑([04_메시지함] 확장, 대화 2026-07-25) — `'game'` PendingAction
+/// payload의 `game_id`/`home`/`away`를 그대로 받아 상대 선발·타선 상위·
+/// 날씨·파크팩터를 미리 보여준다. 새 시뮬레이션 로직 없이 실제 매치가
+/// 이미 쓰는 값들을 그대로 재사용: 선발은 `repository::load_starting_pitcher`
+/// (로테이션 순번 그대로), 타선은 `repository::load_batting_lineup`(라인업
+/// 순서 그대로) 중 컨택+파워 합산 상위 3명, 날씨는 실제 매치 세션이 쓰는
+/// 것과 동일한 결정적 시드(`league_sub_seed(world_seed, "weather:{game_id}")`)
+/// 로 미리 굴려서 매치가 실제로 시작될 때와 같은 값이 나오게 한다.
+class PregameScoutingInfo {
+  final String opponentTeamId;
+  final String starterName;
+  final double starterVelocity;
+  final double starterControl;
+  final double starterStuff;
+  final List<ScoutedBatterInfo> topBatters;
+  final String weather;
+  final String parkFactorLabel;
+
+  const PregameScoutingInfo({
+    required this.opponentTeamId,
+    required this.starterName,
+    required this.starterVelocity,
+    required this.starterControl,
+    required this.starterStuff,
+    required this.topBatters,
+    required this.weather,
+    required this.parkFactorLabel,
+  });
+
+  @override
+  int get hashCode =>
+      opponentTeamId.hashCode ^
+      starterName.hashCode ^
+      starterVelocity.hashCode ^
+      starterControl.hashCode ^
+      starterStuff.hashCode ^
+      topBatters.hashCode ^
+      weather.hashCode ^
+      parkFactorLabel.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PregameScoutingInfo &&
+          runtimeType == other.runtimeType &&
+          opponentTeamId == other.opponentTeamId &&
+          starterName == other.starterName &&
+          starterVelocity == other.starterVelocity &&
+          starterControl == other.starterControl &&
+          starterStuff == other.starterStuff &&
+          topBatters == other.topBatters &&
+          weather == other.weather &&
+          parkFactorLabel == other.parkFactorLabel;
 }
 
 /// [01_내선수](../../../04_UI기획/01_내선수.md) 상태 탭 등에서 표시할 개인
@@ -1461,6 +1636,36 @@ class ScheduleGameInfo {
           resultJson == other.resultJson;
 }
 
+/// 프리게임 브리핑의 상대 타자 한 명(대화 2026-07-25) — `sim::match_sim::BatterStats`
+/// 는 id만 갖고 있어(이름은 `npc` 테이블), 표시용으로 이름을 붙여 재포장.
+class ScoutedBatterInfo {
+  final String name;
+  final double contact;
+  final double power;
+  final double eye;
+
+  const ScoutedBatterInfo({
+    required this.name,
+    required this.contact,
+    required this.power,
+    required this.eye,
+  });
+
+  @override
+  int get hashCode =>
+      name.hashCode ^ contact.hashCode ^ power.hashCode ^ eye.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ScoutedBatterInfo &&
+          runtimeType == other.runtimeType &&
+          name == other.name &&
+          contact == other.contact &&
+          power == other.power &&
+          eye == other.eye;
+}
+
 /// [08_은퇴](../../../04_UI기획/08_은퇴.md) §2 "커리어 타임라인 그래프" —
 /// `career_history`(시즌별 한 줄, `season_rollover`가 채움)를 그대로
 /// 노출. `line_json`은 `{"games","wins","losses","no_decisions",
@@ -1644,8 +1849,8 @@ class TournamentBracketInfo {
 /// 현재 훈련 설정 — 한 번도 설정 안 했으면 `None`(§1 "훈련 계획을 아직
 /// 안 짰다"는 자연스러운 초기 상태, `set_protagonist_training` 문서 참고).
 class TrainingConfigInfo {
-  final String primaryStat;
-  final List<String> secondaryStats;
+  final String primaryTraining;
+  final String secondaryTraining;
   final String intensity;
   final String? newPitch;
 
@@ -1658,8 +1863,8 @@ class TrainingConfigInfo {
   final PlatformInt64 pitchWeeks;
 
   const TrainingConfigInfo({
-    required this.primaryStat,
-    required this.secondaryStats,
+    required this.primaryTraining,
+    required this.secondaryTraining,
     required this.intensity,
     this.newPitch,
     this.masteryPitch,
@@ -1668,8 +1873,8 @@ class TrainingConfigInfo {
 
   @override
   int get hashCode =>
-      primaryStat.hashCode ^
-      secondaryStats.hashCode ^
+      primaryTraining.hashCode ^
+      secondaryTraining.hashCode ^
       intensity.hashCode ^
       newPitch.hashCode ^
       masteryPitch.hashCode ^
@@ -1680,12 +1885,40 @@ class TrainingConfigInfo {
       identical(this, other) ||
       other is TrainingConfigInfo &&
           runtimeType == other.runtimeType &&
-          primaryStat == other.primaryStat &&
-          secondaryStats == other.secondaryStats &&
+          primaryTraining == other.primaryTraining &&
+          secondaryTraining == other.secondaryTraining &&
           intensity == other.intensity &&
           newPitch == other.newPitch &&
           masteryPitch == other.masteryPitch &&
           pitchWeeks == other.pitchWeeks;
+}
+
+/// [06_훈련_시스템](../../../02_기획/육성코어/06_훈련_시스템.md) §2-1
+/// 훈련종류 카탈로그(6종) — 훈련 탭이 스탯 드롭다운 대신 이 목록을
+/// 주/보조 훈련 선택 카드로 보여준다. 각 항목의 `stats`는 그 훈련종류가
+/// 영향을 주는 능력치 2개(순서 무관).
+class TrainingTypeInfo {
+  final String id;
+  final String name;
+  final List<String> stats;
+
+  const TrainingTypeInfo({
+    required this.id,
+    required this.name,
+    required this.stats,
+  });
+
+  @override
+  int get hashCode => id.hashCode ^ name.hashCode ^ stats.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TrainingTypeInfo &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          name == other.name &&
+          stats == other.stats;
 }
 
 /// [07_전환화면](../../../04_UI기획/07_전환화면.md) §5 "3옵션 비교표" —

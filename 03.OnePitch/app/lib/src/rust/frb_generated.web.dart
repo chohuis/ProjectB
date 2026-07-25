@@ -34,6 +34,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   AchievementInfo dco_decode_achievement_info(dynamic raw);
 
   @protected
+  BatterProfileInfo dco_decode_batter_profile_info(dynamic raw);
+
+  @protected
   bool dco_decode_bool(dynamic raw);
 
   @protected
@@ -47,6 +50,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   MatchStepInfo dco_decode_box_autoadd_match_step_info(dynamic raw);
+
+  @protected
+  MatchVenueInfo dco_decode_box_autoadd_match_venue_info(dynamic raw);
 
   @protected
   ProtagonistProfileInfo dco_decode_box_autoadd_protagonist_profile_info(
@@ -168,6 +174,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<ScheduleGameInfo> dco_decode_list_schedule_game_info(dynamic raw);
 
   @protected
+  List<ScoutedBatterInfo> dco_decode_list_scouted_batter_info(dynamic raw);
+
+  @protected
   List<SeasonLine> dco_decode_list_season_line(dynamic raw);
 
   @protected
@@ -180,6 +189,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<TeamOption> dco_decode_list_team_option(dynamic raw);
 
   @protected
+  List<TrainingTypeInfo> dco_decode_list_training_type_info(dynamic raw);
+
+  @protected
   List<TreatmentOption> dco_decode_list_treatment_option(dynamic raw);
 
   @protected
@@ -187,6 +199,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   MatchStepInfo dco_decode_match_step_info(dynamic raw);
+
+  @protected
+  MatchVenueInfo dco_decode_match_venue_info(dynamic raw);
 
   @protected
   MetaStatusInfo dco_decode_meta_status_info(dynamic raw);
@@ -207,6 +222,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   MatchStepInfo? dco_decode_opt_box_autoadd_match_step_info(dynamic raw);
+
+  @protected
+  MatchVenueInfo? dco_decode_opt_box_autoadd_match_venue_info(dynamic raw);
 
   @protected
   ProtagonistProfileInfo? dco_decode_opt_box_autoadd_protagonist_profile_info(
@@ -237,6 +255,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   PlayerPitchingStats dco_decode_player_pitching_stats(dynamic raw);
 
   @protected
+  PregameScoutingInfo dco_decode_pregame_scouting_info(dynamic raw);
+
+  @protected
   ProtagonistProfileInfo dco_decode_protagonist_profile_info(dynamic raw);
 
   @protected
@@ -250,6 +271,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ScheduleGameInfo dco_decode_schedule_game_info(dynamic raw);
+
+  @protected
+  ScoutedBatterInfo dco_decode_scouted_batter_info(dynamic raw);
 
   @protected
   SeasonLine dco_decode_season_line(dynamic raw);
@@ -268,6 +292,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   TrainingConfigInfo dco_decode_training_config_info(dynamic raw);
+
+  @protected
+  TrainingTypeInfo dco_decode_training_type_info(dynamic raw);
 
   @protected
   TreatmentOption dco_decode_treatment_option(dynamic raw);
@@ -296,6 +323,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   AchievementInfo sse_decode_achievement_info(SseDeserializer deserializer);
 
   @protected
+  BatterProfileInfo sse_decode_batter_profile_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   bool sse_decode_bool(SseDeserializer deserializer);
 
   @protected
@@ -313,6 +345,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   MatchStepInfo sse_decode_box_autoadd_match_step_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  MatchVenueInfo sse_decode_box_autoadd_match_venue_info(
     SseDeserializer deserializer,
   );
 
@@ -472,6 +509,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  List<ScoutedBatterInfo> sse_decode_list_scouted_batter_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   List<SeasonLine> sse_decode_list_season_line(SseDeserializer deserializer);
 
   @protected
@@ -486,6 +528,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<TeamOption> sse_decode_list_team_option(SseDeserializer deserializer);
 
   @protected
+  List<TrainingTypeInfo> sse_decode_list_training_type_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   List<TreatmentOption> sse_decode_list_treatment_option(
     SseDeserializer deserializer,
   );
@@ -495,6 +542,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   MatchStepInfo sse_decode_match_step_info(SseDeserializer deserializer);
+
+  @protected
+  MatchVenueInfo sse_decode_match_venue_info(SseDeserializer deserializer);
 
   @protected
   MetaStatusInfo sse_decode_meta_status_info(SseDeserializer deserializer);
@@ -517,6 +567,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   MatchStepInfo? sse_decode_opt_box_autoadd_match_step_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  MatchVenueInfo? sse_decode_opt_box_autoadd_match_venue_info(
     SseDeserializer deserializer,
   );
 
@@ -561,6 +616,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  PregameScoutingInfo sse_decode_pregame_scouting_info(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   ProtagonistProfileInfo sse_decode_protagonist_profile_info(
     SseDeserializer deserializer,
   );
@@ -578,6 +638,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   ScheduleGameInfo sse_decode_schedule_game_info(SseDeserializer deserializer);
+
+  @protected
+  ScoutedBatterInfo sse_decode_scouted_batter_info(
+    SseDeserializer deserializer,
+  );
 
   @protected
   SeasonLine sse_decode_season_line(SseDeserializer deserializer);
@@ -600,6 +665,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   TrainingConfigInfo sse_decode_training_config_info(
     SseDeserializer deserializer,
   );
+
+  @protected
+  TrainingTypeInfo sse_decode_training_type_info(SseDeserializer deserializer);
 
   @protected
   TreatmentOption sse_decode_treatment_option(SseDeserializer deserializer);
@@ -638,6 +706,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_batter_profile_info(
+    BatterProfileInfo self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_bool(bool self, SseSerializer serializer);
 
   @protected
@@ -661,6 +735,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_box_autoadd_match_step_info(
     MatchStepInfo self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_box_autoadd_match_venue_info(
+    MatchVenueInfo self,
     SseSerializer serializer,
   );
 
@@ -869,6 +949,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_list_scouted_batter_info(
+    List<ScoutedBatterInfo> self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_list_season_line(
     List<SeasonLine> self,
     SseSerializer serializer,
@@ -893,6 +979,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_list_training_type_info(
+    List<TrainingTypeInfo> self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_list_treatment_option(
     List<TreatmentOption> self,
     SseSerializer serializer,
@@ -906,6 +998,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_match_step_info(MatchStepInfo self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_match_venue_info(
+    MatchVenueInfo self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_meta_status_info(
@@ -937,6 +1035,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_opt_box_autoadd_match_step_info(
     MatchStepInfo? self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_opt_box_autoadd_match_venue_info(
+    MatchVenueInfo? self,
     SseSerializer serializer,
   );
 
@@ -989,6 +1093,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_pregame_scouting_info(
+    PregameScoutingInfo self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_protagonist_profile_info(
     ProtagonistProfileInfo self,
     SseSerializer serializer,
@@ -1019,6 +1129,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_scouted_batter_info(
+    ScoutedBatterInfo self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_season_line(SeasonLine self, SseSerializer serializer);
 
   @protected
@@ -1042,6 +1158,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_training_config_info(
     TrainingConfigInfo self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_training_type_info(
+    TrainingTypeInfo self,
     SseSerializer serializer,
   );
 

@@ -4,20 +4,21 @@ use rusqlite::{params, Connection, OptionalExtension};
 
 use crate::sim::eval;
 use crate::sim::match_sim::{self, BatterStats, PaOutcome, PitcherStats};
-use crate::sim::pitch::{self, Course};
+use crate::sim::pitch::{self, Power};
 
 use super::repository;
 
 /// `startMatch`/`pitch`(I6 3차분) 호출 결과 — [07_매치_엔진](../../../02_기획/육성코어/07_매치_엔진.md)
-/// §3의 세 모드(자동·수동·반자동)가 전부 이 상태들 중 하나로 귀결된다.
+/// §3의 두 모드(자동·수동, 반자동은 대화 2026-07-25에서 폐지)가 전부 이
+/// 상태들 중 하나로 귀결된다.
 #[derive(Debug, Clone, PartialEq)]
 pub enum MatchStepResult {
     /// 주인공이 다음 공을 던질 차례이고, 모드상 플레이어 입력이 필요한
     /// 시점 — `submit_pitch`로 구종·코스를 제출해야 진행된다.
     /// `inning`~`away_runs`는 [05_매치](../../../04_UI기획/05_매치.md) §2
     /// "상시 경기 상황판"(다이아몬드+주자+이닝+스코어+B-S-O)을 그리는 데
-    /// 필요한 세션 스냅샷 — 이 시점(수동 매 구·반자동 결정적 순간)에만
-    /// 노출된다. **"자동" 모드는 한 번의 호출로 경기 전체가 끝까지
+    /// 필요한 세션 스냅샷 — 이 시점(수동 모드 매 구)에만 노출된다.
+    /// **"자동" 모드는 한 번의 호출로 경기 전체가 끝까지
     /// 시뮬레이션되어 중간 정지점이 아예 없어**, 자동 모드 도중엔 이
     /// 스냅샷을 볼 방법이 구조적으로 없다(엔진을 매 구·매 하프이닝마다
     /// 멈추도록 재설계해야 하는 별도 스코프 — 10_구현_Phase_계획.md
@@ -33,12 +34,19 @@ pub enum MatchStepResult {
         bases: Vec<bool>,
         home_runs: u32,
         away_runs: u32,
+        /// 주인공 투수 피로도(§6-N, UI 매치 화면 스태미나 게이지용) —
+        /// `PitcherChangeDecision`이 이미 쓰던 `load_protagonist_as_pitcher(..).fatigue`
+        /// 를 그대로 threading. 이 시점(§8 판단 이전)엔 "고려 구간"
+        /// 진입 여부와 무관하게 매 구 노출.
+        fatigue: f64,
+        /// 이번 경기 누적 투구수 — `session.pitch_seq` 그대로.
+        pitches_thrown: u32,
     },
     /// 경기 종료 — `schedule.result`·`standings`가 이미 반영됐고
     /// `match_session` 행도 삭제됨.
     GameOver { home_runs: u32, away_runs: u32 },
     /// 감독 개입(§8) 수동 모드 — 하프이닝 경계에서 투구수가 "고려 구간"
-    /// (`sim::manager::pull_probability` > 0)에 들어서면 자동·반자동처럼
+    /// (`sim::manager::pull_probability` > 0)에 들어서면 자동 모드처럼
     /// AI가 바로 판단하지 않고 플레이어에게 묻는다. `submit_pitcher_change_decision`
     /// 으로 "유지"/"교체"/"맡기기"(=AI 판정 그대로) 중 하나를 제출해야
     /// 진행된다.
@@ -73,8 +81,8 @@ struct SessionRow {
     pitch_seq: i64,
     strikeouts: i64,
     /// 감독 개입(§8, I7 29차분) — 주인공이 강판됐는지·이후 던지는 불펜
-    /// 투수·강판 시점 이닝. 자동·반자동 모드에서만 채워짐(수동 모드는
-    /// 이번 스코프에서 개입 없음, 대화 설계).
+    /// 투수·강판 시점 이닝. 자동 모드에서만 채워짐(수동 모드는 이번
+    /// 스코프에서 개입 없음, 대화 설계).
     protagonist_pulled: bool,
     relief_pitcher_id: Option<String>,
     protagonist_pull_inning: Option<i64>,
@@ -141,6 +149,22 @@ struct SessionRow {
     /// `runner_on_first_id`와 같은 개념, `submit_pitch` 호출마다 DB를
     /// 오가는 인터랙티브 세션 특성상 여기 영속시켜야 한다(migration v22).
     runner_on_first_id: Option<String>,
+    /// 매치 화면 박스스코어(migration v26, 대화 2026-07-25) — 하프이닝
+    /// 경계마다 한 줄씩(`push_inning_log_entry`) 쌓이는 JSON 배열
+    /// `[{"inning","top_of_inning","runs","hits","walks"}, ...]`.
+    inning_log: String,
+    /// 이번 경기 한정 타자 개인기록(migration v26) — `{npc_id: {...}}`
+    /// (키는 `repository::batter_stats_fields`와 동일 관례). 시즌 전체는
+    /// 기존 `season_stats` 테이블(`get_player_season_batting_stats`).
+    batter_game_stats: String,
+    /// 지금 진행 중인 하프이닝의 누적치(migration v26) — 하프이닝
+    /// 경계(`push_inning_log_entry`)에서 `inning_log`로 flush되고 0으로
+    /// 리셋된다. 배경 하프이닝은 `HalfInningStats`를 한 번에 대입, 인터랙티브
+    /// (주인공 투구) 하프이닝은 `apply_pa_outcome`·`hits_allowed`/`walks_allowed`
+    /// 증가 지점에서 매 타석마다 누적.
+    current_half_runs: i64,
+    current_half_hits: i64,
+    current_half_walks: i64,
 }
 
 #[allow(clippy::type_complexity)]
@@ -190,6 +214,11 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
         Option<String>,
         Option<i64>,
         Option<i64>,
+        String,
+        String,
+        i64,
+        i64,
+        i64,
     )> = conn
         .query_row(
             "SELECT game_id, home, away, league_id, mode, inning, top_of_inning, outs, bases, home_runs, away_runs,
@@ -203,7 +232,8 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
                     protagonist_second_pulled, second_relief_pitcher_id, protagonist_second_pull_was_save_situation,
                     opponent_second_pulled, opponent_second_relief_pitcher_id, opponent_second_pull_was_save_situation,
                     runner_on_first_id,
-                    pull_decision_settled_inning, pull_decision_settled_top_of_inning
+                    pull_decision_settled_inning, pull_decision_settled_top_of_inning,
+                    inning_log, batter_game_stats, current_half_runs, current_half_hits, current_half_walks
              FROM match_session WHERE id = 1",
             [],
             |r| {
@@ -252,6 +282,11 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
                     r.get(41)?,
                     r.get(42)?,
                     r.get(43)?,
+                    r.get(44)?,
+                    r.get(45)?,
+                    r.get(46)?,
+                    r.get(47)?,
+                    r.get(48)?,
                 ))
             },
         )
@@ -301,6 +336,11 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
         runner_on_first_id,
         pull_decision_settled_inning,
         pull_decision_settled_top_of_inning,
+        inning_log,
+        batter_game_stats,
+        current_half_runs,
+        current_half_hits,
+        current_half_walks,
     )) = row
     else {
         return Ok(None);
@@ -347,6 +387,11 @@ fn load_session(conn: &Connection) -> anyhow::Result<Option<SessionRow>> {
         runner_on_first_id,
         pull_decision_settled_inning,
         pull_decision_settled_top_of_inning: pull_decision_settled_top_of_inning.map(|v| v != 0),
+        inning_log,
+        batter_game_stats,
+        current_half_runs,
+        current_half_hits,
+        current_half_walks,
     }))
 }
 
@@ -361,7 +406,8 @@ fn save_session(conn: &Connection, s: &SessionRow) -> anyhow::Result<()> {
              opponent_pull_was_save_situation = ?24, unearned_runs_allowed = ?25,
              protagonist_second_pulled = ?26, second_relief_pitcher_id = ?27, protagonist_second_pull_was_save_situation = ?28,
              opponent_second_pulled = ?29, opponent_second_relief_pitcher_id = ?30, opponent_second_pull_was_save_situation = ?31,
-             runner_on_first_id = ?32, pull_decision_settled_inning = ?33, pull_decision_settled_top_of_inning = ?34
+             runner_on_first_id = ?32, pull_decision_settled_inning = ?33, pull_decision_settled_top_of_inning = ?34,
+             inning_log = ?35, batter_game_stats = ?36, current_half_runs = ?37, current_half_hits = ?38, current_half_walks = ?39
          WHERE id = 1",
         params![
             s.inning,
@@ -398,6 +444,11 @@ fn save_session(conn: &Connection, s: &SessionRow) -> anyhow::Result<()> {
             s.runner_on_first_id,
             s.pull_decision_settled_inning,
             s.pull_decision_settled_top_of_inning.map(|b| b as i64),
+            s.inning_log,
+            s.batter_game_stats,
+            s.current_half_runs,
+            s.current_half_hits,
+            s.current_half_walks,
         ],
     )?;
     Ok(())
@@ -475,6 +526,10 @@ fn apply_pa_outcome(rng: &mut impl Rng, session: &mut SessionRow, batting_team_i
     } else {
         session.away_runs += runs as i64;
     }
+    // 박스스코어(migration v26) — 인터랙티브 하프이닝은 이 함수가 유일한
+    // 득점 반영 지점이라 여기서 같이 누적해두면 `transition_half_inning`
+    // 이 하프이닝 경계에서 그대로 flush할 수 있다.
+    session.current_half_runs += runs as i64;
     // 1루 주자 신원 갱신(Phase 3, §9 도루) — 배경 `simulate_half_inning`과
     // 동일한 규칙: 1루가 비었으면 놓치고, 볼넷·사구·실책·단타로 새로
     // 도착했으면 그 타자로 교체, 그 외(아웃·병살 등 1루를 안 건드리는
@@ -490,10 +545,57 @@ fn apply_pa_outcome(rng: &mut impl Rng, session: &mut SessionRow, batting_team_i
     runs
 }
 
+/// 이번 경기 개인기록(migration v26) 누적 — `line`(이 타석 1건 또는
+/// 하프이닝 1회분의 델타)을 `session.batter_game_stats`(JSON,
+/// `{npc_id: {...}}`)에 필드별로 더해 넣는다. 키 이름은
+/// `repository::batter_stats_fields`와 동일 관례(시즌 집계와 표시 코드를
+/// 공유하기 쉽게).
+fn merge_batter_game_stats(session: &mut SessionRow, batter_id: &str, line: &match_sim::BatterGameStats) {
+    let mut all: serde_json::Map<String, serde_json::Value> = serde_json::from_str(&session.batter_game_stats).unwrap_or_default();
+    let mut entry: serde_json::Map<String, serde_json::Value> = all.get(batter_id).and_then(|v| v.as_object()).cloned().unwrap_or_default();
+    for (key, delta) in [
+        ("plate_appearances", line.plate_appearances),
+        ("at_bats", line.at_bats),
+        ("hits", line.hits),
+        ("doubles", line.doubles),
+        ("triples", line.triples),
+        ("home_runs", line.home_runs),
+        ("walks", line.walks),
+        ("strikeouts", line.strikeouts),
+        ("rbi", line.rbi),
+        ("stolen_bases", line.stolen_bases),
+        ("caught_stealing", line.caught_stealing),
+    ] {
+        let current = entry.get(key).and_then(|v| v.as_u64()).unwrap_or(0);
+        entry.insert(key.to_string(), serde_json::json!(current + delta as u64));
+    }
+    all.insert(batter_id.to_string(), serde_json::Value::Object(entry));
+    session.batter_game_stats = serde_json::Value::Object(all).to_string();
+}
+
 #[derive(Debug, PartialEq)]
 enum Transition {
     Continue,
     GameOver,
+}
+
+/// 박스스코어 이닝 로그(migration v26) 한 줄 추가 — `transition_half_inning`
+/// 이 호출부에서 `session.top_of_inning`을 뒤집기 **직전**에 불러야
+/// 방금 끝난 하프이닝의 이닝·공수가 정확히 기록된다. `current_half_*`를
+/// 소비한 뒤 0으로 리셋해 다음 하프이닝을 위해 비운다.
+fn push_inning_log_entry(session: &mut SessionRow) {
+    let mut log: Vec<serde_json::Value> = serde_json::from_str(&session.inning_log).unwrap_or_default();
+    log.push(serde_json::json!({
+        "inning": session.inning,
+        "top_of_inning": session.top_of_inning,
+        "runs": session.current_half_runs,
+        "hits": session.current_half_hits,
+        "walks": session.current_half_walks,
+    }));
+    session.inning_log = serde_json::Value::Array(log).to_string();
+    session.current_half_runs = 0;
+    session.current_half_hits = 0;
+    session.current_half_walks = 0;
 }
 
 /// 하프이닝 경계 처리 — §10-2 콜드게임(아마추어)·연장전 규칙(아마추어=
@@ -504,6 +606,10 @@ enum Transition {
 /// 복제해 인터랙티브 경로에도 반영한다(예전엔 스코프 아웃이었으나
 /// I6 이월 항목 처리로 이번에 채움).
 fn transition_half_inning(session: &mut SessionRow) -> Transition {
+    // 박스스코어(migration v26) — 방금 끝난 하프이닝의 누적치를 로그에
+    // 남긴다. `top_of_inning`을 뒤집기 전에 호출해야 그 하프이닝의 진짜
+    // 공수가 기록된다.
+    push_inning_log_entry(session);
     let amateur = match_sim::is_amateur(&session.league_id);
     session.outs = 0;
     session.bases = if amateur && session.inning > 9 { [true, true, false] } else { [false; 3] };
@@ -732,6 +838,25 @@ fn apply_protagonist_evaluation(slot_conn: &Connection, session: &SessionRow, pr
 /// 선택된 값을 받아 세션을 여는 것만). **주인공은 항상 선발 완투로 가정**
 /// (다른 배경 경기들과 동일한 placeholder — 구원 등판·투수 교체는 감독
 /// AI가 생기는 후속 Phase 스코프).
+/// 매치 화면 박스스코어(migration v26, 대화 2026-07-25) — 진행 중인
+/// 세션이 없으면 `None`. `[{"inning","top_of_inning","runs","hits","walks"}, ...]`
+/// JSON 원시 통과(모듈 문서 관례) — Dart가 표시용으로만 읽는다.
+pub fn get_inning_log(conn: &Connection) -> anyhow::Result<Option<String>> {
+    Ok(load_session(conn)?.map(|s| s.inning_log))
+}
+
+/// 매치 화면 구장 도트 아트·팀 색 해시 시드용(대화 2026-07-25) — 진행
+/// 중인 세션의 (홈, 원정) 팀 id. 세션이 없으면 `None`.
+pub fn get_match_teams(conn: &Connection) -> anyhow::Result<Option<(String, String)>> {
+    Ok(load_session(conn)?.map(|s| (s.home, s.away)))
+}
+
+/// 매치 화면 "이번 경기" 타자 개인기록(migration v26) — `{npc_id: {...}}`
+/// JSON 원시 통과. 진행 중인 세션이 없으면 `None`.
+pub fn get_batter_game_stats_json(conn: &Connection) -> anyhow::Result<Option<String>> {
+    Ok(load_session(conn)?.map(|s| s.batter_game_stats))
+}
+
 pub fn start_protagonist_match(
     slot_conn: &Connection,
     content_conn: &Connection,
@@ -741,7 +866,7 @@ pub fn start_protagonist_match(
     away: &str,
     mode: &str,
 ) -> anyhow::Result<MatchStepResult> {
-    if !["자동", "수동", "반자동"].contains(&mode) {
+    if !["자동", "수동"].contains(&mode) {
         anyhow::bail!("unknown match mode: {mode}");
     }
     let league_id: String = content_conn.query_row("SELECT league_id FROM teams WHERE id = ?1", [home], |r| r.get(0))?;
@@ -775,10 +900,10 @@ pub fn start_protagonist_match(
     run_until_decision_point(slot_conn, world_seed, None, None)
 }
 
-/// 1구 제출(§5) — `AwaitingPitch`로 멈춘 세션에 플레이어의 구종·코스
-/// 선택을 반영하고 다음 결정 지점(또는 경기 종료)까지 진행한다.
-pub fn submit_pitch(slot_conn: &Connection, world_seed: i64, pitch_name: &str, course: Course) -> anyhow::Result<MatchStepResult> {
-    run_until_decision_point(slot_conn, world_seed, Some((pitch_name.to_string(), course)), None)
+/// 1구 제출(§5) — `AwaitingPitch`로 멈춘 세션에 플레이어의 구종·위치(연속
+/// 좌표)·구위 선택을 반영하고 다음 결정 지점(또는 경기 종료)까지 진행한다.
+pub fn submit_pitch(slot_conn: &Connection, world_seed: i64, pitch_name: &str, target_x: f64, target_y: f64, power: Power) -> anyhow::Result<MatchStepResult> {
+    run_until_decision_point(slot_conn, world_seed, Some((pitch_name.to_string(), target_x, target_y, power)), None)
 }
 
 /// 감독 개입 수동 모드(§8) 응답 — `PitcherChangeDecision`으로 멈춘
@@ -796,7 +921,7 @@ pub fn submit_pitcher_change_decision(slot_conn: &Connection, world_seed: i64, c
 fn run_until_decision_point(
     slot_conn: &Connection,
     world_seed: i64,
-    mut player_pitch: Option<(String, Course)>,
+    mut player_pitch: Option<(String, f64, f64, Power)>,
     mut pitcher_decision: Option<&str>,
 ) -> anyhow::Result<MatchStepResult> {
     let today: i64 = slot_conn.query_row("SELECT current_day FROM meta", [], |r| r.get(0))?;
@@ -829,7 +954,7 @@ fn run_until_decision_point(
         let protagonist_pitching_team = pitching_team == protagonist_team_id;
 
         // 감독 개입(§8) — 하프이닝 경계마다 판단. 강판되면 이후 이 팀의
-        // 투구는 배경 하프이닝 경로로 넘어간다(아래). 자동·반자동은 AI가
+        // 투구는 배경 하프이닝 경로로 넘어간다(아래). 자동은 AI가
         // 즉시 판단(기존 로직 그대로), 수동은 "고려 구간"(소프트캡 이상)
         // 에서만 플레이어에게 먼저 묻고(§8 "이닝 종료마다 판단 기회") —
         // 위기상황(`high_leverage`)마다 추가로 묻는 건 이번 스코프에서
@@ -1089,8 +1214,12 @@ fn run_until_decision_point(
             // 경기에서 이 기록을 통째로 버리고 있었던 걸 바로잡음).
             let week = crate::calendar::week_for_day(today);
             repository::upsert_pitcher_season_stats(slot_conn, &pitcher.id, week, &half_inning_stats.pitcher)?;
+            session.current_half_runs += runs as i64;
+            session.current_half_hits += half_inning_stats.pitcher.hits_allowed as i64;
+            session.current_half_walks += half_inning_stats.pitcher.walks as i64;
             for (batter_id, s) in &half_inning_stats.batters {
                 repository::upsert_batter_season_stats(slot_conn, batter_id, week, s)?;
+                merge_batter_game_stats(&mut session, batter_id, s);
             }
             if !protagonist_pitching_team && !session.opponent_pulled {
                 // 주인공이 강판된 뒤의 불펜 투수와 동일한 이유(§8 스코프
@@ -1192,14 +1321,10 @@ fn run_until_decision_point(
         let repertoire = load_protagonist_pitches(slot_conn)?;
         let repertoire_diverse = pitch::repertoire_is_diverse(&repertoire);
 
-        let (pitch_name, course) = if let Some(choice) = player_pitch.take() {
+        let (pitch_name, target_x, target_y, power) = if let Some(choice) = player_pitch.take() {
             choice
         } else {
-            let should_prompt = match session.mode.as_str() {
-                "수동" => true,
-                "반자동" => high_leverage,
-                _ => false, // 자동
-            };
+            let should_prompt = session.mode == "수동";
             if should_prompt {
                 return Ok(MatchStepResult::AwaitingPitch {
                     batter_id: session.current_batter_id.clone().unwrap(),
@@ -1212,17 +1337,19 @@ fn run_until_decision_point(
                     bases: session.bases.to_vec(),
                     home_runs: session.home_runs as u32,
                     away_runs: session.away_runs as u32,
+                    fatigue: pitcher.fatigue,
+                    pitches_thrown: session.pitch_seq as u32,
                 });
             }
-            let (pitch, course) = pitch::choose_pitch_and_course(&mut rng, &repertoire, &batter, high_leverage);
-            (pitch.name, course)
+            let (pitch, x, y, power) = pitch::choose_pitch_and_target(&mut rng, &repertoire, &batter, high_leverage);
+            (pitch.name, x, y, power)
         };
         // 플레이어가 직접 고른 구종은 이름만 넘어오므로(§5 UI가 known
         // 구종 중에서만 고르게 함) 마스터리 단계를 레퍼토리에서 다시
         // 찾는다 — 못 찾으면(방어적 폴백) 습작(1단계) 취급.
         let mastery_stage = repertoire.iter().find(|p| p.name == pitch_name).map(|p| p.stage).unwrap_or(1);
 
-        let result = pitch::throw_pitch(&mut rng, &pitcher, &batter, course, high_leverage, mastery_stage, repertoire_diverse, &session.conditions);
+        let result = pitch::throw_pitch(&mut rng, &pitcher, &batter, target_x, target_y, power, high_leverage, mastery_stage, repertoire_diverse, &session.conditions);
         session.pitch_seq += 1;
         let mut count = pitch::Count { balls: session.balls as u32, strikes: session.strikes as u32 };
         let outcome = pitch::apply_pitch_result(&mut count, result);
@@ -1259,19 +1386,23 @@ fn run_until_decision_point(
                 let runs = apply_pa_outcome(&mut rng, &mut session, batting_team_is_home, PaOutcome::Strikeout, team_speed, &batter.id);
                 let mut line = match_sim::BatterGameStats::default();
                 match_sim::record_batter_pa(&mut line, PaOutcome::Strikeout, runs);
+                merge_batter_game_stats(&mut session, &batter.id, &line);
                 repository::upsert_batter_season_stats(slot_conn, &batter.id, week, &line)?;
             }
             pitch::AtBatOutcome::Walk => {
                 session.walks_allowed += 1;
+                session.current_half_walks += 1;
                 let runs = apply_pa_outcome(&mut rng, &mut session, batting_team_is_home, PaOutcome::Walk, team_speed, &batter.id);
                 let mut line = match_sim::BatterGameStats::default();
                 match_sim::record_batter_pa(&mut line, PaOutcome::Walk, runs);
+                merge_batter_game_stats(&mut session, &batter.id, &line);
                 repository::upsert_batter_season_stats(slot_conn, &batter.id, week, &line)?;
             }
             pitch::AtBatOutcome::HitByPitch => {
                 let runs = apply_pa_outcome(&mut rng, &mut session, batting_team_is_home, PaOutcome::HitByPitch, team_speed, &batter.id);
                 let mut line = match_sim::BatterGameStats::default();
                 match_sim::record_batter_pa(&mut line, PaOutcome::HitByPitch, runs);
+                merge_batter_game_stats(&mut session, &batter.id, &line);
                 repository::upsert_batter_season_stats(slot_conn, &batter.id, week, &line)?;
             }
             pitch::AtBatOutcome::InPlay => {
@@ -1293,6 +1424,7 @@ fn run_until_decision_point(
                 );
                 if matches!(pa, PaOutcome::Single | PaOutcome::Double | PaOutcome::Triple | PaOutcome::HomeRun) {
                     session.hits_allowed += 1;
+                    session.current_half_hits += 1;
                 }
                 let runs = apply_pa_outcome(&mut rng, &mut session, batting_team_is_home, pa, team_speed, &batter.id);
                 if pa == PaOutcome::ReachOnError {
@@ -1303,6 +1435,7 @@ fn run_until_decision_point(
                 }
                 let mut line = match_sim::BatterGameStats::default();
                 match_sim::record_batter_pa(&mut line, pa, runs);
+                merge_batter_game_stats(&mut session, &batter.id, &line);
                 repository::upsert_batter_season_stats(slot_conn, &batter.id, week, &line)?;
             }
         }
@@ -1454,6 +1587,11 @@ mod tests {
             opponent_second_pull_was_save_situation: false,
             unearned_runs_allowed: 0,
             runner_on_first_id: None,
+            inning_log: "[]".to_string(),
+            batter_game_stats: "{}".to_string(),
+            current_half_runs: 0,
+            current_half_hits: 0,
+            current_half_walks: 0,
         }
     }
 
@@ -1704,11 +1842,27 @@ mod tests {
 
         let result = start_protagonist_match(&slot_conn, &content_conn, 1, "game:1", "team:home", "team:away", "수동").unwrap();
         match result {
-            MatchStepResult::AwaitingPitch { balls, strikes, .. } => {
+            MatchStepResult::AwaitingPitch { balls, strikes, fatigue, pitches_thrown, .. } => {
                 assert_eq!((balls, strikes), (0, 0));
+                assert_eq!(pitches_thrown, 0, "no pitch thrown yet at the very first AwaitingPitch");
+                assert!(fatigue >= 0.0, "fatigue should be a real live_state reading, got {fatigue}");
             }
             other => panic!("expected manual mode to pause on the very first protagonist pitch, got {other:?}"),
         }
+    }
+
+    /// 대화 2026-07-25 — 반자동 모드 폐지(자동/수동 두 모드만 남김).
+    #[test]
+    fn semi_auto_mode_is_no_longer_accepted() {
+        let content_conn = build_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_roster(&slot_conn, "team:home");
+        insert_roster(&slot_conn, "team:away");
+        insert_protagonist(&slot_conn, "team:home");
+        insert_schedule(&slot_conn, "game:1");
+
+        let result = start_protagonist_match(&slot_conn, &content_conn, 1, "game:1", "team:home", "team:away", "반자동");
+        assert!(result.is_err(), "반자동 모드는 더 이상 유효한 선택지가 아니어야 함");
     }
 
     #[test]
@@ -1726,7 +1880,7 @@ mod tests {
             match result {
                 MatchStepResult::GameOver { .. } => break,
                 MatchStepResult::AwaitingPitch { .. } => {
-                    result = submit_pitch(&slot_conn, 1, "포심 패스트볼", Course::MidCenter).unwrap();
+                    result = submit_pitch(&slot_conn, 1, "포심 패스트볼", 0.0, 0.0, Power::Normal).unwrap();
                 }
                 MatchStepResult::PitcherChangeDecision { .. } => {
                     result = submit_pitcher_change_decision(&slot_conn, 1, "맡기기").unwrap();
@@ -1735,6 +1889,40 @@ mod tests {
             guard += 1;
             assert!(guard < 5000, "manual game did not finish within a reasonable number of pitches");
         }
+    }
+
+    #[test]
+    fn pitches_thrown_on_awaiting_pitch_never_decreases_across_a_manual_game() {
+        let content_conn = build_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_roster(&slot_conn, "team:home");
+        insert_roster(&slot_conn, "team:away");
+        insert_protagonist(&slot_conn, "team:home");
+        insert_schedule(&slot_conn, "game:1");
+
+        let mut result = start_protagonist_match(&slot_conn, &content_conn, 1, "game:1", "team:home", "team:away", "수동").unwrap();
+        let mut last_seen = 0u32;
+        let mut saw_growth = false;
+        let mut guard = 0;
+        loop {
+            match result {
+                MatchStepResult::GameOver { .. } => break,
+                MatchStepResult::AwaitingPitch { pitches_thrown, .. } => {
+                    assert!(pitches_thrown >= last_seen, "pitches_thrown regressed: {pitches_thrown} < {last_seen}");
+                    if pitches_thrown > last_seen {
+                        saw_growth = true;
+                    }
+                    last_seen = pitches_thrown;
+                    result = submit_pitch(&slot_conn, 1, "포심 패스트볼", 0.0, 0.0, Power::Normal).unwrap();
+                }
+                MatchStepResult::PitcherChangeDecision { .. } => {
+                    result = submit_pitcher_change_decision(&slot_conn, 1, "맡기기").unwrap();
+                }
+            }
+            guard += 1;
+            assert!(guard < 5000, "manual game did not finish within a reasonable number of pitches");
+        }
+        assert!(saw_growth, "expected pitches_thrown to actually increase over the course of a game");
     }
 
     #[test]
@@ -2029,7 +2217,7 @@ mod tests {
         // 이후로는 같은 하프이닝 안에서 몇 구를 더 던져도 다시 안 묻는다
         // (예전엔 투구수 단위 게이팅이라 201구째에 또 물어보는 게 "정상"
         // 취급이었는데, 그게 바로 이번에 고친 UX 과함이었다).
-        let after_pitch = submit_pitch(&slot_conn, 1, "포심 패스트볼", Course::MidCenter).unwrap();
+        let after_pitch = submit_pitch(&slot_conn, 1, "포심 패스트볼", 0.0, 0.0, Power::Normal).unwrap();
         assert!(matches!(after_pitch, MatchStepResult::AwaitingPitch { .. }), "같은 하프이닝 안에서는 재질문 없이 다음 구로 넘어가야 함, got {after_pitch:?}");
         let pitch_seq: i64 = slot_conn.query_row("SELECT pitch_seq FROM match_session WHERE id = 1", [], |r| r.get(0)).unwrap();
         assert_eq!(pitch_seq, 201, "the pitch should have actually been thrown, advancing pitch_seq");
@@ -2074,7 +2262,7 @@ mod tests {
             if inning != 1 || top_of_inning != 1 {
                 break; // 하프이닝이 바뀌었으면 이 테스트의 관찰 범위를 벗어남 — 정상 종료.
             }
-            let step = submit_pitch(&slot_conn, 1, "포심 패스트볼", Course::MidCenter).unwrap();
+            let step = submit_pitch(&slot_conn, 1, "포심 패스트볼", 0.0, 0.0, Power::Normal).unwrap();
             if let MatchStepResult::PitcherChangeDecision { inning, top_of_inning, .. } = step {
                 assert!(
                     inning != 1 || !top_of_inning,
@@ -2130,7 +2318,7 @@ mod tests {
         // 같은 하프이닝 안에서 실제 공을 제출하면 그 공은 진짜로 던져져야
         // 한다 — 버그가 있었다면 매번 다시 강판을 시도했다 실패하며
         // pitch_seq가 300에 멈춘 채 무한 반복됐다.
-        let after_pitch = submit_pitch(&slot_conn, 1, "포심 패스트볼", Course::MidCenter).unwrap();
+        let after_pitch = submit_pitch(&slot_conn, 1, "포심 패스트볼", 0.0, 0.0, Power::Normal).unwrap();
         let pitch_seq: i64 = slot_conn.query_row("SELECT pitch_seq FROM match_session WHERE id = 1", [], |r| r.get(0)).unwrap();
         assert_eq!(pitch_seq, 301, "the pitch should have actually been thrown, advancing pitch_seq — got step {after_pitch:?}");
     }

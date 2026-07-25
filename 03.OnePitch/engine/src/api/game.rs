@@ -29,6 +29,8 @@
 
 use std::sync::Mutex;
 
+use rand::SeedableRng;
+use rand_chacha::ChaCha8Rng;
 use rusqlite::{Connection, OptionalExtension};
 
 use crate::data::{content, match_session, repository, slot};
@@ -92,6 +94,10 @@ pub enum MatchStepInfo {
         bases: Vec<bool>,
         home_runs: u32,
         away_runs: u32,
+        /// 매치 화면 스태미나 게이지용(§6-N) — `PitcherChangeDecision.fatigue`
+        /// 와 같은 값 출처.
+        fatigue: f64,
+        pitches_thrown: u32,
     },
     GameOver { home_runs: u32, away_runs: u32 },
     /// 감독 개입(§8) 수동 모드 판단 요청 — `resolveChoice`에 `"유지"`/
@@ -121,7 +127,11 @@ impl From<match_session::MatchStepResult> for MatchStepInfo {
                 bases,
                 home_runs,
                 away_runs,
-            } => MatchStepInfo::AwaitingPitch { batter_id, balls, strikes, high_leverage, inning, top_of_inning, outs, bases, home_runs, away_runs },
+                fatigue,
+                pitches_thrown,
+            } => {
+                MatchStepInfo::AwaitingPitch { batter_id, balls, strikes, high_leverage, inning, top_of_inning, outs, bases, home_runs, away_runs, fatigue, pitches_thrown }
+            }
             match_session::MatchStepResult::GameOver { home_runs, away_runs } => MatchStepInfo::GameOver { home_runs, away_runs },
             match_session::MatchStepResult::PitcherChangeDecision {
                 inning,
@@ -134,6 +144,164 @@ impl From<match_session::MatchStepResult> for MatchStepInfo {
             } => MatchStepInfo::PitcherChangeDecision { inning, top_of_inning, home_runs, away_runs, pitches_thrown, fatigue, manager_recommends_pull },
         }
     }
+}
+
+/// 프리게임 브리핑의 상대 타자 한 명(대화 2026-07-25) — `sim::match_sim::BatterStats`
+/// 는 id만 갖고 있어(이름은 `npc` 테이블), 표시용으로 이름을 붙여 재포장.
+#[derive(Debug, Clone)]
+pub struct ScoutedBatterInfo {
+    pub name: String,
+    pub contact: f64,
+    pub power: f64,
+    pub eye: f64,
+}
+
+/// 프리게임 브리핑([04_메시지함] 확장, 대화 2026-07-25) — `'game'` PendingAction
+/// payload의 `game_id`/`home`/`away`를 그대로 받아 상대 선발·타선 상위·
+/// 날씨·파크팩터를 미리 보여준다. 새 시뮬레이션 로직 없이 실제 매치가
+/// 이미 쓰는 값들을 그대로 재사용: 선발은 `repository::load_starting_pitcher`
+/// (로테이션 순번 그대로), 타선은 `repository::load_batting_lineup`(라인업
+/// 순서 그대로) 중 컨택+파워 합산 상위 3명, 날씨는 실제 매치 세션이 쓰는
+/// 것과 동일한 결정적 시드(`league_sub_seed(world_seed, "weather:{game_id}")`)
+/// 로 미리 굴려서 매치가 실제로 시작될 때와 같은 값이 나오게 한다.
+#[derive(Debug, Clone)]
+pub struct PregameScoutingInfo {
+    pub opponent_team_id: String,
+    pub starter_name: String,
+    pub starter_velocity: f64,
+    pub starter_control: f64,
+    pub starter_stuff: f64,
+    pub top_batters: Vec<ScoutedBatterInfo>,
+    pub weather: String,
+    pub park_factor_label: String,
+}
+
+pub fn get_pregame_scouting(game_id: String, home_team_id: String, away_team_id: String) -> anyhow::Result<PregameScoutingInfo> {
+    with_state(|state| {
+        let opponent_team_id = if repository::is_protagonist_team(&state.slot_conn, &home_team_id)? { away_team_id.clone() } else { home_team_id.clone() };
+
+        let starter = repository::load_starting_pitcher(&state.slot_conn, &opponent_team_id)?;
+        let starter_name: String =
+            state.slot_conn.query_row("SELECT name FROM npc WHERE id = ?1", [&starter.id], |r| r.get(0)).optional()?.unwrap_or_else(|| starter.id.clone());
+
+        let mut lineup = repository::load_batting_lineup(&state.slot_conn, &opponent_team_id)?;
+        lineup.sort_by(|a, b| (b.power + b.contact).partial_cmp(&(a.power + a.contact)).unwrap_or(std::cmp::Ordering::Equal));
+        let top_batters = lineup
+            .into_iter()
+            .take(3)
+            .map(|b| -> anyhow::Result<ScoutedBatterInfo> {
+                let name: String = state.slot_conn.query_row("SELECT name FROM npc WHERE id = ?1", [&b.id], |r| r.get(0)).optional()?.unwrap_or_else(|| b.id.clone());
+                Ok(ScoutedBatterInfo { name, contact: b.contact, power: b.power, eye: b.eye })
+            })
+            .collect::<anyhow::Result<Vec<_>>>()?;
+
+        let park_factor_raw = content::load_team_park_factor(&state.content_conn, &home_team_id)?;
+        let mut weather_rng = ChaCha8Rng::seed_from_u64(repository::league_sub_seed(world_seed(&state.slot_conn)?, &format!("weather:{game_id}")));
+        let weather = match crate::sim::match_sim::roll_weather(&mut weather_rng) {
+            crate::sim::match_sim::Weather::Clear => "맑음",
+            crate::sim::match_sim::Weather::Cloudy => "흐림",
+            crate::sim::match_sim::Weather::Rain => "비",
+            crate::sim::match_sim::Weather::Wind => "강풍",
+            crate::sim::match_sim::Weather::Hot => "더위",
+        };
+
+        Ok(PregameScoutingInfo {
+            opponent_team_id,
+            starter_name,
+            starter_velocity: starter.velocity,
+            starter_control: starter.control,
+            starter_stuff: starter.stuff,
+            top_batters,
+            weather: weather.to_string(),
+            park_factor_label: park_factor_raw.unwrap_or_else(|| "표준".to_string()),
+        })
+    })
+}
+
+/// 매치 화면 "타자 정보" 카드(대화 2026-07-25, 좌/우 레이아웃 재설계)용 —
+/// `MatchStepInfo_AwaitingPitch.batter_id`는 raw npc id뿐이라 이름·능력치를
+/// 못 보여줬다. `npc.stats`가 이미 컨택/파워/선구안을 갖고 있어(§01_선수_능력치)
+/// 원라이너 조회로 충분 — 새 시뮬레이션 로직 없음.
+#[derive(Debug, Clone)]
+pub struct BatterProfileInfo {
+    pub name: String,
+    pub contact: f64,
+    pub power: f64,
+    pub eye: f64,
+}
+
+pub fn get_batter_profile(npc_id: String) -> anyhow::Result<BatterProfileInfo> {
+    with_state(|state| {
+        let (name, stats_raw): (String, String) =
+            state.slot_conn.query_row("SELECT name, stats FROM npc WHERE id = ?1", [&npc_id], |r| Ok((r.get(0)?, r.get(1)?)))?;
+        let v: serde_json::Value = serde_json::from_str(&stats_raw)?;
+        Ok(BatterProfileInfo {
+            name,
+            contact: v.get("컨택").and_then(|x| x.as_f64()).unwrap_or(50.0),
+            power: v.get("파워").and_then(|x| x.as_f64()).unwrap_or(50.0),
+            eye: v.get("선구안").and_then(|x| x.as_f64()).unwrap_or(50.0),
+        })
+    })
+}
+
+/// 매치 화면 박스스코어(migration v26, 대화 2026-07-25) — 이닝별
+/// `[{"inning","top_of_inning","runs","hits","walks"}, ...]` JSON 배열.
+/// 진행 중인 매치 세션이 없으면 `None`(모듈 문서 "JSON 원시 통과" 관례 —
+/// Dart가 dart:convert로 표시용으로만 읽는다).
+pub fn get_inning_log() -> anyhow::Result<Option<String>> {
+    with_state(|state| match_session::get_inning_log(&state.slot_conn))
+}
+
+/// 매치 화면 박스스코어 라벨·주자 팀색·구장 그림(대화 2026-07-25) — 홈/
+/// 원정 팀 id(Dart `hsSchoolColor`로 학교색 해시)와 홈 구장 id. 구장 id는
+/// Dart가 `assets/stadium/{id}.png`(구장별로 미리 절차 생성해둔 도트아트,
+/// content.db의 27개 stadium 행 하나당 하나씩) 자산 키로 그대로 쓴다.
+/// 진행 중인 매치 세션이 없으면 `None`.
+#[derive(Debug, Clone)]
+pub struct MatchVenueInfo {
+    pub home_team_id: String,
+    pub away_team_id: String,
+    pub stadium_id: String,
+}
+
+pub fn get_match_venue() -> anyhow::Result<Option<MatchVenueInfo>> {
+    with_state(|state| {
+        let Some((home_team_id, away_team_id)) = match_session::get_match_teams(&state.slot_conn)? else {
+            return Ok(None);
+        };
+        let stadium_id = content::load_team_stadium_id(&state.content_conn, &home_team_id)?.unwrap_or_else(|| "default".to_string());
+        Ok(Some(MatchVenueInfo { home_team_id, away_team_id, stadium_id }))
+    })
+}
+
+/// 매치 화면 타자 카드 "이번 경기" 라인(migration v26, 대화 2026-07-25) —
+/// `PlayerBattingStats`와 대칭이지만 시즌 전체가 아니라 지금 진행 중인
+/// 경기 하나만. 그 선수가 이번 경기에 아직 타석에 서지 않았거나 매치
+/// 세션이 없으면 0으로 채운 라인.
+pub fn get_batter_game_stats(npc_id: String) -> anyhow::Result<PlayerBattingStats> {
+    with_state(|state| {
+        let name: String =
+            state.slot_conn.query_row("SELECT name FROM npc WHERE id = ?1", [&npc_id], |r| r.get(0)).optional()?.unwrap_or_default();
+        let raw_map = match_session::get_batter_game_stats_json(&state.slot_conn)?.unwrap_or_else(|| "{}".to_string());
+        let v: serde_json::Value = serde_json::from_str(&raw_map)?;
+        let entry = v.get(&npc_id).cloned().unwrap_or_else(|| serde_json::json!({}));
+        let line = repository::NpcBattingLine::from_json(&entry);
+        Ok(PlayerBattingStats::from_line(npc_id, name, &line))
+    })
+}
+
+/// 매치 화면 타자 카드 "시즌 전체" 라인(대화 2026-07-25) — `get_team_season_batting_stats`
+/// 와 같은 소스(진행 중인 `season_stats` 합산)를 선수 한 명만 뽑는 얇은
+/// 래퍼. `get_player_career_batting_stats`(과거 확정 시즌들 통산)와는
+/// 시즌 범위가 다르다.
+pub fn get_player_season_batting_stats(npc_id: String) -> anyhow::Result<PlayerBattingStats> {
+    with_state(|state| {
+        let name: String =
+            state.slot_conn.query_row("SELECT name FROM npc WHERE id = ?1", [&npc_id], |r| r.get(0)).optional()?.unwrap_or_default();
+        let raw = repository::aggregate_stats_line(&state.slot_conn, "season_stats", &npc_id)?;
+        let line = repository::NpcBattingLine::from_json(&raw);
+        Ok(PlayerBattingStats::from_line(npc_id, name, &line))
+    })
 }
 
 /// 뉴게임 — [07_주인공_생성](../../../02_기획/07_주인공_생성.md) §1의 7단계
@@ -458,19 +626,21 @@ pub fn set_university_major(major: String) -> anyhow::Result<()> {
 }
 
 /// 과목 석차백분율(1=상위)을 9등급으로 — 학업 탭 과목별 표에서 순수 계산이라
-/// I/O·락 없이 동기 호출로 둔다(`course_names()`와 같은 패턴).
+/// I/O·락 없이 동기 호출로 둔다(`power_names()`와 같은 패턴).
 #[flutter_rust_bridge::frb(sync)]
 pub fn percentile_to_grade(percentile: f64) -> i64 {
     crate::sim::academics::percentile_to_grade(percentile) as i64
 }
 
-/// 1구 조작 집중뷰의 3×3 코스 그리드 버튼 이름 — `sim::pitch::Course`의
-/// 9개 값 그대로(`resolve_choice`의 `"구종:코스"` choice_id에 이 이름을
-/// 그대로 넣으면 된다). 순수 계산(I/O·락 없음)이라 동기 호출로 둔다 —
-/// Dart 쪽에서 `FutureBuilder` 없이 바로 리스트를 쓸 수 있다.
+/// 1구 조작 집중뷰의 구위 다이얼 3단계 — `sim::pitch::Power`의 라벨
+/// 그대로(`resolve_choice`의 `"구종:x:y:구위"` choice_id 마지막 파트에
+/// 이 이름을 그대로 넣으면 된다). 투구 위치는 더 이상 고정 목록이 아니라
+/// 연속좌표(대화 2026-07-25, 매치 화면 재설계)라 별도 이름 목록이 없다 —
+/// Dart 쪽 코스 캔버스가 탭 위치를 직접 x,y로 변환해 보낸다. 순수 계산
+/// (I/O·락 없음)이라 동기 호출로 둔다.
 #[flutter_rust_bridge::frb(sync)]
-pub fn course_names() -> Vec<String> {
-    crate::sim::pitch::Course::ALL.iter().map(|c| format!("{c:?}")).collect()
+pub fn power_names() -> Vec<String> {
+    crate::sim::pitch::Power::ALL.iter().map(|p| p.label().to_string()).collect()
 }
 
 /// 홈 화면 실제 날짜 표시용(대화 2026-07-21) — `crate::calendar`를 그대로
@@ -708,6 +878,26 @@ pub fn training_intensity_names() -> Vec<String> {
     crate::sim::training::INTENSITIES.iter().map(|s| s.to_string()).collect()
 }
 
+/// [06_훈련_시스템](../../../02_기획/육성코어/06_훈련_시스템.md) §2-1
+/// 훈련종류 카탈로그(6종) — 훈련 탭이 스탯 드롭다운 대신 이 목록을
+/// 주/보조 훈련 선택 카드로 보여준다. 각 항목의 `stats`는 그 훈련종류가
+/// 영향을 주는 능력치 2개(순서 무관).
+#[derive(Debug, Clone)]
+pub struct TrainingTypeInfo {
+    pub id: String,
+    pub name: String,
+    pub stats: Vec<String>,
+}
+
+/// 순수 상수라 동기.
+#[flutter_rust_bridge::frb(sync)]
+pub fn training_type_options() -> Vec<TrainingTypeInfo> {
+    crate::sim::training::TRAINING_TYPES
+        .iter()
+        .map(|t| TrainingTypeInfo { id: t.id.to_string(), name: t.name.to_string(), stats: t.stats.iter().map(|s| s.to_string()).collect() })
+        .collect()
+}
+
 /// 캐릭터 생성 화면 "투수 타입" 카드용(대화 2026-07-23) — 타입별 우세
 /// 스탯(`exposed_stat_names()`의 9종 중 어느 것이 상단/중간 밴드인지)과
 /// 습득 가능 2구종 후보 풀. `sim::protagonist::archetype_bands`/
@@ -746,8 +936,8 @@ pub fn pitcher_archetype_info() -> anyhow::Result<Vec<PitcherArchetypeInfo>> {
 /// 안 짰다"는 자연스러운 초기 상태, `set_protagonist_training` 문서 참고).
 #[derive(Debug, Clone)]
 pub struct TrainingConfigInfo {
-    pub primary_stat: String,
-    pub secondary_stats: Vec<String>,
+    pub primary_training: String,
+    pub secondary_training: String,
     pub intensity: String,
     pub new_pitch: Option<String>,
     /// 기존 구종 마스터리업 대상(05_구종_시스템.md §2, 대화 2026-07-23) —
@@ -769,14 +959,9 @@ pub fn get_training_config() -> anyhow::Result<Option<TrainingConfigInfo>> {
             return Ok(None);
         };
         let v: serde_json::Value = serde_json::from_str(&raw)?;
-        let secondary_stats = v
-            .get("secondary_stats")
-            .and_then(|s| s.as_array())
-            .map(|arr| arr.iter().filter_map(|x| x.as_str().map(str::to_string)).collect())
-            .unwrap_or_default();
         Ok(Some(TrainingConfigInfo {
-            primary_stat: v.get("primary_stat").and_then(|s| s.as_str()).unwrap_or("").to_string(),
-            secondary_stats,
+            primary_training: v.get("primary_training").and_then(|s| s.as_str()).unwrap_or("").to_string(),
+            secondary_training: v.get("secondary_training").and_then(|s| s.as_str()).unwrap_or("").to_string(),
             intensity: v.get("intensity").and_then(|s| s.as_str()).unwrap_or("보통").to_string(),
             new_pitch: v.get("new_pitch").and_then(|s| s.as_str()).map(str::to_string),
             mastery_pitch: v.get("mastery_pitch").and_then(|s| s.as_str()).map(str::to_string),
@@ -793,9 +978,8 @@ pub fn get_training_config() -> anyhow::Result<Option<TrainingConfigInfo>> {
 /// 마스터리 단계를 올리는 슬롯(05_구종_시스템.md §2, 대화 2026-07-23) —
 /// 둘 중 하나만 넘길 수 있다.
 pub fn set_training(
-    primary_stat: String,
-    secondary_stat_1: String,
-    secondary_stat_2: String,
+    primary_training: String,
+    secondary_training: String,
     intensity: String,
     new_pitch: Option<String>,
     mastery_pitch: Option<String>,
@@ -803,8 +987,8 @@ pub fn set_training(
     with_state(|state| {
         repository::set_protagonist_training(
             &state.slot_conn,
-            &primary_stat,
-            [&secondary_stat_1, &secondary_stat_2],
+            &primary_training,
+            &secondary_training,
             &intensity,
             new_pitch.as_deref(),
             mastery_pitch.as_deref(),
@@ -1093,6 +1277,7 @@ pub struct PlayerBattingStats {
     pub at_bats: i64,
     pub hits: i64,
     pub home_runs: i64,
+    pub walks: i64,
     pub rbi: i64,
     pub stolen_bases: i64,
     pub caught_stealing: i64,
@@ -1112,6 +1297,7 @@ impl PlayerBattingStats {
             at_bats: line.at_bats,
             hits: line.hits,
             home_runs: line.home_runs,
+            walks: line.walks,
             rbi: line.rbi,
             stolen_bases: line.stolen_bases,
             caught_stealing: line.caught_stealing,
@@ -1621,6 +1807,32 @@ pub fn career_summary() -> anyhow::Result<CareerSummary> {
     })
 }
 
+/// 매치 화면 투수 카드 "이번 시즌" 성적(대화 2026-07-25) — `career_summary`와
+/// 같은 모양이지만 통산 전체가 아니라 진행 중인 시즌만(`aggregate_game_log`의
+/// `season` 필터, `get_meta_status().season`과 동일한 값 사용).
+pub fn get_protagonist_season_summary() -> anyhow::Result<CareerSummary> {
+    with_state(|state| {
+        let season = repository::current_season_value(&state.slot_conn)?;
+        let line = repository::aggregate_game_log(&state.slot_conn, Some(season))?;
+        let (retired, retirement_reason): (i64, Option<String>) = state
+            .slot_conn
+            .query_row("SELECT retired, retirement_reason FROM protagonist WHERE id = 'proto:1'", [], |r| Ok((r.get(0)?, r.get(1)?)))?;
+        Ok(CareerSummary {
+            games: line.games,
+            wins: line.wins,
+            losses: line.losses,
+            no_decisions: line.no_decisions,
+            strikeouts: line.strikeouts,
+            innings_pitched: line.innings_pitched,
+            era: line.era(),
+            whip: line.whip(),
+            k_per_9: line.k_per_9(),
+            retired: retired == 1,
+            retirement_reason,
+        })
+    })
+}
+
 /// [08_은퇴](../../../04_UI기획/08_은퇴.md) §2 "커리어 타임라인 그래프" —
 /// `career_history`(시즌별 한 줄, `season_rollover`가 채움)를 그대로
 /// 노출. `line_json`은 `{"games","wins","losses","no_decisions",
@@ -1919,10 +2131,9 @@ mod tests {
     }
 
     #[test]
-    fn course_names_returns_all_nine_documented_zones() {
-        let names = course_names();
-        assert_eq!(names.len(), 9);
-        assert!(names.contains(&"MidCenter".to_string()));
+    fn power_names_returns_the_three_documented_levels() {
+        let names = power_names();
+        assert_eq!(names, vec!["약", "보통", "강"]);
     }
 
     #[test]
@@ -1948,10 +2159,14 @@ mod tests {
 
         assert!(get_training_config().unwrap().is_none(), "no training configured yet");
 
-        set_training("구속".to_string(), "구위".to_string(), "제구".to_string(), "보통".to_string(), None, None).unwrap();
+        let types = training_type_options();
+        assert_eq!(types.len(), 6, "06_훈련_시스템.md §2-1의 6종 훈련 카탈로그");
+        assert!(types.iter().any(|t| t.id == "strength" && t.stats == vec!["구속".to_string(), "체력".to_string()]));
+
+        set_training("strength".to_string(), "bullpen".to_string(), "보통".to_string(), None, None).unwrap();
         let config = get_training_config().unwrap().unwrap();
-        assert_eq!(config.primary_stat, "구속");
-        assert_eq!(config.secondary_stats, vec!["구위", "제구"]);
+        assert_eq!(config.primary_training, "strength");
+        assert_eq!(config.secondary_training, "bullpen");
         assert_eq!(config.intensity, "보통");
         assert!(config.new_pitch.is_none());
         assert!(config.mastery_pitch.is_none());
@@ -1963,8 +2178,64 @@ mod tests {
         // 투심 패스트볼(구위 25+)은 강속구형 시작 구위 밴드(26~30)에서
         // 항상 손이 닿는 습득 조건(05_구종_시스템.md §3, 대화 2026-07-25) —
         // 슬라이더(제구 30+)는 강속구형에게 닿지 않는 스탯이라 교체.
-        set_training("구속".to_string(), "구위".to_string(), "제구".to_string(), "보통".to_string(), Some("투심 패스트볼".to_string()), None).unwrap();
+        set_training("strength".to_string(), "bullpen".to_string(), "보통".to_string(), Some("투심 패스트볼".to_string()), None).unwrap();
         assert_eq!(get_training_config().unwrap().unwrap().new_pitch.as_deref(), Some("투심 패스트볼"));
+
+        reset_state();
+    }
+
+    /// 프리게임 브리핑(대화 2026-07-25) — `'game'` PendingAction payload의
+    /// `home`/`away`를 그대로 넘겼을 때 상대 선발·타선·날씨가 채워지는지,
+    /// 그리고 주인공이 홈이든 원정이든 상대팀을 올바르게 골라내는지.
+    #[test]
+    fn get_pregame_scouting_resolves_the_opponent_regardless_of_home_or_away() {
+        let _guard = TEST_SERIAL.lock().unwrap();
+        reset_state();
+
+        let (my_team, opponent) = {
+            let conn = content::open("content.db").unwrap();
+            let mut stmt = conn.prepare("SELECT id FROM teams WHERE league_id = 'league:hs' ORDER BY id LIMIT 2").unwrap();
+            let teams: Vec<String> = stmt.query_map([], |r| r.get(0)).unwrap().collect::<Result<_, _>>().unwrap();
+            (teams[0].clone(), teams[1].clone())
+        };
+
+        new_game("content.db".to_string(), 991, "브리핑테스트".to_string(), "우완".to_string(), my_team.clone(), "강속구형".to_string(), None, None).unwrap();
+
+        // 주인공이 홈일 때 — away가 상대.
+        let as_home = get_pregame_scouting("game:test1".to_string(), my_team.clone(), opponent.clone()).unwrap();
+        assert_eq!(as_home.opponent_team_id, opponent);
+        assert!(!as_home.starter_name.is_empty());
+        assert_eq!(as_home.top_batters.len(), 3);
+        assert!(["맑음", "흐림", "비", "강풍", "더위"].contains(&as_home.weather.as_str()));
+
+        // 주인공이 원정일 때 — home이 상대.
+        let as_away = get_pregame_scouting("game:test2".to_string(), opponent.clone(), my_team.clone()).unwrap();
+        assert_eq!(as_away.opponent_team_id, opponent);
+
+        reset_state();
+    }
+
+    /// 매치 화면 "타자 정보" 카드(대화 2026-07-25) — 로스터에서 아무 타자
+    /// id나 뽑아 조회하면 이름·능력치 3종이 채워지는지.
+    #[test]
+    fn get_batter_profile_returns_name_and_ability_stats_for_a_roster_player() {
+        let _guard = TEST_SERIAL.lock().unwrap();
+        reset_state();
+
+        let hs_team = {
+            let conn = content::open("content.db").unwrap();
+            conn.query_row("SELECT id FROM teams WHERE league_id = 'league:hs' LIMIT 1", [], |r| r.get::<_, String>(0)).unwrap()
+        };
+        new_game("content.db".to_string(), 992, "타자프로필테스트".to_string(), "우완".to_string(), hs_team.clone(), "강속구형".to_string(), None, None).unwrap();
+
+        let roster = list_roster(hs_team).unwrap();
+        let batter = roster.iter().find(|p| p.position != "선발투수" && p.position != "중계투수" && p.position != "마무리투수").unwrap();
+
+        let profile = get_batter_profile(batter.id.clone()).unwrap();
+        assert_eq!(profile.name, batter.name);
+        assert!((0.0..=100.0).contains(&profile.contact));
+        assert!((0.0..=100.0).contains(&profile.power));
+        assert!((0.0..=100.0).contains(&profile.eye));
 
         reset_state();
     }
@@ -2029,6 +2300,23 @@ mod tests {
         let career_pitching = get_player_career_pitching_stats(pitcher.clone()).unwrap();
         assert_eq!(career_pitching.strikeouts, 18, "career should reflect npc_season_history, not the in-progress season");
         assert_eq!(career_pitching.saves, 2);
+
+        // 매치 화면 박스스코어/구장/이번경기 라인 조회(대화 2026-07-25) — 진행 중인
+        // 매치 세션이 없는 흔한 상태(경기 사이 다른 화면)에서도 죽지 않고
+        // 얌전히 빈 값을 돌려줘야 한다. 실제 세션 데이터가 채워지는 경로는
+        // `data::match_session`의 `push_inning_log_entry`/`merge_batter_game_stats`
+        // 단위 테스트가 이미 촘촘히 검증한다.
+        assert_eq!(get_inning_log().unwrap(), None);
+        assert!(get_match_venue().unwrap().is_none());
+
+        let game_line = get_batter_game_stats(batter.clone()).unwrap();
+        assert_eq!(game_line.plate_appearances, 0, "매치 세션이 없으면 이번 경기 라인은 0이어야 함");
+
+        let season_line = get_player_season_batting_stats(batter.clone()).unwrap();
+        assert_eq!(season_line.hits, 4, "get_team_season_batting_stats와 동일 소스를 선수 한 명만 뽑아야 함");
+
+        let season_summary = get_protagonist_season_summary().unwrap();
+        assert_eq!(season_summary.games, 0, "아직 game_log에 이번 시즌 경기가 없어야 함");
 
         reset_state();
     }

@@ -2000,3 +2000,89 @@
 **스크린샷 육안 검증**(이번 세션에 확립한 방식 — `RepaintBoundary.toImage()`를 `tester.runAsync`로 감싸고 한글은 `malgun.ttf` 로드): 월간 뷰(2027년 3월, 상대팀명이 승/패 색으로 표시, 시즌 20경기가 끝난 뒤 나머지 날짜는 빈 칸)·주간 뷰(3/21~3/27, 승/패 배지 + 경기 없는 날은 "경기 없음") 둘 다 실제 데이터로 정상 렌더 확인, 사용자에게 전달.
 
 **영향 없음**: 엔진 변경 없음(순수 Flutter UI 리팩터), 마이그레이션 없음.
+
+### 6-125. 훈련 시스템 — 스탯 직접선택 → 훈련종류 카탈로그(6종) 재설계 (2026-07-25, 완료)
+
+**Context**: 기존 훈련 탭이 "주슬롯1+보조슬롯2 = 9개 능력치 중 직접 선택"이라, 사용자가 "종류를 6개 정도로 하고(예: 근력훈련) 훈련마다 스탯 2개가 다르게 영향받게 조합하면 좋겠다"고 요청 — FM/OOTP식 훈련 카테고리 UX. 플레이어가 스탯을 직접 고르는 대신 "근력 훈련" 같은 훈련종류를 고르면 그 종류가 미리 정해둔 능력치 2개에 영향을 준다.
+
+**설계**(`06_훈련_시스템.md` §2-1 신설): 투수 노출 능력치 9종을 6개 훈련종류에 배분 — 근력 훈련(구속+체력)·컨디셔닝 훈련(회복력+체력)·불펜 피칭(제구+구위)·실전형 시뮬레이션 피칭(경기운영+침착함)·압박 상황 대응 훈련(클러치+침착함)·리더십/게임 스터디(리더십+경기운영). 6종×2스탯=12슬롯을 9개 스탯에 배분하다 보니 체력·침착함·경기운영이 두 훈련종류에 걸쳐 겹치는데, 의도된 설계 — 겹치는 두 훈련종류를 같이 고르면 그 능력치만 더 밀어주는 조합 전략이 생긴다. 슬롯 개수는 주훈련1+보조훈련1(총 2종류, 최대 4스탯)로 축소 — 기존 3스탯 직접선택과 체감폭을 맞추기 위해(훈련종류당 2스탯이라 기존 3슬롯 그대로 가져가면 최대 6스탯까지 건드려 "집중" 개념이 옅어짐). 배율은 기존 주슬롯(×3.0)/보조슬롯(×1.5)/비선택(×0.3) 그대로 재사용하되, 겹치는 스탯은 합산이 아니라 max로 처리(안 그러면 겹침 선택이 배율 2배가 되어 사기).
+
+**구현**:
+- `engine/src/sim/training.rs`: `TrainingType{id,name,stats:[&str;2]}` + `TRAINING_TYPES`(6종 상수) + `training_type_by_id` 신규. `TrainingConfig`의 `primary_stat`/`secondary_stats` 필드를 `primary_training`/`secondary_training`(훈련종류 id)으로 교체, `stat_focus_multiplier`를 훈련종류 매핑 기반 max 룩업으로 재작성.
+- `engine/src/data/repository.rs`: `set_protagonist_training` 시그니처를 훈련종류 id 2개로 교체(카탈로그 존재 검증 + primary≠secondary 검증 신설), `protagonist.training` JSON 필드명 `primary_stat`/`secondary_stats` → `primary_training`/`secondary_training`, `process_protagonist_week` 파싱부 갱신.
+- `engine/src/api/game.rs`: `TrainingTypeInfo{id,name,stats}` + `training_type_options()`(동기, 6종 카탈로그 UI 노출용) 신규. `TrainingConfigInfo`·`set_training` 시그니처를 훈련종류 id 2개로 교체.
+- frb 재생성(`flutter_rust_bridge_codegen generate` + `dart run build_runner build --delete-conflicting-outputs --force-jit`, §6-22 우회법) — 함수 시그니처+struct shape 변경이라 필수.
+- `app/lib/features/my_player/my_player_screen.dart`(`_TrainingTab`): 스탯 드롭다운 3개 → 훈련종류 선택 칩 2개(주훈련/보조훈련) — 각 칩에 "근력 훈련 — 구속·체력"처럼 이름+영향 능력치를 같이 표시(선택 전에 뭘 올리는지 알아야 하니까). 반대쪽 슬롯에서 이미 고른 항목은 후보에서 제외(같은 훈련종류를 양쪽에 중복 배정 못 하게).
+- `app/lib/features/game/home_dashboard.dart`(`_TrainingCard`): 대시보드 "훈련 현황" 카드도 `TrainingConfigInfo` 필드명 변경에 맞춰 훈련종류 id→표시 이름 변환(`trainingTypeOptions()`로 조회) 추가.
+
+**테스트**: `sim::training` — 겹치는 스탯이 합산이 아니라 max 배율을 받는지(`overlapping_stat_between_primary_and_secondary_training_gets_max_not_sum`), 카탈로그 6종 조회·9개 스탯 전부 커버되는지 신규 2건 + 기존 배율/강도/구종연동 테스트를 훈련종류 기준으로 재작성. `repository.rs` — 미지 훈련종류 id 거부·같은 훈련종류 중복 선택 거부(신규) 포함 기존 훈련 관련 테스트 전부 갱신. `api::game` — `training_type_options()` 6종 검증 추가. `app/test/my_player_test.dart` — 훈련종류 카탈로그 왕복 확인으로 갱신. `cargo test --lib` 539개 전부 통과, `cargo clippy --lib --tests --bins` 클린, `cargo build --release` 갱신, `flutter analyze` 클린, `flutter test -j 1` 28개 전부 통과, `balance_harness -- 5 3` 크래시 없음.
+
+**영향 없는 부분**: 강도 다이얼(약/보통/강)·구종 슬롯(신규습득/마스터리업)·학업 배율·코치 보너스·등판주 강도 캡 로직은 전부 그대로(훈련종류 매핑 위에 그대로 얹힘). 아직 배포 전 로컬 개발 단계라 기존 세이브의 `training` JSON 필드명 변경에 대한 마이그레이션은 넣지 않음.
+
+### 6-126. 경기 화면 — 전용 풀스크린 라우트 분리 + 메시지 기반 진입 + 비주얼 강화 + 프리게임 브리핑 (2026-07-25, 완료)
+
+**Context**: 매치 화면이 `GameScreen`(홈, `/game`) 일부(`_MainArea`)가 상태에 따라 인라인으로 바뀌는 구조라 "메인페이지 일부분이 경기화면"처럼 보였고, `game` PendingAction도 홈 화면에 자동으로 튀어나와 사용자가 직접 고를 여지가 없었다. `02.SvelteElectron`의 `{#if activeMatchContext} <MatchPage/> {:else} <레이아웃/>` 풀스크린 전환 + `GameStatusModal`(메시지에서 자동/직접플레이 선택) + `PreGameBriefingModal`(상대 스카우팅) 패턴을 분석해 모바일 세로 레이아웃으로 재구성. Phase 3(비주얼 강화)와 Phase 4(프리게임 브리핑) 둘 다 포함해서 한 번에 진행.
+
+**설계상 제약 확인(Phase 3 스코프 조정 계기)**: SvelteElectron은 매 구 단위로 엔진이 멈춰 개별 결과를 다 보여주지만, OnePitch 엔진은 주인공이 실제로 던질 차례(`AwaitingPitch`)에서만 멈추고 그 사이 하프이닝(다른 타자·배경 시뮬)은 한 호출 안에서 조용히 다 처리된다(10_구현_Phase_계획.md §6-31 기존 스코프 판단) — 그래서 진짜 매 구 단위 "플레이바이플레이 로그"는 구조적으로 불가능. 대신 클라이언트가 연속된 두 `MatchStepInfo` 스냅샷을 비교해 관찰 가능한 변화(득점·이닝 전환·아웃 증가)만 "상황 로그"로 누적하는 절충안으로 스코프를 조정.
+
+**구현 — 엔진**:
+- `engine/src/data/match_session.rs`: `MatchStepResult::AwaitingPitch`에 `fatigue: f64`·`pitches_thrown: u32` 필드 추가 — 이미 그 시점에 로드돼있던 `pitcher.fatigue`/`session.pitch_seq`를 threading만(새 계산 없음), `PitcherChangeDecision`이 쓰던 것과 같은 값 출처.
+- `engine/src/api/game.rs`: `MatchStepInfo::AwaitingPitch` 미러링 필드 추가. 프리게임 브리핑 신규 — `ScoutedBatterInfo`·`PregameScoutingInfo` 구조체 + `get_pregame_scouting(game_id, home_team_id, away_team_id)`: 상대 선발은 `repository::load_starting_pitcher`(로테이션 순번 그대로), 타선은 `repository::load_batting_lineup` 중 컨택+파워 합산 상위 3명, 날씨는 실제 매치가 쓰는 것과 동일한 결정적 시드(`league_sub_seed(world_seed, "weather:{game_id}")`)로 미리 굴려 매치 시작 시점과 같은 값이 나오게 함, 파크팩터는 `content::load_team_park_factor`(홈팀 기준, 기존 로직 그대로) 재사용 — 새 시뮬레이션 로직 없이 기존 함수 조합.
+- `repository::is_protagonist_team` 가시성을 `pub(crate)`로 소폭 확장(홈/원정 중 상대팀 판별용).
+- frb 재생성(`flutter_rust_bridge_codegen generate` + `dart run build_runner build --delete-conflicting-outputs --force-jit`) — struct/함수 시그니처 변경 필수.
+
+**구현 — 라우팅(Phase 1)**: `app/lib/shared/router.dart`에 `/game/match`를 `ShellRoute` **밖** 최상위 라우트로 추가(사이드/바텀 내비 없는 순수 풀스크린). 새 파일 `app/lib/features/game/match_screen.dart` — `game_screen.dart`에 있던 `_PitchPicker`/`_PitcherChangeDecisionView`/`_GameOverSummary`를 그대로 이전. `MatchScreen`은 `state.matchStep`을 보고 세 뷰 중 하나 또는 `_NoActiveMatch`(빈 상태, 딥링크·뒤로가기 방어)를 그린다. `_GameOverSummary`의 "확인"은 `dismissMatchResult()` 후 `context.go('/game')`로 홈 복귀(예전엔 인라인이라 이동이 필요 없었음).
+
+**구현 — 메시지 기반 진입(Phase 2)**: `game_screen.dart`의 `_MainArea`에서 `game` PendingAction 인라인 분기(`_PregameModePicker`)와 매치 상태 분기(`_PitchPicker` 등) 전부 제거. 대신: `state.matchStep != null`이면 `_MatchInProgressPrompt`("경기 화면으로 이동" 버튼, `/game/match` push, 다른 탭으로 나갔다 돌아온 경우 대비), `game` PendingAction이면 `_GameMessageHint`("메시지함 열기" 버튼, `/game/inbox` go)만 보여준다. `app/lib/features/inbox/inbox_screen.dart`: `_RowKind.game`/`_Category.game` 신설, `_load()`가 `pending.where(kind=='game')`도 행으로 포함(팀 이름은 `teamNamesProvider`+`getCurrentTeamInfo()`로 "vs 상대팀 (홈/원정)" 본문 구성), 자동/수동/반자동 3칩을 `_eventRows`와 같은 choices 메커니즘으로 노출. `_MessageDetailDialogState._choose`는 game 행이면 응답 직후 "선택 완료" 패널을 안 보여주고 다이얼로그를 스스로 닫으며, `_InboxScreenState._openMessage`가 다이얼로그가 닫힌 뒤 `matchStep`이 채워졌으면 `/game/match`로 push — 자동 모드도 예외 없이 이 경로를 타므로(자동도 `Some(GameOver)`를 즉시 반환) "모드를 고르면 경기 화면으로 이동"이라는 단일 규칙으로 통일.
+
+**구현 — 비주얼 강화(Phase 3)**: `match_visuals.dart`에 `PitcherStaminaGauge`(피로도 게이지, 70+ 빨강·50+ 노랑, 내 정보 탭 `_LiveGauge`와 반대로 "낮을수록 좋음" 색 매핑)와 `MatchLogPanel`(위 상황 로그 렌더) 신규. `match_screen.dart`의 `_MatchScreenState`가 `ref.listen`으로 `matchStep` 전환을 감지해 로그 한 줄씩 누적(최근 20줄 유지) — 첫 진입 시(리스너가 못 잡는 시점)는 `addPostFrameCallback`으로 한 번 보정.
+
+**구현 — 프리게임 브리핑(Phase 4)**: `inbox_screen.dart`의 `_InboxRow`에 `gameId`/`homeTeamId`/`awayTeamId` 옵션 필드 추가(`_gameRows`가 채움). `_MessageDetailDialog` 본문에 `game` 행이면 `_GameScoutingSection`(신규, `FutureBuilder<PregameScoutingInfo>`)을 끼워 상대 선발(구속·제구·구위)·주의 타자 3명(파워·컨택·선구)·날씨·파크팩터를 모드 선택 전에 미리 보여준다.
+
+**테스트**: `match_session.rs` — 첫 `AwaitingPitch`에서 `pitches_thrown==0`·`fatigue>=0` 확인(기존 테스트 확장), 매 구 단위로 `pitches_thrown`이 절대 감소하지 않고 실제로 증가하는지 신규 테스트. `api::game` — `get_pregame_scouting`이 주인공 홈/원정 어느 쪽이든 상대팀을 올바르게 골라내는지 신규 테스트. `app/test/match_entry_widget_test.dart`(신규) — 실제 `advance()`로 `game` PendingAction까지 진행 → 메시지함에서 "수동 플레이" 선택 → 다이얼로그가 스스로 닫히고 `/game/match`로 전환돼 `AwaitingPitch` UI(코스 선택)가 실제로 뜨는지 왕복 검증. `cargo test --lib` 541개 전부 통과, `cargo clippy --lib --tests --bins` 클린, `cargo build --release` 갱신, `flutter analyze` 클린, `flutter test -j 1` 29개 전부 통과, `balance_harness -- 5 3` 크래시 없음.
+
+**이월/알아두면 좋은 것**: 진짜 매 구 단위 플레이바이플레이는 여전히 스코프 밖(§6-31과 동일 판단 유지) — 필요해지면 자동 시뮬 구간에 이벤트 버퍼를 쌓아 다음 정지점에 실어 보내는 방식(SvelteElectron의 `autoSimLogs`와 유사)을 검토. 스프라이트 애니메이션(공 궤적·수비수 이동)은 이번 스코프 아웃 — 다이아몬드는 기존 CustomPainter 그대로.
+
+### 6-127. 투구 위치 연속좌표화(9칸→탭-애니웨어+볼 영역) + 구위 다이얼 + 좌/우 레이아웃 (2026-07-25, 완료)
+
+**Context**: §6-126에서 매치 화면을 풀스크린으로 분리한 뒤, 사용자가 `02.SvelteElectron`의 클릭 좌표 기반 조준(존 밖 클릭=고의 볼)만큼 "직접 선택해서 던지는" 디테일을 요청. 처음엔 "판정식 전체를 좌표 기반으로 새로 짜야 해서 수백 줄 규모"라 5×5 그리드 확장 정도로 스코프를 줄여 제안했으나, `sim::pitch::throw_pitch`를 직접 다시 읽어보니 `Course`에서 실제로 쓰는 값은 `edge_level()`(중심에서 거리, 0.0/0.5/1.0 세 값)과 `is_inside()`(몸쪽 여부) 단 둘뿐이었고, 이 두 값을 좌표 공식 `edge=(|x|+|y|)/2`로 바꾸면 기존 9칸 수치를 정확히 재현하면서 볼 영역까지 자연 확장된다는 걸 확인 — 진짜 연속좌표로 스코프를 되돌렸다. 이어서 사용자가 구위(3단계) 다이얼과 "구종/구위/위치 잡기/던지기" 단계형 조작 흐름, 좌(정보)/우(조작) 레이아웃까지 한 번에 요청해 전부 이번 서브분에 포함.
+
+**구현 — 엔진**:
+- `engine/src/sim/pitch.rs`: `Course` enum(9종)·`edge_level()`/`is_inside()` 메서드·`Course::parse`·`Course::CORNERS` 전부 제거. 자유함수 `edge_level(x,y)=(|x|+|y|)/2`·`is_inside(x)=x<0.0` 신설. `throw_pitch`가 `course: Course` 대신 `target_x: f64, target_y: f64, power: Power`를 받도록 재설계 — 판정 로직 자체(사구·존통과·컨택 계산)는 값의 출처만 바뀌었을 뿐 수식은 그대로. `Power` enum(약/보통/강, `sim::training::INTENSITIES`와 같은 라벨 재사용) 신설 — 강=구위·구속 +3/제구 −3, 약=반대(실제 투구 상식의 위력↔제구 트레이드오프, 세션 단위 피로 누적 없이 그 자리에서 바로 나는 효과). `choose_pitch_and_course`(자동 모드 AI)를 `choose_pitch_and_target`으로 재작성 — 유인구는 구석 근처(|x|,|y|≈0.7~1.1) 랜덤 샘플, 위기상황엔 구위=강 35% 확률.
+- `engine/src/data/match_session.rs`: `submit_pitch(pitch_name, target_x, target_y, power)`로 시그니처 교체, `player_pitch: Option<(String, f64, f64, Power)>`.
+- `engine/src/data/repository.rs`: `resolve_choice`의 `"pitch_name:course"` 파싱을 `"pitch_name:x:y:power"`(4파트, `splitn(4,':')`) 파싱으로 교체.
+- `engine/src/api/game.rs`: 3×3 코스 이름 목록이던 `course_names()` 제거(더 이상 고정 목록 없음), `power_names()`(구위 3단계) 신규. 매치 화면 "타자 정보" 카드용 `get_batter_profile(npc_id)` 신규 — `npc.stats`(컨택/파워/선구안)를 원라이너로 조회, 새 시뮬레이션 로직 없음.
+
+**구현 — Flutter**:
+- `match_visuals.dart`: `StrikeZoneGrid`(3×3 discrete grid) 제거, `PitchTargetCanvas` 신규 — 탭한 정확한 픽셀 위치를 캔버스 비율(px,py) → 존 좌표(x,y, 캔버스 안쪽 60%가 존·바깥 20% 여백이 볼 영역)로 변환해 크로스헤어만 옮긴다(제출은 안 함). 볼 영역 조준 시 크로스헤어 색이 경고색으로 바뀜.
+- `match_screen.dart`: `_MatchLayout`(600px 기준 좌/우 2열 반응형, `AppShell.wideBreakpoint`와 동일 관례) 신규 — 좌측 `_MatchInfoColumn`(스코어보드 → 경기화면[상황 로그] → 투수·타자 정보[스태미나 게이지+`_BatterInfoCard`]), 우측 `_PitchControls`(`StatefulWidget`으로 전환 — 구종 선택[선택 상태 없던 기존 버그도 같이 고침]/구위 3칩/`PitchTargetCanvas`/"던지기" 버튼, 셋 다 골라야 버튼 활성화, 제출 후 위치만 초기화하고 구종·구위는 유지).
+
+**구현 중 발견 2건**: (1) 새 좌표 기반 테스트(`ball_zone_targets_...`)를 처음엔 "스트라이크가 안 나와야 한다"로 잘못 작성 — 볼 영역이어도 유인구에 헛스윙(`PitchResult::Strike`)하는 건 실제 야구처럼 정상 동작이라, "인플레이(맞아서 타구가 됨)가 한가운데보다 훨씬 드물다"로 기준을 고쳐 재작성. (2) `_MatchLayout` wide 모드에서 우측 `controls`를 스크롤 없이 `Expanded`에 바로 넣어 좁은 세로 공간에서 오버플로우 — 좌측처럼 `SingleChildScrollView`로 감싸 해결.
+
+**테스트**: `sim::pitch` — 볼 영역 인플레이 희소성, 구위(강)가 존 안 헛스윙을 더 유도하는지, 구위(약)가 제구 나쁜 투수의 사구를 줄이는지, `Power::parse` 왕복 등 신규 5건 + 기존 좌표 관련 테스트 전부 `Course::Xxx` → 좌표 리터럴로 갱신. `api::game` — `power_names()` 라벨 확인, `get_batter_profile`이 로스터 타자의 이름·능력치를 정확히 돌려주는지 신규. `app/test/match_visuals_widget_test.dart` — `PitchTargetCanvas` 정중앙 탭이 좌표 (0,0)을 보고하는지·비활성 시 무시하는지로 갱신. `app/test/match_entry_widget_test.dart` — "코스"→"위치 잡기" 텍스트 갱신. `cargo test --lib` 546개 전부 통과, `cargo clippy --lib --tests --bins` 클린, `flutter analyze` 클린, `flutter test -j 1` 29개 전부 통과, `balance_harness -- 5 3` 크래시 없음.
+
+**스크린샷 검증**: 실제 매치 세션(수동 모드)까지 진행시켜 1100×750(와이드 브레이크포인트 이상) 캡처 — 좌측에 스코어보드·경기화면·투수 스태미나 게이지·상대 타자 카드, 우측에 구종/구위 선택(체크마크로 선택 표시)·탭-애니웨어 위치 조준 캔버스(크로스헤어)·활성화된 "던지기" 버튼이 의도대로 렌더링됨을 확인.
+
+**영향 없음**: 세이브 마이그레이션 없음(`Course`/좌표 모두 저장되지 않고 즉시 소비). 전략(공격/균형/안정) 다이얼은 이번엔 스코프에서 뺌 — "위치 잡기"의 볼 영역 선택이 그 역할을 흡수한다고 판단.
+
+### 6-128. 반자동 모드 폐지 + 매치 화면 박스스코어·구장·타자/투수 카드 재설계 (2026-07-25, 완료)
+
+**Context**: §6-127 완료 보고 직후 사용자가 매치 화면 추가 개선을 요청하되 "무작정 진행하지말고 계획이랑 궁금한거 물어보고 해"라고 명시 — (1) 1~12회(연장 대비) 박스스코어(안타·볼넷·득점), (2) 기존 진루+B-S-O 표시를 구장 특색을 살린 시각물 위로, (3) 타자/투수 각자 카드형식(좌: 타자 능력치+이번경기/시즌 기록, 우: 투수 스태미나+시즌 성적). 리서치로 `HalfInningStats`/`BatterGameStats`가 배경 하프이닝(`simulate_half_inning`)에서 이미 계산되지만 `season_stats` upsert 후 버려지고 있었음을 발견해 스코프가 "새 시뮬레이션 계산" 아니라 "이미 계산된 값 영속화"로 축소됨을 먼저 보고. 4개 질문(박스스코어 실시간성/타자 "성향"의 정확한 의미/투수 카드 내용/구장 그림 생성 방식)에 대한 답변으로 **반자동 모드 자체를 폐지**(자동/수동 2모드로 단순화)까지 함께 확정. 계획 승인("진행해줘") 후 구현 착수.
+
+**구현 — 엔진 Phase 1(반자동 폐지)**: `data/match_session.rs` 모드 검증 배열 3→2, `should_prompt` 3-arm match→단일 비교식. `02_기획/육성코어/07_매치_엔진.md`·`09_평가_시스템.md`·`app/lib/features/inbox/inbox_screen.dart`의 모드 선택 칩에서 반자동 제거(문서는 폐지 이력을 각주로 남김, 번호는 보존).
+
+**구현 — 엔진 Phase 2(박스스코어/타자기록 영속화, migration v26)**: `match_session` 테이블에 `inning_log`(JSON 배열, 하프이닝 경계마다 `push_inning_log_entry`가 `{inning,top_of_inning,runs,hits,walks}` 한 줄씩 append)·`batter_game_stats`(JSON 맵, `merge_batter_game_stats`가 타석마다 가산)·`current_half_runs/hits/walks`(하프이닝 진행 중 누적, 경계에서 flush) 5개 컬럼 신설. `transition_half_inning`(배경·인터랙티브 양쪽이 공유하는 유일한 하프이닝 경계 감지 지점) 맨 앞에서 flush를 호출해 두 경로가 갈라지지 않게 통일. 인터랙티브 1구 루프(4개 `AtBatOutcome` 분기 전부)와 배경 `simulate_half_inning` 분기 양쪽에 훅 추가. `api::game`에 조회 4종 신설: `get_inning_log()`(박스스코어 JSON 원시 통과), `get_batter_game_stats(npc_id)`/`get_player_season_batting_stats(npc_id)`(둘 다 `PlayerBattingStats` 재사용, 후자는 `get_team_season_batting_stats`와 같은 소스를 선수 한 명만 뽑는 얇은 래퍼 — `walks` 필드가 없어서 하나 추가), `get_protagonist_season_summary()`(`career_summary`와 같은 모양이지만 `aggregate_game_log(conn, Some(season))`로 시즌 스코프). `get_match_venue()`(홈/원정 팀 id+홈 구장 id, 박스스코어 라벨·주자 학교색 해시·구장 그림 키용)도 신설 — 구장 필드는 후속 수정(3차, 아래)에서 한 번 뺐다가 다시 살아나는 왕복을 겪음.
+
+**구현 — Flutter Phase 3(1차, 절차적 도트 구장)**: `match_boxscore.dart`(`BoxScoreEntry`/`parseInningLog`/`BoxScoreTable`) 신규. `match_stadium.dart`에 해시 기반 절차적 도트 필드(`_StadiumPainter` — 90도 부채꼴 그리드, 열 구역별 해시로 외야 펜스 깊이를 들쭉날쭉하게)+주자를 필드 위에 직접 바둑알로 그리는 1차 버전 작성, `match_screen.dart`의 `_MatchInfoColumn`을 박스스코어→구장→로그→타자/투수 카드 순으로 재배치하고 `_BatterInfoCard`(능력치+이번경기+시즌)·`_PitcherInfoCard`(스태미나+이번시즌 성적) 신규.
+
+**사용자 피드백으로 후속 수정(2차)**: 스크린샷 확인 후 사용자가 "① 박스스코어를 구장 이미지 너비에 맞추고 ② 절차적 도트 대신 실제 png/gif로 도트느낌만 나는 야구장 그림 사용(`02.SvelteElectron` 참고) ③ 진루표는 원래 다이아몬드 모양 그대로 유지"를 지시. `02.SvelteElectron/apps/ui/src/features/match-view/ui/BaseballField.svelte`의 `fieldStyle==='retro'` 모드가 쓰던 `resource/park/probaseball.gif`(자체 소유 프로젝트 에셋, 1306×1204·16프레임·11MB)를 Pillow로 560×516·8프레임·1.1MB까지 축소해 임시로 `app/assets/stadium/probaseball.gif`에 반입(전 구장 공용, 3차에서 폐기됨 — 아래). `_StadiumPainter` 절차적 렌더링은 삭제하고 `StadiumFieldView`가 `Image.asset(..., fit: BoxFit.cover)`를 배경으로 쓰도록 교체. 기존 `MatchScoreboard`의 다이아몬드 페인터를 `match_visuals.dart`의 공개 위젯 `BaseDiamondIndicator`(occupiedColor 파라미터화 — 기본값은 기존 `AppColors.accent` 유지해 `MatchScoreboard` 동작 100% 보존)로 승격, `StadiumFieldView` 우측상단 오버레이가 이 위젯을 `runnerColor`(타격팀 학교색)로 재사용해 "진루+SBO"를 한 자리에 표시. `match_boxscore.dart`의 `BoxScoreTable`은 고정폭 가로 스크롤(`SizedBox(width:24)` 셀들) 대신 `Expanded` 셀로 재작성해 그 아래 구장 이미지와 좌우 폭이 정확히 맞도록 함.
+
+**사용자 피드백으로 후속 수정(3차) — 구장별 개별 생성 이미지**: 커밋을 요청하면서 동시에 "경기장이 저런 디자인으로 구장마다 이미지가 있어야 하고, 이미지도 구장이랑 특징에 맞춰서 생성해줘"라고 재지시 — 2차의 "전 구장 공용 사진 한 장"은 요구를 충족 못 함이 확인됨. `content.db`의 `stadiums` 테이블을 조회해보니 실제로는 27개 행뿐(고교·대학은 권역/조별 거점구장 공유, 프로/프로2군은 팀별 전용구장)이라 전부 미리 구워두는 정적 생성이 충분히 가볍다는 걸 확인. Python(Pillow)로 절차적 도트아트 생성 스크립트를 작성 — `02.SvelteElectron`의 `BaseballField.svelte` `fieldStyle==='dot'` SVG 모드가 쓰던 폴리곤 좌표(외야 담장·경고트랙·내야 다이아몬드·관중석 3단·조명탑)를 그대로 축소 재사용해 저해상도(125×115)로 그린 뒤 4배 NEAREST 업스케일(500×460)해 도트 느낌을 낸다. 27개 각각의 시각 특징을 결정적으로 매핑: **파크팩터**(타자친화/중립/투수친화)→홈플레이트 기준 필드 전체를 방사형으로 0.90/1.0/1.10배 확대·축소 + 담장 두께, **이름에 "돔" 포함**(코브라돔 1곳)→하늘·스카이라인 대신 실내 지붕 트러스, **이름이 "○○구장"으로 끝나는지**(향토/한자어 이름=고교·대학 거점구장) **vs "○○파크/필드/스타디움/아레나"**(영어 마스코트식 이름=프로 전용구장)→배경이 산 실루엣이냐 도시 스카이라인이냐, 나머지(담장 색상·잔디/흙 색조 지터·주야간)는 `zlib.crc32(f"{stadium_id}:{salt}")` 해시로 결정적 다양화(파이썬 내장 `hash()`는 프로세스마다 랜덤 솔트가 붙어 결정론이 깨지므로 반드시 `crc32` 사용). `app/assets/stadium/{key}.png`(구장 27개+`default.png` 폴백, 총 1.3MB)로 전량 생성해 반입, `probaseball.gif`는 삭제. 엔진 `content::load_team_stadium_id(conn, team_id)` 신규(`teams JOIN stadiums`로 구장 id 조회)와 `MatchVenueInfo.stadium_id` 필드를 되살려 `StadiumFieldView`가 다시 `stadiumId` 파라미터(`"stadium:xxx"` → `:` 뒤쪽을 잘라 자산 키로, `errorBuilder`로 `default.png` 폴백)를 받게 원복.
+
+**구현 중 발견 2건**: (1) 첫 렌더에서 관중석이 아예 안 보이는 버그 — 원본 SVG는 "필드를 먼저 꽉 채워 그린 뒤 관중석 폴리곤을 맨 위에 덮어 비필드 영역을 마스킹"하는 순서인데, 초안 스크립트가 순서를 반대로 둬서(관중석→잔디 순) 잔디 사각형이 관중석을 통째로 덮어버렸다 — 그리기 순서를 SVG와 동일하게 교정. (2) 관중석 폴리곤의 상단 꼭짓점이 캔버스 맨 위(y=0)까지 닿는 원본 좌표라 축소판에서는 하늘/배경 실루엣(스카이라인·산·돔 지붕)이 거의 안 보였다 — 관중석 폴리곤 y좌표를 `TOP_CAP` 아래로 못 내려가게 클램프해 항상 하늘 띠가 남도록 고침.
+
+**테스트**: 엔진 `slot.rs`(migration v26 컬럼+기본값 테스트), `api::game`(신규 통합 테스트 1건 — 매치 세션이 없을 때 6개 신규 조회가 전부 안전하게 빈 값을 돌려주는지; 실제 세션 데이터가 쌓이는 경로는 `match_session.rs`의 `push_inning_log_entry`/`merge_batter_game_stats` 단위 테스트가 커버), `cargo test --lib` 548개+1건 신규 전부 통과, `cargo clippy --lib --tests --bins` 클린. Flutter `test/match_boxscore_stadium_widget_test.dart`(신규 7건 — `parseInningLog` 파싱/폴백, `BoxScoreTable` 렌더, `StadiumFieldView` 렌더+재렌더+미확인 구장 id 폴백), `flutter analyze` 클린, `flutter test -j 1` 전체(35개 파일) 전부 통과. `balance_harness -- 5 3` 스모크 — 크래시 없음, S등급 비율 6.7%(§6-127 이후 기존 실측치와 동일, 이번 변경은 전부 조회/표시 전용이라 시뮬레이션 결과에 영향 없음 — 예상대로).
+
+**스크린샷 검증**: 1차(절차적 실시간 도트)·2차(공용 실사 GIF+박스스코어 폭 정렬+원본 다이아몬드 복원)·3차(구장별 절차 생성 PNG) 세 번 다 실제 매치 세션(수동 모드)까지 진행시켜 1100×950 캡처로 확인. 3차 검증 중 `flutter test`가 새로 추가한 자산 디렉터리(`pubspec.yaml`의 `assets/stadium/` 디렉터리 통째 등록)를 못 찾아 화면이 빈 채로 캡처되는 문제를 겪었는데, `flutter pub get`을 다시 돌리지 않아 자산 매니페스트가 갱신 안 된 게 원인이었고, 그다음엔 위젯 테스트 하네스에서 진짜 PNG 비동기 디코딩이 끝나기 전에 캡처해버려 또 비어 보였다(`tester.runAsync` 밖에서 `pump()`만 여러 번 돌려선 안 되고, 실제 디코딩이 끝나도록 `runAsync` 안에서 실제 딜레이+`pump()`를 번갈아 반복해야 함) — 두 문제 다 스크린샷 캡처 스크립트(테스트 코드 아님, 커밋 대상 아님)만의 문제였고 고친 뒤 "한라구장"(투수친화·산·야간) 배경이 정확히 렌더됨을 확인. 최종본에서 박스스코어가 구장 이미지와 동일한 좌우 폭으로 정렬되고, 구장마다 다른 절차 생성 배경(파크팩터별 필드 크기, 돔/노천, 산/스카이라인, 주/야간)이 렌더되며, 우측상단에 다이아몬드+이닝/스코어/B-S-O가 겹치지 않고 표시되고, 좌(타자)/우(투수) 카드가 능력치·이번경기·시즌 기록을 모두 보여줌을 확인.
+
+**영향 없음**: 세이브 마이그레이션은 v26 하나(컬럼 추가만, 기존 세션 로드 경로는 `load_session`이 항상 5개 신규 컬럼을 같이 읽어와 하위 호환 이슈 없음). NPC 시즌 기록 파이프라인(§6-114)·박스스코어 계산 자체는 이미 있던 `HalfInningStats`/`BatterGameStats` 재사용이라 밸런스에 영향 없음(위 스모크 결과로 확인). 구장 이미지 생성 스크립트(Python/Pillow) 자체는 이 저장소의 Rust/Dart 툴체인과 무관한 일회성 생성기라 저장소엔 안 넣고, 결과물(27+1개 PNG)만 커밋 — 구장 목록이 바뀌면(예: I8 이후 구장 추가) 이 기록을 참고해 같은 스크립트를 재작성하면 됨.

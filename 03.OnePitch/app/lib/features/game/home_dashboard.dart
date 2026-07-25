@@ -337,6 +337,13 @@ class _TrainingCard extends StatelessWidget {
   const _TrainingCard({required this.summary});
   final HomeSummary summary;
 
+  /// 훈련종류 id → 표시 이름(예: "strength" → "근력 훈련"). 카탈로그가
+  /// 순수 상수(동기 조회)라 build() 안에서 바로 불러도 부담 없음.
+  String _trainingTypeName(String id) {
+    final match = trainingTypeOptions().where((t) => t.id == id);
+    return match.isEmpty ? id : match.first.name;
+  }
+
   @override
   Widget build(BuildContext context) {
     final training = summary.training;
@@ -350,11 +357,9 @@ class _TrainingCard extends StatelessWidget {
           if (training == null)
             const Text('훈련 미설정 — 내 정보에서 설정하세요', style: TextStyle(color: AppColors.textSecondary))
           else ...[
-            Text('주력: ${training.primaryStat} · 강도 ${training.intensity}', style: const TextStyle(fontWeight: FontWeight.w600)),
-            if (training.secondaryStats.isNotEmpty) ...[
-              const SizedBox(height: 2),
-              Text('보조: ${training.secondaryStats.join(', ')}', style: const TextStyle(color: AppColors.textSecondary)),
-            ],
+            Text('주훈련: ${_trainingTypeName(training.primaryTraining)} · 강도 ${training.intensity}', style: const TextStyle(fontWeight: FontWeight.w600)),
+            const SizedBox(height: 2),
+            Text('보조훈련: ${_trainingTypeName(training.secondaryTraining)}', style: const TextStyle(color: AppColors.textSecondary)),
           ],
         ],
       ),

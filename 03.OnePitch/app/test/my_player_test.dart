@@ -29,13 +29,19 @@ void main() {
     final intensities = trainingIntensityNames();
     expect(intensities, ['약', '보통', '강']);
 
+    final types = trainingTypeOptions();
+    expect(types.length, 6);
+    expect(types.map((t) => t.id), containsAll(['strength', 'conditioning', 'bullpen', 'sim_game', 'pressure', 'leadership']));
+    final bullpen = types.firstWhere((t) => t.id == 'bullpen');
+    expect(bullpen.stats, ['제구', '구위']);
+
     expect(await getTrainingConfig(), isNull, reason: 'training not configured yet');
 
-    await setTraining(primaryStat: '제구', secondaryStat1: '경기운영', secondaryStat2: '침착함', intensity: '강');
+    await setTraining(primaryTraining: 'bullpen', secondaryTraining: 'pressure', intensity: '강');
     final config = await getTrainingConfig();
     expect(config, isNotNull);
-    expect(config!.primaryStat, '제구');
-    expect(config.secondaryStats, ['경기운영', '침착함']);
+    expect(config!.primaryTraining, 'bullpen');
+    expect(config.secondaryTraining, 'pressure');
     expect(config.intensity, '강');
     expect(config.newPitch, isNull);
   });

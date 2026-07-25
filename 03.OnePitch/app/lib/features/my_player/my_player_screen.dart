@@ -314,13 +314,21 @@ class _LiveGauge extends StatelessWidget {
 
 /// 훈련 탭 — "능력치 훈련"·"구종 훈련" 2개 카드(대화 2026-07-21, 마스터리업은
 /// 2026-07-23 신설, "신규 구종 습득"+"기존 구종 다듬기" 통합·습득 조건
-/// 게이팅은 2026-07-25). 구종 슬롯은 06_훈련_시스템.md §2 "신규습득 or
+/// 게이팅은 2026-07-25, 스탯 직접선택 → 훈련종류 카탈로그 전환은
+/// 2026-07-25 재설계). 구종 슬롯은 06_훈련_시스템.md §2 "신규습득 or
 /// 기존 마스터리업" 중 하나만 배정 가능 — 한쪽을 고르면 다른 쪽은 자동
 /// 해제된다. "신규 습득" 후보는 더 이상 카탈로그 전체가 아니라
 /// `learnablePitches()`가 05_구종_시스템.md §3 습득 조건(스탯 임계값)으로
 /// 걸러준 것만 — 지금 아무것도 못 배우면 조건 격차가 가장 적은 다음
 /// 목표 하나만 안내한다(카탈로그 전체를 드러내지 않으면서도 완전히
 /// 깜깜이는 아니게).
+///
+/// 능력치 훈련은 스탯 3개를 직접 고르는 대신 §2-1 "훈련종류 카탈로그"
+/// (6종, 각각 능력치 2개에 영향) 중 주훈련 1개·보조훈련 1개를 고른다 —
+/// "근력 훈련을 하면 구속·체력이 같이 는다"는 감각. 같은 항목을 주·보조
+/// 둘 다로 고를 수 없게 UI에서 서로의 후보 목록에서 이미 선택된 쪽을
+/// 제외한다(엔진도 `set_protagonist_training`에서 같은 규칙을 방어적으로
+/// 검증).
 class _TrainingTab extends StatefulWidget {
   const _TrainingTab({required this.knownPitchesJson});
   final String knownPitchesJson;
@@ -330,16 +338,15 @@ class _TrainingTab extends StatefulWidget {
 }
 
 class _TrainingTabState extends State<_TrainingTab> {
-  List<String> _stats = [];
+  List<TrainingTypeInfo> _trainingTypes = [];
   List<String> _intensities = [];
   List<String> _eligiblePitches = [];
   LockedPitchInfo? _nextCandidate;
   List<PitchMastery> _masterablePitches = [];
   int _knownCount = 0;
   final int _maxPitches = maxKnownPitches();
-  String? _primary;
-  String? _secondary1;
-  String? _secondary2;
+  String? _primaryTraining;
+  String? _secondaryTraining;
   String _intensity = '보통';
   String? _newPitch;
   String? _masteryPitch;
@@ -355,21 +362,20 @@ class _TrainingTabState extends State<_TrainingTab> {
   }
 
   Future<void> _load() async {
-    final stats = exposedStatNames();
+    final trainingTypes = trainingTypeOptions();
     final intensities = trainingIntensityNames();
     final learnable = await learnablePitches();
     final known = decodePitchMastery(widget.knownPitchesJson);
     final config = await getTrainingConfig();
     setState(() {
-      _stats = stats;
+      _trainingTypes = trainingTypes;
       _intensities = intensities;
       _knownCount = known.length;
       _eligiblePitches = learnable.eligible;
       _nextCandidate = learnable.nextCandidate;
       _masterablePitches = known.where((p) => p.stage < 5).toList();
-      _primary = config?.primaryStat ?? stats.first;
-      _secondary1 = config != null && config.secondaryStats.isNotEmpty ? config.secondaryStats[0] : stats[1];
-      _secondary2 = config != null && config.secondaryStats.length > 1 ? config.secondaryStats[1] : stats[2];
+      _primaryTraining = config?.primaryTraining ?? trainingTypes[0].id;
+      _secondaryTraining = config?.secondaryTraining ?? trainingTypes[1].id;
       _intensity = config?.intensity ?? '보통';
       _newPitch = config?.newPitch;
       _masteryPitch = config?.masteryPitch;
@@ -385,9 +391,8 @@ class _TrainingTabState extends State<_TrainingTab> {
     });
     try {
       await setTraining(
-        primaryStat: _primary!,
-        secondaryStat1: _secondary1!,
-        secondaryStat2: _secondary2!,
+        primaryTraining: _primaryTraining!,
+        secondaryTraining: _secondaryTraining!,
         intensity: _intensity,
         newPitch: _newPitch,
         masteryPitch: _masteryPitch,
@@ -420,14 +425,21 @@ class _TrainingTabState extends State<_TrainingTab> {
                     children: [
                       const Text('능력치 훈련', style: TextStyle(fontWeight: FontWeight.bold)),
                       const SizedBox(height: 12),
-                      const Text('주슬롯', style: TextStyle(color: AppColors.textSecondary)),
-                      _statDropdown(_primary, (v) => setState(() => _primary = v)),
-                      const SizedBox(height: 8),
-                      const Text('보조슬롯 1', style: TextStyle(color: AppColors.textSecondary)),
-                      _statDropdown(_secondary1, (v) => setState(() => _secondary1 = v)),
-                      const SizedBox(height: 8),
-                      const Text('보조슬롯 2', style: TextStyle(color: AppColors.textSecondary)),
-                      _statDropdown(_secondary2, (v) => setState(() => _secondary2 = v)),
+                      const Text('주훈련', style: TextStyle(color: AppColors.textSecondary)),
+                      const SizedBox(height: 6),
+                      _trainingTypeChips(
+                        selected: _primaryTraining,
+                        exclude: _secondaryTraining,
+                        onSelected: (id) => setState(() => _primaryTraining = id),
+                      ),
+                      const SizedBox(height: 12),
+                      const Text('보조훈련', style: TextStyle(color: AppColors.textSecondary)),
+                      const SizedBox(height: 6),
+                      _trainingTypeChips(
+                        selected: _secondaryTraining,
+                        exclude: _primaryTraining,
+                        onSelected: (id) => setState(() => _secondaryTraining = id),
+                      ),
                       const SizedBox(height: 8),
                       const Text('강도', style: TextStyle(color: AppColors.textSecondary)),
                       Wrap(
@@ -479,12 +491,24 @@ class _TrainingTabState extends State<_TrainingTab> {
     );
   }
 
-  Widget _statDropdown(String? value, ValueChanged<String?> onChanged) {
-    return DropdownButton<String>(
-      value: value,
-      isExpanded: true,
-      items: _stats.map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(),
-      onChanged: onChanged,
+  /// 훈련종류 카드 — 스탯 드롭다운 대신 "근력 훈련 — 구속·체력"처럼
+  /// 이름+영향 능력치를 같이 보여주는 칩(대화 2026-07-25). `exclude`는
+  /// 반대쪽 슬롯(주↔보조)에서 이미 고른 항목 — 같은 훈련종류를 양쪽에
+  /// 중복 배정할 수 없게 후보에서 뺀다.
+  Widget _trainingTypeChips({required String? selected, required String? exclude, required ValueChanged<String> onSelected}) {
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: _trainingTypes
+          .where((t) => t.id != exclude)
+          .map(
+            (t) => ChoiceChip(
+              label: Text('${t.name} — ${t.stats.join('·')}'),
+              selected: selected == t.id,
+              onSelected: (_) => onSelected(t.id),
+            ),
+          )
+          .toList(),
     );
   }
 

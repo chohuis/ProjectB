@@ -13,13 +13,39 @@ fn intensity_multiplier(intensity: &str) -> f64 {
     }
 }
 
-/// 주슬롯·보조슬롯·비선택 스탯의 XP 배율 — §2 "능력치 슬롯(주슬롯1+
-/// 보조슬롯2)". 정확한 주/보조 효율 차이는 §6 "주슬롯 vs 보조슬롯의 효율
-/// 차이" 미확정이라 placeholder(주슬롯 3배·보조슬롯 1.5배). 비선택
-/// 스탯도 완전히 0은 아니게 잡음(§1 코어루프의 "지속 설정" 취지상, 훈련
-/// 슬롯 밖 스탯도 실전 경험 등으로 아주 조금씩은 큰다는 자연스러운
-/// 여지 — `sim::growth`의 NPC 배경 성장과 같은 스탯 하나가 완전히
-/// 멈추는 건 부자연스러움).
+/// 훈련종류 카탈로그 — §2-1 "스탯 직접선택 대신 훈련 카탈로그"(대화
+/// 2026-07-25). 각 항목이 능력치 2개에 걸쳐있어, 플레이어는 스탯을 직접
+/// 고르는 대신 "근력 훈련" 같은 훈련종류를 고른다. 9개 노출 능력치를
+/// 6종×2로 배분하다 보니 체력·침착함·경기운영은 두 훈련종류에 걸쳐
+/// 겹친다 — 겹치는 두 훈련종류를 같이 고르면 그 능력치만 더 밀어주는
+/// 조합 전략이 의도된 결과.
+pub struct TrainingType {
+    pub id: &'static str,
+    pub name: &'static str,
+    pub stats: [&'static str; 2],
+}
+
+pub const TRAINING_TYPES: [TrainingType; 6] = [
+    TrainingType { id: "strength", name: "근력 훈련", stats: ["구속", "체력"] },
+    TrainingType { id: "conditioning", name: "컨디셔닝 훈련", stats: ["회복력", "체력"] },
+    TrainingType { id: "bullpen", name: "불펜 피칭", stats: ["제구", "구위"] },
+    TrainingType { id: "sim_game", name: "실전형 시뮬레이션 피칭", stats: ["경기운영", "침착함"] },
+    TrainingType { id: "pressure", name: "압박 상황 대응 훈련", stats: ["클러치", "침착함"] },
+    TrainingType { id: "leadership", name: "리더십/게임 스터디", stats: ["리더십", "경기운영"] },
+];
+
+/// id로 훈련종류를 찾는다 — 존재하지 않으면 `None`(호출부가 시스템
+/// 경계에서 검증, `sim::training` 자체는 무조건 신뢰하고 계산만).
+pub fn training_type_by_id(id: &str) -> Option<&'static TrainingType> {
+    TRAINING_TYPES.iter().find(|t| t.id == id)
+}
+
+/// 주슬롯·보조슬롯·비선택 스탯의 XP 배율 — §2-1 "주훈련 능력치 2개는
+/// 주슬롯 배율, 보조훈련 능력치 2개는 보조슬롯 배율" placeholder(주훈련
+/// 3배·보조훈련 1.5배). 비선택 스탯도 완전히 0은 아니게 잡음(§1
+/// 코어루프의 "지속 설정" 취지상, 훈련 슬롯 밖 스탯도 실전 경험 등으로
+/// 아주 조금씩은 큰다는 자연스러운 여지 — `sim::growth`의 NPC 배경 성장과
+/// 같은 스탯 하나가 완전히 멈추는 건 부자연스러움).
 const PRIMARY_MULTIPLIER: f64 = 3.0;
 const SECONDARY_MULTIPLIER: f64 = 1.5;
 const UNFOCUSED_MULTIPLIER: f64 = 0.3;
@@ -31,8 +57,8 @@ const UNFOCUSED_MULTIPLIER: f64 = 0.3;
 /// 둘 중 하나만 배정 가능 — 호출부(`repository::set_protagonist_training`)가
 /// 이미 상호 배타를 검증한다.
 pub struct TrainingConfig<'a> {
-    pub primary_stat: &'a str,
-    pub secondary_stats: [&'a str; 2],
+    pub primary_training: &'a str,
+    pub secondary_training: &'a str,
     pub intensity: &'a str,
     pub new_pitch: Option<&'a str>,
     pub mastery_pitch: Option<&'a str>,
@@ -43,16 +69,22 @@ pub struct TrainingConfig<'a> {
     pub academic_efficiency_mod: f64,
 }
 
-/// 능력치 슬롯 XP 배율 — §3 "신규 습득 중이면 능력치 슬롯 효율 -15%,
-/// 기존 구종 다듬기는 -5%(거의 영향 없음)".
+/// 능력치 슬롯 XP 배율 — §2-1 "주훈련 능력치 2개는 주슬롯 배율, 보조훈련
+/// 능력치 2개는 보조슬롯 배율, 겹치는 능력치는 합산이 아니라 max".
+/// 훈련종류 id가 유효하지 않으면(방어적 폴백, 실제로는 호출부가 시스템
+/// 경계에서 검증해 발생하지 않음) 그 슬롯은 기여하지 않는다.
 fn stat_focus_multiplier(stat: &str, config: &TrainingConfig) -> f64 {
-    let slot_mult = if stat == config.primary_stat {
-        PRIMARY_MULTIPLIER
-    } else if config.secondary_stats.contains(&stat) {
-        SECONDARY_MULTIPLIER
-    } else {
-        UNFOCUSED_MULTIPLIER
-    };
+    let mut slot_mult = UNFOCUSED_MULTIPLIER;
+    if let Some(t) = training_type_by_id(config.primary_training) {
+        if t.stats.contains(&stat) {
+            slot_mult = f64::max(slot_mult, PRIMARY_MULTIPLIER);
+        }
+    }
+    if let Some(t) = training_type_by_id(config.secondary_training) {
+        if t.stats.contains(&stat) {
+            slot_mult = f64::max(slot_mult, SECONDARY_MULTIPLIER);
+        }
+    }
     let pitch_penalty = if config.new_pitch.is_some() {
         0.85
     } else if config.mastery_pitch.is_some() {
@@ -132,11 +164,19 @@ mod tests {
     }
 
     #[test]
-    fn primary_slot_grows_faster_than_unfocused_stats() {
+    fn primary_training_stats_grow_faster_than_unfocused_stats() {
         use crate::sim::growth::PITCHER_EXPOSED;
         let mut stats = stats_at(20.0, &PITCHER_EXPOSED);
         let mut xp = zero_xp(&PITCHER_EXPOSED);
-        let config = TrainingConfig { primary_stat: "구속", secondary_stats: ["구위", "제구"], intensity: "보통", new_pitch: None, mastery_pitch: None, academic_efficiency_mod: 1.0 };
+        // "근력 훈련" 주훈련 -> 구속+체력, "불펜 피칭" 보조훈련 -> 제구+구위.
+        let config = TrainingConfig {
+            primary_training: "strength",
+            secondary_training: "bullpen",
+            intensity: "보통",
+            new_pitch: None,
+            mastery_pitch: None,
+            academic_efficiency_mod: 1.0,
+        };
 
         let mut rng = ChaCha8Rng::seed_from_u64(1);
         for _ in 0..30 {
@@ -149,11 +189,18 @@ mod tests {
     }
 
     #[test]
-    fn secondary_slot_grows_faster_than_unfocused_but_slower_than_primary() {
+    fn secondary_training_stats_grow_faster_than_unfocused_but_slower_than_primary() {
         use crate::sim::growth::PITCHER_EXPOSED;
         let mut stats = stats_at(20.0, &PITCHER_EXPOSED);
         let mut xp = zero_xp(&PITCHER_EXPOSED);
-        let config = TrainingConfig { primary_stat: "구속", secondary_stats: ["구위", "제구"], intensity: "보통", new_pitch: None, mastery_pitch: None, academic_efficiency_mod: 1.0 };
+        let config = TrainingConfig {
+            primary_training: "strength",
+            secondary_training: "bullpen",
+            intensity: "보통",
+            new_pitch: None,
+            mastery_pitch: None,
+            academic_efficiency_mod: 1.0,
+        };
 
         let mut rng = ChaCha8Rng::seed_from_u64(2);
         for _ in 0..30 {
@@ -161,19 +208,59 @@ mod tests {
         }
 
         let primary = stats.get("구속").unwrap().as_f64().unwrap();
-        let secondary = stats.get("구위").unwrap().as_f64().unwrap();
+        let secondary = stats.get("제구").unwrap().as_f64().unwrap();
         let unfocused = stats.get("클러치").unwrap().as_f64().unwrap();
         assert!(primary >= secondary, "primary={primary} secondary={secondary}");
         assert!(secondary > unfocused, "secondary={secondary} unfocused={unfocused}");
     }
 
     #[test]
-    fn stronger_intensity_grows_the_primary_slot_faster() {
+    fn overlapping_stat_between_primary_and_secondary_training_gets_max_not_sum() {
+        use crate::sim::growth::PITCHER_EXPOSED;
+        // "근력 훈련"(구속+체력)을 주훈련, "컨디셔닝 훈련"(회복력+체력)을
+        // 보조훈련으로 고르면 "체력"이 겹친다 — 겹치는 스탯(체력)이 순수
+        // 주훈련 전용 스탯(구속)보다 더 빨리 크면 안 된다(합산이 아니라 max).
+        let run = |seed: u64| -> (f64, f64) {
+            let mut stats = stats_at(20.0, &PITCHER_EXPOSED);
+            let mut xp = zero_xp(&PITCHER_EXPOSED);
+            let config = TrainingConfig {
+                primary_training: "strength",
+                secondary_training: "conditioning",
+                intensity: "보통",
+                new_pitch: None,
+                mastery_pitch: None,
+                academic_efficiency_mod: 1.0,
+            };
+            let mut rng = ChaCha8Rng::seed_from_u64(seed);
+            for _ in 0..30 {
+                apply_weekly_training(&mut rng, &PITCHER_EXPOSED, &mut stats, &mut xp, 80.0, &config);
+            }
+            (stats.get("구속").unwrap().as_f64().unwrap(), stats.get("체력").unwrap().as_f64().unwrap())
+        };
+        let mut speed_total = 0.0;
+        let mut overlap_total = 0.0;
+        for seed in 0..20 {
+            let (speed, overlap) = run(seed);
+            speed_total += speed;
+            overlap_total += overlap;
+        }
+        assert!((speed_total - overlap_total).abs() < speed_total * 0.1, "speed={speed_total} overlap={overlap_total} — 겹치는 스탯이 합산 배율을 받으면 안 됨");
+    }
+
+    #[test]
+    fn stronger_intensity_grows_the_primary_training_stat_faster() {
         use crate::sim::growth::PITCHER_EXPOSED;
         let run = |intensity: &str, seed: u64| -> f64 {
             let mut stats = stats_at(20.0, &PITCHER_EXPOSED);
             let mut xp = zero_xp(&PITCHER_EXPOSED);
-            let config = TrainingConfig { primary_stat: "구속", secondary_stats: ["구위", "제구"], intensity, new_pitch: None, mastery_pitch: None, academic_efficiency_mod: 1.0 };
+            let config = TrainingConfig {
+                primary_training: "strength",
+                secondary_training: "bullpen",
+                intensity,
+                new_pitch: None,
+                mastery_pitch: None,
+                academic_efficiency_mod: 1.0,
+            };
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
             for _ in 0..15 {
                 apply_weekly_training(&mut rng, &PITCHER_EXPOSED, &mut stats, &mut xp, 80.0, &config);
@@ -195,7 +282,14 @@ mod tests {
         let run = |new_pitch: Option<&str>, seed: u64| -> f64 {
             let mut stats = stats_at(20.0, &PITCHER_EXPOSED);
             let mut xp = zero_xp(&PITCHER_EXPOSED);
-            let config = TrainingConfig { primary_stat: "구속", secondary_stats: ["구위", "제구"], intensity: "보통", new_pitch, mastery_pitch: None, academic_efficiency_mod: 1.0 };
+            let config = TrainingConfig {
+                primary_training: "strength",
+                secondary_training: "bullpen",
+                intensity: "보통",
+                new_pitch,
+                mastery_pitch: None,
+                academic_efficiency_mod: 1.0,
+            };
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
             for _ in 0..15 {
                 apply_weekly_training(&mut rng, &PITCHER_EXPOSED, &mut stats, &mut xp, 80.0, &config);
@@ -217,8 +311,14 @@ mod tests {
         let run = |academic_efficiency_mod: f64, seed: u64| -> f64 {
             let mut stats = stats_at(20.0, &PITCHER_EXPOSED);
             let mut xp = zero_xp(&PITCHER_EXPOSED);
-            let config =
-                TrainingConfig { primary_stat: "구속", secondary_stats: ["구위", "제구"], intensity: "보통", new_pitch: None, mastery_pitch: None, academic_efficiency_mod };
+            let config = TrainingConfig {
+                primary_training: "strength",
+                secondary_training: "bullpen",
+                intensity: "보통",
+                new_pitch: None,
+                mastery_pitch: None,
+                academic_efficiency_mod,
+            };
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
             for _ in 0..15 {
                 apply_weekly_training(&mut rng, &PITCHER_EXPOSED, &mut stats, &mut xp, 80.0, &config);
@@ -239,7 +339,14 @@ mod tests {
         use crate::sim::growth::PITCHER_EXPOSED;
         let mut stats = stats_at(20.0, &PITCHER_EXPOSED);
         let mut xp = zero_xp(&PITCHER_EXPOSED);
-        let config = TrainingConfig { primary_stat: "구속", secondary_stats: ["구위", "제구"], intensity: "강", new_pitch: None, mastery_pitch: None, academic_efficiency_mod: 1.0 };
+        let config = TrainingConfig {
+            primary_training: "strength",
+            secondary_training: "bullpen",
+            intensity: "강",
+            new_pitch: None,
+            mastery_pitch: None,
+            academic_efficiency_mod: 1.0,
+        };
         let mut rng = ChaCha8Rng::seed_from_u64(3);
         for _ in 0..500 {
             apply_weekly_training(&mut rng, &PITCHER_EXPOSED, &mut stats, &mut xp, 80.0, &config);
@@ -280,7 +387,14 @@ mod tests {
         let run = |new_pitch: Option<&str>, mastery_pitch: Option<&str>, seed: u64| -> f64 {
             let mut stats = stats_at(20.0, &PITCHER_EXPOSED);
             let mut xp = zero_xp(&PITCHER_EXPOSED);
-            let config = TrainingConfig { primary_stat: "구속", secondary_stats: ["구위", "제구"], intensity: "보통", new_pitch, mastery_pitch, academic_efficiency_mod: 1.0 };
+            let config = TrainingConfig {
+                primary_training: "strength",
+                secondary_training: "bullpen",
+                intensity: "보통",
+                new_pitch,
+                mastery_pitch,
+                academic_efficiency_mod: 1.0,
+            };
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
             for _ in 0..15 {
                 apply_weekly_training(&mut rng, &PITCHER_EXPOSED, &mut stats, &mut xp, 80.0, &config);
@@ -294,5 +408,22 @@ mod tests {
             mastery_total += run(None, Some("슬라이더"), seed);
         }
         assert!(mastery_total >= new_pitch_total, "mastery={mastery_total} new_pitch={new_pitch_total}");
+    }
+
+    #[test]
+    fn training_type_by_id_finds_all_six_catalog_entries() {
+        for t in &TRAINING_TYPES {
+            let found = training_type_by_id(t.id).unwrap();
+            assert_eq!(found.stats, t.stats);
+        }
+        assert!(training_type_by_id("존재안함").is_none());
+    }
+
+    #[test]
+    fn every_pitcher_exposed_stat_is_covered_by_at_least_one_training_type() {
+        use crate::sim::growth::PITCHER_EXPOSED;
+        for stat in PITCHER_EXPOSED {
+            assert!(TRAINING_TYPES.iter().any(|t| t.stats.contains(&stat)), "{stat} is not covered by any training type");
+        }
     }
 }
