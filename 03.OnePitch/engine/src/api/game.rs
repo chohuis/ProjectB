@@ -104,6 +104,11 @@ pub enum MatchStepInfo {
         last_fielder_position: Option<String>,
         /// `last_fielder_position`이 있을 때만 의미 있음 — 그 플레이가 실책이었는지.
         last_play_was_error: bool,
+        /// `last_fielder_position`이 있을 때만 의미 있음(대화 2026-07-25,
+        /// 타구 애니메이션용) — 안타(단타/2루타/3루타/홈런)였는지.
+        last_play_was_hit: bool,
+        /// `last_play_was_hit`의 부분집합 — 홈런이었는지.
+        last_play_was_home_run: bool,
     },
     GameOver { home_runs: u32, away_runs: u32 },
     /// 감독 개입(§8) 수동 모드 판단 요청 — `resolveChoice`에 `"유지"`/
@@ -137,6 +142,8 @@ impl From<match_session::MatchStepResult> for MatchStepInfo {
                 pitches_thrown,
                 last_fielder_position,
                 last_play_was_error,
+                last_play_was_hit,
+                last_play_was_home_run,
             } => MatchStepInfo::AwaitingPitch {
                 batter_id,
                 balls,
@@ -152,6 +159,8 @@ impl From<match_session::MatchStepResult> for MatchStepInfo {
                 pitches_thrown,
                 last_fielder_position,
                 last_play_was_error,
+                last_play_was_hit,
+                last_play_was_home_run,
             },
             match_session::MatchStepResult::GameOver { home_runs, away_runs } => MatchStepInfo::GameOver { home_runs, away_runs },
             match_session::MatchStepResult::PitcherChangeDecision {

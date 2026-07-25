@@ -1059,6 +1059,13 @@ sealed class MatchStepInfo with _$MatchStepInfo {
 
     /// `last_fielder_position`이 있을 때만 의미 있음 — 그 플레이가 실책이었는지.
     required bool lastPlayWasError,
+
+    /// `last_fielder_position`이 있을 때만 의미 있음(대화 2026-07-25,
+    /// 타구 애니메이션용) — 안타(단타/2루타/3루타/홈런)였는지.
+    required bool lastPlayWasHit,
+
+    /// `last_play_was_hit`의 부분집합 — 홈런이었는지.
+    required bool lastPlayWasHomeRun,
   }) = MatchStepInfo_AwaitingPitch;
   const factory MatchStepInfo.gameOver({
     required int homeRuns,

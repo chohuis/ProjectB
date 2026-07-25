@@ -141,6 +141,44 @@ void main() {
     expect(ssBorderColor(), isNot(anyOf(AppColors.accent, AppColors.danger)));
   });
 
+  testWidgets('StadiumFieldView animates a ball from home plate to the fielder and then hides it', (tester) async {
+    Widget buildView({required String? lastFielderPosition}) => MaterialApp(
+      home: Scaffold(
+        body: StadiumFieldView(
+          stadiumId: 'stadium:busan_waves',
+          bases: const [false, false, false],
+          runnerColor: Colors.red,
+          fielderColor: Colors.blueGrey,
+          batterHandedness: '우타',
+          inning: 1,
+          topOfInning: true,
+          outs: 1,
+          balls: 0,
+          strikes: 0,
+          homeRuns: 0,
+          awayRuns: 0,
+          lastFielderPosition: lastFielderPosition,
+        ),
+      ),
+    );
+
+    const ballKey = ValueKey('stadium-ball');
+
+    // 처음엔 방금 플레이가 없어 공이 안 보임.
+    await tester.pumpWidget(buildView(lastFielderPosition: null));
+    expect(find.byKey(ballKey), findsNothing);
+
+    // null→값 전이(유격수, 내야라 350ms짜리 낮은 궤적)로 애니메이션 시작.
+    await tester.pumpWidget(buildView(lastFielderPosition: '유격수'));
+    expect(find.byKey(ballKey), findsOneWidget, reason: '애니메이션 시작 직후엔 공이 보여야 함');
+
+    await tester.pump(const Duration(milliseconds: 200));
+    expect(find.byKey(ballKey), findsOneWidget, reason: '재생 중(200ms/350ms)엔 계속 보여야 함');
+
+    await tester.pump(const Duration(milliseconds: 200));
+    expect(find.byKey(ballKey), findsNothing, reason: '애니메이션이 끝나면(400ms>350ms) 공이 사라져야 함');
+  });
+
   testWidgets('StadiumFieldView falls back to the default asset for an unknown stadium id', (tester) async {
     await tester.pumpWidget(
       const MaterialApp(

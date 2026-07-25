@@ -3015,6 +3015,8 @@ impl SseDecode for crate::api::game::MatchStepInfo {
                 let mut var_pitchesThrown = <u32>::sse_decode(deserializer);
                 let mut var_lastFielderPosition = <Option<String>>::sse_decode(deserializer);
                 let mut var_lastPlayWasError = <bool>::sse_decode(deserializer);
+                let mut var_lastPlayWasHit = <bool>::sse_decode(deserializer);
+                let mut var_lastPlayWasHomeRun = <bool>::sse_decode(deserializer);
                 return crate::api::game::MatchStepInfo::AwaitingPitch {
                     batter_id: var_batterId,
                     balls: var_balls,
@@ -3030,6 +3032,8 @@ impl SseDecode for crate::api::game::MatchStepInfo {
                     pitches_thrown: var_pitchesThrown,
                     last_fielder_position: var_lastFielderPosition,
                     last_play_was_error: var_lastPlayWasError,
+                    last_play_was_hit: var_lastPlayWasHit,
+                    last_play_was_home_run: var_lastPlayWasHomeRun,
                 };
             }
             1 => {
@@ -4147,6 +4151,8 @@ impl flutter_rust_bridge::IntoDart for crate::api::game::MatchStepInfo {
                 pitches_thrown,
                 last_fielder_position,
                 last_play_was_error,
+                last_play_was_hit,
+                last_play_was_home_run,
             } => [
                 0.into_dart(),
                 batter_id.into_into_dart().into_dart(),
@@ -4163,6 +4169,8 @@ impl flutter_rust_bridge::IntoDart for crate::api::game::MatchStepInfo {
                 pitches_thrown.into_into_dart().into_dart(),
                 last_fielder_position.into_into_dart().into_dart(),
                 last_play_was_error.into_into_dart().into_dart(),
+                last_play_was_hit.into_into_dart().into_dart(),
+                last_play_was_home_run.into_into_dart().into_dart(),
             ]
             .into_dart(),
             crate::api::game::MatchStepInfo::GameOver {
@@ -5252,6 +5260,8 @@ impl SseEncode for crate::api::game::MatchStepInfo {
                 pitches_thrown,
                 last_fielder_position,
                 last_play_was_error,
+                last_play_was_hit,
+                last_play_was_home_run,
             } => {
                 <i32>::sse_encode(0, serializer);
                 <String>::sse_encode(batter_id, serializer);
@@ -5268,6 +5278,8 @@ impl SseEncode for crate::api::game::MatchStepInfo {
                 <u32>::sse_encode(pitches_thrown, serializer);
                 <Option<String>>::sse_encode(last_fielder_position, serializer);
                 <bool>::sse_encode(last_play_was_error, serializer);
+                <bool>::sse_encode(last_play_was_hit, serializer);
+                <bool>::sse_encode(last_play_was_home_run, serializer);
             }
             crate::api::game::MatchStepInfo::GameOver {
                 home_runs,

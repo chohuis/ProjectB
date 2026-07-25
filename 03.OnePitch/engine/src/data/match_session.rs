@@ -52,6 +52,14 @@ pub enum MatchStepResult {
         /// `last_fielder_position`이 있을 때만 의미 있음 — 그 플레이가
         /// 실책(`PaOutcome::ReachOnError`)이었는지.
         last_play_was_error: bool,
+        /// `last_fielder_position`이 있을 때만 의미 있음(대화 2026-07-25,
+        /// 타구 애니메이션용) — 안타(단타/2루타/3루타/홈런)였는지. 아웃·
+        /// 실책이면 공이 그 포지션에서 멈추는 걸로, 안타면 그 포지션을
+        /// 지나쳐 더 나가는 걸로 그린다(Dart `StadiumFieldView`).
+        last_play_was_hit: bool,
+        /// `last_play_was_hit`의 부분집합 — 홈런이면 공이 담장 밖까지
+        /// 계속 날아가는 걸로 그린다.
+        last_play_was_home_run: bool,
     },
     /// 경기 종료 — `schedule.result`·`standings`가 이미 반영됐고
     /// `match_session` 행도 삭제됨.
@@ -924,6 +932,17 @@ pub fn submit_pitcher_change_decision(slot_conn: &Connection, world_seed: i64, c
     run_until_decision_point(slot_conn, world_seed, None, Some(choice))
 }
 
+/// `run_until_decision_point`의 로컬 변수 하나(대화 2026-07-25) — 방금
+/// InPlay 판정이 처리한 포지션과 그 결과 분류. `AwaitingPitch`의
+/// `last_fielder_position`/`last_play_was_error`/`last_play_was_hit`/
+/// `last_play_was_home_run` 네 필드로 그대로 풀린다.
+struct LastFielderPlay {
+    position: String,
+    was_error: bool,
+    was_hit: bool,
+    was_home_run: bool,
+}
+
 /// 세션이 있는 동안 계속 진행하다가 ①플레이어 입력이 필요하거나(§3 모드에
 /// 따라) ②경기가 끝나면 멈춘다. `player_pitch`는 `submit_pitch`로 막
 /// 제출된 선택, `pitcher_decision`은 `submit_pitcher_change_decision`으로
@@ -950,7 +969,7 @@ fn run_until_decision_point(
     // 반복"이 (같은 호출 안에서) 서로 다른 반복이어도 값이 살아있게 한다.
     // 하프이닝이 넘어가면 지워(아래 두 지점) 몇 이닝 전 플레이가 계속
     // 표시되는 걸 방지.
-    let mut last_fielder_position: Option<(String, bool)> = None;
+    let mut last_fielder_position: Option<LastFielderPlay> = None;
 
     loop {
         let mut session = load_session(slot_conn)?.ok_or_else(|| anyhow::anyhow!("no match session in progress"))?;
@@ -1345,9 +1364,9 @@ fn run_until_decision_point(
         } else {
             let should_prompt = session.mode == "수동";
             if should_prompt {
-                let (last_position, last_was_error) = match last_fielder_position.take() {
-                    Some((position, was_error)) => (Some(position), was_error),
-                    None => (None, false),
+                let (last_position, last_was_error, last_was_hit, last_was_home_run) = match last_fielder_position.take() {
+                    Some(play) => (Some(play.position), play.was_error, play.was_hit, play.was_home_run),
+                    None => (None, false, false, false),
                 };
                 return Ok(MatchStepResult::AwaitingPitch {
                     batter_id: session.current_batter_id.clone().unwrap(),
@@ -1364,6 +1383,8 @@ fn run_until_decision_point(
                     pitches_thrown: session.pitch_seq as u32,
                     last_fielder_position: last_position,
                     last_play_was_error: last_was_error,
+                    last_play_was_hit: last_was_hit,
+                    last_play_was_home_run: last_was_home_run,
                 });
             }
             let (pitch, x, y, power) = pitch::choose_pitch_and_target(&mut rng, &repertoire, &batter, high_leverage);
@@ -1449,7 +1470,12 @@ fn run_until_decision_point(
                     &session.conditions,
                 );
                 let pa = resolution.outcome;
-                last_fielder_position = Some((resolution.fielder_position.to_string(), pa == PaOutcome::ReachOnError));
+                last_fielder_position = Some(LastFielderPlay {
+                    position: resolution.fielder_position.to_string(),
+                    was_error: pa == PaOutcome::ReachOnError,
+                    was_hit: matches!(pa, PaOutcome::Single | PaOutcome::Double | PaOutcome::Triple | PaOutcome::HomeRun),
+                    was_home_run: pa == PaOutcome::HomeRun,
+                });
                 if matches!(pa, PaOutcome::Single | PaOutcome::Double | PaOutcome::Triple | PaOutcome::HomeRun) {
                     session.hits_allowed += 1;
                     session.current_half_hits += 1;

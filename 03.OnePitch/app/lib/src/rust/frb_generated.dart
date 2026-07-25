@@ -2738,6 +2738,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pitchesThrown: dco_decode_u_32(raw[12]),
           lastFielderPosition: dco_decode_opt_String(raw[13]),
           lastPlayWasError: dco_decode_bool(raw[14]),
+          lastPlayWasHit: dco_decode_bool(raw[15]),
+          lastPlayWasHomeRun: dco_decode_bool(raw[16]),
         );
       case 1:
         return MatchStepInfo_GameOver(
@@ -3944,6 +3946,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         var var_pitchesThrown = sse_decode_u_32(deserializer);
         var var_lastFielderPosition = sse_decode_opt_String(deserializer);
         var var_lastPlayWasError = sse_decode_bool(deserializer);
+        var var_lastPlayWasHit = sse_decode_bool(deserializer);
+        var var_lastPlayWasHomeRun = sse_decode_bool(deserializer);
         return MatchStepInfo_AwaitingPitch(
           batterId: var_batterId,
           balls: var_balls,
@@ -3959,6 +3963,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pitchesThrown: var_pitchesThrown,
           lastFielderPosition: var_lastFielderPosition,
           lastPlayWasError: var_lastPlayWasError,
+          lastPlayWasHit: var_lastPlayWasHit,
+          lastPlayWasHomeRun: var_lastPlayWasHomeRun,
         );
       case 1:
         var var_homeRuns = sse_decode_u_32(deserializer);
@@ -5195,6 +5201,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         pitchesThrown: final pitchesThrown,
         lastFielderPosition: final lastFielderPosition,
         lastPlayWasError: final lastPlayWasError,
+        lastPlayWasHit: final lastPlayWasHit,
+        lastPlayWasHomeRun: final lastPlayWasHomeRun,
       ):
         sse_encode_i_32(0, serializer);
         sse_encode_String(batterId, serializer);
@@ -5211,6 +5219,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_u_32(pitchesThrown, serializer);
         sse_encode_opt_String(lastFielderPosition, serializer);
         sse_encode_bool(lastPlayWasError, serializer);
+        sse_encode_bool(lastPlayWasHit, serializer);
+        sse_encode_bool(lastPlayWasHomeRun, serializer);
       case MatchStepInfo_GameOver(
         homeRuns: final homeRuns,
         awayRuns: final awayRuns,

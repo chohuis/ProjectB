@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import 'package:app/shared/design/colors.dart';
@@ -21,7 +23,9 @@ class _FieldCoord {
 /// "장식이어도 추가" 확인) — 다만 어느 자리가 "방금 그 타구를 처리했는지"
 /// 는 실제 판정 결과(`resolve_in_play_result`의 포지션별 개인 수비
 /// 스탯 적용)라 `StadiumFieldView.lastFielderPosition`으로 해당 배지가
-/// 진짜로 하이라이트된다(Phase 4).
+/// 진짜로 하이라이트되고(Phase 4), 홈플레이트에서 그 배지까지 공이
+/// 실제로 날아가는 애니메이션의 종착점으로도 쓰인다(Phase A, 대화
+/// 2026-07-25 후속).
 class FieldCoords {
   FieldCoords._();
 
@@ -56,6 +60,9 @@ class FieldCoords {
     'CF': centerField,
     'RF': rightField,
   };
+
+  /// 내야 4자리 — 땅볼 느낌(낮은 궤적)으로 애니메이션할지 판단에 씀.
+  static const infieldBadges = <String>{'1B', '2B', '3B', 'SS'};
 }
 
 /// 엔진 `resolve_in_play_result`가 돌려주는 한글 포지션명 → 배지 라벨
@@ -70,6 +77,8 @@ const _koreanPositionToBadge = <String, String>{
   '중견수': 'CF',
   '우익수': 'RF',
 };
+
+double _lerp(double a, double b, double t) => a + (b - a) * t;
 
 /// 구장 배경(대화 2026-07-25, 매치 화면 재설계) — 절차적 실시간 렌더링→
 /// 전 구장 공용 실사 GIF 한 장→구장별 절차 생성 도트아트 PNG를 차례로
@@ -92,8 +101,13 @@ const _koreanPositionToBadge = <String, String>{
 /// `sim::match_.rs`). `lastFielderPosition`/`lastPlayWasError`는 그
 /// 결과를 `AwaitingPitch`로 노출한 값 — 방금 처리한 배지를 성공(파랑)/
 /// 실책(빨강)으로 하이라이트해 장식이던 9자리 배지가 실제 판정과
-/// 연결되게 한다(Phase 4).
-class StadiumFieldView extends StatelessWidget {
+/// 연결되게 한다(Phase 4). 이어서(Phase A, 대화 2026-07-25 후속) 홈플레이트
+/// →처리 포지션으로 공이 실제로 날아가는 애니메이션을 추가 — 내야는
+/// 낮고 빠른 궤적, 외야는 높은 아치, 안타(`lastPlayWasHit`)는 그 포지션을
+/// 지나쳐 더 나가고, 홈런(`lastPlayWasHomeRun`)은 담장 밖까지 계속
+/// 날아간다. 새 좌표 캘리브레이션 없이 기존 9자리 좌표를 종착점으로
+/// 재사용(파울라인·담장 좌표는 여전히 스코프 밖 — 나중에 진짜 필요해지면).
+class StadiumFieldView extends StatefulWidget {
   const StadiumFieldView({
     super.key,
     required this.stadiumId,
@@ -110,6 +124,8 @@ class StadiumFieldView extends StatelessWidget {
     required this.awayRuns,
     this.lastFielderPosition,
     this.lastPlayWasError = false,
+    this.lastPlayWasHit = false,
+    this.lastPlayWasHomeRun = false,
   });
 
   /// 엔진 `MatchVenueInfo.stadiumId`(예: `"stadium:busan_waves"`) 그대로 —
@@ -136,28 +152,102 @@ class StadiumFieldView extends StatelessWidget {
 
   /// `MatchStepInfo_AwaitingPitch.lastFielderPosition`(대화 2026-07-25,
   /// Phase 4) — 한글 포지션명. 방금 전 타석이 인플레이가 아니었거나
-  /// 하프이닝이 막 시작됐으면 `null`(아무 배지도 하이라이트 안 함).
+  /// 하프이닝이 막 시작됐으면 `null`(아무 배지도 하이라이트/애니메이션
+  /// 안 됨).
   final String? lastFielderPosition;
 
   /// `lastFielderPosition`이 있을 때만 의미 있음 — 실책이면 빨강, 아니면
   /// (정상 아웃/안타) 파랑 하이라이트.
   final bool lastPlayWasError;
 
+  /// `lastFielderPosition`이 있을 때만 의미 있음(Phase A) — 안타(단타/
+  /// 2루타/3루타/홈런)였는지. 공 애니메이션이 그 포지션에서 멈출지
+  /// (아웃·실책) 지나쳐 더 나갈지(안타) 결정한다.
+  final bool lastPlayWasHit;
+
+  /// `lastPlayWasHit`의 부분집합 — 홈런이면 공이 담장 밖까지 계속 날아간다.
+  final bool lastPlayWasHomeRun;
+
   // 생성된 GIF의 실제 픽셀 비율(480×443) — 배경이 잘리지 않게 이 비율
   // 그대로 AspectRatio를 잡는다.
   static const _imageAspectRatio = 480 / 443;
 
+  @override
+  State<StadiumFieldView> createState() => _StadiumFieldViewState();
+}
+
+class _StadiumFieldViewState extends State<StadiumFieldView> with SingleTickerProviderStateMixin {
+  late final AnimationController _ballController;
+
+  @override
+  void initState() {
+    super.initState();
+    _ballController = AnimationController(vsync: this, duration: const Duration(milliseconds: 500), value: 1.0);
+  }
+
+  @override
+  void didUpdateWidget(covariant StadiumFieldView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // "직전엔 없다가 이번에 생겼다" — 이게 진짜 새 플레이라는 신호(대화
+    // 2026-07-25). 엔진이 매 응답마다 한 번 쓰고 바로 지우기 때문에, 값
+    // 자체가 이전과 같은 포지션이어도(예: 유격수가 연속으로 처리) 항상
+    // null→값 전이가 일어난다 — 단순 `!=` 비교로는 이 경우를 놓친다.
+    if (widget.lastFielderPosition != null && oldWidget.lastFielderPosition == null) {
+      final badge = _koreanPositionToBadge[widget.lastFielderPosition];
+      final isInfield = badge != null && FieldCoords.infieldBadges.contains(badge);
+      _ballController.duration = widget.lastPlayWasHomeRun
+          ? const Duration(milliseconds: 700)
+          : (isInfield ? const Duration(milliseconds: 350) : const Duration(milliseconds: 500));
+      _ballController.forward(from: 0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _ballController.dispose();
+    super.dispose();
+  }
+
+  bool _occupied(int i) => widget.bases.length > i && widget.bases[i];
+
   String get _assetKey {
-    final key = stadiumId.contains(':') ? stadiumId.split(':').last : stadiumId;
+    final key = widget.stadiumId.contains(':') ? widget.stadiumId.split(':').last : widget.stadiumId;
     return key.isEmpty ? 'default' : key;
   }
 
-  bool _occupied(int i) => bases.length > i && bases[i];
+  /// 홈플레이트→처리 포지션 애니메이션의 현재 프레임 좌표. 애니메이션이
+  /// 끝났거나(값 1.0) 방금 플레이가 없으면 `null`(공 안 그림).
+  _FieldCoord? _ballCoordAt(double t) {
+    final posName = widget.lastFielderPosition;
+    if (posName == null || t >= 1.0) return null;
+    final badge = _koreanPositionToBadge[posName];
+    final target = badge == null ? null : FieldCoords.fielders[badge];
+    if (target == null) return null;
+    final isInfield = FieldCoords.infieldBadges.contains(badge);
+
+    // 안타/홈런이면 그 포지션에서 멈추지 않고 홈→포지션 방향선을 따라
+    // 더 나간다(홈런은 훨씬 더 멀리, 담장 밖 취급).
+    var endX = target.x;
+    var endY = target.y;
+    if (widget.lastPlayWasHomeRun) {
+      endX = (target.x + (target.x - FieldCoords.home.x) * 0.6).clamp(0.02, 0.98);
+      endY = (target.y - 0.12).clamp(0.03, 1.0);
+    } else if (widget.lastPlayWasHit) {
+      endX = (target.x + (target.x - FieldCoords.home.x) * 0.25).clamp(0.02, 0.98);
+      endY = (target.y - (isInfield ? 0.05 : 0.03)).clamp(0.03, 1.0);
+    }
+
+    final x = _lerp(FieldCoords.home.x, endX, t);
+    final yGround = _lerp(FieldCoords.home.y, endY, t);
+    final liftAmplitude = widget.lastPlayWasHomeRun ? 0.16 : (isInfield ? 0.018 : 0.10);
+    final lift = liftAmplitude * math.sin(math.pi * t);
+    return _FieldCoord(x, yGround - lift);
+  }
 
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-      aspectRatio: _imageAspectRatio,
+      aspectRatio: StadiumFieldView._imageAspectRatio,
       child: DecoratedBox(
         decoration: BoxDecoration(border: Border.all(color: AppColors.border), borderRadius: BorderRadius.circular(8)),
         child: ClipRRect(
@@ -168,8 +258,8 @@ class StadiumFieldView extends StatelessWidget {
               final h = constraints.maxHeight;
 
               Offset px(_FieldCoord c) => Offset(c.x * w, c.y * h);
-              final highlightedBadge = lastFielderPosition == null ? null : _koreanPositionToBadge[lastFielderPosition];
-              final highlightColor = lastPlayWasError ? AppColors.danger : AppColors.accent;
+              final highlightedBadge = widget.lastFielderPosition == null ? null : _koreanPositionToBadge[widget.lastFielderPosition];
+              final highlightColor = widget.lastPlayWasError ? AppColors.danger : AppColors.accent;
 
               Widget marker(_FieldCoord c, {required double radius, required Color color, String? label, Color? labelColor, Color? highlight}) {
                 final p = px(c);
@@ -208,36 +298,62 @@ class StadiumFieldView extends StatelessWidget {
                     marker(
                       entry.value,
                       radius: w * 0.026,
-                      color: fielderColor.withValues(alpha: 0.85),
+                      color: widget.fielderColor.withValues(alpha: 0.85),
                       label: entry.key,
                       labelColor: Colors.white,
                       highlight: entry.key == highlightedBadge ? highlightColor : null,
                     ),
                   // 타자 — 손잡이에 맞는 타석에.
                   marker(
-                    batterHandedness == '좌타' ? FieldCoords.lhbBox : FieldCoords.rhbBox,
+                    widget.batterHandedness == '좌타' ? FieldCoords.lhbBox : FieldCoords.rhbBox,
                     radius: w * 0.03,
                     color: AppColors.textPrimary,
                     label: '타',
                     labelColor: AppColors.scaffoldBg,
                   ),
                   // 주자(바둑알) — 실제 진루 데이터.
-                  if (_occupied(0)) marker(FieldCoords.first, radius: w * 0.032, color: runnerColor),
-                  if (_occupied(1)) marker(FieldCoords.second, radius: w * 0.032, color: runnerColor),
-                  if (_occupied(2)) marker(FieldCoords.third, radius: w * 0.032, color: runnerColor),
+                  if (_occupied(0)) marker(FieldCoords.first, radius: w * 0.032, color: widget.runnerColor),
+                  if (_occupied(1)) marker(FieldCoords.second, radius: w * 0.032, color: widget.runnerColor),
+                  if (_occupied(2)) marker(FieldCoords.third, radius: w * 0.032, color: widget.runnerColor),
+                  // 홈→처리 포지션 공 애니메이션(Phase A) — 방금 플레이가
+                  // 있고 재생 중일 때만.
+                  AnimatedBuilder(
+                    animation: _ballController,
+                    builder: (context, _) {
+                      final coord = _ballCoordAt(_ballController.value);
+                      if (coord == null) return const SizedBox.shrink();
+                      final p = px(coord);
+                      const r = 5.0;
+                      return Positioned(
+                        left: p.dx - r,
+                        top: p.dy - r,
+                        child: Container(
+                          key: const ValueKey('stadium-ball'),
+                          width: r * 2,
+                          height: r * 2,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.black.withValues(alpha: 0.4), width: 1),
+                            boxShadow: const [BoxShadow(color: Colors.black38, blurRadius: 2)],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                   Positioned(
                     top: 8,
                     right: 8,
                     child: _ScoreOverlay(
-                      bases: bases,
-                      runnerColor: runnerColor,
-                      inning: inning,
-                      topOfInning: topOfInning,
-                      outs: outs,
-                      balls: balls,
-                      strikes: strikes,
-                      homeRuns: homeRuns,
-                      awayRuns: awayRuns,
+                      bases: widget.bases,
+                      runnerColor: widget.runnerColor,
+                      inning: widget.inning,
+                      topOfInning: widget.topOfInning,
+                      outs: widget.outs,
+                      balls: widget.balls,
+                      strikes: widget.strikes,
+                      homeRuns: widget.homeRuns,
+                      awayRuns: widget.awayRuns,
                     ),
                   ),
                 ],

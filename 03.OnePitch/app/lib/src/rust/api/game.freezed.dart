@@ -154,10 +154,10 @@ return pitcherChangeDecision(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String batterId,  int balls,  int strikes,  bool highLeverage,  int inning,  bool topOfInning,  int outs,  List<bool> bases,  int homeRuns,  int awayRuns,  double fatigue,  int pitchesThrown,  String? lastFielderPosition,  bool lastPlayWasError)?  awaitingPitch,TResult Function( int homeRuns,  int awayRuns)?  gameOver,TResult Function( int inning,  bool topOfInning,  int homeRuns,  int awayRuns,  int pitchesThrown,  double fatigue,  bool managerRecommendsPull)?  pitcherChangeDecision,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String batterId,  int balls,  int strikes,  bool highLeverage,  int inning,  bool topOfInning,  int outs,  List<bool> bases,  int homeRuns,  int awayRuns,  double fatigue,  int pitchesThrown,  String? lastFielderPosition,  bool lastPlayWasError,  bool lastPlayWasHit,  bool lastPlayWasHomeRun)?  awaitingPitch,TResult Function( int homeRuns,  int awayRuns)?  gameOver,TResult Function( int inning,  bool topOfInning,  int homeRuns,  int awayRuns,  int pitchesThrown,  double fatigue,  bool managerRecommendsPull)?  pitcherChangeDecision,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case MatchStepInfo_AwaitingPitch() when awaitingPitch != null:
-return awaitingPitch(_that.batterId,_that.balls,_that.strikes,_that.highLeverage,_that.inning,_that.topOfInning,_that.outs,_that.bases,_that.homeRuns,_that.awayRuns,_that.fatigue,_that.pitchesThrown,_that.lastFielderPosition,_that.lastPlayWasError);case MatchStepInfo_GameOver() when gameOver != null:
+return awaitingPitch(_that.batterId,_that.balls,_that.strikes,_that.highLeverage,_that.inning,_that.topOfInning,_that.outs,_that.bases,_that.homeRuns,_that.awayRuns,_that.fatigue,_that.pitchesThrown,_that.lastFielderPosition,_that.lastPlayWasError,_that.lastPlayWasHit,_that.lastPlayWasHomeRun);case MatchStepInfo_GameOver() when gameOver != null:
 return gameOver(_that.homeRuns,_that.awayRuns);case MatchStepInfo_PitcherChangeDecision() when pitcherChangeDecision != null:
 return pitcherChangeDecision(_that.inning,_that.topOfInning,_that.homeRuns,_that.awayRuns,_that.pitchesThrown,_that.fatigue,_that.managerRecommendsPull);case _:
   return orElse();
@@ -177,10 +177,10 @@ return pitcherChangeDecision(_that.inning,_that.topOfInning,_that.homeRuns,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String batterId,  int balls,  int strikes,  bool highLeverage,  int inning,  bool topOfInning,  int outs,  List<bool> bases,  int homeRuns,  int awayRuns,  double fatigue,  int pitchesThrown,  String? lastFielderPosition,  bool lastPlayWasError)  awaitingPitch,required TResult Function( int homeRuns,  int awayRuns)  gameOver,required TResult Function( int inning,  bool topOfInning,  int homeRuns,  int awayRuns,  int pitchesThrown,  double fatigue,  bool managerRecommendsPull)  pitcherChangeDecision,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String batterId,  int balls,  int strikes,  bool highLeverage,  int inning,  bool topOfInning,  int outs,  List<bool> bases,  int homeRuns,  int awayRuns,  double fatigue,  int pitchesThrown,  String? lastFielderPosition,  bool lastPlayWasError,  bool lastPlayWasHit,  bool lastPlayWasHomeRun)  awaitingPitch,required TResult Function( int homeRuns,  int awayRuns)  gameOver,required TResult Function( int inning,  bool topOfInning,  int homeRuns,  int awayRuns,  int pitchesThrown,  double fatigue,  bool managerRecommendsPull)  pitcherChangeDecision,}) {final _that = this;
 switch (_that) {
 case MatchStepInfo_AwaitingPitch():
-return awaitingPitch(_that.batterId,_that.balls,_that.strikes,_that.highLeverage,_that.inning,_that.topOfInning,_that.outs,_that.bases,_that.homeRuns,_that.awayRuns,_that.fatigue,_that.pitchesThrown,_that.lastFielderPosition,_that.lastPlayWasError);case MatchStepInfo_GameOver():
+return awaitingPitch(_that.batterId,_that.balls,_that.strikes,_that.highLeverage,_that.inning,_that.topOfInning,_that.outs,_that.bases,_that.homeRuns,_that.awayRuns,_that.fatigue,_that.pitchesThrown,_that.lastFielderPosition,_that.lastPlayWasError,_that.lastPlayWasHit,_that.lastPlayWasHomeRun);case MatchStepInfo_GameOver():
 return gameOver(_that.homeRuns,_that.awayRuns);case MatchStepInfo_PitcherChangeDecision():
 return pitcherChangeDecision(_that.inning,_that.topOfInning,_that.homeRuns,_that.awayRuns,_that.pitchesThrown,_that.fatigue,_that.managerRecommendsPull);}
 }
@@ -196,10 +196,10 @@ return pitcherChangeDecision(_that.inning,_that.topOfInning,_that.homeRuns,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String batterId,  int balls,  int strikes,  bool highLeverage,  int inning,  bool topOfInning,  int outs,  List<bool> bases,  int homeRuns,  int awayRuns,  double fatigue,  int pitchesThrown,  String? lastFielderPosition,  bool lastPlayWasError)?  awaitingPitch,TResult? Function( int homeRuns,  int awayRuns)?  gameOver,TResult? Function( int inning,  bool topOfInning,  int homeRuns,  int awayRuns,  int pitchesThrown,  double fatigue,  bool managerRecommendsPull)?  pitcherChangeDecision,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String batterId,  int balls,  int strikes,  bool highLeverage,  int inning,  bool topOfInning,  int outs,  List<bool> bases,  int homeRuns,  int awayRuns,  double fatigue,  int pitchesThrown,  String? lastFielderPosition,  bool lastPlayWasError,  bool lastPlayWasHit,  bool lastPlayWasHomeRun)?  awaitingPitch,TResult? Function( int homeRuns,  int awayRuns)?  gameOver,TResult? Function( int inning,  bool topOfInning,  int homeRuns,  int awayRuns,  int pitchesThrown,  double fatigue,  bool managerRecommendsPull)?  pitcherChangeDecision,}) {final _that = this;
 switch (_that) {
 case MatchStepInfo_AwaitingPitch() when awaitingPitch != null:
-return awaitingPitch(_that.batterId,_that.balls,_that.strikes,_that.highLeverage,_that.inning,_that.topOfInning,_that.outs,_that.bases,_that.homeRuns,_that.awayRuns,_that.fatigue,_that.pitchesThrown,_that.lastFielderPosition,_that.lastPlayWasError);case MatchStepInfo_GameOver() when gameOver != null:
+return awaitingPitch(_that.batterId,_that.balls,_that.strikes,_that.highLeverage,_that.inning,_that.topOfInning,_that.outs,_that.bases,_that.homeRuns,_that.awayRuns,_that.fatigue,_that.pitchesThrown,_that.lastFielderPosition,_that.lastPlayWasError,_that.lastPlayWasHit,_that.lastPlayWasHomeRun);case MatchStepInfo_GameOver() when gameOver != null:
 return gameOver(_that.homeRuns,_that.awayRuns);case MatchStepInfo_PitcherChangeDecision() when pitcherChangeDecision != null:
 return pitcherChangeDecision(_that.inning,_that.topOfInning,_that.homeRuns,_that.awayRuns,_that.pitchesThrown,_that.fatigue,_that.managerRecommendsPull);case _:
   return null;
@@ -213,7 +213,7 @@ return pitcherChangeDecision(_that.inning,_that.topOfInning,_that.homeRuns,_that
 
 
 class MatchStepInfo_AwaitingPitch extends MatchStepInfo {
-  const MatchStepInfo_AwaitingPitch({required this.batterId, required this.balls, required this.strikes, required this.highLeverage, required this.inning, required this.topOfInning, required this.outs, required final  List<bool> bases, required this.homeRuns, required this.awayRuns, required this.fatigue, required this.pitchesThrown, this.lastFielderPosition, required this.lastPlayWasError}): _bases = bases,super._();
+  const MatchStepInfo_AwaitingPitch({required this.batterId, required this.balls, required this.strikes, required this.highLeverage, required this.inning, required this.topOfInning, required this.outs, required final  List<bool> bases, required this.homeRuns, required this.awayRuns, required this.fatigue, required this.pitchesThrown, this.lastFielderPosition, required this.lastPlayWasError, required this.lastPlayWasHit, required this.lastPlayWasHomeRun}): _bases = bases,super._();
   
 
  final  String batterId;
@@ -242,6 +242,11 @@ class MatchStepInfo_AwaitingPitch extends MatchStepInfo {
  final  String? lastFielderPosition;
 /// `last_fielder_position`이 있을 때만 의미 있음 — 그 플레이가 실책이었는지.
  final  bool lastPlayWasError;
+/// `last_fielder_position`이 있을 때만 의미 있음(대화 2026-07-25,
+/// 타구 애니메이션용) — 안타(단타/2루타/3루타/홈런)였는지.
+ final  bool lastPlayWasHit;
+/// `last_play_was_hit`의 부분집합 — 홈런이었는지.
+ final  bool lastPlayWasHomeRun;
 
 /// Create a copy of MatchStepInfo
 /// with the given fields replaced by the non-null parameter values.
@@ -253,16 +258,16 @@ $MatchStepInfo_AwaitingPitchCopyWith<MatchStepInfo_AwaitingPitch> get copyWith =
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MatchStepInfo_AwaitingPitch&&(identical(other.batterId, batterId) || other.batterId == batterId)&&(identical(other.balls, balls) || other.balls == balls)&&(identical(other.strikes, strikes) || other.strikes == strikes)&&(identical(other.highLeverage, highLeverage) || other.highLeverage == highLeverage)&&(identical(other.inning, inning) || other.inning == inning)&&(identical(other.topOfInning, topOfInning) || other.topOfInning == topOfInning)&&(identical(other.outs, outs) || other.outs == outs)&&const DeepCollectionEquality().equals(other._bases, _bases)&&(identical(other.homeRuns, homeRuns) || other.homeRuns == homeRuns)&&(identical(other.awayRuns, awayRuns) || other.awayRuns == awayRuns)&&(identical(other.fatigue, fatigue) || other.fatigue == fatigue)&&(identical(other.pitchesThrown, pitchesThrown) || other.pitchesThrown == pitchesThrown)&&(identical(other.lastFielderPosition, lastFielderPosition) || other.lastFielderPosition == lastFielderPosition)&&(identical(other.lastPlayWasError, lastPlayWasError) || other.lastPlayWasError == lastPlayWasError));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MatchStepInfo_AwaitingPitch&&(identical(other.batterId, batterId) || other.batterId == batterId)&&(identical(other.balls, balls) || other.balls == balls)&&(identical(other.strikes, strikes) || other.strikes == strikes)&&(identical(other.highLeverage, highLeverage) || other.highLeverage == highLeverage)&&(identical(other.inning, inning) || other.inning == inning)&&(identical(other.topOfInning, topOfInning) || other.topOfInning == topOfInning)&&(identical(other.outs, outs) || other.outs == outs)&&const DeepCollectionEquality().equals(other._bases, _bases)&&(identical(other.homeRuns, homeRuns) || other.homeRuns == homeRuns)&&(identical(other.awayRuns, awayRuns) || other.awayRuns == awayRuns)&&(identical(other.fatigue, fatigue) || other.fatigue == fatigue)&&(identical(other.pitchesThrown, pitchesThrown) || other.pitchesThrown == pitchesThrown)&&(identical(other.lastFielderPosition, lastFielderPosition) || other.lastFielderPosition == lastFielderPosition)&&(identical(other.lastPlayWasError, lastPlayWasError) || other.lastPlayWasError == lastPlayWasError)&&(identical(other.lastPlayWasHit, lastPlayWasHit) || other.lastPlayWasHit == lastPlayWasHit)&&(identical(other.lastPlayWasHomeRun, lastPlayWasHomeRun) || other.lastPlayWasHomeRun == lastPlayWasHomeRun));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,batterId,balls,strikes,highLeverage,inning,topOfInning,outs,const DeepCollectionEquality().hash(_bases),homeRuns,awayRuns,fatigue,pitchesThrown,lastFielderPosition,lastPlayWasError);
+int get hashCode => Object.hash(runtimeType,batterId,balls,strikes,highLeverage,inning,topOfInning,outs,const DeepCollectionEquality().hash(_bases),homeRuns,awayRuns,fatigue,pitchesThrown,lastFielderPosition,lastPlayWasError,lastPlayWasHit,lastPlayWasHomeRun);
 
 @override
 String toString() {
-  return 'MatchStepInfo.awaitingPitch(batterId: $batterId, balls: $balls, strikes: $strikes, highLeverage: $highLeverage, inning: $inning, topOfInning: $topOfInning, outs: $outs, bases: $bases, homeRuns: $homeRuns, awayRuns: $awayRuns, fatigue: $fatigue, pitchesThrown: $pitchesThrown, lastFielderPosition: $lastFielderPosition, lastPlayWasError: $lastPlayWasError)';
+  return 'MatchStepInfo.awaitingPitch(batterId: $batterId, balls: $balls, strikes: $strikes, highLeverage: $highLeverage, inning: $inning, topOfInning: $topOfInning, outs: $outs, bases: $bases, homeRuns: $homeRuns, awayRuns: $awayRuns, fatigue: $fatigue, pitchesThrown: $pitchesThrown, lastFielderPosition: $lastFielderPosition, lastPlayWasError: $lastPlayWasError, lastPlayWasHit: $lastPlayWasHit, lastPlayWasHomeRun: $lastPlayWasHomeRun)';
 }
 
 
@@ -273,7 +278,7 @@ abstract mixin class $MatchStepInfo_AwaitingPitchCopyWith<$Res> implements $Matc
   factory $MatchStepInfo_AwaitingPitchCopyWith(MatchStepInfo_AwaitingPitch value, $Res Function(MatchStepInfo_AwaitingPitch) _then) = _$MatchStepInfo_AwaitingPitchCopyWithImpl;
 @override @useResult
 $Res call({
- String batterId, int balls, int strikes, bool highLeverage, int inning, bool topOfInning, int outs, List<bool> bases, int homeRuns, int awayRuns, double fatigue, int pitchesThrown, String? lastFielderPosition, bool lastPlayWasError
+ String batterId, int balls, int strikes, bool highLeverage, int inning, bool topOfInning, int outs, List<bool> bases, int homeRuns, int awayRuns, double fatigue, int pitchesThrown, String? lastFielderPosition, bool lastPlayWasError, bool lastPlayWasHit, bool lastPlayWasHomeRun
 });
 
 
@@ -290,7 +295,7 @@ class _$MatchStepInfo_AwaitingPitchCopyWithImpl<$Res>
 
 /// Create a copy of MatchStepInfo
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? batterId = null,Object? balls = null,Object? strikes = null,Object? highLeverage = null,Object? inning = null,Object? topOfInning = null,Object? outs = null,Object? bases = null,Object? homeRuns = null,Object? awayRuns = null,Object? fatigue = null,Object? pitchesThrown = null,Object? lastFielderPosition = freezed,Object? lastPlayWasError = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? batterId = null,Object? balls = null,Object? strikes = null,Object? highLeverage = null,Object? inning = null,Object? topOfInning = null,Object? outs = null,Object? bases = null,Object? homeRuns = null,Object? awayRuns = null,Object? fatigue = null,Object? pitchesThrown = null,Object? lastFielderPosition = freezed,Object? lastPlayWasError = null,Object? lastPlayWasHit = null,Object? lastPlayWasHomeRun = null,}) {
   return _then(MatchStepInfo_AwaitingPitch(
 batterId: null == batterId ? _self.batterId : batterId // ignore: cast_nullable_to_non_nullable
 as String,balls: null == balls ? _self.balls : balls // ignore: cast_nullable_to_non_nullable
@@ -306,6 +311,8 @@ as int,fatigue: null == fatigue ? _self.fatigue : fatigue // ignore: cast_nullab
 as double,pitchesThrown: null == pitchesThrown ? _self.pitchesThrown : pitchesThrown // ignore: cast_nullable_to_non_nullable
 as int,lastFielderPosition: freezed == lastFielderPosition ? _self.lastFielderPosition : lastFielderPosition // ignore: cast_nullable_to_non_nullable
 as String?,lastPlayWasError: null == lastPlayWasError ? _self.lastPlayWasError : lastPlayWasError // ignore: cast_nullable_to_non_nullable
+as bool,lastPlayWasHit: null == lastPlayWasHit ? _self.lastPlayWasHit : lastPlayWasHit // ignore: cast_nullable_to_non_nullable
+as bool,lastPlayWasHomeRun: null == lastPlayWasHomeRun ? _self.lastPlayWasHomeRun : lastPlayWasHomeRun // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }

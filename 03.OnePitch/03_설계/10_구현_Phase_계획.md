@@ -2114,3 +2114,17 @@
 **스크린샷 검증**: `StadiumFieldView`를 직접 렌더링(주자 1·3루, 좌타자, 유격수가 방금 아웃 처리)해 확인 — 9자리 배지가 각자 위치에 정확히 표시되고, 유격수(SS) 배지에 파란 테두리+글로우 하이라이트가 선명하게 얹히며, 주자 바둑알·타자 마커·우측상단 오버레이 모두 기존과 동일하게 유지됨을 확인.
 
 **영향 있음(의도됨)**: 인플레이 판정마다 RNG 굴림 순서·횟수가 바뀌어(포지션 뽑기가 새로 추가되고, 에러 확률 계산이 타구 유형 판정 이후로 옮겨감) 같은 시드라도 이후 결과가 달라진다 — 버그 아니고 예상된 변화(§6-127 연속좌표화 때와 동일한 종류의 변화). 실책 확률의 "실효 스케일"은 그대로(여전히 `0.03 + (50-defense)*0.001` 공식, 입력만 팀 평균→개인 스탯으로 바뀜)라 전체 분포가 크게 흔들리진 않을 것으로 예상 — 위 balance_harness 결과로 확인.
+
+### 6-130. 파울라인/타구 궤적 애니메이션 — 홈에서 야수 위치까지 공 이동 (2026-07-25, 완료)
+
+**Context**: §6-129 완료 후 사용자에게 남은 작업을 리스트업(파울라인·홈런라인 좌표+궤적 애니메이션 / 포지션별 개인 수비 기록 누적+기록화면 / 볼카운트 판정 공식 수치 스케일 확정)했더니 "위에꺼 다 진행하게 계획안 보여줘봐"로 전체 진행을 요청. Phase A(이 항목, 궤적 애니메이션)를 §6-129에서 이미 확보한 9자리 야수 좌표(`FieldCoords.fielders`)를 애니메이션 종점으로 재사용해 새 좌표 보정 없이 구현하고, Phase B(개인 수비 기록 누적)는 별도로 진행, Phase C(볼카운트 공식)는 코딩이 아니라 밸런스 튜닝 성격이라 따로 논의하기로 — "그러네 제안하는 방식으루가자"로 A→B 순서 확정.
+
+**구현 — 엔진**: `MatchStepResult::AwaitingPitch`(`data::match_session.rs`)·`MatchStepInfo::AwaitingPitch`(`api::game.rs`) 양쪽에 `last_play_was_hit: bool`·`last_play_was_home_run: bool` 필드 추가(§6-129의 `last_fielder_position`·`last_play_was_error`와 나란히). `run_until_decision_point`의 루프-외부 로컬 변수를 `Option<(String, bool)>`에서 `LastFielderPlay { position, was_error, was_hit, was_home_run }` 구조체로 확장해 안타/홈런 여부까지 같이 실어 나름. FRB 재생성(`flutter_rust_bridge_codegen generate` → `dart run build_runner build`).
+
+**구현 — Flutter**: `StadiumFieldView`를 `StatelessWidget`에서 `StatefulWidget`(+`SingleTickerProviderStateMixin`)으로 전환, `lastFielderPosition`이 `null`→값으로 바뀌는 시점(`didUpdateWidget`에서 값 비교가 아니라 "null이었다가 값이 생겼는지"로 트리거 — 같은 포지션이 연속 타석에 반복돼도 값 비교로는 안 잡히는 케이스 방지)에 500ms 짜리 `AnimationController`를 재생. `_ballCoordAt(t)`가 홈 플레이트(`FieldCoords.home`)에서 해당 야수 좌표까지 선형 보간하고 `sin(π·t)` 포물선으로 띄우되 — 내야 땅볼(18px 낮은 궤적·350ms)·외야 뜬공(10px·500ms)·홈런(16px 높은 궤적에 종점을 담장 밖으로 연장·700ms)을 구분. 안타/홈런이면 종점을 야수 좌표보다 홈에서 더 먼 쪽으로 밀어(공이 야수를 지나쳐 가는 느낌) 표현. `match_screen.dart`가 `awaiting.lastPlayWasHit`/`.lastPlayWasHomeRun`을 그대로 threading.
+
+**테스트**: 엔진 `cargo test --lib` 553개 전부 통과, `cargo clippy --lib --tests --bins` 클린(RNG 미변경이라 회귀 테스트 수정 없음). Flutter 신규 위젯 테스트 1건(`StadiumFieldView animates a ball from home plate to the fielder and then hides it`) — `lastFielderPosition: null`일 땐 공 마커(`ValueKey('stadium-ball')`) 없음 → 유격수 지정 시 즉시 나타남 → 200ms 경과 후에도 유지(350ms 재생 중) → 400ms 경과 후 사라짐(내야 애니메이션 종료)을 확인. `flutter analyze` 클린, 관련 위젯 테스트 3파일(`match_boxscore_stadium_widget_test.dart`/`match_visuals_widget_test.dart`/`match_entry_widget_test.dart`) 13개 통과, 전체 `flutter test`(38개 파일) 전부 통과.
+
+**스크린샷 검증**: 임시 스크린샷 스크립트로 홈런 애니메이션 중간 프레임을 캡처해 공이 홈 플레이트에서 외야 담장 밖 방향으로 높게 뜬 궤적 위에 있는 걸 육안 확인(캡처용 스크립트 자체의 초기 pump가 `runAsync`로 안 감싸여 배경 GIF가 안 그려진 건 이 진단 캡처에 국한된 문제이고 실제 앱 동작과 무관).
+
+**영향 없음**: `balance_harness -- 5 3` 결과가 §6-129 커밋 시점 수치와 완전히 동일(S등급 6.5%, 등급 분포 `{"S": 2, "F": 15, "D": 11, "B": 3}`, 평균 이벤트 80.20건 등 — 새 RNG 굴림이 전혀 추가되지 않은 순수 부기/UI 변경이라 예상대로 무변화). `AwaitingPitch`에 필드 2개가 늘었을 뿐 기존 5개 필드는 그대로라 세이브 마이그레이션 불필요.

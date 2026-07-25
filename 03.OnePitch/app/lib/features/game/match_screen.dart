@@ -242,6 +242,8 @@ class _MatchInfoColumn extends StatelessWidget {
                   awayRuns: awaiting.awayRuns,
                   lastFielderPosition: awaiting.lastFielderPosition,
                   lastPlayWasError: awaiting.lastPlayWasError,
+                  lastPlayWasHit: awaiting.lastPlayWasHit,
+                  lastPlayWasHomeRun: awaiting.lastPlayWasHomeRun,
                 );
               },
             ),
