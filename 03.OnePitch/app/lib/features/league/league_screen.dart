@@ -158,6 +158,7 @@ class _RosterTabState extends State<_RosterTab> {
   List<RosterPlayerInfo>? _staff;
   Map<String, PlayerPitchingStats>? _pitchingStats;
   Map<String, PlayerBattingStats>? _battingStats;
+  Map<String, PlayerFieldingStats>? _fieldingStats;
 
   @override
   void didUpdateWidget(covariant _RosterTab oldWidget) {
@@ -177,12 +178,14 @@ class _RosterTabState extends State<_RosterTab> {
       _staff = null;
       _pitchingStats = null;
       _battingStats = null;
+      _fieldingStats = null;
     });
     final results = await Future.wait([
       listRoster(teamId: widget.teamId),
       listTeamStaff(teamId: widget.teamId),
       getTeamSeasonPitchingStats(teamId: widget.teamId),
       getTeamSeasonBattingStats(teamId: widget.teamId),
+      getTeamSeasonFieldingStats(teamId: widget.teamId),
     ]);
     if (mounted) {
       setState(() {
@@ -190,6 +193,7 @@ class _RosterTabState extends State<_RosterTab> {
         _staff = results[1] as List<RosterPlayerInfo>;
         _pitchingStats = {for (final s in results[2] as List<PlayerPitchingStats>) s.playerId: s};
         _battingStats = {for (final s in results[3] as List<PlayerBattingStats>) s.playerId: s};
+        _fieldingStats = {for (final s in results[4] as List<PlayerFieldingStats>) s.playerId: s};
       });
     }
   }
@@ -200,7 +204,10 @@ class _RosterTabState extends State<_RosterTab> {
     final staff = _staff;
     final pitchingStats = _pitchingStats;
     final battingStats = _battingStats;
-    if (roster == null || staff == null || pitchingStats == null || battingStats == null) return const LoadingIndicator();
+    final fieldingStats = _fieldingStats;
+    if (roster == null || staff == null || pitchingStats == null || battingStats == null || fieldingStats == null) {
+      return const LoadingIndicator();
+    }
     if (roster.isEmpty && staff.isEmpty) return const Center(child: Text('로스터가 없습니다.'));
 
     final owner = staff.where((p) => p.position == '구단주').firstOrNull;
@@ -233,7 +240,7 @@ class _RosterTabState extends State<_RosterTab> {
               children: [
                 Expanded(child: _PlayerListCard(label: '투수', players: pitchers, pitchingStats: pitchingStats)),
                 const SizedBox(height: 8),
-                Expanded(child: _PlayerListCard(label: '타자', players: batters, battingStats: battingStats)),
+                Expanded(child: _PlayerListCard(label: '타자', players: batters, battingStats: battingStats, fieldingStats: fieldingStats)),
               ],
             ),
           ),
@@ -277,12 +284,13 @@ class _StaffCard extends StatelessWidget {
 }
 
 class _PlayerListCard extends StatelessWidget {
-  const _PlayerListCard({required this.label, required this.players, this.pitchingStats, this.battingStats});
+  const _PlayerListCard({required this.label, required this.players, this.pitchingStats, this.battingStats, this.fieldingStats});
 
   final String label;
   final List<RosterPlayerInfo> players;
   final Map<String, PlayerPitchingStats>? pitchingStats;
   final Map<String, PlayerBattingStats>? battingStats;
+  final Map<String, PlayerFieldingStats>? fieldingStats;
 
   @override
   Widget build(BuildContext context) {
@@ -300,6 +308,7 @@ class _PlayerListCard extends StatelessWidget {
                 final p = players[i];
                 final pitchSummary = _pitchSummary(p.pitchesJson);
                 final statSummary = _statSummary(p.id);
+                final fieldingSummary = _fieldingSummary(p.id);
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 3),
                   child: Column(
@@ -326,6 +335,11 @@ class _PlayerListCard extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(top: 1),
                           child: Text(statSummary, style: const TextStyle(color: AppColors.textSecondary, fontSize: 10)),
+                        ),
+                      if (fieldingSummary.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 1),
+                          child: Text(fieldingSummary, style: const TextStyle(color: AppColors.textSecondary, fontSize: 10)),
                         ),
                     ],
                   ),
@@ -363,6 +377,15 @@ class _PlayerListCard extends StatelessWidget {
       return '타율 $avg OPS $ops 홈런 ${batting.homeRuns} 타점 ${batting.rbi}';
     }
     return '';
+  }
+
+  // 이번 시즌 수비 성적(Phase B, 대화 2026-07-25) — 투수·포수는 수비 후보에서
+  // 제외돼(§6-129) chances가 항상 0이라 자연히 아무것도 안 보여준다.
+  String _fieldingSummary(String playerId) {
+    final fielding = fieldingStats?[playerId];
+    if (fielding == null || fielding.chances.toInt() == 0) return '';
+    final pct = fielding.fieldingPercentage.toStringAsFixed(3).replaceFirst('0.', '.');
+    return '수비율 $pct (기회 ${fielding.chances} 실책 ${fielding.errors})';
   }
 }
 

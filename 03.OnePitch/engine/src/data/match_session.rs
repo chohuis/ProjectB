@@ -1259,6 +1259,11 @@ fn run_until_decision_point(
                 repository::upsert_batter_season_stats(slot_conn, batter_id, week, s)?;
                 merge_batter_game_stats(&mut session, batter_id, s);
             }
+            // 수비 기록(Phase B) — `fielding_lineup`(수비 중인 팀)의 개인
+            // 수비 기회/실책. 타석 기록과 반대 팀이라 별도 루프.
+            for (fielder_id, s) in &half_inning_stats.fielders {
+                repository::upsert_fielder_season_stats(slot_conn, fielder_id, week, s)?;
+            }
             if !protagonist_pitching_team && !session.opponent_pulled {
                 // 주인공이 강판된 뒤의 불펜 투수와 동일한 이유(§8 스코프
                 // 판단, Part H에서 상대팀에도 대칭 적용) — `accumulate_game_fatigue`
@@ -1476,6 +1481,15 @@ fn run_until_decision_point(
                     was_hit: matches!(pa, PaOutcome::Single | PaOutcome::Double | PaOutcome::Triple | PaOutcome::HomeRun),
                     was_home_run: pa == PaOutcome::HomeRun,
                 });
+                // 수비 기록(Phase B) — 배경 하프이닝(`simulate_half_inning`)과
+                // 동일하게, 그 포지션 선수에게 수비 기회(+실책이면 실책)를 적립.
+                if let Some(fielder) = fielding_lineup.iter().find(|b| b.position == resolution.fielder_position) {
+                    let fielding_line = match_sim::FieldingGameStats {
+                        chances: 1,
+                        errors: if pa == PaOutcome::ReachOnError { 1 } else { 0 },
+                    };
+                    repository::upsert_fielder_season_stats(slot_conn, &fielder.id, week, &fielding_line)?;
+                }
                 if matches!(pa, PaOutcome::Single | PaOutcome::Double | PaOutcome::Triple | PaOutcome::HomeRun) {
                     session.hits_allowed += 1;
                     session.current_half_hits += 1;
@@ -2190,6 +2204,50 @@ mod tests {
             .query_row("SELECT EXISTS(SELECT 1 FROM season_stats WHERE player_id LIKE 'team:away_b%')", [], |r| r.get(0))
             .unwrap();
         assert!(has_batter_stats, "주인공을 직접 상대한 타자도 season_stats가 남아야 함");
+    }
+
+    /// Phase B(대화 2026-07-25) — `opposing_batters_facing_the_protagonist_directly_still_record_season_stats`가
+    /// 잡아낸 것과 같은 종류의 사각지대를 수비 쪽에서 확인. `insert_roster`는
+    /// 타자 포지션이 전부 더미("타자")라 실제 수비 후보 포지션과 안 맞으므로,
+    /// 주인공 팀(team:home, 수비 중)만 7자리 실제 포지션으로 채운 라인업을
+    /// 심어 인터랙티브 InPlay 분기(`resolve_in_play_result` 직접 호출부)가
+    /// season_stats에 fielding_chances를 실제로 적립하는지 확인한다.
+    #[test]
+    fn opposing_batters_hitting_into_the_protagonists_defense_credit_the_fielder_who_made_the_play() {
+        let content_conn = build_content_db();
+        let mut found_fielding_row = false;
+        for seed in 0..10i64 {
+            let slot_conn = slot::open_in_memory().unwrap();
+            for pos in ["포수", "1루수", "2루수", "3루수", "유격수", "좌익수", "중견수", "우익수", "지명타자"] {
+                slot_conn.execute(
+                    "INSERT INTO npc (id, name, team_id, position, age, is_named, retired, form, personality, stats, xp, live_state, pitches, injury)
+                     VALUES (?1, ?1, 'team:home', ?2, 20, 1, 0, 50.0, '{}', ?3, '{}', '{\"피로도\":0}', NULL, '{\"current\":null,\"history\":[]}')",
+                    params![
+                        format!("team:home_{pos}"),
+                        pos,
+                        serde_json::json!({"컨택": 50.0, "선구안": 50.0, "파워": 50.0}).to_string(),
+                    ],
+                ).unwrap();
+            }
+            insert_protagonist(&slot_conn, "team:home");
+            insert_roster(&slot_conn, "team:away");
+            insert_schedule(&slot_conn, "game:1");
+
+            start_protagonist_match(&slot_conn, &content_conn, seed, "game:1", "team:home", "team:away", "자동").unwrap();
+
+            let chances: i64 = slot_conn
+                .query_row(
+                    "SELECT COUNT(*) FROM season_stats WHERE player_id LIKE 'team:home_%' AND json_extract(line, '$.fielding_chances') > 0",
+                    [],
+                    |r| r.get(0),
+                )
+                .unwrap();
+            if chances > 0 {
+                found_fielding_row = true;
+                break;
+            }
+        }
+        assert!(found_fielding_row, "10게임을 굴렸는데 주인공 수비진의 fielding_chances가 한 번도 안 쌓임");
     }
 
     #[test]

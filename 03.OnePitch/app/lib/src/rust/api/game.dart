@@ -8,9 +8,9 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
 part 'game.freezed.dart';
 
-// These functions are ignored because they are not marked as `pub`: `avg_rank_from_season_ranks`, `from_line`, `from_line`, `standings_rows`, `stars_from_group_position`, `tournament_display_name`, `tournament_includes_team`, `with_state_mut`, `with_state`, `world_seed`
+// These functions are ignored because they are not marked as `pub`: `avg_rank_from_season_ranks`, `from_line`, `from_line`, `from_line`, `standings_rows`, `stars_from_group_position`, `tournament_display_name`, `tournament_includes_team`, `with_state_mut`, `with_state`, `world_seed`
 // These types are ignored because they are neither used by any `pub` functions nor (for structs and enums) marked `#[frb(unignore)]`: `GameState`
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `clone`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`
 
 Future<PregameScoutingInfo> getPregameScouting({
   required String gameId,
@@ -301,6 +301,15 @@ Future<List<PlayerBattingStats>> getTeamSeasonBattingStats({
   required String teamId,
 }) =>
     RustLib.instance.api.crateApiGameGetTeamSeasonBattingStats(teamId: teamId);
+
+/// 리그 화면 로스터 탭의 "이번 시즌" 수비 성적(Phase B) — `get_team_season_batting_stats`와
+/// 같은 대상(포지션이 투수 3종이 아닌 선수)·같은 소스(진행 중 `season_stats`
+/// 합산). 투수·포수는 수비 후보에서 제외(§6-129)라 그 선수들 라인은
+/// 항상 0/0으로 나온다 — 호출부가 `chances > 0`으로 걸러서 표시.
+Future<List<PlayerFieldingStats>> getTeamSeasonFieldingStats({
+  required String teamId,
+}) =>
+    RustLib.instance.api.crateApiGameGetTeamSeasonFieldingStats(teamId: teamId);
 
 /// 리그 화면 로스터 탭의 "이번 시즌" 투수 성적(Phase 5) — 그 팀 투수
 /// 전원(선발/중계/마무리)의 진행 중 `season_stats` 합산.
@@ -1323,6 +1332,42 @@ class PlayerBattingStats {
           onBasePercentage == other.onBasePercentage &&
           sluggingPercentage == other.sluggingPercentage &&
           ops == other.ops;
+}
+
+/// `PlayerBattingStats`와 대칭인 수비 쪽(Phase B, 대화 2026-07-25).
+class PlayerFieldingStats {
+  final String playerId;
+  final String name;
+  final PlatformInt64 chances;
+  final PlatformInt64 errors;
+  final double fieldingPercentage;
+
+  const PlayerFieldingStats({
+    required this.playerId,
+    required this.name,
+    required this.chances,
+    required this.errors,
+    required this.fieldingPercentage,
+  });
+
+  @override
+  int get hashCode =>
+      playerId.hashCode ^
+      name.hashCode ^
+      chances.hashCode ^
+      errors.hashCode ^
+      fieldingPercentage.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PlayerFieldingStats &&
+          runtimeType == other.runtimeType &&
+          playerId == other.playerId &&
+          name == other.name &&
+          chances == other.chances &&
+          errors == other.errors &&
+          fieldingPercentage == other.fieldingPercentage;
 }
 
 /// `PlayerBattingStats`와 대칭인 투수 쪽.

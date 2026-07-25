@@ -1971,6 +1971,25 @@ impl NpcBattingLine {
     }
 }
 
+/// `NpcBattingLine`과 대칭인 수비 쪽(Phase B, 대화 2026-07-25) — 수비율만
+/// 파생. 투수·포수는 애초에 `fielding_chances`가 안 쌓이므로(§6-129,
+/// 야수 후보에서 제외) 이 라인이 항상 0/0으로 나오는 게 정상.
+pub(crate) struct NpcFieldingLine {
+    pub chances: i64,
+    pub errors: i64,
+}
+
+impl NpcFieldingLine {
+    pub(crate) fn from_json(v: &serde_json::Value) -> Self {
+        let get = |k: &str| v.get(k).and_then(|x| x.as_i64()).unwrap_or(0);
+        Self { chances: get("fielding_chances"), errors: get("fielding_errors") }
+    }
+
+    pub(crate) fn fielding_percentage(&self) -> f64 {
+        if self.chances == 0 { 1.0 } else { (self.chances - self.errors) as f64 / self.chances as f64 }
+    }
+}
+
 /// `NpcBattingLine`과 대칭인 투수 쪽 — ERA·WHIP·K/9. `earned_runs`는
 /// `pitcher_stats_score`/`CareerLine::era()`와 동일하게 `unearned_runs`를
 /// 뺀 값.
@@ -2610,6 +2629,18 @@ pub(crate) fn upsert_batter_season_stats(conn: &Connection, player_id: &str, wee
     upsert_stats_fields(conn, "season_stats", player_id, week, &batter_stats_fields(s))
 }
 
+fn fielding_stats_fields(s: &match_sim::FieldingGameStats) -> [(&'static str, u32); 2] {
+    [("fielding_chances", s.chances), ("fielding_errors", s.errors)]
+}
+
+/// 포지션별 개인 수비 기록 적립(Phase B, 대화 2026-07-25) — `upsert_batter_season_stats`와
+/// 같은 `season_stats.line` 스키마리스 JSON에 `fielding_chances`/`fielding_errors`
+/// 필드만 새로 얹는다(마이그레이션 불필요). `pub(crate)` — `upsert_pitcher_season_stats`와
+/// 동일한 이유로 공개(`data::match_session`도 재사용).
+pub(crate) fn upsert_fielder_season_stats(conn: &Connection, player_id: &str, week: i64, s: &match_sim::FieldingGameStats) -> anyhow::Result<()> {
+    upsert_stats_fields(conn, "season_stats", player_id, week, &fielding_stats_fields(s))
+}
+
 /// 세이브 단독 적립(Phase 6, §12) — `data::match_session::finalize_game`가
 /// 인터랙티브 경기 종료 시점에 쓴다. 배경 경기(`simulate_game`)는 세이브
 /// 판정이 `PitcherGameStats.saves`에 이미 녹아든 채로 일반 `upsert_pitcher_season_stats`
@@ -2636,6 +2667,11 @@ fn upsert_pitcher_practice_stats(conn: &Connection, player_id: &str, week: i64, 
 
 fn upsert_batter_practice_stats(conn: &Connection, player_id: &str, week: i64, s: &match_sim::BatterGameStats) -> anyhow::Result<()> {
     upsert_stats_fields(conn, "practice_stats", player_id, week, &batter_stats_fields(s))
+}
+
+/// `upsert_fielder_season_stats`의 청백전판 — 테이블만 `practice_stats`.
+fn upsert_fielder_practice_stats(conn: &Connection, player_id: &str, week: i64, s: &match_sim::FieldingGameStats) -> anyhow::Result<()> {
+    upsert_stats_fields(conn, "practice_stats", player_id, week, &fielding_stats_fields(s))
 }
 
 const RELIEVER_FATIGUE_PER_GAME: f64 = 6.0; // 선발(12.0)의 절반 — D그룹 placeholder.
@@ -2719,6 +2755,12 @@ fn process_day(slot_conn: &Connection, content_conn: &Connection, world_seed: i6
         }
         for (batter_id, s) in &result.away_batter_stats {
             upsert_batter_season_stats(slot_conn, batter_id, week, s)?;
+        }
+        for (fielder_id, s) in &result.home_fielding_stats {
+            upsert_fielder_season_stats(slot_conn, fielder_id, week, s)?;
+        }
+        for (fielder_id, s) in &result.away_fielding_stats {
+            upsert_fielder_season_stats(slot_conn, fielder_id, week, s)?;
         }
     }
     Ok(())
@@ -2877,6 +2919,12 @@ fn run_intrasquad_scrimmage(slot_conn: &Connection, content_conn: &Connection, w
     }
     for (batter_id, s) in &result.away_batter_stats {
         upsert_batter_practice_stats(slot_conn, batter_id, week, s)?;
+    }
+    for (fielder_id, s) in &result.home_fielding_stats {
+        upsert_fielder_practice_stats(slot_conn, fielder_id, week, s)?;
+    }
+    for (fielder_id, s) in &result.away_fielding_stats {
+        upsert_fielder_practice_stats(slot_conn, fielder_id, week, s)?;
     }
 
     // 청백전도 실제로 체력을 쓴다(대화 2026-07-26) — 실전 중계/마무리투수와
@@ -9276,6 +9324,59 @@ mod tests {
             )
             .unwrap();
         assert!(batter_rows > 0, "expected at least one batter season_stats row, got {batter_rows}");
+    }
+
+    #[test]
+    fn process_day_records_fielding_season_stats_for_the_defending_teams_real_positions() {
+        // Phase B(대화 2026-07-25) — `insert_minimal_roster`는 타자 포지션이
+        // 전부 "타자"(더미)라 `roll_fielder_position`이 뽑는 실제 포지션
+        // 문자열과 하나도 안 맞아 수비 기록이 절대 안 쌓인다. 이 테스트는
+        // 실제 7자리 포지션을 부여한 라인업으로 `process_day`를 돌려 배경
+        // NPC 경기에서도 season_stats에 fielding_chances가 실제로 적립되는지
+        // 확인한다(라인업에 fielder_position 정보 자체가 배경 경로에선
+        // 통째로 버려지고 있었던 Phase B의 발견 지점).
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:x', NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:a', 'league:x', NULL, NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:b', 'league:x', NULL, NULL)", []).unwrap();
+
+        let build_roster = |slot_conn: &Connection| {
+            for team_id in ["team:a", "team:b"] {
+                insert_test_player(slot_conn, &format!("{team_id}_sp"), team_id, "선발투수", serde_json::json!({"제구": 50.0, "구위": 50.0}));
+                for pos in ["포수", "1루수", "2루수", "3루수", "유격수", "좌익수", "중견수", "우익수", "지명타자"] {
+                    insert_test_player(
+                        slot_conn,
+                        &format!("{team_id}_{pos}"),
+                        team_id,
+                        pos,
+                        serde_json::json!({"컨택": 50.0, "선구안": 50.0, "파워": 50.0}),
+                    );
+                }
+            }
+            slot_conn
+                .execute("INSERT INTO schedule (game_id, day, home, away, result) VALUES ('game:1', 10, 'team:a', 'team:b', NULL)", [])
+                .unwrap();
+        };
+
+        // 시드를 여러 개 훑어 최소 한 게임은 인플레이 타구가 나오게 한다.
+        let mut found_fielding_row = false;
+        for seed in 0..20i64 {
+            let slot_conn = slot::open_in_memory().unwrap();
+            build_roster(&slot_conn);
+            process_day(&slot_conn, &content_conn, seed, 10).unwrap();
+            let chances: i64 = slot_conn
+                .query_row(
+                    "SELECT COUNT(*) FROM season_stats WHERE (player_id LIKE 'team:a_%' OR player_id LIKE 'team:b_%') AND json_extract(line, '$.fielding_chances') > 0",
+                    [],
+                    |r| r.get(0),
+                )
+                .unwrap();
+            if chances > 0 {
+                found_fielding_row = true;
+                break;
+            }
+        }
+        assert!(found_fielding_row, "20게임을 굴렸는데 fielding_chances가 한 번도 안 쌓임");
     }
 
     #[test]

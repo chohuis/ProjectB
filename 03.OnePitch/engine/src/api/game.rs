@@ -1411,6 +1411,47 @@ pub fn get_team_season_batting_stats(team_id: String) -> anyhow::Result<Vec<Play
     })
 }
 
+/// `PlayerBattingStats`와 대칭인 수비 쪽(Phase B, 대화 2026-07-25).
+#[derive(Debug, Clone)]
+pub struct PlayerFieldingStats {
+    pub player_id: String,
+    pub name: String,
+    pub chances: i64,
+    pub errors: i64,
+    pub fielding_percentage: f64,
+}
+
+impl PlayerFieldingStats {
+    fn from_line(player_id: String, name: String, line: &repository::NpcFieldingLine) -> Self {
+        Self { player_id, name, chances: line.chances, errors: line.errors, fielding_percentage: line.fielding_percentage() }
+    }
+}
+
+/// 리그 화면 로스터 탭의 "이번 시즌" 수비 성적(Phase B) — `get_team_season_batting_stats`와
+/// 같은 대상(포지션이 투수 3종이 아닌 선수)·같은 소스(진행 중 `season_stats`
+/// 합산). 투수·포수는 수비 후보에서 제외(§6-129)라 그 선수들 라인은
+/// 항상 0/0으로 나온다 — 호출부가 `chances > 0`으로 걸러서 표시.
+pub fn get_team_season_fielding_stats(team_id: String) -> anyhow::Result<Vec<PlayerFieldingStats>> {
+    with_state(|state| {
+        let mut stmt = state.slot_conn.prepare(
+            "SELECT id, name FROM npc
+             WHERE team_id = ?1 AND retired = 0 AND position NOT IN ('감독', '코치', '구단주', '선발투수', '중계투수', '마무리투수')
+             ORDER BY id",
+        )?;
+        let fielders: Vec<(String, String)> = stmt.query_map([&team_id], |r| Ok((r.get(0)?, r.get(1)?)))?.collect::<Result<_, _>>()?;
+        drop(stmt);
+
+        fielders
+            .into_iter()
+            .map(|(id, name)| {
+                let raw = repository::aggregate_stats_line(&state.slot_conn, "season_stats", &id)?;
+                let line = repository::NpcFieldingLine::from_json(&raw);
+                Ok(PlayerFieldingStats::from_line(id, name, &line))
+            })
+            .collect()
+    })
+}
+
 /// 리그 화면 로스터 탭의 "이번 시즌" 투수 성적(Phase 5) — 그 팀 투수
 /// 전원(선발/중계/마무리)의 진행 중 `season_stats` 합산.
 pub fn get_team_season_pitching_stats(team_id: String) -> anyhow::Result<Vec<PlayerPitchingStats>> {
@@ -2311,7 +2352,7 @@ mod tests {
                 .slot_conn
                 .execute(
                     "INSERT INTO season_stats (player_id, week, line) VALUES (?1, 1, ?2)",
-                    rusqlite::params![batter, serde_json::json!({"plate_appearances": 10, "at_bats": 8, "hits": 4, "doubles": 1, "home_runs": 1, "walks": 2, "rbi": 3}).to_string()],
+                    rusqlite::params![batter, serde_json::json!({"plate_appearances": 10, "at_bats": 8, "hits": 4, "doubles": 1, "home_runs": 1, "walks": 2, "rbi": 3, "fielding_chances": 6, "fielding_errors": 1}).to_string()],
                 )
                 .unwrap();
             state
@@ -2337,6 +2378,15 @@ mod tests {
         assert_eq!(b.hits, 4);
         assert_eq!(b.rbi, 3);
         assert!((b.batting_average - 0.5).abs() < 1e-9, "avg={}", b.batting_average);
+
+        let season_fielding = get_team_season_fielding_stats(hs_team.clone()).unwrap();
+        let f = season_fielding.iter().find(|s| s.player_id == batter).unwrap();
+        assert_eq!(f.chances, 6);
+        assert_eq!(f.errors, 1);
+        assert!((f.fielding_percentage - (5.0 / 6.0)).abs() < 1e-9, "fpct={}", f.fielding_percentage);
+        // 수비 후보에서 제외된 투수는 항상 0/0(완벽한 1.0 폴백)이어야 함.
+        let pf = season_fielding.iter().find(|s| s.player_id == pitcher);
+        assert!(pf.is_none(), "get_team_season_fielding_stats는 투수를 아예 대상에서 제외해야 함");
 
         let career_pitching = get_player_career_pitching_stats(pitcher.clone()).unwrap();
         assert_eq!(career_pitching.strikeouts, 18, "career should reflect npc_season_history, not the in-progress season");

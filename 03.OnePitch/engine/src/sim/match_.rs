@@ -237,6 +237,41 @@ pub struct InPlayResolution {
     pub fielder_position: &'static str,
 }
 
+/// `simulate_plate_appearance`의 반환값(Phase B, 대화 2026-07-25) — 삼진·
+/// 볼넷·사구는 수비가 개입하지 않으므로 `fielder_position`이 `None`, 인플레이로
+/// 이어진 경우만 `resolve_in_play_result`가 뽑은 포지션을 그대로 담는다.
+/// 호출부가 개인 수비 기록(`FieldingGameStats`)을 쌓을지 말지는 이 필드
+/// 유무로 판단하면 된다.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct PlateAppearanceResult {
+    pub outcome: PaOutcome,
+    pub fielder_position: Option<&'static str>,
+}
+
+/// 포지션별 개인 수비 기록 한 줄(Phase B, 대화 2026-07-25) — `resolve_in_play_result`
+/// 가 뽑은 포지션의 실제 담당 선수에게 귀속되는 수비 기회/실책. 타석
+/// 기록(`BatterGameStats`)과 별개로 쌓는 이유: 수비는 "그 자리에 있었는가"라
+/// 타석에 몇 번 섰는지와 무관하고, 투수가 타석에 서지 않는 지명타자
+/// 제도 등으로 타석 기록과 수비 기록의 주체가 어긋날 수 있어서다.
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
+pub struct FieldingGameStats {
+    pub chances: u32,
+    pub errors: u32,
+}
+
+impl FieldingGameStats {
+    /// 수비율 — (기회-실책)/기회. 기회가 0이면(그 이닝에 타구가 한 번도
+    /// 안 온 자리) 완벽한 1.0으로 취급(타율 등과 달리 "시도 없음=실패
+    /// 없음"이 자연스러운 관례).
+    pub fn fielding_percentage(&self) -> f64 {
+        if self.chances == 0 {
+            1.0
+        } else {
+            (self.chances - self.errors) as f64 / self.chances as f64
+        }
+    }
+}
+
 /// 급성형(우발) 부상 이벤트 — 08_부상_시스템.md §3 "경기 중 특정 순간의
 /// 낮은 확률 랜덤 이벤트". `sim::injury::check_acute_injury`가 판정한
 /// 부위·심각도를 어떤 선수(`player_id`)에게 귀속시킬지까지 포함해
@@ -368,8 +403,10 @@ pub fn roll_game_conditions(rng: &mut impl Rng, park_factor_raw: Option<&str>) -
 /// 이어질 때 `resolve_in_play_result`에 그대로 전달 — 병살·희생플라이·
 /// 포지션별 실책 판정에 필요. `tactics`(Phase 5, 수비 시프트)는 지금
 /// 수비 중인 팀 감독의 전술력, `conditions`(Phase 5)는 파크팩터·날씨.
-/// 반환값은 `PaOutcome`만(포지션 정보는 이 배경 시뮬 경로에선 안 씀) —
-/// `resolve_in_play_result`가 돌려주는 `InPlayResolution`에서 `.outcome`만 뽑는다.
+/// 반환값(`PlateAppearanceResult`, Phase B부터)은 `.outcome`과 함께 인플레이로
+/// 이어졌을 때만 `Some`인 `.fielder_position`을 싣는다 — 호출부(`simulate_half_inning`)가
+/// 이걸로 개인 수비 기록을 쌓는다. 삼진·볼넷·사구는 `resolve_in_play_result`
+/// 자체를 안 타므로 `None`.
 #[allow(clippy::too_many_arguments)]
 pub fn simulate_plate_appearance(
     rng: &mut impl Rng,
@@ -381,7 +418,7 @@ pub fn simulate_plate_appearance(
     tactics: f64,
     high_leverage: bool,
     conditions: &GameConditions,
-) -> PaOutcome {
+) -> PlateAppearanceResult {
     let effective_control = fatigue_effective(pitcher.control, pitcher.fatigue) + conditions.weather_control_mod;
     let effective_stuff = fatigue_effective(pitcher.stuff, pitcher.fatigue);
     let mut pitch_edge = (effective_control + effective_stuff) / 2.0 - (batter.contact + batter.eye) / 2.0;
@@ -402,16 +439,17 @@ pub fn simulate_plate_appearance(
 
     let roll = rng.gen::<f64>() * total;
     if roll < k_prob {
-        return PaOutcome::Strikeout;
+        return PlateAppearanceResult { outcome: PaOutcome::Strikeout, fielder_position: None };
     }
     if roll < k_prob + bb_prob {
-        return PaOutcome::Walk;
+        return PlateAppearanceResult { outcome: PaOutcome::Walk, fielder_position: None };
     }
     if roll < k_prob + bb_prob + hbp_prob {
-        return PaOutcome::HitByPitch;
+        return PlateAppearanceResult { outcome: PaOutcome::HitByPitch, fielder_position: None };
     }
 
-    resolve_in_play_result(rng, batter, pitcher, bases, outs, fielding_lineup, tactics, high_leverage, conditions).outcome
+    let resolution = resolve_in_play_result(rng, batter, pitcher, bases, outs, fielding_lineup, tactics, high_leverage, conditions);
+    PlateAppearanceResult { outcome: resolution.outcome, fielder_position: Some(resolution.fielder_position) }
 }
 
 /// 수비 시프트 보너스(Phase 5, §6-1) — 타자의 타격 유형 태그에 따라
@@ -734,11 +772,15 @@ pub(crate) fn record_batter_pa(line: &mut BatterGameStats, outcome: PaOutcome, r
 
 /// 하프이닝 1회 분량의 누산기 — 그 이닝에서 던진 투수 1명 + 타석에 선 타자
 /// 전원을 함께 담는다("누가 던지고 누가 쳤는지"가 한 호출 안에서 항상 한
-/// 팀씩 짝지어지므로).
+/// 팀씩 짝지어지므로). `fielders`(Phase B, 대화 2026-07-25)는 반대로 "그
+/// 이닝에 수비를 본" 상대팀 선수들 — `batters`와 키(player id)가 같은
+/// 스키마일 뿐 소속 팀이 반대라, 호출부가 이 둘을 각각 올바른 팀에
+/// 적재해야 한다(호출부 책임, `simulate_half_inning` 문서 참고).
 #[derive(Debug, Default)]
 pub struct HalfInningStats {
     pub pitcher: PitcherGameStats,
     pub batters: HashMap<String, BatterGameStats>,
+    pub fielders: HashMap<String, FieldingGameStats>,
 }
 
 /// `pub(crate)` — `data::match_session`이 주인공 팀 타석(DH 배경 시뮬,
@@ -750,7 +792,9 @@ pub struct HalfInningStats {
 /// 불러온 "지금 수비 중인 팀"의 라인업, 이 하프이닝 내내 고정. 도루
 /// 저지(`attempt_steal`)는 여전히 팀 평균(`average_defense`)을 쓰고,
 /// 인플레이 실책 판정(`resolve_in_play_result`)만 포지션별 개인 수비로
-/// 세분화된다.
+/// 세분화된다. `stats.fielders`(Phase B)는 `par.fielder_position`이 가리키는
+/// `fielding_lineup` 선수에게 수비 기회 1회(+실책이면 실책 1회)를 적립 —
+/// 그 포지션에 아무도 없으면(결원) 조용히 건너뛴다.
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn simulate_half_inning(
     rng: &mut impl Rng,
@@ -806,8 +850,18 @@ pub(crate) fn simulate_half_inning(
         let batter = &lineup[*batter_idx % lineup.len()];
         *batter_idx += 1;
         let bases_loaded = bases.iter().all(|&b| b);
-        let outcome =
+        let par =
             simulate_plate_appearance(rng, batter, pitcher, bases, outs, fielding_lineup, tactics, high_leverage_base || bases_loaded, conditions);
+        let outcome = par.outcome;
+        if let Some(position) = par.fielder_position {
+            if let Some(fielder) = fielding_lineup.iter().find(|b| b.position == position) {
+                let fielding_line = stats.fielders.entry(fielder.id.clone()).or_default();
+                fielding_line.chances += 1;
+                if outcome == PaOutcome::ReachOnError {
+                    fielding_line.errors += 1;
+                }
+            }
+        }
         let pa_runs = match outcome {
             PaOutcome::Strikeout | PaOutcome::Out => {
                 outs += 1;
@@ -889,6 +943,12 @@ pub struct GameResult {
     pub away_closer_stats: Option<PitcherGameStats>,
     pub home_batter_stats: HashMap<String, BatterGameStats>,
     pub away_batter_stats: HashMap<String, BatterGameStats>,
+    /// 그 경기에서 홈/원정 라인업 선수가 각자 수비로 기록한 기회/실책
+    /// (Phase B, 대화 2026-07-25) — 키는 `home_batter_stats`와 같은 player
+    /// id 스키마지만, 타석에 선 게 아니라 "그 자리를 수비했다"는 별개
+    /// 사건이라 값은 겹치지 않는 별도 맵.
+    pub home_fielding_stats: HashMap<String, FieldingGameStats>,
+    pub away_fielding_stats: HashMap<String, FieldingGameStats>,
 }
 
 const EMPTY_BASES: [bool; 3] = [false, false, false];
@@ -934,6 +994,19 @@ fn merge_batter_stats(mut a: HashMap<String, BatterGameStats>, b: HashMap<String
         entry.rbi += s.rbi;
         entry.stolen_bases += s.stolen_bases;
         entry.caught_stealing += s.caught_stealing;
+    }
+    a
+}
+
+/// `merge_batter_stats`와 같은 이유(Phase B, 대화 2026-07-25) — 강판으로
+/// 갈라진 누산기의 수비 기록을 하나로. 어느 투수가 마운드에 있었는지와
+/// 무관하게 같은 수비수가 계속 그 자리를 지키므로, 선발/구원/마무리
+/// 단계 3개 누산기에 흩어진 같은 선수 기록을 합쳐야 한다.
+fn merge_fielding_stats(mut a: HashMap<String, FieldingGameStats>, b: HashMap<String, FieldingGameStats>) -> HashMap<String, FieldingGameStats> {
+    for (id, s) in b {
+        let entry = a.entry(id).or_default();
+        entry.chances += s.chances;
+        entry.errors += s.errors;
     }
     a
 }
@@ -1206,6 +1279,16 @@ pub fn simulate_game(
         away_batter_stats: merge_batter_stats(
             merge_batter_stats(top_half_stats.batters, home_reliever_stats_acc.batters),
             home_closer_stats_acc.batters,
+        ),
+        // top_half_stats(원정 타자 vs 홈 투수)의 `.fielders`는 그 타석들을
+        // 처리한 "홈" 수비수들 — 배터 쪽과 팀이 반대로 뒤집힘에 주의.
+        home_fielding_stats: merge_fielding_stats(
+            merge_fielding_stats(top_half_stats.fielders, home_reliever_stats_acc.fielders),
+            home_closer_stats_acc.fielders,
+        ),
+        away_fielding_stats: merge_fielding_stats(
+            merge_fielding_stats(bottom_half_stats.fielders, away_reliever_stats_acc.fielders),
+            away_closer_stats_acc.fielders,
         ),
     }
 }
@@ -1571,7 +1654,7 @@ mod tests {
             let mut k = 0;
             for seed in 0..2000u64 {
                 let mut rng = ChaCha8Rng::seed_from_u64(seed);
-                if simulate_plate_appearance(&mut rng, &batter, pitcher, [false; 3], 0, &[], 50.0, false, &GameConditions::default()) == PaOutcome::Strikeout {
+                if simulate_plate_appearance(&mut rng, &batter, pitcher, [false; 3], 0, &[], 50.0, false, &GameConditions::default()).outcome == PaOutcome::Strikeout {
                     k += 1;
                 }
             }
@@ -1592,7 +1675,7 @@ mod tests {
             let mut bb = 0;
             for seed in 0..2000u64 {
                 let mut rng = ChaCha8Rng::seed_from_u64(seed);
-                if simulate_plate_appearance(&mut rng, &batter, pitcher, [false; 3], 0, &[], 50.0, false, &GameConditions::default()) == PaOutcome::Walk {
+                if simulate_plate_appearance(&mut rng, &batter, pitcher, [false; 3], 0, &[], 50.0, false, &GameConditions::default()).outcome == PaOutcome::Walk {
                     bb += 1;
                 }
             }
@@ -1860,6 +1943,53 @@ mod tests {
         assert!(total_sb > 0, "expected at least one stolen base across 300 half-innings with a fast lineup");
     }
 
+    #[test]
+    fn simulate_half_inning_credits_fielding_chances_only_to_the_lineup_position_that_fielded_the_ball() {
+        // Phase B(대화 2026-07-25) — 실제 7자리(포수 포함 8자리 라인업, 포수는
+        // 수비 후보에서 제외됨을 겸사겸사 확인) 수비 라인업을 세워 여러
+        // 하프이닝을 돌리면 내야·외야 7자리에만 수비 기회가 쌓이고 포수는
+        // 절대 안 쌓여야 한다.
+        let batting_lineup: Vec<BatterStats> = (0..9).map(|i| BatterStats { id: format!("b{i}"), ..avg_batter() }).collect();
+        let fielding_lineup: Vec<BatterStats> = ["포수", "1루수", "2루수", "3루수", "유격수", "좌익수", "중견수", "우익수"]
+            .iter()
+            .enumerate()
+            .map(|(i, pos)| BatterStats { id: format!("f{i}"), position: pos.to_string(), ..avg_batter() })
+            .collect();
+        let catcher_id = fielding_lineup[0].id.clone();
+        let pitcher = avg_pitcher();
+
+        let mut total_chances = 0u32;
+        let mut fielders_seen: HashMap<String, FieldingGameStats> = HashMap::new();
+        for seed in 0..200u64 {
+            let mut rng = ChaCha8Rng::seed_from_u64(seed);
+            let mut idx = 0usize;
+            let mut injuries = Vec::new();
+            let mut stats = HalfInningStats::default();
+            simulate_half_inning(
+                &mut rng,
+                &batting_lineup,
+                &mut idx,
+                &pitcher,
+                EMPTY_BASES,
+                false,
+                &fielding_lineup,
+                50.0,
+                &GameConditions::default(),
+                &mut injuries,
+                &mut stats,
+            );
+            for (id, line) in stats.fielders {
+                total_chances += line.chances;
+                let entry = fielders_seen.entry(id).or_default();
+                entry.chances += line.chances;
+                entry.errors += line.errors;
+            }
+        }
+        assert!(total_chances > 0, "200 하프이닝이면 인플레이 타구가 최소 한 번은 있어야 함");
+        assert!(!fielders_seen.contains_key(&catcher_id), "포수는 수비 후보에서 제외돼 기회를 받으면 안 됨");
+        assert_eq!(fielders_seen.len(), 7, "내야 4자리 + 외야 3자리 전부 최소 한 번씩은 기회를 받아야 함(200회면 충분)");
+    }
+
     // Phase 5 — 수비 시프트 + 구장 파크팩터 + 날씨.
 
     #[test]
@@ -1953,7 +2083,7 @@ mod tests {
             let mut walks = 0;
             for seed in 0..3000u64 {
                 let mut rng = ChaCha8Rng::seed_from_u64(seed);
-                if simulate_plate_appearance(&mut rng, &batter, &pitcher, EMPTY_BASES, 0, &[], 50.0, false, conditions) == PaOutcome::Walk {
+                if simulate_plate_appearance(&mut rng, &batter, &pitcher, EMPTY_BASES, 0, &[], 50.0, false, conditions).outcome == PaOutcome::Walk {
                     walks += 1;
                 }
             }
@@ -1995,7 +2125,7 @@ mod tests {
         let (mut it_k, mut it_bb, mut it_hit) = (0u32, 0u32, 0u32);
         for seed in 0..trials {
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
-            match simulate_plate_appearance(&mut rng, &batter, &pitcher, EMPTY_BASES, 0, &[], 50.0, false, &conditions) {
+            match simulate_plate_appearance(&mut rng, &batter, &pitcher, EMPTY_BASES, 0, &[], 50.0, false, &conditions).outcome {
                 PaOutcome::Strikeout => bg_k += 1,
                 PaOutcome::Walk | PaOutcome::HitByPitch => bg_bb += 1,
                 PaOutcome::Single | PaOutcome::Double | PaOutcome::Triple | PaOutcome::HomeRun => bg_hit += 1,

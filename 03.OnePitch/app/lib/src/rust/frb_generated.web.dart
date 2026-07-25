@@ -156,6 +156,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<PlayerBattingStats> dco_decode_list_player_batting_stats(dynamic raw);
 
   @protected
+  List<PlayerFieldingStats> dco_decode_list_player_fielding_stats(dynamic raw);
+
+  @protected
   List<PlayerPitchingStats> dco_decode_list_player_pitching_stats(dynamic raw);
 
   @protected
@@ -250,6 +253,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   PlayerBattingStats dco_decode_player_batting_stats(dynamic raw);
+
+  @protected
+  PlayerFieldingStats dco_decode_player_fielding_stats(dynamic raw);
 
   @protected
   PlayerPitchingStats dco_decode_player_pitching_stats(dynamic raw);
@@ -483,6 +489,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  List<PlayerFieldingStats> sse_decode_list_player_fielding_stats(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   List<PlayerPitchingStats> sse_decode_list_player_pitching_stats(
     SseDeserializer deserializer,
   );
@@ -607,6 +618,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   PlayerBattingStats sse_decode_player_batting_stats(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  PlayerFieldingStats sse_decode_player_fielding_stats(
     SseDeserializer deserializer,
   );
 
@@ -913,6 +929,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_list_player_fielding_stats(
+    List<PlayerFieldingStats> self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_list_player_pitching_stats(
     List<PlayerPitchingStats> self,
     SseSerializer serializer,
@@ -1083,6 +1105,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_player_batting_stats(
     PlayerBattingStats self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_player_fielding_stats(
+    PlayerFieldingStats self,
     SseSerializer serializer,
   );
 
