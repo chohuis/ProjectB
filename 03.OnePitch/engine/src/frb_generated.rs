@@ -2373,11 +2373,13 @@ impl SseDecode for crate::api::game::BatterProfileInfo {
         let mut var_contact = <f64>::sse_decode(deserializer);
         let mut var_power = <f64>::sse_decode(deserializer);
         let mut var_eye = <f64>::sse_decode(deserializer);
+        let mut var_handedness = <String>::sse_decode(deserializer);
         return crate::api::game::BatterProfileInfo {
             name: var_name,
             contact: var_contact,
             power: var_power,
             eye: var_eye,
+            handedness: var_handedness,
         };
     }
 }
@@ -3011,6 +3013,8 @@ impl SseDecode for crate::api::game::MatchStepInfo {
                 let mut var_awayRuns = <u32>::sse_decode(deserializer);
                 let mut var_fatigue = <f64>::sse_decode(deserializer);
                 let mut var_pitchesThrown = <u32>::sse_decode(deserializer);
+                let mut var_lastFielderPosition = <Option<String>>::sse_decode(deserializer);
+                let mut var_lastPlayWasError = <bool>::sse_decode(deserializer);
                 return crate::api::game::MatchStepInfo::AwaitingPitch {
                     batter_id: var_batterId,
                     balls: var_balls,
@@ -3024,6 +3028,8 @@ impl SseDecode for crate::api::game::MatchStepInfo {
                     away_runs: var_awayRuns,
                     fatigue: var_fatigue,
                     pitches_thrown: var_pitchesThrown,
+                    last_fielder_position: var_lastFielderPosition,
+                    last_play_was_error: var_lastPlayWasError,
                 };
             }
             1 => {
@@ -3818,6 +3824,7 @@ impl flutter_rust_bridge::IntoDart for crate::api::game::BatterProfileInfo {
             self.contact.into_into_dart().into_dart(),
             self.power.into_into_dart().into_dart(),
             self.eye.into_into_dart().into_dart(),
+            self.handedness.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
@@ -4138,6 +4145,8 @@ impl flutter_rust_bridge::IntoDart for crate::api::game::MatchStepInfo {
                 away_runs,
                 fatigue,
                 pitches_thrown,
+                last_fielder_position,
+                last_play_was_error,
             } => [
                 0.into_dart(),
                 batter_id.into_into_dart().into_dart(),
@@ -4152,6 +4161,8 @@ impl flutter_rust_bridge::IntoDart for crate::api::game::MatchStepInfo {
                 away_runs.into_into_dart().into_dart(),
                 fatigue.into_into_dart().into_dart(),
                 pitches_thrown.into_into_dart().into_dart(),
+                last_fielder_position.into_into_dart().into_dart(),
+                last_play_was_error.into_into_dart().into_dart(),
             ]
             .into_dart(),
             crate::api::game::MatchStepInfo::GameOver {
@@ -4785,6 +4796,7 @@ impl SseEncode for crate::api::game::BatterProfileInfo {
         <f64>::sse_encode(self.contact, serializer);
         <f64>::sse_encode(self.power, serializer);
         <f64>::sse_encode(self.eye, serializer);
+        <String>::sse_encode(self.handedness, serializer);
     }
 }
 
@@ -5238,6 +5250,8 @@ impl SseEncode for crate::api::game::MatchStepInfo {
                 away_runs,
                 fatigue,
                 pitches_thrown,
+                last_fielder_position,
+                last_play_was_error,
             } => {
                 <i32>::sse_encode(0, serializer);
                 <String>::sse_encode(batter_id, serializer);
@@ -5252,6 +5266,8 @@ impl SseEncode for crate::api::game::MatchStepInfo {
                 <u32>::sse_encode(away_runs, serializer);
                 <f64>::sse_encode(fatigue, serializer);
                 <u32>::sse_encode(pitches_thrown, serializer);
+                <Option<String>>::sse_encode(last_fielder_position, serializer);
+                <bool>::sse_encode(last_play_was_error, serializer);
             }
             crate::api::game::MatchStepInfo::GameOver {
                 home_runs,

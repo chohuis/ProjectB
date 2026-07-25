@@ -314,7 +314,7 @@ pub fn simulate_at_bat_automatically(
     batter: &BatterStats,
     bases: [bool; 3],
     outs: u32,
-    team_defense: f64,
+    fielding_lineup: &[BatterStats],
     tactics: f64,
     high_leverage: bool,
     conditions: &GameConditions,
@@ -333,7 +333,7 @@ pub fn simulate_at_bat_automatically(
             AtBatOutcome::HitByPitch => return (PaOutcome::HitByPitch, pitch_count),
             AtBatOutcome::InPlay => {
                 return (
-                    resolve_in_play_result(rng, batter, pitcher, bases, outs, team_defense, tactics, high_leverage, conditions),
+                    resolve_in_play_result(rng, batter, pitcher, bases, outs, fielding_lineup, tactics, high_leverage, conditions).outcome,
                     pitch_count,
                 )
             }
@@ -359,6 +359,7 @@ mod tests {
             defense: 50.0,
             speed: 50.0,
             handedness: crate::sim::match_sim::Handedness::Right,
+            position: "유격수".to_string(),
         }
     }
     fn avg_pitcher() -> PitcherStats {
@@ -476,7 +477,7 @@ mod tests {
         for seed in 0..100u64 {
             let mut rng = ChaCha8Rng::seed_from_u64(seed);
             let (outcome, pitch_count) =
-                simulate_at_bat_automatically(&mut rng, &pitches, &avg_pitcher(), &avg_batter(), [false; 3], 0, 50.0, 50.0, false, &GameConditions::default());
+                simulate_at_bat_automatically(&mut rng, &pitches, &avg_pitcher(), &avg_batter(), [false; 3], 0, &[], 50.0, false, &GameConditions::default());
             assert!((1..50).contains(&pitch_count), "unreasonable pitch count: {pitch_count}");
             assert!(matches!(
                 outcome,
@@ -500,8 +501,8 @@ mod tests {
         let pitches = vec![PitchMastery { name: "포심 패스트볼".to_string(), stage: 3 }];
         let mut rng_a = ChaCha8Rng::seed_from_u64(42);
         let mut rng_b = ChaCha8Rng::seed_from_u64(42);
-        let a = simulate_at_bat_automatically(&mut rng_a, &pitches, &avg_pitcher(), &avg_batter(), [false; 3], 0, 50.0, 50.0, false, &GameConditions::default());
-        let b = simulate_at_bat_automatically(&mut rng_b, &pitches, &avg_pitcher(), &avg_batter(), [false; 3], 0, 50.0, 50.0, false, &GameConditions::default());
+        let a = simulate_at_bat_automatically(&mut rng_a, &pitches, &avg_pitcher(), &avg_batter(), [false; 3], 0, &[], 50.0, false, &GameConditions::default());
+        let b = simulate_at_bat_automatically(&mut rng_b, &pitches, &avg_pitcher(), &avg_batter(), [false; 3], 0, &[], 50.0, false, &GameConditions::default());
         assert_eq!(a, b);
     }
 

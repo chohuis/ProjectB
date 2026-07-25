@@ -2273,13 +2273,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   BatterProfileInfo dco_decode_batter_profile_info(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 4)
-      throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
+    if (arr.length != 5)
+      throw Exception('unexpected arr length: expect 5 but see ${arr.length}');
     return BatterProfileInfo(
       name: dco_decode_String(arr[0]),
       contact: dco_decode_f_64(arr[1]),
       power: dco_decode_f_64(arr[2]),
       eye: dco_decode_f_64(arr[3]),
+      handedness: dco_decode_String(arr[4]),
     );
   }
 
@@ -2735,6 +2736,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           awayRuns: dco_decode_u_32(raw[10]),
           fatigue: dco_decode_f_64(raw[11]),
           pitchesThrown: dco_decode_u_32(raw[12]),
+          lastFielderPosition: dco_decode_opt_String(raw[13]),
+          lastPlayWasError: dco_decode_bool(raw[14]),
         );
       case 1:
         return MatchStepInfo_GameOver(
@@ -3259,11 +3262,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var var_contact = sse_decode_f_64(deserializer);
     var var_power = sse_decode_f_64(deserializer);
     var var_eye = sse_decode_f_64(deserializer);
+    var var_handedness = sse_decode_String(deserializer);
     return BatterProfileInfo(
       name: var_name,
       contact: var_contact,
       power: var_power,
       eye: var_eye,
+      handedness: var_handedness,
     );
   }
 
@@ -3937,6 +3942,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         var var_awayRuns = sse_decode_u_32(deserializer);
         var var_fatigue = sse_decode_f_64(deserializer);
         var var_pitchesThrown = sse_decode_u_32(deserializer);
+        var var_lastFielderPosition = sse_decode_opt_String(deserializer);
+        var var_lastPlayWasError = sse_decode_bool(deserializer);
         return MatchStepInfo_AwaitingPitch(
           batterId: var_batterId,
           balls: var_balls,
@@ -3950,6 +3957,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           awayRuns: var_awayRuns,
           fatigue: var_fatigue,
           pitchesThrown: var_pitchesThrown,
+          lastFielderPosition: var_lastFielderPosition,
+          lastPlayWasError: var_lastPlayWasError,
         );
       case 1:
         var var_homeRuns = sse_decode_u_32(deserializer);
@@ -4592,6 +4601,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_f_64(self.contact, serializer);
     sse_encode_f_64(self.power, serializer);
     sse_encode_f_64(self.eye, serializer);
+    sse_encode_String(self.handedness, serializer);
   }
 
   @protected
@@ -5183,6 +5193,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         awayRuns: final awayRuns,
         fatigue: final fatigue,
         pitchesThrown: final pitchesThrown,
+        lastFielderPosition: final lastFielderPosition,
+        lastPlayWasError: final lastPlayWasError,
       ):
         sse_encode_i_32(0, serializer);
         sse_encode_String(batterId, serializer);
@@ -5197,6 +5209,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_u_32(awayRuns, serializer);
         sse_encode_f_64(fatigue, serializer);
         sse_encode_u_32(pitchesThrown, serializer);
+        sse_encode_opt_String(lastFielderPosition, serializer);
+        sse_encode_bool(lastPlayWasError, serializer);
       case MatchStepInfo_GameOver(
         homeRuns: final homeRuns,
         awayRuns: final awayRuns,

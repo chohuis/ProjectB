@@ -98,6 +98,12 @@ pub enum MatchStepInfo {
         /// 와 같은 값 출처.
         fatigue: f64,
         pitches_thrown: u32,
+        /// 방금 전 타석의 인플레이 타구를 처리한 포지션(대화 2026-07-25,
+        /// 매치 화면 수비 배지 하이라이트용) — 없으면(K/BB/HBP였거나
+        /// 하프이닝이 막 시작됐으면) `None`.
+        last_fielder_position: Option<String>,
+        /// `last_fielder_position`이 있을 때만 의미 있음 — 그 플레이가 실책이었는지.
+        last_play_was_error: bool,
     },
     GameOver { home_runs: u32, away_runs: u32 },
     /// 감독 개입(§8) 수동 모드 판단 요청 — `resolveChoice`에 `"유지"`/
@@ -129,9 +135,24 @@ impl From<match_session::MatchStepResult> for MatchStepInfo {
                 away_runs,
                 fatigue,
                 pitches_thrown,
-            } => {
-                MatchStepInfo::AwaitingPitch { batter_id, balls, strikes, high_leverage, inning, top_of_inning, outs, bases, home_runs, away_runs, fatigue, pitches_thrown }
-            }
+                last_fielder_position,
+                last_play_was_error,
+            } => MatchStepInfo::AwaitingPitch {
+                batter_id,
+                balls,
+                strikes,
+                high_leverage,
+                inning,
+                top_of_inning,
+                outs,
+                bases,
+                home_runs,
+                away_runs,
+                fatigue,
+                pitches_thrown,
+                last_fielder_position,
+                last_play_was_error,
+            },
             match_session::MatchStepResult::GameOver { home_runs, away_runs } => MatchStepInfo::GameOver { home_runs, away_runs },
             match_session::MatchStepResult::PitcherChangeDecision {
                 inning,
@@ -228,18 +249,28 @@ pub struct BatterProfileInfo {
     pub contact: f64,
     pub power: f64,
     pub eye: f64,
+    /// 타석 손잡이 원문("좌타"/"우타"/"양타", `npc.handedness`, migration v16)
+    /// — 매치 화면에서 타자를 홈플레이트 좌/우 타석 중 어디에 그릴지
+    /// 정하는 데 쓴다(대화 2026-07-25). 스위치 히터(양타)는 Dart가 임의로
+    /// 한쪽(우타석)을 고르면 됨 — 실제 어느 쪽으로 타석에 섰는지는
+    /// 엔진이 구분해 시뮬레이션하지 않는다.
+    pub handedness: String,
 }
 
 pub fn get_batter_profile(npc_id: String) -> anyhow::Result<BatterProfileInfo> {
     with_state(|state| {
-        let (name, stats_raw): (String, String) =
-            state.slot_conn.query_row("SELECT name, stats FROM npc WHERE id = ?1", [&npc_id], |r| Ok((r.get(0)?, r.get(1)?)))?;
+        let (name, stats_raw, handedness): (String, String, Option<String>) = state.slot_conn.query_row(
+            "SELECT name, stats, handedness FROM npc WHERE id = ?1",
+            [&npc_id],
+            |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)),
+        )?;
         let v: serde_json::Value = serde_json::from_str(&stats_raw)?;
         Ok(BatterProfileInfo {
             name,
             contact: v.get("컨택").and_then(|x| x.as_f64()).unwrap_or(50.0),
             power: v.get("파워").and_then(|x| x.as_f64()).unwrap_or(50.0),
             eye: v.get("선구안").and_then(|x| x.as_f64()).unwrap_or(50.0),
+            handedness: handedness.unwrap_or_else(|| "우타".to_string()),
         })
     })
 }
@@ -254,9 +285,9 @@ pub fn get_inning_log() -> anyhow::Result<Option<String>> {
 
 /// 매치 화면 박스스코어 라벨·주자 팀색·구장 그림(대화 2026-07-25) — 홈/
 /// 원정 팀 id(Dart `hsSchoolColor`로 학교색 해시)와 홈 구장 id. 구장 id는
-/// Dart가 `assets/stadium/{id}.png`(구장별로 미리 절차 생성해둔 도트아트,
-/// content.db의 27개 stadium 행 하나당 하나씩) 자산 키로 그대로 쓴다.
-/// 진행 중인 매치 세션이 없으면 `None`.
+/// Dart가 `assets/stadium/{id}.gif`(구장별로 미리 색조 보정해둔 실사
+/// 픽셀아트, content.db의 27개 stadium 행 하나당 하나씩) 자산 키로
+/// 그대로 쓴다. 진행 중인 매치 세션이 없으면 `None`.
 #[derive(Debug, Clone)]
 pub struct MatchVenueInfo {
     pub home_team_id: String,
@@ -2236,6 +2267,7 @@ mod tests {
         assert!((0.0..=100.0).contains(&profile.contact));
         assert!((0.0..=100.0).contains(&profile.power));
         assert!((0.0..=100.0).contains(&profile.eye));
+        assert!(["좌타", "우타", "양타"].contains(&profile.handedness.as_str()), "handedness={}", profile.handedness);
 
         reset_state();
     }

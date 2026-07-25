@@ -541,16 +541,28 @@ class BatterProfileInfo {
   final double power;
   final double eye;
 
+  /// 타석 손잡이 원문("좌타"/"우타"/"양타", `npc.handedness`, migration v16)
+  /// — 매치 화면에서 타자를 홈플레이트 좌/우 타석 중 어디에 그릴지
+  /// 정하는 데 쓴다(대화 2026-07-25). 스위치 히터(양타)는 Dart가 임의로
+  /// 한쪽(우타석)을 고르면 됨 — 실제 어느 쪽으로 타석에 섰는지는
+  /// 엔진이 구분해 시뮬레이션하지 않는다.
+  final String handedness;
+
   const BatterProfileInfo({
     required this.name,
     required this.contact,
     required this.power,
     required this.eye,
+    required this.handedness,
   });
 
   @override
   int get hashCode =>
-      name.hashCode ^ contact.hashCode ^ power.hashCode ^ eye.hashCode;
+      name.hashCode ^
+      contact.hashCode ^
+      power.hashCode ^
+      eye.hashCode ^
+      handedness.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -560,7 +572,8 @@ class BatterProfileInfo {
           name == other.name &&
           contact == other.contact &&
           power == other.power &&
-          eye == other.eye;
+          eye == other.eye &&
+          handedness == other.handedness;
 }
 
 /// 대회 브래킷 경기 한 줄 — `get_tournament_bracket`용. 팀 이름은 여기서
@@ -1038,6 +1051,14 @@ sealed class MatchStepInfo with _$MatchStepInfo {
     /// 와 같은 값 출처.
     required double fatigue,
     required int pitchesThrown,
+
+    /// 방금 전 타석의 인플레이 타구를 처리한 포지션(대화 2026-07-25,
+    /// 매치 화면 수비 배지 하이라이트용) — 없으면(K/BB/HBP였거나
+    /// 하프이닝이 막 시작됐으면) `None`.
+    String? lastFielderPosition,
+
+    /// `last_fielder_position`이 있을 때만 의미 있음 — 그 플레이가 실책이었는지.
+    required bool lastPlayWasError,
   }) = MatchStepInfo_AwaitingPitch;
   const factory MatchStepInfo.gameOver({
     required int homeRuns,
@@ -1059,9 +1080,9 @@ sealed class MatchStepInfo with _$MatchStepInfo {
 
 /// 매치 화면 박스스코어 라벨·주자 팀색·구장 그림(대화 2026-07-25) — 홈/
 /// 원정 팀 id(Dart `hsSchoolColor`로 학교색 해시)와 홈 구장 id. 구장 id는
-/// Dart가 `assets/stadium/{id}.png`(구장별로 미리 절차 생성해둔 도트아트,
-/// content.db의 27개 stadium 행 하나당 하나씩) 자산 키로 그대로 쓴다.
-/// 진행 중인 매치 세션이 없으면 `None`.
+/// Dart가 `assets/stadium/{id}.gif`(구장별로 미리 색조 보정해둔 실사
+/// 픽셀아트, content.db의 27개 stadium 행 하나당 하나씩) 자산 키로
+/// 그대로 쓴다. 진행 중인 매치 세션이 없으면 `None`.
 class MatchVenueInfo {
   final String homeTeamId;
   final String awayTeamId;

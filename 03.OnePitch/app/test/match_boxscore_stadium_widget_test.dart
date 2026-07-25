@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:app/features/game/match_boxscore.dart';
 import 'package:app/features/game/match_stadium.dart';
 import 'package:app/features/game/match_visuals.dart';
+import 'package:app/shared/design/colors.dart';
 
 /// 박스스코어·구장 도트아트(대화 2026-07-25, 매치 화면 재설계) — 순수
 /// Flutter 위젯(엔진 세션 불필요)이라 `match_visuals_widget_test.dart`와
@@ -74,6 +75,8 @@ void main() {
             stadiumId: 'stadium:busan_waves',
             bases: [true, false, true],
             runnerColor: Colors.red,
+            fielderColor: Colors.blueGrey,
+            batterHandedness: '좌타',
             inning: 3,
             topOfInning: true,
             outs: 1,
@@ -91,6 +94,51 @@ void main() {
     expect(find.text('원정 2 : 홈 4'), findsOneWidget);
     expect(find.text('B2-S1'), findsOneWidget);
     expect(find.byType(BaseDiamondIndicator), findsOneWidget);
+    // 수비 9자리(장식) 라벨이 전부 그려지는지 — P/C/1B/2B/SS/3B/LF/CF/RF.
+    for (final label in const ['P', 'C', '1B', '2B', 'SS', '3B', 'LF', 'CF', 'RF']) {
+      expect(find.text(label), findsOneWidget, reason: '$label 수비 배지가 있어야 함');
+    }
+  });
+
+  testWidgets('StadiumFieldView highlights the fielder badge that just made the play', (tester) async {
+    Widget buildView({required String? lastFielderPosition, required bool lastPlayWasError}) => MaterialApp(
+      home: Scaffold(
+        body: StadiumFieldView(
+          stadiumId: 'stadium:busan_waves',
+          bases: const [false, false, false],
+          runnerColor: Colors.red,
+          fielderColor: Colors.blueGrey,
+          batterHandedness: '우타',
+          inning: 1,
+          topOfInning: true,
+          outs: 1,
+          balls: 0,
+          strikes: 0,
+          homeRuns: 0,
+          awayRuns: 0,
+          lastFielderPosition: lastFielderPosition,
+          lastPlayWasError: lastPlayWasError,
+        ),
+      ),
+    );
+
+    Color? ssBorderColor() {
+      final container = tester.widget<Container>(find.ancestor(of: find.text('SS'), matching: find.byType(Container)).first);
+      final decoration = container.decoration as BoxDecoration;
+      return decoration.border?.top.color;
+    }
+
+    // 유격수가 정상 아웃을 처리 — 파란(accent) 하이라이트.
+    await tester.pumpWidget(buildView(lastFielderPosition: '유격수', lastPlayWasError: false));
+    expect(ssBorderColor(), AppColors.accent);
+
+    // 유격수가 실책 — 빨간(danger) 하이라이트로 바뀜.
+    await tester.pumpWidget(buildView(lastFielderPosition: '유격수', lastPlayWasError: true));
+    expect(ssBorderColor(), AppColors.danger);
+
+    // 방금 플레이가 없으면(K/BB 등) 아무 배지도 하이라이트 안 됨.
+    await tester.pumpWidget(buildView(lastFielderPosition: null, lastPlayWasError: false));
+    expect(ssBorderColor(), isNot(anyOf(AppColors.accent, AppColors.danger)));
   });
 
   testWidgets('StadiumFieldView falls back to the default asset for an unknown stadium id', (tester) async {
@@ -101,6 +149,8 @@ void main() {
             stadiumId: 'stadium:does_not_exist',
             bases: [false, false, false],
             runnerColor: Colors.green,
+            fielderColor: Colors.blueGrey,
+            batterHandedness: '우타',
             inning: 1,
             topOfInning: true,
             outs: 0,
@@ -123,6 +173,8 @@ void main() {
           stadiumId: 'stadium:seoul_cobras',
           bases: bases,
           runnerColor: Colors.blue,
+          fielderColor: Colors.blueGrey,
+          batterHandedness: '양타',
           inning: 1,
           topOfInning: true,
           outs: 0,

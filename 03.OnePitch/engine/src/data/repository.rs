@@ -1572,13 +1572,14 @@ fn insert_benched_notice(conn: &Connection, day: i64) -> anyhow::Result<()> {
 /// 그대로 — 기존 동작과 동일.
 pub(crate) fn load_batting_lineup(slot_conn: &Connection, team_id: &str) -> anyhow::Result<Vec<match_sim::BatterStats>> {
     let mut stmt = slot_conn.prepare(
-        "SELECT id, stats, live_state, handedness FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position NOT IN ('선발투수', '중계투수', '마무리투수', '감독', '코치', '구단주') ORDER BY id",
+        "SELECT id, stats, live_state, handedness, position FROM npc WHERE team_id = ?1 AND retired = 0 AND military_return_day IS NULL AND position NOT IN ('선발투수', '중계투수', '마무리투수', '감독', '코치', '구단주') ORDER BY id",
     )?;
-    let rows: Vec<(String, String, String, Option<String>)> =
-        stmt.query_map([team_id], |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?)))?.collect::<Result<Vec<_>, _>>()?;
+    let rows: Vec<(String, String, String, Option<String>, String)> = stmt
+        .query_map([team_id], |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?, row.get(4)?)))?
+        .collect::<Result<Vec<_>, _>>()?;
     let mut id_order: Vec<String> = Vec::with_capacity(rows.len());
     let mut by_id: HashMap<String, match_sim::BatterStats> = HashMap::with_capacity(rows.len());
-    for (id, stats_raw, live_state_raw, handedness_raw) in rows {
+    for (id, stats_raw, live_state_raw, handedness_raw, position) in rows {
         let v: serde_json::Value = serde_json::from_str(&stats_raw)?;
         let live_state: serde_json::Value = serde_json::from_str(&live_state_raw)?;
         id_order.push(id.clone());
@@ -1595,6 +1596,7 @@ pub(crate) fn load_batting_lineup(slot_conn: &Connection, team_id: &str) -> anyh
                 defense: v.get("수비").and_then(|x| x.as_f64()).unwrap_or(50.0),
                 speed: v.get("스피드").and_then(|x| x.as_f64()).unwrap_or(50.0),
                 handedness: match_sim::Handedness::parse(handedness_raw.as_deref().unwrap_or("")),
+                position,
             },
         );
     }
@@ -2803,6 +2805,7 @@ fn run_intrasquad_scrimmage(slot_conn: &Connection, content_conn: &Connection, w
                 defense: v.get("수비").and_then(|x| x.as_f64()).unwrap_or(50.0),
                 speed: v.get("스피드").and_then(|x| x.as_f64()).unwrap_or(50.0),
                 handedness,
+                position,
             });
         }
     }

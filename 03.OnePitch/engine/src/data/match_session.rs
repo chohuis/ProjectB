@@ -41,6 +41,17 @@ pub enum MatchStepResult {
         fatigue: f64,
         /// 이번 경기 누적 투구수 — `session.pitch_seq` 그대로.
         pitches_thrown: u32,
+        /// 방금 전 타석의 인플레이 타구를 처리한 포지션(대화 2026-07-25,
+        /// 매치 화면 수비 배지 하이라이트용) — `resolve_in_play_result`가
+        /// 뽑은 값을 `run_until_decision_point`의 로컬 변수로 threading해,
+        /// 그 InPlay 판정 바로 다음 `AwaitingPitch` 응답 한 번에만 실린다
+        /// (하프이닝이 넘어가면 지워짐 — 몇 이닝 전 플레이가 계속 표시되는
+        /// 걸 방지). K/BB/HBP처럼 인플레이가 아니었거나, 방금 막 하프이닝이
+        /// 시작됐으면 `None`.
+        last_fielder_position: Option<String>,
+        /// `last_fielder_position`이 있을 때만 의미 있음 — 그 플레이가
+        /// 실책(`PaOutcome::ReachOnError`)이었는지.
+        last_play_was_error: bool,
     },
     /// 경기 종료 — `schedule.result`·`standings`가 이미 반영됐고
     /// `match_session` 행도 삭제됨.
@@ -934,6 +945,12 @@ fn run_until_decision_point(
             .ok_or_else(|| anyhow::anyhow!("protagonist has no team_id in contract"))?
             .to_string()
     };
+    // 방금 전 타석 인플레이 판정이 처리한 포지션(대화 2026-07-25) —
+    // `loop` 밖에 둬서 "InPlay 처리 반복"과 "그다음 AwaitingPitch 반환
+    // 반복"이 (같은 호출 안에서) 서로 다른 반복이어도 값이 살아있게 한다.
+    // 하프이닝이 넘어가면 지워(아래 두 지점) 몇 이닝 전 플레이가 계속
+    // 표시되는 걸 방지.
+    let mut last_fielder_position: Option<(String, bool)> = None;
 
     loop {
         let mut session = load_session(slot_conn)?.ok_or_else(|| anyhow::anyhow!("no match session in progress"))?;
@@ -942,6 +959,7 @@ fn run_until_decision_point(
             match transition_half_inning(&mut session) {
                 Transition::GameOver => return finalize_game(slot_conn, &session, &protagonist_team_id),
                 Transition::Continue => {
+                    last_fielder_position = None;
                     save_session(slot_conn, &session)?;
                     continue;
                 }
@@ -1181,10 +1199,11 @@ fn run_until_decision_point(
             // 타석마다 다시 판단하므로 여기선 이닝·스코어차만 넘긴다.
             let leverage_base =
                 pitch::is_high_leverage_situation(false, (session.home_runs - session.away_runs) as i32, session.inning as u32);
-            // 수비 중인 팀(투구 중인 팀)의 평균 수비력(Phase 2)·감독 전술력
-            // (Phase 5, 수비 시프트 적중도) — 실책·시프트 판정에 씀.
+            // 수비 중인 팀(투구 중인 팀)의 라인업(대화 2026-07-25부터 포지션별
+            // 개인 수비 스탯을 쓰기 위해 팀 평균 스칼라 대신 라인업 자체를
+            // 넘긴다)·감독 전술력(Phase 5, 수비 시프트 적중도) — 실책·시프트
+            // 판정에 씀.
             let fielding_lineup = repository::load_batting_lineup(slot_conn, &pitching_team)?;
-            let team_defense = match_sim::average_defense(&fielding_lineup);
             let fielding_tactics = repository::load_manager_stats(slot_conn, &pitching_team)?.tactics;
             let runs = match_sim::simulate_half_inning(
                 &mut rng,
@@ -1193,7 +1212,7 @@ fn run_until_decision_point(
                 &pitcher,
                 session.bases,
                 leverage_base,
-                team_defense,
+                &fielding_lineup,
                 fielding_tactics,
                 &session.conditions,
                 &mut injuries,
@@ -1326,6 +1345,10 @@ fn run_until_decision_point(
         } else {
             let should_prompt = session.mode == "수동";
             if should_prompt {
+                let (last_position, last_was_error) = match last_fielder_position.take() {
+                    Some((position, was_error)) => (Some(position), was_error),
+                    None => (None, false),
+                };
                 return Ok(MatchStepResult::AwaitingPitch {
                     batter_id: session.current_batter_id.clone().unwrap(),
                     balls: session.balls as u32,
@@ -1339,6 +1362,8 @@ fn run_until_decision_point(
                     away_runs: session.away_runs as u32,
                     fatigue: pitcher.fatigue,
                     pitches_thrown: session.pitch_seq as u32,
+                    last_fielder_position: last_position,
+                    last_play_was_error: last_was_error,
                 });
             }
             let (pitch, x, y, power) = pitch::choose_pitch_and_target(&mut rng, &repertoire, &batter, high_leverage);
@@ -1407,21 +1432,24 @@ fn run_until_decision_point(
             }
             pitch::AtBatOutcome::InPlay => {
                 // 수비 중인 팀은 주인공 자신의 팀(투구 중이므로, Phase 2).
-                // 감독 전술력(Phase 5, 수비 시프트)도 같은 팀 것.
+                // 감독 전술력(Phase 5, 수비 시프트)도 같은 팀 것. 대화
+                // 2026-07-25부터 팀 평균 스칼라 대신 라인업 자체를 넘겨
+                // `resolve_in_play_result`가 포지션별 개인 수비 스탯을 쓴다.
                 let fielding_lineup = repository::load_batting_lineup(slot_conn, &protagonist_team_id)?;
-                let team_defense = match_sim::average_defense(&fielding_lineup);
                 let fielding_tactics = repository::load_manager_stats(slot_conn, &protagonist_team_id)?.tactics;
-                let pa = match_sim::resolve_in_play_result(
+                let resolution = match_sim::resolve_in_play_result(
                     &mut rng,
                     &batter,
                     &pitcher,
                     session.bases,
                     session.outs as u32,
-                    team_defense,
+                    &fielding_lineup,
                     fielding_tactics,
                     high_leverage,
                     &session.conditions,
                 );
+                let pa = resolution.outcome;
+                last_fielder_position = Some((resolution.fielder_position.to_string(), pa == PaOutcome::ReachOnError));
                 if matches!(pa, PaOutcome::Single | PaOutcome::Double | PaOutcome::Triple | PaOutcome::HomeRun) {
                     session.hits_allowed += 1;
                     session.current_half_hits += 1;

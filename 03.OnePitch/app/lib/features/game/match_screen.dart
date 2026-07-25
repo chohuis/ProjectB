@@ -204,7 +204,9 @@ class _MatchInfoColumn extends StatelessWidget {
         final homeLabel = venue == null ? '홈' : (teamNames[venue.homeTeamId] ?? venue.homeTeamId);
         final awayLabel = venue == null ? '원정' : (teamNames[venue.awayTeamId] ?? venue.awayTeamId);
         final battingTeamId = venue == null ? null : (awaiting.topOfInning ? venue.awayTeamId : venue.homeTeamId);
+        final pitchingTeamId = venue == null ? null : (awaiting.topOfInning ? venue.homeTeamId : venue.awayTeamId);
         final runnerColor = battingTeamId == null ? AppColors.accent : hsSchoolColor(battingTeamId);
+        final fielderColor = pitchingTeamId == null ? AppColors.textSecondary : hsSchoolColor(pitchingTeamId);
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -221,17 +223,27 @@ class _MatchInfoColumn extends StatelessWidget {
             const SizedBox(height: 16),
             const Text('경기장', style: _sectionLabelStyle),
             const SizedBox(height: 6),
-            StadiumFieldView(
-              stadiumId: venue?.stadiumId ?? 'default',
-              bases: awaiting.bases,
-              runnerColor: runnerColor,
-              inning: awaiting.inning,
-              topOfInning: awaiting.topOfInning,
-              outs: awaiting.outs,
-              balls: awaiting.balls,
-              strikes: awaiting.strikes,
-              homeRuns: awaiting.homeRuns,
-              awayRuns: awaiting.awayRuns,
+            FutureBuilder<BatterProfileInfo>(
+              key: ValueKey(awaiting.batterId),
+              future: getBatterProfile(npcId: awaiting.batterId),
+              builder: (context, batterSnapshot) {
+                return StadiumFieldView(
+                  stadiumId: venue?.stadiumId ?? 'default',
+                  bases: awaiting.bases,
+                  runnerColor: runnerColor,
+                  fielderColor: fielderColor,
+                  batterHandedness: batterSnapshot.data?.handedness ?? '우타',
+                  inning: awaiting.inning,
+                  topOfInning: awaiting.topOfInning,
+                  outs: awaiting.outs,
+                  balls: awaiting.balls,
+                  strikes: awaiting.strikes,
+                  homeRuns: awaiting.homeRuns,
+                  awayRuns: awaiting.awayRuns,
+                  lastFielderPosition: awaiting.lastFielderPosition,
+                  lastPlayWasError: awaiting.lastPlayWasError,
+                );
+              },
             ),
             const SizedBox(height: 8),
             MatchLogPanel(lines: log),
