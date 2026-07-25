@@ -273,27 +273,33 @@ class _FilterBar extends StatelessWidget {
     return AppPanel(
       color: AppColors.surfaceLow,
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-      child: Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        crossAxisAlignment: WrapCrossAlignment.center,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          ChoiceChip(label: Text('전체 (${rows.length})'), selected: filter == null && !unreadOnly, onSelected: (_) {
-            onFilterChanged(null);
-            onUnreadOnlyChanged(false);
-          }),
-          ChoiceChip(
-            label: Text('읽지않음 (${rows.where((r) => r.blocking || !r.read).length})'),
-            selected: unreadOnly,
-            onSelected: (v) => onUnreadOnlyChanged(v),
-          ),
-          for (final c in _Category.values)
-            ChoiceChip(
-              label: Text('${_categoryInfo(c).label} (${_countFor(c)})'),
-              selected: filter == c,
-              onSelected: (v) => onFilterChanged(v ? c : null),
+          Expanded(
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                ChoiceChip(label: Text('전체 (${rows.length})'), selected: filter == null && !unreadOnly, onSelected: (_) {
+                  onFilterChanged(null);
+                  onUnreadOnlyChanged(false);
+                }),
+                ChoiceChip(
+                  label: Text('읽지않음 (${rows.where((r) => r.blocking || !r.read).length})'),
+                  selected: unreadOnly,
+                  onSelected: (v) => onUnreadOnlyChanged(v),
+                ),
+                for (final c in _Category.values)
+                  ChoiceChip(
+                    label: Text('${_categoryInfo(c).label} (${_countFor(c)})'),
+                    selected: filter == c,
+                    onSelected: (v) => onFilterChanged(v ? c : null),
+                  ),
+              ],
             ),
-          const Spacer(),
+          ),
           IconButton(
             tooltip: sort == _Sort.newest ? '최신순' : '오래된순',
             icon: Icon(sort == _Sort.newest ? Icons.arrow_downward : Icons.arrow_upward, size: 18),

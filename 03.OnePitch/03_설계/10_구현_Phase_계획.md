@@ -1972,3 +1972,15 @@
 **테스트**(신규 5개): `league_group_standings_ranks_hs_regions_by_win_pct`, `team_rank_context_gives_region_and_national_rank_for_grouped_league`, `team_rank_context_has_no_region_rank_for_single_group_league`(프로처럼 권역 없는 리그), `protagonist_pitcher_prospect_rank_counts_better_npc_scores`, `process_protagonist_rank_updates_only_notifies_on_change_after_a_baseline_exists`(1회차=알림 없이 저장만, 변동 없는 2회차=알림 없음, 순위 실제로 바뀐 3회차=올바른 이전/이후 숫자 포함 알림). `cargo test --lib` 534개 전부 통과. `cargo clippy --lib --tests --bins` 클린(닥코멘트 `+`로 시작하는 줄이 마크다운 리스트로 오인되던 것 한 번 수정). `cargo build --release` 갱신 후 `flutter test -j 1` 27개 전부 통과. `balance_harness -- 5 3` — 크래시 없음, 기존 추적 지표(이벤트 발동 수·등급 분포) 완전 동일(새 알림은 `career_events`가 아니라 `inbox`에만 남아 그 지표에 안 잡힘 — 의도대로).
 
 **영향 없음**: 신규 테이블·마이그레이션 없음(`season_meta`/`inbox` 재사용). 스코프는 `advance()`의 월간 훅 하나뿐 — `season_rollover`는 이미 다른 일이 많아 이번엔 안 건드림.
+
+### 6-123. 실제 화면 스크린샷 검증 + 발견한 버그 2건 수정 (2026-07-25, 완료)
+
+**Context**: §6-122가 실제로 화면에 뜨는지 사용자가 스크린샷을 요청. `flutter test` 위젯 테스트로 새 게임을 만들고 `advance()`를 최대 400회 반복(실제 배경 시뮬레이션, 가짜 데이터 주입 없음)해 진짜 순위 변동이 날 때까지 기다린 뒤 `InboxScreen`을 `RepaintBoundary.toImage()`로 캡처 — seed=555111 기준 day=392(약 14개월)에서 "지역 팀 순위가 4위에서 2위로 바뀌었다" 알림이 실제로 발동함을 확인(스크린샷 전달 완료). 과정에서 두 가지를 더 발견해 같이 고침.
+
+**발견 1 — `toImage()`는 `tester.runAsync`로 감싸야 함**: 위젯 테스트의 fake-async 존 밖에서 실행되는 진짜 비동기 작업(렌더링 캡처)이라 감싸지 않으면 조용히 멈춘다(에러 없이 타임아웃까지 무한 대기) — 이번 캡처 스크립트는 임시 파일이라 커밋 대상 아님, 검증 후 삭제.
+
+**발견 2 — `InboxScreen._FilterBar`의 구조적 버그**: `Wrap` 위젯 안에 `Spacer()`(=`Expanded`)를 넣어뒀는데, `Expanded`는 `Flex`(Row/Column) 계열 부모가 필요해 특정 리렌더 시점에 "Incorrect use of ParentDataWidget" 크래시가 난다. 지금까지 InboxScreen을 직접 렌더링하는 테스트가 없어서 아무도 못 잡았던 잠재 버그. **구현**(`app/lib/features/inbox/inbox_screen.dart`): `_FilterBar`를 `Wrap` 하나짜리 구조에서 `Row(children: [Expanded(child: Wrap(...칩들...)), 정렬 아이콘, 모두읽음 버튼])`으로 재구성 — 칩들은 여전히 좌측에서 줄바꿈되고 정렬·모두읽음 컨트롤은 우측 고정, 구조적으로 유효한 `Expanded` 사용으로 교체. `flutter analyze lib/features/inbox/inbox_screen.dart` 클린.
+
+**발견 3 — 청백전 결과 알림이 전 리그에 스팸됨**(사용자 질문으로 발견): 스크린샷에서 "청백전 결과" 메시지가 173개 중 압도적 다수를 차지하는 걸 보고 사용자가 "다른 학교 청백전도 메세지로 날라오냐"고 질문 — 코드 확인 결과 `run_monthly_scrimmages`가 고교·대학 전 팀(수백 개)을 순회하며 `run_intrasquad_scrimmage`를 부르는데, 그 안의 `inbox` 삽입이 팀 필터 없이 무조건 실행되고 있었다. **구현**(`engine/src/data/repository.rs`): `is_protagonist_team(slot_conn, team_id)` 신규(주인공 현재 소속팀인지, 무소속이면 항상 false) — 청백전 결과 `inbox` 삽입을 이 체크로 감싸 주인공 소속팀 결과만 알리도록 수정. `practice_stats`/피로도 반영(로테이션 랭킹용)은 팀과 무관하게 그대로 유지 — 알림만 스코프.
+
+**테스트**: `run_intrasquad_scrimmage_records_results_in_practice_stats_only`에서 이제 무의미해진 inbox 단언 제거(그 테스트엔 주인공이 아예 없어 원래도 "1건"이 우연히 나온 것). 신규 `run_intrasquad_scrimmage_only_notifies_the_protagonists_own_team` — 주인공 소속팀+다른 팀 둘 다 청백전을 돌려, inbox엔 주인공 소속팀 것만 1건, 다른 팀은 practice_stats는 그대로 쌓이는지 확인. `cargo test --lib` 535개 전부 통과. `cargo clippy --lib --tests --bins` 클린. `cargo build --release` 갱신 후 `flutter test -j 1` 27개 전부 통과. `balance_harness -- 5 3` — 크래시 없음, 추적 지표 동일.

@@ -2892,12 +2892,29 @@ fn run_intrasquad_scrimmage(slot_conn: &Connection, content_conn: &Connection, w
         bump_fatigue_by_player_id(slot_conn, &b.id, SCRIMMAGE_BATTER_FATIGUE)?;
     }
 
-    let body = format!("청백전 결과 — 청 {}:{} 백", result.home_runs, result.away_runs);
-    slot_conn.execute(
-        "INSERT INTO inbox (id, kind, urgency, read, day, body) VALUES (?1, 'scrimmage_result', 'normal', 0, ?2, ?3)",
-        params![format!("inbox:scrimmage:{team_id}:{day}"), day, body],
-    )?;
+    // 청백전은 고교·대학 전 팀(수백 개) 대상으로 매달 도는데, 주인공
+    // 소속팀이 아닌 팀의 결과까지 inbox에 꽂으면 매달 수백 통씩 스팸이
+    // 된다(대화 2026-07-25 발견 — 실측 스크린샷에서 확인). 주인공 소속팀
+    // 결과만 알린다.
+    if is_protagonist_team(slot_conn, team_id)? {
+        let body = format!("청백전 결과 — 청 {}:{} 백", result.home_runs, result.away_runs);
+        slot_conn.execute(
+            "INSERT INTO inbox (id, kind, urgency, read, day, body) VALUES (?1, 'scrimmage_result', 'normal', 0, ?2, ?3)",
+            params![format!("inbox:scrimmage:{team_id}:{day}"), day, body],
+        )?;
+    }
     Ok(())
+}
+
+/// `team_id`가 주인공의 현재 소속팀인지 — 무소속(입대 등)이면 항상 `false`.
+fn is_protagonist_team(slot_conn: &Connection, team_id: &str) -> anyhow::Result<bool> {
+    let contract_raw: Option<String> =
+        slot_conn.query_row("SELECT contract FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).optional()?;
+    let Some(contract_raw) = contract_raw else {
+        return Ok(false);
+    };
+    let contract: serde_json::Value = serde_json::from_str(&contract_raw)?;
+    Ok(contract.get("team_id").and_then(|v| v.as_str()) == Some(team_id))
 }
 
 /// 고교·대학 팀 전체를 대상으로 월 1회 청백전을 돌린다(`advance()`의
@@ -8545,9 +8562,35 @@ mod tests {
         assert_eq!(season_rows, 0, "청백전은 비공식 — season_stats에 반영되면 안 됨");
         let standings_rows: i64 = slot_conn.query_row("SELECT count(*) FROM standings", [], |r| r.get(0)).unwrap();
         assert_eq!(standings_rows, 0, "청백전은 standings에도 반영되면 안 됨");
+    }
+
+    /// 청백전 결과 알림 스팸 방지(대화 2026-07-25, 실측 스크린샷에서 발견 —
+    /// 고교·대학 전 팀 청백전이 매달 주인공 inbox에 전부 꽂히고 있었음).
+    /// 주인공 소속팀 결과만 알리고, 다른 팀은 practice_stats는 그대로
+    /// 쌓이되 inbox엔 안 남아야 한다.
+    #[test]
+    fn run_intrasquad_scrimmage_only_notifies_the_protagonists_own_team() {
+        let content_conn = build_hs_school_content_db();
+        let slot_conn = slot::open_in_memory().unwrap();
+        create_protagonist(&slot_conn, &content_conn, 1, "청백전주인공", "우완", "team:hanseong_hs", "강속구형", None).unwrap();
+        insert_scrimmage_ready_roster(&slot_conn, "team:hanseong_hs");
+        insert_scrimmage_ready_roster(&slot_conn, "team:x");
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:x', 'league:hs', NULL, NULL)", []).unwrap();
+
+        run_intrasquad_scrimmage(&slot_conn, &content_conn, 1, "team:hanseong_hs", 7).unwrap();
+        run_intrasquad_scrimmage(&slot_conn, &content_conn, 1, "team:x", 7).unwrap();
 
         let inbox_count: i64 = slot_conn.query_row("SELECT count(*) FROM inbox WHERE kind = 'scrimmage_result'", [], |r| r.get(0)).unwrap();
-        assert_eq!(inbox_count, 1);
+        assert_eq!(inbox_count, 1, "주인공 소속팀 결과만 알림, 다른 학교 결과는 스팸 안 됨");
+
+        let other_team_practice_rows: i64 = slot_conn
+            .query_row(
+                "SELECT count(*) FROM practice_stats WHERE player_id LIKE 'team:x%'",
+                [],
+                |r| r.get(0),
+            )
+            .unwrap();
+        assert!(other_team_practice_rows > 0, "알림만 안 갈 뿐, 다른 팀도 practice_stats는 그대로 쌓여야 함(로테이션 랭킹용)");
     }
 
     #[test]
