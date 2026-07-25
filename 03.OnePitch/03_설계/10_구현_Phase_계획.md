@@ -1984,3 +1984,19 @@
 **발견 3 — 청백전 결과 알림이 전 리그에 스팸됨**(사용자 질문으로 발견): 스크린샷에서 "청백전 결과" 메시지가 173개 중 압도적 다수를 차지하는 걸 보고 사용자가 "다른 학교 청백전도 메세지로 날라오냐"고 질문 — 코드 확인 결과 `run_monthly_scrimmages`가 고교·대학 전 팀(수백 개)을 순회하며 `run_intrasquad_scrimmage`를 부르는데, 그 안의 `inbox` 삽입이 팀 필터 없이 무조건 실행되고 있었다. **구현**(`engine/src/data/repository.rs`): `is_protagonist_team(slot_conn, team_id)` 신규(주인공 현재 소속팀인지, 무소속이면 항상 false) — 청백전 결과 `inbox` 삽입을 이 체크로 감싸 주인공 소속팀 결과만 알리도록 수정. `practice_stats`/피로도 반영(로테이션 랭킹용)은 팀과 무관하게 그대로 유지 — 알림만 스코프.
 
 **테스트**: `run_intrasquad_scrimmage_records_results_in_practice_stats_only`에서 이제 무의미해진 inbox 단언 제거(그 테스트엔 주인공이 아예 없어 원래도 "1건"이 우연히 나온 것). 신규 `run_intrasquad_scrimmage_only_notifies_the_protagonists_own_team` — 주인공 소속팀+다른 팀 둘 다 청백전을 돌려, inbox엔 주인공 소속팀 것만 1건, 다른 팀은 practice_stats는 그대로 쌓이는지 확인. `cargo test --lib` 535개 전부 통과. `cargo clippy --lib --tests --bins` 클린. `cargo build --release` 갱신 후 `flutter test -j 1` 27개 전부 통과. `balance_harness -- 5 3` — 크래시 없음, 추적 지표 동일.
+
+### 6-124. 리그 화면 "일정" 탭 — 주간/월간 캘린더 뷰 (2026-07-25, 완료)
+
+**Context**: 기존 `_ScheduleTab`이 "Day N — vs 상대" 형태로 그냥 세로 나열이라, 며칠 간격으로 경기가 있는지·쉬는 날이 언제인지 한눈에 안 들어온다는 지적으로 실제 달력 그리드로 교체 요청. 마침 이번 세션 스케줄 분산 작업(§6-115~117)으로 프로/프로2군에 실제 KBO식 3연전+휴식일 리듬이 생겼는데, 캘린더 뷰라야 그 리듬이 시각적으로 드러난다.
+
+**설계**: 엔진 API 추가 없이 기존 `getTeamSchedule`(이번 시즌 전체, 시즌 경계마다 `schedule` 테이블이 갈아끼워져 다중 시즌 안 섞임)·`calendarDateForDay`(순수 계산, `InboxScreen`이 이미 씀)만으로 구성. **요일은 새 API 없이 Dart `DateTime(y,m,d).weekday`로 클라이언트 계산**(이 게임 캘린더 에폭이 실제 그레고리력에 그대로 매핑돼 있어 안전) — 서버 왕복 없는 순수 클라이언트 계산이라는 게 이번 설계의 핵심.
+
+**구현**(`app/lib/features/league/schedule_calendar_tab.dart`, 신규): `ScheduleCalendarTab`(공개 위젯, 파일 분리 — `league_screen.dart`가 이미 600줄+라 인라인 유지 안 함). `_load()`가 `getTeamSchedule`+`calendarDateForDay`로 `Map<DateTime, ScheduleGameInfo>` 인덱스를 한 번만 구성. **월간 뷰**: 7×N `GridView`(일~토), 칸마다 날짜+상대팀 축약+승패색(`AppColors.safe`/`danger`/`warn`/`textSecondary`), 오늘 칸은 파란 테두리·다음 경기는 금색 테두리, 탭하면 상세 다이얼로그. **주간 뷰**: 선택된 주 7일을 세로 카드로, 경기 없는 날은 "경기 없음" 회색 텍스트(프로의 휴식일 등이 실제로 빈 칸으로 보임). 상단 "월간/주간" `SegmentedButton` 토글 + "오늘" 복귀 버튼, 좌우 화살표로 월/주 이동(두 모드는 각자 독립적인 포커스 상태를 기억 — 월간에서 이동해도 주간 위치엔 안 반영됨, 의도된 동작). `league_screen.dart`는 기존 `_ScheduleTab` 클래스를 통째로 제거하고 `ScheduleCalendarTab(teamId: ...)`로 교체.
+
+**구현 중 실수 2건**(둘 다 `calendarDateForDay`가 실은 동기 함수였는데 `await`를 붙여 `flutter analyze`가 즉시 잡아줌 — 반영해 제거).
+
+**테스트**(`app/test/schedule_calendar_tab_test.dart`, 신규): 새 게임+며칠 진행 후 (1) 월간 헤더가 오늘이 속한 달을 정확히 표시하는지, (2) 실제 첫 경기일 날짜 칸이 렌더되고 탭하면 상세 다이얼로그(상대·스코어)가 뜨는지, (3) 다음달 화살표로 헤더가 바뀌고 "오늘" 버튼으로 복귀하는지, (4) 주간 토글 시 실제 상대 이름이 담긴 행이 보이는지. `flutter analyze` 클린. `flutter test -j 1` 28개(기존 27+신규 1) 전부 통과.
+
+**스크린샷 육안 검증**(이번 세션에 확립한 방식 — `RepaintBoundary.toImage()`를 `tester.runAsync`로 감싸고 한글은 `malgun.ttf` 로드): 월간 뷰(2027년 3월, 상대팀명이 승/패 색으로 표시, 시즌 20경기가 끝난 뒤 나머지 날짜는 빈 칸)·주간 뷰(3/21~3/27, 승/패 배지 + 경기 없는 날은 "경기 없음") 둘 다 실제 데이터로 정상 렌더 확인, 사용자에게 전달.
+
+**영향 없음**: 엔진 변경 없음(순수 Flutter UI 리팩터), 마이그레이션 없음.

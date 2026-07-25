@@ -10,6 +10,7 @@ import 'package:app/shared/design/colors.dart';
 import 'package:app/shared/design/widgets.dart';
 import 'package:app/shared/design/player_badges.dart';
 import 'tournament_bracket_screen.dart';
+import 'schedule_calendar_tab.dart';
 
 const _leagueLabels = {
   'league:hs': '고교',
@@ -113,7 +114,7 @@ class _LeagueScreenState extends ConsumerState<LeagueScreen> {
               child: TabBarView(
                 children: [
                   _RosterTab(teamId: _selectedTeamId!),
-                  _ScheduleTab(teamId: _selectedTeamId!),
+                  ScheduleCalendarTab(teamId: _selectedTeamId!),
                   _CompetitionsTab(teamId: _selectedTeamId!),
                   _RivalsTab(teamId: _selectedTeamId!),
                 ],
@@ -362,82 +363,6 @@ class _PlayerListCard extends StatelessWidget {
       return '타율 $avg OPS $ops 홈런 ${batting.homeRuns} 타점 ${batting.rbi}';
     }
     return '';
-  }
-}
-
-class _ScheduleTab extends StatefulWidget {
-  const _ScheduleTab({required this.teamId});
-  final String teamId;
-
-  @override
-  State<_ScheduleTab> createState() => _ScheduleTabState();
-}
-
-class _ScheduleTabState extends State<_ScheduleTab> {
-  List<ScheduleGameInfo>? _games;
-  int _currentDay = 0;
-
-  @override
-  void didUpdateWidget(covariant _ScheduleTab oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.teamId != widget.teamId) _load();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _load();
-  }
-
-  Future<void> _load() async {
-    setState(() => _games = null);
-    final games = await getTeamSchedule(teamId: widget.teamId);
-    final meta = await getMetaStatus();
-    if (mounted) {
-      setState(() {
-        _games = games;
-        _currentDay = meta.currentDay;
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final games = _games;
-    if (games == null) return const LoadingIndicator();
-    if (games.isEmpty) return const Center(child: Text('일정이 없습니다.'));
-    final nextDay = games.map((g) => g.day).where((d) => d > _currentDay).fold<int?>(null, (min, d) => min == null || d < min ? d : min);
-    return Consumer(
-      builder: (context, ref, _) {
-        final names = ref.watch(teamNamesProvider).value ?? const {};
-        return ListView.builder(
-          itemCount: games.length,
-          itemBuilder: (context, i) {
-            final g = games[i];
-            final opponentId = g.home == widget.teamId ? g.away : g.home;
-            final opponent = names[opponentId] ?? opponentId;
-            final isNext = g.day == nextDay;
-            final scoreText = _scoreText(g);
-            return ListTile(
-              tileColor: isNext ? Colors.amber.withValues(alpha: 0.15) : null,
-              title: Text('Day ${g.day} — vs $opponent (${g.home == widget.teamId ? '홈' : '원정'})'),
-              subtitle: Text(scoreText),
-              trailing: isNext ? const Text('다음 경기', style: TextStyle(fontWeight: FontWeight.bold)) : null,
-            );
-          },
-        );
-      },
-    );
-  }
-
-  String _scoreText(ScheduleGameInfo g) {
-    if (g.resultJson == null) return '예정';
-    try {
-      final v = jsonDecode(g.resultJson!);
-      return '결과: 홈 ${v['home']} : 원정 ${v['away']}';
-    } catch (_) {
-      return '결과 있음';
-    }
   }
 }
 
