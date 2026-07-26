@@ -3728,61 +3728,130 @@ fn process_protagonist_rank_updates(slot_conn: &Connection, content_conn: &Conne
     Ok(())
 }
 
-/// 통산 승수 마일스톤(10승 단위) 근접 알림(대화 2026-07-26, §6-N) —
-/// 03_메시지_알림.md §1 "개인기록근접"(원래 카탈로그, 여태 미구현이던
-/// 마지막 항목 — 부상 전조경고는 `injury_warning`, 방출·FA·재계약은
-/// `contractNego`로 이미 커버됨). `ach:career_100_wins`(§6-36)가 쓰던
-/// "career_history 합산 + 이번 시즌 진행분"과 같은 계산을 재사용하되,
-/// 그건 "달성" 시점(시즌 종료)에만 확인하는 반면 이건 "근접"이라
-/// `process_protagonist_rank_updates`와 같은 월간 훅에서 매달 확인 —
-/// 그래야 시즌 도중에도 "이제 곧이다"라는 긴장감이 생긴다. 한 마일스톤당
-/// 딱 한 번만 알리도록 `season_meta`에 마지막으로 알린 마일스톤 값을
-/// 저장(순위 알림의 "직전 값" 패턴과 동일 재사용, 새 테이블 없음).
-const WIN_MILESTONE_STEP: i64 = 10;
-const WIN_MILESTONE_LOOKAHEAD: i64 = 3;
-
-fn total_protagonist_wins_to_date(conn: &Connection, current_season: i64) -> anyhow::Result<i64> {
-    let mut stmt = conn.prepare("SELECT line FROM career_history")?;
-    let lines: Vec<String> = stmt.query_map([], |r| r.get(0))?.collect::<Result<Vec<_>, _>>()?;
-    let past_wins: i64 = lines
-        .iter()
-        .filter_map(|l| serde_json::from_str::<serde_json::Value>(l).ok())
-        .filter_map(|v| v.get("wins").and_then(|w| w.as_i64()))
-        .sum();
-    let current_wins = aggregate_game_log(conn, Some(current_season))?.wins;
-    Ok(past_wins + current_wins)
+/// 통산 기록 마일스톤 근접 알림(대화 2026-07-26, §6-N) — 03_메시지_알림.md
+/// §1 "개인기록근접"(원래 카탈로그, 여태 미구현이던 마지막 항목 — 부상
+/// 전조경고는 `injury_warning`, 방출·FA·재계약은 `contractNego`로 이미
+/// 커버됨). 처음엔 통산 승수만 구현했다가(§6-134) 이번에 탈삼진·이닝으로
+/// 확장 — `CareerStat`이 세 종류를 한 함수로 묶는다. `ach:career_100_wins`
+/// (§6-36)가 쓰던 "career_history 합산 + 이번 시즌 진행분"과 같은 계산을
+/// 재사용하되, 그건 "달성" 시점(시즌 종료)에만 확인하는 반면 이건
+/// "근접"이라 `process_protagonist_rank_updates`와 같은 월간 훅에서 매달
+/// 확인 — 그래야 시즌 도중에도 "이제 곧이다"라는 긴장감이 생긴다. 한
+/// 마일스톤당 딱 한 번만 알리도록 `season_meta`에 마지막으로 알린
+/// 마일스톤 값을 저장(순위 알림의 "직전 값" 패턴과 동일 재사용, 새
+/// 테이블 없음). 세 종류 다 `kind='stat_milestone'`로 공유 — 순위 알림
+/// (§6-122)이 4가지 순위를 `kind='rank_update'` 하나로 묶은 것과 같은 관례.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum CareerStat {
+    Wins,
+    Strikeouts,
+    InningsPitched,
 }
 
-fn process_protagonist_win_milestone(slot_conn: &Connection, day: i64) -> anyhow::Result<()> {
-    let exists: bool = slot_conn.query_row("SELECT EXISTS(SELECT 1 FROM protagonist WHERE id = 'proto:1')", [], |r| r.get(0))?;
-    if !exists {
-        return Ok(());
+impl CareerStat {
+    const ALL: [CareerStat; 3] = [CareerStat::Wins, CareerStat::Strikeouts, CareerStat::InningsPitched];
+
+    fn json_key(self) -> &'static str {
+        match self {
+            CareerStat::Wins => "wins",
+            CareerStat::Strikeouts => "strikeouts",
+            CareerStat::InningsPitched => "innings_pitched",
+        }
     }
-    let current_season = current_season_value(slot_conn)?;
-    let total_wins = total_protagonist_wins_to_date(slot_conn, current_season)?;
-    let next_milestone = ((total_wins / WIN_MILESTONE_STEP) + 1) * WIN_MILESTONE_STEP;
-    let remaining = next_milestone - total_wins;
-    if remaining > WIN_MILESTONE_LOOKAHEAD {
+
+    fn meta_key(self) -> &'static str {
+        match self {
+            CareerStat::Wins => "stat_milestone_notified:wins",
+            CareerStat::Strikeouts => "stat_milestone_notified:strikeouts",
+            CareerStat::InningsPitched => "stat_milestone_notified:innings_pitched",
+        }
+    }
+
+    fn label(self) -> &'static str {
+        match self {
+            CareerStat::Wins => "승",
+            CareerStat::Strikeouts => "탈삼진",
+            CareerStat::InningsPitched => "이닝",
+        }
+    }
+
+    /// 단위(step)·근접 판정폭(lookahead) — 승수는 §6-134에서 확정한
+    /// 10/3. 탈삼진·이닝은 시즌당 누적 속도가 승수보다 훨씬 빨라(한
+    /// 경기에 여러 개씩 쌓임) 같은 비율(약 30%)로 확대한 50/10.
+    fn step(self) -> i64 {
+        match self {
+            CareerStat::Wins => 10,
+            CareerStat::Strikeouts | CareerStat::InningsPitched => 50,
+        }
+    }
+
+    fn lookahead(self) -> i64 {
+        match self {
+            CareerStat::Wins => 3,
+            CareerStat::Strikeouts | CareerStat::InningsPitched => 10,
+        }
+    }
+
+    fn value_in(self, line: &CareerLine) -> i64 {
+        match self {
+            CareerStat::Wins => line.wins,
+            CareerStat::Strikeouts => line.strikeouts,
+            CareerStat::InningsPitched => line.innings_pitched,
+        }
+    }
+}
+
+fn total_protagonist_stat_to_date(conn: &Connection, current_season: i64, stat: CareerStat) -> anyhow::Result<i64> {
+    let mut stmt = conn.prepare("SELECT line FROM career_history")?;
+    let lines: Vec<String> = stmt.query_map([], |r| r.get(0))?.collect::<Result<Vec<_>, _>>()?;
+    let past: i64 = lines
+        .iter()
+        .filter_map(|l| serde_json::from_str::<serde_json::Value>(l).ok())
+        .filter_map(|v| v.get(stat.json_key()).and_then(|w| w.as_i64()))
+        .sum();
+    let current = stat.value_in(&aggregate_game_log(conn, Some(current_season))?);
+    Ok(past + current)
+}
+
+fn process_protagonist_stat_milestone(slot_conn: &Connection, day: i64, current_season: i64, stat: CareerStat) -> anyhow::Result<()> {
+    let total = total_protagonist_stat_to_date(slot_conn, current_season, stat)?;
+    let step = stat.step();
+    let next_milestone = ((total / step) + 1) * step;
+    let remaining = next_milestone - total;
+    if remaining > stat.lookahead() {
         return Ok(());
     }
 
     let already_notified: Option<i64> = slot_conn
-        .query_row("SELECT value FROM season_meta WHERE key = 'win_milestone_notified'", [], |r| r.get::<_, String>(0))
+        .query_row("SELECT value FROM season_meta WHERE key = ?1", [stat.meta_key()], |r| r.get::<_, String>(0))
         .optional()?
         .and_then(|s| s.parse().ok());
     if already_notified == Some(next_milestone) {
         return Ok(());
     }
 
-    let body = format!("통산 {remaining}승만 더 거두면 {next_milestone}승 고지다.");
+    let label = stat.label();
+    let body = format!("통산 {remaining}{label}만 더 채우면 {next_milestone}{label} 고지다.");
     slot_conn.execute(
-        "INSERT INTO inbox (id, kind, urgency, read, day, body) VALUES (?1, 'win_milestone', 'normal', 0, ?2, ?3)",
-        params![format!("inbox:win_milestone:{next_milestone}"), day, body],
+        "INSERT INTO inbox (id, kind, urgency, read, day, body) VALUES (?1, 'stat_milestone', 'normal', 0, ?2, ?3)",
+        params![format!("inbox:stat_milestone:{}:{next_milestone}", stat.json_key()), day, body],
     )?;
     slot_conn.execute(
-        "INSERT INTO season_meta (key, value) VALUES ('win_milestone_notified', ?1) ON CONFLICT(key) DO UPDATE SET value = excluded.value",
-        params![next_milestone.to_string()],
+        "INSERT INTO season_meta (key, value) VALUES (?1, ?2) ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+        params![stat.meta_key(), next_milestone.to_string()],
     )?;
+    Ok(())
+}
+
+fn process_protagonist_career_milestones(slot_conn: &Connection, day: i64) -> anyhow::Result<()> {
+    let exists: bool = slot_conn.query_row("SELECT EXISTS(SELECT 1 FROM protagonist WHERE id = 'proto:1')", [], |r| r.get(0))?;
+    if !exists {
+        return Ok(());
+    }
+    let current_season = current_season_value(slot_conn)?;
+    for stat in CareerStat::ALL {
+        process_protagonist_stat_milestone(slot_conn, day, current_season, stat)?;
+    }
     Ok(())
 }
 
@@ -5532,8 +5601,8 @@ pub fn advance(slot_conn: &mut Connection, content_conn: &Connection) -> anyhow:
             // 순위 변동 알림(대화 2026-07-25, §6-N) — 위에서 이미 로드한
             // `scores`를 그대로 재사용, 새로 스캔하지 않는다.
             process_protagonist_rank_updates(&tx, content_conn, today, &scores)?;
-            // 통산 승수 마일스톤 근접 알림(대화 2026-07-26, §6-N).
-            process_protagonist_win_milestone(&tx, today)?;
+            // 통산 기록(승수·탈삼진·이닝) 마일스톤 근접 알림(대화 2026-07-26, §6-N).
+            process_protagonist_career_milestones(&tx, today)?;
         }
         if crate::calendar::is_season_boundary(today) {
             season_rollover(&tx, content_conn, today)?;
@@ -8629,7 +8698,7 @@ mod tests {
     }
 
     #[test]
-    fn process_protagonist_win_milestone_notifies_once_when_within_reach_and_not_again_after() {
+    fn process_protagonist_career_milestones_notifies_once_when_within_reach_and_not_again_after() {
         let slot_conn = slot::open_in_memory().unwrap();
         insert_market_protagonist(&slot_conn, &serde_json::json!({"team_id": "team:p1"}), 0.0);
         // career_history는 확정된 과거 시즌(여기선 season -1로 명확히 구분)만,
@@ -8638,27 +8707,47 @@ mod tests {
         // 이번 시즌 진행분 5승 — 통산 97승, 다음 마일스톤(100)까지 3승 남음(허용범위 안).
         insert_win_decision_game_logs(&slot_conn, 0, 5, "s0");
 
-        let inbox_count = || -> i64 { slot_conn.query_row("SELECT count(*) FROM inbox WHERE kind = 'win_milestone'", [], |r| r.get(0)).unwrap() };
+        let inbox_count = || -> i64 { slot_conn.query_row("SELECT count(*) FROM inbox WHERE kind = 'stat_milestone'", [], |r| r.get(0)).unwrap() };
 
-        process_protagonist_win_milestone(&slot_conn, 28).unwrap();
+        process_protagonist_career_milestones(&slot_conn, 28).unwrap();
         assert_eq!(inbox_count(), 1, "100승까지 3승 남았으면 알림이 떠야 함");
-        let body: String = slot_conn.query_row("SELECT body FROM inbox WHERE kind = 'win_milestone'", [], |r| r.get(0)).unwrap();
+        let body: String = slot_conn.query_row("SELECT body FROM inbox WHERE kind = 'stat_milestone'", [], |r| r.get(0)).unwrap();
         assert!(body.contains("3승") && body.contains("100승"), "정확한 잔여 승수·목표 승수가 들어가야 함: {body}");
 
         // 같은 달에 다시 체크해도 같은 마일스톤이면 중복 알림 없음.
-        process_protagonist_win_milestone(&slot_conn, 56).unwrap();
+        process_protagonist_career_milestones(&slot_conn, 56).unwrap();
         assert_eq!(inbox_count(), 1, "같은 마일스톤은 두 번 알리지 않아야 함");
     }
 
     #[test]
-    fn process_protagonist_win_milestone_stays_silent_when_far_from_the_next_step() {
+    fn process_protagonist_career_milestones_stays_silent_when_far_from_the_next_step() {
         let slot_conn = slot::open_in_memory().unwrap();
         insert_market_protagonist(&slot_conn, &serde_json::json!({"team_id": "team:p1"}), 0.0);
         insert_win_decision_game_logs(&slot_conn, 0, 4, "s0"); // 통산 4승, 다음 마일스톤(10)까지 6승 — 허용범위 밖.
 
-        process_protagonist_win_milestone(&slot_conn, 28).unwrap();
-        let inbox_count: i64 = slot_conn.query_row("SELECT count(*) FROM inbox WHERE kind = 'win_milestone'", [], |r| r.get(0)).unwrap();
+        process_protagonist_career_milestones(&slot_conn, 28).unwrap();
+        let inbox_count: i64 = slot_conn.query_row("SELECT count(*) FROM inbox WHERE kind = 'stat_milestone'", [], |r| r.get(0)).unwrap();
         assert_eq!(inbox_count, 0, "마일스톤이 아직 멀면 알림이 없어야 함");
+    }
+
+    #[test]
+    fn process_protagonist_career_milestones_covers_strikeouts_and_innings_too() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_market_protagonist(&slot_conn, &serde_json::json!({"team_id": "team:p1"}), 0.0);
+        slot_conn
+            .execute(
+                "INSERT INTO game_log (game_id, season, detail) VALUES ('game:k', 0, ?1)",
+                [serde_json::json!({"decision": "패", "strikeouts": 45, "innings_pitched": 48, "runs_allowed": 3}).to_string()],
+            )
+            .unwrap();
+
+        process_protagonist_career_milestones(&slot_conn, 28).unwrap();
+        let bodies: Vec<String> = {
+            let mut stmt = slot_conn.prepare("SELECT body FROM inbox WHERE kind = 'stat_milestone' ORDER BY body").unwrap();
+            stmt.query_map([], |r| r.get(0)).unwrap().collect::<Result<_, _>>().unwrap()
+        };
+        assert!(bodies.iter().any(|b| b.contains("탈삼진") && b.contains("50탈삼진")), "탈삼진 45개(50까지 5개 남음)도 알림이 떠야 함: {bodies:?}");
+        assert!(bodies.iter().any(|b| b.contains("이닝") && b.contains("50이닝")), "이닝 48(50까지 2 남음)도 알림이 떠야 함: {bodies:?}");
     }
 
     fn insert_test_player(conn: &Connection, id: &str, team_id: &str, position: &str, stats: serde_json::Value) {

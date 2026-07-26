@@ -838,6 +838,26 @@ fn apply_protagonist_evaluation(slot_conn: &Connection, session: &SessionRow, pr
         params![session.game_id, season, detail],
     )?;
 
+    // 첫 승 알림(대화 2026-07-26, §6-N) — 03_메시지_알림.md §1 "개인기록근접"
+    // 카탈로그의 "첫 승/첫 세이브" 중 첫 승만 구현("첫 세이브"는 주인공이
+    // 항상 선발로만 등판하는 이번 스코프 설계상 구조적으로 발생 불가능
+    // — `sim::eval` 문서의 "등판 상황은 항상 선발 완투" 참고, 세이브
+    // 상황 자체가 안 생김). `game_log`는 시즌 경계에도 안 지워지는 전체
+    // 커리어 로그라, 방금 넣은 이 행까지 포함해 통산 승수를 세면 "정확히
+    // 1번째"만 걸러내는 것만으로 재발동 방지가 저절로 된다(별도 상태
+    // 추적 불필요 — 승수 마일스톤과 달리 딱 한 번뿐인 사건이라 더 단순).
+    if decision == "승" {
+        let win_count: i64 =
+            slot_conn.query_row("SELECT COUNT(*) FROM game_log WHERE json_extract(detail, '$.decision') = '승'", [], |r| r.get(0))?;
+        if win_count == 1 {
+            let today: i64 = slot_conn.query_row("SELECT current_day FROM meta", [], |r| r.get(0))?;
+            slot_conn.execute(
+                "INSERT INTO inbox (id, kind, urgency, read, day, body) VALUES ('inbox:first_win', 'first_win', 'normal', 0, ?1, '커리어 첫 승을 신고했다.')",
+                params![today],
+            )?;
+        }
+    }
+
     // 업적(특수달성형, 04_업적.md §2) — "퍼펙트게임" 원안은 타자 아웃·안타·
     // 볼넷까지 매치 엔진이 추적해야 해(현재는 실점만 기록) 이번 1차 배치는
     // 이미 있는 값(무실점 + 완투)만으로 판정 가능한 "완봉승"으로 단순화한
@@ -2580,6 +2600,30 @@ mod tests {
 
         assert!(good.unwrap_or(0) > 0, "완봉급 등판은 관계도를 올려야 한다, got {good:?}");
         assert!(bad.unwrap_or(0) < 0, "대량 실점 등판은 관계도를 내려야 한다, got {bad:?}");
+    }
+
+    #[test]
+    fn apply_protagonist_evaluation_notifies_the_first_career_win_but_not_the_second() {
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_roster(&slot_conn, "team:home");
+        insert_roster(&slot_conn, "team:away");
+        insert_protagonist(&slot_conn, "team:home");
+        insert_manager(&slot_conn, "team:home", 50.0, 50.0);
+        insert_schedule(&slot_conn, "game:1");
+        let win_session = bottom_of_inning_end_session("league:hs", 9, 1, 0); // 1:0 승리
+
+        apply_protagonist_evaluation(&slot_conn, &win_session, "team:home").unwrap();
+        let first_win_count: i64 = slot_conn.query_row("SELECT count(*) FROM inbox WHERE kind = 'first_win'", [], |r| r.get(0)).unwrap();
+        assert_eq!(first_win_count, 1, "커리어 첫 승엔 알림이 떠야 함");
+
+        // 같은 game_id로 다시 부르면(ON CONFLICT UPDATE) 여전히 1승뿐이라 안 늘어남 —
+        // 두 번째 진짜 승리를 흉내내려면 다른 game_id로 한 번 더.
+        slot_conn.execute("INSERT INTO schedule (game_id, day, home, away, result) VALUES ('game:2', 2, 'team:home', 'team:away', NULL)", []).unwrap();
+        let win_session_2 = SessionRow { game_id: "game:2".to_string(), ..win_session };
+        apply_protagonist_evaluation(&slot_conn, &win_session_2, "team:home").unwrap();
+        let first_win_count_after_second_win: i64 =
+            slot_conn.query_row("SELECT count(*) FROM inbox WHERE kind = 'first_win'", [], |r| r.get(0)).unwrap();
+        assert_eq!(first_win_count_after_second_win, 1, "두 번째 승리에는 다시 알리면 안 됨");
     }
 
     fn morale_of(conn: &Connection) -> f64 {

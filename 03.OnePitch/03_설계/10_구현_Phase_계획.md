@@ -2209,3 +2209,15 @@
 **테스트**: 신규 Rust/Dart 테스트 없음(순수 seed 데이터 추가). `dart run bin/tool.dart content seed` — `events=46` 커밋 성공, `content validate` FK 위반 0. `app/assets/content.db` 재동기화. `flutter test -j 1` 38개 파일 전부 통과. `balance_harness -- 5 3` — S등급 6.5%(변화 없음), 평균 이벤트 발동 수 87.60건(변화 없음 — 이 하네스 표본이 전부 고교 3시즌 상한 안에서 끝나 독립·프로2군 이벤트는 발동 기회 자체가 없었음, 정상), 크래시 없음.
 
 **영향 없음**: 신규 엔진 코드 없음(콘텐츠 데이터만 추가), 새 테이블·마이그레이션 없음.
+
+### 6-136. 메시지 Phase 2 — 마일스톤 종류 확장(탈삼진·이닝) + 첫 승 알림 (2026-07-26, 완료)
+
+**Context**: §6-135 로드맵의 Phase 2. §6-134가 통산 승수 하나만 구현했던 "개인기록근접" 마일스톤을 탈삼진·이닝으로 확장하고, 03_메시지_알림.md §1 카탈로그의 "첫 승/첫 세이브"를 추가.
+
+**구현 — 마일스톤 일반화(`data::repository.rs`)**: `WIN_MILESTONE_STEP`/`total_protagonist_wins_to_date`/`process_protagonist_win_milestone`(승수 전용)를 `CareerStat` enum(`Wins`/`Strikeouts`/`InningsPitched`, 각자 `json_key`·`meta_key`·`label`·`step`·`lookahead`)과 `total_protagonist_stat_to_date`/`process_protagonist_stat_milestone`(제네릭)로 교체 — `career_history.line` JSON에 `wins`뿐 아니라 `strikeouts`·`innings_pitched`도 이미 저장되고 있었음(season_rollover의 `season_line_json` 조립부) 재확인 후 그대로 재사용. 승수는 기존 10/3(step/lookahead) 유지, 탈삼진·이닝은 시즌당 누적 속도가 승수보다 훨씬 빨라 같은 비율(약 30%)로 확대한 50/10. 세 종류 다 `kind='stat_milestone'` 하나로 공유(§6-122 순위 알림이 4가지 순위를 `kind='rank_update'` 하나로 묶은 것과 같은 관례) — `season_meta` 중복방지 키만 `stat_milestone_notified:{종류}`로 구분. 월간 훅(`process_protagonist_career_milestones`)이 `CareerStat::ALL` 3종을 순회.
+
+**구현 — 첫 승 알림(`data::match_session.rs`)**: "첫 세이브"는 스코프 아웃 — `sim::eval` 문서의 "등판 상황은 항상 선발 완투" 설계상 주인공이 세이브 상황에 등판할 일 자체가 구조적으로 없음(확인함, `credit_saves`가 세이브를 크레딧하는 대상은 항상 강판 후 등판한 구원투수 id지 주인공 자신이 아님). 첫 승은 `apply_protagonist_evaluation`의 `game_log` INSERT 직후, `decision == "승"`이면 `SELECT COUNT(*) FROM game_log WHERE json_extract(detail,'$.decision')='승'`로 통산 승수를 세어 정확히 1이면 `kind='first_win'` 알림 1회. `game_log`는 시즌 경계에도 안 지워지는 전체 커리어 로그라 이 카운트 자체가 항상 정확 — 마일스톤과 달리 "정확히 1번째"만 걸러내면 재발동이 구조적으로 불가능해 `season_meta` 같은 별도 상태 추적이 아예 불필요.
+
+**테스트**: 엔진 기존 2건 리네임+유지(`process_protagonist_career_milestones_notifies_once_when_within_reach_and_not_again_after`·`_stays_silent_when_far_from_the_next_step`, `kind='stat_milestone'`로 갱신) + 신규 1건(`process_protagonist_career_milestones_covers_strikeouts_and_innings_too` — 탈삼진 45/이닝 48 두 종류가 동시에 마일스톤 알림을 내는지). 신규 1건(`apply_protagonist_evaluation_notifies_the_first_career_win_but_not_the_second` — 첫 승엔 알림, 다른 game_id로 두 번째 승리를 흉내내도 재알림 없음). `cargo test --lib` 560개 전부 통과, `cargo clippy --lib --tests --bins` 클린(제네릭 헬퍼 이름이 `from_*` 관례와 충돌해 `value_in`으로 수정). `flutter test -j 1` 38개 파일 전부 통과. `balance_harness -- 5 3` — S등급 6.5%·평균 이벤트 발동 수 87.60건 전부 변화 없음(콘텐츠 미변경, 순수 통지 로직이라 예상대로), 크래시 없음.
+
+**영향 없음**: 새 테이블·마이그레이션 없음(`season_meta`/`inbox`/`career_history`/`game_log` 전부 재사용). 새 RNG 굴림 없음.
