@@ -2221,3 +2221,15 @@
 **테스트**: 엔진 기존 2건 리네임+유지(`process_protagonist_career_milestones_notifies_once_when_within_reach_and_not_again_after`·`_stays_silent_when_far_from_the_next_step`, `kind='stat_milestone'`로 갱신) + 신규 1건(`process_protagonist_career_milestones_covers_strikeouts_and_innings_too` — 탈삼진 45/이닝 48 두 종류가 동시에 마일스톤 알림을 내는지). 신규 1건(`apply_protagonist_evaluation_notifies_the_first_career_win_but_not_the_second` — 첫 승엔 알림, 다른 game_id로 두 번째 승리를 흉내내도 재알림 없음). `cargo test --lib` 560개 전부 통과, `cargo clippy --lib --tests --bins` 클린(제네릭 헬퍼 이름이 `from_*` 관례와 충돌해 `value_in`으로 수정). `flutter test -j 1` 38개 파일 전부 통과. `balance_harness -- 5 3` — S등급 6.5%·평균 이벤트 발동 수 87.60건 전부 변화 없음(콘텐츠 미변경, 순수 통지 로직이라 예상대로), 크래시 없음.
 
 **영향 없음**: 새 테이블·마이그레이션 없음(`season_meta`/`inbox`/`career_history`/`game_log` 전부 재사용). 새 RNG 굴림 없음.
+
+### 6-137. 뉴스 1부 — 소속팀·라이벌 경기결과 (2026-07-26, 완료)
+
+**Context**: §6-135 로드맵의 Phase 3. `02_기획/콘텐츠/05_뉴스_미디어.md`("구조 확정"만 되고 미구현이던 카테고리)의 첫 실체화 — 소속팀·라이벌 소식 중 콜백형(사건 즉시)만, 새 시뮬레이션 없이 기존 `schedule`/`standings`/`team_history.rivals` 재사용.
+
+**구현 조사**: `advance()`의 하루 루프 구조를 먼저 확인 — `find_protagonist_game_today`가 `Some`을 반환하면(주인공이 오늘 직접 등판) 그 자리에서 조기 반환해 `process_day`(배경 자동시뮬)를 그날은 아예 안 탄다. 즉 `process_day`가 처리하는 배경 경기는 "주인공이 오늘 직접 안 던진 날"과 정확히 일치 — 이 함수 하나에 훅을 걸면 딱 그 사각지대(본인이 뛴 경기는 이미 알고 있으니 중복 알림 불필요)만 잡힌다. 라이벌 데이터는 `team_history.rivals`(content.db, JSON 배열)에 이미 있었지만 실제 저작된 콘텐츠는 아직 없음(확인함 — `data/seed/`에 rivals 값 자체가 없음) — 메커니즘은 미리 만들어두고 데이터는 나중에 채워도 그대로 작동.
+
+**구현(`data::repository.rs`)**: `load_protagonist_news_context` — 주인공 team_id·라이벌 목록(`HashSet`)을 `process_day` 진입 시 딱 한 번만 로드(172팀 규모 배경 시뮬 루프 안에서 게임마다 다시 조회하면 §6-115류 N+1 재현이라 루프 밖으로 뺌). `notify_team_or_rival_news` — 경기 하나(홈/원정/스코어)를 받아 ①소속팀이 뛰었으면 `kind='team_news'`(라이벌과 붙었으면 "라이벌전 결과" 문구로 갈라짐), ②소속팀은 안 뛰었지만 라이벌이 다른 상대와 붙었으면 `kind='rival_news'`, ③둘 다 아니면 무시. 팀 이름은 본문에 안 넣음(`demotion`·`callup`·`benched` 등 기존 시스템 메시지 전부 team_id를 직접 노출 안 하는 관례 — 표시명 해석은 지금까지 전부 Flutter `teamNamesProvider` 책임이라 Rust에서 재구현할 이유 없음). `process_day`의 결과 기록 직후(`update_standings` 다음 줄)에 배선.
+
+**테스트**: 신규 3건 — `process_day_reports_team_news_when_the_protagonists_team_plays_in_the_background`(소속팀이 배경에서 뛰면 team_news 하나), `process_day_reports_a_rival_flavored_team_news_when_facing_the_rival_directly`(소속팀이 라이벌과 직접 붙으면 "라이벌전" 문구), `process_day_reports_rival_news_when_the_rival_plays_someone_else`(소속팀은 안 뛰고 라이벌만 다른 팀과 붙으면 rival_news, team_news는 0건). `cargo test --lib` 563개 전부 통과, `cargo clippy --lib --tests --bins`(인자 9개로 `too_many_arguments` 경고 나서 `#[allow]` 추가, 기존 `resolve_in_play_result` 등과 같은 관례) 클린. `flutter test -j 1` — 1차 시도에서 1개 실패했으나(자세한 로그가 압축 리포터의 캐리지리턴 갱신 방식 때문에 안 잡혀서 `--reporter expanded`로 재실행) 재실행 시 38개 파일 전부 통과 — 순수 Rust 백엔드 변경(Flutter 대면 API 변경 없음)이라 인과관계 없는 일회성 플레이키로 판단. `balance_harness -- 5 3` — S등급 6.5%·평균 이벤트 발동 수 87.60건 전부 변화 없음, 크래시 없음.
+
+**영향 없음**: 새 테이블·마이그레이션 없음(`inbox`/`team_history` 전부 재사용). 새 RNG 굴림 없음.

@@ -2676,11 +2676,84 @@ fn upsert_fielder_practice_stats(conn: &Connection, player_id: &str, week: i64, 
 
 const RELIEVER_FATIGUE_PER_GAME: f64 = 6.0; // 선발(12.0)의 절반 — D그룹 placeholder.
 
+/// 뉴스 1부(대화 2026-07-26, §6-N) — 05_뉴스_미디어.md §1 "소속팀 소식"·
+/// "라이벌 소식" 콜백. `process_day`가 처리하는 배경 경기는 정확히
+/// "주인공이 오늘 직접 안 던진 날"(직접 던진 날은 `find_protagonist_game_today`
+/// 가 조기 반환해 이 함수 자체를 안 탐, `data::repository::advance` 참고)
+/// 이라 여기 훅 하나로 딱 그 사각지대만 잡는다 — 주인공 본인이 뛴 경기는
+/// 이미 알고 있으니 중복 알림 불필요. `process_day`가 하루에 여러 경기를
+/// 처리하므로 주인공 team_id·라이벌 목록은 루프 밖에서 한 번만 로드
+/// (172팀 규모라 게임마다 다시 조회하면 §6-115류 N+1 재현).
+fn load_protagonist_news_context(slot_conn: &Connection, content_conn: &Connection) -> anyhow::Result<Option<(String, std::collections::HashSet<String>)>> {
+    let contract_raw: Option<String> =
+        slot_conn.query_row("SELECT contract FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).optional()?;
+    let Some(contract_raw) = contract_raw else {
+        return Ok(None);
+    };
+    let contract: serde_json::Value = serde_json::from_str(&contract_raw)?;
+    let Some(team_id) = contract.get("team_id").and_then(|v| v.as_str()) else {
+        return Ok(None);
+    };
+    let rivals_raw: Option<String> =
+        content_conn.query_row("SELECT rivals FROM team_history WHERE team_id = ?1", [team_id], |r| r.get(0)).optional()?;
+    let rivals: std::collections::HashSet<String> =
+        rivals_raw.and_then(|s| serde_json::from_str::<Vec<String>>(&s).ok()).unwrap_or_default().into_iter().collect();
+    Ok(Some((team_id.to_string(), rivals)))
+}
+
+/// 그 경기 결과 하나를 소속팀·라이벌 관점에서 알릴지 판단 — 소속팀이
+/// 뛰었으면(라이벌과 붙었으면 문구만 다르게) `team_news`, 소속팀은
+/// 안 뛰었지만 라이벌이 다른 상대와 붙었으면 `rival_news`. 팀 이름은
+/// 안 넣는다(demotion·callup·benched 등 기존 시스템 메시지 전부 team_id를
+/// 직접 노출 안 하는 관례 그대로 — 실제 표시명 해석은 지금까지 전부
+/// Flutter `teamNamesProvider` 쪽 책임이었고, Rust에서 재구현할 이유가 없음).
+#[allow(clippy::too_many_arguments)]
+fn notify_team_or_rival_news(
+    slot_conn: &Connection,
+    protagonist_team: &str,
+    rivals: &std::collections::HashSet<String>,
+    game_id: &str,
+    home: &str,
+    away: &str,
+    home_runs: u32,
+    away_runs: u32,
+    day: i64,
+) -> anyhow::Result<()> {
+    let outcome_word = |mine: u32, opp: u32| if mine > opp { "승리" } else if mine < opp { "패배" } else { "무승부" };
+
+    let (kind, body) = if home == protagonist_team || away == protagonist_team {
+        let is_home = home == protagonist_team;
+        let (my_runs, opp_runs) = if is_home { (home_runs, away_runs) } else { (away_runs, home_runs) };
+        let opponent = if is_home { away } else { home };
+        let outcome = outcome_word(my_runs, opp_runs);
+        if rivals.contains(opponent) {
+            ("team_news", format!("라이벌전 결과 — {my_runs}:{opp_runs} {outcome}."))
+        } else {
+            ("team_news", format!("오늘 팀 경기 결과 — {my_runs}:{opp_runs} {outcome}."))
+        }
+    } else if rivals.contains(home) || rivals.contains(away) {
+        let rival_is_home = rivals.contains(home);
+        let (rival_runs, opp_runs) = if rival_is_home { (home_runs, away_runs) } else { (away_runs, home_runs) };
+        let outcome = outcome_word(rival_runs, opp_runs);
+        ("rival_news", format!("라이벌 팀이 오늘 {rival_runs}:{opp_runs}로 {outcome}했다."))
+    } else {
+        return Ok(());
+    };
+
+    slot_conn.execute(
+        "INSERT INTO inbox (id, kind, urgency, read, day, body) VALUES (?1, ?2, 'normal', 0, ?3, ?4)",
+        params![format!("inbox:{kind}:{game_id}"), kind, day, body],
+    )?;
+    Ok(())
+}
+
 fn process_day(slot_conn: &Connection, content_conn: &Connection, world_seed: i64, day: i64) -> anyhow::Result<()> {
     let mut stmt = slot_conn.prepare("SELECT game_id, home, away FROM schedule WHERE day = ?1 AND result IS NULL")?;
     let games: Vec<(String, String, String)> =
         stmt.query_map([day], |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)))?.collect::<Result<Vec<_>, _>>()?;
     drop(stmt);
+
+    let news_context = load_protagonist_news_context(slot_conn, content_conn)?;
 
     for (game_id, home, away) in games {
         let league_id: String = content_conn.query_row("SELECT league_id FROM teams WHERE id = ?1", [&home], |row| row.get(0))?;
@@ -2724,6 +2797,9 @@ fn process_day(slot_conn: &Connection, content_conn: &Connection, world_seed: i6
         let result_json = serde_json::json!({"home": result.home_runs, "away": result.away_runs}).to_string();
         slot_conn.execute("UPDATE schedule SET result = ?1 WHERE game_id = ?2", params![result_json, game_id])?;
         update_standings(slot_conn, &home, &away, result.home_runs, result.away_runs)?;
+        if let Some((protagonist_team, rivals)) = &news_context {
+            notify_team_or_rival_news(slot_conn, protagonist_team, rivals, &game_id, &home, &away, result.home_runs, result.away_runs, day)?;
+        }
         accumulate_game_fatigue(slot_conn, &home, conditions.weather_fatigue_mult)?;
         accumulate_game_fatigue(slot_conn, &away, conditions.weather_fatigue_mult)?;
         apply_injury_events(slot_conn, &result.injuries, day)?;
@@ -9517,6 +9593,90 @@ mod tests {
             )
             .unwrap();
         assert!(batter_rows > 0, "expected at least one batter season_stats row, got {batter_rows}");
+    }
+
+    #[test]
+    fn process_day_reports_team_news_when_the_protagonists_team_plays_in_the_background() {
+        // 뉴스 1부(대화 2026-07-26, §6-N) — 주인공이 오늘 안 던진 배경 경기
+        // (find_protagonist_game_today가 이 경로 자체를 안 태우는 날)에서도
+        // 소속팀 결과를 알아야 함.
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:x', NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:a', 'league:x', NULL, NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:b', 'league:x', NULL, NULL)", []).unwrap();
+
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_minimal_roster(&slot_conn, "team:a");
+        insert_minimal_roster(&slot_conn, "team:b");
+        insert_market_protagonist(&slot_conn, &serde_json::json!({"team_id": "team:a"}), 0.0);
+        slot_conn
+            .execute("INSERT INTO schedule (game_id, day, home, away, result) VALUES ('game:1', 10, 'team:a', 'team:b', NULL)", [])
+            .unwrap();
+
+        process_day(&slot_conn, &content_conn, 777, 10).unwrap();
+
+        let count: i64 = slot_conn.query_row("SELECT count(*) FROM inbox WHERE kind = 'team_news'", [], |r| r.get(0)).unwrap();
+        assert_eq!(count, 1, "소속팀이 오늘 뛰었으면 소식이 하나 떠야 함");
+        let body: String = slot_conn.query_row("SELECT body FROM inbox WHERE kind = 'team_news'", [], |r| r.get(0)).unwrap();
+        assert!(body.contains("팀 경기 결과"), "team_news 문구여야 함: {body}");
+        assert!(!body.contains("라이벌"), "라이벌 상대가 아니면 라이벌전 문구가 아니어야 함: {body}");
+    }
+
+    #[test]
+    fn process_day_reports_a_rival_flavored_team_news_when_facing_the_rival_directly() {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:x', NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:a', 'league:x', NULL, NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:b', 'league:x', NULL, NULL)", []).unwrap();
+        content_conn
+            .execute("INSERT INTO team_history (team_id, founded_year, budget, rivals, season_ranks, titles) VALUES ('team:a', NULL, NULL, ?1, NULL, NULL)", [
+                serde_json::json!(["team:b"]).to_string(),
+            ])
+            .unwrap();
+
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_minimal_roster(&slot_conn, "team:a");
+        insert_minimal_roster(&slot_conn, "team:b");
+        insert_market_protagonist(&slot_conn, &serde_json::json!({"team_id": "team:a"}), 0.0);
+        slot_conn
+            .execute("INSERT INTO schedule (game_id, day, home, away, result) VALUES ('game:1', 10, 'team:a', 'team:b', NULL)", [])
+            .unwrap();
+
+        process_day(&slot_conn, &content_conn, 777, 10).unwrap();
+
+        let body: String = slot_conn.query_row("SELECT body FROM inbox WHERE kind = 'team_news'", [], |r| r.get(0)).unwrap();
+        assert!(body.contains("라이벌전"), "라이벌과 붙었으면 라이벌전 문구여야 함: {body}");
+    }
+
+    #[test]
+    fn process_day_reports_rival_news_when_the_rival_plays_someone_else() {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:x', NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:a', 'league:x', NULL, NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:b', 'league:x', NULL, NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:c', 'league:x', NULL, NULL)", []).unwrap();
+        content_conn
+            .execute("INSERT INTO team_history (team_id, founded_year, budget, rivals, season_ranks, titles) VALUES ('team:a', NULL, NULL, ?1, NULL, NULL)", [
+                serde_json::json!(["team:b"]).to_string(),
+            ])
+            .unwrap();
+
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_minimal_roster(&slot_conn, "team:b");
+        insert_minimal_roster(&slot_conn, "team:c");
+        // 주인공은 team:a 소속 — 오늘 경기는 라이벌(team:b) vs 제3팀(team:c),
+        // 주인공 소속팀 자체는 오늘 안 뛰었다.
+        insert_market_protagonist(&slot_conn, &serde_json::json!({"team_id": "team:a"}), 0.0);
+        slot_conn
+            .execute("INSERT INTO schedule (game_id, day, home, away, result) VALUES ('game:1', 10, 'team:b', 'team:c', NULL)", [])
+            .unwrap();
+
+        process_day(&slot_conn, &content_conn, 777, 10).unwrap();
+
+        let team_news_count: i64 = slot_conn.query_row("SELECT count(*) FROM inbox WHERE kind = 'team_news'", [], |r| r.get(0)).unwrap();
+        assert_eq!(team_news_count, 0, "소속팀은 안 뛰었으니 team_news는 없어야 함");
+        let rival_news_count: i64 = slot_conn.query_row("SELECT count(*) FROM inbox WHERE kind = 'rival_news'", [], |r| r.get(0)).unwrap();
+        assert_eq!(rival_news_count, 1, "라이벌이 뛰었으면 rival_news가 하나 떠야 함");
     }
 
     #[test]
