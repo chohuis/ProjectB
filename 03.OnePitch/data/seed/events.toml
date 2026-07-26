@@ -1001,3 +1001,331 @@ label = "차분히 지켜본다"
 target = "xp"
 stat = "침착함"
 delta = 2.0
+
+# ---------------------------------------------------------------------------
+# 대학 1차 배치(대화 2026-07-26, §6-N) — stage="league:univ" 콘텐츠 착수(그
+# 전까지 0개, 가장 큰 공백). 리그팀/03_대학.md §4-6 시즌 캘린더(정규리그
+# 3~5월·왕중왕전 5월·은하기 6월·여명기 7월·쇼케이스 8월초·올스타전 8월중)·
+# §4-3 스카우팅 쇼케이스·§4-4 북vs남 올스타전·§4-6 매년 재신청 드래프트·
+# §4-8 학년별 성장 소재를 반영. week 값은 정규시즌 10주+왕중왕전 1~2주
+# 뒤를 기준으로 한 근사치(고교 배치와 동일한 정밀도). 기존 5개 트리거만
+# 사용, 새 엔진 작업 없음.
+# ---------------------------------------------------------------------------
+
+[[event]]
+id = "event:univ_galaxy_cup_opens"
+type = "calendar"
+week = 12
+stage = "league:univ"
+urgency = "normal"
+bodies = [
+  "은하기 개막이 다가온다. 소수 정예만 겨루는 무대, 참가 자체가 실력의 증명이다.",
+  "은하기 시즌이 시작된다. 정규리그와는 무게가 다른 대회다.",
+  "은하기가 코앞이다. 여기서부터가 진짜 승부라는 걸 느낀다.",
+]
+
+[[event.choices]]
+id = "각오다짐"
+label = "각오를 다진다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 10.0
+
+[[event.choices]]
+id = "담담히준비"
+label = "담담히 준비한다"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "침착함"
+delta = 5.0
+
+[[event]]
+id = "event:univ_dawn_cup_opens"
+type = "calendar"
+week = 17
+stage = "league:univ"
+urgency = "normal"
+bodies = [
+  "여명기가 다가온다. 몸으로 증명해야 하는 다전제, 체력 안배가 관건이다.",
+  "여명기 시즌이 시작된다. 길게 보고 페이스를 조절해야 한다.",
+  "여명기를 앞두고 있다. 이번엔 오래 버텨야 하는 싸움이다.",
+]
+
+[[event.choices]]
+id = "체력아끼기"
+label = "체력을 아낀다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "피로도"
+delta = -5.0
+
+[[event.choices]]
+id = "전력투구"
+label = "전력을 쏟는다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 8.0
+
+[[event.choices.effects]]
+target = "live_state"
+field = "피로도"
+delta = 3.0
+
+[[event]]
+id = "event:univ_showcase_invite"
+type = "probability"
+stage = "league:univ"
+urgency = "normal"
+bodies = [
+  "전국대학선수쇼케이스 초청장이 왔다. 프로 스카우트들 앞에서 직접 보여줄 기회다.",
+  "쇼케이스 초청 명단에 내 이름이 있었다.",
+  "구단들이 지켜보는 자리에 설 기회가 생겼다 — 쇼케이스 초청이다.",
+]
+
+[event.trigger]
+var = "확률"
+chance = 0.02
+
+[[event.choices]]
+id = "워크아웃집중"
+label = "워크아웃(구속·구위 측정)에 집중한다"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "구속"
+delta = 5.0
+
+[[event.choices]]
+id = "실전감각다지기"
+label = "실전 감각을 다진다"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "침착함"
+delta = 4.0
+
+[[event]]
+id = "event:univ_redraft_dilemma"
+type = "probability"
+stage = "league:univ"
+urgency = "normal"
+bodies = [
+  "이번 겨울, 드래프트에 다시 도전할지 고민이다.",
+  "동기들 사이에서 드래프트 얘기가 무성하다.",
+  "올해도 지명 명단에 이름을 올릴지 갈림길이다.",
+]
+
+[event.trigger]
+var = "확률"
+chance = 0.02
+
+[[event.choices]]
+id = "도전한다"
+label = "이번에 도전한다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 6.0
+
+[[event.choices.effects]]
+target = "live_state"
+field = "피로도"
+delta = 3.0
+
+[[event.choices]]
+id = "한해더준비"
+label = "한 해 더 준비한다"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "침착함"
+delta = 5.0
+
+[[event]]
+id = "event:univ_major_studies"
+type = "probability"
+stage = "league:univ"
+urgency = "normal"
+bodies = [
+  "전공 수업 리포트 마감이 코앞인데 훈련 일정과 겹쳤다.",
+  "학점 관리와 훈련을 병행하기가 쉽지 않다.",
+  "중간고사 기간, 훈련장과 강의실을 오가느라 정신이 없다.",
+]
+
+[event.trigger]
+var = "확률"
+chance = 0.02
+
+[[event.choices]]
+id = "훈련우선"
+label = "훈련을 우선한다"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "구위"
+delta = 4.0
+
+[[event.choices.effects]]
+target = "live_state"
+field = "피로도"
+delta = 5.0
+
+[[event.choices]]
+id = "학점도챙기기"
+label = "학점도 챙긴다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 3.0
+
+[[event]]
+id = "event:univ_northsouth_allstar"
+type = "calendar"
+week = 21
+stage = "league:univ"
+urgency = "normal"
+bodies = [
+  "북부-남부 올스타전 출전 명단에 이름이 올랐다.",
+  "지역 자존심을 건 올스타전이 다가온다.",
+  "대학당 최대 2명뿐인 올스타 명단, 그 안에 내가 들어갔다.",
+]
+
+[[event.choices]]
+id = "자존심걸기"
+label = "지역 자존심을 건다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 7.0
+
+[[event.choices.effects]]
+target = "live_state"
+field = "피로도"
+delta = 3.0
+
+[[event.choices]]
+id = "편하게즐기기"
+label = "편하게 즐긴다"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "침착함"
+delta = 4.0
+
+[[event]]
+id = "event:univ_freshman_year_adjustment"
+type = "probability"
+stage = "league:univ"
+urgency = "normal"
+bodies = [
+  "대학 생활도, 야구부 생활도 아직 낯설다.",
+  "새로운 환경에 적응하느라 정신없는 나날이다.",
+  "여기 방식에 조금씩 익숙해져 가는 중이다.",
+]
+
+[event.trigger]
+var = "확률"
+chance = 0.02
+
+[[event.choices]]
+id = "적극적으로부딪히기"
+label = "적극적으로 부딪힌다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 5.0
+
+[[event.choices.effects]]
+target = "live_state"
+field = "피로도"
+delta = 3.0
+
+[[event.choices]]
+id = "천천히적응"
+label = "천천히 적응한다"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "침착함"
+delta = 4.0
+
+[[event]]
+id = "event:univ_pro_scout_rumor"
+type = "probability"
+stage = "league:univ"
+urgency = "normal"
+bodies = [
+  "어느 구단 스카우트가 나를 눈여겨봤다는 얘기가 돌았다.",
+  "프로 스카우트 리스트에 내 이름이 있다는 소문을 들었다.",
+  "구단 관계자가 내 경기 영상을 요청했다는 말이 들렸다.",
+]
+
+[event.trigger]
+var = "확률"
+chance = 0.02
+
+[[event.choices]]
+id = "의식하지않기"
+label = "의식하지 않으려 한다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "주목도"
+delta = 6.0
+
+[[event.choices]]
+id = "더잘보이기"
+label = "더 잘 보이려 애쓴다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "주목도"
+delta = 8.0
+
+[[event.choices.effects]]
+target = "live_state"
+field = "피로도"
+delta = 4.0
+
+[[event]]
+id = "event:univ_regular_season_skid"
+type = "team"
+stage = "league:univ"
+urgency = "normal"
+bodies = [
+  "정규리그에서 연패가 이어진다. 왕중왕전 진출이 멀어지는 느낌이다.",
+  "조 순위가 밀리고 있다. 이대로면 왕중왕전은커녕...",
+  "연패 속에 다들 초조해하는 기색이다.",
+]
+
+[event.trigger]
+var = "연패"
+op = ">="
+value = 4
+
+[[event.choices]]
+id = "침착하게버티기"
+label = "침착하게 버틴다"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "침착함"
+delta = 5.0
+
+[[event.choices]]
+id = "팀다잡기"
+label = "팀을 다잡으려 한다"
+
+[[event.choices.effects]]
+target = "manager_relationship"
+delta = 3

@@ -2175,3 +2175,17 @@
 **§5 이월 레지스트리 갱신**: 13개 남음 → **10개 남음**(38개 카탈로그 중 28개 완료). 대학·독립리그·프로2군은 여전히 stage 전용 콘텐츠 0개(공통 10개만 적용) — 다음 배치 유력 후보. 나머지는 대부분 프로/대학 전용 소재(FA·트레이드·콜업강등·스토브리그·드래프트데이·시상식 등) + 콜백 훅이 필요한 데뷔전·대회우승 확정.
 
 **영향 없음**: 신규 엔진 코드 없음(콘텐츠 데이터만 추가), 새 테이블·마이그레이션 없음.
+
+### 6-134. 이벤트 콘텐츠 저작 — 대학 1차 배치 + 통산 승수 마일스톤 근접 알림 (2026-07-26, 완료)
+
+**Context**: "이벤트를 좀 더 추가해보고 선택지없는 정보의 전달 메세지도 늘려보자"로 착수. 먼저 03_메시지_알림.md §1의 "선택지 없는" 카탈로그 5개를 현재 상태와 대조 — 부상 전조경고는 `injury_warning`으로, 방출·FA·재계약은 `contractNego`로 이미 커버, 국대 발탁은 03_병역.md를 보니 "로스터 임시 이탈+합성 국가대표팀+병역 면제 연계"까지 딸린 별도 엔진 기능이라 콘텐츠 저작 범위를 벗어나 제외. 실제로 채울 수 있는 건 **개인기록근접**(원래 카탈로그, 유일한 미구현 항목) 하나뿐임을 확인 후 사용자에게 두 갈래(리그 선택 / 마일스톤 기준) 확인받아 진행 — 대학 리그 우선, 통산 승수만.
+
+**구현 — 이벤트(A, `data/seed/events.toml`)**: `stage = "league:univ"` 콘텐츠 착수(그 전까지 0개, 대학·독립리그·프로2군 중 가장 큰 공백). `03_대학.md` §4-6 시즌 캘린더(정규리그 3~5월·왕중왕전 5월·은하기 6월·여명기 7월·쇼케이스 8월초·올스타전 8월중)·§4-3 스카우팅 쇼케이스(워크아웃+전시경기)·§4-4 북vs남 올스타전(대학당 최대 2명)·§4-6 매년 재신청 드래프트·§4-8 학년별 성장 소재로 9개 신규 저작: `univ_galaxy_cup_opens`·`univ_dawn_cup_opens`(캘린더, 은하기·여명기 개막)·`univ_showcase_invite`·`univ_redraft_dilemma`·`univ_major_studies`·`univ_freshman_year_adjustment`·`univ_pro_scout_rumor`(확률)·`univ_northsouth_allstar`(캘린더)·`univ_regular_season_skid`(팀 상태, 연패 ≥4). 기존 5개 트리거만 사용, 새 엔진 작업 없음. 38개 카탈로그 중 28개 완료 + 이번 9개 = **37개**(카탈로그 밖 항목이라 이월 레지스트리 분모 자체엔 안 잡히지만 대학 stage 공백은 해소).
+
+**구현 — 마일스톤 알림(B, 신규 엔진 코드)**: `sim::eval`이 아니라 `data::repository.rs`에 직접 추가(§6-122 순위 알림과 같은 위치·같은 패턴 — `events.toml`이 아니라 Rust `format!()`으로 `inbox`에 직접 삽입). `total_protagonist_wins_to_date(conn, current_season)` — `ach:career_100_wins`(§6-36)가 쓰던 "`career_history` 합산 + 이번 시즌 `game_log` 진행분"과 같은 계산을 재사용하되, 그건 "달성" 시점(시즌 종료)만 확인하는 반면 이건 "근접"이라 매달(`today % 28 == 0` 훅, §6-122와 같은 자리) 확인해야 시즌 도중에도 긴장감이 생긴다. `process_protagonist_win_milestone` — 10승 단위 마일스톤(`WIN_MILESTONE_STEP=10`), 남은 승수가 3 이하(`WIN_MILESTONE_LOOKAHEAD=3`)면 `inbox`에 "통산 N승만 더 거두면 M승 고지다" 순수 통지(선택지 없음, `kind='win_milestone'`). 같은 마일스톤 중복 알림 방지는 `season_meta`(순위 알림과 같은 "직전 값" 저장 패턴, 새 테이블 없음)로.
+
+**테스트**: 엔진 신규 2건 — `process_protagonist_win_milestone_notifies_once_when_within_reach_and_not_again_after`(과거 시즌 92승+이번 시즌 5승=97승, 다음 마일스톤 100까지 3승 남아 알림 발생 확인 + 같은 달 재체크 시 중복 안 뜨는지), `process_protagonist_win_milestone_stays_silent_when_far_from_the_next_step`(4승, 다음 마일스톤 10까지 6승 남아 범위 밖이라 알림 없음). `cargo test --lib` 558개 전부 통과, `cargo clippy --lib --tests --bins` 클린. `dart run bin/tool.dart content seed` — `events=37`(28+9) 커밋 성공, `content validate` FK 위반 0. `app/assets/content.db` 재동기화. `flutter test -j 1` 38개 파일 전부 통과. `balance_harness -- 5 3` — S등급 6.5%(변화 없음), 크래시 없음 — 다만 이 하네스의 시행이 전부 고교 3시즌 상한 안에서 끝나 대학 이벤트 자체는 이번 표본에서 발동 기회가 없었음(정상 — 대학 진입 전 시점).
+
+**§5 이월 레지스트리 갱신**: 10개 남음(카탈로그 기준, 대부분 프로/대학 FA·트레이드·콜업강등 등 + 콜백 필요한 데뷔전·대회우승) 그대로 — 이번 9개는 카탈로그 밖 university 소재 확장이라 분모엔 안 잡히지만 "대학·독립·프로2군 stage 0개" 공백은 대학 쪽만 해소. 독립리그·프로2군은 여전히 0개. "개인기록근접"은 통산 승수만 구현 — 탈삼진·이닝 등 다른 마일스톤 종류는 이월.
+
+**영향 없음**: `season_stats`/`career_history`/`season_meta`/`inbox` 전부 재사용, 새 테이블·마이그레이션 없음. 새 RNG 굴림 없는 순수 조회+통지 로직이라 밸런스 지표 무변화(위 balance_harness로 확인).
