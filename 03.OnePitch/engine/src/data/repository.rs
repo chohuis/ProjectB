@@ -2747,6 +2747,66 @@ fn notify_team_or_rival_news(
     Ok(())
 }
 
+/// 뉴스 2부(대화 2026-07-26, §6-N) — §6-133의 확률형 "동료 마일스톤 축하"
+/// (`hs_teammate_milestone`, 선택지 있는 이벤트)는 그대로 두고, 실제
+/// `season_stats` 누적치 기반의 순수 통지를 별도로 얹는다(대체가 아니라
+/// 보강 — 하나는 "그 순간 어떻게 반응할지" 선택하는 이벤트, 하나는
+/// 사실만 전하는 뉴스라 역할이 다름). 투수는 탈삼진(`season_stats`엔
+/// 승수 자체가 없음 — NPC `PitcherGameStats`가 승패를 안 track, 주인공만
+/// `game_log.decision`으로 따로 판정), 타자는 안타 기준. 동료는 시즌마다
+/// 로스터가 바뀌므로(§6-134 승수 마일스톤과 달리) 통산이 아니라 "이번
+/// 시즌"만 본다 — `CareerStat`을 그대로 못 쓰는 이유.
+const TEAMMATE_PITCHER_STRIKEOUT_STEP: i64 = 15;
+const TEAMMATE_BATTER_HIT_STEP: i64 = 15;
+const TEAMMATE_PITCHER_POSITIONS: [&str; 3] = ["선발투수", "중계투수", "마무리투수"];
+
+fn process_teammate_milestones(slot_conn: &Connection, content_conn: &Connection, day: i64) -> anyhow::Result<()> {
+    let Some((protagonist_team, _rivals)) = load_protagonist_news_context(slot_conn, content_conn)? else {
+        return Ok(());
+    };
+    let mut stmt = slot_conn.prepare("SELECT id, position FROM npc WHERE team_id = ?1 AND retired = 0")?;
+    let roster: Vec<(String, String)> = stmt.query_map([&protagonist_team], |r| Ok((r.get(0)?, r.get(1)?)))?.collect::<Result<_, _>>()?;
+    drop(stmt);
+
+    let season_lines = load_all_lines_by_player(slot_conn, "season_stats")?;
+
+    for (player_id, position) in roster {
+        let Some(lines) = season_lines.get(&player_id) else { continue };
+        let sum_field = |field: &str| -> i64 {
+            lines.iter().filter_map(|l| serde_json::from_str::<serde_json::Value>(l).ok()).filter_map(|v| v.get(field).and_then(|x| x.as_i64())).sum()
+        };
+        let (total, step, label) = if TEAMMATE_PITCHER_POSITIONS.contains(&position.as_str()) {
+            (sum_field("strikeouts"), TEAMMATE_PITCHER_STRIKEOUT_STEP, "탈삼진")
+        } else {
+            (sum_field("hits"), TEAMMATE_BATTER_HIT_STEP, "안타")
+        };
+        let milestone = (total / step) * step;
+        if milestone == 0 {
+            continue;
+        }
+
+        let meta_key = format!("teammate_milestone_notified:{player_id}");
+        let already: Option<i64> = slot_conn
+            .query_row("SELECT value FROM season_meta WHERE key = ?1", [&meta_key], |r| r.get::<_, String>(0))
+            .optional()?
+            .and_then(|s| s.parse().ok());
+        if already == Some(milestone) {
+            continue;
+        }
+
+        let body = format!("동료가 이번 시즌 {milestone}{label}을 채웠다.");
+        slot_conn.execute(
+            "INSERT INTO inbox (id, kind, urgency, read, day, body) VALUES (?1, 'teammate_milestone', 'normal', 0, ?2, ?3)",
+            params![format!("inbox:teammate_milestone:{player_id}:{milestone}"), day, body],
+        )?;
+        slot_conn.execute(
+            "INSERT INTO season_meta (key, value) VALUES (?1, ?2) ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+            params![meta_key, milestone.to_string()],
+        )?;
+    }
+    Ok(())
+}
+
 fn process_day(slot_conn: &Connection, content_conn: &Connection, world_seed: i64, day: i64) -> anyhow::Result<()> {
     let mut stmt = slot_conn.prepare("SELECT game_id, home, away FROM schedule WHERE day = ?1 AND result IS NULL")?;
     let games: Vec<(String, String, String)> =
@@ -5679,6 +5739,8 @@ pub fn advance(slot_conn: &mut Connection, content_conn: &Connection) -> anyhow:
             process_protagonist_rank_updates(&tx, content_conn, today, &scores)?;
             // 통산 기록(승수·탈삼진·이닝) 마일스톤 근접 알림(대화 2026-07-26, §6-N).
             process_protagonist_career_milestones(&tx, today)?;
+            // 뉴스 2부 — 동료 개인기록 소식(대화 2026-07-26, §6-N).
+            process_teammate_milestones(&tx, content_conn, today)?;
         }
         if crate::calendar::is_season_boundary(today) {
             season_rollover(&tx, content_conn, today)?;
@@ -9677,6 +9739,64 @@ mod tests {
         assert_eq!(team_news_count, 0, "소속팀은 안 뛰었으니 team_news는 없어야 함");
         let rival_news_count: i64 = slot_conn.query_row("SELECT count(*) FROM inbox WHERE kind = 'rival_news'", [], |r| r.get(0)).unwrap();
         assert_eq!(rival_news_count, 1, "라이벌이 뛰었으면 rival_news가 하나 떠야 함");
+    }
+
+    #[test]
+    fn process_teammate_milestones_notifies_a_pitcher_teammates_strikeout_milestone() {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:x', NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:a', 'league:x', NULL, NULL)", []).unwrap();
+
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_market_protagonist(&slot_conn, &serde_json::json!({"team_id": "team:a"}), 0.0);
+        insert_test_player(&slot_conn, "team:a_sp", "team:a", "선발투수", serde_json::json!({"제구": 50.0, "구위": 50.0}));
+        slot_conn
+            .execute(
+                "INSERT INTO season_stats (player_id, week, line) VALUES ('team:a_sp', 1, ?1)",
+                [serde_json::json!({"strikeouts": 10}).to_string()],
+            )
+            .unwrap();
+        slot_conn
+            .execute(
+                "INSERT INTO season_stats (player_id, week, line) VALUES ('team:a_sp', 2, ?1)",
+                [serde_json::json!({"strikeouts": 8}).to_string()],
+            )
+            .unwrap();
+
+        process_teammate_milestones(&slot_conn, &content_conn, 28).unwrap();
+
+        let body: String = slot_conn.query_row("SELECT body FROM inbox WHERE kind = 'teammate_milestone'", [], |r| r.get(0)).unwrap();
+        assert!(body.contains("15탈삼진"), "통산 18탈삼진 중 마지막으로 넘긴 15단위 마일스톤이어야 함: {body}");
+
+        // 같은 달 다시 체크해도 같은 마일스톤이면 중복 없음.
+        process_teammate_milestones(&slot_conn, &content_conn, 28).unwrap();
+        let count: i64 = slot_conn.query_row("SELECT count(*) FROM inbox WHERE kind = 'teammate_milestone'", [], |r| r.get(0)).unwrap();
+        assert_eq!(count, 1, "같은 마일스톤은 두 번 알리지 않아야 함");
+    }
+
+    #[test]
+    fn process_teammate_milestones_notifies_a_batter_teammates_hit_milestone_but_not_below_the_step() {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:x', NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO teams (id, league_id, color, meta) VALUES ('team:a', 'league:x', NULL, NULL)", []).unwrap();
+
+        let slot_conn = slot::open_in_memory().unwrap();
+        insert_market_protagonist(&slot_conn, &serde_json::json!({"team_id": "team:a"}), 0.0);
+        insert_test_player(&slot_conn, "team:a_b0", "team:a", "유격수", serde_json::json!({"컨택": 50.0}));
+        insert_test_player(&slot_conn, "team:a_b1", "team:a", "2루수", serde_json::json!({"컨택": 50.0}));
+        slot_conn
+            .execute("INSERT INTO season_stats (player_id, week, line) VALUES ('team:a_b0', 1, ?1)", [serde_json::json!({"hits": 16}).to_string()])
+            .unwrap();
+        slot_conn
+            .execute("INSERT INTO season_stats (player_id, week, line) VALUES ('team:a_b1', 1, ?1)", [serde_json::json!({"hits": 4}).to_string()])
+            .unwrap();
+
+        process_teammate_milestones(&slot_conn, &content_conn, 28).unwrap();
+
+        let count: i64 = slot_conn.query_row("SELECT count(*) FROM inbox WHERE kind = 'teammate_milestone'", [], |r| r.get(0)).unwrap();
+        assert_eq!(count, 1, "안타 15개 문턱을 넘긴 타자 한 명만 알림이 떠야 함(4개짜리는 제외)");
+        let body: String = slot_conn.query_row("SELECT body FROM inbox WHERE kind = 'teammate_milestone'", [], |r| r.get(0)).unwrap();
+        assert!(body.contains("15안타"), "16안타 중 마지막으로 넘긴 15단위 마일스톤이어야 함: {body}");
     }
 
     #[test]

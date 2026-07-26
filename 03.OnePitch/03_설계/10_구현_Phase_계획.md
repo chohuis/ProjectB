@@ -2233,3 +2233,17 @@
 **테스트**: 신규 3건 — `process_day_reports_team_news_when_the_protagonists_team_plays_in_the_background`(소속팀이 배경에서 뛰면 team_news 하나), `process_day_reports_a_rival_flavored_team_news_when_facing_the_rival_directly`(소속팀이 라이벌과 직접 붙으면 "라이벌전" 문구), `process_day_reports_rival_news_when_the_rival_plays_someone_else`(소속팀은 안 뛰고 라이벌만 다른 팀과 붙으면 rival_news, team_news는 0건). `cargo test --lib` 563개 전부 통과, `cargo clippy --lib --tests --bins`(인자 9개로 `too_many_arguments` 경고 나서 `#[allow]` 추가, 기존 `resolve_in_play_result` 등과 같은 관례) 클린. `flutter test -j 1` — 1차 시도에서 1개 실패했으나(자세한 로그가 압축 리포터의 캐리지리턴 갱신 방식 때문에 안 잡혀서 `--reporter expanded`로 재실행) 재실행 시 38개 파일 전부 통과 — 순수 Rust 백엔드 변경(Flutter 대면 API 변경 없음)이라 인과관계 없는 일회성 플레이키로 판단. `balance_harness -- 5 3` — S등급 6.5%·평균 이벤트 발동 수 87.60건 전부 변화 없음, 크래시 없음.
 
 **영향 없음**: 새 테이블·마이그레이션 없음(`inbox`/`team_history` 전부 재사용). 새 RNG 굴림 없음.
+
+### 6-138. 뉴스 2부 — 동료 개인기록 소식 실측화 (2026-07-26, 완료 — 로드맵 Phase 1~4 전체 완료)
+
+**Context**: §6-135 로드맵의 Phase 4(마지막). §6-133의 확률형 "동료 마일스톤 축하"(`hs_teammate_milestone`)는 그대로 두고(선택지 있는 이벤트라 "그 순간 어떻게 반응할지" 역할이 다름 — 대체가 아니라 보강), `season_stats` 실측치 기반의 순수 통지를 얹는다.
+
+**구현 조사**: NPC `season_stats`엔 승수 자체가 없음을 확인 — `PitcherGameStats`가 승패를 아예 안 track(주인공만 `game_log.decision`으로 별도 판정, §6-136). 그래서 투수는 탈삼진, 타자는 안타를 기준으로 삼음. 동료는 시즌마다 로스터가 바뀌므로(§6-134/136의 `CareerStat`과 달리) 통산이 아니라 "이번 시즌"만 — `season_stats`를 시즌 경계마다 비우는 기존 관례와도 자연히 맞음.
+
+**구현(`data::repository.rs`)**: `process_teammate_milestones` — `load_protagonist_news_context`(§6-137에서 이미 만든 것)로 소속팀 얻은 뒤, `load_all_lines_by_player(conn, "season_stats")`(`StatScoreCache`가 쓰던 것과 같은 헬퍼, 172팀 로스터 전체를 매번 개별 조회하는 대신 한 번에 로드)로 팀 로스터 전원의 시즌 누적을 계산. 포지션이 투수 3종이면 탈삼진(15단위), 아니면 안타(15단위) 마일스톤을 `season_meta`(플레이어별 키)로 중복방지하며 `kind='teammate_milestone'` 통지. 월간 훅(`process_protagonist_career_milestones` 바로 다음)에 배선.
+
+**테스트**: 신규 2건 — `process_teammate_milestones_notifies_a_pitcher_teammates_strikeout_milestone`(2주치 탈삼진 10+8=18 합산 → 15탈삼진 마일스톤 알림 + 같은 달 재체크 시 중복 없음), `process_teammate_milestones_notifies_a_batter_teammates_hit_milestone_but_not_below_the_step`(16안타 타자는 알림, 4안타 타자는 문턱 미달로 무시). `cargo test --lib` 565개 전부 통과, `cargo clippy --lib --tests --bins` 클린. `flutter test -j 1` 38개 파일 전부 통과. `balance_harness -- 5 3` — S등급 6.5%·평균 이벤트 발동 수 87.60건 전부 변화 없음, 크래시 없음.
+
+**영향 없음**: 새 테이블·마이그레이션 없음(`season_stats`/`season_meta`/`inbox` 전부 재사용). 새 RNG 굴림 없음.
+
+**§6-135 로드맵 진행 상황**: Phase 1(이벤트: 독립·프로2군, §6-135)·Phase 2(메시지: 마일스톤 확장+첫 승, §6-136)·Phase 3(뉴스 1부: 소속팀·라이벌, §6-137)·Phase 4(뉴스 2부: 동료 마일스톤, 이 항목) 전부 완료. 남은 건 Phase 5(나머지 캘린더형 카탈로그: 스토브리그 개시·시상식·스프링캠프 시작·포스트시즌 개막·드래프트 데이·트레이드데드라인)와 Phase 6(주간 다이제스트 + 지역·전국 순위 조회 화면, 신규 Flutter UI 포함) — 둘 다 다음 세션 후보.
