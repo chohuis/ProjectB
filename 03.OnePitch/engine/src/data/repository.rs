@@ -3829,22 +3829,123 @@ fn check_and_notify_rank(slot_conn: &Connection, day: i64, key: &str, context: &
 /// 와 투수 기대주 순위(지역·전국) 4개를 계산해 지난달 대비 바뀐 것만 알린다.
 /// `scores`는 월간 재편성 훅이 이미 로드해둔 `StatScoreCache`를 그대로
 /// 받아 씀(재사용 — 이 함수만을 위해 다시 전체 스캔하지 않는다).
-fn process_protagonist_rank_updates(slot_conn: &Connection, content_conn: &Connection, day: i64, scores: &StatScoreCache) -> anyhow::Result<()> {
+/// `process_protagonist_rank_updates`와 신규 `process_protagonist_periodic_rank_summary`
+/// (대화 2026-07-26, §6-N)가 공유하는 앞부분 — 주인공 소속팀·리그를 찾아
+/// `team_rank_context`까지 계산. 무소속(입대 등)이거나 리그를 못 찾으면
+/// `None`.
+fn load_protagonist_team_rank_context(slot_conn: &Connection, content_conn: &Connection) -> anyhow::Result<Option<(String, String, TeamRankContext)>> {
     let contract_raw: Option<String> =
         slot_conn.query_row("SELECT contract FROM protagonist WHERE id = 'proto:1'", [], |r| r.get(0)).optional()?;
     let Some(contract_raw) = contract_raw else {
-        return Ok(());
+        return Ok(None);
     };
     let contract: serde_json::Value = serde_json::from_str(&contract_raw)?;
     let Some(team_id) = contract.get("team_id").and_then(|v| v.as_str()) else {
-        return Ok(()); // 입대 등 무소속 — 순위 개념 자체가 없음
+        return Ok(None); // 입대 등 무소속 — 순위 개념 자체가 없음
     };
     let league_id: Option<String> =
         content_conn.query_row("SELECT league_id FROM teams WHERE id = ?1", [team_id], |r| r.get(0)).optional()?;
     let Some(league_id) = league_id else {
-        return Ok(());
+        return Ok(None);
     };
     let Some(ctx) = team_rank_context(slot_conn, content_conn, &league_id, team_id)? else {
+        return Ok(None);
+    };
+    Ok(Some((team_id.to_string(), league_id, ctx)))
+}
+
+/// 뉴스 Phase 6-1(대화 2026-07-26, §6-N) — B안(전용 조회 화면 대신
+/// 메시지만): `process_protagonist_rank_updates`는 "바뀔 때만" 알리는데,
+/// 화면이 없으면 "지금 내 순위가 몇 위더라"를 확인할 방법이 그것뿐이다.
+/// 매달 무조건(직전 값과 비교 없이) 스냅샷 하나를 더 보내 — 안 바뀌어도
+/// "그대로 유지 중"이라는 확인 자체가 정보. `team_rank_context` 계산은
+/// 위 헬퍼로 공유, 새 계산 없음.
+fn process_protagonist_periodic_rank_summary(slot_conn: &Connection, content_conn: &Connection, day: i64) -> anyhow::Result<()> {
+    let Some((_team_id, _league_id, ctx)) = load_protagonist_team_rank_context(slot_conn, content_conn)? else {
+        return Ok(());
+    };
+    let body = match ctx.region_rank {
+        Some(region_rank) => format!("이번 달 팀 성적 — 지역 순위 {region_rank}위 · 전국 순위 {}위.", ctx.national_rank),
+        None => format!("이번 달 팀 성적 — 순위 {}위.", ctx.national_rank),
+    };
+    slot_conn.execute(
+        "INSERT INTO inbox (id, kind, urgency, read, day, body) VALUES (?1, 'rank_summary', 'normal', 0, ?2, ?3)",
+        params![format!("inbox:rank_summary:{day}"), day, body],
+    )?;
+    Ok(())
+}
+
+/// 리그 5종의 한국어 표시명(내부 `league_id` 노출 금지 — `tournament_display_name`
+/// 과 같은 이유·같은 관례) — 뉴스 Phase 6-2(대화 2026-07-26, §6-N)의
+/// "먼 리그 헤드라인"에만 씀. 리그는 5개 고정 세트라(팀 이름과 달리
+/// 동적 데이터가 아님) 소규모 매핑으로 충분.
+fn league_display_name(league_id: &str) -> &str {
+    match league_id {
+        "league:hs" => "고교",
+        "league:univ" => "대학",
+        "league:independent" => "독립리그",
+        "league:pro" => "프로",
+        "league:pro_farm" => "프로 2군",
+        other => other,
+    }
+}
+
+const ALL_LEAGUE_IDS: [&str; 5] = ["league:hs", "league:univ", "league:independent", "league:pro", "league:pro_farm"];
+
+fn top_win_pct_in_group(group: &[(String, i64, i64)]) -> Option<f64> {
+    group.first().map(|(_, w, l)| win_pct(*w, *l))
+}
+
+/// 뉴스 Phase 6-2(대화 2026-07-26, §6-N) — 05_뉴스_미디어.md §1 "인접 권역
+/// 소식"(요약 수준)·"먼 리그 소식"(헤드라인만) 두 상세도를 그대로 따름.
+/// "인접"을 실제 지리적 인접성으로 계산하려면 권역 인접 그래프가
+/// 새로 필요해(스코프 과함, D그룹 placeholder) — 같은 리그의 "내 권역이
+/// 아닌 다른 권역"으로 근사(단일 그룹 리그는 애초에 권역 개념이 없어
+/// 스킵). 팀 이름은 여전히 노출 안 함(§6-137 관례 유지) — 승률 숫자만으로
+/// "저기 강한 팀이 있구나" 느낌을 준다. 매주(`today % 7 == 0`) 무작위로
+/// 하나씩만 골라 보낸다(§6-122류 "바뀔 때만"이 아니라 §6-N(Phase 6-1)
+/// 처럼 매번 — 다이제스트는 "새 소식이 있을 때만"이 아니라 "정기적으로
+/// 훑어주는" 성격이 맞다).
+fn process_weekly_league_digest(slot_conn: &Connection, content_conn: &Connection, world_seed: i64, day: i64) -> anyhow::Result<()> {
+    let Some((_team_id, my_league, ctx)) = load_protagonist_team_rank_context(slot_conn, content_conn)? else {
+        return Ok(());
+    };
+    let mut rng = ChaCha8Rng::seed_from_u64(league_sub_seed(world_seed, &format!("digest:{day}")));
+
+    if ctx.region_rank.is_some() {
+        let groups = league_group_standings(slot_conn, content_conn, &my_league)?;
+        let my_region: std::collections::HashSet<&str> = ctx.region_team_ids.iter().map(String::as_str).collect();
+        let other_groups: Vec<&Vec<(String, i64, i64)>> =
+            groups.iter().filter(|g| !g.iter().any(|(id, _, _)| my_region.contains(id.as_str()))).collect();
+        if let Some(group) = other_groups.choose(&mut rng) {
+            if let Some(pct) = top_win_pct_in_group(group) {
+                let body = format!("인접 권역에서는 승률 {pct:.3}인 팀이 선두를 달리고 있다.");
+                slot_conn.execute(
+                    "INSERT INTO inbox (id, kind, urgency, read, day, body) VALUES (?1, 'league_digest', 'normal', 0, ?2, ?3)",
+                    params![format!("inbox:digest_region:{day}"), day, body],
+                )?;
+            }
+        }
+    }
+
+    let other_leagues: Vec<&str> = ALL_LEAGUE_IDS.iter().copied().filter(|l| *l != my_league).collect();
+    if let Some(&other_league) = other_leagues.choose(&mut rng) {
+        let groups = league_group_standings(slot_conn, content_conn, other_league)?;
+        let best = groups.iter().filter_map(|g| top_win_pct_in_group(g)).fold(None::<f64>, |acc, pct| Some(acc.map_or(pct, |a| a.max(pct))));
+        if let Some(pct) = best {
+            let label = league_display_name(other_league);
+            let body = format!("{label} 리그 소식 — 선두 팀이 승률 {pct:.3}을 기록 중이다.");
+            slot_conn.execute(
+                "INSERT INTO inbox (id, kind, urgency, read, day, body) VALUES (?1, 'league_digest', 'normal', 0, ?2, ?3)",
+                params![format!("inbox:digest_league:{day}"), day, body],
+            )?;
+        }
+    }
+    Ok(())
+}
+
+fn process_protagonist_rank_updates(slot_conn: &Connection, content_conn: &Connection, day: i64, scores: &StatScoreCache) -> anyhow::Result<()> {
+    let Some((team_id, league_id, ctx)) = load_protagonist_team_rank_context(slot_conn, content_conn)? else {
         return Ok(());
     };
 
@@ -5697,6 +5798,8 @@ pub fn advance(slot_conn: &mut Connection, content_conn: &Connection) -> anyhow:
             process_week(&tx, content_conn, world_seed, today)?;
             process_protagonist_week(&tx, content_conn, world_seed, today)?;
             process_protagonist_events(&tx, content_conn, world_seed, today)?;
+            // 뉴스 Phase 6-2 — 인접권역·먼 리그 주간 다이제스트(대화 2026-07-26, §6-N).
+            process_weekly_league_digest(&tx, content_conn, world_seed, today)?;
         }
         if today % 28 == 0 {
             process_month(&tx, content_conn, world_seed, today)?;
@@ -5737,6 +5840,8 @@ pub fn advance(slot_conn: &mut Connection, content_conn: &Connection) -> anyhow:
             // 순위 변동 알림(대화 2026-07-25, §6-N) — 위에서 이미 로드한
             // `scores`를 그대로 재사용, 새로 스캔하지 않는다.
             process_protagonist_rank_updates(&tx, content_conn, today, &scores)?;
+            // 뉴스 Phase 6-1 — 월간 순위 스냅샷(대화 2026-07-26, §6-N).
+            process_protagonist_periodic_rank_summary(&tx, content_conn, today)?;
             // 통산 기록(승수·탈삼진·이닝) 마일스톤 근접 알림(대화 2026-07-26, §6-N).
             process_protagonist_career_milestones(&tx, today)?;
             // 뉴스 2부 — 동료 개인기록 소식(대화 2026-07-26, §6-N).
@@ -8822,6 +8927,75 @@ mod tests {
         assert_eq!(inbox_count(), 1, "순위가 바뀌면 알림이 하나 생겨야 함");
         let body: String = slot_conn.query_row("SELECT body FROM inbox WHERE kind = 'rank_update'", [], |r| r.get(0)).unwrap();
         assert!(body.contains("2위에서 1위"), "실제 이전/이후 숫자가 들어가야 함: {body}");
+    }
+
+    #[test]
+    fn process_protagonist_periodic_rank_summary_sends_a_snapshot_every_time_even_without_a_change() {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:pro', NULL)", []).unwrap();
+        let slot_conn = slot::open_in_memory().unwrap();
+
+        insert_rank_test_team(&content_conn, &slot_conn, "team:p1", "league:pro", None, 10, 0);
+        insert_rank_test_team(&content_conn, &slot_conn, "team:p2", "league:pro", None, 5, 5);
+        insert_market_protagonist(&slot_conn, &serde_json::json!({"team_id": "team:p2"}), 0.0);
+
+        let inbox_count = || -> i64 { slot_conn.query_row("SELECT count(*) FROM inbox WHERE kind = 'rank_summary'", [], |r| r.get(0)).unwrap() };
+
+        process_protagonist_periodic_rank_summary(&slot_conn, &content_conn, 28).unwrap();
+        assert_eq!(inbox_count(), 1, "월간 스냅샷은 첫 체크에도 바로 떠야 함(변경 비교 없음)");
+        let body: String = slot_conn.query_row("SELECT body FROM inbox WHERE kind = 'rank_summary'", [], |r| r.get(0)).unwrap();
+        assert!(body.contains("2위"), "순위(단일 그룹 리그라 전국 순위만)가 실제 숫자로 들어가야 함: {body}");
+
+        // 변동이 전혀 없어도 다음 달엔 또 하나 — check_and_notify_rank류의
+        // "바뀔 때만"과 달리 매달 무조건.
+        process_protagonist_periodic_rank_summary(&slot_conn, &content_conn, 56).unwrap();
+        assert_eq!(inbox_count(), 2, "변동이 없어도 매달 스냅샷이 새로 떠야 함");
+    }
+
+    #[test]
+    fn process_weekly_league_digest_reports_an_adjacent_region_and_a_distant_league() {
+        let content_conn = content::open_in_memory().unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:hs', NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO leagues (id, meta) VALUES ('league:pro', NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO stadiums (id, name, park_factor, meta) VALUES ('stad:1', 's1', '{}', NULL)", []).unwrap();
+        content_conn.execute("INSERT INTO stadiums (id, name, park_factor, meta) VALUES ('stad:2', 's2', '{}', NULL)", []).unwrap();
+        let slot_conn = slot::open_in_memory().unwrap();
+
+        // 주인공 팀(team:a1)의 권역(stad:1)엔 팀 하나뿐 — 다른 권역(stad:2)의
+        // team:b1이 "인접 권역" 후보로 잡혀야 함.
+        insert_rank_test_team(&content_conn, &slot_conn, "team:a1", "league:hs", Some("stad:1"), 5, 5);
+        insert_rank_test_team(&content_conn, &slot_conn, "team:b1", "league:hs", Some("stad:2"), 8, 2);
+        insert_rank_test_team(&content_conn, &slot_conn, "team:p1", "league:pro", None, 10, 0);
+        insert_market_protagonist(&slot_conn, &serde_json::json!({"team_id": "team:a1"}), 0.0);
+
+        process_weekly_league_digest(&slot_conn, &content_conn, 555, 7).unwrap();
+
+        let region_body: Option<String> = slot_conn
+            .query_row("SELECT body FROM inbox WHERE id = 'inbox:digest_region:7'", [], |r| r.get(0))
+            .optional()
+            .unwrap();
+        assert!(region_body.is_some_and(|b| b.contains("인접 권역")), "다른 권역이 있으면 인접권역 소식이 떠야 함");
+
+        // 먼 리그는 hs를 뺀 4개(대학·독립·프로·프로2군) 중 무작위 하나라
+        // 매번 프로가 나오리라는 보장이 없다 — 여러 날짜(day)를 훑어서
+        // "프로 리그" 헤드라인이 실제로 나오는 경우가 있는지만 확인.
+        let mut saw_pro_headline = false;
+        for day in 0..50i64 {
+            slot_conn.execute("DELETE FROM inbox WHERE kind = 'league_digest'", []).unwrap();
+            process_weekly_league_digest(&slot_conn, &content_conn, 555, day).unwrap();
+            let body: Option<String> = slot_conn
+                .query_row("SELECT body FROM inbox WHERE id = ?1", [format!("inbox:digest_league:{day}")], |r| r.get(0))
+                .optional()
+                .unwrap();
+            if let Some(body) = body {
+                if body.contains("프로 리그") {
+                    assert!(body.contains("1.000"), "team:p1(10승 0패, 승률 1.000)이 선두여야 함: {body}");
+                    saw_pro_headline = true;
+                    break;
+                }
+            }
+        }
+        assert!(saw_pro_headline, "50번 훑었는데 프로 리그 헤드라인이 한 번도 안 나옴");
     }
 
     fn insert_win_decision_game_logs(slot_conn: &Connection, season: i64, wins: u32, prefix: &str) {
