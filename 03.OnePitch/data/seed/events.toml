@@ -893,3 +893,111 @@ label = "짧게 안부만 전한다"
 target = "live_state"
 field = "피로도"
 delta = -2.0
+
+# ---------------------------------------------------------------------------
+# 고교 3차 배치(대화 2026-07-26, §6-N) — 카탈로그 "동료 상태 기반" 중 남은
+# 3개(동료 부상·은퇴·이적/작별, 동료 마일스톤 축하, 새 스태프 부임).
+# 실제 "그 동료가 누구인지·무슨 사건인지"를 판별하는 콜백 훅은 아직 없어
+# (§6-59 감독 관계도만 실데이터, 팀동료 관계 자체가 미구현) `type =
+# "probability"`로 근사 — 기존 hs_teammate_counsel 등과 같은 관례.
+# 기존 5개 트리거만 사용, 새 엔진 작업 없음.
+# ---------------------------------------------------------------------------
+
+[[event]]
+id = "event:hs_teammate_setback"
+type = "probability"
+stage = "league:hs"
+urgency = "normal"
+bodies = [
+  "함께 훈련하던 동료가 부상으로 팀을 떠나게 됐다.",
+  "정든 동료 하나가 다른 학교로 전학을 가게 됐다는 소식을 들었다.",
+  "같이 땀 흘리던 선수 한 명이 야구를 그만두기로 했다는 얘기가 들렸다.",
+]
+
+[event.trigger]
+var = "확률"
+chance = 0.02
+
+[[event.choices]]
+id = "따뜻하게배웅"
+label = "따뜻하게 배웅한다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 4.0
+
+[[event.choices]]
+id = "내할일집중"
+label = "묵묵히 내 할 일에 집중한다"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "침착함"
+delta = 3.0
+
+[[event]]
+id = "event:hs_teammate_milestone"
+type = "probability"
+stage = "league:hs"
+urgency = "normal"
+bodies = [
+  "동료 한 명이 개인 기록을 세웠다는 소식이 들려왔다.",
+  "같은 팀 선수가 뜻깊은 순간을 맞았다고 다들 떠들썩하다.",
+  "동료가 특별한 성과를 냈다는 얘기로 라커룸이 시끌시끌하다.",
+]
+
+[event.trigger]
+var = "확률"
+chance = 0.02
+
+[[event.choices]]
+id = "진심으로축하"
+label = "진심으로 축하해준다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 5.0
+
+[[event.choices]]
+id = "자극받기"
+label = "자극받아 더 몰입한다"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "구위"
+delta = 3.0
+
+[[event]]
+id = "event:hs_new_staff_arrival"
+type = "probability"
+stage = "league:hs"
+urgency = "normal"
+bodies = [
+  "팀에 새로운 코치님이 부임했다.",
+  "낯선 얼굴의 새 스태프가 훈련장에 나타났다.",
+  "새로 오신 지도자와 첫 인사를 나눴다.",
+]
+
+[event.trigger]
+var = "확률"
+chance = 0.02
+
+[[event.choices]]
+id = "눈도장찍기"
+label = "적극적으로 눈도장을 찍는다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "주목도"
+delta = 3.0
+
+[[event.choices]]
+id = "차분히지켜보기"
+label = "차분히 지켜본다"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "침착함"
+delta = 2.0
