@@ -1654,3 +1654,195 @@ label = "부담 없이 던진다"
 target = "xp"
 stat = "침착함"
 delta = 5.0
+
+# ---------------------------------------------------------------------------
+# 프로 캘린더 배치(대화 2026-07-26, §6-N) — 38개 카탈로그 "캘린더 기반" 중
+# 남은 6개(스토브리그 개시·시상식·스프링캠프 시작·포스트시즌 개막·
+# 드래프트 데이·트레이드데드라인). 01_프로.md §7 시즌 캘린더 그대로:
+# 2월말 스프링캠프 → 3월 개막(기존 season_opener) → 7월중순 올스타
+# (기존 allstar_break, week=13) → 7월말 트레이드데드라인 → 10월말~11월초
+# 포스트시즌 → 11월 시상식+드래프트 → 12월 스토브리그. week 값은 이
+# 순서를 지키는 근사치(고교·대학·독립 배치와 동일한 정밀도) — 스프링
+# 캠프만 시즌 경계를 넘어가는 소재라 이번 시즌의 마지막 주차로 근사
+# (다음 시즌 준비를 이번 시즌 끝자락에서 예고하는 서술). 기존 5개
+# 트리거만 사용, 새 엔진 작업 없음.
+# ---------------------------------------------------------------------------
+
+[[event]]
+id = "event:pro_trade_deadline"
+type = "calendar"
+week = 15
+stage = "league:pro"
+urgency = "normal"
+bodies = [
+  "7월 말 트레이드 데드라인이다. 오늘 하루, 이런저런 소문이 무성하다.",
+  "데드라인 당일, 라커룸 분위기가 뒤숭숭하다.",
+  "트레이드 데드라인이 지나가고 나서야 다들 한숨 돌린다.",
+]
+
+[[event.choices]]
+id = "소문에안흔들리기"
+label = "소문에 흔들리지 않는다"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "침착함"
+delta = 5.0
+
+[[event.choices]]
+id = "빨리지나가길바라기"
+label = "하루빨리 지나가길 바란다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 3.0
+
+[[event]]
+id = "event:pro_postseason_opens"
+type = "calendar"
+week = 30
+stage = "league:pro"
+urgency = "normal"
+bodies = [
+  "포스트시즌이 시작된다. 여기부터는 매 경기가 다르다.",
+  "가을야구가 열렸다. 시즌 내내 쌓아온 걸 증명할 시간이다.",
+  "포스트시즌 첫 경기, 공기부터 다르게 느껴진다.",
+]
+
+[[event.choices]]
+id = "각오다짐"
+label = "각오를 다진다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 10.0
+
+[[event.choices]]
+id = "평소처럼준비"
+label = "평소처럼 준비한다"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "침착함"
+delta = 6.0
+
+[[event]]
+id = "event:pro_awards_ceremony"
+type = "calendar"
+week = 32
+stage = "league:pro"
+urgency = "normal"
+bodies = [
+  "시즌 시상식이 열렸다. 누군가에겐 영광의 밤이다.",
+  "올 시즌 최고의 활약을 펼친 선수들이 상을 받았다.",
+  "시상식장 분위기를 지켜보며 나는 어떤 한 해를 보냈는지 돌아본다.",
+]
+
+[[event.choices]]
+id = "다음목표다짐"
+label = "다음 목표를 다짐한다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 6.0
+
+[[event.choices]]
+id = "축하하는마음으로지켜보기"
+label = "축하하는 마음으로 지켜본다"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "침착함"
+delta = 4.0
+
+[[event]]
+id = "event:pro_draft_day"
+type = "calendar"
+week = 33
+stage = "league:pro"
+urgency = "normal"
+bodies = [
+  "통합 드래프트가 열렸다. 새로운 얼굴들이 리그에 들어온다.",
+  "오늘 지명된 신인들이 곧 스프링캠프에서 합류한다는 소식이다.",
+  "드래프트 결과가 발표되며 팀들의 희비가 갈렸다.",
+]
+
+[[event.choices]]
+id = "자리걱정"
+label = "신인들에게 자리를 내줄 걱정을 한다"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "침착함"
+delta = 4.0
+
+[[event.choices]]
+id = "신경안쓰기"
+label = "별로 신경 쓰지 않는다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 3.0
+
+[[event]]
+id = "event:pro_stove_league_opens"
+type = "calendar"
+week = 36
+stage = "league:pro"
+urgency = "normal"
+bodies = [
+  "스토브리그가 시작됐다. 오프시즌인데도 리그가 시끄럽다.",
+  "FA·트레이드 소식이 하루가 멀다 하고 들려온다.",
+  "스토브리그 특유의 어수선한 공기가 감돈다.",
+]
+
+[[event.choices]]
+id = "소식에무심하기"
+label = "소식에 신경 쓰지 않는다"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "침착함"
+delta = 4.0
+
+[[event.choices]]
+id = "전력변화궁금해하기"
+label = "팀 전력 변화가 궁금하다"
+
+[[event.choices.effects]]
+target = "live_state"
+field = "사기"
+delta = 3.0
+
+[[event]]
+id = "event:pro_spring_camp_begins"
+type = "calendar"
+week = 50
+stage = "league:pro"
+urgency = "normal"
+bodies = [
+  "다음 시즌을 준비하는 스프링캠프가 시작됐다.",
+  "새해 첫 훈련, 스프링캠프가 열렸다.",
+  "긴 겨울을 지나 다시 몸을 만드는 시기다.",
+]
+
+[[event.choices]]
+id = "몸만들기집중"
+label = "몸을 만드는 데 집중한다"
+
+[[event.choices.effects]]
+target = "xp"
+stat = "구위"
+delta = 5.0
+
+[[event.choices]]
+id = "팀워크다지기"
+label = "팀워크를 다진다"
+
+[[event.choices.effects]]
+target = "manager_relationship"
+delta = 3
