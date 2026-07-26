@@ -24,6 +24,22 @@ fn expected_runs(opponent_batting_avg: f64, own_skill: f64) -> f64 {
 /// 좋은 등급. `runs_allowed`는 주인공이 완투하는 이번 스코프에선 상대팀
 /// 총득점과 같다(match_session이 계산해 넘겨줌). 등급 경계 자체는 §6
 /// "구체 수치는 스탯 스케일 확정 후"라 placeholder.
+///
+/// **완봉의 등급 경계 무관성(2026-07-26, `sim::pitch::throw_pitch` 볼카운트
+/// 공식 스케일 확정 작업 중 발견)** — `runs_allowed=0`이면 `expected`가
+/// 무엇이든 `ratio = 0/expected = 0`이라 항상 S 조건(`<= 0.3`)을 만족한다.
+/// 즉 **S등급 비율의 하한선은 이 함수의 어떤 상수를 조정해도 "완봉 확률"
+/// 밑으로 못 내려간다** — 등급 경계(여기)나 `expected_runs`의 계수를 아무리
+/// 손봐도 막을 수 없고, 오직 완봉 확률 자체를 낮추는 쪽(투구 판정 공식,
+/// 또는 이 함수에 "실점 0" 외의 조건을 추가하는 설계 변경)만 효과가 있다.
+/// 위 볼카운트 공식 조정(`throw_pitch`의 존 안 헛스윙 기준치 0.15→0.19)이
+/// 완봉 확률을 올려 `balance_harness`의 S등급 비율을 6.5%→10.0%로 밀어
+/// 올렸을 때, 이 사실을 `expected_runs` base를 2.0→1.5로 낮춰 상쇄해보려
+/// 시도했지만 S등급 비율이 전혀 안 바뀌는 걸로 직접 확인됐다(F/D 비율만
+/// 바뀜) — 그래서 이번엔 이 함수의 상수를 건드리지 않고, 볼카운트 공식
+/// 쪽 조정폭을 S등급 인플레이션이 감당 가능한 선(0.19)까지만 절충했다
+/// (`sim::match_sim::tests::background_and_interactive_engines_agree_within_a_reasonable_tolerance`
+/// 문서 참고).
 pub fn grade_outing(runs_allowed: u32, opponent_batting_avg: f64, own_skill: f64) -> &'static str {
     let expected = expected_runs(opponent_batting_avg, own_skill);
     let ratio = runs_allowed as f64 / expected;

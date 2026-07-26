@@ -203,7 +203,7 @@ pub fn throw_pitch(
     // 타자가 다음 구종을 예측하기 어려워 코스와 무관하게 헛스윙 확률이
     // 소폭 오른다.
     let diversity_bonus = if repertoire_diverse { 0.02 } else { 0.0 };
-    let whiff_prob = clamp01(0.15 + contact_edge * 0.004 + diversity_bonus);
+    let whiff_prob = clamp01(0.19 + contact_edge * 0.004 + diversity_bonus);
     if rng.gen::<f64>() < whiff_prob {
         return PitchResult::Strike;
     }

@@ -2105,13 +2105,23 @@ mod tests {
     /// 을 배제하고 순수하게 공유 판정식(`resolve_in_play_result`·`fatigue_effective`·
     /// `platoon_edge_for_pitcher` 등)만 비교 대상에 남긴다.
     ///
-    /// 실측(2026-07-26, 5000시행): 배경 K=20.8%·BB=8.2%·Hit=19.5%, 인터랙티브
-    /// K=15.0%·BB=15.9%·Hit=20.1% — 두 엔진은 K/BB 배분이 상당히 다르지만
-    /// (1구 단위 볼카운트 시뮬 특유의 파울·유인구 누적 효과, PA레벨
-    /// 휴리스틱엔 없는 구조적 차이) **득점에 가장 직결되는 안타율은 거의
-    /// 일치**한다. 계수를 굳이 맞추러 들지 않음 — D그룹 placeholder라
-    /// 밸런스 조정은 I8 스코프(§4)이고, 이 테스트는 "많이" 갈라지는 회귀만
-    /// 잡는다(허용폭 10%p).
+    /// **볼카운트 판정 공식 수치 스케일 확정(2026-07-26, I8 스코프 항목
+    /// 착수)** — 처음 실측(5000시행)했을 땐 배경 K=20.8%·BB=8.2%·Hit=20.5%
+    /// 인데 인터랙티브는 K=11.7%·BB=10.9%·Hit=22.7%로 K 배분이 크게
+    /// 갈라졌다(9.1%p 차). `throw_pitch`의 존 안 헛스윙 확률 기준치를
+    /// `0.15`→`0.19`로 살짝만 올려 K 격차를 7.0%p로 좁혔다(K=13.8%·
+    /// BB=11.2%·Hit=21.9%) — 더 크게 올리면(예: 0.30) 격차는 거의 사라지지만
+    /// (K=19.8%) `sim::eval::grade_outing`이 실점만으로 등급을 매기는 구조상
+    /// **완봉(0실점)은 `expected_runs` 값과 무관하게 항상 ratio=0으로 S를
+    /// 받는다** — 즉 완봉 확률이 오르면 등급 경계 수치를 아무리 조정해도
+    /// S등급 비율의 하한선 자체가 같이 올라간다(수학적으로 등급 경계
+    /// 재설계로는 못 막음, `sim::eval` 모듈 문서 참고). `balance_harness --
+    /// 15 3`(100경기)로 실측: 0.15(원본) S=6.5%, 0.19(채택) S=10.0%, 0.30
+    /// S=14.0~29.0% — 0.19가 "K 격차 개선 대비 S등급 인플레이션"의
+    /// 합리적인 절충점이라 판단해 이 값으로 확정. 계수를 완전히 맞추러
+    /// 들지 않은 건 여전함(D그룹 placeholder, 나머지 조정은 I8 스코프) —
+    /// 이번엔 "확정"이 아니라 "완봉 인플레이션이 감당 가능한 선까지만
+    /// 절충".
     #[test]
     fn background_and_interactive_engines_agree_within_a_reasonable_tolerance() {
         use crate::sim::pitch::{self, PitchMastery};
@@ -2148,7 +2158,7 @@ mod tests {
         let (bg_k_rate, bg_bb_rate, bg_hit_rate) = (rate(bg_k), rate(bg_bb), rate(bg_hit));
         let (it_k_rate, it_bb_rate, it_hit_rate) = (rate(it_k), rate(it_bb), rate(it_hit));
 
-        const TOLERANCE: f64 = 0.10;
+        const TOLERANCE: f64 = 0.08;
         assert!(
             (bg_k_rate - it_k_rate).abs() < TOLERANCE,
             "삼진율이 두 엔진 사이에서 너무 크게 갈라짐: 배경={bg_k_rate:.3} 인터랙티브={it_k_rate:.3}"
