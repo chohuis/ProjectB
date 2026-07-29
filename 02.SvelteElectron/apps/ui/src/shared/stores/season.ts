@@ -535,6 +535,14 @@ function createSeasonStore() {
       update((s) => ({ ...s, worldSeed: worldSeed >>> 0 }));
     },
 
+    setSurvivalState(survival: import("../utils/survivalLeague").SurvivalState) {
+      update((s) => Postseason.setSurvivalState(s, survival));
+    },
+
+    injectLeagueEntries(leagueId: string, entries: ScheduleEntry[]) {
+      update((s) => Postseason.injectLeagueEntries(s, leagueId, entries));
+    },
+
     setGroupStage(stage: import("../utils/tournament").GroupStage) {
       update((s) => Postseason.setGroupStage(s, stage));
     },

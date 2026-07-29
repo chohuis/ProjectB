@@ -35,9 +35,15 @@ export async function buildAblBracket(
 // 시즌 결산이 패왕기(고교 11월)·왕중왕전(대학 5월)로 옮겨갔다 — top4 준결승/결승을
 // 남겨두면 결승이 두 번 열린다. Rust build_hs_bracket / build_univ_bracket도 제거됨.
 
-export async function buildIndBracket(standings: Standing[]): Promise<PostseasonSeries[]> {
-  const raw = await window.projectB!.postseasonBuildInd(
-    JSON.stringify({ standings })
+/**
+ * 독립 4차 Stage 사다리 (Phase 5-6).
+ *
+ * 준PO(3위 vs 4위, 단판) → PO(2위 vs 준PO승자, 단판) → 챔피언결정전(1위 vs PO승자, 3전2승).
+ * 구 buildIndBracket은 "1위 vs 2위 단판" 하나뿐이라 4팀 사다리를 표현하지 못했다.
+ */
+export async function buildIndLadder(standings: Standing[]): Promise<PostseasonSeries[]> {
+  const raw = await window.projectB!.engine(
+    "buildIndLadderNative", JSON.stringify({ standings }),
   );
   return JSON.parse(raw);
 }

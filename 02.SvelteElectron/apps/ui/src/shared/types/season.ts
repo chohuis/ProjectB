@@ -326,6 +326,8 @@ export interface SaveSeason {
   standingsSnapshots: import("../utils/standingsSnapshot").StandingsSnapshots;
   // 조별예선 (은하기·여명기). 예선이 끝나면 tournaments에 본선 브래킷이 생긴다 (Phase 5-5d)
   groupStages: Record<string, import("../utils/tournament").GroupStage>;
+  // 독립 4단계 생존리그 진행 상태 (Phase 5-6)
+  survival: import("../utils/survivalLeague").SurvivalState | null;
   /**
    * 세계 시드. slot.db meta의 world_seed와 같은 값을 시즌 상태에도 둔다.
    *
@@ -378,6 +380,7 @@ export function makeEmptySeason(
     tournaments: {},
     standingsSnapshots: {},
     groupStages: {},
+    survival: null,
     worldSeed: 0,
   };
 }

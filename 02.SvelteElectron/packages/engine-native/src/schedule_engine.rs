@@ -375,7 +375,7 @@ pub fn generate_league_schedule(p: GenerateLeagueScheduleParams) -> Vec<Schedule
 // 기획서 02_고교.md §4-1 "팀 적은 권역은 바퀴↑ → 경기 균등"을 그대로 구현.
 
 /// 라운드로빈을 목표 경기 수만큼 생성한다. 홀수 바퀴는 홈/원정을 뒤집는다.
-fn build_rounds_targeted(teams: &[String], target_games: u32) -> Vec<Vec<(String, String)>> {
+pub fn build_rounds_targeted(teams: &[String], target_games: u32) -> Vec<Vec<(String, String)>> {
     if teams.len() < 2 || target_games == 0 {
         return vec![];
     }

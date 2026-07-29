@@ -28,7 +28,7 @@ import { INJURY_LABEL } from "../types/save";
 import { toGameDate } from "../utils/scheduleGen";
 import { assignProtagonistRole, assignHighschoolPosition, ROLE_DESCRIPTION, isReliefsRole, relieverWouldPitch } from "../utils/pitcherRoleEngine";
 import {
-  buildKblBracket, buildAblBracket, buildIndBracket, buildJblBracket,
+  buildKblBracket, buildAblBracket, buildIndLadder, buildJblBracket,
   applyGameToSeries, fillNextSeries, resolveNonProtagonistSeries,
   makeSeriesGame, nextGameNum,
 } from "../utils/postseasonEngine";
@@ -54,6 +54,8 @@ import {
 } from "./weekPhases/market";
 import { buildHsLeagueDigest, LEAGUE_NAMES, MONTHLY_STANDINGS_LEAGUES, HS_DIGEST_WEEKS } from "./weekPhases/digest";
 import { applyRoundResults, openTournamentsForWeek, promoteFinishedGroupStages } from "./tournaments";
+import { progressSurvival } from "./survivalLeague";
+import { IND_LEAGUE_ID, emptySurvivalState } from "../utils/survivalLeague";
 import { snapshotDueAt } from "../utils/standingsSnapshot";
 
 // ── 군입대 대상 판별 (nationality 기반) ──────────────────────
@@ -1067,6 +1069,29 @@ async function handleSeasonEnd(): Promise<WeekAdvanceResult> {
 // ── 통합 포스트시즌 주입 (HS / KBL / ABL / UNIV / IND) ──────────
 // 매 게임 처리 후 호출. 정규시즌 종료 감지 → 브라켓 초기화 → 다음 경기 주입
 /**
+ * 독립 생존리그 진행 (Phase 5-6).
+ *
+ * 대회와 달리 한 주에 여러 단계가 겹치지 않으므로 반복 루프가 필요 없다 —
+ * 단계가 끝나야 다음 단계 일정이 나오고, 단계 사이에는 최소 한 주가 있다.
+ */
+async function progressIndependentLeague(week: number): Promise<void> {
+  const s = get(seasonStore);
+  const g = get(gameStore);
+  const state = s.survival ?? emptySurvivalState();
+
+  const r = await progressSurvival(week, s, state, g.protagonist.teamId);
+  if (!r) return;
+
+  seasonStore.setSurvivalState(r.state);
+  if (r.entries.length > 0) {
+    seasonStore.injectLeagueEntries(IND_LEAGUE_ID, r.entries);
+  }
+  if (r.eliminated.length > 0) {
+    console.info(`[독립] ${r.state.stage - 1}차 Stage 종료 — 탈락 ${r.eliminated.length}팀`);
+  }
+}
+
+/**
  * 전국대회 진행 (Phase 5-4).
  *
  * 대회는 한 주에 여러 라운드가 들어간다(국화기 7R/4주). 다음 라운드 대진은
@@ -1166,7 +1191,7 @@ async function injectLeaguePostseason(nextWeek: number): Promise<void> {
   if (!bracket) {
     let built: import("../types/season").PostseasonSeries[];
     if (leagueId === "LEAGUE_KBL") built = await buildKblBracket(s.standings);
-    else if (leagueId === "LEAGUE_INDEPENDENT") built = await buildIndBracket(s.standings);
+    else if (leagueId === "LEAGUE_INDEPENDENT") built = await buildIndLadder(s.standings);
     else if (leagueId === "LEAGUE_JBL") built = await buildJblBracket(s.standings);
     else if (leagueId === "LEAGUE_ABL") {
       const { ablConference } = await import("../utils/leagueConferences");
@@ -1792,6 +1817,9 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       const key = snapshotDueAt(nextWeekNum);
       if (key) seasonStore.captureStandingsSnapshot(key);
     }
+
+    // 독립 생존리그 단계 진행 (Phase 5-6)
+    await progressIndependentLeague(nextWeekNum);
 
     // 대회 개막 라운드를 먼저 얹는다 (Phase 5-4)
     await progressTournaments(nextWeekNum);

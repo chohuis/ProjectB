@@ -114,7 +114,6 @@ contextBridge.exposeInMainWorld("projectB", {
   // ── 포스트시즌 엔진 (Phase 5) ──────────────────────────────────────────────
   postseasonBuildKbl:   (p) => ipcRenderer.invoke("engine:call", "buildKblBracketNative",   p),
   postseasonBuildAbl:   (p) => ipcRenderer.invoke("engine:call", "buildAblBracketNative",   p),
-  postseasonBuildInd:   (p) => ipcRenderer.invoke("engine:call", "buildIndBracketNative",   p),
   postseasonBuildJbl:   (p) => ipcRenderer.invoke("engine:call", "buildJblBracketNative",   p),
   postseasonApplyGame:  (p) => ipcRenderer.invoke("engine:call", "applyGameToSeriesNative",  p),
   postseasonFillNext:   (p) => ipcRenderer.invoke("engine:call", "fillNextSeriesNative",   p),

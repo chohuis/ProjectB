@@ -248,6 +248,29 @@ ts.append("/** 조별 요일 패턴. 정본: seeds/onepitch/league_groups.csv */
               for g in groups_meta)
           + "];\n")
 
+# 독립 생존리그 단계표 (Phase 5-6) — 단계별 팀 수·경기 수·컷오프는 ①정의 데이터다
+stages = rd("survival_stages.csv")
+ts.append("export interface SurvivalStageDef {\n"
+          "  leagueId: string; stage: number; name: string;\n"
+          "  /** 이 단계 시작 시점의 팀 수 (검증용 — 실제 팀은 앞 단계 생존팀) */\n"
+          "  teamCount: number;\n"
+          "  /** 팀당 경기 수 (1차 18 · 2차 14 · 3차 3) */\n"
+          "  targetGames: number;\n"
+          "  startWeek: number; endWeek: number;\n"
+          "  /** 다음 단계로 올릴 팀 수. 마지막 단계는 teamCount와 같다 */\n"
+          "  advanceCount: number;\n"
+          "  note: string;\n"
+          "}\n")
+ts.append("/** 독립 4단계 생존리그 (04_독립.md §3). 정본: seeds/onepitch/survival_stages.csv */\n"
+          "export const SURVIVAL_STAGES: SurvivalStageDef[] = [\n"
+          + "".join(
+              '  { leagueId: "%s", stage: %s, name: "%s", teamCount: %s, targetGames: %s, '
+              'startWeek: %s, endWeek: %s, advanceCount: %s, note: "%s" },\n'
+              % (g["leagueId"], g["stage"], g["name"], g["teamCount"], g["targetGames"],
+                 g["startWeek"], g["endWeek"], g["advanceCount"], g["note"])
+              for g in sorted(stages, key=lambda r: (r["leagueId"], int(r["stage"]))))
+          + "];\n")
+
 # 전국대회 카탈로그 (Phase 5-4) — 시기·참가수·시드 출처는 ①정의 데이터다
 tours = rd("tournaments.csv")
 ts.append("/** 대회 시드 산출 기준 */\n"

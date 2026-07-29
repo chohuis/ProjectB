@@ -582,6 +582,25 @@ export const LEAGUE_GROUP_META: LeagueGroupMeta[] = [
   { leagueId: "LEAGUE_UNIVERSITY", stadiumId: "STADIUM_TAEJONG", label: "E", dayOffsets: [3, 4, 1, 2], note: "기획서는 4월 목금·5월 화수 — 라운드 순환으로 근사 (부경울7+대경2+제주1)" },
 ];
 
+export interface SurvivalStageDef {
+  leagueId: string; stage: number; name: string;
+  /** 이 단계 시작 시점의 팀 수 (검증용 — 실제 팀은 앞 단계 생존팀) */
+  teamCount: number;
+  /** 팀당 경기 수 (1차 18 · 2차 14 · 3차 3) */
+  targetGames: number;
+  startWeek: number; endWeek: number;
+  /** 다음 단계로 올릴 팀 수. 마지막 단계는 teamCount와 같다 */
+  advanceCount: number;
+  note: string;
+}
+
+/** 독립 4단계 생존리그 (04_독립.md §3). 정본: seeds/onepitch/survival_stages.csv */
+export const SURVIVAL_STAGES: SurvivalStageDef[] = [
+  { leagueId: "LEAGUE_INDEPENDENT", stage: 1, name: "1차 Stage", teamCount: 10, targetGames: 18, startWeek: 10, endWeek: 17, advanceCount: 8, note: "전체 더블라운드로빈 → 하위 2팀 탈락" },
+  { leagueId: "LEAGUE_INDEPENDENT", stage: 2, name: "2차 Stage", teamCount: 8, targetGames: 14, startWeek: 18, endWeek: 23, advanceCount: 4, note: "생존팀 더블라운드로빈 → 하위 4팀 탈락" },
+  { leagueId: "LEAGUE_INDEPENDENT", stage: 3, name: "3차 Stage", teamCount: 4, targetGames: 3, startWeek: 24, endWeek: 25, advanceCount: 4, note: "생존팀 싱글라운드로빈 → 최종 정규 순위 확정" },
+];
+
 /** 대회 시드 산출 기준 */
 export type TournamentSeedSource =
   | "prev_season"  /* 전년 권역 순위 */

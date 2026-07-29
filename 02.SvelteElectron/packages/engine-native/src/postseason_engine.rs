@@ -104,14 +104,6 @@ pub fn build_jbl_bracket(p: BuildBracketParams) -> Vec<PostseasonSeries> {
     ]
 }
 
-pub fn build_ind_bracket(p: BuildBracketParams) -> Vec<PostseasonSeries> {
-    let t = sort_teams(&p.standings);
-    if t.len() < 2 { return vec![]; }
-    vec![
-        PostseasonSeries { id: "IND_FINAL".into(), league_id: "LEAGUE_INDEPENDENT".into(), round: "결승".into(), home_team_id: t[0].clone(), away_team_id: t[1].clone(), best_of: 1, home_wins: 0, away_wins: 0, winner: None, home_from: None, away_from: None, next_series_id: None, next_series_slot: None },
-    ]
-}
-
 // ── Series operations ─────────────────────────────────────────
 
 #[derive(Debug, Deserialize)]

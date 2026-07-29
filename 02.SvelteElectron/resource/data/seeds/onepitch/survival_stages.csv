@@ -1,0 +1,4 @@
+leagueId,stage,name,teamCount,targetGames,startWeek,endWeek,advanceCount,note
+LEAGUE_INDEPENDENT,1,1차 Stage,10,18,10,17,8,전체 더블라운드로빈 → 하위 2팀 탈락
+LEAGUE_INDEPENDENT,2,2차 Stage,8,14,18,23,4,생존팀 더블라운드로빈 → 하위 4팀 탈락
+LEAGUE_INDEPENDENT,3,3차 Stage,4,3,24,25,4,생존팀 싱글라운드로빈 → 최종 정규 순위 확정

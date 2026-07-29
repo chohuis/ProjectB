@@ -184,7 +184,6 @@ declare global {
       // ── 포스트시즌 엔진 ────────────────────────────────────
       postseasonBuildKbl:   (p: string) => Promise<string>;
       postseasonBuildAbl:   (p: string) => Promise<string>;
-      postseasonBuildInd:   (p: string) => Promise<string>;
       postseasonBuildJbl:   (p: string) => Promise<string>;
       postseasonApplyGame:  (p: string) => Promise<string>;
       postseasonFillNext:   (p: string) => Promise<string>;

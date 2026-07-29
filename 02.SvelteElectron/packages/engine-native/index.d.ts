@@ -111,6 +111,12 @@ export declare function generateTournamentBracketNative(p: string): string
 export declare function advanceTournamentRoundNative(p: string): string
 /** 해당 라운드에서 **실제로 치를** 경기만 일정 형태로 (부전승·미확정 제외) */
 export declare function tournamentRoundScheduleNative(p: string): string
+/** 한 단계 일정 — 생존팀끼리 새 라운드로빈 */
+export declare function generateSurvivalStageNative(p: string): string
+/** 단계 종료 → 생존팀·탈락팀 판정 */
+export declare function survivalCutoffNative(p: string): string
+/** 4차 Stage 사다리 — 준PO(단판) → PO(단판) → 챔피언결정전(3전2승) */
+export declare function buildIndLadderNative(p: string): string
 /** 참가팀 → 조 추첨 + 예선 일정 (worldSeed 결정적) */
 export declare function buildGroupStageNative(p: string): string
 /** 예선 경기 결과 → 조 순위 반영 */
@@ -128,7 +134,6 @@ export declare function generateAllLeagueSchedulesNative(p: string): string
 export declare function buildKblBracketNative(p: string): string
 export declare function buildAblBracketNative(p: string): string
 export declare function buildJblBracketNative(p: string): string
-export declare function buildIndBracketNative(p: string): string
 export declare function applyGameToSeriesNative(p: string): string
 export declare function fillNextSeriesNative(p: string): string
 export declare function resolveNonProtagonistSeriesNative(p: string): string

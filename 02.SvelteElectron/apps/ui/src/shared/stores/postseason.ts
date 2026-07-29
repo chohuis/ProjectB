@@ -37,6 +37,27 @@ export function captureStandingsSnapshot(
   return { ...s, standingsSnapshots: snapshots };
 }
 
+export function setSurvivalState(
+  s: SeasonStoreState,
+  survival: import("../utils/survivalLeague").SurvivalState,
+): SeasonStoreState {
+  return { ...s, survival };
+}
+
+/** 독립 단계 일정은 leagueSchedules에 쌓인다 — 단계마다 새 경기가 붙는다 */
+export function injectLeagueEntries(
+  s: SeasonStoreState,
+  leagueId: string,
+  entries: ScheduleEntry[],
+): SeasonStoreState {
+  if (entries.length === 0) return s;
+  const cur = s.leagueSchedules[leagueId] ?? [];
+  const have = new Set(cur.map((e) => e.id));
+  const fresh = entries.filter((e) => !have.has(e.id));
+  if (fresh.length === 0) return s;
+  return { ...s, leagueSchedules: { ...s.leagueSchedules, [leagueId]: [...cur, ...fresh] } };
+}
+
 export function setGroupStage(
   s: SeasonStoreState,
   stage: import("../utils/tournament").GroupStage,

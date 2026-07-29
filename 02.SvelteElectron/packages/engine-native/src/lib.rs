@@ -14,6 +14,7 @@ mod player_engine;
 mod schedule_engine;
 mod tournament;
 mod group_stage;
+mod survival;
 mod postseason_engine;
 mod week_engine;
 mod team_engine;
@@ -637,6 +638,38 @@ pub fn tournament_round_schedule_native(p: String) -> String {
         .unwrap_or_else(|e| parse_err("tournamentRoundScheduleNative/serialize", e))
 }
 
+// ── 독립 생존리그 (Phase 5-6) ─────────────────────────────────────────────────
+
+/// 한 단계 일정 — 생존팀끼리 새 라운드로빈
+#[napi]
+pub fn generate_survival_stage_native(p: String) -> String {
+    let params: survival::SurvivalStageParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("generateSurvivalStageNative", e),
+    };
+    serde_json::to_string(&survival::generate_survival_stage(params))
+        .unwrap_or_else(|e| parse_err("generateSurvivalStageNative/serialize", e))
+}
+
+/// 단계 종료 → 생존팀·탈락팀 판정
+#[napi]
+pub fn survival_cutoff_native(p: String) -> String {
+    let params: survival::SurvivalCutoffParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("survivalCutoffNative", e),
+    };
+    serde_json::to_string(&survival::survival_cutoff(params))
+        .unwrap_or_else(|e| parse_err("survivalCutoffNative/serialize", e))
+}
+
+/// 4차 Stage 사다리 — 준PO(단판) → PO(단판) → 챔피언결정전(3전2승)
+#[napi]
+pub fn build_ind_ladder_native(p: String) -> String {
+    let params: survival::BuildIndLadderParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("buildIndLadderNative", e),
+    };
+    serde_json::to_string(&survival::build_ind_ladder(params))
+        .unwrap_or_else(|e| parse_err("buildIndLadderNative/serialize", e))
+}
+
 // ── 조별예선 (Phase 5-5d) ─────────────────────────────────────────────────────
 
 /// 참가팀 → 조 추첨 + 예선 일정 (worldSeed 결정적)
@@ -760,15 +793,6 @@ pub fn build_jbl_bracket_native(p: String) -> String {
     };
     serde_json::to_string(&postseason_engine::build_jbl_bracket(params))
         .unwrap_or_else(|e| parse_err("buildJblBracketNative/serialize", e))
-}
-
-#[napi]
-pub fn build_ind_bracket_native(p: String) -> String {
-    let params: BuildBracketParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("buildIndBracketNative", e),
-    };
-    serde_json::to_string(&postseason_engine::build_ind_bracket(params))
-        .unwrap_or_else(|e| parse_err("buildIndBracketNative/serialize", e))
 }
 
 #[napi]
