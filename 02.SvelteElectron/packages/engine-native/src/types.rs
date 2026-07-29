@@ -340,6 +340,12 @@ pub struct MatchState {
     pub score: MatchScore,
     pub inning_scores: InningScores,
     pub pitch_count: u32,
+    /// 이 경기의 투구수 상한 (리그별 — 고교 105 / 그 외 120, Phase 5-8).
+    /// 세이브 호환을 위해 default: 미지정이면 0이고 그때는 전역 상수로 떨어진다.
+    #[serde(default)]
+    pub pitch_limit: f64,
+    #[serde(default)]
+    pub pitch_soft: f64,
 
     pub protagonist_side: String,
 
@@ -487,6 +493,8 @@ pub struct ProtagonistExitCheck {
 #[serde(rename_all = "camelCase", default)]
 pub struct MatchStartOptions {
     pub match_id: Option<String>,
+    /// 이 경기가 속한 리그 — 투구수 상한이 리그별이다 (Phase 5-8)
+    pub league_id: Option<String>,
     pub inning_limit: Option<u8>,
     pub protagonist_side: Option<String>,
     pub role: Option<PitcherRole>,

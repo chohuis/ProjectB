@@ -151,8 +151,17 @@ fn reliever_appearance_chance(role: &str) -> f64 {
 pub struct RelieverPitchParams {
     pub role: String,
     pub pitch_outs_last: Option<i32>,   // 직전 경기 아웃 수 (None → 0)
-    pub last_pitched_week: Option<i32>, // 마지막 등판 주차 (None → 0)
-    pub current_week: Option<i32>,      // 현재 주차
+    pub last_pitched_week: Option<i32>, // 마지막 등판 주차 (None → 0) — 구 경로
+    pub current_week: Option<i32>,      // 현재 주차 — 구 경로
+    /// 마지막 등판 날짜 "YYYY-MM-DD" (Phase 5-8). 있으면 일 단위 휴식 판정을 쓴다
+    #[serde(default)]
+    pub last_pitched_date: Option<String>,
+    /// 그날 던진 투구 수
+    #[serde(default)]
+    pub last_pitch_count: Option<u32>,
+    /// 등판하려는 경기 날짜
+    #[serde(default)]
+    pub game_date: Option<String>,
 }
 
 #[derive(Debug, Serialize)]
@@ -171,12 +180,27 @@ pub fn reliever_would_pitch(params: RelieverPitchParams) -> RelieverPitchResult 
                        else if outs_last >= 9 { 0.65 } // 3이닝+ → 확률 감소
                        else { 1.00 };
 
-    // 당일 재등판 방지
-    let last_w  = params.last_pitched_week.unwrap_or(0);
-    let cur_w   = params.current_week.unwrap_or(0);
-    let same_week_penalty = if last_w > 0 && last_w == cur_w { 0.0 } else { 1.0 };
+    // 의무 휴식 (Phase 5-8) — 날짜가 오면 일 단위로 막는다.
+    // 주 단위(last_pitched_week)는 "이번 주에 던졌으면 무조건 불가"라 너무 거칠었다:
+    // 불펜이 한 주에 두 번 못 나오고, 반대로 주말 연투(토→일)는 못 막았다.
+    let rest_block = match (&params.last_pitched_date, &params.game_date) {
+        (Some(last), Some(game)) if !last.is_empty() => {
+            let r = crate::rest_rules::check_rest(crate::rest_rules::RestCheckParams {
+                last_pitched_date: last.clone(),
+                last_pitch_count: params.last_pitch_count.unwrap_or(0),
+                game_date: game.clone(),
+            });
+            if r.available { 1.0 } else { 0.0 }
+        }
+        // 날짜가 없으면 구 동작(같은 주 재등판 금지)으로 떨어진다 — 구 세이브 호환
+        _ => {
+            let last_w = params.last_pitched_week.unwrap_or(0);
+            let cur_w  = params.current_week.unwrap_or(0);
+            if last_w > 0 && last_w == cur_w { 0.0 } else { 1.0 }
+        }
+    };
 
-    let chance = base * rest_penalty * same_week_penalty;
+    let chance = base * rest_penalty * rest_block;
     let would_pitch = rand::thread_rng().gen::<f64>() < chance;
     RelieverPitchResult { would_pitch }
 }

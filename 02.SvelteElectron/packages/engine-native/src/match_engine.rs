@@ -191,6 +191,8 @@ pub fn create_initial_match_state(opts: &MatchStartOptions, rng: &mut impl Rng) 
             away: vec![0; inning_limit as usize],
         },
         pitch_count: 0,
+        pitch_limit: T::league_pitch_limit(opts.league_id.as_deref().unwrap_or("")),
+        pitch_soft:  T::league_pitch_soft(opts.league_id.as_deref().unwrap_or("")),
         protagonist_side,
         protagonist_pitcher, my_npc_pitcher, opponent_npc_pitcher,
         home_lineup, away_lineup,
@@ -1110,11 +1112,15 @@ pub fn should_protagonist_exit(state: &MatchState) -> ProtagonistExitCheck {
     let tiq   = state.my_manager.tactical_iq;
     let cdec  = state.my_manager.clutch_decision;
 
-    if pce  >= T::PROTAGONIST_PITCH_COUNT_HARD { return ProtagonistExitCheck { should_exit: true, reason: Some(ExitReason::PitchLimit) }; }
+    // 리그별 상한 (고교 105 / 그 외 120). 구 세이브는 0이라 전역 상수로 떨어진다.
+    let hard = if state.pitch_limit > 0.0 { state.pitch_limit } else { T::PROTAGONIST_PITCH_COUNT_HARD };
+    let soft = if state.pitch_soft  > 0.0 { state.pitch_soft  } else { T::PROTAGONIST_PITCH_COUNT_SOFT };
+
+    if pce  >= hard { return ProtagonistExitCheck { should_exit: true, reason: Some(ExitReason::PitchLimit) }; }
     if stam <= T::PROTAGONIST_STAMINA_EMERGENCY { return ProtagonistExitCheck { should_exit: true, reason: Some(ExitReason::Stamina) }; }
 
     let mut danger = 0.0;
-    if pce >= T::PROTAGONIST_PITCH_COUNT_SOFT { danger += 20.0 + (pce - T::PROTAGONIST_PITCH_COUNT_SOFT) * 1.2; }
+    if pce >= soft { danger += 20.0 + (pce - soft) * 1.2; }
     if stam  < 30.0 { danger += (30.0 - stam)  * 1.5; }
     if mental < 30.0 { danger += (30.0 - mental) * 1.0; }
 

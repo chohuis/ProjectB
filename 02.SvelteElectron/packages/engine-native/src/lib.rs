@@ -15,6 +15,7 @@ mod schedule_engine;
 mod tournament;
 mod group_stage;
 mod survival;
+mod rest_rules;
 mod postseason_engine;
 mod week_engine;
 mod team_engine;
@@ -646,6 +647,34 @@ pub fn build_farm_bracket_native(p: String) -> String {
     };
     serde_json::to_string(&postseason_engine::build_farm_bracket(params))
         .unwrap_or_else(|e| parse_err("buildFarmBracketNative/serialize", e))
+}
+
+// ── 의무 휴식 (Phase 5-8) ─────────────────────────────────────────────────────
+
+/// 투구수별 의무 휴식을 채웠는지 (일 단위 — 주 단위로는 주말 연투가 안 걸린다)
+#[napi]
+pub fn check_pitcher_rest_native(p: String) -> String {
+    let params: rest_rules::RestCheckParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("checkPitcherRestNative", e),
+    };
+    serde_json::to_string(&rest_rules::check_rest(params))
+        .unwrap_or_else(|e| parse_err("checkPitcherRestNative/serialize", e))
+}
+
+#[derive(serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct PitchLimitQuery { league_id: String }
+
+/// 리그별 투구수 상한 (고교 105 / 그 외 120)
+#[napi]
+pub fn league_pitch_limit_native(p: String) -> String {
+    let q: PitchLimitQuery = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("leaguePitchLimitNative", e),
+    };
+    serde_json::to_string(&serde_json::json!({
+        "hard": tuning::league_pitch_limit(&q.league_id),
+        "soft": tuning::league_pitch_soft(&q.league_id),
+    })).unwrap_or_else(|e| parse_err("leaguePitchLimitNative/serialize", e))
 }
 
 // ── 독립 생존리그 (Phase 5-6) ─────────────────────────────────────────────────

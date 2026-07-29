@@ -214,6 +214,8 @@ export interface InteractiveMatchResult {
   outsRecorded: number;
   errors: number;
   pitchCount: number;
+  /** 경기 날짜 "YYYY-MM-DD" — 의무 휴식 판정용 (Phase 5-8). 없으면 일정에서 찾는다 */
+  gameDate?: string;
   summary: string;
   batterLines?: BatterGameLine[];
   playerLines?: PlayerGameLine[];
@@ -235,6 +237,8 @@ export interface UnifiedGameOutcome {
   outsRecorded: number;
   errors: number;
   pitchCount: number;
+  /** 경기 날짜 "YYYY-MM-DD" — 의무 휴식 판정용 (Phase 5-8). 없으면 일정에서 찾는다 */
+  gameDate?: string;
   summary: string;
   protagonistEntered?: boolean;
   batterLines?: BatterGameLine[];
@@ -262,7 +266,16 @@ export interface PostseasonSeries {
 // ── 선수 경기간 컨디션 ────────────────────────────────────────
 export interface PlayerCondition {
   fatigue: number;          // 0~100, 100 = 완전 회복
-  lastPitchedWeek: number;  // 마지막 등판 주차 (0 = 미등판)
+  lastPitchedWeek: number;  // 마지막 등판 주차 (0 = 미등판) — 구 경로, 호환용
+  /**
+   * 마지막 등판 날짜 "YYYY-MM-DD" (Phase 5-8).
+   *
+   * 의무 휴식표가 일 단위라 주차로는 표현이 안 된다 — 고교 주말리그(토·일)에서
+   * "토요일 105구 던지고 일요일 또"가 주 단위 검사로는 안 걸린다.
+   */
+  lastPitchedDate?: string;
+  /** 그날 던진 투구 수 — 휴식일 산출의 입력 */
+  lastPitchCount?: number;
   pitchOutsLast: number;    // 직전 경기 던진 아웃 수
   lastStartGameCount?: number;       // SP: 마지막 선발 시점의 teamRotationIndex
   lastAppearanceGameCount?: number;  // RP/CP: 마지막 출전 시점의 teamRotationIndex

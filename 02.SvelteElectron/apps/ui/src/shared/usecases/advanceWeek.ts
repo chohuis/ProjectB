@@ -1871,6 +1871,12 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
           myCondR?.pitchOutsLast ?? 0,
           myCondR?.lastPitchedWeek ?? 0,
           nextWeekNum,
+          // 의무 휴식은 일 단위 (Phase 5-8) — 주말리그 토→일 연투를 여기서 막는다
+          {
+            lastPitchedDate: myCondR?.lastPitchedDate,
+            lastPitchCount:  myCondR?.lastPitchCount,
+            gameDate:        game.gameDate,
+          },
         );
 
       if (game.isProtagonistGame || relieverPitching) {

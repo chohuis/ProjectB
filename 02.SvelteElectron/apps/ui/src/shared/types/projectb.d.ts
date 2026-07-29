@@ -40,6 +40,7 @@ declare global {
 
       // ── 경기 엔진 ──────────────────────────────────────────
       matchStart: (request?: {
+        leagueId?: string;
         matchId?: string;
         inningLimit?: number;
         initialStamina?: number;

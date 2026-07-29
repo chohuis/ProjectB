@@ -698,6 +698,8 @@
         offenseMind:    myManagerEntity.details.manager.stats.strategy,
       } : undefined;
       const response = await window.projectB.matchStart({
+        // 투구수 상한이 리그별이다 — 고교 105 / 그 외 120 (Phase 5-8)
+        leagueId: $gameStore.protagonist.leagueId,
         initialStamina: player.condition,
         initialMental: 74,
         pitcher: { ...player.pitcherStats, name: player.name },
@@ -1149,6 +1151,7 @@
       if (!engineStarted && window.projectB.matchStart) {
         const player = get(gameStore).player;
         await window.projectB.matchStart({
+          leagueId: get(gameStore).protagonist.leagueId,
           initialStamina: player.condition,
           initialMental: 74,
           pitcher: player.pitcherStats

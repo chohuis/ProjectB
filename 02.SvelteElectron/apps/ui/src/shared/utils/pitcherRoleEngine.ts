@@ -54,18 +54,54 @@ export async function assignProtagonistRole(
 
 // ── 불펜 등판 판정 ────────────────────────────────────────────
 
+/**
+ * 불펜 등판 판정.
+ *
+ * `lastPitchedDate`·`gameDate`를 주면 **일 단위 의무 휴식표**로 판정한다 (Phase 5-8).
+ * 안 주면 구 동작(같은 주 재등판 금지)으로 떨어진다 — 구 세이브 호환.
+ */
 export async function relieverWouldPitch(
   role: PitcherRole,
   pitchOutsLast = 0,
   lastPitchedWeek = 0,
   currentWeek = 0,
+  rest?: { lastPitchedDate?: string; lastPitchCount?: number; gameDate?: string },
 ): Promise<boolean> {
   const result = JSON.parse(
     await window.projectB!.pitcherRelieverWouldPitch(
-      JSON.stringify({ role, pitchOutsLast, lastPitchedWeek, currentWeek })
+      JSON.stringify({
+        role, pitchOutsLast, lastPitchedWeek, currentWeek,
+        lastPitchedDate: rest?.lastPitchedDate ?? "",
+        lastPitchCount:  rest?.lastPitchCount ?? 0,
+        gameDate:        rest?.gameDate ?? "",
+      })
     )
   );
   return result.wouldPitch as boolean;
+}
+
+/** 투구수별 의무 휴식을 채웠는가 (Phase 5-8) */
+export async function checkPitcherRest(
+  lastPitchedDate: string,
+  lastPitchCount: number,
+  gameDate: string,
+): Promise<{ available: boolean; requiredRestDays: number; actualRestDays: number }> {
+  const raw = await window.projectB!.engine("checkPitcherRestNative",
+    JSON.stringify({ lastPitchedDate, lastPitchCount, gameDate }));
+  const p = JSON.parse(raw);
+  if (p && typeof p === "object" && "error" in p) {
+    console.error("[pitcherRoleEngine] checkPitcherRest 오류:", p.error);
+    return { available: true, requiredRestDays: 0, actualRestDays: -1 };
+  }
+  return p;
+}
+
+/** 리그별 투구수 상한 (고교 105 / 그 외 120) */
+export async function leaguePitchLimit(leagueId: string): Promise<{ hard: number; soft: number }> {
+  const raw = await window.projectB!.engine("leaguePitchLimitNative", JSON.stringify({ leagueId }));
+  const p = JSON.parse(raw);
+  if (p && typeof p === "object" && "error" in p) return { hard: 120, soft: 90 };
+  return p;
 }
 
 // ── 순수 유틸 (TS 유지) ───────────────────────────────────────

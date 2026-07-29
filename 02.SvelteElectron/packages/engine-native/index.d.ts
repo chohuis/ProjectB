@@ -113,6 +113,10 @@ export declare function advanceTournamentRoundNative(p: string): string
 export declare function tournamentRoundScheduleNative(p: string): string
 /** 프로 2군 축약 포스트시즌 — 상위 4팀 단판 사다리 (Phase 5-7) */
 export declare function buildFarmBracketNative(p: string): string
+/** 투구수별 의무 휴식을 채웠는지 (일 단위 — 주 단위로는 주말 연투가 안 걸린다) */
+export declare function checkPitcherRestNative(p: string): string
+/** 리그별 투구수 상한 (고교 105 / 그 외 120) */
+export declare function leaguePitchLimitNative(p: string): string
 /** 한 단계 일정 — 생존팀끼리 새 라운드로빈 */
 export declare function generateSurvivalStageNative(p: string): string
 /** 단계 종료 → 생존팀·탈락팀 판정 */
