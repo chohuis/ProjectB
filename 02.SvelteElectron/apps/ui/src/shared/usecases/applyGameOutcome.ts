@@ -32,6 +32,13 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
   const sBefore = get(seasonStore);
   const gBefore = get(gameStore);
 
+  // 의무 휴식이 일 단위라 날짜가 필요하다 (Phase 5-8). 호출부가 안 넘겼으면 일정에서.
+  const gameDate = outcome.gameDate
+    ?? sBefore.schedule.find((e) => e.id === outcome.scheduleId)?.gameDate
+    ?? Object.values(sBefore.leagueSchedules ?? {})
+        .flat().find((e) => e.id === outcome.scheduleId)?.gameDate
+    ?? "";
+
   // ── 친선경기 분기 ─────────────────────────────────────────
   const scheduleEntry = sBefore.schedule.find((e) => e.id === outcome.scheduleId);
   if (scheduleEntry?.isFriendly) {
@@ -103,6 +110,8 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
       pitcherConditions[oppPitcherId] = {
         fatigue:            Math.min(100, (prev?.fatigue ?? 50) + 15),
         lastPitchedWeek:    outcome.week,
+        lastPitchedDate:    gameDate,
+        lastPitchCount:     outcome.pitchCount,
         pitchOutsLast:      safeOuts,
         lastStartGameCount: oppRotIdx,
         consecutiveAppearances: 0,
@@ -288,6 +297,8 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
       rotConditions[oppSpId] = {
         fatigue:            Math.min(100, (prev?.fatigue ?? 50) + 15),
         lastPitchedWeek:    outcome.week,
+        lastPitchedDate:    gameDate,
+        lastPitchCount:     outcome.pitchCount,
         pitchOutsLast:      safeOuts,
         lastStartGameCount: oppRotIdx2,
         consecutiveAppearances: 0,

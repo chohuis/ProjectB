@@ -28,7 +28,7 @@ import { INJURY_LABEL } from "../types/save";
 import { toGameDate } from "../utils/scheduleGen";
 import { assignProtagonistRole, assignHighschoolPosition, ROLE_DESCRIPTION, isReliefsRole, relieverWouldPitch } from "../utils/pitcherRoleEngine";
 import {
-  buildHsBracket, buildKblBracket, buildAblBracket, buildUnivBracket, buildIndBracket, buildJblBracket,
+  buildKblBracket, buildAblBracket, buildIndLadder, buildJblBracket,
   applyGameToSeries, fillNextSeries, resolveNonProtagonistSeries,
   makeSeriesGame, nextGameNum,
 } from "../utils/postseasonEngine";
@@ -53,6 +53,11 @@ import {
   DEFAULT_TEAM_PROFILE,
 } from "./weekPhases/market";
 import { buildHsLeagueDigest, LEAGUE_NAMES, MONTHLY_STANDINGS_LEAGUES, HS_DIGEST_WEEKS } from "./weekPhases/digest";
+import { applyRoundResults, openTournamentsForWeek, promoteFinishedGroupStages } from "./tournaments";
+import { progressSurvival } from "./survivalLeague";
+import { runBackgroundPostseasons } from "./backgroundPostseason";
+import { IND_LEAGUE_ID, emptySurvivalState } from "../utils/survivalLeague";
+import { snapshotDueAt } from "../utils/standingsSnapshot";
 
 // ── 군입대 대상 판별 (nationality 기반) ──────────────────────
 // nationality 없는 구버전 NPC는 originLeagueId로 폴백
@@ -1064,6 +1069,108 @@ async function handleSeasonEnd(): Promise<WeekAdvanceResult> {
 
 // ── 통합 포스트시즌 주입 (HS / KBL / ABL / UNIV / IND) ──────────
 // 매 게임 처리 후 호출. 정규시즌 종료 감지 → 브라켓 초기화 → 다음 경기 주입
+/**
+ * 독립 생존리그 진행 (Phase 5-6).
+ *
+ * 대회와 달리 한 주에 여러 단계가 겹치지 않으므로 반복 루프가 필요 없다 —
+ * 단계가 끝나야 다음 단계 일정이 나오고, 단계 사이에는 최소 한 주가 있다.
+ */
+async function progressIndependentLeague(week: number): Promise<void> {
+  const s = get(seasonStore);
+  const g = get(gameStore);
+  const state = s.survival ?? emptySurvivalState();
+
+  const r = await progressSurvival(week, s, state, g.protagonist.teamId);
+  if (!r) return;
+
+  seasonStore.setSurvivalState(r.state);
+  if (r.entries.length > 0) {
+    seasonStore.injectLeagueEntries(IND_LEAGUE_ID, r.entries);
+  }
+  if (r.eliminated.length > 0) {
+    console.info(`[독립] ${r.state.stage - 1}차 Stage 종료 — 탈락 ${r.eliminated.length}팀`);
+  }
+}
+
+/**
+ * 전국대회 진행 (Phase 5-4).
+ *
+ * 대회는 한 주에 여러 라운드가 들어간다(국화기 7R/4주). 다음 라운드 대진은
+ * 직전 라운드 결과가 나와야 정해지므로, 경기 처리 루프와 번갈아 돌려야 한다.
+ * → 이 함수는 "지금 넣을 수 있는 경기를 넣고, 넣었으면 true"를 돌려주고
+ *   호출부가 경기를 치른 뒤 다시 부른다.
+ *
+ * @returns 일정에 새 경기를 넣었으면 true
+ */
+async function progressTournaments(week: number): Promise<boolean> {
+  const g = get(gameStore);
+  // 주인공 소속과 무관하게 전 리그 대회가 돈다 — DESIGN §2 국내 풀 시뮬.
+  // 주인공이 대학에 가도 모교의 국화기는 계속 열린다.
+  const protagonistTeamId = g.protagonist.teamId;
+  let injected = false;
+
+  // ① 이번 주에 개막하는 대회 (넉아웃이면 브래킷, 은하기·여명기면 조 추첨)
+  const sOpen = get(seasonStore);
+  const opened = await openTournamentsForWeek(
+    week, sOpen, protagonistTeamId, get(masterStore).teams, sOpen.worldSeed ?? 0,
+  );
+  for (const o of opened) {
+    if (o.bracket) seasonStore.setTournamentBracket(o.bracket);
+    if (o.stage) seasonStore.setGroupStage(o.stage);
+    if (o.entries.length > 0) {
+      seasonStore.injectTournamentEntries(o.entries);
+      injected = true;
+    }
+  }
+
+  // ② 예선이 다 끝난 대회 → 본선 8강 브래킷 생성
+  {
+    const promoted = await promoteFinishedGroupStages(get(seasonStore), protagonistTeamId);
+    for (const p of promoted) {
+      seasonStore.setTournamentBracket(p.bracket);
+      const due = p.entries.filter((e) => e.week <= week);
+      if (due.length > 0) {
+        seasonStore.injectTournamentEntries(due);
+        injected = true;
+      }
+    }
+  }
+
+  // ③ 결과가 다 나온 라운드 → 다음 라운드 대진 확정 + 주입
+  const s = get(seasonStore);
+  const resultOf = new Map(
+    s.schedule.filter((e) => e.result).map((e) => [e.id, e.result!.winnerId]),
+  );
+
+  for (const bracket of Object.values(s.tournaments ?? {})) {
+    for (let r = 1; r <= bracket.totalRounds; r++) {
+      const live = bracket.matches.filter(
+        (m) => m.round === r && !m.isBye && m.homeTeamId && m.awayTeamId,
+      );
+      if (live.length === 0) continue;
+      if (live.every((m) => m.winnerTeamId)) continue;   // 이미 반영됨
+
+      const results = live
+        .filter((m) => resultOf.has(m.id))
+        .map((m) => ({ matchId: m.id, winnerTeamId: resultOf.get(m.id)! }));
+      if (results.length < live.length) break;            // 아직 안 끝난 라운드
+
+      const { bracket: next, nextEntries } = await applyRoundResults(
+        bracket, r, results, protagonistTeamId,
+      );
+      seasonStore.setTournamentBracket(next);
+      const due = nextEntries.filter((e) => e.week <= week);
+      if (due.length > 0) {
+        seasonStore.injectTournamentEntries(due);
+        injected = true;
+      }
+      break;  // 이 대회는 한 번에 한 라운드씩
+    }
+  }
+
+  return injected;
+}
+
 async function injectLeaguePostseason(nextWeek: number): Promise<void> {
   const s   = get(seasonStore);
   const g   = get(gameStore);
@@ -1071,7 +1178,9 @@ async function injectLeaguePostseason(nextWeek: number): Promise<void> {
   const protagonistId = g.protagonist.teamId;
   const seasonYear    = s.seasonYear;
 
-  const SUPPORTED = ["LEAGUE_HIGHSCHOOL", "LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL", "LEAGUE_UNIVERSITY", "LEAGUE_INDEPENDENT"];
+  // 고교·대학은 제외 — 시즌 결산이 패왕기(11월)·왕중왕전(5월)로 옮겨갔다 (Phase 5-5a).
+  // top4 준결승/결승을 남기면 결승이 두 번 열린다.
+  const SUPPORTED = ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL", "LEAGUE_INDEPENDENT"];
   if (!SUPPORTED.includes(leagueId)) return;
 
   // 정규시즌 경기가 남아 있으면 아직 아님
@@ -1082,10 +1191,8 @@ async function injectLeaguePostseason(nextWeek: number): Promise<void> {
   // ── 브라켓 미초기화: 빌드 후 비주인공 시리즈 즉시 시뮬 ──────
   if (!bracket) {
     let built: import("../types/season").PostseasonSeries[];
-    if (leagueId === "LEAGUE_HIGHSCHOOL") built = await buildHsBracket(s.standings);
-    else if (leagueId === "LEAGUE_KBL") built = await buildKblBracket(s.standings);
-    else if (leagueId === "LEAGUE_UNIVERSITY") built = await buildUnivBracket(s.standings);
-    else if (leagueId === "LEAGUE_INDEPENDENT") built = await buildIndBracket(s.standings);
+    if (leagueId === "LEAGUE_KBL") built = await buildKblBracket(s.standings);
+    else if (leagueId === "LEAGUE_INDEPENDENT") built = await buildIndLadder(s.standings);
     else if (leagueId === "LEAGUE_JBL") built = await buildJblBracket(s.standings);
     else if (leagueId === "LEAGUE_ABL") {
       const { ablConference } = await import("../utils/leagueConferences");
@@ -1702,10 +1809,37 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       return { processedWeek: nextWeekNum, logs: accLogs, newMessages: [], matchResults: accResults, stoppedBy: sAfterBoundary.pendingActions[0] };
     }
 
-    // 포스트시즌 주입 (HS 포함 — 단일리그 top4 브래킷, injectLeaguePostseason로 통합)
+    // 포스트시즌 — 주인공 리그는 경기를 주입해가며, 나머지 국내 리그는 통째로 (Phase 5-7)
     await injectLeaguePostseason(nextWeekNum);
+    {
+      const sBg = get(seasonStore);
+      const gBg = get(gameStore);
+      const done = await runBackgroundPostseasons(
+        sBg, gBg.protagonist.leagueId, gBg.protagonist.teamId,
+      );
+      for (const r of done) {
+        seasonStore.initPostseasonBracket(r.leagueId, r.bracket);
+        if (r.champion) accLogs.push(`[${r.leagueId}] 우승 ${r.champion}`);
+      }
+    }
 
-    // 이번 주 미결 경기를 gameDate 순으로 처리
+    // 전·후반기 경계에서 순위 스냅샷 (Phase 5-5a).
+    // 대회 개설보다 먼저 찍어야 그 주에 여는 대회가 새 스냅샷을 본다.
+    {
+      const key = snapshotDueAt(nextWeekNum);
+      if (key) seasonStore.captureStandingsSnapshot(key);
+    }
+
+    // 독립 생존리그 단계 진행 (Phase 5-6)
+    await progressIndependentLeague(nextWeekNum);
+
+    // 대회 개막 라운드를 먼저 얹는다 (Phase 5-4)
+    await progressTournaments(nextWeekNum);
+
+    // 이번 주 미결 경기를 gameDate 순으로 처리.
+    // 대회는 한 주에 여러 라운드가 들어가고 다음 대진이 직전 결과에 달렸으므로,
+    // "경기 치르기 → 다음 라운드 주입"을 더 넣을 게 없을 때까지 반복한다.
+    for (let pass = 0; ; pass++) {
     const sForGames = get(seasonStore);
     const thisWeekGames = sForGames.schedule
       .filter((e) => e.week === nextWeekNum && !e.result)
@@ -1737,6 +1871,12 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
           myCondR?.pitchOutsLast ?? 0,
           myCondR?.lastPitchedWeek ?? 0,
           nextWeekNum,
+          // 의무 휴식은 일 단위 (Phase 5-8) — 주말리그 토→일 연투를 여기서 막는다
+          {
+            lastPitchedDate: myCondR?.lastPitchedDate,
+            lastPitchCount:  myCondR?.lastPitchCount,
+            gameDate:        game.gameDate,
+          },
         );
 
       if (game.isProtagonistGame || relieverPitching) {
@@ -1858,6 +1998,13 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
             nextHomeRotIdx, nextAwayRotIdx,
             null, pitcherConds,
           );
+        } else if (game.isTournament) {
+          // 전국대회 → 개인 기록만. 순위표에 섞이면 다음 대회 시드가 오염된다
+          seasonStore.applyTournamentResult(
+            game.id, npcResult, leagueId,
+            game.homeTeamId, game.awayTeamId,
+            nextHomeRotIdx, nextAwayRotIdx, pitcherConds,
+          );
         } else {
           seasonStore.applyProtagonistGroupNpcResult(
             game.id, npcResult, leagueId,
@@ -1869,6 +2016,11 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
         accResults.push(npcResult);
         accLogs.push(`${game.homeTeamId} ${npcResult.homeScore}:${npcResult.awayScore} ${game.awayTeamId}`);
       }
+    }
+
+    // 방금 끝난 라운드로 다음 대진이 열리면 한 번 더 돈다.
+    // 상한 20 = 국화기 7R + 여유. 무한 루프 방지용이지 정상 경로에서 닿지 않는다.
+    if (pass >= 20 || !(await progressTournaments(nextWeekNum))) break;
     }
 
     const sFinal = get(seasonStore);

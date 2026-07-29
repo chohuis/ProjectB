@@ -58,14 +58,80 @@ pub struct BuildBracketParams {
     pub standings: Vec<Standing>,
 }
 
+/// 프로 1군 5강 와일드카드 사다리 (01_프로.md §4).
+///
+/// v1은 6강이었고 **3위가 통째로 빠지는 버그**가 있었다 — WC(5vs6) → 준PO(4위) →
+/// PO(2위) → KS(1위)로 t[2]가 어디에도 안 나왔다. v2는 기획서대로 5강이다.
+///
+/// WC의 "4위는 1승, 5위는 2승"(정규시즌 상위 어드밴티지)은 새 장치 없이
+/// **홈팀이 1승을 안고 시작하는 3전2승**으로 정확히 표현된다:
+/// 4위는 1승만 더하면 2승, 5위는 2연승해야 한다. 최대 2경기.
 pub fn build_kbl_bracket(p: BuildBracketParams) -> Vec<PostseasonSeries> {
     let t = sort_teams(&p.standings);
-    if t.len() < 6 { return vec![]; }
+    if t.len() < 5 { return vec![]; }
     vec![
-        PostseasonSeries { id: "KBL_WC".into(),   league_id: "LEAGUE_KBL".into(), round: "와일드카드".into(),   home_team_id: t[4].clone(), away_team_id: t[5].clone(), best_of: 1, home_wins: 0, away_wins: 0, winner: None, home_from: None, away_from: None,                    next_series_id: Some("KBL_PREP".into()), next_series_slot: Some("away".into()) },
-        PostseasonSeries { id: "KBL_PREP".into(), league_id: "LEAGUE_KBL".into(), round: "준플레이오프".into(), home_team_id: t[3].clone(), away_team_id: "".into(),     best_of: 3, home_wins: 0, away_wins: 0, winner: None, home_from: None, away_from: Some("KBL_WC".into()),   next_series_id: Some("KBL_PO".into()),   next_series_slot: Some("away".into()) },
-        PostseasonSeries { id: "KBL_PO".into(),   league_id: "LEAGUE_KBL".into(), round: "플레이오프".into(),   home_team_id: t[1].clone(), away_team_id: "".into(),     best_of: 5, home_wins: 0, away_wins: 0, winner: None, home_from: None, away_from: Some("KBL_PREP".into()), next_series_id: Some("KBL_KS".into()),   next_series_slot: Some("away".into()) },
-        PostseasonSeries { id: "KBL_KS".into(),   league_id: "LEAGUE_KBL".into(), round: "한국시리즈".into(),   home_team_id: t[0].clone(), away_team_id: "".into(),     best_of: 7, home_wins: 0, away_wins: 0, winner: None, home_from: None, away_from: Some("KBL_PO".into()),   next_series_id: None,                    next_series_slot: None },
+        PostseasonSeries {
+            id: "KBL_WC".into(), league_id: "LEAGUE_KBL".into(), round: "와일드카드".into(),
+            home_team_id: t[3].clone(), away_team_id: t[4].clone(),
+            best_of: 3, home_wins: 1, away_wins: 0, winner: None,
+            home_from: None, away_from: None,
+            next_series_id: Some("KBL_PREP".into()), next_series_slot: Some("away".into()),
+        },
+        PostseasonSeries {
+            id: "KBL_PREP".into(), league_id: "LEAGUE_KBL".into(), round: "준플레이오프".into(),
+            home_team_id: t[2].clone(), away_team_id: "".into(),
+            best_of: 5, home_wins: 0, away_wins: 0, winner: None,
+            home_from: None, away_from: Some("KBL_WC".into()),
+            next_series_id: Some("KBL_PO".into()), next_series_slot: Some("away".into()),
+        },
+        PostseasonSeries {
+            id: "KBL_PO".into(), league_id: "LEAGUE_KBL".into(), round: "플레이오프".into(),
+            home_team_id: t[1].clone(), away_team_id: "".into(),
+            best_of: 5, home_wins: 0, away_wins: 0, winner: None,
+            home_from: None, away_from: Some("KBL_PREP".into()),
+            next_series_id: Some("KBL_KS".into()), next_series_slot: Some("away".into()),
+        },
+        // 정규시즌 1위는 한국시리즈 직행 — 144경기 마라톤의 가장 큰 보상
+        PostseasonSeries {
+            id: "KBL_KS".into(), league_id: "LEAGUE_KBL".into(), round: "한국시리즈".into(),
+            home_team_id: t[0].clone(), away_team_id: "".into(),
+            best_of: 7, home_wins: 0, away_wins: 0, winner: None,
+            home_from: None, away_from: Some("KBL_PO".into()),
+            next_series_id: None, next_series_slot: None,
+        },
+    ]
+}
+
+/// 프로 2군 축약 포스트시즌 (01_프로.md §5).
+///
+/// 상위 4팀 **단판 사다리**(3위vs4위 → 승자vs2위 → 승자vs1위).
+/// 1군 5강처럼 무겁게 가지 않는다 — 2군은 우승 서사만 갖추는 수준.
+/// 독립 사다리와 모양은 같지만 **결승도 단판**이라는 점이 다르다(독립은 3전2승).
+pub fn build_farm_bracket(p: BuildBracketParams) -> Vec<PostseasonSeries> {
+    let t = sort_teams(&p.standings);
+    if t.len() < 4 { return vec![]; }
+    vec![
+        PostseasonSeries {
+            id: "FARM_SEMI".into(), league_id: "LEAGUE_KBL_FARM".into(), round: "준결승".into(),
+            home_team_id: t[2].clone(), away_team_id: t[3].clone(),
+            best_of: 1, home_wins: 0, away_wins: 0, winner: None,
+            home_from: None, away_from: None,
+            next_series_id: Some("FARM_PO".into()), next_series_slot: Some("away".into()),
+        },
+        PostseasonSeries {
+            id: "FARM_PO".into(), league_id: "LEAGUE_KBL_FARM".into(), round: "플레이오프".into(),
+            home_team_id: t[1].clone(), away_team_id: "".into(),
+            best_of: 1, home_wins: 0, away_wins: 0, winner: None,
+            home_from: None, away_from: Some("FARM_SEMI".into()),
+            next_series_id: Some("FARM_FINAL".into()), next_series_slot: Some("away".into()),
+        },
+        PostseasonSeries {
+            id: "FARM_FINAL".into(), league_id: "LEAGUE_KBL_FARM".into(), round: "퓨처스 결승".into(),
+            home_team_id: t[0].clone(), away_team_id: "".into(),
+            best_of: 1, home_wins: 0, away_wins: 0, winner: None,
+            home_from: None, away_from: Some("FARM_PO".into()),
+            next_series_id: None, next_series_slot: None,
+        },
     ]
 }
 
@@ -89,27 +155,6 @@ pub fn build_abl_bracket(p: BuildAblBracketParams) -> Vec<PostseasonSeries> {
     ]
 }
 
-pub fn build_univ_bracket(p: BuildBracketParams) -> Vec<PostseasonSeries> {
-    let t = sort_teams(&p.standings);
-    if t.len() < 4 { return vec![]; }
-    vec![
-        PostseasonSeries { id: "UNIV_SEMI1".into(), league_id: "LEAGUE_UNIVERSITY".into(), round: "준결승".into(), home_team_id: t[0].clone(), away_team_id: t[3].clone(), best_of: 1, home_wins: 0, away_wins: 0, winner: None, home_from: None, away_from: None, next_series_id: Some("UNIV_FINAL".into()), next_series_slot: Some("home".into()) },
-        PostseasonSeries { id: "UNIV_SEMI2".into(), league_id: "LEAGUE_UNIVERSITY".into(), round: "준결승".into(), home_team_id: t[1].clone(), away_team_id: t[2].clone(), best_of: 1, home_wins: 0, away_wins: 0, winner: None, home_from: None, away_from: None, next_series_id: Some("UNIV_FINAL".into()), next_series_slot: Some("away".into()) },
-        PostseasonSeries { id: "UNIV_FINAL".into(), league_id: "LEAGUE_UNIVERSITY".into(), round: "결승".into(),   home_team_id: "".into(),    away_team_id: "".into(),    best_of: 1, home_wins: 0, away_wins: 0, winner: None, home_from: Some("UNIV_SEMI1".into()), away_from: Some("UNIV_SEMI2".into()), next_series_id: None, next_series_slot: None },
-    ]
-}
-
-// 고교 10팀 단일리그 — 대학과 동일한 top4 준결승/결승 (구 A/B조 교차대진 대체, R4)
-pub fn build_hs_bracket(p: BuildBracketParams) -> Vec<PostseasonSeries> {
-    let t = sort_teams(&p.standings);
-    if t.len() < 4 { return vec![]; }
-    vec![
-        PostseasonSeries { id: "HS_SEMI1".into(), league_id: "LEAGUE_HIGHSCHOOL".into(), round: "준결승".into(), home_team_id: t[0].clone(), away_team_id: t[3].clone(), best_of: 1, home_wins: 0, away_wins: 0, winner: None, home_from: None, away_from: None, next_series_id: Some("HS_FINAL".into()), next_series_slot: Some("home".into()) },
-        PostseasonSeries { id: "HS_SEMI2".into(), league_id: "LEAGUE_HIGHSCHOOL".into(), round: "준결승".into(), home_team_id: t[1].clone(), away_team_id: t[2].clone(), best_of: 1, home_wins: 0, away_wins: 0, winner: None, home_from: None, away_from: None, next_series_id: Some("HS_FINAL".into()), next_series_slot: Some("away".into()) },
-        PostseasonSeries { id: "HS_FINAL".into(), league_id: "LEAGUE_HIGHSCHOOL".into(), round: "결승".into(),   home_team_id: "".into(),    away_team_id: "".into(),    best_of: 1, home_wins: 0, away_wins: 0, winner: None, home_from: Some("HS_SEMI1".into()), away_from: Some("HS_SEMI2".into()), next_series_id: None, next_series_slot: None },
-    ]
-}
-
 pub fn build_jbl_bracket(p: BuildBracketParams) -> Vec<PostseasonSeries> {
     let cl: Vec<Standing> = p.standings.iter().filter(|s| s.team_id.contains("_CL_")).cloned().collect();
     let pl: Vec<Standing> = p.standings.iter().filter(|s| s.team_id.contains("_PL_")).cloned().collect();
@@ -122,14 +167,6 @@ pub fn build_jbl_bracket(p: BuildBracketParams) -> Vec<PostseasonSeries> {
         PostseasonSeries { id: "JBL_CL_CF".into(),  league_id: "LEAGUE_JBL".into(), round: "CL 클라이맥스 파이널".into(),    home_team_id: cl[0].clone(), away_team_id: "".into(),     best_of: 5, home_wins: 0, away_wins: 0, winner: None, home_from: None, away_from: Some("JBL_CL_CS1".into()), next_series_id: Some("JBL_JS".into()),    next_series_slot: Some("home".into()) },
         PostseasonSeries { id: "JBL_PL_CF".into(),  league_id: "LEAGUE_JBL".into(), round: "PL 클라이맥스 파이널".into(),    home_team_id: pl[0].clone(), away_team_id: "".into(),     best_of: 5, home_wins: 0, away_wins: 0, winner: None, home_from: None, away_from: Some("JBL_PL_CS1".into()), next_series_id: Some("JBL_JS".into()),    next_series_slot: Some("away".into()) },
         PostseasonSeries { id: "JBL_JS".into(),     league_id: "LEAGUE_JBL".into(), round: "일본시리즈".into(),              home_team_id: "".into(),     away_team_id: "".into(),     best_of: 7, home_wins: 0, away_wins: 0, winner: None, home_from: Some("JBL_CL_CF".into()), away_from: Some("JBL_PL_CF".into()), next_series_id: None, next_series_slot: None },
-    ]
-}
-
-pub fn build_ind_bracket(p: BuildBracketParams) -> Vec<PostseasonSeries> {
-    let t = sort_teams(&p.standings);
-    if t.len() < 2 { return vec![]; }
-    vec![
-        PostseasonSeries { id: "IND_FINAL".into(), league_id: "LEAGUE_INDEPENDENT".into(), round: "결승".into(), home_team_id: t[0].clone(), away_team_id: t[1].clone(), best_of: 1, home_wins: 0, away_wins: 0, winner: None, home_from: None, away_from: None, next_series_id: None, next_series_slot: None },
     ]
 }
 
@@ -194,8 +231,10 @@ pub fn resolve_non_protagonist_series(p: ResolveNpcSeriesParams) -> Vec<Postseas
             if &cur[i].home_team_id == pt || &cur[i].away_team_id == pt { continue; }
 
             let needed = wins_needed(cur[i].best_of);
-            let mut hw = 0u32;
-            let mut aw = 0u32;
+            // 이미 안고 시작하는 승수를 그대로 이어받는다 — 0부터 다시 세면
+            // 프로 WC의 "4위 1승 어드밴티지"(home_wins: 1)가 조용히 사라진다.
+            let mut hw = cur[i].home_wins;
+            let mut aw = cur[i].away_wins;
             while hw < needed && aw < needed {
                 if rng.gen::<f64>() < 0.5 { hw += 1; } else { aw += 1; }
             }
@@ -239,6 +278,7 @@ pub fn make_series_game(p: MakeSeriesGameParams) -> ScheduleEntry {
         away_team_id: s.away_team_id.clone(),
         is_protagonist_game: s.home_team_id == p.protagonist_team_id || s.away_team_id == p.protagonist_team_id,
         phase: "postseason".to_string(),
+        is_tournament: false,
     }
 }
 

@@ -31,25 +31,32 @@ export async function buildAblBracket(
   return JSON.parse(raw);
 }
 
-export async function buildUnivBracket(standings: Standing[]): Promise<PostseasonSeries[]> {
-  const raw = await window.projectB!.postseasonBuildUniv(
-    JSON.stringify({ standings })
-  );
-  return JSON.parse(raw);
-}
+// 고교 buildHsBracket · 대학 buildUnivBracket은 Phase 5-5a에서 폐기했다.
+// 시즌 결산이 패왕기(고교 11월)·왕중왕전(대학 5월)로 옮겨갔다 — top4 준결승/결승을
+// 남겨두면 결승이 두 번 열린다. Rust build_hs_bracket / build_univ_bracket도 제거됨.
 
-// 고교 10팀 단일리그 — 대학과 동일한 top4 준결승/결승 (구 A/B조 교차대진 대체, R4)
-export async function buildHsBracket(standings: Standing[]): Promise<PostseasonSeries[]> {
+/**
+ * 프로 2군 축약 포스트시즌 (Phase 5-7).
+ *
+ * 상위 4팀 단판 사다리(3위vs4위 → 승자vs2위 → 승자vs1위).
+ * 독립 사다리와 모양은 같지만 **결승도 단판**이다(독립 챔결은 3전2승).
+ */
+export async function buildFarmBracket(standings: Standing[]): Promise<PostseasonSeries[]> {
   const raw = await window.projectB!.engine(
-    "buildHsBracketNative",
-    JSON.stringify({ standings }),
+    "buildFarmBracketNative", JSON.stringify({ standings }),
   );
   return JSON.parse(raw);
 }
 
-export async function buildIndBracket(standings: Standing[]): Promise<PostseasonSeries[]> {
-  const raw = await window.projectB!.postseasonBuildInd(
-    JSON.stringify({ standings })
+/**
+ * 독립 4차 Stage 사다리 (Phase 5-6).
+ *
+ * 준PO(3위 vs 4위, 단판) → PO(2위 vs 준PO승자, 단판) → 챔피언결정전(1위 vs PO승자, 3전2승).
+ * 구 buildIndBracket은 "1위 vs 2위 단판" 하나뿐이라 4팀 사다리를 표현하지 못했다.
+ */
+export async function buildIndLadder(standings: Standing[]): Promise<PostseasonSeries[]> {
+  const raw = await window.projectB!.engine(
+    "buildIndLadderNative", JSON.stringify({ standings }),
   );
   return JSON.parse(raw);
 }

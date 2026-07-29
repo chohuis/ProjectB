@@ -62,6 +62,7 @@ export interface ScheduleEntry {
   phase: SeasonPhase;       // 해당 경기의 시즌 페이즈
   result?: MatchResult;     // 경기 완료 후 채워짐
   isFriendly?: boolean;     // 친선경기 여부 (공식 기록 미집계)
+  isTournament?: boolean;   // 전국대회 — 개인 기록은 집계, 리그 순위는 미반영 (Phase 5-4)
   friendlyStats?: {         // 친선경기 주인공 개인 성적 (isFriendly=true일 때만)
     ip:     number;
     er:     number;
@@ -213,6 +214,8 @@ export interface InteractiveMatchResult {
   outsRecorded: number;
   errors: number;
   pitchCount: number;
+  /** 경기 날짜 "YYYY-MM-DD" — 의무 휴식 판정용 (Phase 5-8). 없으면 일정에서 찾는다 */
+  gameDate?: string;
   summary: string;
   batterLines?: BatterGameLine[];
   playerLines?: PlayerGameLine[];
@@ -234,6 +237,8 @@ export interface UnifiedGameOutcome {
   outsRecorded: number;
   errors: number;
   pitchCount: number;
+  /** 경기 날짜 "YYYY-MM-DD" — 의무 휴식 판정용 (Phase 5-8). 없으면 일정에서 찾는다 */
+  gameDate?: string;
   summary: string;
   protagonistEntered?: boolean;
   batterLines?: BatterGameLine[];
@@ -261,7 +266,16 @@ export interface PostseasonSeries {
 // ── 선수 경기간 컨디션 ────────────────────────────────────────
 export interface PlayerCondition {
   fatigue: number;          // 0~100, 100 = 완전 회복
-  lastPitchedWeek: number;  // 마지막 등판 주차 (0 = 미등판)
+  lastPitchedWeek: number;  // 마지막 등판 주차 (0 = 미등판) — 구 경로, 호환용
+  /**
+   * 마지막 등판 날짜 "YYYY-MM-DD" (Phase 5-8).
+   *
+   * 의무 휴식표가 일 단위라 주차로는 표현이 안 된다 — 고교 주말리그(토·일)에서
+   * "토요일 105구 던지고 일요일 또"가 주 단위 검사로는 안 걸린다.
+   */
+  lastPitchedDate?: string;
+  /** 그날 던진 투구 수 — 휴식일 산출의 입력 */
+  lastPitchCount?: number;
   pitchOutsLast: number;    // 직전 경기 던진 아웃 수
   lastStartGameCount?: number;       // SP: 마지막 선발 시점의 teamRotationIndex
   lastAppearanceGameCount?: number;  // RP/CP: 마지막 출전 시점의 teamRotationIndex
@@ -319,6 +333,21 @@ export interface SaveSeason {
   npcLiveStats: Record<string, NpcLiveStat>;
   // 전년도 KBL 최종 순위 — 드래프트 지명 순서 결정 (꼴지팀부터)
   prevSeasonKblStandings: Standing[];
+  // 전국대회 브래킷 (tournamentId → 브래킷). 개설 전에는 없다 (Phase 5-4)
+  tournaments: Record<string, import("../utils/tournament").TournamentBracket>;
+  // 대회 시드용 순위 스냅샷 — 대회마다 보는 시점이 다르다 (Phase 5-5a)
+  standingsSnapshots: import("../utils/standingsSnapshot").StandingsSnapshots;
+  // 조별예선 (은하기·여명기). 예선이 끝나면 tournaments에 본선 브래킷이 생긴다 (Phase 5-5d)
+  groupStages: Record<string, import("../utils/tournament").GroupStage>;
+  // 독립 4단계 생존리그 진행 상태 (Phase 5-6)
+  survival: import("../utils/survivalLeague").SurvivalState | null;
+  /**
+   * 세계 시드. slot.db meta의 world_seed와 같은 값을 시즌 상태에도 둔다.
+   *
+   * 조 추첨처럼 "세이브마다 달라야 하지만 다시 열면 같아야" 하는 뽑기가
+   * 매 주 진행 중에 필요한데, 그때마다 slot.db를 비동기로 읽을 수는 없다.
+   */
+  worldSeed: number;
 }
 
 export const SAVE_SEASON_VERSION = 1;
@@ -361,6 +390,11 @@ export function makeEmptySeason(
     npcRetired: [],
     npcLiveStats: {},
     prevSeasonKblStandings: [],
+    tournaments: {},
+    standingsSnapshots: {},
+    groupStages: {},
+    survival: null,
+    worldSeed: 0,
   };
 }
 

@@ -88,7 +88,26 @@ pub const NPC_STARTER_PITCH_COUNT_SOFT: f64    = 65.0;
 #[allow(dead_code)]
 pub const NPC_STARTER_PITCH_COUNT_HARD: f64    = 110.0;
 pub const PROTAGONIST_PITCH_COUNT_SOFT: f64    = 90.0;
+/// 리그를 모를 때 쓰는 기본 상한. 리그별 상한은 `league_pitch_limit()` (Phase 5-8)
 pub const PROTAGONIST_PITCH_COUNT_HARD: f64    = 120.0;
+
+/// 경기당 투구수 상한 — 리그별 (DESIGN §7.2 · 02_고교.md §4-3).
+///
+/// 고교만 105구다. 성장기 보호 성격이고, 단판 넉아웃 전국대회에서
+/// "에이스를 아껴 쓸까 밀어붙일까" 딜레마를 만드는 장치이기도 하다.
+/// 대학·독립·프로는 120구 — 성인 체력 반영이라 "보호"보다 "관리 전략"에 가깝다.
+pub fn league_pitch_limit(league_id: &str) -> f64 {
+    match league_id {
+        "LEAGUE_HIGHSCHOOL" => 105.0,
+        _ => 120.0,
+    }
+}
+
+/// 소프트 캡(감독이 교체를 고민하기 시작하는 지점)도 상한에 비례해 당긴다.
+/// 105구 리그에서 90구 소프트캡은 여유가 15구뿐이라 사실상 하드캡과 같아진다.
+pub fn league_pitch_soft(league_id: &str) -> f64 {
+    league_pitch_limit(league_id) * 0.75
+}
 pub const PROTAGONIST_STAMINA_EMERGENCY: f64   = 5.0;
 
 // 마운드 방문

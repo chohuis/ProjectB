@@ -19,24 +19,15 @@ const rulesFile = JSON.parse(fs.readFileSync(
   path.join(__dirname, "../resource/data/master/players/generation_rules.json"), "utf8"));
 check("rules v2 + rosterRules 존재", rulesFile.version === 2 && !!rulesFile.rosterRules?.LEAGUE_HIGHSCHOOL);
 
-// HS_ACTIVE_TEAMS_V3와 동일 목록 (leagueScheduler.ts)
-const HS_TEAMS = [
-  "TEAM_HS_SEOUL_INNOVATION", "TEAM_HS_BUSAN_WAVE", "TEAM_HS_DAEGU_HEAT",
-  "TEAM_HS_GWANGJU_VISION", "TEAM_HS_DAEJEON_RISE", "TEAM_HS_INCHEON_HARBOR",
-  "TEAM_HS_ULSAN_CHARGE", "TEAM_HS_SUWON_EDGE",
-  "TEAM_HS_YEOSU_SHORE", "TEAM_HS_CHUNCHEON_HIGHLAND",
-];
-// refs.json에 전부 존재하는지 (R1 부팅 assert와 동일 검증)
+// v2: 고교 102팀 전부가 상시 존재한다 (Lazy 없음 — DESIGN.md §2.1).
+// 목록은 refs에서 읽는다 — 하드코딩하면 refs 교체 때 조용히 어긋난다.
 const refs = JSON.parse(fs.readFileSync(
   path.join(__dirname, "../resource/data/master/entities/refs.json"), "utf8"));
-const hsIndex = JSON.parse(fs.readFileSync(
-  path.join(__dirname, "../resource/data/master/teams/highschool/index.json"), "utf8"));
-const refIds = new Set([
-  ...refs.teams.map((t) => t.id),
-  ...(hsIndex.teams ?? hsIndex.items ?? []).map((t) => (typeof t === "string" ? t : t.id)),
-]);
-check("v3 고교 10팀 전부 refs/인덱스에 존재", HS_TEAMS.every((t) => refIds.has(t)),
-  JSON.stringify(HS_TEAMS.filter((t) => !refIds.has(t))));
+const HS_TEAMS = refs.teams.filter((t) => t.leagueId === "LEAGUE_HIGHSCHOOL").map((t) => t.id).sort();
+const KBL_TEAMS = refs.teams.filter((t) => t.leagueId === "LEAGUE_KBL" && t.id.endsWith("_1")).map((t) => t.id).sort();
+check("v2 고교 102팀", HS_TEAMS.length === 102, `got ${HS_TEAMS.length}`);
+check("v2 프로 1군 10팀", KBL_TEAMS.length === 10, `got ${KBL_TEAMS.length}`);
+const refIds = new Set(refs.teams.map((t) => t.id));
 
 // ── 파이프라인 실행 (newGameV3.ts 동일 단계) ──────────────────
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "newgame-v3-"));
@@ -62,39 +53,39 @@ function runNewGame(slotId, worldSeed) {
 }
 
 const r1 = runNewGame("NG1", 777);
-check("새 게임: 10팀 × 25 = 250명 생성·저장", r1.ok === true && r1.npcCount === 250, JSON.stringify(r1));
+check(`새 게임: ${HS_TEAMS.length}팀 × 25 생성·저장`, r1.ok === true && r1.npcCount === HS_TEAMS.length * 25, JSON.stringify(r1));
 check("새 게임: 주인공 왕복", call("getProtagonist", { slotId: "NG1" }).name === "주인공");
 check("새 게임: 미리보기 메타", call("getMeta", { slotId: "NG1" }).career_stage === "highschool");
 
-const roster = call("getByTeam", { slotId: "NG1", teamId: "TEAM_HS_SEOUL_INNOVATION" });
+const roster = call("getByTeam", { slotId: "NG1", teamId: HS_TEAMS[0] });
 check("새 게임: 팀 로스터 25명 + 능력치 동거", roster.length === 25 && roster.every((n) => n.abilities.pitching || n.abilities.batting));
-check("새 게임: 리그 조회 250명", call("getByLeague", { slotId: "NG1", leagueId: "LEAGUE_HIGHSCHOOL" }).length === 250);
+check("새 게임: 리그 조회 전원", call("getByLeague", { slotId: "NG1", leagueId: "LEAGUE_HIGHSCHOOL" }).length === HS_TEAMS.length * 25);
 check("새 게임: 타 리그 비활성 (KBL 0명)", call("getByLeague", { slotId: "NG1", leagueId: "LEAGUE_KBL" }).length === 0);
 
 // ── worldSeed 재현성: 같은 시드 새 슬롯 = 동일 로스터 ─────────
 runNewGame("NG2", 777);
-const a = call("getByTeam", { slotId: "NG1", teamId: "TEAM_HS_BUSAN_WAVE" });
-const b = call("getByTeam", { slotId: "NG2", teamId: "TEAM_HS_BUSAN_WAVE" });
+const a = call("getByTeam", { slotId: "NG1", teamId: HS_TEAMS[1] });
+const b = call("getByTeam", { slotId: "NG2", teamId: HS_TEAMS[1] });
 check("worldSeed 재현성: 슬롯 간 동일 로스터", JSON.stringify(a) === JSON.stringify(b));
 
 // ── Lazy 리그 활성화 (KBL 진입 시나리오) ─────────────────────
 const kblParams = {
   leagueId: "LEAGUE_KBL", seasonYear: 2029, worldSeed: 777,
-  teams: refs.teams.filter((t) => t.leagueId === "LEAGUE_KBL" && t.id.endsWith("_1")).slice(0, 8)
-    .map((t) => ({ teamId: t.id, schoolId: "" })),
+  teams: KBL_TEAMS.map((teamId) => ({ teamId, schoolId: "" })),
   rules: rulesFile.rosterRules.LEAGUE_KBL,
 };
-check("KBL 1군 8팀 refs 확보", kblParams.teams.length === 8);
+check("KBL 1군 10팀 refs 확보", kblParams.teams.length === 10);
 const kblGen = JSON.parse(engine.generateLeagueRosterNative(JSON.stringify(kblParams)));
 call("insertNpcs", { slotId: "NG1", npcs: kblGen.npcs });
-check("Lazy 활성화: KBL 8×28=224명 삽입", call("getByLeague", { slotId: "NG1", leagueId: "LEAGUE_KBL" }).length === 224);
-check("Lazy 활성화: 고교 250명 불변", call("getByLeague", { slotId: "NG1", leagueId: "LEAGUE_HIGHSCHOOL" }).length === 250);
+check(`Lazy 활성화: KBL ${KBL_TEAMS.length}×28 삽입`, call("getByLeague", { slotId: "NG1", leagueId: "LEAGUE_KBL" }).length === KBL_TEAMS.length * 28);
+check("Lazy 활성화: 고교 인원 불변", call("getByLeague", { slotId: "NG1", leagueId: "LEAGUE_HIGHSCHOOL" }).length === HS_TEAMS.length * 25);
 check("KBL: 계약 생성", kblGen.npcs.every((n) => n.salary > 0));
 
 // 총 세계 규모 확인 (Lite 목표: 사전 생성 16,155 → 활성 리그만)
 const total = call("getByLeague", { slotId: "NG1", leagueId: "LEAGUE_HIGHSCHOOL" }).length
   + call("getByLeague", { slotId: "NG1", leagueId: "LEAGUE_KBL" }).length;
-check("세계 규모: 고교+KBL = 474명 (16,155 대체)", total === 474, `got ${total}`);
+// v2: 고교 102×25 + 프로 1군 10×28 = 2,830명 (v1의 474명 → 172팀 세계)
+check("세계 규모: 고교+프로 1군", total === HS_TEAMS.length * 25 + KBL_TEAMS.length * 28, `got ${total}`);
 
 mgr.closeAll();
 fs.rmSync(tmp, { recursive: true, force: true });

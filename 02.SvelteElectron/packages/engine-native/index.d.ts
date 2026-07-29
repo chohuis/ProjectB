@@ -101,6 +101,36 @@ export declare function pickGeneralEnlisteesNative(paramsJson: string): string
 export declare function calcEarlyEnlistDecisionsNative(paramsJson: string): string
 /** 독립리그 KBL 스카우트 제의 계산 */
 export declare function calcIndieScoutOfferNative(paramsJson: string): string
+/** 권역 주말리그 — 권역 크기가 달라도 팀당 경기 수를 균등하게 (Phase 5-3) */
+export declare function generateRegionalScheduleNative(p: string): string
+/** 권역 순위 → 전국대회 참가팀 선발 (권역 크기 비례 배분 + 와일드카드) */
+export declare function selectTournamentEntrantsNative(p: string): string
+/** 시드 순 참가팀 → 전 라운드 브래킷 뼈대 (부전승 자동 반영) */
+export declare function generateTournamentBracketNative(p: string): string
+/** 한 라운드 결과 반영 → 다음 라운드 대진 확정 */
+export declare function advanceTournamentRoundNative(p: string): string
+/** 해당 라운드에서 **실제로 치를** 경기만 일정 형태로 (부전승·미확정 제외) */
+export declare function tournamentRoundScheduleNative(p: string): string
+/** 프로 2군 축약 포스트시즌 — 상위 4팀 단판 사다리 (Phase 5-7) */
+export declare function buildFarmBracketNative(p: string): string
+/** 투구수별 의무 휴식을 채웠는지 (일 단위 — 주 단위로는 주말 연투가 안 걸린다) */
+export declare function checkPitcherRestNative(p: string): string
+/** 리그별 투구수 상한 (고교 105 / 그 외 120) */
+export declare function leaguePitchLimitNative(p: string): string
+/** 한 단계 일정 — 생존팀끼리 새 라운드로빈 */
+export declare function generateSurvivalStageNative(p: string): string
+/** 단계 종료 → 생존팀·탈락팀 판정 */
+export declare function survivalCutoffNative(p: string): string
+/** 4차 Stage 사다리 — 준PO(단판) → PO(단판) → 챔피언결정전(3전2승) */
+export declare function buildIndLadderNative(p: string): string
+/** 참가팀 → 조 추첨 + 예선 일정 (worldSeed 결정적) */
+export declare function buildGroupStageNative(p: string): string
+/** 예선 경기 결과 → 조 순위 반영 */
+export declare function applyGroupResultsNative(p: string): string
+/** 예선 통과팀 (본선 시드 순) */
+export declare function groupStageQualifiersNative(p: string): string
+/** 우승팀 (결승 승자 미정이면 null) — 시즌 종료 시상·기록용 */
+export declare function tournamentChampionNative(p: string): string
 export declare function generateScheduleNative(p: string): string
 export declare function generateKblScheduleNative(p: string): string
 export declare function generateAblScheduleNative(p: string): string
@@ -109,10 +139,7 @@ export declare function generateLeagueScheduleNative(p: string): string
 export declare function generateAllLeagueSchedulesNative(p: string): string
 export declare function buildKblBracketNative(p: string): string
 export declare function buildAblBracketNative(p: string): string
-export declare function buildUnivBracketNative(p: string): string
-export declare function buildHsBracketNative(p: string): string
 export declare function buildJblBracketNative(p: string): string
-export declare function buildIndBracketNative(p: string): string
 export declare function applyGameToSeriesNative(p: string): string
 export declare function fillNextSeriesNative(p: string): string
 export declare function resolveNonProtagonistSeriesNative(p: string): string

@@ -53,12 +53,12 @@ const rules = R("resource/data/master/players/generation_rules.json");
 const refs = R("resource/data/master/entities/refs.json");
 const refTeamIds = new Set(refs.teams.map((t) => t.id));
 
-const HS_TEAMS = [
-  "TEAM_HS_SEOUL_INNOVATION", "TEAM_HS_BUSAN_WAVE", "TEAM_HS_DAEGU_HEAT",
-  "TEAM_HS_GWANGJU_VISION", "TEAM_HS_DAEJEON_RISE", "TEAM_HS_INCHEON_HARBOR",
-  "TEAM_HS_ULSAN_CHARGE", "TEAM_HS_SUWON_EDGE",
-  "TEAM_HS_YEOSU_SHORE", "TEAM_HS_CHUNCHEON_HIGHLAND",
-];
+// 팀 목록은 refs에서 읽는다 — 하드코딩하면 refs가 바뀔 때 조용히 어긋난다
+// (실제로 Phase 5-2 refs 교체 때 이 하네스가 INV3 위반 990건으로 그걸 잡아냈다)
+const HS_TEAMS = refs.teams
+  .filter((t) => t.leagueId === "LEAGUE_HIGHSCHOOL")
+  .map((t) => t.id)
+  .sort();
 
 // ── 위반 수집 ─────────────────────────────────────────────────────
 const violations = [];

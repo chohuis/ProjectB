@@ -156,6 +156,169 @@ for o1 in ones:
 print("\n검증 오류:", len(errs))
 for e in errs[:10]: print("  ", e)
 
-out = os.path.join(MASTER, "entities", "refs.v2.json")
+out = os.path.join(MASTER, "entities", "refs.json")
 io.open(out, "w", encoding="utf-8").write(json.dumps(refs, ensure_ascii=False, indent=2) + "\n")
 print(f"\n→ {out}")
+
+# ── 코드 측 팀 목록 생성 (Phase 5-2) ──────────────────────────────
+# 팀 목록을 TS에 손으로 박으면 refs와 드리프트한다(부팅 검사 validateTeamRefs가
+# 존재하는 이유가 그것). refs에서 생성해 드리프트를 구조적으로 없앤다.
+def _ids(pred):
+    return sorted(t["id"] for t in refs["teams"] if pred(t))
+
+hs_all   = _ids(lambda t: t["leagueId"] == "LEAGUE_HIGHSCHOOL")
+univ     = _ids(lambda t: t["leagueId"] == "LEAGUE_UNIVERSITY")
+ind      = _ids(lambda t: t["leagueId"] == "LEAGUE_INDEPENDENT")
+kbl_1    = _ids(lambda t: t["leagueId"] == "LEAGUE_KBL" and t["id"].endswith("_1"))
+kbl_2    = _ids(lambda t: t["leagueId"] == "LEAGUE_KBL" and t["id"].endswith("_2"))
+abl_1    = _ids(lambda t: t["leagueId"] == "LEAGUE_ABL" and t["id"].endswith("_1"))
+abl_2    = _ids(lambda t: t["leagueId"] == "LEAGUE_ABL" and t["id"].endswith("_2"))
+jbl_1    = _ids(lambda t: t["leagueId"] == "LEAGUE_JBL" and t["id"].endswith("_1"))
+jbl_2    = _ids(lambda t: t["leagueId"] == "LEAGUE_JBL" and t["id"].endswith("_2"))
+
+# 고교 선택 가능 = 전 102교 (00_개요 §3 "102교 전부 선택 가능")
+hs_selectable = hs_all
+
+# 권역/조 = 거점구장 공유 그룹. 고교 8권역·대학 5조가 같은 규칙으로 나온다
+def _groups(league_id):
+    g = collections.defaultdict(list)
+    for t in refs["teams"]:
+        if t["leagueId"] == league_id:
+            g[t["stadium"]].append(t["id"])
+    return g
+
+hs_regions = _groups("LEAGUE_HIGHSCHOOL")
+univ_groups = _groups("LEAGUE_UNIVERSITY")
+
+def arr(name, items, indent="  "):
+    body = "\n".join(f'{indent}"{i}",' for i in items)
+    return f"export const {name}: string[] = [\n{body}\n];\n"
+
+ts = ['// 이 파일은 생성물이다 — 직접 편집하지 말 것.',
+      '// 생성: python scripts/build_refs_from_seeds.py',
+      '// 정본: resource/data/seeds/onepitch/*.csv → resource/data/master/entities/refs.json',
+      '//',
+      f'// 국내 {len(hs_all)+len(univ)+len(ind)+len(kbl_1)+len(kbl_2)}팀 '
+      f'(고교 {len(hs_all)} · 대학 {len(univ)} · 독립 {len(ind)} · 프로 1군 {len(kbl_1)} · 2군 {len(kbl_2)})',
+      '']
+ts.append(arr("HS_ALL_TEAMS", hs_all))
+ts.append(arr("HS_SELECTABLE_TEAMS", hs_selectable))
+ts.append(arr("UNIV_TEAMS", univ))
+ts.append(arr("IND_TEAMS", ind))
+ts.append(arr("KBL_TEAMS", kbl_1))
+ts.append(arr("KBL_FARM_TEAMS", kbl_2))
+ts.append(arr("ABL_TEAMS", abl_1))
+ts.append(arr("ABL_FARM_TEAMS", abl_2))
+ts.append(arr("JBL_TEAMS", jbl_1))
+ts.append(arr("JBL_FARM_TEAMS", jbl_2))
+
+def _group_const(name, doc, groups):
+    return (f"/** {doc} */\n"
+            f"export const {name}: Record<string, string[]> = {{\n"
+            + "".join(f'  "{k}": [\n' + "".join(f'    "{i}",\n' for i in sorted(v)) + "  ],\n"
+                      for k, v in sorted(groups.items()))
+            + "};\n")
+
+ts.append(_group_const("HS_REGIONS",
+                       "고교 8권역 — 거점구장 공유 그룹. 5-3 주말리그 편성의 기준", hs_regions))
+ts.append(_group_const("UNIV_GROUPS",
+                       "대학 5조(A~E) — 거점구장 공유 그룹. 고교 권역과 같은 규칙", univ_groups))
+
+# 리그별 조 편성 — 대회 선발기가 리그를 몰라도 되게
+ts.append("/** 리그 → 조 편성. 대회 참가팀 선발이 이걸로 권역/조를 찾는다 */\n"
+          "export const GROUPS_BY_LEAGUE: Record<string, Record<string, string[]>> = {\n"
+          "  LEAGUE_HIGHSCHOOL: HS_REGIONS,\n"
+          "  LEAGUE_UNIVERSITY: UNIV_GROUPS,\n"
+          "};\n")
+
+# 조별 요일·라벨 (Phase 5-5b) — 대학은 조마다 요일이 다르다
+groups_meta = rd("league_groups.csv")
+ts.append("export interface LeagueGroupMeta {\n"
+          "  leagueId: string; stadiumId: string; label: string;\n"
+          "  /** 주 안의 날짜 오프셋. 고교 주말리그의 6·7과 같은 축 */\n"
+          "  dayOffsets: number[];\n"
+          "  note: string;\n"
+          "}\n")
+ts.append("/** 조별 요일 패턴. 정본: seeds/onepitch/league_groups.csv */\n"
+          "export const LEAGUE_GROUP_META: LeagueGroupMeta[] = [\n"
+          + "".join(
+              '  { leagueId: "%s", stadiumId: "%s", label: "%s", dayOffsets: [%s], note: "%s" },\n'
+              % (g["leagueId"], g["stadiumId"], g["label"],
+                 ", ".join(g["dayOffsets"].split("|")), g["note"])
+              for g in groups_meta)
+          + "];\n")
+
+# 독립 생존리그 단계표 (Phase 5-6) — 단계별 팀 수·경기 수·컷오프는 ①정의 데이터다
+stages = rd("survival_stages.csv")
+ts.append("export interface SurvivalStageDef {\n"
+          "  leagueId: string; stage: number; name: string;\n"
+          "  /** 이 단계 시작 시점의 팀 수 (검증용 — 실제 팀은 앞 단계 생존팀) */\n"
+          "  teamCount: number;\n"
+          "  /** 팀당 경기 수 (1차 18 · 2차 14 · 3차 3) */\n"
+          "  targetGames: number;\n"
+          "  startWeek: number; endWeek: number;\n"
+          "  /** 다음 단계로 올릴 팀 수. 마지막 단계는 teamCount와 같다 */\n"
+          "  advanceCount: number;\n"
+          "  note: string;\n"
+          "}\n")
+ts.append("/** 독립 4단계 생존리그 (04_독립.md §3). 정본: seeds/onepitch/survival_stages.csv */\n"
+          "export const SURVIVAL_STAGES: SurvivalStageDef[] = [\n"
+          + "".join(
+              '  { leagueId: "%s", stage: %s, name: "%s", teamCount: %s, targetGames: %s, '
+              'startWeek: %s, endWeek: %s, advanceCount: %s, note: "%s" },\n'
+              % (g["leagueId"], g["stage"], g["name"], g["teamCount"], g["targetGames"],
+                 g["startWeek"], g["endWeek"], g["advanceCount"], g["note"])
+              for g in sorted(stages, key=lambda r: (r["leagueId"], int(r["stage"]))))
+          + "];\n")
+
+# 전국대회 카탈로그 (Phase 5-4) — 시기·참가수·시드 출처는 ①정의 데이터다
+tours = rd("tournaments.csv")
+ts.append("/** 대회 시드 산출 기준 */\n"
+          "export type TournamentSeedSource =\n"
+          '  | "prev_season"  /* 전년 권역 순위 */\n'
+          '  | "first_half"   /* 전반기 권역 순위 */\n'
+          '  | "second_half"  /* 후반기 권역 순위 */\n'
+          '  | "open";        /* 전원 참가 */\n\n'
+          "export interface TournamentDef {\n"
+          "  id: string; leagueId: string; name: string; flower: string;\n"
+          "  startWeek: number; endWeek: number;\n"
+          "  totalSlots: number; wildcardSlots: number;\n"
+          "  seedSource: TournamentSeedSource;\n"
+          "  /** 조당 자동 진출 수 고정 (대학 왕중왕전 = 조 1위만). null이면 조 크기 비례 배분 */\n"
+          "  perGroupSlots: number | null;\n"
+          "  /** WC 후보를 조 상위 몇 위까지로 제한 (왕중왕전 = 조 2위까지). null이면 제한 없음 */\n"
+          "  wildcardMaxGroupRank: number | null;\n"
+          "  /** 자동 진출팀을 WC보다 항상 상위 시드로 (왕중왕전) */\n"
+          "  autoSeedsFirst: boolean;\n"
+          "  /** 조별예선 조 수 (은하기 8 · 여명기 4). null이면 바로 넉아웃 */\n"
+          "  groupCount: number | null;\n"
+          "  /** 조당 본선 진출 수 (은하기 1 · 여명기 2) */\n"
+          "  advancePerGroup: number | null;\n"
+          "  /** 예선에 쓸 주차 수. 나머지가 본선 */\n"
+          "  qualifyWeeks: number;\n"
+          "  order: number;\n"
+          "}\n")
+
+_n = lambda v: v if v not in ("", None) else "null"
+ts.append("/** 대회 카탈로그 (고교 5종 · 대학 3종). 정본: seeds/onepitch/tournaments.csv */\n"
+          "export const TOURNAMENTS: TournamentDef[] = [\n"
+          + "".join(
+              '  { id: "%s", leagueId: "%s", name: "%s", flower: "%s", '
+              'startWeek: %s, endWeek: %s, totalSlots: %s, wildcardSlots: %s, '
+              'seedSource: "%s", perGroupSlots: %s, wildcardMaxGroupRank: %s, '
+              'autoSeedsFirst: %s, groupCount: %s, advancePerGroup: %s, '
+              'qualifyWeeks: %s, order: %s },\n'
+              % (t["id"], t["leagueId"], t["name"], t["flower"], t["startWeek"], t["endWeek"],
+                 t["totalSlots"], t["wildcardSlots"], t["seedSource"],
+                 _n(t.get("perGroupSlots")), _n(t.get("wildcardMaxGroupRank")),
+                 "true" if t.get("autoSeedsFirst") == "1" else "false",
+                 _n(t.get("groupCount")), _n(t.get("advancePerGroup")),
+                 t.get("qualifyWeeks") or "0", t["order"])
+              for t in sorted(tours, key=lambda r: (r["leagueId"], int(r["order"]))))
+          + "];\n")
+
+ts_path = os.path.join(ROOT, "02.SvelteElectron", "apps", "ui", "src", "shared", "utils", "leagueTeams.generated.ts")
+io.open(ts_path, "w", encoding="utf-8").write("\n".join(ts))
+print(f"→ {ts_path}")
+print(f"   고교 {len(hs_all)} ({len(hs_regions)}권역) · 대학 {len(univ)} · 독립 {len(ind)} · "
+      f"프로 {len(kbl_1)}+{len(kbl_2)} · ABL {len(abl_1)}+{len(abl_2)} · JBL {len(jbl_1)}+{len(jbl_2)}")

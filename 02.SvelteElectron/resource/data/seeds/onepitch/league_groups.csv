@@ -1,0 +1,6 @@
+leagueId,stadiumId,label,dayOffsets,note
+LEAGUE_UNIVERSITY,STADIUM_MIREU,A,1|2|3|4,화수목금 격주 (서울6+경인4)
+LEAGUE_UNIVERSITY,STADIUM_BYEOLBIT,B,1|2|3|4,화수목금 격주 (경인10)
+LEAGUE_UNIVERSITY,STADIUM_GEUMGANG_UNIV,C,3|4,매주 목금 (충청8+강원2)
+LEAGUE_UNIVERSITY,STADIUM_NOEUL,D,3|4,매주 목금 (호남7+대경3)
+LEAGUE_UNIVERSITY,STADIUM_TAEJONG,E,3|4|1|2,기획서는 4월 목금·5월 화수 — 라운드 순환으로 근사 (부경울7+대경2+제주1)

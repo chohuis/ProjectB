@@ -20,8 +20,14 @@ import {
   ALL_TEAMS_BY_LEAGUE,
   DEFAULT_LEAGUE_CONFIGS,
   generateAllLeagueSchedules,
-  generateLeagueSchedule,
   HS_ACTIVE_TEAMS_V3,
+  HS_REGIONS,
+  HS_TARGET_GAMES,
+  UNIV_GROUPS,
+  UNIV_TARGET_GAMES,
+  UNIV_REGULAR_START_WEEK,
+  UNIV_REGULAR_END_WEEK,
+  generateRegionalSchedule,
   makeStandings,
 } from "../utils/leagueScheduler";
 import * as BackgroundLeague from "./backgroundLeague";
@@ -160,6 +166,14 @@ function createSeasonStore() {
         // 전년도 KBL 최종 순위 보존 — 드래프트 지명 순서에 사용
         const kblStandings = s.leagueState["LEAGUE_KBL"]?.standings ?? [];
         next.prevSeasonKblStandings = kblStandings.length > 0 ? [...kblStandings] : (s.prevSeasonKblStandings ?? []);
+        // 전 리그 최종 순위 → 다음 시즌 prev_season 스냅샷 (개나리기 시드가 이걸 쓴다)
+        const carried: import("../utils/standingsSnapshot").StandingsSnapshots = {};
+        for (const [lid, st] of Object.entries(s.leagueState)) {
+          if (!st?.standings || st.standings.length === 0) continue;
+          carried[lid] = { prev_season: st.standings.map((x) => ({ ...x })) };
+        }
+        next.standingsSnapshots = carried;
+        next.worldSeed = s.worldSeed;
         return next;
       });
     },
@@ -234,6 +248,43 @@ function createSeasonStore() {
           },
         };
         return { ...s, schedule, standings, stats, leagueState };
+      });
+    },
+
+    /**
+     * 전국대회 결과. 개인 기록·로테이션·피로도는 리그 경기와 똑같이 쌓되
+     * **순위표만 건드리지 않는다** — 대회 성적이 주말리그 순위에 섞이면
+     * 다음 대회 시드가 오염된다.
+     */
+    applyTournamentResult(
+      scheduleId: string,
+      result: MatchResult,
+      leagueId: string,
+      homeTeamId: string,
+      awayTeamId: string,
+      nextHomeRotIdx: number,
+      nextAwayRotIdx: number,
+      pitcherConditions: Record<string, PlayerCondition> = {},
+    ) {
+      update((s) => {
+        const schedule = s.schedule.map((e) => (e.id === scheduleId ? { ...e, result } : e));
+        const stats    = accumulateStats(s.stats, result.playerLines);
+
+        const cur = migrateLeagueState(s.leagueState[leagueId] ?? {});
+        const leagueState = {
+          ...s.leagueState,
+          [leagueId]: {
+            ...cur,
+            stats: accumulateStats(cur.stats, result.playerLines),
+            playerConditions:  { ...cur.playerConditions, ...pitcherConditions },
+            teamRotationIndex: {
+              ...cur.teamRotationIndex,
+              [homeTeamId]: nextHomeRotIdx,
+              [awayTeamId]: nextAwayRotIdx,
+            },
+          },
+        };
+        return { ...s, schedule, stats, leagueState };
       });
     },
 
@@ -332,10 +383,16 @@ function createSeasonStore() {
       update((s) => ({ ...s, triggeredEvents: {} }));
     },
 
-    // 고교 10팀 단일리그 초기화 — A/B조 없음 (DESIGN.md §7)
+    // 고교 102팀 8권역 주말리그 초기화 (DESIGN.md §7 v2)
     async initAllLeaguesV3(seasonYear: number, protagonistTeamId: string) {
-      const [hsEntries, otherSchedules] = await Promise.all([
-        generateLeagueSchedule("LEAGUE_HIGHSCHOOL", HS_ACTIVE_TEAMS_V3, 2, 45, 4, protagonistTeamId, seasonYear),
+      const [hsEntries, univEntries, otherSchedules] = await Promise.all([
+        generateRegionalSchedule("LEAGUE_HIGHSCHOOL", HS_REGIONS, HS_TARGET_GAMES, 2, 45, protagonistTeamId, seasonYear),
+        // 대학 5조 — 조당 9경기, 조마다 다른 평일 요일 (Phase 5-5b)
+        generateRegionalSchedule(
+          "LEAGUE_UNIVERSITY", UNIV_GROUPS, UNIV_TARGET_GAMES,
+          UNIV_REGULAR_START_WEEK, UNIV_REGULAR_END_WEEK, protagonistTeamId, seasonYear,
+          { idPrefix: "UNIVR" },
+        ),
         generateAllLeagueSchedules(DEFAULT_LEAGUE_CONFIGS.map((c) => ({ ...c })), protagonistTeamId),
       ]);
 
@@ -355,18 +412,26 @@ function createSeasonStore() {
         ...s,
         seasonYear,
         schedule: hsSchedule,
-        leagueSchedules: otherSchedules,
+        leagueSchedules: { ...otherSchedules, LEAGUE_UNIVERSITY: univEntries },
         leagueState,
         standings: makeStandings(HS_ACTIVE_TEAMS_V3),
       }));
     },
 
-    // 학년 진급 시 다음 고교 시즌 재초기화 — 단일리그 플랫 스케줄 재생성
-    async reinitHighschoolSeason(protagonistTeamId: string, allHsTeams: string[]): Promise<void> {
+    // 학년 진급 시 다음 고교 시즌 재초기화 — 8권역 주말리그 재생성
+    // 팀 목록을 인자로 받지 않는다: 일정은 HS_REGIONS(102팀 전체)로 짜이므로
+    // 부분 목록을 넘기면 순위표와 일정이 어긋난다.
+    async reinitHighschoolSeason(protagonistTeamId: string): Promise<void> {
       const seasonYear = get({ subscribe }).seasonYear;
 
-      const [hsEntries, otherSchedules] = await Promise.all([
-        generateLeagueSchedule("LEAGUE_HIGHSCHOOL", allHsTeams, 2, 45, 4, protagonistTeamId, seasonYear),
+      const [hsEntries, univEntries, otherSchedules] = await Promise.all([
+        generateRegionalSchedule("LEAGUE_HIGHSCHOOL", HS_REGIONS, HS_TARGET_GAMES, 2, 45, protagonistTeamId, seasonYear),
+        // 대학 5조 — 조당 9경기, 조마다 다른 평일 요일 (Phase 5-5b)
+        generateRegionalSchedule(
+          "LEAGUE_UNIVERSITY", UNIV_GROUPS, UNIV_TARGET_GAMES,
+          UNIV_REGULAR_START_WEEK, UNIV_REGULAR_END_WEEK, protagonistTeamId, seasonYear,
+          { idPrefix: "UNIVR" },
+        ),
         generateAllLeagueSchedules(DEFAULT_LEAGUE_CONFIGS.map((c) => ({ ...c })), protagonistTeamId),
       ]);
 
@@ -375,7 +440,7 @@ function createSeasonStore() {
         .sort((a, b) => a.gameDate.localeCompare(b.gameDate));
 
       const leagueState: Record<string, LeagueSeasonState> = {
-        LEAGUE_HIGHSCHOOL: { standings: makeStandings(allHsTeams), stats: {}, playerConditions: {}, teamRotationIndex: {} },
+        LEAGUE_HIGHSCHOOL: { standings: makeStandings(HS_ACTIVE_TEAMS_V3), stats: {}, playerConditions: {}, teamRotationIndex: {} },
       };
       for (const [lid, teams] of Object.entries(ALL_TEAMS_BY_LEAGUE)) {
         if (lid === "LEAGUE_HIGHSCHOOL") continue;
@@ -385,8 +450,8 @@ function createSeasonStore() {
       update((s) => ({
         ...s,
         schedule: hsSchedule,
-        standings: makeStandings(allHsTeams),
-        leagueSchedules: otherSchedules,
+        standings: makeStandings(HS_ACTIVE_TEAMS_V3),
+        leagueSchedules: { ...otherSchedules, LEAGUE_UNIVERSITY: univEntries },
         leagueState,
       }));
     },
@@ -460,6 +525,34 @@ function createSeasonStore() {
 
     updatePostseasonBracket(leagueId: string, updatedSeries: PostseasonSeries[]) {
       update((s) => Postseason.updatePostseasonBracket(s, leagueId, updatedSeries));
+    },
+
+    captureStandingsSnapshot(key: import("../utils/standingsSnapshot").SnapshotKey) {
+      update((s) => Postseason.captureStandingsSnapshot(s, key));
+    },
+
+    setWorldSeed(worldSeed: number) {
+      update((s) => ({ ...s, worldSeed: worldSeed >>> 0 }));
+    },
+
+    setSurvivalState(survival: import("../utils/survivalLeague").SurvivalState) {
+      update((s) => Postseason.setSurvivalState(s, survival));
+    },
+
+    injectLeagueEntries(leagueId: string, entries: ScheduleEntry[]) {
+      update((s) => Postseason.injectLeagueEntries(s, leagueId, entries));
+    },
+
+    setGroupStage(stage: import("../utils/tournament").GroupStage) {
+      update((s) => Postseason.setGroupStage(s, stage));
+    },
+
+    setTournamentBracket(bracket: import("../utils/tournament").TournamentBracket) {
+      update((s) => Postseason.setTournamentBracket(s, bracket));
+    },
+
+    injectTournamentEntries(entries: ScheduleEntry[]) {
+      update((s) => Postseason.injectTournamentEntries(s, entries));
     },
 
     setAblConferences(east: string[], west: string[]) {

@@ -12,6 +12,10 @@ mod npc_sim;
 mod growth_engine;
 mod player_engine;
 mod schedule_engine;
+mod tournament;
+mod group_stage;
+mod survival;
+mod rest_rules;
 mod postseason_engine;
 mod week_engine;
 mod team_engine;
@@ -576,6 +580,177 @@ pub fn calc_indie_scout_offer_native(params_json: String) -> String {
 
 // ── 스케줄 엔진 ───────────────────────────────────────────────────────────────
 
+/// 권역 주말리그 — 권역 크기가 달라도 팀당 경기 수를 균등하게 (Phase 5-3)
+#[napi]
+pub fn generate_regional_schedule_native(p: String) -> String {
+    let params: GenerateRegionalScheduleParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("generateRegionalScheduleNative", e),
+    };
+    serde_json::to_string(&schedule_engine::generate_regional_schedule(params))
+        .unwrap_or_else(|e| parse_err("generateRegionalScheduleNative/serialize", e))
+}
+
+// ── 토너먼트 (Phase 5-4) ──────────────────────────────────────────────────────
+
+/// 권역 순위 → 전국대회 참가팀 선발 (권역 크기 비례 배분 + 와일드카드)
+#[napi]
+pub fn select_tournament_entrants_native(p: String) -> String {
+    let params: tournament::SelectEntrantsParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("selectTournamentEntrantsNative", e),
+    };
+    serde_json::to_string(&tournament::select_tournament_entrants(params))
+        .unwrap_or_else(|e| parse_err("selectTournamentEntrantsNative/serialize", e))
+}
+
+/// 시드 순 참가팀 → 전 라운드 브래킷 뼈대 (부전승 자동 반영)
+#[napi]
+pub fn generate_tournament_bracket_native(p: String) -> String {
+    let params: tournament::GenerateTournamentParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("generateTournamentBracketNative", e),
+    };
+    serde_json::to_string(&tournament::generate_tournament_bracket(params))
+        .unwrap_or_else(|e| parse_err("generateTournamentBracketNative/serialize", e))
+}
+
+/// 한 라운드 결과 반영 → 다음 라운드 대진 확정
+#[napi]
+pub fn advance_tournament_round_native(p: String) -> String {
+    let params: tournament::AdvanceTournamentParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("advanceTournamentRoundNative", e),
+    };
+    serde_json::to_string(&tournament::advance_tournament_round(params))
+        .unwrap_or_else(|e| parse_err("advanceTournamentRoundNative/serialize", e))
+}
+
+#[derive(serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct BracketRoundQuery {
+    bracket: tournament::TournamentBracket,
+    round: u32,
+}
+
+/// 해당 라운드에서 **실제로 치를** 경기만 일정 형태로 (부전승·미확정 제외)
+#[napi]
+pub fn tournament_round_schedule_native(p: String) -> String {
+    let q: BracketRoundQuery = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("tournamentRoundScheduleNative", e),
+    };
+    serde_json::to_string(&tournament::bracket_to_schedule(&q.bracket, q.round))
+        .unwrap_or_else(|e| parse_err("tournamentRoundScheduleNative/serialize", e))
+}
+
+/// 프로 2군 축약 포스트시즌 — 상위 4팀 단판 사다리 (Phase 5-7)
+#[napi]
+pub fn build_farm_bracket_native(p: String) -> String {
+    let params: postseason_engine::BuildBracketParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("buildFarmBracketNative", e),
+    };
+    serde_json::to_string(&postseason_engine::build_farm_bracket(params))
+        .unwrap_or_else(|e| parse_err("buildFarmBracketNative/serialize", e))
+}
+
+// ── 의무 휴식 (Phase 5-8) ─────────────────────────────────────────────────────
+
+/// 투구수별 의무 휴식을 채웠는지 (일 단위 — 주 단위로는 주말 연투가 안 걸린다)
+#[napi]
+pub fn check_pitcher_rest_native(p: String) -> String {
+    let params: rest_rules::RestCheckParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("checkPitcherRestNative", e),
+    };
+    serde_json::to_string(&rest_rules::check_rest(params))
+        .unwrap_or_else(|e| parse_err("checkPitcherRestNative/serialize", e))
+}
+
+#[derive(serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct PitchLimitQuery { league_id: String }
+
+/// 리그별 투구수 상한 (고교 105 / 그 외 120)
+#[napi]
+pub fn league_pitch_limit_native(p: String) -> String {
+    let q: PitchLimitQuery = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("leaguePitchLimitNative", e),
+    };
+    serde_json::to_string(&serde_json::json!({
+        "hard": tuning::league_pitch_limit(&q.league_id),
+        "soft": tuning::league_pitch_soft(&q.league_id),
+    })).unwrap_or_else(|e| parse_err("leaguePitchLimitNative/serialize", e))
+}
+
+// ── 독립 생존리그 (Phase 5-6) ─────────────────────────────────────────────────
+
+/// 한 단계 일정 — 생존팀끼리 새 라운드로빈
+#[napi]
+pub fn generate_survival_stage_native(p: String) -> String {
+    let params: survival::SurvivalStageParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("generateSurvivalStageNative", e),
+    };
+    serde_json::to_string(&survival::generate_survival_stage(params))
+        .unwrap_or_else(|e| parse_err("generateSurvivalStageNative/serialize", e))
+}
+
+/// 단계 종료 → 생존팀·탈락팀 판정
+#[napi]
+pub fn survival_cutoff_native(p: String) -> String {
+    let params: survival::SurvivalCutoffParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("survivalCutoffNative", e),
+    };
+    serde_json::to_string(&survival::survival_cutoff(params))
+        .unwrap_or_else(|e| parse_err("survivalCutoffNative/serialize", e))
+}
+
+/// 4차 Stage 사다리 — 준PO(단판) → PO(단판) → 챔피언결정전(3전2승)
+#[napi]
+pub fn build_ind_ladder_native(p: String) -> String {
+    let params: survival::BuildIndLadderParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("buildIndLadderNative", e),
+    };
+    serde_json::to_string(&survival::build_ind_ladder(params))
+        .unwrap_or_else(|e| parse_err("buildIndLadderNative/serialize", e))
+}
+
+// ── 조별예선 (Phase 5-5d) ─────────────────────────────────────────────────────
+
+/// 참가팀 → 조 추첨 + 예선 일정 (worldSeed 결정적)
+#[napi]
+pub fn build_group_stage_native(p: String) -> String {
+    let params: group_stage::BuildGroupStageParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("buildGroupStageNative", e),
+    };
+    serde_json::to_string(&group_stage::build_group_stage(params))
+        .unwrap_or_else(|e| parse_err("buildGroupStageNative/serialize", e))
+}
+
+/// 예선 경기 결과 → 조 순위 반영
+#[napi]
+pub fn apply_group_results_native(p: String) -> String {
+    let params: group_stage::ApplyGroupResultsParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("applyGroupResultsNative", e),
+    };
+    serde_json::to_string(&group_stage::apply_group_results(params))
+        .unwrap_or_else(|e| parse_err("applyGroupResultsNative/serialize", e))
+}
+
+/// 예선 통과팀 (본선 시드 순)
+#[napi]
+pub fn group_stage_qualifiers_native(p: String) -> String {
+    let stage: group_stage::GroupStage = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("groupStageQualifiersNative", e),
+    };
+    serde_json::to_string(&group_stage::group_stage_qualifiers(&stage))
+        .unwrap_or_else(|e| parse_err("groupStageQualifiersNative/serialize", e))
+}
+
+/// 우승팀 (결승 승자 미정이면 null) — 시즌 종료 시상·기록용
+#[napi]
+pub fn tournament_champion_native(p: String) -> String {
+    let b: tournament::TournamentBracket = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("tournamentChampionNative", e),
+    };
+    serde_json::to_string(&tournament::tournament_champion(&b))
+        .unwrap_or_else(|e| parse_err("tournamentChampionNative/serialize", e))
+}
+
 #[napi]
 pub fn generate_schedule_native(p: String) -> String {
     let params: GenerateScheduleParams = match serde_json::from_str(&p) {
@@ -651,39 +826,12 @@ pub fn build_abl_bracket_native(p: String) -> String {
 }
 
 #[napi]
-pub fn build_univ_bracket_native(p: String) -> String {
-    let params: BuildBracketParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("buildUnivBracketNative", e),
-    };
-    serde_json::to_string(&postseason_engine::build_univ_bracket(params))
-        .unwrap_or_else(|e| parse_err("buildUnivBracketNative/serialize", e))
-}
-
-#[napi]
-pub fn build_hs_bracket_native(p: String) -> String {
-    let params: BuildBracketParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("buildHsBracketNative", e),
-    };
-    serde_json::to_string(&postseason_engine::build_hs_bracket(params))
-        .unwrap_or_else(|e| parse_err("buildHsBracketNative/serialize", e))
-}
-
-#[napi]
 pub fn build_jbl_bracket_native(p: String) -> String {
     let params: BuildBracketParams = match serde_json::from_str(&p) {
         Ok(v) => v, Err(e) => return parse_err("buildJblBracketNative", e),
     };
     serde_json::to_string(&postseason_engine::build_jbl_bracket(params))
         .unwrap_or_else(|e| parse_err("buildJblBracketNative/serialize", e))
-}
-
-#[napi]
-pub fn build_ind_bracket_native(p: String) -> String {
-    let params: BuildBracketParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("buildIndBracketNative", e),
-    };
-    serde_json::to_string(&postseason_engine::build_ind_bracket(params))
-        .unwrap_or_else(|e| parse_err("buildIndBracketNative/serialize", e))
 }
 
 #[napi]

@@ -16,6 +16,63 @@ export function updatePostseasonBracket(s: SeasonStoreState, leagueId: string, u
   return { ...s, postseasonBrackets: { ...s.postseasonBrackets, [leagueId]: updatedSeries } };
 }
 
+// ── 전국대회 (Phase 5-4) ──────────────────────────────────────
+
+export function setTournamentBracket(
+  s: SeasonStoreState,
+  bracket: import("../utils/tournament").TournamentBracket,
+): SeasonStoreState {
+  return { ...s, tournaments: { ...(s.tournaments ?? {}), [bracket.tournamentId]: bracket } };
+}
+
+export function captureStandingsSnapshot(
+  s: SeasonStoreState,
+  key: import("../utils/standingsSnapshot").SnapshotKey,
+): SeasonStoreState {
+  const snapshots = { ...(s.standingsSnapshots ?? {}) };
+  for (const [leagueId, st] of Object.entries(s.leagueState)) {
+    if (!st?.standings || st.standings.length === 0) continue;
+    snapshots[leagueId] = { ...(snapshots[leagueId] ?? {}), [key]: st.standings.map((x) => ({ ...x })) };
+  }
+  return { ...s, standingsSnapshots: snapshots };
+}
+
+export function setSurvivalState(
+  s: SeasonStoreState,
+  survival: import("../utils/survivalLeague").SurvivalState,
+): SeasonStoreState {
+  return { ...s, survival };
+}
+
+/** 독립 단계 일정은 leagueSchedules에 쌓인다 — 단계마다 새 경기가 붙는다 */
+export function injectLeagueEntries(
+  s: SeasonStoreState,
+  leagueId: string,
+  entries: ScheduleEntry[],
+): SeasonStoreState {
+  if (entries.length === 0) return s;
+  const cur = s.leagueSchedules[leagueId] ?? [];
+  const have = new Set(cur.map((e) => e.id));
+  const fresh = entries.filter((e) => !have.has(e.id));
+  if (fresh.length === 0) return s;
+  return { ...s, leagueSchedules: { ...s.leagueSchedules, [leagueId]: [...cur, ...fresh] } };
+}
+
+export function setGroupStage(
+  s: SeasonStoreState,
+  stage: import("../utils/tournament").GroupStage,
+): SeasonStoreState {
+  return { ...s, groupStages: { ...(s.groupStages ?? {}), [stage.tournamentId]: stage } };
+}
+
+/** 이미 있는 id는 넣지 않는다 — 같은 주를 두 번 처리해도 경기가 중복되지 않게 */
+export function injectTournamentEntries(s: SeasonStoreState, entries: ScheduleEntry[]): SeasonStoreState {
+  const have = new Set(s.schedule.map((e) => e.id));
+  const fresh = entries.filter((e) => !have.has(e.id));
+  if (fresh.length === 0) return s;
+  return { ...s, schedule: [...s.schedule, ...fresh] };
+}
+
 export function setAblConferences(s: SeasonStoreState, east: string[], west: string[]): SeasonStoreState {
   return { ...s, ablEastTeams: east, ablWestTeams: west };
 }
