@@ -20,8 +20,10 @@ import {
   ALL_TEAMS_BY_LEAGUE,
   DEFAULT_LEAGUE_CONFIGS,
   generateAllLeagueSchedules,
-  generateLeagueSchedule,
   HS_ACTIVE_TEAMS_V3,
+  HS_REGIONS,
+  HS_TARGET_GAMES,
+  generateRegionalSchedule,
   makeStandings,
 } from "../utils/leagueScheduler";
 import * as BackgroundLeague from "./backgroundLeague";
@@ -332,10 +334,10 @@ function createSeasonStore() {
       update((s) => ({ ...s, triggeredEvents: {} }));
     },
 
-    // 고교 10팀 단일리그 초기화 — A/B조 없음 (DESIGN.md §7)
+    // 고교 102팀 8권역 주말리그 초기화 (DESIGN.md §7 v2)
     async initAllLeaguesV3(seasonYear: number, protagonistTeamId: string) {
       const [hsEntries, otherSchedules] = await Promise.all([
-        generateLeagueSchedule("LEAGUE_HIGHSCHOOL", HS_ACTIVE_TEAMS_V3, 2, 45, 4, protagonistTeamId, seasonYear),
+        generateRegionalSchedule("LEAGUE_HIGHSCHOOL", HS_REGIONS, HS_TARGET_GAMES, 2, 45, protagonistTeamId, seasonYear),
         generateAllLeagueSchedules(DEFAULT_LEAGUE_CONFIGS.map((c) => ({ ...c })), protagonistTeamId),
       ]);
 
@@ -361,12 +363,14 @@ function createSeasonStore() {
       }));
     },
 
-    // 학년 진급 시 다음 고교 시즌 재초기화 — 단일리그 플랫 스케줄 재생성
-    async reinitHighschoolSeason(protagonistTeamId: string, allHsTeams: string[]): Promise<void> {
+    // 학년 진급 시 다음 고교 시즌 재초기화 — 8권역 주말리그 재생성
+    // 팀 목록을 인자로 받지 않는다: 일정은 HS_REGIONS(102팀 전체)로 짜이므로
+    // 부분 목록을 넘기면 순위표와 일정이 어긋난다.
+    async reinitHighschoolSeason(protagonistTeamId: string): Promise<void> {
       const seasonYear = get({ subscribe }).seasonYear;
 
       const [hsEntries, otherSchedules] = await Promise.all([
-        generateLeagueSchedule("LEAGUE_HIGHSCHOOL", allHsTeams, 2, 45, 4, protagonistTeamId, seasonYear),
+        generateRegionalSchedule("LEAGUE_HIGHSCHOOL", HS_REGIONS, HS_TARGET_GAMES, 2, 45, protagonistTeamId, seasonYear),
         generateAllLeagueSchedules(DEFAULT_LEAGUE_CONFIGS.map((c) => ({ ...c })), protagonistTeamId),
       ]);
 
@@ -375,7 +379,7 @@ function createSeasonStore() {
         .sort((a, b) => a.gameDate.localeCompare(b.gameDate));
 
       const leagueState: Record<string, LeagueSeasonState> = {
-        LEAGUE_HIGHSCHOOL: { standings: makeStandings(allHsTeams), stats: {}, playerConditions: {}, teamRotationIndex: {} },
+        LEAGUE_HIGHSCHOOL: { standings: makeStandings(HS_ACTIVE_TEAMS_V3), stats: {}, playerConditions: {}, teamRotationIndex: {} },
       };
       for (const [lid, teams] of Object.entries(ALL_TEAMS_BY_LEAGUE)) {
         if (lid === "LEAGUE_HIGHSCHOOL") continue;
@@ -385,7 +389,7 @@ function createSeasonStore() {
       update((s) => ({
         ...s,
         schedule: hsSchedule,
-        standings: makeStandings(allHsTeams),
+        standings: makeStandings(HS_ACTIVE_TEAMS_V3),
         leagueSchedules: otherSchedules,
         leagueState,
       }));

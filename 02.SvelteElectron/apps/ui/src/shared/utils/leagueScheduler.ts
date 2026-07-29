@@ -35,6 +35,47 @@ export async function generateLeagueSchedule(
   return JSON.parse(raw);
 }
 
+/**
+ * 고교 주말리그 팀당 목표 경기 수 (DESIGN.md §7).
+ *
+ * 권역이 6~20팀으로 갈려도 이 값으로 균등하게 맞춘다 — 팀 적은 권역은
+ * 라운드로빈 바퀴가 늘어 같은 팀을 여러 번 만난다(기획서 02_고교.md §4-1).
+ * v1은 리그 전체에 cycles 4를 줘서 팀당 경기가 권역 크기에 휘둘렸다.
+ */
+export const HS_TARGET_GAMES = 20;
+
+/**
+ * 권역 주말리그 (Phase 5-3).
+ *
+ * v1은 리그에 `cycles`(바퀴 수)를 줬다 — 권역이 6~20팀으로 갈리는 고교에서는
+ * 팀당 경기가 5~19로 들쭉날쭉해진다. v2는 **목표 경기 수**를 주고 바퀴를 역산해,
+ * 권역 크기와 무관하게 팀마다 같은 경기 수를 보장한다.
+ */
+export async function generateRegionalSchedule(
+  leagueId: string,
+  regions: Record<string, readonly string[]>,
+  targetGames: number,
+  startWeek: number,
+  endWeek: number,
+  protagonistTeamId: string,
+  seasonYear = 2026,
+): Promise<ScheduleEntry[]> {
+  const raw = await window.projectB!.engine(
+    "generateRegionalScheduleNative",
+    JSON.stringify({
+      leagueId,
+      regions: Object.entries(regions).map(([regionId, teams]) => ({ regionId, teams: [...teams] })),
+      targetGames, startWeek, endWeek, protagonistTeamId, seasonYear,
+    }),
+  );
+  const parsed = JSON.parse(raw);
+  if (parsed && typeof parsed === "object" && "error" in parsed) {
+    console.error("[leagueScheduler] generateRegionalSchedule Rust 오류:", parsed.error);
+    return [];
+  }
+  return parsed as ScheduleEntry[];
+}
+
 export async function generateAllLeagueSchedules(
   configs: LeagueConfig[],
   protagonistTeamId: string,

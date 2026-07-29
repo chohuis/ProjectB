@@ -576,6 +576,16 @@ pub fn calc_indie_scout_offer_native(params_json: String) -> String {
 
 // ── 스케줄 엔진 ───────────────────────────────────────────────────────────────
 
+/// 권역 주말리그 — 권역 크기가 달라도 팀당 경기 수를 균등하게 (Phase 5-3)
+#[napi]
+pub fn generate_regional_schedule_native(p: String) -> String {
+    let params: GenerateRegionalScheduleParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("generateRegionalScheduleNative", e),
+    };
+    serde_json::to_string(&schedule_engine::generate_regional_schedule(params))
+        .unwrap_or_else(|e| parse_err("generateRegionalScheduleNative/serialize", e))
+}
+
 #[napi]
 pub fn generate_schedule_native(p: String) -> String {
     let params: GenerateScheduleParams = match serde_json::from_str(&p) {

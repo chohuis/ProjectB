@@ -101,6 +101,8 @@ export declare function pickGeneralEnlisteesNative(paramsJson: string): string
 export declare function calcEarlyEnlistDecisionsNative(paramsJson: string): string
 /** 독립리그 KBL 스카우트 제의 계산 */
 export declare function calcIndieScoutOfferNative(paramsJson: string): string
+/** 권역 주말리그 — 권역 크기가 달라도 팀당 경기 수를 균등하게 (Phase 5-3) */
+export declare function generateRegionalScheduleNative(p: string): string
 export declare function generateScheduleNative(p: string): string
 export declare function generateKblScheduleNative(p: string): string
 export declare function generateAblScheduleNative(p: string): string
