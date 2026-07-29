@@ -122,12 +122,90 @@ function addColumn(db, table, col, decl) {
   if (!hasColumn(db, table, col)) db.exec(`ALTER TABLE ${table} ADD COLUMN ${col} ${decl}`);
 }
 
+// ── v2: season 단일 블롭 분해 ─────────────────────────────────────
+// 172팀 세계에서 season 블롭은 시즌당 ~2,635경기 + 4,400선수 성적을 담게 되어
+// 매 주 저장마다 통째로 직렬화하는 구조가 한계에 부딪힌다 (DESIGN.md §10 R6a).
+//
+// **메모리 형태(SaveSeason)는 바꾸지 않는다** — 저장소만 쪼갠다.
+// getSeason/setSeason이 유일한 경계이므로(호출부 2곳) 소비자 코드는 무변경.
+//
+// `bucket` 컬럼: 같은 데이터가 두 자리에 사는 구조를 정확히 복원하기 위한 출처 표시.
+//   'primary' → SaveSeason.schedule / .standings / .stats   (주인공 리그 미러)
+//   'league'  → .leagueSchedules[id] / .leagueState[id].*
+// 둘의 의미론(주인공 리그가 어디로 가는가)에 의존하지 않고 그대로 되돌린다.
+const SEASON_TABLES_SQL = `
+  CREATE TABLE IF NOT EXISTS season_meta (
+    id   INTEGER PRIMARY KEY CHECK (id = 1),
+    json TEXT NOT NULL
+  );
+
+  CREATE TABLE IF NOT EXISTS schedule (
+    bucket     TEXT    NOT NULL,
+    league_id  TEXT    NOT NULL DEFAULT '',
+    entry_id   TEXT    NOT NULL,
+    ord        INTEGER NOT NULL DEFAULT 0,
+    week       INTEGER,
+    has_result INTEGER NOT NULL DEFAULT 0,
+    json       TEXT    NOT NULL,
+    PRIMARY KEY (bucket, league_id, entry_id)
+  );
+  CREATE INDEX IF NOT EXISTS idx_schedule_week    ON schedule(league_id, week);
+  CREATE INDEX IF NOT EXISTS idx_schedule_pending ON schedule(has_result) WHERE has_result = 0;
+
+  CREATE TABLE IF NOT EXISTS standings (
+    bucket    TEXT    NOT NULL,
+    league_id TEXT    NOT NULL DEFAULT '',
+    team_id   TEXT    NOT NULL,
+    ord       INTEGER NOT NULL DEFAULT 0,
+    json      TEXT    NOT NULL,
+    PRIMARY KEY (bucket, league_id, team_id)
+  );
+
+  CREATE TABLE IF NOT EXISTS season_stats (
+    bucket    TEXT NOT NULL,
+    league_id TEXT NOT NULL DEFAULT '',
+    player_id TEXT NOT NULL,
+    json      TEXT NOT NULL,
+    PRIMARY KEY (bucket, league_id, player_id)
+  );
+  CREATE INDEX IF NOT EXISTS idx_season_stats_player ON season_stats(player_id);
+
+  CREATE TABLE IF NOT EXISTS player_condition (
+    league_id TEXT NOT NULL,
+    player_id TEXT NOT NULL,
+    json      TEXT NOT NULL,
+    PRIMARY KEY (league_id, player_id)
+  );
+
+  CREATE TABLE IF NOT EXISTS team_rotation (
+    league_id TEXT    NOT NULL,
+    team_id   TEXT    NOT NULL,
+    idx       INTEGER NOT NULL,
+    PRIMARY KEY (league_id, team_id)
+  );
+`;
+
 const MIGRATIONS = [
   {
     v: 1,
     name: "baseline — slot.db v3 스키마",
     // 전부 IF NOT EXISTS라 기존 슬롯(user_version=0)에 적용해도 무해하다.
     up(db) { db.exec(BASELINE_SQL); },
+  },
+  {
+    v: 2,
+    name: "season 블롭 → schedule/standings/season_stats/player_condition/team_rotation 분해",
+    up(db) {
+      db.exec(SEASON_TABLES_SQL);
+      // 기존 슬롯의 블롭을 실제로 옮긴다 (빈 슬롯이면 no-op)
+      const legacy = db.prepare("SELECT json FROM season WHERE id = 1").get();
+      if (legacy) {
+        let parsed = null;
+        try { parsed = JSON.parse(legacy.json); } catch { parsed = null; }
+        if (parsed && typeof parsed === "object") writeSeason(db, parsed);
+      }
+      db.exec("DROP TABLE IF EXISTS season");
+    },
   },
 ];
 
@@ -161,6 +239,124 @@ function migrate(db) {
     return { from, to: currentVersion(db), applied };
   });
   return run.immediate();
+}
+
+// ── season 분해 / 복원 (유일한 변환 지점) ─────────────────────────
+// SaveSeason에서 행 단위로 쪼갤 5개 컬렉션. 나머지 필드는 season_meta JSON에 남는다.
+const SEASON_ROW_FIELDS = ["schedule", "standings", "stats", "leagueSchedules", "leagueState"];
+
+/** SaveSeason → 테이블들 (전체 교체). 호출자가 트랜잭션을 연다. */
+function writeSeason(db, season) {
+  for (const t of ["schedule", "standings", "season_stats", "player_condition", "team_rotation"]) {
+    db.prepare(`DELETE FROM ${t}`).run();
+  }
+
+  const insSchedule = db.prepare(
+    "INSERT OR REPLACE INTO schedule (bucket, league_id, entry_id, ord, week, has_result, json) VALUES (?,?,?,?,?,?,?)"
+  );
+  const insStanding = db.prepare(
+    "INSERT OR REPLACE INTO standings (bucket, league_id, team_id, ord, json) VALUES (?,?,?,?,?)"
+  );
+  const insStat = db.prepare(
+    "INSERT OR REPLACE INTO season_stats (bucket, league_id, player_id, json) VALUES (?,?,?,?)"
+  );
+  const insCond = db.prepare(
+    "INSERT OR REPLACE INTO player_condition (league_id, player_id, json) VALUES (?,?,?)"
+  );
+  const insRot = db.prepare(
+    "INSERT OR REPLACE INTO team_rotation (league_id, team_id, idx) VALUES (?,?,?)"
+  );
+
+  const putSchedule = (bucket, leagueId, list) => {
+    if (!Array.isArray(list)) return;
+    list.forEach((e, i) => {
+      if (!e || typeof e.id !== "string") return;
+      insSchedule.run(bucket, leagueId, e.id, i, e.week ?? null, e.result ? 1 : 0, JSON.stringify(e));
+    });
+  };
+  const putStandings = (bucket, leagueId, list) => {
+    if (!Array.isArray(list)) return;
+    list.forEach((s, i) => {
+      if (!s || typeof s.teamId !== "string") return;
+      insStanding.run(bucket, leagueId, s.teamId, i, JSON.stringify(s));
+    });
+  };
+  const putStats = (bucket, leagueId, map) => {
+    if (!map || typeof map !== "object") return;
+    for (const [pid, v] of Object.entries(map)) insStat.run(bucket, leagueId, pid, JSON.stringify(v));
+  };
+
+  putSchedule("primary", "", season.schedule);
+  putStandings("primary", "", season.standings);
+  putStats("primary", "", season.stats);
+
+  for (const [lid, list] of Object.entries(season.leagueSchedules ?? {})) putSchedule("league", lid, list);
+  for (const [lid, st] of Object.entries(season.leagueState ?? {})) {
+    putStandings("league", lid, st?.standings);
+    putStats("league", lid, st?.stats);
+    for (const [pid, c] of Object.entries(st?.playerConditions ?? {})) insCond.run(lid, pid, JSON.stringify(c));
+    for (const [tid, idx] of Object.entries(st?.teamRotationIndex ?? {})) insRot.run(lid, tid, Number(idx) || 0);
+  }
+
+  // 나머지 스칼라·작은 맵 + 빈 컬렉션도 복원해야 하므로 키 목록을 남긴다
+  const meta = {};
+  for (const [k, v] of Object.entries(season)) {
+    if (!SEASON_ROW_FIELDS.includes(k)) meta[k] = v;
+  }
+  meta.__leagueScheduleIds = Object.keys(season.leagueSchedules ?? {});
+  meta.__leagueStateIds = Object.keys(season.leagueState ?? {});
+  db.prepare("INSERT OR REPLACE INTO season_meta (id, json) VALUES (1, ?)").run(JSON.stringify(meta));
+}
+
+/** 테이블들 → SaveSeason (분해 전과 동일한 형태). 없으면 null. */
+function readSeason(db) {
+  const metaRow = db.prepare("SELECT json FROM season_meta WHERE id = 1").get();
+  if (!metaRow) return null;
+  const meta = JSON.parse(metaRow.json);
+
+  const leagueScheduleIds = meta.__leagueScheduleIds ?? [];
+  const leagueStateIds = meta.__leagueStateIds ?? [];
+  delete meta.__leagueScheduleIds;
+  delete meta.__leagueStateIds;
+
+  const season = { ...meta };
+  season.schedule = [];
+  season.standings = [];
+  season.stats = {};
+  season.leagueSchedules = Object.fromEntries(leagueScheduleIds.map((id) => [id, []]));
+  season.leagueState = Object.fromEntries(leagueStateIds.map((id) => [id, {
+    standings: [], stats: {}, playerConditions: {}, teamRotationIndex: {},
+  }]));
+
+  const ensureState = (lid) => {
+    if (!season.leagueState[lid]) {
+      season.leagueState[lid] = { standings: [], stats: {}, playerConditions: {}, teamRotationIndex: {} };
+    }
+    return season.leagueState[lid];
+  };
+
+  for (const r of db.prepare("SELECT bucket, league_id, json FROM schedule ORDER BY bucket, league_id, ord").all()) {
+    const e = JSON.parse(r.json);
+    if (r.bucket === "primary") season.schedule.push(e);
+    else (season.leagueSchedules[r.league_id] ??= []).push(e);
+  }
+  for (const r of db.prepare("SELECT bucket, league_id, json FROM standings ORDER BY bucket, league_id, ord").all()) {
+    const s = JSON.parse(r.json);
+    if (r.bucket === "primary") season.standings.push(s);
+    else ensureState(r.league_id).standings.push(s);
+  }
+  for (const r of db.prepare("SELECT bucket, league_id, player_id, json FROM season_stats").all()) {
+    const v = JSON.parse(r.json);
+    if (r.bucket === "primary") season.stats[r.player_id] = v;
+    else ensureState(r.league_id).stats[r.player_id] = v;
+  }
+  for (const r of db.prepare("SELECT league_id, player_id, json FROM player_condition").all()) {
+    ensureState(r.league_id).playerConditions[r.player_id] = JSON.parse(r.json);
+  }
+  for (const r of db.prepare("SELECT league_id, team_id, idx FROM team_rotation").all()) {
+    ensureState(r.league_id).teamRotationIndex[r.team_id] = r.idx;
+  }
+  return season;
 }
 
 // ── 슬롯 파일 관리 ────────────────────────────────────────────────
@@ -305,7 +501,10 @@ const commands = {
   // 새 게임 = 슬롯 초기화 의미론: 기존 데이터(이전 시도 잔재 포함)를 전부 비우고 새로 쓴다
   createSlot(db, p) {
     const t = db.transaction(() => {
-      for (const tbl of ["npc", "transactions", "career_history", "history_league", "protagonist", "season", "meta"]) {
+      for (const tbl of [
+        "npc", "transactions", "career_history", "history_league", "protagonist", "meta",
+        "season_meta", "schedule", "standings", "season_stats", "player_condition", "team_rotation",
+      ]) {
         db.prepare(`DELETE FROM ${tbl}`).run();
       }
       const now = new Date().toISOString();
@@ -316,7 +515,7 @@ const commands = {
       setMeta.run("updated_at", now);
       setMeta.run("slot_name", p.name ?? "");
       db.prepare("INSERT OR REPLACE INTO protagonist (id, json) VALUES (1, ?)").run(JSON.stringify(p.protagonist ?? {}));
-      db.prepare("INSERT OR REPLACE INTO season (id, json) VALUES (1, ?)").run(JSON.stringify(p.season ?? {}));
+      writeSeason(db, p.season ?? {});
       if (Array.isArray(p.npcs) && p.npcs.length > 0) {
         const ins = db.prepare(INSERT_NPC_SQL);
         for (const n of p.npcs) ins.run(npcToInsertParams(n));
@@ -357,12 +556,14 @@ const commands = {
     db.prepare("INSERT OR REPLACE INTO protagonist (id, json) VALUES (1, ?)").run(JSON.stringify(p.data));
     return { ok: true };
   },
+  // season은 5개 테이블로 분해 저장되지만, 경계에서 SaveSeason 형태로 왕복한다
+  // (메모리 형태 무변경 — DATA_POLICY.md §3-2 / migration v2 주석 참고)
   getSeason(db) {
-    const r = db.prepare("SELECT json FROM season WHERE id = 1").get();
-    return r ? JSON.parse(r.json) : null;
+    return readSeason(db);
   },
   setSeason(db, p) {
-    db.prepare("INSERT OR REPLACE INTO season (id, json) VALUES (1, ?)").run(JSON.stringify(p.data));
+    const t = db.transaction(() => writeSeason(db, p.data ?? {}));
+    t();
     return { ok: true };
   },
 

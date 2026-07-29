@@ -18,6 +18,42 @@ function check(name, cond, extra = "") {
   else { failed++; console.error(`FAIL  ${name} ${extra}`); }
 }
 
+/**
+ * 심층 비교 — 객체 키 순서는 무시한다.
+ * readSeason은 메타를 펼친 뒤 컬렉션을 붙이므로 키 순서가 원본과 다르다.
+ * JS에서 키 순서에 의존하는 코드는 없고(HMAC 미구현), 순서를 보존하려면
+ * 키 목록을 따로 저장해야 해서 과설계다 — 내용만 같으면 된다.
+ */
+function deepEq(a, b, pathStr = "$") {
+  if (a === b) return null;
+  if (a === null || b === null || typeof a !== "object" || typeof b !== "object") {
+    return `${pathStr}: ${JSON.stringify(a)} !== ${JSON.stringify(b)}`;
+  }
+  if (Array.isArray(a) !== Array.isArray(b)) return `${pathStr}: 배열/객체 불일치`;
+  if (Array.isArray(a)) {
+    if (a.length !== b.length) return `${pathStr}: 길이 ${a.length} !== ${b.length}`;
+    for (let i = 0; i < a.length; i++) {
+      const d = deepEq(a[i], b[i], `${pathStr}[${i}]`);
+      if (d) return d;
+    }
+    return null;
+  }
+  const ka = Object.keys(a).sort(), kb = Object.keys(b).sort();
+  if (ka.length !== kb.length || ka.some((k, i) => k !== kb[i])) {
+    const only = (x, y) => x.filter((k) => !y.includes(k));
+    return `${pathStr}: 키 불일치 (좌측만: ${only(ka, kb)} / 우측만: ${only(kb, ka)})`;
+  }
+  for (const k of ka) {
+    const d = deepEq(a[k], b[k], `${pathStr}.${k}`);
+    if (d) return d;
+  }
+  return null;
+}
+function checkEq(name, got, want) {
+  const d = deepEq(want, got);
+  check(name, d === null, d ? `\n      ${d}` : "");
+}
+
 // ── 1. 새 슬롯은 최신 버전으로 생성된다 ───────────────────────────
 {
   const db = slotdb.openSlot(tmpDir, "fresh");
@@ -129,6 +165,103 @@ function check(name, cond, extra = "") {
   });
   check("매니저 경유 createSlot", !res.error, JSON.stringify(res));
   check("매니저 경유 getMeta", slotdb.dispatch(mgr, "getMeta", { slotId: "M1" }).world_seed === "42");
+  mgr.closeAll();
+}
+
+// ── 7. v2: season 왕복이 정확한가 (메모리 형태 무변경 보장) ───────
+function makeSeasonFixture() {
+  return {
+    version: 1, savedAt: "2026-07-29T00:00:00.000Z",
+    leagueId: "LEAGUE_HIGHSCHOOL", seasonYear: 2026,
+    currentWeek: 12, currentDate: "2026-06-01", totalWeeks: 52,
+    pendingActions: [{ kind: "game", scheduleId: "SCH_W12_G1" }],
+    triggeredEvents: { EVT_A: 3 },
+    // 주인공 리그 미러 (top-level)
+    schedule: [
+      { id: "SCH_W01_G1", week: 1, gameDate: "2026-03-07", leagueId: "LEAGUE_HIGHSCHOOL",
+        homeTeamId: "T_A", awayTeamId: "T_B", isProtagonistGame: true, phase: "season",
+        result: { homeScore: 3, awayScore: 2, winnerId: "T_A", loserId: "T_B", playerLines: [], events: [] } },
+      { id: "SCH_W12_G1", week: 12, gameDate: "2026-06-01", leagueId: "LEAGUE_HIGHSCHOOL",
+        homeTeamId: "T_A", awayTeamId: "T_C", isProtagonistGame: true, phase: "season" },
+    ],
+    standings: [
+      { teamId: "T_A", wins: 8, losses: 2, draws: 0, winPct: 0.8, runsFor: 44, runsAgainst: 21, streak: "W3", last10: "8W2L0D" },
+      { teamId: "T_B", wins: 5, losses: 5, draws: 0, winPct: 0.5, runsFor: 30, runsAgainst: 30, streak: "L1", last10: "5W5L0D" },
+    ],
+    stats: { "PLY_1": { type: "pitcher", w: 4, l: 1, era: 2.31 } },
+    // 나머지 리그 (disjoint)
+    leagueSchedules: {
+      LEAGUE_KBL: [
+        { id: "KBL_W01_G1", week: 1, gameDate: "2026-03-07", leagueId: "LEAGUE_KBL",
+          homeTeamId: "K_A", awayTeamId: "K_B", isProtagonistGame: false, phase: "season" },
+      ],
+      LEAGUE_ABL: [],   // 빈 배열도 복원돼야 한다
+    },
+    leagueState: {
+      LEAGUE_HIGHSCHOOL: {
+        standings: [{ teamId: "T_A", wins: 8, losses: 2, draws: 0, winPct: 0.8, runsFor: 44, runsAgainst: 21, streak: "W3", last10: "8W2L0D" }],
+        stats: { "PLY_1": { type: "pitcher", w: 4, l: 1, era: 2.31 } },
+        playerConditions: { "PLY_1": { fatigue: 72, lastPitchedWeek: 11, pitchOutsLast: 18 } },
+        teamRotationIndex: { T_A: 2 },
+      },
+      LEAGUE_JBL: { standings: [], stats: {}, playerConditions: {}, teamRotationIndex: {} },  // 전부 비어도 키는 남아야
+    },
+    postseasonBrackets: {}, ablEastTeams: ["K_A"], ablWestTeams: ["K_B"],
+    npcInjuries: {}, npcRetired: [], npcLiveStats: {},
+    prevSeasonKblStandings: [],
+  };
+}
+
+{
+  const mgr = slotdb.createManager(tmpDir);
+  const fx = makeSeasonFixture();
+  slotdb.dispatch(mgr, "createSlot", { slotId: "S1", worldSeed: 1, protagonist: {}, season: fx, npcs: [] });
+  const back = slotdb.dispatch(mgr, "getSeason", { slotId: "S1" });
+
+  checkEq("season 왕복: 내용 완전 일치", back, fx);
+
+  // 개별 확인 (실패 시 어디가 깨졌는지 바로 보이게)
+  check("  · 주인공 리그 schedule 2건", back.schedule.length === 2);
+  check("  · schedule 순서 보존", back.schedule[0].id === "SCH_W01_G1");
+  check("  · result 보존", back.schedule[0].result?.homeScore === 3);
+  check("  · top-level standings 2건", back.standings.length === 2);
+  check("  · leagueSchedules 분리 유지", back.leagueSchedules.LEAGUE_KBL.length === 1);
+  check("  · 빈 배열 리그 키 보존", Array.isArray(back.leagueSchedules.LEAGUE_ABL) && back.leagueSchedules.LEAGUE_ABL.length === 0);
+  check("  · playerConditions 보존", back.leagueState.LEAGUE_HIGHSCHOOL.playerConditions.PLY_1.fatigue === 72);
+  check("  · teamRotationIndex 보존", back.leagueState.LEAGUE_HIGHSCHOOL.teamRotationIndex.T_A === 2);
+  check("  · 전부 빈 leagueState 키 보존", !!back.leagueState.LEAGUE_JBL);
+  check("  · 스칼라 메타 보존", back.currentWeek === 12 && back.leagueId === "LEAGUE_HIGHSCHOOL");
+
+  // 재저장 후에도 동일 (setSeason 경로)
+  slotdb.dispatch(mgr, "setSeason", { slotId: "S1", data: back });
+  const twice = slotdb.dispatch(mgr, "getSeason", { slotId: "S1" });
+  checkEq("season 재저장 후에도 동일", twice, fx);
+
+  // 행 단위로 실제 쪼개졌는가
+  const db = mgr.get("S1");
+  check("schedule 테이블에 3행", db.prepare("SELECT COUNT(*) n FROM schedule").get().n === 3);
+  check("season_stats 테이블에 2행", db.prepare("SELECT COUNT(*) n FROM season_stats").get().n === 2);
+  check("has_result 인덱스 컬럼 채워짐",
+    db.prepare("SELECT COUNT(*) n FROM schedule WHERE has_result = 1").get().n === 1);
+  check("구 season 테이블 제거됨",
+    !db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='season'").get());
+  mgr.closeAll();
+}
+
+// ── 8. v2: 레거시 블롭이 실제로 옮겨지는가 ────────────────────────
+{
+  const p = path.join(tmpDir, "slot3_v1blob.db");
+  const raw = new Database(p);
+  raw.exec(`CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
+            CREATE TABLE season (id INTEGER PRIMARY KEY CHECK (id = 1), json TEXT NOT NULL);`);
+  raw.pragma("user_version = 1");   // v1까지만 적용된 슬롯
+  raw.prepare("INSERT INTO season (id, json) VALUES (1, ?)").run(JSON.stringify(makeSeasonFixture()));
+  raw.close();
+
+  const mgr = slotdb.createManager(tmpDir);
+  const back = slotdb.dispatch(mgr, "getSeason", { slotId: "v1blob" });
+  checkEq("레거시 블롭 → 테이블 이관 성공", back, makeSeasonFixture());
+  check("레거시 슬롯도 최신 버전", slotdb.currentVersion(mgr.get("v1blob")) === slotdb.SCHEMA_VERSION);
   mgr.closeAll();
 }
 
