@@ -192,10 +192,31 @@ CREATE VIEW person AS
 
 ---
 
-## 6. 열린 항목 (구현 단계에서 확정)
+## 6. 열린 항목
 
-- 스태프 능력치 밴드 · 경력 성장률 · 은퇴 연령 곡선
-- 감독 경질 임계값 (구단주 `patience` 연동 계수)
-- 스태프 이동 시장의 규모·빈도
-- 팀 이동 시 관계도 처리(유지 / 감쇠 / 리셋)
-- 코치 역할 6종과 스태프 능력치 5종의 매핑 (전문 영역이 능력치를 어떻게 가중하는가)
+### 6A에서 확정된 것 (2026-07-30)
+
+정본은 [`resource/data/seeds/onepitch/staff_rules.toml`](../../resource/data/seeds/onepitch/staff_rules.toml).
+문서에 수치를 복제하지 않는다 — 복제하면 stale해지고 그게 이 프로젝트가 이미 겪은 문제다.
+
+| 항목 | 확정 |
+|---|---|
+| 능력치 밴드 | 중앙값 ± spread 균등, 20~95 clamp. 감독 52±14 · 코치 50±15 · 구단주 50±16 |
+| 리그 보정 | 고교 0 · 독립 +2 · 대학 +4 · 프로 +10 (중앙값에 가산) |
+| 전력★ 보정 | `(power − 3) × 3` |
+| 자원 → 코치 수 | 부유 6~8 · 안정 4~6 · 알뜰 2~4 · 궁핍 0~2 |
+| 자원 → 구단주 성향 | 부유 예산 +18 · 궁핍 −18 (facilityInvestment도 연동) |
+| 코치 역할 6종 매핑 | 전문 영역이 지정 능력치 2개를 +8. 순환 배정이라 한 팀에 같은 전문이 안 몰린다 |
+| **능력치 스키마** | 감독은 **Rust `ManagerStats` 5종**(tacticalIQ·bullpenRead·offenseMind·motivator·clutchDecision) |
+
+> ⚠ **구 JSON은 감독 스탯을 `tactics`/`decision`/`rotationMgmt`/... 로 저장했는데
+> `MatchPage`는 `handlePressure`/`strategy`/`motivation`을 읽고 있었다.** 이름이 안 맞아
+> **감독 능력치가 매치 엔진에 하나도 전달되지 않았다**(전부 기본값 50).
+> 6A에서 Rust 쪽 이름으로 통일했다 — 판정 이력은 [_ledger.md](_ledger.md) P6-2.
+
+### 6B·6C에서 확정할 것
+
+- 경력 성장률 · 은퇴 연령 곡선 (6B)
+- 감독 경질 임계값 (구단주 `patience` 연동 계수) (6B)
+- 스태프 이동 시장의 규모·빈도 (6B)
+- 팀 이동 시 관계도 처리(유지 / 감쇠 / 리셋) (6C)

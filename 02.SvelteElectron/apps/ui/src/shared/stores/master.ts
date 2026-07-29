@@ -828,7 +828,19 @@ function createMasterStore() {
         console.error("[masterStore] window.projectB 없음 — npm run dev (Electron 포함) 으로 실행하세요");
         return;
       }
-      const staffEntities = rows.filter(r => r.role !== "player");
+      // 스태프는 **slot.db가 정본**이다 (Phase 6A). master.db의 스태프 행은
+      // 구 374 JSON에서 온 것이고 폐기됐다 — 절차 생성 결과를 읽는다.
+      let staffEntities: EntityRow[] = [];
+      if (slotId) {
+        try {
+          const { slotRepo } = await import("../repo/slotRepo");
+          const { staffRowToEntityRow } = await import("../repo/staffGen");
+          const rowsStaff = await slotRepo.getStaff(slotId, { status: "active" });
+          staffEntities = rowsStaff.map(staffRowToEntityRow);
+        } catch (e) {
+          console.warn("[masterStore] slot.db 스태프 로드 실패 — 스태프 없이 계속", e);
+        }
+      }
       // seasonYear 없이 호출되면 선수 로드 안 함 (미래 선수 노출 차단)
       const basePlayerEntities = seasonYear !== undefined
         ? rows.filter(r => r.role === "player")

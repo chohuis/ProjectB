@@ -16,6 +16,7 @@ mod tournament;
 mod group_stage;
 mod survival;
 mod rest_rules;
+mod staff_gen;
 mod postseason_engine;
 mod week_engine;
 mod team_engine;
@@ -647,6 +648,18 @@ pub fn build_farm_bracket_native(p: String) -> String {
     };
     serde_json::to_string(&postseason_engine::build_farm_bracket(params))
         .unwrap_or_else(|e| parse_err("buildFarmBracketNative/serialize", e))
+}
+
+// ── 스태프 생성 (Phase 6A) ────────────────────────────────────────────────────
+
+/// 팀 목록 + 생성 규칙 → 스태프 전원 (worldSeed 결정적)
+#[napi]
+pub fn generate_staff_native(p: String) -> String {
+    let params: staff_gen::GenerateStaffParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("generateStaffNative", e),
+    };
+    serde_json::to_string(&staff_gen::generate_staff(params))
+        .unwrap_or_else(|e| parse_err("generateStaffNative/serialize", e))
 }
 
 // ── 의무 휴식 (Phase 5-8) ─────────────────────────────────────────────────────

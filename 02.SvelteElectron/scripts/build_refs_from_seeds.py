@@ -322,3 +322,31 @@ io.open(ts_path, "w", encoding="utf-8").write("\n".join(ts))
 print(f"→ {ts_path}")
 print(f"   고교 {len(hs_all)} ({len(hs_regions)}권역) · 대학 {len(univ)} · 독립 {len(ind)} · "
       f"프로 {len(kbl_1)}+{len(kbl_2)} · ABL {len(abl_1)}+{len(abl_2)} · JBL {len(jbl_1)}+{len(jbl_2)}")
+
+# ── 스태프 생성 규칙 (Phase 6A) ────────────────────────────────────
+# staff_rules.toml + name_pools.csv → master/players/staff_rules.json
+# 규칙만 git에 남긴다 — 결과물(구 374 JSON)은 폐기했다 (people.md §1-1).
+import tomllib
+
+staff_rules = tomllib.load(io.open(os.path.join(SEED, "staff_rules.toml"), "rb"))
+
+pools = collections.defaultdict(list)
+for r in rd("name_pools.csv"):
+    pools[(r["locale"], r["kind"])].append(r["name"])
+
+staff_payload = {
+    "rules": staff_rules,
+    "namePools": {
+        "krSurnames": pools[("kr", "surname")],
+        "krGiven":    pools[("kr", "given")],
+        "enSurnames": pools[("en", "surname")],
+        "enGiven":    pools[("en", "given")],
+    },
+}
+staff_out = os.path.join(MASTER, "players", "staff_rules.json")
+io.open(staff_out, "w", encoding="utf-8").write(
+    json.dumps(staff_payload, ensure_ascii=False, indent=2) + "\n")
+print(f"→ {staff_out}")
+print(f"   코치 인원표 {len(staff_rules['coach_count'])}등급 · 코치 역할 "
+      f"{len(staff_rules['coach']['specialties'])}종 · 이름풀 "
+      f"성{len(staff_payload['namePools']['krSurnames'])}/이름{len(staff_payload['namePools']['krGiven'])}")

@@ -118,8 +118,25 @@ async function call<T>(cmd: string, payload?: unknown): Promise<T> {
 // ── Repository API ────────────────────────────────────────────
 export const slotRepo = {
   // 슬롯 수명
-  createSlot: (p: { slotId: string; worldSeed: number; name?: string; protagonist: unknown; season: unknown; npcs: Partial<RepoNpc>[] }) =>
-    call<{ ok: true; npcCount: number }>("createSlot", p),
+  createSlot: (p: {
+    slotId: string; worldSeed: number; name?: string;
+    protagonist: unknown; season: unknown;
+    npcs: Partial<RepoNpc>[];
+    /** 스태프 국내 전원 (Phase 6A) — 같은 트랜잭션에 들어간다 */
+    staff?: import("./staffGen").StaffRow[];
+  }) =>
+    call<{ ok: true; npcCount: number; staffCount: number }>("createSlot", p),
+
+  // ── 스태프 (Phase 6A) ───────────────────────────────────────
+  insertStaff: (slotId: string, staff: import("./staffGen").StaffRow[]) =>
+    call<{ ok: true; inserted: number }>("insertStaff", { slotId, staff }),
+  /** teamId/role/leagueId/status로 좁힐 수 있다 */
+  getStaff: (slotId: string, filter: { teamId?: string; role?: string; leagueId?: string; status?: string } = {}) =>
+    call<import("./staffGen").StaffRow[]>("getStaff", { slotId, ...filter }),
+  updateStaff: (slotId: string, updates: Array<{
+    staffId: string; age: number; status: string; years: number;
+    teamId: string; leagueId: string; stats: Record<string, number>;
+  }>) => call<{ ok: true; updated: number }>("updateStaff", { slotId, updates }),
   listSlots: () => call<RepoSlotMeta[]>("listSlots", {}),
   deleteSlot: (slotId: string) => call<{ ok: true }>("deleteSlot", { slotId }),
 

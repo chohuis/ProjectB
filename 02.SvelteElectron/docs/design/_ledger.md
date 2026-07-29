@@ -602,3 +602,55 @@ schedule · status · team · training`
   `reliever_would_pitch`는 날짜가 없으면 구 "같은 주 재등판 금지"로 떨어진다.
 - **부수 효과**: 구 `same_week_penalty`는 "이번 주에 던졌으면 무조건 불가"라
   너무 거칠었다 — 불펜이 한 주에 두 번 못 나왔다. 일 단위로 바뀌며 이것도 풀렸다.
+
+---
+
+## Phase 6 판정
+
+### P6-1. 스태프를 master.db에서 slot.db로 (Phase 6A)
+
+- 스태프는 v1에서 **master.db(정의)** 에 있었다. `entities/players/COA_*.json` 373개를
+  구워 넣고 read-only로 읽었다. 그런데 people.md §3이 요구하는 **생멸**(나이·은퇴·경질·이동)은
+  전부 **상태 변화**다 — read-only 저장소에 둘 수 없다.
+- **판정**: slot.db `staff` 테이블로 옮긴다. master.db에는 **생성 규칙**만 남긴다
+  (`staff_rules.toml` → `players/staff_rules.json`).
+- `npc_master` 테이블은 **빈 채로 남긴다.** `master:loadEntities`가 아직 SELECT하고,
+  시나리오 Named NPC를 콘텐츠로 넣는 경로가 생기면 다시 쓸 자리다. 지우면 그때 되살려야 한다.
+
+### P6-2. 감독 능력치가 매치 엔진에 전달되지 않고 있었다 (Phase 6A)
+
+- **문제**: 구 JSON은 감독 스탯을 `tactics`/`decision`/`rotationMgmt`/`bullpenMgmt`/`moraleMgmt`로
+  저장했는데 `MatchPage.svelte:695-698`은 `stats.handlePressure`/`stats.strategy`/`stats.motivation`을
+  읽었다. 이름이 하나도 안 맞아 **전부 `undefined`가 Rust로 넘어가 기본값 50으로 돌았다.**
+  TS 타입(`EntityManagerStats`)은 또 제3의 이름을 선언하고 있었다 — 3중 드리프트.
+- **판정**: **Rust `ManagerStats`를 정본**으로 삼는다
+  (`tacticalIQ`·`bullpenRead`·`offenseMind`·`motivator`·`clutchDecision`).
+  실제로 값을 쓰는 쪽이 이름을 정하는 게 맞고, 매치 엔진 외에 감독 능력치의 소비자가 없다.
+- 코치는 `teaching`/`analysis`/`communication`/`discipline`/`leadership`,
+  구단주는 `budgetSupport`/`patience`/`prInfluence`/`facilityInvestment`/`staffTrust`.
+  구단주 `patience`는 6B 경질 임계값에 쓰인다.
+
+### P6-3. 스태프 ID 규약 — 팀 종속이되 이동해도 불변 (Phase 6A)
+
+- `staff:<teamId>_MGR` / `_OWN` / `_COA<n>`. 레거시 `COA_00001` 류는 폐기.
+- **팀 기준으로 잡되 이동해도 ID를 바꾸지 않는다** — 관계도(6C)가 ID로 연결되므로
+  이적할 때마다 ID가 바뀌면 주인공이 쌓은 신뢰가 사라진다.
+- 결과적으로 "TEAM_A 이름을 가진 staff가 TEAM_B에 있는" 상태가 생기는데, 그게 의도다.
+  ID는 식별자일 뿐이고 소속은 `team_id` 컬럼이 말한다.
+
+### P6-4. 팀별 독립 난수 스트림 (Phase 6A)
+
+- 팀·역할·순번마다 `splitmix64` 스트림을 따로 판다(`teamSeed ^ hash("manager")` 등).
+- **왜**: 한 스트림으로 순차 생성하면 **코치 수가 바뀌면 그 뒤 모든 팀이 흔들린다.**
+  자원 등급 규칙을 조금 고쳤을 때 무관한 팀 감독이 딴 사람이 되면 디버깅이 불가능하다.
+- 검증: `test-staff-gen.cjs`가 "팀 목록이 줄어도 남은 팀 스태프는 동일"을 확인한다.
+  해외 Lazy 생성 시 국내가 안 흔들리는 것도 이 성질 덕이다.
+
+### P6-5. EntityManagerModal 폐기 (Phase 6A)
+
+- 개발자 도구 1,456줄. master.db 엔티티를 편집해 `entities/players/*.json`에 되썼다 —
+  DESIGN §8.3이 폐기한 "생성 결과물을 저장해두고 스크립트로 사후 수정" 패턴 그 자체다.
+- 절차 생성 세계에서는 **손 편집이 설계상 금지**다. 규칙을 고쳐야 한다.
+- 함께 제거: `masterUpsertEntity`/`masterDeleteEntity` preload 브릿지(IPC 핸들러는 R3a-4d에서
+  이미 죽어 있었다), `scripts/rebuild_entity_index.cjs`, `npm run gen:index`.
+- `masterSave`는 남긴다 — 이벤트·업적 에디터가 쓰고, 그쪽은 진짜 ①정의 콘텐츠다.

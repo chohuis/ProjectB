@@ -3,6 +3,7 @@
 // 사전 생성 데이터(people_*.json, entities/players/*) 를 전혀 읽지 않는다.
 
 import { slotRepo, type RepoNpc } from "./slotRepo";
+import { generateDomesticStaff } from "./staffGen";
 import { HS_ACTIVE_TEAMS_V3 } from "../utils/leagueScheduler";
 
 // Rust RosterRules와 1:1 (generation_rules.json rosterRules[leagueId])
@@ -36,12 +37,20 @@ export interface NewGameV3Options {
   teams?: { teamId: string; schoolId?: string }[];
   /** 시나리오 Named NPC — 콘텐츠 정의에서 변환해 전달 (없으면 배경만) */
   namedNpcs?: Partial<RepoNpc>[];
+  /**
+   * refs.json 전체 팀 — 스태프 생성 입력 (Phase 6A).
+   *
+   * 선수는 시작 리그만 만들지만 **스태프는 국내 전 팀을 한 번에** 만든다.
+   * power·traits.resource가 생성 보정에 쓰이므로 refs 원본이 필요하다.
+   */
+  allTeams?: import("../stores/master").TeamRef[];
 }
 
 export interface NewGameV3Result {
   slotId: string;
   worldSeed: number;
   npcCount: number;
+  staffCount: number;
 }
 
 /** 리그 로스터 생성 파라미터 조립 (Rust generateLeagueRosterNative 입력) */
@@ -89,6 +98,11 @@ export async function createNewGameV3(opts: NewGameV3Options): Promise<NewGameV3
 
   const npcs = [...gen.npcs, ...(opts.namedNpcs ?? [])];
 
+  // 스태프 국내 전원 일괄 생성 (Phase 6A). 선수와 달리 Lazy가 아니다 —
+  // "이 팀 감독이 아직 없을 수 있다"를 모든 조회 경로가 고려하면 버그가 난다
+  // (v1 드래프트 풀 부족 버그가 정확히 이 원인이었다 — people.md §2-1).
+  const staff = await generateDomesticStaff(opts.allTeams ?? [], worldSeed, opts.seasonYear);
+
   await slotRepo.createSlot({
     slotId: opts.slotId,
     worldSeed,
@@ -96,6 +110,7 @@ export async function createNewGameV3(opts: NewGameV3Options): Promise<NewGameV3
     protagonist: opts.protagonist,
     season: opts.season,
     npcs,
+    staff,
   });
   await slotRepo.setMeta(opts.slotId, {
     career_stage: "highschool",
@@ -103,7 +118,7 @@ export async function createNewGameV3(opts: NewGameV3Options): Promise<NewGameV3
     current_week: 0,
   });
 
-  return { slotId: opts.slotId, worldSeed, npcCount: npcs.length };
+  return { slotId: opts.slotId, worldSeed, npcCount: npcs.length, staffCount: staff.length };
 }
 
 /**

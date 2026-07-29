@@ -1,5 +1,11 @@
 // scripts/generate_master_db.cjs
 // 빌드 타임: entity JSON → resource/master.db
+//
+// ⚠ Phase 6A에서 `entities/players/` 374파일을 폐기했다.
+// 선수는 slot.db `npc`, 스태프는 slot.db `staff`가 정본이고 둘 다 런타임 절차 생성이다.
+// 그래서 이 스크립트가 만드는 `npc_master`는 이제 **비어 있는 게 정상**이다.
+// 테이블 자체는 남긴다 — `master:loadEntities`가 아직 이 테이블을 SELECT하고,
+// 시나리오 Named NPC를 콘텐츠로 넣는 경로가 생기면 다시 쓸 자리다.
 
 const path = require("node:path");
 const fs   = require("node:fs");
@@ -226,10 +232,16 @@ function entityToRow(e) {
 
 // ── 메인 ──────────────────────────────────────────────────────
 function main() {
-  const files = fs.readdirSync(ENTITIES_DIR)
-    .filter(f => f.endsWith(".json") && f !== "_index.json");
+  // 디렉토리 자체가 없는 것이 정상 (Phase 6A에서 폐기)
+  const files = fs.existsSync(ENTITIES_DIR)
+    ? fs.readdirSync(ENTITIES_DIR).filter(f => f.endsWith(".json") && f !== "_index.json")
+    : [];
 
-  console.log(`[generate_master_db] ${files.length}개 entity 파일 처리 중...`);
+  if (files.length === 0) {
+    console.log("[generate_master_db] entity JSON 없음 — npc_master 빈 테이블로 생성 (Phase 6A 이후 정상)");
+  } else {
+    console.log(`[generate_master_db] ${files.length}개 entity 파일 처리 중...`);
+  }
 
   const db   = openMasterDb(OUT_DB);
   const stmt = db.prepare(`

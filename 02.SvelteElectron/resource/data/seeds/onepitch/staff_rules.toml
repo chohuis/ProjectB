@@ -1,0 +1,112 @@
+# 스태프 생성 규칙 (Phase 6A)
+#
+# people.md §1-1: git에 남는 것은 **생성 규칙**뿐이다. 결과물(374 JSON)은 폐기한다.
+# 이 파일을 고치면 새 게임에 즉시 반영된다 — 결과물을 스크립트로 땜질하는 경로가 없다.
+#
+# 능력치 스키마는 **Rust가 실제로 쓰는 것**을 정본으로 삼는다.
+# 구 JSON은 감독 스탯을 tactics/decision/rotationMgmt/bullpenMgmt/moraleMgmt로 저장했는데
+# MatchPage는 handlePressure/strategy/motivation을 읽고 있었다 — 이름이 안 맞아
+# **감독 능력치가 매치 엔진에 하나도 전달되지 않았다**(전부 기본값 50).
+# Rust `ManagerStats`(tacticalIQ·bullpenRead·offenseMind·motivator·clutchDecision)로 통일한다.
+
+[world]
+# 국내 팀당 감독 1 · 구단주 1 · 코치는 자원 등급별. 해외는 진출 시 Lazy 생성.
+domestic_leagues = ["LEAGUE_HIGHSCHOOL", "LEAGUE_UNIVERSITY", "LEAGUE_INDEPENDENT", "LEAGUE_KBL"]
+
+# ── 코치 인원 = 팀 자원 등급 (people.md §2-2) ────────────────────
+# 팀 선택의 실질적 격차를 만드는 장치. 궁핍한 팀은 코치가 아예 없을 수 있고,
+# 그 공백은 개인 재정의 트레이닝 구독으로 사비를 들여 메운다.
+[coach_count]
+"부유" = { min = 6, max = 8 }
+"안정" = { min = 4, max = 6 }
+"알뜰" = { min = 2, max = 4 }
+"궁핍" = { min = 0, max = 2 }
+
+# ── 리그 수준 보정 ───────────────────────────────────────────────
+# 프로 감독이 고교 감독보다 낫다. 능력치 중앙값에 더해지는 값.
+[league_bonus]
+LEAGUE_HIGHSCHOOL = 0
+LEAGUE_UNIVERSITY = 4
+LEAGUE_INDEPENDENT = 2
+LEAGUE_KBL = 10
+
+# 전력★(1~5)도 반영 — 명문 팀에 좋은 스태프가 모인다
+[power_bonus]
+per_star = 3      # (power - 3) * per_star
+
+# ── 감독 (Rust ManagerStats 5종) ─────────────────────────────────
+[manager]
+age = { min = 38, max = 66 }
+experience_years = { min = 0, max = 25 }
+# 능력치 중앙값 ± spread 안에서 균등. 리그·전력 보정이 중앙값에 더해진다.
+stat_center = 52
+stat_spread = 14
+stats = ["tacticalIQ", "bullpenRead", "offenseMind", "motivator", "clutchDecision"]
+risk_tolerance = { min = 30, max = 75 }
+
+# 스타일 — 표시용 라벨. 능력치에서 파생하지 않고 따로 뽑는다(서사 다양성).
+styles = [
+  "데이터 중심", "직감형", "노장 중용", "육성 우선", "공격 지향",
+  "수비 조직", "불펜 운영형", "선수단 소통형", "규율 엄격",
+]
+
+# ── 코치 ─────────────────────────────────────────────────────────
+[coach]
+age = { min = 30, max = 62 }
+experience_years = { min = 0, max = 22 }
+stat_center = 50
+stat_spread = 15
+stats = ["teaching", "analysis", "communication", "discipline", "leadership"]
+
+# 역할 6종 — 팀에 순환 배정 (people.md §2-2)
+# specialty가 어떤 능력치를 끌어올리는지도 여기서 정한다.
+[[coach.specialties]]
+name = "투수"
+boost = ["teaching", "analysis"]
+buff = "투구 훈련 효율 +{v}%"
+
+[[coach.specialties]]
+name = "타격"
+boost = ["teaching", "communication"]
+buff = "타격 훈련 효율 +{v}%"
+
+[[coach.specialties]]
+name = "주루"
+boost = ["communication", "discipline"]
+buff = "주루 훈련 효율 +{v}%"
+
+[[coach.specialties]]
+name = "컨디셔닝"
+boost = ["discipline", "leadership"]
+buff = "피로 회복 +{v}%"
+
+[[coach.specialties]]
+name = "멘탈"
+boost = ["communication", "leadership"]
+buff = "멘탈 회복 +{v}%"
+
+[[coach.specialties]]
+name = "전력분석"
+boost = ["analysis", "teaching"]
+buff = "상대 분석 +{v}%"
+
+[coach.specialty_boost]
+amount = 8        # boost 대상 능력치에 더하는 값
+buff_divisor = 10 # buff 표시값 = teaching / divisor (반올림)
+
+# ── 구단주 ───────────────────────────────────────────────────────
+[owner]
+age = { min = 45, max = 75 }
+tenure_years = { min = 0, max = 30 }
+stat_center = 50
+stat_spread = 16
+stats = ["budgetSupport", "patience", "prInfluence", "facilityInvestment", "staffTrust"]
+
+styles = ["투자 적극", "안정 지향", "성적 지상", "육성 중시", "무관심", "간섭형"]
+
+# 자원 등급이 구단주 성향에 직결된다 — 부유한 팀 구단주가 예산을 더 푼다
+[owner.resource_bonus]
+"부유" = { budgetSupport = 18, facilityInvestment = 14 }
+"안정" = { budgetSupport = 5, facilityInvestment = 4 }
+"알뜰" = { budgetSupport = -6, facilityInvestment = -5 }
+"궁핍" = { budgetSupport = -18, facilityInvestment = -15 }

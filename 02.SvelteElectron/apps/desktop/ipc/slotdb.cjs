@@ -185,6 +185,44 @@ const SEASON_TABLES_SQL = `
   );
 `;
 
+
+const STAFF_TABLES_SQL = `
+  -- ── 스태프 1명 = 1행 (Phase 6A) ─────────────────────────────────
+  -- 선수(npc)와 **테이블을 나눈다**. OnePitch는 한 테이블에 동거시키고 position으로
+  -- 걸렀는데 그 필터가 7곳에 필요했고 5회 이상 누락 버그가 났다 —
+  -- 감독이 타순에 서고, 피로도가 쌓이고, 트레이드 후보에 올랐다.
+  -- 나누면 SELECT * FROM npc 가 **구조적으로** 스태프를 못 집는다.
+  CREATE TABLE IF NOT EXISTS staff (
+    staff_id      TEXT PRIMARY KEY,
+    name          TEXT NOT NULL,
+    name_en       TEXT NOT NULL DEFAULT '',
+    role          TEXT NOT NULL,              -- manager | coach | owner
+    age           INTEGER NOT NULL,
+    team_id       TEXT NOT NULL DEFAULT '',
+    league_id     TEXT NOT NULL DEFAULT '',
+    school_id     TEXT NOT NULL DEFAULT '',
+    status        TEXT NOT NULL DEFAULT 'active',
+    years         INTEGER NOT NULL DEFAULT 0, -- 감독·코치 경력 / 구단주 재임
+    style         TEXT NOT NULL DEFAULT '',   -- 스타일 또는 코치 전문 영역
+    stats_json    TEXT NOT NULL DEFAULT '{}',
+    risk_tolerance INTEGER NOT NULL DEFAULT 50,
+    training_buff TEXT NOT NULL DEFAULT '',
+    joined_season INTEGER NOT NULL DEFAULT 0
+  );
+  CREATE INDEX IF NOT EXISTS idx_staff_team ON staff (team_id);
+  CREATE INDEX IF NOT EXISTS idx_staff_role ON staff (role);
+  CREATE INDEX IF NOT EXISTS idx_staff_league ON staff (league_id);
+
+  -- 공통 조회용 (관계도·이름 표시·거래 기록) — people.md §1-2
+  CREATE VIEW IF NOT EXISTS person AS
+    SELECT npc_id AS person_id, name, 'player' AS kind, current_team AS team_id,
+           current_league AS league_id, age
+      FROM npc
+    UNION ALL
+    SELECT staff_id, name, role, team_id, league_id, age
+      FROM staff;
+`;
+
 const MIGRATIONS = [
   {
     v: 1,
@@ -206,6 +244,14 @@ const MIGRATIONS = [
       }
       db.exec("DROP TABLE IF EXISTS season");
     },
+  },
+  {
+    v: 3,
+    name: "staff 테이블 + person VIEW (Phase 6A — 스태프를 master.db에서 slot.db로)",
+    // 기존 슬롯에는 스태프가 없다. people.md §5가 정한 대로 세이브를 클린 브레이크
+    // 하지 않고도 열리게만 해둔다 — 스태프가 빈 슬롯은 화면에 스태프가 안 보일 뿐
+    // 크래시하지 않는다. 새 게임부터 채워진다.
+    up(db) { db.exec(STAFF_TABLES_SQL); },
   },
 ];
 
@@ -417,6 +463,56 @@ function mapNpcRow(r) {
   };
 }
 
+// ── 스태프 (Phase 6A) ────────────────────────────────────────────
+const INSERT_STAFF_SQL = `
+  INSERT OR REPLACE INTO staff (
+    staff_id, name, name_en, role, age, team_id, league_id, school_id,
+    status, years, style, stats_json, risk_tolerance, training_buff, joined_season
+  ) VALUES (
+    @staffId, @name, @nameEn, @role, @age, @teamId, @leagueId, @schoolId,
+    @status, @years, @style, @statsJson, @riskTolerance, @trainingBuff, @joinedSeason
+  )`;
+
+function staffToInsertParams(st) {
+  return {
+    staffId: st.staffId,
+    name: st.name,
+    nameEn: st.nameEn ?? "",
+    role: st.role,
+    age: st.age ?? 45,
+    teamId: st.teamId ?? "",
+    leagueId: st.leagueId ?? "",
+    schoolId: st.schoolId ?? "",
+    status: st.status ?? "active",
+    years: st.years ?? 0,
+    style: st.style ?? "",
+    statsJson: JSON.stringify(st.stats ?? {}),
+    riskTolerance: st.riskTolerance ?? 50,
+    trainingBuff: st.trainingBuff ?? "",
+    joinedSeason: st.joinedSeason ?? 0,
+  };
+}
+
+function staffRowToObject(r) {
+  return {
+    staffId: r.staff_id,
+    name: r.name,
+    nameEn: r.name_en,
+    role: r.role,
+    age: r.age,
+    teamId: r.team_id,
+    leagueId: r.league_id,
+    schoolId: r.school_id,
+    status: r.status,
+    years: r.years,
+    style: r.style,
+    stats: r.stats_json ? JSON.parse(r.stats_json) : {},
+    riskTolerance: r.risk_tolerance,
+    trainingBuff: r.training_buff,
+    joinedSeason: r.joined_season,
+  };
+}
+
 const INSERT_NPC_SQL = `
   INSERT INTO npc (
     npc_id, name, name_en, is_named, player_type, position, handedness,
@@ -502,7 +598,7 @@ const commands = {
   createSlot(db, p) {
     const t = db.transaction(() => {
       for (const tbl of [
-        "npc", "transactions", "career_history", "history_league", "protagonist", "meta",
+        "npc", "staff", "transactions", "career_history", "history_league", "protagonist", "meta",
         "season_meta", "schedule", "standings", "season_stats", "player_condition", "team_rotation",
       ]) {
         db.prepare(`DELETE FROM ${tbl}`).run();
@@ -520,9 +616,53 @@ const commands = {
         const ins = db.prepare(INSERT_NPC_SQL);
         for (const n of p.npcs) ins.run(npcToInsertParams(n));
       }
+      // 스태프 ~1,090명 (Phase 6A). 같은 트랜잭션 안이라 INSERT 루프가 느려지지 않는다 —
+      // OnePitch는 이걸 안 감싸서 41.4초 → 1.46초(28배) 차이를 겪었다 (people.md §2-1)
+      if (Array.isArray(p.staff) && p.staff.length > 0) {
+        const insS = db.prepare(INSERT_STAFF_SQL);
+        for (const st of p.staff) insS.run(staffToInsertParams(st));
+      }
     });
     t();
-    return { ok: true, npcCount: p.npcs?.length ?? 0 };
+    return { ok: true, npcCount: p.npcs?.length ?? 0, staffCount: p.staff?.length ?? 0 };
+  },
+
+  insertStaff(db, p) {
+    const t = db.transaction(() => {
+      const ins = db.prepare(INSERT_STAFF_SQL);
+      for (const st of p.staff) ins.run(staffToInsertParams(st));
+    });
+    t();
+    return { ok: true, inserted: p.staff.length };
+  },
+
+  /** 스태프 조회. teamId/role/leagueId로 좁힐 수 있다 */
+  getStaff(db, p = {}) {
+    const where = [];
+    const args = [];
+    if (p.teamId)   { where.push("team_id = ?");   args.push(p.teamId); }
+    if (p.role)     { where.push("role = ?");      args.push(p.role); }
+    if (p.leagueId) { where.push("league_id = ?"); args.push(p.leagueId); }
+    if (p.status)   { where.push("status = ?");    args.push(p.status); }
+    const sql = `SELECT * FROM staff${where.length ? " WHERE " + where.join(" AND ") : ""} ORDER BY staff_id`;
+    return db.prepare(sql).all(...args).map(staffRowToObject);
+  },
+
+  /** 스태프 상태 변경 (6B 생멸에서 쓴다 — 나이·은퇴·이적) */
+  updateStaff(db, p) {
+    const t = db.transaction(() => {
+      const stmt = db.prepare(
+        "UPDATE staff SET age = ?, status = ?, years = ?, team_id = ?, league_id = ?, stats_json = ? WHERE staff_id = ?"
+      );
+      for (const u of p.updates) {
+        stmt.run(
+          u.age, u.status, u.years, u.teamId, u.leagueId,
+          JSON.stringify(u.stats ?? {}), u.staffId,
+        );
+      }
+    });
+    t();
+    return { ok: true, updated: p.updates.length };
   },
 
   insertNpcs(db, p) {
