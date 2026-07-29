@@ -1,5 +1,5 @@
 import type { ScheduleEntry, Standing } from "../types/season";
-import { HS_REGIONS, TOURNAMENTS } from "./leagueTeams.generated";
+import { GROUPS_BY_LEAGUE, HS_REGIONS, TOURNAMENTS } from "./leagueTeams.generated";
 import type { TournamentDef, TournamentSeedSource } from "./leagueTeams.generated";
 
 export type { TournamentDef, TournamentSeedSource };
@@ -86,13 +86,20 @@ export function winPctMap(standings: Standing[]): Record<string, number> {
 /** 권역 순위 → 참가팀 선발 (권역 크기 비례 배분 + 와일드카드) */
 export async function selectEntrants(
   regions: { regionId: string; rankedTeams: string[] }[],
-  totalSlots: number,
-  wildcardSlots: number,
+  def: Pick<TournamentDef,
+    "totalSlots" | "wildcardSlots" | "perGroupSlots" | "wildcardMaxGroupRank" | "autoSeedsFirst">,
   winPct: Record<string, number>,
 ): Promise<SelectEntrantsResult> {
   return call<SelectEntrantsResult>(
     "selectTournamentEntrantsNative",
-    { regions, totalSlots, wildcardSlots, winPct },
+    {
+      regions, winPct,
+      totalSlots: def.totalSlots,
+      wildcardSlots: def.wildcardSlots,
+      perGroupSlots: def.perGroupSlots ?? null,
+      wildcardMaxGroupRank: def.wildcardMaxGroupRank ?? null,
+      autoSeedsFirst: def.autoSeedsFirst ?? false,
+    },
     { seededTeams: [], regionQuota: {}, wildcards: [] },
   );
 }
@@ -155,10 +162,9 @@ export async function openTournament(
   protagonistTeamId: string,
   seasonYear: number,
 ): Promise<{ bracket: TournamentBracket | null; entrants: SelectEntrantsResult }> {
-  const regions = regionRankings(standings);
-  const entrants = await selectEntrants(
-    regions, def.totalSlots, def.wildcardSlots, winPctMap(standings),
-  );
+  const groups = GROUPS_BY_LEAGUE[def.leagueId] ?? HS_REGIONS;
+  const regions = regionRankings(standings, groups);
+  const entrants = await selectEntrants(regions, def, winPctMap(standings));
   if (entrants.seededTeams.length === 0) {
     return { bracket: null, entrants };
   }

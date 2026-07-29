@@ -45,6 +45,19 @@ export async function generateLeagueSchedule(
 export const HS_TARGET_GAMES = 20;
 
 /**
+ * 대학 정규리그 팀당 목표 경기 수 (03_대학.md §4-1).
+ *
+ * 조당 10팀 단일 라운드로빈 = 9경기. 조 45경기 × 5조 = **총 225경기**.
+ * 고교(20경기)보다 가벼운 건 의도다 — 정규리그는 생존 무대이고
+ * 승부는 은하기·여명기에서 난다.
+ */
+export const UNIV_TARGET_GAMES = 9;
+
+/** 대학 정규리그 기간 — 3월~5월 초 10주 (§4-6 캘린더) */
+export const UNIV_REGULAR_START_WEEK = 1;
+export const UNIV_REGULAR_END_WEEK = 10;
+
+/**
  * 권역 주말리그 (Phase 5-3).
  *
  * v1은 리그에 `cycles`(바퀴 수)를 줬다 — 권역이 6~20팀으로 갈리는 고교에서는
@@ -59,13 +72,21 @@ export async function generateRegionalSchedule(
   endWeek: number,
   protagonistTeamId: string,
   seasonYear = 2026,
+  opts: { idPrefix?: string; defaultDayOffsets?: number[] } = {},
 ): Promise<ScheduleEntry[]> {
+  // 조별 요일 — 대학은 조마다 다르다 (league_groups.csv). 없으면 상위 기본값.
+  const dayOf = new Map(
+    LEAGUE_GROUP_META.filter((g) => g.leagueId === leagueId).map((g) => [g.stadiumId, g.dayOffsets]),
+  );
   const raw = await window.projectB!.engine(
     "generateRegionalScheduleNative",
     JSON.stringify({
       leagueId,
-      regions: Object.entries(regions).map(([regionId, teams]) => ({ regionId, teams: [...teams] })),
+      regions: Object.entries(regions).map(([regionId, teams]) => ({
+        regionId, teams: [...teams], dayOffsets: dayOf.get(regionId) ?? [],
+      })),
       targetGames, startWeek, endWeek, protagonistTeamId, seasonYear,
+      idPrefix: opts.idPrefix, defaultDayOffsets: opts.defaultDayOffsets ?? [],
     }),
   );
   const parsed = JSON.parse(raw);
@@ -96,13 +117,15 @@ export async function generateAllLeagueSchedules(
 // refs.json에서 생성된다 (scripts/build_refs_from_seeds.py) — 손으로 박으면 refs와
 // 드리프트하고, 그걸 잡으려고 부팅 검사(validateTeamRefs)가 생겼다. 이제 같은 소스다.
 export {
-  HS_ALL_TEAMS, HS_SELECTABLE_TEAMS, HS_REGIONS,
+  HS_ALL_TEAMS, HS_SELECTABLE_TEAMS, HS_REGIONS, UNIV_GROUPS,
+  GROUPS_BY_LEAGUE, LEAGUE_GROUP_META,
   UNIV_TEAMS, IND_TEAMS,
   KBL_TEAMS, KBL_FARM_TEAMS,
   ABL_TEAMS, ABL_FARM_TEAMS,
   JBL_TEAMS, JBL_FARM_TEAMS,
 } from "./leagueTeams.generated";
 
+import { LEAGUE_GROUP_META } from "./leagueTeams.generated";
 import {
   HS_ALL_TEAMS as _HS, UNIV_TEAMS as _UNIV, IND_TEAMS as _IND,
   KBL_TEAMS as _KBL, KBL_FARM_TEAMS as _KBLF,

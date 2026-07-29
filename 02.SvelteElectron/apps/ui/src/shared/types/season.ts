@@ -322,6 +322,8 @@ export interface SaveSeason {
   prevSeasonKblStandings: Standing[];
   // 전국대회 브래킷 (tournamentId → 브래킷). 개설 전에는 없다 (Phase 5-4)
   tournaments: Record<string, import("../utils/tournament").TournamentBracket>;
+  // 대회 시드용 순위 스냅샷 — 대회마다 보는 시점이 다르다 (Phase 5-5a)
+  standingsSnapshots: import("../utils/standingsSnapshot").StandingsSnapshots;
 }
 
 export const SAVE_SEASON_VERSION = 1;
@@ -365,6 +367,7 @@ export function makeEmptySeason(
     npcLiveStats: {},
     prevSeasonKblStandings: [],
     tournaments: {},
+    standingsSnapshots: {},
   };
 }
 

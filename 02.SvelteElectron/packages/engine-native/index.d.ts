@@ -121,8 +121,6 @@ export declare function generateLeagueScheduleNative(p: string): string
 export declare function generateAllLeagueSchedulesNative(p: string): string
 export declare function buildKblBracketNative(p: string): string
 export declare function buildAblBracketNative(p: string): string
-export declare function buildUnivBracketNative(p: string): string
-export declare function buildHsBracketNative(p: string): string
 export declare function buildJblBracketNative(p: string): string
 export declare function buildIndBracketNative(p: string): string
 export declare function applyGameToSeriesNative(p: string): string

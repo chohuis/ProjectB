@@ -721,24 +721,6 @@ pub fn build_abl_bracket_native(p: String) -> String {
 }
 
 #[napi]
-pub fn build_univ_bracket_native(p: String) -> String {
-    let params: BuildBracketParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("buildUnivBracketNative", e),
-    };
-    serde_json::to_string(&postseason_engine::build_univ_bracket(params))
-        .unwrap_or_else(|e| parse_err("buildUnivBracketNative/serialize", e))
-}
-
-#[napi]
-pub fn build_hs_bracket_native(p: String) -> String {
-    let params: BuildBracketParams = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("buildHsBracketNative", e),
-    };
-    serde_json::to_string(&postseason_engine::build_hs_bracket(params))
-        .unwrap_or_else(|e| parse_err("buildHsBracketNative/serialize", e))
-}
-
-#[napi]
 pub fn build_jbl_bracket_native(p: String) -> String {
     let params: BuildBracketParams = match serde_json::from_str(&p) {
         Ok(v) => v, Err(e) => return parse_err("buildJblBracketNative", e),

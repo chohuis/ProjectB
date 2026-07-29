@@ -405,6 +405,13 @@ fn build_rounds_targeted(teams: &[String], target_games: u32) -> Vec<Vec<(String
 pub struct RegionInput {
     pub region_id: String,
     pub teams: Vec<String>,
+    /// 이 권역/조가 쓰는 요일 (0=월 … 5=토, 6=일). 비우면 상위 기본값.
+    ///
+    /// 대학은 조마다 요일이 다르다 — A·B조 화수목금, C·D조 목·금,
+    /// E조 4월 목금/5월 화수 (03_대학.md §4-1). 5-8의 의무 휴식표가
+    /// 일 단위라 요일이 등판 간격에 실제로 영향을 준다.
+    #[serde(default)]
+    pub day_offsets: Vec<u32>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -418,9 +425,15 @@ pub struct GenerateRegionalScheduleParams {
     pub end_week: u32,
     pub protagonist_team_id: String,
     pub season_year: Option<u32>,
+    /// 권역이 요일을 지정하지 않았을 때 쓸 기본 요일. 비우면 주말(토·일).
+    #[serde(default)]
+    pub default_day_offsets: Vec<u32>,
+    /// 경기 ID 접두사. 비우면 "HSW" (고교 주말리그).
+    #[serde(default)]
+    pub id_prefix: Option<String>,
 }
 
-/// 권역별 주말리그. 권역마다 독립적으로 라운드로빈을 돌리고 토·일에 배치한다.
+/// 권역/조별 리그. 권역마다 독립적으로 라운드로빈을 돌리고 지정 요일에 배치한다.
 pub fn generate_regional_schedule(p: GenerateRegionalScheduleParams) -> Vec<ScheduleEntry> {
     let sy = p.season_year.unwrap_or(2026);
     let mut entries = Vec::new();
@@ -428,6 +441,13 @@ pub fn generate_regional_schedule(p: GenerateRegionalScheduleParams) -> Vec<Sche
         return entries;
     }
     let span = (p.end_week - p.start_week + 1) as f64;
+
+    let default_days: Vec<u32> = if p.default_day_offsets.is_empty() {
+        vec![6, 7] // 토·일
+    } else {
+        p.default_day_offsets.clone()
+    };
+    let prefix = p.id_prefix.clone().unwrap_or_else(|| "HSW".to_string());
 
     // 권역을 정렬해 결정적으로 만든다 (입력 순서에 의존하지 않음)
     let mut regions: Vec<&RegionInput> = p.regions.iter().collect();
@@ -438,6 +458,7 @@ pub fn generate_regional_schedule(p: GenerateRegionalScheduleParams) -> Vec<Sche
         if rounds.is_empty() {
             continue;
         }
+        let days: &[u32] = if region.day_offsets.is_empty() { &default_days } else { &region.day_offsets };
         let step = span / rounds.len() as f64;
         // 권역마다 시작 주를 어긋나게 — 전 권역이 같은 주에 몰리면 그 주만 부하가 튄다
         let week_offset = (ri % 3) as u32;
@@ -447,10 +468,10 @@ pub fn generate_regional_schedule(p: GenerateRegionalScheduleParams) -> Vec<Sche
             let week = (p.start_week + week_offset + (idx as f64 * step).round() as u32)
                 .min(p.end_week);
             for (gi, (home, away)) in round.iter().enumerate() {
-                // 주말리그 = 토(day 6)·일(day 7). 한 라운드의 경기를 이틀에 나눠 배치
-                let day_offset = if gi % 2 == 0 { 6 } else { 7 };
+                // 한 라운드의 경기를 그 권역의 요일들에 돌아가며 배치
+                let day_offset = days[gi % days.len()];
                 entries.push(ScheduleEntry {
-                    id: format!("HSW_{}_R{:02}_G{}", tag, idx + 1, gi + 1),
+                    id: format!("{}_{}_R{:02}_G{}", prefix, tag, idx + 1, gi + 1),
                     week,
                     game_date: to_game_date(sy, week, day_offset),
                     league_id: Some(p.league_id.clone()),

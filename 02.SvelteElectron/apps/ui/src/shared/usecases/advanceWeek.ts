@@ -28,7 +28,7 @@ import { INJURY_LABEL } from "../types/save";
 import { toGameDate } from "../utils/scheduleGen";
 import { assignProtagonistRole, assignHighschoolPosition, ROLE_DESCRIPTION, isReliefsRole, relieverWouldPitch } from "../utils/pitcherRoleEngine";
 import {
-  buildHsBracket, buildKblBracket, buildAblBracket, buildUnivBracket, buildIndBracket, buildJblBracket,
+  buildKblBracket, buildAblBracket, buildIndBracket, buildJblBracket,
   applyGameToSeries, fillNextSeries, resolveNonProtagonistSeries,
   makeSeriesGame, nextGameNum,
 } from "../utils/postseasonEngine";
@@ -54,6 +54,7 @@ import {
 } from "./weekPhases/market";
 import { buildHsLeagueDigest, LEAGUE_NAMES, MONTHLY_STANDINGS_LEAGUES, HS_DIGEST_WEEKS } from "./weekPhases/digest";
 import { applyRoundResults, openTournamentsForWeek } from "./tournaments";
+import { snapshotDueAt } from "../utils/standingsSnapshot";
 
 // ── 군입대 대상 판별 (nationality 기반) ──────────────────────
 // nationality 없는 구버전 NPC는 originLeagueId로 폴백
@@ -1077,13 +1078,15 @@ async function handleSeasonEnd(): Promise<WeekAdvanceResult> {
  */
 async function progressTournaments(week: number): Promise<boolean> {
   const g = get(gameStore);
-  if (g.protagonist.leagueId !== "LEAGUE_HIGHSCHOOL") return false;
-
+  // 주인공 소속과 무관하게 전 리그 대회가 돈다 — DESIGN §2 국내 풀 시뮬.
+  // 주인공이 대학에 가도 모교의 국화기는 계속 열린다.
   const protagonistTeamId = g.protagonist.teamId;
   let injected = false;
 
   // ① 이번 주에 개막하는 대회
-  const opened = await openTournamentsForWeek(week, get(seasonStore), protagonistTeamId);
+  const opened = await openTournamentsForWeek(
+    week, get(seasonStore), protagonistTeamId, get(masterStore).teams,
+  );
   for (const o of opened) {
     seasonStore.setTournamentBracket(o.bracket);
     if (o.entries.length > 0) {
@@ -1134,7 +1137,9 @@ async function injectLeaguePostseason(nextWeek: number): Promise<void> {
   const protagonistId = g.protagonist.teamId;
   const seasonYear    = s.seasonYear;
 
-  const SUPPORTED = ["LEAGUE_HIGHSCHOOL", "LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL", "LEAGUE_UNIVERSITY", "LEAGUE_INDEPENDENT"];
+  // 고교·대학은 제외 — 시즌 결산이 패왕기(11월)·왕중왕전(5월)로 옮겨갔다 (Phase 5-5a).
+  // top4 준결승/결승을 남기면 결승이 두 번 열린다.
+  const SUPPORTED = ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL", "LEAGUE_INDEPENDENT"];
   if (!SUPPORTED.includes(leagueId)) return;
 
   // 정규시즌 경기가 남아 있으면 아직 아님
@@ -1145,9 +1150,7 @@ async function injectLeaguePostseason(nextWeek: number): Promise<void> {
   // ── 브라켓 미초기화: 빌드 후 비주인공 시리즈 즉시 시뮬 ──────
   if (!bracket) {
     let built: import("../types/season").PostseasonSeries[];
-    if (leagueId === "LEAGUE_HIGHSCHOOL") built = await buildHsBracket(s.standings);
-    else if (leagueId === "LEAGUE_KBL") built = await buildKblBracket(s.standings);
-    else if (leagueId === "LEAGUE_UNIVERSITY") built = await buildUnivBracket(s.standings);
+    if (leagueId === "LEAGUE_KBL") built = await buildKblBracket(s.standings);
     else if (leagueId === "LEAGUE_INDEPENDENT") built = await buildIndBracket(s.standings);
     else if (leagueId === "LEAGUE_JBL") built = await buildJblBracket(s.standings);
     else if (leagueId === "LEAGUE_ABL") {
@@ -1767,6 +1770,13 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
 
     // 포스트시즌 주입 (HS 포함 — 단일리그 top4 브래킷, injectLeaguePostseason로 통합)
     await injectLeaguePostseason(nextWeekNum);
+
+    // 전·후반기 경계에서 순위 스냅샷 (Phase 5-5a).
+    // 대회 개설보다 먼저 찍어야 그 주에 여는 대회가 새 스냅샷을 본다.
+    {
+      const key = snapshotDueAt(nextWeekNum);
+      if (key) seasonStore.captureStandingsSnapshot(key);
+    }
 
     // 대회 개막 라운드를 먼저 얹는다 (Phase 5-4)
     await progressTournaments(nextWeekNum);

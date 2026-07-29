@@ -8,17 +8,24 @@ import {
   TOURNAMENTS, advanceRound, openTournament, roundSchedule,
   type TournamentBracket, type TournamentDef,
 } from "../utils/tournament";
+import { standingsForSeed, syntheticStandings } from "../utils/standingsSnapshot";
 
 /**
- * 시드 산출에 쓸 순위표를 고른다.
+ * 시드 산출에 쓸 순위표를 고른다 (Phase 5-5a).
  *
- * 전반기 대회에 시즌 최종 순위표를 넘기면 아직 치르지 않은 경기 결과로
- * 시드를 매기게 된다. 지금은 "현재까지의 순위표" 하나뿐이라 그대로 쓰지만,
- * 스냅샷이 생기면 여기만 고치면 된다.
+ * 대회마다 보는 시점이 다르다 — 개나리기는 전년, 장미기·무궁화기는 전반기,
+ * 패왕기는 후반기. 현재 누적 순위를 전부에 쓰면 패왕기가 "그해 최강전"이 아니라
+ * "3월부터 잘한 팀 대회"가 된다.
  */
-function seedStandings(def: TournamentDef, season: SaveSeason): Standing[] {
-  const hs = season.leagueState["LEAGUE_HIGHSCHOOL"]?.standings;
-  return (hs && hs.length > 0 ? hs : season.standings) ?? [];
+function seedStandings(
+  def: TournamentDef,
+  season: SaveSeason,
+  firstSeasonFallback: Standing[] | null,
+): Standing[] {
+  const current = season.leagueState[def.leagueId]?.standings ?? season.standings ?? [];
+  return standingsForSeed(
+    def.seedSource, def.leagueId, current, season.standingsSnapshots ?? {}, firstSeasonFallback,
+  );
 }
 
 export interface TournamentOpenResult {
@@ -34,6 +41,8 @@ export async function openTournamentsForWeek(
   week: number,
   season: SaveSeason,
   protagonistTeamId: string,
+  /** 첫 시즌에 전년 순위가 없을 때 쓸 합성 순위 (전력★+과거기록) — leagueId별 */
+  worldTeams: { id: string; leagueId: string; power?: number; history?: { seasonRanks?: { rank: number }[] } }[] = [],
 ): Promise<TournamentOpenResult[]> {
   const due = TOURNAMENTS.filter(
     (t) => t.startWeek === week && !season.tournaments?.[t.id],
@@ -41,8 +50,11 @@ export async function openTournamentsForWeek(
   const out: TournamentOpenResult[] = [];
 
   for (const def of due) {
+    const fallback = def.seedSource === "prev_season"
+      ? syntheticStandings(worldTeams.filter((t) => t.leagueId === def.leagueId))
+      : null;
     const { bracket, entrants } = await openTournament(
-      def, seedStandings(def, season), protagonistTeamId, season.seasonYear,
+      def, seedStandings(def, season, fallback), protagonistTeamId, season.seasonYear,
     );
     if (!bracket) {
       console.warn(`[tournaments] ${def.name} 개설 실패 — 참가팀 0`);

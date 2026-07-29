@@ -36,10 +36,17 @@ const HS_TEAMS = Object.values(regionsMap).flat().sort();
 const tours = fs.readFileSync(
   path.join(__dirname, "../resource/data/seeds/onepitch/tournaments.csv"), "utf8")
   .trim().split(/\r?\n/).slice(1).map((line) => {
-    const [id, leagueId, name, flower, startWeek, endWeek, totalSlots, wildcardSlots, seedSource, order] = line.split(",");
+    const [id, leagueId, name, flower, startWeek, endWeek, totalSlots, wildcardSlots,
+           seedSource, perGroupSlots, wildcardMaxGroupRank, autoSeedsFirst, order] = line.split(",");
     return { id, leagueId, name, flower, startWeek: +startWeek, endWeek: +endWeek,
-             totalSlots: +totalSlots, wildcardSlots: +wildcardSlots, seedSource, order: +order };
+             totalSlots: +totalSlots, wildcardSlots: +wildcardSlots, seedSource,
+             perGroupSlots: perGroupSlots ? +perGroupSlots : null,
+             wildcardMaxGroupRank: wildcardMaxGroupRank ? +wildcardMaxGroupRank : null,
+             autoSeedsFirst: autoSeedsFirst === "1",
+             order: +order };
   });
+const hsTours = tours.filter((t) => t.leagueId === "LEAGUE_HIGHSCHOOL");
+const univTours = tours.filter((t) => t.leagueId === "LEAGUE_UNIVERSITY");
 
 // 결정적 가짜 순위 — 팀ID 해시로 승률을 만든다 (Math.random 금지 규칙 준수)
 const winPct = {};
@@ -54,12 +61,12 @@ const regions = Object.entries(regionsMap)
 
 // ── 1. 카탈로그 ──────────────────────────────────────────────
 console.log("대회 카탈로그");
-for (const t of tours) console.log(`    ${t.name.padEnd(6)} W${String(t.startWeek).padStart(2)}~${t.endWeek}  ${String(t.totalSlots).padStart(3)}팀 (WC ${t.wildcardSlots})`);
+for (const t of hsTours) console.log(`    ${t.name.padEnd(6)} W${String(t.startWeek).padStart(2)}~${t.endWeek}  ${String(t.totalSlots).padStart(3)}팀 (WC ${t.wildcardSlots})`);
 console.log("");
-check("고교 대회 5종", tours.length === 5, `got ${tours.length}`);
-check("대회 기간이 겹치지 않음",
-  tours.slice(1).every((t, i) => t.startWeek > tours[i].endWeek),
-  tours.map((t) => `${t.startWeek}-${t.endWeek}`).join(" "));
+check("고교 대회 5종", hsTours.length === 5, `got ${hsTours.length}`);
+check("고교 대회 기간이 겹치지 않음",
+  hsTours.slice(1).every((t, i) => t.startWeek > hsTours[i].endWeek),
+  hsTours.map((t) => `${t.startWeek}-${t.endWeek}`).join(" "));
 
 // ── 2. 기획서 대진표와 일치하는가 ─────────────────────────────
 // 02_고교.md §4-2: 32강(5R) · 32강(5R) · 48강 부전승16(6R) · 128대진 부전승26(7R) · 32대진 부전승8(5R)
@@ -71,11 +78,16 @@ const EXPECT = {
   TOUR_HS_PAEWANG:   { size: 32,  rounds: 5, byes: 8 },
 };
 
+const selPayload = (t, rs) => ({
+  regions: rs, winPct,
+  totalSlots: t.totalSlots, wildcardSlots: t.wildcardSlots,
+  perGroupSlots: t.perGroupSlots, wildcardMaxGroupRank: t.wildcardMaxGroupRank,
+  autoSeedsFirst: t.autoSeedsFirst,
+});
+
 const brackets = {};
-for (const t of tours) {
-  const sel = J("selectTournamentEntrantsNative", {
-    regions, totalSlots: t.totalSlots, wildcardSlots: t.wildcardSlots, winPct,
-  });
+for (const t of hsTours) {
+  const sel = J("selectTournamentEntrantsNative", selPayload(t, regions));
   check(`${t.name} 참가 ${t.totalSlots}팀 선발`,
     sel.seededTeams.length === t.totalSlots,
     `got ${sel.seededTeams.length}`);
@@ -195,11 +207,9 @@ console.log("\n국화기 128대진 전 라운드 진행");
 
 // ── 6. 결정성 ────────────────────────────────────────────────
 {
-  const t = tours[0];
-  const a = engine.selectTournamentEntrantsNative(JSON.stringify({
-    regions, totalSlots: t.totalSlots, wildcardSlots: t.wildcardSlots, winPct }));
-  const bb = engine.selectTournamentEntrantsNative(JSON.stringify({
-    regions: [...regions].reverse(), totalSlots: t.totalSlots, wildcardSlots: t.wildcardSlots, winPct }));
+  const t = hsTours[0];
+  const a = engine.selectTournamentEntrantsNative(JSON.stringify(selPayload(t, regions)));
+  const bb = engine.selectTournamentEntrantsNative(JSON.stringify(selPayload(t, [...regions].reverse())));
   check("권역 입력 순서가 바뀌어도 같은 선발", a === bb);
 }
 
@@ -212,6 +222,101 @@ for (const { def, bracket } of Object.values(brackets)) {
   const dates = rounds.map((r) => bracket.matches.find((m) => m.round === r).gameDate);
   check(`${def.name} 라운드 날짜가 순차 진행`,
     dates.every((d, i) => i === 0 || d > dates[i - 1]), dates.join(" "));
+}
+
+// ── 8. 대학 왕중왕전 (Phase 5-5c) ────────────────────────────
+// 기획서 §4-1: 8팀 = 조 1위 자동 5 + 조 2위 중 승률 상위 3(WC).
+// 시드는 조 1위 5팀이 상위(부전승 우선), WC 3팀이 하위.
+// 고교의 "권역 크기 비례 배분"으로는 이 규칙을 표현할 수 없어 조당 고정 인원 모드를 넣었다.
+console.log("\n대학 왕중왕전");
+{
+  const uMap = {};
+  for (const t of refs.teams) {
+    if (t.leagueId !== "LEAGUE_UNIVERSITY") continue;
+    (uMap[t.stadium] ??= []).push(t.id);
+  }
+  const uWinPct = {};
+  for (const t of Object.values(uMap).flat()) {
+    let h = 0;
+    for (let i = 0; i < t.length; i++) h = (h * 37 + t.charCodeAt(i)) >>> 0;
+    uWinPct[t] = (h % 1000) / 1000;
+  }
+  const uRegions = Object.entries(uMap)
+    .map(([regionId, teams]) => ({
+      regionId,
+      rankedTeams: [...teams].sort((a, b) => uWinPct[b] - uWinPct[a] || a.localeCompare(b)),
+    }))
+    .sort((a, b) => a.regionId.localeCompare(b.regionId));
+
+  const wjw = univTours.find((t) => t.id === "TOUR_UNIV_WANGJUNGWANG");
+  check("왕중왕전이 카탈로그에 있음", !!wjw);
+  check("왕중왕전 조당 1팀 자동 · WC 조2위까지 · 자동시드 우선",
+    wjw.perGroupSlots === 1 && wjw.wildcardMaxGroupRank === 2 && wjw.autoSeedsFirst === true,
+    `perGroup=${wjw.perGroupSlots} wcMax=${wjw.wildcardMaxGroupRank} autoFirst=${wjw.autoSeedsFirst}`);
+
+  const sel = J("selectTournamentEntrantsNative", {
+    regions: uRegions, winPct: uWinPct,
+    totalSlots: wjw.totalSlots, wildcardSlots: wjw.wildcardSlots,
+    perGroupSlots: wjw.perGroupSlots, wildcardMaxGroupRank: wjw.wildcardMaxGroupRank,
+    autoSeedsFirst: wjw.autoSeedsFirst,
+  });
+
+  check("참가 8팀", sel.seededTeams.length === 8, `got ${sel.seededTeams.length}`);
+  check("WC 3장", sel.wildcards.length === 3, `got ${sel.wildcards.length}`);
+  check("조당 자동 진출 정확히 1팀",
+    uRegions.every((r) => sel.regionQuota[r.regionId] === 1),
+    JSON.stringify(sel.regionQuota));
+
+  const groupWinners = uRegions.map((r) => r.rankedTeams[0]);
+  const groupSeconds = uRegions.map((r) => r.rankedTeams[1]);
+  check("자동 진출 = 조 1위 5팀",
+    groupWinners.every((t) => sel.seededTeams.includes(t)));
+  check("WC는 전부 조 2위",
+    sel.wildcards.every((t) => groupSeconds.includes(t)),
+    sel.wildcards.join(" "));
+  check("조 3위 이하는 WC로 안 뽑힘",
+    sel.wildcards.every((t) => !uRegions.some((r) => r.rankedTeams.slice(2).includes(t))));
+
+  // 시드 순서: 조 1위 5팀이 1~5번, WC 3팀이 6~8번
+  check("시드 1~5 = 조 1위 (부전승 우선)",
+    sel.seededTeams.slice(0, 5).every((t) => groupWinners.includes(t)),
+    sel.seededTeams.slice(0, 5).join(" "));
+  check("시드 6~8 = WC",
+    sel.seededTeams.slice(5).every((t) => sel.wildcards.includes(t)));
+
+  const b = J("generateTournamentBracketNative", {
+    tournamentId: wjw.id, leagueId: wjw.leagueId, seededTeams: sel.seededTeams,
+    startWeek: wjw.startWeek, endWeek: wjw.endWeek,
+    protagonistTeamId: sel.seededTeams[0], seasonYear: 2026,
+  });
+  check("8대진 3R 부전승 0 (기획서 8강 단판 3R)",
+    b.bracketSize === 8 && b.totalRounds === 3 && b.byeCount === 0,
+    `size=${b.bracketSize} rounds=${b.totalRounds} byes=${b.byeCount}`);
+  check("전 라운드가 W11~12 안에",
+    b.matches.every((m) => m.week >= 11 && m.week <= 12));
+
+  // 끝까지 굴려 우승팀 1팀
+  const seedOf = new Map(sel.seededTeams.map((t, i) => [t, i]));
+  let cur = b;
+  for (let r = 1; r <= cur.totalRounds; r++) {
+    const live = cur.matches.filter((m) => m.round === r && !m.isBye && m.homeTeamId && m.awayTeamId);
+    cur = J("advanceTournamentRoundNative", {
+      bracket: cur, round: r, protagonistTeamId: sel.seededTeams[0],
+      results: live.map((m) => ({
+        matchId: m.id,
+        winnerTeamId: seedOf.get(m.homeTeamId) < seedOf.get(m.awayTeamId) ? m.homeTeamId : m.awayTeamId,
+      })),
+    });
+  }
+  const champ = JSON.parse(engine.tournamentChampionNative(JSON.stringify(cur)));
+  check("우승팀 = 1시드 (상위시드 승 규칙)", champ === sel.seededTeams[0], `got ${champ}`);
+  check("총 7경기", cur.matches.length === 7, `got ${cur.matches.length}`);
+
+  // 고교와 겹치지 않는 규칙: 고교는 비례 배분 그대로여야 한다
+  const hsSel = J("selectTournamentEntrantsNative", selPayload(hsTours[2], regions));
+  check("고교 무궁화기는 여전히 비례 배분 (조당 고정 아님)",
+    new Set(Object.values(hsSel.regionQuota)).size > 1,
+    JSON.stringify(hsSel.regionQuota));
 }
 
 console.log(failed === 0 ? "\nALL PASS" : `\n${failed} FAILED`);

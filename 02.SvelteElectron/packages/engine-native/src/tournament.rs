@@ -276,6 +276,24 @@ pub struct SelectEntrantsParams {
     /// 와일드카드 정렬 기준 — 팀ID → 전체 승률(내림차순). 없으면 권역 순위로 대체
     #[serde(default)]
     pub win_pct: HashMap<String, f64>,
+    /// 조당 자동 진출 수를 고정한다 (대학 왕중왕전 = 조 1위만).
+    ///
+    /// 비우면 권역 크기 비례 배분(고교). 대학은 5조가 전부 10팀 균등이라
+    /// 비례 배분이 의미가 없고, 기획서의 "조 1위 자동 + 조 2위 중 WC"라는
+    /// 제약을 표현하지 못한다 (03_대학.md §4-1).
+    #[serde(default)]
+    pub per_group_slots: Option<u32>,
+    /// WC 후보를 조 상위 몇 위까지로 제한할지 (왕중왕전 = 조 2위까지).
+    /// 비우면 자동 진출 밖 전원이 후보.
+    #[serde(default)]
+    pub wildcard_max_group_rank: Option<u32>,
+    /// 자동 진출팀을 WC보다 항상 위 시드로 둔다 (왕중왕전 = 조1위 상위·WC 하위).
+    ///
+    /// 기본은 false — 강한 권역 3위가 약한 권역 1위보다 셀 수 있으므로
+    /// 고교는 승률로 통합 정렬한다. 대학 왕중왕전은 기획서가 명시적으로
+    /// "조 1위 5팀 상위 시드(부전승 우선), WC 3팀 하위 시드"라고 정했다.
+    #[serde(default)]
+    pub auto_seeds_first: bool,
 }
 
 #[derive(Debug, Serialize)]
@@ -297,7 +315,12 @@ pub fn select_tournament_entrants(p: SelectEntrantsParams) -> SelectEntrantsResu
 
     let mut quota: BTreeMap<String, u32> = BTreeMap::new();
 
-    if total_teams <= auto_slots {
+    if let Some(per) = p.per_group_slots {
+        // 조당 고정 인원 — 조 크기가 균등한 리그(대학 5조 × 10팀)의 방식
+        for r in &regions {
+            quota.insert(r.region_id.clone(), per.min(r.ranked_teams.len() as u32));
+        }
+    } else if total_teams <= auto_slots {
         // 전원 참가 대회(국화기) — 비례 배분이 의미 없다
         for r in &regions {
             quota.insert(r.region_id.clone(), r.ranked_teams.len() as u32);
@@ -338,11 +361,13 @@ pub fn select_tournament_entrants(p: SelectEntrantsParams) -> SelectEntrantsResu
         auto.extend(r.ranked_teams.iter().take(q).cloned());
     }
 
-    // 와일드카드 = 차순위 팀들을 전체 승률로 정렬해 상위 N장
+    // 와일드카드 = 차순위 팀들을 전체 승률로 정렬해 상위 N장.
+    // wildcard_max_group_rank가 있으면 그 순위까지만 후보 (왕중왕전 = 조 2위까지).
     let mut pool: Vec<String> = Vec::new();
     for r in &regions {
         let q = *quota.get(&r.region_id).unwrap_or(&0) as usize;
-        pool.extend(r.ranked_teams.iter().skip(q).cloned());
+        let cap = p.wildcard_max_group_rank.map(|m| m as usize).unwrap_or(usize::MAX);
+        pool.extend(r.ranked_teams.iter().skip(q).take(cap.saturating_sub(q)).cloned());
     }
     let rank_in_region: HashMap<String, usize> = regions
         .iter()
@@ -357,16 +382,27 @@ pub fn select_tournament_entrants(p: SelectEntrantsParams) -> SelectEntrantsResu
     });
     let wildcards: Vec<String> = pool.into_iter().take(p.wildcard_slots as usize).collect();
 
-    // 전체 시드 = 자동 + WC를 승률 내림차순으로 재정렬.
-    // 자동 시드가 WC보다 항상 위는 아니다 — 강한 권역 3위가 약한 권역 1위보다 셀 수 있다.
-    let mut seeded: Vec<String> = auto.iter().chain(wildcards.iter()).cloned().collect();
-    seeded.sort_by(|a, b| {
+    // 전체 시드 정렬
+    let by_strength = |a: &String, b: &String| {
         let (pa, pb) = (p.win_pct.get(a).copied().unwrap_or(-1.0), p.win_pct.get(b).copied().unwrap_or(-1.0));
         pb.partial_cmp(&pa)
             .unwrap()
             .then(rank_in_region.get(a).cmp(&rank_in_region.get(b)))
             .then(a.cmp(b))
-    });
+    };
+    let seeded: Vec<String> = if p.auto_seeds_first {
+        // 자동 진출 블록이 통째로 위, WC 블록이 아래. 각 블록 안에서는 승률순.
+        let mut a1 = auto.clone();
+        a1.sort_by(&by_strength);
+        let mut w1 = wildcards.clone();
+        w1.sort_by(&by_strength);
+        a1.into_iter().chain(w1).collect()
+    } else {
+        // 자동 시드가 WC보다 항상 위는 아니다 — 강한 권역 3위가 약한 권역 1위보다 셀 수 있다.
+        let mut all: Vec<String> = auto.iter().chain(wildcards.iter()).cloned().collect();
+        all.sort_by(&by_strength);
+        all
+    };
 
     SelectEntrantsResult { seeded_teams: seeded, region_quota: quota, wildcards }
 }

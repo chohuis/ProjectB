@@ -179,11 +179,16 @@ jbl_2    = _ids(lambda t: t["leagueId"] == "LEAGUE_JBL" and t["id"].endswith("_2
 # 고교 선택 가능 = 전 102교 (00_개요 §3 "102교 전부 선택 가능")
 hs_selectable = hs_all
 
-# 권역 = 구장 공유 그룹 (stadiums가 8권역 거점) — 5-3 주말리그 편성의 기준
-region_of = {t["id"]: t["stadium"] for t in refs["teams"] if t["leagueId"] == "LEAGUE_HIGHSCHOOL"}
-hs_regions = collections.defaultdict(list)
-for tid, st in region_of.items():
-    hs_regions[st].append(tid)
+# 권역/조 = 거점구장 공유 그룹. 고교 8권역·대학 5조가 같은 규칙으로 나온다
+def _groups(league_id):
+    g = collections.defaultdict(list)
+    for t in refs["teams"]:
+        if t["leagueId"] == league_id:
+            g[t["stadium"]].append(t["id"])
+    return g
+
+hs_regions = _groups("LEAGUE_HIGHSCHOOL")
+univ_groups = _groups("LEAGUE_UNIVERSITY")
 
 def arr(name, items, indent="  "):
     body = "\n".join(f'{indent}"{i}",' for i in items)
@@ -207,11 +212,41 @@ ts.append(arr("ABL_FARM_TEAMS", abl_2))
 ts.append(arr("JBL_TEAMS", jbl_1))
 ts.append(arr("JBL_FARM_TEAMS", jbl_2))
 
-ts.append("/** 고교 8권역 — 거점구장 공유 그룹. 5-3 주말리그 편성의 기준 */\n"
-          "export const HS_REGIONS: Record<string, string[]> = {\n"
-          + "".join(f'  "{k}": [\n' + "".join(f'    "{i}",\n' for i in sorted(v)) + "  ],\n"
-                    for k, v in sorted(hs_regions.items()))
-          + "};\n")
+def _group_const(name, doc, groups):
+    return (f"/** {doc} */\n"
+            f"export const {name}: Record<string, string[]> = {{\n"
+            + "".join(f'  "{k}": [\n' + "".join(f'    "{i}",\n' for i in sorted(v)) + "  ],\n"
+                      for k, v in sorted(groups.items()))
+            + "};\n")
+
+ts.append(_group_const("HS_REGIONS",
+                       "고교 8권역 — 거점구장 공유 그룹. 5-3 주말리그 편성의 기준", hs_regions))
+ts.append(_group_const("UNIV_GROUPS",
+                       "대학 5조(A~E) — 거점구장 공유 그룹. 고교 권역과 같은 규칙", univ_groups))
+
+# 리그별 조 편성 — 대회 선발기가 리그를 몰라도 되게
+ts.append("/** 리그 → 조 편성. 대회 참가팀 선발이 이걸로 권역/조를 찾는다 */\n"
+          "export const GROUPS_BY_LEAGUE: Record<string, Record<string, string[]>> = {\n"
+          "  LEAGUE_HIGHSCHOOL: HS_REGIONS,\n"
+          "  LEAGUE_UNIVERSITY: UNIV_GROUPS,\n"
+          "};\n")
+
+# 조별 요일·라벨 (Phase 5-5b) — 대학은 조마다 요일이 다르다
+groups_meta = rd("league_groups.csv")
+ts.append("export interface LeagueGroupMeta {\n"
+          "  leagueId: string; stadiumId: string; label: string;\n"
+          "  /** 주 안의 날짜 오프셋. 고교 주말리그의 6·7과 같은 축 */\n"
+          "  dayOffsets: number[];\n"
+          "  note: string;\n"
+          "}\n")
+ts.append("/** 조별 요일 패턴. 정본: seeds/onepitch/league_groups.csv */\n"
+          "export const LEAGUE_GROUP_META: LeagueGroupMeta[] = [\n"
+          + "".join(
+              '  { leagueId: "%s", stadiumId: "%s", label: "%s", dayOffsets: [%s], note: "%s" },\n'
+              % (g["leagueId"], g["stadiumId"], g["label"],
+                 ", ".join(g["dayOffsets"].split("|")), g["note"])
+              for g in groups_meta)
+          + "];\n")
 
 # 전국대회 카탈로그 (Phase 5-4) — 시기·참가수·시드 출처는 ①정의 데이터다
 tours = rd("tournaments.csv")
@@ -225,17 +260,29 @@ ts.append("/** 대회 시드 산출 기준 */\n"
           "  id: string; leagueId: string; name: string; flower: string;\n"
           "  startWeek: number; endWeek: number;\n"
           "  totalSlots: number; wildcardSlots: number;\n"
-          "  seedSource: TournamentSeedSource; order: number;\n"
+          "  seedSource: TournamentSeedSource;\n"
+          "  /** 조당 자동 진출 수 고정 (대학 왕중왕전 = 조 1위만). null이면 조 크기 비례 배분 */\n"
+          "  perGroupSlots: number | null;\n"
+          "  /** WC 후보를 조 상위 몇 위까지로 제한 (왕중왕전 = 조 2위까지). null이면 제한 없음 */\n"
+          "  wildcardMaxGroupRank: number | null;\n"
+          "  /** 자동 진출팀을 WC보다 항상 상위 시드로 (왕중왕전) */\n"
+          "  autoSeedsFirst: boolean;\n"
+          "  order: number;\n"
           "}\n")
-ts.append("/** 고교 전국대회 5종 (02_고교.md §4-2). 정본: seeds/onepitch/tournaments.csv */\n"
+
+_n = lambda v: v if v not in ("", None) else "null"
+ts.append("/** 대회 카탈로그 (고교 5종 · 대학). 정본: seeds/onepitch/tournaments.csv */\n"
           "export const TOURNAMENTS: TournamentDef[] = [\n"
           + "".join(
               '  { id: "%s", leagueId: "%s", name: "%s", flower: "%s", '
               'startWeek: %s, endWeek: %s, totalSlots: %s, wildcardSlots: %s, '
-              'seedSource: "%s", order: %s },\n'
+              'seedSource: "%s", perGroupSlots: %s, wildcardMaxGroupRank: %s, '
+              'autoSeedsFirst: %s, order: %s },\n'
               % (t["id"], t["leagueId"], t["name"], t["flower"], t["startWeek"], t["endWeek"],
-                 t["totalSlots"], t["wildcardSlots"], t["seedSource"], t["order"])
-              for t in sorted(tours, key=lambda r: int(r["order"])))
+                 t["totalSlots"], t["wildcardSlots"], t["seedSource"],
+                 _n(t.get("perGroupSlots")), _n(t.get("wildcardMaxGroupRank")),
+                 "true" if t.get("autoSeedsFirst") == "1" else "false", t["order"])
+              for t in sorted(tours, key=lambda r: (r["leagueId"], int(r["order"]))))
           + "];\n")
 
 ts_path = os.path.join(ROOT, "02.SvelteElectron", "apps", "ui", "src", "shared", "utils", "leagueTeams.generated.ts")

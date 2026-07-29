@@ -31,21 +31,9 @@ export async function buildAblBracket(
   return JSON.parse(raw);
 }
 
-export async function buildUnivBracket(standings: Standing[]): Promise<PostseasonSeries[]> {
-  const raw = await window.projectB!.postseasonBuildUniv(
-    JSON.stringify({ standings })
-  );
-  return JSON.parse(raw);
-}
-
-// 고교 10팀 단일리그 — 대학과 동일한 top4 준결승/결승 (구 A/B조 교차대진 대체, R4)
-export async function buildHsBracket(standings: Standing[]): Promise<PostseasonSeries[]> {
-  const raw = await window.projectB!.engine(
-    "buildHsBracketNative",
-    JSON.stringify({ standings }),
-  );
-  return JSON.parse(raw);
-}
+// 고교 buildHsBracket · 대학 buildUnivBracket은 Phase 5-5a에서 폐기했다.
+// 시즌 결산이 패왕기(고교 11월)·왕중왕전(대학 5월)로 옮겨갔다 — top4 준결승/결승을
+// 남겨두면 결승이 두 번 열린다. Rust build_hs_bracket / build_univ_bracket도 제거됨.
 
 export async function buildIndBracket(standings: Standing[]): Promise<PostseasonSeries[]> {
   const raw = await window.projectB!.postseasonBuildInd(

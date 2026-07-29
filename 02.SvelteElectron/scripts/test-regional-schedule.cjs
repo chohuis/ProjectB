@@ -109,5 +109,96 @@ check(`주인공 경기 ${TARGET}건 표시`, protagGames.length === TARGET, `go
 check("총 1,020경기", entries.length === 1020, `got ${entries.length}`);
 
 console.log(`\n총 ${entries.length}경기 / ${regions.length}권역`);
+
+// ── 11. 대학 5조 정규리그 (Phase 5-5b) ───────────────────────
+// 조당 10팀 단일 라운드로빈 = 9경기, 조 45경기 × 5조 = 225경기 (03_대학.md §4-1)
+console.log("\n대학 5조 정규리그");
+{
+  const groupsMap = {};
+  for (const t of refs.teams) {
+    if (t.leagueId !== "LEAGUE_UNIVERSITY") continue;
+    (groupsMap[t.stadium] ??= []).push(t.id);
+  }
+  // 조별 요일 — 정본 seeds/onepitch/league_groups.csv
+  const meta = {};
+  for (const line of fs.readFileSync(
+    path.join(__dirname, "../resource/data/seeds/onepitch/league_groups.csv"), "utf8")
+    .trim().split(/\r?\n/).slice(1)) {
+    const [leagueId, stadiumId, label, days] = line.split(",");
+    if (leagueId === "LEAGUE_UNIVERSITY") meta[stadiumId] = { label, days: days.split("|").map(Number) };
+  }
+
+  const univRegions = Object.entries(groupsMap)
+    .map(([regionId, teams]) => ({
+      regionId, teams: teams.sort(), dayOffsets: meta[regionId]?.days ?? [],
+    }))
+    .sort((a, b) => a.regionId.localeCompare(b.regionId));
+
+  for (const r of univRegions) {
+    console.log(`    ${meta[r.regionId]?.label ?? "?"}조 ${r.regionId.replace("STADIUM_", "").padEnd(16)} ${r.teams.length}팀  요일오프셋 [${r.dayOffsets}]`);
+  }
+
+  const UNIV_TARGET = 9;
+  const univ = JSON.parse(engine.generateRegionalScheduleNative(JSON.stringify({
+    leagueId: "LEAGUE_UNIVERSITY", regions: univRegions, targetGames: UNIV_TARGET,
+    startWeek: 1, endWeek: 10, protagonistTeamId: univRegions[0].teams[0],
+    seasonYear: 2026, idPrefix: "UNIVR", defaultDayOffsets: [],
+  })));
+  if (!Array.isArray(univ)) throw new Error(`대학 생성 실패: ${univ.error}`);
+
+  check("대학 5조", univRegions.length === 5, `got ${univRegions.length}`);
+  check("대학 50팀", univRegions.reduce((a, r) => a + r.teams.length, 0) === 50);
+  check("전 조 10팀 균등", univRegions.every((r) => r.teams.length === 10));
+
+  const uPlayed = {};
+  for (const e of univ) {
+    uPlayed[e.homeTeamId] = (uPlayed[e.homeTeamId] ?? 0) + 1;
+    uPlayed[e.awayTeamId] = (uPlayed[e.awayTeamId] ?? 0) + 1;
+  }
+  check(`전 팀 ${UNIV_TARGET}경기 (단일 라운드로빈)`,
+    Object.keys(uPlayed).length === 50 && Object.values(uPlayed).every((c) => c === UNIV_TARGET),
+    `분포 ${[...new Set(Object.values(uPlayed))]}, 팀수 ${Object.keys(uPlayed).length}`);
+  check("총 225경기", univ.length === 225, `got ${univ.length}`);
+
+  // 단일 라운드로빈 = 같은 상대를 두 번 만나지 않는다
+  const pairs = univ.map((e) => [e.homeTeamId, e.awayTeamId].sort().join("|"));
+  check("같은 상대 재대결 없음", new Set(pairs).size === pairs.length,
+    `${pairs.length}건 중 고유 ${new Set(pairs).size}`);
+
+  const uGroupOf = {};
+  for (const r of univRegions) for (const t of r.teams) uGroupOf[t] = r.regionId;
+  check("조 간 대전 없음", univ.every((e) => uGroupOf[e.homeTeamId] === uGroupOf[e.awayTeamId]));
+  check("경기 ID 유일", new Set(univ.map((e) => e.id)).size === univ.length);
+  check("ID 접두사 UNIVR", univ.every((e) => e.id.startsWith("UNIVR_")));
+  check("주차가 1~10 안에", univ.every((e) => e.week >= 1 && e.week <= 10),
+    `${Math.min(...univ.map((e) => e.week))}~${Math.max(...univ.map((e) => e.week))}`);
+
+  // 핵심: 조마다 요일이 실제로 다른가 (dayOffsets가 먹었는가)
+  const weekdayKinds = (stadiumId) => {
+    const teams = new Set(groupsMap[stadiumId]);
+    const s = new Set();
+    for (const e of univ) if (teams.has(e.homeTeamId)) s.add(new Date(e.gameDate).getUTCDay());
+    return s.size;
+  };
+  for (const r of univRegions) {
+    const want = new Set(r.dayOffsets).size;
+    check(`  · ${meta[r.regionId]?.label}조 요일 ${want}종`,
+      weekdayKinds(r.regionId) === want,
+      `실제 ${weekdayKinds(r.regionId)}종`);
+  }
+  check("A조(4요일) > C조(2요일)",
+    weekdayKinds("STADIUM_MIREU") > weekdayKinds("STADIUM_GEUMGANG_UNIV"),
+    `A=${weekdayKinds("STADIUM_MIREU")} C=${weekdayKinds("STADIUM_GEUMGANG_UNIV")}`);
+
+  // 대학은 평일, 고교는 주말 — 요일이 겹치면 안 된다
+  const hsWeekdays = new Set(entries.map((e) => new Date(e.gameDate).getUTCDay()));
+  const univWeekdays = new Set(univ.map((e) => new Date(e.gameDate).getUTCDay()));
+  check("대학 평일 · 고교 주말 — 요일 안 겹침",
+    [...univWeekdays].every((d) => !hsWeekdays.has(d)),
+    `고교 [${[...hsWeekdays].sort()}] 대학 [${[...univWeekdays].sort()}]`);
+
+  console.log(`\n대학 총 ${univ.length}경기 / ${univRegions.length}조`);
+}
+
 console.log(failed === 0 ? "\nALL PASS" : `\n${failed} FAILED`);
 process.exit(failed === 0 ? 0 : 1);
