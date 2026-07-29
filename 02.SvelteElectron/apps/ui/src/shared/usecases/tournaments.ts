@@ -5,8 +5,11 @@
 
 import type { SaveSeason, ScheduleEntry, Standing } from "../types/season";
 import {
-  TOURNAMENTS, advanceRound, openTournament, roundSchedule,
-  type TournamentBracket, type TournamentDef,
+  GROUPS_BY_LEAGUE, TOURNAMENTS,
+  advanceRound, buildFinalBracket, buildGroupStage, groupQualifiers,
+  hasGroupStage, openTournament, regionRankings, roundSchedule,
+  selectEntrants, winPctMap,
+  type GroupStage, type TournamentBracket, type TournamentDef,
 } from "../utils/tournament";
 import { standingsForSeed, syntheticStandings } from "../utils/standingsSnapshot";
 
@@ -29,23 +32,29 @@ function seedStandings(
 }
 
 export interface TournamentOpenResult {
-  bracket: TournamentBracket;
-  /** 1라운드에서 실제로 치를 경기 (부전승 제외) */
+  /** 넉아웃 대회면 본선 브래킷. 조별예선 대회는 예선이 끝나야 생긴다 */
+  bracket: TournamentBracket | null;
+  /** 조별예선 대회일 때만 */
+  stage: GroupStage | null;
+  /** 이번에 일정에 넣을 경기 (넉아웃 1라운드 · 또는 예선 전 경기) */
   entries: ScheduleEntry[];
   regionQuota: Record<string, number>;
   wildcards: string[];
 }
 
-/** 해당 주차에 시작하는 대회를 연다. 없으면 null. */
+/** 해당 주차에 시작하는 대회를 연다. 없으면 빈 배열. */
 export async function openTournamentsForWeek(
   week: number,
   season: SaveSeason,
   protagonistTeamId: string,
   /** 첫 시즌에 전년 순위가 없을 때 쓸 합성 순위 (전력★+과거기록) — leagueId별 */
   worldTeams: { id: string; leagueId: string; power?: number; history?: { seasonRanks?: { rank: number }[] } }[] = [],
+  worldSeed = 0,
 ): Promise<TournamentOpenResult[]> {
   const due = TOURNAMENTS.filter(
-    (t) => t.startWeek === week && !season.tournaments?.[t.id],
+    (t) => t.startWeek === week
+      && !season.tournaments?.[t.id]
+      && !season.groupStages?.[t.id],
   );
   const out: TournamentOpenResult[] = [];
 
@@ -53,19 +62,72 @@ export async function openTournamentsForWeek(
     const fallback = def.seedSource === "prev_season"
       ? syntheticStandings(worldTeams.filter((t) => t.leagueId === def.leagueId))
       : null;
+    const standings = seedStandings(def, season, fallback);
+
+    if (hasGroupStage(def)) {
+      // 은하기·여명기 — 참가팀만 뽑고 조 추첨. 본선 브래킷은 예선이 끝나야 만든다.
+      const groups = GROUPS_BY_LEAGUE[def.leagueId] ?? {};
+      const entrants = await selectEntrants(
+        regionRankings(standings, groups), def, winPctMap(standings),
+      );
+      if (entrants.seededTeams.length === 0) {
+        console.warn(`[tournaments] ${def.name} 개설 실패 — 참가팀 0`);
+        continue;
+      }
+      const stage = await buildGroupStage(
+        def, entrants.seededTeams, protagonistTeamId, season.seasonYear, worldSeed,
+      );
+      if (!stage) {
+        console.warn(`[tournaments] ${def.name} 조 추첨 실패`);
+        continue;
+      }
+      out.push({
+        bracket: null, stage, entries: stage.matches,
+        regionQuota: entrants.regionQuota, wildcards: entrants.wildcards,
+      });
+      continue;
+    }
+
     const { bracket, entrants } = await openTournament(
-      def, seedStandings(def, season, fallback), protagonistTeamId, season.seasonYear,
+      def, standings, protagonistTeamId, season.seasonYear,
     );
     if (!bracket) {
       console.warn(`[tournaments] ${def.name} 개설 실패 — 참가팀 0`);
       continue;
     }
     out.push({
-      bracket,
+      bracket, stage: null,
       entries: await roundSchedule(bracket, 1),
       regionQuota: entrants.regionQuota,
       wildcards: entrants.wildcards,
     });
+  }
+  return out;
+}
+
+/**
+ * 예선이 끝난 대회를 본선으로 넘긴다.
+ *
+ * @returns 본선 브래킷과 1라운드 일정. 아직 예선이 안 끝났으면 null.
+ */
+export async function promoteFinishedGroupStages(
+  season: SaveSeason,
+  protagonistTeamId: string,
+): Promise<{ def: TournamentDef; bracket: TournamentBracket; entries: ScheduleEntry[] }[]> {
+  const out: { def: TournamentDef; bracket: TournamentBracket; entries: ScheduleEntry[] }[] = [];
+  const resultOf = new Map(season.schedule.filter((e) => e.result).map((e) => [e.id, e]));
+
+  for (const stage of Object.values(season.groupStages ?? {})) {
+    if (season.tournaments?.[stage.tournamentId]) continue;  // 이미 본선 진행 중
+    const def = TOURNAMENTS.find((t) => t.id === stage.tournamentId);
+    if (!def) continue;
+    if (!stage.matches.every((m) => resultOf.has(m.id))) continue;  // 예선 미완
+
+    const { qualified } = await groupQualifiers(stage);
+    if (qualified.length === 0) continue;
+    const bracket = await buildFinalBracket(def, qualified, protagonistTeamId, season.seasonYear);
+    if (!bracket) continue;
+    out.push({ def, bracket, entries: await roundSchedule(bracket, 1) });
   }
   return out;
 }

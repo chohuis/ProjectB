@@ -324,6 +324,15 @@ export interface SaveSeason {
   tournaments: Record<string, import("../utils/tournament").TournamentBracket>;
   // 대회 시드용 순위 스냅샷 — 대회마다 보는 시점이 다르다 (Phase 5-5a)
   standingsSnapshots: import("../utils/standingsSnapshot").StandingsSnapshots;
+  // 조별예선 (은하기·여명기). 예선이 끝나면 tournaments에 본선 브래킷이 생긴다 (Phase 5-5d)
+  groupStages: Record<string, import("../utils/tournament").GroupStage>;
+  /**
+   * 세계 시드. slot.db meta의 world_seed와 같은 값을 시즌 상태에도 둔다.
+   *
+   * 조 추첨처럼 "세이브마다 달라야 하지만 다시 열면 같아야" 하는 뽑기가
+   * 매 주 진행 중에 필요한데, 그때마다 slot.db를 비동기로 읽을 수는 없다.
+   */
+  worldSeed: number;
 }
 
 export const SAVE_SEASON_VERSION = 1;
@@ -368,6 +377,8 @@ export function makeEmptySeason(
     prevSeasonKblStandings: [],
     tournaments: {},
     standingsSnapshots: {},
+    groupStages: {},
+    worldSeed: 0,
   };
 }
 

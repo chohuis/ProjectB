@@ -111,6 +111,12 @@ export declare function generateTournamentBracketNative(p: string): string
 export declare function advanceTournamentRoundNative(p: string): string
 /** 해당 라운드에서 **실제로 치를** 경기만 일정 형태로 (부전승·미확정 제외) */
 export declare function tournamentRoundScheduleNative(p: string): string
+/** 참가팀 → 조 추첨 + 예선 일정 (worldSeed 결정적) */
+export declare function buildGroupStageNative(p: string): string
+/** 예선 경기 결과 → 조 순위 반영 */
+export declare function applyGroupResultsNative(p: string): string
+/** 예선 통과팀 (본선 시드 순) */
+export declare function groupStageQualifiersNative(p: string): string
 /** 우승팀 (결승 승자 미정이면 null) — 시즌 종료 시상·기록용 */
 export declare function tournamentChampionNative(p: string): string
 export declare function generateScheduleNative(p: string): string

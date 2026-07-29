@@ -1,7 +1,9 @@
-id,leagueId,name,flower,startWeek,endWeek,totalSlots,wildcardSlots,seedSource,perGroupSlots,wildcardMaxGroupRank,autoSeedsFirst,order
-TOUR_HS_GAENARI,LEAGUE_HIGHSCHOOL,개나리기,개나리,2,3,32,8,prev_season,,,0,1
-TOUR_HS_JANGMI,LEAGUE_HIGHSCHOOL,장미기,장미,14,15,32,8,first_half,,,0,2
-TOUR_HS_MUGUNGHWA,LEAGUE_HIGHSCHOOL,무궁화기,무궁화,20,22,48,12,first_half,,,0,3
-TOUR_HS_GUKHWA,LEAGUE_HIGHSCHOOL,국화기,국화,31,34,102,0,open,,,0,4
-TOUR_HS_PAEWANG,LEAGUE_HIGHSCHOOL,패왕기,왕중왕,40,41,24,0,second_half,,,0,5
-TOUR_UNIV_WANGJUNGWANG,LEAGUE_UNIVERSITY,왕중왕전,왕중왕,11,12,8,3,first_half,1,2,1,1
+id,leagueId,name,flower,startWeek,endWeek,totalSlots,wildcardSlots,seedSource,perGroupSlots,wildcardMaxGroupRank,autoSeedsFirst,groupCount,advancePerGroup,qualifyWeeks,order
+TOUR_HS_GAENARI,LEAGUE_HIGHSCHOOL,개나리기,개나리,2,3,32,8,prev_season,,,0,,,0,1
+TOUR_HS_JANGMI,LEAGUE_HIGHSCHOOL,장미기,장미,14,15,32,8,first_half,,,0,,,0,2
+TOUR_HS_MUGUNGHWA,LEAGUE_HIGHSCHOOL,무궁화기,무궁화,20,22,48,12,first_half,,,0,,,0,3
+TOUR_HS_GUKHWA,LEAGUE_HIGHSCHOOL,국화기,국화,31,34,102,0,open,,,0,,,0,4
+TOUR_HS_PAEWANG,LEAGUE_HIGHSCHOOL,패왕기,왕중왕,40,41,24,0,second_half,,,0,,,0,5
+TOUR_UNIV_WANGJUNGWANG,LEAGUE_UNIVERSITY,왕중왕전,왕중왕,11,12,8,3,first_half,1,2,1,,,0,1
+TOUR_UNIV_EUNHA,LEAGUE_UNIVERSITY,은하기,은하,14,17,24,4,first_half,4,,0,8,1,2,2
+TOUR_UNIV_YEOMYEONG,LEAGUE_UNIVERSITY,여명기,여명,18,21,20,5,first_half,3,,0,4,2,2,3

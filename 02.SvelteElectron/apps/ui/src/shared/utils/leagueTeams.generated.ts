@@ -600,15 +600,23 @@ export interface TournamentDef {
   wildcardMaxGroupRank: number | null;
   /** 자동 진출팀을 WC보다 항상 상위 시드로 (왕중왕전) */
   autoSeedsFirst: boolean;
+  /** 조별예선 조 수 (은하기 8 · 여명기 4). null이면 바로 넉아웃 */
+  groupCount: number | null;
+  /** 조당 본선 진출 수 (은하기 1 · 여명기 2) */
+  advancePerGroup: number | null;
+  /** 예선에 쓸 주차 수. 나머지가 본선 */
+  qualifyWeeks: number;
   order: number;
 }
 
-/** 대회 카탈로그 (고교 5종 · 대학). 정본: seeds/onepitch/tournaments.csv */
+/** 대회 카탈로그 (고교 5종 · 대학 3종). 정본: seeds/onepitch/tournaments.csv */
 export const TOURNAMENTS: TournamentDef[] = [
-  { id: "TOUR_HS_GAENARI", leagueId: "LEAGUE_HIGHSCHOOL", name: "개나리기", flower: "개나리", startWeek: 2, endWeek: 3, totalSlots: 32, wildcardSlots: 8, seedSource: "prev_season", perGroupSlots: null, wildcardMaxGroupRank: null, autoSeedsFirst: false, order: 1 },
-  { id: "TOUR_HS_JANGMI", leagueId: "LEAGUE_HIGHSCHOOL", name: "장미기", flower: "장미", startWeek: 14, endWeek: 15, totalSlots: 32, wildcardSlots: 8, seedSource: "first_half", perGroupSlots: null, wildcardMaxGroupRank: null, autoSeedsFirst: false, order: 2 },
-  { id: "TOUR_HS_MUGUNGHWA", leagueId: "LEAGUE_HIGHSCHOOL", name: "무궁화기", flower: "무궁화", startWeek: 20, endWeek: 22, totalSlots: 48, wildcardSlots: 12, seedSource: "first_half", perGroupSlots: null, wildcardMaxGroupRank: null, autoSeedsFirst: false, order: 3 },
-  { id: "TOUR_HS_GUKHWA", leagueId: "LEAGUE_HIGHSCHOOL", name: "국화기", flower: "국화", startWeek: 31, endWeek: 34, totalSlots: 102, wildcardSlots: 0, seedSource: "open", perGroupSlots: null, wildcardMaxGroupRank: null, autoSeedsFirst: false, order: 4 },
-  { id: "TOUR_HS_PAEWANG", leagueId: "LEAGUE_HIGHSCHOOL", name: "패왕기", flower: "왕중왕", startWeek: 40, endWeek: 41, totalSlots: 24, wildcardSlots: 0, seedSource: "second_half", perGroupSlots: null, wildcardMaxGroupRank: null, autoSeedsFirst: false, order: 5 },
-  { id: "TOUR_UNIV_WANGJUNGWANG", leagueId: "LEAGUE_UNIVERSITY", name: "왕중왕전", flower: "왕중왕", startWeek: 11, endWeek: 12, totalSlots: 8, wildcardSlots: 3, seedSource: "first_half", perGroupSlots: 1, wildcardMaxGroupRank: 2, autoSeedsFirst: true, order: 1 },
+  { id: "TOUR_HS_GAENARI", leagueId: "LEAGUE_HIGHSCHOOL", name: "개나리기", flower: "개나리", startWeek: 2, endWeek: 3, totalSlots: 32, wildcardSlots: 8, seedSource: "prev_season", perGroupSlots: null, wildcardMaxGroupRank: null, autoSeedsFirst: false, groupCount: null, advancePerGroup: null, qualifyWeeks: 0, order: 1 },
+  { id: "TOUR_HS_JANGMI", leagueId: "LEAGUE_HIGHSCHOOL", name: "장미기", flower: "장미", startWeek: 14, endWeek: 15, totalSlots: 32, wildcardSlots: 8, seedSource: "first_half", perGroupSlots: null, wildcardMaxGroupRank: null, autoSeedsFirst: false, groupCount: null, advancePerGroup: null, qualifyWeeks: 0, order: 2 },
+  { id: "TOUR_HS_MUGUNGHWA", leagueId: "LEAGUE_HIGHSCHOOL", name: "무궁화기", flower: "무궁화", startWeek: 20, endWeek: 22, totalSlots: 48, wildcardSlots: 12, seedSource: "first_half", perGroupSlots: null, wildcardMaxGroupRank: null, autoSeedsFirst: false, groupCount: null, advancePerGroup: null, qualifyWeeks: 0, order: 3 },
+  { id: "TOUR_HS_GUKHWA", leagueId: "LEAGUE_HIGHSCHOOL", name: "국화기", flower: "국화", startWeek: 31, endWeek: 34, totalSlots: 102, wildcardSlots: 0, seedSource: "open", perGroupSlots: null, wildcardMaxGroupRank: null, autoSeedsFirst: false, groupCount: null, advancePerGroup: null, qualifyWeeks: 0, order: 4 },
+  { id: "TOUR_HS_PAEWANG", leagueId: "LEAGUE_HIGHSCHOOL", name: "패왕기", flower: "왕중왕", startWeek: 40, endWeek: 41, totalSlots: 24, wildcardSlots: 0, seedSource: "second_half", perGroupSlots: null, wildcardMaxGroupRank: null, autoSeedsFirst: false, groupCount: null, advancePerGroup: null, qualifyWeeks: 0, order: 5 },
+  { id: "TOUR_UNIV_WANGJUNGWANG", leagueId: "LEAGUE_UNIVERSITY", name: "왕중왕전", flower: "왕중왕", startWeek: 11, endWeek: 12, totalSlots: 8, wildcardSlots: 3, seedSource: "first_half", perGroupSlots: 1, wildcardMaxGroupRank: 2, autoSeedsFirst: true, groupCount: null, advancePerGroup: null, qualifyWeeks: 0, order: 1 },
+  { id: "TOUR_UNIV_EUNHA", leagueId: "LEAGUE_UNIVERSITY", name: "은하기", flower: "은하", startWeek: 14, endWeek: 17, totalSlots: 24, wildcardSlots: 4, seedSource: "first_half", perGroupSlots: 4, wildcardMaxGroupRank: null, autoSeedsFirst: false, groupCount: 8, advancePerGroup: 1, qualifyWeeks: 2, order: 2 },
+  { id: "TOUR_UNIV_YEOMYEONG", leagueId: "LEAGUE_UNIVERSITY", name: "여명기", flower: "여명", startWeek: 18, endWeek: 21, totalSlots: 20, wildcardSlots: 5, seedSource: "first_half", perGroupSlots: 3, wildcardMaxGroupRank: null, autoSeedsFirst: false, groupCount: 4, advancePerGroup: 2, qualifyWeeks: 2, order: 3 },
 ];

@@ -3,7 +3,7 @@ import { GROUPS_BY_LEAGUE, HS_REGIONS, TOURNAMENTS } from "./leagueTeams.generat
 import type { TournamentDef, TournamentSeedSource } from "./leagueTeams.generated";
 
 export type { TournamentDef, TournamentSeedSource };
-export { TOURNAMENTS };
+export { TOURNAMENTS, GROUPS_BY_LEAGUE };
 
 // ── Rust 반환 타입 ────────────────────────────────────────────
 
@@ -177,4 +177,101 @@ export function tournamentAtWeek(week: number, leagueId = "LEAGUE_HIGHSCHOOL"): 
   return TOURNAMENTS
     .filter((t) => t.leagueId === leagueId && week >= t.startWeek && week <= t.endWeek)
     .sort((a, b) => a.order - b.order)[0] ?? null;
+}
+
+// ── 조별예선 (Phase 5-5d) ─────────────────────────────────────
+//
+// 은하기·여명기는 "조별예선 → 본선 8강"이라 순수 넉아웃으로 표현이 안 된다.
+// 예선을 먼저 돌리고, 통과팀으로 본선 브래킷을 새로 만든다.
+
+export interface GroupStanding {
+  teamId: string;
+  wins: number; losses: number; draws: number;
+  runsFor: number; runsAgainst: number;
+}
+
+export interface QualifyingGroup {
+  label: string;
+  teams: string[];
+  standings: GroupStanding[];
+}
+
+export interface GroupStage {
+  tournamentId: string;
+  leagueId: string;
+  seasonYear: number;
+  groups: QualifyingGroup[];
+  advancePerGroup: number;
+  startWeek: number;
+  endWeek: number;
+  matches: ScheduleEntry[];
+}
+
+export interface QualifiersResult {
+  /** 본선 진출팀 — 시드 순 (조 1위 블록 → 조 2위 블록) */
+  qualified: string[];
+  groupRanks: Record<string, string[]>;
+}
+
+/** 참가팀 → 조 추첨 + 예선 일정. 같은 worldSeed면 늘 같은 조가 나온다. */
+export async function buildGroupStage(
+  def: TournamentDef,
+  seededTeams: string[],
+  protagonistTeamId: string,
+  seasonYear: number,
+  worldSeed: number,
+): Promise<GroupStage | null> {
+  if (!def.groupCount || !def.advancePerGroup) return null;
+  return call<GroupStage | null>(
+    "buildGroupStageNative",
+    {
+      tournamentId: def.id, leagueId: def.leagueId, seededTeams,
+      groupCount: def.groupCount, advancePerGroup: def.advancePerGroup,
+      startWeek: def.startWeek,
+      endWeek: def.startWeek + Math.max(0, def.qualifyWeeks - 1),
+      protagonistTeamId, seasonYear, worldSeed,
+      // 예선은 평일 포함 매일 — 대회 기간이 짧다
+      dayOffsets: [],
+    },
+    null,
+  );
+}
+
+/** 예선 결과 → 조 순위 반영 */
+export async function applyGroupResults(
+  stage: GroupStage,
+  results: { matchId: string; homeScore: number; awayScore: number }[],
+): Promise<GroupStage> {
+  return call<GroupStage>("applyGroupResultsNative", { stage, results }, stage);
+}
+
+/** 예선 통과팀 (본선 시드 순) */
+export async function groupQualifiers(stage: GroupStage): Promise<QualifiersResult> {
+  return call<QualifiersResult>(
+    "groupStageQualifiersNative", stage, { qualified: [], groupRanks: {} },
+  );
+}
+
+/** 본선(8강) 브래킷 — 예선 통과팀으로 만든다. 예선이 끝난 다음 주부터. */
+export async function buildFinalBracket(
+  def: TournamentDef,
+  qualified: string[],
+  protagonistTeamId: string,
+  seasonYear: number,
+): Promise<TournamentBracket | null> {
+  const finalStart = def.startWeek + def.qualifyWeeks;
+  return call<TournamentBracket | null>(
+    "generateTournamentBracketNative",
+    {
+      tournamentId: def.id, leagueId: def.leagueId, seededTeams: qualified,
+      startWeek: finalStart, endWeek: def.endWeek,
+      protagonistTeamId, seasonYear,
+    },
+    null,
+  );
+}
+
+/** 조별예선이 있는 대회인가 */
+export function hasGroupStage(def: TournamentDef): boolean {
+  return def.groupCount != null && def.advancePerGroup != null && def.qualifyWeeks > 0;
 }

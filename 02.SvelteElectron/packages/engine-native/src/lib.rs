@@ -13,6 +13,7 @@ mod growth_engine;
 mod player_engine;
 mod schedule_engine;
 mod tournament;
+mod group_stage;
 mod postseason_engine;
 mod week_engine;
 mod team_engine;
@@ -634,6 +635,38 @@ pub fn tournament_round_schedule_native(p: String) -> String {
     };
     serde_json::to_string(&tournament::bracket_to_schedule(&q.bracket, q.round))
         .unwrap_or_else(|e| parse_err("tournamentRoundScheduleNative/serialize", e))
+}
+
+// ── 조별예선 (Phase 5-5d) ─────────────────────────────────────────────────────
+
+/// 참가팀 → 조 추첨 + 예선 일정 (worldSeed 결정적)
+#[napi]
+pub fn build_group_stage_native(p: String) -> String {
+    let params: group_stage::BuildGroupStageParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("buildGroupStageNative", e),
+    };
+    serde_json::to_string(&group_stage::build_group_stage(params))
+        .unwrap_or_else(|e| parse_err("buildGroupStageNative/serialize", e))
+}
+
+/// 예선 경기 결과 → 조 순위 반영
+#[napi]
+pub fn apply_group_results_native(p: String) -> String {
+    let params: group_stage::ApplyGroupResultsParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("applyGroupResultsNative", e),
+    };
+    serde_json::to_string(&group_stage::apply_group_results(params))
+        .unwrap_or_else(|e| parse_err("applyGroupResultsNative/serialize", e))
+}
+
+/// 예선 통과팀 (본선 시드 순)
+#[napi]
+pub fn group_stage_qualifiers_native(p: String) -> String {
+    let stage: group_stage::GroupStage = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("groupStageQualifiersNative", e),
+    };
+    serde_json::to_string(&group_stage::group_stage_qualifiers(&stage))
+        .unwrap_or_else(|e| parse_err("groupStageQualifiersNative/serialize", e))
 }
 
 /// 우승팀 (결승 승자 미정이면 null) — 시즌 종료 시상·기록용

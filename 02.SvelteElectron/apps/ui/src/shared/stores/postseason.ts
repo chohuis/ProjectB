@@ -37,6 +37,13 @@ export function captureStandingsSnapshot(
   return { ...s, standingsSnapshots: snapshots };
 }
 
+export function setGroupStage(
+  s: SeasonStoreState,
+  stage: import("../utils/tournament").GroupStage,
+): SeasonStoreState {
+  return { ...s, groupStages: { ...(s.groupStages ?? {}), [stage.tournamentId]: stage } };
+}
+
 /** 이미 있는 id는 넣지 않는다 — 같은 주를 두 번 처리해도 경기가 중복되지 않게 */
 export function injectTournamentEntries(s: SeasonStoreState, entries: ScheduleEntry[]): SeasonStoreState {
   const have = new Set(s.schedule.map((e) => e.id));

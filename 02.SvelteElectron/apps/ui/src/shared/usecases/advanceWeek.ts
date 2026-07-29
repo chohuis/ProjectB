@@ -53,7 +53,7 @@ import {
   DEFAULT_TEAM_PROFILE,
 } from "./weekPhases/market";
 import { buildHsLeagueDigest, LEAGUE_NAMES, MONTHLY_STANDINGS_LEAGUES, HS_DIGEST_WEEKS } from "./weekPhases/digest";
-import { applyRoundResults, openTournamentsForWeek } from "./tournaments";
+import { applyRoundResults, openTournamentsForWeek, promoteFinishedGroupStages } from "./tournaments";
 import { snapshotDueAt } from "../utils/standingsSnapshot";
 
 // ── 군입대 대상 판별 (nationality 기반) ──────────────────────
@@ -1083,19 +1083,34 @@ async function progressTournaments(week: number): Promise<boolean> {
   const protagonistTeamId = g.protagonist.teamId;
   let injected = false;
 
-  // ① 이번 주에 개막하는 대회
+  // ① 이번 주에 개막하는 대회 (넉아웃이면 브래킷, 은하기·여명기면 조 추첨)
+  const sOpen = get(seasonStore);
   const opened = await openTournamentsForWeek(
-    week, get(seasonStore), protagonistTeamId, get(masterStore).teams,
+    week, sOpen, protagonistTeamId, get(masterStore).teams, sOpen.worldSeed ?? 0,
   );
   for (const o of opened) {
-    seasonStore.setTournamentBracket(o.bracket);
+    if (o.bracket) seasonStore.setTournamentBracket(o.bracket);
+    if (o.stage) seasonStore.setGroupStage(o.stage);
     if (o.entries.length > 0) {
       seasonStore.injectTournamentEntries(o.entries);
       injected = true;
     }
   }
 
-  // ② 결과가 다 나온 라운드 → 다음 라운드 대진 확정 + 주입
+  // ② 예선이 다 끝난 대회 → 본선 8강 브래킷 생성
+  {
+    const promoted = await promoteFinishedGroupStages(get(seasonStore), protagonistTeamId);
+    for (const p of promoted) {
+      seasonStore.setTournamentBracket(p.bracket);
+      const due = p.entries.filter((e) => e.week <= week);
+      if (due.length > 0) {
+        seasonStore.injectTournamentEntries(due);
+        injected = true;
+      }
+    }
+  }
+
+  // ③ 결과가 다 나온 라운드 → 다음 라운드 대진 확정 + 주입
   const s = get(seasonStore);
   const resultOf = new Map(
     s.schedule.filter((e) => e.result).map((e) => [e.id, e.result!.winnerId]),

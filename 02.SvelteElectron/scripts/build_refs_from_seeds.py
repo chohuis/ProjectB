@@ -267,21 +267,30 @@ ts.append("/** 대회 시드 산출 기준 */\n"
           "  wildcardMaxGroupRank: number | null;\n"
           "  /** 자동 진출팀을 WC보다 항상 상위 시드로 (왕중왕전) */\n"
           "  autoSeedsFirst: boolean;\n"
+          "  /** 조별예선 조 수 (은하기 8 · 여명기 4). null이면 바로 넉아웃 */\n"
+          "  groupCount: number | null;\n"
+          "  /** 조당 본선 진출 수 (은하기 1 · 여명기 2) */\n"
+          "  advancePerGroup: number | null;\n"
+          "  /** 예선에 쓸 주차 수. 나머지가 본선 */\n"
+          "  qualifyWeeks: number;\n"
           "  order: number;\n"
           "}\n")
 
 _n = lambda v: v if v not in ("", None) else "null"
-ts.append("/** 대회 카탈로그 (고교 5종 · 대학). 정본: seeds/onepitch/tournaments.csv */\n"
+ts.append("/** 대회 카탈로그 (고교 5종 · 대학 3종). 정본: seeds/onepitch/tournaments.csv */\n"
           "export const TOURNAMENTS: TournamentDef[] = [\n"
           + "".join(
               '  { id: "%s", leagueId: "%s", name: "%s", flower: "%s", '
               'startWeek: %s, endWeek: %s, totalSlots: %s, wildcardSlots: %s, '
               'seedSource: "%s", perGroupSlots: %s, wildcardMaxGroupRank: %s, '
-              'autoSeedsFirst: %s, order: %s },\n'
+              'autoSeedsFirst: %s, groupCount: %s, advancePerGroup: %s, '
+              'qualifyWeeks: %s, order: %s },\n'
               % (t["id"], t["leagueId"], t["name"], t["flower"], t["startWeek"], t["endWeek"],
                  t["totalSlots"], t["wildcardSlots"], t["seedSource"],
                  _n(t.get("perGroupSlots")), _n(t.get("wildcardMaxGroupRank")),
-                 "true" if t.get("autoSeedsFirst") == "1" else "false", t["order"])
+                 "true" if t.get("autoSeedsFirst") == "1" else "false",
+                 _n(t.get("groupCount")), _n(t.get("advancePerGroup")),
+                 t.get("qualifyWeeks") or "0", t["order"])
               for t in sorted(tours, key=lambda r: (r["leagueId"], int(r["order"]))))
           + "];\n")
 

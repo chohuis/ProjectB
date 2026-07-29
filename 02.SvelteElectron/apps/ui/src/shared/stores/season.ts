@@ -173,6 +173,7 @@ function createSeasonStore() {
           carried[lid] = { prev_season: st.standings.map((x) => ({ ...x })) };
         }
         next.standingsSnapshots = carried;
+        next.worldSeed = s.worldSeed;
         return next;
       });
     },
@@ -528,6 +529,14 @@ function createSeasonStore() {
 
     captureStandingsSnapshot(key: import("../utils/standingsSnapshot").SnapshotKey) {
       update((s) => Postseason.captureStandingsSnapshot(s, key));
+    },
+
+    setWorldSeed(worldSeed: number) {
+      update((s) => ({ ...s, worldSeed: worldSeed >>> 0 }));
+    },
+
+    setGroupStage(stage: import("../utils/tournament").GroupStage) {
+      update((s) => Postseason.setGroupStage(s, stage));
     },
 
     setTournamentBracket(bracket: import("../utils/tournament").TournamentBracket) {

@@ -176,6 +176,11 @@ export async function startNewGameV3(opts: StartNewGameV3Options): Promise<{ npc
   });
   await slotRepo.setMeta(opts.slotId, { team_id: opts.protagonist.teamId });
 
+  // worldSeed를 시즌 상태에도 복사한다 — 조 추첨처럼 주중에 필요한 결정적 뽑기가
+  // slot.db를 비동기로 읽지 않아도 되게 (SaveSeason.worldSeed 주석 참고)
+  seasonStore.setWorldSeed(r.worldSeed);
+  await seasonStore.save();
+
   await hydrateStoresFromSlot(opts.slotId);
   return { npcCount: r.npcCount, worldSeed: r.worldSeed };
 }
