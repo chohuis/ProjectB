@@ -638,6 +638,16 @@ pub fn tournament_round_schedule_native(p: String) -> String {
         .unwrap_or_else(|e| parse_err("tournamentRoundScheduleNative/serialize", e))
 }
 
+/// 프로 2군 축약 포스트시즌 — 상위 4팀 단판 사다리 (Phase 5-7)
+#[napi]
+pub fn build_farm_bracket_native(p: String) -> String {
+    let params: postseason_engine::BuildBracketParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("buildFarmBracketNative", e),
+    };
+    serde_json::to_string(&postseason_engine::build_farm_bracket(params))
+        .unwrap_or_else(|e| parse_err("buildFarmBracketNative/serialize", e))
+}
+
 // ── 독립 생존리그 (Phase 5-6) ─────────────────────────────────────────────────
 
 /// 한 단계 일정 — 생존팀끼리 새 라운드로빈

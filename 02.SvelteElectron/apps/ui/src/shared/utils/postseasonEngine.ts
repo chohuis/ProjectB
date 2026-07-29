@@ -36,6 +36,19 @@ export async function buildAblBracket(
 // 남겨두면 결승이 두 번 열린다. Rust build_hs_bracket / build_univ_bracket도 제거됨.
 
 /**
+ * 프로 2군 축약 포스트시즌 (Phase 5-7).
+ *
+ * 상위 4팀 단판 사다리(3위vs4위 → 승자vs2위 → 승자vs1위).
+ * 독립 사다리와 모양은 같지만 **결승도 단판**이다(독립 챔결은 3전2승).
+ */
+export async function buildFarmBracket(standings: Standing[]): Promise<PostseasonSeries[]> {
+  const raw = await window.projectB!.engine(
+    "buildFarmBracketNative", JSON.stringify({ standings }),
+  );
+  return JSON.parse(raw);
+}
+
+/**
  * 독립 4차 Stage 사다리 (Phase 5-6).
  *
  * 준PO(3위 vs 4위, 단판) → PO(2위 vs 준PO승자, 단판) → 챔피언결정전(1위 vs PO승자, 3전2승).

@@ -55,6 +55,7 @@ import {
 import { buildHsLeagueDigest, LEAGUE_NAMES, MONTHLY_STANDINGS_LEAGUES, HS_DIGEST_WEEKS } from "./weekPhases/digest";
 import { applyRoundResults, openTournamentsForWeek, promoteFinishedGroupStages } from "./tournaments";
 import { progressSurvival } from "./survivalLeague";
+import { runBackgroundPostseasons } from "./backgroundPostseason";
 import { IND_LEAGUE_ID, emptySurvivalState } from "../utils/survivalLeague";
 import { snapshotDueAt } from "../utils/standingsSnapshot";
 
@@ -1808,8 +1809,19 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       return { processedWeek: nextWeekNum, logs: accLogs, newMessages: [], matchResults: accResults, stoppedBy: sAfterBoundary.pendingActions[0] };
     }
 
-    // 포스트시즌 주입 (HS 포함 — 단일리그 top4 브래킷, injectLeaguePostseason로 통합)
+    // 포스트시즌 — 주인공 리그는 경기를 주입해가며, 나머지 국내 리그는 통째로 (Phase 5-7)
     await injectLeaguePostseason(nextWeekNum);
+    {
+      const sBg = get(seasonStore);
+      const gBg = get(gameStore);
+      const done = await runBackgroundPostseasons(
+        sBg, gBg.protagonist.leagueId, gBg.protagonist.teamId,
+      );
+      for (const r of done) {
+        seasonStore.initPostseasonBracket(r.leagueId, r.bracket);
+        if (r.champion) accLogs.push(`[${r.leagueId}] 우승 ${r.champion}`);
+      }
+    }
 
     // 전·후반기 경계에서 순위 스냅샷 (Phase 5-5a).
     // 대회 개설보다 먼저 찍어야 그 주에 여는 대회가 새 스냅샷을 본다.

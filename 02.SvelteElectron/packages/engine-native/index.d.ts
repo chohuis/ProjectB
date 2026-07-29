@@ -111,6 +111,8 @@ export declare function generateTournamentBracketNative(p: string): string
 export declare function advanceTournamentRoundNative(p: string): string
 /** 해당 라운드에서 **실제로 치를** 경기만 일정 형태로 (부전승·미확정 제외) */
 export declare function tournamentRoundScheduleNative(p: string): string
+/** 프로 2군 축약 포스트시즌 — 상위 4팀 단판 사다리 (Phase 5-7) */
+export declare function buildFarmBracketNative(p: string): string
 /** 한 단계 일정 — 생존팀끼리 새 라운드로빈 */
 export declare function generateSurvivalStageNative(p: string): string
 /** 단계 종료 → 생존팀·탈락팀 판정 */
