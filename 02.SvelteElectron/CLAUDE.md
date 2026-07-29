@@ -24,6 +24,12 @@
 
 ## 절대 금지
 
+- **게임 로직을 `shared/stores/*.ts`에 작성** — store는 상태 보관 + 얇은 패처(`update(s => ({...s, 필드: 값}))`)만.
+  그보다 길거나 다른 시스템을 호출하면 `shared/usecases/`로. 상세: [docs/DATA_POLICY.md §5](docs/DATA_POLICY.md)
+  *(이 규칙이 없어서 `stores/game.ts`가 2,579줄이 됐고 그중 `processAllLeaguesSeasonEnd` 하나가 566줄이다)*
+- **선수·스태프를 미리 만들어 파일로 저장** — 생성 "규칙"만 git에. 결과물은 런타임 생성 ([docs/design/people.md](docs/design/people.md))
+- **slot.db 스키마를 `CREATE TABLE IF NOT EXISTS`로만 변경** — 기존 슬롯에 조용히 반영 안 됨.
+  반드시 `slotdb.cjs`의 `MIGRATIONS`에 추가하고 `npm run test:migration` 통과시킬 것
 - TypeScript/Svelte에서 `Math.random()` 게임 로직에 사용 — Rust `rand::thread_rng()` 사용
 - Electron에 암호화 키, 라이선스 판정, `bool isLicensed()` 단독 export 패턴
 - `window.projectB!.*()` 호출 시 `await` 누락
@@ -78,7 +84,15 @@ pub fn calc_my_thing(p: MyPayload) -> MyResult {
 - TS에서 Rust 결과 타입: `as MyType` 명시적 캐스팅
 - 주석은 WHY가 명확할 때만, 코드로 알 수 있는 내용은 생략
 
-## 데이터 계층 구조 (혼동 금지) — v3 확정 (R3a 완료, 2026-07-07). 상세는 DESIGN.md §8
+## 데이터 계층 구조 (혼동 금지)
+
+> **정본은 [docs/DATA_POLICY.md](docs/DATA_POLICY.md)다.** 데이터를 추가·변경하기 전에 그 문서의
+> §1-1 판별 기준과 §6 체크리스트를 볼 것. 아래는 요약이다.
+>
+> **한 줄**: 데이터는 3종류뿐 — ①정의는 git(CSV/TOML→master.db), ②상태는 slot.db, ③파생은 저장 안 함.
+>
+> v2 변경: 인물(선수·감독·코치·구단주)은 **전원 런타임 절차 생성**이고
+> 선수 `npc` / 스태프 `staff` **테이블이 분리**된다 ([docs/design/people.md](docs/design/people.md)).
 
 ### 세 가지 데이터 저장소
 
