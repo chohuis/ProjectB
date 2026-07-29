@@ -51,122 +51,59 @@ export async function generateAllLeagueSchedules(
   return parsed;
 }
 
-// ── 고교 팀 목록 ──────────────────────────────────────────────
-export const HS_SELECTABLE_TEAMS = [
-  "TEAM_HS_SEOUL_INNOVATION",
-  "TEAM_HS_BUSAN_WAVE",
-  "TEAM_HS_DAEGU_HEAT",
-  "TEAM_HS_GWANGJU_VISION",
-  "TEAM_HS_DAEJEON_RISE",
-  "TEAM_HS_INCHEON_HARBOR",
-  "TEAM_HS_ULSAN_CHARGE",
-  "TEAM_HS_SUWON_EDGE",
-];
+// ── 팀 목록 ───────────────────────────────────────────────────
+// refs.json에서 생성된다 (scripts/build_refs_from_seeds.py) — 손으로 박으면 refs와
+// 드리프트하고, 그걸 잡으려고 부팅 검사(validateTeamRefs)가 생겼다. 이제 같은 소스다.
+export {
+  HS_ALL_TEAMS, HS_SELECTABLE_TEAMS, HS_REGIONS,
+  UNIV_TEAMS, IND_TEAMS,
+  KBL_TEAMS, KBL_FARM_TEAMS,
+  ABL_TEAMS, ABL_FARM_TEAMS,
+  JBL_TEAMS, JBL_FARM_TEAMS,
+} from "./leagueTeams.generated";
 
-export const HS_ALL_TEAMS = [
-  ...HS_SELECTABLE_TEAMS,
-  "TEAM_HS_YEOSU_SHORE",
-  "TEAM_HS_CHUNCHEON_HIGHLAND",
-  "TEAM_HS_JEJU_WIND",
-  "TEAM_HS_GANGWON_PEAK",
-  "TEAM_HS_MASAN_HARBOR",
-  "TEAM_HS_JECHEON_RIDGE",
-  "TEAM_HS_GOYANG_ARROW",
-  "TEAM_HS_SUNCHEON_BAY",
-];
+import {
+  HS_ALL_TEAMS as _HS, UNIV_TEAMS as _UNIV, IND_TEAMS as _IND,
+  KBL_TEAMS as _KBL, KBL_FARM_TEAMS as _KBLF,
+  ABL_TEAMS as _ABL, ABL_FARM_TEAMS as _ABLF,
+  JBL_TEAMS as _JBL, JBL_FARM_TEAMS as _JBLF,
+} from "./leagueTeams.generated";
 
-// ── R4: 고교 10팀 단일리그 — 선택 8교 + 배경 2교 (DESIGN.md §7) ──
-export const HS_ACTIVE_TEAMS_V3 = [
-  ...HS_SELECTABLE_TEAMS,
-  "TEAM_HS_YEOSU_SHORE",
-  "TEAM_HS_CHUNCHEON_HIGHLAND",
-];
-
-export const UNIV_TEAMS = [
-  "TEAM_UNIV_HANBBIT", "TEAM_UNIV_DONGMYUNG", "TEAM_UNIV_SEOHAE",
-  "TEAM_UNIV_NAMGANG", "TEAM_UNIV_CHEONGUN", "TEAM_UNIV_MIRAE", "TEAM_UNIV_GAON",
-  "TEAM_SPORTS_UNIT",
-];
-
-export const IND_TEAMS = [
-  "TEAM_IND_SEOUL_PIONEERS", "TEAM_IND_BUSAN_TEMPEST",
-  "TEAM_IND_DAEGU_FALCONS", "TEAM_IND_GWANGJU_STORM",
-  "TEAM_IND_DAEJEON_HUNTERS", "TEAM_IND_INCHEON_ORCAS",
-  "TEAM_IND_SUWON_BLAZE", "TEAM_IND_ULSAN_PHOENIX",
-];
-
-export const KBL_TEAMS = [
-  "TEAM_KBL_TWINWOLVES_1", "TEAM_KBL_BEARGUARDIANS_1",
-  "TEAM_KBL_SKYGULLS_1", "TEAM_KBL_SOARINGEAGLES_1",
-  "TEAM_KBL_EMBERTIGERS_1", "TEAM_KBL_ROYALLIONS_1",
-  "TEAM_KBL_STEELDINOS_1", "TEAM_KBL_GIANTWHALES_1",
-];
-
-export const ABL_TEAMS = [
-  "TEAM_ABL_EMPIRE_1", "TEAM_ABL_HARBORHAWKS_1",
-  "TEAM_ABL_SUNDRAGONS_1", "TEAM_ABL_WINDBEARS_1",
-  "TEAM_ABL_SPACECOMETS_1", "TEAM_ABL_PEACHTREEFALCONS_1",
-  "TEAM_ABL_LONESTARS_1", "TEAM_ABL_RAINARROWS_1",
-  "TEAM_ABL_BAYSEALS_1", "TEAM_ABL_WAVERIDERS_1",
-  "TEAM_ABL_MOTORWOLVES_1", "TEAM_ABL_MOUNTAINPEAKS_1",
-  "TEAM_ABL_LAKESPIRITS_1", "TEAM_ABL_COASTALRAYS_1",
-  "TEAM_ABL_DESERTSERPENTS_1", "TEAM_ABL_RIVERCARDINALS_1",
-];
-
-export const JBL_TEAMS = [
-  "TEAM_JBL_CL_NEONCRANES_1",    "TEAM_JBL_CL_TEMPOSTINGS_1",
-  "TEAM_JBL_CL_IRONDRAKES_1",    "TEAM_JBL_CL_TIDERAVES_1",
-  "TEAM_JBL_CL_SILVERWOLVES_1",  "TEAM_JBL_CL_IRONSTORMS_1",
-  "TEAM_JBL_PL_THUNDERFALCONS_1","TEAM_JBL_PL_POLARBEARS_1",
-  "TEAM_JBL_PL_SPIRITBUFFALOS_1","TEAM_JBL_PL_MARINESOLDIERS_1",
-  "TEAM_JBL_PL_SEAGULLS_1",      "TEAM_JBL_PL_SUNS_1",
-];
-
-// ── 2군(팜) 팀 목록 ───────────────────────────────────────────
-export const KBL_FARM_TEAMS = [
-  "TEAM_KBL_TWINWOLVES_2", "TEAM_KBL_BEARGUARDIANS_2",
-  "TEAM_KBL_SKYGULLS_2", "TEAM_KBL_SOARINGEAGLES_2",
-  "TEAM_KBL_EMBERTIGERS_2", "TEAM_KBL_ROYALLIONS_2",
-  "TEAM_KBL_STEELDINOS_2", "TEAM_KBL_GIANTWHALES_2",
-];
-
-export const ABL_FARM_TEAMS = [
-  "TEAM_ABL_EMPIRE_2", "TEAM_ABL_HARBORHAWKS_2",
-  "TEAM_ABL_SUNDRAGONS_2", "TEAM_ABL_WINDBEARS_2",
-  "TEAM_ABL_SPACECOMETS_2", "TEAM_ABL_PEACHTREEFALCONS_2",
-  "TEAM_ABL_LONESTARS_2", "TEAM_ABL_RAINARROWS_2",
-  "TEAM_ABL_BAYSEALS_2", "TEAM_ABL_WAVERIDERS_2",
-  "TEAM_ABL_MOTORWOLVES_2", "TEAM_ABL_MOUNTAINPEAKS_2",
-  "TEAM_ABL_LAKESPIRITS_2", "TEAM_ABL_COASTALRAYS_2",
-  "TEAM_ABL_DESERTSERPENTS_2", "TEAM_ABL_RIVERCARDINALS_2",
-];
-
-export const JBL_FARM_TEAMS = [
-  "TEAM_JBL_CL_NEONCRANES_2",    "TEAM_JBL_CL_TEMPOSTINGS_2",
-  "TEAM_JBL_CL_IRONDRAKES_2",    "TEAM_JBL_CL_TIDERAVES_2",
-  "TEAM_JBL_CL_SILVERWOLVES_2",  "TEAM_JBL_CL_IRONSTORMS_2",
-  "TEAM_JBL_PL_THUNDERFALCONS_2","TEAM_JBL_PL_POLARBEARS_2",
-  "TEAM_JBL_PL_SPIRITBUFFALOS_2","TEAM_JBL_PL_MARINESOLDIERS_2",
-  "TEAM_JBL_PL_SEAGULLS_2",      "TEAM_JBL_PL_SUNS_2",
-];
+/**
+ * v2: 고교는 102팀 전부가 상시 존재한다 (Lazy 없음 — DESIGN.md §2.1).
+ * 구 HS_ACTIVE_TEAMS_V3(10팀 축소본)는 v2에서 의미가 없어져 전체 목록의 별칭으로 남긴다.
+ * 호출부를 한 번에 갈아엎지 않기 위한 전환기 별칭 — 5-3 이후 정리 대상.
+ */
+export const HS_ACTIVE_TEAMS_V3: string[] = _HS;
 
 export const ALL_TEAMS_BY_LEAGUE: Record<string, string[]> = {
-  LEAGUE_HIGHSCHOOL: HS_ALL_TEAMS,
-  LEAGUE_UNIVERSITY: UNIV_TEAMS,
-  LEAGUE_INDEPENDENT: IND_TEAMS,
-  LEAGUE_KBL: KBL_TEAMS,
-  LEAGUE_ABL: ABL_TEAMS,
-  LEAGUE_JBL: JBL_TEAMS,
-  LEAGUE_KBL_FARM: KBL_FARM_TEAMS,
-  LEAGUE_ABL_FARM: ABL_FARM_TEAMS,
-  LEAGUE_JBL_FARM: JBL_FARM_TEAMS,
+  LEAGUE_HIGHSCHOOL:  [..._HS],
+  LEAGUE_UNIVERSITY:  [..._UNIV],
+  LEAGUE_INDEPENDENT: [..._IND],
+  LEAGUE_KBL:         [..._KBL],
+  LEAGUE_ABL:         [..._ABL],
+  LEAGUE_JBL:         [..._JBL],
+  LEAGUE_KBL_FARM:    [..._KBLF],
+  LEAGUE_ABL_FARM:    [..._ABLF],
+  LEAGUE_JBL_FARM:    [..._JBLF],
 };
 
-// 2군(팜) 리그는 스케줄을 생성하지 않는다 — 경기 시뮬 제거, 로스터·콜업 테이블 룩업만 (R5, DESIGN.md §5·§7)
+/**
+ * v2 스케줄 설정.
+ *
+ * ⚠ 미완 (Phase 5 진행 중):
+ *  - 고교(102팀 8권역 주말리그)는 cycles 모델로 표현 불가 → 5-3에서 권역 스케줄러 신설
+ *  - 대학(50팀 5조)·독립(10팀 4단계 생존리그)도 마찬가지 → 5-5 / 5-6
+ *    그때까지 여기서 **일부러 뺀다**. 50팀 라운드로빈을 그대로 돌리면
+ *    6,000경기가 생겨 아무도 원치 않는 결과가 나온다.
+ *  - 프로만 현 모델로 정확히 표현된다 (팀당 경기수 = (n-1) × cycles)
+ */
 export const DEFAULT_LEAGUE_CONFIGS: LeagueConfig[] = [
-  { leagueId: "LEAGUE_UNIVERSITY",  teams: UNIV_TEAMS,      startWeek: 8, endWeek: 40, cycles: 5,  seriesGames: 2 },
-  { leagueId: "LEAGUE_INDEPENDENT", teams: IND_TEAMS,       startWeek: 6, endWeek: 38, cycles: 8,  seriesGames: 2 },
-  { leagueId: "LEAGUE_KBL",         teams: KBL_TEAMS,       startWeek: 1, endWeek: 50, cycles: 16 },
-  { leagueId: "LEAGUE_ABL",         teams: ABL_TEAMS,       startWeek: 1, endWeek: 50, cycles: 9  },
-  { leagueId: "LEAGUE_JBL",         teams: JBL_TEAMS,       startWeek: 1, endWeek: 50, cycles: 10 },
+  // 프로 1군 10팀 × 16차전 = 팀당 144경기 (DESIGN.md §7)
+  { leagueId: "LEAGUE_KBL",      teams: [..._KBL],  startWeek: 1, endWeek: 50, cycles: 16 },
+  // 프로 2군 10팀 × 11차전 = 팀당 99경기 — R5에서 제거했던 팜 리그 시뮬 복원 (DESIGN.md §5)
+  { leagueId: "LEAGUE_KBL_FARM", teams: [..._KBLF], startWeek: 1, endWeek: 50, cycles: 11 },
+  // 해외 — 현행 유지 (진출 전까지 드리프트만)
+  { leagueId: "LEAGUE_ABL",      teams: [..._ABL],  startWeek: 1, endWeek: 50, cycles: 9  },
+  { leagueId: "LEAGUE_JBL",      teams: [..._JBL],  startWeek: 1, endWeek: 50, cycles: 10 },
 ];

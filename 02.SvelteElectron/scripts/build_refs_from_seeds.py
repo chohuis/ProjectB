@@ -156,6 +156,65 @@ for o1 in ones:
 print("\n검증 오류:", len(errs))
 for e in errs[:10]: print("  ", e)
 
-out = os.path.join(MASTER, "entities", "refs.v2.json")
+out = os.path.join(MASTER, "entities", "refs.json")
 io.open(out, "w", encoding="utf-8").write(json.dumps(refs, ensure_ascii=False, indent=2) + "\n")
 print(f"\n→ {out}")
+
+# ── 코드 측 팀 목록 생성 (Phase 5-2) ──────────────────────────────
+# 팀 목록을 TS에 손으로 박으면 refs와 드리프트한다(부팅 검사 validateTeamRefs가
+# 존재하는 이유가 그것). refs에서 생성해 드리프트를 구조적으로 없앤다.
+def _ids(pred):
+    return sorted(t["id"] for t in refs["teams"] if pred(t))
+
+hs_all   = _ids(lambda t: t["leagueId"] == "LEAGUE_HIGHSCHOOL")
+univ     = _ids(lambda t: t["leagueId"] == "LEAGUE_UNIVERSITY")
+ind      = _ids(lambda t: t["leagueId"] == "LEAGUE_INDEPENDENT")
+kbl_1    = _ids(lambda t: t["leagueId"] == "LEAGUE_KBL" and t["id"].endswith("_1"))
+kbl_2    = _ids(lambda t: t["leagueId"] == "LEAGUE_KBL" and t["id"].endswith("_2"))
+abl_1    = _ids(lambda t: t["leagueId"] == "LEAGUE_ABL" and t["id"].endswith("_1"))
+abl_2    = _ids(lambda t: t["leagueId"] == "LEAGUE_ABL" and t["id"].endswith("_2"))
+jbl_1    = _ids(lambda t: t["leagueId"] == "LEAGUE_JBL" and t["id"].endswith("_1"))
+jbl_2    = _ids(lambda t: t["leagueId"] == "LEAGUE_JBL" and t["id"].endswith("_2"))
+
+# 고교 선택 가능 = 전 102교 (00_개요 §3 "102교 전부 선택 가능")
+hs_selectable = hs_all
+
+# 권역 = 구장 공유 그룹 (stadiums가 8권역 거점) — 5-3 주말리그 편성의 기준
+region_of = {t["id"]: t["stadium"] for t in refs["teams"] if t["leagueId"] == "LEAGUE_HIGHSCHOOL"}
+hs_regions = collections.defaultdict(list)
+for tid, st in region_of.items():
+    hs_regions[st].append(tid)
+
+def arr(name, items, indent="  "):
+    body = "\n".join(f'{indent}"{i}",' for i in items)
+    return f"export const {name}: string[] = [\n{body}\n];\n"
+
+ts = ['// 이 파일은 생성물이다 — 직접 편집하지 말 것.',
+      '// 생성: python scripts/build_refs_from_seeds.py',
+      '// 정본: resource/data/seeds/onepitch/*.csv → resource/data/master/entities/refs.json',
+      '//',
+      f'// 국내 {len(hs_all)+len(univ)+len(ind)+len(kbl_1)+len(kbl_2)}팀 '
+      f'(고교 {len(hs_all)} · 대학 {len(univ)} · 독립 {len(ind)} · 프로 1군 {len(kbl_1)} · 2군 {len(kbl_2)})',
+      '']
+ts.append(arr("HS_ALL_TEAMS", hs_all))
+ts.append(arr("HS_SELECTABLE_TEAMS", hs_selectable))
+ts.append(arr("UNIV_TEAMS", univ))
+ts.append(arr("IND_TEAMS", ind))
+ts.append(arr("KBL_TEAMS", kbl_1))
+ts.append(arr("KBL_FARM_TEAMS", kbl_2))
+ts.append(arr("ABL_TEAMS", abl_1))
+ts.append(arr("ABL_FARM_TEAMS", abl_2))
+ts.append(arr("JBL_TEAMS", jbl_1))
+ts.append(arr("JBL_FARM_TEAMS", jbl_2))
+
+ts.append("/** 고교 8권역 — 거점구장 공유 그룹. 5-3 주말리그 편성의 기준 */\n"
+          "export const HS_REGIONS: Record<string, string[]> = {\n"
+          + "".join(f'  "{k}": [\n' + "".join(f'    "{i}",\n' for i in sorted(v)) + "  ],\n"
+                    for k, v in sorted(hs_regions.items()))
+          + "};\n")
+
+ts_path = os.path.join(ROOT, "02.SvelteElectron", "apps", "ui", "src", "shared", "utils", "leagueTeams.generated.ts")
+io.open(ts_path, "w", encoding="utf-8").write("\n".join(ts))
+print(f"→ {ts_path}")
+print(f"   고교 {len(hs_all)} ({len(hs_regions)}권역) · 대학 {len(univ)} · 독립 {len(ind)} · "
+      f"프로 {len(kbl_1)}+{len(kbl_2)} · ABL {len(abl_1)}+{len(abl_2)} · JBL {len(jbl_1)}+{len(jbl_2)}")
