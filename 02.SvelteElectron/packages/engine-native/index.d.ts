@@ -103,6 +103,16 @@ export declare function calcEarlyEnlistDecisionsNative(paramsJson: string): stri
 export declare function calcIndieScoutOfferNative(paramsJson: string): string
 /** 권역 주말리그 — 권역 크기가 달라도 팀당 경기 수를 균등하게 (Phase 5-3) */
 export declare function generateRegionalScheduleNative(p: string): string
+/** 권역 순위 → 전국대회 참가팀 선발 (권역 크기 비례 배분 + 와일드카드) */
+export declare function selectTournamentEntrantsNative(p: string): string
+/** 시드 순 참가팀 → 전 라운드 브래킷 뼈대 (부전승 자동 반영) */
+export declare function generateTournamentBracketNative(p: string): string
+/** 한 라운드 결과 반영 → 다음 라운드 대진 확정 */
+export declare function advanceTournamentRoundNative(p: string): string
+/** 해당 라운드에서 **실제로 치를** 경기만 일정 형태로 (부전승·미확정 제외) */
+export declare function tournamentRoundScheduleNative(p: string): string
+/** 우승팀 (결승 승자 미정이면 null) — 시즌 종료 시상·기록용 */
+export declare function tournamentChampionNative(p: string): string
 export declare function generateScheduleNative(p: string): string
 export declare function generateKblScheduleNative(p: string): string
 export declare function generateAblScheduleNative(p: string): string

@@ -495,3 +495,26 @@ export const HS_REGIONS: Record<string, string[]> = {
     "TEAM_HS_YUDAL",
   ],
 };
+
+/** 대회 시드 산출 기준 */
+export type TournamentSeedSource =
+  | "prev_season"  /* 전년 권역 순위 */
+  | "first_half"   /* 전반기 권역 순위 */
+  | "second_half"  /* 후반기 권역 순위 */
+  | "open";        /* 전원 참가 */
+
+export interface TournamentDef {
+  id: string; leagueId: string; name: string; flower: string;
+  startWeek: number; endWeek: number;
+  totalSlots: number; wildcardSlots: number;
+  seedSource: TournamentSeedSource; order: number;
+}
+
+/** 고교 전국대회 5종 (02_고교.md §4-2). 정본: seeds/onepitch/tournaments.csv */
+export const TOURNAMENTS: TournamentDef[] = [
+  { id: "TOUR_HS_GAENARI", leagueId: "LEAGUE_HIGHSCHOOL", name: "개나리기", flower: "개나리", startWeek: 2, endWeek: 3, totalSlots: 32, wildcardSlots: 8, seedSource: "prev_season", order: 1 },
+  { id: "TOUR_HS_JANGMI", leagueId: "LEAGUE_HIGHSCHOOL", name: "장미기", flower: "장미", startWeek: 14, endWeek: 15, totalSlots: 32, wildcardSlots: 8, seedSource: "first_half", order: 2 },
+  { id: "TOUR_HS_MUGUNGHWA", leagueId: "LEAGUE_HIGHSCHOOL", name: "무궁화기", flower: "무궁화", startWeek: 20, endWeek: 22, totalSlots: 48, wildcardSlots: 12, seedSource: "first_half", order: 3 },
+  { id: "TOUR_HS_GUKHWA", leagueId: "LEAGUE_HIGHSCHOOL", name: "국화기", flower: "국화", startWeek: 31, endWeek: 34, totalSlots: 102, wildcardSlots: 0, seedSource: "open", order: 4 },
+  { id: "TOUR_HS_PAEWANG", leagueId: "LEAGUE_HIGHSCHOOL", name: "패왕기", flower: "왕중왕", startWeek: 40, endWeek: 41, totalSlots: 24, wildcardSlots: 0, seedSource: "second_half", order: 5 },
+];

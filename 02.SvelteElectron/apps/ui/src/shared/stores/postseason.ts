@@ -16,6 +16,23 @@ export function updatePostseasonBracket(s: SeasonStoreState, leagueId: string, u
   return { ...s, postseasonBrackets: { ...s.postseasonBrackets, [leagueId]: updatedSeries } };
 }
 
+// ── 전국대회 (Phase 5-4) ──────────────────────────────────────
+
+export function setTournamentBracket(
+  s: SeasonStoreState,
+  bracket: import("../utils/tournament").TournamentBracket,
+): SeasonStoreState {
+  return { ...s, tournaments: { ...(s.tournaments ?? {}), [bracket.tournamentId]: bracket } };
+}
+
+/** 이미 있는 id는 넣지 않는다 — 같은 주를 두 번 처리해도 경기가 중복되지 않게 */
+export function injectTournamentEntries(s: SeasonStoreState, entries: ScheduleEntry[]): SeasonStoreState {
+  const have = new Set(s.schedule.map((e) => e.id));
+  const fresh = entries.filter((e) => !have.has(e.id));
+  if (fresh.length === 0) return s;
+  return { ...s, schedule: [...s.schedule, ...fresh] };
+}
+
 export function setAblConferences(s: SeasonStoreState, east: string[], west: string[]): SeasonStoreState {
   return { ...s, ablEastTeams: east, ablWestTeams: west };
 }

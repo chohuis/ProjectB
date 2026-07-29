@@ -12,6 +12,7 @@ mod npc_sim;
 mod growth_engine;
 mod player_engine;
 mod schedule_engine;
+mod tournament;
 mod postseason_engine;
 mod week_engine;
 mod team_engine;
@@ -584,6 +585,65 @@ pub fn generate_regional_schedule_native(p: String) -> String {
     };
     serde_json::to_string(&schedule_engine::generate_regional_schedule(params))
         .unwrap_or_else(|e| parse_err("generateRegionalScheduleNative/serialize", e))
+}
+
+// ── 토너먼트 (Phase 5-4) ──────────────────────────────────────────────────────
+
+/// 권역 순위 → 전국대회 참가팀 선발 (권역 크기 비례 배분 + 와일드카드)
+#[napi]
+pub fn select_tournament_entrants_native(p: String) -> String {
+    let params: tournament::SelectEntrantsParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("selectTournamentEntrantsNative", e),
+    };
+    serde_json::to_string(&tournament::select_tournament_entrants(params))
+        .unwrap_or_else(|e| parse_err("selectTournamentEntrantsNative/serialize", e))
+}
+
+/// 시드 순 참가팀 → 전 라운드 브래킷 뼈대 (부전승 자동 반영)
+#[napi]
+pub fn generate_tournament_bracket_native(p: String) -> String {
+    let params: tournament::GenerateTournamentParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("generateTournamentBracketNative", e),
+    };
+    serde_json::to_string(&tournament::generate_tournament_bracket(params))
+        .unwrap_or_else(|e| parse_err("generateTournamentBracketNative/serialize", e))
+}
+
+/// 한 라운드 결과 반영 → 다음 라운드 대진 확정
+#[napi]
+pub fn advance_tournament_round_native(p: String) -> String {
+    let params: tournament::AdvanceTournamentParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("advanceTournamentRoundNative", e),
+    };
+    serde_json::to_string(&tournament::advance_tournament_round(params))
+        .unwrap_or_else(|e| parse_err("advanceTournamentRoundNative/serialize", e))
+}
+
+#[derive(serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct BracketRoundQuery {
+    bracket: tournament::TournamentBracket,
+    round: u32,
+}
+
+/// 해당 라운드에서 **실제로 치를** 경기만 일정 형태로 (부전승·미확정 제외)
+#[napi]
+pub fn tournament_round_schedule_native(p: String) -> String {
+    let q: BracketRoundQuery = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("tournamentRoundScheduleNative", e),
+    };
+    serde_json::to_string(&tournament::bracket_to_schedule(&q.bracket, q.round))
+        .unwrap_or_else(|e| parse_err("tournamentRoundScheduleNative/serialize", e))
+}
+
+/// 우승팀 (결승 승자 미정이면 null) — 시즌 종료 시상·기록용
+#[napi]
+pub fn tournament_champion_native(p: String) -> String {
+    let b: tournament::TournamentBracket = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("tournamentChampionNative", e),
+    };
+    serde_json::to_string(&tournament::tournament_champion(&b))
+        .unwrap_or_else(|e| parse_err("tournamentChampionNative/serialize", e))
 }
 
 #[napi]

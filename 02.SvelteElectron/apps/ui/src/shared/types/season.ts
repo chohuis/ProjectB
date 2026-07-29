@@ -62,6 +62,7 @@ export interface ScheduleEntry {
   phase: SeasonPhase;       // 해당 경기의 시즌 페이즈
   result?: MatchResult;     // 경기 완료 후 채워짐
   isFriendly?: boolean;     // 친선경기 여부 (공식 기록 미집계)
+  isTournament?: boolean;   // 전국대회 — 개인 기록은 집계, 리그 순위는 미반영 (Phase 5-4)
   friendlyStats?: {         // 친선경기 주인공 개인 성적 (isFriendly=true일 때만)
     ip:     number;
     er:     number;
@@ -319,6 +320,8 @@ export interface SaveSeason {
   npcLiveStats: Record<string, NpcLiveStat>;
   // 전년도 KBL 최종 순위 — 드래프트 지명 순서 결정 (꼴지팀부터)
   prevSeasonKblStandings: Standing[];
+  // 전국대회 브래킷 (tournamentId → 브래킷). 개설 전에는 없다 (Phase 5-4)
+  tournaments: Record<string, import("../utils/tournament").TournamentBracket>;
 }
 
 export const SAVE_SEASON_VERSION = 1;
@@ -361,6 +364,7 @@ export function makeEmptySeason(
     npcRetired: [],
     npcLiveStats: {},
     prevSeasonKblStandings: [],
+    tournaments: {},
   };
 }
 

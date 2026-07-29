@@ -15,6 +15,9 @@ pub struct ScheduleEntry {
     pub away_team_id: String,
     pub is_protagonist_game: bool,
     pub phase: String,
+    /// 전국대회 경기 — 리그 순위에는 반영하지 않는다 (개인 기록은 반영)
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub is_tournament: bool,
 }
 
 // ── Date helper ───────────────────────────────────────────────
@@ -151,6 +154,7 @@ fn assign_rounds_to_weeks(
                 away_team_id: away.clone(),
                 is_protagonist_game: home == protagonist_team_id || away == protagonist_team_id,
                 phase: "season".to_string(),
+                is_tournament: false,
             });
         }
     }
@@ -209,6 +213,7 @@ fn generate_pro_league_schedule(
                         away_team_id: away.clone(),
                         is_protagonist_game,
                         phase: "season".to_string(),
+                        is_tournament: false,
                     });
                 }
             }
@@ -255,6 +260,7 @@ pub fn generate_schedule(p: GenerateScheduleParams) -> Vec<ScheduleEntry> {
                 home_team_id: home.clone(), away_team_id: away.clone(),
                 is_protagonist_game: home == p.protagonist_team_id || away == p.protagonist_team_id,
                 phase: phase.to_string(),
+                is_tournament: false,
             });
         }
     }
@@ -333,6 +339,7 @@ pub fn generate_league_schedule(p: GenerateLeagueScheduleParams) -> Vec<Schedule
                             away_team_id: away.clone(),
                             is_protagonist_game,
                             phase: "season".to_string(),
+                            is_tournament: false,
                         });
                     }
                 }
@@ -452,6 +459,7 @@ pub fn generate_regional_schedule(p: GenerateRegionalScheduleParams) -> Vec<Sche
                     is_protagonist_game: *home == p.protagonist_team_id
                         || *away == p.protagonist_team_id,
                     phase: "season".to_string(),
+                    is_tournament: false,
                 });
             }
         }

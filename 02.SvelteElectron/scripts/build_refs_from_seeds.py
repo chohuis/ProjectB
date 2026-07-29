@@ -213,6 +213,31 @@ ts.append("/** 고교 8권역 — 거점구장 공유 그룹. 5-3 주말리그 �
                     for k, v in sorted(hs_regions.items()))
           + "};\n")
 
+# 전국대회 카탈로그 (Phase 5-4) — 시기·참가수·시드 출처는 ①정의 데이터다
+tours = rd("tournaments.csv")
+ts.append("/** 대회 시드 산출 기준 */\n"
+          "export type TournamentSeedSource =\n"
+          '  | "prev_season"  /* 전년 권역 순위 */\n'
+          '  | "first_half"   /* 전반기 권역 순위 */\n'
+          '  | "second_half"  /* 후반기 권역 순위 */\n'
+          '  | "open";        /* 전원 참가 */\n\n'
+          "export interface TournamentDef {\n"
+          "  id: string; leagueId: string; name: string; flower: string;\n"
+          "  startWeek: number; endWeek: number;\n"
+          "  totalSlots: number; wildcardSlots: number;\n"
+          "  seedSource: TournamentSeedSource; order: number;\n"
+          "}\n")
+ts.append("/** 고교 전국대회 5종 (02_고교.md §4-2). 정본: seeds/onepitch/tournaments.csv */\n"
+          "export const TOURNAMENTS: TournamentDef[] = [\n"
+          + "".join(
+              '  { id: "%s", leagueId: "%s", name: "%s", flower: "%s", '
+              'startWeek: %s, endWeek: %s, totalSlots: %s, wildcardSlots: %s, '
+              'seedSource: "%s", order: %s },\n'
+              % (t["id"], t["leagueId"], t["name"], t["flower"], t["startWeek"], t["endWeek"],
+                 t["totalSlots"], t["wildcardSlots"], t["seedSource"], t["order"])
+              for t in sorted(tours, key=lambda r: int(r["order"])))
+          + "];\n")
+
 ts_path = os.path.join(ROOT, "02.SvelteElectron", "apps", "ui", "src", "shared", "utils", "leagueTeams.generated.ts")
 io.open(ts_path, "w", encoding="utf-8").write("\n".join(ts))
 print(f"→ {ts_path}")

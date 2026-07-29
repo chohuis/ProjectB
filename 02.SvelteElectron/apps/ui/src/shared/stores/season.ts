@@ -239,6 +239,43 @@ function createSeasonStore() {
       });
     },
 
+    /**
+     * 전국대회 결과. 개인 기록·로테이션·피로도는 리그 경기와 똑같이 쌓되
+     * **순위표만 건드리지 않는다** — 대회 성적이 주말리그 순위에 섞이면
+     * 다음 대회 시드가 오염된다.
+     */
+    applyTournamentResult(
+      scheduleId: string,
+      result: MatchResult,
+      leagueId: string,
+      homeTeamId: string,
+      awayTeamId: string,
+      nextHomeRotIdx: number,
+      nextAwayRotIdx: number,
+      pitcherConditions: Record<string, PlayerCondition> = {},
+    ) {
+      update((s) => {
+        const schedule = s.schedule.map((e) => (e.id === scheduleId ? { ...e, result } : e));
+        const stats    = accumulateStats(s.stats, result.playerLines);
+
+        const cur = migrateLeagueState(s.leagueState[leagueId] ?? {});
+        const leagueState = {
+          ...s.leagueState,
+          [leagueId]: {
+            ...cur,
+            stats: accumulateStats(cur.stats, result.playerLines),
+            playerConditions:  { ...cur.playerConditions, ...pitcherConditions },
+            teamRotationIndex: {
+              ...cur.teamRotationIndex,
+              [homeTeamId]: nextHomeRotIdx,
+              [awayTeamId]: nextAwayRotIdx,
+            },
+          },
+        };
+        return { ...s, schedule, stats, leagueState };
+      });
+    },
+
     applyFriendlyResult(
       scheduleId: string,
       result: MatchResult,
@@ -464,6 +501,14 @@ function createSeasonStore() {
 
     updatePostseasonBracket(leagueId: string, updatedSeries: PostseasonSeries[]) {
       update((s) => Postseason.updatePostseasonBracket(s, leagueId, updatedSeries));
+    },
+
+    setTournamentBracket(bracket: import("../utils/tournament").TournamentBracket) {
+      update((s) => Postseason.setTournamentBracket(s, bracket));
+    },
+
+    injectTournamentEntries(entries: ScheduleEntry[]) {
+      update((s) => Postseason.injectTournamentEntries(s, entries));
     },
 
     setAblConferences(east: string[], west: string[]) {

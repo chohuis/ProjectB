@@ -239,6 +239,7 @@ pub fn make_series_game(p: MakeSeriesGameParams) -> ScheduleEntry {
         away_team_id: s.away_team_id.clone(),
         is_protagonist_game: s.home_team_id == p.protagonist_team_id || s.away_team_id == p.protagonist_team_id,
         phase: "postseason".to_string(),
+        is_tournament: false,
     }
 }
 

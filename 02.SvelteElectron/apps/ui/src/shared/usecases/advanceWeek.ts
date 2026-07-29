@@ -53,6 +53,7 @@ import {
   DEFAULT_TEAM_PROFILE,
 } from "./weekPhases/market";
 import { buildHsLeagueDigest, LEAGUE_NAMES, MONTHLY_STANDINGS_LEAGUES, HS_DIGEST_WEEKS } from "./weekPhases/digest";
+import { applyRoundResults, openTournamentsForWeek } from "./tournaments";
 
 // ── 군입대 대상 판별 (nationality 기반) ──────────────────────
 // nationality 없는 구버전 NPC는 originLeagueId로 폴백
@@ -1064,6 +1065,68 @@ async function handleSeasonEnd(): Promise<WeekAdvanceResult> {
 
 // ── 통합 포스트시즌 주입 (HS / KBL / ABL / UNIV / IND) ──────────
 // 매 게임 처리 후 호출. 정규시즌 종료 감지 → 브라켓 초기화 → 다음 경기 주입
+/**
+ * 전국대회 진행 (Phase 5-4).
+ *
+ * 대회는 한 주에 여러 라운드가 들어간다(국화기 7R/4주). 다음 라운드 대진은
+ * 직전 라운드 결과가 나와야 정해지므로, 경기 처리 루프와 번갈아 돌려야 한다.
+ * → 이 함수는 "지금 넣을 수 있는 경기를 넣고, 넣었으면 true"를 돌려주고
+ *   호출부가 경기를 치른 뒤 다시 부른다.
+ *
+ * @returns 일정에 새 경기를 넣었으면 true
+ */
+async function progressTournaments(week: number): Promise<boolean> {
+  const g = get(gameStore);
+  if (g.protagonist.leagueId !== "LEAGUE_HIGHSCHOOL") return false;
+
+  const protagonistTeamId = g.protagonist.teamId;
+  let injected = false;
+
+  // ① 이번 주에 개막하는 대회
+  const opened = await openTournamentsForWeek(week, get(seasonStore), protagonistTeamId);
+  for (const o of opened) {
+    seasonStore.setTournamentBracket(o.bracket);
+    if (o.entries.length > 0) {
+      seasonStore.injectTournamentEntries(o.entries);
+      injected = true;
+    }
+  }
+
+  // ② 결과가 다 나온 라운드 → 다음 라운드 대진 확정 + 주입
+  const s = get(seasonStore);
+  const resultOf = new Map(
+    s.schedule.filter((e) => e.result).map((e) => [e.id, e.result!.winnerId]),
+  );
+
+  for (const bracket of Object.values(s.tournaments ?? {})) {
+    for (let r = 1; r <= bracket.totalRounds; r++) {
+      const live = bracket.matches.filter(
+        (m) => m.round === r && !m.isBye && m.homeTeamId && m.awayTeamId,
+      );
+      if (live.length === 0) continue;
+      if (live.every((m) => m.winnerTeamId)) continue;   // 이미 반영됨
+
+      const results = live
+        .filter((m) => resultOf.has(m.id))
+        .map((m) => ({ matchId: m.id, winnerTeamId: resultOf.get(m.id)! }));
+      if (results.length < live.length) break;            // 아직 안 끝난 라운드
+
+      const { bracket: next, nextEntries } = await applyRoundResults(
+        bracket, r, results, protagonistTeamId,
+      );
+      seasonStore.setTournamentBracket(next);
+      const due = nextEntries.filter((e) => e.week <= week);
+      if (due.length > 0) {
+        seasonStore.injectTournamentEntries(due);
+        injected = true;
+      }
+      break;  // 이 대회는 한 번에 한 라운드씩
+    }
+  }
+
+  return injected;
+}
+
 async function injectLeaguePostseason(nextWeek: number): Promise<void> {
   const s   = get(seasonStore);
   const g   = get(gameStore);
@@ -1705,7 +1768,13 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
     // 포스트시즌 주입 (HS 포함 — 단일리그 top4 브래킷, injectLeaguePostseason로 통합)
     await injectLeaguePostseason(nextWeekNum);
 
-    // 이번 주 미결 경기를 gameDate 순으로 처리
+    // 대회 개막 라운드를 먼저 얹는다 (Phase 5-4)
+    await progressTournaments(nextWeekNum);
+
+    // 이번 주 미결 경기를 gameDate 순으로 처리.
+    // 대회는 한 주에 여러 라운드가 들어가고 다음 대진이 직전 결과에 달렸으므로,
+    // "경기 치르기 → 다음 라운드 주입"을 더 넣을 게 없을 때까지 반복한다.
+    for (let pass = 0; ; pass++) {
     const sForGames = get(seasonStore);
     const thisWeekGames = sForGames.schedule
       .filter((e) => e.week === nextWeekNum && !e.result)
@@ -1858,6 +1927,13 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
             nextHomeRotIdx, nextAwayRotIdx,
             null, pitcherConds,
           );
+        } else if (game.isTournament) {
+          // 전국대회 → 개인 기록만. 순위표에 섞이면 다음 대회 시드가 오염된다
+          seasonStore.applyTournamentResult(
+            game.id, npcResult, leagueId,
+            game.homeTeamId, game.awayTeamId,
+            nextHomeRotIdx, nextAwayRotIdx, pitcherConds,
+          );
         } else {
           seasonStore.applyProtagonistGroupNpcResult(
             game.id, npcResult, leagueId,
@@ -1869,6 +1945,11 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
         accResults.push(npcResult);
         accLogs.push(`${game.homeTeamId} ${npcResult.homeScore}:${npcResult.awayScore} ${game.awayTeamId}`);
       }
+    }
+
+    // 방금 끝난 라운드로 다음 대진이 열리면 한 번 더 돈다.
+    // 상한 20 = 국화기 7R + 여유. 무한 루프 방지용이지 정상 경로에서 닿지 않는다.
+    if (pass >= 20 || !(await progressTournaments(nextWeekNum))) break;
     }
 
     const sFinal = get(seasonStore);
