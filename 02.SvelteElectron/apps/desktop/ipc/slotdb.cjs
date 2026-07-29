@@ -10,9 +10,18 @@ const path = require("node:path");
 const fs = require("node:fs");
 const Database = require("better-sqlite3");
 
-const SCHEMA_VERSION = 3;
+// ── 마이그레이션 (Phase 4-1) ──────────────────────────────────────
+// 정본 = `PRAGMA user_version`. meta.schema_version은 사람이 읽는 사본일 뿐이다.
+//
+// 이전 구현의 결함: 스키마를 `CREATE TABLE IF NOT EXISTS`로만 깔고 schema_version을
+// "쓰기만 하고 읽지 않아", 기존 슬롯에 컬럼을 추가하면 조용히 반영되지 않았다
+// (docs/AUDIT_2026-07.md B3). 이제 버전이 낮으면 실제로 up()을 돌린다.
+//
+// 새 마이그레이션 추가법: MIGRATIONS 끝에 { v: 다음번호, name, up(db) } 를 붙인다.
+//  - up()은 반드시 **재실행해도 안전**해야 한다 (addColumn 헬퍼가 존재 여부를 검사).
+//  - user_version 갱신은 러너가 한다 — up() 안에서 건드리지 말 것.
 
-const SCHEMA_SQL = `
+const BASELINE_SQL = `
   CREATE TABLE IF NOT EXISTS meta (
     key   TEXT PRIMARY KEY,
     value TEXT NOT NULL
@@ -103,6 +112,57 @@ const SCHEMA_SQL = `
   );
 `;
 
+// ── 마이그레이션 헬퍼 ─────────────────────────────────────────────
+function hasColumn(db, table, col) {
+  return db.prepare(`PRAGMA table_info(${table})`).all().some((c) => c.name === col);
+}
+
+/** 컬럼이 없을 때만 추가 — up()을 재실행해도 안전하게 만드는 유일한 수단 */
+function addColumn(db, table, col, decl) {
+  if (!hasColumn(db, table, col)) db.exec(`ALTER TABLE ${table} ADD COLUMN ${col} ${decl}`);
+}
+
+const MIGRATIONS = [
+  {
+    v: 1,
+    name: "baseline — slot.db v3 스키마",
+    // 전부 IF NOT EXISTS라 기존 슬롯(user_version=0)에 적용해도 무해하다.
+    up(db) { db.exec(BASELINE_SQL); },
+  },
+];
+
+const SCHEMA_VERSION = MIGRATIONS[MIGRATIONS.length - 1].v;
+
+function currentVersion(db) {
+  return db.pragma("user_version", { simple: true });
+}
+
+/**
+ * 버전 확인과 적용을 **하나의 IMMEDIATE 트랜잭션**으로 묶는다.
+ * 나눠두면 두 커넥션이 동시에 낮은 버전을 읽고 같은 ALTER를 두 번 실행한다
+ * (OnePitch가 실제로 겪은 "duplicate column name" 경합).
+ */
+function migrate(db) {
+  const run = db.transaction(() => {
+    const from = currentVersion(db);
+    const applied = [];
+    for (const m of MIGRATIONS) {
+      if (m.v <= from) continue;
+      m.up(db);
+      db.pragma(`user_version = ${m.v}`);
+      applied.push(m.v);
+    }
+    if (applied.length > 0) {
+      db.prepare(
+        "INSERT INTO meta (key, value) VALUES ('schema_version', ?) " +
+        "ON CONFLICT(key) DO UPDATE SET value = excluded.value"
+      ).run(String(SCHEMA_VERSION));
+    }
+    return { from, to: currentVersion(db), applied };
+  });
+  return run.immediate();
+}
+
 // ── 슬롯 파일 관리 ────────────────────────────────────────────────
 const SLOT_ID_RE = /^[A-Za-z0-9_-]{1,32}$/;
 
@@ -115,11 +175,7 @@ function openSlot(savesDir, slotId) {
   fs.mkdirSync(savesDir, { recursive: true });
   const db = new Database(slotFilePath(savesDir, slotId));
   db.pragma("journal_mode = WAL");
-  db.exec(SCHEMA_SQL);
-  const cur = db.prepare("SELECT value FROM meta WHERE key='schema_version'").get();
-  if (!cur) {
-    db.prepare("INSERT INTO meta (key, value) VALUES ('schema_version', ?)").run(String(SCHEMA_VERSION));
-  }
+  migrate(db);
   return db;
 }
 
@@ -617,4 +673,8 @@ function dispatch(manager, cmd, payload) {
   }
 }
 
-module.exports = { createManager, dispatch, openSlot, SCHEMA_VERSION, _commands: commands };
+module.exports = {
+  createManager, dispatch, openSlot, SCHEMA_VERSION, _commands: commands,
+  // 마이그레이션 (테스트·진단용)
+  migrate, currentVersion, hasColumn, addColumn, MIGRATIONS,
+};
