@@ -44,7 +44,8 @@
     "test:v3": "npm run test:migration && npm run test:slotdb && npm run test:rostergen && npm run test:newgame && npm run test:draftpool",
     "test:draftpool": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-draft-pool.cjs",
     "test:synthetic": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-synthetic-trajectory.cjs",
-    "test:migration": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-migration.cjs"
+    "test:migration": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-migration.cjs",
+    "harness": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/harness.cjs"
   },
   "build": {
     "appId": "com.projectb.desktop",

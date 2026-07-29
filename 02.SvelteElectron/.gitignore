@@ -22,3 +22,6 @@ userData/
 # 로컬 설정
 .env
 .env.local
+
+# 하네스 실행 결과 (생성물 — DATA_POLICY §1 ③파생)
+docs/reports/harness_last.json
