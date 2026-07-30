@@ -56,5 +56,15 @@
       "good_rank_pct": 0.4,
       "bad_rank_pct": 0.75
     }
+  },
+  "training_area": {
+    "command": "투수",
+    "velocity": "투수",
+    "control": "투수",
+    "movement": "투수",
+    "pitch_dev": "투수",
+    "mentality": "멘탈",
+    "stamina": "컨디셔닝",
+    "recovery": "컨디셔닝"
   }
 }

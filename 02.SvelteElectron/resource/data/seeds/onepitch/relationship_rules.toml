@@ -90,3 +90,20 @@ bad_era = 5.50
 # 팀 성적 판정 — 리그 상위 몇 %인가
 good_rank_pct = 0.40
 bad_rank_pct = 0.75
+
+# ── 훈련 focus → 코치 전문 영역 ─────────────────────────────────
+# 두 어휘가 **다른 파일에서 왔다** — 왼쪽은 training/programs_pitcher.json의 focus,
+# 오른쪽은 staff_rules.toml [[coach.specialties]]의 name이다.
+# 이 매핑을 코드에 박으면 어느 한쪽 어휘를 고쳐도 조용히 어긋난다
+# (감독 능력치가 3중 이름 드리프트로 전달되지 않던 P6-2가 정확히 그 사고였다).
+#
+# 여기 없는 focus는 담당 코치가 없다는 뜻이고, 그 주에는 아무 코치도 오르지 않는다.
+[training_area]
+command   = "투수"
+velocity  = "투수"
+control   = "투수"
+movement  = "투수"
+pitch_dev = "투수"
+mentality = "멘탈"
+stamina   = "컨디셔닝"
+recovery  = "컨디셔닝"

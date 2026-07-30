@@ -2303,6 +2303,52 @@ function createGameStore() {
         // 병역·FA까지 다 처리한 시즌이 통째로 롤백된다
         console.error("[processAllLeaguesSeasonEnd] 스태프 생애주기 실패", e);
       }
+
+      // ── 관계도 시즌 총평 + 비접촉 감쇠 (Phase 6C) ──────────
+      // 스태프 생애주기 **다음에** 돈다. 은퇴·경질로 사라진 사람을 ended로
+      // 접은 뒤에 총평을 얹어야 이미 떠난 감독에게 시즌 평가가 붙지 않는다.
+      try {
+        const st = get({ subscribe });
+        const slotId = st.currentSlotId;
+        if (slotId) {
+          const { applySeasonRelations, endRelationships } =
+            await import("../usecases/relationships");
+          const { seasonStore } = await import("./season");
+          const seasonNow = get(seasonStore);
+
+          // 사라진 상대를 먼저 동결한다 (값은 기록으로 남는다)
+          const { slotRepo } = await import("../repo/slotRepo");
+          const activeStaff = new Set(
+            (await slotRepo.getStaff(slotId, { status: "active" })).map((x) => x.staffId),
+          );
+          const rows = await slotRepo.getRelationships(slotId);
+          const gone = rows
+            .filter((r) => r.contact !== "ended"
+              && (r.kind === "manager" || r.kind === "coach" || r.kind === "owner")
+              && !activeStaff.has(r.personId))
+            .map((r) => r.personId);
+          if (gone.length > 0) await endRelationships(slotId, gone);
+
+          const myStats = seasonNow.stats[st.protagonist.id] as
+            import("../types/save").PitcherSeasonStats | null ?? null;
+          const standings = seasonNow.standings ?? [];
+          const myIdx = standings.findIndex((x) => x.teamId === st.protagonist.teamId);
+          // 순위를 못 찾으면 중간(0.5)으로 둔다 — 구단주 관계가 임의로 요동치는 것보다 낫다
+          const rankPct = myIdx >= 0 && standings.length > 1
+            ? myIdx / (standings.length - 1)
+            : 0.5;
+
+          await applySeasonRelations({
+            slotId,
+            week: 52,
+            era: myStats?.era ?? 0,
+            teamRankPct: rankPct,
+            pitchedAny: (myStats?.ip ?? 0) > 0,
+          });
+        }
+      } catch (e) {
+        console.error("[processAllLeaguesSeasonEnd] 관계도 시즌 처리 실패", e);
+      }
     },
 
     // 시즌 종료 후 주인공 에이징 감퇴 적용 (advanceSeasonYear 이전에 호출 — seasonHealth 기반)
