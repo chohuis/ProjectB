@@ -137,6 +137,27 @@ export const slotRepo = {
     staffId: string; age: number; status: string; years: number;
     teamId: string; leagueId: string; stats: Record<string, number>;
   }>) => call<{ ok: true; updated: number }>("updateStaff", { slotId, updates }),
+  // ── 관계도 (Phase 6C) ───────────────────────────────────────
+  /** `withPerson`이면 person VIEW를 조인해 이름·소속까지 온다 (화면용) */
+  getRelationships: (slotId: string, filter: {
+    kind?: import("../types/relationship").RelationKind;
+    contact?: import("../types/relationship").RelationContact;
+    personIds?: string[];
+    withPerson?: boolean;
+  } = {}) =>
+    call<import("../types/relationship").Relationship[]>("getRelationships", { slotId, ...filter }),
+
+  /** 신규 생성과 갱신이 같은 경로. 값 clamp는 커맨드 쪽에서도 한 번 더 한다 */
+  upsertRelationships: (slotId: string, rows: import("../types/relationship").Relationship[]) =>
+    call<{ ok: true; written: number }>("upsertRelationships", { slotId, rows }),
+
+  /** 팀 이동·은퇴 시 접촉 상태만 바꾼다. `fromTeam`이면 그 팀 전원 일괄 */
+  setRelationshipContact: (slotId: string, p: {
+    contact: import("../types/relationship").RelationContact;
+    personIds?: string[];
+    fromTeam?: string;
+  }) => call<{ ok: true }>("setRelationshipContact", { slotId, ...p }),
+
   listSlots: () => call<RepoSlotMeta[]>("listSlots", {}),
   deleteSlot: (slotId: string) => call<{ ok: true }>("deleteSlot", { slotId }),
 
