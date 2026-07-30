@@ -89,6 +89,9 @@ pub struct GenAbilities {
     pub pitching: Option<NpcPitchingAttrs>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub batting: Option<NpcBattingAttrs>,
+    /// 투수만. 야수는 빈 배열이 아니라 아예 없다
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pitches: Option<Vec<crate::sim_types::NpcPitchEntry>>,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -173,6 +176,95 @@ fn league_code(league_id: &str) -> &'static str {
 /// 맞춘다. 팀 ID가 유일하므로 **구조적으로** 충돌이 불가능해진다.
 fn team_tag(team_id: &str) -> &str {
     team_id.strip_prefix("TEAM_").unwrap_or(team_id)
+}
+
+// ── 구종 생성 (Phase 6.5) ────────────────────────────────────────────────────
+//
+// 예전엔 생성물에 구종이 아예 없었다. 프로 투수가 패스트볼도 없이 시작했고,
+// 주간 성장(`decide_pitch_training`)이 매년 0에서부터 구종을 채워 넣었다.
+// 경기 결과에는 영향이 없지만(SimPitcher가 구종을 안 본다) 화면과 성장에 쓰인다.
+//
+// 목표 구종 수는 성장 로직과 **같은 규칙**을 쓴다 — 생성이 목표보다 많이 주면
+// 성장 로직이 할 일이 없고, 적게 주면 신인이 매년 새 구종만 배운다.
+
+/// 성장 로직 `npc_pitch_target`과 같은 값이어야 한다 (npc_sim.rs)
+fn pitch_target(position: &str, velocity: f64) -> usize {
+    match position {
+        "SP" => if velocity >= 70.0 { 4 } else { 5 },
+        "CP" => if velocity >= 70.0 { 2 } else if velocity >= 60.0 { 3 } else { 4 },
+        _    => if velocity >= 65.0 { 3 } else { 4 },
+    }
+}
+
+/// 구종 카탈로그 — `training/pitch_catalog.json`과 같은 ID여야 한다.
+/// (그 파일은 콘텐츠라 Rust가 읽지 않는다. 어긋나면 화면이 이름을 못 찾는다 —
+///  `npm run test:rostergen`이 두 목록을 대조한다)
+const PITCH_FASTBALL: &str = "PITCH_FASTBALL";
+const PITCH_BREAKING: [&str; 4] = ["PITCH_SLIDER", "PITCH_CURVE", "PITCH_CUTTER", "PITCH_SINKER"];
+const PITCH_OFFSPEED: [&str; 4] = ["PITCH_CHANGEUP", "PITCH_SPLITTER", "PITCH_FORKBALL", "PITCH_SCREWBALL"];
+const PITCH_SPECIAL:  &str = "PITCH_KNUCKLEBALL";
+
+/// 투수 한 명의 구종 세트.
+///
+/// - **패스트볼은 항상 있다.** 그게 없는 투수는 없다
+/// - 보유 수는 목표치에 성숙도(나이·OVR)를 곱한다 — 신인은 덜 갖추고 시작한다
+/// - 변화구·오프스피드를 섞는다. 한 계열만 갖는 투수가 나오지 않게
+/// - 너클볼은 특수구다. 낮은 확률로만, 그리고 **주무기로만** 준다
+fn gen_pitches(
+    position: &str,
+    velocity: f64,
+    ovr: f64,
+    age: i32,
+    rng: &mut LcgRand,
+) -> Vec<crate::sim_types::NpcPitchEntry> {
+    use crate::sim_types::NpcPitchEntry;
+
+    let target = pitch_target(position, velocity);
+
+    // 성숙도 0.5~1.0 — 20세 OVR50이 0.5, 28세 이상 OVR80+가 1.0
+    let age_f = ((age - 19).max(0) as f64 / 9.0).min(1.0);
+    let ovr_f = ((ovr - 45.0).max(0.0) / 35.0).min(1.0);
+    let maturity = 0.5 + 0.5 * (age_f * 0.45 + ovr_f * 0.55);
+    let count = ((target as f64 * maturity).round() as usize).clamp(1, target);
+
+    let mut out: Vec<NpcPitchEntry> = Vec::new();
+
+    // ① 패스트볼 — grade는 구속이 정한다
+    let fb_grade = if velocity >= 75.0 { 5 } else if velocity >= 65.0 { 4 }
+                   else if velocity >= 55.0 { 3 } else { 2 };
+    out.push(NpcPitchEntry { id: PITCH_FASTBALL.to_string(), grade: fb_grade });
+    if count == 1 { return out; }
+
+    // ② 주무기 — OVR이 높을수록 잘 여문다. 너클볼은 여기서만 나온다
+    let ace = ovr >= 72.0;
+    let main_grade: u8 = if ovr >= 78.0 { 5 } else if ovr >= 66.0 { 4 } else { 3 };
+    let knuckle = ace && rng.next() < 0.04;
+    let main_id = if knuckle {
+        PITCH_SPECIAL.to_string()
+    } else if rng.next() < 0.55 {
+        PITCH_BREAKING[(rng.next() * PITCH_BREAKING.len() as f64) as usize % PITCH_BREAKING.len()].to_string()
+    } else {
+        PITCH_OFFSPEED[(rng.next() * PITCH_OFFSPEED.len() as f64) as usize % PITCH_OFFSPEED.len()].to_string()
+    };
+    out.push(NpcPitchEntry { id: main_id.clone(), grade: main_grade });
+
+    // ③ 나머지 — 주무기와 **다른 계열**을 우선해 한쪽으로 몰리지 않게 한다
+    let main_is_breaking = PITCH_BREAKING.contains(&main_id.as_str());
+    let mut pool: Vec<&str> = if main_is_breaking {
+        PITCH_OFFSPEED.iter().chain(PITCH_BREAKING.iter()).copied().collect()
+    } else {
+        PITCH_BREAKING.iter().chain(PITCH_OFFSPEED.iter()).copied().collect()
+    };
+    pool.retain(|id| *id != main_id);
+
+    while out.len() < count && !pool.is_empty() {
+        let idx = (rng.next() * pool.len() as f64) as usize % pool.len();
+        let id = pool.remove(idx);
+        // 곁가지 구종은 주무기보다 여물지 않았다
+        let g = (main_grade as i32 - 1 - (rng.next() * 2.0) as i32).clamp(1, 4) as u8;
+        out.push(NpcPitchEntry { id: id.to_string(), grade: g });
+    }
+    out
 }
 
 fn pick<'a>(list: &'a [String], rng: &mut LcgRand) -> &'a str {
@@ -266,14 +358,20 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
             let ovr_p = p.rules.pitching_ovr_min + rng.next() * (p.rules.pitching_ovr_max - p.rules.pitching_ovr_min);
             let ovr_b = p.rules.batting_ovr_min  + rng.next() * (p.rules.batting_ovr_max  - p.rules.batting_ovr_min);
             let abilities = if is_pitcher {
+                let pitching = make_pitching(ovr_p.round(), &mut rng);
+                // 구종은 구속·보직·나이·OVR이 정한다 (Phase 6.5).
+                // 예전엔 아예 없어서 프로 투수가 패스트볼도 없이 시작했다.
+                let pitches = gen_pitches(&position, pitching.velocity, ovr_p, age, &mut rng);
                 GenAbilities {
-                    pitching: Some(make_pitching(ovr_p.round(), &mut rng)),
+                    pitching: Some(pitching),
                     batting:  Some(make_batting((ovr_b * 0.55).round(), &mut rng)),
+                    pitches:  Some(pitches),
                 }
             } else {
                 GenAbilities {
                     pitching: None,
                     batting:  Some(make_batting(ovr_b.round(), &mut rng)),
+                    pitches:  None,
                 }
             };
 
@@ -485,6 +583,51 @@ mod tests {
         let kbl_hi = num("LEAGUE_KBL", "ageMax");
         assert!(after_uv >= kbl_lo && after_uv <= kbl_hi,
             "대졸 다음해 {after_uv}가 프로 범위 {kbl_lo}~{kbl_hi} 밖이다");
+    }
+
+    /// 투수는 구종을 갖고 시작한다 — 예전엔 0종이었다.
+    ///
+    /// 경기 결과에는 영향이 없지만(SimPitcher가 구종을 안 본다) 화면과 성장에 쓰인다.
+    /// 프로 투수가 패스트볼도 없이 시작하는 건 그 자체로 틀렸다.
+    #[test]
+    fn 투수는_구종을_갖고_시작한다() {
+        let npcs = gen("LEAGUE_KBL", &["TEAM_KBL_A", "TEAM_KBL_B"], 30);
+        let pitchers: Vec<_> = npcs.iter().filter(|n| n.player_type == "pitcher").collect();
+        let batters:  Vec<_> = npcs.iter().filter(|n| n.player_type != "pitcher").collect();
+        assert!(!pitchers.is_empty() && !batters.is_empty());
+
+        for p in &pitchers {
+            let ps = p.abilities.pitches.as_ref().expect("투수에 구종이 없다");
+            assert!(!ps.is_empty(), "구종 0종인 투수");
+            assert!(ps.iter().any(|x| x.id == PITCH_FASTBALL),
+                "패스트볼 없는 투수: {:?}", ps.iter().map(|x| &x.id).collect::<Vec<_>>());
+            assert!(ps.iter().all(|x| (1..=5).contains(&x.grade)),
+                "구종 grade가 1~5 밖");
+            // 같은 구종을 두 번 갖지 않는다
+            let mut ids: Vec<&str> = ps.iter().map(|x| x.id.as_str()).collect();
+            ids.sort_unstable();
+            let n = ids.len();
+            ids.dedup();
+            assert_eq!(ids.len(), n, "구종 중복");
+        }
+        // 야수는 구종이 **없어야** 한다 (빈 배열이 아니라 아예 없음)
+        for b in &batters {
+            assert!(b.abilities.pitches.is_none(), "야수에 구종이 붙었다");
+        }
+    }
+
+    /// 생성 구종 수가 성장 로직의 목표치를 넘지 않아야 한다.
+    /// 넘으면 성장 로직(`decide_pitch_training`)이 할 일이 없어진다.
+    #[test]
+    fn 구종_수가_성장_목표를_넘지_않는다() {
+        let npcs = gen("LEAGUE_KBL", &["TEAM_KBL_A"], 30);
+        for p in npcs.iter().filter(|n| n.player_type == "pitcher") {
+            let ps = p.abilities.pitches.as_ref().unwrap();
+            let vel = p.abilities.pitching.as_ref().unwrap().velocity;
+            let target = pitch_target(&p.position, vel);
+            assert!(ps.len() <= target,
+                "{} 구속{vel}: 구종 {}종 > 목표 {target}종", p.position, ps.len());
+        }
     }
 
     /// 야수 8포지션에 백업까지 있어야 한다 (한 명이 다치면 자리가 비지 않게)
