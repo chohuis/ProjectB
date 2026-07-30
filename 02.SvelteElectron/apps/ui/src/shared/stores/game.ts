@@ -37,8 +37,9 @@ import {
   selectDraftCandidates,
   DRAFT_ROUNDS,
   DRAFT_ROUTE_LABELS,
+  KBL_TEAM_IDS,
 } from "../utils/draftSystem";
-import { loadRosterRules } from "../repo/newGameV3";
+import { loadRosterRules, buildSalaryIndex } from "../repo/newGameV3";
 import type {
   DraftSimResult,
   HighSchoolMaster,
@@ -2592,6 +2593,14 @@ function createGameStore() {
         autoLog(`[드래프트오류] generation_rules.json에 draftRules가 없다 — 드래프트를 건너뛴다`);
         return;
       }
+
+      // 지명 순서는 **전 시즌 성적 역순**이다. 예전엔 팀 목록을 아예 안 넘겨
+      // 기본값(알파벳 순)으로 돌았다 — 매년 같은 팀이 1순위를 가져갔다
+      const prevStandings = _getSeasonData?.()?.prevSeasonKblStandings ?? [];
+      const draftOrder = prevStandings.length > 0
+        ? [...prevStandings].sort((a, b) => a.winPct - b.winPct || a.wins - b.wins).map(st => st.teamId)
+        : [...KBL_TEAM_IDS];
+      const teamIndex = Object.fromEntries(buildSalaryIndex(get(masterStore).teams));
       const univGradeMax = rulesFile.rosterRules["LEAGUE_UNIVERSITY"]?.gradeMax ?? 4;
       const { candidates, counts } = await selectDraftCandidates(combined, draftRules, univGradeMax);
       if (candidates.length === 0) return;
@@ -2607,7 +2616,7 @@ function createGameStore() {
         `(고졸 ${counts[0]} · 대졸 ${counts[1]} · 대학재학 ${counts[2]} · 독립 ${counts[3]})`
       );
       const simResult = await runDraftSimulation(
-        candidateNpcs, [], year, (draftRules as { rounds?: number }).rounds ?? DRAFT_ROUNDS,
+        candidateNpcs, [], year, draftRules.rounds ?? DRAFT_ROUNDS, draftOrder,
       );
 
       // 픽별 상세 로그
@@ -2634,6 +2643,11 @@ function createGameStore() {
 
       const updatedNpcs = await applyDraftToNpcs(
         combined, simResult, universityTeamIds, independentTeamIds,
+        {
+          contract: draftRules.contract,
+          rookieToFarm: draftRules.rookieToFarm ?? false,
+          teamIndex,
+        },
       );
       update(st => ({ ...st, npcs: updatedNpcs, pendingDraft: [] }));
 

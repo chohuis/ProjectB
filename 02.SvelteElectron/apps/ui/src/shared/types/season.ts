@@ -121,7 +121,9 @@ export type PendingAction =
       round: number;
       pickNo: number;
       salary: number;
-      durationYears: 3;
+      /** 신인 계약 연수. 규칙 파일(draftRules.contract.durationYears)이 정한다 —
+       *  예전엔 리터럴 `3`이라 규칙을 바꾸면 타입이 먼저 깨졌다 */
+      durationYears: number;
       signingBonus: number;
       altUniversityTeamId?: string;
       altIndependentTeamId?: string;

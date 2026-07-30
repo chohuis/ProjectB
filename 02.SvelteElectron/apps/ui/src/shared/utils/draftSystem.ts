@@ -159,32 +159,39 @@ export async function runDraftSimulation(
 }
 
 // ── 드래프트 결과 NPC 반영 (Rust DLL 위임) ───────────────────
+export interface ApplyDraftOptions {
+  /** 신인 계약 표 (draftRules.contract). 없으면 신인이 연봉 0으로 시작한다 */
+  contract?: import("./draftSalaryTable").DraftContractRules;
+  /** 신인을 2군에서 시작시킬지 (draftRules.rookieToFarm) */
+  rookieToFarm?: boolean;
+  /** 팀 예산 지수 — 계약금에 곱한다 (`buildSalaryIndex`) */
+  teamIndex?: Record<string, number>;
+}
+
 export async function applyDraftToNpcs(
   npcs: NpcSaveState[],
   result: DraftSimResult,
   universityTeamIds: string[] = [],
   independentTeamIds: string[] = [],
+  opts: ApplyDraftOptions = {},
 ): Promise<NpcSaveState[]> {
   const namedFlags = new Map(npcs.map(n => [n.npcId, n.isNamed] as const));
-  const json = await api().npcApplyDraft(JSON.stringify({ npcs, result, universityTeamIds, independentTeamIds }));
+  const json = await api().npcApplyDraft(JSON.stringify({
+    npcs, result, universityTeamIds, independentTeamIds,
+    ...(opts.contract ? { contract: opts.contract } : {}),
+    rookieToFarm: opts.rookieToFarm ?? false,
+    teamIndex: opts.teamIndex ?? {},
+  }));
   const updated = parseResult<NpcSaveState[]>(json).map(n => ({
     ...n,
     isNamed:         n.isNamed         ?? namedFlags.get(n.npcId),
     potentialHidden: n.potentialHidden ?? 75,
   }));
 
-  const pickedMap = new Map(result.picks.map(p => [p.npcId, p]));
-  return updated.map(n => {
-    const pick = pickedMap.get(n.npcId);
-    if (!pick) return n;
-    return {
-      ...n,
-      careerEvents: [
-        ...(n.careerEvents ?? []),
-        { year: result.year, eventType: "draft_picked" as const, toTeamId: pick.teamId },
-      ],
-    };
-  });
+  // 지명 이벤트는 **Rust가 이미 남긴다** (라운드·순번·계약금·떠나온 팀까지).
+  // 여기서 또 push하면 선수마다 draft_picked가 두 번 쌓인다 — 경력 화면에
+  // 같은 지명이 두 줄로 뜬다
+  return updated;
 }
 
 // ── 주인공 드래프트 결과 결정 (Rust DLL 위임) ────────────────

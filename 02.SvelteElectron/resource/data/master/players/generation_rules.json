@@ -272,6 +272,53 @@
       "_universityNote": "1/2/3학년 OVR 하한. 대학 생성 범위가 52~76(전력 보정 ±7)이라 1학년 74는 최상위 극소수다. 4학년은 졸업이라 자동 후보",
       "independent": 68,
       "_independentNote": "독립은 소속 연차와 무관하게 매년 신청할 수 있다. 생성 범위 50~74"
+    },
+    "rookieToFarm": true,
+    "_rookieToFarmNote": "신인은 2군에서 시작한다. 1군 승격은 Phase 7-2의 승강 로직이 담당한다",
+    "contract": {
+      "_note": "KBO 신인 규정: 연봉은 최저연봉으로 균일하고 차등은 계약금이 진다. 예전 TS 표는 1순위 연봉 9000만원(규정 위반)에 하위 지명 1500만원(최저연봉 3000 미달)이었다",
+      "durationYears": 3,
+      "byPick": [
+        {
+          "untilPick": 1,
+          "salary": 3000,
+          "bonus": 50000
+        },
+        {
+          "untilPick": 4,
+          "salary": 3000,
+          "bonus": 30000
+        },
+        {
+          "untilPick": 10,
+          "salary": 3000,
+          "bonus": 20000
+        },
+        {
+          "untilPick": 20,
+          "salary": 3000,
+          "bonus": 12000
+        },
+        {
+          "untilPick": 40,
+          "salary": 3000,
+          "bonus": 7000
+        },
+        {
+          "untilPick": 70,
+          "salary": 3000,
+          "bonus": 4000
+        },
+        {
+          "untilPick": 9999,
+          "salary": 3000,
+          "bonus": 2000
+        }
+      ],
+      "_bonusNote": "단위 만원. 1순위 5억 ~ 하위 라운드 2000만원 — KBO 실제 규모",
+      "teamIndexMin": 0.85,
+      "teamIndexMax": 1.15,
+      "_teamIndexNote": "팀 예산 지수(팀 예산/리그 평균)를 계약금에 곱한다. 연봉은 규정상 균일이라 안 곱한다"
     }
   },
   "_rosterLimitsNote": "rosterSize는 생성 인원, rosterMin/rosterMax는 매 시즌 유지 상한이다. 예전엔 상한이 Rust roster_rule()과 TS ROSTER_RULES에 각각 하드코딩돼 있었고 둘 다 이 파일과 달랐다 (KBL 상한 65 vs 생성 30)."

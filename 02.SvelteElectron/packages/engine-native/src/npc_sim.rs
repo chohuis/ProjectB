@@ -634,7 +634,53 @@ fn normalize_offseason_npcs(
         }
     }
 
+    fill_first_teams(&mut next, limits, logs);
     next
+}
+
+/// 1군이 최소 인원에 미달하면 같은 구단 2군에서 능력치 상위를 끌어올린다.
+///
+/// 신인이 전부 2군에서 시작하면(D-3b) 1군은 은퇴·FA로 **빠지기만 한다.**
+/// 실측에서 1군이 팀당 24명(최소 16)까지 말랐다. 성적 기반 상시 콜업은
+/// Phase 7-2가 담당하고, 여기서는 리그가 성립하는 최소선만 지킨다.
+fn fill_first_teams(
+    npcs: &mut [NpcSaveState],
+    limits: &HashMap<String, RosterLimit>,
+    logs: &mut Vec<String>,
+) {
+    // 1군 팀별 현재 인원
+    let mut count: HashMap<String, usize> = HashMap::new();
+    for n in npcs.iter() {
+        if n.career_status != "active" { continue; }
+        if farm_league(&n.current_league).is_none() { continue; }  // 1군 리그만
+        *count.entry(n.current_team.clone()).or_default() += 1;
+    }
+
+    for (team_id, have) in count {
+        let Some(base) = team_id.strip_suffix("_1") else { continue };
+        // 이 팀이 속한 1군 리그를 인원에서 역추적한다
+        let Some(league_id) = npcs.iter()
+            .find(|n| n.current_team == team_id && n.career_status == "active")
+            .map(|n| n.current_league.clone()) else { continue };
+        let Some((min, _)) = roster_rule(&league_id, limits) else { continue };
+        if have as i32 >= min { continue; }
+
+        let farm_tid = format!("{base}_2");
+        let mut cands: Vec<usize> = npcs.iter().enumerate()
+            .filter(|(_, n)| n.career_status == "active" && n.current_team == farm_tid)
+            .map(|(i, _)| i)
+            .collect();
+        // 능력치 높은 순 — 2군에서 제일 나은 선수가 올라간다
+        cands.sort_by(|&a, &b| npc_core_ovr(&npcs[b])
+            .partial_cmp(&npc_core_ovr(&npcs[a])).unwrap_or(std::cmp::Ordering::Equal));
+
+        let need = (min as usize).saturating_sub(have);
+        for &idx in cands.iter().take(need) {
+            npcs[idx].current_league = league_id.clone();
+            npcs[idx].current_team   = team_id.clone();
+            logs.push(format!("{} → 1군 승격 ({team_id})", npcs[idx].name));
+        }
+    }
 }
 
 // ── 오프시즌 전체 처리 ────────────────────────────────────────────────────────
@@ -1340,20 +1386,43 @@ pub fn apply_draft(params: ApplyDraftParams) -> Vec<NpcSaveState> {
             let from_team   = (!npc.current_team.is_empty()).then(|| npc.current_team.clone());
             let from_league = (npc.current_league != "LEAGUE_DRAFT_POOL")
                 .then(|| npc.current_league.clone());
+
+            // 신인은 2군에서 시작한다. 1군 직행시키면 1군 정원(34)이 매년 11명씩
+            // 밀려 베테랑이 대신 밀려난다 — 1군 승격은 Phase 7-2가 성적으로 판단한다
+            let (team_id, league_id) = match params.rookie_to_farm
+                .then(|| farm_team(&pick.team_id)).flatten()
+            {
+                Some(farm) => (farm, "LEAGUE_KBL_FARM"),
+                None => (pick.team_id.clone(), "LEAGUE_KBL"),
+            };
+
+            // 계약금은 **지명 구단**의 예산 지수로 정한다 (2군 팀이 아니라)
+            let idx = params.team_index.get(&pick.team_id).copied().unwrap_or(1.0);
+            let detail = match params.contract.as_ref() {
+                Some(rules) => {
+                    let (salary, bonus, years) = rules.for_pick(pick.pick, idx);
+                    npc.current_salary = salary;
+                    npc.contract_years = years;
+                    format!("{}라운드 {}번 지명 · 계약금 {}만원", pick.round, pick.pick, bonus)
+                }
+                None => format!("{}라운드 {}번 지명", pick.round, pick.pick),
+            };
+
             // career_history에는 실제 시즌 기록만 → 드래프트 이벤트는 career_events에 기록
             npc.career_events.push(NpcCareerEvent {
                 year: params.result.year,
                 event_type: "draft_picked".into(),
                 from_team_id: from_team,
-                to_team_id: Some(pick.team_id.clone()),
+                to_team_id: Some(team_id.clone()),
                 from_league_id: from_league,
-                to_league_id: Some("LEAGUE_KBL".into()),
-                detail: Some(format!("{}라운드 {}번 지명", pick.round, pick.pick)),
+                to_league_id: Some(league_id.into()),
+                detail: Some(detail),
             });
-            npc.current_league = "LEAGUE_KBL".into();
-            npc.current_team   = pick.team_id.clone();
-            npc.grade          = None;   // 재학생이 지명되면 학적이 끝난다
-            npc.school_id      = String::new();
+            npc.current_league    = league_id.into();
+            npc.current_team      = team_id;
+            npc.grade             = None;   // 재학생이 지명되면 학적이 끝난다
+            npc.school_id         = String::new();
+            npc.pro_service_years = Some(0);
         }
     }
 

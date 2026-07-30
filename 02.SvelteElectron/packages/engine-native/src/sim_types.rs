@@ -259,6 +259,16 @@ pub struct ApplyDraftParams {
     pub university_team_ids: Vec<String>,
     #[serde(default)]
     pub independent_team_ids: Vec<String>,
+    /// 신인 계약 (generation_rules.json draftRules.contract).
+    /// 없으면 계약이 안 붙는다 — 신인이 연봉 0으로 시작한다
+    #[serde(default)]
+    pub contract: Option<crate::draft::DraftContractRules>,
+    /// 신인을 2군에서 시작시킬지 (draftRules.rookieToFarm)
+    #[serde(default)]
+    pub rookie_to_farm: bool,
+    /// 팀 예산 지수 (팀 예산 / 리그 평균). 계약금에 곱한다
+    #[serde(default)]
+    pub team_index: std::collections::HashMap<String, f64>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

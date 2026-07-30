@@ -109,6 +109,16 @@ function generateFreshmen(npcs, year) {
 }
 
 // ── 한 시즌 ────────────────────────────────────────────────────
+/** 팀 예산 지수 — newGameV3.buildSalaryIndex와 같은 규칙 (팀 예산 / 리그 평균) */
+const TEAM_INDEX = (() => {
+  const out = {};
+  const kbl = refs.teams.filter((t) => t.leagueId === "LEAGUE_KBL" && t.id.endsWith("_1"));
+  const budgets = kbl.map((t) => t.history?.budget ?? 0).filter((b) => b > 0);
+  const avg = budgets.reduce((a, b) => a + b, 0) / (budgets.length || 1);
+  for (const t of kbl) out[t.id] = (t.history?.budget ?? 0) > 0 ? t.history.budget / avg : 1.0;
+  return out;
+})();
+
 /** rosterRules → Rust rosterLimits (npcEngine.rosterLimitsFrom와 같은 규칙) */
 const ROSTER_LIMITS = Object.fromEntries(
   Object.entries(gr.rosterRules)
@@ -151,6 +161,20 @@ function runSeason(npcs, year, kblTeams, rounds, excludeSangmu, useEarlyEntry, u
     candidates, namedMetas: [], year, rounds, teamIds: kblTeams,
   });
 
+  if (useLimits) {
+    // 신인 계약이 실제로 붙는지 — 상위/하위 지명을 한 줄씩 남긴다
+    const first = sim.picks[0], last = sim.picks[sim.picks.length - 1];
+    if (first && year === START_YEAR) {
+      const c = gr.draftRules.contract;
+      const pick = (p) => {
+        const row = c.byPick.find((r) => p.pick <= r.untilPick) ?? c.byPick[c.byPick.length - 1];
+        const idx = Math.min(c.teamIndexMax, Math.max(c.teamIndexMin, TEAM_INDEX[p.teamId] ?? 1));
+        return `${p.round}R-${p.pick} 연봉 ${row.salary}만 · 계약금 ${Math.round(row.bonus * idx / 100) * 100}만`;
+      };
+      console.log(`  신인 계약 표본: ${pick(first)} / ${pick(last)}`);
+    }
+  }
+
   // draftDestinationTeams()와 같은 규칙. excludeSangmu=false면 D-1 이전 동작
   // (상무가 독립리그 소속이라 리그로만 거르면 그대로 들어간다)
   const keep = (t) => excludeSangmu ? t.id !== SANGMU_TEAM_ID : t.id !== "TEAM_SPORTS_UNIT";
@@ -159,6 +183,11 @@ function runSeason(npcs, year, kblTeams, rounds, excludeSangmu, useEarlyEntry, u
 
   const after = call("applyDraftNative", {
     npcs: aged, result: sim, universityTeamIds: univIds, independentTeamIds: indIds,
+    ...(useLimits ? {
+      contract: gr.draftRules.contract,
+      rookieToFarm: gr.draftRules.rookieToFarm,
+      teamIndex: TEAM_INDEX,
+    } : {}),
   });
 
   // 다음 시즌 W1 — 고교 신입생 입학

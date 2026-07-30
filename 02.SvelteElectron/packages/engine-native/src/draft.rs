@@ -38,6 +38,48 @@ pub struct EarlyEntryRules {
     pub independent: f64,
 }
 
+/// 지명 순번 구간별 계약. `until_pick` 이하면 이 줄이 적용된다
+#[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PickContract {
+    pub until_pick: i32,
+    pub salary: i64,
+    pub bonus: i64,
+}
+
+/// 신인 계약 규칙.
+///
+/// KBO 신인은 **연봉이 최저연봉으로 균일하고 차등은 계약금이 진다.**
+/// 예전 TS 표는 1순위 연봉 9,000만원(규정 위반)에 하위 지명 1,500만원
+/// (최저연봉 3,000만원 미달)이었다 — 양쪽으로 다 틀렸다.
+#[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DraftContractRules {
+    pub duration_years: i32,
+    pub by_pick: Vec<PickContract>,
+    #[serde(default = "default_index_min")]
+    pub team_index_min: f64,
+    #[serde(default = "default_index_max")]
+    pub team_index_max: f64,
+}
+
+fn default_index_min() -> f64 { 0.85 }
+fn default_index_max() -> f64 { 1.15 }
+
+impl DraftContractRules {
+    /// (연봉, 계약금, 계약연수). 팀 예산 지수는 **계약금에만** 곱한다 —
+    /// 연봉은 규정상 균일이라 팀 사정이 못 건드린다
+    pub fn for_pick(&self, pick_no: i32, team_index: f64) -> (i64, i64, i32) {
+        let row = self.by_pick.iter()
+            .find(|r| pick_no <= r.until_pick)
+            .or_else(|| self.by_pick.last());
+        let Some(row) = row else { return (0, 0, self.duration_years) };
+        let idx = team_index.clamp(self.team_index_min, self.team_index_max);
+        let bonus = ((row.bonus as f64 * idx) / 100.0).round() as i64 * 100;
+        (row.salary, bonus, self.duration_years)
+    }
+}
+
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct DraftRules {
@@ -46,6 +88,11 @@ pub struct DraftRules {
     pub age_min: i32,
     pub age_max: i32,
     pub early_entry: EarlyEntryRules,
+    /// 신인은 2군에서 시작한다. 1군 승격은 Phase 7-2 승강 로직
+    #[serde(default)]
+    pub rookie_to_farm: bool,
+    #[serde(default)]
+    pub contract: Option<DraftContractRules>,
 }
 
 // ── 후보 ────────────────────────────────────────────────────────────────────
@@ -276,5 +323,61 @@ mod tests {
     #[test]
     fn 라운드_수가_규칙에서_온다() {
         assert!(rules().rounds > 0);
+    }
+
+    fn contract() -> DraftContractRules {
+        rules().contract.expect("draftRules.contract 없음")
+    }
+
+    #[test]
+    fn 신인_연봉이_최저연봉_아래로_안_내려간다() {
+        // 예전 TS 표는 하위 지명이 1,500만원이라 KBL 최저연봉 3,000만원 미달이었다
+        let src = std::fs::read_to_string(concat!(
+            env!("CARGO_MANIFEST_DIR"), "/../../resource/data/master/players/generation_rules.json"
+        )).unwrap();
+        let v: serde_json::Value = serde_json::from_str(&src).unwrap();
+        let min_salary = v["salaryRules"]["minSalary"]["LEAGUE_KBL"].as_i64()
+            .expect("minSalary.LEAGUE_KBL 없음");
+
+        let c = contract();
+        for pick in [1, 5, 30, 80, 110] {
+            let (salary, _, _) = c.for_pick(pick, 1.0);
+            assert!(salary >= min_salary, "{pick}순위 연봉 {salary} < 최저 {min_salary}");
+        }
+    }
+
+    #[test]
+    fn 신인_연봉은_균일하고_차등은_계약금이_진다() {
+        // KBO 신인 규정이 그렇다. 연봉으로 차등을 주면 규정 위반이 된다
+        let c = contract();
+        let (s1, b1, _) = c.for_pick(1, 1.0);
+        let (s_last, b_last, _) = c.for_pick(110, 1.0);
+        assert_eq!(s1, s_last, "신인 연봉은 순번과 무관해야 한다");
+        assert!(b1 > b_last * 5, "계약금이 순번을 반영해야 한다: {b1} vs {b_last}");
+    }
+
+    #[test]
+    fn 계약금이_순번을_따라_단조감소한다() {
+        let c = contract();
+        let mut prev = i64::MAX;
+        for pick in 1..=120 {
+            let (_, bonus, _) = c.for_pick(pick, 1.0);
+            assert!(bonus <= prev, "{pick}순위에서 계약금이 다시 올랐다: {prev} → {bonus}");
+            prev = bonus;
+        }
+    }
+
+    #[test]
+    fn 팀_예산이_계약금만_움직인다() {
+        let c = contract();
+        let (rich_s, rich_b, _) = c.for_pick(1, 5.0);   // clamp 위로
+        let (poor_s, poor_b, _) = c.for_pick(1, 0.1);   // clamp 아래로
+        assert_eq!(rich_s, poor_s, "연봉은 팀 사정을 안 탄다");
+        assert!(rich_b > poor_b, "계약금은 팀 예산을 반영한다");
+    }
+
+    #[test]
+    fn 신인은_2군에서_시작한다() {
+        assert!(rules().rookie_to_farm, "1군 직행이면 1군 정원이 매년 11명씩 밀린다");
     }
 }
