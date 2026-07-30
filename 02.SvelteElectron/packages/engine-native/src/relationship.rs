@@ -308,6 +308,11 @@ pub struct WeeklyRelationParams {
     pub rules: RelationRules,
     pub rows: Vec<RelationRow>,
     pub ctx: WeeklyContext,
+    /// 코치 `communication` 계수 (1.0 = 중립). 관계가 쌓이는 속도를 민다.
+    /// **양수 변화에만 곱한다** — 소통 좋은 코치진이라고 미움도 빨리 쌓이면
+    /// 방향이 뒤집힌다. 스태프 15종 배선(§7-5 F-1)
+    #[serde(default)]
+    pub relation_mod: Option<f64>,
 }
 
 #[derive(Debug, Serialize)]
@@ -410,6 +415,9 @@ pub fn weekly_relations(p: WeeklyRelationParams) -> WeeklyRelationResult {
         }
 
         if d == 0.0 { continue; }
+        if d > 0.0 {
+            d *= p.relation_mod.unwrap_or(1.0).clamp(0.75, 1.30);
+        }
         deltas.push(make_delta(&row.person_id, row.value, row.value + d));
     }
 
@@ -730,6 +738,7 @@ mod tests {
                 training_done: true, training_area: "투수".to_string(),
                 ..Default::default()
             },
+            relation_mod: None,
         });
         assert_eq!(out.deltas.len(), 1, "담당 아닌 코치까지 움직였다");
         assert_eq!(out.deltas[0].person_id, "COA_P");
@@ -748,6 +757,7 @@ mod tests {
             world_seed: 1.0, week: 5, rules: r,
             rows: vec![apart, ended, row("MGR_3", "manager", 40.0)],
             ctx: WeeklyContext { pitched: true, won: true, era: 1.5, ..Default::default() },
+            relation_mod: None,
         });
         assert_eq!(out.deltas.len(), 1, "together가 아닌 상대가 움직였다");
         assert_eq!(out.deltas[0].person_id, "MGR_3");
@@ -820,6 +830,7 @@ mod tests {
                     training_done: true,
                     ..Default::default()
                 },
+                relation_mod: None,
             });
             if let Some(d) = out.deltas.first() { value = d.value as f64; }
         }
@@ -852,6 +863,7 @@ mod tests {
                     training_skipped: true,
                     ..Default::default()
                 },
+                relation_mod: None,
             });
             if let Some(d) = out.deltas.first() { value = d.value as f64; }
         }
@@ -875,6 +887,7 @@ mod tests {
                 pitched: true, won: true, era: 1.0,
                 faced_rivals: ids, ..Default::default()
             },
+            relation_mod: None,
         });
         let pos = out.deltas.iter().filter(|d| d.delta > 0).count();
         let neg = out.deltas.iter().filter(|d| d.delta < 0).count();
@@ -894,6 +907,7 @@ mod tests {
                     pitched: true, won: true, era: 0.5, complete_shutout: true,
                     ..Default::default()
                 },
+                relation_mod: None,
             });
             if let Some(d) = out.deltas.first() { value = d.value as f64; }
         }

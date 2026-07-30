@@ -287,6 +287,11 @@ pub struct CalcOfferedSalaryForProtagonistParams {
     pub league_id: String,
     pub current_salary: Option<f64>,
     pub stats: Option<SeasonStats>,
+    /// 구단주 `budgetSupport` 계수 (1.0 = 중립). 지갑을 여는 구단주면 더 준다.
+    /// **시장가에만 곱한다** — 현재 연봉은 이미 계약된 값이라 구단주가 못 바꾼다.
+    /// 스태프 15종 배선(§7-5 F-1)
+    #[serde(default)]
+    pub budget_mod: Option<f64>,
 }
 
 pub fn calc_offered_salary_for_protagonist(params: CalcOfferedSalaryForProtagonistParams) -> i64 {
@@ -298,6 +303,7 @@ pub fn calc_offered_salary_for_protagonist(params: CalcOfferedSalaryForProtagoni
     let market = {
         let base = 1800.0 + (params.pitching_ovr - 50.0).max(0.0) * 220.0 + params.fame * 28.0;
         base * league_salary_mult(&params.league_id)
+            * params.budget_mod.unwrap_or(1.0).clamp(0.80, 1.25)
     };
     let current = params.current_salary.unwrap_or(market);
     let perf_adj = (rating - 50.0) * 0.012;

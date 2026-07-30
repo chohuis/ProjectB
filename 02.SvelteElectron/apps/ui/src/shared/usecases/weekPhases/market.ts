@@ -5,6 +5,7 @@ import { masterStore } from "../../stores/master";
 import { autoLog, logEvent, logVerify, type PlayerEventEntry } from "../../stores/autoAdvance";
 import { getFaThreshold } from "../../utils/faEngine";
 import { loadRosterRules } from "../../repo/newGameV3";
+import { staffModsOf } from "../../utils/staffEffects";
 import type { PlayerSeasonStats } from "../../types/save";
 import { MONTH_STARTS_1 } from "./growth";
 
@@ -667,13 +668,16 @@ export async function processProTeamCallupCalldown(
     const { active, farm } = getTeamEntityRefs(
       teamId1, teamId2, m.entities, get(npcLiveStatsStore), namedMap, leagueStats);
     const teamShort = teamId1.replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "");
+    // 감독 승부처 판단이 "최근 성적을 얼마나 정확히 읽는가"를 정한다 (§7-5 F-1).
+    // 낮은 감독은 이름값(OVR)만 보고 올린다
+    const callupMod = staffModsOf(teamId1, m.entities).callup;
 
     // 콜업
     if (farm.length > 0 && active.length > 0) {
       const callupRes = JSON.parse(
         await window.projectB!.evalCallupCandidatesNative(JSON.stringify({
           teamProfile: profile, farmPlayers: farm, activePlayers: active,
-          injuredPlayerIds: injuredIds, currentMonth, promotionRules,
+          injuredPlayerIds: injuredIds, currentMonth, promotionRules, callupMod,
         }))
       ) as { candidates: Array<{ playerId: string; replacesPlayerId: string; reason: string }> };
 
@@ -704,7 +708,7 @@ export async function processProTeamCallupCalldown(
       const calldownRes = JSON.parse(
         await window.projectB!.evalCalldownCandidatesNative(JSON.stringify({
           teamProfile: profile, activePlayers: active,
-          currentRosterSize: active.length, maxRosterSize, promotionRules,
+          currentRosterSize: active.length, maxRosterSize, promotionRules, callupMod,
         }))
       ) as { candidates: Array<{ playerId: string }> };
 

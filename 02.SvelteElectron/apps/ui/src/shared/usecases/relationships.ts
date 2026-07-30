@@ -239,6 +239,8 @@ export async function applyWeeklyRelations(p: {
   week: number;
   season: number;
   ctx: WeeklyRelationContext;
+  /** 코치 소통력 계수 (§7-5 F-1). 없으면 중립 */
+  relationMod?: number;
 }): Promise<RelationDelta[]> {
   const rules = await loadRelationRules();
   const rows = await slotRepo.getRelationships(p.slotId, { contact: "together" });
@@ -293,6 +295,7 @@ export async function applyWeeklyRelations(p: {
     rules,
     rows: toEngineRows(rows, specialtyOf),
     ctx: p.ctx,
+    relationMod: p.relationMod ?? 1.0,
   });
   const deltas = res?.deltas ?? [];
   if (deltas.length === 0) return [];

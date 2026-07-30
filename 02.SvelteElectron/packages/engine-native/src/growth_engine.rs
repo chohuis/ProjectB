@@ -96,6 +96,14 @@ pub struct GameGrowthParams {
     pub won: bool,
     pub score_diff: i32,
     pub strikeouts: Option<i32>,
+    /// 감독 `motivator` 계수 (1.0 = 중립). 패배의 충격을 줄이고 승리를 키운다.
+    /// 스태프 15종 배선(§7-5 F-1) — 계수 정본은 `staff_rules.json [effects]`
+    #[serde(default)]
+    pub morale_mod: Option<f64>,
+    /// 구단주 `prInfluence` 계수 (1.0 = 중립). 명성 증감폭을 민다 —
+    /// 홍보력 있는 구단에서 뛰면 같은 활약이 더 알려진다
+    #[serde(default)]
+    pub fame_mod: Option<f64>,
 }
 
 #[derive(Debug, Serialize)]
@@ -620,14 +628,23 @@ pub fn calc_game_growth(params: GameGrowthParams) -> GrowthResult {
     if !p_logs.is_empty() { pitching.ovr = calc_pitching_ovr(&pitching); }
     if !b_logs.is_empty() { batting.ovr  = calc_batting_ovr(&batting); }
 
-    let morale_delta = if params.won { 6.0 } else if params.score_diff >= 5 { -15.0 } else { -8.0 };
-    let result_log = if params.won { "경기 승리 — 사기 +6".to_string() }
-                     else if params.score_diff >= 5 { "대패 — 사기 -15".to_string() }
-                     else { "경기 패배 — 사기 -8".to_string() };
+    let base_morale = if params.won { 6.0 } else if params.score_diff >= 5 { -15.0 } else { -8.0 };
+    // 좋은 감독은 승리를 키우고 패배의 충격을 줄인다 — 그래서 음수엔 역수를 쓴다.
+    // 1.075배 감독이면 승리 +6.5 / 패배 -7.4
+    let mm = params.morale_mod.unwrap_or(1.0).clamp(0.75, 1.30);
+    let morale_delta = base_morale * if base_morale < 0.0 { 2.0 - mm } else { mm };
+    let result_log = format!(
+        "{} — 사기 {}{}",
+        if params.won { "경기 승리" } else if params.score_diff >= 5 { "대패" } else { "경기 패배" },
+        if morale_delta >= 0.0 { "+" } else { "" },
+        morale_delta.round() as i32,
+    );
 
     let strikeouts = params.strikeouts.unwrap_or(0);
     let fame_base = if params.won { 2.0 } else if params.score_diff >= 5 { -1.0 } else { 0.0 };
-    let fame_delta = (fame_base + strikeouts as f64 * 0.3).round() as i32;
+    // 홍보력 있는 구단이면 같은 활약이 더 알려진다. 명성은 스폰서 수입의 입력이다
+    let fm = params.fame_mod.unwrap_or(1.0).clamp(0.75, 1.35);
+    let fame_delta = ((fame_base + strikeouts as f64 * 0.3) * fm).round() as i32;
 
     let growth_logs: Vec<String> = p_logs.into_iter().chain(b_logs).collect();
     let mut all_logs = vec![result_log];

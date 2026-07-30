@@ -158,3 +158,57 @@ export function staffStatsOf(
 export function neutralStaffStats(): TeamStaffStats {
   return neutralStats();
 }
+
+// ── 소비처가 받는 배수 15종 ─────────────────────────────────────
+//
+// 각 화면·유스케이스가 "어느 능력치가 내 축이지"를 매번 고르면 또 흩어진다.
+// 배선표를 여기 한 번만 적고 소비처는 이름으로 가져간다.
+
+export interface StaffMods {
+  /** 사기 변동폭 — 감독 motivator */
+  morale: number;
+  /** 명성 증감폭 — 구단주 prInfluence. 스폰서 수입의 입력이다 */
+  fame: number;
+  /** 성장률(developmentRate) — 코치 analysis */
+  devRate: number;
+  /** 훈련 효율 — 코치 teaching (기존 배선과 축이 같다) */
+  training: number;
+  /** 시설 효율 · 부상 회복 — 구단주 facilityInvestment */
+  facility: number;
+  /** 부상 발생 억제 — 코치 discipline. **1보다 크면 덜 다친다** */
+  injuryPrevention: number;
+  /** 관계도 형성 속도 — 코치 communication */
+  relation: number;
+  /** 슬럼프 저항 — 코치 leadership. 1보다 크면 슬럼프에 늦게 빠지고 덜 깎인다 */
+  slump: number;
+  /** FA 오퍼·연봉 상한 — 구단주 budgetSupport */
+  budget: number;
+  /** 콜업/강등 판단 정확도 — 감독 clutchDecision */
+  callup: number;
+}
+
+export function staffModsOf(
+  teamId: string,
+  entities: readonly EntityRow[],
+  opts: StaffLookupOptions = {},
+): StaffMods {
+  const s = staffStatsOf(teamId, entities, opts);
+  return {
+    morale:           factorOf("motivator", s.motivator),
+    fame:             factorOf("prInfluence", s.prInfluence),
+    devRate:          factorOf("analysis", s.analysis),
+    training:         factorOf("teaching", s.teaching),
+    facility:         factorOf("facilityInvestment", s.facilityInvestment),
+    injuryPrevention: factorOf("discipline", s.discipline),
+    relation:         factorOf("communication", s.communication),
+    slump:            factorOf("leadership", s.leadership),
+    budget:           factorOf("budgetSupport", s.budgetSupport),
+    callup:           factorOf("clutchDecision", s.clutchDecision),
+  };
+}
+
+/** 스태프가 없는 무대(학생·독립·군)에서 쓰는 중립값 */
+export const NEUTRAL_MODS: StaffMods = {
+  morale: 1, fame: 1, devRate: 1, training: 1, facility: 1,
+  injuryPrevention: 1, relation: 1, slump: 1, budget: 1, callup: 1,
+};

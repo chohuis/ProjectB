@@ -16,7 +16,7 @@ import { runNationalTeamWeek } from "./nationalTeam";
 import { calcOfferedSalaryForProtagonist, calcSeasonRating } from "../utils/salaryEngine";
 import { isFaEligible, getFaThreshold } from "../utils/faEngine";
 import { facilityTierOf } from "../utils/ids";
-import { staffStatsOf, factorOf } from "../utils/staffEffects";
+import { staffModsOf } from "../utils/staffEffects";
 import type { MatchResult, PendingAction, PlayerCondition, ScheduleEntry, WeekAdvanceResult } from "../types/season";
 import type { EventContext } from "../types/event";
 import type { MessageItem } from "../types/main";
@@ -211,12 +211,17 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   const coachEffBonus  = Math.max(-0.15, Math.min(0.25,
     (coachTeaching - 50) * 0.004 + relEffects.trainingBonus));
   const teamRef        = m.teams.find((t) => t.id === g.protagonist.teamId);
-  // 주인공 소속팀 스태프 15종 — 시설·성장·부상·명성이 전부 여기서 갈린다
-  const myStaff        = staffStatsOf(g.protagonist.teamId ?? "", m.entities, { specialty: "투수" });
+  const myMods             = staffModsOf(g.protagonist.teamId ?? "", m.entities, { specialty: "투수" });
+  // 통솔력 있는 코치진이면 슬럼프에 늦게 빠지고 덜 깎인다 (§7-5 F-1).
+  // 1.07배면 임계 3주 → 4주 · 페널티 0.70 → 0.72
+  const slumpResist        = myMods.slump;
   const prevLowMoraleWeeks = g.protagonist.consecutiveLowMoraleWeeks ?? 0;
   const isLowMorale        = g.protagonist.morale < 35;
   const newLowMoraleWeeks  = isLowMorale ? prevLowMoraleWeeks + 1 : 0;
-  const slumpPenalty       = newLowMoraleWeeks >= 3 ? 0.70 : 1.0;
+  const slumpThreshold     = Math.max(2, Math.round(3 * slumpResist));
+  const slumpPenalty       = newLowMoraleWeeks >= slumpThreshold
+    ? Math.min(0.95, 1 - (1 - 0.70) / slumpResist)
+    : 1.0;
   const alreadyInjured     = !!g.protagonist.injury;
 
   // 훈련 강도 계산: TRN_RECOVERY / TRN_MENTAL_P / TRN_MENTAL_B 제외한 슬롯 비율
@@ -236,7 +241,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
         careerStage: g.protagonist.careerStage,
         // refs의 국내 팀엔 `tier`가 없다 — 리그에서 파생한다 (ids.ts 정본)
         teamTier: teamRef ? facilityTierOf(teamRef.leagueId) : null,
-        facilityInvestment: factorOf("facilityInvestment", myStaff.facilityInvestment),
+        facilityInvestment: myMods.facility,
       })
     ),
     window.projectB!.weekCalcInjury(JSON.stringify({
@@ -296,7 +301,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   const finalEffMod = studyResult.efficiencyMod * (1 + majorEffBonus + coachEffBonus)
     * facilityEffMod * slumpPenalty * effectiveInjuryEffMod;
 
-  const growth = await calcTrainingGrowth(g.protagonist, g.trainingPlan, finalEffMod);
+  const growth = await calcTrainingGrowth(g.protagonist, g.trainingPlan, finalEffMod, myMods);
 
   if (newLowMoraleWeeks >= 3) growth.logs.push(`[슬럼프] 사기 저하 ${newLowMoraleWeeks}주 연속 — 훈련 효율 -30%`);
   if (coachEffBonus > 0.01) growth.logs.push(`[코치] 투수 코치 지도 보너스 +${Math.round(coachEffBonus * 100)}%`);
@@ -715,6 +720,9 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
         (a) => a.type === "salaryNegotiation" || a.type === "faMarket" || a.type === "optionClause"
       );
       const hasPendingNext = !!gOff.protagonist.pendingNextContract;
+      // 지갑을 여는 구단주면 오퍼가 후하다 (§7-5 F-1). 주인공 소속팀 기준
+      const offSeasonBudgetMod = (): number =>
+        staffModsOf(gOff.protagonist.teamId ?? "", m.entities).budget;
 
       // applySeasonContractProgress()는 W52(SeasonEndModal)에서 호출 — 여기서는 미리 체크만
       // 이번 시즌 종료 후 계약이 만료되는지 확인 (remainingYears === 1 → 감산 후 0)
@@ -723,7 +731,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
 
         if (contract.remainingYears === 1) {
           // 이번 시즌 마지막 계약 연도 — 만료 예정
-          const offeredSalary = await calcOfferedSalaryForProtagonist(gOff.protagonist, myStats);
+          const offeredSalary = await calcOfferedSalaryForProtagonist(gOff.protagonist, myStats, offSeasonBudgetMod());
           if (contract.teamOptionYears > 0) {
             const seasonRating = await calcSeasonRating(myStats);
             const profile = getTeamProfile(gOff.protagonist.teamId, gOff, m) ?? DEFAULT_TEAM_PROFILE;
@@ -755,7 +763,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
           if (isFaEligible(gOff.protagonist, gOff.schoolState.attendsUniversity)) {
             seasonStore.pushPendingAction({ type: "faMarket" });
           } else {
-            const offeredSalary = await calcOfferedSalaryForProtagonist(gOff.protagonist, myStats);
+            const offeredSalary = await calcOfferedSalaryForProtagonist(gOff.protagonist, myStats, offSeasonBudgetMod());
             seasonStore.pushPendingAction({
               type: "salaryNegotiation",
               teamId: gOff.protagonist.teamId,
@@ -776,7 +784,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
         if (isFaEligible(gOff.protagonist, gOff.schoolState.attendsUniversity)) {
           seasonStore.pushPendingAction({ type: "faMarket" });
         } else {
-          const offeredSalary = await calcOfferedSalaryForProtagonist(gOff.protagonist, myStats);
+          const offeredSalary = await calcOfferedSalaryForProtagonist(gOff.protagonist, myStats, offSeasonBudgetMod());
           seasonStore.pushPendingAction({
             type: "salaryNegotiation",
             teamId: gOff.protagonist.teamId,
@@ -895,6 +903,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
             trainingArea,
             facedRivals,
           },
+          relationMod: myMods.relation,
         });
 
         // 라벨이 바뀐 것만 알린다 — 값은 플레이어에게 보여주지 않는다

@@ -1,4 +1,5 @@
 import type { ProtagonistSave, TrainingPlanState } from "../types/save";
+import { NEUTRAL_MODS, type StaffMods } from "./staffEffects";
 
 export interface GrowthResult {
   protagonistPatch: Partial<ProtagonistSave>;
@@ -10,13 +11,16 @@ export async function calcTrainingGrowth(
   protagonist: ProtagonistSave,
   plan: TrainingPlanState,
   efficiencyMod = 1.0,
+  /** 소속팀 스태프 배수 (§7-5 F-1) */
+  mods: StaffMods = NEUTRAL_MODS,
 ): Promise<GrowthResult> {
   const params = {
     protagonist: {
       age:              protagonist.age,
       condition:        protagonist.condition,
       fatigue:          protagonist.fatigue,
-      developmentRate:  protagonist.developmentRate,
+      // 코치 분석력이 성장률을 민다 — 지도력(훈련 효율)과 다른 축이다
+      developmentRate:  protagonist.developmentRate * mods.devRate,
       diligence:        protagonist.diligence,
       potentialHidden:  protagonist.potentialHidden,
       pitching:         protagonist.pitching,
@@ -56,13 +60,15 @@ export async function calcGameGrowth(
   won: boolean,
   scoreDiff: number,
   strikeouts = 0,
+  /** 소속팀 스태프 배수 (§7-5 F-1). 스태프 없는 무대는 NEUTRAL_MODS */
+  mods: StaffMods = NEUTRAL_MODS,
 ): Promise<GrowthResult> {
   const params = {
     protagonist: {
       age:             protagonist.age,
       condition:       protagonist.condition,
       fatigue:         protagonist.fatigue,
-      developmentRate: protagonist.developmentRate,
+      developmentRate: protagonist.developmentRate * mods.devRate,
       diligence:       protagonist.diligence,
       potentialHidden: protagonist.potentialHidden,
       pitching:        protagonist.pitching,
@@ -75,6 +81,8 @@ export async function calcGameGrowth(
     won,
     scoreDiff,
     strikeouts,
+    moraleMod: mods.morale,
+    fameMod:   mods.fame,
   };
 
   const raw = JSON.parse(
