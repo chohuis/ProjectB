@@ -44,6 +44,9 @@ feat/172teams           Phase 5 작업 브랜치 — main에 병합됨, 삭제�
 
 6C가 끝나면 `feat/people` → `main` 병합.
 
+> **남은 작업 전량은 [BACKLOG.md](BACKLOG.md)에 있다.** 이 문서는 "지금 당장",
+> 그 문서는 "끝까지 뭐가 남았나"다. 아래 미결 표는 그중 당장 걸리는 것만 추린 것.
+
 ## 미결 (범위 밖이라 손대지 않은 것)
 
 | 항목 | 상태 |
@@ -83,6 +86,7 @@ npx svelte-check --threshold error                  # 기존 결함 다수 — m
 | 문서 | 내용 |
 |---|---|
 | [DESIGN.md](../DESIGN.md) | 통합 기획서 v2. **§10 R6**이 남은 구현 로드맵 |
+| [docs/BACKLOG.md](BACKLOG.md) | **남은 작업 전량** — Phase 7~9 분해 · 버그 B1~B11 실사 · 상시 부채 |
 | [docs/design/_ledger.md](design/_ledger.md) | 판정 이력 — 기획 통합 22건 + P5-1~P5-12 + P6-1~P6-10.<br>**"버린 안과 그 이유"가 같이 적혀 있다** |
 | [docs/design/people.md](design/people.md) | 인물 시스템 설계 (Phase 6) |
 | [docs/DATA_POLICY.md](DATA_POLICY.md) | 데이터 3분류 · 마이그레이션 규칙 · 코드 배치 규칙 |
