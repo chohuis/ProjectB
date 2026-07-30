@@ -1960,7 +1960,9 @@ function createGameStore() {
           isKoreanEntity(e) &&
           e.teamId && e.teamId !== "" &&
           !dischargedIds.has(e.id) &&
-          e.age >= 18 && e.age <= 27
+          // 한국 나이 기준 고졸 20세부터 (generation_rules.json ageBase 16 → 고3 = 19세).
+          // 예전엔 18이었는데 그건 고3 나이라 재학생이 후보에 섞였다.
+          e.age >= 20 && e.age <= 29
         ).map(e => {
           const live = npcLiveStats[e.id];
           const dp = e.details?.player;

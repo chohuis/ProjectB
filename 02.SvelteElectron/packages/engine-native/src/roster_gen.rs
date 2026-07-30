@@ -438,6 +438,55 @@ mod tests {
         assert!(farm[0].npc_id.starts_with("PLY_KF"), "팜 접두사가 틀렸다: {}", farm[0].npc_id);
     }
 
+    /// **한국 나이 체계 — 고1이 17세다.**
+    ///
+    /// 이 테스트가 없어서 두 가지가 동시에 어긋나 있었다:
+    ///  1. NPC 고1이 16세인데 **주인공은 17세로 시작**했다 (같은 학년, 다른 나이)
+    ///  2. 고3이 18세라 졸업하면 19세인데 프로 최소 나이가 20세 —
+    ///     **진학·입단 사이에 1년 구멍**이 있었다
+    ///
+    /// 실데이터(generation_rules.json)로 검사한다 — 인라인 규칙으로는 실제 게임과
+    /// 달라질 수 있다.
+    #[test]
+    fn 나이_체계가_진로를_끊지_않는다() {
+        let src = std::fs::read_to_string(concat!(
+            env!("CARGO_MANIFEST_DIR"), "/../../resource/data/master/players/generation_rules.json"
+        )).expect("generation_rules.json 없음");
+        let v: serde_json::Value = serde_json::from_str(&src).expect("파싱 실패");
+        let r = &v["rosterRules"];
+        let num = |lid: &str, k: &str| r[lid][k].as_i64().expect(&format!("{lid}.{k} 없음"));
+
+        // 학년제: age = ageBase + grade
+        let hs_base = num("LEAGUE_HIGHSCHOOL", "ageBase");
+        let hs_max_grade = num("LEAGUE_HIGHSCHOOL", "gradeMax");
+        let uv_base = num("LEAGUE_UNIVERSITY", "ageBase");
+        let uv_max_grade = num("LEAGUE_UNIVERSITY", "gradeMax");
+
+        assert_eq!(hs_base + 1, 17, "고1이 17세가 아니다 (ageBase {hs_base})");
+        assert_eq!(uv_base + 1, 20, "대1이 20세가 아니다 (ageBase {uv_base})");
+
+        let hs_grad = hs_base + hs_max_grade;      // 고3 나이
+        let uv_grad = uv_base + uv_max_grade;      // 대4 나이
+        assert_eq!(hs_grad, 19, "고3이 19세가 아니다");
+        assert_eq!(uv_grad, 23, "대4가 23세가 아니다");
+
+        // 졸업 다음 해 나이로 각 진로에 들어갈 수 있어야 한다 — 여기가 구멍이었다
+        let after_hs = hs_grad + 1;                // 20
+        for lid in ["LEAGUE_INDEPENDENT", "LEAGUE_KBL", "LEAGUE_KBL_FARM"] {
+            let lo = num(lid, "ageMin");
+            assert!(after_hs >= lo,
+                "{lid} 최소 나이 {lo} > 고졸 다음해 {after_hs} — 진로에 {}년 구멍", lo - after_hs);
+        }
+        assert_eq!(after_hs, uv_base + 1, "고졸 다음해와 대1 나이가 다르다");
+
+        // 대졸도 프로 나이 범위 안이어야 한다
+        let after_uv = uv_grad + 1;                // 24
+        let kbl_lo = num("LEAGUE_KBL", "ageMin");
+        let kbl_hi = num("LEAGUE_KBL", "ageMax");
+        assert!(after_uv >= kbl_lo && after_uv <= kbl_hi,
+            "대졸 다음해 {after_uv}가 프로 범위 {kbl_lo}~{kbl_hi} 밖이다");
+    }
+
     /// 야수 8포지션에 백업까지 있어야 한다 (한 명이 다치면 자리가 비지 않게)
     #[test]
     fn 야수_8포지션에_백업이_있다() {

@@ -20,7 +20,7 @@ const hsParams = {
     rosterSize: 25,
     pitchingOvrMin: 40, pitchingOvrMax: 72, battingOvrMin: 40, battingOvrMax: 72,
     devRateMin: 45, devRateMax: 75,
-    gradeMax: 3, ageBase: 16,
+    gradeMax: 3, ageBase: 16,   // 한국 나이 — 고1 = 17세
   },
 };
 const hs = gen(hsParams);
@@ -97,7 +97,7 @@ console.log("\n포지션 깊이 (국내 전 팀)");
 }
 const grades = [1, 2, 3].map(g => team0.filter(n => n.grade === g).length);
 check("고교: 학년 분포 균등(±2)", Math.max(...grades) - Math.min(...grades) <= 2, JSON.stringify(grades));
-check("고교: 나이 = 16+학년", team0.every(n => n.age === 16 + n.grade));
+check("고교: 나이 = ageBase+학년 (고1 = 17세)", team0.every(n => n.age === 16 + n.grade));
 check("고교: 졸업연도 정합", team0.every(n => n.graduationYear === 2026 + (3 - n.grade)));
 
 const pOvrs = hs.npcs.filter(n => n.playerType === "pitcher").map(n => n.abilities.pitching.ovr);

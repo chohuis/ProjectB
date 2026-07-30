@@ -77,7 +77,7 @@
       "devRateMin": 45,
       "devRateMax": 75,
       "gradeMax": 3,
-      "ageBase": 15
+      "ageBase": 16
     },
     "LEAGUE_UNIVERSITY": {
       "rosterSize": 32,
@@ -88,7 +88,7 @@
       "devRateMin": 45,
       "devRateMax": 72,
       "gradeMax": 4,
-      "ageBase": 18
+      "ageBase": 19
     },
     "LEAGUE_INDEPENDENT": {
       "rosterSize": 30,
@@ -98,8 +98,8 @@
       "battingOvrMax": 74,
       "devRateMin": 40,
       "devRateMax": 70,
-      "ageMin": 19,
-      "ageMax": 30,
+      "ageMin": 20,
+      "ageMax": 31,
       "withContract": true
     },
     "LEAGUE_KBL": {
@@ -111,7 +111,7 @@
       "devRateMin": 40,
       "devRateMax": 70,
       "ageMin": 20,
-      "ageMax": 36,
+      "ageMax": 37,
       "withContract": true
     },
     "LEAGUE_KBL_FARM": {
@@ -122,8 +122,8 @@
       "battingOvrMax": 76,
       "devRateMin": 50,
       "devRateMax": 80,
-      "ageMin": 19,
-      "ageMax": 28,
+      "ageMin": 20,
+      "ageMax": 29,
       "withContract": true
     },
     "LEAGUE_ABL": {
