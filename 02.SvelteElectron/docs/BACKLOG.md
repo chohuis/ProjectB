@@ -20,9 +20,8 @@
 
 ## 0. 지금 상태
 
-**Phase 1~6 + 6.5(로스터 디테일) 완료.**
-`main`에 Phase 6·로스터 결함 4건·출시 범위 확정까지 병합됨.
-`feat/roster-detail` 6커밋이 실행 확인 후 병합 대기 (설계 정본 [design/roster.md](design/roster.md)).
+**Phase 1~6 + 6.5(로스터 디테일) 완료 — 2026-07-30 전부 `main`에 병합됨.**
+설계 정본 [design/roster.md](design/roster.md). 열려 있는 작업 브랜치가 없다.
 
 다음은 **Phase 7-1 (11월 통합 드래프트 · 미지명자 진로)**.
 
