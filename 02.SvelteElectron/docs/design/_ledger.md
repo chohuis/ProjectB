@@ -711,3 +711,28 @@ schedule · status · team · training`
 - **실측 (20시즌)**: 경질 201 · 동반이탈 105 · 하향 86 · 상향 532 · FA 재취업 354 ·
   **신규 생성 0건**. 사람이 완전히 재활용된다. FA 잔류는 456명 중 5명.
   "KBL에서 잘린 감독이 고교에 부임"이 15시즌 동안 164건 — 경로가 실제로 성립한다.
+
+### P6-9. 선수 학적 역행 — 대학 두 번 입학이 실제로 가능했다 (Phase 6B 보강)
+
+- **사용자 지적**: "고등학교 재입학, 대학 두 번 입학 같은 케이스는 안 돼."
+  (스태프 이동 로그의 `KBL→고교`를 보고 물었지만, 그쪽은 **감독** 이동이라 정상이다.
+  다만 그 질문이 **선수** 경로의 실제 결함을 드러냈다.)
+- **결함**: `advanceWeek`의 `isUnivResultWeek`가
+  `careerStage === "university" || "independent"` 일 때도 발동하는데, 그 안에서
+  `apps.universityChoices`를 조건 없이 처리했다. 지원 UI(`CareerChoiceHubModal`)도
+  `!isIndependent`로만 걸러 **대학 재학생에게 "대학 진학 신청"이 보였다.**
+  → `applyDraftDecision({stage:"university"})`가 호출되며 **대학 두 번 입학**이 성립.
+  `독립 → 대학`도 같은 경로로 가능했다.
+- **판정** (사용자 확정): **지원 단계 + 전이 가드 둘 다.** UI만 고치면 나중에 다른
+  경로가 생길 때 같은 버그가 재발한다.
+  1. `careerTransition.ts` 신설 — 전이 허용표가 단일 정본.
+     `applyDraftDecision`이 위반 시 **상태를 건드리지 않고** `return s`.
+  2. `canApplyToUniversity`/`canApplyToIndependent`로 지원 UI·결과 모달·드래프트
+     알림·`advanceWeek` 결과 처리를 전부 게이트.
+- **허용표**: 고교 → 대학/독립/프로/군 · 대학 → 독립/프로/군 · 독립 → 프로/군 ·
+  프로 ↔ 프로/독립/군. **어떤 단계도 `highschool`로 못 간다**, `university`로 갈 수
+  있는 건 `highschool`뿐. `military`에서 나가는 전이는 표에 없다 —
+  전역은 `militaryHiatusStage`(입대 전 단계) 복원 전용 경로다.
+- **스태프와 선수는 규칙이 다르다.** 감독·코치의 `KBL → 고교`는 정상이고 의도한
+  동작이다(P6-8). 학적이 아니라 직장이므로 역행 개념이 없다. 두 규칙을 한 표로
+  묶으려 하면 어느 한쪽이 망가진다.

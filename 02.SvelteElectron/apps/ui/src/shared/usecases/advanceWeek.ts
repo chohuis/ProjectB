@@ -58,6 +58,7 @@ import { progressSurvival } from "./survivalLeague";
 import { runBackgroundPostseasons } from "./backgroundPostseason";
 import { IND_LEAGUE_ID, emptySurvivalState } from "../utils/survivalLeague";
 import { snapshotDueAt } from "../utils/standingsSnapshot";
+import { canApplyToUniversity, canApplyToIndependent } from "../utils/careerTransition";
 
 // ── 군입대 대상 판별 (nationality 기반) ──────────────────────
 // nationality 없는 구버전 NPC는 originLeagueId로 폴백
@@ -557,8 +558,15 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   if (isHsResultWeek || isUnivResultWeek) {
     const p = gDraft.protagonist;
     const apps = gDraft.schoolState.careerApplications;
-    const univChoices = apps?.universityChoices ?? [];
-    const indieChoices = apps?.independentChoices ?? [];
+    // 학적 역행 방어 (Phase 6B 보강) — `isUnivResultWeek`는 대학 재학생·독립 소속에도
+    // 발동한다. 그때 universityChoices를 그대로 처리하면 **대학 두 번 입학**이 된다.
+    // 지원 UI에서도 막지만, 구 세이브에 남은 지원 기록이 여기로 흘러들 수 있다.
+    const univChoices = canApplyToUniversity(p.careerStage)
+      ? (apps?.universityChoices ?? [])
+      : [];
+    const indieChoices = canApplyToIndependent(p.careerStage)
+      ? (apps?.independentChoices ?? [])
+      : [];
     const draftApplied = apps?.draftApplied ?? false;
 
     const subjects = Object.values(gDraft.schoolState.subjectScores);

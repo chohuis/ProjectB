@@ -3,12 +3,16 @@
   import { seasonStore } from "../../../shared/stores/season";
   import { masterStore } from "../../../shared/stores/master";
   import { calcKblDraftContract } from "../../../shared/utils/draftSalaryTable";
+  import { canApplyToUniversity, canApplyToIndependent } from "../../../shared/utils/careerTransition";
 
   let resolving = false;
 
   $: results = $gameStore.schoolState.careerResults;
-  $: univPassed = results?.universityPassed ?? [];
-  $: indiePassed = results?.independentPassed ?? [];
+  // 학적 역행 방어 — 지원 단계에서 막지만 구 세이브에 남은 결과가 있을 수 있다.
+  // 대학 재학생에게 "대학 합격" 버튼이 뜨면 누르는 순간 두 번 입학이 된다.
+  $: stage = $gameStore.protagonist.careerStage;
+  $: univPassed = canApplyToUniversity(stage) ? (results?.universityPassed ?? []) : [];
+  $: indiePassed = canApplyToIndependent(stage) ? (results?.independentPassed ?? []) : [];
   $: draftPassed = results?.draftDrafted ?? false;
 
   // 대학 재학 중 여부 및 학년

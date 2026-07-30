@@ -4,6 +4,7 @@
   import { seasonStore } from "../../../shared/stores/season";
   import { generateKblSchedule } from "../../../shared/utils/scheduleGen";
   import type { PendingAction } from "../../../shared/types/season";
+  import { canApplyToUniversity } from "../../../shared/utils/careerTransition";
 
   export let action: Extract<PendingAction, { type: "draftNotification" }>;
 
@@ -56,7 +57,8 @@
     resolving = true;
     seasonStore.resolvePendingAction("draftNotification");
 
-    if (action.altUniversityTeamId) {
+    // 대학 대안은 고교생만 — 대학 재학생이 미지명 시 여기로 오면 두 번 입학이 된다
+    if (action.altUniversityTeamId && canApplyToUniversity($gameStore.protagonist.careerStage)) {
       gameStore.applyDraftDecision({ stage: "university", leagueId: "LEAGUE_UNIVERSITY", teamId: action.altUniversityTeamId });
       gameStore.setCareerFinalChoice("university");
     } else if (action.altIndependentTeamId) {

@@ -44,6 +44,7 @@ import type {
   SchoolScenario,
 } from "../types/save";
 import type { ProContract } from "../types/save";
+import { transitionReason } from "../utils/careerTransition";
 import { runOffseasonProcessing } from "../utils/npcEngine";
 import { getFaThreshold } from "../utils/faEngine";
 import { masterStore } from "./master";
@@ -1278,6 +1279,14 @@ function createGameStore() {
       resetDraftTrigger?: boolean;
     }) {
       update((s) => {
+        // 학적은 되돌릴 수 없다 — 고교 재입학·대학 두 번 입학·프로에서 학교 복귀 거부.
+        // 여기가 없어서 `isUnivResultWeek`가 대학 재학생에도 발동하며 대학 재입학이
+        // 실제로 성립했다 (careerTransition.ts 주석 참고).
+        const reason = transitionReason(s.protagonist.careerStage, payload.stage);
+        if (reason) {
+          console.error(`[applyDraftDecision] 전이 거부: ${reason}`);
+          return s;   // 상태를 건드리지 않는다
+        }
         const protagonist: ProtagonistSave = {
           ...s.protagonist,
           careerStage: payload.stage,

@@ -5,6 +5,7 @@
   import { masterStore } from "../../../shared/stores/master";
   import UniversityApplyModal from "./UniversityApplyModal.svelte";
   import IndependentApplyModal from "./IndependentApplyModal.svelte";
+  import { canApplyToUniversity, canApplyToIndependent } from "../../../shared/utils/careerTransition";
 
   let resolving = false;
   let draftChecked = false;
@@ -12,6 +13,11 @@
   let independentChecked = false;
 
   $: isIndependent = $gameStore.protagonist.careerStage === "independent";
+  // 학적은 되돌릴 수 없다 — 대학 재학생은 대학에 다시 지원할 수 없고(두 번 입학),
+  // 독립 소속은 학교로 돌아갈 수 없다. 선택지 자체를 안 보여준다:
+  // 보이는데 눌러도 아무 일이 없으면 그게 더 나쁘다.
+  $: canUniv = canApplyToUniversity($gameStore.protagonist.careerStage);
+  $: canIndie = canApplyToIndependent($gameStore.protagonist.careerStage);
   let universityChoices: string[] = [];
   let independentChoices: string[] = [];
   let universityModalOpen = false;
@@ -114,14 +120,16 @@
         <span class="opt-label">드래프트 참가 신청 {draftChecked ? "✓" : ""}</span>
       </button>
 
-      {#if !isIndependent}
+      {#if canUniv}
         <button class="opt-btn" type="button" on:click={() => (universityModalOpen = true)}>
           <span class="opt-label">대학 진학 신청 {universityChecked ? `✓ (${universityChoices.length}/3)` : ""}</span>
         </button>
         {#if universityChecked}
           <div class="opt-box"><div class="list">{#each universityChoices as teamId}<div class="picked">{teamName(teamId)}</div>{/each}</div></div>
         {/if}
+      {/if}
 
+      {#if canIndie}
         <button class="opt-btn" type="button" on:click={() => (independentModalOpen = true)}>
           <span class="opt-label">독립리그 신청 {independentChecked ? `✓ (${independentChoices.length}/3)` : ""}</span>
         </button>
