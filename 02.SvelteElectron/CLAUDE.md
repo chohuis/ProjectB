@@ -9,7 +9,12 @@
 - DESIGN.md §3 "육성 코어 보호 목록"의 시스템은 경량화 작업에서 수정 금지.
 - 아래 "데이터 계층 구조" 절은 R3a 완료 후 v3 확정 기준으로 갱신됨.
 
-**진행 현황**: R0 ✅ · R1 ✅ · R2 ✅ · R3a 전체 완료 ✅ (2026-07-07) · R4 전체 완료 ✅ (2026-07-08) · R3b 전체 완료 ✅ (2026-07-08) · R5 2/5 완료(트레이드·콜업 캐던스, 팜리그 시뮬 제거) ✅ (2026-07-08, 정적 검증 통과·사용자 실행 스모크 대기) | **다음: R5 잔여(ABL/JBL Lazy → PendingAction 통합 → 히스토리 화면)**
+**진행 현황은 [docs/RESUME.md](docs/RESUME.md)가 정본이다.** 브랜치·다음 작업·미결
+목록·검증 명령이 거기 있다. 여기 복제하면 stale해진다.
+
+> 요약 (2026-07-30): Phase 1~5 완료 · **Phase 6A·6B 완료, 6C(관계도)가 다음**.
+> 작업 브랜치 `feat/people`.
+
 - 세이브 무결성(HMAC) v3 미구현 상태 — 별도 작업 필요 (DESIGN.md §8.4)
 
 ## 아키텍처 원칙 (필수 숙지)
@@ -98,8 +103,8 @@ pub fn calc_my_thing(p: MyPayload) -> MyResult {
 
 | 저장소 | 위치 | 역할 | 수정 시점 |
 |--------|------|------|----------|
-| **master.db** | `resource/master.db` | 콘텐츠(이벤트·템플릿·밸런스) + **스태프**(코치/감독/구단주, `entities/players/COA_·MNG_·OWN_*.json` 373개가 소스) 전용. read-only | `npm run build:masterdb`만 씀 |
-| **slot.db** | `userData/saves/slot3_<id>.db` (파일=슬롯) | **선수(NPC) 전부의 유일한 정본**. 정체성+팀+계약+능력치+XP가 `npc` 테이블 1행에 동거 | `repo:call`(→`shared/repo/slotRepo.ts`) 커맨드만 씀 — 직접 접근 금지 |
+| **master.db** | `resource/master.db` | 콘텐츠(이벤트·템플릿·밸런스) + **생성 규칙**(`players/staff_rules.json` 등). read-only.<br>⚠ Phase 6A에서 **스태프 JSON 373개를 폐기**했다 — `npc_master`는 이제 빈 테이블이 정상 | `npm run build:masterdb`만 씀 |
+| **slot.db** | `userData/saves/slot3_<id>.db` (파일=슬롯) | **선수는 `npc`, 스태프는 `staff`** 테이블이 유일 정본. 둘 다 런타임 절차 생성.<br>공통 조회는 `person` VIEW | `repo:call`(→`shared/repo/slotRepo.ts`) 커맨드만 씀 — 직접 접근 금지 |
 | (폐기됨) | ~~master_overlay.db~~ / ~~entities/players/PLY_*.json~~ / ~~projectb_v2.db~~ | — | R3a-4d에서 완전 제거. 재도입 금지 |
 
 ### 런타임에서 NPC 데이터 흐름
@@ -122,7 +127,7 @@ pub fn calc_my_thing(p: MyPayload) -> MyResult {
 
 - NPC(선수) 상태를 바꾸는 코드는 반드시 `shared/repo/slotRepo.ts`의 커맨드를 거친다. `window.projectB.repo(...)` 직접 호출 금지(레이어 우회).
 - 새로운 상태 변이가 필요하면 `apps/desktop/ipc/slotdb.cjs`의 `commands`에 커맨드를 추가하고(트랜잭션 1개로), `slotRepo.ts`에 타입드 래퍼를 노출한다.
-- `entities/players/`에는 스태프(COA_/MNG_/OWN_) 원본만 남아 있다. 여기에 선수(PLY_) JSON을 다시 추가하지 않는다.
+- `entities/players/` 디렉토리는 **Phase 6A에서 삭제됐다.** 선수도 스태프도 JSON으로 사전 생성하지 않는다 — 생성 규칙(`seeds/onepitch/*.toml|csv`)만 git에 둔다.
 - `master:fetch` IPC는 이벤트·훈련·업적 등 콘텐츠 JSON 전용이다 (NPC에 쓰지 않는다 — 애초에 NPC는 master.db에 없음).
 - 레거시 채널(`npc:getByLeague`/`swapTeams`/`updateContracts`, `league:add/getTransactions`)은 내부적으로 slotdb 커맨드를 감싸는 호환 래퍼다 — 신규 코드는 여기 의존하지 말고 `slotRepo`를 직접 쓴다.
 - `window.projectB` 없는 환경(Vite 단독)에서는 저장/로드가 동작하지 않는다 — `npm run dev` (Electron 포함)로 실행해야 한다.
