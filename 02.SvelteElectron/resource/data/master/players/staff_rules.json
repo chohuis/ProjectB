@@ -297,6 +297,24 @@
           "coach"
         ]
       }
+    },
+    "effects": {
+      "pivot": 50,
+      "span": 40,
+      "amounts": {
+        "motivator": 0.15,
+        "clutchDecision": 0.2,
+        "teaching": 0.15,
+        "analysis": 0.12,
+        "communication": 0.18,
+        "discipline": 0.2,
+        "leadership": 0.14,
+        "budgetSupport": 0.12,
+        "patience": 0.3,
+        "prInfluence": 0.25,
+        "facilityInvestment": 0.16,
+        "staffTrust": 0.1
+      }
     }
   },
   "namePools": {

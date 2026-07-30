@@ -15,6 +15,8 @@ import { isMonthStart, planMonthlyFriendlies, buildMonthlyNoticeMessage } from "
 import { runNationalTeamWeek } from "./nationalTeam";
 import { calcOfferedSalaryForProtagonist, calcSeasonRating } from "../utils/salaryEngine";
 import { isFaEligible, getFaThreshold } from "../utils/faEngine";
+import { facilityTierOf } from "../utils/ids";
+import { staffStatsOf, factorOf } from "../utils/staffEffects";
 import type { MatchResult, PendingAction, PlayerCondition, ScheduleEntry, WeekAdvanceResult } from "../types/season";
 import type { EventContext } from "../types/event";
 import type { MessageItem } from "../types/main";
@@ -209,6 +211,8 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   const coachEffBonus  = Math.max(-0.15, Math.min(0.25,
     (coachTeaching - 50) * 0.004 + relEffects.trainingBonus));
   const teamRef        = m.teams.find((t) => t.id === g.protagonist.teamId);
+  // 주인공 소속팀 스태프 15종 — 시설·성장·부상·명성이 전부 여기서 갈린다
+  const myStaff        = staffStatsOf(g.protagonist.teamId ?? "", m.entities, { specialty: "투수" });
   const prevLowMoraleWeeks = g.protagonist.consecutiveLowMoraleWeeks ?? 0;
   const isLowMorale        = g.protagonist.morale < 35;
   const newLowMoraleWeeks  = isLowMorale ? prevLowMoraleWeeks + 1 : 0;
@@ -228,7 +232,12 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   // ── 4개 독립 IPC 병렬 실행 (Phase 3) ──────────────────────────
   const [facilityEffModRaw, injuryCalcRaw, weeklyNetRaw, eventRandsRaw] = await Promise.all([
     window.projectB!.weekCalcFacilityEff(
-      JSON.stringify({ careerStage: g.protagonist.careerStage, teamTier: teamRef?.tier ?? null })
+      JSON.stringify({
+        careerStage: g.protagonist.careerStage,
+        // refs의 국내 팀엔 `tier`가 없다 — 리그에서 파생한다 (ids.ts 정본)
+        teamTier: teamRef ? facilityTierOf(teamRef.leagueId) : null,
+        facilityInvestment: factorOf("facilityInvestment", myStaff.facilityInvestment),
+      })
     ),
     window.projectB!.weekCalcInjury(JSON.stringify({
       fatigue: g.protagonist.fatigue,
@@ -303,15 +312,18 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     }
   } else if (alreadyInjured && !injuryJustHealed && injuryState) {
     growth.logs.push(`[부상] 회복 중 (${injuryState.recoveryWeeksLeft}주 남음) — 훈련 효율 -80%`);
-    // 주간 치료비 차감
+    // 주간 치료비 차감. **단위는 만원이다** — `money`도 드래프트 계약금도 만원이다.
+    //
+    // 고치기 전엔 이 표만 원 단위(500_000)로 만원 단위 `money`에서 빼고 있었다.
+    // 초기 자산이 1,200(=1,200만원)이니 **보존 치료 한 주면 자산이 0**이 됐다.
     const weeklyTreatmentCost: Record<string, number> = {
-      conservative: injuryState.severity === "moderate" ? 300_000 : 500_000,
-      counseling:   800_000,
+      conservative: injuryState.severity === "moderate" ? 30 : 50,
+      counseling:   80,
     };
     const treatCost = weeklyTreatmentCost[injuryState.treatmentChoice ?? ""] ?? 0;
     if (treatCost > 0) {
       growth.protagonistPatch.money = Math.max(0, (g.protagonist.money ?? 0) - treatCost);
-      growth.logs.push(`[치료비] 주간 치료비 ${(treatCost / 10000).toFixed(0)}만원 차감`);
+      growth.logs.push(`[치료비] 주간 치료비 ${treatCost}만원 차감`);
     }
   } else if (injuryJustHealed) {
     growth.logs.push(`[부상] 회복 완료 — 정상 훈련 재개`);

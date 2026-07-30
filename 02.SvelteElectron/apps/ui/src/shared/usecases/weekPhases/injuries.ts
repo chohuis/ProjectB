@@ -3,6 +3,7 @@ import { seasonStore } from "../../stores/season";
 import { gameStore } from "../../stores/game";
 import { masterStore } from "../../stores/master";
 import { autoLog } from "../../stores/autoAdvance";
+import { staffStatsOf, factorOf } from "../../utils/staffEffects";
 import type { InjurySeverity, InjuryState, InjuryType } from "../../types/save";
 import { INJURY_LABEL } from "../../types/save";
 
@@ -97,13 +98,23 @@ export async function processNpcInjuries(weekNum: number): Promise<void> {
 
   const entityMap = new Map(m.entities.map((e) => [e.id, e]));
 
-  const mgrInjuryMgmt = new Map<string, number>();
-  for (const e of m.entities) {
-    if (e.role === "manager") {
-      const val = ((e.details as { manager?: { stats?: { injuryMgmt?: number } } } | undefined)?.manager?.stats?.injuryMgmt) ?? 50;
-      mgrInjuryMgmt.set(e.teamId, val);
-    }
-  }
+  // 부상 관리 = 팀 컨디셔닝 코치의 `discipline`.
+  //
+  // 예전엔 `manager.stats.injuryMgmt`를 읽었는데 그 키는 어디에도 없어
+  // **모든 팀이 항상 50**이었다 — 즉 부상 관리라는 축이 존재하지 않았다.
+  // 감독 5종에 부상 관련 능력치가 없으므로(전부 경기 운영 축이다) 코치 쪽의
+  // "관리·규율"이 정본이다.
+  const teamInjuryMgmt = new Map<string, number>();
+  const injuryMgmtOf = (teamId: string): number => {
+    if (!teamId) return 50;
+    const cached = teamInjuryMgmt.get(teamId);
+    if (cached !== undefined) return cached;
+    const st = staffStatsOf(teamId, m.entities, { specialty: "컨디셔닝" });
+    // 시설에 투자하는 구단이면 관리가 더 잘 먹힌다
+    const val = st.discipline * factorOf("facilityInvestment", st.facilityInvestment);
+    teamInjuryMgmt.set(teamId, val);
+    return val;
+  };
 
   type NpcEntry = { playerId: string; role: string; age: number; consecutiveApp: number; hasPriorInjury: boolean; isPlayingThrough: boolean; playingThroughSeverity: string | null };
   const players: NpcEntry[] = [];
@@ -151,7 +162,7 @@ export async function processNpcInjuries(weekNum: number): Promise<void> {
 
   for (const occ of result.occurred) {
     const entity = entityMap.get(occ.playerId);
-    const injuryMgmt = entity ? (mgrInjuryMgmt.get(entity.teamId) ?? 50) : 50;
+    const injuryMgmt = injuryMgmtOf(entity?.teamId ?? "");
     const age = ((entity?.details as { player?: { age?: number } } | undefined)?.player?.age) ?? 25;
     const isSurgery = occ.severity === "surgery";
     const entityName = entity?.name ?? occ.playerId;

@@ -8,19 +8,32 @@ use rand::Rng;
 pub struct FacilityEffPayload {
     pub career_stage: String,
     pub team_tier: Option<String>,
+    #[serde(default)]
+    pub facility_investment: Option<f64>,
 }
 
+/// 주인공 시설 효율. `team_tier`는 TS `facilityTierOf(leagueId)`가 넘긴다 —
+/// 예전엔 `TeamRef.tier`를 넘겼는데 국내 팀엔 그 필드가 없어 프로 1군도
+/// 항상 0.95를 받고 있었다 (`facility_investment`도 없었다).
+///
+/// `facility_investment`는 구단주 능력치 계수(1.0 기준)다. 학생·군·독립은
+/// 구단주가 없으므로 1.0이 들어온다.
 pub fn calc_facility_eff(p: FacilityEffPayload) -> f64 {
-    match p.career_stage.as_str() {
+    let base = match p.career_stage.as_str() {
         "highschool"  => 0.92,
         "university"  => 0.95,
         "military"    => 0.88,
         "independent" => 0.85,
         "pro" | "pro_kbl" | "pro_abl" | "pro_jbl" => {
-            if p.team_tier.as_deref() == Some("1군") { 1.05 } else { 0.95 }
+            match p.team_tier.as_deref() {
+                Some("1군") => 1.05,
+                Some("2군") => 0.95,
+                _           => 0.95,
+            }
         }
         _ => 0.92,
-    }
+    };
+    base * p.facility_investment.unwrap_or(1.0).clamp(0.80, 1.25)
 }
 
 // ── Weekly Net Income ─────────────────────────────────────────

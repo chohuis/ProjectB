@@ -248,10 +248,11 @@
                 <div><span>전문</span><strong>{c?.specialty ?? m?.style ?? "-"}</strong></div>
                 {#if selected.role === "coach"}
                   <div><span>지도력</span><strong>{c?.stats?.teaching ?? "-"}</strong></div>
+                  <div><span>관리</span><strong>{c?.stats?.discipline ?? "-"}</strong></div>
                   <div><span>경험</span><strong>Lv.{c?.stats?.experience ?? "-"}</strong></div>
                 {:else if selected.role === "manager"}
-                  <div><span>전술</span><strong>{m?.stats?.strategy ?? "-"}</strong></div>
-                  <div><span>동기부여</span><strong>{m?.stats?.motivation ?? "-"}</strong></div>
+                  <div><span>전술</span><strong>{m?.stats?.tacticalIQ ?? "-"}</strong></div>
+                  <div><span>동기부여</span><strong>{m?.stats?.motivator ?? "-"}</strong></div>
                 {:else}
                   <div><span>메모</span><strong>{selected.notes || "-"}</strong></div>
                 {/if}

@@ -124,13 +124,24 @@ export interface TeamRef {
 }
 
 // ?? ?몃Ъ ?뷀떚???곸꽭 ?????????????????????????????????????????
+// 스태프 능력치 15종. **정본은 `players/staff_rules.json`의 `stats` 배열 하나**다 —
+// 여기 이름이 그 배열과 다르면 값이 조용히 undefined가 된다.
+//
+// 고치기 전엔 이 타입이 옛 5종(motivation/development/strategy/handlePressure/
+// handlePersonnel + injuryMgmt)을 들고 있었고 staffGen은 새 5종을 쓰고 있었다.
+// 그래서 감독 능력치가 **매치엔진에 4종·성장에 1종·부상관리에 1종 전부 미전달**이었다
+// (JSON.stringify가 undefined 키를 지워 Rust는 기본값을 썼다).
 export interface EntityManagerStats {
-  motivation: number;
-  development: number;
-  strategy: number;
-  handlePressure: number;
-  handlePersonnel: number;
-  injuryMgmt?: number;  // 遺??愿由?(70+ 蹂댁닔?? 40誘몃쭔 臾대━??
+  /** 전술 판단 — 매치엔진 */
+  tacticalIQ: number;
+  /** 불펜 운용 — 매치엔진 */
+  bullpenRead: number;
+  /** 타선 운용 — 매치엔진 */
+  offenseMind: number;
+  /** 동기부여 — 주간 성장 XP · 사기 회복 */
+  motivator: number;
+  /** 승부처 판단 — 매치엔진 · 콜업 정확도 */
+  clutchDecision: number;
 }
 
 export interface EntityManagerDetails {
@@ -142,9 +153,37 @@ export interface EntityManagerDetails {
 }
 
 export interface EntityCoachStats {
+  /** 지도력 — 훈련 효율 */
   teaching: number;
-  analytics: number;
-  experience: number; // ?덈꺼 1~5
+  /** 분석력 — 잠재력 발현 · 상대 분석 */
+  analysis: number;
+  /** 소통 — 관계도 형성 · 사기 */
+  communication: number;
+  /** 관리 — 부상 예방(피로 누적 억제) */
+  discipline: number;
+  /** 통솔 — 팀 폼 안정 · 슬럼프 탈출 */
+  leadership: number;
+  /** 연차 1~5 등급. 능력치가 아니라 표시용 */
+  experience: number;
+}
+
+export interface EntityOwnerStats {
+  /** 예산 지원 — FA 오퍼 · 연봉 협상 상한 */
+  budgetSupport: number;
+  /** 인내 — 감독 경질 임계 */
+  patience: number;
+  /** 홍보력 — 주인공 명성 증가율 → 스폰서 수입 */
+  prInfluence: number;
+  /** 시설 투자 — 훈련 효율 · 부상 회복 속도 */
+  facilityInvestment: number;
+  /** 스태프 신뢰 — 코치 능력치 실효 배수 */
+  staffTrust: number;
+}
+
+export interface EntityOwnerDetails {
+  ownershipStyle: string;
+  tenureYears: number;
+  stats: EntityOwnerStats;
 }
 
 export interface EntityCoachDetails {
@@ -192,7 +231,7 @@ export interface EntityDetails {
   player: EntityPlayerDetails;
   coach:   EntityCoachDetails   | null;
   manager: EntityManagerDetails | null;
-  owner:   Record<string, unknown> | null;
+  owner:   EntityOwnerDetails      | null;
 }
 
 // ?? ?몃Ъ ?뷀떚?????(people_*.json 援ъ“) ?????????????????????
