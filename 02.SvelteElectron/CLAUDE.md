@@ -12,8 +12,8 @@
 **진행 현황은 [docs/RESUME.md](docs/RESUME.md)가 정본이다.** 브랜치·다음 작업·미결
 목록·검증 명령이 거기 있다. 여기 복제하면 stale해진다.
 
-> 요약 (2026-07-30): Phase 1~5 완료 · **Phase 6A·6B 완료, 6C(관계도)가 다음**.
-> 작업 브랜치 `feat/people`.
+> 요약 (2026-07-30): **Phase 1~6 완료** (6C 관계도까지). 다음은 `feat/people` →
+> `main` 병합, 그 다음 Phase 7(커리어·시장·신규).
 
 - 세이브 무결성(HMAC) v3 미구현 상태 — 별도 작업 필요 (DESIGN.md §8.4)
 
@@ -34,7 +34,7 @@
   *(이 규칙이 없어서 `stores/game.ts`가 2,579줄이 됐고 그중 `processAllLeaguesSeasonEnd` 하나가 566줄이다)*
 - **선수·스태프를 미리 만들어 파일로 저장** — 생성 "규칙"만 git에. 결과물은 런타임 생성 ([docs/design/people.md](docs/design/people.md))
 - **slot.db 스키마를 `CREATE TABLE IF NOT EXISTS`로만 변경** — 기존 슬롯에 조용히 반영 안 됨.
-  반드시 `slotdb.cjs`의 `MIGRATIONS`에 추가하고 `npm run test:migration` 통과시킬 것
+  반드시 `slotdb.cjs`의 `MIGRATIONS`에 추가하고 `npm run test:migration` 통과시킬 것 (현재 `SCHEMA_VERSION = 4`)
 - TypeScript/Svelte에서 `Math.random()` 게임 로직에 사용 — Rust `rand::thread_rng()` 사용
 - Electron에 암호화 키, 라이선스 판정, `bool isLicensed()` 단독 export 패턴
 - `window.projectB!.*()` 호출 시 `await` 누락
