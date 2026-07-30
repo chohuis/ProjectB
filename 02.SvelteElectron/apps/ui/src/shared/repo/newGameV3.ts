@@ -4,7 +4,7 @@
 
 import { slotRepo, type RepoNpc } from "./slotRepo";
 import { generateDomesticStaff } from "./staffGen";
-import { HS_ACTIVE_TEAMS_V3 } from "../utils/leagueScheduler";
+import { ALL_TEAMS_BY_LEAGUE, HS_ACTIVE_TEAMS_V3 } from "../utils/leagueScheduler";
 
 // Rust RosterRules와 1:1 (generation_rules.json rosterRules[leagueId])
 export interface RosterRulesData {
@@ -79,8 +79,43 @@ export async function loadRosterRules(): Promise<GenerationRulesFile> {
 }
 
 /**
+ * 국내 리그 — 새 게임에서 **전부** 로스터를 만든다.
+ *
+ * v1은 시작 리그(고교)만 만들고 나머지는 Lazy였다. v2에서 반경 게이트가
+ * "국내 전 리그 상시 풀 시뮬"로 개정되면서(DESIGN §2) 그 전제가 깨졌다 —
+ * 로스터 없는 리그의 경기가 시뮬되면 **빈 로스터로 항상 0-0, 홈팀 승**이 된다.
+ * 시즌1에 대학 225 + 프로 720 + 2군 495경기가 그렇게 처리되고 있었다.
+ *
+ * Lazy를 유지할 이유도 없다 — 국내 전 리그 로스터 생성이 합쳐서 1,580명·35ms다.
+ * **Lazy 활성화는 이제 해외(ABL·JBL) 전용이다.**
+ */
+const DOMESTIC_ROSTER_LEAGUES = [
+  "LEAGUE_UNIVERSITY",
+  "LEAGUE_INDEPENDENT",
+  "LEAGUE_KBL",
+  "LEAGUE_KBL_FARM",
+] as const;
+
+async function generateLeagueNpcs(
+  leagueId: string,
+  seasonYear: number,
+  worldSeed: number,
+  teams: { teamId: string; schoolId?: string }[],
+  rules: RosterRulesData,
+): Promise<Partial<RepoNpc>[]> {
+  const params = buildRosterParams(leagueId, seasonYear, worldSeed, teams, rules);
+  const gen = JSON.parse(
+    await window.projectB!.engine("generateLeagueRosterNative", JSON.stringify(params))
+  ) as { npcs?: Partial<RepoNpc>[]; error?: string };
+  if (!Array.isArray(gen.npcs)) {
+    throw new Error(`[newGameV3] ${leagueId} 로스터 생성 실패: ${gen.error ?? "unknown"}`);
+  }
+  return gen.npcs;
+}
+
+/**
  * 새 게임 슬롯 생성 (클린 브레이크 — v3 전용).
- * 시작 리그(고교)만 활성화. 타 리그는 진출 시점에 activateLeagueV3로 Lazy 생성.
+ * **국내 전 리그**를 활성화한다. 해외(ABL·JBL)만 진출 시점에 Lazy 생성.
  */
 export async function createNewGameV3(opts: NewGameV3Options): Promise<NewGameV3Result> {
   const worldSeed = (opts.worldSeed ?? Date.now()) >>> 0;
@@ -89,14 +124,27 @@ export async function createNewGameV3(opts: NewGameV3Options): Promise<NewGameV3
   if (!hsRules) throw new Error("[newGameV3] LEAGUE_HIGHSCHOOL rosterRules 없음");
 
   const teams = opts.teams ?? HS_ACTIVE_TEAMS_V3.map((teamId) => ({ teamId }));
+  const hsNpcs = await generateLeagueNpcs(
+    "LEAGUE_HIGHSCHOOL", opts.seasonYear, worldSeed, teams, hsRules);
 
-  const params = buildRosterParams("LEAGUE_HIGHSCHOOL", opts.seasonYear, worldSeed, teams, hsRules);
-  const gen = JSON.parse(
-    await window.projectB!.engine("generateLeagueRosterNative", JSON.stringify(params))
-  ) as { npcs?: Partial<RepoNpc>[]; error?: string };
-  if (!Array.isArray(gen.npcs)) throw new Error(`[newGameV3] 로스터 생성 실패: ${gen.error ?? "unknown"}`);
+  // 나머지 국내 리그 — 팀 목록은 leagueScheduler가 정본이다 (refs에서 파생)
+  const otherNpcs: Partial<RepoNpc>[] = [];
+  for (const lid of DOMESTIC_ROSTER_LEAGUES) {
+    const rules = rulesFile.rosterRules[lid];
+    if (!rules) {
+      console.warn(`[newGameV3] ${lid} rosterRules 없음 — 이 리그는 빈 로스터로 남는다`);
+      continue;
+    }
+    const ids = ALL_TEAMS_BY_LEAGUE[lid] ?? [];
+    const leagueTeams = ids
+      .filter((id) => id !== "TEAM_SPORTS_UNIT")   // 상무는 복무자가 채운다 (Phase 7-3)
+      .map((teamId) => ({ teamId }));
+    if (leagueTeams.length === 0) continue;
+    otherNpcs.push(
+      ...(await generateLeagueNpcs(lid, opts.seasonYear, worldSeed, leagueTeams, rules)));
+  }
 
-  const npcs = [...gen.npcs, ...(opts.namedNpcs ?? [])];
+  const npcs = [...hsNpcs, ...otherNpcs, ...(opts.namedNpcs ?? [])];
 
   // 스태프 국내 전원 일괄 생성 (Phase 6A). 선수와 달리 Lazy가 아니다 —
   // "이 팀 감독이 아직 없을 수 있다"를 모든 조회 경로가 고려하면 버그가 난다
@@ -122,7 +170,10 @@ export async function createNewGameV3(opts: NewGameV3Options): Promise<NewGameV3
 }
 
 /**
- * 리그 Lazy 활성화 — KBL 진입·해외 진출 확정 시점에 호출 (DESIGN.md §2.2).
+ * 리그 Lazy 활성화 — **해외(ABL·JBL) 진출 시점 전용** (DESIGN.md §2.2).
+ *
+ * 국내 리그는 새 게임에서 이미 만들어지므로 여기 오면 기존 행이 있어 no-op다.
+ * 구 세이브(국내 로스터가 없는 슬롯)를 열었을 때의 복구 경로로도 남겨둔다.
  * 같은 worldSeed면 언제 호출해도 동일 로스터.
  */
 export async function activateLeagueV3(

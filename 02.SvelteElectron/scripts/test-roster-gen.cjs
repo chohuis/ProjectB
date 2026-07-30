@@ -31,6 +31,70 @@ const team0 = hs.npcs.filter(n => n.currentTeam === "TEAM_HS_T0");
 const posSet = new Set(team0.map(n => n.position));
 check("고교: 야수 8포지션 커버", ["C","1B","2B","3B","SS","LF","CF","RF"].every(p => posSet.has(p)));
 check("고교: SP 3명 이상", team0.filter(n => n.position === "SP").length >= 3);
+
+// ── 포지션 깊이 — 국내 전 리그 전 팀 (Phase 6 이후 보강) ─────────
+//
+// 커버리지(1명씩)만 보면 부족하다. 한 바퀴만 돌던 시절엔 나머지가 전부 랜덤이라
+// **프로 28명 로스터에서 2루·좌익·중견이 1명씩** 남았다. 그 1명이 다치면 자리가
+// 통째로 빈다. 지금은 8포지션을 두 바퀴 돌아 백업 1명까지 구조로 보장한다.
+console.log("\n포지션 깊이 (국내 전 팀)");
+{
+  // 이 절은 **실데이터**로 본다 — 위 절들은 인라인 규칙이라 실제 새 게임과
+  // 다를 수 있다. 로스터 규모가 바뀌면 여기서 잡혀야 한다.
+  const fs = require("node:fs");
+  const path = require("node:path");
+  const refs = JSON.parse(fs.readFileSync(
+    path.join(__dirname, "../resource/data/master/entities/refs.json"), "utf8"));
+  const rulesFile = JSON.parse(fs.readFileSync(
+    path.join(__dirname, "../resource/data/master/players/generation_rules.json"), "utf8"));
+
+  const FIELD = ["C","1B","2B","3B","SS","LF","CF","RF"];
+  const byL = {};
+  for (const t of refs.teams) (byL[t.leagueId] ??= []).push(t.id);
+  const PLAN = [
+    ["LEAGUE_HIGHSCHOOL",  byL.LEAGUE_HIGHSCHOOL ?? []],
+    ["LEAGUE_UNIVERSITY",  byL.LEAGUE_UNIVERSITY ?? []],
+    ["LEAGUE_INDEPENDENT", byL.LEAGUE_INDEPENDENT ?? []],
+    ["LEAGUE_KBL",         (byL.LEAGUE_KBL ?? []).filter((i) => i.endsWith("_1"))],
+    ["LEAGUE_KBL_FARM",    (byL.LEAGUE_KBL ?? []).filter((i) => i.endsWith("_2"))],
+  ];
+  let teams = 0, thin = [], totalNpcs = 0;
+  for (const [lid, ids] of PLAN) {
+    const rule = rulesFile.rosterRules[lid];
+    if (!rule || ids.length === 0) { check(`${lid} 규칙·팀 존재`, false, "없음"); continue; }
+    const out = JSON.parse(engine.generateLeagueRosterNative(JSON.stringify({
+      leagueId: lid, seasonYear: 2029, worldSeed: 4242,
+      teams: ids.map((id) => ({ teamId: id, schoolId: "" })), rules: rule,
+    })));
+    totalNpcs += out.npcs.length;
+    const byTeam = {};
+    for (const n of out.npcs) (byTeam[n.currentTeam] ??= []).push(n);
+    for (const [tid, roster] of Object.entries(byTeam)) {
+      teams++;
+      const cnt = {};
+      for (const r of roster) cnt[r.position] = (cnt[r.position] ?? 0) + 1;
+      const min = Math.min(...FIELD.map((f) => cnt[f] ?? 0));
+      if (min < 2) thin.push(`${tid}(최소 ${min})`);
+    }
+    const sample = byTeam[ids[0]];
+    const cnt = {};
+    for (const r of sample) cnt[r.position] = (cnt[r.position] ?? 0) + 1;
+    console.log(`    ${lid.padEnd(20)} ${String(sample.length).padStart(2)}명 · ` +
+      FIELD.map((f) => `${f}${cnt[f] ?? 0}`).join(" ") + ` SP${cnt.SP ?? 0} RP${cnt.RP ?? 0}`);
+  }
+  console.log(`    국내 ${totalNpcs}명 / ${teams}팀`);
+
+  check(`국내 ${teams}팀 전부 야수 8포지션에 백업까지 있다`, thin.length === 0,
+    thin.slice(0, 5).join(" "));
+  // 로스터 규모가 사용자 확정("현실 기준")대로인가 — 줄어들면 백업 보장이 깨진다
+  for (const [lid, want] of Object.entries({
+    LEAGUE_HIGHSCHOOL: 30, LEAGUE_UNIVERSITY: 32, LEAGUE_INDEPENDENT: 30,
+    LEAGUE_KBL: 30, LEAGUE_KBL_FARM: 34,
+  })) {
+    check(`  ${lid} 로스터 ${want}명`, rulesFile.rosterRules[lid]?.rosterSize === want,
+      `got ${rulesFile.rosterRules[lid]?.rosterSize}`);
+  }
+}
 const grades = [1, 2, 3].map(g => team0.filter(n => n.grade === g).length);
 check("고교: 학년 분포 균등(±2)", Math.max(...grades) - Math.min(...grades) <= 2, JSON.stringify(grades));
 check("고교: 나이 = 16+학년", team0.every(n => n.age === 16 + n.grade));

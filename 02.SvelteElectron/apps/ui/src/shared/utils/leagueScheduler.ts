@@ -1,4 +1,5 @@
 import type { ScheduleEntry, Standing } from "../types/season";
+import { isLeagueInScope } from "../config/releaseScope";
 
 // ── 빈 순위표 생성 (pure TS) ──────────────────────────────────
 export function makeStandings(teamIds: string[]): Standing[] {
@@ -162,7 +163,12 @@ export const ALL_TEAMS_BY_LEAGUE: Record<string, string[]> = {
  *    6,000경기가 생겨 아무도 원치 않는 결과가 나온다.
  *  - 프로만 현 모델로 정확히 표현된다 (팀당 경기수 = (n-1) × cycles)
  */
-export const DEFAULT_LEAGUE_CONFIGS: LeagueConfig[] = [
+/**
+ * 1차 출시 범위 밖(해외)은 **일정 자체를 만들지 않는다.**
+ * 만들어두고 시뮬만 안 하면 영영 결과 없는 경기가 세이브에 쌓인다.
+ * 확장팩에서 releaseScope.ts의 Set을 비우면 아래 항목이 그대로 살아난다.
+ */
+export const DEFAULT_LEAGUE_CONFIGS: LeagueConfig[] = ([
   // 프로 1군 10팀 × 16차전 = 팀당 144경기 (DESIGN.md §7)
   { leagueId: "LEAGUE_KBL",      teams: [..._KBL],  startWeek: 1, endWeek: 50, cycles: 16 },
   // 프로 2군 10팀 × 11차전 = 팀당 99경기 — R5에서 제거했던 팜 리그 시뮬 복원 (DESIGN.md §5)
@@ -170,4 +176,4 @@ export const DEFAULT_LEAGUE_CONFIGS: LeagueConfig[] = [
   // 해외 — 현행 유지 (진출 전까지 드리프트만)
   { leagueId: "LEAGUE_ABL",      teams: [..._ABL],  startWeek: 1, endWeek: 50, cycles: 9  },
   { leagueId: "LEAGUE_JBL",      teams: [..._JBL],  startWeek: 1, endWeek: 50, cycles: 10 },
-];
+] as LeagueConfig[]).filter((c) => isLeagueInScope(c.leagueId));

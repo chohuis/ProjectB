@@ -50,7 +50,12 @@ const univ = gen("LEAGUE_UNIVERSITY", UNIV_TEAMS, 111);
 const ind = gen("LEAGUE_INDEPENDENT", IND_TEAMS, 111);
 
 const hsSeniors = hs.filter((n) => n.grade === 3);
-check("고교 3학년 = 80명 (10팀×8)", hsSeniors.length === 80, `got ${hsSeniors.length}`);
+// 학년당 인원은 로스터 규모에서 나온다 — 하드코딩하면 밸런스 조정마다 깨진다
+const HS_SIZE = rulesFile.rosterRules.LEAGUE_HIGHSCHOOL.rosterSize;
+const perGrade = Math.round(HS_SIZE / 3);
+check(`고교 3학년 = ${HS_TEAMS.length}팀 × 약 ${perGrade}명`,
+  Math.abs(hsSeniors.length - HS_TEAMS.length * perGrade) <= HS_TEAMS.length,
+  `got ${hsSeniors.length} (로스터 ${HS_SIZE})`);
 
 // runDraftBoardBackground.ts / DraftBoardModal.svelte와 동일한 cutoff 로직
 const hsCutoff = Math.ceil(hsSeniors.length * 0.8);
@@ -66,8 +71,14 @@ check(
   `hsCutoff=${hsCutoff} univCutoff=${univCutoff} indCutoff=${indCutoff}`,
 );
 
-// 회귀 방지: 리그 활성화(Lazy) 없이 고교만으로는 원래도 부족했다는 사실 자체를 기록
-check("고교 단독 풀은 슬롯보다 부족함(활성화 필요성 문서화)", hsCutoff < TOTAL_PICK_SLOTS, `hsCutoff=${hsCutoff}`);
+// ⚠ 이 자리엔 원래 "고교 단독 풀은 슬롯보다 부족함(활성화 필요성 문서화)"가 있었다.
+// 로스터를 25 → 30으로 올리면서 고교 3학년만으로도 슬롯이 채워져 그 단정이 깨졌다.
+// **버그가 아니라 전제가 바뀐 것**이라 단정을 바꾼다 — 대학·독립을 활성화하는
+// 이유는 이제 "슬롯이 모자라서"가 아니라 "드래프트 풀이 고교생만이면 현실성이
+// 없어서"다 (Phase 7-1이 대학 1~4학년·독립 매년 신청으로 확장한다).
+console.log(`    고교 단독 ${hsCutoff}명 · 대학 ${univCutoff} · 독립 ${indCutoff} · 슬롯 ${TOTAL_PICK_SLOTS}`);
+check("대학·독립이 풀에 실질적으로 기여한다", univCutoff + indCutoff >= TOTAL_PICK_SLOTS * 0.3,
+  `대학+독립 ${univCutoff + indCutoff} < 슬롯의 30%`);
 
 console.log(failed === 0 ? "\nALL PASS" : `\n${failed} FAILED`);
 process.exit(failed === 0 ? 0 : 1);

@@ -448,11 +448,6 @@ interface EntityIndex {
   byLeague: Record<string, string[]>;
 }
 
-interface LeagueTeamIndex {
-  leagueId: string;
-  activeTeamIds: string[];
-}
-
 const TEAM_NAME_MAP: Record<string, string> = {
   TEAM_UNIV_HANBBIT:              "한빛체육대학교",
   TEAM_UNIV_DONGMYUNG:            "동명과학대학교",
@@ -506,47 +501,21 @@ function teamNameFromId(teamId: string): string {
     .join(" ");
 }
 
-function mergeSupplementTeams(
-  baseTeams: TeamRef[],
-  universityIndex: LeagueTeamIndex | null,
-  independentIndex: LeagueTeamIndex | null,
-  highschoolIndex: LeagueTeamIndex | null
-): TeamRef[] {
-  const merged = [...baseTeams];
-  const existing = new Set(merged.map((team) => team.id));
+/**
+ * ⚠ 여기 있던 `mergeSupplementTeams`를 제거했다 (2026-07-30).
+ *
+ * v1 시절 `teams/{highschool,university,independent}/index.json`의 팀을 refs에
+ * **덧붙이던** 전환기 다리였다. Phase 5가 172팀으로 ID 체계를 갈아엎으면서
+ * 그 31개 팀이 refs에 없어졌는데, 이 함수가 계속 목록에 얹고 있었다.
+ *
+ * 결과: 화면엔 뜨는데 **로스터도 일정도 순위표도 없는 유령 팀 31개**.
+ * 새 게임 팀 선택도 `masterStore.teams`를 그대로 쓰므로 주인공이 그런 팀을
+ * 고를 수 있었다.
+ *
+ * **refs.json이 팀의 유일한 정본이다** (DESIGN §8.2 원칙 6). 보충하지 않는다.
+ */
 
-  const append = (teamId: string, leagueId: string) => {
-    if (existing.has(teamId)) return;
-    const name = teamNameFromId(teamId);
-    const profileMeta = TEAM_PROFILE_MAP[teamId];
-    merged.push({
-      id: teamId,
-      name,
-      nameEn: name,
-      leagueId,
-      clubId: teamId,
-      profile: profileMeta
-        ? {
-            style: profileMeta.style,
-            desc: profileMeta.desc,
-            tags: [],
-            strengths: profileMeta.strengths,
-            funding: profileMeta.funding,
-            difficulty: profileMeta.difficulty,
-          }
-        : undefined,
-    });
-    existing.add(teamId);
-  };
-
-  for (const teamId of universityIndex?.activeTeamIds ?? []) append(teamId, "LEAGUE_UNIVERSITY");
-  for (const teamId of independentIndex?.activeTeamIds ?? []) append(teamId, "LEAGUE_INDEPENDENT");
-  for (const teamId of highschoolIndex?.activeTeamIds ?? []) append(teamId, "LEAGUE_HIGHSCHOOL");
-
-  return merged;
-}
-
-// ?? batchFetch ?ы띁 ???????????????????????????????????????????
+// ── batchFetch 헬퍼 ──────────────────────────────────────────────
 async function batchFetch<T>(ids: string[], pathFn: (id: string) => string): Promise<T[]> {
   if (ids.length === 0) return [];
   const results = await Promise.all(ids.map((id) => fetchMaster<T>(pathFn(id))));
@@ -673,7 +642,6 @@ function createMasterStore() {
       // ?? 怨듯넻 ?곗씠??(蹂寃??놁쓬) ????????????????????????????
       const [
         trainingData, pitchData, unlockData, refsData,
-        univTeamsIndex, indepTeamsIndex, hsTeamsIndex,
         msgTmplData, decisionTmplData,
         poolMedia, poolSocial, poolTeamLife,
         militaryCommonData, militarySportsData, militaryGeneralData,
@@ -685,9 +653,6 @@ function createMasterStore() {
         fetchMaster<{ leagues: LeagueRef[]; schools: SchoolRef[]; clubs: ClubRef[]; teams: TeamRef[] }>(
           "entities/refs.json"
         ),
-        fetchMaster<LeagueTeamIndex>("teams/university/index.json"),
-        fetchMaster<LeagueTeamIndex>("teams/independent/index.json"),
-        fetchMaster<LeagueTeamIndex>("teams/highschool/index.json"),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         fetchMaster<{ templates: Record<string, any>[] }>("messages/templates.json"),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -710,7 +675,8 @@ function createMasterStore() {
         (p): p is Record<string, unknown> => p !== null && typeof p === "object"
       );
       const eventPools = rawPools.map(parseEventPool);
-      const mergedTeams = mergeSupplementTeams(refsData?.teams ?? [], univTeamsIndex, indepTeamsIndex, hsTeamsIndex);
+      // refs가 팀의 유일한 정본이다 — 보충하지 않는다 (위 주석 참고)
+      const mergedTeams = refsData?.teams ?? [];
 
       // ?? manifest 湲곕컲 濡쒕뱶 (?대깽?맞룹뾽?겶룹틦由?꽣) ??????????
       let eventRules:  EventRule[] = [];
