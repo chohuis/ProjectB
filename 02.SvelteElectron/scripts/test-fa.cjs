@@ -164,5 +164,44 @@ console.log("\n등급 분포");
   check("보상선수 이동이 실제로 일어난다", withComp.length > 0);
 }
 
+// ── 5. 방출 2단계 ─────────────────────────────────────────────
+console.log("\n방출 2단계");
+{
+  const R = FA.release;
+  check("방출 규칙이 규칙 파일에 있다", !!R);
+  check("임계값·팀당 상한이 있다",
+    typeof R.scoreThreshold === "number" && typeof R.maxPerTeam === "number");
+  check("팀당 상한이 로스터를 통째로 갈지 않는다", R.maxPerTeam <= 5, String(R.maxPerTeam));
+  check("구단주 관계 가중치가 임계값을 통째로 지우지 않는다",
+    R.ownerRelationWeight * 100 <= R.scoreThreshold,
+    `관계 100이면 -${R.ownerRelationWeight * 100}점 vs 임계 ${R.scoreThreshold}`);
+
+  // 구단주 관계가 방출 점수를 실제로 움직이는가 (주인공 전용 경로)
+  const base = {
+    teamProfile: {
+      ownerSpendingWillingness: 50, stability: 50, developmentFocus: 50, discipline: 50,
+      ownerPatience: 50, winNowPressure: 50, scoutingQuality: 50, prestige: 50,
+      marketAppeal: 50, clubhouseCulture: 50, medicalQuality: 50, farmInvestment: 50,
+    },
+    player: {
+      id: "P1", position: "SP", age: 33, ovr: 55, salary: 50000,
+      remainingYears: 1, proServiceYears: 10, isProspect: false, personality: null, fame: 0,
+    },
+    recentPerformanceRating: 30, rosterDepthAtPosition: 5,
+    currentSalary: 50000, marketValue: 20000,
+  };
+  const cold = call("evalReleasePriorityNative", {
+    ...base, ownerRelation: -80, ownerRelationWeight: R.ownerRelationWeight });
+  const warm = call("evalReleasePriorityNative", {
+    ...base, ownerRelation: 80, ownerRelationWeight: R.ownerRelationWeight });
+  const none = call("evalReleasePriorityNative", base);
+  console.log(`    방출 점수 — 관계 나쁨 ${cold.releaseScore.toFixed(0)} · ` +
+    `없음 ${none.releaseScore.toFixed(0)} · 좋음 ${warm.releaseScore.toFixed(0)}`);
+  check("구단주 관계가 좋으면 방출 점수가 내려간다", warm.releaseScore < none.releaseScore);
+  check("관계가 나쁘면 올라간다", cold.releaseScore > none.releaseScore);
+  check("관계를 안 넘기면 점수가 안 변한다 (NPC 경로)",
+    Math.abs(none.releaseScore - (cold.releaseScore + warm.releaseScore) / 2) < 0.01);
+}
+
 console.log(failed === 0 ? "\nALL PASS" : `\n${failed} FAILED`);
 process.exit(failed === 0 ? 0 : 1);

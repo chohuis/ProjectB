@@ -49,6 +49,8 @@ export interface GenerationRulesFile {
   promotionRules?: unknown;
   /** 국가대표 · 국제대회 (Phase 7-3) */
   internationalRules?: unknown;
+  /** FA 자격·등급·보상선수 · 방출 2단계 (Phase 7-4) */
+  faRules?: unknown;
 }
 
 export interface NewGameV3Options {

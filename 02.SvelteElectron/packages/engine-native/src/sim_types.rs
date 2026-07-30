@@ -279,6 +279,9 @@ pub struct ApplyDraftParams {
     /// 미지명자 진로 배정 상한 (rosterRules에서 온다)
     #[serde(default)]
     pub placement: Option<crate::draft::PlacementRules>,
+    /// 방출 2단계 (faRules.release). 없으면 1단계(정원 초과)만 돈다
+    #[serde(default)]
+    pub release_rules: Option<crate::free_agency::ReleaseRules>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -559,6 +562,9 @@ pub struct OffseasonParams {
     pub independent_team_ids: Vec<String>,
     #[serde(default)]
     pub placement: Option<crate::draft::PlacementRules>,
+    /// 방출 2단계 (faRules.release). 없으면 1단계(정원 초과)만 돈다
+    #[serde(default)]
+    pub release_rules: Option<crate::free_agency::ReleaseRules>,
 }
 
 // ── 학년 진급 입력 ───────────────────────────────────────────────────────────
@@ -668,6 +674,9 @@ pub struct MonthlyNpcGrowthResult {
 
 // ── 팀 프로필 ─────────────────────────────────────────────────────────────────
 
+/// 팀 성향. `Default`는 **전 항목 50(중립)** — 오프시즌 방출 판정처럼
+/// 팀별 프로필을 들고 오지 않는 경로에서 쓴다. 0으로 두면 모든 팀이
+/// "안정성 0 · 성적압박 0"이 되어 판정이 한쪽으로 쏠린다
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ProTeamProfile {
@@ -683,6 +692,17 @@ pub struct ProTeamProfile {
     pub clubhouse_culture: f64,
     pub medical_quality: f64,
     pub farm_investment: f64,
+}
+
+impl Default for ProTeamProfile {
+    fn default() -> Self {
+        Self {
+            owner_spending_willingness: 50.0, stability: 50.0, development_focus: 50.0,
+            discipline: 50.0, owner_patience: 50.0, win_now_pressure: 50.0,
+            scouting_quality: 50.0, prestige: 50.0, market_appeal: 50.0,
+            clubhouse_culture: 50.0, medical_quality: 50.0, farm_investment: 50.0,
+        }
+    }
 }
 
 // ── 선수 성향 ─────────────────────────────────────────────────────────────────

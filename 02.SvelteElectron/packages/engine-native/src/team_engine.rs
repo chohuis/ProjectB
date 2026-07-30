@@ -277,6 +277,15 @@ pub struct EvalReleaseParams {
     pub roster_depth_at_position: i32,
     pub current_salary: i64,
     pub market_value: i64,
+    /// 구단주와의 관계 (−100 ~ +100). 좋으면 한 번 더 기회를 준다.
+    ///
+    /// **주인공에게만 값이 있다** — 관계도는 주인공 기준 1:N이라
+    /// NPC끼리의 구단주 관계는 존재하지 않는다 (Phase 6C 설계)
+    #[serde(default)]
+    pub owner_relation: f64,
+    /// 관계 1점당 방출 점수 감산폭 (faRules.release.ownerRelationWeight)
+    #[serde(default)]
+    pub owner_relation_weight: f64,
 }
 
 #[derive(Debug, Serialize)]
@@ -309,6 +318,13 @@ pub fn eval_release_priority(p: EvalReleaseParams) -> ReleaseEvalResult {
     }
     if profile.stability > 70.0 && p.player.age >= 30 { score -= 10.0; }
     if profile.win_now_pressure > 80.0 { score *= 1.3; }
+
+    // 구단주 인내심 — 관계가 좋으면 한 번 더 기회를 준다 (Phase 7-4, 6C 이월).
+    // 나쁘면 반대로 밀어낸다. **주인공에게만 값이 들어온다**
+    if p.owner_relation_weight != 0.0 {
+        score -= p.owner_relation * p.owner_relation_weight;
+        if p.owner_relation != 0.0 { flags |= 32; }
+    }
 
     ReleaseEvalResult { release_score: score.max(0.0), reason_flags: flags }
 }

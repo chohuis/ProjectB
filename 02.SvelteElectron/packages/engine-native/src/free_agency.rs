@@ -28,11 +28,33 @@ pub struct FaGrade {
     pub money_pct: f64,
 }
 
+/// 방출 2단계 규칙 (faRules.release)
+#[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ReleaseRules {
+    /// 이 점수 이상이면 방출 후보
+    pub score_threshold: f64,
+    /// 한 시즌에 한 팀이 방출할 수 있는 최대 인원.
+    /// 없으면 성적 나쁜 해에 팀이 통째로 갈린다
+    pub max_per_team: usize,
+    /// 구단주 관계 1점당 방출 점수 감산폭. **주인공에게만 쓰인다**
+    #[serde(default)]
+    pub owner_relation_weight: f64,
+}
+
+impl Default for ReleaseRules {
+    fn default() -> Self {
+        Self { score_threshold: 55.0, max_per_team: 3, owner_relation_weight: 0.4 }
+    }
+}
+
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct FaRules {
     pub eligible_years: HashMap<String, i32>,
     pub grades: Vec<FaGrade>,
+    #[serde(default)]
+    pub release: Option<ReleaseRules>,
 }
 
 impl FaRules {

@@ -16,7 +16,7 @@
 ```
 main                             Phase 1~6 + 6.5까지
 feat/draft                       Phase 7-1 드래프트. main보다 11커밋
-feat/promotion        (최신)     ← Phase 7-2 승강 + 7-3 병역. feat/draft 위에 8커밋
+feat/promotion        (최신)     ← Phase 7-2·7-3·7-4. feat/draft 위에 11커밋
 feat/roster-detail               병합됨 — 삭제 무방
 fix/domestic-rosters             병합됨 — 삭제 무방
 feat/people                      병합됨 — 삭제 무방
@@ -67,7 +67,7 @@ feat/172teams                    병합됨 — 삭제 무방
 
 1. **실행 스모크** → `feat/draft` → `feat/promotion` 순서로 `main` 병합
    (브랜치가 쌓여 있다 — 눈으로 확인하기 전이라 안 올렸다)
-2. **Phase 7-4 — 방출 · FA**
+2. **Phase 7-5 — 개인 재정 · 스태프 배선**
 
 ### Phase 7-2 들어가기 전에 알아둘 것
 
@@ -101,8 +101,8 @@ Phase 7이 남은 일의 절반 이상이다. 하위 단계로 쪼개서 커밋 
 ## 검증 명령
 
 ```bash
-npm run test:v3          # 20개 스위트 (전부 ALL PASS여야 한다)
-cd packages/engine-native && cargo test --release   # Rust 유닛 105개
+npm run test:v3          # 21개 스위트 (전부 ALL PASS여야 한다)
+cd packages/engine-native && cargo test --release   # Rust 유닛 114개
 npm run harness -- --seasons 5 --trials 2           # 불변식 위반 0
 npx tsc --noEmit         # 11개가 베이스라인. 늘면 내가 만든 것
 npx svelte-check --threshold error                  # 70 errors가 베이스라인 — main과 대조할 것
@@ -131,6 +131,7 @@ npm run measure:slotsize # npc 행 크기 컬럼별 실측
 | [docs/design/draft.md](design/draft.md) | 드래프트 설계 (Phase 7-1) |
 | [docs/design/promotion.md](design/promotion.md) | 승강 설계 (Phase 7-2) |
 | [docs/design/military.md](design/military.md) | 병역·국가대표 설계 (Phase 7-3) |
+| [docs/design/fa.md](design/fa.md) | FA·방출 설계 (Phase 7-4) |
 | [docs/DATA_POLICY.md](DATA_POLICY.md) | 데이터 3분류 · 마이그레이션 규칙 · 코드 배치 규칙 |
 | [docs/AUDIT_2026-07.md](AUDIT_2026-07.md) | 현황 전수조사 · 버그 B1~B11 |
 | [CLAUDE.md](../CLAUDE.md) | 작업 규칙 |
