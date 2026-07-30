@@ -31,6 +31,8 @@ export interface GenerationRulesFile {
   careerHistoryRules?: unknown;
   /** 군경팀(상무) 로스터 (Phase 6.5) */
   militaryRules?: unknown;
+  /** 11월 통합 드래프트 — 라운드 수·나이 게이트·얼리 신청 하한 (Phase 7-1) */
+  draftRules?: unknown;
 }
 
 export interface NewGameV3Options {

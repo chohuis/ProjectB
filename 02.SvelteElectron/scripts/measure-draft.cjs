@@ -109,13 +109,27 @@ function generateFreshmen(npcs, year) {
 }
 
 // ── 한 시즌 ────────────────────────────────────────────────────
-function runSeason(npcs, year, kblTeams, rounds, excludeSangmu) {
+function runSeason(npcs, year, kblTeams, rounds, excludeSangmu, useEarlyEntry) {
   const g = call("advanceAllGradesNative", { npcs, seasonYear: year });
   const pool = [...g.hsGraduated, ...g.univGraduated];
   const aged = call("advanceAllAgesNative", { npcs: [...g.updated, ...pool] });
 
   const poolIds = new Set(pool.map((n) => n.npcId));
-  const candidates = aged.filter((n) => poolIds.has(n.npcId));
+  let candidates, counts = [0, 0, 0, 0], routeOf = new Map();
+  if (useEarlyEntry) {
+    // D-2 이후: 졸업생 + 소속 유지 신청자(대학 재학·독립)
+    const sel = call("selectDraftCandidatesNative", {
+      npcs: aged, rules: gr.draftRules,
+      universityGradeMax: gr.rosterRules.LEAGUE_UNIVERSITY.gradeMax,
+    });
+    counts = sel.counts;
+    routeOf = new Map(sel.candidates.map((c) => [c.npcId, c.route]));
+    const byId = new Map(aged.map((n) => [n.npcId, n]));
+    candidates = sel.candidates.map((c) => byId.get(c.npcId)).filter(Boolean);
+  } else {
+    candidates = aged.filter((n) => poolIds.has(n.npcId));
+    counts = [g.hsGraduated.length, g.univGraduated.length, 0, 0];
+  }
 
   const sim = call("runDraftNative", {
     candidates, namedMetas: [], year, rounds, teamIds: kblTeams,
@@ -135,13 +149,18 @@ function runSeason(npcs, year, kblTeams, rounds, excludeSangmu) {
   const fresh = generateFreshmen(after, year + 1);
 
   return {
-    after: [...after, ...fresh], fresh: fresh.length,
+    after: [...after, ...fresh], fresh: fresh.length, counts,
+    nCand: candidates.length,
+    earlyPicked: sim.picks.filter((p) => {
+      const r = routeOf.get(p.npcId);
+      return r === "universityEarly" || r === "independent";
+    }).length,
     hsGrad: g.hsGraduated.length, univGrad: g.univGraduated.length, sim, poolIds,
   };
 }
 
 // ── 측정 ───────────────────────────────────────────────────────
-function measure(label, kblTeams, rounds, excludeSangmu) {
+function measure(label, kblTeams, rounds, excludeSangmu, useEarlyEntry) {
   let npcs = buildWorld();
   const t0 = Date.now();
   console.log(`\n══ ${label} (KBL ${kblTeams.length}팀 × ${rounds}라운드) ══`);
@@ -151,7 +170,7 @@ function measure(label, kblTeams, rounds, excludeSangmu) {
   for (let i = 0; i < SEASONS; i++) {
     const year = START_YEAR + i;
     const before = npcs.length;
-    const r = runSeason(npcs, year, kblTeams, rounds, excludeSangmu);
+    const r = runSeason(npcs, year, kblTeams, rounds, excludeSangmu, useEarlyEntry);
     npcs = r.after;
 
     const moved = new Map();
@@ -160,7 +179,7 @@ function measure(label, kblTeams, rounds, excludeSangmu) {
       if (n) moved.set(n.currentLeague, (moved.get(n.currentLeague) ?? 0) + 1);
     }
     rows.push({
-      year, before, fresh: r.fresh,
+      year, before, fresh: r.fresh, counts: r.counts, nCand: r.nCand, early: r.earlyPicked,
       pool: r.poolIds.size, hs: r.hsGrad, univ: r.univGrad,
       drafted: r.sim.picks.length,
       toKbl: moved.get("LEAGUE_KBL") ?? 0,
@@ -171,13 +190,15 @@ function measure(label, kblTeams, rounds, excludeSangmu) {
     });
   }
 
-  console.log("연도  드래프트풀 (고졸/대졸)  지명  →KBL  →대학  →독립  은퇴  풀잔류  신입생");
+  console.log("연도   후보 (고졸/대졸/대학재학/독립)  지명(얼리)  →대학  →독립  은퇴  신입생");
   for (const r of rows) {
+    const c = r.counts;
     console.log(
-      `${r.year}  ${String(r.pool).padStart(6)} (${String(r.hs).padStart(4)}/${String(r.univ).padStart(3)})` +
-      `  ${String(r.drafted).padStart(4)}  ${String(r.toKbl).padStart(4)}  ${String(r.toUniv).padStart(5)}` +
-      `  ${String(r.toInd).padStart(5)}  ${String(r.retired).padStart(4)}  ${String(r.stuck).padStart(5)}` +
-      `  ${String(r.fresh).padStart(5)}`
+      `${r.year}  ${String(r.nCand).padStart(5)} (${String(c[0]).padStart(4)}/${String(c[1]).padStart(3)}` +
+      `/${String(c[2]).padStart(4)}/${String(c[3]).padStart(3)})` +
+      `  ${String(r.drafted).padStart(6)}(${String(r.early).padStart(2)})` +
+      `  ${String(r.toUniv).padStart(5)}  ${String(r.toInd).padStart(5)}` +
+      `  ${String(r.retired).padStart(4)}  ${String(r.fresh).padStart(6)}`
     );
   }
 
@@ -215,5 +236,6 @@ function measure(label, kblTeams, rounds, excludeSangmu) {
   return npcs;
 }
 
-measure("D-1 이전 — 유령 팀 8개 · 상무 혼입", GHOST_TEAMS, 10, false);
-measure("D-1 이후 — 실제 10팀 11라운드 · 상무 제외", REAL_KBL, 11, true);
+measure("D-1 이전 — 유령 팀 8개 · 상무 혼입 · 졸업생만", GHOST_TEAMS, 10, false, false);
+measure("D-1 — 실제 10팀 11라운드 · 상무 제외 · 졸업생만", REAL_KBL, 11, true, false);
+measure("D-2 — 대학 재학·독립 얼리 신청 추가", REAL_KBL, gr.draftRules.rounds, true, true);

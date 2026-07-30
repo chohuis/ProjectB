@@ -504,7 +504,7 @@ fn fa_eligibility_years(league_id: &str) -> i32 {
     }
 }
 
-fn npc_core_ovr(npc: &NpcSaveState) -> f64 {
+pub(crate) fn npc_core_ovr(npc: &NpcSaveState) -> f64 {
     if npc.player_type == "pitcher" {
         npc.pitching.as_ref().map(|p| p.ovr).unwrap_or(0.0)
     } else {
@@ -1297,29 +1297,40 @@ pub fn apply_draft(params: ApplyDraftParams) -> Vec<NpcSaveState> {
         if npc.current_league == "LEAGUE_DRAFT_POOL"
             || npc.current_league == "LEAGUE_RETIRED"
             || npc.career_status == "retired" { continue; }
+        // 지명된 재학생은 곧 팀을 떠난다 — 자리를 차지한 것으로 세면
+        // 그 팀이 미지명자를 한 명 덜 받는다
+        if pick_map.contains_key(&npc.npc_id) { continue; }
         let t = &npc.current_team;
         if !univ_set.contains(t.as_str()) && !ind_set.contains(t.as_str()) { continue; }
         let e = roster.entry(t.clone()).or_insert((0, 0));
         if npc.player_type == "pitcher" { e.0 += 1; } else { e.1 += 1; }
     }
 
-    // Step 2: KBL 지명자 먼저 처리
+    // Step 2: KBL 지명자 먼저 처리.
+    //
+    // **출신 리그를 따지지 않는다.** 예전엔 `LEAGUE_DRAFT_POOL` 소속만 옮겼는데,
+    // D-2에서 대학 재학생·독립리그 선수가 소속을 유지한 채 신청할 수 있게 되면서
+    // 그 조건이 남아 있으면 **지명돼도 원 소속에 그대로 남는다.**
     let mut result_npcs = params.npcs;
     for npc in result_npcs.iter_mut() {
-        if npc.current_league != "LEAGUE_DRAFT_POOL" { continue; }
         if let Some(pick) = pick_map.get(&npc.npc_id) {
+            let from_team   = (!npc.current_team.is_empty()).then(|| npc.current_team.clone());
+            let from_league = (npc.current_league != "LEAGUE_DRAFT_POOL")
+                .then(|| npc.current_league.clone());
             // career_history에는 실제 시즌 기록만 → 드래프트 이벤트는 career_events에 기록
             npc.career_events.push(NpcCareerEvent {
                 year: params.result.year,
                 event_type: "draft_picked".into(),
-                from_team_id: None,
+                from_team_id: from_team,
                 to_team_id: Some(pick.team_id.clone()),
-                from_league_id: None,
+                from_league_id: from_league,
                 to_league_id: Some("LEAGUE_KBL".into()),
                 detail: Some(format!("{}라운드 {}번 지명", pick.round, pick.pick)),
             });
             npc.current_league = "LEAGUE_KBL".into();
             npc.current_team   = pick.team_id.clone();
+            npc.grade          = None;   // 재학생이 지명되면 학적이 끝난다
+            npc.school_id      = String::new();
         }
     }
 

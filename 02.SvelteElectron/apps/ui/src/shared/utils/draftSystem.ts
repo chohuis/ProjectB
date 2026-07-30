@@ -91,6 +91,54 @@ export function calcDraftScore(npc: NpcSaveState, meta?: NamedNpcMeta): number {
   return ovr * 0.6 + (npc.developmentRate ?? 50) * 0.3 + potBonus * 0.1;
 }
 
+// ── 후보 선정 (Rust DLL 위임 — Phase 7-1 D-2) ────────────────
+/** 후보가 어디서 왔나. `universityEarly`·`independent`는 **소속을 유지한 신청자**다 */
+export type DraftRoute =
+  | "highschoolGraduate" | "universityGraduate" | "universityEarly" | "independent";
+
+export interface DraftCandidateRow {
+  npcId: string;
+  route: DraftRoute;
+  ovr: number;
+  age: number;
+}
+
+export interface DraftCandidatesResult {
+  candidates: DraftCandidateRow[];
+  /** 고졸 · 대졸 · 대학 재학 · 독립 순 */
+  counts: [number, number, number, number];
+}
+
+/**
+ * 드래프트 후보를 고른다.
+ *
+ * 예전엔 후보가 졸업생(`pendingDraft`)뿐이었다. 이제 **전체 NPC를 넘긴다** —
+ * 대학 재학생과 독립리그 선수가 소속을 유지한 채 신청할 수 있어야 하는데,
+ * 졸업생만 담긴 배열에는 그 사람들이 애초에 없다.
+ */
+export async function selectDraftCandidates(
+  npcs: NpcSaveState[],
+  draftRules: unknown,
+  universityGradeMax = 4,
+): Promise<DraftCandidatesResult> {
+  const json = await window.projectB!.engine("selectDraftCandidatesNative", JSON.stringify({
+    npcs, rules: draftRules, universityGradeMax,
+  }));
+  return parseResult<DraftCandidatesResult>(json);
+}
+
+/** 소속을 유지한 신청자는 미지명이어도 제자리다 — 진로 배정 대상이 아니다 */
+export function routeNeedsPlacement(route: DraftRoute): boolean {
+  return route === "highschoolGraduate" || route === "universityGraduate";
+}
+
+export const DRAFT_ROUTE_LABELS: Record<DraftRoute, string> = {
+  highschoolGraduate: "고졸",
+  universityGraduate: "대졸",
+  universityEarly:    "대학 재학",
+  independent:        "독립",
+};
+
 // ── NPC 드래프트 시뮬 (Rust DLL 위임) ────────────────────────
 export async function runDraftSimulation(
   candidates: NpcSaveState[],

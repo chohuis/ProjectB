@@ -29,6 +29,7 @@ mod synthetic_trajectory;
 mod relationship;
 mod career_history;
 mod military_roster;
+mod draft;
 
 use types::*;
 use sim_types::*;
@@ -269,6 +270,17 @@ pub fn generate_freshmen_native(params_json: String) -> String {
     };
     let result = npc_sim::generate_freshmen(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("generateFreshmenNative/serialize", e))
+}
+
+/// 드래프트 후보 선정 — 졸업생 + 대학 재학 얼리 신청 + 독립리그 신청
+#[napi]
+pub fn select_draft_candidates_native(params_json: String) -> String {
+    let params: draft::SelectCandidatesParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("selectDraftCandidatesNative", e),
+    };
+    let result = draft::select_candidates(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("selectDraftCandidatesNative/serialize", e))
 }
 
 /// NPC 드래프트 시뮬

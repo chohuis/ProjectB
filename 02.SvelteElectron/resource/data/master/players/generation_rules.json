@@ -240,5 +240,23 @@
     "_devNote": "유망주 위주라 육성률이 일반 리그보다 높다",
     "salary": 300,
     "_salaryNote": "군인 봉급(월 수십만원)이라 연 300만원 수준. 프로 최저연봉과 다르다"
+  },
+
+  "draftRules": {
+    "_note": "11월 통합 드래프트 (Phase 7-1). 읽는 곳: engine-native/src/draft.rs",
+    "rounds": 11,
+    "_roundsNote": "10팀 x 11라운드 = 110명. KBO 실제 규모와 같다",
+
+    "ageMin": 20,
+    "ageMax": 29,
+    "_ageNote": "고3이 19세라(design/roster.md §1) 하한 20이 재학생을 막는다. 예전 값 18은 고3 나이였다",
+
+    "earlyEntry": {
+      "_note": "졸업반이 아닌 선수의 신청 자격. 확률이 아니라 능력치 하한이다 - '지명될 만한 실력이면 신청한다'. 결정적이고 화면에 설명할 수 있다",
+      "universityByGrade": [74, 71, 68],
+      "_universityNote": "1/2/3학년 OVR 하한. 대학 생성 범위가 52~76(전력 보정 ±7)이라 1학년 74는 최상위 극소수다. 4학년은 졸업이라 자동 후보",
+      "independent": 68,
+      "_independentNote": "독립은 소속 연차와 무관하게 매년 신청할 수 있다. 생성 범위 50~74"
+    }
   }
 }

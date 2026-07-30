@@ -34,7 +34,11 @@ import {
   applyDraftToNpcs,
   determineProtagonistDraft,
   runDraftSimulation,
+  selectDraftCandidates,
+  DRAFT_ROUNDS,
+  DRAFT_ROUTE_LABELS,
 } from "../utils/draftSystem";
+import { loadRosterRules } from "../repo/newGameV3";
 import type {
   DraftSimResult,
   HighSchoolMaster,
@@ -2566,13 +2570,42 @@ function createGameStore() {
     ): Promise<void> {
       const _t0Draft = Date.now();
       const s = get({ subscribe });
-      if (s.pendingDraft.length === 0) return;
 
-      autoLog(`[드래프트] Y${year} 후보 ${s.pendingDraft.length}명 시뮬 시작`);
-      const simResult = await runDraftSimulation(s.pendingDraft, [], year);
+      // 후보 풀은 졸업생 + **소속을 유지한 신청자**(대학 재학·독립)다.
+      // 예전엔 pendingDraft(졸업생)만 봐서 대학 저학년과 독립리그 선수는
+      // 영원히 드래프트에 나올 수 없었다.
+      const npcIdSet = new Set(s.npcs.map(n => n.npcId));
+      const combined = [
+        ...s.npcs,
+        ...s.pendingDraft.filter(n => !npcIdSet.has(n.npcId)),
+      ];
+
+      const rulesFile = await loadRosterRules();
+      const draftRules = rulesFile.draftRules;
+      if (!draftRules) {
+        autoLog(`[드래프트오류] generation_rules.json에 draftRules가 없다 — 드래프트를 건너뛴다`);
+        return;
+      }
+      const univGradeMax = rulesFile.rosterRules["LEAGUE_UNIVERSITY"]?.gradeMax ?? 4;
+      const { candidates, counts } = await selectDraftCandidates(combined, draftRules, univGradeMax);
+      if (candidates.length === 0) return;
+
+      const byId = new Map(combined.map(n => [n.npcId, n]));
+      const candidateNpcs = candidates
+        .map(c => byId.get(c.npcId))
+        .filter((n): n is NpcSaveState => n !== undefined);
+      const routeOf = new Map(candidates.map(c => [c.npcId, c.route]));
+
+      autoLog(
+        `[드래프트] Y${year} 후보 ${candidates.length}명 ` +
+        `(고졸 ${counts[0]} · 대졸 ${counts[1]} · 대학재학 ${counts[2]} · 독립 ${counts[3]})`
+      );
+      const simResult = await runDraftSimulation(
+        candidateNpcs, [], year, (draftRules as { rounds?: number }).rounds ?? DRAFT_ROUNDS,
+      );
 
       // 픽별 상세 로그
-      const npcInfoMap = new Map(s.pendingDraft.map(n => [n.npcId, n]));
+      const npcInfoMap = new Map(candidateNpcs.map(n => [n.npcId, n]));
       const _draftEntries: PlayerEventEntry[] = [];
       for (const pick of simResult.picks) {
         const npc = npcInfoMap.get(pick.npcId);
@@ -2581,22 +2614,18 @@ function createGameStore() {
         const age = npc?.age ?? 0;
         const potential = npc?.developmentRate ?? 0;
         const teamShort = pick.teamId.replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "");
-        autoLog(`  ${pick.round}R-${pick.pick}: ${npc?.name ?? pick.npcId} (OVR:${ovr} ${pos} ${age}세 잠재${potential}) → ${teamShort}`);
+        const route = DRAFT_ROUTE_LABELS[routeOf.get(pick.npcId) ?? "highschoolGraduate"];
+        autoLog(`  ${pick.round}R-${pick.pick}: ${npc?.name ?? pick.npcId} (${route} OVR:${ovr} ${pos} ${age}세 잠재${potential}) → ${teamShort}`);
         _draftEntries.push({
           npcId: pick.npcId,
           name: npc?.name ?? pick.npcId,
           toTeamId: pick.teamId,
           toLeagueId: "LEAGUE_KBL",
-          detail: `${pick.round}라운드 ${pick.pick}순위 | OVR:${ovr} ${pos} ${age}세 잠재:${potential}`,
+          detail: `${pick.round}라운드 ${pick.pick}순위 | ${route} OVR:${ovr} ${pos} ${age}세 잠재:${potential}`,
         });
       }
-      autoLog(`[드래프트] 지명 ${simResult.picks.length}건 (미지명 ${s.pendingDraft.length - simResult.picks.length}명)`);
+      autoLog(`[드래프트] 지명 ${simResult.picks.length}건 (미지명 ${candidates.length - simResult.picks.length}명)`);
 
-      const npcIdSet = new Set(s.npcs.map(n => n.npcId));
-      const combined = [
-        ...s.npcs,
-        ...s.pendingDraft.filter(n => !npcIdSet.has(n.npcId)),
-      ];
       const updatedNpcs = await applyDraftToNpcs(
         combined, simResult, universityTeamIds, independentTeamIds,
       );
@@ -2606,19 +2635,24 @@ function createGameStore() {
       const slotId = s.currentSlotId;
       let _draftDbOk = true;
       if (slotId && simResult.picks.length > 0) {
-        const nameMap = new Map(s.pendingDraft.map((n) => [n.npcId, n.name]));
-        const rows = simResult.picks.map((pick) => ({
-          seasonYear: year,
-          category: "draft" as const,
-          playerId: pick.npcId,
-          playerName: nameMap.get(pick.npcId) ?? pick.npcId,
-          fromTeamId: null,
-          fromLeagueId: null,
-          toTeamId: pick.teamId,
-          toLeagueId: "LEAGUE_KBL",
-          detail: `${pick.round}라운드 ${pick.pick}순위`,
-          groupId: null,
-        }));
+        const rows = simResult.picks.map((pick) => {
+          const before = npcInfoMap.get(pick.npcId);
+          // 소속을 유지한 채 신청한 선수는 **떠나온 팀이 있다.** 그 팀을 안 적으면
+          // 리그 기록에 "어디서 왔는지 없는 이적"으로 남는다
+          const from = before && before.currentLeague !== "LEAGUE_DRAFT_POOL" ? before : null;
+          return {
+            seasonYear: year,
+            category: "draft" as const,
+            playerId: pick.npcId,
+            playerName: before?.name ?? pick.npcId,
+            fromTeamId: from?.currentTeam ?? null,
+            fromLeagueId: from?.currentLeague ?? null,
+            toTeamId: pick.teamId,
+            toLeagueId: "LEAGUE_KBL",
+            detail: `${pick.round}라운드 ${pick.pick}순위`,
+            groupId: null,
+          };
+        });
         const draftRes = JSON.parse(
           await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows }))
         );
@@ -2632,14 +2666,14 @@ function createGameStore() {
         type: "draft",
         seasonYear: year,
         players: _draftEntries,
-        counts: { input: s.pendingDraft.length, processed: simResult.picks.length, saved: simResult.picks.length },
+        counts: { input: candidates.length, processed: simResult.picks.length, saved: simResult.picks.length },
         dbOk: _draftDbOk,
         durationMs: Date.now() - _t0Draft,
-        extra: `미지명 ${s.pendingDraft.length - simResult.picks.length}명`,
+        extra: `미지명 ${candidates.length - simResult.picks.length}명 · 얼리신청 ${counts[2] + counts[3]}명`,
       });
 
       logVerify(`Y${year} 드래프트 완료`, [
-        { name: `후보 ${s.pendingDraft.length}명 → 지명 ${simResult.picks.length}건`, ok: simResult.picks.length > 0 },
+        { name: `후보 ${candidates.length}명 → 지명 ${simResult.picks.length}건`, ok: simResult.picks.length > 0 },
         { name: `DB 저장`, ok: _draftDbOk },
         { name: `gameStore.npcs 반영`, ok: updatedNpcs.length >= s.npcs.length },
       ]);
