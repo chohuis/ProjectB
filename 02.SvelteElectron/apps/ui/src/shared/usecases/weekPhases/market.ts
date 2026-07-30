@@ -4,6 +4,7 @@ import { gameStore } from "../../stores/game";
 import { masterStore } from "../../stores/master";
 import { autoLog, logEvent, logVerify, type PlayerEventEntry } from "../../stores/autoAdvance";
 import { getFaThreshold } from "../../utils/faEngine";
+import { loadRosterRules } from "../../repo/newGameV3";
 import type { PlayerSeasonStats } from "../../types/save";
 import { MONTH_STARTS_1 } from "./growth";
 
@@ -574,21 +575,30 @@ function getTeamEntityRefs(
   return { active, farm };
 }
 
-// 프로팀 월간 콜업/콜다운 처리
+/**
+ * 프로 1군 ↔ 2군 승강.
+ *
+ * **주인공과 무관하게 국내 10구단 전부 돈다.** 예전엔 `careerStage`가 프로일
+ * 때만, 그것도 주인공 리그만 처리해서 — 주인공이 고교생이면 프로 세계의 승강이
+ * 통째로 멈췄다. 드래프트가 매년 110명을 2군에 넣는데 아무도 안 올라왔다.
+ * 국내 전 리그 풀 시뮬(DESIGN §2)의 전제와도 어긋난다.
+ */
 export async function processProTeamCallupCalldown(weekNum: number): Promise<string[]> {
   const g = get(gameStore);
   const s = get(seasonStore);
   const m = get(masterStore);
   const logs: string[] = [];
-  const isProStage = ["pro_kbl", "pro_abl", "pro_jbl"].includes(g.protagonist.careerStage);
-  if (!isProStage) return logs;
 
   const namedMap = new Map(g.npcs.map(n => [n.npcId, n]));
   const monthIndex = MONTH_STARTS_1.indexOf(s.schedule.find(e => e.week === weekNum)?.week ?? 0);
   const currentMonth = monthIndex >= 0 ? monthIndex + 1 : 6;
 
-  // 주인공 리그만 (R5, DESIGN.md §5)
-  const proTeams1 = m.teams.filter(t => t.leagueId === g.protagonist.leagueId && t.id.endsWith("_1"));
+  // 로스터 상한은 규칙 파일이 정본이다 — 예전엔 여기 35가 박혀 있었고
+  // 규칙 파일(34)과 달랐다 (드리프트)
+  const rulesFile = await loadRosterRules();
+  const maxRosterSize = rulesFile.rosterRules["LEAGUE_KBL"]?.rosterMax ?? 34;
+
+  const proTeams1 = m.teams.filter(t => t.leagueId === "LEAGUE_KBL" && t.id.endsWith("_1"));
 
   const injuredIds = Object.entries(s.npcInjuries ?? {})
     .filter(([, inj]) => (inj as any)?.severity !== "mild")
@@ -635,12 +645,13 @@ export async function processProTeamCallupCalldown(weekNum: number): Promise<str
       const calldownRes = JSON.parse(
         await window.projectB!.evalCalldownCandidatesNative(JSON.stringify({
           teamProfile: profile, activePlayers: active,
-          currentRosterSize: active.length, maxRosterSize: 35,
+          currentRosterSize: active.length, maxRosterSize,
         }))
       ) as { candidates: Array<{ playerId: string }> };
 
       for (const c of calldownRes.candidates.slice(0, 2)) {
-        if (c.playerId === g.protagonist.id) continue;
+        // 주인공도 강등된다 (사용자 확정 2026-07-30). 예전엔 여기서 건너뛰어
+        // 주인공만 성적과 무관하게 1군에 남았다
         allMoves.push({ id: c.playerId, teamId: teamId2 });
         const cdName = m.entities.find(e => e.id === c.playerId)?.name ?? c.playerId;
         const cdOvr  = Math.round(active.find(a => a.playerId === c.playerId)?.ovr ?? 0);
@@ -654,11 +665,34 @@ export async function processProTeamCallupCalldown(weekNum: number): Promise<str
   let _callupDbOk = true;
   if (allMoves.length > 0) {
     // 팀 이동을 gameStore.npcs에 반영 → connectToGameStore 구독이 entities 자동 갱신
+    //
+    // ⚠ **리그도 같이 바꾼다.** 예전엔 `currentTeam`만 갈아서 2군으로 내려간
+    // 선수가 계속 `LEAGUE_KBL` 소속으로 집계됐다 — 2군 리그 순위·경기에 안 잡히고
+    // 1군 로스터 상한에는 계속 포함된다. 오프시즌 강등에서도 같은 결함이
+    // 프로 소속을 800명까지 부풀렸다 (Phase 7-1 D-3a).
     const moveMap = new Map(allMoves.map(mv => [mv.id, mv.teamId]));
     const movedNpcs = get(gameStore).npcs
       .filter(n => moveMap.has(n.npcId))
-      .map(n => ({ ...n, currentTeam: moveMap.get(n.npcId)! }));
+      .map(n => {
+        const toTeam = moveMap.get(n.npcId)!;
+        return {
+          ...n,
+          currentTeam: toTeam,
+          currentLeague: toTeam.endsWith("_2") ? "LEAGUE_KBL_FARM" : "LEAGUE_KBL",
+        };
+      });
     if (movedNpcs.length > 0) gameStore.updateNpcs(movedNpcs);
+
+    // 주인공이 승강 대상이면 소속 리그를 같이 옮긴다 — 2군 일정·순위표가
+    // 이미 있으므로 leagueId만 맞으면 그대로 뛴다 (사용자 확정)
+    const protoTo = moveMap.get(g.protagonist.id);
+    if (protoTo) {
+      const toLeague = protoTo.endsWith("_2") ? "LEAGUE_KBL_FARM" : "LEAGUE_KBL";
+      gameStore.setProtagonistTeam(protoTo, toLeague);
+      logs.push(protoTo.endsWith("_2")
+        ? `[W${weekNum}] 2군 강등 통보를 받았다.`
+        : `[W${weekNum}] 1군 승격 통보를 받았다.`);
+    }
   }
 
   if (_callupEntries.length > 0) {

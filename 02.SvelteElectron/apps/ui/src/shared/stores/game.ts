@@ -1285,6 +1285,20 @@ function createGameStore() {
       });
     },
 
+    /**
+     * 1군 ↔ 2군 승강으로 주인공의 소속만 옮긴다.
+     *
+     * `applyDraftDecision`과 달리 **커리어 단계는 안 건드린다** — 2군 강등은
+     * 진학·입단 같은 학적 전이가 아니라 같은 구단 안의 이동이다.
+     * 2군 일정·순위표는 이미 있으므로 `leagueId`만 맞으면 그대로 뛴다.
+     */
+    setProtagonistTeam(teamId: string, leagueId: string) {
+      update((s) => ({
+        ...s,
+        protagonist: { ...s.protagonist, teamId, leagueId },
+      }));
+    },
+
     applyDraftDecision(payload: {
       stage: import("../types/save").CareerStage;
       leagueId?: string;
