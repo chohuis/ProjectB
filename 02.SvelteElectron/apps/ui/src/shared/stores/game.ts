@@ -2686,6 +2686,21 @@ function createGameStore() {
       );
       update(st => ({ ...st, npcs: updatedNpcs, pendingDraft: [], lastDraftYear: year }));
 
+      // 지명 로그 — **관전 보드가 이걸 재생한다.** 예전엔 보드가 자기 후보 풀로
+      // 따로 시뮬을 돌려서, 화면에서 본 지명과 실제 소속이 달랐다
+      const pickLog: CareerDraftPickLogEntry[] = simResult.picks.map(pick => ({
+        pickNo: pick.pick,
+        round: pick.round,
+        teamId: pick.teamId,
+        playerId: pick.npcId,
+        playerName: npcInfoMap.get(pick.npcId)?.name ?? pick.npcId,
+        isUser: false,
+      }));
+      update(st => ({
+        ...st,
+        schoolState: { ...st.schoolState, careerDraftPickLog: pickLog },
+      }));
+
       // NPC 드래프트 픽 거래 기록
       const slotId = s.currentSlotId;
       let _draftDbOk = true;

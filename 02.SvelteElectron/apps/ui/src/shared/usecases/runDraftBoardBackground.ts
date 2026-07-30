@@ -21,31 +21,12 @@ export async function runDraftBoardBackground(
   seasonYear: number,
 ): Promise<DraftBoardBackgroundResult> {
   const { univIds, indIds } = draftDestinationTeams(get(masterStore).teams);
+  // 지명 로그(careerDraftPickLog)는 processNpcDraft가 남긴다 — 관전 보드가 그걸 재생한다
   const result = await gameStore.processNpcDraft(seasonYear, univIds, indIds);
-
-  // 이미 그 해 드래프트가 끝났으면(중복 호출) 로그를 다시 쓰지 않는다
-  if (!result) return { picks: [] };
-
-  const nameById = new Map<string, string>();
-  for (const npc of get(gameStore).npcs) nameById.set(npc.npcId, npc.name);
-  for (const entity of get(masterStore).entities) {
-    if (!nameById.has(entity.id)) nameById.set(entity.id, entity.name);
-  }
-
-  gameStore.clearCareerDraftPickLog();
-  for (const pick of result.picks) {
-    gameStore.appendCareerDraftPickLog({
-      pickNo: pick.pick,
-      round: pick.round,
-      teamId: pick.teamId,
-      playerId: pick.npcId,
-      playerName: nameById.get(pick.npcId) ?? pick.npcId,
-      isUser: false,
-    });
-  }
-
   await gameStore.save();
-  return { picks: result.picks.map((p) => ({
+
+  // 이미 그 해 드래프트가 끝났으면(중복 호출) null이 온다
+  return { picks: (result?.picks ?? []).map((p) => ({
     pickNo: p.pick, round: p.round, teamId: p.teamId, candidateId: p.npcId, isUser: false,
   })) };
 }

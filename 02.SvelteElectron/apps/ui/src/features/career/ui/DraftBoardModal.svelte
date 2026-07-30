@@ -3,11 +3,9 @@
   import { gameStore } from "../../../shared/stores/game";
   import { masterStore } from "../../../shared/stores/master";
   import { seasonStore } from "../../../shared/stores/season";
-  import type { EntityRow, EntityDetails } from "../../../shared/stores/master";
   import type { NpcSaveState } from "../../../shared/types/save";
   import {
-    runDraftBoard,
-    type DraftBoardCandidate,
+    draftDestinationTeams,
     type DraftBoardPick,
   } from "../../../shared/utils/draftSystem";
 
@@ -41,10 +39,6 @@
     candidate: Candidate;
   };
 
-  const ROUND_COUNT = 10;
-  const PICKS_PER_ROUND = 8;
-  const TOTAL_PICKS = ROUND_COUNT * PICKS_PER_ROUND;
-
   let started = false;
   let loading = false;
   let pickCursor = 0;
@@ -60,16 +54,15 @@
   $: heroId = $gameStore.protagonist.id;
   $: heroName = $gameStore.protagonist.name;
 
-  $: currentRound = Math.floor(pickCursor / PICKS_PER_ROUND) + 1;
-  $: currentPickInRound = (pickCursor % PICKS_PER_ROUND) + 1;
-
-  $: currentTeamId = (() => {
-    if (finished || draftTeamIds.length === 0 || pickCursor >= TOTAL_PICKS) return "";
-    const teamOrder = pickCursor % PICKS_PER_ROUND;
-    const roundNo = currentRound;
-    const slot = roundNo % 2 === 1 ? teamOrder : PICKS_PER_ROUND - 1 - teamOrder;
-    return draftTeamIds[slot] ?? "";
-  })();
+  // 라운드·순번·지명 팀은 **실제 픽에서 읽는다.** 예전엔 화면이 8팀 스네이크
+  // 방식을 따로 계산했는데, 엔진은 10팀 정순이라 표시가 매번 어긋났다
+  $: nextPick = boardPicks[pickCursor];
+  $: currentRound = nextPick?.round ?? 0;
+  $: currentPickInRound = nextPick
+    ? nextPick.pickNo - (nextPick.round - 1) * Math.max(1, draftTeamIds.length)
+    : 0;
+  $: currentTeamId = finished ? "" : (nextPick?.teamId ?? "");
+  $: totalRounds = boardPicks.length > 0 ? boardPicks[boardPicks.length - 1].round : 0;
 
   $: currentTeamName = getTeamName(currentTeamId);
   $: undraftedCount = candidates.filter((c) => !c.drafted).length;
@@ -94,161 +87,105 @@
     return "독립";
   }
 
-  function buildFromEntity(e: EntityRow, isUser = false): Candidate {
-    const p = (e.details as EntityDetails)?.player ?? {};
-    const pitchOvr = Number(p.pitching?.ovr ?? 0);
-    const batOvr = Number(p.batting?.ovr ?? 0);
-    return {
-      id: e.id,
-      name: e.name,
-      ovr: Math.max(pitchOvr, batOvr),
-      age: e.age,
-      potential: Number(p.potentialHidden ?? 70),
-      isUser,
-      position: p.position ?? "?",
-      origin: getTeamName(e.teamId),
-      originType: toOriginType(e.leagueId),
-      drafted: false,
-    };
-  }
-
+  /**
+   * 보드에 뜨는 시점의 NPC는 **이미 지명 처리가 끝나** 소속이 2군으로 바뀌어 있다.
+   * 출신은 지명 이벤트가 남긴 `fromLeagueId`에서 읽고, 졸업생이라 그게 비면
+   * 마지막 경력 기록으로 폴백한다 — 현재 소속을 보면 전원 "프로 출신"이 된다.
+   */
   function buildFromNpc(npc: NpcSaveState, isUser = false): Candidate {
-    const pitchOvr = npc.pitching?.ovr ?? 0;
-    const batOvr = npc.batting?.ovr ?? 0;
-    const origin = npc.currentTeam ? getTeamName(npc.currentTeam) : npc.schoolId;
+    const draftEvent = [...(npc.careerEvents ?? [])].reverse()
+      .find((e) => e.eventType === "draft_picked");
+    const fromLeague = draftEvent?.fromLeagueId
+      ?? npc.careerHistory?.[npc.careerHistory.length - 1]?.leagueId
+      ?? "LEAGUE_HIGHSCHOOL";
+    const fromTeam = draftEvent?.fromTeamId;
     return {
       id: npc.npcId,
       name: npc.name,
-      ovr: Math.max(pitchOvr, batOvr),
+      ovr: Math.max(npc.pitching?.ovr ?? 0, npc.batting?.ovr ?? 0),
       age: npc.age,
       potential: npc.developmentRate,
       isUser,
       position: npc.position,
-      origin,
-      originType: "HS",
+      origin: fromTeam ? getTeamName(fromTeam) : (npc.schoolId || "-"),
+      originType: toOriginType(fromLeague),
       drafted: false,
     };
   }
 
-  function npcOvr(npc: NpcSaveState): number {
-    return Math.max(npc.pitching?.ovr ?? 0, npc.batting?.ovr ?? 0);
-  }
-
-  function entityOvr(e: EntityRow): number {
-    const p = (e.details as EntityDetails)?.player ?? {};
-    return Math.max(Number(p.pitching?.ovr ?? 0), Number(p.batting?.ovr ?? 0));
-  }
-
+  /**
+   * 보드는 **실제 드래프트 결과를 재생만 한다.**
+   *
+   * 예전엔 여기서 자체 후보 풀(고교 3학년 상위 80% + 대학 상위 30 + 독립 상위 15)을
+   * `masterStore.entities` 정의치로 만들고 자체 시뮬(`runDraftBoard`)을 돌렸다.
+   * 실제 반영은 `processNpcDraft`가 **다른 후보 풀·다른 규칙**으로 따로 했으므로,
+   * 화면에서 본 지명과 선수의 실제 소속이 달랐다.
+   */
   async function initBoard() {
     loading = true;
     try {
+      pickCursor = 0;
+      userDrafted = false;
+      finished = false;
+      displayPicks = [];
+      boardPicks = [];
 
-    // 전년도 KBL 순위 역순 (꼴지팀부터 지명) — 데이터 없으면 masterStore 순서 폴백
-    const prevStandings = $seasonStore.prevSeasonKblStandings ?? [];
-    if (prevStandings.length > 0) {
-      draftTeamIds = [...prevStandings]
-        .sort((a, b) => a.winPct - b.winPct || a.wins - b.wins)
-        .map((s) => s.teamId);
-    } else {
-      draftTeamIds = $masterStore.teams
-        .filter((t) => t.leagueId === "LEAGUE_KBL" && t.tier === "1군")
-        .map((t) => t.id);
-    }
+      // 아직 안 돌았으면 여기서 돌린다. 이미 돌았으면 `lastDraftYear` 가드가 막고
+      // 그때 남긴 로그를 그대로 읽는다 (관전 → 스킵, 스킵 → 관전 어느 순서든 같다)
+      const { univIds, indIds } = draftDestinationTeams($masterStore.teams);
+      await gameStore.processNpcDraft($seasonStore.seasonYear, univIds, indIds);
 
-    pickCursor = 0;
-    userDrafted = false;
-    finished = false;
-    displayPicks = [];
-    boardPicks = [];
+      const log = $gameStore.schoolState.careerDraftPickLog;
+      boardPicks = log.map((r) => ({
+        pickNo: r.pickNo, round: r.round, teamId: r.teamId,
+        candidateId: r.playerId ?? "", isUser: false,
+      }));
 
-    const seen = new Set<string>();
-    const rows: Candidate[] = [];
+      // 지명 순서는 실제 결과에서 읽는다 — 화면이 순서를 따로 계산하면
+      // 엔진과 어긋난다 (예전엔 8팀 스네이크 방식을 별도로 계산했다)
+      draftTeamIds = [...new Set(boardPicks.map((p) => p.teamId))];
 
-    // ── 고교 3학년 전체(배경+Named 병합) — 이전엔 Named가 1명이라도 있으면
-    // 배경 선수 ~80명을 통째로 무시하고 Named 소수만 후보 풀로 썼던 버그가 있었음.
-    // Named는 실제 라이브 능력치를 쓰고, 나머지는 entity 정의치를 쓰되 풀 자체는 항상 전체 학년.
-    const namedById = new Map($gameStore.npcs.map((n) => [n.npcId, n]));
-    const hsEntities = $masterStore.entities
-      .filter((e) => e.leagueId === "LEAGUE_HIGHSCHOOL" && e.role === "player" && e.grade === 3 && (!viewOnly || e.id !== heroId));
-    const hsPool = hsEntities
-      .map((e) => {
-        const named = namedById.get(e.id);
-        return named
-          ? { id: e.id, ovr: npcOvr(named), cand: buildFromNpc(named, !viewOnly && e.id === heroId) }
-          : { id: e.id, ovr: entityOvr(e),  cand: buildFromEntity(e, !viewOnly && e.id === heroId) };
-      })
-      .sort((a, b) => b.ovr - a.ovr);
-    const hsCutoff = Math.ceil(hsPool.length * 0.8);
-    for (const { id, cand } of hsPool.slice(0, hsCutoff)) {
-      if (seen.has(id)) continue;
-      seen.add(id);
-      rows.push(cand);
-    }
+      // 후보 카드 — 지명된 선수는 실제 로스터에서, 나머지는 후보 풀에서
+      const npcById = new Map($gameStore.npcs.map((n) => [n.npcId, n]));
+      const rows: Candidate[] = [];
+      const seen = new Set<string>();
+      for (const p of boardPicks) {
+        if (seen.has(p.candidateId)) continue;
+        seen.add(p.candidateId);
+        const npc = npcById.get(p.candidateId);
+        rows.push(npc
+          ? buildFromNpc(npc)
+          : { id: p.candidateId, name: p.candidateId, ovr: 0, age: 0, potential: 0,
+              isUser: false, position: "?", origin: "-", originType: "HS", drafted: false });
+      }
 
-    // ── 주인공 (HS 풀에 없으면 별도 추가) ──
-    if (!viewOnly && !seen.has(heroId)) {
-      seen.add(heroId);
-      rows.push({
-        id: heroId,
-        name: heroName,
-        ovr: $gameStore.protagonist.pitching.ovr,
-        age: $gameStore.protagonist.age ?? 19,
-        potential: 75,
-        isUser: true,
-        position: $gameStore.protagonist.position ?? "SP",
-        origin: getTeamName($gameStore.protagonist.teamId),
-        originType: "HS",
-        drafted: false,
-      });
-    }
+      // ── 주인공 ──
+      // 주인공은 NPC 드래프트에 안 들어간다 (진로 결과가 따로 정해진다).
+      // 지명됐다면 그 순번에 끼워 넣어 보드에 같이 보이게 한다
+      const cr = $gameStore.schoolState.careerResults;
+      if (!viewOnly && cr?.draftDrafted && cr.draftTeamId) {
+        rows.unshift({
+          id: heroId,
+          name: heroName,
+          ovr: $gameStore.protagonist.pitching.ovr,
+          age: $gameStore.protagonist.age ?? 19,
+          potential: 75,
+          isUser: true,
+          position: $gameStore.protagonist.position ?? "SP",
+          origin: getTeamName($gameStore.protagonist.teamId),
+          originType: "HS",
+          drafted: false,
+        });
+        const at = Math.max(0, Math.min(boardPicks.length, (cr.draftPick ?? 1) - 1));
+        boardPicks = [
+          ...boardPicks.slice(0, at),
+          { pickNo: cr.draftPick ?? at + 1, round: cr.draftRound ?? 1,
+            teamId: cr.draftTeamId, candidateId: heroId, isUser: true },
+          ...boardPicks.slice(at),
+        ];
+      }
 
-    // ── 대학: OVR 상위 30명 ──
-    const allPlayers = $masterStore.entities.filter((e) => e.role === "player");
-
-    const univTop = allPlayers
-      .filter((e) => e.leagueId === "LEAGUE_UNIVERSITY")
-      .sort((a, b) => entityOvr(b) - entityOvr(a))
-      .slice(0, 30);
-
-    for (const e of univTop) {
-      if (seen.has(e.id)) continue;
-      seen.add(e.id);
-      rows.push(buildFromEntity(e));
-    }
-
-    // ── 독립: OVR 상위 15명 ──
-    const indTop = allPlayers
-      .filter((e) => e.leagueId === "LEAGUE_INDEPENDENT")
-      .sort((a, b) => entityOvr(b) - entityOvr(a))
-      .slice(0, 15);
-
-    for (const e of indTop) {
-      if (seen.has(e.id)) continue;
-      seen.add(e.id);
-      rows.push(buildFromEntity(e));
-    }
-
-    candidates = rows;
-    gameStore.clearCareerDraftPickLog();
-
-    // ── Rust에서 전체 픽 시퀀스 사전 계산 ──
-    const rustCandidates: DraftBoardCandidate[] = rows.map((c) => ({
-      id: c.id,
-      ovr: c.ovr,
-      age: c.age,
-      potential: c.potential,
-      isUser: c.isUser,
-    }));
-
-    boardPicks = (await runDraftBoard(
-      rustCandidates,
-      $gameStore.protagonist.scoutScore,
-      $gameStore.protagonist.pitching.ovr,
-      draftTeamIds,
-      $seasonStore.seasonYear,
-      ROUND_COUNT,
-    )).picks;
-
+      candidates = rows;
     } finally {
       loading = false;
     }
@@ -278,14 +215,8 @@
     };
     displayPicks = [...displayPicks, entry];
 
-    gameStore.appendCareerDraftPickLog({
-      pickNo: bp.pickNo,
-      round: bp.round,
-      teamId: bp.teamId,
-      playerId: bp.candidateId,
-      playerName: candidates[cidx].name,
-      isUser: bp.isUser,
-    });
+    // ⚠ 로그에 다시 append하지 않는다. **재생 원본이 그 로그다** —
+    // 여기서 쓰면 같은 픽이 두 번 쌓이고 200개 상한에 잘려 앞부분이 사라진다
 
     if (bp.isUser) userDrafted = true;
     pickCursor++;
@@ -310,25 +241,15 @@
   }
 
   async function complete() {
-    const userPick = viewOnly
-      ? null
-      : $gameStore.schoolState.careerDraftPickLog.find((r) => r.isUser) ?? null;
-    const slotId = $gameStore.currentSlotId;
-    const seasonYear = $seasonStore.seasonYear;
+    // 주인공 지명은 진로 결과가 정본이다 — 보드가 만든 값이 아니라
+    const cr = $gameStore.schoolState.careerResults;
+    const userPick = !viewOnly && cr?.draftDrafted
+      ? { teamId: cr.draftTeamId, round: cr.draftRound, pickNo: cr.draftPick }
+      : null;
 
-    // 드래프트 전체 픽 리그 거래 기록
-    if (slotId && $gameStore.schoolState.careerDraftPickLog.length > 0) {
-      const draftRows = $gameStore.schoolState.careerDraftPickLog.map((pick) => ({
-        seasonYear, category: "draft",
-        playerId: pick.playerId ?? "",
-        playerName: pick.playerName ?? "",
-        fromTeamId: null, fromLeagueId: null,
-        toTeamId: pick.teamId, toLeagueId: "LEAGUE_KBL",
-        detail: `${pick.round}라운드 ${pick.pickNo}순위`,
-        groupId: null,
-      }));
-      await window.projectB?.leagueAddTransactions(JSON.stringify({ slotId, rows: draftRows }));
-    }
+    // ⚠ 여기서 거래기록을 쓰지 않는다. `processNpcDraft`가 이미 썼다 —
+    // 예전엔 이 함수가 careerDraftPickLog를 통째로 다시 삽입해서
+    // 같은 지명이 리그 기록에 두 번 남았다
 
     await gameStore.save();
     await seasonStore.save();
@@ -356,11 +277,11 @@
       </div>
       {#if started && !finished}
         <div class="status-bar">
-          <span class="status-item">라운드 <strong>{currentRound}</strong> / {ROUND_COUNT}</span>
+          <span class="status-item">라운드 <strong>{currentRound}</strong> / {totalRounds}</span>
           <span class="sep">·</span>
-          <span class="status-item">픽 <strong>{currentPickInRound}</strong> / {PICKS_PER_ROUND}</span>
+          <span class="status-item">픽 <strong>{currentPickInRound}</strong> / {draftTeamIds.length}</span>
           <span class="sep">·</span>
-          <span class="status-item">전체 <strong>{pickCursor}</strong> / {TOTAL_PICKS}</span>
+          <span class="status-item">전체 <strong>{pickCursor}</strong> / {boardPicks.length}</span>
         </div>
       {:else if started && finished}
         <div class="status-bar">
