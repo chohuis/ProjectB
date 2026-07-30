@@ -110,3 +110,121 @@ styles = ["투자 적극", "안정 지향", "성적 지상", "육성 중시", "�
 "안정" = { budgetSupport = 5, facilityInvestment = 4 }
 "알뜰" = { budgetSupport = -6, facilityInvestment = -5 }
 "궁핍" = { budgetSupport = -18, facilityInvestment = -15 }
+
+# ══════════════════════════════════════════════════════════════════
+# 생애주기 (Phase 6B) — people.md §3
+# ══════════════════════════════════════════════════════════════════
+# 20시즌 커리어에서 스태프가 그대로면 세계가 죽어 보인다. 목표는
+# "20시즌에 초기 감독 절반 정도가 교체"다 — 너무 빠르면 관계도(6C)가 자리를 못 잡고
+# 너무 느리면 생멸이 서사에 안 걸린다.
+
+[lifecycle]
+# 시즌 종료 순서: 나이+1 → 경력성장 → 은퇴판정 → 경질판정 → 빈자리 충원
+# 충원은 "하위팀 우수 스태프 스카우트 → 이동", 안 차면 신규 생성 (사용자 확정)
+enabled = true
+
+# ── 은퇴 확률 (연령 구간별, %/시즌) ──────────────────────────────
+# 상한 나이에 도달하면 100% — 무한정 남는 스태프가 없게 한다.
+[[lifecycle.retire.manager]]
+until = 59
+chance = 0
+
+[[lifecycle.retire.manager]]
+until = 63
+chance = 6
+
+[[lifecycle.retire.manager]]
+until = 67
+chance = 14
+
+[[lifecycle.retire.manager]]
+until = 71
+chance = 30
+
+[[lifecycle.retire.manager]]
+until = 200
+chance = 100
+
+# 코치는 감독과 유사하되 조금 이르다 (현장 체력 부담)
+[[lifecycle.retire.coach]]
+until = 56
+chance = 0
+
+[[lifecycle.retire.coach]]
+until = 60
+chance = 7
+
+[[lifecycle.retire.coach]]
+until = 64
+chance = 16
+
+[[lifecycle.retire.coach]]
+until = 68
+chance = 32
+
+[[lifecycle.retire.coach]]
+until = 200
+chance = 100
+
+# 구단주는 훨씬 늦게 물러난다 — 경영진은 현장이 아니다
+[[lifecycle.retire.owner]]
+until = 69
+chance = 0
+
+[[lifecycle.retire.owner]]
+until = 74
+chance = 5
+
+[[lifecycle.retire.owner]]
+until = 79
+chance = 12
+
+[[lifecycle.retire.owner]]
+until = 200
+chance = 100
+
+# ── 경력 성장 ────────────────────────────────────────────────────
+# 선수와 달리 **완만하게**. 스태프가 몇 시즌 만에 최상급이 되면 팀 격차가 무너진다
+# (people.md §3-3).
+[lifecycle.growth]
+# 젊을 때만 오르고 고령에서 둔화 → 감소
+peak_age = 50
+# 매 시즌 능력치 1종에 적용되는 변화량 (성장기 / 정점 / 쇠퇴기)
+young_gain = 1      # peak_age 이전
+plateau_gain = 0    # peak_age ~ decline_age
+decline_age = 62
+decline_loss = 1    # decline_age 이후
+# 성장은 능력치 5종 중 매 시즌 이 개수만 골라 적용 (전부 올리면 너무 빠르다)
+stats_per_season = 2
+cap = 95
+floor = 20
+
+# ── 감독 경질 ────────────────────────────────────────────────────
+# 전력★로 기대 순위를 잡고 실제 순위가 미달하면 '부진 시즌'을 누적한다.
+# 누적이 임계값에 닿으면 경질. patience가 임계값을 좌우한다 (people.md §3-2).
+[lifecycle.firing]
+# 기대 순위 비율 = 1 − (power − 1) / 5
+#   ★5 → 상위 20% 기대 · ★1 → 전원이 기대치(경질 없음)
+# 약팀 감독이 하위권이라고 잘리는 건 부당하다 — 그게 그 팀의 정상이다.
+expectation_by_power = true
+# 부진 누적 임계값 (구단주 patience 구간별)
+[[lifecycle.firing.threshold]]
+patience_until = 29
+seasons = 1
+
+[[lifecycle.firing.threshold]]
+patience_until = 69
+seasons = 2
+
+[[lifecycle.firing.threshold]]
+patience_until = 200
+seasons = 3
+
+# ── 빈자리 충원 ──────────────────────────────────────────────────
+[lifecycle.hiring]
+# 상위 팀부터 채운다. 하위 리그/약팀의 우수 스태프를 스카우트해 끌어온다.
+# 이동은 "위로 올라가는 경로"로만 생긴다 (사용자 확정 — 자유 이동장 아님).
+scout_from_lower_only = true
+# 스카우트 후보 = 능력치 평균이 이 값 이상
+scout_min_avg = 58
+# 후보가 없으면 신규 생성

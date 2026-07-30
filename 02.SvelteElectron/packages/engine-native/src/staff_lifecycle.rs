@@ -1,0 +1,483 @@
+// 스태프 생애주기 (Phase 6B) — people.md §3
+//
+// 정적 JSON 시절엔 없던 개념이다. 20시즌 커리어에서 감독이 그대로면 세계가 죽어 보인다.
+//
+// 시즌 종료 처리 순서 (이 순서가 중요하다):
+//   1. 나이 +1
+//   2. 경력 성장 (완만하게 — 몇 시즌 만에 최상급이 되면 팀 격차가 무너진다)
+//   3. 은퇴 판정 → 빈 자리 목록
+//   4. 감독 경질 판정 → 빈 자리 추가
+//   5. 빈 자리 충원: 상위 팀부터 "하위팀 우수 스태프 스카우트" → 안 차면 신규 생성
+//
+// 5번을 상위 팀부터 도는 이유: 이동이 "위로 올라가는 경로"로만 생기게 하고,
+// 이동으로 새로 빈 자리가 연쇄로 메워지게 하려면 한 방향으로 훑어야 한다.
+//
+// worldSeed × 시즌 결정적 — 같은 세이브를 다시 열어도 같은 사람이 은퇴한다.
+
+use std::collections::{BTreeMap, HashMap};
+
+use serde::{Deserialize, Serialize};
+
+use crate::staff_gen::StaffRow;
+
+fn splitmix64(state: &mut u64) -> u64 {
+    *state = state.wrapping_add(0x9E3779B97F4A7C15);
+    let mut z = *state;
+    z = (z ^ (z >> 30)).wrapping_mul(0xBF58476D1CE4E5B9);
+    z = (z ^ (z >> 27)).wrapping_mul(0x94D049BB133111EB);
+    z ^ (z >> 31)
+}
+
+fn hash_str(s: &str) -> u64 {
+    let mut h = 0xCBF29CE484222325u64;
+    for b in s.as_bytes() {
+        h ^= *b as u64;
+        h = h.wrapping_mul(0x100000001B3);
+    }
+    h
+}
+
+struct Rng(u64);
+impl Rng {
+    fn new(seed: u64) -> Self { Rng(seed) }
+    /// 0~99
+    fn pct(&mut self) -> u64 { splitmix64(&mut self.0) % 100 }
+    fn range(&mut self, lo: i64, hi: i64) -> i64 {
+        if hi <= lo { return lo; }
+        lo + (splitmix64(&mut self.0) % ((hi - lo + 1) as u64)) as i64
+    }
+}
+
+// ── 규칙 (staff_rules.toml [lifecycle]) ────────────────────────
+
+// TOML에서 오는 규칙 — snake_case가 정본
+#[derive(Debug, Deserialize, Clone)]
+pub struct RetireBand {
+    pub until: i64,
+    pub chance: u64,
+}
+
+#[derive(Debug, Deserialize, Clone)]
+pub struct RetireRules {
+    pub manager: Vec<RetireBand>,
+    pub coach: Vec<RetireBand>,
+    pub owner: Vec<RetireBand>,
+}
+
+#[derive(Debug, Deserialize, Clone)]
+pub struct GrowthRules {
+    pub peak_age: i64,
+    pub young_gain: i64,
+    pub plateau_gain: i64,
+    pub decline_age: i64,
+    pub decline_loss: i64,
+    pub stats_per_season: usize,
+    pub cap: i64,
+    pub floor: i64,
+}
+
+#[derive(Debug, Deserialize, Clone)]
+pub struct FiringThreshold {
+    pub patience_until: i64,
+    pub seasons: i64,
+}
+
+#[derive(Debug, Deserialize, Clone)]
+pub struct FiringRules {
+    #[serde(default)]
+    pub expectation_by_power: bool,
+    pub threshold: Vec<FiringThreshold>,
+}
+
+#[derive(Debug, Deserialize, Clone)]
+pub struct HiringRules {
+    #[serde(default)]
+    pub scout_from_lower_only: bool,
+    pub scout_min_avg: i64,
+}
+
+#[derive(Debug, Deserialize, Clone)]
+pub struct LifecycleRules {
+    #[serde(default = "yes")]
+    pub enabled: bool,
+    pub retire: RetireRules,
+    pub growth: GrowthRules,
+    pub firing: FiringRules,
+    pub hiring: HiringRules,
+}
+
+fn yes() -> bool { true }
+
+// ── 입력 ───────────────────────────────────────────────────────
+
+#[derive(Debug, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct TeamSeasonResult {
+    pub team_id: String,
+    pub league_id: String,
+    /// 전력★ 1~5 — 기대 순위의 근거
+    pub power: i64,
+    /// 그 리그에서의 최종 순위 (1 = 1위)
+    pub rank: i64,
+    /// 그 리그 팀 수
+    pub league_size: i64,
+    /// 누적된 부진 시즌 수 (이 시즌 판정 전 값)
+    #[serde(default)]
+    pub slump_seasons: i64,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct AdvanceStaffParams {
+    pub world_seed: u32,
+    /// 방금 끝난 시즌
+    pub season_year: u32,
+    pub staff: Vec<StaffRow>,
+    /// 리그 최종 순위 — 경질 판정에 쓴다. 없는 팀은 경질 판정을 건너뛴다
+    #[serde(default)]
+    pub results: Vec<TeamSeasonResult>,
+    pub rules: LifecycleRules,
+}
+
+// ── 출력 ───────────────────────────────────────────────────────
+
+#[derive(Debug, Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct StaffEvent {
+    /// "retired" | "fired" | "moved" | "hired"
+    pub kind: String,
+    pub staff_id: String,
+    pub name: String,
+    pub role: String,
+    pub team_id: String,
+    pub league_id: String,
+    /// moved일 때 떠난 팀
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub from_team_id: Option<String>,
+    pub age: i64,
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct AdvanceStaffResult {
+    /// 시즌 후 스태프 전원 (은퇴·경질자는 status가 바뀐 채로 포함된다)
+    pub staff: Vec<StaffRow>,
+    /// 이번 시즌에 벌어진 일 — 뉴스·메시지의 소재
+    pub events: Vec<StaffEvent>,
+    /// 팀별 갱신된 부진 누적 (다음 시즌 입력으로 되돌려준다)
+    pub slump_seasons: BTreeMap<String, i64>,
+}
+
+fn clamp(v: i64, lo: i64, hi: i64) -> i64 { v.max(lo).min(hi) }
+
+fn retire_chance(bands: &[RetireBand], age: i64) -> u64 {
+    for b in bands {
+        if age <= b.until {
+            return b.chance;
+        }
+    }
+    100
+}
+
+fn firing_threshold(rules: &FiringRules, patience: i64) -> i64 {
+    for t in &rules.threshold {
+        if patience <= t.patience_until {
+            return t.seasons;
+        }
+    }
+    // 구간을 못 찾으면 가장 관대한 값 — 조용히 경질하는 쪽으로 기울지 않는다
+    rules.threshold.iter().map(|t| t.seasons).max().unwrap_or(3)
+}
+
+fn avg_stat(s: &BTreeMap<String, i64>) -> i64 {
+    if s.is_empty() {
+        return 0;
+    }
+    s.values().sum::<i64>() / s.len() as i64
+}
+
+/// 리그 서열 — 스카우트가 "위로만" 움직이게 하는 기준
+fn league_tier(league_id: &str) -> i64 {
+    match league_id {
+        "LEAGUE_KBL" => 4,
+        "LEAGUE_UNIVERSITY" => 3,
+        "LEAGUE_INDEPENDENT" => 2,
+        "LEAGUE_HIGHSCHOOL" => 1,
+        _ => 0,
+    }
+}
+
+pub fn advance_staff_season(p: AdvanceStaffParams) -> AdvanceStaffResult {
+    let mut staff = p.staff.clone();
+    let mut events: Vec<StaffEvent> = Vec::new();
+    let mut slump: BTreeMap<String, i64> = BTreeMap::new();
+
+    if !p.rules.enabled {
+        for r in &p.results {
+            slump.insert(r.team_id.clone(), r.slump_seasons);
+        }
+        return AdvanceStaffResult { staff, events, slump_seasons: slump };
+    }
+
+    let season_salt = (p.world_seed as u64).wrapping_mul(0x9E3779B97F4A7C15)
+        ^ (p.season_year as u64).wrapping_mul(0xD1B54A32D192ED03);
+
+    // 결정성: staff_id 순으로 처리한다 (입력 순서에 의존하지 않는다)
+    staff.sort_by(|a, b| a.staff_id.cmp(&b.staff_id));
+
+    let g = &p.rules.growth;
+
+    // ── 1·2. 나이 +1 · 경력 성장 ──────────────────────────────
+    for st in staff.iter_mut() {
+        if st.status != "active" {
+            continue;
+        }
+        st.age += 1;
+        st.years += 1;
+
+        let delta = if st.age < g.peak_age {
+            g.young_gain
+        } else if st.age < g.decline_age {
+            g.plateau_gain
+        } else {
+            -g.decline_loss
+        };
+        if delta != 0 && g.stats_per_season > 0 {
+            let mut rng = Rng::new(season_salt ^ hash_str(&st.staff_id) ^ hash_str("growth"));
+            // 능력치 5종 중 일부만 — 전부 올리면 몇 시즌 만에 최상급이 된다
+            let keys: Vec<String> = st.stats.keys().cloned().collect();
+            if !keys.is_empty() {
+                let n = g.stats_per_season.min(keys.len());
+                // 시작 인덱스를 시드로 정하고 순환 — 같은 시즌에 같은 스태프면 같은 선택
+                let start = (rng.range(0, keys.len() as i64 - 1)) as usize;
+                for i in 0..n {
+                    let k = &keys[(start + i) % keys.len()];
+                    if let Some(v) = st.stats.get_mut(k) {
+                        *v = clamp(*v + delta, g.floor, g.cap);
+                    }
+                }
+            }
+        }
+    }
+
+    // ── 3. 은퇴 판정 ──────────────────────────────────────────
+    for st in staff.iter_mut() {
+        if st.status != "active" {
+            continue;
+        }
+        let bands = match st.role.as_str() {
+            "manager" => &p.rules.retire.manager,
+            "coach" => &p.rules.retire.coach,
+            _ => &p.rules.retire.owner,
+        };
+        let chance = retire_chance(bands, st.age);
+        if chance == 0 {
+            continue;
+        }
+        let mut rng = Rng::new(season_salt ^ hash_str(&st.staff_id) ^ hash_str("retire"));
+        if chance >= 100 || rng.pct() < chance {
+            st.status = "retired".into();
+            events.push(StaffEvent {
+                kind: "retired".into(),
+                staff_id: st.staff_id.clone(),
+                name: st.name.clone(),
+                role: st.role.clone(),
+                team_id: st.team_id.clone(),
+                league_id: st.league_id.clone(),
+                from_team_id: None,
+                age: st.age,
+            });
+        }
+    }
+
+    // ── 4. 감독 경질 판정 ─────────────────────────────────────
+    // 전력★로 기대 순위를 잡고 실제 순위가 미달하면 부진 시즌을 누적한다.
+    // ★1 팀은 기대치가 전원이라 경질이 없다 — 하위권이 그 팀의 정상이다.
+    let owner_patience: HashMap<String, i64> = staff
+        .iter()
+        .filter(|s| s.role == "owner" && s.status == "active")
+        .map(|s| (s.team_id.clone(), *s.stats.get("patience").unwrap_or(&50)))
+        .collect();
+
+    for r in &p.results {
+        let expected_ratio = if p.rules.firing.expectation_by_power {
+            1.0 - ((r.power - 1) as f64 / 5.0)
+        } else {
+            0.5
+        };
+        let expected_rank = ((r.league_size as f64) * expected_ratio).ceil().max(1.0) as i64;
+        let underperformed = r.rank > expected_rank;
+        let next_slump = if underperformed { r.slump_seasons + 1 } else { 0 };
+        slump.insert(r.team_id.clone(), next_slump);
+
+        if !underperformed {
+            continue;
+        }
+        let patience = *owner_patience.get(&r.team_id).unwrap_or(&50);
+        let need = firing_threshold(&p.rules.firing, patience);
+        if next_slump < need {
+            continue;
+        }
+        // 경질 — 이미 은퇴한 감독은 건드리지 않는다
+        if let Some(mgr) = staff
+            .iter_mut()
+            .find(|s| s.role == "manager" && s.team_id == r.team_id && s.status == "active")
+        {
+            mgr.status = "fired".into();
+            events.push(StaffEvent {
+                kind: "fired".into(),
+                staff_id: mgr.staff_id.clone(),
+                name: mgr.name.clone(),
+                role: mgr.role.clone(),
+                team_id: mgr.team_id.clone(),
+                league_id: mgr.league_id.clone(),
+                from_team_id: None,
+                age: mgr.age,
+            });
+            // 경질했으면 누적은 리셋 — 새 감독에게 전 감독의 빚을 물리지 않는다
+            slump.insert(r.team_id.clone(), 0);
+        }
+    }
+
+    // ── 5. 빈 자리 충원 ───────────────────────────────────────
+    // 상위 리그·강팀부터 채운다. 하위 팀의 우수 스태프를 스카우트해 끌어온다.
+    // 한 방향으로 훑어야 이동으로 새로 빈 자리가 연쇄로 메워진다.
+    let vacancies: Vec<(String, String, String)> = events
+        .iter()
+        .filter(|e| e.kind == "retired" || e.kind == "fired")
+        .map(|e| (e.team_id.clone(), e.league_id.clone(), e.role.clone()))
+        .collect();
+
+    // 팀 전력 — 충원 우선순위
+    let power_of: HashMap<String, i64> =
+        p.results.iter().map(|r| (r.team_id.clone(), r.power)).collect();
+
+    let mut ordered = vacancies.clone();
+    ordered.sort_by(|a, b| {
+        league_tier(&b.1)
+            .cmp(&league_tier(&a.1))
+            .then(power_of.get(&b.0).unwrap_or(&3).cmp(power_of.get(&a.0).unwrap_or(&3)))
+            .then(a.0.cmp(&b.0))
+            .then(a.2.cmp(&b.2))
+    });
+
+    for (team_id, league_id, role) in ordered {
+        let target_tier = league_tier(&league_id);
+        let target_power = *power_of.get(&team_id).unwrap_or(&3);
+
+        // 스카우트 후보: 같은 역할 · active · 능력치 평균 하한 이상 ·
+        // **현 소속이 더 낮은 자리**(리그가 낮거나, 같은 리그에서 전력이 낮은 팀)
+        let mut best: Option<(usize, i64)> = None;
+        for (i, cand) in staff.iter().enumerate() {
+            if cand.status != "active" || cand.role != role {
+                continue;
+            }
+            if cand.team_id == team_id {
+                continue;
+            }
+            let avg = avg_stat(&cand.stats);
+            if avg < p.rules.hiring.scout_min_avg {
+                continue;
+            }
+            if p.rules.hiring.scout_from_lower_only {
+                let cand_tier = league_tier(&cand.league_id);
+                let cand_power = *power_of.get(&cand.team_id).unwrap_or(&3);
+                let is_lower = cand_tier < target_tier
+                    || (cand_tier == target_tier && cand_power < target_power);
+                if !is_lower {
+                    continue;
+                }
+            }
+            if best.map(|(_, a)| avg > a).unwrap_or(true) {
+                best = Some((i, avg));
+            }
+        }
+
+        if let Some((i, _)) = best {
+            let from = staff[i].team_id.clone();
+            staff[i].team_id = team_id.clone();
+            staff[i].league_id = league_id.clone();
+            staff[i].joined_season = p.season_year + 1;
+            events.push(StaffEvent {
+                kind: "moved".into(),
+                staff_id: staff[i].staff_id.clone(),
+                name: staff[i].name.clone(),
+                role: staff[i].role.clone(),
+                team_id: team_id.clone(),
+                league_id: league_id.clone(),
+                from_team_id: Some(from),
+                age: staff[i].age,
+            });
+            // 이동으로 새로 빈 자리가 생기지만, 그 자리는 다음 시즌에 메워진다 —
+            // 같은 시즌에 연쇄를 끝까지 돌리면 리그 전체가 한 해에 뒤집힌다.
+            continue;
+        }
+        // 후보 없음 → 신규 생성은 호출부(TS)가 staff_gen으로 처리한다.
+        // 여기서 만들면 이름 풀·생성 규칙을 이 모듈이 또 들고 있어야 한다.
+        events.push(StaffEvent {
+            kind: "vacant".into(),
+            staff_id: String::new(),
+            name: String::new(),
+            role: role.clone(),
+            team_id: team_id.clone(),
+            league_id: league_id.clone(),
+            from_team_id: None,
+            age: 0,
+        });
+    }
+
+    AdvanceStaffResult { staff, events, slump_seasons: slump }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn bands() -> Vec<RetireBand> {
+        vec![
+            RetireBand { until: 59, chance: 0 },
+            RetireBand { until: 63, chance: 6 },
+            RetireBand { until: 71, chance: 30 },
+            RetireBand { until: 200, chance: 100 },
+        ]
+    }
+
+    #[test]
+    fn retire_bands_pick_first_match() {
+        let b = bands();
+        assert_eq!(retire_chance(&b, 40), 0);
+        assert_eq!(retire_chance(&b, 59), 0);
+        assert_eq!(retire_chance(&b, 60), 6);
+        assert_eq!(retire_chance(&b, 63), 6);
+        assert_eq!(retire_chance(&b, 64), 30);
+        assert_eq!(retire_chance(&b, 71), 30);
+        assert_eq!(retire_chance(&b, 72), 100);
+        assert_eq!(retire_chance(&b, 99), 100);
+    }
+
+    #[test]
+    fn firing_threshold_scales_with_patience() {
+        let r = FiringRules {
+            expectation_by_power: true,
+            threshold: vec![
+                FiringThreshold { patience_until: 29, seasons: 1 },
+                FiringThreshold { patience_until: 69, seasons: 2 },
+                FiringThreshold { patience_until: 200, seasons: 3 },
+            ],
+        };
+        assert_eq!(firing_threshold(&r, 10), 1);
+        assert_eq!(firing_threshold(&r, 29), 1);
+        assert_eq!(firing_threshold(&r, 30), 2);
+        assert_eq!(firing_threshold(&r, 69), 2);
+        assert_eq!(firing_threshold(&r, 70), 3);
+        assert_eq!(firing_threshold(&r, 95), 3);
+    }
+
+    #[test]
+    fn league_tiers_are_ordered() {
+        assert!(league_tier("LEAGUE_KBL") > league_tier("LEAGUE_UNIVERSITY"));
+        assert!(league_tier("LEAGUE_UNIVERSITY") > league_tier("LEAGUE_INDEPENDENT"));
+        assert!(league_tier("LEAGUE_INDEPENDENT") > league_tier("LEAGUE_HIGHSCHOOL"));
+        assert_eq!(league_tier("LEAGUE_UNKNOWN"), 0);
+    }
+}

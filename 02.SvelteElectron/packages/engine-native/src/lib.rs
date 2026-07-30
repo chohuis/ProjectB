@@ -17,6 +17,7 @@ mod group_stage;
 mod survival;
 mod rest_rules;
 mod staff_gen;
+mod staff_lifecycle;
 mod postseason_engine;
 mod week_engine;
 mod team_engine;
@@ -660,6 +661,16 @@ pub fn generate_staff_native(p: String) -> String {
     };
     serde_json::to_string(&staff_gen::generate_staff(params))
         .unwrap_or_else(|e| parse_err("generateStaffNative/serialize", e))
+}
+
+/// 시즌 종료 → 스태프 나이·경력성장·은퇴·경질·이동 (Phase 6B)
+#[napi]
+pub fn advance_staff_season_native(p: String) -> String {
+    let params: staff_lifecycle::AdvanceStaffParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("advanceStaffSeasonNative", e),
+    };
+    serde_json::to_string(&staff_lifecycle::advance_staff_season(params))
+        .unwrap_or_else(|e| parse_err("advanceStaffSeasonNative/serialize", e))
 }
 
 // ── 의무 휴식 (Phase 5-8) ─────────────────────────────────────────────────────

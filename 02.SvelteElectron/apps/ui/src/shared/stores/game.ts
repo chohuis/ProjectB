@@ -2263,6 +2263,37 @@ function createGameStore() {
           ? trimMailbox([result.mailboxEntry, ...st.mailbox])
           : st.mailbox,
       }));
+
+      // ── 스태프 생애주기 (Phase 6B) ─────────────────────────
+      // 이 566줄과 얽히지 않는다 — 스태프는 병역·FA·드래프트에 의존하지 않으므로
+      // usecases/seasonEnd/staffLifecycle.ts에서 독립적으로 처리하고 여기서 호출만 한다.
+      try {
+        const slotId = get({ subscribe }).currentSlotId;
+        if (slotId) {
+          const { processStaffSeasonEnd, describeStaffEvent } =
+            await import("../usecases/seasonEnd/staffLifecycle");
+          const { seasonStore } = await import("./season");
+          const seasonNow = get(seasonStore);
+          const r = await processStaffSeasonEnd(
+            slotId, seasonYear, seasonNow.worldSeed ?? 0, seasonNow.staffSlumpSeasons ?? {},
+          );
+          seasonStore.setStaffSlumpSeasons(r.slumpSeasons);
+
+          if (r.events.length > 0) {
+            const teamName = (id: string) =>
+              get(masterStore).teams.find((t) => t.id === id)?.name ?? id;
+            const lines = r.events.map((e) => describeStaffEvent(e, teamName)).filter(Boolean);
+            update((st) => ({
+              ...st,
+              logs: [...lines.slice(0, 8), ...st.logs].slice(0, 30),
+            }));
+          }
+        }
+      } catch (e) {
+        // 스태프 처리가 실패해도 시즌 종료 자체는 끝나야 한다 — 여기서 던지면
+        // 병역·FA까지 다 처리한 시즌이 통째로 롤백된다
+        console.error("[processAllLeaguesSeasonEnd] 스태프 생애주기 실패", e);
+      }
     },
 
     // 시즌 종료 후 주인공 에이징 감퇴 적용 (advanceSeasonYear 이전에 호출 — seasonHealth 기반)

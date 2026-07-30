@@ -186,6 +186,104 @@
           "facilityInvestment": -15
         }
       }
+    },
+    "lifecycle": {
+      "enabled": true,
+      "retire": {
+        "manager": [
+          {
+            "until": 59,
+            "chance": 0
+          },
+          {
+            "until": 63,
+            "chance": 6
+          },
+          {
+            "until": 67,
+            "chance": 14
+          },
+          {
+            "until": 71,
+            "chance": 30
+          },
+          {
+            "until": 200,
+            "chance": 100
+          }
+        ],
+        "coach": [
+          {
+            "until": 56,
+            "chance": 0
+          },
+          {
+            "until": 60,
+            "chance": 7
+          },
+          {
+            "until": 64,
+            "chance": 16
+          },
+          {
+            "until": 68,
+            "chance": 32
+          },
+          {
+            "until": 200,
+            "chance": 100
+          }
+        ],
+        "owner": [
+          {
+            "until": 69,
+            "chance": 0
+          },
+          {
+            "until": 74,
+            "chance": 5
+          },
+          {
+            "until": 79,
+            "chance": 12
+          },
+          {
+            "until": 200,
+            "chance": 100
+          }
+        ]
+      },
+      "growth": {
+        "peak_age": 50,
+        "young_gain": 1,
+        "plateau_gain": 0,
+        "decline_age": 62,
+        "decline_loss": 1,
+        "stats_per_season": 2,
+        "cap": 95,
+        "floor": 20
+      },
+      "firing": {
+        "expectation_by_power": true,
+        "threshold": [
+          {
+            "patience_until": 29,
+            "seasons": 1
+          },
+          {
+            "patience_until": 69,
+            "seasons": 2
+          },
+          {
+            "patience_until": 200,
+            "seasons": 3
+          }
+        ]
+      },
+      "hiring": {
+        "scout_from_lower_only": true,
+        "scout_min_avg": 58
+      }
     }
   },
   "namePools": {

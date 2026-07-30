@@ -174,6 +174,8 @@ function createSeasonStore() {
         }
         next.standingsSnapshots = carried;
         next.worldSeed = s.worldSeed;
+        // 부진 누적은 시즌을 넘겨야 의미가 있다 (경질 판정의 입력)
+        next.staffSlumpSeasons = { ...(s.staffSlumpSeasons ?? {}) };
         return next;
       });
     },
@@ -529,6 +531,10 @@ function createSeasonStore() {
 
     captureStandingsSnapshot(key: import("../utils/standingsSnapshot").SnapshotKey) {
       update((s) => Postseason.captureStandingsSnapshot(s, key));
+    },
+
+    setStaffSlumpSeasons(map: Record<string, number>) {
+      update((s) => ({ ...s, staffSlumpSeasons: map }));
     },
 
     setWorldSeed(worldSeed: number) {

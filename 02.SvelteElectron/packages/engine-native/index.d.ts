@@ -115,6 +115,8 @@ export declare function tournamentRoundScheduleNative(p: string): string
 export declare function buildFarmBracketNative(p: string): string
 /** 팀 목록 + 생성 규칙 → 스태프 전원 (worldSeed 결정적) */
 export declare function generateStaffNative(p: string): string
+/** 시즌 종료 → 스태프 나이·경력성장·은퇴·경질·이동 (Phase 6B) */
+export declare function advanceStaffSeasonNative(p: string): string
 /** 투구수별 의무 휴식을 채웠는지 (일 단위 — 주 단위로는 주말 연투가 안 걸린다) */
 export declare function checkPitcherRestNative(p: string): string
 /** 리그별 투구수 상한 (고교 105 / 그 외 120) */

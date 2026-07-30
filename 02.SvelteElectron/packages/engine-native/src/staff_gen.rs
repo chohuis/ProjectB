@@ -156,7 +156,8 @@ pub struct GenerateStaffParams {
 
 // ── 출력 ───────────────────────────────────────────────────────
 
-#[derive(Debug, Serialize, Clone)]
+// Deserialize도 붙인다 — 생애주기(6B)가 시즌마다 이 구조를 되받는다
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct StaffRow {
     pub staff_id: String,

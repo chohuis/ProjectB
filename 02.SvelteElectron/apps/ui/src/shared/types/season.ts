@@ -342,6 +342,13 @@ export interface SaveSeason {
   // 독립 4단계 생존리그 진행 상태 (Phase 5-6)
   survival: import("../utils/survivalLeague").SurvivalState | null;
   /**
+   * 팀별 부진 시즌 누적 — 감독 경질 판정의 입력 (Phase 6B).
+   *
+   * 전력★ 기대 순위에 미달한 시즌이 쌓이고, 구단주 patience가 정한 임계값에
+   * 닿으면 경질된다. 시즌을 넘겨야 누적되므로 세이브에 남는다.
+   */
+  staffSlumpSeasons: Record<string, number>;
+  /**
    * 세계 시드. slot.db meta의 world_seed와 같은 값을 시즌 상태에도 둔다.
    *
    * 조 추첨처럼 "세이브마다 달라야 하지만 다시 열면 같아야" 하는 뽑기가
@@ -394,6 +401,7 @@ export function makeEmptySeason(
     standingsSnapshots: {},
     groupStages: {},
     survival: null,
+    staffSlumpSeasons: {},
     worldSeed: 0,
   };
 }
