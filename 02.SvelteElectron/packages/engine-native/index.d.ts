@@ -45,6 +45,12 @@ export declare function advanceGradesNative(paramsJson: string): string
 export declare function npcCalcWeeklyGrowth(paramsJson: string): string
 /** 신입생 벌크 생성 */
 export declare function generateFreshmenNative(paramsJson: string): string
+/** FA 시장 정산 — 등급·계약·보상선수를 한 번에 */
+export declare function resolveFaMarketNative(paramsJson: string): string
+/** 국가대표 발탁 — 그 해 대회가 없으면 빈 결과 */
+export declare function selectNationalSquadNative(paramsJson: string): string
+/** 국제대회 결과 — 경기는 시뮬하지 않고 대표팀 전력으로 순위를 뽑는다 */
+export declare function simulateTournamentNative(paramsJson: string): string
 /** 드래프트 후보 선정 — 졸업생 + 대학 재학 얼리 신청 + 독립리그 신청 */
 export declare function selectDraftCandidatesNative(paramsJson: string): string
 /** NPC 드래프트 시뮬 */

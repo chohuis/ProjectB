@@ -171,7 +171,7 @@ function runSeason(npcs, year, kblTeams) {
   npcs = call("applyDraftNative", {
     npcs, result: sim, universityTeamIds: DEST_UNIV, independentTeamIds: DEST_IND,
     contract: gr.draftRules.contract,
-    rookieToFarm: gr.draftRules.rookieToFarm,
+    firstTeamRounds: gr.draftRules.firstTeamRounds,
     teamIndex: TEAM_INDEX,
     placement: PLACEMENT,
   });
@@ -189,13 +189,16 @@ function runSeason(npcs, year, kblTeams) {
     seasonYear: year, namedNpcIds: [],
     salaryRules: gr.salaryRules, rosterLimits: ROSTER_LIMITS,
     universityTeamIds: DEST_UNIV, independentTeamIds: DEST_IND, placement: PLACEMENT,
+    releaseRules: gr.faRules && gr.faRules.release,
   });
+  const releasedThisYear = (off.logs || []).filter((l) => l.includes("방출 (점수")).length;
 
   // ── 다음 시즌 W1: 고교 신입생 ────────────────────────────────
   const fresh = generateFreshmen(off.npcs, year + 1);
 
   return {
     after: [...off.npcs, ...fresh], fresh: fresh.length, counts: sel.counts,
+    released: releasedThisYear,
     nCand: candidates.length,
     earlyPicked: sim.picks.filter((p) => {
       const r = routeOf.get(p.npcId);
@@ -228,14 +231,14 @@ function measure(label, kblTeams) {
     }
     rows.push({
       year, before, fresh: r.fresh, counts: r.counts, nCand: r.nCand, early: r.earlyPicked,
-      drafted: r.sim.picks.length, leftover: r.leftoverPending,
+      drafted: r.sim.picks.length, leftover: r.leftoverPending, released: r.released,
       toUniv: moved.get("LEAGUE_UNIVERSITY") ?? 0,
       toInd: moved.get("LEAGUE_INDEPENDENT") ?? 0,
       retired: moved.get("LEAGUE_RETIRED") ?? 0,
     });
   }
 
-  console.log("연도   후보 (고졸/대졸/대학재학/독립)  지명(얼리)  미지명→대학  →독립  포기  신입생");
+  console.log("연도   후보 (고졸/대졸/대학재학/독립)  지명(얼리)  미지명→대학  →독립  포기  방출  신입생");
   for (const r of rows) {
     const c = r.counts;
     console.log(
@@ -243,7 +246,7 @@ function measure(label, kblTeams) {
       `/${String(c[2]).padStart(4)}/${String(c[3]).padStart(3)})` +
       `  ${String(r.drafted).padStart(6)}(${String(r.early).padStart(2)})` +
       `  ${String(r.toUniv).padStart(9)}  ${String(r.toInd).padStart(5)}` +
-      `  ${String(r.retired).padStart(4)}  ${String(r.fresh).padStart(6)}`
+      `  ${String(r.retired).padStart(4)}  ${String(r.released).padStart(4)}  ${String(r.fresh).padStart(6)}`
     );
   }
 

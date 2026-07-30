@@ -329,6 +329,20 @@ export interface SaveSeason {
   ablWestTeams: string[];
   // NPC 부상 상태 (playerId → 부상 정보)
   npcInjuries: Record<string, import("../types/save").NpcInjuryEntry>;
+  /**
+   * 국가대표 차출 — npcId → 남은 주.
+   *
+   * 부상과 **같은 취급**이다: 승강의 상시 콜업이 이 자리를 메운다
+   * (사용자 확정 — 발탁되면 그 주 소속팀 경기에서 빠진다).
+   * 대회가 끝나면 비워진다.
+   */
+  nationalDuty?: Record<string, number>;
+  /** 진행 중인 대회 — 폐막 주에 결과를 뽑기 위해 들고 있는다 */
+  activeTournament?: {
+    def: import("../usecases/nationalTeam").TournamentDef;
+    squadStrength: number;
+    endWeek: number;
+  } | null;
   // 부상 은퇴 NPC 목록 (playerId)
   npcRetired: string[];
   // 모든 선수 NPC 라이브 스탯 (월간 성장/하락 누적, entityId → NpcLiveStat)

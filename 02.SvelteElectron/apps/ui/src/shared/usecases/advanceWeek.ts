@@ -12,6 +12,7 @@ import { applyWeeklyStudy, calcExamResult, getUniversityEffBonus, getUniversityE
 import { checkAchievements, computeMetrics } from "../utils/achievementEngine";
 import { generateTop10, buildTop10Message, rankEffect } from "../utils/top10Engine";
 import { isMonthStart, planMonthlyFriendlies, buildMonthlyNoticeMessage } from "../utils/friendlyMatchEngine";
+import { runNationalTeamWeek } from "./nationalTeam";
 import { calcOfferedSalaryForProtagonist, calcSeasonRating } from "../utils/salaryEngine";
 import { isFaEligible, getFaThreshold } from "../utils/faEngine";
 import type { MatchResult, PendingAction, PlayerCondition, ScheduleEntry, WeekAdvanceResult } from "../types/season";
@@ -453,9 +454,24 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   // NPC 주간 성장/하락 처리 (매주 실행)
   await processWeeklyNpcGrowth(weekNum, g.protagonist.careerStage);
 
-  // 프로 스테이지: 콜업/콜다운 — 연 2회(시즌 중 W20 + 오프시즌 W43), 주인공 리그만 (R5, DESIGN.md §5)
-  if (weekInYear === 20 || weekInYear === 43) {
-    const callupLogs = await processProTeamCallupCalldown(weekNum);
+  // ── 국가대표 · 국제대회 (Phase 7-3) ─────────────────────────
+  // 대회는 4년 주기이고 한 해에 하나만 열린다. 발탁되면 그 기간 소속팀에서
+  // 빠지고(부상과 같은 취급), 폐막 주에 순위·메달·병역 면제가 정해진다
+  {
+    const nationalLogs = await runNationalTeamWeek(weekNum, weekInYear);
+    logs.push(...nationalLogs);
+  }
+
+  // 1군 ↔ 2군 승강 — 국내 10구단 전부, 주인공 무관.
+  //
+  //   월 첫 주: 정기 재편 (콜업 + 콜다운)
+  //   나머지 주: 상시 콜업 — 부상·장기 부진으로 빈 자리만 메운다
+  //
+  // 예전엔 연 2회(W20·W43)에 주인공 리그만이라, 드래프트가 매년 2군에 넣는
+  // 110명을 따라가지 못했고 주인공이 프로가 아니면 아예 안 돌았다.
+  {
+    const callupLogs = await processProTeamCallupCalldown(
+      weekNum, isMonthStart(weekInYear) ? {} : { urgentOnly: true });
     logs.push(...callupLogs);
   }
 

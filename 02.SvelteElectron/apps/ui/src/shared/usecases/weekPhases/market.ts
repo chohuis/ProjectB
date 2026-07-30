@@ -4,6 +4,7 @@ import { gameStore } from "../../stores/game";
 import { masterStore } from "../../stores/master";
 import { autoLog, logEvent, logVerify, type PlayerEventEntry } from "../../stores/autoAdvance";
 import { getFaThreshold } from "../../utils/faEngine";
+import { loadRosterRules } from "../../repo/newGameV3";
 import type { PlayerSeasonStats } from "../../types/save";
 import { MONTH_STARTS_1 } from "./growth";
 
@@ -23,10 +24,29 @@ function npcOvr(entity: import("../../stores/master").EntityRow, liveStats: impo
   return (live?.pitching?.ovr ?? p?.pitching?.ovr ?? live?.batting?.ovr ?? p?.batting?.ovr ?? 60) as number;
 }
 
+/**
+ * 승강 판정이 보는 시즌 성적. 1군·2군 기록을 한 곳에서 찾는다 —
+ * 시즌 중 오르내린 선수는 두 리그에 기록이 나뉘어 있다.
+ */
+function seasonPerfOf(
+  npcId: string,
+  stats: Record<string, Record<string, PlayerSeasonStats>>,
+): object | undefined {
+  for (const lid of ["LEAGUE_KBL", "LEAGUE_KBL_FARM"]) {
+    const st = stats[lid]?.[npcId];
+    if (!st) continue;
+    return st.type === "pitcher"
+      ? { games: st.g, innings: st.ip, era: st.era, whip: st.whip }
+      : { games: st.g, plateAppearances: st.pa, ops: st.ops };
+  }
+  return undefined;
+}
+
 function buildRosterRef(
   entity: import("../../stores/master").EntityRow,
   liveStats: import("../../stores/master").NpcLiveStats,
   savedNpc?: import("../../types/save").NpcSaveState,
+  perf?: object,
 ): object {
   const p = (entity.details as EntityDetails)?.player;
   return {
@@ -40,6 +60,8 @@ function buildRosterRef(
     isProspect:       entity.teamId?.endsWith("_2") ?? false,
     personality:      entity.personality ?? null,
     fame:             savedNpc?.fame ?? 0,
+    // 성적이 없으면 undefined — Rust가 그때는 능력치만 본다
+    ...(perf ? { perf } : {}),
   };
 }
 
@@ -564,49 +586,86 @@ function getTeamEntityRefs(
   entities: import("../../stores/master").EntityRow[],
   liveStats: import("../../stores/master").NpcLiveStats,
   namedMap: Map<string, import("../../types/save").NpcSaveState>,
+  leagueStats: Record<string, Record<string, PlayerSeasonStats>> = {},
 ) {
-  const active = entities
-    .filter(e => e.role === "player" && e.teamId === teamId1)
-    .map(e => buildRosterRef(e, liveStats, namedMap.get(e.id)));
-  const farm = entities
-    .filter(e => e.role === "player" && e.teamId === teamId2)
-    .map(e => buildRosterRef(e, liveStats, namedMap.get(e.id)));
-  return { active, farm };
+  const build = (teamId: string) => entities
+    .filter(e => e.role === "player" && e.teamId === teamId)
+    .map(e => buildRosterRef(e, liveStats, namedMap.get(e.id), seasonPerfOf(e.id, leagueStats)));
+  return { active: build(teamId1), farm: build(teamId2) };
 }
 
-// 프로팀 월간 콜업/콜다운 처리
-export async function processProTeamCallupCalldown(weekNum: number): Promise<string[]> {
+/**
+ * 프로 1군 ↔ 2군 승강.
+ *
+ * **주인공과 무관하게 국내 10구단 전부 돈다.** 예전엔 `careerStage`가 프로일
+ * 때만, 그것도 주인공 리그만 처리해서 — 주인공이 고교생이면 프로 세계의 승강이
+ * 통째로 멈췄다. 드래프트가 매년 110명을 2군에 넣는데 아무도 안 올라왔다.
+ * 국내 전 리그 풀 시뮬(DESIGN §2)의 전제와도 어긋난다.
+ *
+ * 경로가 둘이다 (사용자 확정 2026-07-30):
+ *
+ *   **월간 정기** (`urgentOnly` 없음) — 월 첫 주. 콜업과 콜다운을 같이 돌려
+ *   로스터를 재편한다. 성적·능력치·연봉·팀 성향을 다 본다
+ *
+ *   **상시 콜업** (`urgentOnly: true`) — 나머지 주. **빈 자리 메우기만** 한다.
+ *   부상이나 장기 부진으로 자리가 비었을 때 팀당 한 명. 콜다운은 안 돈다 —
+ *   그건 재편이라 정기의 몫이다. 둘이 같은 일을 하면 매주 로스터가 출렁인다
+ */
+export async function processProTeamCallupCalldown(
+  weekNum: number,
+  opts: { urgentOnly?: boolean } = {},
+): Promise<string[]> {
+  const urgentOnly = opts.urgentOnly ?? false;
   const g = get(gameStore);
   const s = get(seasonStore);
   const m = get(masterStore);
   const logs: string[] = [];
-  const isProStage = ["pro_kbl", "pro_abl", "pro_jbl"].includes(g.protagonist.careerStage);
-  if (!isProStage) return logs;
 
   const namedMap = new Map(g.npcs.map(n => [n.npcId, n]));
   const monthIndex = MONTH_STARTS_1.indexOf(s.schedule.find(e => e.week === weekNum)?.week ?? 0);
   const currentMonth = monthIndex >= 0 ? monthIndex + 1 : 6;
 
-  // 주인공 리그만 (R5, DESIGN.md §5)
-  const proTeams1 = m.teams.filter(t => t.leagueId === g.protagonist.leagueId && t.id.endsWith("_1"));
+  // 로스터 상한은 규칙 파일이 정본이다 — 예전엔 여기 35가 박혀 있었고
+  // 규칙 파일(34)과 달랐다 (드리프트)
+  const rulesFile = await loadRosterRules();
+  const maxRosterSize = rulesFile.rosterRules["LEAGUE_KBL"]?.rosterMax ?? 34;
+  const minRosterSize = rulesFile.rosterRules["LEAGUE_KBL"]?.rosterMin ?? 26;
+  // 승강 판정은 성적을 주로 본다 (사용자 확정) — 규칙은 규칙 파일이 정본
+  const promotionRules = rulesFile.promotionRules;
 
-  const injuredIds = Object.entries(s.npcInjuries ?? {})
-    .filter(([, inj]) => (inj as any)?.severity !== "mild")
-    .map(([id]) => id);
+  // 1군·2군 시즌 기록. 없으면 판정이 능력치만 보게 된다
+  const leagueStats: Record<string, Record<string, PlayerSeasonStats>> = {};
+  for (const lid of ["LEAGUE_KBL", "LEAGUE_KBL_FARM"]) {
+    const ls = s.leagueState?.[lid];
+    if (ls?.stats) leagueStats[lid] = ls.stats;
+  }
+
+  const proTeams1 = m.teams.filter(t => t.leagueId === "LEAGUE_KBL" && t.id.endsWith("_1"));
+
+  // 국가대표 차출자는 **부상자와 같은 목록으로** 넘긴다 (사용자 확정) —
+  // 따로 처리하면 대회 기간에 1군이 빈 채로 돈다
+  const injuredIds = [
+    ...Object.entries(s.npcInjuries ?? {})
+      .filter(([, inj]) => (inj as any)?.severity !== "mild")
+      .map(([id]) => id),
+    ...Object.keys(s.nationalDuty ?? {}),
+  ];
 
   const allMoves: Array<{ id: string; teamId: string }> = [];
   const _t0Callup = Date.now();
   const _callupEntries: PlayerEventEntry[] = [];
   const _calldownEntries: PlayerEventEntry[] = [];
 
-  autoLog(`[콜업콜다운] W${weekNum} 시작 | 대상팀 ${proTeams1.length}팀 | 부상자 ${injuredIds.length}명`);
+  const label = urgentOnly ? "상시콜업" : "월간승강";
+  autoLog(`[${label}] W${weekNum} 시작 | 대상팀 ${proTeams1.length}팀 | 부상자 ${injuredIds.length}명`);
 
   for (const team of proTeams1) {
     const teamId1 = team.id;
     const teamId2 = teamId1.replace(/_1$/, "_2");
     const profile  = getTeamProfile(teamId1, g, m) ?? DEFAULT_TEAM_PROFILE;
 
-    const { active, farm } = getTeamEntityRefs(teamId1, teamId2, m.entities, get(npcLiveStatsStore), namedMap);
+    const { active, farm } = getTeamEntityRefs(
+      teamId1, teamId2, m.entities, get(npcLiveStatsStore), namedMap, leagueStats);
     const teamShort = teamId1.replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "");
 
     // 콜업
@@ -614,11 +673,19 @@ export async function processProTeamCallupCalldown(weekNum: number): Promise<str
       const callupRes = JSON.parse(
         await window.projectB!.evalCallupCandidatesNative(JSON.stringify({
           teamProfile: profile, farmPlayers: farm, activePlayers: active,
-          injuredPlayerIds: injuredIds, currentMonth,
+          injuredPlayerIds: injuredIds, currentMonth, promotionRules,
         }))
       ) as { candidates: Array<{ playerId: string; replacesPlayerId: string; reason: string }> };
 
-      for (const c of callupRes.candidates.slice(0, 2)) {
+      // 상시 경로는 **빈 자리 메우기만** — 부상·장기 부진으로 생긴 자리에
+      // 팀당 한 명. 나머지 사유(전력 보강·유망주 노출)는 정기의 몫이다
+      const picked = urgentOnly
+        ? callupRes.candidates
+            .filter(c => c.reason === "injury_replacement" || c.reason === "slump_replacement")
+            .slice(0, 1)
+        : callupRes.candidates.slice(0, 2);
+
+      for (const c of picked) {
         allMoves.push({ id: c.playerId,         teamId: teamId1 });
         allMoves.push({ id: c.replacesPlayerId, teamId: teamId2 });
         const upName   = m.entities.find(e => e.id === c.playerId)?.name         ?? c.playerId;
@@ -630,17 +697,20 @@ export async function processProTeamCallupCalldown(weekNum: number): Promise<str
       }
     }
 
-    // 콜다운
-    if (active.length > 0) {
+    // 콜다운 — 정기에만. 상시가 같이 돌면 매주 로스터가 출렁인다.
+    // 하한 아래로는 안 내린다 (규칙 파일의 rosterMin) — 콜업은 1:1 교체라
+    // 정원을 안 늘리는데 콜다운만 나가면 1군이 마른다
+    if (!urgentOnly && active.length > minRosterSize) {
       const calldownRes = JSON.parse(
         await window.projectB!.evalCalldownCandidatesNative(JSON.stringify({
           teamProfile: profile, activePlayers: active,
-          currentRosterSize: active.length, maxRosterSize: 35,
+          currentRosterSize: active.length, maxRosterSize, promotionRules,
         }))
       ) as { candidates: Array<{ playerId: string }> };
 
       for (const c of calldownRes.candidates.slice(0, 2)) {
-        if (c.playerId === g.protagonist.id) continue;
+        // 주인공도 강등된다 (사용자 확정 2026-07-30). 예전엔 여기서 건너뛰어
+        // 주인공만 성적과 무관하게 1군에 남았다
         allMoves.push({ id: c.playerId, teamId: teamId2 });
         const cdName = m.entities.find(e => e.id === c.playerId)?.name ?? c.playerId;
         const cdOvr  = Math.round(active.find(a => a.playerId === c.playerId)?.ovr ?? 0);
@@ -654,11 +724,34 @@ export async function processProTeamCallupCalldown(weekNum: number): Promise<str
   let _callupDbOk = true;
   if (allMoves.length > 0) {
     // 팀 이동을 gameStore.npcs에 반영 → connectToGameStore 구독이 entities 자동 갱신
+    //
+    // ⚠ **리그도 같이 바꾼다.** 예전엔 `currentTeam`만 갈아서 2군으로 내려간
+    // 선수가 계속 `LEAGUE_KBL` 소속으로 집계됐다 — 2군 리그 순위·경기에 안 잡히고
+    // 1군 로스터 상한에는 계속 포함된다. 오프시즌 강등에서도 같은 결함이
+    // 프로 소속을 800명까지 부풀렸다 (Phase 7-1 D-3a).
     const moveMap = new Map(allMoves.map(mv => [mv.id, mv.teamId]));
     const movedNpcs = get(gameStore).npcs
       .filter(n => moveMap.has(n.npcId))
-      .map(n => ({ ...n, currentTeam: moveMap.get(n.npcId)! }));
+      .map(n => {
+        const toTeam = moveMap.get(n.npcId)!;
+        return {
+          ...n,
+          currentTeam: toTeam,
+          currentLeague: toTeam.endsWith("_2") ? "LEAGUE_KBL_FARM" : "LEAGUE_KBL",
+        };
+      });
     if (movedNpcs.length > 0) gameStore.updateNpcs(movedNpcs);
+
+    // 주인공이 승강 대상이면 소속 리그를 같이 옮긴다 — 2군 일정·순위표가
+    // 이미 있으므로 leagueId만 맞으면 그대로 뛴다 (사용자 확정)
+    const protoTo = moveMap.get(g.protagonist.id);
+    if (protoTo) {
+      const toLeague = protoTo.endsWith("_2") ? "LEAGUE_KBL_FARM" : "LEAGUE_KBL";
+      gameStore.setProtagonistTeam(protoTo, toLeague);
+      logs.push(protoTo.endsWith("_2")
+        ? `[W${weekNum}] 2군 강등 통보를 받았다.`
+        : `[W${weekNum}] 1군 승격 통보를 받았다.`);
+    }
   }
 
   if (_callupEntries.length > 0) {
@@ -673,7 +766,7 @@ export async function processProTeamCallupCalldown(weekNum: number): Promise<str
       counts: { input: proTeams1.length, processed: _calldownEntries.length, saved: _calldownEntries.length },
       dbOk: _callupDbOk, durationMs: Date.now() - _t0Callup });
   }
-  autoLog(`[콜업콜다운] W${weekNum} 완료 | 콜업 ${_callupEntries.length}건 / 콜다운 ${_calldownEntries.length}건 | ${Date.now() - _t0Callup}ms`);
+  autoLog(`[${label}] W${weekNum} 완료 | 콜업 ${_callupEntries.length}건 / 콜다운 ${_calldownEntries.length}건 | ${Date.now() - _t0Callup}ms`);
 
   return logs;
 }

@@ -224,6 +224,8 @@
     "rosterSize": 26,
     "serviceMonths": 24,
     "_serviceNote": "복무 기간(개월). 기존 규약은 enlistYear + 2시즌이라 24개월로 맞춘다",
+    "maxPerTeam": 3,
+    "_selectionNote": "연간 입대 인원은 정원/복무연수로 산출한다 (26명 / 2년 = 13명). 예전엔 game.ts에 maxTotal 20이 박혀 있어 정상상태가 40명 - 정원의 1.5배였다. maxPerTeam은 한 구단이 상무를 독식하지 않게 하는 상한",
     "ranks": [
       {
         "untilMonths": 2,
@@ -259,6 +261,8 @@
     "_note": "11월 통합 드래프트 (Phase 7-1). 읽는 곳: engine-native/src/draft.rs",
     "rounds": 11,
     "_roundsNote": "10팀 x 11라운드 = 110명. KBO 실제 규모와 같다",
+    "firstTeamRounds": 4,
+    "_firstTeamRoundsNote": "이 라운드 이하 지명자는 1군에서 시작한다 (특급 신인). 0이면 전원 2군. 4라운드면 매년 40명이 1군으로 들어오는데 1군 정원이 팀당 34라 그만큼 기존 선수가 밀린다 - measure:draft로 확인할 것",
     "ageMin": 19,
     "ageMax": 29,
     "_ageNote": "드래프트는 졸업 전(11월)에 하므로 고3(19세)이 후보다. 저학년은 나이가 아니라 학년 게이트가 막는다 — 고교는 gradeMax 학년만 후보로 잡는다",
@@ -273,8 +277,6 @@
       "independent": 68,
       "_independentNote": "독립은 소속 연차와 무관하게 매년 신청할 수 있다. 생성 범위 50~74"
     },
-    "rookieToFarm": true,
-    "_rookieToFarmNote": "신인은 2군에서 시작한다. 1군 승격은 Phase 7-2의 승강 로직이 담당한다",
     "contract": {
       "_note": "KBO 신인 규정: 연봉은 최저연봉으로 균일하고 차등은 계약금이 진다. 예전 TS 표는 1순위 연봉 9000만원(규정 위반)에 하위 지명 1500만원(최저연봉 3000 미달)이었다",
       "durationYears": 3,
@@ -321,5 +323,106 @@
       "_teamIndexNote": "팀 예산 지수(팀 예산/리그 평균)를 계약금에 곱한다. 연봉은 규정상 균일이라 안 곱한다"
     }
   },
-  "_rosterLimitsNote": "rosterSize는 생성 인원, rosterMin/rosterMax는 매 시즌 유지 상한이다. 예전엔 상한이 Rust roster_rule()과 TS ROSTER_RULES에 각각 하드코딩돼 있었고 둘 다 이 파일과 달랐다 (KBL 상한 65 vs 생성 30)."
+  "_rosterLimitsNote": "rosterSize는 생성 인원, rosterMin/rosterMax는 매 시즌 유지 상한이다. 예전엔 상한이 Rust roster_rule()과 TS ROSTER_RULES에 각각 하드코딩돼 있었고 둘 다 이 파일과 달랐다 (KBL 상한 65 vs 생성 30).",
+  "promotionRules": {
+    "_note": "1군 <-> 2군 승강 판정 (Phase 7-2). 읽는 곳: engine-native/src/team_engine.rs. 사용자 확정: 최근 성적 위주 + 능력치 보정",
+    "formWeight": 8.0,
+    "_formWeightNote": "성적 점수(-1~+1)에 곱한다. 8이면 성적이 OVR 8점어치 - 리그 OVR 폭 30의 4분의 1이라 뒤집히되 능력치를 완전히 무시하진 않는다",
+    "pitcherEraBaseline": 4.5,
+    "pitcherFullInnings": 40.0,
+    "_pitcherNote": "ERA 4.50이 0점. 2.25면 +1.0. 40이닝 미만은 표본만큼 0쪽으로 당긴다",
+    "batterOpsBaseline": 0.7,
+    "batterFullPa": 120.0,
+    "_batterNote": "OPS 0.700이 0점. 0.910이면 +0.3. 120타석 미만은 표본만큼 깎는다",
+    "formSpan": 1.0,
+    "slumpScore": -0.5,
+    "_slumpNote": "이 점수 아래면 장기 부진 - 상시 콜업 트리거이자 교체 압력 +20"
+  },
+  "internationalRules": {
+    "_note": "국가대표 · 국제대회 (Phase 7-3). 읽는 곳: engine-native/src/national_team.rs. 경기는 시뮬하지 않는다 - 대표팀 전력으로 순위를 확률 산출한다",
+    "_scheduleNote": "cycleYears 4 · yearMod가 서로 달라 **한 해에 두 대회가 겹치지 않는다**. yearMod 3인 해는 대회가 없다",
+    "maxPerTeam": 4,
+    "_maxPerTeamNote": "한 구단이 대표팀을 독식하지 않게. 소속팀 전력이 통째로 빠지면 리그가 기운다",
+    "ageMax": 29,
+    "_ageNote": "대표팀은 주력 연령대만. 병역 면제가 걸린 대회라 젊은 선수가 간다",
+    "tournaments": [
+      {
+        "id": "olympics",
+        "name": "올림픽",
+        "cycleYears": 4,
+        "yearMod": 0,
+        "week": 30,
+        "durationWeeks": 3,
+        "rosterSize": 24,
+        "fieldSize": 6,
+        "exemptionRank": 3,
+        "_note": "6개국 · 3위(동메달) 이내 면제"
+      },
+      {
+        "id": "worldcup",
+        "name": "야구 월드컵",
+        "cycleYears": 4,
+        "yearMod": 1,
+        "week": 10,
+        "durationWeeks": 3,
+        "rosterSize": 28,
+        "fieldSize": 20,
+        "exemptionRank": 0,
+        "_note": "20개국 · 면제 없음. 시즌 초라 소속팀 타격이 크다"
+      },
+      {
+        "id": "asiangames",
+        "name": "아시안게임",
+        "cycleYears": 4,
+        "yearMod": 2,
+        "week": 38,
+        "durationWeeks": 2,
+        "rosterSize": 24,
+        "fieldSize": 8,
+        "exemptionRank": 1,
+        "_note": "8개국 · 우승만 면제. 실제 규정과 같다"
+      }
+    ]
+  },
+  "faRules": {
+    "_note": "FA (Phase 7-4). 읽는 곳: engine-native/src/free_agency.rs. 자격 연수는 예전에 TS FA_THRESHOLD와 Rust fa_eligibility_years 두 곳에 각각 있었다 - 값이 같아도 정본이 둘이면 언젠가 갈라진다",
+    "eligibleYears": {
+      "LEAGUE_KBL": 5,
+      "LEAGUE_ABL": 6,
+      "LEAGUE_JBL": 4,
+      "default": 9
+    },
+    "grades": [
+      {
+        "grade": "A",
+        "untilPercent": 30,
+        "protectedCount": 20,
+        "moneyPct": 200
+      },
+      {
+        "grade": "B",
+        "untilPercent": 60,
+        "protectedCount": 25,
+        "moneyPct": 100
+      },
+      {
+        "grade": "C",
+        "untilPercent": 100,
+        "protectedCount": 0,
+        "moneyPct": 150
+      }
+    ],
+    "_gradesNote": "리그 연봉 순위 백분위로 등급을 매긴다. A/B는 보호선수 밖에서 보상선수 1명 + 보상금, C는 보상금만. moneyPct는 직전 연봉 대비 % (KBO 규정과 같은 구조)",
+    "marketWeeks": 4,
+    "_marketWeeksNote": "이 주 안에 계약 못 하면 미계약 - 7-1의 진로 배정(독립·은퇴)으로 넘어간다",
+    "release": {
+      "_note": "방출 2단계 (Phase 7-4). 1단계는 로스터 초과분(7-1), 2단계는 정원 안이어도 성적·연봉·뎁스로 걸러내는 판정이다",
+      "scoreThreshold": 55,
+      "_thresholdNote": "eval_release_priority 점수가 이보다 높으면 방출 후보. 낮추면 매년 방출이 폭증하니 measure로 확인하고 조정할 것",
+      "maxPerTeam": 3,
+      "_maxPerTeamNote": "한 시즌에 한 팀이 방출할 수 있는 최대 인원. 없으면 성적 나쁜 해에 팀이 통째로 갈린다",
+      "ownerRelationWeight": 0.4,
+      "_ownerNote": "구단주 관계(-100~100) x 이 값만큼 방출 점수를 깎는다. 관계 100이면 -40점 - 임계값 하나를 통째로 상쇄한다. 관계도는 주인공 기준 1:N이라 **주인공에게만** 적용된다"
+    }
+  }
 }

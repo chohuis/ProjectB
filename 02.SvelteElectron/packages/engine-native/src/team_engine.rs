@@ -2,6 +2,12 @@ use serde::{Deserialize, Serialize};
 use rand::Rng;
 use crate::sim_types::*;
 
+/// FA 자격 연수 **폴백**.
+///
+/// 정본은 `generation_rules.json`의 `faRules.eligibleYears`다. 규칙을 들고
+/// 있지 않은 호출 경로(오프시즌 내부 등)를 위한 값이라, 규칙 파일과 달라지면
+/// `npm run test:fa`가 깨진다 — 이 프로젝트에서 "표가 두 곳"으로 시작한
+/// 결함이 열 번 나왔다.
 pub fn fa_eligibility_years(league_id: &str) -> i32 {
     match league_id {
         "LEAGUE_KBL" => 5,
@@ -78,6 +84,9 @@ pub struct EvalCallupParams {
     pub active_players: Vec<RosterPlayerRef>,
     pub injured_player_ids: Vec<String>,
     pub current_month: i32,
+    /// 성적 반영 규칙. 안 넘어오면 기본값(성적을 보긴 하되 보수적)
+    #[serde(default)]
+    pub promotion_rules: Option<PromotionRules>,
 }
 
 #[derive(Debug, Serialize)]
@@ -95,8 +104,66 @@ pub struct EvalCallupResult {
     pub candidates: Vec<CallupCandidate>,
 }
 
+// ── 성적 기반 판정 (Phase 7-2) ───────────────────────────────────────────────
+
+/// 승강 판정 규칙. 정본은 `generation_rules.json`의 `promotionRules`
+#[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PromotionRules {
+    /// 성적이 능력치 대비 몇 점어치인가. 이게 0이면 예전처럼 능력치만 본다
+    pub form_weight: f64,
+    /// 이 평균자책점이 ±0점. 낮을수록 좋다
+    pub pitcher_era_baseline: f64,
+    /// 이만큼 던져야 성적을 100% 반영한다 (그 아래는 비례해서 깎는다)
+    pub pitcher_full_innings: f64,
+    pub batter_ops_baseline: f64,
+    pub batter_full_pa: f64,
+    /// 성적 점수 폭 (±). 넓힐수록 성적이 능력치를 크게 뒤집는다
+    pub form_span: f64,
+    /// 이 점수 아래면 "장기 부진" — 상시 콜업의 트리거다
+    pub slump_score: f64,
+}
+
+impl Default for PromotionRules {
+    fn default() -> Self {
+        Self {
+            form_weight: 8.0, pitcher_era_baseline: 4.50, pitcher_full_innings: 40.0,
+            batter_ops_baseline: 0.700, batter_full_pa: 120.0,
+            form_span: 1.0, slump_score: -0.5,
+        }
+    }
+}
+
+/// 성적 점수 −1.0 ~ +1.0. 표본이 적으면 그만큼 0쪽으로 당긴다 —
+/// **몇 경기 안 뛴 선수가 요행으로 1군에 올라오지 않게** 하는 장치다.
+/// 기록이 아예 없으면 0이라 판정이 능력치만 보게 된다.
+pub fn form_score(perf: Option<&RosterPerf>, is_pitcher: bool, r: &PromotionRules) -> f64 {
+    let Some(perf) = perf else { return 0.0 };
+
+    let (raw, sample) = if is_pitcher {
+        if perf.innings <= 0.0 { return 0.0; }
+        // 자책점이 기준보다 낮으면 +. 기준의 절반이면 +1.0에 닿는다
+        let rel = (r.pitcher_era_baseline - perf.era) / r.pitcher_era_baseline.max(0.01);
+        (rel, (perf.innings / r.pitcher_full_innings.max(1.0)).min(1.0))
+    } else {
+        if perf.plate_appearances <= 0 { return 0.0; }
+        // OPS는 기준 대비 비율. 0.700 기준에 0.910이면 +0.3
+        let rel = (perf.ops - r.batter_ops_baseline) / r.batter_ops_baseline.max(0.01);
+        (rel, (perf.plate_appearances as f64 / r.batter_full_pa.max(1.0)).min(1.0))
+    };
+
+    (raw * sample).clamp(-r.form_span, r.form_span)
+}
+
+/// 능력치 + 성적. 승강 판정이 비교하는 단일 값이다
+fn rated(pl: &RosterPlayerRef, r: &PromotionRules) -> f64 {
+    let is_pitcher = matches!(pl.position.as_str(), "SP" | "RP" | "CP" | "P");
+    pl.ovr + form_score(pl.perf.as_ref(), is_pitcher, r) * r.form_weight
+}
+
 pub fn eval_callup_candidates(p: EvalCallupParams) -> EvalCallupResult {
     let profile = &p.team_profile;
+    let rules = p.promotion_rules.clone().unwrap_or_default();
     let mut candidates = Vec::new();
     let threshold = 10.0 - (profile.win_now_pressure * 0.05);
 
@@ -105,11 +172,14 @@ pub fn eval_callup_candidates(p: EvalCallupParams) -> EvalCallupResult {
             .filter(|a| a.position == farm.position)
             .collect();
         if active_at_pos.is_empty() { continue; }
+        // **성적을 반영한 값으로 최약체를 고른다.** 예전엔 OVR만 봐서
+        // 시즌 내내 부진한 베테랑이 자리를 지켰다
         let weakest = active_at_pos.iter().min_by(|a, b|
-            a.ovr.partial_cmp(&b.ovr).unwrap()).unwrap();
+            rated(a, &rules).partial_cmp(&rated(b, &rules)).unwrap_or(std::cmp::Ordering::Equal)
+        ).unwrap();
 
         let is_injury = p.injured_player_ids.contains(&weakest.id);
-        let ovr_gap = farm.ovr - weakest.ovr;
+        let ovr_gap = rated(farm, &rules) - rated(weakest, &rules);
         let mut score = ovr_gap * 2.0;
 
         if is_injury { score += 50.0; }
@@ -121,12 +191,21 @@ pub fn eval_callup_candidates(p: EvalCallupParams) -> EvalCallupResult {
             if farm.age > 28 { score += 3.0; }
         }
 
+        // 자리를 지키던 선수가 장기 부진이면 교체 압력이 올라간다
+        let slumping = form_score(
+            weakest.perf.as_ref(),
+            matches!(weakest.position.as_str(), "SP" | "RP" | "CP" | "P"),
+            &rules,
+        ) <= rules.slump_score;
+        if slumping { score += 20.0; }
+
         if score >= threshold {
             candidates.push(CallupCandidate {
                 player_id: farm.id.clone(),
                 replaces_player_id: weakest.id.clone(),
                 priority_score: score,
                 reason: if is_injury { "injury_replacement".into() }
+                        else if slumping { "slump_replacement".into() }
                         else if profile.development_focus > 60.0 { "development_exposure".into() }
                         else { "performance_upgrade".into() },
             });
@@ -145,6 +224,8 @@ pub struct EvalCalldownParams {
     pub active_players: Vec<RosterPlayerRef>,
     pub current_roster_size: i32,
     pub max_roster_size: i32,
+    #[serde(default)]
+    pub promotion_rules: Option<PromotionRules>,
 }
 
 #[derive(Debug, Serialize)]
@@ -161,17 +242,25 @@ pub struct EvalCalldownResult {
 }
 
 pub fn eval_calldown_candidates(p: EvalCalldownParams) -> EvalCalldownResult {
+    let rules = p.promotion_rules.clone().unwrap_or_default();
     let over = (p.current_roster_size - p.max_roster_size).max(0) as usize;
     let mut scored: Vec<(String, f64)> = p.active_players.iter().map(|pl| {
+        // 성적을 반영한 값으로 본다 — 능력치만 보면 부진한 고연봉 베테랑이
+        // 시즌 내내 1군을 지킨다
+        let r = rated(pl, &rules);
         let mut score = 0.0;
-        score += (60.0 - pl.ovr).max(0.0);
+        score += (60.0 - r).max(0.0);
         score += pl.salary as f64 / 100_000.0;
-        if p.team_profile.win_now_pressure > 60.0 && pl.ovr < 65.0 { score += 10.0; }
+        if p.team_profile.win_now_pressure > 60.0 && r < 65.0 { score += 10.0; }
         if p.team_profile.development_focus > 60.0 && pl.age > 32 { score += 8.0; }
         (pl.id.clone(), score)
     }).collect();
     scored.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
-    let candidates = scored.into_iter().take(over.max(3))
+    // **정원 초과분만 내린다.** 예전엔 `over.max(3)`이라 정원에 여유가 있어도
+    // 매번 3명을 후보로 내놨고, 호출측이 그중 2명을 실제로 내렸다.
+    // 콜업은 1:1 교체라 정원을 안 늘리는데 콜다운만 매달 2명씩 나가서
+    // 한 시즌에 1군이 30명 → 16명으로 말랐다.
+    let candidates = scored.into_iter().take(over)
         .map(|(id, s)| CalldownCandidate { player_id: id, priority_score: s })
         .collect();
     EvalCalldownResult { candidates }
@@ -188,6 +277,15 @@ pub struct EvalReleaseParams {
     pub roster_depth_at_position: i32,
     pub current_salary: i64,
     pub market_value: i64,
+    /// 구단주와의 관계 (−100 ~ +100). 좋으면 한 번 더 기회를 준다.
+    ///
+    /// **주인공에게만 값이 있다** — 관계도는 주인공 기준 1:N이라
+    /// NPC끼리의 구단주 관계는 존재하지 않는다 (Phase 6C 설계)
+    #[serde(default)]
+    pub owner_relation: f64,
+    /// 관계 1점당 방출 점수 감산폭 (faRules.release.ownerRelationWeight)
+    #[serde(default)]
+    pub owner_relation_weight: f64,
 }
 
 #[derive(Debug, Serialize)]
@@ -220,6 +318,13 @@ pub fn eval_release_priority(p: EvalReleaseParams) -> ReleaseEvalResult {
     }
     if profile.stability > 70.0 && p.player.age >= 30 { score -= 10.0; }
     if profile.win_now_pressure > 80.0 { score *= 1.3; }
+
+    // 구단주 인내심 — 관계가 좋으면 한 번 더 기회를 준다 (Phase 7-4, 6C 이월).
+    // 나쁘면 반대로 밀어낸다. **주인공에게만 값이 들어온다**
+    if p.owner_relation_weight != 0.0 {
+        score -= p.owner_relation * p.owner_relation_weight;
+        if p.owner_relation != 0.0 { flags |= 32; }
+    }
 
     ReleaseEvalResult { release_score: score.max(0.0), reason_flags: flags }
 }
@@ -860,5 +965,87 @@ pub fn eval_medical_test(p: MedicalTestParams) -> MedicalTestResult {
         concern_level: concern.clamp(0.0, 1.0),
         rejection_probability: rejection_prob,
         rejection_reason: if !pass { reason } else { None },
+    }
+}
+
+// ── 테스트 ──────────────────────────────────────────────────────────────────
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// **실데이터를 읽는다** — 인라인 규칙으로 두면 게임과 달라져
+    /// 테스트가 거짓 안심을 준다 (docs/design/roster.md §10)
+    fn rules() -> PromotionRules {
+        let src = std::fs::read_to_string(concat!(
+            env!("CARGO_MANIFEST_DIR"), "/../../resource/data/master/players/generation_rules.json"
+        )).expect("generation_rules.json 없음");
+        let v: serde_json::Value = serde_json::from_str(&src).unwrap();
+        serde_json::from_value(v["promotionRules"].clone()).expect("promotionRules 파싱 실패")
+    }
+
+    fn pitcher(innings: f64, era: f64) -> RosterPerf {
+        RosterPerf { games: 20, innings, era, whip: 1.30, ..Default::default() }
+    }
+    fn batter(pa: i32, ops: f64) -> RosterPerf {
+        RosterPerf { games: 60, plate_appearances: pa, ops, ..Default::default() }
+    }
+
+    #[test]
+    fn 기록이_없으면_성적_점수가_0이다() {
+        // 그래야 판정이 능력치만 본다 — 안 뛴 선수를 성적으로 벌주면 안 된다
+        let r = rules();
+        assert_eq!(form_score(None, true, &r), 0.0);
+        assert_eq!(form_score(Some(&RosterPerf::default()), true, &r), 0.0);
+        assert_eq!(form_score(Some(&RosterPerf::default()), false, &r), 0.0);
+    }
+
+    #[test]
+    fn 잘하면_양수_못하면_음수다() {
+        let r = rules();
+        let good = form_score(Some(&pitcher(r.pitcher_full_innings, r.pitcher_era_baseline / 2.0)), true, &r);
+        let bad  = form_score(Some(&pitcher(r.pitcher_full_innings, r.pitcher_era_baseline * 2.0)), true, &r);
+        assert!(good > 0.0, "좋은 성적이 {good}");
+        assert!(bad < 0.0, "나쁜 성적이 {bad}");
+
+        let hot  = form_score(Some(&batter(r.batter_full_pa as i32, r.batter_ops_baseline * 1.3)), false, &r);
+        let cold = form_score(Some(&batter(r.batter_full_pa as i32, r.batter_ops_baseline * 0.7)), false, &r);
+        assert!(hot > 0.0 && cold < 0.0, "{hot} / {cold}");
+    }
+
+    #[test]
+    fn 표본이_적으면_성적이_덜_반영된다() {
+        // 3이닝 던지고 0점대인 선수가 시즌 내내 던진 에이스를 밀어내면 안 된다
+        let r = rules();
+        let era = r.pitcher_era_baseline / 2.0;
+        let full  = form_score(Some(&pitcher(r.pitcher_full_innings, era)), true, &r);
+        let small = form_score(Some(&pitcher(r.pitcher_full_innings / 10.0, era)), true, &r);
+        assert!(small < full, "표본 1/10인데 {small} vs {full}");
+        assert!(small > 0.0);
+    }
+
+    #[test]
+    fn 성적_점수는_폭을_안_넘는다() {
+        let r = rules();
+        let absurd = form_score(Some(&pitcher(200.0, 0.0)), true, &r);
+        assert!(absurd <= r.form_span, "{absurd} > {}", r.form_span);
+        let awful = form_score(Some(&pitcher(200.0, 99.0)), true, &r);
+        assert!(awful >= -r.form_span, "{awful} < {}", -r.form_span);
+    }
+
+    #[test]
+    fn 성적이_능력치를_뒤집되_완전히_지우지는_않는다() {
+        // formWeight가 리그 OVR 폭보다 크면 능력치가 무의미해진다
+        let r = rules();
+        assert!(r.form_weight > 0.0, "성적을 아예 안 본다");
+        assert!(r.form_weight * r.form_span < 15.0,
+            "성적 최대 기여 {}점이면 능력치가 무의미해진다", r.form_weight * r.form_span);
+    }
+
+    #[test]
+    fn 부진_기준이_폭_안에_있다() {
+        let r = rules();
+        assert!(r.slump_score < 0.0 && r.slump_score > -r.form_span,
+            "slump_score {} 가 폭 밖이면 아무도(또는 전부) 부진이 된다", r.slump_score);
     }
 }

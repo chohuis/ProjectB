@@ -269,15 +269,19 @@ pub struct ApplyDraftParams {
     /// 없으면 계약이 안 붙는다 — 신인이 연봉 0으로 시작한다
     #[serde(default)]
     pub contract: Option<crate::draft::DraftContractRules>,
-    /// 신인을 2군에서 시작시킬지 (draftRules.rookieToFarm)
+    /// 이 라운드 이하 지명자는 1군에서 시작한다 (draftRules.firstTeamRounds).
+    /// 0이면 전원 2군
     #[serde(default)]
-    pub rookie_to_farm: bool,
+    pub first_team_rounds: i32,
     /// 팀 예산 지수 (팀 예산 / 리그 평균). 계약금에 곱한다
     #[serde(default)]
     pub team_index: std::collections::HashMap<String, f64>,
     /// 미지명자 진로 배정 상한 (rosterRules에서 온다)
     #[serde(default)]
     pub placement: Option<crate::draft::PlacementRules>,
+    /// 방출 2단계 (faRules.release). 없으면 1단계(정원 초과)만 돈다
+    #[serde(default)]
+    pub release_rules: Option<crate::free_agency::ReleaseRules>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -558,6 +562,9 @@ pub struct OffseasonParams {
     pub independent_team_ids: Vec<String>,
     #[serde(default)]
     pub placement: Option<crate::draft::PlacementRules>,
+    /// 방출 2단계 (faRules.release). 없으면 1단계(정원 초과)만 돈다
+    #[serde(default)]
+    pub release_rules: Option<crate::free_agency::ReleaseRules>,
 }
 
 // ── 학년 진급 입력 ───────────────────────────────────────────────────────────
@@ -667,6 +674,9 @@ pub struct MonthlyNpcGrowthResult {
 
 // ── 팀 프로필 ─────────────────────────────────────────────────────────────────
 
+/// 팀 성향. `Default`는 **전 항목 50(중립)** — 오프시즌 방출 판정처럼
+/// 팀별 프로필을 들고 오지 않는 경로에서 쓴다. 0으로 두면 모든 팀이
+/// "안정성 0 · 성적압박 0"이 되어 판정이 한쪽으로 쏠린다
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ProTeamProfile {
@@ -682,6 +692,17 @@ pub struct ProTeamProfile {
     pub clubhouse_culture: f64,
     pub medical_quality: f64,
     pub farm_investment: f64,
+}
+
+impl Default for ProTeamProfile {
+    fn default() -> Self {
+        Self {
+            owner_spending_willingness: 50.0, stability: 50.0, development_focus: 50.0,
+            discipline: 50.0, owner_patience: 50.0, win_now_pressure: 50.0,
+            scouting_quality: 50.0, prestige: 50.0, market_appeal: 50.0,
+            clubhouse_culture: 50.0, medical_quality: 50.0, farm_investment: 50.0,
+        }
+    }
 }
 
 // ── 선수 성향 ─────────────────────────────────────────────────────────────────
@@ -757,6 +778,31 @@ pub struct RosterPlayerRef {
     pub is_prospect: bool,
     pub personality: Option<NpcPersonality>,
     pub fame: f64,
+    /// 올 시즌 성적. **승강 판정의 주 입력이다** (사용자 확정 2026-07-30:
+    /// "최근 성적 위주 + 능력치 보정"). 표본이 없으면 전부 0이고,
+    /// 그때는 `form_score`가 능력치만 보게 된다
+    #[serde(default)]
+    pub perf: Option<RosterPerf>,
+}
+
+/// 승강 판정용 시즌 성적. 투수/타자 중 해당 쪽만 채워진다
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RosterPerf {
+    #[serde(default)]
+    pub games: i32,
+    /// 투수
+    #[serde(default)]
+    pub innings: f64,
+    #[serde(default)]
+    pub era: f64,
+    #[serde(default)]
+    pub whip: f64,
+    /// 타자
+    #[serde(default)]
+    pub plate_appearances: i32,
+    #[serde(default)]
+    pub ops: f64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

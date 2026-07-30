@@ -189,8 +189,8 @@ export function placementRulesFrom(
 export interface ApplyDraftOptions {
   /** 신인 계약 표 (draftRules.contract). 없으면 신인이 연봉 0으로 시작한다 */
   contract?: import("./draftSalaryTable").DraftContractRules;
-  /** 신인을 2군에서 시작시킬지 (draftRules.rookieToFarm) */
-  rookieToFarm?: boolean;
+  /** 이 라운드 이하 지명자는 1군에서 시작한다 (draftRules.firstTeamRounds) */
+  firstTeamRounds?: number;
   /** 팀 예산 지수 — 계약금에 곱한다 (`buildSalaryIndex`) */
   teamIndex?: Record<string, number>;
   /** 미지명자 진로 배정 상한 */
@@ -209,7 +209,7 @@ export async function applyDraftToNpcs(
     npcs, result, universityTeamIds, independentTeamIds,
     ...(opts.contract ? { contract: opts.contract } : {}),
     ...(opts.placement ? { placement: opts.placement } : {}),
-    rookieToFarm: opts.rookieToFarm ?? false,
+    firstTeamRounds: opts.firstTeamRounds ?? 0,
     teamIndex: opts.teamIndex ?? {},
   }));
   const updated = parseResult<NpcSaveState[]>(json).map(n => ({

@@ -88,9 +88,10 @@ pub struct DraftRules {
     pub age_min: i32,
     pub age_max: i32,
     pub early_entry: EarlyEntryRules,
-    /// 신인은 2군에서 시작한다. 1군 승격은 Phase 7-2 승강 로직
+    /// **이 라운드 이하 지명자는 1군에서 시작한다** (특급 신인).
+    /// 0이면 전원 2군. 나머지 신인의 1군 진입은 Phase 7-2 승강 로직이 맡는다
     #[serde(default)]
-    pub rookie_to_farm: bool,
+    pub first_team_rounds: i32,
     #[serde(default)]
     pub contract: Option<DraftContractRules>,
 }
@@ -557,8 +558,13 @@ mod tests {
     }
 
     #[test]
-    fn 신인은_2군에서_시작한다() {
-        assert!(rules().rookie_to_farm, "1군 직행이면 1군 정원이 매년 11명씩 밀린다");
+    fn 특급_신인만_1군에서_시작한다() {
+        let r = rules();
+        assert!(r.first_team_rounds >= 0);
+        // 전 라운드가 1군 직행이면 정원이 매년 110명씩 밀려 리그가 무너진다
+        assert!(r.first_team_rounds < r.rounds,
+            "1군 직행 {}라운드가 전체 {}라운드와 같으면 전원 직행이다",
+            r.first_team_rounds, r.rounds);
     }
 
     // ── 진로 배정 ────────────────────────────────────────────

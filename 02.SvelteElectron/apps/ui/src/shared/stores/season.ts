@@ -159,6 +159,28 @@ function createSeasonStore() {
       set(makeEmptySeason(leagueId, seasonYear, totalWeeks, teamIds));
     },
 
+    /**
+     * 국가대표 차출 시작 — 대회 기간 동안 소속팀에서 빠진다.
+     * **부상과 같은 취급**이라 승강의 상시 콜업이 그 자리를 메운다
+     */
+    startNationalDuty(
+      npcIds: string[],
+      def: import("../usecases/nationalTeam").TournamentDef,
+      squadStrength: number,
+      endWeek: number,
+    ) {
+      update((s) => ({
+        ...s,
+        nationalDuty: Object.fromEntries(npcIds.map((id) => [id, endWeek])),
+        activeTournament: { def, squadStrength, endWeek },
+      }));
+    },
+
+    /** 대회 종료 — 전원 소속팀 복귀 */
+    endNationalDuty() {
+      update((s) => ({ ...s, nationalDuty: {}, activeTournament: null }));
+    },
+
     startNewSeason() {
       update((s) => {
         const teamIds = s.standings.map((st) => st.teamId);

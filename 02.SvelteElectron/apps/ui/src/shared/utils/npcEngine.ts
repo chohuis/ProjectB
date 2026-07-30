@@ -77,6 +77,11 @@ export async function runOffseasonProcessing(
     independentTeamIds: string[];
     rules: import("./draftSystem").PlacementRules;
   },
+  /**
+   * 방출 2단계 (faRules.release). 안 넘기면 1단계(정원 초과)만 돈다 —
+   * 그러면 부진한 고연봉 베테랑이 정원 안에서 계속 버틴다
+   */
+  releaseRules?: unknown,
 ): Promise<OffseasonResult> {
   const namedFlags = new Map(npcs.map(n => [n.npcId, n.isNamed] as const));
   const paramsJson = JSON.stringify({
@@ -88,6 +93,7 @@ export async function runOffseasonProcessing(
       independentTeamIds: placement.independentTeamIds,
       placement: placement.rules,
     } : {}),
+    ...(releaseRules ? { releaseRules } : {}),
   });
   const json = await api().npcRunOffseason(paramsJson);
   const raw = parseResult<{ npcs: NpcSaveState[]; pendingDraft: NpcSaveState[]; summary: SeasonEndSummary; logs: string[] }>(json);

@@ -578,13 +578,25 @@ export interface NpcCareerEntry {
   stats?: PlayerSeasonStats;  // 연도별 상세 성적 (최근 5년 표시용)
 }
 
+/**
+ * ⚠ **Rust가 쓰는 문자열과 같아야 한다.** Rust `NpcCareerEvent.event_type`은
+ * `String`이라 컴파일러가 안 잡아준다 — 여기 없는 값을 Rust가 쓰면 경력 화면이
+ * 조용히 렌더를 건너뛴다. 실제로 `release`·`quit_baseball`(Phase 7-1 D-4a)이
+ * 그렇게 빠져 있었다.
+ *
+ * 방출·야구 포기: `draft.rs`의 `Placer::place` · `QUIT_EVENT`
+ * 지명·미지명: `npc_sim.rs`의 `apply_draft`
+ */
 export type NpcCareerEventType =
   | "draft_picked"
   | "draft_undrafted"
   | "trade"
   | "fa_signed"
+  | "release"
+  | "quit_baseball"
   | "military_enlist"
   | "military_discharge"
+  | "military_exempt"
   | "retirement";
 
 export interface NpcCareerEvent {

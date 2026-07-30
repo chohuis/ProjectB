@@ -1,7 +1,13 @@
 import type { ProtagonistSave, ProContract } from "../types/save";
 import type { TeamRef } from "../stores/master";
 
-// 리그별 FA 자격 기준 연수 (고졸/대졸 구분 없음, 프로 입단 후 연수)
+/**
+ * 리그별 FA 자격 연수 **폴백** (프로 입단 후 연수).
+ *
+ * 정본은 `generation_rules.json`의 `faRules.eligibleYears`다.
+ * 여기 값은 규칙 파일을 못 읽는 동기 호출 경로를 위한 것이고,
+ * **규칙 파일과 달라지면 `npm run test:fa`가 깨진다.**
+ */
 export const FA_THRESHOLD: Record<string, number> = {
   LEAGUE_KBL: 5,
   LEAGUE_ABL: 6,

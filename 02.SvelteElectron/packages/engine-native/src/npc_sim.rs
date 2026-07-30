@@ -495,14 +495,9 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
 
 // ── NPC 공통 헬퍼 ────────────────────────────────────────────────────────────
 
-fn fa_eligibility_years(league_id: &str) -> i32 {
-    match league_id {
-        "LEAGUE_KBL" => 5,
-        "LEAGUE_ABL" => 6,
-        "LEAGUE_JBL" => 4,
-        _ => 9,
-    }
-}
+// FA 자격 연수는 `team_engine`에 하나만 둔다. 예전엔 여기에도 같은 표가
+// 있었다 — Rust 안에서만 정의가 둘이었고, TS `FA_THRESHOLD`까지 세 곳이었다
+use crate::team_engine::fa_eligibility_years;
 
 pub(crate) fn npc_core_ovr(npc: &NpcSaveState) -> f64 {
     if npc.player_type == "pitcher" {
@@ -646,6 +641,100 @@ fn normalize_offseason_npcs(
 
     fill_first_teams(&mut next, limits, logs);
     next
+}
+
+/// 방출 2단계 — **정원 안이어도** 성적·연봉·뎁스로 걸러낸다.
+///
+/// 1단계는 로스터 초과분 밀어내기(7-1 D-4a)라 정원이 차 있지 않으면 아무도
+/// 안 걸린다. 그래서 부진한 고연봉 베테랑이 정원 안에서 계속 버텼다.
+///
+/// 방출자는 소속만 비워두고 진로 배정(12단계)이 독립·은퇴를 정한다 —
+/// 미지명자·FA 미계약자와 **같은 로직**이다.
+fn release_second_stage(
+    npcs: &mut [NpcSaveState],
+    rules: &crate::free_agency::ReleaseRules,
+    limits: &HashMap<String, RosterLimit>,
+    logs: &mut Vec<String>,
+) -> usize {
+    use crate::team_engine::{eval_release_priority, EvalReleaseParams};
+
+    // 팀별 포지션 뎁스 — 같은 자리에 사람이 많으면 방출 압력이 올라간다
+    let mut depth: HashMap<(String, String), i32> = HashMap::new();
+    for n in npcs.iter() {
+        if n.career_status != "active" || n.current_team.is_empty() { continue; }
+        *depth.entry((n.current_team.clone(), n.position.clone())).or_insert(0) += 1;
+    }
+
+    // 팀별 시장가 기준선 = 그 팀 평균 연봉. 과지급 판정의 분모다
+    let mut team_salaries: HashMap<String, (i64, i32)> = HashMap::new();
+    for n in npcs.iter() {
+        if n.career_status != "active" || n.current_team.is_empty() { continue; }
+        let e = team_salaries.entry(n.current_team.clone()).or_insert((0, 0));
+        e.0 += n.current_salary;
+        e.1 += 1;
+    }
+
+    let mut per_team: HashMap<String, usize> = HashMap::new();
+    let mut released = 0usize;
+
+    // 방출 점수가 높은 순으로 — 팀당 상한이 있어 순서가 결과를 바꾼다
+    let mut scored: Vec<(usize, f64)> = Vec::new();
+    for (i, n) in npcs.iter().enumerate() {
+        if n.career_status != "active" || n.current_team.is_empty() { continue; }
+        // 프로만. 학생·독립은 방출 개념이 없다
+        if !matches!(n.current_league.as_str(),
+            "LEAGUE_KBL" | "LEAGUE_KBL_FARM" | "LEAGUE_ABL" | "LEAGUE_ABL_FARM"
+            | "LEAGUE_JBL" | "LEAGUE_JBL_FARM") { continue; }
+
+        let (sum, cnt) = team_salaries.get(&n.current_team).copied().unwrap_or((0, 1));
+        let market = (sum / cnt.max(1) as i64).max(1);
+        let ovr = npc_core_ovr(n);
+
+        let res = eval_release_priority(EvalReleaseParams {
+            team_profile: ProTeamProfile::default(),
+            player: RosterPlayerRef {
+                id: n.npc_id.clone(), position: n.position.clone(), age: n.age, ovr,
+                salary: n.current_salary, remaining_years: n.contract_years,
+                pro_service_years: n.pro_service_years.unwrap_or(0),
+                is_prospect: n.current_team.ends_with("_2"),
+                personality: n.personality.clone(), fame: n.fame, perf: None,
+            },
+            // 성적 표본이 없으므로 능력치를 성적 대용으로 쓴다 —
+            // 오프시즌엔 시즌 기록이 이미 정산돼 넘어오지 않는다
+            recent_performance_rating: ovr,
+            roster_depth_at_position:
+                depth.get(&(n.current_team.clone(), n.position.clone())).copied().unwrap_or(1),
+            current_salary: n.current_salary,
+            market_value: market,
+            owner_relation: 0.0,          // NPC는 구단주 관계가 없다 (6C 설계)
+            owner_relation_weight: 0.0,
+        });
+        if res.release_score >= rules.score_threshold {
+            scored.push((i, res.release_score));
+        }
+    }
+    scored.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
+
+    for (idx, score) in scored {
+        let team = npcs[idx].current_team.clone();
+        let league = npcs[idx].current_league.clone();
+        // 하한 아래로는 안 내린다 — 방출만 돌면 로스터가 마른다 (7-2 P-4 교훈)
+        let min = roster_rule(&league, limits).map(|(m, _)| m).unwrap_or(0);
+        let have = npcs.iter().filter(|n|
+            n.career_status == "active" && n.current_team == team).count() as i32;
+        if have <= min { continue; }
+
+        let cnt = per_team.entry(team.clone()).or_insert(0);
+        if *cnt >= rules.max_per_team { continue; }
+        *cnt += 1;
+        released += 1;
+
+        logs.push(format!("{} 방출 (점수 {:.0})", npcs[idx].name, score));
+        npcs[idx].current_team = String::new();
+        npcs[idx].current_salary = 0;
+        npcs[idx].contract_years = 0;
+    }
+    released
 }
 
 /// 1군이 최소 인원에 미달하면 같은 구단 2군에서 능력치 상위를 끌어올린다.
@@ -896,6 +985,13 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     // **미지명 졸업생과 같은 로직을 탄다** (`draft::Placer`). 따로 짜면 셋 중
     // 하나가 반드시 어긋난다. 예전엔 이들이 전부 "은퇴"로 처리돼
     // 22세 신인이 방출 한 번에 은퇴하고 있었다.
+    // 11-b. 방출 2단계 — 정원 안이어도 성적·연봉으로 걸러낸다.
+    // 진로 배정(12단계) **앞**에 있어야 방출자가 그 경로를 탄다
+    if let Some(rr) = params.release_rules.as_ref() {
+        let n = release_second_stage(&mut after_normalize, rr, &params.roster_limits, &mut logs);
+        if n > 0 { logs.push(format!("방출 2단계 {n}명")); }
+    }
+
     let mut leftover_pending = Vec::new();
     if can_place {
         // 졸업했는데 지명을 못 받은 사람도 같이 처리한다. 드래프트는 졸업 전(W47)에
@@ -1447,9 +1543,11 @@ pub fn apply_draft(params: ApplyDraftParams) -> Vec<NpcSaveState> {
             let from_league = (npc.current_league != "LEAGUE_DRAFT_POOL")
                 .then(|| npc.current_league.clone());
 
-            // 신인은 2군에서 시작한다. 1군 직행시키면 1군 정원(34)이 매년 11명씩
-            // 밀려 베테랑이 대신 밀려난다 — 1군 승격은 Phase 7-2가 성적으로 판단한다
-            let (team_id, league_id) = match params.rookie_to_farm
+            // **상위 라운드(특급 신인)는 1군에서 시작한다.** 나머지는 2군 —
+            // 전원 1군이면 정원(34)이 매년 11명씩 밀려 베테랑이 대신 나간다.
+            // 2군에서 시작한 신인의 1군 진입은 Phase 7-2 승강이 성적으로 판단한다
+            let to_first = pick.round <= params.first_team_rounds;
+            let (team_id, league_id) = match (!to_first)
                 .then(|| farm_team(&pick.team_id)).flatten()
             {
                 Some(farm) => (farm, "LEAGUE_KBL_FARM"),

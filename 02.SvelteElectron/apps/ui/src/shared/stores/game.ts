@@ -1285,6 +1285,48 @@ function createGameStore() {
       });
     },
 
+    /**
+     * 1군 ↔ 2군 승강으로 주인공의 소속만 옮긴다.
+     *
+     * `applyDraftDecision`과 달리 **커리어 단계는 안 건드린다** — 2군 강등은
+     * 진학·입단 같은 학적 전이가 아니라 같은 구단 안의 이동이다.
+     * 2군 일정·순위표는 이미 있으므로 `leagueId`만 맞으면 그대로 뛴다.
+     */
+    /**
+     * 국제대회 성적으로 병역 면제 (Phase 7-3).
+     *
+     * **면제는 되돌리지 않는다** — 이미 군필·현역인 사람은 건드리지 않고,
+     * 미필만 면제로 바꾼다. 주인공도 같은 경로를 탄다.
+     */
+    grantMilitaryExemption(npcIds: string[], seasonYear: number, tournamentName: string) {
+      const target = new Set(npcIds);
+      update((s) => {
+        const npcs = s.npcs.map((n) => {
+          if (!target.has(n.npcId) || n.militaryStatus !== "미필") return n;
+          return {
+            ...n,
+            militaryStatus: "면제" as const,
+            careerEvents: [
+              ...(n.careerEvents ?? []),
+              { year: seasonYear, eventType: "military_exempt" as const,
+                detail: `${tournamentName} 입상` },
+            ],
+          };
+        });
+        const proto = target.has(s.protagonist.id) && s.protagonist.militaryStatus === "미필"
+          ? { ...s.protagonist, militaryStatus: "면제" as const }
+          : s.protagonist;
+        return { ...s, npcs, protagonist: proto };
+      });
+    },
+
+    setProtagonistTeam(teamId: string, leagueId: string) {
+      update((s) => ({
+        ...s,
+        protagonist: { ...s.protagonist, teamId, leagueId },
+      }));
+    },
+
     applyDraftDecision(payload: {
       stage: import("../types/save").CareerStage;
       leagueId?: string;
@@ -1754,6 +1796,7 @@ function createGameStore() {
           independentTeamIds: offDest.indIds,
           rules: placementRulesFrom(offRules.rosterRules),
         },
+        (offRules.faRules as { release?: unknown } | undefined)?.release,
       );
       // 이 배열은 아래 시즌종료 처리들이 인덱스로 직접 덮어쓴다 (careerHistory·병역·드래프트).
       // 예전엔 여기서 감정 9축의 dormant 감쇠·은퇴 archive도 했는데, 6C에서
@@ -1978,8 +2021,16 @@ function createGameStore() {
           autoLog(`[전역] 엔티티 ${discharging.length}명`);
         }
 
-        // 2. 체육부대 입대: 3개 프로리그 한국인 선수 후보
-        const proLeagues = new Set(["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"]);
+        // 2. 체육부대 입대: 프로 소속 한국인 선수 후보.
+        //
+        // **2군(FARM)도 후보다.** 예전엔 1군 리그만 봤는데, 실제로 상무는
+        // 2군 유망주가 많이 간다. Phase 7-1에서 신인 대부분이 2군에서 시작하게
+        // 되면서 그 누락이 더 커졌다 — 갓 지명된 선수는 후보조차 못 됐다
+        const proLeagues = new Set([
+          "LEAGUE_KBL", "LEAGUE_KBL_FARM",
+          "LEAGUE_ABL", "LEAGUE_ABL_FARM",
+          "LEAGUE_JBL", "LEAGUE_JBL_FARM",
+        ]);
         const milCandidates = mNow.entities.filter(e =>
           e.role === "player" &&
           e.status !== "retired" &&
@@ -2015,11 +2066,21 @@ function createGameStore() {
           if (topRaw.error) {
             autoLog(`[병역통합오류] militaryCalcCandidates: ${topRaw.error}`);
           } else if ((topRaw.topCandidates?.length ?? 0) > 0) {
+            // 연간 입대 인원 = 정원 / 복무연수. 예전엔 여기 20이 박혀 있어
+            // 정상상태가 40명(정원 26의 1.5배)이었다 — 상무는 복무자라
+            // `career_status: "military"`고, 로스터 캡이 active만 세므로
+            // **아무도 막지 않았다.** 규칙 파일이 정본이다
+            const milRules = (await loadRosterRules()).militaryRules as {
+              rosterSize?: number; serviceMonths?: number; maxPerTeam?: number;
+            } | undefined;
+            const serviceYears = Math.max(1, Math.round((milRules?.serviceMonths ?? 24) / 12));
+            const annualIntake = Math.max(1, Math.round((milRules?.rosterSize ?? 26) / serviceYears));
+
             const selRes = JSON.parse(
               await window.projectB!.militaryCalcSelection(JSON.stringify({
                 applicants: topRaw.topCandidates!.map(c => ({ ...c, isProtagonist: false })),
-                maxTotal: Math.min(20, topRaw.topCandidates!.length),
-                maxPerTeam: 3,
+                maxTotal: Math.min(annualIntake, topRaw.topCandidates!.length),
+                maxPerTeam: milRules?.maxPerTeam ?? 3,
               }))
             ) as { protagonistSelected: boolean; selectedIds?: string[]; error?: string };
 
@@ -2679,7 +2740,7 @@ function createGameStore() {
         combined, simResult, universityTeamIds, independentTeamIds,
         {
           contract: draftRules.contract,
-          rookieToFarm: draftRules.rookieToFarm ?? false,
+          firstTeamRounds: draftRules.firstTeamRounds ?? 0,
           teamIndex,
           placement: placementRulesFrom(rulesFile.rosterRules),
         },
