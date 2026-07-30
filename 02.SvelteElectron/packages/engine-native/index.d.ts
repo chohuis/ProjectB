@@ -117,6 +117,8 @@ export declare function buildFarmBracketNative(p: string): string
 export declare function generateStaffNative(p: string): string
 /** 시즌 종료 → 스태프 나이·경력성장·은퇴·경질·이동 (Phase 6B) */
 export declare function advanceStaffSeasonNative(p: string): string
+/** 새 게임 시점의 과거 경력 (입단·이적) — slot.db transactions로 들어간다 */
+export declare function generateCareerHistoryNative(p: string): string
 /** 새로 만난 사람들의 초기 관계값 (중립 0 + 성향 편차) */
 export declare function initRelationsNative(p: string): string
 /** 주간 관계 갱신 — contact가 together인 상대만 움직인다 */

@@ -230,6 +230,16 @@ export const slotRepo = {
   countByTeam: (slotId: string) => call<{ teamId: string; n: number }[]>("countByTeam", { slotId }),
   getTransactions: (p: { slotId: string; seasonYear?: number; category?: RepoTransaction["category"]; leagueId?: string; npcId?: string; limit?: number }) =>
     call<RepoTransaction[]>("getTransactions", p),
+
+  /**
+   * 거래기록 일괄 삽입 (1 트랜잭션).
+   *
+   * 새 게임의 과거 경력 시딩(Phase 6.5)이 유일한 대량 사용처다. 개별 이적은
+   * `transfer`/`assignDraft` 같은 커맨드가 기록까지 같이 남기므로 이걸 쓰지 않는다 —
+   * 여기로 직접 쓰면 npc 테이블과 기록이 어긋날 수 있다.
+   */
+  addTransactions: (slotId: string, rows: Array<Record<string, unknown>>) =>
+    call<{ ok: true }>("addTransactions", { slotId, rows }),
   getCareerHistory: (slotId: string, npcId: string) =>
     call<RepoCareerLine[]>("getCareerHistory", { slotId, npcId }),
   getHistoryLeague: (p: { slotId: string; year?: number; leagueId?: string }) =>

@@ -92,6 +92,10 @@ pub struct GenerateLeagueRosterParams {
     /// 전력★ → OVR 보정 규칙 (generation_rules.json powerRules). 없으면 보정 없음
     #[serde(default)]
     pub power_rules: Option<PowerRules>,
+    /// 입단 경로 규칙 (generation_rules.json careerHistoryRules.entry).
+    /// 연차를 여기서 역산한다 — 무작위로 뽑으면 출신 분포가 뒤집힌다
+    #[serde(default)]
+    pub entry_rules: Option<crate::career_history::EntryRules>,
 }
 
 /// 팀 전력★이 로스터 수준을 정한다.
@@ -428,10 +432,22 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
             // 하한 = 고졸 입단(20세) 기준 경과 연수의 절반. 대졸·군필·독립 출신이
             // 늦게 들어온 경우를 그 폭이 흡수한다.
             let pro_service_years = if p.rules.grade_max == 0 && p.rules.with_contract {
-                let elapsed = (age - 20).max(0);
-                let min_svc = elapsed / 2;
-                let span = (elapsed - min_svc).max(0);
-                min_svc + (rng.next() * (span + 1) as f64) as i32
+                match &p.entry_rules {
+                    // **입단 경로를 먼저 뽑고 연차를 역산한다.**
+                    // 연차를 균등하게 뽑으면 입단 나이가 중간값에 몰려 출신 분포가
+                    // 뒤집힌다 — 실제로 대졸 57% / 고졸 28%가 나왔다(KBO는 반대다).
+                    Some(er) => {
+                        let entry_age = crate::career_history::pick_entry_age(er, &mut rng);
+                        (age - entry_age).max(0)
+                    }
+                    // 규칙이 없으면 구 동작 — 나이 하한만 건다(37세 0년차 방지)
+                    None => {
+                        let elapsed = (age - 20).max(0);
+                        let min_svc = elapsed / 2;
+                        let span = (elapsed - min_svc).max(0);
+                        min_svc + (rng.next() * (span + 1) as f64) as i32
+                    }
+                }
             } else { 0 };
 
             let (salary, contract_years) = if p.rules.with_contract {
@@ -516,6 +532,9 @@ mod tests {
             serde_json::from_value(v["salaryRules"].clone()).ok();
         let power_rules: Option<PowerRules> =
             serde_json::from_value(v["powerRules"].clone()).ok();
+        // 입단 경로 규칙도 실데이터에서 — 연차·출신이 여기서 나온다
+        let entry_rules: Option<crate::career_history::EntryRules> =
+            serde_json::from_value(v["careerHistoryRules"]["entry"].clone()).ok();
 
         generate_league_roster(GenerateLeagueRosterParams {
             league_id: league.to_string(),
@@ -528,7 +547,7 @@ mod tests {
             rules: league_rules(league, size),
             name_pool: None,
             id_prefix: None,
-            salary_rules, power_rules,
+            salary_rules, power_rules, entry_rules,
         }).npcs
     }
 

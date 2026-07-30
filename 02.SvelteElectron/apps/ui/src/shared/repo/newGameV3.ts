@@ -26,6 +26,8 @@ export interface GenerationRulesFile {
   salaryRules?: unknown;
   /** 전력★ → OVR 보정 (Phase 6.5) */
   powerRules?: unknown;
+  /** 과거 경력 생성 (Phase 6.5) */
+  careerHistoryRules?: unknown;
 }
 
 export interface NewGameV3Options {
@@ -67,6 +69,7 @@ export function buildRosterParams(
   namePool?: { surnames: string[]; givenA: string[]; givenB: string[]; western?: boolean },
   salaryRules?: unknown,
   powerRules?: unknown,
+  entryRules?: unknown,
 ) {
   return {
     leagueId,
@@ -82,6 +85,7 @@ export function buildRosterParams(
     ...(namePool ? { namePool } : {}),
     ...(salaryRules ? { salaryRules } : {}),
     ...(powerRules ? { powerRules } : {}),
+    ...(entryRules ? { entryRules } : {}),
   };
 }
 
@@ -166,9 +170,11 @@ async function generateLeagueNpcs(
   rules: RosterRulesData,
   salaryRules?: unknown,
   powerRules?: unknown,
+  entryRules?: unknown,
 ): Promise<Partial<RepoNpc>[]> {
   const params = buildRosterParams(
-    leagueId, seasonYear, worldSeed, teams, rules, undefined, salaryRules, powerRules);
+    leagueId, seasonYear, worldSeed, teams, rules, undefined,
+    salaryRules, powerRules, entryRules);
   const gen = JSON.parse(
     await window.projectB!.engine("generateLeagueRosterNative", JSON.stringify(params))
   ) as { npcs?: Partial<RepoNpc>[]; error?: string };
@@ -192,6 +198,9 @@ export async function createNewGameV3(opts: NewGameV3Options): Promise<NewGameV3
   const salaryIndex = buildSalaryIndex(opts.allTeams ?? []);
   const salaryRules = rulesFile.salaryRules;
   const powerRules = rulesFile.powerRules;
+  // 입단 경로 규칙 — 로스터 생성이 이걸로 연차를 역산하고, 경력 이력이 같은
+  // 규칙으로 출신을 읽는다. **한 곳에서 나와야 둘이 어긋나지 않는다**
+  const entryRules = (rulesFile.careerHistoryRules as { entry?: unknown } | undefined)?.entry;
   // 전력★ — 명문팀 로스터가 실제로 강해지는 유일한 입력 (Phase 6.5)
   const powerOf = new Map((opts.allTeams ?? []).map((t) => [t.id, t.power]));
   const withIndex = (ids: string[]) =>
@@ -205,7 +214,7 @@ export async function createNewGameV3(opts: NewGameV3Options): Promise<NewGameV3
   const hsNpcs = await generateLeagueNpcs(
     "LEAGUE_HIGHSCHOOL", opts.seasonYear, worldSeed,
     teams.map((t) => ({ ...t, salaryIndex: salaryIndex.get(t.teamId), power: powerOf.get(t.teamId) })),
-    hsRules, salaryRules, powerRules);
+    hsRules, salaryRules, powerRules, entryRules);
 
   // 나머지 국내 리그 — 팀 목록은 leagueScheduler가 정본이다 (refs에서 파생)
   const otherNpcs: Partial<RepoNpc>[] = [];
@@ -220,7 +229,8 @@ export async function createNewGameV3(opts: NewGameV3Options): Promise<NewGameV3
     if (leagueTeams.length === 0) continue;
     otherNpcs.push(
       ...(await generateLeagueNpcs(
-        lid, opts.seasonYear, worldSeed, leagueTeams, rules, salaryRules, powerRules)));
+        lid, opts.seasonYear, worldSeed, leagueTeams, rules,
+        salaryRules, powerRules, entryRules)));
   }
 
   const npcs = [...hsNpcs, ...otherNpcs, ...(opts.namedNpcs ?? [])];
@@ -245,7 +255,88 @@ export async function createNewGameV3(opts: NewGameV3Options): Promise<NewGameV3
     current_week: 0,
   });
 
+  // ── 과거 경력 (Phase 6.5) ────────────────────────────────────
+  // createSlot **뒤에** 넣는다 — createSlot이 transactions를 비우기 때문이다.
+  // 실패해도 새 게임 자체는 성립해야 하므로 여기서 던지지 않는다.
+  try {
+    await seedCareerHistory(
+      opts.slotId, worldSeed, opts.seasonYear, npcs, rulesFile.careerHistoryRules);
+  } catch (e) {
+    console.warn("[newGameV3] 과거 경력 생성 실패 — 이력 없이 시작", e);
+  }
+
   return { slotId: opts.slotId, worldSeed, npcCount: npcs.length, staffCount: staff.length };
+}
+
+/** 계약·이적이 있는 리그. 학교 리그(고교·대학)엔 그런 개념이 없다 */
+const CONTRACT_LEAGUES: ReadonlySet<string> = new Set([
+  "LEAGUE_KBL", "LEAGUE_KBL_FARM", "LEAGUE_INDEPENDENT",
+]);
+
+/**
+ * 새 게임 시점의 과거 경력을 만들어 `transactions`에 넣는다 (Phase 6.5).
+ *
+ * 예전엔 전원이 현 소속팀에서만 뛴 것처럼 보였다 — 12년차 베테랑도 이적 한 번
+ * 없는 세계였다. 여기서 만든 기록은 리그 화면 "리그 기록" 탭에 바로 뜨고,
+ * Phase 7-1 드래프트·7-4 FA가 같은 테이블에 쓰므로 과거와 미래가 이어진다.
+ *
+ * 리그별로 나눠 돌린다 — **과거 소속팀은 같은 리그에서만 골라야 한다.**
+ */
+async function seedCareerHistory(
+  slotId: string,
+  worldSeed: number,
+  seasonYear: number,
+  npcs: Partial<RepoNpc>[],
+  rules: unknown,
+): Promise<void> {
+  if (!rules) return;
+
+  const byLeague = new Map<string, Partial<RepoNpc>[]>();
+  for (const n of npcs) {
+    const lid = n.currentLeague ?? "";
+    if (!CONTRACT_LEAGUES.has(lid)) continue;
+    if (!byLeague.has(lid)) byLeague.set(lid, []);
+    byLeague.get(lid)!.push(n);
+  }
+
+  const rows: Array<Record<string, unknown>> = [];
+  for (const [leagueId, list] of byLeague) {
+    const leagueTeams = [...new Set(list.map((n) => n.currentTeam ?? "").filter(Boolean))];
+    if (leagueTeams.length < 2) continue;   // 팀이 하나면 이적할 데가 없다
+
+    const raw = await window.projectB!.engine("generateCareerHistoryNative", JSON.stringify({
+      worldSeed: worldSeed >>> 0,
+      seasonYear,
+      rules,
+      players: list.map((n) => ({
+        npcId: n.npcId, name: n.name, age: n.age,
+        proServiceYears: n.proServiceYears ?? 0,
+        currentTeam: n.currentTeam, currentLeague: leagueId,
+      })),
+      leagueTeams,
+    }));
+    const parsed = JSON.parse(raw) as {
+      events?: Array<{
+        npcId: string; npcName: string; seasonYear: number; category: string;
+        fromTeamId: string | null; toTeamId: string; leagueId: string; detail: string;
+      }>;
+      error?: string;
+    };
+    if (!parsed.events) {
+      console.warn(`[newGameV3] ${leagueId} 경력 생성 실패:`, parsed.error);
+      continue;
+    }
+    for (const e of parsed.events) {
+      rows.push({
+        seasonYear: e.seasonYear, week: null, category: e.category,
+        playerId: e.npcId, playerName: e.npcName,
+        fromTeamId: e.fromTeamId, fromLeagueId: e.fromTeamId ? e.leagueId : null,
+        toTeamId: e.toTeamId, toLeagueId: e.leagueId,
+        detail: e.detail, groupId: null,
+      });
+    }
+  }
+  if (rows.length > 0) await slotRepo.addTransactions(slotId, rows);
 }
 
 /**
