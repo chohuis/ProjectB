@@ -1,0 +1,207 @@
+// D-0: 현행 드래프트 파이프라인 실측.
+//
+// 예측하지 않는다 — 실제 refs.json·generation_rules.json으로 세계를 만들고
+// 시즌 종료 경로(advance_all_grades → advance_all_ages → run_draft → apply_draft)를
+// 그대로 5시즌 돌려 숫자를 찍는다. (docs/design/roster.md §10)
+//
+// 실행: ELECTRON_RUN_AS_NODE=1 ./node_modules/electron/dist/electron.exe scripts/measure-draft.cjs
+
+const path = require("node:path");
+const ROOT = path.resolve(__dirname, "..");
+const native = require(path.join(ROOT, "packages/engine-native/index.js"));
+const refs = require(path.join(ROOT, "resource/data/master/entities/refs.json"));
+const gr = require(path.join(ROOT, "resource/data/master/players/generation_rules.json"));
+
+const SEASONS = 5;
+const START_YEAR = 2026;
+const WORLD_SEED = 4242;
+
+// draftSystem.ts의 KBL_TEAM_IDS — 현행 processNpcDraft가 쓰는 기본값
+const GHOST_TEAMS = [
+  "TEAM_KBL_TWINWOLVES_1", "TEAM_KBL_BEARGUARDIANS_1", "TEAM_KBL_SKYGULLS_1",
+  "TEAM_KBL_SOARINGEAGLES_1", "TEAM_KBL_ROYALLIONS_1", "TEAM_KBL_EMBERTIGERS_1",
+  "TEAM_KBL_STEELDINOS_1", "TEAM_KBL_GIANTWHALES_1",
+];
+
+const call = (fn, payload) => {
+  const out = JSON.parse(native[fn](JSON.stringify(payload)));
+  if (out && out.error) throw new Error(`${fn}: ${out.error}`);
+  return out;
+};
+
+// ── 세계 만들기 ────────────────────────────────────────────────
+const teamsOf = (leagueId, farm = false) =>
+  refs.teams
+    .filter((t) => t.leagueId === leagueId && (leagueId !== "LEAGUE_KBL" || t.id.endsWith(farm ? "_2" : "_1")))
+    .map((t) => ({ teamId: t.id, schoolId: t.schoolId ?? "", power: t.power }));
+
+const REAL_KBL = teamsOf("LEAGUE_KBL").map((t) => t.teamId);
+
+function buildWorld() {
+  const specs = [
+    ["LEAGUE_HIGHSCHOOL", teamsOf("LEAGUE_HIGHSCHOOL")],
+    ["LEAGUE_UNIVERSITY", teamsOf("LEAGUE_UNIVERSITY")],
+    ["LEAGUE_INDEPENDENT", teamsOf("LEAGUE_INDEPENDENT")],
+    ["LEAGUE_KBL", teamsOf("LEAGUE_KBL")],
+    ["LEAGUE_KBL_FARM", teamsOf("LEAGUE_KBL", true)],
+  ];
+  const out = [];
+  for (const [leagueId, teams] of specs) {
+    const rules = gr.rosterRules[leagueId];
+    if (!rules) throw new Error(`rosterRules 없음: ${leagueId}`);
+    const gen = call("generateLeagueRosterNative", {
+      leagueId, seasonYear: START_YEAR, worldSeed: WORLD_SEED >>> 0, teams, rules,
+      salaryRules: gr.salaryRules, powerRules: gr.powerRules,
+      entryRules: gr.careerHistoryRules && gr.careerHistoryRules.entry,
+    });
+    out.push(...gen.npcs.map(toSaveState));
+  }
+  return out;
+}
+
+/** GenNpc(roster_gen) → NpcSaveState(npc_sim) — npcAdapter.ts가 하는 변환의 최소판 */
+function toSaveState(g) {
+  return {
+    npcId: g.npcId, name: g.name, nameEn: g.nameEn, nationality: g.nationality,
+    playerType: g.playerType, position: g.position, age: g.age,
+    ...(g.grade != null ? { grade: g.grade } : {}),
+    schoolId: g.schoolId, graduationYear: g.graduationYear,
+    careerStatus: g.careerStatus, currentLeague: g.currentLeague, currentTeam: g.currentTeam,
+    militaryStatus: g.militaryStatus, currentSalary: g.salary, contractYears: g.contractYears,
+    pitching: g.abilities.pitching, batting: g.abilities.batting,
+    developmentRate: g.developmentRate, potentialHidden: g.potentialHidden,
+    proServiceYears: g.proServiceYears,
+    careerHistory: [], careerEvents: [], achievements: [], fame: 0,
+  };
+}
+
+/** advanceWeek W1의 generateFreshmenV3 — grade 1이 빈 고교 팀을 Rust로 채운다 */
+function generateFreshmen(npcs, year) {
+  const rules = gr.rosterRules["LEAGUE_HIGHSCHOOL"];
+  const perYear = Math.max(1, Math.round(rules.rosterSize / (rules.gradeMax ?? 3)));
+  const hasG1 = new Set(
+    npcs.filter((n) => n.grade === 1 && n.careerStatus === "active").map((n) => n.currentTeam),
+  );
+  const out = [];
+  for (const t of teamsOf("LEAGUE_HIGHSCHOOL")) {
+    if (hasG1.has(t.teamId)) continue;
+    const raw = JSON.parse(native.generateFreshmenNative(JSON.stringify({
+      schoolId: t.teamId.replace("TEAM_HS_", "SCHOOL_HS_"),
+      teamId: t.teamId, annualRosterSize: perYear,
+      pitchingOvrMin: rules.pitchingOvrMin, pitchingOvrMax: rules.pitchingOvrMax,
+      battingOvrMin: rules.battingOvrMin, battingOvrMax: rules.battingOvrMax,
+      devRateMin: rules.devRateMin, devRateMax: rules.devRateMax,
+      namedNpcs: [], seasonYear: year, idOffset: 0,
+    })));
+    if (Array.isArray(raw)) out.push(...raw);
+  }
+  return out;
+}
+
+// ── 한 시즌 ────────────────────────────────────────────────────
+function runSeason(npcs, year, kblTeams, rounds) {
+  const g = call("advanceAllGradesNative", { npcs, seasonYear: year });
+  const pool = [...g.hsGraduated, ...g.univGraduated];
+  const aged = call("advanceAllAgesNative", { npcs: [...g.updated, ...pool] });
+
+  const poolIds = new Set(pool.map((n) => n.npcId));
+  const candidates = aged.filter((n) => poolIds.has(n.npcId));
+
+  const sim = call("runDraftNative", {
+    candidates, namedMetas: [], year, rounds, teamIds: kblTeams,
+  });
+
+  // SeasonEndModal이 넘기는 그대로 — 상무가 독립 팀 목록에 섞여 들어간다
+  const univIds = refs.teams.filter((t) => t.leagueId === "LEAGUE_UNIVERSITY" && t.id !== "TEAM_SPORTS_UNIT").map((t) => t.id);
+  const indIds = refs.teams.filter((t) => t.leagueId === "LEAGUE_INDEPENDENT").map((t) => t.id);
+
+  const after = call("applyDraftNative", {
+    npcs: aged, result: sim, universityTeamIds: univIds, independentTeamIds: indIds,
+  });
+
+  // 다음 시즌 W1 — 고교 신입생 입학
+  const fresh = generateFreshmen(after, year + 1);
+
+  return {
+    after: [...after, ...fresh], fresh: fresh.length,
+    hsGrad: g.hsGraduated.length, univGrad: g.univGraduated.length, sim, poolIds,
+  };
+}
+
+// ── 측정 ───────────────────────────────────────────────────────
+function measure(label, kblTeams, rounds) {
+  let npcs = buildWorld();
+  const t0 = Date.now();
+  console.log(`\n══ ${label} (KBL ${kblTeams.length}팀 × ${rounds}라운드) ══`);
+  console.log(`시작 인원 ${npcs.length}명`);
+
+  const rows = [];
+  for (let i = 0; i < SEASONS; i++) {
+    const year = START_YEAR + i;
+    const before = npcs.length;
+    const r = runSeason(npcs, year, kblTeams, rounds);
+    npcs = r.after;
+
+    const moved = new Map();
+    for (const id of r.poolIds) {
+      const n = npcs.find((x) => x.npcId === id);
+      if (n) moved.set(n.currentLeague, (moved.get(n.currentLeague) ?? 0) + 1);
+    }
+    rows.push({
+      year, before, fresh: r.fresh,
+      pool: r.poolIds.size, hs: r.hsGrad, univ: r.univGrad,
+      drafted: r.sim.picks.length,
+      toKbl: moved.get("LEAGUE_KBL") ?? 0,
+      toUniv: moved.get("LEAGUE_UNIVERSITY") ?? 0,
+      toInd: moved.get("LEAGUE_INDEPENDENT") ?? 0,
+      retired: moved.get("LEAGUE_RETIRED") ?? 0,
+      stuck: moved.get("LEAGUE_DRAFT_POOL") ?? 0,
+    });
+  }
+
+  console.log("연도  드래프트풀 (고졸/대졸)  지명  →KBL  →대학  →독립  은퇴  풀잔류  신입생");
+  for (const r of rows) {
+    console.log(
+      `${r.year}  ${String(r.pool).padStart(6)} (${String(r.hs).padStart(4)}/${String(r.univ).padStart(3)})` +
+      `  ${String(r.drafted).padStart(4)}  ${String(r.toKbl).padStart(4)}  ${String(r.toUniv).padStart(5)}` +
+      `  ${String(r.toInd).padStart(5)}  ${String(r.retired).padStart(4)}  ${String(r.stuck).padStart(5)}` +
+      `  ${String(r.fresh).padStart(5)}`
+    );
+  }
+
+  // 지명된 팀이 refs에 있는가
+  const realIds = new Set(refs.teams.map((t) => t.id));
+  const kblRoster = npcs.filter((n) => n.currentLeague === "LEAGUE_KBL");
+  const ghosted = kblRoster.filter((n) => !realIds.has(n.currentTeam));
+  console.log(`\n최종 ${npcs.length}명 (${npcs.length - rows[0].before >= 0 ? "+" : ""}${npcs.length - rows[0].before})`);
+  console.log(`은퇴 누적 ${npcs.filter((n) => n.careerStatus === "retired").length}명 · 드래프트풀 잔류 ${npcs.filter((n) => n.currentLeague === "LEAGUE_DRAFT_POOL").length}명`);
+  console.log(`KBL 소속 ${kblRoster.length}명 중 refs에 없는 팀 소속: ${ghosted.length}명`);
+  if (ghosted.length) {
+    const teams = [...new Set(ghosted.map((n) => n.currentTeam))];
+    console.log(`  → ${teams.join(", ")}`);
+  }
+
+  // 대학·독립 로스터가 견디는가
+  const sizeOf = (lid) => {
+    const per = new Map();
+    for (const n of npcs.filter((x) => x.currentLeague === lid)) {
+      per.set(n.currentTeam, (per.get(n.currentTeam) ?? 0) + 1);
+    }
+    const v = [...per.values()].sort((a, b) => a - b);
+    return v.length ? `${v.length}팀 · 최소 ${v[0]} 최대 ${v[v.length - 1]} 평균 ${(v.reduce((a, b) => a + b, 0) / v.length).toFixed(1)}` : "없음";
+  };
+  console.log(`대학  ${sizeOf("LEAGUE_UNIVERSITY")}`);
+  console.log(`독립  ${sizeOf("LEAGUE_INDEPENDENT")}`);
+  console.log(`고교  ${sizeOf("LEAGUE_HIGHSCHOOL")}`);
+
+  // 상무에 미지명자가 배정됐는가
+  const sangmu = npcs.filter((n) => n.currentTeam === "TEAM_IND_SANGMU_PHOENIX");
+  const sangmuCivil = sangmu.filter((n) => n.careerStatus !== "military");
+  console.log(`상무 ${sangmu.length}명 중 복무자 아닌 인원: ${sangmuCivil.length}명`);
+
+  console.log(`(${Date.now() - t0}ms)`);
+  return npcs;
+}
+
+measure("현행 — 유령 팀 8개", GHOST_TEAMS, 10);
+measure("실제 팀으로 교체", REAL_KBL, 11);
