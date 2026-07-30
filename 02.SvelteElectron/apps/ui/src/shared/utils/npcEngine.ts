@@ -68,12 +68,26 @@ export async function runOffseasonProcessing(
   /** 규칙 파일의 상한. 안 넘기면 Rust에 상한이 없어 로스터가 무한히 부푼다 */
   rosterLimits?: Record<string, RosterLimit>,
   salaryRules?: unknown,
+  /**
+   * 방출·FA 미계약자가 갈 곳. **안 넘기면 그 사람들이 전부 은퇴 처리된다** —
+   * 22세 신인이 방출 한 번에 야구를 그만두게 된다
+   */
+  placement?: {
+    universityTeamIds: string[];
+    independentTeamIds: string[];
+    rules: import("./draftSystem").PlacementRules;
+  },
 ): Promise<OffseasonResult> {
   const namedFlags = new Map(npcs.map(n => [n.npcId, n.isNamed] as const));
   const paramsJson = JSON.stringify({
     npcs, pendingDraft, seasonYear, namedNpcIds: namedNpcIds ?? [],
     rosterLimits: rosterLimits ?? {},
     ...(salaryRules ? { salaryRules } : {}),
+    ...(placement ? {
+      universityTeamIds: placement.universityTeamIds,
+      independentTeamIds: placement.independentTeamIds,
+      placement: placement.rules,
+    } : {}),
   });
   const json = await api().npcRunOffseason(paramsJson);
   const raw = parseResult<{ npcs: NpcSaveState[]; pendingDraft: NpcSaveState[]; summary: SeasonEndSummary; logs: string[] }>(json);

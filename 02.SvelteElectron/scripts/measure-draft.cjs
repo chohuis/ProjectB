@@ -119,6 +119,13 @@ const TEAM_INDEX = (() => {
   return out;
 })();
 
+/** 진로 배정 상한 — draftSystem.placementRulesFrom와 같은 규칙 */
+const PLACEMENT = {
+  universityMax: gr.rosterRules.LEAGUE_UNIVERSITY.rosterMax,
+  independentMax: gr.rosterRules.LEAGUE_INDEPENDENT.rosterMax,
+  independentAgeMax: gr.rosterRules.LEAGUE_INDEPENDENT.ageMax,
+};
+
 /** rosterRules → Rust rosterLimits (npcEngine.rosterLimitsFrom와 같은 규칙) */
 const ROSTER_LIMITS = Object.fromEntries(
   Object.entries(gr.rosterRules)
@@ -129,10 +136,15 @@ const ROSTER_LIMITS = Object.fromEntries(
 function runSeason(npcs, year, kblTeams, rounds, excludeSangmu, useEarlyEntry, useLimits) {
   // 시즌 종료 오프시즌 — 은퇴 판정 + 로스터 상한. useLimits=false면 D-3a 이전
   // (Rust 하드코딩 표: KBL 상한 65가 1군+2군 합산에 걸린다)
+  const univIds0 = refs.teams.filter((t) => t.leagueId === "LEAGUE_UNIVERSITY" && t.id !== SANGMU_TEAM_ID).map((t) => t.id);
+  const indIds0 = refs.teams.filter((t) => t.leagueId === "LEAGUE_INDEPENDENT" && t.id !== SANGMU_TEAM_ID).map((t) => t.id);
   const off = call("runOffseasonNative", {
     npcs, pendingDraft: [], seasonYear: year, namedNpcIds: [],
     salaryRules: gr.salaryRules,
     rosterLimits: useLimits ? ROSTER_LIMITS : {},
+    ...(useLimits ? {
+      universityTeamIds: univIds0, independentTeamIds: indIds0, placement: PLACEMENT,
+    } : {}),
   });
   npcs = off.npcs;
 
@@ -187,6 +199,7 @@ function runSeason(npcs, year, kblTeams, rounds, excludeSangmu, useEarlyEntry, u
       contract: gr.draftRules.contract,
       rookieToFarm: gr.draftRules.rookieToFarm,
       teamIndex: TEAM_INDEX,
+      placement: PLACEMENT,
     } : {}),
   });
 
@@ -299,4 +312,4 @@ function measure(label, kblTeams, rounds, excludeSangmu, useEarlyEntry, useLimit
 }
 
 measure("D-2 — 상한이 Rust 하드코딩 (KBL 65)", REAL_KBL, gr.draftRules.rounds, true, true, false);
-measure("D-3a — 상한을 규칙 파일에서 + 2군 리그 표기 수정", REAL_KBL, gr.draftRules.rounds, true, true, true);
+measure("D-4a — 진로 배정 일원화 (미지명·방출·FA 미계약)", REAL_KBL, gr.draftRules.rounds, true, true, true);

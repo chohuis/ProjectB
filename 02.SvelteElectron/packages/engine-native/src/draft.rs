@@ -21,7 +21,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::npc_sim::npc_core_ovr;
-use crate::sim_types::NpcSaveState;
+use crate::sim_types::{NpcCareerEvent, NpcSaveState};
 
 /// 소속이 사라져 드래프트 풀에 들어간 선수의 리그 ID
 pub const DRAFT_POOL_LEAGUE: &str = "LEAGUE_DRAFT_POOL";
@@ -209,6 +209,156 @@ pub fn select_candidates(params: SelectCandidatesParams) -> SelectCandidatesResu
     SelectCandidatesResult { candidates, counts }
 }
 
+// ── 진로 배정 ───────────────────────────────────────────────────────────────
+
+/// 야구를 그만둔 사람에게 붙는 이벤트. 저장 슬림화가 이걸 보고 판단한다
+pub const QUIT_EVENT: &str = "quit_baseball";
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PlacementRules {
+    pub university_max: usize,
+    pub independent_max: usize,
+    /// 이 나이를 넘으면 독립리그도 안 받는다 (rosterRules.LEAGUE_INDEPENDENT.ageMax)
+    pub independent_age_max: i32,
+}
+
+/// 갈 곳 없는 선수들의 진로를 정한다.
+///
+/// **세 종류가 같은 로직을 탄다** — 미지명 졸업생 · 방출된 프로 · FA 미계약자.
+/// 셋 다 "소속이 없어진 사람"이고, 따로 짜면 셋 중 하나가 반드시 어긋난다.
+///
+/// ⚠ **대학은 고교 졸업자만 갈 수 있다.** 예전엔 경로를 안 보고 남는 자리부터
+/// 채워서 **대졸 미지명자가 대학 1학년으로 다시 입학**했다. 스태프와 달리
+/// 선수의 `대학 → 대학`은 학적이 허용하지 않는다 (`_ledger.md` P6-9).
+pub struct Placer<'a> {
+    /// 팀 → (투수, 야수)
+    roster: std::collections::HashMap<String, (usize, usize)>,
+    university: &'a [String],
+    independent: &'a [String],
+    rules: PlacementRules,
+}
+
+impl<'a> Placer<'a> {
+    pub fn new(
+        npcs: &[NpcSaveState],
+        university: &'a [String],
+        independent: &'a [String],
+        rules: PlacementRules,
+    ) -> Self {
+        let univ: std::collections::HashSet<&str> = university.iter().map(|s| s.as_str()).collect();
+        let ind: std::collections::HashSet<&str> = independent.iter().map(|s| s.as_str()).collect();
+        let mut roster = std::collections::HashMap::new();
+        for npc in npcs {
+            if npc.career_status != "active" { continue; }
+            let t = npc.current_team.as_str();
+            if !univ.contains(t) && !ind.contains(t) { continue; }
+            let e = roster.entry(npc.current_team.clone()).or_insert((0usize, 0usize));
+            if npc.player_type == "pitcher" { e.0 += 1; } else { e.1 += 1; }
+        }
+        Self { roster, university, independent, rules }
+    }
+
+    /// 이미 자리를 잡은 사람을 로스터 집계에서 빼둔다 (지명된 재학생 등)
+    pub fn forget(&mut self, npc: &NpcSaveState) {
+        if let Some(e) = self.roster.get_mut(&npc.current_team) {
+            if npc.player_type == "pitcher" { e.0 = e.0.saturating_sub(1); }
+            else { e.1 = e.1.saturating_sub(1); }
+        }
+    }
+
+    /// 팀별 빈 슬롯 탐색. 포지션 수요 우선(strict), 없으면 슬롯만 본다
+    fn find_slot(&mut self, want_pitcher: bool, teams: &[String], max: usize) -> Option<String> {
+        for strict in [true, false] {
+            let mut best: Option<(String, usize)> = None;
+            for tid in teams {
+                let (p, b) = self.roster.get(tid).copied().unwrap_or((0, 0));
+                let total = p + b;
+                if total >= max { continue; }
+                if strict {
+                    let ratio = if total > 0 { p as f64 / total as f64 } else { 0.5 };
+                    // 투수 비율 >0.65면 투수 사양, <0.55면 야수 사양
+                    if want_pitcher && ratio > 0.65 { continue; }
+                    if !want_pitcher && ratio < 0.55 { continue; }
+                }
+                let slots = max - total;
+                if best.as_ref().map_or(true, |(_, s)| slots > *s) {
+                    best = Some((tid.clone(), slots));
+                }
+            }
+            if let Some((tid, _)) = best {
+                let e = self.roster.entry(tid.clone()).or_insert((0, 0));
+                if want_pitcher { e.0 += 1; } else { e.1 += 1; }
+                return Some(tid);
+            }
+        }
+        None
+    }
+
+    /// `allow_university`는 **고교 졸업자만 true**여야 한다
+    pub fn place(
+        &mut self,
+        npc: &mut NpcSaveState,
+        year: i32,
+        event_type: &str,
+        reason: &str,
+        allow_university: bool,
+    ) {
+        let is_pitcher = npc.player_type == "pitcher";
+        let from_team = (!npc.current_team.is_empty()).then(|| npc.current_team.clone());
+
+        let placed = allow_university
+            .then(|| self.find_slot(is_pitcher, self.university, self.rules.university_max))
+            .flatten()
+            .map(|t| (t, "LEAGUE_UNIVERSITY"))
+            .or_else(|| {
+                // 독립리그는 나이 제한이 있다. 서른 넘은 미지명자를 받으면
+                // 독립 로스터가 은퇴 직전 선수로만 채워진다
+                (npc.age <= self.rules.independent_age_max)
+                    .then(|| self.find_slot(is_pitcher, self.independent, self.rules.independent_max))
+                    .flatten()
+                    .map(|t| (t, "LEAGUE_INDEPENDENT"))
+            });
+
+        match placed {
+            Some((tid, league)) => {
+                let dest = if league == "LEAGUE_UNIVERSITY" { "대학리그" } else { "독립리그" };
+                npc.career_events.push(NpcCareerEvent {
+                    year,
+                    event_type: event_type.into(),
+                    from_team_id: from_team,
+                    to_team_id: Some(tid.clone()),
+                    from_league_id: None,
+                    to_league_id: Some(league.into()),
+                    detail: Some(format!("{reason} → {dest}")),
+                });
+                npc.current_league = league.into();
+                npc.current_team = tid;
+                npc.grade = (league == "LEAGUE_UNIVERSITY").then_some(1);
+                npc.current_salary = 0;
+                npc.contract_years = 0;
+            }
+            None => {
+                npc.career_events.push(NpcCareerEvent {
+                    year,
+                    event_type: QUIT_EVENT.into(),
+                    from_team_id: from_team,
+                    to_team_id: None,
+                    from_league_id: None,
+                    to_league_id: None,
+                    detail: Some(format!("{reason} → 야구를 그만둔다")),
+                });
+                npc.career_status = "retired".into();
+                npc.current_league = "LEAGUE_RETIRED".into();
+                npc.current_team = String::new();
+                npc.grade = None;
+                npc.current_salary = 0;
+                npc.contract_years = 0;
+            }
+        }
+    }
+}
+
 // ── 테스트 ──────────────────────────────────────────────────────────────────
 
 #[cfg(test)]
@@ -379,5 +529,85 @@ mod tests {
     #[test]
     fn 신인은_2군에서_시작한다() {
         assert!(rules().rookie_to_farm, "1군 직행이면 1군 정원이 매년 11명씩 밀린다");
+    }
+
+    // ── 진로 배정 ────────────────────────────────────────────
+
+    fn placement() -> PlacementRules {
+        PlacementRules { university_max: 40, independent_max: 45, independent_age_max: 31 }
+    }
+
+    #[test]
+    fn 대학은_고교_졸업자만_간다() {
+        // 예전엔 경로를 안 봐서 대졸 미지명자가 대학 1학년으로 다시 입학했다
+        let univ = vec!["TEAM_UNIV_A".to_string()];
+        let indie = vec!["TEAM_IND_A".to_string()];
+        let mut p = Placer::new(&[], &univ, &indie, placement());
+
+        let mut hs = npc("HS", DRAFT_POOL_LEAGUE, None, 60.0, 20);
+        p.place(&mut hs, 2026, "draft_undrafted", "미지명", true);
+        assert_eq!(hs.current_league, "LEAGUE_UNIVERSITY");
+        assert_eq!(hs.grade, Some(1));
+
+        let mut uv = npc("UV", DRAFT_POOL_LEAGUE, None, 60.0, 24);
+        p.place(&mut uv, 2026, "draft_undrafted", "미지명", false);
+        assert_eq!(uv.current_league, "LEAGUE_INDEPENDENT", "대졸은 대학 재입학 불가");
+        assert_eq!(uv.grade, None);
+    }
+
+    #[test]
+    fn 나이가_지나면_독립리그도_안_받는다() {
+        let indie = vec!["TEAM_IND_A".to_string()];
+        let mut p = Placer::new(&[], &[], &indie, placement());
+        let mut old = npc("OLD", "LEAGUE_KBL", None, 60.0, placement().independent_age_max + 1);
+        p.place(&mut old, 2026, "release", "방출", false);
+        assert_eq!(old.career_status, "retired");
+        assert_eq!(old.career_events.last().unwrap().event_type, QUIT_EVENT);
+    }
+
+    #[test]
+    fn 자리가_없으면_야구를_그만둔다() {
+        // 목적지 목록이 비면 갈 곳이 없다
+        let mut p = Placer::new(&[], &[], &[], placement());
+        let mut n = npc("A", DRAFT_POOL_LEAGUE, None, 60.0, 20);
+        p.place(&mut n, 2026, "draft_undrafted", "미지명", true);
+        assert_eq!(n.career_status, "retired");
+        assert_eq!(n.current_league, "LEAGUE_RETIRED");
+        assert!(n.current_team.is_empty());
+        assert_eq!(n.career_events.last().unwrap().event_type, QUIT_EVENT,
+            "그만둔 사람은 QUIT_EVENT로 표시돼야 저장 슬림화가 구분할 수 있다");
+    }
+
+    #[test]
+    fn 정원이_차면_다음_사람은_다른_리그로_간다() {
+        let univ = vec!["TEAM_UNIV_A".to_string()];
+        let indie = vec!["TEAM_IND_A".to_string()];
+        let rules = PlacementRules { university_max: 1, independent_max: 1, independent_age_max: 31 };
+        let mut p = Placer::new(&[], &univ, &indie, rules);
+
+        let mut a = npc("A", DRAFT_POOL_LEAGUE, None, 60.0, 20);
+        let mut b = npc("B", DRAFT_POOL_LEAGUE, None, 60.0, 20);
+        let mut c = npc("C", DRAFT_POOL_LEAGUE, None, 60.0, 20);
+        p.place(&mut a, 2026, "draft_undrafted", "미지명", true);
+        p.place(&mut b, 2026, "draft_undrafted", "미지명", true);
+        p.place(&mut c, 2026, "draft_undrafted", "미지명", true);
+
+        assert_eq!(a.current_league, "LEAGUE_UNIVERSITY");
+        assert_eq!(b.current_league, "LEAGUE_INDEPENDENT");
+        assert_eq!(c.career_status, "retired");
+    }
+
+    #[test]
+    fn 배정되면_계약이_초기화된다() {
+        // 프로에서 방출된 선수가 옛 연봉을 들고 독립리그로 가면 안 된다
+        let indie = vec!["TEAM_IND_A".to_string()];
+        let mut p = Placer::new(&[], &[], &indie, placement());
+        let mut n = npc("A", "LEAGUE_KBL", None, 60.0, 26);
+        n.current_salary = 50_000;
+        n.contract_years = 3;
+        p.place(&mut n, 2026, "release", "방출", false);
+        assert_eq!(n.current_league, "LEAGUE_INDEPENDENT");
+        assert_eq!(n.current_salary, 0);
+        assert_eq!(n.contract_years, 0);
     }
 }

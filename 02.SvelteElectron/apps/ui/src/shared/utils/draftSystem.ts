@@ -159,6 +159,29 @@ export async function runDraftSimulation(
 }
 
 // ── 드래프트 결과 NPC 반영 (Rust DLL 위임) ───────────────────
+/**
+ * 소속을 잃은 사람의 진로 배정 상한.
+ *
+ * 미지명 졸업생 · 방출된 프로 · FA 미계약자가 **같은 규칙**을 탄다.
+ * 따로 두면 셋 중 하나가 반드시 어긋난다.
+ */
+export interface PlacementRules {
+  universityMax: number;
+  independentMax: number;
+  /** 이 나이를 넘으면 독립리그도 안 받는다 */
+  independentAgeMax: number;
+}
+
+export function placementRulesFrom(
+  rosterRules: Record<string, { rosterMax?: number; ageMax?: number }>,
+): PlacementRules {
+  return {
+    universityMax: rosterRules["LEAGUE_UNIVERSITY"]?.rosterMax ?? 40,
+    independentMax: rosterRules["LEAGUE_INDEPENDENT"]?.rosterMax ?? 45,
+    independentAgeMax: rosterRules["LEAGUE_INDEPENDENT"]?.ageMax ?? 31,
+  };
+}
+
 export interface ApplyDraftOptions {
   /** 신인 계약 표 (draftRules.contract). 없으면 신인이 연봉 0으로 시작한다 */
   contract?: import("./draftSalaryTable").DraftContractRules;
@@ -166,6 +189,8 @@ export interface ApplyDraftOptions {
   rookieToFarm?: boolean;
   /** 팀 예산 지수 — 계약금에 곱한다 (`buildSalaryIndex`) */
   teamIndex?: Record<string, number>;
+  /** 미지명자 진로 배정 상한 */
+  placement?: PlacementRules;
 }
 
 export async function applyDraftToNpcs(
@@ -179,6 +204,7 @@ export async function applyDraftToNpcs(
   const json = await api().npcApplyDraft(JSON.stringify({
     npcs, result, universityTeamIds, independentTeamIds,
     ...(opts.contract ? { contract: opts.contract } : {}),
+    ...(opts.placement ? { placement: opts.placement } : {}),
     rookieToFarm: opts.rookieToFarm ?? false,
     teamIndex: opts.teamIndex ?? {},
   }));

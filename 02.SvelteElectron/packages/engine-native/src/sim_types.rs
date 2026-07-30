@@ -269,6 +269,9 @@ pub struct ApplyDraftParams {
     /// 팀 예산 지수 (팀 예산 / 리그 평균). 계약금에 곱한다
     #[serde(default)]
     pub team_index: std::collections::HashMap<String, f64>,
+    /// 미지명자 진로 배정 상한 (rosterRules에서 온다)
+    #[serde(default)]
+    pub placement: Option<crate::draft::PlacementRules>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -542,6 +545,13 @@ pub struct OffseasonParams {
     /// 안 넘어오면 상한 자체가 없어 로스터가 무한히 부푼다
     #[serde(default)]
     pub roster_limits: std::collections::HashMap<String, crate::npc_sim::RosterLimit>,
+    /// 방출·FA 미계약자가 갈 곳. 안 넘어오면 그 사람들은 전부 은퇴 처리된다
+    #[serde(default)]
+    pub university_team_ids: Vec<String>,
+    #[serde(default)]
+    pub independent_team_ids: Vec<String>,
+    #[serde(default)]
+    pub placement: Option<crate::draft::PlacementRules>,
 }
 
 // ── 학년 진급 입력 ───────────────────────────────────────────────────────────

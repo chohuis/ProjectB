@@ -555,6 +555,9 @@ fn normalize_offseason_npcs(
     logs: &mut Vec<String>,
     rng: &mut impl Rng,
     limits: &HashMap<String, RosterLimit>,
+    // 12단계 진로 배정이 돌 수 있는가. false면 방출 대신 바로 은퇴시킨다 —
+    // 소속 없는 현역이 떠다니면 화면과 시뮬이 다 깨진다
+    can_place: bool,
 ) -> Vec<NpcSaveState> {
     let mut next = npcs;
 
@@ -621,6 +624,13 @@ fn normalize_offseason_npcs(
                         logs.push(format!("{} → 2군 강등 ({league_id})", npc.name));
                         npc.current_league = farm_lid;
                         npc.current_team   = farm_tid;
+                    }
+                    // 내릴 곳이 없으면 방출이다. 소속만 비워두면 12단계가
+                    // 미지명자와 같은 로직으로 진로를 정한다 (독립 입단 또는 은퇴).
+                    // 예전엔 여기서 바로 은퇴시켜 22세 신인이 방출 한 번에 끝났다
+                    None if can_place => {
+                        logs.push(format!("{} 방출 (로스터 초과 {league_id})", npc.name));
+                        npc.current_team = "".into();
                     }
                     None => {
                         logs.push(format!("{} 은퇴 (로스터 초과 {league_id})", npc.name));
@@ -875,9 +885,40 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     }
 
     // 11. 은퇴 판정 + 로스터 캡
-    let after_normalize = normalize_offseason_npcs(
-        processed, season_year, &mut summary, &mut logs, &mut rng, &params.roster_limits,
+    let can_place = !params.independent_team_ids.is_empty();
+    let mut after_normalize = normalize_offseason_npcs(
+        processed, season_year, &mut summary, &mut logs, &mut rng,
+        &params.roster_limits, can_place,
     );
+
+    // 12. 소속을 잃은 사람들의 진로 — 방출자와 FA 미계약자.
+    //
+    // **미지명 졸업생과 같은 로직을 탄다** (`draft::Placer`). 따로 짜면 셋 중
+    // 하나가 반드시 어긋난다. 예전엔 이들이 전부 "은퇴"로 처리돼
+    // 22세 신인이 방출 한 번에 은퇴하고 있었다.
+    if can_place {
+        let rules = params.placement.clone().unwrap_or(crate::draft::PlacementRules {
+            university_max: 40, independent_max: 45, independent_age_max: 31,
+        });
+        let mut placer = crate::draft::Placer::new(
+            &after_normalize, &params.university_team_ids, &params.independent_team_ids, rules,
+        );
+        let homeless: Vec<usize> = after_normalize.iter().enumerate()
+            .filter(|(_, n)| n.career_status == "active" && n.current_team.is_empty()
+                && n.current_league != "LEAGUE_DRAFT_POOL")
+            .map(|(i, _)| i)
+            .collect();
+        let mut quit = 0usize;
+        for idx in homeless {
+            // 프로를 거친 사람은 대학에 못 간다 — 학적 역행
+            placer.place(&mut after_normalize[idx], season_year, "release", "방출", false);
+            if after_normalize[idx].career_status == "retired" { quit += 1; }
+        }
+        if quit > 0 {
+            summary.retired_count += quit as i32;
+            logs.push(format!("방출 후 갈 팀을 못 찾아 은퇴 {quit}명"));
+        }
+    }
 
     OffseasonOutput {
         npcs: after_normalize,
@@ -1426,60 +1467,34 @@ pub fn apply_draft(params: ApplyDraftParams) -> Vec<NpcSaveState> {
         }
     }
 
-    // Step 3: 미지명자를 OVR 내림차순 정렬 후 대학 → 독립 → 은퇴 배정
+    // Step 3: 미지명자 진로. **경로를 본다** — 고교 졸업자만 대학에 갈 수 있다.
+    // 예전엔 남는 자리부터 채워서 대졸 미지명자가 대학 1학년으로 다시 입학했다
+    let mut placer = crate::draft::Placer::new(
+        &result_npcs, &params.university_team_ids, &params.independent_team_ids,
+        params.placement.clone().unwrap_or(crate::draft::PlacementRules {
+            university_max: 40, independent_max: 45, independent_age_max: 31,
+        }),
+    );
+    // 지명된 재학생은 곧 떠난다 — 집계에 남기면 그 팀이 한 명 덜 받는다
+    for npc in result_npcs.iter() {
+        if pick_map.contains_key(&npc.npc_id) { placer.forget(npc); }
+    }
+
     let mut undrafted_idx: Vec<(usize, f64)> = result_npcs.iter().enumerate()
         .filter(|(_, n)| n.current_league == "LEAGUE_DRAFT_POOL" && undrafted.contains(&n.npc_id))
         .map(|(i, n)| (i, npc_core_ovr(n)))
         .collect();
+    // 능력치 높은 순 — 좋은 선수가 먼저 자리를 잡는다
     undrafted_idx.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
 
     for (idx, _) in undrafted_idx {
-        let is_pitcher = result_npcs[idx].player_type == "pitcher";
-
-        let univ_tid = find_slot(&mut roster, is_pitcher, &params.university_team_ids, 40);
-        let assigned: Option<(String, bool)> = if let Some(tid) = univ_tid {
-            Some((tid, true))
-        } else {
-            find_slot(&mut roster, is_pitcher, &params.independent_team_ids, 45)
-                .map(|tid| (tid, false))
-        };
-
-        let npc = &mut result_npcs[idx];
-        match assigned {
-            Some((tid, is_univ)) => {
-                let (league, detail_str) = if is_univ {
-                    ("LEAGUE_UNIVERSITY", "미지명 → 대학리그")
-                } else {
-                    ("LEAGUE_INDEPENDENT", "미지명 → 독립리그")
-                };
-                npc.career_events.push(NpcCareerEvent {
-                    year: params.result.year,
-                    event_type: "draft_undrafted".into(),
-                    from_team_id: None,
-                    to_team_id: Some(tid.clone()),
-                    from_league_id: None,
-                    to_league_id: Some(league.into()),
-                    detail: Some(detail_str.into()),
-                });
-                npc.current_league = league.into();
-                npc.current_team   = tid;
-                if is_univ { npc.grade = Some(1); }
-            }
-            None => {
-                npc.career_events.push(NpcCareerEvent {
-                    year: params.result.year,
-                    event_type: "retirement".into(),
-                    from_team_id: None,
-                    to_team_id: None,
-                    from_league_id: None,
-                    to_league_id: None,
-                    detail: Some("미지명 → 은퇴".into()),
-                });
-                npc.career_status  = "retired".into();
-                npc.current_league = "LEAGUE_RETIRED".into();
-                npc.current_team   = "".into();
-            }
-        }
+        // 마지막 경력이 고교면 대학 진학 가능. 대학·독립 출신은 안 된다
+        let from_highschool = result_npcs[idx].career_history.last()
+            .map_or(true, |e| e.league_id == "LEAGUE_HIGHSCHOOL");
+        placer.place(
+            &mut result_npcs[idx], params.result.year,
+            "draft_undrafted", "미지명", from_highschool,
+        );
     }
 
     result_npcs

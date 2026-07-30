@@ -38,6 +38,8 @@ import {
   DRAFT_ROUNDS,
   DRAFT_ROUTE_LABELS,
   KBL_TEAM_IDS,
+  draftDestinationTeams,
+  placementRulesFrom,
 } from "../utils/draftSystem";
 import { loadRosterRules, buildSalaryIndex } from "../repo/newGameV3";
 import type {
@@ -1733,9 +1735,17 @@ function createGameStore() {
       // 로스터 상한·연봉 규칙을 규칙 파일에서 넘긴다. 예전엔 Rust에 하드코딩된
       // 표(KBL 상한 65)를 썼고 그게 1군+2군 합산에 걸려 프로가 700명까지 부풀었다
       const offRules = await loadRosterRules();
+      // 방출·FA 미계약자의 진로 — 미지명 졸업생과 **같은 로직**을 태운다.
+      // 안 넘기면 Rust가 그 사람들을 전부 은퇴시킨다
+      const offDest = draftDestinationTeams(get(masterStore).teams);
       const result = await runOffseasonProcessing(
         s.npcs, s.pendingDraft, seasonYear, namedNpcIds,
         rosterLimitsFrom(offRules.rosterRules), offRules.salaryRules,
+        {
+          universityTeamIds: offDest.univIds,
+          independentTeamIds: offDest.indIds,
+          rules: placementRulesFrom(offRules.rosterRules),
+        },
       );
       // 이 배열은 아래 시즌종료 처리들이 인덱스로 직접 덮어쓴다 (careerHistory·병역·드래프트).
       // 예전엔 여기서 감정 9축의 dormant 감쇠·은퇴 archive도 했는데, 6C에서
@@ -2647,6 +2657,7 @@ function createGameStore() {
           contract: draftRules.contract,
           rookieToFarm: draftRules.rookieToFarm ?? false,
           teamIndex,
+          placement: placementRulesFrom(rulesFile.rosterRules),
         },
       );
       update(st => ({ ...st, npcs: updatedNpcs, pendingDraft: [] }));
