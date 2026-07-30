@@ -645,6 +645,13 @@ export interface NpcSaveState {
   militaryEnlistYear?: number;
   militaryDischargeYear?: number;
   militaryUnit?: "sports" | "general";
+  /**
+   * 군 계급 (이병·일병·상병·병장). 생성 시 복무 **개월**로 정해져 저장된다.
+   *
+   * 화면이 입대 연도로 다시 계산하면 안 된다 — 연 단위로는 일병이 안 나오고
+   * 저장값과 어긋난다. 여기 있으면 이걸 쓰고, 없을 때만(구 세이브) 역산한다.
+   */
+  militaryRank?: string;
   originalLeagueId?: string;
   originalTeamId?: string;
 

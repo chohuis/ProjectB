@@ -19,6 +19,8 @@ export interface RepoAbilities {
 
 export interface RepoMilitary {
   unit?: "sports" | "general";
+  /** 군 계급 — 생성 시 복무 개월로 정해진다 (military_roster.rs) */
+  rank?: string;
   enlistYear?: number;
   dischargeYear?: number;
   originalLeagueId?: string;

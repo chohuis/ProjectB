@@ -158,6 +158,16 @@ base = ovrBase × ovrGrowth^(OVR − pivot)      ← 선형이 아니라 지수
 - 계급은 복무 경과 개월로 (이병 → 일병 → 상병 → 병장)
 - **복무 경과를 흩뿌린다.** 전원이 같이 입대하면 2년마다 팀이 통째로 갈린다
 
+**계급은 저장된 값이 정본이다.** 화면이 입대 연도로 역산하면 안 된다 —
+연 단위로는 일병이 안 나오고 저장값(개월 기준 4종)과 어긋난다.
+`NpcSaveState.militaryRank` → `RepoMilitary.rank` → `military_json`으로 왕복한다.
+
+> R-5로 상무에 진짜 복무자가 들어가자 **선수 상세 모달이 안 열렸다.**
+> `PlayerDetailModal`의 `militaryUnit === "sports" && 현역` 분기가 `curYear`라는
+> **함수 안 지역 변수**를 템플릿에서 참조하고 있었다 — ReferenceError로 모달이
+> 통째로 죽었다. 상무에 민간 선수만 있던 시절엔 그 분기에 아무도 안 닿아
+> 드러나지 않은 죽은 코드였다.
+
 ID는 `utils/ids.ts`의 `SANGMU_TEAM_ID`/`SANGMU_LEAGUE_ID`를 쓴다.
 하드코딩이 세 곳에 흩어져 있어서 v1 ID(`TEAM_SPORTS_UNIT`, refs에 없음)가
 살아남았고, **입대자가 존재하지 않는 팀으로 가고 있었다.**

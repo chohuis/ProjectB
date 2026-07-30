@@ -76,7 +76,19 @@
     if (s === "현역") return "mil-active";
     return "mil-pending";
   }
-  function militaryRankLabel(enlistYear: number | null | undefined, currentYear: number): string {
+  /**
+   * 군 계급 표시.
+   *
+   * **저장된 계급이 정본이다** — 생성 시 복무 개월로 정해진다(military_roster.rs).
+   * 입대 연도로 역산하면 연 단위라 일병이 안 나오고 저장값과 어긋난다.
+   * 역산은 계급이 없는 구 세이브용 폴백일 뿐이다.
+   */
+  function militaryRankLabel(
+    rank: string | null | undefined,
+    enlistYear: number | null | undefined,
+    currentYear: number,
+  ): string {
+    if (rank) return rank;
     if (enlistYear == null) return "";
     const served = currentYear - enlistYear;
     if (served <= 0) return "이병";
@@ -159,6 +171,12 @@
       },
     };
   })();
+
+  // 템플릿에서 쓰는 현재 시즌. 예전엔 이게 **함수 안 지역 변수**여서 템플릿이
+  // `curYear`를 못 찾았고, 상무 선수(militaryUnit "sports" + 현역) 분기에 닿는
+  // 순간 ReferenceError로 **모달이 통째로 안 열렸다.**
+  // 상무에 민간 선수만 있던 시절엔 그 분기에 아무도 안 닿아 드러나지 않았다.
+  $: curSeasonYear = $seasonStore.seasonYear ?? 2026;
 
   $: isProtagonistModal = !!entityId && entityId === $gameStore.protagonist.id;
 
@@ -607,7 +625,7 @@
                   {#if contractSummary.isSchool}
                     <span class="cp-yrsin">{contractSummary.yearsIn}학년</span>
                   {:else if modalNpcSave?.militaryUnit === "sports" && modalNpcSave?.militaryStatus === "현역"}
-                    <span class="cp-yrsin">{militaryRankLabel(modalNpcSave.militaryEnlistYear, curYear)}</span>
+                    <span class="cp-yrsin">{militaryRankLabel(modalNpcSave.militaryRank, modalNpcSave.militaryEnlistYear, curSeasonYear)}</span>
                   {:else}
                     <span class="cp-yrsin">{contractSummary.yearsIn}년차</span>
                   {/if}
@@ -630,7 +648,7 @@
                 <div class="mil-row">
                   <span class="mil-badge {npcMilClass(modalNpcSave.militaryStatus)}">{npcMilText(modalNpcSave.militaryStatus)}</span>
                   {#if modalNpcSave.militaryStatus === "현역" && modalNpcSave.militaryUnit === "sports"}
-                    <span class="mil-note">{militaryRankLabel(modalNpcSave.militaryEnlistYear, curYear)}</span>
+                    <span class="mil-note">{militaryRankLabel(modalNpcSave.militaryRank, modalNpcSave.militaryEnlistYear, curSeasonYear)}</span>
                   {/if}
                   {#if modalNpcSave.militaryStatus === "현역" && modalNpcSave.militaryDischargeYear}
                     <span class="mil-note">전역 예정 {modalNpcSave.militaryDischargeYear}년</span>
