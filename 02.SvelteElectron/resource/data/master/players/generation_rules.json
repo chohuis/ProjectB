@@ -383,5 +383,37 @@
         "_note": "8개국 · 우승만 면제. 실제 규정과 같다"
       }
     ]
+  },
+  "faRules": {
+    "_note": "FA (Phase 7-4). 읽는 곳: engine-native/src/free_agency.rs. 자격 연수는 예전에 TS FA_THRESHOLD와 Rust fa_eligibility_years 두 곳에 각각 있었다 - 값이 같아도 정본이 둘이면 언젠가 갈라진다",
+    "eligibleYears": {
+      "LEAGUE_KBL": 5,
+      "LEAGUE_ABL": 6,
+      "LEAGUE_JBL": 4,
+      "default": 9
+    },
+    "grades": [
+      {
+        "grade": "A",
+        "untilPercent": 30,
+        "protectedCount": 20,
+        "moneyPct": 200
+      },
+      {
+        "grade": "B",
+        "untilPercent": 60,
+        "protectedCount": 25,
+        "moneyPct": 100
+      },
+      {
+        "grade": "C",
+        "untilPercent": 100,
+        "protectedCount": 0,
+        "moneyPct": 150
+      }
+    ],
+    "_gradesNote": "리그 연봉 순위 백분위로 등급을 매긴다. A/B는 보호선수 밖에서 보상선수 1명 + 보상금, C는 보상금만. moneyPct는 직전 연봉 대비 % (KBO 규정과 같은 구조)",
+    "marketWeeks": 4,
+    "_marketWeeksNote": "이 주 안에 계약 못 하면 미계약 - 7-1의 진로 배정(독립·은퇴)으로 넘어간다"
   }
 }

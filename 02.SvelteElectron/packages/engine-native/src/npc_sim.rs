@@ -495,14 +495,9 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
 
 // ── NPC 공통 헬퍼 ────────────────────────────────────────────────────────────
 
-fn fa_eligibility_years(league_id: &str) -> i32 {
-    match league_id {
-        "LEAGUE_KBL" => 5,
-        "LEAGUE_ABL" => 6,
-        "LEAGUE_JBL" => 4,
-        _ => 9,
-    }
-}
+// FA 자격 연수는 `team_engine`에 하나만 둔다. 예전엔 여기에도 같은 표가
+// 있었다 — Rust 안에서만 정의가 둘이었고, TS `FA_THRESHOLD`까지 세 곳이었다
+use crate::team_engine::fa_eligibility_years;
 
 pub(crate) fn npc_core_ovr(npc: &NpcSaveState) -> f64 {
     if npc.player_type == "pitcher" {

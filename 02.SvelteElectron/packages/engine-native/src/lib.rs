@@ -31,6 +31,7 @@ mod career_history;
 mod military_roster;
 mod draft;
 mod national_team;
+mod free_agency;
 
 use types::*;
 use sim_types::*;
@@ -271,6 +272,17 @@ pub fn generate_freshmen_native(params_json: String) -> String {
     };
     let result = npc_sim::generate_freshmen(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("generateFreshmenNative/serialize", e))
+}
+
+/// FA 시장 정산 — 등급·계약·보상선수를 한 번에
+#[napi]
+pub fn resolve_fa_market_native(params_json: String) -> String {
+    let params: free_agency::FaMarketParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("resolveFaMarketNative", e),
+    };
+    let result = free_agency::resolve_market(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("resolveFaMarketNative/serialize", e))
 }
 
 /// 국가대표 발탁 — 그 해 대회가 없으면 빈 결과

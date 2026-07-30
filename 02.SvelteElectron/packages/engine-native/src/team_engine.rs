@@ -2,6 +2,12 @@ use serde::{Deserialize, Serialize};
 use rand::Rng;
 use crate::sim_types::*;
 
+/// FA 자격 연수 **폴백**.
+///
+/// 정본은 `generation_rules.json`의 `faRules.eligibleYears`다. 규칙을 들고
+/// 있지 않은 호출 경로(오프시즌 내부 등)를 위한 값이라, 규칙 파일과 달라지면
+/// `npm run test:fa`가 깨진다 — 이 프로젝트에서 "표가 두 곳"으로 시작한
+/// 결함이 열 번 나왔다.
 pub fn fa_eligibility_years(league_id: &str) -> i32 {
     match league_id {
         "LEAGUE_KBL" => 5,
