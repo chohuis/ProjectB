@@ -528,6 +528,10 @@ pub struct OffseasonParams {
     /// 규칙 누락이 연봉을 0으로 만들어 세이브를 망가뜨리지 않게
     #[serde(default)]
     pub salary_rules: Option<crate::npc_sim::SalaryRules>,
+    /// 팀당 유지 인원 상한 (generation_rules.json rosterRules[리그]).
+    /// 안 넘어오면 상한 자체가 없어 로스터가 무한히 부푼다
+    #[serde(default)]
+    pub roster_limits: std::collections::HashMap<String, crate::npc_sim::RosterLimit>,
 }
 
 // ── 학년 진급 입력 ───────────────────────────────────────────────────────────

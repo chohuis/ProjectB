@@ -11,7 +11,9 @@
       "devRateMin": 45,
       "devRateMax": 75,
       "gradeMax": 3,
-      "ageBase": 16
+      "ageBase": 16,
+      "rosterMin": 18,
+      "rosterMax": 33
     },
     "LEAGUE_UNIVERSITY": {
       "rosterSize": 32,
@@ -22,7 +24,9 @@
       "devRateMin": 45,
       "devRateMax": 72,
       "gradeMax": 4,
-      "ageBase": 19
+      "ageBase": 19,
+      "rosterMin": 20,
+      "rosterMax": 40
     },
     "LEAGUE_INDEPENDENT": {
       "rosterSize": 30,
@@ -34,7 +38,9 @@
       "devRateMax": 70,
       "ageMin": 20,
       "ageMax": 31,
-      "withContract": true
+      "withContract": true,
+      "rosterMin": 18,
+      "rosterMax": 45
     },
     "LEAGUE_KBL": {
       "rosterSize": 30,
@@ -46,7 +52,9 @@
       "devRateMax": 70,
       "ageMin": 20,
       "ageMax": 37,
-      "withContract": true
+      "withContract": true,
+      "rosterMin": 26,
+      "rosterMax": 34
     },
     "LEAGUE_KBL_FARM": {
       "rosterSize": 34,
@@ -58,7 +66,9 @@
       "devRateMax": 80,
       "ageMin": 20,
       "ageMax": 29,
-      "withContract": true
+      "withContract": true,
+      "rosterMin": 26,
+      "rosterMax": 34
     },
     "LEAGUE_ABL": {
       "rosterSize": 28,
@@ -71,7 +81,9 @@
       "ageMin": 21,
       "ageMax": 38,
       "withContract": true,
-      "nationality": "USA"
+      "nationality": "USA",
+      "rosterMin": 26,
+      "rosterMax": 34
     },
     "LEAGUE_JBL": {
       "rosterSize": 28,
@@ -84,7 +96,9 @@
       "ageMin": 20,
       "ageMax": 37,
       "withContract": true,
-      "nationality": "JPN"
+      "nationality": "JPN",
+      "rosterMin": 26,
+      "rosterMax": 32
     }
   },
   "salaryRules": {
@@ -241,22 +255,24 @@
     "salary": 300,
     "_salaryNote": "군인 봉급(월 수십만원)이라 연 300만원 수준. 프로 최저연봉과 다르다"
   },
-
   "draftRules": {
     "_note": "11월 통합 드래프트 (Phase 7-1). 읽는 곳: engine-native/src/draft.rs",
     "rounds": 11,
     "_roundsNote": "10팀 x 11라운드 = 110명. KBO 실제 규모와 같다",
-
     "ageMin": 20,
     "ageMax": 29,
     "_ageNote": "고3이 19세라(design/roster.md §1) 하한 20이 재학생을 막는다. 예전 값 18은 고3 나이였다",
-
     "earlyEntry": {
       "_note": "졸업반이 아닌 선수의 신청 자격. 확률이 아니라 능력치 하한이다 - '지명될 만한 실력이면 신청한다'. 결정적이고 화면에 설명할 수 있다",
-      "universityByGrade": [74, 71, 68],
+      "universityByGrade": [
+        74,
+        71,
+        68
+      ],
       "_universityNote": "1/2/3학년 OVR 하한. 대학 생성 범위가 52~76(전력 보정 ±7)이라 1학년 74는 최상위 극소수다. 4학년은 졸업이라 자동 후보",
       "independent": 68,
       "_independentNote": "독립은 소속 연차와 무관하게 매년 신청할 수 있다. 생성 범위 50~74"
     }
-  }
+  },
+  "_rosterLimitsNote": "rosterSize는 생성 인원, rosterMin/rosterMax는 매 시즌 유지 상한이다. 예전엔 상한이 Rust roster_rule()과 TS ROSTER_RULES에 각각 하드코딩돼 있었고 둘 다 이 파일과 달랐다 (KBL 상한 65 vs 생성 30)."
 }

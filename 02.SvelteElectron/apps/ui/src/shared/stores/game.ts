@@ -48,7 +48,7 @@ import type {
 } from "../types/save";
 import type { ProContract } from "../types/save";
 import { transitionReason } from "../utils/careerTransition";
-import { runOffseasonProcessing } from "../utils/npcEngine";
+import { runOffseasonProcessing, rosterLimitsFrom } from "../utils/npcEngine";
 import { getFaThreshold } from "../utils/faEngine";
 import { masterStore } from "./master";
 import { autoLog, logEvent, logVerify, type PlayerEventEntry } from "./autoAdvance";
@@ -1729,7 +1729,13 @@ function createGameStore() {
 
       // TS에서 이미 FA/재계약 결정된 named NPC ID → Rust FA 랜덤 재결정 방지
       const namedNpcIds = s.npcs.map(n => n.npcId);
-      const result = await runOffseasonProcessing(s.npcs, s.pendingDraft, seasonYear, namedNpcIds);
+      // 로스터 상한·연봉 규칙을 규칙 파일에서 넘긴다. 예전엔 Rust에 하드코딩된
+      // 표(KBL 상한 65)를 썼고 그게 1군+2군 합산에 걸려 프로가 700명까지 부풀었다
+      const offRules = await loadRosterRules();
+      const result = await runOffseasonProcessing(
+        s.npcs, s.pendingDraft, seasonYear, namedNpcIds,
+        rosterLimitsFrom(offRules.rosterRules), offRules.salaryRules,
+      );
       // 이 배열은 아래 시즌종료 처리들이 인덱스로 직접 덮어쓴다 (careerHistory·병역·드래프트).
       // 예전엔 여기서 감정 9축의 dormant 감쇠·은퇴 archive도 했는데, 6C에서
       // 관계도로 대체했다 — 감쇠는 slot.db relationship에서 시즌 단위로 돈다.

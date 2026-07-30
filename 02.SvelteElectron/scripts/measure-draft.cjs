@@ -109,7 +109,23 @@ function generateFreshmen(npcs, year) {
 }
 
 // ── 한 시즌 ────────────────────────────────────────────────────
-function runSeason(npcs, year, kblTeams, rounds, excludeSangmu, useEarlyEntry) {
+/** rosterRules → Rust rosterLimits (npcEngine.rosterLimitsFrom와 같은 규칙) */
+const ROSTER_LIMITS = Object.fromEntries(
+  Object.entries(gr.rosterRules)
+    .filter(([, r]) => typeof r.rosterMax === "number")
+    .map(([lid, r]) => [lid, { rosterMin: r.rosterMin, rosterMax: r.rosterMax }]),
+);
+
+function runSeason(npcs, year, kblTeams, rounds, excludeSangmu, useEarlyEntry, useLimits) {
+  // 시즌 종료 오프시즌 — 은퇴 판정 + 로스터 상한. useLimits=false면 D-3a 이전
+  // (Rust 하드코딩 표: KBL 상한 65가 1군+2군 합산에 걸린다)
+  const off = call("runOffseasonNative", {
+    npcs, pendingDraft: [], seasonYear: year, namedNpcIds: [],
+    salaryRules: gr.salaryRules,
+    rosterLimits: useLimits ? ROSTER_LIMITS : {},
+  });
+  npcs = off.npcs;
+
   const g = call("advanceAllGradesNative", { npcs, seasonYear: year });
   const pool = [...g.hsGraduated, ...g.univGraduated];
   const aged = call("advanceAllAgesNative", { npcs: [...g.updated, ...pool] });
@@ -160,7 +176,7 @@ function runSeason(npcs, year, kblTeams, rounds, excludeSangmu, useEarlyEntry) {
 }
 
 // ── 측정 ───────────────────────────────────────────────────────
-function measure(label, kblTeams, rounds, excludeSangmu, useEarlyEntry) {
+function measure(label, kblTeams, rounds, excludeSangmu, useEarlyEntry, useLimits) {
   let npcs = buildWorld();
   const t0 = Date.now();
   console.log(`\n══ ${label} (KBL ${kblTeams.length}팀 × ${rounds}라운드) ══`);
@@ -170,7 +186,7 @@ function measure(label, kblTeams, rounds, excludeSangmu, useEarlyEntry) {
   for (let i = 0; i < SEASONS; i++) {
     const year = START_YEAR + i;
     const before = npcs.length;
-    const r = runSeason(npcs, year, kblTeams, rounds, excludeSangmu, useEarlyEntry);
+    const r = runSeason(npcs, year, kblTeams, rounds, excludeSangmu, useEarlyEntry, useLimits);
     npcs = r.after;
 
     const moved = new Map();
@@ -223,9 +239,26 @@ function measure(label, kblTeams, rounds, excludeSangmu, useEarlyEntry) {
     const v = [...per.values()].sort((a, b) => a - b);
     return v.length ? `${v.length}팀 · 최소 ${v[0]} 최대 ${v[v.length - 1]} 평균 ${(v.reduce((a, b) => a + b, 0) / v.length).toFixed(1)}` : "없음";
   };
+  // 프로 소속이 왜 부푸는지 — 상태별·팀유형별로 쪼개 본다
+  {
+    const kbl = npcs.filter((n) => n.currentLeague === "LEAGUE_KBL");
+    const st = {};
+    for (const n of kbl) st[n.careerStatus] = (st[n.careerStatus] ?? 0) + 1;
+    const farmTagged = kbl.filter((n) => n.currentTeam.endsWith("_2")).length;
+    const noTeam = kbl.filter((n) => !n.currentTeam).length;
+    console.log(`LEAGUE_KBL 상태별: ${Object.entries(st).map(([k, v]) => `${k} ${v}`).join(" · ")}`);
+    console.log(`  그중 _2팀 소속 ${farmTagged}명 · 팀 없음 ${noTeam}명`);
+  }
+  console.log(`프로1군 ${sizeOf("LEAGUE_KBL")}`);
+  console.log(`프로2군 ${sizeOf("LEAGUE_KBL_FARM")}`);
   console.log(`대학  ${sizeOf("LEAGUE_UNIVERSITY")}`);
   console.log(`독립  ${sizeOf("LEAGUE_INDEPENDENT")}`);
   console.log(`고교  ${sizeOf("LEAGUE_HIGHSCHOOL")}`);
+
+  // 소속 팀이 없는 현역 — FA 미계약자다. D-4가 진로를 줘야 한다
+  const homeless = npcs.filter((n) => n.careerStatus === "active" && !n.currentTeam
+    && n.currentLeague !== "LEAGUE_RETIRED" && n.currentLeague !== "LEAGUE_DRAFT_POOL");
+  console.log(`팀 없는 현역 ${homeless.length}명 (FA 미계약 — D-4 대상)`);
 
   // 상무에 미지명자가 배정됐는가
   const sangmu = npcs.filter((n) => n.currentTeam === SANGMU_TEAM_ID);
@@ -236,6 +269,5 @@ function measure(label, kblTeams, rounds, excludeSangmu, useEarlyEntry) {
   return npcs;
 }
 
-measure("D-1 이전 — 유령 팀 8개 · 상무 혼입 · 졸업생만", GHOST_TEAMS, 10, false, false);
-measure("D-1 — 실제 10팀 11라운드 · 상무 제외 · 졸업생만", REAL_KBL, 11, true, false);
-measure("D-2 — 대학 재학·독립 얼리 신청 추가", REAL_KBL, gr.draftRules.rounds, true, true);
+measure("D-2 — 상한이 Rust 하드코딩 (KBL 65)", REAL_KBL, gr.draftRules.rounds, true, true, false);
+measure("D-3a — 상한을 규칙 파일에서 + 2군 리그 표기 수정", REAL_KBL, gr.draftRules.rounds, true, true, true);

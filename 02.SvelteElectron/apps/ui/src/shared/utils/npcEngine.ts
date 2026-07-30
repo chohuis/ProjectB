@@ -12,15 +12,25 @@ export interface SeasonEndSummary {
 
 // 팀/구단 ID 파생 규칙(팜 팀·구단→1군 등)은 utils/ids.ts 참조 — 하드코딩 맵 금지
 
-type RosterRule = { min: number; max: number };
-export const ROSTER_RULES: Record<string, RosterRule> = {
-  LEAGUE_HIGHSCHOOL:  { min: 18, max: 30 },
-  LEAGUE_UNIVERSITY:  { min: 20, max: 40 },
-  LEAGUE_INDEPENDENT: { min: 18, max: 45 },
-  LEAGUE_KBL:         { min: 40, max: 65 },
-  LEAGUE_ABL:         { min: 50, max: 90 },
-  LEAGUE_JBL:         { min: 45, max: 80 },
-};
+/**
+ * 팀당 유지 인원 상한 — **정본은 `generation_rules.json rosterRules`다.**
+ *
+ * 예전엔 여기와 Rust `roster_rule()`에 각각 표가 박혀 있었고 둘 다 규칙 파일과
+ * 달랐다 (KBL 상한 65 vs 생성 인원 30). 그 65가 1군·2군 합산에 걸리는 바람에
+ * 프로 소속이 700명까지 부풀었다.
+ */
+export interface RosterLimit { rosterMin?: number; rosterMax: number }
+
+export function rosterLimitsFrom(
+  rosterRules: Record<string, { rosterMin?: number; rosterMax?: number }>,
+): Record<string, RosterLimit> {
+  const out: Record<string, RosterLimit> = {};
+  for (const [leagueId, r] of Object.entries(rosterRules)) {
+    if (typeof r?.rosterMax !== "number") continue;
+    out[leagueId] = { rosterMin: r.rosterMin, rosterMax: r.rosterMax };
+  }
+  return out;
+}
 
 export function clampStat(v: number): number {
   return Math.max(1, Math.min(99, Math.round(v)));
@@ -55,9 +65,16 @@ export async function runOffseasonProcessing(
   pendingDraft: NpcSaveState[],
   seasonYear: number,
   namedNpcIds?: string[],
+  /** 규칙 파일의 상한. 안 넘기면 Rust에 상한이 없어 로스터가 무한히 부푼다 */
+  rosterLimits?: Record<string, RosterLimit>,
+  salaryRules?: unknown,
 ): Promise<OffseasonResult> {
   const namedFlags = new Map(npcs.map(n => [n.npcId, n.isNamed] as const));
-  const paramsJson = JSON.stringify({ npcs, pendingDraft, seasonYear, namedNpcIds: namedNpcIds ?? [] });
+  const paramsJson = JSON.stringify({
+    npcs, pendingDraft, seasonYear, namedNpcIds: namedNpcIds ?? [],
+    rosterLimits: rosterLimits ?? {},
+    ...(salaryRules ? { salaryRules } : {}),
+  });
   const json = await api().npcRunOffseason(paramsJson);
   const raw = parseResult<{ npcs: NpcSaveState[]; pendingDraft: NpcSaveState[]; summary: SeasonEndSummary; logs: string[] }>(json);
   const rehydrate = (n: NpcSaveState): NpcSaveState => ({
