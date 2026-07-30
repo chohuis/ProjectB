@@ -142,6 +142,47 @@ console.log("\n리그 3자 정합");
   check("상무는 로스터 생성 대상이 아니다", !generated.has("TEAM_SPORTS_UNIT"));
 }
 
+// ── 유령 팀 — refs에 없는 팀이 화면 목록에 섞이지 않는가 ────────
+//
+// v1 시절 `teams/*/index.json`의 팀을 refs에 덧붙이는 `mergeSupplementTeams`가
+// 있었다. Phase 5가 172팀으로 ID 체계를 갈아엎으면서 그 31개 팀이 refs에서
+// 사라졌는데 함수는 계속 목록에 얹었다 — **화면엔 뜨는데 로스터도 일정도
+// 순위표도 없는 유령 팀**이 됐고, 새 게임 팀 선택에서 고를 수도 있었다.
+console.log("\n유령 팀 (refs 단일 정본)");
+{
+  const masterSrc = fs.readFileSync(
+    path.join(__dirname, "../apps/ui/src/shared/stores/master.ts"), "utf8");
+  const code = masterSrc
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/^\s*\/\/.*$/gm, "");
+
+  check("mergeSupplementTeams가 살아있지 않다", !/function\s+mergeSupplementTeams/.test(code));
+  check("teams/*/index.json을 읽지 않는다",
+    !/teams\/(university|independent|highschool)\/index\.json/.test(code));
+
+  // 팀 목록이 refs에서만 온다 — 다른 출처가 섞이면 여기서 잡힌다
+  const assign = code.match(/const mergedTeams = ([^;]+);/);
+  check("팀 목록이 refs에서만 온다", /refsData\?\.teams/.test(assign?.[1] ?? ""),
+    (assign?.[1] ?? "(못 찾음)").trim());
+
+  // 구 index.json이 아직 파일로 남아 있다면 refs와 얼마나 어긋났는지 보고만 한다
+  const refsIds = new Set(refs.teams.map((t) => t.id));
+  let ghosts = 0;
+  for (const [label, rel] of Object.entries({
+    대학: "../resource/data/master/teams/university/index.json",
+    독립: "../resource/data/master/teams/independent/index.json",
+    고교: "../resource/data/master/teams/highschool/index.json",
+  })) {
+    const f = path.join(__dirname, rel);
+    if (!fs.existsSync(f)) continue;
+    const list = JSON.parse(fs.readFileSync(f, "utf8")).activeTeamIds ?? [];
+    const g = list.filter((id) => !refsIds.has(id));
+    ghosts += g.length;
+    if (g.length) console.log(`    ${label} index.json: refs에 없는 팀 ${g.length}개 (읽지 않으므로 무해)`);
+  }
+  console.log(`    구 index.json의 유령 후보 ${ghosts}개 — 코드가 안 읽으면 화면에 안 뜬다`);
+}
+
 // ── 빈 로스터가 실제로 어떻게 나오는지 (회귀 근거 고정) ─────────
 console.log("\n빈 로스터 시뮬 (버그 재현 근거)");
 {
