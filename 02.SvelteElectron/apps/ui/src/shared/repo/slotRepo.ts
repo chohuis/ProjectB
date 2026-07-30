@@ -60,7 +60,6 @@ export interface RepoNpc {
   xp: { pitchingXp?: Record<string, number>; battingXp?: Record<string, number> };
   form?: unknown;                 // R3b 합성 궤적
   personality?: NpcPersonality;
-  emotion?: unknown;              // Named 전용 (emotion/memories/status)
   injury?: RepoInjury;
   extra?: Record<string, unknown>; // fame·tags 등 확장
 }
@@ -118,8 +117,46 @@ async function call<T>(cmd: string, payload?: unknown): Promise<T> {
 // ── Repository API ────────────────────────────────────────────
 export const slotRepo = {
   // 슬롯 수명
-  createSlot: (p: { slotId: string; worldSeed: number; name?: string; protagonist: unknown; season: unknown; npcs: Partial<RepoNpc>[] }) =>
-    call<{ ok: true; npcCount: number }>("createSlot", p),
+  createSlot: (p: {
+    slotId: string; worldSeed: number; name?: string;
+    protagonist: unknown; season: unknown;
+    npcs: Partial<RepoNpc>[];
+    /** 스태프 국내 전원 (Phase 6A) — 같은 트랜잭션에 들어간다 */
+    staff?: import("./staffGen").StaffRow[];
+  }) =>
+    call<{ ok: true; npcCount: number; staffCount: number }>("createSlot", p),
+
+  // ── 스태프 (Phase 6A) ───────────────────────────────────────
+  insertStaff: (slotId: string, staff: import("./staffGen").StaffRow[]) =>
+    call<{ ok: true; inserted: number }>("insertStaff", { slotId, staff }),
+  /** teamId/role/leagueId/status로 좁힐 수 있다 */
+  getStaff: (slotId: string, filter: { teamId?: string; role?: string; leagueId?: string; status?: string } = {}) =>
+    call<import("./staffGen").StaffRow[]>("getStaff", { slotId, ...filter }),
+  updateStaff: (slotId: string, updates: Array<{
+    staffId: string; age: number; status: string; years: number;
+    teamId: string; leagueId: string; stats: Record<string, number>;
+  }>) => call<{ ok: true; updated: number }>("updateStaff", { slotId, updates }),
+  // ── 관계도 (Phase 6C) ───────────────────────────────────────
+  /** `withPerson`이면 person VIEW를 조인해 이름·소속까지 온다 (화면용) */
+  getRelationships: (slotId: string, filter: {
+    kind?: import("../types/relationship").RelationKind;
+    contact?: import("../types/relationship").RelationContact;
+    personIds?: string[];
+    withPerson?: boolean;
+  } = {}) =>
+    call<import("../types/relationship").Relationship[]>("getRelationships", { slotId, ...filter }),
+
+  /** 신규 생성과 갱신이 같은 경로. 값 clamp는 커맨드 쪽에서도 한 번 더 한다 */
+  upsertRelationships: (slotId: string, rows: import("../types/relationship").Relationship[]) =>
+    call<{ ok: true; written: number }>("upsertRelationships", { slotId, rows }),
+
+  /** 팀 이동·은퇴 시 접촉 상태만 바꾼다. `fromTeam`이면 그 팀 전원 일괄 */
+  setRelationshipContact: (slotId: string, p: {
+    contact: import("../types/relationship").RelationContact;
+    personIds?: string[];
+    fromTeam?: string;
+  }) => call<{ ok: true }>("setRelationshipContact", { slotId, ...p }),
+
   listSlots: () => call<RepoSlotMeta[]>("listSlots", {}),
   deleteSlot: (slotId: string) => call<{ ok: true }>("deleteSlot", { slotId }),
 

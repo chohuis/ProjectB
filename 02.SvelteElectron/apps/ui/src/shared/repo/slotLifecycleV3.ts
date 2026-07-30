@@ -173,6 +173,8 @@ export async function startNewGameV3(opts: StartNewGameV3Options): Promise<{ npc
     seasonYear: opts.seasonYear,
     protagonist: slimGame,
     season: slimSeason,
+    // 스태프는 국내 전 팀을 한 번에 만든다 (Phase 6A) — power·resource가 생성 보정에 쓰인다
+    allTeams: get(masterStore).teams,
   });
   await slotRepo.setMeta(opts.slotId, { team_id: opts.protagonist.teamId });
 

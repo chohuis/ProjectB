@@ -24,6 +24,7 @@
   import AchievementsPage from "../achievements/AchievementsPage.svelte";
   import MessagesPage from "../messages/MessagesPage.svelte";
   import TeamPage from "../team/TeamPage.svelte";
+  import PeoplePage from "../people/PeoplePage.svelte";
   import EventManagerModal from "../../features/events/ui/EventManagerModal.svelte";
   import CareerChoiceHubModal from "../../features/career/ui/CareerChoiceHubModal.svelte";
   import CareerResultsModal from "../../features/career/ui/CareerResultsModal.svelte";
@@ -41,7 +42,6 @@
   import AutoAdvancePanel from "../../features/devtools/ui/AutoAdvancePanel.svelte";
   import { runAutoAdvance } from "../../shared/usecases/runAutoAdvance";
   import MatchEngineLabModal from "../../features/match-engine-lab/ui/MatchEngineLabModal.svelte";
-  import EntityManagerModal from "../../features/entity-manager/ui/EntityManagerModal.svelte";
   import AchievementManagerModal from "../../features/achievements/ui/AchievementManagerModal.svelte";
   import SeasonEndModal from "../../features/season-end/ui/SeasonEndModal.svelte";
   import InjuryTreatmentModal from "../../features/injury/ui/InjuryTreatmentModal.svelte";
@@ -58,7 +58,6 @@
   let currentTab: MainTabId = "home";
   let devToolsHubOpen = false;
   let eventManagerOpen = false;
-  let entityManagerOpen = false;
   let achievementManagerOpen = false;
   let matchLabOpen = false;
   let activeMatchContext: InteractiveMatchContext | null = null;
@@ -67,6 +66,7 @@
     messages: "page.messages",
     status: "page.status",
     team: "page.team",
+    people: "page.people",
     schedule: "page.schedule",
     training: "page.training",
     finance: "page.finance",
@@ -384,11 +384,10 @@
     if (typing) return;
 
     event.preventDefault();
-    const anyOpen = devToolsHubOpen || eventManagerOpen || entityManagerOpen || achievementManagerOpen || matchLabOpen;
+    const anyOpen = devToolsHubOpen || eventManagerOpen || achievementManagerOpen || matchLabOpen;
     if (anyOpen) {
       devToolsHubOpen = false;
       eventManagerOpen = false;
-      entityManagerOpen = false;
       achievementManagerOpen = false;
       matchLabOpen = false;
       return;
@@ -464,6 +463,8 @@
             <MessagesPage />
           {:else if currentTab === "team"}
             <TeamPage />
+          {:else if currentTab === "people"}
+            <PeoplePage />
           {:else}
             <section class="placeholder">
               {$t("main.placeholderPreparing", { tab: $t(tabPageKey[currentTab]) })}
@@ -484,10 +485,6 @@
     devToolsHubOpen = false;
     eventManagerOpen = true;
   }}
-  on:openEntity={() => {
-    devToolsHubOpen = false;
-    entityManagerOpen = true;
-  }}
   on:openAchievement={() => {
     devToolsHubOpen = false;
     achievementManagerOpen = true;
@@ -504,7 +501,6 @@
 
 <AutoAdvancePanel />
 <EventManagerModal open={eventManagerOpen} on:close={() => (eventManagerOpen = false)} />
-<EntityManagerModal open={entityManagerOpen} on:close={() => (entityManagerOpen = false)} />
 <AchievementManagerModal open={achievementManagerOpen} on:close={() => (achievementManagerOpen = false)} />
 <MatchEngineLabModal open={matchLabOpen} on:close={() => (matchLabOpen = false)} />
 

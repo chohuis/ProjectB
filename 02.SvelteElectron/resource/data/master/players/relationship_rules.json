@@ -1,0 +1,74 @@
+{
+  "init": {
+    "base": 0,
+    "personality_spread": 10,
+    "draft_bonus": {
+      "round1": 15,
+      "round2": 8,
+      "round3plus": 3,
+      "undrafted": -5
+    }
+  },
+  "decay": {
+    "on_move": 0.6,
+    "apart_per_season": 0.9,
+    "apart_floor": 2
+  },
+  "weekly": {
+    "growth_threshold": 2.0,
+    "quality_era": 2.5,
+    "blowup_era": 6.0,
+    "manager": {
+      "win": 2,
+      "loss": -2,
+      "quality_start": 1,
+      "blowup": -2,
+      "complete_shutout": 5,
+      "training_skip": -1,
+      "growth": 1
+    },
+    "coach": {
+      "own_area_training": 1,
+      "training_skip": -2,
+      "growth": 2
+    },
+    "teammate": {
+      "team_win": 1,
+      "isolated_ace": -1,
+      "growth": 0
+    },
+    "rival": {
+      "faced_and_won": 3,
+      "faced_and_lost": -1
+    }
+  },
+  "season": {
+    "manager_good": 8,
+    "manager_bad": -6,
+    "coach_good": 4,
+    "coach_bad": -3,
+    "owner_good": 6,
+    "owner_bad": -5,
+    "teammate_together": 5,
+    "criteria": {
+      "good_era": 3.5,
+      "bad_era": 5.5,
+      "good_rank_pct": 0.4,
+      "bad_rank_pct": 0.75
+    }
+  },
+  "effect": {
+    "manager_role_ovr_per_step": 2,
+    "coach_training_per_step": 0.02
+  },
+  "training_area": {
+    "command": "투수",
+    "velocity": "투수",
+    "control": "투수",
+    "movement": "투수",
+    "pitch_dev": "투수",
+    "mentality": "멘탈",
+    "stamina": "컨디셔닝",
+    "recovery": "컨디셔닝"
+  }
+}

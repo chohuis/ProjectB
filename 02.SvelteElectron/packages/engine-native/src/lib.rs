@@ -16,6 +16,8 @@ mod tournament;
 mod group_stage;
 mod survival;
 mod rest_rules;
+mod staff_gen;
+mod staff_lifecycle;
 mod postseason_engine;
 mod week_engine;
 mod team_engine;
@@ -24,6 +26,7 @@ mod scouting_engine;
 mod roster_gen;
 mod standings_drift;
 mod synthetic_trajectory;
+mod relationship;
 
 use types::*;
 use sim_types::*;
@@ -647,6 +650,87 @@ pub fn build_farm_bracket_native(p: String) -> String {
     };
     serde_json::to_string(&postseason_engine::build_farm_bracket(params))
         .unwrap_or_else(|e| parse_err("buildFarmBracketNative/serialize", e))
+}
+
+// ── 스태프 생성 (Phase 6A) ────────────────────────────────────────────────────
+
+/// 팀 목록 + 생성 규칙 → 스태프 전원 (worldSeed 결정적)
+#[napi]
+pub fn generate_staff_native(p: String) -> String {
+    let params: staff_gen::GenerateStaffParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("generateStaffNative", e),
+    };
+    serde_json::to_string(&staff_gen::generate_staff(params))
+        .unwrap_or_else(|e| parse_err("generateStaffNative/serialize", e))
+}
+
+/// 시즌 종료 → 스태프 나이·경력성장·은퇴·경질·이동 (Phase 6B)
+#[napi]
+pub fn advance_staff_season_native(p: String) -> String {
+    let params: staff_lifecycle::AdvanceStaffParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("advanceStaffSeasonNative", e),
+    };
+    serde_json::to_string(&staff_lifecycle::advance_staff_season(params))
+        .unwrap_or_else(|e| parse_err("advanceStaffSeasonNative/serialize", e))
+}
+
+// ── 관계도 (Phase 6C) ────────────────────────────────────────────────────────
+
+/// 새로 만난 사람들의 초기 관계값 (중립 0 + 성향 편차)
+#[napi]
+pub fn init_relations_native(p: String) -> String {
+    let params: relationship::InitRelationParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("initRelationsNative", e),
+    };
+    serde_json::to_string(&relationship::init_relations(params))
+        .unwrap_or_else(|e| parse_err("initRelationsNative/serialize", e))
+}
+
+/// 주간 관계 갱신 — contact가 together인 상대만 움직인다
+#[napi]
+pub fn weekly_relations_native(p: String) -> String {
+    let params: relationship::WeeklyRelationParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("weeklyRelationsNative", e),
+    };
+    serde_json::to_string(&relationship::weekly_relations(params))
+        .unwrap_or_else(|e| parse_err("weeklyRelationsNative/serialize", e))
+}
+
+/// 시즌 종료 — together는 총평 가산, apart는 감쇠, ended는 동결
+#[napi]
+pub fn season_relations_native(p: String) -> String {
+    let params: relationship::SeasonRelationParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("seasonRelationsNative", e),
+    };
+    serde_json::to_string(&relationship::season_relations(params))
+        .unwrap_or_else(|e| parse_err("seasonRelationsNative/serialize", e))
+}
+
+/// 팀 이동 감쇠 (감쇠 후 보존 — 행은 남는다)
+#[napi]
+pub fn relation_move_decay_native(p: String) -> String {
+    let params: relationship::MoveDecayParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("relationMoveDecayNative", e),
+    };
+    serde_json::to_string(&relationship::move_decay(params))
+        .unwrap_or_else(|e| parse_err("relationMoveDecayNative/serialize", e))
+}
+
+/// 관계 → 실제 판정 보정 (보직 OVR 평가 · 훈련 효율)
+#[napi]
+pub fn relation_effects_native(p: String) -> String {
+    let params: relationship::RelationEffectParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("relationEffectsNative", e),
+    };
+    serde_json::to_string(&relationship::relation_effects(params))
+        .unwrap_or_else(|e| parse_err("relationEffectsNative/serialize", e))
+}
+
+/// 7단계 라벨 표. TS `types/relationship.ts`의 미러가 어긋났는지 대조하는 데 쓴다
+#[napi]
+pub fn relation_label_table_native() -> String {
+    serde_json::to_string(&relationship::label_table())
+        .unwrap_or_else(|e| parse_err("relationLabelTableNative/serialize", e))
 }
 
 // ── 의무 휴식 (Phase 5-8) ─────────────────────────────────────────────────────

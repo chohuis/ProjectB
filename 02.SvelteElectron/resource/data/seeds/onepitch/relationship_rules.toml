@@ -1,0 +1,122 @@
+# 관계도 규칙 (Phase 6C) — 설계 정본 docs/design/people.md §4
+#
+# 이 파일이 **수치의 정본**이다. 문서에 복제하지 않는다.
+# 고치면 `python scripts/build_refs_from_seeds.py`를 반드시 다시 돌린다 —
+# 안 돌리면 Rust가 옛 규칙으로 돈다 (6B에서 두 번 겪었다).
+#
+# ⚠ 7단계 라벨 **경계는 여기 없다.** 경계는 튜닝이 아니라 구조라서
+#   Rust `relationship.rs`의 RELATION_LABELS가 정본이고 TS가 그걸 미러한다.
+#   (`npm run test:relationship`이 두 정의를 대조한다)
+#
+# 목표 감각 — 사용자 확정 "중간": **한 시즌 순변화 대략 ±25 = 라벨 1~2단계.**
+# 커리어가 10~15시즌인 걸 감안한 속도다. 실측은 test:relationship이 찍는다.
+
+[init]
+# 사용자 확정: "중립 0 + 소폭 편차"
+base = 0
+# 상대 성격에서 오는 편차의 최대 폭 (±) — personId+worldSeed 결정적
+personality_spread = 10
+
+# 감독 한정 초기 보정. 지명 순위가 곧 "팀이 나를 어떻게 보고 데려왔나"다.
+[init.draft_bonus]
+round1 = 15
+round2 = 8
+round3plus = 3
+undrafted = -5
+
+[decay]
+# 사용자 확정: "감쇠 후 보존". 팀을 옮기면 0쪽으로 당기고 행은 남긴다
+on_move = 0.6
+# 헤어진 채로 지나간 시즌마다 추가 감쇠 (재회하면 이 값에서 재개)
+apart_per_season = 0.9
+# 이 이하로 남은 apart 관계는 0으로 떨군다 (±1이 영원히 남는 걸 막는다)
+apart_floor = 2
+
+# ── 주간 변동 ────────────────────────────────────────────────────
+# 주인공이 등판한 주에만 대부분 적용된다. 시즌당 등판 주는 20~25회 수준.
+#
+# 공통 판정 기준을 먼저 둔다 — 하위 테이블([weekly.manager] 등)보다 뒤에 쓰면
+# TOML은 통과하지만 읽는 사람이 [weekly] 스칼라를 놓친다.
+
+[weekly]
+growth_threshold = 2.0  # ovrDelta가 이 이상이면 "성장한 주"
+quality_era = 2.5
+blowup_era = 6.0
+
+[weekly.manager]
+win = 2
+loss = -2
+quality_start = 1       # ERA < 2.5 인 등판
+blowup = -2             # ERA > 6.0 인 등판
+complete_shutout = 5
+training_skip = -1
+growth = 1              # 이번 주 OVR 상승폭이 growth_threshold 이상
+
+[weekly.coach]
+# 이번 주 훈련이 그 코치의 전문 영역일 때만 붙는다 (전 코치에게 매주 붙으면 폭주한다)
+own_area_training = 1
+training_skip = -2
+growth = 2
+
+[weekly.teammate]
+team_win = 1
+# 나는 호투했는데 팀이 진 주 — 에이스가 고립되는 감각
+isolated_ace = -1
+growth = 0
+
+[weekly.rival]
+# 맞대결 결과. **부호는 상대 성향이 뒤집는다** —
+# competitive/prideful이 높으면 내가 이겼을 때 적개심(−), nurturing이 높으면 인정(+).
+faced_and_won = 3
+faced_and_lost = -1
+
+# ── 시즌 종료 변동 ───────────────────────────────────────────────
+# 주간 누적과 별개로 시즌말에 한 번. 팀 성적·개인 성적의 총평이다.
+
+[season]
+manager_good = 8
+manager_bad = -6
+coach_good = 4
+coach_bad = -3
+owner_good = 6
+owner_bad = -5
+# 같은 팀에서 한 시즌을 더 보냈다는 것만으로 붙는 값 (동료 한정)
+teammate_together = 5
+
+[season.criteria]
+# 개인 성적 판정 기준 — 투수 ERA
+good_era = 3.50
+bad_era = 5.50
+# 팀 성적 판정 — 리그 상위 몇 %인가
+good_rank_pct = 0.40
+bad_rank_pct = 0.75
+
+# ── 관계가 실제로 무엇을 바꾸는가 (people.md §4 표) ─────────────
+#
+# 라벨 **1단계당** 값이다. 중립을 0으로 두고 우호 +1 · 신뢰 +2 · 각별 +3 /
+# 서먹 −1 · 불신 −2 · 적대 −3. 그래서 최대 보정은 아래 값 × 3이다.
+#
+# 왜 값이 아니라 단계로 세는가: 관계값은 플레이어에게 안 보이고 라벨만 보인다.
+# 판정도 라벨로 하면 "각별인데 왜 안 써주지"가 생기지 않는다.
+[effect]
+# 감독 관계 → 역할 배정 시 OVR 평가 보정. ±6이면 5선발과 스윙맨을 가르는 폭이다
+manager_role_ovr_per_step = 2
+# 코치 관계 → 담당 영역 훈련 효율 배율 보정 (0.02 = 2%p). 최대 ±6%p
+coach_training_per_step = 0.02
+
+# ── 훈련 focus → 코치 전문 영역 ─────────────────────────────────
+# 두 어휘가 **다른 파일에서 왔다** — 왼쪽은 training/programs_pitcher.json의 focus,
+# 오른쪽은 staff_rules.toml [[coach.specialties]]의 name이다.
+# 이 매핑을 코드에 박으면 어느 한쪽 어휘를 고쳐도 조용히 어긋난다
+# (감독 능력치가 3중 이름 드리프트로 전달되지 않던 P6-2가 정확히 그 사고였다).
+#
+# 여기 없는 focus는 담당 코치가 없다는 뜻이고, 그 주에는 아무 코치도 오르지 않는다.
+[training_area]
+command   = "투수"
+velocity  = "투수"
+control   = "투수"
+movement  = "투수"
+pitch_dev = "투수"
+mentality = "멘탈"
+stamina   = "컨디셔닝"
+recovery  = "컨디셔닝"

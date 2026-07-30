@@ -66,6 +66,9 @@ const BASELINE_SQL = `
     xp_json           TEXT NOT NULL DEFAULT '{}',
     form_json         TEXT,
     personality_json  TEXT,
+    -- ⚠ 폐기됨 (Phase 6C). 구 감정 9축이 여기 있었다. **아무도 쓰지 않는다** —
+    -- 컬럼만 남긴 이유는 DROP에 마이그레이션이 필요하고 구 슬롯을 열 때 무해하기
+    -- 때문이다. 관계는 relationship 테이블이 정본이다. 여기 새로 쓰지 말 것.
     emotion_json      TEXT,
     injury_json       TEXT,
     extra_json        TEXT
@@ -185,6 +188,69 @@ const SEASON_TABLES_SQL = `
   );
 `;
 
+
+const STAFF_TABLES_SQL = `
+  -- ── 스태프 1명 = 1행 (Phase 6A) ─────────────────────────────────
+  -- 선수(npc)와 **테이블을 나눈다**. OnePitch는 한 테이블에 동거시키고 position으로
+  -- 걸렀는데 그 필터가 7곳에 필요했고 5회 이상 누락 버그가 났다 —
+  -- 감독이 타순에 서고, 피로도가 쌓이고, 트레이드 후보에 올랐다.
+  -- 나누면 SELECT * FROM npc 가 **구조적으로** 스태프를 못 집는다.
+  CREATE TABLE IF NOT EXISTS staff (
+    staff_id      TEXT PRIMARY KEY,
+    name          TEXT NOT NULL,
+    name_en       TEXT NOT NULL DEFAULT '',
+    role          TEXT NOT NULL,              -- manager | coach | owner
+    age           INTEGER NOT NULL,
+    team_id       TEXT NOT NULL DEFAULT '',
+    league_id     TEXT NOT NULL DEFAULT '',
+    school_id     TEXT NOT NULL DEFAULT '',
+    status        TEXT NOT NULL DEFAULT 'active',
+    years         INTEGER NOT NULL DEFAULT 0, -- 감독·코치 경력 / 구단주 재임
+    style         TEXT NOT NULL DEFAULT '',   -- 스타일 또는 코치 전문 영역
+    stats_json    TEXT NOT NULL DEFAULT '{}',
+    risk_tolerance INTEGER NOT NULL DEFAULT 50,
+    training_buff TEXT NOT NULL DEFAULT '',
+    joined_season INTEGER NOT NULL DEFAULT 0
+  );
+  CREATE INDEX IF NOT EXISTS idx_staff_team ON staff (team_id);
+  CREATE INDEX IF NOT EXISTS idx_staff_role ON staff (role);
+  CREATE INDEX IF NOT EXISTS idx_staff_league ON staff (league_id);
+
+  -- 공통 조회용 (관계도·이름 표시·거래 기록) — people.md §1-2
+  CREATE VIEW IF NOT EXISTS person AS
+    SELECT npc_id AS person_id, name, 'player' AS kind, current_team AS team_id,
+           current_league AS league_id, age
+      FROM npc
+    UNION ALL
+    SELECT staff_id, name, role, team_id, league_id, age
+      FROM staff;
+`;
+
+const RELATIONSHIP_TABLES_SQL = `
+  -- ── 관계도 (Phase 6C) — people.md §4 ────────────────────────────
+  -- **주인공 기준 1:N만** 추적한다. NPC끼리의 관계는 만들지 않는다.
+  -- 그래서 상대 person_id가 곧 PRIMARY KEY다 (주인공 컬럼이 없다).
+  --
+  -- 왜 테이블인가: 구 감정 시스템은 값을 npc 배열 블롭에 얹었다. 한 명의 신뢰도가
+  -- 1 올라도 npcs 전체를 다시 써야 했고, 스태프는 npc 배열에 없으니 감독·코치
+  -- 관계는 **저장할 자리 자체가 없었다**(emotionRole "manager"/"coach"가 죽은
+  -- 분기였던 이유). 대상이 스태프+동료 전원이면 수백 행이라 테이블이 맞다.
+  CREATE TABLE IF NOT EXISTS relationship (
+    person_id     TEXT PRIMARY KEY,
+    kind          TEXT    NOT NULL,                  -- manager|coach|owner|teammate|rival
+    value         INTEGER NOT NULL DEFAULT 0,        -- -100 ~ +100 (7단계 라벨은 표시 시 파생)
+    -- together = 지금 같은 팀 · apart = 헤어짐(감쇠 대상) · ended = 은퇴/종료(값 동결)
+    contact       TEXT    NOT NULL DEFAULT 'together',
+    met_season    INTEGER NOT NULL DEFAULT 0,
+    met_team      TEXT    NOT NULL DEFAULT '',       -- 처음 만난 팀
+    last_team     TEXT    NOT NULL DEFAULT '',       -- 마지막으로 함께 있던 팀 (재회 판정)
+    memories_json TEXT    NOT NULL DEFAULT '[]',
+    updated_week  INTEGER NOT NULL DEFAULT 0
+  );
+  CREATE INDEX IF NOT EXISTS idx_rel_kind    ON relationship (kind);
+  CREATE INDEX IF NOT EXISTS idx_rel_contact ON relationship (contact);
+`;
+
 const MIGRATIONS = [
   {
     v: 1,
@@ -206,6 +272,23 @@ const MIGRATIONS = [
       }
       db.exec("DROP TABLE IF EXISTS season");
     },
+  },
+  {
+    v: 3,
+    name: "staff 테이블 + person VIEW (Phase 6A — 스태프를 master.db에서 slot.db로)",
+    // 기존 슬롯에는 스태프가 없다. people.md §5가 정한 대로 세이브를 클린 브레이크
+    // 하지 않고도 열리게만 해둔다 — 스태프가 빈 슬롯은 화면에 스태프가 안 보일 뿐
+    // 크래시하지 않는다. 새 게임부터 채워진다.
+    up(db) { db.exec(STAFF_TABLES_SQL); },
+  },
+  {
+    v: 4,
+    name: "relationship 테이블 (Phase 6C — 관계도)",
+    // 구 감정값(npc.extra_json 의 emotion 9축)은 **옮기지 않는다.** 축이 9→1로
+    // 줄어드는데 어느 축을 관계값으로 볼지는 자의적이고, 그 자의적 환산이
+    // 세이브에 굳으면 나중에 되돌릴 수 없다. 기존 슬롯은 관계가 빈 상태로
+    // 열리고 만나는 사람부터 다시 쌓인다 (세이브 폐기는 사용자 확정).
+    up(db) { db.exec(RELATIONSHIP_TABLES_SQL); },
   },
 ];
 
@@ -411,9 +494,99 @@ function mapNpcRow(r) {
     xp: JSON.parse(r.xp_json || "{}"),
     form: r.form_json ? JSON.parse(r.form_json) : undefined,
     personality: r.personality_json ? JSON.parse(r.personality_json) : undefined,
-    emotion: r.emotion_json ? JSON.parse(r.emotion_json) : undefined,
     injury: r.injury_json ? JSON.parse(r.injury_json) : undefined,
     extra: r.extra_json ? JSON.parse(r.extra_json) : undefined,
+  };
+}
+
+// ── 스태프 (Phase 6A) ────────────────────────────────────────────
+const INSERT_STAFF_SQL = `
+  INSERT OR REPLACE INTO staff (
+    staff_id, name, name_en, role, age, team_id, league_id, school_id,
+    status, years, style, stats_json, risk_tolerance, training_buff, joined_season
+  ) VALUES (
+    @staffId, @name, @nameEn, @role, @age, @teamId, @leagueId, @schoolId,
+    @status, @years, @style, @statsJson, @riskTolerance, @trainingBuff, @joinedSeason
+  )`;
+
+function staffToInsertParams(st) {
+  return {
+    staffId: st.staffId,
+    name: st.name,
+    nameEn: st.nameEn ?? "",
+    role: st.role,
+    age: st.age ?? 45,
+    teamId: st.teamId ?? "",
+    leagueId: st.leagueId ?? "",
+    schoolId: st.schoolId ?? "",
+    status: st.status ?? "active",
+    years: st.years ?? 0,
+    style: st.style ?? "",
+    statsJson: JSON.stringify(st.stats ?? {}),
+    riskTolerance: st.riskTolerance ?? 50,
+    trainingBuff: st.trainingBuff ?? "",
+    joinedSeason: st.joinedSeason ?? 0,
+  };
+}
+
+function staffRowToObject(r) {
+  return {
+    staffId: r.staff_id,
+    name: r.name,
+    nameEn: r.name_en,
+    role: r.role,
+    age: r.age,
+    teamId: r.team_id,
+    leagueId: r.league_id,
+    schoolId: r.school_id,
+    status: r.status,
+    years: r.years,
+    style: r.style,
+    stats: r.stats_json ? JSON.parse(r.stats_json) : {},
+    riskTolerance: r.risk_tolerance,
+    trainingBuff: r.training_buff,
+    joinedSeason: r.joined_season,
+  };
+}
+
+// ── 관계도 (Phase 6C) ──────────────────────────────────────────
+const UPSERT_REL_SQL = `
+  INSERT OR REPLACE INTO relationship (
+    person_id, kind, value, contact, met_season, met_team, last_team,
+    memories_json, updated_week
+  ) VALUES (
+    @personId, @kind, @value, @contact, @metSeason, @metTeam, @lastTeam,
+    @memoriesJson, @updatedWeek
+  )`;
+
+function relToInsertParams(r) {
+  return {
+    personId: r.personId,
+    kind: r.kind,
+    // 저장 시점에도 clamp한다 — Rust를 우회한 호출이 범위를 깨는 걸 DB 앞에서 막는다
+    value: Math.max(-100, Math.min(100, Math.round(r.value ?? 0))),
+    contact: r.contact ?? "together",
+    metSeason: r.metSeason ?? 0,
+    metTeam: r.metTeam ?? "",
+    lastTeam: r.lastTeam ?? "",
+    memoriesJson: JSON.stringify(r.memories ?? []),
+    updatedWeek: r.updatedWeek ?? 0,
+  };
+}
+
+function relRowToObject(r) {
+  return {
+    personId: r.person_id,
+    kind: r.kind,
+    value: r.value,
+    contact: r.contact,
+    metSeason: r.met_season,
+    metTeam: r.met_team,
+    lastTeam: r.last_team,
+    memories: r.memories_json ? JSON.parse(r.memories_json) : [],
+    updatedWeek: r.updated_week,
+    // person VIEW 조인 시에만 채워진다 (화면용)
+    ...(r.name !== undefined ? { name: r.name, teamId: r.team_id, leagueId: r.league_id, age: r.age } : {}),
   };
 }
 
@@ -454,7 +627,7 @@ function npcToInsertParams(n) {
     xpJson: JSON.stringify(n.xp ?? {}),
     formJson: n.form ? JSON.stringify(n.form) : null,
     personalityJson: n.personality ? JSON.stringify(n.personality) : null,
-    emotionJson: n.emotion ? JSON.stringify(n.emotion) : null,
+    emotionJson: null,   // 폐기됨 (Phase 6C) — 위 스키마 주석 참고
     injuryJson: n.injury ? JSON.stringify(n.injury) : null,
     extraJson: n.extra ? JSON.stringify(n.extra) : null,
   };
@@ -502,7 +675,7 @@ const commands = {
   createSlot(db, p) {
     const t = db.transaction(() => {
       for (const tbl of [
-        "npc", "transactions", "career_history", "history_league", "protagonist", "meta",
+        "npc", "staff", "relationship", "transactions", "career_history", "history_league", "protagonist", "meta",
         "season_meta", "schedule", "standings", "season_stats", "player_condition", "team_rotation",
       ]) {
         db.prepare(`DELETE FROM ${tbl}`).run();
@@ -520,9 +693,107 @@ const commands = {
         const ins = db.prepare(INSERT_NPC_SQL);
         for (const n of p.npcs) ins.run(npcToInsertParams(n));
       }
+      // 스태프 ~1,090명 (Phase 6A). 같은 트랜잭션 안이라 INSERT 루프가 느려지지 않는다 —
+      // OnePitch는 이걸 안 감싸서 41.4초 → 1.46초(28배) 차이를 겪었다 (people.md §2-1)
+      if (Array.isArray(p.staff) && p.staff.length > 0) {
+        const insS = db.prepare(INSERT_STAFF_SQL);
+        for (const st of p.staff) insS.run(staffToInsertParams(st));
+      }
     });
     t();
-    return { ok: true, npcCount: p.npcs?.length ?? 0 };
+    return { ok: true, npcCount: p.npcs?.length ?? 0, staffCount: p.staff?.length ?? 0 };
+  },
+
+  insertStaff(db, p) {
+    const t = db.transaction(() => {
+      const ins = db.prepare(INSERT_STAFF_SQL);
+      for (const st of p.staff) ins.run(staffToInsertParams(st));
+    });
+    t();
+    return { ok: true, inserted: p.staff.length };
+  },
+
+  /** 스태프 조회. teamId/role/leagueId로 좁힐 수 있다 */
+  getStaff(db, p = {}) {
+    const where = [];
+    const args = [];
+    if (p.teamId)   { where.push("team_id = ?");   args.push(p.teamId); }
+    if (p.role)     { where.push("role = ?");      args.push(p.role); }
+    if (p.leagueId) { where.push("league_id = ?"); args.push(p.leagueId); }
+    if (p.status)   { where.push("status = ?");    args.push(p.status); }
+    const sql = `SELECT * FROM staff${where.length ? " WHERE " + where.join(" AND ") : ""} ORDER BY staff_id`;
+    return db.prepare(sql).all(...args).map(staffRowToObject);
+  },
+
+  /** 스태프 상태 변경 (6B 생멸에서 쓴다 — 나이·은퇴·이적) */
+  updateStaff(db, p) {
+    const t = db.transaction(() => {
+      const stmt = db.prepare(
+        "UPDATE staff SET age = ?, status = ?, years = ?, team_id = ?, league_id = ?, stats_json = ? WHERE staff_id = ?"
+      );
+      for (const u of p.updates) {
+        stmt.run(
+          u.age, u.status, u.years, u.teamId, u.leagueId,
+          JSON.stringify(u.stats ?? {}), u.staffId,
+        );
+      }
+    });
+    t();
+    return { ok: true, updated: p.updates.length };
+  },
+
+  // ── 관계도 (Phase 6C) ────────────────────────────────────────
+  /**
+   * 관계 조회. `withPerson: true`면 person VIEW를 조인해 이름·소속을 함께 준다 —
+   * 화면이 npcs 배열과 스태프 목록을 각각 로드해서 이름을 찾지 않아도 되도록.
+   * LEFT JOIN인 이유: 상대가 은퇴로 npc/staff에서 사라져도 관계 행은 남는다(기록).
+   */
+  getRelationships(db, p = {}) {
+    const where = [];
+    const args = [];
+    if (p.kind)     { where.push("r.kind = ?");     args.push(p.kind); }
+    if (p.contact)  { where.push("r.contact = ?");  args.push(p.contact); }
+    if (Array.isArray(p.personIds) && p.personIds.length > 0) {
+      where.push(`r.person_id IN (${p.personIds.map(() => "?").join(",")})`);
+      args.push(...p.personIds);
+    }
+    const cond = where.length ? " WHERE " + where.join(" AND ") : "";
+    const sql = p.withPerson
+      ? `SELECT r.*, pv.name, pv.team_id, pv.league_id, pv.age
+           FROM relationship r LEFT JOIN person pv ON pv.person_id = r.person_id
+          ${cond} ORDER BY r.value DESC, r.person_id`
+      : `SELECT r.* FROM relationship r${cond} ORDER BY r.person_id`;
+    return db.prepare(sql).all(...args).map(relRowToObject);
+  },
+
+  /** 관계 일괄 쓰기 (신규 생성 + 갱신 동일 경로). 1 트랜잭션 */
+  upsertRelationships(db, p) {
+    const t = db.transaction(() => {
+      const ins = db.prepare(UPSERT_REL_SQL);
+      for (const r of p.rows) ins.run(relToInsertParams(r));
+    });
+    t();
+    return { ok: true, written: p.rows.length };
+  },
+
+  /**
+   * 접촉 상태 일괄 변경 — 팀 이동·은퇴 시 쓴다.
+   * `fromTeam`을 주면 그 팀에서 함께 있던 전원을 한 번에 바꾼다 (ID 목록 없이).
+   * 값 감쇠는 여기서 하지 않는다 — 감쇠 계수는 게임 규칙이라 Rust가 정한다.
+   */
+  setRelationshipContact(db, p) {
+    const t = db.transaction(() => {
+      if (Array.isArray(p.personIds) && p.personIds.length > 0) {
+        const stmt = db.prepare("UPDATE relationship SET contact = ? WHERE person_id = ?");
+        for (const id of p.personIds) stmt.run(p.contact, id);
+      }
+      if (p.fromTeam) {
+        db.prepare("UPDATE relationship SET contact = ? WHERE last_team = ? AND contact = 'together'")
+          .run(p.contact, p.fromTeam);
+      }
+    });
+    t();
+    return { ok: true };
   },
 
   insertNpcs(db, p) {

@@ -95,7 +95,14 @@ export interface NpcInjuryEntry {
 }
 
 // ── 코치 능력치 ────────────────────────────────────────────────
-export type CoachSpecialty = "pitching" | "batting" | "fielding" | "running";
+/**
+ * 코치 전문 영역. **정본은 `seeds/onepitch/staff_rules.toml` [[coach.specialties]]** 이고
+ * 거기 값은 한국어다. 이 타입이 예전엔 영문 4종("pitching"|"batting"|...)이었는데
+ * 실제 데이터는 한국어 6종이라 **비교가 전부 실패하고 있었다** —
+ * `coach?.specialty === "pitching"` 이 항상 false였고 그래서 투수코치 능력치가
+ * 훈련 효율에 하나도 반영되지 않았다 (감독 능력치 미전달 P6-2와 같은 부류).
+ */
+export type CoachSpecialty = "투수" | "타격" | "주루" | "컨디셔닝" | "멘탈" | "전력분석";
 
 export interface CoachAttributes {
   teaching: number;  // XP 획득량 보정 계수
@@ -551,7 +558,6 @@ export interface ProtagonistDraftOutcome {
 // ── 드래프트 타입 ────────────────────────────────────────────
 export type MilitaryStatus = "미필" | "현역" | "군필" | "면제";
 export type NpcCareerStatus = "active" | "military" | "injured" | "retired" | "free_agent";
-export type NpcEmotionRole = "manager" | "coach" | "rival" | "teammate";
 export type Nationality = "KOR" | "JPN" | "USA" | "OTHER";
 
 export interface AnonDraftEntry {
@@ -618,7 +624,13 @@ export interface NpcSaveState {
   schoolId: string;
   graduationYear: number;
 
-  emotionRole?: NpcEmotionRole;
+  /**
+   * Named NPC — 주간 개별 시뮬 대상이고, 반경 2/3 리그에서는 합성 궤적을 받는다.
+   * 구 필드명은 `emotionRole`("manager"|"coach"|"rival"|"teammate")이었는데
+   * 실제로 쓰인 건 **truthy 여부**뿐이었다(감정 시스템 6C에서 폐기).
+   * slot.db `npc.is_named`가 정본이다.
+   */
+  isNamed?: boolean;
   potentialHidden?: number;  // 성장 cap 계산용 — 없으면 75 폴백 (구버전 세이브 호환)
 
   nationality?: Nationality;  // 없으면 "KOR" 폴백
@@ -655,53 +667,7 @@ export interface NpcSaveState {
 
   fame: number;
   personality?: NpcPersonality;
-
-  // 감정 시스템 (emotionRole 있는 NPC에만 적용, optional)
-  emotion?:        NpcEmotion;
-  memories?:       NpcMemory[];
-  emotionStatus?:  EmotionStatus;
-  lastActiveStage?: CareerStage;
 }
-
-// ── NPC 감정 시스템 ────────────────────────────────────────────
-
-export interface NpcEmotion {
-  // 인식 축 — 낮으면 나머지 수치가 의미 없음
-  recognition:  number;  // 0~100: 플레이어를 의식하는 정도
-
-  // 평가 축 — 셋이 독립적으로 공존 가능
-  admiration:   number;  // 실력 인정
-  jealousy:     number;  // 위협감 (자신이 밀린다는 감각)
-  contempt:     number;  // 경멸 (아직 상대 아니라는 감각)
-
-  // 관계 축
-  trust:        number;  // 인간적 신뢰
-  dependence:   number;  // NPC→플레이어 기대/의존 (코치·감독용)
-  resentment:   number;  // 누적 원한 — 한번 쌓이면 줄기 어려움
-
-  // 단기 상황 축 — 매주 자동 감쇠
-  pressure:     number;  // 지금 느끼는 압박감
-  excitement:   number;  // 지금 느끼는 기대감
-}
-
-export type NpcMemoryType =
-  | "humiliation"   // 공개적으로 당함 (맞대결 완봉패 등)
-  | "gratitude"     // 결정적 도움을 받음
-  | "betrayal"      // 뒤통수 (FA로 라이벌 팀 이적 등)
-  | "witness"       // 대단한 장면을 직접 목격
-  | "shared_ordeal"; // 함께 고생함 (강훈련, 강등 위기 등)
-
-export interface NpcMemory {
-  type:      NpcMemoryType;
-  week:      number;
-  intensity: 1 | 2 | 3;  // 메시지 무게와 감정 변화폭 결정
-  detail:    string;      // "2028 고교리그 결승전" 등 맥락 문자열
-}
-
-export type EmotionStatus =
-  | "active"    // 현재 같은 리그/팀 — 매주 업데이트
-  | "dormant"   // 다른 리그로 헤어짐 — 오프시즌에만 감쇠
-  | "archived"; // 은퇴/완전 종료 — 수치 제거, 기억만 보존
 
 // ── 커리어 기록 ───────────────────────────────────────────────
 export interface CareerAward {

@@ -56,13 +56,13 @@ export async function runOffseasonProcessing(
   seasonYear: number,
   namedNpcIds?: string[],
 ): Promise<OffseasonResult> {
-  const emotionRoles = new Map(npcs.map(n => [n.npcId, n.emotionRole] as const));
+  const namedFlags = new Map(npcs.map(n => [n.npcId, n.isNamed] as const));
   const paramsJson = JSON.stringify({ npcs, pendingDraft, seasonYear, namedNpcIds: namedNpcIds ?? [] });
   const json = await api().npcRunOffseason(paramsJson);
   const raw = parseResult<{ npcs: NpcSaveState[]; pendingDraft: NpcSaveState[]; summary: SeasonEndSummary; logs: string[] }>(json);
   const rehydrate = (n: NpcSaveState): NpcSaveState => ({
     ...n,
-    emotionRole:     n.emotionRole     ?? emotionRoles.get(n.npcId),
+    isNamed:         n.isNamed         ?? namedFlags.get(n.npcId),
     potentialHidden: n.potentialHidden ?? 75,
   });
 

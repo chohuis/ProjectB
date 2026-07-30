@@ -602,3 +602,157 @@ schedule · status · team · training`
   `reliever_would_pitch`는 날짜가 없으면 구 "같은 주 재등판 금지"로 떨어진다.
 - **부수 효과**: 구 `same_week_penalty`는 "이번 주에 던졌으면 무조건 불가"라
   너무 거칠었다 — 불펜이 한 주에 두 번 못 나왔다. 일 단위로 바뀌며 이것도 풀렸다.
+
+---
+
+## Phase 6 판정
+
+### P6-1. 스태프를 master.db에서 slot.db로 (Phase 6A)
+
+- 스태프는 v1에서 **master.db(정의)** 에 있었다. `entities/players/COA_*.json` 373개를
+  구워 넣고 read-only로 읽었다. 그런데 people.md §3이 요구하는 **생멸**(나이·은퇴·경질·이동)은
+  전부 **상태 변화**다 — read-only 저장소에 둘 수 없다.
+- **판정**: slot.db `staff` 테이블로 옮긴다. master.db에는 **생성 규칙**만 남긴다
+  (`staff_rules.toml` → `players/staff_rules.json`).
+- `npc_master` 테이블은 **빈 채로 남긴다.** `master:loadEntities`가 아직 SELECT하고,
+  시나리오 Named NPC를 콘텐츠로 넣는 경로가 생기면 다시 쓸 자리다. 지우면 그때 되살려야 한다.
+
+### P6-2. 감독 능력치가 매치 엔진에 전달되지 않고 있었다 (Phase 6A)
+
+- **문제**: 구 JSON은 감독 스탯을 `tactics`/`decision`/`rotationMgmt`/`bullpenMgmt`/`moraleMgmt`로
+  저장했는데 `MatchPage.svelte:695-698`은 `stats.handlePressure`/`stats.strategy`/`stats.motivation`을
+  읽었다. 이름이 하나도 안 맞아 **전부 `undefined`가 Rust로 넘어가 기본값 50으로 돌았다.**
+  TS 타입(`EntityManagerStats`)은 또 제3의 이름을 선언하고 있었다 — 3중 드리프트.
+- **판정**: **Rust `ManagerStats`를 정본**으로 삼는다
+  (`tacticalIQ`·`bullpenRead`·`offenseMind`·`motivator`·`clutchDecision`).
+  실제로 값을 쓰는 쪽이 이름을 정하는 게 맞고, 매치 엔진 외에 감독 능력치의 소비자가 없다.
+- 코치는 `teaching`/`analysis`/`communication`/`discipline`/`leadership`,
+  구단주는 `budgetSupport`/`patience`/`prInfluence`/`facilityInvestment`/`staffTrust`.
+  구단주 `patience`는 6B 경질 임계값에 쓰인다.
+
+### P6-3. 스태프 ID 규약 — 팀 종속이되 이동해도 불변 (Phase 6A)
+
+- `staff:<teamId>_MGR` / `_OWN` / `_COA<n>`. 레거시 `COA_00001` 류는 폐기.
+- **팀 기준으로 잡되 이동해도 ID를 바꾸지 않는다** — 관계도(6C)가 ID로 연결되므로
+  이적할 때마다 ID가 바뀌면 주인공이 쌓은 신뢰가 사라진다.
+- 결과적으로 "TEAM_A 이름을 가진 staff가 TEAM_B에 있는" 상태가 생기는데, 그게 의도다.
+  ID는 식별자일 뿐이고 소속은 `team_id` 컬럼이 말한다.
+
+### P6-4. 팀별 독립 난수 스트림 (Phase 6A)
+
+- 팀·역할·순번마다 `splitmix64` 스트림을 따로 판다(`teamSeed ^ hash("manager")` 등).
+- **왜**: 한 스트림으로 순차 생성하면 **코치 수가 바뀌면 그 뒤 모든 팀이 흔들린다.**
+  자원 등급 규칙을 조금 고쳤을 때 무관한 팀 감독이 딴 사람이 되면 디버깅이 불가능하다.
+- 검증: `test-staff-gen.cjs`가 "팀 목록이 줄어도 남은 팀 스태프는 동일"을 확인한다.
+  해외 Lazy 생성 시 국내가 안 흔들리는 것도 이 성질 덕이다.
+
+### P6-5. EntityManagerModal 폐기 (Phase 6A)
+
+- 개발자 도구 1,456줄. master.db 엔티티를 편집해 `entities/players/*.json`에 되썼다 —
+  DESIGN §8.3이 폐기한 "생성 결과물을 저장해두고 스크립트로 사후 수정" 패턴 그 자체다.
+- 절차 생성 세계에서는 **손 편집이 설계상 금지**다. 규칙을 고쳐야 한다.
+- 함께 제거: `masterUpsertEntity`/`masterDeleteEntity` preload 브릿지(IPC 핸들러는 R3a-4d에서
+  이미 죽어 있었다), `scripts/rebuild_entity_index.cjs`, `npm run gen:index`.
+- `masterSave`는 남긴다 — 이벤트·업적 에디터가 쓰고, 그쪽은 진짜 ①정의 콘텐츠다.
+
+### P6-6. 스태프 생애주기 수치 (Phase 6B)
+
+정본은 `staff_rules.toml [lifecycle]`. 문서에 수치를 복제하지 않는다.
+
+| 항목 | 확정 |
+|---|---|
+| 은퇴 곡선 | 감독 60부터 시작·72 상한 · 코치는 조금 이르게 · 구단주는 70부터·80 상한 |
+| 경력 성장 | peak 50 이전 +1, 62 이후 −1. **능력치 5종 중 2종만** 적용 |
+| 경질 기준 | 전력★ 기대 순위 미달 누적. 임계값은 구단주 patience (≤29→1시즌 · ≤69→2 · 그 외 3) |
+| 충원 | 상위 리그·강팀부터. 하위 자리의 우수 스태프 스카우트 → 없으면 신규 생성 |
+
+- **★1 팀은 경질이 없다.** 기대 순위 비율 `1 − (power−1)/5`이라 ★1이면 전원이 기대치다.
+  약팀 감독이 하위권이라고 잘리는 건 부당하다 — 그게 그 팀의 정상이다.
+- **성장은 능력치 2종만.** 5종을 전부 올리면 몇 시즌 만에 최상급이 되고 팀 격차가 무너진다
+  (people.md §3-3 "완만하게").
+- **이동은 위로만.** `scout_from_lower_only` — 자유 이동장이 아니다. 이동으로 생긴
+  빈 자리는 **다음 시즌**에 메워진다. 같은 시즌에 연쇄를 끝까지 돌리면 리그가 한 해에 뒤집힌다.
+- **신규 생성은 Rust가 하지 않는다.** `vacant` 이벤트로 남기고 TS가 `staff_gen`을 재사용한다 —
+  이름 풀·생성 규칙을 생애주기 모듈이 또 들고 있지 않게.
+
+> ⚠ **내가 사용자에게 제시한 예상치가 틀렸다.** "20시즌 후 초기 감독 생존 45~55%"라고
+> 적었는데, 감독 시작 나이가 38~66(평균 52)이라 20시즌 뒤 평균 72세로 상한에 닿는다.
+> 실측은 **13%** 다. 초기 감독 절반이 20시즌을 버티면 평균 재임이 40년이라는 뜻이고
+> 애초에 성립하지 않는다. 곡선 자체는 사용자가 고른 "중간"이 맞으므로
+> **테스트를 절대 수치 대신 "세 곡선 중 중간인가"로 바꿨다**(빠름 4% · 현행 13% · 느림 19%).
+
+### P6-7. 566줄을 쪼개지 않은 이유 (Phase 6B)
+
+- `processAllLeaguesSeasonEnd`(566줄)는 병역·FA·드래프트가 얽혀 있고 섹션 경계가 거의 없다.
+- 스태프는 그 셋에 의존하지 않으므로 **`usecases/seasonEnd/staffLifecycle.ts`에서 독립 처리**하고
+  566줄 끝에서 한 번 호출한다. 566줄 전면 분리는 별도 작업으로 남긴다 (사용자 확정).
+- 호출을 `try/catch`로 감싼다 — 스태프 처리가 실패해도 시즌 종료는 끝나야 한다.
+  여기서 던지면 병역·FA까지 다 처리한 시즌이 통째로 롤백된다.
+
+### P6-8. 경질이 종착이면 세계에 아는 이름이 안 쌓인다 (Phase 6B 보강)
+
+- **사용자 지적**: "팀 성적이 안 나오거나 특정 나이가 되면 하향도 있어야 할 것 같은데
+  감독 코치도." 초기 구현은 **상향 이동만** 있었다.
+- 그 결과 실제 구멍이 있었다: **경질된 스태프가 `status=fired`로 영구히 사라졌다.**
+  DB에 남아 있지만 다시 등장하는 경로가 없어 매 시즌 새 사람이 생성됐다.
+- **판정** (사용자 확정 3건):
+  1. **경질 = FA 전환**(`status=free_agent`). 다음 빈 자리 후보에 들어간다.
+     `fa_downward_only` — 마지막 소속보다 낮거나 같은 자리만. 잘린 직후 상위 팀으로
+     가는 건 막는다. FA도 나이를 먹어 고령이면 은퇴 곡선이 알아서 정리한다
+     (별도 "FA 잠재 기간" 카운터 불필요).
+  2. **감독 경질 시 코치진 일부 동반 이탈** — 능력 하위 약 1/3. 감독 교체가 팀에
+     진짜 충격이 되고, 주인공 입장에서 훈련 효율이 떨어지는 실질적 손실이 된다.
+  3. **고령 하향** — 은퇴 확률이 생기는 나이부터, 상위 리그에 있으면 하향 확률 =
+     은퇴 확률 × 0.5. 최하위 리그(고교)면 더 내려갈 곳이 없어 하향 없음.
+     구단주는 제외 — 경영진은 리그를 옮겨 다니지 않는다.
+- **충원 우선순위**: ① 현직 하위 자리 우수 스태프(상향) → ② FA 풀 → ③ 신규 생성.
+- **주의한 함정**: FA가 은퇴할 때 이벤트 kind를 `retired_fa`로 갈랐다. `retired`로
+  두면 이미 비어 있는 자리를 빈 자리로 또 세서 **한 자리에 두 명이 부임**한다.
+- **실측 (20시즌)**: 경질 201 · 동반이탈 105 · 하향 86 · 상향 532 · FA 재취업 354 ·
+  **신규 생성 0건**. 사람이 완전히 재활용된다. FA 잔류는 456명 중 5명.
+  "KBL에서 잘린 감독이 고교에 부임"이 15시즌 동안 164건 — 경로가 실제로 성립한다.
+
+### P6-9. 선수 학적 역행 — 대학 두 번 입학이 실제로 가능했다 (Phase 6B 보강)
+
+- **사용자 지적**: "고등학교 재입학, 대학 두 번 입학 같은 케이스는 안 돼."
+  (스태프 이동 로그의 `KBL→고교`를 보고 물었지만, 그쪽은 **감독** 이동이라 정상이다.
+  다만 그 질문이 **선수** 경로의 실제 결함을 드러냈다.)
+- **결함**: `advanceWeek`의 `isUnivResultWeek`가
+  `careerStage === "university" || "independent"` 일 때도 발동하는데, 그 안에서
+  `apps.universityChoices`를 조건 없이 처리했다. 지원 UI(`CareerChoiceHubModal`)도
+  `!isIndependent`로만 걸러 **대학 재학생에게 "대학 진학 신청"이 보였다.**
+  → `applyDraftDecision({stage:"university"})`가 호출되며 **대학 두 번 입학**이 성립.
+  `독립 → 대학`도 같은 경로로 가능했다.
+- **판정** (사용자 확정): **지원 단계 + 전이 가드 둘 다.** UI만 고치면 나중에 다른
+  경로가 생길 때 같은 버그가 재발한다.
+  1. `careerTransition.ts` 신설 — 전이 허용표가 단일 정본.
+     `applyDraftDecision`이 위반 시 **상태를 건드리지 않고** `return s`.
+  2. `canApplyToUniversity`/`canApplyToIndependent`로 지원 UI·결과 모달·드래프트
+     알림·`advanceWeek` 결과 처리를 전부 게이트.
+- **허용표**: 고교 → 대학/독립/프로/군 · 대학 → 독립/프로/군 · 독립 → 프로/군 ·
+  프로 ↔ 프로/독립/군. **어떤 단계도 `highschool`로 못 간다**, `university`로 갈 수
+  있는 건 `highschool`뿐. `military`에서 나가는 전이는 표에 없다 —
+  전역은 `militaryHiatusStage`(입대 전 단계) 복원 전용 경로다.
+- **스태프와 선수는 규칙이 다르다.** 감독·코치의 `KBL → 고교`는 정상이고 의도한
+  동작이다(P6-8). 학적이 아니라 직장이므로 역행 개념이 없다. 두 규칙을 한 표로
+  묶으려 하면 어느 한쪽이 망가진다.
+
+### P6-10. 팀 역사 화면이 v1 데이터를 읽고 있었다 (Phase 6 중 별건)
+
+- Phase 5-1에서 `refs.json`을 시드 CSV로 다시 만들며 `teams[].history` 모양이 바뀌었다:
+  `founded`/`nationalTitles`/`proPlayers`/`recentRecords`/`titleYears`/`peakEra`/`rival`
+  → `foundedYear`/`budget`/`seasonRanks`/`titles`/`rivals`.
+- **타입과 화면이 v1에 남아 있었다.** `TeamHistory`가 전부 optional이라 tsc가 못 잡았고
+  (6A에서 발견해 타입에만 반영해뒀다), 화면은 그대로였다:
+  - `TeamDetailModal` — 팀 역사·최근 성적 섹션이 **통째로 빈 값**
+  - `NewGamePage` — `h.recentRecords.length`가 `undefined.length`라
+    **팀을 고르는 순간 렌더가 터졌다.** 빈 값보다 나쁜 상태였다.
+- **판정**: 화면을 v2 필드에서 파생하게 고치고, **v1 블록을 타입에서 제거**했다.
+  optional로 남겨두면 다음 사람이 또 그걸 읽는다.
+  - 우승 횟수 = `titles.filter(result === "우승").length`
+  - 대회별 우승 = 같은 목록을 competition으로 묶음 ("개나리기 2회")
+  - 최근 성적 = `seasonRanks`(S-1이 직전) + 그 시즌 `titles` 조인
+  - 라이벌 = `rivals[]` (v1은 단수 `rival`이라 한 명만 보였다. 실제로는 여러 명)
+- `test-team-history.cjs`가 refs 데이터 모양과 **화면 소스에 v1 필드가 없는지**를
+  같이 검사한다. 소스 검사는 주석을 실제로 걷어내고 본다 — 줄 앞머리로 거르면
+  "왜 v1을 버렸는지" 설명하는 주석 본문이 코드로 잡힌다.

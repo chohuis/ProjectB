@@ -30,6 +30,11 @@ export async function assignHighschoolPosition(
 export async function assignProtagonistRole(
   protagonist: ProtagonistSave,
   entities: EntityRow[],
+  /**
+   * 감독 관계 보정 (Phase 6C-5). 실력이 아니라 **감독이 나를 어떻게 보는가**다 —
+   * 같은 OVR이라도 신뢰가 두터우면 선발 경쟁에서 앞선다. 0이면 구 동작과 동일.
+   */
+  roleOvrBias = 0,
 ): Promise<PitcherRole> {
   const myOvr = protagonist.pitching.ovr;
   const teamSpOvrs = entities
@@ -46,7 +51,7 @@ export async function assignProtagonistRole(
 
   const result = JSON.parse(
     await window.projectB!.pitcherAssignRole(
-      JSON.stringify({ position: protagonist.position, ovr: myOvr, teamSpOvrs })
+      JSON.stringify({ position: protagonist.position, ovr: myOvr, teamSpOvrs, roleOvrBias })
     )
   );
   return result.role as PitcherRole;

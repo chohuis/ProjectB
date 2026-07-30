@@ -3,14 +3,8 @@ import { seasonStore, npcLiveStatsStore } from "../stores/season";
 import { gameStore } from "../stores/game";
 import { masterStore } from "../stores/master";
 import { autoLog } from "../stores/autoAdvance";
-import {
-  updateNpcEmotion,
-  makeMemory,
-  reactivateNpc,
-  checkTeamMoodWarning,
-} from "../utils/emotionEngine";
-import { checkEmotionTriggers, makeReunionMessage } from "../utils/emotionMessageEngine";
-import type { WeeklyEmotionContext } from "../utils/emotionEngine";
+import { applyWeeklyRelations, reconcileRelationships, relationEffects, trainingAreaOf } from "./relationships";
+import { buildRelationMessages } from "../utils/relationMessages";
 import { simulateGame } from "../utils/gameSimulator";
 import { rotationSizeForStage } from "../utils/rosterEngine";
 import { calcTrainingGrowth } from "../utils/growthEngine";
@@ -23,7 +17,7 @@ import { isFaEligible, getFaThreshold } from "../utils/faEngine";
 import type { MatchResult, PendingAction, PlayerCondition, ScheduleEntry, WeekAdvanceResult } from "../types/season";
 import type { EventContext } from "../types/event";
 import type { MessageItem } from "../types/main";
-import type { InjurySeverity, InjuryHistoryEntry, InjuryState, InjuryType, NpcMemory, PitchingAttributes, ProtagonistSave } from "../types/save";
+import type { InjurySeverity, InjuryHistoryEntry, InjuryState, InjuryType, PitchingAttributes, ProtagonistSave } from "../types/save";
 import { INJURY_LABEL } from "../types/save";
 import { toGameDate } from "../utils/scheduleGen";
 import { assignProtagonistRole, assignHighschoolPosition, ROLE_DESCRIPTION, isReliefsRole, relieverWouldPitch } from "../utils/pitcherRoleEngine";
@@ -36,7 +30,7 @@ import { isV3SlotActive } from "../repo/v3Mode";
 import { generateFreshmenV3, ensureLeagueActivatedV3 } from "../repo/slotLifecycleV3";
 
 // ── weekPhases 도메인 모듈 (R4: training·academics·events·games·injuries·growth·market·digest) ──
-import { getPitchCoachName, makeTrainingMessage } from "./weekPhases/training";
+import { findTeamCoach, getPitchCoachName, makeTrainingMessage } from "./weekPhases/training";
 import { EXAM_EVENT_IDS, makeExamMessage } from "./weekPhases/academics";
 import { runEventEngine } from "./weekPhases/events";
 import { simulateNpcGame } from "./weekPhases/games";
@@ -58,6 +52,7 @@ import { progressSurvival } from "./survivalLeague";
 import { runBackgroundPostseasons } from "./backgroundPostseason";
 import { IND_LEAGUE_ID, emptySurvivalState } from "../utils/survivalLeague";
 import { snapshotDueAt } from "../utils/standingsSnapshot";
+import { canApplyToUniversity, canApplyToIndependent } from "../utils/careerTransition";
 
 // ── 군입대 대상 판별 (nationality 기반) ──────────────────────
 // nationality 없는 구버전 NPC는 originLeagueId로 폴백
@@ -115,8 +110,13 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       });
       logs.push(`[보직 배정] ${posLabel}`);
     } else {
-      // 프로(대학·독립 포함): 상세 역할 배정
-      const role = await assignProtagonistRole(g.protagonist, m.entities);
+      // 프로(대학·독립 포함): 상세 역할 배정.
+      // 감독 관계가 OVR 평가를 보정한다 (Phase 6C-5) — 관계 행이 아직 없으면
+      // 0이라 구 동작과 같다(새 팀 첫 시즌 W1이 그렇다).
+      const roleBias = (isV3SlotActive() && g.currentSlotId)
+        ? (await relationEffects({ slotId: g.currentSlotId, teamId: g.protagonist.teamId })).roleOvrBias
+        : 0;
+      const role = await assignProtagonistRole(g.protagonist, m.entities, roleBias);
       const pos: "SP" | "RP" | "CP" =
         role === "마무리" ? "CP" : isReliefsRole(role) ? "RP" : "SP";
       gameStore.setPosition(pos);
@@ -188,12 +188,25 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
 
   const majorEffBonus = isUniversity ? getUniversityEffBonus(g.schoolState.universityMajor) : 0;
 
-  const pitchCoach = m.entities.find(
-    (e) => e.role === "coach" && e.teamId === g.protagonist.teamId &&
-           (e.details as import("../stores/master").EntityDetails)?.coach?.specialty === "pitching"
-  );
+  const pitchCoach = findTeamCoach(g.protagonist.teamId, "투수", m.entities);
   const coachTeaching  = (pitchCoach?.details as import("../stores/master").EntityDetails)?.coach?.stats?.teaching ?? 50;
-  const coachEffBonus  = Math.max(-0.10, Math.min(0.20, (coachTeaching - 50) * 0.004));
+
+  // 관계 보정 (Phase 6C-5) — 이번 주 훈련 영역의 담당 코치와 감독 관계를 한 번에 읽는다.
+  // 이 조회가 여기 있는 이유: coachEffBonus와 보직 배정이 둘 다 아래에서 쓰인다.
+  const trainingFocus = m.trainingPrograms.find(
+    pr => pr.id === g.trainingPlan?.primaryProgramId,
+  )?.focus;
+  const relEffects = (isV3SlotActive() && g.currentSlotId)
+    ? await relationEffects({
+        slotId: g.currentSlotId,
+        teamId: g.protagonist.teamId,
+        coachSpecialty: await trainingAreaOf(trainingFocus),
+      })
+    : { roleOvrBias: 0, trainingBonus: 0, managerLabel: "중립", coachLabel: "중립" };
+
+  // 능력치 보정과 관계 보정을 더한 뒤 clamp한다 — 각각 clamp하면 상한이 두 배가 된다
+  const coachEffBonus  = Math.max(-0.15, Math.min(0.25,
+    (coachTeaching - 50) * 0.004 + relEffects.trainingBonus));
   const teamRef        = m.teams.find((t) => t.id === g.protagonist.teamId);
   const prevLowMoraleWeeks = g.protagonist.consecutiveLowMoraleWeeks ?? 0;
   const isLowMorale        = g.protagonist.morale < 35;
@@ -557,8 +570,15 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   if (isHsResultWeek || isUnivResultWeek) {
     const p = gDraft.protagonist;
     const apps = gDraft.schoolState.careerApplications;
-    const univChoices = apps?.universityChoices ?? [];
-    const indieChoices = apps?.independentChoices ?? [];
+    // 학적 역행 방어 (Phase 6B 보강) — `isUnivResultWeek`는 대학 재학생·독립 소속에도
+    // 발동한다. 그때 universityChoices를 그대로 처리하면 **대학 두 번 입학**이 된다.
+    // 지원 UI에서도 막지만, 구 세이브에 남은 지원 기록이 여기로 흘러들 수 있다.
+    const univChoices = canApplyToUniversity(p.careerStage)
+      ? (apps?.universityChoices ?? [])
+      : [];
+    const indieChoices = canApplyToIndependent(p.careerStage)
+      ? (apps?.independentChoices ?? [])
+      : [];
     const draftApplied = apps?.draftApplied ?? false;
 
     const subjects = Object.values(gDraft.schoolState.subjectScores);
@@ -768,74 +788,95 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     gameStore.applyAchievementCheck(achResult);
   }
 
-  // ── NPC 감정 업데이트 ─────────────────────────────────────────
+  // ── 관계도 갱신 (Phase 6C — 구 NPC 감정 시스템을 대체) ─────────
+  //
+  // 구 코드는 `careerStage === "highschool"`일 때만 돌았고, 감독·코치는
+  // npcs 배열에 없어서 애초에 대상이 아니었다. 지금은 스태프 전원 + 팀동료가
+  // 전 커리어에 걸쳐 갱신된다.
   {
-    const gEmo = get(gameStore);
-    const sEmo = get(seasonStore);
-    const isHs = gEmo.protagonist.careerStage === "highschool";
-    const namedNpcs = gEmo.npcs.filter(n => n.emotionStatus !== "archived");
+    const gRel = get(gameStore);
+    const sRel = get(seasonStore);
+    const slotId = gRel.currentSlotId;
 
-    if (isHs && namedNpcs.length > 0) {
-      // 이번 주 주인공 경기 결과 (schedule에서 조회)
-      const myGame = sEmo.schedule.find(
-        e => e.week === weekNum && e.isProtagonistGame && e.result != null,
-      );
-      const myResult = myGame?.result;
-      const iWon = myResult != null && myResult.winnerId === gEmo.protagonist.teamId;
+    if (isV3SlotActive() && slotId) {
+      try {
+        // ① 소속 정합 먼저 — 팀이 바뀌었으면 감쇠·apart 처리 후 새 팀 인원을 만든다.
+        //    팀 변경 훅을 개별 지점에 박지 않는다 (relationships.ts 주석 참고)
+        await reconcileRelationships({
+          slotId,
+          worldSeed: sRel.worldSeed,
+          teamId: gRel.protagonist.teamId,
+          season: sRel.seasonYear,
+          week: weekNum,
+          teammateIds: gRel.npcs
+            .filter(n => n.currentTeam === gRel.protagonist.teamId && n.npcId !== gRel.protagonist.id)
+            .map(n => n.npcId),
+          // 지명 순위는 "팀이 나를 어떻게 보고 데려왔나"라서 감독 초기값에만 붙는다
+          draftRound: gRel.schoolState.careerResults?.draftRound ?? 0,
+          draftedContext: !!gRel.schoolState.careerResults?.draftDrafted,
+        });
 
-      // 훈련 여부: 훈련 계획에 이번 주 항목 존재 여부로 추론
-      const hasTrainingPlan = !!(gEmo.trainingPlan?.primaryProgramId ?? gEmo.trainingPlan?.secondaryProgramId);
+        const myGame = sRel.schedule.find(
+          e => e.week === weekNum && e.isProtagonistGame && e.result != null,
+        );
+        const myResult = myGame?.result;
+        const teamWon = myResult != null && myResult.winnerId === gRel.protagonist.teamId;
 
-      const ctx: WeeklyEmotionContext = {
-        weekInSeason:    weekInYear,
-        careerStage:     gEmo.protagonist.careerStage,
-        protagonistOvr:  gEmo.protagonist.pitching?.ovr ?? gEmo.protagonist.batting?.ovr ?? 50,
-        gameResult:      myResult
-          ? { won: iWon, era: 0, strikeouts: 0 }
-          : undefined,
-        ovrDelta:        0,
-        trainingDone:    hasTrainingPlan,
-        trainingSkipped: !hasTrainingPlan,
-        consecutiveTrainingSkips: 0,
-      };
+        // 등판 여부·성적은 **경기 라인이 정본**이다. 누적 stats에서 역산하면
+        // 주 단위 델타를 다시 만들어야 하고 그 계산이 또 하나의 진실이 된다.
+        const lines = myResult?.playerLines ?? [];
+        const myLine = lines.find(
+          (l): l is import("../types/season").PitcherGameLine =>
+            l.role === "pitcher" && l.playerId === gRel.protagonist.id,
+        );
+        const era = myLine && myLine.ip > 0 ? (myLine.er * 9) / myLine.ip : 0;
 
-      const emotionMsgs: MessageItem[] = [];
-      const updatedNpcs = namedNpcs.map(npc => {
-        // 재회 감지: dormant → active
-        const activated = npc.emotionStatus === "dormant"
-          && npc.currentLeague === gEmo.protagonist.leagueId
-          ? reactivateNpc(npc, gEmo.protagonist.careerStage)
-          : npc;
+        // 이번 주 훈련 영역 — 담당 코치만 오르게 하는 근거
+        const primaryId = gRel.trainingPlan?.primaryProgramId ?? null;
+        const focus = get(masterStore).trainingPrograms.find(pr => pr.id === primaryId)?.focus;
+        const trainingArea = await trainingAreaOf(focus);
+        const hasTrainingPlan = !!(primaryId ?? gRel.trainingPlan?.secondaryProgramId);
 
-        if (activated.emotionStatus === "active" && npc.emotionStatus === "dormant") {
-          const isSameTeam = activated.currentTeam === gEmo.protagonist.teamId;
-          const reunionMsg = makeReunionMessage(activated, isSameTeam, weekNum);
-          if (reunionMsg) emotionMsgs.push(reunionMsg);
-        }
+        // 맞대결 상대 = **실제로 나와 맞붙어 던진 투수**. 구 코드는 시나리오에
+        // 하드코딩된 emotionRole="rival" ID에 의존해 고교에서만 동작했다.
+        // 경기 라인에서 뽑으면 전 커리어에 걸쳐 실측으로 잡힌다.
+        const facedRivals = myLine
+          ? lines
+              .filter((l): l is import("../types/season").PitcherGameLine =>
+                l.role === "pitcher" && l.playerId !== gRel.protagonist.id)
+              .sort((a, b) => b.ip - a.ip)
+              .slice(0, 1)      // 상대 선발 1명 — 불펜까지 라이벌로 잡으면 관계가 폭증한다
+              .map((l) => l.playerId)
+          : [];
 
-        // 맞대결 memory: 라이벌 NPC가 이번 주 상대팀에 있을 때
-        const newMems: NpcMemory[] = [];
-        if (myResult && npc.emotionRole === "rival" && npc.currentTeam === myGame?.awayTeamId) {
-          newMems.push(makeMemory(
-            iWon ? "humiliation" : "witness",
-            weekNum,
-            2,
-            `W${weekNum} 경기`,
-          ));
-        }
+        const deltas = await applyWeeklyRelations({
+          slotId,
+          worldSeed: sRel.worldSeed,
+          week: weekNum,
+          season: sRel.seasonYear,
+          ctx: {
+            pitched: !!myLine,
+            won: teamWon,
+            era,
+            completeShutout: !!myLine && myLine.ip >= 9 && myLine.er === 0,
+            teamPlayed: myResult != null,
+            teamWon,
+            ovrDelta: 0,
+            trainingDone: hasTrainingPlan,
+            trainingSkipped: !hasTrainingPlan,
+            trainingArea,
+            facedRivals,
+          },
+        });
 
-        const { npc: updated, prevEmotion } = updateNpcEmotion(activated, ctx, newMems);
-        const msg = checkEmotionTriggers(updated, prevEmotion, weekNum);
-        if (msg) emotionMsgs.push(msg);
-
-        return updated;
-      });
-
-      const moodMsg = checkTeamMoodWarning(updatedNpcs, weekNum);
-      if (moodMsg) emotionMsgs.push(moodMsg);
-
-      if (emotionMsgs.length) gameStore.addMessages(emotionMsgs);
-      gameStore.updateNpcs(updatedNpcs);
+        // 라벨이 바뀐 것만 알린다 — 값은 플레이어에게 보여주지 않는다
+        const kindOf = new Map(deltas.flatMap(d => d.kind ? [[d.personId, d.kind] as const] : []));
+        const msgs = buildRelationMessages(deltas, weekNum, get(masterStore).entities, new Map(kindOf));
+        if (msgs.length) gameStore.addMessages(msgs);
+      } catch (e) {
+        // 관계도가 못 돌아도 주간 진행 자체는 막지 않는다
+        console.warn("[advanceWeek] 관계도 갱신 실패 — 이번 주는 건너뜀", e);
+      }
     }
   }
 

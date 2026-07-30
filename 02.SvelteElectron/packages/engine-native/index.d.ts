@@ -113,6 +113,22 @@ export declare function advanceTournamentRoundNative(p: string): string
 export declare function tournamentRoundScheduleNative(p: string): string
 /** 프로 2군 축약 포스트시즌 — 상위 4팀 단판 사다리 (Phase 5-7) */
 export declare function buildFarmBracketNative(p: string): string
+/** 팀 목록 + 생성 규칙 → 스태프 전원 (worldSeed 결정적) */
+export declare function generateStaffNative(p: string): string
+/** 시즌 종료 → 스태프 나이·경력성장·은퇴·경질·이동 (Phase 6B) */
+export declare function advanceStaffSeasonNative(p: string): string
+/** 새로 만난 사람들의 초기 관계값 (중립 0 + 성향 편차) */
+export declare function initRelationsNative(p: string): string
+/** 주간 관계 갱신 — contact가 together인 상대만 움직인다 */
+export declare function weeklyRelationsNative(p: string): string
+/** 시즌 종료 — together는 총평 가산, apart는 감쇠, ended는 동결 */
+export declare function seasonRelationsNative(p: string): string
+/** 팀 이동 감쇠 (감쇠 후 보존 — 행은 남는다) */
+export declare function relationMoveDecayNative(p: string): string
+/** 관계 → 실제 판정 보정 (보직 OVR 평가 · 훈련 효율) */
+export declare function relationEffectsNative(p: string): string
+/** 7단계 라벨 표. TS `types/relationship.ts`의 미러가 어긋났는지 대조하는 데 쓴다 */
+export declare function relationLabelTableNative(): string
 /** 투구수별 의무 휴식을 채웠는지 (일 단위 — 주 단위로는 주말 연투가 안 걸린다) */
 export declare function checkPitcherRestNative(p: string): string
 /** 리그별 투구수 상한 (고교 105 / 그 외 120) */

@@ -6,7 +6,6 @@
   const dispatch = createEventDispatcher<{
     close: void;
     openEvent: void;
-    openEntity: void;
     openAchievement: void;
     openMessenger: void;
     openMatchLab: void;
@@ -21,9 +20,6 @@
     dispatch("openEvent");
   }
 
-  function openEntity() {
-    dispatch("openEntity");
-  }
 
   function openAchievement() {
     dispatch("openAchievement");
@@ -55,11 +51,6 @@
         <button type="button" class="tool-btn" on:click={openEvent}>
           <strong>이벤트 에디터</strong>
           <span>이벤트/풀/메시지 템플릿/선택지 템플릿 관리</span>
-        </button>
-
-        <button type="button" class="tool-btn" on:click={openEntity}>
-          <strong>선수/스태프/구단주 에디터</strong>
-          <span>선수, 감독, 코치, 구단주 생성/수정/삭제 관리</span>
         </button>
 
         <button type="button" class="tool-btn" on:click={openAchievement}>

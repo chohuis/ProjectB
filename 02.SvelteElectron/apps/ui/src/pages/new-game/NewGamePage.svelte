@@ -238,14 +238,6 @@
     return `background:${hexToRgba(c,0.18)};border-color:${hexToRgba(c,0.5)};color:${c};`;
   }
 
-  function recordTone(result: string): "gold" | "silver" | "bronze" | "normal" | "dim" {
-    if (result === "우승") return "gold";
-    if (result === "준우승") return "silver";
-    if (result === "플레이오프") return "bronze";
-    if (result === "예선 탈락") return "dim";
-    return "normal";
-  }
-
   // ── Step 3 레이더 헬퍼 ────────────────────────────────────────────
   const PRESET_COLORS: Record<PresetKey, string> = {
     balanced: "#4a80f0", power: "#f05050", control: "#50c080", stamina: "#f0c040",
@@ -428,36 +420,51 @@
                   </div>
                 {/if}
 
+                <!--
+                  팀 역사 — v2 refs 기준 (Phase 5-1에서 모양이 바뀌었다).
+                  구 코드는 h.founded·h.nationalTitles·h.recentRecords를 읽었는데
+                  v2에는 없는 필드라, h.recentRecords.length가 undefined.length로
+                  **팀을 고르는 순간 렌더가 터졌다.**
+                -->
                 {#if selectedTeam.history}
                   {@const h = selectedTeam.history}
+                  {@const wins = (h.titles ?? []).filter((t) => t.result === "우승")}
+                  {@const ranks = [...(h.seasonRanks ?? [])].sort((a, b) => b.season.localeCompare(a.season))}
                   <div class="history-stats">
+                    {#if h.foundedYear}
+                      <div class="hs-item"><span>창단</span><strong>{h.foundedYear}년</strong></div>
+                    {/if}
                     <div class="hs-item">
-                      <span>창단</span><strong>{h.founded}년</strong>
+                      <span>대회 우승</span><strong>{wins.length}회</strong>
                     </div>
-                    <div class="hs-item">
-                      <span>전국 우승</span><strong>{h.nationalTitles}회</strong>
-                    </div>
-                    <div class="hs-item">
-                      <span>프로 배출</span><strong>{h.proPlayers}명</strong>
-                    </div>
+                    {#if h.budget}
+                      <div class="hs-item">
+                        <span>운영 예산</span><strong>{Math.round(h.budget / 100000000)}억</strong>
+                      </div>
+                    {/if}
                   </div>
 
-                  <div class="record-section">
-                    <div class="record-title">최근 {h.recentRecords.length}년 성적</div>
-                    <div class="record-table">
-                      <div class="record-head">
-                        <span>연도</span><span>전국대회</span><span>지역</span><span>비고</span>
-                      </div>
-                      {#each h.recentRecords as rec}
-                        <div class="record-row">
-                          <span class="rec-year">{rec.year}</span>
-                          <span class="rec-nat rec-{recordTone(rec.national)}">{rec.national}</span>
-                          <span class="rec-reg">{rec.regional}</span>
-                          <span class="rec-note">{rec.note ?? ""}</span>
+                  {#if ranks.length}
+                    <div class="record-section">
+                      <div class="record-title">과거 {ranks.length}시즌 성적</div>
+                      <div class="record-table">
+                        <div class="record-head">
+                          <span>시즌</span><span>순위</span><span>우승 대회</span><span></span>
                         </div>
-                      {/each}
+                        {#each ranks as sr}
+                          {@const won = (h.titles ?? [])
+                            .filter((t) => t.season === sr.season && t.result === "우승")
+                            .map((t) => t.competition.replace(/^(고교|대학|프로|독립)\s*/, ""))}
+                          <div class="record-row">
+                            <span class="rec-year">{sr.season}</span>
+                            <span class="rec-nat rec-{sr.rank === 1 ? "gold" : sr.rank <= 3 ? "silver" : sr.rank <= 6 ? "bronze" : "dim"}">{sr.rank}위</span>
+                            <span class="rec-reg">{won.join(" · ")}</span>
+                            <span class="rec-note"></span>
+                          </div>
+                        {/each}
+                      </div>
                     </div>
-                  </div>
+                  {/if}
                 {/if}
               </div>
 

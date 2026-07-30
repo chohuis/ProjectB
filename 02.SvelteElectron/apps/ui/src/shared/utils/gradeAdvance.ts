@@ -3,7 +3,6 @@ import { clubToFirstTeam } from "./ids";
 import type {
   BattingAttributes,
   NpcCareerEntry,
-  NpcEmotionRole,
   NpcSaveState,
   PitchingAttributes,
 } from "../types/save";
@@ -21,7 +20,8 @@ function parseResult<T>(json: string): T {
 export function entityToNpcState(
   entity: EntityRow,
   seasonYear: number,
-  emotionRole?: NpcEmotionRole,
+  /** Named NPC 지정 — 주간 개별 시뮬 대상 (구 emotionRole) */
+  isNamed?: boolean,
 ): NpcSaveState {
   const pl   = entity.details.player as EntityPlayerDetails;
   const grade = (Math.min(entity.grade ?? 3, 3)) as 1 | 2 | 3;
@@ -41,7 +41,7 @@ export function entityToNpcState(
     age:          entity.age,
     schoolId:     entity.schoolId ?? "",
     graduationYear: seasonYear + (3 - grade),
-    emotionRole,
+    isNamed,
     careerStatus:  isMilitary ? "military" : "active",
     currentLeague: entity.leagueId,
     currentTeam:   entity.teamId,
@@ -134,7 +134,7 @@ export function entityToProNpcState(
 export function initHighSchoolNpcs(
   entities: EntityRow[],
   seasonYear: number,
-  emotionRoleMap: Map<string, NpcEmotionRole>,
+  namedIds: Set<string>,
 ): NpcSaveState[] {
   return entities
     .filter(e =>
@@ -142,7 +142,7 @@ export function initHighSchoolNpcs(
       e.leagueId === "LEAGUE_HIGHSCHOOL" &&
       (!e.entryYear || e.entryYear <= seasonYear),
     )
-    .map(e => entityToNpcState(e, seasonYear, emotionRoleMap.get(e.id)));
+    .map(e => entityToNpcState(e, seasonYear, namedIds.has(e.id)));
 }
 
 // ── 학년 진급 결과 ────────────────────────────────────────────
@@ -157,12 +157,12 @@ export async function advanceHighSchoolGrades(
   npcs: NpcSaveState[],
   seasonYear: number,
 ): Promise<GradeAdvanceResult> {
-  const emotionRoles = new Map(npcs.map(n => [n.npcId, n.emotionRole] as const));
+  const namedFlags = new Map(npcs.map(n => [n.npcId, n.isNamed] as const));
   const json = await api().npcAdvanceGrades(JSON.stringify({ npcs, seasonYear }));
   const raw = parseResult<GradeAdvanceResult>(json);
   const rehydrate = (n: NpcSaveState): NpcSaveState => ({
     ...n,
-    emotionRole:     n.emotionRole     ?? emotionRoles.get(n.npcId),
+    isNamed:         n.isNamed         ?? namedFlags.get(n.npcId),
     potentialHidden: n.potentialHidden ?? 75,
   });
   return {
@@ -177,12 +177,12 @@ export async function advanceAllGrades(
   npcs: NpcSaveState[],
   seasonYear: number,
 ): Promise<GradeAdvanceResult> {
-  const emotionRoles = new Map(npcs.map(n => [n.npcId, n.emotionRole] as const));
+  const namedFlags = new Map(npcs.map(n => [n.npcId, n.isNamed] as const));
   const json = await api().npcAdvanceAllGrades(JSON.stringify({ npcs, seasonYear }));
   const raw = parseResult<GradeAdvanceResult>(json);
   const rehydrate = (n: NpcSaveState): NpcSaveState => ({
     ...n,
-    emotionRole:     n.emotionRole     ?? emotionRoles.get(n.npcId),
+    isNamed:         n.isNamed         ?? namedFlags.get(n.npcId),
     potentialHidden: n.potentialHidden ?? 75,
   });
   return {
@@ -196,12 +196,12 @@ export async function advanceAllGrades(
 export async function advanceAllAges(
   npcs: NpcSaveState[],
 ): Promise<NpcSaveState[]> {
-  const emotionRoles = new Map(npcs.map(n => [n.npcId, n.emotionRole] as const));
+  const namedFlags = new Map(npcs.map(n => [n.npcId, n.isNamed] as const));
   const json = await api().npcAdvanceAllAges(JSON.stringify({ npcs }));
   const result = parseResult<NpcSaveState[]>(json);
   return result.map(n => ({
     ...n,
-    emotionRole:     n.emotionRole     ?? emotionRoles.get(n.npcId),
+    isNamed:         n.isNamed         ?? namedFlags.get(n.npcId),
     potentialHidden: n.potentialHidden ?? 75,
   }));
 }

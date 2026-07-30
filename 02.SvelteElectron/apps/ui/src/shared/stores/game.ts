@@ -14,7 +14,6 @@ import type {
   NpcCareerEvent,
   NpcSaveState,
   PitchEntry,
-  NpcEmotionRole,
   PitchingStatKey,
   PlayerSeasonStats,
   ProtagonistSave,
@@ -44,6 +43,7 @@ import type {
   SchoolScenario,
 } from "../types/save";
 import type { ProContract } from "../types/save";
+import { transitionReason } from "../utils/careerTransition";
 import { runOffseasonProcessing } from "../utils/npcEngine";
 import { getFaThreshold } from "../utils/faEngine";
 import { masterStore } from "./master";
@@ -1278,6 +1278,14 @@ function createGameStore() {
       resetDraftTrigger?: boolean;
     }) {
       update((s) => {
+        // 학적은 되돌릴 수 없다 — 고교 재입학·대학 두 번 입학·프로에서 학교 복귀 거부.
+        // 여기가 없어서 `isUnivResultWeek`가 대학 재학생에도 발동하며 대학 재입학이
+        // 실제로 성립했다 (careerTransition.ts 주석 참고).
+        const reason = transitionReason(s.protagonist.careerStage, payload.stage);
+        if (reason) {
+          console.error(`[applyDraftDecision] 전이 거부: ${reason}`);
+          return s;   // 상태를 건드리지 않는다
+        }
         const protagonist: ProtagonistSave = {
           ...s.protagonist,
           careerStage: payload.stage,
@@ -1717,16 +1725,10 @@ function createGameStore() {
       // TS에서 이미 FA/재계약 결정된 named NPC ID → Rust FA 랜덤 재결정 방지
       const namedNpcIds = s.npcs.map(n => n.npcId);
       const result = await runOffseasonProcessing(s.npcs, s.pendingDraft, seasonYear, namedNpcIds);
-      const { decayDormantEmotion, archiveNpc } = await import("../utils/emotionEngine");
-      const decayedNpcs = result.npcs.map(n => {
-        if (n.emotionStatus === "dormant" && n.emotion) {
-          return { ...n, emotion: decayDormantEmotion(n.emotion) };
-        }
-        if (n.careerStatus === "retired" && n.emotionStatus !== "archived") {
-          return archiveNpc(n);
-        }
-        return n;
-      });
+      // 이 배열은 아래 시즌종료 처리들이 인덱스로 직접 덮어쓴다 (careerHistory·병역·드래프트).
+      // 예전엔 여기서 감정 9축의 dormant 감쇠·은퇴 archive도 했는데, 6C에서
+      // 관계도로 대체했다 — 감쇠는 slot.db relationship에서 시즌 단위로 돈다.
+      const nextNpcs = [...result.npcs];
 
       // 프로·독립리그 NPC 시즌 careerHistory 엔트리 추가 (_getSeasonData 통해 순환 의존 없이 접근)
       {
@@ -1742,8 +1744,8 @@ function createGameStore() {
             if (stat.type === "pitcher") return `${stat.w}승 ${stat.l}패 ERA ${stat.era.toFixed(2)}`;
             return `타율 .${Math.round(stat.avg * 1000).toString().padStart(3, "0")} ${stat.hr}홈런 ${stat.rbi}타점`;
           };
-          for (let i = 0; i < decayedNpcs.length; i++) {
-            const npc = decayedNpcs[i];
+          for (let i = 0; i < nextNpcs.length; i++) {
+            const npc = nextNpcs[i];
             const pre = npcPreState.get(npc.npcId);
             if (!pre) continue;
             if (npc.careerHistory.some(h => h.year === seasonYear)) continue;
@@ -1755,7 +1757,7 @@ function createGameStore() {
               statLine:   npcStat ? buildStatLine(npcStat) : "-",
               highlights: [],
             };
-            decayedNpcs[i] = { ...npc, careerHistory: [...npc.careerHistory, entry] };
+            nextNpcs[i] = { ...npc, careerHistory: [...npc.careerHistory, entry] };
           }
         }
       }
@@ -1825,7 +1827,7 @@ function createGameStore() {
       for (const n of result.npcs) {
         const before = beforeMilitary.get(n.npcId);
         if (!before) continue;
-        const decIdx = decayedNpcs.findIndex(d => d.npcId === n.npcId);
+        const decIdx = nextNpcs.findIndex(d => d.npcId === n.npcId);
         if (before.status === "현역" && n.militaryStatus !== "현역") {
           militaryDischargedNames.push(before.name);
           const returnLeague = proLeagues.has(n.currentLeague) ? n.currentLeague : undefined;
@@ -1849,10 +1851,10 @@ function createGameStore() {
             detail: "전역",
           });
           if (decIdx >= 0) {
-            decayedNpcs[decIdx] = {
-              ...decayedNpcs[decIdx],
+            nextNpcs[decIdx] = {
+              ...nextNpcs[decIdx],
               careerEvents: [
-                ...(decayedNpcs[decIdx].careerEvents ?? []),
+                ...(nextNpcs[decIdx].careerEvents ?? []),
                 { year: seasonYear, eventType: "military_discharge" as const,
                   toLeagueId: returnLeague },
               ],
@@ -1860,10 +1862,10 @@ function createGameStore() {
           }
         } else if (before.status !== "현역" && n.militaryStatus === "현역") {
           if (decIdx >= 0) {
-            decayedNpcs[decIdx] = {
-              ...decayedNpcs[decIdx],
+            nextNpcs[decIdx] = {
+              ...nextNpcs[decIdx],
               careerEvents: [
-                ...(decayedNpcs[decIdx].careerEvents ?? []),
+                ...(nextNpcs[decIdx].careerEvents ?? []),
                 { year: seasonYear, eventType: "military_enlist" as const,
                   fromTeamId: before.team, fromLeagueId: before.league },
               ],
@@ -1894,7 +1896,7 @@ function createGameStore() {
       // ── Phase 4: 병역 통합 처리 (단일 소스: masterStore.entities) ─────────────
       if (slotId) {
         const mNow = get(masterStore);
-        const npcMap = new Map(decayedNpcs.map(n => [n.npcId, n]));
+        const npcMap = new Map(nextNpcs.map(n => [n.npcId, n]));
         const npcLiveStats = get(npcLiveStatsStore);
 
         // Phase 4-0: 외국인 선수 면제 일괄 패치
@@ -1914,9 +1916,9 @@ function createGameStore() {
         );
         if (foreignExempt.length > 0) {
           const exemptedIdSet = new Set(foreignExempt.map(e => e.id));
-          for (let i = 0; i < decayedNpcs.length; i++) {
-            if (exemptedIdSet.has(decayedNpcs[i].npcId) && decayedNpcs[i].militaryStatus === "미필") {
-              decayedNpcs[i] = { ...decayedNpcs[i], militaryStatus: "면제" };
+          for (let i = 0; i < nextNpcs.length; i++) {
+            if (exemptedIdSet.has(nextNpcs[i].npcId) && nextNpcs[i].militaryStatus === "미필") {
+              nextNpcs[i] = { ...nextNpcs[i], militaryStatus: "면제" };
             }
           }
           autoLog(`[외국인면제] ${foreignExempt.length}명 면제 처리`);
@@ -2042,10 +2044,10 @@ function createGameStore() {
               }
 
               // gameStore.npcs 동기화
-              for (let i = 0; i < decayedNpcs.length; i++) {
-                if (!selectedSet.has(decayedNpcs[i].npcId)) continue;
-                const n = decayedNpcs[i];
-                decayedNpcs[i] = {
+              for (let i = 0; i < nextNpcs.length; i++) {
+                if (!selectedSet.has(nextNpcs[i].npcId)) continue;
+                const n = nextNpcs[i];
+                nextNpcs[i] = {
                   ...n,
                   originalLeagueId:      n.currentLeague,
                   originalTeamId:        n.currentTeam,
@@ -2208,10 +2210,10 @@ function createGameStore() {
               detail: `OVR:${ovr} | ${e.age ?? "?"}세 | 제대예정 Y${seasonYear + 2}`,
             });
           });
-          for (let i = 0; i < decayedNpcs.length; i++) {
-            if (!genIdSet.has(decayedNpcs[i].npcId)) continue;
-            const n = decayedNpcs[i];
-            decayedNpcs[i] = {
+          for (let i = 0; i < nextNpcs.length; i++) {
+            if (!genIdSet.has(nextNpcs[i].npcId)) continue;
+            const n = nextNpcs[i];
+            nextNpcs[i] = {
               ...n,
               originalLeagueId:      n.currentLeague,
               originalTeamId:        n.currentTeam,
@@ -2255,7 +2257,7 @@ function createGameStore() {
 
       update((st) => ({
         ...st,
-        npcs: decayedNpcs,
+        npcs: nextNpcs,
         pendingDraft: result.pendingDraft,
         seasonEndSummary: result.summary,
         logs: [...result.logs, ...st.logs].slice(0, 30),
@@ -2263,6 +2265,83 @@ function createGameStore() {
           ? trimMailbox([result.mailboxEntry, ...st.mailbox])
           : st.mailbox,
       }));
+
+      // ── 스태프 생애주기 (Phase 6B) ─────────────────────────
+      // 이 566줄과 얽히지 않는다 — 스태프는 병역·FA·드래프트에 의존하지 않으므로
+      // usecases/seasonEnd/staffLifecycle.ts에서 독립적으로 처리하고 여기서 호출만 한다.
+      try {
+        const slotId = get({ subscribe }).currentSlotId;
+        if (slotId) {
+          const { processStaffSeasonEnd, describeStaffEvent } =
+            await import("../usecases/seasonEnd/staffLifecycle");
+          const { seasonStore } = await import("./season");
+          const seasonNow = get(seasonStore);
+          const r = await processStaffSeasonEnd(
+            slotId, seasonYear, seasonNow.worldSeed ?? 0, seasonNow.staffSlumpSeasons ?? {},
+          );
+          seasonStore.setStaffSlumpSeasons(r.slumpSeasons);
+
+          if (r.events.length > 0) {
+            const teamName = (id: string) =>
+              get(masterStore).teams.find((t) => t.id === id)?.name ?? id;
+            const lines = r.events.map((e) => describeStaffEvent(e, teamName)).filter(Boolean);
+            update((st) => ({
+              ...st,
+              logs: [...lines.slice(0, 8), ...st.logs].slice(0, 30),
+            }));
+          }
+        }
+      } catch (e) {
+        // 스태프 처리가 실패해도 시즌 종료 자체는 끝나야 한다 — 여기서 던지면
+        // 병역·FA까지 다 처리한 시즌이 통째로 롤백된다
+        console.error("[processAllLeaguesSeasonEnd] 스태프 생애주기 실패", e);
+      }
+
+      // ── 관계도 시즌 총평 + 비접촉 감쇠 (Phase 6C) ──────────
+      // 스태프 생애주기 **다음에** 돈다. 은퇴·경질로 사라진 사람을 ended로
+      // 접은 뒤에 총평을 얹어야 이미 떠난 감독에게 시즌 평가가 붙지 않는다.
+      try {
+        const st = get({ subscribe });
+        const slotId = st.currentSlotId;
+        if (slotId) {
+          const { applySeasonRelations, endRelationships } =
+            await import("../usecases/relationships");
+          const { seasonStore } = await import("./season");
+          const seasonNow = get(seasonStore);
+
+          // 사라진 상대를 먼저 동결한다 (값은 기록으로 남는다)
+          const { slotRepo } = await import("../repo/slotRepo");
+          const activeStaff = new Set(
+            (await slotRepo.getStaff(slotId, { status: "active" })).map((x) => x.staffId),
+          );
+          const rows = await slotRepo.getRelationships(slotId);
+          const gone = rows
+            .filter((r) => r.contact !== "ended"
+              && (r.kind === "manager" || r.kind === "coach" || r.kind === "owner")
+              && !activeStaff.has(r.personId))
+            .map((r) => r.personId);
+          if (gone.length > 0) await endRelationships(slotId, gone);
+
+          const myStats = seasonNow.stats[st.protagonist.id] as
+            import("../types/save").PitcherSeasonStats | null ?? null;
+          const standings = seasonNow.standings ?? [];
+          const myIdx = standings.findIndex((x) => x.teamId === st.protagonist.teamId);
+          // 순위를 못 찾으면 중간(0.5)으로 둔다 — 구단주 관계가 임의로 요동치는 것보다 낫다
+          const rankPct = myIdx >= 0 && standings.length > 1
+            ? myIdx / (standings.length - 1)
+            : 0.5;
+
+          await applySeasonRelations({
+            slotId,
+            week: 52,
+            era: myStats?.era ?? 0,
+            teamRankPct: rankPct,
+            pitchedAny: (myStats?.ip ?? 0) > 0,
+          });
+        }
+      } catch (e) {
+        console.error("[processAllLeaguesSeasonEnd] 관계도 시즌 처리 실패", e);
+      }
     },
 
     // 시즌 종료 후 주인공 에이징 감퇴 적용 (advanceSeasonYear 이전에 호출 — seasonHealth 기반)
@@ -2342,19 +2421,23 @@ function createGameStore() {
       seasonYear: number,
     ) {
       const r = scenario.protagonistRoles;
-      const emotionRoleMap = new Map<string, NpcEmotionRole>([
-        ...r.seniorMentors.map((id): [string, NpcEmotionRole] => [id, "teammate"]),
-        [r.seniorCaptain, "teammate"],
-        ...r.classmateRivals.map((id): [string, NpcEmotionRole] => [id, "rival"]),
-        [r.batteryPartner, "teammate"],
-        [r.promisingJunior, "teammate"],
-        ...scenario.rivalAces.map((id): [string, NpcEmotionRole] => [id, "rival"]),
-        ...scenario.initialZone0Npcs.map((id): [string, NpcEmotionRole] => [id, "teammate"]),
-      ].filter(([id]) => Boolean(id)) as [string, NpcEmotionRole][]);
+      // 시나리오가 지목한 인물은 Named — 주간 개별 시뮬 대상이 된다.
+      // 구 코드는 여기서 "teammate"/"rival" 역할까지 붙였는데, 그 값을 읽는 곳은
+      // 감정 시스템뿐이었고 6C에서 폐기했다. 지금은 동료/라이벌을 실측으로 가른다
+      // (동료 = 같은 팀 · 라이벌 = 실제로 맞붙어 던진 투수).
+      const namedIds = new Set<string>([
+        ...r.seniorMentors,
+        r.seniorCaptain,
+        ...r.classmateRivals,
+        r.batteryPartner,
+        r.promisingJunior,
+        ...scenario.rivalAces,
+        ...scenario.initialZone0Npcs,
+      ].filter(Boolean));
 
       update((s) => ({
         ...s,
-        npcs: initHighSchoolNpcs(entities, seasonYear, emotionRoleMap),
+        npcs: initHighSchoolNpcs(entities, seasonYear, namedIds),
       }));
     },
 
