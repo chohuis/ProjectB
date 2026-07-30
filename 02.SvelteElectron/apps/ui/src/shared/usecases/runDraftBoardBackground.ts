@@ -1,147 +1,32 @@
+/**
+ * W47 드래프트 — 관전을 건너뛸 때의 배경 처리.
+ *
+ * **예전엔 여기가 별도의 드래프트였다.** 자체 후보 풀(고교 3학년 상위 80% +
+ * 대학 상위 30 + 독립 상위 15)을 `masterStore.entities`의 정의치로 만들고,
+ * 자체 지명 시뮬을 돌려 `slotRepo.assignDraft`로 **DB에 직접 썼다.**
+ * 시즌 종료의 `processNpcDraft`는 다른 후보 풀로 또 한 번 돌았고, 거래기록이
+ * 두 벌 쌓이면서 화면에서 본 지명과 실제 소속이 어긋났다.
+ *
+ * 이제 실제 드래프트는 `gameStore.processNpcDraft` 하나뿐이고, 이 함수는
+ * 그걸 호출해 결과를 로그로 옮기기만 한다. 관전 보드(`DraftBoardModal`)도
+ * 같은 결과를 재생한다.
+ */
 import { get } from "svelte/store";
 import { gameStore } from "../stores/game";
-import { masterStore, type EntityDetails, type EntityRow } from "../stores/master";
-import { seasonStore } from "../stores/season";
-import { slotRepo } from "../repo/slotRepo";
-import type { NpcSaveState } from "../types/save";
-import {
-  DRAFT_ROUNDS,
-  runDraftBoard,
-  type DraftBoardBackgroundResult,
-  type DraftBoardCandidate,
-} from "../utils/draftSystem";
+import { masterStore } from "../stores/master";
+import { draftDestinationTeams, type DraftBoardBackgroundResult } from "../utils/draftSystem";
 
-function entityOvr(e: EntityRow): number {
-  const p = (e.details as EntityDetails | undefined)?.player ?? {};
-  return Math.max(Number(p.pitching?.ovr ?? 0), Number(p.batting?.ovr ?? 0));
-}
-
-function npcOvr(npc: NpcSaveState): number {
-  return Math.max(npc.pitching?.ovr ?? 0, npc.batting?.ovr ?? 0);
-}
-
-async function collectViewOnlyDraftCandidates(): Promise<DraftBoardCandidate[]> {
-  const game = get(gameStore);
-  const namedById = new Map(game.npcs.map((n) => [n.npcId, n]));
-
-  const seen = new Set<string>();
-  const rows: DraftBoardCandidate[] = [];
-
-  // 고교 3학년 전체(배경+Named 병합) — 이전엔 Named가 1명이라도 있으면 배경 선수
-  // ~80명을 통째로 무시하고 Named 소수(주로 10~20명)만 후보 풀로 썼던 버그가 있었음.
-  // Named는 실제 라이브 능력치를 쓰고, 나머지는 entity 정의치를 쓰되 풀 자체는 항상 전체 학년.
-  const hsEntities = get(masterStore).entities
-    .filter((e) => e.leagueId === "LEAGUE_HIGHSCHOOL" && e.role === "player" && e.grade === 3 && e.id !== game.protagonist.id);
-  const hsPool = hsEntities.map((e) => {
-    const named = namedById.get(e.id);
-    return named
-      ? { id: e.id, ovr: npcOvr(named), age: named.age, potential: named.developmentRate }
-      : { id: e.id, ovr: entityOvr(e), age: e.age, potential: Number(e.potentialHidden ?? 70) };
-  }).sort((a, b) => b.ovr - a.ovr);
-  const hsCutoff = Math.ceil(hsPool.length * 0.8);
-  for (const c of hsPool.slice(0, hsCutoff)) {
-    if (seen.has(c.id)) continue;
-    seen.add(c.id);
-    rows.push({ id: c.id, ovr: c.ovr, age: c.age, potential: c.potential, isUser: false });
-  }
-
-  const allPlayers = get(masterStore).entities.filter((e) => e.role === "player");
-  const univTop = allPlayers
-    .filter((e) => e.leagueId === "LEAGUE_UNIVERSITY")
-    .sort((a, b) => entityOvr(b) - entityOvr(a))
-    .slice(0, 30);
-  const indTop = allPlayers
-    .filter((e) => e.leagueId === "LEAGUE_INDEPENDENT")
-    .sort((a, b) => entityOvr(b) - entityOvr(a))
-    .slice(0, 15);
-
-  for (const entity of [...univTop, ...indTop]) {
-    if (seen.has(entity.id)) continue;
-    seen.add(entity.id);
-    rows.push({
-      id: entity.id,
-      ovr: entityOvr(entity),
-      age: entity.age,
-      potential: Number(entity.potentialHidden ?? 70),
-      isUser: false,
-    });
-  }
-
-  return rows;
-}
-
-export async function runDraftBoardBackground(slotId: string, seasonYear: number): Promise<DraftBoardBackgroundResult> {
-  const game = get(gameStore);
-  const master = get(masterStore);
-  const prevStandings = get(seasonStore).prevSeasonKblStandings ?? [];
-  const teamIds = prevStandings.length > 0
-    ? [...prevStandings].sort((a, b) => a.winPct - b.winPct || a.wins - b.wins).map((s) => s.teamId)
-    : master.teams.filter((t) => t.leagueId === "LEAGUE_KBL" && t.tier === "1군").map((t) => t.id);
-  const candidates = await collectViewOnlyDraftCandidates();
-  const result = await runDraftBoard(
-    candidates,
-    game.protagonist.scoutScore,
-    game.protagonist.pitching.ovr,
-    teamIds,
-    seasonYear,
-    DRAFT_ROUNDS,
-  );
-
-  gameStore.clearCareerDraftPickLog();
-  const playerNameById = new Map<string, string>();
-  for (const npc of game.npcs) {
-    playerNameById.set(npc.npcId, npc.name);
-  }
-  for (const entity of get(masterStore).entities) {
-    if (!playerNameById.has(entity.id)) playerNameById.set(entity.id, entity.name);
-  }
-
-  for (const pick of result.picks) {
-    gameStore.appendCareerDraftPickLog({
-      pickNo: pick.pickNo,
-      round: pick.round,
-      teamId: pick.teamId,
-      playerId: pick.candidateId,
-      playerName: playerNameById.get(pick.candidateId) ?? pick.candidateId,
-      isUser: false,
-    });
-  }
-
-  if (result.picks.length > 0) {
-    // v3: npc 테이블 갱신 + 거래기록을 단일 트랜잭션으로 (구 master_overlay.db 경로는
-    // master:loadEntities가 이미 overlay를 읽지 않아 실질적으로 유실되던 경로였음)
-    await slotRepo.assignDraft({
-      slotId,
-      seasonYear,
-      picks: result.picks.map((pick) => ({
-        npcId: pick.candidateId,
-        teamId: pick.teamId,
-        leagueId: "LEAGUE_KBL",
-        round: pick.round,
-        pickNo: pick.pickNo,
-        detail: `${pick.round}라운드 ${pick.pickNo}순위`,
-      })),
-    });
-
-    // gameStore.npcs 반응형 반영 (부분 패치 — updateNpcs가 정확한 용도)
-    const draftedIds = new Set(result.picks.map((p) => p.candidateId));
-    const pickByNpcId = new Map(result.picks.map((p) => [p.candidateId, p]));
-    const patched = game.npcs
-      .filter((n) => draftedIds.has(n.npcId))
-      .map((n) => {
-        const pick = pickByNpcId.get(n.npcId)!;
-        return {
-          ...n,
-          currentTeam: pick.teamId,
-          currentLeague: "LEAGUE_KBL",
-          grade: undefined,
-          schoolId: "",
-          proServiceYears: 0,
-        };
-      });
-    if (patched.length > 0) gameStore.updateNpcs(patched);
-  }
-
+export async function runDraftBoardBackground(
+  _slotId: string,
+  seasonYear: number,
+): Promise<DraftBoardBackgroundResult> {
+  const { univIds, indIds } = draftDestinationTeams(get(masterStore).teams);
+  // 지명 로그(careerDraftPickLog)는 processNpcDraft가 남긴다 — 관전 보드가 그걸 재생한다
+  const result = await gameStore.processNpcDraft(seasonYear, univIds, indIds);
   await gameStore.save();
-  return { picks: result.picks };
+
+  // 이미 그 해 드래프트가 끝났으면(중복 호출) null이 온다
+  return { picks: (result?.picks ?? []).map((p) => ({
+    pickNo: p.pick, round: p.round, teamId: p.teamId, candidateId: p.npcId, isUser: false,
+  })) };
 }

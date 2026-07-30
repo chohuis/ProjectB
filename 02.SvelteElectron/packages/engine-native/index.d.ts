@@ -45,6 +45,8 @@ export declare function advanceGradesNative(paramsJson: string): string
 export declare function npcCalcWeeklyGrowth(paramsJson: string): string
 /** 신입생 벌크 생성 */
 export declare function generateFreshmenNative(paramsJson: string): string
+/** 드래프트 후보 선정 — 졸업생 + 대학 재학 얼리 신청 + 독립리그 신청 */
+export declare function selectDraftCandidatesNative(paramsJson: string): string
 /** NPC 드래프트 시뮬 */
 export declare function runDraftNative(paramsJson: string): string
 /** 드래프트 결과 NPC에 적용 */

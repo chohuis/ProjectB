@@ -18,6 +18,13 @@ export interface RosterRulesData {
   pitcherRatio?: number;
   withContract?: boolean;
   nationality?: string;
+  /**
+   * 매 시즌 오프시즌에 강제되는 팀당 유지 인원. `rosterSize`(생성 인원)와 다르다.
+   * 예전엔 상한이 Rust와 TS에 각각 하드코딩돼 있었고 둘 다 이 파일과 달랐다
+   * (KBL 상한 65 vs 생성 30) — 그 65가 1군+2군 합산에 걸려 프로가 부풀었다
+   */
+  rosterMin?: number;
+  rosterMax?: number;
 }
 
 export interface GenerationRulesFile {
@@ -31,6 +38,13 @@ export interface GenerationRulesFile {
   careerHistoryRules?: unknown;
   /** 군경팀(상무) 로스터 (Phase 6.5) */
   militaryRules?: unknown;
+  /** 11월 통합 드래프트 — 라운드 수·나이 게이트·얼리 신청 하한·신인 계약 (Phase 7-1) */
+  draftRules?: {
+    rounds?: number;
+    rookieToFarm?: boolean;
+    contract?: import("../utils/draftSalaryTable").DraftContractRules;
+    [key: string]: unknown;
+  };
 }
 
 export interface NewGameV3Options {

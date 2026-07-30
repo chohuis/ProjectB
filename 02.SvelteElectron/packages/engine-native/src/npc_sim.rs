@@ -504,7 +504,7 @@ fn fa_eligibility_years(league_id: &str) -> i32 {
     }
 }
 
-fn npc_core_ovr(npc: &NpcSaveState) -> f64 {
+pub(crate) fn npc_core_ovr(npc: &NpcSaveState) -> f64 {
     if npc.player_type == "pitcher" {
         npc.pitching.as_ref().map(|p| p.ovr).unwrap_or(0.0)
     } else {
@@ -518,19 +518,32 @@ fn farm_team(team_id: &str) -> Option<String> {
     team_id.strip_suffix("_1").map(|base| format!("{}_2", base))
 }
 
-fn roster_rule(league_id: &str) -> Option<(i32, i32)> {
-    match league_id {
-        "LEAGUE_HIGHSCHOOL"  => Some((18, 30)),
-        "LEAGUE_UNIVERSITY"  => Some((20, 40)),
-        "LEAGUE_INDEPENDENT" => Some((18, 45)),
-        "LEAGUE_KBL"         => Some((40, 65)),
-        "LEAGUE_ABL"         => Some((50, 90)),
-        "LEAGUE_JBL"         => Some((45, 80)),
-        "LEAGUE_KBL_FARM"    => Some((20, 35)),
-        "LEAGUE_ABL_FARM"    => Some((20, 35)),
-        "LEAGUE_JBL_FARM"    => Some((20, 30)),
-        _ => None,
+/// 1군 리그 → 팜 리그. 팀 ID의 `_1 → _2`와 짝이다 —
+/// 팀만 바꾸고 리그를 그대로 두면 2군 선수가 1군 소속으로 남아
+/// **1군 상한이 1군+2군 합산 상한처럼 작동한다.** 실제로 그래서 KBL 소속이
+/// 700명까지 부풀었고 2군 상한은 아무한테도 안 걸리고 있었다.
+fn farm_league(league_id: &str) -> Option<String> {
+    matches!(league_id, "LEAGUE_KBL" | "LEAGUE_ABL" | "LEAGUE_JBL")
+        .then(|| format!("{league_id}_FARM"))
+}
+
+/// 팀당 유지 인원 (min, max).
+///
+/// **정본은 `generation_rules.json rosterRules[리그].rosterMin/rosterMax`다.**
+/// 예전엔 이 함수와 TS `ROSTER_RULES`에 각각 하드코딩돼 있었고 둘 다 규칙 파일과
+/// 달랐다 (KBL 상한 65 vs 생성 인원 30). 규칙이 안 넘어오면 생성 인원 기준
+/// 폴백을 쓴다 — 상한이 없으면 로스터가 무한히 부푼다
+fn roster_rule(league_id: &str, limits: &HashMap<String, RosterLimit>) -> Option<(i32, i32)> {
+    if let Some(l) = limits.get(league_id) {
+        return Some((l.roster_min, l.roster_max));
     }
+    // 팜 리그 규칙이 없으면 1군 규칙을 물려받는다 (ABL_FARM·JBL_FARM)
+    if let Some(base) = league_id.strip_suffix("_FARM") {
+        if let Some(l) = limits.get(base) {
+            return Some((l.roster_min, l.roster_max));
+        }
+    }
+    None
 }
 
 // ── 은퇴 판정 + 로스터 캡 정규화 ────────────────────────────────────────────
@@ -541,6 +554,10 @@ fn normalize_offseason_npcs(
     summary: &mut SeasonEndSummary,
     logs: &mut Vec<String>,
     rng: &mut impl Rng,
+    limits: &HashMap<String, RosterLimit>,
+    // 12단계 진로 배정이 돌 수 있는가. false면 방출 대신 바로 은퇴시킨다 —
+    // 소속 없는 현역이 떠다니면 화면과 시뮬이 다 깨진다
+    can_place: bool,
 ) -> Vec<NpcSaveState> {
     let mut next = npcs;
 
@@ -585,7 +602,7 @@ fn normalize_offseason_npcs(
 
     for (key, indices) in &by_league_team {
         let league_id = key.split("::").next().unwrap_or("");
-        let rule = match roster_rule(league_id) { Some(r) => r, None => continue };
+        let rule = match roster_rule(league_id, limits) { Some(r) => r, None => continue };
         let (_min, max) = rule;
 
         if indices.len() as i32 > max {
@@ -599,49 +616,81 @@ fn normalize_offseason_npcs(
             });
             for &idx in sorted_i.iter().take(overflow as usize) {
                 let npc = &mut next[idx];
-                if league_id == "LEAGUE_KBL" {
-                    if let Some(farm) = farm_team(&npc.current_team) {
-                        logs.push(format!("{} → 2군 강등", npc.name));
-                        npc.current_team = farm;
-                    } else {
-                        logs.push(format!("{} → 독립리그", npc.name));
-                        npc.current_league = "LEAGUE_INDEPENDENT".into();
-                        npc.current_team   = "".into();
+                // 1군 초과는 2군으로 내린다 — **리그도 같이 바꾼다.**
+                // 팀만 `_2`로 바꾸면 그 선수는 여전히 1군 소속으로 집계돼
+                // 2군 상한이 영원히 안 걸린다 (KBL 700명의 원인)
+                match farm_league(league_id).zip(farm_team(&npc.current_team)) {
+                    Some((farm_lid, farm_tid)) => {
+                        logs.push(format!("{} → 2군 강등 ({league_id})", npc.name));
+                        npc.current_league = farm_lid;
+                        npc.current_team   = farm_tid;
                     }
-                } else if league_id == "LEAGUE_ABL" {
-                    if let Some(farm) = farm_team(&npc.current_team) {
-                        logs.push(format!("{} → ABL 2군 강등", npc.name));
-                        npc.current_team = farm;
-                    } else {
-                        logs.push(format!("{} 은퇴 (ABL 로스터 초과)", npc.name));
+                    // 내릴 곳이 없으면 방출이다. 소속만 비워두면 12단계가
+                    // 미지명자와 같은 로직으로 진로를 정한다 (독립 입단 또는 은퇴).
+                    // 예전엔 여기서 바로 은퇴시켜 22세 신인이 방출 한 번에 끝났다
+                    None if can_place => {
+                        logs.push(format!("{} 방출 (로스터 초과 {league_id})", npc.name));
+                        npc.current_team = "".into();
+                    }
+                    None => {
+                        logs.push(format!("{} 은퇴 (로스터 초과 {league_id})", npc.name));
                         npc.career_status  = "retired".into();
                         npc.current_league = "LEAGUE_RETIRED".into();
                         npc.current_team   = "".into();
                         summary.retired_count += 1;
                     }
-                } else if league_id == "LEAGUE_JBL" {
-                    if let Some(farm) = farm_team(&npc.current_team) {
-                        logs.push(format!("{} → JBL 2군 강등", npc.name));
-                        npc.current_team = farm;
-                    } else {
-                        logs.push(format!("{} 은퇴 (JBL 로스터 초과)", npc.name));
-                        npc.career_status  = "retired".into();
-                        npc.current_league = "LEAGUE_RETIRED".into();
-                        npc.current_team   = "".into();
-                        summary.retired_count += 1;
-                    }
-                } else {
-                    logs.push(format!("{} 은퇴 (로스터 초과)", npc.name));
-                    npc.career_status  = "retired".into();
-                    npc.current_league = "LEAGUE_RETIRED".into();
-                    npc.current_team   = "".into();
-                    summary.retired_count += 1;
                 }
             }
         }
     }
 
+    fill_first_teams(&mut next, limits, logs);
     next
+}
+
+/// 1군이 최소 인원에 미달하면 같은 구단 2군에서 능력치 상위를 끌어올린다.
+///
+/// 신인이 전부 2군에서 시작하면(D-3b) 1군은 은퇴·FA로 **빠지기만 한다.**
+/// 실측에서 1군이 팀당 24명(최소 16)까지 말랐다. 성적 기반 상시 콜업은
+/// Phase 7-2가 담당하고, 여기서는 리그가 성립하는 최소선만 지킨다.
+fn fill_first_teams(
+    npcs: &mut [NpcSaveState],
+    limits: &HashMap<String, RosterLimit>,
+    logs: &mut Vec<String>,
+) {
+    // 1군 팀별 현재 인원
+    let mut count: HashMap<String, usize> = HashMap::new();
+    for n in npcs.iter() {
+        if n.career_status != "active" { continue; }
+        if farm_league(&n.current_league).is_none() { continue; }  // 1군 리그만
+        *count.entry(n.current_team.clone()).or_default() += 1;
+    }
+
+    for (team_id, have) in count {
+        let Some(base) = team_id.strip_suffix("_1") else { continue };
+        // 이 팀이 속한 1군 리그를 인원에서 역추적한다
+        let Some(league_id) = npcs.iter()
+            .find(|n| n.current_team == team_id && n.career_status == "active")
+            .map(|n| n.current_league.clone()) else { continue };
+        let Some((min, _)) = roster_rule(&league_id, limits) else { continue };
+        if have as i32 >= min { continue; }
+
+        let farm_tid = format!("{base}_2");
+        let mut cands: Vec<usize> = npcs.iter().enumerate()
+            .filter(|(_, n)| n.career_status == "active" && n.current_team == farm_tid)
+            .map(|(i, _)| i)
+            .collect();
+        // 능력치 높은 순 — 2군에서 제일 나은 선수가 올라간다
+        cands.sort_by(|&a, &b| npc_core_ovr(&npcs[b])
+            .partial_cmp(&npc_core_ovr(&npcs[a])).unwrap_or(std::cmp::Ordering::Equal));
+
+        let need = (min as usize).saturating_sub(have);
+        for &idx in cands.iter().take(need) {
+            npcs[idx].current_league = league_id.clone();
+            npcs[idx].current_team   = team_id.clone();
+            logs.push(format!("{} → 1군 승격 ({team_id})", npcs[idx].name));
+        }
+    }
 }
 
 // ── 오프시즌 전체 처리 ────────────────────────────────────────────────────────
@@ -768,21 +817,22 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
 
     // 8-10. 군입대 판정/체육부대 선발/입대 처리 → TypeScript Phase 4 통합 처리로 이전
 
-    // 11. 은퇴 판정 + 로스터 캡
     let mut logs: Vec<String> = Vec::new();
-    let mut after_normalize = normalize_offseason_npcs(processed, season_year, &mut summary, &mut logs, &mut rng);
 
-    // 8. FA → 원래 리그별 재배치 (KBL→KBL, ABL→ABL, JBL→JBL, 기타→독립)
-    // 팀별 active NPC 수 집계 (유령 팀 필터링용 — 구 팀ID 잔존 방지)
+    // 8. FA → 원래 리그의 **자리가 있는 팀**으로 재배치.
+    //
+    // ⚠ 이 블록은 로스터 캡보다 **먼저** 돌아야 한다. 예전엔 캡 뒤에 있어서
+    // 캡이 34명으로 줄여놓은 팀에 FA 40명이 그대로 얹혔다 — 결과 74명.
+    // 캡이 매년 통과되면서 프로 소속이 계속 부푼 진짜 메커니즘이 이거다.
     let mut team_active_count: HashMap<String, usize> = HashMap::new();
-    for n in after_normalize.iter() {
+    for n in processed.iter() {
         if n.career_status == "active" && !n.current_team.is_empty() {
             *team_active_count.entry(n.current_team.clone()).or_default() += 1;
         }
     }
-    // 리그별 현역 팀 목록 수집 (active NPC 5명 미만 팀 제외)
+    // 리그별 현역 팀 목록 (active NPC 5명 미만은 유령 팀 — 구 팀ID 잔존 방지)
     let mut league_teams: HashMap<String, Vec<String>> = HashMap::new();
-    for n in after_normalize.iter() {
+    for n in processed.iter() {
         if n.career_status != "active" || n.current_team.is_empty() { continue; }
         let is_pro = n.current_league == "LEAGUE_KBL"
             || n.current_league == "LEAGUE_ABL"
@@ -794,35 +844,103 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
             .or_default()
             .push(n.current_team.clone());
     }
-    // 중복 제거
     for teams in league_teams.values_mut() {
         teams.sort();
         teams.dedup();
     }
 
-    for npc in after_normalize.iter_mut() {
+    let mut fa_unsigned = 0usize;
+    for npc in processed.iter_mut() {
         if npc.current_league != "LEAGUE_FREE_AGENT" { continue; }
         // FA 직전 리그 판별: original_league_id 우선, 없으면 KBL 기본값
         let origin_league = npc.original_league_id.as_deref()
             .filter(|l| !l.is_empty())
             .unwrap_or("LEAGUE_KBL");
-        if let Some(teams) = league_teams.get(origin_league) {
-            if !teams.is_empty() {
-                let idx = (rng.gen::<f64>() * teams.len() as f64) as usize % teams.len();
-                npc.current_league = origin_league.into();
-                npc.current_team   = teams[idx].clone();
-                npc.original_league_id = None;
-                npc.original_team_id   = None;
-            }
-        } else {
+        let max = roster_rule(origin_league, &params.roster_limits).map(|(_, m)| m);
+        // 정원에 여유가 있는 팀만 후보다. 여유를 안 보면 FA가 캡을 통과한다
+        let open: Vec<&String> = league_teams.get(origin_league)
+            .map(|teams| teams.iter().filter(|t| {
+                let n = team_active_count.get(*t).copied().unwrap_or(0) as i32;
+                max.map_or(true, |m| n < m)
+            }).collect())
+            .unwrap_or_default();
+
+        if open.is_empty() {
+            // 미계약 — 갈 팀이 없다. 진로(독립 입단·은퇴)는 D-4가 정한다
             npc.current_league = "LEAGUE_INDEPENDENT".into();
             npc.current_team   = "".into();
+            fa_unsigned += 1;
+            continue;
         }
+        let idx = (rng.gen::<f64>() * open.len() as f64) as usize % open.len();
+        let team = open[idx].clone();
+        *team_active_count.entry(team.clone()).or_default() += 1;
+        npc.current_league = origin_league.into();
+        npc.current_team   = team;
+        npc.original_league_id = None;
+        npc.original_team_id   = None;
+    }
+    if fa_unsigned > 0 {
+        logs.push(format!("FA 미계약 {fa_unsigned}명 — 원 소속 리그에 자리가 없었다"));
+    }
+
+    // 11. 은퇴 판정 + 로스터 캡
+    let can_place = !params.independent_team_ids.is_empty();
+    let mut after_normalize = normalize_offseason_npcs(
+        processed, season_year, &mut summary, &mut logs, &mut rng,
+        &params.roster_limits, can_place,
+    );
+
+    // 12. 소속을 잃은 사람들의 진로 — 방출자와 FA 미계약자.
+    //
+    // **미지명 졸업생과 같은 로직을 탄다** (`draft::Placer`). 따로 짜면 셋 중
+    // 하나가 반드시 어긋난다. 예전엔 이들이 전부 "은퇴"로 처리돼
+    // 22세 신인이 방출 한 번에 은퇴하고 있었다.
+    let mut leftover_pending = Vec::new();
+    if can_place {
+        // 졸업했는데 지명을 못 받은 사람도 같이 처리한다. 드래프트는 졸업 전(W47)에
+        // 끝나므로, 여기 남아 있다는 건 미지명이라는 뜻이다
+        let grad_start = after_normalize.len();
+        after_normalize.extend(params.pending_draft.iter().cloned());
+
+        let rules = params.placement.clone().unwrap_or(crate::draft::PlacementRules {
+            university_max: 40, independent_max: 45, independent_age_max: 31,
+        });
+        let mut placer = crate::draft::Placer::new(
+            &after_normalize, &params.university_team_ids, &params.independent_team_ids, rules,
+        );
+        let homeless: Vec<usize> = after_normalize.iter().enumerate()
+            .filter(|(i, n)| n.career_status == "active"
+                && (n.current_team.is_empty()
+                    || n.current_league == crate::draft::DRAFT_POOL_LEAGUE
+                    || *i >= grad_start))
+            .map(|(i, _)| i)
+            .collect();
+
+        let mut quit = 0usize;
+        for idx in homeless {
+            // **대학은 고교 졸업자만.** 프로·대학을 거친 사람의 대학 입학은 학적 역행이다
+            let from_hs = after_normalize[idx].career_history.last()
+                .is_some_and(|e| e.league_id == "LEAGUE_HIGHSCHOOL");
+            let (event, reason) = if from_hs || idx >= grad_start {
+                ("draft_undrafted", "미지명")
+            } else {
+                ("release", "방출")
+            };
+            placer.place(&mut after_normalize[idx], season_year, event, reason, from_hs);
+            if after_normalize[idx].career_status == "retired" { quit += 1; }
+        }
+        if quit > 0 {
+            summary.retired_count += quit as i32;
+            logs.push(format!("갈 팀을 못 찾아 야구를 그만둔 선수 {quit}명"));
+        }
+    } else {
+        leftover_pending = params.pending_draft;
     }
 
     OffseasonOutput {
         npcs: after_normalize,
-        pending_draft: [params.pending_draft, new_pending].concat(),
+        pending_draft: [leftover_pending, new_pending].concat(),
         summary,
         logs,
     }
@@ -1042,6 +1160,7 @@ pub fn generate_freshmen(params: GenerateFreshmenParams) -> Vec<NpcSaveState> {
             contract_years:          1,
             sports_unit_selected:    false,
             military_unit:           None,
+            military_rank:           None,
             original_league_id:      None,
             original_team_id:        None,
             fame:                    0.0,
@@ -1066,6 +1185,16 @@ pub fn generate_freshmen(params: GenerateFreshmenParams) -> Vec<NpcSaveState> {
 pub struct ServiceBand {
     pub until: i32,
     pub factor: f64,
+}
+
+/// 팀당 유지 인원. `rosterSize`(생성 인원)와 다르다 —
+/// 생성은 시작 인원이고 이건 매 시즌 오프시즌에 강제되는 상한이다
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RosterLimit {
+    #[serde(default)]
+    pub roster_min: i32,
+    pub roster_max: i32,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -1297,86 +1426,94 @@ pub fn apply_draft(params: ApplyDraftParams) -> Vec<NpcSaveState> {
         if npc.current_league == "LEAGUE_DRAFT_POOL"
             || npc.current_league == "LEAGUE_RETIRED"
             || npc.career_status == "retired" { continue; }
+        // 지명된 재학생은 곧 팀을 떠난다 — 자리를 차지한 것으로 세면
+        // 그 팀이 미지명자를 한 명 덜 받는다
+        if pick_map.contains_key(&npc.npc_id) { continue; }
         let t = &npc.current_team;
         if !univ_set.contains(t.as_str()) && !ind_set.contains(t.as_str()) { continue; }
         let e = roster.entry(t.clone()).or_insert((0, 0));
         if npc.player_type == "pitcher" { e.0 += 1; } else { e.1 += 1; }
     }
 
-    // Step 2: KBL 지명자 먼저 처리
+    // Step 2: KBL 지명자 먼저 처리.
+    //
+    // **출신 리그를 따지지 않는다.** 예전엔 `LEAGUE_DRAFT_POOL` 소속만 옮겼는데,
+    // D-2에서 대학 재학생·독립리그 선수가 소속을 유지한 채 신청할 수 있게 되면서
+    // 그 조건이 남아 있으면 **지명돼도 원 소속에 그대로 남는다.**
     let mut result_npcs = params.npcs;
     for npc in result_npcs.iter_mut() {
-        if npc.current_league != "LEAGUE_DRAFT_POOL" { continue; }
         if let Some(pick) = pick_map.get(&npc.npc_id) {
+            let from_team   = (!npc.current_team.is_empty()).then(|| npc.current_team.clone());
+            let from_league = (npc.current_league != "LEAGUE_DRAFT_POOL")
+                .then(|| npc.current_league.clone());
+
+            // 신인은 2군에서 시작한다. 1군 직행시키면 1군 정원(34)이 매년 11명씩
+            // 밀려 베테랑이 대신 밀려난다 — 1군 승격은 Phase 7-2가 성적으로 판단한다
+            let (team_id, league_id) = match params.rookie_to_farm
+                .then(|| farm_team(&pick.team_id)).flatten()
+            {
+                Some(farm) => (farm, "LEAGUE_KBL_FARM"),
+                None => (pick.team_id.clone(), "LEAGUE_KBL"),
+            };
+
+            // 계약금은 **지명 구단**의 예산 지수로 정한다 (2군 팀이 아니라)
+            let idx = params.team_index.get(&pick.team_id).copied().unwrap_or(1.0);
+            let detail = match params.contract.as_ref() {
+                Some(rules) => {
+                    let (salary, bonus, years) = rules.for_pick(pick.pick, idx);
+                    npc.current_salary = salary;
+                    npc.contract_years = years;
+                    format!("{}라운드 {}번 지명 · 계약금 {}만원", pick.round, pick.pick, bonus)
+                }
+                None => format!("{}라운드 {}번 지명", pick.round, pick.pick),
+            };
+
             // career_history에는 실제 시즌 기록만 → 드래프트 이벤트는 career_events에 기록
             npc.career_events.push(NpcCareerEvent {
                 year: params.result.year,
                 event_type: "draft_picked".into(),
-                from_team_id: None,
-                to_team_id: Some(pick.team_id.clone()),
-                from_league_id: None,
-                to_league_id: Some("LEAGUE_KBL".into()),
-                detail: Some(format!("{}라운드 {}번 지명", pick.round, pick.pick)),
+                from_team_id: from_team,
+                to_team_id: Some(team_id.clone()),
+                from_league_id: from_league,
+                to_league_id: Some(league_id.into()),
+                detail: Some(detail),
             });
-            npc.current_league = "LEAGUE_KBL".into();
-            npc.current_team   = pick.team_id.clone();
+            npc.current_league    = league_id.into();
+            npc.current_team      = team_id;
+            npc.grade             = None;   // 재학생이 지명되면 학적이 끝난다
+            npc.school_id         = String::new();
+            npc.pro_service_years = Some(0);
         }
     }
 
-    // Step 3: 미지명자를 OVR 내림차순 정렬 후 대학 → 독립 → 은퇴 배정
+    // Step 3: 미지명자 진로. **경로를 본다** — 고교 졸업자만 대학에 갈 수 있다.
+    // 예전엔 남는 자리부터 채워서 대졸 미지명자가 대학 1학년으로 다시 입학했다
+    let mut placer = crate::draft::Placer::new(
+        &result_npcs, &params.university_team_ids, &params.independent_team_ids,
+        params.placement.clone().unwrap_or(crate::draft::PlacementRules {
+            university_max: 40, independent_max: 45, independent_age_max: 31,
+        }),
+    );
+    // 지명된 재학생은 곧 떠난다 — 집계에 남기면 그 팀이 한 명 덜 받는다
+    for npc in result_npcs.iter() {
+        if pick_map.contains_key(&npc.npc_id) { placer.forget(npc); }
+    }
+
     let mut undrafted_idx: Vec<(usize, f64)> = result_npcs.iter().enumerate()
         .filter(|(_, n)| n.current_league == "LEAGUE_DRAFT_POOL" && undrafted.contains(&n.npc_id))
         .map(|(i, n)| (i, npc_core_ovr(n)))
         .collect();
+    // 능력치 높은 순 — 좋은 선수가 먼저 자리를 잡는다
     undrafted_idx.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
 
     for (idx, _) in undrafted_idx {
-        let is_pitcher = result_npcs[idx].player_type == "pitcher";
-
-        let univ_tid = find_slot(&mut roster, is_pitcher, &params.university_team_ids, 40);
-        let assigned: Option<(String, bool)> = if let Some(tid) = univ_tid {
-            Some((tid, true))
-        } else {
-            find_slot(&mut roster, is_pitcher, &params.independent_team_ids, 45)
-                .map(|tid| (tid, false))
-        };
-
-        let npc = &mut result_npcs[idx];
-        match assigned {
-            Some((tid, is_univ)) => {
-                let (league, detail_str) = if is_univ {
-                    ("LEAGUE_UNIVERSITY", "미지명 → 대학리그")
-                } else {
-                    ("LEAGUE_INDEPENDENT", "미지명 → 독립리그")
-                };
-                npc.career_events.push(NpcCareerEvent {
-                    year: params.result.year,
-                    event_type: "draft_undrafted".into(),
-                    from_team_id: None,
-                    to_team_id: Some(tid.clone()),
-                    from_league_id: None,
-                    to_league_id: Some(league.into()),
-                    detail: Some(detail_str.into()),
-                });
-                npc.current_league = league.into();
-                npc.current_team   = tid;
-                if is_univ { npc.grade = Some(1); }
-            }
-            None => {
-                npc.career_events.push(NpcCareerEvent {
-                    year: params.result.year,
-                    event_type: "retirement".into(),
-                    from_team_id: None,
-                    to_team_id: None,
-                    from_league_id: None,
-                    to_league_id: None,
-                    detail: Some("미지명 → 은퇴".into()),
-                });
-                npc.career_status  = "retired".into();
-                npc.current_league = "LEAGUE_RETIRED".into();
-                npc.current_team   = "".into();
-            }
-        }
+        // 마지막 경력이 고교면 대학 진학 가능. 대학·독립 출신은 안 된다
+        let from_highschool = result_npcs[idx].career_history.last()
+            .map_or(true, |e| e.league_id == "LEAGUE_HIGHSCHOOL");
+        placer.place(
+            &mut result_npcs[idx], params.result.year,
+            "draft_undrafted", "미지명", from_highschool,
+        );
     }
 
     result_npcs

@@ -12,6 +12,7 @@ import { seasonStore } from "../stores/season";
 import { npcLiveStatsStore } from "../stores/npcLiveStats";
 import { masterStore } from "../stores/master";
 import { HS_ACTIVE_TEAMS_V3 } from "../utils/leagueScheduler";
+import { SANGMU_TEAM_IDS } from "../utils/ids";
 import type { SaveGame, ProtagonistSave, NpcSaveState } from "../types/save";
 import type { SaveSeason } from "../types/season";
 import type { SaveSlotMeta } from "../types/projectb.d";
@@ -133,7 +134,8 @@ export async function ensureLeagueActivatedV3(leagueId: string, seasonYear: numb
   const isPro = ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"].includes(leagueId);
   const teams = get(masterStore).teams
     .filter((t) => t.leagueId === leagueId)
-    .filter((t) => (isPro ? t.id.endsWith("_1") : t.id !== "TEAM_SPORTS_UNIT"))
+    // 상무는 Lazy 활성화 대상이 아니다 — 로스터는 military_roster.rs가 따로 만든다
+    .filter((t) => (isPro ? t.id.endsWith("_1") : !SANGMU_TEAM_IDS.has(t.id)))
     .map((t) => ({ teamId: t.id }));
   if (teams.length === 0) return 0;
 

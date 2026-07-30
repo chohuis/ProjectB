@@ -113,6 +113,12 @@ pub struct NpcSaveState {
     pub sports_unit_selected: bool,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub military_unit: Option<String>,       // "sports" | "general"
+    /// 군 계급. **Rust는 안 쓰지만 반드시 들고 있어야 한다** —
+    /// 이 필드가 없으면 NPC가 Rust를 한 번 통과할 때마다 계급이 사라지고,
+    /// `syncNpcs`가 INSERT OR REPLACE라 다음 저장에서 DB의 계급까지 지워진다.
+    /// (military_roster.rs가 복무 개월로 정한 값이 정본 — design/roster.md §7)
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub military_rank: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub original_league_id: Option<String>,  // 입대 전 리그 (전역 시 복귀)
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -259,6 +265,19 @@ pub struct ApplyDraftParams {
     pub university_team_ids: Vec<String>,
     #[serde(default)]
     pub independent_team_ids: Vec<String>,
+    /// 신인 계약 (generation_rules.json draftRules.contract).
+    /// 없으면 계약이 안 붙는다 — 신인이 연봉 0으로 시작한다
+    #[serde(default)]
+    pub contract: Option<crate::draft::DraftContractRules>,
+    /// 신인을 2군에서 시작시킬지 (draftRules.rookieToFarm)
+    #[serde(default)]
+    pub rookie_to_farm: bool,
+    /// 팀 예산 지수 (팀 예산 / 리그 평균). 계약금에 곱한다
+    #[serde(default)]
+    pub team_index: std::collections::HashMap<String, f64>,
+    /// 미지명자 진로 배정 상한 (rosterRules에서 온다)
+    #[serde(default)]
+    pub placement: Option<crate::draft::PlacementRules>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -528,6 +547,17 @@ pub struct OffseasonParams {
     /// 규칙 누락이 연봉을 0으로 만들어 세이브를 망가뜨리지 않게
     #[serde(default)]
     pub salary_rules: Option<crate::npc_sim::SalaryRules>,
+    /// 팀당 유지 인원 상한 (generation_rules.json rosterRules[리그]).
+    /// 안 넘어오면 상한 자체가 없어 로스터가 무한히 부푼다
+    #[serde(default)]
+    pub roster_limits: std::collections::HashMap<String, crate::npc_sim::RosterLimit>,
+    /// 방출·FA 미계약자가 갈 곳. 안 넘어오면 그 사람들은 전부 은퇴 처리된다
+    #[serde(default)]
+    pub university_team_ids: Vec<String>,
+    #[serde(default)]
+    pub independent_team_ids: Vec<String>,
+    #[serde(default)]
+    pub placement: Option<crate::draft::PlacementRules>,
 }
 
 // ── 학년 진급 입력 ───────────────────────────────────────────────────────────

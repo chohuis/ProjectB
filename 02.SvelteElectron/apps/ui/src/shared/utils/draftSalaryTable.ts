@@ -1,42 +1,49 @@
-const TEAM_MULTIPLIER: Record<string, number> = {
-  TEAM_KBL_ROYALLIONS_1:    1.12,
-  TEAM_KBL_TWINWOLVES_1:    1.10,
-  TEAM_KBL_BEARGUARDIANS_1: 1.08,
-  TEAM_KBL_SKYGULLS_1:      1.05,
-  TEAM_KBL_SOARINGEAGLES_1: 1.00,
-  TEAM_KBL_EMBERTIGERS_1:   0.97,
-  TEAM_KBL_STEELDINOS_1:    0.93,
-  TEAM_KBL_GIANTWHALES_1:   0.90,
-};
+/**
+ * 신인 지명 계약 — **정본은 `generation_rules.json draftRules.contract`다.**
+ *
+ * 예전엔 이 파일에 표가 직접 박혀 있었고 두 군데가 다 틀렸다:
+ * 1순위 연봉 9,000만원(KBO 신인 연봉 규정 위반)에 하위 지명 1,500만원
+ * (KBL 최저연봉 3,000만원 미달). 게다가 팀 배수 맵의 키가 전부 없는 팀이라
+ * 모든 구단이 배수 1.0으로 떨어지고 있었다.
+ *
+ * 규칙 파일을 Rust(`draft.rs`)와 **같이 읽는다** — NPC 신인과 주인공 신인이
+ * 다른 표를 쓰면 화면에 나란히 뜨는 순간 어긋난다.
+ */
 
-function baseSalary(pickNo: number): number {
-  if (pickNo === 1)  return 9000;
-  if (pickNo <= 4)   return 7500;
-  if (pickNo <= 8)   return 6000;
-  if (pickNo <= 16)  return 4500;
-  if (pickNo <= 32)  return 3500;
-  if (pickNo <= 48)  return 2800;
-  if (pickNo <= 64)  return 2200;
-  return 1500;
+export interface PickContract { untilPick: number; salary: number; bonus: number }
+
+export interface DraftContractRules {
+  durationYears: number;
+  byPick: PickContract[];
+  teamIndexMin?: number;
+  teamIndexMax?: number;
 }
 
-function baseBonus(pickNo: number): number {
-  if (pickNo === 1)  return 6000;
-  if (pickNo <= 4)   return 4000;
-  if (pickNo <= 8)   return 2500;
-  if (pickNo <= 16)  return 1500;
-  if (pickNo <= 32)  return 800;
-  if (pickNo <= 48)  return 300;
-  return 0;
-}
-
-export function calcKblDraftContract(pickNo: number, teamId: string): {
+export interface DraftContract {
   salary: number;
-  durationYears: 3;
+  durationYears: number;
   signingBonus: number;
-} {
-  const mult = TEAM_MULTIPLIER[teamId] ?? 1.0;
-  const salary      = Math.round(baseSalary(pickNo) * mult / 100) * 100;
-  const signingBonus = Math.round(baseBonus(pickNo) * mult / 100) * 100;
-  return { salary, durationYears: 3, signingBonus };
+}
+
+/**
+ * @param teamIndex 팀 예산 / 리그 평균 (`buildSalaryIndex`). 모르면 1.0.
+ *                  **계약금에만** 곱한다 — 신인 연봉은 규정상 균일이다
+ */
+export function calcKblDraftContract(
+  pickNo: number,
+  rules: DraftContractRules,
+  teamIndex = 1.0,
+): DraftContract {
+  const row = rules.byPick.find((r) => pickNo <= r.untilPick)
+    ?? rules.byPick[rules.byPick.length - 1];
+  if (!row) return { salary: 0, durationYears: rules.durationYears, signingBonus: 0 };
+
+  const lo = rules.teamIndexMin ?? 0.85;
+  const hi = rules.teamIndexMax ?? 1.15;
+  const idx = Math.min(hi, Math.max(lo, teamIndex || 1.0));
+  return {
+    salary: row.salary,
+    durationYears: rules.durationYears,
+    signingBonus: Math.round((row.bonus * idx) / 100) * 100,
+  };
 }

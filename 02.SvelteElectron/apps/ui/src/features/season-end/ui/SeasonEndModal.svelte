@@ -3,6 +3,7 @@
   import { seasonStore, currentStandings } from "../../../shared/stores/season";
   import { masterStore, teamMap } from "../../../shared/stores/master";
   import { runSeasonEndBgProcessing } from "../../../shared/usecases/runAutoAdvance";
+  import { draftDestinationTeams } from "../../../shared/utils/draftSystem";
   import type { PitcherSeasonStats, BatterSeasonStats, CareerAward, CareerGameLogEntry } from "../../../shared/types/save";
   import type { PitcherGameLine } from "../../../shared/types/season";
 
@@ -288,6 +289,17 @@
     // processSeasonEnd 내부에서 protagonist.careerStage === "highschool"일 때만 주인공 학년도 올림
     await gameStore.processSeasonEnd(now);
 
+    // NPC 드래프트 — **오프시즌보다 먼저** 돌아야 한다.
+    //
+    // 오프시즌이 미지명자 진로를 배정하므로(방출·FA 미계약과 같은 로직),
+    // 드래프트가 그 뒤에 오면 이미 대학·독립으로 흩어진 뒤가 된다.
+    // W47 관전에서 이미 돌았으면 `lastDraftYear` 가드가 건너뛴다 —
+    // 주인공 졸업 시즌엔 W47 관전 이벤트가 안 떠서 여기가 유일한 경로다.
+    {
+      const { univIds, indIds } = draftDestinationTeams($masterStore.teams);
+      await gameStore.processNpcDraft(now, univIds, indIds);
+    }
+
     // ── 프로(KBL/ABL/JBL): pendingNextContract 적용 후 새 시즌 초기화 ──
     const isProStage = ["pro_kbl", "pro_abl", "pro_jbl"].includes(p.careerStage);
     if (isProStage) {
@@ -299,11 +311,6 @@
       await gameStore.processAllLeaguesSeasonEnd(now);
       await gameStore.applyAgingDecay();
       await runSeasonEndBgProcessing(now);
-      if ($gameStore.pendingDraft.length > 0) {
-        const univIds = $masterStore.teams.filter(t => t.leagueId === "LEAGUE_UNIVERSITY" && t.id !== "TEAM_SPORTS_UNIT").map(t => t.id);
-        const indIds  = $masterStore.teams.filter(t => t.leagueId === "LEAGUE_INDEPENDENT").map(t => t.id);
-        await gameStore.processNpcDraft(now, univIds, indIds);
-      }
       gameStore.advanceSeasonYear($seasonStore.seasonYear);
 
       // ── 2군 리그 우승팀 발표 메시지 ────────────────────────────
@@ -412,11 +419,6 @@
     }
     await gameStore.applyAgingDecay();
     await runSeasonEndBgProcessing(now);
-    if ($gameStore.pendingDraft.length > 0) {
-      const univIds = $masterStore.teams.filter(t => t.leagueId === "LEAGUE_UNIVERSITY" && t.id !== "TEAM_SPORTS_UNIT").map(t => t.id);
-      const indIds  = $masterStore.teams.filter(t => t.leagueId === "LEAGUE_INDEPENDENT").map(t => t.id);
-      await gameStore.processNpcDraft(now, univIds, indIds);
-    }
     gameStore.advanceSeasonYear($seasonStore.seasonYear);
     seasonStore.startNewSeason();
 

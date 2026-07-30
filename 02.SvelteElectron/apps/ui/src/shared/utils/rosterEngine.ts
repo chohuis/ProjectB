@@ -1,3 +1,4 @@
+import { SANGMU_TEAM_IDS } from "./ids";
 import type { EntityRow, EntityPlayerDetails } from "../stores/master";
 import type { NpcInjuryEntry } from "../types/save";
 import type { PlayerCondition } from "../types/season";
@@ -97,7 +98,8 @@ function getTeamPlayers(teamId: string, entities: EntityRow[], npcInjuries?: Rec
   const retiredSet = new Set(npcRetired ?? []);
   const active = entities.filter(
     (e) => e.role === "player" && e.teamId === teamId && !retiredSet.has(e.id)
-      && (e.status === "active" || (e.status === "military" && teamId === "TEAM_SPORTS_UNIT")),
+      // 복무 중인 선수는 소속 팀 로스터에 안 뜬다 — 상무 로스터에서만 보인다
+      && (e.status === "active" || (e.status === "military" && SANGMU_TEAM_IDS.has(teamId))),
   );
   return npcInjuries ? applyNpcInjuries(active, npcInjuries) : active;
 }

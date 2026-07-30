@@ -14,28 +14,31 @@
 ## 지금 상태
 
 ```
-main                  (최신)     Phase 1~6 + 6.5 전부 병합됨. 작업 브랜치 없음
+main                             Phase 1~6 + 6.5까지
+feat/draft            (최신)     ← Phase 7-1 드래프트. main보다 9커밋 앞섬
 feat/roster-detail               병합됨 — 삭제 무방
 fix/domestic-rosters             병합됨 — 삭제 무방
 feat/people                      병합됨 — 삭제 무방
 feat/172teams                    병합됨 — 삭제 무방
 ```
 
-**Phase 6 완료 + 로스터 디테일(Phase 6.5) 완료 — 2026-07-30 main 병합.**
+**Phase 1~6 + 6.5 완료(main) · Phase 7-1 드래프트 완료(`feat/draft`, 병합 대기).**
 
 | | 문제였던 것 | 지금 |
 |---|---|---|
-| R-1 | 고1 16세 · **졸업↔입단 1년 구멍** | 고1 17세 · 진로 전부 연결 |
-| R-2 | 투수 구종 **0종** | 2~4종 · 패스트볼 필수 · 카탈로그 대조 |
-| R-3 | OVR 선형 · **연차 무의미** | OVR+연차+예산 · **전력★ 연동**(상관 0.92) |
-| R-4 | **전원 원클럽** | 이적·FA·트레이드 이력 (원클럽 66%) |
-| R-5 | 상무에 **민간 선수** | 복무자 26명 · 계급 · 전역 분산 |
-| — | 결정성 | 이상 없었음 (같은 시드 = 완전 동일) |
+| D-1 | 지명자 400명이 **없는 팀 소속** · 신인 계약 배수도 유령 8팀 | 정본 팀 목록 |
+| D-2 | 대학 저학년·독립은 **신청조차 못 함** | 소속 유지 신청 (미지명이면 제자리) |
+| D-3a | 상한 표가 **세 곳에 각각** · FA가 캡 통과 | 규칙 파일 정본 · FA를 캡 앞으로 |
+| D-3b | 계약 없음 · 알파벳 순 지명 · 1군 직행 | 규칙 파일 계약 · 역순위 · 2군 시작 |
+| D-4a | **대졸이 대학에 재입학** · 방출자 즉시 은퇴 | 경로별 진로, 셋을 한 로직으로 |
+| D-4b | 은퇴자 슬림 보존 | 실측 4.5%뿐 → 전량 보존 (Phase 8 이관) |
+| D-5 | 한 해에 **드래프트가 두 번** · 기록도 두 벌 | 졸업 전 1회 + `lastDraftYear` 가드 |
 
-설계 정본은 [design/roster.md](design/roster.md).
+설계 정본 [design/roster.md](design/roster.md) · [design/draft.md](design/draft.md).
 
-**실행으로 눈으로 볼 것** (병합했으니 언제 봐도 된다): 팀 화면 선수 나이(고1 17세) ·
-투수 구종 표시 · 연봉 편차 · 리그 기록 탭의 과거 이적 · 상무 로스터와 선수 상세 모달.
+**실행으로 볼 것**: W47 드래프트 관전(순서가 전 시즌 역순인지) · 신인이 2군에
+들어갔는지 · 리그 기록 탭에 지명이 **한 줄씩만** 있는지 · 대학 로스터가 정원
+근처인지 · 상무에 민간 선수가 없는지.
 
 > **남은 작업 전량은 [BACKLOG.md](BACKLOG.md)에 있다.** 이 문서는 "지금 당장",
 > 그 문서는 "끝까지 뭐가 남았나"다.
@@ -61,20 +64,21 @@ feat/172teams                    병합됨 — 삭제 무방
 
 ## 다음에 할 것
 
-**Phase 7-1 — 11월 통합 드래프트 · 미지명자 진로.** 새 브랜치를 따고 시작한다.
+1. **실행 스모크** (위 항목) → `feat/draft` → `main` 병합
+2. **Phase 7-2 — 프로 진입 · 승강**
 
-### Phase 7-1 들어가기 전에 알아둘 것
+### Phase 7-2 들어가기 전에 알아둘 것
 
-- **`transactions` 테이블에 과거 이력이 이미 들어 있다** (R-4). 드래프트가 같은
-  테이블·같은 `category: "draft"`를 쓰면 과거와 미래가 한 줄로 이어진다.
-  형식은 `career_history.rs`의 `HistoryEvent`를 따르면 된다
-- **미지명자 진로가 이 단계의 본체다.** 고교 102팀 × 10명 = 매년 졸업생 약
-  1,020명인데 프로 슬롯은 100 언저리다. 나머지 900명을 흘려보내지 않으면
-  무적(無籍) 선수가 매년 900명씩 쌓인다
-- 입단 경로 비율(고졸 55 · 대졸 30 · 독립 15)이 `careerHistoryRules.entry`에 있다 —
-  **드래프트도 이 비율에 수렴해야** 과거 이력과 미래가 안 어긋난다
-- 드래프트 후보 나이 게이트는 `game.ts`에서 20~29로 고쳐뒀다 (예전엔 18 =
-  고3 나이라 재학생이 섞였다)
+- **승격이 반쪽만 있다.** 7-1이 "1군 최소 인원 미달이면 2군 상위를 끌어올린다"를
+  넣었는데 **성적을 안 본다.** 안 넣으면 1군이 팀당 24명까지 마르기 때문에 급히
+  둔 최소선이다 — 상시 콜업·월간 정기 2경로가 이걸 대체해야 한다
+  (`npc_sim.rs`의 `fill_first_teams`)
+- 로스터 상한 정본은 `rosterRules[리그].rosterMin/rosterMax`다. 1군 26~34 ·
+  2군 26~34. 승강 로직은 이 폭 안에서 움직여야 한다
+- 강등은 **팀과 리그를 같이 바꿔야 한다** (`_1`→`_2` + `LEAGUE_KBL`→`LEAGUE_KBL_FARM`).
+  팀만 바꾸면 2군 상한이 아무한테도 안 걸린다 — 그게 프로 800명의 원인이었다
+- 드래프트가 매년 110명을 2군에 넣는다. 2군 상한 34 × 10팀 = 340이므로
+  **매년 110명이 밀려나야 균형**이다. 지금은 진로 배정(독립·은퇴)이 받는다
 
 분해와 순서는 [BACKLOG.md §1](BACKLOG.md).
 
@@ -95,11 +99,14 @@ Phase 7이 남은 일의 절반 이상이다. 하위 단계로 쪼개서 커밋 
 ## 검증 명령
 
 ```bash
-npm run test:v3          # 17개 스위트 (전부 ALL PASS여야 한다)
-cd packages/engine-native && cargo test --release   # Rust 유닛 71개
+npm run test:v3          # 18개 스위트 (전부 ALL PASS여야 한다)
+cd packages/engine-native && cargo test --release   # Rust 유닛 90개
 npm run harness -- --seasons 5 --trials 2           # 불변식 위반 0
-npx tsc --noEmit         # 15개가 베이스라인. 늘면 내가 만든 것
-npx svelte-check --threshold error                  # 76 errors가 베이스라인 — main과 대조할 것
+npx tsc --noEmit         # 11개가 베이스라인. 늘면 내가 만든 것
+npx svelte-check --threshold error                  # 70 errors가 베이스라인 — main과 대조할 것
+
+npm run measure:draft    # 드래프트 5시즌 규모 실측 (테스트 아님, 숫자 확인용)
+npm run measure:slotsize # npc 행 크기 컬럼별 실측
 ```
 
 > ⚠ 테스트는 electron으로 돈다. `npx electron`은 이 환경에서 실패하니
@@ -118,6 +125,8 @@ npx svelte-check --threshold error                  # 76 errors가 베이스라�
 | [docs/BACKLOG.md](BACKLOG.md) | **남은 작업 전량** — Phase 7~9 분해 · 버그 B1~B11 실사 · 상시 부채 |
 | [docs/design/_ledger.md](design/_ledger.md) | 판정 이력 — **"버린 안과 그 이유"가 같이 적혀 있다** |
 | [docs/design/people.md](design/people.md) | 인물 시스템 설계 (Phase 6) — §6에 6A·6B·6C 확정 사항 |
+| [docs/design/roster.md](design/roster.md) | 로스터 생성 규칙 (Phase 6.5) |
+| [docs/design/draft.md](design/draft.md) | 드래프트 설계 (Phase 7-1) |
 | [docs/DATA_POLICY.md](DATA_POLICY.md) | 데이터 3분류 · 마이그레이션 규칙 · 코드 배치 규칙 |
 | [docs/AUDIT_2026-07.md](AUDIT_2026-07.md) | 현황 전수조사 · 버그 B1~B11 |
 | [CLAUDE.md](../CLAUDE.md) | 작업 규칙 |
@@ -165,14 +174,27 @@ npx svelte-check --threshold error                  # 76 errors가 베이스라�
 
 ### 이 코드베이스의 함정
 
-- **어휘 드리프트가 이 코드베이스의 1번 버그 유형이다.** 지금까지 셋 나왔고
+- **어휘 드리프트가 이 코드베이스의 1번 버그 유형이다.** 지금까지 여섯 나왔고
   전부 "저장하는 쪽과 읽는 쪽의 이름이 다른데 타입이 안 잡아준" 경우다:
   1. 감독 능력치 3중 이름 드리프트 → 매치 엔진에 **하나도 전달되지 않았다** (P6-2)
   2. `TeamHistory` v1 필드 → 팀 상세가 빈 값, 새 게임 팀 선택이 **렌더 크래시** (P6-10)
   3. 코치 `specialty` 영문 4종 vs 데이터 한국어 6종 → 비교가 3곳 전부 false라
      **투수코치 능력치가 훈련 효율에 반영되지 않았다** (6C-5)
+  4. `TEAM_SPORTS_UNIT` v1 팀 ID → 입대자가 **존재하지 않는 팀**으로 갔다 (R-5)
+  5. `draftSystem`의 팀 ID 8개 → 매년 지명자 80명이 **유령 팀 소속**이 됐고,
+     같은 유령 ID를 쓰던 신인 계약 배수는 전 구단이 1.0으로 떨어졌다 (7-1 D-1)
+  6. 로스터 상한이 규칙 파일·Rust·TS 세 곳에 **각각 다른 값**으로 (7-1 D-3a)
+  7. `militaryRank`를 TS 타입에만 넣고 Rust 구조체에 안 넣어서, NPC가 Rust를
+     통과할 때마다 계급이 **조용히 사라졌다**. `syncNpcs`가 INSERT OR REPLACE라
+     다음 저장에 DB 값까지 지워진다 (7-1 스모크에서 발견)
+  → **Rust가 안 쓰는 필드라도 `NpcSaveState`에 있어야 한다.** 없으면 왕복에서
+     버려진다. `npm run test:draft`의 "Rust 왕복 보존"이 이 부류를 지킨다.
   → 새 필드를 붙일 때 **저장·읽기·타입 세 곳의 이름이 같은지** 의심하고,
      가능하면 비교를 한 함수로 모아 테스트로 대조를 묶어라.
+  → **표를 두 번째로 적고 있다면 이미 드리프트다.** 정본을 정하고 나머지는 지운다.
+- **`cargo build`만으로는 `.node`가 안 바뀐다.** napi가 바인딩을 다시 만들어야
+  하므로 `npm run build:native`를 돌려야 한다. 안 그러면 고친 Rust가 그대로인
+  것처럼 보여 "고쳐도 안 된다"고 오진하게 된다 (7-1 D-3a에서 겪었다).
 - **Rust 규칙 구조체는 snake_case, TS와 주고받는 것은 camelCase.** TOML에서 오는
   규칙에 `rename_all = "camelCase"`를 걸면 `missing field`로 죽는다.
 - **결정적 난수는 대상마다 스트림을 분리한다.** 한 스트림으로 순차 생성하면
