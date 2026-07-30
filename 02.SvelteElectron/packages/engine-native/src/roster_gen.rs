@@ -153,10 +153,26 @@ fn league_code(league_id: &str) -> &'static str {
         "LEAGUE_UNIVERSITY"  => "UV",
         "LEAGUE_INDEPENDENT" => "IN",
         "LEAGUE_KBL"         => "KB",
+        "LEAGUE_KBL_FARM"    => "KF",
         "LEAGUE_ABL"         => "AB",
+        "LEAGUE_ABL_FARM"    => "AF",
         "LEAGUE_JBL"         => "JB",
+        "LEAGUE_JBL_FARM"    => "JF",
         _                    => "XX",
     }
+}
+
+/// npcId에 넣을 팀 식별자.
+///
+/// 예전엔 `hash_str(team_id) % 10000`이었다. 4자리(1만 버킷)에 182팀을 넣으면
+/// 생일 문제로 충돌이 사실상 확실하고, 실제로 `TEAM_UNIV_NAMGANG`과
+/// `TEAM_UNIV_SEORAK`이 같은 5898로 접혀 **ID가 통째로 겹쳤다**
+/// (`UNIQUE constraint failed: npc.npc_id`).
+///
+/// 스태프는 처음부터 `staff:{team_id}_MGR`로 팀 ID를 그대로 썼다 — 같은 방식으로
+/// 맞춘다. 팀 ID가 유일하므로 **구조적으로** 충돌이 불가능해진다.
+fn team_tag(team_id: &str) -> &str {
+    team_id.strip_prefix("TEAM_").unwrap_or(team_id)
 }
 
 fn pick<'a>(list: &'a [String], rng: &mut LcgRand) -> &'a str {
@@ -286,7 +302,7 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
 
             npcs.push(GenNpc {
                 npc_id: format!("PLY_{}{:02}_{}_{:03}",
-                    prefix, p.season_year % 100, hash_str(&team.team_id) % 10000, i + 1),
+                    prefix, p.season_year % 100, team_tag(&team.team_id), i + 1),
                 name, name_en,
                 is_named: false,
                 player_type: if is_pitcher { "pitcher".into() } else { "batter".into() },
@@ -312,4 +328,126 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
     }
 
     GenerateLeagueRosterResult { npcs }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::collections::HashSet;
+
+    fn rules(size: i32) -> RosterRules {
+        RosterRules {
+            roster_size: size,
+            pitching_ovr_min: 40.0, pitching_ovr_max: 72.0,
+            batting_ovr_min: 40.0, batting_ovr_max: 72.0,
+            dev_rate_min: 45.0, dev_rate_max: 75.0,
+            grade_max: 0, age_base: 18, age_min: 20, age_max: 32,
+            pitcher_ratio: 0.45,
+            with_contract: false,
+            nationality: None,
+        }
+    }
+
+    fn gen(league: &str, team_ids: &[&str], size: i32) -> Vec<GenNpc> {
+        generate_league_roster(GenerateLeagueRosterParams {
+            league_id: league.to_string(),
+            season_year: 2029,
+            world_seed: 4242,
+            teams: team_ids.iter().map(|t| TeamSpec {
+                team_id: t.to_string(), school_id: String::new(),
+            }).collect(),
+            rules: rules(size),
+            name_pool: None,
+            id_prefix: None,
+        }).npcs
+    }
+
+    /// **이 테스트가 없어서 `UNIQUE constraint failed: npc.npc_id`가 실사용에서 터졌다.**
+    ///
+    /// npcId가 `hash_str(team_id) % 10000`을 쓰던 시절, 4자리(1만 버킷)에 182팀을
+    /// 넣으면 생일 문제로 충돌이 사실상 확실했다. 실제로 TEAM_UNIV_NAMGANG과
+    /// TEAM_UNIV_SEORAK이 같은 5898로 접혀 두 팀 로스터 ID가 통째로 겹쳤다.
+    ///
+    /// **합성 팀명(T00~T49)으로는 안 잡힌다** — 우연히 안 겹칠 수 있다.
+    /// refs.json의 실제 팀 목록을 읽어 국내 전 팀을 한 번에 검사한다.
+    #[test]
+    fn npc_id는_국내_전_팀에서_유일하다() {
+        let refs_src = std::fs::read_to_string(concat!(
+            env!("CARGO_MANIFEST_DIR"), "/../../resource/data/master/entities/refs.json"
+        )).expect("refs.json 없음");
+        let refs: serde_json::Value = serde_json::from_str(&refs_src).expect("refs.json 파싱 실패");
+        let teams = refs["teams"].as_array().expect("teams 배열 없음");
+
+        let pick = |pred: &dyn Fn(&str, &str) -> bool| -> Vec<String> {
+            teams.iter().filter_map(|t| {
+                let id = t["id"].as_str()?;
+                let lid = t["leagueId"].as_str()?;
+                if pred(id, lid) { Some(id.to_string()) } else { None }
+            }).collect()
+        };
+
+        let plan: Vec<(&str, Vec<String>, i32)> = vec![
+            ("LEAGUE_HIGHSCHOOL",  pick(&|_, l| l == "LEAGUE_HIGHSCHOOL"), 30),
+            ("LEAGUE_UNIVERSITY",  pick(&|_, l| l == "LEAGUE_UNIVERSITY"), 32),
+            ("LEAGUE_INDEPENDENT", pick(&|_, l| l == "LEAGUE_INDEPENDENT"), 30),
+            ("LEAGUE_KBL",         pick(&|i, l| l == "LEAGUE_KBL" && i.ends_with("_1")), 30),
+            ("LEAGUE_KBL_FARM",    pick(&|i, l| l == "LEAGUE_KBL" && i.ends_with("_2")), 34),
+        ];
+
+        let mut seen: HashSet<String> = HashSet::new();
+        let mut dups: Vec<String> = Vec::new();
+        let mut total = 0usize;
+        let mut team_count = 0usize;
+        for (lid, ids, size) in &plan {
+            assert!(!ids.is_empty(), "{lid} 팀이 refs에 없다");
+            team_count += ids.len();
+            let refs_v: Vec<&str> = ids.iter().map(|s| s.as_str()).collect();
+            let npcs = gen(lid, &refs_v, *size);
+            total += npcs.len();
+            for n in &npcs {
+                if !seen.insert(n.npc_id.clone()) { dups.push(n.npc_id.clone()); }
+            }
+        }
+        assert!(dups.is_empty(),
+            "국내 {team_count}팀 {total}명 중 npcId 중복 {}건 (예: {:?})",
+            dups.len(), &dups[..dups.len().min(3)]);
+        assert_eq!(seen.len(), total);
+    }
+
+    /// 이름이 비슷한 팀은 해시가 겹치기 쉬웠다 — 팀 ID를 그대로 쓰면 구조적으로 불가능하다
+    #[test]
+    fn 같은_리그_다른_팀은_id가_안_겹친다() {
+        let npcs = gen("LEAGUE_UNIVERSITY", &["TEAM_UNIV_NAMGANG", "TEAM_UNIV_SEORAK"], 32);
+        let a: HashSet<_> = npcs.iter().filter(|n| n.current_team == "TEAM_UNIV_NAMGANG")
+            .map(|n| n.npc_id.clone()).collect();
+        let b: HashSet<_> = npcs.iter().filter(|n| n.current_team == "TEAM_UNIV_SEORAK")
+            .map(|n| n.npc_id.clone()).collect();
+        assert!(!a.is_empty() && !b.is_empty());
+        assert!(a.is_disjoint(&b), "두 팀의 npcId가 겹친다: {:?}", a.intersection(&b).next());
+    }
+
+    /// 1군/2군은 팀 ID 접미사(_1/_2)만 다르다 — 그것만으로 갈려야 한다
+    #[test]
+    fn 팜팀과_1군은_id가_안_겹친다() {
+        let first = gen("LEAGUE_KBL", &["TEAM_KBL_SEOUL_1"], 30);
+        let farm  = gen("LEAGUE_KBL_FARM", &["TEAM_KBL_SEOUL_2"], 34);
+        let a: HashSet<_> = first.iter().map(|n| n.npc_id.clone()).collect();
+        let b: HashSet<_> = farm.iter().map(|n| n.npc_id.clone()).collect();
+        assert!(a.is_disjoint(&b));
+        // 팜 리그가 league_code에 없으면 "XX"로 떨어진다 — 접두사도 확인한다
+        assert!(farm[0].npc_id.starts_with("PLY_KF"), "팜 접두사가 틀렸다: {}", farm[0].npc_id);
+    }
+
+    /// 야수 8포지션에 백업까지 있어야 한다 (한 명이 다치면 자리가 비지 않게)
+    #[test]
+    fn 야수_8포지션에_백업이_있다() {
+        const FIELD: [&str; 8] = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF"];
+        for size in [30, 32, 34] {
+            let npcs = gen("LEAGUE_KBL", &["TEAM_KBL_A"], size);
+            for pos in FIELD {
+                let n = npcs.iter().filter(|x| x.position == pos).count();
+                assert!(n >= 2, "로스터 {size}명인데 {pos}가 {n}명 — 백업이 없다");
+            }
+        }
+    }
 }
