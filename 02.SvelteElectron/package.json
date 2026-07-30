@@ -39,6 +39,8 @@
     "postinstall": "electron-rebuild -f -w better-sqlite3",
     "test:slotdb": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-slotdb.cjs",
     "test:rostergen": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-roster-gen.cjs",
+    "measure:draft": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-draft.cjs",
+    "measure:slotsize": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-slotsize.cjs",
     "test:newgame": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-newgame-v3.cjs",
     "test:regional": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-regional-schedule.cjs",
     "test:tournament": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-tournament.cjs",

@@ -115,14 +115,18 @@ export interface DraftCandidatesResult {
  * 예전엔 후보가 졸업생(`pendingDraft`)뿐이었다. 이제 **전체 NPC를 넘긴다** —
  * 대학 재학생과 독립리그 선수가 소속을 유지한 채 신청할 수 있어야 하는데,
  * 졸업생만 담긴 배열에는 그 사람들이 애초에 없다.
+ *
+ * 드래프트는 **졸업 전(11월)** 이라 고3·대4는 재학 상태로 후보에 든다.
+ * 저학년은 나이가 아니라 학년 게이트가 막는다 — 고2도 19세일 수 있다.
  */
 export async function selectDraftCandidates(
   npcs: NpcSaveState[],
   draftRules: unknown,
   universityGradeMax = 4,
+  highschoolGradeMax = 3,
 ): Promise<DraftCandidatesResult> {
   const json = await window.projectB!.engine("selectDraftCandidatesNative", JSON.stringify({
-    npcs, rules: draftRules, universityGradeMax,
+    npcs, rules: draftRules, universityGradeMax, highschoolGradeMax,
   }));
   return parseResult<DraftCandidatesResult>(json);
 }

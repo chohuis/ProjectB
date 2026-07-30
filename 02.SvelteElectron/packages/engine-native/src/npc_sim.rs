@@ -896,7 +896,13 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     // **미지명 졸업생과 같은 로직을 탄다** (`draft::Placer`). 따로 짜면 셋 중
     // 하나가 반드시 어긋난다. 예전엔 이들이 전부 "은퇴"로 처리돼
     // 22세 신인이 방출 한 번에 은퇴하고 있었다.
+    let mut leftover_pending = Vec::new();
     if can_place {
+        // 졸업했는데 지명을 못 받은 사람도 같이 처리한다. 드래프트는 졸업 전(W47)에
+        // 끝나므로, 여기 남아 있다는 건 미지명이라는 뜻이다
+        let grad_start = after_normalize.len();
+        after_normalize.extend(params.pending_draft.iter().cloned());
+
         let rules = params.placement.clone().unwrap_or(crate::draft::PlacementRules {
             university_max: 40, independent_max: 45, independent_age_max: 31,
         });
@@ -904,25 +910,37 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
             &after_normalize, &params.university_team_ids, &params.independent_team_ids, rules,
         );
         let homeless: Vec<usize> = after_normalize.iter().enumerate()
-            .filter(|(_, n)| n.career_status == "active" && n.current_team.is_empty()
-                && n.current_league != "LEAGUE_DRAFT_POOL")
+            .filter(|(i, n)| n.career_status == "active"
+                && (n.current_team.is_empty()
+                    || n.current_league == crate::draft::DRAFT_POOL_LEAGUE
+                    || *i >= grad_start))
             .map(|(i, _)| i)
             .collect();
+
         let mut quit = 0usize;
         for idx in homeless {
-            // 프로를 거친 사람은 대학에 못 간다 — 학적 역행
-            placer.place(&mut after_normalize[idx], season_year, "release", "방출", false);
+            // **대학은 고교 졸업자만.** 프로·대학을 거친 사람의 대학 입학은 학적 역행이다
+            let from_hs = after_normalize[idx].career_history.last()
+                .is_some_and(|e| e.league_id == "LEAGUE_HIGHSCHOOL");
+            let (event, reason) = if from_hs || idx >= grad_start {
+                ("draft_undrafted", "미지명")
+            } else {
+                ("release", "방출")
+            };
+            placer.place(&mut after_normalize[idx], season_year, event, reason, from_hs);
             if after_normalize[idx].career_status == "retired" { quit += 1; }
         }
         if quit > 0 {
             summary.retired_count += quit as i32;
-            logs.push(format!("방출 후 갈 팀을 못 찾아 은퇴 {quit}명"));
+            logs.push(format!("갈 팀을 못 찾아 야구를 그만둔 선수 {quit}명"));
         }
+    } else {
+        leftover_pending = params.pending_draft;
     }
 
     OffseasonOutput {
         npcs: after_normalize,
-        pending_draft: [params.pending_draft, new_pending].concat(),
+        pending_draft: [leftover_pending, new_pending].concat(),
         summary,
         logs,
     }

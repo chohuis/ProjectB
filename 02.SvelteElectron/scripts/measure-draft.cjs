@@ -133,104 +133,94 @@ const ROSTER_LIMITS = Object.fromEntries(
     .map(([lid, r]) => [lid, { rosterMin: r.rosterMin, rosterMax: r.rosterMax }]),
 );
 
-function runSeason(npcs, year, kblTeams, rounds, excludeSangmu, useEarlyEntry, useLimits) {
-  // 시즌 종료 오프시즌 — 은퇴 판정 + 로스터 상한. useLimits=false면 D-3a 이전
-  // (Rust 하드코딩 표: KBL 상한 65가 1군+2군 합산에 걸린다)
-  const univIds0 = refs.teams.filter((t) => t.leagueId === "LEAGUE_UNIVERSITY" && t.id !== SANGMU_TEAM_ID).map((t) => t.id);
-  const indIds0 = refs.teams.filter((t) => t.leagueId === "LEAGUE_INDEPENDENT" && t.id !== SANGMU_TEAM_ID).map((t) => t.id);
-  const off = call("runOffseasonNative", {
-    npcs, pendingDraft: [], seasonYear: year, namedNpcIds: [],
-    salaryRules: gr.salaryRules,
-    rosterLimits: useLimits ? ROSTER_LIMITS : {},
-    ...(useLimits ? {
-      universityTeamIds: univIds0, independentTeamIds: indIds0, placement: PLACEMENT,
-    } : {}),
+// 상무는 진로 배정 대상이 아니다 — draftSystem.draftDestinationTeams와 같은 규칙
+const DEST_UNIV = refs.teams
+  .filter((t) => t.leagueId === "LEAGUE_UNIVERSITY" && t.id !== SANGMU_TEAM_ID).map((t) => t.id);
+const DEST_IND = refs.teams
+  .filter((t) => t.leagueId === "LEAGUE_INDEPENDENT" && t.id !== SANGMU_TEAM_ID).map((t) => t.id);
+
+/**
+ * 한 시즌. **실제 게임 순서를 그대로 따른다** —
+ * W47 드래프트(졸업 전) → 시즌 종료 졸업 → 오프시즌(캡·FA·진로배정) → W1 신입생.
+ */
+function runSeason(npcs, year, kblTeams) {
+  // ── W47: 드래프트 ────────────────────────────────────────────
+  const sel = call("selectDraftCandidatesNative", {
+    npcs, rules: gr.draftRules,
+    universityGradeMax: gr.rosterRules.LEAGUE_UNIVERSITY.gradeMax,
+    highschoolGradeMax: gr.rosterRules.LEAGUE_HIGHSCHOOL.gradeMax,
   });
-  npcs = off.npcs;
-
-  const g = call("advanceAllGradesNative", { npcs, seasonYear: year });
-  const pool = [...g.hsGraduated, ...g.univGraduated];
-  const aged = call("advanceAllAgesNative", { npcs: [...g.updated, ...pool] });
-
-  const poolIds = new Set(pool.map((n) => n.npcId));
-  let candidates, counts = [0, 0, 0, 0], routeOf = new Map();
-  if (useEarlyEntry) {
-    // D-2 이후: 졸업생 + 소속 유지 신청자(대학 재학·독립)
-    const sel = call("selectDraftCandidatesNative", {
-      npcs: aged, rules: gr.draftRules,
-      universityGradeMax: gr.rosterRules.LEAGUE_UNIVERSITY.gradeMax,
-    });
-    counts = sel.counts;
-    routeOf = new Map(sel.candidates.map((c) => [c.npcId, c.route]));
-    const byId = new Map(aged.map((n) => [n.npcId, n]));
-    candidates = sel.candidates.map((c) => byId.get(c.npcId)).filter(Boolean);
-  } else {
-    candidates = aged.filter((n) => poolIds.has(n.npcId));
-    counts = [g.hsGraduated.length, g.univGraduated.length, 0, 0];
-  }
+  const byId = new Map(npcs.map((n) => [n.npcId, n]));
+  const candidates = sel.candidates.map((c) => byId.get(c.npcId)).filter(Boolean);
+  const routeOf = new Map(sel.candidates.map((c) => [c.npcId, c.route]));
 
   const sim = call("runDraftNative", {
-    candidates, namedMetas: [], year, rounds, teamIds: kblTeams,
+    candidates, namedMetas: [], year, rounds: gr.draftRules.rounds, teamIds: kblTeams,
   });
 
-  if (useLimits) {
-    // 신인 계약이 실제로 붙는지 — 상위/하위 지명을 한 줄씩 남긴다
-    const first = sim.picks[0], last = sim.picks[sim.picks.length - 1];
-    if (first && year === START_YEAR) {
-      const c = gr.draftRules.contract;
-      const pick = (p) => {
-        const row = c.byPick.find((r) => p.pick <= r.untilPick) ?? c.byPick[c.byPick.length - 1];
-        const idx = Math.min(c.teamIndexMax, Math.max(c.teamIndexMin, TEAM_INDEX[p.teamId] ?? 1));
-        return `${p.round}R-${p.pick} 연봉 ${row.salary}만 · 계약금 ${Math.round(row.bonus * idx / 100) * 100}만`;
-      };
-      console.log(`  신인 계약 표본: ${pick(first)} / ${pick(last)}`);
-    }
+  if (year === START_YEAR && sim.picks.length > 0) {
+    const c = gr.draftRules.contract;
+    const fmt = (p) => {
+      const row = c.byPick.find((r) => p.pick <= r.untilPick) ?? c.byPick[c.byPick.length - 1];
+      const idx = Math.min(c.teamIndexMax, Math.max(c.teamIndexMin, TEAM_INDEX[p.teamId] ?? 1));
+      return `${p.round}R-${p.pick} 연봉 ${row.salary}만 · 계약금 ${Math.round(row.bonus * idx / 100) * 100}만`;
+    };
+    console.log(`  신인 계약 표본: ${fmt(sim.picks[0])} / ${fmt(sim.picks[sim.picks.length - 1])}`);
   }
 
-  // draftDestinationTeams()와 같은 규칙. excludeSangmu=false면 D-1 이전 동작
-  // (상무가 독립리그 소속이라 리그로만 거르면 그대로 들어간다)
-  const keep = (t) => excludeSangmu ? t.id !== SANGMU_TEAM_ID : t.id !== "TEAM_SPORTS_UNIT";
-  const univIds = refs.teams.filter((t) => t.leagueId === "LEAGUE_UNIVERSITY" && keep(t)).map((t) => t.id);
-  const indIds = refs.teams.filter((t) => t.leagueId === "LEAGUE_INDEPENDENT" && keep(t)).map((t) => t.id);
-
-  const after = call("applyDraftNative", {
-    npcs: aged, result: sim, universityTeamIds: univIds, independentTeamIds: indIds,
-    ...(useLimits ? {
-      contract: gr.draftRules.contract,
-      rookieToFarm: gr.draftRules.rookieToFarm,
-      teamIndex: TEAM_INDEX,
-      placement: PLACEMENT,
-    } : {}),
+  npcs = call("applyDraftNative", {
+    npcs, result: sim, universityTeamIds: DEST_UNIV, independentTeamIds: DEST_IND,
+    contract: gr.draftRules.contract,
+    rookieToFarm: gr.draftRules.rookieToFarm,
+    teamIndex: TEAM_INDEX,
+    placement: PLACEMENT,
   });
 
-  // 다음 시즌 W1 — 고교 신입생 입학
-  const fresh = generateFreshmen(after, year + 1);
+  // ── 시즌 종료: 졸업 → 나이 +1 ────────────────────────────────
+  const g = call("advanceAllGradesNative", { npcs, seasonYear: year });
+  const pending = [...g.hsGraduated, ...g.univGraduated];   // 미지명 졸업생
+  const aged = call("advanceAllAgesNative", { npcs: [...g.updated, ...pending] });
+  const pendingIds = new Set(pending.map((n) => n.npcId));
+
+  // ── 오프시즌: 은퇴·캡·FA·진로배정 ────────────────────────────
+  const off = call("runOffseasonNative", {
+    npcs: aged.filter((n) => !pendingIds.has(n.npcId)),
+    pendingDraft: aged.filter((n) => pendingIds.has(n.npcId)),
+    seasonYear: year, namedNpcIds: [],
+    salaryRules: gr.salaryRules, rosterLimits: ROSTER_LIMITS,
+    universityTeamIds: DEST_UNIV, independentTeamIds: DEST_IND, placement: PLACEMENT,
+  });
+
+  // ── 다음 시즌 W1: 고교 신입생 ────────────────────────────────
+  const fresh = generateFreshmen(off.npcs, year + 1);
 
   return {
-    after: [...after, ...fresh], fresh: fresh.length, counts,
+    after: [...off.npcs, ...fresh], fresh: fresh.length, counts: sel.counts,
     nCand: candidates.length,
     earlyPicked: sim.picks.filter((p) => {
       const r = routeOf.get(p.npcId);
       return r === "universityEarly" || r === "independent";
     }).length,
-    hsGrad: g.hsGraduated.length, univGrad: g.univGraduated.length, sim, poolIds,
+    leftoverPending: off.pendingDraft.length,
+    sim, poolIds: pendingIds,
   };
 }
 
 // ── 측정 ───────────────────────────────────────────────────────
-function measure(label, kblTeams, rounds, excludeSangmu, useEarlyEntry, useLimits) {
+function measure(label, kblTeams) {
   let npcs = buildWorld();
   const t0 = Date.now();
-  console.log(`\n══ ${label} (KBL ${kblTeams.length}팀 × ${rounds}라운드) ══`);
+  console.log(`\n══ ${label} (KBL ${kblTeams.length}팀 × ${gr.draftRules.rounds}라운드) ══`);
   console.log(`시작 인원 ${npcs.length}명`);
 
   const rows = [];
   for (let i = 0; i < SEASONS; i++) {
     const year = START_YEAR + i;
     const before = npcs.length;
-    const r = runSeason(npcs, year, kblTeams, rounds, excludeSangmu, useEarlyEntry, useLimits);
+    const r = runSeason(npcs, year, kblTeams);
     npcs = r.after;
 
+    // 미지명 졸업생이 어디로 갔나
     const moved = new Map();
     for (const id of r.poolIds) {
       const n = npcs.find((x) => x.npcId === id);
@@ -238,24 +228,21 @@ function measure(label, kblTeams, rounds, excludeSangmu, useEarlyEntry, useLimit
     }
     rows.push({
       year, before, fresh: r.fresh, counts: r.counts, nCand: r.nCand, early: r.earlyPicked,
-      pool: r.poolIds.size, hs: r.hsGrad, univ: r.univGrad,
-      drafted: r.sim.picks.length,
-      toKbl: moved.get("LEAGUE_KBL") ?? 0,
+      drafted: r.sim.picks.length, leftover: r.leftoverPending,
       toUniv: moved.get("LEAGUE_UNIVERSITY") ?? 0,
       toInd: moved.get("LEAGUE_INDEPENDENT") ?? 0,
       retired: moved.get("LEAGUE_RETIRED") ?? 0,
-      stuck: moved.get("LEAGUE_DRAFT_POOL") ?? 0,
     });
   }
 
-  console.log("연도   후보 (고졸/대졸/대학재학/독립)  지명(얼리)  →대학  →독립  은퇴  신입생");
+  console.log("연도   후보 (고졸/대졸/대학재학/독립)  지명(얼리)  미지명→대학  →독립  포기  신입생");
   for (const r of rows) {
     const c = r.counts;
     console.log(
       `${r.year}  ${String(r.nCand).padStart(5)} (${String(c[0]).padStart(4)}/${String(c[1]).padStart(3)}` +
       `/${String(c[2]).padStart(4)}/${String(c[3]).padStart(3)})` +
       `  ${String(r.drafted).padStart(6)}(${String(r.early).padStart(2)})` +
-      `  ${String(r.toUniv).padStart(5)}  ${String(r.toInd).padStart(5)}` +
+      `  ${String(r.toUniv).padStart(9)}  ${String(r.toInd).padStart(5)}` +
       `  ${String(r.retired).padStart(4)}  ${String(r.fresh).padStart(6)}`
     );
   }
@@ -311,5 +298,6 @@ function measure(label, kblTeams, rounds, excludeSangmu, useEarlyEntry, useLimit
   return npcs;
 }
 
-measure("D-2 — 상한이 Rust 하드코딩 (KBL 65)", REAL_KBL, gr.draftRules.rounds, true, true, false);
-measure("D-4a — 진로 배정 일원화 (미지명·방출·FA 미계약)", REAL_KBL, gr.draftRules.rounds, true, true, true);
+// 옛 동작(유령 팀·상한 하드코딩·졸업생만)과의 대조는 각 커밋 메시지에 숫자로 남아 있다.
+// Rust가 바뀐 뒤라 여기서 재현할 수 없다 — 실측은 **지금 코드**를 재는 것이다.
+measure("현행 파이프라인", REAL_KBL);

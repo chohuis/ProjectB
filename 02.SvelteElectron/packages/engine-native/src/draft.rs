@@ -144,9 +144,13 @@ pub struct SelectCandidatesParams {
     /// 대학 졸업 학년 (rosterRules.LEAGUE_UNIVERSITY.gradeMax)
     #[serde(default = "default_univ_grade_max")]
     pub university_grade_max: u8,
+    /// 고교 졸업 학년 (rosterRules.LEAGUE_HIGHSCHOOL.gradeMax)
+    #[serde(default = "default_hs_grade_max")]
+    pub highschool_grade_max: u8,
 }
 
 fn default_univ_grade_max() -> u8 { 4 }
+fn default_hs_grade_max() -> u8 { 3 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -157,32 +161,41 @@ pub struct SelectCandidatesResult {
 }
 
 /// 이 선수가 드래프트를 신청할 수 있는 경로. 자격이 없으면 None
-fn route_of(npc: &NpcSaveState, rules: &DraftRules, univ_grade_max: u8) -> Option<DraftRoute> {
+fn route_of(npc: &NpcSaveState, rules: &DraftRules, p: &SelectCandidatesParams) -> Option<DraftRoute> {
     // 복무 중·은퇴자는 후보가 아니다. 상무가 독립리그 소속이라
     // 리그로만 거르면 복무자가 드래프트에 나온다
     if npc.career_status != "active" { return None; }
     if npc.age < rules.age_min || npc.age > rules.age_max { return None; }
 
     match npc.current_league.as_str() {
-        DRAFT_POOL_LEAGUE => {
-            // 소속이 사라진 사람. **마지막 경력 기록의 리그**로 고졸/대졸을 가른다 —
-            // `advance_all_grades`가 풀로 보내기 직전에 그 해 기록을 남긴다.
-            // school_id로는 못 가른다: 고교 팀도 대학 팀도 refs에 schoolId가 있다
-            let last = npc.career_history.last().map(|e| e.league_id.as_str());
-            Some(match last {
-                Some("LEAGUE_UNIVERSITY") => DraftRoute::UniversityGraduate,
-                _ => DraftRoute::HighschoolGraduate,
-            })
-        }
+        // **졸업 예정자.** 드래프트는 졸업 전(11월)에 한다 — 실제 KBO도 그렇고,
+        // 그래야 관전 화면(W47)과 실제 지명이 같은 명단을 본다.
+        // 저학년은 학년 게이트로 막힌다 (나이 게이트만으로는 못 막는다)
+        "LEAGUE_HIGHSCHOOL" => (npc.grade? >= p.highschool_grade_max)
+            .then_some(DraftRoute::HighschoolGraduate),
+
         "LEAGUE_UNIVERSITY" => {
             let grade = npc.grade?;
-            if grade >= univ_grade_max { return None; }  // 졸업반은 졸업 경로로 온다
+            if grade >= p.university_grade_max {
+                return Some(DraftRoute::UniversityGraduate);
+            }
             let min = *rules.early_entry.university_by_grade.get(grade.saturating_sub(1) as usize)?;
             (npc_core_ovr(npc) >= min).then_some(DraftRoute::UniversityEarly)
         }
+
         "LEAGUE_INDEPENDENT" => {
             (npc_core_ovr(npc) >= rules.early_entry.independent).then_some(DraftRoute::Independent)
         }
+
+        // 이미 졸업해 소속이 사라진 사람 (구 세이브·시즌 종료 후 재실행 경로).
+        // **마지막 경력 기록의 리그**로 고졸/대졸을 가른다 — school_id로는 못 가른다:
+        // 고교 팀도 대학 팀도 refs에 schoolId가 있다
+        DRAFT_POOL_LEAGUE => Some(
+            match npc.career_history.last().map(|e| e.league_id.as_str()) {
+                Some("LEAGUE_UNIVERSITY") => DraftRoute::UniversityGraduate,
+                _ => DraftRoute::HighschoolGraduate,
+            }
+        ),
         _ => None,
     }
 }
@@ -192,7 +205,7 @@ pub fn select_candidates(params: SelectCandidatesParams) -> SelectCandidatesResu
     let mut counts = [0usize; 4];
 
     for npc in &params.npcs {
-        let Some(route) = route_of(npc, &params.rules, params.university_grade_max) else { continue };
+        let Some(route) = route_of(npc, &params.rules, &params) else { continue };
         counts[route as usize] += 1;
         candidates.push(DraftCandidate {
             npc_id: npc.npc_id.clone(),
@@ -402,7 +415,9 @@ mod tests {
     }
 
     fn select(npcs: Vec<NpcSaveState>) -> SelectCandidatesResult {
-        select_candidates(SelectCandidatesParams { npcs, rules: rules(), university_grade_max: 4 })
+        select_candidates(SelectCandidatesParams {
+            npcs, rules: rules(), university_grade_max: 4, highschool_grade_max: 3,
+        })
     }
 
     #[test]
@@ -416,11 +431,18 @@ mod tests {
     }
 
     #[test]
-    fn 대학_졸업반은_재학_경로로_중복되지_않는다() {
-        // grade 4는 advance_all_grades가 이미 졸업시켜 풀로 보낸다.
-        // 여기서 또 잡으면 같은 사람이 후보에 두 번 들어간다
-        let r = select(vec![npc("A", "LEAGUE_UNIVERSITY", Some(4), 90.0, 23)]);
-        assert_eq!(r.candidates.len(), 0);
+    fn 후보는_중복되지_않는다() {
+        // 한 사람이 졸업 경로와 얼리 경로에 동시에 들어가면 드래프트에 두 번 나온다
+        let r = select(vec![
+            npc("G3", "LEAGUE_HIGHSCHOOL", Some(3), 70.0, 19),
+            npc("U4", "LEAGUE_UNIVERSITY", Some(4), 70.0, 23),
+            npc("U2", "LEAGUE_UNIVERSITY", Some(2), 90.0, 21),
+            npc("IN", "LEAGUE_INDEPENDENT", None, 90.0, 24),
+        ]);
+        let ids: std::collections::HashSet<&str> =
+            r.candidates.iter().map(|c| c.npc_id.as_str()).collect();
+        assert_eq!(ids.len(), r.candidates.len(), "같은 선수가 두 번 들어갔다");
+        assert_eq!(r.candidates.len(), 4);
     }
 
     #[test]
@@ -461,13 +483,21 @@ mod tests {
     }
 
     #[test]
-    fn 나이_게이트가_고교_재학생을_막는다() {
-        let rl = rules();
-        // 고3이 19세다 (design/roster.md §1). 게이트 하한이 그보다 높아야
-        // 재학생이 안 섞인다
-        assert!(rl.age_min > 19, "age_min {} 이면 고3이 후보가 된다", rl.age_min);
-        let young = npc("Y", DRAFT_POOL_LEAGUE, None, 90.0, rl.age_min - 1);
-        assert_eq!(select(vec![young]).candidates.len(), 0);
+    fn 고교는_졸업반만_후보다() {
+        // 드래프트는 졸업 전(11월)이라 고3(19세)이 후보다.
+        // 저학년은 나이가 아니라 **학년**이 막는다 — 고2도 19세일 수 있다
+        let g3 = npc("G3", "LEAGUE_HIGHSCHOOL", Some(3), 70.0, 19);
+        let g2 = npc("G2", "LEAGUE_HIGHSCHOOL", Some(2), 90.0, 19);
+        let r = select(vec![g3, g2]);
+        assert_eq!(r.candidates.len(), 1, "고2가 후보에 섞였다");
+        assert_eq!(r.candidates[0].npc_id, "G3");
+    }
+
+    #[test]
+    fn 대학_졸업반은_졸업_경로로_후보가_된다() {
+        // 드래프트가 졸업 전이므로 대4는 재학 상태로 후보에 든다
+        let r = select(vec![npc("A", "LEAGUE_UNIVERSITY", Some(4), 60.0, 23)]);
+        assert_eq!(r.counts[DraftRoute::UniversityGraduate as usize], 1);
     }
 
     #[test]
