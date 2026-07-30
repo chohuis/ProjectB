@@ -1,72 +1,6 @@
 {
   "version": 2,
-  "description": "player generation baseline rules",
-  "ageRangeByStage": {
-    "highschool": [
-      16,
-      18
-    ],
-    "university": [
-      19,
-      22
-    ],
-    "independent": [
-      19,
-      30
-    ],
-    "kbo": [
-      18,
-      38
-    ],
-    "mlb": [
-      18,
-      42
-    ]
-  },
-  "overallRangeByStage": {
-    "highschool": [
-      45,
-      70
-    ],
-    "university": [
-      52,
-      76
-    ],
-    "independent": [
-      50,
-      74
-    ],
-    "kbo": [
-      58,
-      90
-    ],
-    "mlb": [
-      62,
-      94
-    ]
-  },
-  "potentialRangeByStage": {
-    "highschool": [
-      60,
-      95
-    ],
-    "university": [
-      58,
-      92
-    ],
-    "independent": [
-      54,
-      86
-    ],
-    "kbo": [
-      56,
-      90
-    ],
-    "mlb": [
-      58,
-      92
-    ]
-  },
+  "description": "player generation baseline rules | 구 ageRangeByStage/overallRangeByStage/potentialRangeByStage는 2026-07-30에 제거했다 — 아무도 안 읽는데 옛 나이(고교 16~18)가 박혀 있어 참고하면 틀린다. 정본은 rosterRules다.",
   "rosterRules": {
     "LEAGUE_HIGHSCHOOL": {
       "rosterSize": 30,
@@ -77,7 +11,7 @@
       "devRateMin": 45,
       "devRateMax": 75,
       "gradeMax": 3,
-      "ageBase": 15
+      "ageBase": 16
     },
     "LEAGUE_UNIVERSITY": {
       "rosterSize": 32,
@@ -88,7 +22,7 @@
       "devRateMin": 45,
       "devRateMax": 72,
       "gradeMax": 4,
-      "ageBase": 18
+      "ageBase": 19
     },
     "LEAGUE_INDEPENDENT": {
       "rosterSize": 30,
@@ -98,8 +32,8 @@
       "battingOvrMax": 74,
       "devRateMin": 40,
       "devRateMax": 70,
-      "ageMin": 19,
-      "ageMax": 30,
+      "ageMin": 20,
+      "ageMax": 31,
       "withContract": true
     },
     "LEAGUE_KBL": {
@@ -111,7 +45,7 @@
       "devRateMin": 40,
       "devRateMax": 70,
       "ageMin": 20,
-      "ageMax": 36,
+      "ageMax": 37,
       "withContract": true
     },
     "LEAGUE_KBL_FARM": {
@@ -122,8 +56,8 @@
       "battingOvrMax": 76,
       "devRateMin": 50,
       "devRateMax": 80,
-      "ageMin": 19,
-      "ageMax": 28,
+      "ageMin": 20,
+      "ageMax": 29,
       "withContract": true
     },
     "LEAGUE_ABL": {
@@ -152,5 +86,159 @@
       "withContract": true,
       "nationality": "JPN"
     }
+  },
+  "salaryRules": {
+    "_comment": "연봉 = base(OVR) x 연차계수 x 나이보정 x 팀지수 x 리그배수, 리그별 최저연봉으로 바닥. 단위 만원",
+    "ovrPivot": 50,
+    "ovrGrowth": 1.1,
+    "ovrBase": 3000,
+    "service": [
+      {
+        "until": 2,
+        "factor": 0.4,
+        "_note": "신인·저연차 — 구단이 정한다"
+      },
+      {
+        "until": 6,
+        "factor": 0.7,
+        "_note": "연봉조정 신청 전"
+      },
+      {
+        "until": 11,
+        "factor": 1,
+        "_note": "FA 자격권"
+      },
+      {
+        "until": 99,
+        "factor": 1.1,
+        "_note": "베테랑 프리미엄"
+      }
+    ],
+    "agingFromAge": 34,
+    "agingPerYear": 0.06,
+    "teamIndexMin": 0.8,
+    "teamIndexMax": 1.35,
+    "jitter": 0.1,
+    "leagueMult": {
+      "LEAGUE_KBL": 1,
+      "LEAGUE_KBL_FARM": 0.3,
+      "LEAGUE_INDEPENDENT": 0.14,
+      "LEAGUE_ABL": 3.5,
+      "LEAGUE_JBL": 2
+    },
+    "minSalary": {
+      "LEAGUE_KBL": 3000,
+      "LEAGUE_KBL_FARM": 3000,
+      "LEAGUE_INDEPENDENT": 1200,
+      "LEAGUE_ABL": 8000,
+      "LEAGUE_JBL": 6000
+    }
+  },
+  "powerRules": {
+    "_comment": "팀 전력★(1~5) → 로스터 OVR 보정. 중심을 ★3에 두고 한 단계당 shift만큼 민다. 스태프 생성(staff_rules.toml [power_bonus])과 같은 축이다",
+    "pivot": 3,
+    "ovrShiftPerStar": 3.5,
+    "_note": "★5면 +7, ★1이면 -7. 리그 OVR 폭(고교 32 / 프로 30)의 절반 남짓 — 명문과 약팀이 갈리되 하위팀도 특급 유망주는 나올 수 있다"
+  },
+  "careerHistoryRules": {
+    "_comment": "새 게임 시점의 과거 경력을 만든다. 결정적(worldSeed+npcId) — 같은 세계를 다시 열면 같은 이력",
+    "movePerYear": 0.09,
+    "_movePerYearNote": "연차당 이적 확률. 사용자 확정 중간 — 12년차 기준 원클럽 약 32%",
+    "faEligibleYears": 8,
+    "_faNote": "FA 자격 연차. 그 전엔 FA 이적이 안 나온다",
+    "reasonWeights": {
+      "fa": 45,
+      "trade": 40,
+      "release": 15
+    },
+    "entry": {
+      "hsAge": 20,
+      "univAge": 24,
+      "_ageNote": "입단 나이 = 현재 나이 - 연차. 20이면 고졸, 24면 대졸, 그 외는 독립/육성",
+      "roundWeights": [
+        {
+          "round": 1,
+          "weight": 8
+        },
+        {
+          "round": 2,
+          "weight": 12
+        },
+        {
+          "round": 3,
+          "weight": 16
+        },
+        {
+          "round": 4,
+          "weight": 18
+        },
+        {
+          "round": 5,
+          "weight": 16
+        },
+        {
+          "round": 6,
+          "weight": 12
+        },
+        {
+          "round": 7,
+          "weight": 10
+        },
+        {
+          "round": 8,
+          "weight": 8
+        }
+      ],
+      "undraftedPct": 18,
+      "_undraftedNote": "미지명(육성선수) 비율. 이들은 지명 라운드가 없다",
+      "routeWeights": {
+        "hs": 55,
+        "univ": 30,
+        "indie": 15
+      },
+      "_routeNote": "입단 경로 비율. KBO는 고졸 입단이 가장 많다. 로스터 생성이 이 비율로 경로를 뽑고 연차를 역산한다 — 그래야 나이·연차·출신이 한 번에 맞는다",
+      "indieAgeMin": 25,
+      "indieAgeMax": 27
+    },
+    "faIntervalYears": 4,
+    "_faIntervalNote": "FA 재취득 주기. 없으면 FA 이적이 연속으로 나온다"
+  },
+  "militaryRules": {
+    "_comment": "군경팀(상무) 로스터. 별도 생성하고 원소속만 실재 프로/2군 팀으로 지정한다 — 원팀 로스터를 빼내면 8포지션 백업 보장이 깨진다",
+    "teamId": "TEAM_IND_SANGMU_PHOENIX",
+    "leagueId": "LEAGUE_INDEPENDENT",
+    "rosterSize": 26,
+    "serviceMonths": 24,
+    "_serviceNote": "복무 기간(개월). 기존 규약은 enlistYear + 2시즌이라 24개월로 맞춘다",
+    "ranks": [
+      {
+        "untilMonths": 2,
+        "name": "이병"
+      },
+      {
+        "untilMonths": 8,
+        "name": "일병"
+      },
+      {
+        "untilMonths": 14,
+        "name": "상병"
+      },
+      {
+        "untilMonths": 99,
+        "name": "병장"
+      }
+    ],
+    "ageMin": 20,
+    "ageMax": 24,
+    "_ageNote": "상무는 병역을 일찍 해결하려는 젊은 선수가 간다",
+    "pitchingOvrMin": 52,
+    "pitchingOvrMax": 80,
+    "battingOvrMin": 52,
+    "battingOvrMax": 80,
+    "devRateMin": 55,
+    "devRateMax": 85,
+    "_devNote": "유망주 위주라 육성률이 일반 리그보다 높다",
+    "salary": 300,
+    "_salaryNote": "군인 봉급(월 수십만원)이라 연 300만원 수준. 프로 최저연봉과 다르다"
   }
 }

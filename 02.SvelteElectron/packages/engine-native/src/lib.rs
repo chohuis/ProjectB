@@ -27,6 +27,8 @@ mod roster_gen;
 mod standings_drift;
 mod synthetic_trajectory;
 mod relationship;
+mod career_history;
+mod military_roster;
 
 use types::*;
 use sim_types::*;
@@ -672,6 +674,30 @@ pub fn advance_staff_season_native(p: String) -> String {
     };
     serde_json::to_string(&staff_lifecycle::advance_staff_season(params))
         .unwrap_or_else(|e| parse_err("advanceStaffSeasonNative/serialize", e))
+}
+
+// ── 군경팀 로스터 (Phase 6.5) ────────────────────────────────────────────────
+
+/// 상무 로스터 — 복무 중인 선수 + 계급 + 전역 연도 (원소속은 실재 팀에서 지정)
+#[napi]
+pub fn generate_military_roster_native(p: String) -> String {
+    let params: military_roster::GenerateMilitaryRosterParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("generateMilitaryRosterNative", e),
+    };
+    serde_json::to_string(&military_roster::generate_military_roster(params))
+        .unwrap_or_else(|e| parse_err("generateMilitaryRosterNative/serialize", e))
+}
+
+// ── 경력 이력 (Phase 6.5) ────────────────────────────────────────────────────
+
+/// 새 게임 시점의 과거 경력 (입단·이적) — slot.db transactions로 들어간다
+#[napi]
+pub fn generate_career_history_native(p: String) -> String {
+    let params: career_history::GenerateCareerHistoryParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("generateCareerHistoryNative", e),
+    };
+    serde_json::to_string(&career_history::generate_career_history(params))
+        .unwrap_or_else(|e| parse_err("generateCareerHistoryNative/serialize", e))
 }
 
 // ── 관계도 (Phase 6C) ────────────────────────────────────────────────────────

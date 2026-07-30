@@ -20,7 +20,7 @@ const hsParams = {
     rosterSize: 25,
     pitchingOvrMin: 40, pitchingOvrMax: 72, battingOvrMin: 40, battingOvrMax: 72,
     devRateMin: 45, devRateMax: 75,
-    gradeMax: 3, ageBase: 16,
+    gradeMax: 3, ageBase: 16,   // 한국 나이 — 고1 = 17세
   },
 };
 const hs = gen(hsParams);
@@ -97,7 +97,7 @@ console.log("\n포지션 깊이 (국내 전 팀)");
 }
 const grades = [1, 2, 3].map(g => team0.filter(n => n.grade === g).length);
 check("고교: 학년 분포 균등(±2)", Math.max(...grades) - Math.min(...grades) <= 2, JSON.stringify(grades));
-check("고교: 나이 = 16+학년", team0.every(n => n.age === 16 + n.grade));
+check("고교: 나이 = ageBase+학년 (고1 = 17세)", team0.every(n => n.age === 16 + n.grade));
 check("고교: 졸업연도 정합", team0.every(n => n.graduationYear === 2026 + (3 - n.grade)));
 
 const pOvrs = hs.npcs.filter(n => n.playerType === "pitcher").map(n => n.abilities.pitching.ovr);
@@ -173,6 +173,68 @@ check("slotdb 연동: 조회 왕복 (능력치 보존)",
 check("slotdb 연동: personality 보존", loaded.every(n => n.personality?.loyalty >= 40));
 mgr.closeAll();
 fs.rmSync(tmp, { recursive: true, force: true });
+
+// ── 구종 — Rust 상수 ↔ pitch_catalog.json 대조 ────────────────
+//
+// Rust는 카탈로그 JSON을 읽지 않는다(콘텐츠라서). 그래서 구종 ID가 코드에 상수로
+// 박혀 있고, 카탈로그가 바뀌면 **조용히 어긋난다** — 화면이 구종 이름을 못 찾는다.
+// 이 코드베이스의 1번 버그 유형(어휘 드리프트)이라 대조를 테스트로 묶는다.
+console.log("\n구종 (Rust ↔ 카탈로그)");
+{
+  const fs = require("node:fs");
+  const path = require("node:path");
+  const catRaw = JSON.parse(fs.readFileSync(
+    path.join(__dirname, "../resource/data/master/training/pitch_catalog.json"), "utf8"));
+  const catArr = Array.isArray(catRaw) ? catRaw : (catRaw.pitches ?? Object.values(catRaw).find(Array.isArray));
+  const catIds = new Set(catArr.map((p) => p.id));
+
+  const rustSrc = fs.readFileSync(
+    path.join(__dirname, "../packages/engine-native/src/roster_gen.rs"), "utf8");
+  const rustIds = new Set([...rustSrc.matchAll(/"(PITCH_[A-Z_]+)"/g)].map((m) => m[1]));
+  console.log(`    카탈로그 ${catIds.size}종 · Rust 상수 ${rustIds.size}종`);
+
+  const notInCatalog = [...rustIds].filter((id) => !catIds.has(id));
+  check("Rust가 쓰는 구종이 전부 카탈로그에 있다", notInCatalog.length === 0,
+    notInCatalog.join(","));
+
+  const rulesFile2 = JSON.parse(fs.readFileSync(
+    path.join(__dirname, "../resource/data/master/players/generation_rules.json"), "utf8"));
+  const refs2 = JSON.parse(fs.readFileSync(
+    path.join(__dirname, "../resource/data/master/entities/refs.json"), "utf8"));
+  const kbl = refs2.teams.filter((t) => t.leagueId === "LEAGUE_KBL" && t.id.endsWith("_1"));
+  const npcs = gen({
+    leagueId: "LEAGUE_KBL", seasonYear: 2029, worldSeed: 4242,
+    teams: kbl.map((t) => ({ teamId: t.id, schoolId: "" })),
+    rules: rulesFile2.rosterRules.LEAGUE_KBL,
+  }).npcs;
+  const P = npcs.filter((n) => n.playerType === "pitcher");
+  const B = npcs.filter((n) => n.playerType !== "pitcher");
+
+  check("투수 전원이 구종을 갖는다", P.every((n) => (n.abilities.pitches ?? []).length > 0));
+  check("투수 전원이 패스트볼을 갖는다",
+    P.every((n) => (n.abilities.pitches ?? []).some((x) => x.id === "PITCH_FASTBALL")));
+  check("야수에는 구종이 없다", B.every((n) => !n.abilities.pitches));
+
+  const unknown = new Set();
+  for (const n of P) for (const x of n.abilities.pitches ?? []) if (!catIds.has(x.id)) unknown.add(x.id);
+  check("생성된 구종이 전부 카탈로그에 있다", unknown.size === 0, [...unknown].join(","));
+
+  const dist = {};
+  for (const n of P) {
+    const k = (n.abilities.pitches ?? []).length;
+    dist[k] = (dist[k] ?? 0) + 1;
+  }
+  console.log(`    구종 수 분포: ${Object.entries(dist).sort().map(([k, v]) => `${k}종 ${v}명`).join(" ")}`);
+  // 전원이 같은 개수면 성숙도가 안 먹은 것이다
+  check("구종 수가 선수마다 다르다 (성숙도 반영)", Object.keys(dist).length >= 2,
+    Object.keys(dist).join(","));
+
+  // 카탈로그에 있는데 아무도 안 쓰는 구종이 너무 많으면 풀이 좁다는 뜻
+  const used = new Set(P.flatMap((n) => (n.abilities.pitches ?? []).map((x) => x.id)));
+  console.log(`    실제 등장 구종 ${used.size}/${catIds.size}종`);
+  check("카탈로그 구종 대부분이 실제로 등장한다", used.size >= catIds.size - 1,
+    `미등장: ${[...catIds].filter((i) => !used.has(i)).join(",")}`);
+}
 
 console.log(failed === 0 ? "\nALL PASS" : `\n${failed} FAILED`);
 process.exit(failed === 0 ? 0 : 1);

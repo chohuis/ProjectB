@@ -524,6 +524,10 @@ pub struct OffseasonParams {
     // TS에서 FA/은퇴 결정을 완료한 named NPC ID 목록 — Rust FA 로직 스킵 대상
     #[serde(default)]
     pub named_npc_ids: Vec<String>,
+    /// 연봉 규칙 (generation_rules.json salaryRules). 안 넘어오면 폴백을 쓴다 —
+    /// 규칙 누락이 연봉을 0으로 만들어 세이브를 망가뜨리지 않게
+    #[serde(default)]
+    pub salary_rules: Option<crate::npc_sim::SalaryRules>,
 }
 
 // ── 학년 진급 입력 ───────────────────────────────────────────────────────────

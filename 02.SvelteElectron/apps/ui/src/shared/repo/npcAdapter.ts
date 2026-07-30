@@ -32,6 +32,7 @@ export function repoNpcToSaveState(r: RepoNpc): NpcSaveState {
     militaryEnlistYear: r.military?.enlistYear,
     militaryDischargeYear: r.military?.dischargeYear,
     militaryUnit: r.military?.unit,
+    militaryRank: r.military?.rank,
     originalLeagueId: r.military?.originalLeagueId,
     originalTeamId: r.military?.originalTeamId,
     developmentRate: r.developmentRate,
@@ -101,6 +102,7 @@ export function saveStateToRepoNpc(n: NpcSaveState, live?: NpcLiveStat): RepoNpc
     n.militaryUnit || n.militaryEnlistYear || n.originalTeamId
       ? {
           unit: n.militaryUnit,
+          rank: n.militaryRank,
           enlistYear: n.militaryEnlistYear,
           dischargeYear: n.militaryDischargeYear,
           originalLeagueId: n.originalLeagueId,
