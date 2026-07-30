@@ -1992,8 +1992,16 @@ function createGameStore() {
           autoLog(`[전역] 엔티티 ${discharging.length}명`);
         }
 
-        // 2. 체육부대 입대: 3개 프로리그 한국인 선수 후보
-        const proLeagues = new Set(["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"]);
+        // 2. 체육부대 입대: 프로 소속 한국인 선수 후보.
+        //
+        // **2군(FARM)도 후보다.** 예전엔 1군 리그만 봤는데, 실제로 상무는
+        // 2군 유망주가 많이 간다. Phase 7-1에서 신인 대부분이 2군에서 시작하게
+        // 되면서 그 누락이 더 커졌다 — 갓 지명된 선수는 후보조차 못 됐다
+        const proLeagues = new Set([
+          "LEAGUE_KBL", "LEAGUE_KBL_FARM",
+          "LEAGUE_ABL", "LEAGUE_ABL_FARM",
+          "LEAGUE_JBL", "LEAGUE_JBL_FARM",
+        ]);
         const milCandidates = mNow.entities.filter(e =>
           e.role === "player" &&
           e.status !== "retired" &&
@@ -2029,11 +2037,21 @@ function createGameStore() {
           if (topRaw.error) {
             autoLog(`[병역통합오류] militaryCalcCandidates: ${topRaw.error}`);
           } else if ((topRaw.topCandidates?.length ?? 0) > 0) {
+            // 연간 입대 인원 = 정원 / 복무연수. 예전엔 여기 20이 박혀 있어
+            // 정상상태가 40명(정원 26의 1.5배)이었다 — 상무는 복무자라
+            // `career_status: "military"`고, 로스터 캡이 active만 세므로
+            // **아무도 막지 않았다.** 규칙 파일이 정본이다
+            const milRules = (await loadRosterRules()).militaryRules as {
+              rosterSize?: number; serviceMonths?: number; maxPerTeam?: number;
+            } | undefined;
+            const serviceYears = Math.max(1, Math.round((milRules?.serviceMonths ?? 24) / 12));
+            const annualIntake = Math.max(1, Math.round((milRules?.rosterSize ?? 26) / serviceYears));
+
             const selRes = JSON.parse(
               await window.projectB!.militaryCalcSelection(JSON.stringify({
                 applicants: topRaw.topCandidates!.map(c => ({ ...c, isProtagonist: false })),
-                maxTotal: Math.min(20, topRaw.topCandidates!.length),
-                maxPerTeam: 3,
+                maxTotal: Math.min(annualIntake, topRaw.topCandidates!.length),
+                maxPerTeam: milRules?.maxPerTeam ?? 3,
               }))
             ) as { protagonistSelected: boolean; selectedIds?: string[]; error?: string };
 

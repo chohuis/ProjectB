@@ -224,6 +224,8 @@
     "rosterSize": 26,
     "serviceMonths": 24,
     "_serviceNote": "복무 기간(개월). 기존 규약은 enlistYear + 2시즌이라 24개월로 맞춘다",
+    "maxPerTeam": 3,
+    "_selectionNote": "연간 입대 인원은 정원/복무연수로 산출한다 (26명 / 2년 = 13명). 예전엔 game.ts에 maxTotal 20이 박혀 있어 정상상태가 40명 - 정원의 1.5배였다. maxPerTeam은 한 구단이 상무를 독식하지 않게 하는 상한",
     "ranks": [
       {
         "untilMonths": 2,
