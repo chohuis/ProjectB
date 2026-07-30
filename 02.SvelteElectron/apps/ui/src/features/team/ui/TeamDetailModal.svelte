@@ -46,9 +46,40 @@
     return null;
   })();
 
-  $: rivalTeam = team?.history?.rival
-    ? ($masterStore.teams.find((t) => t.id === team!.history!.rival) ?? null)
-    : null;
+  // ── 팀 역사 (v2 refs 기준) ──────────────────────────────────
+  // Phase 5-1에서 refs를 시드 CSV로 다시 만들며 history 모양이 바뀌었는데
+  // 이 화면은 v1 필드(founded·nationalTitles·recentRecords·rival)를 계속 읽어
+  // **전부 빈 값을 보여주고 있었다.** v2 필드에서 파생한다.
+  $: rivals = (team?.history?.rivals ?? [])
+    .map((r) => ({
+      team: $masterStore.teams.find((t) => t.id === r.with) ?? null,
+      desc: r.desc ?? "",
+    }))
+    .filter((r) => r.team !== null);
+
+  /** 우승 = titles 중 result가 "우승"인 것 */
+  $: championships = (team?.history?.titles ?? []).filter((t) => t.result === "우승");
+  /** 대회별 우승 횟수 — "개나리기 2회" 처럼 묶어서 보여준다 */
+  $: titlesByCompetition = (() => {
+    const m = new Map<string, number>();
+    for (const t of championships) m.set(t.competition, (m.get(t.competition) ?? 0) + 1);
+    return [...m.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+  })();
+  /** 과거 5시즌 순위 — S-5(가장 오래된)부터 S-1(직전) 순으로 */
+  $: seasonRanks = [...(team?.history?.seasonRanks ?? [])]
+    .sort((a, b) => b.season.localeCompare(a.season));
+  /** 그 시즌에 딴 타이틀 (최근 성적 줄에 붙인다) */
+  function titlesOfSeason(season: string): string[] {
+    return (team?.history?.titles ?? [])
+      .filter((t) => t.season === season && t.result === "우승")
+      .map((t) => t.competition.replace(/^(고교|대학|프로|독립)\s*/, ""));
+  }
+  function rankColor(rank: number): string {
+    if (rank === 1) return "#e0b040";
+    if (rank <= 3) return "#70b0e0";
+    if (rank <= 6) return "#8fa0b0";
+    return "#6080a0";
+  }
 
   // ── 로스터 ──────────────────────────────────────────────────
   $: allMembers = (() => {
@@ -210,19 +241,11 @@
   const FANBASE_ICON: Record<string, string> = {
     "소규모": "●", "지역": "●●", "광역": "●●●", "전국": "●●●●", "메가": "●●●●●",
   };
-  const NATIONAL_COLOR: Record<string, string> = {
-    "우승": "#f0c060", "준우승": "#b0c8ee", "플레이오프": "#7a9ac8", "조별 리그": "#5a7a98",
-  };
-
   function stars(n: number): string {
     return "★".repeat(n) + "☆".repeat(5 - n);
   }
   function capacityFmt(n: number): string {
     return n >= 10000 ? `${(n / 10000).toFixed(1)}만` : `${n.toLocaleString()}`;
-  }
-  function nationalColor(v: string): string {
-    for (const [k, c] of Object.entries(NATIONAL_COLOR)) if (v.includes(k)) return c;
-    return "#6080a0";
   }
 </script>
 
@@ -369,45 +392,41 @@
                 <section class="section">
                   <h4>팀 역사</h4>
                   <div class="history-kpi">
-                    {#if team.history.founded}<div><span>창단</span><strong>{team.history.founded}년</strong></div>{/if}
-                    {#if team.history.nationalTitles}<div><span>전국 우승</span><strong>{team.history.nationalTitles}회</strong></div>{/if}
-                    {#if team.history.proPlayers}<div><span>프로 배출</span><strong>{team.history.proPlayers}명</strong></div>{/if}
+                    {#if team.history.foundedYear}<div><span>창단</span><strong>{team.history.foundedYear}년</strong></div>{/if}
+                    {#if championships.length}<div><span>대회 우승</span><strong>{championships.length}회</strong></div>{/if}
+                    {#if team.history.budget}<div><span>운영 예산</span><strong>{Math.round(team.history.budget / 100000000)}억</strong></div>{/if}
                   </div>
 
-                  {#if team.history.titleYears?.length}
+                  {#if titlesByCompetition.length}
                     <div class="title-years">
-                      {#each team.history.titleYears as yr}
-                        <span class="year-pill">{yr}</span>
+                      {#each titlesByCompetition as [competition, count]}
+                        <span class="year-pill">{competition.replace(/^(고교|대학|프로|독립)\s*/, "")} {count}회</span>
                       {/each}
                     </div>
                   {/if}
 
-                  {#if team.history.peakEra}
-                    <p class="peak-era">"{team.history.peakEra}"</p>
+                  {#if team.profile?.desc}
+                    <p class="desc">{team.profile.desc}</p>
                   {/if}
 
-                  {#if team.history.summary}
-                    <p class="desc">{team.history.summary}</p>
-                  {/if}
-
-                  {#if rivalTeam}
+                  {#each rivals as r}
                     <div class="rival-row">
                       <span class="rival-label">라이벌</span>
-                      <span class="rival-name">{rivalTeam.name}</span>
+                      <span class="rival-name">{r.team?.name}</span>
+                      {#if r.desc}<span class="rival-desc">{r.desc}</span>{/if}
                     </div>
-                  {/if}
+                  {/each}
                 </section>
 
-                {#if team.history.recentRecords?.length}
+                {#if seasonRanks.length}
                   <section class="section">
-                    <h4>최근 성적</h4>
+                    <h4>과거 5시즌</h4>
                     <div class="records-list">
-                      {#each [...team.history.recentRecords].reverse() as rec}
+                      {#each seasonRanks as sr}
                         <div class="record-row">
-                          <span class="rec-year">{rec.year}</span>
-                          <span class="rec-national" style="color:{nationalColor(rec.national)};">{rec.national}</span>
-                          <span class="rec-regional">{rec.regional}</span>
-                          {#if rec.note}<span class="rec-note">{rec.note}</span>{/if}
+                          <span class="rec-year">{sr.season}</span>
+                          <span class="rec-national" style="color:{rankColor(sr.rank)};">{sr.rank}위</span>
+                          <span class="rec-regional">{titlesOfSeason(sr.season).join(" · ")}</span>
                         </div>
                       {/each}
                     </div>
@@ -789,12 +808,13 @@
   }
 
   .rival-row {
-    display: flex; align-items: center; gap: 8px;
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
     background: #131f38; border: 1px solid #2a3f62;
-    border-radius: 8px; padding: 7px 10px;
+    border-radius: 8px; padding: 7px 10px; margin-bottom: 4px;
   }
   .rival-label { font-size: 10px; color: #8aa4cc; }
   .rival-name { font-size: 12px; color: #f08080; font-weight: 700; }
+  .rival-desc { font-size: 10px; color: #8aa4cc; }
 
   /* 최근 성적 */
   .records-list { display: grid; gap: 4px; }

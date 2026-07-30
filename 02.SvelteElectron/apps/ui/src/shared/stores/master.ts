@@ -85,40 +85,21 @@ export interface ProTeamProfile {
   farmInvestment: number;
 }
 
-export interface TeamRecord {
-  year: number;
-  national: string;
-  regional: string;
-  note?: string;
-}
-
 /**
- * ⚠ 두 세대가 섞여 있다.
+ * 팀 고정 세계관 (DESIGN §7.1) — refs.json `teams[].history`와 1:1.
  *
- * 위쪽(founded·summary·proPlayers…)은 v1 형식이고, **Phase 5-1에서 refs.json을
- * 시드 CSV로 다시 만들면서 아래쪽 형식으로 바뀌었다.** 타입만 안 따라와서
- * 전부 optional로 남아 있다 — 그래서 tsc가 안 잡았고, 팀 상세 화면(TeamDetailModal ·
- * NewGamePage)은 지금 v1 필드를 읽어 빈 값을 보여준다. 화면 수정은 별건이라
- * 여기서는 **실제 데이터 모양을 타입에 정직하게 반영만** 한다.
+ * Phase 5-1에서 refs를 시드 CSV로 다시 만들며 모양이 바뀌었는데 타입과 화면이
+ * v1(founded·nationalTitles·recentRecords·rival)에 남아 있었다. 전부 optional이라
+ * tsc가 못 잡았고, 팀 상세는 빈 값을 보여주고 **새 게임 팀 선택은 렌더가 터졌다**
+ * (`recentRecords.length` = undefined.length). v1 필드는 읽는 코드가 없어져 제거.
  */
 export interface TeamHistory {
-  // ── v2 (현행 refs.json) ──
   foundedYear?: number | null;
   budget?: number | null;
-  /** 과거 5시즌 순위 — 첫 시즌 대회 시드의 근거 (DESIGN §7.1) */
+  /** 과거 5시즌 순위 ("S-1" = 직전 시즌) — 첫 시즌 대회 시드의 근거 */
   seasonRanks?: { season: string; rank: number }[];
   titles?: { season: string; competition: string; result: string }[];
   rivals?: { with: string; desc: string }[];
-
-  // ── v1 (화면이 아직 읽는 필드) ──
-  founded?: number;
-  summary?: string;
-  proPlayers?: number;
-  nationalTitles?: number;
-  recentRecords?: TeamRecord[];
-  rival?: string;
-  titleYears?: number[];
-  peakEra?: string;
 }
 
 export interface TeamRef {

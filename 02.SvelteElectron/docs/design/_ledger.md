@@ -736,3 +736,23 @@ schedule · status · team · training`
 - **스태프와 선수는 규칙이 다르다.** 감독·코치의 `KBL → 고교`는 정상이고 의도한
   동작이다(P6-8). 학적이 아니라 직장이므로 역행 개념이 없다. 두 규칙을 한 표로
   묶으려 하면 어느 한쪽이 망가진다.
+
+### P6-10. 팀 역사 화면이 v1 데이터를 읽고 있었다 (Phase 6 중 별건)
+
+- Phase 5-1에서 `refs.json`을 시드 CSV로 다시 만들며 `teams[].history` 모양이 바뀌었다:
+  `founded`/`nationalTitles`/`proPlayers`/`recentRecords`/`titleYears`/`peakEra`/`rival`
+  → `foundedYear`/`budget`/`seasonRanks`/`titles`/`rivals`.
+- **타입과 화면이 v1에 남아 있었다.** `TeamHistory`가 전부 optional이라 tsc가 못 잡았고
+  (6A에서 발견해 타입에만 반영해뒀다), 화면은 그대로였다:
+  - `TeamDetailModal` — 팀 역사·최근 성적 섹션이 **통째로 빈 값**
+  - `NewGamePage` — `h.recentRecords.length`가 `undefined.length`라
+    **팀을 고르는 순간 렌더가 터졌다.** 빈 값보다 나쁜 상태였다.
+- **판정**: 화면을 v2 필드에서 파생하게 고치고, **v1 블록을 타입에서 제거**했다.
+  optional로 남겨두면 다음 사람이 또 그걸 읽는다.
+  - 우승 횟수 = `titles.filter(result === "우승").length`
+  - 대회별 우승 = 같은 목록을 competition으로 묶음 ("개나리기 2회")
+  - 최근 성적 = `seasonRanks`(S-1이 직전) + 그 시즌 `titles` 조인
+  - 라이벌 = `rivals[]` (v1은 단수 `rival`이라 한 명만 보였다. 실제로는 여러 명)
+- `test-team-history.cjs`가 refs 데이터 모양과 **화면 소스에 v1 필드가 없는지**를
+  같이 검사한다. 소스 검사는 주석을 실제로 걷어내고 본다 — 줄 앞머리로 거르면
+  "왜 v1을 버렸는지" 설명하는 주석 본문이 코드로 잡힌다.
