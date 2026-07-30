@@ -453,8 +453,10 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   // NPC 주간 성장/하락 처리 (매주 실행)
   await processWeeklyNpcGrowth(weekNum, g.protagonist.careerStage);
 
-  // 프로 스테이지: 콜업/콜다운 — 연 2회(시즌 중 W20 + 오프시즌 W43), 주인공 리그만 (R5, DESIGN.md §5)
-  if (weekInYear === 20 || weekInYear === 43) {
+  // 1군 ↔ 2군 승강 — **월 1회 정기**, 국내 10구단 전부 (주인공 무관).
+  // 예전엔 연 2회(W20·W43)에 주인공 리그만이라, 드래프트가 매년 2군에 넣는
+  // 110명을 따라가지 못했고 주인공이 프로가 아니면 아예 안 돌았다.
+  if (isMonthStart(weekInYear)) {
     const callupLogs = await processProTeamCallupCalldown(weekNum);
     logs.push(...callupLogs);
   }

@@ -24,10 +24,29 @@ function npcOvr(entity: import("../../stores/master").EntityRow, liveStats: impo
   return (live?.pitching?.ovr ?? p?.pitching?.ovr ?? live?.batting?.ovr ?? p?.batting?.ovr ?? 60) as number;
 }
 
+/**
+ * 승강 판정이 보는 시즌 성적. 1군·2군 기록을 한 곳에서 찾는다 —
+ * 시즌 중 오르내린 선수는 두 리그에 기록이 나뉘어 있다.
+ */
+function seasonPerfOf(
+  npcId: string,
+  stats: Record<string, Record<string, PlayerSeasonStats>>,
+): object | undefined {
+  for (const lid of ["LEAGUE_KBL", "LEAGUE_KBL_FARM"]) {
+    const st = stats[lid]?.[npcId];
+    if (!st) continue;
+    return st.type === "pitcher"
+      ? { games: st.g, innings: st.ip, era: st.era, whip: st.whip }
+      : { games: st.g, plateAppearances: st.pa, ops: st.ops };
+  }
+  return undefined;
+}
+
 function buildRosterRef(
   entity: import("../../stores/master").EntityRow,
   liveStats: import("../../stores/master").NpcLiveStats,
   savedNpc?: import("../../types/save").NpcSaveState,
+  perf?: object,
 ): object {
   const p = (entity.details as EntityDetails)?.player;
   return {
@@ -41,6 +60,8 @@ function buildRosterRef(
     isProspect:       entity.teamId?.endsWith("_2") ?? false,
     personality:      entity.personality ?? null,
     fame:             savedNpc?.fame ?? 0,
+    // 성적이 없으면 undefined — Rust가 그때는 능력치만 본다
+    ...(perf ? { perf } : {}),
   };
 }
 
@@ -565,14 +586,12 @@ function getTeamEntityRefs(
   entities: import("../../stores/master").EntityRow[],
   liveStats: import("../../stores/master").NpcLiveStats,
   namedMap: Map<string, import("../../types/save").NpcSaveState>,
+  leagueStats: Record<string, Record<string, PlayerSeasonStats>> = {},
 ) {
-  const active = entities
-    .filter(e => e.role === "player" && e.teamId === teamId1)
-    .map(e => buildRosterRef(e, liveStats, namedMap.get(e.id)));
-  const farm = entities
-    .filter(e => e.role === "player" && e.teamId === teamId2)
-    .map(e => buildRosterRef(e, liveStats, namedMap.get(e.id)));
-  return { active, farm };
+  const build = (teamId: string) => entities
+    .filter(e => e.role === "player" && e.teamId === teamId)
+    .map(e => buildRosterRef(e, liveStats, namedMap.get(e.id), seasonPerfOf(e.id, leagueStats)));
+  return { active: build(teamId1), farm: build(teamId2) };
 }
 
 /**
@@ -597,6 +616,15 @@ export async function processProTeamCallupCalldown(weekNum: number): Promise<str
   // 규칙 파일(34)과 달랐다 (드리프트)
   const rulesFile = await loadRosterRules();
   const maxRosterSize = rulesFile.rosterRules["LEAGUE_KBL"]?.rosterMax ?? 34;
+  // 승강 판정은 성적을 주로 본다 (사용자 확정) — 규칙은 규칙 파일이 정본
+  const promotionRules = rulesFile.promotionRules;
+
+  // 1군·2군 시즌 기록. 없으면 판정이 능력치만 보게 된다
+  const leagueStats: Record<string, Record<string, PlayerSeasonStats>> = {};
+  for (const lid of ["LEAGUE_KBL", "LEAGUE_KBL_FARM"]) {
+    const ls = s.leagueState?.[lid];
+    if (ls?.stats) leagueStats[lid] = ls.stats;
+  }
 
   const proTeams1 = m.teams.filter(t => t.leagueId === "LEAGUE_KBL" && t.id.endsWith("_1"));
 
@@ -616,7 +644,8 @@ export async function processProTeamCallupCalldown(weekNum: number): Promise<str
     const teamId2 = teamId1.replace(/_1$/, "_2");
     const profile  = getTeamProfile(teamId1, g, m) ?? DEFAULT_TEAM_PROFILE;
 
-    const { active, farm } = getTeamEntityRefs(teamId1, teamId2, m.entities, get(npcLiveStatsStore), namedMap);
+    const { active, farm } = getTeamEntityRefs(
+      teamId1, teamId2, m.entities, get(npcLiveStatsStore), namedMap, leagueStats);
     const teamShort = teamId1.replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "");
 
     // 콜업
@@ -624,7 +653,7 @@ export async function processProTeamCallupCalldown(weekNum: number): Promise<str
       const callupRes = JSON.parse(
         await window.projectB!.evalCallupCandidatesNative(JSON.stringify({
           teamProfile: profile, farmPlayers: farm, activePlayers: active,
-          injuredPlayerIds: injuredIds, currentMonth,
+          injuredPlayerIds: injuredIds, currentMonth, promotionRules,
         }))
       ) as { candidates: Array<{ playerId: string; replacesPlayerId: string; reason: string }> };
 
@@ -645,7 +674,7 @@ export async function processProTeamCallupCalldown(weekNum: number): Promise<str
       const calldownRes = JSON.parse(
         await window.projectB!.evalCalldownCandidatesNative(JSON.stringify({
           teamProfile: profile, activePlayers: active,
-          currentRosterSize: active.length, maxRosterSize,
+          currentRosterSize: active.length, maxRosterSize, promotionRules,
         }))
       ) as { candidates: Array<{ playerId: string }> };
 

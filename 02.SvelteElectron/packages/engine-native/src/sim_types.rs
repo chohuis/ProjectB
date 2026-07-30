@@ -757,6 +757,31 @@ pub struct RosterPlayerRef {
     pub is_prospect: bool,
     pub personality: Option<NpcPersonality>,
     pub fame: f64,
+    /// 올 시즌 성적. **승강 판정의 주 입력이다** (사용자 확정 2026-07-30:
+    /// "최근 성적 위주 + 능력치 보정"). 표본이 없으면 전부 0이고,
+    /// 그때는 `form_score`가 능력치만 보게 된다
+    #[serde(default)]
+    pub perf: Option<RosterPerf>,
+}
+
+/// 승강 판정용 시즌 성적. 투수/타자 중 해당 쪽만 채워진다
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RosterPerf {
+    #[serde(default)]
+    pub games: i32,
+    /// 투수
+    #[serde(default)]
+    pub innings: f64,
+    #[serde(default)]
+    pub era: f64,
+    #[serde(default)]
+    pub whip: f64,
+    /// 타자
+    #[serde(default)]
+    pub plate_appearances: i32,
+    #[serde(default)]
+    pub ops: f64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
