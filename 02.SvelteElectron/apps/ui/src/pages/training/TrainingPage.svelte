@@ -111,7 +111,7 @@
 
   $: pitchCoach = $masterStore.entities.find(
     (e) => e.role === "coach" && e.teamId === protagonist.teamId &&
-           (e.details as import("../../shared/stores/master").EntityDetails)?.coach?.specialty === "pitching"
+           (e.details as import("../../shared/stores/master").EntityDetails)?.coach?.specialty === "투수"
   );
   $: coachTeaching = (pitchCoach?.details as import("../../shared/stores/master").EntityDetails)?.coach?.stats?.teaching ?? 50;
   $: coachFatMod  = Math.max(0.88, 1.0 - coachTeaching * 0.0024);

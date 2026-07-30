@@ -68,6 +68,17 @@ pub fn relation_label(value: i32) -> (&'static str, &'static str) {
     ("중립", "neutral")
 }
 
+/// 중립을 0으로 둔 라벨 거리. −3(적대) ~ +3(각별).
+///
+/// 효과 배선은 **값이 아니라 이 단계로** 계산한다. 관계값은 플레이어에게 안 보이고
+/// 라벨만 보이므로, 판정도 라벨로 해야 "각별인데 왜 안 써주지"가 생기지 않는다.
+pub fn label_step(value: i32) -> i32 {
+    let v = value.clamp(-100, 100);
+    let idx = RELATION_LABELS.iter().position(|(lo, hi, _, _)| v >= *lo && v <= *hi);
+    // 중립이 인덱스 3이다
+    idx.map(|i| i as i32 - 3).unwrap_or(0)
+}
+
 // ── 상대 성향 — personId 결정적 ──────────────────────────────────
 // 구 emotionEngine의 disposition을 그대로 가져왔다. 같은 사건에 사람마다
 // 다르게 반응하게 만드는 유일한 축이라 관계도에서도 필요하다.
@@ -182,11 +193,61 @@ pub struct SeasonRules {
 }
 
 #[derive(Debug, Deserialize, Clone)]
+pub struct EffectRules {
+    pub manager_role_ovr_per_step: f64,
+    pub coach_training_per_step: f64,
+}
+
+#[derive(Debug, Deserialize, Clone)]
 pub struct RelationRules {
     pub init: InitRules,
     pub decay: DecayRules,
     pub weekly: WeeklyRules,
     pub season: SeasonRules,
+    pub effect: EffectRules,
+}
+
+// ── 효과 계산 (6C-5) ──────────────────────────────────────────────
+// 관계값 → 실제 판정 보정. TS가 계산하지 않는 이유는 CLAUDE.md 규칙(게임 로직은
+// Rust)이고, 규칙 파일을 읽는 곳을 한 군데로 묶기 위해서다.
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RelationEffectParams {
+    pub rules: RelationRules,
+    /// 감독 관계값. 없으면 중립으로 본다
+    #[serde(default)]
+    pub manager_value: i32,
+    /// 이번 주 담당 영역 코치의 관계값
+    #[serde(default)]
+    pub coach_value: i32,
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RelationEffectResult {
+    /// 역할 배정 시 OVR에 더할 값 (감독이 나를 어떻게 보는가)
+    pub role_ovr_bias: f64,
+    /// 훈련 효율 배율에 더할 값 (0.04 = +4%p)
+    pub training_bonus: f64,
+    pub manager_step: i32,
+    pub coach_step: i32,
+    pub manager_label: String,
+    pub coach_label: String,
+}
+
+pub fn relation_effects(p: RelationEffectParams) -> RelationEffectResult {
+    let e = &p.rules.effect;
+    let m_step = label_step(p.manager_value);
+    let c_step = label_step(p.coach_value);
+    RelationEffectResult {
+        role_ovr_bias: m_step as f64 * e.manager_role_ovr_per_step,
+        training_bonus: c_step as f64 * e.coach_training_per_step,
+        manager_step: m_step,
+        coach_step: c_step,
+        manager_label: relation_label(p.manager_value).0.to_string(),
+        coach_label: relation_label(p.coach_value).0.to_string(),
+    }
 }
 
 // ── 입출력 ────────────────────────────────────────────────────────
@@ -580,6 +641,39 @@ mod tests {
         // clamp 밖도 안전
         assert_eq!(relation_label(9999).0, "각별");
         assert_eq!(relation_label(-9999).0, "적대");
+    }
+
+    #[test]
+    fn 라벨_단계는_중립을_0으로_센다() {
+        assert_eq!(label_step(0), 0, "중립이 0이 아니다");
+        assert_eq!(label_step(10), 0);
+        assert_eq!(label_step(11), 1, "우호 = +1");
+        assert_eq!(label_step(50), 2, "신뢰 = +2");
+        assert_eq!(label_step(100), 3, "각별 = +3");
+        assert_eq!(label_step(-11), -1, "서먹 = -1");
+        assert_eq!(label_step(-40), -2, "불신 = -2");
+        assert_eq!(label_step(-100), -3, "적대 = -3");
+    }
+
+    #[test]
+    fn 효과는_라벨_단계에_비례한다() {
+        let r = rules();
+        let per = r.effect.manager_role_ovr_per_step;
+        let close = relation_effects(RelationEffectParams {
+            rules: r.clone(), manager_value: 80, coach_value: 80,
+        });
+        let hostile = relation_effects(RelationEffectParams {
+            rules: r.clone(), manager_value: -80, coach_value: -80,
+        });
+        let neutral = relation_effects(RelationEffectParams {
+            rules: r.clone(), manager_value: 0, coach_value: 0,
+        });
+        assert_eq!(close.role_ovr_bias, per * 3.0, "각별이 최대 보정이 아니다");
+        assert_eq!(hostile.role_ovr_bias, -per * 3.0);
+        assert_eq!(neutral.role_ovr_bias, 0.0, "중립이 0이 아니다");
+        assert!(close.training_bonus > 0.0 && hostile.training_bonus < 0.0);
+        assert_eq!(close.manager_label, "각별");
+        assert_eq!(hostile.coach_label, "적대");
     }
 
     #[test]

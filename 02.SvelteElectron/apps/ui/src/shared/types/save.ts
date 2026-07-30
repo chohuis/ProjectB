@@ -95,7 +95,14 @@ export interface NpcInjuryEntry {
 }
 
 // ── 코치 능력치 ────────────────────────────────────────────────
-export type CoachSpecialty = "pitching" | "batting" | "fielding" | "running";
+/**
+ * 코치 전문 영역. **정본은 `seeds/onepitch/staff_rules.toml` [[coach.specialties]]** 이고
+ * 거기 값은 한국어다. 이 타입이 예전엔 영문 4종("pitching"|"batting"|...)이었는데
+ * 실제 데이터는 한국어 6종이라 **비교가 전부 실패하고 있었다** —
+ * `coach?.specialty === "pitching"` 이 항상 false였고 그래서 투수코치 능력치가
+ * 훈련 효율에 하나도 반영되지 않았다 (감독 능력치 미전달 P6-2와 같은 부류).
+ */
+export type CoachSpecialty = "투수" | "타격" | "주루" | "컨디셔닝" | "멘탈" | "전력분석";
 
 export interface CoachAttributes {
   teaching: number;  // XP 획득량 보정 계수

@@ -57,6 +57,10 @@
       "bad_rank_pct": 0.75
     }
   },
+  "effect": {
+    "manager_role_ovr_per_step": 2,
+    "coach_training_per_step": 0.02
+  },
   "training_area": {
     "command": "투수",
     "velocity": "투수",

@@ -3,7 +3,7 @@ import { seasonStore, npcLiveStatsStore } from "../stores/season";
 import { gameStore } from "../stores/game";
 import { masterStore } from "../stores/master";
 import { autoLog } from "../stores/autoAdvance";
-import { applyWeeklyRelations, reconcileRelationships, trainingAreaOf } from "./relationships";
+import { applyWeeklyRelations, reconcileRelationships, relationEffects, trainingAreaOf } from "./relationships";
 import { buildRelationMessages } from "../utils/relationMessages";
 import { simulateGame } from "../utils/gameSimulator";
 import { rotationSizeForStage } from "../utils/rosterEngine";
@@ -30,7 +30,7 @@ import { isV3SlotActive } from "../repo/v3Mode";
 import { generateFreshmenV3, ensureLeagueActivatedV3 } from "../repo/slotLifecycleV3";
 
 // ── weekPhases 도메인 모듈 (R4: training·academics·events·games·injuries·growth·market·digest) ──
-import { getPitchCoachName, makeTrainingMessage } from "./weekPhases/training";
+import { findTeamCoach, getPitchCoachName, makeTrainingMessage } from "./weekPhases/training";
 import { EXAM_EVENT_IDS, makeExamMessage } from "./weekPhases/academics";
 import { runEventEngine } from "./weekPhases/events";
 import { simulateNpcGame } from "./weekPhases/games";
@@ -110,8 +110,13 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       });
       logs.push(`[보직 배정] ${posLabel}`);
     } else {
-      // 프로(대학·독립 포함): 상세 역할 배정
-      const role = await assignProtagonistRole(g.protagonist, m.entities);
+      // 프로(대학·독립 포함): 상세 역할 배정.
+      // 감독 관계가 OVR 평가를 보정한다 (Phase 6C-5) — 관계 행이 아직 없으면
+      // 0이라 구 동작과 같다(새 팀 첫 시즌 W1이 그렇다).
+      const roleBias = (isV3SlotActive() && g.currentSlotId)
+        ? (await relationEffects({ slotId: g.currentSlotId, teamId: g.protagonist.teamId })).roleOvrBias
+        : 0;
+      const role = await assignProtagonistRole(g.protagonist, m.entities, roleBias);
       const pos: "SP" | "RP" | "CP" =
         role === "마무리" ? "CP" : isReliefsRole(role) ? "RP" : "SP";
       gameStore.setPosition(pos);
@@ -183,12 +188,25 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
 
   const majorEffBonus = isUniversity ? getUniversityEffBonus(g.schoolState.universityMajor) : 0;
 
-  const pitchCoach = m.entities.find(
-    (e) => e.role === "coach" && e.teamId === g.protagonist.teamId &&
-           (e.details as import("../stores/master").EntityDetails)?.coach?.specialty === "pitching"
-  );
+  const pitchCoach = findTeamCoach(g.protagonist.teamId, "투수", m.entities);
   const coachTeaching  = (pitchCoach?.details as import("../stores/master").EntityDetails)?.coach?.stats?.teaching ?? 50;
-  const coachEffBonus  = Math.max(-0.10, Math.min(0.20, (coachTeaching - 50) * 0.004));
+
+  // 관계 보정 (Phase 6C-5) — 이번 주 훈련 영역의 담당 코치와 감독 관계를 한 번에 읽는다.
+  // 이 조회가 여기 있는 이유: coachEffBonus와 보직 배정이 둘 다 아래에서 쓰인다.
+  const trainingFocus = m.trainingPrograms.find(
+    pr => pr.id === g.trainingPlan?.primaryProgramId,
+  )?.focus;
+  const relEffects = (isV3SlotActive() && g.currentSlotId)
+    ? await relationEffects({
+        slotId: g.currentSlotId,
+        teamId: g.protagonist.teamId,
+        coachSpecialty: await trainingAreaOf(trainingFocus),
+      })
+    : { roleOvrBias: 0, trainingBonus: 0, managerLabel: "중립", coachLabel: "중립" };
+
+  // 능력치 보정과 관계 보정을 더한 뒤 clamp한다 — 각각 clamp하면 상한이 두 배가 된다
+  const coachEffBonus  = Math.max(-0.15, Math.min(0.25,
+    (coachTeaching - 50) * 0.004 + relEffects.trainingBonus));
   const teamRef        = m.teams.find((t) => t.id === g.protagonist.teamId);
   const prevLowMoraleWeeks = g.protagonist.consecutiveLowMoraleWeeks ?? 0;
   const isLowMorale        = g.protagonist.morale < 35;

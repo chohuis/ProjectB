@@ -125,6 +125,8 @@ export declare function weeklyRelationsNative(p: string): string
 export declare function seasonRelationsNative(p: string): string
 /** 팀 이동 감쇠 (감쇠 후 보존 — 행은 남는다) */
 export declare function relationMoveDecayNative(p: string): string
+/** 관계 → 실제 판정 보정 (보직 OVR 평가 · 훈련 효율) */
+export declare function relationEffectsNative(p: string): string
 /** 7단계 라벨 표. TS `types/relationship.ts`의 미러가 어긋났는지 대조하는 데 쓴다 */
 export declare function relationLabelTableNative(): string
 /** 투구수별 의무 휴식을 채웠는지 (일 단위 — 주 단위로는 주말 연투가 안 걸린다) */

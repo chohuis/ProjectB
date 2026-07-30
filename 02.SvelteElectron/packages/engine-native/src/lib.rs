@@ -716,6 +716,16 @@ pub fn relation_move_decay_native(p: String) -> String {
         .unwrap_or_else(|e| parse_err("relationMoveDecayNative/serialize", e))
 }
 
+/// 관계 → 실제 판정 보정 (보직 OVR 평가 · 훈련 효율)
+#[napi]
+pub fn relation_effects_native(p: String) -> String {
+    let params: relationship::RelationEffectParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("relationEffectsNative", e),
+    };
+    serde_json::to_string(&relationship::relation_effects(params))
+        .unwrap_or_else(|e| parse_err("relationEffectsNative/serialize", e))
+}
+
 /// 7단계 라벨 표. TS `types/relationship.ts`의 미러가 어긋났는지 대조하는 데 쓴다
 #[napi]
 pub fn relation_label_table_native() -> String {

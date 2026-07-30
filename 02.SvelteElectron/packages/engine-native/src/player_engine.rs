@@ -84,6 +84,10 @@ pub struct AssignRoleParams {
     pub position: Option<String>,
     pub ovr: f64,
     pub team_sp_ovrs: Vec<f64>,
+    /// 감독 관계 보정 (Phase 6C). 실력이 아니라 **감독이 나를 어떻게 보는가**다 —
+    /// 신뢰가 두터우면 같은 OVR로도 선발 경쟁에서 앞선다. 없으면 0(중립).
+    #[serde(default)]
+    pub role_ovr_bias: f64,
 }
 
 #[derive(Debug, Serialize)]
@@ -94,7 +98,8 @@ pub struct AssignRoleResult {
 
 pub fn assign_protagonist_role(params: AssignRoleParams) -> AssignRoleResult {
     let pos = params.position.as_deref().unwrap_or("");
-    let ovr = params.ovr;
+    // 감독이 보는 나 = 실제 OVR + 관계 보정. 순위 비교에 이 값을 쓴다
+    let ovr = params.ovr + params.role_ovr_bias;
 
     let role = match pos {
         "CP" => "마무리".into(),
@@ -596,6 +601,7 @@ mod tests {
             position: Some("CP".into()),
             ovr: 70.0,
             team_sp_ovrs: vec![],
+            role_ovr_bias: 0.0,
         });
         assert_eq!(r.role, "마무리");
     }
@@ -608,6 +614,7 @@ mod tests {
                 position: Some("RP".into()),
                 ovr,
                 team_sp_ovrs: vec![],
+                role_ovr_bias: 0.0,
             });
             assert_eq!(r.role, expected, "ovr={ovr}");
         }
@@ -620,6 +627,7 @@ mod tests {
             position: None,
             ovr: 80.0,
             team_sp_ovrs: vec![70.0, 65.0, 60.0],
+            role_ovr_bias: 0.0,
         });
         assert_eq!(r.role, "1선발");
     }
@@ -631,8 +639,24 @@ mod tests {
             position: None,
             ovr: 62.0,
             team_sp_ovrs: vec![90.0, 85.0, 80.0, 75.0, 70.0],
+            role_ovr_bias: 0.0,
         });
         assert_eq!(r.role, "스윙맨");
+
+    }
+
+    /// 감독 관계가 보직을 실제로 가른다 (Phase 6C-5).
+    /// 같은 실력인데 감독이 각별하면 5선발, 적대면 스윙맨으로 밀린다.
+    #[test]
+    fn 감독_관계가_보직_경쟁을_가른다() {
+        let rotation = vec![90.0, 85.0, 80.0, 70.0, 64.0];  // 5선발이 64
+        let mk = |bias: f64| assign_protagonist_role(AssignRoleParams {
+            position: None, ovr: 62.0, team_sp_ovrs: rotation.clone(), role_ovr_bias: bias,
+        }).role;
+        assert_eq!(mk(0.0), "스윙맨", "중립이면 5선발(64)에 밀린다");
+        assert_eq!(mk(6.0), "5선발", "각별(+6)이면 68로 평가돼 5선발을 밀어낸다");
+        // 62 − 6 = 56 이라 스윙맨 하한(60)마저 밑돈다 — 한 단계 더 떨어진다
+        assert_eq!(mk(-6.0), "롱릴리프", "적대(-6)면 스윙맨에서도 밀려난다");
     }
 
     #[test]

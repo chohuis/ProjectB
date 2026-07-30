@@ -448,3 +448,65 @@ export async function relationValueMap(
   const rows = await slotRepo.getRelationships(slotId, { kind, contact });
   return new Map(rows.map((r) => [r.personId, r.value]));
 }
+
+// ── 효과 (6C-5) ────────────────────────────────────────────────
+
+export interface RelationEffects {
+  /** 보직 배정 시 OVR에 더할 값 — 감독이 나를 어떻게 보는가 */
+  roleOvrBias: number;
+  /** 훈련 효율 배율에 더할 값 (0.04 = +4%p) */
+  trainingBonus: number;
+  managerLabel: string;
+  coachLabel: string;
+}
+
+const NEUTRAL_EFFECTS: RelationEffects = {
+  roleOvrBias: 0, trainingBonus: 0, managerLabel: "중립", coachLabel: "중립",
+};
+
+/**
+ * 관계가 실제 판정을 얼마나 바꾸는가.
+ *
+ * 계산은 Rust가 한다 — 규칙 파일을 읽는 곳을 한 군데로 묶고, 보정을 **라벨 단계**로
+ * 세기 때문이다(값이 아니라). 관계값은 플레이어에게 안 보이니 판정도 라벨로 해야
+ * "각별인데 왜 안 써주지"가 생기지 않는다.
+ *
+ * @param coachSpecialty 이번 주 훈련 영역. 그 영역 담당 코치의 관계만 본다
+ */
+export async function relationEffects(p: {
+  slotId: string;
+  teamId: string;
+  /** 담당 영역 코치 조회용 — masterStore.staffEntities */
+  coachSpecialty?: string;
+}): Promise<RelationEffects> {
+  try {
+    const rules = await loadRelationRules();
+    const rows = await slotRepo.getRelationships(p.slotId, { contact: "together" });
+    if (rows.length === 0) return NEUTRAL_EFFECTS;
+
+    const managerValue = rows.find((r) => r.kind === "manager")?.value ?? 0;
+
+    let coachValue = 0;
+    if (p.coachSpecialty) {
+      const staffById = new Map(
+        get(masterStore).staffEntities.map((e) => [
+          e.id,
+          (e.details as { coach?: { specialty?: string } } | undefined)?.coach?.specialty,
+        ]),
+      );
+      coachValue = rows.find(
+        (r) => r.kind === "coach" && staffById.get(r.personId) === p.coachSpecialty,
+      )?.value ?? 0;
+    }
+
+    const res = await callEngine<{
+      roleOvrBias: number; trainingBonus: number;
+      managerLabel: string; coachLabel: string;
+    }>("relationEffectsNative", { rules, managerValue, coachValue });
+    return res ?? NEUTRAL_EFFECTS;
+  } catch (e) {
+    // 관계를 못 읽으면 중립으로 돈다 — 보정이 없는 게 임의 보정보다 낫다
+    console.warn("[relationships] 효과 조회 실패 — 중립으로 진행", e);
+    return NEUTRAL_EFFECTS;
+  }
+}

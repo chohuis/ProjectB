@@ -2,12 +2,23 @@ import type { MessageItem } from "../../types/main";
 import type { PitchingAttributes, ProtagonistSave } from "../../types/save";
 
 // ── 코치 관련 헬퍼 ───────────────────────────────────────────
-export function getPitchCoachName(teamId: string, entities: import("../../stores/master").EntityRow[]): string {
-  const coach = entities.find(
+//
+// 전문 영역 비교가 **한 군데에만** 있어야 한다. 예전엔 이 비교가 3곳에 흩어져
+// 있었고 셋 다 영문 `"pitching"`과 비교했는데 데이터는 한국어 `"투수"`였다 —
+// 전부 조용히 실패했다. 정본은 staff_rules.toml [[coach.specialties]]다.
+export function findTeamCoach(
+  teamId: string,
+  specialty: import("../../types/save").CoachSpecialty,
+  entities: import("../../stores/master").EntityRow[],
+): import("../../stores/master").EntityRow | undefined {
+  return entities.find(
     e => e.role === "coach" && e.teamId === teamId &&
-         (e.details as import("../../stores/master").EntityDetails)?.coach?.specialty === "pitching"
+         (e.details as import("../../stores/master").EntityDetails)?.coach?.specialty === specialty
   );
-  return coach?.name ?? "투수 코치";
+}
+
+export function getPitchCoachName(teamId: string, entities: import("../../stores/master").EntityRow[]): string {
+  return findTeamCoach(teamId, "투수", entities)?.name ?? "투수 코치";
 }
 
 // Rust xp_threshold(v) = 7.5 + v * 0.35 동일 공식

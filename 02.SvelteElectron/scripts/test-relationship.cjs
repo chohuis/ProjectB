@@ -221,5 +221,94 @@ console.log("\n규칙 파일");
   }
 }
 
+// ── 9. 효과 배선 — 관계가 실제 판정을 바꾸는가 (6C-5) ─────────
+//
+// 값이 쌓이기만 하고 아무것도 안 바뀌면 관계도는 장식이다. 이 절이 "쌓인 값이
+// 보직·훈련에 실제로 닿는다"를 본다.
+console.log("\n효과 배선");
+{
+  const native = require("../packages/engine-native/index.js");
+  const rules = JSON.parse(fs.readFileSync(
+    path.join(__dirname, "../resource/data/master/players/relationship_rules.json"), "utf8"));
+
+  const eff = (managerValue, coachValue) => JSON.parse(
+    native.relationEffectsNative(JSON.stringify({ rules, managerValue, coachValue })));
+
+  const close = eff(80, 80);      // 각별
+  const neutral = eff(0, 0);      // 중립
+  const hostile = eff(-80, -80);  // 적대
+
+  check("중립은 보정이 0", neutral.roleOvrBias === 0 && neutral.trainingBonus === 0,
+    JSON.stringify(neutral));
+  check("각별이면 보직 평가가 오른다", close.roleOvrBias > 0, `${close.roleOvrBias}`);
+  check("적대면 보직 평가가 내린다", hostile.roleOvrBias < 0, `${hostile.roleOvrBias}`);
+  check("부호가 대칭", close.roleOvrBias === -hostile.roleOvrBias);
+  check("훈련 효율도 같은 방향", close.trainingBonus > 0 && hostile.trainingBonus < 0);
+  check("라벨이 함께 온다", close.managerLabel === "각별" && hostile.coachLabel === "적대",
+    `${close.managerLabel}/${hostile.coachLabel}`);
+
+  // 라벨 단계별로 단조 증가 (중간에 꺾이면 튜닝 사고다)
+  const steps = [-80, -40, -20, 0, 20, 50, 80].map(v => eff(v, v).roleOvrBias);
+  const monotone = steps.every((v, i) => i === 0 || v > steps[i - 1]);
+  check("라벨이 오를 때마다 보정도 오른다", monotone, steps.join(" → "));
+
+  // 보정이 실제로 보직을 가르는가 — 관계도만의 힘으로 5선발에 진입할 수 있어야 한다
+  const rotation = [90, 85, 80, 70, 64];
+  const roleAt = (bias) => JSON.parse(native.assignProtagonistRoleNative(JSON.stringify({
+    position: null, ovr: 62, teamSpOvrs: rotation, roleOvrBias: bias,
+  }))).role;
+  check("중립이면 로테이션 밖", roleAt(0) === "스윙맨", roleAt(0));
+  check("각별이면 5선발 진입", roleAt(close.roleOvrBias) === "5선발", roleAt(close.roleOvrBias));
+  check("적대면 더 밀린다", roleAt(hostile.roleOvrBias) === "롱릴리프", roleAt(hostile.roleOvrBias));
+}
+
+// ── 10. 코치 전문 영역 어휘 일치 ──────────────────────────────
+//
+// 이 절이 있는 이유: `coach.specialty === "pitching"` 비교가 3곳에 있었는데
+// 실제 데이터는 한국어 "투수"였다. 전부 조용히 false였고 그래서 **투수코치
+// 능력치가 훈련 효율에 하나도 반영되지 않았다**(감독 능력치 P6-2와 같은 부류).
+console.log("\n코치 전문 영역 어휘");
+{
+  const staffRules = JSON.parse(fs.readFileSync(
+    path.join(__dirname, "../resource/data/master/players/staff_rules.json"), "utf8"));
+  const seedNames = staffRules.rules.coach.specialties.map((x) => x.name);
+  console.log(`    시드 전문영역: ${seedNames.join(" · ")}`);
+
+  // TS 타입이 시드와 같은 어휘인가
+  const saveSrc = fs.readFileSync(
+    path.join(__dirname, "../apps/ui/src/shared/types/save.ts"), "utf8");
+  const m = saveSrc.match(/export type CoachSpecialty =([^;]+);/);
+  const tsNames = [...(m?.[1] ?? "").matchAll(/"([^"]+)"/g)].map((x) => x[1]);
+  check(`CoachSpecialty가 시드와 같은 ${seedNames.length}종`,
+    tsNames.length === seedNames.length, `TS ${tsNames.length}종: ${tsNames.join(",")}`);
+  const missing = seedNames.filter((n) => !tsNames.includes(n));
+  check("시드의 모든 전문영역이 타입에 있다", missing.length === 0, missing.join(","));
+
+  // training_area 매핑의 오른쪽이 실재하는 전문영역인가
+  const relRules = JSON.parse(fs.readFileSync(
+    path.join(__dirname, "../resource/data/master/players/relationship_rules.json"), "utf8"));
+  const badTargets = Object.entries(relRules.training_area ?? {})
+    .filter(([, area]) => !seedNames.includes(area))
+    .map(([k, v]) => `${k}→${v}`);
+  check("training_area가 실재 전문영역을 가리킨다", badTargets.length === 0, badTargets.join(" "));
+
+  // 화면·로직에 영문 전문영역 비교가 남아 있지 않은가
+  const files = [
+    "../apps/ui/src/shared/usecases/advanceWeek.ts",
+    "../apps/ui/src/shared/usecases/weekPhases/training.ts",
+    "../apps/ui/src/pages/training/TrainingPage.svelte",
+  ];
+  const leaked = [];
+  for (const rel of files) {
+    const src = fs.readFileSync(path.join(__dirname, rel), "utf8")
+      .replace(/<!--[\s\S]*?-->/g, "").replace(/\/\*[\s\S]*?\*\//g, "")
+      .replace(/^\s*\/\/.*$/gm, "");
+    if (/specialty\s*===\s*"(pitching|batting|fielding|running)"/.test(src)) {
+      leaked.push(rel.replace("../apps/ui/src/", ""));
+    }
+  }
+  check("영문 전문영역 비교가 남아 있지 않다", leaked.length === 0, leaked.join(" "));
+}
+
 console.log(failed === 0 ? "\nALL PASS" : `\n${failed} FAILED`);
 process.exit(failed === 0 ? 0 : 1);
