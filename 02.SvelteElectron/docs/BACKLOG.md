@@ -20,11 +20,13 @@
 
 ## 0. 지금 상태
 
-**Phase 1~6 + 6.5(로스터 디테일) 완료 — `main`.**
-**Phase 7-1(드래프트) 완료 — `feat/draft`, 병합 대기.**
-**Phase 7-2(승강) · 7-3(병역) · 7-4(FA) 완료 — `feat/promotion`, 병합 대기.**
+**Phase 1~6 + 6.5 · Phase 7-1~7-4 완료 — 전부 `main`에 병합됨 (2026-07-31).**
 
-설계 정본 [design/roster.md](design/roster.md) · [design/draft.md](design/draft.md).
+설계 정본: [roster.md](design/roster.md) · [draft.md](design/draft.md) ·
+[promotion.md](design/promotion.md) · [military.md](design/military.md) · [fa.md](design/fa.md)
+
+⚠ **실행 확인은 아직 안 했다.** 자동 테스트(21스위트)는 데이터만 본다 —
+화면 확인 항목은 [RESUME.md](RESUME.md)에 있다.
 
 다음은 **Phase 7-5 (개인 재정 · 스태프 배선)**.
 

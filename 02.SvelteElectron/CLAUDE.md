@@ -12,9 +12,9 @@
 **진행 현황은 [docs/RESUME.md](docs/RESUME.md)가 정본이다.** 브랜치·다음 작업·미결
 목록·검증 명령이 거기 있다. 여기 복제하면 stale해진다.
 
-> 요약 (2026-07-30): **Phase 1~6 + 6.5 완료(main) · Phase 7-1 드래프트(`feat/draft`) · 7-2 승강 · 7-3 병역 · 7-4 FA(`feat/promotion`) 완료.**
+> 요약 (2026-07-30): **Phase 1~6 + 6.5 · 7-1~7-4 완료 — 전부 `main` 병합됨.**
 > 다음은 Phase 7-5(개인 재정·스태프 배선).
-> 설계 정본은 [docs/design/roster.md](docs/design/roster.md)·[docs/design/draft.md](docs/design/draft.md) —
+> 설계 정본은 `docs/design/` 아래 roster·draft·promotion·military·fa —
 > **수치는 `resource/data/master/players/generation_rules.json`에만 둔다.**
 > 로스터 상한·드래프트 라운드·신인 계약도 전부 그 파일이다 (코드에 표를 두 번 적지 말 것).
 >
