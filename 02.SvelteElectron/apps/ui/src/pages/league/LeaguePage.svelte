@@ -1,6 +1,7 @@
 <script lang="ts">
   import { get } from "svelte/store";
   import { t } from "../../shared/i18n";
+  import { isLeagueInScope, scopedLeagueIds } from "../../shared/config/releaseScope";
   import { gameStore } from "../../shared/stores/game";
   import { seasonStore } from "../../shared/stores/season";
   import { masterStore, teamMap } from "../../shared/stores/master";
@@ -45,7 +46,7 @@
   $: if (selectedLeagueId && isLocked(selectedLeagueId)) selectedLeagueId = myLeagueId;
 
   // ── 리그 기록 탭 ─────────────────────────────────────────────
-  const TX_LEAGUES = ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"] as const;
+  const TX_LEAGUES = scopedLeagueIds(["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"]);
   const TX_CAT_LABEL: Record<TxCategory, string> = {
     all: "전체", trade: "트레이드", fa: "FA", draft: "드래프트", military: "병역", retirement: "은퇴",
   };
@@ -321,8 +322,9 @@
   // 팜리그는 경기 시뮬을 하지 않아(R5) 순위표가 항상 0-0 — 순위표 탭에서 제외
   $: allLeagueIds = (() => {
     const keys = new Set([...Object.keys($seasonStore.leagueState).filter(Boolean), myLeagueId]);
-    const ordered  = LEAGUE_ORDER.filter((lid) => keys.has(lid) && !lockedLeagueSet.has(lid) && !isFarmLeague(lid));
-    const extra    = [...keys].filter((lid) => !LEAGUE_ORDER.includes(lid) && !lockedLeagueSet.has(lid) && !isFarmLeague(lid));
+    // isLeagueInScope: 1차 출시 범위 밖(해외)은 목록에서 뺀다 — releaseScope.ts
+    const ordered  = LEAGUE_ORDER.filter((lid) => keys.has(lid) && isLeagueInScope(lid) && !lockedLeagueSet.has(lid) && !isFarmLeague(lid));
+    const extra    = [...keys].filter((lid) => !LEAGUE_ORDER.includes(lid) && isLeagueInScope(lid) && !lockedLeagueSet.has(lid) && !isFarmLeague(lid));
     const locked   = [...keys].filter((lid) => lockedLeagueSet.has(lid) && !isFarmLeague(lid));
     return [...ordered, ...extra, ...locked];
   })();

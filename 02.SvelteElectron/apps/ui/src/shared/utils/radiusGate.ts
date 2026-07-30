@@ -1,4 +1,5 @@
 import type { CareerStage } from "../types/save";
+import { isLeagueInScope } from "../config/releaseScope";
 
 // DESIGN.md §2 — 시뮬 반경. **v2에서 전면 개정됐다.**
 //
@@ -43,6 +44,9 @@ const FOREIGN_HOME: Partial<Record<CareerStage, string[]>> = {
 export const RADIUS_GATED_LEAGUES = new Set([...DOMESTIC_LEAGUES, ...FOREIGN_LEAGUES]);
 
 export function getLeagueRadius(careerStage: CareerStage, leagueId: string): LeagueRadius {
+  // 1차 출시 범위 밖(해외)은 **비활성**이다 — 드리프트도 돌지 않는다.
+  // 드리프트만 돌려두면 선수 없는 리그의 순위표가 화면에 뜬다 (releaseScope.ts).
+  if (!isLeagueInScope(leagueId)) return 3;
   if (DOMESTIC_LEAGUES.has(leagueId)) return 1;
   if (FOREIGN_LEAGUES.has(leagueId)) {
     return FOREIGN_HOME[careerStage]?.includes(leagueId) ? 1 : 2;

@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import { t } from "../../shared/i18n";
   import { masterStore } from "../../shared/stores/master";
+  import { inScope, isLeagueInScope } from "../../shared/config/releaseScope";
   import type { EntityDetails } from "../../shared/stores/master";
   import { gameStore } from "../../shared/stores/game";
   import { seasonStore } from "../../shared/stores/season";
@@ -16,6 +17,10 @@
     abl:  "LEAGUE_ABL",
     jbl:  "LEAGUE_JBL",
   };
+
+  /** 범위 밖 리그 탭은 아예 안 그린다 (확장팩에서 releaseScope Set을 비우면 돌아온다) */
+  const SCOPED_TABS: LeagueTab[] = (["all", "hs", "univ", "ind", "kbl", "abl", "jbl"] as LeagueTab[])
+    .filter((t) => t === "all" || isLeagueInScope(LEAGUE_MAP[t as Exclude<LeagueTab, "all">]));
 
   let leagueTab: LeagueTab = "all";
   let selectedTeamId = "";
@@ -41,7 +46,8 @@
     return map[leagueId] ?? leagueId;
   }
 
-  $: filteredTeams = $masterStore.teams.filter((team) => {
+  // 1차 출시 범위 밖(해외) 팀은 목록에 넣지 않는다 — releaseScope.ts
+  $: filteredTeams = inScope($masterStore.teams).filter((team) => {
     if (leagueTab === "all") return true;
     return team.leagueId === LEAGUE_MAP[leagueTab as Exclude<LeagueTab, "all">];
   });
@@ -101,7 +107,7 @@
   <article class="card board">
     <header class="top-row">
       <div class="league-tabs">
-        {#each (["all", "hs", "univ", "ind", "kbl", "abl", "jbl"] as LeagueTab[]) as tab}
+        {#each SCOPED_TABS as tab}
           <button class:active={leagueTab === tab} on:click={() => (leagueTab = tab)}>{leagueLabel(tab)}</button>
         {/each}
       </div>
