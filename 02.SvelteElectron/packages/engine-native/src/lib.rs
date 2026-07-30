@@ -28,6 +28,7 @@ mod standings_drift;
 mod synthetic_trajectory;
 mod relationship;
 mod career_history;
+mod military_roster;
 
 use types::*;
 use sim_types::*;
@@ -673,6 +674,18 @@ pub fn advance_staff_season_native(p: String) -> String {
     };
     serde_json::to_string(&staff_lifecycle::advance_staff_season(params))
         .unwrap_or_else(|e| parse_err("advanceStaffSeasonNative/serialize", e))
+}
+
+// ── 군경팀 로스터 (Phase 6.5) ────────────────────────────────────────────────
+
+/// 상무 로스터 — 복무 중인 선수 + 계급 + 전역 연도 (원소속은 실재 팀에서 지정)
+#[napi]
+pub fn generate_military_roster_native(p: String) -> String {
+    let params: military_roster::GenerateMilitaryRosterParams = match serde_json::from_str(&p) {
+        Ok(v) => v, Err(e) => return parse_err("generateMilitaryRosterNative", e),
+    };
+    serde_json::to_string(&military_roster::generate_military_roster(params))
+        .unwrap_or_else(|e| parse_err("generateMilitaryRosterNative/serialize", e))
 }
 
 // ── 경력 이력 (Phase 6.5) ────────────────────────────────────────────────────

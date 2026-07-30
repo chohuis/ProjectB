@@ -5,6 +5,7 @@
 import { slotRepo, type RepoNpc } from "./slotRepo";
 import { generateDomesticStaff } from "./staffGen";
 import { ALL_TEAMS_BY_LEAGUE, HS_ACTIVE_TEAMS_V3 } from "../utils/leagueScheduler";
+import { SANGMU_TEAM_IDS } from "../utils/ids";
 
 // Rust RosterRules와 1:1 (generation_rules.json rosterRules[leagueId])
 export interface RosterRulesData {
@@ -28,6 +29,8 @@ export interface GenerationRulesFile {
   powerRules?: unknown;
   /** 과거 경력 생성 (Phase 6.5) */
   careerHistoryRules?: unknown;
+  /** 군경팀(상무) 로스터 (Phase 6.5) */
+  militaryRules?: unknown;
 }
 
 export interface NewGameV3Options {
@@ -144,17 +147,6 @@ export async function loadRosterRules(): Promise<GenerationRulesFile> {
  * Lazy를 유지할 이유도 없다 — 국내 전 리그 로스터 생성이 합쳐서 1,580명·35ms다.
  * **Lazy 활성화는 이제 해외(ABL·JBL) 전용이다.**
  */
-/**
- * 군경팀 — 일반 로스터를 만들지 않는다. **복무 중인 선수가 채운다** (R-5).
- *
- * 예전엔 `TEAM_SPORTS_UNIT`을 걸렀는데 refs의 실제 ID는 `TEAM_IND_SANGMU_PHOENIX`라
- * 필터가 안 먹었다 — 그래서 병역 "미필"인 민간 선수 30명이 상무에 생성돼 있었다.
- */
-export const SANGMU_TEAM_IDS: ReadonlySet<string> = new Set([
-  "TEAM_IND_SANGMU_PHOENIX",
-  "TEAM_SPORTS_UNIT",   // 구 ID — 구 세이브·구 코드 경로 대비
-]);
-
 const DOMESTIC_ROSTER_LEAGUES = [
   "LEAGUE_UNIVERSITY",
   "LEAGUE_INDEPENDENT",
@@ -233,7 +225,13 @@ export async function createNewGameV3(opts: NewGameV3Options): Promise<NewGameV3
         salaryRules, powerRules, entryRules)));
   }
 
-  const npcs = [...hsNpcs, ...otherNpcs, ...(opts.namedNpcs ?? [])];
+  // ── 군경팀(상무) — 복무 중인 선수로 채운다 (Phase 6.5) ─────
+  // 별도 생성이고 원소속만 실재 프로/2군 팀으로 지정한다 (사용자 확정).
+  // 원팀에서 빼내면 8포지션 백업 보장이 깨진다.
+  const militaryNpcs = await generateMilitaryRoster(
+    opts.seasonYear, worldSeed, rulesFile.militaryRules);
+
+  const npcs = [...hsNpcs, ...otherNpcs, ...militaryNpcs, ...(opts.namedNpcs ?? [])];
 
   // 스태프 국내 전원 일괄 생성 (Phase 6A). 선수와 달리 Lazy가 아니다 —
   // "이 팀 감독이 아직 없을 수 있다"를 모든 조회 경로가 고려하면 버그가 난다
@@ -266,6 +264,35 @@ export async function createNewGameV3(opts: NewGameV3Options): Promise<NewGameV3
   }
 
   return { slotId: opts.slotId, worldSeed, npcCount: npcs.length, staffCount: staff.length };
+}
+
+/**
+ * 군경팀 로스터 — 복무 중인 선수 + 계급 + 전역 연도.
+ *
+ * 원소속은 **프로 1군·2군에서만** 고른다. 전역하면 거기로 돌아가는데,
+ * 없는 팀을 넣으면 돌아갈 곳이 사라진다.
+ */
+async function generateMilitaryRoster(
+  seasonYear: number,
+  worldSeed: number,
+  rules: unknown,
+): Promise<Partial<RepoNpc>[]> {
+  if (!rules) return [];
+  const originTeams = [
+    ...(ALL_TEAMS_BY_LEAGUE.LEAGUE_KBL ?? []).map((teamId) => ({ teamId, leagueId: "LEAGUE_KBL" })),
+    ...(ALL_TEAMS_BY_LEAGUE.LEAGUE_KBL_FARM ?? []).map((teamId) => ({ teamId, leagueId: "LEAGUE_KBL_FARM" })),
+  ];
+  if (originTeams.length === 0) return [];
+
+  const raw = await window.projectB!.engine("generateMilitaryRosterNative", JSON.stringify({
+    worldSeed: worldSeed >>> 0, seasonYear, rules, originTeams,
+  }));
+  const parsed = JSON.parse(raw) as { npcs?: Partial<RepoNpc>[]; error?: string };
+  if (!Array.isArray(parsed.npcs)) {
+    console.warn("[newGameV3] 상무 로스터 생성 실패 — 빈 팀으로 진행", parsed.error);
+    return [];
+  }
+  return parsed.npcs;
 }
 
 /** 계약·이적이 있는 리그. 학교 리그(고교·대학)엔 그런 개념이 없다 */

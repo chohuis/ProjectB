@@ -268,5 +268,43 @@
     },
     "faIntervalYears": 4,
     "_faIntervalNote": "FA 재취득 주기. 없으면 FA 이적이 연속으로 나온다"
+  },
+  "militaryRules": {
+    "_comment": "군경팀(상무) 로스터. 별도 생성하고 원소속만 실재 프로/2군 팀으로 지정한다 — 원팀 로스터를 빼내면 8포지션 백업 보장이 깨진다",
+    "teamId": "TEAM_IND_SANGMU_PHOENIX",
+    "leagueId": "LEAGUE_INDEPENDENT",
+    "rosterSize": 26,
+    "serviceMonths": 24,
+    "_serviceNote": "복무 기간(개월). 기존 규약은 enlistYear + 2시즌이라 24개월로 맞춘다",
+    "ranks": [
+      {
+        "untilMonths": 2,
+        "name": "이병"
+      },
+      {
+        "untilMonths": 8,
+        "name": "일병"
+      },
+      {
+        "untilMonths": 14,
+        "name": "상병"
+      },
+      {
+        "untilMonths": 99,
+        "name": "병장"
+      }
+    ],
+    "ageMin": 20,
+    "ageMax": 24,
+    "_ageNote": "상무는 병역을 일찍 해결하려는 젊은 선수가 간다",
+    "pitchingOvrMin": 52,
+    "pitchingOvrMax": 80,
+    "battingOvrMin": 52,
+    "battingOvrMax": 80,
+    "devRateMin": 55,
+    "devRateMax": 85,
+    "_devNote": "유망주 위주라 육성률이 일반 리그보다 높다",
+    "salary": 300,
+    "_salaryNote": "군인 봉급(월 수십만원)이라 연 300만원 수준. 프로 최저연봉과 다르다"
   }
 }

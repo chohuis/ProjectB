@@ -1,3 +1,21 @@
+/**
+ * 군경팀(상무) — refs.json의 실제 ID.
+ *
+ * 이걸 상수로 뽑은 이유: `TEAM_SPORTS_UNIT`이 v1 시절 ID인데 코드 세 곳에
+ * 하드코딩돼 있었고, Phase 5가 refs를 갈아엎으면서 **존재하지 않는 팀**이 됐다.
+ * 새 게임 필터도, 런타임 입대 처리도 그 ID를 쓰고 있었다.
+ *
+ * 상무는 **독립리그 소속**이다 (예전 코드는 LEAGUE_UNIVERSITY로 넣었다).
+ */
+export const SANGMU_TEAM_ID = "TEAM_IND_SANGMU_PHOENIX";
+export const SANGMU_LEAGUE_ID = "LEAGUE_INDEPENDENT";
+
+/** 구 ID 포함 — 구 세이브·구 코드 경로를 걸러낼 때 쓴다 */
+export const SANGMU_TEAM_IDS: ReadonlySet<string> = new Set([
+  SANGMU_TEAM_ID,
+  "TEAM_SPORTS_UNIT",
+]);
+
 // ── ID 규칙 정본 (DESIGN.md §8.2 원칙 6) ─────────────────────
 // 리그/팀/구단 ID의 유일한 출처는 refs.json이며, 파생 규칙은 이 모듈에만 둔다.
 // 개별 파일에 .replace(/^CLUB_/...) 류 인라인 변환을 두지 않는다.
