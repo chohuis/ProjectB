@@ -159,5 +159,67 @@ console.log("\n슬롯 재생성");
   check("createSlot 후 관계 0행", d("getRelationships").length === 0);
 }
 
+// ── 7. 라벨 경계 — Rust와 TS가 같은 표를 쓰는가 ───────────────
+//
+// 이 대조가 이 파일에 있는 이유: 경계가 두 곳에 있다. 화면은 IPC 왕복 없이
+// 라벨을 그려야 하고(TS), 콜업·훈련효율 판정은 Rust에서 한다. 한쪽만 고치면
+// "화면엔 신뢰로 뜨는데 감독은 안 쓰는" 상태가 되고 그건 조용히 굴러간다.
+console.log("\n라벨 경계 (Rust ↔ TS)");
+{
+  const native = require("../packages/engine-native/index.js");
+  const rustTable = JSON.parse(native.relationLabelTableNative());
+
+  // TS 정의를 소스에서 뽑는다 (.ts를 그대로 require할 수 없다)
+  const tsSrc = fs.readFileSync(
+    path.join(__dirname, "../apps/ui/src/shared/types/relationship.ts"), "utf8");
+  const block = tsSrc.match(/RELATION_LABELS = \[([\s\S]*?)\] as const/);
+  const tsTable = [...(block?.[1] ?? "").matchAll(
+    /min:\s*(-?\d+),\s*max:\s*(-?\d+),\s*label:\s*"([^"]+)",\s*tone:\s*"([^"]+)"/g)]
+    .map((m) => ({ min: +m[1], max: +m[2], label: m[3], tone: m[4] }));
+
+  check(`TS 표를 파싱했다 (${tsTable.length}구간)`, tsTable.length === 7, `${tsTable.length}`);
+  check(`Rust 표가 7구간`, rustTable.length === 7, `${rustTable.length}`);
+
+  let mismatch = [];
+  for (let i = 0; i < Math.max(rustTable.length, tsTable.length); i++) {
+    const r = rustTable[i], t = tsTable[i];
+    if (!r || !t) { mismatch.push(`구간 ${i} 한쪽에만 있음`); continue; }
+    if (r.min !== t.min || r.max !== t.max || r.label !== t.label || r.tone !== t.tone) {
+      mismatch.push(`구간 ${i}: Rust(${r.min}~${r.max} ${r.label}/${r.tone}) ≠ TS(${t.min}~${t.max} ${t.label}/${t.tone})`);
+    }
+  }
+  check("Rust와 TS의 라벨 표가 완전히 같다", mismatch.length === 0, "\n      " + mismatch.join("\n      "));
+
+  // 구멍·겹침 없이 −100~100을 덮는가 (양쪽 각각)
+  for (const [who, table] of [["Rust", rustTable], ["TS", tsTable]]) {
+    const bad = [];
+    for (let v = -100; v <= 100; v++) {
+      const hits = table.filter((b) => v >= b.min && v <= b.max).length;
+      if (hits !== 1) bad.push(`${v}→${hits}개`);
+    }
+    check(`  ${who}: 전 구간이 정확히 한 라벨`, bad.length === 0, bad.slice(0, 5).join(" "));
+  }
+}
+
+// ── 8. 규칙 파일이 생성돼 있는가 ──────────────────────────────
+// 6B에서 두 번 겪은 실패: TOML을 고치고 build_refs_from_seeds.py를 안 돌려
+// Rust가 옛 규칙으로 돌았다. Rust 유닛테스트가 이 JSON을 읽으므로 존재는 그쪽이
+// 보장하지만, TS 배선도 같은 파일을 먹으니 여기서도 확인한다.
+console.log("\n규칙 파일");
+{
+  const rulesPath = path.join(__dirname, "../resource/data/master/players/relationship_rules.json");
+  check("relationship_rules.json 생성됨", fs.existsSync(rulesPath),
+    "python scripts/build_refs_from_seeds.py 실행 필요");
+  if (fs.existsSync(rulesPath)) {
+    const r = JSON.parse(fs.readFileSync(rulesPath, "utf8"));
+    check("init·decay·weekly·season 4섹션",
+      ["init", "decay", "weekly", "season"].every((k) => k in r), Object.keys(r).join(","));
+    check("이동 감쇠가 0<f<1 (리셋도 유지도 아니다)",
+      r.decay.on_move > 0 && r.decay.on_move < 1, `${r.decay.on_move}`);
+    check("비접촉 감쇠가 0<f<1", r.decay.apart_per_season > 0 && r.decay.apart_per_season < 1);
+    check("주간 규칙에 4종 kind", ["manager", "coach", "teammate", "rival"].every((k) => k in r.weekly));
+  }
+}
+
 console.log(failed === 0 ? "\nALL PASS" : `\n${failed} FAILED`);
 process.exit(failed === 0 ? 0 : 1);

@@ -350,3 +350,13 @@ print(f"→ {staff_out}")
 print(f"   코치 인원표 {len(staff_rules['coach_count'])}등급 · 코치 역할 "
       f"{len(staff_rules['coach']['specialties'])}종 · 이름풀 "
       f"성{len(staff_payload['namePools']['krSurnames'])}/이름{len(staff_payload['namePools']['krGiven'])}")
+
+# ── 관계도 규칙 (Phase 6C) ────────────────────────────────────────
+# 라벨 경계는 여기 없다 — Rust relationship.rs가 정본이다 (TOML 주석 참고).
+rel_rules = tomllib.load(io.open(os.path.join(SEED, "relationship_rules.toml"), "rb"))
+rel_out = os.path.join(MASTER, "players", "relationship_rules.json")
+io.open(rel_out, "w", encoding="utf-8").write(
+    json.dumps(rel_rules, ensure_ascii=False, indent=2) + "\n")
+print(f"→ {rel_out}")
+print(f"   이동 감쇠 ×{rel_rules['decay']['on_move']} · 비접촉 시즌 ×"
+      f"{rel_rules['decay']['apart_per_season']} · 초기 편차 ±{rel_rules['init']['personality_spread']}")
