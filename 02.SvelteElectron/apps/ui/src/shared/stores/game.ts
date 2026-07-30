@@ -1292,6 +1292,34 @@ function createGameStore() {
      * 진학·입단 같은 학적 전이가 아니라 같은 구단 안의 이동이다.
      * 2군 일정·순위표는 이미 있으므로 `leagueId`만 맞으면 그대로 뛴다.
      */
+    /**
+     * 국제대회 성적으로 병역 면제 (Phase 7-3).
+     *
+     * **면제는 되돌리지 않는다** — 이미 군필·현역인 사람은 건드리지 않고,
+     * 미필만 면제로 바꾼다. 주인공도 같은 경로를 탄다.
+     */
+    grantMilitaryExemption(npcIds: string[], seasonYear: number, tournamentName: string) {
+      const target = new Set(npcIds);
+      update((s) => {
+        const npcs = s.npcs.map((n) => {
+          if (!target.has(n.npcId) || n.militaryStatus !== "미필") return n;
+          return {
+            ...n,
+            militaryStatus: "면제" as const,
+            careerEvents: [
+              ...(n.careerEvents ?? []),
+              { year: seasonYear, eventType: "military_exempt" as const,
+                detail: `${tournamentName} 입상` },
+            ],
+          };
+        });
+        const proto = target.has(s.protagonist.id) && s.protagonist.militaryStatus === "미필"
+          ? { ...s.protagonist, militaryStatus: "면제" as const }
+          : s.protagonist;
+        return { ...s, npcs, protagonist: proto };
+      });
+    },
+
     setProtagonistTeam(teamId: string, leagueId: string) {
       update((s) => ({
         ...s,

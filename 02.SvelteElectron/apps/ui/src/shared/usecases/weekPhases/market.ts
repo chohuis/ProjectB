@@ -642,9 +642,14 @@ export async function processProTeamCallupCalldown(
 
   const proTeams1 = m.teams.filter(t => t.leagueId === "LEAGUE_KBL" && t.id.endsWith("_1"));
 
-  const injuredIds = Object.entries(s.npcInjuries ?? {})
-    .filter(([, inj]) => (inj as any)?.severity !== "mild")
-    .map(([id]) => id);
+  // 국가대표 차출자는 **부상자와 같은 목록으로** 넘긴다 (사용자 확정) —
+  // 따로 처리하면 대회 기간에 1군이 빈 채로 돈다
+  const injuredIds = [
+    ...Object.entries(s.npcInjuries ?? {})
+      .filter(([, inj]) => (inj as any)?.severity !== "mild")
+      .map(([id]) => id),
+    ...Object.keys(s.nationalDuty ?? {}),
+  ];
 
   const allMoves: Array<{ id: string; teamId: string }> = [];
   const _t0Callup = Date.now();

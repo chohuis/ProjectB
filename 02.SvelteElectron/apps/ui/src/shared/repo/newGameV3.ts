@@ -47,6 +47,8 @@ export interface GenerationRulesFile {
   };
   /** 1군 ↔ 2군 승강 판정 (Phase 7-2). Rust로 그대로 넘긴다 */
   promotionRules?: unknown;
+  /** 국가대표 · 국제대회 (Phase 7-3) */
+  internationalRules?: unknown;
 }
 
 export interface NewGameV3Options {

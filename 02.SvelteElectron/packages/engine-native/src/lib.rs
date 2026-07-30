@@ -30,6 +30,7 @@ mod relationship;
 mod career_history;
 mod military_roster;
 mod draft;
+mod national_team;
 
 use types::*;
 use sim_types::*;
@@ -270,6 +271,28 @@ pub fn generate_freshmen_native(params_json: String) -> String {
     };
     let result = npc_sim::generate_freshmen(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("generateFreshmenNative/serialize", e))
+}
+
+/// 국가대표 발탁 — 그 해 대회가 없으면 빈 결과
+#[napi]
+pub fn select_national_squad_native(params_json: String) -> String {
+    let params: national_team::SelectSquadParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("selectNationalSquadNative", e),
+    };
+    let result = national_team::select_squad(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("selectNationalSquadNative/serialize", e))
+}
+
+/// 국제대회 결과 — 경기는 시뮬하지 않고 대표팀 전력으로 순위를 뽑는다
+#[napi]
+pub fn simulate_tournament_native(params_json: String) -> String {
+    let params: national_team::TournamentParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("simulateTournamentNative", e),
+    };
+    let result = national_team::simulate_tournament(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("simulateTournamentNative/serialize", e))
 }
 
 /// 드래프트 후보 선정 — 졸업생 + 대학 재학 얼리 신청 + 독립리그 신청

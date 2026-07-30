@@ -337,5 +337,51 @@
     "formSpan": 1.0,
     "slumpScore": -0.5,
     "_slumpNote": "이 점수 아래면 장기 부진 - 상시 콜업 트리거이자 교체 압력 +20"
+  },
+  "internationalRules": {
+    "_note": "국가대표 · 국제대회 (Phase 7-3). 읽는 곳: engine-native/src/national_team.rs. 경기는 시뮬하지 않는다 - 대표팀 전력으로 순위를 확률 산출한다",
+    "_scheduleNote": "cycleYears 4 · yearMod가 서로 달라 **한 해에 두 대회가 겹치지 않는다**. yearMod 3인 해는 대회가 없다",
+    "maxPerTeam": 4,
+    "_maxPerTeamNote": "한 구단이 대표팀을 독식하지 않게. 소속팀 전력이 통째로 빠지면 리그가 기운다",
+    "ageMax": 29,
+    "_ageNote": "대표팀은 주력 연령대만. 병역 면제가 걸린 대회라 젊은 선수가 간다",
+    "tournaments": [
+      {
+        "id": "olympics",
+        "name": "올림픽",
+        "cycleYears": 4,
+        "yearMod": 0,
+        "week": 30,
+        "durationWeeks": 3,
+        "rosterSize": 24,
+        "fieldSize": 6,
+        "exemptionRank": 3,
+        "_note": "6개국 · 3위(동메달) 이내 면제"
+      },
+      {
+        "id": "worldcup",
+        "name": "야구 월드컵",
+        "cycleYears": 4,
+        "yearMod": 1,
+        "week": 10,
+        "durationWeeks": 3,
+        "rosterSize": 28,
+        "fieldSize": 20,
+        "exemptionRank": 0,
+        "_note": "20개국 · 면제 없음. 시즌 초라 소속팀 타격이 크다"
+      },
+      {
+        "id": "asiangames",
+        "name": "아시안게임",
+        "cycleYears": 4,
+        "yearMod": 2,
+        "week": 38,
+        "durationWeeks": 2,
+        "rosterSize": 24,
+        "fieldSize": 8,
+        "exemptionRank": 1,
+        "_note": "8개국 · 우승만 면제. 실제 규정과 같다"
+      }
+    ]
   }
 }

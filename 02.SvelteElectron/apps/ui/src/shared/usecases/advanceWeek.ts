@@ -12,6 +12,7 @@ import { applyWeeklyStudy, calcExamResult, getUniversityEffBonus, getUniversityE
 import { checkAchievements, computeMetrics } from "../utils/achievementEngine";
 import { generateTop10, buildTop10Message, rankEffect } from "../utils/top10Engine";
 import { isMonthStart, planMonthlyFriendlies, buildMonthlyNoticeMessage } from "../utils/friendlyMatchEngine";
+import { runNationalTeamWeek } from "./nationalTeam";
 import { calcOfferedSalaryForProtagonist, calcSeasonRating } from "../utils/salaryEngine";
 import { isFaEligible, getFaThreshold } from "../utils/faEngine";
 import type { MatchResult, PendingAction, PlayerCondition, ScheduleEntry, WeekAdvanceResult } from "../types/season";
@@ -452,6 +453,14 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
 
   // NPC 주간 성장/하락 처리 (매주 실행)
   await processWeeklyNpcGrowth(weekNum, g.protagonist.careerStage);
+
+  // ── 국가대표 · 국제대회 (Phase 7-3) ─────────────────────────
+  // 대회는 4년 주기이고 한 해에 하나만 열린다. 발탁되면 그 기간 소속팀에서
+  // 빠지고(부상과 같은 취급), 폐막 주에 순위·메달·병역 면제가 정해진다
+  {
+    const nationalLogs = await runNationalTeamWeek(weekNum, weekInYear);
+    logs.push(...nationalLogs);
+  }
 
   // 1군 ↔ 2군 승강 — 국내 10구단 전부, 주인공 무관.
   //
