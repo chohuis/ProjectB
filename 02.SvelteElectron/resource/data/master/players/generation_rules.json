@@ -69,7 +69,7 @@
   },
   "rosterRules": {
     "LEAGUE_HIGHSCHOOL": {
-      "rosterSize": 25,
+      "rosterSize": 30,
       "pitchingOvrMin": 45,
       "pitchingOvrMax": 70,
       "battingOvrMin": 45,
@@ -80,7 +80,7 @@
       "ageBase": 15
     },
     "LEAGUE_UNIVERSITY": {
-      "rosterSize": 22,
+      "rosterSize": 32,
       "pitchingOvrMin": 52,
       "pitchingOvrMax": 76,
       "battingOvrMin": 52,
@@ -91,7 +91,7 @@
       "ageBase": 18
     },
     "LEAGUE_INDEPENDENT": {
-      "rosterSize": 20,
+      "rosterSize": 30,
       "pitchingOvrMin": 50,
       "pitchingOvrMax": 74,
       "battingOvrMin": 50,
@@ -103,7 +103,7 @@
       "withContract": true
     },
     "LEAGUE_KBL": {
-      "rosterSize": 28,
+      "rosterSize": 30,
       "pitchingOvrMin": 58,
       "pitchingOvrMax": 88,
       "battingOvrMin": 58,
@@ -115,7 +115,7 @@
       "withContract": true
     },
     "LEAGUE_KBL_FARM": {
-      "rosterSize": 26,
+      "rosterSize": 34,
       "pitchingOvrMin": 48,
       "pitchingOvrMax": 76,
       "battingOvrMin": 48,

@@ -219,11 +219,20 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
             let position = if is_pitcher {
                 if i < sp_n { "SP".to_string() } else { "RP".to_string() }
             } else {
-                let bi = i - pitcher_n;
-                if (bi as usize) < POSITIONS.len() {
-                    POSITIONS[bi as usize].to_string()   // 8포지션 커버리지 보장
+                // 8포지션을 **두 바퀴** 돈 뒤에야 랜덤으로 넘어간다.
+                //
+                // 한 바퀴만 돌던 시절엔 나머지가 전부 랜덤이라 특정 포지션이 1명으로
+                // 남았다(프로 28명 로스터에서 2루·좌익·중견이 1명씩). 그 1명이 다치면
+                // 그 자리가 통째로 빈다. 백업 1명까지는 구조로 보장한다.
+                //
+                // 야수가 16명이 안 되는 리그는 두 바퀴가 안 돌지만, 그때도 최소
+                // 한 바퀴(8포지션 전원)는 보장된다 — 아래 나머지 연산이 그대로 처리한다.
+                let bi = (i - pitcher_n) as usize;
+                let np = POSITIONS.len();
+                if bi < np * 2 {
+                    POSITIONS[bi % np].to_string()
                 } else {
-                    POSITIONS[(rng.next() * POSITIONS.len() as f64) as usize % POSITIONS.len()].to_string()
+                    POSITIONS[(rng.next() * np as f64) as usize % np].to_string()
                 }
             };
 

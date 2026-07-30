@@ -53,13 +53,17 @@ function runNewGame(slotId, worldSeed) {
 }
 
 const r1 = runNewGame("NG1", 777);
-check(`새 게임: ${HS_TEAMS.length}팀 × 25 생성·저장`, r1.ok === true && r1.npcCount === HS_TEAMS.length * 25, JSON.stringify(r1));
+// 로스터 규모는 **규칙 파일에서 읽는다.** 하드코딩하면 밸런스 조정마다
+// 테스트가 깨지고, "왜 깨졌지"에 시간을 쓰게 된다 (실제로 그렇게 깨졌다).
+const HS_SIZE  = rulesFile.rosterRules.LEAGUE_HIGHSCHOOL.rosterSize;
+const KBL_SIZE = rulesFile.rosterRules.LEAGUE_KBL.rosterSize;
+check(`새 게임: ${HS_TEAMS.length}팀 × ${HS_SIZE} 생성·저장`, r1.ok === true && r1.npcCount === HS_TEAMS.length * HS_SIZE, JSON.stringify(r1));
 check("새 게임: 주인공 왕복", call("getProtagonist", { slotId: "NG1" }).name === "주인공");
 check("새 게임: 미리보기 메타", call("getMeta", { slotId: "NG1" }).career_stage === "highschool");
 
 const roster = call("getByTeam", { slotId: "NG1", teamId: HS_TEAMS[0] });
-check("새 게임: 팀 로스터 25명 + 능력치 동거", roster.length === 25 && roster.every((n) => n.abilities.pitching || n.abilities.batting));
-check("새 게임: 리그 조회 전원", call("getByLeague", { slotId: "NG1", leagueId: "LEAGUE_HIGHSCHOOL" }).length === HS_TEAMS.length * 25);
+check(`새 게임: 팀 로스터 ${HS_SIZE}명 + 능력치 동거`, roster.length === HS_SIZE && roster.every((n) => n.abilities.pitching || n.abilities.batting));
+check("새 게임: 리그 조회 전원", call("getByLeague", { slotId: "NG1", leagueId: "LEAGUE_HIGHSCHOOL" }).length === HS_TEAMS.length * HS_SIZE);
 // ⚠ 이 스크립트는 `createNewGameV3`를 **부르지 않고 파이프라인을 재구현한다.**
 // (window.projectB가 없어서 그렇다) 그래서 여기 KBL 0명은 "이 스크립트가 고교만
 // 넣었다"는 뜻이지 실제 새 게임 동작이 아니다 — 실제 동작은 아래 §정합 검사가 본다.
@@ -80,15 +84,16 @@ const kblParams = {
 check("KBL 1군 10팀 refs 확보", kblParams.teams.length === 10);
 const kblGen = JSON.parse(engine.generateLeagueRosterNative(JSON.stringify(kblParams)));
 call("insertNpcs", { slotId: "NG1", npcs: kblGen.npcs });
-check(`Lazy 활성화: KBL ${KBL_TEAMS.length}×28 삽입`, call("getByLeague", { slotId: "NG1", leagueId: "LEAGUE_KBL" }).length === KBL_TEAMS.length * 28);
-check("Lazy 활성화: 고교 인원 불변", call("getByLeague", { slotId: "NG1", leagueId: "LEAGUE_HIGHSCHOOL" }).length === HS_TEAMS.length * 25);
+check(`Lazy 활성화: KBL ${KBL_TEAMS.length}×${KBL_SIZE} 삽입`, call("getByLeague", { slotId: "NG1", leagueId: "LEAGUE_KBL" }).length === KBL_TEAMS.length * KBL_SIZE);
+check("Lazy 활성화: 고교 인원 불변", call("getByLeague", { slotId: "NG1", leagueId: "LEAGUE_HIGHSCHOOL" }).length === HS_TEAMS.length * HS_SIZE);
 check("KBL: 계약 생성", kblGen.npcs.every((n) => n.salary > 0));
 
 // 총 세계 규모 확인 (Lite 목표: 사전 생성 16,155 → 활성 리그만)
 const total = call("getByLeague", { slotId: "NG1", leagueId: "LEAGUE_HIGHSCHOOL" }).length
   + call("getByLeague", { slotId: "NG1", leagueId: "LEAGUE_KBL" }).length;
-// v2: 고교 102×25 + 프로 1군 10×28 = 2,830명 (v1의 474명 → 172팀 세계)
-check("세계 규모: 고교+프로 1군", total === HS_TEAMS.length * 25 + KBL_TEAMS.length * 28, `got ${total}`);
+const wantTotal = HS_TEAMS.length * HS_SIZE + KBL_TEAMS.length * KBL_SIZE;
+check(`세계 규모: 고교 ${HS_TEAMS.length}×${HS_SIZE} + 프로 1군 ${KBL_TEAMS.length}×${KBL_SIZE} = ${wantTotal}`,
+  total === wantTotal, `got ${total}`);
 
 // ── 리그 3자 정합 — 이 검사가 없어서 "0-0 홈팀승" 버그가 살아남았다 ─────
 //
