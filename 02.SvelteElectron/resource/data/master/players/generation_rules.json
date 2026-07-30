@@ -152,5 +152,58 @@
       "withContract": true,
       "nationality": "JPN"
     }
+  },
+  "salaryRules": {
+    "_comment": "연봉 = base(OVR) x 연차계수 x 나이보정 x 팀지수 x 리그배수, 리그별 최저연봉으로 바닥. 단위 만원",
+    "ovrPivot": 50,
+    "ovrGrowth": 1.1,
+    "ovrBase": 3000,
+    "service": [
+      {
+        "until": 2,
+        "factor": 0.4,
+        "_note": "신인·저연차 — 구단이 정한다"
+      },
+      {
+        "until": 6,
+        "factor": 0.7,
+        "_note": "연봉조정 신청 전"
+      },
+      {
+        "until": 11,
+        "factor": 1,
+        "_note": "FA 자격권"
+      },
+      {
+        "until": 99,
+        "factor": 1.1,
+        "_note": "베테랑 프리미엄"
+      }
+    ],
+    "agingFromAge": 34,
+    "agingPerYear": 0.06,
+    "teamIndexMin": 0.8,
+    "teamIndexMax": 1.35,
+    "jitter": 0.1,
+    "leagueMult": {
+      "LEAGUE_KBL": 1,
+      "LEAGUE_KBL_FARM": 0.3,
+      "LEAGUE_INDEPENDENT": 0.14,
+      "LEAGUE_ABL": 3.5,
+      "LEAGUE_JBL": 2
+    },
+    "minSalary": {
+      "LEAGUE_KBL": 3000,
+      "LEAGUE_KBL_FARM": 3000,
+      "LEAGUE_INDEPENDENT": 1200,
+      "LEAGUE_ABL": 8000,
+      "LEAGUE_JBL": 6000
+    }
+  },
+  "powerRules": {
+    "_comment": "팀 전력★(1~5) → 로스터 OVR 보정. 중심을 ★3에 두고 한 단계당 shift만큼 민다. 스태프 생성(staff_rules.toml [power_bonus])과 같은 축이다",
+    "pivot": 3,
+    "ovrShiftPerStar": 3.5,
+    "_note": "★5면 +7, ★1이면 -7. 리그 OVR 폭(고교 32 / 프로 30)의 절반 남짓 — 명문과 약팀이 갈리되 하위팀도 특급 유망주는 나올 수 있다"
   }
 }

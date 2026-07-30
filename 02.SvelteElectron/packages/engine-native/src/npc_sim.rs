@@ -647,6 +647,7 @@ fn normalize_offseason_npcs(
 // ── 오프시즌 전체 처리 ────────────────────────────────────────────────────────
 
 pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
+    let salary_rules = params.salary_rules.clone().unwrap_or_default();
     let mut rng = rand::thread_rng();
     let mut lcg = LcgRand::new(
         (params.season_year as u32).wrapping_mul(3571)
@@ -704,7 +705,11 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
             && n.current_league != "LEAGUE_RETIRED"
         {
             let ovr = npc_core_ovr(&n);
-            let (salary, years) = estimate_salary_and_contract(ovr, &n.current_league, &mut lcg);
+            // 오프시즌 재계약 — 팀 예산 지수는 이 경로로 안 들어온다(1.0 = 평균팀).
+            // 팀별 차등은 Phase 7-4 FA 등급제에서 협상 경로와 함께 붙인다.
+            let (salary, years) = estimate_salary_and_contract(
+                ovr, &n.current_league, n.pro_service_years.unwrap_or(0), n.age, 1.0,
+                &salary_rules, &mut lcg);
             n.current_salary = salary;
             n.contract_years  = years;
         }
@@ -1048,22 +1053,99 @@ pub fn generate_freshmen(params: GenerateFreshmenParams) -> Vec<NpcSaveState> {
 
 // ── 연봉/계약 기간 추정 (player_engine.league_salary_mult 공식과 통일) ───────
 
-fn league_salary_mult(league: &str) -> f64 {
-    match league {
-        "LEAGUE_ABL"         => 3.5,
-        "LEAGUE_JBL"         => 2.0,
-        "LEAGUE_INDEPENDENT" => 0.35,
-        _                    => 1.0,  // KBL 기준
+// ── 연봉 모델 (Phase 6.5) ────────────────────────────────────────────────────
+//
+// 예전엔 `1800 + (ovr-50) * 220` 선형이었다. 그래서 **연차가 사실상 무의미했고**
+// (0년차 OVR61 = 4,296만 / 12년차 OVR61 = 4,209만) 팀 사정도 안 보였다.
+//
+// 지금은 base(OVR) × 연차계수 × 나이보정 × 팀지수 × 리그배수 다.
+// 수치 정본은 `generation_rules.json` 의 `salaryRules` — 여기 하드코딩하지 않는다.
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ServiceBand {
+    pub until: i32,
+    pub factor: f64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SalaryRules {
+    pub ovr_pivot: f64,
+    pub ovr_growth: f64,
+    pub ovr_base: f64,
+    pub service: Vec<ServiceBand>,
+    pub aging_from_age: i32,
+    pub aging_per_year: f64,
+    pub team_index_min: f64,
+    pub team_index_max: f64,
+    pub jitter: f64,
+    pub league_mult: std::collections::HashMap<String, f64>,
+    pub min_salary: std::collections::HashMap<String, f64>,
+}
+
+impl Default for SalaryRules {
+    /// 규칙이 안 넘어왔을 때의 폴백. **구 선형식과 같은 감각**으로 둔다 —
+    /// 규칙 누락이 연봉을 0으로 만들어 세이브를 망가뜨리지 않게.
+    fn default() -> Self {
+        SalaryRules {
+            ovr_pivot: 50.0, ovr_growth: 1.10, ovr_base: 3000.0,
+            service: vec![ServiceBand { until: 99, factor: 1.0 }],
+            aging_from_age: 34, aging_per_year: 0.06,
+            team_index_min: 0.8, team_index_max: 1.35, jitter: 0.10,
+            league_mult: std::collections::HashMap::new(),
+            min_salary: std::collections::HashMap::new(),
+        }
     }
 }
 
-pub(crate) fn estimate_salary_and_contract(ovr: f64, league: &str, rng: &mut LcgRand) -> (i64, i32) {
-    let base   = 1800.0 + (ovr - 50.0).max(0.0) * 220.0;
-    let salary = (base * league_salary_mult(league)).round() as i64;
-    let years  = if ovr >= 75.0      { 3 + (rng.next() * 3.0) as i32 }  // 3~5
-                 else if ovr >= 68.0 { 2 + (rng.next() * 3.0) as i32 }  // 2~4
-                 else if ovr >= 55.0 { 1 + (rng.next() * 2.0) as i32 }  // 1~2
-                 else                { 1 };
+fn service_factor(rules: &SalaryRules, years: i32) -> f64 {
+    for b in &rules.service {
+        if years <= b.until { return b.factor; }
+    }
+    rules.service.last().map(|b| b.factor).unwrap_or(1.0)
+}
+
+/// 연봉·계약연수.
+///
+/// `team_index` = 그 팀 예산 / 리그 평균 예산 (TS가 refs에서 계산해 넘긴다).
+/// 1.0이면 평균팀. 없으면 1.0을 넘기면 된다.
+pub(crate) fn estimate_salary_and_contract(
+    ovr: f64,
+    league: &str,
+    service_years: i32,
+    age: i32,
+    team_index: f64,
+    rules: &SalaryRules,
+    rng: &mut LcgRand,
+) -> (i64, i32) {
+    let mult = *rules.league_mult.get(league).unwrap_or(&1.0);
+
+    // ① OVR 곡선 — 선형이 아니다. 상위 몇 명이 시장을 지배하는 게 실제에 가깝다
+    let base = rules.ovr_base * rules.ovr_growth.powf(ovr - rules.ovr_pivot);
+
+    // ② 연차 — 신인은 구단이 정하고, FA 자격을 얻어야 협상력이 생긴다
+    let svc = service_factor(rules, service_years);
+
+    // ③ 나이 — 노장은 깎인다
+    let aging = if age > rules.aging_from_age {
+        (1.0 - (age - rules.aging_from_age) as f64 * rules.aging_per_year).max(0.45)
+    } else { 1.0 };
+
+    // ④ 팀 사정 — 부유한 팀이 더 준다
+    let team = team_index.clamp(rules.team_index_min, rules.team_index_max);
+
+    // ⑤ 흔들기 — 같은 조건이어도 계약마다 조금씩 다르다
+    let jitter = 1.0 + (rng.next() * 2.0 - 1.0) * rules.jitter;
+
+    let raw = base * svc * aging * team * mult * jitter;
+    let floor = *rules.min_salary.get(league).unwrap_or(&0.0);
+    let salary = raw.max(floor).round() as i64;
+
+    let years = if ovr >= 75.0      { 3 + (rng.next() * 3.0) as i32 }
+                else if ovr >= 68.0 { 2 + (rng.next() * 3.0) as i32 }
+                else if ovr >= 55.0 { 1 + (rng.next() * 2.0) as i32 }
+                else                { 1 };
     (salary, years)
 }
 

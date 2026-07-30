@@ -20,6 +20,14 @@ pub struct TeamSpec {
     pub team_id: String,
     #[serde(default)]
     pub school_id: String,
+    /// 팀 예산 / 리그 평균 예산. TS가 refs에서 계산해 넘긴다 (없으면 1.0 = 평균팀).
+    /// 부유한 팀이 더 주는 걸 연봉에 반영하는 유일한 입력이다
+    #[serde(default)]
+    pub salary_index: Option<f64>,
+    /// 팀 전력★ 1~5 (refs.teams[].power). 없으면 pivot(=평범한 팀)으로 본다.
+    /// 이게 없어서 **명문교와 약팀의 로스터가 똑같았다** (고교 상관계수 −0.05)
+    #[serde(default)]
+    pub power: Option<f64>,
 }
 
 fn default_pitcher_ratio() -> f64 { 0.45 }
@@ -78,6 +86,26 @@ pub struct GenerateLeagueRosterParams {
     /// npcId 접두 (기본: 리그 코드 자동)
     #[serde(default)]
     pub id_prefix: Option<String>,
+    /// 연봉 규칙 (generation_rules.json salaryRules). 없으면 폴백
+    #[serde(default)]
+    pub salary_rules: Option<crate::npc_sim::SalaryRules>,
+    /// 전력★ → OVR 보정 규칙 (generation_rules.json powerRules). 없으면 보정 없음
+    #[serde(default)]
+    pub power_rules: Option<PowerRules>,
+}
+
+/// 팀 전력★이 로스터 수준을 정한다.
+///
+/// 예전엔 전력★이 로스터에 전혀 안 닿았다 — ★5 명문교와 ★1 약팀의 선수가
+/// 같은 분포였고, 그래서 전국대회 우승팀이 매년 무작위로 바뀌었다.
+/// 스태프 생성은 이미 같은 축을 쓴다 (`staff_rules.toml [power_bonus]`).
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PowerRules {
+    /// 보정 0이 되는 기준 전력 (보통 3)
+    pub pivot: f64,
+    /// 전력 한 단계당 OVR 이동폭
+    pub ovr_shift_per_star: f64,
 }
 
 // ── 출력 (slotdb npc INSERT shape) ───────────────────────────────────────────
@@ -310,12 +338,19 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
     let prefix = p.id_prefix.clone().unwrap_or_else(|| league_code(&p.league_id).to_string());
     let nationality = p.rules.nationality.clone().unwrap_or_else(|| "KOR".into());
 
+    let salary_rules = p.salary_rules.clone().unwrap_or_default();
     let roster = p.rules.roster_size.max(1);
     let pitcher_n = ((roster as f64) * p.rules.pitcher_ratio).round() as i32;
     let sp_n = (pitcher_n as f64 * 0.45).round().max(3.0) as i32;
     let batter_n = roster - pitcher_n;
 
     for team in &p.teams {
+        // 전력★ → OVR 이동폭. 규칙이 없으면 0 (구 동작)
+        let power_shift = match (&p.power_rules, team.power) {
+            (Some(pr), Some(pw)) => (pw - pr.pivot) * pr.ovr_shift_per_star,
+            _ => 0.0,
+        };
+
         // 팀별 독립 시드 — 팀 목록 순서/구성 변경이 다른 팀 로스터에 영향 없음
         let seed = p.world_seed
             ^ hash_str(&team.team_id)
@@ -354,9 +389,13 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
                 (None, a, 0)
             };
 
-            // 능력치 — 투수도 최소 타격치 보유 (교류전/지명타자 부재 대비)
-            let ovr_p = p.rules.pitching_ovr_min + rng.next() * (p.rules.pitching_ovr_max - p.rules.pitching_ovr_min);
-            let ovr_b = p.rules.batting_ovr_min  + rng.next() * (p.rules.batting_ovr_max  - p.rules.batting_ovr_min);
+            // 능력치 — 투수도 최소 타격치 보유 (교류전/지명타자 부재 대비).
+            // 전력★ 보정은 **구간 전체를 민다** — 폭은 그대로 두고 중심만 옮긴다.
+            // 그래야 약팀에서도 특급 유망주가 나올 수 있다(폭이 좁아지지 않는다).
+            let ovr_p = (p.rules.pitching_ovr_min + rng.next() * (p.rules.pitching_ovr_max - p.rules.pitching_ovr_min)
+                + power_shift).clamp(20.0, 99.0);
+            let ovr_b = (p.rules.batting_ovr_min  + rng.next() * (p.rules.batting_ovr_max  - p.rules.batting_ovr_min)
+                + power_shift).clamp(20.0, 99.0);
             let abilities = if is_pitcher {
                 let pitching = make_pitching(ovr_p.round(), &mut rng);
                 // 구종은 구속·보직·나이·OVR이 정한다 (Phase 6.5).
@@ -382,16 +421,26 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
 
             let handedness = if rng.next() < (if is_pitcher { 0.30 } else { 0.35 }) { "L" } else { "R" };
 
+            // 프로 무학년: 경력 연차. **연봉보다 먼저 정해야 한다** — 연차가 연봉의 입력이다.
+            //
+            // 나이에 하한을 건다. 예전엔 `rand(0, age-20)`이라 **37세 0년차**가 나왔다.
+            // 실제로는 나이가 많으면 그만큼 뛰었다 — 늦깎이라도 한계가 있다.
+            // 하한 = 고졸 입단(20세) 기준 경과 연수의 절반. 대졸·군필·독립 출신이
+            // 늦게 들어온 경우를 그 폭이 흡수한다.
+            let pro_service_years = if p.rules.grade_max == 0 && p.rules.with_contract {
+                let elapsed = (age - 20).max(0);
+                let min_svc = elapsed / 2;
+                let span = (elapsed - min_svc).max(0);
+                min_svc + (rng.next() * (span + 1) as f64) as i32
+            } else { 0 };
+
             let (salary, contract_years) = if p.rules.with_contract {
-                estimate_salary_and_contract(core_ovr, &p.league_id, &mut rng)
+                estimate_salary_and_contract(
+                    core_ovr, &p.league_id, pro_service_years, age,
+                    team.salary_index.unwrap_or(1.0), &salary_rules, &mut rng)
             } else {
                 (0, 0)
             };
-            // 프로 무학년: 경력 연차 = 나이 기반 근사 (18세 입단 가정, 0~age-19)
-            let pro_service_years = if p.rules.grade_max == 0 && p.rules.with_contract {
-                let max_svc = (age - 19).max(0);
-                (rng.next() * (max_svc + 1) as f64) as i32
-            } else { 0 };
 
             let (name, name_en) = match &p.name_pool {
                 Some(pool) => gen_name_pooled(pool, &mut rng),
@@ -433,30 +482,53 @@ mod tests {
     use super::*;
     use std::collections::HashSet;
 
-    fn rules(size: i32) -> RosterRules {
-        RosterRules {
-            roster_size: size,
-            pitching_ovr_min: 40.0, pitching_ovr_max: 72.0,
-            batting_ovr_min: 40.0, batting_ovr_max: 72.0,
-            dev_rate_min: 45.0, dev_rate_max: 75.0,
-            grade_max: 0, age_base: 18, age_min: 20, age_max: 32,
-            pitcher_ratio: 0.45,
-            with_contract: false,
-            nationality: None,
-        }
+    /// 실데이터(generation_rules.json)의 리그 규칙을 읽고 로스터 크기만 덮어쓴다.
+    ///
+    /// 인라인 규칙으로 두면 실제 게임과 달라져 테스트가 거짓 안심을 준다 —
+    /// 실제로 `with_contract: false`인 인라인 규칙 때문에 연봉 테스트가
+    /// 연봉 0을 검사하고 있었다.
+    fn league_rules(league: &str, size: i32) -> RosterRules {
+        let src = std::fs::read_to_string(concat!(
+            env!("CARGO_MANIFEST_DIR"), "/../../resource/data/master/players/generation_rules.json"
+        )).expect("generation_rules.json 없음");
+        let v: serde_json::Value = serde_json::from_str(&src).unwrap();
+        let mut r: RosterRules = serde_json::from_value(v["rosterRules"][league].clone())
+            .unwrap_or_else(|e| panic!("{league} rosterRules 파싱 실패: {e}"));
+        r.roster_size = size;
+        r
     }
 
     fn gen(league: &str, team_ids: &[&str], size: i32) -> Vec<GenNpc> {
+        gen_with(league, &team_ids.iter().map(|t| (*t, None, None)).collect::<Vec<_>>(), size)
+    }
+
+    /// (팀ID, 전력★, 예산지수)로 생성 — 실데이터 규칙을 읽어 쓴다
+    fn gen_with(
+        league: &str,
+        teams: &[(&str, Option<f64>, Option<f64>)],
+        size: i32,
+    ) -> Vec<GenNpc> {
+        let src = std::fs::read_to_string(concat!(
+            env!("CARGO_MANIFEST_DIR"), "/../../resource/data/master/players/generation_rules.json"
+        )).expect("generation_rules.json 없음");
+        let v: serde_json::Value = serde_json::from_str(&src).unwrap();
+        let salary_rules: Option<crate::npc_sim::SalaryRules> =
+            serde_json::from_value(v["salaryRules"].clone()).ok();
+        let power_rules: Option<PowerRules> =
+            serde_json::from_value(v["powerRules"].clone()).ok();
+
         generate_league_roster(GenerateLeagueRosterParams {
             league_id: league.to_string(),
             season_year: 2029,
             world_seed: 4242,
-            teams: team_ids.iter().map(|t| TeamSpec {
+            teams: teams.iter().map(|(t, pw, si)| TeamSpec {
                 team_id: t.to_string(), school_id: String::new(),
+                salary_index: *si, power: *pw,
             }).collect(),
-            rules: rules(size),
+            rules: league_rules(league, size),
             name_pool: None,
             id_prefix: None,
+            salary_rules, power_rules,
         }).npcs
     }
 
@@ -627,6 +699,87 @@ mod tests {
             let target = pitch_target(&p.position, vel);
             assert!(ps.len() <= target,
                 "{} 구속{vel}: 구종 {}종 > 목표 {target}종", p.position, ps.len());
+        }
+    }
+
+    /// 전력★이 로스터 수준을 정한다.
+    ///
+    /// 이게 없어서 **명문교와 약팀의 로스터가 똑같았다** (고교 상관계수 −0.05).
+    /// 전국대회 우승팀이 매년 무작위로 바뀌었고, 팀 선택에 의미가 없었다.
+    #[test]
+    fn 전력이_높은_팀이_실제로_강하다() {
+        let teams = [("TEAM_KBL_S5", Some(5.0), None), ("TEAM_KBL_S1", Some(1.0), None)];
+        let npcs = gen_with("LEAGUE_KBL", &teams, 30);
+        let avg = |tid: &str| {
+            let v: Vec<f64> = npcs.iter().filter(|n| n.current_team == tid)
+                .map(|n| n.abilities.pitching.as_ref().map(|p| p.ovr)
+                    .or_else(|| n.abilities.batting.as_ref().map(|b| b.ovr)).unwrap_or(0.0))
+                .collect();
+            v.iter().sum::<f64>() / v.len() as f64
+        };
+        let strong = avg("TEAM_KBL_S5");
+        let weak   = avg("TEAM_KBL_S1");
+        assert!(strong > weak + 8.0,
+            "★5({strong:.1})가 ★1({weak:.1})보다 충분히 강하지 않다");
+    }
+
+    /// 약팀에서도 특급이 나올 수 있어야 한다 — 보정은 **폭이 아니라 중심**을 민다.
+    /// 폭까지 좁히면 약팀에 유망주가 영영 안 나오고 드래프트가 심심해진다.
+    #[test]
+    fn 전력_보정이_능력치_폭을_좁히지_않는다() {
+        let s5 = gen_with("LEAGUE_KBL", &[("T5", Some(5.0), None)], 30);
+        let s1 = gen_with("LEAGUE_KBL", &[("T1", Some(1.0), None)], 30);
+        let spread = |v: &[GenNpc]| {
+            let o: Vec<f64> = v.iter().map(|n| n.abilities.pitching.as_ref().map(|p| p.ovr)
+                .or_else(|| n.abilities.batting.as_ref().map(|b| b.ovr)).unwrap_or(0.0)).collect();
+            o.iter().cloned().fold(f64::MIN, f64::max) - o.iter().cloned().fold(f64::MAX, f64::min)
+        };
+        let (a, b) = (spread(&s5), spread(&s1));
+        assert!((a - b).abs() < 12.0, "★5 폭 {a:.1} vs ★1 폭 {b:.1} — 한쪽이 눌렸다");
+    }
+
+    /// 연봉은 OVR·연차·팀 예산을 **전부** 본다.
+    /// 예전엔 OVR 선형이라 0년차와 12년차가 같은 연봉이었다.
+    #[test]
+    fn 연봉이_연차와_팀예산을_반영한다() {
+        let npcs = gen_with("LEAGUE_KBL", &[("T", Some(3.0), Some(1.0))], 30);
+        let rookies: Vec<i64> = npcs.iter().filter(|n| n.pro_service_years <= 2).map(|n| n.salary).collect();
+        let vets:    Vec<i64> = npcs.iter().filter(|n| n.pro_service_years >= 8).map(|n| n.salary).collect();
+        if !rookies.is_empty() && !vets.is_empty() {
+            let ra = rookies.iter().sum::<i64>() as f64 / rookies.len() as f64;
+            let va = vets.iter().sum::<i64>() as f64 / vets.len() as f64;
+            assert!(va > ra * 1.3, "베테랑 평균 {va:.0} vs 신인 {ra:.0} — 연차가 안 먹는다");
+        }
+
+        // 팀 예산이 총액을 가른다 (전력은 같게 두고 예산만 바꾼다)
+        let rich = gen_with("LEAGUE_KBL", &[("R", Some(3.0), Some(1.4))], 30);
+        let poor = gen_with("LEAGUE_KBL", &[("P", Some(3.0), Some(0.6))], 30);
+        let sum = |v: &[GenNpc]| v.iter().map(|n| n.salary).sum::<i64>();
+        assert!(sum(&rich) > sum(&poor),
+            "부유한 팀 총연봉 {} <= 궁핍한 팀 {}", sum(&rich), sum(&poor));
+    }
+
+    /// 리그 최저연봉 아래로 내려가지 않는다
+    #[test]
+    fn 최저연봉선을_지킨다() {
+        let npcs = gen_with("LEAGUE_KBL", &[("T", Some(1.0), Some(0.5))], 30);
+        for n in &npcs {
+            assert!(n.salary >= 3000, "{} 연봉 {} < 최저 3000", n.npc_id, n.salary);
+        }
+    }
+
+    /// 나이와 연차가 어긋나지 않는다 — 예전엔 **37세 0년차**가 나왔다
+    #[test]
+    fn 연차가_나이와_맞는다() {
+        let npcs = gen_with("LEAGUE_KBL", &[("T", Some(3.0), Some(1.0))], 30);
+        for n in &npcs {
+            assert!(n.pro_service_years <= n.age - 20,
+                "{}세 {}년차 — 고졸 입단(20세)보다 오래 뛰었다", n.age, n.pro_service_years);
+            // 서른 넘어 신인은 없다
+            if n.age >= 30 {
+                assert!(n.pro_service_years >= 3,
+                    "{}세인데 {}년차 — 늦깎이라도 한계가 있다", n.age, n.pro_service_years);
+            }
         }
     }
 

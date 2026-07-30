@@ -22,6 +22,10 @@ export interface RosterRulesData {
 export interface GenerationRulesFile {
   version: number;
   rosterRules: Record<string, RosterRulesData>;
+  /** 연봉 모델 (Phase 6.5). Rust로 그대로 넘긴다 — TS는 해석하지 않는다 */
+  salaryRules?: unknown;
+  /** 전력★ → OVR 보정 (Phase 6.5) */
+  powerRules?: unknown;
 }
 
 export interface NewGameV3Options {
@@ -58,18 +62,65 @@ export function buildRosterParams(
   leagueId: string,
   seasonYear: number,
   worldSeed: number,
-  teams: { teamId: string; schoolId?: string }[],
+  teams: { teamId: string; schoolId?: string; salaryIndex?: number; power?: number }[],
   rules: RosterRulesData,
   namePool?: { surnames: string[]; givenA: string[]; givenB: string[]; western?: boolean },
+  salaryRules?: unknown,
+  powerRules?: unknown,
 ) {
   return {
     leagueId,
     seasonYear,
     worldSeed: worldSeed >>> 0,
-    teams: teams.map((t) => ({ teamId: t.teamId, schoolId: t.schoolId ?? "" })),
+    teams: teams.map((t) => ({
+      teamId: t.teamId,
+      schoolId: t.schoolId ?? "",
+      ...(t.salaryIndex !== undefined ? { salaryIndex: t.salaryIndex } : {}),
+      ...(t.power !== undefined ? { power: t.power } : {}),
+    })),
     rules,
     ...(namePool ? { namePool } : {}),
+    ...(salaryRules ? { salaryRules } : {}),
+    ...(powerRules ? { powerRules } : {}),
   };
+}
+
+/**
+ * 팀 예산 지수 = 그 팀 예산 / 리그 평균 예산.
+ *
+ * 연봉이 팀 사정을 반영하는 **유일한 입력**이다. 예산이 없는 팀(고교·대학 등
+ * 계약 자체가 없는 리그, 또는 데이터 누락)은 1.0(평균팀)으로 둔다 —
+ * 0으로 두면 그 팀 선수 연봉이 전부 최저연봉으로 깔린다.
+ *
+ * 2군은 **같은 구단 1군의 지수를 물려받는다.** 별도 예산이 없고,
+ * 실제로도 모기업 사정이 2군 연봉을 정한다.
+ */
+export function buildSalaryIndex(
+  teams: import("../stores/master").TeamRef[],
+): Map<string, number> {
+  const out = new Map<string, number>();
+  const byLeague = new Map<string, import("../stores/master").TeamRef[]>();
+  for (const t of teams) {
+    if (!byLeague.has(t.leagueId)) byLeague.set(t.leagueId, []);
+    byLeague.get(t.leagueId)!.push(t);
+  }
+  for (const [, list] of byLeague) {
+    const budgets = list.map((t) => t.history?.budget ?? 0).filter((b) => b > 0);
+    if (budgets.length === 0) continue;
+    const avg = budgets.reduce((a, b) => a + b, 0) / budgets.length;
+    if (avg <= 0) continue;
+    for (const t of list) {
+      const b = t.history?.budget ?? 0;
+      out.set(t.id, b > 0 ? b / avg : 1.0);
+    }
+  }
+  // 2군(_2)은 1군(_1) 지수를 물려받는다
+  for (const t of teams) {
+    if (!t.id.endsWith("_2")) continue;
+    const first = t.id.replace(/_2$/, "_1");
+    if (out.has(first)) out.set(t.id, out.get(first)!);
+  }
+  return out;
 }
 
 export async function loadRosterRules(): Promise<GenerationRulesFile> {
@@ -89,6 +140,17 @@ export async function loadRosterRules(): Promise<GenerationRulesFile> {
  * Lazy를 유지할 이유도 없다 — 국내 전 리그 로스터 생성이 합쳐서 1,580명·35ms다.
  * **Lazy 활성화는 이제 해외(ABL·JBL) 전용이다.**
  */
+/**
+ * 군경팀 — 일반 로스터를 만들지 않는다. **복무 중인 선수가 채운다** (R-5).
+ *
+ * 예전엔 `TEAM_SPORTS_UNIT`을 걸렀는데 refs의 실제 ID는 `TEAM_IND_SANGMU_PHOENIX`라
+ * 필터가 안 먹었다 — 그래서 병역 "미필"인 민간 선수 30명이 상무에 생성돼 있었다.
+ */
+export const SANGMU_TEAM_IDS: ReadonlySet<string> = new Set([
+  "TEAM_IND_SANGMU_PHOENIX",
+  "TEAM_SPORTS_UNIT",   // 구 ID — 구 세이브·구 코드 경로 대비
+]);
+
 const DOMESTIC_ROSTER_LEAGUES = [
   "LEAGUE_UNIVERSITY",
   "LEAGUE_INDEPENDENT",
@@ -100,10 +162,13 @@ async function generateLeagueNpcs(
   leagueId: string,
   seasonYear: number,
   worldSeed: number,
-  teams: { teamId: string; schoolId?: string }[],
+  teams: { teamId: string; schoolId?: string; salaryIndex?: number; power?: number }[],
   rules: RosterRulesData,
+  salaryRules?: unknown,
+  powerRules?: unknown,
 ): Promise<Partial<RepoNpc>[]> {
-  const params = buildRosterParams(leagueId, seasonYear, worldSeed, teams, rules);
+  const params = buildRosterParams(
+    leagueId, seasonYear, worldSeed, teams, rules, undefined, salaryRules, powerRules);
   const gen = JSON.parse(
     await window.projectB!.engine("generateLeagueRosterNative", JSON.stringify(params))
   ) as { npcs?: Partial<RepoNpc>[]; error?: string };
@@ -123,9 +188,24 @@ export async function createNewGameV3(opts: NewGameV3Options): Promise<NewGameV3
   const hsRules = rulesFile.rosterRules["LEAGUE_HIGHSCHOOL"];
   if (!hsRules) throw new Error("[newGameV3] LEAGUE_HIGHSCHOOL rosterRules 없음");
 
+  // 팀 예산 지수 — 연봉이 팀 사정을 반영하는 유일한 입력 (Phase 6.5)
+  const salaryIndex = buildSalaryIndex(opts.allTeams ?? []);
+  const salaryRules = rulesFile.salaryRules;
+  const powerRules = rulesFile.powerRules;
+  // 전력★ — 명문팀 로스터가 실제로 강해지는 유일한 입력 (Phase 6.5)
+  const powerOf = new Map((opts.allTeams ?? []).map((t) => [t.id, t.power]));
+  const withIndex = (ids: string[]) =>
+    ids.map((teamId) => ({
+      teamId,
+      salaryIndex: salaryIndex.get(teamId),
+      power: powerOf.get(teamId),
+    }));
+
   const teams = opts.teams ?? HS_ACTIVE_TEAMS_V3.map((teamId) => ({ teamId }));
   const hsNpcs = await generateLeagueNpcs(
-    "LEAGUE_HIGHSCHOOL", opts.seasonYear, worldSeed, teams, hsRules);
+    "LEAGUE_HIGHSCHOOL", opts.seasonYear, worldSeed,
+    teams.map((t) => ({ ...t, salaryIndex: salaryIndex.get(t.teamId), power: powerOf.get(t.teamId) })),
+    hsRules, salaryRules, powerRules);
 
   // 나머지 국내 리그 — 팀 목록은 leagueScheduler가 정본이다 (refs에서 파생)
   const otherNpcs: Partial<RepoNpc>[] = [];
@@ -136,12 +216,11 @@ export async function createNewGameV3(opts: NewGameV3Options): Promise<NewGameV3
       continue;
     }
     const ids = ALL_TEAMS_BY_LEAGUE[lid] ?? [];
-    const leagueTeams = ids
-      .filter((id) => id !== "TEAM_SPORTS_UNIT")   // 상무는 복무자가 채운다 (Phase 7-3)
-      .map((teamId) => ({ teamId }));
+    const leagueTeams = withIndex(ids.filter((id) => !SANGMU_TEAM_IDS.has(id)));
     if (leagueTeams.length === 0) continue;
     otherNpcs.push(
-      ...(await generateLeagueNpcs(lid, opts.seasonYear, worldSeed, leagueTeams, rules)));
+      ...(await generateLeagueNpcs(
+        lid, opts.seasonYear, worldSeed, leagueTeams, rules, salaryRules, powerRules)));
   }
 
   const npcs = [...hsNpcs, ...otherNpcs, ...(opts.namedNpcs ?? [])];
