@@ -171,7 +171,7 @@ function runSeason(npcs, year, kblTeams) {
   npcs = call("applyDraftNative", {
     npcs, result: sim, universityTeamIds: DEST_UNIV, independentTeamIds: DEST_IND,
     contract: gr.draftRules.contract,
-    rookieToFarm: gr.draftRules.rookieToFarm,
+    firstTeamRounds: gr.draftRules.firstTeamRounds,
     teamIndex: TEAM_INDEX,
     placement: PLACEMENT,
   });

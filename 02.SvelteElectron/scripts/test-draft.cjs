@@ -55,7 +55,9 @@ console.log("규칙 정본");
   check("얼리 신청 하한이 학년별로 있다",
     Array.isArray(d.earlyEntry?.universityByGrade) && d.earlyEntry.universityByGrade.length >= 3);
   check("신인 계약 표가 있다", Array.isArray(d.contract?.byPick) && d.contract.byPick.length > 0);
-  check("신인은 2군에서 시작한다", d.rookieToFarm === true);
+  check("특급 신인 1군 직행 라운드가 규칙 파일에 있다",
+    typeof d.firstTeamRounds === "number" && d.firstTeamRounds < d.rounds,
+    String(d.firstTeamRounds));
 
   // 상한이 규칙 파일에 있어야 한다 — 예전엔 Rust와 TS에 각각 하드코딩돼 있었고
   // 둘 다 이 파일과 달랐다 (KBL 상한 65 vs 생성 인원 30)
@@ -282,7 +284,7 @@ console.log("\n5시즌 통합");
 
     npcs = call("applyDraftNative", {
       npcs, result: sim, universityTeamIds: DEST_UNIV, independentTeamIds: DEST_IND,
-      contract: gr.draftRules.contract, rookieToFarm: gr.draftRules.rookieToFarm,
+      contract: gr.draftRules.contract, firstTeamRounds: gr.draftRules.firstTeamRounds,
       placement: PLACEMENT,
     });
 

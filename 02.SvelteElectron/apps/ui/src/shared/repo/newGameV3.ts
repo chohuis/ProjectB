@@ -41,7 +41,7 @@ export interface GenerationRulesFile {
   /** 11월 통합 드래프트 — 라운드 수·나이 게이트·얼리 신청 하한·신인 계약 (Phase 7-1) */
   draftRules?: {
     rounds?: number;
-    rookieToFarm?: boolean;
+    firstTeamRounds?: number;
     contract?: import("../utils/draftSalaryTable").DraftContractRules;
     [key: string]: unknown;
   };

@@ -1447,9 +1447,11 @@ pub fn apply_draft(params: ApplyDraftParams) -> Vec<NpcSaveState> {
             let from_league = (npc.current_league != "LEAGUE_DRAFT_POOL")
                 .then(|| npc.current_league.clone());
 
-            // 신인은 2군에서 시작한다. 1군 직행시키면 1군 정원(34)이 매년 11명씩
-            // 밀려 베테랑이 대신 밀려난다 — 1군 승격은 Phase 7-2가 성적으로 판단한다
-            let (team_id, league_id) = match params.rookie_to_farm
+            // **상위 라운드(특급 신인)는 1군에서 시작한다.** 나머지는 2군 —
+            // 전원 1군이면 정원(34)이 매년 11명씩 밀려 베테랑이 대신 나간다.
+            // 2군에서 시작한 신인의 1군 진입은 Phase 7-2 승강이 성적으로 판단한다
+            let to_first = pick.round <= params.first_team_rounds;
+            let (team_id, league_id) = match (!to_first)
                 .then(|| farm_team(&pick.team_id)).flatten()
             {
                 Some(farm) => (farm, "LEAGUE_KBL_FARM"),

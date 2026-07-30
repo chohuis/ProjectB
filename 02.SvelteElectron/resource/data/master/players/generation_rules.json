@@ -259,6 +259,8 @@
     "_note": "11월 통합 드래프트 (Phase 7-1). 읽는 곳: engine-native/src/draft.rs",
     "rounds": 11,
     "_roundsNote": "10팀 x 11라운드 = 110명. KBO 실제 규모와 같다",
+    "firstTeamRounds": 4,
+    "_firstTeamRoundsNote": "이 라운드 이하 지명자는 1군에서 시작한다 (특급 신인). 0이면 전원 2군. 4라운드면 매년 40명이 1군으로 들어오는데 1군 정원이 팀당 34라 그만큼 기존 선수가 밀린다 - measure:draft로 확인할 것",
     "ageMin": 19,
     "ageMax": 29,
     "_ageNote": "드래프트는 졸업 전(11월)에 하므로 고3(19세)이 후보다. 저학년은 나이가 아니라 학년 게이트가 막는다 — 고교는 gradeMax 학년만 후보로 잡는다",
@@ -273,8 +275,6 @@
       "independent": 68,
       "_independentNote": "독립은 소속 연차와 무관하게 매년 신청할 수 있다. 생성 범위 50~74"
     },
-    "rookieToFarm": true,
-    "_rookieToFarmNote": "신인은 2군에서 시작한다. 1군 승격은 Phase 7-2의 승강 로직이 담당한다",
     "contract": {
       "_note": "KBO 신인 규정: 연봉은 최저연봉으로 균일하고 차등은 계약금이 진다. 예전 TS 표는 1순위 연봉 9000만원(규정 위반)에 하위 지명 1500만원(최저연봉 3000 미달)이었다",
       "durationYears": 3,

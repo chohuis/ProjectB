@@ -2693,7 +2693,7 @@ function createGameStore() {
         combined, simResult, universityTeamIds, independentTeamIds,
         {
           contract: draftRules.contract,
-          rookieToFarm: draftRules.rookieToFarm ?? false,
+          firstTeamRounds: draftRules.firstTeamRounds ?? 0,
           teamIndex,
           placement: placementRulesFrom(rulesFile.rosterRules),
         },

@@ -147,7 +147,7 @@ const DEST_IND = refs.teams.filter((t) => t.leagueId === "LEAGUE_INDEPENDENT" &&
 const before = new Map(npcs.map((n) => [n.npcId, n]));
 npcs = call("applyDraftNative", {
   npcs, result: sim, universityTeamIds: DEST_UNIV, independentTeamIds: DEST_IND,
-  contract: gr.draftRules.contract, rookieToFarm: gr.draftRules.rookieToFarm,
+  contract: gr.draftRules.contract, firstTeamRounds: gr.draftRules.firstTeamRounds,
   teamIndex: TEAM_INDEX, placement: PLACEMENT,
 });
 
@@ -201,12 +201,18 @@ console.log("\n팀 화면이 볼 것 (npc 행)");
   const rows = drafted.map((id) => slotdb.dispatch(mgr, "getNpc", { slotId: "S1", npcId: id }));
   check("지명자가 전부 DB에 있다", rows.every(Boolean));
 
-  const farm = rows.filter((r) => r.currentLeague === "LEAGUE_KBL_FARM");
-  check(`신인이 2군에 저장됐다 (${farm.length}/${rows.length})`, farm.length === rows.length);
-
-  const badTeam = rows.filter((r) => !r.currentTeam.endsWith("_2"));
-  check("2군 팀 ID로 저장됐다", badTeam.length === 0,
-    badTeam.slice(0, 3).map((r) => r.currentTeam).join(","));
+  // 특급 신인(firstTeamRounds 이하)은 1군, 나머지는 2군에서 시작한다
+  const cut = gr.draftRules.firstTeamRounds ?? 0;
+  const roundOf = new Map(sim.picks.map((p) => [p.npcId, p.round]));
+  const wrong = rows.filter((r) => {
+    const toFirst = (roundOf.get(r.npcId) ?? 99) <= cut;
+    return toFirst
+      ? r.currentLeague !== "LEAGUE_KBL" || !r.currentTeam.endsWith("_1")
+      : r.currentLeague !== "LEAGUE_KBL_FARM" || !r.currentTeam.endsWith("_2");
+  });
+  const firstN = rows.filter((r) => r.currentLeague === "LEAGUE_KBL").length;
+  check(`${cut}라운드 이하는 1군, 나머지는 2군 (1군 ${firstN}/${rows.length})`,
+    wrong.length === 0, wrong.slice(0, 3).map((r) => `${r.npcId}:${r.currentTeam}`).join(","));
 
   const refIds = new Set(refs.teams.map((t) => t.id));
   check("전부 refs에 있는 팀이다", rows.every((r) => refIds.has(r.currentTeam)));
