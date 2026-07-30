@@ -60,7 +60,6 @@ export interface RepoNpc {
   xp: { pitchingXp?: Record<string, number>; battingXp?: Record<string, number> };
   form?: unknown;                 // R3b 합성 궤적
   personality?: NpcPersonality;
-  emotion?: unknown;              // Named 전용 (emotion/memories/status)
   injury?: RepoInjury;
   extra?: Record<string, unknown>; // fame·tags 등 확장
 }

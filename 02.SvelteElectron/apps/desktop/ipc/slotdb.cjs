@@ -66,6 +66,9 @@ const BASELINE_SQL = `
     xp_json           TEXT NOT NULL DEFAULT '{}',
     form_json         TEXT,
     personality_json  TEXT,
+    -- ⚠ 폐기됨 (Phase 6C). 구 감정 9축이 여기 있었다. **아무도 쓰지 않는다** —
+    -- 컬럼만 남긴 이유는 DROP에 마이그레이션이 필요하고 구 슬롯을 열 때 무해하기
+    -- 때문이다. 관계는 relationship 테이블이 정본이다. 여기 새로 쓰지 말 것.
     emotion_json      TEXT,
     injury_json       TEXT,
     extra_json        TEXT
@@ -491,7 +494,6 @@ function mapNpcRow(r) {
     xp: JSON.parse(r.xp_json || "{}"),
     form: r.form_json ? JSON.parse(r.form_json) : undefined,
     personality: r.personality_json ? JSON.parse(r.personality_json) : undefined,
-    emotion: r.emotion_json ? JSON.parse(r.emotion_json) : undefined,
     injury: r.injury_json ? JSON.parse(r.injury_json) : undefined,
     extra: r.extra_json ? JSON.parse(r.extra_json) : undefined,
   };
@@ -625,7 +627,7 @@ function npcToInsertParams(n) {
     xpJson: JSON.stringify(n.xp ?? {}),
     formJson: n.form ? JSON.stringify(n.form) : null,
     personalityJson: n.personality ? JSON.stringify(n.personality) : null,
-    emotionJson: n.emotion ? JSON.stringify(n.emotion) : null,
+    emotionJson: null,   // 폐기됨 (Phase 6C) — 위 스키마 주석 참고
     injuryJson: n.injury ? JSON.stringify(n.injury) : null,
     extraJson: n.extra ? JSON.stringify(n.extra) : null,
   };

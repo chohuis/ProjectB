@@ -17,7 +17,7 @@ import { isFaEligible, getFaThreshold } from "../utils/faEngine";
 import type { MatchResult, PendingAction, PlayerCondition, ScheduleEntry, WeekAdvanceResult } from "../types/season";
 import type { EventContext } from "../types/event";
 import type { MessageItem } from "../types/main";
-import type { InjurySeverity, InjuryHistoryEntry, InjuryState, InjuryType, NpcMemory, PitchingAttributes, ProtagonistSave } from "../types/save";
+import type { InjurySeverity, InjuryHistoryEntry, InjuryState, InjuryType, PitchingAttributes, ProtagonistSave } from "../types/save";
 import { INJURY_LABEL } from "../types/save";
 import { toGameDate } from "../utils/scheduleGen";
 import { assignProtagonistRole, assignHighschoolPosition, ROLE_DESCRIPTION, isReliefsRole, relieverWouldPitch } from "../utils/pitcherRoleEngine";

@@ -95,11 +95,11 @@ export async function applyDraftToNpcs(
   universityTeamIds: string[] = [],
   independentTeamIds: string[] = [],
 ): Promise<NpcSaveState[]> {
-  const emotionRoles = new Map(npcs.map(n => [n.npcId, n.emotionRole] as const));
+  const namedFlags = new Map(npcs.map(n => [n.npcId, n.isNamed] as const));
   const json = await api().npcApplyDraft(JSON.stringify({ npcs, result, universityTeamIds, independentTeamIds }));
   const updated = parseResult<NpcSaveState[]>(json).map(n => ({
     ...n,
-    emotionRole:     n.emotionRole     ?? emotionRoles.get(n.npcId),
+    isNamed:         n.isNamed         ?? namedFlags.get(n.npcId),
     potentialHidden: n.potentialHidden ?? 75,
   }));
 

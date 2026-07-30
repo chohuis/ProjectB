@@ -11,11 +11,6 @@ import type { NpcLiveStat } from "../types/season";
 // ── RepoNpc → NpcSaveState (스토어 읽기 표면) ─────────────────
 export function repoNpcToSaveState(r: RepoNpc): NpcSaveState {
   const extra = (r.extra ?? {}) as Record<string, unknown>;
-  const emotionPack = (r.emotion ?? {}) as {
-    emotion?: NpcSaveState["emotion"];
-    memories?: NpcSaveState["memories"];
-    status?: NpcSaveState["emotionStatus"];
-  };
   return {
     npcId: r.npcId,
     name: r.name,
@@ -48,16 +43,14 @@ export function repoNpcToSaveState(r: RepoNpc): NpcSaveState {
       ? { severity: (r.injury.severity ?? "moderate") as InjurySeverity, recoveryWeeksLeft: r.injury.weeksLeft }
       : undefined,
     // 확장 필드 (extra 보존)
-    emotionRole: extra.emotionRole as NpcSaveState["emotionRole"],
+    // Named 여부는 npc 테이블 is_named가 정본이다. 구 세이브는 extra.emotionRole에
+    // 들어 있었으므로(감정 시스템 시절) 있으면 그것도 Named로 읽는다.
+    isNamed: r.isNamed || !!extra.emotionRole,
     fame: (extra.fame as number) ?? 0,
     achievements: (extra.achievements as string[]) ?? [],
     careerHistory: (extra.careerHistory as NpcSaveState["careerHistory"]) ?? [],
     careerEvents: extra.careerEvents as NpcSaveState["careerEvents"],
-    lastActiveStage: extra.lastActiveStage as NpcSaveState["lastActiveStage"],
     personality: r.personality,
-    emotion: emotionPack.emotion,
-    memories: emotionPack.memories,
-    emotionStatus: emotionPack.status,
     // 읽기용 사본 — 정본은 npcLiveStats(주간 갱신)이며, 이 사본은 저장 시점마다
     // dehydrate가 liveStats에서 다시 채운다 (최대 1세이브 지연).
     // 레거시 읽기 경로(드래프트 보드·Rust 오프시즌 npc_core_ovr 등)가 이 필드를 참조한다.
@@ -115,12 +108,11 @@ export function saveStateToRepoNpc(n: NpcSaveState, live?: NpcLiveStat): RepoNpc
         }
       : undefined;
   const extra: Record<string, unknown> = {};
-  if (n.emotionRole) extra.emotionRole = n.emotionRole;
+
   if (n.fame) extra.fame = n.fame;
   if (n.achievements?.length) extra.achievements = n.achievements;
   if (n.careerHistory?.length) extra.careerHistory = n.careerHistory;
   if (n.careerEvents?.length) extra.careerEvents = n.careerEvents;
-  if (n.lastActiveStage) extra.lastActiveStage = n.lastActiveStage;
   if (live?.peakOvr !== undefined) extra.peakOvr = live.peakOvr;
   if (live?.pitchInTraining) extra.pitchInTraining = live.pitchInTraining;
 
@@ -128,7 +120,7 @@ export function saveStateToRepoNpc(n: NpcSaveState, live?: NpcLiveStat): RepoNpc
     npcId: n.npcId,
     name: n.name,
     nameEn: n.nameEn,
-    isNamed: !!n.emotionRole || !!(n as unknown as { isNamed?: boolean }).isNamed,
+    isNamed: !!n.isNamed,
     playerType: n.playerType,
     position: n.position,
     handedness: n.handedness ?? "R",
@@ -151,10 +143,6 @@ export function saveStateToRepoNpc(n: NpcSaveState, live?: NpcLiveStat): RepoNpc
     abilities,
     xp: { pitchingXp: live?.pitchingXp ?? {}, battingXp: live?.battingXp ?? {} },
     personality: n.personality,
-    emotion:
-      n.emotion || n.memories || n.emotionStatus
-        ? { emotion: n.emotion, memories: n.memories, status: n.emotionStatus }
-        : undefined,
     injury,
     extra: Object.keys(extra).length > 0 ? extra : undefined,
   };
