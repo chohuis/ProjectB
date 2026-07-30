@@ -60,7 +60,10 @@ check("새 게임: 미리보기 메타", call("getMeta", { slotId: "NG1" }).care
 const roster = call("getByTeam", { slotId: "NG1", teamId: HS_TEAMS[0] });
 check("새 게임: 팀 로스터 25명 + 능력치 동거", roster.length === 25 && roster.every((n) => n.abilities.pitching || n.abilities.batting));
 check("새 게임: 리그 조회 전원", call("getByLeague", { slotId: "NG1", leagueId: "LEAGUE_HIGHSCHOOL" }).length === HS_TEAMS.length * 25);
-check("새 게임: 타 리그 비활성 (KBL 0명)", call("getByLeague", { slotId: "NG1", leagueId: "LEAGUE_KBL" }).length === 0);
+// ⚠ 이 스크립트는 `createNewGameV3`를 **부르지 않고 파이프라인을 재구현한다.**
+// (window.projectB가 없어서 그렇다) 그래서 여기 KBL 0명은 "이 스크립트가 고교만
+// 넣었다"는 뜻이지 실제 새 게임 동작이 아니다 — 실제 동작은 아래 §정합 검사가 본다.
+check("이 스크립트가 만든 슬롯엔 고교만 (재구현 범위)", call("getByLeague", { slotId: "NG1", leagueId: "LEAGUE_KBL" }).length === 0);
 
 // ── worldSeed 재현성: 같은 시드 새 슬롯 = 동일 로스터 ─────────
 runNewGame("NG2", 777);
@@ -86,6 +89,71 @@ const total = call("getByLeague", { slotId: "NG1", leagueId: "LEAGUE_HIGHSCHOOL"
   + call("getByLeague", { slotId: "NG1", leagueId: "LEAGUE_KBL" }).length;
 // v2: 고교 102×25 + 프로 1군 10×28 = 2,830명 (v1의 474명 → 172팀 세계)
 check("세계 규모: 고교+프로 1군", total === HS_TEAMS.length * 25 + KBL_TEAMS.length * 28, `got ${total}`);
+
+// ── 리그 3자 정합 — 이 검사가 없어서 "0-0 홈팀승" 버그가 살아남았다 ─────
+//
+// 세 목록이 어긋나면 조용히 망가진다:
+//   ① 일정이 생기는 리그   (leagueScheduler)
+//   ② 풀 시뮬 대상 리그    (radiusGate DOMESTIC_LEAGUES)
+//   ③ 로스터가 생기는 리그 (newGameV3 DOMESTIC_ROSTER_LEAGUES + rosterRules)
+//
+// ①∩② 인데 ③에 없으면 → 선수 없는 팀끼리 경기 → Rust가 **항상 0-0, 홈팀 승**을
+// 낸다. 시즌1에 대학 225 + 프로 720 + 2군 495경기가 그렇게 처리되고 있었다.
+// 순위표는 "홈경기 수 = 승수"가 된다.
+console.log("\n리그 3자 정합");
+{
+  const read = (rel) => fs.readFileSync(path.join(__dirname, rel), "utf8");
+
+  // ② 풀 시뮬(반경 1) 대상
+  const gate = read("../apps/ui/src/shared/utils/radiusGate.ts");
+  const domesticBlock = gate.match(/const DOMESTIC_LEAGUES = new Set\(\[([\s\S]*?)\]\)/);
+  const fullSim = [...(domesticBlock?.[1] ?? "").matchAll(/"(LEAGUE_[A-Z_]+)"/g)].map((m) => m[1]);
+
+  // ③ 새 게임에서 로스터가 생기는 리그
+  const ng = read("../apps/ui/src/shared/repo/newGameV3.ts");
+  const rosterBlock = ng.match(/const DOMESTIC_ROSTER_LEAGUES = \[([\s\S]*?)\] as const/);
+  const generated = new Set([
+    "LEAGUE_HIGHSCHOOL",   // 시작 리그 — 별도 경로로 항상 생성
+    ...[...(rosterBlock?.[1] ?? "").matchAll(/"(LEAGUE_[A-Z_]+)"/g)].map((m) => m[1]),
+  ]);
+
+  console.log(`    풀 시뮬 ${fullSim.length}개: ${fullSim.join(" ")}`);
+  console.log(`    로스터 생성 ${generated.size}개: ${[...generated].join(" ")}`);
+
+  check("radiusGate에서 국내 리그 목록을 읽었다", fullSim.length >= 4, `${fullSim.length}개`);
+  check("newGameV3에서 로스터 리그 목록을 읽었다", generated.size >= 4, `${generated.size}개`);
+
+  // 핵심: 풀 시뮬하는데 로스터를 안 만드는 리그가 있으면 0-0 버그다
+  const noRoster = fullSim.filter((l) => !generated.has(l));
+  check("풀 시뮬하는 리그는 전부 새 게임에서 로스터가 생긴다", noRoster.length === 0,
+    `로스터 없이 시뮬됨 → 0-0 홈팀승: ${noRoster.join(", ")}`);
+
+  // 생성 목록에 있는데 규칙이 없으면 런타임에 조용히 건너뛴다
+  const noRules = [...generated].filter((l) => !rulesFile.rosterRules[l]);
+  check("로스터 생성 대상은 전부 rosterRules를 가진다", noRules.length === 0,
+    `규칙 없음: ${noRules.join(", ")}`);
+
+  // 상무는 예외 — 복무자가 채우므로 로스터를 만들지 않는다 (Phase 7-3)
+  check("상무는 로스터 생성 대상이 아니다", !generated.has("TEAM_SPORTS_UNIT"));
+}
+
+// ── 빈 로스터가 실제로 어떻게 나오는지 (회귀 근거 고정) ─────────
+console.log("\n빈 로스터 시뮬 (버그 재현 근거)");
+{
+  const empty = JSON.parse(engine.simGameNative(JSON.stringify({
+    homeRotation: [], awayRotation: [], homeBullpen: [], awayBullpen: [],
+    homeCloser: null, awayCloser: null, homeLineup: [], awayLineup: [],
+    homeRotIdx: 0, awayRotIdx: 0, conditions: {}, week: 1,
+    homeTeamId: "TEAM_X", awayTeamId: "TEAM_Y",
+  })));
+  console.log(`    빈 로스터 결과: ${empty.result.homeScore}-${empty.result.awayScore} 승자 ${empty.result.winnerId}`);
+  // 이 동작 자체는 고치지 않는다 — Rust가 빈 입력에 뭘 하든, 애초에 빈 입력이
+  // 들어가지 않게 하는 게 위 정합 검사의 일이다. 여기선 "왜 조용했나"를 기록만 한다.
+  check("빈 로스터는 0-0 무득점 (그래서 조용히 굴러갔다)",
+    empty.result.homeScore === 0 && empty.result.awayScore === 0);
+  check("빈 로스터는 홈팀이 이긴다 (순위표가 홈경기 수가 된다)",
+    empty.result.winnerId === "TEAM_X");
+}
 
 mgr.closeAll();
 fs.rmSync(tmp, { recursive: true, force: true });

@@ -151,6 +151,9 @@ Phase 6C가 `emotionEngine`(360줄)·`emotionMessageEngine`(478줄)을 폐기했
 | `salaryNegotiation` 타입 결함 | 소 | `CareerResultModal.svelte:79` — 필수 필드 3개 누락 |
 | `EntityDetails` 미import | 소 | `TeamDetailModal.svelte` — svelte-check 7건. **화면은 동작한다** |
 | 구 세이브에 스태프 없음 | — | 마이그레이션 v3가 테이블만 만든다. 사용자 확정("개발 중이라 폐기 OK") |
+| **인물 화면 개선** | 소 | 사용자 지목(2026-07-30) — 우선 동작만 확인. 무엇을 개선할지는 미정 |
+| `seeds/onepitch/generation_rules.toml` 고아 | 소 | **아무도 안 읽는다.** OnePitch 시절 플레이스홀더고, 실제 정본은 손으로 관리하는 `master/players/generation_rules.json`이다. DATA_POLICY상 시드→master 경로로 정리하거나 시드를 지울 것 |
+| `test-newgame-v3.cjs`가 파이프라인을 재구현 | 중 | `createNewGameV3`를 부르지 않는다(window.projectB 부재). 그래서 로스터 결함이 테스트를 통과했다. 3자 정합 검사로 우회했지만 근본 해결은 아니다 |
 
 ---
 

@@ -114,6 +114,18 @@
       "ageMax": 36,
       "withContract": true
     },
+    "LEAGUE_KBL_FARM": {
+      "rosterSize": 26,
+      "pitchingOvrMin": 48,
+      "pitchingOvrMax": 76,
+      "battingOvrMin": 48,
+      "battingOvrMax": 76,
+      "devRateMin": 50,
+      "devRateMax": 80,
+      "ageMin": 19,
+      "ageMax": 28,
+      "withContract": true
+    },
     "LEAGUE_ABL": {
       "rosterSize": 28,
       "pitchingOvrMin": 62,
