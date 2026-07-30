@@ -310,5 +310,187 @@ console.log("\n코치 전문 영역 어휘");
   check("영문 전문영역 비교가 남아 있지 않다", leaked.length === 0, leaked.join(" "));
 }
 
+// ── 11. 다시즌 실측 — 15시즌 커리어를 통째로 돌린다 ───────────
+//
+// 유닛테스트는 "한 시즌이 ±25인가"만 본다. 커리어 전체에서 값이 어디로 수렴하는지는
+// 돌려봐야 안다 — 6B에서 "20시즌 후 감독 생존 45~55%"라고 예측했다가 실측 13%로
+// 틀렸던 게 정확히 이 종류의 착오였다(_ledger P6-6). 그래서 숫자를 찍는다.
+//
+// 하네스(npm run harness)에 넣지 않은 이유: 하네스는 slot.db와 Rust만 돌고
+// advanceWeek(TS)를 안 거친다. 거기서 관계 불변식을 검사하면 관계 행이 아예
+// 없어서 **항상 통과하는 공허한 불변식**이 된다.
+console.log("\n다시즌 실측 (15시즌)");
+{
+  const native = require("../packages/engine-native/index.js");
+  const rules = JSON.parse(fs.readFileSync(
+    path.join(__dirname, "../resource/data/master/players/relationship_rules.json"), "utf8"));
+
+  // 결정적 의사난수 — Date.now()나 Math.random()을 쓰면 실측이 매번 달라진다
+  let seed = 20260730;
+  const rnd = () => {
+    seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+    return seed / 0x7fffffff;
+  };
+
+  const CAREER = [
+    { team: "TEAM_HS_A",   seasons: 3, label: "고교" },
+    { team: "TEAM_UNIV_A", seasons: 4, label: "대학" },
+    { team: "TEAM_KBL_A",  seasons: 5, label: "프로" },
+    { team: "TEAM_KBL_B",  seasons: 3, label: "이적" },
+    // 친정 복귀 — **재회 경로를 실제로 밟는다.** 6C가 "감쇠 후 보존"을 택한 이유가
+    // 이 지점이고, 안 밟으면 그 결정이 검증되지 않는다
+    { team: "TEAM_KBL_A",  seasons: 2, label: "복귀" },
+  ];
+
+  /** 한 팀에서 만나는 사람들 — 감독1·구단주1·코치3·동료15 */
+  function rosterOf(team) {
+    return [
+      { personId: `${team}_MGR`, kind: "manager" },
+      { personId: `${team}_OWN`, kind: "owner" },
+      ...[0, 1, 2].map((i) => ({ personId: `${team}_COA${i}`, kind: "coach" })),
+      ...Array.from({ length: 15 }, (_, i) => ({ personId: `${team}_PLY${i}`, kind: "teammate" })),
+    ];
+  }
+  const SPECIALTIES = ["투수", "타격", "컨디셔닝"];
+
+  let rowsAll = new Map();   // personId → row
+  let season = 2029;
+  const events = { moved: 0, reunion: 0, seasonsRun: 0 };
+  const perSeasonSwing = [];
+  const reunionSnapshot = [];
+
+  for (const leg of CAREER) {
+    // ── 팀 이동: 감쇠 후 apart ──
+    const leaving = [...rowsAll.values()].filter(
+      (r) => r.contact === "together" && r.lastTeam !== leg.team);
+    if (leaving.length > 0) {
+      const dec = JSON.parse(native.relationMoveDecayNative(JSON.stringify({
+        rules, rows: leaving.map((r) => ({ ...r, specialty: r.specialty ?? "" })),
+      })));
+      for (const d of dec.deltas) rowsAll.get(d.personId).value = d.value;
+      for (const r of leaving) r.contact = "apart";
+      events.moved += leaving.length;
+    }
+
+    // ── 새 팀 사람들 (없으면 초기값, apart였으면 재회) ──
+    const roster = rosterOf(leg.team);
+    const unknown = roster.filter((p) => !rowsAll.has(p.personId));
+    if (unknown.length > 0) {
+      const init = JSON.parse(native.initRelationsNative(JSON.stringify({
+        worldSeed: 4242, rules, people: unknown, draftRound: 1, draftedContext: true,
+      })));
+      init.rows.forEach((r, i) => rowsAll.set(r.personId, {
+        personId: r.personId, kind: r.kind, value: r.value, contact: "together",
+        lastTeam: leg.team, metSeason: season,
+        specialty: r.kind === "coach" ? SPECIALTIES[i % SPECIALTIES.length] : "",
+      }));
+    }
+    for (const p of roster) {
+      const row = rowsAll.get(p.personId);
+      if (row.contact === "apart") {
+        // **감쇠된 값에서 재개된다** — 0으로 리셋하지 않는다(사용자 확정)
+        reunionSnapshot.push({ id: row.personId, at: row.value });
+        row.contact = "together";
+        events.reunion++;
+      }
+      row.lastTeam = leg.team;
+    }
+
+    // ── 시즌 진행 ──
+    for (let sn = 0; sn < leg.seasons; sn++) {
+      const before = rowsAll.get(`${leg.team}_MGR`).value;
+
+      for (let wk = 1; wk <= 25; wk++) {
+        const won = rnd() < 0.58;
+        const era = 1.5 + rnd() * 4.0;
+        const together = [...rowsAll.values()].filter((r) => r.contact === "together");
+        const out = JSON.parse(native.weeklyRelationsNative(JSON.stringify({
+          worldSeed: 4242, week: wk, rules,
+          rows: together,
+          ctx: {
+            pitched: true, won, era,
+            completeShutout: era < 0.5 && won,
+            teamPlayed: true, teamWon: won,
+            ovrDelta: rnd() < 0.15 ? 3 : 0,
+            trainingDone: rnd() < 0.9,
+            trainingSkipped: rnd() >= 0.9,
+            trainingArea: SPECIALTIES[wk % SPECIALTIES.length],
+            facedRivals: [],
+          },
+        })));
+        for (const d of out.deltas) rowsAll.get(d.personId).value = d.value;
+      }
+
+      // 시즌 종료 — together 총평 + apart 감쇠
+      const all = [...rowsAll.values()];
+      const sOut = JSON.parse(native.seasonRelationsNative(JSON.stringify({
+        rules, rows: all,
+        era: 2.8 + rnd() * 2.0, teamRankPct: rnd(), pitchedAny: true,
+      })));
+      for (const d of sOut.deltas) rowsAll.get(d.personId).value = d.value;
+
+      perSeasonSwing.push(rowsAll.get(`${leg.team}_MGR`).value - before);
+      season++;
+      events.seasonsRun++;
+    }
+  }
+
+  // ── 실측 출력 ──
+  const all = [...rowsAll.values()];
+  const labelOf = (v) => {
+    const b = JSON.parse(native.relationLabelTableNative())
+      .find((x) => v >= x.min && v <= x.max);
+    return b ? b.label : "?";
+  };
+  const dist = {};
+  for (const r of all) dist[labelOf(r.value)] = (dist[labelOf(r.value)] ?? 0) + 1;
+
+  const apart = all.filter((r) => r.contact === "apart");
+  const together = all.filter((r) => r.contact === "together");
+  const avgSwing = perSeasonSwing.reduce((a, b) => a + b, 0) / perSeasonSwing.length;
+
+  console.log(`    ${events.seasonsRun}시즌 · 인물 ${all.length}명 (함께 ${together.length} · 헤어짐 ${apart.length})`);
+  console.log(`    이동으로 감쇠 ${events.moved}건 · 재회 ${events.reunion}건`);
+  console.log(`    라벨 분포: ${Object.entries(dist).map(([k, v]) => `${k} ${v}`).join(" · ")}`);
+  console.log(`    감독 관계 시즌당 순변화 평균 ${avgSwing.toFixed(1)}`);
+  console.log(`    헤어진 관계 값: ${apart.map((r) => r.value).sort((a, b) => b - a).slice(0, 6).join(", ")}${apart.length > 6 ? " …" : ""}`);
+
+  // ── 판정 ──
+  check("값이 전부 범위 안", all.every((r) => r.value >= -100 && r.value <= 100),
+    all.filter((r) => Math.abs(r.value) > 100).map((r) => r.value).join(","));
+
+  check("이동 때마다 감쇠가 걸렸다", events.moved > 0, `${events.moved}`);
+
+  // 한 팀에만 오래 있으면 전부 각별로 몰린다 — 그러면 라벨이 정보를 못 준다
+  const closeRatio = (dist["각별"] ?? 0) / all.length;
+  check("전원이 각별로 몰리지 않는다", closeRatio < 0.7,
+    `각별 비율 ${(closeRatio * 100).toFixed(0)}%`);
+  check("라벨이 2종 이상으로 갈린다", Object.keys(dist).length >= 2,
+    Object.keys(dist).join(","));
+
+  // 감쇠가 실제로 값을 낮추는가 — 헤어진 지 오래된 사람이 각별로 남아 있으면 안 된다
+  const staleClose = apart.filter((r) => Math.abs(r.value) >= 65);
+  check("오래 헤어진 관계가 각별로 굳어 있지 않다", staleClose.length === 0,
+    staleClose.map((r) => `${r.personId}:${r.value}`).slice(0, 3).join(" "));
+
+  // 시즌당 순변화가 "중간" 감각인가 (사용자 확정 ±25 언저리)
+  check("시즌당 순변화가 폭주하지 않는다", Math.abs(avgSwing) < 45,
+    `평균 ${avgSwing.toFixed(1)}`);
+
+  check("헤어진 사람의 행이 보존된다", apart.length > 0, `${apart.length}`);
+
+  // ── 재회 — 6C가 "감쇠 후 보존"을 택한 이유 그 자체 ──
+  check("친정 복귀에서 재회가 일어났다", events.reunion > 0, `${events.reunion}건`);
+  // **전원이 0이 아닐 것을 요구하지 않는다.** 완전히 식은 관계에서 재회하는 것도
+  // 정상이다 — 그게 감쇠의 목적이다. 실제로 구단주는 주간 항목이 없고 시즌
+  // 팀성적으로만 움직여서(6C-2 결정) 팀 순위가 중간이면 거의 안 쌓이고,
+  // 헤어지면 빨리 0으로 식는다. 요구할 것은 "감쇠가 전부를 0으로 만들지는 않는다"다.
+  const carried = reunionSnapshot.filter((x) => x.at !== 0).length;
+  check("재회 대부분이 남은 값에서 재개된다 (전부 리셋이 아니다)",
+    carried >= reunionSnapshot.length * 0.7,
+    `${carried}/${reunionSnapshot.length}명만 값을 이어받음`);
+  console.log(`    재회 시 이어받은 값: ${reunionSnapshot.slice(0, 6).map((x) => x.at).join(", ")} (0에서 재개 ${reunionSnapshot.length - carried}명)`);
+}
+
 console.log(failed === 0 ? "\nALL PASS" : `\n${failed} FAILED`);
 process.exit(failed === 0 ? 0 : 1);

@@ -24,6 +24,7 @@
   import AchievementsPage from "../achievements/AchievementsPage.svelte";
   import MessagesPage from "../messages/MessagesPage.svelte";
   import TeamPage from "../team/TeamPage.svelte";
+  import PeoplePage from "../people/PeoplePage.svelte";
   import EventManagerModal from "../../features/events/ui/EventManagerModal.svelte";
   import CareerChoiceHubModal from "../../features/career/ui/CareerChoiceHubModal.svelte";
   import CareerResultsModal from "../../features/career/ui/CareerResultsModal.svelte";
@@ -65,6 +66,7 @@
     messages: "page.messages",
     status: "page.status",
     team: "page.team",
+    people: "page.people",
     schedule: "page.schedule",
     training: "page.training",
     finance: "page.finance",
@@ -461,6 +463,8 @@
             <MessagesPage />
           {:else if currentTab === "team"}
             <TeamPage />
+          {:else if currentTab === "people"}
+            <PeoplePage />
           {:else}
             <section class="placeholder">
               {$t("main.placeholderPreparing", { tab: $t(tabPageKey[currentTab]) })}
