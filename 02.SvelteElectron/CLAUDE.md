@@ -12,9 +12,11 @@
 **진행 현황은 [docs/RESUME.md](docs/RESUME.md)가 정본이다.** 브랜치·다음 작업·미결
 목록·검증 명령이 거기 있다. 여기 복제하면 stale해진다.
 
-> 요약 (2026-07-30): **Phase 1~6 + 6.5(로스터 디테일) 완료.** 다음은 Phase 7(커리어·시장·신규).
-> 로스터 생성 규칙 정본은 [docs/design/roster.md](docs/design/roster.md) —
-> 수치는 `resource/data/master/players/generation_rules.json`에만 둔다.
+> 요약 (2026-07-30): **Phase 1~6 + 6.5 완료(main) · Phase 7-1 드래프트 완료(`feat/draft`).**
+> 다음은 Phase 7-2(프로 진입·승강).
+> 설계 정본은 [docs/design/roster.md](docs/design/roster.md)·[docs/design/draft.md](docs/design/draft.md) —
+> **수치는 `resource/data/master/players/generation_rules.json`에만 둔다.**
+> 로스터 상한·드래프트 라운드·신인 계약도 전부 그 파일이다 (코드에 표를 두 번 적지 말 것).
 >
 > ⚠ **1차 출시 범위 = 국내만.** 해외(ABL·JBL)는 확장팩으로 미뤘다 —
 > `apps/ui/src/shared/config/releaseScope.ts`가 노출을 막는다. **코드·데이터는 지우지 말 것.**
