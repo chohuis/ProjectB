@@ -3,6 +3,7 @@
   import { seasonStore, currentStandings } from "../../../shared/stores/season";
   import { masterStore, teamMap } from "../../../shared/stores/master";
   import { runSeasonEndBgProcessing } from "../../../shared/usecases/runAutoAdvance";
+  import { draftDestinationTeams } from "../../../shared/utils/draftSystem";
   import type { PitcherSeasonStats, BatterSeasonStats, CareerAward, CareerGameLogEntry } from "../../../shared/types/save";
   import type { PitcherGameLine } from "../../../shared/types/season";
 
@@ -300,8 +301,7 @@
       await gameStore.applyAgingDecay();
       await runSeasonEndBgProcessing(now);
       if ($gameStore.pendingDraft.length > 0) {
-        const univIds = $masterStore.teams.filter(t => t.leagueId === "LEAGUE_UNIVERSITY" && t.id !== "TEAM_SPORTS_UNIT").map(t => t.id);
-        const indIds  = $masterStore.teams.filter(t => t.leagueId === "LEAGUE_INDEPENDENT").map(t => t.id);
+        const { univIds, indIds } = draftDestinationTeams($masterStore.teams);
         await gameStore.processNpcDraft(now, univIds, indIds);
       }
       gameStore.advanceSeasonYear($seasonStore.seasonYear);
@@ -413,8 +413,7 @@
     await gameStore.applyAgingDecay();
     await runSeasonEndBgProcessing(now);
     if ($gameStore.pendingDraft.length > 0) {
-      const univIds = $masterStore.teams.filter(t => t.leagueId === "LEAGUE_UNIVERSITY" && t.id !== "TEAM_SPORTS_UNIT").map(t => t.id);
-      const indIds  = $masterStore.teams.filter(t => t.leagueId === "LEAGUE_INDEPENDENT").map(t => t.id);
+      const { univIds, indIds } = draftDestinationTeams($masterStore.teams);
       await gameStore.processNpcDraft(now, univIds, indIds);
     }
     gameStore.advanceSeasonYear($seasonStore.seasonYear);

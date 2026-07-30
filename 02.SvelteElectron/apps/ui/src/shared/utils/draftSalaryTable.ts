@@ -1,13 +1,18 @@
-const TEAM_MULTIPLIER: Record<string, number> = {
-  TEAM_KBL_ROYALLIONS_1:    1.12,
-  TEAM_KBL_TWINWOLVES_1:    1.10,
-  TEAM_KBL_BEARGUARDIANS_1: 1.08,
-  TEAM_KBL_SKYGULLS_1:      1.05,
-  TEAM_KBL_SOARINGEAGLES_1: 1.00,
-  TEAM_KBL_EMBERTIGERS_1:   0.97,
-  TEAM_KBL_STEELDINOS_1:    0.93,
-  TEAM_KBL_GIANTWHALES_1:   0.90,
-};
+/**
+ * 신인 지명 계약 — 순번이 정하고 팀 예산이 민다.
+ *
+ * 예전엔 여기 팀 ID 8개짜리 배수 맵이 박혀 있었다. 그 8개가 refs.json에
+ * 존재하지 않는 팀이라 **모든 팀이 배수 1.0으로 떨어지고 있었다** — 명문 구단과
+ * 하위 구단의 신인 계약이 똑같았다는 뜻이다.
+ *
+ * 팀 사정은 예산 지수(팀 예산 / 리그 평균)로 반영한다. 로스터 생성의 연봉
+ * 계산이 쓰는 것과 **같은 입력**이다 (`buildSalaryIndex` in newGameV3.ts,
+ * design/roster.md §5). 하드코딩 맵을 다시 만들지 않는다 — CLAUDE.md 금지 항목.
+ */
+
+/** 예산 지수를 이 폭 안으로 가둔다 — 로스터 연봉 계산과 같은 clamp */
+const INDEX_MIN = 0.85;
+const INDEX_MAX = 1.15;
 
 function baseSalary(pickNo: number): number {
   if (pickNo === 1)  return 9000;
@@ -30,13 +35,17 @@ function baseBonus(pickNo: number): number {
   return 0;
 }
 
-export function calcKblDraftContract(pickNo: number, teamId: string): {
+/**
+ * @param teamIndex 팀 예산 / 리그 평균. 모르면 1.0(평균팀)을 넘긴다 —
+ *                  0을 넘기면 신인 계약이 통째로 0이 된다.
+ */
+export function calcKblDraftContract(pickNo: number, teamIndex = 1.0): {
   salary: number;
   durationYears: 3;
   signingBonus: number;
 } {
-  const mult = TEAM_MULTIPLIER[teamId] ?? 1.0;
-  const salary      = Math.round(baseSalary(pickNo) * mult / 100) * 100;
-  const signingBonus = Math.round(baseBonus(pickNo) * mult / 100) * 100;
+  const mult = Math.min(INDEX_MAX, Math.max(INDEX_MIN, teamIndex || 1.0));
+  const salary       = Math.round(baseSalary(pickNo) * mult / 100) * 100;
+  const signingBonus = Math.round(baseBonus(pickNo)  * mult / 100) * 100;
   return { salary, durationYears: 3, signingBonus };
 }

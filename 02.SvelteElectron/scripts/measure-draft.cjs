@@ -30,9 +30,13 @@ const call = (fn, payload) => {
 };
 
 // ── 세계 만들기 ────────────────────────────────────────────────
+const SANGMU_TEAM_ID = "TEAM_IND_SANGMU_PHOENIX";  // utils/ids.ts와 같은 값
+
+// 상무는 리그 로스터 생성 대상이 아니다 — military_roster.rs가 따로 만든다 (newGameV3와 동일)
 const teamsOf = (leagueId, farm = false) =>
   refs.teams
-    .filter((t) => t.leagueId === leagueId && (leagueId !== "LEAGUE_KBL" || t.id.endsWith(farm ? "_2" : "_1")))
+    .filter((t) => t.leagueId === leagueId && t.id !== SANGMU_TEAM_ID
+      && (leagueId !== "LEAGUE_KBL" || t.id.endsWith(farm ? "_2" : "_1")))
     .map((t) => ({ teamId: t.id, schoolId: t.schoolId ?? "", power: t.power }));
 
 const REAL_KBL = teamsOf("LEAGUE_KBL").map((t) => t.teamId);
@@ -56,6 +60,12 @@ function buildWorld() {
     });
     out.push(...gen.npcs.map(toSaveState));
   }
+  // 상무 로스터 (newGameV3의 seedMilitaryRoster와 같은 경로)
+  const mil = call("generateMilitaryRosterNative", {
+    worldSeed: WORLD_SEED >>> 0, seasonYear: START_YEAR, rules: gr.militaryRules,
+    originTeams: teamsOf("LEAGUE_KBL").map((t) => ({ teamId: t.teamId, leagueId: "LEAGUE_KBL" })),
+  });
+  out.push(...mil.npcs.map(toSaveState));
   return out;
 }
 
@@ -99,7 +109,7 @@ function generateFreshmen(npcs, year) {
 }
 
 // ── 한 시즌 ────────────────────────────────────────────────────
-function runSeason(npcs, year, kblTeams, rounds) {
+function runSeason(npcs, year, kblTeams, rounds, excludeSangmu) {
   const g = call("advanceAllGradesNative", { npcs, seasonYear: year });
   const pool = [...g.hsGraduated, ...g.univGraduated];
   const aged = call("advanceAllAgesNative", { npcs: [...g.updated, ...pool] });
@@ -111,9 +121,11 @@ function runSeason(npcs, year, kblTeams, rounds) {
     candidates, namedMetas: [], year, rounds, teamIds: kblTeams,
   });
 
-  // SeasonEndModal이 넘기는 그대로 — 상무가 독립 팀 목록에 섞여 들어간다
-  const univIds = refs.teams.filter((t) => t.leagueId === "LEAGUE_UNIVERSITY" && t.id !== "TEAM_SPORTS_UNIT").map((t) => t.id);
-  const indIds = refs.teams.filter((t) => t.leagueId === "LEAGUE_INDEPENDENT").map((t) => t.id);
+  // draftDestinationTeams()와 같은 규칙. excludeSangmu=false면 D-1 이전 동작
+  // (상무가 독립리그 소속이라 리그로만 거르면 그대로 들어간다)
+  const keep = (t) => excludeSangmu ? t.id !== SANGMU_TEAM_ID : t.id !== "TEAM_SPORTS_UNIT";
+  const univIds = refs.teams.filter((t) => t.leagueId === "LEAGUE_UNIVERSITY" && keep(t)).map((t) => t.id);
+  const indIds = refs.teams.filter((t) => t.leagueId === "LEAGUE_INDEPENDENT" && keep(t)).map((t) => t.id);
 
   const after = call("applyDraftNative", {
     npcs: aged, result: sim, universityTeamIds: univIds, independentTeamIds: indIds,
@@ -129,7 +141,7 @@ function runSeason(npcs, year, kblTeams, rounds) {
 }
 
 // ── 측정 ───────────────────────────────────────────────────────
-function measure(label, kblTeams, rounds) {
+function measure(label, kblTeams, rounds, excludeSangmu) {
   let npcs = buildWorld();
   const t0 = Date.now();
   console.log(`\n══ ${label} (KBL ${kblTeams.length}팀 × ${rounds}라운드) ══`);
@@ -139,7 +151,7 @@ function measure(label, kblTeams, rounds) {
   for (let i = 0; i < SEASONS; i++) {
     const year = START_YEAR + i;
     const before = npcs.length;
-    const r = runSeason(npcs, year, kblTeams, rounds);
+    const r = runSeason(npcs, year, kblTeams, rounds, excludeSangmu);
     npcs = r.after;
 
     const moved = new Map();
@@ -195,7 +207,7 @@ function measure(label, kblTeams, rounds) {
   console.log(`고교  ${sizeOf("LEAGUE_HIGHSCHOOL")}`);
 
   // 상무에 미지명자가 배정됐는가
-  const sangmu = npcs.filter((n) => n.currentTeam === "TEAM_IND_SANGMU_PHOENIX");
+  const sangmu = npcs.filter((n) => n.currentTeam === SANGMU_TEAM_ID);
   const sangmuCivil = sangmu.filter((n) => n.careerStatus !== "military");
   console.log(`상무 ${sangmu.length}명 중 복무자 아닌 인원: ${sangmuCivil.length}명`);
 
@@ -203,5 +215,5 @@ function measure(label, kblTeams, rounds) {
   return npcs;
 }
 
-measure("현행 — 유령 팀 8개", GHOST_TEAMS, 10);
-measure("실제 팀으로 교체", REAL_KBL, 11);
+measure("D-1 이전 — 유령 팀 8개 · 상무 혼입", GHOST_TEAMS, 10, false);
+measure("D-1 이후 — 실제 10팀 11라운드 · 상무 제외", REAL_KBL, 11, true);

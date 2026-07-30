@@ -3,6 +3,7 @@
   import { seasonStore } from "../../../shared/stores/season";
   import { masterStore } from "../../../shared/stores/master";
   import { calcKblDraftContract } from "../../../shared/utils/draftSalaryTable";
+  import { buildSalaryIndex } from "../../../shared/repo/newGameV3";
   import { canApplyToUniversity, canApplyToIndependent } from "../../../shared/utils/careerTransition";
 
   let resolving = false;
@@ -49,7 +50,9 @@
     if (kind === "draft") {
       const pickNo  = results?.draftPick   ?? 80;
       const teamId  = results?.draftTeamId ?? $gameStore.protagonist.teamId;
-      const { salary, durationYears, signingBonus } = calcKblDraftContract(pickNo, teamId);
+      // 팀 예산 지수 — 로스터 연봉 계산과 같은 입력 (design/roster.md §5)
+      const teamIndex = buildSalaryIndex($masterStore.teams).get(teamId) ?? 1.0;
+      const { salary, durationYears, signingBonus } = calcKblDraftContract(pickNo, teamIndex);
       seasonStore.resolvePendingAction("careerChoice");
       seasonStore.pushPendingAction({
         type: "draftNotification",

@@ -1,3 +1,5 @@
+import { KBL_TEAMS } from "./leagueScheduler";
+import { SANGMU_TEAM_IDS } from "./ids";
 import type {
   DraftPick,
   DraftSimResult,
@@ -36,18 +38,38 @@ export interface DraftBoardBackgroundResult {
 }
 
 // ── 상수 ─────────────────────────────────────────────────────
-export const KBL_TEAM_IDS = [
-  "TEAM_KBL_TWINWOLVES_1",
-  "TEAM_KBL_BEARGUARDIANS_1",
-  "TEAM_KBL_SKYGULLS_1",
-  "TEAM_KBL_SOARINGEAGLES_1",
-  "TEAM_KBL_ROYALLIONS_1",
-  "TEAM_KBL_EMBERTIGERS_1",
-  "TEAM_KBL_STEELDINOS_1",
-  "TEAM_KBL_GIANTWHALES_1",
-] as const;
+/**
+ * 지명권을 가진 프로 1군 10팀.
+ *
+ * 예전엔 이 파일에 팀 ID 8개가 직접 박혀 있었다. Phase 5가 refs.json을 갈아엎자
+ * **8개 전부 존재하지 않는 팀**이 됐고, 실측(D-0)에서 5시즌에 지명자 400명이
+ * 유령 팀 소속으로 쌓이는 게 확인됐다. 팀 화면 어디에도 안 나오는 선수들이다.
+ *
+ * 정본은 `leagueTeams.generated.ts` — 시드에서 생성되고 부팅 시
+ * `validateTeamRefs`가 refs.json과 대조한다. 여기서 다시 만들지 않는다.
+ */
+export const KBL_TEAM_IDS: readonly string[] = KBL_TEAMS;
 
-export const DRAFT_ROUNDS = 10;
+/** KBO 실제 규모와 같다 (10팀 × 11라운드 = 110명) */
+export const DRAFT_ROUNDS = 11;
+
+/**
+ * 미지명자가 갈 수 있는 팀 — **군경팀(상무)은 제외한다.**
+ *
+ * 상무가 독립리그 소속이라 리그로만 거르면 그대로 들어간다. 실측(D-0)에서
+ * 5시즌 뒤 상무 45명이 **전원 복무자가 아닌 미지명자**로 채워져 있었다.
+ * 병역은 Phase 7-3의 선발 경로로만 들어가야 한다.
+ *
+ * 예전 필터는 `t.id !== "TEAM_SPORTS_UNIT"`이었는데 그건 refs에 없는 v1 ID라
+ * 아무것도 걸러내지 못했다 (ids.ts 주석 참고).
+ */
+export function draftDestinationTeams(
+  teams: readonly { id: string; leagueId: string }[],
+): { univIds: string[]; indIds: string[] } {
+  const pick = (leagueId: string) =>
+    teams.filter((t) => t.leagueId === leagueId && !SANGMU_TEAM_IDS.has(t.id)).map((t) => t.id);
+  return { univIds: pick("LEAGUE_UNIVERSITY"), indIds: pick("LEAGUE_INDEPENDENT") };
+}
 
 // ── IPC 헬퍼 ─────────────────────────────────────────────────
 const api = () => (window as unknown as { projectB: Record<string, (p: string) => Promise<string>> }).projectB;

@@ -6,6 +6,7 @@ import { slotRepo } from "../repo/slotRepo";
 import type { NpcSaveState } from "../types/save";
 import {
   DRAFT_ROUNDS,
+  KBL_TEAM_IDS,
   runDraftBoard,
   type DraftBoardBackgroundResult,
   type DraftBoardCandidate,
@@ -72,11 +73,12 @@ async function collectViewOnlyDraftCandidates(): Promise<DraftBoardCandidate[]> 
 
 export async function runDraftBoardBackground(slotId: string, seasonYear: number): Promise<DraftBoardBackgroundResult> {
   const game = get(gameStore);
-  const master = get(masterStore);
   const prevStandings = get(seasonStore).prevSeasonKblStandings ?? [];
+  // 폴백은 refs가 아니라 KBL_TEAMS를 쓴다 — refs의 KBL 20팀에는 `tier` 필드가
+  // 아예 없어서(해외 56팀에만 있다) 예전 `tier === "1군"` 필터는 **항상 0팀**이었다.
   const teamIds = prevStandings.length > 0
     ? [...prevStandings].sort((a, b) => a.winPct - b.winPct || a.wins - b.wins).map((s) => s.teamId)
-    : master.teams.filter((t) => t.leagueId === "LEAGUE_KBL" && t.tier === "1군").map((t) => t.id);
+    : [...KBL_TEAM_IDS];
   const candidates = await collectViewOnlyDraftCandidates();
   const result = await runDraftBoard(
     candidates,
