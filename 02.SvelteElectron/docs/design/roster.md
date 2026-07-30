@@ -162,6 +162,12 @@ base = ovrBase × ovrGrowth^(OVR − pivot)      ← 선형이 아니라 지수
 연 단위로는 일병이 안 나오고 저장값(개월 기준 4종)과 어긋난다.
 `NpcSaveState.militaryRank` → `RepoMilitary.rank` → `military_json`으로 왕복한다.
 
+⚠ **Rust `NpcSaveState`에도 그 필드가 있어야 한다.** Rust는 계급을 쓰지 않지만,
+구조체에 없으면 역직렬화 때 버려져 **NPC가 Rust를 한 번 통과할 때마다 계급이
+사라진다.** `syncNpcs`가 INSERT OR REPLACE라 다음 저장에서 DB 값까지 지워진다 —
+R-5로 고친 게 첫 시즌 종료(`advanceAllAges`)에서 그대로 무너지고 있었다.
+`npm run test:draft`의 "Rust 왕복 보존"이 이걸 지킨다.
+
 > R-5로 상무에 진짜 복무자가 들어가자 **선수 상세 모달이 안 열렸다.**
 > `PlayerDetailModal`의 `militaryUnit === "sports" && 현역` 분기가 `curYear`라는
 > **함수 안 지역 변수**를 템플릿에서 참조하고 있었다 — ReferenceError로 모달이

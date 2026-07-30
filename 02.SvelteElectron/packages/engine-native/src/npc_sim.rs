@@ -1160,6 +1160,7 @@ pub fn generate_freshmen(params: GenerateFreshmenParams) -> Vec<NpcSaveState> {
             contract_years:          1,
             sports_unit_selected:    false,
             military_unit:           None,
+            military_rank:           None,
             original_league_id:      None,
             original_team_id:        None,
             fame:                    0.0,

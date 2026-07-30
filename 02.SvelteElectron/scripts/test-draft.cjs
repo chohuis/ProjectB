@@ -196,6 +196,38 @@ const DEST_IND = refs.teams
     byId.UV.currentLeague !== "LEAGUE_UNIVERSITY", byId.UV.currentLeague);
 }
 
+// ── 5-1. Rust 왕복에서 필드가 살아남는가 ──────────────────────
+//
+// Rust `NpcSaveState`에 없는 필드는 **한 번 통과할 때마다 사라진다.**
+// `syncNpcs`가 INSERT OR REPLACE라 다음 저장에서 DB 값까지 지워진다.
+// 실제로 `militaryRank`가 그랬다 — R-5에서 "계급은 저장값이 정본"으로 고쳤는데
+// 첫 시즌 종료(advanceAllAges)에서 무너지고 있었다.
+console.log("\nRust 왕복 보존");
+{
+  const probe = {
+    ...fakeNpc("M1", "LEAGUE_INDEPENDENT", null, 70, 22),
+    careerStatus: "military", militaryStatus: "현역",
+    militaryUnit: "sports", militaryRank: "상병",
+    militaryEnlistYear: 2026, militaryDischargeYear: 2028,
+    originalLeagueId: "LEAGUE_KBL", originalTeamId: KBL_FIRST[0],
+    proServiceYears: 2, currentSalary: 300, contractYears: 2,
+  };
+  const keep = ["militaryStatus", "militaryUnit", "militaryRank", "militaryEnlistYear",
+    "militaryDischargeYear", "originalLeagueId", "originalTeamId",
+    "proServiceYears", "currentSalary", "contractYears", "position", "schoolId"];
+
+  for (const [label, out] of [
+    ["advanceAllAges", JSON.parse(native.advanceAllAgesNative(JSON.stringify({ npcs: [probe] })))[0]],
+    ["advanceAllGrades", call("advanceAllGradesNative", { npcs: [probe], seasonYear: 2026 }).updated[0]],
+    ["applyDraft", call("applyDraftNative", {
+      npcs: [probe], result: { year: 2026, picks: [], undraftedIds: [] },
+    })[0]],
+  ]) {
+    const lost = keep.filter((k) => probe[k] !== undefined && out[k] === undefined);
+    check(`${label}가 필드를 안 버린다`, lost.length === 0, `사라짐: ${lost.join(",")}`);
+  }
+}
+
 // ── 6. 5시즌 통합 — 불변식 ────────────────────────────────────
 console.log("\n5시즌 통합");
 {

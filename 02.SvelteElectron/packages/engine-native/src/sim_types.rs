@@ -113,6 +113,12 @@ pub struct NpcSaveState {
     pub sports_unit_selected: bool,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub military_unit: Option<String>,       // "sports" | "general"
+    /// 군 계급. **Rust는 안 쓰지만 반드시 들고 있어야 한다** —
+    /// 이 필드가 없으면 NPC가 Rust를 한 번 통과할 때마다 계급이 사라지고,
+    /// `syncNpcs`가 INSERT OR REPLACE라 다음 저장에서 DB의 계급까지 지워진다.
+    /// (military_roster.rs가 복무 개월로 정한 값이 정본 — design/roster.md §7)
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub military_rank: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub original_league_id: Option<String>,  // 입대 전 리그 (전역 시 복귀)
     #[serde(skip_serializing_if = "Option::is_none")]
