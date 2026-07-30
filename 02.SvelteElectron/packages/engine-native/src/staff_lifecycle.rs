@@ -6,11 +6,16 @@
 //   1. 나이 +1
 //   2. 경력 성장 (완만하게 — 몇 시즌 만에 최상급이 되면 팀 격차가 무너진다)
 //   3. 은퇴 판정 → 빈 자리 목록
-//   4. 감독 경질 판정 → 빈 자리 추가
-//   5. 빈 자리 충원: 상위 팀부터 "하위팀 우수 스태프 스카우트" → 안 차면 신규 생성
+//   4. 감독 경질 판정 → FA 전환 + 코치진 일부 동반 이탈 → 빈 자리 추가
+//   5. 고령 하향 판정 (상위 리그에 있는 은퇴 진입기 스태프 → FA)
+//   6. 빈 자리 충원: ① 현직 하위 자리 우수 스태프(상향) ② FA 풀 ③ 신규 생성
 //
-// 5번을 상위 팀부터 도는 이유: 이동이 "위로 올라가는 경로"로만 생기게 하고,
+// 6번을 상위 팀부터 도는 이유: 이동이 "위로 올라가는 경로"로만 생기게 하고,
 // 이동으로 새로 빈 자리가 연쇄로 메워지게 하려면 한 방향으로 훑어야 한다.
+//
+// **경질은 종착이 아니다.** status를 `free_agent`로 두고 다음 시즌 빈 자리 후보에
+// 넣는다 — 경질자를 retired로 끝내면 세계에 "아는 이름"이 안 쌓이고 매번 새 사람이
+// 생성된다. FA는 나이가 계속 오르므로 고령 FA는 은퇴 곡선이 알아서 정리한다.
 //
 // worldSeed × 시즌 결정적 — 같은 세이브를 다시 열어도 같은 사람이 은퇴한다.
 
@@ -87,6 +92,23 @@ pub struct FiringRules {
     #[serde(default)]
     pub expectation_by_power: bool,
     pub threshold: Vec<FiringThreshold>,
+    /// 감독 경질 시 코치진 동반 이탈
+    #[serde(default)]
+    pub fallout: Option<FalloutRules>,
+}
+
+#[derive(Debug, Deserialize, Clone)]
+pub struct FalloutRules {
+    /// 그 팀 코치 중 능력 **하위** 이 비율이 함께 나간다
+    pub coach_ratio: f64,
+}
+
+/// 하향 — 은퇴 진입기에 상위 리그에 있으면 한 단계 낮은 무대로 (FA 전환)
+#[derive(Debug, Deserialize, Clone)]
+pub struct DemotionRules {
+    /// 하향 확률 = 그 나이의 은퇴 확률 × age_ratio
+    pub age_ratio: f64,
+    pub roles: Vec<String>,
 }
 
 #[derive(Debug, Deserialize, Clone)]
@@ -94,7 +116,17 @@ pub struct HiringRules {
     #[serde(default)]
     pub scout_from_lower_only: bool,
     pub scout_min_avg: i64,
+    /// 경질·하향자(FA)를 빈 자리 후보에 넣는다
+    #[serde(default)]
+    pub use_free_agent_pool: bool,
+    #[serde(default = "fa_default_min")]
+    pub fa_min_avg: i64,
+    /// FA 재취업은 마지막 소속보다 낮거나 같은 자리만
+    #[serde(default)]
+    pub fa_downward_only: bool,
 }
+
+fn fa_default_min() -> i64 { 45 }
 
 #[derive(Debug, Deserialize, Clone)]
 pub struct LifecycleRules {
@@ -104,6 +136,8 @@ pub struct LifecycleRules {
     pub growth: GrowthRules,
     pub firing: FiringRules,
     pub hiring: HiringRules,
+    #[serde(default)]
+    pub demotion: Option<DemotionRules>,
 }
 
 fn yes() -> bool { true }
@@ -144,7 +178,7 @@ pub struct AdvanceStaffParams {
 #[derive(Debug, Serialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct StaffEvent {
-    /// "retired" | "fired" | "moved" | "hired"
+    /// "retired" | "fired" | "demoted" | "fallout" | "moved" | "rehired" | "hired" | "vacant"
     pub kind: String,
     pub staff_id: String,
     pub name: String,
@@ -229,11 +263,15 @@ pub fn advance_staff_season(p: AdvanceStaffParams) -> AdvanceStaffResult {
 
     // ── 1·2. 나이 +1 · 경력 성장 ──────────────────────────────
     for st in staff.iter_mut() {
-        if st.status != "active" {
+        // FA도 나이를 먹는다 — 안 그러면 구직 상태로 영구히 남는다.
+        // 다만 경력(years)은 안 오른다: 현장을 떠나 있는 해다.
+        if st.status != "active" && st.status != "free_agent" {
             continue;
         }
         st.age += 1;
-        st.years += 1;
+        if st.status == "active" {
+            st.years += 1;
+        }
 
         let delta = if st.age < g.peak_age {
             g.young_gain
@@ -262,7 +300,9 @@ pub fn advance_staff_season(p: AdvanceStaffParams) -> AdvanceStaffResult {
 
     // ── 3. 은퇴 판정 ──────────────────────────────────────────
     for st in staff.iter_mut() {
-        if st.status != "active" {
+        // FA도 은퇴 판정 대상 — 구직 기간이 길어지면 나이가 상한에 닿아 정리된다.
+        // 별도 "FA 잠재 기간" 카운터를 두지 않아도 자연히 마무리된다.
+        if st.status != "active" && st.status != "free_agent" {
             continue;
         }
         let bands = match st.role.as_str() {
@@ -276,9 +316,12 @@ pub fn advance_staff_season(p: AdvanceStaffParams) -> AdvanceStaffResult {
         }
         let mut rng = Rng::new(season_salt ^ hash_str(&st.staff_id) ^ hash_str("retire"));
         if chance >= 100 || rng.pct() < chance {
+            let was_fa = st.status == "free_agent";
             st.status = "retired".into();
             events.push(StaffEvent {
-                kind: "retired".into(),
+                // FA가 은퇴하면 그 팀 자리는 이미 비어 있다 — 빈 자리를 두 번 세면
+                // 한 자리에 두 명이 부임한다
+                kind: if was_fa { "retired_fa".into() } else { "retired".to_string() },
                 staff_id: st.staff_id.clone(),
                 name: st.name.clone(),
                 role: st.role.clone(),
@@ -319,11 +362,13 @@ pub fn advance_staff_season(p: AdvanceStaffParams) -> AdvanceStaffResult {
             continue;
         }
         // 경질 — 이미 은퇴한 감독은 건드리지 않는다
+        let mut fired_any = false;
         if let Some(mgr) = staff
             .iter_mut()
             .find(|s| s.role == "manager" && s.team_id == r.team_id && s.status == "active")
         {
-            mgr.status = "fired".into();
+            // 종착이 아니라 FA — 다음 시즌 하위 자리 후보에 들어간다
+            mgr.status = "free_agent".into();
             events.push(StaffEvent {
                 kind: "fired".into(),
                 staff_id: mgr.staff_id.clone(),
@@ -336,15 +381,90 @@ pub fn advance_staff_season(p: AdvanceStaffParams) -> AdvanceStaffResult {
             });
             // 경질했으면 누적은 리셋 — 새 감독에게 전 감독의 빚을 물리지 않는다
             slump.insert(r.team_id.clone(), 0);
+            fired_any = true;
+        }
+
+        // 감독 경질 시 코치진 일부 동반 이탈.
+        // 감독 교체가 팀에 진짜 충격이 되게 하는 장치 — 주인공 입장에서는
+        // 훈련 효율이 떨어지는 실질적 손실이다.
+        if fired_any {
+            if let Some(fo) = &p.rules.firing.fallout {
+                let mut idxs: Vec<(usize, i64)> = staff
+                    .iter()
+                    .enumerate()
+                    .filter(|(_, s)| s.role == "coach" && s.team_id == r.team_id && s.status == "active")
+                    .map(|(i, s)| (i, avg_stat(&s.stats)))
+                    .collect();
+                // 능력 하위부터 — 좋은 코치는 남는다
+                idxs.sort_by(|a, b| a.1.cmp(&b.1).then(staff[a.0].staff_id.cmp(&staff[b.0].staff_id)));
+                let n = ((idxs.len() as f64) * fo.coach_ratio).floor() as usize;
+                for (i, _) in idxs.into_iter().take(n) {
+                    staff[i].status = "free_agent".into();
+                    events.push(StaffEvent {
+                        kind: "fallout".into(),
+                        staff_id: staff[i].staff_id.clone(),
+                        name: staff[i].name.clone(),
+                        role: staff[i].role.clone(),
+                        team_id: staff[i].team_id.clone(),
+                        league_id: staff[i].league_id.clone(),
+                        from_team_id: None,
+                        age: staff[i].age,
+                    });
+                }
+            }
         }
     }
 
-    // ── 5. 빈 자리 충원 ───────────────────────────────────────
+    // ── 5. 고령 하향 ──────────────────────────────────────────
+    // 은퇴 확률이 생기는 나이부터, **상위 리그에 있으면** 한 단계 낮은 무대로 내려간다.
+    // 은퇴 전 마지막 무대가 고교·대학이 되는 그림이고, 고교 팀에 베테랑 지도자가
+    // 오는 경로가 열린다. 최하위 리그(고교)면 더 내려갈 곳이 없어 하향 없음.
+    if let Some(dm) = &p.rules.demotion {
+        for st in staff.iter_mut() {
+            if st.status != "active" || !dm.roles.contains(&st.role) {
+                continue;
+            }
+            if league_tier(&st.league_id) <= 1 {
+                continue; // 이미 최하위 무대
+            }
+            let bands = match st.role.as_str() {
+                "manager" => &p.rules.retire.manager,
+                "coach" => &p.rules.retire.coach,
+                _ => continue,
+            };
+            let base = retire_chance(bands, st.age);
+            if base == 0 {
+                continue; // 아직 은퇴 진입기가 아니다
+            }
+            // 상한(100%) 구간은 이미 은퇴 판정에서 걸렸으므로 여기 오지 않는다
+            let chance = ((base as f64) * dm.age_ratio).round() as u64;
+            if chance == 0 {
+                continue;
+            }
+            let mut rng = Rng::new(season_salt ^ hash_str(&st.staff_id) ^ hash_str("demote"));
+            if rng.pct() < chance {
+                st.status = "free_agent".into();
+                events.push(StaffEvent {
+                    kind: "demoted".into(),
+                    staff_id: st.staff_id.clone(),
+                    name: st.name.clone(),
+                    role: st.role.clone(),
+                    team_id: st.team_id.clone(),
+                    league_id: st.league_id.clone(),
+                    from_team_id: None,
+                    age: st.age,
+                });
+            }
+        }
+    }
+
+    // ── 6. 빈 자리 충원 ───────────────────────────────────────
     // 상위 리그·강팀부터 채운다. 하위 팀의 우수 스태프를 스카우트해 끌어온다.
     // 한 방향으로 훑어야 이동으로 새로 빈 자리가 연쇄로 메워진다.
+    // 은퇴·경질·동반이탈·하향으로 비워진 모든 자리
     let vacancies: Vec<(String, String, String)> = events
         .iter()
-        .filter(|e| e.kind == "retired" || e.kind == "fired")
+        .filter(|e| matches!(e.kind.as_str(), "retired" | "fired" | "fallout" | "demoted"))
         .map(|e| (e.team_id.clone(), e.league_id.clone(), e.role.clone()))
         .collect();
 
@@ -412,7 +532,58 @@ pub fn advance_staff_season(p: AdvanceStaffParams) -> AdvanceStaffResult {
             // 같은 시즌에 연쇄를 끝까지 돌리면 리그 전체가 한 해에 뒤집힌다.
             continue;
         }
-        // 후보 없음 → 신규 생성은 호출부(TS)가 staff_gen으로 처리한다.
+
+        // ② FA 풀 — 경질·하향·동반이탈로 나온 사람들.
+        //
+        // "KBL에서 잘린 감독이 모교에 왔다"가 성립하는 경로다. 신규 생성이 줄어
+        // 세계에 아는 이름이 쌓인다. 이번 시즌에 막 FA가 된 사람도 포함한다 —
+        // 경질과 재취업이 같은 오프시즌에 일어나는 게 현실적이다.
+        if p.rules.hiring.use_free_agent_pool {
+            let mut fa: Option<(usize, i64)> = None;
+            for (i, cand) in staff.iter().enumerate() {
+                if cand.status != "free_agent" || cand.role != role {
+                    continue;
+                }
+                let avg = avg_stat(&cand.stats);
+                if avg < p.rules.hiring.fa_min_avg {
+                    continue;
+                }
+                if p.rules.hiring.fa_downward_only {
+                    // 마지막 소속(FA가 되어도 team_id/league_id는 그대로 남는다)보다
+                    // 낮거나 같은 자리만. 잘린 직후 상위 팀으로 가는 건 막는다.
+                    let last_tier = league_tier(&cand.league_id);
+                    let last_power = *power_of.get(&cand.team_id).unwrap_or(&3);
+                    let is_not_higher = target_tier < last_tier
+                        || (target_tier == last_tier && target_power <= last_power);
+                    if !is_not_higher {
+                        continue;
+                    }
+                }
+                if fa.map(|(_, a)| avg > a).unwrap_or(true) {
+                    fa = Some((i, avg));
+                }
+            }
+            if let Some((i, _)) = fa {
+                let from = staff[i].team_id.clone();
+                staff[i].status = "active".into();
+                staff[i].team_id = team_id.clone();
+                staff[i].league_id = league_id.clone();
+                staff[i].joined_season = p.season_year + 1;
+                events.push(StaffEvent {
+                    kind: "rehired".into(),
+                    staff_id: staff[i].staff_id.clone(),
+                    name: staff[i].name.clone(),
+                    role: staff[i].role.clone(),
+                    team_id: team_id.clone(),
+                    league_id: league_id.clone(),
+                    from_team_id: Some(from),
+                    age: staff[i].age,
+                });
+                continue;
+            }
+        }
+
+        // ③ 후보 없음 → 신규 생성은 호출부(TS)가 staff_gen으로 처리한다.
         // 여기서 만들면 이름 풀·생성 규칙을 이 모듈이 또 들고 있어야 한다.
         events.push(StaffEvent {
             kind: "vacant".into(),
@@ -464,6 +635,7 @@ mod tests {
                 FiringThreshold { patience_until: 69, seasons: 2 },
                 FiringThreshold { patience_until: 200, seasons: 3 },
             ],
+            fallout: None,
         };
         assert_eq!(firing_threshold(&r, 10), 1);
         assert_eq!(firing_threshold(&r, 29), 1);
@@ -471,6 +643,16 @@ mod tests {
         assert_eq!(firing_threshold(&r, 69), 2);
         assert_eq!(firing_threshold(&r, 70), 3);
         assert_eq!(firing_threshold(&r, 95), 3);
+    }
+
+    #[test]
+    fn fa_retirement_does_not_create_vacancy() {
+        // FA가 은퇴하면 그 팀 자리는 이미 비어 있다. 빈 자리로 두 번 세면
+        // 한 자리에 두 명이 부임한다 — kind가 "retired_fa"로 갈려야 한다.
+        let vacancy_kinds = ["retired", "fired", "fallout", "demoted"];
+        assert!(!vacancy_kinds.contains(&"retired_fa"));
+        assert!(vacancy_kinds.contains(&"demoted"));
+        assert!(vacancy_kinds.contains(&"fallout"));
     }
 
     #[test]

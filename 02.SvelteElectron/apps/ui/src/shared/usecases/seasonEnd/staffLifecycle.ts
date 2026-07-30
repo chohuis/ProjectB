@@ -16,7 +16,12 @@ import { ALL_TEAMS_BY_LEAGUE } from "../../utils/leagueScheduler";
 import type { Standing } from "../../types/season";
 
 export interface StaffEvent {
-  /** "retired" | "fired" | "moved" | "hired" | "vacant" */
+  /**
+   * "retired" — 현직 은퇴 · "retired_fa" — FA 상태에서 은퇴(자리 이미 비어 있음)
+   * "fired" — 경질(FA 전환) · "fallout" — 감독 경질 동반 이탈
+   * "demoted" — 고령 하향(FA 전환) · "moved" — 현직 상향 이동
+   * "rehired" — FA 재취업 · "hired" — 신규 부임 · "vacant" — 충원 실패(TS가 생성)
+   */
   kind: string;
   staffId: string;
   name: string;
@@ -186,11 +191,15 @@ export async function processStaffSeasonEnd(
 export function describeStaffEvent(e: StaffEvent, teamName: (id: string) => string): string {
   const role = e.role === "manager" ? "감독" : e.role === "coach" ? "코치" : "구단주";
   switch (e.kind) {
-    case "retired": return `${teamName(e.teamId)} ${e.name} ${role}(${e.age}세) 은퇴`;
-    case "fired":   return `${teamName(e.teamId)} ${e.name} ${role} 경질`;
-    case "moved":   return `${e.name} ${role} — ${teamName(e.fromTeamId ?? "")} → ${teamName(e.teamId)} 이적`;
-    case "hired":   return `${teamName(e.teamId)} 신임 ${e.name} ${role}(${e.age}세) 부임`;
-    default:        return "";
+    case "retired":    return `${teamName(e.teamId)} ${e.name} ${role}(${e.age}세) 은퇴`;
+    case "retired_fa": return `${e.name} 전 ${role}(${e.age}세) 지도자 생활 마감`;
+    case "fired":      return `${teamName(e.teamId)} ${e.name} ${role} 경질`;
+    case "fallout":    return `${teamName(e.teamId)} ${e.name} ${role} 동반 사퇴 (감독 경질)`;
+    case "demoted":    return `${e.name} ${role}(${e.age}세) ${teamName(e.teamId)} 떠남 — 거취 미정`;
+    case "moved":      return `${e.name} ${role} — ${teamName(e.fromTeamId ?? "")} → ${teamName(e.teamId)} 영전`;
+    case "rehired":    return `${teamName(e.teamId)} ${e.name} ${role}(${e.age}세) 부임 — 전 ${teamName(e.fromTeamId ?? "")}`;
+    case "hired":      return `${teamName(e.teamId)} 신임 ${e.name} ${role}(${e.age}세) 부임`;
+    default:           return "";
   }
 }
 

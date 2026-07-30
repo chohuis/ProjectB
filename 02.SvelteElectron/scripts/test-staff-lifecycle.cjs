@@ -351,5 +351,95 @@ console.log("\n비활성 스위치");
     off.events.length === 0 && JSON.stringify(off.staff) === JSON.stringify(s0));
 }
 
+// ── 9. 하향 · FA 풀 · 동반 이탈 ───────────────────────────────
+// 이전 구현은 상향 이동만 있었고 경질자가 status=fired로 영구히 사라졌다.
+console.log("\n하향 · FA 풀");
+{
+  const TIER = { LEAGUE_KBL: 4, LEAGUE_UNIVERSITY: 3, LEAGUE_INDEPENDENT: 2, LEAGUE_HIGHSCHOOL: 1 };
+  check("하향 규칙이 있다", !!LC.demotion, "staff_rules.toml [lifecycle.demotion]");
+  check("하향 대상은 감독·코치 (구단주 제외)",
+    LC.demotion.roles.includes("manager") && LC.demotion.roles.includes("coach")
+    && !LC.demotion.roles.includes("owner"));
+  check("FA 풀이 켜져 있다", LC.hiring.use_free_agent_pool === true);
+  check("FA 재취업은 하향만", LC.hiring.fa_downward_only === true);
+  check("감독 경질 동반 이탈 규칙이 있다", !!LC.firing.fallout);
+
+  let staff = genStaff();
+  let slump = {};
+  const seen = { demoted: 0, fired: 0, fallout: 0, rehired: 0, hired: 0, moved: 0, retired_fa: 0 };
+  let faUpward = 0, demoteFromBottom = 0, ownerDemoted = 0;
+  const rehireDetail = [];
+
+  for (let y = 2026; y < 2046; y++) {
+    const active = staff.filter((s) => s.status === "active" || s.status === "free_agent");
+    const before = new Map(active.map((s) => [s.staffId, { team: s.teamId, league: s.leagueId }]));
+    const r = advance(active, y, slump);
+    staff = r.staff;
+    slump = r.slumpSeasons;
+
+    for (const e of r.events) {
+      if (seen[e.kind] !== undefined) seen[e.kind]++;
+      if (e.kind === "demoted") {
+        if ((TIER[e.leagueId] ?? 0) <= 1) demoteFromBottom++;
+        if (e.role === "owner") ownerDemoted++;
+      }
+      if (e.kind === "rehired") {
+        const b = before.get(e.staffId);
+        const lastTier = TIER[b?.league] ?? 0;
+        const newTier = TIER[e.leagueId] ?? 0;
+        const lastPower = powerOf[b?.team] ?? 3;
+        const newPower = powerOf[e.teamId] ?? 3;
+        const higher = newTier > lastTier || (newTier === lastTier && newPower > lastPower);
+        if (higher) {
+          faUpward++;
+          if (faUpward <= 3) console.error(`      ↑FA ${e.name}: ${b?.team}(T${lastTier}★${lastPower}) → ${e.teamId}(T${newTier}★${newPower})`);
+        }
+        if (rehireDetail.length < 3) {
+          rehireDetail.push(`${e.name} ${(b?.league ?? "").replace("LEAGUE_", "")}→${e.leagueId.replace("LEAGUE_", "")}`);
+        }
+      }
+    }
+  }
+  console.log(`    20시즌: 경질 ${seen.fired} · 동반이탈 ${seen.fallout} · 하향 ${seen.demoted} · 상향 ${seen.moved} · FA재취업 ${seen.rehired} · 신규 ${seen.hired}`);
+  if (rehireDetail.length) console.log(`    FA 재취업 예: ${rehireDetail.join(" / ")}`);
+
+  check("하향이 발생한다", seen.demoted > 0, `${seen.demoted}건`);
+  check("최하위 리그(고교)에서는 하향이 없다 (더 내려갈 곳 없음)",
+    demoteFromBottom === 0, `${demoteFromBottom}건`);
+  check("구단주는 하향되지 않는다", ownerDemoted === 0, `${ownerDemoted}건`);
+  check("FA 재취업이 발생한다 (경질자가 사라지지 않는다)", seen.rehired > 0, `${seen.rehired}건`);
+  check("FA는 마지막 소속보다 위로 못 간다", faUpward === 0, `${faUpward}건`);
+  check("감독 경질 시 코치 동반 이탈이 있다", seen.fallout > 0, `${seen.fallout}건`);
+  check("status에 fired가 남지 않는다 (FA로 전환)",
+    staff.every((s) => s.status !== "fired"),
+    staff.filter((s) => s.status === "fired").length + "명");
+  check("FA도 나이를 먹어 결국 은퇴한다", seen.retired_fa > 0, `${seen.retired_fa}건`);
+  check("FA가 무한정 쌓이지 않는다", (() => {
+    const fa = staff.filter((s) => s.status === "free_agent").length;
+    console.log(`    20시즌 후 FA 잔류 ${fa}명 / 전체 ${staff.length}명`);
+    return fa < staff.length * 0.35;
+  })());
+}
+
+// ── 10. 하향으로 "고교에 베테랑 지도자가 오는 경로"가 생기는가 ─
+console.log("\n하향의 효과");
+{
+  let staff = genStaff();
+  let slump = {};
+  let hsFromAbove = 0;
+  for (let y = 2026; y < 2041; y++) {
+    const active = staff.filter((s) => s.status === "active" || s.status === "free_agent");
+    const before = new Map(active.map((s) => [s.staffId, s.leagueId]));
+    const r = advance(active, y, slump);
+    staff = r.staff; slump = r.slumpSeasons;
+    for (const e of r.events) {
+      if (e.kind === "rehired" && e.leagueId === "LEAGUE_HIGHSCHOOL"
+          && before.get(e.staffId) !== "LEAGUE_HIGHSCHOOL") hsFromAbove++;
+    }
+  }
+  console.log(`    15시즌 동안 상위 리그 출신이 고교에 부임: ${hsFromAbove}건`);
+  check("상위 리그 출신이 고교로 내려온다 (경로 성립)", hsFromAbove > 0, `${hsFromAbove}건`);
+}
+
 console.log(failed === 0 ? "\nALL PASS" : `\n${failed} FAILED`);
 process.exit(failed === 0 ? 0 : 1);

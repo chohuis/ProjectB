@@ -278,11 +278,24 @@
             "patience_until": 200,
             "seasons": 3
           }
-        ]
+        ],
+        "fallout": {
+          "coach_ratio": 0.34
+        }
       },
       "hiring": {
         "scout_from_lower_only": true,
-        "scout_min_avg": 58
+        "scout_min_avg": 58,
+        "use_free_agent_pool": true,
+        "fa_min_avg": 45,
+        "fa_downward_only": true
+      },
+      "demotion": {
+        "age_ratio": 0.5,
+        "roles": [
+          "manager",
+          "coach"
+        ]
       }
     }
   },
