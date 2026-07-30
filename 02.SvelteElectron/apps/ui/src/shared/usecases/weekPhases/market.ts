@@ -629,6 +629,7 @@ export async function processProTeamCallupCalldown(
   // 규칙 파일(34)과 달랐다 (드리프트)
   const rulesFile = await loadRosterRules();
   const maxRosterSize = rulesFile.rosterRules["LEAGUE_KBL"]?.rosterMax ?? 34;
+  const minRosterSize = rulesFile.rosterRules["LEAGUE_KBL"]?.rosterMin ?? 26;
   // 승강 판정은 성적을 주로 본다 (사용자 확정) — 규칙은 규칙 파일이 정본
   const promotionRules = rulesFile.promotionRules;
 
@@ -691,8 +692,10 @@ export async function processProTeamCallupCalldown(
       }
     }
 
-    // 콜다운 — 정기에만. 상시가 같이 돌면 매주 로스터가 출렁인다
-    if (!urgentOnly && active.length > 0) {
+    // 콜다운 — 정기에만. 상시가 같이 돌면 매주 로스터가 출렁인다.
+    // 하한 아래로는 안 내린다 (규칙 파일의 rosterMin) — 콜업은 1:1 교체라
+    // 정원을 안 늘리는데 콜다운만 나가면 1군이 마른다
+    if (!urgentOnly && active.length > minRosterSize) {
       const calldownRes = JSON.parse(
         await window.projectB!.evalCalldownCandidatesNative(JSON.stringify({
           teamProfile: profile, activePlayers: active,

@@ -250,7 +250,11 @@ pub fn eval_calldown_candidates(p: EvalCalldownParams) -> EvalCalldownResult {
         (pl.id.clone(), score)
     }).collect();
     scored.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
-    let candidates = scored.into_iter().take(over.max(3))
+    // **정원 초과분만 내린다.** 예전엔 `over.max(3)`이라 정원에 여유가 있어도
+    // 매번 3명을 후보로 내놨고, 호출측이 그중 2명을 실제로 내렸다.
+    // 콜업은 1:1 교체라 정원을 안 늘리는데 콜다운만 매달 2명씩 나가서
+    // 한 시즌에 1군이 30명 → 16명으로 말랐다.
+    let candidates = scored.into_iter().take(over)
         .map(|(id, s)| CalldownCandidate { player_id: id, priority_score: s })
         .collect();
     EvalCalldownResult { candidates }
