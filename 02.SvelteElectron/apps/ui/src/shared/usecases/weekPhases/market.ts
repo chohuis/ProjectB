@@ -601,8 +601,21 @@ function getTeamEntityRefs(
  * 때만, 그것도 주인공 리그만 처리해서 — 주인공이 고교생이면 프로 세계의 승강이
  * 통째로 멈췄다. 드래프트가 매년 110명을 2군에 넣는데 아무도 안 올라왔다.
  * 국내 전 리그 풀 시뮬(DESIGN §2)의 전제와도 어긋난다.
+ *
+ * 경로가 둘이다 (사용자 확정 2026-07-30):
+ *
+ *   **월간 정기** (`urgentOnly` 없음) — 월 첫 주. 콜업과 콜다운을 같이 돌려
+ *   로스터를 재편한다. 성적·능력치·연봉·팀 성향을 다 본다
+ *
+ *   **상시 콜업** (`urgentOnly: true`) — 나머지 주. **빈 자리 메우기만** 한다.
+ *   부상이나 장기 부진으로 자리가 비었을 때 팀당 한 명. 콜다운은 안 돈다 —
+ *   그건 재편이라 정기의 몫이다. 둘이 같은 일을 하면 매주 로스터가 출렁인다
  */
-export async function processProTeamCallupCalldown(weekNum: number): Promise<string[]> {
+export async function processProTeamCallupCalldown(
+  weekNum: number,
+  opts: { urgentOnly?: boolean } = {},
+): Promise<string[]> {
+  const urgentOnly = opts.urgentOnly ?? false;
   const g = get(gameStore);
   const s = get(seasonStore);
   const m = get(masterStore);
@@ -637,7 +650,8 @@ export async function processProTeamCallupCalldown(weekNum: number): Promise<str
   const _callupEntries: PlayerEventEntry[] = [];
   const _calldownEntries: PlayerEventEntry[] = [];
 
-  autoLog(`[콜업콜다운] W${weekNum} 시작 | 대상팀 ${proTeams1.length}팀 | 부상자 ${injuredIds.length}명`);
+  const label = urgentOnly ? "상시콜업" : "월간승강";
+  autoLog(`[${label}] W${weekNum} 시작 | 대상팀 ${proTeams1.length}팀 | 부상자 ${injuredIds.length}명`);
 
   for (const team of proTeams1) {
     const teamId1 = team.id;
@@ -657,7 +671,15 @@ export async function processProTeamCallupCalldown(weekNum: number): Promise<str
         }))
       ) as { candidates: Array<{ playerId: string; replacesPlayerId: string; reason: string }> };
 
-      for (const c of callupRes.candidates.slice(0, 2)) {
+      // 상시 경로는 **빈 자리 메우기만** — 부상·장기 부진으로 생긴 자리에
+      // 팀당 한 명. 나머지 사유(전력 보강·유망주 노출)는 정기의 몫이다
+      const picked = urgentOnly
+        ? callupRes.candidates
+            .filter(c => c.reason === "injury_replacement" || c.reason === "slump_replacement")
+            .slice(0, 1)
+        : callupRes.candidates.slice(0, 2);
+
+      for (const c of picked) {
         allMoves.push({ id: c.playerId,         teamId: teamId1 });
         allMoves.push({ id: c.replacesPlayerId, teamId: teamId2 });
         const upName   = m.entities.find(e => e.id === c.playerId)?.name         ?? c.playerId;
@@ -669,8 +691,8 @@ export async function processProTeamCallupCalldown(weekNum: number): Promise<str
       }
     }
 
-    // 콜다운
-    if (active.length > 0) {
+    // 콜다운 — 정기에만. 상시가 같이 돌면 매주 로스터가 출렁인다
+    if (!urgentOnly && active.length > 0) {
       const calldownRes = JSON.parse(
         await window.projectB!.evalCalldownCandidatesNative(JSON.stringify({
           teamProfile: profile, activePlayers: active,
@@ -736,7 +758,7 @@ export async function processProTeamCallupCalldown(weekNum: number): Promise<str
       counts: { input: proTeams1.length, processed: _calldownEntries.length, saved: _calldownEntries.length },
       dbOk: _callupDbOk, durationMs: Date.now() - _t0Callup });
   }
-  autoLog(`[콜업콜다운] W${weekNum} 완료 | 콜업 ${_callupEntries.length}건 / 콜다운 ${_calldownEntries.length}건 | ${Date.now() - _t0Callup}ms`);
+  autoLog(`[${label}] W${weekNum} 완료 | 콜업 ${_callupEntries.length}건 / 콜다운 ${_calldownEntries.length}건 | ${Date.now() - _t0Callup}ms`);
 
   return logs;
 }
