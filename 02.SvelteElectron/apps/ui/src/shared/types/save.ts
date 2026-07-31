@@ -302,6 +302,14 @@ export interface ProtagonistSave {
   militaryDeferPenalty: number;
   sportsUnitApplied: boolean;
   /**
+   * 은퇴 기록. **있으면 커리어가 끝난 것이다.**
+   *
+   * `careerStage`에 `"retired"`를 넣지 않는 이유: 마지막 소속이 어디였는지가
+   * 기록의 일부고, 단계별 분기 수십 곳이 새 값을 모른다.
+   * protagonist는 JSON 블롭이라 마이그레이션이 필요 없다.
+   */
+  retirement?: { year: number; week: number; reason: RetirementReason };
+  /**
    * 체육부대 후보 공개(W50)를 **이 시즌에 이미 물어봤는가.**
    *
    * 없으면 무한 반복이 난다: 후보 공개는 주를 안 넘기고 pending만 밀어넣는데,
@@ -566,6 +574,9 @@ export interface ProtagonistDraftOutcome {
 
 // ── 드래프트 타입 ────────────────────────────────────────────
 export type MilitaryStatus = "미필" | "현역" | "군필" | "면제";
+
+/** 은퇴 사유 — 설계 정본의 트리거 3종 (05_히스토리_엔딩 §3) */
+export type RetirementReason = "voluntary" | "decline" | "injury";
 export type NpcCareerStatus = "active" | "military" | "injured" | "retired" | "free_agent";
 export type Nationality = "KOR" | "JPN" | "USA" | "OTHER";
 

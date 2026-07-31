@@ -140,6 +140,8 @@ export type PendingAction =
       context: "initial" | "renewal" | "military_return";
     }
   | { type: "faMarket" }
+  /** 은퇴 권고 — 계약이 끝났고 구단이 다시 부르지 않는 상황 (05_히스토리_엔딩 §3) */
+  | { type: "retirementAsk"; urgency: number }
   | {
       type: "trade";
       fromTeamId: string;

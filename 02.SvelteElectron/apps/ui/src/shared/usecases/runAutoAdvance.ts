@@ -5,6 +5,7 @@ import { seasonStore, nextPendingAction, seasonEnded } from "../stores/season";
 import { masterStore } from "../stores/master";
 import { autoAdvanceStore, autoLog, setAutoLogFile } from "../stores/autoAdvance";
 import { advanceWeek } from "./advanceWeek";
+import { isRetired } from "./retirement";
 import { applyGameOutcome } from "./applyGameOutcome";
 import type { UnifiedGameOutcome, PlayerGameLine, PendingAction } from "../types/season";
 import { buildBatterLineup, buildStarterStats } from "../utils/matchLineupBuilder";
@@ -15,6 +16,8 @@ import { buildBatterLineup, buildStarterStats } from "../utils/matchLineupBuilde
 // 고교에 남는다. 커리어가 갈리는 지점은 자동 진행이 대신 결정하면 안 된다.
 const STOP_PENDING = new Set<PendingAction["type"]>([
   "careerChoiceHub", "careerResults", "careerChoice", "draftObserve", "draftNotification",
+  // 은퇴는 커리어가 끝나는 결정이다 — 자동 진행이 대신 넘기면 안 된다
+  "retirementAsk",
 ]);
 const STOP_WEEKS = [40, 51] as const;
 
@@ -240,6 +243,13 @@ export async function runAutoAdvance(): Promise<void> {
     if (!get(autoAdvanceStore).running) break;
 
     try {
+      // 0. 은퇴 → 커리어 종료. 더 진행할 것이 없다
+      if (isRetired(get(gameStore).protagonist)) {
+        autoAdvanceStore.stop("은퇴 — 커리어가 끝났습니다");
+        autoLog("[은퇴] 커리어 종료");
+        return;
+      }
+
       // 1. 시즌 종료 → SeasonEndModal이 처리하도록 정지
       if (get(seasonEnded)) {
         const yr = get(seasonStore).seasonYear;
@@ -279,6 +289,8 @@ export async function runAutoAdvance(): Promise<void> {
         const label =
           pa.type === "careerChoiceHub" ? "대학/드래프트 지원 선택" :
           pa.type === "careerResults"   ? "드래프트 결과 확인" :
+          pa.type === "retirementAsk"   ? "은퇴 여부 결정" :
+          pa.type === "draftNotification" ? "지명 계약 수락 여부" :
                                           "진로 최종 선택";
         autoAdvanceStore.stop(`정지: ${label}`);
         autoAdvanceStore.addLog(`[정지] ${label}`);

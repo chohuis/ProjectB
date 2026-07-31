@@ -23,6 +23,7 @@ import { runSeasonRollover } from "../../apps/ui/src/shared/usecases/seasonRollo
 import { processTradeWindow } from "../../apps/ui/src/shared/usecases/weekPhases/market";
 import { runDevScenarios } from "../../apps/ui/src/shared/usecases/devScenarios";
 import { signNegotiatedContract } from "../../apps/ui/src/shared/usecases/contractDecision";
+import { retireProtagonist, isRetired } from "../../apps/ui/src/shared/usecases/retirement";
 import { runCampusEventsWeek } from "../../apps/ui/src/shared/usecases/campusEvents";
 import {
   submitCareerApplications, confirmCareerResults, chooseDraft,
@@ -344,6 +345,12 @@ export async function pushCareerForward(): Promise<string | null> {
       await acceptNegotiation();
       return "salaryNegotiation(accept)";
 
+    case "retirementAsk":
+      // 은퇴 권고를 **수락**한다 — 헤드리스는 커리어가 끝나는지 보는 게 목적이다.
+      // 실제 게임에서는 플레이어가 "더 뛴다"를 고를 수 있다
+      await retireProtagonist("decline");
+      return "retirementAsk(retire)";
+
     case "draftNotification":
       await acceptDraftOffer({
         teamId: pa.teamId, leagueId: pa.leagueId,
@@ -357,6 +364,12 @@ export async function pushCareerForward(): Promise<string | null> {
 }
 
 export function careerStage(): string { return get(gameStore).protagonist.careerStage; }
+
+/** 은퇴했는가 — 헤드리스 루프의 종료 조건 */
+export function retired(): { year: number; reason: string } | null {
+  const r = get(gameStore).protagonist.retirement;
+  return r ? { year: r.year, reason: r.reason } : null;
+}
 
 /**
  * 계약 협상을 "수락" 눌러준다 (`ContractNegotiationModal.accept`).

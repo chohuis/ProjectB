@@ -15,6 +15,9 @@ import { isMonthStart, planMonthlyFriendlies, buildMonthlyNoticeMessage } from "
 import { runNationalTeamWeek } from "./nationalTeam";
 import { runCampusEventsWeek } from "./campusEvents";
 import { enlistProtagonist } from "./militaryDecision";
+import {
+  isRetired, evalRetirementPressure, ovrTrendOf, calcMarketValueForProtagonist,
+} from "./retirement";
 import { calcOfferedSalaryForProtagonist, calcSeasonRating } from "../utils/salaryEngine";
 import { isFaEligible, getFaThreshold } from "../utils/faEngine";
 import { facilityTierOf } from "../utils/ids";
@@ -849,7 +852,21 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
             });
           }
         } else if (contract.remainingYears <= 0) {
-          // 이미 만료된 계약 — 계약 없음 처리
+          // ⚠ 계약이 끝났다 — **설계의 "노쇠·방출 압박" 트리거 자리**다.
+          // 예전엔 나이·성적과 무관하게 항상 재계약 오퍼를 만들어서
+          // 자연 은퇴가 일어날 수 없었다 (주인공은 영원히 뛴다).
+          // NPC와 같은 엔진으로 판정하고, 강제하지 않고 물어본다.
+          const trend = ovrTrendOf(gOff.protagonist);
+          const mv = await calcMarketValueForProtagonist(gOff.protagonist);
+          const pressure = await evalRetirementPressure(trend, mv);
+          if (pressure.suggest) {
+            // pending만 밀어넣는다 — 이 함수는 로그만 돌려주고, 주 진행을
+            // 멈추는 건 호출부가 `pendingActions`를 보고 한다
+            seasonStore.pushPendingAction({ type: "retirementAsk", urgency: pressure.urgency });
+            logs.push("은퇴 권고 — 계약이 끝났고 구단이 다시 부르지 않는다");
+            return logs;
+          }
+          // 계약 없음 처리
           if (isFaEligible(gOff.protagonist, gOff.schoolState.attendsUniversity)) {
             seasonStore.pushPendingAction({ type: "faMarket" });
           } else {
@@ -1542,6 +1559,16 @@ async function applyPostseasonResult(scheduleId: string, result: MatchResult): P
 // · 일반 시즌: NPC 경기 자동 처리 후 주인공 경기·이벤트에서 정지
 // ══════════════════════════════════════════════════════════════
 export async function advanceWeek(): Promise<WeekAdvanceResult> {
+  // ⚠ 은퇴하면 커리어가 끝난다 — 여기서 멈추지 않으면 은퇴한 선수가
+  // 계속 등판하고 나이를 먹는다. 인생 기록 화면이 이 상태를 읽는다
+  if (isRetired(get(gameStore).protagonist)) {
+    const sR = get(seasonStore);
+    return {
+      processedWeek: sR.currentWeek, logs: ["은퇴 — 커리어 종료"],
+      newMessages: [], matchResults: [], stoppedBy: null,
+    };
+  }
+
   const accLogs: string[]       = [];
   const accResults: MatchResult[] = [];
 

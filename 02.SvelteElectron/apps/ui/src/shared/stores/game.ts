@@ -1624,6 +1624,14 @@ function createGameStore() {
       }));
     },
 
+    /** 은퇴 확정 — 커리어가 여기서 끝난다 */
+    retire(rec: { year: number; week: number; reason: import("../types/save").RetirementReason }) {
+      update((s) => ({
+        ...s,
+        protagonist: { ...s.protagonist, retirement: rec },
+      }));
+    },
+
     /** 체육부대 후보 공개를 이 시즌에 물어봤다고 표시 — 같은 주 무한 반복 방지 */
     markSportsUnitPrompted(seasonYear: number) {
       update((s) => ({
