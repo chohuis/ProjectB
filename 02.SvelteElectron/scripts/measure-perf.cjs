@@ -179,6 +179,18 @@ const fmtB = (n) => (n >= 1024 * 1024 ? `${(n / 1048576).toFixed(1)}MB` : n >= 1
         offseasonLog.push({ kind: "draftSkip", ms: Number(process.hrtime.bigint() - t) / 1e6 });
         continue;
       }
+      // 진로 결정 — 여기를 안 넘기면 **프로 단계를 영영 못 잰다.**
+      // 승강·FA·트레이드가 전부 프로에서만 도는데 고교 3년에서 멈춰 있었다
+      {
+        const t = process.hrtime.bigint();
+        const done = await app.pushCareerForward();
+        if (done) {
+          const cms = Number(process.hrtime.bigint() - t) / 1e6;
+          offseasonLog.push({ kind: `career:${done}`, ms: cms });
+          process.stderr.write(`  [진로] ${done} → ${app.careerStage()}\n`);
+          continue;
+        }
+      }
       if (app.isSeasonEnded()) {
         const t = process.hrtime.bigint();
         const year = await app.seasonRollover();
