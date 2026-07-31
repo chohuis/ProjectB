@@ -70,7 +70,8 @@
     "harness": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/harness.cjs",
     "test:staffgen": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-staff-gen.cjs",
     "test:relationship": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-relationship.cjs",
-    "test:releasescope": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-release-scope.cjs"
+    "test:releasescope": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-release-scope.cjs",
+    "measure:perf": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-perf.cjs"
   },
   "build": {
     "appId": "com.projectb.desktop",

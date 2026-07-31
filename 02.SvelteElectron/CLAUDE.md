@@ -19,8 +19,11 @@
 > 스태프 15종 계수는 `seeds/onepitch/staff_rules.toml [effects]`다
 > (코드에 표를 두 번 적지 말 것 — Phase 7에서 이 결함만 15건 나왔다).
 >
-> ⚠ **Phase 8은 계측부터다** — 계획서 `docs/PHASE8_PLAN.md`.
-> 현재 성능은 측정된 적이 없고, 목표 수치는 계측 결과를 보고 사용자와 정한다.
+> ⚠ **Phase 8 진행 중** — 계획서·실측치 `docs/PHASE8_PLAN.md` (§6이 결과).
+> P8-0(계측) 완료: `npm run measure:perf`. 주당 약 2~3초이고 그 **55%가
+> `gameStore.save()`의 전량 재저장**이다. 다음은 목표 수치 합의(사용자 확정).
+> **성능 비교는 벽시계가 아니라 IPC 바이트로 한다** — 벽시계는 같은 설정에서
+> 2배까지 흔들리고, IPC 바이트는 편차 0.5% 미만이다.
 >
 > ⚠ **1차 출시 범위 = 국내만.** 해외(ABL·JBL)는 확장팩으로 미뤘다 —
 > `apps/ui/src/shared/config/releaseScope.ts`가 노출을 막는다. **코드·데이터는 지우지 말 것.**
