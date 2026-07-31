@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { MessageCategory, MessageItem } from "../../shared/types/main";
+  import { applyDecision } from "../../shared/usecases/decisions";
   import { gameStore } from "../../shared/stores/game";
   import { seasonStore } from "../../shared/stores/season";
   import { masterStore } from "../../shared/stores/master";
@@ -83,7 +84,7 @@
 
   async function choose(optionId: string) {
     if (!selected) return;
-    gameStore.resolveDecision(selected.id, optionId);
+    void applyDecision(selected.id, optionId);
     seasonStore.resolvePendingAction("message", selected.id);
     await gameStore.save();
     await seasonStore.save();

@@ -445,6 +445,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     standings:       s.standings,
     stats:           s.stats,
     triggeredEvents: s.triggeredEvents,
+    sentenceMemory: s.sentenceMemory ?? {},
   };
   const evResult = runEventEngine(
     m.eventRules, m.eventPools,
@@ -454,6 +455,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     eventRands,
   );
   seasonStore.recordTriggeredEvents(evResult.updatedTriggers);
+  seasonStore.recordSentencePicks(evResult.sentencePicks);
   gameStore.recordCareerTriggeredEvents(evResult.careerUpdatedTriggers);
 
   // 고교 월간 유망주 TOP 10 (4주마다)

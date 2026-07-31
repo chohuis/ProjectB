@@ -319,6 +319,11 @@ export interface SaveSeason {
   standings: Standing[];
   stats: Record<string, PlayerSeasonStats>;  // playerId → 누적 스탯
   triggeredEvents: Record<string, number>;   // eventId → 마지막 발생 주차
+  /**
+   * 문장 뱅크의 직전 선택 (Phase 7-6). `templateId#body → index`.
+   * 시즌이 바뀌어도 안 지운다 — 시즌 경계에서 같은 문장이 반복되면 그게 더 티난다
+   */
+  sentenceMemory?: Record<string, number>;
   // L1: 멀티리그 지원
   leagueSchedules: Record<string, ScheduleEntry[]>;      // leagueId → 경기 일정
   leagueState: Record<string, LeagueSeasonState>;        // leagueId → 순위·스탯
@@ -404,6 +409,7 @@ export function makeEmptySeason(
     })),
     stats: {},
     triggeredEvents: {},
+    sentenceMemory: {},
     leagueSchedules: {},
     leagueState: {},
     postseasonBrackets: {},

@@ -1,4 +1,5 @@
 import type { EventRule, EventPool, MessageTemplate, DecisionTemplate, EventContext } from "../types/event";
+import { pickSentence, bodyBankOf, type SentenceMemory } from "./sentenceBank";
 import type { MessageCategory, MessageItem } from "../types/main";
 import { evaluateConditions } from "./conditionEvaluator";
 
@@ -53,9 +54,32 @@ function ruleToOutput(
   msgTmpl: MessageTemplate | undefined,
   decTmpl: DecisionTemplate | undefined,
   week: number,
+  /** 문장 뱅크 선택용. 뱅크가 없는 템플릿이면 안 쓴다 */
+  bank?: {
+    memory: SentenceMemory;
+    picked: SentenceMemory;
+    rand: () => number;
+  },
 ): { message: MessageItem } {
-  const title = msgTmpl?.subject ?? rule.title;
-  const body  = msgTmpl?.body   ?? "";
+  // 문장 뱅크 — 직전에 쓴 문장을 빼고 뽑는다 (Phase 7-6, DESIGN §7.3).
+  // 뱅크가 없으면 예전처럼 `body` 한 줄이다
+  let title = msgTmpl?.subject ?? rule.title;
+  let body  = msgTmpl?.body   ?? "";
+
+  if (bank && msgTmpl) {
+    const bodyBank = bodyBankOf(msgTmpl);
+    if (bodyBank.length > 1) {
+      const key = `${msgTmpl.id}#body`;
+      const got = pickSentence(bodyBank, bank.rand(), bank.memory[key] ?? -1);
+      if (got) { body = got.text; bank.picked[key] = got.index; }
+    }
+    const subjBank = msgTmpl.subjects ?? [];
+    if (subjBank.length > 1) {
+      const key = `${msgTmpl.id}#subject`;
+      const got = pickSentence(subjBank, bank.rand(), bank.memory[key] ?? -1);
+      if (got) { title = got.text; bank.picked[key] = got.index; }
+    }
+  }
 
   const message: MessageItem = {
     id:        `evt-${rule.id}-w${week}-${Date.now()}`,
@@ -97,6 +121,11 @@ export interface EventEngineResult {
   newMessages: MessageItem[];
   updatedTriggers: Record<string, number>;        // 시즌 트리거 (startNewSeason으로 초기화)
   careerUpdatedTriggers: Record<string, number>;  // 커리어 트리거 (once_per_career 전용, 영구 유지)
+  /**
+   * 이번 주에 뽑은 문장 인덱스 (Phase 7-6). 다음 주에 "직전 것 제외"의 입력이
+   * 되므로 **세이브에 남아야 한다** — 안 남기면 로드할 때마다 같은 문장이 나온다
+   */
+  sentencePicks: SentenceMemory;
 }
 
 export function runEventEngine(
@@ -114,13 +143,22 @@ export function runEventEngine(
   const careerUpdatedTriggers: Record<string, number> = {};
   const week = ctx.currentWeek;
   let ri = 0;
-  const nextRand = () => randoms[ri++] ?? Math.random();
+  // 난수는 Rust가 뽑아 넘긴 것을 쓴다 (TS 게임 로직에서 Math.random 금지).
+  // 다 쓰면 0.5로 떨어진다 — 예전엔 Math.random()으로 새어나갔다
+  const nextRand = () => randoms[ri++] ?? 0.5;
+
+  // 문장 뱅크 메모리. 이번 주에 뽑은 것만 `picked`에 모아 결과로 돌려준다
+  const bank = {
+    memory: ctx.sentenceMemory ?? {},
+    picked: {} as SentenceMemory,
+    rand: nextRand,
+  };
 
   function tryEmit(rule: EventRule) {
     if (!checkOncePolicy(rule, ctx, seasonYear, careerStageYear)) return;
     const msgTmpl = rule.messageTemplateId ? msgTmplMap.get(rule.messageTemplateId) : undefined;
     const decTmpl = rule.decisionTemplateId ? decTmplMap.get(rule.decisionTemplateId) : undefined;
-    const { message } = ruleToOutput(rule, msgTmpl, decTmpl, week);
+    const { message } = ruleToOutput(rule, msgTmpl, decTmpl, week, bank);
     newMessages.push(message);
     updatedTriggers[rule.id] = week;
     if (rule.oncePolicy === "once_per_career") {
@@ -177,5 +215,5 @@ export function runEventEngine(
     }
   }
 
-  return { newMessages, updatedTriggers, careerUpdatedTriggers };
+  return { newMessages, updatedTriggers, careerUpdatedTriggers, sentencePicks: bank.picked };
 }

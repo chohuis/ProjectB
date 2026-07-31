@@ -946,6 +946,17 @@ function createGameStore() {
       });
     },
 
+    /** 명성 패처 (Phase 7-6c). 사치품·이벤트가 쓴다 */
+    applyFameChange(delta: number) {
+      update((s) => ({
+        ...s,
+        protagonist: {
+          ...s.protagonist,
+          fame: Math.max(0, Math.min(200, s.protagonist.fame + delta)),
+        },
+      }));
+    },
+
     applyMoneyChange(delta: number) {
       update((s) => ({
         ...s,

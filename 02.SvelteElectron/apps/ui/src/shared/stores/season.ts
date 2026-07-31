@@ -403,6 +403,18 @@ function createSeasonStore() {
       }));
     },
 
+    /**
+     * 문장 뱅크의 직전 선택 기록 (Phase 7-6). 저장 안 하면 로드할 때마다
+     * 같은 문장이 나온다 — "직전 제외"의 입력이 사라지기 때문이다
+     */
+    recordSentencePicks(picks: Record<string, number>) {
+      if (Object.keys(picks).length === 0) return;
+      update((s) => ({
+        ...s,
+        sentenceMemory: { ...(s.sentenceMemory ?? {}), ...picks },
+      }));
+    },
+
     clearTriggeredEvents() {
       update((s) => ({ ...s, triggeredEvents: {} }));
     },

@@ -1226,6 +1226,14 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
           autoLog(`[FA미계약] ${market.unsigned.length}명 — 진로 배정으로 넘어간다`);
         }
 
+        // ── FA 시장 뉴스 (§7-6b) ────────────────────────────────
+        //
+        // 7-4·F-4까지는 **로그로만** 있었다. 자동진행 로그는 개발용이라
+        // 플레이어는 리그의 겨울에 무슨 일이 있었는지 볼 수 없었다.
+        if (market.signings.length > 0) {
+          emitFaMarketNews(market.signings, market.unsigned.length, weekNum, s.seasonYear, m, g.protagonist.teamId);
+        }
+
         if (slotId && faMarketRows.length > 0) {
           const res = JSON.parse(
             await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: faMarketRows }))
@@ -1325,3 +1333,64 @@ export async function processScoutingImprovement(): Promise<void> {
 }
 
 export { getTeamProfile, DEFAULT_TEAM_PROFILE };
+
+// ── FA 시장 뉴스 (Phase 7-6b) ────────────────────────────────────
+//
+// **금액 순으로 자른다.** 계약 수십 건을 다 나열하면 아무도 안 읽는다 —
+// 겨울의 큰 사건 몇 개만 남기고 나머지는 숫자로 요약한다.
+function emitFaMarketNews(
+  signings: Array<{
+    npcId: string; name: string; fromTeamId: string; toTeamId: string;
+    grade: string; salary: number; years: number;
+    compensationNpcId: string | null; compensationMoney: number;
+  }>,
+  unsignedCount: number,
+  weekNum: number,
+  seasonYear: number,
+  m: import("../../stores/master").MasterState,
+  myTeamId: string,
+): void {
+  const teamName = (id: string) =>
+    m.teams.find((t) => t.id === id)?.name ?? id.replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "");
+  const won = (v: number) => (v >= 10000 ? `${(v / 10000).toFixed(1)}억` : `${v.toLocaleString()}만`);
+
+  const moved = signings.filter((x) => x.toTeamId !== x.fromTeamId);
+  const stayed = signings.filter((x) => x.toTeamId === x.fromTeamId);
+  const top = [...signings].sort((a, b) => b.salary * b.years - a.salary * a.years).slice(0, 5);
+
+  // 내 팀이 얽힌 건 따로 뽑는다 — 남의 팀 소식 사이에 묻히면 놓친다
+  const mine = signings.filter((x) => x.toTeamId === myTeamId || x.fromTeamId === myTeamId);
+  const mineLines = mine.map((x) =>
+    x.toTeamId === myTeamId
+      ? (x.fromTeamId === myTeamId
+          ? `  · ${x.name} 잔류 (${x.grade}등급 · ${won(x.salary)}/년 ${x.years}년)`
+          : `  · ${x.name} 영입 ← ${teamName(x.fromTeamId)} (${x.grade}등급 · ${won(x.salary)}/년)`)
+      : `  · ${x.name} 이적 → ${teamName(x.toTeamId)}` +
+        (x.compensationNpcId ? " (보상선수 발생)" : ""));
+
+  gameStore.addMessage({
+    id: `msg-fa-market-${seasonYear}-w${weekNum}`,
+    category: "news",
+    sender: "리그 사무국",
+    subject: `${seasonYear} FA 시장 마감 — ${signings.length}건 계약`,
+    preview: `이적 ${moved.length} · 잔류 ${stayed.length} · 미계약 ${unsignedCount}`,
+    body: [
+      `${seasonYear} 시즌 FA 시장이 마감됐습니다.`,
+      "",
+      `총 ${signings.length}건 계약 — 이적 ${moved.length}건 · 원소속 잔류 ${stayed.length}건` +
+        (unsignedCount > 0 ? ` · 미계약 ${unsignedCount}명` : ""),
+      "",
+      "■ 대형 계약",
+      ...top.map((x) =>
+        `  · ${x.name} (${x.grade}등급) ${teamName(x.fromTeamId)}` +
+        `${x.toTeamId === x.fromTeamId ? " 잔류" : ` → ${teamName(x.toTeamId)}`}` +
+        ` · ${won(x.salary)}/년 ${x.years}년 (총 ${won(x.salary * x.years)})`),
+      ...(mineLines.length > 0 ? ["", "■ 우리 팀", ...mineLines] : []),
+      ...(unsignedCount > 0
+        ? ["", `계약을 찾지 못한 ${unsignedCount}명은 독립리그행 또는 은퇴를 택하게 됩니다.`]
+        : []),
+    ].join("\n"),
+    createdAt: `W${weekNum}`,
+    readAt: null,
+  });
+}
