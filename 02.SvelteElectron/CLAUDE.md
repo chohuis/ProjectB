@@ -89,6 +89,19 @@ pub fn calc_my_thing(p: MyPayload) -> MyResult {
 }
 ```
 
+## dev 서버 포트
+
+**정본은 `dev-server.config.cjs` 하나다** (기본 5174). `DEV_PORT` 환경변수로 덮어쓴다.
+
+예전엔 이 숫자가 네 군데 각각 적혀 있었다 — `vite.config.ts` · `package.json` ·
+`wait-for-port.cjs` · `main.cjs`(CSP·will-navigate). 한 곳만 바꾸면 Electron이
+안 뜨거나, 떠도 CSP가 막아 **화면이 하얗게** 나온다. 원인 찾기 제일 나쁜 종류다.
+
+```bash
+npm run dev                # 5174
+cross-env DEV_PORT=5180 npm run dev   # 다른 프로젝트와 겹칠 때
+```
+
 ## 빌드 규칙
 
 - Rust 수정 후: `npm run build:native` (증분 빌드, ~5~30초) → Electron 재시작

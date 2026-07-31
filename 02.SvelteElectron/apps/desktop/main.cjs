@@ -5,6 +5,8 @@ const { createHash } = require("node:crypto");
 const engineNative  = require("../../packages/engine-native");
 const { app, BrowserWindow, ipcMain, session, protocol, net } = require("electron");
 const Database = require("better-sqlite3");
+// 포트 정본 — CSP와 will-navigate가 같은 값을 봐야 한다
+const { DEV_ORIGIN } = require("../../dev-server.config.cjs");
 
 const {
   openDatabase, applySchemaPatches,
@@ -92,8 +94,11 @@ function createWindow() {
   });
 
   win.webContents.on("will-navigate", (event, url) => {
-    const allowed = isDev ? /^http:\/\/localhost:5173/ : /^app:\/\/bundle\//;
-    if (!allowed.test(url)) event.preventDefault();
+    // dev 오리진을 정규식에 두 번째로 적지 않는다 — 포트가 바뀌면 조용히 막힌다
+    const allowed = isDev
+      ? (u) => u.startsWith(process.env.VITE_DEV_SERVER_URL)
+      : (u) => u.startsWith("app://bundle/");
+    if (!allowed(url)) event.preventDefault();
   });
 
   win.webContents.setWindowOpenHandler(() => ({ action: "deny" }));
@@ -615,7 +620,7 @@ app.whenReady().then(() => {
       ? [
           "default-src 'self' 'unsafe-eval'",
           "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
-          "connect-src 'self' ws://localhost:5173 http://localhost:5173",
+          `connect-src 'self' ${DEV_ORIGIN} ${DEV_ORIGIN.replace("http://", "ws://")}`,
           "style-src 'self' 'unsafe-inline'",
           "img-src 'self' data: blob:",
         ].join("; ")
