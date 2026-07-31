@@ -93,7 +93,8 @@ main   (최신)   Phase 1~6 + 6.5 + **7 전체** 병합됨. 작업 브랜치 없
 
 ## 다음에 할 것
 
-**Phase 8 — 성능.** BACKLOG §2가 분해다. 순서가 정해져 있다:
+**Phase 8 — 성능.** 계획서는 [PHASE8_PLAN.md](PHASE8_PLAN.md)다 (BACKLOG §2가 원본 분해).
+순서가 정해져 있다:
 
 1. **성능 목표 수치 합의가 먼저다.** 추측으로 최적화하지 않는다
 2. 프로파일 → 진범 특정 → **그것만** 수정
@@ -129,6 +130,7 @@ main   (최신)   Phase 1~6 + 6.5 + **7 전체** 병합됨. 작업 브랜치 없
 | 13 | `effectHint`와 `effects` 불일치 — "trust +5"라 적고 사기만 움직임 | 6C→7-6 |
 | 14 | `Math.random()`이 난수 부족 시 폴백으로 새어나감 (결정성) | 7-6 |
 | 15 | **로스터 캡이 강등 유입을 재검사 안 함** — HashMap 임의 순서 | 7-7 |
+| 16 | **회귀가 파일 목록을 하드코딩** — 목록 밖 `backgroundLeague.ts`가 죽은 `handlePersonnel`을 계속 읽어 **배경 리그 전 경기가 감독 능력치 50 고정**이었다 | 7-5→8 |
 
 → **표를 두 번째로 적고 있다면 이미 드리프트다.** 정본을 정하고 나머지는 지운다.
 → 폴백을 남길 거면 **대조 테스트를 같이 둔다** (`test:fa`·`test:staff`가 그 예다).
@@ -136,6 +138,9 @@ main   (최신)   Phase 1~6 + 6.5 + **7 전체** 병합됨. 작업 브랜치 없
 → **엔진을 만들었으면 호출부까지 확인한다.** 유닛테스트는 통과하는데
   게임에는 없는 상태가 두 번 나왔다 (11번·12번).
 → **HashMap 순회에 기대지 마라.** 순서가 결과를 바꾸는 자리가 실제로 있었다.
+→ **회귀에 파일 목록을 하드코딩하지 마라.** 목록이 아니라 **조건**으로 검사한다 —
+  `test:staff`는 이제 소스 136개를 훑고, "`staffEffects`를 안 거치고 스태프 능력치를
+  직접 읽는 곳"까지 같이 센다.
 
 분해와 순서는 [BACKLOG.md §2](BACKLOG.md).
 
@@ -189,6 +194,7 @@ npm run smoke:draft       # 진짜 slot.db에 쓰고 읽어 화면이 볼 데이
 | [docs/design/military.md](design/military.md) | 병역·국가대표 설계 (Phase 7-3) |
 | [docs/design/fa.md](design/fa.md) | FA·방출 설계 (Phase 7-4) |
 | [docs/design/finance.md](design/finance.md) | 재정·스태프 배선·부상 전조 (Phase 7-5~7-7) |
+| [docs/PHASE8_PLAN.md](PHASE8_PLAN.md) | **Phase 8 계획** — 계측 먼저, 목표 합의, 진범만 수정 |
 | [docs/DATA_POLICY.md](DATA_POLICY.md) | 데이터 3분류 · 마이그레이션 규칙 · 코드 배치 규칙 |
 | [docs/AUDIT_2026-07.md](AUDIT_2026-07.md) | 현황 전수조사 · 버그 B1~B11 |
 | [CLAUDE.md](../CLAUDE.md) | 작업 규칙 |

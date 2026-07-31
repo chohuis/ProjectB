@@ -2,6 +2,7 @@
   import { t } from "../../shared/i18n";
   import { gameStore } from "../../shared/stores/game";
   import { masterStore, pitchUnlockRuleMap } from "../../shared/stores/master";
+  import { staffStatsOf } from "../../shared/utils/staffEffects";
   import { INJURY_LABEL } from "../../shared/types/save";
   import type { TrainingPreset } from "../../shared/types/save";
 
@@ -113,7 +114,9 @@
     (e) => e.role === "coach" && e.teamId === protagonist.teamId &&
            (e.details as import("../../shared/stores/master").EntityDetails)?.coach?.specialty === "투수"
   );
-  $: coachTeaching = (pitchCoach?.details as import("../../shared/stores/master").EntityDetails)?.coach?.stats?.teaching ?? 50;
+  // 스태프 능력치는 `staffEffects`만 읽는다 (7-5 F-0). 화면이 직접 파면
+  // 키가 바뀌었을 때 조용히 50으로 떨어진다 — 실제로 그렇게 돌던 자리가 있었다
+  $: coachTeaching = staffStatsOf(protagonist.teamId ?? "", $masterStore.entities, { specialty: "투수" }).teaching;
   $: coachFatMod  = Math.max(0.88, 1.0 - coachTeaching * 0.0024);
   $: coachRiskMod = Math.max(0.85, 1.0 - coachTeaching * 0.003);
   $: coachMod     = { fatigue: coachFatMod, risk: coachRiskMod };

@@ -62,21 +62,55 @@ const DEAD_KEYS = [
   "stats?.development", "stats.development",
   "stats?.analytics", "stats.analytics",
 ];
-const SCAN_FILES = [
-  "apps/ui/src/shared/stores/master.ts",
-  "apps/ui/src/shared/repo/staffGen.ts",
-  "apps/ui/src/shared/utils/staffEffects.ts",
-  "apps/ui/src/shared/usecases/weekPhases/growth.ts",
-  "apps/ui/src/shared/usecases/weekPhases/injuries.ts",
-  "apps/ui/src/pages/match/MatchPage.svelte",
-  "apps/ui/src/pages/roster/RosterPage.svelte",
-  "apps/ui/src/features/player/ui/PlayerDetailModal.svelte",
-];
+// ⚠ **파일 목록을 손으로 적지 않는다.** 처음엔 8개를 하드코딩했는데,
+// 목록에 없던 `stores/backgroundLeague.ts`가 `manager.stats.handlePersonnel`을
+// 계속 읽고 있었다 — 배경 리그 전 경기(주 ~56경기)가 감독 능력치 50 고정으로
+// 돌고 있었고 테스트는 조용히 통과했다.
+//
+// 이제 **소스 전체를 훑어 소비처를 찾아낸다.** 새 파일이 옛 키를 읽기 시작하면
+// 목록을 갱신하지 않아도 걸린다.
+function walk(dir, out = []) {
+  for (const e of fs.readdirSync(path.join(ROOT, dir), { withFileTypes: true })) {
+    if (e.name === "node_modules" || e.name.startsWith(".")) continue;
+    const rel = `${dir}/${e.name}`;
+    if (e.isDirectory()) walk(rel, out);
+    else if (/\.(ts|svelte)$/.test(e.name) && !e.name.endsWith(".d.ts")) out.push(rel);
+  }
+  return out;
+}
+
+const SCAN_FILES = walk("apps/ui/src");
+console.log(`    소스 ${SCAN_FILES.length}개 파일을 훑는다 (목록 하드코딩 안 함)`);
+
+const offenders = [];
 for (const f of SCAN_FILES) {
   const src = readCode(f);
   const hits = DEAD_KEYS.filter((k) => src.includes(k));
-  ok(hits.length === 0, `${path.basename(f)} — 옛 키 없음${hits.length ? ` (${hits})` : ""}`);
+  if (hits.length > 0) offenders.push(`${f} (${hits.join(", ")})`);
 }
+ok(offenders.length === 0,
+   offenders.length === 0
+     ? `옛 키를 읽는 파일 없음`
+     : `옛 키 사용:\n      ${offenders.join("\n      ")}`);
+
+// 스태프 stats를 **staffEffects를 안 거치고** 직접 파는 곳이 있나.
+// 하나라도 있으면 그게 다음 드리프트의 씨앗이다
+const rawReaders = [];
+for (const f of SCAN_FILES) {
+  if (f.endsWith("utils/staffEffects.ts") || f.endsWith("repo/staffGen.ts")) continue;
+  if (f.endsWith("stores/master.ts")) continue;              // 타입 정의
+  if (f.endsWith("features/player/ui/PlayerDetailModal.svelte")) continue;  // 표시 전용
+  if (f.endsWith("pages/roster/RosterPage.svelte")) continue;              // 표시 전용(고아)
+  if (f.endsWith("pages/match/MatchPage.svelte")) continue;                // stats 통째 전달
+  const src = readCode(f);
+  if (/\.(manager|coach|owner)\?\.stats\?\.\w+|\.(manager|coach|owner)\.stats\.\w+/.test(src)) {
+    rawReaders.push(f);
+  }
+}
+ok(rawReaders.length === 0,
+   rawReaders.length === 0
+     ? "계산 경로는 전부 staffEffects를 거친다"
+     : `staffEffects를 안 거치고 직접 읽는 곳:\n      ${rawReaders.join("\n      ")}`);
 
 // ══ 3. 15종 전부 소비처가 있다 ═══════════════════════════════════
 console.log("\n[3] 15종 전부 실제 계산에 닿는다");

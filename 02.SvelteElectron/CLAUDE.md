@@ -19,7 +19,8 @@
 > 스태프 15종 계수는 `seeds/onepitch/staff_rules.toml [effects]`다
 > (코드에 표를 두 번 적지 말 것 — Phase 7에서 이 결함만 15건 나왔다).
 >
-> ⚠ **Phase 8은 성능 목표 수치 합의부터 한다.** 현재 성능은 측정된 적이 없다.
+> ⚠ **Phase 8은 계측부터다** — 계획서 `docs/PHASE8_PLAN.md`.
+> 현재 성능은 측정된 적이 없고, 목표 수치는 계측 결과를 보고 사용자와 정한다.
 >
 > ⚠ **1차 출시 범위 = 국내만.** 해외(ABL·JBL)는 확장팩으로 미뤘다 —
 > `apps/ui/src/shared/config/releaseScope.ts`가 노출을 막는다. **코드·데이터는 지우지 말 것.**

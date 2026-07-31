@@ -1,6 +1,6 @@
 ﻿import { derived, writable } from "svelte/store";
 import type { EventRule, EventPool, MessageTemplate, DecisionTemplate, DecisionTemplateOption } from "../types/event";
-import type { CareerStage, ManagerAttributes, CoachAttributes, CoachSpecialty } from "../types/save";
+import type { CareerStage, CoachAttributes, CoachSpecialty } from "../types/save";
 import type { DecisionEffect } from "../types/main";
 import { validateTeamRefs } from "../utils/ids";
 import {
@@ -9,7 +9,7 @@ import {
   UNIV_TEAMS, IND_TEAMS, HS_ALL_TEAMS,
 } from "../utils/leagueScheduler";
 
-export type { ManagerAttributes, CoachAttributes, CoachSpecialty };
+export type { CoachAttributes, CoachSpecialty };
 
 // ?? ?덈젴쨌援ъ쥌 ????????????????????????????????????????????????
 export interface TrainingProgram {

@@ -42,18 +42,21 @@ function calcEffectiveOvr(
   return Math.round(baseOvr * fatF * restF);
 }
 
-// ── handlePersonnel 기반 선도 점수 ────────────────────────────
-// handlePersonnel > 50: 최근 쉰 선수 선호 → 자연스러운 로테이션
-// handlePersonnel < 50: OVR 위주 → 같은 선수 반복 기용
+// ── 로테이션 운용 감각 기반 선도 점수 ─────────────────────────
+// rotationSense > 50: 최근 쉰 선수 선호 → 자연스러운 로테이션
+// rotationSense < 50: OVR 위주 → 같은 선수 반복 기용
+//
+// 입력은 감독 `bullpenRead`다. 예전 이름은 `rotationSense`이었는데 그 키는
+// 7-5 F-0에서 사라졌다 — 이름만 남으면 "그 키가 아직 있는 줄" 알고 다시 읽는다
 function freshnessBonus(
   lastAppearanceGameCount: number | undefined,
   teamGameCount: number,
-  handlePersonnel: number,
+  rotationSense: number,
 ): number {
   const gamesSince = lastAppearanceGameCount !== undefined
     ? teamGameCount - lastAppearanceGameCount
     : 99;  // 한 번도 안 나온 선수 → 가장 신선
-  return gamesSince * (handlePersonnel - 50) * 0.3;
+  return gamesSince * (rotationSense - 50) * 0.3;
 }
 
 // 리그(careerStage)별 로테이션 크기
@@ -183,7 +186,7 @@ export function getTeamBullpen(
   npcInjuries?: Record<string, NpcInjuryEntry>,
   conditions?: Record<string, PlayerCondition>,
   teamGameCount = 0,
-  handlePersonnel = 50,
+  rotationSense = 50,
   npcRetired?: string[],
 ): { bullpen: string[]; closer: string } {
   const players = getTeamPlayers(teamId, entities, npcInjuries, npcRetired);
@@ -215,7 +218,7 @@ export function getTeamBullpen(
   // 선택 점수 = effectiveOvr + freshnessBonus
   const score = (e: EntityRow) => {
     const ovr = playerDetails(e).pitching?.ovr ?? 0;
-    return ovr + freshnessBonus(conditions?.[e.id]?.lastAppearanceGameCount, teamGameCount, handlePersonnel);
+    return ovr + freshnessBonus(conditions?.[e.id]?.lastAppearanceGameCount, teamGameCount, rotationSense);
   };
 
   // CP: 가용 CP 중 점수 최고, 없으면 전체 CP 중 최고 (fallback)
@@ -244,7 +247,7 @@ export function getTeamLineup(
   conditions?: Record<string, PlayerCondition>,
   currentWeek = 0,
   teamGameCount = 0,
-  handlePersonnel = 50,
+  rotationSense = 50,
   npcRetired?: string[],
 ): string[] {
   const players = getTeamPlayers(teamId, entities, npcInjuries, npcRetired);
@@ -264,7 +267,7 @@ export function getTeamLineup(
       : cond.fatigue >= 50 ? 0.90
       : 0.78;
     const effOvr = Math.round(base * fatF);
-    return effOvr + freshnessBonus(cond?.lastAppearanceGameCount, teamGameCount, handlePersonnel);
+    return effOvr + freshnessBonus(cond?.lastAppearanceGameCount, teamGameCount, rotationSense);
   };
 
   // 포지션별 1명씩 최고 점수 선택
@@ -336,11 +339,11 @@ export function buildTeamRoster(
   currentWeek = 0,
   teamGameCount = 0,
   leagueId = "",
-  handlePersonnel = 50,
+  rotationSense = 50,
   npcRetired?: string[],
 ): TeamRoster {
   const rotation = getTeamRotation(teamId, entities, npcInjuries, maxRotation, conditions, currentWeek, teamGameCount, leagueId, npcRetired);
-  const { bullpen, closer } = getTeamBullpen(teamId, entities, rotation, npcInjuries, conditions, teamGameCount, handlePersonnel, npcRetired);
-  const lineup = getTeamLineup(teamId, entities, npcInjuries, conditions, currentWeek, teamGameCount, handlePersonnel, npcRetired);
+  const { bullpen, closer } = getTeamBullpen(teamId, entities, rotation, npcInjuries, conditions, teamGameCount, rotationSense, npcRetired);
+  const lineup = getTeamLineup(teamId, entities, npcInjuries, conditions, currentWeek, teamGameCount, rotationSense, npcRetired);
   return { rotation, bullpen, closer, lineup };
 }

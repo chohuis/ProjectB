@@ -72,17 +72,16 @@ export type PitcherRole =
   | "롱릴리프" | "중간계투" | "셋업맨" | "마무리" | "패전처리"
   | "스윙맨" | "오프너";
 
-// ── 감독 능력치 ────────────────────────────────────────────────
-export interface ManagerAttributes {
-  motivation: number;      // 선수 모랄 주간 보정
-  development: number;     // 팀 전체 devFactor 보정
-  strategy: number;        // 경기 전술 의사결정
-  handlePressure: number;  // 압박 상황 관리
-  handlePersonnel: number; // 선수 기용/트레이드/방출 결정
-  rotationMgmt?: number;   // 선발 로테이션 운용 능력 (50 기본)
-  bullpenMgmt?: number;    // 불펜 운용 능력 (50 기본)
-  injuryMgmt?: number;     // 부상 관리 (높을수록 보수적 — 즉시 결장, 70+ 보수, 40미만 무리형)
-}
+// ── 감독 능력치 (제거됨 — Phase 8 정리) ────────────────────────
+//
+// `ManagerAttributes` 8종이 여기 있었다. 7-5 F-0이 감독 능력치를 새 5종
+// (`tacticalIQ`·`bullpenRead`·`offenseMind`·`motivator`·`clutchDecision`)으로
+// 정본화했는데 이 타입만 남아, **아무도 쓰지 않으면서 옛 이름을 계속 정당화**하고
+// 있었다. 실제로 `backgroundLeague.ts`가 여기 있던 `handlePersonnel`을 읽으며
+// 세계 전 경기를 감독 능력치 50 고정으로 돌렸다.
+//
+// 정본은 `stores/master.ts`의 `EntityManagerStats`이고, 읽는 곳은
+// `utils/staffEffects.ts` 하나다.
 
 // ── NPC 부상 상태 ──────────────────────────────────────────────
 export interface NpcInjuryEntry {

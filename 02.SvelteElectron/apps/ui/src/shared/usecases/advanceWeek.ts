@@ -17,7 +17,7 @@ import { runCampusEventsWeek } from "./campusEvents";
 import { calcOfferedSalaryForProtagonist, calcSeasonRating } from "../utils/salaryEngine";
 import { isFaEligible, getFaThreshold } from "../utils/faEngine";
 import { facilityTierOf } from "../utils/ids";
-import { staffModsOf } from "../utils/staffEffects";
+import { staffModsOf, staffStatsOf } from "../utils/staffEffects";
 import { calcWeeklyFinance, calcTrainingBonus } from "./finance";
 import type { MatchResult, PendingAction, PlayerCondition, ScheduleEntry, WeekAdvanceResult } from "../types/season";
 import type { EventContext } from "../types/event";
@@ -194,7 +194,8 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   const majorEffBonus = isUniversity ? getUniversityEffBonus(g.schoolState.universityMajor) : 0;
 
   const pitchCoach = findTeamCoach(g.protagonist.teamId, "투수", m.entities);
-  const coachTeaching  = (pitchCoach?.details as import("../stores/master").EntityDetails)?.coach?.stats?.teaching ?? 50;
+  // 스태프 능력치는 `staffEffects`만 읽는다 — 여기서 직접 파면 그게 다음 드리프트다
+  const coachTeaching  = staffStatsOf(g.protagonist.teamId ?? "", m.entities, { specialty: "투수" }).teaching;
 
   // 관계 보정 (Phase 6C-5) — 이번 주 훈련 영역의 담당 코치와 감독 관계를 한 번에 읽는다.
   // 이 조회가 여기 있는 이유: coachEffBonus와 보직 배정이 둘 다 아래에서 쓰인다.

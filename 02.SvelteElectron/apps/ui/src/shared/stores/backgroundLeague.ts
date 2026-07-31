@@ -6,14 +6,24 @@ import type { SeasonStoreState } from "./season";
 import { accumulateStats, migrateLeagueState, updateStandings } from "../utils/season-helpers";
 import { makeStandings, ALL_TEAMS_BY_LEAGUE } from "../utils/leagueScheduler";
 import { simulateGame } from "../utils/gameSimulator";
+import { staffStatsOf } from "../utils/staffEffects";
 import { rotationSizeForLeague } from "../utils/rosterEngine";
 import { autoLog } from "./autoAdvance";
 import { getLeagueRadius, RADIUS_GATED_LEAGUES } from "../utils/radiusGate";
 
-// 팀 소속 감독의 handlePersonnel 능력치 조회
-function getManagerHandlePersonnel(teamId: string, entities: EntityRow[]): number {
-  const mgr = entities.find((e) => e.teamId === teamId && e.role === "manager");
-  return (mgr?.details as any)?.manager?.stats?.handlePersonnel ?? 50;
+/**
+ * 로테이션 운용 감각 — 감독 `bullpenRead`.
+ *
+ * ⚠ 여기가 **`manager.stats.handlePersonnel`을 읽고 있었다.** 그 키는 7-5 F-0에서
+ * 사라졌는데(구 5종 → 새 5종) 이 파일은 목록에 없어 살아남았다. 그래서 배경 리그
+ * 전 경기(주 ~56경기 × 52주)가 **감독 능력치 50 고정**으로 돌고 있었다 —
+ * 로테이션 선택 축이 세계 전체에서 죽어 있었던 셈이다.
+ *
+ * 회귀(`test:staff`)가 **하드코딩 파일 목록**을 쓰고 있어서 못 잡았다.
+ * 그래서 그 테스트를 "소비처를 찾아내는" 방식으로 바꿨다.
+ */
+function getManagerRotationSense(teamId: string, entities: EntityRow[]): number {
+  return staffStatsOf(teamId, entities).bullpenRead;
 }
 
 const WEEKLY_FATIGUE_RECOVERY = 28;
@@ -39,8 +49,8 @@ export async function runSimBatch(
         npcLiveStats,
         rotationSize:         rotSize,
         leagueId:             g.leagueId ?? "",
-        homeHandlePersonnel:  getManagerHandlePersonnel(g.homeTeamId, entities),
-        awayHandlePersonnel:  getManagerHandlePersonnel(g.awayTeamId, entities),
+        homeHandlePersonnel:  getManagerRotationSense(g.homeTeamId, entities),
+        awayHandlePersonnel:  getManagerRotationSense(g.awayTeamId, entities),
       });
 
       // 엔티티 없어서 시뮬 실패(winner_id="") 시 폴백으로 랜덤 결과 생성
