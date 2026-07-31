@@ -27,6 +27,7 @@ import { staffStatsOf, staffModsOf, MANAGER_STATS, COACH_STATS } from "../utils/
 import { buildRelationMessages, relationSceneCatalog } from "../utils/relationMessages";
 import { facilityTierOf } from "../utils/ids";
 import { visibleLeagueIds, leaderboardLeagueIds, hasPlayedGames } from "../utils/leagueVisibility";
+import { splitByGroup } from "../utils/standingsGroups";
 import { isLeagueInScope } from "../config/releaseScope";
 import { HS_DIGEST_WEEKS, MONTHLY_STANDINGS_LEAGUES } from "./weekPhases/digest";
 import { MY_RANK_WEEKS } from "./weekPhases/standingsNews";
@@ -505,6 +506,36 @@ const S_LEAGUES: Scenario = {
     // 범위 밖 리그가 새어나오지 않는가
     const leaked = [...visible].filter((lid) => !isLeagueInScope(lid));
     c.ok("출시 범위 밖 리그가 목록에 없다", leaked.length === 0, leaked.join(", "));
+
+    // ── 순위표가 리그 구조대로 쪼개지는가 ──────────────────────
+    //
+    // 고교 102팀·대학 50팀이 통짜 한 표로 나왔다. 그 표에서는 내가 몇 등인지도
+    // 우리 권역 1위가 누군지도 못 읽는다 — 리그 구조가 화면에 없던 셈이다.
+    const stadiums = new Map(get(masterStore).stadiums.map((x) => [x.id, x.name]));
+    const sName = (id: string) => stadiums.get(id) ?? id.replace(/^STADIUM_/, "");
+    for (const [lid, expectGroups] of [
+      ["LEAGUE_HIGHSCHOOL", 8], ["LEAGUE_UNIVERSITY", 5],
+    ] as [string, number][]) {
+      const st = s.leagueState[lid]?.standings ?? [];
+      if (st.length === 0) { c.info(`${lid}: 순위표 없음 — 건너뜀`); continue; }
+      const parts = splitByGroup(lid, st, sName);
+      c.ok(`${lid.replace("LEAGUE_", "")} 순위표가 ${expectGroups}개로 쪼개진다`,
+        parts.length === expectGroups, `${parts.length}개: ${parts.map((p) => p.label).join(" ")}`);
+      c.ok(`  ${lid.replace("LEAGUE_", "")} 미분류 팀 없음`,
+        !parts.some((p) => p.label === "미분류"),
+        "권역·조에 안 잡힌 팀이 있다 — refs와 그룹 정의가 어긋났다");
+      const total = parts.reduce((a, p) => a + p.rows.length, 0);
+      c.ok(`  ${lid.replace("LEAGUE_", "")} 팀이 새거나 겹치지 않는다`, total === st.length,
+        `${total} vs ${st.length}`);
+      c.info(`  ${parts.map((p) => `${p.label}:${p.rows.length}`).join(" ")}`);
+    }
+
+    // 프로는 10팀이라 통짜가 맞다 — 쪼개면 5팀짜리 표 두 개가 된다
+    const kbl = s.leagueState["LEAGUE_KBL"]?.standings ?? [];
+    if (kbl.length > 0) {
+      c.ok("프로 1군은 통짜 한 표다",
+        splitByGroup("LEAGUE_KBL", kbl, sName).length === 1);
+    }
   },
 };
 

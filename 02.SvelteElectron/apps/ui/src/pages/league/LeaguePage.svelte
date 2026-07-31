@@ -7,7 +7,7 @@
   import { seasonStore } from "../../shared/stores/season";
   import { masterStore, teamMap } from "../../shared/stores/master";
   import { leagueUiState } from "../../shared/stores/leagueUiStore";
-  import { ablConference, jblConference } from "../../shared/utils/leagueConferences";
+  import { splitByGroup } from "../../shared/utils/standingsGroups";
   import type { PitcherSeasonStats, BatterSeasonStats, PlayerSeasonStats } from "../../shared/types/save";
   import PlayerDetailModal from "../../features/player/ui/PlayerDetailModal.svelte";
 
@@ -289,22 +289,15 @@
   }
 
   // ── ABL East/West, JBL CL/PL 분리 (현재 시즌) ─────────────────
-  function splitStandings<T extends { teamId: string }>(rows: T[], fn: (id: string) => string | null, val: string) {
-    return rows.filter((r) => fn(r.teamId) === val).sort((a: any, b: any) => b.winPct - a.winPct || b.wins - a.wins);
-  }
-  $: ablEastStandings = splitStandings(selectedStandings, ablConference, "East");
-  $: ablWestStandings = splitStandings(selectedStandings, ablConference, "West");
-  $: jblClStandings   = splitStandings(selectedStandings, jblConference, "CL");
-  $: jblPlStandings   = splitStandings(selectedStandings, jblConference, "PL");
+  // 권역·조·컨퍼런스 분할 — 어떻게 나눌지는 refs 정본에서 읽는다
+  $: stadiumName = (id: string) =>
+    $masterStore.stadiums.find((x) => x.id === id)?.name ?? id.replace(/^STADIUM_/, "");
+  $: standingsGroupsView =
+    splitByGroup(selectedLeagueId || myLeagueId, selectedStandings, stadiumName);
 
   // ── ABL East/West, JBL CL/PL 분리 (히스토리) ─────────────────
-  function splitHistStandings<T extends { team_id: string }>(rows: T[], fn: (id: string) => string | null, val: string) {
-    return rows.filter((r) => fn(r.team_id) === val).sort((a: any, b: any) => b.win_pct - a.win_pct || b.wins - a.wins);
-  }
-  $: histAblEastStandings = splitHistStandings(histStandings, ablConference, "East");
-  $: histAblWestStandings = splitHistStandings(histStandings, ablConference, "West");
-  $: histJblClStandings   = splitHistStandings(histStandings, jblConference, "CL");
-  $: histJblPlStandings   = splitHistStandings(histStandings, jblConference, "PL");
+  $: histGroupsView = splitByGroup(
+    selectedLeagueId || myLeagueId, histStandings, stadiumName, (r) => r.team_id);
 
   // 어느 리그를 보일지는 `utils/leagueVisibility`가 정한다 — 화면 안에 두면
   // 전제가 낡아도 아무도 검사하지 못한다 (실제로 2군 리그가 그렇게 사라졌다)
@@ -430,62 +423,17 @@
               {#if histStandings.length === 0}
                 <p class="empty">해당 시즌 순위 기록이 없습니다.</p>
               {:else}
-                {#if (selectedLeagueId || myLeagueId) === "LEAGUE_ABL"}
-                  <div class="tbl-wrap">
-                    <table class="stbl full">
-                      <thead><tr><th>#</th><th>팀</th><th>승</th><th>패</th><th>무</th><th>승률</th><th>득점</th><th>실점</th><th>연속</th><th>최근10</th></tr></thead>
-                      <tbody>
-                        <tr class="group-row"><td colspan="10">East</td></tr>
-                        {#each histAblEastStandings as r, i}
-                          <tr><td>{i+1}</td><td class="t-name">{tName(r.team_id)}</td>
-                            <td class="w">{r.wins}</td><td class="l">{r.losses}</td><td>{r.draws}</td>
-                            <td>{r.win_pct.toFixed(2)}</td><td>{r.runs_for}</td><td>{r.runs_against}</td>
-                            <td class:streak-w={r.streak.startsWith("W")} class:streak-l={r.streak.startsWith("L")}>{r.streak||"-"}</td>
-                            <td>{r.last10||"-"}</td></tr>
-                        {/each}
-                        <tr class="group-row"><td colspan="10">West</td></tr>
-                        {#each histAblWestStandings as r, i}
-                          <tr><td>{i+1}</td><td class="t-name">{tName(r.team_id)}</td>
-                            <td class="w">{r.wins}</td><td class="l">{r.losses}</td><td>{r.draws}</td>
-                            <td>{r.win_pct.toFixed(2)}</td><td>{r.runs_for}</td><td>{r.runs_against}</td>
-                            <td class:streak-w={r.streak.startsWith("W")} class:streak-l={r.streak.startsWith("L")}>{r.streak||"-"}</td>
-                            <td>{r.last10||"-"}</td></tr>
-                        {/each}
-                      </tbody>
-                    </table>
-                  </div>
-                {:else if (selectedLeagueId || myLeagueId) === "LEAGUE_JBL"}
-                  <div class="tbl-wrap">
-                    <table class="stbl full">
-                      <thead><tr><th>#</th><th>팀</th><th>승</th><th>패</th><th>무</th><th>승률</th><th>득점</th><th>실점</th><th>연속</th><th>최근10</th></tr></thead>
-                      <tbody>
-                        <tr class="group-row"><td colspan="10">센트럴 (CL)</td></tr>
-                        {#each histJblClStandings as r, i}
-                          <tr><td>{i+1}</td><td class="t-name">{tName(r.team_id)}</td>
-                            <td class="w">{r.wins}</td><td class="l">{r.losses}</td><td>{r.draws}</td>
-                            <td>{r.win_pct.toFixed(2)}</td><td>{r.runs_for}</td><td>{r.runs_against}</td>
-                            <td class:streak-w={r.streak.startsWith("W")} class:streak-l={r.streak.startsWith("L")}>{r.streak||"-"}</td>
-                            <td>{r.last10||"-"}</td></tr>
-                        {/each}
-                        <tr class="group-row"><td colspan="10">퍼시픽 (PL)</td></tr>
-                        {#each histJblPlStandings as r, i}
-                          <tr><td>{i+1}</td><td class="t-name">{tName(r.team_id)}</td>
-                            <td class="w">{r.wins}</td><td class="l">{r.losses}</td><td>{r.draws}</td>
-                            <td>{r.win_pct.toFixed(2)}</td><td>{r.runs_for}</td><td>{r.runs_against}</td>
-                            <td class:streak-w={r.streak.startsWith("W")} class:streak-l={r.streak.startsWith("L")}>{r.streak||"-"}</td>
-                            <td>{r.last10||"-"}</td></tr>
-                        {/each}
-                      </tbody>
-                    </table>
-                  </div>
-                {:else}
-                  <div class="tbl-wrap">
-                    <table class="stbl full">
-                      <thead>
-                        <tr><th>#</th><th>팀</th><th>승</th><th>패</th><th>무</th><th>승률</th><th>득점</th><th>실점</th><th>연속</th><th>최근10</th></tr>
-                      </thead>
-                      <tbody>
-                        {#each histStandings as r, i}
+                <div class="tbl-wrap">
+                  <table class="stbl full">
+                    <thead>
+                      <tr><th>#</th><th>팀</th><th>승</th><th>패</th><th>무</th><th>승률</th><th>득점</th><th>실점</th><th>연속</th><th>최근10</th></tr>
+                    </thead>
+                    <tbody>
+                      {#each histGroupsView as grp}
+                        {#if grp.label}
+                          <tr class="group-row"><td colspan="10">{grp.label} <span class="grp-n">{grp.rows.length}팀</span></td></tr>
+                        {/if}
+                        {#each grp.rows as r, i}
                           <tr>
                             <td>{i + 1}</td>
                             <td class="t-name">{tName(r.team_id)}</td>
@@ -495,10 +443,10 @@
                             <td>{r.last10 || "-"}</td>
                           </tr>
                         {/each}
-                      </tbody>
-                    </table>
-                  </div>
-                {/if}
+                      {/each}
+                    </tbody>
+                  </table>
+                </div>
                 {@const ps = histPostseasonForLeague(selectedLeagueId || myLeagueId)}
                 {#if ps && ps.champion_id}
                   <div class="ps-history-card">
@@ -517,69 +465,13 @@
                   </div>
                 {/if}
               {/if}
-            {:else if (selectedLeagueId || myLeagueId) === "LEAGUE_ABL"}
-              <div class="tbl-wrap">
-                <table class="stbl full">
-                  <thead><tr><th>#</th><th>팀</th><th>승</th><th>패</th><th>무</th><th>승률</th><th>득점</th><th>실점</th><th>연속</th><th>최근10</th></tr></thead>
-                  <tbody>
-                    <tr class="group-row"><td colspan="10">East</td></tr>
-                    {#if ablEastStandings.length === 0}<tr><td colspan="10" class="empty-cell">아직 경기 데이터가 없습니다.</td></tr>
-                    {:else}{#each ablEastStandings as s, i}
-                      <tr class:my-row={s.teamId === myTeamId}>
-                        <td>{i+1}</td><td class="t-name">{tName(s.teamId)}</td>
-                        <td class="w">{s.wins}</td><td class="l">{s.losses}</td><td>{s.draws}</td>
-                        <td>{s.winPct.toFixed(2)}</td><td>{s.runsFor}</td><td>{s.runsAgainst}</td>
-                        <td class:streak-w={s.streak.startsWith("W")} class:streak-l={s.streak.startsWith("L")}>{s.streak||"-"}</td>
-                        <td>{s.last10||"-"}</td>
-                      </tr>
-                    {/each}{/if}
-                    <tr class="group-row"><td colspan="10">West</td></tr>
-                    {#if ablWestStandings.length === 0}<tr><td colspan="10" class="empty-cell">아직 경기 데이터가 없습니다.</td></tr>
-                    {:else}{#each ablWestStandings as s, i}
-                      <tr class:my-row={s.teamId === myTeamId}>
-                        <td>{i+1}</td><td class="t-name">{tName(s.teamId)}</td>
-                        <td class="w">{s.wins}</td><td class="l">{s.losses}</td><td>{s.draws}</td>
-                        <td>{s.winPct.toFixed(2)}</td><td>{s.runsFor}</td><td>{s.runsAgainst}</td>
-                        <td class:streak-w={s.streak.startsWith("W")} class:streak-l={s.streak.startsWith("L")}>{s.streak||"-"}</td>
-                        <td>{s.last10||"-"}</td>
-                      </tr>
-                    {/each}{/if}
-                  </tbody>
-                </table>
-              </div>
-            {:else if (selectedLeagueId || myLeagueId) === "LEAGUE_JBL"}
-              <div class="tbl-wrap">
-                <table class="stbl full">
-                  <thead><tr><th>#</th><th>팀</th><th>승</th><th>패</th><th>무</th><th>승률</th><th>득점</th><th>실점</th><th>연속</th><th>최근10</th></tr></thead>
-                  <tbody>
-                    <tr class="group-row"><td colspan="10">센트럴 (CL)</td></tr>
-                    {#if jblClStandings.length === 0}<tr><td colspan="10" class="empty-cell">아직 경기 데이터가 없습니다.</td></tr>
-                    {:else}{#each jblClStandings as s, i}
-                      <tr class:my-row={s.teamId === myTeamId}>
-                        <td>{i+1}</td><td class="t-name">{tName(s.teamId)}</td>
-                        <td class="w">{s.wins}</td><td class="l">{s.losses}</td><td>{s.draws}</td>
-                        <td>{s.winPct.toFixed(2)}</td><td>{s.runsFor}</td><td>{s.runsAgainst}</td>
-                        <td class:streak-w={s.streak.startsWith("W")} class:streak-l={s.streak.startsWith("L")}>{s.streak||"-"}</td>
-                        <td>{s.last10||"-"}</td>
-                      </tr>
-                    {/each}{/if}
-                    <tr class="group-row"><td colspan="10">퍼시픽 (PL)</td></tr>
-                    {#if jblPlStandings.length === 0}<tr><td colspan="10" class="empty-cell">아직 경기 데이터가 없습니다.</td></tr>
-                    {:else}{#each jblPlStandings as s, i}
-                      <tr class:my-row={s.teamId === myTeamId}>
-                        <td>{i+1}</td><td class="t-name">{tName(s.teamId)}</td>
-                        <td class="w">{s.wins}</td><td class="l">{s.losses}</td><td>{s.draws}</td>
-                        <td>{s.winPct.toFixed(2)}</td><td>{s.runsFor}</td><td>{s.runsAgainst}</td>
-                        <td class:streak-w={s.streak.startsWith("W")} class:streak-l={s.streak.startsWith("L")}>{s.streak||"-"}</td>
-                        <td>{s.last10||"-"}</td>
-                      </tr>
-                    {/each}{/if}
-                  </tbody>
-                </table>
-              </div>
             {:else if selectedStandings.length === 0}
               <p class="empty">아직 경기 데이터가 없습니다.</p>
             {:else}
+              <!-- 권역·조·컨퍼런스로 나눠 그린다. 어떻게 나눌지는
+                   utils/standingsGroups가 refs 정본에서 읽는다 —
+                   예전엔 ABL·JBL만 표를 따로 박아뒀고 고교 102팀·대학 50팀은
+                   통짜 한 표였다 (리그 구조가 화면에 없었다) -->
               <div class="tbl-wrap">
                 <table class="stbl full">
                   <thead>
@@ -589,21 +481,26 @@
                     </tr>
                   </thead>
                   <tbody>
-                    {#each selectedStandings as s, i}
-                      <tr class:my-row={s.teamId === myTeamId}>
-                        <td>{i + 1}</td>
-                        <td class="t-name">{tName(s.teamId)}</td>
-                        <td class="w">{s.wins}</td>
-                        <td class="l">{s.losses}</td>
-                        <td>{s.draws}</td>
-                        <td>{s.winPct.toFixed(2)}</td>
-                        <td>{s.runsFor}</td>
-                        <td>{s.runsAgainst}</td>
-                        <td class:streak-w={s.streak.startsWith("W")} class:streak-l={s.streak.startsWith("L")}>
-                          {s.streak || "-"}
-                        </td>
-                        <td>{s.last10 || "-"}</td>
-                      </tr>
+                    {#each standingsGroupsView as grp}
+                      {#if grp.label}
+                        <tr class="group-row"><td colspan="10">{grp.label} <span class="grp-n">{grp.rows.length}팀</span></td></tr>
+                      {/if}
+                      {#each grp.rows as s, i}
+                        <tr class:my-row={s.teamId === myTeamId}>
+                          <td>{i + 1}</td>
+                          <td class="t-name">{tName(s.teamId)}</td>
+                          <td class="w">{s.wins}</td>
+                          <td class="l">{s.losses}</td>
+                          <td>{s.draws}</td>
+                          <td>{s.winPct.toFixed(2)}</td>
+                          <td>{s.runsFor}</td>
+                          <td>{s.runsAgainst}</td>
+                          <td class:streak-w={s.streak.startsWith("W")} class:streak-l={s.streak.startsWith("L")}>
+                            {s.streak || "-"}
+                          </td>
+                          <td>{s.last10 || "-"}</td>
+                        </tr>
+                      {/each}
                     {/each}
                   </tbody>
                 </table>
@@ -982,7 +879,8 @@
     text-align: left;
     letter-spacing: 0.5px;
   }
-  .stbl .empty-cell { color: #9db2d8; font-size: 11px; text-align: center; padding: 8px; }
+  /* 권역·조 머리행의 팀 수 — 권역마다 6~20팀으로 차이가 커서 같이 보여준다 */
+  .stbl .group-row .grp-n { color: #5b7aa8; font-weight: 400; margin-left: 6px; }
 
   .lb-top-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 
