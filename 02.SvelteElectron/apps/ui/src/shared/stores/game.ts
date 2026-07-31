@@ -668,6 +668,14 @@ function createGameStore() {
     /** 배치 중에도 지금 쓴다 — 주 경계처럼 "여기까지는 남아야 하는" 지점용 */
     flushSave: flushSaveImpl,
 
+    /**
+     * 아직 slot.db에 안 쓴 변경이 있는가.
+     *
+     * **회귀 검사용이다.** 이 상태에서 slot.db를 읽으면 낡은 값이 온다 —
+     * `processTradeWindow`가 실제로 그랬다 (PHASE8_PLAN §7-6).
+     */
+    hasUnsavedChanges(): boolean { return _saveBatchDirty; },
+
     // 주 진행 후 주인공 상태 패치
     applyWeekResult(
       protagonistPatch: Partial<ProtagonistSave>,
