@@ -1514,6 +1514,11 @@ function createGameStore() {
           contract: { ...contract, status: "active" },
           money: Math.max(0, s.protagonist.money + contract.signingBonus),
           careerStage: leagueStage,
+          // 학년은 고교에서만 의미가 있다. `applyDraftDecision`은 이미 이렇게
+          // 지우는데 여기만 빠져 있어서, 드래프트로 프로에 간 선수가
+          // `grade: 3`을 달고 다녔다 — 시즌 종료 화면 헤더가 `p.grade`를 먼저
+          // 보므로 프로 선수에게 "3학년"이 찍혔다
+          grade: undefined,
           teamId: contract.teamId,
           leagueId: contract.leagueId,
           faNegotiationRound: 0,
