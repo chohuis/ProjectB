@@ -18,6 +18,8 @@ import { assignHighschoolPosition } from "../../apps/ui/src/shared/utils/pitcher
 import { runAutoAdvance } from "../../apps/ui/src/shared/usecases/runAutoAdvance";
 import { advanceWeek } from "../../apps/ui/src/shared/usecases/advanceWeek";
 import { nextPendingAction } from "../../apps/ui/src/shared/stores/season";
+import { slotRepo } from "../../apps/ui/src/shared/repo/slotRepo";
+import { dehydrateToRepo } from "../../apps/ui/src/shared/repo/npcAdapter";
 import type { ProtagonistSave } from "../../apps/ui/src/shared/types/save";
 
 // ── 주인공 픽스처 ────────────────────────────────────────────────
@@ -171,32 +173,93 @@ export async function oneWeek(): Promise<void> {
   await advanceWeek();
 }
 
-/**
- * 세계 상태 지문 — **최적화가 결과를 바꿨는지 판정하는 유일한 근거**다.
- *
- * 성능 작업은 난수 소비 순서를 바꾸기 쉽다 (7-7의 `HashMap` 순회가 실제로 그랬다).
- * 같은 시드로 두 번 돌려 이 문자열이 다르면 그 최적화는 세계를 바꾼 것이다.
- *
- * 시간·경과시간처럼 실행마다 달라지는 값은 넣지 않는다 — 넣으면 매번 다르다.
- */
-export function fingerprint(): string {
-  const g = get(gameStore);
+// ── 세계 상태 지문 ──────────────────────────────────────────────
+// 메모리와 slot.db 양쪽을 **같은 함수로** 찍는다. 따로 적으면 두 지문이
+// 서로 다른 이유로 달라져도 구분이 안 된다.
+
+interface FpInput {
+  protagonist: { pitchingOvr: number; fatigue: number; morale: number; money: number; fame: number; scoutScore: number; teamId: string };
+  npcs: { npcId: string; currentTeam?: string | null; careerStatus?: string; age?: number; pitchOvr?: number; batOvr?: number; salary?: number }[];
+  standings: { leagueId: string; teamId: string; wins: number; losses: number; draws: number }[];
+}
+
+function fpOf(inp: FpInput): string {
   const parts: string[] = [];
-  const p = g.protagonist;
-  parts.push(`P|${p.pitching.ovr}|${p.fatigue}|${p.morale}|${p.money}|${p.fame}|${p.scoutScore}|${p.teamId}`);
-  for (const n of [...g.npcs].sort((a, b) => (a.npcId < b.npcId ? -1 : 1))) {
-    parts.push(`${n.npcId}|${n.currentTeam ?? ""}|${n.careerStatus}|${n.age}|${n.pitching?.ovr ?? ""}|${n.batting?.ovr ?? ""}|${n.currentSalary ?? 0}`);
+  const p = inp.protagonist;
+  parts.push(`P|${p.pitchingOvr}|${p.fatigue}|${p.morale}|${p.money}|${p.fame}|${p.scoutScore}|${p.teamId}`);
+  for (const n of [...inp.npcs].sort((a, b) => (a.npcId < b.npcId ? -1 : 1))) {
+    parts.push(`${n.npcId}|${n.currentTeam ?? ""}|${n.careerStatus ?? ""}|${n.age ?? ""}|${n.pitchOvr ?? ""}|${n.batOvr ?? ""}|${n.salary ?? 0}`);
   }
-  const s = get(seasonStore);
-  for (const [lid, ls] of Object.entries(s.leagueState).sort()) {
-    // standings는 배열이다 — 순서 자체가 결과의 일부라 정렬하지 않고 그대로 읽는다
-    for (const row of ls.standings ?? []) {
-      parts.push(`S|${lid}|${row.teamId}|${row.wins}-${row.losses}-${row.draws}`);
-    }
-  }
+  for (const r of inp.standings) parts.push(`S|${r.leagueId}|${r.teamId}|${r.wins}-${r.losses}-${r.draws}`);
   // djb2 — 암호학적 강도가 필요 없다. "달라졌는가"만 보면 된다
   let h = 5381;
   const joined = parts.join("\n");
   for (let i = 0; i < joined.length; i++) h = ((h * 33) ^ joined.charCodeAt(i)) >>> 0;
   return `${h.toString(16)}:${parts.length}`;
+}
+
+type StandingsMap = Record<string, { standings?: { teamId: string; wins: number; losses: number; draws: number }[] }>;
+
+function standingsRows(leagueState: StandingsMap): FpInput["standings"] {
+  const out: FpInput["standings"] = [];
+  for (const [leagueId, ls] of Object.entries(leagueState).sort()) {
+    // standings는 배열이다 — 순서 자체가 결과의 일부라 정렬하지 않고 그대로 읽는다
+    for (const row of ls.standings ?? []) {
+      out.push({ leagueId, teamId: row.teamId, wins: row.wins, losses: row.losses, draws: row.draws });
+    }
+  }
+  return out;
+}
+
+/**
+ * 메모리 상의 세계 지문.
+ *
+ * ⚠ **동치 판정에는 못 쓴다.** 주간 시뮬이 `thread_rng()`라 같은 시드로도
+ * 매번 달라진다 (PHASE8_PLAN §P8-4). 지금 쓰이는 곳은 아래 `dbFingerprint`와의
+ * **비교**다 — 그건 같은 실행 안이라 난수와 무관하게 일치해야 한다.
+ */
+export function fingerprint(): string {
+  const g = get(gameStore);
+  const p = g.protagonist;
+  return fpOf({
+    protagonist: {
+      pitchingOvr: p.pitching.ovr, fatigue: p.fatigue, morale: p.morale,
+      money: p.money, fame: p.fame, scoutScore: p.scoutScore, teamId: p.teamId,
+    },
+    // ⚠ `g.npcs`를 그대로 읽으면 안 된다. 저장 경로는 `dehydrateToRepo`로
+    // **라이브 스탯을 병합해서** 쓴다 — 메모리의 `n.pitching.ovr`는 시즌 시작값이라
+    // 디스크와 다른 게 정상이다. 여기서 비교하려는 건 "쓰였어야 할 것 vs 쓰인 것"이라
+    // 저장 경로와 **같은 변환**을 태워야 한다.
+    npcs: dehydrateToRepo(g.npcs, get(npcLiveStatsStore)).map((r) => ({
+      npcId: r.npcId, currentTeam: r.currentTeam, careerStatus: r.careerStatus,
+      age: r.age, pitchOvr: r.abilities?.pitching?.ovr, batOvr: r.abilities?.batting?.ovr, salary: r.salary,
+    })),
+    standings: standingsRows(get(seasonStore).leagueState as unknown as StandingsMap),
+  });
+}
+
+/**
+ * **slot.db에 실제로 남은** 세계의 지문.
+ *
+ * `fingerprint()`와 다르면 = 메모리엔 있는데 디스크엔 없다 = **조용한 유실**.
+ * P8-2a가 저장을 배치로 미루면서 생긴 위험이 정확히 이거라, 이 비교가
+ * 그 변경의 안전망이다. v1의 "미저장 종료 유실" 계열을 여기서 잡는다.
+ */
+export async function dbFingerprint(slotId: string): Promise<string> {
+  const rows = await slotRepo.getAllNpcs(slotId);
+  const game = await slotRepo.getProtagonist<{ protagonist?: ProtagonistSave }>(slotId);
+  const season = await slotRepo.getSeason<{ leagueState?: StandingsMap }>(slotId);
+  const p = game?.protagonist;
+  if (!p) throw new Error("[perfEntry] slot.db에 주인공이 없다");
+  return fpOf({
+    protagonist: {
+      pitchingOvr: p.pitching.ovr, fatigue: p.fatigue, morale: p.morale,
+      money: p.money, fame: p.fame, scoutScore: p.scoutScore, teamId: p.teamId,
+    },
+    npcs: rows.map((r) => ({
+      npcId: r.npcId, currentTeam: r.currentTeam, careerStatus: r.careerStatus,
+      age: r.age, pitchOvr: r.abilities?.pitching?.ovr, batOvr: r.abilities?.batting?.ovr, salary: r.salary,
+    })),
+    standings: standingsRows(season?.leagueState ?? {}),
+  });
 }
