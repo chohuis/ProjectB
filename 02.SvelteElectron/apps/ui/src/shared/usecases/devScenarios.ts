@@ -15,7 +15,7 @@
 // `skip`으로 남기고 **무엇을 눌러봐야 하는지**를 적는다.
 
 import { get } from "svelte/store";
-import { gameStore } from "../stores/game";
+import { gameStore, MAX_MAILBOX } from "../stores/game";
 import { seasonStore } from "../stores/season";
 import { masterStore, type EntityDetails, type EntityRow } from "../stores/master";
 import {
@@ -26,6 +26,7 @@ import { loadRosterRules } from "../repo/newGameV3";
 import { staffStatsOf, staffModsOf, MANAGER_STATS, COACH_STATS } from "../utils/staffEffects";
 import { buildRelationMessages, relationSceneCatalog } from "../utils/relationMessages";
 import { facilityTierOf } from "../utils/ids";
+import { HS_DIGEST_WEEKS, MONTHLY_STANDINGS_LEAGUES } from "./weekPhases/digest";
 
 export type ScenarioStatus = "pass" | "fail" | "skip";
 
@@ -257,33 +258,64 @@ const S_MAILBOX: Scenario = {
   eyeOnly: "메시지 목록이 렌더되는지, 본문이 잘리지 않는지",
   async run(c) {
     const g = get(gameStore);
+    const s = get(seasonStore);
     const box = g.mailbox ?? [];
-    c.info(`메시지 ${box.length}건`);
+    const week = s.currentWeek;
+    const stage = g.protagonist.careerStage;
+    const grade = g.protagonist.grade ?? 0;
+    c.info(`메시지 ${box.length}건 · ${stage}${grade ? ` ${grade}학년` : ""} W${week}`);
     if (box.length === 0) { c.skip("메시지가 없다 — 몇 주 진행한 뒤 확인할 것"); return; }
 
     const byCat = new Map<string, number>();
     for (const msg of box) byCat.set(msg.category, (byCat.get(msg.category) ?? 0) + 1);
     c.info(`분류별: ${[...byCat].map(([k, v]) => `${k}:${v}`).join(" ")}`);
 
-    // 본문이 빈 메시지는 화면에서 빈 칸으로 보인다
     const empty = box.filter((msg) => !msg.body || msg.body.trim() === "");
     c.ok("본문이 빈 메시지 없음", empty.length === 0,
       `${empty.length}건: ${empty.slice(0, 3).map((m) => m.id).join(", ")}`);
-    const noSubject = box.filter((msg) => !msg.subject);
-    c.ok("제목 없는 메시지 없음", noSubject.length === 0, `${noSubject.length}건`);
+    c.ok("제목 없는 메시지 없음", box.every((msg) => !!msg.subject));
 
-    // 7-6이 넣은 뉴스 종류 — 없으면 그 기능이 화면에 안 닿은 것이다
-    const KINDS: [string, RegExp][] = [
-      ["국가대표", /국가대표|대표팀/],
-      ["FA 시장", /FA|자유계약/],
-      ["쇼케이스", /쇼케이스|스카우트 데이/],
-      ["올스타", /올스타/],
-      ["순위 요약", /순위|승률/],
+    // ── 뉴스가 왔어야 하는가 ────────────────────────────────────
+    //
+    // ⚠ **"아직 안 지났으면 정상"으로 얼버무리지 않는다.** 그건 반증이 안 되는
+    // 문구라 진짜로 안 와도 통과한다 — 실제로 그래서 고교 스카우트 데이(W32)가
+    // 안 온 걸 못 잡았다. 게이트를 **코드에서 읽어** 판정한다.
+    const capped = box.length >= MAX_MAILBOX;
+    if (capped) {
+      c.info(`⚠ 메일함이 상한(${MAX_MAILBOX})에 닿았다 — 오래된 메시지가 밀려났을 수 있어`);
+      c.info("  '안 왔다'를 증명할 수 없다. 아래 판정은 '못 찾음'까지만 말한다");
+    }
+
+    const scoutWeek = ((await loadRosterRules()) as unknown as
+      { campusEvents?: { showcase?: { week: number }; allstar?: { week: number } } }).campusEvents;
+
+    // [이름, 본문/제목 패턴, 이번 세이브에서 나왔어야 하는가]
+    const EXPECT: [string, RegExp, boolean, string][] = [
+      ["고교 분기 다이제스트", /선두|최하위|스카우트 관심/,
+        stage === "highschool" && grade >= 2 && [...HS_DIGEST_WEEKS].some((w) => w <= week),
+        "고교 2~3학년만 · W12·24·36"],
+      ["고교 스카우트 데이", /스카우트 데이/,
+        stage === "highschool" && (scoutWeek?.showcase?.week ?? 99) <= week,
+        `고교만 · W${scoutWeek?.showcase?.week}`],
+      ["대학 쇼케이스", /쇼케이스/,
+        stage === "university" && (scoutWeek?.showcase?.week ?? 99) <= week,
+        `대학만 · W${scoutWeek?.showcase?.week}`],
+      ["대학 올스타", /올스타/,
+        stage === "university" && (scoutWeek?.allstar?.week ?? 99) <= week,
+        `대학만 · W${scoutWeek?.allstar?.week}`],
+      ["월간 순위표", /순위|승률/,
+        MONTHLY_STANDINGS_LEAGUES.has(g.protagonist.leagueId) && week >= 4,
+        "고교 제외 · 4주마다"],
+      ["FA 시장", /FA|자유계약/,
+        stage.startsWith("pro"), "프로만"],
     ];
-    for (const [label, re] of KINDS) {
+
+    for (const [label, re, expected, gate] of EXPECT) {
       const hit = box.some((msg) => re.test(msg.subject ?? "") || re.test(msg.body ?? ""));
-      if (hit) c.notes.push(`✓ ${label} 뉴스 있음`);
-      else c.info(`${label} 뉴스 없음 — 해당 주차를 아직 안 지났으면 정상`);
+      if (!expected) { c.info(`${label}: 대상 아님 (${gate})`); continue; }
+      if (hit) { c.notes.push(`✓ ${label} 도착 (${gate})`); continue; }
+      if (capped) c.info(`${label}: 못 찾음 — 상한에 밀렸을 수 있다 (${gate})`);
+      else c.problems.push(`✗ ${label}가 왔어야 하는데 없다 (${gate})`);
     }
   },
 };
