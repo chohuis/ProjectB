@@ -206,7 +206,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
         teamId: g.protagonist.teamId,
         coachSpecialty: await trainingAreaOf(trainingFocus),
       })
-    : { roleOvrBias: 0, trainingBonus: 0, managerLabel: "중립", coachLabel: "중립" };
+    : { roleOvrBias: 0, trainingBonus: 0, contractBonus: 0, managerLabel: "중립", coachLabel: "중립", ownerLabel: "중립" };
 
   // 능력치 보정과 관계 보정을 더한 뒤 clamp한다 — 각각 clamp하면 상한이 두 배가 된다
   const coachEffBonus  = Math.max(-0.15, Math.min(0.25,

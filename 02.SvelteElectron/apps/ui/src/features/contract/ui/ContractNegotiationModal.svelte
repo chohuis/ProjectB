@@ -7,6 +7,9 @@
   import { generateKblSchedule, generateAblSchedule, generateJblSchedule } from "../../../shared/utils/scheduleGen";
   import { calcMarketSalary, calcSeasonRating } from "../../../shared/utils/salaryEngine";
   import { isFaEligible } from "../../../shared/utils/faEngine";
+  import { relationEffects } from "../../../shared/usecases/relationships";
+  import { staffModsOf } from "../../../shared/utils/staffEffects";
+  import { onMount } from "svelte";
 
   export let action: Extract<PendingAction, { type: "salaryNegotiation" }>;
 
@@ -23,13 +26,44 @@
   let playerOptionYears = 0;
   let resolving = false;
 
-  $: requestedSalary = Math.round(action.offeredSalary * (1 + salaryRatio) / 100) * 100;
+  // ── 구단주 관계 · 예산 (§7-5 F-4 / 7-4 이월) ──────────────────
+  //
+  // 7-4는 구단주 관계를 **방출 우선순위**에만 썼다. 나를 안 좋아하는 구단주가
+  // 자르기만 하고 계약엔 아무 영향이 없으면 그 축이 절반만 사는 셈이다.
+  // 여기서 재계약 쪽 소비처가 생긴다.
+  //
+  // 두 입력이 다른 축이라는 게 요점이다:
+  //   구단주 **관계**  — 나를 어떻게 보는가 (내가 쌓은 것)
+  //   구단주 **예산**  — 지갑을 여는 사람인가 (팀이 원래 가진 것)
+  // 관계가 좋아도 궁핍한 구단은 못 준다.
+  let ownerLabel = "중립";
+  let ownerBonus = 0;
+  $: budgetMod = staffModsOf($gameStore.protagonist.teamId ?? "", $masterStore.entities).budget;
+
+  onMount(async () => {
+    const slotId = $gameStore.currentSlotId;
+    if (!slotId) return;
+    try {
+      const eff = await relationEffects({ slotId, teamId: action.teamId });
+      ownerLabel = eff.ownerLabel;
+      ownerBonus = eff.contractBonus;
+    } catch {
+      // 관계를 못 읽으면 중립으로 간다 — 보정 없음이 임의 보정보다 낫다
+    }
+  });
+
+  /** 구단주가 실제로 낼 수 있는 금액. 관계 × 예산 */
+  $: ownerMult = (1 + ownerBonus) * budgetMod;
+  $: effectiveOffer = Math.round((action.offeredSalary * ownerMult) / 100) * 100;
+
+  $: requestedSalary = Math.round(effectiveOffer * (1 + salaryRatio) / 100) * 100;
   $: teamName = $masterStore.teams.find((t) => t.id === action.teamId)?.name ?? action.teamId;
   $: totalValue = requestedSalary * selectedDuration + action.signingBonus;
 
   // 허용 임계값: 옵션 조합에 따라 조정
   $: acceptThreshold = (() => {
-    let base = action.offeredSalary * 1.15;
+    // 임계값도 같은 배수를 탄다 — 오퍼만 올리면 "더 주는데 더 짜다"가 된다
+    let base = effectiveOffer * 1.15;
     const durDiff = selectedDuration - action.durationYears;
     base *= (1 + durDiff * 0.03);
     if (noTrade)               base *= 0.95;
@@ -171,7 +205,7 @@
     <div class="compare-grid">
       <div class="compare-col">
         <p class="col-label">팀 제시</p>
-        <p class="col-val">{formatSalary(action.offeredSalary)}원</p>
+        <p class="col-val">{formatSalary(effectiveOffer)}원</p>
         <p class="col-sub">{action.durationYears}년 · 계약금 {formatSalary(action.signingBonus)}원</p>
       </div>
       <div class="arrow">→</div>
@@ -181,6 +215,21 @@
         <p class="col-sub">{selectedDuration}년 · 총액 {formatSalary(totalValue)}원</p>
       </div>
     </div>
+
+    <!-- 구단주 (§7-5 F-4) — 관계와 예산은 다른 축이다 -->
+    {#if ownerMult !== 1}
+      <p class="owner-line">
+        구단주 관계 <strong>{ownerLabel}</strong>
+        {#if ownerBonus !== 0}
+          ({ownerBonus > 0 ? "+" : ""}{(ownerBonus * 100).toFixed(0)}%)
+        {/if}
+        · 구단 예산 {budgetMod > 1 ? "여유" : budgetMod < 1 ? "빠듯" : "보통"}
+        ({budgetMod > 1 ? "+" : ""}{((budgetMod - 1) * 100).toFixed(0)}%)
+        <span class="owner-net" class:up={ownerMult > 1} class:down={ownerMult < 1}>
+          → 제시액 {ownerMult > 1 ? "+" : ""}{((ownerMult - 1) * 100).toFixed(1)}%
+        </span>
+      </p>
+    {/if}
 
     <!-- 시장가 게이지 -->
     <div class="gauge-row">
@@ -197,9 +246,9 @@
       <p class="section-title">연봉 협상 <span class="muted">(±20%)</span></p>
       <input class="slider" type="range" min="-0.2" max="0.2" step="0.01" bind:value={salaryRatio} />
       <div class="range-labels">
-        <span>{formatSalary(action.offeredSalary * 0.8)}원</span>
+        <span>{formatSalary(effectiveOffer * 0.8)}원</span>
         <span class="center-label">{formatSalary(requestedSalary)}원</span>
-        <span>{formatSalary(action.offeredSalary * 1.2)}원</span>
+        <span>{formatSalary(effectiveOffer * 1.2)}원</span>
       </div>
     </div>
 
@@ -288,6 +337,18 @@
 </div>
 
 <style>
+  /* ── 구단주 줄 (§7-5 F-4) ─────────────────────────────────────── */
+  .owner-line {
+    margin: 0 0 8px;
+    font-size: 11px;
+    color: #9eb6de;
+    line-height: 1.6;
+  }
+  .owner-line strong { color: #eef4ff; }
+  .owner-net { font-weight: 600; }
+  .owner-net.up { color: #79e0a2; }
+  .owner-net.down { color: #ffb68a; }
+
   .overlay { position:fixed; inset:0; background:rgba(0,0,0,.75); display:flex; align-items:center; justify-content:center; z-index:220; }
   .modal { width:min(640px,94vw); background:#0e1928; border:1px solid #35568a; border-radius:16px; padding:24px; display:grid; gap:16px; max-height:92vh; overflow-y:auto; }
 

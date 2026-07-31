@@ -6,6 +6,7 @@ import { autoLog, logEvent, logVerify, type PlayerEventEntry } from "../../store
 import { getFaThreshold } from "../../utils/faEngine";
 import { loadRosterRules } from "../../repo/newGameV3";
 import { staffModsOf } from "../../utils/staffEffects";
+import { SANGMU_TEAM_IDS } from "../../utils/ids";
 import type { PlayerSeasonStats } from "../../types/save";
 import { MONTH_STARTS_1 } from "./growth";
 
@@ -1058,6 +1059,188 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
     }
   }
 
+  // ── NPC FA 시장 정산 (§7-5 F-4 / 7-4 이월) ──────────────────
+  //
+  // 7-4가 엔진(`resolveFaMarketNative`)만 만들고 호출부가 없었다. 그동안 FA
+  // 신청자는 `LEAGUE_FREE_AGENT`로만 바뀌고 **Rust run_offseason step 8이
+  // 리그별로 무작위 재배치**하고 있었다 — 등급도 보상선수도 안 걸렸다.
+  //
+  // 좋은 선수부터 팀을 고르고 자리가 하나씩 줄어든다. 원소속도 경쟁에 낀다.
+  const _faSignEntries: PlayerEventEntry[] = [];
+  let _faMarketDbOk = true;
+  const faMarketRows: Array<Record<string, unknown>> = [];
+  {
+    const faApplicants = updatedNpcs.filter(
+      (n) => n.careerStatus === "free_agent"
+        && n.currentLeague === "LEAGUE_FREE_AGENT"
+        && proLeagues.has(n.originalLeagueId ?? ""),
+    );
+
+    if (faApplicants.length > 0) {
+      const rulesFile = await loadRosterRules();
+      const faRules = (rulesFile as unknown as { faRules?: unknown }).faRules;
+      // 로스터 상한은 규칙 파일이 정본이다 — 코드에 두 번 적으면 그게 드리프트다
+      const faMaxRoster = rulesFile.rosterRules["LEAGUE_KBL"]?.rosterMax ?? 34;
+      const liveStats2 = get(npcLiveStatsStore);
+      const ovrOf = (npcId: string): number => {
+        const e = m.entities.find((x) => x.id === npcId);
+        return e ? npcOvr(e, liveStats2) : 60;
+      };
+
+      // 영입 가능한 1군 팀 — 상무는 제외한다 (군 복무팀이 FA를 영입하지 않는다)
+      const proFirstTeams = m.teams.filter(
+        (t) => t.leagueId === "LEAGUE_KBL" && t.id.endsWith("_1") && !SANGMU_TEAM_IDS.has(t.id),
+      );
+      const rosterOf = (teamId: string) =>
+        updatedNpcs
+          .filter((n) => n.currentTeam === teamId && n.careerStatus === "active")
+          .map((n) => ({ npcId: n.npcId, ovr: ovrOf(n.npcId) }));
+
+      const budgets = proFirstTeams.map((t) => t.history?.budget ?? 0).filter((b) => b > 0);
+      const avgBudget = budgets.length > 0 ? budgets.reduce((a, b) => a + b, 0) / budgets.length : 1;
+
+      const faTeams = proFirstTeams.map((t) => {
+        const roster = rosterOf(t.id);
+        const profile = getTeamProfile(t.id, g, m) ?? DEFAULT_TEAM_PROFILE;
+        return {
+          teamId: t.id,
+          budgetIndex: avgBudget > 0 ? (t.history?.budget ?? avgBudget) / avgBudget : 1,
+          winNowPressure: profile.winNowPressure,
+          // 정원까지 남은 자리. 꽉 찬 팀은 FA를 못 받는다
+          openSlots: Math.max(0, faMaxRoster - roster.length),
+          roster,
+        };
+      });
+
+      const leagueSalaries = updatedNpcs
+        .filter((n) => n.currentLeague === "LEAGUE_KBL" && n.careerStatus === "active")
+        .map((n) => n.currentSalary ?? 0)
+        .filter((v) => v > 0);
+
+      try {
+        const market = JSON.parse(
+          await window.projectB!.engine("resolveFaMarketNative", JSON.stringify({
+            players: faApplicants.map((n) => ({
+              npcId: n.npcId, name: n.name,
+              fromTeamId: n.originalTeamId ?? "",
+              position: n.position ?? "SP",
+              ovr: ovrOf(n.npcId),
+              age: n.age,
+              salary: n.currentSalary ?? 0,
+              form: 0,
+            })),
+            teams: faTeams,
+            rules: faRules,
+            leagueSalaries,
+            seasonYear: s.seasonYear,
+            worldSeed: (s.worldSeed ?? 0) >>> 0,
+          }))
+        ) as {
+          error?: string;
+          signings: Array<{
+            npcId: string; name: string; fromTeamId: string; toTeamId: string;
+            grade: string; salary: number; years: number;
+            compensationNpcId: string | null; compensationMoney: number;
+          }>;
+          unsigned: string[];
+        };
+
+        if (market.error) throw new Error(market.error);
+
+        for (const sg of market.signings) {
+          const idx = updatedNpcs.findIndex((n) => n.npcId === sg.npcId);
+          if (idx < 0) continue;
+          const cur = updatedNpcs[idx];
+          const stayed = sg.toTeamId === sg.fromTeamId;
+          updatedNpcs[idx] = {
+            ...cur,
+            careerStatus: "active",
+            currentLeague: "LEAGUE_KBL",
+            currentTeam: sg.toTeamId,
+            currentSalary: sg.salary,
+            contractYears: sg.years,
+            careerEvents: [
+              ...(cur.careerEvents ?? []),
+              {
+                year: s.seasonYear,
+                eventType: "fa_signed" as const,
+                fromTeamId: sg.fromTeamId,
+                fromLeagueId: "LEAGUE_KBL",
+                toTeamId: sg.toTeamId,
+                toLeagueId: "LEAGUE_KBL",
+              },
+            ],
+          };
+
+          // 보상선수 — 이적일 때만 나온다. 원소속 재계약이면 보상이 없다
+          if (sg.compensationNpcId) {
+            const ci = updatedNpcs.findIndex((n) => n.npcId === sg.compensationNpcId);
+            if (ci >= 0) {
+              const comp = updatedNpcs[ci];
+              updatedNpcs[ci] = {
+                ...comp,
+                currentTeam: sg.fromTeamId,
+                careerEvents: [
+                  ...(comp.careerEvents ?? []),
+                  {
+                    year: s.seasonYear, eventType: "trade" as const,
+                    fromTeamId: comp.currentTeam, fromLeagueId: comp.currentLeague,
+                    toTeamId: sg.fromTeamId, toLeagueId: "LEAGUE_KBL",
+                  },
+                ],
+              };
+              faMarketRows.push({
+                seasonYear: s.seasonYear, week: weekNum, category: "trade",
+                playerId: comp.npcId, playerName: comp.name,
+                fromTeamId: comp.currentTeam, fromLeagueId: comp.currentLeague,
+                toTeamId: sg.fromTeamId, toLeagueId: "LEAGUE_KBL",
+                detail: `${sg.grade}등급 FA ${sg.name} 보상선수`,
+              });
+            }
+          }
+
+          const detail = stayed
+            ? `${sg.grade}등급 원소속 잔류 | ${sg.salary.toLocaleString()}만/${sg.years}년`
+            : `${sg.grade}등급 이적 | ${sg.salary.toLocaleString()}만/${sg.years}년`
+              + (sg.compensationMoney > 0 ? ` | 보상금 ${sg.compensationMoney.toLocaleString()}만` : "");
+
+          autoLog(`[FA계약] ${sg.name} | ${stayed ? "잔류" : "이적"} → ${sg.toTeamId.replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "")} | ${detail}`);
+          _faSignEntries.push({
+            npcId: sg.npcId, name: sg.name,
+            fromTeamId: sg.fromTeamId, fromLeagueId: "LEAGUE_KBL",
+            toTeamId: sg.toTeamId, toLeagueId: "LEAGUE_KBL",
+            detail,
+          });
+          faMarketRows.push({
+            seasonYear: s.seasonYear, week: weekNum, category: "fa",
+            playerId: sg.npcId, playerName: sg.name,
+            fromTeamId: sg.fromTeamId, fromLeagueId: "LEAGUE_KBL",
+            toTeamId: sg.toTeamId, toLeagueId: "LEAGUE_KBL",
+            detail,
+          });
+        }
+
+        // 미계약자는 `LEAGUE_FREE_AGENT`로 남는다 — Rust `Placer`가
+        // 미지명 졸업생·방출자와 **같은 로직**으로 독립·은퇴를 정한다 (7-1)
+        if (market.unsigned.length > 0) {
+          autoLog(`[FA미계약] ${market.unsigned.length}명 — 진로 배정으로 넘어간다`);
+        }
+
+        if (slotId && faMarketRows.length > 0) {
+          const res = JSON.parse(
+            await window.projectB!.leagueAddTransactions(JSON.stringify({ slotId, rows: faMarketRows }))
+          ) as { error?: string };
+          if (res.error) { autoLog(`[FA기록오류] ${res.error}`); _faMarketDbOk = false; }
+        }
+      } catch (e) {
+        // FA 시장이 못 돌아도 오프시즌 자체는 멈추지 않는다 —
+        // 미계약자는 기존 경로(Rust 재배치)로 흘러간다
+        autoLog(`[FA시장오류] ${e instanceof Error ? e.message : String(e)}`);
+        _faMarketDbOk = false;
+      }
+    }
+  }
+
   updateNpcsAndSync(updatedNpcs);
 
   let _retireDbOk = true;
@@ -1083,6 +1266,13 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
       dbOk: true, durationMs: _elapsed,
       extra: `신청 ${_faApplyCount} / 재계약의사 ${_faDeclineCount}` });
 
+  if (_faSignEntries.length > 0)
+    logEvent({ id: `fa-market-W${weekNum}-${s.seasonYear}`, type: "fa_result", seasonYear: s.seasonYear, week: weekNum,
+      players: _faSignEntries,
+      counts: { input: _faApplyCount, processed: _faSignEntries.length, saved: faMarketRows.length },
+      dbOk: _faMarketDbOk, durationMs: Date.now() - _t0Offseason,
+      extra: `계약 ${_faSignEntries.length} / 신청 ${_faApplyCount}` });
+
   if (_renewalEntries.length > 0)
     logEvent({ id: `renewal-W${weekNum}-${s.seasonYear}`, type: "renewal", seasonYear: s.seasonYear, week: weekNum,
       players: _renewalEntries, counts: { input: namedNpcs.length, processed: _renewalEntries.length, saved: _renewalEntries.length },
@@ -1101,6 +1291,8 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
   logVerify(`W${weekNum} 오프시즌 NPC 처리 완료 (${_elapsed}ms)`, [
     { name: `은퇴 ${_retireEntries.length}명 DB저장`, ok: _retireDbOk },
     { name: `FA신청 ${_faApplyCount} / 재계약의사 ${_faDeclineCount}`, ok: true },
+    { name: `FA계약 ${_faSignEntries.length}명 (등급·보상선수 반영)`, ok: _faMarketDbOk,
+      detail: _faSignEntries.length === 0 && _faApplyCount > 0 ? "신청자는 있는데 계약이 0 — 시장이 안 돌았다" : undefined },
     { name: `재계약 ${_renewalEntries.length} / 중간조정 ${_adjustEntries.length}`, ok: true },
     { name: `gameStore.npcs 프로 ${_proNpcs.length}명`, ok: _proNpcs.length > 0, detail: `entities 프로 ${_proEntities.length}명` },
   ]);

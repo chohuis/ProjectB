@@ -196,6 +196,9 @@ pub struct SeasonRules {
 pub struct EffectRules {
     pub manager_role_ovr_per_step: f64,
     pub coach_training_per_step: f64,
+    /// 구단주 관계 → 재계약 오퍼 배율. 없으면 0(효과 없음)
+    #[serde(default)]
+    pub owner_contract_per_step: f64,
 }
 
 #[derive(Debug, Deserialize, Clone)]
@@ -221,6 +224,9 @@ pub struct RelationEffectParams {
     /// 이번 주 담당 영역 코치의 관계값
     #[serde(default)]
     pub coach_value: i32,
+    /// 구단주 관계값. 재계약 오퍼에 쓴다 (§7-5 F-4)
+    #[serde(default)]
+    pub owner_value: i32,
 }
 
 #[derive(Debug, Serialize)]
@@ -230,23 +236,31 @@ pub struct RelationEffectResult {
     pub role_ovr_bias: f64,
     /// 훈련 효율 배율에 더할 값 (0.04 = +4%p)
     pub training_bonus: f64,
+    /// 재계약 오퍼 배율에 더할 값 (0.06 = +6%)
+    pub contract_bonus: f64,
     pub manager_step: i32,
     pub coach_step: i32,
+    pub owner_step: i32,
     pub manager_label: String,
     pub coach_label: String,
+    pub owner_label: String,
 }
 
 pub fn relation_effects(p: RelationEffectParams) -> RelationEffectResult {
     let e = &p.rules.effect;
     let m_step = label_step(p.manager_value);
     let c_step = label_step(p.coach_value);
+    let o_step = label_step(p.owner_value);
     RelationEffectResult {
         role_ovr_bias: m_step as f64 * e.manager_role_ovr_per_step,
         training_bonus: c_step as f64 * e.coach_training_per_step,
+        contract_bonus: o_step as f64 * e.owner_contract_per_step,
         manager_step: m_step,
         coach_step: c_step,
+        owner_step: o_step,
         manager_label: relation_label(p.manager_value).0.to_string(),
         coach_label: relation_label(p.coach_value).0.to_string(),
+        owner_label: relation_label(p.owner_value).0.to_string(),
     }
 }
 
@@ -668,14 +682,11 @@ mod tests {
         let r = rules();
         let per = r.effect.manager_role_ovr_per_step;
         let close = relation_effects(RelationEffectParams {
-            rules: r.clone(), manager_value: 80, coach_value: 80,
-        });
+            rules: r.clone(), manager_value: 80, coach_value: 80, owner_value: 0 });
         let hostile = relation_effects(RelationEffectParams {
-            rules: r.clone(), manager_value: -80, coach_value: -80,
-        });
+            rules: r.clone(), manager_value: -80, coach_value: -80, owner_value: 0 });
         let neutral = relation_effects(RelationEffectParams {
-            rules: r.clone(), manager_value: 0, coach_value: 0,
-        });
+            rules: r.clone(), manager_value: 0, coach_value: 0, owner_value: 0 });
         assert_eq!(close.role_ovr_bias, per * 3.0, "각별이 최대 보정이 아니다");
         assert_eq!(hostile.role_ovr_bias, -per * 3.0);
         assert_eq!(neutral.role_ovr_bias, 0.0, "중립이 0이 아니다");
