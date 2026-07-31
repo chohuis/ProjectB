@@ -1,743 +1,593 @@
 {
-  "ranAt": "2026-07-31T04:26:40.853Z",
+  "ranAt": "2026-07-31T05:07:54.389Z",
   "config": {
-    "weeks": 51,
+    "weeks": 20,
     "seed": 20260731
   },
-  "bundleMs": 379,
+  "bundleMs": 268,
   "boot": {
-    "ms": 953.8457,
-    "ipcMs": 5849.833799999998,
+    "ms": 815.2191,
+    "ipcMs": 5632.545900000009,
     "npcCount": 5596,
-    "entityCount": 5596,
+    "entityCount": 6788,
     "teamId": "TEAM_HS_AEWOL",
-    "worldSeed": 3060435320,
+    "worldSeed": 3062985710,
     "topIpc": [
       {
         "key": "master:fetch",
         "calls": 265,
-        "ms": 5170.0693999999985,
+        "ms": 5065.012300000007,
         "inBytes": 12563,
         "outBytes": 406249
       },
       {
         "key": "repo:createSlot",
         "calls": 1,
-        "ms": 279.7747,
-        "inBytes": 6246240,
+        "ms": 222.2057,
+        "inBytes": 6249558,
         "outBytes": 45
       },
       {
         "key": "repo:syncNpcs",
         "calls": 1,
-        "ms": 183.2256,
-        "inBytes": 5409081,
+        "ms": 158.2281,
+        "inBytes": 5408917,
         "outBytes": 25
       },
       {
         "key": "repo:getAllNpcs",
         "calls": 1,
-        "ms": 89.1865,
+        "ms": 76.4483,
         "inBytes": 27,
-        "outBytes": 5241624
+        "outBytes": 5241464
       },
       {
         "key": "engine:generateLeagueRosterNative",
         "calls": 5,
-        "ms": 55.7897,
+        "ms": 46.0156,
         "inBytes": 27016,
-        "outBytes": 5448003
+        "outBytes": 5447842
       },
       {
         "key": "repo:setSeason",
         "calls": 1,
-        "ms": 27.5522,
+        "ms": 19.7672,
         "inBytes": 560829,
         "outBytes": 11
       },
       {
         "key": "repo:addTransactions",
         "calls": 1,
-        "ms": 11.4641,
-        "inBytes": 375305,
+        "ms": 9.4711,
+        "inBytes": 366733,
         "outBytes": 11
       },
       {
         "key": "engine:generateRegionalScheduleNative",
         "calls": 2,
-        "ms": 9.0818,
+        "ms": 8.2371,
         "inBytes": 3979,
         "outBytes": 247376
       }
     ]
   },
   "weekly": {
-    "weeksRun": 51,
-    "reachedWeek": 51,
-    "totalMs": 133949.8426,
-    "avgMs": 2626.4675019607844,
-    "p50": 2087.6276,
-    "p95": 6514.352400000003,
-    "max": 8094.344299999997,
-    "ipcMs": 95420.2981,
-    "jsMs": 38529.5445,
-    "ipcCalls": 5373,
-    "ipcBytes": 1337970774
+    "weeksRun": 40,
+    "reachedWeek": 40,
+    "totalMs": 57508.99479999999,
+    "avgMs": 1437.7248699999998,
+    "p50": 1449.6328999999996,
+    "p95": 1732.2590000000018,
+    "max": 2350.2618999999977,
+    "ipcMs": 43677.09990000005,
+    "jsMs": 13831.894899999941,
+    "ipcCalls": 4011,
+    "ipcBytes": 1019595308
   },
   "ipc": [
     {
       "key": "engine:simGameNative",
-      "calls": 2726,
-      "ms": 33313.18720000008,
-      "inBytes": 210960504,
-      "outBytes": 7697257
-    },
-    {
-      "key": "repo:setSeason",
-      "calls": 53,
-      "ms": 24664.039600000004,
-      "inBytes": 312051241,
-      "outBytes": 583
+      "calls": 2391,
+      "ms": 19558.337599999966,
+      "inBytes": 189552145,
+      "outBytes": 6803612
     },
     {
       "key": "repo:syncNpcs",
-      "calls": 53,
-      "ms": 23285.6449,
-      "inBytes": 352758773,
-      "outBytes": 1325
+      "calls": 41,
+      "ms": 10128.167899999999,
+      "inBytes": 272545990,
+      "outBytes": 1025
+    },
+    {
+      "key": "repo:setSeason",
+      "calls": 41,
+      "ms": 8494.770000000002,
+      "inBytes": 209127688,
+      "outBytes": 451
     },
     {
       "key": "engine:npcCalcWeeklyGrowth",
-      "calls": 51,
-      "ms": 5661.256199999999,
-      "inBytes": 204580590,
-      "outBytes": 177806214
+      "calls": 40,
+      "ms": 2583.2185999999997,
+      "inBytes": 160661847,
+      "outBytes": 139263124
     },
     {
       "key": "npc:trimGameLogs",
-      "calls": 50,
-      "ms": 5142.0252,
-      "inBytes": 1350,
-      "outBytes": 550
+      "calls": 40,
+      "ms": 1630.8902,
+      "inBytes": 1080,
+      "outBytes": 440
     },
     {
       "key": "npc:bulkInsertGameLogs",
-      "calls": 50,
-      "ms": 934.5035000000003,
-      "inBytes": 6768828,
-      "outBytes": 1304
+      "calls": 40,
+      "ms": 391.40580000000006,
+      "inBytes": 5696151,
+      "outBytes": 1044
     },
     {
       "key": "week:rollRandomBatch",
-      "calls": 100,
-      "ms": 378.0639,
-      "inBytes": 245,
-      "outBytes": 2250668
+      "calls": 78,
+      "ms": 163.97239999999996,
+      "inBytes": 190,
+      "outBytes": 1588492
     },
     {
       "key": "match:simulateToEntry",
-      "calls": 33,
-      "ms": 305.8748,
-      "inBytes": 124947,
-      "outBytes": 129834
+      "calls": 29,
+      "ms": 111.45189999999998,
+      "inBytes": 109872,
+      "outBytes": 104724
     },
     {
       "key": "engine:evalCallupCandidatesNative",
-      "calls": 510,
-      "ms": 255.38839999999973,
-      "inBytes": 15789056,
-      "outBytes": 207458
-    },
-    {
-      "key": "league:addTransactions",
-      "calls": 5,
-      "ms": 233.4436,
-      "inBytes": 74443,
-      "outBytes": 55
-    },
-    {
-      "key": "engine:weekCalcNpcInjuriesNative",
-      "calls": 49,
-      "ms": 200.19309999999996,
-      "inBytes": 18552320,
-      "outBytes": 248890
-    },
-    {
-      "key": "master:fetch",
-      "calls": 158,
-      "ms": 194.90390000000002,
-      "inBytes": 4584,
-      "outBytes": 3134423
+      "calls": 400,
+      "ms": 109.62679999999997,
+      "inBytes": 12028911,
+      "outBytes": 187740
     },
     {
       "key": "repo:setMeta",
-      "calls": 53,
-      "ms": 171.78399999999996,
-      "inBytes": 6722,
-      "outBytes": 583
+      "calls": 41,
+      "ms": 108.629,
+      "inBytes": 5198,
+      "outBytes": 451
+    },
+    {
+      "key": "engine:weekCalcNpcInjuriesNative",
+      "calls": 38,
+      "ms": 88.0232,
+      "inBytes": 13092449,
+      "outBytes": 171991
+    },
+    {
+      "key": "master:fetch",
+      "calls": 123,
+      "ms": 87.63780000000001,
+      "inBytes": 3569,
+      "outBytes": 2435893
     },
     {
       "key": "repo:setProtagonist",
-      "calls": 53,
-      "ms": 126.9875,
-      "inBytes": 2154189,
-      "outBytes": 583
-    },
-    {
-      "key": "repo:getRelationships",
-      "calls": 204,
-      "ms": 109.41900000000001,
-      "inBytes": 9945,
-      "outBytes": 1349721
-    },
-    {
-      "key": "engine:applyDraftNative",
-      "calls": 1,
-      "ms": 105.7125,
-      "inBytes": 5259991,
-      "outBytes": 5304509
+      "calls": 41,
+      "ms": 53.969100000000005,
+      "inBytes": 1628189,
+      "outBytes": 451
     },
     {
       "key": "match:autoFinishFromEntry",
-      "calls": 17,
-      "ms": 97.686,
+      "calls": 21,
+      "ms": 50.46960000000001,
       "inBytes": 0,
-      "outBytes": 29908
+      "outBytes": 36826
     },
     {
-      "key": "engine:selectDraftCandidatesNative",
-      "calls": 1,
-      "ms": 53.1833,
-      "inBytes": 5215290,
-      "outBytes": 95960
+      "key": "repo:getRelationships",
+      "calls": 160,
+      "ms": 48.949799999999996,
+      "inBytes": 7800,
+      "outBytes": 1024117
+    },
+    {
+      "key": "engine:calcWeeklyFinanceNative",
+      "calls": 40,
+      "ms": 12.310600000000004,
+      "inBytes": 256880,
+      "outBytes": 8880
+    },
+    {
+      "key": "engine:evalCalldownCandidatesNative",
+      "calls": 100,
+      "ms": 11.1606,
+      "inBytes": 1322284,
+      "outBytes": 2425
+    },
+    {
+      "key": "repo:getStaff",
+      "calls": 40,
+      "ms": 9.987499999999999,
+      "inBytes": 2720,
+      "outBytes": 80520
     },
     {
       "key": "engine:runShowcaseNative",
       "calls": 1,
-      "ms": 28.9092,
-      "inBytes": 627725,
-      "outBytes": 39808
-    },
-    {
-      "key": "repo:getStaff",
-      "calls": 51,
-      "ms": 25.178400000000003,
-      "inBytes": 3468,
-      "outBytes": 123573
-    },
-    {
-      "key": "engine:evalCalldownCandidatesNative",
-      "calls": 120,
-      "ms": 23.705300000000005,
-      "inBytes": 1617276,
-      "outBytes": 7106
-    },
-    {
-      "key": "engine:calcWeeklyFinanceNative",
-      "calls": 51,
-      "ms": 23.169399999999996,
-      "inBytes": 327522,
-      "outBytes": 11322
-    },
-    {
-      "key": "engine:runDraftNative",
-      "calls": 1,
-      "ms": 19.4359,
-      "inBytes": 1026082,
-      "outBytes": 37686
-    },
-    {
-      "key": "engine:weeklyRelationsNative",
-      "calls": 51,
-      "ms": 8.035800000000002,
-      "inBytes": 252936,
-      "outBytes": 1275
+      "ms": 5.8247,
+      "inBytes": 627561,
+      "outBytes": 39809
     },
     {
       "key": "engine:weekCalcFacilityEffNative",
-      "calls": 51,
-      "ms": 6.660200000000001,
-      "inBytes": 4896,
-      "outBytes": 204
+      "calls": 40,
+      "ms": 4.2605,
+      "inBytes": 3960,
+      "outBytes": 240
     },
     {
-      "key": "engine:evalRetirementSuggestionNative",
-      "calls": 342,
-      "ms": 5.4126,
-      "inBytes": 245065,
-      "outBytes": 10633
-    },
-    {
-      "key": "engine:calcTrainingBonusNative",
-      "calls": 51,
-      "ms": 4.8957,
-      "inBytes": 89199,
-      "outBytes": 2448
-    },
-    {
-      "key": "engine:calcTrainingGrowthNative",
-      "calls": 51,
-      "ms": 4.794600000000001,
-      "inBytes": 47152,
-      "outBytes": 35506
+      "key": "engine:weeklyRelationsNative",
+      "calls": 40,
+      "ms": 3.6969000000000003,
+      "inBytes": 194801,
+      "outBytes": 1000
     },
     {
       "key": "engine:weekCalcInjuryNative",
-      "calls": 51,
-      "ms": 4.763400000000001,
-      "inBytes": 18943,
-      "outBytes": 6388
-    },
-    {
-      "key": "npc:updateContracts",
-      "calls": 1,
-      "ms": 4.2953,
-      "inBytes": 22840,
-      "outBytes": 11
+      "calls": 40,
+      "ms": 3.1984999999999983,
+      "inBytes": 15206,
+      "outBytes": 5090
     },
     {
       "key": "engine:selectTournamentEntrantsNative",
       "calls": 8,
-      "ms": 3.9262,
-      "inBytes": 32557,
-      "outBytes": 7479
+      "ms": 3.0754,
+      "inBytes": 32946,
+      "outBytes": 7483
+    },
+    {
+      "key": "engine:calcTrainingGrowthNative",
+      "calls": 40,
+      "ms": 2.4425,
+      "inBytes": 37410,
+      "outBytes": 27793
+    },
+    {
+      "key": "engine:calcTrainingBonusNative",
+      "calls": 40,
+      "ms": 2.0079,
+      "inBytes": 70040,
+      "outBytes": 2000
     },
     {
       "key": "engine:relationEffectsNative",
-      "calls": 50,
-      "ms": 3.9179000000000004,
-      "inBytes": 54800,
-      "outBytes": 8550
+      "calls": 39,
+      "ms": 1.8592999999999997,
+      "inBytes": 42744,
+      "outBytes": 6669
+    },
+    {
+      "key": "engine:tournamentRoundScheduleNative",
+      "calls": 16,
+      "ms": 1.722,
+      "inBytes": 171583,
+      "outBytes": 43723
+    },
+    {
+      "key": "engine:advanceTournamentRoundNative",
+      "calls": 8,
+      "ms": 1.6482999999999999,
+      "inBytes": 116719,
+      "outBytes": 109798
     },
     {
       "key": "engine:selectNationalSquadNative",
       "calls": 1,
-      "ms": 2.9169,
-      "inBytes": 113512,
-      "outBytes": 1086
-    },
-    {
-      "key": "engine:tournamentRoundScheduleNative",
-      "calls": 15,
-      "ms": 2.583,
-      "inBytes": 123818,
-      "outBytes": 40188
-    },
-    {
-      "key": "engine:advanceTournamentRoundNative",
-      "calls": 7,
-      "ms": 2.4309,
-      "inBytes": 67238,
-      "outBytes": 62131
-    },
-    {
-      "key": "engine:playerEvalFaDecisionNative",
-      "calls": 165,
-      "ms": 2.0071000000000008,
-      "inBytes": 63151,
-      "outBytes": 7868
+      "ms": 1.0024,
+      "inBytes": 114011,
+      "outBytes": 1082
     },
     {
       "key": "engine:generateTournamentBracketNative",
       "calls": 8,
-      "ms": 1.6425999999999998,
-      "inBytes": 6259,
-      "outBytes": 60922
+      "ms": 0.6828000000000001,
+      "inBytes": 6274,
+      "outBytes": 60969
     },
     {
       "key": "engine:calcGameGrowthNative",
-      "calls": 11,
-      "ms": 1.4998,
-      "inBytes": 8426,
-      "outBytes": 8067
-    },
-    {
-      "key": "engine:resolveFaMarketNative",
-      "calls": 1,
-      "ms": 1.4328,
-      "inBytes": 36138,
-      "outBytes": 29180
-    },
-    {
-      "key": "engine:calcNpcRenewalSalaryNative",
-      "calls": 29,
-      "ms": 1.2312999999999996,
-      "inBytes": 3539,
-      "outBytes": 116
+      "calls": 10,
+      "ms": 0.5984,
+      "inBytes": 7824,
+      "outBytes": 7267
     },
     {
       "key": "repo:upsertRelationships",
       "calls": 1,
-      "ms": 0.9289,
-      "inBytes": 6759,
+      "ms": 0.5961,
+      "inBytes": 6567,
       "outBytes": 24
-    },
-    {
-      "key": "engine:calcNpcContractYearsNative",
-      "calls": 29,
-      "ms": 0.6299000000000001,
-      "inBytes": 2987,
-      "outBytes": 29
-    },
-    {
-      "key": "engine:generateSurvivalStageNative",
-      "calls": 2,
-      "ms": 0.4972,
-      "inBytes": 844,
-      "outBytes": 21161
-    },
-    {
-      "key": "engine:updatePlayerLoyaltyNative",
-      "calls": 40,
-      "ms": 0.32259999999999994,
-      "inBytes": 4760,
-      "outBytes": 218
-    },
-    {
-      "key": "engine:groupStageQualifiersNative",
-      "calls": 2,
-      "ms": 0.3214,
-      "inBytes": 20272,
-      "outBytes": 1304
     },
     {
       "key": "engine:buildGroupStageNative",
       "calls": 2,
-      "ms": 0.2956,
-      "inBytes": 1381,
-      "outBytes": 20220
+      "ms": 0.4245,
+      "inBytes": 1370,
+      "outBytes": 20172
+    },
+    {
+      "key": "engine:generateSurvivalStageNative",
+      "calls": 2,
+      "ms": 0.3096,
+      "inBytes": 844,
+      "outBytes": 21161
     },
     {
       "key": "engine:survivalCutoffNative",
       "calls": 2,
-      "ms": 0.2468,
-      "inBytes": 2775,
+      "ms": 0.1392,
+      "inBytes": 2742,
       "outBytes": 992
     },
     {
-      "key": "engine:resolveNonProtagonistSeriesNative",
-      "calls": 3,
-      "ms": 0.19080000000000003,
-      "inBytes": 2909,
-      "outBytes": 3055
+      "key": "engine:buildIndLadderNative",
+      "calls": 1,
+      "ms": 0.1289,
+      "inBytes": 1094,
+      "outBytes": 798
+    },
+    {
+      "key": "engine:groupStageQualifiersNative",
+      "calls": 2,
+      "ms": 0.1225,
+      "inBytes": 20224,
+      "outBytes": 1288
     },
     {
       "key": "engine:initRelationsNative",
       "calls": 1,
-      "ms": 0.1678,
-      "inBytes": 3098,
-      "outBytes": 2980
+      "ms": 0.1156,
+      "inBytes": 3043,
+      "outBytes": 2892
     },
     {
-      "key": "engine:buildKblBracketNative",
+      "key": "engine:resolveNonProtagonistSeriesNative",
       "calls": 1,
-      "ms": 0.133,
-      "inBytes": 1589,
-      "outBytes": 1055
+      "ms": 0.098,
+      "inBytes": 879,
+      "outBytes": 896
     },
     {
       "key": "engine:weekCalcExamResultNative",
       "calls": 2,
-      "ms": 0.1164,
+      "ms": 0.0746,
       "inBytes": 157,
       "outBytes": 563
     },
     {
       "key": "engine:simulateTournamentNative",
       "calls": 1,
-      "ms": 0.1049,
-      "inBytes": 256,
+      "ms": 0.0486,
+      "inBytes": 255,
       "outBytes": 55
-    },
-    {
-      "key": "engine:buildIndLadderNative",
-      "calls": 1,
-      "ms": 0.096,
-      "inBytes": 1094,
-      "outBytes": 799
-    },
-    {
-      "key": "engine:buildFarmBracketNative",
-      "calls": 1,
-      "ms": 0.0667,
-      "inBytes": 1573,
-      "outBytes": 812
     },
     {
       "key": "engine:assignHighschoolPositionNative",
       "calls": 1,
-      "ms": 0.0392,
+      "ms": 0.0443,
       "inBytes": 104,
       "outBytes": 17
     }
   ],
-  "offseason": [
-    {
-      "kind": "draftSkip",
-      "ms": 1319.2692
-    }
-  ],
+  "offseason": [],
   "weekTimings": [
     {
       "week": 0,
-      "ms": 3.465599999999995
+      "ms": 3.197499999999991
     },
     {
       "week": 1,
-      "ms": 896.1812999999997
+      "ms": 828.6988999999999
     },
     {
       "week": 2,
-      "ms": 1130.6399999999999
+      "ms": 1272.5272
     },
     {
       "week": 3,
-      "ms": 1305.3194000000003
+      "ms": 1425.2470000000003
     },
     {
       "week": 4,
-      "ms": 1195.3049
+      "ms": 1449.6328999999996
     },
     {
       "week": 5,
-      "ms": 1103.3474999999999
+      "ms": 1244.5699000000004
     },
     {
       "week": 6,
-      "ms": 1132.8240999999998
+      "ms": 1281.9527999999991
     },
     {
       "week": 7,
-      "ms": 1041.0499
+      "ms": 1227.1774999999998
     },
     {
       "week": 8,
-      "ms": 1199.7458000000006
+      "ms": 1327.1002000000008
     },
     {
       "week": 9,
-      "ms": 1237.2045999999991
+      "ms": 1286.7924000000003
     },
     {
       "week": 10,
-      "ms": 1352.1044000000002
+      "ms": 1466.5373
     },
     {
       "week": 11,
-      "ms": 1538.1249000000007
+      "ms": 1419.9506000000001
     },
     {
       "week": 12,
-      "ms": 1261.9061000000002
+      "ms": 1191.947399999999
     },
     {
       "week": 13,
-      "ms": 1170.6706999999988
+      "ms": 1388.8902999999991
     },
     {
       "week": 14,
-      "ms": 1423.1611000000012
+      "ms": 1527.1113000000005
     },
     {
       "week": 15,
-      "ms": 1508.1774000000005
+      "ms": 1522.7596000000012
     },
     {
       "week": 16,
-      "ms": 1332.0056000000004
+      "ms": 1318.2734999999993
     },
     {
       "week": 17,
-      "ms": 1304.6844999999994
+      "ms": 1424.6797000000006
     },
     {
       "week": 18,
-      "ms": 1281.6509000000005
+      "ms": 1516.7600999999995
     },
     {
       "week": 19,
-      "ms": 1427.8122000000003
+      "ms": 1490.0668000000005
     },
     {
       "week": 20,
-      "ms": 1632.5985999999975
+      "ms": 1439.0473999999995
     },
     {
       "week": 21,
-      "ms": 1585.6343000000015
+      "ms": 1238.4988000000012
     },
     {
       "week": 22,
-      "ms": 1764.5472000000009
+      "ms": 1446.0609000000004
     },
     {
       "week": 23,
-      "ms": 1917.1109999999971
+      "ms": 1392.8080999999984
     },
     {
       "week": 24,
-      "ms": 3030.073400000001
+      "ms": 1732.2590000000018
     },
     {
       "week": 25,
-      "ms": 2593.0742000000027
+      "ms": 1494.7221999999965
     },
     {
       "week": 26,
-      "ms": 2087.6276
+      "ms": 1601.9596999999994
     },
     {
       "week": 27,
-      "ms": 2272.1376999999993
+      "ms": 1492.5434999999998
     },
     {
       "week": 28,
-      "ms": 3702.676999999996
+      "ms": 1705.230300000003
     },
     {
       "week": 29,
-      "ms": 6121.3629
+      "ms": 1562.469299999997
     },
     {
       "week": 30,
-      "ms": 5418.4883000000045
+      "ms": 1414.6660000000047
     },
     {
       "week": 31,
-      "ms": 6742.635399999999
+      "ms": 2350.2618999999977
     },
     {
       "week": 32,
-      "ms": 5114.477899999998
+      "ms": 1841.118300000002
     },
     {
       "week": 33,
-      "ms": 8094.344299999997
+      "ms": 1688.3830000000016
     },
     {
       "week": 34,
-      "ms": 7842.724400000006
+      "ms": 1555.986699999994
     },
     {
       "week": 35,
-      "ms": 4717.768199999991
+      "ms": 1627.5768000000025
     },
     {
       "week": 36,
-      "ms": 3751.6848000000027
+      "ms": 1547.935900000004
     },
     {
       "week": 37,
-      "ms": 2648.5896000000066
+      "ms": 1672.225099999996
     },
     {
       "week": 38,
-      "ms": 2592.7451
+      "ms": 1487.6290000000008
     },
     {
       "week": 39,
-      "ms": 3429.2641999999905
-    },
-    {
-      "week": 40,
-      "ms": 6514.352400000003
-    },
-    {
-      "week": 41,
-      "ms": 3594.058600000004
-    },
-    {
-      "week": 42,
-      "ms": 2969.0406999999977
-    },
-    {
-      "week": 43,
-      "ms": 2802.5776999999944
-    },
-    {
-      "week": 44,
-      "ms": 2339.172000000006
-    },
-    {
-      "week": 45,
-      "ms": 2425.498099999997
-    },
-    {
-      "week": 46,
-      "ms": 1933.2394000000058
-    },
-    {
-      "week": 47,
-      "ms": 3152.7641999999905
-    },
-    {
-      "week": 48,
-      "ms": 2146.8348000000115
-    },
-    {
-      "week": 49,
-      "ms": 2349.0795999999973
-    },
-    {
-      "week": 50,
-      "ms": 2818.278099999996
+      "ms": 1603.739999999998
     }
   ],
   "slowestWeeks": [
     {
-      "week": 33,
-      "ms": 8094.344299999997
-    },
-    {
-      "week": 34,
-      "ms": 7842.724400000006
-    },
-    {
       "week": 31,
-      "ms": 6742.635399999999
-    },
-    {
-      "week": 40,
-      "ms": 6514.352400000003
-    },
-    {
-      "week": 29,
-      "ms": 6121.3629
-    },
-    {
-      "week": 30,
-      "ms": 5418.4883000000045
+      "ms": 2350.2618999999977
     },
     {
       "week": 32,
-      "ms": 5114.477899999998
+      "ms": 1841.118300000002
+    },
+    {
+      "week": 24,
+      "ms": 1732.2590000000018
+    },
+    {
+      "week": 28,
+      "ms": 1705.230300000003
+    },
+    {
+      "week": 33,
+      "ms": 1688.3830000000016
+    },
+    {
+      "week": 37,
+      "ms": 1672.225099999996
     },
     {
       "week": 35,
-      "ms": 4717.768199999991
+      "ms": 1627.5768000000025
+    },
+    {
+      "week": 39,
+      "ms": 1603.739999999998
     }
   ],
   "weekLog": [
     {
       "from": 0,
       "to": 40,
-      "ms": 106949.7173
-    },
-    {
-      "from": 40,
-      "to": 47,
-      "ms": 18362.725
-    },
-    {
-      "from": 47,
-      "to": 51,
-      "ms": 9430.281
+      "ms": 59697.811
     }
   ],
   "dbFiles": [
     {
       "f": "projectb_v2.db",
-      "size": 5021696
+      "size": 4603904
     },
     {
       "f": "projectb_v2.db-shm",
@@ -745,11 +595,11 @@
     },
     {
       "f": "projectb_v2.db-wal",
-      "size": 4713312
+      "size": 4754512
     },
     {
       "f": "slot3_PERF.db",
-      "size": 21495808
+      "size": 19980288
     },
     {
       "f": "slot3_PERF.db-shm",
@@ -757,14 +607,14 @@
     },
     {
       "f": "slot3_PERF.db-wal",
-      "size": 14724912
+      "size": 13369432
     }
   ],
   "npcCount": 5596,
-  "entityCount": 5596,
+  "entityCount": 6788,
   "staleReads": [],
-  "fingerprint": "c75b660a:5835",
-  "dbFingerprint": "c75b660a:5835",
+  "fingerprint": "8a74abe8:5835",
+  "dbFingerprint": "8a74abe8:5835",
   "lossFree": true,
   "staleFree": true,
   "missingChannels": []

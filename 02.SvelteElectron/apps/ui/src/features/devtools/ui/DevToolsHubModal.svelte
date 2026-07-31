@@ -10,6 +10,7 @@
     openMessenger: void;
     openMatchLab: void;
     openAutoAdvance: void;
+    openScenario: void;
   }>();
 
   function close() {
@@ -35,6 +36,10 @@
 
   function openAutoAdvance() {
     dispatch("openAutoAdvance");
+  }
+
+  function openScenario() {
+    dispatch("openScenario");
   }
 
 </script>
@@ -71,6 +76,11 @@
         <button type="button" class="tool-btn tool-btn-auto" on:click={openAutoAdvance}>
           <strong>자동 진행</strong>
           <span>W40 또는 진로 선택 전까지 훈련·경기·이벤트 자동 처리</span>
+        </button>
+
+        <button type="button" class="tool-btn tool-btn-scenario" on:click={openScenario}>
+          <strong>테스트 시나리오</strong>
+          <span>화면에 값을 넣어주는 경로를 실제로 돌려 확인 · 세이브를 바꾸지 않음</span>
         </button>
 
       </div>

@@ -47,10 +47,26 @@ export async function renameSlotV3(slotId: string, name: string): Promise<void> 
 async function hydrateStoresFromSlot(slotId: string): Promise<void> {
   const rows = await slotRepo.getAllNpcs(slotId);
   const { npcs, liveStats } = hydrateFromRepo(rows);
-  // v3: 선수는 slot.db가 정본. 스태프(코치/감독)는 App.svelte 부팅 시 masterStore.load()가
-  // 이미 1회 로드해둔 상태 — 여기서 reloadEntities()를 다시 부르면 staffEntities만으로
-  // entities를 덮어써서 connectToGameStore가 병합해둔 NPC 선수가 전부 지워진다
-  // (원인이었던 버그: 새 게임 직후 로스터에 주인공+코치+감독만 보이던 현상).
+
+  // ── 스태프를 slot.db에서 읽어온다 ─────────────────────────────
+  //
+  // **이게 없으면 세계 전체가 스태프 없이 돈다.** `App.svelte`의
+  // `masterStore.load()`는 슬롯이 정해지기 **전에** 돌아서 `reloadEntities()`를
+  // slotId 없이 부른다 — 스태프는 slot.db에 있으므로 그때는 못 읽는다.
+  // 그리고 slotId를 넘겨 다시 부르는 곳이 여기 말고 없었다.
+  //
+  // 결과: `masterStore.entities`에 감독·코치·구단주가 0명이었고,
+  // `staffStatsOf(teamId, entities)`가 전부 기본값 50을 돌려줬다 —
+  // 7-5가 배선한 스태프 15종이 실제 게임에선 통째로 죽어 있었다.
+  //
+  // ⚠ 순서가 중요하다. `reloadEntities`는 `entities`를
+  // `[...staffEntities, ...basePlayerEntities]`로 **덮어쓴다.** 그래서
+  // `setNpcs`보다 **먼저** 불러야 한다 — 뒤에 부르면 병합해둔 NPC가 지워진다
+  // (그게 예전에 "로스터에 주인공+코치+감독만 보이던" 버그였다).
+  // seasonYear를 넘기지 않는 건 의도다: v3에서 선수 정본은 slot.db고
+  // master.db의 `npc_master`는 Phase 6A에서 비웠다.
+  await masterStore.reloadEntities(undefined, slotId);
+
   gameStore.setNpcs(npcs);  // 전체 교체 — updateNpcs(부분패치) 사용 금지. 이 호출이
   // connectToGameStore 구독을 통해 masterStore.entities를 스태프+NPC로 반응형 재구성한다.
   npcLiveStatsStore.set(liveStats);
