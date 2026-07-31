@@ -36,28 +36,13 @@ pub fn calc_facility_eff(p: FacilityEffPayload) -> f64 {
     base * p.facility_investment.unwrap_or(1.0).clamp(0.80, 1.25)
 }
 
-// ── Weekly Net Income ─────────────────────────────────────────
-
-#[derive(Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct WeeklyNetPayload {
-    pub career_stage: String,
-    pub salary: Option<i32>,
-}
-
-pub fn calc_weekly_net(p: WeeklyNetPayload) -> i32 {
-    match p.career_stage.as_str() {
-        "highschool"  => (42 - 18) / 4,
-        "university"  => (62 - 21) / 4,
-        "military"    => (196 - 13) / 4,
-        "pro" | "pro_kbl" | "pro_abl" | "pro_jbl" => {
-            let salary = p.salary.unwrap_or(3000) as f64;
-            (salary / 52.0 - 54.0).round() as i32
-        }
-        "independent" => (80 - 30) / 4,
-        _ => 0,
-    }
-}
+// ── Weekly Net Income (제거됨 — Phase 7-5 F-3) ────────────────
+//
+// `calc_weekly_net`이 여기 있었다. 무대별 수입·지출이 **Rust 상수 표**라
+// 조정하려면 재컴파일이 필요했고, 규칙 파일과 정본이 둘로 갈렸다.
+//
+// 정본은 이제 `generation_rules.json financeRules.stages`이고
+// 계산은 `finance::calc_weekly_finance`가 한다 — 세금·스폰서·구독까지 함께 본다.
 
 // ── Injury Calculation ────────────────────────────────────────
 

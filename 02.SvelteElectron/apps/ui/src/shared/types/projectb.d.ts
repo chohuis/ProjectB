@@ -193,7 +193,6 @@ declare global {
       postseasonShuffleAbl: (p: string) => Promise<string>;
       // ── 주간 엔진 ──────────────────────────────────────────
       weekCalcFacilityEff:  (p: string) => Promise<string>;
-      weekCalcWeeklyNet:    (p: string) => Promise<string>;
       weekCalcInjury:       (p: string) => Promise<string>;
       weekCalcHsAdmissions: (p: string) => Promise<string>;
       weekCalcTradeRumor:   (p: string) => Promise<string>;

@@ -1,151 +1,101 @@
-﻿<script lang="ts">
+<script lang="ts">
+  /**
+   * 개인 재정 화면 (Phase 7-5 F-3).
+   *
+   * **여기서 계산하지 않는다.** 전부 Rust `finance.rs`가 낸 값을 표시만 한다.
+   * 예전 이 파일은 컴포넌트 안에서 OVR·사기로 수입을 즉석 계산했고, 그 숫자가
+   * 실제 `money`와 아무 관계가 없었다 (CLAUDE.md "화면에 게임 로직 금지" 위반).
+   *
+   * DESIGN §7.3 관리 UI 원칙: **가계부·예산배분 화면 없이 상시 잔액만.**
+   * 지출은 이벤트 선택 또는 구독 토글로만 한다 — 그래서 여기 "예산 짜기"가 없다.
+   */
+  import { onMount } from "svelte";
   import { t } from "../../shared/i18n";
   import { gameStore } from "../../shared/stores/game";
+  import { seasonStore } from "../../shared/stores/season";
+  import {
+    loadFinanceRules, calcWeeklyFinance, calcSponsorOffers, calcTrainingBonus,
+    financeOf, sponsorAnnualOf, signSponsor, toggleSubscription,
+    type FinanceRulesFile, type WeeklyFinance, type SponsorOffer, type TrainingBonusResult,
+  } from "../../shared/usecases/finance";
 
-  type FinanceTab = "overview" | "portfolio" | "support";
-  type CashFlowItem = { label: string; amount: number; tone: "income" | "expense" };
-  type AssetItem = { label: string; value: number; risk: "low" | "mid" | "high" };
-
+  type FinanceTab = "overview" | "sponsor" | "training" | "invest";
   let tab: FinanceTab = "overview";
-  let assets: AssetItem[] = [];
 
-  const clamp = (v: number, min = 0, max = 100) => Math.max(min, Math.min(max, v));
+  let rules: FinanceRulesFile | null = null;
+  let weekly: WeeklyFinance | null = null;
+  let offers: SponsorOffer[] = [];
+  let offersCapped = false;
+  let bonus: TrainingBonusResult | null = null;
+  let loadError = "";
+  let busy = false;
 
   $: p = $gameStore.protagonist;
-  $: stage = p.careerStage;
+  $: seasonYear = $seasonStore.seasonYear;
+  $: fin = financeOf(p);
+  $: sponsorAnnual = sponsorAnnualOf(fin, seasonYear);
+  $: isPro = p.careerStage === "pro" || p.careerStage.startsWith("pro_");
 
   $: stageLabel =
-    stage === "highschool" ? "고등학교" :
-    stage === "university" ? "대학교" :
-    stage === "military" ? "군 복무" : "프로";
+    p.careerStage === "highschool" ? "고등학교" :
+    p.careerStage === "university" ? "대학교" :
+    p.careerStage === "military" ? "군 복무" :
+    p.careerStage === "independent" ? "독립리그" : "프로";
 
-  $: monthlyIncome = buildIncome(stage, p.condition, p.morale, p.pitching.ovr);
-  $: monthlyExpense = buildExpense(stage, p.fatigue, $gameStore.schoolState.weeklyStudyMode);
+  // 주인공 상태가 바뀌면 다시 계산한다 — 화면이 스스로 추정하지 않는다
+  $: refreshKey = `${p.careerStage}|${p.contract?.salary ?? 0}|${p.fame}|${sponsorAnnual}|${JSON.stringify(fin.subscriptions)}`;
+  $: if (refreshKey) void refresh();
 
-  $: totalIncome = monthlyIncome.reduce((s, x) => s + x.amount, 0);
-  $: totalExpense = monthlyExpense.reduce((s, x) => s + x.amount, 0);
-  $: netCashflow = totalIncome - totalExpense;
+  onMount(() => { void refresh(); });
 
-  $: cash = p.money;
-  $: savings = Math.round(p.money * 0.4);
-  $: investments = stage === "pro" ? Math.round(p.money * 0.3) : Math.round(p.pitching.ovr * 0.5);
-
-  $: assets = [
-    { label: "현금", value: cash, risk: "low" },
-    { label: "예금", value: savings, risk: "low" },
-    { label: stage === "pro" ? "투자" : "교육/장비 적립", value: investments, risk: stage === "pro" ? "mid" : "low" },
-  ];
-
-  $: totalAsset = p.money;
-  $: savingRate = totalIncome > 0 ? ((netCashflow / totalIncome) * 100).toFixed(1) : "0.0";
-  $: emergencyMonths = totalExpense > 0 ? (cash / totalExpense).toFixed(1) : "0.0";
-
-  $: supportTitle = stage === "pro" ? "계약" : "지원 내역";
-  $: primaryLine =
-    stage === "highschool" ? "용돈 + 가족 지원 중심" :
-    stage === "university" ? "용돈 + 장학금 중심" :
-    stage === "military" ? "군 급여 중심" : "연봉 + 성과 보너스 중심";
-
-  $: supportRows = buildSupportRows(stage, p.pitching.ovr, p.morale);
-
-  function buildIncome(stageId: string, condition: number, morale: number, ovr: number): CashFlowItem[] {
-    if (stageId === "highschool") {
-      return [
-        { label: "월 용돈", amount: 10, tone: "income" },
-        { label: "가족 지원", amount: 24 + Math.round(morale * 0.08), tone: "income" },
-        { label: "학교 활동 지원", amount: 8 + Math.round(condition * 0.05), tone: "income" },
-      ];
+  async function refresh(): Promise<void> {
+    try {
+      rules = await loadFinanceRules();
+      weekly = await calcWeeklyFinance({ protagonist: p, seasonYear });
+      bonus = await calcTrainingBonus({ protagonist: p });
+      const so = await calcSponsorOffers({ protagonist: p, seasonYear });
+      offers = so.offers;
+      offersCapped = so.capped;
+      loadError = "";
+    } catch (e) {
+      loadError = e instanceof Error ? e.message : String(e);
     }
-    if (stageId === "university") {
-      return [
-        { label: "월 용돈", amount: 30, tone: "income" },
-        { label: "장학금", amount: 20 + Math.round(ovr * 0.25), tone: "income" },
-        { label: "대회 지원금", amount: 12 + Math.round(condition * 0.07), tone: "income" },
-      ];
-    }
-    if (stageId === "military") {
-      return [
-        { label: "군 급여", amount: 180, tone: "income" },
-        { label: "포상/격려금", amount: 10 + Math.round(morale * 0.07), tone: "income" },
-        { label: "외부 지원", amount: 6, tone: "income" },
-      ];
-    }
-    return [
-      { label: "연봉(월할)", amount: 520 + Math.round(ovr * 3.8), tone: "income" },
-      { label: "경기/성과 보너스", amount: 70 + Math.round(condition * 1.1), tone: "income" },
-      { label: "광고/스폰", amount: 18 + Math.round(morale * 0.35), tone: "income" },
-    ];
   }
 
-  function buildExpense(stageId: string, fatigue: number, studyMode: string): CashFlowItem[] {
-    const trainCost = 18 + Math.round(fatigue * 0.15);
-    const lifeCost = stageId === "pro" ? 140 : stageId === "military" ? 34 : 54;
-    const studyCost = stageId === "highschool" || stageId === "university"
-      ? (studyMode === "hard" ? 20 : studyMode === "light" ? 8 : 13)
-      : 0;
-
-    const rows: CashFlowItem[] = [
-      { label: "생활비", amount: lifeCost, tone: "expense" },
-      { label: "개인 훈련비", amount: trainCost, tone: "expense" },
-    ];
-
-    if (studyCost > 0) rows.push({ label: "학업 관련 지출", amount: studyCost, tone: "expense" });
-    if (stageId === "pro") rows.push({ label: "가족/매니지먼트", amount: 58, tone: "expense" });
-
-    return rows;
+  async function onSign(o: SponsorOffer): Promise<void> {
+    if (busy) return;
+    busy = true;
+    try { await signSponsor(o, seasonYear); await refresh(); }
+    finally { busy = false; }
   }
 
-  function buildSupportRows(stageId: string, ovr: number, morale: number): Array<{ k: string; v: string }> {
-    if (stageId === "pro") {
-      const annual = 6200 + ovr * 35;
-      const bonusCap = 900 + morale * 5;
-      return [
-        { k: "연봉", v: amountLabel(annual) },
-        { k: "성과 보너스 상한", v: amountLabel(bonusCap) },
-        { k: "잔여 기간", v: "2년" },
-        { k: "조항", v: "성과 인센티브 + 팀 옵션" },
-      ];
+  async function onToggle(areaId: string): Promise<void> {
+    if (busy) return;
+    busy = true;
+    try { await toggleSubscription(areaId); await refresh(); }
+    finally { busy = false; }
+  }
+
+  /** 만원 단위를 사람이 읽는 문자열로. 1억(10,000만원)부터는 억으로 */
+  function won(v: number): string {
+    const abs = Math.abs(v);
+    if (abs >= 10_000) {
+      const eok = v / 10_000;
+      return `${eok % 1 === 0 ? eok.toFixed(0) : eok.toFixed(2)}억`;
     }
-
-    if (stageId === "military") {
-      return [
-        { k: "기본 급여", v: amountLabel(180) + " / 월" },
-        { k: "포상 정책", v: "주간 성과 기반" },
-        { k: "주요 지출", v: "개인 장비/휴가" },
-        { k: "비고", v: "훈련 성실도에 따라 격려금" },
-      ];
-    }
-
-    if (stageId === "university") {
-      return [
-        { k: "월 용돈", v: amountLabel(30) },
-        { k: "장학금", v: amountLabel(20 + Math.round(ovr * 0.25)) },
-        { k: "지원 조건", v: "출석/훈련 성실도 유지" },
-        { k: "비고", v: "대회 성과 시 추가 지원" },
-      ];
-    }
-
-    return [
-      { k: "월 용돈", v: amountLabel(10) },
-      { k: "가족 지원", v: amountLabel(24 + Math.round(morale * 0.08)) },
-      { k: "지원 조건", v: "생활 규칙/훈련 태도" },
-      { k: "비고", v: "학교 일정에 따라 변동" },
-    ];
+    return `${Math.round(v).toLocaleString()}만`;
   }
 
-  function amountLabel(value: number): string {
-    return `${value.toLocaleString()}만`;
+  function tierOf(areaId: string): number {
+    return fin.subscriptions.find((s) => s.areaId === areaId)?.tier ?? 0;
   }
-
-  function riskLabel(value: AssetItem["risk"]): string {
-    if (value === "low") return "저위험";
-    if (value === "high") return "고위험";
-    return "중위험";
+  function tierLabel(areaId: string): string {
+    const tr = tierOf(areaId);
+    if (tr === 0) return "미구독";
+    return rules?.training.tiers.find((x) => x.tier === tr)?.name ?? `${tr}단계`;
   }
-
-  function assetRatio(v: number): number {
-    if (totalAsset <= 0) return 0;
-    return clamp((v / totalAsset) * 100);
+  function effectiveOf(areaId: string): number {
+    return bonus?.byArea.find((b) => b.areaId === areaId)?.effective ?? 0;
   }
 </script>
 
@@ -156,88 +106,194 @@
     <header class="head">
       <div class="stage-chip">
         <strong>{stageLabel}</strong>
-        <span>{primaryLine}</span>
+        <span>보유 자산 {won(p.money)}원</span>
       </div>
       <div class="tabs">
         <button class:active={tab === "overview"} on:click={() => (tab = "overview")}>개요</button>
-        <button class:active={tab === "portfolio"} on:click={() => (tab = "portfolio")}>자산</button>
-        <button class:active={tab === "support"} on:click={() => (tab = "support")}>{supportTitle}</button>
+        <button class:active={tab === "sponsor"}  on:click={() => (tab = "sponsor")}>스폰서</button>
+        <button class:active={tab === "training"} on:click={() => (tab = "training")}>개인 트레이닝</button>
+        <button class:active={tab === "invest"}   on:click={() => (tab = "invest")}>투자</button>
       </div>
     </header>
 
-    {#if tab === "overview"}
+    {#if loadError}
+      <section class="panel err">
+        <h3>재정 규칙을 못 읽었습니다</h3>
+        <p class="sub">{loadError}</p>
+        <p class="sub">`generation_rules.json`의 <code>financeRules</code>가 필요합니다 (Phase 7-5).</p>
+      </section>
+    {:else if !weekly}
+      <section class="panel"><p class="sub">계산 중…</p></section>
+
+    {:else if tab === "overview"}
       <div class="overview-grid">
         <section class="panel kpi-grid">
-          <article><span>총 자산</span><strong>{amountLabel(totalAsset)}</strong></article>
-          <article><span>월 수입</span><strong class="up">{amountLabel(totalIncome)}</strong></article>
-          <article><span>월 지출</span><strong class="down">{amountLabel(totalExpense)}</strong></article>
-          <article><span>월 순현금흐름</span><strong class:up={netCashflow >= 0} class:down={netCashflow < 0}>{amountLabel(netCashflow)}</strong></article>
-          <article><span>저축률</span><strong>{savingRate}%</strong></article>
-          <article><span>현금 커버</span><strong>{emergencyMonths}개월</strong></article>
+          <article><span>보유 자산</span><strong>{won(p.money)}</strong></article>
+          <article>
+            <span>주간 순현금</span>
+            <strong class:up={weekly.netWeekly >= 0} class:down={weekly.netWeekly < 0}>
+              {weekly.netWeekly >= 0 ? "+" : ""}{won(weekly.netWeekly)}
+            </strong>
+          </article>
+          <article><span>연 총수입</span><strong>{won(weekly.grossAnnual)}</strong></article>
+          <article>
+            <span>실효 세율</span>
+            <strong>{weekly.taxAnnual > 0 ? `${(weekly.effectiveTaxRate * 100).toFixed(1)}%` : "비과세"}</strong>
+          </article>
+          <article><span>명성</span><strong>{Math.round(p.fame)}</strong></article>
+          <article><span>스폰서 계약</span><strong>{fin.sponsors.filter((s) => s.untilSeason >= seasonYear).length}건</strong></article>
         </section>
 
         <section class="panel ledger-panel">
-          <h3>월간 현금흐름</h3>
+          <h3>주간 수입 · 지출</h3>
+          <p class="sub">
+            {#if weekly.taxAnnual > 0}
+              세금은 수령 시 원천징수됩니다 — 위 순현금은 세후입니다.
+            {:else}
+              학생·군 무대는 과세하지 않습니다.
+            {/if}
+          </p>
           <div class="ledger-grid">
             <div>
               <p class="ledger-title up">수입</p>
               <ul>
-                {#each monthlyIncome as item}
-                  <li><span>{item.label}</span><strong>{amountLabel(item.amount)}</strong></li>
+                {#each weekly.income as item}
+                  <li><span>{item.label}</span><strong>{won(item.amount)}</strong></li>
+                {:else}
+                  <li><span>수입 없음</span><strong>-</strong></li>
                 {/each}
               </ul>
             </div>
             <div>
               <p class="ledger-title down">지출</p>
               <ul>
-                {#each monthlyExpense as item}
-                  <li><span>{item.label}</span><strong>{amountLabel(item.amount)}</strong></li>
+                {#each weekly.expense as item}
+                  <li><span>{item.label}</span><strong>{won(item.amount)}</strong></li>
+                {:else}
+                  <li><span>지출 없음</span><strong>-</strong></li>
                 {/each}
               </ul>
             </div>
           </div>
         </section>
       </div>
-    {:else if tab === "portfolio"}
-      <section class="panel portfolio-panel">
-        <h3>자산 구성</h3>
-        <p class="sub">총 {amountLabel(totalAsset)} 기준</p>
-        <ul>
-          {#each assets as a}
-            <li class="asset-row">
-              <div class="asset-left">
-                <strong>{a.label}</strong>
-                <span>{amountLabel(a.value)} · {riskLabel(a.risk)}</span>
-              </div>
-              <div class="asset-bar-wrap">
-                <div class="asset-bar" style={`width:${assetRatio(a.value)}%`}></div>
-              </div>
-              <p>{assetRatio(a.value).toFixed(1)}%</p>
-            </li>
-          {/each}
-        </ul>
-      </section>
-    {:else}
-      <div class="support-grid">
-        <section class="panel support-panel">
-          <h3>{supportTitle}</h3>
+
+    {:else if tab === "sponsor"}
+      <div class="overview-grid">
+        <section class="panel">
+          <h3>계약 중</h3>
+          <p class="sub">연 합계 {won(sponsorAnnual)} · 기타소득 분리과세 {rules ? (rules.tax.otherIncomeRate * 100).toFixed(0) : "-"}%</p>
           <ul>
-            {#each supportRows as row}
-              <li><span>{row.k}</span><strong>{row.v}</strong></li>
+            {#each fin.sponsors.filter((s) => s.untilSeason >= seasonYear) as s}
+              <li>
+                <span>{s.name}</span>
+                <strong>{won(s.annual)} / 년 · {s.untilSeason}까지</strong>
+              </li>
+            {:else}
+              <li><span>계약 중인 스폰서가 없습니다</span><strong>-</strong></li>
             {/each}
           </ul>
         </section>
 
-        <section class="panel support-panel">
-          <h3>재정 메모</h3>
+        <section class="panel">
+          <h3>받은 제안</h3>
+          <p class="sub">
+            {#if !isPro}
+              학생·독립 무대에는 스폰서가 붙지 않습니다 (아마추어 규정).
+            {:else if offers.length === 0}
+              지금 명성({Math.round(p.fame)})으로 들어온 제안이 없습니다.
+              가장 낮은 문턱은 명성 {rules?.sponsor.categories[0]?.fameMin ?? "-"}입니다.
+            {:else}
+              명성이 오르면 금액도 같이 오릅니다{offersCapped ? " · 연봉 대비 상한에 걸려 조정됐습니다" : ""}.
+            {/if}
+          </p>
           <ul>
-            <li><span>핵심 포인트</span><strong>{primaryLine}</strong></li>
-            <li><span>권장 운영</span><strong>월 순현금흐름 플러스 유지</strong></li>
-            <li><span>리스크</span><strong>컨디션/피로도 악화 시 비용 증가</strong></li>
-            <li><span>다음 단계</span><strong>주간 이벤트와 지출 자동 연동</strong></li>
+            {#each offers as o}
+              <li class="offer">
+                <div class="offer-left">
+                  <strong>{o.name}</strong>
+                  <span>{won(o.annual)} / 년 · {o.termYears}년 · 연봉의 {(o.pctOfSalary * 100).toFixed(1)}%</span>
+                </div>
+                <button class="act" disabled={busy} on:click={() => onSign(o)}>계약</button>
+              </li>
+            {/each}
           </ul>
         </section>
       </div>
+
+    {:else if tab === "training"}
+      <section class="panel training-panel">
+        <h3>개인 트레이닝 구독</h3>
+        <p class="sub">
+          누를 때마다 단계가 오르고, 마지막 단계에서 누르면 해지됩니다.
+          {#if bonus && bonus.inverseFactor !== 1}
+            <br />
+            <strong class:up={bonus.inverseFactor > 1} class:down={bonus.inverseFactor < 1}>
+              팀 시설 보정 ×{bonus.inverseFactor.toFixed(2)}
+            </strong>
+            — {bonus.inverseFactor > 1
+              ? "시설이 열악해 개인 트레이닝이 더 크게 먹힙니다."
+              : "시설이 좋아 개인 트레이닝의 추가 효과가 줄어듭니다."}
+          {/if}
+        </p>
+        <ul>
+          {#each rules?.training.areas ?? [] as a}
+            <li class="offer">
+              <div class="offer-left">
+                <strong>{a.name}</strong>
+                <span>
+                  {tierLabel(a.id)}
+                  {#if tierOf(a.id) > 0}
+                    · 효율 +{(effectiveOf(a.id) * 100).toFixed(1)}%
+                    · 주 {rules?.training.tiers.find((x) => x.tier === tierOf(a.id))?.weeklyCost ?? 0}만원
+                  {/if}
+                </span>
+              </div>
+              <button class="act" disabled={busy} on:click={() => onToggle(a.id)}>
+                {tierOf(a.id) === 0 ? "구독" : tierOf(a.id) >= (rules?.training.tiers.length ?? 2) ? "해지" : "상향"}
+              </button>
+            </li>
+          {/each}
+        </ul>
+        <p class="sub">
+          주간 구독료 합계 <strong>{won(bonus?.weeklyCost ?? 0)}</strong> —
+          위 개요 탭의 순현금에 이미 반영돼 있습니다.
+        </p>
+      </section>
+
+    {:else}
+      <section class="panel">
+        <h3>투자</h3>
+        <p class="sub">
+          투자는 <strong>시즌 종료 화면</strong>에서 한 번만 선택합니다.
+          여기서는 지금까지의 결과만 봅니다.
+          {#if rules && p.money < rules.investment.minCash}
+            <br />현금이 {won(rules.investment.minCash)} 이상이어야 선택지가 열립니다.
+          {/if}
+        </p>
+        <ul>
+          {#each fin.investments.slice().reverse() as inv}
+            <li>
+              <span>{inv.season} {inv.name}</span>
+              <strong class:up={inv.profit >= 0} class:down={inv.profit < 0}>
+                {won(inv.principal)} → {inv.profit >= 0 ? "+" : ""}{won(inv.profit)}
+                ({(inv.rate * 100).toFixed(1)}%)
+              </strong>
+            </li>
+          {:else}
+            <li><span>아직 투자 이력이 없습니다</span><strong>-</strong></li>
+          {/each}
+        </ul>
+        {#if fin.investments.length > 0}
+          <p class="sub">
+            누적 손익
+            <strong class:up={fin.investments.reduce((a, i) => a + i.profit, 0) >= 0}
+                    class:down={fin.investments.reduce((a, i) => a + i.profit, 0) < 0}>
+              {won(fin.investments.reduce((a, i) => a + i.profit, 0))}
+            </strong>
+          </p>
+        {/if}
+      </section>
     {/if}
   </article>
 </section>
@@ -275,6 +331,7 @@
     justify-content: space-between;
     align-items: center;
     gap: 8px;
+    flex-wrap: wrap;
   }
 
   .stage-chip {
@@ -289,7 +346,7 @@
   .stage-chip strong { font-size: 13px; color: #eff5ff; }
   .stage-chip span { font-size: 11px; color: #a8bcdd; }
 
-  .tabs { display: flex; gap: 6px; }
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; }
   .tabs button {
     border: 1px solid #355182;
     background: #1f2f4f;
@@ -301,7 +358,7 @@
   }
   .tabs button.active { background: #3262b0; border-color: #6da1f7; }
 
-  .overview-grid, .support-grid {
+  .overview-grid {
     min-height: 0;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -314,13 +371,19 @@
     background: #13223d;
     padding: 10px;
     min-height: 0;
-    overflow: hidden;
+    overflow: auto;
+    display: grid;
+    gap: 8px;
+    align-content: start;
   }
+
+  .err { border-color: #7a3b3b; background: #2a1620; }
 
   .kpi-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 7px;
+    align-content: start;
   }
 
   .kpi-grid article {
@@ -337,7 +400,7 @@
   .up { color: #79e0a2; }
   .down { color: #ffb68a; }
 
-  .ledger-panel { display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 8px; }
+  .ledger-panel { grid-template-rows: auto auto minmax(0, 1fr); }
   .ledger-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; min-height: 0; }
   .ledger-title { font-size: 12px; margin-bottom: 6px; }
 
@@ -357,25 +420,28 @@
 
   li strong { color: #eef4ff; font-size: 12px; }
 
-  .portfolio-panel { display: grid; grid-template-rows: auto auto minmax(0, 1fr); gap: 8px; }
-  .sub { color: #aac0e4; font-size: 11px; }
+  .sub { color: #aac0e4; font-size: 11px; line-height: 1.5; }
+  .sub code { color: #cfe0ff; }
 
-  .asset-row {
-    display: grid;
-    grid-template-columns: minmax(130px, 1fr) minmax(0, 1fr) auto;
-    gap: 8px;
-    align-items: center;
+  .offer { align-items: center; }
+  .offer-left { display: grid; gap: 2px; }
+  .offer-left span { color: #9eb6de; font-size: 11px; }
+
+  .act {
+    border: 1px solid #4a7fd0;
+    background: #2b53a0;
+    color: #eaf2ff;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    white-space: nowrap;
   }
+  .act:disabled { opacity: 0.5; cursor: default; }
 
-  .asset-left { display: grid; gap: 2px; }
-  .asset-left span { color: #9eb6de; font-size: 11px; }
-
-  .asset-bar-wrap { height: 8px; border-radius: 999px; background: #20375c; overflow: hidden; }
-  .asset-bar { height: 100%; border-radius: inherit; background: #6ea3ff; }
-
-  .support-panel { display: grid; gap: 8px; }
+  .training-panel { grid-template-rows: auto auto minmax(0, 1fr) auto; }
 
   @media (max-width: 1100px) {
-    .overview-grid, .support-grid, .ledger-grid { grid-template-columns: 1fr; }
+    .overview-grid, .ledger-grid { grid-template-columns: 1fr; }
   }
 </style>

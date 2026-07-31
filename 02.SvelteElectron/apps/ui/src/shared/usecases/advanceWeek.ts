@@ -17,6 +17,7 @@ import { calcOfferedSalaryForProtagonist, calcSeasonRating } from "../utils/sala
 import { isFaEligible, getFaThreshold } from "../utils/faEngine";
 import { facilityTierOf } from "../utils/ids";
 import { staffModsOf } from "../utils/staffEffects";
+import { calcWeeklyFinance, calcTrainingBonus } from "./finance";
 import type { MatchResult, PendingAction, PlayerCondition, ScheduleEntry, WeekAdvanceResult } from "../types/season";
 import type { EventContext } from "../types/event";
 import type { MessageItem } from "../types/main";
@@ -235,7 +236,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   const randCount = m.eventPools.length + m.eventPools.reduce((s, p) => s + p.maxPicksPerWeek, 0);
 
   // ── 4개 독립 IPC 병렬 실행 (Phase 3) ──────────────────────────
-  const [facilityEffModRaw, injuryCalcRaw, weeklyNetRaw, eventRandsRaw] = await Promise.all([
+  const [facilityEffModRaw, injuryCalcRaw, finance, trainingSub, eventRandsRaw] = await Promise.all([
     window.projectB!.weekCalcFacilityEff(
       JSON.stringify({
         careerStage: g.protagonist.careerStage,
@@ -262,9 +263,11 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       injuryPrevention: myMods.injuryPrevention,
       recoveryBoost:    myMods.facility,
     })),
-    window.projectB!.weekCalcWeeklyNet(
-      JSON.stringify({ careerStage: g.protagonist.careerStage, salary: g.protagonist.contract?.salary ?? null })
-    ),
+    // 개인 재정 (§7-5 F-3). 예전 `weekCalcWeeklyNet`은 무대별 상수 표가 Rust
+    // 안에 박혀 있어 조정하려면 재컴파일이 필요했다 — 이제 규칙 파일이 정본이다
+    calcWeeklyFinance({ protagonist: g.protagonist, seasonYear: s.seasonYear }),
+    // 개인 트레이닝 구독 — 보너스가 팀 자원에 반비례한다 (DESIGN §7.3)
+    calcTrainingBonus({ protagonist: g.protagonist }),
     window.projectB!.weekRollRandomBatch(randCount),
   ]);
   const facilityEffMod = JSON.parse(facilityEffModRaw) as number;
@@ -275,7 +278,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     /** 부상 전조 — 임계 넘긴 첫 주에만 온다 (§7-5 F-2) */
     warning?: { kind: string; fatigue: number; risk: number };
   };
-  const weeklyNet = JSON.parse(weeklyNetRaw) as number;
+  const weeklyNet = finance.netWeekly;
   const eventRands = JSON.parse(eventRandsRaw) as number[];
   const injuryJustOccurred = injuryCalc.justOccurred;
   const injuryJustHealed   = injuryCalc.justHealed;
@@ -313,10 +316,19 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     effectiveInjuryEffMod = SURGERY_REHAB_EFF[phase];
   }
 
-  const finalEffMod = studyResult.efficiencyMod * (1 + majorEffBonus + coachEffBonus)
+  // 개인 트레이닝 구독 보너스 — 사비를 들인 만큼 효율이 오른다.
+  // **팀 자원에 반비례**하므로 열악한 팀일수록 이 값이 크다 (DESIGN §7.3)
+  const subBonus = trainingSub.byArea.reduce((a, b) => a + b.effective, 0);
+
+  const finalEffMod = studyResult.efficiencyMod * (1 + majorEffBonus + coachEffBonus + subBonus)
     * facilityEffMod * slumpPenalty * effectiveInjuryEffMod;
 
   const growth = await calcTrainingGrowth(g.protagonist, g.trainingPlan, finalEffMod, myMods);
+  if (subBonus > 0) {
+    growth.logs.push(
+      `[개인 트레이닝] 효율 +${(subBonus * 100).toFixed(1)}% (구독 ${trainingSub.byArea.length}건 · 주 ${trainingSub.weeklyCost}만원${trainingSub.inverseFactor !== 1 ? ` · 팀 시설 보정 ×${trainingSub.inverseFactor.toFixed(2)}` : ""})`,
+    );
+  }
 
   if (newLowMoraleWeeks >= 3) growth.logs.push(`[슬럼프] 사기 저하 ${newLowMoraleWeeks}주 연속 — 훈련 효율 -30%`);
   if (coachEffBonus > 0.01) growth.logs.push(`[코치] 투수 코치 지도 보너스 +${Math.round(coachEffBonus * 100)}%`);

@@ -285,6 +285,8 @@ export interface ProtagonistSave {
   pitches: PitchEntry[];                               // 보유 구종 목록 (id + 등급)
   trainingPitchState?: { id: string; progress: number };  // 현재 훈련 중인 구종
   money: number;
+  /** 개인 재정 상태 (Phase 7-5). 구 세이브엔 없으므로 optional */
+  finance?: import("../usecases/finance").FinanceState;
   fame: number;
   scoutScore: number;
   proServiceYears: number;

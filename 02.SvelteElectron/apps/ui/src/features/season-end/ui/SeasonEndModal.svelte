@@ -1,5 +1,10 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import { gameStore } from "../../../shared/stores/game";
+  import {
+    loadFinanceRules, applyInvestment,
+    type FinanceRulesFile, type InvestmentResult,
+  } from "../../../shared/usecases/finance";
   import { seasonStore, currentStandings } from "../../../shared/stores/season";
   import { masterStore, teamMap } from "../../../shared/stores/master";
   import { runSeasonEndBgProcessing } from "../../../shared/usecases/runAutoAdvance";
@@ -11,6 +16,59 @@
 
   let isProcessing = false;
   let activeTab: "season" | "team" | "personal" = "season";
+
+  // ── 시즌말 투자 (§7-5 F-3) ────────────────────────────────────
+  //
+  // **여기가 유일한 투자 시점이다.** 상시 화면에 두면 매주 눌러보는 도박이 되고,
+  // DESIGN §7.3의 "가계부 없이 상시 잔액만" 원칙과도 어긋난다.
+  let financeRules: FinanceRulesFile | null = null;
+  let investAmount = 0;
+  let investDone: InvestmentResult | null = null;
+  let investBusy = false;
+
+  $: investCash = p.money;
+  $: canInvest = !!financeRules
+    && !investDone
+    && (p.careerStage === "pro" || p.careerStage.startsWith("pro_"))
+    && investCash >= financeRules.investment.minCash;
+
+  onMount(async () => {
+    try {
+      financeRules = await loadFinanceRules();
+      // 기본 제안액 = 현금의 1/4. 전액을 기본값으로 두면 실수로 다 넣는다
+      investAmount = Math.max(
+        financeRules.investment.minCash,
+        Math.floor(p.money / 4 / 100) * 100,
+      );
+    } catch (e) {
+      console.warn("[SeasonEnd] 재정 규칙 로드 실패 — 투자 선택지를 숨긴다", e);
+    }
+  });
+
+  async function chooseInvestment(optionId: string): Promise<void> {
+    if (investBusy || !canInvest) return;
+    investBusy = true;
+    try {
+      investDone = await applyInvestment({
+        optionId,
+        amount: Math.min(investAmount, p.money),
+        seasonYear: $seasonStore.seasonYear,
+      });
+    } catch (e) {
+      console.warn("[SeasonEnd] 투자 정산 실패", e);
+    } finally {
+      investBusy = false;
+    }
+  }
+
+  function moneyLabel(v: number): string {
+    const abs = Math.abs(v);
+    if (abs >= 10_000) {
+      const eok = v / 10_000;
+      return `${eok % 1 === 0 ? eok.toFixed(0) : eok.toFixed(2)}억`;
+    }
+    return `${Math.round(v).toLocaleString()}만`;
+  }
 
   $: p = $gameStore.protagonist;
   $: myTeamId = p.teamId;
@@ -741,6 +799,60 @@
           <p class="empty-state">기록된 경기가 없습니다.</p>
         {/if}
 
+        <!-- ── 시즌말 투자 (§7-5 F-3) ───────────────────────────── -->
+        {#if investDone}
+          <section class="section">
+            <h4>투자 결과</h4>
+            <div class="invest-result" class:invest-loss={investDone.profit < 0}>
+              <strong>{investDone.name}</strong>
+              <span>
+                {moneyLabel(investDone.principal)} 투자 →
+                {investDone.profit >= 0 ? "+" : ""}{moneyLabel(investDone.profit)}
+                ({(investDone.rate * 100).toFixed(1)}%)
+              </span>
+              <span class="invest-note">
+                {investDone.profit >= 0 ? "자산에 반영됐습니다." : "손실이 자산에서 차감됐습니다."}
+              </span>
+            </div>
+          </section>
+        {:else if canInvest && financeRules}
+          <section class="section">
+            <h4>시즌말 투자</h4>
+            <p class="invest-lead">
+              보유 현금 {moneyLabel(investCash)} 중
+              <strong>{moneyLabel(Math.min(investAmount, investCash))}</strong>을 굴립니다.
+              <span class="invest-warn">고위험 선택지는 원금을 잃을 수 있습니다.</span>
+            </p>
+            <div class="invest-amounts">
+              {#each [4, 2, 1] as div}
+                <button
+                  class="invest-amt"
+                  class:active={investAmount === Math.floor(investCash / div / 100) * 100}
+                  disabled={investBusy}
+                  on:click={() => (investAmount = Math.max(
+                    financeRules?.investment.minCash ?? 0,
+                    Math.floor(investCash / div / 100) * 100,
+                  ))}
+                >
+                  {div === 1 ? "전액" : `1/${div}`}
+                </button>
+              {/each}
+            </div>
+            <div class="invest-options">
+              {#each financeRules.investment.options as opt}
+                <button class="invest-opt" disabled={investBusy} on:click={() => chooseInvestment(opt.id)}>
+                  <strong>{opt.name}</strong>
+                  <span class="invest-stat">
+                    평균 {(opt.mean * 100).toFixed(0)}%
+                    {#if opt.sd > 0}· 변동 ±{(opt.sd * 100).toFixed(0)}%{:else}· 확정{/if}
+                  </span>
+                  <span class="invest-desc">{opt.desc}</span>
+                </button>
+              {/each}
+            </div>
+          </section>
+        {/if}
+
       {/if}
 
     </div><!-- /modal-body -->
@@ -756,6 +868,59 @@
 </div>
 
 <style>
+  /* ── 시즌말 투자 (§7-5 F-3) ───────────────────────────────────── */
+  .invest-lead { font-size: 12px; color: #aac0e4; margin: 0 0 8px; line-height: 1.6; }
+  .invest-lead strong { color: #eef4ff; }
+  .invest-warn { color: #ffb68a; }
+
+  .invest-amounts { display: flex; gap: 6px; margin-bottom: 8px; }
+  .invest-amt {
+    border: 1px solid #355182;
+    background: #1f2f4f;
+    color: #dbe8ff;
+    border-radius: 8px;
+    padding: 5px 12px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .invest-amt.active { background: #3262b0; border-color: #6da1f7; }
+  .invest-amt:disabled { opacity: 0.5; cursor: default; }
+
+  .invest-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .invest-opt {
+    display: grid;
+    gap: 3px;
+    text-align: left;
+    border: 1px solid #2f486f;
+    background: #152b4f;
+    color: #dce5f7;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+  }
+  .invest-opt:hover:not(:disabled) { border-color: #6da1f7; background: #1b3762; }
+  .invest-opt:disabled { opacity: 0.5; cursor: default; }
+  .invest-opt strong { color: #eef4ff; font-size: 13px; }
+  .invest-stat { color: #9eb6de; font-size: 11px; }
+  .invest-desc { color: #7f96bd; font-size: 11px; line-height: 1.4; }
+
+  .invest-result {
+    display: grid;
+    gap: 4px;
+    border: 1px solid #3a6b4c;
+    background: #16301f;
+    border-radius: 10px;
+    padding: 12px;
+  }
+  .invest-result.invest-loss { border-color: #7a3b3b; background: #2a1620; }
+  .invest-result strong { color: #eef4ff; font-size: 14px; }
+  .invest-result span { color: #cfe0ff; font-size: 12px; }
+  .invest-note { color: #9eb6de; font-size: 11px; }
+
+  @media (max-width: 900px) {
+    .invest-options { grid-template-columns: 1fr; }
+  }
+
   /* ── 오버레이 ─────────────────────────────────────────────────── */
   .overlay {
     position: fixed;

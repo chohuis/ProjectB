@@ -424,5 +424,191 @@
       "ownerRelationWeight": 0.4,
       "_ownerNote": "구단주 관계(-100~100) x 이 값만큼 방출 점수를 깎는다. 관계 100이면 -40점 - 임계값 하나를 통째로 상쇄한다. 관계도는 주인공 기준 1:N이라 **주인공에게만** 적용된다"
     }
+  },
+  "financeRules": {
+    "_note": "개인 재정 정본 (Phase 7-5). **단위는 전부 만원이다** — money·연봉·계약금·치료비가 같은 단위여야 한다. 예전엔 치료비만 원 단위라 한 주에 자산이 0이 됐다",
+    "_scaleNote": "스케일 기준은 7-1 드래프트 계약금이다 (1순위 5억=50000). 프로 최저연봉 3000만원, 신인 자산 1200만원",
+    "_stagesNote": "주간이 아니라 **월간 값**이다. 주간 순현금 = (income − expense) / 4.33",
+    "stages": {
+      "highschool": {
+        "income": 42,
+        "expense": 18,
+        "label": "용돈 + 가족 지원"
+      },
+      "university": {
+        "income": 62,
+        "expense": 21,
+        "label": "용돈 + 장학금"
+      },
+      "military": {
+        "income": 49,
+        "expense": 13,
+        "label": "군 급여"
+      },
+      "independent": {
+        "income": 80,
+        "expense": 30,
+        "label": "독립리그 급여"
+      },
+      "pro": {
+        "income": 0,
+        "expense": 54,
+        "label": "연봉 + 스폰서"
+      }
+    },
+    "_militaryNote": "군 급여 월 49만원 = 병장 봉급 수준. 로스터 생성의 상무 연봉 300만원(연)과 같은 축이다 — 프로 최저연봉을 쓰면 안 된다",
+    "tax": {
+      "_note": "한국 소득세 근사 4구간 + 최고구간 (2026-07-31 사용자 확정). 과세표준은 **연 단위**로 잡고 주급에서 원천징수한다",
+      "brackets": [
+        {
+          "until": 1200,
+          "rate": 0.06
+        },
+        {
+          "until": 4600,
+          "rate": 0.15
+        },
+        {
+          "until": 8800,
+          "rate": 0.24
+        },
+        {
+          "until": 15000,
+          "rate": 0.35
+        },
+        {
+          "until": 0,
+          "rate": 0.38
+        }
+      ],
+      "_bracketNote": "until 0 = 상한 없음(최고구간). 누진공제 방식이라 구간을 넘어도 전액에 높은 세율이 붙지 않는다",
+      "otherIncomeRate": 0.22,
+      "_otherNote": "계약금·스폰서·CF는 기타소득 분리과세 22%. 연봉과 합산하지 않는다 — 합산하면 계약금 받은 해에 세율이 튀어 신인이 파산한다",
+      "studentExempt": true,
+      "_studentNote": "고교·대학·군 무대는 과세하지 않는다. 용돈에 세금을 매기면 숫자만 늘고 재미가 없다"
+    },
+    "sponsor": {
+      "_note": "명성 연동 4카테고리 (DESIGN §7.3). 합계가 연봉의 10~40%가 되도록 잡았다 (2026-07-31 사용자 확정) — 명성이 실제로 돈이 되지만 야구를 대체하진 않는다",
+      "proOnly": true,
+      "_proOnlyNote": "학생에게 스폰서가 붙으면 아마추어 규정 위반이다. 독립리그도 제외",
+      "maxTotalPct": 0.4,
+      "categories": [
+        {
+          "id": "LOCAL",
+          "name": "지역 상공회",
+          "fameMin": 10,
+          "pctMin": 0.03,
+          "pctMax": 0.06,
+          "termYears": 1
+        },
+        {
+          "id": "GEAR",
+          "name": "스포츠 용품",
+          "fameMin": 30,
+          "pctMin": 0.05,
+          "pctMax": 0.11,
+          "termYears": 2
+        },
+        {
+          "id": "BEVERAGE",
+          "name": "식음료 CF",
+          "fameMin": 55,
+          "pctMin": 0.07,
+          "pctMax": 0.15,
+          "termYears": 1
+        },
+        {
+          "id": "NATIONAL",
+          "name": "전국구 브랜드",
+          "fameMin": 75,
+          "pctMin": 0.1,
+          "pctMax": 0.22,
+          "termYears": 2
+        }
+      ],
+      "fameSpan": 25,
+      "_fameSpanNote": "fameMin에서 pctMin, fameMin+fameSpan 이상에서 pctMax. 문턱을 겨우 넘은 선수와 한참 위인 선수가 같은 돈을 받으면 명성이 계단이 된다",
+      "minSalaryBase": 3000,
+      "_minBaseNote": "연봉이 최저연봉이어도 스폰서가 0이 되지 않게 하는 하한. 2군 신인도 유명하면 광고가 붙는다"
+    },
+    "training": {
+      "_note": "3분야 × 2단계 (DESIGN §7.3). **보너스가 팀 자원에 반비례한다** — 시설 좋은 팀에선 개인 트레이닝의 한계효용이 낮다. 이게 성립하려면 스태프 15종 배선(F-1)이 선행돼야 했다",
+      "areas": [
+        {
+          "id": "PITCH",
+          "name": "투구 역학",
+          "target": "pitching"
+        },
+        {
+          "id": "PHYSICAL",
+          "name": "체력 관리",
+          "target": "physical"
+        },
+        {
+          "id": "MENTAL",
+          "name": "멘탈 코칭",
+          "target": "mental"
+        }
+      ],
+      "tiers": [
+        {
+          "tier": 1,
+          "weeklyCost": 15,
+          "bonus": 0.04,
+          "name": "주 1회"
+        },
+        {
+          "tier": 2,
+          "weeklyCost": 40,
+          "bonus": 0.09,
+          "name": "상시"
+        }
+      ],
+      "teamResourceInverse": 1.0,
+      "_inverseNote": "실효 보너스 = bonus × clamp(2 − 팀시설계수, 0.60, 1.40). 시설계수 1.08인 명문 구단이면 0.92배, 0.85인 약체면 1.15배. teamResourceInverse=0으로 두면 반비례가 꺼진다",
+      "_inverseFloorNote": "하한 0.60을 둔 이유: 반비례가 너무 세면 좋은 팀에 간 순간 구독이 무의미해지고, 구독 토글 자체가 죽은 UI가 된다"
+    },
+    "investment": {
+      "_note": "시즌말 3택 (DESIGN §7.3). **원금 손실 허용** (2026-07-31 사용자 확정) — 은퇴 자산에 플레이어 판단이 실제로 반영된다. 세이브 로드로 되돌리는 문제는 시즌말 1회뿐이라 크지 않다",
+      "proOnly": true,
+      "minCash": 500,
+      "_minCashNote": "이보다 현금이 적으면 투자 선택지가 안 뜬다. 생활비도 빠듯한 신인에게 투자 화면을 띄우면 조롱이다",
+      "options": [
+        {
+          "id": "DEPOSIT",
+          "name": "예금",
+          "mean": 0.03,
+          "sd": 0.0,
+          "floor": 0.0,
+          "desc": "확정 수익. 물가만큼은 지킨다"
+        },
+        {
+          "id": "FUND",
+          "name": "펀드",
+          "mean": 0.08,
+          "sd": 0.15,
+          "floor": -0.35,
+          "desc": "평균은 예금보다 낫지만 마이너스 해도 있다"
+        },
+        {
+          "id": "VENTURE",
+          "name": "사업·주식",
+          "mean": 0.15,
+          "sd": 0.45,
+          "floor": -0.8,
+          "desc": "크게 벌거나 크게 잃는다"
+        }
+      ],
+      "_floorNote": "floor = 최대 손실률. 사업은 −80%까지 갈 수 있지만 원금이 통째로 사라지지는 않는다 — 전액 소실은 리셋 유도라 재미가 아니라 벌이다"
+    },
+    "luxury": {
+      "_note": "이벤트 선택지로만 소비된다 (DESIGN §7.3의 '가계부 없음' 원칙). 여기엔 계수만 두고 문안은 7-6 문장 뱅크가 갖는다",
+      "teammateRelationPerCost": 0.06,
+      "_relNote": "동료에게 쓴 금액 100만원당 관계도 +6. 관계도는 −100~100이라 밥 몇 번으로 절친이 되지 않는다",
+      "selfFamePerCost": 0.03,
+      "_fameNote": "자기 소비는 명성이 **성격에 따라 부호가 갈린다.** 과시형은 +, 성실형은 − (씀씀이가 구설이 된다)",
+      "selfFameSplitDiligence": 60,
+      "_splitNote": "diligence가 이 값 이상이면 자기 소비가 명성을 깎는다"
+    }
   }
 }
