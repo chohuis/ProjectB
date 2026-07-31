@@ -79,6 +79,9 @@ pub struct TrainingSubRules {
     pub tiers: Vec<TrainingTier>,
     #[serde(default = "one")]
     pub team_resource_inverse: f64,
+    /// 분야를 다 켜도 넘지 못하는 합계 상한. 0이면 상한 없음
+    #[serde(default)]
+    pub max_total_bonus: f64,
 }
 
 fn one() -> f64 { 1.0 }
@@ -345,15 +348,32 @@ pub fn calc_training_bonus(p: TrainingBonusParams) -> TrainingBonusResult {
         (1.0 + (1.0 - p.team_facility) * strength).clamp(0.60, 1.40)
     };
 
-    let by_area = p.subscriptions.iter().filter_map(|s| {
+    let mut by_area: Vec<AreaBonus> = p.subscriptions.iter().filter_map(|s| {
         let t = p.rules.tiers.iter().find(|t| t.tier == s.tier)?;
         Some(AreaBonus {
             area_id: s.area_id.clone(),
             tier: s.tier,
             base: t.bonus,
-            effective: ((t.bonus * inverse) * 10_000.0).round() / 10_000.0,
+            effective: t.bonus * inverse,
         })
     }).collect();
+
+    // 합계 상한 — 분야를 다 켜도 스태프 15종의 폭을 넘지 못한다.
+    //
+    // 20시즌 실측에서 3분야 상시가 훈련 +27%가 나왔다. 스태프 전체 폭이 15%인데
+    // 구독 하나가 그걸 압도하면 "돈으로 성장을 산다"가 지배 루프가 되고,
+    // 야구를 대체하지 않는다는 전제(DESIGN §7.3)가 깨진다.
+    let cap = p.rules.max_total_bonus;
+    if cap > 0.0 {
+        let total: f64 = by_area.iter().map(|a| a.effective).sum();
+        if total > cap {
+            let scale = cap / total;
+            for a in by_area.iter_mut() { a.effective *= scale; }
+        }
+    }
+    for a in by_area.iter_mut() {
+        a.effective = (a.effective * 10_000.0).round() / 10_000.0;
+    }
 
     TrainingBonusResult {
         by_area,

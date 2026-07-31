@@ -48,6 +48,7 @@
     "test:finance": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-finance.cjs",
     "smoke:draft": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/smoke-draft-db.cjs",
     "measure:draft": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-draft.cjs",
+    "measure:finance": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-finance.cjs",
     "measure:promotion": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-promotion.cjs",
     "measure:slotsize": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-slotsize.cjs",
     "test:newgame": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-newgame-v3.cjs",
