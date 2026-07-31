@@ -427,18 +427,27 @@ const S_FARM: Scenario = {
     c.info(`주인공 리그 ${p.leagueId} · 팀 ${p.teamId} · 시즌 리그 ${s.leagueId}`);
     c.info(`시설 등급 ${facilityTierOf(p.leagueId)}`);
 
-    c.ok("주인공 리그 == 시즌 리그", p.leagueId === s.leagueId,
-      `${p.leagueId} vs ${s.leagueId} — 강등됐는데 일정이 안 바뀐 상태일 수 있다`);
+    // ⚠ 진로 결정(W44~) 뒤에는 **일부러 어긋난다.** 소속은 새 무대로 바뀌었지만
+    // 새 시즌은 롤오버에서 열린다. 그 구간까지 실패로 세면 매년 헛 실패가 난다.
+    // 이 검사가 원래 잡으려던 건 **시즌 중** 강등인데 일정이 그대로인 경우다.
+    const inTransition = p.leagueId !== s.leagueId && s.currentWeek >= 44;
+    if (inTransition) {
+      c.info(`진로 전환 대기 — ${s.leagueId} 시즌 안에서 소속만 ${p.leagueId}로 바뀐 상태다`);
+      c.info("  새 리그 일정은 시즌 롤오버에서 열린다. 여기서 어긋나는 게 정상");
+    } else {
+      c.ok("주인공 리그 == 시즌 리그", p.leagueId === s.leagueId,
+        `${p.leagueId} vs ${s.leagueId} — 시즌 중 소속이 바뀌었는데 일정이 안 따라왔다`);
 
-    const mine = s.schedule.filter((e) => e.homeTeamId === p.teamId || e.awayTeamId === p.teamId);
-    c.ok("일정에 내 팀 경기가 있다", mine.length > 0,
-      `0경기 — 소속팀(${p.teamId})이 이 리그 일정에 없다`);
-    c.info(`내 팀 경기 ${mine.length}건 / 전체 ${s.schedule.length}건`);
+      const mine = s.schedule.filter((e) => e.homeTeamId === p.teamId || e.awayTeamId === p.teamId);
+      c.ok("일정에 내 팀 경기가 있다", mine.length > 0,
+        `0경기 — 소속팀(${p.teamId})이 이 리그 일정에 없다`);
+      c.info(`내 팀 경기 ${mine.length}건 / 전체 ${s.schedule.length}건`);
 
-    const teamIds = new Set(get(masterStore).teams.filter((t) => t.leagueId === s.leagueId).map((t) => t.id));
-    if (teamIds.size > 0) {
-      c.ok("소속팀이 이 리그 소속이다", teamIds.has(p.teamId),
-        `${p.teamId}는 ${s.leagueId} 소속이 아니다`);
+      const teamIds = new Set(get(masterStore).teams.filter((t) => t.leagueId === s.leagueId).map((t) => t.id));
+      if (teamIds.size > 0) {
+        c.ok("소속팀이 이 리그 소속이다", teamIds.has(p.teamId),
+          `${p.teamId}는 ${s.leagueId} 소속이 아니다`);
+      }
     }
 
     // 스태프 보정이 실제 소속팀에서 나오는가 (7-5가 배선한 자리)

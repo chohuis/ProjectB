@@ -1,6 +1,7 @@
 ﻿<script lang="ts">
   import { onMount } from "svelte";
   import { gameStore } from "../../../shared/stores/game";
+  import { submitCareerApplications } from "../../../shared/usecases/careerDecision";
   import { seasonStore } from "../../../shared/stores/season";
   import { masterStore } from "../../../shared/stores/master";
   import UniversityApplyModal from "./UniversityApplyModal.svelte";
@@ -89,18 +90,11 @@
     const hasAny = draftChecked || universityChecked || independentChecked || isIndependent;
     if (!hasAny) return;
     resolving = true;
-    gameStore.setCareerApplications({
-      draftApplied: draftChecked,
-      universityChoices: universityChoices.slice(0, 3),
-      independentChoices: independentChoices.slice(0, 3),
-      sportsMilitaryApplied: false,
+    await submitCareerApplications({
+      draft: draftChecked,
+      universityChoices,
+      independentChoices,
     });
-    gameStore.setCareerApplicationsSubmitted(true);
-    gameStore.markCareerChoiceTriggered();
-    gameStore.setCareerChoiceUiState({ popupOpened: false, mode: "none", confirmed: true });
-    seasonStore.resolvePendingAction("careerChoiceHub");
-    await gameStore.save();
-    await seasonStore.save();
     resolving = false;
   }
 </script>

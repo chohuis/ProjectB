@@ -2,8 +2,7 @@
   import { gameStore } from "../../../shared/stores/game";
   import { seasonStore } from "../../../shared/stores/season";
   import { masterStore } from "../../../shared/stores/master";
-  import { calcKblDraftContract } from "../../../shared/utils/draftSalaryTable";
-  import { buildSalaryIndex, loadRosterRules } from "../../../shared/repo/newGameV3";
+  import { chooseDraft, chooseSchoolOrIndependent } from "../../../shared/usecases/careerDecision";
   import { canApplyToUniversity, canApplyToIndependent } from "../../../shared/utils/careerTransition";
 
   let resolving = false;
@@ -48,50 +47,9 @@
     resolving = true;
 
     if (kind === "draft") {
-      const pickNo  = results?.draftPick   ?? 80;
-      const teamId  = results?.draftTeamId ?? $gameStore.protagonist.teamId;
-      // 팀 예산 지수 — 로스터 연봉 계산과 같은 입력 (design/roster.md §5)
-      const teamIndex = buildSalaryIndex($masterStore.teams).get(teamId) ?? 1.0;
-      // 계약 표는 규칙 파일에서 온다. NPC 신인(Rust draft.rs)과 **같은 표**를 써야
-      // 화면에 나란히 떴을 때 안 어긋난다
-      const contractRules = (await loadRosterRules()).draftRules?.contract;
-      if (!contractRules) throw new Error("[CareerResultModal] draftRules.contract 없음");
-      const { salary, durationYears, signingBonus } =
-        calcKblDraftContract(pickNo, contractRules, teamIndex);
-      seasonStore.resolvePendingAction("careerChoice");
-      seasonStore.pushPendingAction({
-        type: "draftNotification",
-        teamId,
-        leagueId: "LEAGUE_KBL",
-        round:    results?.draftRound ?? 10,
-        pickNo,
-        salary,
-        durationYears,
-        signingBonus,
-        altUniversityTeamId:  univPassed[0] ?? undefined,
-        altIndependentTeamId: indiePassed[0] ?? undefined,
-      });
-      // clearCareerResults는 DraftNotificationModal에서 처리
-      gameStore.setCareerFinalChoice("draft");
-    } else if (kind === "university" && teamId) {
-      gameStore.applyDraftDecision({ stage: "university", leagueId: "LEAGUE_UNIVERSITY", teamId });
-      gameStore.setCareerApplicationsSubmitted(false);
-      gameStore.setCareerFinalChoice("university");
-      seasonStore.resolvePendingAction("careerChoice");
-    } else if (kind === "independent" && teamId) {
-      gameStore.applyDraftDecision({ stage: "independent", leagueId: "LEAGUE_INDEPENDENT", teamId });
-      gameStore.setCareerApplicationsSubmitted(false);
-      gameStore.setCareerFinalChoice("independent");
-      seasonStore.resolvePendingAction("careerChoice");
-      // 입단 계약 협상 발동
-      seasonStore.pushPendingAction({
-        type: "salaryNegotiation",
-        teamId,
-        leagueId: "LEAGUE_INDEPENDENT",
-        offeredSalary: Math.max(800, Math.round(($gameStore.protagonist.pitching.ovr - 40) * 60)),
-        durationYears: 1,
-        signingBonus: 0,
-      });
+      await chooseDraft();
+    } else if ((kind === "university" || kind === "independent") && teamId) {
+      await chooseSchoolOrIndependent(kind, teamId);
     } else {
       // 전원 탈락: 현역 입대 (고3 강제 케이스)
       const slotId = $gameStore.currentSlotId;

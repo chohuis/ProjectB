@@ -301,6 +301,14 @@ export interface ProtagonistSave {
   militaryHiatusUniversityWeek: number | null;
   militaryDeferPenalty: number;
   sportsUnitApplied: boolean;
+  /**
+   * 체육부대 후보 공개(W50)를 **이 시즌에 이미 물어봤는가.**
+   *
+   * 없으면 무한 반복이 난다: 후보 공개는 주를 안 넘기고 pending만 밀어넣는데,
+   * 사용자가 신청/거절 어느 쪽을 눌러도 같은 주에 머무르므로 다음 주 진행에서
+   * 조건이 그대로 다시 참이 된다. 미필·비고교·27세 이하면 **매년 여기서 멈춘다.**
+   */
+  sportsUnitPromptedYear?: number;
   tradeAdaptationWeeks: number;
   faNegotiationRound: number;
   faUnsignedWeeks: number;

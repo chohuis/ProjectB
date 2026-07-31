@@ -1561,7 +1561,12 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       }
 
       // W50: 체육부대 후보 30명 공개 (주인공 제외 NPC)
-      if (weekInYear === 50 && p.age <= 27) {
+      //
+      // ⚠ `sportsUnitPromptedYear` 가드가 **반드시 있어야 한다.** 이 블록은
+      // 주를 안 넘기고 pending만 밀어넣은 채 반환한다 — 사용자가 신청/거절
+      // 어느 쪽을 눌러도 주차가 그대로라 다음 진행에서 조건이 또 참이 된다.
+      // 그러면 미필·비고교·27세 이하는 **매년 여기서 게임이 멈춘다** (실측 확인).
+      if (weekInYear === 50 && p.age <= 27 && p.sportsUnitPromptedYear !== s.seasonYear) {
         const m = get(masterStore);
         const npcCandidates = m.entities
           .filter((e) => {
@@ -1604,6 +1609,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
           });
 
           const action: PendingAction = { type: "sportsUnitApplication" };
+          gameStore.markSportsUnitPrompted(s.seasonYear);
           seasonStore.pushPendingAction(action);
           return { processedWeek: s.currentWeek, logs: ["체육부대 후보 공개"], newMessages: [], matchResults: [], stoppedBy: action };
         }
