@@ -205,6 +205,32 @@ export function dumpMessages(pattern: string, limit = 3): string[] {
 ${m.body}`);
 }
 
+/** 일정에 들어간 대회 경기와 그 결과 — 넣었는데 안 치러지는지 본다 */
+export function tourScheduleState(): Record<string, { entries: number; played: number }> {
+  const s = get(seasonStore);
+  const out: Record<string, { entries: number; played: number }> = {};
+  const all = [...s.schedule, ...Object.values(s.leagueSchedules).flat()];
+  for (const e of all) {
+    const m = /^(TOUR_[A-Z_]+)/.exec(e.id);
+    if (!m) continue;
+    out[m[1]] ??= { entries: 0, played: 0 };
+    out[m[1]].entries++;
+    if (e.result) out[m[1]].played++;
+  }
+  return out;
+}
+
+/** 대회 상태 — 브래킷이 생겼는지, 결승 승자가 나왔는지 */
+export function tournamentState(): { id: string; rounds: number; done: number; champ: string | null }[] {
+  const s = get(seasonStore);
+  return Object.values(s.tournaments ?? {}).map((b) => ({
+    id: b.tournamentId,
+    rounds: b.totalRounds,
+    done: b.matches.filter((m) => m.winnerTeamId).length,
+    champ: b.matches.find((m) => m.round === b.totalRounds)?.winnerTeamId ?? null,
+  }));
+}
+
 export function currentWeek(): number { return get(seasonStore).currentWeek; }
 export function currentSeason(): number { return get(seasonStore).seasonYear; }
 export function pendingKind(): string | null { return get(nextPendingAction)?.type ?? null; }

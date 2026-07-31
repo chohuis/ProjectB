@@ -79,6 +79,12 @@ fn bracket_seed_order(size: u32) -> Vec<u32> {
 }
 
 /// 라운드 r(0-based)을 몇째 날에 둘지. 대회는 평일 포함 매일 치른다.
+/// 라운드를 대회 기간 안에 고르게 편다.
+///
+/// ⚠ `round`는 **0-based**다 (`for round in 0..total_rounds`). 그래서
+/// 마지막 라운드가 `last`(= 기간 마지막 날)에 정확히 떨어진다.
+/// 1-based로 착각하고 `round - 1`을 넣으면 결승이 기간 안쪽으로 당겨지면서
+/// 1·2라운드가 같은 날에 겹친다 — 실제로 그렇게 고쳤다가 되돌렸다.
 fn tournament_round_day(round: u32, total_rounds: u32, start_week: u32, end_week: u32) -> (u32, u32) {
     let span_days = (end_week.saturating_sub(start_week) + 1) * 7;
     let last = span_days.saturating_sub(1);
@@ -405,4 +411,43 @@ pub fn select_tournament_entrants(p: SelectEntrantsParams) -> SelectEntrantsResu
     };
 
     SelectEntrantsResult { seeded_teams: seeded, region_quota: quota, wildcards }
+}
+
+#[cfg(test)]
+mod round_day_tests {
+    use super::tournament_round_day;
+
+    /// 라운드가 **대회 기간 안에서** 시작하고 끝나는가.
+    ///
+    /// `round`는 0-based다. 이걸 1-based로 착각하고 `round - 1`을 넣으면
+    /// 1·2라운드가 같은 날에 겹친다 (`test:tournament`의 "라운드 날짜가
+    /// 순차 진행"이 그걸 잡는다). 여기서는 **기간 경계**를 지킨다.
+    #[test]
+    fn round_days_stay_within_window() {
+        // (start_week, end_week, total_rounds) — tournaments.csv 실제 값
+        for (sw, ew, rounds) in [(2u32, 3u32, 5u32), (14, 15, 5), (20, 22, 6), (31, 34, 7), (40, 41, 5)] {
+            let (w1, d1) = tournament_round_day(0, rounds, sw, ew);
+            assert_eq!((w1, d1), (sw, 0), "첫 라운드는 기간 첫날이어야 한다 ({sw}~{ew}, {rounds}R)");
+
+            let (wl, _) = tournament_round_day(rounds - 1, rounds, sw, ew);
+            assert!(wl <= ew, "마지막 라운드가 기간을 넘었다: W{wl} > W{ew} ({rounds}R)");
+
+            // 라운드마다 날짜가 앞으로만 간다 — 같은 날 두 라운드는 없어야 한다
+            let mut prev: Option<u32> = None;
+            for r in 0..rounds {
+                let (w, d) = tournament_round_day(r, rounds, sw, ew);
+                let abs = (w - sw) * 7 + d;
+                if let Some(pv) = prev {
+                    assert!(abs > pv, "라운드 날짜가 안 벌어졌다 (R{r}: W{w}+{d})");
+                }
+                prev = Some(abs);
+            }
+        }
+    }
+
+    /// 라운드가 1개면 첫날 하나뿐이다 (0으로 나누지 않는다)
+    #[test]
+    fn single_round_is_first_day() {
+        assert_eq!(tournament_round_day(0, 1, 10, 12), (10, 0));
+    }
 }

@@ -55,7 +55,11 @@ import { buildHsLeagueDigest, LEAGUE_NAMES, MONTHLY_STANDINGS_LEAGUES, HS_DIGEST
 import {
   MY_RANK_WEEKS, calcMyRank, buildMyRankMessage, buildNeighborDigest,
 } from "./weekPhases/standingsNews";
-import { applyRoundResults, openTournamentsForWeek, promoteFinishedGroupStages } from "./tournaments";
+import { applyRoundResults, missingRoundEntries, openTournamentsForWeek, promoteFinishedGroupStages } from "./tournaments";
+import { TOURNAMENTS } from "../utils/tournament";
+import {
+  buildOpenMessage, buildMyRoundMessage, buildChampionMessage,
+} from "./weekPhases/tournamentNews";
 import { progressSurvival } from "./survivalLeague";
 import { runBackgroundPostseasons } from "./backgroundPostseason";
 import { IND_LEAGUE_ID, emptySurvivalState } from "../utils/survivalLeague";
@@ -1322,12 +1326,25 @@ async function progressTournaments(week: number): Promise<boolean> {
   const opened = await openTournamentsForWeek(
     week, sOpen, protagonistTeamId, get(masterStore).teams, sOpen.worldSeed ?? 0,
   );
+  const tName4Tour = (id: string) =>
+    get(masterStore).teams.find((t) => t.id === id)?.name ?? id;
   for (const o of opened) {
     if (o.bracket) seasonStore.setTournamentBracket(o.bracket);
     if (o.stage) seasonStore.setGroupStage(o.stage);
     if (o.entries.length > 0) {
       seasonStore.injectTournamentEntries(o.entries);
       injected = true;
+    }
+    // 개막 알림 — 대회는 고교 시즌 서사의 본체인데 예전엔 아무 통지가 없었다
+    const def = TOURNAMENTS.find((t) => t.id === (o.bracket?.tournamentId ?? o.stage?.tournamentId));
+    if (def) {
+      const entrants = o.bracket
+        ? [...new Set(o.bracket.matches.flatMap((m) => [m.homeTeamId, m.awayTeamId]))]
+            .filter((x): x is string => !!x)
+        : (o.stage?.groups ?? []).flatMap((gr) => gr.teams);
+      gameStore.addMessage(buildOpenMessage(
+        def, entrants, protagonistTeamId, week, get(seasonStore).seasonYear,
+      ));
     }
   }
 
@@ -1349,6 +1366,7 @@ async function progressTournaments(week: number): Promise<boolean> {
   const resultOf = new Map(
     s.schedule.filter((e) => e.result).map((e) => [e.id, e.result!.winnerId]),
   );
+  const scheduledIds = new Set(s.schedule.map((e) => e.id));
 
   for (const bracket of Object.values(s.tournaments ?? {})) {
     for (let r = 1; r <= bracket.totalRounds; r++) {
@@ -1357,6 +1375,29 @@ async function progressTournaments(week: number): Promise<boolean> {
       );
       if (live.length === 0) continue;
       if (live.every((m) => m.winnerTeamId)) continue;   // 이미 반영됨
+
+      // ⚠ 대진은 확정됐는데 **일정에 없는** 라운드 — 먼저 넣는다.
+      // 예전엔 다음 라운드 일정을 `week <= 현재주`로 걸러 버리고 다시 넣는
+      // 경로가 없어서, 모든 대회가 1라운드에서 교착했다 (우승팀 0)
+      {
+        const missing = await missingRoundEntries(bracket, r, scheduledIds);
+        // ⚠ **지난 주차로 들어가면 영영 안 치러진다.** 경기 처리 루프가
+        // `e.week === 이번주`만 보기 때문이다. 앞 라운드가 늦게 끝나
+        // 원래 주차를 넘겼으면 **이번 주로 당겨서** 넣는다 —
+        // 실제 대회도 앞 라운드가 밀리면 다음 라운드가 곧바로 붙는다.
+        const due = missing
+          .filter((e) => e.week <= week)
+          .map((e) => e.week === week ? e : {
+            ...e,
+            week,
+            gameDate: toGameDate(get(seasonStore).seasonYear, week, 6),
+          });
+        if (due.length > 0) {
+          seasonStore.injectTournamentEntries(due);
+          injected = true;
+        }
+        if (missing.length > 0) break;   // 경기를 치른 뒤 다시 부른다
+      }
 
       const results = live
         .filter((m) => resultOf.has(m.id))
@@ -1367,6 +1408,21 @@ async function progressTournaments(week: number): Promise<boolean> {
         bracket, r, results, protagonistTeamId,
       );
       seasonStore.setTournamentBracket(next);
+
+      // 내 팀 결과 · 우승 확정 — 둘 다 확정된 브래킷만 읽는다 (새 시뮬 없음)
+      {
+        const def = TOURNAMENTS.find((t) => t.id === next.tournamentId);
+        if (def) {
+          const mine = buildMyRoundMessage(
+            def, next, r, protagonistTeamId, tName4Tour, week);
+          if (mine) gameStore.addMessage(mine);
+          if (r === next.totalRounds) {
+            const champ = buildChampionMessage(
+              def, next, protagonistTeamId, tName4Tour, week);
+            if (champ) gameStore.addMessage(champ);
+          }
+        }
+      }
       const due = nextEntries.filter((e) => e.week <= week);
       if (due.length > 0) {
         seasonStore.injectTournamentEntries(due);

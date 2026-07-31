@@ -151,6 +151,28 @@ export function pendingRounds(
 }
 
 /**
+ * 대진이 확정됐는데 **일정에 아직 안 들어간** 라운드 경기를 돌려준다.
+ *
+ * ⚠ 이게 없으면 **모든 대회가 1라운드에서 멈춘다.** `applyRoundResults`가
+ * 만든 다음 라운드 일정을 호출부가 `week <= 현재주`로 거르는데, 뒤 주차
+ * 경기는 그 자리에서 **버려지고 다시 넣는 경로가 없었다.** 다음 주가 되면
+ * 그 라운드는 "대진은 있는데 일정에 없는" 상태라 결과가 영영 안 나온다.
+ * (실측: 8개 대회 전부 1라운드만 치르고 우승팀 0)
+ */
+export async function missingRoundEntries(
+  bracket: TournamentBracket,
+  round: number,
+  scheduledIds: ReadonlySet<string>,
+): Promise<ScheduleEntry[]> {
+  const live = bracket.matches.filter(
+    (m) => m.round === round && !m.isBye && m.homeTeamId && m.awayTeamId,
+  );
+  if (live.length === 0 || live.every((m) => scheduledIds.has(m.id))) return [];
+  const all = await roundSchedule(bracket, round);
+  return all.filter((e) => !scheduledIds.has(e.id));
+}
+
+/**
  * 라운드 결과를 반영하고 **다음 라운드 일정까지** 돌려준다.
  * 승자 판정 자체는 매치 엔진(호출부) 몫이다 — 여기서 이기고 지는 것을 정하지 않는다.
  */
