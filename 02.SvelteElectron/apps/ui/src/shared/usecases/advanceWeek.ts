@@ -52,6 +52,9 @@ import {
   DEFAULT_TEAM_PROFILE,
 } from "./weekPhases/market";
 import { buildHsLeagueDigest, LEAGUE_NAMES, MONTHLY_STANDINGS_LEAGUES, HS_DIGEST_WEEKS } from "./weekPhases/digest";
+import {
+  MY_RANK_WEEKS, calcMyRank, buildMyRankMessage, buildNeighborDigest,
+} from "./weekPhases/standingsNews";
 import { applyRoundResults, openTournamentsForWeek, promoteFinishedGroupStages } from "./tournaments";
 import { progressSurvival } from "./survivalLeague";
 import { runBackgroundPostseasons } from "./backgroundPostseason";
@@ -235,7 +238,11 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
 
   // 동일 부위 이전 부상 이력 여부 (moderate 이상)
   const hasPriorInjurySameArea = (g.protagonist.injuryHistory ?? []).some(h => h.severity !== "light");
-  const randCount = m.eventPools.length + m.eventPools.reduce((s, p) => s + p.maxPicksPerWeek, 0);
+  // +2는 인접권역 다이제스트용이다 (권역 하나 · 리그 하나 고르기).
+  // 이벤트 엔진은 앞에서부터 순서대로 소비하므로 뒤 두 개는 안 건드린다 —
+  // TS 게임 로직에서 Math.random()은 금지라 난수는 전부 Rust에서 온다
+  const NEWS_RANDS = 2;
+  const randCount = m.eventPools.length + m.eventPools.reduce((s, p) => s + p.maxPicksPerWeek, 0) + NEWS_RANDS;
 
   // ── 4개 독립 IPC 병렬 실행 (Phase 3) ──────────────────────────
   const [facilityEffModRaw, injuryCalcRaw, finance, trainingSub, eventRandsRaw] = await Promise.all([
@@ -1044,16 +1051,61 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     : null;
 
   if (hsGradeForMsg !== null) {
-    // 고교: 1학년 = 없음 / 2~3학년 = 분기 Digest (W12·W24·W36)
+    const sAfterSim = get(seasonStore);
+    const teamById  = new Map(mFinal.teams.map((t) => [t.id, t.name]));
+    const tName     = (id: string) => teamById.get(id) ?? id;
+    // 권역 표시명은 refs의 구장 이름에서 나온다 — 손으로 표를 만들면 빠뜨린다.
+    // "한라구장" 그대로면 "한라구장 3위"가 되어 어색하니 접미를 권역으로 바꾼다
+    const stadiumById = new Map(mFinal.stadiums.map((x) => [x.id, x.name]));
+    const rName = (id: string) => {
+      const nm = stadiumById.get(id);
+      return nm ? `${nm.replace(/구장$/, "")}권역` : `${id.replace(/^STADIUM_/, "")}권역`;
+    };
+
+    // 고교 2~3학년 = 분기 Digest (W12·W24·W36). 1학년은 대상이 아니다 —
+    // 진로가 아직 안 걸린 학년에게 프로 순위표는 잡음이라는 판단
     if (hsGradeForMsg >= 2 && HS_DIGEST_WEEKS.has(weekInYear)) {
-      const sAfterSim = get(seasonStore);
-      const teamById  = new Map(mFinal.teams.map((t) => [t.id, t.name]));
-      const digest    = buildHsLeagueDigest(
+      const digest = buildHsLeagueDigest(
         weekNum, weekInYear, hsGradeForMsg,
         sAfterSim.leagueState, teamById,
         gFinal.protagonist.scoutScore ?? 0,
       );
       if (digest) gameStore.addMessage(digest);
+    }
+
+    // ── 내 위치 뉴스 (설계 원장 D-3 #3·#4) ────────────────────
+    //
+    // **학년을 안 가린다.** 1학년도 받는다 — 오히려 1학년에게 제일 필요하다.
+    // 102교 세계에서 자기 위치를 알려주는 유일한 장치인데, 예전엔 분기
+    // 다이제스트뿐이라 첫 시즌 리그 소식이 스카우트 데이 하나였다.
+    //
+    // 새 시뮬을 돌리지 않는다 — 이미 있는 순위표만 다시 읽는다.
+    if (MY_RANK_WEEKS.has(weekInYear)) {
+      const rank = calcMyRank(sAfterSim.standings, gFinal.protagonist.teamId);
+      if (rank) {
+        gameStore.addMessage(buildMyRankMessage(
+          rank, weekNum, sAfterSim.seasonYear,
+          sAfterSim.standings.find((st) => st.teamId === gFinal.protagonist.teamId),
+          rName,
+        ));
+      }
+    }
+
+    // 주간 — 다른 권역 하나 + 다른 리그 하나. 시즌 초(전부 0-0)에는 null이 온다
+    {
+      const nd = buildNeighborDigest({
+        weekNum, seasonYear: sAfterSim.seasonYear,
+        hsStandings: sAfterSim.standings,
+        myTeamId: gFinal.protagonist.teamId,
+        leagueState: sAfterSim.leagueState,
+        teamName: tName,
+        regionName: rName,
+        rand01: [
+          eventRands[eventRands.length - 2] ?? 0.5,
+          eventRands[eventRands.length - 1] ?? 0.5,
+        ],
+      });
+      if (nd) gameStore.addMessage(nd);
     }
   } else {
     // 비고교: 기존 월간 순위표 (4주마다)

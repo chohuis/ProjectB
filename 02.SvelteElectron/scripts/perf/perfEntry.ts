@@ -195,6 +195,16 @@ export function leagueSummary(): Record<string, {
   return out;
 }
 
+/** 메시지 본문 들여다보기 — 문구가 읽을 만한지 눈으로 볼 때 쓴다 */
+export function dumpMessages(pattern: string, limit = 3): string[] {
+  const re = new RegExp(pattern);
+  return (get(gameStore).mailbox ?? [])
+    .filter((m) => re.test(m.subject ?? "") || re.test(m.id))
+    .slice(0, limit)
+    .map((m) => `[${m.category}/${m.sender}] ${m.subject}
+${m.body}`);
+}
+
 export function currentWeek(): number { return get(seasonStore).currentWeek; }
 export function currentSeason(): number { return get(seasonStore).seasonYear; }
 export function pendingKind(): string | null { return get(nextPendingAction)?.type ?? null; }

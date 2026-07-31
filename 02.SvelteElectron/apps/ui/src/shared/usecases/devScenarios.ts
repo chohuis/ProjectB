@@ -29,6 +29,7 @@ import { facilityTierOf } from "../utils/ids";
 import { visibleLeagueIds, leaderboardLeagueIds, hasPlayedGames } from "../utils/leagueVisibility";
 import { isLeagueInScope } from "../config/releaseScope";
 import { HS_DIGEST_WEEKS, MONTHLY_STANDINGS_LEAGUES } from "./weekPhases/digest";
+import { MY_RANK_WEEKS } from "./weekPhases/standingsNews";
 
 export type ScenarioStatus = "pass" | "fail" | "skip";
 
@@ -296,6 +297,12 @@ const S_MAILBOX: Scenario = {
       ["고교 분기 다이제스트", /선두|최하위|스카우트 관심/,
         stage === "highschool" && grade >= 2 && [...HS_DIGEST_WEEKS].some((w) => w <= week),
         "고교 2~3학년만 · W12·24·36"],
+      ["내 팀 순위 요약", /전국 \d+위|권역/,
+        stage === "highschool" && [...MY_RANK_WEEKS].some((w) => w <= week),
+        "고교 전학년 · 월 1회"],
+      ["인접권역 다이제스트", /다른 무대|권역   선두/,
+        stage === "highschool" && week >= 6,
+        "고교 전학년 · 주간"],
       ["고교 스카우트 데이", /스카우트 데이/,
         stage === "highschool" && (scoutWeek?.showcase?.week ?? 99) <= week,
         `고교만 · W${scoutWeek?.showcase?.week}`],

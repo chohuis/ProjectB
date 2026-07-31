@@ -48,6 +48,13 @@ export interface SchoolRef {
   nameEn?: string;
 }
 
+/** 구장 — 고교 권역 키가 구장 ID라 **권역 표시명의 원천**이기도 하다 */
+export interface StadiumRef {
+  id: string;
+  name: string;
+  parkFactor?: string;
+}
+
 export interface ClubRef {
   id: string;
   name: string;
@@ -298,6 +305,7 @@ export interface MasterState {
   pitchUnlockRules: PitchUnlockRule[];
   leagues: LeagueRef[];
   schools: SchoolRef[];
+  stadiums: StadiumRef[];
   clubs: ClubRef[];
   teams: TeamRef[];
   staffEntities: EntityRow[];       // 코치·감독·구단주 (master.db에서만 로드)
@@ -633,6 +641,7 @@ function createMasterStore() {
     pitchUnlockRules: [],
     leagues: [],
     schools: [],
+    stadiums: [],
     clubs: [],
     teams: [],
     staffEntities: [],
@@ -689,7 +698,7 @@ function createMasterStore() {
         fetchMaster<{ programs: TrainingProgram[] }>("training/programs_pitcher.json"),
         fetchMaster<{ pitches: PitchEntry[] }>("training/pitch_catalog.json"),
         fetchMaster<{ rules: PitchUnlockRule[] }>("training/pitch_unlock_rules.json"),
-        fetchMaster<{ leagues: LeagueRef[]; schools: SchoolRef[]; clubs: ClubRef[]; teams: TeamRef[] }>(
+        fetchMaster<{ leagues: LeagueRef[]; schools: SchoolRef[]; stadiums: StadiumRef[]; clubs: ClubRef[]; teams: TeamRef[] }>(
           "entities/refs.json"
         ),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -759,6 +768,7 @@ function createMasterStore() {
         pitchUnlockRules: unlockData?.rules       ?? [],
         leagues:          refsData?.leagues ?? [],
         schools:          refsData?.schools ?? [],
+        stadiums:         refsData?.stadiums ?? [],
         clubs:            refsData?.clubs   ?? [],
         teams:            mergedTeams,
         eventRules,
