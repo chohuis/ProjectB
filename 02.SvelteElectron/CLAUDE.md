@@ -12,11 +12,14 @@
 **진행 현황은 [docs/RESUME.md](docs/RESUME.md)가 정본이다.** 브랜치·다음 작업·미결
 목록·검증 명령이 거기 있다. 여기 복제하면 stale해진다.
 
-> 요약 (2026-07-30): **Phase 1~6 + 6.5 · 7-1~7-4 완료 — 전부 `main` 병합됨.**
-> 다음은 Phase 7-5(개인 재정·스태프 배선).
-> 설계 정본은 `docs/design/` 아래 roster·draft·promotion·military·fa —
+> 요약 (2026-07-31): **Phase 1~7 전부 완료 — `main` 병합됨.** 다음은 Phase 8(성능).
+> 설계 정본은 `docs/design/` 아래 roster·draft·promotion·military·fa·finance —
 > **수치는 `resource/data/master/players/generation_rules.json`에만 둔다.**
-> 로스터 상한·드래프트 라운드·신인 계약도 전부 그 파일이다 (코드에 표를 두 번 적지 말 것).
+> 로스터 상한·드래프트 라운드·신인 계약·개인 재정·대학 이벤트가 전부 그 파일이고,
+> 스태프 15종 계수는 `seeds/onepitch/staff_rules.toml [effects]`다
+> (코드에 표를 두 번 적지 말 것 — Phase 7에서 이 결함만 15건 나왔다).
+>
+> ⚠ **Phase 8은 성능 목표 수치 합의부터 한다.** 현재 성능은 측정된 적이 없다.
 >
 > ⚠ **1차 출시 범위 = 국내만.** 해외(ABL·JBL)는 확장팩으로 미뤘다 —
 > `apps/ui/src/shared/config/releaseScope.ts`가 노출을 막는다. **코드·데이터는 지우지 말 것.**
