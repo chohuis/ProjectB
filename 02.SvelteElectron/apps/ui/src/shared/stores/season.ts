@@ -595,6 +595,11 @@ function createSeasonStore() {
       update((s) => Postseason.injectTournamentEntries(s, entries));
     },
 
+    /** 주차가 지난 미처리 대회 경기를 이번 주로 당긴다 (대회 교착 방지) */
+    pullOverdueTournamentGames(week: number, gameDate: string) {
+      update((s) => Postseason.pullOverdueTournamentGames(s, week, gameDate));
+    },
+
     setAblConferences(east: string[], west: string[]) {
       update((s) => Postseason.setAblConferences(s, east, west));
     },

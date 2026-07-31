@@ -205,6 +205,53 @@ export function dumpMessages(pattern: string, limit = 3): string[] {
 ${m.body}`);
 }
 
+/** 일정에 들어간 대회 경기와 그 결과 — 넣었는데 안 치러지는지 본다 */
+export function tourScheduleState(): Record<string, { entries: number; played: number }> {
+  const s = get(seasonStore);
+  const out: Record<string, { entries: number; played: number }> = {};
+  const all = [...s.schedule, ...Object.values(s.leagueSchedules).flat()];
+  for (const e of all) {
+    const m = /^(TOUR_[A-Z_]+)/.exec(e.id);
+    if (!m) continue;
+    out[m[1]] ??= { entries: 0, played: 0 };
+    out[m[1]].entries++;
+    if (e.result) out[m[1]].played++;
+  }
+  return out;
+}
+
+/** 특정 대회의 일정 상세 — 라운드·주차·결과를 그대로 본다 */
+export function tourDetail(tourId: string): string[] {
+  const s = get(seasonStore);
+  const b = (s.tournaments ?? {})[tourId];
+  const out: string[] = [];
+  if (b) {
+    for (let r = 1; r <= b.totalRounds; r++) {
+      const ms = b.matches.filter((m) => m.round === r);
+      const withTeams = ms.filter((m) => m.homeTeamId && m.awayTeamId && !m.isBye);
+      const won = ms.filter((m) => m.winnerTeamId);
+      out.push(`  R${r}: 경기${ms.length} 대진확정${withTeams.length} 승자${won.length} week=${ms[0]?.week}`);
+    }
+  } else out.push("  (브래킷 없음)");
+  const inSched = s.schedule.filter((e) => e.id.startsWith(tourId));
+  out.push(`  일정 ${inSched.length}건 · 결과 ${inSched.filter((e) => e.result).length}건`);
+  for (const e of inSched) {
+    out.push(`    ${e.id} w${e.week} ${e.gameDate} ${e.result ? "OK" : "미처리"}`);
+  }
+  return out;
+}
+
+/** 대회 상태 — 브래킷이 생겼는지, 결승 승자가 나왔는지 */
+export function tournamentState(): { id: string; rounds: number; done: number; champ: string | null }[] {
+  const s = get(seasonStore);
+  return Object.values(s.tournaments ?? {}).map((b) => ({
+    id: b.tournamentId,
+    rounds: b.totalRounds,
+    done: b.matches.filter((m) => m.winnerTeamId).length,
+    champ: b.matches.find((m) => m.round === b.totalRounds)?.winnerTeamId ?? null,
+  }));
+}
+
 export function currentWeek(): number { return get(seasonStore).currentWeek; }
 export function currentSeason(): number { return get(seasonStore).seasonYear; }
 export function pendingKind(): string | null { return get(nextPendingAction)?.type ?? null; }

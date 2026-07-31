@@ -73,6 +73,30 @@ export function injectTournamentEntries(s: SeasonStoreState, entries: ScheduleEn
   return { ...s, schedule: [...s.schedule, ...fresh] };
 }
 
+/**
+ * 주차가 지났는데 아직 안 치러진 **대회 경기를 이번 주로 당긴다.**
+ *
+ * ⚠ 이게 없으면 대회가 1라운드에서 영영 멈춘다. 경기 처리 루프는
+ * `e.week === 이번주`만 보는데(배경 리그는 `<= 이번주`라 다르다), 대회 다음
+ * 라운드는 앞 라운드 결과가 나온 **뒤에** 일정에 들어간다. 그 사이 주차가
+ * 넘어가면 그 경기는 아무도 안 보는 상태로 남는다.
+ * 실측: 개나리기 R2 8경기가 `week 2`인 채 W40까지 미처리로 남았다.
+ *
+ * 실제 대회도 앞 라운드가 밀리면 다음 라운드가 곧바로 붙는다 — 날짜를
+ * 당기는 게 규칙에 어긋나지 않는다.
+ */
+export function pullOverdueTournamentGames(
+  s: SeasonStoreState, week: number, gameDate: string,
+): SeasonStoreState {
+  let changed = false;
+  const schedule = s.schedule.map((e) => {
+    if (!e.isTournament || e.result || e.week >= week) return e;
+    changed = true;
+    return { ...e, week, gameDate };
+  });
+  return changed ? { ...s, schedule } : s;
+}
+
 export function setAblConferences(s: SeasonStoreState, east: string[], west: string[]): SeasonStoreState {
   return { ...s, ablEastTeams: east, ablWestTeams: west };
 }
