@@ -214,6 +214,7 @@ const fmtB = (n) => (n >= 1024 * 1024 ? `${(n / 1048576).toFixed(1)}MB` : n >= 1
 
   // ── 주간 진행 ─────────────────────────────────────────────────
   const weekLog = [];
+  const offseasonLog = [];
   let guard = 0;
   let lastWeek = app.currentWeek();
   app.startTimeline();
@@ -228,8 +229,25 @@ const fmtB = (n) => (n >= 1024 * 1024 ? `${(n / 1048576).toFixed(1)}MB` : n >= 1
 
     if (after - before <= 0) {
       const pend = app.pendingKind();
+      // 사용자 입력이 필요한 두 지점은 "누른 셈 치고" 넘긴다 — 그래야 시즌
+      // 경계 너머를 잰다. 로직은 usecase 그대로고 여기서 재현하지 않는다
+      if (pend === "draftObserve") {
+        const t = process.hrtime.bigint();
+        await app.skipDraftObserve();
+        offseasonLog.push({ kind: "draftSkip", ms: Number(process.hrtime.bigint() - t) / 1e6 });
+        continue;
+      }
+      if (app.isSeasonEnded()) {
+        const t = process.hrtime.bigint();
+        const year = await app.seasonRollover();
+        const rms = Number(process.hrtime.bigint() - t) / 1e6;
+        offseasonLog.push({ kind: "rollover", year, ms: rms });
+        process.stderr.write(`  [오프시즌] ${year} 롤오버 ${(rms / 1000).toFixed(1)}s
+`);
+        continue;
+      }
       weekLog.push({ from: before, to: after, ms, blocked: pend ?? app.stopReason() });
-      // 진로 선택 등으로 막혔다 — 계측 목적상 여기서 끝낸다 (우회하면 실제 경로가 아니다)
+      // 그 외 진로 선택 등으로 막혔다 — 계측 목적상 여기서 끝낸다
       break;
     }
     weekLog.push({ from: before, to: after, ms });
@@ -282,6 +300,7 @@ const fmtB = (n) => (n >= 1024 * 1024 ? `${(n / 1048576).toFixed(1)}MB` : n >= 1
       ipcBytes: rows.reduce((a, r) => a + r.inBytes + r.outBytes, 0),
     },
     ipc: rows,
+    offseason: offseasonLog,
     weekTimings,
     slowestWeeks: [...weekTimings].sort((a, b) => b.ms - a.ms).slice(0, 8),
     weekLog,
@@ -313,6 +332,9 @@ const fmtB = (n) => (n >= 1024 * 1024 ? `${(n / 1048576).toFixed(1)}MB` : n >= 1
     console.log(`  주당          평균 ${fmtMs(W.avgMs)} · p50 ${fmtMs(W.p50)} · p95 ${fmtMs(W.p95)} · 최대 ${fmtMs(W.max)}`);
     console.log(`  분해          IPC ${fmtMs(W.ipcMs)} (${((W.ipcMs / W.totalMs) * 100).toFixed(0)}%) · TS ${fmtMs(W.jsMs)} (${((W.jsMs / W.totalMs) * 100).toFixed(0)}%)`);
     console.log(`  느린 주       ${report.slowestWeeks.map((w) => `W${w.week} ${fmtMs(w.ms)}`).join(" · ")}`);
+    if (offseasonLog.length) {
+      console.log(`  오프시즌      ${offseasonLog.map((o) => `${o.kind}${o.year ? ` ${o.year}` : ""} ${fmtMs(o.ms)}`).join(" · ")}`);
+    }
     console.log(`  IPC           ${W.ipcCalls}회 · ${fmtB(W.ipcBytes)} (주당 ${(W.ipcCalls / Math.max(1, W.weeksRun)).toFixed(0)}회 · ${fmtB(W.ipcBytes / Math.max(1, W.weeksRun))})`);
     console.log(`${"─".repeat(72)}`);
     console.log(`IPC 상위 (누적 시간순)`);

@@ -17,7 +17,9 @@ import { startNewGameV3 } from "../../apps/ui/src/shared/repo/slotLifecycleV3";
 import { assignHighschoolPosition } from "../../apps/ui/src/shared/utils/pitcherRoleEngine";
 import { runAutoAdvance } from "../../apps/ui/src/shared/usecases/runAutoAdvance";
 import { advanceWeek } from "../../apps/ui/src/shared/usecases/advanceWeek";
-import { nextPendingAction } from "../../apps/ui/src/shared/stores/season";
+import { nextPendingAction, seasonEnded } from "../../apps/ui/src/shared/stores/season";
+import { runDraftBoardBackground } from "../../apps/ui/src/shared/usecases/runDraftBoardBackground";
+import { runSeasonRollover } from "../../apps/ui/src/shared/usecases/seasonRollover";
 import { slotRepo } from "../../apps/ui/src/shared/repo/slotRepo";
 import { dehydrateToRepo } from "../../apps/ui/src/shared/repo/npcAdapter";
 import type { ProtagonistSave } from "../../apps/ui/src/shared/types/save";
@@ -167,6 +169,29 @@ export function entityCount(): number { return get(masterStore).entities.length;
 export async function autoRun(): Promise<void> {
   await runAutoAdvance();
 }
+
+// ── 사용자 입력 대체 ─────────────────────────────────────────────
+// 아래 둘은 **모달이 사용자 클릭에 반응해 하는 일**과 같다. 게임 로직을
+// 재현하는 게 아니라 "사용자가 건너뛰기를 눌렀다"를 대신 눌러주는 것뿐이다.
+// 로직 자체는 전부 usecase에 있고 그걸 그대로 부른다.
+
+/** `DraftObserveModal.handleSkip` — 관전을 건너뛴다 */
+export async function skipDraftObserve(): Promise<void> {
+  const slotId = get(gameStore).currentSlotId;
+  if (!slotId) throw new Error("[perfEntry] 슬롯이 없다");
+  await runDraftBoardBackground(slotId, get(seasonStore).seasonYear);
+  seasonStore.resolvePendingAction("draftObserve");
+  await seasonStore.save();
+}
+
+/** `SeasonEndModal.handleNewSeason`의 세계 처리분 — 시즌 롤오버 */
+export async function seasonRollover(): Promise<number> {
+  const year = get(seasonStore).seasonYear;
+  await runSeasonRollover({ seasonYear: year, gradeBeforeAdvance: get(gameStore).protagonist.grade });
+  return year;
+}
+
+export function isSeasonEnded(): boolean { return get(seasonEnded); }
 
 /** 주 1회 진행만 (pending 처리 없음) — 순수 `advanceWeek` 비용 측정용 */
 export async function oneWeek(): Promise<void> {
