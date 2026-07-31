@@ -424,5 +424,235 @@
       "ownerRelationWeight": 0.4,
       "_ownerNote": "구단주 관계(-100~100) x 이 값만큼 방출 점수를 깎는다. 관계 100이면 -40점 - 임계값 하나를 통째로 상쇄한다. 관계도는 주인공 기준 1:N이라 **주인공에게만** 적용된다"
     }
+  },
+  "financeRules": {
+    "_note": "개인 재정 정본 (Phase 7-5). **단위는 전부 만원이다** — money·연봉·계약금·치료비가 같은 단위여야 한다. 예전엔 치료비만 원 단위라 한 주에 자산이 0이 됐다",
+    "_scaleNote": "스케일 기준은 7-1 드래프트 계약금이다 (1순위 5억=50000). 프로 최저연봉 3000만원, 신인 자산 1200만원",
+    "_stagesNote": "주간이 아니라 **월간 값**이다. 주간 순현금 = (income − expense) / 4.33",
+    "stages": {
+      "highschool": {
+        "income": 42,
+        "expense": 18,
+        "label": "용돈 + 가족 지원"
+      },
+      "university": {
+        "income": 62,
+        "expense": 21,
+        "label": "용돈 + 장학금"
+      },
+      "military": {
+        "income": 49,
+        "expense": 13,
+        "label": "군 급여"
+      },
+      "independent": {
+        "income": 80,
+        "expense": 30,
+        "label": "독립리그 급여"
+      },
+      "pro": {
+        "income": 0,
+        "expense": 54,
+        "label": "연봉 + 스폰서"
+      }
+    },
+    "_militaryNote": "군 급여 월 49만원 = 병장 봉급 수준. 로스터 생성의 상무 연봉 300만원(연)과 같은 축이다 — 프로 최저연봉을 쓰면 안 된다",
+    "tax": {
+      "_note": "한국 소득세 근사 4구간 + 최고구간 (2026-07-31 사용자 확정). 과세표준은 **연 단위**로 잡고 주급에서 원천징수한다",
+      "brackets": [
+        {
+          "until": 1200,
+          "rate": 0.06
+        },
+        {
+          "until": 4600,
+          "rate": 0.15
+        },
+        {
+          "until": 8800,
+          "rate": 0.24
+        },
+        {
+          "until": 15000,
+          "rate": 0.35
+        },
+        {
+          "until": 0,
+          "rate": 0.38
+        }
+      ],
+      "_bracketNote": "until 0 = 상한 없음(최고구간). 누진공제 방식이라 구간을 넘어도 전액에 높은 세율이 붙지 않는다",
+      "otherIncomeRate": 0.22,
+      "_otherNote": "계약금·스폰서·CF는 기타소득 분리과세 22%. 연봉과 합산하지 않는다 — 합산하면 계약금 받은 해에 세율이 튀어 신인이 파산한다",
+      "studentExempt": true,
+      "_studentNote": "고교·대학·군 무대는 과세하지 않는다. 용돈에 세금을 매기면 숫자만 늘고 재미가 없다"
+    },
+    "sponsor": {
+      "_note": "명성 연동 4카테고리 (DESIGN §7.3). 합계가 연봉의 10~40%가 되도록 잡았다 (2026-07-31 사용자 확정) — 명성이 실제로 돈이 되지만 야구를 대체하진 않는다",
+      "proOnly": true,
+      "_proOnlyNote": "학생에게 스폰서가 붙으면 아마추어 규정 위반이다. 독립리그도 제외",
+      "maxTotalPct": 0.4,
+      "categories": [
+        {
+          "id": "LOCAL",
+          "name": "지역 상공회",
+          "fameMin": 10,
+          "pctMin": 0.03,
+          "pctMax": 0.06,
+          "termYears": 1
+        },
+        {
+          "id": "GEAR",
+          "name": "스포츠 용품",
+          "fameMin": 30,
+          "pctMin": 0.05,
+          "pctMax": 0.11,
+          "termYears": 2
+        },
+        {
+          "id": "BEVERAGE",
+          "name": "식음료 CF",
+          "fameMin": 55,
+          "pctMin": 0.07,
+          "pctMax": 0.15,
+          "termYears": 1
+        },
+        {
+          "id": "NATIONAL",
+          "name": "전국구 브랜드",
+          "fameMin": 75,
+          "pctMin": 0.1,
+          "pctMax": 0.22,
+          "termYears": 2
+        }
+      ],
+      "fameSpan": 25,
+      "_fameSpanNote": "fameMin에서 pctMin, fameMin+fameSpan 이상에서 pctMax. 문턱을 겨우 넘은 선수와 한참 위인 선수가 같은 돈을 받으면 명성이 계단이 된다",
+      "minSalaryBase": 3000,
+      "_minBaseNote": "연봉이 최저연봉이어도 스폰서가 0이 되지 않게 하는 하한. 2군 신인도 유명하면 광고가 붙는다"
+    },
+    "training": {
+      "_note": "3분야 × 2단계 (DESIGN §7.3). **보너스가 팀 자원에 반비례한다** — 시설 좋은 팀에선 개인 트레이닝의 한계효용이 낮다. 이게 성립하려면 스태프 15종 배선(F-1)이 선행돼야 했다",
+      "areas": [
+        {
+          "id": "PITCH",
+          "name": "투구 역학",
+          "target": "pitching"
+        },
+        {
+          "id": "PHYSICAL",
+          "name": "체력 관리",
+          "target": "physical"
+        },
+        {
+          "id": "MENTAL",
+          "name": "멘탈 코칭",
+          "target": "mental"
+        }
+      ],
+      "tiers": [
+        {
+          "tier": 1,
+          "weeklyCost": 15,
+          "bonus": 0.015,
+          "name": "주 1회"
+        },
+        {
+          "tier": 2,
+          "weeklyCost": 40,
+          "bonus": 0.04,
+          "name": "상시"
+        }
+      ],
+      "teamResourceInverse": 1.0,
+      "_inverseNote": "실효 보너스 = bonus × clamp(2 − 팀시설계수, 0.60, 1.40). 시설계수 1.08인 명문 구단이면 0.92배, 0.85인 약체면 1.15배. teamResourceInverse=0으로 두면 반비례가 꺼진다",
+      "_inverseFloorNote": "하한 0.60을 둔 이유: 반비례가 너무 세면 좋은 팀에 간 순간 구독이 무의미해지고, 구독 토글 자체가 죽은 UI가 된다",
+      "maxTotalBonus": 0.14,
+      "_balanceNote": "20시즌 실측(measure:finance)으로 두 번 잡은 값. 처음 0.04/0.09는 3분야 상시가 훈련 +27%가 됐다 — 스태프 15종 전체 폭이 15%인데 구독 하나가 그걸 압도하면 \"돈으로 성장을 산다\"가 지배 루프가 되고 야구를 대체하지 않는다는 전제(DESIGN §7.3)가 깨진다. 다음 0.02/0.05 + 상한 0.12는 반대 문제가 났다 — 3개 켠 순간 모든 팀이 상한에 걸려 **팀 자원 반비례가 통째로 사라졌다**. 상한이 기능을 지우면 안 된다. 지금 값은 3분야 상시 기본 12%, 반비례를 먹여 독립 13.8% ~ 명문 8.2%로 상한(14%) 아래에 전부 들어온다."
+    },
+    "investment": {
+      "_note": "시즌말 3택 (DESIGN §7.3). **원금 손실 허용** (2026-07-31 사용자 확정) — 은퇴 자산에 플레이어 판단이 실제로 반영된다. 세이브 로드로 되돌리는 문제는 시즌말 1회뿐이라 크지 않다",
+      "proOnly": true,
+      "minCash": 500,
+      "_minCashNote": "이보다 현금이 적으면 투자 선택지가 안 뜬다. 생활비도 빠듯한 신인에게 투자 화면을 띄우면 조롱이다",
+      "options": [
+        {
+          "id": "DEPOSIT",
+          "name": "예금",
+          "mean": 0.03,
+          "sd": 0.0,
+          "floor": 0.0,
+          "desc": "확정 수익. 물가만큼은 지킨다"
+        },
+        {
+          "id": "FUND",
+          "name": "펀드",
+          "mean": 0.08,
+          "sd": 0.15,
+          "floor": -0.35,
+          "desc": "평균은 예금보다 낫지만 마이너스 해도 있다"
+        },
+        {
+          "id": "VENTURE",
+          "name": "사업·주식",
+          "mean": 0.15,
+          "sd": 0.45,
+          "floor": -0.8,
+          "desc": "크게 벌거나 크게 잃는다"
+        }
+      ],
+      "_floorNote": "floor = 최대 손실률. 사업은 −80%까지 갈 수 있지만 원금이 통째로 사라지지는 않는다 — 전액 소실은 리셋 유도라 재미가 아니라 벌이다"
+    },
+    "luxury": {
+      "_note": "이벤트 선택지로만 소비된다 (DESIGN §7.3의 '가계부 없음' 원칙). 여기엔 계수만 두고 문안은 7-6 문장 뱅크가 갖는다",
+      "teammateRelationPerCost": 0.06,
+      "_relNote": "동료에게 쓴 금액 100만원당 관계도 +6. 관계도는 −100~100이라 밥 몇 번으로 절친이 되지 않는다",
+      "selfFamePerCost": 0.03,
+      "_fameNote": "자기 소비는 명성이 **성격에 따라 부호가 갈린다.** 과시형은 +, 성실형은 − (씀씀이가 구설이 된다)",
+      "selfFameSplitDiligence": 60,
+      "_splitNote": "diligence가 이 값 이상이면 자기 소비가 명성을 깎는다"
+    }
+  },
+  "campusEvents": {
+    "_note": "대학 비경기성 이벤트 2종 (Phase 7-7). 설계 근거는 docs/design/_ledger.md §A-9",
+    "_roleNote": "쇼케이스는 **주목도 급등 경로**, 올스타는 **선발 자체가 서사**다. 그래서 선발 규칙이 다르다 — 쇼케이스는 넓게(팀 추천+주목도+구단 지명), 올스타는 좁게 그러나 고르게(포지션 쿼터+대학당 캡)",
+    "showcase": {
+      "_note": "전국대학선수쇼케이스 — 8월 초 2일. Day1 워크아웃(스탯 공개) + Day2 전시경기",
+      "week": 32,
+      "perTeamRecommend": 4,
+      "_recommendNote": "50교 × 4 = 200명. **팀마다 고정 인원**이라 약팀도 무대에 선다 — 순위순으로 자르면 명문 상위권만 모여 '이미 아는 이름'만 나온다",
+      "topScoutExtra": 15,
+      "clubPicks": 8,
+      "_pickNote": "구단 지명은 남은 후보에서 무작위다. 이 경로가 '예상 밖의 이름'을 만든다 — 세 경로 합계 ~223명으로 기획(~220명)과 맞는다",
+      "attendScoutGain": 4.0,
+      "attendFameGain": 2.0,
+      "standoutScoutGain": 9.0,
+      "standoutPercent": 0.12,
+      "_gainNote": "참가만 해도 주목도 +4. Day2 상위 12%는 +13. 참가가 형식이 되면 안 되고, 그렇다고 나가기만 하면 드래프트 순위가 뒤집혀도 안 된다"
+    },
+    "allstar": {
+      "_note": "올스타전(북 vs 남) — 8월 중 1일, 9이닝 단판",
+      "week": 34,
+      "squadSize": 24,
+      "perSchoolCap": 2,
+      "_capNote": "**캡이 핵심이다.** 없으면 명문 한 곳이 라인업을 통째로 채워 '북 vs 남'이 아니라 'A대 vs B대'가 된다",
+      "requiredPositions": [
+        "C",
+        "1B",
+        "2B",
+        "3B",
+        "SS",
+        "LF",
+        "CF",
+        "RF",
+        "SP",
+        "RP"
+      ],
+      "_posNote": "각 자리를 최소 한 명은 채운다. 점수순으로만 뽑으면 OVR이 몰리는 포지션만 남아 라인업이 안 짜인다",
+      "selectFameGain": 6.0,
+      "selectPopularityGain": 8.0,
+      "mvpFameGain": 12.0,
+      "_gainNote": "선발되는 것 자체가 보상이라 참가 보너스가 쇼케이스보다 크다. 인기도가 선발 점수의 30%를 차지하므로 뽑히면 다음 해에 더 뽑히기 쉬워진다 — 의도한 양의 되먹임이다"
+    }
   }
 }

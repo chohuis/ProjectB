@@ -7,6 +7,7 @@
 // 이제 git에 남는 건 규칙뿐이고, 규칙을 고치면 새 게임에 즉시 반영된다.
 
 import type { TeamRef } from "../stores/master";
+import { setStaffEffectRules, type StaffEffectRules } from "../utils/staffEffects";
 
 export type StaffRole = "manager" | "coach" | "owner";
 
@@ -49,6 +50,9 @@ export async function loadStaffRules(): Promise<StaffRulesFile> {
   if (!raw?.rules || !raw.namePools) {
     throw new Error("[staffGen] staff_rules.json 없음 — python scripts/build_refs_from_seeds.py 실행 필요");
   }
+  // 15종 효과 계수를 소비처(staffEffects)에 한 번 주입한다.
+  // 규칙 파일을 두 번 읽지 않게 여기서만 넘긴다
+  setStaffEffectRules((raw.rules as { effects?: StaffEffectRules }).effects);
   cached = raw;
   return raw;
 }
@@ -146,24 +150,31 @@ export function staffRowToEntityRow(st: StaffRow): EntityRow {
       manager: st.role === "manager" ? {
         style: st.style,
         experienceYears: st.years,
-        // Rust ManagerStats와 같은 키. 구 JSON은 tactics/decision/... 이었고
-        // MatchPage는 handlePressure/strategy/... 를 읽어 값이 전달되지 않았다.
+        // Rust ManagerStats와 같은 키 — `staff_rules.json manager.stats`가 정본이다.
+        // 구 JSON은 tactics/decision/..., 화면은 handlePressure/strategy/... 라
+        // 세 이름이 돌아다녔고 그래서 값이 아무 데도 도달하지 않았다.
         stats: {
           tacticalIQ:     s.tacticalIQ ?? 50,
           bullpenRead:    s.bullpenRead ?? 50,
           offenseMind:    s.offenseMind ?? 50,
           motivator:      s.motivator ?? 50,
           clutchDecision: s.clutchDecision ?? 50,
-        } as unknown as EntityRow["details"]["manager"] extends null ? never : NonNullable<EntityRow["details"]["manager"]>["stats"],
+        },
         gamePlanBias: "",
         riskTolerance: st.riskTolerance,
       } as NonNullable<EntityRow["details"]["manager"]> : null,
       coach: st.role === "coach" ? {
         specialty: st.style as NonNullable<EntityRow["details"]["coach"]>["specialty"],
         experienceYears: st.years,
+        // 5종 전부 넘긴다. 예전엔 teaching/analysis만 통과시키고
+        // communication·discipline·leadership 3종을 여기서 버렸다 —
+        // 생성은 하는데 아무도 볼 수 없는 값이었다
         stats: {
-          teaching:   s.teaching ?? 50,
-          analytics:  s.analysis ?? 50,
+          teaching:      s.teaching      ?? 50,
+          analysis:      s.analysis      ?? 50,
+          communication: s.communication ?? 50,
+          discipline:    s.discipline    ?? 50,
+          leadership:    s.leadership    ?? 50,
           experience: Math.max(1, Math.min(5, Math.round(st.years / 5))),
         },
         trainingBuffs: st.trainingBuff,

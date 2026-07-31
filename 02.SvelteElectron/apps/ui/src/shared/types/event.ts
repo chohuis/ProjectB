@@ -89,6 +89,16 @@ export interface MessageTemplate {
   category: string; // 이벤트 내부 분류 (media, training 등) — eventEngine에서 MessageCategory로 매핑
   subject: string;
   body: string;
+  /**
+   * 문장 뱅크 (Phase 7-6, DESIGN §7.3). 있으면 `body` 대신 여기서 뽑고
+   * **직전에 쓴 문장을 제외**한다.
+   *
+   * **쓸 거면 3개 이상이어야 한다** — 2개면 직전 제외가 "무조건 번갈아"가 되어
+   * 랜덤이 아니라 교대가 된다. `npm run test:sentencebank`가 검사한다.
+   */
+  bodies?: string[];
+  /** 제목도 여러 벌 둘 수 있다. 같은 규칙(3개 이상) */
+  subjects?: string[];
   decisionTemplateId?: string | null;
 }
 
@@ -114,4 +124,9 @@ export interface EventContext {
   standings: Standing[];
   stats: Record<string, PlayerSeasonStats>;
   triggeredEvents: Record<string, number>;   // eventId → 마지막 발생 주차
+  /**
+   * 문장 뱅크의 "직전에 쓴 문장" 기억 (Phase 7-6). `templateId#body → index`.
+   * 세이브에 남는 값이라 로드해도 같은 문장이 이어서 나오지 않는다
+   */
+  sentenceMemory?: Record<string, number>;
 }

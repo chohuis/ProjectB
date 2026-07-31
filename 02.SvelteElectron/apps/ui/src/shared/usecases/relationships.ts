@@ -239,6 +239,8 @@ export async function applyWeeklyRelations(p: {
   week: number;
   season: number;
   ctx: WeeklyRelationContext;
+  /** 코치 소통력 계수 (§7-5 F-1). 없으면 중립 */
+  relationMod?: number;
 }): Promise<RelationDelta[]> {
   const rules = await loadRelationRules();
   const rows = await slotRepo.getRelationships(p.slotId, { contact: "together" });
@@ -293,6 +295,7 @@ export async function applyWeeklyRelations(p: {
     rules,
     rows: toEngineRows(rows, specialtyOf),
     ctx: p.ctx,
+    relationMod: p.relationMod ?? 1.0,
   });
   const deltas = res?.deltas ?? [];
   if (deltas.length === 0) return [];
@@ -456,12 +459,16 @@ export interface RelationEffects {
   roleOvrBias: number;
   /** 훈련 효율 배율에 더할 값 (0.04 = +4%p) */
   trainingBonus: number;
+  /** 재계약 오퍼 배율에 더할 값 (0.06 = +6%) — 구단주 관계 (§7-5 F-4) */
+  contractBonus: number;
   managerLabel: string;
   coachLabel: string;
+  ownerLabel: string;
 }
 
 const NEUTRAL_EFFECTS: RelationEffects = {
-  roleOvrBias: 0, trainingBonus: 0, managerLabel: "중립", coachLabel: "중립",
+  roleOvrBias: 0, trainingBonus: 0, contractBonus: 0,
+  managerLabel: "중립", coachLabel: "중립", ownerLabel: "중립",
 };
 
 /**
@@ -485,6 +492,9 @@ export async function relationEffects(p: {
     if (rows.length === 0) return NEUTRAL_EFFECTS;
 
     const managerValue = rows.find((r) => r.kind === "manager")?.value ?? 0;
+    // 구단주 관계는 재계약 오퍼에 쓴다 (§7-5 F-4). 7-4에서는 방출 판정에만
+    // 쓰였고, 그러면 "나를 싫어하는 구단주"가 자르기만 하고 계약엔 무관해진다
+    const ownerValue = rows.find((r) => r.kind === "owner")?.value ?? 0;
 
     let coachValue = 0;
     if (p.coachSpecialty) {
@@ -500,9 +510,9 @@ export async function relationEffects(p: {
     }
 
     const res = await callEngine<{
-      roleOvrBias: number; trainingBonus: number;
-      managerLabel: string; coachLabel: string;
-    }>("relationEffectsNative", { rules, managerValue, coachValue });
+      roleOvrBias: number; trainingBonus: number; contractBonus: number;
+      managerLabel: string; coachLabel: string; ownerLabel: string;
+    }>("relationEffectsNative", { rules, managerValue, coachValue, ownerValue });
     return res ?? NEUTRAL_EFFECTS;
   } catch (e) {
     // 관계를 못 읽으면 중립으로 돈다 — 보정이 없는 게 임의 보정보다 낫다

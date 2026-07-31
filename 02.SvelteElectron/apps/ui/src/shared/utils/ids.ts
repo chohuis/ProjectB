@@ -33,6 +33,26 @@ export function farmTeamId(teamId: string): string | null {
 }
 
 /**
+ * 리그 ID → 시설 등급. Rust `facility_factor`가 받는 5종과 같은 문자열이다.
+ *
+ * ⚠ **`TeamRef.tier`를 쓰면 안 된다.** refs.json의 국내 182팀에는 그 필드가 아예
+ * 없고(값이 있는 건 범위 밖인 해외 56팀뿐), `?? "독립"` 폴백이 걸려 있었다.
+ * 그래서 국내 NPC 5,600명이 전부 `facility_factor("독립") = 0.78`로 성장하고
+ * 있었다 — 고교(1.08)·프로1군(1.00)이 있어야 할 자리다.
+ */
+export function facilityTierOf(leagueId: string): string {
+  switch (leagueId) {
+    case "LEAGUE_HIGHSCHOOL":  return "고교";
+    case "LEAGUE_UNIVERSITY":  return "대학";
+    case "LEAGUE_KBL":         return "1군";
+    case "LEAGUE_KBL_FARM":    return "2군";
+    case "LEAGUE_ABL":
+    case "LEAGUE_JBL":         return "1군";
+    default:                   return "독립";
+  }
+}
+
+/**
  * 부팅 무결성 검증 — 코드 상수(leagueScheduler 팀 목록)가 refs.json 팀과 일치하는지,
  * 프로 1군 팀마다 _2 팜 팀이 refs에 존재하는지 확인한다.
  * 위반 시 콘솔 에러 + 위반 목록 반환 (게임은 계속 — 개발 중 조기 발견 목적).

@@ -119,7 +119,6 @@ contextBridge.exposeInMainWorld("projectB", {
   postseasonMakeGame:   (p) => ipcRenderer.invoke("engine:call", "makeSeriesGameNative",   p),
   postseasonShuffleAbl: (p) => ipcRenderer.invoke("engine:call", "shuffleAblConferencesNative", p),
   weekCalcFacilityEff:   (p) => ipcRenderer.invoke("engine:call", "weekCalcFacilityEffNative",   p),
-  weekCalcWeeklyNet:     (p) => ipcRenderer.invoke("engine:call", "weekCalcWeeklyNetNative",     p),
   weekCalcInjury:        (p) => ipcRenderer.invoke("engine:call", "weekCalcInjuryNative",        p),
   weekCalcHsAdmissions:  (p) => ipcRenderer.invoke("engine:call", "weekCalcHsAdmissionsNative",  p),
   weekCalcTradeRumor:    (p) => ipcRenderer.invoke("engine:call", "weekCalcTradeRumorNative",    p),

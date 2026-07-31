@@ -87,6 +87,11 @@ pub struct EvalCallupParams {
     /// 성적 반영 규칙. 안 넘어오면 기본값(성적을 보긴 하되 보수적)
     #[serde(default)]
     pub promotion_rules: Option<PromotionRules>,
+    /// 감독 `clutchDecision` 계수 (1.0 = 중립). **성적을 얼마나 정확히 읽는가**다.
+    /// 낮으면 최근 성적이 판단에 거의 안 들어가 이름값(OVR)만 보고 올린다.
+    /// 스태프 15종 배선(§7-5 F-1)
+    #[serde(default)]
+    pub callup_mod: Option<f64>,
 }
 
 #[derive(Debug, Serialize)]
@@ -163,7 +168,8 @@ fn rated(pl: &RosterPlayerRef, r: &PromotionRules) -> f64 {
 
 pub fn eval_callup_candidates(p: EvalCallupParams) -> EvalCallupResult {
     let profile = &p.team_profile;
-    let rules = p.promotion_rules.clone().unwrap_or_default();
+    let mut rules = p.promotion_rules.clone().unwrap_or_default();
+    rules.form_weight *= p.callup_mod.unwrap_or(1.0).clamp(0.70, 1.30);
     let mut candidates = Vec::new();
     let threshold = 10.0 - (profile.win_now_pressure * 0.05);
 
@@ -226,6 +232,9 @@ pub struct EvalCalldownParams {
     pub max_roster_size: i32,
     #[serde(default)]
     pub promotion_rules: Option<PromotionRules>,
+    /// 감독 `clutchDecision` 계수 — 콜업과 같은 축이다 (§7-5 F-1)
+    #[serde(default)]
+    pub callup_mod: Option<f64>,
 }
 
 #[derive(Debug, Serialize)]
@@ -242,7 +251,8 @@ pub struct EvalCalldownResult {
 }
 
 pub fn eval_calldown_candidates(p: EvalCalldownParams) -> EvalCalldownResult {
-    let rules = p.promotion_rules.clone().unwrap_or_default();
+    let mut rules = p.promotion_rules.clone().unwrap_or_default();
+    rules.form_weight *= p.callup_mod.unwrap_or(1.0).clamp(0.70, 1.30);
     let over = (p.current_roster_size - p.max_roster_size).max(0) as usize;
     let mut scored: Vec<(String, f64)> = p.active_players.iter().map(|pl| {
         // 성적을 반영한 값으로 본다 — 능력치만 보면 부진한 고연봉 베테랑이

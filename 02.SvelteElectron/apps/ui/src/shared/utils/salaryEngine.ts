@@ -28,6 +28,8 @@ export async function calcOfferedSalary(
 export async function calcOfferedSalaryForProtagonist(
   protagonist: ProtagonistSave,
   seasonStats: PitcherSeasonStats | null,
+  /** 구단주 budgetSupport 계수 (§7-5 F-1). 없으면 중립 */
+  budgetMod = 1.0,
 ): Promise<number> {
   const params = {
     pitchingOvr:   protagonist.pitching.ovr,
@@ -35,6 +37,7 @@ export async function calcOfferedSalaryForProtagonist(
     leagueId:      protagonist.leagueId,
     currentSalary: protagonist.contract?.salary ?? null,
     stats:         seasonStats ?? null,
+    budgetMod,
   };
   const raw = await window.projectB!.salaryCalcOfferedSalaryForProtagonist(
     JSON.stringify(params)

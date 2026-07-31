@@ -32,6 +32,8 @@ mod military_roster;
 mod draft;
 mod national_team;
 mod free_agency;
+mod finance;
+mod campus_events;
 
 use types::*;
 use sim_types::*;
@@ -283,6 +285,88 @@ pub fn resolve_fa_market_native(params_json: String) -> String {
     };
     let result = free_agency::resolve_market(params);
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("resolveFaMarketNative/serialize", e))
+}
+
+// ── 개인 재정 (Phase 7-5 F-3) ─────────────────────────────────
+//
+// 화면은 결과를 **표시만** 한다. 예전 FinancePage는 Svelte 안에서 OVR·사기로
+// 수입을 즉석 계산해 `money`와 무관한 숫자를 보여주고 있었다.
+
+/// 주간 수입·지출·세금. `money`에 더할 순현금을 낸다
+#[napi]
+pub fn calc_weekly_finance_native(params_json: String) -> String {
+    let params: finance::WeeklyFinanceParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("calcWeeklyFinanceNative", e),
+    };
+    serde_json::to_string(&finance::calc_weekly_finance(params))
+        .unwrap_or_else(|e| parse_err("calcWeeklyFinanceNative/serialize", e))
+}
+
+/// 명성 연동 스폰서 오퍼. 학생·독립은 빈 결과 (아마추어 규정)
+#[napi]
+pub fn calc_sponsor_offers_native(params_json: String) -> String {
+    let params: finance::SponsorOfferParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("calcSponsorOffersNative", e),
+    };
+    serde_json::to_string(&finance::calc_sponsor_offers(params))
+        .unwrap_or_else(|e| parse_err("calcSponsorOffersNative/serialize", e))
+}
+
+/// 개인 트레이닝 구독 보너스 — **팀 자원에 반비례**한다
+#[napi]
+pub fn calc_training_bonus_native(params_json: String) -> String {
+    let params: finance::TrainingBonusParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("calcTrainingBonusNative", e),
+    };
+    serde_json::to_string(&finance::calc_training_bonus(params))
+        .unwrap_or_else(|e| parse_err("calcTrainingBonusNative/serialize", e))
+}
+
+/// 시즌말 투자 정산. 원금 손실 가능, 전액 소실은 없음
+#[napi]
+pub fn resolve_investment_native(params_json: String) -> String {
+    let params: finance::InvestmentParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("resolveInvestmentNative", e),
+    };
+    serde_json::to_string(&finance::resolve_investment(params))
+        .unwrap_or_else(|e| parse_err("resolveInvestmentNative/serialize", e))
+}
+
+/// 사치품 소비 — 동료면 관계도, 자기 소비면 성격에 따라 명성 ±
+#[napi]
+pub fn calc_luxury_native(params_json: String) -> String {
+    let params: finance::LuxuryParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("calcLuxuryNative", e),
+    };
+    serde_json::to_string(&finance::calc_luxury(params))
+        .unwrap_or_else(|e| parse_err("calcLuxuryNative/serialize", e))
+}
+
+// ── 대학 비경기성 이벤트 (Phase 7-7) ─────────────────────────
+
+/// 전국대학선수쇼케이스 — 팀 추천 + 주목도 상위 + 구단 지명 세 경로
+#[napi]
+pub fn run_showcase_native(params_json: String) -> String {
+    let params: campus_events::ShowcaseParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v, Err(e) => return parse_err("runShowcaseNative", e),
+    };
+    serde_json::to_string(&campus_events::run_showcase(params))
+        .unwrap_or_else(|e| parse_err("runShowcaseNative/serialize", e))
+}
+
+/// 대학 올스타전(북 vs 남) — 포지션 쿼터 + 대학당 캡
+#[napi]
+pub fn run_allstar_native(params_json: String) -> String {
+    let params: campus_events::AllStarParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v, Err(e) => return parse_err("runAllstarNative", e),
+    };
+    serde_json::to_string(&campus_events::run_allstar(params))
+        .unwrap_or_else(|e| parse_err("runAllstarNative/serialize", e))
 }
 
 /// 국가대표 발탁 — 그 해 대회가 없으면 빈 결과
@@ -1045,15 +1129,6 @@ pub fn week_calc_facility_eff_native(p: String) -> String {
     };
     serde_json::to_string(&week_engine::calc_facility_eff(params))
         .unwrap_or_else(|e| parse_err("weekCalcFacilityEffNative/serialize", e))
-}
-
-#[napi]
-pub fn week_calc_weekly_net_native(p: String) -> String {
-    let params: week_engine::WeeklyNetPayload = match serde_json::from_str(&p) {
-        Ok(v) => v, Err(e) => return parse_err("weekCalcWeeklyNetNative", e),
-    };
-    serde_json::to_string(&week_engine::calc_weekly_net(params))
-        .unwrap_or_else(|e| parse_err("weekCalcWeeklyNetNative/serialize", e))
 }
 
 #[napi]

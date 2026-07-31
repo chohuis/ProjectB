@@ -196,6 +196,9 @@ pub struct SeasonRules {
 pub struct EffectRules {
     pub manager_role_ovr_per_step: f64,
     pub coach_training_per_step: f64,
+    /// 구단주 관계 → 재계약 오퍼 배율. 없으면 0(효과 없음)
+    #[serde(default)]
+    pub owner_contract_per_step: f64,
 }
 
 #[derive(Debug, Deserialize, Clone)]
@@ -221,6 +224,9 @@ pub struct RelationEffectParams {
     /// 이번 주 담당 영역 코치의 관계값
     #[serde(default)]
     pub coach_value: i32,
+    /// 구단주 관계값. 재계약 오퍼에 쓴다 (§7-5 F-4)
+    #[serde(default)]
+    pub owner_value: i32,
 }
 
 #[derive(Debug, Serialize)]
@@ -230,23 +236,31 @@ pub struct RelationEffectResult {
     pub role_ovr_bias: f64,
     /// 훈련 효율 배율에 더할 값 (0.04 = +4%p)
     pub training_bonus: f64,
+    /// 재계약 오퍼 배율에 더할 값 (0.06 = +6%)
+    pub contract_bonus: f64,
     pub manager_step: i32,
     pub coach_step: i32,
+    pub owner_step: i32,
     pub manager_label: String,
     pub coach_label: String,
+    pub owner_label: String,
 }
 
 pub fn relation_effects(p: RelationEffectParams) -> RelationEffectResult {
     let e = &p.rules.effect;
     let m_step = label_step(p.manager_value);
     let c_step = label_step(p.coach_value);
+    let o_step = label_step(p.owner_value);
     RelationEffectResult {
         role_ovr_bias: m_step as f64 * e.manager_role_ovr_per_step,
         training_bonus: c_step as f64 * e.coach_training_per_step,
+        contract_bonus: o_step as f64 * e.owner_contract_per_step,
         manager_step: m_step,
         coach_step: c_step,
+        owner_step: o_step,
         manager_label: relation_label(p.manager_value).0.to_string(),
         coach_label: relation_label(p.coach_value).0.to_string(),
+        owner_label: relation_label(p.owner_value).0.to_string(),
     }
 }
 
@@ -308,6 +322,11 @@ pub struct WeeklyRelationParams {
     pub rules: RelationRules,
     pub rows: Vec<RelationRow>,
     pub ctx: WeeklyContext,
+    /// 코치 `communication` 계수 (1.0 = 중립). 관계가 쌓이는 속도를 민다.
+    /// **양수 변화에만 곱한다** — 소통 좋은 코치진이라고 미움도 빨리 쌓이면
+    /// 방향이 뒤집힌다. 스태프 15종 배선(§7-5 F-1)
+    #[serde(default)]
+    pub relation_mod: Option<f64>,
 }
 
 #[derive(Debug, Serialize)]
@@ -410,6 +429,9 @@ pub fn weekly_relations(p: WeeklyRelationParams) -> WeeklyRelationResult {
         }
 
         if d == 0.0 { continue; }
+        if d > 0.0 {
+            d *= p.relation_mod.unwrap_or(1.0).clamp(0.75, 1.30);
+        }
         deltas.push(make_delta(&row.person_id, row.value, row.value + d));
     }
 
@@ -660,14 +682,11 @@ mod tests {
         let r = rules();
         let per = r.effect.manager_role_ovr_per_step;
         let close = relation_effects(RelationEffectParams {
-            rules: r.clone(), manager_value: 80, coach_value: 80,
-        });
+            rules: r.clone(), manager_value: 80, coach_value: 80, owner_value: 0 });
         let hostile = relation_effects(RelationEffectParams {
-            rules: r.clone(), manager_value: -80, coach_value: -80,
-        });
+            rules: r.clone(), manager_value: -80, coach_value: -80, owner_value: 0 });
         let neutral = relation_effects(RelationEffectParams {
-            rules: r.clone(), manager_value: 0, coach_value: 0,
-        });
+            rules: r.clone(), manager_value: 0, coach_value: 0, owner_value: 0 });
         assert_eq!(close.role_ovr_bias, per * 3.0, "각별이 최대 보정이 아니다");
         assert_eq!(hostile.role_ovr_bias, -per * 3.0);
         assert_eq!(neutral.role_ovr_bias, 0.0, "중립이 0이 아니다");
@@ -730,6 +749,7 @@ mod tests {
                 training_done: true, training_area: "투수".to_string(),
                 ..Default::default()
             },
+            relation_mod: None,
         });
         assert_eq!(out.deltas.len(), 1, "담당 아닌 코치까지 움직였다");
         assert_eq!(out.deltas[0].person_id, "COA_P");
@@ -748,6 +768,7 @@ mod tests {
             world_seed: 1.0, week: 5, rules: r,
             rows: vec![apart, ended, row("MGR_3", "manager", 40.0)],
             ctx: WeeklyContext { pitched: true, won: true, era: 1.5, ..Default::default() },
+            relation_mod: None,
         });
         assert_eq!(out.deltas.len(), 1, "together가 아닌 상대가 움직였다");
         assert_eq!(out.deltas[0].person_id, "MGR_3");
@@ -820,6 +841,7 @@ mod tests {
                     training_done: true,
                     ..Default::default()
                 },
+                relation_mod: None,
             });
             if let Some(d) = out.deltas.first() { value = d.value as f64; }
         }
@@ -852,6 +874,7 @@ mod tests {
                     training_skipped: true,
                     ..Default::default()
                 },
+                relation_mod: None,
             });
             if let Some(d) = out.deltas.first() { value = d.value as f64; }
         }
@@ -875,6 +898,7 @@ mod tests {
                 pitched: true, won: true, era: 1.0,
                 faced_rivals: ids, ..Default::default()
             },
+            relation_mod: None,
         });
         let pos = out.deltas.iter().filter(|d| d.delta > 0).count();
         let neg = out.deltas.iter().filter(|d| d.delta < 0).count();
@@ -894,6 +918,7 @@ mod tests {
                     pitched: true, won: true, era: 0.5, complete_shutout: true,
                     ..Default::default()
                 },
+                relation_mod: None,
             });
             if let Some(d) = out.deltas.first() { value = d.value as f64; }
         }

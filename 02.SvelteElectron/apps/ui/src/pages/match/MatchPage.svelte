@@ -690,13 +690,12 @@
       const myManagerEntity = get(masterStore).entities.find(
         (e) => e.role === "manager" && e.teamId === myTeamId
       );
-      const myManagerStats = myManagerEntity ? {
-        bullpenRead:    myManagerEntity.details.manager.riskTolerance,
-        clutchDecision: myManagerEntity.details.manager.stats.handlePressure,
-        tacticalIQ:     myManagerEntity.details.manager.stats.strategy,
-        motivator:      myManagerEntity.details.manager.stats.motivation,
-        offenseMind:    myManagerEntity.details.manager.stats.strategy,
-      } : undefined;
+      // Rust ManagerStats와 키가 같으므로 그대로 넘긴다. 예전엔 옛 키를 새 키에
+      // 별칭으로 붙이고 있었는데 옛 키가 이미 없어서 5종 중 4종이 undefined였다 —
+      // JSON.stringify가 그 키를 지워 Rust는 매 경기 기본값으로 돌았다
+      const myManagerStats = myManagerEntity?.details.manager
+        ? { ...myManagerEntity.details.manager.stats }
+        : undefined;
       const response = await window.projectB.matchStart({
         // 투구수 상한이 리그별이다 — 고교 105 / 그 외 120 (Phase 5-8)
         leagueId: $gameStore.protagonist.leagueId,

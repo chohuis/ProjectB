@@ -908,6 +908,77 @@ function createGameStore() {
       });
     },
 
+    /**
+     * 재정 상태 패처 (Phase 7-5). **계산은 `usecases/finance.ts`가 한다** —
+     * 여기는 store 규칙대로 얇은 패처만이다 (CLAUDE.md).
+     */
+    patchFinance(fn: (f: import("../usecases/finance").FinanceState) => import("../usecases/finance").FinanceState) {
+      update((s) => ({
+        ...s,
+        protagonist: {
+          ...s.protagonist,
+          finance: fn({
+            sponsors: [], subscriptions: [], investments: [], taxPaid: 0, lastOfferSeason: 0,
+            ...(s.protagonist.finance ?? {}),
+          }),
+        },
+      }));
+    },
+
+    /** 투자 정산 — 손익을 자산에 반영하고 이력을 남긴다 */
+    applyInvestmentResult(entry: {
+      season: number; optionId: string; name: string;
+      principal: number; rate: number; profit: number;
+    }) {
+      update((s) => {
+        const f = {
+          sponsors: [], subscriptions: [], investments: [], taxPaid: 0, lastOfferSeason: 0,
+          ...(s.protagonist.finance ?? {}),
+        };
+        return {
+          ...s,
+          protagonist: {
+            ...s.protagonist,
+            money: Math.max(0, s.protagonist.money + entry.profit),
+            finance: { ...f, investments: [...f.investments, entry] },
+          },
+        };
+      });
+    },
+
+    /** 주목도 패처 (Phase 7-7). 쇼케이스·스카우트 데이가 쓴다 */
+    applyScoutScoreChange(delta: number) {
+      update((s) => ({
+        ...s,
+        protagonist: {
+          ...s.protagonist,
+          scoutScore: Math.max(0, Math.min(100, s.protagonist.scoutScore + delta)),
+        },
+      }));
+    },
+
+    /** 인기도 패처 (Phase 7-7). 올스타 선발이 쓴다 */
+    applyPopularityChange(delta: number) {
+      update((s) => ({
+        ...s,
+        protagonist: {
+          ...s.protagonist,
+          popularity: Math.max(0, Math.min(100, s.protagonist.popularity + delta)),
+        },
+      }));
+    },
+
+    /** 명성 패처 (Phase 7-6c). 사치품·이벤트가 쓴다 */
+    applyFameChange(delta: number) {
+      update((s) => ({
+        ...s,
+        protagonist: {
+          ...s.protagonist,
+          fame: Math.max(0, Math.min(200, s.protagonist.fame + delta)),
+        },
+      }));
+    },
+
     applyMoneyChange(delta: number) {
       update((s) => ({
         ...s,

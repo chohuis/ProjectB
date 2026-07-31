@@ -1,4 +1,5 @@
 import { get } from "svelte/store";
+import { applyDecision } from "./decisions";
 import { gameStore } from "../stores/game";
 import { seasonStore, nextPendingAction, seasonEnded } from "../stores/season";
 import { masterStore } from "../stores/master";
@@ -148,7 +149,7 @@ async function handleMessage(messageId: string): Promise<void> {
 
   if (msg.decision && msg.decision.selectedOptionId === null) {
     const choiceId = pickChoice(msg.decision.options, g.protagonist.fatigue);
-    gameStore.resolveDecision(messageId, choiceId);
+    await applyDecision(messageId, choiceId);
   }
 
   seasonStore.resolvePendingAction("message", messageId);

@@ -4,6 +4,7 @@ import { masterStore } from "../stores/master";
 import { seasonStore } from "../stores/season";
 import { checkAchievements, computeMetrics } from "../utils/achievementEngine";
 import { calcGameGrowth } from "../utils/growthEngine";
+import { staffModsOf } from "../utils/staffEffects";
 import { simulateGame } from "../utils/gameSimulator";
 import type { MatchResult, PitcherGameLine, PlayerCondition, UnifiedGameOutcome } from "../types/season";
 import { buildFriendlyResultMessage, buildOfficialResultMessage, ratePerformance, type PitcherRole } from "../utils/friendlyMatchEngine";
@@ -209,7 +210,9 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
   const myScore = outcome.homeTeamId === myTeamId ? outcome.homeScore : outcome.awayScore;
   const oppScore = outcome.homeTeamId === myTeamId ? outcome.awayScore : outcome.homeScore;
   const diff = Math.abs(myScore - oppScore);
-  const growth = await calcGameGrowth(protagonist, won, diff, outcome.strikeouts);
+  // 감독 동기부여가 사기 변동폭을, 구단주 홍보력이 명성 변동폭을 민다 (§7-5 F-1)
+  const myMods = staffModsOf(myTeamId ?? "", get(masterStore).entities, { specialty: "투수" });
+  const growth = await calcGameGrowth(protagonist, won, diff, outcome.strikeouts, myMods);
   const teamById = new Map(get(masterStore).teams.map((t) => [t.id, t.name]));
   const awayTeamName = teamById.get(outcome.awayTeamId) ?? outcome.awayTeamId;
   const homeTeamName = teamById.get(outcome.homeTeamId) ?? outcome.homeTeamId;

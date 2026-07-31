@@ -782,7 +782,9 @@
                   <div class="stat-grid g4">
                     {#each [
                       ["전문", mc.specialty], ["지도력", mc.stats?.teaching],
-                      ["분석", mc.stats?.analytics], ["경험레벨", mc.stats?.experience],
+                      ["분석", mc.stats?.analysis], ["소통", mc.stats?.communication],
+                      ["관리", mc.stats?.discipline], ["통솔", mc.stats?.leadership],
+                      ["경험레벨", mc.stats?.experience],
                     ] as [lbl, val]}
                       <div class="sc">
                         <span class="sc-lbl">{lbl}</span>
@@ -796,9 +798,9 @@
                   <h4>감독 능력치</h4>
                   <div class="stat-grid g4">
                     {#each [
-                      ["동기부여", mm.stats?.motivation], ["선수육성", mm.stats?.development],
-                      ["전술", mm.stats?.strategy], ["위기대처", mm.stats?.handlePressure],
-                      ["선수기용", mm.stats?.handlePersonnel],
+                      ["전술", mm.stats?.tacticalIQ], ["불펜운용", mm.stats?.bullpenRead],
+                      ["타선운용", mm.stats?.offenseMind], ["동기부여", mm.stats?.motivator],
+                      ["승부처", mm.stats?.clutchDecision],
                     ] as [lbl, val]}
                       <div class="sc">
                         <span class="sc-lbl">{lbl}</span>

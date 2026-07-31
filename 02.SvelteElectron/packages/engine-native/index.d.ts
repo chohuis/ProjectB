@@ -47,6 +47,20 @@ export declare function npcCalcWeeklyGrowth(paramsJson: string): string
 export declare function generateFreshmenNative(paramsJson: string): string
 /** FA 시장 정산 — 등급·계약·보상선수를 한 번에 */
 export declare function resolveFaMarketNative(paramsJson: string): string
+/** 주간 수입·지출·세금. `money`에 더할 순현금을 낸다 */
+export declare function calcWeeklyFinanceNative(paramsJson: string): string
+/** 명성 연동 스폰서 오퍼. 학생·독립은 빈 결과 (아마추어 규정) */
+export declare function calcSponsorOffersNative(paramsJson: string): string
+/** 개인 트레이닝 구독 보너스 — **팀 자원에 반비례**한다 */
+export declare function calcTrainingBonusNative(paramsJson: string): string
+/** 시즌말 투자 정산. 원금 손실 가능, 전액 소실은 없음 */
+export declare function resolveInvestmentNative(paramsJson: string): string
+/** 사치품 소비 — 동료면 관계도, 자기 소비면 성격에 따라 명성 ± */
+export declare function calcLuxuryNative(paramsJson: string): string
+/** 전국대학선수쇼케이스 — 팀 추천 + 주목도 상위 + 구단 지명 세 경로 */
+export declare function runShowcaseNative(paramsJson: string): string
+/** 대학 올스타전(북 vs 남) — 포지션 쿼터 + 대학당 캡 */
+export declare function runAllstarNative(paramsJson: string): string
 /** 국가대표 발탁 — 그 해 대회가 없으면 빈 결과 */
 export declare function selectNationalSquadNative(paramsJson: string): string
 /** 국제대회 결과 — 경기는 시뮬하지 않고 대표팀 전력으로 순위를 뽑는다 */
@@ -174,7 +188,6 @@ export declare function resolveNonProtagonistSeriesNative(p: string): string
 export declare function makeSeriesGameNative(p: string): string
 export declare function shuffleAblConferencesNative(p: string): string
 export declare function weekCalcFacilityEffNative(p: string): string
-export declare function weekCalcWeeklyNetNative(p: string): string
 export declare function weekCalcInjuryNative(p: string): string
 export declare function weekCalcHsAdmissionsNative(p: string): string
 export declare function weekCalcTradeRumorNative(p: string): string

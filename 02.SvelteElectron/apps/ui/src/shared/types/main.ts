@@ -36,6 +36,34 @@ export interface DecisionEffect {
   popularityDelta?: number;                  // 인기도 ± (0~100 clamp)
   diligenceDelta?:  number;                  // 성실도 ± (1~99 clamp)
   addTag?:          string[];                // 태그 추가 (중복 무시)
+
+  /**
+   * 관계도 변화 (Phase 7-6c). **`effectHint`와 반드시 일치시킬 것.**
+   *
+   * 6C가 걷어낸 감정 문구는 힌트에 "trust +5"라고 적어놓고 실제로는 사기·피로만
+   * 움직였다 — 표시와 동작이 달랐다. 그 결함을 되풀이하지 않으려고 만든 필드다.
+   *
+   * `personId`를 비우면 그 종류의 현재 접촉 중인 첫 상대 (감독·구단주는 팀당 1명).
+   */
+  relationDelta?: {
+    kind: import("./relationship").RelationKind;
+    personId?: string;
+    delta: number;
+  };
+
+  /**
+   * 사치품 소비 (Phase 7-5 F-3 → 7-6c 배선). **`moneyDelta`와 같이 쓰지 않는다**
+   * — 금액은 여기서 빠지므로 둘 다 적으면 두 번 빠진다.
+   *
+   * 관계도·명성 변화는 Rust `calc_luxury`가 정한다. 자기 소비는 성격에 따라
+   * 명성의 **부호가 갈린다** (성실한 선수의 씀씀이는 구설이 된다).
+   */
+  luxurySpend?: {
+    cost: number;
+    onTeammate: boolean;
+    /** 동료 지목. 비우면 접촉 중인 첫 동료 */
+    personId?: string;
+  };
 }
 
 export interface MessageDecisionOption {

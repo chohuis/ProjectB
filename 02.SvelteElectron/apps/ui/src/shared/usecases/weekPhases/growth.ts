@@ -4,6 +4,8 @@ import { gameStore } from "../../stores/game";
 import { masterStore } from "../../stores/master";
 import { getLeagueRadius } from "../../utils/radiusGate";
 import { slotRepo } from "../../repo/slotRepo";
+import { facilityTierOf } from "../../utils/ids";
+import { staffStatsOf, factorOf } from "../../utils/staffEffects";
 import type { CareerStage } from "../../types/save";
 
 // ── NPC 월간 성장 헬퍼 ────────────────────────────────────────
@@ -58,15 +60,21 @@ export async function processWeeklyNpcGrowth(weekNum: number, careerStage: Caree
 
   const currentPhase = s.schedule.find((e) => e.week === weekNum)?.phase ?? "offseason";
 
-  // 팀 컨텍스트 — 코치/감독 능력치 반영
+  // 팀 컨텍스트 — 시설·감독·코치가 NPC 성장 속도를 정한다.
+  //
+  // 고친 것 둘:
+  //  1. `t.tier`는 국내 팀에 없는 필드라 182팀 전부 "독립"(0.78)으로 떨어졌었다.
+  //     리그에서 파생한다 (`facilityTierOf`)
+  //  2. `manager.stats.development`는 존재하지 않는 키라 항상 50이었다.
+  //     감독이 성장에 기여하는 축은 `motivator`다 (staff_rules.json 정본 5종)
   const teamContexts = m.teams.map((t) => {
-    const mgr   = m.entities.find((e) => e.role === "manager" && e.teamId === t.id);
-    const coach = m.entities.find((e) => e.role === "coach"   && e.teamId === t.id);
+    const staff = staffStatsOf(t.id, m.entities);
     return {
       teamId: t.id,
-      facilityTier: t.tier ?? "독립",
-      managerDevelopment: (mgr?.details as any)?.manager?.stats?.development ?? 50,
-      coachTeaching:      (coach?.details as any)?.coach?.stats?.teaching    ?? 50,
+      facilityTier: facilityTierOf(t.leagueId),
+      managerDevelopment: staff.motivator,
+      // 시설 투자에 적극적인 구단주면 코치 지도력이 더 먹힌다
+      coachTeaching: staff.teaching * factorOf("facilityInvestment", staff.facilityInvestment),
     };
   });
 
