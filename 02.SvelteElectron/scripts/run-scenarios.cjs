@@ -25,12 +25,15 @@ const WEEKS = i !== -1 ? (Number(process.argv[i + 1]) || 0) : 0;
       await app.autoRun();
       if (app.currentWeek() <= before) {
         if (app.pendingKind() === "draftObserve") { await app.skipDraftObserve(); continue; }
+        // 진로 pending — 사용자가 누를 자리를 대신 눌러 프로까지 민다
+        const done = await app.pushCareerForward();
+        if (done) { process.stderr.write(`  [진로] ${done} → ${app.careerStage()}\n`); continue; }
         if (app.isSeasonEnded()) { await app.seasonRollover(); continue; }
         process.stderr.write(`  W${before}에서 정지: ${app.pendingKind()}\n`);
         break;
       }
     }
-    process.stderr.write(`  W${app.currentWeek()} 도달\n`);
+    process.stderr.write(`  W${app.currentWeek()} 도달 · ${app.careerStage()}\n`);
   }
 
   console.log(await app.runScenarios());

@@ -23,6 +23,10 @@ import { runSeasonRollover } from "../../apps/ui/src/shared/usecases/seasonRollo
 import { processTradeWindow } from "../../apps/ui/src/shared/usecases/weekPhases/market";
 import { runDevScenarios } from "../../apps/ui/src/shared/usecases/devScenarios";
 import { runCampusEventsWeek } from "../../apps/ui/src/shared/usecases/campusEvents";
+import {
+  submitCareerApplications, confirmCareerResults, chooseDraft,
+  chooseSchoolOrIndependent, acceptDraftOffer,
+} from "../../apps/ui/src/shared/usecases/careerDecision";
 import { slotRepo } from "../../apps/ui/src/shared/repo/slotRepo";
 import { dehydrateToRepo } from "../../apps/ui/src/shared/repo/npcAdapter";
 import type { ProtagonistSave } from "../../apps/ui/src/shared/types/save";
@@ -187,6 +191,69 @@ export async function skipDraftObserve(): Promise<void> {
   await seasonStore.save();
 }
 
+/**
+ * 진로 pending을 "눌러준다" — 드래프트 지원 → 결과 확인 → 지명 수락.
+ *
+ * 각 단계는 `usecases/careerDecision.ts`를 그대로 부른다. 여기서 하는 건
+ * **사용자가 어느 버튼을 눌렀는지 고르는 것**뿐이다.
+ *
+ * 왜 필요한가: 고교 졸업 이후 경로가 자동 검증에서 통째로 비어 있었다.
+ * 시나리오의 "투자 3택"이 영영 SKIP이었고, **프로 단계 트레이드 윈도우도
+ * 한 번도 안 돌아봤다** — 거기가 P8-2a의 낡은 읽기를 고친 자리다.
+ *
+ * @returns 처리한 pending 종류. null이면 아는 진로 pending이 아니다
+ */
+export async function pushCareerForward(): Promise<string | null> {
+  const pa = get(nextPendingAction);
+  if (!pa) return null;
+
+  switch (pa.type) {
+    case "careerChoiceHub": {
+      // 드래프트 + 폴백(대학·독립)을 같이 넣는다.
+      //
+      // 드래프트만 넣으면 미지명 시 갈 곳이 없어 **현역 입대로 빠지고**
+      // 프로 경로 계측이 거기서 끝난다 (실제로 그렇게 막혔다).
+      // 실제 플레이어도 보통 폴백을 같이 넣는다.
+      const teams = get(masterStore).teams;
+      const pick = (leagueId: string) =>
+        teams.filter((t) => t.leagueId === leagueId).map((t) => t.id).sort().slice(0, 3);
+      await submitCareerApplications({
+        draft: true,
+        universityChoices: pick("LEAGUE_UNIVERSITY"),
+        independentChoices: pick("LEAGUE_INDEPENDENT"),
+      });
+      return "careerChoiceHub";
+    }
+
+    case "careerResults":
+      await confirmCareerResults();
+      return "careerResults";
+
+    case "careerChoice": {
+      const r = get(gameStore).schoolState.careerResults;
+      if (r?.draftDrafted) { await chooseDraft(); return "careerChoice(draft)"; }
+      // 미지명이면 대학 → 독립 순으로 받는다. 아무 데도 안 되면 못 민다
+      const uni = r?.universityPassed?.[0];
+      const ind = r?.independentPassed?.[0];
+      if (uni) { await chooseSchoolOrIndependent("university", uni); return "careerChoice(university)"; }
+      if (ind) { await chooseSchoolOrIndependent("independent", ind); return "careerChoice(independent)"; }
+      return null;
+    }
+
+    case "draftNotification":
+      await acceptDraftOffer({
+        teamId: pa.teamId, leagueId: pa.leagueId,
+        salary: pa.salary, durationYears: pa.durationYears, signingBonus: pa.signingBonus,
+      });
+      return "draftNotification";
+
+    default:
+      return null;
+  }
+}
+
+export function careerStage(): string { return get(gameStore).protagonist.careerStage; }
+
 /** `SeasonEndModal.handleNewSeason`의 세계 처리분 — 시즌 롤오버 */
 export async function seasonRollover(): Promise<number> {
   const year = get(seasonStore).seasonYear;
@@ -276,6 +343,37 @@ export async function probeImmediateSave(): Promise<void> {
 /** 주 1회 진행만 (pending 처리 없음) — 순수 `advanceWeek` 비용 측정용 */
 export async function oneWeek(): Promise<void> {
   await advanceWeek();
+}
+
+/** `SportsUnitApplicationModal.apply` — 신청한다 */
+export async function applySportsUnit(): Promise<void> {
+  gameStore.setSportsUnitApplied(true);
+  seasonStore.resolvePendingAction("sportsUnitApplication");
+  await gameStore.save();
+}
+
+/** `SportsUnitApplicationModal.decline` — 신청하지 않는다 */
+export async function declineSportsUnit(): Promise<void> {
+  seasonStore.resolvePendingAction("sportsUnitApplication");
+  await gameStore.save();
+}
+
+/** `advanceWeek`이 무엇을 돌려주는지 그대로 본다 — 진행이 막혔을 때 진단용 */
+export async function probeWeek(): Promise<Record<string, unknown>> {
+  const before = get(seasonStore).currentWeek;
+  const r = await advanceWeek();
+  return {
+    before,
+    after: get(seasonStore).currentWeek,
+    processedWeek: r?.processedWeek,
+    stoppedBy: r?.stoppedBy?.type ?? null,
+    logs: r?.logs ?? [],
+    pending: get(seasonStore).pendingActions.map((a) => a.type),
+    seasonLeague: get(seasonStore).leagueId,
+    stage: get(gameStore).protagonist.careerStage,
+    scheduleLen: get(seasonStore).schedule.length,
+    totalWeeks: get(seasonStore).totalWeeks,
+  };
 }
 
 // ── 세계 상태 지문 ──────────────────────────────────────────────

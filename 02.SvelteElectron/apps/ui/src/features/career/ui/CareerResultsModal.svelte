@@ -1,6 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
   import { gameStore } from "../../../shared/stores/game";
+  import { confirmCareerResults } from "../../../shared/usecases/careerDecision";
   import { masterStore } from "../../../shared/stores/master";
   import { seasonStore } from "../../../shared/stores/season";
   import DraftBoardModal from "./DraftBoardModal.svelte";
@@ -66,12 +67,7 @@
   async function confirm() {
     if (resolving) return;
     resolving = true;
-    seasonStore.resolvePendingAction("careerResults");
-    if (!$seasonStore.pendingActions.some((a) => a.type === "careerChoice")) {
-      seasonStore.pushPendingAction({ type: "careerChoice" });
-    }
-    await gameStore.save();
-    await seasonStore.save();
+    await confirmCareerResults();
     dispatch("close");
     resolving = false;
   }

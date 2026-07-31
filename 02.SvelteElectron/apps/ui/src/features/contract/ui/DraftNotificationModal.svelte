@@ -1,5 +1,6 @@
 <script lang="ts">
   import { gameStore } from "../../../shared/stores/game";
+  import { acceptDraftOffer } from "../../../shared/usecases/careerDecision";
   import { masterStore } from "../../../shared/stores/master";
   import { seasonStore } from "../../../shared/stores/season";
   import { generateKblSchedule } from "../../../shared/utils/scheduleGen";
@@ -25,30 +26,13 @@
   async function accept() {
     if (resolving) return;
     resolving = true;
-    const contract = {
-      teamId:         action.teamId,
-      leagueId:       action.leagueId,
-      salary:         action.salary,
-      durationYears:  action.durationYears,
-      remainingYears: action.durationYears,
-      signingBonus:   action.signingBonus,
-      teamOptionYears:   0,
-      playerOptionYears: 0,
-      noTrade: false,
-      status: "active" as const,
-    };
-    gameStore.signContract(contract);
-    const proTeamIds = $masterStore.teams
-      .filter((t) => t.leagueId === action.leagueId)
-      .map((t) => t.id);
-    const seasonYear = ($seasonStore.seasonYear || 2026) + 1;
-    seasonStore.initSeason(action.leagueId, seasonYear, 52, proTeamIds);
-    seasonStore.setSchedule(await generateKblSchedule(proTeamIds, action.teamId));
-    gameStore.clearCareerResults();
-    gameStore.setCareerApplicationsSubmitted(false);
-    seasonStore.resolvePendingAction("draftNotification");
-    await gameStore.save();
-    await seasonStore.save();
+    await acceptDraftOffer({
+      teamId: action.teamId,
+      leagueId: action.leagueId,
+      salary: action.salary,
+      durationYears: action.durationYears,
+      signingBonus: action.signingBonus,
+    });
     resolving = false;
   }
 
