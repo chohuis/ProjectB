@@ -37,8 +37,6 @@
 
 const path = require("node:path");
 const fs = require("node:fs");
-const os = require("node:os");
-const Module = require("node:module");
 
 const ROOT = path.resolve(__dirname, "..");
 
@@ -51,10 +49,41 @@ const WEEKS = argNum("weeks", 51);
 const SEED = argNum("seed", 20260731);
 const AS_JSON = process.argv.includes("--json");
 
+// ── 낡은 읽기 감시 (데이터 안전망) ────────────────────────────────
+//
+// `gameStore.save()`는 npc·season·protagonist를 메모리에서 slot.db로 밀어넣는다.
+// 자동 진행이 그 저장을 주 경계까지 미루므로(P8-2a), **미룬 사이에 그 테이블을
+// 읽으면 낡은 값이 온다.** `processTradeWindow`가 실제로 그랬다 — 최대 한 주
+// 낡은 팀·연봉으로 트레이드를 판정하고 있었다.
+//
+// 그래서 **기본은 거부**다. 조회성 커맨드는 "gameStore가 안 쓰는 테이블을
+// 읽는다"가 증명된 것만 통과시킨다. 새 조회가 생기면 분류될 때까지 실패한다 —
+// 목록이 아니라 조건으로 검사한다 (Phase 7 교훈 #6).
+const READ_OK = new Map([
+  // gameStore.save()가 쓰지 않는 테이블들 — 낡을 수가 없다
+  ["repo:getRelationships", "relationship 테이블 — save 대상 아님"],
+  ["repo:getStaff",         "staff 테이블 — save 대상 아님"],
+  ["repo:getMeta",          "meta는 save가 쓰지만 읽는 값이 슬롯 식별자뿐"],
+  ["repo:listSlots",        "슬롯 목록 — 세계 상태 아님"],
+  ["league:getTransactions","transactions 테이블 — addTransactions가 직접 쓴다"],
+  ["npc:getCareerStats",    "npc_season_stats(projectb_v2.db) — slot.db 아님"],
+  ["npc:getRecentGames",    "npc_game_log(projectb_v2.db) — slot.db 아님"],
+]);
+
+/** 조회성인가 (쓰기는 낡을 수 없으니 감시 대상이 아니다) */
+function isReadCmd(channel, args) {
+  if (channel === "repo:call") return /^(get|count|list)/.test(String(args[0] ?? ""));
+  return channel === "npc:getByLeague" || channel === "league:getTransactions"
+      || channel === "npc:getCareerStats" || channel === "npc:getRecentGames";
+}
+
+const staleReads = new Map();
+
 // ── 계측 수집 ─────────────────────────────────────────────────────
 const ipcStats = new Map(); // key -> { calls, ms, inBytes, outBytes }
 let ipcTotalMs = 0;
 let collecting = false;
+let watchStale = null;  // () => 저장이 밀려 있는가
 
 function bump(key, ms, inB, outB) {
   let s = ipcStats.get(key);
@@ -78,97 +107,25 @@ function keyOf(channel, args) {
   return channel;
 }
 
-// ── 가짜 electron ────────────────────────────────────────────────
-const handlers = new Map();
-const missing = new Set();
+// ── 헤드리스 부팅은 공용 장치에서 ────────────────────────────────
+// 가짜 electron·main.cjs/preload.cjs 로드·window 심기는 `perf/headless.cjs`가
+// 한다. 회귀(`test-savebatch`)와 **같은 장치**를 써야 둘이 다른 세계를 안 돈다.
+const headless = require("./perf/headless.cjs");
 
-const noop = () => {};
-const fakeWebContents = {
-  on: noop, send: noop, setWindowOpenHandler: noop,
-  openDevTools: noop, closeDevTools: noop,
-};
-class FakeBrowserWindow {
-  constructor() { this.webContents = fakeWebContents; }
-  loadURL() {} isDestroyed() { return true; }
-  static getAllWindows() { return []; }
-}
-
-let USER_DATA = "";
-
-const fakeElectron = {
-  app: {
-    isPackaged: false,
-    whenReady: () => Promise.resolve(),
-    getPath: (k) => (k === "userData" ? USER_DATA : USER_DATA),
-    on: noop,
-    quit: noop,
-  },
-  BrowserWindow: FakeBrowserWindow,
-  ipcMain: {
-    handle(channel, fn) { handlers.set(channel, fn); },
-    removeHandler(channel) { handlers.delete(channel); },
-  },
-  ipcRenderer: {
-    async invoke(channel, ...args) {
-      const fn = handlers.get(channel);
-      if (!fn) {
-        // 조건으로 검사한다 — 미등록 채널을 조용히 넘기면 그 경로가
-        // 계측에서 통째로 빠진 줄 모른다 (Phase 7 교훈 #6)
-        missing.add(channel);
-        throw new Error(`[measure-perf] 미등록 IPC 채널: ${channel}`);
-      }
-      if (!collecting) return await fn({}, ...args);
-      const t0 = process.hrtime.bigint();
-      const out = await fn({}, ...args);
-      const ms = Number(process.hrtime.bigint() - t0) / 1e6;
-      bump(keyOf(channel, args), ms, args.reduce((a, v) => a + sizeOf(v), 0), sizeOf(out));
-      return out;
-    },
-    on: noop,
-  },
-  contextBridge: {
-    exposeInMainWorld(name, api) { globalThis[`__bridge_${name}`] = api; },
-  },
-  session: { defaultSession: { webRequest: { onHeadersReceived: noop } } },
-  protocol: { registerSchemesAsPrivileged: noop, handle: noop },
-  net: { fetch: () => { throw new Error("net.fetch는 계측 경로에 없다"); } },
-};
-
-const origLoad = Module._load;
-Module._load = function (request, ...rest) {
-  if (request === "electron") return fakeElectron;
-  return origLoad.call(this, request, ...rest);
-};
-
-// ── main.cjs / preload.cjs 로드 (진짜 파일) ───────────────────────
-async function bootIpc(tmpDir) {
-  USER_DATA = tmpDir;
-  fs.mkdirSync(path.join(tmpDir, "saves"), { recursive: true });
-  require(path.join(ROOT, "apps/desktop/main.cjs"));
-  // app.whenReady().then(...) 안에서 등록된다 — 마이크로태스크를 흘려보낸다
-  for (let i = 0; i < 10; i++) await new Promise((r) => setImmediate(r));
-  if (handlers.size === 0) throw new Error("[measure-perf] main.cjs가 IPC를 하나도 등록하지 않았다");
-
-  require(path.join(ROOT, "apps/desktop/preload.cjs"));
-  const bridge = globalThis.__bridge_projectB;
-  if (!bridge?.engine) throw new Error("[measure-perf] preload.cjs가 projectB를 노출하지 않았다");
-  return bridge;
-}
-
-// ── 번들 ─────────────────────────────────────────────────────────
-function bundleEntry(outFile) {
-  const esbuild = require("esbuild");
-  esbuild.buildSync({
-    entryPoints: [path.join(__dirname, "perf/perfEntry.ts")],
-    bundle: true,
-    platform: "node",
-    format: "cjs",
-    target: "node18",
-    outfile: outFile,
-    // svelte/store는 순수 JS라 노드에서 그대로 돈다
-    logLevel: "warning",
-  });
-}
+headless.setInterceptor(async (channel, args, call) => {
+  if (!collecting) return await call();
+  if (watchStale && isReadCmd(channel, args)) {
+    const key = keyOf(channel, args);
+    if (!READ_OK.has(key) && watchStale()) {
+      staleReads.set(key, (staleReads.get(key) ?? 0) + 1);
+    }
+  }
+  const t0 = process.hrtime.bigint();
+  const out = await call();
+  const ms = Number(process.hrtime.bigint() - t0) / 1e6;
+  bump(keyOf(channel, args), ms, args.reduce((a, v) => a + sizeOf(v), 0), sizeOf(out));
+  return out;
+});
 
 // ── 통계 ──────────────────────────────────────────────────────────
 const pct = (arr, p) => {
@@ -181,24 +138,7 @@ const fmtB = (n) => (n >= 1024 * 1024 ? `${(n / 1048576).toFixed(1)}MB` : n >= 1
 
 // ── 실행 ──────────────────────────────────────────────────────────
 (async () => {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "perf-"));
-  const bundleFile = path.join(tmp, "perfEntry.cjs");
-
-  const tBundle0 = Date.now();
-  bundleEntry(bundleFile);
-  const bundleMs = Date.now() - tBundle0;
-
-  const bridge = await bootIpc(tmp);
-  globalThis.window = globalThis;
-  globalThis.window.projectB = bridge;
-  globalThis.localStorage = {
-    _m: new Map(),
-    getItem(k) { return this._m.has(k) ? this._m.get(k) : null; },
-    setItem(k, v) { this._m.set(k, String(v)); },
-    removeItem(k) { this._m.delete(k); },
-  };
-
-  const app = require(bundleFile);
+  const { app, tmp, bundleMs } = await headless.boot("perf");
 
   // ── 부팅 (새 게임 생성) ───────────────────────────────────────
   collecting = true;
@@ -211,6 +151,8 @@ const fmtB = (n) => (n >= 1024 * 1024 ? `${(n / 1048576).toFixed(1)}MB` : n >= 1
   // 부팅 비용은 주간 비용과 성격이 다르다 — 섞어 재면 둘 다 못 읽는다
   ipcStats.clear();
   ipcTotalMs = 0;
+
+  watchStale = () => app.isSaveDirty();
 
   // ── 주간 진행 ─────────────────────────────────────────────────
   const weekLog = [];
@@ -307,10 +249,12 @@ const fmtB = (n) => (n >= 1024 * 1024 ? `${(n / 1048576).toFixed(1)}MB` : n >= 1
     dbFiles,
     npcCount: app.npcCount(),
     entityCount: app.entityCount(),
+    staleReads: [...staleReads.entries()].map(([key, count]) => ({ key, count })),
     fingerprint: memFp,
     dbFingerprint: dbFp,
     lossFree: memFp === dbFp,
-    missingChannels: [...missing],
+    staleFree: staleReads.size === 0,
+    missingChannels: [...headless.missing],
   };
 
   const outPath = path.join(ROOT, "docs/reports/perf_last.json");
@@ -348,19 +292,20 @@ const fmtB = (n) => (n >= 1024 * 1024 ? `${(n / 1048576).toFixed(1)}MB` : n >= 1
     console.log(`slot.db         ${dbFiles.map((d) => `${d.f} ${fmtB(d.size)}`).join(" · ") || "(없음)"}`);
     console.log(`메모리 NPC      ${report.npcCount} · 엔티티 ${report.entityCount}`);
     console.log(`유실 검사       ${report.lossFree ? "통과 — 메모리 == slot.db" : "!! 실패 !!"}`);
+    console.log(`낡은 읽기       ${report.staleFree ? "없음 — 저장이 밀린 채로 slot.db를 읽는 곳 없음" : "!! 발견 !!"}`);
+    for (const r of report.staleReads) console.log(`                ${r.key}  ${r.count}회`);
     if (!report.lossFree) console.log(`                메모리 ${report.fingerprint} / slot.db ${report.dbFingerprint}`);
     console.log(`⚠ IPC 시간은 Promise.all 구간에서 겹쳐 세어진다 (합 > 벽시계 가능).`);
     console.log(`⚠ 이 하네스엔 프로세스 경계가 없다 — 실제 Electron은 구조화 복제만큼 더 느리다.`);
     const blocked = weekLog.find((w) => w.blocked);
     if (blocked) console.log(`정지            W${blocked.to}에서 "${blocked.blocked}" — 여기까지가 무인 진행 범위다`);
-    if (missing.size) console.log(`⚠ 미등록 채널   ${[...missing].join(", ")}`);
+    if (headless.missing.size) console.log(`⚠ 미등록 채널   ${[...headless.missing].join(", ")}`);
     console.log(`\n리포트 → docs/reports/perf_last.json  (번들 ${bundleMs}ms)`);
   }
 
-  // better-sqlite3 핸들이 열린 채라 Windows에서 지워지지 않는다 — 실패해도 무시한다
-  try { fs.rmSync(tmp, { recursive: true, force: true }); } catch { /* temp는 OS가 치운다 */ }
-  // 유실은 성능 수치와 무관하게 실패다 — 조용히 0으로 끝내지 않는다
-  process.exit(report.lossFree ? 0 : 1);
+  headless.cleanup(tmp);
+  // 유실·낡은 읽기는 성능 수치와 무관하게 실패다 — 조용히 0으로 끝내지 않는다
+  process.exit(report.lossFree && report.staleFree ? 0 : 1);
 })().catch((e) => {
   console.error("[measure-perf] 실패:", e);
   process.exit(1);

@@ -137,6 +137,16 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
   if (!slotId) return;
 
   // ① 리그 전체 NPC 수집
+  //
+  // ⚠ **읽기 전에 저장을 확정한다.** 이 조회는 slot.db의 npc 테이블을 보는데,
+  // 그 테이블은 `gameStore.save()`가 메모리에서 밀어넣는다. 자동 진행은 저장을
+  // 주 경계까지 미루므로(P8-2a), 확정하지 않으면 **최대 한 주 낡은 팀·연봉·
+  // 계약연수·OVR로 트레이드를 판정**한다. 그 주에 이미 이동한 선수가 옛 팀
+  // 소속으로 보이는 것도 여기서 생긴다.
+  //
+  // 성능보다 데이터가 먼저다 — 트레이드 윈도우가 열리는 주에만 한 번 더 쓴다.
+  await gameStore.flushSave();
+
   autoLog(`[트레이드윈도우] ${leagueId} W${weekInYear} 시작`);
   const _t0Trade = Date.now();
   const _npcRaw = JSON.parse(

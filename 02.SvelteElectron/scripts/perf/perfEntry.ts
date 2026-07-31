@@ -20,6 +20,7 @@ import { advanceWeek } from "../../apps/ui/src/shared/usecases/advanceWeek";
 import { nextPendingAction, seasonEnded } from "../../apps/ui/src/shared/stores/season";
 import { runDraftBoardBackground } from "../../apps/ui/src/shared/usecases/runDraftBoardBackground";
 import { runSeasonRollover } from "../../apps/ui/src/shared/usecases/seasonRollover";
+import { processTradeWindow } from "../../apps/ui/src/shared/usecases/weekPhases/market";
 import { slotRepo } from "../../apps/ui/src/shared/repo/slotRepo";
 import { dehydrateToRepo } from "../../apps/ui/src/shared/repo/npcAdapter";
 import type { ProtagonistSave } from "../../apps/ui/src/shared/types/save";
@@ -192,6 +193,53 @@ export async function seasonRollover(): Promise<number> {
 }
 
 export function isSeasonEnded(): boolean { return get(seasonEnded); }
+
+/** 아직 slot.db에 안 쓴 변경이 있는가 — 낡은 읽기 회귀용 */
+export function isSaveDirty(): boolean { return gameStore.hasUnsavedChanges(); }
+
+// ── 회귀용 프로브 (test-savebatch.cjs 전용) ──────────────────────
+// 게임 로직이 아니라 **불변식을 때려보는 손잡이**다. 실제 코드 경로를
+// 그대로 부르고, 여기서 상황만 만든다.
+
+/** 일부러 낡은 읽기를 만든다 — 감시기가 죽었는지 확인용 */
+export async function probeStaleRead(): Promise<void> {
+  const slotId = get(gameStore).currentSlotId!;
+  gameStore.beginSaveBatch();
+  gameStore.applyFameChange(1);          // 메모리만 바뀐다
+  await gameStore.save();                // 배치 안이라 표시만
+  await slotRepo.getAllNpcs(slotId);     // ← 이 시점에 slot.db는 낡았다
+  await gameStore.endSaveBatch();
+}
+
+/** 배치 안에서 예외가 나도 저장이 확정되는가 (`runAutoAdvance`의 try/finally) */
+export async function probeBatchException(): Promise<boolean> {
+  gameStore.beginSaveBatch();
+  try {
+    gameStore.applyFameChange(1);
+    await gameStore.save();
+    throw new Error("의도된 예외");
+  } catch {
+    return true;
+  } finally {
+    await gameStore.endSaveBatch();
+  }
+}
+
+/** 저장이 밀린 상태에서 트레이드 윈도우를 돌린다 — 낡은 값을 읽으면 안 된다 */
+export async function probeTradeWindow(): Promise<void> {
+  gameStore.beginSaveBatch();
+  gameStore.applyFameChange(1);
+  await gameStore.save();                // 배치 안 — 밀린다
+  // 프로 리그 트레이드 윈도우. 로스터가 비어 있어도 slot.db 조회는 실제로 나간다
+  await processTradeWindow(20, "LEAGUE_KBL");
+  await gameStore.endSaveBatch();
+}
+
+/** 배치 밖 save()는 즉시 영속되는가 (모달·페이지 55곳의 의미) */
+export async function probeImmediateSave(): Promise<void> {
+  gameStore.applyFameChange(1);
+  await gameStore.save();
+}
 
 /** 주 1회 진행만 (pending 처리 없음) — 순수 `advanceWeek` 비용 측정용 */
 export async function oneWeek(): Promise<void> {
