@@ -13,7 +13,7 @@
   "include": [
     "apps/ui/src/**/*.ts",
     "apps/ui/src/**/*.d.ts",
-    "packages/core/src/**/*.ts"
+    "packages/core/src/**/*.ts", "scripts/perf/**/*.ts"
   ]
 }
 
