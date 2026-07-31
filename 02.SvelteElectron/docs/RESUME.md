@@ -191,7 +191,7 @@ main   (최신)   Phase 1~6 + 6.5 + **7 전체** 병합됨. 작업 브랜치 없
 ## 검증 명령
 
 ```bash
-npm run test:v3          # 26개 스위트 (전부 ALL PASS여야 한다)
+npm run test:v3          # 27개 스위트 (전부 ALL PASS여야 한다)
 cd packages/engine-native && cargo test --release   # Rust 유닛 133개
 npm run harness -- --seasons 5 --trials 2           # 불변식 위반 0
 npx tsc --noEmit         # 11개가 베이스라인. 늘면 내가 만든 것
@@ -202,7 +202,17 @@ npm run measure:finance   # 재정 20시즌 실측 — 자산 곡선·세율·�
 npm run measure:promotion # 승강 출렁임 실측
 npm run measure:slotsize  # npc 행 크기 컬럼별 실측
 npm run smoke:draft       # 진짜 slot.db에 쓰고 읽어 화면이 볼 데이터를 확인
+
+# ── 화면 경로 (Phase 8 신설) ─────────────────────────────────────
+npm run scenarios                     # 9개 시나리오 — 새 게임 상태에서
+npm run scenarios -- --weeks 60       # 한 시즌 지난 뒤 (드래프트·메시지 확인)
+npm run scenarios -- --weeks 260      # 프로까지 밀어서 (투자·트레이드 확인, 10분+)
+npm run measure:perf                  # 주간 성능 — 유실·낡은읽기 검사 포함
+npm run measure:perf -- --seasons 6   # 프로 단계까지 (--weeks는 시즌을 못 넘는다)
 ```
+
+> `scenarios`는 인게임 **Ctrl+Q → 테스트 시나리오**와 같은 함수를 부른다.
+> **화면이 그려지는지는 못 본다** — 각 항목의 "👁 눈으로 볼 것"은 직접 봐야 한다.
 
 > ⚠ 테스트는 electron으로 돈다. `npx electron`은 이 환경에서 실패하니
 > `ELECTRON_RUN_AS_NODE=1 ./node_modules/electron/dist/electron.exe scripts/xxx.cjs`
