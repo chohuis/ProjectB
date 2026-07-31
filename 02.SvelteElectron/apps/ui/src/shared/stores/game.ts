@@ -32,7 +32,6 @@ import {
 } from "../utils/gradeAdvance";
 import {
   applyDraftToNpcs,
-  determineProtagonistDraft,
   runDraftSimulation,
   selectDraftCandidates,
   DRAFT_ROUNDS,
@@ -47,7 +46,6 @@ import type {
   DraftSimResult,
   HighSchoolMaster,
   NamedNpcMeta,
-  ProtagonistDraftOutcome,
   SchoolScenario,
 } from "../types/save";
 import type { ProContract } from "../types/save";
@@ -2750,37 +2748,16 @@ function createGameStore() {
     },
 
     // 드래프트 시뮬레이션 실행 → NPC 반영 + 주인공 결과 반환
-    async processDraft(
-      namedMetas: NamedNpcMeta[],
-      year: number,
-    ): Promise<{ simResult: DraftSimResult; protagonistOutcome: ProtagonistDraftOutcome }> {
-      const s = get({ subscribe });
-
-      // 1. NPC 드래프트 시뮬레이션
-      const simResult = await runDraftSimulation(s.pendingDraft, namedMetas, year);
-
-      // 2. 주인공 드래프트 결과 (고교 졸업 시즌에만)
-      const isGraduating = s.protagonist.careerStage === "highschool"
-        && s.pendingDraft.length > 0;
-      const protagonistOutcome: ProtagonistDraftOutcome = isGraduating
-        ? await determineProtagonistDraft(
-            s.protagonist.scoutScore,
-            s.protagonist.pitching.ovr,
-            year,
-          )
-        : { drafted: false };
-
-      // 3. NpcSaveState에 드래프트 결과 반영
-      const updatedNpcs = await applyDraftToNpcs(s.npcs, simResult);
-
-      update(st => ({
-        ...st,
-        npcs:         updatedNpcs,
-        pendingDraft: [],
-      }));
-
-      return { simResult, protagonistOutcome };
-    },
+    // ── `processDraft` 제거됨 (2026-07-31) ────────────────────────
+    //
+    // NPC 드래프트를 돌리고 `determineProtagonistDraft`로 주인공 지명까지
+    // 정하던 함수였는데, `processNpcDraft`로 대체되면서 **호출부가 사라졌다.**
+    // 그런데 코드는 남아 있어서 "주인공 지명은 여기서 정해진다"처럼 보였고,
+    // 실제로는 아무도 안 불러서 **주인공이 영영 지명될 수 없었다.**
+    // (`careerResults.draftDrafted`를 true로 만드는 곳이 어디에도 없었다)
+    //
+    // 지금 주인공 지명은 `advanceWeek`의 W47 진로 결과 계산이 정한다 —
+    // 거기서 `determineProtagonistDraft`를 부른다. 정본은 한 곳이다.
 
     /**
      * NPC 드래프트 — **한 시즌에 한 번만 돈다.**

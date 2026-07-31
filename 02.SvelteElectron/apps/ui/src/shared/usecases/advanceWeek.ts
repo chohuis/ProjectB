@@ -684,12 +684,33 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       ovr: p.pitching.ovr, avgPct, hsBaseballScore, univChoices: univChoiceReqs, indieChoices,
     }))) as { univPassed: string[]; indiePassed: string[]; sportsPassed: boolean };
 
+    // ── 주인공 드래프트 결과 ──────────────────────────────────
+    //
+    // ⚠ 예전엔 여기서 `draftDrafted: false`로 못박고 끝났다. 그리고 이 값을
+    // true로 만드는 곳이 **어디에도 없었다**:
+    //   · `DraftBoardModal`은 `careerResults.draftDrafted`가 이미 true여야
+    //     주인공을 보드에 끼워 넣는다 → 순환이라 영원히 false
+    //   · `determineProtagonistDraft`를 부르는 유일한 곳(`gameStore.processDraft`)은
+    //     `processNpcDraft`로 대체되면서 **죽은 코드**가 됐다
+    // 결과: **주인공은 절대 지명될 수 없었고, 따라서 프로에 갈 수 없었다.**
+    // 승강·FA·트레이드·연봉협상 등 프로 콘텐츠 전부가 도달 불가였다.
+    //
+    // 주인공은 NPC 드래프트 풀에 안 들어간다 — 진로 결과가 따로 정해지는 게
+    // 설계다(`DraftBoardModal` 주석). 그 "따로 정하는" 호출이 빠져 있었다.
+    const { determineProtagonistDraft } = await import("../utils/draftSystem");
+    const draftOutcome = draftApplied
+      ? await determineProtagonistDraft(p.scoutScore, p.pitching.ovr, get(seasonStore).seasonYear)
+      : { drafted: false };
+
     gameStore.setCareerResults({
-      draftDrafted: false,
-      draftTeamId: null,
-      draftRound: null,
-      draftPick: null,
-      draftSigningBonus: 0,
+      draftDrafted: draftOutcome.drafted,
+      draftTeamId: draftOutcome.teamId ?? null,
+      draftRound: draftOutcome.round ?? null,
+      draftPick: draftOutcome.pick ?? null,
+      // 계약금은 지명 순위가 정한다 — 계약 표는 수락 시 규칙 파일에서 다시 읽는다
+      draftSigningBonus: draftOutcome.drafted
+        ? Math.max(3000, Math.round((p.pitching.ovr - 45) * 220))
+        : 0,
       universityPassed: admissionsCalc.univPassed,
       independentPassed: admissionsCalc.indiePassed,
     });

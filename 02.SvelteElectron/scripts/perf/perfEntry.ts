@@ -25,7 +25,7 @@ import { runDevScenarios } from "../../apps/ui/src/shared/usecases/devScenarios"
 import { runCampusEventsWeek } from "../../apps/ui/src/shared/usecases/campusEvents";
 import {
   submitCareerApplications, confirmCareerResults, chooseDraft,
-  chooseSchoolOrIndependent, acceptDraftOffer,
+  chooseSchoolOrIndependent, acceptDraftOffer, continueCurrentStage,
 } from "../../apps/ui/src/shared/usecases/careerDecision";
 import { slotRepo } from "../../apps/ui/src/shared/repo/slotRepo";
 import { dehydrateToRepo } from "../../apps/ui/src/shared/repo/npcAdapter";
@@ -237,6 +237,15 @@ export async function pushCareerForward(): Promise<string | null> {
       const ind = r?.independentPassed?.[0];
       if (uni) { await chooseSchoolOrIndependent("university", uni); return "careerChoice(university)"; }
       if (ind) { await chooseSchoolOrIndependent("independent", ind); return "careerChoice(independent)"; }
+
+      // 갈 곳이 없으면 지금 무대를 계속한다 — 화면의 "독립리그 계속" /
+      // "다음 학년 진급"과 같은 버튼이다. 이게 없으면 미지명 선수가
+      // 여기서 막혀 프로 경로를 영영 못 잰다
+      const stage2 = get(gameStore).protagonist.careerStage;
+      if (stage2 === "independent" || stage2 === "university") {
+        await continueCurrentStage();
+        return `careerChoice(continue:${stage2})`;
+      }
       return null;
     }
 

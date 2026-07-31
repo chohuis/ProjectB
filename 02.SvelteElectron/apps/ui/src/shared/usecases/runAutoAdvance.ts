@@ -10,7 +10,12 @@ import type { UnifiedGameOutcome, PlayerGameLine, PendingAction } from "../types
 import { buildBatterLineup, buildStarterStats } from "../utils/matchLineupBuilder";
 
 // ── 정지 조건 ──────────────────────────────────────────────────
-const STOP_PENDING = new Set<PendingAction["type"]>(["careerChoiceHub", "careerResults", "careerChoice", "draftObserve"]);
+// ⚠ `draftNotification`이 여기 없으면 **프로 계약이 조용히 버려진다.**
+// switch의 `default:`가 resolve만 하고 넘어가서, 지명을 받고도 계약이 안 된 채
+// 고교에 남는다. 커리어가 갈리는 지점은 자동 진행이 대신 결정하면 안 된다.
+const STOP_PENDING = new Set<PendingAction["type"]>([
+  "careerChoiceHub", "careerResults", "careerChoice", "draftObserve", "draftNotification",
+]);
 const STOP_WEEKS = [40, 51] as const;
 
 // ── 이벤트/메시지 선택지 피로도 기반 키워드 ───────────────────

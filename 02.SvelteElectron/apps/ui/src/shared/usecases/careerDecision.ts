@@ -52,6 +52,20 @@ export async function confirmCareerResults(): Promise<void> {
 }
 
 /**
+ * 지금 무대를 계속한다 (`CareerResultModal`의 "다음 학년 진급" / "독립리그 계속").
+ *
+ * 대학은 최종 학년 전까지, 독립리그는 제한 없이 고를 수 있다 —
+ * **미지명이어도 갈 곳이 없어 막히지 않게** 하는 자리다.
+ */
+export async function continueCurrentStage(): Promise<void> {
+  gameStore.setCareerApplicationsSubmitted(false);
+  gameStore.clearCareerResults();
+  seasonStore.resolvePendingAction("careerChoice");
+  await gameStore.save();
+  await seasonStore.save();
+}
+
+/**
  * 드래프트 지명을 최종 선택한다 (`CareerResultModal.chooseResult("draft")`).
  *
  * 계약 표는 규칙 파일에서 온다 — NPC 신인(Rust `draft.rs`)과 **같은 표**를
