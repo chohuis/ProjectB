@@ -497,7 +497,8 @@ function fromSaveGame(saved: SaveGame): GameStoreState {
 }
 
 // ── 메일함 정리: 최대 50건, 미결 선택지 메시지는 항상 보존 ────
-const MAX_MAILBOX = 50;
+// 회귀·시나리오가 "메시지가 안 온 건가, 밀려난 건가"를 구분하려면 이 값을 알아야 한다
+export const MAX_MAILBOX = 50;
 
 function trimMailbox(mailbox: MessageItem[]): MessageItem[] {
   if (mailbox.length <= MAX_MAILBOX) return mailbox;

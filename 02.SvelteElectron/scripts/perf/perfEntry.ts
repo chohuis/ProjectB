@@ -22,6 +22,7 @@ import { runDraftBoardBackground } from "../../apps/ui/src/shared/usecases/runDr
 import { runSeasonRollover } from "../../apps/ui/src/shared/usecases/seasonRollover";
 import { processTradeWindow } from "../../apps/ui/src/shared/usecases/weekPhases/market";
 import { runDevScenarios } from "../../apps/ui/src/shared/usecases/devScenarios";
+import { runCampusEventsWeek } from "../../apps/ui/src/shared/usecases/campusEvents";
 import { slotRepo } from "../../apps/ui/src/shared/repo/slotRepo";
 import { dehydrateToRepo } from "../../apps/ui/src/shared/repo/npcAdapter";
 import type { ProtagonistSave } from "../../apps/ui/src/shared/types/save";
@@ -246,6 +247,24 @@ export async function probeTradeWindow(): Promise<void> {
   // 프로 리그 트레이드 윈도우. 로스터가 비어 있어도 slot.db 조회는 실제로 나간다
   await processTradeWindow(20, "LEAGUE_KBL");
   await gameStore.endSaveBatch();
+}
+
+/**
+ * 고교 스카우트 데이가 실제로 발동하는가 (W32).
+ *
+ * 인게임 시나리오는 메일함을 뒤져서 판정하는데, 메일함이 50건 상한이라
+ * **"안 왔다"와 "밀려났다"를 구분 못 한다.** 여기서는 usecase를 직접 불러
+ * 확정한다 — 세계를 바꾸므로 인게임 시나리오에는 넣지 않는다.
+ */
+export async function probeScoutDay(): Promise<{ logs: string[]; message: boolean; scoutGain: number }> {
+  const before = get(gameStore).protagonist.scoutScore ?? 0;
+  const logs = await runCampusEventsWeek(999, 32);
+  const box = get(gameStore).mailbox ?? [];
+  return {
+    logs,
+    message: box.some((m) => (m.subject ?? "").includes("스카우트 데이")),
+    scoutGain: (get(gameStore).protagonist.scoutScore ?? 0) - before,
+  };
 }
 
 /** 배치 밖 save()는 즉시 영속되는가 (모달·페이지 55곳의 의미) */
