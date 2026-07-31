@@ -539,9 +539,58 @@ const S_LEAGUES: Scenario = {
   },
 };
 
+// ── 11. 대회가 완주하는가 ────────────────────────────────────────
+const S_TOURNAMENT: Scenario = {
+  id: "tournament",
+  title: "대회가 1라운드에서 멈추지 않는가",
+  eyeOnly: "대진표 화면이 있는지 (아직 없다 — 메시지로만 보인다)",
+  async run(c) {
+    const s = get(seasonStore);
+    const brackets = Object.values(s.tournaments ?? {});
+    if (brackets.length === 0) { c.skip("아직 열린 대회가 없다 — W2를 지나야 한다"); return; }
+
+    c.info(`열린 대회 ${brackets.length}개`);
+    // ⚠ 이 검사가 잡는 것: **대진은 확정됐는데 일정에 없는 라운드.**
+    // 다음 라운드는 앞 라운드 결과가 나온 뒤 일정에 들어가는데, 그 사이
+    // 주차가 넘어가면 경기 처리 루프(`e.week === 이번주`)가 영영 못 잡았다.
+    // 실측으로 개나리기 R2 8경기가 W2인 채 W40까지 미처리로 남았다.
+    const scheduled = new Set(s.schedule.map((e) => e.id));
+    let stuck = 0;
+    for (const b of brackets) {
+      const ready = b.matches.filter(
+        (m) => !m.isBye && m.homeTeamId && m.awayTeamId && !m.winnerTeamId,
+      );
+      const orphan = ready.filter((m) => !scheduled.has(m.id));
+      if (orphan.length > 0) {
+        stuck++;
+        c.problems.push(`✗ ${b.tournamentId} R${orphan[0].round}: 대진 확정 ${orphan.length}경기가 일정에 없다`);
+      }
+    }
+    c.ok("대진 확정 경기가 전부 일정에 있다", stuck === 0);
+
+    // 주차가 지났는데 안 치러진 대회 경기 — 있으면 그 대회는 멈춘 것이다
+    const overdue = s.schedule.filter(
+      (e) => e.isTournament && !e.result && e.week < s.currentWeek,
+    );
+    c.ok("주차 지난 미처리 대회 경기 없음", overdue.length === 0,
+      `${overdue.length}건: ${overdue.slice(0, 3).map((e) => `${e.id}(w${e.week})`).join(" ")}`);
+
+    // 기간이 끝난 대회는 우승팀이 나와야 한다
+    const done = brackets.filter((b) => {
+      const last = b.matches.filter((m) => m.round === b.totalRounds);
+      return last.length > 0 && last.every((m) => m.week < s.currentWeek);
+    });
+    for (const b of done) {
+      const champ = b.matches.find((m) => m.round === b.totalRounds)?.winnerTeamId;
+      c.ok(`${b.tournamentId} 우승팀 확정`, !!champ, "결승 주차가 지났는데 승자가 없다");
+    }
+    c.info(`기간 종료 ${done.length}개 · 진행 중 ${brackets.length - done.length}개`);
+  },
+};
+
 const SCENARIOS: Scenario[] = [
   S_NEWGAME, S_DRAFT, S_FINANCE, S_INVEST, S_CONTRACT,
-  S_MAILBOX, S_RELATION, S_DETAIL, S_FARM, S_LEAGUES,
+  S_MAILBOX, S_RELATION, S_DETAIL, S_FARM, S_LEAGUES, S_TOURNAMENT,
 ];
 
 // ── 러너 ─────────────────────────────────────────────────────────

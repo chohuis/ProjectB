@@ -1316,6 +1316,11 @@ async function progressIndependentLeague(week: number): Promise<void> {
  */
 async function progressTournaments(week: number): Promise<boolean> {
   const g = get(gameStore);
+  // 앞 라운드가 늦게 끝나 주차를 넘긴 대회 경기를 이번 주로 당긴다.
+  // 경기 처리 루프가 `e.week === 이번주`만 보므로, 안 당기면 영영 안 치러진다
+  seasonStore.pullOverdueTournamentGames(
+    week, toGameDate(get(seasonStore).seasonYear, week, 6),
+  );
   // 주인공 소속과 무관하게 전 리그 대회가 돈다 — DESIGN §2 국내 풀 시뮬.
   // 주인공이 대학에 가도 모교의 국화기는 계속 열린다.
   const protagonistTeamId = g.protagonist.teamId;
