@@ -595,9 +595,25 @@ fn normalize_offseason_npcs(
         by_league_team.entry(key).or_default().push(i);
     }
 
-    for (key, indices) in &by_league_team {
-        let league_id = key.split("::").next().unwrap_or("");
-        let rule = match roster_rule(league_id, limits) { Some(r) => r, None => continue };
+    // **상위 리그부터 처리한다.** 1군 초과분이 2군으로 내려가면 2군 인원이
+    // 늘어나므로, 2군을 먼저 세어두면 그 유입이 상한 검사를 통과해버린다.
+    //
+    // 실제로 그렇게 돌고 있었다 — 스냅샷을 한 번만 뜨고 순회 순서가 HashMap
+    // 임의 순서라, 2군이 34명(상한)일 때 강등자가 들어와 35명이 되어도
+    // 아무도 다시 안 봤다. 7-5 F-4가 FA 계약자를 1군에 직접 넣으면서
+    // 1군 초과가 늘자 회귀에 걸렸다.
+    let mut keys: Vec<String> = by_league_team.keys().cloned().collect();
+    // 팜 리그를 뒤로. 나머지는 이름순 (결정성 — HashMap 순회 순서에 기대지 않는다)
+    keys.sort_by(|a, b| {
+        let fa = a.contains("_FARM");
+        let fb = b.contains("_FARM");
+        fa.cmp(&fb).then_with(|| a.cmp(b))
+    });
+
+    for key in keys {
+        let indices = by_league_team.get(&key).cloned().unwrap_or_default();
+        let league_id = key.split("::").next().unwrap_or("").to_string();
+        let rule = match roster_rule(&league_id, limits) { Some(r) => r, None => continue };
         let (_min, max) = rule;
 
         if indices.len() as i32 > max {
@@ -608,32 +624,44 @@ fn normalize_offseason_npcs(
                 let ovr_b = npc_core_ovr(&next[b]);
                 ovr_a.partial_cmp(&ovr_b).unwrap_or(std::cmp::Ordering::Equal)
                     .then(next[b].age.cmp(&next[a].age))
+                    .then(next[a].npc_id.cmp(&next[b].npc_id))
             });
             for &idx in sorted_i.iter().take(overflow as usize) {
-                let npc = &mut next[idx];
-                // 1군 초과는 2군으로 내린다 — **리그도 같이 바꾼다.**
-                // 팀만 `_2`로 바꾸면 그 선수는 여전히 1군 소속으로 집계돼
-                // 2군 상한이 영원히 안 걸린다 (KBL 700명의 원인)
-                match farm_league(league_id).zip(farm_team(&npc.current_team)) {
-                    Some((farm_lid, farm_tid)) => {
-                        logs.push(format!("{} → 2군 강등 ({league_id})", npc.name));
-                        npc.current_league = farm_lid;
-                        npc.current_team   = farm_tid;
+                let (new_league, new_team) = {
+                    let npc = &mut next[idx];
+                    // 1군 초과는 2군으로 내린다 — **리그도 같이 바꾼다.**
+                    // 팀만 `_2`로 바꾸면 그 선수는 여전히 1군 소속으로 집계돼
+                    // 2군 상한이 영원히 안 걸린다 (KBL 700명의 원인)
+                    match farm_league(&league_id).zip(farm_team(&npc.current_team)) {
+                        Some((farm_lid, farm_tid)) => {
+                            logs.push(format!("{} → 2군 강등 ({league_id})", npc.name));
+                            npc.current_league = farm_lid.clone();
+                            npc.current_team   = farm_tid.clone();
+                            (Some(farm_lid), Some(farm_tid))
+                        }
+                        // 내릴 곳이 없으면 방출이다. 소속만 비워두면 12단계가
+                        // 미지명자와 같은 로직으로 진로를 정한다 (독립 입단 또는 은퇴).
+                        // 예전엔 여기서 바로 은퇴시켜 22세 신인이 방출 한 번에 끝났다
+                        None if can_place => {
+                            logs.push(format!("{} 방출 (로스터 초과 {league_id})", npc.name));
+                            npc.current_team = "".into();
+                            (None, None)
+                        }
+                        None => {
+                            logs.push(format!("{} 은퇴 (로스터 초과 {league_id})", npc.name));
+                            npc.career_status  = "retired".into();
+                            npc.current_league = "LEAGUE_RETIRED".into();
+                            npc.current_team   = "".into();
+                            summary.retired_count += 1;
+                            (None, None)
+                        }
                     }
-                    // 내릴 곳이 없으면 방출이다. 소속만 비워두면 12단계가
-                    // 미지명자와 같은 로직으로 진로를 정한다 (독립 입단 또는 은퇴).
-                    // 예전엔 여기서 바로 은퇴시켜 22세 신인이 방출 한 번에 끝났다
-                    None if can_place => {
-                        logs.push(format!("{} 방출 (로스터 초과 {league_id})", npc.name));
-                        npc.current_team = "".into();
-                    }
-                    None => {
-                        logs.push(format!("{} 은퇴 (로스터 초과 {league_id})", npc.name));
-                        npc.career_status  = "retired".into();
-                        npc.current_league = "LEAGUE_RETIRED".into();
-                        npc.current_team   = "".into();
-                        summary.retired_count += 1;
-                    }
+                };
+
+                // 내려간 선수를 **받는 쪽 그룹에 넣는다.** 이게 없으면 팜이
+                // 상한을 넘어도 자기 차례에 세지 않은 인원이라 통과한다
+                if let (Some(lid), Some(tid)) = (new_league, new_team) {
+                    by_league_team.entry(format!("{lid}::{tid}")).or_default().push(idx);
                 }
             }
         }
