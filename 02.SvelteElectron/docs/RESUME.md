@@ -237,6 +237,7 @@ npm run measure:perf -- --seasons 6   # 프로 단계까지 (--weeks는 시즌�
 | [docs/design/fa.md](design/fa.md) | FA·방출 설계 (Phase 7-4) |
 | [docs/design/finance.md](design/finance.md) | 재정·스태프 배선·부상 전조 (Phase 7-5~7-7) |
 | [docs/PHASE8_PLAN.md](PHASE8_PLAN.md) | **Phase 8 계획** — 계측 먼저, 목표 합의, 진범만 수정 |
+| [docs/design/_league_status.md](design/_league_status.md) | **리그별 구현 실태** — 코드가 아니라 돌려서 잰 것. 미연동 7건 |
 | [docs/DATA_POLICY.md](DATA_POLICY.md) | 데이터 3분류 · 마이그레이션 규칙 · 코드 배치 규칙 |
 | [docs/AUDIT_2026-07.md](AUDIT_2026-07.md) | 현황 전수조사 · 버그 B1~B11 |
 | [CLAUDE.md](../CLAUDE.md) | 작업 규칙 |

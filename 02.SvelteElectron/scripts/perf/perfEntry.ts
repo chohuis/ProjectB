@@ -162,6 +162,37 @@ export function weekTimings(): { week: number; ms: number }[] {
   return out;
 }
 
+/**
+ * 리그별 실태 — 일정·결과·순위가 실제로 도는가.
+ *
+ * "이 리그는 구현됐다"를 코드 읽기로 판단하면 틀린다. 실제로 경기가 돌고
+ * 순위가 쌓이는지는 돌려봐야 안다.
+ */
+export function leagueSummary(): Record<string, {
+  schedule: number; played: number; standings: number; wins: number;
+}> {
+  const s = get(seasonStore);
+  const out: Record<string, { schedule: number; played: number; standings: number; wins: number }> = {};
+  const bump = (lid: string, sched: number, played: number) => {
+    out[lid] ??= { schedule: 0, played: 0, standings: 0, wins: 0 };
+    out[lid].schedule += sched;
+    out[lid].played += played;
+  };
+  // 주인공 리그는 `schedule`, 나머지는 `leagueSchedules`에 있다
+  bump(s.leagueId, s.schedule.length, s.schedule.filter((e) => e.result).length);
+  for (const [lid, sch] of Object.entries(s.leagueSchedules)) {
+    if (!Array.isArray(sch)) continue;
+    bump(lid, sch.length, sch.filter((e) => e.result).length);
+  }
+  for (const [lid, ls] of Object.entries(s.leagueState)) {
+    out[lid] ??= { schedule: 0, played: 0, standings: 0, wins: 0 };
+    const st = ls?.standings ?? [];
+    out[lid].standings = st.length;
+    out[lid].wins = st.reduce((a, r) => a + (r.wins ?? 0), 0);
+  }
+  return out;
+}
+
 export function currentWeek(): number { return get(seasonStore).currentWeek; }
 export function currentSeason(): number { return get(seasonStore).seasonYear; }
 export function pendingKind(): string | null { return get(nextPendingAction)?.type ?? null; }
