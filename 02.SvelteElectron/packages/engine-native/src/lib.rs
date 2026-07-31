@@ -33,6 +33,7 @@ mod draft;
 mod national_team;
 mod free_agency;
 mod finance;
+mod campus_events;
 
 use types::*;
 use sim_types::*;
@@ -344,6 +345,28 @@ pub fn calc_luxury_native(params_json: String) -> String {
     };
     serde_json::to_string(&finance::calc_luxury(params))
         .unwrap_or_else(|e| parse_err("calcLuxuryNative/serialize", e))
+}
+
+// ── 대학 비경기성 이벤트 (Phase 7-7) ─────────────────────────
+
+/// 전국대학선수쇼케이스 — 팀 추천 + 주목도 상위 + 구단 지명 세 경로
+#[napi]
+pub fn run_showcase_native(params_json: String) -> String {
+    let params: campus_events::ShowcaseParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v, Err(e) => return parse_err("runShowcaseNative", e),
+    };
+    serde_json::to_string(&campus_events::run_showcase(params))
+        .unwrap_or_else(|e| parse_err("runShowcaseNative/serialize", e))
+}
+
+/// 대학 올스타전(북 vs 남) — 포지션 쿼터 + 대학당 캡
+#[napi]
+pub fn run_allstar_native(params_json: String) -> String {
+    let params: campus_events::AllStarParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v, Err(e) => return parse_err("runAllstarNative", e),
+    };
+    serde_json::to_string(&campus_events::run_allstar(params))
+        .unwrap_or_else(|e| parse_err("runAllstarNative/serialize", e))
 }
 
 /// 국가대표 발탁 — 그 해 대회가 없으면 빈 결과

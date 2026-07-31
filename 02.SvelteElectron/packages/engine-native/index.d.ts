@@ -57,6 +57,10 @@ export declare function calcTrainingBonusNative(paramsJson: string): string
 export declare function resolveInvestmentNative(paramsJson: string): string
 /** 사치품 소비 — 동료면 관계도, 자기 소비면 성격에 따라 명성 ± */
 export declare function calcLuxuryNative(paramsJson: string): string
+/** 전국대학선수쇼케이스 — 팀 추천 + 주목도 상위 + 구단 지명 세 경로 */
+export declare function runShowcaseNative(paramsJson: string): string
+/** 대학 올스타전(북 vs 남) — 포지션 쿼터 + 대학당 캡 */
+export declare function runAllstarNative(paramsJson: string): string
 /** 국가대표 발탁 — 그 해 대회가 없으면 빈 결과 */
 export declare function selectNationalSquadNative(paramsJson: string): string
 /** 국제대회 결과 — 경기는 시뮬하지 않고 대표팀 전력으로 순위를 뽑는다 */

@@ -13,6 +13,7 @@ import { checkAchievements, computeMetrics } from "../utils/achievementEngine";
 import { generateTop10, buildTop10Message, rankEffect } from "../utils/top10Engine";
 import { isMonthStart, planMonthlyFriendlies, buildMonthlyNoticeMessage } from "../utils/friendlyMatchEngine";
 import { runNationalTeamWeek } from "./nationalTeam";
+import { runCampusEventsWeek } from "./campusEvents";
 import { calcOfferedSalaryForProtagonist, calcSeasonRating } from "../utils/salaryEngine";
 import { isFaEligible, getFaThreshold } from "../utils/faEngine";
 import { facilityTierOf } from "../utils/ids";
@@ -525,6 +526,13 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   {
     const nationalLogs = await runNationalTeamWeek(weekNum, weekInYear);
     logs.push(...nationalLogs);
+  }
+
+  // ── 대학 쇼케이스 · 올스타전 · 고교 스카우트 데이 (Phase 7-7) ─
+  // 학생 무대에서만 돈다. 프로 선수에게 대학 쇼케이스 소식을 보내면 잡음이다
+  {
+    const campusLogs = await runCampusEventsWeek(weekNum, weekInYear);
+    logs.push(...campusLogs);
   }
 
   // 1군 ↔ 2군 승강 — 국내 10구단 전부, 주인공 무관.

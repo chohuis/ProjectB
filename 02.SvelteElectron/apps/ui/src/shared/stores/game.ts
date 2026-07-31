@@ -946,6 +946,28 @@ function createGameStore() {
       });
     },
 
+    /** 주목도 패처 (Phase 7-7). 쇼케이스·스카우트 데이가 쓴다 */
+    applyScoutScoreChange(delta: number) {
+      update((s) => ({
+        ...s,
+        protagonist: {
+          ...s.protagonist,
+          scoutScore: Math.max(0, Math.min(100, s.protagonist.scoutScore + delta)),
+        },
+      }));
+    },
+
+    /** 인기도 패처 (Phase 7-7). 올스타 선발이 쓴다 */
+    applyPopularityChange(delta: number) {
+      update((s) => ({
+        ...s,
+        protagonist: {
+          ...s.protagonist,
+          popularity: Math.max(0, Math.min(100, s.protagonist.popularity + delta)),
+        },
+      }));
+    },
+
     /** 명성 패처 (Phase 7-6c). 사치품·이벤트가 쓴다 */
     applyFameChange(delta: number) {
       update((s) => ({
