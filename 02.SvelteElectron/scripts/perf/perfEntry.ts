@@ -365,6 +365,26 @@ export async function pushCareerForward(): Promise<string | null> {
 
 export function careerStage(): string { return get(gameStore).protagonist.careerStage; }
 
+/** 시즌 상태 상세 — 리그·주차·일정 구성이 어떻게 돼 있는지 */
+export function seasonState(): Record<string, unknown> {
+  const s = get(seasonStore);
+  const byPrefix: Record<string, number> = {};
+  for (const e of s.schedule) {
+    const m = /^(TEAM_[A-Z]+|TOUR_[A-Z]+|PS)/.exec(e.homeTeamId ?? e.id) ?? /^([A-Z_]+)/.exec(e.id);
+    const k = (e.homeTeamId ?? "").split("_")[1] ?? "?";
+    byPrefix[k] = (byPrefix[k] ?? 0) + 1;
+  }
+  return {
+    leagueId: s.leagueId, year: s.seasonYear, week: s.currentWeek,
+    totalWeeks: s.totalWeeks,
+    scheduleLen: s.schedule.length,
+    scheduleBy: byPrefix,
+    standings: s.standings.length,
+    leagueSchedules: Object.fromEntries(
+      Object.entries(s.leagueSchedules).map(([k, v]) => [k, Array.isArray(v) ? v.length : 0])),
+  };
+}
+
 /** 은퇴했는가 — 헤드리스 루프의 종료 조건 */
 export function retired(): { year: number; reason: string } | null {
   const r = get(gameStore).protagonist.retirement;

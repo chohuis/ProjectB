@@ -25,6 +25,20 @@ export interface WeeklyStudyResult {
   efficiencyMod: number;
 }
 
+/**
+ * 학생이 아닐 때 쓰는 중립값 — **학업이 훈련 효율에 영향을 주지 않는다.**
+ *
+ * 프로 선수에게도 주간 학업이 돌아서 `efficiencyMod`가 훈련에 곱해지고
+ * "[학업] 주간 효율 85%" 로그까지 남았다 (실측). 학적이 없는 단계에서
+ * 학업 상태는 의미가 없다.
+ */
+export const NEUTRAL_STUDY: WeeklyStudyResult = {
+  examAccumDelta: 0,
+  updatedSubjectScores: {},
+  warningCountDelta: 0,
+  efficiencyMod: 1.0,
+};
+
 export function applyWeeklyStudy(school: SchoolState, examGainMult = 1.0): WeeklyStudyResult {
   const fx = STUDY_MODE_EFFECTS[school.weeklyStudyMode];
   const clamp  = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, Math.round(v * 10) / 10));

@@ -11,6 +11,7 @@
 
 import { get } from "svelte/store";
 import { masterStore } from "../stores/master";
+import { ALL_TEAMS_BY_LEAGUE } from "../utils/leagueScheduler";
 import { seasonStore } from "../stores/season";
 import type { ScheduleEntry } from "../types/season";
 
@@ -34,9 +35,12 @@ export async function proSchedule(
 export async function openProSeason(
   leagueId: string, myTeamId: string, seasonYear?: number,
 ): Promise<number> {
-  const teamIds = get(masterStore).teams
-    .filter((t) => t.leagueId === leagueId)
-    .map((t) => t.id);
+  // ⚠ `masterStore.teams`를 리그로 거르면 **1군과 2군이 같이 딸려온다.**
+  // refs에서 KBL은 `_1`(1군 10팀)과 `_2`(2군 10팀)가 **같은 leagueId**를 쓴다.
+  // 그대로 쓰면 20팀짜리 시즌이 열리고 순위표에 2군이 섞인다(실측 standings 20).
+  // 정본은 `ALL_TEAMS_BY_LEAGUE` — refs에서 생성되고 1군/2군을 나눠 담는다.
+  const teamIds = ALL_TEAMS_BY_LEAGUE[leagueId]
+    ?? get(masterStore).teams.filter((t) => t.leagueId === leagueId).map((t) => t.id);
   if (teamIds.length === 0) return 0;
 
   const year = seasonYear ?? (get(seasonStore).seasonYear || 2026) + 1;

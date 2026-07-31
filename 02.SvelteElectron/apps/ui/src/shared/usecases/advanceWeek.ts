@@ -8,7 +8,7 @@ import { buildRelationMessages } from "../utils/relationMessages";
 import { simulateGame } from "../utils/gameSimulator";
 import { rotationSizeForStage } from "../utils/rosterEngine";
 import { calcTrainingGrowth } from "../utils/growthEngine";
-import { applyWeeklyStudy, calcExamResult, getUniversityEffBonus, getUniversityExamGainMult } from "../utils/academicsEngine";
+import { applyWeeklyStudy, NEUTRAL_STUDY, calcExamResult, getUniversityEffBonus, getUniversityExamGainMult } from "../utils/academicsEngine";
 import { checkAchievements, computeMetrics } from "../utils/achievementEngine";
 import { generateTop10, buildTop10Message, rankEffect } from "../utils/top10Engine";
 import { isMonthStart, planMonthlyFriendlies, buildMonthlyNoticeMessage } from "../utils/friendlyMatchEngine";
@@ -198,9 +198,16 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
 
   if (isUniversity) gameStore.incrementUniversityWeek();
 
+  // ⚠ **학생일 때만 학업이 돈다.** 예전엔 단계 게이트가 없어서 프로 선수도
+  // 매주 출석·과제·백분위가 갱신됐다 (실측: pro_kbl 주간 로그에 "[학업] 주간
+  // 효율 85%"). 학사 경고가 걸리면 `eligibilityBlocked`로 경기가 자동 시뮬되는데,
+  // 프로 선수에게 그게 걸리는 건 말이 안 된다.
+  const isStudent = g.protagonist.careerStage === "highschool" || isUniversity;
   const examGainMult  = isUniversity ? getUniversityExamGainMult(g.schoolState.universityMajor) : 1.0;
-  const studyResult   = applyWeeklyStudy(g.schoolState, examGainMult);
-  gameStore.applyWeeklyStudyResult(studyResult);
+  const studyResult = isStudent
+    ? applyWeeklyStudy(g.schoolState, examGainMult)
+    : NEUTRAL_STUDY;
+  if (isStudent) gameStore.applyWeeklyStudyResult(studyResult);
 
   const majorEffBonus = isUniversity ? getUniversityEffBonus(g.schoolState.universityMajor) : 0;
 

@@ -591,8 +591,30 @@ function createSeasonStore() {
       update((s) => Postseason.setTournamentBracket(s, bracket));
     },
 
-    injectTournamentEntries(entries: ScheduleEntry[]) {
-      update((s) => Postseason.injectTournamentEntries(s, entries));
+    /**
+     * 대회 경기를 일정에 넣는다.
+     *
+     * ⚠ **주인공 리그 대회만 `schedule`에 들어간다.** 다른 리그 대회는
+     * `leagueSchedules`로 간다 — 예전엔 전부 `schedule`에 밀어넣어서
+     * 프로 선수의 주간 일정에 고교·대학 대회 경기가 섞였다
+     * (실측: pro_kbl 2029 W40에 HS 230·UNIV 85경기).
+     * 그러면 주간 루프가 그걸 주인공 경기로 처리한다.
+     */
+    injectTournamentEntries(entries: ScheduleEntry[], myLeagueId?: string) {
+      update((s) => {
+        const mine = myLeagueId ?? s.leagueId;
+        const own = entries.filter((e) => (e.leagueId ?? mine) === mine);
+        const others = entries.filter((e) => (e.leagueId ?? mine) !== mine);
+        let next = own.length > 0 ? Postseason.injectTournamentEntries(s, own) : s;
+        for (const [lid, list] of Object.entries(
+          others.reduce<Record<string, ScheduleEntry[]>>((acc, e) => {
+            (acc[e.leagueId!] ??= []).push(e); return acc;
+          }, {}),
+        )) {
+          next = Postseason.injectLeagueEntries(next, lid, list);
+        }
+        return next;
+      });
     },
 
     /** 주차가 지난 미처리 대회 경기를 이번 주로 당긴다 (대회 교착 방지) */
