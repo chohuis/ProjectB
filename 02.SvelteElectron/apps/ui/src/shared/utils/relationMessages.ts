@@ -237,6 +237,22 @@ const SCENES: Partial<Record<RelationKind, LabelScene[]>> = {
   ],
 };
 
+/**
+ * 어떤 장면이 정의돼 있는가 — **회귀·시나리오 전용 조회구.**
+ *
+ * 검사 쪽이 라벨을 손으로 적으면 그게 두 번째 표가 되고, 여기가 바뀔 때
+ * 조용히 어긋난다 (실제로 그렇게 헛 실패가 났다). 목록은 여기서만 나온다.
+ */
+export function relationSceneCatalog(): { kind: RelationKind; label: string; hasOptions: boolean }[] {
+  const out: { kind: RelationKind; label: string; hasOptions: boolean }[] = [];
+  for (const [kind, scenes] of Object.entries(SCENES)) {
+    for (const sc of scenes ?? []) {
+      out.push({ kind: kind as RelationKind, label: sc.label, hasOptions: (sc.options?.length ?? 0) > 0 });
+    }
+  }
+  return out;
+}
+
 /** 이 라벨로 진입했을 때 붙일 장면 */
 function sceneFor(kind: RelationKind, label: string): LabelScene | null {
   return SCENES[kind]?.find((sc) => sc.label === label) ?? null;

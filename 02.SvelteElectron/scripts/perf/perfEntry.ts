@@ -21,6 +21,7 @@ import { nextPendingAction, seasonEnded } from "../../apps/ui/src/shared/stores/
 import { runDraftBoardBackground } from "../../apps/ui/src/shared/usecases/runDraftBoardBackground";
 import { runSeasonRollover } from "../../apps/ui/src/shared/usecases/seasonRollover";
 import { processTradeWindow } from "../../apps/ui/src/shared/usecases/weekPhases/market";
+import { runDevScenarios } from "../../apps/ui/src/shared/usecases/devScenarios";
 import { slotRepo } from "../../apps/ui/src/shared/repo/slotRepo";
 import { dehydrateToRepo } from "../../apps/ui/src/shared/repo/npcAdapter";
 import type { ProtagonistSave } from "../../apps/ui/src/shared/types/save";
@@ -193,6 +194,18 @@ export async function seasonRollover(): Promise<number> {
 }
 
 export function isSeasonEnded(): boolean { return get(seasonEnded); }
+
+/**
+ * 테스트 시나리오를 헤드리스로 돌린다.
+ *
+ * 인게임 버튼(Ctrl+Q → 테스트 시나리오)과 **같은 함수**를 부른다.
+ * 버튼이 도는지 확인하려고 사람이 눌러볼 필요가 없게 하려는 것이고,
+ * 시나리오가 예외로 죽는지도 여기서 먼저 걸린다.
+ */
+export async function runScenarios(): Promise<string> {
+  const r = await runDevScenarios();
+  return r.text;
+}
 
 /** 아직 slot.db에 안 쓴 변경이 있는가 — 낡은 읽기 회귀용 */
 export function isSaveDirty(): boolean { return gameStore.hasUnsavedChanges(); }

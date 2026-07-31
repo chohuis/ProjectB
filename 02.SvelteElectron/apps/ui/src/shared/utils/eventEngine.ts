@@ -159,6 +159,20 @@ export function runEventEngine(
     const msgTmpl = rule.messageTemplateId ? msgTmplMap.get(rule.messageTemplateId) : undefined;
     const decTmpl = rule.decisionTemplateId ? decTmplMap.get(rule.decisionTemplateId) : undefined;
     const { message } = ruleToOutput(rule, msgTmpl, decTmpl, week, bank);
+
+    // 본문도 선택지도 없는 이벤트는 **메시지함에 빈 칸으로 보인다.**
+    // `EVT_TRADE_RUMOR`·`EVT_TRADE_CONFIRMED`가 실제로 그랬다 — 그 둘은
+    // 트레이드 코드가 pendingAction으로 직접 띄우는 이벤트인데
+    // `conditional.json`에도 등록돼 있어 엔진이 무작위로 또 발동시켰고,
+    // 템플릿(`messageTemplateId`)이 없어 빈 메시지가 됐다.
+    //
+    // 트리거는 그대로 소비한다 — 조건·쿨다운 판정을 바꾸면 그게 밸런스 변경이다.
+    if (!message.body?.trim() && !message.decision) {
+      updatedTriggers[rule.id] = week;
+      if (rule.oncePolicy === "once_per_career") careerUpdatedTriggers[rule.id] = week;
+      return;
+    }
+
     newMessages.push(message);
     updatedTriggers[rule.id] = week;
     if (rule.oncePolicy === "once_per_career") {

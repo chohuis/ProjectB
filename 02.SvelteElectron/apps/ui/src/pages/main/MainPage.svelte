@@ -40,6 +40,7 @@
   import MilitaryEnlistAskModal from "../../features/military/ui/MilitaryEnlistAskModal.svelte";
   import DevToolsHubModal from "../../features/devtools/ui/DevToolsHubModal.svelte";
   import AutoAdvancePanel from "../../features/devtools/ui/AutoAdvancePanel.svelte";
+  import ScenarioPanel from "../../features/devtools/ui/ScenarioPanel.svelte";
   import { runAutoAdvance } from "../../shared/usecases/runAutoAdvance";
   import MatchEngineLabModal from "../../features/match-engine-lab/ui/MatchEngineLabModal.svelte";
   import AchievementManagerModal from "../../features/achievements/ui/AchievementManagerModal.svelte";
@@ -60,6 +61,7 @@
   let eventManagerOpen = false;
   let achievementManagerOpen = false;
   let matchLabOpen = false;
+  let scenarioOpen = false;
   let activeMatchContext: InteractiveMatchContext | null = null;
   const tabPageKey: Record<MainTabId, string> = {
     home: "page.home",
@@ -384,12 +386,13 @@
     if (typing) return;
 
     event.preventDefault();
-    const anyOpen = devToolsHubOpen || eventManagerOpen || achievementManagerOpen || matchLabOpen;
+    const anyOpen = devToolsHubOpen || eventManagerOpen || achievementManagerOpen || matchLabOpen || scenarioOpen;
     if (anyOpen) {
       devToolsHubOpen = false;
       eventManagerOpen = false;
       achievementManagerOpen = false;
       matchLabOpen = false;
+      scenarioOpen = false;
       return;
     }
     devToolsHubOpen = true;
@@ -497,9 +500,16 @@
     devToolsHubOpen = false;
     runAutoAdvance();
   }}
+  on:openScenario={() => {
+    devToolsHubOpen = false;
+    scenarioOpen = true;
+  }}
 />
 
 <AutoAdvancePanel />
+{#if scenarioOpen}
+  <ScenarioPanel onClose={() => (scenarioOpen = false)} />
+{/if}
 <EventManagerModal open={eventManagerOpen} on:close={() => (eventManagerOpen = false)} />
 <AchievementManagerModal open={achievementManagerOpen} on:close={() => (achievementManagerOpen = false)} />
 <MatchEngineLabModal open={matchLabOpen} on:close={() => (matchLabOpen = false)} />
