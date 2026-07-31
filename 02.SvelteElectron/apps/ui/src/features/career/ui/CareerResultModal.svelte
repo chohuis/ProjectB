@@ -2,7 +2,7 @@
   import { gameStore } from "../../../shared/stores/game";
   import { seasonStore } from "../../../shared/stores/season";
   import { masterStore } from "../../../shared/stores/master";
-  import { chooseDraft, chooseSchoolOrIndependent } from "../../../shared/usecases/careerDecision";
+  import { chooseDraft, chooseSchoolOrIndependent, continueCurrentStage } from "../../../shared/usecases/careerDecision";
   import { canApplyToUniversity, canApplyToIndependent } from "../../../shared/utils/careerTransition";
 
   let resolving = false;
@@ -31,14 +31,11 @@
     return $masterStore.teams.find((t) => t.id === teamId)?.name ?? teamId;
   }
 
+  // 이름은 "University"지만 독립리그 "계속"도 같은 버튼을 쓴다
   async function continueUniversity() {
     if (resolving) return;
     resolving = true;
-    gameStore.setCareerApplicationsSubmitted(false);
-    gameStore.clearCareerResults();
-    seasonStore.resolvePendingAction("careerChoice");
-    await gameStore.save();
-    await seasonStore.save();
+    await continueCurrentStage();
     resolving = false;
   }
 

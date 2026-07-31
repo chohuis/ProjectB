@@ -18,6 +18,22 @@ import { runSeasonEndBgProcessing } from "./runAutoAdvance";
 import { draftDestinationTeams } from "../utils/draftSystem";
 import type { PitcherSeasonStats, BatterSeasonStats } from "../types/save";
 
+/**
+ * 프로 리그 일정 생성 — 리그별 생성기 선택을 **한 곳에만** 둔다.
+ *
+ * 재계약 분기와 계약 중 분기가 각자 골랐다가 한쪽만 고쳐지면
+ * "재계약한 해만 일정이 있다" 같은 게 조용히 난다.
+ */
+async function proSchedule(
+  leagueId: string, teamIds: string[], myTeamId: string,
+): Promise<import("../types/season").ScheduleEntry[]> {
+  const { generateKblSchedule, generateAblSchedule, generateJblSchedule } =
+    await import("../utils/scheduleGen");
+  if (leagueId === "LEAGUE_ABL") return generateAblSchedule(teamIds, myTeamId);
+  if (leagueId === "LEAGUE_JBL") return generateJblSchedule(teamIds, myTeamId);
+  return generateKblSchedule(teamIds, myTeamId);
+}
+
 /** 시즌 기록을 history_* 테이블에 남긴다 (순위·개인기록·포스트시즌) */
 export async function saveSeasonHistory(seasonYear: number) {
   const slotId = get(gameStore).currentSlotId;
@@ -185,18 +201,25 @@ export async function runSeasonRollover(input: SeasonRolloverInput): Promise<voi
         .filter((t) => t.leagueId === pending.leagueId)
         .map((t) => t.id);
       const seasonYear = (get(seasonStore).seasonYear || 2026) + 1;
-      const { generateKblSchedule, generateAblSchedule, generateJblSchedule } = await import("../utils/scheduleGen");
-      const isAbl = pending.leagueId === "LEAGUE_ABL";
-      const isJbl = pending.leagueId === "LEAGUE_JBL";
       seasonStore.initSeason(pending.leagueId, seasonYear, 52, proTeamIds);
-      seasonStore.setSchedule(
-        isAbl ? await generateAblSchedule(proTeamIds, pending.teamId) :
-        isJbl ? await generateJblSchedule(proTeamIds, pending.teamId) :
-                await generateKblSchedule(proTeamIds, pending.teamId),
-      );
+      seasonStore.setSchedule(await proSchedule(pending.leagueId, proTeamIds, pending.teamId));
     } else {
-      // 미서명 상태 — 최소 계약 강제 (Step 3에서 정상 처리, 여기는 폴백)
+      // ⚠ **계약 기간 중이면 `pendingNextContract`가 없는 게 정상이다.**
+      // 재계약을 앞둔 해가 아니면 아무것도 대기하지 않는다 — 신인 3년 계약이면
+      // 2·3년차가 여기로 온다.
+      //
+      // 예전엔 이 분기가 `startNewSeason()`만 불렀다. 그건 **빈 시즌**을 만든다
+      // (`makeEmptySeason` — 일정 없음). 그래서 프로 2년차부터 경기가 0건이었다.
+      // 주석은 "미서명 상태 폴백"이라고 적혀 있었지만 실제로 여기 오는 건
+      // 대부분 **정상 계약 중인 선수**다.
       seasonStore.startNewSeason();
+      const me = P();
+      const teamIds = get(masterStore).teams
+        .filter((t) => t.leagueId === me.leagueId)
+        .map((t) => t.id);
+      if (teamIds.length > 0 && me.teamId) {
+        seasonStore.setSchedule(await proSchedule(me.leagueId, teamIds, me.teamId));
+      }
     }
 
     await gameStore.save();

@@ -62,10 +62,22 @@ console.log("\n게이트 적용");
   check("팀 화면: 팀 목록을 범위로 거른다", /inScope\(\$masterStore\.teams\)/.test(teamPage));
   check("팀 화면: 리그 탭을 범위로 거른다", /SCOPED_TABS/.test(teamPage));
 
+  // ⚠ 예전엔 여기서 `LeaguePage.svelte` 안의 `isLeagueInScope(lid)` **개수**를 셌다.
+  // 그건 "필터가 이 파일에 있다"를 검사한 것이지 "거른다"를 검사한 게 아니다 —
+  // 로직을 `utils/leagueVisibility.ts`로 옮기자 곧바로 깨졌다 (교훈 #6과 같은 형태).
+  // 이제 위임을 따라간다: 화면이 그 모듈을 쓰는가 + 그 모듈이 범위로 거르는가.
   const leaguePage = stripComments(read("../apps/ui/src/pages/league/LeaguePage.svelte"));
-  check("리그 화면: 순위표 목록을 범위로 거른다",
-    (leaguePage.match(/isLeagueInScope\(lid\)/g) ?? []).length >= 2);
+  const visibility = stripComments(read("../apps/ui/src/shared/utils/leagueVisibility.ts"));
+  check("리그 화면: 목록 계산을 leagueVisibility에 위임한다",
+    /visibleLeagueIds\(/.test(leaguePage) && /leaderboardLeagueIds\(/.test(leaguePage));
+  check("리그 화면: 순위표·리더보드 둘 다 범위로 거른다",
+    (visibility.match(/isLeagueInScope\(/g) ?? []).length >= 2,
+    "leagueVisibility가 두 함수 모두에서 거르지 않는다");
   check("리그 화면: 거래기록 리그를 범위로 거른다", /scopedLeagueIds\(\[/.test(leaguePage));
+
+  // 실제로 걸러지는지는 정적 검사로 증명할 수 없다 —
+  // `npm run scenarios`의 10번(경기가 도는 리그가 화면 목록에 있는가)이
+  // 런타임으로 "범위 밖 리그가 목록에 없다"까지 확인한다.
 }
 
 // ── 3. 데이터는 지워지지 않았는가 (확장팩 복원 가능성) ────────

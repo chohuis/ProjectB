@@ -2,6 +2,7 @@
   import { get } from "svelte/store";
   import { t } from "../../shared/i18n";
   import { isLeagueInScope, scopedLeagueIds } from "../../shared/config/releaseScope";
+  import { visibleLeagueIds, leaderboardLeagueIds } from "../../shared/utils/leagueVisibility";
   import { gameStore } from "../../shared/stores/game";
   import { seasonStore } from "../../shared/stores/season";
   import { masterStore, teamMap } from "../../shared/stores/master";
@@ -32,9 +33,6 @@
     "LEAGUE_UNIVERSITY", "LEAGUE_INDEPENDENT",
     "LEAGUE_KBL_FARM", "LEAGUE_ABL_FARM", "LEAGUE_JBL_FARM",
   ]);
-
-  const FARM_LEAGUES = new Set(["LEAGUE_KBL_FARM", "LEAGUE_ABL_FARM", "LEAGUE_JBL_FARM"]);
-  function isFarmLeague(lid: string): boolean { return FARM_LEAGUES.has(lid); }
 
   $: lockedLeagueSet = new Set<string>();
 
@@ -308,26 +306,13 @@
   $: histJblClStandings   = splitHistStandings(histStandings, jblConference, "CL");
   $: histJblPlStandings   = splitHistStandings(histStandings, jblConference, "PL");
 
-  // ── 멀티리그 순위표 ─────────────────────────────────────────
-  // KBL → KBL2군 → ABL → ABL2군 → JBL → JBL2군 고정 순서
-  const LEAGUE_ORDER = [
-    "LEAGUE_HIGHSCHOOL",
-    "LEAGUE_UNIVERSITY",
-    "LEAGUE_INDEPENDENT",
-    "LEAGUE_KBL",     "LEAGUE_KBL_FARM",
-    "LEAGUE_ABL",     "LEAGUE_ABL_FARM",
-    "LEAGUE_JBL",     "LEAGUE_JBL_FARM",
-  ];
-
-  // 팜리그는 경기 시뮬을 하지 않아(R5) 순위표가 항상 0-0 — 순위표 탭에서 제외
-  $: allLeagueIds = (() => {
-    const keys = new Set([...Object.keys($seasonStore.leagueState).filter(Boolean), myLeagueId]);
-    // isLeagueInScope: 1차 출시 범위 밖(해외)은 목록에서 뺀다 — releaseScope.ts
-    const ordered  = LEAGUE_ORDER.filter((lid) => keys.has(lid) && isLeagueInScope(lid) && !lockedLeagueSet.has(lid) && !isFarmLeague(lid));
-    const extra    = [...keys].filter((lid) => !LEAGUE_ORDER.includes(lid) && isLeagueInScope(lid) && !lockedLeagueSet.has(lid) && !isFarmLeague(lid));
-    const locked   = [...keys].filter((lid) => lockedLeagueSet.has(lid) && !isFarmLeague(lid));
-    return [...ordered, ...extra, ...locked];
-  })();
+  // 어느 리그를 보일지는 `utils/leagueVisibility`가 정한다 — 화면 안에 두면
+  // 전제가 낡아도 아무도 검사하지 못한다 (실제로 2군 리그가 그렇게 사라졌다)
+  $: allLeagueIds = visibleLeagueIds({
+    leagueState: $seasonStore.leagueState,
+    myLeagueId,
+    locked: lockedLeagueSet,
+  });
 
   function getLeagueStandings(lid: string) {
     if (lid === myLeagueId) {
@@ -341,12 +326,11 @@
   $: selectedStandings = getLeagueStandings(selectedLeagueId || myLeagueId);
 
   // ── 스탯 리더보드 ─────────────────────────────────────────────
-  // leaderboard는 farm 리그 제외 (배경 시뮬 전용)
-  $: lbLeagueIds = (() => {
-    const others = Object.keys($seasonStore.leagueState)
-      .filter((lid) => lid !== myLeagueId && !lockedLeagueSet.has(lid) && !isFarmLeague(lid));
-    return [myLeagueId, ...others].filter(Boolean);
-  })();
+  $: lbLeagueIds = leaderboardLeagueIds({
+    leagueState: $seasonStore.leagueState,
+    myLeagueId,
+    locked: lockedLeagueSet,
+  });
 
   $: if (!lbLeagueId && lbLeagueIds.length > 0) lbLeagueId = lbLeagueIds[0];
 

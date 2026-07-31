@@ -130,7 +130,7 @@ main   (최신)   Phase 1~6 + 6.5 + **7 전체** 병합됨. 작업 브랜치 없
 - **오프시즌은 못 잰다** — 그 로직이 `SeasonEndModal.svelte` 안에 있다.
   재려면 usecase로 먼저 빼내야 한다
 
-### 이 코드베이스에서 반복된 결함 (Phase 7에서 15건)
+### 이 코드베이스에서 반복된 결함 (Phase 7에서 15건 · Phase 8에서 6건 추가)
 
 전부 **"정본이 둘 이상"** 이거나 **"타입이 안 잡아주는 경계"** 였다:
 
@@ -153,7 +153,18 @@ main   (최신)   Phase 1~6 + 6.5 + **7 전체** 병합됨. 작업 브랜치 없
 | 15 | **로스터 캡이 강등 유입을 재검사 안 함** — HashMap 임의 순서 | 7-7 |
 | 16 | **회귀가 파일 목록을 하드코딩** — 목록 밖 `backgroundLeague.ts`가 죽은 `handlePersonnel`을 계속 읽어 **배경 리그 전 경기가 감독 능력치 50 고정**이었다 | 7-5→8 |
 
+| 17 | **스태프가 세계 전체에서 없었다** — `masterStore.load()`가 슬롯 확정 **전에** 돌아 `reloadEntities()`를 slotId 없이 부르고, 그 뒤 다시 부르는 곳이 없었다. `entities`에 감독·코치·구단주 0명 → 7-5가 배선한 스태프 15종이 통째로 기본값 50 | 8 |
+| 18 | **트레이드 이벤트가 빈 메시지를 쌓았다** — `pendingAction`으로 직접 띄우는 이벤트가 `conditional.json`에도 등록돼 엔진이 또 발동. 템플릿이 없어 본문이 빈 메시지 | 8 |
+| 19 | **매년 W49에서 게임이 멈췄다** — 체육부대 후보 공개가 주를 안 넘기고 pending만 밀어넣어, 신청/거절 어느 쪽을 눌러도 같은 모달이 다시 뜬다. 미필·비고교·27세 이하 전원 해당 | 8 |
+| 20 | **주인공이 드래프트 지명을 받을 수 없었다** — `draftDrafted`를 true로 만드는 곳이 없었다(보드는 이미 true여야 주인공을 넣는 순환, 판정 함수의 호출부는 죽은 코드). **프로 진입 자체가 불가능**했다 | 8 |
+
+| 21 | **프로 2년차부터 경기가 0건** — 시즌 롤오버의 프로 분기가 `pendingNextContract`가 있을 때만 일정을 만든다. **계약 기간 중이면 그게 없는 게 정상**인데 주석은 "미서명 폴백"이라 적혀 있었다. 신인 3년 계약이면 2·3년차가 빈 시즌 | 8 |
+
 → **표를 두 번째로 적고 있다면 이미 드리프트다.** 정본을 정하고 나머지는 지운다.
+→ **죽은 코드는 결함을 숨긴다.** #20은 `processDraft` 47줄이 남아 있어서
+   "주인공 지명은 여기서 정해진다"처럼 보였고, 아무도 안 부른다는 걸 아무도 몰랐다.
+→ **화면 안에 있는 로직은 검증할 수 없다.** #19·#20은 진로 결정을 usecase로
+   빼내고 헤드리스로 밀어보고서야 나왔다 (`seasonRollover`·`careerDecision`).
 → 폴백을 남길 거면 **대조 테스트를 같이 둔다** (`test:fa`·`test:staff`가 그 예다).
 → Rust가 안 쓰는 필드라도 `NpcSaveState`에 있어야 한다 — 없으면 왕복에서 버려진다.
 → **엔진을 만들었으면 호출부까지 확인한다.** 유닛테스트는 통과하는데
@@ -180,7 +191,7 @@ main   (최신)   Phase 1~6 + 6.5 + **7 전체** 병합됨. 작업 브랜치 없
 ## 검증 명령
 
 ```bash
-npm run test:v3          # 26개 스위트 (전부 ALL PASS여야 한다)
+npm run test:v3          # 27개 스위트 (전부 ALL PASS여야 한다)
 cd packages/engine-native && cargo test --release   # Rust 유닛 133개
 npm run harness -- --seasons 5 --trials 2           # 불변식 위반 0
 npx tsc --noEmit         # 11개가 베이스라인. 늘면 내가 만든 것
@@ -191,7 +202,17 @@ npm run measure:finance   # 재정 20시즌 실측 — 자산 곡선·세율·�
 npm run measure:promotion # 승강 출렁임 실측
 npm run measure:slotsize  # npc 행 크기 컬럼별 실측
 npm run smoke:draft       # 진짜 slot.db에 쓰고 읽어 화면이 볼 데이터를 확인
+
+# ── 화면 경로 (Phase 8 신설) ─────────────────────────────────────
+npm run scenarios                     # 9개 시나리오 — 새 게임 상태에서
+npm run scenarios -- --weeks 60       # 한 시즌 지난 뒤 (드래프트·메시지 확인)
+npm run scenarios -- --weeks 260      # 프로까지 밀어서 (투자·트레이드 확인, 10분+)
+npm run measure:perf                  # 주간 성능 — 유실·낡은읽기 검사 포함
+npm run measure:perf -- --seasons 6   # 프로 단계까지 (--weeks는 시즌을 못 넘는다)
 ```
+
+> `scenarios`는 인게임 **Ctrl+Q → 테스트 시나리오**와 같은 함수를 부른다.
+> **화면이 그려지는지는 못 본다** — 각 항목의 "👁 눈으로 볼 것"은 직접 봐야 한다.
 
 > ⚠ 테스트는 electron으로 돈다. `npx electron`은 이 환경에서 실패하니
 > `ELECTRON_RUN_AS_NODE=1 ./node_modules/electron/dist/electron.exe scripts/xxx.cjs`
@@ -216,6 +237,7 @@ npm run smoke:draft       # 진짜 slot.db에 쓰고 읽어 화면이 볼 데이
 | [docs/design/fa.md](design/fa.md) | FA·방출 설계 (Phase 7-4) |
 | [docs/design/finance.md](design/finance.md) | 재정·스태프 배선·부상 전조 (Phase 7-5~7-7) |
 | [docs/PHASE8_PLAN.md](PHASE8_PLAN.md) | **Phase 8 계획** — 계측 먼저, 목표 합의, 진범만 수정 |
+| [docs/design/_league_status.md](design/_league_status.md) | **리그별 구현 실태** — 코드가 아니라 돌려서 잰 것. 미연동 7건 |
 | [docs/DATA_POLICY.md](DATA_POLICY.md) | 데이터 3분류 · 마이그레이션 규칙 · 코드 배치 규칙 |
 | [docs/AUDIT_2026-07.md](AUDIT_2026-07.md) | 현황 전수조사 · 버그 B1~B11 |
 | [CLAUDE.md](../CLAUDE.md) | 작업 규칙 |

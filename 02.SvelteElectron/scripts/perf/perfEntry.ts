@@ -25,7 +25,7 @@ import { runDevScenarios } from "../../apps/ui/src/shared/usecases/devScenarios"
 import { runCampusEventsWeek } from "../../apps/ui/src/shared/usecases/campusEvents";
 import {
   submitCareerApplications, confirmCareerResults, chooseDraft,
-  chooseSchoolOrIndependent, acceptDraftOffer,
+  chooseSchoolOrIndependent, acceptDraftOffer, continueCurrentStage,
 } from "../../apps/ui/src/shared/usecases/careerDecision";
 import { slotRepo } from "../../apps/ui/src/shared/repo/slotRepo";
 import { dehydrateToRepo } from "../../apps/ui/src/shared/repo/npcAdapter";
@@ -162,6 +162,49 @@ export function weekTimings(): { week: number; ms: number }[] {
   return out;
 }
 
+/**
+ * 리그별 실태 — 일정·결과·순위가 실제로 도는가.
+ *
+ * "이 리그는 구현됐다"를 코드 읽기로 판단하면 틀린다. 실제로 경기가 돌고
+ * 순위가 쌓이는지는 돌려봐야 안다.
+ */
+export function leagueSummary(): Record<string, {
+  schedule: number; played: number; standings: number; wins: number; statPlayers: number;
+}> {
+  const s = get(seasonStore);
+  const out: Record<string, { schedule: number; played: number; standings: number; wins: number; statPlayers: number }> = {};
+  const bump = (lid: string, sched: number, played: number) => {
+    out[lid] ??= { schedule: 0, played: 0, standings: 0, wins: 0, statPlayers: 0 };
+    out[lid].schedule += sched;
+    out[lid].played += played;
+  };
+  // 주인공 리그는 `schedule`, 나머지는 `leagueSchedules`에 있다
+  bump(s.leagueId, s.schedule.length, s.schedule.filter((e) => e.result).length);
+  for (const [lid, sch] of Object.entries(s.leagueSchedules)) {
+    if (!Array.isArray(sch)) continue;
+    bump(lid, sch.length, sch.filter((e) => e.result).length);
+  }
+  for (const [lid, ls] of Object.entries(s.leagueState)) {
+    out[lid] ??= { schedule: 0, played: 0, standings: 0, wins: 0, statPlayers: 0 };
+    const st = ls?.standings ?? [];
+    out[lid].standings = st.length;
+    out[lid].wins = st.reduce((a, r) => a + (r.wins ?? 0), 0);
+    // 리더보드가 쓰는 자리 — 비어 있으면 탭을 열어도 빈 표만 나온다
+    out[lid].statPlayers = Object.keys(ls?.stats ?? {}).length;
+  }
+  return out;
+}
+
+/** 메시지 본문 들여다보기 — 문구가 읽을 만한지 눈으로 볼 때 쓴다 */
+export function dumpMessages(pattern: string, limit = 3): string[] {
+  const re = new RegExp(pattern);
+  return (get(gameStore).mailbox ?? [])
+    .filter((m) => re.test(m.subject ?? "") || re.test(m.id))
+    .slice(0, limit)
+    .map((m) => `[${m.category}/${m.sender}] ${m.subject}
+${m.body}`);
+}
+
 export function currentWeek(): number { return get(seasonStore).currentWeek; }
 export function currentSeason(): number { return get(seasonStore).seasonYear; }
 export function pendingKind(): string | null { return get(nextPendingAction)?.type ?? null; }
@@ -237,6 +280,15 @@ export async function pushCareerForward(): Promise<string | null> {
       const ind = r?.independentPassed?.[0];
       if (uni) { await chooseSchoolOrIndependent("university", uni); return "careerChoice(university)"; }
       if (ind) { await chooseSchoolOrIndependent("independent", ind); return "careerChoice(independent)"; }
+
+      // 갈 곳이 없으면 지금 무대를 계속한다 — 화면의 "독립리그 계속" /
+      // "다음 학년 진급"과 같은 버튼이다. 이게 없으면 미지명 선수가
+      // 여기서 막혀 프로 경로를 영영 못 잰다
+      const stage2 = get(gameStore).protagonist.careerStage;
+      if (stage2 === "independent" || stage2 === "university") {
+        await continueCurrentStage();
+        return `careerChoice(continue:${stage2})`;
+      }
       return null;
     }
 

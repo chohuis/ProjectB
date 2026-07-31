@@ -2,7 +2,7 @@
 /**
  * P8-0 — 주간 경로 성능 계측 (Phase 8)
  *
- * 실행: npm run measure:perf -- [--weeks N] [--seed S] [--json]
+ * 실행: npm run measure:perf -- [--weeks N | --seasons N] [--seed S] [--json]
  *
  * ── 왜 새로 만드는가 ─────────────────────────────────────────────
  * `npm run harness`는 slot.db와 Rust만 돈다. 실제 주간 처리는 TS
@@ -28,11 +28,17 @@
  *   · IPC 밖에서 태운 시간(= TS 자체 계산)
  *   · slot.db 파일 크기
  *
- * ── 경계 (정직하게) ──────────────────────────────────────────────
- * 시즌 롤오버(오프시즌)는 **여기서 못 잰다.** 그 로직이 usecase가 아니라
- * `features/season-end/ui/SeasonEndModal.svelte` 안에 있어서, 부르려면
- * 컴포넌트 내용을 복제해야 한다 — 그건 정본을 둘로 만드는 짓이다.
- * 필요해지면 usecase로 먼저 빼내고 잰다 (PHASE8_PLAN.md에 기록).
+ * ── 어디까지 재는가 ──────────────────────────────────────────────
+ * 주간 · 시즌 롤오버(오프시즌) · 진로 결정 · 프로 단계까지 전부 탄다.
+ * 롤오버와 진로 결정은 원래 모달 안에 있어 못 쟀는데, `seasonRollover`·
+ * `careerDecision` usecase로 빼내면서 열렸다.
+ *
+ * `--seasons N`을 주면 N시즌을 넘긴다 (`--weeks`는 시즌마다 0으로 돌아오는
+ * `currentWeek`을 보므로 시즌 경계를 못 넘는다). 프로 단계를 재려면 6시즌쯤
+ * 필요하다 — 고교 3년 + 드래프트 + 프로 2년.
+ *
+ * ⚠ 남은 경계: 이 하네스엔 **프로세스 경계가 없다.** 실제 Electron은
+ * 구조화 복제만큼 더 느리므로 여기 수치는 하한이다.
  */
 
 const path = require("node:path");
@@ -46,6 +52,9 @@ const argNum = (name, dflt) => {
   return i !== -1 ? (Number(process.argv[i + 1]) || dflt) : dflt;
 };
 const WEEKS = argNum("weeks", 51);
+// 시즌을 넘기며 재려면 주차만으로는 안 된다 — `currentWeek`이 시즌마다 0으로 돌아온다.
+// `--seasons N`을 주면 N시즌을 넘길 때까지 돈다 (프로 단계 계측용)
+const SEASONS = argNum("seasons", 0);
 const SEED = argNum("seed", 20260731);
 const AS_JSON = process.argv.includes("--json");
 
@@ -161,7 +170,11 @@ const fmtB = (n) => (n >= 1024 * 1024 ? `${(n / 1048576).toFixed(1)}MB` : n >= 1
   let lastWeek = app.currentWeek();
   app.startTimeline();
 
-  while (app.currentWeek() < WEEKS && guard++ < WEEKS * 4) {
+  const startSeason = app.currentSeason();
+  const keepGoing = () => (SEASONS > 0
+    ? app.currentSeason() - startSeason < SEASONS
+    : app.currentWeek() < WEEKS);
+  while (keepGoing() && guard++ < (SEASONS > 0 ? SEASONS * 200 : WEEKS * 4)) {
     const before = app.currentWeek();
     const t0 = process.hrtime.bigint();
     await app.autoRun();
@@ -178,6 +191,18 @@ const fmtB = (n) => (n >= 1024 * 1024 ? `${(n / 1048576).toFixed(1)}MB` : n >= 1
         await app.skipDraftObserve();
         offseasonLog.push({ kind: "draftSkip", ms: Number(process.hrtime.bigint() - t) / 1e6 });
         continue;
+      }
+      // 진로 결정 — 여기를 안 넘기면 **프로 단계를 영영 못 잰다.**
+      // 승강·FA·트레이드가 전부 프로에서만 도는데 고교 3년에서 멈춰 있었다
+      {
+        const t = process.hrtime.bigint();
+        const done = await app.pushCareerForward();
+        if (done) {
+          const cms = Number(process.hrtime.bigint() - t) / 1e6;
+          offseasonLog.push({ kind: `career:${done}`, ms: cms });
+          process.stderr.write(`  [진로] ${done} → ${app.careerStage()}\n`);
+          continue;
+        }
       }
       if (app.isSeasonEnded()) {
         const t = process.hrtime.bigint();

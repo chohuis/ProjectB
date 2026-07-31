@@ -19,7 +19,6 @@ import { calcKblDraftContract } from "../utils/draftSalaryTable";
 import { buildSalaryIndex, loadRosterRules } from "../repo/newGameV3";
 import { canApplyToUniversity } from "../utils/careerTransition";
 import { generateKblSchedule } from "../utils/scheduleGen";
-import type { PendingAction } from "../types/season";
 
 /** 진로 지원 제출 (`CareerChoiceHubModal.submitApplications`) */
 export async function submitCareerApplications(opts: {
@@ -47,6 +46,20 @@ export async function confirmCareerResults(): Promise<void> {
   if (!get(seasonStore).pendingActions.some((a) => a.type === "careerChoice")) {
     seasonStore.pushPendingAction({ type: "careerChoice" });
   }
+  await gameStore.save();
+  await seasonStore.save();
+}
+
+/**
+ * 지금 무대를 계속한다 (`CareerResultModal`의 "다음 학년 진급" / "독립리그 계속").
+ *
+ * 대학은 최종 학년 전까지, 독립리그는 제한 없이 고를 수 있다 —
+ * **미지명이어도 갈 곳이 없어 막히지 않게** 하는 자리다.
+ */
+export async function continueCurrentStage(): Promise<void> {
+  gameStore.setCareerApplicationsSubmitted(false);
+  gameStore.clearCareerResults();
+  seasonStore.resolvePendingAction("careerChoice");
   await gameStore.save();
   await seasonStore.save();
 }
@@ -98,13 +111,19 @@ export async function chooseSchoolOrIndependent(
   if (kind === "independent") {
     const p = get(gameStore).protagonist;
     const ovr = p.pitching?.ovr ?? p.batting?.ovr ?? 50;
+    // 독립리그 입단은 1년 단기 계약 고정이라 min=max=1이다.
+    // (BACKLOG에 "salaryNegotiation 필수 필드 3개 누락"으로 올라 있던 자리 —
+    //  캐스팅으로 덮으면 협상 화면이 undefined를 읽는다)
     seasonStore.pushPendingAction({
       type: "salaryNegotiation",
       teamId, leagueId,
       offeredSalary: Math.max(800, Math.round((ovr - 40) * 60)),
       durationYears: 1,
+      minDurationYears: 1,
+      maxDurationYears: 1,
       signingBonus: 0,
-    } as PendingAction);
+      context: "initial",
+    });
   }
   await gameStore.save();
   await seasonStore.save();
