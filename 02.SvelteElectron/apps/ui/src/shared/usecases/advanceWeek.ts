@@ -258,6 +258,9 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       consecutiveLowMoraleWeeks: g.protagonist.consecutiveLowMoraleWeeks ?? 0,
       hasPriorInjurySameArea,
       priorSteroidUsed: g.protagonist.injury?.steroidUsed ?? false,
+      // 코치 관리력이 발생 확률을, 구단 시설이 회복 주차를 민다 (§7-5 F-1)
+      injuryPrevention: myMods.injuryPrevention,
+      recoveryBoost:    myMods.facility,
     })),
     window.projectB!.weekCalcWeeklyNet(
       JSON.stringify({ careerStage: g.protagonist.careerStage, salary: g.protagonist.contract?.salary ?? null })
@@ -265,7 +268,13 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     window.projectB!.weekRollRandomBatch(randCount),
   ]);
   const facilityEffMod = JSON.parse(facilityEffModRaw) as number;
-  const injuryCalc = JSON.parse(injuryCalcRaw) as { injuryUpdate: { type: string; severity: string; recoveryWeeksLeft: number } | null; justOccurred: boolean; justHealed: boolean; effMod: number; newConsecutiveHighFatigueWeeks: number; source: string | null };
+  const injuryCalc = JSON.parse(injuryCalcRaw) as {
+    injuryUpdate: { type: string; severity: string; recoveryWeeksLeft: number } | null;
+    justOccurred: boolean; justHealed: boolean; effMod: number;
+    newConsecutiveHighFatigueWeeks: number; source: string | null;
+    /** 부상 전조 — 임계 넘긴 첫 주에만 온다 (§7-5 F-2) */
+    warning?: { kind: string; fatigue: number; risk: number };
+  };
   const weeklyNet = JSON.parse(weeklyNetRaw) as number;
   const eventRands = JSON.parse(eventRandsRaw) as number[];
   const injuryJustOccurred = injuryCalc.justOccurred;
@@ -287,6 +296,12 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       injuryState = { ...g.protagonist.injury, recoveryWeeksLeft: injuryCalc.injuryUpdate.recoveryWeeksLeft };
     }
   }
+
+  // ── 부상 전조 (§7-5 F-2) ────────────────────────────────────
+  //
+  // 임계를 넘은 첫 주는 부상 판정을 건너뛰고 여기서 경고만 낸다. 그대로 두면
+  // 다음 주에 risk 확률로 실제 판정이 돈다 — 손쓸 기회를 한 번 주는 장치다.
+  const injuryWarning = injuryCalc.warning ?? null;
 
   const SURGERY_REHAB_EFF: Record<number, number> = { 1: 0.00, 2: 0.10, 3: 0.30, 4: 0.60 };
   let effectiveInjuryEffMod = injuryCalc.effMod;
@@ -332,6 +347,25 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     }
   } else if (injuryJustHealed) {
     growth.logs.push(`[부상] 회복 완료 — 정상 훈련 재개`);
+  } else if (injuryWarning) {
+    const pct = Math.round(injuryWarning.risk * 100);
+    growth.logs.push(
+      `[부상 경고] 피로 ${Math.round(injuryWarning.fatigue)} — 이대로 한 주 더 가면 ${pct}% 확률로 부상`,
+    );
+    gameStore.addMessage({
+      id:        `msg-injury-warn-w${weekNum}`,
+      category:  "coach",
+      sender:    getPitchCoachName(g.protagonist.teamId, m.entities),
+      subject:   "몸 상태 경고 — 이번 주는 넘겼습니다",
+      preview:   `피로 ${Math.round(injuryWarning.fatigue)} / 다음 주 부상 위험 ${pct}%`,
+      body:
+        `피로도가 임계선을 넘었습니다. 이번 주는 별 탈 없이 지나갔지만 운이 좋았던 겁니다.\n\n`
+        + `이대로 한 주를 더 보내면 **약 ${pct}% 확률로 부상**이 옵니다.\n\n`
+        + `회복 훈련(TRN_RECOVERY)으로 슬롯을 돌리거나 등판을 걸러 피로를 떨어뜨리십시오.\n`
+        + `임계선 아래로 내려가면 이 경고는 초기화됩니다.`,
+      createdAt: `W${weekNum}`,
+      readAt:    null,
+    });
   }
   if (studyResult.efficiencyMod < 1.0) {
     growth.logs.push(`[학업] 주간 효율 ${Math.round(studyResult.efficiencyMod * 100)}%`);

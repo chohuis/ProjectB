@@ -77,6 +77,14 @@ pub struct InjuryPayload {
     pub consecutive_low_morale_weeks: u32,
     pub has_prior_injury_same_area: bool,
     pub prior_steroid_used: Option<bool>,
+    /// 코치 `discipline` 계수 (1.0 = 중립). **1보다 크면 덜 다친다** —
+    /// 발생 확률을 나눈다. 스태프 15종 배선(§7-5 F-1)
+    #[serde(default)]
+    pub injury_prevention: Option<f64>,
+    /// 구단주 `facilityInvestment` 계수 (1.0 = 중립). 회복 주차를 줄인다.
+    /// **발생 시점에만** 적용한다 — 틱다운에도 걸면 두 번 깎인다
+    #[serde(default)]
+    pub recovery_boost: Option<f64>,
 }
 
 #[derive(Serialize)]
@@ -88,6 +96,25 @@ pub struct InjuryUpdateOut {
     pub recovery_weeks_left: u32,
 }
 
+/// 부상 전조 (§7-5 F-2 / DESIGN §7.3).
+///
+/// 피로 임계를 넘은 **첫 주는 경고만** 내고 부상 판정을 건너뛴다. 그대로
+/// 두 주째 넘기면 그때 판정한다. 플레이어가 손쓸 기회를 한 번 주는 장치다 —
+/// 아무 예고 없이 시즌이 끝나면 "관리 실패"가 아니라 "재수 없음"이 된다.
+///
+/// **NPC는 경고가 없다** (DESIGN §7.3). 몇천 명에게 경고를 내면 로그가 그것만
+/// 남고, NPC는 어차피 손쓸 주체가 없다.
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct InjuryWarningOut {
+    /// "fatigue" — 지금은 피로 하나뿐이다.
+    /// 세분화하면 7-2 상시 콜업 트리거도 같이 넓혀야 한다
+    pub kind: String,
+    pub fatigue: f64,
+    /// 다음 주도 이대로면 이 확률로 다친다
+    pub risk: f64,
+}
+
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct InjuryResult {
@@ -97,6 +124,9 @@ pub struct InjuryResult {
     pub eff_mod: f64,
     pub new_consecutive_high_fatigue_weeks: u32,
     pub source: Option<String>,
+    /// 이번 주 전조. 부상이 실제로 났으면 None (경고할 게 아니라 벌어진 일이다)
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub warning: Option<InjuryWarningOut>,
 }
 
 fn pick_light_type(is_pitcher: bool, rng: &mut impl rand::Rng) -> &'static str {
@@ -192,6 +222,10 @@ pub fn calc_injury(p: InjuryPayload) -> InjuryResult {
     let mut just_occurred = false;
     let mut just_healed   = false;
     let mut source: Option<String> = None;
+    let mut warning: Option<InjuryWarningOut> = None;
+
+    // 임계를 넘은 **첫 주**. 이 주는 피로발 부상 판정을 건너뛰고 경고만 낸다
+    let grace_week = is_high_fatigue && new_high_fatigue_weeks == 1;
 
     if !p.has_injury {
         // ── 심리 트리거 (YIPS) — 피로 트리거와 독립 ──────────────
@@ -213,23 +247,32 @@ pub fn calc_injury(p: InjuryPayload) -> InjuryResult {
         // ── 피로 + 훈련 복합 트리거 ──────────────────────────────
         if !just_occurred {
             // 볼록 곡선: 80미만=0%, 80~85=5%, 85~90=15%, 90~95=35%, 95+=60%
-            let mut trigger_chance: f64 = if p.fatigue >= 95.0 { 0.60 }
+            let fatigue_chance: f64 = if p.fatigue >= 95.0 { 0.60 }
                 else if p.fatigue >= 90.0 { 0.35 }
                 else if p.fatigue >= 85.0 { 0.15 }
                 else if p.fatigue >= 80.0 { 0.05 }
                 else { 0.0 };
 
             let training_trigger = p.training_intensity >= 0.8 && p.condition < 65.0;
+            let mut training_chance = 0.0f64;
             if training_trigger {
-                trigger_chance += 0.10;
-                if p.condition < 60.0 && p.fatigue > 70.0 { trigger_chance += 0.10; }
+                training_chance += 0.10;
+                if p.condition < 60.0 && p.fatigue > 70.0 { training_chance += 0.10; }
             }
+
+            // 유예 주에는 **피로 몫만** 뺀다. 훈련 무리는 다른 축이라 그대로 둔다 —
+            // "쉬라고 경고했는데 고강도 훈련을 밀어붙였다"가 면죄부가 되면 안 된다
+            let mut trigger_chance = if grace_week { training_chance }
+                                     else { fatigue_chance + training_chance };
 
             if p.has_prior_injury_same_area { trigger_chance *= 1.5; }
             if p.prior_steroid_used.unwrap_or(false) { trigger_chance *= 1.25; }
 
             let age_mult: f64 = if p.age >= 35 { 1.5 } else if p.age >= 32 { 1.3 } else { 1.0 };
-            trigger_chance = (trigger_chance * age_mult).min(0.80);
+            trigger_chance *= age_mult;
+            // 관리 잘하는 코치진이면 덜 다친다
+            trigger_chance /= p.injury_prevention.unwrap_or(1.0).clamp(0.80, 1.30);
+            trigger_chance = trigger_chance.min(0.80);
 
             if trigger_chance > 0.0 && rng.gen::<f64>() < trigger_chance {
                 let tier_roll: f64 = rng.gen();
@@ -266,9 +309,12 @@ pub fn calc_injury(p: InjuryPayload) -> InjuryResult {
                     _ => pick_light_type(is_pitcher, &mut rng),
                 };
 
-                let injury_src = if training_trigger && p.fatigue < 80.0 { "training" } else { "fatigue" };
+                let injury_src = if grace_week || (training_trigger && p.fatigue < 80.0) { "training" } else { "fatigue" };
                 let severity   = severity_of(injury_type);
-                let weeks      = recovery_weeks_for(injury_type, &mut rng);
+                let raw_weeks  = recovery_weeks_for(injury_type, &mut rng);
+                // 시설 좋은 구단이면 복귀가 빠르다. 최소 1주는 남긴다
+                let boost      = p.recovery_boost.unwrap_or(1.0).clamp(0.80, 1.30);
+                let weeks      = ((raw_weeks as f64) / boost).round().max(1.0) as u32;
                 injury_update = Some(InjuryUpdateOut {
                     injury_type: injury_type.to_string(),
                     severity:    severity.to_string(),
@@ -276,6 +322,23 @@ pub fn calc_injury(p: InjuryPayload) -> InjuryResult {
                 });
                 just_occurred = true;
                 source = Some(injury_src.to_string());
+            }
+
+            // 유예 주인데 부상이 안 났으면 경고를 낸다.
+            // risk = 다음 주도 이대로 갈 때의 실제 확률 — 예방·나이까지 반영해
+            // 화면이 "위험합니다" 대신 숫자를 보여줄 수 있게 한다
+            if grace_week && !just_occurred {
+                let next = ((fatigue_chance + training_chance)
+                    * if p.has_prior_injury_same_area { 1.5 } else { 1.0 }
+                    * if p.prior_steroid_used.unwrap_or(false) { 1.25 } else { 1.0 }
+                    * age_mult
+                    / p.injury_prevention.unwrap_or(1.0).clamp(0.80, 1.30))
+                    .min(0.80);
+                warning = Some(InjuryWarningOut {
+                    kind: "fatigue".to_string(),
+                    fatigue: p.fatigue,
+                    risk: (next * 1000.0).round() / 1000.0,
+                });
             }
         }
     } else {
@@ -309,6 +372,7 @@ pub fn calc_injury(p: InjuryPayload) -> InjuryResult {
         eff_mod,
         new_consecutive_high_fatigue_weeks: final_high_fatigue_weeks,
         source,
+        warning,
     }
 }
 
