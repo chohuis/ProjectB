@@ -565,9 +565,57 @@ function buildNpcStatLine(stat: PlayerSeasonStats): string {
   return `타율 ${avg} ${stat.hr}홈런 ${stat.rbi}타점 ${stat.ab}타수`;
 }
 
+// ── 저장 배치 (P8-2a) ────────────────────────────────────────
+//
+// `save()` 한 번이 NPC 5,596명 전원을 slot.db에 다시 쓴다. 자동 진행이 이걸
+// 주당 3회 불러 **주간 시간의 55%**를 태우고 있었다 (PHASE8_PLAN §6-3).
+//
+// 배치를 연 구간에서는 쓰지 않고 표시만 하고, 주 경계에서 한 번 쓴다.
+// ⚠ **여는 쪽은 `runAutoAdvance` 하나뿐이다.** 배치를 넓게 열수록 크래시 때
+// 잃는 진행이 길어진다 — 자동 진행 밖(모달·페이지)은 지금까지처럼 즉시 쓴다.
+let _saveBatchDepth = 0;
+let _saveBatchDirty = false;
+
 // ── 스토어 생성 ───────────────────────────────────────────────
 function createGameStore() {
   const { subscribe, update, set } = writable<GameStoreState>(buildInitialState());
+
+  /** 실제 slot.db 쓰기 — `save`/`flushSave`가 공유하는 유일한 경로 */
+  async function writeSlot(): Promise<void> {
+    const s = get({ subscribe });
+    if (!isV3SlotActive() || !s.currentSlotId || !_getSeasonData) return;
+    try {
+      const slotId = s.currentSlotId;
+      const slimGame = {
+        ...makeSaveGame(
+          s.protagonist, s.mailbox, s.trainingPlan,
+          s.schoolState, s.achievements, s.achievementMetrics, s.logs, s.upcoming,
+          [], s.trainingPresets,
+        ),
+      };
+      const season = _getSeasonData();
+      const slimSeason = { ...season, npcLiveStats: {} };
+      await slotRepo.setProtagonist(slotId, slimGame);
+      await slotRepo.setSeason(slotId, slimSeason);
+      // 전환기: 주간 변이가 repo 커맨드로 전면 이관(R3a-4c)되기 전까지 벌크 동기화
+      await slotRepo.syncNpcs(slotId, dehydrateToRepo(s.npcs, get(npcLiveStatsStore)));
+      await slotRepo.setMeta(slotId, {
+        career_stage: s.protagonist.careerStage,
+        season_year: season.seasonYear,
+        current_week: season.currentWeek,
+        team_id: s.protagonist.teamId,
+      });
+    } catch (e) {
+      console.error("[gameStore] save 예외:", e);
+    }
+  }
+
+  /** 밀린 쓰기 반영. 더티가 아니면 아무것도 안 한다 */
+  async function flushSaveImpl(): Promise<void> {
+    if (!_saveBatchDirty) return;
+    _saveBatchDirty = false;
+    await writeSlot();
+  }
 
   return {
     subscribe,
@@ -593,35 +641,32 @@ function createGameStore() {
       update((s) => ({ ...s, currentSlotId: slotId }));
     },
 
-    // 저장: v3 슬롯 → slot.db (slim 블롭 + npc 테이블 동기화). 클린 브레이크 — v2 경로 없음.
+    /**
+     * 저장: v3 슬롯 → slot.db (slim 블롭 + npc 테이블 동기화).
+     *
+     * **배치 모드 안에서는 쓰지 않고 표시만 한다** (P8-2a). 이 함수 한 번이
+     * NPC 5,596명 전원을 `INSERT OR REPLACE`하는데, 자동 진행이 주당 3번 불렀다 —
+     * 주간 시간의 55%였다 (PHASE8_PLAN §6-3).
+     *
+     * 배치는 `runAutoAdvance`만 연다. **모달·페이지의 호출부 55곳은 의미가 그대로**라
+     * 사용자 조작 뒤에는 지금까지처럼 즉시 영속된다.
+     */
     async save() {
-      const s = get({ subscribe });
-      if (!isV3SlotActive() || !s.currentSlotId || !_getSeasonData) return;
-      try {
-        const slotId = s.currentSlotId;
-        const slimGame = {
-          ...makeSaveGame(
-            s.protagonist, s.mailbox, s.trainingPlan,
-            s.schoolState, s.achievements, s.achievementMetrics, s.logs, s.upcoming,
-            [], s.trainingPresets,
-          ),
-        };
-        const season = _getSeasonData();
-        const slimSeason = { ...season, npcLiveStats: {} };
-        await slotRepo.setProtagonist(slotId, slimGame);
-        await slotRepo.setSeason(slotId, slimSeason);
-        // 전환기: 주간 변이가 repo 커맨드로 전면 이관(R3a-4c)되기 전까지 벌크 동기화
-        await slotRepo.syncNpcs(slotId, dehydrateToRepo(s.npcs, get(npcLiveStatsStore)));
-        await slotRepo.setMeta(slotId, {
-          career_stage: s.protagonist.careerStage,
-          season_year: season.seasonYear,
-          current_week: season.currentWeek,
-          team_id: s.protagonist.teamId,
-        });
-      } catch (e) {
-        console.error("[gameStore] save 예외:", e);
-      }
+      if (_saveBatchDepth > 0) { _saveBatchDirty = true; return; }
+      await writeSlot();
     },
+
+    /** 배치 시작 — 중첩 가능. 반드시 `endSaveBatch`와 짝지어 `finally`에서 닫는다 */
+    beginSaveBatch() { _saveBatchDepth++; },
+
+    /** 배치 종료 — 밀린 쓰기가 있으면 여기서 한 번 쓴다 */
+    async endSaveBatch() {
+      _saveBatchDepth = Math.max(0, _saveBatchDepth - 1);
+      if (_saveBatchDepth === 0) await flushSaveImpl();
+    },
+
+    /** 배치 중에도 지금 쓴다 — 주 경계처럼 "여기까지는 남아야 하는" 지점용 */
+    flushSave: flushSaveImpl,
 
     // 주 진행 후 주인공 상태 패치
     applyWeekResult(

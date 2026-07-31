@@ -240,6 +240,12 @@ const fmtB = (n) => (n >= 1024 * 1024 ? `${(n / 1048576).toFixed(1)}MB` : n >= 1
   const weekTimings = app.weekTimings();
   const weekMs = weekTimings.map((w) => w.ms);
 
+  // ── 유실 검사 ─────────────────────────────────────────────────
+  // 저장을 배치로 미루면(P8-2a) "메모리엔 있는데 디스크엔 없다"가 조용히 생긴다.
+  // 자동 진행이 끝난 시점에 둘이 다르면 그게 유실이다 — 벽시계보다 이게 먼저다.
+  const memFp = app.fingerprint();
+  const dbFp = await app.dbFingerprint("PERF");
+
   // ── slot.db 크기 ──────────────────────────────────────────────
   const savesDir = path.join(tmp, "saves");
   const dbFiles = fs.existsSync(savesDir)
@@ -282,7 +288,9 @@ const fmtB = (n) => (n >= 1024 * 1024 ? `${(n / 1048576).toFixed(1)}MB` : n >= 1
     dbFiles,
     npcCount: app.npcCount(),
     entityCount: app.entityCount(),
-    fingerprint: app.fingerprint(),
+    fingerprint: memFp,
+    dbFingerprint: dbFp,
+    lossFree: memFp === dbFp,
     missingChannels: [...missing],
   };
 
@@ -317,7 +325,8 @@ const fmtB = (n) => (n >= 1024 * 1024 ? `${(n / 1048576).toFixed(1)}MB` : n >= 1
     console.log(`${"─".repeat(72)}`);
     console.log(`slot.db         ${dbFiles.map((d) => `${d.f} ${fmtB(d.size)}`).join(" · ") || "(없음)"}`);
     console.log(`메모리 NPC      ${report.npcCount} · 엔티티 ${report.entityCount}`);
-    console.log(`세계 지문       ${report.fingerprint}   ← 최적화 전후로 같아야 한다`);
+    console.log(`유실 검사       ${report.lossFree ? "통과 — 메모리 == slot.db" : "!! 실패 !!"}`);
+    if (!report.lossFree) console.log(`                메모리 ${report.fingerprint} / slot.db ${report.dbFingerprint}`);
     console.log(`⚠ IPC 시간은 Promise.all 구간에서 겹쳐 세어진다 (합 > 벽시계 가능).`);
     console.log(`⚠ 이 하네스엔 프로세스 경계가 없다 — 실제 Electron은 구조화 복제만큼 더 느리다.`);
     const blocked = weekLog.find((w) => w.blocked);
@@ -328,7 +337,8 @@ const fmtB = (n) => (n >= 1024 * 1024 ? `${(n / 1048576).toFixed(1)}MB` : n >= 1
 
   // better-sqlite3 핸들이 열린 채라 Windows에서 지워지지 않는다 — 실패해도 무시한다
   try { fs.rmSync(tmp, { recursive: true, force: true }); } catch { /* temp는 OS가 치운다 */ }
-  process.exit(0);
+  // 유실은 성능 수치와 무관하게 실패다 — 조용히 0으로 끝내지 않는다
+  process.exit(report.lossFree ? 0 : 1);
 })().catch((e) => {
   console.error("[measure-perf] 실패:", e);
   process.exit(1);

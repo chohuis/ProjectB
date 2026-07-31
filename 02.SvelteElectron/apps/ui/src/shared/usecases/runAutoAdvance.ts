@@ -215,6 +215,17 @@ export async function runAutoAdvance(): Promise<void> {
   let iter = 0;
   let tickStart = performance.now();
 
+  // ── 저장 배치 (P8-2a) ───────────────────────────────────────
+  // `gameStore.save()`는 NPC 5,596명 전원을 다시 쓴다. 자동 진행은 한 주에
+  // advanceWeek 1회 + pending 처리 2회쯤 불러 **주간 시간의 55%**를 여기 태웠다.
+  // 배치를 열면 그 호출들이 표시만 하고, 주 경계에서 한 번만 쓴다.
+  //
+  // ⚠ 배치를 여는 건 **여기 하나뿐이다.** 넓게 열수록 크래시 때 잃는 진행이
+  // 길어지므로, 아래 루프는 `advanceWeek` 직후마다 `flushSave()`로 확정한다 —
+  // 즉 잃을 수 있는 최대치는 "그 주에 처리한 pending"이지 여러 주가 아니다.
+  gameStore.beginSaveBatch();
+  try {
+
   while (get(autoAdvanceStore).running && iter < MAX_ITER) {
     iter++;
     if (performance.now() - tickStart >= TICK_BUDGET_MS) {
@@ -248,6 +259,11 @@ export async function runAutoAdvance(): Promise<void> {
         autoLog(`[주진행] W${w} 시작`);
         await advanceWeek();
         const wAfter = get(seasonStore).currentWeek;
+        // 주 경계 확정 — **주가 실제로 넘어갔을 때만** 쓴다.
+        // `advanceWeek`은 pending(경기·메시지)을 밀어넣고 주를 안 넘긴 채
+        // 돌아오는 경우가 있어, 무조건 쓰면 한 주에 두 번 쓰게 된다.
+        // 안 쓴 구간은 다음 주 경계나 `endSaveBatch`에서 함께 확정된다.
+        if (wAfter !== w) await gameStore.flushSave();
         autoAdvanceStore.addLog(`W${w} → W${wAfter}`);
         autoLog(`[주진행] W${w} → W${wAfter} 완료`);
         continue;
@@ -331,6 +347,12 @@ export async function runAutoAdvance(): Promise<void> {
   if (iter >= MAX_ITER) {
     autoAdvanceStore.stop("최대 반복 횟수 초과");
     autoLog("[정지] 최대 반복 횟수 초과");
+  }
+
+  } finally {
+    // 루프 안의 `return`·예외·정지 어느 쪽으로 빠져나가도 밀린 저장을 확정한다.
+    // 이게 없으면 "자동 진행을 멈췄더니 마지막 처리가 사라짐"이 된다
+    await gameStore.endSaveBatch();
   }
   autoLog(`=== 자동 진행 세션 종료 | iter=${iter} ===`);
 }
