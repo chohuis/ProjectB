@@ -14,6 +14,7 @@ import { generateTop10, buildTop10Message, rankEffect } from "../utils/top10Engi
 import { isMonthStart, planMonthlyFriendlies, buildMonthlyNoticeMessage } from "../utils/friendlyMatchEngine";
 import { runNationalTeamWeek } from "./nationalTeam";
 import { runCampusEventsWeek } from "./campusEvents";
+import { enlistProtagonist } from "./militaryDecision";
 import { calcOfferedSalaryForProtagonist, calcSeasonRating } from "../utils/salaryEngine";
 import { isFaEligible, getFaThreshold } from "../utils/faEngine";
 import { facilityTierOf } from "../utils/ids";
@@ -1793,25 +1794,9 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
             body: "이번 체육부대 선발에 합격하였습니다.\n체육부대로 입대합니다.",
             createdAt: `W${weekNum}`, readAt: null,
           });
-          gameStore.enlistMilitary("sports", weekNum, true, s.seasonYear);
-          gameStore.addCareerEvent({ year: s.seasonYear, eventType: "military_enlist",
-            fromTeamId: p.teamId || undefined, fromLeagueId: p.leagueId || undefined, detail: "체육부대 입대" });
-          // 군입대 시 SeasonEndModal이 스킵되므로 여기서 NPC 오프시즌 처리
-          await gameStore.processAllLeaguesSeasonEnd(s.seasonYear);
-          seasonStore.initSeason("LEAGUE_MILITARY", s.seasonYear + 1, 100, []);
-          seasonStore.setSchedule([]);
-          const milSlotId = get(gameStore).currentSlotId;
-          if (milSlotId) {
-            await window.projectB!.leagueAddTransactions(JSON.stringify({
-              slotId: milSlotId,
-              rows: [{ seasonYear: s.seasonYear, week: weekNum, category: "military",
-                playerId: p.id, playerName: p.name,
-                fromTeamId: p.teamId || null, fromLeagueId: p.leagueId || null,
-                detail: "체육부대 입대" }],
-            }));
-          }
-          await gameStore.save();
-          await seasonStore.save();
+          // 입대 처리는 `militaryDecision`이 정본이다 — 네 경로가 각자
+          // 적고 있었고 그중 둘이 오프시즌 처리를 빠뜨렸다
+          await enlistProtagonist("sports", weekNum, true);
           return { processedWeek: weekNum, logs: ["체육부대 입대"], newMessages: [], matchResults: [], stoppedBy: null };
         }
 

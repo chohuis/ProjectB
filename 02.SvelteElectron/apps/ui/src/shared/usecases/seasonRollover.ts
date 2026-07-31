@@ -16,23 +16,8 @@ import { seasonStore } from "../stores/season";
 import { masterStore } from "../stores/master";
 import { runSeasonEndBgProcessing } from "./runAutoAdvance";
 import { draftDestinationTeams } from "../utils/draftSystem";
+import { proSchedule } from "./proSeason";
 import type { PitcherSeasonStats, BatterSeasonStats } from "../types/save";
-
-/**
- * 프로 리그 일정 생성 — 리그별 생성기 선택을 **한 곳에만** 둔다.
- *
- * 재계약 분기와 계약 중 분기가 각자 골랐다가 한쪽만 고쳐지면
- * "재계약한 해만 일정이 있다" 같은 게 조용히 난다.
- */
-async function proSchedule(
-  leagueId: string, teamIds: string[], myTeamId: string,
-): Promise<import("../types/season").ScheduleEntry[]> {
-  const { generateKblSchedule, generateAblSchedule, generateJblSchedule } =
-    await import("../utils/scheduleGen");
-  if (leagueId === "LEAGUE_ABL") return generateAblSchedule(teamIds, myTeamId);
-  if (leagueId === "LEAGUE_JBL") return generateJblSchedule(teamIds, myTeamId);
-  return generateKblSchedule(teamIds, myTeamId);
-}
 
 /** 시즌 기록을 history_* 테이블에 남긴다 (순위·개인기록·포스트시즌) */
 export async function saveSeasonHistory(seasonYear: number) {

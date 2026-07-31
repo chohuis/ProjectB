@@ -1,5 +1,8 @@
 <script lang="ts">
   import { gameStore } from "../../../shared/stores/game";
+  import {
+    isImmediateContract, signNegotiatedContract, rejectNegotiatedContract,
+  } from "../../../shared/usecases/contractDecision";
   import { masterStore } from "../../../shared/stores/master";
   import { seasonStore } from "../../../shared/stores/season";
   import type { PendingAction } from "../../../shared/types/season";
@@ -104,87 +107,41 @@
     return `${v.toLocaleString()}만`;
   }
 
-  $: isImmediate = action.context === "military_return" || action.context === "initial";
+  $: isImmediate = isImmediateContract(action.context);
 
-  async function doSign(contract: ProContract) {
-    if (isImmediate) {
-      gameStore.signContract(contract);
-      const proTeamIds = $masterStore.teams.filter((t) => t.leagueId === action.leagueId).map((t) => t.id);
-      const seasonYear = ($seasonStore.seasonYear || 2026) + 1;
-      const isAbl = action.leagueId === "LEAGUE_ABL";
-      const isJbl = action.leagueId === "LEAGUE_JBL";
-      seasonStore.initSeason(action.leagueId, seasonYear, 52, proTeamIds);
-      seasonStore.setSchedule(
-        isAbl ? await generateAblSchedule(proTeamIds, contract.teamId) :
-        isJbl ? await generateJblSchedule(proTeamIds, contract.teamId) :
-                await generateKblSchedule(proTeamIds, contract.teamId),
-      );
-    } else {
-      gameStore.setPendingNextContract(contract);
-      gameStore.addMessage({
-        id: `msg-contract-signed-${Date.now()}`,
-        category: "system", sender: "에이전트",
-        subject: "계약 서명 완료",
-        preview: `${teamName}와 계약이 완료되었습니다. W52 새 시즌부터 적용됩니다.`,
-        body: [
-          `${teamName}와의 계약이 완료되었습니다.`,
-          `연봉: ${formatSalary(contract.salary)}원 / ${contract.durationYears}년`,
-          `계약금: ${formatSalary(contract.signingBonus)}원`,
-          ``,
-          `W52 새 시즌 시작 시 정식 적용됩니다.`,
-        ].join("\n"),
-        createdAt: `W${$seasonStore.currentWeek}`, readAt: null,
-      });
-    }
-    seasonStore.resolvePendingAction("salaryNegotiation");
-    await gameStore.save();
-    await seasonStore.save();
-  }
-
-  async function accept() {
-    if (resolving) return;
-    resolving = true;
-    await doSign({
+  function buildContract(salary: number, years: number): ProContract {
+    return {
       teamId: action.teamId,
       leagueId: action.leagueId,
-      salary: action.offeredSalary,
-      durationYears: action.durationYears,
-      remainingYears: action.durationYears,
+      salary,
+      durationYears: years,
+      remainingYears: years,
       signingBonus: action.signingBonus,
       teamOptionYears,
       playerOptionYears,
       noTrade,
       status: "active",
-    });
+    };
+  }
+
+  async function accept() {
+    if (resolving) return;
+    resolving = true;
+    await signNegotiatedContract(action, buildContract(action.offeredSalary, action.durationYears), teamName);
     resolving = false;
   }
 
   async function counter() {
     if (resolving || !canCounter) return;
     resolving = true;
-    await doSign({
-      teamId: action.teamId,
-      leagueId: action.leagueId,
-      salary: requestedSalary,
-      durationYears: selectedDuration,
-      remainingYears: selectedDuration,
-      signingBonus: action.signingBonus,
-      teamOptionYears,
-      playerOptionYears,
-      noTrade,
-      status: "active",
-    });
+    await signNegotiatedContract(action, buildContract(requestedSalary, selectedDuration), teamName);
     resolving = false;
   }
 
   async function reject() {
     if (resolving) return;
     resolving = true;
-    seasonStore.resolvePendingAction("salaryNegotiation");
-    if (isFaEligible($gameStore.protagonist, $gameStore.schoolState.attendsUniversity)) {
-      seasonStore.pushPendingAction({ type: "faMarket" });
-    }
-    await seasonStore.save();
+    await rejectNegotiatedContract(action, teamName);
     resolving = false;
   }
 

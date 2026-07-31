@@ -22,6 +22,7 @@ import { runDraftBoardBackground } from "../../apps/ui/src/shared/usecases/runDr
 import { runSeasonRollover } from "../../apps/ui/src/shared/usecases/seasonRollover";
 import { processTradeWindow } from "../../apps/ui/src/shared/usecases/weekPhases/market";
 import { runDevScenarios } from "../../apps/ui/src/shared/usecases/devScenarios";
+import { signNegotiatedContract } from "../../apps/ui/src/shared/usecases/contractDecision";
 import { runCampusEventsWeek } from "../../apps/ui/src/shared/usecases/campusEvents";
 import {
   submitCareerApplications, confirmCareerResults, chooseDraft,
@@ -339,6 +340,10 @@ export async function pushCareerForward(): Promise<string | null> {
       return null;
     }
 
+    case "salaryNegotiation":
+      await acceptNegotiation();
+      return "salaryNegotiation(accept)";
+
     case "draftNotification":
       await acceptDraftOffer({
         teamId: pa.teamId, leagueId: pa.leagueId,
@@ -352,6 +357,41 @@ export async function pushCareerForward(): Promise<string | null> {
 }
 
 export function careerStage(): string { return get(gameStore).protagonist.careerStage; }
+
+/**
+ * 계약 협상을 "수락" 눌러준다 (`ContractNegotiationModal.accept`).
+ *
+ * 프로 커리어 **매년** 도는 경로인데 헤드리스로 한 번도 안 돌아봤다.
+ */
+export async function acceptNegotiation(): Promise<boolean> {
+  const pa = get(nextPendingAction);
+  if (pa?.type !== "salaryNegotiation") return false;
+  const teamName = get(masterStore).teams.find((t) => t.id === pa.teamId)?.name ?? pa.teamId;
+  await signNegotiatedContract(pa, {
+    teamId: pa.teamId, leagueId: pa.leagueId,
+    salary: pa.offeredSalary,
+    durationYears: pa.durationYears, remainingYears: pa.durationYears,
+    signingBonus: pa.signingBonus,
+    teamOptionYears: 0, playerOptionYears: 0, noTrade: false, status: "active",
+  }, teamName);
+  return true;
+}
+
+/** 계약 상태 — 재계약이 실제로 적용되는지 본다 */
+export function contractState(): Record<string, unknown> {
+  const p = get(gameStore).protagonist;
+  return {
+    stage: p.careerStage, team: p.teamId, league: p.leagueId,
+    contract: p.contract ? {
+      team: p.contract.teamId, salary: p.contract.salary,
+      years: p.contract.durationYears, remaining: p.contract.remainingYears,
+    } : null,
+    pendingNext: p.pendingNextContract ? {
+      team: p.pendingNextContract.teamId, salary: p.pendingNextContract.salary,
+    } : null,
+    scheduleLen: get(seasonStore).schedule.length,
+  };
+}
 
 /** `SeasonEndModal.handleNewSeason`의 세계 처리분 — 시즌 롤오버 */
 export async function seasonRollover(): Promise<number> {

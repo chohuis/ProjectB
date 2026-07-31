@@ -1,5 +1,6 @@
 <script lang="ts">
   import { gameStore } from "../../../shared/stores/game";
+  import { enlistProtagonist } from "../../../shared/usecases/militaryDecision";
   import { seasonStore } from "../../../shared/stores/season";
 
   export let reason: "rejected" | "overdue";
@@ -20,26 +21,8 @@
   async function enlist() {
     if (resolving) return;
     resolving = true;
-    const slotId = $gameStore.currentSlotId;
-    const proto = $gameStore.protagonist;
-    const seasonYear = $seasonStore.seasonYear;
-    gameStore.enlistMilitary("general", 52, false, seasonYear);
-    gameStore.addCareerEvent({ year: seasonYear, eventType: "military_enlist",
-      fromTeamId: proto.teamId || undefined, fromLeagueId: proto.leagueId || undefined, detail: "일반병 입대" });
-    // 군입대 시 SeasonEndModal이 스킵되므로 NPC 오프시즌 처리
-    await gameStore.processAllLeaguesSeasonEnd(seasonYear);
-    seasonStore.initSeason("LEAGUE_MILITARY", (seasonYear || 2026) + 1, 100, []);
-    seasonStore.setSchedule([]);
+    await enlistProtagonist("general");
     seasonStore.resolvePendingAction("militaryEnlistAsk");
-    if (slotId) {
-      await window.projectB!.leagueAddTransactions(JSON.stringify({
-        slotId, rows: [{ seasonYear, week: 52, category: "military",
-          playerId: proto.id, playerName: proto.name,
-          fromTeamId: proto.teamId || null, fromLeagueId: proto.leagueId || null,
-          detail: "일반병 입대" }],
-      }));
-    }
-    await gameStore.save();
     await seasonStore.save();
     resolving = false;
   }

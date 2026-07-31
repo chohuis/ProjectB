@@ -18,7 +18,7 @@ import { masterStore } from "../stores/master";
 import { calcKblDraftContract } from "../utils/draftSalaryTable";
 import { buildSalaryIndex, loadRosterRules } from "../repo/newGameV3";
 import { canApplyToUniversity } from "../utils/careerTransition";
-import { generateKblSchedule } from "../utils/scheduleGen";
+import { openProSeason } from "./proSeason";
 
 /** 진로 지원 제출 (`CareerChoiceHubModal.submitApplications`) */
 export async function submitCareerApplications(opts: {
@@ -152,12 +152,9 @@ export async function acceptDraftOffer(action: {
     status: "active" as const,
   });
 
-  const proTeamIds = get(masterStore).teams
-    .filter((t) => t.leagueId === action.leagueId)
-    .map((t) => t.id);
-  const seasonYear = (get(seasonStore).seasonYear || 2026) + 1;
-  seasonStore.initSeason(action.leagueId, seasonYear, 52, proTeamIds);
-  seasonStore.setSchedule(await generateKblSchedule(proTeamIds, action.teamId));
+  // 프로 시즌 열기는 `proSeason`이 정본이다 — 예전엔 여기·재계약 모달·
+  // 시즌 롤오버 셋이 각자 리그 분기를 적고 있었다
+  await openProSeason(action.leagueId, action.teamId);
 
   gameStore.clearCareerResults();
   gameStore.setCareerApplicationsSubmitted(false);

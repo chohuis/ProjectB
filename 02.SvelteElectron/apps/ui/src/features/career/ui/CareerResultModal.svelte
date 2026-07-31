@@ -3,6 +3,7 @@
   import { seasonStore } from "../../../shared/stores/season";
   import { masterStore } from "../../../shared/stores/master";
   import { chooseDraft, chooseSchoolOrIndependent, continueCurrentStage } from "../../../shared/usecases/careerDecision";
+  import { enlistProtagonist } from "../../../shared/usecases/militaryDecision";
   import { canApplyToUniversity, canApplyToIndependent } from "../../../shared/utils/careerTransition";
 
   let resolving = false;
@@ -48,25 +49,15 @@
     } else if ((kind === "university" || kind === "independent") && teamId) {
       await chooseSchoolOrIndependent(kind, teamId);
     } else {
-      // 전원 탈락: 현역 입대 (고3 강제 케이스)
-      const slotId = $gameStore.currentSlotId;
-      const proto = $gameStore.protagonist;
-      const seasonYear = $seasonStore.seasonYear;
-      gameStore.enlistMilitary("general", 52, false, seasonYear);
-      seasonStore.initSeason("LEAGUE_MILITARY", (seasonYear || 2026) + 1, 100, []);
-      seasonStore.setSchedule([]);
+      // 전원 탈락: 현역 입대 (고3 강제 케이스).
+      // ⚠ 입대 처리는 `militaryDecision`이 정본이다 — 예전엔 여기서
+      // `processAllLeaguesSeasonEnd`를 빠뜨려 **그해 NPC 오프시즌이 통째로
+      // 안 돌았다** (나이·은퇴·FA·드래프트 배정 전부).
+      await enlistProtagonist("general");
       gameStore.setCareerApplicationsSubmitted(false);
       gameStore.clearCareerResults();
       gameStore.setCareerFinalChoice("general");
       seasonStore.resolvePendingAction("careerChoice");
-      if (slotId) {
-        await window.projectB!.leagueAddTransactions(JSON.stringify({
-          slotId, rows: [{ seasonYear, week: 52, category: "military",
-            playerId: proto.id, playerName: proto.name,
-            fromTeamId: proto.teamId || null, fromLeagueId: proto.leagueId || null,
-            detail: "일반병 입대" }],
-        }));
-      }
     }
 
     await gameStore.save();

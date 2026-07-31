@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import { gameStore } from "../../../shared/stores/game";
   import { submitCareerApplications } from "../../../shared/usecases/careerDecision";
+  import { enlistProtagonist } from "../../../shared/usecases/militaryDecision";
   import { seasonStore } from "../../../shared/stores/season";
   import { masterStore } from "../../../shared/stores/master";
   import UniversityApplyModal from "./UniversityApplyModal.svelte";
@@ -64,23 +65,14 @@
     if (resolving) return;
     if (!confirm("바로 입대하시겠습니까? 기존 신청은 모두 무시됩니다.")) return;
     resolving = true;
-    const slotId = $gameStore.currentSlotId;
-    const proto = $gameStore.protagonist;
-    const seasonYear = $seasonStore.seasonYear;
-    gameStore.enlistMilitary("general");
+    // ⚠ 예전엔 여기서 `enlistMilitary("general")`을 **인자 없이** 부르고
+    // 끝냈다 — 군 시즌 전환도, 일정 정리도, NPC 오프시즌도 없어서
+    // 입대 표시만 된 채 고교 시즌에 그대로 남았다.
+    await enlistProtagonist("general", $seasonStore.currentWeek);
     gameStore.setCareerApplicationsSubmitted(false);
     gameStore.clearCareerResults();
     gameStore.setCareerChoiceUiState({ popupOpened: false, mode: "none", confirmed: true });
     seasonStore.resolvePendingAction("careerChoiceHub");
-    if (slotId) {
-      await window.projectB!.leagueAddTransactions(JSON.stringify({
-        slotId, rows: [{ seasonYear, week: $seasonStore.currentWeek, category: "military",
-          playerId: proto.id, playerName: proto.name,
-          fromTeamId: proto.teamId || null, fromLeagueId: proto.leagueId || null,
-          detail: "일반병 입대" }],
-      }));
-    }
-    await gameStore.save();
     await seasonStore.save();
     resolving = false;
   }

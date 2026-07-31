@@ -1,6 +1,7 @@
 <script lang="ts">
   import { gameStore } from "../../../shared/stores/game";
   import { acceptDraftOffer } from "../../../shared/usecases/careerDecision";
+  import { enlistProtagonist } from "../../../shared/usecases/militaryDecision";
   import { masterStore } from "../../../shared/stores/master";
   import { seasonStore } from "../../../shared/stores/season";
   import { generateKblSchedule } from "../../../shared/utils/scheduleGen";
@@ -61,21 +62,10 @@
         context: "initial",
       });
     } else {
-      const slotId = $gameStore.currentSlotId;
-      const proto = $gameStore.protagonist;
-      const seasonYear = $seasonStore.seasonYear;
-      gameStore.enlistMilitary("general", 52, false, seasonYear);
-      seasonStore.initSeason("LEAGUE_MILITARY", (seasonYear || 2026) + 1, 100, []);
-      seasonStore.setSchedule([]);
+      // 갈 곳이 없다 — 현역 입대. 입대 처리는 `militaryDecision`이 정본이다
+      // (예전엔 여기서 오프시즌 처리를 빠뜨려 그해 세계가 정체됐다)
+      await enlistProtagonist("general");
       gameStore.setCareerFinalChoice("general");
-      if (slotId) {
-        await window.projectB!.leagueAddTransactions(JSON.stringify({
-          slotId, rows: [{ seasonYear, week: 52, category: "military",
-            playerId: proto.id, playerName: proto.name,
-            fromTeamId: proto.teamId || null, fromLeagueId: proto.leagueId || null,
-            detail: "일반병 입대" }],
-        }));
-      }
     }
 
     gameStore.clearCareerResults();
