@@ -26,6 +26,8 @@ import { loadRosterRules } from "../repo/newGameV3";
 import { staffStatsOf, staffModsOf, MANAGER_STATS, COACH_STATS } from "../utils/staffEffects";
 import { buildRelationMessages, relationSceneCatalog } from "../utils/relationMessages";
 import { facilityTierOf } from "../utils/ids";
+import { visibleLeagueIds, leaderboardLeagueIds, hasPlayedGames } from "../utils/leagueVisibility";
+import { isLeagueInScope } from "../config/releaseScope";
 import { HS_DIGEST_WEEKS, MONTHLY_STANDINGS_LEAGUES } from "./weekPhases/digest";
 
 export type ScenarioStatus = "pass" | "fail" | "skip";
@@ -460,9 +462,48 @@ const S_FARM: Scenario = {
   },
 };
 
+// ── 10. 리그가 화면에 보이는가 ───────────────────────────────────
+const S_LEAGUES: Scenario = {
+  id: "leagues",
+  title: "경기가 도는 리그가 화면 목록에 있는가",
+  eyeOnly: "탭이 실제로 눌리는지, 순위표가 렌더되는지",
+  async run(c) {
+    const s = get(seasonStore);
+    const myLeagueId = get(gameStore).protagonist.leagueId;
+    const visible = new Set(visibleLeagueIds({ leagueState: s.leagueState, myLeagueId }));
+    const lb = new Set(leaderboardLeagueIds({ leagueState: s.leagueState, myLeagueId }));
+
+    // ⚠ 이 검사가 잡는 것: **경기는 도는데 화면에서 빠진 리그.**
+    // 2군이 실제로 그랬다 — 한 시즌 465경기가 도는데 순위표 탭에 없었다.
+    // "팜리그는 시뮬 안 함"이라는 낡은 전제가 필터에 박혀 있었다.
+    const played: string[] = [];
+    for (const [lid, ls] of Object.entries(s.leagueState)) {
+      if (hasPlayedGames(ls)) played.push(lid);
+    }
+    c.info(`경기가 도는 리그 ${played.length}종: ${played.map((l) => l.replace("LEAGUE_", "")).join(" ")}`);
+
+    for (const lid of played) {
+      if (!isLeagueInScope(lid)) { c.info(`${lid}: 출시 범위 밖 — 안 보이는 게 맞다`); continue; }
+      c.ok(`${lid.replace("LEAGUE_", "")} 순위표에 보인다`, visible.has(lid),
+        "경기가 도는데 화면 목록에 없다");
+      c.ok(`${lid.replace("LEAGUE_", "")} 리더보드에 보인다`, lb.has(lid));
+    }
+
+    // 주인공 리그는 경기 수와 무관하게 항상 보여야 한다 (2군 강등 포함)
+    c.ok("주인공 리그가 순위표에 보인다", visible.has(myLeagueId),
+      `${myLeagueId} — 강등되면 자기 리그를 못 보는 상태다`);
+    c.ok("주인공 리그가 리더보드 맨 앞이다",
+      leaderboardLeagueIds({ leagueState: s.leagueState, myLeagueId })[0] === myLeagueId);
+
+    // 범위 밖 리그가 새어나오지 않는가
+    const leaked = [...visible].filter((lid) => !isLeagueInScope(lid));
+    c.ok("출시 범위 밖 리그가 목록에 없다", leaked.length === 0, leaked.join(", "));
+  },
+};
+
 const SCENARIOS: Scenario[] = [
   S_NEWGAME, S_DRAFT, S_FINANCE, S_INVEST, S_CONTRACT,
-  S_MAILBOX, S_RELATION, S_DETAIL, S_FARM,
+  S_MAILBOX, S_RELATION, S_DETAIL, S_FARM, S_LEAGUES,
 ];
 
 // ── 러너 ─────────────────────────────────────────────────────────

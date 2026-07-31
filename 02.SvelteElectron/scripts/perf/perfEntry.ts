@@ -169,12 +169,12 @@ export function weekTimings(): { week: number; ms: number }[] {
  * 순위가 쌓이는지는 돌려봐야 안다.
  */
 export function leagueSummary(): Record<string, {
-  schedule: number; played: number; standings: number; wins: number;
+  schedule: number; played: number; standings: number; wins: number; statPlayers: number;
 }> {
   const s = get(seasonStore);
-  const out: Record<string, { schedule: number; played: number; standings: number; wins: number }> = {};
+  const out: Record<string, { schedule: number; played: number; standings: number; wins: number; statPlayers: number }> = {};
   const bump = (lid: string, sched: number, played: number) => {
-    out[lid] ??= { schedule: 0, played: 0, standings: 0, wins: 0 };
+    out[lid] ??= { schedule: 0, played: 0, standings: 0, wins: 0, statPlayers: 0 };
     out[lid].schedule += sched;
     out[lid].played += played;
   };
@@ -185,10 +185,12 @@ export function leagueSummary(): Record<string, {
     bump(lid, sch.length, sch.filter((e) => e.result).length);
   }
   for (const [lid, ls] of Object.entries(s.leagueState)) {
-    out[lid] ??= { schedule: 0, played: 0, standings: 0, wins: 0 };
+    out[lid] ??= { schedule: 0, played: 0, standings: 0, wins: 0, statPlayers: 0 };
     const st = ls?.standings ?? [];
     out[lid].standings = st.length;
     out[lid].wins = st.reduce((a, r) => a + (r.wins ?? 0), 0);
+    // 리더보드가 쓰는 자리 — 비어 있으면 탭을 열어도 빈 표만 나온다
+    out[lid].statPlayers = Object.keys(ls?.stats ?? {}).length;
   }
   return out;
 }
