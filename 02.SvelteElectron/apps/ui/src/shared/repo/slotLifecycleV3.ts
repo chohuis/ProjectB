@@ -88,7 +88,22 @@ export async function loadGameV3(slotId: string): Promise<boolean> {
   return true;
 }
 
-/** v3 신입생 생성 — 진급 후 grade 1이 빈 고교 팀에 Rust 생성으로 채움 (첫 시즌은 로스터에 이미 포함) */
+/**
+ * v3 신입생 생성 — 진급으로 빈 자리를 **부족한 만큼 채운다.**
+ *
+ * ⚠ 예전엔 `if (hasGrade1) continue`였다. "1학년이 하나라도 있으면 그 팀은
+ * 건너뛴다"는 뜻인데, 두 가지가 겹쳐 **고교 리그가 매년 말라붙었다**:
+ *
+ *   · 생성이 요청량을 못 채워 1학년이 절반만 들어온다(실측 507/1,020)
+ *   · 그 절반이 남아 있으니 **다음 해엔 102팀 전부가 가드에 걸려 0명**이 된다
+ *
+ * 실측 붕괴 곡선: 3,060 → 2,533 → 1,749 → 945 (4시즌).
+ * 하네스는 이걸 못 봤다 — `advanceWeek`을 안 타고, INV8 임계값도
+ * 정상 로스터의 3분의 1이었다.
+ *
+ * 지금은 팀 정원(`rosterSize`)까지 **모자란 수만큼** 만든다. 한 번에 다 못
+ * 채워도 다음 시즌에 이어서 채워지므로 구멍이 누적되지 않는다.
+ */
 export async function generateFreshmenV3(seasonYear: number): Promise<number> {
   if (!isV3SlotActive()) return 0;
   const g = get(gameStore);
@@ -99,17 +114,29 @@ export async function generateFreshmenV3(seasonYear: number): Promise<number> {
   if (!rules) return 0;
   const perYear = Math.max(1, Math.round(rules.rosterSize / (rules.gradeMax ?? 3)));
 
+  // 팀별 현재 인원 — 한 번만 센다 (102팀 × 5,600명을 매번 훑으면 느리다)
+  //
+  // ⚠ **`active`만 세면 안 된다.** 부상자도 로스터를 차지한다. `active`만
+  // 세던 시절엔 부상자 수만큼 빈 자리로 착각해 정원을 넘겨 생성했다
+  // (부상 상태가 안 풀리는 결함과 겹쳐 최대 47%까지 과잉 생성됐다).
+  // 자리를 비우는 건 **은퇴뿐**이다.
+  const sizeByTeam = new Map<string, number>();
+  for (const n of g.npcs) {
+    if (n.careerStatus === "retired" || !n.currentTeam) continue;
+    if (n.currentLeague !== "LEAGUE_HIGHSCHOOL") continue;
+    sizeByTeam.set(n.currentTeam, (sizeByTeam.get(n.currentTeam) ?? 0) + 1);
+  }
+
   const newOnes: NpcSaveState[] = [];
   for (const teamId of HS_ACTIVE_TEAMS_V3) {
-    const hasGrade1 = g.npcs.some(
-      (n) => n.currentTeam === teamId && n.grade === 1 && n.careerStatus === "active",
-    );
-    if (hasGrade1) continue;
+    // 빈 자리만큼만 만든다. 정원을 넘기지 않고, 모자라면 반드시 채운다
+    const want = Math.min(perYear, rules.rosterSize - (sizeByTeam.get(teamId) ?? 0));
+    if (want <= 0) continue;
     const raw = JSON.parse(
       await window.projectB!.engine("generateFreshmenNative", JSON.stringify({
         schoolId: teamId.replace("TEAM_HS_", "SCHOOL_HS_"),
         teamId,
-        annualRosterSize: perYear,
+        annualRosterSize: want,
         pitchingOvrMin: rules.pitchingOvrMin, pitchingOvrMax: rules.pitchingOvrMax,
         battingOvrMin: rules.battingOvrMin, battingOvrMax: rules.battingOvrMax,
         devRateMin: rules.devRateMin, devRateMax: rules.devRateMax,

@@ -55,6 +55,12 @@ const refTeamIds = new Set(refs.teams.map((t) => t.id));
 
 // 팀 목록은 refs에서 읽는다 — 하드코딩하면 refs가 바뀔 때 조용히 어긋난다
 // (실제로 Phase 5-2 refs 교체 때 이 하네스가 INV3 위반 990건으로 그걸 잡아냈다)
+// 로스터 정본 — 임계값을 여기서 파생한다(코드에 숫자를 두 번 적지 않는다)
+const RULES = JSON.parse(
+  require("node:fs").readFileSync(
+    require("node:path").join(__dirname, "../resource/data/master/players/generation_rules.json"),
+    "utf8"));
+
 const HS_TEAMS = refs.teams
   .filter((t) => t.leagueId === "LEAGUE_HIGHSCHOOL")
   .map((t) => t.id)
@@ -68,7 +74,16 @@ function inv(id, cond, detail) {
 
 // ── 한 시행 ───────────────────────────────────────────────────────
 function runTrial(mgr, slotId, worldSeed) {
-  const call = (cmd, p) => slotdb.dispatch(mgr, cmd, { slotId, ...p });
+  // ⚠ `dispatch`는 예외를 `{ error }` 객체로 **삼킨다.** 그걸 그대로 쓰면
+  // 진짜 오류 대신 "call(...).map is not a function" 같은 2차 증상만 남아
+  // 어디가 터졌는지 못 찾는다 (실제로 이 하네스가 그 상태로 죽어 있었다).
+  const call = (cmd, p) => {
+    const r = slotdb.dispatch(mgr, cmd, { slotId, ...p });
+    if (r && typeof r === "object" && !Array.isArray(r) && typeof r.error === "string") {
+      throw new Error(`repo:${cmd} 실패 — ${r.error}`);
+    }
+    return r;
+  };
 
   const gen = JSON.parse(engine.generateLeagueRosterNative(JSON.stringify({
     leagueId: "LEAGUE_HIGHSCHOOL", seasonYear: 2026, worldSeed,
@@ -183,11 +198,19 @@ function runTrial(mgr, slotId, worldSeed) {
 
     // ── INV8: 고교 로스터 유지 — 졸업으로 리그가 비어버리지 않는가 ──
     // v1의 "드래프트 풀 부족(64 < 80)" 버그가 정확히 이 계열이었다.
+    //
+    // ⚠ **임계값을 규칙 파일에서 파생한다.** 예전엔 `HS_TEAMS.length * 10`
+    // (=1,020)이었고 주석은 "10팀 × 최소10"이라 적혀 있었는데, `HS_TEAMS`는
+    // 실제로 102팀 전부라 **정상 로스터(102×30=3,060)의 3분의 1**이 기준이었다.
+    // 즉 인원이 3분의 2 사라져도 통과했다 — 실측에서 5시즌 만에
+    // 3,060 → 1,286으로 줄었는데 이 검사는 조용했다.
     const hsActive = slotdb.dispatch(mgr, "getByLeague", {
       slotId, leagueId: "LEAGUE_HIGHSCHOOL", activeOnly: true,
     });
-    inv("INV8_고교로스터", hsActive.length >= HS_TEAMS.length * 10,
-      `S${s}: 고교 활성 ${hsActive.length}명 (10팀 × 최소10 = ${HS_TEAMS.length * 10} 미만)`);
+    const hsSize = RULES.rosterRules?.LEAGUE_HIGHSCHOOL?.rosterSize ?? 30;
+    const hsFloor = Math.round(HS_TEAMS.length * hsSize * 0.75);
+    inv("INV8_고교로스터", hsActive.length >= hsFloor,
+      `S${s}: 고교 활성 ${hsActive.length}명 (${HS_TEAMS.length}팀 × ${hsSize}명 × 75% = ${hsFloor} 미만)`);
 
     stats.retired = reloaded.filter((n) => n.careerStatus === "retired").length;
     stats.seasons = s;
@@ -290,7 +313,9 @@ for (let t = 0; t < TRIALS; t++) {
   try {
     r = runTrial(mgr, `H${t}`, seed);
   } catch (e) {
-    violations.push({ id: "CRASH", detail: `시행${t} (seed ${seed}): ${e.message}` });
+    // 스택을 버리면 "call(...).map is not a function"만 남아 어느 호출인지 못 찾는다
+    const where = String(e.stack || "").split(/\r?\n/).slice(1, 5).join(" | ");
+    violations.push({ id: "CRASH", detail: `시행${t} (seed ${seed}): ${e.message} @ ${where}` });
     continue;
   }
   results.push(r);

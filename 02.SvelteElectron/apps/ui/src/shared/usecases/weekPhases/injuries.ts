@@ -62,8 +62,25 @@ export async function processNpcInjuries(weekNum: number): Promise<void> {
   const g = get(gameStore);
   const m = get(masterStore);
 
-  // 완치된 선수 → OVR 영구 손실 적용
+  // 완치된 선수 → 복귀 처리 + OVR 영구 손실 적용
+  //
+  // ⚠ **`careerStatus`를 되돌리는 코드가 없었다.** 부상 발생 시
+  // `updateNpcCareerStatus(id, "injured")`로 바꾸는데 완치 시 `active`로
+  // 되돌리질 않아, 한 번 다친 NPC는 **영구히 `injured`로 남았다.**
+  //
+  // 실측: 시즌 중 고교 3,015명 중 **1,429명(47%)이 injured**.
+  // `activeOnly` 조회에서 절반이 빠지니 로스터·순위·승강·트레이드·FA·
+  // 드래프트 후보·성장에서 통째로 제외됐고, 시즌 종료에 초기화되면서
+  // "인원이 롤오버마다 2배가 된다"처럼 보였다.
+  // 완치자가 없는 주가 대부분이다 — 5,600건 Map을 그때마다 만들지 않는다
+  const npcById = healed.length > 0
+    ? new Map(g.npcs.map((n) => [n.npcId, n]))
+    : null;
   for (const { playerId, entry } of healed) {
+    // 은퇴한 선수는 되돌리지 않는다 — 수술 부상 은퇴가 여기로 오면 안 된다
+    if (npcById?.get(playerId)?.careerStatus === "injured") {
+      gameStore.updateNpcCareerStatus(playerId, "active");
+    }
     if (entry.permanentPenaltyApplied) continue;
     const delta = NPC_INJURY_OVR_PENALTY[entry.type] ?? 0;
     if (delta !== 0) seasonStore.patchNpcLiveOvr(playerId, delta);

@@ -80,3 +80,60 @@ export function validateTeamRefs(
   }
   return violations;
 }
+
+// ── 무대별 성장 계수 ─────────────────────────────────────────────
+//
+// ⚠ **정본은 `generation_rules.json`의 `growthRules.facilityFactor`다.**
+// 예전엔 이 표가 Rust(`npc_sim.rs facility_factor()`)에만 있었고,
+// **대학 0.95 < 고교 1.08**이라 고교 출신이 대학에 가면 성장이 오히려
+// 느려졌다. 그래서 얼리 신청 하한(68)을 넘는 사람이 유출량을 못 따라가
+// **대학 드래프트 후보가 5년에 걸쳐 220 → 1로 말라붙었다**(실측).
+let _facFactors: Record<string, number> | null = null;
+
+export async function loadFacilityFactors(): Promise<Record<string, number>> {
+  if (_facFactors) return _facFactors;
+  const raw = await window.projectB!.masterFetch("players/generation_rules.json") as
+    { growthRules?: { facilityFactor?: Record<string, number> } } | null;
+  const t = raw?.growthRules?.facilityFactor;
+  if (!t) throw new Error("[ids] generation_rules.json growthRules.facilityFactor 없음");
+  _facFactors = t;
+  return t;
+}
+
+/** 규칙 파일을 미리 읽어둔 뒤 동기적으로 쓴다. 못 읽었으면 undefined → Rust 폴백 */
+export function facilityFactorOf(tier: string): number | undefined {
+  return _facFactors?.[tier];
+}
+
+// ── NPC 성장 속도 규칙 ───────────────────────────────────────────
+//
+// ⚠ **정본은 `generation_rules.json`의 `growthRules.xp`다.**
+// 예전엔 Rust에 박혀 있었고, 그 값으로는 17세 유망주가 스탯 하나를 +1
+// 올리는 데 85주가 걸렸다 — 고교 3년을 다 뛰어도 OVR이 1도 안 올랐다.
+// 30세 감퇴만 정상 작동해서 세계 평균이 매년 내려앉았다.
+
+export type GrowthXpRules = {
+  multiplierPitcher: number;
+  multiplierBatter: number;
+  ageBands: Array<{ maxAge: number; f: number }>;
+};
+
+let _xpRules: GrowthXpRules | null = null;
+
+export async function loadGrowthXpRules(): Promise<GrowthXpRules> {
+  if (_xpRules) return _xpRules;
+  const raw = await window.projectB!.masterFetch("players/generation_rules.json") as
+    { growthRules?: { xp?: GrowthXpRules } } | null;
+  const t = raw?.growthRules?.xp;
+  if (!t) throw new Error("[ids] generation_rules.json growthRules.xp 없음");
+  if (!Array.isArray(t.ageBands) || t.ageBands.length === 0) {
+    throw new Error("[ids] growthRules.xp.ageBands가 비었다");
+  }
+  _xpRules = t;
+  return t;
+}
+
+/** 미리 읽어둔 성장 규칙. 못 읽었으면 undefined → Rust 폴백 */
+export function growthXpRules(): GrowthXpRules | undefined {
+  return _xpRules ?? undefined;
+}

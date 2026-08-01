@@ -305,6 +305,14 @@ export interface NpcLiveStat {
   peakOvr?: number;
   pitches?: import("../types/save").PitchEntry[];
   pitchInTraining?: { id: string; progress: number; isNew: boolean };
+  /**
+   * 스탯별 미반영 노화 누적분.
+   *
+   * ⚠ **매주 왕복시켜야 한다.** 안 넘기면 Rust가 매번 0에서 시작하고,
+   * 주당 감퇴량(연 2.5 / 52 = 0.048)이 영원히 1.0을 못 넘어 **노화가
+   * 통째로 사라진다** — 실제로 그 상태였다.
+   */
+  agingDebt?: Record<string, number>;
 }
 
 // ── save_season.json 전체 구조 ─────────────────────────────────

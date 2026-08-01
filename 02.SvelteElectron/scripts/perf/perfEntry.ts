@@ -35,6 +35,7 @@ import {
   submitCareerApplications, confirmCareerResults, chooseDraft,
   chooseSchoolOrIndependent, acceptDraftOffer, rejectDraftOffer, continueCurrentStage,
 } from "../../apps/ui/src/shared/usecases/careerDecision";
+import { facilityFactorOf, SANGMU_TEAM_IDS } from "../../apps/ui/src/shared/utils/ids";
 import { slotRepo } from "../../apps/ui/src/shared/repo/slotRepo";
 import { dehydrateToRepo } from "../../apps/ui/src/shared/repo/npcAdapter";
 import type { ProtagonistSave } from "../../apps/ui/src/shared/types/save";
@@ -559,6 +560,309 @@ export function draftOvrProbe(): Record<string, unknown> {
     지명_상위5: cands.filter((c) => picked.has(c.playerId)).slice(0, 5).map((c) => row(c.playerId)),
     미지명_상위3: cands.filter((c) => !picked.has(c.playerId)).slice(0, 3).map((c) => row(c.playerId)),
     미지명_하위3: cands.filter((c) => !picked.has(c.playerId)).slice(-3).map((c) => row(c.playerId)),
+  };
+}
+
+/**
+ * 고교 학년 분포 + 팀별 1학년 보유 — 신입생이 왜 덜 생기는지 가른다.
+ *
+ * `generateFreshmenV3`는 **1학년이 하나라도 있는 팀은 건너뛴다**
+ * (`hasGrade1` → `continue`). 진급 후에도 1학년이 남아 있으면 그 팀은
+ * 신입생을 못 받고 매년 인원이 준다 — 실측에서 고교가
+ * 3,060 → 2,533 → 1,749 → 945로 무너졌다.
+ */
+/**
+ * **slot.db를 직접 센다** — `gameStore.npcs`는 메모리 작업 세트지 정본이 아니다.
+ *
+ * 스토어 기준 측정에서 고교 인원이 시즌 중 1,000명쯤 줄었다가 롤오버에
+ * 되돌아왔다. 그게 실제 데이터인지 스토어 적재 방식의 문제인지는
+ * **정본(slot.db)을 봐야** 안다. 이번 세션에서 "측정기가 무엇을 안 보는지"를
+ * 확인 안 해 틀린 판단을 세 번 했다.
+ */
+export async function hsDbCount(): Promise<Record<string, unknown>> {
+  const slotId = get(gameStore).currentSlotId;
+  if (!slotId) return { 오류: "슬롯 없음" };
+  const rows = await slotRepo.getByLeague(slotId, "LEAGUE_HIGHSCHOOL", true);
+  // 필터 없이도 세서 **어떤 상태로 빠지는지** 본다.
+  // 시즌 중 고교가 2,527 → 1,514로 줄었다가 롤오버에 돌아온다 —
+  // `activeOnly`가 거르는 상태가 무엇인지가 답이다
+  const allRows = await slotRepo.getByLeague(slotId, "LEAGUE_HIGHSCHOOL", false);
+  const byStatus: Record<string, number> = {};
+  for (const r of allRows as { careerStatus?: string | null }[]) {
+    const k = r.careerStatus ?? "(없음)";
+    byStatus[k] = (byStatus[k] ?? 0) + 1;
+  }
+  const byGrade: Record<string, number> = {};
+  const teams = new Set<string>();
+  for (const r of rows as { grade?: number | null; currentTeam?: string | null }[]) {
+    const k = r.grade == null ? "없음" : String(r.grade);
+    byGrade[k] = (byGrade[k] ?? 0) + 1;
+    if (r.currentTeam) teams.add(r.currentTeam);
+  }
+  const store = get(gameStore).npcs.filter(
+    (n) => n.currentLeague === "LEAGUE_HIGHSCHOOL" && n.careerStatus === "active").length;
+  return { db활성: rows.length, db전체: allRows.length, 상태별: byStatus,
+           db학년별: byGrade, db팀수: teams.size, 스토어: store };
+}
+
+export function hsGradeProbe(): Record<string, unknown> {
+  const npcs = get(gameStore).npcs.filter(
+    (n) => n.currentLeague === "LEAGUE_HIGHSCHOOL" && n.careerStatus === "active");
+  const byGrade: Record<string, number> = {};
+  const teamsWithG1 = new Set<string>();
+  const teams = new Set<string>();
+  for (const n of npcs) {
+    const key = n.grade == null ? "없음" : String(n.grade);
+    byGrade[key] = (byGrade[key] ?? 0) + 1;
+    if (n.currentTeam) teams.add(n.currentTeam);
+    if (n.grade === 1 && n.currentTeam) teamsWithG1.add(n.currentTeam);
+  }
+  const perTeam = [...teams]
+    .map((t) => npcs.filter((n) => n.currentTeam === t).length)
+    .sort((a, b) => a - b);
+  return {
+    총원: npcs.length,
+    팀수: teams.size,
+    학년별: byGrade,
+    "1학년보유팀": teamsWithG1.size,
+    "팀당(최소/중앙/최대)": [perTeam[0], perTeam[Math.floor(perTeam.length / 2)], perTeam[perTeam.length - 1]],
+  };
+}
+
+/**
+ * 리그별 **원시 인원** — 필터 없이 센다.
+ *
+ * `leagueOvrSnapshot`은 OVR이 있는 활성 NPC만 세므로, 신입생이 라이브 스탯
+ * 없이 들어오면 빠진다. 인원 붕괴가 진짜인지 측정 아티팩트인지 가르려면
+ * 거르지 않은 수가 필요하다.
+ */
+export function leagueRawCounts(): Record<string, Record<string, number>> {
+  const out: Record<string, Record<string, number>> = {};
+  for (const n of get(gameStore).npcs) {
+    const lg = n.currentLeague ?? "(없음)";
+    const st = n.careerStatus ?? "(없음)";
+    ((out[lg] ??= {})[st] ??= 0);
+    out[lg][st] += 1;
+  }
+  return out;
+}
+
+/** 리그별 OVR 분포 — 성장이 실제로 일어나는지 본다 */
+export function leagueOvrSnapshot(): Record<string, { avg: number; p90: number; n: number }> {
+  const out: Record<string, { avg: number; p90: number; n: number }> = {};
+  const want: Record<string, string> = {
+    LEAGUE_HIGHSCHOOL: "고교", LEAGUE_UNIVERSITY: "대학",
+    LEAGUE_INDEPENDENT: "독립", LEAGUE_KBL: "1군",
+  };
+  const live = get(npcLiveStatsStore);
+  const buckets: Record<string, number[]> = {};
+  for (const n of get(gameStore).npcs) {
+    const label = want[n.currentLeague ?? ""];
+    if (!label || n.careerStatus !== "active") continue;
+    const ls = live[n.npcId];
+    const ovr = Math.max(
+      ls?.pitching?.ovr ?? n.pitching?.ovr ?? 0,
+      ls?.batting?.ovr ?? n.batting?.ovr ?? 0,
+    );
+    if (ovr <= 0) continue;
+    (buckets[label] ??= []).push(ovr);
+  }
+  for (const [k, arr] of Object.entries(buckets)) {
+    arr.sort((a, b) => a - b);
+    out[k] = {
+      avg: Math.round(arr.reduce((s2, v) => s2 + v, 0) / arr.length * 10) / 10,
+      p90: Math.round(arr[Math.floor(arr.length * 0.9)] ?? 0),
+      n: arr.length,
+    };
+  }
+  return out;
+}
+
+// ── 성장 곡선 실측 ──────────────────────────────────────────────
+//
+// 리그 평균 OVR이 떨어지는 게 ①성장이 약해서인지 ②노화가 세서인지
+// ③유입 질이 낮아서인지를 가른다. 평균만 봐서는 셋을 구분할 수 없다.
+//
+// `ovrCurve()`는 **나이별 평균**이라 곡선 모양을 본다 — 건강하면 20대
+// 중후반까지 오르고 그 뒤 꺾인다. 평평하거나 계속 내려가면 성장이 죽은 것.
+// `ovrMark()`/`ovrDelta()`는 **같은 선수**를 시즌 전후로 비교한다 —
+// 구성 변화(신입 유입·졸업)에 오염되지 않은 순수 성장 폭이다.
+
+type OvrRow = { ovr: number; age: number; league: string };
+
+function ovrRows(): Map<string, OvrRow> {
+  const want: Record<string, string> = {
+    LEAGUE_HIGHSCHOOL: "고교", LEAGUE_UNIVERSITY: "대학",
+    LEAGUE_INDEPENDENT: "독립", LEAGUE_KBL: "1군", LEAGUE_KBL_FARM: "2군",
+  };
+  const live = get(npcLiveStatsStore);
+  const out = new Map<string, OvrRow>();
+  for (const n of get(gameStore).npcs) {
+    const league = want[n.currentLeague ?? ""];
+    if (!league || n.careerStatus === "retired") continue;
+    const ls = live[n.npcId];
+    const ovr = Math.max(
+      ls?.pitching?.ovr ?? n.pitching?.ovr ?? 0,
+      ls?.batting?.ovr ?? n.batting?.ovr ?? 0,
+    );
+    if (ovr <= 0) continue;
+    out.set(n.npcId, { ovr, age: n.age ?? 0, league });
+  }
+  return out;
+}
+
+const avg = (a: number[]) => Math.round((a.reduce((s, v) => s + v, 0) / a.length) * 10) / 10;
+
+/**
+ * 학년제 리그(고교·대학)에서 나이와 학년의 관계를 본다.
+ *
+ * 고교 학년 진급이 `careerStatus == "active"`만 처리해서 **부상 중인 선수는
+ * 학년이 안 오르고 졸업도 안 됐다.** 나이만 매년 +1 되어 20~21세 고교생이
+ * 쌓였고, 이 프로브가 그걸 잡았다.
+ *
+ * ⚠ **`age = ageBase + grade`는 초기 로스터 생성 규칙이지 런타임 불변식이
+ * 아니다.** 대학은 고교 졸업(20세) → 드래프트 미지명 → 진학 경로가 1년을
+ * 소비해서 **21세 1학년이 정상적으로 생긴다**(실측: 매년 ~88명, 그 코호트가
+ * 22세 2학년으로 그대로 진급). `학년≠나이`를 대학에서 결함으로 읽지 말 것 —
+ * 한 번 그렇게 착각했다. 고교는 유입 경로가 신입생 생성 하나뿐이라 다르다.
+ */
+export function gradeAgeProbe(): Record<string, unknown> {
+  const RULES: Record<string, { base: number; max: number }> = {
+    LEAGUE_HIGHSCHOOL: { base: 16, max: 3 },
+    LEAGUE_UNIVERSITY: { base: 19, max: 4 },
+  };
+  const out: Record<string, unknown> = {};
+  for (const [lg, r] of Object.entries(RULES)) {
+    // ⚠ **상무를 빼야 한다.** 체육부대 입대자는 `currentLeague`가
+    // LEAGUE_UNIVERSITY로 바뀌어 대학 리그에서 뛴다. 20대 중후반 프로 선수라
+    // 학년이 없고 나이도 학부생 범위를 넘는데, 그건 설계지 결함이 아니다.
+    const rows = get(gameStore).npcs.filter(
+      (n) => n.currentLeague === lg
+        && n.careerStatus !== "retired"
+        && n.careerStatus !== "military"
+        && !SANGMU_TEAM_IDS.has(n.currentTeam ?? ""),
+    );
+    const overAge = rows.filter((n) => (n.age ?? 0) > r.base + r.max);
+    const mismatch = rows.filter((n) => n.grade != null && n.age !== r.base + n.grade);
+    const byAge: Record<number, number> = {};
+    for (const n of rows) byAge[n.age ?? 0] = (byAge[n.age ?? 0] ?? 0) + 1;
+    out[lg.replace("LEAGUE_", "")] = {
+      총원: rows.length,
+      정상나이: `${r.base + 1}~${r.base + r.max}`,
+      초과나이: overAge.length,
+      "학년≠나이": mismatch.length,
+      학년없음: rows.filter((n) => n.grade == null).length,
+      나이분포: byAge,
+      // 숫자만 보면 원인을 못 찾는다 — 실제 선수 몇 명을 같이 낸다
+      불일치표본: mismatch.slice(0, 6).map(
+        (n) => `${n.grade}학년/${n.age}세(${n.currentTeam ?? "?"})`,
+      ),
+    };
+  }
+  return out;
+}
+
+/** 나이별 평균 OVR — 리그별. 성장 곡선의 모양을 본다 */
+export function ovrCurve(): Record<string, Record<number, { ovr: number; n: number }>> {
+  const byLeagueAge: Record<string, Record<number, number[]>> = {};
+  for (const r of ovrRows().values()) {
+    ((byLeagueAge[r.league] ??= {})[r.age] ??= []).push(r.ovr);
+  }
+  const out: Record<string, Record<number, { ovr: number; n: number }>> = {};
+  for (const [lg, ages] of Object.entries(byLeagueAge)) {
+    out[lg] = {};
+    for (const [age, arr] of Object.entries(ages)) {
+      if (arr.length < 5) continue; // 표본 5명 미만은 노이즈
+      out[lg][Number(age)] = { ovr: avg(arr), n: arr.length };
+    }
+  }
+  return out;
+}
+
+let _ovrMark: Map<string, OvrRow> | null = null;
+
+/** 성장 폭 비교 기준점을 찍는다 */
+export function ovrMark(): number {
+  _ovrMark = ovrRows();
+  return _ovrMark.size;
+}
+
+/**
+ * 기준점 이후 **같은 선수**의 OVR 변화. 나이대별로 묶어 평균 낸다.
+ * 리그는 기준점 시점 기준(승격·진학한 선수를 원래 자리에서 센다).
+ */
+export function ovrDelta(): Record<string, Record<string, { d: number; n: number; up: number; dn: number }>> {
+  if (!_ovrMark) return {};
+  const now = ovrRows();
+  const bucketOf = (age: number) =>
+    age <= 18 ? "~18" : age <= 21 ? "19-21" : age <= 24 ? "22-24"
+    : age <= 27 ? "25-27" : age <= 30 ? "28-30" : "31+";
+  const acc: Record<string, Record<string, number[]>> = {};
+  for (const [id, was] of _ovrMark) {
+    const is = now.get(id);
+    if (!is) continue; // 은퇴·이탈은 성장 폭 계산에서 뺀다
+    ((acc[was.league] ??= {})[bucketOf(was.age)] ??= []).push(is.ovr - was.ovr);
+  }
+  const out: Record<string, Record<string, { d: number; n: number; up: number; dn: number }>> = {};
+  for (const [lg, buckets] of Object.entries(acc)) {
+    out[lg] = {};
+    for (const [b, arr] of Object.entries(buckets)) {
+      // ⚠ 소수 1자리로 반올림하면 "0.0"과 "정말 0"이 구분되지 않는다.
+      // 한 명도 안 변한 것과 전원이 +0.04인 것은 원인이 전혀 다르다 —
+      // 변화 인원(up/dn)을 같이 낸다.
+      out[lg][b] = {
+        d: Math.round((arr.reduce((s, v) => s + v, 0) / arr.length) * 100) / 100,
+        n: arr.length,
+        up: arr.filter((v) => v > 0).length,
+        dn: arr.filter((v) => v < 0).length,
+      };
+    }
+  }
+  return out;
+}
+
+/**
+ * 주간 성장이 **누구를 도는지** 센다.
+ *
+ * `processWeeklyNpcGrowth`는 `masterStore.entities`를 돌면서
+ * `npcLiveStatsStore[id]`가 있는 선수만 성장시킨다. 그런데 리그 인원·OVR
+ * 측정기는 전부 `gameStore.npcs`를 본다 — **출처가 다르다.**
+ * 둘의 교집합이 작으면 "성장이 0으로 보이는" 현상이 그대로 설명된다.
+ * 실패는 조용하다: `if (npcs.length === 0) return;`이라 오류 로그도 안 남는다.
+ */
+export function growthInputProbe(): Record<string, unknown> {
+  const m = get(masterStore);
+  const live = get(npcLiveStatsStore);
+  const g = get(gameStore);
+  const players = m.entities.filter((e) => e.role === "player");
+  const withLive = players.filter((e) => live[e.id]);
+  const byLeague: Record<string, { entities: number; live: number; store: number }> = {};
+  for (const e of players) {
+    const k = e.leagueId ?? "(없음)";
+    (byLeague[k] ??= { entities: 0, live: 0, store: 0 }).entities++;
+    if (live[e.id]) byLeague[k].live++;
+  }
+  for (const n of g.npcs) {
+    const k = n.currentLeague ?? "(없음)";
+    (byLeague[k] ??= { entities: 0, live: 0, store: 0 }).store++;
+  }
+  return {
+    "masterStore.entities(전체)": m.entities.length,
+    "그중 player": players.length,
+    "liveStats 보유(=성장 대상)": withLive.length,
+    "npcLiveStats 총건수": Object.keys(live).length,
+    "gameStore.npcs": g.npcs.length,
+    리그별: byLeague,
+  };
+}
+
+/** 성장 계수가 실제로 Rust에 전달되는지 — 배선 확인용 */
+export function growthFactorProbe(): Record<string, unknown> {
+  return {
+    규칙파일값: {
+      고교: facilityFactorOf("고교"), 대학: facilityFactorOf("대학"),
+      "1군": facilityFactorOf("1군"), 독립: facilityFactorOf("독립"),
+    },
   };
 }
 

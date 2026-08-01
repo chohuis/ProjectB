@@ -29,7 +29,7 @@ const vlog = (s) => { if (verbose) log("      " + s); };
 //
 // `rt2.cjs` 계열 스크립트가 매번 이 루프를 다시 적고 있었다. 한 곳에 둔다.
 async function drive(app, opts) {
-  const { maxSeasons = 8, until, onSeason } = opts;
+  const { maxSeasons = 8, until, onSeason, onTick } = opts;
   const start = app.currentSeason();
   let guard = 0;
   const trail = [];
@@ -42,6 +42,10 @@ async function drive(app, opts) {
     const before = app.currentWeek();
     if (opts.applyPolicy) opts.applyPolicy();
     await app.autoRun();               // 오류를 삼키지 않는다 (throw)
+    // 시즌 **중간** 상태를 보는 유일한 창이다. `onSeason`은 롤오버에서만 도는데
+    // 롤오버는 부상을 전부 리셋하므로, 거기서만 재면 시즌 중 부상 누적을
+    // 영영 못 본다 (실제로 부상 상태 미복구 결함이 그렇게 숨어 있었다)
+    if (onTick) onTick(app);
     if (app.currentWeek() > before) continue;
 
     if (app.pendingKind() === "draftObserve") { await app.skipDraftObserve(); continue; }
@@ -187,6 +191,40 @@ const PATHS = [
       return `독립 경유 → ${st.team}`;
     },
   },
+  {
+    id: "T11",
+    name: "NPC 부상 — 발생하고 회복되는가",
+    // **실제로 있었던 결함을 고정한다.** 부상이 나면 `careerStatus`를
+    // "injured"로 바꾸는데 완치 시 "active"로 되돌리는 코드가 없었다.
+    // 한 번 다친 NPC가 영영 injured로 남아 시즌 중 고교의 **47%**(1,429/3,015)가
+    // 부상 상태였고, 로스터·순위·트레이드·FA·드래프트 후보·시즌 기록에서
+    // 통째로 빠졌다. 시즌 롤오버가 상태를 리셋해서 시즌 경계에서만 보면
+    // 멀쩡해 보였다 — 그래서 **시즌 중간**을 본다.
+    policy: { draft: false, university: true, independent: false },
+    maxSeasons: 2,
+    until: (a) => a.currentSeason() >= 2028,
+    onTick(app, out) {
+      const raw = app.leagueRawCounts()["LEAGUE_HIGHSCHOOL"] ?? {};
+      const injured = raw.injured ?? 0;
+      const alive = (raw.active ?? 0) + injured;
+      if (alive < 100) return;                       // 아직 세계가 안 찼다
+      const ratio = injured / alive;
+      if (ratio > out.injPeak) out.injPeak = ratio;
+      if (injured > out.injMax) out.injMax = injured;
+      // 정점을 찍은 뒤 실제로 줄어든 적이 있는가 = 회복이 반영된다
+      if (out.injMax > 0 && injured < out.injMax) out.recovered = true;
+      out.injSeen = out.injSeen || injured > 0;
+      out.samples++;
+    },
+    check(app, r, out) {
+      if (out.samples < 10) throw new Error(`표본 부족 (${out.samples}회) — 측정이 안 돌았다`);
+      if (!out.injSeen) throw new Error("부상이 한 번도 발생하지 않았다 — 부상 계산이 죽었을 수 있다");
+      if (!out.recovered) throw new Error(`부상자 수가 한 번도 줄지 않았다 (최대 ${out.injMax}명) — 회복 시 active 복귀가 안 된다`);
+      const pct = (out.injPeak * 100).toFixed(1);
+      if (out.injPeak > 0.25) throw new Error(`고교 부상 비율이 ${pct}%까지 올라갔다 (상한 25%)`);
+      return `부상 정점 ${out.injMax}명 (${pct}%) · 회복 확인 · 표본 ${out.samples}회`;
+    },
+  },
 ];
 
 // ── 실행 ─────────────────────────────────────────────────────────
@@ -210,11 +248,16 @@ const PATHS = [
         typeof p.policy === "function" ? p.policy(app.careerStage()) : p.policy);
       applyPolicy();
 
-      const out = { grades: new Set(), enlistAge: null, aca: { semesters: 0, gpa: null, warn: 0, repeated: 0 } };
+      const out = {
+        grades: new Set(), enlistAge: null,
+        aca: { semesters: 0, gpa: null, warn: 0, repeated: 0 },
+        injPeak: 0, injMax: 0, injSeen: false, recovered: false, samples: 0,
+      };
       const r = await drive(app, {
         maxSeasons: p.maxSeasons,
         until: p.until,
         applyPolicy,
+        onTick: p.onTick ? (a) => p.onTick(a, out) : undefined,
         onSeason: p.watch ? (a) => p.watch(a, out) : undefined,
         onDecision: p.onDecision ? (a, d, st) => p.onDecision(a, d, st, out) : undefined,
       });

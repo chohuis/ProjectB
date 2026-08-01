@@ -723,5 +723,60 @@
         "careerNet": true
       }
     }
+  },
+  "growthRules": {
+    "_note": "무대별 성장 계수 — 정본. 예전엔 Rust facility_factor()에 박혀 있었다(코드에 표를 두 번 적지 말 것). 읽는 곳: engine-native/src/npc_sim.rs training_factor()",
+    "facilityFactor": {
+      "_note": "대학은 고교보다 커야 한다. 예전엔 대학 0.95 < 고교 1.08이라 고교 출신이 대학에 가면 성장이 오히려 느려졌고, 그래서 얼리 신청 하한(68)을 넘는 사람이 유출량을 못 따라가 대학 후보가 5년에 걸쳐 220→1로 말라붙었다",
+      "1군": 1,
+      "2군": 0.92,
+      "대학": 1.15,
+      "고교": 1.05,
+      "독립": 0.85
+    },
+    "xp": {
+      "_note": "NPC 성장 속도 정본. 읽는 곳: weekPhases/growth.ts → Rust calc_weekly_npc_growth. 목표 곡선(시즌당 OVR): ~18 +4.5 / 19-21 +4.0 / 22-24 +2.5 / 25-27 +1.5 / 28-30 +0.6 / 31+ 감퇴. 예전엔 이 값이 Rust에 박혀 있었고 17세가 스탯 +1 올리는 데 85주가 걸렸다 — 고교 3년에 OVR이 1도 안 올랐다. 검증: npm run test:growth",
+      "_note2": "투/타 배율이 다른 이유: XP 배분 가중치가 커버하는 OVR 비중이 투수 12중 8.5, 타자 11.8중 6.6이라 같은 XP로도 투수가 더 오른다",
+      "multiplierPitcher": 30,
+      "multiplierBatter": 39,
+      "ageBands": [
+        {
+          "maxAge": 18,
+          "f": 1.8
+        },
+        {
+          "maxAge": 21,
+          "f": 1.41
+        },
+        {
+          "maxAge": 24,
+          "f": 0.71
+        },
+        {
+          "maxAge": 27,
+          "f": 0.52
+        },
+        {
+          "maxAge": 30,
+          "f": 0.22
+        },
+        {
+          "maxAge": 32,
+          "f": 0.08
+        },
+        {
+          "maxAge": 99,
+          "f": 0
+        }
+      ],
+      "_note3": "noPerfBase/phaseWeight: 배경 NPC는 대부분 경기 라인에 안 올라 noPerfBase에 걸린다. 예전 0.40 × offseason 0.20 = 0.08까지 떨어졌고, training_factor가 오프시즌을 1.50으로 밀어주는 것과 정면으로 상쇄됐다 — 오프시즌은 원래 훈련기다",
+      "noPerfBase": 0.7,
+      "phaseWeight": {
+        "offseason": 0.7,
+        "preseason": 0.8,
+        "postseason": 0.85,
+        "season": 1
+      }
+    }
   }
 }

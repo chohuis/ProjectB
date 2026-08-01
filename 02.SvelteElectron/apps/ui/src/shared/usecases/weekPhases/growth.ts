@@ -4,7 +4,10 @@ import { gameStore } from "../../stores/game";
 import { masterStore } from "../../stores/master";
 import { getLeagueRadius } from "../../utils/radiusGate";
 import { slotRepo } from "../../repo/slotRepo";
-import { facilityTierOf } from "../../utils/ids";
+import {
+  facilityTierOf, facilityFactorOf, loadFacilityFactors,
+  loadGrowthXpRules, growthXpRules,
+} from "../../utils/ids";
 import { staffStatsOf, factorOf } from "../../utils/staffEffects";
 import type { CareerStage } from "../../types/save";
 
@@ -67,11 +70,17 @@ export async function processWeeklyNpcGrowth(weekNum: number, careerStage: Caree
   //     리그에서 파생한다 (`facilityTierOf`)
   //  2. `manager.stats.development`는 존재하지 않는 키라 항상 50이었다.
   //     감독이 성장에 기여하는 축은 `motivator`다 (staff_rules.json 정본 5종)
+  // 성장 계수는 규칙 파일이 정본이다 — 한 번 읽고 캐시한다
+  await loadFacilityFactors();
+  await loadGrowthXpRules();
+
   const teamContexts = m.teams.map((t) => {
     const staff = staffStatsOf(t.id, m.entities);
     return {
       teamId: t.id,
       facilityTier: facilityTierOf(t.leagueId),
+      // 성장 계수의 정본은 규칙 파일이다 — Rust의 표는 폴백일 뿐이다
+      facilityFactor: facilityFactorOf(facilityTierOf(t.leagueId)),
       managerDevelopment: staff.motivator,
       // 시설 투자에 적극적인 구단주면 코치 지도력이 더 먹힌다
       coachTeaching: staff.teaching * factorOf("facilityInvestment", staff.facilityInvestment),
@@ -145,6 +154,8 @@ export async function processWeeklyNpcGrowth(weekNum: number, careerStage: Caree
         pitches:         live?.pitches ?? p?.pitches ?? [],
         pitcherRole:     p?.position ?? "",
         pitchInTraining: live?.pitchInTraining,
+        // 노화 누적분 — 안 넘기면 매주 0에서 시작해 노화가 영영 안 걸린다
+        agingDebt:       live?.agingDebt ?? {},
       };
     });
 
@@ -158,6 +169,8 @@ export async function processWeeklyNpcGrowth(weekNum: number, careerStage: Caree
       currentPhase,
       monthIndex: 0,  // 주간 모드에서는 사용 안 함
       pitchCatalogIds: m.pitchCatalog.map((p) => p.id),
+      // 성장 속도 정본은 규칙 파일이다 — Rust의 표는 폴백일 뿐이다
+      xpRules: growthXpRules(),
     }))
   ) as { updated?: Array<{
     npcId: string;

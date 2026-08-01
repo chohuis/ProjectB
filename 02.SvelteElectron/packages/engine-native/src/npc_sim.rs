@@ -1080,7 +1080,7 @@ pub fn advance_grades(params: AdvanceGradesParams) -> GradeAdvanceResult {
 
     for npc in params.npcs {
         let is_hs = npc.current_league == "LEAGUE_HIGHSCHOOL"
-            && npc.career_status == "active"
+            && npc.career_status != "retired"   // 부상 중이어도 학년은 오른다
             && npc.grade.is_some();
 
         if !is_hs { updated.push(npc); continue; }
@@ -1111,6 +1111,11 @@ pub fn advance_grades(params: AdvanceGradesParams) -> GradeAdvanceResult {
 }
 
 // HS + 대학 전체 학년 진급 (단일 호출용)
+//
+// ⚠ 예전엔 `career_status == "active"`만 진급시켰다. **부상 중인 선수는
+// 학년이 안 오르고 졸업도 안 됐다** — 나이만 매 시즌 +1 되어 20~21세
+// 고교생이 쌓였다. 완치돼도 부상 상태가 안 풀리던 결함(시즌 중 고교의
+// 47%가 injured)과 겹쳐 대량으로 샜다. 자리를 비우는 건 은퇴뿐이다.
 pub fn advance_all_grades(params: AdvanceGradesParams) -> GradeAdvanceResult {
     let mut updated        = Vec::new();
     let mut hs_graduated   = Vec::new();
@@ -1120,7 +1125,7 @@ pub fn advance_all_grades(params: AdvanceGradesParams) -> GradeAdvanceResult {
     for npc in params.npcs {
         // ── 고등학교 ──────────────────────────────────────────────────────────
         if npc.current_league == "LEAGUE_HIGHSCHOOL"
-            && npc.career_status == "active"
+            && npc.career_status != "retired"   // 부상 중이어도 학년은 오른다
             && npc.grade.is_some()
         {
             let grade = npc.grade.unwrap();
@@ -1149,7 +1154,7 @@ pub fn advance_all_grades(params: AdvanceGradesParams) -> GradeAdvanceResult {
 
         // ── 대학교 ────────────────────────────────────────────────────────────
         if npc.current_league == "LEAGUE_UNIVERSITY"
-            && npc.career_status == "active"
+            && npc.career_status != "retired"   // 부상 중이어도 학년은 오른다
             && npc.grade.is_some()
         {
             let grade = npc.grade.unwrap();
@@ -1206,34 +1211,71 @@ pub(crate) fn gen_name(rng: &mut LcgRand) -> (String, String) {
     (format!("{}{}{}", sur, a, b), format!("{} {}{}", sur, a, b))
 }
 
+/// 생성한 스탯이 목표 OVR을 내도록 **전 스탯을 평행이동**한다.
+///
+/// ⚠ **이게 없으면 생성기가 매긴 `ovr`이 거짓말이 된다.** 개별 스탯은
+/// `ovr` 기준 오프셋으로 만드는데 그 오프셋이 대부분 음수라(command −5,
+/// recovery −6, clutch −8, holdRunners −10) 같은 스탯을 OVR 공식에 넣으면
+/// 다른 값이 나온다 — 투수 **−2.1**, 타자 **−4.0~−4.8**.
+///
+/// 첫 주간 성장에서 엔진이 OVR을 재계산하는 순간 전 세계 선수가 일제히
+/// 그만큼 내려앉았고, 매 시즌 신규 생성분이 같은 손실을 다시 겪어
+/// 리그 평균이 계속 떨어졌다(1군 상위 88 → 81 → 77). 성장이 약해서가
+/// 아니라 **장부가 매년 정정되고 있었다.**
+///
+/// ⚠ **OVR 공식을 여기 다시 적지 않는다** — `calc_*_ovr`을 그대로 부른다.
+/// 이 프로젝트에서 표를 두 번 적어 생긴 결함이 Phase 7에만 15건이었다.
+/// `clamp_stat`이 반올림하므로 한 번에 안 맞는다. 잔차 0.5 미만은 반올림
+/// 한계라 더 줄일 수 없다.
+macro_rules! align_ovr {
+    ($obj:expr, $target:expr, $calc:ident, [$($f:ident),+]) => {
+        for _ in 0..4 {
+            let diff = $target - $calc(&$obj);
+            if diff.abs() < 0.5 { break; }
+            $( $obj.$f = clamp_stat($obj.$f + diff); )+
+        }
+        $obj.ovr = $calc(&$obj);
+    };
+}
+
 pub(crate) fn make_pitching(ovr: f64, rng: &mut LcgRand) -> NpcPitchingAttrs {
-    let stamina      = clamp_stat(ovr - 2.0  + (rng.next() - 0.5) * 12.0);
-    let velocity     = clamp_stat(ovr + 4.0  + (rng.next() - 0.5) * 12.0);
-    let command      = clamp_stat(ovr - 5.0  + (rng.next() - 0.5) * 12.0);
-    let control      = clamp_stat(ovr - 3.0  + (rng.next() - 0.5) * 12.0);
-    let movement     = clamp_stat(ovr - 4.0  + (rng.next() - 0.5) * 12.0);
-    let mentality    = clamp_stat(ovr        + (rng.next() - 0.5) * 12.0);
-    let recovery     = clamp_stat(ovr - 6.0  + (rng.next() - 0.5) * 12.0);
-    let clutch       = clamp_stat(ovr - 8.0  + (rng.next() - 0.5) * 12.0);
-    let hold_runners = clamp_stat(ovr - 10.0 + (rng.next() - 0.5) * 12.0);
-    NpcPitchingAttrs { ovr, stamina, velocity, command, control, movement, mentality, recovery, clutch, hold_runners }
+    let mut p = NpcPitchingAttrs {
+        ovr,
+        stamina:      clamp_stat(ovr - 2.0  + (rng.next() - 0.5) * 12.0),
+        velocity:     clamp_stat(ovr + 4.0  + (rng.next() - 0.5) * 12.0),
+        command:      clamp_stat(ovr - 5.0  + (rng.next() - 0.5) * 12.0),
+        control:      clamp_stat(ovr - 3.0  + (rng.next() - 0.5) * 12.0),
+        movement:     clamp_stat(ovr - 4.0  + (rng.next() - 0.5) * 12.0),
+        mentality:    clamp_stat(ovr        + (rng.next() - 0.5) * 12.0),
+        recovery:     clamp_stat(ovr - 6.0  + (rng.next() - 0.5) * 12.0),
+        clutch:       clamp_stat(ovr - 8.0  + (rng.next() - 0.5) * 12.0),
+        hold_runners: clamp_stat(ovr - 10.0 + (rng.next() - 0.5) * 12.0),
+    };
+    align_ovr!(p, ovr, calc_npc_pitching_ovr,
+        [stamina, velocity, command, control, movement, mentality, recovery, clutch, hold_runners]);
+    p
 }
 
 pub(crate) fn make_batting(ovr: f64, rng: &mut LcgRand) -> NpcBattingAttrs {
-    let contact       = clamp_stat(ovr - 2.0  + (rng.next() - 0.5) * 12.0);
-    let power         = clamp_stat(ovr - 5.0  + (rng.next() - 0.5) * 12.0);
-    let eye           = clamp_stat(ovr - 3.0  + (rng.next() - 0.5) * 12.0);
-    let discipline    = clamp_stat(ovr - 4.0  + (rng.next() - 0.5) * 12.0);
-    let speed         = clamp_stat(ovr        + (rng.next() - 0.5) * 12.0);
-    let base_instinct = clamp_stat(ovr - 5.0  + (rng.next() - 0.5) * 12.0);
-    let bunting       = clamp_stat(ovr - 15.0 + (rng.next() - 0.5) * 12.0);
-    let fielding      = clamp_stat(ovr - 5.0  + (rng.next() - 0.5) * 12.0);
-    let arm           = clamp_stat(ovr - 5.0  + (rng.next() - 0.5) * 12.0);
-    let batting_clutch = clamp_stat(ovr - 8.0 + (rng.next() - 0.5) * 12.0);
-    NpcBattingAttrs {
-        ovr, contact, power, eye, discipline, speed, base_instinct,
-        bunting, platoon: 50.0, fielding, arm, batting_clutch,
-    }
+    let mut b = NpcBattingAttrs {
+        ovr,
+        contact:        clamp_stat(ovr - 2.0  + (rng.next() - 0.5) * 12.0),
+        power:          clamp_stat(ovr - 5.0  + (rng.next() - 0.5) * 12.0),
+        eye:            clamp_stat(ovr - 3.0  + (rng.next() - 0.5) * 12.0),
+        discipline:     clamp_stat(ovr - 4.0  + (rng.next() - 0.5) * 12.0),
+        speed:          clamp_stat(ovr        + (rng.next() - 0.5) * 12.0),
+        base_instinct:  clamp_stat(ovr - 5.0  + (rng.next() - 0.5) * 12.0),
+        bunting:        clamp_stat(ovr - 15.0 + (rng.next() - 0.5) * 12.0),
+        // 플래툰은 능력이 아니라 성향이라 중립 고정이다. 다만 OVR 공식에는
+        // 가중치 0.3으로 들어가므로, 고정된 만큼의 어긋남은 아래 보정이 흡수한다
+        platoon:        50.0,
+        fielding:       clamp_stat(ovr - 5.0  + (rng.next() - 0.5) * 12.0),
+        arm:            clamp_stat(ovr - 5.0  + (rng.next() - 0.5) * 12.0),
+        batting_clutch: clamp_stat(ovr - 8.0  + (rng.next() - 0.5) * 12.0),
+    };
+    align_ovr!(b, ovr, calc_npc_batting_ovr,
+        [contact, power, eye, discipline, speed, base_instinct, bunting, fielding, arm, batting_clutch]);
+    b
 }
 
 pub fn generate_freshmen(params: GenerateFreshmenParams) -> Vec<NpcSaveState> {
@@ -1476,10 +1518,12 @@ fn calc_draft_score(npc: &NpcSaveState, meta: Option<&NamedNpcMeta>) -> f64 {
     //
     // 어린 선수는 완성 전이라 현재 능력치가 낮은 게 정상이고, 구단은 그걸
     // 감안해 뽑는다. 그 프리미엄을 능력치 보정과 같은 크기로 준다.
-    let youth = (26.0 - ((npc.age - 19).max(0) as f64) * 5.5).max(-8.0);
+    // ⚠ 한 번 +26까지 올렸다가 되돌렸다. 그러면 능력치 차이를 덮어서
+    // **OVR 55(19세)가 1순위, OVR 82(26세)가 미지명**이 됐다(실측 2031).
+    // 업사이드 프리미엄은 능력치를 뒤집지 않을 만큼만 준다.
+    let youth = (14.0 - ((npc.age - 19).max(0) as f64) * 3.0).max(-6.0);
 
-    // 재능도 같이 올린다 — 어린 선수의 가치는 대부분 여기서 온다
-    ovr * 0.40 + edge + npc.development_rate as f64 * 0.40 + pot * 0.1 + youth
+    ovr * 0.40 + edge + npc.development_rate as f64 * 0.35 + pot * 0.1 + youth
 }
 
 fn weighted_pick(weights: &[f64], rng: &mut LcgRand) -> usize {
@@ -1933,34 +1977,69 @@ pub fn advance_protagonist_grade(params: ProtagonistGradeParams) -> ProtagonistG
 // ── NPC 월간 성장 ─────────────────────────────────────────────────────────────
 
 use crate::sim_types::{
-    NpcLiveOutput, NpcMonthlyPerf, NpcTeamContext,
+    NpcLiveOutput, NpcMonthlyPerf, NpcTeamContext, GrowthXpRules,
     MonthlyNpcGrowthParams, MonthlyNpcGrowthResult,
 };
 
+/// 잠재력에 가까울수록 XP를 깎는다 — **잠재력이 실제 상한이 되게 한다.**
+///
+/// ⚠ 예전엔 `ratio >= 0.95`가 `0.10`이라 **잠재력을 넘어서도 계속 자랐다.**
+/// 성장 배율이 작을 땐 티가 안 났지만(연 +0.3), 배율을 목표 곡선에 맞추자
+/// 잠재력 105%인 선수도 연 +3.3씩 올랐다 — 잠재력이 아무 의미가 없어진다.
+fn potential_cap(cur: f64, potential: f64) -> f64 {
+    let ratio = cur / potential;
+    if      ratio >= 1.00 { 0.00 }
+    else if ratio <  0.75 { 1.00 }
+    else if ratio <  0.85 { 0.70 }
+    else if ratio <  0.95 { 0.35 }
+    else                  { 0.10 }
+}
+
+/// ⚠ **정본은 `generation_rules.json`의 `growthRules.xp.ageBands`다.**
+/// 여기 값은 규칙을 못 받았을 때의 폴백이다 — 규칙 파일과 같아야 하고
+/// `npm run test:growth`가 두 표의 일치를 대조한다.
 fn age_growth_factor(age: i32) -> f64 {
     match age {
-        i32::MIN..=18 => 1.35,
-        19..=21       => 1.20,
-        22..=24       => 1.00,
-        25..=27       => 0.70,
-        28..=30       => 0.30,
+        i32::MIN..=18 => 1.80,
+        19..=21       => 1.41,
+        22..=24       => 0.71,
+        25..=27       => 0.52,
+        28..=30       => 0.22,
         31..=32       => 0.08,
         _             => 0.00,
     }
 }
 
+/// 규칙이 있으면 그걸, 없으면 폴백 표를 쓴다
+fn age_growth_factor_of(rules: Option<&GrowthXpRules>, age: i32) -> f64 {
+    match rules {
+        Some(r) => r.age_bands.iter()
+            .find(|b| age <= b.max_age)
+            .map(|b| b.f)
+            .unwrap_or(0.0),
+        None => age_growth_factor(age),
+    }
+}
+
+/// ⚠ **정본은 `generation_rules.json`의 `growthRules.facilityFactor`다.**
+/// 여기 값은 그걸 못 받았을 때의 폴백이고 규칙 파일과 같아야 한다 —
+/// `npm run test:draft`가 두 표의 일치를 대조한다.
+///
+/// 예전엔 이 표가 유일한 정본이었고 **대학 0.95 < 고교 1.08**이라, 고교
+/// 출신이 대학에 가면 성장이 오히려 느려졌다. 그래서 얼리 신청 하한(68)을
+/// 넘는 사람이 유출량을 못 따라가 **대학 후보가 5년에 걸쳐 220→1로 말라붙었다**.
 fn facility_factor(tier: &str) -> f64 {
     match tier {
         "1군"  => 1.00,
-        "2군"  => 0.88,
-        "대학" => 0.95,
-        "고교" => 1.08,
-        _      => 0.78,
+        "2군"  => 0.92,
+        "대학" => 1.15,
+        "고교" => 1.05,
+        _      => 0.85,
     }
 }
 
 fn training_factor(ctx: &NpcTeamContext, phase: &str) -> f64 {
-    let fac  = facility_factor(&ctx.facility_tier);
+    let fac  = ctx.facility_factor.unwrap_or_else(|| facility_factor(&ctx.facility_tier));
     let mgr  = 0.75 + ctx.manager_development / 250.0;
     let cch  = 0.80 + ctx.coach_teaching / 200.0;
     let mult = match phase {
@@ -1993,18 +2072,27 @@ fn quality_factor(perf: &NpcMonthlyPerf, player_type: &str) -> f64 {
     1.00
 }
 
-fn perf_factor(perf: Option<&NpcMonthlyPerf>, phase: &str, player_type: &str) -> f64 {
+/// ⚠ **정본은 `generation_rules.json`의 `growthRules.xp`다** (`noPerfBase`,
+/// `phaseWeight`). 여기 상수는 규칙을 못 받았을 때의 폴백이고 규칙 파일과
+/// 같아야 한다 — `npm run test:growth`가 두 표를 대조한다.
+fn perf_factor(
+    perf: Option<&NpcMonthlyPerf>,
+    phase: &str,
+    player_type: &str,
+    rules: Option<&GrowthXpRules>,
+) -> f64 {
+    let pw = rules.and_then(|r| r.phase_weight.as_ref());
     let phase_weight = match phase {
-        "offseason"  => 0.20,
-        "preseason"  => 0.50,
-        "postseason" => 0.80,
-        _            => 1.00,
+        "offseason"  => pw.map(|w| w.offseason).unwrap_or(0.70),
+        "preseason"  => pw.map(|w| w.preseason).unwrap_or(0.80),
+        "postseason" => pw.map(|w| w.postseason).unwrap_or(0.85),
+        _            => pw.map(|w| w.season).unwrap_or(1.00),
     };
     let base = if let Some(p) = perf {
         let games = (p.games_played as f64 / 5.0).min(1.0);
         games * quality_factor(p, player_type)
     } else {
-        0.40
+        rules.and_then(|r| r.no_perf_base).unwrap_or(0.70)
     };
     base * phase_weight
 }
@@ -2181,8 +2269,21 @@ fn calc_npc_batting_ovr(b: &NpcBattingAttrs) -> f64 {
     (w / 11.8).round().max(1.0).min(99.0)
 }
 
-// 월간 감퇴 (연간 총량의 1/12)
-fn apply_monthly_aging_pitch(p: &mut NpcPitchingAttrs, age: i32, perf: Option<&NpcMonthlyPerf>, phase: &str) {
+/// 주간 감퇴를 **누적해서** 반영한다.
+///
+/// ⚠ 예전엔 스탯에서 곧바로 뺐다. 그런데 `clamp_stat`이 매번 `round()`를
+/// 하고 주당 감퇴량은 연 2.5를 52로 나눈 **0.048**이라 75 − 0.048 = 74.95 →
+/// 75로 되돌아갔다. **전 연령에서 노화가 통째로 사라졌고**, 35세 투수를
+/// 52주 굴려도 스탯이 하나도 안 변했다. 그래서 1군 31세 이상 117명이
+/// 한 시즌 동안 전원 무변화였고, 베테랑이 자리를 안 비워 2군 유망주가
+/// 올라갈 자리도 없었다.
+///
+/// 성장은 XP를 쌓아 임계값에서 +1 하므로 멀쩡했다. 노화도 같은 방식으로
+/// `debt`에 쌓아 1.0을 넘을 때 −1 한다.
+fn apply_weekly_aging_pitch(
+    p: &mut NpcPitchingAttrs, age: i32, perf: Option<&NpcMonthlyPerf>, phase: &str,
+    debt: &mut HashMap<String, f64>,
+) {
     if age < 30 { return; }
 
     let perf_mod = if let Some(pf) = perf {
@@ -2192,22 +2293,36 @@ fn apply_monthly_aging_pitch(p: &mut NpcPitchingAttrs, age: i32, perf: Option<&N
     let phase_mod = if phase == "offseason" { 0.85 } else { 1.00 };
     let mgmt = perf_mod * phase_mod;
 
-    // 연간 감퇴 / 12 (기존 apply_aging_decay 수치 기준)
+    // 연간 감퇴량 (기존 apply_aging_decay 수치 기준)
     let (vel_y, sta_y, rec_y, cmd_y, ctrl_y) = match age {
         30..=32 => (1.00, 0.80, 0.20, 0.30, 0.30),
         33..=35 => (2.50, 2.00, 0.50, 3.20, 3.00),
         _       => (4.00, 3.50, 0.80, 5.00, 4.50),
     };
 
-    p.velocity = clamp_stat(p.velocity - vel_y  / 52.0 * mgmt);
-    p.stamina  = clamp_stat(p.stamina  - sta_y  / 52.0 * mgmt);
-    p.recovery = clamp_stat(p.recovery - rec_y  / 52.0 * mgmt);
-    p.command  = clamp_stat(p.command  - cmd_y  / 52.0 * mgmt);
-    p.control  = clamp_stat(p.control  - ctrl_y / 52.0 * mgmt);
+    let mut apply = |stat: &str, cur: &mut f64, yearly: f64| {
+        let acc = debt.get(stat).copied().unwrap_or(0.0) + yearly / 52.0 * mgmt;
+        let drop = acc.floor();
+        if drop >= 1.0 {
+            *cur = clamp_stat(*cur - drop);
+            debt.insert(stat.to_string(), acc - drop);
+        } else {
+            debt.insert(stat.to_string(), acc);
+        }
+    };
+    apply("velocity", &mut p.velocity, vel_y);
+    apply("stamina",  &mut p.stamina,  sta_y);
+    apply("recovery", &mut p.recovery, rec_y);
+    apply("command",  &mut p.command,  cmd_y);
+    apply("control",  &mut p.control,  ctrl_y);
     p.ovr = calc_npc_pitching_ovr(p);
 }
 
-fn apply_monthly_aging_bat(b: &mut NpcBattingAttrs, age: i32, perf: Option<&NpcMonthlyPerf>, phase: &str) {
+/// 타자 주간 감퇴 — 투수와 같은 누적 방식 (위 주석 참고)
+fn apply_weekly_aging_bat(
+    b: &mut NpcBattingAttrs, age: i32, perf: Option<&NpcMonthlyPerf>, phase: &str,
+    debt: &mut HashMap<String, f64>,
+) {
     if age < 30 { return; }
 
     let perf_mod = if let Some(pf) = perf {
@@ -2223,9 +2338,19 @@ fn apply_monthly_aging_bat(b: &mut NpcBattingAttrs, age: i32, perf: Option<&NpcM
         _       => (3.50, 2.80),
     };
 
-    b.speed = clamp_stat(b.speed - spd_y / 52.0 * mgmt);
-    b.power = clamp_stat(b.power - pow_y / 52.0 * mgmt);
-    b.ovr   = calc_npc_batting_ovr(b);
+    let mut apply = |stat: &str, cur: &mut f64, yearly: f64| {
+        let acc = debt.get(stat).copied().unwrap_or(0.0) + yearly / 52.0 * mgmt;
+        let drop = acc.floor();
+        if drop >= 1.0 {
+            *cur = clamp_stat(*cur - drop);
+            debt.insert(stat.to_string(), acc - drop);
+        } else {
+            debt.insert(stat.to_string(), acc);
+        }
+    };
+    apply("speed", &mut b.speed, spd_y);
+    apply("power", &mut b.power, pow_y);
+    b.ovr = calc_npc_batting_ovr(b);
 }
 
 pub fn calc_weekly_npc_growth(params: MonthlyNpcGrowthParams) -> MonthlyNpcGrowthResult {
@@ -2236,29 +2361,40 @@ pub fn calc_weekly_npc_growth(params: MonthlyNpcGrowthParams) -> MonthlyNpcGrowt
     let ctx_map: HashMap<String, &NpcTeamContext> =
         params.team_contexts.iter().map(|c| (c.team_id.clone(), c)).collect();
 
+    // 팀을 못 찾았을 때만 쓰는 폴백이다. `facility_factor: None`이면
+    // `training_factor`가 `facility_tier` 기준 폴백 표를 쓴다
     let default_ctx = NpcTeamContext {
         team_id: String::new(),
         facility_tier: "독립".into(),
+        facility_factor: None,
         manager_development: 50.0,
         coach_teaching: 50.0,
     };
+
+    let xp_rules = params.xp_rules.as_ref();
 
     let updated: Vec<NpcLiveOutput> = params.npcs.into_iter().map(|mut npc| {
         let ctx = ctx_map.get(&npc.team_id).copied().unwrap_or(&default_ctx);
         let perf = params.perf_data.get(&npc.npc_id);
 
-        let age_f     = age_growth_factor(npc.age);
+        let age_f     = age_growth_factor_of(xp_rules, npc.age);
         let trn_f     = training_factor(ctx, phase);
-        let prf_f     = perf_factor(perf, phase, &npc.player_type);
+        let prf_f     = perf_factor(perf, phase, &npc.player_type, xp_rules);
         let dev_f     = npc.development_rate as f64 / 50.0;
         let rand_f    = 0.85 + rng.gen::<f64>() * 0.30;  // 0.85~1.15
         let potential = npc.potential_hidden.unwrap_or(75.0).clamp(60.0, 99.0);
         // A: 잠재력 속도 배율
         let speed_f   = 0.80 + (potential - 60.0) / 39.0 * 0.40;
 
+        // 투/타 배율 — 정본은 generation_rules.json (없으면 폴백)
+        let mult = match xp_rules {
+            Some(r) => if npc.player_type == "pitcher" { r.multiplier_pitcher } else { r.multiplier_batter },
+            None    => if npc.player_type == "pitcher" { 30.0 } else { 39.0 },
+        };
+
         // 주간 기본 XP (월간 2.5를 4.3주로 나눠 주간 단위로 전환)
         let base_xp = if age_f > 0.0 {
-            (2.5 / 4.3) * dev_f * age_f * trn_f * prf_f * rand_f * speed_f
+            (2.5 / 4.3) * dev_f * age_f * trn_f * prf_f * rand_f * speed_f * mult
         } else {
             0.0
         };
@@ -2270,13 +2406,7 @@ pub fn calc_weekly_npc_growth(params: MonthlyNpcGrowthParams) -> MonthlyNpcGrowt
                     for &(stat, weight) in pitching_xp_weights(npc.age) {
                         let cur  = get_npc_pitching_stat(pit, stat);
                         // B: soft cap — 잠재력에 근접할수록 XP 감쇠
-                        let cap_f = {
-                            let ratio = cur / potential;
-                            if      ratio < 0.75 { 1.00 }
-                            else if ratio < 0.85 { 0.70 }
-                            else if ratio < 0.95 { 0.35 }
-                            else                 { 0.10 }
-                        };
+                        let cap_f = potential_cap(cur, potential);
                         let gain = base_xp * weight * cap_f;
                         let acc  = npc.pitching_xp.get(stat).copied().unwrap_or(0.0) + gain;
                         if acc >= xp_threshold(cur) {
@@ -2288,8 +2418,8 @@ pub fn calc_weekly_npc_growth(params: MonthlyNpcGrowthParams) -> MonthlyNpcGrowt
                     }
                     pit.ovr = calc_npc_pitching_ovr(pit);
                 }
-                // 월간 에이징 감퇴
-                apply_monthly_aging_pitch(pit, npc.age, perf, phase);
+                // 주간 에이징 감퇴 — 누적분(aging_debt)을 들고 다닌다
+                apply_weekly_aging_pitch(pit, npc.age, perf, phase, &mut npc.aging_debt);
             }
 
             // ── 구종 훈련 진행 ──────────────────────────────────────────────
@@ -2341,13 +2471,7 @@ pub fn calc_weekly_npc_growth(params: MonthlyNpcGrowthParams) -> MonthlyNpcGrowt
                 if base_xp > 0.0 {
                     for &(stat, weight) in batting_xp_weights(npc.age) {
                         let cur  = get_npc_batting_stat(bat, stat);
-                        let cap_f = {
-                            let ratio = cur / potential;
-                            if      ratio < 0.75 { 1.00 }
-                            else if ratio < 0.85 { 0.70 }
-                            else if ratio < 0.95 { 0.35 }
-                            else                 { 0.10 }
-                        };
+                        let cap_f = potential_cap(cur, potential);
                         let gain = base_xp * weight * cap_f;
                         let acc  = npc.batting_xp.get(stat).copied().unwrap_or(0.0) + gain;
                         if acc >= xp_threshold(cur) {
@@ -2359,7 +2483,7 @@ pub fn calc_weekly_npc_growth(params: MonthlyNpcGrowthParams) -> MonthlyNpcGrowt
                     }
                     bat.ovr = calc_npc_batting_ovr(bat);
                 }
-                apply_monthly_aging_bat(bat, npc.age, perf, phase);
+                apply_weekly_aging_bat(bat, npc.age, perf, phase, &mut npc.aging_debt);
             }
         }
 
@@ -2395,6 +2519,7 @@ pub fn calc_weekly_npc_growth(params: MonthlyNpcGrowthParams) -> MonthlyNpcGrowt
             fame_delta,
             pitches:          npc.pitches,
             pitch_in_training: npc.pitch_in_training,
+            aging_debt:       npc.aging_debt,
         }
     }).collect();
 

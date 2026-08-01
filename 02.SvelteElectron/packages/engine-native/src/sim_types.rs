@@ -600,8 +600,63 @@ pub struct ProtagonistGradeParams {
 pub struct NpcTeamContext {
     pub team_id: String,
     pub facility_tier: String,       // "1군"|"2군"|"고교"|"대학"|"독립"
+    /// 무대별 성장 계수. **정본은 `generation_rules.json`의
+    /// `growthRules.facilityFactor`**이고 TS가 그 값을 넘긴다.
+    /// 없으면 아래 폴백 표를 쓴다 (구 호출부 호환)
+    #[serde(default)]
+    pub facility_factor: Option<f64>,
     pub manager_development: f64,    // 0~99
     pub coach_teaching: f64,         // 0~99
+}
+
+/// 나이 구간별 성장 계수 한 칸 — `maxAge` 이하에 `f`를 적용
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct AgeGrowthBand {
+    pub max_age: i32,
+    pub f: f64,
+}
+
+/// NPC 성장 속도 규칙.
+///
+/// ⚠ **정본은 `generation_rules.json`의 `growthRules.xp`다.**
+/// 예전엔 이 수치가 전부 Rust에 박혀 있었고, 그 값으로는 17세 유망주가
+/// 스탯 하나를 +1 올리는 데 **85주**가 걸렸다 — 고교 3년을 다 뛰어도
+/// OVR이 1도 안 올랐다. 반면 30세 감퇴는 정상 작동해서, 세계 평균이
+/// 매년 내려앉았다(1군 상위 88 → 81 → 77).
+///
+/// 투수와 타자에 배율을 따로 두는 이유: XP 배분 가중치가 커버하는 OVR
+/// 비중이 다르다. 투수는 12 중 8.5(velocity·command·control·movement),
+/// 타자는 11.8 중 6.6(contact·eye·speed·power)이라 같은 XP로도 투수가
+/// 더 오른다. 같은 목표 곡선에 맞추려면 배율이 달라야 한다.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct GrowthXpRules {
+    pub multiplier_pitcher: f64,
+    pub multiplier_batter: f64,
+    /// 오름차순이어야 한다 — 첫 번째로 `age <= max_age`인 칸을 쓴다
+    pub age_bands: Vec<AgeGrowthBand>,
+    /// 경기 기록이 없는 선수의 성적 계수.
+    ///
+    /// 배경 NPC는 대부분 경기 라인에 안 올라 여기 걸린다. 예전 값 **0.40**은
+    /// "출전 못 하면 훈련도 무의미"에 가까웠고, 오프시즌 가중치 0.20과
+    /// 겹치면 0.08까지 떨어졌다 — 리그 전체 성장이 목표의 1/4로 눌린
+    /// 주된 이유다.
+    #[serde(default)]
+    pub no_perf_base: Option<f64>,
+    /// 단계별 성적 가중치. `training_factor`는 오프시즌을 1.50으로 밀어주는데
+    /// 여기가 0.20이면 서로 상쇄된다 — 오프시즌은 원래 훈련기다.
+    #[serde(default)]
+    pub phase_weight: Option<PhaseWeights>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PhaseWeights {
+    pub offseason: f64,
+    pub preseason: f64,
+    pub postseason: f64,
+    pub season: f64,
 }
 
 /// 이전 달 경기 성적
@@ -638,6 +693,17 @@ pub struct NpcLiveInput {
     pub pitcher_role: String,   // "SP" | "RP" | "CP"
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pitch_in_training: Option<NpcPitchTraining>,
+    /// 스탯별 **미반영 노화 누적분**.
+    ///
+    /// ⚠ 이게 없던 시절 노화는 **전 연령에서 통째로 사라졌다.** 감퇴를
+    /// 스탯에서 직접 빼는데 `clamp_stat`이 매번 `round()`를 하고, 주당
+    /// 감퇴량은 연 2.5를 52로 나눈 **0.048**이라 75 − 0.048 = 74.95 →
+    /// 75로 되돌아갔다. 35세 투수를 52주 굴려도 스탯이 하나도 안 변했다.
+    /// 성장은 XP를 쌓아 임계값에서 +1 하므로 멀쩡했는데 노화만 이랬다.
+    ///
+    /// 이제 성장과 대칭으로 **1.0을 넘을 때 −1**을 적용한다.
+    #[serde(default)]
+    pub aging_debt: HashMap<String, f64>,
 }
 
 /// 월간 성장 계산 출력 단위
@@ -656,6 +722,9 @@ pub struct NpcLiveOutput {
     pub pitches: Vec<NpcPitchEntry>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pitch_in_training: Option<NpcPitchTraining>,
+    /// 미반영 노화 누적분 — 다음 주에 그대로 되돌려 받는다
+    #[serde(default)]
+    pub aging_debt: HashMap<String, f64>,
 }
 
 /// 월간 성장 전체 파라미터
@@ -670,6 +739,9 @@ pub struct MonthlyNpcGrowthParams {
     pub month_index: i32,        // 0~11
     #[serde(default)]
     pub pitch_catalog_ids: Vec<String>,
+    /// 없으면 Rust 폴백 표를 쓴다 — 정본은 `generation_rules.json`
+    #[serde(default)]
+    pub xp_rules: Option<GrowthXpRules>,
 }
 
 /// 월간 성장 결과

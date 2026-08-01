@@ -112,6 +112,7 @@ function createSeasonStore() {
         peakOvr: number;
         pitches: import("../types/save").PitchEntry[];
         pitchInTraining?: { id: string; progress: number; isNew: boolean };
+        agingDebt?: Record<string, number>;
       }>
     ) {
       npcLiveStatsStore.update((stats) => {
@@ -126,6 +127,8 @@ function createSeasonStore() {
             peakOvr:         u.peakOvr,
             pitches:         u.pitches,
             pitchInTraining: u.pitchInTraining,
+            // 노화 누적분을 다음 주로 넘긴다 — 여기서 흘리면 노화가 사라진다
+            agingDebt:       u.agingDebt ?? {},
           };
         }
         return next;

@@ -362,5 +362,36 @@ console.log("\n5시즌 통합");
   }
 }
 
+
+// ── 무대별 성장 계수 — 규칙 파일과 Rust 폴백이 어긋나지 않는다 ──
+//
+// ⚠ 정본은 `generation_rules.json`의 `growthRules.facilityFactor`이고,
+// Rust `npc_sim.rs facility_factor()`는 그걸 못 받았을 때의 폴백이다.
+// **표가 둘이면 갈라진다** — 실제로 이 표가 Rust에만 있던 시절
+// 대학 0.95 < 고교 1.08이라 고교 출신이 대학에서 더 느리게 자랐고,
+// 대학 드래프트 후보가 5년에 걸쳐 220 → 1로 말라붙었다.
+{
+  const fsx = require("node:fs");
+  const pathx = require("node:path");
+  const rulesPath = pathx.join(__dirname, "../resource/data/master/players/generation_rules.json");
+  const rules = JSON.parse(fsx.readFileSync(rulesPath, "utf8"));
+  const want = rules.growthRules?.facilityFactor ?? {};
+  const rs = fsx.readFileSync(pathx.join(__dirname, "../packages/engine-native/src/npc_sim.rs"), "utf8");
+  const block = rs.match(/fn facility_factor\(tier: &str\) -> f64 \{[\s\S]*?\n\}/);
+  const got = {};
+  if (block) {
+    for (const m of block[0].matchAll(/"([^"]+)"\s*=>\s*([0-9.]+)/g)) got[m[1]] = parseFloat(m[2]);
+    const dflt = block[0].match(/_\s*=>\s*([0-9.]+)/);
+    if (dflt) got["독립"] = parseFloat(dflt[1]);
+  }
+  const keys = Object.keys(want).filter((k) => !k.startsWith("_"));
+  const bad = keys.filter((k) => got[k] !== want[k]);
+  check(`성장 계수 ${keys.length}종이 규칙 파일과 Rust에서 같다`, bad.length === 0,
+    bad.map((k) => `${k} 규칙 ${want[k]} vs Rust ${got[k]}`).join(" / "));
+  check(`대학(${want["대학"]}) > 고교(${want["고교"]}) — 진학하면 더 자란다`,
+    (want["대학"] ?? 0) > (want["고교"] ?? 0),
+    "진학하면 성장이 느려져 대학이 마른다");
+}
+
 console.log(failed === 0 ? "\nALL PASS" : `\n${failed} FAILED`);
 process.exit(failed === 0 ? 0 : 1);
