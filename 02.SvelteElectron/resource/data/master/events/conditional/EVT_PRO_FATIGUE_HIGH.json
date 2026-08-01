@@ -14,7 +14,11 @@
     },
     {
       "type": "fatigue_gte",
-      "value": 75
+      "value": 60
+    },
+    {
+      "type": "fatigue_lte",
+      "value": 74
     }
   ]
 }

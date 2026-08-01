@@ -18,7 +18,7 @@
       "value": 24
     }
   ],
-  "messageTemplateId": "MSG_HS_LIFE_MEDIA_RIVAL_HEADLINE",
+  "messageTemplateId": "MSG_HS_MEDIA_RIVAL_HEADLINE",
   "decisionTemplateId": null,
   "cooldownWeeks": 6
 }

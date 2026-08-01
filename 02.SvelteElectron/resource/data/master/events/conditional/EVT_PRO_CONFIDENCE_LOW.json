@@ -13,8 +13,12 @@
       "stage": "pro_kbl"
     },
     {
+      "type": "morale_gte",
+      "value": 39
+    },
+    {
       "type": "morale_lte",
-      "value": 35
+      "value": 50
     }
   ]
 }
