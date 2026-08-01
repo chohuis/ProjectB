@@ -40,6 +40,14 @@ export async function calcTrainingGrowth(
     await window.projectB!.growthCalcTraining(JSON.stringify(params))
   );
 
+  // ⚠ 엔진이 역직렬화에 실패하면 `{error}`만 온다. 예전엔 그대로
+  // `raw.protagonistPatch.pitchStateAction`을 읽어 **"undefined의 속성을 읽을 수
+  // 없다"** 로 터졌다 — 원인이 뭔지 알 수 없는 메시지다(실측: 전역 후 독립리그
+  // 복귀 구간에서 매주 반복). 승강 판정(`weekPhases/market`)과 같은 자리다.
+  if (!raw?.protagonistPatch) {
+    throw new Error(`[훈련] 성장 계산 실패: ${raw?.error ?? JSON.stringify(raw).slice(0, 200)}`);
+  }
+
   const patch: Partial<ProtagonistSave> = { ...raw.protagonistPatch };
   const action: string = raw.protagonistPatch.pitchStateAction ?? "keep";
   delete (patch as any).pitchStateAction;

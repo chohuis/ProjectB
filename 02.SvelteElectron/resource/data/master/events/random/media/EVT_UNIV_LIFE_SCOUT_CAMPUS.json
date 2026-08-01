@@ -1,0 +1,22 @@
+{
+  "id": "EVT_UNIV_LIFE_SCOUT_CAMPUS",
+  "type": "random",
+  "category": "media",
+  "priority": 300,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 3,
+  "weight": 22,
+  "poolId": "POOL_MEDIA_DAILY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 10
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_LIFE_SCOUT_CAMPUS",
+  "decisionTemplateId": null
+}

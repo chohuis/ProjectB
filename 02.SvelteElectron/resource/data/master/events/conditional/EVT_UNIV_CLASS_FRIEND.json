@@ -1,0 +1,20 @@
+{
+  "id": "EVT_UNIV_CLASS_FRIEND",
+  "type": "conditional",
+  "category": "social",
+  "priority": 620,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "week_gte",
+      "value": 10
+    }
+  ],
+  "cooldownWeeks": 6,
+  "messageTemplateId": "MSG_UNIV_CLASS_FRIEND",
+  "decisionTemplateId": null
+}

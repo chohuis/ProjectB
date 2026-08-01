@@ -1,0 +1,24 @@
+{
+  "id": "EVT_UNIV_FRIEND_QUIT",
+  "type": "conditional",
+  "category": "social",
+  "priority": 700,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "week_gte",
+      "value": 28
+    },
+    {
+      "type": "morale_lte",
+      "value": 58
+    }
+  ],
+  "cooldownWeeks": 8,
+  "messageTemplateId": "MSG_UNIV_FRIEND_QUIT",
+  "decisionTemplateId": "DEC_UNIV_FRIEND_QUIT"
+}

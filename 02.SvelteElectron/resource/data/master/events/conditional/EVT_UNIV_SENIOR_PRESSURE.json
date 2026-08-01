@@ -1,0 +1,20 @@
+{
+  "id": "EVT_UNIV_SENIOR_PRESSURE",
+  "type": "conditional",
+  "category": "team",
+  "priority": 685,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "week_gte",
+      "value": 24
+    }
+  ],
+  "cooldownWeeks": 8,
+  "messageTemplateId": "MSG_UNIV_SENIOR_PRESSURE",
+  "decisionTemplateId": "DEC_UNIV_SENIOR_PRESSURE"
+}

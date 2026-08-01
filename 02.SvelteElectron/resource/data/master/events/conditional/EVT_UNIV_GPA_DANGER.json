@@ -1,0 +1,24 @@
+{
+  "id": "EVT_UNIV_GPA_DANGER",
+  "type": "conditional",
+  "category": "academics",
+  "priority": 770,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "gpa_lte",
+      "value": 2
+    },
+    {
+      "type": "week_gte",
+      "value": 6
+    }
+  ],
+  "cooldownWeeks": 5,
+  "messageTemplateId": "MSG_UNIV_GPA_DANGER",
+  "decisionTemplateId": "DEC_UNIV_GPA_DANGER"
+}

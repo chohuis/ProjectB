@@ -1,0 +1,24 @@
+{
+  "id": "EVT_UNIV_DRAFT_STOCK_DOWN",
+  "type": "conditional",
+  "category": "media",
+  "priority": 725,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 25
+    },
+    {
+      "type": "morale_lte",
+      "value": 50
+    }
+  ],
+  "cooldownWeeks": 6,
+  "messageTemplateId": "MSG_UNIV_DRAFT_STOCK_DOWN",
+  "decisionTemplateId": "DEC_UNIV_DRAFT_STOCK_DOWN"
+}

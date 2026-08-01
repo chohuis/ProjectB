@@ -1,0 +1,19 @@
+{
+  "id": "EVT_UNIV_W20_SUMMER_TERM",
+  "type": "mandatory",
+  "category": "academics",
+  "priority": 900,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "week_eq",
+      "value": 20
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_W20_SUMMER_TERM",
+  "decisionTemplateId": "DEC_UNIV_W20_SUMMER_TERM"
+}

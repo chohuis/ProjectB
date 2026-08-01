@@ -1,6 +1,17 @@
 import type { MessageItem } from "../../types/main";
 
-export const EXAM_EVENT_IDS = new Set(["EVT_HS_MIDTERM", "EVT_HS_FINAL"]);
+// ⚠ **대학 시험 트리거가 없어서 학기 확정이 죽은 코드였다.** `EVT_HS_*`는
+// `career_stage: highschool` 전용이라 대학에서는 아예 안 뜬다 — 9-C-1이
+// 붙인 학점 확정 경로가 영영 실행되지 않았다.
+export const EXAM_EVENT_IDS = new Set([
+  "EVT_HS_MIDTERM", "EVT_HS_FINAL",
+  "EVT_UNIV_MIDTERM", "EVT_UNIV_FINAL",
+]);
+
+/** 중간고사인가 — id가 무대별로 둘씩이라 이름으로 가른다 */
+export function isMidtermEvent(eventId: string): boolean {
+  return eventId.endsWith("_MIDTERM");
+}
 
 export function makeExamMessage(week: number, subject: string, body: string): MessageItem {
   return {

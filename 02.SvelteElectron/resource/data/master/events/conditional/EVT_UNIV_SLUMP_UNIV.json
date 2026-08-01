@@ -1,0 +1,24 @@
+{
+  "id": "EVT_UNIV_SLUMP_UNIV",
+  "type": "conditional",
+  "category": "mental",
+  "priority": 715,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 20
+    },
+    {
+      "type": "morale_lte",
+      "value": 48
+    }
+  ],
+  "cooldownWeeks": 5,
+  "messageTemplateId": "MSG_UNIV_SLUMP_UNIV",
+  "decisionTemplateId": "DEC_UNIV_SLUMP_UNIV"
+}

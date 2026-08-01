@@ -253,8 +253,8 @@
     {
       "id": "MSG_UNIV_MIDTERM",
       "category": "system",
-      "subject": "대학 중간고사 기간입니다",
-      "body": "이번 주는 대학 중간고사 기간입니다.\n\n학업 일정을 우선하면서도 최소한의 훈련 루틴은 유지하는 것이 좋습니다.",
+      "subject": "중간고사",
+      "body": "중간고사 기간입니다.\n\n이번 학기 학점이 여기서 절반 정해집니다.",
       "decisionTemplateId": null
     },
     {
@@ -2530,6 +2530,356 @@
       "category": "news",
       "subject": "짧은 인터뷰",
       "body": "리그 사무국에서 선수 소개 인터뷰를 요청했습니다.\n\n홈페이지에 실립니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_UNIV_FINAL",
+      "category": "system",
+      "subject": "기말고사",
+      "body": "기말고사 기간입니다.\n\n한 학기가 마무리됩니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_UNIV_W02_SEMESTER_OPEN",
+      "category": "system",
+      "subject": "개강",
+      "body": "새 학기가 시작됐습니다.\n\n수강 신청을 마쳤습니다. 운동과 학업을 같이 굴려야 합니다.",
+      "decisionTemplateId": "DEC_UNIV_W02_SEMESTER_OPEN"
+    },
+    {
+      "id": "MSG_UNIV_W20_SUMMER_TERM",
+      "category": "system",
+      "subject": "계절학기",
+      "body": "계절학기 수강 신청 기간입니다.\n\n학점을 만회할 기회지만 여름 훈련과 겹칩니다.",
+      "decisionTemplateId": "DEC_UNIV_W20_SUMMER_TERM"
+    },
+    {
+      "id": "MSG_UNIV_W40_SEMESTER_CLOSE",
+      "category": "system",
+      "subject": "종강",
+      "body": "한 학기가 끝났습니다.\n\n성적이 확정됐습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_UNIV_W44_MT_SEASON",
+      "category": "news",
+      "subject": "팀 MT",
+      "body": "야구부 MT가 잡혔습니다.\n\n시즌이 끝나고 처음 다 같이 모이는 자리입니다.",
+      "decisionTemplateId": "DEC_UNIV_W44_MT_SEASON"
+    },
+    {
+      "id": "MSG_UNIV_GPA_DANGER",
+      "category": "coach",
+      "subject": "학점이 위험하다",
+      "body": "누적 학점이 졸업 기준에 못 미칩니다.\n\n이대로면 졸업이 밀립니다.",
+      "decisionTemplateId": "DEC_UNIV_GPA_DANGER"
+    },
+    {
+      "id": "MSG_UNIV_GPA_GOOD",
+      "category": "coach",
+      "subject": "우수한 학점",
+      "body": "학점이 상위권입니다.\n\n장학금 대상이 될 수도 있습니다.",
+      "decisionTemplateId": "DEC_UNIV_GPA_GOOD"
+    },
+    {
+      "id": "MSG_UNIV_WARN_1",
+      "category": "coach",
+      "subject": "학사 경고",
+      "body": "학사 경고를 받았습니다.\n\n훈련에 쓸 시간이 줄어듭니다. 아직 경기는 뜁니다.",
+      "decisionTemplateId": "DEC_UNIV_WARN_1"
+    },
+    {
+      "id": "MSG_UNIV_WARN_2",
+      "category": "coach",
+      "subject": "출전 정지",
+      "body": "경고가 누적되어 경기 출전이 정지됐습니다.\n\n덕아웃에서 지켜보는 수밖에 없습니다.",
+      "decisionTemplateId": "DEC_UNIV_WARN_2"
+    },
+    {
+      "id": "MSG_UNIV_WARN_3",
+      "category": "coach",
+      "subject": "유급",
+      "body": "유급 처리됐습니다.\n\n졸업이 한 해 밀립니다. 드래프트 기회도 그만큼 밀립니다.",
+      "decisionTemplateId": "DEC_UNIV_WARN_3"
+    },
+    {
+      "id": "MSG_UNIV_EXAM_PREP",
+      "category": "coach",
+      "subject": "시험 기간",
+      "body": "시험이 다가옵니다.\n\n야구부는 시험 기간에도 훈련이 있습니다.",
+      "decisionTemplateId": "DEC_UNIV_EXAM_PREP"
+    },
+    {
+      "id": "MSG_UNIV_ATTENDANCE",
+      "category": "coach",
+      "subject": "출석 부족",
+      "body": "원정 일정으로 결석이 쌓였습니다.\n\n교수에게 사정을 설명해야 합니다.",
+      "decisionTemplateId": "DEC_UNIV_ATTENDANCE"
+    },
+    {
+      "id": "MSG_UNIV_SCHOLARSHIP",
+      "category": "coach",
+      "subject": "장학금",
+      "body": "성적 장학금 대상이 됐습니다.\n\n학업과 야구를 같이 해낸 결과입니다.",
+      "decisionTemplateId": "DEC_UNIV_SCHOLARSHIP"
+    },
+    {
+      "id": "MSG_UNIV_MAJOR_DOUBT",
+      "category": "coach",
+      "subject": "전공 고민",
+      "body": "전공이 맞는지 모르겠습니다.\n\n야구가 안 되면 이걸로 살아야 하는데.",
+      "decisionTemplateId": "DEC_UNIV_MAJOR_DOUBT"
+    },
+    {
+      "id": "MSG_UNIV_THESIS",
+      "category": "coach",
+      "subject": "졸업 논문",
+      "body": "졸업 논문 준비가 시작됐습니다.\n\n4학년의 통과 의례입니다.",
+      "decisionTemplateId": "DEC_UNIV_THESIS"
+    },
+    {
+      "id": "MSG_UNIV_GROUP_LEAD",
+      "category": "coach",
+      "subject": "조 1위",
+      "body": "우리 조 1위입니다.\n\n왕중왕전 진출이 보입니다.",
+      "decisionTemplateId": "DEC_UNIV_GROUP_LEAD"
+    },
+    {
+      "id": "MSG_UNIV_GROUP_LAST",
+      "category": "coach",
+      "subject": "조 하위권",
+      "body": "조 순위가 낮습니다.\n\n대회 진출이 어려워집니다.",
+      "decisionTemplateId": "DEC_UNIV_GROUP_LAST"
+    },
+    {
+      "id": "MSG_UNIV_TOURNAMENT_IN",
+      "category": "coach",
+      "subject": "전국대회 진출",
+      "body": "전국대회 진출이 확정됐습니다.\n\n스카우트가 가장 많이 오는 무대입니다.",
+      "decisionTemplateId": "DEC_UNIV_TOURNAMENT_IN"
+    },
+    {
+      "id": "MSG_UNIV_TOURNAMENT_OUT",
+      "category": "coach",
+      "subject": "대회 탈락",
+      "body": "대회에서 탈락했습니다.\n\n스카우트에게 보여줄 자리가 하나 줄었습니다.",
+      "decisionTemplateId": "DEC_UNIV_TOURNAMENT_OUT"
+    },
+    {
+      "id": "MSG_UNIV_ACE_UNIV",
+      "category": "coach",
+      "subject": "팀의 에이스",
+      "body": "감독이 중요한 경기를 맡기기 시작했습니다.\n\n팀에서의 위치가 정해졌습니다.",
+      "decisionTemplateId": "DEC_UNIV_ACE_UNIV"
+    },
+    {
+      "id": "MSG_UNIV_BENCH_UNIV",
+      "category": "coach",
+      "subject": "등판 기회 부족",
+      "body": "등판 기회가 좀처럼 오지 않습니다.\n\n대학은 선수가 많습니다.",
+      "decisionTemplateId": "DEC_UNIV_BENCH_UNIV"
+    },
+    {
+      "id": "MSG_UNIV_SENIOR_PRESSURE",
+      "category": "coach",
+      "subject": "선배의 자리",
+      "body": "졸업반 선배가 마지막 시즌을 보내고 있습니다.\n\n그 자리를 내가 이어받게 됩니다.",
+      "decisionTemplateId": "DEC_UNIV_SENIOR_PRESSURE"
+    },
+    {
+      "id": "MSG_UNIV_JUNIOR_CARE",
+      "category": "coach",
+      "subject": "후배 지도",
+      "body": "1학년 후배가 폼을 봐달라고 합니다.\n\n가르치다 보면 내 것도 정리됩니다.",
+      "decisionTemplateId": "DEC_UNIV_JUNIOR_CARE"
+    },
+    {
+      "id": "MSG_UNIV_DRAFT_YEAR1",
+      "category": "coach",
+      "subject": "1학년인데 지명 이야기",
+      "body": "1학년인데 드래프트 이야기가 나옵니다.\n\n얼리 드래프트를 노려볼 수도 있습니다.",
+      "decisionTemplateId": "DEC_UNIV_DRAFT_YEAR1"
+    },
+    {
+      "id": "MSG_UNIV_DRAFT_STOCK_UP",
+      "category": "news",
+      "subject": "주가 상승",
+      "body": "스카우트 사이에서 평가가 올라가고 있습니다.\n\n올해가 기회일 수 있습니다.",
+      "decisionTemplateId": "DEC_UNIV_DRAFT_STOCK_UP"
+    },
+    {
+      "id": "MSG_UNIV_DRAFT_STOCK_DOWN",
+      "category": "news",
+      "subject": "주가 하락",
+      "body": "평가가 내려갔다는 이야기를 들었습니다.\n\n한 시즌으로 판단되는 게 야구입니다.",
+      "decisionTemplateId": "DEC_UNIV_DRAFT_STOCK_DOWN"
+    },
+    {
+      "id": "MSG_UNIV_EARLY_DRAFT",
+      "category": "coach",
+      "subject": "얼리 드래프트",
+      "body": "저학년 드래프트 신청을 고민할 시기입니다.\n\n지금 나가면 학위는 포기해야 합니다.",
+      "decisionTemplateId": "DEC_UNIV_EARLY_DRAFT"
+    },
+    {
+      "id": "MSG_UNIV_GRAD_NEAR",
+      "category": "coach",
+      "subject": "졸업이 보인다",
+      "body": "졸업 요건을 채웠습니다.\n\n야구가 안 되더라도 학위는 남습니다.",
+      "decisionTemplateId": "DEC_UNIV_GRAD_NEAR"
+    },
+    {
+      "id": "MSG_UNIV_GRAD_RISK",
+      "category": "coach",
+      "subject": "졸업 위태",
+      "body": "학점이 모자라 졸업이 어렵습니다.\n\n야구도 학위도 놓칠 수 있습니다.",
+      "decisionTemplateId": "DEC_UNIV_GRAD_RISK"
+    },
+    {
+      "id": "MSG_UNIV_OVERLOAD",
+      "category": "coach",
+      "subject": "과부하",
+      "body": "훈련·경기·수업이 겹쳤습니다.\n\n몸이 버티질 못합니다.",
+      "decisionTemplateId": "DEC_UNIV_OVERLOAD"
+    },
+    {
+      "id": "MSG_UNIV_FORM_UP_UNIV",
+      "category": "coach",
+      "subject": "감각이 올라왔다",
+      "body": "몸이 가볍습니다.\n\n대학 와서 처음 이런 느낌입니다.",
+      "decisionTemplateId": "DEC_UNIV_FORM_UP_UNIV"
+    },
+    {
+      "id": "MSG_UNIV_HOMESICK_UNIV",
+      "category": "news",
+      "subject": "타지 생활",
+      "body": "집을 떠나 산 지 오래됐습니다.\n\n가끔 견디기 어렵습니다.",
+      "decisionTemplateId": "DEC_UNIV_HOMESICK_UNIV"
+    },
+    {
+      "id": "MSG_UNIV_MONEY_TIGHT",
+      "category": "coach",
+      "subject": "생활비",
+      "body": "생활비가 빠듯합니다.\n\n장학금이 아니면 부담이 큽니다.",
+      "decisionTemplateId": "DEC_UNIV_MONEY_TIGHT"
+    },
+    {
+      "id": "MSG_UNIV_INJURY_SCARE_UNIV",
+      "category": "coach",
+      "subject": "부상 신호",
+      "body": "팔에 통증이 있습니다.\n\n대학 트레이닝 파트는 인원이 적습니다.",
+      "decisionTemplateId": "DEC_UNIV_INJURY_SCARE_UNIV"
+    },
+    {
+      "id": "MSG_UNIV_SLUMP_UNIV",
+      "category": "coach",
+      "subject": "부진",
+      "body": "결과가 안 나옵니다.\n\n고교 때와는 상대 수준이 다릅니다.",
+      "decisionTemplateId": "DEC_UNIV_SLUMP_UNIV"
+    },
+    {
+      "id": "MSG_UNIV_CONFIDENCE_UNIV",
+      "category": "coach",
+      "subject": "자신감",
+      "body": "대학 무대가 익숙해졌습니다.\n\n이제 여기가 내 자리처럼 느껴집니다.",
+      "decisionTemplateId": "DEC_UNIV_CONFIDENCE_UNIV"
+    },
+    {
+      "id": "MSG_UNIV_CAMPUS_PAPER",
+      "category": "news",
+      "subject": "학보사 인터뷰",
+      "body": "학보사에서 인터뷰를 요청했습니다.\n\n학교 안에서 읽는 지면입니다.",
+      "decisionTemplateId": "DEC_UNIV_CAMPUS_PAPER"
+    },
+    {
+      "id": "MSG_UNIV_SHOWCASE_UNIV",
+      "category": "news",
+      "subject": "쇼케이스",
+      "body": "대학 쇼케이스가 열립니다.\n\n프로 스카우트가 한자리에 모입니다.",
+      "decisionTemplateId": "DEC_UNIV_SHOWCASE_UNIV"
+    },
+    {
+      "id": "MSG_UNIV_ALLSTAR_UNIV",
+      "category": "news",
+      "subject": "대학 올스타",
+      "body": "대학 올스타 명단에 들었습니다.\n\n또래 최고들과 한자리에 섭니다.",
+      "decisionTemplateId": "DEC_UNIV_ALLSTAR_UNIV"
+    },
+    {
+      "id": "MSG_UNIV_ALUMNI",
+      "category": "news",
+      "subject": "선배 방문",
+      "body": "프로에 간 학교 선배가 다녀갔습니다.\n\n짧게 조언을 들었습니다.",
+      "decisionTemplateId": "DEC_UNIV_ALUMNI"
+    },
+    {
+      "id": "MSG_UNIV_FRIEND_QUIT",
+      "category": "news",
+      "subject": "야구를 그만둔 동기",
+      "body": "같이 입학한 동기가 야구를 그만뒀습니다.\n\n일반 학생으로 돌아갔습니다.",
+      "decisionTemplateId": "DEC_UNIV_FRIEND_QUIT"
+    },
+    {
+      "id": "MSG_UNIV_CLASS_FRIEND",
+      "category": "news",
+      "subject": "과 동기",
+      "body": "야구부가 아닌 동기와 밥을 먹었습니다.\n\n다른 세계 이야기를 듣습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_UNIV_LIFE_LECTURE",
+      "category": "system",
+      "subject": "강의실",
+      "body": "오전 강의를 듣고 오후에 훈련합니다.\n\n하루가 두 개로 나뉩니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_UNIV_LIFE_ASSIGNMENT",
+      "category": "system",
+      "subject": "과제 마감",
+      "body": "과제 마감이 내일입니다.\n\n오늘 훈련도 있습니다.",
+      "decisionTemplateId": "DEC_UNIV_LIFE_ASSIGNMENT"
+    },
+    {
+      "id": "MSG_UNIV_LIFE_LIBRARY",
+      "category": "system",
+      "subject": "도서관",
+      "body": "시험 기간 도서관은 자리가 없습니다.\n\n야구부 라커룸에서 공부합니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_UNIV_LIFE_CAMPUS_WALK",
+      "category": "system",
+      "subject": "캠퍼스",
+      "body": "훈련 전에 캠퍼스를 걸었습니다.\n\n계절이 바뀌는 게 보입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_UNIV_LIFE_DORM_UNIV",
+      "category": "system",
+      "subject": "기숙사",
+      "body": "기숙사 통금이 있습니다.\n\n야간 훈련이 늦어지면 곤란합니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_UNIV_LIFE_PROF_TALK",
+      "category": "system",
+      "subject": "교수 면담",
+      "body": "지도교수와 면담을 했습니다.\n\n진로 이야기가 나왔습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_UNIV_LIFE_CLUB_FAIR",
+      "category": "system",
+      "subject": "동아리 축제",
+      "body": "학교 축제 기간입니다.\n\n야구부도 부스를 냅니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_UNIV_LIFE_SCOUT_CAMPUS",
+      "category": "news",
+      "subject": "캠퍼스의 스카우트",
+      "body": "훈련장 옆에 낯선 사람이 서 있습니다.\n\n수첩을 들고 있습니다.",
       "decisionTemplateId": null
     }
   ]

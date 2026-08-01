@@ -1,0 +1,26 @@
+{
+  "id": "EVT_UNIV_LIFE_CLUB_FAIR",
+  "type": "random",
+  "category": "social",
+  "priority": 300,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 3,
+  "weight": 18,
+  "poolId": "POOL_SOCIAL_DAILY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "week_gte",
+      "value": 18
+    },
+    {
+      "type": "week_lte",
+      "value": 30
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_LIFE_CLUB_FAIR",
+  "decisionTemplateId": null
+}

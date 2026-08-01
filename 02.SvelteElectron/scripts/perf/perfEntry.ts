@@ -501,6 +501,21 @@ export function eventTallyDump(): Record<string, number> {
   return { ..._evTally };
 }
 
+/** 대학 학업 현황 — 학점·경고·유급이 실제로 도는지 본다 (Phase 9-C) */
+export function academicsState(): Record<string, unknown> {
+  const sc = get(gameStore).schoolState;
+  return {
+    major: sc.universityMajor,
+    gpa: sc.universityGpa ?? null,
+    semesters: sc.semesterGpaHistory?.length ?? 0,
+    warn: sc.academicWarningLevel ?? 0,
+    repeated: sc.repeatedYears ?? 0,
+    graduated: !!sc.graduated,
+    blocked: sc.eligibilityBlocked,
+    univWeek: sc.universityWeek,
+  };
+}
+
 /** 주인공 현황 한 줄 — 경로 회귀가 "지금 어디에 있나"를 판정하는 데 쓴다 */
 export function protagonistState(): Record<string, unknown> {
   const p = get(gameStore).protagonist;

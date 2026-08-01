@@ -1,0 +1,23 @@
+{
+  "id": "EVT_UNIV_GRAD_RISK",
+  "type": "conditional",
+  "category": "career",
+  "priority": 765,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "week_gte",
+      "value": 34
+    },
+    {
+      "type": "gpa_lte",
+      "value": 2
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_GRAD_RISK",
+  "decisionTemplateId": "DEC_UNIV_GRAD_RISK"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "EVT_UNIV_CAMPUS_PAPER",
+  "type": "conditional",
+  "category": "media",
+  "priority": 630,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 10
+    }
+  ],
+  "cooldownWeeks": 8,
+  "messageTemplateId": "MSG_UNIV_CAMPUS_PAPER",
+  "decisionTemplateId": "DEC_UNIV_CAMPUS_PAPER"
+}

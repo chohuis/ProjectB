@@ -1,0 +1,20 @@
+{
+  "id": "EVT_UNIV_WARN_2",
+  "type": "conditional",
+  "category": "academics",
+  "priority": 800,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "academic_warning_gte",
+      "value": 2
+    }
+  ],
+  "cooldownWeeks": 6,
+  "messageTemplateId": "MSG_UNIV_WARN_2",
+  "decisionTemplateId": "DEC_UNIV_WARN_2"
+}

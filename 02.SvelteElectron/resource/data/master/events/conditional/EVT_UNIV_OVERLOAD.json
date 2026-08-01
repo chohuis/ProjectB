@@ -1,0 +1,20 @@
+{
+  "id": "EVT_UNIV_OVERLOAD",
+  "type": "conditional",
+  "category": "health",
+  "priority": 755,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "fatigue_gte",
+      "value": 70
+    }
+  ],
+  "cooldownWeeks": 5,
+  "messageTemplateId": "MSG_UNIV_OVERLOAD",
+  "decisionTemplateId": "DEC_UNIV_OVERLOAD"
+}

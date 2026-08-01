@@ -1,0 +1,19 @@
+{
+  "id": "EVT_UNIV_W44_MT_SEASON",
+  "type": "mandatory",
+  "category": "social",
+  "priority": 900,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "week_eq",
+      "value": 44
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_W44_MT_SEASON",
+  "decisionTemplateId": "DEC_UNIV_W44_MT_SEASON"
+}

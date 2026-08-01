@@ -1,0 +1,23 @@
+{
+  "id": "EVT_UNIV_SCHOLARSHIP",
+  "type": "conditional",
+  "category": "academics",
+  "priority": 720,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "gpa_gte",
+      "value": 3
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 20
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_SCHOLARSHIP",
+  "decisionTemplateId": "DEC_UNIV_SCHOLARSHIP"
+}

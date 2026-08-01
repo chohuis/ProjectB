@@ -1,0 +1,23 @@
+{
+  "id": "EVT_UNIV_EARLY_DRAFT",
+  "type": "conditional",
+  "category": "career",
+  "priority": 735,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "week_gte",
+      "value": 36
+    },
+    {
+      "type": "pitching_ovr_gte",
+      "value": 65
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_EARLY_DRAFT",
+  "decisionTemplateId": "DEC_UNIV_EARLY_DRAFT"
+}

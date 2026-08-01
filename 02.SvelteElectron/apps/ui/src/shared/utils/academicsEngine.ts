@@ -210,7 +210,10 @@ export interface SemesterResult {
 export function settleSemester(
   rules: AcademicsRules,
   opts: {
-    weeklyGpaAccum: number;      // 주간 모드 누적
+    /** 이번 학기 주당 품질(0~1)의 합 */
+    qualityAccum: number;
+    /** 이번 학기 주차 수 — 길이가 다르므로 반드시 나눈다 */
+    weeks: number;
     priorCumulative: number;     // 직전까지의 누적 학점
     semestersDone: number;       // 이번 학기 포함 전 학기 수
     warningLevel: number;
@@ -219,7 +222,10 @@ export function settleSemester(
 ): SemesterResult {
   const u = rules.university;
   const mj = majorEffects(rules, opts.major);
-  const gpa = Math.max(0, Math.min(u.gpaMax, opts.weeklyGpaAccum * mj.gpaGainMult));
+  // ⚠ **평균 품질로 낸다.** 합계를 그대로 쓰면 기말(27주)이 중간(11주)보다
+  // 무조건 높아져, 중간고사에서 늘 경고가 걸린다
+  const avgQuality = opts.weeks > 0 ? opts.qualityAccum / opts.weeks : 0;
+  const gpa = Math.max(0, Math.min(u.gpaMax, avgQuality * u.gpaMax * mj.gpaGainMult));
 
   const n = Math.max(1, opts.semestersDone);
   const cumulativeGpa = Math.round(((opts.priorCumulative * (n - 1) + gpa) / n) * 100) / 100;

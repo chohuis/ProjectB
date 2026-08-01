@@ -1,0 +1,24 @@
+{
+  "id": "EVT_UNIV_CONFIDENCE_UNIV",
+  "type": "conditional",
+  "category": "mental",
+  "priority": 665,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "morale_gte",
+      "value": 78
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 15
+    }
+  ],
+  "cooldownWeeks": 6,
+  "messageTemplateId": "MSG_UNIV_CONFIDENCE_UNIV",
+  "decisionTemplateId": "DEC_UNIV_CONFIDENCE_UNIV"
+}

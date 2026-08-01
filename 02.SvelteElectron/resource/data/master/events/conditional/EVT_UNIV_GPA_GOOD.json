@@ -1,0 +1,20 @@
+{
+  "id": "EVT_UNIV_GPA_GOOD",
+  "type": "conditional",
+  "category": "academics",
+  "priority": 700,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "gpa_gte",
+      "value": 3.5
+    }
+  ],
+  "cooldownWeeks": 8,
+  "messageTemplateId": "MSG_UNIV_GPA_GOOD",
+  "decisionTemplateId": "DEC_UNIV_GPA_GOOD"
+}

@@ -1,0 +1,24 @@
+{
+  "id": "EVT_UNIV_ATTENDANCE",
+  "type": "conditional",
+  "category": "academics",
+  "priority": 675,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "week_gte",
+      "value": 14
+    },
+    {
+      "type": "academic_warning_gte",
+      "value": 1
+    }
+  ],
+  "cooldownWeeks": 6,
+  "messageTemplateId": "MSG_UNIV_ATTENDANCE",
+  "decisionTemplateId": "DEC_UNIV_ATTENDANCE"
+}

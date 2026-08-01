@@ -1,0 +1,28 @@
+{
+  "id": "EVT_UNIV_TOURNAMENT_IN",
+  "type": "conditional",
+  "category": "team",
+  "priority": 740,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "team_rank_lte",
+      "value": 2
+    },
+    {
+      "type": "week_gte",
+      "value": 10
+    },
+    {
+      "type": "week_lte",
+      "value": 20
+    }
+  ],
+  "cooldownWeeks": 8,
+  "messageTemplateId": "MSG_UNIV_TOURNAMENT_IN",
+  "decisionTemplateId": "DEC_UNIV_TOURNAMENT_IN"
+}

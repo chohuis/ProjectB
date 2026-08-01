@@ -513,6 +513,19 @@ export interface SchoolState {
 
   /** 누적 학점 (0.0~4.5). 졸업 판정의 기준이다 */
   universityGpa?: number;
+  /**
+   * 이번 학기 학업 품질 누계와 주차 수.
+   *
+   * ⚠ **`examAccumScore`를 재사용하면 안 된다.** 그건 고교 시험 누적(0~100)이고
+   * 대학에서도 `applyWeeklyStudy`가 주당 4씩 더한다 — 실측에서 학점이 상한
+   * 4.50으로 튀었다(주 0.03씩 쌓아야 할 값에 주 4가 섞였다).
+   *
+   * 품질은 주당 0~1이고, 학기 학점 = 평균 품질 × 4.5다. **주차 수로 나누므로
+   * 학기 길이가 달라도 공정하다** — 중간고사 구간(W1~11, 11주)과 기말 구간
+   * (W12~38, 27주)의 길이가 두 배 넘게 차이 난다.
+   */
+  semesterQualityAccum?: number;
+  semesterWeeks?: number;
   /** 학기별 학점 이력 — 연속 미달을 세려면 이력이 있어야 한다 */
   semesterGpaHistory?: { year: number; term: "midterm" | "final"; gpa: number }[];
   /**

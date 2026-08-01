@@ -62,6 +62,7 @@ async function drive(app, opts) {
       await app.seasonRollover();
       if (onSeason) onSeason(app, y);
       vlog(`[시즌] ${y}→${app.currentSeason()} ${JSON.stringify(app.protagonistState())}`);
+      if (app.careerStage() === "university") vlog(`        학업 ${JSON.stringify(app.academicsState())}`);
       continue;
     }
     return { hit: false, trail, reason: `막힘 W${before} pending=${app.pendingKind()} stop=${app.stopReason()}` };
@@ -83,18 +84,29 @@ const PATHS = [
       : { draft: true, university: false, independent: false },
     maxSeasons: 12,
     until: (a) => a.careerStage().startsWith("pro"),
-    check(app, r) {
+    check(app, r, out) {
       if (!r.hit) throw new Error(`프로에 도달 못 함 — ${r.reason}`);
       const seen = r.trail.join(" ");
       if (!/careerChoice\(university\)/.test(seen)) throw new Error("대학 진학을 안 거쳤다");
       const st = app.protagonistState();
       if (st.proServiceYears == null) throw new Error("proServiceYears 없음");
-      return `대학 경유 → ${st.team} (${st.age}세)`;
+      // ⚠ 학업이 **실제로 돌았는지** 본다. 9-C-1을 붙였을 때 시험 트리거가
+      // `career_stage: highschool` 전용이라 대학 학기 확정이 죽은 코드였다 —
+      // 코드가 있다고 도는 게 아니다
+      // ⚠ **끝난 뒤에 직접 읽는다.** `watch`는 롤오버에서만 도는데 마지막
+      // 롤오버가 대학 시즌 **시작 전**이라 늘 0으로 보였다 — T2의 입대 나이와
+      // 같은 실수다. `schoolState`는 프로로 넘어가도 남는다.
+      const aca = app.academicsState();
+      if (aca.semesters === 0) throw new Error("대학 학기가 한 번도 확정 안 됐다 (시험 트리거 미발동)");
+      if (aca.gpa == null) throw new Error("학점이 안 쌓였다");
+      return `대학 경유 → ${st.team} (${st.age}세) · 학기 ${aca.semesters}회 · 학점 ${Number(aca.gpa).toFixed(2)} · 경고 ${aca.warn} · 유급 ${aca.repeated}`;
     },
-    // 대학 재학 중 학년이 실제로 올라갔는지 같이 본다
+    // 대학 재학 중 학년·학업이 실제로 올라갔는지 같이 본다
     watch(app, out) {
       const st = app.protagonistState();
       if (st.stage === "university" && st.grade != null) out.grades.add(st.grade);
+      const a = app.academicsState();
+      if (a.semesters > (out.aca?.semesters ?? -1)) out.aca = a;
     },
   },
   {
@@ -198,7 +210,7 @@ const PATHS = [
         typeof p.policy === "function" ? p.policy(app.careerStage()) : p.policy);
       applyPolicy();
 
-      const out = { grades: new Set(), enlistAge: null };
+      const out = { grades: new Set(), enlistAge: null, aca: { semesters: 0, gpa: null, warn: 0, repeated: 0 } };
       const r = await drive(app, {
         maxSeasons: p.maxSeasons,
         until: p.until,

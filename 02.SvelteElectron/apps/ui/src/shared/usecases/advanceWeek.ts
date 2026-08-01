@@ -43,7 +43,7 @@ import { generateFreshmenV3, ensureLeagueActivatedV3 } from "../repo/slotLifecyc
 
 // ── weekPhases 도메인 모듈 (R4: training·academics·events·games·injuries·growth·market·digest) ──
 import { findTeamCoach, getPitchCoachName, makeTrainingMessage } from "./weekPhases/training";
-import { EXAM_EVENT_IDS, makeExamMessage } from "./weekPhases/academics";
+import { EXAM_EVENT_IDS, isMidtermEvent, makeExamMessage } from "./weekPhases/academics";
 import { runEventEngine } from "./weekPhases/events";
 import { simulateNpcGame } from "./weekPhases/games";
 export { simulateProtagonistGame } from "./weekPhases/games";
@@ -210,7 +210,10 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   const studyResult = isStudent
     ? applyWeeklyStudy(g.schoolState, examGainMult)
     : NEUTRAL_STUDY;
-  if (isStudent) gameStore.applyWeeklyStudyResult(studyResult);
+  // ⚠ **대학은 고교식 주간 학업 결과를 저장하지 않는다.** 석차백분율·출석·
+  // 과제·경고누적은 고교 축이고, 대학은 학점 축이다(설계 §1-1).
+  // 훈련 효율(`studyResult.efficiencyMod`)만 아래에서 그대로 쓴다
+  if (isStudent && !isUniversity) gameStore.applyWeeklyStudyResult(studyResult);
 
   // ── 대학 학업 (Phase 9-C) ────────────────────────────────────
   //
@@ -646,7 +649,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   const gAfterStudy = get(gameStore);
   const triggeredExamId = Object.keys(evResult.updatedTriggers).find((id) => EXAM_EVENT_IDS.has(id));
   if (triggeredExamId && (g.protagonist.careerStage === "highschool" || g.protagonist.careerStage === "university")) {
-    const examType = triggeredExamId === "EVT_HS_MIDTERM" ? "midterm" : "final";
+    const examType = isMidtermEvent(triggeredExamId) ? "midterm" : "final";
     if (isUniversity && acaRules) {
       // ── 대학: 학점 확정 (Phase 9-C) ───────────────────────────
       //
@@ -655,7 +658,8 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       // 정해진다. 경고는 한 번에 출전 정지로 가지 않고 단계로 오르내린다.
       const sc = gAfterStudy.schoolState;
       const res = settleSemester(acaRules, {
-        weeklyGpaAccum: sc.examAccumScore,
+        qualityAccum: sc.semesterQualityAccum ?? 0,
+        weeks: sc.semesterWeeks ?? 0,
         priorCumulative: sc.universityGpa ?? 0,
         semestersDone: (sc.semesterGpaHistory?.length ?? 0) + 1,
         warningLevel: sc.academicWarningLevel ?? 0,

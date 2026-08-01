@@ -1,0 +1,24 @@
+{
+  "id": "EVT_UNIV_MAJOR_DOUBT",
+  "type": "conditional",
+  "category": "academics",
+  "priority": 660,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "week_gte",
+      "value": 20
+    },
+    {
+      "type": "morale_lte",
+      "value": 60
+    }
+  ],
+  "cooldownWeeks": 8,
+  "messageTemplateId": "MSG_UNIV_MAJOR_DOUBT",
+  "decisionTemplateId": "DEC_UNIV_MAJOR_DOUBT"
+}

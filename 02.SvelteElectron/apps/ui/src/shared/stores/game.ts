@@ -1259,7 +1259,9 @@ function createGameStore() {
             eligibilityBlocked: r.newWarningLevel >= 2,
             // 유급하면 학년 계수기를 한 해(52주) 되돌린다
             universityWeek: r.repeats ? Math.max(0, sc.universityWeek - 52) : sc.universityWeek,
-            examAccumScore: 0,
+            // 다음 학기를 위해 누적기를 비운다
+            semesterQualityAccum: 0,
+            semesterWeeks: 0,
           },
         };
       });
@@ -1270,11 +1272,20 @@ function createGameStore() {
       update((s) => ({ ...s, schoolState: { ...s.schoolState, graduated: true } }));
     },
 
-    /** 주간 학업 학점 누적 (대학 전용) */
-    addWeeklyGpa(delta: number) {
+    /**
+     * 주간 학업 품질 누적 (대학 전용).
+     *
+     * ⚠ **고교의 `examAccumScore`를 쓰지 않는다.** 거기엔 `applyWeeklyStudy`가
+     * 주당 4씩 더하고 있어서 섞이면 학점이 상한으로 튄다(실측 4.50).
+     */
+    addWeeklyGpa(quality: number) {
       update((s) => ({
         ...s,
-        schoolState: { ...s.schoolState, examAccumScore: s.schoolState.examAccumScore + delta },
+        schoolState: {
+          ...s.schoolState,
+          semesterQualityAccum: (s.schoolState.semesterQualityAccum ?? 0) + quality,
+          semesterWeeks: (s.schoolState.semesterWeeks ?? 0) + 1,
+        },
       }));
     },
 

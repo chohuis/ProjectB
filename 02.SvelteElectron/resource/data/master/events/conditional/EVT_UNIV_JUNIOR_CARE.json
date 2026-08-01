@@ -1,0 +1,24 @@
+{
+  "id": "EVT_UNIV_JUNIOR_CARE",
+  "type": "conditional",
+  "category": "team_life",
+  "priority": 650,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "week_gte",
+      "value": 20
+    },
+    {
+      "type": "pitching_ovr_gte",
+      "value": 58
+    }
+  ],
+  "cooldownWeeks": 6,
+  "messageTemplateId": "MSG_UNIV_JUNIOR_CARE",
+  "decisionTemplateId": "DEC_UNIV_JUNIOR_CARE"
+}

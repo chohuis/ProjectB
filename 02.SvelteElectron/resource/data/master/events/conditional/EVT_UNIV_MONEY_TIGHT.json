@@ -1,0 +1,20 @@
+{
+  "id": "EVT_UNIV_MONEY_TIGHT",
+  "type": "conditional",
+  "category": "career",
+  "priority": 655,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "week_gte",
+      "value": 16
+    }
+  ],
+  "cooldownWeeks": 8,
+  "messageTemplateId": "MSG_UNIV_MONEY_TIGHT",
+  "decisionTemplateId": "DEC_UNIV_MONEY_TIGHT"
+}

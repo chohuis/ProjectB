@@ -1,0 +1,18 @@
+{
+  "id": "EVT_UNIV_LIFE_CAMPUS_WALK",
+  "type": "random",
+  "category": "team_life",
+  "priority": 300,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 3,
+  "weight": 20,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_LIFE_CAMPUS_WALK",
+  "decisionTemplateId": null
+}

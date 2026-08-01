@@ -1,0 +1,19 @@
+{
+  "id": "EVT_UNIV_W40_SEMESTER_CLOSE",
+  "type": "mandatory",
+  "category": "academics",
+  "priority": 900,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "week_eq",
+      "value": 40
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_W40_SEMESTER_CLOSE",
+  "decisionTemplateId": null
+}

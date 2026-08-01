@@ -1,0 +1,24 @@
+{
+  "id": "EVT_UNIV_INJURY_SCARE_UNIV",
+  "type": "conditional",
+  "category": "health",
+  "priority": 760,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "fatigue_gte",
+      "value": 62
+    },
+    {
+      "type": "condition_lte",
+      "value": 55
+    }
+  ],
+  "cooldownWeeks": 6,
+  "messageTemplateId": "MSG_UNIV_INJURY_SCARE_UNIV",
+  "decisionTemplateId": "DEC_UNIV_INJURY_SCARE_UNIV"
+}

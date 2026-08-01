@@ -1,0 +1,19 @@
+{
+  "id": "EVT_UNIV_WARN_3",
+  "type": "conditional",
+  "category": "academics",
+  "priority": 810,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "academic_warning_gte",
+      "value": 3
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_WARN_3",
+  "decisionTemplateId": "DEC_UNIV_WARN_3"
+}

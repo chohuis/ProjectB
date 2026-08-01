@@ -1,0 +1,24 @@
+{
+  "id": "EVT_UNIV_HOMESICK_UNIV",
+  "type": "conditional",
+  "category": "social",
+  "priority": 640,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "week_gte",
+      "value": 8
+    },
+    {
+      "type": "morale_lte",
+      "value": 55
+    }
+  ],
+  "cooldownWeeks": 8,
+  "messageTemplateId": "MSG_UNIV_HOMESICK_UNIV",
+  "decisionTemplateId": "DEC_UNIV_HOMESICK_UNIV"
+}

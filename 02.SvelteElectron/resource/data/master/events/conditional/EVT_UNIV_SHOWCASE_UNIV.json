@@ -1,0 +1,23 @@
+{
+  "id": "EVT_UNIV_SHOWCASE_UNIV",
+  "type": "conditional",
+  "category": "media",
+  "priority": 740,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "week_gte",
+      "value": 30
+    },
+    {
+      "type": "week_lte",
+      "value": 34
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_SHOWCASE_UNIV",
+  "decisionTemplateId": "DEC_UNIV_SHOWCASE_UNIV"
+}

@@ -1,0 +1,23 @@
+{
+  "id": "EVT_UNIV_THESIS",
+  "type": "conditional",
+  "category": "academics",
+  "priority": 700,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "university"
+    },
+    {
+      "type": "week_gte",
+      "value": 30
+    },
+    {
+      "type": "gpa_gte",
+      "value": 2
+    }
+  ],
+  "messageTemplateId": "MSG_UNIV_THESIS",
+  "decisionTemplateId": "DEC_UNIV_THESIS"
+}
