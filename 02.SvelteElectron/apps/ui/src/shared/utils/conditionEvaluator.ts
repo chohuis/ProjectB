@@ -3,7 +3,7 @@ import type { PitcherSeasonStats } from "../types/save";
 
 // ── 조건 단일 평가 ─────────────────────────────────────────────
 export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
-  const { protagonist, currentWeek, seasonPhase, standings, stats } = ctx;
+  const { protagonist, currentWeek, seasonPhase, standings, stats, schoolState } = ctx;
 
   switch (cond.type) {
 
@@ -116,6 +116,22 @@ export function evaluateCondition(cond: Condition, ctx: EventContext): boolean {
     // ── 미래 필드 (군 시스템 설계 시 구현) ──────────────────────
     case "military_phase":
       return false;
+
+    // ── 대학 학업 (Phase 9-C) ────────────────────────────────────
+    //
+    // `schoolState`가 없으면 전부 거짓이다 — 고교·프로·독립에서 학점 조건이
+    // 참이 되면 안 된다. 대학 이벤트만 이 축을 쓴다.
+    case "gpa_gte":
+      return (schoolState?.universityGpa ?? 0) >= cond.value;
+
+    case "gpa_lte":
+      // ⚠ 학기를 한 번도 안 마쳤으면(이력 0) 학점이 0인 게 아니라 **없는** 것이다.
+      // 그대로 0으로 비교하면 입학 첫 주부터 "학점이 위험하다"가 뜬다
+      return (schoolState?.semesterGpaHistory?.length ?? 0) > 0
+        && (schoolState?.universityGpa ?? 0) <= cond.value;
+
+    case "academic_warning_gte":
+      return (schoolState?.academicWarningLevel ?? 0) >= cond.value;
   }
 }
 

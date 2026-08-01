@@ -18,7 +18,7 @@ import { masterStore } from "../stores/master";
 import { calcKblDraftContract } from "../utils/draftSalaryTable";
 import { buildSalaryIndex, loadRosterRules } from "../repo/newGameV3";
 import { canApplyToUniversity, isUniversityFinalYear } from "../utils/careerTransition";
-import { loadAcademicsRules, canGraduate } from "../utils/academicsEngine";
+import { loadAcademicsRules, canGraduate, majorEffects } from "../utils/academicsEngine";
 import { openProSeason } from "./proSeason";
 import { enlistProtagonist } from "./militaryDecision";
 import type { PendingAction } from "../types/season";
@@ -74,8 +74,21 @@ export async function continueCurrentStage(): Promise<boolean> {
   if (p.careerStage === "university"
       && isUniversityFinalYear(p.grade, g.schoolState.universityWeek)) {
     const rules = await loadAcademicsRules();
-    if (canGraduate(rules, g.schoolState.universityGpa ?? 0)) {
+    const gpa = g.schoolState.universityGpa ?? 0;
+    if (canGraduate(rules, gpa)) {
       gameStore.markGraduated();
+      // ⚠ 취업 경로는 **기록만 남긴다.** 화면은 Phase 11 엔딩과 같이 만든다 —
+      // 지금 만들면 엔딩 톤이 정해질 때 다시 손대게 된다.
+      // 4년을 관리한 결과가 여기서 처음 의미를 갖는다(설계 §0 구멍 ③).
+      const mj = majorEffects(rules, g.schoolState.universityMajor);
+      const path = mj.coachPath ? "지도자" : mj.careerNet ? "일반 취업" : "야구 관련";
+      gameStore.addCareerEvent({
+        year: get(seasonStore).seasonYear,
+        eventType: "graduation",
+        fromTeamId: g.protagonist.teamId || undefined,
+        fromLeagueId: "LEAGUE_UNIVERSITY",
+        detail: `졸업 · ${g.schoolState.universityMajor} · 학점 ${gpa.toFixed(2)} · 대안 경로 ${path}`,
+      });
       return false;          // 졸업 — 진로를 정해야 한다
     }
     // 학점 미달 — 한 해 더 다닌다. **여기서 반환하면 안 된다**:

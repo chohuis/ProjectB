@@ -50,7 +50,14 @@ export type Condition =
   // ── 미래 필드 (evaluator에서 false 반환, 추후 구현) ──────────
   | { type: "fame_gte";        value: number }        // 명성 이상 — protagonist.fame 추가 후 구현
   | { type: "pro_year_gte";    value: number }        // 프로 연차 이상 — 추가 후 구현
-  | { type: "military_phase";  phase: string };       // 군복무 단계 — 군대 시스템 추가 후 구현
+  | { type: "military_phase";  phase: string }        // 군복무 단계 — 군대 시스템 추가 후 구현
+
+  // ── 대학 학업 (Phase 9-C) ────────────────────────────────────
+  // 대학 이벤트가 학점·경고를 조건으로 걸 수 있어야 한다. 이게 없으면
+  // "학점이 위험하다" 같은 이벤트를 아예 쓸 수 없다
+  | { type: "gpa_gte";              value: number }
+  | { type: "gpa_lte";              value: number }
+  | { type: "academic_warning_gte"; value: number };
 
 // ── 이벤트 규칙 (마스터 JSON 구조) ───────────────────────────
 export type EventOncePolicy =
@@ -124,6 +131,11 @@ export interface EventContext {
   standings: Standing[];
   stats: Record<string, PlayerSeasonStats>;
   triggeredEvents: Record<string, number>;   // eventId → 마지막 발생 주차
+  /**
+   * 학업 상태 — 대학 이벤트가 학점·경고를 조건으로 읽는다 (Phase 9-C).
+   * 없으면 학업 조건은 전부 거짓이 된다(고교·프로에서는 그게 맞다).
+   */
+  schoolState?: import("./save").SchoolState;
   /**
    * 문장 뱅크의 "직전에 쓴 문장" 기억 (Phase 7-6). `templateId#body → index`.
    * 세이브에 남는 값이라 로드해도 같은 문장이 이어서 나오지 않는다

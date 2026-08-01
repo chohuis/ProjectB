@@ -496,6 +496,9 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     stats:           s.stats,
     triggeredEvents: s.triggeredEvents,
     sentenceMemory: s.sentenceMemory ?? {},
+    // 대학 이벤트가 학점·경고를 조건으로 읽는다 (Phase 9-C).
+    // **`get(gameStore)`로 최신을 읽는다** — 이번 주 학점 누적이 반영돼야 한다
+    schoolState: get(gameStore).schoolState,
   };
   const evResult = runEventEngine(
     m.eventRules, m.eventPools,

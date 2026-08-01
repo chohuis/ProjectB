@@ -657,7 +657,10 @@ export type NpcCareerEventType =
   | "military_enlist"
   | "military_discharge"
   | "military_exempt"
-  | "retirement";
+  | "retirement"
+  // 대학 졸업 (Phase 9-C). 미지명이어도 학점에 따라 진로가 갈린다 —
+  // 취업 경로 화면은 Phase 11 엔딩과 함께 붙이고, 여기서는 기록만 남긴다
+  | "graduation";
 
 export interface NpcCareerEvent {
   year: number;
