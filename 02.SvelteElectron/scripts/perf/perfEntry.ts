@@ -12,17 +12,20 @@ import { masterStore } from "../../apps/ui/src/shared/stores/master";
 import { gameStore } from "../../apps/ui/src/shared/stores/game";
 import { seasonStore } from "../../apps/ui/src/shared/stores/season";
 import { npcLiveStatsStore } from "../../apps/ui/src/shared/stores/npcLiveStats";
-import { autoAdvanceStore } from "../../apps/ui/src/shared/stores/autoAdvance";
+import { autoAdvanceStore, setAutoLogFile } from "../../apps/ui/src/shared/stores/autoAdvance";
 import { startNewGameV3 } from "../../apps/ui/src/shared/repo/slotLifecycleV3";
 import { assignHighschoolPosition } from "../../apps/ui/src/shared/utils/pitcherRoleEngine";
-import { runAutoAdvance } from "../../apps/ui/src/shared/usecases/runAutoAdvance";
+import { runAutoAdvance, lastAutoAdvanceError } from "../../apps/ui/src/shared/usecases/runAutoAdvance";
 import { advanceWeek } from "../../apps/ui/src/shared/usecases/advanceWeek";
 import { nextPendingAction, seasonEnded } from "../../apps/ui/src/shared/stores/season";
 import { runDraftBoardBackground } from "../../apps/ui/src/shared/usecases/runDraftBoardBackground";
 import { runSeasonRollover } from "../../apps/ui/src/shared/usecases/seasonRollover";
 import { processTradeWindow } from "../../apps/ui/src/shared/usecases/weekPhases/market";
 import { runDevScenarios } from "../../apps/ui/src/shared/usecases/devScenarios";
-import { signNegotiatedContract } from "../../apps/ui/src/shared/usecases/contractDecision";
+import {
+  signNegotiatedContract, applyOptionClause, signFaOffer, waitFaMarket,
+} from "../../apps/ui/src/shared/usecases/contractDecision";
+import { generateFaOffers } from "../../apps/ui/src/shared/utils/faEngine";
 import { retireProtagonist, isRetired } from "../../apps/ui/src/shared/usecases/retirement";
 import { runCampusEventsWeek } from "../../apps/ui/src/shared/usecases/campusEvents";
 import {
@@ -267,6 +270,13 @@ export function entityCount(): number { return get(masterStore).entities.length;
  */
 export async function autoRun(): Promise<void> {
   await runAutoAdvance();
+  // ⚠ `runAutoAdvance`는 예외를 **삼키고** `stopReason`에만 남긴다. 헤드리스가
+  // 그걸 안 보면 "주는 넘어갔으니 정상"으로 읽혀서, 매년 같은 자리에서
+  // 터지는 결함이 25시즌 내내 안 보인다. 여기서 던져 드러낸다.
+  const reason = get(autoAdvanceStore).stopReason;
+  if (reason && reason.startsWith("오류:")) {
+    throw new Error(`[autoRun] ${reason}\n${lastAutoAdvanceError() ?? "(스택 없음)"}`);
+  }
 }
 
 // ── 사용자 입력 대체 ─────────────────────────────────────────────
@@ -344,6 +354,21 @@ export async function pushCareerForward(): Promise<string | null> {
     case "salaryNegotiation":
       await acceptNegotiation();
       return "salaryNegotiation(accept)";
+
+    case "optionClause":
+      // 구단 옵션은 결과가 이미 정해져 있고(확인만), 선수 옵션은 행사한다.
+      // 어느 쪽이든 다음 단계(FA 또는 재계약)가 이어져야 한다
+      await applyOptionClause(pa, pa.optionType === "team" ? pa.exercised : true);
+      return `optionClause(${pa.optionType})`;
+
+    case "faMarket": {
+      // 제시 중 연봉이 가장 높은 곳과 계약한다 — 플레이어의 기본 선택
+      const offers = await generateFaOffers(get(gameStore).protagonist, get(masterStore).teams);
+      const best = offers.slice().sort((a, b) => b.salary - a.salary)[0];
+      if (!best) { await waitFaMarket(); return "faMarket(wait)"; }
+      await signFaOffer(best, best.salary);
+      return "faMarket(sign)";
+    }
 
     case "retirementAsk":
       // 은퇴 권고를 **수락**한다 — 헤드리스는 커리어가 끝나는지 보는 게 목적이다.
@@ -510,6 +535,17 @@ export async function probeScoutDay(): Promise<{ logs: string[]; message: boolea
 export async function probeImmediateSave(): Promise<void> {
   gameStore.applyFameChange(1);
   await gameStore.save();
+}
+
+/**
+ * 게임이 이미 쓰고 있는 진단 로그를 파일로 받는다.
+ *
+ * `autoLog`는 주간 루프 곳곳에 깔려 있는데(`[W43오프시즌]`·`[정지]`·`[오류]` 등)
+ * 헤드리스는 `setAutoLogFile`을 부른 적이 없어서 **전부 버려졌다.** 화면으로만
+ * 보이던 정보라 헤드리스에서 결함을 추적할 때 매번 스크립트를 새로 짜야 했다.
+ */
+export function setLogFile(filename: string | null): void {
+  setAutoLogFile(filename);
 }
 
 /** 주 1회 진행만 (pending 처리 없음) — 순수 `advanceWeek` 비용 측정용 */

@@ -9,12 +9,14 @@
 import { get } from "svelte/store";
 import { gameStore } from "../stores/game";
 import { seasonStore } from "../stores/season";
-import { isFaEligible } from "../utils/faEngine";
+import { masterStore } from "../stores/master";
+import { isFaEligible, toContract, type FaOffer } from "../utils/faEngine";
 import { openProSeason } from "./proSeason";
 import type { ProContract } from "../types/save";
 import type { PendingAction } from "../types/season";
 
 export type NegotiationAction = Extract<PendingAction, { type: "salaryNegotiation" }>;
+export type OptionAction = Extract<PendingAction, { type: "optionClause" }>;
 
 /** 즉시 발효되는 계약인가 — 입단·전역 복귀는 그 자리에서 시즌이 열린다 */
 export function isImmediateContract(context: NegotiationAction["context"]): boolean {
@@ -97,4 +99,86 @@ export async function rejectNegotiatedContract(
   await gameStore.save();
   await seasonStore.save();
   return "unsigned";
+}
+
+// ── 옵션 조항 ────────────────────────────────────────────────────
+//
+// `OptionClauseModal`이 구단 옵션·선수 옵션 두 갈래에 **같은 15줄을 두 번**
+// 적고 있었다(옵션 적용 → 해소 → FA 자격이면 FA, 아니면 재계약 오퍼).
+// 한쪽만 고치면 "구단 옵션으로 들어온 해만 FA가 안 열린다"가 된다.
+
+/**
+ * 옵션 결과를 적용하고 **다음 단계를 잇는다**.
+ *
+ * 옵션이 안 걸리면(미행사) 계약은 만료 상태가 되고, FA 자격이 있으면
+ * 시장으로, 없으면 원소속 재계약 협상으로 넘어간다. 여기서 다음을
+ * 안 밀어주면 계약이 만료된 채 아무 일도 안 일어난다.
+ */
+export async function applyOptionClause(action: OptionAction, exercised: boolean): Promise<"faMarket" | "salaryNegotiation"> {
+  gameStore.applyOptionResult({ exercised, nextSalary: action.nextSalary, optionType: action.optionType });
+  seasonStore.resolvePendingAction("optionClause");
+
+  const g = get(gameStore);
+  const next: "faMarket" | "salaryNegotiation" =
+    !exercised && isFaEligible(g.protagonist, g.schoolState.attendsUniversity) ? "faMarket" : "salaryNegotiation";
+
+  if (next === "faMarket") {
+    seasonStore.pushPendingAction({ type: "faMarket" });
+  } else {
+    seasonStore.pushPendingAction({
+      type: "salaryNegotiation",
+      teamId: g.protagonist.contract?.teamId ?? g.protagonist.teamId,
+      leagueId: g.protagonist.contract?.leagueId ?? g.protagonist.leagueId,
+      offeredSalary: action.nextSalary,
+      durationYears: 1, minDurationYears: 1, maxDurationYears: 3,
+      signingBonus: 0, context: "renewal",
+    });
+  }
+  await gameStore.save();
+  await seasonStore.save();
+  return next;
+}
+
+// ── FA 시장 ──────────────────────────────────────────────────────
+
+/** FA 계약 체결 — 재계약과 같이 `pendingNextContract`에 넣고 롤오버가 적용한다 */
+export async function signFaOffer(offer: FaOffer, salary: number): Promise<void> {
+  const s = get(seasonStore);
+  const contract = toContract({ ...offer, salary });
+  const teamName = get(masterStore).teams.find((t) => t.id === contract.teamId)?.name ?? contract.teamId;
+
+  gameStore.setPendingNextContract(contract);
+  gameStore.addCareerEvent({
+    year: s.seasonYear, eventType: "fa_signed",
+    toTeamId: contract.teamId, toLeagueId: contract.leagueId,
+  });
+  gameStore.addMessage({
+    // ⚠ 예전엔 `Date.now()`를 썼다 — 같은 세이브를 다시 열면 id가 달라져
+    // 중복 메시지가 생긴다. 게임 시간(연·주)으로 만든다.
+    id: `msg-fa-signed-${s.seasonYear}-w${s.currentWeek}`,
+    category: "system", sender: "에이전트",
+    subject: "FA 계약 서명 완료",
+    preview: `${teamName}와 FA 계약이 완료되었습니다.`,
+    body: [
+      `${teamName}와 FA 계약이 완료되었습니다.`,
+      `연봉: ${salary.toLocaleString()}만원 / ${offer.durationYears}년`,
+      `계약금: ${offer.signingBonus.toLocaleString()}만원`,
+      ``,
+      `W52 새 시즌 시작 시 정식 적용됩니다.`,
+    ].join("\n"),
+    createdAt: `W${s.currentWeek}`, readAt: null,
+  });
+  gameStore.resetFaProgress();
+  seasonStore.resolvePendingAction("faMarket");
+  await gameStore.save();
+  await seasonStore.save();
+}
+
+/** 계약하지 않고 기다린다 — 미계약 주차가 쌓이면 제시 조건이 내려간다 */
+export async function waitFaMarket(): Promise<void> {
+  gameStore.incrementFaUnsignedWeek();
+  gameStore.resetFaProgress();
+  seasonStore.resolvePendingAction("faMarket");
+  await gameStore.save();
+  await seasonStore.save();
 }

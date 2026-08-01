@@ -1834,6 +1834,7 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
           return { processedWeek: weekNum, logs: ["체육부대 입대"], newMessages: [], matchResults: [], stoppedBy: null };
         }
 
+        gameStore.markMilitaryAsked(s.seasonYear);
         const action: PendingAction = { type: "militaryEnlistAsk", reason: "rejected" };
         seasonStore.pushPendingAction(action);
         return { processedWeek: s.currentWeek, logs: ["체육부대 탈락"], newMessages: [], matchResults: [], stoppedBy: action };
@@ -1873,7 +1874,13 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
       }
 
       // W52: 입영 기간 만료 (28세 이상, 미신청)
-      if (weekInYear === 52 && p.age >= 28) {
+      //
+      // ⚠ `militaryAskedYear` 가드 필수 — W50 체육부대 공개와 **같은 결함**이다.
+      // 주를 안 넘기고 pending만 밀어넣는데 모달의 "연기"는 상태를 안 바꾸므로
+      // 다음 진행에서 조건이 또 참이 된다. 실측: 2038 W51에서 자동 진행이
+      // 1000회 반복 상한에 걸려 멈췄고, 수동 진행이면 영영 W51이다.
+      if (weekInYear === 52 && p.age >= 28 && p.militaryAskedYear !== s.seasonYear) {
+        gameStore.markMilitaryAsked(s.seasonYear);
         const action: PendingAction = { type: "militaryEnlistAsk", reason: "overdue" };
         seasonStore.pushPendingAction(action);
         return { processedWeek: s.currentWeek, logs: ["입영 기간 만료"], newMessages: [], matchResults: [], stoppedBy: action };

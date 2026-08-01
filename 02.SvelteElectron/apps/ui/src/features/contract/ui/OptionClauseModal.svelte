@@ -1,68 +1,15 @@
 <script lang="ts">
-  import { gameStore } from "../../../shared/stores/game";
-  import { seasonStore } from "../../../shared/stores/season";
+  import { applyOptionClause } from "../../../shared/usecases/contractDecision";
   import type { PendingAction } from "../../../shared/types/season";
-  import { isFaEligible } from "../../../shared/utils/faEngine";
 
   export let action: Extract<PendingAction, { type: "optionClause" }>;
 
   let resolving = false;
 
-  async function confirmTeamOption() {
+  async function decide(exercised: boolean) {
     if (resolving) return;
     resolving = true;
-    gameStore.applyOptionResult({
-      exercised: action.exercised,
-      nextSalary: action.nextSalary,
-      optionType: "team",
-    });
-    seasonStore.resolvePendingAction("optionClause");
-    if (!action.exercised && isFaEligible($gameStore.protagonist, $gameStore.schoolState.attendsUniversity)) {
-      seasonStore.pushPendingAction({ type: "faMarket" });
-    } else {
-      seasonStore.pushPendingAction({
-        type: "salaryNegotiation",
-        teamId: $gameStore.protagonist.contract?.teamId ?? $gameStore.protagonist.teamId,
-        leagueId: $gameStore.protagonist.contract?.leagueId ?? $gameStore.protagonist.leagueId,
-        offeredSalary: action.nextSalary,
-        durationYears: 1,
-        minDurationYears: 1,
-        maxDurationYears: 3,
-        signingBonus: 0,
-        context: "renewal",
-      });
-    }
-    await gameStore.save();
-    await seasonStore.save();
-    resolving = false;
-  }
-
-  async function choosePlayerOption(exercised: boolean) {
-    if (resolving) return;
-    resolving = true;
-    gameStore.applyOptionResult({
-      exercised,
-      nextSalary: action.nextSalary,
-      optionType: "player",
-    });
-    seasonStore.resolvePendingAction("optionClause");
-    if (!exercised && isFaEligible($gameStore.protagonist, $gameStore.schoolState.attendsUniversity)) {
-      seasonStore.pushPendingAction({ type: "faMarket" });
-    } else {
-      seasonStore.pushPendingAction({
-        type: "salaryNegotiation",
-        teamId: $gameStore.protagonist.contract?.teamId ?? $gameStore.protagonist.teamId,
-        leagueId: $gameStore.protagonist.contract?.leagueId ?? $gameStore.protagonist.leagueId,
-        offeredSalary: action.nextSalary,
-        durationYears: 1,
-        minDurationYears: 1,
-        maxDurationYears: 3,
-        signingBonus: 0,
-        context: "renewal",
-      });
-    }
-    await gameStore.save();
-    await seasonStore.save();
+    await applyOptionClause(action, exercised);
     resolving = false;
   }
 </script>
@@ -75,12 +22,12 @@
         구단 옵션 결과:
         {action.exercised ? "구단이 옵션을 행사했습니다." : "구단이 옵션을 행사하지 않았습니다."}
       </p>
-      <button disabled={resolving} on:click={confirmTeamOption}>확인</button>
+      <button disabled={resolving} on:click={() => decide(action.exercised)}>확인</button>
     {:else}
       <p>선수 옵션을 행사할지 선택하세요.</p>
       <div class="actions">
-        <button disabled={resolving} on:click={() => choosePlayerOption(true)}>선수 옵션 행사</button>
-        <button disabled={resolving} on:click={() => choosePlayerOption(false)}>옵션 거부 (FA)</button>
+        <button disabled={resolving} on:click={() => decide(true)}>선수 옵션 행사</button>
+        <button disabled={resolving} on:click={() => decide(false)}>옵션 거부 (FA)</button>
       </div>
     {/if}
   </section>

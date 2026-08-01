@@ -317,6 +317,15 @@ export interface ProtagonistSave {
    * 조건이 그대로 다시 참이 된다. 미필·비고교·27세 이하면 **매년 여기서 멈춘다.**
    */
   sportsUnitPromptedYear?: number;
+  /**
+   * 입대 여부 질문(`militaryEnlistAsk`)을 **이 시즌에 이미 물어봤는가.**
+   *
+   * 위와 같은 결함이 한 칸 옆에 그대로 있었다. W52 "입영 기간 만료"와 W48
+   * "체육부대 탈락"도 주를 안 넘기고 pending만 밀어넣는데, 모달의 "연기"는
+   * 상태를 아무것도 안 바꾸고 해소만 한다 — 다음 진행에서 조건이 또 참이 된다.
+   * 실측: 2038 W51에서 자동 진행이 1000회 반복 상한에 걸렸다.
+   */
+  militaryAskedYear?: number;
   tradeAdaptationWeeks: number;
   faNegotiationRound: number;
   faUnsignedWeeks: number;

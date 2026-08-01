@@ -1640,6 +1640,14 @@ function createGameStore() {
       }));
     },
 
+    /** 입대 여부를 이 시즌에 물어봤다고 표시 — 같은 주 무한 반복 방지 */
+    markMilitaryAsked(seasonYear: number) {
+      update((s) => ({
+        ...s,
+        protagonist: { ...s.protagonist, militaryAskedYear: seasonYear },
+      }));
+    },
+
     enlistMilitary(unit: "sports" | "general", enlistWeek = 52, sportsUnitSelected = false, enlistYear?: number) {
       update((s) => {
         const now = s.protagonist;

@@ -1,9 +1,8 @@
-﻿<script lang="ts">
+<script lang="ts">
   import { gameStore } from "../../../shared/stores/game";
   import { masterStore } from "../../../shared/stores/master";
-  import { seasonStore } from "../../../shared/stores/season";
-  import { generateKblSchedule, generateAblSchedule, generateJblSchedule } from "../../../shared/utils/scheduleGen";
-  import { generateFaOffers, isFaEligible, toContract, getFaThreshold, type FaOffer } from "../../../shared/utils/faEngine";
+  import { signFaOffer, waitFaMarket } from "../../../shared/usecases/contractDecision";
+  import { generateFaOffers, isFaEligible, getFaThreshold, type FaOffer } from "../../../shared/utils/faEngine";
 
   let resolving = false;
   let selectedTeamId: string | null = null;
@@ -21,45 +20,17 @@
   $: unsignedWeeks = $gameStore.protagonist.faUnsignedWeeks ?? 0;
   $: faEligible = isFaEligible($gameStore.protagonist, $gameStore.schoolState.attendsUniversity);
 
-  // FA도 오프시즌 계약 — pendingNextContract에 보관 (W52에 시즌 리셋 시 적용)
   async function signWithOffer() {
     if (resolving || !selectedOffer) return;
     resolving = true;
-    const offer: FaOffer = { ...selectedOffer, salary: requestedSalary };
-    const contract = toContract(offer);
-    const signingTeamName = $masterStore.teams.find((t) => t.id === contract.teamId)?.name ?? contract.teamId;
-    gameStore.setPendingNextContract(contract);
-    gameStore.addCareerEvent({ year: $seasonStore.seasonYear, eventType: "fa_signed",
-      toTeamId: contract.teamId, toLeagueId: contract.leagueId });
-    gameStore.addMessage({
-      id: `msg-fa-signed-${Date.now()}`,
-      category: "system", sender: "에이전트",
-      subject: "FA 계약 서명 완료",
-      preview: `${signingTeamName}와 FA 계약이 완료되었습니다.`,
-      body: [
-        `${signingTeamName}와 FA 계약이 완료되었습니다.`,
-        `연봉: ${requestedSalary.toLocaleString()}만원 / ${offer.durationYears}년`,
-        `계약금: ${offer.signingBonus.toLocaleString()}만원`,
-        ``,
-        `W52 새 시즌 시작 시 정식 적용됩니다.`,
-      ].join("\n"),
-      createdAt: `W${$seasonStore.currentWeek}`, readAt: null,
-    });
-    gameStore.resetFaProgress();
-    seasonStore.resolvePendingAction("faMarket");
-    await gameStore.save();
-    await seasonStore.save();
+    await signFaOffer(selectedOffer, requestedSalary);
     resolving = false;
   }
 
   async function submitCounter() {
     if (resolving || !selectedOffer || negotiationRound >= 2) return;
+    if (acceptedByTeam) { await signWithOffer(); return; }
     resolving = true;
-    if (acceptedByTeam) {
-      await signWithOffer();
-      resolving = false;
-      return;
-    }
     gameStore.incrementFaNegotiationRound();
     const improvedSalary = Math.round((selectedOffer.salary + requestedSalary) / 2);
     offers = offers.map((o) =>
@@ -75,11 +46,7 @@
   async function waitMore() {
     if (resolving) return;
     resolving = true;
-    gameStore.incrementFaUnsignedWeek();
-    gameStore.resetFaProgress();
-    seasonStore.resolvePendingAction("faMarket");
-    await gameStore.save();
-    await seasonStore.save();
+    await waitFaMarket();
     resolving = false;
   }
 </script>

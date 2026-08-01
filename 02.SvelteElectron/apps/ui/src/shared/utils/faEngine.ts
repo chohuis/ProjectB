@@ -1,5 +1,6 @@
 import type { ProtagonistSave, ProContract } from "../types/save";
 import type { TeamRef } from "../stores/master";
+import { ALL_TEAMS_BY_LEAGUE } from "./leagueScheduler";
 
 /**
  * 리그별 FA 자격 연수 **폴백** (프로 입단 후 연수).
@@ -32,13 +33,20 @@ export async function generateFaOffers(
   protagonist: ProtagonistSave,
   teams: TeamRef[],
 ): Promise<FaOffer[]> {
+  // ⚠ 엔진은 `leagueId`가 같은 팀을 후보로 삼는데, refs에서 KBL은 1군(`_1`)과
+  // 2군(`_2`)이 **같은 leagueId**를 쓴다. 그대로 넘기면 FA 제안에 2군이 섞이고
+  // 실제로 그리로 이적한다 (실측: TEAM_KBL_CHANGWON_STARS_2와 3년 계약).
+  // 1군/2군을 나눠 담는 정본은 `ALL_TEAMS_BY_LEAGUE`다.
+  const firstTeams = ALL_TEAMS_BY_LEAGUE[protagonist.leagueId];
+  const pool = firstTeams ? teams.filter((t) => firstTeams.includes(t.id)) : teams;
+
   const params = {
     pitchingOvr:     protagonist.pitching.ovr,
     fame:            protagonist.fame,
     leagueId:        protagonist.leagueId,
     teamId:          protagonist.teamId,
     faUnsignedWeeks: protagonist.faUnsignedWeeks ?? 0,
-    teams:           teams.map((t) => ({ id: t.id, leagueId: t.leagueId })),
+    teams:           pool.map((t) => ({ id: t.id, leagueId: t.leagueId })),
   };
   return JSON.parse(
     await window.projectB!.faGenerateOffers(JSON.stringify(params))

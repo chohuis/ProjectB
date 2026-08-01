@@ -18,8 +18,23 @@ const STOP_PENDING = new Set<PendingAction["type"]>([
   "careerChoiceHub", "careerResults", "careerChoice", "draftObserve", "draftNotification",
   // 은퇴는 커리어가 끝나는 결정이다 — 자동 진행이 대신 넘기면 안 된다
   "retirementAsk",
+  // ⚠ 계약도 마찬가지다. 예전엔 이 셋을 "dev 도구"라며 `resolvePendingAction`으로
+  // **그냥 버렸다** — 자동 진행으로 W43을 지나면 재계약 제안이 사라지고,
+  // 계약이 `remainingYears: 0`인 채 다음 시즌으로 넘어간다. 25시즌 헤드리스에서
+  // 2031년에 만료된 계약이 2038년까지 그대로 있었다(재계약도 은퇴도 없음).
+  // 지명 통보는 멈추는데 재계약은 안 멈출 이유가 없다.
+  "salaryNegotiation", "optionClause", "faMarket",
 ]);
 const STOP_WEEKS = [40, 51] as const;
+
+// ── 마지막 예외 스택 ─────────────────────────────────────────────
+//
+// 아래 루프는 예외를 잡아 `stopReason`에 **메시지만** 남긴다. 스택은 autoLog로
+// 나가는데 그건 파일 로그가 켜져 있을 때만이라, 헤드리스에서는 통째로 사라졌다.
+// 실측: 프로 2년차 한 시즌 내내 매주 터졌는데 25시즌 런이 정상으로 보였다.
+let _lastErrorStack: string | null = null;
+/** 자동 진행 중 마지막으로 삼킨 예외의 스택 — 진단용 */
+export function lastAutoAdvanceError(): string | null { return _lastErrorStack; }
 
 // ── 이벤트/메시지 선택지 피로도 기반 키워드 ───────────────────
 const REST_KW   = ["휴식", "거절", "패스", "쉬", "무시"];
@@ -291,6 +306,9 @@ export async function runAutoAdvance(): Promise<void> {
           pa.type === "careerResults"   ? "드래프트 결과 확인" :
           pa.type === "retirementAsk"   ? "은퇴 여부 결정" :
           pa.type === "draftNotification" ? "지명 계약 수락 여부" :
+          pa.type === "salaryNegotiation" ? "연봉 협상" :
+          pa.type === "optionClause"    ? "옵션 조항 확인" :
+          pa.type === "faMarket"        ? "FA 시장" :
                                           "진로 최종 선택";
         autoAdvanceStore.stop(`정지: ${label}`);
         autoAdvanceStore.addLog(`[정지] ${label}`);
@@ -335,11 +353,9 @@ export async function runAutoAdvance(): Promise<void> {
           await seasonStore.save();
           break;
 
-        // dev 도구: 복잡한 비즈니스 로직 없이 단순 resolve
-        case "salaryNegotiation":
-        case "optionClause":
+        // 단순 resolve — 결과가 상태에 남지 않는 알림성 pending만 여기 둔다.
+        // 계약 관련(salaryNegotiation·optionClause·faMarket)은 STOP_PENDING이다
         case "trade":
-        case "faMarket":
         case "sportsUnitApplication":
         case "militaryEnlistAsk":
           seasonStore.resolvePendingAction(pa.type);
@@ -353,6 +369,7 @@ export async function runAutoAdvance(): Promise<void> {
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       const stack = err instanceof Error ? (err.stack ?? "") : "";
+      _lastErrorStack = `${get(seasonStore).seasonYear} W${get(seasonStore).currentWeek} | ${msg}\n${stack}`;
       autoAdvanceStore.addLog(`오류: ${msg}`);
       autoAdvanceStore.stop(`오류: ${msg}`);
       autoLog(`[오류] ${msg}`);
