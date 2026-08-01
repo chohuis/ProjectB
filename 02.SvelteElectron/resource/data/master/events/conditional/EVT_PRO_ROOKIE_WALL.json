@@ -1,0 +1,27 @@
+{
+  "id": "EVT_PRO_ROOKIE_WALL",
+  "type": "conditional",
+  "category": "mental",
+  "priority": 725,
+  "oncePolicy": "once_per_career",
+  "messageTemplateId": "MSG_PRO_ROOKIE_WALL",
+  "decisionTemplateId": "DEC_PRO_ROOKIE_WALL",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "pro_year_gte",
+      "value": 1
+    },
+    {
+      "type": "week_gte",
+      "value": 24
+    },
+    {
+      "type": "morale_lte",
+      "value": 55
+    }
+  ]
+}

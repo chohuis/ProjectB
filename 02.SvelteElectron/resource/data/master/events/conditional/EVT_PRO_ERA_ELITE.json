@@ -1,0 +1,24 @@
+{
+  "id": "EVT_PRO_ERA_ELITE",
+  "type": "conditional",
+  "category": "media",
+  "priority": 760,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
+  "messageTemplateId": "MSG_PRO_ERA_ELITE",
+  "decisionTemplateId": "DEC_PRO_ERA_ELITE",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 40
+    },
+    {
+      "type": "season_era_lte",
+      "value": 2.5
+    }
+  ]
+}

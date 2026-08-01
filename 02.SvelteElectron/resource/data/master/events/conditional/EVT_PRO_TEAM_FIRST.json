@@ -1,0 +1,24 @@
+{
+  "id": "EVT_PRO_TEAM_FIRST",
+  "type": "conditional",
+  "category": "team",
+  "priority": 700,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
+  "messageTemplateId": "MSG_PRO_TEAM_FIRST",
+  "decisionTemplateId": null,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "team_rank_lte",
+      "value": 1
+    },
+    {
+      "type": "week_gte",
+      "value": 20
+    }
+  ]
+}

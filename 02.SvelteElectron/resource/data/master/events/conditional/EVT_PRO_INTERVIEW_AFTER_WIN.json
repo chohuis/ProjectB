@@ -1,0 +1,24 @@
+{
+  "id": "EVT_PRO_INTERVIEW_AFTER_WIN",
+  "type": "conditional",
+  "category": "media",
+  "priority": 620,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 2,
+  "messageTemplateId": "MSG_PRO_INTERVIEW_AFTER_WIN",
+  "decisionTemplateId": "DEC_PRO_INTERVIEW_AFTER_WIN",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "season_wins_gte",
+      "value": 3
+    },
+    {
+      "type": "morale_gte",
+      "value": 65
+    }
+  ]
+}

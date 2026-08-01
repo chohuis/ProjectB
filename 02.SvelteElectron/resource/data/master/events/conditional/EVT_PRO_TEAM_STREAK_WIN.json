@@ -1,0 +1,24 @@
+{
+  "id": "EVT_PRO_TEAM_STREAK_WIN",
+  "type": "conditional",
+  "category": "team",
+  "priority": 670,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 4,
+  "messageTemplateId": "MSG_PRO_TEAM_STREAK_WIN",
+  "decisionTemplateId": null,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "team_rank_lte",
+      "value": 4
+    },
+    {
+      "type": "morale_gte",
+      "value": 75
+    }
+  ]
+}

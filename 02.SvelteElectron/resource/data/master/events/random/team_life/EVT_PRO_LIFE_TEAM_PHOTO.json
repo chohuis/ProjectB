@@ -1,0 +1,26 @@
+{
+  "id": "EVT_PRO_LIFE_TEAM_PHOTO",
+  "type": "random",
+  "category": "team_life",
+  "priority": 300,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 3,
+  "weight": 14,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "messageTemplateId": "MSG_PRO_LIFE_TEAM_PHOTO",
+  "decisionTemplateId": null,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "week_gte",
+      "value": 6
+    },
+    {
+      "type": "week_lte",
+      "value": 12
+    }
+  ]
+}

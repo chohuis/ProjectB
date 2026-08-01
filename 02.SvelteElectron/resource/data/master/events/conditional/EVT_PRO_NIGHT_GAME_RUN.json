@@ -1,0 +1,24 @@
+{
+  "id": "EVT_PRO_NIGHT_GAME_RUN",
+  "type": "conditional",
+  "category": "health",
+  "priority": 655,
+  "oncePolicy": "repeatable",
+  "messageTemplateId": "MSG_PRO_NIGHT_GAME_RUN",
+  "decisionTemplateId": "DEC_PRO_NIGHT_GAME_RUN",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "week_gte",
+      "value": 24
+    },
+    {
+      "type": "fatigue_gte",
+      "value": 50
+    }
+  ],
+  "cooldownWeeks": 4
+}

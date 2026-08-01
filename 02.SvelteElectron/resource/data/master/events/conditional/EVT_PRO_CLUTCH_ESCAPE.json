@@ -1,0 +1,25 @@
+{
+  "id": "EVT_PRO_CLUTCH_ESCAPE",
+  "type": "conditional",
+  "category": "mental",
+  "priority": 685,
+  "oncePolicy": "repeatable",
+  "messageTemplateId": "MSG_PRO_CLUTCH_ESCAPE",
+  "decisionTemplateId": null,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "pitching_stat_gte",
+      "stat": "clutch",
+      "value": 60
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 20
+    }
+  ],
+  "cooldownWeeks": 4
+}

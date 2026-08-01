@@ -1,0 +1,24 @@
+{
+  "id": "EVT_PRO_FAME_STAR",
+  "type": "conditional",
+  "category": "media",
+  "priority": 720,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 8,
+  "messageTemplateId": "MSG_PRO_FAME_STAR",
+  "decisionTemplateId": "DEC_PRO_FAME_STAR",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "fame_gte",
+      "value": 60
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 40
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "id": "EVT_PRO_LOCKER_MOOD",
+  "type": "conditional",
+  "category": "team_life",
+  "priority": 630,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 5,
+  "messageTemplateId": "MSG_PRO_LOCKER_MOOD",
+  "decisionTemplateId": "DEC_PRO_LOCKER_MOOD",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "morale_lte",
+      "value": 55
+    },
+    {
+      "type": "team_rank_gte",
+      "value": 6
+    }
+  ]
+}

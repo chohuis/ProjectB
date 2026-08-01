@@ -1,0 +1,18 @@
+{
+  "id": "EVT_PRO_LIFE_AWAY_BOOING",
+  "type": "random",
+  "category": "team_life",
+  "priority": 300,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 3,
+  "weight": 20,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "messageTemplateId": "MSG_PRO_LIFE_AWAY_BOOING",
+  "decisionTemplateId": "DEC_PRO_LIFE_AWAY_BOOING",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    }
+  ]
+}

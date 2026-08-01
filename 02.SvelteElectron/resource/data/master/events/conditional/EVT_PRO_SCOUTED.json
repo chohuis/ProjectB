@@ -1,0 +1,24 @@
+{
+  "id": "EVT_PRO_SCOUTED",
+  "type": "conditional",
+  "category": "team",
+  "priority": 660,
+  "oncePolicy": "repeatable",
+  "messageTemplateId": "MSG_PRO_SCOUTED",
+  "decisionTemplateId": "DEC_PRO_SCOUTED",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 50
+    },
+    {
+      "type": "fame_gte",
+      "value": 30
+    }
+  ],
+  "cooldownWeeks": 6
+}

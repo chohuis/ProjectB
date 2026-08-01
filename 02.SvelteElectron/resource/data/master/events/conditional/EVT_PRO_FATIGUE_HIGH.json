@@ -1,0 +1,20 @@
+{
+  "id": "EVT_PRO_FATIGUE_HIGH",
+  "type": "conditional",
+  "category": "health",
+  "priority": 800,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 3,
+  "messageTemplateId": "MSG_PRO_FATIGUE_HIGH",
+  "decisionTemplateId": "DEC_PRO_FATIGUE_HIGH",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "fatigue_gte",
+      "value": 75
+    }
+  ]
+}

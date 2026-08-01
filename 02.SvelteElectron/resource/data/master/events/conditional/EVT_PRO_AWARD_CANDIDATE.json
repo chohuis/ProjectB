@@ -1,0 +1,23 @@
+{
+  "id": "EVT_PRO_AWARD_CANDIDATE",
+  "type": "conditional",
+  "category": "media",
+  "priority": 765,
+  "oncePolicy": "once_per_season",
+  "messageTemplateId": "MSG_PRO_AWARD_CANDIDATE",
+  "decisionTemplateId": null,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "season_era_lte",
+      "value": 2.8
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 100
+    }
+  ]
+}

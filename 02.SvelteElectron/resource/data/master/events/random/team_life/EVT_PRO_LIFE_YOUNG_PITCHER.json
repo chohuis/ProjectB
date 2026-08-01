@@ -1,0 +1,22 @@
+{
+  "id": "EVT_PRO_LIFE_YOUNG_PITCHER",
+  "type": "random",
+  "category": "team_life",
+  "priority": 300,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 3,
+  "weight": 22,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "messageTemplateId": "MSG_PRO_LIFE_YOUNG_PITCHER",
+  "decisionTemplateId": "DEC_PRO_LIFE_YOUNG_PITCHER",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "pro_year_gte",
+      "value": 4
+    }
+  ]
+}

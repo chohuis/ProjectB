@@ -1,0 +1,19 @@
+{
+  "id": "EVT_PRO_HOUSE_MOVE",
+  "type": "conditional",
+  "category": "team_life",
+  "priority": 600,
+  "oncePolicy": "once_per_season",
+  "messageTemplateId": "MSG_PRO_HOUSE_MOVE",
+  "decisionTemplateId": null,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "pro_year_gte",
+      "value": 2
+    }
+  ]
+}

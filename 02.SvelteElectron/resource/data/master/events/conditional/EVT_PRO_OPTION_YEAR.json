@@ -1,0 +1,23 @@
+{
+  "id": "EVT_PRO_OPTION_YEAR",
+  "type": "conditional",
+  "category": "career",
+  "priority": 715,
+  "oncePolicy": "once_per_season",
+  "messageTemplateId": "MSG_PRO_OPTION_YEAR",
+  "decisionTemplateId": null,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "pro_year_gte",
+      "value": 3
+    },
+    {
+      "type": "week_gte",
+      "value": 42
+    }
+  ]
+}

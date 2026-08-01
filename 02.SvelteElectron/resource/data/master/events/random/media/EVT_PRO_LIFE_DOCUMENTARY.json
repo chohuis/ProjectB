@@ -1,0 +1,18 @@
+{
+  "id": "EVT_PRO_LIFE_DOCUMENTARY",
+  "type": "random",
+  "category": "media",
+  "priority": 300,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 3,
+  "weight": 14,
+  "poolId": "POOL_MEDIA_DAILY",
+  "messageTemplateId": "MSG_PRO_LIFE_DOCUMENTARY",
+  "decisionTemplateId": "DEC_PRO_LIFE_DOCUMENTARY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "id": "EVT_PRO_ROLE_DEMOTE",
+  "type": "conditional",
+  "category": "team",
+  "priority": 735,
+  "oncePolicy": "repeatable",
+  "messageTemplateId": "MSG_PRO_ROLE_DEMOTE",
+  "decisionTemplateId": "DEC_PRO_ROLE_DEMOTE",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 30
+    },
+    {
+      "type": "morale_lte",
+      "value": 45
+    },
+    {
+      "type": "team_rank_gte",
+      "value": 6
+    }
+  ],
+  "cooldownWeeks": 8
+}

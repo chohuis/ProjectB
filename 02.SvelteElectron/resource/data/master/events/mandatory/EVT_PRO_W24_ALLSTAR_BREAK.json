@@ -1,0 +1,19 @@
+{
+  "id": "EVT_PRO_W24_ALLSTAR_BREAK",
+  "type": "mandatory",
+  "category": "season",
+  "priority": 900,
+  "oncePolicy": "once_per_season",
+  "messageTemplateId": "MSG_PRO_ALLSTAR_BREAK",
+  "decisionTemplateId": "DEC_PRO_ALLSTAR_BREAK",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "week_eq",
+      "value": 24
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "id": "EVT_PRO_OFFSEASON_TRIP",
+  "type": "conditional",
+  "category": "team_life",
+  "priority": 610,
+  "oncePolicy": "once_per_season",
+  "messageTemplateId": "MSG_PRO_OFFSEASON_TRIP",
+  "decisionTemplateId": "DEC_PRO_OFFSEASON_TRIP",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "week_gte",
+      "value": 46
+    },
+    {
+      "type": "week_lte",
+      "value": 51
+    }
+  ]
+}

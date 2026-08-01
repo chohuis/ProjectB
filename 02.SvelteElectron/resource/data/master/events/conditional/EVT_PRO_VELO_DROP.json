@@ -1,0 +1,25 @@
+{
+  "id": "EVT_PRO_VELO_DROP",
+  "type": "conditional",
+  "category": "health",
+  "priority": 750,
+  "oncePolicy": "repeatable",
+  "messageTemplateId": "MSG_PRO_VELO_DROP",
+  "decisionTemplateId": "DEC_PRO_VELO_DROP",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 60
+    },
+    {
+      "type": "pitching_stat_lte",
+      "stat": "velocity",
+      "value": 50
+    }
+  ],
+  "cooldownWeeks": 6
+}

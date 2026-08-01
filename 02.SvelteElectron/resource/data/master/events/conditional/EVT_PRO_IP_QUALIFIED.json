@@ -1,0 +1,19 @@
+{
+  "id": "EVT_PRO_IP_QUALIFIED",
+  "type": "conditional",
+  "category": "career",
+  "priority": 745,
+  "oncePolicy": "once_per_career",
+  "messageTemplateId": "MSG_PRO_IP_QUALIFIED",
+  "decisionTemplateId": null,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 100
+    }
+  ]
+}

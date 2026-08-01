@@ -1,0 +1,24 @@
+{
+  "id": "EVT_PRO_ROLE_SWING",
+  "type": "conditional",
+  "category": "team",
+  "priority": 680,
+  "oncePolicy": "repeatable",
+  "messageTemplateId": "MSG_PRO_ROLE_SWING",
+  "decisionTemplateId": "DEC_PRO_ROLE_SWING",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "pitching_ovr_lte",
+      "value": 65
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 20
+    }
+  ],
+  "cooldownWeeks": 6
+}

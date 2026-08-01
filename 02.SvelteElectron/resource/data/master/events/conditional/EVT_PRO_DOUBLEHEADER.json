@@ -1,0 +1,24 @@
+{
+  "id": "EVT_PRO_DOUBLEHEADER",
+  "type": "conditional",
+  "category": "health",
+  "priority": 695,
+  "oncePolicy": "repeatable",
+  "messageTemplateId": "MSG_PRO_DOUBLEHEADER",
+  "decisionTemplateId": null,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "week_gte",
+      "value": 20
+    },
+    {
+      "type": "fatigue_gte",
+      "value": 55
+    }
+  ],
+  "cooldownWeeks": 5
+}

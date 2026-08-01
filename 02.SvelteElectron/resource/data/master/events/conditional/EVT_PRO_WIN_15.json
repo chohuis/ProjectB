@@ -1,0 +1,19 @@
+{
+  "id": "EVT_PRO_WIN_15",
+  "type": "conditional",
+  "category": "career",
+  "priority": 785,
+  "oncePolicy": "once_per_career",
+  "messageTemplateId": "MSG_PRO_WIN_15",
+  "decisionTemplateId": null,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "season_wins_gte",
+      "value": 15
+    }
+  ]
+}

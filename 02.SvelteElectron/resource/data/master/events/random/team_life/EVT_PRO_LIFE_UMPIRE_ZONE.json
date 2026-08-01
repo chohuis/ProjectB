@@ -1,0 +1,18 @@
+{
+  "id": "EVT_PRO_LIFE_UMPIRE_ZONE",
+  "type": "random",
+  "category": "team_life",
+  "priority": 300,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 3,
+  "weight": 22,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "messageTemplateId": "MSG_PRO_LIFE_UMPIRE_ZONE",
+  "decisionTemplateId": "DEC_PRO_LIFE_UMPIRE_ZONE",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    }
+  ]
+}

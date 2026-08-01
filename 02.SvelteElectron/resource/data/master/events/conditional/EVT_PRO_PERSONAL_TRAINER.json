@@ -1,0 +1,23 @@
+{
+  "id": "EVT_PRO_PERSONAL_TRAINER",
+  "type": "conditional",
+  "category": "training",
+  "priority": 645,
+  "oncePolicy": "once_per_season",
+  "messageTemplateId": "MSG_PRO_PERSONAL_TRAINER",
+  "decisionTemplateId": "DEC_PRO_PERSONAL_TRAINER",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "pro_year_gte",
+      "value": 3
+    },
+    {
+      "type": "fame_gte",
+      "value": 30
+    }
+  ]
+}

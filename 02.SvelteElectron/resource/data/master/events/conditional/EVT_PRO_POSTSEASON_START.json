@@ -1,0 +1,23 @@
+{
+  "id": "EVT_PRO_POSTSEASON_START",
+  "type": "conditional",
+  "category": "team",
+  "priority": 780,
+  "oncePolicy": "once_per_season",
+  "messageTemplateId": "MSG_PRO_POSTSEASON_START",
+  "decisionTemplateId": "DEC_PRO_POSTSEASON_START",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "team_rank_lte",
+      "value": 5
+    },
+    {
+      "type": "week_gte",
+      "value": 40
+    }
+  ]
+}

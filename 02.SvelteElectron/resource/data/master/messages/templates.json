@@ -914,6 +914,1203 @@
       "category": "system",
       "subject": "은퇴하는 선배/후배 선물",
       "body": "이번 시즌을 마지막으로 팀을 떠나는 선배/후배를 위해 선물을 준비해야 한다."
+    },
+    {
+      "id": "MSG_PRO_CAMP_OPEN",
+      "category": "system",
+      "subject": "스프링캠프 소집",
+      "body": "스프링캠프가 시작됐습니다.\n\n겨우내 쉬었던 몸을 다시 야구에 맞춰야 합니다. 첫 주는 대개 몸 상태를 확인하는 데 씁니다.",
+      "decisionTemplateId": "DEC_PRO_CAMP_OPEN"
+    },
+    {
+      "id": "MSG_PRO_CAMP_BULLPEN",
+      "category": "system",
+      "subject": "캠프 첫 불펜",
+      "body": "캠프 첫 불펜 피칭입니다.\n\n투수코치가 옆에 붙어 폼을 봅니다. 겨울 동안 흐트러진 부분이 있다면 지금 잡아야 합니다.",
+      "decisionTemplateId": "DEC_PRO_CAMP_BULLPEN"
+    },
+    {
+      "id": "MSG_PRO_CAMP_SCRIMMAGE",
+      "category": "system",
+      "subject": "연습경기 시작",
+      "body": "캠프 연습경기가 시작됐습니다.\n\n실전 감각을 되찾는 자리입니다. 성적보다 몸 상태를 확인하는 데 의미가 있습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_OPENING_ROSTER",
+      "category": "system",
+      "subject": "개막 로스터 발표",
+      "body": "개막 엔트리가 발표됐습니다.\n\n캠프에서의 몸 상태와 지난 시즌 성적이 반영된 결과입니다. 시즌은 여기서부터입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_OPENING_DAY",
+      "category": "system",
+      "subject": "개막전",
+      "body": "정규시즌이 개막했습니다.\n\n관중석이 가득 찼습니다. 긴 시즌의 첫 경기입니다.",
+      "decisionTemplateId": "DEC_PRO_OPENING_DAY"
+    },
+    {
+      "id": "MSG_PRO_LONG_ROAD",
+      "category": "system",
+      "subject": "장기 원정",
+      "body": "9일간의 장기 원정이 시작됩니다.\n\n호텔을 옮겨 다니며 경기를 치릅니다. 잠자리가 바뀌면 회복이 더디기 마련입니다.",
+      "decisionTemplateId": "DEC_PRO_LONG_ROAD"
+    },
+    {
+      "id": "MSG_PRO_MONTH_APR",
+      "category": "system",
+      "subject": "4월 결산",
+      "body": "4월이 끝났습니다.\n\n시즌 첫 달의 기록이 정리됐습니다. 아직 표본이 적지만 흐름은 보입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_FAN_MEETING",
+      "category": "news",
+      "subject": "홈 팬미팅",
+      "body": "구단 팬미팅 행사가 열립니다.\n\n시즌권 팬들과 만나는 자리입니다. 구단이 선수 참여를 권하고 있습니다.",
+      "decisionTemplateId": "DEC_PRO_FAN_MEETING"
+    },
+    {
+      "id": "MSG_PRO_MONTH_MAY",
+      "category": "system",
+      "subject": "5월 결산",
+      "body": "5월이 끝났습니다.\n\n시즌의 4분의 1이 지났습니다. 이제 기록이 실력을 반영하기 시작합니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_MIDSEASON_CHECK",
+      "category": "system",
+      "subject": "시즌 중반 체력 점검",
+      "body": "구단 의료팀의 정기 검진일입니다.\n\n시즌 중반은 누적 피로가 처음 몸으로 드러나는 시기입니다.",
+      "decisionTemplateId": "DEC_PRO_MIDSEASON_CHECK"
+    },
+    {
+      "id": "MSG_PRO_MONTH_JUN",
+      "category": "system",
+      "subject": "6월 결산",
+      "body": "6월이 끝났습니다.\n\n전반기가 마무리 국면에 들어섭니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_ALLSTAR_VOTE",
+      "category": "news",
+      "subject": "올스타 팬투표",
+      "body": "올스타 팬투표가 시작됐습니다.\n\n중간 집계가 공개됐습니다. 인기와 성적이 함께 반영되는 자리입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_ALLSTAR_BREAK",
+      "category": "system",
+      "subject": "올스타 휴식기",
+      "body": "올스타 브레이크입니다.\n\n짧지만 시즌 중 유일한 공백입니다. 이 시간을 어떻게 쓰느냐가 후반기를 가릅니다.",
+      "decisionTemplateId": "DEC_PRO_ALLSTAR_BREAK"
+    },
+    {
+      "id": "MSG_PRO_SECOND_HALF",
+      "category": "system",
+      "subject": "후반기 시작",
+      "body": "후반기가 시작됐습니다.\n\n순위표가 굳어지기 시작하는 시기입니다. 여기서부터가 진짜라는 말을 많이 합니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_MONTH_JUL",
+      "category": "system",
+      "subject": "7월 결산",
+      "body": "7월이 끝났습니다.\n\n무더위 속에서 치른 한 달입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_HEAT_WAVE",
+      "category": "system",
+      "subject": "혹서기 관리",
+      "body": "폭염 경보가 이어지고 있습니다.\n\n한여름 경기는 체력 소모가 다릅니다. 트레이닝 파트가 수분과 회복을 강조합니다.",
+      "decisionTemplateId": "DEC_PRO_HEAT_WAVE"
+    },
+    {
+      "id": "MSG_PRO_MONTH_AUG",
+      "category": "system",
+      "subject": "8월 결산",
+      "body": "8월이 끝났습니다.\n\n순위 경쟁이 본격화됐습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_RANK_BATTLE",
+      "category": "system",
+      "subject": "순위 싸움",
+      "body": "5강 경쟁이 치열합니다.\n\n남은 경기 하나하나가 순위를 바꿉니다. 라커룸 분위기도 달라졌습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_TRADE_DEADLINE",
+      "category": "system",
+      "subject": "트레이드 마감",
+      "body": "트레이드 마감일입니다.\n\n오늘이 지나면 이번 시즌 선수 이동은 없습니다. 구단들이 마지막까지 움직입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_MONTH_SEP",
+      "category": "system",
+      "subject": "9월 결산",
+      "body": "9월이 끝났습니다.\n\n정규시즌이 끝을 향합니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_FINAL_STRETCH",
+      "category": "system",
+      "subject": "시즌 막바지",
+      "body": "정규시즌 마지막 2주입니다.\n\n몸은 무겁지만 순위가 걸려 있습니다.",
+      "decisionTemplateId": "DEC_PRO_FINAL_STRETCH"
+    },
+    {
+      "id": "MSG_PRO_LAST_GAME",
+      "category": "system",
+      "subject": "최종전을 앞두고",
+      "body": "정규시즌 최종전입니다.\n\n한 시즌이 여기서 마무리됩니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_SEASON_CLOSE",
+      "category": "system",
+      "subject": "정규시즌 종료",
+      "body": "정규시즌이 종료됐습니다.\n\n한 해의 기록이 확정됩니다. 오프시즌이 시작됩니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_POSTSEASON_WAIT",
+      "category": "system",
+      "subject": "포스트시즌",
+      "body": "포스트시즌이 진행 중입니다.\n\n가을 야구는 정규시즌과 공기가 다릅니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_AWARDS",
+      "category": "news",
+      "subject": "시상식",
+      "body": "시즌 시상식이 열립니다.\n\n한 해를 결산하는 자리입니다. 수상자가 아니어도 참석은 합니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_NEGOTIATION_OPEN",
+      "category": "system",
+      "subject": "연봉 협상 개시",
+      "body": "연봉 협상 기간이 시작됐습니다.\n\n구단과 선수가 다음 시즌 조건을 정하는 시기입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_FINISH_CAMP",
+      "category": "system",
+      "subject": "마무리 캠프",
+      "body": "마무리 캠프가 시작됩니다.\n\n시즌 중 드러난 약점을 손보는 자리입니다. 참가는 선택입니다.",
+      "decisionTemplateId": "DEC_PRO_FINISH_CAMP"
+    },
+    {
+      "id": "MSG_PRO_DRAFT_WATCH",
+      "category": "system",
+      "subject": "신인 드래프트",
+      "body": "신인 드래프트가 열렸습니다.\n\n새로 들어오는 선수들이 있습니다. 누군가에게는 경쟁자입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_OFFSEASON_QUIET",
+      "category": "system",
+      "subject": "비활동 기간",
+      "body": "비활동 기간입니다.\n\n구단 시설을 쓸 수 없는 기간입니다. 각자 관리하는 수밖에 없습니다.",
+      "decisionTemplateId": "DEC_PRO_OFFSEASON_QUIET"
+    },
+    {
+      "id": "MSG_PRO_NEXT_SEASON_PREP",
+      "category": "system",
+      "subject": "새 시즌 준비",
+      "body": "새 시즌이 곧 시작됩니다.\n\n다시 캠프에 나갈 준비를 할 때입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_ERA_ELITE",
+      "category": "news",
+      "subject": "리그 최상위 방어율",
+      "body": "방어율이 리그 상위권입니다.\n\n기록실에서 연락이 왔습니다. 이 페이스라면 타이틀 경쟁 이야기가 나옵니다.",
+      "decisionTemplateId": "DEC_PRO_ERA_ELITE"
+    },
+    {
+      "id": "MSG_PRO_ERA_GOOD",
+      "category": "coach",
+      "subject": "안정된 시즌",
+      "body": "방어율이 3점대 초반에서 안정돼 있습니다.\n\n투수코치가 지금 폼을 유지하라고 합니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_K_MACHINE",
+      "category": "news",
+      "subject": "탈삼진 페이스",
+      "body": "탈삼진이 쌓이고 있습니다.\n\n구위가 통하고 있다는 뜻입니다. 상대 팀 전력분석실이 바빠집니다.",
+      "decisionTemplateId": "DEC_PRO_K_MACHINE"
+    },
+    {
+      "id": "MSG_PRO_K_MILESTONE_150",
+      "category": "news",
+      "subject": "시즌 150탈삼진",
+      "body": "시즌 150탈삼진을 넘겼습니다.\n\n리그에서 몇 명 되지 않는 기록입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_WIN_10",
+      "category": "coach",
+      "subject": "시즌 10승",
+      "body": "시즌 10승에 도달했습니다.\n\n선발 투수의 한 해를 평가하는 첫 기준선입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_WIN_15",
+      "category": "coach",
+      "subject": "시즌 15승",
+      "body": "시즌 15승입니다.\n\n다승왕 경쟁에 이름이 오르내립니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_IP_QUALIFIED",
+      "category": "coach",
+      "subject": "규정이닝 도달",
+      "body": "규정이닝에 도달했습니다.\n\n한 시즌을 온전히 로테이션에서 버텼다는 뜻입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_WORKHORSE",
+      "category": "coach",
+      "subject": "이닝 부담",
+      "body": "많은 이닝을 던졌습니다.\n\n어깨와 팔꿈치에 누적이 옵니다. 트레이닝 파트가 관리 이야기를 꺼냅니다.",
+      "decisionTemplateId": "DEC_PRO_WORKHORSE"
+    },
+    {
+      "id": "MSG_PRO_SLUMP_DEEP",
+      "category": "coach",
+      "subject": "부진이 길어진다",
+      "body": "결과가 나오지 않는 시기가 이어집니다.\n\n마운드에서 자신감이 떨어진 게 스스로도 느껴집니다.",
+      "decisionTemplateId": "DEC_PRO_SLUMP_DEEP"
+    },
+    {
+      "id": "MSG_PRO_SLUMP_MEDIA",
+      "category": "news",
+      "subject": "부진 기사",
+      "body": "부진을 지적하는 기사가 났습니다.\n\n읽지 않는 게 낫다는 걸 알면서도 눈에 들어옵니다.",
+      "decisionTemplateId": "DEC_PRO_SLUMP_MEDIA"
+    },
+    {
+      "id": "MSG_PRO_CONFIDENCE_LOW",
+      "category": "coach",
+      "subject": "흔들리는 자신감",
+      "body": "마운드에 서는 게 부담스럽습니다.\n\n프로에서는 누구나 한 번쯤 겪는다고들 합니다.",
+      "decisionTemplateId": "DEC_PRO_CONFIDENCE_LOW"
+    },
+    {
+      "id": "MSG_PRO_CONTROL_ISSUE",
+      "category": "coach",
+      "subject": "제구 난조",
+      "body": "볼넷이 늘고 있습니다.\n\n릴리스 포인트가 흔들린다는 지적을 받았습니다.",
+      "decisionTemplateId": "DEC_PRO_CONTROL_ISSUE"
+    },
+    {
+      "id": "MSG_PRO_TEAM_FIRST",
+      "category": "coach",
+      "subject": "1위 팀의 무게",
+      "body": "팀이 1위입니다.\n\n쫓기는 입장이 됐습니다. 라커룸 분위기가 미묘하게 달라졌습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_TEAM_TOP3",
+      "category": "coach",
+      "subject": "상위권 경쟁",
+      "body": "팀이 상위권을 지키고 있습니다.\n\n가을 야구가 눈앞입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_TEAM_BUBBLE",
+      "category": "coach",
+      "subject": "5강 경계선",
+      "body": "팀이 5위 경계에 걸쳐 있습니다.\n\n한 경기가 순위를 바꾸는 국면입니다.",
+      "decisionTemplateId": "DEC_PRO_TEAM_BUBBLE"
+    },
+    {
+      "id": "MSG_PRO_TEAM_BOTTOM",
+      "category": "coach",
+      "subject": "하위권",
+      "body": "팀이 하위권에 처져 있습니다.\n\n시즌이 길게 느껴집니다. 이런 해일수록 개인 기록이 남습니다.",
+      "decisionTemplateId": "DEC_PRO_TEAM_BOTTOM"
+    },
+    {
+      "id": "MSG_PRO_TEAM_STREAK_WIN",
+      "category": "coach",
+      "subject": "팀 연승",
+      "body": "팀이 연승 중입니다.\n\n덕아웃 분위기가 좋습니다. 이럴 때 야구가 쉬워 보입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_TEAM_STREAK_LOSE",
+      "category": "coach",
+      "subject": "팀 연패",
+      "body": "팀이 연패에 빠졌습니다.\n\n누군가 흐름을 끊어야 합니다.",
+      "decisionTemplateId": "DEC_PRO_TEAM_STREAK_LOSE"
+    },
+    {
+      "id": "MSG_PRO_FATIGUE_HIGH",
+      "category": "coach",
+      "subject": "누적 피로",
+      "body": "피로가 위험 수준입니다.\n\n이 상태로 등판하면 부상 위험이 올라갑니다.",
+      "decisionTemplateId": "DEC_PRO_FATIGUE_HIGH"
+    },
+    {
+      "id": "MSG_PRO_CONDITION_LOW",
+      "category": "coach",
+      "subject": "떨어진 컨디션",
+      "body": "몸이 무겁습니다.\n\n감각이 평소 같지 않습니다.",
+      "decisionTemplateId": "DEC_PRO_CONDITION_LOW"
+    },
+    {
+      "id": "MSG_PRO_PEAK_FORM",
+      "category": "coach",
+      "subject": "몸이 가볍다",
+      "body": "컨디션이 최고조입니다.\n\n공이 손에서 잘 빠집니다. 이럴 때 무엇을 하느냐가 시즌을 바꿉니다.",
+      "decisionTemplateId": "DEC_PRO_PEAK_FORM"
+    },
+    {
+      "id": "MSG_PRO_PAIN_SIGNAL",
+      "category": "coach",
+      "subject": "미세한 통증",
+      "body": "던진 뒤 팔에 미세한 통증이 남습니다.\n\n큰 건 아니라고 하지만 신경이 쓰입니다.",
+      "decisionTemplateId": "DEC_PRO_PAIN_SIGNAL"
+    },
+    {
+      "id": "MSG_PRO_RECOVERY_ROUTINE",
+      "category": "coach",
+      "subject": "회복 루틴",
+      "body": "트레이너가 회복 프로그램을 제안했습니다.\n\n시즌 중반 이후에는 던지는 것보다 회복이 중요하다고 합니다.",
+      "decisionTemplateId": "DEC_PRO_RECOVERY_ROUTINE"
+    },
+    {
+      "id": "MSG_PRO_ROOKIE_WALL",
+      "category": "coach",
+      "subject": "신인의 벽",
+      "body": "프로 첫 시즌 중반입니다.\n\n아마추어 때와는 경기 수부터 다릅니다. 몸도 마음도 처음 겪는 길이입니다.",
+      "decisionTemplateId": "DEC_PRO_ROOKIE_WALL"
+    },
+    {
+      "id": "MSG_PRO_YEAR3_STEP",
+      "category": "coach",
+      "subject": "3년차의 자리",
+      "body": "프로 3년차입니다.\n\n이제 신인이라는 말은 안 붙습니다. 팀에서의 위치가 정해지는 시기입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_YEAR5_FA_NEAR",
+      "category": "coach",
+      "subject": "FA가 보인다",
+      "body": "FA 자격까지 얼마 남지 않았습니다.\n\n에이전트가 연락을 해왔습니다. 남은 시즌이 몸값을 정합니다.",
+      "decisionTemplateId": "DEC_PRO_YEAR5_FA_NEAR"
+    },
+    {
+      "id": "MSG_PRO_YEAR8_VETERAN",
+      "category": "coach",
+      "subject": "베테랑",
+      "body": "프로 8년차입니다.\n\n어린 선수들이 먼저 인사를 해옵니다. 라커룸에서의 역할이 달라졌습니다.",
+      "decisionTemplateId": "DEC_PRO_YEAR8_VETERAN"
+    },
+    {
+      "id": "MSG_PRO_YEAR10_MILESTONE",
+      "category": "coach",
+      "subject": "프로 10년",
+      "body": "프로 10년째입니다.\n\n이 자리까지 온 선수가 많지 않습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_DECLINE_SIGN",
+      "category": "coach",
+      "subject": "예전 같지 않다",
+      "body": "회복이 예전만큼 빠르지 않습니다.\n\n같은 훈련을 해도 다음 날이 다릅니다.",
+      "decisionTemplateId": "DEC_PRO_DECLINE_SIGN"
+    },
+    {
+      "id": "MSG_PRO_FAME_RISING",
+      "category": "news",
+      "subject": "높아진 인지도",
+      "body": "길에서 알아보는 사람이 늘었습니다.\n\n프로 선수라는 게 실감 납니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_FAME_STAR",
+      "category": "news",
+      "subject": "간판 선수",
+      "body": "구단 홍보물에 얼굴이 실렸습니다.\n\n팀의 얼굴이라는 건 부담이기도 합니다.",
+      "decisionTemplateId": "DEC_PRO_FAME_STAR"
+    },
+    {
+      "id": "MSG_PRO_INTERVIEW_AFTER_WIN",
+      "category": "news",
+      "subject": "승리 후 인터뷰",
+      "body": "경기 후 방송사 인터뷰 요청이 들어왔습니다.\n\n짧게 몇 마디만 하면 됩니다.",
+      "decisionTemplateId": "DEC_PRO_INTERVIEW_AFTER_WIN"
+    },
+    {
+      "id": "MSG_PRO_SNS_BUZZ",
+      "category": "news",
+      "subject": "SNS 반응",
+      "body": "어제 등판이 SNS에서 회자되고 있습니다.\n\n좋은 말도 나쁜 말도 섞여 있습니다.",
+      "decisionTemplateId": "DEC_PRO_SNS_BUZZ"
+    },
+    {
+      "id": "MSG_PRO_SPONSOR_OFFER",
+      "category": "coach",
+      "subject": "스폰서 제안",
+      "body": "용품 업체에서 후원 제안이 왔습니다.\n\n조건은 나쁘지 않습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_ROOKIE_ASKS",
+      "category": "coach",
+      "subject": "신인의 질문",
+      "body": "신인 투수가 조언을 구해왔습니다.\n\n자기가 무엇을 고쳐야 할지 모르겠다고 합니다.",
+      "decisionTemplateId": "DEC_PRO_ROOKIE_ASKS"
+    },
+    {
+      "id": "MSG_PRO_CATCHER_TALK",
+      "category": "coach",
+      "subject": "포수와의 대화",
+      "body": "전담 포수가 볼 배합 이야기를 꺼냈습니다.\n\n둘의 생각이 조금 다릅니다.",
+      "decisionTemplateId": "DEC_PRO_CATCHER_TALK"
+    },
+    {
+      "id": "MSG_PRO_BULLPEN_RIVAL",
+      "category": "coach",
+      "subject": "자리 경쟁",
+      "body": "같은 보직에 경쟁자가 들어왔습니다.\n\n감독이 둘을 저울에 올려놓았습니다.",
+      "decisionTemplateId": "DEC_PRO_BULLPEN_RIVAL"
+    },
+    {
+      "id": "MSG_PRO_MANAGER_TALK",
+      "category": "coach",
+      "subject": "감독 면담",
+      "body": "감독이 따로 불렀습니다.\n\n보직과 등판 간격 이야기입니다.",
+      "decisionTemplateId": "DEC_PRO_MANAGER_TALK"
+    },
+    {
+      "id": "MSG_PRO_LOCKER_MOOD",
+      "category": "coach",
+      "subject": "가라앉은 라커룸",
+      "body": "성적이 안 나오자 라커룸이 조용합니다.\n\n누구도 먼저 입을 열지 않습니다.",
+      "decisionTemplateId": "DEC_PRO_LOCKER_MOOD"
+    },
+    {
+      "id": "MSG_PRO_ROLE_ACE",
+      "category": "coach",
+      "subject": "에이스",
+      "body": "감독이 개막전 선발을 맡기겠다고 했습니다.\n\n팀에서 가장 믿는 투수라는 뜻입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_ROLE_SWING",
+      "category": "coach",
+      "subject": "스윙맨",
+      "body": "선발과 불펜을 오가는 보직을 받았습니다.\n\n둘 다 준비해야 한다는 건 어느 쪽도 온전히 준비하기 어렵다는 뜻이기도 합니다.",
+      "decisionTemplateId": "DEC_PRO_ROLE_SWING"
+    },
+    {
+      "id": "MSG_PRO_ROLE_CLOSER",
+      "category": "coach",
+      "subject": "마무리 제안",
+      "body": "감독이 마무리 보직을 제안했습니다.\n\n한 이닝에 모든 게 걸리는 자리입니다.",
+      "decisionTemplateId": "DEC_PRO_ROLE_CLOSER"
+    },
+    {
+      "id": "MSG_PRO_ROLE_DEMOTE",
+      "category": "coach",
+      "subject": "보직 강등",
+      "body": "선발 로테이션에서 빠졌습니다.\n\n성적이 이유라는 걸 스스로도 압니다.",
+      "decisionTemplateId": "DEC_PRO_ROLE_DEMOTE"
+    },
+    {
+      "id": "MSG_PRO_ROLE_RETURN",
+      "category": "coach",
+      "subject": "로테이션 복귀",
+      "body": "다시 선발 자리를 받았습니다.\n\n기회는 한 번 더 왔습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_QUALITY_START_RUN",
+      "category": "coach",
+      "subject": "퀄리티스타트 행진",
+      "body": "연속 퀄리티스타트를 이어가고 있습니다.\n\n기복이 없다는 건 프로에서 가장 큰 칭찬입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_NO_DECISION",
+      "category": "coach",
+      "subject": "승운이 없다",
+      "body": "잘 던지고도 승리가 붙지 않습니다.\n\n타선이 도와주지 않는 날이 이어집니다.",
+      "decisionTemplateId": "DEC_PRO_NO_DECISION"
+    },
+    {
+      "id": "MSG_PRO_BIG_INNING",
+      "category": "coach",
+      "subject": "빅이닝 실점",
+      "body": "한 이닝에 대량 실점했습니다.\n\n무너지는 건 순식간이었습니다.",
+      "decisionTemplateId": "DEC_PRO_BIG_INNING"
+    },
+    {
+      "id": "MSG_PRO_CLUTCH_ESCAPE",
+      "category": "coach",
+      "subject": "만루 위기 탈출",
+      "body": "무사 만루를 실점 없이 넘겼습니다.\n\n덕아웃이 들썩였습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_RIVAL_MATCHUP",
+      "category": "news",
+      "subject": "라이벌 맞대결",
+      "body": "같은 리그 정상급 투수와 맞대결이 잡혔습니다.\n\n중계도 이 경기를 크게 다룹니다.",
+      "decisionTemplateId": "DEC_PRO_RIVAL_MATCHUP"
+    },
+    {
+      "id": "MSG_PRO_SHUTOUT",
+      "category": "news",
+      "subject": "완봉승",
+      "body": "완봉승을 거뒀습니다.\n\n프로에서 흔치 않은 기록입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_PITCH_COUNT_HIGH",
+      "category": "coach",
+      "subject": "투구수 과다",
+      "body": "지난 등판 투구수가 많았습니다.\n\n다음 등판까지 회복이 관건입니다.",
+      "decisionTemplateId": "DEC_PRO_PITCH_COUNT_HIGH"
+    },
+    {
+      "id": "MSG_PRO_NEW_PITCH_IDEA",
+      "category": "coach",
+      "subject": "새 구종",
+      "body": "투수코치가 구종 하나를 더 익혀보자고 합니다.\n\n지금 레퍼토리로는 두 번째 상대할 때 읽힌다는 이야기입니다.",
+      "decisionTemplateId": "DEC_PRO_NEW_PITCH_IDEA"
+    },
+    {
+      "id": "MSG_PRO_VELO_DROP",
+      "category": "coach",
+      "subject": "구속 저하",
+      "body": "구속이 시즌 초보다 떨어졌습니다.\n\n누적인지 다른 문제인지 확인이 필요합니다.",
+      "decisionTemplateId": "DEC_PRO_VELO_DROP"
+    },
+    {
+      "id": "MSG_PRO_SCOUTED",
+      "category": "coach",
+      "subject": "분석당하다",
+      "body": "상대 팀들이 내 패턴을 읽기 시작했습니다.\n\n같은 방식으로는 두 번째부터 통하지 않습니다.",
+      "decisionTemplateId": "DEC_PRO_SCOUTED"
+    },
+    {
+      "id": "MSG_PRO_OFFSEASON_TRAIN",
+      "category": "coach",
+      "subject": "오프시즌 훈련 계획",
+      "body": "다음 시즌을 위한 훈련 계획을 세울 때입니다.\n\n무엇을 키울지는 본인이 정합니다.",
+      "decisionTemplateId": "DEC_PRO_OFFSEASON_TRAIN"
+    },
+    {
+      "id": "MSG_PRO_SALARY_SATISFIED",
+      "category": "coach",
+      "subject": "만족스러운 협상",
+      "body": "연봉 협상이 원만하게 끝났습니다.\n\n성적이 좋으면 대화가 짧습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_SALARY_GAP",
+      "category": "coach",
+      "subject": "협상 난항",
+      "body": "구단과 생각하는 금액 차이가 큽니다.\n\n에이전트가 시간을 더 달라고 합니다.",
+      "decisionTemplateId": "DEC_PRO_SALARY_GAP"
+    },
+    {
+      "id": "MSG_PRO_TRADE_RUMOR",
+      "category": "news",
+      "subject": "트레이드 루머",
+      "body": "이적설이 보도됐습니다.\n\n구단은 공식적으로 부인했지만 기분이 좋지는 않습니다.",
+      "decisionTemplateId": "DEC_PRO_TRADE_RUMOR"
+    },
+    {
+      "id": "MSG_PRO_FA_MARKET_TALK",
+      "category": "coach",
+      "subject": "FA 시장 이야기",
+      "body": "FA 자격을 얻었습니다.\n\n여러 구단이 관심을 보인다는 이야기가 들립니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_OPTION_YEAR",
+      "category": "coach",
+      "subject": "옵션 조항",
+      "body": "계약서에 옵션 조항이 걸려 있습니다.\n\n구단이 행사할지 이번 오프시즌에 결정됩니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_FIRST_PAYCHECK",
+      "category": "coach",
+      "subject": "첫 프로 월급",
+      "body": "프로 계약 후 첫 월급이 들어왔습니다.\n\n아마추어 시절과는 자릿수가 다릅니다.",
+      "decisionTemplateId": "DEC_PRO_FIRST_PAYCHECK"
+    },
+    {
+      "id": "MSG_PRO_HOUSE_MOVE",
+      "category": "coach",
+      "subject": "이사",
+      "body": "구단 근처로 숙소를 옮겼습니다.\n\n이동 시간이 줄면 회복 시간이 늘어납니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_PERSONAL_TRAINER",
+      "category": "coach",
+      "subject": "개인 트레이너",
+      "body": "개인 트레이너를 두는 선수가 늘고 있습니다.\n\n비용은 만만치 않습니다.",
+      "decisionTemplateId": "DEC_PRO_PERSONAL_TRAINER"
+    },
+    {
+      "id": "MSG_PRO_CHARITY",
+      "category": "news",
+      "subject": "기부 요청",
+      "body": "지역 유소년 야구단에서 후원 요청이 왔습니다.\n\n액수는 크지 않습니다.",
+      "decisionTemplateId": "DEC_PRO_CHARITY"
+    },
+    {
+      "id": "MSG_PRO_OFFSEASON_TRIP",
+      "category": "coach",
+      "subject": "비시즌 여행",
+      "body": "시즌이 끝났습니다.\n\n오랜만에 야구를 잊을 시간이 생겼습니다.",
+      "decisionTemplateId": "DEC_PRO_OFFSEASON_TRIP"
+    },
+    {
+      "id": "MSG_PRO_MOMENTUM_HIGH",
+      "category": "coach",
+      "subject": "흐름을 탔다",
+      "body": "모든 게 잘 풀립니다.\n\n이런 시기는 길지 않다는 것도 압니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_PRESSURE_HOME",
+      "category": "coach",
+      "subject": "홈 팬의 기대",
+      "body": "홈 경기 관중이 크게 늘었습니다.\n\n환호가 클수록 부담도 큽니다.",
+      "decisionTemplateId": "DEC_PRO_PRESSURE_HOME"
+    },
+    {
+      "id": "MSG_PRO_FAMILY_GAME",
+      "category": "news",
+      "subject": "가족이 온 날",
+      "body": "가족이 경기장에 왔습니다.\n\n관중석 어딘가에 있다는 걸 압니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_OLD_TEAMMATE",
+      "category": "news",
+      "subject": "옛 동료",
+      "body": "고교 시절 동료를 상대 팀에서 만났습니다.\n\n같은 자리에 서기까지 서로 다른 길을 걸었습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_MEDIA_DAY",
+      "category": "news",
+      "subject": "미디어데이",
+      "body": "시즌 개막 미디어데이입니다.\n\n각 구단 대표 선수가 나와 각오를 밝힙니다.",
+      "decisionTemplateId": "DEC_PRO_MEDIA_DAY"
+    },
+    {
+      "id": "MSG_PRO_EQUIPMENT",
+      "category": "coach",
+      "subject": "장비 교체",
+      "body": "글러브를 새로 맞췄습니다.\n\n손에 익기까지 시간이 걸립니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_WEATHER_RAIN",
+      "category": "coach",
+      "subject": "우천 취소",
+      "body": "비로 경기가 취소됐습니다.\n\n예정에 없던 하루가 생겼습니다.",
+      "decisionTemplateId": "DEC_PRO_WEATHER_RAIN"
+    },
+    {
+      "id": "MSG_PRO_DOUBLEHEADER",
+      "category": "coach",
+      "subject": "더블헤더",
+      "body": "우천 취소분을 메우는 더블헤더가 잡혔습니다.\n\n불펜 전체가 긴장합니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_NIGHT_GAME_RUN",
+      "category": "coach",
+      "subject": "연속 야간경기",
+      "body": "야간경기가 이어집니다.\n\n생활 리듬이 흐트러집니다.",
+      "decisionTemplateId": "DEC_PRO_NIGHT_GAME_RUN"
+    },
+    {
+      "id": "MSG_PRO_COACH_REPORT",
+      "category": "coach",
+      "subject": "코치 리포트",
+      "body": "투수코치가 최근 등판 분석을 정리해 왔습니다.\n\n숫자로 보니 스스로 느끼던 것과 다른 부분이 있습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_ANALYTICS_MEET",
+      "category": "coach",
+      "subject": "전력분석 미팅",
+      "body": "전력분석팀이 상대 타선 데이터를 들고 왔습니다.\n\n숫자를 얼마나 믿을지는 투수의 몫입니다.",
+      "decisionTemplateId": "DEC_PRO_ANALYTICS_MEET"
+    },
+    {
+      "id": "MSG_PRO_YOUTH_CAMP",
+      "category": "news",
+      "subject": "유소년 캠프",
+      "body": "구단 유소년 캠프에 코치로 초청받았습니다.\n\n비시즌 며칠을 씁니다.",
+      "decisionTemplateId": "DEC_PRO_YOUTH_CAMP"
+    },
+    {
+      "id": "MSG_PRO_AWARD_CANDIDATE",
+      "category": "news",
+      "subject": "수상 후보",
+      "body": "시즌 수상 후보에 이름이 올랐습니다.\n\n한 해를 잘 보냈다는 뜻입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_GOLDEN_GLOVE",
+      "category": "news",
+      "subject": "골든글러브 경쟁",
+      "body": "골든글러브 투수 부문 경쟁자로 거론됩니다.\n\n결과는 투표로 갈립니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_TEAM_CHAMPION",
+      "category": "coach",
+      "subject": "우승",
+      "body": "팀이 우승했습니다.\n\n이 순간을 위해 한 시즌을 버텼습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_POSTSEASON_START",
+      "category": "coach",
+      "subject": "가을 야구",
+      "body": "포스트시즌 진출이 확정됐습니다.\n\n정규시즌과는 다른 야구가 시작됩니다.",
+      "decisionTemplateId": "DEC_PRO_POSTSEASON_START"
+    },
+    {
+      "id": "MSG_PRO_LIFE_BUS_RIDE",
+      "category": "system",
+      "subject": "원정 버스",
+      "body": "원정 버스 안입니다.\n\n창밖으로 도시가 지나갑니다. 이 시간이 익숙해질 때쯤 프로 선수가 됩니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_HOTEL_NIGHT",
+      "category": "system",
+      "subject": "원정 숙소의 밤",
+      "body": "원정 숙소입니다.\n\n내일 등판이 잡혀 있습니다.",
+      "decisionTemplateId": "DEC_PRO_LIFE_HOTEL_NIGHT"
+    },
+    {
+      "id": "MSG_PRO_LIFE_BULLPEN_SIDE",
+      "category": "system",
+      "subject": "사이드 피칭",
+      "body": "등판 사이 사이드 피칭 날입니다.\n\n감각을 확인하는 자리입니다.",
+      "decisionTemplateId": "DEC_PRO_LIFE_BULLPEN_SIDE"
+    },
+    {
+      "id": "MSG_PRO_LIFE_WEIGHT_ROOM",
+      "category": "system",
+      "subject": "웨이트룸",
+      "body": "비번 날 웨이트룸입니다.\n\n시즌 중 근력 유지는 생각보다 중요합니다.",
+      "decisionTemplateId": "DEC_PRO_LIFE_WEIGHT_ROOM"
+    },
+    {
+      "id": "MSG_PRO_LIFE_TEAM_DINNER",
+      "category": "system",
+      "subject": "회식",
+      "body": "팀 회식이 잡혔습니다.\n\n연승 뒤에는 늘 이런 자리가 생깁니다.",
+      "decisionTemplateId": "DEC_PRO_LIFE_TEAM_DINNER"
+    },
+    {
+      "id": "MSG_PRO_LIFE_CATCHER_DINNER",
+      "category": "system",
+      "subject": "포수와 식사",
+      "body": "전담 포수와 저녁을 먹었습니다.\n\n야구 이야기가 절반, 사는 이야기가 절반입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_TRAINER_ROOM",
+      "category": "system",
+      "subject": "치료실",
+      "body": "치료실에 들렀습니다.\n\n트레이너가 어깨 상태를 봐줍니다.",
+      "decisionTemplateId": "DEC_PRO_LIFE_TRAINER_ROOM"
+    },
+    {
+      "id": "MSG_PRO_LIFE_ROOKIE_HAZING",
+      "category": "system",
+      "subject": "신인 신고식",
+      "body": "신인 선수들의 신고식이 열립니다.\n\n분위기를 푸는 자리입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_CLUBHOUSE_GAME",
+      "category": "system",
+      "subject": "라커룸 게임",
+      "body": "경기 전 라커룸에서 카드 게임이 벌어졌습니다.\n\n긴장을 푸는 방식은 저마다 다릅니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_EQUIPMENT_CHECK",
+      "category": "system",
+      "subject": "장비 점검",
+      "body": "장비 담당자가 스파이크를 손봐 왔습니다.\n\n작은 것이 크게 느껴지는 날이 있습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_MEAL_PLAN",
+      "category": "system",
+      "subject": "식단 관리",
+      "body": "구단 영양사가 식단표를 새로 짰습니다.\n\n체중 관리도 실력의 일부라고 합니다.",
+      "decisionTemplateId": "DEC_PRO_LIFE_MEAL_PLAN"
+    },
+    {
+      "id": "MSG_PRO_LIFE_SLEEP_LACK",
+      "category": "system",
+      "subject": "잠이 안 온다",
+      "body": "야간경기 뒤 잠이 오지 않습니다.\n\n머릿속에서 오늘 던진 공이 반복됩니다.",
+      "decisionTemplateId": "DEC_PRO_LIFE_SLEEP_LACK"
+    },
+    {
+      "id": "MSG_PRO_LIFE_VETERAN_ADVICE",
+      "category": "system",
+      "subject": "선배의 조언",
+      "body": "베테랑 선배가 지나가듯 한마디 했습니다.\n\n짧지만 오래 남는 말이었습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_COACH_SMALL_TALK",
+      "category": "system",
+      "subject": "코치와의 잡담",
+      "body": "투수코치와 짧은 대화를 나눴습니다.\n\n야구 이야기는 아니었습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_BATTING_PRACTICE",
+      "category": "system",
+      "subject": "타격 훈련 구경",
+      "body": "타자들의 타격 훈련을 지켜봤습니다.\n\n좋은 타자의 스윙을 보면 배울 게 있습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_RAIN_DELAY",
+      "category": "system",
+      "subject": "우천 지연",
+      "body": "경기가 비로 지연되고 있습니다.\n\n언제 시작할지 모른 채 몸을 데워둡니다.",
+      "decisionTemplateId": "DEC_PRO_LIFE_RAIN_DELAY"
+    },
+    {
+      "id": "MSG_PRO_LIFE_HOME_CROWD",
+      "category": "system",
+      "subject": "홈 만원 관중",
+      "body": "홈 경기가 매진됐습니다.\n\n함성이 마운드까지 올라옵니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_AWAY_BOOING",
+      "category": "system",
+      "subject": "원정 야유",
+      "body": "원정 경기에서 야유를 받았습니다.\n\n상대 팬 입장에서는 당연한 일입니다.",
+      "decisionTemplateId": "DEC_PRO_LIFE_AWAY_BOOING"
+    },
+    {
+      "id": "MSG_PRO_LIFE_TEAM_MEETING",
+      "category": "system",
+      "subject": "팀 미팅",
+      "body": "감독이 전체 미팅을 소집했습니다.\n\n분위기가 무겁습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_YOUNG_PITCHER",
+      "category": "system",
+      "subject": "어린 투수",
+      "body": "2군에서 올라온 어린 투수가 옆자리에 앉았습니다.\n\n긴장한 게 눈에 보입니다.",
+      "decisionTemplateId": "DEC_PRO_LIFE_YOUNG_PITCHER"
+    },
+    {
+      "id": "MSG_PRO_LIFE_MASSAGE",
+      "category": "system",
+      "subject": "마사지",
+      "body": "경기 후 마사지를 받았습니다.\n\n근육이 풀리는 감각이 좋습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_ICE_BATH",
+      "category": "system",
+      "subject": "냉욕",
+      "body": "등판 후 냉욕입니다.\n\n매번 익숙해지지 않습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_SIGN_FANS",
+      "category": "system",
+      "subject": "사인 요청",
+      "body": "경기장 밖에서 팬들이 기다리고 있습니다.\n\n다들 손에 공을 들고 있습니다.",
+      "decisionTemplateId": "DEC_PRO_LIFE_SIGN_FANS"
+    },
+    {
+      "id": "MSG_PRO_LIFE_LOCKER_CLEAN",
+      "category": "system",
+      "subject": "라커 정리",
+      "body": "라커를 정리했습니다.\n\n시즌이 길어질수록 물건이 쌓입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_NEW_TEAMMATE",
+      "category": "system",
+      "subject": "새 동료",
+      "body": "트레이드로 새 선수가 왔습니다.\n\n라커룸 자리가 하나 바뀌었습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_FIELD_WORK",
+      "category": "system",
+      "subject": "수비 훈련",
+      "body": "투수 수비 훈련일입니다.\n\n번트 처리와 견제를 반복합니다.",
+      "decisionTemplateId": "DEC_PRO_LIFE_FIELD_WORK"
+    },
+    {
+      "id": "MSG_PRO_LIFE_ROTATION_TALK",
+      "category": "system",
+      "subject": "로테이션 조정",
+      "body": "우천 취소로 로테이션이 밀렸습니다.\n\n등판 간격이 하루 늘었습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_SCOUT_SEATS",
+      "category": "system",
+      "subject": "관중석의 스카우트",
+      "body": "백네트 뒤에 스카우트들이 앉아 있습니다.\n\n누구를 보러 왔는지는 모릅니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_POST_GAME_MEAL",
+      "category": "system",
+      "subject": "경기 후 식사",
+      "body": "경기가 끝나고 늦은 식사를 합니다.\n\n이긴 날의 밥맛은 다릅니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_OFFDAY",
+      "category": "system",
+      "subject": "휴식일",
+      "body": "리그 휴식일입니다.\n\n하루가 통째로 비었습니다.",
+      "decisionTemplateId": "DEC_PRO_LIFE_OFFDAY"
+    },
+    {
+      "id": "MSG_PRO_LIFE_TRAVEL_DELAY",
+      "category": "system",
+      "subject": "이동 지연",
+      "body": "이동 일정이 지연됐습니다.\n\n공항에서 오래 기다립니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_JERSEY_NUMBER",
+      "category": "system",
+      "subject": "등번호",
+      "body": "등번호 변경 신청 기간입니다.\n\n번호에는 저마다 이유가 있습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_MOUND_VISIT",
+      "category": "system",
+      "subject": "마운드 방문",
+      "body": "위기 상황에서 코치가 마운드에 올라왔습니다.\n\n짧게 한마디만 하고 내려갑니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_PITCH_CLOCK",
+      "category": "system",
+      "subject": "투구 시간 제한",
+      "body": "투구 시간 제한 규정에 적응 중입니다.\n\n리듬이 달라집니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_UMPIRE_ZONE",
+      "category": "system",
+      "subject": "심판 존",
+      "body": "오늘 주심의 스트라이크 존이 좁습니다.\n\n적응하는 수밖에 없습니다.",
+      "decisionTemplateId": "DEC_PRO_LIFE_UMPIRE_ZONE"
+    },
+    {
+      "id": "MSG_PRO_LIFE_DOUBLE_BULLPEN",
+      "category": "system",
+      "subject": "불펜 대기",
+      "body": "불펜에서 대기가 길어집니다.\n\n몸을 풀었다 식혔다를 반복합니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_SEASON_TICKET",
+      "category": "system",
+      "subject": "시즌권 팬",
+      "body": "매 홈경기 같은 자리에 앉는 팬이 있습니다.\n\n오늘도 그 자리에 있습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_GROUND_KEEPER",
+      "category": "system",
+      "subject": "그라운드 관리인",
+      "body": "경기 전 마운드를 손보는 관리인과 인사했습니다.\n\n마운드 상태는 투수에게 중요합니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_TEAM_PHOTO",
+      "category": "system",
+      "subject": "단체 사진",
+      "body": "시즌 단체 사진 촬영일입니다.\n\n한 해에 한 번 있는 일입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_BAT_BOY",
+      "category": "system",
+      "subject": "배트보이",
+      "body": "배트보이 아이가 사인을 부탁했습니다.\n\n야구장에서 자라는 아이입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_LOCAL_PAPER",
+      "category": "news",
+      "subject": "지역지 인터뷰",
+      "body": "지역 신문 기자가 짧은 인터뷰를 요청했습니다.\n\n분량은 크지 않습니다.",
+      "decisionTemplateId": "DEC_PRO_LIFE_LOCAL_PAPER"
+    },
+    {
+      "id": "MSG_PRO_LIFE_TV_HIGHLIGHT",
+      "category": "news",
+      "subject": "하이라이트",
+      "body": "어제 등판이 하이라이트에 나왔습니다.\n\n삼진 장면이 반복 재생됩니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_RADIO_SHOW",
+      "category": "news",
+      "subject": "라디오 출연",
+      "body": "야구 라디오 프로그램 출연 요청입니다.\n\n한 시간 정도 걸립니다.",
+      "decisionTemplateId": "DEC_PRO_LIFE_RADIO_SHOW"
+    },
+    {
+      "id": "MSG_PRO_LIFE_COLUMN_PRAISE",
+      "category": "news",
+      "subject": "칼럼",
+      "body": "전문 칼럼에서 좋은 평가를 받았습니다.\n\n숫자가 아니라 던지는 방식을 봐준 글이었습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_COLUMN_CRITIC",
+      "category": "news",
+      "subject": "비판 칼럼",
+      "body": "칼럼에서 지적을 받았습니다.\n\n틀린 말은 아니어서 더 신경이 쓰입니다.",
+      "decisionTemplateId": "DEC_PRO_LIFE_COLUMN_CRITIC"
+    },
+    {
+      "id": "MSG_PRO_LIFE_SNS_POST",
+      "category": "news",
+      "subject": "SNS 게시",
+      "body": "구단 SNS에 올릴 사진을 찍었습니다.\n\n요즘은 이것도 일의 일부입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_FAN_LETTER",
+      "category": "news",
+      "subject": "팬레터",
+      "body": "팬레터가 도착했습니다.\n\n손으로 쓴 편지였습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_PHOTO_SHOOT",
+      "category": "news",
+      "subject": "화보 촬영",
+      "body": "구단 홍보용 화보 촬영입니다.\n\n반나절이 걸립니다.",
+      "decisionTemplateId": "DEC_PRO_LIFE_PHOTO_SHOOT"
+    },
+    {
+      "id": "MSG_PRO_LIFE_PRESS_CONF",
+      "category": "news",
+      "subject": "기자회견",
+      "body": "경기 후 기자회견에 불려 나갔습니다.\n\n질문이 날카롭습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_RIVAL_QUOTE",
+      "category": "news",
+      "subject": "상대 선수의 말",
+      "body": "상대 팀 타자가 인터뷰에서 내 이름을 언급했습니다.\n\n칭찬인지 도발인지 애매합니다.",
+      "decisionTemplateId": "DEC_PRO_LIFE_RIVAL_QUOTE"
+    },
+    {
+      "id": "MSG_PRO_LIFE_STAT_FEATURE",
+      "category": "news",
+      "subject": "기록 기사",
+      "body": "세부 기록을 다룬 기사가 났습니다.\n\n스스로도 몰랐던 숫자가 있습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_BROADCAST_MIC",
+      "category": "news",
+      "subject": "중계 마이크",
+      "body": "중계진이 경기 전 짧은 코멘트를 요청했습니다.\n\n한두 마디면 됩니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_DOCUMENTARY",
+      "category": "news",
+      "subject": "다큐 촬영",
+      "body": "구단 다큐멘터리 팀이 하루 동선을 따라다닙니다.\n\n카메라가 신경 쓰입니다.",
+      "decisionTemplateId": "DEC_PRO_LIFE_DOCUMENTARY"
+    },
+    {
+      "id": "MSG_PRO_LIFE_YOUTH_INTERVIEW",
+      "category": "news",
+      "subject": "유소년 매체",
+      "body": "유소년 야구 매체에서 인터뷰를 요청했습니다.\n\n아이들이 읽는 지면입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_ADVERTISEMENT",
+      "category": "news",
+      "subject": "광고 제안",
+      "body": "지역 업체에서 광고 모델 제안이 왔습니다.\n\n규모는 크지 않습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_ONLINE_RANKING",
+      "category": "news",
+      "subject": "온라인 랭킹",
+      "body": "팬 사이트에서 투수 랭킹이 공개됐습니다.\n\n순위가 매겨지는 건 익숙해지지 않습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_POST_LOSS_MIC",
+      "category": "news",
+      "subject": "패전 후 인터뷰",
+      "body": "패한 날에도 인터뷰는 있습니다.\n\n말을 고르기가 어렵습니다.",
+      "decisionTemplateId": "DEC_PRO_LIFE_POST_LOSS_MIC"
+    },
+    {
+      "id": "MSG_PRO_LIFE_MILESTONE_NEWS",
+      "category": "news",
+      "subject": "기록 예고 기사",
+      "body": "다음 등판에서 기록에 도달할 수 있다는 기사가 났습니다.\n\n의식하지 않기가 어렵습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_CAMP_MEDIA",
+      "category": "news",
+      "subject": "캠프 취재",
+      "body": "캠프에 취재진이 몰렸습니다.\n\n훈련 하나하나가 기사가 됩니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_PRO_LIFE_OFFSEASON_NEWS",
+      "category": "news",
+      "subject": "비시즌 기사",
+      "body": "비시즌인데도 기사가 납니다.\n\n야구가 없는 계절에도 야구 이야기는 계속됩니다.",
+      "decisionTemplateId": null
     }
   ]
 }

@@ -1,0 +1,18 @@
+{
+  "id": "EVT_PRO_LIFE_RAIN_DELAY",
+  "type": "random",
+  "category": "team_life",
+  "priority": 300,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 3,
+  "weight": 22,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "messageTemplateId": "MSG_PRO_LIFE_RAIN_DELAY",
+  "decisionTemplateId": "DEC_PRO_LIFE_RAIN_DELAY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    }
+  ]
+}

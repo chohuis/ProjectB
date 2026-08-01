@@ -1,0 +1,24 @@
+{
+  "id": "EVT_PRO_DECLINE_SIGN",
+  "type": "conditional",
+  "category": "health",
+  "priority": 715,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 8,
+  "messageTemplateId": "MSG_PRO_DECLINE_SIGN",
+  "decisionTemplateId": "DEC_PRO_DECLINE_SIGN",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "pro_year_gte",
+      "value": 9
+    },
+    {
+      "type": "pitching_ovr_lte",
+      "value": 62
+    }
+  ]
+}

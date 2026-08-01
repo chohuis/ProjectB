@@ -1,0 +1,24 @@
+{
+  "id": "EVT_PRO_WEATHER_RAIN",
+  "type": "conditional",
+  "category": "team_life",
+  "priority": 580,
+  "oncePolicy": "repeatable",
+  "messageTemplateId": "MSG_PRO_WEATHER_RAIN",
+  "decisionTemplateId": "DEC_PRO_WEATHER_RAIN",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "week_gte",
+      "value": 10
+    },
+    {
+      "type": "week_lte",
+      "value": 38
+    }
+  ],
+  "cooldownWeeks": 3
+}

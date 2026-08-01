@@ -1,0 +1,20 @@
+{
+  "id": "EVT_PRO_BULLPEN_RIVAL",
+  "type": "conditional",
+  "category": "team_life",
+  "priority": 650,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
+  "messageTemplateId": "MSG_PRO_BULLPEN_RIVAL",
+  "decisionTemplateId": "DEC_PRO_BULLPEN_RIVAL",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "pitching_ovr_gte",
+      "value": 60
+    }
+  ]
+}

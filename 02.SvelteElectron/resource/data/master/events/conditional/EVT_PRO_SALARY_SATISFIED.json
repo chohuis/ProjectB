@@ -1,0 +1,27 @@
+{
+  "id": "EVT_PRO_SALARY_SATISFIED",
+  "type": "conditional",
+  "category": "career",
+  "priority": 655,
+  "oncePolicy": "once_per_season",
+  "messageTemplateId": "MSG_PRO_SALARY_SATISFIED",
+  "decisionTemplateId": null,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "week_gte",
+      "value": 44
+    },
+    {
+      "type": "morale_gte",
+      "value": 70
+    },
+    {
+      "type": "season_wins_gte",
+      "value": 10
+    }
+  ]
+}

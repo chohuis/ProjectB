@@ -1,0 +1,24 @@
+{
+  "id": "EVT_PRO_BIG_INNING",
+  "type": "conditional",
+  "category": "mental",
+  "priority": 690,
+  "oncePolicy": "repeatable",
+  "messageTemplateId": "MSG_PRO_BIG_INNING",
+  "decisionTemplateId": "DEC_PRO_BIG_INNING",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 20
+    },
+    {
+      "type": "morale_lte",
+      "value": 50
+    }
+  ],
+  "cooldownWeeks": 4
+}

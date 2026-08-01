@@ -1,0 +1,19 @@
+{
+  "id": "EVT_PRO_W08_OPENING_DAY",
+  "type": "mandatory",
+  "category": "season",
+  "priority": 900,
+  "oncePolicy": "once_per_season",
+  "messageTemplateId": "MSG_PRO_OPENING_DAY",
+  "decisionTemplateId": "DEC_PRO_OPENING_DAY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "week_eq",
+      "value": 8
+    }
+  ]
+}

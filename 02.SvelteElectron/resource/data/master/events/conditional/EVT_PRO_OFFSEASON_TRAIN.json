@@ -1,0 +1,23 @@
+{
+  "id": "EVT_PRO_OFFSEASON_TRAIN",
+  "type": "conditional",
+  "category": "training",
+  "priority": 640,
+  "oncePolicy": "once_per_season",
+  "messageTemplateId": "MSG_PRO_OFFSEASON_TRAIN",
+  "decisionTemplateId": "DEC_PRO_OFFSEASON_TRAIN",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "week_gte",
+      "value": 44
+    },
+    {
+      "type": "week_lte",
+      "value": 50
+    }
+  ]
+}

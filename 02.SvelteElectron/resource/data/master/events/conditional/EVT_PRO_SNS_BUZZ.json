@@ -1,0 +1,20 @@
+{
+  "id": "EVT_PRO_SNS_BUZZ",
+  "type": "conditional",
+  "category": "social",
+  "priority": 600,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 3,
+  "messageTemplateId": "MSG_PRO_SNS_BUZZ",
+  "decisionTemplateId": "DEC_PRO_SNS_BUZZ",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "fame_gte",
+      "value": 25
+    }
+  ]
+}

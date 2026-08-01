@@ -1,0 +1,24 @@
+{
+  "id": "EVT_PRO_PEAK_FORM",
+  "type": "conditional",
+  "category": "training",
+  "priority": 735,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 5,
+  "messageTemplateId": "MSG_PRO_PEAK_FORM",
+  "decisionTemplateId": "DEC_PRO_PEAK_FORM",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "condition_gte",
+      "value": 85
+    },
+    {
+      "type": "fatigue_lte",
+      "value": 35
+    }
+  ]
+}

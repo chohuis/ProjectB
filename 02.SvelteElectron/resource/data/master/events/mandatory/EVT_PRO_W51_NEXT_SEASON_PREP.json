@@ -1,0 +1,19 @@
+{
+  "id": "EVT_PRO_W51_NEXT_SEASON_PREP",
+  "type": "mandatory",
+  "category": "season",
+  "priority": 900,
+  "oncePolicy": "once_per_season",
+  "messageTemplateId": "MSG_PRO_NEXT_SEASON_PREP",
+  "decisionTemplateId": null,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "week_eq",
+      "value": 51
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "EVT_PRO_LIFE_OFFSEASON_NEWS",
+  "type": "random",
+  "category": "media",
+  "priority": 300,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 3,
+  "weight": 14,
+  "poolId": "POOL_MEDIA_DAILY",
+  "messageTemplateId": "MSG_PRO_LIFE_OFFSEASON_NEWS",
+  "decisionTemplateId": null,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "week_gte",
+      "value": 44
+    }
+  ]
+}

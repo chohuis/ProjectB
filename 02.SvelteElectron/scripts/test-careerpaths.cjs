@@ -160,7 +160,12 @@ const PATHS = [
   {
     id: "T6",
     name: "독립리그 → 재지명 → 프로",
-    policy: { draft: false, university: false, independent: true },
+    // 고교에서는 독립만, 독립에 들어가면 드래프트를 넣는다.
+    // (전 단계 draft:false로 두면 독립에서 재지원을 안 해 영영 프로에 못 간다 —
+    //  T1과 같은 배선 오류였다)
+    policy: (stage) => stage === "highschool"
+      ? { draft: false, university: false, independent: true }
+      : { draft: true, university: false, independent: false },
     maxSeasons: 12,
     until: (a) => a.careerStage().startsWith("pro"),
     check(app, r) {

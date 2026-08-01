@@ -1,0 +1,19 @@
+{
+  "id": "EVT_PRO_W22_ALLSTAR_VOTE",
+  "type": "mandatory",
+  "category": "media",
+  "priority": 900,
+  "oncePolicy": "once_per_season",
+  "messageTemplateId": "MSG_PRO_ALLSTAR_VOTE",
+  "decisionTemplateId": null,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "week_eq",
+      "value": 22
+    }
+  ]
+}

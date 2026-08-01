@@ -1,0 +1,20 @@
+{
+  "id": "EVT_PRO_EQUIPMENT",
+  "type": "conditional",
+  "category": "team_life",
+  "priority": 590,
+  "oncePolicy": "repeatable",
+  "messageTemplateId": "MSG_PRO_EQUIPMENT",
+  "decisionTemplateId": null,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "pro_year_gte",
+      "value": 2
+    }
+  ],
+  "cooldownWeeks": 8
+}

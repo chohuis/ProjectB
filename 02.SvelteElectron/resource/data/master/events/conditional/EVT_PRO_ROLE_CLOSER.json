@@ -1,0 +1,25 @@
+{
+  "id": "EVT_PRO_ROLE_CLOSER",
+  "type": "conditional",
+  "category": "team",
+  "priority": 730,
+  "oncePolicy": "repeatable",
+  "messageTemplateId": "MSG_PRO_ROLE_CLOSER",
+  "decisionTemplateId": "DEC_PRO_ROLE_CLOSER",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "pitching_stat_gte",
+      "stat": "clutch",
+      "value": 65
+    },
+    {
+      "type": "pitching_ovr_gte",
+      "value": 65
+    }
+  ],
+  "cooldownWeeks": 8
+}

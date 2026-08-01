@@ -1,0 +1,24 @@
+{
+  "id": "EVT_PRO_MOMENTUM_HIGH",
+  "type": "conditional",
+  "category": "mental",
+  "priority": 660,
+  "oncePolicy": "repeatable",
+  "messageTemplateId": "MSG_PRO_MOMENTUM_HIGH",
+  "decisionTemplateId": null,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "morale_gte",
+      "value": 80
+    },
+    {
+      "type": "condition_gte",
+      "value": 75
+    }
+  ],
+  "cooldownWeeks": 4
+}

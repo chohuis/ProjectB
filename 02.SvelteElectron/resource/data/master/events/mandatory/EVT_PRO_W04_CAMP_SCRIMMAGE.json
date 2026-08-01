@@ -1,0 +1,19 @@
+{
+  "id": "EVT_PRO_W04_CAMP_SCRIMMAGE",
+  "type": "mandatory",
+  "category": "season",
+  "priority": 900,
+  "oncePolicy": "once_per_season",
+  "messageTemplateId": "MSG_PRO_CAMP_SCRIMMAGE",
+  "decisionTemplateId": null,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "week_eq",
+      "value": 4
+    }
+  ]
+}

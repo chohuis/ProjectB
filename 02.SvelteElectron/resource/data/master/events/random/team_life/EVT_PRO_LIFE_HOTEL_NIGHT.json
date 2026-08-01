@@ -1,0 +1,18 @@
+{
+  "id": "EVT_PRO_LIFE_HOTEL_NIGHT",
+  "type": "random",
+  "category": "team_life",
+  "priority": 300,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 3,
+  "weight": 28,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "messageTemplateId": "MSG_PRO_LIFE_HOTEL_NIGHT",
+  "decisionTemplateId": "DEC_PRO_LIFE_HOTEL_NIGHT",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    }
+  ]
+}

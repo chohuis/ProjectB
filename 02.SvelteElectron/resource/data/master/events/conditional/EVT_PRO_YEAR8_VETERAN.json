@@ -1,0 +1,19 @@
+{
+  "id": "EVT_PRO_YEAR8_VETERAN",
+  "type": "conditional",
+  "category": "team",
+  "priority": 705,
+  "oncePolicy": "once_per_career",
+  "messageTemplateId": "MSG_PRO_YEAR8_VETERAN",
+  "decisionTemplateId": "DEC_PRO_YEAR8_VETERAN",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "pro_year_gte",
+      "value": 8
+    }
+  ]
+}

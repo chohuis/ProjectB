@@ -1,0 +1,24 @@
+{
+  "id": "EVT_PRO_PAIN_SIGNAL",
+  "type": "conditional",
+  "category": "health",
+  "priority": 795,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
+  "messageTemplateId": "MSG_PRO_PAIN_SIGNAL",
+  "decisionTemplateId": "DEC_PRO_PAIN_SIGNAL",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "fatigue_gte",
+      "value": 65
+    },
+    {
+      "type": "condition_lte",
+      "value": 55
+    }
+  ]
+}

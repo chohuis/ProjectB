@@ -1,0 +1,23 @@
+{
+  "id": "EVT_PRO_TEAM_CHAMPION",
+  "type": "conditional",
+  "category": "team",
+  "priority": 790,
+  "oncePolicy": "once_per_season",
+  "messageTemplateId": "MSG_PRO_TEAM_CHAMPION",
+  "decisionTemplateId": null,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "team_rank_lte",
+      "value": 1
+    },
+    {
+      "type": "week_gte",
+      "value": 40
+    }
+  ]
+}

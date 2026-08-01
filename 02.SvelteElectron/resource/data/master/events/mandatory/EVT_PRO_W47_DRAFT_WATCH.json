@@ -1,0 +1,19 @@
+{
+  "id": "EVT_PRO_W47_DRAFT_WATCH",
+  "type": "mandatory",
+  "category": "career",
+  "priority": 900,
+  "oncePolicy": "once_per_season",
+  "messageTemplateId": "MSG_PRO_DRAFT_WATCH",
+  "decisionTemplateId": null,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "week_eq",
+      "value": 47
+    }
+  ]
+}

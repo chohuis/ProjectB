@@ -1,0 +1,24 @@
+{
+  "id": "EVT_PRO_SLUMP_DEEP",
+  "type": "conditional",
+  "category": "mental",
+  "priority": 730,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 5,
+  "messageTemplateId": "MSG_PRO_SLUMP_DEEP",
+  "decisionTemplateId": "DEC_PRO_SLUMP_DEEP",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 30
+    },
+    {
+      "type": "morale_lte",
+      "value": 45
+    }
+  ]
+}

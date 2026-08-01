@@ -369,7 +369,10 @@ export async function pushCareerForward(): Promise<string | null> {
 
     case "careerChoice": {
       const r = get(gameStore).schoolState.careerResults;
-      if (r?.draftDrafted && !_policy.rejectDraft) { await chooseDraft(); return "careerChoice(draft)"; }
+      // ⚠ `rejectDraft`는 **지명 통보에서** 거부한다는 뜻이다. 여기서 막으면
+      // 통보 자체가 안 뜨고 대학으로 새서 거부 경로를 영영 못 밟는다
+      // (T4가 실제로 그렇게 "거부 경로를 안 탔다"로 실패했다)
+      if (r?.draftDrafted) { await chooseDraft(); return "careerChoice(draft)"; }
       // 미지명이면 대학 → 독립 순으로 받는다. 아무 데도 안 되면 못 민다
       const uni = r?.universityPassed?.[0];
       const ind = r?.independentPassed?.[0];
@@ -439,6 +442,64 @@ export async function pushCareerForward(): Promise<string | null> {
 }
 
 export function careerStage(): string { return get(gameStore).protagonist.careerStage; }
+
+/**
+ * 이벤트가 **실제로 뜨는가** — 메시지함에 쌓인 것을 무대·이벤트별로 센다.
+ *
+ * ⚠ 파일 개수는 근거가 못 된다. 조건이 빡빡하면 171개를 넣어도 한 번도 안 뜬다 —
+ * Phase 8 결함 26건이 전부 "코드는 있는데 안 돈다"였다. 판정은 발생 빈도로 한다.
+ *
+ * 메일함 상한(`MAX_MAILBOX`)에 밀려 사라지므로 **누적 집계는 주간 훅이 필요**하다.
+ * 여기서는 지금 남아 있는 것만 본다 — 0인지 아닌지를 가리는 데는 충분하다.
+ */
+export function eventTally(): Record<string, unknown> {
+  const msgs = get(gameStore).mailbox ?? [];
+  const byPrefix: Record<string, number> = {};
+  for (const m of msgs) {
+    const src = (m as { templateId?: string; id?: string }).templateId ?? m.id ?? "";
+    const p = /MSG_(PRO|HS|UNIV|IND|COND|RAND)/.exec(src)?.[1]
+      ?? /msg-([a-z]+)/.exec(src)?.[1] ?? "기타";
+    byPrefix[p] = (byPrefix[p] ?? 0) + 1;
+  }
+  return { 메시지수: msgs.length, 출처별: byPrefix };
+}
+
+/** 메일함 원본 — 이벤트 발생 빈도 계측이 templateId를 본다 */
+export function mailboxRaw(): { id: string; subject: string }[] {
+  return (get(gameStore).mailbox ?? []).map((m) => ({ id: m.id, subject: m.subject }));
+}
+
+// ── 이벤트 발생 계측 ─────────────────────────────────────────────
+//
+// ⚠ **메일함을 나중에 훑으면 안 된다.** `MAX_MAILBOX = 50`이라 `autoRun`이
+// 30주를 한 번에 도는 사이 초반 메시지가 밀려 사라진다 — 실측에서 프로
+// 전반기(W1~W28) 달력 이벤트가 통째로 "한 번도 안 뜸"으로 나왔는데
+// 실제로는 뜬 뒤 밀려난 것이었다. (스카우트 데이·W40 총평도 같은 함정이었다)
+// store 구독으로 **추가되는 순간** 잡는다.
+const _evSeen = new Set<string>();
+const _evTally: Record<string, number> = {};
+let _evOn = false;
+
+gameStore.subscribe((s) => {
+  if (!_evOn) return;
+  for (const m of s.mailbox ?? []) {
+    if (_evSeen.has(m.id)) continue;
+    _evSeen.add(m.id);
+    // 이벤트 메시지 id는 `evt-<이벤트id>-w<주차>-<ts>` 형식이다
+    const mm = /^evt-(EVT_[A-Z0-9_]+)-w\d+/.exec(m.id);
+    if (mm) _evTally[mm[1]] = (_evTally[mm[1]] ?? 0) + 1;
+  }
+});
+
+export function startEventTally(): void {
+  _evOn = true; _evSeen.clear();
+  for (const k of Object.keys(_evTally)) delete _evTally[k];
+}
+
+/** 이벤트 id → 발생 횟수 */
+export function eventTallyDump(): Record<string, number> {
+  return { ..._evTally };
+}
 
 /** 주인공 현황 한 줄 — 경로 회귀가 "지금 어디에 있나"를 판정하는 데 쓴다 */
 export function protagonistState(): Record<string, unknown> {

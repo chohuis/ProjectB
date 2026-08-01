@@ -1,0 +1,24 @@
+{
+  "id": "EVT_PRO_PITCH_COUNT_HIGH",
+  "type": "conditional",
+  "category": "health",
+  "priority": 770,
+  "oncePolicy": "repeatable",
+  "messageTemplateId": "MSG_PRO_PITCH_COUNT_HIGH",
+  "decisionTemplateId": "DEC_PRO_PITCH_COUNT_HIGH",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "fatigue_gte",
+      "value": 60
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 40
+    }
+  ],
+  "cooldownWeeks": 3
+}

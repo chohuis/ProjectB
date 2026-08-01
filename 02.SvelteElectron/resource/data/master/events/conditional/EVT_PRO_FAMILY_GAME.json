@@ -1,0 +1,20 @@
+{
+  "id": "EVT_PRO_FAMILY_GAME",
+  "type": "conditional",
+  "category": "social",
+  "priority": 615,
+  "oncePolicy": "repeatable",
+  "messageTemplateId": "MSG_PRO_FAMILY_GAME",
+  "decisionTemplateId": null,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "week_gte",
+      "value": 12
+    }
+  ],
+  "cooldownWeeks": 8
+}

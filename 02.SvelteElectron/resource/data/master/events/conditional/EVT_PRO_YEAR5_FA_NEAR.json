@@ -1,0 +1,19 @@
+{
+  "id": "EVT_PRO_YEAR5_FA_NEAR",
+  "type": "conditional",
+  "category": "career",
+  "priority": 755,
+  "oncePolicy": "once_per_career",
+  "messageTemplateId": "MSG_PRO_YEAR5_FA_NEAR",
+  "decisionTemplateId": "DEC_PRO_YEAR5_FA_NEAR",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "pro_year_gte",
+      "value": 4
+    }
+  ]
+}

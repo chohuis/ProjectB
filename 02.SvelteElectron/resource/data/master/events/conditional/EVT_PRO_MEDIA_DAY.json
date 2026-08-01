@@ -1,0 +1,23 @@
+{
+  "id": "EVT_PRO_MEDIA_DAY",
+  "type": "conditional",
+  "category": "media",
+  "priority": 635,
+  "oncePolicy": "once_per_season",
+  "messageTemplateId": "MSG_PRO_MEDIA_DAY",
+  "decisionTemplateId": "DEC_PRO_MEDIA_DAY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "week_gte",
+      "value": 5
+    },
+    {
+      "type": "week_lte",
+      "value": 8
+    }
+  ]
+}

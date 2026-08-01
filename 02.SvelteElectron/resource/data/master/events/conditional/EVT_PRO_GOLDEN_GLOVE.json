@@ -1,0 +1,23 @@
+{
+  "id": "EVT_PRO_GOLDEN_GLOVE",
+  "type": "conditional",
+  "category": "media",
+  "priority": 770,
+  "oncePolicy": "once_per_season",
+  "messageTemplateId": "MSG_PRO_GOLDEN_GLOVE",
+  "decisionTemplateId": null,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "season_wins_gte",
+      "value": 15
+    },
+    {
+      "type": "season_era_lte",
+      "value": 3
+    }
+  ]
+}

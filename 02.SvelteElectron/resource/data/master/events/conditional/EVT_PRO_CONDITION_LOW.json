@@ -1,0 +1,20 @@
+{
+  "id": "EVT_PRO_CONDITION_LOW",
+  "type": "conditional",
+  "category": "health",
+  "priority": 790,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 3,
+  "messageTemplateId": "MSG_PRO_CONDITION_LOW",
+  "decisionTemplateId": "DEC_PRO_CONDITION_LOW",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "condition_lte",
+      "value": 45
+    }
+  ]
+}

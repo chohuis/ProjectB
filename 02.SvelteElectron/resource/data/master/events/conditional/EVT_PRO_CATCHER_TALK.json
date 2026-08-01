@@ -1,0 +1,20 @@
+{
+  "id": "EVT_PRO_CATCHER_TALK",
+  "type": "conditional",
+  "category": "team_life",
+  "priority": 640,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 4,
+  "messageTemplateId": "MSG_PRO_CATCHER_TALK",
+  "decisionTemplateId": "DEC_PRO_CATCHER_TALK",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 20
+    }
+  ]
+}

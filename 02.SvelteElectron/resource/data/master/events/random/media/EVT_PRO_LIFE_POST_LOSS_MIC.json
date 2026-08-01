@@ -1,0 +1,22 @@
+{
+  "id": "EVT_PRO_LIFE_POST_LOSS_MIC",
+  "type": "random",
+  "category": "media",
+  "priority": 300,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 3,
+  "weight": 18,
+  "poolId": "POOL_MEDIA_DAILY",
+  "messageTemplateId": "MSG_PRO_LIFE_POST_LOSS_MIC",
+  "decisionTemplateId": "DEC_PRO_LIFE_POST_LOSS_MIC",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "morale_lte",
+      "value": 60
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "id": "EVT_PRO_W34_RANK_BATTLE",
+  "type": "mandatory",
+  "category": "team",
+  "priority": 900,
+  "oncePolicy": "once_per_season",
+  "messageTemplateId": "MSG_PRO_RANK_BATTLE",
+  "decisionTemplateId": null,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "week_eq",
+      "value": 34
+    }
+  ]
+}

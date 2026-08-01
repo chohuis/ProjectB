@@ -1,0 +1,24 @@
+{
+  "id": "EVT_PRO_NO_DECISION",
+  "type": "conditional",
+  "category": "mental",
+  "priority": 650,
+  "oncePolicy": "repeatable",
+  "messageTemplateId": "MSG_PRO_NO_DECISION",
+  "decisionTemplateId": "DEC_PRO_NO_DECISION",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 40
+    },
+    {
+      "type": "season_wins_gte",
+      "value": 2
+    }
+  ],
+  "cooldownWeeks": 5
+}

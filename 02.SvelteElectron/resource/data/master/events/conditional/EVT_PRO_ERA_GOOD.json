@@ -1,0 +1,24 @@
+{
+  "id": "EVT_PRO_ERA_GOOD",
+  "type": "conditional",
+  "category": "training",
+  "priority": 740,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 6,
+  "messageTemplateId": "MSG_PRO_ERA_GOOD",
+  "decisionTemplateId": null,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 30
+    },
+    {
+      "type": "season_era_lte",
+      "value": 3.2
+    }
+  ]
+}

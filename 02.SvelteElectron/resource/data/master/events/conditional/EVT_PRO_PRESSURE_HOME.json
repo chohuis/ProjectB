@@ -1,0 +1,24 @@
+{
+  "id": "EVT_PRO_PRESSURE_HOME",
+  "type": "conditional",
+  "category": "mental",
+  "priority": 665,
+  "oncePolicy": "repeatable",
+  "messageTemplateId": "MSG_PRO_PRESSURE_HOME",
+  "decisionTemplateId": "DEC_PRO_PRESSURE_HOME",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "week_gte",
+      "value": 30
+    },
+    {
+      "type": "team_rank_lte",
+      "value": 5
+    }
+  ],
+  "cooldownWeeks": 5
+}

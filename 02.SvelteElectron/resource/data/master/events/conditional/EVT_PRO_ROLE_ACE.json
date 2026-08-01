@@ -1,0 +1,28 @@
+{
+  "id": "EVT_PRO_ROLE_ACE",
+  "type": "conditional",
+  "category": "team",
+  "priority": 745,
+  "oncePolicy": "repeatable",
+  "messageTemplateId": "MSG_PRO_ROLE_ACE",
+  "decisionTemplateId": null,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 60
+    },
+    {
+      "type": "season_era_lte",
+      "value": 3
+    },
+    {
+      "type": "pitching_ovr_gte",
+      "value": 70
+    }
+  ],
+  "cooldownWeeks": 8
+}

@@ -1,0 +1,19 @@
+{
+  "id": "EVT_PRO_W06_OPENING_ROSTER",
+  "type": "mandatory",
+  "category": "career",
+  "priority": 900,
+  "oncePolicy": "once_per_season",
+  "messageTemplateId": "MSG_PRO_OPENING_ROSTER",
+  "decisionTemplateId": null,
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "week_eq",
+      "value": 6
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "id": "EVT_PRO_W45_FINISH_CAMP",
+  "type": "mandatory",
+  "category": "training",
+  "priority": 900,
+  "oncePolicy": "once_per_season",
+  "messageTemplateId": "MSG_PRO_FINISH_CAMP",
+  "decisionTemplateId": "DEC_PRO_FINISH_CAMP",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "week_eq",
+      "value": 45
+    }
+  ]
+}

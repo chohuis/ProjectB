@@ -1,0 +1,24 @@
+{
+  "id": "EVT_PRO_ANALYTICS_MEET",
+  "type": "conditional",
+  "category": "training",
+  "priority": 675,
+  "oncePolicy": "repeatable",
+  "messageTemplateId": "MSG_PRO_ANALYTICS_MEET",
+  "decisionTemplateId": "DEC_PRO_ANALYTICS_MEET",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 30
+    },
+    {
+      "type": "pitching_ovr_gte",
+      "value": 60
+    }
+  ],
+  "cooldownWeeks": 6
+}

@@ -1,0 +1,19 @@
+{
+  "id": "EVT_PRO_W49_OFFSEASON_QUIET",
+  "type": "mandatory",
+  "category": "team_life",
+  "priority": 900,
+  "oncePolicy": "once_per_season",
+  "messageTemplateId": "MSG_PRO_OFFSEASON_QUIET",
+  "decisionTemplateId": "DEC_PRO_OFFSEASON_QUIET",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "week_eq",
+      "value": 49
+    }
+  ]
+}

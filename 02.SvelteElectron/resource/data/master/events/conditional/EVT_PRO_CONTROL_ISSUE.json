@@ -1,0 +1,25 @@
+{
+  "id": "EVT_PRO_CONTROL_ISSUE",
+  "type": "conditional",
+  "category": "training",
+  "priority": 710,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 5,
+  "messageTemplateId": "MSG_PRO_CONTROL_ISSUE",
+  "decisionTemplateId": "DEC_PRO_CONTROL_ISSUE",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 20
+    },
+    {
+      "type": "pitching_stat_lte",
+      "stat": "control",
+      "value": 45
+    }
+  ]
+}

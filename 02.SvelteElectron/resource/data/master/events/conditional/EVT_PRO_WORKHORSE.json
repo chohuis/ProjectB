@@ -1,0 +1,24 @@
+{
+  "id": "EVT_PRO_WORKHORSE",
+  "type": "conditional",
+  "category": "health",
+  "priority": 700,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 8,
+  "messageTemplateId": "MSG_PRO_WORKHORSE",
+  "decisionTemplateId": "DEC_PRO_WORKHORSE",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 130
+    },
+    {
+      "type": "fatigue_gte",
+      "value": 60
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "id": "EVT_PRO_RIVAL_MATCHUP",
+  "type": "conditional",
+  "category": "media",
+  "priority": 705,
+  "oncePolicy": "repeatable",
+  "messageTemplateId": "MSG_PRO_RIVAL_MATCHUP",
+  "decisionTemplateId": "DEC_PRO_RIVAL_MATCHUP",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "pro_kbl"
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 30
+    },
+    {
+      "type": "fame_gte",
+      "value": 30
+    }
+  ],
+  "cooldownWeeks": 6
+}
