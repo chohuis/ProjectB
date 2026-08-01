@@ -1399,6 +1399,20 @@ function createGameStore() {
       }));
     },
 
+    /**
+     * 그해 드래프트 **후보 명단**을 남긴다 (Phase 9-E).
+     *
+     * 관전 보드가 후보를 지명 결과에서만 만들어 **미지명이 항상 0명**이었다.
+     * 실제 풀은 1,600명이 넘지만 전원을 싣는 건 무겁고 읽히지도 않으므로
+     * 상위 N명만 남긴다 (`draftRules.boardCandidateMultiplier` × 지명 수).
+     */
+    setCareerDraftCandidates(rows: import("../types/save").DraftBoardCandidate[]) {
+      update((s) => ({
+        ...s,
+        schoolState: { ...s.schoolState, careerDraftCandidates: rows },
+      }));
+    },
+
     clearCareerDraftPickLog() {
       update((s) => ({
         ...s,
@@ -2931,8 +2945,11 @@ function createGameStore() {
         `[드래프트] Y${year} 후보 ${candidates.length}명 ` +
         `(고졸 ${counts[0]} · 대졸 ${counts[1]} · 대학재학 ${counts[2]} · 독립 ${counts[3]})`
       );
+      // 지명 대상 풀 배수 — 보드에 싣는 수와 **같은 값**을 쓴다.
+      // 다르면 "화면엔 220명인데 실제로는 1,682명에서 뽑는" 상태가 된다
+      const poolMult = (draftRules as { boardCandidateMultiplier?: number }).boardCandidateMultiplier ?? 2;
       const simResult = await runDraftSimulation(
-        candidateNpcs, [], year, draftRules.rounds ?? DRAFT_ROUNDS, draftOrder,
+        candidateNpcs, [], year, draftRules.rounds ?? DRAFT_ROUNDS, draftOrder, poolMult,
       );
 
       // 픽별 상세 로그
@@ -2941,7 +2958,7 @@ function createGameStore() {
       for (const pick of simResult.picks) {
         const npc = npcInfoMap.get(pick.npcId);
         const ovr = npc ? (npc.pitching?.ovr ?? npc.batting?.ovr ?? 0) : 0;
-        const pos = npc?.playerType === "pitcher" ? "P" : (npc?.primaryPosition ?? "?");
+        const pos = npc?.playerType === "pitcher" ? "P" : (npc?.position ?? "?");
         const age = npc?.age ?? 0;
         const potential = npc?.developmentRate ?? 0;
         const teamShort = pick.teamId.replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "");
@@ -2956,6 +2973,41 @@ function createGameStore() {
         });
       }
       autoLog(`[드래프트] 지명 ${simResult.picks.length}건 (미지명 ${candidates.length - simResult.picks.length}명)`);
+
+      // ── 관전 보드용 후보 명단 ────────────────────────────────
+      //
+      // ⚠ 보드는 예전에 후보를 **지명 결과에서만** 만들어서 미지명이 항상
+      // 0명이었다. 지명 수의 배수만큼 상위 후보를 남겨 "뽑히지 못한 사람"이
+      // 화면에 보이게 한다. 정렬은 실제 지명 순서를 먼저 두고, 나머지는
+      // OVR 내림차순이다 — 지명자가 상위에 몰리는 게 자연스럽다.
+      {
+        const mult = (draftRules as { boardCandidateMultiplier?: number }).boardCandidateMultiplier ?? 2;
+        const want = Math.max(simResult.picks.length, Math.round(simResult.picks.length * mult));
+        const pickedIds = new Set(simResult.picks.map((p) => p.npcId));
+        // ⚠ **`??`가 아니라 `Math.max`다.** NPC는 투수·타자 블록을 둘 다 갖는다 —
+        // `??`로 읽으면 타자의 낮은 `pitching.ovr`이 먼저 잡혀 실제 실력보다
+        // 훨씬 낮게 나온다. 실측에서 지명 1순위가 OVR 53으로, 미지명 최하위(74)
+        // 보다 낮게 찍혔다. 보드(`DraftBoardModal`)는 처음부터 max를 쓴다
+        const ovrOf = (n: NpcSaveState) => Math.max(n.pitching?.ovr ?? 0, n.batting?.ovr ?? 0);
+        const rest = candidateNpcs
+          .filter((n) => !pickedIds.has(n.npcId))
+          .sort((a, b) => ovrOf(b) - ovrOf(a));
+        const ordered = [
+          ...simResult.picks.map((p) => npcInfoMap.get(p.npcId)).filter((n): n is NpcSaveState => !!n),
+          ...rest,
+        ].slice(0, want);
+        this.setCareerDraftCandidates(ordered.map((n) => ({
+          playerId: n.npcId,
+          playerName: n.name,
+          ovr: Math.round(ovrOf(n)),
+          age: n.age ?? 0,
+          potential: n.developmentRate ?? 0,
+          position: n.playerType === "pitcher" ? "P" : (n.position ?? "?"),
+          originTeamId: n.currentTeam ?? "",
+          route: DRAFT_ROUTE_LABELS[routeOf.get(n.npcId) ?? "highschoolGraduate"],
+        })));
+        autoLog(`[드래프트] 보드 후보 ${ordered.length}명 (지명 ${simResult.picks.length} · 미지명 ${ordered.length - simResult.picks.length})`);
+      }
 
       const updatedNpcs = await applyDraftToNpcs(
         combined, simResult, universityTeamIds, independentTeamIds,

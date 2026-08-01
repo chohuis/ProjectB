@@ -145,18 +145,41 @@
       // 엔진과 어긋난다 (예전엔 8팀 스네이크 방식을 별도로 계산했다)
       draftTeamIds = [...new Set(boardPicks.map((p) => p.teamId))];
 
-      // 후보 카드 — 지명된 선수는 실제 로스터에서, 나머지는 후보 풀에서
+      // ── 후보 카드 ──────────────────────────────────────────
+      //
+      // ⚠ 예전엔 후보를 **지명 결과(boardPicks)에서만** 만들었다. 그래서
+      // 화면에 뜨는 후보 수가 정확히 지명 수와 같았고 **미지명이 항상 0명**이라
+      // 긴장감이 없었다 — 실제 후보 풀은 1,600명이 넘는데 안 보였다.
+      // 지금은 `processNpcDraft`가 남긴 후보 명단(지명 수의 배수)을 읽는다.
       const npcById = new Map($gameStore.npcs.map((n) => [n.npcId, n]));
       const rows: Candidate[] = [];
       const seen = new Set<string>();
-      for (const p of boardPicks) {
-        if (seen.has(p.candidateId)) continue;
-        seen.add(p.candidateId);
-        const npc = npcById.get(p.candidateId);
-        rows.push(npc
-          ? buildFromNpc(npc)
-          : { id: p.candidateId, name: p.candidateId, ovr: 0, age: 0, potential: 0,
-              isUser: false, position: "?", origin: "-", originType: "HS", drafted: false });
+
+      const saved = $gameStore.schoolState.careerDraftCandidates ?? [];
+      for (const c of saved) {
+        if (seen.has(c.playerId)) continue;
+        seen.add(c.playerId);
+        const npc = npcById.get(c.playerId);
+        rows.push(npc ? buildFromNpc(npc) : {
+          id: c.playerId, name: c.playerName, ovr: c.ovr, age: c.age,
+          potential: c.potential, isUser: false, position: c.position,
+          origin: c.originTeamId ? getTeamName(c.originTeamId) : "-",
+          originType: c.route.includes("대학") ? "UNIV" : c.route.includes("독립") ? "IND" : "HS",
+          drafted: false,
+        });
+      }
+
+      // 명단이 없는 구 세이브 폴백 — 지명 결과로라도 채운다
+      if (rows.length === 0) {
+        for (const p of boardPicks) {
+          if (seen.has(p.candidateId)) continue;
+          seen.add(p.candidateId);
+          const npc = npcById.get(p.candidateId);
+          rows.push(npc
+            ? buildFromNpc(npc)
+            : { id: p.candidateId, name: p.candidateId, ovr: 0, age: 0, potential: 0,
+                isUser: false, position: "?", origin: "-", originType: "HS", drafted: false });
+        }
       }
 
       // ── 주인공 ──

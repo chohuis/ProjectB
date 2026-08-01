@@ -460,6 +460,29 @@ export interface CareerDraftPickLogEntry {
   isUser: boolean;
 }
 
+/**
+ * 드래프트 **후보 명단** (Phase 9-E).
+ *
+ * ⚠ 예전엔 관전 보드가 후보를 **지명 결과에서만** 만들었다. 그래서 화면에
+ * 뜨는 후보가 정확히 지명 수(110명)와 같았고 **미지명이 항상 0명**이라
+ * 긴장감이 없었다 — 실제 후보 풀은 1,600명이 넘는데 화면에 안 나왔다.
+ *
+ * 전원을 싣는 건 무겁고 읽히지도 않으므로 **상위 N명만** 남긴다
+ * (`draftRules.boardCandidateMultiplier` × 지명 수).
+ */
+export interface DraftBoardCandidate {
+  playerId: string;
+  playerName: string;
+  ovr: number;
+  age: number;
+  potential: number;
+  position: string;
+  /** 출신 팀 id — 화면이 이름으로 바꾼다 */
+  originTeamId: string;
+  /** 고졸 / 대졸 / 대학재학 / 독립 */
+  route: string;
+}
+
 export interface CareerApplications {
   draftApplied: boolean;
   universityChoices: string[];
@@ -497,6 +520,8 @@ export interface SchoolState {
   careerChoiceMode: CareerChoiceMode;
   careerChoiceConfirmed: boolean;
   careerDraftPickLog: CareerDraftPickLogEntry[];
+  /** 그해 드래프트 후보 명단 (지명 수의 배수). 관전 보드가 읽는다 */
+  careerDraftCandidates?: DraftBoardCandidate[];
   careerFinalChoice: CareerFinalChoice;
   universityWeek: number;
   majorSelected: boolean;

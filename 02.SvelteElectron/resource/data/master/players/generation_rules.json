@@ -321,7 +321,9 @@
       "teamIndexMin": 0.85,
       "teamIndexMax": 1.15,
       "_teamIndexNote": "팀 예산 지수(팀 예산/리그 평균)를 계약금에 곱한다. 연봉은 규정상 균일이라 안 곱한다"
-    }
+    },
+    "boardCandidateMultiplier": 2,
+    "_boardCandidateNote": "관전 보드에 싣는 후보 수 = 지명 수 x 이 배수. 2면 110지명에 220후보라 절반이 미지명으로 남는다 — 예전엔 보드가 지명 결과에서만 후보를 만들어 미지명이 항상 0명이었다"
   },
   "_rosterLimitsNote": "rosterSize는 생성 인원, rosterMin/rosterMax는 매 시즌 유지 상한이다. 예전엔 상한이 Rust roster_rule()과 TS ROSTER_RULES에 각각 하드코딩돼 있었고 둘 다 이 파일과 달랐다 (KBL 상한 65 vs 생성 30).",
   "promotionRules": {

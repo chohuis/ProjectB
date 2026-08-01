@@ -150,6 +150,8 @@ export async function runDraftSimulation(
   year: number,
   rounds: number = DRAFT_ROUNDS,
   teamIds: readonly string[] = KBL_TEAM_IDS,
+  /** 지명 대상 풀 = 지명 수 × 이 배수 (규칙 파일 `boardCandidateMultiplier`) */
+  poolMultiplier = 2,
 ): Promise<DraftSimResult> {
   const params = {
     candidates,
@@ -157,6 +159,7 @@ export async function runDraftSimulation(
     year,
     rounds,
     teamIds: [...teamIds],
+    poolMultiplier,
   };
   const json = await api().npcRunDraft(JSON.stringify(params));
   return parseResult<DraftSimResult>(json);

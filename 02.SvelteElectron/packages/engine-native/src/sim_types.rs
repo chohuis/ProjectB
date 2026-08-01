@@ -254,7 +254,14 @@ pub struct DraftSimParams {
     pub year: i32,
     pub rounds: i32,
     pub team_ids: Vec<String>,
+    /// 지명 대상 풀 = 지명 수 × 이 배수. 정본은
+    /// `generation_rules.json`의 `draftRules.boardCandidateMultiplier`다.
+    /// 없으면 2 (110지명이면 220명이 경쟁한다)
+    #[serde(default = "default_pool_multiplier")]
+    pub pool_multiplier: usize,
 }
+
+fn default_pool_multiplier() -> usize { 2 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]

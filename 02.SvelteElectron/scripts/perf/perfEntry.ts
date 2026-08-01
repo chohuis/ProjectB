@@ -516,6 +516,52 @@ export function academicsState(): Record<string, unknown> {
   };
 }
 
+/** 드래프트 보드 후보 명단 — 미지명이 실제로 남는지 본다 (Phase 9-E) */
+export function draftBoardState(): Record<string, unknown> {
+  const sc = get(gameStore).schoolState;
+  const cands = sc.careerDraftCandidates ?? [];
+  const picked = new Set((sc.careerDraftPickLog ?? []).map((p) => p.playerId));
+  const byRoute: Record<string, number> = {};
+  for (const c of cands) byRoute[c.route] = (byRoute[c.route] ?? 0) + 1;
+  return {
+    후보: cands.length,
+    지명: picked.size,
+    미지명: cands.filter((c) => !picked.has(c.playerId)).length,
+    경로별: byRoute,
+    상위OVR: cands.slice(0, 3).map((c) => `${c.playerName}:${c.ovr}`),
+    하위OVR: cands.slice(-3).map((c) => `${c.playerName}:${c.ovr}`),
+  };
+}
+
+/**
+ * 드래프트 지명자·미지명자의 **원시 능력치**를 그대로 찍는다.
+ *
+ * "지명 1순위가 미지명 최하위보다 OVR이 낮다"가 실측으로 나왔다. 원인이
+ * ①투수·타자 블록 오독 ②엔진이 잠재력을 우선 ③정렬 오류 중 무엇인지
+ * 추측으로 못 가른다 — 두 블록을 다 찍어서 본다.
+ */
+export function draftOvrProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const sc = g.schoolState;
+  const picked = new Set((sc.careerDraftPickLog ?? []).map((p) => p.playerId));
+  const byId = new Map(g.npcs.map((n) => [n.npcId, n]));
+  const row = (id: string) => {
+    const n = byId.get(id);
+    if (!n) return { id, 없음: true };
+    return {
+      이름: n.name, 유형: n.playerType, 나이: n.age,
+      투수ovr: n.pitching?.ovr ?? null, 타자ovr: n.batting?.ovr ?? null,
+      성장률: n.developmentRate, 리그: n.currentLeague,
+    };
+  };
+  const cands = sc.careerDraftCandidates ?? [];
+  return {
+    지명_상위5: cands.filter((c) => picked.has(c.playerId)).slice(0, 5).map((c) => row(c.playerId)),
+    미지명_상위3: cands.filter((c) => !picked.has(c.playerId)).slice(0, 3).map((c) => row(c.playerId)),
+    미지명_하위3: cands.filter((c) => !picked.has(c.playerId)).slice(-3).map((c) => row(c.playerId)),
+  };
+}
+
 /** 주인공 현황 한 줄 — 경로 회귀가 "지금 어디에 있나"를 판정하는 데 쓴다 */
 export function protagonistState(): Record<string, unknown> {
   const p = get(gameStore).protagonist;

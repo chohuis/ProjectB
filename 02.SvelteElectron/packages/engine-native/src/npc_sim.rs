@@ -1446,10 +1446,40 @@ fn potential_bonus(tier: &str) -> f64 {
     match tier { "S" => 30.0, "A" => 20.0, "B" => 10.0, _ => 0.0 }
 }
 
+/// 드래프트 평가 점수 — **나이 · 능력치 · 재능**을 함께 본다.
+///
+/// ⚠ 예전엔 `ovr*0.6 + 성장률*0.3 + 잠재*0.1`이라 **최고 선수가 평균의 1.4배**
+/// 밖에 안 됐다. 그 점수로 1,682명에서 확률 추첨을 돌리니 최고 유망주가 지명될
+/// 확률이 약 9%였다 — 실측에서 **OVR 83 대학 투수가 미지명**이고 OVR 51 고졸이
+/// 2순위로 뽑혔다.
+///
+/// 두 가지를 바꿨다:
+///  · 능력치 격차를 **제곱으로 벌린다** — 상위권이 실제로 유리해진다
+///  · **나이**를 넣는다. 같은 실력이면 어린 쪽이 유망하다 (19세 기준, 매년 감점)
+///
+/// 대회 입상·개인 수상은 **데이터가 없어서 못 넣는다** — `careerHistory.highlights`가
+/// 타입만 있고 채우는 코드가 없다(전부 빈 배열). 그 데이터를 만든 뒤에 더한다.
 fn calc_draft_score(npc: &NpcSaveState, meta: Option<&NamedNpcMeta>) -> f64 {
-    let ovr     = npc_core_ovr(npc);
-    let pot     = meta.map(|m| potential_bonus(&m.pro_potential_tier)).unwrap_or(0.0);
-    ovr * 0.6 + npc.development_rate as f64 * 0.3 + pot * 0.1
+    let ovr = npc_core_ovr(npc);
+    let pot = meta.map(|m| potential_bonus(&m.pro_potential_tier)).unwrap_or(0.0);
+
+    // 능력치는 50을 기준으로 초과분을 제곱해 키운다.
+    // OVR 83 → (33/25)^2 * 20 ≈ 34.8 / OVR 60 → (10/25)^2 * 20 = 3.2
+    let edge = ((ovr - 50.0).max(0.0) / 25.0).powi(2) * 20.0;
+
+    // ── 나이 (업사이드 프리미엄) ─────────────────────────────────
+    //
+    // ⚠ 처음엔 19세 +10 / 매년 -1.8이었는데 **능력치 보정(최대 +43)에 눌려
+    // 아무 영향도 못 줬다.** 대학 얼리 신청 자격이 OVR 68~74 하한이라 신청자는
+    // 전원 고OVR이고, 19세 고졸(OVR 40~55)은 경쟁이 안 됐다 —
+    // 실측에서 **보드 220명 중 고졸이 5명**까지 줄었다(주인공의 기본 경로다).
+    //
+    // 어린 선수는 완성 전이라 현재 능력치가 낮은 게 정상이고, 구단은 그걸
+    // 감안해 뽑는다. 그 프리미엄을 능력치 보정과 같은 크기로 준다.
+    let youth = (26.0 - ((npc.age - 19).max(0) as f64) * 5.5).max(-8.0);
+
+    // 재능도 같이 올린다 — 어린 선수의 가치는 대부분 여기서 온다
+    ovr * 0.40 + edge + npc.development_rate as f64 * 0.40 + pot * 0.1 + youth
 }
 
 fn weighted_pick(weights: &[f64], rng: &mut LcgRand) -> usize {
@@ -1472,21 +1502,54 @@ pub fn run_draft(params: DraftSimParams) -> DraftSimResult {
     );
 
     let mut picks: Vec<DraftPick> = Vec::new();
-    let mut remaining_ids: Vec<String> = pool.iter().map(|n| n.npc_id.clone()).collect();
     let candidate_map: HashMap<String, &NpcSaveState> = params.candidates.iter()
         .map(|n| (n.npc_id.clone(), n)).collect();
+
+    // ── 지명 대상 풀을 상위 N명으로 좁힌다 ──────────────────────
+    //
+    // ⚠ 예전엔 후보 **전원**(실측 1,682명)에서 확률 추첨을 돌렸다. 지명은
+    // 110명뿐인데 풀이 그렇게 크면 점수 가중이 거의 의미가 없어져,
+    // **최고 유망주가 지명될 확률이 약 9%**였다.
+    //
+    // 화면(관전 보드)이 상위 N명만 보여주는 것과도 어긋났다 — 보드에는
+    // "220명 중 110명 지명"으로 보이는데 실제로는 1,682명에서 뽑고 있었다.
+    // 나머지는 지금처럼 대학·독립으로 흩어진다(`Placer`).
+    let slots = (params.rounds as usize) * params.team_ids.len();
+    let pool_size = (slots * params.pool_multiplier.max(1)).min(pool.len());
+    let mut scored: Vec<(String, f64)> = pool.iter()
+        .map(|n| (n.npc_id.clone(), calc_draft_score(n, meta_map.get(&n.npc_id).copied())))
+        .collect();
+    scored.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
+    let mut remaining_ids: Vec<String> =
+        scored.into_iter().take(pool_size).map(|(id, _)| id).collect();
+    let excluded: Vec<String> = pool.iter()
+        .map(|n| n.npc_id.clone())
+        .filter(|id| !remaining_ids.contains(id))
+        .collect();
 
     for r in 1..=params.rounds {
         let mut t = 0;
         while t < params.team_ids.len() as i32 && !remaining_ids.is_empty() {
             let pick_num = (r - 1) * params.team_ids.len() as i32 + t + 1;
-            let scores: Vec<f64> = remaining_ids.iter().map(|id| {
+            // ⚠ **비례 추첨이 아니라 최고점을 뽑는다.**
+            //
+            // 예전엔 `weighted_pick`(점수 비례 확률)이었다. 점수 격차가 1.5배쯤이라
+            // 최상위도 30%쯤 미지명으로 샜다 — 실측에서 **OVR 82가 미지명이고
+            // OVR 72가 지명**됐다. "나이·능력치·재능으로 뽑는다"와 어긋난다.
+            //
+            // 구단이 매 순번에서 **가장 좋다고 본 선수**를 고르고, 그 평가에
+            // 노이즈가 섞이는 게 실제 드래프트에 가깝다. 노이즈는 라운드가
+            // 깊을수록 커지되 상한이 있다(예전엔 11R에서 ±44라 순수 난수였다).
+            let spread = (r as f64 * 4.0).min(15.0);
+            let scored_now: Vec<f64> = remaining_ids.iter().map(|id| {
                 let npc = candidate_map[id];
                 let base = calc_draft_score(npc, meta_map.get(id).copied());
-                let noise = (rng.next() - 0.5) * (r as f64 * 8.0);
-                (base + noise).max(0.1)
+                base + (rng.next() - 0.5) * spread
             }).collect();
-            let idx = weighted_pick(&scores, &mut rng);
+            let idx = scored_now.iter().enumerate()
+                .max_by(|a, b| a.1.partial_cmp(b.1).unwrap_or(std::cmp::Ordering::Equal))
+                .map(|(i, _)| i)
+                .unwrap_or(0);
             let npc_id = remaining_ids[idx].clone();
             picks.push(DraftPick {
                 round: r,
@@ -1499,7 +1562,10 @@ pub fn run_draft(params: DraftSimParams) -> DraftSimResult {
         }
     }
 
-    DraftSimResult { year, picks, undrafted_ids: remaining_ids }
+    // 미지명 = 풀에 들었지만 안 뽑힌 사람 + 풀에도 못 든 사람
+    let mut undrafted_ids = remaining_ids;
+    undrafted_ids.extend(excluded);
+    DraftSimResult { year, picks, undrafted_ids }
 }
 
 // 팀별 빈 슬롯 탐색: 포지션 수요 우선(strict=true), 없으면 슬롯만 확인.
