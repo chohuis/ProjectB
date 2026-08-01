@@ -829,6 +829,27 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       if (!hasPending && !hasPendingNext && contract) {
         const myStats = (sOff.stats[gOff.protagonist.id] ?? null) as import("../types/save").PitcherSeasonStats | null;
 
+        // ── 노쇠·방출 압박 판정 ──────────────────────────────────
+        //
+        // ⚠ **계약이 끝나는 해마다 여기를 지난다.** 예전엔 이 판정이
+        // `remainingYears <= 0` 가지에만 있었는데, 바로 위 `=== 1` 가지가
+        // 나이·성적과 무관하게 **매번 재계약 오퍼를 만들어서** 거기 도달할
+        // 일이 없었다. 실측: 25시즌(2026→2051, 42세)을 완주하고도 은퇴 0건.
+        //
+        // 판정은 NPC와 같은 엔진이다 — 주인공 전용 기준을 만들면 "NPC는 38세에
+        // 은퇴하는데 나는 45세까지 뛴다"가 되고, 그걸 맞추려고 표를 두 번 관리하게 된다.
+        // 결과를 강제하지는 않는다: 제안하고 선택은 플레이어가 한다.
+        if (contract.remainingYears <= 1) {
+          const trend = ovrTrendOf(gOff.protagonist);
+          const mv = await calcMarketValueForProtagonist(gOff.protagonist);
+          const pressure = await evalRetirementPressure(trend, mv);
+          if (pressure.suggest) {
+            seasonStore.pushPendingAction({ type: "retirementAsk", urgency: pressure.urgency });
+            logs.push("은퇴 권고 — 계약이 끝났고 구단이 다시 부르지 않는다");
+            return logs;
+          }
+        }
+
         if (contract.remainingYears === 1) {
           // 이번 시즌 마지막 계약 연도 — 만료 예정
           const offeredSalary = await calcOfferedSalaryForProtagonist(gOff.protagonist, myStats, offSeasonBudgetMod());
@@ -859,21 +880,8 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
             });
           }
         } else if (contract.remainingYears <= 0) {
-          // ⚠ 계약이 끝났다 — **설계의 "노쇠·방출 압박" 트리거 자리**다.
-          // 예전엔 나이·성적과 무관하게 항상 재계약 오퍼를 만들어서
-          // 자연 은퇴가 일어날 수 없었다 (주인공은 영원히 뛴다).
-          // NPC와 같은 엔진으로 판정하고, 강제하지 않고 물어본다.
-          const trend = ovrTrendOf(gOff.protagonist);
-          const mv = await calcMarketValueForProtagonist(gOff.protagonist);
-          const pressure = await evalRetirementPressure(trend, mv);
-          if (pressure.suggest) {
-            // pending만 밀어넣는다 — 이 함수는 로그만 돌려주고, 주 진행을
-            // 멈추는 건 호출부가 `pendingActions`를 보고 한다
-            seasonStore.pushPendingAction({ type: "retirementAsk", urgency: pressure.urgency });
-            logs.push("은퇴 권고 — 계약이 끝났고 구단이 다시 부르지 않는다");
-            return logs;
-          }
-          // 계약 없음 처리
+          // 계약이 이미 끝나 있다 (이례적 — 위 압박 판정을 이미 지났다).
+          // 갈 곳을 찾아준다
           if (isFaEligible(gOff.protagonist, gOff.schoolState.attendsUniversity)) {
             seasonStore.pushPendingAction({ type: "faMarket" });
           } else {

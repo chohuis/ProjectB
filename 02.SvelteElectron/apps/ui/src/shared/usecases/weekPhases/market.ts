@@ -51,7 +51,7 @@ function buildRosterRef(
   perf?: object,
 ): object {
   const p = (entity.details as EntityDetails)?.player;
-  return {
+  const ref = {
     id:               entity.id,
     position:         p?.position ?? "",
     age:              entity.age,
@@ -65,6 +65,21 @@ function buildRosterRef(
     // 성적이 없으면 undefined — Rust가 그때는 능력치만 본다
     ...(perf ? { perf } : {}),
   };
+
+  // ⚠ 엔진의 `RosterPlayerRef`는 이 넷이 `i32`/`i64`/`f64`다. 하나라도 null이면
+  // **serde가 페이로드 전체를 거부**하고 그 팀 승강이 통째로 죽는다 —
+  // 그 예외가 주간 루프를 중단시켜 뒤따르는 성장·메시지·순위·오프시즌까지
+  // 안 돈다(실측: 한 시즌 40주 연속). 누가 깨졌는지 여기서 이름을 남긴다.
+  for (const k of ["age", "ovr", "salary", "remainingYears", "proServiceYears"] as const) {
+    const v = (ref as Record<string, unknown>)[k];
+    if (typeof v !== "number" || !Number.isFinite(v)) {
+      throw new Error(
+        `[로스터ref] ${entity.id}(${entity.name}) ${k}=${JSON.stringify(v)} ` +
+        `— team=${entity.teamId} league=${entity.leagueId} status=${entity.status} named=${!!savedNpc}`,
+      );
+    }
+  }
+  return ref;
 }
 
 function getTeamProfile(teamId: string, g: import("../../stores/game").GameStoreState, m: import("../../stores/master").MasterState): ProTeamProfile | null {
@@ -690,7 +705,15 @@ export async function processProTeamCallupCalldown(
           teamProfile: profile, farmPlayers: farm, activePlayers: active,
           injuredPlayerIds: injuredIds, currentMonth, promotionRules, callupMod,
         }))
-      ) as { candidates: Array<{ playerId: string; replacesPlayerId: string; reason: string }> };
+      ) as { candidates?: Array<{ playerId: string; replacesPlayerId: string; reason: string }>; error?: string };
+
+      // ⚠ 엔진이 역직렬화에 실패하면 `{error}`만 온다. 예전엔 그대로
+      // `candidates.slice(...)`를 불러 **TypeError로 그 주 전체가 죽었다** —
+      // 승강 뒤에 오는 성장·메시지·순위가 통째로 안 돌고, 원인은 어디에도
+      // 안 남는다. 실측: 프로 3년차 W14부터 시즌 끝까지 40주 연속.
+      if (callupRes.error || !callupRes.candidates) {
+        throw new Error(`[승강] 콜업 판정 실패 ${teamId1}: ${callupRes.error ?? "candidates 없음"}`);
+      }
 
       // 상시 경로는 **빈 자리 메우기만** — 부상·장기 부진으로 생긴 자리에
       // 팀당 한 명. 나머지 사유(전력 보강·유망주 노출)는 정기의 몫이다
@@ -721,7 +744,11 @@ export async function processProTeamCallupCalldown(
           teamProfile: profile, activePlayers: active,
           currentRosterSize: active.length, maxRosterSize, promotionRules, callupMod,
         }))
-      ) as { candidates: Array<{ playerId: string }> };
+      ) as { candidates?: Array<{ playerId: string }>; error?: string };
+
+      if (calldownRes.error || !calldownRes.candidates) {
+        throw new Error(`[승강] 콜다운 판정 실패 ${teamId1}: ${calldownRes.error ?? "candidates 없음"}`);
+      }
 
       for (const c of calldownRes.candidates.slice(0, 2)) {
         // 주인공도 강등된다 (사용자 확정 2026-07-30). 예전엔 여기서 건너뛰어

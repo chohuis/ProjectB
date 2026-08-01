@@ -26,7 +26,9 @@ import {
   signNegotiatedContract, applyOptionClause, signFaOffer, waitFaMarket,
 } from "../../apps/ui/src/shared/usecases/contractDecision";
 import { generateFaOffers } from "../../apps/ui/src/shared/utils/faEngine";
-import { retireProtagonist, isRetired } from "../../apps/ui/src/shared/usecases/retirement";
+import {
+  retireProtagonist, isRetired, evalRetirementPressure, calcMarketValueForProtagonist,
+} from "../../apps/ui/src/shared/usecases/retirement";
 import { runCampusEventsWeek } from "../../apps/ui/src/shared/usecases/campusEvents";
 import {
   submitCareerApplications, confirmCareerResults, chooseDraft,
@@ -546,6 +548,26 @@ export async function probeImmediateSave(): Promise<void> {
  */
 export function setLogFile(filename: string | null): void {
   setAutoLogFile(filename);
+}
+
+/**
+ * 은퇴 판정을 **지금 상태 + 지정한 나이/추세**로 한 번 돌려본다.
+ *
+ * 25시즌을 돌려야만 이 경로를 밟을 수 있으면 페이로드 불일치 하나 고치는 데
+ * 30분이 든다 — 실제로 그렇게 두 번 갔다(`RosterPlayerRef` 필드 7개 누락,
+ * `calcMarketSalary` `leagueId` 누락). 둘 다 옛 `catch`가 삼키던 것이다.
+ */
+export async function probeRetirementEval(
+  opts: { age: number; ovrTrend: number; salary: number },
+): Promise<Record<string, unknown>> {
+  const p0 = get(gameStore).protagonist;
+  const aged = {
+    ...p0, age: opts.age,
+    contract: { ...(p0.contract ?? ({} as never)), salary: opts.salary, remainingYears: 1 },
+  };
+  const mv = await calcMarketValueForProtagonist(aged);
+  const pressure = await evalRetirementPressure(opts.ovrTrend, mv, aged);
+  return { marketValue: mv, suggest: pressure.suggest, urgency: pressure.urgency };
 }
 
 /** 주 1회 진행만 (pending 처리 없음) — 순수 `advanceWeek` 비용 측정용 */

@@ -24,6 +24,7 @@ import { gameStore } from "../stores/game";
 import { seasonStore } from "../stores/season";
 import { masterStore } from "../stores/master";
 import { getTeamProfile, DEFAULT_TEAM_PROFILE } from "./weekPhases/market";
+import { calcMarketSalary } from "../utils/salaryEngine";
 import type { ProtagonistSave, RetirementReason } from "../types/save";
 
 /** 은퇴했는가 — 화면·주간 진행이 이걸 보고 멈춘다 */
@@ -57,9 +58,11 @@ export interface RetirementSuggestion {
 export async function evalRetirementPressure(
   ovrTrend: number,
   marketValue: number,
+  /** 판정 대상. 생략하면 현재 주인공 — 명시하면 "만약 42세라면"을 물어볼 수 있다 */
+  target?: ProtagonistSave,
 ): Promise<RetirementSuggestion> {
   const g = get(gameStore);
-  const p = g.protagonist;
+  const p = target ?? g.protagonist;
   const m = get(masterStore);
   const profile = getTeamProfile(p.teamId, g, m) ?? DEFAULT_TEAM_PROFILE;
   const ovr = p.pitching?.ovr ?? p.batting?.ovr ?? 50;
@@ -72,21 +75,36 @@ export async function evalRetirementPressure(
       return Math.max(mx, ep?.pitching?.ovr ?? ep?.batting?.ovr ?? 0);
     }, 0);
 
-  try {
-    const raw = await window.projectB!.evalRetirementSuggestionNative(JSON.stringify({
-      player: { age: p.age, ovr, fame: p.fame },
-      teamProfile: profile,
-      ovrTrend,
-      currentSalary: p.contract?.salary ?? 0,
-      marketValue,
-      prospectOvrAtPosition: prospectOvr,
-    }));
-    const r = JSON.parse(raw) as RetirementSuggestion & { error?: string };
-    if (r.error) return { suggest: false, urgency: 0 };
-    return { suggest: !!r.suggest, urgency: r.urgency ?? 0 };
-  } catch {
-    return { suggest: false, urgency: 0 };
-  }
+  // ⚠ `player`는 엔진의 `RosterPlayerRef` **전체**여야 한다. 예전엔
+  // `{ age, ovr, fame }` 셋만 보냈는데, 나머지 일곱 필드가 없으면 serde가
+  // 역직렬화에 실패해 `{error}`만 돌아온다. 그걸 아래에서 조용히
+  // `suggest: false`로 바꿔 돌려줬으므로 **은퇴 권고가 영영 안 나온다.**
+  // NPC 쪽(`weekPhases/market`)은 같은 엔진에 `buildRosterRef`로 전체를 보낸다.
+  const player = {
+    id: p.id,
+    position: p.primaryPosition ?? p.position ?? "SP",
+    age: p.age,
+    ovr,
+    salary: p.contract?.salary ?? 0,
+    remainingYears: p.contract?.remainingYears ?? 0,
+    proServiceYears: p.proServiceYears ?? 0,
+    isProspect: false,
+    personality: null,
+    fame: p.fame,
+  };
+
+  const raw = await window.projectB!.evalRetirementSuggestionNative(JSON.stringify({
+    player,
+    teamProfile: profile,
+    ovrTrend,
+    currentSalary: p.contract?.salary ?? 0,
+    marketValue,
+    prospectOvrAtPosition: prospectOvr,
+  }));
+  const r = JSON.parse(raw) as RetirementSuggestion & { error?: string };
+  // 조용히 삼키지 않는다 — 여기가 막히면 커리어가 끝나지 않는다
+  if (r.error) throw new Error(`[은퇴판정] 엔진 오류: ${r.error}`);
+  return { suggest: !!r.suggest, urgency: r.urgency ?? 0 };
 }
 
 /**
@@ -105,18 +123,13 @@ export function ovrTrendOf(p: ProtagonistSave): number {
 
 /** 시장가 — 연봉 협상과 **같은 엔진**을 쓴다 (기준이 둘이면 어긋난다) */
 export async function calcMarketValueForProtagonist(p: ProtagonistSave): Promise<number> {
-  try {
-    const raw = await window.projectB!.salaryCalcMarketSalary(JSON.stringify({
-      ovr: p.pitching?.ovr ?? p.batting?.ovr ?? 50,
-      age: p.age,
-      proServiceYears: p.proServiceYears ?? 0,
-      fame: p.fame,
-    }));
-    const v = JSON.parse(raw) as number | { error?: string };
-    return typeof v === "number" ? v : 0;
-  } catch {
-    return 0;
-  }
+  // ⚠ 페이로드를 여기서 두 번째로 적지 않는다. 그렇게 적었더니 `leagueId`가
+  // 빠지고 대신 엔진이 안 보는 `age`·`proServiceYears`를 넣어, serde가
+  // 역직렬화에 실패했다 — 그런데 옛 `catch { return 0 }`이 그걸 0으로 바꿔
+  // 삼켰다. 은퇴 판정은 `salary / marketValue`로 과지급을 보므로 0이면
+  // 그 비율이 항상 최대가 되어 **없는 압박을 만든다.**
+  const ovr = p.pitching?.ovr ?? p.batting?.ovr ?? 50;
+  return calcMarketSalary(ovr, p.fame, p.leagueId);
 }
 
 /**
