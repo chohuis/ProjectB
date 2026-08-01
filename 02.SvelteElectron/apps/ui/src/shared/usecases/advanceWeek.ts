@@ -14,7 +14,7 @@ import { generateTop10, buildTop10Message, rankEffect } from "../utils/top10Engi
 import { isMonthStart, planMonthlyFriendlies, buildMonthlyNoticeMessage } from "../utils/friendlyMatchEngine";
 import { runNationalTeamWeek } from "./nationalTeam";
 import { runCampusEventsWeek } from "./campusEvents";
-import { enlistProtagonist } from "./militaryDecision";
+import { enlistProtagonist, dischargeProtagonist } from "./militaryDecision";
 import {
   isRetired, evalRetirementPressure, ovrTrendOf, calcMarketValueForProtagonist,
 } from "./retirement";
@@ -1281,30 +1281,19 @@ async function handleSeasonEnd(): Promise<WeekAdvanceResult> {
   const s = get(seasonStore);
   const g = get(gameStore);
 
-  // 군 복무 종료
+  // 군 복무 종료.
+  //
+  // ⚠ 실제로 여기 오는 일은 거의 없다 — `runAutoAdvance`가 한 주 먼저
+  // 시즌 종료(`currentWeek >= totalWeeks`)에서 멈추고 롤오버로 넘어간다.
+  // 그래서 전역 정본은 `militaryDecision.dischargeProtagonist`이고
+  // **롤오버가 그걸 부른다.** 여기서는 같은 함수를 부르기만 한다 —
+  // 예전엔 이 자리에 전역 로직 전체가 복제돼 있었고, 도달하지 못해
+  // **입대하면 영원히 군대에 있었다**(실측 700주).
   if (g.protagonist.careerStage === "military") {
-    gameStore.completeMilitaryService();
-    gameStore.addCareerEvent({ year: s.seasonYear, eventType: "military_discharge",
-      toTeamId: g.protagonist.contract?.teamId ?? undefined, detail: "전역" });
-    const contract = g.protagonist.contract;
-    if (contract) {
-      const action: PendingAction = {
-        type: "salaryNegotiation",
-        teamId: contract.teamId, leagueId: contract.leagueId,
-        offeredSalary: contract.salary,
-        durationYears: Math.max(1, contract.remainingYears),
-        minDurationYears: 1,
-        maxDurationYears: 2,
-        signingBonus: 0,
-        context: "military_return",
-      };
-      seasonStore.pushPendingAction(action);
-      return { processedWeek: s.currentWeek, logs: ["전역: 복귀 계약 협상을 진행하세요."], newMessages: [], matchResults: [], stoppedBy: action };
+    if (await dischargeProtagonist()) {
+      const stopped = get(seasonStore).pendingActions[0] ?? null;
+      return { processedWeek: s.currentWeek, logs: ["전역 처리 완료"], newMessages: [], matchResults: [], stoppedBy: stopped };
     }
-    // 잔여 계약 없이 전역 → FA 시장으로
-    const faAction: PendingAction = { type: "faMarket" };
-    seasonStore.pushPendingAction(faAction);
-    return { processedWeek: s.currentWeek, logs: ["전역 완료 — FA 시장 오픈"], newMessages: [], matchResults: [], stoppedBy: faAction };
   }
 
   // 프로 계약 로직은 processWeekBoundary W43에서 처리

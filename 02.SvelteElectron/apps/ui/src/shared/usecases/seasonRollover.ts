@@ -17,6 +17,7 @@ import { masterStore } from "../stores/master";
 import { runSeasonEndBgProcessing } from "./runAutoAdvance";
 import { draftDestinationTeams } from "../utils/draftSystem";
 import { proSchedule } from "./proSeason";
+import { dischargeProtagonist, openMilitarySeason } from "./militaryDecision";
 import type { PitcherSeasonStats, BatterSeasonStats } from "../types/save";
 
 /** 시즌 기록을 history_* 테이블에 남긴다 (순위·개인기록·포스트시즌) */
@@ -123,6 +124,26 @@ export async function runSeasonRollover(input: SeasonRolloverInput): Promise<voi
   // 고교 NPC 학년 승급 + 졸업 처리는 매 시즌 종료마다 실행 (careerStage 무관)
   // processSeasonEnd 내부에서 protagonist.careerStage === "highschool"일 때만 주인공 학년도 올림
   await gameStore.processSeasonEnd(now);
+
+  // ── 복무 중 ──────────────────────────────────────────────────
+  //
+  // ⚠ 전역이 **여기 없어서 입대하면 영원히 군대에 있었다.** 전역 코드는
+  // `advanceWeek.handleSeasonEnd`에 있었지만 `runAutoAdvance`가 그보다 먼저
+  // 시즌 종료(`currentWeek >= totalWeeks`)에서 멈춰 도달할 수가 없었다 —
+  // 두 조건이 같은 순간을 가리키는데 자동 진행이 먼저 잡는다(죽은 코드).
+  // 실측: 2029 입대 → 2036년 복무 700주(13.5년), 26세.
+  //
+  // 복무는 52주 시즌 두 번으로 흐른다. 매 시즌 세계 오프시즌을 돌리고
+  // 나이를 올린 뒤, 복무가 끝났으면 전역하고 아니면 다음 해를 연다.
+  // (오프시즌을 건너뛰면 복무 기간만큼 세계가 정체된다 — `militaryDecision` 주석 참고)
+  if (P().careerStage === "military") {
+    await gameStore.processAllLeaguesSeasonEnd(now);
+    gameStore.advanceSeasonYear(get(seasonStore).seasonYear);
+    if (!(await dischargeProtagonist())) openMilitarySeason(now + 1);
+    await gameStore.save();
+    await seasonStore.save();
+    return;
+  }
 
   // NPC 드래프트 — **오프시즌보다 먼저** 돌아야 한다.
   //

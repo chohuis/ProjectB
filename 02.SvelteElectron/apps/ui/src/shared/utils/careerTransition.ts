@@ -67,5 +67,40 @@ export function canApplyToIndependent(stage: CareerStage): boolean {
   return stage === "highschool" || stage === "university";
 }
 
+/** 대학은 4년제 — 그 이상은 없다 */
+export const UNIVERSITY_FINAL_GRADE = 4;
+
+/**
+ * 대학 몇 학년인가 (1~4).
+ *
+ * ⚠ **정본이 둘이었다.** 저장 필드 `protagonist.grade`와
+ * `schoolState.universityWeek / 52`를 서로 다른 곳에서 각자 계산했다.
+ * 게다가 `grade`는 대학 진학 시 지워지고 있어서(수정 전) 늘 null이었고,
+ * 화면만 `universityWeek`로 버티고 있었다 — 그래서 **화면은 4학년에서
+ * 진급을 막는데 헤드리스는 7년째 "계속"을 눌렀다**(실측 29세 대학생).
+ *
+ * **`universityWeek`이 정본이다** — 매주 오르는 실제 계수기이고, 진학이
+ * 시즌 도중(W47)에 확정돼도 어긋나지 않는다. `grade`는 그걸 비추는 값이라
+ * 계수기가 없을 때(구 세이브)만 쓴다.
+ */
+export function universityGradeOf(
+  grade: number | null | undefined,
+  universityWeek: number | null | undefined,
+): number {
+  if (typeof universityWeek === "number" && universityWeek >= 1) {
+    return Math.min(Math.floor((universityWeek - 1) / 52) + 1, UNIVERSITY_FINAL_GRADE);
+  }
+  if (typeof grade === "number" && grade >= 1) return Math.min(grade, UNIVERSITY_FINAL_GRADE);
+  return 1;
+}
+
+/** 이번이 마지막 학년인가 — 진급 선택지를 낼지 정한다 */
+export function isUniversityFinalYear(
+  grade: number | null | undefined,
+  universityWeek: number | null | undefined,
+): boolean {
+  return universityGradeOf(grade, universityWeek) >= UNIVERSITY_FINAL_GRADE;
+}
+
 /** 표 전체 — 테스트가 읽는다 */
 export const TRANSITION_TABLE = ALLOWED;

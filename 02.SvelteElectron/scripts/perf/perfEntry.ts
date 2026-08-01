@@ -30,9 +30,10 @@ import {
   retireProtagonist, isRetired, evalRetirementPressure, calcMarketValueForProtagonist,
 } from "../../apps/ui/src/shared/usecases/retirement";
 import { runCampusEventsWeek } from "../../apps/ui/src/shared/usecases/campusEvents";
+import { enlistProtagonist } from "../../apps/ui/src/shared/usecases/militaryDecision";
 import {
   submitCareerApplications, confirmCareerResults, chooseDraft,
-  chooseSchoolOrIndependent, acceptDraftOffer, continueCurrentStage,
+  chooseSchoolOrIndependent, acceptDraftOffer, rejectDraftOffer, continueCurrentStage,
 } from "../../apps/ui/src/shared/usecases/careerDecision";
 import { slotRepo } from "../../apps/ui/src/shared/repo/slotRepo";
 import { dehydrateToRepo } from "../../apps/ui/src/shared/repo/npcAdapter";
@@ -307,24 +308,57 @@ export async function skipDraftObserve(): Promise<void> {
  *
  * @returns 처리한 pending 종류. null이면 아는 진로 pending이 아니다
  */
+/**
+ * 진로 선택 정책 — **어느 버튼을 누를지**를 밖에서 정한다.
+ *
+ * 기본값(드래프트+폴백 전부)만 있으면 헤드리스가 항상 같은 한 갈래로만 간다.
+ * 실제로 그랬다: 프로 경로만 25시즌을 돌았고 **대학 4학년 졸업·군 복무
+ * 왕복·독립 재지명은 한 번도 안 밟혔다.** 결함 26건이 전부 그런 자리에서 나왔다.
+ */
+export interface CareerPolicy {
+  draft: boolean;
+  university: boolean;
+  independent: boolean;
+  /** 허브에서 즉시 입대를 고른다 — 다른 신청을 무시한다 */
+  enlistNow: boolean;
+  /** 지명 통보를 거부한다 (폴백 경로 확인용) */
+  rejectDraft: boolean;
+}
+const DEFAULT_POLICY: CareerPolicy = {
+  draft: true, university: true, independent: true, enlistNow: false, rejectDraft: false,
+};
+let _policy: CareerPolicy = { ...DEFAULT_POLICY };
+
+export function setCareerPolicy(p: Partial<CareerPolicy>): void {
+  _policy = { ...DEFAULT_POLICY, ...p };
+}
+
 export async function pushCareerForward(): Promise<string | null> {
   const pa = get(nextPendingAction);
   if (!pa) return null;
 
   switch (pa.type) {
     case "careerChoiceHub": {
-      // 드래프트 + 폴백(대학·독립)을 같이 넣는다.
+      // 드래프트 + 폴백(대학·독립)을 같이 넣는 게 기본이다.
       //
       // 드래프트만 넣으면 미지명 시 갈 곳이 없어 **현역 입대로 빠지고**
       // 프로 경로 계측이 거기서 끝난다 (실제로 그렇게 막혔다).
       // 실제 플레이어도 보통 폴백을 같이 넣는다.
+      if (_policy.enlistNow) {
+        await enlistProtagonist("general", get(seasonStore).currentWeek);
+        gameStore.setCareerApplicationsSubmitted(false);
+        gameStore.clearCareerResults();
+        seasonStore.resolvePendingAction("careerChoiceHub");
+        await seasonStore.save();
+        return "careerChoiceHub(enlist)";
+      }
       const teams = get(masterStore).teams;
       const pick = (leagueId: string) =>
         teams.filter((t) => t.leagueId === leagueId).map((t) => t.id).sort().slice(0, 3);
       await submitCareerApplications({
-        draft: true,
-        universityChoices: pick("LEAGUE_UNIVERSITY"),
-        independentChoices: pick("LEAGUE_INDEPENDENT"),
+        draft: _policy.draft,
+        universityChoices: _policy.university ? pick("LEAGUE_UNIVERSITY") : [],
+        independentChoices: _policy.independent ? pick("LEAGUE_INDEPENDENT") : [],
       });
       return "careerChoiceHub";
     }
@@ -335,7 +369,7 @@ export async function pushCareerForward(): Promise<string | null> {
 
     case "careerChoice": {
       const r = get(gameStore).schoolState.careerResults;
-      if (r?.draftDrafted) { await chooseDraft(); return "careerChoice(draft)"; }
+      if (r?.draftDrafted && !_policy.rejectDraft) { await chooseDraft(); return "careerChoice(draft)"; }
       // 미지명이면 대학 → 독립 순으로 받는다. 아무 데도 안 되면 못 민다
       const uni = r?.universityPassed?.[0];
       const ind = r?.independentPassed?.[0];
@@ -347,8 +381,17 @@ export async function pushCareerForward(): Promise<string | null> {
       // 여기서 막혀 프로 경로를 영영 못 잰다
       const stage2 = get(gameStore).protagonist.careerStage;
       if (stage2 === "independent" || stage2 === "university") {
-        await continueCurrentStage();
-        return `careerChoice(continue:${stage2})`;
+        if (await continueCurrentStage()) return `careerChoice(continue:${stage2})`;
+        // 계속할 수 없다 = 대학 4학년인데 갈 곳이 없다.
+        // 화면의 "전원 탈락: 현역 입대"와 같은 결말이다 —
+        // 예전엔 여기서 그냥 계속 눌러 **7년째 대학생**이 됐다
+        await enlistProtagonist("general");
+        gameStore.setCareerFinalChoice("general");
+        gameStore.clearCareerResults();
+        seasonStore.resolvePendingAction("careerChoice");
+        await gameStore.save();
+        await seasonStore.save();
+        return "careerChoice(졸업→현역)";
       }
       return null;
     }
@@ -378,12 +421,17 @@ export async function pushCareerForward(): Promise<string | null> {
       await retireProtagonist("decline");
       return "retirementAsk(retire)";
 
-    case "draftNotification":
+    case "draftNotification": {
+      if (_policy.rejectDraft) {
+        const went = await rejectDraftOffer(pa);
+        return `draftNotification(reject→${went})`;
+      }
       await acceptDraftOffer({
         teamId: pa.teamId, leagueId: pa.leagueId,
         salary: pa.salary, durationYears: pa.durationYears, signingBonus: pa.signingBonus,
       });
       return "draftNotification";
+    }
 
     default:
       return null;
@@ -391,6 +439,22 @@ export async function pushCareerForward(): Promise<string | null> {
 }
 
 export function careerStage(): string { return get(gameStore).protagonist.careerStage; }
+
+/** 주인공 현황 한 줄 — 경로 회귀가 "지금 어디에 있나"를 판정하는 데 쓴다 */
+export function protagonistState(): Record<string, unknown> {
+  const p = get(gameStore).protagonist;
+  const s = get(seasonStore);
+  return {
+    year: s.seasonYear, week: s.currentWeek,
+    stage: p.careerStage, league: p.leagueId, team: p.teamId,
+    age: p.age, grade: p.grade ?? null,
+    militaryStatus: p.militaryStatus, militaryUnit: p.militaryUnit,
+    serviceWeeks: p.militaryServiceWeeks, recoveryWeeks: p.militaryRecoveryWeeks ?? 0,
+    proServiceYears: p.proServiceYears,
+    ovr: p.pitching?.ovr ?? p.batting?.ovr ?? 0,
+    retired: p.retirement ?? null,
+  };
+}
 
 /** 시즌 상태 상세 — 리그·주차·일정 구성이 어떻게 돼 있는지 */
 export function seasonState(): Record<string, unknown> {

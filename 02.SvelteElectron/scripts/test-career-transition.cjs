@@ -109,20 +109,46 @@ check("프로 4종은 서로 오갈 수 있다",
   PRO.every((a) => PRO.every((b) => a === b || (ALLOWED[a] ?? []).includes(b))));
 
 // ── 호출부에 가드가 실제로 있는가 ─────────────────────────────
+//
+// ⚠ **파일 목록을 하드코딩하지 않는다.** 예전엔 여기 다섯 파일을 적어두고
+// 각각 `careerTransition`을 import하는지 봤는데, 로직이 모달에서 usecase로
+// 옮겨가자 "모달에 가드가 없다"고 실패했다 — 정작 가드는 그 모달이 부르는
+// usecase에 있었다. 이 회귀는 **목록이 아니라 조건**으로 검사한다:
+// "학적을 바꾸는 코드는 어디에 있든 전이 규칙을 거친다".
 console.log("\n호출부 가드");
+
+const GUARD_RE = /careerTransition|transitionReason|canApplyTo|isUniversityFinalYear|universityGradeOf/;
+/** 학적을 바꾸는 호출 — 이게 있으면 같은 파일이나 그 위임처에 가드가 있어야 한다 */
+const MUTATES_RE = /applyDraftDecision|setCareerFinalChoice|chooseSchoolOrIndependent/;
+
+function walk(dir, out = []) {
+  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+    const p = path.join(dir, e.name);
+    if (e.isDirectory()) { if (e.name !== "node_modules") walk(p, out); }
+    else if (/\.(ts|svelte)$/.test(e.name)) out.push(p);
+  }
+  return out;
+}
+
+const UI_SRC = path.join(__dirname, "../apps/ui/src");
+const sources = walk(UI_SRC);
+const offenders = [];
+for (const file of sources) {
+  const src = fs.readFileSync(file, "utf8");
+  if (!MUTATES_RE.test(src)) continue;
+  if (GUARD_RE.test(src)) continue;
+  // 위임만 하는 파일은 통과 — 부르는 usecase에 가드가 있으면 된다
+  const delegates = /from ["'].*usecases\/(careerDecision|militaryDecision)["']/.test(src);
+  if (delegates) continue;
+  offenders.push(path.relative(UI_SRC, file));
+}
+check(`  학적을 바꾸는 코드가 전부 전이 규칙을 거친다 (검사 ${sources.length}개)`,
+  offenders.length === 0, `가드 없음: ${offenders.join(", ")}`);
+
 const files = {
   "game.ts applyDraftDecision": "../apps/ui/src/shared/stores/game.ts",
-  "advanceWeek 진로 결과": "../apps/ui/src/shared/usecases/advanceWeek.ts",
   "진로 신청 허브": "../apps/ui/src/features/career/ui/CareerChoiceHubModal.svelte",
-  "진로 결과 모달": "../apps/ui/src/features/career/ui/CareerResultModal.svelte",
-  "드래프트 알림 모달": "../apps/ui/src/features/contract/ui/DraftNotificationModal.svelte",
 };
-for (const [label, rel] of Object.entries(files)) {
-  const src = fs.readFileSync(path.join(__dirname, rel), "utf8");
-  check(`  ${label} 가 careerTransition 을 쓴다`,
-    /careerTransition|transitionReason|canApplyTo/.test(src),
-    "가드 없음");
-}
 {
   const g = fs.readFileSync(path.join(__dirname, files["game.ts applyDraftDecision"]), "utf8");
   check("  applyDraftDecision 이 거부 시 상태를 안 건드린다",

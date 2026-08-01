@@ -22,7 +22,14 @@ const read = (rel) => fs.readFileSync(path.join(ROOT, rel), "utf-8");
 
 // 주석을 걷어낸 코드만 본다. "예전엔 handlePressure를 읽었다" 같은 설명 주석까지
 // 결함으로 세면 왜 고쳤는지를 적을 수가 없어진다
+//
+// ⚠ **줄바꿈을 먼저 정규화한다.** 예전엔 `split("\n")` 뒤에 `/\/\/.*$/`를
+// 썼는데, JS에서 `.`는 `\r`를 line terminator로 보고 안 넘어가고 `$`는
+// (m 플래그가 없으면) 문자열 끝에만 붙는다 — **CRLF 파일에서는 줄 주석이
+// 하나도 안 걷혔다.** 그래서 "예전엔 handlePersonnel을 읽었다"고 적어둔
+// 설명 주석이 결함으로 잡혔다. 이 검사가 막으려던 바로 그 상황이다.
 const readCode = (rel) => read(rel)
+  .replace(/\r\n?/g, "\n")
   .replace(/\/\*[\s\S]*?\*\//g, "")
   .split("\n").map((l) => l.replace(/\/\/.*$/, "")).join("\n");
 

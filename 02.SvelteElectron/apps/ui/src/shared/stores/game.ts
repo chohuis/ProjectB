@@ -49,7 +49,7 @@ import type {
   SchoolScenario,
 } from "../types/save";
 import type { ProContract } from "../types/save";
-import { transitionReason } from "../utils/careerTransition";
+import { transitionReason, universityGradeOf } from "../utils/careerTransition";
 import { runOffseasonProcessing, rosterLimitsFrom } from "../utils/npcEngine";
 import { getFaThreshold } from "../utils/faEngine";
 import { masterStore } from "./master";
@@ -1473,7 +1473,17 @@ function createGameStore() {
           leagueId: payload.leagueId ?? s.protagonist.leagueId,
           teamId: payload.teamId ?? s.protagonist.teamId,
           money: Math.max(0, s.protagonist.money + (payload.signingBonus ?? 0)),
-          grade: payload.stage === "highschool" ? s.protagonist.grade : undefined,
+          // ⚠ **대학도 학년이 있다** (1~4). 예전엔 고교만 남기고 나머지를 전부
+          // 지워서, 대학에 진학하면 `grade`가 undefined가 됐다. 그러면
+          // `processSeasonEnd`의 `isStudentProto`(grade != null 검사)가 거짓이라
+          // `advanceProtagonistGrade`가 **한 번도 안 불린다** — 학년이 안 오르고
+          // 졸업이 영영 안 온다. 실측: 2032 진학 → 2038까지 7년째 대학생(29세),
+          // 매년 W42 진로 허브만 반복.
+          // 프로·독립·군은 학년이 없는 게 맞다.
+          grade:
+            payload.stage === "highschool" ? s.protagonist.grade :
+            payload.stage === "university" ? 1 :
+            undefined,
         };
         const schoolState: SchoolState = {
           ...s.schoolState,
@@ -1694,9 +1704,17 @@ function createGameStore() {
     completeMilitaryService() {
       update((s) => {
         const p = s.protagonist;
-        // 휴학 단계 복구: militaryHiatusStage 우선, 없으면 leagueId 기반
+        // 휴학 단계 복구: militaryHiatusStage 우선, 없으면 leagueId 기반.
+        //
+        // ⚠ **학교로는 돌아가지 않는다.** 고교·대학에서 입대하면 hiatusStage가
+        // 그 학적이라 그대로 복구했는데, 그러면 2년 복무한 21세가 고등학교로
+        // 돌아간다(실측). `careerTransition`이 "고교 재입학 불가"를 이미
+        // 명시하고 있고, 전이표에서도 학교로 가는 화살표는 없다.
+        // 학생 신분에서 입대했으면 갈 곳은 독립리그다.
+        const hiatus = p.militaryHiatusStage as import("../types/save").CareerStage | null;
+        const restored = (hiatus === "highschool" || hiatus === "university") ? null : hiatus;
         const stage: import("../types/save").CareerStage =
-          (p.militaryHiatusStage as import("../types/save").CareerStage | null) ??
+          restored ??
           (p.leagueId === "LEAGUE_ABL" ? "pro_abl" :
            p.leagueId === "LEAGUE_JBL" ? "pro_jbl" :
            p.leagueId === "LEAGUE_KBL" ? "pro_kbl" : "independent");
@@ -1709,6 +1727,11 @@ function createGameStore() {
           militaryStatus: "군필",
           militaryHiatusStage: null,
           militaryHiatusUniversityWeek: null,
+          // 학년은 학생일 때만 의미가 있다. 전역자는 학교로 안 돌아가므로
+          // 지운다 — 안 그러면 독립리그 선수가 `grade: 3`을 달고 다니고
+          // 시즌 종료 화면 헤더가 그걸 먼저 읽어 "3학년"이 찍힌다
+          // (`signContract`·`applyDraftDecision`이 이미 같은 이유로 지운다)
+          grade: undefined,
         };
         return {
           ...s,
@@ -2707,13 +2730,23 @@ function createGameStore() {
       const agedHsGraduated  = agedNpcs.filter(n => hsGradIds.has(n.npcId));
       const agedUnivGraduated = agedNpcs.filter(n => univGradIds.has(n.npcId));
 
-      // ③ 주인공 학년 진급 (HS + 대학, 나이는 advanceSeasonYear에서)
+      // ③ 주인공 학년 진급 (나이는 advanceSeasonYear에서)
+      //
+      // ⚠ **대학은 여기서 +1 하면 안 된다.** 대학 학년의 실제 계수기는
+      // `schoolState.universityWeek`이고 매주 오른다. 진학은 시즌 도중(W47)에
+      // 확정되므로, 그때 넣은 `grade: 1`을 시즌 종료에서 또 +1 하면
+      // **첫 대학 시즌을 2학년으로 뛴다** (실측 — 1학년이 통째로 사라진다).
+      // 고교는 계수기가 따로 없어 +1이 맞다.
       const proto = s.protagonist;
-      const isStudentProto = proto.grade != null && ["highschool", "university"].includes(proto.careerStage);
-      const gradeResult = isStudentProto
-        ? advanceProtagonistGrade(proto.grade!, proto.careerStage)
-        : null;
-      const updatedProto = gradeResult ? { ...proto, ...gradeResult.patch } : proto;
+      let updatedProto: ProtagonistSave = proto;
+      if (proto.careerStage === "university") {
+        updatedProto = {
+          ...proto,
+          grade: universityGradeOf(undefined, s.schoolState.universityWeek) as 1 | 2 | 3 | 4,
+        };
+      } else if (proto.grade != null && proto.careerStage === "highschool") {
+        updatedProto = { ...proto, ...advanceProtagonistGrade(proto.grade, proto.careerStage).patch };
+      }
 
       update((st) => ({
         ...st,

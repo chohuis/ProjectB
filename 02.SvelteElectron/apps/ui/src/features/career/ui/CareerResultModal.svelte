@@ -4,7 +4,7 @@
   import { masterStore } from "../../../shared/stores/master";
   import { chooseDraft, chooseSchoolOrIndependent, continueCurrentStage } from "../../../shared/usecases/careerDecision";
   import { enlistProtagonist } from "../../../shared/usecases/militaryDecision";
-  import { canApplyToUniversity, canApplyToIndependent } from "../../../shared/utils/careerTransition";
+  import { canApplyToUniversity, canApplyToIndependent, universityGradeOf, isUniversityFinalYear } from "../../../shared/utils/careerTransition";
 
   let resolving = false;
 
@@ -16,12 +16,12 @@
   $: indiePassed = canApplyToIndependent(stage) ? (results?.independentPassed ?? []) : [];
   $: draftPassed = results?.draftDrafted ?? false;
 
-  // 대학 재학 중 여부 및 학년
+  // 대학 재학 중 여부 및 학년 — 판정은 `careerTransition`이 정본이다.
+  // 예전엔 여기서 `universityWeek / 52`로 따로 계산해 `protagonist.grade`와
+  // 정본이 둘이었다 (그리고 grade는 대학 진학 시 지워지고 있었다).
   $: isUniversity = $gameStore.protagonist.careerStage === "university";
-  $: univYear = isUniversity
-    ? Math.floor(Math.max(0, ($gameStore.schoolState.universityWeek ?? 1) - 1) / 52)
-    : -1;
-  $: isFinalYear = univYear >= 3;
+  $: univGrade = universityGradeOf($gameStore.protagonist.grade, $gameStore.schoolState.universityWeek);
+  $: isFinalYear = isUniversity && isUniversityFinalYear($gameStore.protagonist.grade, $gameStore.schoolState.universityWeek);
   $: canContinue = isUniversity && !isFinalYear && !draftPassed;
 
   // 독립리그 계속 여부
@@ -77,7 +77,7 @@
     <div class="options">
       {#if canContinue}
         <button class="opt-btn continue" type="button" on:click={continueUniversity}>
-          <span class="opt-label">다음 학년 진급 ({univYear + 2}학년)</span>
+          <span class="opt-label">다음 학년 진급 ({univGrade + 1}학년)</span>
           <span class="opt-sub">드래프트 미지명 — 대학 계속</span>
         </button>
       {/if}

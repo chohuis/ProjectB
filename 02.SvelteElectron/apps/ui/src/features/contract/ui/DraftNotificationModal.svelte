@@ -1,12 +1,7 @@
 <script lang="ts">
-  import { gameStore } from "../../../shared/stores/game";
-  import { acceptDraftOffer } from "../../../shared/usecases/careerDecision";
-  import { enlistProtagonist } from "../../../shared/usecases/militaryDecision";
+  import { acceptDraftOffer, rejectDraftOffer } from "../../../shared/usecases/careerDecision";
   import { masterStore } from "../../../shared/stores/master";
-  import { seasonStore } from "../../../shared/stores/season";
-  import { generateKblSchedule } from "../../../shared/utils/scheduleGen";
   import type { PendingAction } from "../../../shared/types/season";
-  import { canApplyToUniversity } from "../../../shared/utils/careerTransition";
 
   export let action: Extract<PendingAction, { type: "draftNotification" }>;
 
@@ -40,38 +35,7 @@
   async function reject() {
     if (resolving) return;
     resolving = true;
-    seasonStore.resolvePendingAction("draftNotification");
-
-    // 대학 대안은 고교생만 — 대학 재학생이 미지명 시 여기로 오면 두 번 입학이 된다
-    if (action.altUniversityTeamId && canApplyToUniversity($gameStore.protagonist.careerStage)) {
-      gameStore.applyDraftDecision({ stage: "university", leagueId: "LEAGUE_UNIVERSITY", teamId: action.altUniversityTeamId });
-      gameStore.setCareerFinalChoice("university");
-    } else if (action.altIndependentTeamId) {
-      gameStore.applyDraftDecision({ stage: "independent", leagueId: "LEAGUE_INDEPENDENT", teamId: action.altIndependentTeamId });
-      gameStore.setCareerFinalChoice("independent");
-      const ovr = $gameStore.protagonist.pitching?.ovr ?? $gameStore.protagonist.batting?.ovr ?? 50;
-      seasonStore.pushPendingAction({
-        type: "salaryNegotiation",
-        teamId: action.altIndependentTeamId,
-        leagueId: "LEAGUE_INDEPENDENT",
-        offeredSalary: Math.max(800, Math.round((ovr - 40) * 60)),
-        durationYears: 1,
-        minDurationYears: 1,
-        maxDurationYears: 1,
-        signingBonus: 0,
-        context: "initial",
-      });
-    } else {
-      // 갈 곳이 없다 — 현역 입대. 입대 처리는 `militaryDecision`이 정본이다
-      // (예전엔 여기서 오프시즌 처리를 빠뜨려 그해 세계가 정체됐다)
-      await enlistProtagonist("general");
-      gameStore.setCareerFinalChoice("general");
-    }
-
-    gameStore.clearCareerResults();
-    gameStore.setCareerApplicationsSubmitted(false);
-    await gameStore.save();
-    await seasonStore.save();
+    await rejectDraftOffer(action);
     resolving = false;
   }
 </script>

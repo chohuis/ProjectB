@@ -73,7 +73,8 @@
     "test:releasescope": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-release-scope.cjs",
     "measure:perf": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-perf.cjs",
     "test:savebatch": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-savebatch.cjs",
-    "scenarios": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/run-scenarios.cjs"
+    "scenarios": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/run-scenarios.cjs",
+    "test:careerpaths": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-careerpaths.cjs"
   },
   "build": {
     "appId": "com.projectb.desktop",

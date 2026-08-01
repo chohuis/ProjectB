@@ -17,8 +17,10 @@ import { seasonStore } from "../stores/season";
 import { masterStore } from "../stores/master";
 import { calcKblDraftContract } from "../utils/draftSalaryTable";
 import { buildSalaryIndex, loadRosterRules } from "../repo/newGameV3";
-import { canApplyToUniversity } from "../utils/careerTransition";
+import { canApplyToUniversity, isUniversityFinalYear } from "../utils/careerTransition";
 import { openProSeason } from "./proSeason";
+import { enlistProtagonist } from "./militaryDecision";
+import type { PendingAction } from "../types/season";
 
 /** 진로 지원 제출 (`CareerChoiceHubModal.submitApplications`) */
 export async function submitCareerApplications(opts: {
@@ -56,12 +58,26 @@ export async function confirmCareerResults(): Promise<void> {
  * 대학은 최종 학년 전까지, 독립리그는 제한 없이 고를 수 있다 —
  * **미지명이어도 갈 곳이 없어 막히지 않게** 하는 자리다.
  */
-export async function continueCurrentStage(): Promise<void> {
+export async function continueCurrentStage(): Promise<boolean> {
+  const g = get(gameStore);
+  const p = g.protagonist;
+
+  // ⚠ 4학년은 계속할 수 없다 — 5학년은 없다. 이 판정이 **화면에만** 있어서
+  // (`CareerResultModal.isFinalYear`) 헤드리스는 그냥 계속 눌렀고,
+  // 주인공이 **7년째 대학생(29세)** 이 됐다. 판정을 여기로 옮겨 화면과
+  // 자동 진행이 같은 걸 본다.
+  if (p.careerStage === "university"
+      && isUniversityFinalYear(p.grade, g.schoolState.universityWeek)) {
+    return false;
+  }
+  if (p.careerStage !== "university" && p.careerStage !== "independent") return false;
+
   gameStore.setCareerApplicationsSubmitted(false);
   gameStore.clearCareerResults();
   seasonStore.resolvePendingAction("careerChoice");
   await gameStore.save();
   await seasonStore.save();
+  return true;
 }
 
 /**
@@ -127,6 +143,59 @@ export async function chooseSchoolOrIndependent(
   }
   await gameStore.save();
   await seasonStore.save();
+}
+
+/**
+ * 지명을 **거부**하고 대안 경로로 간다.
+ *
+ * `DraftNotificationModal.reject` 안에 있던 로직이다. 대안이 셋이라
+ * (대학 · 독립 · 갈 곳 없음→현역) 커리어가 크게 갈리는데, 화면 안에 있어서
+ * **한 번도 검증된 적이 없다** — 수락 경로만 헤드리스로 밟혔다.
+ *
+ * @returns 어디로 갔는지 — 호출부가 화면 문구·검증에 쓴다
+ */
+export async function rejectDraftOffer(
+  action: Extract<PendingAction, { type: "draftNotification" }>,
+): Promise<"university" | "independent" | "general"> {
+  seasonStore.resolvePendingAction("draftNotification");
+  const p = get(gameStore).protagonist;
+
+  let went: "university" | "independent" | "general";
+  // 대학 대안은 고교생만 — 대학 재학생이 미지명 시 여기로 오면 두 번 입학이 된다
+  if (action.altUniversityTeamId && canApplyToUniversity(p.careerStage)) {
+    gameStore.applyDraftDecision({
+      stage: "university", leagueId: "LEAGUE_UNIVERSITY", teamId: action.altUniversityTeamId,
+    });
+    gameStore.setCareerFinalChoice("university");
+    went = "university";
+  } else if (action.altIndependentTeamId) {
+    gameStore.applyDraftDecision({
+      stage: "independent", leagueId: "LEAGUE_INDEPENDENT", teamId: action.altIndependentTeamId,
+    });
+    gameStore.setCareerFinalChoice("independent");
+    const ovr = p.pitching?.ovr ?? p.batting?.ovr ?? 50;
+    seasonStore.pushPendingAction({
+      type: "salaryNegotiation",
+      teamId: action.altIndependentTeamId,
+      leagueId: "LEAGUE_INDEPENDENT",
+      offeredSalary: Math.max(800, Math.round((ovr - 40) * 60)),
+      durationYears: 1, minDurationYears: 1, maxDurationYears: 1,
+      signingBonus: 0, context: "initial",
+    });
+    went = "independent";
+  } else {
+    // 갈 곳이 없다 — 현역 입대. 입대 처리는 `militaryDecision`이 정본이다
+    // (예전엔 여기서 오프시즌 처리를 빠뜨려 그해 세계가 정체됐다)
+    await enlistProtagonist("general");
+    gameStore.setCareerFinalChoice("general");
+    went = "general";
+  }
+
+  gameStore.clearCareerResults();
+  gameStore.setCareerApplicationsSubmitted(false);
+  await gameStore.save();
+  await seasonStore.save();
+  return went;
 }
 
 /**

@@ -245,7 +245,14 @@ export interface ProtagonistSave {
   leagueId: string;  // 현재 소속 리그
   teamId: string;  // 현재 소속 팀
   schoolId?: string;  // 고교·대학 단계
-  grade?: 1 | 2 | 3;  // 고교/대학 재학 중일 때만 존재
+  /**
+   * 학년 — 고교 1~3, **대학 1~4**. 재학 중일 때만 존재한다.
+   *
+   * ⚠ 예전엔 `1 | 2 | 3`이라 **대학 4학년을 표현할 수조차 없었다.**
+   * 대학 학년의 실계수기는 `schoolState.universityWeek`이고 이 필드는 그걸
+   * 비추는 값이다 — 판정은 `careerTransition.universityGradeOf`를 쓴다.
+   */
+  grade?: 1 | 2 | 3 | 4;
   age: number;
   playerType: PlayerType;
   position: string;  // "SP" | "RP" | "CP" | "" (미정)
@@ -661,7 +668,14 @@ export interface NpcSaveState {
   positionRatings?: PositionRatings;
 
   age: number;
-  grade?: 1 | 2 | 3;  // 고교/대학 재학 중일 때만 존재
+  /**
+   * 학년 — 고교 1~3, **대학 1~4**. 재학 중일 때만 존재한다.
+   *
+   * ⚠ 예전엔 `1 | 2 | 3`이라 **대학 4학년을 표현할 수조차 없었다.**
+   * 대학 학년의 실계수기는 `schoolState.universityWeek`이고 이 필드는 그걸
+   * 비추는 값이다 — 판정은 `careerTransition.universityGradeOf`를 쓴다.
+   */
+  grade?: 1 | 2 | 3 | 4;
   schoolId: string;
   graduationYear: number;
 
