@@ -1,0 +1,24 @@
+{
+  "id": "EVT_IND_ROSTER_RISK",
+  "type": "conditional",
+  "category": "career",
+  "priority": 745,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "morale_lte",
+      "value": 50
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 15
+    }
+  ],
+  "cooldownWeeks": 8,
+  "messageTemplateId": "MSG_IND_ROSTER_RISK",
+  "decisionTemplateId": "DEC_IND_ROSTER_RISK"
+}

@@ -1,0 +1,24 @@
+{
+  "id": "EVT_IND_FORM_FOUND",
+  "type": "conditional",
+  "category": "training",
+  "priority": 695,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "condition_gte",
+      "value": 80
+    },
+    {
+      "type": "fatigue_lte",
+      "value": 45
+    }
+  ],
+  "cooldownWeeks": 6,
+  "messageTemplateId": "MSG_IND_FORM_FOUND",
+  "decisionTemplateId": "DEC_IND_FORM_FOUND"
+}

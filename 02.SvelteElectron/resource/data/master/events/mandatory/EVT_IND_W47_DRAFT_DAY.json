@@ -1,0 +1,19 @@
+{
+  "id": "EVT_IND_W47_DRAFT_DAY",
+  "type": "mandatory",
+  "category": "career",
+  "priority": 900,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "week_eq",
+      "value": 47
+    }
+  ],
+  "messageTemplateId": "MSG_IND_W47_DRAFT_DAY",
+  "decisionTemplateId": "DEC_IND_DRAFT_DAY"
+}

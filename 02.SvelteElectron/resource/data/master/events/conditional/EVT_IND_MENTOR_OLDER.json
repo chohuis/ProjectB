@@ -1,0 +1,20 @@
+{
+  "id": "EVT_IND_MENTOR_OLDER",
+  "type": "conditional",
+  "category": "team_life",
+  "priority": 665,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "pitching_ovr_lte",
+      "value": 62
+    }
+  ],
+  "cooldownWeeks": 6,
+  "messageTemplateId": "MSG_IND_MENTOR_OLDER",
+  "decisionTemplateId": "DEC_IND_MENTOR_OLDER"
+}

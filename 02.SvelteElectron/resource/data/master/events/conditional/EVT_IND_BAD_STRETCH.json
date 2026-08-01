@@ -1,0 +1,24 @@
+{
+  "id": "EVT_IND_BAD_STRETCH",
+  "type": "conditional",
+  "category": "mental",
+  "priority": 705,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 20
+    },
+    {
+      "type": "morale_lte",
+      "value": 45
+    }
+  ],
+  "cooldownWeeks": 5,
+  "messageTemplateId": "MSG_IND_BAD_STRETCH",
+  "decisionTemplateId": "DEC_IND_BAD_STRETCH"
+}

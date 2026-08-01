@@ -1,0 +1,24 @@
+{
+  "id": "EVT_IND_FAMILY_DOUBT",
+  "type": "conditional",
+  "category": "social",
+  "priority": 700,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "week_gte",
+      "value": 24
+    },
+    {
+      "type": "morale_lte",
+      "value": 55
+    }
+  ],
+  "cooldownWeeks": 8,
+  "messageTemplateId": "MSG_IND_FAMILY_DOUBT",
+  "decisionTemplateId": "DEC_IND_FAMILY_DOUBT"
+}

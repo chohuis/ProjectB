@@ -1,0 +1,24 @@
+{
+  "id": "EVT_IND_INJURY_FEAR",
+  "type": "conditional",
+  "category": "health",
+  "priority": 755,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "fatigue_gte",
+      "value": 65
+    },
+    {
+      "type": "condition_lte",
+      "value": 55
+    }
+  ],
+  "cooldownWeeks": 6,
+  "messageTemplateId": "MSG_IND_INJURY_FEAR",
+  "decisionTemplateId": "DEC_IND_INJURY_FEAR"
+}

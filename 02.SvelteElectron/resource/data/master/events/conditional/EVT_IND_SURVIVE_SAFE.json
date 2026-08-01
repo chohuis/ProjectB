@@ -1,0 +1,24 @@
+{
+  "id": "EVT_IND_SURVIVE_SAFE",
+  "type": "conditional",
+  "category": "team",
+  "priority": 700,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "team_rank_lte",
+      "value": 4
+    },
+    {
+      "type": "week_gte",
+      "value": 14
+    }
+  ],
+  "cooldownWeeks": 6,
+  "messageTemplateId": "MSG_IND_SURVIVE_SAFE",
+  "decisionTemplateId": "DEC_IND_SURVIVE_SAFE"
+}

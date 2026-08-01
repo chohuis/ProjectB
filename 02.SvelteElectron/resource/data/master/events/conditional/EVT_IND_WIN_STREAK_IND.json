@@ -1,0 +1,24 @@
+{
+  "id": "EVT_IND_WIN_STREAK_IND",
+  "type": "conditional",
+  "category": "team",
+  "priority": 680,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "team_rank_lte",
+      "value": 3
+    },
+    {
+      "type": "morale_gte",
+      "value": 70
+    }
+  ],
+  "cooldownWeeks": 5,
+  "messageTemplateId": "MSG_IND_WIN_STREAK_IND",
+  "decisionTemplateId": "DEC_IND_WIN_STREAK_IND"
+}

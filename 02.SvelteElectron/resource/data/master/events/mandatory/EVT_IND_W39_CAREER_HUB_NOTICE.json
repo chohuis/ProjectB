@@ -1,0 +1,19 @@
+{
+  "id": "EVT_IND_W39_CAREER_HUB_NOTICE",
+  "type": "mandatory",
+  "category": "career",
+  "priority": 900,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "week_eq",
+      "value": 39
+    }
+  ],
+  "messageTemplateId": "MSG_IND_W39_CAREER_HUB_NOTICE",
+  "decisionTemplateId": "DEC_IND_CAREER_HUB_NOTICE"
+}

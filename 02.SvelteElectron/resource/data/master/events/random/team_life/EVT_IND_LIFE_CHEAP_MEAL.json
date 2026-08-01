@@ -1,0 +1,18 @@
+{
+  "id": "EVT_IND_LIFE_CHEAP_MEAL",
+  "type": "random",
+  "category": "team_life",
+  "priority": 300,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 3,
+  "weight": 24,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    }
+  ],
+  "messageTemplateId": "MSG_IND_LIFE_CHEAP_MEAL",
+  "decisionTemplateId": "DEC_IND_LIFE_CHEAP_MEAL"
+}

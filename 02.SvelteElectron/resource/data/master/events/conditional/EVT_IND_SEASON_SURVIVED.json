@@ -1,0 +1,23 @@
+{
+  "id": "EVT_IND_SEASON_SURVIVED",
+  "type": "conditional",
+  "category": "career",
+  "priority": 730,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "week_gte",
+      "value": 26
+    },
+    {
+      "type": "team_rank_lte",
+      "value": 4
+    }
+  ],
+  "messageTemplateId": "MSG_IND_SEASON_SURVIVED",
+  "decisionTemplateId": "DEC_IND_SEASON_SURVIVED"
+}

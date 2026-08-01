@@ -1,0 +1,23 @@
+{
+  "id": "EVT_IND_DRAFT_MISS",
+  "type": "conditional",
+  "category": "mental",
+  "priority": 750,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "week_gte",
+      "value": 47
+    },
+    {
+      "type": "morale_lte",
+      "value": 55
+    }
+  ],
+  "messageTemplateId": "MSG_IND_DRAFT_MISS",
+  "decisionTemplateId": "DEC_IND_DRAFT_MISS"
+}

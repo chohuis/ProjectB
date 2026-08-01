@@ -1,0 +1,22 @@
+{
+  "id": "EVT_IND_LIFE_TEAM_TALK_IND",
+  "type": "random",
+  "category": "team_life",
+  "priority": 300,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 3,
+  "weight": 22,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "morale_lte",
+      "value": 60
+    }
+  ],
+  "messageTemplateId": "MSG_IND_LIFE_TEAM_TALK_IND",
+  "decisionTemplateId": null
+}

@@ -1,0 +1,19 @@
+{
+  "id": "EVT_IND_W04_SPRING_START",
+  "type": "mandatory",
+  "category": "season",
+  "priority": 900,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "week_eq",
+      "value": 4
+    }
+  ],
+  "messageTemplateId": "MSG_IND_W04_SPRING_START",
+  "decisionTemplateId": "DEC_IND_W04_SPRING_START"
+}

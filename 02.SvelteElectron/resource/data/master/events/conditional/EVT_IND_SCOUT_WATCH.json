@@ -1,0 +1,24 @@
+{
+  "id": "EVT_IND_SCOUT_WATCH",
+  "type": "conditional",
+  "category": "media",
+  "priority": 740,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 20
+    },
+    {
+      "type": "pitching_ovr_gte",
+      "value": 58
+    }
+  ],
+  "cooldownWeeks": 5,
+  "messageTemplateId": "MSG_IND_SCOUT_WATCH",
+  "decisionTemplateId": "DEC_IND_SCOUT_WATCH"
+}

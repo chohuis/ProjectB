@@ -1,0 +1,24 @@
+{
+  "id": "EVT_IND_DRAFT_HOPE",
+  "type": "conditional",
+  "category": "career",
+  "priority": 735,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 30
+    },
+    {
+      "type": "season_era_lte",
+      "value": 3.5
+    }
+  ],
+  "cooldownWeeks": 8,
+  "messageTemplateId": "MSG_IND_DRAFT_HOPE",
+  "decisionTemplateId": "DEC_IND_DRAFT_HOPE"
+}

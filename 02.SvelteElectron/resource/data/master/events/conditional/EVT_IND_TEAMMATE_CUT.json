@@ -1,0 +1,24 @@
+{
+  "id": "EVT_IND_TEAMMATE_CUT",
+  "type": "conditional",
+  "category": "social",
+  "priority": 730,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "week_gte",
+      "value": 17
+    },
+    {
+      "type": "week_lte",
+      "value": 24
+    }
+  ],
+  "cooldownWeeks": 6,
+  "messageTemplateId": "MSG_IND_TEAMMATE_CUT",
+  "decisionTemplateId": "DEC_IND_TEAMMATE_CUT"
+}

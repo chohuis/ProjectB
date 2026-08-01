@@ -1,0 +1,20 @@
+{
+  "id": "EVT_IND_SMALL_CROWD",
+  "type": "conditional",
+  "category": "team_life",
+  "priority": 630,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "week_gte",
+      "value": 10
+    }
+  ],
+  "cooldownWeeks": 5,
+  "messageTemplateId": "MSG_IND_SMALL_CROWD",
+  "decisionTemplateId": "DEC_IND_SMALL_CROWD"
+}

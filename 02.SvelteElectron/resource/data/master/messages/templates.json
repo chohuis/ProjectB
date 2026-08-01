@@ -2111,6 +2111,426 @@
       "subject": "비시즌 기사",
       "body": "비시즌인데도 기사가 납니다.\n\n야구가 없는 계절에도 야구 이야기는 계속됩니다.",
       "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_IND_W04_SPRING_START",
+      "category": "system",
+      "subject": "훈련 시작",
+      "body": "독립리그 시즌 준비가 시작됐습니다.\n\n시설도 지원도 넉넉하지 않습니다. 각자 알아서 몸을 만드는 분위기입니다.",
+      "decisionTemplateId": "DEC_IND_W04_SPRING_START"
+    },
+    {
+      "id": "MSG_IND_W08_ROSTER_CUT",
+      "category": "system",
+      "subject": "개막 로스터",
+      "body": "개막 로스터가 발표됐습니다.\n\n독립리그는 자리가 늘 부족합니다. 이름이 빠진 선수도 있습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_IND_W10_STAGE1_OPEN",
+      "category": "system",
+      "subject": "1차 스테이지 개막",
+      "body": "1차 스테이지가 시작됩니다.\n\n10팀이 붙어 하위 2팀이 탈락합니다. 첫 단계부터 살아남아야 합니다.",
+      "decisionTemplateId": "DEC_IND_W10_STAGE1_OPEN"
+    },
+    {
+      "id": "MSG_IND_W17_STAGE1_END",
+      "category": "system",
+      "subject": "1차 스테이지 종료",
+      "body": "1차 스테이지가 끝났습니다.\n\n두 팀이 시즌을 마쳤습니다. 남의 일 같지 않습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_IND_W18_STAGE2_OPEN",
+      "category": "system",
+      "subject": "2차 스테이지",
+      "body": "2차 스테이지가 시작됩니다.\n\n8팀 중 4팀만 남습니다. 절반이 떨어집니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_IND_W23_STAGE2_END",
+      "category": "system",
+      "subject": "2차 스테이지 종료",
+      "body": "2차 스테이지가 끝났습니다.\n\n네 팀이 더 떨어졌습니다. 라커룸이 절반으로 줄었습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_IND_W24_STAGE3_OPEN",
+      "category": "system",
+      "subject": "최종 스테이지",
+      "body": "최종 스테이지입니다.\n\n네 팀이 순위를 가립니다. 여기까지 온 것만으로도 의미가 있습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_IND_W26_LADDER",
+      "category": "system",
+      "subject": "사다리",
+      "body": "포스트시즌 사다리가 시작됩니다.\n\n독립리그의 가을은 짧고 치열합니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_IND_W30_SUMMER_GAP",
+      "category": "system",
+      "subject": "여름 공백",
+      "body": "정규 일정이 끝나고 공백기가 왔습니다.\n\n프로와 달리 이 기간에 할 일이 정해져 있지 않습니다.",
+      "decisionTemplateId": "DEC_IND_W30_SUMMER_GAP"
+    },
+    {
+      "id": "MSG_IND_W34_SHOWCASE",
+      "category": "news",
+      "subject": "합동 트라이아웃",
+      "body": "프로 구단 스카우트가 참관하는 합동 트라이아웃이 열립니다.\n\n독립리그 선수에게는 몇 안 되는 기회입니다.",
+      "decisionTemplateId": "DEC_IND_W34_SHOWCASE"
+    },
+    {
+      "id": "MSG_IND_W39_CAREER_HUB_NOTICE",
+      "category": "system",
+      "subject": "진로 선택 시기",
+      "body": "진로를 정할 시기입니다.\n\n드래프트 재지원, 독립리그 잔류, 입대 — 선택지는 셋입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_IND_W43_CONTRACT_SHORT",
+      "category": "system",
+      "subject": "1년 계약",
+      "body": "독립리그 계약은 1년 단위입니다.\n\n매년 이 시기에 자리를 다시 확인받아야 합니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_IND_W47_DRAFT_DAY",
+      "category": "system",
+      "subject": "드래프트 당일",
+      "body": "신인 드래프트가 열렸습니다.\n\n독립리그에서 지명받는 선수는 매년 몇 명 되지 않습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_IND_W50_WINTER_ALONE",
+      "category": "system",
+      "subject": "겨울",
+      "body": "비시즌입니다.\n\n구단이 시설을 열어주지 않습니다. 알아서 겨울을 나야 합니다.",
+      "decisionTemplateId": "DEC_IND_W50_WINTER_ALONE"
+    },
+    {
+      "id": "MSG_IND_SURVIVE_EDGE",
+      "category": "coach",
+      "subject": "탈락권",
+      "body": "팀이 탈락권에 있습니다.\n\n남은 경기가 얼마 없습니다.",
+      "decisionTemplateId": "DEC_IND_SURVIVE_EDGE"
+    },
+    {
+      "id": "MSG_IND_SURVIVE_SAFE",
+      "category": "coach",
+      "subject": "생존 확정",
+      "body": "다음 단계 진출이 확정됐습니다.\n\n한숨 돌렸지만 끝난 게 아닙니다.",
+      "decisionTemplateId": "DEC_IND_SURVIVE_SAFE"
+    },
+    {
+      "id": "MSG_IND_TEAMMATE_CUT",
+      "category": "news",
+      "subject": "떠나는 동료",
+      "body": "함께 뛰던 동료가 팀을 떠났습니다.\n\n독립리그에서는 흔한 일입니다.",
+      "decisionTemplateId": "DEC_IND_TEAMMATE_CUT"
+    },
+    {
+      "id": "MSG_IND_SCOUT_WATCH",
+      "category": "news",
+      "subject": "스카우트가 왔다",
+      "body": "프로 구단 스카우트가 경기장에 왔습니다.\n\n누구를 보러 왔는지는 말해주지 않습니다.",
+      "decisionTemplateId": "DEC_IND_SCOUT_WATCH"
+    },
+    {
+      "id": "MSG_IND_DRAFT_HOPE",
+      "category": "coach",
+      "subject": "지명 가능성",
+      "body": "성적이 나쁘지 않습니다.\n\n에이전트가 올해는 해볼 만하다고 합니다.",
+      "decisionTemplateId": "DEC_IND_DRAFT_HOPE"
+    },
+    {
+      "id": "MSG_IND_DRAFT_MISS",
+      "category": "coach",
+      "subject": "또 미지명",
+      "body": "올해도 지명되지 않았습니다.\n\n몇 번째인지 세는 것도 그만뒀습니다.",
+      "decisionTemplateId": "DEC_IND_DRAFT_MISS"
+    },
+    {
+      "id": "MSG_IND_POOR_FACILITY",
+      "category": "coach",
+      "subject": "열악한 시설",
+      "body": "구장 상태가 좋지 않습니다.\n\n마운드가 고르지 않아 발디딤이 불안합니다.",
+      "decisionTemplateId": "DEC_IND_POOR_FACILITY"
+    },
+    {
+      "id": "MSG_IND_SALARY_THIN",
+      "category": "coach",
+      "subject": "빠듯한 생활",
+      "body": "독립리그 급여로는 빠듯합니다.\n\n야구만 생각하기 어려운 달이 있습니다.",
+      "decisionTemplateId": "DEC_IND_SALARY_THIN"
+    },
+    {
+      "id": "MSG_IND_SANGMU_MATCH",
+      "category": "coach",
+      "subject": "상무전",
+      "body": "상무 피닉스와의 경기입니다.\n\n저쪽은 프로에서 온 선수들입니다. 수준 차이를 확인하는 자리이기도 합니다.",
+      "decisionTemplateId": "DEC_IND_SANGMU_MATCH"
+    },
+    {
+      "id": "MSG_IND_AGE_PRESSURE",
+      "category": "coach",
+      "subject": "나이",
+      "body": "또 한 해가 지나갑니다.\n\n독립리그에서 나이는 실력보다 먼저 읽힙니다.",
+      "decisionTemplateId": "DEC_IND_AGE_PRESSURE"
+    },
+    {
+      "id": "MSG_IND_GOOD_ERA",
+      "category": "coach",
+      "subject": "좋은 성적",
+      "body": "방어율이 리그 상위권입니다.\n\n독립리그에서도 숫자는 남습니다.",
+      "decisionTemplateId": "DEC_IND_GOOD_ERA"
+    },
+    {
+      "id": "MSG_IND_BAD_STRETCH",
+      "category": "coach",
+      "subject": "무너지는 구간",
+      "body": "결과가 계속 나쁩니다.\n\n독립리그에서는 부진이 곧 자리 문제입니다.",
+      "decisionTemplateId": "DEC_IND_BAD_STRETCH"
+    },
+    {
+      "id": "MSG_IND_K_RUN",
+      "category": "news",
+      "subject": "탈삼진 행진",
+      "body": "탈삼진이 쌓이고 있습니다.\n\n독립리그 기록도 스카우트는 봅니다.",
+      "decisionTemplateId": "DEC_IND_K_RUN"
+    },
+    {
+      "id": "MSG_IND_FATIGUE_IND",
+      "category": "coach",
+      "subject": "관리받지 못하는 몸",
+      "body": "피로가 쌓였습니다.\n\n프로처럼 전담 트레이너가 붙지 않습니다.",
+      "decisionTemplateId": "DEC_IND_FATIGUE_IND"
+    },
+    {
+      "id": "MSG_IND_INJURY_FEAR",
+      "category": "coach",
+      "subject": "부상이 무섭다",
+      "body": "몸에 신호가 옵니다.\n\n여기서 크게 다치면 돌아올 자리가 없습니다.",
+      "decisionTemplateId": "DEC_IND_INJURY_FEAR"
+    },
+    {
+      "id": "MSG_IND_ROSTER_RISK",
+      "category": "coach",
+      "subject": "자리 위협",
+      "body": "새 선수가 테스트를 받으러 왔습니다.\n\n자리는 하나뿐입니다.",
+      "decisionTemplateId": "DEC_IND_ROSTER_RISK"
+    },
+    {
+      "id": "MSG_IND_COACH_ONE",
+      "category": "coach",
+      "subject": "코치가 한 명",
+      "body": "코치가 한 명뿐입니다.\n\n투수 열 명을 혼자 봅니다.",
+      "decisionTemplateId": "DEC_IND_COACH_ONE"
+    },
+    {
+      "id": "MSG_IND_BUS_LONG",
+      "category": "coach",
+      "subject": "긴 이동",
+      "body": "원정 이동이 깁니다.\n\n버스로 네 시간을 갑니다.",
+      "decisionTemplateId": "DEC_IND_BUS_LONG"
+    },
+    {
+      "id": "MSG_IND_SMALL_CROWD",
+      "category": "coach",
+      "subject": "빈 관중석",
+      "body": "관중석이 거의 비어 있습니다.\n\n그래도 경기는 합니다.",
+      "decisionTemplateId": "DEC_IND_SMALL_CROWD"
+    },
+    {
+      "id": "MSG_IND_LOYAL_FAN",
+      "category": "news",
+      "subject": "한 사람의 팬",
+      "body": "매 경기 오는 관중이 있습니다.\n\n오늘도 같은 자리에 앉아 있습니다.",
+      "decisionTemplateId": "DEC_IND_LOYAL_FAN"
+    },
+    {
+      "id": "MSG_IND_FAMILY_DOUBT",
+      "category": "news",
+      "subject": "가족의 걱정",
+      "body": "언제까지 할 거냐는 말을 들었습니다.\n\n대답하기 어려웠습니다.",
+      "decisionTemplateId": "DEC_IND_FAMILY_DOUBT"
+    },
+    {
+      "id": "MSG_IND_OLD_FRIEND_PRO",
+      "category": "news",
+      "subject": "프로에 간 친구",
+      "body": "같이 야구하던 친구가 1군에서 던졌습니다.\n\n중계로 봤습니다.",
+      "decisionTemplateId": "DEC_IND_OLD_FRIEND_PRO"
+    },
+    {
+      "id": "MSG_IND_TEAM_FOLD_RUMOR",
+      "category": "coach",
+      "subject": "구단 존속 이야기",
+      "body": "구단 운영이 어렵다는 이야기가 돕니다.\n\n독립리그에서는 팀이 사라지기도 합니다.",
+      "decisionTemplateId": "DEC_IND_TEAM_FOLD_RUMOR"
+    },
+    {
+      "id": "MSG_IND_WIN_STREAK_IND",
+      "category": "coach",
+      "subject": "연승",
+      "body": "팀이 연승 중입니다.\n\n작은 리그에서도 이기는 건 즐겁습니다.",
+      "decisionTemplateId": "DEC_IND_WIN_STREAK_IND"
+    },
+    {
+      "id": "MSG_IND_MENTOR_OLDER",
+      "category": "coach",
+      "subject": "나이 많은 동료",
+      "body": "서른이 넘은 동료가 있습니다.\n\n아직 포기하지 않은 사람입니다.",
+      "decisionTemplateId": "DEC_IND_MENTOR_OLDER"
+    },
+    {
+      "id": "MSG_IND_FORM_FOUND",
+      "category": "coach",
+      "subject": "감각을 찾았다",
+      "body": "공이 손에서 잘 빠집니다.\n\n이런 날이 이어지면 좋겠습니다.",
+      "decisionTemplateId": "DEC_IND_FORM_FOUND"
+    },
+    {
+      "id": "MSG_IND_TRYOUT_INVITE",
+      "category": "coach",
+      "subject": "구단 테스트",
+      "body": "프로 구단에서 개인 테스트 제안이 왔습니다.\n\n짧은 기회입니다.",
+      "decisionTemplateId": "DEC_IND_TRYOUT_INVITE"
+    },
+    {
+      "id": "MSG_IND_NO_SPONSOR",
+      "category": "coach",
+      "subject": "장비 자비 부담",
+      "body": "장비를 직접 사야 합니다.\n\n스폰서가 붙는 무대가 아닙니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_IND_PLAYOFF_IND",
+      "category": "coach",
+      "subject": "사다리 진출",
+      "body": "포스트시즌 사다리에 올랐습니다.\n\n짧지만 이 리그의 가을입니다.",
+      "decisionTemplateId": "DEC_IND_PLAYOFF_IND"
+    },
+    {
+      "id": "MSG_IND_SEASON_SURVIVED",
+      "category": "coach",
+      "subject": "한 시즌을 버텼다",
+      "body": "끝까지 살아남았습니다.\n\n독립리그에서는 그것도 성취입니다.",
+      "decisionTemplateId": "DEC_IND_SEASON_SURVIVED"
+    },
+    {
+      "id": "MSG_IND_LIFE_FIELD_PREP",
+      "category": "system",
+      "subject": "그라운드 정비",
+      "body": "선수들이 직접 그라운드를 고릅니다.\n\n관리 인력이 따로 없습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_IND_LIFE_SHARED_ROOM",
+      "category": "system",
+      "subject": "합숙소",
+      "body": "합숙소 방을 셋이 씁니다.\n\n좁지만 익숙해집니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_IND_LIFE_CHEAP_MEAL",
+      "category": "system",
+      "subject": "식사",
+      "body": "식대가 정해져 있습니다.\n\n먹는 것도 관리의 일부인데 마음대로 되지 않습니다.",
+      "decisionTemplateId": "DEC_IND_LIFE_CHEAP_MEAL"
+    },
+    {
+      "id": "MSG_IND_LIFE_SELF_CATCH",
+      "category": "system",
+      "subject": "캐치볼 상대",
+      "body": "캐치볼 상대를 구하기 어렵습니다.\n\n포수가 두 명뿐입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_IND_LIFE_OLD_GLOVE",
+      "category": "system",
+      "subject": "낡은 장비",
+      "body": "글러브가 많이 낡았습니다.\n\n새로 사려면 돈이 듭니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_IND_LIFE_NIGHT_LIGHT",
+      "category": "system",
+      "subject": "조명 없는 구장",
+      "body": "야간 조명이 약합니다.\n\n공이 잘 안 보인다는 말이 나옵니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_IND_LIFE_TEAM_TALK_IND",
+      "category": "system",
+      "subject": "팀 미팅",
+      "body": "감독이 짧게 미팅을 열었습니다.\n\n다들 무슨 말이 나올지 압니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_IND_LIFE_EXTRA_WORK",
+      "category": "system",
+      "subject": "야간 훈련",
+      "body": "경기 후 혼자 남아 던집니다.\n\n불 꺼진 구장에서 소리만 납니다.",
+      "decisionTemplateId": "DEC_IND_LIFE_EXTRA_WORK"
+    },
+    {
+      "id": "MSG_IND_LIFE_RIVAL_IND",
+      "category": "system",
+      "subject": "같은 처지의 상대",
+      "body": "상대 투수도 나와 비슷한 처지입니다.\n\n서로를 알아봅니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_IND_LIFE_BUS_SLEEP",
+      "category": "system",
+      "subject": "버스에서 자다",
+      "body": "원정 버스에서 잠들었습니다.\n\n목이 뻐근합니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_IND_LIFE_LOCAL_NEWS",
+      "category": "news",
+      "subject": "지역 뉴스",
+      "body": "지역 방송에 리그 소식이 짧게 나왔습니다.\n\n한 줄이었습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_IND_LIFE_BLOG_POST",
+      "category": "news",
+      "subject": "블로그 후기",
+      "body": "야구 블로그에 어제 경기 후기가 올라왔습니다.\n\n내 이름이 한 번 나옵니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_IND_LIFE_SCOUT_NOTE",
+      "category": "news",
+      "subject": "스카우트 수첩",
+      "body": "관중석에서 수첩에 뭔가 적는 사람을 봤습니다.\n\n신경이 쓰입니다.",
+      "decisionTemplateId": "DEC_IND_LIFE_SCOUT_NOTE"
+    },
+    {
+      "id": "MSG_IND_LIFE_FAN_CAFE",
+      "category": "news",
+      "subject": "팬 카페",
+      "body": "리그 팬 카페에 글이 올라왔습니다.\n\n작은 커뮤니티입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_IND_LIFE_YOUTH_VISIT",
+      "category": "news",
+      "subject": "유소년 방문",
+      "body": "지역 유소년 팀이 견학을 왔습니다.\n\n아이들이 눈을 반짝입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_IND_LIFE_INTERVIEW_IND",
+      "category": "news",
+      "subject": "짧은 인터뷰",
+      "body": "리그 사무국에서 선수 소개 인터뷰를 요청했습니다.\n\n홈페이지에 실립니다.",
+      "decisionTemplateId": null
     }
   ]
 }

@@ -1,0 +1,19 @@
+{
+  "id": "EVT_IND_W43_CONTRACT_SHORT",
+  "type": "mandatory",
+  "category": "career",
+  "priority": 900,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "week_eq",
+      "value": 43
+    }
+  ],
+  "messageTemplateId": "MSG_IND_W43_CONTRACT_SHORT",
+  "decisionTemplateId": null
+}

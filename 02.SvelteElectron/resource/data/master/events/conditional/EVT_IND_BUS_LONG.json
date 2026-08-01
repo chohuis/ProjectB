@@ -1,0 +1,24 @@
+{
+  "id": "EVT_IND_BUS_LONG",
+  "type": "conditional",
+  "category": "team_life",
+  "priority": 640,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "week_gte",
+      "value": 10
+    },
+    {
+      "type": "week_lte",
+      "value": 26
+    }
+  ],
+  "cooldownWeeks": 5,
+  "messageTemplateId": "MSG_IND_BUS_LONG",
+  "decisionTemplateId": "DEC_IND_BUS_LONG"
+}

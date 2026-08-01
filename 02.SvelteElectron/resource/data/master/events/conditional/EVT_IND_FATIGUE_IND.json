@@ -1,0 +1,24 @@
+{
+  "id": "EVT_IND_FATIGUE_IND",
+  "type": "conditional",
+  "category": "health",
+  "priority": 760,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "fatigue_gte",
+      "value": 60
+    },
+    {
+      "type": "fatigue_lte",
+      "value": 74
+    }
+  ],
+  "cooldownWeeks": 4,
+  "messageTemplateId": "MSG_IND_FATIGUE_IND",
+  "decisionTemplateId": "DEC_IND_FATIGUE_IND"
+}

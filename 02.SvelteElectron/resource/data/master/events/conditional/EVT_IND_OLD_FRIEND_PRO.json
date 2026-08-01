@@ -1,0 +1,20 @@
+{
+  "id": "EVT_IND_OLD_FRIEND_PRO",
+  "type": "conditional",
+  "category": "social",
+  "priority": 710,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "week_gte",
+      "value": 20
+    }
+  ],
+  "cooldownWeeks": 8,
+  "messageTemplateId": "MSG_IND_OLD_FRIEND_PRO",
+  "decisionTemplateId": "DEC_IND_OLD_FRIEND_PRO"
+}

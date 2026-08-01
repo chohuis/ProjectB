@@ -1,0 +1,19 @@
+{
+  "id": "EVT_IND_W26_LADDER",
+  "type": "mandatory",
+  "category": "season",
+  "priority": 900,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "week_eq",
+      "value": 26
+    }
+  ],
+  "messageTemplateId": "MSG_IND_W26_LADDER",
+  "decisionTemplateId": "DEC_IND_LADDER"
+}

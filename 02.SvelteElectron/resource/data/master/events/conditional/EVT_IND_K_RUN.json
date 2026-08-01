@@ -1,0 +1,20 @@
+{
+  "id": "EVT_IND_K_RUN",
+  "type": "conditional",
+  "category": "media",
+  "priority": 720,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "season_k_gte",
+      "value": 40
+    }
+  ],
+  "cooldownWeeks": 6,
+  "messageTemplateId": "MSG_IND_K_RUN",
+  "decisionTemplateId": "DEC_IND_K_RUN"
+}

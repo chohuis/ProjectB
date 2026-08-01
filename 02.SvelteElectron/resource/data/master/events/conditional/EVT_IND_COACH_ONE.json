@@ -1,0 +1,20 @@
+{
+  "id": "EVT_IND_COACH_ONE",
+  "type": "conditional",
+  "category": "team_life",
+  "priority": 670,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 10
+    }
+  ],
+  "cooldownWeeks": 6,
+  "messageTemplateId": "MSG_IND_COACH_ONE",
+  "decisionTemplateId": "DEC_IND_COACH_ONE"
+}

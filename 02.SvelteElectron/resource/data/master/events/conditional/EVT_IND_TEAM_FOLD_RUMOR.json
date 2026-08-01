@@ -1,0 +1,19 @@
+{
+  "id": "EVT_IND_TEAM_FOLD_RUMOR",
+  "type": "conditional",
+  "category": "team",
+  "priority": 740,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "week_gte",
+      "value": 30
+    }
+  ],
+  "messageTemplateId": "MSG_IND_TEAM_FOLD_RUMOR",
+  "decisionTemplateId": "DEC_IND_TEAM_FOLD_RUMOR"
+}

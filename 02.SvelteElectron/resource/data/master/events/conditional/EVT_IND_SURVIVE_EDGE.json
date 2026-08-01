@@ -1,0 +1,28 @@
+{
+  "id": "EVT_IND_SURVIVE_EDGE",
+  "type": "conditional",
+  "category": "team",
+  "priority": 745,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "team_rank_gte",
+      "value": 8
+    },
+    {
+      "type": "week_gte",
+      "value": 12
+    },
+    {
+      "type": "week_lte",
+      "value": 17
+    }
+  ],
+  "cooldownWeeks": 4,
+  "messageTemplateId": "MSG_IND_SURVIVE_EDGE",
+  "decisionTemplateId": "DEC_IND_SURVIVE_EDGE"
+}

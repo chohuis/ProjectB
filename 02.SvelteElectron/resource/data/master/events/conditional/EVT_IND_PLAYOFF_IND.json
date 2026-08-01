@@ -1,0 +1,23 @@
+{
+  "id": "EVT_IND_PLAYOFF_IND",
+  "type": "conditional",
+  "category": "team",
+  "priority": 760,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "team_rank_lte",
+      "value": 4
+    },
+    {
+      "type": "week_gte",
+      "value": 25
+    }
+  ],
+  "messageTemplateId": "MSG_IND_PLAYOFF_IND",
+  "decisionTemplateId": "DEC_IND_PLAYOFF_IND"
+}

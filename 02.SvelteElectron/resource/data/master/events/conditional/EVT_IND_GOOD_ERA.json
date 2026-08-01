@@ -1,0 +1,24 @@
+{
+  "id": "EVT_IND_GOOD_ERA",
+  "type": "conditional",
+  "category": "training",
+  "priority": 710,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 25
+    },
+    {
+      "type": "season_era_lte",
+      "value": 3
+    }
+  ],
+  "cooldownWeeks": 6,
+  "messageTemplateId": "MSG_IND_GOOD_ERA",
+  "decisionTemplateId": "DEC_IND_GOOD_ERA"
+}

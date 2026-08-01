@@ -1,0 +1,22 @@
+{
+  "id": "EVT_IND_LIFE_NIGHT_LIGHT",
+  "type": "random",
+  "category": "team_life",
+  "priority": 300,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 3,
+  "weight": 20,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "week_gte",
+      "value": 14
+    }
+  ],
+  "messageTemplateId": "MSG_IND_LIFE_NIGHT_LIGHT",
+  "decisionTemplateId": null
+}

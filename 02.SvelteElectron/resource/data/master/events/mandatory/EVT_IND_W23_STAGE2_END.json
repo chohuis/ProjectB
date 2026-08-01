@@ -1,0 +1,19 @@
+{
+  "id": "EVT_IND_W23_STAGE2_END",
+  "type": "mandatory",
+  "category": "season",
+  "priority": 900,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "week_eq",
+      "value": 23
+    }
+  ],
+  "messageTemplateId": "MSG_IND_W23_STAGE2_END",
+  "decisionTemplateId": null
+}

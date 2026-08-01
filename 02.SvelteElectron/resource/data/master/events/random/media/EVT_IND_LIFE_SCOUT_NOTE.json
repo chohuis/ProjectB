@@ -1,0 +1,22 @@
+{
+  "id": "EVT_IND_LIFE_SCOUT_NOTE",
+  "type": "random",
+  "category": "media",
+  "priority": 300,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 3,
+  "weight": 22,
+  "poolId": "POOL_MEDIA_DAILY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 10
+    }
+  ],
+  "messageTemplateId": "MSG_IND_LIFE_SCOUT_NOTE",
+  "decisionTemplateId": "DEC_IND_LIFE_SCOUT_NOTE"
+}

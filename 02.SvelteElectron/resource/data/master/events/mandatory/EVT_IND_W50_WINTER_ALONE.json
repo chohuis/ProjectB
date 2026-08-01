@@ -1,0 +1,19 @@
+{
+  "id": "EVT_IND_W50_WINTER_ALONE",
+  "type": "mandatory",
+  "category": "team_life",
+  "priority": 900,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "week_eq",
+      "value": 50
+    }
+  ],
+  "messageTemplateId": "MSG_IND_W50_WINTER_ALONE",
+  "decisionTemplateId": "DEC_IND_W50_WINTER_ALONE"
+}

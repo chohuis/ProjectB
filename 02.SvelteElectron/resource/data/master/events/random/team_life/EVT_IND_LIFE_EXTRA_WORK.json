@@ -1,0 +1,22 @@
+{
+  "id": "EVT_IND_LIFE_EXTRA_WORK",
+  "type": "random",
+  "category": "team_life",
+  "priority": 300,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 3,
+  "weight": 24,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "conditions": [
+    {
+      "type": "career_stage",
+      "stage": "independent"
+    },
+    {
+      "type": "fatigue_lte",
+      "value": 65
+    }
+  ],
+  "messageTemplateId": "MSG_IND_LIFE_EXTRA_WORK",
+  "decisionTemplateId": "DEC_IND_LIFE_EXTRA_WORK"
+}
