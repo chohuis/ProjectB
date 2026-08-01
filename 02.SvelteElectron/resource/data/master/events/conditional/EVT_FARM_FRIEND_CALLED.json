@@ -1,0 +1,20 @@
+{
+  "id": "EVT_FARM_FRIEND_CALLED",
+  "type": "conditional",
+  "category": "social",
+  "priority": 715,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueId": "LEAGUE_KBL_FARM"
+    },
+    {
+      "type": "week_gte",
+      "value": 16
+    }
+  ],
+  "cooldownWeeks": 8,
+  "messageTemplateId": "MSG_FARM_FRIEND_CALLED",
+  "decisionTemplateId": "DEC_FARM_FRIEND_CALLED"
+}

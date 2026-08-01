@@ -1,0 +1,19 @@
+{
+  "id": "EVT_FARM_W46_ROSTER_REVIEW",
+  "type": "mandatory",
+  "category": "career",
+  "priority": 900,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueId": "LEAGUE_KBL_FARM"
+    },
+    {
+      "type": "week_eq",
+      "value": 46
+    }
+  ],
+  "messageTemplateId": "MSG_FARM_W46_ROSTER_REVIEW",
+  "decisionTemplateId": "DEC_FARM_ROSTER_REVIEW"
+}

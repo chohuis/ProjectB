@@ -1,0 +1,22 @@
+{
+  "id": "EVT_FARM_LIFE_SIDE_FARM",
+  "type": "random",
+  "category": "team_life",
+  "priority": 300,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 3,
+  "weight": 24,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueId": "LEAGUE_KBL_FARM"
+    },
+    {
+      "type": "fatigue_lte",
+      "value": 70
+    }
+  ],
+  "messageTemplateId": "MSG_FARM_LIFE_SIDE_FARM",
+  "decisionTemplateId": "DEC_FARM_SIDE_FARM"
+}

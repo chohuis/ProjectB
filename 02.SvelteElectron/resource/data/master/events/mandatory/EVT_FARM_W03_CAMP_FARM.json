@@ -1,0 +1,19 @@
+{
+  "id": "EVT_FARM_W03_CAMP_FARM",
+  "type": "mandatory",
+  "category": "season",
+  "priority": 900,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueId": "LEAGUE_KBL_FARM"
+    },
+    {
+      "type": "week_eq",
+      "value": 3
+    }
+  ],
+  "messageTemplateId": "MSG_FARM_W03_CAMP_FARM",
+  "decisionTemplateId": "DEC_FARM_W03_CAMP_FARM"
+}

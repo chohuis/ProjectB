@@ -1,0 +1,27 @@
+{
+  "id": "EVT_FARM_FIRST_CALLUP_HOPE",
+  "type": "conditional",
+  "category": "career",
+  "priority": 760,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueId": "LEAGUE_KBL_FARM"
+    },
+    {
+      "type": "pro_year_gte",
+      "value": 1
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 20
+    },
+    {
+      "type": "season_era_lte",
+      "value": 3.5
+    }
+  ],
+  "messageTemplateId": "MSG_FARM_FIRST_CALLUP_HOPE",
+  "decisionTemplateId": "DEC_FARM_FIRST_CALLUP_HOPE"
+}

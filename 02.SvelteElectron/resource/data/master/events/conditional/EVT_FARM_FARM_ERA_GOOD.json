@@ -1,0 +1,24 @@
+{
+  "id": "EVT_FARM_FARM_ERA_GOOD",
+  "type": "conditional",
+  "category": "training",
+  "priority": 720,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueId": "LEAGUE_KBL_FARM"
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 25
+    },
+    {
+      "type": "season_era_lte",
+      "value": 2.8
+    }
+  ],
+  "cooldownWeeks": 6,
+  "messageTemplateId": "MSG_FARM_FARM_ERA_GOOD",
+  "decisionTemplateId": "DEC_FARM_FARM_ERA_GOOD"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "EVT_FARM_MENTAL_LOW_FARM",
+  "type": "conditional",
+  "category": "mental",
+  "priority": 745,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueId": "LEAGUE_KBL_FARM"
+    },
+    {
+      "type": "morale_lte",
+      "value": 42
+    }
+  ],
+  "cooldownWeeks": 5,
+  "messageTemplateId": "MSG_FARM_MENTAL_LOW_FARM",
+  "decisionTemplateId": "DEC_FARM_MENTAL_LOW_FARM"
+}

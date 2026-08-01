@@ -169,7 +169,19 @@ console.log(`    (참고) 상위와 조건이 겹쳐 경합하는 쌍 ${partial.
 
 // ── 4. 무대별 밀도 ────────────────────────────────────────────
 console.log("\n[4] 무대별 이벤트 수");
-const stageOf = (e) => (e.conditions ?? []).find((c) => c.type === "career_stage")?.stage ?? "전체";
+// ⚠ 무대는 `career_stage`로만 정해지지 않는다. **2군 강등은 학적 전이가
+// 아니라 같은 구단 안의 이동**이라 `careerStage`는 `pro_kbl` 그대로고
+// `leagueId`만 바뀐다 — `league_id` 조건도 봐야 2군이 "전체"로 안 샌다.
+const LEAGUE_LABEL = {
+  LEAGUE_KBL_FARM: "pro_farm", LEAGUE_INDEPENDENT: "independent",
+  LEAGUE_UNIVERSITY: "university", LEAGUE_HIGHSCHOOL: "highschool", LEAGUE_KBL: "pro_kbl",
+};
+const stageOf = (e) => {
+  const cs = (e.conditions ?? []).find((c) => c.type === "career_stage")?.stage;
+  if (cs) return cs;
+  const lg = (e.conditions ?? []).find((c) => c.type === "league_id")?.leagueId;
+  return (lg && LEAGUE_LABEL[lg]) || "전체";
+};
 const byStage = {};
 for (const e of ALL) byStage[stageOf(e)] = (byStage[stageOf(e)] ?? 0) + 1;
 for (const [s, n] of Object.entries(byStage).sort((a, b) => b[1] - a[1])) {

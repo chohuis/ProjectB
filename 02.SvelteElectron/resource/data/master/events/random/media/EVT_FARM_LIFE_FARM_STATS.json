@@ -1,0 +1,22 @@
+{
+  "id": "EVT_FARM_LIFE_FARM_STATS",
+  "type": "random",
+  "category": "media",
+  "priority": 300,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 3,
+  "weight": 20,
+  "poolId": "POOL_MEDIA_DAILY",
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueId": "LEAGUE_KBL_FARM"
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 10
+    }
+  ],
+  "messageTemplateId": "MSG_FARM_LIFE_FARM_STATS",
+  "decisionTemplateId": null
+}

@@ -1,0 +1,24 @@
+{
+  "id": "EVT_FARM_CALLUP_CLOSE",
+  "type": "conditional",
+  "category": "career",
+  "priority": 780,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueId": "LEAGUE_KBL_FARM"
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 20
+    },
+    {
+      "type": "season_era_lte",
+      "value": 3
+    }
+  ],
+  "cooldownWeeks": 6,
+  "messageTemplateId": "MSG_FARM_CALLUP_CLOSE",
+  "decisionTemplateId": "DEC_FARM_CALLUP_CLOSE"
+}

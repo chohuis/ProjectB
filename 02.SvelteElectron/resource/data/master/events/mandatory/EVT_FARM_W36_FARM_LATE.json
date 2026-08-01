@@ -1,0 +1,19 @@
+{
+  "id": "EVT_FARM_W36_FARM_LATE",
+  "type": "mandatory",
+  "category": "season",
+  "priority": 900,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueId": "LEAGUE_KBL_FARM"
+    },
+    {
+      "type": "week_eq",
+      "value": 36
+    }
+  ],
+  "messageTemplateId": "MSG_FARM_W36_FARM_LATE",
+  "decisionTemplateId": "DEC_FARM_FARM_LATE"
+}

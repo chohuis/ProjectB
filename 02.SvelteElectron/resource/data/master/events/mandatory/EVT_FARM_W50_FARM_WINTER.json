@@ -1,0 +1,19 @@
+{
+  "id": "EVT_FARM_W50_FARM_WINTER",
+  "type": "mandatory",
+  "category": "team_life",
+  "priority": 900,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueId": "LEAGUE_KBL_FARM"
+    },
+    {
+      "type": "week_eq",
+      "value": 50
+    }
+  ],
+  "messageTemplateId": "MSG_FARM_W50_FARM_WINTER",
+  "decisionTemplateId": "DEC_FARM_W50_FARM_WINTER"
+}

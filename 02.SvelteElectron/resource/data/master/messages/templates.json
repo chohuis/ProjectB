@@ -2881,6 +2881,286 @@
       "subject": "캠퍼스의 스카우트",
       "body": "훈련장 옆에 낯선 사람이 서 있습니다.\n\n수첩을 들고 있습니다.",
       "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_FARM_W03_CAMP_FARM",
+      "category": "system",
+      "subject": "2군 캠프",
+      "body": "2군 캠프가 시작됐습니다.\n\n1군 캠프와는 인원도 시설도 다릅니다.",
+      "decisionTemplateId": "DEC_FARM_W03_CAMP_FARM"
+    },
+    {
+      "id": "MSG_FARM_W08_FARM_OPEN",
+      "category": "system",
+      "subject": "2군 개막",
+      "body": "2군 리그가 개막했습니다.\n\n관중은 적지만 기록은 남습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_FARM_W14_MONTHLY_REPORT",
+      "category": "system",
+      "subject": "월간 보고",
+      "body": "1군 코칭스태프에 2군 선수 보고서가 올라갑니다.\n\n숫자로만 평가받는 자리입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_FARM_W22_MIDSEASON_CALLUP",
+      "category": "system",
+      "subject": "중간 콜업 시기",
+      "body": "시즌 중반, 1군에 부상자가 나오면 자리가 생깁니다.\n\n준비된 사람이 올라갑니다.",
+      "decisionTemplateId": "DEC_FARM_W22_MIDSEASON_CALLUP"
+    },
+    {
+      "id": "MSG_FARM_W36_FARM_LATE",
+      "category": "system",
+      "subject": "2군 막바지",
+      "body": "2군 시즌이 끝나갑니다.\n\n올해도 못 올라간 선수들이 대부분입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_FARM_W42_FARM_CLOSE",
+      "category": "system",
+      "subject": "2군 시즌 종료",
+      "body": "2군 리그가 종료됐습니다.\n\n한 해가 이렇게 지나갔습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_FARM_W46_ROSTER_REVIEW",
+      "category": "system",
+      "subject": "로스터 재검토",
+      "body": "구단이 다음 시즌 로스터를 정리합니다.\n\n2군에서 오래 머문 선수부터 이름이 빠집니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_FARM_W50_FARM_WINTER",
+      "category": "system",
+      "subject": "2군의 겨울",
+      "body": "비시즌입니다.\n\n1군 선수들과 달리 개인 트레이너를 붙일 여유가 없습니다.",
+      "decisionTemplateId": "DEC_FARM_W50_FARM_WINTER"
+    },
+    {
+      "id": "MSG_FARM_DEMOTED",
+      "category": "coach",
+      "subject": "2군으로",
+      "body": "1군에서 내려왔습니다.\n\n라커룸이 조용합니다. 여기서 다시 올라가야 합니다.",
+      "decisionTemplateId": "DEC_FARM_DEMOTED"
+    },
+    {
+      "id": "MSG_FARM_CALLUP_CLOSE",
+      "category": "coach",
+      "subject": "콜업이 가깝다",
+      "body": "성적이 좋습니다.\n\n코치가 1군 이야기를 흘렸습니다.",
+      "decisionTemplateId": "DEC_FARM_CALLUP_CLOSE"
+    },
+    {
+      "id": "MSG_FARM_CALLUP_MISSED",
+      "category": "coach",
+      "subject": "다른 사람이 올라갔다",
+      "body": "성적은 내가 나은데 다른 선수가 콜업됐습니다.\n\n이유는 설명해주지 않습니다.",
+      "decisionTemplateId": "DEC_FARM_CALLUP_MISSED"
+    },
+    {
+      "id": "MSG_FARM_FARM_ERA_GOOD",
+      "category": "coach",
+      "subject": "2군에서는 압도적",
+      "body": "2군 타자들은 상대가 안 됩니다.\n\n문제는 여기가 아니라는 겁니다.",
+      "decisionTemplateId": "DEC_FARM_FARM_ERA_GOOD"
+    },
+    {
+      "id": "MSG_FARM_FARM_STRUGGLE",
+      "category": "coach",
+      "subject": "2군에서도 안 된다",
+      "body": "2군에서조차 결과가 안 나옵니다.\n\n이건 다른 문제입니다.",
+      "decisionTemplateId": "DEC_FARM_FARM_STRUGGLE"
+    },
+    {
+      "id": "MSG_FARM_RELEASE_RISK",
+      "category": "coach",
+      "subject": "방출 위험",
+      "body": "2군에서 오래 머물렀습니다.\n\n구단이 자리를 정리한다는 이야기가 돕니다.",
+      "decisionTemplateId": "DEC_FARM_RELEASE_RISK"
+    },
+    {
+      "id": "MSG_FARM_YOUNG_PROSPECT",
+      "category": "coach",
+      "subject": "유망주가 왔다",
+      "body": "고졸 신인이 2군에 배치됐습니다.\n\n나보다 어리고 공이 빠릅니다.",
+      "decisionTemplateId": "DEC_FARM_YOUNG_PROSPECT"
+    },
+    {
+      "id": "MSG_FARM_REHAB_PLAYER",
+      "category": "coach",
+      "subject": "재활 선수",
+      "body": "1군 주전이 재활 등판으로 2군에 왔습니다.\n\n며칠만 있다 올라갑니다.",
+      "decisionTemplateId": "DEC_FARM_REHAB_PLAYER"
+    },
+    {
+      "id": "MSG_FARM_FARM_FACILITY",
+      "category": "coach",
+      "subject": "2군 시설",
+      "body": "훈련 시설이 1군과 다릅니다.\n\n같은 구단인데 이렇게 차이가 납니다.",
+      "decisionTemplateId": "DEC_FARM_FARM_FACILITY"
+    },
+    {
+      "id": "MSG_FARM_FARM_CROWD",
+      "category": "coach",
+      "subject": "빈 관중석",
+      "body": "2군 경기장은 늘 한산합니다.\n\n가족 몇 명이 전부입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_FARM_SALARY_FARM",
+      "category": "coach",
+      "subject": "2군 연봉",
+      "body": "2군 선수의 연봉은 1군과 자릿수가 다릅니다.\n\n같은 프로인데도 그렇습니다.",
+      "decisionTemplateId": "DEC_FARM_SALARY_FARM"
+    },
+    {
+      "id": "MSG_FARM_INNINGS_MANY",
+      "category": "coach",
+      "subject": "많은 이닝",
+      "body": "2군에서는 이닝을 많이 먹습니다.\n\n올라가려면 던져야 하고, 던지면 몸이 상합니다.",
+      "decisionTemplateId": "DEC_FARM_INNINGS_MANY"
+    },
+    {
+      "id": "MSG_FARM_FARM_PLAYOFF",
+      "category": "coach",
+      "subject": "2군 포스트시즌",
+      "body": "2군 사다리에 올랐습니다.\n\n작은 무대지만 이기는 건 이기는 겁니다.",
+      "decisionTemplateId": "DEC_FARM_FARM_PLAYOFF"
+    },
+    {
+      "id": "MSG_FARM_COACH_ATTENTION",
+      "category": "coach",
+      "subject": "코치의 관심",
+      "body": "2군 투수코치가 붙어서 봐줍니다.\n\n1군보다 오히려 시간을 많이 씁니다.",
+      "decisionTemplateId": "DEC_FARM_COACH_ATTENTION"
+    },
+    {
+      "id": "MSG_FARM_BUS_FARM",
+      "category": "coach",
+      "subject": "2군 원정",
+      "body": "2군 원정은 당일치기입니다.\n\n경기 끝나고 바로 버스에 오릅니다.",
+      "decisionTemplateId": "DEC_FARM_BUS_FARM"
+    },
+    {
+      "id": "MSG_FARM_FRIEND_CALLED",
+      "category": "news",
+      "subject": "동료의 콜업",
+      "body": "같이 2군에 있던 동료가 1군에 올라갔습니다.\n\n축하해주고 돌아섰습니다.",
+      "decisionTemplateId": "DEC_FARM_FRIEND_CALLED"
+    },
+    {
+      "id": "MSG_FARM_FARM_MILESTONE",
+      "category": "coach",
+      "subject": "2군 기록",
+      "body": "2군에서 탈삼진 기록을 세웠습니다.\n\n2군 기록이라는 말이 늘 따라붙습니다.",
+      "decisionTemplateId": "DEC_FARM_FARM_MILESTONE"
+    },
+    {
+      "id": "MSG_FARM_FAMILY_ASK",
+      "category": "news",
+      "subject": "가족의 물음",
+      "body": "1군에는 언제 올라가느냐고 묻습니다.\n\n대답할 말이 없습니다.",
+      "decisionTemplateId": "DEC_FARM_FAMILY_ASK"
+    },
+    {
+      "id": "MSG_FARM_FORM_FOUND_FARM",
+      "category": "coach",
+      "subject": "감각을 찾았다",
+      "body": "공이 손에서 잘 빠집니다.\n\n이 상태로 콜업이 오면 좋겠습니다.",
+      "decisionTemplateId": "DEC_FARM_FORM_FOUND_FARM"
+    },
+    {
+      "id": "MSG_FARM_TRADE_TALK_FARM",
+      "category": "coach",
+      "subject": "트레이드 이야기",
+      "body": "다른 팀이 관심을 보인다는 이야기를 들었습니다.\n\n2군에서는 이적이 기회일 수 있습니다.",
+      "decisionTemplateId": "DEC_FARM_TRADE_TALK_FARM"
+    },
+    {
+      "id": "MSG_FARM_MENTAL_LOW_FARM",
+      "category": "coach",
+      "subject": "여기서 끝인가",
+      "body": "이 자리에서 몇 년이 지났습니다.\n\n이대로 끝나는 건 아닌지 생각합니다.",
+      "decisionTemplateId": "DEC_FARM_MENTAL_LOW_FARM"
+    },
+    {
+      "id": "MSG_FARM_FIRST_CALLUP_HOPE",
+      "category": "coach",
+      "subject": "첫 콜업을 앞두고",
+      "body": "신인인데 성적이 좋습니다.\n\n첫 1군 등판이 멀지 않았을 수 있습니다.",
+      "decisionTemplateId": "DEC_FARM_FIRST_CALLUP_HOPE"
+    },
+    {
+      "id": "MSG_FARM_LIFE_SIDE_FARM",
+      "category": "system",
+      "subject": "사이드 피칭",
+      "body": "2군 불펜에서 사이드 피칭을 합니다.\n\n보는 사람은 코치 한 명입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_FARM_LIFE_SHARE_GEAR",
+      "category": "system",
+      "subject": "장비 공유",
+      "body": "공이 모자랍니다.\n\n2군은 늘 그렇습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_FARM_LIFE_LATE_MEAL",
+      "category": "system",
+      "subject": "늦은 식사",
+      "body": "경기가 끝나고 늦게 먹습니다.\n\n식당 문이 닫히기 직전입니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_FARM_LIFE_ROOM_MATE",
+      "category": "system",
+      "subject": "룸메이트",
+      "body": "합숙소 룸메이트도 콜업을 기다립니다.\n\n같은 이야기를 반복합니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_FARM_LIFE_FARM_UMPIRE",
+      "category": "system",
+      "subject": "2군 심판",
+      "body": "2군 심판의 존이 들쭉날쭉합니다.\n\n적응하는 것도 실력이라고 합니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_FARM_LIFE_EXTRA_FARM",
+      "category": "system",
+      "subject": "야간 자율 훈련",
+      "body": "불 꺼진 2군 구장에서 혼자 던집니다.\n\n누가 보든 안 보든 합니다.",
+      "decisionTemplateId": "DEC_FARM_LIFE_EXTRA_FARM"
+    },
+    {
+      "id": "MSG_FARM_LIFE_ONE_GAME_FARM",
+      "category": "system",
+      "subject": "1군 중계",
+      "body": "숙소에서 1군 경기를 봅니다.\n\n내 자리에 다른 사람이 서 있습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_FARM_LIFE_FARM_STATS",
+      "category": "news",
+      "subject": "2군 기록실",
+      "body": "2군 기록도 정리돼 올라갑니다.\n\n누가 보는지는 모릅니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_FARM_LIFE_LOCAL_FARM_NEWS",
+      "category": "news",
+      "subject": "2군 소식",
+      "body": "구단 홈페이지에 2군 소식이 한 줄 올라왔습니다.\n\n이름이 실렸습니다.",
+      "decisionTemplateId": null
+    },
+    {
+      "id": "MSG_FARM_LIFE_SCOUT_FARM",
+      "category": "news",
+      "subject": "타팀 스카우트",
+      "body": "2군 경기에 다른 팀 사람이 왔습니다.\n\n트레이드를 보는 눈일 수도 있습니다.",
+      "decisionTemplateId": null
     }
   ]
 }

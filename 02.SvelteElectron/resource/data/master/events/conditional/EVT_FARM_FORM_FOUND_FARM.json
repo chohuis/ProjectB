@@ -1,0 +1,24 @@
+{
+  "id": "EVT_FARM_FORM_FOUND_FARM",
+  "type": "conditional",
+  "category": "training",
+  "priority": 705,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueId": "LEAGUE_KBL_FARM"
+    },
+    {
+      "type": "condition_gte",
+      "value": 80
+    },
+    {
+      "type": "fatigue_lte",
+      "value": 45
+    }
+  ],
+  "cooldownWeeks": 6,
+  "messageTemplateId": "MSG_FARM_FORM_FOUND_FARM",
+  "decisionTemplateId": "DEC_FARM_FORM_FOUND_FARM"
+}

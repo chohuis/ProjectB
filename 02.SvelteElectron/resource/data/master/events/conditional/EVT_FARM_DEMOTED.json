@@ -1,0 +1,19 @@
+{
+  "id": "EVT_FARM_DEMOTED",
+  "type": "conditional",
+  "category": "career",
+  "priority": 800,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueId": "LEAGUE_KBL_FARM"
+    },
+    {
+      "type": "week_gte",
+      "value": 2
+    }
+  ],
+  "messageTemplateId": "MSG_FARM_DEMOTED",
+  "decisionTemplateId": "DEC_FARM_DEMOTED"
+}

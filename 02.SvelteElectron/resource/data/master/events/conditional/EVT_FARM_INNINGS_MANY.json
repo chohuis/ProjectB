@@ -1,0 +1,24 @@
+{
+  "id": "EVT_FARM_INNINGS_MANY",
+  "type": "conditional",
+  "category": "health",
+  "priority": 740,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueId": "LEAGUE_KBL_FARM"
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 60
+    },
+    {
+      "type": "fatigue_gte",
+      "value": 60
+    }
+  ],
+  "cooldownWeeks": 5,
+  "messageTemplateId": "MSG_FARM_INNINGS_MANY",
+  "decisionTemplateId": "DEC_FARM_INNINGS_MANY"
+}

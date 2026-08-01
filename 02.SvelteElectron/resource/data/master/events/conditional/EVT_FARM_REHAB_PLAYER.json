@@ -1,0 +1,20 @@
+{
+  "id": "EVT_FARM_REHAB_PLAYER",
+  "type": "conditional",
+  "category": "team_life",
+  "priority": 690,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueId": "LEAGUE_KBL_FARM"
+    },
+    {
+      "type": "week_gte",
+      "value": 10
+    }
+  ],
+  "cooldownWeeks": 6,
+  "messageTemplateId": "MSG_FARM_REHAB_PLAYER",
+  "decisionTemplateId": "DEC_FARM_REHAB_PLAYER"
+}

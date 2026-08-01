@@ -1,0 +1,19 @@
+{
+  "id": "EVT_FARM_FARM_MILESTONE",
+  "type": "conditional",
+  "category": "career",
+  "priority": 725,
+  "oncePolicy": "once_per_season",
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueId": "LEAGUE_KBL_FARM"
+    },
+    {
+      "type": "season_k_gte",
+      "value": 60
+    }
+  ],
+  "messageTemplateId": "MSG_FARM_FARM_MILESTONE",
+  "decisionTemplateId": "DEC_FARM_FARM_MILESTONE"
+}

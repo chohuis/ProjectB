@@ -1,0 +1,24 @@
+{
+  "id": "EVT_FARM_FAMILY_ASK",
+  "type": "conditional",
+  "category": "social",
+  "priority": 695,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueId": "LEAGUE_KBL_FARM"
+    },
+    {
+      "type": "pro_year_gte",
+      "value": 3
+    },
+    {
+      "type": "morale_lte",
+      "value": 55
+    }
+  ],
+  "cooldownWeeks": 8,
+  "messageTemplateId": "MSG_FARM_FAMILY_ASK",
+  "decisionTemplateId": "DEC_FARM_FAMILY_ASK"
+}

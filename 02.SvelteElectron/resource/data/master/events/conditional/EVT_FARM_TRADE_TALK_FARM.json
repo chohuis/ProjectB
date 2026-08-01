@@ -1,0 +1,24 @@
+{
+  "id": "EVT_FARM_TRADE_TALK_FARM",
+  "type": "conditional",
+  "category": "career",
+  "priority": 735,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueId": "LEAGUE_KBL_FARM"
+    },
+    {
+      "type": "pro_year_gte",
+      "value": 3
+    },
+    {
+      "type": "week_gte",
+      "value": 30
+    }
+  ],
+  "cooldownWeeks": 8,
+  "messageTemplateId": "MSG_FARM_TRADE_TALK_FARM",
+  "decisionTemplateId": "DEC_FARM_TRADE_TALK_FARM"
+}

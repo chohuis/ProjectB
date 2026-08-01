@@ -1,0 +1,18 @@
+{
+  "id": "EVT_FARM_LIFE_FARM_UMPIRE",
+  "type": "random",
+  "category": "team_life",
+  "priority": 300,
+  "oncePolicy": "repeatable",
+  "cooldownWeeks": 3,
+  "weight": 20,
+  "poolId": "POOL_TEAM_LIFE_DAILY",
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueId": "LEAGUE_KBL_FARM"
+    }
+  ],
+  "messageTemplateId": "MSG_FARM_LIFE_FARM_UMPIRE",
+  "decisionTemplateId": null
+}

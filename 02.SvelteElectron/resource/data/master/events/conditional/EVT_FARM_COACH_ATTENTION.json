@@ -1,0 +1,24 @@
+{
+  "id": "EVT_FARM_COACH_ATTENTION",
+  "type": "conditional",
+  "category": "training",
+  "priority": 710,
+  "oncePolicy": "repeatable",
+  "conditions": [
+    {
+      "type": "league_id",
+      "leagueId": "LEAGUE_KBL_FARM"
+    },
+    {
+      "type": "season_ip_gte",
+      "value": 15
+    },
+    {
+      "type": "pitching_ovr_gte",
+      "value": 58
+    }
+  ],
+  "cooldownWeeks": 6,
+  "messageTemplateId": "MSG_FARM_COACH_ATTENTION",
+  "decisionTemplateId": "DEC_FARM_COACH_ATTENTION"
+}
