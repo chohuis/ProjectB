@@ -18,6 +18,7 @@ import { masterStore } from "../stores/master";
 import { calcKblDraftContract } from "../utils/draftSalaryTable";
 import { buildSalaryIndex, loadRosterRules } from "../repo/newGameV3";
 import { canApplyToUniversity, isUniversityFinalYear } from "../utils/careerTransition";
+import { loadAcademicsRules, canGraduate } from "../utils/academicsEngine";
 import { openProSeason } from "./proSeason";
 import { enlistProtagonist } from "./militaryDecision";
 import type { PendingAction } from "../types/season";
@@ -66,11 +67,23 @@ export async function continueCurrentStage(): Promise<boolean> {
   // (`CareerResultModal.isFinalYear`) 헤드리스는 그냥 계속 눌렀고,
   // 주인공이 **7년째 대학생(29세)** 이 됐다. 판정을 여기로 옮겨 화면과
   // 자동 진행이 같은 걸 본다.
+  //
+  // 단 **학점이 모자라면 졸업을 못 한다** — 그때는 한 해 더 다닌다(Phase 9-C).
+  // 유급 자체는 `applySemesterResult`가 `universityWeek`을 되돌려 내므로
+  // 여기서는 "졸업 자격이 없으면 최종 학년이어도 계속할 수 있다"만 본다.
   if (p.careerStage === "university"
       && isUniversityFinalYear(p.grade, g.schoolState.universityWeek)) {
+    const rules = await loadAcademicsRules();
+    if (canGraduate(rules, g.schoolState.universityGpa ?? 0)) {
+      gameStore.markGraduated();
+      return false;          // 졸업 — 진로를 정해야 한다
+    }
+    // 학점 미달 — 한 해 더 다닌다. **여기서 반환하면 안 된다**:
+    // 아래 해소 블록을 건너뛰면 `careerChoice` pending이 남아 같은 주가
+    // 무한 반복된다 (#19·#26과 같은 형태다)
+  } else if (p.careerStage !== "university" && p.careerStage !== "independent") {
     return false;
   }
-  if (p.careerStage !== "university" && p.careerStage !== "independent") return false;
 
   gameStore.setCareerApplicationsSubmitted(false);
   gameStore.clearCareerResults();

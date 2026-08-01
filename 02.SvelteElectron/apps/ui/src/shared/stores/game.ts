@@ -1232,6 +1232,52 @@ function createGameStore() {
       });
     },
 
+    /**
+     * 대학 학기 성적 확정 (Phase 9-C).
+     *
+     * ⚠ 고교의 `applyExamResult`와 **다른 경로다.** 고교는 석차 9등급으로
+     * 대학 입학 티어를 정하고, 대학은 학점으로 졸업 자격을 정한다.
+     * 유급은 `universityWeek`을 **안 올리는 방식**으로 낸다 — 학년 계수기가
+     * 거기 하나뿐이라 그래야 정본이 갈라지지 않는다.
+     */
+    applySemesterResult(
+      r: import("../utils/academicsEngine").SemesterResult,
+      term: "midterm" | "final",
+      seasonYear: number,
+    ) {
+      update((s) => {
+        const sc = s.schoolState;
+        return {
+          ...s,
+          schoolState: {
+            ...sc,
+            universityGpa: r.cumulativeGpa,
+            semesterGpaHistory: [...(sc.semesterGpaHistory ?? []), { year: seasonYear, term, gpa: r.gpa }],
+            academicWarningLevel: r.newWarningLevel,
+            repeatedYears: (sc.repeatedYears ?? 0) + (r.repeats ? 1 : 0),
+            // 2단계 이상이면 다음 학기 출전 정지
+            eligibilityBlocked: r.newWarningLevel >= 2,
+            // 유급하면 학년 계수기를 한 해(52주) 되돌린다
+            universityWeek: r.repeats ? Math.max(0, sc.universityWeek - 52) : sc.universityWeek,
+            examAccumScore: 0,
+          },
+        };
+      });
+    },
+
+    /** 졸업 확정 — 미지명이어도 여기서 취업 경로가 갈린다 (Phase 11 엔딩) */
+    markGraduated() {
+      update((s) => ({ ...s, schoolState: { ...s.schoolState, graduated: true } }));
+    },
+
+    /** 주간 학업 학점 누적 (대학 전용) */
+    addWeeklyGpa(delta: number) {
+      update((s) => ({
+        ...s,
+        schoolState: { ...s.schoolState, examAccumScore: s.schoolState.examAccumScore + delta },
+      }));
+    },
+
     // 출전 정지 해제 (1주 후 자동)
     clearEligibilityBlock() {
       update((s) => ({

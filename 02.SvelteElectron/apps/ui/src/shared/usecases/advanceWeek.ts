@@ -8,7 +8,10 @@ import { buildRelationMessages } from "../utils/relationMessages";
 import { simulateGame } from "../utils/gameSimulator";
 import { rotationSizeForStage } from "../utils/rosterEngine";
 import { calcTrainingGrowth } from "../utils/growthEngine";
-import { applyWeeklyStudy, NEUTRAL_STUDY, calcExamResult, getUniversityEffBonus, getUniversityExamGainMult } from "../utils/academicsEngine";
+import {
+  applyWeeklyStudy, NEUTRAL_STUDY, calcExamResult, getUniversityExamGainMult,
+  loadAcademicsRules, majorEffects, warningEffect, settleSemester,
+} from "../utils/academicsEngine";
 import { checkAchievements, computeMetrics } from "../utils/achievementEngine";
 import { generateTop10, buildTop10Message, rankEffect } from "../utils/top10Engine";
 import { isMonthStart, planMonthlyFriendlies, buildMonthlyNoticeMessage } from "../utils/friendlyMatchEngine";
@@ -209,7 +212,28 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     : NEUTRAL_STUDY;
   if (isStudent) gameStore.applyWeeklyStudyResult(studyResult);
 
-  const majorEffBonus = isUniversity ? getUniversityEffBonus(g.schoolState.universityMajor) : 0;
+  // ── 대학 학업 (Phase 9-C) ────────────────────────────────────
+  //
+  // 고교와 축이 다르다 — 고교는 석차 9등급으로 대학 입학 티어를 정하고,
+  // 대학은 **학점 → 졸업 자격**이다. 수치는 전부 `academicsRules`에서 온다.
+  const acaRules = isUniversity ? await loadAcademicsRules() : null;
+  let univEffMod = 1.0;
+  if (acaRules) {
+    const mj = majorEffects(acaRules, g.schoolState.universityMajor);
+    // 주간 학점 누적 — 학업 모드와 전공이 함께 정한다
+    const perWeek = acaRules.university.studyModeGpa[g.schoolState.weeklyStudyMode] ?? 0;
+    if (perWeek > 0) gameStore.addWeeklyGpa(perWeek * mj.gpaGainMult);
+    // 경고 단계는 훈련 효율을 깎는다. **한 번에 출전 정지로 가지 않는다** —
+    // 1차는 효율만 깎고 경기는 뛴다(회복할 틈)
+    univEffMod = warningEffect(acaRules, g.schoolState.academicWarningLevel ?? 0)?.trainingEffMod ?? 1.0;
+  }
+
+  // ⚠ 전공 계수의 정본은 `generation_rules.json`이다. 예전엔
+  // `academicsEngine.UNIVERSITY_MAJORS` 상수에도 같은 숫자가 있었는데,
+  // 규칙 파일에 `majors`를 넣으면서 **표가 둘이 됐다** — 규칙 파일만 읽는다.
+  const majorEffBonus = acaRules
+    ? majorEffects(acaRules, g.schoolState.universityMajor).trainingEffBonus
+    : 0;
 
   const pitchCoach = findTeamCoach(g.protagonist.teamId, "투수", m.entities);
   // 스태프 능력치는 `staffEffects`만 읽는다 — 여기서 직접 파면 그게 다음 드리프트다
@@ -344,7 +368,9 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   // **팀 자원에 반비례**하므로 열악한 팀일수록 이 값이 크다 (DESIGN §7.3)
   const subBonus = trainingSub.byArea.reduce((a, b) => a + b.effective, 0);
 
-  const finalEffMod = studyResult.efficiencyMod * (1 + majorEffBonus + coachEffBonus + subBonus)
+  // `univEffMod`는 학사 경고 단계의 훈련 효율 하락이다 (대학 전용, 없으면 1.0)
+  const finalEffMod = studyResult.efficiencyMod * univEffMod
+    * (1 + majorEffBonus + coachEffBonus + subBonus)
     * facilityEffMod * slumpPenalty * effectiveInjuryEffMod;
 
   const growth = await calcTrainingGrowth(g.protagonist, g.trainingPlan, finalEffMod, myMods);
@@ -618,10 +644,30 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
   const triggeredExamId = Object.keys(evResult.updatedTriggers).find((id) => EXAM_EVENT_IDS.has(id));
   if (triggeredExamId && (g.protagonist.careerStage === "highschool" || g.protagonist.careerStage === "university")) {
     const examType = triggeredExamId === "EVT_HS_MIDTERM" ? "midterm" : "final";
-    const examRes  = await calcExamResult(gAfterStudy.schoolState.examAccumScore, gAfterStudy.schoolState.warningCount, examType);
-    gameStore.applyExamResult(examRes);
-    gameStore.addMessage(makeExamMessage(weekNum, examRes.messageSubject, examRes.messageBody));
-    logs.push(`[시험] ${examRes.messageSubject}`);
+    if (isUniversity && acaRules) {
+      // ── 대학: 학점 확정 (Phase 9-C) ───────────────────────────
+      //
+      // 고교의 9등급 경로와 **다른 경로다.** 고교는 그 등급으로 대학 입학
+      // 티어가 정해지고(`universityUtils`), 대학은 학점으로 졸업 자격이
+      // 정해진다. 경고는 한 번에 출전 정지로 가지 않고 단계로 오르내린다.
+      const sc = gAfterStudy.schoolState;
+      const res = settleSemester(acaRules, {
+        weeklyGpaAccum: sc.examAccumScore,
+        priorCumulative: sc.universityGpa ?? 0,
+        semestersDone: (sc.semesterGpaHistory?.length ?? 0) + 1,
+        warningLevel: sc.academicWarningLevel ?? 0,
+        major: sc.universityMajor,
+      });
+      gameStore.applySemesterResult(res, examType, s.seasonYear);
+      gameStore.addMessage(makeExamMessage(weekNum, res.messageSubject, res.messageBody));
+      logs.push(`[학업] ${res.messageSubject} (학점 ${res.gpa.toFixed(2)} / 누적 ${res.cumulativeGpa.toFixed(2)})`);
+      if (res.repeats) logs.push("[학업] 유급 — 졸업이 한 해 밀린다");
+    } else {
+      const examRes = await calcExamResult(gAfterStudy.schoolState.examAccumScore, gAfterStudy.schoolState.warningCount, examType);
+      gameStore.applyExamResult(examRes);
+      gameStore.addMessage(makeExamMessage(weekNum, examRes.messageSubject, examRes.messageBody));
+      logs.push(`[시험] ${examRes.messageSubject}`);
+    }
   }
 
   // 진로허브 트리거 — 스테이지별 시즌 종료 직후

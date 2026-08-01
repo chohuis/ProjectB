@@ -500,6 +500,30 @@ export interface SchoolState {
   careerFinalChoice: CareerFinalChoice;
   universityWeek: number;
   majorSelected: boolean;
+
+  // ── 대학 학업 (Phase 9-C) ────────────────────────────────────
+  //
+  // ⚠ **고교와 축이 다르다.** 고교는 석차 9등급으로 대학 입학 티어를 정하고
+  // (`universityUtils.minAcademicGrade`), 그건 지금도 정상 동작한다.
+  // 대학은 **학점 → 졸업 자격 → 진로 안전망**이 축이다. 대학에 내신 9등급을
+  // 그대로 쓰면 성립하지 않는다.
+  //
+  // 주인공은 slot.db에 JSON 블롭으로 들어가므로 **마이그레이션이 필요 없다.**
+  // 구 세이브는 전부 undefined로 읽히고 아래 기본값이 적용된다.
+
+  /** 누적 학점 (0.0~4.5). 졸업 판정의 기준이다 */
+  universityGpa?: number;
+  /** 학기별 학점 이력 — 연속 미달을 세려면 이력이 있어야 한다 */
+  semesterGpaHistory?: { year: number; term: "midterm" | "final"; gpa: number }[];
+  /**
+   * 학사 경고 단계 (0~3). **한 번에 출전 정지로 가지 않는다** —
+   * 1차 훈련효율 하락 → 2차 출전 정지 → 3차 유급. 회복할 틈을 준다.
+   */
+  academicWarningLevel?: 0 | 1 | 2 | 3;
+  /** 유급 횟수 — `universityWeek`을 안 올려 졸업이 밀린 해의 수 */
+  repeatedYears?: number;
+  /** 졸업했는가. 미지명이어도 여기서 취업 경로가 갈린다 (Phase 11 엔딩) */
+  graduated?: boolean;
 }
 
 export type AchievementCategory = "baseball" | "growth" | "social" | "hidden";

@@ -326,15 +326,15 @@
   "_rosterLimitsNote": "rosterSize는 생성 인원, rosterMin/rosterMax는 매 시즌 유지 상한이다. 예전엔 상한이 Rust roster_rule()과 TS ROSTER_RULES에 각각 하드코딩돼 있었고 둘 다 이 파일과 달랐다 (KBL 상한 65 vs 생성 30).",
   "promotionRules": {
     "_note": "1군 <-> 2군 승강 판정 (Phase 7-2). 읽는 곳: engine-native/src/team_engine.rs. 사용자 확정: 최근 성적 위주 + 능력치 보정",
-    "formWeight": 8.0,
+    "formWeight": 8,
     "_formWeightNote": "성적 점수(-1~+1)에 곱한다. 8이면 성적이 OVR 8점어치 - 리그 OVR 폭 30의 4분의 1이라 뒤집히되 능력치를 완전히 무시하진 않는다",
     "pitcherEraBaseline": 4.5,
-    "pitcherFullInnings": 40.0,
+    "pitcherFullInnings": 40,
     "_pitcherNote": "ERA 4.50이 0점. 2.25면 +1.0. 40이닝 미만은 표본만큼 0쪽으로 당긴다",
     "batterOpsBaseline": 0.7,
-    "batterFullPa": 120.0,
+    "batterFullPa": 120,
     "_batterNote": "OPS 0.700이 0점. 0.910이면 +0.3. 120타석 미만은 표본만큼 깎는다",
-    "formSpan": 1.0,
+    "formSpan": 1,
     "slumpScore": -0.5,
     "_slumpNote": "이 점수 아래면 장기 부진 - 상시 콜업 트리거이자 교체 압력 +20"
   },
@@ -564,7 +564,7 @@
           "name": "상시"
         }
       ],
-      "teamResourceInverse": 1.0,
+      "teamResourceInverse": 1,
       "_inverseNote": "실효 보너스 = bonus × clamp(2 − 팀시설계수, 0.60, 1.40). 시설계수 1.08인 명문 구단이면 0.92배, 0.85인 약체면 1.15배. teamResourceInverse=0으로 두면 반비례가 꺼진다",
       "_inverseFloorNote": "하한 0.60을 둔 이유: 반비례가 너무 세면 좋은 팀에 간 순간 구독이 무의미해지고, 구독 토글 자체가 죽은 UI가 된다",
       "maxTotalBonus": 0.14,
@@ -580,8 +580,8 @@
           "id": "DEPOSIT",
           "name": "예금",
           "mean": 0.03,
-          "sd": 0.0,
-          "floor": 0.0,
+          "sd": 0,
+          "floor": 0,
           "desc": "확정 수익. 물가만큼은 지킨다"
         },
         {
@@ -624,9 +624,9 @@
       "topScoutExtra": 15,
       "clubPicks": 8,
       "_pickNote": "구단 지명은 남은 후보에서 무작위다. 이 경로가 '예상 밖의 이름'을 만든다 — 세 경로 합계 ~223명으로 기획(~220명)과 맞는다",
-      "attendScoutGain": 4.0,
-      "attendFameGain": 2.0,
-      "standoutScoutGain": 9.0,
+      "attendScoutGain": 4,
+      "attendFameGain": 2,
+      "standoutScoutGain": 9,
       "standoutPercent": 0.12,
       "_gainNote": "참가만 해도 주목도 +4. Day2 상위 12%는 +13. 참가가 형식이 되면 안 되고, 그렇다고 나가기만 하면 드래프트 순위가 뒤집혀도 안 된다"
     },
@@ -649,10 +649,77 @@
         "RP"
       ],
       "_posNote": "각 자리를 최소 한 명은 채운다. 점수순으로만 뽑으면 OVR이 몰리는 포지션만 남아 라인업이 안 짜인다",
-      "selectFameGain": 6.0,
-      "selectPopularityGain": 8.0,
-      "mvpFameGain": 12.0,
+      "selectFameGain": 6,
+      "selectPopularityGain": 8,
+      "mvpFameGain": 12,
       "_gainNote": "선발되는 것 자체가 보상이라 참가 보너스가 쇼케이스보다 크다. 인기도가 선발 점수의 30%를 차지하므로 뽑히면 다음 해에 더 뽑히기 쉬워진다 — 의도한 양의 되먹임이다"
+    }
+  },
+  "academicsRules": {
+    "_note": "대학 학업 정본. 코드에 같은 수치를 다시 적지 말 것 — Phase 7에서 이 결함만 15건 나왔다.",
+    "university": {
+      "gpaMax": 4.5,
+      "graduationGpa": 2,
+      "warningGpa": 1.75,
+      "_warningNote": "학기 GPA가 warningGpa 미만이면 경고 단계 +1, 이상이면 -1 (0 미만으로 안 내려간다)",
+      "warningEffects": [
+        {
+          "level": 1,
+          "trainingEffMod": 0.9,
+          "blocksGames": false,
+          "repeats": false,
+          "label": "학사 경고"
+        },
+        {
+          "level": 2,
+          "trainingEffMod": 0.85,
+          "blocksGames": true,
+          "repeats": false,
+          "label": "출전 정지"
+        },
+        {
+          "level": 3,
+          "trainingEffMod": 0.85,
+          "blocksGames": true,
+          "repeats": true,
+          "label": "유급"
+        }
+      ],
+      "studyModeGpa": {
+        "_note": "주간 학업 모드가 학기 GPA에 기여하는 주당 값. 52주 시즌에 시험이 2회다",
+        "focus": 0.055,
+        "normal": 0.03,
+        "rest": 0.01,
+        "sleep": 0
+      }
+    },
+    "majors": {
+      "_note": "전공은 각각 다른 축을 준다. 전부 훈련효율만 주면 고를 이유가 없다",
+      "체육교육": {
+        "trainingEffBonus": 0.03,
+        "xpBonus": {
+          "mentality": 0.15
+        },
+        "injuryMod": 1,
+        "gpaGainMult": 1,
+        "coachPath": true
+      },
+      "스포츠과학": {
+        "trainingEffBonus": 0.03,
+        "xpBonus": {
+          "recovery": 0.2
+        },
+        "injuryMod": 0.88,
+        "gpaGainMult": 1,
+        "coachPath": false
+      },
+      "일반전공": {
+        "trainingEffBonus": 0,
+        "xpBonus": {},
+        "injuryMod": 1,
+        "gpaGainMult": 1.5,
+        "careerNet": true
+      }
     }
   }
 }

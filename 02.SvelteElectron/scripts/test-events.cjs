@@ -180,5 +180,30 @@ ok("프로 이벤트가 고교의 절반 이상이다",
   (byStage["pro_kbl"] ?? 0) >= (byStage["highschool"] ?? 0) * 0.5,
   `프로 ${byStage["pro_kbl"] ?? 0} · 고교 ${byStage["highschool"] ?? 0}`);
 
+// ── 5. 대학 전공 — 코드 목록과 규칙 파일이 어긋나지 않는다 ────
+console.log("\n[5] 전공 목록이 규칙 파일과 일치한다");
+//
+// 수치 정본은 `generation_rules.json`의 `academicsRules.majors`이고,
+// `academicsEngine.UNIVERSITY_MAJORS`는 화면이 고를 목록이다.
+// **표가 둘이면 갈라진다** — Phase 7에서 이 결함만 15건 나왔다.
+{
+  const rules = JSON.parse(fs.readFileSync(
+    path.join(ROOT, "resource/data/master/players/generation_rules.json"), "utf8"));
+  const ruleMajors = Object.keys(rules.academicsRules?.majors ?? {}).filter((k) => !k.startsWith("_"));
+  const src = fs.readFileSync(path.join(ROOT, "apps/ui/src/shared/utils/academicsEngine.ts"), "utf8");
+  const codeMajors = [...src.matchAll(/\{\s*id:\s*"([^"]+)"/g)].map((m) => m[1]);
+  const onlyCode = codeMajors.filter((m) => !ruleMajors.includes(m));
+  const onlyRule = ruleMajors.filter((m) => !codeMajors.includes(m));
+  ok(`전공 ${ruleMajors.length}종이 양쪽에 같다`,
+    onlyCode.length === 0 && onlyRule.length === 0,
+    `코드에만: ${onlyCode.join(", ") || "-"} / 규칙에만: ${onlyRule.join(", ") || "-"}`);
+
+  const u = rules.academicsRules?.university;
+  ok("졸업·경고 기준이 규칙 파일에 있다",
+    !!u && typeof u.graduationGpa === "number"
+      && Array.isArray(u.warningEffects) && u.warningEffects.length === 3,
+    JSON.stringify(u ?? null).slice(0, 140));
+}
+
 console.log(failed === 0 ? "\nALL PASS" : `\n${failed} FAILED`);
 process.exit(failed === 0 ? 0 : 1);
