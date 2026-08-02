@@ -2,7 +2,7 @@
 import type { EventRule, EventPool, MessageTemplate, DecisionTemplate, DecisionTemplateOption } from "../types/event";
 import type { CareerStage, CoachAttributes, CoachSpecialty } from "../types/save";
 import type { DecisionEffect } from "../types/main";
-import { validateTeamRefs } from "../utils/ids";
+import { validateTeamRefs, primeTeamLeagueMap } from "../utils/ids";
 import {
   KBL_TEAMS, ABL_TEAMS, JBL_TEAMS,
   KBL_FARM_TEAMS, ABL_FARM_TEAMS, JBL_FARM_TEAMS,
@@ -780,6 +780,10 @@ function createMasterStore() {
         militarySportsEvents:  militarySportsData?.events  ?? [],
         militaryGeneralEvents: militaryGeneralData?.events ?? [],
       }));
+
+      // 팀→리그 표를 채운다 — 선수 소속을 바꿀 때 `leagueOfTeam`이 이걸 쓴다.
+      // 안 채우면 ID 접두사 폴백으로 돌지만, refs가 정본이므로 여기서 먼저 준다.
+      primeTeamLeagueMap(mergedTeams);
 
       // 부팅 무결성 검증 — 코드 팀 상수 ⊆ refs.json + _1→_2 팜 규칙 (DESIGN.md §8.2 원칙 6)
       validateTeamRefs(

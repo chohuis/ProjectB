@@ -60,9 +60,24 @@ console.log("\n소스 가드");
     !/maxRosterSize:\s*\d+/.test(market),
     (market.match(/maxRosterSize:\s*\d+/) ?? [""])[0]);
 
-  // 강등은 팀과 리그를 같이 바꿔야 한다
-  check("승강이 currentLeague도 바꾼다", /currentLeague:\s*to[A-Za-z]*\.endsWith|currentLeague:\s*toTeam\.endsWith/.test(market)
+  // 강등은 팀과 리그를 같이 바꿔야 한다.
+  //
+  // ⚠ 예전엔 `currentLeague: toTeam.endsWith("_2") ? ...` **구현 방식을**
+  // 정규식으로 고정했다. 그래서 파생을 `ids.leagueOfTeam`으로 옮기자
+  // **동작은 그대로인데 검사가 깨졌다.** 검사는 "무엇을 하는가"를 봐야지
+  // "어떻게 적는가"를 보면 안 된다 — 리팩터링을 막고, 통과해도 의미가 없다.
+  check("승강이 currentLeague도 바꾼다",
+    /currentLeague:\s*leagueOfTeam\(/.test(market)
+    || /currentLeague:\s*to[A-Za-z]*\.endsWith/.test(market)
     || /currentLeague:\s*.*LEAGUE_KBL_FARM/.test(market));
+
+  // 팀→리그 파생은 `ids.ts`가 정본이다 (CLAUDE.md: ID 파생 규칙은 거기 하나)
+  // ⚠ `LEAGUE_FREE_AGENT`·`LEAGUE_RETIRED`는 **팀이 없는 상태**라 파생 대상이
+  // 아니다 — 예외로 둔다. 그 외 리그 문자열이 대입되면 팀과 어긋날 수 있다.
+  const hardcoded = market.match(/currentLeague:\s*"LEAGUE_[A-Z_]+"/g) ?? [];
+  const bad = hardcoded.filter((h) => !/FREE_AGENT|RETIRED/.test(h));
+  check("리그를 팀 ID에서 파생한다 (소속 리그 하드코딩 금지)",
+    bad.length === 0, bad.join(" · "));
 
   // 주인공이 프로가 아니어도 돌아야 한다
   check("careerStage로 승강을 막지 않는다",

@@ -32,6 +32,59 @@ export function farmTeamId(teamId: string): string | null {
   return teamId.endsWith("_1") ? `${teamId.slice(0, -2)}_2` : null;
 }
 
+// ── 팀 → 리그 파생 ───────────────────────────────────────────────
+//
+// ⚠ **이게 없어서 선수 소속이 어긋났다.** 팀을 바꾸는 자리마다 리그를 각자
+// 처리했는데 — FA 계약은 `currentLeague: "LEAGUE_KBL"`을 **하드코딩**하고,
+// 트레이드는 리그를 **아예 안 건드리고**, 승강만 `_2` 접미사로 파생했다.
+//
+// 국내끼리는 출발·도착 리그가 같아서 **안 드러났다.** 확장팩(ABL·JBL)을 켜자
+// 즉시 터졌다 — `TEAM_ABL_MOTORWOLVES_1` 소속인데 `currentLeague`는
+// `LEAGUE_KBL`인 선수가 생겼다. 게다가 Rust FA 재배치가 `current_league`로
+// 팀을 그룹화하므로 **오염이 자가증식한다**(한 시즌에 25명 → 224명).
+//
+// 팀 ID가 곧 리그다. 파생 규칙은 여기 하나에 둔다.
+
+let _teamLeague: Map<string, string> | null = null;
+
+/**
+ * refs에서 팀→리그 표를 만들어 캐시한다. `masterStore.teams`를 넘긴다.
+ * 부팅 시 한 번 부르면 되고, 안 불러도 `leagueOfTeam`이 접미사로 폴백한다.
+ */
+export function primeTeamLeagueMap(teams: readonly { id: string; leagueId: string }[]): void {
+  const m = new Map<string, string>();
+  for (const t of teams) {
+    // refs는 1군·팜을 **같은 leagueId**로 담는다 (KBL 1군 10 + 팜 10 = 20팀이
+    // 전부 LEAGUE_KBL). `_2`는 팜 리그로 파생한다 — `roster_gen.rs`의 plan과 같은 규칙.
+    m.set(t.id, t.id.endsWith("_2") ? `${t.leagueId}_FARM` : t.leagueId);
+  }
+  _teamLeague = m;
+}
+
+/**
+ * 팀 ID → 리그 ID. **선수 소속을 바꿀 때 반드시 이걸 쓴다.**
+ *
+ * 표가 없으면 ID 접두사로 폴백한다 — 헤드리스·테스트에서 `primeTeamLeagueMap`을
+ * 안 불렀을 때 조용히 틀린 값을 주는 것보다 낫다.
+ */
+export function leagueOfTeam(teamId: string): string | null {
+  if (!teamId) return null;
+  const hit = _teamLeague?.get(teamId);
+  if (hit) return hit;
+
+  const farm = teamId.endsWith("_2");
+  const m = /^TEAM_([A-Z]+)_/.exec(teamId);
+  if (!m) return null;
+  const base = ({
+    HS: "LEAGUE_HIGHSCHOOL", UNIV: "LEAGUE_UNIVERSITY", IND: "LEAGUE_INDEPENDENT",
+    KBL: "LEAGUE_KBL", ABL: "LEAGUE_ABL", JBL: "LEAGUE_JBL",
+  } as Record<string, string>)[m[1]];
+  if (!base) return null;
+  // 고교·대학·독립엔 팜이 없다
+  return farm && (base === "LEAGUE_KBL" || base === "LEAGUE_ABL" || base === "LEAGUE_JBL")
+    ? `${base}_FARM` : base;
+}
+
 /**
  * 리그 ID → 시설 등급. Rust `facility_factor`가 받는 5종과 같은 문자열이다.
  *

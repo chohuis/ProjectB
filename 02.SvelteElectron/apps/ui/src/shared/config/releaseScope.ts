@@ -26,26 +26,17 @@
  *  · `generation_rules.json`에 해외 팜 로스터 규칙 추가
  *
  * **아직 남은 것 — 그래서 다시 닫아 뒀다:**
- *  1. 해외 팜 로스터가 0명. refs에 `LEAGUE_*_FARM` leagueId가 **없고**
- *     `_2` 접미사로 파생하는 구조인데 `ensureLeagueActivatedV3`는
- *     `leagueId` 일치로만 팀을 찾는다
- *  2. **KBL이 오염된다** (O-2b 조사 결과)
+ *  ✅ 해외 팜 로스터 0명 → 해결(O-2a). `_2` 접미사로 파생한다
+ *  ✅ KBL 오염 → 해결(O-2c). `ids.leagueOfTeam`으로 팀에서 리그를 파생.
+ *     **원인은 국내 코드에 있었다** — 팀만 바꾸고 리그를 안 바꾸는 자리들.
+ *     해외를 켜야 드러났을 뿐이다
  *
- *     실측 표본:
- *       팀 TEAM_ABL_MOTORWOLVES_1 · 기록된리그 LEAGUE_KBL · 사건 "2026 trade→LEAGUE_KBL"
- *       팀 TEAM_JBL_CL_SEAGULLS_1 · 기록된리그 LEAGUE_KBL · 사건 "2026 fa_signed"
+ *  ⚠ **남은 것: 해외 1군 정원 초과.** 2시즌 실측에서 ABL 512명(정원 448),
+ *     JBL 406명(정원 336)이 됐고 팜과 인원이 요동친다(ABL_FARM 544 → 353).
+ *     1군↔팜 승강(`processProTeamCallupCalldown`)이 **KBL 전용**이라
+ *     해외는 로스터가 조정되지 않는다.
  *
- *     **이동이 팀만 바꾸고 리그를 안 바꾼다.** 국내끼리는 리그가 같아 안
- *     드러났는데 해외를 켜니 즉시 터진다. 게다가 Rust FA 재배치의
- *     `league_teams`가 `current_league`로 그룹화하므로
- *     **오염된 선수가 다음 해 후보 팀 목록을 오염시킨다** — 자가증식이다
- *     (25명 → 224명, 한 시즌 만에).
- *
- *     남은 것: 최초 진입점. 트레이드는 `t.leagueId === leagueId`로 같은
- *     리그만 보는데도 해외 팀이 배정됐다 — `generate_trade_proposals`에
- *     넘기는 팀 목록을 더 봐야 한다.
- *
- * 2번이 국내를 망가뜨리므로 해결 전에는 열지 않는다.
+ * 정원 조정이 붙기 전에는 열지 않는다 — 국내는 이제 깨끗하다(KBL 10팀).
  */
 export const OUT_OF_SCOPE_LEAGUES: ReadonlySet<string> = new Set([
   "LEAGUE_ABL",

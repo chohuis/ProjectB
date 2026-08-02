@@ -2413,7 +2413,11 @@ function createGameStore() {
                   militaryUnit:          "sports",
                   militaryEnlistYear:    seasonYear,
                   militaryDischargeYear: seasonYear + 2,
-                  currentLeague:         "LEAGUE_UNIVERSITY",
+                  // ⚠ 바로 위 entity 갱신은 `SANGMU_LEAGUE_ID`를 쓰는데 여기만
+                  // `"LEAGUE_UNIVERSITY"` 하드코딩이 남아 있었다 — 같은 선수의
+                  // 리그가 두 곳에서 달라져 팀(독립)과 어긋났다.
+                  // 2362줄 주석이 고쳤다고 적은 그 결함이 여기 그대로 있었다.
+                  currentLeague:         SANGMU_LEAGUE_ID,
                   currentTeam:           SANGMU_TEAM_ID,
                 };
               }

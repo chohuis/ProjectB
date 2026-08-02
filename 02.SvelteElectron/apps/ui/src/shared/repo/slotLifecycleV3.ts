@@ -174,11 +174,18 @@ export async function ensureLeagueActivatedV3(leagueId: string, seasonYear: numb
   if (!slotId) return 0;
   if (g.npcs.some((n) => n.currentLeague === leagueId)) return 0;
 
-  const isPro = ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"].includes(leagueId);
+  // ⚠ **refs엔 `LEAGUE_*_FARM` leagueId가 없다.** 팜은 상위 리그 팀 중 `_2`
+  // 접미사로 파생한다(`roster_gen.rs`의 plan과 같은 규칙). `leagueId` 일치로만
+  // 찾으면 해외 팜이 **0팀**이 되어 일정만 깔리고 선수가 안 생겼다.
+  const isFarm = leagueId.endsWith("_FARM");
+  const baseLeague = isFarm ? leagueId.slice(0, -"_FARM".length) : leagueId;
+  const isPro = ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"].includes(baseLeague);
   const teams = get(masterStore).teams
-    .filter((t) => t.leagueId === leagueId)
+    .filter((t) => t.leagueId === baseLeague)
     // 상무는 Lazy 활성화 대상이 아니다 — 로스터는 military_roster.rs가 따로 만든다
-    .filter((t) => (isPro ? t.id.endsWith("_1") : !SANGMU_TEAM_IDS.has(t.id)))
+    .filter((t) => (isPro
+      ? t.id.endsWith(isFarm ? "_2" : "_1")
+      : !SANGMU_TEAM_IDS.has(t.id)))
     .map((t) => ({ teamId: t.id }));
   if (teams.length === 0) return 0;
 

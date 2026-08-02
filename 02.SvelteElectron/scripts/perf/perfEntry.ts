@@ -1182,9 +1182,10 @@ export function gradeAgeProbe(): Record<string, unknown> {
   };
   const out: Record<string, unknown> = {};
   for (const [lg, r] of Object.entries(RULES)) {
-    // ⚠ **상무를 빼야 한다.** 체육부대 입대자는 `currentLeague`가
-    // LEAGUE_UNIVERSITY로 바뀌어 대학 리그에서 뛴다. 20대 중후반 프로 선수라
-    // 학년이 없고 나이도 학부생 범위를 넘는데, 그건 설계지 결함이 아니다.
+    // ⚠ **상무를 뺀다.** 체육부대 입대자는 20대 중후반 프로 선수라 학년이
+    // 없고 나이도 학부생 범위를 넘는다 — 설계지 결함이 아니다.
+    // (예전엔 상무가 `LEAGUE_UNIVERSITY`로 잘못 기록돼 대학에 섞였다.
+    //  지금은 `SANGMU_LEAGUE_ID`(독립)로 바로잡혔지만 팀 필터는 남겨둔다)
     const rows = get(gameStore).npcs.filter(
       (n) => n.currentLeague === lg
         && n.careerStatus !== "retired"

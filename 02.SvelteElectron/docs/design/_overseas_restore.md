@@ -68,14 +68,9 @@ OVR 74.6. 국내 1군(79)보다 조금 낮은 적절한 수준이다.
 refs에 `LEAGUE_ABL_FARM`인 팀이 없다(전부 `LEAGUE_ABL` + `_2` 접미사).
 → 팜은 상위 리그에서 `_2`로 파생하도록 고쳐야 한다.
 
-### 2. KBL이 오염된다 ⚠ (O-2b 조사 완료)
+### 2. KBL 오염 → **해결 (O-2c)**
 
-| | 기준선 | 게이트 열림 |
-|---|---|---|
-| KBL 인원 | 307 | **447** |
-| KBL 팀수 | 10 | **34** |
-
-**원인: 이동이 팀만 바꾸고 리그를 안 바꾼다.**
+**원인: 이동이 팀만 바꾸고 리그를 안 바꿨다.**
 
 `leagueTeamMismatch` 프로브로 그 선수들을 직접 봤다.
 
@@ -84,28 +79,36 @@ refs에 `LEAGUE_ABL_FARM`인 팀이 없다(전부 `LEAGUE_ABL` + `_2` 접미사)
 팀 TEAM_JBL_CL_SEAGULLS_1  · 기록된리그 LEAGUE_KBL · 사건 "2026 fa_signed"
 ```
 
-국내끼리는 출발·도착 리그가 같아서 **안 드러났다.** 해외를 켜니 즉시 터진다.
+팀을 바꾸는 자리마다 리그를 각자 처리하고 있었다.
 
-**게다가 자가증식한다.** Rust FA 재배치의 `league_teams`가 `current_league`로
-팀을 그룹화하므로, 오염된 선수 하나가 다음 해 `league_teams["LEAGUE_KBL"]`에
-ABL 팀을 밀어넣고 그리로 또 FA가 배정된다.
+| 자리 | 옛 동작 |
+|---|---|
+| FA 계약 | `currentLeague: "LEAGUE_KBL"` **하드코딩** |
+| 트레이드 | 리그를 **아예 안 건드림** |
+| 승강 | `_2` 접미사로 파생하되 KBL 하드코딩 |
+| 상무 입대 | 한 곳은 `SANGMU_LEAGUE_ID`, 다른 곳은 `"LEAGUE_UNIVERSITY"` |
 
-| | 롤오버 직전 | 롤오버 직후 |
+국내끼리는 출발·도착 리그가 같아 **안 드러났다.** 게다가 Rust FA 재배치의
+`league_teams`가 `current_league`로 그룹화하므로 **자가증식했다** —
+롤오버 직전 25명 → 직후 224명(한 시즌 9배).
+
+**수정**: `ids.ts`에 `leagueOfTeam(teamId)` + `primeTeamLeagueMap(teams)`.
+refs가 정본이고(1군·팜이 같은 leagueId라 `_2`는 `_FARM`으로 파생),
+표가 없으면 ID 접두사로 폴백한다. 팀을 바꾸는 **모든 자리**가 이걸 쓴다.
+
+| | 수정 전 | 수정 후 |
 |---|---|---|
-| 불일치 | 25명 | **224명** |
+| `KBL ← ABL/JBL` | 119명 (증식) | **0** |
+| `UNIVERSITY ← INDEPENDENT` (상무) | 13명 | **0** |
+| `DRAFT_POOL ← HIGHSCHOOL` | 92 | 97 (**정상** — 졸업생은 팀을 유지한 채 풀로 간다) |
 
-한 시즌 만에 9배가 됐다.
+⚠ 이 결함은 **국내 코드에 있었다.** 해외를 켜야 드러났을 뿐이다.
 
-**남은 것: 최초 진입점.** 트레이드는 `t.leagueId === leagueId`로 같은 리그만
-보는데도 해외 팀이 배정됐다 — `generate_trade_proposals`에 넘기는 팀 목록을
-더 봐야 한다. FA 쪽도 TS는 KBL 1군만 후보로 거르는데 결과는 ABL이었다.
+### 1. 해외 팜 로스터 0명 → 해결 (O-2a)
 
-**수정 방향**: 팀을 바꾸는 모든 자리에서 **팀 ID로 리그를 파생**한다.
-`ids.ts`가 ID 파생 규칙의 정본이므로 거기에 `leagueOfTeam(teamId)`를 두고
-트레이드·FA·승강이 공통으로 쓰게 한다. 지금은 각자 `"LEAGUE_KBL"`을
-하드코딩하거나 리그를 아예 안 건드린다.
-
-이게 국내를 망가뜨리므로 해결 전에는 열지 않는다.
+`ensureLeagueActivatedV3`가 `t.leagueId === leagueId`로만 팀을 찾는데
+refs엔 `LEAGUE_ABL_FARM`인 팀이 없다. `_FARM`을 떼고 상위 리그에서 `_2`
+접미사로 찾도록 고쳤다 — `roster_gen.rs`의 plan과 같은 규칙이다.
 
 ## 다음 작업
 

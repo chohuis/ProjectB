@@ -6,7 +6,7 @@ import { autoLog, logEvent, logVerify, type PlayerEventEntry } from "../../store
 import { getFaThreshold } from "../../utils/faEngine";
 import { loadRosterRules } from "../../repo/newGameV3";
 import { staffModsOf } from "../../utils/staffEffects";
-import { SANGMU_TEAM_IDS } from "../../utils/ids";
+import { SANGMU_TEAM_IDS, leagueOfTeam } from "../../utils/ids";
 import type { PlayerSeasonStats } from "../../types/save";
 import { MONTH_STARTS_1 } from "./growth";
 import { finiteOr } from "../../utils/payloadNum";
@@ -536,9 +536,17 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
     }));
     // gameStore.npcs 팀 갱신 (모든 NPC는 Named NPC)
     {
+      // ⚠ 예전엔 `currentTeam`만 갈았다. 같은 리그 안 거래라 국내에선 안
+      // 드러났지만, 리그를 안 건드리면 목적지가 다른 리그일 때 소속이 어긋난다.
       const updatedNpcs = get(gameStore).npcs.map(n => {
-        if (n.npcId === offeredId)   return { ...n, currentTeam: proposal.receivingTeamId };
-        if (n.npcId === requestedId) return { ...n, currentTeam: proposal.proposingTeamId };
+        if (n.npcId === offeredId) {
+          const t = proposal.receivingTeamId;
+          return { ...n, currentTeam: t, currentLeague: leagueOfTeam(t) ?? n.currentLeague };
+        }
+        if (n.npcId === requestedId) {
+          const t = proposal.proposingTeamId;
+          return { ...n, currentTeam: t, currentLeague: leagueOfTeam(t) ?? n.currentLeague };
+        }
         return n;
       });
       updateNpcsAndSync(updatedNpcs);
@@ -793,7 +801,7 @@ export async function processProTeamCallupCalldown(
         return {
           ...n,
           currentTeam: toTeam,
-          currentLeague: toTeam.endsWith("_2") ? "LEAGUE_KBL_FARM" : "LEAGUE_KBL",
+          currentLeague: leagueOfTeam(toTeam) ?? n.currentLeague,
         };
       });
     if (movedNpcs.length > 0) gameStore.updateNpcs(movedNpcs);
@@ -802,7 +810,7 @@ export async function processProTeamCallupCalldown(
     // 이미 있으므로 leagueId만 맞으면 그대로 뛴다 (사용자 확정)
     const protoTo = moveMap.get(g.protagonist.id);
     if (protoTo) {
-      const toLeague = protoTo.endsWith("_2") ? "LEAGUE_KBL_FARM" : "LEAGUE_KBL";
+      const toLeague = leagueOfTeam(protoTo) ?? g.protagonist.leagueId;
       gameStore.setProtagonistTeam(protoTo, toLeague);
       logs.push(protoTo.endsWith("_2")
         ? `[W${weekNum}] 2군 강등 통보를 받았다.`
@@ -1203,10 +1211,13 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
           if (idx < 0) continue;
           const cur = updatedNpcs[idx];
           const stayed = sg.toTeamId === sg.fromTeamId;
+          // ⚠ 예전엔 `currentLeague: "LEAGUE_KBL"` 하드코딩이었다. 목적지가
+          // 해외 팀이어도 KBL로 기록돼 소속이 어긋났다 — 팀 ID에서 파생한다.
+          const toLeague = leagueOfTeam(sg.toTeamId) ?? cur.currentLeague;
           updatedNpcs[idx] = {
             ...cur,
             careerStatus: "active",
-            currentLeague: "LEAGUE_KBL",
+            currentLeague: toLeague,
             currentTeam: sg.toTeamId,
             currentSalary: sg.salary,
             contractYears: sg.years,
@@ -1231,6 +1242,7 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
               updatedNpcs[ci] = {
                 ...comp,
                 currentTeam: sg.fromTeamId,
+                currentLeague: leagueOfTeam(sg.fromTeamId) ?? comp.currentLeague,
                 careerEvents: [
                   ...(comp.careerEvents ?? []),
                   {
