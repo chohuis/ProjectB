@@ -235,6 +235,15 @@ pub struct PlacementRules {
     pub independent_max: usize,
     /// 이 나이를 넘으면 독립리그도 안 받는다 (rosterRules.LEAGUE_INDEPENDENT.ageMax)
     pub independent_age_max: i32,
+    /// 대학이 **한 해에** 팀당 받을 수 있는 인원 (정원 ÷ 학년 수).
+    ///
+    /// ⚠ 없으면 팀 정원(`university_max`)만 보고 채워서 **학년 균형이 깨진다.**
+    /// 한 해에 많이 받으면 4년 뒤 그 코호트가 한꺼번에 빠져나가고 다시 크게
+    /// 받는 4년 주기가 생긴다 — 실측 대학 유입이 194~558로 진동했고,
+    /// 저점 해의 고교 졸업생은 갈 곳이 없어 대량으로 야구를 그만뒀다
+    /// (포기 630~1,163명). 어느 해에 태어났느냐가 운명을 가르면 안 된다.
+    #[serde(default)]
+    pub university_annual_max: Option<usize>,
 }
 
 /// 갈 곳 없는 선수들의 진로를 정한다.
@@ -248,6 +257,8 @@ pub struct PlacementRules {
 pub struct Placer<'a> {
     /// 팀 → (투수, 야수)
     roster: std::collections::HashMap<String, (usize, usize)>,
+    /// 팀 → 이번 배치에서 대학이 새로 받은 인원 (학년 균형용)
+    univ_intake: std::collections::HashMap<String, usize>,
     university: &'a [String],
     independent: &'a [String],
     rules: PlacementRules,
@@ -273,7 +284,7 @@ impl<'a> Placer<'a> {
             let e = roster.entry(npc.current_team.clone()).or_insert((0usize, 0usize));
             if npc.player_type == "pitcher" { e.0 += 1; } else { e.1 += 1; }
         }
-        Self { roster, university, independent, rules }
+        Self { roster, univ_intake: std::collections::HashMap::new(), university, independent, rules }
     }
 
     /// 이미 자리를 잡은 사람을 로스터 집계에서 빼둔다 (지명된 재학생 등)
@@ -285,13 +296,21 @@ impl<'a> Placer<'a> {
     }
 
     /// 팀별 빈 슬롯 탐색. 포지션 수요 우선(strict), 없으면 슬롯만 본다
-    fn find_slot(&mut self, want_pitcher: bool, teams: &[String], max: usize) -> Option<String> {
+    ///
+    /// `annual_max`가 있으면 **이번 배치에서 그 팀이 받은 인원**도 함께 본다.
+    /// 대학의 학년 균형이 이걸로 유지된다.
+    fn find_slot(
+        &mut self, want_pitcher: bool, teams: &[String], max: usize, annual_max: Option<usize>,
+    ) -> Option<String> {
         for strict in [true, false] {
             let mut best: Option<(String, usize)> = None;
             for tid in teams {
                 let (p, b) = self.roster.get(tid).copied().unwrap_or((0, 0));
                 let total = p + b;
                 if total >= max { continue; }
+                if let Some(am) = annual_max {
+                    if self.univ_intake.get(tid).copied().unwrap_or(0) >= am { continue; }
+                }
                 if strict {
                     let ratio = if total > 0 { p as f64 / total as f64 } else { 0.5 };
                     // 투수 비율 >0.65면 투수 사양, <0.55면 야수 사양
@@ -325,14 +344,19 @@ impl<'a> Placer<'a> {
         let from_team = (!npc.current_team.is_empty()).then(|| npc.current_team.clone());
 
         let placed = allow_university
-            .then(|| self.find_slot(is_pitcher, self.university, self.rules.university_max))
+            .then(|| self.find_slot(
+                is_pitcher, self.university, self.rules.university_max,
+                self.rules.university_annual_max,
+            ))
             .flatten()
             .map(|t| (t, "LEAGUE_UNIVERSITY"))
             .or_else(|| {
                 // 독립리그는 나이 제한이 있다. 서른 넘은 미지명자를 받으면
                 // 독립 로스터가 은퇴 직전 선수로만 채워진다
                 (npc.age <= self.rules.independent_age_max)
-                    .then(|| self.find_slot(is_pitcher, self.independent, self.rules.independent_max))
+                    .then(|| self.find_slot(
+                        is_pitcher, self.independent, self.rules.independent_max, None,
+                    ))
                     .flatten()
                     .map(|t| (t, "LEAGUE_INDEPENDENT"))
             });
@@ -349,6 +373,10 @@ impl<'a> Placer<'a> {
                     to_league_id: Some(league.into()),
                     detail: Some(format!("{reason} → {dest}")),
                 });
+                // 대학 연간 유입 카운터 — 학년 균형의 근거다
+                if league == "LEAGUE_UNIVERSITY" {
+                    *self.univ_intake.entry(tid.clone()).or_insert(0) += 1;
+                }
                 npc.current_league = league.into();
                 npc.current_team = tid;
                 npc.grade = (league == "LEAGUE_UNIVERSITY").then_some(1);
@@ -573,7 +601,10 @@ mod tests {
     // ── 진로 배정 ────────────────────────────────────────────
 
     fn placement() -> PlacementRules {
-        PlacementRules { university_max: 40, independent_max: 45, independent_age_max: 31 }
+        PlacementRules {
+            university_max: 40, independent_max: 45, independent_age_max: 31,
+            university_annual_max: None,   // 연간 상한 없음 = 기존 동작
+        }
     }
 
     #[test]
@@ -621,7 +652,10 @@ mod tests {
     fn 정원이_차면_다음_사람은_다른_리그로_간다() {
         let univ = vec!["TEAM_UNIV_A".to_string()];
         let indie = vec!["TEAM_IND_A".to_string()];
-        let rules = PlacementRules { university_max: 1, independent_max: 1, independent_age_max: 31 };
+        let rules = PlacementRules {
+            university_max: 1, independent_max: 1, independent_age_max: 31,
+            university_annual_max: None,
+        };
         let mut p = Placer::new(&[], &univ, &indie, rules);
 
         let mut a = npc("A", DRAFT_POOL_LEAGUE, None, 60.0, 20);

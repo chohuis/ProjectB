@@ -908,8 +908,12 @@ export function tradeSourceProbe(): Record<string, unknown> {
     const expiring = roster.filter((n) => (n.contractYears ?? 0) <= 1).length;
     const rank = rankOf.get(t.id);
     const rankPct = rank != null && sorted.length ? rank / sorted.length : 0.5;
-    const prof = (m.entities.find((e) => e.teamId === t.id && e.role === "owner")?.details as
-      { owner?: { winNowPressure?: number } } | undefined)?.owner?.winNowPressure;
+    // ⚠ 프로필은 `owner` 엔티티가 아니라 `gameStore.proTeamProfiles`에 있다.
+    // 엉뚱한 데서 읽어 항상 `?? 50`으로 떨어졌고, 그러면 buyer 조건
+    // (`> 60`)을 영원히 못 넘어 **수정 전후가 똑같이 buyer 0으로 보였다.**
+    // `getTeamProfile`과 같은 순서로 읽는다.
+    const prof = (g.proTeamProfiles[t.id]
+      ?? m.teams.find((mt) => mt.id === t.id)?.proTeamProfile)?.winNowPressure;
     const mode = rankPct > 0.70 ? "seller"
       : (rankPct <= 0.30 && (prof ?? 50) > 60) ? "buyer" : "-";
     return {

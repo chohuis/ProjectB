@@ -45,6 +45,14 @@ export async function runWorldSeasonEnd(now: number): Promise<void> {
   if (_lastWorldSeasonEndYear === now) return;
   _lastWorldSeasonEndYear = now;
 
+  // ⓪ NPC 학년 진급·졸업·나이 — **드래프트보다 먼저**.
+  //
+  // ⚠ 이게 빠져 있어서 A 수정이 절반만 들었다. 진로 결정 경로에서
+  // `runWorldSeasonEnd`를 부를 때 아직 졸업 처리가 안 돼 **졸업생이 드래프트
+  // 풀에 없었다** — 그 해 `quit_baseball`이 정상(950)의 12%인 116건이었다.
+  // 정상 롤오버는 이미 부르므로 `lastSeasonEndYear` 가드가 중복을 막는다.
+  await gameStore.processSeasonEnd(now);
+
   // NPC 드래프트는 **오프시즌보다 먼저** 돌아야 한다 — 오프시즌이 미지명자
   // 진로를 배정하므로, 드래프트가 뒤에 오면 이미 흩어진 뒤가 된다.
   // W47 관전에서 이미 돌았으면 `lastDraftYear` 가드가 건너뛴다.

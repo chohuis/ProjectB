@@ -177,15 +177,28 @@ export interface PlacementRules {
   independentMax: number;
   /** 이 나이를 넘으면 독립리그도 안 받는다 */
   independentAgeMax: number;
+  /**
+   * 대학이 **한 해에** 팀당 받는 인원 (정원 ÷ 학년 수).
+   *
+   * ⚠ 이게 없으면 팀 정원만 보고 채워 **학년 균형이 깨진다.** 한 해에 많이
+   * 받으면 4년 뒤 그 코호트가 한꺼번에 나가고 다시 크게 받는 4년 주기가
+   * 생긴다 — 실측 대학 유입 194~558, 저점 해엔 고교 졸업생이 갈 곳이 없어
+   * 야구 포기가 1,163명까지 올랐다.
+   */
+  universityAnnualMax: number;
 }
 
 export function placementRulesFrom(
-  rosterRules: Record<string, { rosterMax?: number; ageMax?: number }>,
+  rosterRules: Record<string, { rosterMax?: number; ageMax?: number; rosterSize?: number; gradeMax?: number }>,
 ): PlacementRules {
+  const uni = rosterRules["LEAGUE_UNIVERSITY"];
+  // 정원 ÷ 학년 수 — 고교 신입생 생성(`generateFreshmenV3`)의 `perYear`와 같은 계산이다
+  const annual = Math.max(1, Math.round((uni?.rosterSize ?? 32) / (uni?.gradeMax ?? 4)));
   return {
-    universityMax: rosterRules["LEAGUE_UNIVERSITY"]?.rosterMax ?? 40,
+    universityMax: uni?.rosterMax ?? 40,
     independentMax: rosterRules["LEAGUE_INDEPENDENT"]?.rosterMax ?? 45,
     independentAgeMax: rosterRules["LEAGUE_INDEPENDENT"]?.ageMax ?? 31,
+    universityAnnualMax: annual,
   };
 }
 

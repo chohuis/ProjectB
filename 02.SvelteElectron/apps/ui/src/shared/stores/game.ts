@@ -86,6 +86,15 @@ export interface GameStoreState {
    * 문제를 막는다. 어느 쪽이 먼저 돌든 그 해에 한 번만 실행된다.
    */
   lastDraftYear?: number;
+  /**
+   * `processSeasonEnd`를 한 해에 한 번만 돌게 하는 가드.
+   *
+   * 세계 오프시즌(`runWorldSeasonEnd`)이 NPC 진급·졸업을 먼저 돌려야
+   * 졸업생이 드래프트 풀에 들어간다. 그런데 정상 롤오버는 이미
+   * `processSeasonEnd`를 부르므로, 가드가 없으면 **학년이 두 번 오르고
+   * 나이가 두 살 는다.**
+   */
+  lastSeasonEndYear?: number;
   pendingAchievements: string[];      // 미확인 신규 달성 (비저장)
   seasonEndSummary: SeasonEndSummary | null;  // 직전 시즌 종료 처리 요약 (비저장)
   lastTop10Pitcher: import("../types/save").Top10Snapshot | null;  // 직전 투수 TOP10 스냅샷
@@ -2794,6 +2803,14 @@ function createGameStore() {
     async processSeasonEnd(seasonYear: number) {
       const s = get({ subscribe });
 
+      // ⚠ **한 해에 한 번만.** 세계 오프시즌(`runWorldSeasonEnd`)이 이걸 먼저
+      // 돌려야 졸업생이 드래프트 풀에 들어가는데, 정상 롤오버도 따로 부른다.
+      // 가드가 없으면 학년이 두 번 오르고 나이가 두 살 늘어난다.
+      if (s.lastSeasonEndYear === seasonYear) {
+        autoLog(`[시즌종료] Y${seasonYear}는 이미 진행됨 — 건너뛴다`);
+        return;
+      }
+
       // ① HS + 대학 전체 NPC 학년 진급 (나이 증가 없음)
       const { updated, hsGraduated, univGraduated } = await advanceAllGrades(s.npcs, seasonYear);
       autoLog(`[시즌종료] NPC 진급: 재학 ${updated.length}명, HS졸업 ${hsGraduated.length}명, 대학졸업 ${univGraduated.length}명`);
@@ -2830,6 +2847,7 @@ function createGameStore() {
         npcs: agedUpdated,
         protagonist: updatedProto,
         pendingDraft: [...st.pendingDraft, ...agedHsGraduated, ...agedUnivGraduated],
+        lastSeasonEndYear: seasonYear,
       }));
     },
 

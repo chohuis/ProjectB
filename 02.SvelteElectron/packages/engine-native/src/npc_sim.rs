@@ -499,6 +499,10 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
 // 있었다 — Rust 안에서만 정의가 둘이었고, TS `FA_THRESHOLD`까지 세 곳이었다
 use crate::team_engine::fa_eligibility_years;
 
+/// FA 재취득까지 필요한 연수. 현실 야구의 재자격 기간에 해당한다.
+/// 누적 연차(`pro_service_years`)는 리셋하지 않고 이 기간만 센다.
+const FA_REACQUIRE_YEARS: i32 = 4;
+
 pub(crate) fn npc_core_ovr(npc: &NpcSaveState) -> f64 {
     if npc.player_type == "pitcher" {
         npc.pitching.as_ref().map(|p| p.ovr).unwrap_or(0.0)
@@ -863,17 +867,53 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
         // 4. 에이징: 주간 감퇴(calc_weekly_npc_growth)로 이관, 오프시즌 중복 처리 제거
 
         // 5. 프로 연차 + FA
-        if n.current_league == "LEAGUE_KBL"
+        //
+        // ⚠ **연차 적립과 FA 선언을 분리한다.** 예전엔 한 조건문이었고 거기에
+        // `LEAGUE_KBL_FARM`이 빠져 **2군 선수는 연차가 안 쌓였다.** 프로 인원의
+        // 절반이 2군인데 그동안 시계가 멈춘 셈이라, 실측에서 2군 평균 연차가
+        // 3.0 → 1.4년으로 **역행**했고 FA 자격자가 300 → 20명으로 말랐다.
+        // 2군에서도 등록 연수는 쌓이되, 선언은 1군에서 한다.
+        let is_pro_any = n.current_league == "LEAGUE_KBL"
+            || n.current_league == "LEAGUE_KBL_FARM"
             || n.current_league == "LEAGUE_ABL"
+            || n.current_league == "LEAGUE_ABL_FARM"
             || n.current_league == "LEAGUE_JBL"
-        {
+            || n.current_league == "LEAGUE_JBL_FARM";
+        if is_pro_any {
             n.pro_service_years = Some(n.pro_service_years.unwrap_or(0) + 1);
+        }
+
+        let is_top_league = n.current_league == "LEAGUE_KBL"
+            || n.current_league == "LEAGUE_ABL"
+            || n.current_league == "LEAGUE_JBL";
+        if is_top_league {
             let fa_threshold = fa_eligibility_years(&n.current_league);
-            if n.pro_service_years.unwrap_or(0) >= fa_threshold && rng.gen::<f64>() < 0.6 {
-                n.original_league_id = Some(n.current_league.clone()); // FA 재배치 시 원래 리그로 복귀하기 위해 보존
+            // ⚠ **연차를 0으로 리셋하지 않는다.** 예전엔 리셋해서 1군 평균이
+            // 7년 → 1.8년으로 폭락하고 7년차 이상이 157명 → 0명이 됐다.
+            // 현실 야구처럼 누적은 유지하고 **재취득 기간**(4년)을 따로 센다.
+            let last_fa = n.career_events.iter()
+                .filter(|e| e.event_type == "fa_signed")
+                .map(|e| e.year)
+                .max();
+            let reacquire_ok = last_fa.map_or(true, |y| season_year - y >= FA_REACQUIRE_YEARS);
+
+            if n.pro_service_years.unwrap_or(0) >= fa_threshold
+                && reacquire_ok
+                && rng.gen::<f64>() < 0.6
+            {
+                n.original_league_id = Some(n.current_league.clone()); // FA 재배치 시 원래 리그로 복귀
+                // 재취득 판정의 근거가 되는 기록 — 이게 없으면 매년 FA가 된다
+                n.career_events.push(NpcCareerEvent {
+                    year: season_year,
+                    event_type: "fa_signed".into(),
+                    from_team_id: (!n.current_team.is_empty()).then(|| n.current_team.clone()),
+                    to_team_id: None,
+                    from_league_id: Some(n.current_league.clone()),
+                    to_league_id: None,
+                    detail: Some(format!("FA 취득 ({}년차)", n.pro_service_years.unwrap_or(0))),
+                });
                 n.current_league    = "LEAGUE_FREE_AGENT".into();
                 n.current_team      = "".into();
-                n.pro_service_years = Some(0);
                 summary.fa_count   += 1;
                 return n;
             }
@@ -1043,6 +1083,8 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
 
         let rules = params.placement.clone().unwrap_or(crate::draft::PlacementRules {
             university_max: 40, independent_max: 45, independent_age_max: 31,
+            // 폴백 — TS가 규칙 파일에서 계산해 넘긴다(`placementRulesFrom`)
+            university_annual_max: None,
         });
         let mut placer = crate::draft::Placer::new(
             &after_normalize, &params.university_team_ids, &params.independent_team_ids, rules,
@@ -1754,6 +1796,8 @@ pub fn apply_draft(params: ApplyDraftParams) -> Vec<NpcSaveState> {
         &result_npcs, &params.university_team_ids, &params.independent_team_ids,
         params.placement.clone().unwrap_or(crate::draft::PlacementRules {
             university_max: 40, independent_max: 45, independent_age_max: 31,
+            // 폴백 — TS가 규칙 파일에서 계산해 넘긴다(`placementRulesFrom`)
+            university_annual_max: None,
         }),
     );
     // 지명된 재학생은 곧 떠난다 — 집계에 남기면 그 팀이 한 명 덜 받는다
