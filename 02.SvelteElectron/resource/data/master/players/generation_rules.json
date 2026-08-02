@@ -111,7 +111,10 @@
       "battingOvrMin": 50,
       "battingOvrMax": 80,
       "devRateMin": 40,
-      "devRateMax": 70
+      "devRateMax": 70,
+      "rosterMin": 26,
+      "_note2": "해외 팜. rosterMin이 없어 fill_first_teams 대상에서 빠졌고, 1군이 매년 빨아들이기만 해 544 → 184로 말랐다(실측)",
+      "nationality": "USA"
     },
     "LEAGUE_JBL_FARM": {
       "_note": "해외 팜 — 1군 규칙에서 파생. 국내 2군(rosterSize 34, 1군보다 OVR 하향)과 같은 관계",
@@ -124,7 +127,10 @@
       "battingOvrMin": 48,
       "battingOvrMax": 78,
       "devRateMin": 40,
-      "devRateMax": 70
+      "devRateMax": 70,
+      "rosterMin": 26,
+      "_note2": "해외 팜. rosterMin이 없어 fill_first_teams 대상에서 빠졌고, 1군이 매년 빨아들이기만 해 544 → 184로 말랐다(실측)",
+      "nationality": "JPN"
     }
   },
   "salaryRules": {

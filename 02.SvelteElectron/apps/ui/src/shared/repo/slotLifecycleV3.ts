@@ -11,8 +11,9 @@ import { gameStore } from "../stores/game";
 import { seasonStore } from "../stores/season";
 import { npcLiveStatsStore } from "../stores/npcLiveStats";
 import { masterStore } from "../stores/master";
+import { isLeagueInScope } from "../config/releaseScope";
 import { HS_ACTIVE_TEAMS_V3 } from "../utils/leagueScheduler";
-import { SANGMU_TEAM_IDS } from "../utils/ids";
+import { SANGMU_TEAM_IDS, leagueOfTeam } from "../utils/ids";
 import type { SaveGame, ProtagonistSave, NpcSaveState } from "../types/save";
 import type { SaveSeason } from "../types/season";
 import type { SaveSlotMeta } from "../types/projectb.d";
@@ -144,6 +145,92 @@ export async function generateFreshmenV3(seasonYear: number): Promise<number> {
       })),
     ) as NpcSaveState[];
     if (Array.isArray(raw)) newOnes.push(...raw);
+  }
+  if (newOnes.length === 0) return 0;
+
+  await slotRepo.insertNpcs(slotId, newOnes.map((n) => saveStateToRepoNpc(n)));
+  gameStore.addNpcs(newOnes);
+  npcLiveStatsStore.update((st) => {
+    const next = { ...st };
+    for (const n of newOnes) {
+      next[n.npcId] = {
+        pitching: n.pitching, batting: n.batting,
+        pitchingXp: {}, battingXp: {},
+        seasonStartPitching: n.pitching, seasonStartBatting: n.batting,
+        peakOvr: n.pitching?.ovr ?? n.batting?.ovr,
+        pitches: [],
+      };
+    }
+    return next;
+  });
+  return newOnes.length;
+}
+
+/**
+ * 해외 리그(ABL·JBL) 신인 배정 — **매년 부족분만 채운다.**
+ *
+ * 국내는 고교 → 대학/독립 → 드래프트 → 프로라는 **다단계 파이프라인**이
+ * 인구를 공급한다. 해외엔 그런 하부 구조가 없으므로 리그에 직접 배정한다
+ * (사용자 확정 2026-08-02).
+ *
+ * ⚠ **이게 없으면 팜이 마른다.** `fill_first_teams`가 1군을 `rosterMin`까지
+ * 채우려고 팜에서 최고 선수를 빼오는데, 팜을 채우는 경로가 없었다 —
+ * 실측 ABL_FARM 544 → 356 → 265 → 184(팀당 최소 5명).
+ *
+ * 계산은 `generateFreshmenV3`(고교 신입생)와 같다: 은퇴자만 자리를 비우고,
+ * `rosterSize`까지 모자란 만큼만 만든다. KBL이 외국인을 데려가 생긴 빈자리도
+ * 다음 해에 여기서 메워지므로 **수지가 저절로 맞는다.**
+ */
+export async function generateOverseasIntakeV3(seasonYear: number): Promise<number> {
+  if (!isV3SlotActive()) return 0;
+  const g = get(gameStore);
+  const slotId = g.currentSlotId;
+  if (!slotId) return 0;
+
+  const rulesFile = (await loadRosterRules()).rosterRules;
+  const teamsAll = get(masterStore).teams;
+
+  // 리그별 현재 인원 — 전체를 한 번만 훑는다
+  const sizeByTeam = new Map<string, number>();
+  for (const n of g.npcs) {
+    if (n.careerStatus === "retired" || !n.currentTeam) continue;
+    sizeByTeam.set(n.currentTeam, (sizeByTeam.get(n.currentTeam) ?? 0) + 1);
+  }
+
+  const newOnes: NpcSaveState[] = [];
+  for (const leagueId of ["LEAGUE_ABL", "LEAGUE_ABL_FARM", "LEAGUE_JBL", "LEAGUE_JBL_FARM"]) {
+    if (!isLeagueInScope(leagueId)) continue;
+    const rules = rulesFile[leagueId];
+    if (!rules) continue;
+
+    // refs엔 팜 leagueId가 없다 — 상위 리그의 `_2` 팀이 팜이다
+    const isFarm = leagueId.endsWith("_FARM");
+    const base = isFarm ? leagueId.slice(0, -"_FARM".length) : leagueId;
+    const teams = teamsAll
+      .filter((t) => t.leagueId === base && t.id.endsWith(isFarm ? "_2" : "_1"))
+      .map((t) => t.id);
+
+    for (const teamId of teams) {
+      const want = rules.rosterSize - (sizeByTeam.get(teamId) ?? 0);
+      if (want <= 0) continue;
+      const raw = JSON.parse(
+        await window.projectB!.engine("generateFreshmenNative", JSON.stringify({
+          schoolId: teamId, teamId,
+          annualRosterSize: want,
+          pitchingOvrMin: rules.pitchingOvrMin, pitchingOvrMax: rules.pitchingOvrMax,
+          battingOvrMin: rules.battingOvrMin, battingOvrMax: rules.battingOvrMax,
+          devRateMin: rules.devRateMin, devRateMax: rules.devRateMax,
+          namedNpcs: [], seasonYear, idOffset: 0,
+        })),
+      ) as NpcSaveState[];
+      if (!Array.isArray(raw)) continue;
+      // 생성기는 리그를 모른다 — 팀에서 파생한 값으로 맞춘다
+      for (const n of raw) {
+        n.currentLeague = leagueOfTeam(teamId) ?? leagueId;
+        n.nationality = (rules as { nationality?: NpcSaveState["nationality"] }).nationality;
+      }
+      newOnes.push(...raw);
+    }
   }
   if (newOnes.length === 0) return 0;
 

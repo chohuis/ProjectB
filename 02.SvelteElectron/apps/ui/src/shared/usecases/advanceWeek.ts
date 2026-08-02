@@ -39,7 +39,7 @@ import {
   makeSeriesGame, nextGameNum,
 } from "../utils/postseasonEngine";
 import { isV3SlotActive } from "../repo/v3Mode";
-import { generateFreshmenV3, ensureLeagueActivatedV3 } from "../repo/slotLifecycleV3";
+import { generateFreshmenV3, ensureLeagueActivatedV3, generateOverseasIntakeV3 } from "../repo/slotLifecycleV3";
 
 // ── weekPhases 도메인 모듈 (R4: training·academics·events·games·injuries·growth·market·digest) ──
 import { findTeamCoach, getPitchCoachName, makeTrainingMessage } from "./weekPhases/training";
@@ -180,6 +180,11 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
         const n = await ensureLeagueActivatedV3(lid, currentSeasonYear);
         if (n > 0) logs.push(`[해외활성화] ${lid.replace("LEAGUE_", "")} ${n}명`);
       }
+      // 해외는 하부 파이프라인(고교→대학→드래프트)이 없다 — 매년 리그에
+      // 직접 신인을 배정한다. 안 하면 `fill_first_teams`가 1군을 채우려고
+      // 팜에서 빼오기만 해서 **팜이 말라붙는다**(실측 544 → 184).
+      const intake = await generateOverseasIntakeV3(currentSeasonYear);
+      if (intake > 0) logs.push(`[해외신인] ${intake}명 배정`);
     } else {
     // (레거시) entry_year == currentSeasonYear인 신규 NPC: master.db 직접 조회 (store 미갱신)
     const yearEntrants = await masterStore.fetchEntryEntities(currentSeasonYear);

@@ -958,6 +958,47 @@ export function tradeSourceProbe(): Record<string, unknown> {
  * **게이트를 연다고 도는 게 아니다** — 이 세션에서 "코드가 있다고 도는 게
  * 아니다"를 여러 번 겪었다. 로스터·일정·순위표·성장을 각각 확인한다.
  */
+/**
+ * 해외 리그 정원 초과가 어디서 오는가 (F-1).
+ *
+ * 실측: ABL 1군 284 → 512(정원 448)로 느는 동안 팜은 544 → 353으로 줄었다.
+ * **팜에서 1군으로 대량 이동**한 것으로 보이는데, 승강
+ * (`processProTeamCallupCalldown`)은 `LEAGUE_KBL` 1군만 순회하므로
+ * 해외엔 그 경로가 없다 — 다른 무언가가 옮기고 있다.
+ *
+ * 팀별로 봐야 "전체가 조금씩 넘치는가" vs "몇 팀이 몰아서 넘치는가"가 갈린다.
+ */
+export function rosterOverflowProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const out: Record<string, unknown> = {};
+  const RULES: Record<string, number> = {
+    LEAGUE_KBL: 30, LEAGUE_KBL_FARM: 34,
+    LEAGUE_ABL: 28, LEAGUE_ABL_FARM: 34,
+    LEAGUE_JBL: 28, LEAGUE_JBL_FARM: 34,
+  };
+  for (const [lg, size] of Object.entries(RULES)) {
+    const byTeam = new Map<string, number>();
+    for (const n of g.npcs) {
+      if (n.currentLeague !== lg || n.careerStatus === "retired") continue;
+      const t = n.currentTeam ?? "";
+      if (!t) continue;
+      byTeam.set(t, (byTeam.get(t) ?? 0) + 1);
+    }
+    if (byTeam.size === 0) continue;
+    const counts = [...byTeam.values()].sort((a, b) => b - a);
+    out[lg.replace("LEAGUE_", "")] = {
+      정원: size,
+      팀수: byTeam.size,
+      총원: counts.reduce((a, b) => a + b, 0),
+      최대: counts[0],
+      중앙: counts[Math.floor(counts.length / 2)],
+      최소: counts[counts.length - 1],
+      초과팀: counts.filter((c) => c > size).length,
+    };
+  }
+  return out;
+}
+
 export function overseasProbe(): Record<string, unknown> {
   const g = get(gameStore);
   const m = get(masterStore);
