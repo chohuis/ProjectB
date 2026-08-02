@@ -997,6 +997,78 @@ export function overseasProbe(): Record<string, unknown> {
   return out;
 }
 
+/**
+ * 리그와 팀이 어긋난 선수를 찾는다 (O-2b).
+ *
+ * 확장팩 게이트를 열면 KBL이 **10팀 307명 → 34팀 447명**으로 불어난다.
+ * refs의 KBL 팀은 1군 10 + 팜 10 = 20개뿐인데 34개가 나온다 —
+ * 해외 팀에 있는 선수가 `currentLeague = LEAGUE_KBL`로 기록되는 것이다.
+ *
+ * 로스터 생성은 `current_league: p.league_id`라 정상이므로 **나중에 리그가
+ * 덮어써진다.** 누가 그랬는지는 `careerEvents`에 남아 있다 — 집계가 아니라
+ * **그 선수 자체**를 봐야 알 수 있다.
+ */
+export function leagueTeamMismatch(): Record<string, unknown> {
+  const g = get(gameStore);
+  const m = get(masterStore);
+  const teamLeague = new Map(m.teams.map((t) => [t.id, t.leagueId]));
+
+  const bad: Array<Record<string, unknown>> = [];
+  const byPair: Record<string, number> = {};
+  for (const n of g.npcs) {
+    if (n.careerStatus === "retired" || !n.currentTeam) continue;
+    const real = teamLeague.get(n.currentTeam);
+    if (!real) continue;                       // refs에 없는 팀 — 별개 문제
+    // 팜은 상위 리그 id를 쓴다(KBL_FARM ↔ LEAGUE_KBL) — 그건 정상이다
+    const norm = (l: string) => l.replace(/_FARM$/, "");
+    if (norm(n.currentLeague ?? "") === norm(real)) continue;
+
+    const k = `${n.currentLeague} ← ${real}`;
+    byPair[k] = (byPair[k] ?? 0) + 1;
+    if (bad.length < 8) {
+      bad.push({
+        id: n.npcId,
+        팀: n.currentTeam,
+        기록된리그: n.currentLeague,
+        팀의실제리그: real,
+        원소속: n.originalLeagueId ?? null,
+        최근사건: (n.careerEvents ?? []).slice(-3).map(
+          (e) => `${e.year} ${e.eventType}${e.toLeagueId ? `→${e.toLeagueId}` : ""}`,
+        ),
+      });
+    }
+  }
+  return { 불일치: Object.values(byPair).reduce((a, b) => a + b, 0), 조합별: byPair, 표본: bad };
+}
+
+/**
+ * 수상이 실제로 기록됐는가 (4-1).
+ *
+ * `careerHistory.highlights`는 타입만 있고 채우는 곳이 없어 **항상 빈
+ * 배열**이었다. 대학 진학 점수(`awards.length * 15`)와 드래프트 점수가
+ * 이미 이걸 전제하는데 값이 0이었다.
+ */
+export function awardTally(): Record<string, unknown> {
+  const byTitle: Record<string, number> = {};
+  const byYear: Record<number, number> = {};
+  let players = 0;
+  const examples: string[] = [];
+  for (const n of get(gameStore).npcs) {
+    let has = false;
+    for (const h of n.careerHistory ?? []) {
+      for (const t of h.highlights ?? []) {
+        const key = t.split(" (")[0];
+        byTitle[key] = (byTitle[key] ?? 0) + 1;
+        byYear[h.year] = (byYear[h.year] ?? 0) + 1;
+        has = true;
+        if (examples.length < 6) examples.push(`${h.year} ${n.name} ${t}`);
+      }
+    }
+    if (has) players++;
+  }
+  return { 수상선수: players, 부문별: byTitle, 연도별: byYear, 표본: examples };
+}
+
 /** 리그별 가용 슬롯 — 정원 대비 얼마나 차 있는가 */
 export function leagueCapacity(): Record<string, unknown> {
   const rows = get(gameStore).npcs.filter((n) => n.careerStatus !== "retired");

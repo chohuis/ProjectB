@@ -29,9 +29,21 @@
  *  1. 해외 팜 로스터가 0명. refs에 `LEAGUE_*_FARM` leagueId가 **없고**
  *     `_2` 접미사로 파생하는 구조인데 `ensureLeagueActivatedV3`는
  *     `leagueId` 일치로만 팀을 찾는다
- *  2. **KBL이 오염된다** — 기준선 10팀 307명 → 게이트 연 뒤 34팀 447명.
- *     refs의 KBL 팀은 20개뿐인데 34개가 나온다. FA 재배치가 해외 선수를
- *     KBL로 보내는 것으로 보이며 원인 추적이 더 필요하다
+ *  2. **KBL이 오염된다** (O-2b 조사 결과)
+ *
+ *     실측 표본:
+ *       팀 TEAM_ABL_MOTORWOLVES_1 · 기록된리그 LEAGUE_KBL · 사건 "2026 trade→LEAGUE_KBL"
+ *       팀 TEAM_JBL_CL_SEAGULLS_1 · 기록된리그 LEAGUE_KBL · 사건 "2026 fa_signed"
+ *
+ *     **이동이 팀만 바꾸고 리그를 안 바꾼다.** 국내끼리는 리그가 같아 안
+ *     드러났는데 해외를 켜니 즉시 터진다. 게다가 Rust FA 재배치의
+ *     `league_teams`가 `current_league`로 그룹화하므로
+ *     **오염된 선수가 다음 해 후보 팀 목록을 오염시킨다** — 자가증식이다
+ *     (25명 → 224명, 한 시즌 만에).
+ *
+ *     남은 것: 최초 진입점. 트레이드는 `t.leagueId === leagueId`로 같은
+ *     리그만 보는데도 해외 팀이 배정됐다 — `generate_trade_proposals`에
+ *     넘기는 팀 목록을 더 봐야 한다.
  *
  * 2번이 국내를 망가뜨리므로 해결 전에는 열지 않는다.
  */

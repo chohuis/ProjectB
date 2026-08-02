@@ -15,7 +15,9 @@ import { gameStore } from "../stores/game";
 import { seasonStore } from "../stores/season";
 import { masterStore } from "../stores/master";
 import { runSeasonEndBgProcessing } from "./runAutoAdvance";
+import { autoLog } from "../stores/autoAdvance";
 import { DEFAULT_TEAM_PROFILE } from "./weekPhases/market";
+import { applySeasonAwards } from "./seasonAwards";
 import { draftDestinationTeams } from "../utils/draftSystem";
 import { proSchedule } from "./proSeason";
 import { dischargeProtagonist, openMilitarySeason } from "./militaryDecision";
@@ -28,6 +30,11 @@ import type { PitcherSeasonStats, BatterSeasonStats } from "../types/save";
  * `applyAgingDecay`·`runSeasonEndBgProcessing`엔 없다.
  */
 let _lastWorldSeasonEndYear = -1;
+
+/** 세계 처리 로그를 자동 진행 로그로 흘린다 */
+function logsOf(lines: string[]): void {
+  for (const l of lines) autoLog(l);
+}
 
 /**
  * **세계 오프시즌** — 주인공이 무엇을 하든 매 시즌 끝에 반드시 도는 처리.
@@ -68,6 +75,8 @@ export async function runWorldSeasonEnd(now: number): Promise<void> {
   await seasonStore.flushAllLeagueStatsToDb(now);
   await saveSeasonHistory(now);
   await gameStore.processAllLeaguesSeasonEnd(now);  // ← 여기서 __lastOffseasonSummary 세팅
+  // 수상은 연도 기록이 만들어진 **뒤**여야 얹을 자리가 있다
+  logsOf(await applySeasonAwards(now));
   await gameStore.applyAgingDecay();
   await updateProTeamProfiles();
   await runSeasonEndBgProcessing(now);

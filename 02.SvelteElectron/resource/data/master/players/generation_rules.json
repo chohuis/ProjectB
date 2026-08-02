@@ -804,5 +804,92 @@
         "season": 1
       }
     }
+  },
+  "awardRules": {
+    "_note": "개인 수상 정본. 시즌 종료에 리그별 1위를 뽑아 careerHistory.highlights에 남긴다. 읽는 곳: usecases/seasonAwards.ts. 이 데이터가 없어서 대학 진학 점수(universityUtils awards*15)와 드래프트 점수의 수상 항목이 항상 0이었다",
+    "_note2": "최소 출전 조건이 없으면 1경기 등판한 선수가 방어율왕이 된다 — 규정이닝·규정타석에 해당한다",
+    "leagues": [
+      "LEAGUE_KBL",
+      "LEAGUE_ABL",
+      "LEAGUE_JBL",
+      "LEAGUE_UNIVERSITY",
+      "LEAGUE_INDEPENDENT",
+      "LEAGUE_HIGHSCHOOL"
+    ],
+    "pitcher": [
+      {
+        "id": "wins",
+        "label": "다승왕",
+        "stat": "w",
+        "order": "desc",
+        "minIp": 60,
+        "minValue": 5
+      },
+      {
+        "id": "era",
+        "label": "방어율왕",
+        "stat": "era",
+        "order": "asc",
+        "minIp": 70,
+        "maxValue": 4.5
+      },
+      {
+        "id": "strikeouts",
+        "label": "탈삼진왕",
+        "stat": "k",
+        "order": "desc",
+        "minIp": 60,
+        "minValue": 30
+      },
+      {
+        "id": "saves",
+        "label": "세이브왕",
+        "stat": "sv",
+        "order": "desc",
+        "minIp": 15,
+        "minValue": 3
+      }
+    ],
+    "batter": [
+      {
+        "id": "avg",
+        "label": "타격왕",
+        "stat": "avg",
+        "order": "desc",
+        "minPa": 200,
+        "minValue": 0.25
+      },
+      {
+        "id": "hr",
+        "label": "홈런왕",
+        "stat": "hr",
+        "order": "desc",
+        "minPa": 130,
+        "minValue": 5
+      },
+      {
+        "id": "rbi",
+        "label": "타점왕",
+        "stat": "rbi",
+        "order": "desc",
+        "minPa": 130,
+        "minValue": 20
+      },
+      {
+        "id": "sb",
+        "label": "도루왕",
+        "stat": "sb",
+        "order": "desc",
+        "minPa": 120,
+        "minValue": 3
+      }
+    ],
+    "mvp": {
+      "_note": "MVP는 개별 부문 수상 수로 정한다 — 별도 지표를 만들면 부문 1위와 어긋난다",
+      "label": "MVP",
+      "minTitles": 2
+    },
+    "_note3": "minValue/maxValue가 없으면 **0이 1위가 된다** — 실측에서 도루왕(0)·세이브왕(0)·방어율왕(8.45)이 나왔고 그걸로 MVP까지 받았다. 부문마다 \"이 정도는 돼야 상\"이라는 선이 필요하다",
+    "_note4": "규정타석/이닝 절충값. 250/90은 너무 높아 방어율왕·세이브왕·도루왕이 아예 안 나왔고, 100/50은 너무 낮아 타율 .528 같은 소표본 1위가 나왔다. 아래는 그 사이다 — 타격왕 이상치(.583)가 남아 있어 추가 조정이 필요하다"
   }
 }

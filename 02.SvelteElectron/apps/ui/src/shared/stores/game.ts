@@ -2851,6 +2851,37 @@ function createGameStore() {
       }));
     },
 
+    /**
+     * 그 해 `careerHistory` 항목에 수상 내역을 얹는다.
+     *
+     * ⚠ **연도 항목이 이미 있어야 한다.** `applySeasonHistory` ·
+     * `processAllLeaguesSeasonEnd`가 만든 뒤에 불러야 붙일 자리가 있다.
+     * 항목이 없으면 조용히 버리지 않고 새로 만든다 — 수상은 남아야 한다.
+     *
+     * ⚠ 주인공은 여기서 처리하지 않는다 — `achievements`는 NPC 필드이고
+     * 주인공 기록은 `careerRecord` 계열이다. 섞으면 둘 다 어긋난다.
+     */
+    addSeasonHighlights(seasonYear: number, byPlayer: Map<string, string[]>) {
+      update((s) => ({
+        ...s,
+        npcs: s.npcs.map((n) => {
+          const titles = byPlayer.get(n.npcId);
+          if (!titles?.length) return n;
+          const hist = n.careerHistory ?? [];
+          const i = hist.findIndex((h) => h.year === seasonYear);
+          if (i < 0) {
+            return { ...n, careerHistory: [...hist, {
+              year: seasonYear, leagueId: n.currentLeague, teamId: n.currentTeam,
+              statLine: "-", highlights: [...titles],
+            }] };
+          }
+          const next = [...hist];
+          next[i] = { ...next[i], highlights: [...(next[i].highlights ?? []), ...titles] };
+          return { ...n, careerHistory: next };
+        }),
+      }));
+    },
+
     // L4: 시즌 종료 시 NPC careerHistory 기록
     applySeasonHistory(
       seasonStats: Record<string, PlayerSeasonStats>,

@@ -38,6 +38,8 @@ export interface GenerationRulesFile {
   careerHistoryRules?: unknown;
   /** 군경팀(상무) 로스터 · 연간 입대 규모 (Phase 6.5 · 7-3) */
   militaryRules?: unknown;
+  /** 시즌 개인 수상 — 부문·최소 출전 조건. 읽는 곳: usecases/seasonAwards.ts */
+  awardRules?: unknown;
   /** 11월 통합 드래프트 — 라운드 수·나이 게이트·얼리 신청 하한·신인 계약 (Phase 7-1) */
   draftRules?: {
     rounds?: number;
