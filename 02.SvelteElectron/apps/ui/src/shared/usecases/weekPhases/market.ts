@@ -7,6 +7,7 @@ import { getFaThreshold } from "../../utils/faEngine";
 import { loadRosterRules } from "../../repo/newGameV3";
 import { staffModsOf } from "../../utils/staffEffects";
 import { SANGMU_TEAM_IDS, leagueOfTeam } from "../../utils/ids";
+import { isForeignPlayer } from "../../utils/foreignSlots";
 import type { PlayerSeasonStats } from "../../types/save";
 import { MONTH_STARTS_1 } from "./growth";
 import { finiteOr } from "../../utils/payloadNum";
@@ -69,6 +70,9 @@ function buildRosterRef(
     isProspect:       entity.teamId?.endsWith("_2") ?? false,
     personality:      entity.personality ?? null,
     fame:             savedNpc?.fame ?? 0,
+    // 외국인은 1군 전용 — 승강 판정이 이 값으로 강등·교체 후보에서 뺀다.
+    // 국적만으로 판정하면 ABL(USA)·JBL(JPN) 로스터 전원이 외국인이 된다
+    isForeign:        isForeignPlayer(entity.leagueId ?? "", entity.nationality),
     // 성적이 없으면 undefined — Rust가 그때는 능력치만 본다
     ...(perf ? { perf } : {}),
   };
@@ -191,6 +195,7 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
     npcId: string; position: string; currentTeam: string; currentLeague: string;
     currentSalary: number; contractYears: number; proServiceYears: number;
     pitchOvr: number | null; batOvr: number | null; age: number;
+    nationality?: string;
   };
   // npc_runtime 미초기화(새 게임 첫 시즌 saveSlot 전) 시 gameStore.npcs 메모리 폴백
   let npcRows: NpcTradeRow[];
@@ -211,6 +216,7 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
           pitchOvr:       ls?.pitching?.ovr ?? null,
           batOvr:         ls?.batting?.ovr  ?? null,
           age:            n.age ?? 25,
+          nationality:    n.nationality,
         };
       });
     autoLog(`[트레이드윈도우] npc_runtime 미초기화 → 메모리 폴백 ${npcRows.length}명`);
@@ -224,6 +230,12 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
     return;
   }
 
+  // ⚠ **외국인은 트레이드 대상에서 뺀다.** 1:1 교환이라 외국인↔내국인이
+  // 성사되면 한 팀은 4명, 상대는 2명이 되어 보유 한도가 그 자리에서 깨진다.
+  // 실제 KBO에서도 시즌 중 외국인 트레이드는 사실상 없다.
+  // 연봉 총액은 전원으로 계산한다 — 페이롤에서 빠지면 안 된다.
+  const tradableRows = npcRows.filter((n) => !isForeignPlayer(n.currentLeague, n.nationality));
+
   const proTeams = m.teams.filter(
     (t) => t.leagueId === leagueId && t.id.endsWith("_1")
   );
@@ -234,7 +246,7 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
 
   // ② TeamWithRoster 빌드
   const teamWithRosters = proTeams.map((team) => {
-    const roster = npcRows.filter((n) => n.currentTeam === team.id);
+    const roster = tradableRows.filter((n) => n.currentTeam === team.id);
     const st = standings.find((st) => st.teamId === team.id);
     const winPct = st ? (st.wins / Math.max(1, st.wins + st.losses)) : 0.5;
 
@@ -250,7 +262,9 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
       .map((n) => n.npcId);
 
     const profile = getTeamProfile(team.id, g, m) ?? DEFAULT_TEAM_PROFILE;
-    const currentPayroll = roster.reduce((sum, n) => sum + n.currentSalary, 0);
+    const currentPayroll = npcRows
+      .filter((n) => n.currentTeam === team.id)
+      .reduce((sum, n) => sum + n.currentSalary, 0);
 
     return {
       teamId: team.id,
@@ -270,7 +284,7 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
 
   // ③ TradeAsset 빌드 (NPC 전체 + 주인공)
   const _tradeliveSt = get(npcLiveStatsStore);
-  const buildNpcAsset = (n: typeof npcRows[number]) => {
+  const buildNpcAsset = (n: typeof tradableRows[number]) => {
     const named = namedMap.get(n.npcId);
     const inj = s.npcInjuries[n.npcId];
     // pitch_ovr/bat_ovr가 DB에 NULL인 경우(deprecated 필드) npcLiveStats로 폴백
@@ -309,7 +323,7 @@ export async function processTradeWindow(weekInYear: number, leagueId: string): 
     };
   };
 
-  const allNpcAssets = npcRows.map(buildNpcAsset);
+  const allNpcAssets = tradableRows.map(buildNpcAsset);
 
   const proInjury = g.protagonist.injury;
   const proHistory = g.protagonist.injuryHistory ?? [];
@@ -953,7 +967,13 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
     }
 
     // FA 자격 판단
+    //
+    // ⚠ **FA 경로가 둘이다.** Rust `run_offseason`에도 같은 판정이 있고
+    // 거기만 막으면 이 TS 경로로 새어 나간다 — 용병이 FA를 선언하면
+    // 재배치가 그를 아무 팀에나 넣어 보유 한도가 그 자리에서 깨진다.
+    // 외국인은 단년 계약이라 연차로 자격을 쌓는 신분이 아니다.
     const league = npc.currentLeague ?? "";
+    if (isForeignPlayer(league, npc.nationality)) continue;
     const faThreshold = getFaThreshold(league);
     if ((npc.proServiceYears ?? 0) < faThreshold) continue;
 
@@ -1150,24 +1170,31 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
       const proFirstTeams = m.teams.filter(
         (t) => t.leagueId === "LEAGUE_KBL" && t.id.endsWith("_1") && !SANGMU_TEAM_IDS.has(t.id),
       );
-      const rosterOf = (teamId: string) =>
-        updatedNpcs
-          .filter((n) => n.currentTeam === teamId && n.careerStatus === "active")
+      const activeOf = (teamId: string) =>
+        updatedNpcs.filter((n) => n.currentTeam === teamId && n.careerStatus === "active");
+      // ⚠ 엔진 `FaTeam.roster`는 **보상선수 후보**다(정원 계산은 `openSlots`가 따로 받는다).
+      //
+      // 외국인을 여기 넣으면 보상선수로 끌려간다 — OVR 내림차순에서 보호선수
+      // 다음을 집는데 용병은 73~94라 거의 항상 그 자리에 걸린다. 실측에서
+      // 5시즌 뒤 한 팀 4명(전원 투수)·다른 팀 2명이 됐고, 총원은 30 그대로라
+      // **집계로는 정상처럼 보였다.** KBO도 외국인은 보상선수 대상이 아니다.
+      const compensationPoolOf = (teamId: string) =>
+        activeOf(teamId)
+          .filter((n) => !isForeignPlayer(n.currentLeague ?? "", n.nationality))
           .map((n) => ({ npcId: n.npcId, ovr: ovrOf(n.npcId) }));
 
       const budgets = proFirstTeams.map((t) => t.history?.budget ?? 0).filter((b) => b > 0);
       const avgBudget = budgets.length > 0 ? budgets.reduce((a, b) => a + b, 0) / budgets.length : 1;
 
       const faTeams = proFirstTeams.map((t) => {
-        const roster = rosterOf(t.id);
         const profile = getTeamProfile(t.id, g, m) ?? DEFAULT_TEAM_PROFILE;
         return {
           teamId: t.id,
           budgetIndex: avgBudget > 0 ? (t.history?.budget ?? avgBudget) / avgBudget : 1,
           winNowPressure: profile.winNowPressure,
-          // 정원까지 남은 자리. 꽉 찬 팀은 FA를 못 받는다
-          openSlots: Math.max(0, faMaxRoster - roster.length),
-          roster,
+          // 정원까지 남은 자리 — **외국인도 자리를 차지한다.** 보상선수 후보에서만 뺀다
+          openSlots: Math.max(0, faMaxRoster - activeOf(t.id).length),
+          roster: compensationPoolOf(t.id),
         };
       });
 

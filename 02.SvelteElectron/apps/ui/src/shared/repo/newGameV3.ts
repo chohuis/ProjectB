@@ -40,6 +40,11 @@ export interface GenerationRulesFile {
   militaryRules?: unknown;
   /** 시즌 개인 수상 — 부문·최소 출전 조건. 읽는 곳: usecases/seasonAwards.ts */
   awardRules?: unknown;
+  /**
+   * 외국인 선수 — 보유 한도·능력 범위·서양식 이름 풀. Rust로 그대로 넘긴다.
+   * `leagues`에 든 리그의 **1군 로스터에만** 적용된다.
+   */
+  foreignRules?: { leagues?: string[]; [key: string]: unknown };
   /** 11월 통합 드래프트 — 라운드 수·나이 게이트·얼리 신청 하한·신인 계약 (Phase 7-1) */
   draftRules?: {
     rounds?: number;
@@ -95,6 +100,7 @@ export function buildRosterParams(
   salaryRules?: unknown,
   powerRules?: unknown,
   entryRules?: unknown,
+  foreign?: unknown,
 ) {
   return {
     leagueId,
@@ -111,7 +117,22 @@ export function buildRosterParams(
     ...(salaryRules ? { salaryRules } : {}),
     ...(powerRules ? { powerRules } : {}),
     ...(entryRules ? { entryRules } : {}),
+    ...(foreign ? { foreign } : {}),
   };
+}
+
+/**
+ * 이 리그가 외국인 슬롯을 쓰는가 — `foreignRules.leagues`가 정본이다.
+ *
+ * ⚠ **1군만이다.** `LEAGUE_KBL_FARM`은 목록에 없고, 있어서도 안 된다 —
+ * 2군에 외국인을 깔면 보유 한도(3명) 계산이 흐려진다.
+ */
+export function foreignSlotsFor(
+  leagueId: string,
+  rulesFile: GenerationRulesFile,
+): unknown | undefined {
+  const fr = rulesFile.foreignRules;
+  return fr?.leagues?.includes(leagueId) ? fr : undefined;
 }
 
 /**
@@ -185,10 +206,11 @@ async function generateLeagueNpcs(
   salaryRules?: unknown,
   powerRules?: unknown,
   entryRules?: unknown,
+  foreign?: unknown,
 ): Promise<Partial<RepoNpc>[]> {
   const params = buildRosterParams(
     leagueId, seasonYear, worldSeed, teams, rules, undefined,
-    salaryRules, powerRules, entryRules);
+    salaryRules, powerRules, entryRules, foreign);
   const gen = JSON.parse(
     await window.projectB!.engine("generateLeagueRosterNative", JSON.stringify(params))
   ) as { npcs?: Partial<RepoNpc>[]; error?: string };
@@ -244,7 +266,7 @@ export async function createNewGameV3(opts: NewGameV3Options): Promise<NewGameV3
     otherNpcs.push(
       ...(await generateLeagueNpcs(
         lid, opts.seasonYear, worldSeed, leagueTeams, rules,
-        salaryRules, powerRules, entryRules)));
+        salaryRules, powerRules, entryRules, foreignSlotsFor(lid, rulesFile))));
   }
 
   // ── 군경팀(상무) — 복무 중인 선수로 채운다 (Phase 6.5) ─────
@@ -412,7 +434,11 @@ export async function activateLeagueV3(
   const existing = await slotRepo.getByLeague(slotId, leagueId);
   if (existing.length > 0) return { inserted: 0 };
 
-  const params = buildRosterParams(leagueId, seasonYear, worldSeed, teams, rules, namePool);
+  const params = buildRosterParams(
+    leagueId, seasonYear, worldSeed, teams, rules, namePool,
+    rulesFile.salaryRules, rulesFile.powerRules,
+    (rulesFile.careerHistoryRules as { entry?: unknown } | undefined)?.entry,
+    foreignSlotsFor(leagueId, rulesFile));
   const gen = JSON.parse(
     await window.projectB!.engine("generateLeagueRosterNative", JSON.stringify(params))
   ) as { npcs?: Partial<RepoNpc>[]; error?: string };

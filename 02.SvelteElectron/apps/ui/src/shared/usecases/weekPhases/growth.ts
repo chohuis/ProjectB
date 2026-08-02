@@ -9,6 +9,8 @@ import {
   loadGrowthXpRules, growthXpRules,
 } from "../../utils/ids";
 import { staffStatsOf, factorOf } from "../../utils/staffEffects";
+import { primeForeignRules } from "../../utils/foreignSlots";
+import { loadRosterRules } from "../../repo/newGameV3";
 import type { CareerStage } from "../../types/save";
 
 // ── NPC 월간 성장 헬퍼 ────────────────────────────────────────
@@ -73,6 +75,8 @@ export async function processWeeklyNpcGrowth(weekNum: number, careerStage: Caree
   // 성장 계수는 규칙 파일이 정본이다 — 한 번 읽고 캐시한다
   await loadFacilityFactors();
   await loadGrowthXpRules();
+  // 외국인 보유 한도표도 같은 파일이다 — 승강·방출·교체가 동기적으로 읽는다
+  primeForeignRules(await loadRosterRules());
 
   const teamContexts = m.teams.map((t) => {
     const staff = staffStatsOf(t.id, m.entities);

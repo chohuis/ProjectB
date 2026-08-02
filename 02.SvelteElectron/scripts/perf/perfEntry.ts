@@ -31,6 +31,7 @@ import {
   retireProtagonist, isRetired, evalRetirementPressure, calcMarketValueForProtagonist,
 } from "../../apps/ui/src/shared/usecases/retirement";
 import { runCampusEventsWeek } from "../../apps/ui/src/shared/usecases/campusEvents";
+import { foreignRules, isForeignPlayer } from "../../apps/ui/src/shared/utils/foreignSlots";
 import { enlistProtagonist } from "../../apps/ui/src/shared/usecases/militaryDecision";
 import {
   submitCareerApplications, confirmCareerResults, chooseDraft,
@@ -1033,6 +1034,90 @@ export function overseasProbe(): Record<string, unknown> {
       일정: (s.leagueSchedules?.[lg] ?? []).length,
       // 경기가 실제로 치러졌는가 — 일정만 있고 결과가 없으면 안 도는 것이다
       결과있는경기: (s.leagueSchedules?.[lg] ?? []).filter((e) => e.result).length,
+    };
+  }
+  return out;
+}
+
+/**
+ * 외국인 보유 현황 (F-2b·F-4).
+ *
+ * 보는 건 **한 시점의 총원이 아니라 팀별 한도 위반 수**다. 총원만 보면
+ * 어떤 팀이 4명, 다른 팀이 2명이어도 평균이 3이라 정상으로 읽힌다 —
+ * 실제로 트레이드·승강이 한도를 새게 하는 방식이 정확히 그거였다.
+ */
+export function foreignProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const m = get(masterStore);
+  const live = get(npcLiveStatsStore);
+  const out: Record<string, unknown> = {};
+
+  // 규칙 파일을 못 읽는 자리라(동기) 한도는 `foreignSlots` 캐시에서 본다 —
+  // 주간 성장이 매주 prime하므로 첫 주 이후엔 항상 채워져 있다
+  const F = foreignRules();
+  if (!F?.leagues?.length) return { 규칙: "없음" };
+
+  for (const lg of F.leagues) {
+    const held = g.npcs.filter((n) =>
+      n.careerStatus !== "retired" && isForeignPlayer(n.currentLeague ?? "", n.nationality));
+    // ⚠ **보유자 목록에서 팀을 뽑으면 0명인 팀이 아예 안 보인다.** 그러면
+    // "미달 없음"이 자리가 통째로 빈 팀을 통과시킨다 — 충원이 죽었을 때
+    // 정확히 그렇게 조용해진다. 팀 목록은 refs에서 온다.
+    const byTeam = new Map<string, typeof held>();
+    for (const t of m.teams) {
+      if (t.leagueId === lg && t.id.endsWith("_1")) byTeam.set(t.id, []);
+    }
+    for (const n of held) {
+      const t = n.currentTeam ?? "";
+      byTeam.set(t, [...(byTeam.get(t) ?? []), n]);
+    }
+    const overHold: string[] = [];
+    const overPitch: string[] = [];
+    const under: string[] = [];
+    for (const [tid, list] of byTeam) {
+      if (list.length > F.perTeam) overHold.push(`${tid}:${list.length}`);
+      if (list.length < F.perTeam) under.push(`${tid}:${list.length}`);
+      const p = list.filter((n) => n.playerType === "pitcher").length;
+      if (p > F.maxPitchers) overPitch.push(`${tid}:${p}`);
+    }
+    const ovrs = held.map((n) => {
+      const ls = live[n.npcId];
+      return Math.max(
+        ls?.pitching?.ovr ?? n.pitching?.ovr ?? 0,
+        ls?.batting?.ovr ?? n.batting?.ovr ?? 0,
+      );
+    }).filter((v) => v > 0);
+    // 2군에 외국인이 있으면 1군 전용 원칙이 깨진 것이다
+    const inFarm = g.npcs.filter((n) =>
+      n.careerStatus !== "retired" && (n.currentTeam ?? "").endsWith("_2")
+      && (n.nationality ?? "KOR") !== "KOR").length;
+
+    // ⚠ **집계로는 원인을 못 찾는다.** 한도가 새면 "누가 언제 왜 옮겼는지"를
+    // 그 선수의 `careerEvents`에서 직접 읽어야 한다 — 이 프로젝트에서 KBL
+    // 오염 원인을 찾은 방법도 그거였다(집계는 5시즌을 헤맸다).
+    const bad = new Set([...overHold.map((x) => x.split(":")[0]),
+                         ...under.map((x) => x.split(":")[0])]);
+    const 상세: string[] = [];
+    for (const n of g.npcs) {
+      if (n.careerStatus === "retired") continue;
+      if (!bad.has(n.currentTeam ?? "")) continue;
+      if ((n.nationality ?? "KOR") === "KOR") continue;
+      const ev = (n.careerEvents ?? [])
+        .map((e) => `${e.year}:${e.eventType}${e.toTeamId ? `→${e.toTeamId}` : ""}`).join(",");
+      상세.push(`${n.npcId} ${n.playerType} 팀=${n.currentTeam} 리그=${n.currentLeague} [${ev}]`);
+    }
+
+    out[lg.replace("LEAGUE_", "")] = {
+      총원: held.length,
+      팀수: byTeam.size,
+      상세,
+      한도초과: overHold,
+      투수한도초과: overPitch,
+      미달: under,
+      "2군체류": inFarm,
+      평균OVR: ovrs.length ? Math.round((ovrs.reduce((a, b) => a + b, 0) / ovrs.length) * 10) / 10 : 0,
+      최저OVR: ovrs.length ? Math.min(...ovrs) : 0,
+      최고OVR: ovrs.length ? Math.max(...ovrs) : 0,
     };
   }
   return out;

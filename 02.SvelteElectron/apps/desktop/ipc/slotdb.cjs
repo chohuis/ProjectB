@@ -1047,6 +1047,11 @@ const compatCommands = {
         proServiceYears: r.pro_service_years,
         pitchOvr: ab.pitching?.ovr ?? null, batOvr: ab.batting?.ovr ?? null,
         age: r.age,
+        // ⚠ **이게 빠져 있어서 트레이드가 외국인을 걸러내지 못했다.**
+        // 호출측은 `nationality ?? "KOR"`로 폴백하므로 컬럼이 없으면
+        // 전원이 내국인으로 읽힌다 — 오류도 경고도 없이 필터만 무력해진다.
+        // 실측: 8시즌 뒤 한 팀 4명·다른 팀 2명(사건 기록은 빈 채로).
+        nationality: r.nationality,
       };
     });
   },

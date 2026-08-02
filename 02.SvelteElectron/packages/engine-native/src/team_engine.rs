@@ -174,8 +174,10 @@ pub fn eval_callup_candidates(p: EvalCallupParams) -> EvalCallupResult {
     let threshold = 10.0 - (profile.win_now_pressure * 0.05);
 
     for farm in &p.farm_players {
+        // 외국인은 교체 대상에서 뺀다 — `replaces_player_id`는 호출측이 2군으로
+        // 내리는 선수다. 외국인이 거기 걸리면 콜업 한 번에 1군 전용 원칙이 깨진다
         let active_at_pos: Vec<&RosterPlayerRef> = p.active_players.iter()
-            .filter(|a| a.position == farm.position)
+            .filter(|a| a.position == farm.position && !a.is_foreign)
             .collect();
         if active_at_pos.is_empty() { continue; }
         // **성적을 반영한 값으로 최약체를 고른다.** 예전엔 OVR만 봐서
@@ -254,7 +256,12 @@ pub fn eval_calldown_candidates(p: EvalCalldownParams) -> EvalCalldownResult {
     let mut rules = p.promotion_rules.clone().unwrap_or_default();
     rules.form_weight *= p.callup_mod.unwrap_or(1.0).clamp(0.70, 1.30);
     let over = (p.current_roster_size - p.max_roster_size).max(0) as usize;
-    let mut scored: Vec<(String, f64)> = p.active_players.iter().map(|pl| {
+    // ⚠ **외국인은 2군에 안 내린다.** 보유 한도(1군 3명)가 2군 강등으로 새면
+    // 그 팀은 한 자리를 놀리고, 2군에 외국인이 쌓여 한도 계산이 흐려진다.
+    // 정원 초과는 내국인 안에서 푼다 — 외국인을 빼려면 방출(F-5)이다.
+    let mut scored: Vec<(String, f64)> = p.active_players.iter()
+        .filter(|pl| !pl.is_foreign)
+        .map(|pl| {
         // 성적을 반영한 값으로 본다 — 능력치만 보면 부진한 고연봉 베테랑이
         // 시즌 내내 1군을 지킨다
         let r = rated(pl, &rules);

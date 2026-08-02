@@ -557,6 +557,9 @@ fn normalize_offseason_npcs(
     // 12단계 진로 배정이 돌 수 있는가. false면 방출 대신 바로 은퇴시킨다 —
     // 소속 없는 현역이 떠다니면 화면과 시뮬이 다 깨진다
     can_place: bool,
+    // 외국인 판정. 이들은 **2군으로 못 내린다**(1군 전용) —
+    // 정원 초과는 내국인 안에서 푼다
+    is_foreign: &dyn Fn(&NpcSaveState) -> bool,
 ) -> Vec<NpcSaveState> {
     let mut next = npcs;
 
@@ -636,7 +639,10 @@ fn normalize_offseason_npcs(
 
         if indices.len() as i32 > max {
             let overflow = indices.len() as i32 - max;
-            let mut sorted_i = indices.clone();
+            // 외국인은 강등 대상이 아니다 — 1군 전용 슬롯이라 내릴 곳이 없다.
+            // 남은 자리에서 밀어내면 그 팀은 보유 3명을 채우고도 한 자리를 논다
+            let mut sorted_i: Vec<usize> = indices.iter().copied()
+                .filter(|&i| !is_foreign(&next[i])).collect();
             sorted_i.sort_by(|&a, &b| {
                 let ovr_a = npc_core_ovr(&next[a]);
                 let ovr_b = npc_core_ovr(&next[b]);
@@ -701,6 +707,10 @@ fn release_second_stage(
     rules: &crate::free_agency::ReleaseRules,
     limits: &HashMap<String, RosterLimit>,
     logs: &mut Vec<String>,
+    // 외국인은 이 경로를 타지 않는다. 방출자는 소속만 비고 진로 배정이
+    // 독립 입단·은퇴를 정하는데, 용병이 국내 독립리그로 가는 건 말이 안 된다.
+    // 외국인 교체는 재계약 판정 + 새 영입이 짝이다 (F-4·F-5)
+    is_foreign: &dyn Fn(&NpcSaveState) -> bool,
 ) -> usize {
     use crate::team_engine::{eval_release_priority, EvalReleaseParams};
 
@@ -731,6 +741,7 @@ fn release_second_stage(
         if !matches!(n.current_league.as_str(),
             "LEAGUE_KBL" | "LEAGUE_KBL_FARM" | "LEAGUE_ABL" | "LEAGUE_ABL_FARM"
             | "LEAGUE_JBL" | "LEAGUE_JBL_FARM") { continue; }
+        if is_foreign(n) { continue; }
 
         let (sum, cnt) = team_salaries.get(&n.current_team).copied().unwrap_or((0, 1));
         let market = (sum / cnt.max(1) as i64).max(1);
@@ -744,6 +755,7 @@ fn release_second_stage(
                 pro_service_years: n.pro_service_years.unwrap_or(0),
                 is_prospect: n.current_team.ends_with("_2"),
                 personality: n.personality.clone(), fame: n.fame, perf: None,
+                is_foreign: false,   // 위에서 걸러졌다
             },
             // 성적 표본이 없으므로 능력치를 성적 대용으로 쓴다 —
             // 오프시즌엔 시즌 기록이 이미 정산돼 넘어오지 않는다
@@ -832,6 +844,18 @@ fn fill_first_teams(
 
 pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     let salary_rules = params.salary_rules.clone().unwrap_or_default();
+    // 외국인 슬롯 판정 — `params.npcs`가 아래에서 move되므로 표만 먼저 떼어 둔다.
+    //
+    // ⚠ **외국인은 국적이 아니라 리그 기준 상대 개념이다.** `국적 != "KOR"`로
+    // 보면 ABL(USA)·JBL(JPN) 로스터 전원이 외국인이 된다. 정본 표는
+    // generation_rules.json이고 여기 다시 적지 않는다 — 호출측이 넘긴다.
+    let foreign_leagues = params.foreign_leagues.clone();
+    let home_nationality = params.home_nationality.clone();
+    let is_foreign = |n: &NpcSaveState| -> bool {
+        if !foreign_leagues.iter().any(|l| *l == n.current_league) { return false; }
+        let home = home_nationality.get(&n.current_league).map(|s| s.as_str()).unwrap_or("KOR");
+        n.nationality.as_deref().unwrap_or("KOR") != home
+    };
     let mut rng = rand::thread_rng();
     let mut lcg = LcgRand::new(
         (params.season_year as u32).wrapping_mul(3571)
@@ -886,7 +910,10 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
         let is_top_league = n.current_league == "LEAGUE_KBL"
             || n.current_league == "LEAGUE_ABL"
             || n.current_league == "LEAGUE_JBL";
-        if is_top_league {
+        // ⚠ **외국인은 FA를 취득하지 않는다.** 용병은 단년 계약이고 연차로
+        // 자격을 쌓는 신분이 아니다. 안 막으면 8년 뒤 전원이 FA 시장에 나와
+        // FA 재배치가 그들을 아무 팀에나 넣는다 — 보유 한도가 그 자리에서 깨진다.
+        if is_top_league && !is_foreign(&n) {
             let fa_threshold = fa_eligibility_years(&n.current_league);
             // ⚠ **연차를 0으로 리셋하지 않는다.** 예전엔 리셋해서 1군 평균이
             // 7년 → 1.8년으로 폭락하고 7년차 이상이 157명 → 0명이 됐다.
@@ -931,7 +958,8 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
                 ovr, &n.current_league, n.pro_service_years.unwrap_or(0), n.age, 1.0,
                 &salary_rules, &mut lcg);
             n.current_salary = salary;
-            n.contract_years  = years;
+            // 외국인은 **단년 계약**이다 — 다년으로 묶이면 매 시즌 교체(F-4)가 막힌다
+            n.contract_years  = if is_foreign(&n) { 1 } else { years };
         }
 
         n
@@ -1059,7 +1087,7 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     let can_place = !params.independent_team_ids.is_empty();
     let mut after_normalize = normalize_offseason_npcs(
         processed, season_year, &mut summary, &mut logs, &mut rng,
-        &params.roster_limits, can_place,
+        &params.roster_limits, can_place, &is_foreign,
     );
 
     // 12. 소속을 잃은 사람들의 진로 — 방출자와 FA 미계약자.
@@ -1070,7 +1098,8 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
     // 11-b. 방출 2단계 — 정원 안이어도 성적·연봉으로 걸러낸다.
     // 진로 배정(12단계) **앞**에 있어야 방출자가 그 경로를 탄다
     if let Some(rr) = params.release_rules.as_ref() {
-        let n = release_second_stage(&mut after_normalize, rr, &params.roster_limits, &mut logs);
+        let n = release_second_stage(
+            &mut after_normalize, rr, &params.roster_limits, &mut logs, &is_foreign);
         if n > 0 { logs.push(format!("방출 2단계 {n}명")); }
     }
 

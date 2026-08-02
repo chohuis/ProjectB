@@ -75,6 +75,7 @@
     "test:savebatch": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-savebatch.cjs",
     "scenarios": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/run-scenarios.cjs",
     "test:careerpaths": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-careerpaths.cjs",
+    "test:foreign": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-foreign.cjs",
     "test:events": "node scripts/test-events.cjs",
     "test:growth": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-growth.cjs"
   },

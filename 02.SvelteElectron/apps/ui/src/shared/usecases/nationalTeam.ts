@@ -95,11 +95,16 @@ export async function callUpNationalSquad(seasonYear: number): Promise<SquadResu
     if (ls?.stats) leagueStats[lid] = ls.stats;
   }
 
-  // 후보 = 국내 프로 한국인 현역. 복무 중·면제자는 뽑아도 의미가 없다
+  // 후보 = 국내 프로 한국인 현역. 복무 중인 선수는 뽑아도 의미가 없다.
+  //
+  // ⚠ **국적을 봐야 한다.** 예전엔 `militaryStatus !== "현역"`만 걸렀는데
+  // 외국인은 병역이 "면제"라 그 조건을 그냥 통과한다 — KBL 외국인이
+  // 한국 국가대표로 뽑혔다. 구 세이브(국적 없음)는 KOR로 읽는다.
   const proLeagues = new Set(["LEAGUE_KBL", "LEAGUE_KBL_FARM"]);
   const candidates = m.entities
     .filter((e) => e.role === "player" && e.status === "active"
-      && proLeagues.has(e.leagueId ?? "") && e.militaryStatus !== "현역")
+      && proLeagues.has(e.leagueId ?? "") && e.militaryStatus !== "현역"
+      && (e.nationality ?? "KOR") === "KOR")
     .map((e) => {
       const ls = live[e.id];
       const p = e.details?.player;

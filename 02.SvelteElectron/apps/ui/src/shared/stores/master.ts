@@ -258,6 +258,14 @@ export interface EntityRow {
   grade?: number;
   notes: string;
   militaryStatus?: "미필" | "현역" | "군필" | "면제";
+  /**
+   * 국적. 없으면 "KOR"로 읽는다(구 세이브).
+   *
+   * ⚠ **국가대표 발탁이 이걸 봐야 한다.** 예전엔 필드가 없어서
+   * `militaryStatus !== "현역"`만 걸렀는데, 외국인은 "면제"라 그 조건을 통과한다.
+   * KBL에 외국인이 들어온 뒤로는 한국 국가대표에 외국인이 뽑힌다.
+   */
+  nationality?: string;
   personality?: import("../types/save").NpcPersonality;
   entryYear?:   number;
   entryLeague?: string;
@@ -607,6 +615,7 @@ export function npcSaveStateToEntityRow(
     grade:          npc.grade,
     notes:          "",
     militaryStatus: npc.militaryStatus,
+    nationality:    npc.nationality ?? "KOR",
     personality:    npc.personality,
     details: {
       player: {

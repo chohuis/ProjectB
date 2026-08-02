@@ -236,5 +236,89 @@ console.log("\n구종 (Rust ↔ 카탈로그)");
     `미등장: ${[...catIds].filter((i) => !used.has(i)).join(",")}`);
 }
 
+// ── 외국인 선수 (F-2a) ────────────────────────────────────────
+//
+// KBL은 **진행 중인 리그**다. 새 게임 시작 시점에 이미 외국인이 있어야 하고,
+// 그 수는 KBO와 같은 보유 3명·투수 최대 2명이다.
+//
+// ⚠ 검사는 "무엇을 하는가"를 본다 — 규칙 파일의 숫자를 읽어 그대로 대조한다.
+// 여기 3/2를 다시 적으면 규칙을 바꿨을 때 이 파일이 거짓말을 한다.
+console.log("\n외국인 선수");
+{
+  const fs = require("node:fs");
+  const path = require("node:path");
+  const rf = JSON.parse(fs.readFileSync(
+    path.join(__dirname, "../resource/data/master/players/generation_rules.json"), "utf8"));
+  const refs3 = JSON.parse(fs.readFileSync(
+    path.join(__dirname, "../resource/data/master/entities/refs.json"), "utf8"));
+  const F = rf.foreignRules;
+  check("foreignRules 존재", !!F);
+
+  const first = refs3.teams.filter((t) => t.leagueId === "LEAGUE_KBL" && t.id.endsWith("_1"));
+  const farm  = refs3.teams.filter((t) => t.leagueId === "LEAGUE_KBL" && t.id.endsWith("_2"));
+
+  const mk = (lid, teams, foreign) => gen({
+    leagueId: lid, seasonYear: 2029, worldSeed: 4242,
+    teams: teams.map((t) => ({ teamId: t.id, schoolId: "" })),
+    rules: rf.rosterRules[lid],
+    ...(foreign ? { foreign: F } : {}),
+  }).npcs;
+
+  const one = mk("LEAGUE_KBL", first, true);
+  const byTeam = {};
+  for (const n of one) (byTeam[n.currentTeam] ??= []).push(n);
+
+  const bad = [];
+  for (const [tid, roster] of Object.entries(byTeam)) {
+    const f = roster.filter((n) => n.nationality === F.nationality);
+    const fp = f.filter((n) => n.playerType === "pitcher");
+    if (f.length !== F.perTeam || fp.length > F.maxPitchers) {
+      bad.push(`${tid}(외국인 ${f.length}/투수 ${fp.length})`);
+    }
+  }
+  check(`1군 전 팀이 외국인 ${F.perTeam}명·투수 ${F.maxPitchers}명 이하`,
+    bad.length === 0, bad.join(" "));
+
+  const fgn = one.filter((n) => n.nationality === F.nationality);
+  check("정원은 그대로 (외국인이 자리를 늘리지 않는다)",
+    one.length === first.length * rf.rosterRules.LEAGUE_KBL.rosterSize,
+    `${one.length}`);
+  check("외국인은 병역 대상이 아니다", fgn.every((n) => n.militaryStatus === "면제"));
+  check("외국인은 단년 계약", fgn.every((n) => n.contractYears === 1));
+  check("외국인 이름이 서양식 (공백 포함)", fgn.every((n) => n.name.includes(" ")));
+  check("내국인 이름에는 공백이 없다",
+    one.filter((n) => n.nationality !== F.nationality).every((n) => !n.name.includes(" ")));
+
+  const ages = fgn.map((n) => n.age);
+  check(`외국인 나이가 ${F.ageMin}~${F.ageMax}`,
+    ages.every((a) => a >= F.ageMin && a <= F.ageMax),
+    `${Math.min(...ages)}~${Math.max(...ages)}`);
+
+  const ovrOf = (n) => n.playerType === "pitcher"
+    ? (n.abilities.pitching?.ovr ?? 0) : (n.abilities.batting?.ovr ?? 0);
+  const ovrs = fgn.map(ovrOf);
+  const lo = Math.min(...ovrs), hi = Math.max(...ovrs);
+  const avg = ovrs.reduce((a, b) => a + b, 0) / ovrs.length;
+  console.log(`    외국인 ${fgn.length}명 · OVR ${lo}~${hi} (평균 ${avg.toFixed(1)})`);
+  // 대박/쪽박 편차가 의도다 — 전원이 비슷하면 추첨이 아니라 배급이다
+  check("외국인 OVR 편차가 존재한다", hi - lo >= 15, `폭 ${hi - lo}`);
+
+  const dom = one.filter((n) => n.nationality !== F.nationality).map(ovrOf);
+  const domAvg = dom.reduce((a, b) => a + b, 0) / dom.length;
+  console.log(`    내국인 ${dom.length}명 · 평균 OVR ${domAvg.toFixed(1)}`);
+  check("외국인 평균이 내국인보다 높다", avg > domAvg, `${avg.toFixed(1)} vs ${domAvg.toFixed(1)}`);
+
+  // 2군에는 넣지 않는다 — 보유 한도 계산이 흐려진다
+  check("foreignRules.leagues에 2군이 없다", !F.leagues.includes("LEAGUE_KBL_FARM"));
+  const farmNpcs = mk("LEAGUE_KBL_FARM", farm, false);
+  check("2군에는 외국인이 없다",
+    farmNpcs.every((n) => n.nationality !== F.nationality));
+
+  // foreign 미전달 시 기존 동작과 동일해야 한다 (rng 순서 포함)
+  const noF = mk("LEAGUE_KBL", first, false);
+  check("foreign 없이 생성하면 전원 내국인",
+    noF.every((n) => n.nationality !== F.nationality));
+}
+
 console.log(failed === 0 ? "\nALL PASS" : `\n${failed} FAILED`);
 process.exit(failed === 0 ? 0 : 1);

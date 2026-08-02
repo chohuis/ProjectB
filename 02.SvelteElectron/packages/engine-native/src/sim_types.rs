@@ -572,6 +572,16 @@ pub struct OffseasonParams {
     /// 방출 2단계 (faRules.release). 없으면 1단계(정원 초과)만 돈다
     #[serde(default)]
     pub release_rules: Option<crate::free_agency::ReleaseRules>,
+    /// 외국인 보유 한도가 걸리는 리그 (generation_rules.json `foreignRules.leagues`).
+    /// 비면 외국인 개념이 없는 세계 — 구 세이브·구 페이로드가 그렇다
+    #[serde(default)]
+    pub foreign_leagues: Vec<String>,
+    /// 리그별 자국 국적 (`rosterRules[리그].nationality`, 없으면 KOR).
+    ///
+    /// ⚠ **외국인은 국적이 아니라 리그 기준 상대 개념이다.** `!= "KOR"`로 보면
+    /// ABL(USA)·JBL(JPN) 로스터 전원이 외국인이 된다
+    #[serde(default)]
+    pub home_nationality: std::collections::HashMap<String, String>,
 }
 
 // ── 학년 진급 입력 ───────────────────────────────────────────────────────────
@@ -862,6 +872,10 @@ pub struct RosterPlayerRef {
     /// 그때는 `form_score`가 능력치만 보게 된다
     #[serde(default)]
     pub perf: Option<RosterPerf>,
+    /// 외국인 선수인가. **1군 전용이라 2군 강등 후보에서 빼야 한다.**
+    /// 없으면 false — 구 페이로드는 전원 내국인으로 읽힌다
+    #[serde(default)]
+    pub is_foreign: bool,
 }
 
 /// 승강 판정용 시즌 성적. 투수/타자 중 해당 쪽만 채워진다

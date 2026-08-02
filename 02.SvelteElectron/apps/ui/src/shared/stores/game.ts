@@ -50,7 +50,7 @@ import type {
 } from "../types/save";
 import type { ProContract } from "../types/save";
 import { transitionReason, universityGradeOf } from "../utils/careerTransition";
-import { runOffseasonProcessing, rosterLimitsFrom } from "../utils/npcEngine";
+import { runOffseasonProcessing, rosterLimitsFrom, foreignParamsFrom } from "../utils/npcEngine";
 import { getFaThreshold } from "../utils/faEngine";
 import { masterStore } from "./master";
 import { autoLog, logEvent, logVerify, type PlayerEventEntry } from "./autoAdvance";
@@ -2052,6 +2052,7 @@ function createGameStore() {
           rules: placementRulesFrom(offRules.rosterRules),
         },
         (offRules.faRules as { release?: unknown } | undefined)?.release,
+        foreignParamsFrom(offRules),
       );
       // 이 배열은 아래 시즌종료 처리들이 인덱스로 직접 덮어쓴다 (careerHistory·병역·드래프트).
       // 예전엔 여기서 감정 9축의 dormant 감쇠·은퇴 archive도 했는데, 6C에서

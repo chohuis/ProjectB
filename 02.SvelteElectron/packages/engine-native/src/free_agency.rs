@@ -101,7 +101,11 @@ pub struct FaTeam {
     /// 1군에 받을 수 있는 인원. 0이면 영입 못 한다
     #[serde(default)]
     pub open_slots: i32,
-    /// 보상선수 후보 (이 팀 로스터, OVR 내림차순일 필요는 없다)
+    /// 보상선수 후보 (OVR 내림차순일 필요는 없다).
+    ///
+    /// ⚠ **팀 전체 로스터가 아니다.** 정원은 `open_slots`가 따로 받는다.
+    /// 호출측이 보상 대상이 아닌 사람(외국인)을 빼고 넘긴다 — 여기 다 넣으면
+    /// 보호선수 다음 순위가 거의 항상 용병이라 매 FA마다 한 명씩 팀을 옮긴다
     #[serde(default)]
     pub roster: Vec<FaRosterEntry>,
 }

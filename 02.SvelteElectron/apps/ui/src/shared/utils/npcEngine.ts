@@ -32,6 +32,23 @@ export function rosterLimitsFrom(
   return out;
 }
 
+/**
+ * 외국인 판정에 필요한 두 표. **정본은 규칙 파일이고 여기서 파생만 한다.**
+ *
+ * ⚠ 자국 국적을 빼먹으면 Rust가 전부 KOR로 읽어 ABL(USA)·JBL(JPN) 로스터
+ * 전원이 외국인이 된다 — 그 리그 FA가 통째로 멎는다.
+ */
+export function foreignParamsFrom(rulesFile: {
+  foreignRules?: { leagues?: string[] };
+  rosterRules?: Record<string, { nationality?: string }>;
+}): { foreignLeagues: string[]; homeNationality: Record<string, string> } {
+  const homeNationality: Record<string, string> = {};
+  for (const [lid, r] of Object.entries(rulesFile.rosterRules ?? {})) {
+    homeNationality[lid] = r?.nationality ?? "KOR";
+  }
+  return { foreignLeagues: rulesFile.foreignRules?.leagues ?? [], homeNationality };
+}
+
 export function clampStat(v: number): number {
   return Math.max(1, Math.min(99, Math.round(v)));
 }
@@ -82,6 +99,11 @@ export async function runOffseasonProcessing(
    * 그러면 부진한 고연봉 베테랑이 정원 안에서 계속 버틴다
    */
   releaseRules?: unknown,
+  /**
+   * 외국인 판정표 (`foreignParamsFrom`). 안 넘기면 외국인 개념이 없는 세계로
+   * 돌아간다 — 용병이 FA를 취득하고 2군으로 강등되며 보유 한도가 깨진다
+   */
+  foreign?: { foreignLeagues: string[]; homeNationality: Record<string, string> },
 ): Promise<OffseasonResult> {
   const namedFlags = new Map(npcs.map(n => [n.npcId, n.isNamed] as const));
   const paramsJson = JSON.stringify({
@@ -94,6 +116,7 @@ export async function runOffseasonProcessing(
       placement: placement.rules,
     } : {}),
     ...(releaseRules ? { releaseRules } : {}),
+    ...(foreign ?? {}),
   });
   const json = await api().npcRunOffseason(paramsJson);
   const raw = parseResult<{ npcs: NpcSaveState[]; pendingDraft: NpcSaveState[]; summary: SeasonEndSummary; logs: string[] }>(json);

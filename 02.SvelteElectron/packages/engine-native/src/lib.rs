@@ -1213,6 +1213,18 @@ pub fn generate_league_roster_native(params_json: String) -> String {
     serde_json::to_string(&result).unwrap_or_else(|e| parse_err("generateLeagueRosterNative/serialize", e))
 }
 
+/// 외국인 교체 영입 — 시즌 종료 후 빈 슬롯만큼 새 용병을 만든다 (F-4).
+/// 확장팩(ABL·JBL)이 닫혀 있어도 KBL 외국인 자리가 비지 않게 하는 경로다
+#[napi]
+pub fn generate_foreign_players_native(params_json: String) -> String {
+    let params: roster_gen::GenerateForeignParams = match serde_json::from_str(&params_json) {
+        Ok(v) => v,
+        Err(e) => return parse_err("generateForeignPlayersNative", e),
+    };
+    let result = roster_gen::generate_foreign_players(params);
+    serde_json::to_string(&result).unwrap_or_else(|e| parse_err("generateForeignPlayersNative/serialize", e))
+}
+
 /// 반경 2(드리프트) 리그 순위표 주간 갱신 — 팀 전력치 + 노이즈로 승패만 누적 (DESIGN.md §2.1)
 #[napi]
 pub fn standings_drift_native(params_json: String) -> String {

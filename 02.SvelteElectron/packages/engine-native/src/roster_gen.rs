@@ -96,6 +96,35 @@ pub struct GenerateLeagueRosterParams {
     /// 연차를 여기서 역산한다 — 무작위로 뽑으면 출신 분포가 뒤집힌다
     #[serde(default)]
     pub entry_rules: Option<crate::career_history::EntryRules>,
+    /// 외국인 선수 슬롯 (generation_rules.json foreignRules). None이면 전원 내국인
+    #[serde(default)]
+    pub foreign: Option<ForeignSlots>,
+}
+
+/// 외국인 선수 규칙 — **KBL은 진행 중인 리그라 시작 시점에 이미 있어야 한다.**
+///
+/// ⚠ `ovr_min`~`ovr_max` 폭이 넓은 건 의도다(사용자 확정) — 대박/쪽박 편차.
+/// 팀당 `per_team`명이 각자 독립 추첨이라 어떤 팀은 에이스를, 어떤 팀은
+/// 실패작을 데려온다. 그게 초기 전력 차가 된다.
+///
+/// ⚠ **1군에만 넣는다.** 2군에 두면 보유 한도 계산이 흐려지고, 실제 KBO도
+/// 외국인은 1군 등록이 원칙이다.
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ForeignSlots {
+    pub per_team: usize,
+    /// 그중 투수 수 (KBO는 출전 3명 중 투수 최대 2명)
+    pub max_pitchers: usize,
+    pub ovr_min: f64,
+    pub ovr_max: f64,
+    pub nationality: String,
+    pub dev_rate_min: f64,
+    pub dev_rate_max: f64,
+    pub age_min: i32,
+    pub age_max: i32,
+    /// 서양식 이름 풀. 없으면 내장 풀(한국식)이라 이름이 어색해진다
+    #[serde(default)]
+    pub name_pool: Option<NamePool>,
 }
 
 /// 팀 전력★이 로스터 수준을 정한다.
@@ -361,8 +390,25 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
             ^ (p.season_year as u32).wrapping_mul(2654435761);
         let mut rng = LcgRand::new(seed);
 
+        // 외국인 슬롯 — **자리를 늘리지 않고 내국인 자리를 대체한다.**
+        // 투수는 선발 앞자리(0..), 야수는 야수 첫 자리(pitcher_n..)에 넣는다.
+        // 그래야 정원도 포지션 분포도 그대로다.
+        let (fgn_p, fgn_b) = match &p.foreign {
+            Some(f) => {
+                let fp = f.max_pitchers.min(f.per_team) as i32;
+                (fp.min(sp_n), (f.per_team as i32 - fp).min(batter_n))
+            }
+            None => (0, 0),
+        };
+
         for i in 0..roster {
             let is_pitcher = i < pitcher_n;
+            // ⚠ None일 때 rng 호출 순서가 예전과 **완전히 같아야** 한다 —
+            // 아래 분기들은 전부 None 갈래에서 기존 코드를 그대로 탄다.
+            let fgn: Option<&ForeignSlots> = match &p.foreign {
+                Some(f) if i < fgn_p || (i >= pitcher_n && i < pitcher_n + fgn_b) => Some(f),
+                _ => None,
+            };
             let position = if is_pitcher {
                 if i < sp_n { "SP".to_string() } else { "RP".to_string() }
             } else {
@@ -383,8 +429,11 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
                 }
             };
 
-            // 학년/나이
-            let (grade, age, graduation_year) = if p.rules.grade_max > 0 {
+            // 학년/나이 — 외국인은 전성기 나이대에서 뽑는다(유망주를 데려오지 않는다)
+            let (grade, age, graduation_year) = if let Some(f) = fgn {
+                let span = (f.age_max - f.age_min).max(0);
+                (None, f.age_min + (rng.next() * (span + 1) as f64) as i32, 0)
+            } else if p.rules.grade_max > 0 {
                 let g = (i % p.rules.grade_max) + 1;
                 (Some(g), p.rules.age_base + g, p.season_year + (p.rules.grade_max - g))
             } else {
@@ -396,10 +445,19 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
             // 능력치 — 투수도 최소 타격치 보유 (교류전/지명타자 부재 대비).
             // 전력★ 보정은 **구간 전체를 민다** — 폭은 그대로 두고 중심만 옮긴다.
             // 그래야 약팀에서도 특급 유망주가 나올 수 있다(폭이 좁아지지 않는다).
-            let ovr_p = (p.rules.pitching_ovr_min + rng.next() * (p.rules.pitching_ovr_max - p.rules.pitching_ovr_min)
-                + power_shift).clamp(20.0, 99.0);
-            let ovr_b = (p.rules.batting_ovr_min  + rng.next() * (p.rules.batting_ovr_max  - p.rules.batting_ovr_min)
-                + power_shift).clamp(20.0, 99.0);
+            //
+            // ⚠ **외국인은 전력★ 보정을 받지 않는다.** 영입은 팀 전력이 아니라
+            // 추첨에 가깝다 — 약팀이 대박을 뽑고 강팀이 쪽박을 차는 게 정상이다.
+            // 폭이 넓은 것도 의도다(사용자 확정): 팀당 독립 추첨이라 초기 전력차가 된다.
+            let (ovr_p, ovr_b) = if let Some(f) = fgn {
+                let o = (f.ovr_min + rng.next() * (f.ovr_max - f.ovr_min)).clamp(20.0, 99.0);
+                (o, o)
+            } else {
+                ((p.rules.pitching_ovr_min + rng.next() * (p.rules.pitching_ovr_max - p.rules.pitching_ovr_min)
+                    + power_shift).clamp(20.0, 99.0),
+                 (p.rules.batting_ovr_min  + rng.next() * (p.rules.batting_ovr_max  - p.rules.batting_ovr_min)
+                    + power_shift).clamp(20.0, 99.0))
+            };
             let abilities = if is_pitcher {
                 let pitching = make_pitching(ovr_p.round(), &mut rng);
                 // 구종은 구속·보직·나이·OVR이 정한다 (Phase 6.5).
@@ -419,8 +477,14 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
             };
 
             let core_ovr = if is_pitcher { ovr_p } else { ovr_b };
-            let dev_rate = p.rules.dev_rate_min + rng.next() * (p.rules.dev_rate_max - p.rules.dev_rate_min);
-            let pot_cap  = p.rules.pitching_ovr_max.max(p.rules.batting_ovr_max);
+            let dev_rate = match fgn {
+                Some(f) => f.dev_rate_min + rng.next() * (f.dev_rate_max - f.dev_rate_min),
+                None => p.rules.dev_rate_min + rng.next() * (p.rules.dev_rate_max - p.rules.dev_rate_min),
+            };
+            let pot_cap  = match fgn {
+                Some(f) => f.ovr_max,
+                None => p.rules.pitching_ovr_max.max(p.rules.batting_ovr_max),
+            };
             let potential = (pot_cap * (1.05 + rng.next() * 0.20)).round().clamp(core_ovr.round(), 99.0);
 
             let handedness = if rng.next() < (if is_pitcher { 0.30 } else { 0.35 }) { "L" } else { "R" };
@@ -431,7 +495,12 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
             // 실제로는 나이가 많으면 그만큼 뛰었다 — 늦깎이라도 한계가 있다.
             // 하한 = 고졸 입단(20세) 기준 경과 연수의 절반. 대졸·군필·독립 출신이
             // 늦게 들어온 경우를 그 폭이 흡수한다.
-            let pro_service_years = if p.rules.grade_max == 0 && p.rules.with_contract {
+            //
+            // 외국인은 **이 리그 연차가 짧다.** entry_rules로 역산하면 30세가
+            // 10년차가 돼 FA 자격까지 얻는다 — 그건 국내 육성 경로의 규칙이다.
+            let pro_service_years = if fgn.is_some() {
+                (rng.next() * 3.0) as i32
+            } else if p.rules.grade_max == 0 && p.rules.with_contract {
                 match &p.entry_rules {
                     // **입단 경로를 먼저 뽑고 연차를 역산한다.**
                     // 연차를 균등하게 뽑으면 입단 나이가 중간값에 몰려 출신 분포가
@@ -451,14 +520,17 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
             } else { 0 };
 
             let (salary, contract_years) = if p.rules.with_contract {
-                estimate_salary_and_contract(
+                let (s, y) = estimate_salary_and_contract(
                     core_ovr, &p.league_id, pro_service_years, age,
-                    team.salary_index.unwrap_or(1.0), &salary_rules, &mut rng)
+                    team.salary_index.unwrap_or(1.0), &salary_rules, &mut rng);
+                // 외국인은 **단년 계약**이 원칙이다(KBO 동일). 매 시즌 재계약/교체가
+                // 걸리게 하려면 여기서 1년으로 못박아야 한다
+                if fgn.is_some() { (s, 1) } else { (s, y) }
             } else {
                 (0, 0)
             };
 
-            let (name, name_en) = match &p.name_pool {
+            let (name, name_en) = match fgn.and_then(|f| f.name_pool.as_ref()).or(p.name_pool.as_ref()) {
                 Some(pool) => gen_name_pooled(pool, &mut rng),
                 None => gen_name_builtin(&mut rng),
             };
@@ -476,12 +548,145 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
                 grade,
                 school_id: team.school_id.clone(),
                 graduation_year,
-                nationality: nationality.clone(),
+                nationality: fgn.map_or_else(|| nationality.clone(), |f| f.nationality.clone()),
                 career_status: "active".into(),
                 current_league: p.league_id.clone(),
                 current_team: team.team_id.clone(),
                 salary, contract_years, pro_service_years,
-                military_status: if nationality == "KOR" { "미필".into() } else { "면제".into() },
+                military_status: if fgn.is_none() && nationality == "KOR" { "미필".into() } else { "면제".into() },
+                development_rate: dev_rate.round() as i32,
+                potential_hidden: potential as i32,
+                abilities,
+                personality: gen_personality(&mut rng),
+            });
+        }
+    }
+
+    GenerateLeagueRosterResult { npcs }
+}
+
+// ── 외국인 교체 영입 (F-4) ───────────────────────────────────────────────────
+//
+// 시즌이 끝나면 부진한 용병이 빠지고 그 자리가 빈다. **확장팩이 닫혀 있으면
+// ABL·JBL에서 데려올 수가 없으므로 새로 만든다**(사용자 확정).
+//
+// 초기 로스터(`generate_league_roster`)와 **같은 규칙·같은 폭**을 쓴다 —
+// 여기서 따로 좁히면 2년차부터 세계 수준이 슬금슬금 달라진다.
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ForeignRequest {
+    pub team_id: String,
+    /// 이 팀이 이번에 채울 투수 수
+    pub pitchers: usize,
+    /// 이 팀이 이번에 채울 야수 수
+    pub batters: usize,
+    #[serde(default)]
+    pub salary_index: Option<f64>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct GenerateForeignParams {
+    pub league_id: String,
+    pub season_year: i32,
+    pub world_seed: u32,
+    pub requests: Vec<ForeignRequest>,
+    pub foreign: ForeignSlots,
+    #[serde(default)]
+    pub salary_rules: Option<crate::npc_sim::SalaryRules>,
+    /// 같은 해에 두 번 부를 때 ID가 겹치지 않게 하는 오프셋
+    #[serde(default)]
+    pub id_offset: i32,
+}
+
+pub fn generate_foreign_players(p: GenerateForeignParams) -> GenerateLeagueRosterResult {
+    let f = &p.foreign;
+    let salary_rules = p.salary_rules.clone().unwrap_or_default();
+    let mut npcs: Vec<GenNpc> = Vec::new();
+
+    for req in &p.requests {
+        let total = req.pitchers + req.batters;
+        if total == 0 { continue; }
+
+        // 팀·연도별 독립 시드. 요청 순서가 바뀌어도 같은 결과가 나온다
+        let seed = p.world_seed
+            ^ hash_str(&req.team_id)
+            ^ (p.season_year as u32).wrapping_mul(40503)
+            ^ 0x464f_5247;   // "FORG" — 초기 로스터와 시드가 겹치지 않게
+        let mut rng = LcgRand::new(seed);
+
+        for i in 0..total {
+            let is_pitcher = i < req.pitchers;
+            // 투수는 선발 우선(용병 투수는 선발로 쓴다), 야수는 중심타선 자리
+            let position = if is_pitcher {
+                if i == 0 { "SP" } else if i == 1 { "SP" } else { "RP" }
+            } else {
+                // 외야·1루 — 용병 타자가 실제로 서는 자리다
+                ["LF", "1B", "RF", "3B"][(i - req.pitchers) % 4]
+            }.to_string();
+
+            let span = (f.age_max - f.age_min).max(0);
+            let age = f.age_min + (rng.next() * (span + 1) as f64) as i32;
+
+            // ⚠ 폭은 초기 로스터와 같다 — 대박/쪽박 편차가 매년 이어져야 한다
+            let ovr = (f.ovr_min + rng.next() * (f.ovr_max - f.ovr_min)).clamp(20.0, 99.0);
+
+            let abilities = if is_pitcher {
+                let pitching = make_pitching(ovr.round(), &mut rng);
+                let pitches = gen_pitches(&position, pitching.velocity, ovr, age, &mut rng);
+                GenAbilities {
+                    pitching: Some(pitching),
+                    batting:  Some(make_batting((ovr * 0.55).round(), &mut rng)),
+                    pitches:  Some(pitches),
+                }
+            } else {
+                GenAbilities {
+                    pitching: None,
+                    batting:  Some(make_batting(ovr.round(), &mut rng)),
+                    pitches:  None,
+                }
+            };
+
+            let dev_rate = f.dev_rate_min + rng.next() * (f.dev_rate_max - f.dev_rate_min);
+            let potential = (f.ovr_max * (1.05 + rng.next() * 0.20)).round().clamp(ovr.round(), 99.0);
+            let handedness = if rng.next() < (if is_pitcher { 0.30 } else { 0.35 }) { "L" } else { "R" };
+
+            // 새로 온 용병은 이 리그 연차가 0이다
+            let (salary, _years) = estimate_salary_and_contract(
+                ovr, &p.league_id, 0, age,
+                req.salary_index.unwrap_or(1.0), &salary_rules, &mut rng);
+
+            let (name, name_en) = match f.name_pool.as_ref() {
+                Some(pool) => gen_name_pooled(pool, &mut rng),
+                None => gen_name_builtin(&mut rng),
+            };
+
+            npcs.push(GenNpc {
+                // `F`가 들어가 초기 로스터 ID와 절대 겹치지 않는다
+                npc_id: format!("PLY_F{}{:02}_{}_{:03}",
+                    league_code(&p.league_id), p.season_year % 100,
+                    team_tag(&req.team_id), p.id_offset + i as i32 + 1),
+                name, name_en,
+                is_named: false,
+                player_type: if is_pitcher { "pitcher".into() } else { "batter".into() },
+                position,
+                handedness: handedness.into(),
+                // 등번호는 뒷번호대 — 기존 로스터와 부딪히지 않게
+                jersey_number: 60 + i as i32,
+                age,
+                grade: None,
+                school_id: String::new(),
+                graduation_year: 0,
+                nationality: f.nationality.clone(),
+                career_status: "active".into(),
+                current_league: p.league_id.clone(),
+                current_team: req.team_id.clone(),
+                salary,
+                // 외국인은 단년 계약이다 — 매 시즌 재계약 판정을 받는다
+                contract_years: 1,
+                pro_service_years: 0,
+                military_status: "면제".into(),
                 development_rate: dev_rate.round() as i32,
                 potential_hidden: potential as i32,
                 abilities,
@@ -548,7 +753,91 @@ mod tests {
             name_pool: None,
             id_prefix: None,
             salary_rules, power_rules, entry_rules,
+            foreign: None,
         }).npcs
+    }
+
+    /// 실데이터 `foreignRules`를 읽는다 — 인라인 값을 두면 규칙을 바꿨을 때
+    /// 이 테스트가 거짓 안심을 준다
+    fn foreign_rules() -> ForeignSlots {
+        let src = std::fs::read_to_string(concat!(
+            env!("CARGO_MANIFEST_DIR"), "/../../resource/data/master/players/generation_rules.json"
+        )).expect("generation_rules.json 없음");
+        let v: serde_json::Value = serde_json::from_str(&src).unwrap();
+        serde_json::from_value(v["foreignRules"].clone()).expect("foreignRules 파싱 실패")
+    }
+
+    /// 외국인 교체 영입(F-4) — **요청한 수와 보직이 그대로 나와야 한다.**
+    /// 여기가 어긋나면 보유 한도가 매 시즌 조금씩 밀린다.
+    #[test]
+    fn 외국인_교체_영입은_요청한_구성대로_만든다() {
+        let f = foreign_rules();
+        let out = generate_foreign_players(GenerateForeignParams {
+            league_id: "LEAGUE_KBL".into(),
+            season_year: 2030,
+            world_seed: 4242,
+            requests: vec![
+                ForeignRequest { team_id: "TEAM_KBL_A_1".into(), pitchers: 2, batters: 1, salary_index: None },
+                ForeignRequest { team_id: "TEAM_KBL_B_1".into(), pitchers: 0, batters: 1, salary_index: None },
+                ForeignRequest { team_id: "TEAM_KBL_C_1".into(), pitchers: 0, batters: 0, salary_index: None },
+            ],
+            foreign: f.clone(),
+            salary_rules: None,
+            id_offset: 0,
+        }).npcs;
+
+        assert_eq!(out.len(), 4, "요청 합계와 다르다");
+        let a: Vec<_> = out.iter().filter(|n| n.current_team == "TEAM_KBL_A_1").collect();
+        assert_eq!(a.iter().filter(|n| n.player_type == "pitcher").count(), 2);
+        assert_eq!(a.iter().filter(|n| n.player_type == "batter").count(), 1);
+        assert!(out.iter().all(|n| n.current_team != "TEAM_KBL_C_1"), "0명 요청에도 만들었다");
+
+        for n in &out {
+            assert_eq!(n.nationality, f.nationality);
+            // 단년 계약이 아니면 매 시즌 교체 판정이 막힌다
+            assert_eq!(n.contract_years, 1, "{} 계약연수", n.name);
+            assert_eq!(n.military_status, "면제");
+            assert!(n.age >= f.age_min && n.age <= f.age_max, "{} 나이 {}", n.name, n.age);
+            // 초기 로스터 ID와 절대 겹치면 안 된다 (INSERT가 UNIQUE로 죽는다)
+            assert!(n.npc_id.starts_with("PLY_F"), "{}", n.npc_id);
+        }
+        let ids: HashSet<&str> = out.iter().map(|n| n.npc_id.as_str()).collect();
+        assert_eq!(ids.len(), out.len(), "npc_id 중복");
+    }
+
+    /// 초기 로스터(F-2a)의 보유 한도. **`test-roster-gen.cjs`와 겹치지만
+    /// 여기서 먼저 깨지는 편이 낫다** — cargo test가 훨씬 빠르다.
+    #[test]
+    fn 초기_로스터_외국인은_보유_한도를_지킨다() {
+        let f = foreign_rules();
+        let src = std::fs::read_to_string(concat!(
+            env!("CARGO_MANIFEST_DIR"), "/../../resource/data/master/players/generation_rules.json"
+        )).unwrap();
+        let v: serde_json::Value = serde_json::from_str(&src).unwrap();
+        let rules: RosterRules = serde_json::from_value(v["rosterRules"]["LEAGUE_KBL"].clone()).unwrap();
+
+        let teams: Vec<TeamSpec> = ["TEAM_KBL_A_1", "TEAM_KBL_B_1", "TEAM_KBL_C_1"].iter()
+            .map(|t| TeamSpec { team_id: t.to_string(), school_id: String::new(),
+                                salary_index: None, power: None })
+            .collect();
+        let n_teams = teams.len();
+        let size = rules.roster_size;
+        let out = generate_league_roster(GenerateLeagueRosterParams {
+            league_id: "LEAGUE_KBL".into(), season_year: 2029, world_seed: 4242,
+            teams, rules, name_pool: None, id_prefix: None,
+            salary_rules: None, power_rules: None, entry_rules: None,
+            foreign: Some(f.clone()),
+        }).npcs;
+
+        // 외국인이 자리를 **늘리지 않는다** — 정원은 그대로다
+        assert_eq!(out.len(), n_teams * size as usize);
+        for t in ["TEAM_KBL_A_1", "TEAM_KBL_B_1", "TEAM_KBL_C_1"] {
+            let fg: Vec<_> = out.iter()
+                .filter(|n| n.current_team == t && n.nationality == f.nationality).collect();
+            assert_eq!(fg.len(), f.per_team, "{t} 보유 수");
+            assert!(fg.iter().filter(|n| n.player_type == "pitcher").count() <= f.max_pitchers,
+                    "{t} 투수 한도");
+        }
     }
 
     /// **이 테스트가 없어서 `UNIQUE constraint failed: npc.npc_id`가 실사용에서 터졌다.**

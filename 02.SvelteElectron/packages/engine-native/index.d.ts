@@ -198,6 +198,11 @@ export declare function weekRollRandomBatchNative(count: number): string
 export declare function weekCalcNpcInjuriesNative(p: string): string
 /** 리그 활성화 시점 로스터 생성 — worldSeed 결정적 (DESIGN.md §8.3) */
 export declare function generateLeagueRosterNative(paramsJson: string): string
+/**
+ * 외국인 교체 영입 — 시즌 종료 후 빈 슬롯만큼 새 용병을 만든다 (F-4).
+ * 확장팩(ABL·JBL)이 닫혀 있어도 KBL 외국인 자리가 비지 않게 하는 경로다
+ */
+export declare function generateForeignPlayersNative(paramsJson: string): string
 /** 반경 2(드리프트) 리그 순위표 주간 갱신 — 팀 전력치 + 노이즈로 승패만 누적 (DESIGN.md §2.1) */
 export declare function standingsDriftNative(paramsJson: string): string
 /** 타 리그 Named NPC 주간 합성 성적 — worldSeed 결정적 (DESIGN.md §4.2, R3b) */

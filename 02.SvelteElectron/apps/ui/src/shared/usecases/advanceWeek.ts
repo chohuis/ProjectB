@@ -40,6 +40,7 @@ import {
 } from "../utils/postseasonEngine";
 import { isV3SlotActive } from "../repo/v3Mode";
 import { generateFreshmenV3, ensureLeagueActivatedV3, generateOverseasIntakeV3 } from "../repo/slotLifecycleV3";
+import { applyForeignTurnover } from "./foreignPlayers";
 
 // ── weekPhases 도메인 모듈 (R4: training·academics·events·games·injuries·growth·market·digest) ──
 import { findTeamCoach, getPitchCoachName, makeTrainingMessage } from "./weekPhases/training";
@@ -185,6 +186,13 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       // 팜에서 빼오기만 해서 **팜이 말라붙는다**(실측 544 → 184).
       const intake = await generateOverseasIntakeV3(currentSeasonYear);
       if (intake > 0) logs.push(`[해외신인] ${intake}명 배정`);
+
+      // ── 외국인 순환 (F-4·F-5) ─────────────────────────────────
+      //
+      // 은퇴·로스터 정리가 끝난 **뒤**여야 빈 자리를 정확히 센다.
+      // 안 돌면 보유 3명이 은퇴·부진 퇴출로 매년 줄어들기만 한다
+      const fgn = await applyForeignTurnover(currentSeasonYear);
+      for (const l of fgn.logs) logs.push(l);
     } else {
     // (레거시) entry_year == currentSeasonYear인 신규 NPC: master.db 직접 조회 (store 미갱신)
     const yearEntrants = await masterStore.fetchEntryEntities(currentSeasonYear);
