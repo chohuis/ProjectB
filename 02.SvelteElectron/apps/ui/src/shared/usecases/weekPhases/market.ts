@@ -136,7 +136,8 @@ function detectPerfSwing(curr: PlayerSeasonStats, prev: PlayerSeasonStats): numb
   return 0;
 }
 
-const TRADE_REASON_LABEL: Record<string, string> = {
+/** 트레이드 사유 표시명 — **정본은 여기 하나다.** 모달·usecase가 같이 쓴다 */
+export const TRADE_REASON_LABEL: Record<string, string> = {
   position_surplus:   "포지션 보강",
   injury_cover:       "부상 대체",
   seller_mode:        "전력 재편",

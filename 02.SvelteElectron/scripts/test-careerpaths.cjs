@@ -192,6 +192,86 @@ const PATHS = [
     },
   },
   {
+    id: "T3",
+    name: "2군 강등 → 1군 복귀",
+    // **한 번도 안 밟아본 경로다.** 승강은 이번 조사에서 페이로드 null 하나로
+    // 한 팀이 매주 죽어 있던 곳이고(주간 루프까지 끊겼다), 주인공이 실제로
+    // 내려갔다 돌아오는 흐름은 검증된 적이 없다.
+    //
+    // 성적으로 강등을 유도하려면 시즌을 여러 번 굴려야 하고 그래도 안 걸릴
+    // 수 있다 — `forceProtagonistToFarm`으로 무대에 직접 세운다
+    // (강등 자체는 실제 승강 코드와 **같은 함수**를 쓴다).
+    policy: (stage) => stage === "highschool"
+      ? { draft: true, university: false, independent: true }
+      : { draft: true, university: false, independent: false },
+    maxSeasons: 12,
+    until: (a) => a.careerStage().startsWith("pro"),
+    async check(app, r, out) {
+      if (!r.hit) throw new Error(`프로에 도달 못 함 — ${r.reason}`);
+
+      const forced = app.forceProtagonistToFarm();
+      if (!forced.ok) throw new Error(`강등을 못 걸었다 — ${forced.이유 ?? JSON.stringify(forced)}`);
+      if (!app.protagonistIsFarm()) throw new Error("강등 후에도 2군이 아니다");
+      const demotedAt = `${app.currentSeason()}W${app.currentWeek()}`;
+
+      // ⚠ **강등만 확인하고 끝내면 안 된다.** 이 파일 T2 주석에 적힌 대로
+      // "검사가 약하면 엉뚱한 결말을 통과시킨다" — 2군에 갇힌 채 커리어가
+      // 끝나는 것도 강등 성공으로 읽힌다. 복귀까지 본다.
+      const back = await drive(app, {
+        maxSeasons: 6,
+        until: (a) => !a.protagonistIsFarm(),
+        applyPolicy: () => app.setCareerPolicy({ draft: true, university: false, independent: false }),
+      });
+      const st = app.protagonistState();
+      if (!back.hit) {
+        throw new Error(`2군에서 못 올라왔다 (${demotedAt} 강등 → 지금 ${st.team}) — ${back.reason}`);
+      }
+      return `강등 ${forced.before.team} → ${forced.after.team} (${demotedAt}) → 복귀 ${st.team} (${app.currentSeason()}W${app.currentWeek()})`;
+    },
+  },
+  {
+    id: "T8",
+    name: "국가대표 — 대회가 열리고 소집이 도는가",
+    // **엔진 페이로드 null로 죽어 있던 경로다.**
+    // `selectNationalSquadNative: invalid type: null, expected f64` —
+    // `formOf`가 통계 없는 선수에게 NaN을 만들고 JSON.stringify가 null로
+    // 바꿨다. 고친 뒤 실제로 대회가 열리는지 확인한다.
+    //
+    // ⚠ 대회는 **개막 주에만** 열린다. 시즌 경계에서만 재면 이미 닫혀 있어
+    // 영영 0으로 보인다 — 부상(T11)과 같은 함정이라 `onTick`으로 본다.
+    policy: (stage) => stage === "highschool"
+      ? { draft: true, university: false, independent: true }
+      : { draft: true, university: false, independent: false },
+    maxSeasons: 10,
+    until: (a) => a.natlSeen >= 1,
+    onTick(app, out) {
+      const p = app.nationalTeamProbe();
+      out.samples++;
+      // ⚠ **진행 중 스냅샷만 보면 안 된다.** 대회 기간이 2~3주인데 autoRun은
+      // W40·W51에서만 멈춘다 — 아시안게임(W38~40)은 멈추는 순간 이미 폐막했고
+      // 올림픽(W30~33)은 통째로 지나간다. 실제로 그렇게 "한 번도 안 열렸다"고
+      // 잘못 읽었다. 발탁 발표(메시지)를 **매 tick 누적**한다 —
+      // mailbox엔 상한이 있어 나중에 몰아 읽으면 밀려나 있다.
+      for (const t of p.발탁제목 ?? []) out.natlTournaments.add(t);
+      if (p.진행중) {
+        if (p.소집인원 > out.natlMaxSquad) out.natlMaxSquad = p.소집인원;
+        if (p.주인공소집) out.natlProtagonist = true;
+      }
+      app.natlSeen = out.natlTournaments.size;
+    },
+    check(app, r, out) {
+      // ⚠ 표본 수를 조건에 넣지 않는다. `until`이 첫 tick에 만족되면
+      // samples가 1이고, 그건 **빨리 찾았다는 뜻이지 측정 실패가 아니다** —
+      // T11(부상)에서 쓰던 조건을 그대로 복사했다가 성공을 실패로 읽었다.
+      if (out.natlTournaments.size === 0) {
+        throw new Error("국제대회 발탁 발표가 한 번도 없었다 — 선발이 여전히 죽어 있다");
+      }
+      return `발탁 발표 ${out.natlTournaments.size}회 — ${[...out.natlTournaments][0]}`
+        + (out.natlMaxSquad > 0 ? ` · 소집 ${out.natlMaxSquad}명` : "")
+        + (out.natlProtagonist ? " · 주인공 발탁" : "");
+    },
+  },
+  {
     id: "T11",
     name: "NPC 부상 — 발생하고 회복되는가",
     // **실제로 있었던 결함을 고정한다.** 부상이 나면 `careerStatus`를
@@ -252,7 +332,11 @@ const PATHS = [
         grades: new Set(), enlistAge: null,
         aca: { semesters: 0, gpa: null, warn: 0, repeated: 0 },
         injPeak: 0, injMax: 0, injSeen: false, recovered: false, samples: 0,
+        natlTournaments: new Set(), natlMaxSquad: 0, natlProtagonist: false,
+        demotedAt: null,
       };
+      // `until`이 app만 받으므로 onTick이 여기 얹는다 (T8)
+      app.natlSeen = 0;
       const r = await drive(app, {
         maxSeasons: p.maxSeasons,
         until: p.until,
@@ -261,7 +345,7 @@ const PATHS = [
         onSeason: p.watch ? (a) => p.watch(a, out) : undefined,
         onDecision: p.onDecision ? (a, d, st) => p.onDecision(a, d, st, out) : undefined,
       });
-      const detail = p.check(app, r, out);
+      const detail = await p.check(app, r, out);
       log(`  ok  ${p.id} ${p.name}`);
       log(`      ${detail}  (${((Date.now() - t0) / 1000).toFixed(1)}초)`);
     } catch (e) {

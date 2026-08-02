@@ -24,6 +24,12 @@ const STOP_PENDING = new Set<PendingAction["type"]>([
   // 2031년에 만료된 계약이 2038년까지 그대로 있었다(재계약도 은퇴도 없음).
   // 지명 통보는 멈추는데 재계약은 안 멈출 이유가 없다.
   "salaryNegotiation", "optionClause", "faMarket",
+  // ⚠ **트레이드도 같은 계열이었다.** 아래 "단순 resolve"에 들어 있어서
+  // 자동 진행 중 트레이드되면 **통보만 사라지고 팀은 그대로**였다.
+  // 주석은 "결과가 상태에 남지 않는 알림성"이라 했는데 트레이드는
+  // 소속이 바뀐다 — 분류가 틀렸다. 노트레이드 조항이 있으면 거부도
+  // 가능하므로 사용자 결정이 필요하다.
+  "trade",
 ]);
 const STOP_WEEKS = [40, 51] as const;
 
@@ -355,7 +361,6 @@ export async function runAutoAdvance(): Promise<void> {
 
         // 단순 resolve — 결과가 상태에 남지 않는 알림성 pending만 여기 둔다.
         // 계약 관련(salaryNegotiation·optionClause·faMarket)은 STOP_PENDING이다
-        case "trade":
         case "sportsUnitApplication":
         case "militaryEnlistAsk":
           seasonStore.resolvePendingAction(pa.type);

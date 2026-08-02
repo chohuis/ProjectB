@@ -12,6 +12,7 @@ import { seasonStore } from "../stores/season";
 import { masterStore } from "../stores/master";
 import { isFaEligible, toContract, type FaOffer } from "../utils/faEngine";
 import { openProSeason } from "./proSeason";
+import { TRADE_REASON_LABEL } from "./weekPhases/market";
 import type { ProContract } from "../types/save";
 import type { PendingAction } from "../types/season";
 
@@ -181,4 +182,79 @@ export async function waitFaMarket(): Promise<void> {
   seasonStore.resolvePendingAction("faMarket");
   await gameStore.save();
   await seasonStore.save();
+}
+
+// ── 트레이드 통보 ────────────────────────────────────────────────
+//
+// ⚠ **이 로직은 `TradeModal.svelte` 안에 있었다.** 그래서 두 가지가 깨졌다.
+//
+//  1. `runAutoAdvance`가 `trade` pending을 "결과가 상태에 남지 않는 알림성"으로
+//     분류해 **그냥 resolve했다.** 자동 진행 중 트레이드되면 통보만 사라지고
+//     **팀은 그대로 남는다.** 계약 관련 pending들이 `STOP_PENDING`에 없어
+//     조용히 버려지던 것과 같은 계열이다.
+//  2. 화면 안에 있으면 회귀를 걸 수 없다 — 이번 조사에서 결함이 쏟아진
+//     자리가 전부 "코드는 있는데 한 번도 안 돈 곳"이었다.
+//
+// 모달에는 표시와 버튼만 남는다.
+
+export interface TradePendingAction {
+  fromTeamId: string;
+  toTeamId: string;
+  toLeagueId?: string;
+  receivedNpcId: string;
+  receivedNpcName: string;
+  tradeReason: string;
+}
+
+/** 트레이드 수락 — 팀 이동 + 경력 기록 + 리그 거래 기록 */
+export async function acceptTrade(action: TradePendingAction): Promise<void> {
+  const g = get(gameStore);
+  const s = get(seasonStore);
+  const seasonYear = s.seasonYear;
+  const slotId = g.currentSlotId;
+  const leagueId = g.protagonist.leagueId;
+  const toLeagueId = action.toLeagueId ?? leagueId;
+
+  gameStore.applyTradeTransfer(action.toTeamId, toLeagueId);
+  gameStore.addCareerEvent({
+    year: seasonYear, eventType: "trade",
+    fromTeamId: action.fromTeamId, fromLeagueId: leagueId,
+    toTeamId: action.toTeamId, toLeagueId,
+  });
+  seasonStore.resolvePendingAction("trade");
+
+  if (slotId) {
+    const label = TRADE_REASON_LABEL[action.tradeReason] ?? action.tradeReason;
+    const groupId = `trade-pro-${action.fromTeamId}-${action.toTeamId}-${seasonYear}`;
+    await window.projectB!.leagueAddTransactions(JSON.stringify({
+      slotId,
+      rows: [
+        {
+          seasonYear, category: "trade",
+          playerId: g.protagonist.id, playerName: g.protagonist.name,
+          fromTeamId: action.fromTeamId, fromLeagueId: leagueId,
+          toTeamId: action.toTeamId, toLeagueId: leagueId,
+          detail: label, groupId,
+        },
+        {
+          seasonYear, category: "trade",
+          playerId: action.receivedNpcId, playerName: action.receivedNpcName,
+          fromTeamId: action.toTeamId, fromLeagueId: leagueId,
+          toTeamId: action.fromTeamId, toLeagueId: leagueId,
+          detail: label, groupId,
+        },
+      ],
+    }));
+  }
+
+  await gameStore.save();
+  await seasonStore.save();
+}
+
+/** 트레이드 거부 — **노트레이드 조항이 있을 때만** 가능하다 */
+export async function rejectTrade(): Promise<boolean> {
+  if (!(get(gameStore).protagonist.contract?.noTrade ?? false)) return false;
+  seasonStore.resolvePendingAction("trade");
+  await seasonStore.save();
+  return true;
 }

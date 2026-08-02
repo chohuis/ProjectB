@@ -24,6 +24,7 @@ import { processTradeWindow } from "../../apps/ui/src/shared/usecases/weekPhases
 import { runDevScenarios } from "../../apps/ui/src/shared/usecases/devScenarios";
 import {
   signNegotiatedContract, applyOptionClause, signFaOffer, waitFaMarket,
+  acceptTrade, rejectTrade,
 } from "../../apps/ui/src/shared/usecases/contractDecision";
 import { generateFaOffers } from "../../apps/ui/src/shared/utils/faEngine";
 import {
@@ -324,9 +325,12 @@ export interface CareerPolicy {
   enlistNow: boolean;
   /** 지명 통보를 거부한다 (폴백 경로 확인용) */
   rejectDraft: boolean;
+  /** 트레이드를 거부한다 — 노트레이드 조항이 있어야 실제로 먹힌다 */
+  rejectTrade: boolean;
 }
 const DEFAULT_POLICY: CareerPolicy = {
-  draft: true, university: true, independent: true, enlistNow: false, rejectDraft: false,
+  draft: true, university: true, independent: true, enlistNow: false,
+  rejectDraft: false, rejectTrade: false,
 };
 let _policy: CareerPolicy = { ...DEFAULT_POLICY };
 
@@ -435,6 +439,21 @@ export async function pushCareerForward(): Promise<string | null> {
         salary: pa.salary, durationYears: pa.durationYears, signingBonus: pa.signingBonus,
       });
       return "draftNotification";
+    }
+
+    case "trade": {
+      // 트레이드는 `STOP_PENDING`이라 여기서 눌러주지 않으면 자동 진행이 멈춘다.
+      // 기본은 수락 — 거부는 노트레이드 조항이 있어야 가능하다.
+      if (_policy.rejectTrade && await rejectTrade()) return "trade(reject)";
+      await acceptTrade({
+        fromTeamId: pa.fromTeamId,
+        toTeamId: pa.toTeamId,
+        toLeagueId: pa.toLeagueId,
+        receivedNpcId: pa.receivedNpcId,
+        receivedNpcName: pa.receivedNpcName,
+        tradeReason: pa.tradeReason,
+      });
+      return `trade(accept→${pa.toTeamId})`;
     }
 
     default:
@@ -1238,6 +1257,78 @@ export function protagonistState(): Record<string, unknown> {
     ovr: p.pitching?.ovr ?? p.batting?.ovr ?? 0,
     retired: p.retirement ?? null,
   };
+}
+
+/**
+ * 주인공을 2군으로 내린 뒤 승강이 실제로 도는지 본다 (T3).
+ *
+ * ⚠ **성적으로 강등을 유도하려면 시즌을 여러 번 굴려야 하고, 그래도
+ * 안 걸릴 수 있다.** 그러면 이 경로는 영영 미검증으로 남는다 —
+ * 이번 세션 결함 24건이 전부 그런 자리에서 나왔다.
+ * `probeRetirementEval`과 같은 방식으로 무대에 직접 세운다.
+ *
+ * 강등 자체는 `setProtagonistTeam`이 하고(실제 승강 코드가 쓰는 것과 같은
+ * 함수다), 여기서는 그 뒤 **승강 판정이 주인공을 다시 올리는가**를 본다.
+ */
+export function forceProtagonistToFarm(): Record<string, unknown> {
+  const p = get(gameStore).protagonist;
+  const before = { team: p.teamId, league: p.leagueId, stage: p.careerStage };
+  if (!p.teamId || !p.teamId.endsWith("_1")) {
+    return { ok: false, 이유: `1군 소속이 아니다 (${p.teamId ?? "없음"})`, before };
+  }
+  const farmTeam = p.teamId.replace(/_1$/, "_2");
+  gameStore.setProtagonistTeam(farmTeam, "LEAGUE_KBL_FARM");
+  const after = get(gameStore).protagonist;
+  return {
+    ok: after.teamId === farmTeam && after.leagueId === "LEAGUE_KBL_FARM",
+    before,
+    after: { team: after.teamId, league: after.leagueId, stage: after.careerStage },
+  };
+}
+
+/**
+ * 국가대표가 실제로 도는가 (T8).
+ *
+ * ⚠ 이 경로는 **엔진 페이로드 null로 죽어 있었다** —
+ * `selectNationalSquadNative: invalid type: null, expected f64`.
+ * `formOf`가 통계 없는 선수에게 NaN을 만들고 `JSON.stringify`가 null로
+ * 바꿨다. 고친 뒤 실제로 발탁·대회·병역면제가 도는지 본다.
+ *
+ * 대회는 **개막 주에만** 열리므로 시즌 중간을 봐야 한다 — 시즌 경계에서만
+ * 재면 `activeTournament`가 이미 닫혀 영영 0으로 보인다(부상과 같은 함정).
+ */
+export function nationalTeamProbe(): Record<string, unknown> {
+  const s = get(seasonStore);
+  const g = get(gameStore);
+  const duty = s.nationalDuty ?? {};
+  const act = s.activeTournament;
+
+  // ⚠ **`activeTournament` 스냅샷으로는 못 본다.** 대회 기간이 2~3주인데
+  // `autoRun`은 W40·W51에서만 멈춘다 — 아시안게임(W38~40)은 멈추는 순간
+  // 이미 폐막했고, 올림픽(W30~33)은 통째로 지나간다. 실제로 그렇게
+  // "대회가 한 번도 안 열렸다"고 잘못 읽었다.
+  // **누적 기록**(메시지함)을 함께 센다. 발탁 발표는 `emitSquadNews`가
+  // `sender: "대한야구협회"`로 남긴다.
+  // ⚠ `mailbox`에는 상한이 있어 오래된 건 밀려난다 — 부르는 쪽이 매 tick
+  // 누적해야 한다(이 세션 초반에 50-cap으로 이벤트를 놓친 적이 있다).
+  const news = get(gameStore).mailbox.filter((msg) => msg.sender === "대한야구협회");
+
+  return {
+    진행중: act ? (act.def?.name ?? "이름없음") : null,
+    소집인원: Object.keys(duty).length,
+    주인공소집: Object.prototype.hasOwnProperty.call(duty, g.protagonist.id),
+    // 누적 — 이게 "대회가 열렸는가"의 정본이다
+    발탁발표수: news.length,
+    발탁제목: news.slice(0, 3).map((msg) => msg.subject),
+    // 국제대회 입상은 병역 면제로 이어진다 — 그 배선까지 확인한다
+    주인공병역: g.protagonist.militaryStatus ?? null,
+  };
+}
+
+/** 주인공이 지금 2군인가 — T3 판정용 */
+export function protagonistIsFarm(): boolean {
+  const p = get(gameStore).protagonist;
+  return (p.teamId ?? "").endsWith("_2") || p.leagueId === "LEAGUE_KBL_FARM";
 }
 
 /** 시즌 상태 상세 — 리그·주차·일정 구성이 어떻게 돼 있는지 */

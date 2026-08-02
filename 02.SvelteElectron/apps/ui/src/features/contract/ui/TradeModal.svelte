@@ -3,6 +3,7 @@
   import { masterStore } from "../../../shared/stores/master";
   import { seasonStore } from "../../../shared/stores/season";
   import type { PendingAction } from "../../../shared/types/season";
+  import { acceptTrade, rejectTrade } from "../../../shared/usecases/contractDecision";
 
   export let action: Extract<PendingAction, { type: "trade" }>;
 
@@ -39,13 +40,13 @@
     action.receivedMedicalConcern >= 0.6 ? "high" :
     action.receivedMedicalConcern >= 0.3 ? "mid" : "none";
 
-  async function acceptTrade() {
+  // 세계를 바꾸는 로직은 `usecases/contractDecision`에 있다 —
+  // 여기 두면 자동 진행이 그 경로를 못 타고(실제로 통보만 버려졌다)
+  // 회귀도 걸 수 없다. 모달에는 표시와 선택만 남긴다.
+  async function onAccept() {
     if (resolving) return;
     resolving = true;
     const g = $gameStore;
-    const slotId = g.currentSlotId;
-    const seasonYear = $seasonStore.seasonYear;
-
     seasonStore.pushPendingAction({
       type: "event",
       eventId: "EVT_TRADE_CONFIRMED",
@@ -53,52 +54,24 @@
       description: `${fromTeamName} → ${toTeamName} 이적이 확정되었습니다.`,
       choices: [{ id: "ok", label: "확인" }],
     });
-    gameStore.applyTradeTransfer(action.toTeamId, action.toLeagueId ?? g.protagonist.leagueId);
-    gameStore.addCareerEvent({ year: seasonYear, eventType: "trade",
-      fromTeamId: action.fromTeamId, fromLeagueId: g.protagonist.leagueId,
-      toTeamId: action.toTeamId, toLeagueId: action.toLeagueId ?? g.protagonist.leagueId });
-    seasonStore.resolvePendingAction("trade");
-
-    // 리그 거래 기록
-    if (slotId) {
-      const proName = g.protagonist.name;
-      const leagueId = g.protagonist.leagueId;
-      const tradeGroupId = `trade-pro-${action.fromTeamId}-${action.toTeamId}-${seasonYear}`;
-      await window.projectB!.leagueAddTransactions(JSON.stringify({
-        slotId,
-        rows: [
-          {
-            seasonYear, category: "trade",
-            playerId: g.protagonist.id, playerName: proName,
-            fromTeamId: action.fromTeamId, fromLeagueId: leagueId,
-            toTeamId: action.toTeamId,   toLeagueId: leagueId,
-            detail: TRADE_REASON_LABEL[action.tradeReason] ?? action.tradeReason,
-            groupId: tradeGroupId,
-          },
-          {
-            seasonYear, category: "trade",
-            playerId: action.receivedNpcId, playerName: action.receivedNpcName,
-            fromTeamId: action.toTeamId,   fromLeagueId: leagueId,
-            toTeamId: action.fromTeamId,   toLeagueId: leagueId,
-            detail: TRADE_REASON_LABEL[action.tradeReason] ?? action.tradeReason,
-            groupId: tradeGroupId,
-          },
-        ],
-      }));
-    }
-
-    await gameStore.save();
-    await seasonStore.save();
+    await acceptTrade({
+      fromTeamId: action.fromTeamId,
+      toTeamId: action.toTeamId,
+      toLeagueId: action.toLeagueId ?? g.protagonist.leagueId,
+      receivedNpcId: action.receivedNpcId,
+      receivedNpcName: action.receivedNpcName,
+      tradeReason: action.tradeReason,
+    });
     resolving = false;
   }
 
-  async function rejectTrade() {
+  async function onReject() {
     if (resolving || !hasNoTrade) return;
     resolving = true;
-    seasonStore.resolvePendingAction("trade");
-    await seasonStore.save();
+    await rejectTrade();
     resolving = false;
   }
+
 </script>
 
 <div class="overlay">
@@ -143,9 +116,9 @@
     {/if}
 
     <div class="actions">
-      <button class="btn-accept" disabled={resolving} on:click={acceptTrade}>수락</button>
+      <button class="btn-accept" disabled={resolving} on:click={onAccept}>수락</button>
       {#if hasNoTrade}
-        <button class="btn-reject" disabled={resolving} on:click={rejectTrade}>거부권 행사</button>
+        <button class="btn-reject" disabled={resolving} on:click={onReject}>거부권 행사</button>
       {/if}
     </div>
   </section>
