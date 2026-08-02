@@ -113,7 +113,8 @@ async function handleGame(scheduleId: string): Promise<void> {
       const auto = JSON.parse(autoRaw) as {
         homeScore: number; awayScore: number; summary: string;
         strikeouts?: number; hitsAllowed?: number; walksAllowed?: number;
-        outsRecorded?: number; pitchCount?: number; playerLines?: PlayerGameLine[];
+        outsRecorded?: number; pitchCount?: number; earnedRuns?: number;
+        playerLines?: PlayerGameLine[];
         error?: string;
       };
       if (auto.error) throw new Error(auto.error);
@@ -128,6 +129,7 @@ async function handleGame(scheduleId: string): Promise<void> {
         hitsAllowed:  auto.hitsAllowed  ?? 0,
         walksAllowed: auto.walksAllowed ?? 0,
         outsRecorded: auto.outsRecorded ?? 0,
+        earnedRuns:   auto.earnedRuns,
         errors: 0, pitchCount: auto.pitchCount ?? 0,
         summary: auto.summary ?? "",
         playerLines: Array.isArray(auto.playerLines) ? auto.playerLines : undefined,

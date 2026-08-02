@@ -216,6 +216,8 @@ export interface InteractiveMatchResult {
   hitsAllowed: number;
   walksAllowed: number;
   outsRecorded: number;
+  /** 등판 중 실점. 없으면 호출측이 피안타로 역산한다(구 경로 호환) */
+  earnedRuns?: number;
   errors: number;
   pitchCount: number;
   /** 경기 날짜 "YYYY-MM-DD" — 의무 휴식 판정용 (Phase 5-8). 없으면 일정에서 찾는다 */
@@ -239,6 +241,8 @@ export interface UnifiedGameOutcome {
   hitsAllowed: number;
   walksAllowed: number;
   outsRecorded: number;
+  /** 등판 중 실점. 없으면 호출측이 피안타로 역산한다(구 경로 호환) */
+  earnedRuns?: number;
   errors: number;
   pitchCount: number;
   /** 경기 날짜 "YYYY-MM-DD" — 의무 휴식 판정용 (Phase 5-8). 없으면 일정에서 찾는다 */

@@ -28,7 +28,23 @@ export function sanitizeStatsRecord(
         era: calcEra(safeN(s.er), ip), whip: calcWhip(safeN(s.bb), safeN(s.h), ip),
       };
     } else {
-      out[pid] = st;
+      // ⚠ **타자 쪽이 통째로 비어 있었다.** 투수만 NaN을 막고 파생값을 다시
+      // 계산했고 타자는 그대로 통과시켰다. 그래서 한 번 어긋난 `pa`·`obp`·`ops`가
+      // 세이브를 왕복해도 영영 안 고쳐졌다.
+      //
+      // 파생값은 저장된 값을 믿지 않고 **누적 counter에서 다시 만든다** —
+      // 그러면 구 세이브도 로드 시점에 정상으로 돌아온다.
+      const b  = st as BatterSeasonStats;
+      const ab = safeN(b.ab), h = safeN(b.h), bb = safeN(b.bb), hr = safeN(b.hr);
+      const pa = ab + bb;
+      const obp = pa > 0 ? Math.round(((h + bb) / pa) * 1000) / 1000 : 0;
+      const slg = ab > 0 ? Math.round(((h + hr * 3) / ab) * 1000) / 1000 : 0;
+      out[pid] = {
+        ...b,
+        g: safeN(b.g), pa, ab, h, hr, rbi: safeN(b.rbi), sb: safeN(b.sb),
+        bb, k: safeN(b.k),
+        avg: calcAvg(h, ab), obp, slg, ops: calcOps(obp, slg),
+      };
     }
   }
   return out;
@@ -117,7 +133,23 @@ export function accumulateStats(
       const bb  = prev.bb  + (line.bb  ?? 0);
       const k   = prev.k   + (line.k   ?? 0);
       const sb  = prev.sb  + (line.sb  ?? 0);
-      const pa  = prev.pa  + ab + bb;
+      // ⚠ **타석은 누적하지 않고 파생한다.**
+      //
+      // 예전엔 `prev.pa + ab + bb`였는데 `ab`·`bb`가 **이미 누적 합계**라
+      // 매 경기 누적값을 또 더했다 — `pa`가 경기 수의 제곱으로 늘었다.
+      // 100경기·경기당 4타수면 실제 ~450인데 계산값이 ~20,200(45배)이다.
+      //
+      // 그 값이 두 곳을 망가뜨렸다:
+      //  · 수상 자격선 `minPa` 200이 실질 4~5타석이 되어 12타수 7안타(.583)가
+      //    타격왕이 됐다
+      //  · `obp = (h+bb)/pa`가 45배 작아지고 `ops`도 같이 붕괴 — 승강 판정
+      //    (`batterOpsBaseline` 0.700)·국가대표 form·트레이드 가치가 전부
+      //    이 값 위에 서 있다
+      //
+      // 희생타·사구를 안 세는 이 모델에서 타석 = 타수 + 볼넷이다. 누적 counter
+      // (ab·bb)에서 파생하면 애초에 어긋날 수가 없고, 구 세이브도 다음 경기부터
+      // 저절로 정상값이 된다(마이그레이션 불필요 — 사용자 확정 "그대로 진행").
+      const pa  = ab + bb;
       const avg = calcAvg(h, ab);
       const obp = pa > 0 ? Math.round(((h + bb) / pa) * 1000) / 1000 : 0;
       const slg = ab > 0 ? Math.round(((h + hr * 3) / ab) * 1000) / 1000 : 0;

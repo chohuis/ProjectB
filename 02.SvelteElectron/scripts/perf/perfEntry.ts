@@ -1174,6 +1174,149 @@ export function leagueTeamMismatch(): Record<string, unknown> {
  * 배열**이었다. 대학 진학 점수(`awards.length * 15`)와 드래프트 점수가
  * 이미 이걸 전제하는데 값이 0이었다.
  */
+/**
+ * 타자 표본 분포 (Phase 1).
+ *
+ * ⚠ **수상 자격선(`minPa`)이 실제 타석 분포 위에 서 있는지 확인하는 창이다.**
+ * 예전엔 `pa`가 경기 수의 제곱으로 늘어서(누적값을 매 경기 또 더했다)
+ * `minPa` 200이 실질 4~5타석이었고, 12타수 7안타(.583)가 타격왕이 됐다.
+ * 자격선을 조정하기 전에 **분포부터 본다** — 숫자를 감으로 옮기면 또 틀린다.
+ */
+/**
+ * **개별 선수 편차** (사용자 질문 2026-08-03).
+ *
+ * 리그 합산 지표(ERA·피안타/9)는 "세계 평균"만 말한다. 그 숫자가 맞아도
+ * **모든 선수가 똑같이 평균이면 능력치가 안 먹는 것**이다. 여기서는 능력치와
+ * 성적의 상관·분포를 본다 — 상관이 0에 가까우면 능력치가 결과에 안 닿는다.
+ *
+ * ⚠ `SimPitcher`에는 **성격도 구종도 필드가 없다**(속도·무브·커맨드·제구·
+ * 스태미나 여섯 개뿐). 즉 NPC끼리의 리그 경기는 그 둘을 안 본다.
+ * 주인공 경기(`match_engine`)만 clutch·mental을 반영한다.
+ */
+export function abilitySpreadProbe(leagueId = "LEAGUE_KBL"): Record<string, unknown> {
+  const g = get(gameStore);
+  const s = get(seasonStore);
+  const live = get(npcLiveStatsStore);
+  const stats = (s.leagueId === leagueId ? s.stats : s.leagueState?.[leagueId]?.stats) ?? {};
+
+  const rows: Array<{ ovr: number; era: number; ip: number; k9: number }> = [];
+  for (const n of g.npcs) {
+    if (n.currentLeague !== leagueId || n.playerType !== "pitcher") continue;
+    const st = stats[n.npcId];
+    if (!st || st.type !== "pitcher") continue;
+    const q = st as unknown as { ip: number; er: number; k: number };
+    if (!(q.ip >= 40)) continue;   // 규정 표본
+    const ovr = live[n.npcId]?.pitching?.ovr ?? n.pitching?.ovr ?? 0;
+    if (!(ovr > 0)) continue;
+    rows.push({ ovr, era: q.er * 9 / q.ip, ip: q.ip, k9: q.k * 9 / q.ip });
+  }
+  if (rows.length < 10) return { 표본: rows.length, 비고: "표본 부족" };
+
+  const mean = (xs: number[]) => xs.reduce((a, b) => a + b, 0) / xs.length;
+  const corr = (xs: number[], ys: number[]) => {
+    const mx = mean(xs), my = mean(ys);
+    let num = 0, dx = 0, dy = 0;
+    for (let i = 0; i < xs.length; i++) {
+      num += (xs[i] - mx) * (ys[i] - my);
+      dx += (xs[i] - mx) ** 2; dy += (ys[i] - my) ** 2;
+    }
+    return dx > 0 && dy > 0 ? num / Math.sqrt(dx * dy) : 0;
+  };
+  const r2 = (v: number) => Math.round(v * 100) / 100;
+  const eras = rows.map((r) => r.era).sort((a, b) => a - b);
+  const q = (f: number) => r2(eras[Math.min(eras.length - 1, Math.floor(eras.length * f))]);
+
+  // 능력치 상·하위 그룹을 직접 비교한다 — 상관계수만 보면 크기를 못 느낀다
+  const byOvr = [...rows].sort((a, b) => b.ovr - a.ovr);
+  const top = byOvr.slice(0, Math.max(3, Math.floor(byOvr.length * 0.25)));
+  const bot = byOvr.slice(-Math.max(3, Math.floor(byOvr.length * 0.25)));
+
+  return {
+    표본: rows.length,
+    "ERA_p10": q(0.10), "ERA_중앙": q(0.50), "ERA_p90": q(0.90),
+    "OVR-ERA 상관": r2(corr(rows.map((r) => r.ovr), rows.map((r) => r.era))),
+    "OVR-K9 상관": r2(corr(rows.map((r) => r.ovr), rows.map((r) => r.k9))),
+    "상위25% OVR": r2(mean(top.map((r) => r.ovr))),
+    "상위25% ERA": r2(mean(top.map((r) => r.era))),
+    "하위25% OVR": r2(mean(bot.map((r) => r.ovr))),
+    "하위25% ERA": r2(mean(bot.map((r) => r.era))),
+  };
+}
+
+/** 같은 리그의 투수 쪽 분포 — 타자 수치와 짝으로 본다 */
+function pitcherSide(stats: Record<string, { type: string }>): Record<string, unknown> {
+  const ps = Object.values(stats).filter((x) => x.type === "pitcher") as unknown as Array<{
+    ip: number; er: number; h: number; k: number; bb: number; era: number; whip: number;
+  }>;
+  const qualified = ps.filter((p) => p.ip >= 50);
+  if (qualified.length === 0) return { 규정투수: 0 };
+  const eras = qualified.map((p) => p.era).sort((a, b) => a - b);
+  const q = (f: number) => eras[Math.min(eras.length - 1, Math.floor(eras.length * f))];
+  const ip = ps.reduce((a, b) => a + b.ip, 0);
+  const h  = ps.reduce((a, b) => a + b.h, 0);
+  const k  = ps.reduce((a, b) => a + b.k, 0);
+  const bb = ps.reduce((a, b) => a + b.bb, 0);
+  const er = ps.reduce((a, b) => a + b.er, 0);
+  return {
+    규정투수: qualified.length,
+    ERA_최저: q(0), ERA_중앙: q(0.5),
+    "리그ERA": ip > 0 ? Math.round((er * 9 / ip) * 100) / 100 : 0,
+    "9이닝당피안타": ip > 0 ? Math.round((h * 9 / ip) * 10) / 10 : 0,
+    "9이닝당K": ip > 0 ? Math.round((k * 9 / ip) * 10) / 10 : 0,
+    "9이닝당BB": ip > 0 ? Math.round((bb * 9 / ip) * 10) / 10 : 0,
+  };
+}
+
+export function batterSampleProbe(): Record<string, unknown> {
+  const s = get(seasonStore);
+  const out: Record<string, unknown> = {};
+  // 주인공 소속 리그도 본다 — **모델 두 벌을 같은 리그 안에서 맞대는 유일한 창**이다.
+  // 주인공 경기는 `match_engine`, 같은 리그 NPC 경기는 `npc_sim`이 돌린다.
+  // 프로까지 6시즌을 밀지 않아도 고교에서 바로 비교가 된다.
+  const proLeague = get(gameStore).protagonist.leagueId;
+  const leagues = ["LEAGUE_KBL", "LEAGUE_KBL_FARM"];
+  if (proLeague && !leagues.includes(proLeague)) leagues.push(proLeague);
+  for (const lid of leagues) {
+    const stats = (s.leagueId === lid ? s.stats : s.leagueState?.[lid]?.stats) ?? {};
+    const bs = Object.values(stats).filter((x) => x.type === "batter") as Array<{
+      g: number; pa: number; ab: number; h: number; bb: number;
+      avg: number; obp: number; ops: number;
+    }>;
+    if (bs.length === 0) continue;
+    const pas = bs.map((b) => b.pa).sort((a, b) => a - b);
+    const q = (f: number) => pas[Math.min(pas.length - 1, Math.floor(pas.length * f))];
+    // pa가 ab+bb와 어긋나면 파생이 깨진 것이다 — 이 검사가 회귀의 핵심이다
+    const mismatched = bs.filter((b) => Math.abs(b.pa - (b.ab + b.bb)) > 0.5).length;
+    const regulars = bs.filter((b) => b.pa >= 200);
+    // 최다타석 선수의 원시값 — 경기당 타석이 말이 되는지 본다.
+    // 집계값만 보면 "최대 1140타석"이 왜 나오는지 알 수 없다
+    const top = bs.reduce((a, b) => (b.pa > a.pa ? b : a), bs[0]);
+    const avgs = bs.map((b) => b.avg).sort((a, b) => a - b);
+    const qa = (f: number) => avgs[Math.min(avgs.length - 1, Math.floor(avgs.length * f))];
+    const opsOf = (list: typeof bs) =>
+      list.length ? Math.round((list.reduce((a, b) => a + b.ops, 0) / list.length) * 1000) / 1000 : 0;
+    out[lid.replace("LEAGUE_", "")] = {
+      타자수: bs.length,
+      "pa≠ab+bb": mismatched,
+      최대경기: Math.max(...bs.map((b) => b.g)),
+      "pa_중앙": q(0.5), "pa_p75": q(0.75), "pa_최대": pas[pas.length - 1],
+      "200타석이상": regulars.length,
+      평균OPS: opsOf(bs),
+      규정타자OPS: opsOf(regulars),
+      최고타율_전체: Math.max(...bs.map((b) => b.avg)),
+      최고타율_규정: regulars.length ? Math.max(...regulars.map((b) => b.avg)) : 0,
+      // ⚠ 최대값만 보면 "이상치 한 명"으로 읽힌다. **중앙값이 리그 수준이다**
+      타율_p25: qa(0.25), 타율_중앙: qa(0.5), 타율_p75: qa(0.75),
+      최다타석선수: `g${top.g} pa${top.pa} ab${top.ab} bb${top.bb} = 경기당 ${
+        top.g > 0 ? Math.round((top.pa / top.g) * 100) / 100 : 0}`,
+      // 타자만 보면 "타격이 세다"인지 "투수가 약하다"인지 못 가른다.
+      // 두 쪽을 같이 봐야 어느 계수를 건드릴지 정할 수 있다
+      ...pitcherSide(stats),
+    };
+  }
+  return out;
+}
+
 export function awardTally(): Record<string, unknown> {
   const byTitle: Record<string, number> = {};
   const byYear: Record<number, number> = {};
@@ -1455,6 +1598,87 @@ export function protagonistState(): Record<string, unknown> {
     proServiceYears: p.proServiceYears,
     ovr: p.pitching?.ovr ?? p.batting?.ovr ?? 0,
     retired: p.retirement ?? null,
+  };
+}
+
+/**
+ * 주인공과 **같은 리그·비슷한 OVR**의 NPC 투수 (Phase 1-c 대조군).
+ *
+ * 리그 평균과 비교하면 "주인공이 약해서 그렇다"와 "모델이 다르다"를 못 가른다.
+ * 능력치를 맞춘 뒤에도 차이가 남으면 그건 모델 차이다.
+ */
+export function peerPitcherProbe(ovrBand = 8): Record<string, unknown> {
+  const g = get(gameStore);
+  const s = get(seasonStore);
+  const live = get(npcLiveStatsStore);
+  const p = g.protagonist;
+  const myOvr = p.pitching?.ovr ?? 0;
+  const lid = p.leagueId;
+  const stats = (s.leagueId === lid ? s.stats : s.leagueState?.[lid]?.stats) ?? {};
+
+  let ip = 0, h = 0, er = 0, k = 0, bb = 0, n = 0;
+  for (const npc of g.npcs) {
+    if (npc.currentLeague !== lid || npc.playerType !== "pitcher") continue;
+    const o = live[npc.npcId]?.pitching?.ovr ?? npc.pitching?.ovr ?? 0;
+    if (Math.abs(o - myOvr) > ovrBand) continue;
+    const st = stats[npc.npcId];
+    if (!st || st.type !== "pitcher") continue;
+    const q = st as unknown as { ip: number; h: number; er: number; k: number; bb: number };
+    if (!(q.ip > 0)) continue;
+    ip += q.ip; h += q.h; er += q.er; k += q.k; bb += q.bb; n++;
+  }
+  if (ip <= 0) return { 대조군: 0, 기준OVR: myOvr };
+  return {
+    대조군: n, 기준OVR: myOvr, 합계이닝: Math.round(ip * 10) / 10,
+    era: Math.round((er * 9 / ip) * 100) / 100,
+    "9이닝당피안타": Math.round((h * 9 / ip) * 10) / 10,
+    "9이닝당K": Math.round((k * 9 / ip) * 10) / 10,
+    "9이닝당BB": Math.round((bb * 9 / ip) * 10) / 10,
+  };
+}
+
+/**
+ * 주인공 시즌 성적 (Phase 1-c).
+ *
+ * ⚠ **타격 모델이 두 벌이다.** 리그 720경기는 `npc_sim.rs`의 간이 모델을,
+ * 주인공이 뛰는 경기는 `match_engine.rs`의 투구 단위 모델을 탄다. 계수도
+ * 구조도 다르다.
+ *
+ * 그런데 수상·승강·드래프트 평가는 **같은 규칙 파일**을 읽는다. 한쪽만
+ * 맞춰두면 주인공이 상대적으로 과대·과소 평가된다. 리그를 KBO 수준으로
+ * 맞춘 뒤 이쪽도 같은 세계에 있는지 확인해야 한다.
+ */
+export function protagonistStatProbe(): Record<string, unknown> {
+  const g = get(gameStore).protagonist;
+  const s = get(seasonStore);
+  const st = s.stats[g.id];
+  if (!st) return { 기록: "없음", stage: g.careerStage, week: s.currentWeek };
+  if (st.type === "pitcher") {
+    const p = st as unknown as {
+      g: number; ip: number; er: number; h: number; k: number; bb: number;
+      era: number; whip: number; w: number; l: number; sv?: number; hd?: number;
+    };
+    return {
+      역할: "투수", 리그: g.leagueId, 경기: p.g,
+      ip: Math.round(p.ip * 10) / 10, era: p.era, whip: p.whip,
+      "9이닝당피안타": p.ip > 0 ? Math.round((p.h * 9 / p.ip) * 10) / 10 : 0,
+      "9이닝당K": p.ip > 0 ? Math.round((p.k * 9 / p.ip) * 10) / 10 : 0,
+      "9이닝당BB": p.ip > 0 ? Math.round((p.bb * 9 / p.ip) * 10) / 10 : 0,
+      // ⚠ 승패만 찍으면 홀드·세이브가 안 보여 "기록이 아예 없다"로 오독한다
+      성적: `${p.w}승 ${p.l}패 ${p.sv ?? 0}세이브 ${p.hd ?? 0}홀드`,
+      보직: get(gameStore).protagonist.position ?? "?",
+      경기당이닝: p.g > 0 ? Math.round((p.ip / p.g) * 100) / 100 : 0,
+    };
+  }
+  const b = st as unknown as {
+    g: number; pa: number; ab: number; h: number; hr: number; bb: number; k: number;
+    avg: number; obp: number; ops: number;
+  };
+  return {
+    역할: "타자", 리그: g.leagueId, 경기: b.g,
+    pa: b.pa, ab: b.ab, avg: b.avg, obp: b.obp, ops: b.ops,
+    "pa=ab+bb": b.pa === b.ab + b.bb,
+    hr: b.hr, "타석당K": b.pa > 0 ? Math.round((b.k / b.pa) * 1000) / 1000 : 0,
   };
 }
 

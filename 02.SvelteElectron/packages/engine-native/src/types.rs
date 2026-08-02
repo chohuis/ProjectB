@@ -374,6 +374,12 @@ pub struct MatchState {
     pub bb_since_entry: u32,
     #[serde(default)]
     pub outs_since_entry: u32,
+    /// 등판 중 실점. **자책/비자책을 구분하지 않는다** — 이 모델엔 실책 실점을
+    /// 따로 추적할 근거가 얇다. 예전엔 이 필드가 아예 없어서 호출측이
+    /// `피안타 × 0.35`로 자책점을 **역산**했고, 피안타가 부풀면 ERA가 그대로
+    /// 따라 올라갔다(실측 ERA 14.78)
+    #[serde(default)]
+    pub er_since_entry: u32,
 
     pub npc_pitcher_stamina: NpcPitcherTracker,
     pub npc_pitcher_mental: NpcPitcherTracker,

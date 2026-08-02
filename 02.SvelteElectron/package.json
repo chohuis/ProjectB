@@ -76,6 +76,8 @@
     "scenarios": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/run-scenarios.cjs",
     "test:careerpaths": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-careerpaths.cjs",
     "test:foreign": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-foreign.cjs",
+    "measure:batting": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-batting.cjs",
+    "audit:engine": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/audit-engine.cjs",
     "test:events": "node scripts/test-events.cjs",
     "test:growth": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-growth.cjs"
   },

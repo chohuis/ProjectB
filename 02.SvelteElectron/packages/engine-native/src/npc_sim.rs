@@ -64,9 +64,13 @@ fn npc_sim_one_pitch(
             return if in_zone { NpcPitchResult::StrikeLook } else { NpcPitchResult::Ball };
         }
     }
-    let strike_prob = clamp_f(0.58 + (ctl - 50.0) * 0.003 + (cmd - 50.0) * 0.002, 0.42, 0.72);
+    // 볼/스트라이크 비율 — 볼넷 총량을 정하는 레버. 정본은 `tuning.rs`
+    let strike_prob = clamp_f(
+        crate::tuning::NPC_STRIKE_PROB_BASE + (ctl - 50.0) * 0.003 + (cmd - 50.0) * 0.002,
+        0.38, 0.68);
     if rng.gen::<f64>() >= strike_prob {
-        let chase = clamp_f(0.28 - (discipline - 50.0) * 0.003, 0.10, 0.42);
+        let chase = clamp_f(
+            crate::tuning::NPC_CHASE_BASE - (discipline - 50.0) * 0.003, 0.08, 0.40);
         return if rng.gen::<f64>() < chase { NpcPitchResult::StrikeSwing } else { NpcPitchResult::Ball };
     }
     let swing_prob = clamp_f(0.70 + (contact - 50.0) * 0.003 - (eye - 50.0) * 0.002, 0.50, 0.88);
@@ -83,7 +87,14 @@ fn npc_sim_one_pitch(
     if rng.gen::<f64>() < foul_prob { return NpcPitchResult::Foul; }
 
     let hr_rate  = clamp_f(0.030 + (power - 50.0) * 0.0015 - (vel - 50.0) * 0.001, 0.005, 0.08);
-    let out_rate = clamp_f(0.62  - (contact - 50.0) * 0.004, 0.40, 0.78);
+    // 인플레이 타구의 아웃 비율 — **리그 타격 수준을 정하는 단일 레버**다.
+    // 정본은 `tuning.rs` (근거·실측치도 거기 있다)
+    let out_rate = clamp_f(
+        crate::tuning::NPC_INPLAY_OUT_BASE
+            - (contact - 50.0) * crate::tuning::NPC_INPLAY_OUT_CONTACT_SCALE,
+        crate::tuning::NPC_INPLAY_OUT_MIN,
+        crate::tuning::NPC_INPLAY_OUT_MAX,
+    );
     let r: f64   = rng.gen();
     if r < hr_rate              { return NpcPitchResult::HR; }
     if r < hr_rate + out_rate   { return NpcPitchResult::Out; }

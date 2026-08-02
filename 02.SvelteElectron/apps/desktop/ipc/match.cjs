@@ -297,6 +297,8 @@ function register(ipcMain, { loadCoreModule, engineNative }) {
       const walksAllowed = state.bbSinceEntry   ?? 0;
       const outsRecorded = state.outsSinceEntry ?? 0;
       const pitchCount   = state.pitchCountSinceEntry ?? 0;
+      // ⚠ 예전엔 이 값이 없어서 호출측이 `피안타 × 0.35`로 자책점을 역산했다
+      const earnedRuns   = state.erSinceEntry ?? 0;
       const result = core.finishMatch(state);
       activeMatchState = result.nextState;
       matchReadyState = null;
@@ -305,7 +307,7 @@ function register(ipcMain, { loadCoreModule, engineNative }) {
         homeScore: ns.score.home,
         awayScore: ns.score.away,
         summary: result.summary ?? "",
-        strikeouts, hitsAllowed, walksAllowed, outsRecorded, pitchCount,
+        strikeouts, hitsAllowed, walksAllowed, outsRecorded, pitchCount, earnedRuns,
         batterLines: result.batterLines ?? [],
         playerLines: result.playerLines ?? [],
       });

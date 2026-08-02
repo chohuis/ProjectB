@@ -206,6 +206,7 @@ pub fn create_initial_match_state(opts: &MatchStartOptions, rng: &mut impl Rng) 
         h_since_entry: 0,
         bb_since_entry: 0,
         outs_since_entry: 0,
+        er_since_entry: 0,
         protagonist_stamina: initial_stamina,
         protagonist_mental: initial_mental,
         npc_pitcher_stamina:    NpcPitcherTracker { my: 80.0, opponent: 80.0 },
@@ -353,39 +354,58 @@ fn resolve_contact(pitch_q: f64, contact_q: f64, batter: &BatterStats, rng: &mut
     let roll = rng.gen::<f64>();
     let hit_bonus = clamp((60.0 - pitch_q) * 0.003 + (batter.power - 50.0) * 0.002, -0.12, 0.20);
 
+    // ⚠ **표가 세 축에서 동시에 어긋나 있었다.**
+    //
+    // 실측(엔진 직접 호출 200경기, OVR 70 대 70 → contact_q 약 56):
+    //   헛스윙 15% · 파울 15% · 인플레이 중 안타 50%
+    // 현실은 대략 헛스윙 25% · 파울 35% · BABIP 30%다. 헛스윙과 파울이 둘 다
+    // 적어 삼진이 안 쌓이고 BABIP은 1.7배라, 피안타/삼진 비가 **4.67**이 나왔다
+    // (같은 조건 `npc_sim`은 1.17). 단일 계수로는 못 맞춘다.
+    //
+    // 아래는 **스윙 한 번의 결과 분포**다. 구간이 올라갈수록(투수가 이긴 공)
+    // 헛스윙이 늘고 인플레이가 줄며, 인플레이 중 안타 비율도 함께 떨어진다.
+    // 파울은 어느 구간이든 22~35%로 둔다 — 파울이 적으면 승부가 너무 빨리 끝나
+    // 삼진도 볼넷도 안 나온다.
     if contact_q >= 72.0 {
-        if roll < 0.55 { StrikeSwing } else if roll < 0.80 { Foul } else if roll < 0.95 { InplayOut } else { HitSingle }
+        // 투수 완승 — 헛스윙 50 / 파울 30 / 인플레이 20 (그중 안타 15%)
+        if roll < 0.50 { StrikeSwing } else if roll < 0.80 { Foul } else if roll < 0.97 { InplayOut } else { HitSingle }
     } else if contact_q >= 60.0 {
-        if roll < 0.30 { StrikeSwing } else if roll < 0.50 { Foul } else if roll < 0.75 { InplayOut } else { HitSingle }
+        // 헛스윙 32 / 파울 33 / 인플레이 35 (안타 22%)
+        if roll < 0.32 { StrikeSwing } else if roll < 0.65 { Foul } else if roll < 0.92 { InplayOut } else { HitSingle }
     } else if contact_q >= 52.0 {
-        if roll < 0.15 { StrikeSwing } else if roll < 0.30 { Foul } else if roll < 0.65 { InplayOut } else { HitSingle }
+        // 헛스윙 22 / 파울 35 / 인플레이 43 (안타 28%)
+        if roll < 0.22 { StrikeSwing } else if roll < 0.57 { Foul } else if roll < 0.88 { InplayOut } else { HitSingle }
     } else if contact_q >= 45.0 {
-        if roll < 0.08 { StrikeSwing }
-        else if roll < 0.20 { Foul }
-        else if roll < clamp(0.55 - hit_bonus, 0.32, 0.68) { InplayOut }
-        else if roll < clamp(0.88 - hit_bonus * 0.5, 0.74, 0.94) { HitSingle }
+        // 헛스윙 15 / 파울 35 / 인플레이 50 (안타 33%)
+        if roll < 0.15 { StrikeSwing }
+        else if roll < 0.50 { Foul }
+        else if roll < clamp(0.835 - hit_bonus, 0.62, 0.92) { InplayOut }
+        else if roll < clamp(0.95 - hit_bonus * 0.5, 0.90, 0.98) { HitSingle }
         else { HitDouble }
     } else if contact_q >= 38.0 {
-        if roll < 0.05 { StrikeSwing }
-        else if roll < 0.14 { Foul }
-        else if roll < clamp(0.35 - hit_bonus, 0.18, 0.48) { InplayOut }
-        else if roll < clamp(0.72 - hit_bonus * 0.5, 0.56, 0.82) { HitSingle }
-        else if roll < clamp(0.92 - hit_bonus * 0.3, 0.86, 0.96) { HitDouble }
+        // 헛스윙 10 / 파울 32 / 인플레이 58 (안타 40%)
+        if roll < 0.10 { StrikeSwing }
+        else if roll < 0.42 { Foul }
+        else if roll < clamp(0.768 - hit_bonus, 0.55, 0.87) { InplayOut }
+        else if roll < clamp(0.93 - hit_bonus * 0.5, 0.87, 0.97) { HitSingle }
+        else if roll < clamp(0.98 - hit_bonus * 0.3, 0.95, 0.99) { HitDouble }
         else { HitTriple }
     } else if contact_q >= 32.0 {
-        if roll < 0.03 { StrikeSwing }
-        else if roll < 0.10 { Foul }
-        else if roll < clamp(0.25 - hit_bonus, 0.10, 0.36) { InplayOut }
-        else if roll < clamp(0.58 - hit_bonus * 0.5, 0.44, 0.70) { HitSingle }
-        else if roll < clamp(0.82 - hit_bonus * 0.3, 0.75, 0.90) { HitDouble }
-        else if roll < clamp(0.95 + hit_bonus * 0.2, 0.92, 0.98) { HitTriple }
+        // 헛스윙 6 / 파울 28 / 인플레이 66 (안타 50%)
+        if roll < 0.06 { StrikeSwing }
+        else if roll < 0.34 { Foul }
+        else if roll < clamp(0.67 - hit_bonus, 0.45, 0.78) { InplayOut }
+        else if roll < clamp(0.87 - hit_bonus * 0.5, 0.80, 0.93) { HitSingle }
+        else if roll < clamp(0.95 - hit_bonus * 0.3, 0.92, 0.97) { HitDouble }
+        else if roll < clamp(0.98 + hit_bonus * 0.2, 0.97, 0.99) { HitTriple }
         else { HomeRun }
     } else {
-        if roll < 0.05 { Foul }
-        else if roll < clamp(0.15 - hit_bonus, 0.05, 0.24) { InplayOut }
-        else if roll < clamp(0.48 - hit_bonus * 0.5, 0.36, 0.58) { HitSingle }
-        else if roll < clamp(0.72 - hit_bonus * 0.3, 0.64, 0.80) { HitDouble }
-        else if roll < clamp(0.87 + hit_bonus * 0.2, 0.83, 0.92) { HitTriple }
+        // 통타 — 파울 22 / 인플레이 78 (안타 62%). 여기서도 100%는 아니다
+        if roll < 0.22 { Foul }
+        else if roll < clamp(0.535 - hit_bonus, 0.35, 0.66) { InplayOut }
+        else if roll < clamp(0.78 - hit_bonus * 0.5, 0.68, 0.86) { HitSingle }
+        else if roll < clamp(0.90 - hit_bonus * 0.3, 0.86, 0.94) { HitDouble }
+        else if roll < clamp(0.94 + hit_bonus * 0.2, 0.92, 0.96) { HitTriple }
         else { HomeRun }
     }
 }
@@ -1003,24 +1023,52 @@ fn target_to_zone(t: XY) -> u8 {
     [[7u8, 8, 9], [4, 5, 6], [1, 2, 3]][row][col]
 }
 
-fn auto_pick_decision(state: &MatchState, rng: &mut impl Rng) -> PitchDecision {
-    let (balls, strikes) = (state.count.balls, state.count.strikes);
-    let (target, pitch_type, strategy);
+/// 카운트별 목표 지점 — **투수 AI의 코스 선택 정본이다.**
+///
+/// ⚠ 예전엔 `auto_pick_decision`과 `random_decision_for_sim`이 각자 좌표를
+/// 만들었고 **둘 다 존 밖을 겨냥하지 않았다**(각각 최대 0.8, 1.1인데 볼
+/// 판정선은 1.2다). 그래서 200경기에 볼넷이 3개였다. 표를 두 곳에 두면
+/// 한쪽만 고쳐지므로 여기 하나로 모은다. 수치 정본은 `tuning.rs`.
+fn pick_target(balls: u8, strikes: u8, rng: &mut impl Rng) -> XY {
+    let chase_prob = if balls >= 3 { T::AUTO_CHASE_PROB_BEHIND }
+        else if strikes == 2 { T::AUTO_CHASE_PROB_AHEAD }
+        else { T::AUTO_CHASE_PROB_NEUTRAL };
+
+    let sign = |rng: &mut dyn FnMut() -> f64| if rng() < 0.5 { -1.0 } else { 1.0 };
+    let mut r = || rng.gen::<f64>();
+
+    if r() < chase_prob {
+        // 유인구 — **한 축만** 존 밖으로 뺀다. 두 축 다 빼면 대각선으로 크게
+        // 벗어나 타자가 아예 안 속고 볼만 쌓인다
+        let out = T::AUTO_CHASE_MIN + r() * T::AUTO_CHASE_SPAN;
+        let other = (r() - 0.5) * 1.8;
+        let (sx, sy) = (sign(&mut r), sign(&mut r));
+        return if r() < 0.5 { XY { x: sx * out, y: other } } else { XY { x: other, y: sy * out } };
+    }
 
     if balls >= 3 {
-        target = XY { x: (rng.gen::<f64>() - 0.5) * 1.0, y: (rng.gen::<f64>() - 0.5) * 1.0 };
-        pitch_type = PitchType::Fastball; strategy = PitchStrategy::Safe;
+        // 볼넷을 피해야 한다 — 존 한복판
+        XY { x: (r() - 0.5) * 1.0, y: (r() - 0.5) * 1.0 }
     } else if strikes == 2 {
-        let sx = if rng.gen::<f64>() < 0.5 { -1.0 } else { 1.0 };
-        let sy = if rng.gen::<f64>() < 0.5 { -1.0 } else { 1.0 };
-        target = XY { x: sx * (0.55 + rng.gen::<f64>() * 0.40), y: sy * (0.55 + rng.gen::<f64>() * 0.40) };
-        pitch_type = PitchType::Slider; strategy = PitchStrategy::Aggressive;
+        // 코너
+        let (sx, sy) = (sign(&mut r), sign(&mut r));
+        XY { x: sx * (0.55 + r() * 0.40), y: sy * (0.55 + r() * 0.40) }
     } else {
-        target = XY { x: (rng.gen::<f64>() - 0.5) * 1.6, y: (rng.gen::<f64>() - 0.5) * 1.6 };
-        let types = [PitchType::Fastball, PitchType::Fastball, PitchType::Slider, PitchType::Changeup];
-        pitch_type = types[rng.gen_range(0..types.len())];
-        strategy = PitchStrategy::Balanced;
+        XY { x: (r() - 0.5) * 1.6, y: (r() - 0.5) * 1.6 }
     }
+}
+
+fn auto_pick_decision(state: &MatchState, rng: &mut impl Rng) -> PitchDecision {
+    let (balls, strikes) = (state.count.balls, state.count.strikes);
+    let target = pick_target(balls, strikes, rng);
+    let (pitch_type, strategy) = if balls >= 3 {
+        (PitchType::Fastball, PitchStrategy::Safe)
+    } else if strikes == 2 {
+        (PitchType::Slider, PitchStrategy::Aggressive)
+    } else {
+        let types = [PitchType::Fastball, PitchType::Fastball, PitchType::Slider, PitchType::Changeup];
+        (types[rng.gen_range(0..types.len())], PitchStrategy::Balanced)
+    };
     PitchDecision { pitch_type, location: target_to_zone(target), target: Some(target), strategy, power: PitchPower::Normal }
 }
 
@@ -1028,7 +1076,10 @@ fn random_decision_for_sim(rng: &mut impl Rng) -> PitchDecision {
     let types    = [PitchType::Fastball, PitchType::Slider, PitchType::Curve, PitchType::Changeup];
     let strats   = [PitchStrategy::Aggressive, PitchStrategy::Balanced, PitchStrategy::Safe];
     let powers   = [PitchPower::Low, PitchPower::Normal, PitchPower::High];
-    let target   = XY { x: (rng.gen::<f64>() - 0.5) * 2.2, y: (rng.gen::<f64>() - 0.5) * 2.2 };
+    // 코스는 공통 함수를 쓴다 — 여기 좌표를 따로 적으면 `auto_pick_decision`과
+    // 어긋나고, 실제로 그래서 두 경로가 각자 볼넷을 못 만들고 있었다.
+    // 카운트를 모르는 자리라 중립 카운트로 뽑는다
+    let target   = pick_target(0, 0, rng);
     PitchDecision {
         pitch_type: types[rng.gen_range(0..types.len())],
         location:   target_to_zone(target),
@@ -1263,6 +1314,10 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
         else    { score.home += runs; if idx < inning_scores.home.len() { inning_scores.home[idx] += runs; } }
     };
 
+    // 이 투구로 늘어난 아웃 수 — 아래 3아웃 전환이 `next_outs`를 0으로 되돌리므로
+    // **되돌리기 전에** 재야 한다
+    let outs_before_play = next_outs;
+
     match result_code {
         PitchResultCode::Ball => {
             next_count.balls += 1;
@@ -1310,6 +1365,11 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
         }
         _ => {}
     }
+
+    let outs_added_this_play = next_outs.saturating_sub(outs_before_play) as u32;
+    // 이 투구로 들어온 점수 — 아웃과 같은 방식으로 잰다
+    let runs_added_this_play = ((next_score.home - pre_state.score.home)
+        + (next_score.away - pre_state.score.away)).max(0) as u32;
 
     // 수비 스탯 업데이트
     let mut next_defense_stat = pre_state.defense_stat.clone();
@@ -1400,11 +1460,17 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
     } else { pre_state.pitch_count_since_entry };
 
     let is_hit = matches!(result_code, PitchResultCode::HitSingle | PitchResultCode::HitDouble | PitchResultCode::HitTriple | PitchResultCode::HomeRun);
-    let is_out_result = is_k_out || result_code == PitchResultCode::InplayOut;
+    // ⚠ **아웃을 "있었다/없었다"로 세면 안 된다.** 병살타는 한 타석에 아웃이
+    // 둘이고, 안타 때 주루사(`hr_extra`)도 아웃이다. 예전엔 불리언이라
+    // 그 아웃들이 주인공 이닝에 안 잡혔고 `ip = outs/3`이 작아져
+    // **9이닝당 피안타·ERA가 그대로 부풀었다.**
     let next_k_since_entry    = pre_state.k_since_entry    + if is_protagonist_active && is_k_out { 1 } else { 0 };
     let next_h_since_entry    = pre_state.h_since_entry    + if is_protagonist_active && is_hit { 1 } else { 0 };
     let next_bb_since_entry   = pre_state.bb_since_entry   + if is_protagonist_active && result_code == PitchResultCode::Walk { 1 } else { 0 };
-    let next_outs_since_entry = pre_state.outs_since_entry + if is_protagonist_active && is_out_result { 1 } else { 0 };
+    let next_outs_since_entry = pre_state.outs_since_entry
+        + if is_protagonist_active { outs_added_this_play } else { 0 };
+    let next_er_since_entry = pre_state.er_since_entry
+        + if is_protagonist_active { runs_added_this_play } else { 0 };
 
     // ── 6b. 타자 스탯 누적 ────────────────────────────────────────────────────
     let mut next_batter_accum = pre_state.batter_accum.clone();
@@ -1453,6 +1519,7 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
         h_since_entry: next_h_since_entry,
         bb_since_entry: next_bb_since_entry,
         outs_since_entry: next_outs_since_entry,
+        er_since_entry: next_er_since_entry,
         home_lineup_index: next_home_idx, away_lineup_index: next_away_idx,
         last_pitch_types: next_last_types,
         defense_stat: next_defense_stat,

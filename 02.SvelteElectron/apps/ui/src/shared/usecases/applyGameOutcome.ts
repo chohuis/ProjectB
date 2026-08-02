@@ -10,6 +10,33 @@ import type { MatchResult, PitcherGameLine, PlayerCondition, UnifiedGameOutcome 
 import { buildFriendlyResultMessage, buildOfficialResultMessage, ratePerformance, type PitcherRole } from "../utils/friendlyMatchEngine";
 import { getTeamRotation, getTeamBullpen, rotationSizeForLeague } from "../utils/rosterEngine";
 
+/**
+ * 투수 승패 판정 — **`npc_sim.rs`의 `pitcher_decision`과 같은 규칙이다.**
+ *
+ * ⚠ 예전엔 `won ? "W" : isDraw ? "ND" : "L"`이었다. 등판만 하면 무조건 승패가
+ * 붙어서 **0.6이닝 던진 불펜이 매 경기 승패를 기록**했다(실측 12경기 6승 6패).
+ * 그 값이 다승왕 집계·경력 기록·계약 평가에 그대로 들어간다.
+ *
+ * 리그 NPC는 이미 제대로 된 규칙을 쓰고 있었다. 주인공만 다른 규칙을 쓰면
+ * 같은 수상 부문에서 서로 다른 기준으로 경쟁하게 된다 — 규칙을 맞춘다.
+ */
+function pitcherDecision(
+  role: PitcherRole,
+  won: boolean,
+  isDraw: boolean,
+  outs: number,
+  margin: number,
+): PitcherGameLine["decision"] {
+  if (isDraw) return "ND";
+  if (role === "SP") {
+    if (won) return outs >= 15 ? "W" : "ND";   // 5이닝 이상
+    return "L";
+  }
+  if (!won) return "ND";                        // 구원 패는 이 모델에서 안 매긴다
+  if (role === "CP") return margin <= 3 && outs >= 1 ? "SV" : "ND";
+  return outs >= 3 ? "HD" : "ND";               // 1이닝 이상 홀드
+}
+
 function buildTeamMatchResult(
   homeTeamId: string,
   awayTeamId: string,
@@ -168,7 +195,12 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
   const won = !isDraw && teamResult.winnerId === myTeamId;
 
   const didEnter = outcome.protagonistEntered !== false;
-  const er = Math.round(Math.max(0, outcome.hitsAllowed) * 0.35);
+  // ⚠ **자책점은 엔진이 준다.** 예전엔 `피안타 × 0.35`로 역산했고, 그래서
+  // 피안타가 부풀면 ERA가 자동으로 따라 올라갔다(실측 ERA 14.78 — 시뮬이 아니라
+  // 이 곱셈이 만든 숫자다). 구 경로 호환으로 값이 없을 때만 역산으로 떨어진다.
+  const er = typeof outcome.earnedRuns === "number"
+    ? Math.max(0, Math.round(outcome.earnedRuns))
+    : Math.round(Math.max(0, outcome.hitsAllowed) * 0.35);
   const safeOuts = (typeof outcome.outsRecorded === "number" && !isNaN(outcome.outsRecorded)) ? outcome.outsRecorded : 0;
   const inningsPitched = Number((Math.max(0, safeOuts) / 3).toFixed(1));
   const pitcherLine: PitcherGameLine | null = didEnter ? {
@@ -179,7 +211,8 @@ export async function applyGameOutcome(outcome: UnifiedGameOutcome): Promise<voi
     h: Math.max(0, outcome.hitsAllowed),
     k: Math.max(0, outcome.strikeouts),
     bb: Math.max(0, outcome.walksAllowed),
-    decision: won ? "W" : isDraw ? "ND" : "L",
+    decision: pitcherDecision(role, won, isDraw, safeOuts,
+      Math.abs(outcome.homeScore - outcome.awayScore)),
     pitchCount: outcome.pitchCount > 0 ? outcome.pitchCount : undefined,
   } : null;
   let playerLines = Array.isArray(outcome.playerLines) && outcome.playerLines.length > 0
