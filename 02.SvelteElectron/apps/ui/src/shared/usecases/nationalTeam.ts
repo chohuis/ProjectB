@@ -19,6 +19,7 @@ import { masterStore } from "../stores/master";
 import { loadRosterRules } from "../repo/newGameV3";
 import { autoLog } from "../stores/autoAdvance";
 import type { PlayerSeasonStats } from "../types/save";
+import { finiteOr } from "../utils/payloadNum";
 
 export interface TournamentDef {
   id: string; name: string;
@@ -59,14 +60,20 @@ function formOf(npcId: string, stats: Record<string, Record<string, PlayerSeason
   for (const lid of ["LEAGUE_KBL", "LEAGUE_KBL_FARM"]) {
     const st = stats[lid]?.[npcId];
     if (!st) continue;
+    // ⚠ 통계값을 그대로 쓰면 안 된다 — 없으면 NaN이 되고 `JSON.stringify`가
+    // 그걸 **null로 바꿔** 엔진이 페이로드 전체를 거부한다.
+    // 실측: "selectNationalSquadNative: invalid type: null, expected f64"로
+    // 국가대표 선발이 죽어 있었다.
     if (st.type === "pitcher") {
-      if (st.ip <= 0) return 0;
-      const sample = Math.min(1, st.ip / 40);
-      return Math.max(-1, Math.min(1, ((4.5 - st.era) / 4.5) * sample));
+      const ip = finiteOr(st.ip);
+      if (ip <= 0) return 0;
+      const sample = Math.min(1, ip / 40);
+      return finiteOr(Math.max(-1, Math.min(1, ((4.5 - finiteOr(st.era, 4.5)) / 4.5) * sample)));
     }
-    if (st.pa <= 0) return 0;
-    const sample = Math.min(1, st.pa / 120);
-    return Math.max(-1, Math.min(1, ((st.ops - 0.7) / 0.7) * sample));
+    const pa = finiteOr(st.pa);
+    if (pa <= 0) return 0;
+    const sample = Math.min(1, pa / 120);
+    return finiteOr(Math.max(-1, Math.min(1, ((finiteOr(st.ops, 0.7) - 0.7) / 0.7) * sample)));
   }
   return 0;
 }
@@ -101,8 +108,12 @@ export async function callUpNationalSquad(seasonYear: number): Promise<SquadResu
         ?? (p as { batting?: { ovr?: number } })?.batting?.ovr ?? 50;
       return {
         npcId: e.id, name: e.name || e.id, teamId: e.teamId ?? "",
-        position: p?.position ?? "", ovr, age: e.age,
-        form: formOf(e.id, leagueStats),
+        position: p?.position ?? "",
+        // 엔진 `NationalCandidate`는 ovr·form이 f64, age가 i32다 —
+        // 하나라도 null/NaN이면 선발 전체가 거부된다
+        ovr: finiteOr(ovr, 50),
+        age: Math.round(finiteOr(e.age, 25)),
+        form: finiteOr(formOf(e.id, leagueStats)),
         isProtagonist: e.id === g.protagonist.id,
       };
     });

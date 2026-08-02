@@ -9,6 +9,7 @@ import { staffModsOf } from "../../utils/staffEffects";
 import { SANGMU_TEAM_IDS } from "../../utils/ids";
 import type { PlayerSeasonStats } from "../../types/save";
 import { MONTH_STARTS_1 } from "./growth";
+import { finiteOr } from "../../utils/payloadNum";
 
 // gameStore.updateNpcs → connectToGameStore 구독이 entities 자동 갱신
 function updateNpcsAndSync(npcs: import("../../types/save").NpcSaveState[]): void {
@@ -43,11 +44,9 @@ function seasonPerfOf(
     // 실측: 프로 7년차부터 한 팀에서 매주 "콜업 판정 실패"가 나며 승강이
     // 멈췄고, 그 예외가 주간 루프를 끊어 뒤따르는 처리까지 안 돌았다.
     // `buildRosterRef`에는 같은 방어가 있었는데 perf만 빠져 있었다.
-    const num = (v: unknown): number =>
-      typeof v === "number" && Number.isFinite(v) ? v : 0;
     return st.type === "pitcher"
-      ? { games: num(st.g), innings: num(st.ip), era: num(st.era), whip: num(st.whip) }
-      : { games: num(st.g), plateAppearances: num(st.pa), ops: num(st.ops) };
+      ? { games: finiteOr(st.g), innings: finiteOr(st.ip), era: finiteOr(st.era), whip: finiteOr(st.whip) }
+      : { games: finiteOr(st.g), plateAppearances: finiteOr(st.pa), ops: finiteOr(st.ops) };
   }
   return undefined;
 }
@@ -103,16 +102,20 @@ export const DEFAULT_TEAM_PROFILE: ProTeamProfile = {
 };
 
 // 투수: ERA 2.50=80pt·4.00=50pt·6.00=10pt / 타자: OPS .900=85pt·.700=50pt·.550=20pt
+// ⚠ 이 값은 `calcNpcRenewalSalaryNative`로 **엔진에 넘어간다.** 통계가
+// 비면 NaN이 되고 `JSON.stringify`가 null로 바꿔 재계약 계산이 통째로
+// 거부된다 — 국가대표·승강이 정확히 그렇게 죽어 있었다.
 function calcNpcPerfScore(stats: PlayerSeasonStats): number {
   if (stats.type === "pitcher") {
-    if (stats.ip < 5) return 50;
-    const eraPts   = Math.max(10, Math.min(95, 80 - (stats.era - 2.5) * 15));
-    const gamesPts = Math.min(15, (stats.g / 55) * 15);
+    const ip = finiteOr(stats.ip);
+    if (ip < 5) return 50;
+    const eraPts   = Math.max(10, Math.min(95, 80 - (finiteOr(stats.era, 4.5) - 2.5) * 15));
+    const gamesPts = Math.min(15, (finiteOr(stats.g) / 55) * 15);
     return Math.round(eraPts * 0.85 + gamesPts * 0.15);
   }
-  if (stats.ab < 30) return 50;
-  const opsPts   = Math.max(10, Math.min(95, 50 + (stats.ops - 0.700) * 180));
-  const gamesPts = Math.min(15, (stats.g / 130) * 15);
+  if (finiteOr(stats.ab) < 30) return 50;
+  const opsPts   = Math.max(10, Math.min(95, 50 + (finiteOr(stats.ops, 0.7) - 0.700) * 180));
+  const gamesPts = Math.min(15, (finiteOr(stats.g) / 130) * 15);
   return Math.round(opsPts * 0.85 + gamesPts * 0.15);
 }
 
