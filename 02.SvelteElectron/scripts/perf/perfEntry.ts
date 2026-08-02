@@ -1309,6 +1309,25 @@ export function batterSampleProbe(): Record<string, unknown> {
       타율_p25: qa(0.25), 타율_중앙: qa(0.5), 타율_p75: qa(0.75),
       최다타석선수: `g${top.g} pa${top.pa} ab${top.ab} bb${top.bb} = 경기당 ${
         top.g > 0 ? Math.round((top.pa / top.g) * 100) / 100 : 0}`,
+      // ⚠ **경기당 타석이 5를 크게 넘으면 물리적으로 불가능하다.**
+      // 한 선수가 두 팀 라인업에 동시에 들어가면 정확히 2배가 나온다.
+      // 그 선수가 누구고 어느 팀 소속인지 이름을 남겨야 원인을 찾을 수 있다 —
+      // 집계만 보면 "타격이 세다"로 오독한다(실제로 한 번 그렇게 읽었다).
+      이상타석: bs.filter((b) => b.g > 0 && b.pa / b.g > 6).length,
+      이상타석상세: (() => {
+        const bad = Object.entries(stats)
+          .filter(([, x]) => x.type === "batter")
+          .filter(([, x]) => {
+            const b = x as unknown as { g: number; pa: number };
+            return b.g > 0 && b.pa / b.g > 6;
+          })
+          .slice(0, 3);
+        return bad.map(([pid, x]) => {
+          const b = x as unknown as { g: number; pa: number };
+          const n = get(gameStore).npcs.find((v) => v.npcId === pid);
+          return `${pid} 팀=${n?.currentTeam ?? "?"} 리그=${n?.currentLeague ?? "?"} g${b.g} pa${b.pa}`;
+        });
+      })(),
       // 타자만 보면 "타격이 세다"인지 "투수가 약하다"인지 못 가른다.
       // 두 쪽을 같이 봐야 어느 계수를 건드릴지 정할 수 있다
       ...pitcherSide(stats),

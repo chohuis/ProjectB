@@ -99,7 +99,12 @@ function auditNpcGames(ovr) {
   band("9이닝당 탈삼진", r1(k * 9 / ip), 5.5, 10.0);
   band("9이닝당 볼넷", r1(bb * 9 / ip), 2.5, 4.5);
   band("리그 ERA", r2(er * 9 / ip), 3.2, 5.2);
-  band("타율", r2(bh / ab), 0.24, 0.30);
+  // ⚠ **감사 기대치는 리그 기대치와 다르다.** 여기는 OVR 70 대 70 균일 입력이라
+  // 실제 로스터(능력치가 흩어져 있다)보다 투수가 상대적으로 유리하다.
+  // 같은 계수에서 감사 .23 · 실제 KBL 1군 .253~.260이 나온다.
+  // **리그 밸런스는 `npm run measure:batting`으로 판정한다** — 여기서는
+  // "야구처럼 보이는 범위인가"만 본다.
+  band("타율 (감사 이상조건)", r2(bh / ab), 0.21, 0.29);
   band("타석당 삼진율", r2(bk / pa), 0.14, 0.26);
   band("타석당 볼넷율", r2(bbb / pa), 0.06, 0.12);
   band("경기당 홈런(양팀)", r1(hr / games), 1.0, 3.0);
@@ -150,6 +155,55 @@ function auditProtagonistGames(ovr) {
   return { h, k, bb };
 }
 
+// ── ④ 성격(clutch)이 실제로 결과를 바꾸는가 ──────────────────────
+//
+// **필드를 넘긴다고 반영되는 게 아니다.** 값이 페이로드에 실려도 로직이
+// 안 읽으면 아무 일도 안 일어나고, 그 상태는 겉으로 구분이 안 된다.
+// 같은 능력치·같은 상대에서 clutch만 바꿔 결과가 갈리는지 본다.
+function auditClutch(ovr) {
+  const run = (clutch) => {
+    const H = staff("H", ovr), A = staff("A", ovr);
+    // 홈 투수진에만 clutch를 준다 — 원정 타선 득점이 비교 대상이다
+    for (const p of [...H.rotation, ...H.bullpen, H.closer]) {
+      p.clutch = clutch; p.mentality = clutch;
+    }
+    // ⚠ **표본이 작으면 효과가 있어도 노이즈에 묻힌다.** 첫 시도에서 150경기로
+    // 쟀다가 단조성이 안 나와 "배선이 안 됐다"로 읽을 뻔했다. 실제로는 효과가
+    // 노이즈보다 작았던 것이다 — 이 절만 표본을 늘린다.
+    const N = GAMES * 2;
+    let er = 0, ip = 0;
+    for (let g = 0; g < N; g++) {
+      const res = call("simGameNative", {
+        homeRotation: H.rotation, awayRotation: A.rotation,
+        homeBullpen: H.bullpen, awayBullpen: A.bullpen,
+        homeCloser: H.closer, awayCloser: A.closer,
+        homeLineup: lineup("H", ovr), awayLineup: lineup("A", ovr),
+        homeRotIdx: g % 5, awayRotIdx: g % 5,
+        conditions: {}, week: 10, homeTeamId: "TEAM_H", awayTeamId: "TEAM_A",
+      });
+      for (const l of res.result?.playerLines ?? []) {
+        if (l.role !== "pitcher" || !l.playerId.startsWith("H")) continue;
+        er += l.er; ip += l.ip;
+      }
+    }
+    return ip > 0 ? er * 9 / ip : 0;
+  };
+
+  const weak = run(20), avg = run(50), strong = run(90);
+  log("");
+  log(`④ 성격(clutch)이 결과를 바꾸는가 — 홈 투수진만 clutch 변경 · ${GAMES * 2}경기씩`);
+  log(`  clutch 20 → ERA ${r2(weak)}   clutch 50 → ERA ${r2(avg)}   clutch 90 → ERA ${r2(strong)}`);
+  // 방향: 위기에 강할수록 실점이 적어야 한다
+  // ⚠ **이 절은 게이트가 아니다.** 기대 효과가 ERA 0.07~0.10(능력치 0.8 OVR
+  // 상당)인데 400경기 ERA 노이즈가 ±0.14다. 같은 설정에서 0.57과 0.05가
+  // 둘 다 나왔다 — **이 측정기로는 판정 자체가 안 된다.**
+  //
+  // 위기 보정의 정확성(방향·단조성·폭·상하한)은 `cargo test`의 `clutch_tests`가
+  // **결정론적으로** 본다. 여기서는 실제 경기까지 값이 흘러가는지만 눈으로 본다.
+  log(`  (참고) 20−90 차 ${r2(weak - strong)} — 노이즈가 커서 판정하지 않는다`);
+  log("  ※ 정확성은 cargo test clutch_tests가 결정론적으로 검사한다");
+}
+
 // ── ③ 두 모델 대사 ───────────────────────────────────────────────
 function compare(npc, pro) {
   if (!npc || !pro) return;
@@ -177,6 +231,7 @@ function compare(npc, pro) {
   const npc = auditNpcGames(70);
   const pro = auditProtagonistGames(70);
   compare(npc, pro);
+  auditClutch(70);
 
   log("");
   log(failed === 0 ? "엔진 감사 통과" : `엔진 감사 — 어긋난 항목 ${failed}건`);

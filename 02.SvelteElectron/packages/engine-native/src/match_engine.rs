@@ -1072,14 +1072,18 @@ fn auto_pick_decision(state: &MatchState, rng: &mut impl Rng) -> PitchDecision {
     PitchDecision { pitch_type, location: target_to_zone(target), target: Some(target), strategy, power: PitchPower::Normal }
 }
 
-fn random_decision_for_sim(rng: &mut impl Rng) -> PitchDecision {
+/// ⚠ **카운트를 받아야 한다.** 예전엔 인자가 rng뿐이라 `pick_target(0,0)`으로
+/// 항상 중립 카운트를 썼다. 그래서 `runSimpleGame`(감사가 쓰는 경로)은
+/// 볼 3개·스트라이크 2개의 코스 변화를 **재현하지 못했고**, 실제 자동진행
+/// (`auto_pick_decision`)과 다른 야구를 하고 있었다.
+fn random_decision_for_sim(balls: u8, strikes: u8, rng: &mut impl Rng) -> PitchDecision {
     let types    = [PitchType::Fastball, PitchType::Slider, PitchType::Curve, PitchType::Changeup];
     let strats   = [PitchStrategy::Aggressive, PitchStrategy::Balanced, PitchStrategy::Safe];
     let powers   = [PitchPower::Low, PitchPower::Normal, PitchPower::High];
     // 코스는 공통 함수를 쓴다 — 여기 좌표를 따로 적으면 `auto_pick_decision`과
     // 어긋나고, 실제로 그래서 두 경로가 각자 볼넷을 못 만들고 있었다.
     // 카운트를 모르는 자리라 중립 카운트로 뽑는다
-    let target   = pick_target(0, 0, rng);
+    let target   = pick_target(balls, strikes, rng);
     PitchDecision {
         pitch_type: types[rng.gen_range(0..types.len())],
         location:   target_to_zone(target),
@@ -1757,7 +1761,9 @@ pub fn run_simple_game(params: &RunSimpleGameParams, rng: &mut impl Rng) -> Game
     while !state.is_finished && safety > 0 {
         safety -= 1;
         let prev_strikes = state.count.strikes;
-        let decision = if is_protagonist_pitching(&state) { random_decision_for_sim(rng) } else { auto_pick_decision(&state, rng) };
+        let decision = if is_protagonist_pitching(&state) {
+            random_decision_for_sim(state.count.balls, state.count.strikes, rng)
+        } else { auto_pick_decision(&state, rng) };
         let step = step_pitch_core(&state, &decision, is_protagonist_pitching(&state), rng);
         let code = step.outcome.result_code;
         if matches!(code, PitchResultCode::StrikeLook | PitchResultCode::StrikeSwing) && prev_strikes == 2 { strikeouts += 1; }

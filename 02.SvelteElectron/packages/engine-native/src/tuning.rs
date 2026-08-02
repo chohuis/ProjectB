@@ -186,9 +186,19 @@ pub const NPC_INPLAY_OUT_MAX: f64           = 0.75;
 // 폭증했다 — **볼넷 0과 피안타 폭증은 한 원인이다.**
 //
 // 현실 야구의 존 통과율은 약 48~50%다. 카운트가 유리할수록 유인구가 늘어난다.
-pub const AUTO_CHASE_PROB_BEHIND: f64  = 0.12;  // 볼 3개 — 스트라이크를 던져야 한다
-pub const AUTO_CHASE_PROB_NEUTRAL: f64 = 0.42;
-pub const AUTO_CHASE_PROB_AHEAD: f64   = 0.62;  // 스트라이크 2개 — 유인구
+// ⚠ 0.12는 **너무 낮았다.** 볼 3개에서 거의 존 안만 겨냥하니 볼넷이 잘 안 나와
+// 주인공 볼넷 비중이 0.11로 리그(0.18)의 절반이었다. 현실 KBO 비율은
+// 3.5/(9+7.5+3.5) ≈ 0.175라 **리그 쪽이 맞고 주인공이 낮았다.**
+// 몰려도 완벽히 제구되진 않는다.
+//
+// ⚠ 카운트를 실제로 반영하자 **볼넷이 더 줄었다**(비중 0.11 → 0.08, 리그 0.18).
+// 스트라이크 2개에서 유인구가 많으니 타자가 쫓아가 삼진이 늘고, 볼 3개에서는
+// 존 안만 겨냥해 볼넷이 억제되는 조합이었다. 현실적인 운영이지만 **결과가
+// 리그의 절반**이면 같은 수상 부문에서 다른 기준으로 경쟁하게 된다.
+// 세 값을 함께 올려 존 통과율을 현실선(약 48~50%)에 맞춘다.
+pub const AUTO_CHASE_PROB_BEHIND: f64  = 0.30;  // 볼 3개 — 스트라이크를 던져야 한다
+pub const AUTO_CHASE_PROB_NEUTRAL: f64 = 0.50;
+pub const AUTO_CHASE_PROB_AHEAD: f64   = 0.66;  // 스트라이크 2개 — 유인구
 /// 존 밖 목표의 중심축 거리 (존 경계 1.0, 볼 판정선 1.2)
 pub const AUTO_CHASE_MIN: f64          = 1.05;
 pub const AUTO_CHASE_SPAN: f64         = 0.45;
@@ -208,3 +218,47 @@ pub const AUTO_CHASE_SPAN: f64         = 0.45;
 // 조금만 낮춰도 크게 움직이므로 한 번에 하나씩 재면서 맞춘다.
 pub const NPC_STRIKE_PROB_BASE: f64 = 0.500;
 pub const NPC_CHASE_BASE: f64       = 0.240;
+
+
+// ── NPC 리그 시뮬 위기 상황 (Phase 1-e) ──────────────────────────────────────
+//
+// ⚠ **`clutch`·`mentality`·`battingClutch`는 이미 생성·저장되고 있었다**
+// (`make_pitching`이 `ovr − 8 ± 6`으로 만든다). 저장 타입 주석에도 용도가
+// 적혀 있다 — "위기 집중력: 후반 접전/득점권 압박 시 quality 보정".
+// 그런데 리그 경기는 그 값을 **읽지 않았다**. `gameSimulator.ts`의
+// `SimPitcher`/`SimBatter`가 능력치를 골라 담으면서 빠뜨렸기 때문이다.
+//
+// 주인공 경기(`match_engine`)에는 `clutch_modifier`·`jam_pressure_modifier`가
+// 이미 있다. 같은 개념을 리그로 옮긴다 — 안 그러면 같은 리그에서 주인공만
+// 위기에 강해지고 NPC는 성격이 성적에 안 닿는다.
+//
+// 값은 **투수 능력치 배율**이다(1.0 = 무보정). 폭을 좁게 잡는다 — 위기 보정이
+// 크면 능력치보다 상황이 성적을 정하게 되고, 그러면 OVR·성적 상관이 무너진다.
+//
+// ⚠ **첫 값(0.030/0.012/0.015/0.025)은 너무 작아 측정이 안 됐다.** clutch 20과
+// 90의 실효 능력 차가 3%인데 그게 득점권(전체 타석의 약 25%)에만 걸려
+// 총합 0.75%였다 — 150경기 ERA 노이즈(±0.15)에 묻혔다.
+//
+// 그건 측정 문제만이 아니다. **플레이어에게도 안 보인다는 뜻**이고, 그러면
+// 성격 능력치를 만들어 저장할 이유가 없다. 아래는 clutch 20↔90이 ERA로
+// 0.2~0.4점 갈리도록 올린 값이다(`audit:engine` ④번이 검사한다).
+//
+// ⚠ **하한이 최고 위기 상황에서 성격을 무력화하고 있었다.** 만루·2아웃·9회·
+// 1점차면 압박이 0.200이라 clutch 20도 90도 전부 하한(0.88)에 걸려 **같은
+// 값**이 됐다 — 배짱이 가장 중요해야 할 자리에서만 무의미해진 것이다.
+// 시즌 ERA 감사로는 평균에 희석돼 절대 못 잡는다(`clutch_tests`가 잡았다).
+//
+// 압박 총합이 하한에 닿지 않도록 낮추고 하한도 함께 내렸다.
+// 최악 조합(만루·2아웃·후반접전) 총합 0.147 → clutch 20에서 0.80,
+// 90에서 0.924로 **12%p가 살아 있다**.
+pub const NPC_CLUTCH_SCORING_POS: f64   = 0.055;  // 2·3루 주자
+pub const NPC_CLUTCH_TWO_OUT: f64       = 0.022;
+pub const NPC_CLUTCH_LOADED: f64        = 0.025;  // 만루 추가
+pub const NPC_CLUTCH_LATE_CLOSE: f64    = 0.045;  // 후반 + 3점차 이내
+/// 압박을 얼마나 덜어내는가 — 투수 clutch/mentality 1점당
+pub const NPC_CLUTCH_PITCHER_SCALE: f64 = 0.0080;
+pub const NPC_CLUTCH_MENTAL_SCALE: f64  = 0.0040;
+/// 타자 battingClutch 1점당 압박 가중
+pub const NPC_CLUTCH_BATTER_SCALE: f64  = 0.0006;
+pub const NPC_CLUTCH_MIN: f64           = 0.78;
+pub const NPC_CLUTCH_MAX: f64           = 1.05;

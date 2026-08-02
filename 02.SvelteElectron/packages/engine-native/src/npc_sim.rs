@@ -200,6 +200,41 @@ fn apply_ab_result(
     }
 }
 
+/// 위기 상황 보정 — **`match_engine`의 `clutch_modifier`·`jam_pressure_modifier`와
+/// 같은 개념**을 리그 시뮬로 옮긴 것이다.
+///
+/// 리그 720경기는 이 함수를 타고, 주인공 경기만 `match_engine`을 탄다.
+/// 한쪽에만 위기 보정이 있으면 **같은 리그에서 주인공만 성격이 성적에 닿는다.**
+///
+/// 반환값은 투수 능력치에 곱하는 배율이다. 폭을 좁게 잡는 이유: 위기 보정이
+/// 크면 능력치보다 상황이 성적을 정하게 되고 OVR·성적 상관이 무너진다.
+fn npc_clutch_mod(
+    bases: &[bool; 3], outs: i32, inning: i32, score_diff: i32,
+    pit_clutch: f64, pit_mentality: f64, bat_clutch: f64,
+) -> f64 {
+    use crate::tuning as T;
+    let scoring_pos = bases[1] || bases[2];
+    let late_close  = inning >= 7 && score_diff.abs() <= 3;
+    if !scoring_pos && !late_close { return 1.0; }
+
+    let mut pressure = 0.0;
+    if scoring_pos {
+        pressure += T::NPC_CLUTCH_SCORING_POS;
+        if outs >= 2 { pressure += T::NPC_CLUTCH_TWO_OUT; }
+        if bases[0] && bases[1] && bases[2] { pressure += T::NPC_CLUTCH_LOADED; }
+    }
+    if late_close { pressure += T::NPC_CLUTCH_LATE_CLOSE; }
+
+    // 투수 기질이 압박을 덜어낸다. clutch 90이면 (90-50)*0.008 = 0.32 → 32% 완화
+    let relief = ((pit_clutch - 50.0) * T::NPC_CLUTCH_PITCHER_SCALE
+                + (pit_mentality - 50.0) * T::NPC_CLUTCH_MENTAL_SCALE).clamp(-0.6, 0.6);
+    pressure *= 1.0 - relief;
+    // 승부처에 강한 타자는 압박을 키운다
+    pressure += (bat_clutch - 50.0) * T::NPC_CLUTCH_BATTER_SCALE;
+
+    clamp_f(1.0 - pressure, T::NPC_CLUTCH_MIN, T::NPC_CLUTCH_MAX)
+}
+
 fn sim_half_inning_pitch(
     lineup: &[SimBatter],
     lineup_pos: usize,
@@ -207,6 +242,9 @@ fn sim_half_inning_pitch(
     pit_stamina: f64,
     pit_outs: i32,
     start_cond_mod: f64,
+    // 위기 보정 입력 — 이 둘이 없으면 후반 접전을 못 본다
+    inning: i32,
+    score_diff: i32,
     pit_map: &mut HashMap<String, PitAccum>,
     bat_map: &mut HashMap<String, BatAccum>,
     rng: &mut impl Rng,
@@ -237,7 +275,11 @@ fn sim_half_inning_pitch(
         let batter = &lineup[lpos % n];
         lpos += 1;
 
-        let q   = quality(stamina) * start_cond_mod;
+        // 스태미나·컨디션과 **같은 축**으로 곱한다 — 능력치를 직접 흔드는 게
+        // 아니라 그 순간의 실효 능력을 조정하는 것이다
+        let cm  = npc_clutch_mod(&bases, outs, inning, score_diff,
+                                 pit.clutch, pit.mentality, batter.batting_clutch);
+        let q   = quality(stamina) * start_cond_mod * cm;
         let vel = pit.velocity * q;
         let cmd = pit.command  * q;
         let ctl = pit.control  * q;
@@ -371,6 +413,7 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
         // 원정 공격 (상반기)
         let (top_runs, new_away_lpos, new_h_outs, new_h_stamina) = sim_half_inning_pitch(
             &params.away_lineup, away_lpos, h_pit, h_stamina, h_pit_outs, h_cond,
+            inning, home_score - away_score,
             &mut pit_map, &mut bat_map, &mut rng,
         );
         away_score  += top_runs;
@@ -393,6 +436,7 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
         // 홈 공격 (하반기)
         let (bot_runs, new_home_lpos, new_a_outs, new_a_stamina) = sim_half_inning_pitch(
             &params.home_lineup, home_lpos, a_pit, a_stamina, a_pit_outs, a_cond,
+            inning, home_score - away_score,
             &mut pit_map, &mut bat_map, &mut rng,
         );
         home_score  += bot_runs;
@@ -413,6 +457,7 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
                 let ex_h_st = *pit_stamina_map.get(&ex_h.id).unwrap_or(&ex_h.stamina);
                 let (t, new_al, _, new_ex_h_st) = sim_half_inning_pitch(
                     &params.away_lineup, away_lpos, ex_h, ex_h_st, 27, ex_h_cond,
+                    ex_inning, home_score - away_score,
                     &mut pit_map, &mut bat_map, &mut rng,
                 );
                 away_score += t;
@@ -424,6 +469,7 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
                 let ex_a_st = *pit_stamina_map.get(&ex_a.id).unwrap_or(&ex_a.stamina);
                 let (b, new_hl, _, new_ex_a_st) = sim_half_inning_pitch(
                     &params.home_lineup, home_lpos, ex_a, ex_a_st, 27, ex_a_cond,
+                    ex_inning, home_score - away_score,
                     &mut pit_map, &mut bat_map, &mut rng,
                 );
                 home_score += b;
@@ -475,7 +521,18 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
     let all_batter_ids: HashSet<String> = params.home_lineup.iter().chain(params.away_lineup.iter())
         .map(|b| b.id.clone()).collect();
     for id in &all_batter_ids {
-        let acc = match bat_map.get(id) { Some(a) if a.ab > 0 => a, _ => continue };
+        // ⚠ **`ab > 0`으로 거르면 볼넷만 얻은 타자가 통째로 사라진다.**
+        // 볼넷은 타수에 안 잡히므로, 그 경기에 타수 없이 볼넷만 있는 타자
+        // (막판 출전·대타)의 볼넷이 기록에서 빠진다. 투수 쪽은 그 볼넷을
+        // 정상 기록하니 **투타 대사가 어긋난다**(감사 실측 200경기당 0~8차).
+        // 안타·삼진은 항상 타수를 동반해서 이 조건에 안 걸렸고, 그래서
+        // 볼넷 하나만 조용히 새고 있었다.
+        //
+        // 출전 여부는 "타석에 섰는가"로 본다 — 타수 또는 볼넷이 있으면 출전이다.
+        let acc = match bat_map.get(id) {
+            Some(a) if a.ab > 0 || a.bb > 0 => a,
+            _ => continue,
+        };
         player_lines.push(PlayerGameLine::Batter {
             player_id: id.clone(), ab: acc.ab, h: acc.h, hr: acc.hr,
             rbi: acc.rbi, bb: acc.bb, k: acc.k, sb: 0,
@@ -2739,4 +2796,78 @@ pub fn bg_hs_graduate_draft(params: BgHsGraduateDraftParams) -> BgHsGraduateDraf
     }
 
     BgHsGraduateDraftResult { assignments }
+}
+
+#[cfg(test)]
+mod clutch_tests {
+    use super::*;
+
+    const NONE:    [bool; 3] = [false, false, false];
+    const SECOND:  [bool; 3] = [false, true,  false];
+    const LOADED:  [bool; 3] = [true,  true,  true];
+
+    /// 위기 보정은 **시즌 ERA로 재기 어렵다** — 득점권은 전체 타석의 25%뿐이라
+    /// 전체 평균으로 희석된다. 400경기 실측에서 clutch 20↔90 차가 0.18인데
+    /// ERA 노이즈가 ±0.14라 근거가 약했다(`audit:engine` ④번은 방향만 본다).
+    ///
+    /// 여기서는 **함수를 직접** 본다. 결정론적이라 노이즈가 없다.
+    #[test]
+    fn 위기가_아니면_보정이_없다() {
+        // 주자 없음 + 초반 = 무보정
+        assert_eq!(npc_clutch_mod(&NONE, 0, 3, 0, 50.0, 50.0, 50.0), 1.0);
+        // 1루만 있어도 득점권이 아니다
+        assert_eq!(npc_clutch_mod(&[true, false, false], 1, 3, 0, 50.0, 50.0, 50.0), 1.0);
+    }
+
+    #[test]
+    fn 득점권과_후반접전이_압박을_만든다() {
+        let base = npc_clutch_mod(&SECOND, 0, 3, 0, 50.0, 50.0, 50.0);
+        assert!(base < 1.0, "득점권인데 보정이 없다: {base}");
+
+        // 2아웃이면 더 조인다
+        let two_out = npc_clutch_mod(&SECOND, 2, 3, 0, 50.0, 50.0, 50.0);
+        assert!(two_out < base, "2아웃이 더 낮아야 한다: {two_out} vs {base}");
+
+        // 만루면 더
+        let loaded = npc_clutch_mod(&LOADED, 2, 3, 0, 50.0, 50.0, 50.0);
+        assert!(loaded < two_out, "만루가 더 낮아야 한다: {loaded} vs {two_out}");
+
+        // 주자가 없어도 후반 접전이면 압박이 있다
+        let late = npc_clutch_mod(&NONE, 0, 9, 1, 50.0, 50.0, 50.0);
+        assert!(late < 1.0, "후반 1점차인데 보정이 없다: {late}");
+        // 점수 차가 크면 압박이 사라진다
+        assert_eq!(npc_clutch_mod(&NONE, 0, 9, 9, 50.0, 50.0, 50.0), 1.0);
+    }
+
+    #[test]
+    fn 배짱이_좋을수록_압박을_덜_받는다() {
+        let weak   = npc_clutch_mod(&LOADED, 2, 9, 1, 20.0, 20.0, 50.0);
+        let normal = npc_clutch_mod(&LOADED, 2, 9, 1, 50.0, 50.0, 50.0);
+        let strong = npc_clutch_mod(&LOADED, 2, 9, 1, 90.0, 90.0, 50.0);
+        assert!(weak < normal && normal < strong,
+                "단조성이 깨졌다: {weak} < {normal} < {strong}");
+
+        // **크기도 본다.** 방향만 맞고 폭이 0에 가까우면 있으나 마나다 —
+        // 실제로 첫 계수(0.030)가 그래서 시즌 성적에 안 보였다
+        assert!(strong - weak >= 0.05,
+                "clutch 20↔90 폭이 너무 좁다: {}", strong - weak);
+    }
+
+    #[test]
+    fn 승부처에_강한_타자는_압박을_키운다() {
+        let vs_weak   = npc_clutch_mod(&SECOND, 2, 9, 1, 50.0, 50.0, 20.0);
+        let vs_strong = npc_clutch_mod(&SECOND, 2, 9, 1, 50.0, 50.0, 90.0);
+        assert!(vs_strong < vs_weak,
+                "강한 타자 상대가 더 낮아야 한다: {vs_strong} vs {vs_weak}");
+    }
+
+    #[test]
+    fn 보정폭이_상한_하한을_벗어나지_않는다() {
+        // 최악 조건에서도 하한 아래로 안 내려간다 — 위기 보정이 능력치를
+        // 압도하면 OVR·성적 상관이 무너진다
+        let worst = npc_clutch_mod(&LOADED, 2, 9, 0, 1.0, 1.0, 99.0);
+        assert!(worst >= crate::tuning::NPC_CLUTCH_MIN - 1e-9, "하한 위반: {worst}");
+        let best = npc_clutch_mod(&NONE, 0, 9, 0, 99.0, 99.0, 1.0);
+        assert!(best <= crate::tuning::NPC_CLUTCH_MAX + 1e-9, "상한 위반: {best}");
+    }
 }

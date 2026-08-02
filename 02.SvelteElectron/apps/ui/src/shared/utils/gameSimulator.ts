@@ -21,8 +21,17 @@ function parseResult<T>(json: string): T {
 }
 
 // ── EntityRow → SimPitcher / SimBatter 변환 ──────────────────
-interface SimPitcher { id: string; velocity: number; movement: number; command: number; control: number; stamina: number }
-interface SimBatter  { id: string; contact: number;  power: number;    eye: number;    discipline: number }
+// ⚠ **능력치를 골라 담는 자리다.** 여기 빠뜨린 값은 리그 경기에서 존재하지
+// 않는 것과 같다 — `clutch`·`mentality`·`battingClutch`가 생성·저장까지 되면서
+// 이 조립부에서만 빠져 있었고, 그래서 **주인공 경기에만 위기 보정이 있었다.**
+interface SimPitcher {
+  id: string; velocity: number; movement: number; command: number;
+  control: number; stamina: number; clutch: number; mentality: number;
+}
+interface SimBatter {
+  id: string; contact: number; power: number; eye: number;
+  discipline: number; battingClutch: number;
+}
 
 function toSimPitcher(
   id: string,
@@ -42,6 +51,9 @@ function toSimPitcher(
     command:   Math.round((p?.command   ?? 50) * f),
     control:   Math.round((p?.control   ?? 50) * f),
     stamina:   Math.round((p?.stamina   ?? 50) * f),
+    // 위기 보정은 상황이 정하는 축이라 컨디션 계수(f)를 곱하지 않는다
+    clutch:    p?.clutch    ?? 50,
+    mentality: p?.mentality ?? 50,
   };
 }
 
@@ -60,6 +72,7 @@ function toSimBatter(
     power:      b?.power      ?? 50,
     eye:        b?.eye        ?? 50,
     discipline: b?.discipline ?? 50,
+    battingClutch: b?.battingClutch ?? 50,
   };
 }
 

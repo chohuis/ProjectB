@@ -444,7 +444,14 @@ pub struct SimPitcher {
     pub stamina: f64,
     #[serde(default = "default_stamina_cap")]
     pub stamina_cap: f64,
+    /// 위기 집중력. **없으면 50(무보정)** — 구 페이로드·감사 스크립트 호환
+    #[serde(default = "default_neutral_stat")]
+    pub clutch: f64,
+    #[serde(default = "default_neutral_stat")]
+    pub mentality: f64,
 }
+
+pub(crate) fn default_neutral_stat() -> f64 { 50.0 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -454,6 +461,9 @@ pub struct SimBatter {
     pub power: f64,
     pub eye: f64,
     pub discipline: f64,
+    /// 승부처 집중력. 없으면 50(무보정)
+    #[serde(default = "default_neutral_stat")]
+    pub batting_clutch: f64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
