@@ -932,6 +932,52 @@ export function tradeSourceProbe(): Record<string, unknown> {
   };
 }
 
+/**
+ * 해외 리그(ABL·JBL)가 실제로 도는가 — 확장팩 복원(O-1) 계측.
+ *
+ * `releaseScope.OUT_OF_SCOPE_LEAGUES`를 비우면 게이트는 열린다. 하지만
+ * **게이트를 연다고 도는 게 아니다** — 이 세션에서 "코드가 있다고 도는 게
+ * 아니다"를 여러 번 겪었다. 로스터·일정·순위표·성장을 각각 확인한다.
+ */
+export function overseasProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const m = get(masterStore);
+  const s = get(seasonStore);
+  const live = get(npcLiveStatsStore);
+
+  const out: Record<string, unknown> = {};
+  for (const lg of ["LEAGUE_ABL", "LEAGUE_ABL_FARM", "LEAGUE_JBL", "LEAGUE_JBL_FARM"]) {
+    const roster = g.npcs.filter((n) => n.currentLeague === lg && n.careerStatus !== "retired");
+    const teams = new Set(roster.map((n) => n.currentTeam ?? ""));
+    const ovrs = roster.map((n) => {
+      const ls = live[n.npcId];
+      return Math.max(
+        ls?.pitching?.ovr ?? n.pitching?.ovr ?? 0,
+        ls?.batting?.ovr ?? n.batting?.ovr ?? 0,
+      );
+    }).filter((v) => v > 0);
+    const st = s.leagueState?.[lg];
+    // ⚠ ABL·JBL도 KBL처럼 **1군과 팜이 같은 `leagueId`를 쓴다**(ABL 16+16,
+    // JBL 12+12). `leagueId`로만 세면 팜이 딸려와 순위표(1군 16)와 어긋나
+    // "순위표가 절반"처럼 보인다 — 실제로 한 번 그렇게 읽었다.
+    const isFarmLeague = lg.endsWith("_FARM");
+    const refsTeams = m.teams.filter((t) =>
+      t.leagueId === lg.replace("_FARM", "")
+      && (isFarmLeague ? t.id.endsWith("_2") : t.id.endsWith("_1")));
+    out[lg.replace("LEAGUE_", "")] = {
+      인원: roster.length,
+      팀수: teams.size,
+      refs팀: refsTeams.length,
+      평균OVR: ovrs.length ? Math.round((ovrs.reduce((a, b) => a + b, 0) / ovrs.length) * 10) / 10 : 0,
+      순위표: st?.standings?.length ?? 0,
+      일정: (s.leagueSchedules?.[lg] ?? []).length,
+      // 경기가 실제로 치러졌는가 — 일정만 있고 결과가 없으면 안 도는 것이다
+      결과있는경기: (s.leagueSchedules?.[lg] ?? []).filter((e) => e.result).length,
+    };
+  }
+  return out;
+}
+
 /** 리그별 가용 슬롯 — 정원 대비 얼마나 차 있는가 */
 export function leagueCapacity(): Record<string, unknown> {
   const rows = get(gameStore).npcs.filter((n) => n.careerStatus !== "retired");

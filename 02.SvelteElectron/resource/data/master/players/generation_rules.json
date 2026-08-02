@@ -99,6 +99,32 @@
       "nationality": "JPN",
       "rosterMin": 26,
       "rosterMax": 32
+    },
+    "LEAGUE_ABL_FARM": {
+      "_note": "해외 팜 — 1군 규칙에서 파생. 국내 2군(rosterSize 34, 1군보다 OVR 하향)과 같은 관계",
+      "rosterSize": 34,
+      "rosterMax": 34,
+      "ageMin": 21,
+      "ageMax": 38,
+      "pitchingOvrMin": 50,
+      "pitchingOvrMax": 80,
+      "battingOvrMin": 50,
+      "battingOvrMax": 80,
+      "devRateMin": 40,
+      "devRateMax": 70
+    },
+    "LEAGUE_JBL_FARM": {
+      "_note": "해외 팜 — 1군 규칙에서 파생. 국내 2군(rosterSize 34, 1군보다 OVR 하향)과 같은 관계",
+      "rosterSize": 34,
+      "rosterMax": 34,
+      "ageMin": 20,
+      "ageMax": 37,
+      "pitchingOvrMin": 48,
+      "pitchingOvrMax": 78,
+      "battingOvrMin": 48,
+      "battingOvrMax": 78,
+      "devRateMin": 40,
+      "devRateMax": 70
     }
   },
   "salaryRules": {

@@ -133,7 +133,12 @@ export async function processWeeklyNpcGrowth(weekNum: number, careerStage: Caree
     .filter((e) => {
       if (e.role !== "player" || !get(npcLiveStatsStore)[e.id]) return false;
       if (namedFameMap.has(e.id)) return true;
-      return getLeagueRadius(careerStage, e.leagueId ?? "") === 1;
+      // ⚠ **드리프트 리그(반경 2)도 성장시킨다.** 예전엔 반경 1만 성장해서
+      // 해외 리그가 순위표만 돌고 선수는 그대로 있었다. 몇 시즌 뒤 주인공이
+      // 진출하면 그동안 국내만 자란 만큼 **리그 수준이 어긋난다.**
+      // 경기는 여전히 안 돌리므로 성적이 없고, `noPerfBase`로 자란다 —
+      // 국내 배경 NPC와 같은 경로다(주간 Rust 호출 1회라 비용도 그만큼이다).
+      return getLeagueRadius(careerStage, e.leagueId ?? "") <= 2;
     })
     .map((e) => {
       const live = get(npcLiveStatsStore)[e.id];

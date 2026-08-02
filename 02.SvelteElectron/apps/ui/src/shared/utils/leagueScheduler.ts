@@ -173,7 +173,12 @@ export const DEFAULT_LEAGUE_CONFIGS: LeagueConfig[] = ([
   { leagueId: "LEAGUE_KBL",      teams: [..._KBL],  startWeek: 1, endWeek: 50, cycles: 16 },
   // 프로 2군 10팀 × 11차전 = 팀당 99경기 — R5에서 제거했던 팜 리그 시뮬 복원 (DESIGN.md §5)
   { leagueId: "LEAGUE_KBL_FARM", teams: [..._KBLF], startWeek: 1, endWeek: 50, cycles: 11 },
-  // 해외 — 현행 유지 (진출 전까지 드리프트만)
+  // 해외 — 주인공 진출 전까지 드리프트만 (반경 2). 로스터와 성장은 돈다
   { leagueId: "LEAGUE_ABL",      teams: [..._ABL],  startWeek: 1, endWeek: 50, cycles: 9  },
   { leagueId: "LEAGUE_JBL",      teams: [..._JBL],  startWeek: 1, endWeek: 50, cycles: 10 },
+  // ⚠ 해외 팜은 **항목 자체가 없었다.** 확장팩 게이트를 열어도 1군 일정만
+  // 깔리고 팜은 0경기였다 — 승강할 곳이 없으면 로스터가 고인다.
+  // 차수는 국내 2군(11차전)에 맞춘다.
+  { leagueId: "LEAGUE_ABL_FARM", teams: [..._ABLF], startWeek: 1, endWeek: 50, cycles: 11 },
+  { leagueId: "LEAGUE_JBL_FARM", teams: [..._JBLF], startWeek: 1, endWeek: 50, cycles: 11 },
 ] as LeagueConfig[]).filter((c) => isLeagueInScope(c.leagueId));

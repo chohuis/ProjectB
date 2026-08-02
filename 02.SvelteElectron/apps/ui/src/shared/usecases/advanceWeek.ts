@@ -72,6 +72,7 @@ import { runBackgroundPostseasons } from "./backgroundPostseason";
 import { IND_LEAGUE_ID, emptySurvivalState } from "../utils/survivalLeague";
 import { snapshotDueAt } from "../utils/standingsSnapshot";
 import { canApplyToUniversity, canApplyToIndependent } from "../utils/careerTransition";
+import { isLeagueInScope } from "../config/releaseScope";
 
 // ── 군입대 대상 판별 (nationality 기반) ──────────────────────
 // nationality 없는 구버전 NPC는 originLeagueId로 폴백
@@ -164,6 +165,21 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       // ── v3: 신입생은 Rust 생성 — 진급 후 grade 1이 빈 팀에 채움 ──
       const created = await generateFreshmenV3(currentSeasonYear);
       if (created > 0) logs.push(`[신입생] ${created}명 입학 (Rust 생성)`);
+
+      // ── 해외 리그 로스터 보장 (확장팩) ──────────────────────────
+      //
+      // ⚠ 예전엔 해외가 **Lazy 활성화 전용**이었고 `ensureLeagueActivatedV3`를
+      // 대학·독립·주인공 리그만 불렀다. 그래서 확장팩 게이트를 열어도
+      // **선수 0명인 리그에 일정만 1,740경기 깔렸다**(실측 ABL 1,080 · JBL 660,
+      // 2시즌 굴려도 인원 0·결과 0). 게이트를 연다고 도는 게 아니다.
+      //
+      // 범위 밖이면 `ensureLeagueActivatedV3`가 호출돼도 할 일이 없어야 하므로
+      // 여기서 먼저 거른다.
+      for (const lid of ["LEAGUE_ABL", "LEAGUE_ABL_FARM", "LEAGUE_JBL", "LEAGUE_JBL_FARM"]) {
+        if (!isLeagueInScope(lid)) continue;
+        const n = await ensureLeagueActivatedV3(lid, currentSeasonYear);
+        if (n > 0) logs.push(`[해외활성화] ${lid.replace("LEAGUE_", "")} ${n}명`);
+      }
     } else {
     // (레거시) entry_year == currentSeasonYear인 신규 NPC: master.db 직접 조회 (store 미갱신)
     const yearEntrants = await masterStore.fetchEntryEntities(currentSeasonYear);

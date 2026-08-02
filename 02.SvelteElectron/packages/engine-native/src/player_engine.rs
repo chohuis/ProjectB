@@ -410,28 +410,48 @@ pub fn generate_fa_offers(params: GenerateFaOffersParams) -> Vec<FaOffer> {
         .map(|&idx| make_offer(same_league[idx], market, &mut rng))
         .collect();
 
-    // KBL/ABL FA 중 OVR 65+ & 명성 20+ 이면 JBL 스카우트 오퍼 1~2개 추가
-    let can_get_jbl = (params.league_id == "LEAGUE_KBL" || params.league_id == "LEAGUE_ABL")
-        && params.pitching_ovr >= 65.0
-        && params.fame >= 20.0;
+    // ── 해외 스카우트 오퍼 ──────────────────────────────────────
+    //
+    // ⚠ 예전엔 **JBL 경로만** 있었다. ABL은 자체 리그로만 존재해서
+    // 국내 선수가 갈 방법이 없었고, 확장팩을 열어도 32팀이 관전 대상일 뿐이었다.
+    // 표를 두 벌 적지 않도록 리그별 문턱만 다른 **하나의 경로**로 만든다.
+    //
+    // 문턱 차이가 위계를 만든다. **ABL이 최상위다** — `league_salary_mult`가
+    // ABL 3.5 / JBL 2.0이고 로스터 OVR도 62~92 vs 60~90이다.
+    // (한 번 거꾸로 잡았다: JBL 문턱을 더 높게 뒀는데 연봉은 ABL이 1.75배였다)
+    //   (목적지, 최소 OVR, 최소 명성, 상위 확률, 하위 확률, 상위 기준 OVR)
+    const OVERSEAS_ROUTES: [(&str, f64, f64, f64, f64, f64); 2] = [
+        ("LEAGUE_ABL", 70.0, 30.0, 0.55, 0.25, 80.0),
+        ("LEAGUE_JBL", 62.0, 15.0, 0.65, 0.35, 72.0),
+    ];
 
-    if can_get_jbl {
-        let jbl_teams: Vec<&TeamRef> = params.teams.iter()
-            .filter(|t| t.league_id == "LEAGUE_JBL")
+    for (dest, min_ovr, min_fame, hi_chance, lo_chance, hi_ovr) in OVERSEAS_ROUTES {
+        // 같은 리그로는 스카우트 오퍼를 안 만든다 (그건 위 `same_league` 몫)
+        if params.league_id == dest { continue; }
+        // 국내·해외 1군에서만 나간다 — 팜·대학·독립은 대상이 아니다
+        let from_top = params.league_id == "LEAGUE_KBL"
+            || params.league_id == "LEAGUE_ABL"
+            || params.league_id == "LEAGUE_JBL";
+        if !from_top { continue; }
+        if params.pitching_ovr < min_ovr || params.fame < min_fame { continue; }
+
+        let dest_teams: Vec<&TeamRef> = params.teams.iter()
+            .filter(|t| t.league_id == dest)
             .collect();
-        // OVR 75+ 이면 70%, 65~75이면 40%
-        let jbl_chance = if params.pitching_ovr >= 75.0 { 0.70 } else { 0.40 };
-        if !jbl_teams.is_empty() && rng.gen::<f64>() < jbl_chance {
-            let jbl_market = base * league_salary_mult("LEAGUE_JBL");
-            let n_jbl = rng.gen_range(1..=2usize).min(jbl_teams.len());
-            let mut jbl_idx: Vec<usize> = (0..jbl_teams.len()).collect();
-            for i in 0..n_jbl {
-                let j = rng.gen_range(i..jbl_teams.len());
-                jbl_idx.swap(i, j);
-            }
-            for &idx in &jbl_idx[..n_jbl] {
-                offers.push(make_offer(jbl_teams[idx], jbl_market, &mut rng));
-            }
+        if dest_teams.is_empty() { continue; }
+
+        let chance = if params.pitching_ovr >= hi_ovr { hi_chance } else { lo_chance };
+        if rng.gen::<f64>() >= chance { continue; }
+
+        let market = base * league_salary_mult(dest);
+        let n = rng.gen_range(1..=2usize).min(dest_teams.len());
+        let mut idx: Vec<usize> = (0..dest_teams.len()).collect();
+        for i in 0..n {
+            let j = rng.gen_range(i..dest_teams.len());
+            idx.swap(i, j);
+        }
+        for &k in &idx[..n] {
+            offers.push(make_offer(dest_teams[k], market, &mut rng));
         }
     }
 
