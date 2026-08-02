@@ -578,7 +578,21 @@ fn normalize_offseason_npcs(
                 stat_line: "retired".into(),
                 highlights: vec![],
             };
-            npc.career_history.push(history);
+            push_year_once(&mut npc.career_history, history);
+            // ⚠ **은퇴가 경력 사건으로 안 남고 있었다.** `NpcCareerEventType`에
+            // `retirement`가 정의돼 있는데 쓰는 곳은 주인공 경로뿐이라, NPC는
+            // 경력 화면에 은퇴가 뜨지 않았다. 사건 집계로 세대교체를 확인할
+            // 방법도 없어서 "나이 은퇴가 한 번도 없다"고 잘못 읽기까지 했다.
+            // ⚠ 소속을 비우기 **전에** 넣어야 어디서 은퇴했는지가 남는다.
+            npc.career_events.push(NpcCareerEvent {
+                year: season_year,
+                event_type: "retirement".into(),
+                from_team_id: (!npc.current_team.is_empty()).then(|| npc.current_team.clone()),
+                to_team_id: None,
+                from_league_id: Some(npc.current_league.clone()),
+                to_league_id: None,
+                detail: Some(format!("{}세 은퇴", npc.age)),
+            });
             npc.career_status   = "retired".into();
             npc.current_league  = "LEAGUE_RETIRED".into();
             npc.current_team    = "".into();
@@ -1072,6 +1086,18 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
 
 // ── 학년 진급 ─────────────────────────────────────────────────────────────────
 
+/// 같은 해가 이미 있으면 안 넣는다.
+///
+/// ⚠ **연도 기록을 네 곳이 각자 쓰고 있었고 방어는 한 곳에만 있었다.**
+/// Rust 학년 진급·은퇴, TS `applySeasonHistory`, TS `processAllLeaguesSeasonEnd`.
+/// 그래서 고교생은 같은 해가 **두 줄**로 남았다(Rust 진급 + TS 성적 기록).
+/// 경력 화면과 **드래프트 경로 판정**(`career_history.last()`로 고졸/대졸을
+/// 가른다)이 이 배열을 읽으므로 중복은 그대로 오작동이 된다.
+fn push_year_once(hist: &mut Vec<NpcCareerEntry>, entry: NpcCareerEntry) {
+    if hist.iter().any(|h| h.year == entry.year) { return; }
+    hist.push(entry);
+}
+
 // HS 전용 학년 진급 (기존 호환용, advance_all_grades 사용 권장)
 pub fn advance_grades(params: AdvanceGradesParams) -> GradeAdvanceResult {
     let mut updated      = Vec::new();
@@ -1098,7 +1124,7 @@ pub fn advance_grades(params: AdvanceGradesParams) -> GradeAdvanceResult {
             let mut g = npc;
             g.grade          = None;
             g.current_league = "LEAGUE_DRAFT_POOL".into();
-            g.career_history.push(entry);
+            push_year_once(&mut g.career_history, entry);
             hs_graduated.push(g);
         } else {
             let mut n = npc;
@@ -1141,12 +1167,12 @@ pub fn advance_all_grades(params: AdvanceGradesParams) -> GradeAdvanceResult {
                 let mut g = npc;
                 g.grade          = None;
                 g.current_league = "LEAGUE_DRAFT_POOL".into();
-                g.career_history.push(entry);
+                push_year_once(&mut g.career_history, entry);
                 hs_graduated.push(g);
             } else {
                 let mut n = npc;
                 n.grade = Some(grade + 1);
-                n.career_history.push(entry);
+                push_year_once(&mut n.career_history, entry);
                 updated.push(n);
             }
             continue;
@@ -1170,12 +1196,12 @@ pub fn advance_all_grades(params: AdvanceGradesParams) -> GradeAdvanceResult {
                 let mut g = npc;
                 g.grade          = None;
                 g.current_league = "LEAGUE_DRAFT_POOL".into();
-                g.career_history.push(entry);
+                push_year_once(&mut g.career_history, entry);
                 univ_graduated.push(g);
             } else {
                 let mut n = npc;
                 n.grade = Some(grade + 1);
-                n.career_history.push(entry);
+                push_year_once(&mut n.career_history, entry);
                 updated.push(n);
             }
             continue;

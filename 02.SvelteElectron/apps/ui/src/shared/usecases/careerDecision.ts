@@ -20,6 +20,7 @@ import { buildSalaryIndex, loadRosterRules } from "../repo/newGameV3";
 import { canApplyToUniversity, isUniversityFinalYear } from "../utils/careerTransition";
 import { loadAcademicsRules, canGraduate, majorEffects } from "../utils/academicsEngine";
 import { openProSeason } from "./proSeason";
+import { runWorldSeasonEnd } from "./seasonRollover";
 import { enlistProtagonist } from "./militaryDecision";
 import type { PendingAction } from "../types/season";
 
@@ -246,6 +247,16 @@ export async function acceptDraftOffer(action: {
     noTrade: false,
     status: "active" as const,
   });
+
+  // ⚠ **다음 시즌을 열기 전에 이번 시즌의 세계를 닫아야 한다.**
+  // `openProSeason`은 현재 연도 +1로 새 시즌을 직접 여는데, 그러면
+  // `runSeasonRollover`를 안 타므로 **그 해 세계 처리가 통째로 사라진다** —
+  // 실측: 주인공이 지명된 해의 NPC 사건이 `fa_signed 6`뿐이었고 드래프트·
+  // 은퇴·이적·연도기록이 전부 없었으며 주인공 나이도 안 올랐다.
+  // 연도 가드가 있어 롤오버가 이미 돌았으면 그냥 지나간다.
+  const closingYear = get(seasonStore).seasonYear;
+  await runWorldSeasonEnd(closingYear);
+  gameStore.advanceSeasonYear(closingYear);
 
   // 프로 시즌 열기는 `proSeason`이 정본이다 — 예전엔 여기·재계약 모달·
   // 시즌 롤오버 셋이 각자 리그 분기를 적고 있었다

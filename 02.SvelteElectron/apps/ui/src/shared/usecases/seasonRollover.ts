@@ -15,10 +15,110 @@ import { gameStore } from "../stores/game";
 import { seasonStore } from "../stores/season";
 import { masterStore } from "../stores/master";
 import { runSeasonEndBgProcessing } from "./runAutoAdvance";
+import { DEFAULT_TEAM_PROFILE } from "./weekPhases/market";
 import { draftDestinationTeams } from "../utils/draftSystem";
 import { proSchedule } from "./proSeason";
 import { dischargeProtagonist, openMilitarySeason } from "./militaryDecision";
 import type { PitcherSeasonStats, BatterSeasonStats } from "../types/save";
+
+/**
+ * 세계 오프시즌을 한 해에 한 번만 돌게 하는 가드.
+ *
+ * `applySeasonHistory`·`processAllLeaguesSeasonEnd`엔 각자 방어가 있지만
+ * `applyAgingDecay`·`runSeasonEndBgProcessing`엔 없다.
+ */
+let _lastWorldSeasonEndYear = -1;
+
+/**
+ * **세계 오프시즌** — 주인공이 무엇을 하든 매 시즌 끝에 반드시 도는 처리.
+ *
+ * ⚠ 예전엔 이 순서가 **세 분기에 각각** 적혀 있었고(military·프로·학생),
+ * 그중 어디도 안 타는 경로가 있었다. `acceptDraftOffer`가 `openProSeason`으로
+ * 다음 해를 직접 열기 때문에 **주인공이 지명된 해엔 통째로 건너뛰었다** —
+ * 실측: 그 해 NPC 사건이 `fa_signed 6`뿐이고 드래프트·은퇴·이적·연도기록이
+ * 전부 없었으며 주인공 나이도 안 올랐다.
+ *
+ * 이제 정본은 여기 하나다. 롤오버와 진로 결정 양쪽에서 부르고, 연도 가드가
+ * 중복 실행을 막는다.
+ */
+export async function runWorldSeasonEnd(now: number): Promise<void> {
+  if (_lastWorldSeasonEndYear === now) return;
+  _lastWorldSeasonEndYear = now;
+
+  // NPC 드래프트는 **오프시즌보다 먼저** 돌아야 한다 — 오프시즌이 미지명자
+  // 진로를 배정하므로, 드래프트가 뒤에 오면 이미 흩어진 뒤가 된다.
+  // W47 관전에서 이미 돌았으면 `lastDraftYear` 가드가 건너뛴다.
+  {
+    const { univIds, indIds } = draftDestinationTeams(get(masterStore).teams);
+    await gameStore.processNpcDraft(now, univIds, indIds);
+  }
+
+  const leagueStats: Record<string, Record<string, import("../types/save").PlayerSeasonStats>> = {};
+  for (const [lid, ls] of Object.entries(get(seasonStore).leagueState)) leagueStats[lid] = ls.stats;
+  gameStore.applySeasonHistory(get(seasonStore).stats, leagueStats, now);
+
+  await seasonStore.flushAllLeagueStatsToDb(now);
+  await saveSeasonHistory(now);
+  await gameStore.processAllLeaguesSeasonEnd(now);  // ← 여기서 __lastOffseasonSummary 세팅
+  await gameStore.applyAgingDecay();
+  await updateProTeamProfiles();
+  await runSeasonEndBgProcessing(now);
+}
+
+/**
+ * 시즌 성적으로 구단 성향을 갱신한다 — **팀 개성이 생기는 유일한 경로**.
+ *
+ * ⚠ `calc_win_now_pressure_update`는 구현돼 있는데 **아무도 안 불렀다.**
+ * `initProTeamProfiles`·`patchProTeamProfile`도 호출부가 없어서
+ * `gameStore.proTeamProfiles`는 항상 비어 있었고, refs.json에도
+ * `proTeamProfile`이 없어 **전 팀이 `DEFAULT_TEAM_PROFILE`(전 항목 50)** 로
+ * 떨어졌다.
+ *
+ * 그 결과가 트레이드 소멸이다. buyer 조건이
+ * `rank_pct <= 0.30 && win_now_pressure > 60`인데 모두가 정확히 50이라
+ * **buyer가 구조적으로 0팀**이었다 — seller만 남으면 거래 상대가 없다.
+ * 실측 트레이드: 9 → 8 → 2 → 1 → 1 → 0.
+ *
+ * 같은 프로필을 승강 임계값(`10.0 - win_now_pressure * 0.05`)·방출·FA 입찰도
+ * 읽으므로, 눌려 있는 동안 그쪽 판단도 전부 중립이었다.
+ */
+async function updateProTeamProfiles(): Promise<void> {
+  const s = get(seasonStore);
+  const g = get(gameStore);
+  const m = get(masterStore);
+
+  for (const leagueId of ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"]) {
+    const standings = s.leagueId === leagueId ? s.standings : (s.leagueState[leagueId]?.standings ?? []);
+    if (standings.length === 0) continue;
+    const sorted = [...standings].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
+
+    for (let i = 0; i < sorted.length; i++) {
+      const teamId = sorted[i].teamId;
+      const cur = g.proTeamProfiles[teamId]
+        ?? m.teams.find((t) => t.id === teamId)?.proTeamProfile
+        ?? DEFAULT_TEAM_PROFILE;
+      const raw = await window.projectB!.engine("calcWinNowPressureUpdateNative", JSON.stringify({
+        currentPressure: cur.winNowPressure,
+        ownerPatience: cur.ownerPatience,
+        finalStanding: i + 1,
+        totalTeams: sorted.length,
+        // 연속 포스트시즌 실패는 아직 집계하지 않는다 — 순위만으로도
+        // 하위권은 +8/시즌이라 두 시즌이면 buyer 문턱(60)을 넘는다
+        consecutiveMissedPlayoffs: 0,
+        wonChampionship: i === 0,
+      }));
+      const r = JSON.parse(raw) as { newPressure?: number; error?: string };
+      if (r.error || typeof r.newPressure !== "number") continue;
+      gameStore.patchProTeamProfile(teamId, { ...cur, winNowPressure: r.newPressure });
+    }
+  }
+}
+
+
+/** 진로 결정 등으로 시즌을 건너뛸 때 가드를 되돌린다 (새 게임·슬롯 전환) */
+export function resetWorldSeasonEndGuard(): void {
+  _lastWorldSeasonEndYear = -1;
+}
 
 /** 시즌 기록을 history_* 테이블에 남긴다 (순위·개인기록·포스트시즌) */
 export async function saveSeasonHistory(seasonYear: number) {
@@ -137,7 +237,9 @@ export async function runSeasonRollover(input: SeasonRolloverInput): Promise<voi
   // 나이를 올린 뒤, 복무가 끝났으면 전역하고 아니면 다음 해를 연다.
   // (오프시즌을 건너뛰면 복무 기간만큼 세계가 정체된다 — `militaryDecision` 주석 참고)
   if (P().careerStage === "military") {
-    await gameStore.processAllLeaguesSeasonEnd(now);
+    // ⚠ 예전엔 `processAllLeaguesSeasonEnd`만 불렀다. 그 사이 **드래프트가
+    // 안 돌아** 복무 2년 동안 신인이 한 명도 안 들어왔다.
+    await runWorldSeasonEnd(now);
     gameStore.advanceSeasonYear(get(seasonStore).seasonYear);
     if (!(await dischargeProtagonist())) openMilitarySeason(now + 1);
     await gameStore.save();
@@ -151,22 +253,10 @@ export async function runSeasonRollover(input: SeasonRolloverInput): Promise<voi
   // 드래프트가 그 뒤에 오면 이미 대학·독립으로 흩어진 뒤가 된다.
   // W47 관전에서 이미 돌았으면 `lastDraftYear` 가드가 건너뛴다 —
   // 주인공 졸업 시즌엔 W47 관전 이벤트가 안 떠서 여기가 유일한 경로다.
-  {
-    const { univIds, indIds } = draftDestinationTeams(get(masterStore).teams);
-    await gameStore.processNpcDraft(now, univIds, indIds);
-  }
-
   // ── 프로(KBL/ABL/JBL): pendingNextContract 적용 후 새 시즌 초기화 ──
   const isProStage = ["pro_kbl", "pro_abl", "pro_jbl"].includes(P().careerStage);
   if (isProStage) {
-    const leagueStats2: Record<string, Record<string, import("../types/save").PlayerSeasonStats>> = {};
-    for (const [lid, ls] of Object.entries(get(seasonStore).leagueState)) leagueStats2[lid] = ls.stats;
-    gameStore.applySeasonHistory(get(seasonStore).stats, leagueStats2, now);
-    await seasonStore.flushAllLeagueStatsToDb(now);
-    await saveSeasonHistory(now);
-    await gameStore.processAllLeaguesSeasonEnd(now);
-    await gameStore.applyAgingDecay();
-    await runSeasonEndBgProcessing(now);
+    await runWorldSeasonEnd(now);
     gameStore.advanceSeasonYear(get(seasonStore).seasonYear);
 
     // ── 2군 리그 우승팀 발표 메시지 ────────────────────────────
@@ -249,13 +339,7 @@ export async function runSeasonRollover(input: SeasonRolloverInput): Promise<voi
     });
   }
 
-  const leagueStats: Record<string, Record<string, import("../types/save").PlayerSeasonStats>> = {};
-  for (const [lid, ls] of Object.entries(get(seasonStore).leagueState)) leagueStats[lid] = ls.stats;
-  gameStore.applySeasonHistory(get(seasonStore).stats, leagueStats, now);
-
-  await seasonStore.flushAllLeagueStatsToDb(now);
-  await saveSeasonHistory(now);
-  await gameStore.processAllLeaguesSeasonEnd(now);  // ← 여기서 __lastOffseasonSummary 세팅
+  await runWorldSeasonEnd(now);
 
   // ── 연간 병역 현황 메시지 (processAllLeaguesSeasonEnd 이후 읽어야 정확한 데이터)
   type OffseasonSummary = { militaryEnlistedSports?: string[]; militaryEnlistedGeneral?: string[]; militaryDischargedNames?: string[] };
@@ -280,8 +364,6 @@ export async function runSeasonRollover(input: SeasonRolloverInput): Promise<voi
     }
     (window as Window & { __lastOffseasonSummary?: unknown }).__lastOffseasonSummary = null;
   }
-  await gameStore.applyAgingDecay();
-  await runSeasonEndBgProcessing(now);
   gameStore.advanceSeasonYear(get(seasonStore).seasonYear);
   seasonStore.startNewSeason();
 

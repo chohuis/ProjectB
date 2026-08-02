@@ -2053,7 +2053,13 @@ function createGameStore() {
       {
         const seasonData = _getSeasonData?.();
         if (seasonData) {
-          const proIndLeagues = new Set(["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL", "LEAGUE_INDEPENDENT"]);
+          // ⚠ **2군(LEAGUE_KBL_FARM)이 빠져 있었다.** 고교·대학은 Rust 학년
+          // 진급이 연도 기록을 남기고 프로·독립은 여기서 남기는데, 2군만
+          // 아무도 안 써서 **그 해가 통째로 비었다** — 궤적을 따라가면
+          // 프로 선수의 특정 연도가 없어진 채로 보인다.
+          const proIndLeagues = new Set([
+            "LEAGUE_KBL", "LEAGUE_KBL_FARM", "LEAGUE_ABL", "LEAGUE_JBL", "LEAGUE_INDEPENDENT",
+          ]);
           const npcPreState = new Map(
             s.npcs
               .filter(n => proIndLeagues.has(n.currentLeague ?? ""))
@@ -2844,6 +2850,9 @@ function createGameStore() {
           if (npc.careerStatus !== "active") return npc;
           const stat = merged[npc.npcId];
           if (!stat) return npc;
+          // 연도 기록은 Rust 학년 진급도 남긴다 — 방어가 없으면 고교생이
+          // 같은 해에 두 줄이 된다 (실측으로 확인)
+          if (npc.careerHistory.some(h => h.year === seasonYear)) return npc;
           const statLine = buildNpcStatLine(stat);
           const entry: NpcCareerEntry = {
             year:      seasonYear,

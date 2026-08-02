@@ -713,6 +713,314 @@ function ovrRows(): Map<string, OvrRow> {
 
 const avg = (a: number[]) => Math.round((a.reduce((s, v) => s + v, 0) / a.length) * 10) / 10;
 
+// ── NPC 생애 궤적 ────────────────────────────────────────────────
+//
+// **집계로는 원인을 못 짚는다.** 이번 성장 조사에서 "시즌당 −3.1"이라는
+// 평균 하나로는 아무것도 알 수 없었고, 나이별·동일선수 델타로 갈라서야
+// 원인이 나왔다. 드래프트·이적·병역·은퇴도 같다 — 한 명의 인생이 순서대로
+// 말이 되는지 봐야 "어디서 새는가"를 짚을 수 있다.
+//
+// `careerEvents`(사건)와 `careerHistory`(연도별 소속)를 합쳐 시간순으로 낸다.
+// 둘 중 하나만 보면 안 된다: 사건은 전이의 *이유*를, 이력은 전이의 *결과*를
+// 담고 있어서, 이유 없는 이동이나 결과 없는 사건이 바로 결함 신호다.
+
+export type TrajectoryStep = {
+  year: number;
+  league: string;
+  team: string;
+  grade: number | null;
+  events: string[];
+};
+
+export type Trajectory = {
+  npcId: string;
+  name: string;
+  playerType: string;
+  현재: { age: number; league: string; team: string; status: string; ovr: number; grade: number | null };
+  steps: TrajectoryStep[];
+  // 이력에 없는 사건 연도 — 사건은 있는데 소속 기록이 없는 해
+  이력없는사건연도: number[];
+};
+
+/**
+ * 연도별 커리어 사건 집계 — **Phase 3 전체의 계측기**.
+ *
+ * 드래프트·트레이드·FA·방출·입대·전역·은퇴가 전부 `careerEvents`에 남으므로,
+ * 연도별로 세면 "몇 명이 · 언제 · 어디로"가 한 번에 나온다. 시스템마다
+ * 따로 프로브를 만들면 또 표를 여러 벌 적게 된다.
+ *
+ * ⚠ 은퇴자를 빼면 안 된다 — 세계에서 빠져나간 사람이야말로 세어야 할 대상이다.
+ */
+export function careerEventTally(): Record<number, Record<string, number>> {
+  const out: Record<number, Record<string, number>> = {};
+  for (const n of get(gameStore).npcs) {
+    for (const e of n.careerEvents ?? []) {
+      ((out[e.year] ??= {})[e.eventType] ??= 0);
+      out[e.year][e.eventType] += 1;
+    }
+  }
+  return out;
+}
+
+/**
+ * 고교 졸업생이 어디로 갔는가 — 한 해분.
+ *
+ * 실측에서 표본 30명 중 **21명이 5시즌 안에 야구를 그만뒀다**(OVR 73·75
+ * 포함). `place()`는 능력 높은 순으로 자리를 잡으므로, 상위권이 못 들어갔다면
+ * 대학·독립 정원이 실제로 모자란 것이다. 전체 인원으로 비율을 확인한다.
+ */
+export function draftOutcomeByYear(year: number): Record<string, unknown> {
+  // ⚠ **`draft_*`만 세면 안 된다.** 독립리그에는 방출(`release`)로도 들어온다 —
+  // 2026 실측에서 독립이 296 → 410(+114)인데 드래프트 유입은 47명뿐이었고,
+  // 그 차이를 못 보고 "독립 유입 0"이라고 잘못 읽었다. 리그를 드나든
+  // **모든 사건**을 함께 센다.
+  const 진로: Record<string, number> = {};   // 졸업 후 진로 (draft_*/quit)
+  const 유입: Record<string, number> = {};   // 사건 종류별 리그 유입
+  const 유출: Record<string, number> = {};
+  let 진로대상 = 0;
+  for (const n of get(gameStore).npcs) {
+    for (const e of n.careerEvents ?? []) {
+      if (e.year !== year) continue;
+      const to = (e.toLeagueId ?? "").replace("LEAGUE_", "");
+      const from = (e.fromLeagueId ?? "").replace("LEAGUE_", "");
+      if (e.eventType === "draft_picked" || e.eventType === "draft_undrafted"
+          || e.eventType === "quit_baseball") {
+        진로대상++;
+        const k = e.eventType === "draft_picked" ? "지명"
+          : e.eventType === "quit_baseball" ? "야구포기"
+          : to || "미지명(행선지없음)";
+        진로[k] = (진로[k] ?? 0) + 1;
+      }
+      if (to) 유입[`${to}←${e.eventType}`] = (유입[`${to}←${e.eventType}`] ?? 0) + 1;
+      if (from) 유출[`${from}→${e.eventType}`] = (유출[`${from}→${e.eventType}`] ?? 0) + 1;
+    }
+  }
+  return { year, 진로대상, 진로, 유입, 유출 };
+}
+
+/**
+ * 은퇴·연령 분포 — 세대교체가 도는가.
+ *
+ * ⚠ **`careerEvents`로 은퇴를 세면 안 된다.** NPC 나이 은퇴는
+ * `career_history`에만 남고 `career_events`에는 `retirement`를 push하지
+ * 않는다(타입은 정의돼 있는데 아무도 안 쓴다). 그걸 모르고 사건 집계만
+ * 보다가 "나이 은퇴가 한 번도 없다"고 잘못 읽었다 — `careerStatus`를 센다.
+ */
+export function retirementProbe(): Record<string, unknown> {
+  const all = get(gameStore).npcs;
+  const retired = all.filter((n) => n.careerStatus === "retired");
+  const alive = all.filter((n) => n.careerStatus !== "retired");
+  const ageBucket = (a: number) =>
+    a < 20 ? "~19" : a < 25 ? "20-24" : a < 30 ? "25-29"
+    : a < 33 ? "30-32" : a < 36 ? "33-35" : "36+";
+  const retiredByAge: Record<string, number> = {};
+  for (const n of retired) {
+    const k = ageBucket(n.age ?? 0);
+    retiredByAge[k] = (retiredByAge[k] ?? 0) + 1;
+  }
+  // 프로(1·2군)의 연령 분포 — 늙기만 하는지 본다
+  const proAges: Record<string, number> = {};
+  for (const n of alive) {
+    if (n.currentLeague !== "LEAGUE_KBL" && n.currentLeague !== "LEAGUE_KBL_FARM") continue;
+    const k = ageBucket(n.age ?? 0);
+    proAges[k] = (proAges[k] ?? 0) + 1;
+  }
+  const proAlive = alive.filter(
+    (n) => n.currentLeague === "LEAGUE_KBL" || n.currentLeague === "LEAGUE_KBL_FARM",
+  );
+  const avgAge = proAlive.length
+    ? Math.round((proAlive.reduce((s, n) => s + (n.age ?? 0), 0) / proAlive.length) * 10) / 10
+    : 0;
+  return {
+    누적은퇴: retired.length,
+    은퇴자나이분포: retiredByAge,
+    프로연령분포: proAges,
+    프로평균나이: avgAge,
+    최고령: alive.reduce((m, n) => Math.max(m, n.age ?? 0), 0),
+  };
+}
+
+/**
+ * FA·트레이드가 도는가.
+ *
+ * 실측에서 `fa_signed`가 264 → 30 → 8 → 4 → 4로 붕괴하고 트레이드는 연
+ * 1~4건이었다. 가설: **2군(`LEAGUE_KBL_FARM`)이 프로 연차 적립에서 빠져
+ * 있다** — Rust 오프시즌이 KBL·ABL·JBL만 `pro_service_years`를 올린다.
+ * 프로 인원의 절반이 2군이라면 그동안 시계가 멈춘다.
+ *
+ * 연차 분포를 1군·2군으로 나눠 보면 가설이 바로 갈린다.
+ */
+export function faTradeProbe(): Record<string, unknown> {
+  const rows = get(gameStore).npcs.filter((n) => n.careerStatus !== "retired");
+  const bucket = (y: number) => y <= 0 ? "0" : y <= 2 ? "1-2" : y <= 4 ? "3-4" : y <= 6 ? "5-6" : "7+";
+  const dist = (lg: string) => {
+    const out: Record<string, number> = {};
+    let sum = 0, n = 0;
+    for (const r of rows) {
+      if (r.currentLeague !== lg) continue;
+      const y = r.proServiceYears ?? 0;
+      out[bucket(y)] = (out[bucket(y)] ?? 0) + 1;
+      sum += y; n++;
+    }
+    return { 인원: n, 평균연차: n ? Math.round((sum / n) * 10) / 10 : 0, 분포: out };
+  };
+  // KBL 자격 5년 (generation_rules.json faRules.eligibleYears)
+  const eligible = rows.filter(
+    (r) => (r.currentLeague === "LEAGUE_KBL" || r.currentLeague === "LEAGUE_KBL_FARM")
+      && (r.proServiceYears ?? 0) >= 5,
+  ).length;
+  return {
+    "1군": dist("LEAGUE_KBL"),
+    "2군": dist("LEAGUE_KBL_FARM"),
+    "자격5년이상(1·2군)": eligible,
+    FA대기: rows.filter((r) => r.currentLeague === "LEAGUE_FREE_AGENT").length,
+  };
+}
+
+/**
+ * 트레이드 제안이 나올 재료가 있는가.
+ *
+ * 실측 `trade`: 9 → 8 → 2 → 1 → 1 → 0. 완전히 마른다.
+ * 제안 생성(`generate_trade_proposals`)의 두 축을 직접 센다.
+ *
+ *  1. **계약 만료 예정자**(`contractYears <= 1`) — 제안의 주 소스인데
+ *     오프시즌마다 `estimate_salary_and_contract`가 계약을 갱신해 리셋될 수 있다.
+ *  2. **buyer 팀** — `rank_pct <= 0.30 && win_now_pressure > 60`이라 0팀일 수 있다.
+ *     buyer가 없으면 seller만 남아 거래가 성립하지 않는다.
+ *
+ * ⚠ autoLog를 파일로 받는 방법(`setLogFile`)은 헤드리스에서 두 번 실패했다 —
+ * 경로 규칙(`path.join(logsDir, filename)`)과 `isDev=false`가 겹친다.
+ * 재료를 직접 세는 편이 확실하다.
+ */
+export function tradeSourceProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const m = get(masterStore);
+  const s = get(seasonStore);
+  const teams1 = m.teams.filter((t) => t.leagueId === "LEAGUE_KBL" && t.id.endsWith("_1"));
+  const standings = s.standings?.length
+    ? s.standings
+    : (s.leagueState?.["LEAGUE_KBL"]?.standings ?? []);
+  const sorted = [...standings].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
+  const rankOf = new Map(sorted.map((st, i) => [st.teamId, i]));
+
+  const rows = teams1.map((t) => {
+    const roster = g.npcs.filter((n) => n.currentTeam === t.id && n.careerStatus !== "retired");
+    const expiring = roster.filter((n) => (n.contractYears ?? 0) <= 1).length;
+    const rank = rankOf.get(t.id);
+    const rankPct = rank != null && sorted.length ? rank / sorted.length : 0.5;
+    const prof = (m.entities.find((e) => e.teamId === t.id && e.role === "owner")?.details as
+      { owner?: { winNowPressure?: number } } | undefined)?.owner?.winNowPressure;
+    const mode = rankPct > 0.70 ? "seller"
+      : (rankPct <= 0.30 && (prof ?? 50) > 60) ? "buyer" : "-";
+    return {
+      팀: t.id.replace(/^TEAM_KBL_/, "").replace(/_1$/, ""),
+      인원: roster.length, 만료예정: expiring,
+      순위: rank != null ? rank + 1 : null,
+      압박: prof ?? null, 모드: mode,
+    };
+  });
+  return {
+    팀: rows,
+    만료예정합계: rows.reduce((a, r) => a + r.만료예정, 0),
+    buyer: rows.filter((r) => r.모드 === "buyer").length,
+    seller: rows.filter((r) => r.모드 === "seller").length,
+    순위표길이: standings.length,
+  };
+}
+
+/** 리그별 가용 슬롯 — 정원 대비 얼마나 차 있는가 */
+export function leagueCapacity(): Record<string, unknown> {
+  const rows = get(gameStore).npcs.filter((n) => n.careerStatus !== "retired");
+  const byLeague: Record<string, { 인원: number; 팀수: number }> = {};
+  const teams: Record<string, Set<string>> = {};
+  for (const n of rows) {
+    const lg = (n.currentLeague ?? "(없음)").replace("LEAGUE_", "");
+    (byLeague[lg] ??= { 인원: 0, 팀수: 0 }).인원 += 1;
+    (teams[lg] ??= new Set()).add(n.currentTeam ?? "");
+  }
+  for (const [lg, t] of Object.entries(teams)) byLeague[lg].팀수 = t.size;
+  return byLeague;
+}
+
+/** NPC 표본을 고른다. 능력 상·중·하를 고르게 섞어야 경로가 다 나온다 */
+export function pickTrajectorySample(leagueId: string, perBand: number): string[] {
+  const live = get(npcLiveStatsStore);
+  const rows = get(gameStore).npcs
+    .filter((n) => n.currentLeague === leagueId && n.careerStatus !== "retired")
+    .map((n) => {
+      const ls = live[n.npcId];
+      return {
+        id: n.npcId,
+        ovr: Math.max(
+          ls?.pitching?.ovr ?? n.pitching?.ovr ?? 0,
+          ls?.batting?.ovr ?? n.batting?.ovr ?? 0,
+        ),
+      };
+    })
+    .filter((r) => r.ovr > 0)
+    .sort((a, b) => b.ovr - a.ovr);
+  if (rows.length === 0) return [];
+  const third = Math.floor(rows.length / 3);
+  const bands = [rows.slice(0, third), rows.slice(third, third * 2), rows.slice(third * 2)];
+  const out: string[] = [];
+  for (const band of bands) {
+    // 각 구간에서 고르게 뽑는다 — 앞에서만 뽑으면 한 팀에 몰린다
+    const step = Math.max(1, Math.floor(band.length / perBand));
+    for (let i = 0; i < band.length && out.length < perBand * bands.length; i += step) {
+      out.push(band[i].id);
+    }
+  }
+  return out;
+}
+
+/** 표본의 생애 궤적을 시간순으로 낸다 */
+export function npcTrajectory(npcIds: string[]): Trajectory[] {
+  const live = get(npcLiveStatsStore);
+  const byId = new Map(get(gameStore).npcs.map((n) => [n.npcId, n]));
+  const out: Trajectory[] = [];
+  for (const id of npcIds) {
+    const n = byId.get(id);
+    if (!n) continue;
+    const ls = live[id];
+    const evByYear = new Map<number, string[]>();
+    for (const e of n.careerEvents ?? []) {
+      const label = e.detail ? `${e.eventType}(${e.detail})` : e.eventType;
+      (evByYear.get(e.year) ?? evByYear.set(e.year, []).get(e.year)!).push(label);
+    }
+    const years = new Set<number>();
+    for (const h of n.careerHistory ?? []) years.add(h.year);
+    const steps: TrajectoryStep[] = (n.careerHistory ?? [])
+      .slice()
+      .sort((a, b) => a.year - b.year)
+      .map((h) => ({
+        year: h.year,
+        league: (h.leagueId ?? "").replace("LEAGUE_", ""),
+        team: (h.teamId ?? "").replace("TEAM_", ""),
+        grade: null,
+        events: evByYear.get(h.year) ?? [],
+      }));
+    out.push({
+      npcId: id,
+      name: n.name,
+      playerType: n.playerType ?? "",
+      현재: {
+        age: n.age ?? 0,
+        league: (n.currentLeague ?? "").replace("LEAGUE_", ""),
+        team: (n.currentTeam ?? "").replace("TEAM_", ""),
+        status: n.careerStatus,
+        ovr: Math.max(
+          ls?.pitching?.ovr ?? n.pitching?.ovr ?? 0,
+          ls?.batting?.ovr ?? n.batting?.ovr ?? 0,
+        ),
+        grade: n.grade ?? null,
+      },
+      steps,
+      이력없는사건연도: [...evByYear.keys()].filter((y) => !years.has(y)).sort(),
+    });
+  }
+  return out;
+}
+
 /**
  * 학년제 리그(고교·대학)에서 나이와 학년의 관계를 본다.
  *

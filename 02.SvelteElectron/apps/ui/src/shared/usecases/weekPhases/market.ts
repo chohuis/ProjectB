@@ -37,9 +37,17 @@ function seasonPerfOf(
   for (const lid of ["LEAGUE_KBL", "LEAGUE_KBL_FARM"]) {
     const st = stats[lid]?.[npcId];
     if (!st) continue;
+    // ⚠ **값을 그대로 넘기면 안 된다.** 엔진 `RosterPerf`는 전부 i32/f64인데
+    // `#[serde(default)]`는 **키가 없을 때만** 동작한다 — 명시적 `null`이
+    // 오면 페이로드 전체가 거부되고 그 팀 승강이 통째로 죽는다.
+    // 실측: 프로 7년차부터 한 팀에서 매주 "콜업 판정 실패"가 나며 승강이
+    // 멈췄고, 그 예외가 주간 루프를 끊어 뒤따르는 처리까지 안 돌았다.
+    // `buildRosterRef`에는 같은 방어가 있었는데 perf만 빠져 있었다.
+    const num = (v: unknown): number =>
+      typeof v === "number" && Number.isFinite(v) ? v : 0;
     return st.type === "pitcher"
-      ? { games: st.g, innings: st.ip, era: st.era, whip: st.whip }
-      : { games: st.g, plateAppearances: st.pa, ops: st.ops };
+      ? { games: num(st.g), innings: num(st.ip), era: num(st.era), whip: num(st.whip) }
+      : { games: num(st.g), plateAppearances: num(st.pa), ops: num(st.ops) };
   }
   return undefined;
 }
@@ -86,7 +94,9 @@ function getTeamProfile(teamId: string, g: import("../../stores/game").GameStore
   return g.proTeamProfiles[teamId] ?? m.teams.find(t => t.id === teamId)?.proTeamProfile ?? null;
 }
 
-const DEFAULT_TEAM_PROFILE: ProTeamProfile = {
+/** 프로필이 없는 팀의 기본값 — **정본은 여기 하나다.**
+ *  시즌 갱신(`seasonRollover.updateProTeamProfiles`)도 이걸 출발점으로 쓴다. */
+export const DEFAULT_TEAM_PROFILE: ProTeamProfile = {
   ownerSpendingWillingness: 50, stability: 50, developmentFocus: 50,
   discipline: 50, ownerPatience: 50, winNowPressure: 50, scoutingQuality: 50,
   prestige: 50, marketAppeal: 50, clubhouseCulture: 50, medicalQuality: 50, farmInvestment: 50,
@@ -1369,7 +1379,8 @@ export async function processScoutingImprovement(): Promise<void> {
   }
 }
 
-export { getTeamProfile, DEFAULT_TEAM_PROFILE };
+// DEFAULT_TEAM_PROFILE은 선언부에서 이미 export한다 (중복 선언이 되므로 여기 넣지 않는다)
+export { getTeamProfile };
 
 // ── FA 시장 뉴스 (Phase 7-6b) ────────────────────────────────────
 //

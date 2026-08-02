@@ -264,7 +264,10 @@ impl<'a> Placer<'a> {
         let ind: std::collections::HashSet<&str> = independent.iter().map(|s| s.as_str()).collect();
         let mut roster = std::collections::HashMap::new();
         for npc in npcs {
-            if npc.career_status != "active" { continue; }
+            // ⚠ **부상자도 로스터를 차지한다.** `active`만 세면 그만큼 빈자리로
+            // 착각해 정원을 넘겨 배치한다 — 실측에서 독립리그가 정원 300인데
+            // 410명(41/팀)까지 불어났다. 자리를 비우는 건 은퇴뿐이다.
+            if npc.career_status == "retired" { continue; }
             let t = npc.current_team.as_str();
             if !univ.contains(t) && !ind.contains(t) { continue; }
             let e = roster.entry(npc.current_team.clone()).or_insert((0usize, 0usize));
