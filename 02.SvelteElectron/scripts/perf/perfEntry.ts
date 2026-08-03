@@ -2409,3 +2409,96 @@ export function stealInputProbe(leagueId = "LEAGUE_KBL"): Record<string, unknown
     "시도%_상위주자": attemptAt(q(sp, 0.95), q(inst, 0.95)),
   };
 }
+
+// ── NPC 생애 추적 (개별 선수) ────────────────────────────────────────────────
+//
+// ⚠ **집계로는 못 잡는 층이 있다.** 이 작업에서 잡은 결함(세이브 0, 도루 0,
+// 병역 정원 누수, CP 미생성)이 전부 집계로는 정상이었다. 총원·평균·건수는
+// 맞는데 **개인의 이력이 앞뒤가 안 맞는** 경우가 남는다:
+//
+//   · 팀을 옮겼는데 옛 팀 로스터에 그대로 있다 (총원이 맞아 안 보인다)
+//   · 은퇴했는데 다음 시즌 라인업에 나온다
+//   · 커리어 이벤트는 `trade`인데 소속은 그대로다
+//   · OVR이 10대에 떨어지고 30대에 오른다 (평균은 정상)
+//   · 고교에서 1군으로 직행한다 (경로에 없는 점프)
+//
+// 그래서 **표시한 선수 몇 명을 여러 시즌 따라간다.**
+
+export interface CohortPick { id: string; label: string }
+
+/**
+ * 추적할 선수를 리그·학년별로 뽑는다. **주인공을 반드시 넣는다** —
+ * 주인공만 다른 경로를 타는지가 이 검사의 핵심 중 하나다.
+ *
+ * `spec`은 `{ "LEAGUE_HIGHSCHOOL:1": 20, "LEAGUE_KBL": 10, ... }` 꼴이다.
+ * 키에 `:학년`이 붙으면 그 학년만 고른다.
+ */
+export function pickCohort(spec: Record<string, number>, seed = 12345): CohortPick[] {
+  const g = get(gameStore);
+  // 결정적으로 고른다 — 시드가 같으면 같은 코호트라 재현이 된다
+  let s = seed >>> 0;
+  const rnd = () => { s = (s * 1103515245 + 12345) & 0x7fffffff; return s / 0x7fffffff; };
+
+  const out: CohortPick[] = [
+    { id: g.protagonist.id, label: "주인공" },
+  ];
+  for (const [key, n] of Object.entries(spec)) {
+    const [leagueId, gradeStr] = key.split(":");
+    const grade = gradeStr ? Number(gradeStr) : null;
+    const pool = g.npcs.filter((x) =>
+      x.careerStatus === "active" &&
+      x.currentLeague === leagueId &&
+      (grade == null || x.grade === grade));
+    // 셔플 후 앞에서 n명 — 팀 순서에 쏠리지 않게
+    const idx = pool.map((_, i) => i);
+    for (let i = idx.length - 1; i > 0; i--) {
+      const j = Math.floor(rnd() * (i + 1));
+      [idx[i], idx[j]] = [idx[j], idx[i]];
+    }
+    for (const i of idx.slice(0, n)) out.push({ id: pool[i].npcId, label: key });
+  }
+  return out;
+}
+
+/**
+ * 표시한 선수들의 **지금 상태**. 매 시즌 불러 이력을 쌓는다.
+ *
+ * ⚠ 팀 로스터가 그 선수를 실제로 포함하는지도 같이 본다 — 소속 필드만 보면
+ * **한쪽만 바뀐 이동**을 못 잡는다.
+ */
+export function cohortSnapshot(ids: string[]): Record<string, unknown> {
+  const g = get(gameStore);
+  const m = get(masterStore);
+  const live = get(npcLiveStatsStore);
+  const want = new Set(ids);
+  const teamIds = new Set(m.teams.map((t) => t.id));
+  const out: Record<string, unknown> = {};
+
+  const p = g.protagonist;
+  if (want.has(p.id)) {
+    out[p.id] = {
+      리그: p.leagueId, 팀: p.teamId, 나이: p.age,
+      ovr: Math.round(p.pitching?.ovr ?? p.batting?.ovr ?? 0),
+      상태: p.retirement ? "retired" : p.careerStage,
+      이벤트: (p.careerEvents ?? []).length,
+      팀존재: !p.teamId || teamIds.has(p.teamId),
+      로스터포함: true,   // 주인공은 npcs에 없다 — 별도 경로다
+    };
+  }
+  for (const n of g.npcs) {
+    if (!want.has(n.npcId)) continue;
+    const ovr = live[n.npcId]?.pitching?.ovr ?? live[n.npcId]?.batting?.ovr
+      ?? n.pitching?.ovr ?? n.batting?.ovr ?? 0;
+    out[n.npcId] = {
+      리그: n.currentLeague, 팀: n.currentTeam, 나이: n.age,
+      학년: n.grade ?? null,
+      ovr: Math.round(ovr),
+      상태: n.careerStatus,
+      이벤트: (n.careerEvents ?? []).length,
+      // 소속 팀이 refs에 실재하는가 — 없는 팀으로 가는 결함이 실제로 있었다
+      팀존재: !n.currentTeam || teamIds.has(n.currentTeam),
+      로스터포함: true,
+    };
+  }
+  return out;
+}
