@@ -81,6 +81,8 @@ export async function enlistProtagonist(
 /** 총 복무 기간(주). 52주 시즌 두 번에 나눠 흐른다 */
 export const SERVICE_WEEKS = 100;
 
+
+
 /** 군 시즌을 연다 — 경기 없는 52주. 입대와 롤오버가 같은 함수를 쓴다 */
 export function openMilitarySeason(seasonYear: number): void {
   seasonStore.initSeason("LEAGUE_MILITARY", seasonYear, 52, []);

@@ -51,14 +51,33 @@ console.log("상무 규칙");
     `정상상태 ${steady} vs 정원 ${MIL.rosterSize}`);
 
   // 상무는 career_status가 "military"라 로스터 캡(active만 센다)이 안 걸린다.
-  // 연간 입대 인원이 유일한 제어라 코드에 박혀 있으면 안 된다
+  // 연간 입대 인원이 유일한 제어라 코드에 박혀 있으면 안 된다.
+  //
+  // ⚠ **선발 경로가 둘이다.** NPC는 오프시즌(`stores/game.ts`), 주인공은
+  // W52(`usecases/advanceWeek.ts`). 예전엔 이 검사가 `game.ts`만 스캔해서
+  // **주인공 경로의 `maxTotal: 10`을 못 봤다** — 검사는 있는데 보는 파일이
+  // 하나여서 다른 경로가 그대로 샜다. 둘 다 본다.
+  const SELECTION_FILES = [
+    "apps/ui/src/shared/stores/game.ts",
+    "apps/ui/src/shared/usecases/advanceWeek.ts",
+  ];
   const game = stripComments(read("apps/ui/src/shared/stores/game.ts"));
-  check("연간 입대 인원을 코드에 박지 않는다",
-    !/maxTotal:\s*Math\.min\(\s*\d+/.test(game),
-    (game.match(/maxTotal:\s*Math\.min\(\s*\d+/) ?? [""])[0]);
-  check("구단 상한도 코드에 박지 않는다",
-    !/maxPerTeam:\s*\d+/.test(game),
-    (game.match(/maxPerTeam:\s*\d+/) ?? [""])[0]);
+  for (const f of SELECTION_FILES) {
+    const src = stripComments(read(f));
+    const short = f.split("/").pop();
+    check(`${short}: 연간 입대 인원을 코드에 박지 않는다`,
+      !/maxTotal:\s*(?:Math\.min\(\s*)?\d+/.test(src),
+      (src.match(/maxTotal:\s*(?:Math\.min\(\s*)?\d+/) ?? [""])[0]);
+    check(`${short}: 구단 상한도 코드에 박지 않는다`,
+      !/maxPerTeam:\s*\d+/.test(src),
+      (src.match(/maxPerTeam:\s*\d+/) ?? [""])[0]);
+  }
+
+  // ⚠ **두 선발이 별개 추첨이라 둘 다 뽑히면 정원 + 1이 된다.**
+  // NPC 쪽이 주인공 선발을 빼야 한다
+  check("주인공이 뽑힌 해엔 NPC 정원에서 한 자리를 뺀다",
+    /protagonistTookSportsSlot/.test(game),
+    "game.ts가 주인공 선발을 안 본다");
 
   // 2군 유망주가 상무의 주 공급원이다. Phase 7-1 이후 신인 대부분이 2군에서
   // 시작하므로 FARM이 빠지면 갓 지명된 선수는 후보조차 못 된다

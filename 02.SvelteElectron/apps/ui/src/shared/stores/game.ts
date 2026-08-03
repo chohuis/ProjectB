@@ -58,6 +58,7 @@ import { npcLiveStatsStore } from "./npcLiveStats";
 import { slotRepo } from "../repo/slotRepo";
 import { dehydrateToRepo } from "../repo/npcAdapter";
 import { SANGMU_LEAGUE_ID, SANGMU_TEAM_ID } from "../utils/ids";
+import { sportsUnitLimits, protagonistTookSportsSlot } from "../utils/militaryRules";
 import { isV3SlotActive } from "../repo/v3Mode";
 import type { SeasonEndSummary } from "../utils/npcEngine";
 export type { SeasonEndSummary } from "../utils/npcEngine";
@@ -1516,8 +1517,22 @@ function createGameStore() {
             ],
           };
         });
-        const proto = target.has(s.protagonist.id) && s.protagonist.militaryStatus === "미필"
-          ? { ...s.protagonist, militaryStatus: "면제" as const }
+        // ⚠ **주인공만 커리어 이벤트가 없었다.** NPC는 `military_exempt`를
+        // 남기는데 주인공은 `militaryStatus`만 바뀌어서, 연도별 인생 기록에
+        // "아시안게임 우승 → 병역 면제"가 **한 줄도 안 떴다.**
+        // 국제대회 입상은 병역을 벗어나는 두 길 중 하나다 — 커리어의 분기점인데
+        // 기록에 없으면 플레이어가 무슨 일이 있었는지 되짚을 수 없다.
+        const protoExempt = target.has(s.protagonist.id) && s.protagonist.militaryStatus === "미필";
+        const proto = protoExempt
+          ? {
+              ...s.protagonist,
+              militaryStatus: "면제" as const,
+              careerEvents: [
+                ...(s.protagonist.careerEvents ?? []),
+                { year: seasonYear, eventType: "military_exempt" as const,
+                  detail: `${tournamentName} 입상` },
+              ],
+            }
           : s.protagonist;
         return { ...s, npcs, protagonist: proto };
       });
@@ -2332,20 +2347,24 @@ function createGameStore() {
             // 연간 입대 인원 = 정원 / 복무연수. 예전엔 여기 20이 박혀 있어
             // 정상상태가 40명(정원 26의 1.5배)이었다 — 상무는 복무자라
             // `career_status: "military"`고, 로스터 캡이 active만 세므로
-            // **아무도 막지 않았다.** 규칙 파일이 정본이다
-            const milRules = (await loadRosterRules()).militaryRules as {
-              rosterSize?: number; serviceMonths?: number; maxPerTeam?: number;
-            } | undefined;
-            const serviceYears = Math.max(1, Math.round((milRules?.serviceMonths ?? 24) / 12));
-            const annualIntake = Math.max(1, Math.round((milRules?.rosterSize ?? 26) / serviceYears));
+            // **아무도 막지 않았다.** 규칙 파일이 정본이다.
+            //
+            // ⚠ 계산을 여기서 다시 적지 않는다 — 주인공 경로(`advanceWeek`)와
+            // **같은 함수**를 쓴다. 따로 적었더니 그쪽만 10으로 박혀 있었다.
+            const milLimits = await sportsUnitLimits();
+            // ⚠ **주인공이 뽑힌 해엔 한 자리를 뺀다.** 두 선발이 별개 추첨이라
+            // 둘 다 뽑히면 그 해 입대가 정원 + 1이 된다 — 상무는 로스터 캡이
+            // 안 걸리니 이런 누수가 해마다 쌓인다.
+            const protoTook = protagonistTookSportsSlot(get({ subscribe }).protagonist, seasonYear);
+            const npcIntake = Math.max(0, milLimits.annualIntake - (protoTook ? 1 : 0));
 
-            const selRes = JSON.parse(
+            const selRes = npcIntake === 0 ? { selectedIds: [] } : JSON.parse(
               await window.projectB!.militaryCalcSelection(JSON.stringify({
                 applicants: topRaw.topCandidates!.map(c => ({ ...c, isProtagonist: false })),
-                maxTotal: Math.min(annualIntake, topRaw.topCandidates!.length),
-                maxPerTeam: milRules?.maxPerTeam ?? 3,
+                maxTotal: Math.min(npcIntake, topRaw.topCandidates!.length),
+                maxPerTeam: milLimits.maxPerTeam,
               }))
-            ) as { protagonistSelected: boolean; selectedIds?: string[]; error?: string };
+            ) as { protagonistSelected?: boolean; selectedIds?: string[]; error?: string };
 
             if (selRes.error) {
               autoLog(`[병역통합오류] militaryCalcSelection: ${selRes.error}`);

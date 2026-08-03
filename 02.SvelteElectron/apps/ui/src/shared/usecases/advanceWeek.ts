@@ -22,6 +22,7 @@ import {
   isRetired, evalRetirementPressure, ovrTrendOf, calcMarketValueForProtagonist,
   loadRetirementRules, surgeryRetireChance,
 } from "./retirement";
+import { sportsUnitLimits } from "../utils/militaryRules";
 import { calcOfferedSalaryForProtagonist, calcSeasonRating } from "../utils/salaryEngine";
 import { isFaEligible, getFaThreshold } from "../utils/faEngine";
 import { facilityTierOf } from "../utils/ids";
@@ -1922,11 +1923,16 @@ export async function advanceWeek(): Promise<WeekAdvanceResult> {
           ...topNpcRaw.topCandidates.map((c) => ({ ...c, isProtagonist: false })),
         ];
 
+        // ⚠ **규칙 파일이 정본이다.** 예전엔 `maxTotal: 10`·`maxPerTeam: 3`이
+        // 여기 박혀 있었다. NPC 경로는 `rosterSize / 복무연수`(26/2 = 13)를
+        // 쓰는데 주인공만 10이라, 같은 해에 주인공은 30명 중 10명(33%)·NPC는
+        // 70명 중 13명(19%)을 놓고 겨뤘다.
+        const milLimits = await sportsUnitLimits();
         const selResult = JSON.parse(
           await window.projectB!.militaryCalcSelection(JSON.stringify({
             applicants,
-            maxTotal: 10,
-            maxPerTeam: 3,
+            maxTotal: Math.min(milLimits.annualIntake, applicants.length),
+            maxPerTeam: milLimits.maxPerTeam,
           }))
         ) as { protagonistSelected: boolean; selectedIds: string[] };
 

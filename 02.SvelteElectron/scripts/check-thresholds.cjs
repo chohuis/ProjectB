@@ -141,6 +141,11 @@ const r3 = (v) => Math.round(v * 1000) / 1000;
         + `  ·  OVR-K9 ${s.spread["OVR-K9 상관"] ?? "-"}`
         + `  ·  상위25% ERA ${s.spread["상위25% ERA"] ?? "-"} vs 하위25% ${s.spread["하위25% ERA"] ?? "-"}`
         + `  (표본 ${s.spread.표본 ?? 0})`);
+      // ⚠ **예측변수의 분산이 사라지면 상관은 자연히 0이 된다.**
+      // 상관만 보면 "능력치가 성적을 안 만든다"로 읽히지만, 실제 원인이
+      // "모두 능력치가 비슷해졌다"일 수 있다 — 고칠 곳이 완전히 다르다.
+      log(`         OVR 상위25% ${s.spread["상위25% OVR"] ?? "-"} vs 하위25% ${s.spread["하위25% OVR"] ?? "-"}`
+        + `  (차 ${((s.spread["상위25% OVR"] ?? 0) - (s.spread["하위25% OVR"] ?? 0)).toFixed(1)})`);
     }
   } catch (e) {
     log("ERR " + String((e && e.stack) || e).split("\n").slice(0, 8).join("\n    "));
