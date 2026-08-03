@@ -34,11 +34,23 @@ interface AwardDef {
   maxValue?: number;
 }
 
-interface AwardRules {
+export interface AwardRules {
   leagues: string[];
   pitcher: AwardDef[];
   batter: AwardDef[];
   mvp: { label: string; minTitles: number };
+}
+
+/** 한 부문의 수상자. 화면과 경력기록이 **같은 값**을 쓴다 */
+export interface AwardWinner {
+  defId: string;
+  label: string;
+  playerId: string;
+  value: number;
+  /** 부문별 표기법을 거친 값 — "2.31" / ".312" / "27" */
+  valueText: string;
+  /** "방어율왕 (2.31)" — 경력기록에 남는 문자열과 동일 */
+  title: string;
 }
 
 /** 한 부문의 1위 — 자격 미달은 후보에서 뺀다 */
@@ -76,14 +88,48 @@ function fmt(def: AwardDef, v: number): string {
 }
 
 /**
+ * 한 리그의 부문 수상자를 전부 뽑는다. **화면과 기록의 유일한 계산 지점이다.**
+ *
+ * ⚠ 예전엔 `SeasonEndModal`이 같은 것을 따로 계산했다. 자격선이 `ip>=20` /
+ * `ab>=50`으로 규칙 파일(`minIp` 60~70, `minPa` 120~200)과 달랐고 `minValue`
+ * 하한이 아예 없어서, **모달에 뜬 수상자와 경력기록에 남는 수상자가 달랐다.**
+ * 게다가 모달은 `$seasonStore.stats`를 읽었는데 그건 주인공 개인 버킷이라
+ * 승강하면 1군·2군이 합산된다(`leagueStatsOf` 주석 참고).
+ *
+ * 정본이 둘이면 반드시 어긋난다 — 이 프로젝트에서 이미 여러 번 나온 형태다.
+ */
+export function computeAwards(
+  rules: AwardRules,
+  stats: Record<string, PlayerSeasonStats>,
+): AwardWinner[] {
+  const out: AwardWinner[] = [];
+  for (const def of [...rules.pitcher, ...rules.batter]) {
+    const w = winnerOf(def, stats);
+    if (!w) continue;
+    const valueText = fmt(def, w.value);
+    out.push({
+      defId: def.id, label: def.label, playerId: w.playerId, value: w.value,
+      valueText, title: `${def.label} (${valueText})`,
+    });
+  }
+  return out;
+}
+
+/** 규칙 파일에서 수상 규칙을 읽는다. 화면도 이걸 쓴다 — 상수를 다시 적지 않는다 */
+export async function loadAwardRules(): Promise<AwardRules | null> {
+  const rules = (await loadRosterRules()).awardRules as AwardRules | undefined;
+  return rules?.leagues?.length ? rules : null;
+}
+
+/**
  * 시즌 개인 수상을 정하고 `careerHistory`에 기록한다.
  *
  * **`runWorldSeasonEnd`가 부른다** — 주인공이 무엇을 하든 매 시즌 돌아야 하고,
  * 연도 기록(`applySeasonHistory`)이 끝난 **뒤**여야 그 해 항목에 얹을 수 있다.
  */
 export async function applySeasonAwards(seasonYear: number): Promise<string[]> {
-  const rules = (await loadRosterRules()).awardRules as AwardRules | undefined;
-  if (!rules?.leagues?.length) return [];
+  const rules = await loadAwardRules();
+  if (!rules) return [];
 
   const s = get(seasonStore);
   const logs: string[] = [];
@@ -96,12 +142,9 @@ export async function applySeasonAwards(seasonYear: number): Promise<string[]> {
     const stats: Record<string, PlayerSeasonStats> = leagueStatsOf(s, leagueId);
     if (Object.keys(stats).length === 0) continue;
 
-    for (const def of [...rules.pitcher, ...rules.batter]) {
-      const w = winnerOf(def, stats);
-      if (!w) continue;
-      const title = `${def.label} (${fmt(def, w.value)})`;
+    for (const w of computeAwards(rules, stats)) {
       const list = won.get(w.playerId) ?? [];
-      list.push(title);
+      list.push(w.title);
       won.set(w.playerId, list);
     }
   }

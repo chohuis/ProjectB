@@ -244,6 +244,9 @@ pub struct PlacementRules {
     /// (포기 630~1,163명). 어느 해에 태어났느냐가 운명을 가르면 안 된다.
     #[serde(default)]
     pub university_annual_max: Option<usize>,
+    /// 프로 2군 팀당 정원. 0이면 2군을 목적지로 안 쓴다(구 페이로드 호환)
+    #[serde(default)]
+    pub farm_max: usize,
 }
 
 /// 갈 곳 없는 선수들의 진로를 정한다.
@@ -261,6 +264,9 @@ pub struct Placer<'a> {
     univ_intake: std::collections::HashMap<String, usize>,
     university: &'a [String],
     independent: &'a [String],
+    /// 프로 2군. **방출된 프로 선수가 갈 첫 자리다** —
+    /// 독립리그보다 먼저 본다(현실에서도 다른 팀 팜과 계약한다)
+    farm: &'a [String],
     rules: PlacementRules,
 }
 
@@ -269,10 +275,12 @@ impl<'a> Placer<'a> {
         npcs: &[NpcSaveState],
         university: &'a [String],
         independent: &'a [String],
+        farm: &'a [String],
         rules: PlacementRules,
     ) -> Self {
         let univ: std::collections::HashSet<&str> = university.iter().map(|s| s.as_str()).collect();
         let ind: std::collections::HashSet<&str> = independent.iter().map(|s| s.as_str()).collect();
+        let frm: std::collections::HashSet<&str> = farm.iter().map(|s| s.as_str()).collect();
         let mut roster = std::collections::HashMap::new();
         for npc in npcs {
             // ⚠ **부상자도 로스터를 차지한다.** `active`만 세면 그만큼 빈자리로
@@ -280,11 +288,11 @@ impl<'a> Placer<'a> {
             // 410명(41/팀)까지 불어났다. 자리를 비우는 건 은퇴뿐이다.
             if npc.career_status == "retired" { continue; }
             let t = npc.current_team.as_str();
-            if !univ.contains(t) && !ind.contains(t) { continue; }
+            if !univ.contains(t) && !ind.contains(t) && !frm.contains(t) { continue; }
             let e = roster.entry(npc.current_team.clone()).or_insert((0usize, 0usize));
             if npc.player_type == "pitcher" { e.0 += 1; } else { e.1 += 1; }
         }
-        Self { roster, univ_intake: std::collections::HashMap::new(), university, independent, rules }
+        Self { roster, univ_intake: std::collections::HashMap::new(), university, independent, farm, rules }
     }
 
     /// 이미 자리를 잡은 사람을 로스터 집계에서 빼둔다 (지명된 재학생 등)
@@ -351,6 +359,22 @@ impl<'a> Placer<'a> {
             .flatten()
             .map(|t| (t, "LEAGUE_UNIVERSITY"))
             .or_else(|| {
+                // ⚠ **프로 2군이 독립리그보다 먼저다.**
+                //
+                // 2군은 유입이 드래프트 하위 라운드 지명 하나뿐인데 1군이
+                // 콜업으로 계속 빼간다 — 실측에서 야수 29명에 **투수 6명**이
+                // 됐고 오프시즌에도 회복이 없었다. 1군의 `fill_first_teams`에
+                // 해당하는 보충 경로가 2군엔 없다.
+                //
+                // 현실에서도 방출된 프로 선수는 독립리그보다 **다른 팀 팜과
+                // 계약**하는 게 자연스럽다. `find_slot`이 포지션 수요를 보므로
+                // 모자란 보직으로 들어간다.
+                (self.rules.farm_max > 0)
+                    .then(|| self.find_slot(is_pitcher, self.farm, self.rules.farm_max, None))
+                    .flatten()
+                    .map(|t| (t, "LEAGUE_KBL_FARM"))
+            })
+            .or_else(|| {
                 // 독립리그는 나이 제한이 있다. 서른 넘은 미지명자를 받으면
                 // 독립 로스터가 은퇴 직전 선수로만 채워진다
                 (npc.age <= self.rules.independent_age_max)
@@ -363,7 +387,11 @@ impl<'a> Placer<'a> {
 
         match placed {
             Some((tid, league)) => {
-                let dest = if league == "LEAGUE_UNIVERSITY" { "대학리그" } else { "독립리그" };
+                let dest = match league {
+                    "LEAGUE_UNIVERSITY" => "대학리그",
+                    "LEAGUE_KBL_FARM"   => "2군",
+                    _                    => "독립리그",
+                };
                 npc.career_events.push(NpcCareerEvent {
                     year,
                     event_type: event_type.into(),
@@ -604,6 +632,7 @@ mod tests {
         PlacementRules {
             university_max: 40, independent_max: 45, independent_age_max: 31,
             university_annual_max: None,   // 연간 상한 없음 = 기존 동작
+            farm_max: 0,                   // 2군을 목적지로 안 씀 = 기존 동작
         }
     }
 
@@ -612,7 +641,7 @@ mod tests {
         // 예전엔 경로를 안 봐서 대졸 미지명자가 대학 1학년으로 다시 입학했다
         let univ = vec!["TEAM_UNIV_A".to_string()];
         let indie = vec!["TEAM_IND_A".to_string()];
-        let mut p = Placer::new(&[], &univ, &indie, placement());
+        let mut p = Placer::new(&[], &univ, &indie, &[], placement());
 
         let mut hs = npc("HS", DRAFT_POOL_LEAGUE, None, 60.0, 20);
         p.place(&mut hs, 2026, "draft_undrafted", "미지명", true);
@@ -628,7 +657,7 @@ mod tests {
     #[test]
     fn 나이가_지나면_독립리그도_안_받는다() {
         let indie = vec!["TEAM_IND_A".to_string()];
-        let mut p = Placer::new(&[], &[], &indie, placement());
+        let mut p = Placer::new(&[], &[], &indie, &[], placement());
         let mut old = npc("OLD", "LEAGUE_KBL", None, 60.0, placement().independent_age_max + 1);
         p.place(&mut old, 2026, "release", "방출", false);
         assert_eq!(old.career_status, "retired");
@@ -638,7 +667,7 @@ mod tests {
     #[test]
     fn 자리가_없으면_야구를_그만둔다() {
         // 목적지 목록이 비면 갈 곳이 없다
-        let mut p = Placer::new(&[], &[], &[], placement());
+        let mut p = Placer::new(&[], &[], &[], &[], placement());
         let mut n = npc("A", DRAFT_POOL_LEAGUE, None, 60.0, 20);
         p.place(&mut n, 2026, "draft_undrafted", "미지명", true);
         assert_eq!(n.career_status, "retired");
@@ -654,9 +683,9 @@ mod tests {
         let indie = vec!["TEAM_IND_A".to_string()];
         let rules = PlacementRules {
             university_max: 1, independent_max: 1, independent_age_max: 31,
-            university_annual_max: None,
+            university_annual_max: None, farm_max: 0,
         };
-        let mut p = Placer::new(&[], &univ, &indie, rules);
+        let mut p = Placer::new(&[], &univ, &indie, &[], rules);
 
         let mut a = npc("A", DRAFT_POOL_LEAGUE, None, 60.0, 20);
         let mut b = npc("B", DRAFT_POOL_LEAGUE, None, 60.0, 20);
@@ -674,7 +703,7 @@ mod tests {
     fn 배정되면_계약이_초기화된다() {
         // 프로에서 방출된 선수가 옛 연봉을 들고 독립리그로 가면 안 된다
         let indie = vec!["TEAM_IND_A".to_string()];
-        let mut p = Placer::new(&[], &[], &indie, placement());
+        let mut p = Placer::new(&[], &[], &indie, &[], placement());
         let mut n = npc("A", "LEAGUE_KBL", None, 60.0, 26);
         n.current_salary = 50_000;
         n.contract_years = 3;

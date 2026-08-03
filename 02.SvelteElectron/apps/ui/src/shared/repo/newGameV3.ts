@@ -40,6 +40,8 @@ export interface GenerationRulesFile {
   militaryRules?: unknown;
   /** 시즌 개인 수상 — 부문·최소 출전 조건. 읽는 곳: usecases/seasonAwards.ts */
   awardRules?: unknown;
+  /** 은퇴 판정 — NPC(`weekPhases/injuries`)와 주인공(`advanceWeek`)이 같이 읽는다 */
+  retirementRules?: unknown;
   /**
    * 외국인 선수 — 보유 한도·능력 범위·서양식 이름 풀. Rust로 그대로 넘긴다.
    * `leagues`에 든 리그의 **1군 로스터에만** 적용된다.

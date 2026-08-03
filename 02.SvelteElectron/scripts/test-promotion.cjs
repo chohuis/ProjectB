@@ -161,17 +161,53 @@ const pitcherPerf = (innings, era) => ({ games: 20, innings, era, whip: 1.3 });
 console.log("\n콜다운");
 {
   const full = PROMO.pitcherFullInnings;
+  // ⚠ **실제 로스터 크기로 부른다.** 예전엔 선수 둘만 넘겼는데, 콜다운이
+  // 보직 하한(`tuning.rs` FIRST_TEAM_MIN_BATTERS 14 / _PITCHERS 12)을 보게 된
+  // 뒤로는 둘뿐인 로스터가 "양쪽 다 하한 이하"라 강등이 아예 안 나온다.
+  // 판정 자체는 멀쩡한데 **테스트 전제가 현실에 없는 로스터**였던 것이다.
+  //
+  // 채우는 선수는 능력치를 높게 준다 — 강등 점수가 낮아 후보를 안 뺏는다.
+  const filler = (id, pos) => ({ ...ref(id, 82), position: pos });
+  const bench = [
+    ...Array.from({ length: 16 }, (_, i) => filler(`BAT${i}`, "1B")),
+    ...Array.from({ length: 13 }, (_, i) => filler(`PIT${i}`, "RP")),
+  ];
+  const active = [
+    ref("SLUMP", 66, pitcherPerf(full, PROMO.pitcherEraBaseline * 2.5)),
+    ref("HOT", 66, pitcherPerf(full, PROMO.pitcherEraBaseline / 2)),
+    ...bench,
+  ];
   const res = call("evalCalldownCandidatesNative", {
     teamProfile: PROFILE,
-    activePlayers: [
-      ref("SLUMP", 66, pitcherPerf(full, PROMO.pitcherEraBaseline * 2.5)),
-      ref("HOT", 66, pitcherPerf(full, PROMO.pitcherEraBaseline / 2)),
-    ],
-    currentRosterSize: 40, maxRosterSize: gr.rosterRules.LEAGUE_KBL.rosterMax,
+    activePlayers: active,
+    currentRosterSize: active.length, maxRosterSize: active.length - 1,
     promotionRules: PROMO,
   });
   check("능력치가 같으면 부진한 쪽이 먼저 내려간다",
     res.candidates[0]?.playerId === "SLUMP", res.candidates[0]?.playerId ?? "-");
+
+  // 보직 하한 — 강등이 로스터 구성을 무너뜨리면 안 된다.
+  // **한쪽만 걸면 반대쪽이 밀린다**(실측: 야수 하한만 걸었더니 투수 9~11 → 5).
+  const onlyPitchers = Array.from({ length: 20 }, (_, i) => filler(`P${i}`, "RP"))
+    .concat(Array.from({ length: 14 }, (_, i) => filler(`B${i}`, "1B")));
+  const lockBat = call("evalCalldownCandidatesNative", {
+    teamProfile: PROFILE, activePlayers: onlyPitchers,
+    currentRosterSize: onlyPitchers.length, maxRosterSize: onlyPitchers.length - 3,
+    promotionRules: PROMO,
+  });
+  check("야수가 하한이면 투수만 내려간다",
+    lockBat.candidates.length === 3 && lockBat.candidates.every((c) => c.playerId.startsWith("P")),
+    lockBat.candidates.map((c) => c.playerId).join(","));
+
+  const both = Array.from({ length: 12 }, (_, i) => filler(`P${i}`, "RP"))
+    .concat(Array.from({ length: 14 }, (_, i) => filler(`B${i}`, "1B")));
+  const stop = call("evalCalldownCandidatesNative", {
+    teamProfile: PROFILE, activePlayers: both,
+    currentRosterSize: both.length, maxRosterSize: both.length - 3,
+    promotionRules: PROMO,
+  });
+  check("양쪽 다 하한이면 강등을 멈춘다 (정원 초과를 감수)",
+    stop.candidates.length === 0, `${stop.candidates.length}건`);
 }
 
 // ── 5. 한 시즌 — 출렁임이 폭주하지 않는가 ─────────────────────

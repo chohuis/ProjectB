@@ -38,6 +38,7 @@
   import MilitaryStatusPanel from "../../features/military/ui/MilitaryStatusPanel.svelte";
   import SportsUnitApplicationModal from "../../features/military/ui/SportsUnitApplicationModal.svelte";
   import MilitaryEnlistAskModal from "../../features/military/ui/MilitaryEnlistAskModal.svelte";
+  import RetirementAskModal from "../../features/retirement/ui/RetirementAskModal.svelte";
   import DevToolsHubModal from "../../features/devtools/ui/DevToolsHubModal.svelte";
   import AutoAdvancePanel from "../../features/devtools/ui/AutoAdvancePanel.svelte";
   import ScenarioPanel from "../../features/devtools/ui/ScenarioPanel.svelte";
@@ -93,6 +94,7 @@
       case "draftObserve":
       case "sportsUnitApplication":
       case "militaryEnlistAsk":
+      case "retirementAsk":
       case "draftNotification":
       case "trade":
       case "salaryNegotiation":
@@ -135,6 +137,7 @@
   $: pendingMilitaryEnlistAsk = $nextPendingAction?.type === "militaryEnlistAsk"
     ? ($nextPendingAction as import("../../shared/types/season").PendingAction & { type: "militaryEnlistAsk" })
     : null;
+  $: pendingRetirementAsk = $nextPendingAction?.type === "retirementAsk" ? $nextPendingAction : null;
   $: pendingInjuryTreatment  = $nextPendingAction?.type === "injuryTreatment"  ? $nextPendingAction : null;
   $: pendingConditionWarning = $nextPendingAction?.type === "conditionWarning" ? $nextPendingAction : null;
   $: pendingPreGameBriefing  = $nextPendingAction?.type === "preGameBriefing"  ? $nextPendingAction : null;
@@ -560,6 +563,14 @@
 
 {#if pendingMilitaryEnlistAsk && currentTab === "messages"}
   <MilitaryEnlistAskModal reason={pendingMilitaryEnlistAsk.reason} />
+{/if}
+
+{#if pendingRetirementAsk && currentTab === "messages"}
+  <RetirementAskModal
+    urgency={pendingRetirementAsk.urgency}
+    reason={pendingRetirementAsk.reason ?? "decline"}
+    detail={pendingRetirementAsk.detail ?? ""}
+  />
 {/if}
 
 {#if pendingInjuryTreatment && currentTab === "messages"}

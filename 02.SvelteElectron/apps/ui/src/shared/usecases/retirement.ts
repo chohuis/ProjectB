@@ -24,8 +24,46 @@ import { gameStore } from "../stores/game";
 import { seasonStore } from "../stores/season";
 import { masterStore } from "../stores/master";
 import { getTeamProfile, DEFAULT_TEAM_PROFILE } from "./weekPhases/market";
+import { loadRosterRules } from "../repo/newGameV3";
 import { calcMarketSalary } from "../utils/salaryEngine";
 import type { ProtagonistSave, RetirementReason } from "../types/save";
+
+// ── 수술급 부상 은퇴 확률 ────────────────────────────────────────
+//
+// ⚠ **표가 `weekPhases/injuries.ts` 안에 박혀 있었고 NPC만 썼다.**
+// 주인공은 수술을 받아도 은퇴 판정이 아예 없어서 설계의 트리거 셋 중
+// "부상 강제"가 데이터상 존재하지 않았다.
+//
+// 여기로 올린 이유는 소비자가 둘이 됐기 때문이다. 표를 양쪽에 적으면
+// "NPC는 36세에 은퇴하는데 나는 45세까지 뛴다"가 되고, 그걸 맞추려고
+// 표를 두 번 관리하게 된다 — 이 프로젝트가 이미 여러 번 겪은 형태다.
+// **수치 정본은 `generation_rules.json`의 `retirementRules`다.**
+
+export interface SurgeryRetireRules {
+  ageHigh: number; chanceHigh: number;
+  ageMid: number;  chanceMid: number;
+  priorSurgeryChance: number;
+  baseChance: number;
+}
+
+export async function loadRetirementRules(): Promise<SurgeryRetireRules | null> {
+  const r = (await loadRosterRules()).retirementRules as
+    { surgery?: SurgeryRetireRules } | undefined;
+  return r?.surgery ?? null;
+}
+
+/** 수술급 부상이 났을 때 은퇴할 확률 (0~1). NPC·주인공 공용 */
+export function surgeryRetireChance(
+  age: number,
+  hasPriorSurgery: boolean,
+  r: SurgeryRetireRules,
+): number {
+  if (age >= r.ageHigh) return r.chanceHigh;
+  if (age >= r.ageMid)  return r.chanceMid;
+  // 젊어도 재수술이면 높다 — 나이 조건보다 뒤에 둔다
+  if (hasPriorSurgery)  return r.priorSurgeryChance;
+  return r.baseChance;
+}
 
 /** 은퇴했는가 — 화면·주간 진행이 이걸 보고 멈춘다 */
 export function isRetired(p: ProtagonistSave): boolean {

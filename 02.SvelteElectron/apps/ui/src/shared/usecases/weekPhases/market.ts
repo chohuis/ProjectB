@@ -754,9 +754,13 @@ export async function processProTeamCallupCalldown(
 
       // 상시 경로는 **빈 자리 메우기만** — 부상·장기 부진으로 생긴 자리에
       // 팀당 한 명. 나머지 사유(전력 보강·유망주 노출)는 정기의 몫이다
+      // `position_gap`도 상시 경로에 넣는다 — 포수가 0명인 팀을 월간 주기까지
+      // 기다리게 하면 그 사이 경기가 그대로 돈다 (엔진 쪽 주석 참고)
       const picked = urgentOnly
         ? callupRes.candidates
-            .filter(c => c.reason === "injury_replacement" || c.reason === "slump_replacement")
+            .filter(c => c.reason === "injury_replacement"
+                      || c.reason === "slump_replacement"
+                      || c.reason === "position_gap")
             .slice(0, 1)
         : callupRes.candidates.slice(0, 2);
 

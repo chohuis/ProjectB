@@ -2049,6 +2049,7 @@ function createGameStore() {
         {
           universityTeamIds: offDest.univIds,
           independentTeamIds: offDest.indIds,
+          farmTeamIds: offDest.farmIds,
           rules: placementRulesFrom(offRules.rosterRules),
         },
         (offRules.faRules as { release?: unknown } | undefined)?.release,

@@ -80,7 +80,8 @@
     "test:rosterbalance": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-roster-balance.cjs",
     "audit:engine": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/audit-engine.cjs",
     "test:events": "node scripts/test-events.cjs",
-    "test:growth": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-growth.cjs"
+    "test:growth": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-growth.cjs",
+    "check:thresholds": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-thresholds.cjs"
   },
   "build": {
     "appId": "com.projectb.desktop",

@@ -140,8 +140,13 @@ export type PendingAction =
       context: "initial" | "renewal" | "military_return";
     }
   | { type: "faMarket" }
-  /** 은퇴 권고 — 계약이 끝났고 구단이 다시 부르지 않는 상황 (05_히스토리_엔딩 §3) */
-  | { type: "retirementAsk"; urgency: number }
+  /**
+   * 은퇴 권고 (05_히스토리_엔딩 §3).
+   *
+   * `decline` 계약이 끝났고 구단이 다시 부르지 않는 상황 — 거절하고 더 뛸 수 있다
+   * `injury` 수술급 부상의 재기 불가 판정 — **거절 선택지가 없다**(설계상 "부상 강제")
+   */
+  | { type: "retirementAsk"; urgency: number; reason?: "decline" | "injury"; detail?: string }
   | {
       type: "trade";
       fromTeamId: string;

@@ -65,10 +65,16 @@ export const DRAFT_ROUNDS = 11;
  */
 export function draftDestinationTeams(
   teams: readonly { id: string; leagueId: string }[],
-): { univIds: string[]; indIds: string[] } {
+): { univIds: string[]; indIds: string[]; farmIds: string[] } {
   const pick = (leagueId: string) =>
     teams.filter((t) => t.leagueId === leagueId && !SANGMU_TEAM_IDS.has(t.id)).map((t) => t.id);
-  return { univIds: pick("LEAGUE_UNIVERSITY"), indIds: pick("LEAGUE_INDEPENDENT") };
+  return {
+    univIds: pick("LEAGUE_UNIVERSITY"),
+    indIds: pick("LEAGUE_INDEPENDENT"),
+    // ⚠ refs는 1군·팜을 **같은 leagueId**로 담는다 — `_2` 접미사로 가른다
+    // (`roster_gen.rs`의 plan과 같은 규칙)
+    farmIds: teams.filter((t) => t.leagueId === "LEAGUE_KBL" && t.id.endsWith("_2")).map((t) => t.id),
+  };
 }
 
 // ── IPC 헬퍼 ─────────────────────────────────────────────────
@@ -173,6 +179,8 @@ export async function runDraftSimulation(
  * 따로 두면 셋 중 하나가 반드시 어긋난다.
  */
 export interface PlacementRules {
+  /** 프로 2군 팀당 정원. 0이면 2군을 목적지로 안 쓴다 */
+  farmMax?: number;
   universityMax: number;
   independentMax: number;
   /** 이 나이를 넘으면 독립리그도 안 받는다 */
@@ -199,6 +207,11 @@ export function placementRulesFrom(
     independentMax: rosterRules["LEAGUE_INDEPENDENT"]?.rosterMax ?? 45,
     independentAgeMax: rosterRules["LEAGUE_INDEPENDENT"]?.ageMax ?? 31,
     universityAnnualMax: annual,
+    // ⚠ **2군을 목적지로 안 주면 투수가 마른다.** 유입이 드래프트 하위 라운드
+    // 지명 하나뿐인데 1군이 콜업으로 계속 빼간다 — 실측 야수 29 / 투수 6,
+    // 오프시즌에도 회복이 없었다. 1군의 `fill_first_teams`에 해당하는 보충
+    // 경로가 2군엔 없다. 방출자·미계약 FA가 여기로 흘러가면 그 구멍이 메워진다.
+    farmMax: rosterRules["LEAGUE_KBL_FARM"]?.rosterMax ?? 34,
   };
 }
 

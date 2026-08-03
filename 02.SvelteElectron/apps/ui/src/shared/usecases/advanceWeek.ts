@@ -20,6 +20,7 @@ import { runCampusEventsWeek } from "./campusEvents";
 import { enlistProtagonist, dischargeProtagonist } from "./militaryDecision";
 import {
   isRetired, evalRetirementPressure, ovrTrendOf, calcMarketValueForProtagonist,
+  loadRetirementRules, surgeryRetireChance,
 } from "./retirement";
 import { calcOfferedSalaryForProtagonist, calcSeasonRating } from "../utils/salaryEngine";
 import { isFaEligible, getFaThreshold } from "../utils/faEngine";
@@ -423,6 +424,35 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
         injuryType: injuryState.type,
         severity: injuryState.severity,
       });
+    }
+    // ── 부상 은퇴 판정 (수술급 발생 즉시) ────────────────────────
+    //
+    // ⚠ **주인공에게는 이 경로가 없었다.** NPC는 `weekPhases/injuries`가
+    // 수술 발생 즉시 굴리는데(36세 이상 65%), 주인공은 수술을 받아도 아무
+    // 판정이 없어 설계의 트리거 셋 중 "부상 강제"가 데이터상 존재하지 않았다.
+    //
+    // **NPC와 같은 표를 쓴다** (`retirementRules.surgery`). 따로 두면
+    // "NPC는 36세에 은퇴하는데 나는 45세까지 뛴다"가 된다.
+    if (injuryState.severity === "surgery") {
+      const retireRules = await loadRetirementRules();
+      // 조용히 넘어가지 않는다 — 규칙이 없으면 커리어가 끝나지 않는다
+      if (!retireRules) {
+        throw new Error("[은퇴판정] generation_rules.json에 retirementRules가 없다");
+      }
+      {
+        const hadSurgery = (g.protagonist.injuryHistory ?? [])
+          .some((h) => h.severity === "surgery");
+        const chance = surgeryRetireChance(g.protagonist.age, hadSurgery, retireRules);
+        // TS에서 Math.random()은 금지 — 난수는 전부 Rust에서 온다
+        const roll = (JSON.parse(await window.projectB!.weekRollRandomBatch(1)) as number[])[0] ?? 1;
+        if (roll < chance) {
+          seasonStore.pushPendingAction({
+            type: "retirementAsk", urgency: 1, reason: "injury",
+            detail: `${INJURY_LABEL[injuryState.type]} — 재기 불가 판정`,
+          });
+          growth.logs.push(`[은퇴] ${INJURY_LABEL[injuryState.type]} 재기 불가 판정`);
+        }
+      }
     }
   } else if (alreadyInjured && !injuryJustHealed && injuryState) {
     growth.logs.push(`[부상] 회복 중 (${injuryState.recoveryWeeksLeft}주 남음) — 훈련 효율 -80%`);
@@ -926,7 +956,9 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
           const mv = await calcMarketValueForProtagonist(gOff.protagonist);
           const pressure = await evalRetirementPressure(trend, mv);
           if (pressure.suggest) {
-            seasonStore.pushPendingAction({ type: "retirementAsk", urgency: pressure.urgency });
+            seasonStore.pushPendingAction({
+              type: "retirementAsk", urgency: pressure.urgency, reason: "decline",
+            });
             logs.push("은퇴 권고 — 계약이 끝났고 구단이 다시 부르지 않는다");
             return logs;
           }

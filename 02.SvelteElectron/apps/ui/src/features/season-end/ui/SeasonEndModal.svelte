@@ -8,6 +8,10 @@
   import { seasonStore, currentStandings } from "../../../shared/stores/season";
   import { masterStore, teamMap } from "../../../shared/stores/master";
   import { runSeasonRollover } from "../../../shared/usecases/seasonRollover";
+  import {
+    computeAwards, loadAwardRules, type AwardRules,
+  } from "../../../shared/usecases/seasonAwards";
+  import { leagueStatsOf } from "../../../shared/utils/season-helpers";
   import type { PitcherSeasonStats, BatterSeasonStats, CareerAward, CareerGameLogEntry } from "../../../shared/types/save";
   import type { PitcherGameLine } from "../../../shared/types/season";
 
@@ -21,6 +25,7 @@
   // **여기가 유일한 투자 시점이다.** 상시 화면에 두면 매주 눌러보는 도박이 되고,
   // DESIGN §7.3의 "가계부 없이 상시 잔액만" 원칙과도 어긋난다.
   let financeRules: FinanceRulesFile | null = null;
+  let awardRules: AwardRules | null = null;
   let investAmount = 0;
   let investDone: InvestmentResult | null = null;
   let investBusy = false;
@@ -41,6 +46,11 @@
       );
     } catch (e) {
       console.warn("[SeasonEnd] 재정 규칙 로드 실패 — 투자 선택지를 숨긴다", e);
+    }
+    try {
+      awardRules = await loadAwardRules();
+    } catch (e) {
+      console.warn("[SeasonEnd] 수상 규칙 로드 실패 — 시상 항목을 숨긴다", e);
     }
   });
 
@@ -106,29 +116,16 @@
     return $masterStore.entities.find((e) => e.id === id)?.name ?? id;
   }
 
-  $: seasonAwards = (() => {
-    const stats = $seasonStore.stats;
-    let eraKing: { id: string; name: string; era: number } | null = null;
-    let winKing: { id: string; name: string; w:   number } | null = null;
-    let avgKing: { id: string; name: string; avg: number } | null = null;
-    let hrKing:  { id: string; name: string; hr:  number } | null = null;
-    for (const [id, s] of Object.entries(stats)) {
-      if (s.type === "pitcher") {
-        const ps = s as PitcherSeasonStats;
-        if (ps.ip >= 20) {
-          if (!eraKing || ps.era < eraKing.era) eraKing = { id, name: entityName(id), era: ps.era };
-          if (!winKing || ps.w   > winKing.w)   winKing = { id, name: entityName(id), w:   ps.w   };
-        }
-      } else {
-        const bs = s as BatterSeasonStats;
-        if (bs.ab >= 50) {
-          if (!avgKing || bs.avg > avgKing.avg) avgKing = { id, name: entityName(id), avg: bs.avg };
-          if (!hrKing  || bs.hr  > hrKing.hr)  hrKing  = { id, name: entityName(id), hr:  bs.hr  };
-        }
-      }
-    }
-    return { eraKing, winKing, avgKing, hrKing };
-  })();
+  // ⚠ **여기서 직접 계산하지 않는다.** 예전엔 이 자리에 자체 집계가 있었고
+  // 자격선이 `ip>=20` / `ab>=50`이라 규칙 파일(`minIp` 60~70, `minPa` 120~200)과
+  // 달랐다. `minValue` 하한도 없어서 **화면에 뜬 수상자와 경력기록에 남는
+  // 수상자가 서로 달랐다.** 게다가 `$seasonStore.stats`를 읽었는데 그건
+  // 주인공 개인 버킷이라 승강하면 1군·2군이 합산된다.
+  //
+  // 정본은 `usecases/seasonAwards.ts`의 `computeAwards` 하나다.
+  $: seasonAwards = awardRules
+    ? computeAwards(awardRules, leagueStatsOf($seasonStore, $seasonStore.leagueId))
+    : [];
 
   // ── 팀 경기 기록 ────────────────────────────────────────────────
   $: teamGames = $seasonStore.schedule
@@ -222,11 +219,11 @@
     const pid = p.id;
     const mySeasonSt = $seasonStore.stats[pid];
 
-    const protagonistAwards: CareerAward[] = [];
-    if (seasonAwards.eraKing?.id === pid) protagonistAwards.push({ id: "era_king", label: "ERA왕",  value: seasonAwards.eraKing.era.toFixed(2) });
-    if (seasonAwards.winKing?.id === pid) protagonistAwards.push({ id: "win_king", label: "다승왕", value: `${seasonAwards.winKing.w}승` });
-    if (seasonAwards.avgKing?.id === pid) protagonistAwards.push({ id: "avg_king", label: "타격왕", value: pct(seasonAwards.avgKing.avg) });
-    if (seasonAwards.hrKing?.id  === pid) protagonistAwards.push({ id: "hr_king",  label: "홈런왕", value: `${seasonAwards.hrKing.hr}홈런` });
+    // 부문 목록이 규칙 파일에서 오므로 여기 if문을 늘릴 일이 없다 —
+    // 예전엔 4개만 하드코딩돼 있어 탈삼진왕·세이브왕·타점왕·도루왕이 빠졌다
+    const protagonistAwards: CareerAward[] = seasonAwards
+      .filter((a) => a.playerId === pid)
+      .map((a) => ({ id: a.defId, label: a.label, value: a.valueText }));
 
     let statLine = "";
     if (mySeasonSt?.type === "pitcher") {
@@ -370,38 +367,17 @@
         </section>
 
         <!-- 시즌 시상 -->
-        {#if seasonAwards.eraKing || seasonAwards.winKing || seasonAwards.avgKing || seasonAwards.hrKing}
+        {#if seasonAwards.length > 0}
           <section class="section">
             <h4>시즌 시상</h4>
             <div class="awards-grid">
-              {#if seasonAwards.eraKing}
-                <div class="award" class:award-mine={seasonAwards.eraKing.id === p.id}>
-                  <span class="award-label">ERA왕</span>
-                  <strong class="award-name">{seasonAwards.eraKing.name}</strong>
-                  <span class="award-val">{seasonAwards.eraKing.era.toFixed(2)}</span>
+              {#each seasonAwards as a (a.defId)}
+                <div class="award" class:award-mine={a.playerId === p.id}>
+                  <span class="award-label">{a.label}</span>
+                  <strong class="award-name">{entityName(a.playerId)}</strong>
+                  <span class="award-val">{a.valueText}</span>
                 </div>
-              {/if}
-              {#if seasonAwards.winKing}
-                <div class="award" class:award-mine={seasonAwards.winKing.id === p.id}>
-                  <span class="award-label">다승왕</span>
-                  <strong class="award-name">{seasonAwards.winKing.name}</strong>
-                  <span class="award-val">{seasonAwards.winKing.w}승</span>
-                </div>
-              {/if}
-              {#if seasonAwards.avgKing}
-                <div class="award" class:award-mine={seasonAwards.avgKing.id === p.id}>
-                  <span class="award-label">타격왕</span>
-                  <strong class="award-name">{seasonAwards.avgKing.name}</strong>
-                  <span class="award-val">{pct(seasonAwards.avgKing.avg)}</span>
-                </div>
-              {/if}
-              {#if seasonAwards.hrKing}
-                <div class="award" class:award-mine={seasonAwards.hrKing.id === p.id}>
-                  <span class="award-label">홈런왕</span>
-                  <strong class="award-name">{seasonAwards.hrKing.name}</strong>
-                  <span class="award-val">{seasonAwards.hrKing.hr}홈런</span>
-                </div>
-              {/if}
+              {/each}
             </div>
           </section>
         {/if}

@@ -951,8 +951,19 @@ fn fill_first_teams(
                     .collect();
                 pit.sort_by(|&a, &b| npc_core_ovr(&npcs[a])
                     .partial_cmp(&npc_core_ovr(&npcs[b])).unwrap_or(std::cmp::Ordering::Equal));
+                // ⚠ **투수 하한 아래로는 내리지 않는다.** 야수를 채우겠다고
+                // 무한정 내리면 이번엔 등판이 무너진다 — 콜다운에서 똑같은
+                // 결함이 나왔다(정본은 `tuning::FIRST_TEAM_MIN_PITCHERS`).
+                // 외국인 투수는 애초에 `pit`에 없으니 총원(`pitchers_now`)으로 센다.
+                let pitchers_now = npcs.iter()
+                    .filter(|n| n.career_status == "active" && n.current_team == team_id
+                             && n.player_type == "pitcher")
+                    .count();
+                let can_demote = pitchers_now
+                    .saturating_sub(crate::tuning::FIRST_TEAM_MIN_PITCHERS)
+                    .min(want - room);
                 let farm_lid = farm_league(&league_id);
-                for &idx in pit.iter().take(want - room) {
+                for &idx in pit.iter().take(can_demote) {
                     if let (Some(fl), Some(ft)) = (farm_lid.clone(), farm_team(&team_id)) {
                         logs.push(format!("{} → 2군 (야수 자리 확보 {team_id})", npcs[idx].name));
                         npcs[idx].current_league = fl;
@@ -1315,10 +1326,11 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
         let rules = params.placement.clone().unwrap_or(crate::draft::PlacementRules {
             university_max: 40, independent_max: 45, independent_age_max: 31,
             // 폴백 — TS가 규칙 파일에서 계산해 넘긴다(`placementRulesFrom`)
-            university_annual_max: None,
+            university_annual_max: None, farm_max: 0,
         });
         let mut placer = crate::draft::Placer::new(
-            &after_normalize, &params.university_team_ids, &params.independent_team_ids, rules,
+            &after_normalize, &params.university_team_ids, &params.independent_team_ids,
+            &params.farm_team_ids, rules,
         );
         let homeless: Vec<usize> = after_normalize.iter().enumerate()
             .filter(|(i, n)| n.career_status == "active"
@@ -2031,10 +2043,11 @@ pub fn apply_draft(params: ApplyDraftParams) -> Vec<NpcSaveState> {
     // 예전엔 남는 자리부터 채워서 대졸 미지명자가 대학 1학년으로 다시 입학했다
     let mut placer = crate::draft::Placer::new(
         &result_npcs, &params.university_team_ids, &params.independent_team_ids,
+        &params.farm_team_ids,
         params.placement.clone().unwrap_or(crate::draft::PlacementRules {
             university_max: 40, independent_max: 45, independent_age_max: 31,
             // 폴백 — TS가 규칙 파일에서 계산해 넘긴다(`placementRulesFrom`)
-            university_annual_max: None,
+            university_annual_max: None, farm_max: 0,
         }),
     );
     // 지명된 재학생은 곧 떠난다 — 집계에 남기면 그 팀이 한 명 덜 받는다

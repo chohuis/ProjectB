@@ -92,6 +92,8 @@ export async function runOffseasonProcessing(
   placement?: {
     universityTeamIds: string[];
     independentTeamIds: string[];
+    /** 프로 2군 — 방출자·미계약 FA가 갈 첫 자리 */
+    farmTeamIds?: string[];
     rules: import("./draftSystem").PlacementRules;
   },
   /**
@@ -113,6 +115,7 @@ export async function runOffseasonProcessing(
     ...(placement ? {
       universityTeamIds: placement.universityTeamIds,
       independentTeamIds: placement.independentTeamIds,
+      farmTeamIds: placement.farmTeamIds ?? [],
       placement: placement.rules,
     } : {}),
     ...(releaseRules ? { releaseRules } : {}),

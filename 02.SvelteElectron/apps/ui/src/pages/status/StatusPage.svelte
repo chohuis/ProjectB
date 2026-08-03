@@ -7,9 +7,28 @@
   import type { CareerSeasonRecord } from "../../shared/types/save";
   import { INJURY_LABEL } from "../../shared/types/save";
   import { getFaThreshold } from "../../shared/utils/faEngine";
+  import { canRetireVoluntarily, isRetired, retireProtagonist } from "../../shared/usecases/retirement";
 
   type StatusTab = "stats" | "record" | "career";
   let activeTab: StatusTab = "stats";
+
+  // ── 자발적 은퇴 (05_히스토리_엔딩 §3) ────────────────────────
+  //
+  // ⚠ **트리거 셋 중 이것만 진입점이 없었다.** 노쇠·부상은 엔진이 상황을
+  // 만들어 주지만 "이만하면 충분하다"는 플레이어만 결정할 수 있다.
+  // 여기 둔 이유는 커리어 탭이 통산 기록을 보는 자리라서다 — 무엇을 남겼는지
+  // 보고 나서 접는 게 자연스럽다.
+  //
+  // 되돌릴 수 없으므로 **확인을 한 번 받는다.**
+  let retireConfirm = false;
+  let retiring = false;
+  async function doVoluntaryRetire(): Promise<void> {
+    if (retiring) return;
+    retiring = true;
+    await retireProtagonist("voluntary");
+    retireConfirm = false;
+    retiring = false;
+  }
 
   // ── 레이더 차트 ──────────────────────────────────────────────
   const R_CX = 80, R_CY = 80, R_R = 56, R_MAX = 99;
@@ -575,6 +594,29 @@
             </table>
           </article>
         {/if}
+
+        {#if canRetireVoluntarily($gameStore.protagonist)}
+          <article class="card career-card">
+            <h3>선수 생활</h3>
+            {#if !retireConfirm}
+              <p class="retire-hint">언제든 스스로 그만둘 수 있습니다.</p>
+              <button class="retire-btn" type="button" on:click={() => (retireConfirm = true)}>은퇴를 고려한다</button>
+            {:else}
+              <p class="retire-warn">은퇴하면 되돌릴 수 없습니다. 통산 {($gameStore.protagonist.careerRecords ?? []).length}시즌으로 마칩니다.</p>
+              <div class="retire-actions">
+                <button class="retire-cancel" type="button" disabled={retiring} on:click={() => (retireConfirm = false)}>더 뛴다</button>
+                <button class="retire-btn" type="button" disabled={retiring} on:click={doVoluntaryRetire}>은퇴한다</button>
+              </div>
+            {/if}
+          </article>
+        {:else if isRetired($gameStore.protagonist)}
+          <article class="card career-card">
+            <h3>선수 생활</h3>
+            <p class="retire-hint">
+              {$gameStore.protagonist.retirement?.year}년 은퇴 — 통산 {($gameStore.protagonist.careerRecords ?? []).length}시즌
+            </p>
+          </article>
+        {/if}
       {/if}
     {/if}
 
@@ -582,6 +624,13 @@
 </section>
 
 <style>
+  .retire-hint { color: #7f93b5; font-size: 12px; }
+  .retire-warn { color: #f08080; font-size: 12px; line-height: 1.6; }
+  .retire-actions { display: flex; gap: 8px; }
+  .retire-btn { border: 1px solid #5a4020; background: #2a1e08; color: #e0a040; border-radius: 8px; padding: 8px 16px; cursor: pointer; font-size: 12px; }
+  .retire-cancel { border: 1px solid #2a4068; background: #0d1e38; color: #7aa8d8; border-radius: 8px; padding: 8px 16px; cursor: pointer; font-size: 12px; }
+  .retire-btn:disabled, .retire-cancel:disabled { opacity: .5; cursor: default; }
+
   .page {
     display: flex;
     flex-direction: column;

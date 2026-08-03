@@ -4,6 +4,7 @@ import { gameStore } from "../../stores/game";
 import { masterStore } from "../../stores/master";
 import { autoLog } from "../../stores/autoAdvance";
 import { staffStatsOf, factorOf } from "../../utils/staffEffects";
+import { loadRetirementRules, surgeryRetireChance } from "../retirement";
 import type { InjurySeverity, InjuryState, InjuryType } from "../../types/save";
 import { INJURY_LABEL } from "../../types/save";
 
@@ -39,12 +40,9 @@ const NPC_INJURY_OVR_PENALTY: Partial<Record<InjuryType, number>> = {
 };
 
 // 은퇴 확률 계산
-function npcRetireChance(age: number, hasPriorSurgery: boolean): number {
-  if (age >= 36) return 0.65;
-  if (age >= 33) return 0.35;
-  if (hasPriorSurgery) return 0.40;
-  return 0.05;
-}
+// ⚠ 이 자리에 확률표가 박혀 있었다. **주인공 경로가 생기면서 소비자가 둘이 됐고**,
+// 표를 양쪽에 적으면 반드시 어긋난다. 정본은 `usecases/retirement.ts` →
+// `generation_rules.json`의 `retirementRules.surgery`다.
 
 // 부상 계산용 출전 이력 증분 캐시 — 매 시즌 시작 또는 슬롯 변경 시 자동 리셋
 const _injuryAppCache = {
@@ -168,9 +166,10 @@ export async function processNpcInjuries(weekNum: number): Promise<void> {
   if (players.length === 0) return;
 
   // 은퇴 확률 판정용 난수 + NPC 부상 계산 병렬 실행
-  const [retireRollsRaw, resultRaw] = await Promise.all([
+  const [retireRollsRaw, resultRaw, retireRules] = await Promise.all([
     window.projectB!.weekRollRandomBatch(players.length),
     window.projectB!.weekCalcNpcInjuries(JSON.stringify({ players })),
+    loadRetirementRules(),
   ]);
   const retireRolls = JSON.parse(retireRollsRaw) as number[];
   const result = JSON.parse(resultRaw) as { occurred: { playerId: string; injuryType: string; severity: string; recoveryWeeks: number }[] };
@@ -198,10 +197,17 @@ export async function processNpcInjuries(weekNum: number): Promise<void> {
     const playerInfoBlock = `\n\n▸ 소속팀:  ${teamName}\n▸ 포지션:  ${position} (${handStr})\n▸ 나이:    ${entity?.age ?? age}세`;
 
     // ── 은퇴 판정 (수술 발생 즉시) ──────────────────────────
-    if (isSurgery) {
+    // ⚠ **규칙이 없으면 조용히 넘어가면 안 된다.** `&& retireRules`로 건너뛰면
+    // **부상 은퇴가 통째로 꺼진 채 아무 신호도 안 난다** — 은퇴가 안 나오는 게
+    // 밸런스인지 결함인지 구분할 수 없게 된다. 규칙 파일이 깨졌다는 뜻이므로
+    // 여기서 멈추는 게 맞다.
+    if (isSurgery && !retireRules) {
+      throw new Error("[부상은퇴] generation_rules.json에 retirementRules가 없다");
+    }
+    if (isSurgery && retireRules) {
       const npcSave = (g.npcs ?? []).find((n) => n.npcId === occ.playerId);
       const hasPriorSurgery = npcSave?.injuryStatus?.severity === "surgery";
-      const retireChance = npcRetireChance(age, hasPriorSurgery);
+      const retireChance = surgeryRetireChance(age, hasPriorSurgery, retireRules);
       const roll = retireRolls[retireRollIdx++ % retireRolls.length] ?? 0.5;
 
       if (roll < retireChance) {

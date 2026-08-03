@@ -27,6 +27,7 @@ import {
   acceptTrade, rejectTrade,
 } from "../../apps/ui/src/shared/usecases/contractDecision";
 import { generateFaOffers } from "../../apps/ui/src/shared/utils/faEngine";
+import { loadAwardRules } from "../../apps/ui/src/shared/usecases/seasonAwards";
 import {
   retireProtagonist, isRetired, evalRetirementPressure, calcMarketValueForProtagonist,
 } from "../../apps/ui/src/shared/usecases/retirement";
@@ -1334,6 +1335,14 @@ export function rosterCompositionProbe(): Record<string, unknown> {
     let minBat = 999, minPit = 999, noCatcher = 0, thinPos = 0, empty = 0;
     const bad: string[] = [];
     let totBat = 0, totPit = 0;
+    // ⚠ **최소값만 보면 172팀 중 한 팀의 이상치와 스무 팀의 붕괴가 같아 보인다.**
+    // 최소는 팀 수 × 시즌 수 표본의 극단값이라 한두 번은 자연스레 낮게 나온다.
+    // 분포를 같이 낸다 — 검사가 "몇 팀이"를 물을 수 있어야 한다.
+    const batCounts: number[] = [];
+    const pitCounts: number[] = [];
+    // 야수 9명 미만은 **타순 한 바퀴가 안 돈다** — 남은 타자의 타석이 부풀어
+    // 통계가 왜곡되므로 다른 미달과 성격이 다르다 (getTeamLineup 주석 참고)
+    let underNine = 0;
 
     for (const t of teams) {
       const roster = byTeam.get(t.id) ?? [];
@@ -1342,6 +1351,8 @@ export function rosterCompositionProbe(): Record<string, unknown> {
       const bat = roster.length - pit;
       totBat += bat; totPit += pit;
       minBat = Math.min(minBat, bat); minPit = Math.min(minPit, pit);
+      batCounts.push(bat); pitCounts.push(pit);
+      if (bat < 9) { underNine++; if (bad.length < 6) bad.push(`${t.id} 야수${bat}(타순미달)`); }
 
       const cnt: Record<string, number> = {};
       for (const n of roster) {
@@ -1358,12 +1369,22 @@ export function rosterCompositionProbe(): Record<string, unknown> {
     }
 
     const n = teams.length - empty;
+    batCounts.sort((a, b) => a - b);
+    pitCounts.sort((a, b) => a - b);
+    // 5퍼센타일 — 최소값보다 안정적이라 "가끔 한 팀"과 "상시 여러 팀"을 가른다
+    const p05 = (v: number[]) => v.length === 0 ? 0 : v[Math.floor(v.length * 0.05)];
     out[label] = {
       팀: teams.length, 로스터없음: empty,
       평균야수: n > 0 ? Math.round((totBat / n) * 10) / 10 : 0,
       평균투수: n > 0 ? Math.round((totPit / n) * 10) / 10 : 0,
       최소야수: minBat === 999 ? 0 : minBat,
       최소투수: minPit === 999 ? 0 : minPit,
+      야수5퍼센타일: p05(batCounts),
+      투수5퍼센타일: p05(pitCounts),
+      // 하한 미달 팀 수는 검사측이 하한을 알아야 세므로 분포를 그대로 넘긴다
+      야수분포: batCounts,
+      투수분포: pitCounts,
+      타순미달팀: underNine,
       포수없는팀: noCatcher,
       포지션공백팀: thinPos,
       상세: bad.slice(0, 5),
@@ -2214,4 +2235,73 @@ export async function dbFingerprint(slotId: string): Promise<string> {
     })),
     standings: standingsRows(season?.leagueState ?? {}),
   });
+}
+
+/**
+ * 수상 자격선이 **지금 분포에서** 맞는가 (Phase 3).
+ *
+ * ⚠ 수상 규칙은 계산이 아니라 **판정 기준**이다. 엔진이 바뀌면 같은 규칙이
+ * 다른 결과를 낸다 — 리그 타율이 .431에서 .253으로 내려온 뒤에도 자격선은
+ * 그대로였다. `awardRules._note4`가 이미 "타격왕 이상치(.583)가 남아 있어
+ * 추가 조정이 필요하다"고 적어 두었다.
+ *
+ * 부문마다 **자격 통과 인원**과 **1위 값**을 같이 낸다:
+ *   통과 0명   자격선이 너무 높다 — 그 상이 아예 안 나온다
+ *   통과 1~2명 표본이 얕아 요행이 1위가 된다
+ *   1위 값이 minValue/maxValue에 걸리면 그 해 수상자가 없다
+ */
+export async function awardThresholdProbe(leagueId = "LEAGUE_KBL"): Promise<Record<string, unknown>> {
+  const s = get(seasonStore);
+  const stats = s.leagueState?.[leagueId]?.stats ?? {};
+  // **화면·기록과 같은 규칙을 읽는다** — 여기서 따로 적으면 검사가 거짓 안심을 준다
+  const rules = await loadAwardRules();
+  if (!rules) return { 비고: "generation_rules.json에 awardRules가 없다" };
+
+  const rows = Object.values(stats) as unknown as Array<Record<string, number | string>>;
+  const out: Record<string, unknown> = {};
+  const won = new Map<string, number>();
+
+  for (const def of [...rules.pitcher, ...rules.batter] as unknown as Array<Record<string, unknown>>) {
+    const minIp = def.minIp as number | undefined;
+    const minPa = def.minPa as number | undefined;
+    const stat  = def.stat as string;
+    const desc  = def.order === "desc";
+
+    const pool = rows.filter((r) => {
+      if (minIp != null) return r.type === "pitcher" && Number(r.ip ?? 0) >= minIp;
+      if (minPa != null) return r.type === "batter"  && Number(r.pa ?? 0) >= minPa;
+      return false;
+    });
+    if (pool.length === 0) { out[String(def.label)] = { 통과: 0, 비고: "자격자 없음" }; continue; }
+
+    const vals = pool.map((r) => Number(r[stat] ?? NaN)).filter(Number.isFinite);
+    vals.sort((a, b) => (desc ? b - a : a - b));
+    const best = vals[0];
+    const minValue = def.minValue as number | undefined;
+    const maxValue = def.maxValue as number | undefined;
+    const rejected = (minValue != null && best < minValue) || (maxValue != null && best > maxValue);
+    // 2위와의 차 — 1위만 튀면 표본이 얕다는 신호다
+    const gap = vals.length > 1 ? Math.abs(best - vals[1]) : 0;
+    const r3 = (v: number) => Math.round(v * 1000) / 1000;
+    out[String(def.label)] = {
+      통과: pool.length,
+      "1위": r3(best),
+      "2위차": r3(gap),
+      "중앙": r3(vals[Math.floor(vals.length / 2)]),
+      // 자격선에 걸려 수상자가 없으면 그 해 그 부문이 통째로 비는 것이다
+      ...(rejected ? { 수상없음: `${minValue ?? maxValue} 기준 미달` } : {}),
+    };
+    if (!rejected) {
+      const winner = pool.find((r) => Number(r[stat]) === best);
+      const id = String(winner?.playerId ?? "");
+      if (id) won.set(id, (won.get(id) ?? 0) + 1);
+    }
+  }
+  const minTitles = rules.mvp.minTitles;
+  out["MVP"] = {
+    기준: `${minTitles}개 이상`,
+    해당: [...won.values()].filter((n) => n >= minTitles).length,
+    최다부문: won.size ? Math.max(...won.values()) : 0,
+  };
+  return out;
 }

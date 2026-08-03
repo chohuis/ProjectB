@@ -284,6 +284,10 @@ pub struct ApplyDraftParams {
     pub university_team_ids: Vec<String>,
     #[serde(default)]
     pub independent_team_ids: Vec<String>,
+    /// 프로 2군 팀. **방출자·미계약 FA가 갈 첫 자리다** — 없으면 2군은
+    /// 드래프트 하위 라운드로만 채워져 투수가 마른다(실측 야수 29/투수 6)
+    #[serde(default)]
+    pub farm_team_ids: Vec<String>,
     /// 신인 계약 (generation_rules.json draftRules.contract).
     /// 없으면 계약이 안 붙는다 — 신인이 연봉 0으로 시작한다
     #[serde(default)]
@@ -589,6 +593,10 @@ pub struct OffseasonParams {
     pub university_team_ids: Vec<String>,
     #[serde(default)]
     pub independent_team_ids: Vec<String>,
+    /// 프로 2군 팀. **방출자·미계약 FA가 갈 첫 자리다** — 없으면 2군은
+    /// 드래프트 하위 라운드로만 채워져 투수가 마른다(실측 야수 29/투수 6)
+    #[serde(default)]
+    pub farm_team_ids: Vec<String>,
     #[serde(default)]
     pub placement: Option<crate::draft::PlacementRules>,
     /// 방출 2단계 (faRules.release). 없으면 1단계(정원 초과)만 돈다

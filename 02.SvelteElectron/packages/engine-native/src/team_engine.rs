@@ -173,16 +173,51 @@ pub fn eval_callup_candidates(p: EvalCallupParams) -> EvalCallupResult {
     let mut candidates = Vec::new();
     let threshold = 10.0 - (profile.win_now_pressure * 0.05);
 
+    let is_pit = |pos: &str| matches!(pos, "SP" | "RP" | "CP" | "P");
+    let count_at = |pos: &str| p.active_players.iter().filter(|a| a.position == pos).count();
+
     for farm in &p.farm_players {
         // 외국인은 교체 대상에서 뺀다 — `replaces_player_id`는 호출측이 2군으로
         // 내리는 선수다. 외국인이 거기 걸리면 콜업 한 번에 1군 전용 원칙이 깨진다
         let active_at_pos: Vec<&RosterPlayerRef> = p.active_players.iter()
             .filter(|a| a.position == farm.position && !a.is_foreign)
             .collect();
-        if active_at_pos.is_empty() { continue; }
+
+        // ⚠ **자리가 비면 콜업으로는 영영 못 메웠다.**
+        //
+        // 콜업은 같은 포지션 1:1 교체다. 그래서 포수가 0명이 되면
+        // `active_at_pos`가 비어 **2군 포수를 올릴 방법이 사라진다.** 메워주는
+        // `fix_position_gaps`는 오프시즌에만 도니 다음 해까지 그대로였다 —
+        // 실측에서 리그마다 1~2팀이 포수 0명이었다.
+        //
+        // 자리가 비었으면 **같은 부류에서 남는 자리의 최약체**를 내린다.
+        // 부류를 안 맞추면 야수 공백을 메우려고 투수를 내려 반대쪽이 깨진다.
+        // 그 자리의 마지막 한 명은 안 내린다 — 메우려다 새 공백을 만든다.
+        let gap_fill = active_at_pos.is_empty();
+        let pool: Vec<&RosterPlayerRef> = if gap_fill {
+            // ⚠ **공백 충원은 2군 구성을 바꾼다.** 일반 콜업은 같은 포지션
+            // 1:1이라 올라간 자리에 내려온 선수가 들어가지만, 여기선 부류가
+            // 다를 수 있다 — 2군 투수를 올리고 야수를 내려보낸다.
+            // 이걸 안 막았더니 실측 2군 투수가 7명 → **0명**이 됐다.
+            let cls = is_pit(&farm.position);
+            let farm_cls = p.farm_players.iter()
+                .filter(|f| is_pit(&f.position) == cls).count();
+            let floor = if cls { crate::tuning::FARM_MIN_PITCHERS }
+                        else   { crate::tuning::FARM_MIN_BATTERS };
+            if farm_cls <= floor { continue; }
+
+            p.active_players.iter()
+                .filter(|a| !a.is_foreign
+                         && is_pit(&a.position) == is_pit(&farm.position)
+                         && count_at(&a.position) >= 2)
+                .collect()
+        } else {
+            active_at_pos
+        };
+        if pool.is_empty() { continue; }
         // **성적을 반영한 값으로 최약체를 고른다.** 예전엔 OVR만 봐서
         // 시즌 내내 부진한 베테랑이 자리를 지켰다
-        let weakest = active_at_pos.iter().min_by(|a, b|
+        let weakest = pool.iter().min_by(|a, b|
             rated(a, &rules).partial_cmp(&rated(b, &rules)).unwrap_or(std::cmp::Ordering::Equal)
         ).unwrap();
 
@@ -191,6 +226,9 @@ pub fn eval_callup_candidates(p: EvalCallupParams) -> EvalCallupResult {
         let mut score = ovr_gap * 2.0;
 
         if is_injury { score += 50.0; }
+        // 빈 자리를 메우는 콜업은 부상 대체와 같은 급이다 — 능력치 차가 마이너스여도
+        // 올려야 한다. 포수 0명인 팀은 그 자체로 경기가 성립하지 않는다
+        if gap_fill { score += 60.0; }
         if profile.stability < 40.0 { score += 8.0; }
         if profile.stability > 70.0 { score -= 5.0; }
         if profile.development_focus > 60.0 && farm.age <= 23 { score += 6.0; }
@@ -212,7 +250,8 @@ pub fn eval_callup_candidates(p: EvalCallupParams) -> EvalCallupResult {
                 player_id: farm.id.clone(),
                 replaces_player_id: weakest.id.clone(),
                 priority_score: score,
-                reason: if is_injury { "injury_replacement".into() }
+                reason: if gap_fill { "position_gap".into() }
+                        else if is_injury { "injury_replacement".into() }
                         else if slumping { "slump_replacement".into() }
                         else if profile.development_focus > 60.0 { "development_exposure".into() }
                         else { "performance_upgrade".into() },
@@ -267,15 +306,30 @@ pub fn eval_calldown_candidates(p: EvalCalldownParams) -> EvalCalldownResult {
     // (투수는 30명). `fill_first_teams`는 오프시즌에만 도니 다음 해까지 그대로다.
     //
     // 야수가 하한 아래면 **투수 안에서만** 강등 대상을 고른다.
-    let batters_now = p.active_players.iter()
-        .filter(|pl| !matches!(pl.position.as_str(), "SP" | "RP" | "CP" | "P"))
-        .count();
-    let batters_locked = batters_now <= crate::tuning::FIRST_TEAM_MIN_BATTERS;
+    //
+    // ⚠ **하한을 한쪽만 걸면 반대쪽이 눌린다.** 야수 하한만 걸었더니 압력이
+    // 전부 투수로 흘러 1군 투수가 9~11명 → **5명**이 됐다. 양쪽 다 건다.
+    //
+    // 둘 다 하한 이하면 **강등을 아예 멈추고 정원 초과를 감수한다.**
+    // 그 상태의 로스터는 강등으로 풀 문제가 아니다 — 어느 쪽을 내려도
+    // 라인업이나 등판이 무너진다. 오프시즌 `fill_first_teams`가 채워야 한다.
+    let is_pitcher = |pos: &str| matches!(pos, "SP" | "RP" | "CP" | "P");
+    let (pitchers_now, batters_now) = p.active_players.iter()
+        .fold((0usize, 0usize), |(pit, bat), pl| {
+            if is_pitcher(pl.position.as_str()) { (pit + 1, bat) } else { (pit, bat + 1) }
+        });
+    let batters_locked  = batters_now  <= crate::tuning::FIRST_TEAM_MIN_BATTERS;
+    let pitchers_locked = pitchers_now <= crate::tuning::FIRST_TEAM_MIN_PITCHERS;
+    if batters_locked && pitchers_locked {
+        return EvalCalldownResult { candidates: Vec::new() };
+    }
 
     let mut scored: Vec<(String, f64)> = p.active_players.iter()
         .filter(|pl| !pl.is_foreign)
-        .filter(|pl| !batters_locked
-                  || matches!(pl.position.as_str(), "SP" | "RP" | "CP" | "P"))
+        .filter(|pl| {
+            let pit = is_pitcher(pl.position.as_str());
+            (!batters_locked || pit) && (!pitchers_locked || !pit)
+        })
         .map(|pl| {
         // 성적을 반영한 값으로 본다 — 능력치만 보면 부진한 고연봉 베테랑이
         // 시즌 내내 1군을 지킨다
@@ -864,6 +918,73 @@ pub fn generate_trade_proposals(p: GenerateTradeProposalsParams) -> GenerateTrad
         }
     }
 
+    // ── 보직 하한 검사 ────────────────────────────────────────────────────
+    //
+    // ⚠ **트레이드가 투/야 배분을 안 봤다.** 네 유형이 전부 부류를 넘나든다:
+    // 계약만료는 포지션 무관 유망주와 바꾸고, 부상보강은 **명시적으로 다른
+    // 포지션**(`pl.position != inj_pos`)을 내주며, surplus/deficit도 마찬가지다.
+    // 투수 수요가 야수보다 크니(로스터의 45%가 투수고 부상도 잦다) 야수가
+    // 한 방향으로 새어 나간다 — 실측 KBL 1군 야수가 오프시즌 13명에서
+    // **시즌 종료 8명**(타순 한 바퀴도 안 된다)까지 빠졌다.
+    //
+    // **개별 생성 지점이 아니라 여기서 한 번에 거른다.** 네 군데에 각각 걸면
+    // 다섯 번째 유형이 생길 때 또 빠진다 — 이 프로젝트에서 반복된 형태다.
+    let is_pit = |pos: &str| matches!(pos, "SP" | "RP" | "CP" | "P");
+    let asset_of = |id: &str| p.all_players.iter().find(|pl| pl.player_id == id);
+    let team_of = |tid: &str| p.teams.iter().find(|t| t.team_id == tid);
+
+    // 이 팀이 give를 내주고 recv를 받으면 1군 보직 하한이 깨지는가.
+    // **1군만 센다** — 하한은 1군 로스터의 규칙이고, 2군은 강등·승격으로 푼다.
+    let breaks_floor = |tid: &str, give: &[String], recv: &[String]| -> bool {
+        let Some(team) = team_of(tid) else { return false };
+        let active: std::collections::HashSet<&str> =
+            team.active_roster.iter().map(|s| s.as_str()).collect();
+        let (mut pit, mut bat) = (0i64, 0i64);
+        for pl in &p.all_players {
+            if !active.contains(pl.player_id.as_str()) { continue; }
+            if is_pit(&pl.position) { pit += 1 } else { bat += 1 }
+        }
+        let mut delta = |ids: &[String], sign: i64| {
+            for id in ids {
+                // 2군 선수의 이동은 1군 구성을 안 바꾼다
+                if !active.contains(id.as_str()) && sign < 0 { continue; }
+                let Some(a) = asset_of(id) else { continue };
+                if is_pit(&a.position) { pit += sign } else { bat += sign }
+            }
+        };
+        delta(give, -1);
+        delta(recv, 1);
+        pit < crate::tuning::FIRST_TEAM_MIN_PITCHERS as i64
+            || bat < crate::tuning::FIRST_TEAM_MIN_BATTERS as i64
+    };
+
+    // ⚠ **유일한 포수는 안 내준다.** 부류 하한(투/야)만 보면 포수 1명인 팀이
+    // 그 포수를 내주는 걸 못 막는다 — 야수 총원은 그대로니까. 그런데 포수는
+    // 전문 요원이라 0명이면 경기가 성립하지 않고, 메워주는 `fix_position_gaps`는
+    // **오프시즌에만 돈다.** 시즌 중에 비면 다음 해까지 그대로다.
+    // 실측: 리그마다 1~2팀이 포수 0명이었다.
+    //
+    // 다른 7포지션엔 안 건다. 수비가 `fielding` 단일 스탯이라 배치가 경기 결과에
+    // 안 들어가고, 전 포지션에 걸면 트레이드가 말라 리그가 정지한다.
+    let last_catcher_out = |tid: &str, give: &[String], recv: &[String]| -> bool {
+        let Some(team) = team_of(tid) else { return false };
+        let gives_c = give.iter().any(|id| asset_of(id).is_some_and(|a| a.position == "C"));
+        if !gives_c { return false; }
+        let gets_c = recv.iter().any(|id| asset_of(id).is_some_and(|a| a.position == "C"));
+        if gets_c { return false; }
+        let have = team.active_roster.iter()
+            .filter(|id| asset_of(id).is_some_and(|a| a.position == "C"))
+            .count();
+        have <= 1
+    };
+
+    proposals.retain(|pr| {
+        !breaks_floor(&pr.proposing_team_id, &pr.offering_ids, &pr.requesting_ids)
+            && !breaks_floor(&pr.receiving_team_id, &pr.requesting_ids, &pr.offering_ids)
+            && !last_catcher_out(&pr.proposing_team_id, &pr.offering_ids, &pr.requesting_ids)
+            && !last_catcher_out(&pr.receiving_team_id, &pr.requesting_ids, &pr.offering_ids)
+    });
+
     proposals.sort_by(|a, b| b.mutual_benefit_score.partial_cmp(&a.mutual_benefit_score).unwrap());
     proposals.truncate(p.max_proposals);
     GenerateTradeProposalsResult { proposals }
@@ -1079,5 +1200,277 @@ mod tests {
         let r = rules();
         assert!(r.slump_score < 0.0 && r.slump_score > -r.form_span,
             "slump_score {} 가 폭 밖이면 아무도(또는 전부) 부진이 된다", r.slump_score);
+    }
+
+    // ── 콜다운 보직 하한 ────────────────────────────────────────────────────
+    //
+    // ⚠ **이건 통계 감사로는 안 잡힌다.** 시즌 종료 시점의 집계만 보면
+    // "야수 7명"이 강등 때문인지 콜업 편중 때문인지 구분이 안 된다.
+    // 실제로 야수 하한을 넣고도 한 시즌을 더 돌린 뒤에야 투수가 5명까지
+    // 밀린 걸 알았다. 판정 자체를 직접 찔러야 한다.
+
+    fn roster(n_pit: usize, n_bat: usize) -> Vec<RosterPlayerRef> {
+        let mk = |i: usize, pos: &str| RosterPlayerRef {
+            id: format!("{pos}{i}"), position: pos.into(), age: 25,
+            // 능력치를 흩어 놓는다 — 전원 동점이면 정렬이 순서에 기대게 된다
+            ovr: 50.0 + (i % 10) as f64, salary: 30_000, remaining_years: 2,
+            pro_service_years: 3, is_prospect: false, personality: None,
+            fame: 0.0, perf: None, is_foreign: false,
+        };
+        (0..n_pit).map(|i| mk(i, "RP"))
+            .chain((0..n_bat).map(|i| mk(i, "1B")))
+            .collect()
+    }
+    fn calldown(n_pit: usize, n_bat: usize, over: i32) -> Vec<String> {
+        let players = roster(n_pit, n_bat);
+        let size = players.len() as i32;
+        eval_calldown_candidates(EvalCalldownParams {
+            team_profile: ProTeamProfile::default(),
+            active_players: players,
+            current_roster_size: size,
+            max_roster_size: size - over,
+            promotion_rules: Some(rules()),
+            callup_mod: None,
+        }).candidates.into_iter().map(|c| c.player_id).collect()
+    }
+    fn is_pit(id: &str) -> bool { id.starts_with("RP") }
+
+    #[test]
+    fn 야수가_하한이면_투수만_내린다() {
+        let got = calldown(20, crate::tuning::FIRST_TEAM_MIN_BATTERS, 3);
+        assert_eq!(got.len(), 3, "정원 초과분만큼은 나와야 한다: {got:?}");
+        assert!(got.iter().all(|id| is_pit(id)), "야수가 섞였다: {got:?}");
+    }
+
+    #[test]
+    fn 투수가_하한이면_야수만_내린다() {
+        // 야수 하한만 걸었을 때 압력이 전부 투수로 흘러 1군 투수가 5명까지
+        // 밀렸다. 반대 방향도 같은 보호를 받아야 한다.
+        let got = calldown(crate::tuning::FIRST_TEAM_MIN_PITCHERS, 20, 3);
+        assert_eq!(got.len(), 3, "{got:?}");
+        assert!(got.iter().all(|id| !is_pit(id)), "투수가 섞였다: {got:?}");
+    }
+
+    #[test]
+    fn 양쪽_다_하한이면_강등을_멈춘다() {
+        // 어느 쪽을 내려도 라인업이나 등판이 무너진다 — 정원 초과를 감수한다
+        let got = calldown(
+            crate::tuning::FIRST_TEAM_MIN_PITCHERS,
+            crate::tuning::FIRST_TEAM_MIN_BATTERS, 5);
+        assert!(got.is_empty(), "둘 다 하한인데 {got:?}");
+    }
+
+    #[test]
+    fn 하한_위에서는_보직을_안_가린다() {
+        let got = calldown(20, 20, 6);
+        assert_eq!(got.len(), 6, "{got:?}");
+    }
+
+    // ── 공백 충원 콜업 ──────────────────────────────────────────────────────
+
+    fn ref_of(id: &str, pos: &str, ovr: f64) -> RosterPlayerRef {
+        RosterPlayerRef {
+            id: id.into(), position: pos.into(), age: 26, ovr, salary: 30_000,
+            remaining_years: 2, pro_service_years: 3, is_prospect: false,
+            personality: None, fame: 0.0, perf: None, is_foreign: false,
+        }
+    }
+    /// 하한 위에 있는 2군 로스터 — 포수 한 명과 여유 인원
+    fn farm() -> Vec<RosterPlayerRef> {
+        let mut v = vec![ref_of("C_FARM", "C", 55.0)];
+        for i in 0..crate::tuning::FARM_MIN_BATTERS  { v.push(ref_of(&format!("FB{i}"), "1B", 50.0)); }
+        for i in 0..=crate::tuning::FARM_MIN_PITCHERS { v.push(ref_of(&format!("FP{i}"), "RP", 50.0)); }
+        v
+    }
+
+    #[test]
+    fn 자리가_비면_같은_부류에서_내려서_메운다() {
+        // ⚠ 콜업은 같은 포지션 1:1 교체다. 그래서 포수가 0명이 되면 2군 포수를
+        // **올릴 방법이 없었다** — `fix_position_gaps`는 오프시즌에만 돈다.
+        // 실측에서 리그마다 1~2팀이 포수 0명으로 시즌을 났다.
+        let r = rules();
+        let mk = |id: &str, pos: &str, ovr: f64| RosterPlayerRef {
+            id: id.into(), position: pos.into(), age: 26, ovr, salary: 30_000,
+            remaining_years: 2, pro_service_years: 3, is_prospect: false,
+            personality: None, fame: 0.0, perf: None, is_foreign: false,
+        };
+        // 1군에 포수가 없다. 1루수는 셋이라 한 명 내릴 여유가 있다
+        let active = vec![
+            mk("1B_A", "1B", 70.0), mk("1B_B", "1B", 62.0), mk("1B_C", "1B", 60.0),
+            mk("SS_A", "SS", 68.0), mk("SP_A", "SP", 72.0),
+        ];
+        let res = eval_callup_candidates(EvalCallupParams {
+            team_profile: ProTeamProfile::default(),
+            // ⚠ **2군도 현실 크기로 넘긴다.** 공백 충원은 2군 하한을 보므로
+            // 선수 한 명짜리 2군은 "고갈 상태"라 아무것도 안 올라간다
+            farm_players: farm(),
+            active_players: active,
+            injured_player_ids: vec![],
+            current_month: 5,
+            promotion_rules: Some(r),
+            callup_mod: None,
+        });
+        let c = res.candidates.iter().find(|c| c.player_id == "C_FARM")
+            .expect("포수 공백인데 2군 포수가 후보에 없다");
+        assert_eq!(c.reason, "position_gap");
+        // **능력치가 낮아도 올라와야 한다** — 포수 0명은 경기가 성립하지 않는다
+        assert_eq!(c.replaces_player_id, "1B_C", "남는 자리의 최약체를 내려야 한다");
+    }
+
+    #[test]
+    fn 공백을_메우려고_새_공백을_만들지_않는다() {
+        let r = rules();
+        let mk = |id: &str, pos: &str, ovr: f64| RosterPlayerRef {
+            id: id.into(), position: pos.into(), age: 26, ovr, salary: 30_000,
+            remaining_years: 2, pro_service_years: 3, is_prospect: false,
+            personality: None, fame: 0.0, perf: None, is_foreign: false,
+        };
+        // 야수가 전부 1명씩 — 누구를 내려도 그 자리가 빈다
+        let active = vec![mk("1B_A", "1B", 62.0), mk("SS_A", "SS", 60.0), mk("SP_A", "SP", 72.0)];
+        let res = eval_callup_candidates(EvalCallupParams {
+            team_profile: ProTeamProfile::default(),
+            farm_players: farm(),
+            active_players: active,
+            injured_player_ids: vec![],
+            current_month: 5,
+            promotion_rules: Some(r),
+            callup_mod: None,
+        });
+        assert!(res.candidates.is_empty(),
+            "내릴 여유가 없는데 후보가 나왔다: {:?}",
+            res.candidates.iter().map(|c| &c.replaces_player_id).collect::<Vec<_>>());
+    }
+
+    #[test]
+    fn 공백_충원도_부류를_지킨다() {
+        // 야수 공백을 메우겠다고 투수를 내리면 이번엔 등판이 무너진다
+        let r = rules();
+        let mk = |id: &str, pos: &str, ovr: f64| RosterPlayerRef {
+            id: id.into(), position: pos.into(), age: 26, ovr, salary: 30_000,
+            remaining_years: 2, pro_service_years: 3, is_prospect: false,
+            personality: None, fame: 0.0, perf: None, is_foreign: false,
+        };
+        // 야수는 자리마다 1명뿐이고 투수만 남아돈다
+        let active = vec![
+            mk("1B_A", "1B", 62.0), mk("SS_A", "SS", 60.0),
+            mk("RP_A", "RP", 70.0), mk("RP_B", "RP", 55.0), mk("RP_C", "RP", 54.0),
+        ];
+        let res = eval_callup_candidates(EvalCallupParams {
+            team_profile: ProTeamProfile::default(),
+            farm_players: farm(),
+            active_players: active,
+            injured_player_ids: vec![],
+            current_month: 5,
+            promotion_rules: Some(r),
+            callup_mod: None,
+        });
+        assert!(res.candidates.is_empty(), "야수 공백을 투수로 메웠다: {:?}",
+            res.candidates.iter().map(|c| &c.replaces_player_id).collect::<Vec<_>>());
+    }
+
+    #[test]
+    fn 공백을_메우겠다고_2군을_비우지_않는다() {
+        // ⚠ 이 검사가 없어서 실측 2군 투수가 7명 → **0명**이 됐다.
+        // 일반 콜업은 같은 포지션 1:1이라 2군 구성을 안 바꾸는데, 공백 충원만
+        // 부류를 넘나든다 — 2군 투수를 올리고 1군 야수를 내려보낸다.
+        let r = rules();
+        // 1군에 CP가 없다. 2군 투수는 하한에 딱 걸려 있다
+        let active = vec![
+            ref_of("RP_A", "RP", 70.0), ref_of("RP_B", "RP", 60.0), ref_of("RP_C", "RP", 58.0),
+            ref_of("1B_A", "1B", 62.0), ref_of("1B_B", "1B", 60.0),
+        ];
+        let mut thin = vec![ref_of("CP_FARM", "CP", 66.0)];
+        for i in 1..crate::tuning::FARM_MIN_PITCHERS { thin.push(ref_of(&format!("FP{i}"), "RP", 50.0)); }
+        assert_eq!(thin.len(), crate::tuning::FARM_MIN_PITCHERS, "전제: 2군 투수가 하한에 걸려 있다");
+
+        let res = eval_callup_candidates(EvalCallupParams {
+            team_profile: ProTeamProfile::default(),
+            farm_players: thin,
+            active_players: active,
+            injured_player_ids: vec![],
+            current_month: 5,
+            promotion_rules: Some(r),
+            callup_mod: None,
+        });
+        assert!(res.candidates.iter().all(|c| c.player_id != "CP_FARM"),
+            "2군 투수가 하한인데 공백 충원으로 빼갔다");
+    }
+
+    // ── 트레이드 보직 하한 ──────────────────────────────────────────────────
+
+    /// 부상 보강 트레이드를 유도하는 두 팀. A는 SP가 부상이고 야수는 하한이다 —
+    /// 야수를 내주고 투수를 받으면 타순이 무너진다
+    fn trade_setup(a_batters: usize) -> GenerateTradeProposalsParams {
+        let mk = |id: &str, team: &str, pos: &str, ovr: f64| TradeAsset {
+            player_id: id.into(), team_id: team.into(), position: pos.into(),
+            age: 27, ovr, true_ovr: ovr, salary: 30_000, remaining_years: 3,
+            is_prospect: false, personality: None, injury_severity: None,
+            injury_weeks_left: 0, career_injury_count: 0, has_steroid_history: false,
+        };
+        let mut all = Vec::new();
+        let mut a_ids = Vec::new();
+        for i in 0..a_batters { let id = format!("AB{i}"); all.push(mk(&id, "A", "1B", 62.0)); a_ids.push(id); }
+        for i in 0..14        { let id = format!("AP{i}"); all.push(mk(&id, "A", "RP", 62.0)); a_ids.push(id); }
+        let mut b_ids = Vec::new();
+        for i in 0..16 { let id = format!("BB{i}"); all.push(mk(&id, "B", "1B", 62.0)); b_ids.push(id); }
+        for i in 0..14 { let id = format!("BP{i}"); all.push(mk(&id, "B", "SP", 70.0)); b_ids.push(id); }
+
+        let team = |id: &str, roster: Vec<String>, inj: Vec<String>| TeamWithRoster {
+            team_id: id.into(), league_id: "LEAGUE_KBL".into(),
+            profile: ProTeamProfile::default(),
+            active_roster: roster, farm_roster: vec![],
+            salary_cap: 300_000, current_payroll: 0, win_pct: 0.5,
+            injured_positions: inj, expiring_contract_ids: vec![],
+        };
+        GenerateTradeProposalsParams {
+            teams: vec![team("A", a_ids, vec!["SP".into()]), team("B", b_ids, vec![])],
+            all_players: all,
+            season_standing: [("A".to_string(), 1), ("B".to_string(), 2)].into_iter().collect(),
+            total_teams: 2, max_proposals: 20,
+        }
+    }
+
+    #[test]
+    fn 야수가_하한이면_야수를_내주는_트레이드가_안_나온다() {
+        // ⚠ 실측: 트레이드가 보직을 안 봐서 KBL 1군 야수가 오프시즌 13명 →
+        // **시즌 종료 8명**까지 빠졌다. 부상 보강은 명시적으로 다른 포지션을 내준다
+        let p = trade_setup(crate::tuning::FIRST_TEAM_MIN_BATTERS);
+        let pos_of: std::collections::HashMap<String, String> = p.all_players.iter()
+            .map(|a| (a.player_id.clone(), a.position.clone())).collect();
+        let bat = |ids: &[String]| ids.iter()
+            .filter(|id| !matches!(pos_of[*id].as_str(), "SP" | "RP" | "CP" | "P")).count() as i64;
+        let r = generate_trade_proposals(p);
+        // 투수↔투수는 배분을 안 바꾸므로 막을 이유가 없다 — **순 증감**으로 본다
+        for pr in &r.proposals {
+            if pr.proposing_team_id != "A" { continue; }
+            assert!(bat(&pr.requesting_ids) >= bat(&pr.offering_ids),
+                "야수 하한인 A가 야수를 순감시키는 제안이 남았다: {:?} → {:?}",
+                pr.offering_ids, pr.requesting_ids);
+        }
+    }
+
+    #[test]
+    fn 여유가_있으면_트레이드가_막히지_않는다() {
+        // 하한이 트레이드 자체를 죽이면 리그가 정지한다 — 여유가 있을 땐 돌아야 한다
+        let r = generate_trade_proposals(trade_setup(crate::tuning::FIRST_TEAM_MIN_BATTERS + 4));
+        assert!(!r.proposals.is_empty(), "여유가 있는데 제안이 0건이다");
+    }
+
+    #[test]
+    fn 하한_둘의_합이_정원_안에_들어간다() {
+        // 합이 상한 이상이면 **정원이 찬 팀은 항상 "둘 다 하한"**이라
+        // 강등이 영영 안 돌고 초과분이 안 풀린다.
+        // 정원은 `generation_rules.json`이 정본이다 — 코드에 다시 적지 않는다.
+        let src = std::fs::read_to_string(concat!(
+            env!("CARGO_MANIFEST_DIR"), "/../../resource/data/master/players/generation_rules.json"
+        )).unwrap();
+        let v: serde_json::Value = serde_json::from_str(&src).unwrap();
+        let kbl = &v["rosterRules"]["LEAGUE_KBL"];
+        let max = kbl["rosterMax"].as_u64().expect("rosterMax 없음") as usize;
+        let size = kbl["rosterSize"].as_u64().expect("rosterSize 없음") as usize;
+        let floors = crate::tuning::FIRST_TEAM_MIN_BATTERS + crate::tuning::FIRST_TEAM_MIN_PITCHERS;
+        assert!(floors < max, "하한 합 {floors} 가 상한 {max} 이상이면 강등이 멈춘다");
+        // 생성 시점 구성(30)도 넘으면 새 시즌이 시작부터 잠긴 상태가 된다
+        assert!(floors < size, "하한 합 {floors} 가 생성 정원 {size} 이상이다");
     }
 }
