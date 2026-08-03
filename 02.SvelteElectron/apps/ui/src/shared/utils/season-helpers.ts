@@ -50,6 +50,39 @@ export function sanitizeStatsRecord(
   return out;
 }
 
+// ── 리그 기록 버킷 ───────────────────────────────────────────────
+//
+// ⚠ **`season.stats`는 리그 버킷이 아니다.** 주인공이 이번 시즌 뛴 기록이고,
+// 1군에서 뛰다 2군에 내려가도 **합산**된다(개인 성적으로는 그게 맞다).
+//
+// 그런데 리그 집계가 `s.leagueId === lid ? s.stats : leagueState[lid].stats`
+// 라는 관용구를 쓰고 있었다. `s.leagueId`는 `initSeason` 때만 정해져 시즌 중
+// 안 바뀌므로, 주인공이 승강으로 오르내리면 **2군 경기 기록이 1군 버킷으로
+// 읽힌다.**
+//
+// 실측(2029 KBL): 규정투수 62 → **94명**(10팀 리그에서 불가능),
+// 2군 소속 선수가 1군 기록에 등장, OVR–ERA 상관 −0.54 → −0.20.
+// 능력치 풀이 다른 두 집단이 섞이면 상관이 무너진다.
+//
+// 쓰기(`applyMatchResult`)는 이미 `leagueState[leagueId]`에 정확히 넣고 있다.
+// **읽기만 바로잡으면 된다.**
+
+/** 리그 기록. 주인공 소속 여부와 무관하게 그 리그 버킷만 본다 */
+export function leagueStatsOf(
+  s: Pick<import("../types/season").SaveSeason, "leagueState">,
+  leagueId: string,
+): Record<string, PlayerSeasonStats> {
+  return s.leagueState?.[leagueId]?.stats ?? {};
+}
+
+/** 리그 순위. 같은 이유로 버킷만 본다 */
+export function leagueStandingsOf(
+  s: Pick<import("../types/season").SaveSeason, "leagueState">,
+  leagueId: string,
+): Standing[] {
+  return s.leagueState?.[leagueId]?.standings ?? [];
+}
+
 export function updateStandings(
   standings: Standing[],
   result: MatchResult,

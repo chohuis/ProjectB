@@ -1197,7 +1197,7 @@ export function abilitySpreadProbe(leagueId = "LEAGUE_KBL"): Record<string, unkn
   const g = get(gameStore);
   const s = get(seasonStore);
   const live = get(npcLiveStatsStore);
-  const stats = (s.leagueId === leagueId ? s.stats : s.leagueState?.[leagueId]?.stats) ?? {};
+  const stats = s.leagueState?.[leagueId]?.stats ?? {};
 
   const rows: Array<{ ovr: number; era: number; ip: number; k9: number }> = [];
   for (const n of g.npcs) {
@@ -1267,6 +1267,137 @@ function pitcherSide(stats: Record<string, { type: string }>): Record<string, un
   };
 }
 
+/**
+ * ⚠ **리그 기록은 `leagueState[lid].stats`만 본다.**
+ *
+ * 예전엔 `s.leagueId === lid ? s.stats : ...`였다. `s.stats`는 주인공 개인
+ * 기록이고 승강으로 오르내리면 1군·2군이 합산돼 있어, 주인공 리그를 잴 때만
+ * **2군 기록이 섞여 들어왔다.** 실측 2029 KBL에서 규정투수가 62 → 94로
+ * 부풀고 OVR–ERA 상관이 −0.54 → −0.20으로 무너졌다.
+ *
+ * 그 상태에서 성격 계수를 조정했다면 **오염된 측정에 맞추는** 셈이었다.
+ */
+/**
+ * 팀별 가용 타자 수 (Phase 1-f).
+ *
+ * ⚠ **라인업이 9명 미만이면 남은 타자가 타순을 더 자주 돈다.**
+ * Rust는 `lineup[lpos % n]`으로 돌리므로 n=6이면 타석이 1.5배가 된다 —
+ * 실측 경기당 7.1타석(정상 4.7)이 정확히 그 비율이다.
+ *
+ * 라인업 구성기(`getTeamLineup`)에는 **9명 하한 보장이 없다.** 가용 타자가
+ * 모자라면 짧은 채로 반환하고, 그 결과가 개인 기록을 부풀린다.
+ */
+/**
+ * **전 리그 로스터 구성** (사용자 질문 2026-08-03).
+ *
+ * 생성 시점엔 보장된다 — `roster_gen`이 8포지션을 **두 바퀴** 돌아 백업까지
+ * 만들고 `test-roster-gen`이 국내 전 팀을 검사한다. 하지만 그건 새 게임
+ * 시점뿐이고, 시즌이 돌면 은퇴·부상·승강·FA로 무너진다.
+ *
+ * 실제로 KBL 1군에서 야수 3명·투수 34명인 팀이 나왔다. 같은 일이 2군·대학·
+ * 독립·고교에서도 일어나는지 **한 번에** 본다.
+ *
+ * ⚠ 포수를 따로 센다. 다른 자리는 대체가 되지만 포수는 전문 요원이라
+ * 0명이면 경기 자체가 성립하지 않는다.
+ */
+export function rosterCompositionProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const m = get(masterStore);
+  const FIELD = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF"];
+  const out: Record<string, unknown> = {};
+
+  // 리그별로 어떤 팀이 속하는지 — refs가 1군·팜을 같은 leagueId로 담으므로
+  // `_1`/`_2` 접미사로 가른다 (roster_gen의 plan과 같은 규칙)
+  const plan: Array<[string, (t: { id: string; leagueId: string }) => boolean]> = [
+    ["HIGHSCHOOL",  (t) => t.leagueId === "LEAGUE_HIGHSCHOOL"],
+    ["UNIVERSITY",  (t) => t.leagueId === "LEAGUE_UNIVERSITY"],
+    ["INDEPENDENT", (t) => t.leagueId === "LEAGUE_INDEPENDENT"],
+    ["KBL_1군",     (t) => t.leagueId === "LEAGUE_KBL" && t.id.endsWith("_1")],
+    ["KBL_2군",     (t) => t.leagueId === "LEAGUE_KBL" && t.id.endsWith("_2")],
+    ["ABL_1군",     (t) => t.leagueId === "LEAGUE_ABL" && t.id.endsWith("_1")],
+    ["ABL_2군",     (t) => t.leagueId === "LEAGUE_ABL" && t.id.endsWith("_2")],
+    ["JBL_1군",     (t) => t.leagueId === "LEAGUE_JBL" && t.id.endsWith("_1")],
+    ["JBL_2군",     (t) => t.leagueId === "LEAGUE_JBL" && t.id.endsWith("_2")],
+  ];
+
+  const byTeam = new Map<string, typeof g.npcs>();
+  for (const n of g.npcs) {
+    if (n.careerStatus !== "active" || !n.currentTeam) continue;
+    const arr = byTeam.get(n.currentTeam) ?? [];
+    arr.push(n);
+    byTeam.set(n.currentTeam, arr);
+  }
+
+  for (const [label, pick] of plan) {
+    const teams = m.teams.filter(pick);
+    if (teams.length === 0) continue;
+    let minBat = 999, minPit = 999, noCatcher = 0, thinPos = 0, empty = 0;
+    const bad: string[] = [];
+    let totBat = 0, totPit = 0;
+
+    for (const t of teams) {
+      const roster = byTeam.get(t.id) ?? [];
+      if (roster.length === 0) { empty++; continue; }
+      const pit = roster.filter((n) => n.playerType === "pitcher").length;
+      const bat = roster.length - pit;
+      totBat += bat; totPit += pit;
+      minBat = Math.min(minBat, bat); minPit = Math.min(minPit, pit);
+
+      const cnt: Record<string, number> = {};
+      for (const n of roster) {
+        if (n.playerType === "pitcher") continue;
+        cnt[n.position ?? ""] = (cnt[n.position ?? ""] ?? 0) + 1;
+      }
+      if ((cnt["C"] ?? 0) === 0) { noCatcher++; bad.push(`${t.id} 포수0`); }
+      // 8포지션 중 한 명도 없는 자리가 있으면 그 팀은 수비가 성립 안 한다
+      const missing = FIELD.filter((f) => (cnt[f] ?? 0) === 0);
+      if (missing.length > 0) {
+        thinPos++;
+        if (bad.length < 6) bad.push(`${t.id} 공백[${missing.join(",")}] 야수${bat}/투수${pit}`);
+      }
+    }
+
+    const n = teams.length - empty;
+    out[label] = {
+      팀: teams.length, 로스터없음: empty,
+      평균야수: n > 0 ? Math.round((totBat / n) * 10) / 10 : 0,
+      평균투수: n > 0 ? Math.round((totPit / n) * 10) / 10 : 0,
+      최소야수: minBat === 999 ? 0 : minBat,
+      최소투수: minPit === 999 ? 0 : minPit,
+      포수없는팀: noCatcher,
+      포지션공백팀: thinPos,
+      상세: bad.slice(0, 5),
+    };
+  }
+  return out;
+}
+
+export function lineupDepthProbe(leagueId = "LEAGUE_KBL"): Record<string, unknown> {
+  const g = get(gameStore);
+  const m = get(masterStore);
+  const s = get(seasonStore);
+  const out: Array<string> = [];
+  let thin = 0, teams = 0;
+
+  for (const t of m.teams) {
+    if (t.leagueId !== leagueId || !t.id.endsWith("_1")) continue;
+    teams++;
+    const all = g.npcs.filter((n) => n.currentTeam === t.id && n.careerStatus === "active");
+    const roster = all.filter((n) => n.playerType !== "pitcher");
+    // 부상자는 라인업에서 빠진다 — 가용 인원은 그만큼 더 적다
+    const healthy = roster.filter((n) => !s.npcInjuries?.[n.npcId]);
+    // KBO 1군 야수는 15~17명이다(생성 시점도 16). 9는 "경기가 성립하는" 선일
+    // 뿐이라 그걸 기준으로 보면 백업이 없는 팀을 정상으로 읽는다
+    if (healthy.length < 14) {
+      thin++;
+      // 투수 수까지 봐야 "야수만 마른 것"인지 "팀 전체가 마른 것"인지 갈린다
+      out.push(`${t.id} 야수 ${roster.length}(가용 ${healthy.length}) 투수 ${
+        all.length - roster.length} 총 ${all.length}`);
+    }
+  }
+  return { 팀수: teams, "14명미만": thin, 상세: out.slice(0, 6) };
+}
+
 export function batterSampleProbe(): Record<string, unknown> {
   const s = get(seasonStore);
   const out: Record<string, unknown> = {};
@@ -1277,7 +1408,7 @@ export function batterSampleProbe(): Record<string, unknown> {
   const leagues = ["LEAGUE_KBL", "LEAGUE_KBL_FARM"];
   if (proLeague && !leagues.includes(proLeague)) leagues.push(proLeague);
   for (const lid of leagues) {
-    const stats = (s.leagueId === lid ? s.stats : s.leagueState?.[lid]?.stats) ?? {};
+    const stats = s.leagueState?.[lid]?.stats ?? {};
     const bs = Object.values(stats).filter((x) => x.type === "batter") as Array<{
       g: number; pa: number; ab: number; h: number; bb: number;
       avg: number; obp: number; ops: number;
@@ -1633,7 +1764,7 @@ export function peerPitcherProbe(ovrBand = 8): Record<string, unknown> {
   const p = g.protagonist;
   const myOvr = p.pitching?.ovr ?? 0;
   const lid = p.leagueId;
-  const stats = (s.leagueId === lid ? s.stats : s.leagueState?.[lid]?.stats) ?? {};
+  const stats = s.leagueState?.[lid]?.stats ?? {};
 
   let ip = 0, h = 0, er = 0, k = 0, bb = 0, n = 0;
   for (const npc of g.npcs) {

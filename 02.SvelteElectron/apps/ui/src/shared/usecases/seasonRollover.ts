@@ -18,6 +18,7 @@ import { runSeasonEndBgProcessing } from "./runAutoAdvance";
 import { autoLog } from "../stores/autoAdvance";
 import { DEFAULT_TEAM_PROFILE } from "./weekPhases/market";
 import { applySeasonAwards } from "./seasonAwards";
+import { leagueStandingsOf } from "../utils/season-helpers";
 import { draftDestinationTeams } from "../utils/draftSystem";
 import { proSchedule } from "./proSeason";
 import { dischargeProtagonist, openMilitarySeason } from "./militaryDecision";
@@ -105,7 +106,7 @@ async function updateProTeamProfiles(): Promise<void> {
   const m = get(masterStore);
 
   for (const leagueId of ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"]) {
-    const standings = s.leagueId === leagueId ? s.standings : (s.leagueState[leagueId]?.standings ?? []);
+    const standings = leagueStandingsOf(s, leagueId);
     if (standings.length === 0) continue;
     const sorted = [...standings].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
 

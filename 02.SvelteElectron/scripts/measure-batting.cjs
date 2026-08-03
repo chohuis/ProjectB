@@ -68,6 +68,11 @@ const log = (s) => process.stdout.write(s + "\n");
         proSnaps.push(`${y} 대조군 ${JSON.stringify(app.peerPitcherProbe())}`);
         // 리그 합산이 맞아도 전원이 평균이면 능력치가 안 먹는 것이다
         proSnaps.push(`${y} 편차 ${JSON.stringify(app.abilitySpreadProbe())}`);
+        proSnaps.push(`${y} 라인업 ${JSON.stringify(app.lineupDepthProbe())}`);
+        // 전 리그 로스터 구성 — 생성 시점엔 보장돼도 시즌이 돌면 무너진다
+        for (const [lg, v] of Object.entries(app.rosterCompositionProbe())) {
+          proSnaps.push(`${y} 구성 ${lg} ${JSON.stringify(v)}`);
+        }
         const probe = app.batterSampleProbe();
         log("");
         log(`[${y} 시즌종료]`);

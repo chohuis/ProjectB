@@ -759,7 +759,7 @@ fn normalize_offseason_npcs(
         }
     }
 
-    fill_first_teams(&mut next, limits, logs);
+    fill_first_teams(&mut next, limits, logs, is_foreign);
     next
 }
 
@@ -872,6 +872,10 @@ fn fill_first_teams(
     npcs: &mut [NpcSaveState],
     limits: &HashMap<String, RosterLimit>,
     logs: &mut Vec<String>,
+    // ⚠ **외국인은 2군에 못 내린다**(1군 전용 슬롯). 자리를 만들려고 투수를
+    // 내릴 때 이걸 안 걸면 용병이 2군으로 밀려 보유 한도가 깨진다 —
+    // 실제로 이 경로를 추가하자마자 `test:foreign`이 잡았다.
+    is_foreign: &dyn Fn(&NpcSaveState) -> bool,
 ) {
     // 1군 팀별 현재 인원
     let mut count: HashMap<String, usize> = HashMap::new();
@@ -887,23 +891,91 @@ fn fill_first_teams(
         let Some(league_id) = npcs.iter()
             .find(|n| n.current_team == team_id && n.career_status == "active")
             .map(|n| n.current_league.clone()) else { continue };
-        let Some((min, _)) = roster_rule(&league_id, limits) else { continue };
-        if have as i32 >= min { continue; }
+        let Some((min, max)) = roster_rule(&league_id, limits) else { continue };
+
+        // ⚠ **야수 하한은 총원 가드 밖에서 본다.**
+        //
+        // 예전엔 `have >= min`이면 바로 빠져나갔다. 그런데 보직 배분이 깨지는
+        // 팀은 **대개 총원이 차 있다** — 실측에서 야수 3명·투수 34명·총 37명인
+        // 팀이 나왔고, 총원이 min(26)을 넘으니 이 함수가 한 번도 안 돌았다.
+        // 정확히 필요한 상황에서만 작동하지 않는 구조였다.
+        let batters_now = npcs.iter()
+            .filter(|n| n.career_status == "active" && n.current_team == team_id
+                     && n.player_type != "pitcher")
+            .count();
+        let batter_short = crate::tuning::FIRST_TEAM_MIN_BATTERS.saturating_sub(batters_now);
+        if have as i32 >= min && batter_short == 0 { continue; }
 
         let farm_tid = format!("{base}_2");
-        let mut cands: Vec<usize> = npcs.iter().enumerate()
-            .filter(|(_, n)| n.career_status == "active" && n.current_team == farm_tid)
-            .map(|(i, _)| i)
-            .collect();
-        // 능력치 높은 순 — 2군에서 제일 나은 선수가 올라간다
-        cands.sort_by(|&a, &b| npc_core_ovr(&npcs[b])
-            .partial_cmp(&npc_core_ovr(&npcs[a])).unwrap_or(std::cmp::Ordering::Equal));
+        let pick_best = |npcs: &[NpcSaveState], want_pitcher: Option<bool>| -> Vec<usize> {
+            let mut v: Vec<usize> = npcs.iter().enumerate()
+                .filter(|(_, n)| n.career_status == "active" && n.current_team == farm_tid)
+                .filter(|(_, n)| match want_pitcher {
+                    Some(p) => (n.player_type == "pitcher") == p,
+                    None => true,
+                })
+                .map(|(i, _)| i)
+                .collect();
+            // 능력치 높은 순 — 2군에서 제일 나은 선수가 올라간다
+            v.sort_by(|&a, &b| npc_core_ovr(&npcs[b])
+                .partial_cmp(&npc_core_ovr(&npcs[a])).unwrap_or(std::cmp::Ordering::Equal));
+            v
+        };
 
-        let need = (min as usize).saturating_sub(have);
-        for &idx in cands.iter().take(need) {
+        let mut promote = |npcs: &mut [NpcSaveState], idx: usize, logs: &mut Vec<String>| {
             npcs[idx].current_league = league_id.clone();
             npcs[idx].current_team   = team_id.clone();
             logs.push(format!("{} → 1군 승격 ({team_id})", npcs[idx].name));
+        };
+
+        // ① **야수 하한부터 채운다.** 능력치 순으로만 뽑으면 2군 상위권이
+        // 투수에 몰렸을 때 투수만 올라와 로스터를 잠식한다(정본은 `tuning.rs`).
+        //
+        // 정원이 이미 찼으면 **투수를 내려 자리를 만든다.** 안 그러면 야수 3명인
+        // 팀이 영영 그대로다 — 타순 한 바퀴도 못 채워 남은 타자의 타석이
+        // 부풀고 통계가 왜곡된다.
+        let mut used = 0usize;
+        let mut room = (max as usize).saturating_sub(have);
+        if batter_short > 0 {
+            let want = batter_short;
+            if room < want {
+                // 능력치 낮은 투수부터 2군으로 — 콜다운과 같은 기준이다
+                let mut pit: Vec<usize> = npcs.iter().enumerate()
+                    .filter(|(_, n)| n.career_status == "active"
+                                  && n.current_team == team_id
+                                  && n.player_type == "pitcher"
+                                  && !is_foreign(n))
+                    .map(|(i, _)| i)
+                    .collect();
+                pit.sort_by(|&a, &b| npc_core_ovr(&npcs[a])
+                    .partial_cmp(&npc_core_ovr(&npcs[b])).unwrap_or(std::cmp::Ordering::Equal));
+                let farm_lid = farm_league(&league_id);
+                for &idx in pit.iter().take(want - room) {
+                    if let (Some(fl), Some(ft)) = (farm_lid.clone(), farm_team(&team_id)) {
+                        logs.push(format!("{} → 2군 (야수 자리 확보 {team_id})", npcs[idx].name));
+                        npcs[idx].current_league = fl;
+                        npcs[idx].current_team   = ft;
+                        room += 1;
+                    }
+                }
+            }
+            let cands = pick_best(npcs, Some(false));
+            for &idx in cands.iter().take(want.min(room)) {
+                promote(npcs, idx, logs);
+                used += 1;
+            }
+        }
+        let need = (min as usize).saturating_sub(have);
+
+        // ② 남은 자리는 보직 무관 상위 능력치로 채운다
+        if used < need {
+            let cands = pick_best(npcs, None);
+            for &idx in cands.iter() {
+                if used >= need { break; }
+                if npcs[idx].current_team == team_id { continue; }  // ①에서 이미 올림
+                promote(npcs, idx, logs);
+                used += 1;
+            }
         }
     }
 }

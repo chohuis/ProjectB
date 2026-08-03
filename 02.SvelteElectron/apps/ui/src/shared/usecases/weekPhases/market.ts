@@ -11,6 +11,7 @@ import { isForeignPlayer } from "../../utils/foreignSlots";
 import type { PlayerSeasonStats } from "../../types/save";
 import { MONTH_STARTS_1 } from "./growth";
 import { finiteOr } from "../../utils/payloadNum";
+import { leagueStandingsOf } from "../../utils/season-helpers";
 
 // gameStore.updateNpcs → connectToGameStore 구독이 entities 자동 갱신
 function updateNpcsAndSync(npcs: import("../../types/save").NpcSaveState[]): void {
@@ -884,7 +885,9 @@ export async function processWinNowPressureUpdate(weekNum: number): Promise<void
 
 // 리그별 순위 조회 헬퍼 (leagueState 우선, 없으면 protagonist standings 폴백)
 export function getLeagueStandings(leagueId: string, s: import("../../types/season").SaveSeason) {
-  return s.leagueState[leagueId]?.standings ?? s.standings;
+  // ⚠ `?? s.standings` 폴백을 뺐다 — 그건 주인공 리그 순위라, 버킷이 비었을 때
+  // **엉뚱한 리그 순위를 그 리그 것으로 쓴다.** 비었으면 빈 채로 두는 게 맞다
+  return leagueStandingsOf(s, leagueId);
 }
 
 // W43 오프시즌 — 전체 프로 NPC 은퇴/FA 결정

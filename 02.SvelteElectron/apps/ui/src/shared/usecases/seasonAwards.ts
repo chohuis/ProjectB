@@ -18,6 +18,7 @@ import { gameStore } from "../stores/game";
 import { seasonStore } from "../stores/season";
 import { loadRosterRules } from "../repo/newGameV3";
 import { finiteOr } from "../utils/payloadNum";
+import { leagueStatsOf } from "../utils/season-helpers";
 import type { PlayerSeasonStats } from "../types/save";
 
 interface AwardDef {
@@ -90,8 +91,9 @@ export async function applySeasonAwards(seasonYear: number): Promise<string[]> {
   const won = new Map<string, string[]>();
 
   for (const leagueId of rules.leagues) {
-    const stats: Record<string, PlayerSeasonStats> =
-      (s.leagueId === leagueId ? s.stats : s.leagueState?.[leagueId]?.stats) ?? {};
+    // ⚠ `s.stats`로 대체하면 안 된다 — 그건 주인공 개인 기록이고 승강으로
+    // 오르내리면 1군·2군이 합산돼 있다(`leagueStatsOf` 주석 참고)
+    const stats: Record<string, PlayerSeasonStats> = leagueStatsOf(s, leagueId);
     if (Object.keys(stats).length === 0) continue;
 
     for (const def of [...rules.pitcher, ...rules.batter]) {
