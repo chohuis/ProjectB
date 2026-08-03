@@ -113,7 +113,15 @@ const OK_MOVE = {
       if (app.pendingKind() === "draftObserve") { await app.skipDraftObserve(); continue; }
       if (await app.pushCareerForward()) continue;
       if (app.isSeasonEnded()) {
-        hist.push({ year: app.currentSeason(), snap: app.cohortSnapshot(ids) });
+        hist.push({
+          year: app.currentSeason(),
+          snap: app.cohortSnapshot(ids),
+          // ⚠ **진로가 막히면 세대가 통째로 사라진다.** 대졸 미지명자는
+          // 독립리그로 가는데(`Placer`), 정원이 차 있으면 갈 곳이 없어
+          // `quit_baseball`이 된다 — 실측 추적 대학생 10명이 **전원** 사라졌다.
+          // 리그 인원을 같이 찍어야 "확률"과 "포화"를 가른다.
+          counts: app.leagueRawCounts(),
+        });
         await app.seasonRollover();
         continue;
       }
@@ -232,6 +240,46 @@ const OK_MOVE = {
     }
     log("");
     log(`      ${hist.length}시즌 뒤 — 리그이동 ${moved} · 은퇴 ${retired} · 제자리 ${stayed}`);
+
+    // ⚠ **은퇴 비율만 보면 "많다/적다"를 못 가른다.**
+    //
+    // 8시즌에 111명 중 71명(64%)이 은퇴로 나왔다. 고교생 60명이 섞여 있으니
+    // 대부분은 진로 탈락(`quit_baseball`)일 텐데, 그건 은퇴와 성격이 다르다 —
+    // **어디 출신이 몇 살에 사라졌는지**를 봐야 판단이 된다.
+    const gone = {};
+    for (const id of ids) {
+      const b = last[id];
+      if (!b || b.상태 !== "retired") continue;
+      const label = labelOf.get(id);
+      // 마지막으로 활동한 해의 나이 — 은퇴 시점에 가깝다
+      let age = null;
+      for (let i = hist.length - 1; i >= 0; i--) {
+        const v = hist[i].snap[id];
+        if (v && v.상태 !== "retired") { age = v.나이; break; }
+      }
+      const bucket = age == null ? "?" : age < 20 ? "~19" : age < 24 ? "20-23"
+        : age < 28 ? "24-27" : age < 32 ? "28-31" : "32+";
+      gone[label] = gone[label] ?? {};
+      gone[label][bucket] = (gone[label][bucket] ?? 0) + 1;
+    }
+    // 리그 인원 추이 — 독립리그가 정원(45×10=450)에 붙어 있으면 진로가 막힌다
+    log("");
+    log("      리그 인원 (active) — 독립 정원 450");
+    for (const h of hist) {
+      const c = h.counts ?? {};
+      const n = (k) => (c[k]?.active ?? 0) + (c[k]?.injured ?? 0);
+      log(`         ${h.year}  고교 ${String(n("LEAGUE_HIGHSCHOOL")).padStart(4)}`
+        + ` · 대학 ${String(n("LEAGUE_UNIVERSITY")).padStart(4)}`
+        + ` · 독립 ${String(n("LEAGUE_INDEPENDENT")).padStart(4)}`
+        + ` · KBL ${String(n("LEAGUE_KBL")).padStart(3)}`
+        + ` · 2군 ${String(n("LEAGUE_KBL_FARM")).padStart(3)}`);
+    }
+
+    for (const [label, buckets] of Object.entries(gone)) {
+      const total = Object.values(buckets).reduce((a, b) => a + b, 0);
+      const parts = Object.entries(buckets).sort().map(([k, v]) => `${k}:${v}`).join(" ");
+      log(`         ${label.padEnd(22)} 사라짐 ${String(total).padStart(2)} — ${parts}`);
+    }
     // ⚠ **아무도 안 움직이면 세계가 멈춘 것이다.** 8시즌이면 고교생은
     // 전원 졸업해서 어디론가 가야 한다
     check("추적 대상이 실제로 움직인다", moved + retired === 0 ? 1 : 0,
