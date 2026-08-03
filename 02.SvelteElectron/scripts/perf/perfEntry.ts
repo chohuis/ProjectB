@@ -2273,7 +2273,11 @@ export async function awardThresholdProbe(leagueId = "LEAGUE_KBL"): Promise<Reco
   const rules = await loadAwardRules();
   if (!rules) return { 비고: "generation_rules.json에 awardRules가 없다" };
 
-  const rows = Object.values(stats) as unknown as Array<Record<string, number | string>>;
+  // ⚠ **playerId는 필드가 아니라 키다.** `Object.values`로 뽑아 `r.playerId`를
+  // 읽으면 항상 undefined라 수상자가 한 명도 집계되지 않는다 — 그래서 MVP가
+  // 늘 0명으로 나왔다(부문별 1위는 정상 출력되니 티가 안 났다).
+  const rows: Array<Record<string, number | string>> = Object.entries(stats).map(
+    ([playerId, st]) => ({ ...(st as unknown as Record<string, number | string>), playerId }));
   const out: Record<string, unknown> = {};
   const won = new Map<string, number>();
 
@@ -2348,5 +2352,55 @@ export function postseasonProbe(leagueId = "LEAGUE_KBL"): Record<string, unknown
     주인공팀참가: myTeam
       ? series.some((x) => x.homeTeamId === myTeam || x.awayTeamId === myTeam)
       : false,
+  };
+}
+
+/**
+ * 도루 입력값의 실제 분포 (Phase 3-b).
+ *
+ * ⚠ **추측으로 계수를 만지면 빗나간다.** `STEAL_2B_SPEED_PIVOT`을 40 → 50으로
+ * 올리면 시도가 크게 줄 거라 봤는데 실측 도루 중앙이 22 → 23으로 그대로였다.
+ * 리그 타자의 `speed`·`baseInstinct`가 실제로 얼마인지를 안 보고 고쳤기 때문이다.
+ *
+ * 시도 확률은 `(speed − pivot) × 0.008 × (instinct / 50) × hold_factor`다.
+ * **instinct가 높으면 speed가 낮아도 확률이 커진다** — 두 값을 같이 봐야 한다.
+ */
+export function stealInputProbe(leagueId = "LEAGUE_KBL"): Record<string, unknown> {
+  const g = get(gameStore);
+  const live = get(npcLiveStatsStore);
+  const sp: number[] = [], inst: number[] = [], hold: number[] = [];
+  for (const n of g.npcs) {
+    if (n.currentLeague !== leagueId || n.careerStatus !== "active") continue;
+    if (n.playerType === "pitcher") {
+      const h = live[n.npcId]?.pitching?.holdRunners ?? n.pitching?.holdRunners;
+      if (typeof h === "number") hold.push(h);
+    } else {
+      const b = live[n.npcId]?.batting ?? n.batting;
+      if (typeof b?.speed === "number") sp.push(b.speed);
+      if (typeof b?.baseInstinct === "number") inst.push(b.baseInstinct);
+    }
+  }
+  const q = (v: number[], f: number) => {
+    if (v.length === 0) return 0;
+    const s = [...v].sort((a, b) => a - b);
+    return Math.round(s[Math.min(s.length - 1, Math.floor(s.length * f))] * 10) / 10;
+  };
+  // 지금 계수로 평균 주자의 시도 확률이 얼마인지 — 이게 판단의 핵심이다.
+  //
+  // ⚠ **계수를 여기 복제하면 낡는다.** 실제로 `tuning.rs`의 pivot을 50 → 75로
+  // 올린 뒤에도 이 줄이 50을 쓰고 있어 "시도확률 30%"라고 계속 표시했다.
+  // 값은 `STEAL_2B_SPEED_PIVOT` 75 · `STEAL_INSTINCT_PIVOT` 75다
+  // (Rust 상수라 여기서 읽을 수 없으니, 바꿀 때 같이 고칠 것).
+  const PIVOT = 75, INST_PIVOT = 75, SCALE = 0.008, MAX = 0.30;
+  const attemptAt = (speed: number, instinct: number) =>
+    Math.round(Math.max(0, Math.min(MAX,
+      (speed - PIVOT) * SCALE * (instinct / INST_PIVOT))) * 1000) / 10;
+  return {
+    타자수: sp.length,
+    "speed_p25": q(sp, 0.25), "speed_중앙": q(sp, 0.5), "speed_p75": q(sp, 0.75), "speed_p95": q(sp, 0.95),
+    "instinct_중앙": q(inst, 0.5), "instinct_p95": q(inst, 0.95),
+    "holdRunners_중앙": q(hold, 0.5),
+    "시도%_중앙주자": attemptAt(q(sp, 0.5), q(inst, 0.5)),
+    "시도%_상위주자": attemptAt(q(sp, 0.95), q(inst, 0.95)),
   };
 }
