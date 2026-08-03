@@ -760,6 +760,8 @@ fn normalize_offseason_npcs(
     }
 
     fill_first_teams(&mut next, limits, logs, is_foreign);
+    // 충원 **뒤에** 돈다 — 새로 올라온 선수까지 보고 남은 공백만 전환한다
+    fix_position_gaps(&mut next, logs);
     next
 }
 
@@ -976,6 +978,66 @@ fn fill_first_teams(
                 promote(npcs, idx, logs);
                 used += 1;
             }
+        }
+    }
+}
+
+/// 포지션 공백을 **남는 자리에서 전환해** 메운다 (Phase 2-b).
+///
+/// ⚠ **충원만으로는 못 메운다.** 정원이 찬 팀은 신입생·승격 대상이 아니라
+/// 공백이 그대로 유지된다 — 실측에서 야수 12명인 고교 팀에 유격수가 0명이었다.
+/// `fill_first_teams`가 총원만 보고 구성을 안 보던 것과 **같은 구조**다.
+///
+/// 실제 야구에서도 유틸리티 전환은 흔하다. 3루수가 셋이고 유격수가 없으면
+/// 한 명을 돌린다. 능력치는 그대로 두고 자리만 바꾼다 — 이 모델의 수비는
+/// `fielding` 단일 스탯이라 포지션별 보정이 없다.
+///
+/// **전 리그에 한 번에 적용된다** — 고교·대학·독립·프로 1군·2군의 충원 경로가
+/// 각각 다른데, 공백이 생기는 방식은 같기 때문이다.
+fn fix_position_gaps(npcs: &mut [NpcSaveState], logs: &mut Vec<String>) {
+    // 포수가 맨 앞이다 — 전문 요원이라 0명이면 경기가 성립하지 않는다
+    const FIELD: [&str; 8] = ["C", "SS", "CF", "2B", "3B", "RF", "LF", "1B"];
+
+    let mut by_team: HashMap<String, Vec<usize>> = HashMap::new();
+    for (i, n) in npcs.iter().enumerate() {
+        if n.career_status != "active" || n.current_team.is_empty() { continue; }
+        if n.player_type == "pitcher" { continue; }
+        by_team.entry(n.current_team.clone()).or_default().push(i);
+    }
+
+    let mut keys: Vec<String> = by_team.keys().cloned().collect();
+    keys.sort();   // HashMap 순회 순서에 기대지 않는다 (결정성)
+
+    for team in keys {
+        let idxs = match by_team.get(&team) { Some(v) => v.clone(), None => continue };
+        if idxs.len() < FIELD.len() { continue; }   // 자리 수보다 적으면 전환해도 소용없다
+
+        let mut cnt: HashMap<String, Vec<usize>> = HashMap::new();
+        for &i in &idxs { cnt.entry(npcs[i].position.clone()).or_default().push(i); }
+
+        for pos in FIELD {
+            if cnt.get(pos).map_or(0, |v| v.len()) > 0 { continue; }
+            // ⚠ **3명 조건만으로는 못 메운다.** 야수 14명을 8자리에 나누면
+            // 대부분 1~2명씩이라 3명인 자리가 아예 없다 — 실측에서 야수 16명인
+            // 대학 팀에 2루수가 0명인데도 전환이 안 걸렸다(공백 33팀 잔존).
+            //
+            // 그래서 두 번 본다: 여유 있는 자리(3명+)를 먼저 쓰고, 없으면
+            // 2명인 자리에서 가져온다. **"백업이 없는 것"이 "아무도 없는 것"보다
+            // 낫다** — 8포지션 전원 배치가 우선이다.
+            let pick = |min: usize| FIELD.iter()
+                .filter(|p| **p != pos)
+                .filter(|p| cnt.get(**p).map_or(0, |v| v.len()) >= min)
+                .max_by_key(|p| (cnt.get(**p).map_or(0, |v| v.len()), std::cmp::Reverse(**p)));
+            let donor = pick(3).or_else(|| pick(2));
+            let Some(from) = donor else { continue };
+            let Some(pool) = cnt.get_mut(*from) else { continue };
+            // 그 자리에서 능력치가 가장 낮은 사람을 돌린다 — 주전은 자리를 지킨다
+            pool.sort_by(|&a, &b| npc_core_ovr(&npcs[a])
+                .partial_cmp(&npc_core_ovr(&npcs[b])).unwrap_or(std::cmp::Ordering::Equal));
+            let moved = pool.remove(0);
+            logs.push(format!("{} {} → {} 전환 ({team})", npcs[moved].name, npcs[moved].position, pos));
+            npcs[moved].position = pos.to_string();
+            cnt.entry(pos.to_string()).or_default().push(moved);
         }
     }
 }
@@ -1526,13 +1588,19 @@ pub fn generate_freshmen(params: GenerateFreshmenParams) -> Vec<NpcSaveState> {
     for i in 0..bulk_count as usize {
         let npc_id = format!("GEN_{}_Y{}_{:03}", params.school_id, params.season_year, params.id_offset as usize + i + 1);
         let (name, name_en) = gen_name(&mut rng);
-        let is_sp = rng.next() < 0.3;
+        // **부족한 자리부터 채운다.** 목록이 모자라면 무작위로 넘어간다 —
+        // 정본은 호출측이고(그쪽만 현재 로스터를 안다), 여기선 순서대로 쓴다
+        let position = match params.needed_positions.get(i) {
+            Some(p) if !p.is_empty() => p.clone(),
+            _ => {
+                if rng.next() < 0.3 { "SP".to_string() }
+                else { POSITIONS[(rng.next() * POSITIONS.len() as f64) as usize % POSITIONS.len()].to_string() }
+            }
+        };
+        let is_sp = matches!(position.as_str(), "SP" | "RP" | "CP" | "P");
         let ovr_p = params.pitching_ovr_min + rng.next() * (params.pitching_ovr_max - params.pitching_ovr_min);
         let ovr_b = params.batting_ovr_min  + rng.next() * (params.batting_ovr_max  - params.batting_ovr_min);
         let dev_r = params.dev_rate_min     + rng.next() * (params.dev_rate_max      - params.dev_rate_min);
-        let position = if is_sp { "SP".to_string() } else {
-            POSITIONS[(rng.next() * POSITIONS.len() as f64) as usize % POSITIONS.len()].to_string()
-        };
 
         result.push(NpcSaveState {
             npc_id,

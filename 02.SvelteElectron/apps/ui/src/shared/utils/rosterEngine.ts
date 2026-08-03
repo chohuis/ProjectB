@@ -240,6 +240,56 @@ export function getTeamBullpen(
 // ── 라인업(타순) 자동 배정 ──────────────────────────────────
 const POSITION_PRIORITY = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "DH", "UT"];
 
+// ── 충원 시 채워야 할 자리 ───────────────────────────────────────
+//
+// ⚠ **인원 충원이 "몇 명"만 보고 "어느 자리"를 안 보면 포지션이 무너진다.**
+//
+// 생성 시점(`roster_gen`)은 8포지션을 두 바퀴 돌아 백업까지 보장한다.
+// 그런데 매년 들어오는 신입생·드래프트·2군 충원은 그 규칙 밖에 있었고,
+// 포지션을 무작위로 뽑았다. 평균으로는 균등해도 **팀 단위 편차가 해마다
+// 누적된다** — 포수는 8분의 1이라 신입생 8명이면 포수 0명일 확률이 34%다.
+//
+// 실측(2026~2030 시즌별 최악): 고교 102팀 **전부**가 어느 해엔가 포지션 공백,
+// 포수 0명이 31팀. 독립리그만 0건이었다 — 방출자 유입이 포지션을 안 가리고
+// 들어와 자연히 균형이 잡힌다.
+
+/** 야수 8포지션 + 투수 보직. 채우는 순서가 곧 우선순위다 */
+const FIELD_POSITIONS = ["C", "SS", "CF", "2B", "3B", "RF", "LF", "1B"] as const;
+
+/**
+ * 그 팀에 **모자란 자리**를 우선순위 순으로 돌려준다.
+ *
+ * ① 한 명도 없는 야수 자리 (포수가 맨 앞 — 전문 요원이라 0명이면 경기 불성립)
+ * ② 투수가 하한 미달이면 SP·RP
+ * ③ 백업이 없는(1명뿐인) 야수 자리
+ *
+ * `count`보다 짧게 돌려줄 수 있다 — 그 뒤는 생성기가 무작위로 채운다.
+ */
+export function neededPositions(
+  roster: Array<{ playerType?: string; position?: string }>,
+  count: number,
+  minPitchers = 0,
+): string[] {
+  const cnt: Record<string, number> = {};
+  let pitchers = 0;
+  for (const p of roster) {
+    if (p.playerType === "pitcher") { pitchers++; continue; }
+    const pos = p.position ?? "";
+    cnt[pos] = (cnt[pos] ?? 0) + 1;
+  }
+
+  const out: string[] = [];
+  const push = (v: string) => { if (out.length < count) out.push(v); };
+
+  for (const pos of FIELD_POSITIONS) if ((cnt[pos] ?? 0) === 0) push(pos);
+  // 투수는 선발 우선 — 로테이션이 먼저 돌아야 경기가 성립한다
+  for (let i = pitchers; i < minPitchers && out.length < count; i++) {
+    push(i % 3 === 2 ? "RP" : "SP");
+  }
+  for (const pos of FIELD_POSITIONS) if ((cnt[pos] ?? 0) === 1) push(pos);
+  return out;
+}
+
 export function getTeamLineup(
   teamId: string,
   entities: EntityRow[],
@@ -256,7 +306,24 @@ export function getTeamLineup(
       playerDetails(e).playerType === "batter" ||
       playerDetails(e).playerType === "twoWay",
   );
-  if (batters.length === 0) batters = players;
+  // ⚠ **9명을 못 채우면 남은 타자의 타석이 부푼다.**
+  //
+  // Rust는 `lineup[lpos % n]`으로 타순을 돌린다. n=6이면 한 바퀴가 짧아져
+  // 타석이 9/6 = 1.5배가 되고, 그러면 **능력치가 아니라 출전량이 성적을
+  // 만든다** — 실측에서 경기당 7.1타석(정상 4.7)이 나왔고 OVR·ERA 상관이
+  // −0.5에서 −0.25로 무너졌다.
+  //
+  // 예전엔 야수가 **0명일 때만** 전체 선수로 폴백했다. 8명이면 8명짜리
+  // 라인업이 그대로 나갔고 아무 신호도 없었다.
+  //
+  // 실제 야구도 야수가 모자라면 투수를 타석에 세운다(비상 상황). 여기서도
+  // 타격이 나은 투수부터 채운다 — 부자연스럽지만 **통계를 왜곡하는 것보다 낫다.**
+  if (batters.length < 9) {
+    const fillers = players
+      .filter((e) => !batters.includes(e))
+      .sort((a, b) => (playerDetails(b).batting?.ovr ?? 0) - (playerDetails(a).batting?.ovr ?? 0));
+    batters = [...batters, ...fillers.slice(0, 9 - batters.length)];
+  }
 
   // 타자 선택 점수: 피로 반영 OVR + freshnessBonus
   const batScore = (e: EntityRow) => {

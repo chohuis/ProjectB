@@ -65,8 +65,18 @@ const FLOOR = {
     // 중간에 무너졌다가 회복된 구간을 놓친다
     const worst = {};
 
-    const absorb = () => {
+    // 시점별로 따로 모은다
+    const byPhase = { "시즌종료": {}, "오프시즌직후": {} };
+    const absorb = (phase = "시즌종료") => {
       const comp = app.rosterCompositionProbe();
+      const bucket = byPhase[phase];
+      for (const [lg, v] of Object.entries(comp)) {
+        if (v.로스터없음 === v.팀) continue;
+        const b = bucket[lg] ?? { 최소야수: 999, 최소투수: 999 };
+        b.최소야수 = Math.min(b.최소야수, v.최소야수);
+        b.최소투수 = Math.min(b.최소투수, v.최소투수);
+        bucket[lg] = b;
+      }
       for (const [lg, v] of Object.entries(comp)) {
         if (v.로스터없음 === v.팀) continue;   // 비활성 리그(ABL·JBL)
         const w = worst[lg] ?? { 포수없는팀: 0, 포지션공백팀: 0, 최소야수: 999, 최소투수: 999, 상세: [] };
@@ -88,15 +98,28 @@ const FLOOR = {
       if (app.pendingKind() === "draftObserve") { await app.skipDraftObserve(); continue; }
       if (await app.pushCareerForward()) continue;
       if (app.isSeasonEnded()) {
-        absorb();
+        // ⚠ **두 시점을 각각 잰다.** 야수 7명인 팀이 왜 남는지는
+        //   · 오프시즌 직후에 이미 7명  → 충원(`fill_first_teams`)에 안 걸린다
+        //   · 직후엔 14명인데 시즌 말 7명 → 시즌 중 유출(트레이드·부상)
+        // 로 갈리고, 고칠 곳이 완전히 다르다. 한 시점만 재면 구분이 안 된다.
+        absorb("시즌종료");
         await app.seasonRollover();
+        absorb("오프시즌직후");
         continue;
       }
       break;
     }
-    absorb();
+    absorb("시즌종료");
 
     log(`      ${start}~${app.currentSeason()} · 시즌마다 최악값 누적`);
+    // 시점 대조 — 어느 쪽에서 무너지는지 한눈에 본다
+    for (const lg of Object.keys(byPhase["시즌종료"])) {
+      const a1 = byPhase["오프시즌직후"][lg];
+      const b1 = byPhase["시즌종료"][lg];
+      if (!a1 || !b1) continue;
+      log(`      [시점] ${lg.padEnd(12)} 오프시즌직후 야수${a1.최소야수}/투수${a1.최소투수}` +
+          `  →  시즌종료 야수${b1.최소야수}/투수${b1.최소투수}`);
+    }
     for (const [lg, w] of Object.entries(worst)) {
       if (verbose) log(`      ${lg} ${JSON.stringify(w)}`);
       const floor = FLOOR[lg];

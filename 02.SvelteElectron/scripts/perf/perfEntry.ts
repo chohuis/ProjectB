@@ -1440,6 +1440,13 @@ export function batterSampleProbe(): Record<string, unknown> {
       타율_p25: qa(0.25), 타율_중앙: qa(0.5), 타율_p75: qa(0.75),
       최다타석선수: `g${top.g} pa${top.pa} ab${top.ab} bb${top.bb} = 경기당 ${
         top.g > 0 ? Math.round((top.pa / top.g) * 100) / 100 : 0}`,
+      // ⚠ **경기당 타석이 실제 라인업 길이를 알려준다.** 9인 타순이면 4.5~5.2다.
+      // 6을 넘으면 라인업이 9명이 아니라는 뜻이고, 그때는 능력치가 아니라
+      // 출전량이 성적을 만든다 — 집계만 보면 "타격이 세다"로 읽힌다.
+      "경기당타석_중앙": (() => {
+        const per = bs.filter((b) => b.g >= 20).map((b) => b.pa / b.g).sort((a, b) => a - b);
+        return per.length ? Math.round(per[Math.floor(per.length / 2)] * 100) / 100 : 0;
+      })(),
       // ⚠ **경기당 타석이 5를 크게 넘으면 물리적으로 불가능하다.**
       // 한 선수가 두 팀 라인업에 동시에 들어가면 정확히 2배가 나온다.
       // 그 선수가 누구고 어느 팀 소속인지 이름을 남겨야 원인을 찾을 수 있다 —

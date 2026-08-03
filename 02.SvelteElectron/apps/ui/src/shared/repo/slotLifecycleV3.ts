@@ -14,6 +14,14 @@ import { masterStore } from "../stores/master";
 import { isLeagueInScope } from "../config/releaseScope";
 import { HS_ACTIVE_TEAMS_V3 } from "../utils/leagueScheduler";
 import { SANGMU_TEAM_IDS, leagueOfTeam } from "../utils/ids";
+import { neededPositions } from "../utils/rosterEngine";
+
+/**
+ * 고교 팀 투수 하한. **실측에서 최소 4명까지 떨어졌다** — 선발 로테이션이
+ * 안 돌아간다. 신입생 투수 비율이 `rand < 0.3` 고정 확률이라 포지션과 같은
+ * 이유로 팀 단위 편차가 누적됐다.
+ */
+const HS_MIN_PITCHERS = 8;
 import type { SaveGame, ProtagonistSave, NpcSaveState } from "../types/save";
 import type { SaveSeason } from "../types/season";
 import type { SaveSlotMeta } from "../types/projectb.d";
@@ -122,10 +130,15 @@ export async function generateFreshmenV3(seasonYear: number): Promise<number> {
   // (부상 상태가 안 풀리는 결함과 겹쳐 최대 47%까지 과잉 생성됐다).
   // 자리를 비우는 건 **은퇴뿐**이다.
   const sizeByTeam = new Map<string, number>();
+  // 포지션 구성도 같이 모은다 — 신입생을 **부족한 자리부터** 배정하기 위해서다
+  const rosterByTeam = new Map<string, Array<{ playerType?: string; position?: string }>>();
   for (const n of g.npcs) {
     if (n.careerStatus === "retired" || !n.currentTeam) continue;
     if (n.currentLeague !== "LEAGUE_HIGHSCHOOL") continue;
     sizeByTeam.set(n.currentTeam, (sizeByTeam.get(n.currentTeam) ?? 0) + 1);
+    const arr = rosterByTeam.get(n.currentTeam) ?? [];
+    arr.push({ playerType: n.playerType, position: n.position });
+    rosterByTeam.set(n.currentTeam, arr);
   }
 
   const newOnes: NpcSaveState[] = [];
@@ -142,6 +155,10 @@ export async function generateFreshmenV3(seasonYear: number): Promise<number> {
         battingOvrMin: rules.battingOvrMin, battingOvrMax: rules.battingOvrMax,
         devRateMin: rules.devRateMin, devRateMax: rules.devRateMax,
         namedNpcs: [], seasonYear, idOffset: 0,
+        // ⚠ 이걸 안 넘기면 생성기가 포지션을 무작위로 뽑는다 — 평균으로는
+        // 균등해도 팀 단위 편차가 해마다 누적돼 포수 0명인 팀이 생긴다
+        neededPositions: neededPositions(
+          rosterByTeam.get(teamId) ?? [], want, HS_MIN_PITCHERS),
       })),
     ) as NpcSaveState[];
     if (Array.isArray(raw)) newOnes.push(...raw);
