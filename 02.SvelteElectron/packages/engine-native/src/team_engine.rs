@@ -259,8 +259,23 @@ pub fn eval_calldown_candidates(p: EvalCalldownParams) -> EvalCalldownResult {
     // ⚠ **외국인은 2군에 안 내린다.** 보유 한도(1군 3명)가 2군 강등으로 새면
     // 그 팀은 한 자리를 놀리고, 2군에 외국인이 쌓여 한도 계산이 흐려진다.
     // 정원 초과는 내국인 안에서 푼다 — 외국인을 빼려면 방출(F-5)이다.
+    // ⚠ **야수 하한을 안 보면 야수만 골라 내려간다.**
+    //
+    // 강등 점수는 능력치가 낮을수록 높다. 2군에서 갓 올라온 신인 야수가 대개
+    // 능력치가 낮으니 우선 대상이 되고, 투수 콜업이 정원을 밀어올릴 때마다
+    // 야수가 빠진다. 실측: 오프시즌 직후 야수 13명 → **시즌 종료 6명**
+    // (투수는 30명). `fill_first_teams`는 오프시즌에만 도니 다음 해까지 그대로다.
+    //
+    // 야수가 하한 아래면 **투수 안에서만** 강등 대상을 고른다.
+    let batters_now = p.active_players.iter()
+        .filter(|pl| !matches!(pl.position.as_str(), "SP" | "RP" | "CP" | "P"))
+        .count();
+    let batters_locked = batters_now <= crate::tuning::FIRST_TEAM_MIN_BATTERS;
+
     let mut scored: Vec<(String, f64)> = p.active_players.iter()
         .filter(|pl| !pl.is_foreign)
+        .filter(|pl| !batters_locked
+                  || matches!(pl.position.as_str(), "SP" | "RP" | "CP" | "P"))
         .map(|pl| {
         // 성적을 반영한 값으로 본다 — 능력치만 보면 부진한 고연봉 베테랑이
         // 시즌 내내 1군을 지킨다
