@@ -465,6 +465,9 @@ pub struct SimPitcher {
     pub clutch: f64,
     #[serde(default = "default_neutral_stat")]
     pub mentality: f64,
+    /// 견제력 — 도루 시도를 누른다. 없으면 50(무보정)
+    #[serde(default = "default_neutral_stat")]
+    pub hold_runners: f64,
 }
 
 pub(crate) fn default_neutral_stat() -> f64 { 50.0 }
@@ -480,6 +483,15 @@ pub struct SimBatter {
     /// 승부처 집중력. 없으면 50(무보정)
     #[serde(default = "default_neutral_stat")]
     pub batting_clutch: f64,
+    /// 주력·주루 판단 — **도루에 쓴다.**
+    ///
+    /// ⚠ 능력치는 처음부터 `BattingAttributes`에 있었는데 리그 시뮬이 안 받아서
+    /// `sb: 0`이 하드코딩돼 있었다. 없으면 50(평균)이라 구 페이로드는
+    /// 도루가 거의 안 나온다 — 값이 0으로 떨어져 이상해지는 것보다 낫다.
+    #[serde(default = "default_neutral_stat")]
+    pub speed: f64,
+    #[serde(default = "default_neutral_stat")]
+    pub base_instinct: f64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

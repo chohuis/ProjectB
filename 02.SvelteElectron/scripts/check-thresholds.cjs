@@ -66,6 +66,7 @@ const r3 = (v) => Math.round(v * 1000) / 1000;
           bat: app.batterSampleProbe(),
           spread: app.abilitySpreadProbe("LEAGUE_KBL"),
           awards: await app.awardThresholdProbe("LEAGUE_KBL"),
+          steal: app.stealInputProbe("LEAGUE_KBL"),
         });
         await app.seasonRollover();
         continue;
@@ -119,6 +120,17 @@ const r3 = (v) => Math.round(v * 1000) / 1000;
       }
       const mvp = s.awards.MVP;
       if (mvp) log(`      MVP      ${mvp.기준} → ${mvp.해당}명 (최다 ${mvp.최다부문}부문)`);
+    }
+
+    // ── ②-1 도루 입력 분포 ───────────────────────────────────
+    log("");
+    log("②-1 도루 입력 — 계수를 만지기 전에 실제 분포를 본다");
+    for (const s2 of seasons) {
+      const v = s2.steal ?? {};
+      log(`   ${s2.year}  speed p25 ${v.speed_p25} / 중앙 ${v.speed_중앙} / p75 ${v.speed_p75} / p95 ${v.speed_p95}`
+        + `  ·  instinct 중앙 ${v.instinct_중앙} p95 ${v.instinct_p95}`
+        + `  ·  견제 중앙 ${v.holdRunners_중앙}`);
+      log(`         시도확률 중앙주자 ${v["시도%_중앙주자"]}% · 상위주자 ${v["시도%_상위주자"]}%`);
     }
 
     // ── ③ 능력치가 성적을 만드는가 ───────────────────────────

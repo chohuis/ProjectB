@@ -410,7 +410,19 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
                 _ => None,
             };
             let position = if is_pitcher {
-                if i < sp_n { "SP".to_string() } else { "RP".to_string() }
+                // ⚠ **마무리(CP)가 한 명도 생성되지 않았다.**
+                //
+                // 투수를 SP/RP로만 나눴다. 그런데 `rosterEngine.getTeamBullpen`은
+                // 마무리를 **CP 포지션에서만** 고르고(`cpSorted[0]?.id ?? ""`),
+                // 없으면 빈 문자열이라 `homeCloser: null`이 넘어간다 —
+                // 그래서 **리그 전체 세이브가 0**이었다(규정투수 94~110명 전원).
+                //
+                // 불펜 첫 자리를 마무리로 둔다. 생성 순서가 능력치 순은 아니지만
+                // 팀마다 정확히 1명이 보장되고, 실제 기용은 `getTeamBullpen`이
+                // 컨디션·능력치로 다시 고른다.
+                if i < sp_n { "SP".to_string() }
+                else if i == sp_n { "CP".to_string() }
+                else { "RP".to_string() }
             } else {
                 // 8포지션을 **두 바퀴** 돈 뒤에야 랜덤으로 넘어간다.
                 //
@@ -1101,6 +1113,23 @@ mod tests {
                 let n = npcs.iter().filter(|x| x.position == pos).count();
                 assert!(n >= 2, "로스터 {size}명인데 {pos}가 {n}명 — 백업이 없다");
             }
+        }
+    }
+
+    #[test]
+    fn 팀마다_마무리가_있다() {
+        // ⚠ **투수를 SP/RP로만 만들었다.** `rosterEngine.getTeamBullpen`은
+        // 마무리를 CP 포지션에서만 고르므로 CP가 0명이면 마무리가 빈 문자열이
+        // 되고, 엔진에 `homeCloser: null`이 넘어가 **세이브가 리그 전체에서 0**이
+        // 된다. 아무 오류도 안 나고, 집계로도 "접전이 적었나"로 읽힌다 —
+        // 수상 자격선 점검에서 규정투수 94~110명 전원의 sv가 0인 걸 보고서야 알았다.
+        for size in [30, 32, 34] {
+            let npcs = gen("LEAGUE_KBL", &["TEAM_KBL_A"], size);
+            let cp = npcs.iter().filter(|x| x.position == "CP").count();
+            assert!(cp >= 1, "로스터 {size}명인데 마무리가 {cp}명");
+            // 선발도 로테이션이 돌 만큼은 있어야 한다 — CP를 늘리다 SP를 깎으면 안 된다
+            let sp = npcs.iter().filter(|x| x.position == "SP").count();
+            assert!(sp >= 5, "로스터 {size}명인데 선발이 {sp}명 — 로테이션이 안 돈다");
         }
     }
 }

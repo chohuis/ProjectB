@@ -118,6 +118,92 @@ pub const MOUND_VISIT_MIN_PITCH_GAP: i32    = 6;
 // 공격 전술
 pub const OFFENSE_STEAL_MODIFIER: f64 = 0.006;
 
+// ── 도루 ─────────────────────────────────────────────────────────────────────
+//
+// ⚠ **모델 두 벌 중 한쪽에만 있었다.** `match_engine`(주인공 경기)은 도루를
+// 돌리는데 `npc_sim`(리그 720경기)은 `sb: 0`을 하드코딩했다. 그래서 리그
+// **전체 도루가 0**이었고 도루왕이 구조적으로 안 나왔다 — 규정타석 97~102명
+// 전원의 sb가 0인 걸 수상 자격선 점검에서야 봤다.
+//
+// 능력치는 처음부터 있었다(타자 `speed`·`baseInstinct`, 투수 `holdRunners`).
+// 쓰는 곳이 한쪽뿐이었을 뿐이다.
+//
+// 값은 `match_engine::attempt_steals`에 박혀 있던 것을 그대로 올렸다 —
+// **두 모델이 같은 상수를 봐야** 주인공 기록과 리그 기록이 같은 척도가 된다.
+pub const STEAL_HOLD_SCALE: f64 = 0.008;   // 견제력이 시도 확률을 누르는 폭
+/// 주루 판단의 기준점. **50으로 두면 전원이 1.5배**가 된다 — 실측 중앙이 75다
+pub const STEAL_INSTINCT_PIVOT: f64 = 75.0;
+pub const STEAL_HOLD_MIN: f64   = 0.4;
+pub const STEAL_HOLD_MAX: f64   = 1.6;
+
+// ⚠⚠ **계수가 "speed 50이 평균"을 전제하는데 실제 분포는 80 중심이다.**
+//
+// 실측 리그 타자: speed p25 72 / **중앙 81** / p75 87 / p95 94, instinct 중앙 75.
+// 원래 값(pivot 40)으로는 `(81−40)×0.008×(75/50) = 0.49`라 **중앙 주자도 최고
+// 주자도 전부 시도 상한(0.30)에 붙는다.** 그래서 능력 차가 도루에 전혀
+// 반영되지 않았고, pivot을 40 → 50으로 올려도 실측 도루가 22 → 23으로 그대로였다.
+// 3루도 같다 — GATE 68이면 거의 전원이 통과하고 역시 상한(0.16)에 붙는다.
+//
+// 성공률은 반대로 **너무 낮았다.** 중앙 주자 49.7%(KBO 68~72%)라 실패가 많고,
+// 그 아웃이 투수 이닝에 들어가 **리그 ERA를 4.71 → 3.98로 끌어내렸다** —
+// 사용자 확정 "KBO 수준(ERA 4점대)"에서 벗어나고, OVR–ERA 상관도
+// −0.53 → −0.24로 무너졌다(투수 능력과 무관한 실점이 늘어서다).
+//
+// 아래 값은 **실측 분포 기준**이다. 중앙 주자는 가끔, 상위 주자는 자주 뛴다.
+// 이 계수는 `match_engine`(주인공 경기)도 같이 쓴다 — 그쪽도 같은 전제였고
+// 리그 도루가 0이라 대조군이 없어 드러나지 않았다.
+
+// 1루 → 2루
+pub const STEAL_2B_SPEED_PIVOT: f64   = 75.0;   // 실측 p25 72 ~ 중앙 81 사이
+pub const STEAL_2B_ATTEMPT_SCALE: f64 = 0.008;
+pub const STEAL_2B_ATTEMPT_MAX: f64   = 0.30;
+pub const STEAL_2B_SUCCESS_BASE: f64  = 0.65;   // KBO 도루 성공률 68~72%
+pub const STEAL_2B_SUCCESS_PIVOT: f64 = 80.0;   // 성공률 기준점도 실측 중앙에 맞춘다
+pub const STEAL_2B_SUCCESS_SCALE: f64 = 0.007;
+pub const STEAL_2B_SUCCESS_MIN: f64   = 0.40;
+pub const STEAL_2B_SUCCESS_MAX: f64   = 0.90;
+
+// 2루 → 3루 — 발이 아주 빠른 주자만 시도한다
+pub const STEAL_3B_SPEED_GATE: f64    = 88.0;   // 실측 p75 87 위 — 상위권만
+pub const STEAL_3B_SPEED_PIVOT: f64   = 85.0;
+pub const STEAL_3B_ATTEMPT_SCALE: f64 = 0.006;
+pub const STEAL_3B_ATTEMPT_MAX: f64   = 0.16;
+pub const STEAL_3B_SUCCESS_BASE: f64  = 0.60;   // 3루 도루는 2루보다 어렵다
+pub const STEAL_3B_SUCCESS_PIVOT: f64 = 88.0;
+pub const STEAL_3B_SUCCESS_SCALE: f64 = 0.008;
+pub const STEAL_3B_SUCCESS_MIN: f64   = 0.35;
+pub const STEAL_3B_SUCCESS_MAX: f64   = 0.85;
+
+fn clamp01(v: f64, lo: f64, hi: f64) -> f64 { v.max(lo).min(hi) }
+
+/// 견제력이 도루 시도에 거는 배수. 두 모델이 같이 쓴다
+pub fn steal_hold_factor(hold_runners: f64) -> f64 {
+    clamp01(1.0 - (hold_runners - 50.0) * STEAL_HOLD_SCALE, STEAL_HOLD_MIN, STEAL_HOLD_MAX)
+}
+
+/// 1루 주자의 (시도 확률, 성공 확률)
+pub fn steal_second_probs(speed: f64, instinct: f64, hold_factor: f64, manager_boost: f64) -> (f64, f64) {
+    let attempt = clamp01(
+        (speed - STEAL_2B_SPEED_PIVOT) * STEAL_2B_ATTEMPT_SCALE * (instinct / STEAL_INSTINCT_PIVOT) * hold_factor
+            + manager_boost, 0.0, STEAL_2B_ATTEMPT_MAX);
+    let success = clamp01(
+        STEAL_2B_SUCCESS_BASE + (speed - STEAL_2B_SUCCESS_PIVOT) * STEAL_2B_SUCCESS_SCALE,
+        STEAL_2B_SUCCESS_MIN, STEAL_2B_SUCCESS_MAX);
+    (attempt, success)
+}
+
+/// 2루 주자의 (시도 확률, 성공 확률). `STEAL_3B_SPEED_GATE` 미만은 시도하지 않는다
+pub fn steal_third_probs(speed: f64, instinct: f64, hold_factor: f64, manager_boost: f64) -> (f64, f64) {
+    if speed <= STEAL_3B_SPEED_GATE { return (0.0, 0.0); }
+    let attempt = clamp01(
+        (speed - STEAL_3B_SPEED_PIVOT) * STEAL_3B_ATTEMPT_SCALE * (instinct / STEAL_INSTINCT_PIVOT) * hold_factor
+            + manager_boost, 0.0, STEAL_3B_ATTEMPT_MAX);
+    let success = clamp01(
+        STEAL_3B_SUCCESS_BASE + (speed - STEAL_3B_SUCCESS_PIVOT) * STEAL_3B_SUCCESS_SCALE,
+        STEAL_3B_SUCCESS_MIN, STEAL_3B_SUCCESS_MAX);
+    (attempt, success)
+}
+
 // Phase A: 착탄 분산
 pub const DISPERSION_BASE: f64           = 0.15;
 pub const DISPERSION_CONTROL_SCALE: f64  = 0.003;
@@ -320,3 +406,10 @@ pub const FIRST_TEAM_MIN_PITCHERS: usize = 12;
 /// 공백 충원이 항상 막혀 **1군 포수 0명이 안 고쳐진다.**
 pub const FARM_MIN_PITCHERS: usize = 8;
 pub const FARM_MIN_BATTERS:  usize = 9;
+
+/// 세이브 요건 점수차 (KBO·MLB 공통 3점 이내).
+///
+/// ⚠ **등판 조건과 판정 조건이 같아야 한다.** 이 값이 두 군데에 따로 적혀
+/// 있으면 "마무리는 나왔는데 세이브는 안 붙는" 경기가 생긴다.
+/// 읽는 곳: `npc_sim.rs`의 9회 마무리 투입 · `pitcher_decision`.
+pub const SAVE_MAX_MARGIN: i32 = 3;

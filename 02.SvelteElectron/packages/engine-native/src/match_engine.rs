@@ -695,13 +695,15 @@ fn attempt_steals(state: &MatchState, pitcher: &PitcherStats, rng: &mut impl Rng
     let manager_boost = if is_our_batting {
         (state.my_manager.offense_mind - 50.0) * T::OFFENSE_STEAL_MODIFIER
     } else { 0.0 };
-    let hold_factor = clamp(1.0 - (pitcher.hold_runners - 50.0) * 0.008, 0.4, 1.6);
+    // ⚠ 계수를 여기 적지 않는다 — **`npc_sim`이 같은 규칙을 쓴다.**
+    // 두 벌로 두면 주인공 기록과 리그 기록이 다른 척도가 된다
+    // (실제로 도루가 이쪽에만 있어서 리그 도루가 0이었다).
+    let hold_factor = T::steal_hold_factor(pitcher.hold_runners);
 
     if first.is_some() && second.is_none() {
         let r = first.as_ref().unwrap().clone();
-        let attempt_prob = clamp((r.speed - 40.0) * 0.008 * (r.instinct / 50.0) * hold_factor + manager_boost, 0.0, 0.30);
+        let (attempt_prob, success) = T::steal_second_probs(r.speed, r.instinct, hold_factor, manager_boost);
         if rng.gen::<f64>() < attempt_prob {
-            let success = clamp(0.28 + (r.speed - 50.0) * 0.007, 0.15, 0.90);
             if rng.gen::<f64>() < success {
                 second = first.take();
                 steal_logs.push(format!("도루 성공! 1루→2루 (스피드 {})", r.speed));
@@ -712,11 +714,10 @@ fn attempt_steals(state: &MatchState, pitcher: &PitcherStats, rng: &mut impl Rng
         }
     }
     if let Some(ref r) = second.clone() {
-        if third.is_none() && r.speed > 68.0 {
+        if third.is_none() && r.speed > T::STEAL_3B_SPEED_GATE {
             let r = r.clone();
-            let attempt_prob = clamp((r.speed - 58.0) * 0.006 * (r.instinct / 55.0) * hold_factor + manager_boost, 0.0, 0.16);
+            let (attempt_prob, success) = T::steal_third_probs(r.speed, r.instinct, hold_factor, manager_boost);
             if rng.gen::<f64>() < attempt_prob {
-                let success = clamp(0.22 + (r.speed - 65.0) * 0.008, 0.10, 0.78);
                 if rng.gen::<f64>() < success {
                     third = second.take();
                     steal_logs.push(format!("도루 성공! 2루→3루 (스피드 {})", r.speed));

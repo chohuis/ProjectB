@@ -208,16 +208,62 @@
     if (r === "runnerUp") return "준우승";
     return "4강";
   }
+  // ── 커리어 이벤트 표기 ──────────────────────────────────────
+  //
+  // ⚠ **Rust가 쓰는 문자열과 같아야 한다** (`NpcCareerEventType` 주석 참고).
+  // 여기 없는 값이 오면 라벨 대신 원문이 뜨도록 두 — 조용히 사라지는 것보다 낫다.
+  const EVENT_LABEL: Record<string, string> = {
+    draft_picked: "드래프트 지명", draft_undrafted: "미지명",
+    trade: "트레이드", fa_signed: "FA 계약", release: "방출",
+    quit_baseball: "야구 포기", military_enlist: "입대",
+    military_discharge: "전역", military_exempt: "병역 면제",
+    retirement: "은퇴", graduation: "졸업",
+  };
+  function eventText(ev: import("../../shared/types/save").NpcCareerEvent): string {
+    if (ev.eventType === "trade") {
+      return `${$teamMap.get(ev.fromTeamId ?? "")?.name ?? ev.fromTeamId ?? ""}`
+        + ` → ${$teamMap.get(ev.toTeamId ?? "")?.name ?? ev.toTeamId ?? ""}`;
+    }
+    if (ev.eventType === "fa_signed") {
+      return `${$teamMap.get(ev.toTeamId ?? "")?.name ?? ev.toTeamId ?? ""} 입단`;
+    }
+    return ev.detail ?? "";
+  }
+
+  // ⚠ **한 해의 이야기가 두 곳에 나뉘어 있었다.** 성적·수상은 타임라인에,
+  // 드래프트·트레이드·입대·은퇴는 아래 별도 표에 있어서 "그 해에 무슨 일이
+  // 있었나"를 보려면 두 군데를 대조해야 했다. 연도별 타임라인이라면 같은
+  // 줄에 붙는 게 맞다 (사용자 확정 "연도별 타임라인").
   $: timelineEntries = (() => {
     const records = ($gameStore.protagonist.careerRecords ?? []).slice().reverse();
-    return records.map((rec, i) => {
+    const events = $gameStore.protagonist.careerEvents ?? [];
+    type Row = {
+      year: number;
+      // 기록 없는 해가 있다 — 아래 참고
+      rec: CareerSeasonRecord | null;
+      events: import("../../shared/types/save").NpcCareerEvent[];
+      teamChanged: boolean; leagueChanged: boolean;
+    };
+    const rows: Row[] = records.map((rec, i) => {
       const prev = records[i + 1];
       return {
-        rec,
+        year: rec.year,
+        rec: rec as CareerSeasonRecord | null,
+        events: events.filter((e) => e.year === rec.year),
         teamChanged:   !!(prev && prev.teamId   !== rec.teamId),
         leagueChanged: !!(prev && prev.leagueId !== rec.leagueId),
       };
     });
+    // ⚠ **기록 없는 해가 통째로 빠진다.** 시즌 기록은 뛰어야 생기는데
+    // 입대·전역·미지명은 안 뛴 해에도 일어난다 — 그 해만 이벤트로 채운다.
+    // 이걸 안 하면 군 복무 2년이 인생 기록에서 사라진다.
+    const covered = new Set(rows.map((r) => r.year));
+    for (const y of [...new Set(events.map((e) => e.year))]) {
+      if (covered.has(y)) continue;
+      rows.push({ year: y, rec: null, events: events.filter((e) => e.year === y),
+                  teamChanged: false, leagueChanged: false });
+    }
+    return rows.sort((a, b) => b.year - a.year);
   })();
 </script>
 
@@ -534,66 +580,43 @@
         <article class="card career-card">
           <h3>커리어 타임라인</h3>
           <div class="timeline">
-            {#each timelineEntries as entry}
+            {#each timelineEntries as entry (entry.year)}
               <div class="tl-item" class:tl-change={entry.teamChanged || entry.leagueChanged}>
                 <div class="tl-dot"></div>
                 <div class="tl-body">
                   <div class="tl-header">
-                    <span class="tl-year">{entry.rec.year}</span>
-                    <span class="tl-league">{leagueShortName(entry.rec.leagueId)}</span>
-                    <span class="tl-team">{$teamMap.get(entry.rec.teamId)?.name ?? entry.rec.teamId}</span>
+                    <span class="tl-year">{entry.year}</span>
+                    {#if entry.rec}
+                      <span class="tl-league">{leagueShortName(entry.rec.leagueId)}</span>
+                      <span class="tl-team">{$teamMap.get(entry.rec.teamId)?.name ?? entry.rec.teamId}</span>
+                    {/if}
                     {#if entry.leagueChanged}
                       <span class="tl-badge tl-badge-league">리그 이동</span>
                     {:else if entry.teamChanged}
                       <span class="tl-badge tl-badge-team">팀 이적</span>
                     {/if}
                   </div>
-                  {#if entry.rec.statLine}
+                  {#if entry.rec?.statLine}
                     <p class="tl-stat">{entry.rec.statLine}</p>
                   {/if}
-                  {#if entry.rec.awards.length > 0}
+                  {#if entry.rec && entry.rec.awards.length > 0}
                     <div class="tl-awards">
                       {#each entry.rec.awards as a}
                         <span class="tl-award">{a.label}{a.value ? ` ${a.value}` : ""}</span>
                       {/each}
                     </div>
                   {/if}
+                  {#each entry.events as ev}
+                    <p class="tl-event">
+                      <span class="tl-event-kind">{EVENT_LABEL[ev.eventType] ?? ev.eventType}</span>
+                      {eventText(ev)}
+                    </p>
+                  {/each}
                 </div>
               </div>
             {/each}
           </div>
         </article>
-
-        {#if ($gameStore.protagonist.careerEvents?.length ?? 0) > 0}
-          <article class="card career-card">
-            <h3>주요 이벤트</h3>
-            <table class="career-table">
-              <thead><tr><th>연도</th><th>유형</th><th>내용</th></tr></thead>
-              <tbody>
-                {#each [...($gameStore.protagonist.careerEvents ?? [])].reverse() as ev}
-                  <tr>
-                    <td class="year-cell">{ev.year}</td>
-                    <td>{
-                      ev.eventType === "trade" ? "트레이드" :
-                      ev.eventType === "fa_signed" ? "FA 계약" :
-                      ev.eventType === "military_enlist" ? "입대" :
-                      ev.eventType === "military_discharge" ? "전역" :
-                      ev.eventType === "draft_picked" ? "드래프트" :
-                      ev.eventType === "retirement" ? "은퇴" : ev.eventType
-                    }</td>
-                    <td>{
-                      ev.eventType === "trade"
-                        ? `${$teamMap.get(ev.fromTeamId ?? "")?.name ?? ev.fromTeamId ?? ""} → ${$teamMap.get(ev.toTeamId ?? "")?.name ?? ev.toTeamId ?? ""}`
-                        : ev.eventType === "fa_signed"
-                        ? `${$teamMap.get(ev.toTeamId ?? "")?.name ?? ev.toTeamId ?? ""} 입단`
-                        : ev.detail ?? ""
-                    }</td>
-                  </tr>
-                {/each}
-              </tbody>
-            </table>
-          </article>
-        {/if}
 
         {#if canRetireVoluntarily($gameStore.protagonist)}
           <article class="card career-card">
@@ -624,6 +647,9 @@
 </section>
 
 <style>
+  .tl-event { margin: 3px 0 0; color: #a8c8e8; font-size: 12px; }
+  .tl-event-kind { color: #e0a040; margin-right: 6px; }
+
   .retire-hint { color: #7f93b5; font-size: 12px; }
   .retire-warn { color: #f08080; font-size: 12px; line-height: 1.6; }
   .retire-actions { display: flex; gap: 8px; }

@@ -24,13 +24,19 @@ function parseResult<T>(json: string): T {
 // ⚠ **능력치를 골라 담는 자리다.** 여기 빠뜨린 값은 리그 경기에서 존재하지
 // 않는 것과 같다 — `clutch`·`mentality`·`battingClutch`가 생성·저장까지 되면서
 // 이 조립부에서만 빠져 있었고, 그래서 **주인공 경기에만 위기 보정이 있었다.**
+//
+// 같은 일이 도루에서 또 났다. `speed`·`baseInstinct`·`holdRunners`가 전부
+// 있는데 여기서 안 담겨서 **리그 전체 도루가 0**이었다(규정타석 97~102명 전원).
+// 능력치를 추가하면 이 조립부부터 확인할 것.
 interface SimPitcher {
   id: string; velocity: number; movement: number; command: number;
   control: number; stamina: number; clutch: number; mentality: number;
+  holdRunners: number;
 }
 interface SimBatter {
   id: string; contact: number; power: number; eye: number;
   discipline: number; battingClutch: number;
+  speed: number; baseInstinct: number;
 }
 
 function toSimPitcher(
@@ -54,6 +60,8 @@ function toSimPitcher(
     // 위기 보정은 상황이 정하는 축이라 컨디션 계수(f)를 곱하지 않는다
     clutch:    p?.clutch    ?? 50,
     mentality: p?.mentality ?? 50,
+    // 견제력 — 도루 시도를 누른다. 안 넘기면 엔진이 50(무보정)으로 본다
+    holdRunners: p?.holdRunners ?? 50,
   };
 }
 
@@ -73,6 +81,10 @@ function toSimBatter(
     eye:        b?.eye        ?? 50,
     discipline: b?.discipline ?? 50,
     battingClutch: b?.battingClutch ?? 50,
+    // ⚠ **이 둘을 안 넘기면 도루가 거의 안 나온다.** 엔진이 없으면 50으로 보고,
+    // 50은 시도 확률이 바닥이다. 능력치는 처음부터 있었는데 전달만 빠져 있었다
+    speed:        b?.speed        ?? 50,
+    baseInstinct: b?.baseInstinct ?? 50,
   };
 }
 

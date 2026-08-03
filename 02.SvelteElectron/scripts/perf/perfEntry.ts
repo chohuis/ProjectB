@@ -425,11 +425,16 @@ export async function pushCareerForward(): Promise<string | null> {
       return "faMarket(sign)";
     }
 
-    case "retirementAsk":
+    case "retirementAsk": {
       // 은퇴 권고를 **수락**한다 — 헤드리스는 커리어가 끝나는지 보는 게 목적이다.
-      // 실제 게임에서는 플레이어가 "더 뛴다"를 고를 수 있다
-      await retireProtagonist("decline");
-      return "retirementAsk(retire)";
+      // 실제 게임에서는 플레이어가 "더 뛴다"를 고를 수 있다(부상 강제는 제외).
+      //
+      // ⚠ 사유를 `decline`으로 고정하면 **부상 은퇴가 기록에 안 남는다.**
+      // 인생 기록·경력 이벤트가 그 값을 그대로 보여준다.
+      const why = pa.reason ?? "decline";
+      await retireProtagonist(why);
+      return `retirementAsk(${why})`;
+    }
 
     case "draftNotification": {
       if (_policy.rejectDraft) {
@@ -1207,7 +1212,13 @@ export function abilitySpreadProbe(leagueId = "LEAGUE_KBL"): Record<string, unkn
     if (!st || st.type !== "pitcher") continue;
     const q = st as unknown as { ip: number; er: number; k: number };
     if (!(q.ip >= 40)) continue;   // 규정 표본
-    const ovr = live[n.npcId]?.pitching?.ovr ?? n.pitching?.ovr ?? 0;
+    // ⚠ **시즌 시작 OVR로 잰다.** 현재 OVR은 성장·감퇴가 이미 반영된 값이라
+    // "그 시즌에 어떤 능력으로 던졌나"와 어긋난다 — 시즌 중 크게 성장한 신인이
+    // "높은 OVR인데 성적이 나쁜" 표본이 되어 상관을 흐린다. 실측에서 같은
+    // 설정인데 상관이 −0.51 ↔ −0.07로 갈렸고, 표본이 50~60명(사실상 선발)뿐이라
+    // 그런 표본 몇 개가 지표를 통째로 흔든다.
+    const lv = live[n.npcId];
+    const ovr = lv?.seasonStartPitching?.ovr ?? lv?.pitching?.ovr ?? n.pitching?.ovr ?? 0;
     if (!(ovr > 0)) continue;
     rows.push({ ovr, era: q.er * 9 / q.ip, ip: q.ip, k9: q.k * 9 / q.ip });
   }
@@ -2304,4 +2315,71 @@ export async function awardThresholdProbe(leagueId = "LEAGUE_KBL"): Promise<Reco
     최다부문: won.size ? Math.max(...won.values()) : 0,
   };
   return out;
+}
+
+/**
+ * 포스트시즌이 실제로 치러졌는가 (T7).
+ *
+ * ⚠ **일정만 보면 안 된다.** `postseasonBrackets`에 항목이 있어도 경기가
+ * 치러지지 않으면 `result`가 없다 — 그러면 우승팀이 안 정해지고 시즌
+ * 요약·수상·구단 성향 갱신이 전부 빈손으로 돈다. **결과가 붙었는지**를 본다.
+ */
+export function postseasonProbe(leagueId = "LEAGUE_KBL"): Record<string, unknown> {
+  const s = get(seasonStore);
+  const sched = (s.leagueSchedules?.[leagueId] ?? []).filter((e) => e.phase === "postseason");
+  const played = sched.filter((e) => !!e.result);
+  const finals = sched.filter((e) => e.id.startsWith("PS_FINAL"));
+  const champion = finals.find((e) => e.result)?.result?.winnerId ?? null;
+  const myTeam = get(gameStore).protagonist.teamId;
+  return {
+    경기수: sched.length,
+    치러진경기: played.length,
+    우승팀: champion,
+    // 주인공 팀이 가을야구에 갔는가 — 경로가 주인공까지 닿는지 본다
+    주인공팀참가: myTeam ? sched.some((e) => e.homeTeamId === myTeam || e.awayTeamId === myTeam) : false,
+  };
+}
+
+/**
+ * 도루 입력값의 실제 분포 (Phase 3-b).
+ *
+ * ⚠ **추측으로 계수를 만지면 빗나간다.** `STEAL_2B_SPEED_PIVOT`을 40 → 50으로
+ * 올리면 시도가 크게 줄 거라 봤는데 실측 도루 중앙이 22 → 23으로 그대로였다.
+ * 리그 타자의 `speed`·`baseInstinct`가 실제로 얼마인지를 안 보고 고쳤기 때문이다.
+ *
+ * 시도 확률은 `(speed − pivot) × 0.008 × (instinct / 50) × hold_factor`다.
+ * **instinct가 높으면 speed가 낮아도 확률이 커진다** — 두 값을 같이 봐야 한다.
+ */
+export function stealInputProbe(leagueId = "LEAGUE_KBL"): Record<string, unknown> {
+  const g = get(gameStore);
+  const live = get(npcLiveStatsStore);
+  const sp: number[] = [], inst: number[] = [], hold: number[] = [];
+  for (const n of g.npcs) {
+    if (n.currentLeague !== leagueId || n.careerStatus !== "active") continue;
+    if (n.playerType === "pitcher") {
+      const h = live[n.npcId]?.pitching?.holdRunners ?? n.pitching?.holdRunners;
+      if (typeof h === "number") hold.push(h);
+    } else {
+      const b = live[n.npcId]?.batting ?? n.batting;
+      if (typeof b?.speed === "number") sp.push(b.speed);
+      if (typeof b?.baseInstinct === "number") inst.push(b.baseInstinct);
+    }
+  }
+  const q = (v: number[], f: number) => {
+    if (v.length === 0) return 0;
+    const s = [...v].sort((a, b) => a - b);
+    return Math.round(s[Math.min(s.length - 1, Math.floor(s.length * f))] * 10) / 10;
+  };
+  // 지금 계수로 평균 주자의 시도 확률이 얼마인지 — 이게 판단의 핵심이다
+  const attemptAt = (speed: number, instinct: number) =>
+    Math.round(Math.max(0, Math.min(0.30,
+      (speed - 50) * 0.008 * (instinct / 50) * 1.0)) * 1000) / 10;
+  return {
+    타자수: sp.length,
+    "speed_p25": q(sp, 0.25), "speed_중앙": q(sp, 0.5), "speed_p75": q(sp, 0.75), "speed_p95": q(sp, 0.95),
+    "instinct_중앙": q(inst, 0.5), "instinct_p95": q(inst, 0.95),
+    "holdRunners_중앙": q(hold, 0.5),
+    "시도%_중앙주자": attemptAt(q(sp, 0.5), q(inst, 0.5)),
+    "시도%_상위주자": attemptAt(q(sp, 0.95), q(inst, 0.95)),
+  };
 }

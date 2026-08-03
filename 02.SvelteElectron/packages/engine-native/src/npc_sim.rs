@@ -32,7 +32,7 @@ fn cond_start_mod(pitcher_id: &str, conditions: &HashMap<String, SimPlayerCondit
 }
 
 struct PitAccum { outs: i32, er: i32, h: i32, k: i32, bb: i32, pc: i32 }
-struct BatAccum { ab: i32, h: i32, hr: i32, rbi: i32, bb: i32, k: i32 }
+struct BatAccum { ab: i32, h: i32, hr: i32, rbi: i32, bb: i32, k: i32, sb: i32 }
 
 fn sim_max_outs(pit: &SimPitcher, is_starter: bool, cond_mod: f64, rng: &mut impl Rng) -> i32 {
     let eff_stam = pit.stamina * cond_mod;
@@ -143,58 +143,71 @@ fn sim_at_bat(
 }
 
 // 타석 결과를 베이스/득점에 적용 → (outs_added, runs_scored, is_hit, is_hr)
+/// 베이스 상태. `Some(주자 lineup 인덱스)`.
+///
+/// ⚠ 예전엔 `[bool; 3]`이었다. 누가 나가 있는지를 안 들고 다니면 **도루를
+/// 누구에게 붙일지 알 수 없다** — `sb: 0` 하드코딩이 그래서 남아 있었다.
+type Bases = [Option<usize>; 3];
+
+fn occupied(b: &Bases) -> [bool; 3] { [b[0].is_some(), b[1].is_some(), b[2].is_some()] }
+
 fn apply_ab_result(
     result: &AbResult,
-    bases: &mut [bool; 3],
+    bases: &mut Bases,
+    batter_idx: usize,
     rng: &mut impl Rng,
 ) -> (i32, i32, bool, bool) {
+    let (b1, b2, b3) = (bases[0], bases[1], bases[2]);
     match result {
         AbResult::K | AbResult::Out => {
-            if matches!(result, AbResult::Out) && bases[2] && rng.gen::<f64>() < 0.10 {
-                bases[2] = false;
+            if matches!(result, AbResult::Out) && b3.is_some() && rng.gen::<f64>() < 0.10 {
+                bases[2] = None;
                 return (1, 1, false, false); // 희생플라이
             }
             (1, 0, false, false)
         }
-        AbResult::DoublePlay => (2, 0, false, false),
+        // 병살은 1루 주자를 지운다 — 예전엔 아웃 수만 늘리고 주자를 안 지워
+        // 그 주자가 계속 남아 있었다(신분을 안 들고 다녀 티가 안 났다)
+        AbResult::DoublePlay => { bases[0] = None; (2, 0, false, false) }
         AbResult::BB => {
-            let (b1, b2, b3) = (bases[0], bases[1], bases[2]);
-            let runs = if b1 && b2 && b3 { 1 } else { 0 };
-            bases[2] = if b1 && b2 { true } else { b3 };
-            bases[1] = if b1 { true } else { b2 };
-            bases[0] = true;
+            let runs = if b1.is_some() && b2.is_some() && b3.is_some() { 1 } else { 0 };
+            bases[2] = if b1.is_some() && b2.is_some() { b2 } else { b3 };
+            bases[1] = if b1.is_some() { b1 } else { b2 };
+            bases[0] = Some(batter_idx);
             (0, runs, false, false)
         }
         AbResult::Single => {
-            let (b1, b2, b3) = (bases[0], bases[1], bases[2]);
             let mut runs = 0;
-            if b3 { runs += 1; }
-            let new_b3 = if b2 { if rng.gen::<f64>() < 0.45 { runs += 1; false } else { true } } else { false };
+            if b3.is_some() { runs += 1; }
+            let new_b3 = if b2.is_some() {
+                if rng.gen::<f64>() < 0.45 { runs += 1; None } else { b2 }
+            } else { None };
             bases[2] = new_b3;
             bases[1] = b1;
-            bases[0] = true;
+            bases[0] = Some(batter_idx);
             (0, runs, true, false)
         }
         AbResult::Double => {
-            let (b1, b2, b3) = (bases[0], bases[1], bases[2]);
             let mut runs = 0;
-            if b3 { runs += 1; }
-            if b2 { runs += 1; }
-            let new_b3 = if b1 { if rng.gen::<f64>() < 0.5 { true } else { runs += 1; false } } else { false };
+            if b3.is_some() { runs += 1; }
+            if b2.is_some() { runs += 1; }
+            let new_b3 = if b1.is_some() {
+                if rng.gen::<f64>() < 0.5 { b1 } else { runs += 1; None }
+            } else { None };
             bases[2] = new_b3;
-            bases[1] = true;
-            bases[0] = false;
+            bases[1] = Some(batter_idx);
+            bases[0] = None;
             (0, runs, true, false)
         }
         AbResult::Triple => {
             let mut runs = 0;
-            for i in 0..3 { if bases[i] { runs += 1; bases[i] = false; } }
-            bases[2] = true;
+            for i in 0..3 { if bases[i].is_some() { runs += 1; bases[i] = None; } }
+            bases[2] = Some(batter_idx);
             (0, runs, true, false)
         }
         AbResult::HR => {
             let mut runs = 1;
-            for i in 0..3 { if bases[i] { runs += 1; bases[i] = false; } }
+            for i in 0..3 { if bases[i].is_some() { runs += 1; bases[i] = None; } }
             (0, runs, true, true)
         }
     }
@@ -249,7 +262,7 @@ fn sim_half_inning_pitch(
     bat_map: &mut HashMap<String, BatAccum>,
     rng: &mut impl Rng,
 ) -> (i32, usize, i32, f64) {  // (runs, new_lineup_pos, new_pit_outs, new_stamina)
-    let mut bases        = [false; 3];
+    let mut bases: Bases = [None; 3];
     let mut outs         = 0i32;
     let mut runs         = 0i32;
     let mut lpos         = lineup_pos;
@@ -270,14 +283,54 @@ fn sim_half_inning_pitch(
         .or_insert(PitAccum { outs: 0, er: 0, h: 0, k: 0, bb: 0, pc: 0 });
     let acc_ptr = acc as *mut PitAccum;
 
+    // 도루는 **투수 견제력**이 누른다. 이닝 내내 같은 투수이므로 한 번만 계산한다
+    let hold_factor = crate::tuning::steal_hold_factor(pit.hold_runners);
+
     while outs < 3 {
         if lineup.is_empty() { outs += 1; cur_pit_outs += 1; continue; }
+
+        // ── 도루 (타석 전) ──────────────────────────────────────────
+        //
+        // ⚠ **모델 두 벌 중 이쪽에만 없었다.** `match_engine`(주인공 경기)은
+        // 도루를 돌리는데 여기(리그 720경기)는 `sb: 0`을 하드코딩했다 —
+        // 리그 전체 도루가 0이라 도루왕이 구조적으로 안 나왔다.
+        // 규칙·계수는 `tuning.rs`에 올려 **두 모델이 같은 값을 본다.**
+        //
+        // 도루 실패는 아웃이고 **투수 이닝에도 들어간다** — 주자 아웃도
+        // 투수가 있는 동안 잡힌 아웃이다. 이걸 빼면 이닝이 짧아져
+        // 9이닝당 지표가 전부 부푼다(주인공 쪽에서 겪은 결함과 같은 형태).
+        for (from, to) in [(0usize, 1usize), (1usize, 2usize)] {
+            if outs >= 3 { break; }
+            let Some(ri) = bases[from] else { continue };
+            if bases[to].is_some() { continue; }
+            let r = &lineup[ri % n];
+            let (attempt, success) = if from == 0 {
+                crate::tuning::steal_second_probs(r.speed, r.base_instinct, hold_factor, 0.0)
+            } else {
+                crate::tuning::steal_third_probs(r.speed, r.base_instinct, hold_factor, 0.0)
+            };
+            if rng.gen::<f64>() >= attempt { continue; }
+            if rng.gen::<f64>() < success {
+                bases[to] = bases[from].take();
+                bat_map.entry(r.id.clone())
+                    .or_insert(BatAccum { ab: 0, h: 0, hr: 0, rbi: 0, bb: 0, k: 0, sb: 0 })
+                    .sb += 1;
+            } else {
+                bases[from] = None;
+                outs += 1;
+                cur_pit_outs += 1;
+                unsafe { (*acc_ptr).outs += 1; }
+            }
+        }
+        if outs >= 3 { break; }
+
         let batter = &lineup[lpos % n];
+        let batter_idx = lpos % n;
         lpos += 1;
 
         // 스태미나·컨디션과 **같은 축**으로 곱한다 — 능력치를 직접 흔드는 게
         // 아니라 그 순간의 실효 능력을 조정하는 것이다
-        let cm  = npc_clutch_mod(&bases, outs, inning, score_diff,
+        let cm  = npc_clutch_mod(&occupied(&bases), outs, inning, score_diff,
                                  pit.clutch, pit.mentality, batter.batting_clutch);
         let q   = quality(stamina) * start_cond_mod * cm;
         let vel = pit.velocity * q;
@@ -288,11 +341,12 @@ fn sim_half_inning_pitch(
         let (ab_result, pc) = sim_at_bat(
             vel, cmd, ctl, mov,
             batter.contact, batter.eye, batter.discipline, batter.power,
-            &bases, outs, rng,
+            &occupied(&bases), outs, rng,
         );
         stamina = (stamina - stamina_loss * pc as f64).max(0.0);
 
-        let (outs_added, runs_scored, is_hit, is_hr) = apply_ab_result(&ab_result, &mut bases, rng);
+        let (outs_added, runs_scored, is_hit, is_hr) =
+            apply_ab_result(&ab_result, &mut bases, batter_idx, rng);
 
         outs         += outs_added;
         cur_pit_outs += outs_added;
@@ -310,7 +364,7 @@ fn sim_half_inning_pitch(
         if is_bb  { pa.bb += 1; }
 
         let ba = bat_map.entry(batter.id.clone())
-            .or_insert(BatAccum { ab: 0, h: 0, hr: 0, rbi: 0, bb: 0, k: 0 });
+            .or_insert(BatAccum { ab: 0, h: 0, hr: 0, rbi: 0, bb: 0, k: 0, sb: 0 });
         if !is_bb { ba.ab += 1; }
         if is_hit  { ba.h  += 1; }
         if is_hr   { ba.hr += 1; }
@@ -332,7 +386,13 @@ fn build_pit_queue(
     if !rotation.is_empty() {
         q.push(rotation[rot_idx % rotation.len()].clone());
     }
+    // ⚠ **마무리를 불펜에서 뺀다.** 호출측(`rosterEngine.getTeamBullpen`)이
+    // 마무리를 불펜 목록에도 같이 넣어 보낸다. 그대로 두면 마무리가 점수순
+    // 정렬에서 대개 맨 앞이라 **6~7회에 소모되고 9회에 남아 있지 않다.**
+    // 뒤에 한 번 더 push하는 코드는 `any(id)` 가드에 걸려 아무 일도 안 했다.
+    let closer_id = closer.as_ref().map(|c| c.id.as_str());
     for p in bullpen {
+        if Some(p.id.as_str()) == closer_id { continue; }
         if !q.iter().any(|x| x.id == p.id) { q.push(p.clone()); }
     }
     if let Some(c) = closer {
@@ -400,11 +460,35 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
     let mut h_pit_outs = 0i32;
     let mut a_pit_outs = 0i32;
 
+    // ⚠ **마무리가 한 번도 등판하지 않았다.**
+    //
+    // 큐가 [선발, 불펜..., 마무리] 순서인데 앞에서부터 소모한다. 9이닝 경기에서
+    // 불펜을 전부 쓰는 일은 없으니 **맨 뒤의 마무리는 영영 안 나온다** —
+    // 팀마다 제일 좋은 불펜이 놀고, `pitcher_decision`의 `is_closer`가 참이
+    // 되는 투수가 없어 **리그 전체 세이브가 0**이었다(실측 규정투수 99~115명 전원).
+    //
+    // 실제 야구처럼 **접전 9회에 마무리를 낸다.** 요건은 세이브 판정과 같은
+    // 상수를 쓴다 — 따로 적으면 "나왔는데 세이브는 안 붙는" 경기가 생긴다.
+    let closer_pos = |q: &[SimPitcher], c: &Option<SimPitcher>| -> Option<usize> {
+        let c = c.as_ref()?;
+        q.iter().position(|p| p.id == c.id)
+    };
+    let h_closer_pos = closer_pos(&home_pit_q, &params.home_closer);
+    let a_closer_pos = closer_pos(&away_pit_q, &params.away_closer);
+
     for inning in 1i32..=9 {
         // 홈 투수 교체
         if h_pit_idx + 1 < home_pit_q.len() {
             let max = *pit_max_map.get(&home_pit_q[h_pit_idx].id).unwrap_or(&27);
             if h_pit_outs >= max { h_pit_idx += 1; h_pit_outs = 0; }
+        }
+        if inning == 9 {
+            let lead = home_score - away_score;
+            if let Some(ci) = h_closer_pos {
+                if lead > 0 && lead <= crate::tuning::SAVE_MAX_MARGIN && ci > h_pit_idx {
+                    h_pit_idx = ci; h_pit_outs = 0;
+                }
+            }
         }
         let h_pit = &home_pit_q[h_pit_idx.min(home_pit_q.len().saturating_sub(1))];
         let h_cond = cond_start_mod(&h_pit.id, &params.conditions);
@@ -425,6 +509,14 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
         if a_pit_idx + 1 < away_pit_q.len() {
             let max = *pit_max_map.get(&away_pit_q[a_pit_idx].id).unwrap_or(&27);
             if a_pit_outs >= max { a_pit_idx += 1; a_pit_outs = 0; }
+        }
+        if inning == 9 {
+            let lead = away_score - home_score;
+            if let Some(ci) = a_closer_pos {
+                if lead > 0 && lead <= crate::tuning::SAVE_MAX_MARGIN && ci > a_pit_idx {
+                    a_pit_idx = ci; a_pit_outs = 0;
+                }
+            }
         }
         let a_pit = &away_pit_q[a_pit_idx.min(away_pit_q.len().saturating_sub(1))];
         let a_cond = cond_start_mod(&a_pit.id, &params.conditions);
@@ -489,14 +581,19 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
     let margin    = (home_score - away_score).abs();
 
     // W/L/SV/HD 결정
-    let pitcher_decision = |pit_id: &str, team_won: bool, pit_q: &[SimPitcher], final_idx: usize| -> String {
+    let pitcher_decision = |pit_id: &str, team_won: bool, pit_q: &[SimPitcher], final_idx: usize,
+                            closer_id: Option<&str>| -> String {
         let acc = match pit_map.get(pit_id) { Some(a) => a, None => return "ND".into() };
         let is_starter = pit_q.first().map(|p| p.id == pit_id).unwrap_or(false);
-        let is_closer  = pit_q.len() > 1 && pit_q.last().map(|p| p.id == pit_id).unwrap_or(false);
+        // ⚠ **자리가 아니라 신분으로 본다.** 예전엔 `pit_q.last()`와 비교했는데
+        // 마무리가 불펜에 섞여 들어와 큐 중간에 있었다 — 등판해도 세이브가
+        // 안 붙었고, 큐 마지막은 제일 약한 불펜이라 실질적으로 아무도
+        // 세이브를 못 받았다(실측 규정투수 108~110명 전원 sv 0).
+        let is_closer  = closer_id.is_some_and(|c| c == pit_id) && !is_starter;
         let _ = final_idx;
         if team_won {
             if is_starter && acc.outs >= 15  { return "W".into(); }
-            if is_closer && margin <= 3       { return "SV".into(); }
+            if is_closer && margin <= crate::tuning::SAVE_MAX_MARGIN { return "SV".into(); }
             if !is_starter && !is_closer && acc.outs >= 3 { return "HD".into(); }
         } else if is_starter {
             return "L".into();
@@ -511,7 +608,9 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
         let pit_q     = if is_home { &home_pit_q } else { &away_pit_q };
         let final_idx = if is_home { h_pit_idx } else { a_pit_idx };
         let team_won  = if is_home { home_won } else { !home_won };
-        let decision  = pitcher_decision(id, team_won, pit_q, final_idx);
+        let closer_id = if is_home { params.home_closer.as_ref() } else { params.away_closer.as_ref() }
+            .map(|c| c.id.as_str());
+        let decision  = pitcher_decision(id, team_won, pit_q, final_idx, closer_id);
         let ip        = (acc.outs / 3) as f64 + (acc.outs % 3) as f64 / 10.0;
         player_lines.push(PlayerGameLine::Pitcher {
             player_id: id.clone(), ip, er: acc.er, h: acc.h, k: acc.k, bb: acc.bb, pc: acc.pc, decision,
@@ -535,7 +634,7 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
         };
         player_lines.push(PlayerGameLine::Batter {
             player_id: id.clone(), ab: acc.ab, h: acc.h, hr: acc.hr,
-            rbi: acc.rbi, bb: acc.bb, k: acc.k, sb: 0,
+            rbi: acc.rbi, bb: acc.bb, k: acc.k, sb: acc.sb,
         });
     }
 
@@ -3022,5 +3121,138 @@ mod clutch_tests {
         assert!(worst >= crate::tuning::NPC_CLUTCH_MIN - 1e-9, "하한 위반: {worst}");
         let best = npc_clutch_mod(&NONE, 0, 9, 0, 99.0, 99.0, 1.0);
         assert!(best <= crate::tuning::NPC_CLUTCH_MAX + 1e-9, "상한 위반: {best}");
+    }
+}
+
+// ── 마무리·세이브 ────────────────────────────────────────────────────────────
+
+#[cfg(test)]
+mod closer_tests {
+    use super::*;
+
+    // ⚠ **이건 집계로 잡기 어렵다.** 리그 세이브가 0이어도 "접전이 적었나"로
+    // 읽히지, 마무리가 큐 맨 뒤에 있어 영영 등판 못 한다는 건 안 보인다.
+    // 실제로 규정투수 99~115명 전원의 sv가 0인 걸 수상 자격선 점검에서야 봤다.
+
+    fn pit(id: &str, ovr: f64) -> SimPitcher {
+        SimPitcher {
+            id: id.into(), velocity: ovr, movement: ovr, command: ovr, control: ovr,
+            stamina: ovr, stamina_cap: 100.0, clutch: 50.0, mentality: 50.0,
+            hold_runners: 50.0,
+        }
+    }
+    fn bat(id: &str, ovr: f64) -> SimBatter {
+        SimBatter {
+            id: id.into(), contact: ovr, power: ovr, eye: ovr, discipline: ovr,
+            batting_clutch: 50.0, speed: 55.0, base_instinct: 55.0,
+        }
+    }
+    /// ⚠ **주력은 실측 분포를 쓴다.** 두 번 틀렸다:
+    ///
+    ///   1차 — 9명 전원 speed 55. 도루가 경기당 0.17개로 나와 "계수가 너무
+    ///         강하다"는 오판 직전까지 갔다. 평균값 9명은 대표성이 없다.
+    ///   2차 — 45~77로 흩뿌렸다. 그런데 **리그 실측은 p25 72 / 중앙 81 / p95 94**다.
+    ///         45는 존재하지 않는 값이라 여전히 현실과 달랐다.
+    ///
+    /// 계수를 이 분포 위에서 맞췄으므로 테스트도 같은 분포여야 한다.
+    fn lineup(prefix: &str, ovr: f64) -> Vec<SimBatter> {
+        // 실측 p25 72 ~ p95 94를 9명에 펼친다
+        (0..9).map(|i| {
+            let mut b = bat(&format!("{prefix}B{i}"), ovr);
+            b.speed = 71.0 + (i as f64) * 3.0;          // 71 ~ 95
+            b.base_instinct = 75.0;                      // 실측 중앙
+            b
+        }).collect()
+    }
+
+    /// 마무리를 둔 두 팀으로 여러 경기를 돌린다. 접전이면 마무리가 나와야 한다.
+    ///
+    /// ⚠ **호출측 모양 그대로 넘긴다.** `rosterEngine.getTeamBullpen`은 마무리를
+    /// **불펜 목록에도 같이** 넣어 보내고 점수순으로 정렬하므로 마무리가 대개
+    /// 맨 앞이다. 처음엔 여기서 마무리를 불펜에서 빼고 넘겼는데, 그러면
+    /// 테스트는 통과하고 실제로는 세이브가 0이었다 — 현실에 없는 입력이었다.
+    fn run(n: usize) -> (usize, usize) {
+        let mut appeared = 0usize;
+        let mut saves = 0usize;
+        for w in 0..n {
+            let hpen = || { let mut v = vec![pit("HCP", 75.0)];
+                v.extend((0..4).map(|i| pit(&format!("HRP{i}"), 58.0))); v };
+            let apen = || { let mut v = vec![pit("ACP", 75.0)];
+                v.extend((0..4).map(|i| pit(&format!("ARP{i}"), 58.0))); v };
+            let params = SimGameParams {
+                home_rotation: vec![pit("HSP", 62.0)],
+                away_rotation: vec![pit("ASP", 62.0)],
+                home_bullpen: hpen(),
+                away_bullpen: apen(),
+                home_closer: Some(pit("HCP", 75.0)),
+                away_closer: Some(pit("ACP", 75.0)),
+                home_lineup: lineup("H", 60.0),
+                away_lineup: lineup("A", 60.0),
+                home_rot_idx: 0, away_rot_idx: 0,
+                conditions: HashMap::new(),
+                week: w as i32 + 1,
+                home_team_id: "TEAM_H".into(), away_team_id: "TEAM_A".into(),
+            };
+            let r = sim_game(&params);
+            for line in &r.result.player_lines {
+                if let PlayerGameLine::Pitcher { player_id, decision, .. } = line {
+                    if player_id == "HCP" || player_id == "ACP" {
+                        appeared += 1;
+                        if decision == "SV" { saves += 1; }
+                    }
+                }
+            }
+        }
+        (appeared, saves)
+    }
+
+    #[test]
+    fn 마무리가_등판한다() {
+        // 큐가 [선발, 불펜 4, 마무리]라 앞에서부터 소모하면 마무리는 영영 안 나온다
+        let (appeared, _) = run(60);
+        assert!(appeared > 0, "60경기 동안 마무리가 한 번도 등판하지 않았다");
+    }
+
+    /// 도루가 **나오되 폭주하지 않는가.**
+    ///
+    /// KBO는 팀당 경기당 도루 0.5~0.9개다. 한 경기 두 팀 합쳐 **1.0~1.8개**.
+    ///
+    /// ⚠ **처음엔 0.2~3.0으로 뒀다가 못 걸렀다.** 그 폭이면 실측 도루왕 47~51
+    /// (KBO 30~40)·규정타석 중앙 22(KBO 8~10)가 전부 통과한다. 게다가 도루 실패
+    /// 아웃이 투수 이닝에 들어가 리그 ERA를 4.71 → 3.88로 끌어내렸다 —
+    /// 사용자 확정 "KBO 수준(ERA 4점대)"에서 벗어나는데 테스트는 초록이었다.
+    /// **범위를 실제 리그 수치로 좁힌다.**
+    #[test]
+    fn 도루가_현실적인_빈도로_나온다() {
+        let n = 80usize;
+        let mut sb = 0usize;
+        for w in 0..n {
+            let params = SimGameParams {
+                home_rotation: vec![pit("HSP", 62.0)],
+                away_rotation: vec![pit("ASP", 62.0)],
+                home_bullpen: (0..4).map(|i| pit(&format!("HRP{i}"), 58.0)).collect(),
+                away_bullpen: (0..4).map(|i| pit(&format!("ARP{i}"), 58.0)).collect(),
+                home_closer: None, away_closer: None,
+                home_lineup: lineup("H", 60.0),
+                away_lineup: lineup("A", 60.0),
+                home_rot_idx: 0, away_rot_idx: 0,
+                conditions: HashMap::new(),
+                week: w as i32 + 1,
+                home_team_id: "TEAM_H".into(), away_team_id: "TEAM_A".into(),
+            };
+            for line in &sim_game(&params).result.player_lines {
+                if let PlayerGameLine::Batter { sb: s, .. } = line { sb += *s as usize; }
+            }
+        }
+        let per_game = sb as f64 / n as f64;
+        assert!(per_game > 0.5, "도루가 경기당 {per_game:.2}개 — 너무 적다(KBO 1.0~1.8)");
+        assert!(per_game < 2.2, "도루가 경기당 {per_game:.2}개 — 너무 많다(KBO 1.0~1.8)");
+    }
+
+    #[test]
+    fn 접전이면_세이브가_기록된다() {
+        // 세이브가 0이면 세이브왕이 구조적으로 안 나온다 — 실측이 정확히 그랬다
+        let (_, saves) = run(60);
+        assert!(saves > 0, "60경기 동안 세이브가 한 건도 없었다");
     }
 }

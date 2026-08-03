@@ -222,10 +222,20 @@ export function getTeamBullpen(
   };
 
   // CP: 가용 CP 중 점수 최고, 없으면 전체 CP 중 최고 (fallback)
+  //
+  // ⚠ **CP가 0명이면 마무리가 빈 문자열이 되고, 그러면 세이브가 리그 전체에서
+  // 0이 된다.** 호출측이 `closer ? toSimPitcher(...) : null`로 넘기고 엔진은
+  // 마무리가 없으면 세이브를 안 붙인다 — 아무 오류도 안 나고 조용히 사라진다.
+  // 실제로 생성기가 SP/RP만 만들던 시절 규정투수 94~110명 전원의 sv가 0이었다.
+  //
+  // 생성은 고쳤지만(팀당 CP 1명) 트레이드·부상·은퇴로 시즌 중에 비면 같은 일이
+  // 다시 난다. **CP가 없으면 제일 좋은 불펜을 마무리로 쓴다** — 실제 구단도 그렇다.
   const cpPool = availableCp.length > 0 ? availableCp
     : reliefs.filter((e) => playerDetails(e).position === "CP");
   const cpSorted = [...cpPool].sort((a, b) => score(b) - score(a));
-  const closer = cpSorted[0]?.id ?? "";
+  const closer = cpSorted[0]?.id
+    ?? [...availableRp].sort((a, b) => score(b) - score(a))[0]?.id
+    ?? "";
 
   // RP 불펜: 가용 RP + 가용 CP → 점수 내림차순 (CP는 마무리 제외 후 포함 가능)
   const bullpenPool = [
@@ -264,6 +274,14 @@ const FIELD_POSITIONS = ["C", "SS", "CF", "2B", "3B", "RF", "LF", "1B"] as const
  * ③ 백업이 없는(1명뿐인) 야수 자리
  *
  * `count`보다 짧게 돌려줄 수 있다 — 그 뒤는 생성기가 무작위로 채운다.
+ *
+ * ⚠ **①~③을 순서대로 다 채우면 ②가 굶는다.** 고교는 한 해 정원이 10명인데
+ * 빈 자리(①)와 백업 없는 자리(③)가 합쳐 8자리를 넘는 팀이 흔하다. 그러면
+ * 투수 몫이 남지 않고, 다음 해에도 같은 일이 반복된다 —
+ * 실측 고교 투수 4~5명(하한 6), **102팀 중 21팀** 미달.
+ *
+ * 그래서 **투수 몫을 먼저 떼어 둔다.** 야수 공백(①)은 경기가 성립하지 않는
+ * 문제라 그대로 최우선이고, 그 다음이 투수, 백업(③)은 마지막이다.
  */
 export function neededPositions(
   roster: Array<{ playerType?: string; position?: string }>,
@@ -278,15 +296,21 @@ export function neededPositions(
     cnt[pos] = (cnt[pos] ?? 0) + 1;
   }
 
+  const empty  = FIELD_POSITIONS.filter((pos) => (cnt[pos] ?? 0) === 0);
+  const backup = FIELD_POSITIONS.filter((pos) => (cnt[pos] ?? 0) === 1);
+  const pitShort = Math.max(0, minPitchers - pitchers);
+
+  // 투수 몫 — 남은 자리를 백업(③)과 나눠 갖는다. 공백(①)은 먼저 뺀다
+  const afterEmpty = Math.max(0, count - empty.length);
+  const pitQuota = Math.min(pitShort, afterEmpty);
+
   const out: string[] = [];
   const push = (v: string) => { if (out.length < count) out.push(v); };
 
-  for (const pos of FIELD_POSITIONS) if ((cnt[pos] ?? 0) === 0) push(pos);
+  for (const pos of empty) push(pos);
   // 투수는 선발 우선 — 로테이션이 먼저 돌아야 경기가 성립한다
-  for (let i = pitchers; i < minPitchers && out.length < count; i++) {
-    push(i % 3 === 2 ? "RP" : "SP");
-  }
-  for (const pos of FIELD_POSITIONS) if ((cnt[pos] ?? 0) === 1) push(pos);
+  for (let i = 0; i < pitQuota; i++) push((pitchers + i) % 3 === 2 ? "RP" : "SP");
+  for (const pos of backup) push(pos);
   return out;
 }
 

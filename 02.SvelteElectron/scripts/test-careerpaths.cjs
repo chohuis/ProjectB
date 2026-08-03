@@ -272,6 +272,99 @@ const PATHS = [
     },
   },
   {
+    id: "T7",
+    name: "포스트시즌 — 가을야구가 실제로 치러지는가",
+    // ⚠ **일정만 있고 결과가 안 붙는 경우를 잡는다.** 브래킷에 항목이 있어도
+    // 경기가 안 치러지면 `result`가 없고, 그러면 우승팀이 안 정해진다 —
+    // 시즌 요약·구단 성향 갱신·수상이 전부 빈손으로 돈다. **결과**를 본다.
+    policy: (stage) => stage === "highschool"
+      ? { draft: true, university: false, independent: true }
+      : { draft: true, university: false, independent: false },
+    maxSeasons: 12,
+    until: (a) => a.careerStage().startsWith("pro"),
+    async check(app, r) {
+      if (!r.hit) throw new Error(`프로에 도달 못 함 — ${r.reason}`);
+      // 프로 첫 시즌을 끝까지 민다 — 포스트시즌은 정규 시즌 뒤에 온다
+      const season = app.currentSeason();
+      await drive(app, {
+        maxSeasons: 2,
+        until: (a) => a.currentSeason() > season,
+        applyPolicy: () => app.setCareerPolicy({ draft: true, university: false, independent: false }),
+        onTick: (a) => {
+          const p = a.postseasonProbe("LEAGUE_KBL");
+          if ((p.치러진경기 ?? 0) > 0) a._psSeen = p;
+        },
+      });
+      const ps = app._psSeen ?? app.postseasonProbe("LEAGUE_KBL");
+      if ((ps.경기수 ?? 0) === 0) throw new Error("포스트시즌 일정이 아예 없다");
+      if ((ps.치러진경기 ?? 0) === 0) {
+        throw new Error(`포스트시즌 ${ps.경기수}경기가 잡혔는데 한 경기도 안 치러졌다`);
+      }
+      if (!ps.우승팀) throw new Error("결승이 끝났는데 우승팀이 없다");
+      return `${ps.치러진경기}/${ps.경기수}경기 · 우승 ${ps.우승팀}`
+        + (ps.주인공팀참가 ? " · 주인공 팀 진출" : "");
+    },
+  },
+  {
+    id: "T9",
+    name: "FA — 계약이 끝나고 시장을 거쳐 다시 뛴다",
+    // **프로 커리어에서 매번 도는 경로인데 끝까지 밟아본 적이 없다.**
+    // 계약 만료 → FA 시장 → 재계약까지 이어져야 한다. 중간에 막히면
+    // 자동 진행이 멈추고, 그건 "은퇴"가 아니라 결함이다.
+    policy: (stage) => stage === "highschool"
+      ? { draft: true, university: false, independent: true }
+      : { draft: true, university: false, independent: false },
+    maxSeasons: 20,
+    until: (a) => a.careerStage().startsWith("pro"),
+    async check(app, r, out) {
+      if (!r.hit) throw new Error(`프로에 도달 못 함 — ${r.reason}`);
+      // FA 자격은 연차가 쌓여야 온다 — 계약 결정을 계속 눌러가며 민다
+      const fa = await drive(app, {
+        maxSeasons: 14,
+        until: () => out.faSigned,
+        applyPolicy: () => app.setCareerPolicy({ draft: true, university: false, independent: false }),
+        onDecision: (_a, decided) => {
+          if (typeof decided === "string" && decided.startsWith("faMarket")) out.faSigned = decided;
+        },
+      });
+      if (!fa.hit) {
+        throw new Error(`FA 시장에 한 번도 못 갔다 — ${fa.reason}`
+          + ` (경로: ${fa.trail.slice(-4).join(" / ")})`);
+      }
+      // **계약까지 확인한다.** `faMarket(wait)`로 대기만 하고 끝나면
+      // 무소속인 채 시즌을 나는 것이라 경로를 밟았다고 할 수 없다
+      const st = app.contractState();
+      if (!st.contract) throw new Error(`FA는 거쳤는데 계약이 없다 (${out.faSigned})`);
+      return `${out.faSigned} → ${st.contract.team} ${st.contract.salary}만원 ${st.contract.years}년`;
+    },
+  },
+  {
+    id: "T10",
+    name: "은퇴 — 커리어가 실제로 끝난다",
+    // ⚠ **끝나지 않는 게임이었다.** `retirementAsk`를 만드는 코드는 있었는데
+    // 받는 화면이 없어 자동 진행이 거기서 멈춘 채 안 풀렸고,
+    // `retireProtagonist`는 호출부가 하나도 없었다. 목표 커리어가 15~20시즌인데
+    // 25시즌(42세)을 완주하고도 은퇴가 0건이었다.
+    policy: (stage) => stage === "highschool"
+      ? { draft: true, university: false, independent: true }
+      : { draft: true, university: false, independent: false },
+    maxSeasons: 30,
+    until: (a) => !!a.retired(),
+    check(app, r) {
+      const ret = app.retired();
+      if (!ret) {
+        const st = app.protagonistState();
+        throw new Error(`${r.reason} — ${st.age}세까지 뛰고도 은퇴가 없다`);
+      }
+      const st = app.protagonistState();
+      // 나이가 말이 되는가 — 20대에 노쇠 은퇴가 나오면 판정이 잘못된 것이다
+      if (ret.reason === "decline" && (st.age ?? 0) < 30) {
+        throw new Error(`${st.age}세에 노쇠 은퇴 — 판정 기준이 너무 이르다`);
+      }
+      return `${ret.year}년 ${st.age}세 은퇴 (사유 ${ret.reason})`;
+    },
+  },
+  {
     id: "T11",
     name: "NPC 부상 — 발생하고 회복되는가",
     // **실제로 있었던 결함을 고정한다.** 부상이 나면 `careerStatus`를
@@ -333,7 +426,7 @@ const PATHS = [
         aca: { semesters: 0, gpa: null, warn: 0, repeated: 0 },
         injPeak: 0, injMax: 0, injSeen: false, recovered: false, samples: 0,
         natlTournaments: new Set(), natlMaxSquad: 0, natlProtagonist: false,
-        demotedAt: null,
+        demotedAt: null, faSigned: null,
       };
       // `until`이 app만 받으므로 onTick이 여기 얹는다 (T8)
       app.natlSeen = 0;
