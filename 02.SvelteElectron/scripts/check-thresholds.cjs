@@ -46,13 +46,15 @@ const r3 = (v) => Math.round(v * 1000) / 1000;
     await app.boot({ slotId: "THR", worldSeed: SEED, seasonYear: 2026 });
     app.setCareerPolicy({ draft: true, university: false, independent: true });
 
-    const start = app.currentSeason();
     let guard = 0;
     // 시즌마다 찍는다 — 한 해만 보면 그 해 변동을 기준선 문제로 오독한다
     const seasons = [];
 
-    while (guard++ < 4000) {
-      if (app.currentSeason() - start >= SEASONS) break;
+    // ⚠ **연도 차이로 세면 한 시즌이 빈다.** 수집은 시즌 종료 시점에 하는데
+    // 종료 판정 전에 위 조건이 먼저 걸린다 — `--seasons 3`인데 2시즌만 모였다.
+    // **모은 개수로 센다.** 상관은 표본이 전부라 한 시즌이 통째로 빠지면 크다.
+    while (guard++ < 6000) {
+      if (seasons.length >= SEASONS) break;
       if (app.retired()) break;
       const before = app.currentWeek();
       await app.autoRun();

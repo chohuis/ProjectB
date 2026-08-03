@@ -2318,10 +2318,15 @@ export async function awardThresholdProbe(leagueId = "LEAGUE_KBL"): Promise<Reco
     }
   }
   const minTitles = rules.mvp.minTitles;
+  const multi = [...won.values()].filter((n) => n >= minTitles).length;
+  // ⚠ **판정을 여기 다시 적으면 화면·기록과 어긋난다.** `applySeasonAwards`가
+  // minTitles 미달인 해엔 "가장 압도적으로 1위한 선수"에게 준다(사용자 확정) —
+  // 이 프로브도 같은 결과를 보여야 검사가 거짓 안심을 안 준다
   out["MVP"] = {
-    기준: `${minTitles}개 이상`,
-    해당: [...won.values()].filter((n) => n >= minTitles).length,
+    기준: `${minTitles}개 이상 (미달 시 최고 압도)`,
+    해당: multi > 0 ? multi : (won.size > 0 ? 1 : 0),
     최다부문: won.size ? Math.max(...won.values()) : 0,
+    폴백: multi === 0 && won.size > 0,
   };
   return out;
 }

@@ -51,14 +51,22 @@ export interface AwardWinner {
   valueText: string;
   /** "방어율왕 (2.31)" — 경력기록에 남는 문자열과 동일 */
   title: string;
+  /**
+   * 2위와의 상대 격차 (0~). **MVP 폴백의 기준이다.**
+   *
+   * 부문마다 단위가 달라 절대값으로는 비교가 안 된다(다승 20 vs 타율 .338).
+   * 비율로 재면 "얼마나 압도적으로 1위였나"가 부문 간에 비교된다.
+   */
+  dominance: number;
 }
 
 /** 한 부문의 1위 — 자격 미달은 후보에서 뺀다 */
 function winnerOf(
   def: AwardDef,
   stats: Record<string, PlayerSeasonStats>,
-): { playerId: string; value: number } | null {
+): { playerId: string; value: number; second: number | null } | null {
   let best: { playerId: string; value: number } | null = null;
+  let second: number | null = null;
   for (const [playerId, st] of Object.entries(stats)) {
     if (def.minIp != null) {
       if (st.type !== "pitcher" || finiteOr(st.ip) < def.minIp) continue;
@@ -69,7 +77,10 @@ function winnerOf(
     const v = finiteOr((st as unknown as Record<string, unknown>)[def.stat], NaN);
     if (!Number.isFinite(v)) continue;
     if (best == null || (def.order === "desc" ? v > best.value : v < best.value)) {
+      if (best != null) second = best.value;
       best = { playerId, value: v };
+    } else if (second == null || (def.order === "desc" ? v > second : v < second)) {
+      second = v;
     }
   }
   // ⚠ **자격선이 없으면 0이 1위가 된다.** 실측에서 도루왕(0)·세이브왕(0)·
@@ -78,7 +89,7 @@ function winnerOf(
   if (best == null) return null;
   if (def.minValue != null && best.value < def.minValue) return null;
   if (def.maxValue != null && best.value > def.maxValue) return null;
-  return best;
+  return { ...best, second };
 }
 
 function fmt(def: AwardDef, v: number): string {
@@ -107,9 +118,14 @@ export function computeAwards(
     const w = winnerOf(def, stats);
     if (!w) continue;
     const valueText = fmt(def, w.value);
+    // 방어율은 낮을수록 좋다 — 방향을 맞춰야 부문 간 비교가 된다
+    const gap = w.second == null ? 0
+      : def.order === "desc" ? w.value - w.second : w.second - w.value;
+    const base = Math.abs(w.second ?? w.value) || 1;
     out.push({
       defId: def.id, label: def.label, playerId: w.playerId, value: w.value,
       valueText, title: `${def.label} (${valueText})`,
+      dominance: Math.max(0, gap / base),
     });
   }
   return out;
@@ -142,16 +158,31 @@ export async function applySeasonAwards(seasonYear: number): Promise<string[]> {
     const stats: Record<string, PlayerSeasonStats> = leagueStatsOf(s, leagueId);
     if (Object.keys(stats).length === 0) continue;
 
-    for (const w of computeAwards(rules, stats)) {
+    // ⚠ **MVP는 리그별로 뽑는다.** `won`은 전 리그를 한 Map에 담으므로
+    // 여기서 리그 안에서만 판정해야 한다 — 리그를 합치면 KBO MVP와 고교
+    // MVP가 같은 저울에 올라간다.
+    const winners = computeAwards(rules, stats);
+    const inLeague = new Map<string, number>();
+    for (const w of winners) {
       const list = won.get(w.playerId) ?? [];
       list.push(w.title);
       won.set(w.playerId, list);
+      inLeague.set(w.playerId, (inLeague.get(w.playerId) ?? 0) + 1);
     }
-  }
 
-  // MVP — 부문 1위를 여럿 가져간 선수. 별도 지표를 만들면 부문 수상과 어긋난다
-  for (const [playerId, titles] of won) {
-    if (titles.length >= rules.mvp.minTitles) titles.push(rules.mvp.label);
+    // MVP — 부문 1위를 여럿 가져간 선수. 별도 지표를 만들면 부문 수상과 어긋난다
+    const multi = [...inLeague.entries()].filter(([, n]) => n >= rules.mvp.minTitles);
+    if (multi.length > 0) {
+      for (const [playerId] of multi) won.get(playerId)?.push(rules.mvp.label);
+    } else if (winners.length > 0) {
+      // ⚠ **아무도 2부문을 못 채우는 해가 있다** (사용자 확정 2026-08-03).
+      // 8부문에 자격자 100명이면 석권이 매년 나오지 않는다 — 실측 격년꼴이었다.
+      // 실제 리그는 매년 MVP가 나오므로, 그 해엔 **가장 압도적으로 1위를 한**
+      // 선수에게 준다. `minTitles`를 1로 낮추면 한 해에 8명이 되어 의미가 없고,
+      // 별도 지표를 만들면 부문 1위와 어긋난다(설계 원칙).
+      const top = winners.reduce((a, b) => (b.dominance > a.dominance ? b : a));
+      won.get(top.playerId)?.push(rules.mvp.label);
+    }
   }
 
   if (won.size === 0) return logs;
