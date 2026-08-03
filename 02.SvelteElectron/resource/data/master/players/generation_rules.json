@@ -911,6 +911,18 @@
       "baseChance": 0.05
     }
   },
+  "developmentPlayerRules": {
+    "_note": "육성선수 — 2군이 보직 하한 아래로 내려가면 그만큼만 만든다. 읽는 곳: repo/slotLifecycleV3.ts(generateFarmDevelopmentV3)",
+    "_note2": "**정원까지 채우지 않는다.** 국내 2군은 드래프트가 공급하므로 정원을 채우면 드래프트가 무의미해진다. 해외 팬(generateOverseasIntakeV3)은 하부 구조가 없어 정원까지 채우는 것과 다르다",
+    "_note3": "minPitchers/minBatters는 rosterMin 26 × 보직비율(0.45/0.55)에서 여유 2를 민 선이다. test-roster-balance의 하한과 같은 근거",
+    "leagues": [
+      "LEAGUE_KBL_FARM"
+    ],
+    "minPitchers": 9,
+    "minBatters": 12,
+    "maxPerYear": 4,
+    "_maxNote": "한 팀이 한 해에 받는 상한. 이걸 막지 않으면 한 해에 로스터가 통째로 새 선수로 바뀜다"
+  },
   "foreignRules": {
     "_note": "외국인 선수 정본. KBO 기준 보유 3명·투수 최대 2명. 읽는 곳: repo/newGameV3(초기 로스터) → Rust generate_league_roster. KBL은 진행 중인 리그라 새 게임 시점에 이미 외국인이 있어야 한다",
     "_note2": "ovrMin~ovrMax 폭이 넓은 건 의도다(사용자 확정) — 대박/쪽박 편차. 어떤 팀은 에이스를, 어떤 팀은 실패작을 데려온다. 팀당 3명이 각자 독립 추첨이라 팀 전력 차가 생긴다",

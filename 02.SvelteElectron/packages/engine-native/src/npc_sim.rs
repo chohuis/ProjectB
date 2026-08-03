@@ -1704,7 +1704,21 @@ pub fn generate_freshmen(params: GenerateFreshmenParams) -> Vec<NpcSaveState> {
         let position = match params.needed_positions.get(i) {
             Some(p) if !p.is_empty() => p.clone(),
             _ => {
-                if rng.next() < 0.3 { "SP".to_string() }
+                // ⚠ **여기가 파이프라인 전체의 투수 비율을 정한다.**
+                //
+                // 예전엔 0.3이었다. 로스터 생성은 `pitcher_ratio`(0.45)로 만드는데
+                // **신입생은 30%만 투수**라, 세대가 교체될수록 리그가 30%로 수렴한다.
+                // 30명 로스터 기준 투수 13.5명 → 9명이다. 실측에서 고교 투수가
+                // 23/102팀 미달이었고, 그 부족이 대학·독립·드래프트를 거쳐
+                // 프로까지 그대로 내려갔다 — 구단당 투수 총량이 11~13명(하한 21).
+                //
+                // 2군에 육성선수를 넣어도 안 풀린 이유가 이것이다. **상류가 마르면
+                // 하류에서 아무리 퍼도 안 찬다.**
+                let pit_ratio = if params.pitcher_ratio > 0.0 { params.pitcher_ratio } else { 0.45 };
+                if rng.next() < pit_ratio {
+                    // 선발 우선 — 로테이션이 먼저 돌아야 경기가 성립한다
+                    if rng.next() < 0.55 { "SP".to_string() } else { "RP".to_string() }
+                }
                 else { POSITIONS[(rng.next() * POSITIONS.len() as f64) as usize % POSITIONS.len()].to_string() }
             }
         };
@@ -3254,5 +3268,62 @@ mod closer_tests {
         // 세이브가 0이면 세이브왕이 구조적으로 안 나온다 — 실측이 정확히 그랬다
         let (_, saves) = run(60);
         assert!(saves > 0, "60경기 동안 세이브가 한 건도 없었다");
+    }
+}
+
+// ── 신입생 보직 비율 ─────────────────────────────────────────────────────────
+
+#[cfg(test)]
+mod freshmen_ratio_tests {
+    use super::*;
+    use crate::sim_types::GenerateFreshmenParams;
+
+    /// ⚠ **폴백 비율이 파이프라인 전체의 투수 수를 정한다.**
+    ///
+    /// 로스터 생성은 `pitcher_ratio`(0.45)로 만드는데 신입생 폴백은 0.3이 박혀
+    /// 있었다. 세대가 교체될수록 리그가 30%로 수렴한다 — 30명 로스터 기준
+    /// 투수 13.5명 → 9명이다. 실측 고교 23/102팀 투수 미달이었고, 그 부족이
+    /// 대학·독립·드래프트를 거쳐 프로까지 내려가 구단당 총량이 11~13명(하한 21)이었다.
+    ///
+    /// **2군에 육성선수를 넣어도 안 풀렸다** — 상류가 마르면 하류에서 퍼도 안 찬다.
+    #[test]
+    fn 신입생_투수_비율이_로스터_생성과_같다() {
+        let make = |ratio: f64| {
+            let out = generate_freshmen(GenerateFreshmenParams {
+                school_id: "SCHOOL_T".into(), team_id: "TEAM_T".into(),
+                annual_roster_size: 400,
+                pitching_ovr_min: 45.0, pitching_ovr_max: 70.0,
+                batting_ovr_min: 45.0, batting_ovr_max: 70.0,
+                dev_rate_min: 45.0, dev_rate_max: 75.0,
+                named_npcs: vec![], season_year: 2026, id_offset: 0,
+                needed_positions: vec![],   // 전부 폴백으로 뽑힌다
+                pitcher_ratio: ratio,
+            });
+            let pit = out.iter().filter(|n| n.player_type == "pitcher").count();
+            pit as f64 / out.len() as f64
+        };
+        let r = make(0.45);
+        assert!((r - 0.45).abs() < 0.06, "폴백 투수 비율 {r:.3} — 목표 0.45");
+
+        // 규칙이 0이면(구 페이로드) 기본값 0.45로 떨어져야 한다 — 0.3으로 돌아가면 안 된다
+        let d = make(0.0);
+        assert!((d - 0.45).abs() < 0.06, "기본값 투수 비율 {d:.3} — 0.45여야 한다");
+    }
+
+    #[test]
+    fn 신입생_투수는_선발이_더_많다() {
+        // 로테이션이 먼저 돌아야 경기가 성립한다
+        let out = generate_freshmen(GenerateFreshmenParams {
+            school_id: "SCHOOL_T".into(), team_id: "TEAM_T".into(),
+            annual_roster_size: 400,
+            pitching_ovr_min: 45.0, pitching_ovr_max: 70.0,
+            batting_ovr_min: 45.0, batting_ovr_max: 70.0,
+            dev_rate_min: 45.0, dev_rate_max: 75.0,
+            named_npcs: vec![], season_year: 2026, id_offset: 0,
+            needed_positions: vec![], pitcher_ratio: 0.45,
+        });
+        let sp = out.iter().filter(|n| n.position == "SP").count();
+        let rp = out.iter().filter(|n| n.position == "RP").count();
+        assert!(sp > rp, "선발 {sp} vs 불펜 {rp} — 선발이 더 많아야 한다");
     }
 }

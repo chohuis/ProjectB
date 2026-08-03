@@ -147,6 +147,31 @@ const r3 = (v) => Math.round(v * 1000) / 1000;
       log(`         OVR 상위25% ${s.spread["상위25% OVR"] ?? "-"} vs 하위25% ${s.spread["하위25% OVR"] ?? "-"}`
         + `  (차 ${((s.spread["상위25% OVR"] ?? 0) - (s.spread["하위25% OVR"] ?? 0)).toFixed(1)})`);
     }
+
+    // ── 합산 상관 ────────────────────────────────────────────
+    //
+    // ⚠ **시즌별 상관은 표본 60이라 못 쓴다.** `ip >= 40` 필터가 사실상 선발만
+    // 남겨서, 몇 명이 지표를 통째로 흔든다 — 같은 설정에서 −0.13 ~ −0.64가
+    // 나왔고 "둘째 시즌에 무너진다"는 잘못된 결론에 이를 뻔했다.
+    //
+    // 시즌을 합쳐 표본을 늘린다. **불펜을 넣는 건 안 된다** — 마무리는
+    // OVR이 높고 짧은 이닝만 던져 ERA가 낮으니 상관이 인위적으로 강해진다.
+    const pooled = seasons.flatMap((s2) => s2.spread.행 ?? []);
+    if (pooled.length >= 30) {
+      const xs = pooled.map((r) => r[0]);
+      const ys = pooled.map((r) => r[1]);
+      const mean = (v) => v.reduce((a, b) => a + b, 0) / v.length;
+      const mx = mean(xs), my = mean(ys);
+      let num = 0, dx = 0, dy = 0;
+      for (let i = 0; i < xs.length; i++) {
+        num += (xs[i] - mx) * (ys[i] - my);
+        dx += (xs[i] - mx) ** 2; dy += (ys[i] - my) ** 2;
+      }
+      const r = dx > 0 && dy > 0 ? num / Math.sqrt(dx * dy) : 0;
+      log("");
+      log(`   합산 ${seasons.length}시즌 · 표본 ${pooled.length}  →  OVR-ERA ${r3(r)}`);
+      log(`   (시즌별은 표본 60이라 못 쓴다 — 이 값으로 판단한다)`);
+    }
   } catch (e) {
     log("ERR " + String((e && e.stack) || e).split("\n").slice(0, 8).join("\n    "));
   } finally {

@@ -41,7 +41,7 @@ import {
   makeSeriesGame, nextGameNum,
 } from "../utils/postseasonEngine";
 import { isV3SlotActive } from "../repo/v3Mode";
-import { generateFreshmenV3, ensureLeagueActivatedV3, generateOverseasIntakeV3 } from "../repo/slotLifecycleV3";
+import { generateFreshmenV3, ensureLeagueActivatedV3, generateOverseasIntakeV3, generateFarmDevelopmentV3 } from "../repo/slotLifecycleV3";
 import { applyForeignTurnover } from "./foreignPlayers";
 
 // ── weekPhases 도메인 모듈 (R4: training·academics·events·games·injuries·growth·market·digest) ──
@@ -168,6 +168,14 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       // ── v3: 신입생은 Rust 생성 — 진급 후 grade 1이 빈 팀에 채움 ──
       const created = await generateFreshmenV3(currentSeasonYear);
       if (created > 0) logs.push(`[신입생] ${created}명 입학 (Rust 생성)`);
+
+      // ── 육성선수: 2군 보직 하한 미달분만 ────────────────────────
+      //
+      // ⚠ 유출은 다 막았는데(콜다운·트레이드·공백 충원 하한) 그러자 반대편이
+      // 막혔다 — 2군 투수가 하한이면 1군 포수 공백을 메울 수가 없다.
+      // 하한을 더 걸어봐야 교착이라 **없는 사람을 만들어야 한다.**
+      const dev = await generateFarmDevelopmentV3(currentSeasonYear);
+      if (dev > 0) logs.push(`[육성선수] ${dev}명 (2군 보직 하한 충원)`);
 
       // ── 해외 리그 로스터 보장 (확장팩) ──────────────────────────
       //

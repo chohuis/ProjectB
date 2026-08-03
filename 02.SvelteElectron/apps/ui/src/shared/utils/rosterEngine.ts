@@ -270,8 +270,9 @@ const FIELD_POSITIONS = ["C", "SS", "CF", "2B", "3B", "RF", "LF", "1B"] as const
  * 그 팀에 **모자란 자리**를 우선순위 순으로 돌려준다.
  *
  * ① 한 명도 없는 야수 자리 (포수가 맨 앞 — 전문 요원이라 0명이면 경기 불성립)
- * ② 투수가 하한 미달이면 SP·RP
- * ③ 백업이 없는(1명뿐인) 야수 자리
+ * ② 야수 총원이 타순(9)에 못 미치면 제일 얇은 자리부터
+ * ③ 투수가 하한 미달이면 SP·RP
+ * ④ 백업이 없는(1명뿐인) 야수 자리
  *
  * `count`보다 짧게 돌려줄 수 있다 — 그 뒤는 생성기가 무작위로 채운다.
  *
@@ -287,6 +288,8 @@ export function neededPositions(
   roster: Array<{ playerType?: string; position?: string }>,
   count: number,
   minPitchers = 0,
+  /** 타순 한 바퀴. **경기 성립 조건이라 투수 하한보다 앞이다** */
+  minBatters = 9,
 ): string[] {
   const cnt: Record<string, number> = {};
   let pitchers = 0;
@@ -296,18 +299,31 @@ export function neededPositions(
     cnt[pos] = (cnt[pos] ?? 0) + 1;
   }
 
+  const batters = roster.length - pitchers;
   const empty  = FIELD_POSITIONS.filter((pos) => (cnt[pos] ?? 0) === 0);
   const backup = FIELD_POSITIONS.filter((pos) => (cnt[pos] ?? 0) === 1);
   const pitShort = Math.max(0, minPitchers - pitchers);
 
-  // 투수 몫 — 남은 자리를 백업(③)과 나눠 갖는다. 공백(①)은 먼저 뺀다
-  const afterEmpty = Math.max(0, count - empty.length);
-  const pitQuota = Math.min(pitShort, afterEmpty);
+  // ⚠ **포지션 공백만 보면 야수 총원이 빈다.** 8자리 중 7자리가 차 있으면
+  // 공백은 1개뿐이라, 야수가 7명이어도 나머지를 투수가 다 먹는다.
+  // 실측: 투수 폴백 비율을 30% → 45%로 올리자 고교 **20팀이 타순 미달**(야수<9).
+  //
+  // 타순 한 바퀴는 **경기 성립 조건**이라 투수 하한보다 앞이다.
+  // (야수가 9명 미만이면 Rust가 `lineup[lpos % n]`으로 돌려 남은 타자의
+  // 타석이 부풀고, 능력치가 아니라 출전량이 성적을 만든다)
+  const batShort = Math.max(0, minBatters - batters - empty.length);
+
+  // 투수 몫 — 공백(①)과 야수 총원(②)을 먼저 뺀 나머지를 백업(④)과 나눈다
+  const afterBat = Math.max(0, count - empty.length - batShort);
+  const pitQuota = Math.min(pitShort, afterBat);
 
   const out: string[] = [];
   const push = (v: string) => { if (out.length < count) out.push(v); };
 
   for (const pos of empty) push(pos);
+  // 총원이 모자라면 **제일 얇은 자리부터** 채운다 — 한 자리에 몰아주지 않는다
+  const thin = [...FIELD_POSITIONS].sort((a, b) => (cnt[a] ?? 0) - (cnt[b] ?? 0));
+  for (let i = 0; i < batShort; i++) push(thin[i % thin.length]);
   // 투수는 선발 우선 — 로테이션이 먼저 돌아야 경기가 성립한다
   for (let i = 0; i < pitQuota; i++) push((pitchers + i) % 3 === 2 ? "RP" : "SP");
   for (const pos of backup) push(pos);

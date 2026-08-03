@@ -1245,6 +1245,11 @@ export function abilitySpreadProbe(leagueId = "LEAGUE_KBL"): Record<string, unkn
 
   return {
     표본: rows.length,
+    // ⚠ **표본 60으로는 상관이 −0.13 ~ −0.64로 흔들린다.** `ip >= 40` 필터가
+    // 사실상 선발만 남기기 때문이다. 호출측이 **여러 시즌을 합산**할 수 있게
+    // 원시 행을 같이 낸다 — 불펜을 넣어 표본을 늘리는 건 안 된다.
+    // 마무리(고OVR·저ERA)가 섞여 상관을 인위적으로 강화한다.
+    행: rows.map((r) => [Math.round(r.ovr * 10) / 10, Math.round(r.era * 100) / 100]),
     "ERA_p10": q(0.10), "ERA_중앙": q(0.50), "ERA_p90": q(0.90),
     "OVR-ERA 상관": r2(corr(rows.map((r) => r.ovr), rows.map((r) => r.era))),
     "OVR-K9 상관": r2(corr(rows.map((r) => r.ovr), rows.map((r) => r.k9))),
@@ -2320,66 +2325,28 @@ export async function awardThresholdProbe(leagueId = "LEAGUE_KBL"): Promise<Reco
 /**
  * 포스트시즌이 실제로 치러졌는가 (T7).
  *
- * ⚠ **일정만 보면 안 된다.** `postseasonBrackets`에 항목이 있어도 경기가
- * 치러지지 않으면 `result`가 없다 — 그러면 우승팀이 안 정해지고 시즌
- * 요약·수상·구단 성향 갱신이 전부 빈손으로 돈다. **결과가 붙었는지**를 본다.
+ * ⚠ **일정 엔트리를 보면 안 된다.** 처음엔 `leagueSchedules[lid]`에서
+ * `phase === "postseason"`을 셌는데 **항상 0**이었다 — 포스트시즌 정본은
+ * `postseasonBrackets[leagueId]`(시리즈 목록)이고, 일정은 시리즈가 진행되면서
+ * 주입된다(`injectPostseasonEntries`). 있는 곳을 안 보면 "아예 없다"가 된다.
+ *
+ * 시리즈가 있어도 `winner`가 안 붙으면 우승팀이 안 정해지고, 시즌 요약·수상·
+ * 구단 성향 갱신이 전부 빈손으로 돈다 — **승자가 붙었는지**를 본다.
  */
 export function postseasonProbe(leagueId = "LEAGUE_KBL"): Record<string, unknown> {
   const s = get(seasonStore);
-  const sched = (s.leagueSchedules?.[leagueId] ?? []).filter((e) => e.phase === "postseason");
-  const played = sched.filter((e) => !!e.result);
-  const finals = sched.filter((e) => e.id.startsWith("PS_FINAL"));
-  const champion = finals.find((e) => e.result)?.result?.winnerId ?? null;
+  const series = s.postseasonBrackets?.[leagueId] ?? [];
+  const decided = series.filter((x) => !!x.winner);
+  // 마지막 시리즈(다음이 없는 것)의 승자가 우승팀이다
+  const final = series.find((x) => x.nextSeriesId == null);
   const myTeam = get(gameStore).protagonist.teamId;
   return {
-    경기수: sched.length,
-    치러진경기: played.length,
-    우승팀: champion,
+    시리즈: series.length,
+    승자결정: decided.length,
+    우승팀: final?.winner ?? null,
     // 주인공 팀이 가을야구에 갔는가 — 경로가 주인공까지 닿는지 본다
-    주인공팀참가: myTeam ? sched.some((e) => e.homeTeamId === myTeam || e.awayTeamId === myTeam) : false,
-  };
-}
-
-/**
- * 도루 입력값의 실제 분포 (Phase 3-b).
- *
- * ⚠ **추측으로 계수를 만지면 빗나간다.** `STEAL_2B_SPEED_PIVOT`을 40 → 50으로
- * 올리면 시도가 크게 줄 거라 봤는데 실측 도루 중앙이 22 → 23으로 그대로였다.
- * 리그 타자의 `speed`·`baseInstinct`가 실제로 얼마인지를 안 보고 고쳤기 때문이다.
- *
- * 시도 확률은 `(speed − pivot) × 0.008 × (instinct / 50) × hold_factor`다.
- * **instinct가 높으면 speed가 낮아도 확률이 커진다** — 두 값을 같이 봐야 한다.
- */
-export function stealInputProbe(leagueId = "LEAGUE_KBL"): Record<string, unknown> {
-  const g = get(gameStore);
-  const live = get(npcLiveStatsStore);
-  const sp: number[] = [], inst: number[] = [], hold: number[] = [];
-  for (const n of g.npcs) {
-    if (n.currentLeague !== leagueId || n.careerStatus !== "active") continue;
-    if (n.playerType === "pitcher") {
-      const h = live[n.npcId]?.pitching?.holdRunners ?? n.pitching?.holdRunners;
-      if (typeof h === "number") hold.push(h);
-    } else {
-      const b = live[n.npcId]?.batting ?? n.batting;
-      if (typeof b?.speed === "number") sp.push(b.speed);
-      if (typeof b?.baseInstinct === "number") inst.push(b.baseInstinct);
-    }
-  }
-  const q = (v: number[], f: number) => {
-    if (v.length === 0) return 0;
-    const s = [...v].sort((a, b) => a - b);
-    return Math.round(s[Math.min(s.length - 1, Math.floor(s.length * f))] * 10) / 10;
-  };
-  // 지금 계수로 평균 주자의 시도 확률이 얼마인지 — 이게 판단의 핵심이다
-  const attemptAt = (speed: number, instinct: number) =>
-    Math.round(Math.max(0, Math.min(0.30,
-      (speed - 50) * 0.008 * (instinct / 50) * 1.0)) * 1000) / 10;
-  return {
-    타자수: sp.length,
-    "speed_p25": q(sp, 0.25), "speed_중앙": q(sp, 0.5), "speed_p75": q(sp, 0.75), "speed_p95": q(sp, 0.95),
-    "instinct_중앙": q(inst, 0.5), "instinct_p95": q(inst, 0.95),
-    "holdRunners_중앙": q(hold, 0.5),
-    "시도%_중앙주자": attemptAt(q(sp, 0.5), q(inst, 0.5)),
-    "시도%_상위주자": attemptAt(q(sp, 0.95), q(inst, 0.95)),
+    주인공팀참가: myTeam
+      ? series.some((x) => x.homeTeamId === myTeam || x.awayTeamId === myTeam)
+      : false,
   };
 }

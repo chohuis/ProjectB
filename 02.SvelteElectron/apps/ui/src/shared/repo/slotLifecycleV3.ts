@@ -155,6 +155,9 @@ export async function generateFreshmenV3(seasonYear: number): Promise<number> {
         battingOvrMin: rules.battingOvrMin, battingOvrMax: rules.battingOvrMax,
         devRateMin: rules.devRateMin, devRateMax: rules.devRateMax,
         namedNpcs: [], seasonYear, idOffset: 0,
+        // ⚠ **안 넘기면 무작위 폴백이 투수 30%가 된다**(생성은 45%).
+        // 세대 교체마다 리그가 30%로 수렴해 파이프라인 전체가 마른다
+        pitcherRatio: rules.pitcherRatio ?? 0.45,
         // ⚠ 이걸 안 넘기면 생성기가 포지션을 무작위로 뽑는다 — 평균으로는
         // 균등해도 팀 단위 편차가 해마다 누적돼 포수 0명인 팀이 생긴다
         neededPositions: neededPositions(
@@ -238,6 +241,9 @@ export async function generateOverseasIntakeV3(seasonYear: number): Promise<numb
           battingOvrMin: rules.battingOvrMin, battingOvrMax: rules.battingOvrMax,
           devRateMin: rules.devRateMin, devRateMax: rules.devRateMax,
           namedNpcs: [], seasonYear, idOffset: 0,
+          pitcherRatio: rules.pitcherRatio ?? 0.45,
+        // ⚠ **안 넘기면 무작위 폴백이 투수 30%가 된다**(생성은 45%).
+        // 세대 교체마다 리그가 30%로 수렴해 파이프라인 전체가 마른다
         })),
       ) as NpcSaveState[];
       if (!Array.isArray(raw)) continue;
@@ -246,6 +252,114 @@ export async function generateOverseasIntakeV3(seasonYear: number): Promise<numb
         n.currentLeague = leagueOfTeam(teamId) ?? leagueId;
         n.nationality = (rules as { nationality?: NpcSaveState["nationality"] }).nationality;
       }
+      newOnes.push(...raw);
+    }
+  }
+  if (newOnes.length === 0) return 0;
+
+  await slotRepo.insertNpcs(slotId, newOnes.map((n) => saveStateToRepoNpc(n)));
+  gameStore.addNpcs(newOnes);
+  npcLiveStatsStore.update((st) => {
+    const next = { ...st };
+    for (const n of newOnes) {
+      next[n.npcId] = {
+        pitching: n.pitching, batting: n.batting,
+        pitchingXp: {}, battingXp: {},
+        seasonStartPitching: n.pitching, seasonStartBatting: n.batting,
+        peakOvr: n.pitching?.ovr ?? n.batting?.ovr,
+        pitches: [],
+      };
+    }
+    return next;
+  });
+  return newOnes.length;
+}
+
+/**
+ * 육성선수 — **2군이 보직 하한 아래로 내려가면 그만큼만 만든다.**
+ *
+ * ⚠ **유출을 다 막아도 사람이 모자라면 소용없다.** 콜다운·트레이드·공백 충원에
+ * 전부 하한을 걸었더니 이번엔 반대편이 막혔다 — 2군 투수가 하한이면 1군
+ * 포수 공백을 메울 수가 없다. 하한을 더 걸어봐야 교착일 뿐이고,
+ * **없는 사람을 만들어야 한다.**
+ *
+ * 실측(4시즌): KBL 2군 투수 5~7명(하한 9, 2/10팀 미달) · 포수 0명 2팀.
+ *
+ * ⚠ **정원까지 채우지 않는다.** 국내 2군은 드래프트가 공급하므로 정원을
+ * 채우면 드래프트가 무의미해진다. 해외 팜(`generateOverseasIntakeV3`)이
+ * `rosterSize`까지 채우는 건 그쪽엔 하부 구조가 아예 없기 때문이다.
+ *
+ * 실제 KBO 육성선수 제도와도 맞는다 — 정식 등록 외 인원을 구단이 따로 뽑는다.
+ * 수치 정본은 `generation_rules.json`의 `developmentPlayerRules`다.
+ */
+export async function generateFarmDevelopmentV3(seasonYear: number): Promise<number> {
+  if (!isV3SlotActive()) return 0;
+  const g = get(gameStore);
+  const slotId = g.currentSlotId;
+  if (!slotId) return 0;
+
+  const rulesFile = await loadRosterRules();
+  const dev = (rulesFile as { developmentPlayerRules?: {
+    leagues?: string[]; minPitchers?: number; minBatters?: number; maxPerYear?: number;
+  } }).developmentPlayerRules;
+  if (!dev?.leagues?.length) return 0;
+
+  const teamsAll = get(masterStore).teams;
+  const newOnes: NpcSaveState[] = [];
+
+  for (const leagueId of dev.leagues) {
+    const rules = rulesFile.rosterRules[leagueId];
+    if (!rules) continue;
+    const base = leagueId.endsWith("_FARM") ? leagueId.slice(0, -"_FARM".length) : leagueId;
+    const teams = teamsAll.filter((t) => t.leagueId === base && t.id.endsWith("_2")).map((t) => t.id);
+
+    // 팀별 현재 구성 — 한 번만 훑는다
+    const roster = new Map<string, Array<{ playerType?: string; position?: string }>>();
+    for (const n of g.npcs) {
+      if (n.careerStatus === "retired" || !n.currentTeam) continue;
+      if (n.currentLeague !== leagueId) continue;
+      const arr = roster.get(n.currentTeam) ?? [];
+      arr.push({ playerType: n.playerType, position: n.position });
+      roster.set(n.currentTeam, arr);
+    }
+
+    for (const teamId of teams) {
+      const cur = roster.get(teamId) ?? [];
+      const pit = cur.filter((p) => p.playerType === "pitcher").length;
+      const bat = cur.length - pit;
+      // ⚠ 총원이 아니라 **부류별로** 본다. 야수 25명·투수 4명인 팀은 총원으로는
+      // 멀쩡해 보이지만 등판이 안 돈다 — 이 프로젝트에서 반복된 형태다.
+      const short = Math.max(0, (dev.minPitchers ?? 0) - pit)
+                  + Math.max(0, (dev.minBatters ?? 0) - bat);
+      // ⚠ **정원으로 막으면 안 된다.** 처음엔 `rosterMax − 총원`을 여유로 뒀는데
+      // W1의 2군은 총원이 꽉 차 있다(투수 6 / 야수 28처럼 **총원은 맞고 보직이
+      // 틀린** 상태다). 그래서 한 명도 안 만들어졌고 실측이 그대로였다 —
+      // 이 작업 내내 잡아온 "몇 명은 맞는데 어느 자리가 틀렸다"를 그대로 재현했다.
+      //
+      // 육성선수는 **정원 밖 인원**이다(실제 KBO도 정식 등록 외로 뽑는다).
+      // 정원 초과분은 오프시즌 캡이 남아도는 부류부터 정리하면서 저절로 맞는다.
+      // 폭주는 `maxPerYear`가 막는다.
+      const want = Math.min(short, dev.maxPerYear ?? 4);
+      if (want <= 0) continue;
+
+      const raw = JSON.parse(
+        await window.projectB!.engine("generateFreshmenNative", JSON.stringify({
+          schoolId: teamId, teamId,
+          annualRosterSize: want,
+          pitchingOvrMin: rules.pitchingOvrMin, pitchingOvrMax: rules.pitchingOvrMax,
+          battingOvrMin: rules.battingOvrMin, battingOvrMax: rules.battingOvrMax,
+          devRateMin: rules.devRateMin, devRateMax: rules.devRateMax,
+          namedNpcs: [], seasonYear, idOffset: 0,
+          pitcherRatio: rules.pitcherRatio ?? 0.45,
+        // ⚠ **안 넘기면 무작위 폴백이 투수 30%가 된다**(생성은 45%).
+        // 세대 교체마다 리그가 30%로 수렴해 파이프라인 전체가 마른다
+          // 포수 0명인 팀이 여기서 메워진다 — 빈 야수 자리가 맨 앞이다
+          neededPositions: neededPositions(cur, want, dev.minPitchers ?? 0),
+        })),
+      ) as NpcSaveState[];
+      if (!Array.isArray(raw)) continue;
+      // 생성기는 리그를 모른다 — 팀에서 파생한 값으로 맞춘다
+      for (const n of raw) n.currentLeague = leagueOfTeam(teamId) ?? leagueId;
       newOnes.push(...raw);
     }
   }

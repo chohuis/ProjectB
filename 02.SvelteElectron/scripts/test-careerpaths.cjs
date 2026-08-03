@@ -292,16 +292,16 @@ const PATHS = [
         applyPolicy: () => app.setCareerPolicy({ draft: true, university: false, independent: false }),
         onTick: (a) => {
           const p = a.postseasonProbe("LEAGUE_KBL");
-          if ((p.치러진경기 ?? 0) > 0) a._psSeen = p;
+          if ((p.승자결정 ?? 0) > 0) a._psSeen = p;
         },
       });
       const ps = app._psSeen ?? app.postseasonProbe("LEAGUE_KBL");
-      if ((ps.경기수 ?? 0) === 0) throw new Error("포스트시즌 일정이 아예 없다");
-      if ((ps.치러진경기 ?? 0) === 0) {
-        throw new Error(`포스트시즌 ${ps.경기수}경기가 잡혔는데 한 경기도 안 치러졌다`);
+      if ((ps.시리즈 ?? 0) === 0) throw new Error("포스트시즌 브래킷이 아예 없다");
+      if ((ps.승자결정 ?? 0) === 0) {
+        throw new Error(`시리즈 ${ps.시리즈}개가 잡혔는데 승자가 하나도 안 정해졌다`);
       }
-      if (!ps.우승팀) throw new Error("결승이 끝났는데 우승팀이 없다");
-      return `${ps.치러진경기}/${ps.경기수}경기 · 우승 ${ps.우승팀}`
+      if (!ps.우승팀) throw new Error("시리즈는 끝났는데 우승팀이 없다");
+      return `${ps.승자결정}/${ps.시리즈}시리즈 · 우승 ${ps.우승팀}`
         + (ps.주인공팀참가 ? " · 주인공 팀 진출" : "");
     },
   },
