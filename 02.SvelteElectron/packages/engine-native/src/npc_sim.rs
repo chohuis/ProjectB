@@ -1692,7 +1692,14 @@ pub fn generate_freshmen(params: GenerateFreshmenParams) -> Vec<NpcSaveState> {
     let mut result = params.named_npcs;
     let named_count = result.len();
     let bulk_count  = (params.annual_roster_size - named_count as i32).max(0);
-    let seed = (params.school_id.len() as u32).wrapping_mul(997)
+    // ⚠ **시드가 학교 이름 길이였다.** 같은 길이의 학교가 **같은 난수열**을 쓴다 —
+    // 102팀에 길이는 몇 종류뿐이라 충돌이 심하다. `needed_positions`가 비어
+    // 전부 폴백으로 뽑히는 해엔 그 편향이 그대로 드러났다(실측 투수 비율
+    // 목표 45%인데 32.5% — 표본 1,020이면 통계 오차로는 불가능한 차이다).
+    // 글자 값을 섞어 학교마다 다른 스트림을 준다.
+    let name_hash = params.school_id.bytes()
+        .fold(2166136261u32, |h, b| (h ^ b as u32).wrapping_mul(16777619));
+    let seed = name_hash.wrapping_mul(997)
         .wrapping_add((params.season_year as u32).wrapping_mul(31));
     let mut rng = LcgRand::new(seed);
 
@@ -3288,10 +3295,16 @@ mod freshmen_ratio_tests {
     /// **2군에 육성선수를 넣어도 안 풀렸다** — 상류가 마르면 하류에서 퍼도 안 찬다.
     #[test]
     fn 신입생_투수_비율이_로스터_생성과_같다() {
+        // ⚠ **학교 하나로 재면 안 된다.** 학교마다 난수 스트림이 따로라
+        // 한 스트림의 치우침이 그대로 결과가 된다(실측 한 학교 52%).
+        // 실제로는 102개 학교가 각자 돌므로 **여러 학교를 합쳐서** 본다.
         let make = |ratio: f64| {
+            let mut pit = 0usize;
+            let mut tot = 0usize;
+            for i in 0..30 {
             let out = generate_freshmen(GenerateFreshmenParams {
-                school_id: "SCHOOL_T".into(), team_id: "TEAM_T".into(),
-                annual_roster_size: 400,
+                school_id: format!("SCHOOL_HS_{i:02}"), team_id: "TEAM_T".into(),
+                annual_roster_size: 40,
                 pitching_ovr_min: 45.0, pitching_ovr_max: 70.0,
                 batting_ovr_min: 45.0, batting_ovr_max: 70.0,
                 dev_rate_min: 45.0, dev_rate_max: 75.0,
@@ -3299,8 +3312,10 @@ mod freshmen_ratio_tests {
                 needed_positions: vec![],   // 전부 폴백으로 뽑힌다
                 pitcher_ratio: ratio,
             });
-            let pit = out.iter().filter(|n| n.player_type == "pitcher").count();
-            pit as f64 / out.len() as f64
+            pit += out.iter().filter(|n| n.player_type == "pitcher").count();
+            tot += out.len();
+            }
+            pit as f64 / tot as f64
         };
         let r = make(0.45);
         assert!((r - 0.45).abs() < 0.06, "폴백 투수 비율 {r:.3} — 목표 0.45");

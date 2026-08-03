@@ -270,9 +270,9 @@ const FIELD_POSITIONS = ["C", "SS", "CF", "2B", "3B", "RF", "LF", "1B"] as const
  * 그 팀에 **모자란 자리**를 우선순위 순으로 돌려준다.
  *
  * ① 한 명도 없는 야수 자리 (포수가 맨 앞 — 전문 요원이라 0명이면 경기 불성립)
- * ② 야수 총원이 타순(9)에 못 미치면 제일 얇은 자리부터
- * ③ 투수가 하한 미달이면 SP·RP
- * ④ 백업이 없는(1명뿐인) 야수 자리
+ * ② 야수 총원(타순 9)과 ③ 투수 하한이 **둘 다 모자라면 부족분에 비례 배분**
+ *
+ * ④ 남은 칸은 **투수 비율(0.45)대로** 투수와 백업 자리를 섞는다
  *
  * `count`보다 짧게 돌려줄 수 있다 — 그 뒤는 생성기가 무작위로 채운다.
  *
@@ -290,6 +290,8 @@ export function neededPositions(
   minPitchers = 0,
   /** 타순 한 바퀴. **경기 성립 조건이라 투수 하한보다 앞이다** */
   minBatters = 9,
+  /** 남은 칸의 투수 비율. **생성 규칙(`pitcherRatio` 0.45)과 같아야 한다** */
+  pitcherRatio = 0.45,
 ): string[] {
   const cnt: Record<string, number> = {};
   let pitchers = 0;
@@ -313,9 +315,18 @@ export function neededPositions(
   // 타석이 부풀고, 능력치가 아니라 출전량이 성적을 만든다)
   const batShort = Math.max(0, minBatters - batters - empty.length);
 
-  // 투수 몫 — 공백(①)과 야수 총원(②)을 먼저 뺀 나머지를 백업(④)과 나눈다
-  const afterBat = Math.max(0, count - empty.length - batShort);
-  const pitQuota = Math.min(pitShort, afterBat);
+  // ⚠ **둘 다 하한 미달이면 우선순위로 나누면 안 된다.** 앞쪽이 `count`를 다
+  // 먹으면 뒤쪽이 굶는다. 고교는 한 해 정원이 10명뿐이라 이게 바로 드러났다 —
+  // 같은 코드에서 실행마다 **고교 투수 미달이 ≤5팀 ↔ 76팀**으로 갈렸다.
+  // 어느 쪽이 굶느냐가 그때그때 로스터 상태에 달렸기 때문이다.
+  //
+  // 공백(①)을 뺀 나머지를 **부족분에 비례해** 나눈다. 둘 다 모자라면
+  // 둘 다 조금씩 채우고, 남으면 백업(④)으로 간다.
+  const remain = Math.max(0, count - empty.length);
+  const need = batShort + pitShort;
+  const batQuota = need === 0 ? 0
+    : Math.min(batShort, Math.round((remain * batShort) / need));
+  const pitQuota = Math.min(pitShort, Math.max(0, remain - batQuota));
 
   const out: string[] = [];
   const push = (v: string) => { if (out.length < count) out.push(v); };
@@ -323,10 +334,33 @@ export function neededPositions(
   for (const pos of empty) push(pos);
   // 총원이 모자라면 **제일 얇은 자리부터** 채운다 — 한 자리에 몰아주지 않는다
   const thin = [...FIELD_POSITIONS].sort((a, b) => (cnt[a] ?? 0) - (cnt[b] ?? 0));
-  for (let i = 0; i < batShort; i++) push(thin[i % thin.length]);
+  for (let i = 0; i < batQuota; i++) push(thin[i % thin.length]);
   // 투수는 선발 우선 — 로테이션이 먼저 돌아야 경기가 성립한다
   for (let i = 0; i < pitQuota; i++) push((pitchers + i) % 3 === 2 ? "RP" : "SP");
-  for (const pos of backup) push(pos);
+
+  // ── 남은 칸: 비율을 **여기서 직접 지킨다** ─────────────────────
+  //
+  // ⚠ 두 번 틀렸다.
+  //
+  //   1차 — 백업 자리(전부 야수)로 남은 칸을 다 채웠다. 그러면 생성기의
+  //         폴백(투수 45%)이 돌 여지가 없다. 실측 고교 신입생 1,020명 중
+  //         **지정 613칸이 전부 야수**였고 실제 투수는 161명(15.8%)이었다.
+  //   2차 — 그래서 백업을 아예 뺐다. 이번엔 **포수가 사라졌다**(8~11팀).
+  //         `empty`(①)는 자리가 0이 된 **뒤에야** 도는데, 백업이 바로
+  //         그 전에 채워 넣는 장치였다 — 포수는 8분의 1이라 신입생 8명이면
+  //         0명일 확률이 34%다.
+  //
+  // 폴백에 비율을 맡기는 것 자체가 틀렸다. **지정 리스트가 비율을 지키고**
+  // 백업도 같이 채운다 — 난수에 기대지 않으니 팀별 편차도 없다.
+  const rest = Math.max(0, count - out.length);
+  const restPit = Math.round(rest * pitcherRatio);
+  let bi = 0;
+  for (let i = 0; i < rest; i++) {
+    if (i < restPit) { push((pitchers + pitQuota + i) % 3 === 2 ? "RP" : "SP"); continue; }
+    // 백업 없는 자리 → 그것도 다 차면 제일 얇은 자리
+    push(backup[bi] ?? thin[bi % thin.length]);
+    bi++;
+  }
   return out;
 }
 
