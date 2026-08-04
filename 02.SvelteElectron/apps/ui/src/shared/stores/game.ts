@@ -50,6 +50,7 @@ import type {
 } from "../types/save";
 import type { ProContract } from "../types/save";
 import { transitionReason, universityGradeOf } from "../utils/careerTransition";
+import { careerSummaryOf } from "../utils/careerSummary";
 import { runOffseasonProcessing, rosterLimitsFrom, foreignParamsFrom } from "../utils/npcEngine";
 import { getFaThreshold } from "../utils/faEngine";
 import { masterStore } from "./master";
@@ -608,11 +609,21 @@ function createGameStore() {
       await slotRepo.setSeason(slotId, slimSeason);
       // 전환기: 주간 변이가 repo 커맨드로 전면 이관(R3a-4c)되기 전까지 벌크 동기화
       await slotRepo.syncNpcs(slotId, dehydrateToRepo(s.npcs, get(npcLiveStatsStore)));
+      // ⚠ **통산 요약을 메타에 같이 남긴다.** 슬롯 선택 화면이 성적을 보여주려면
+      // 그 값이 메타에 있어야 한다 — 없으면 슬롯 3개의 전체 세이브를 열어야 하고,
+      // 그건 목록 한 번 뜨는 데 slot.db 세 개를 여는 일이다(각 19MB).
+      //
+      // `meta`는 키-값 테이블이라 키를 늘려도 스키마 변경이 아니다.
+      const career = careerSummaryOf(s.protagonist.careerRecords ?? []);
       await slotRepo.setMeta(slotId, {
         career_stage: s.protagonist.careerStage,
         season_year: season.seasonYear,
         current_week: season.currentWeek,
         team_id: s.protagonist.teamId,
+        career_w: career.w,
+        career_l: career.l,
+        career_era: career.era,
+        career_seasons: career.seasons,
       });
     } catch (e) {
       console.error("[gameStore] save 예외:", e);

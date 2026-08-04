@@ -8,6 +8,12 @@ export interface SaveSlotPreview {
   seasonYear: number | null;
   currentWeek: number | null;
   teamId: string | null;
+  /** 통산 요약 — 슬롯 목록이 전체 세이브를 열지 않고도 성적을 보여주기 위한 것 */
+  careerW: number | null;
+  careerL: number | null;
+  /** 문자열이다. "3.36" 형태로 이미 반올림돼 있다 */
+  careerEra: string | null;
+  careerSeasons: number | null;
 }
 
 export interface SaveSlotMeta {

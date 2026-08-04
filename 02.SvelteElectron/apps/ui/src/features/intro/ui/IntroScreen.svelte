@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { SaveSlotMeta } from "../../../shared/types/projectb.d";
   import { masterStore } from "../../../shared/stores/master";
+  import { careerStageLabel } from "../../../shared/utils/careerStageLabel";
 
   export let onNew: () => void;
   export let onContinue: () => void;
@@ -8,19 +9,13 @@
   /** 가장 최근 슬롯. 없으면 이어하기가 비활성이다 */
   export let latest: SaveSlotMeta | null = null;
 
-  const STAGE_LABEL: Record<string, string> = {
-    highschool: "고교", university: "대학", independent: "독립리그",
-    pro: "프로", pro_farm: "프로 2군", military: "복무 중", retired: "은퇴",
-  };
 
   // ⚠ 팀 이름은 refs에서 찾는다. 슬롯 메타에는 teamId만 있다
   $: team = latest?.preview.teamId
     ? ($masterStore.teams ?? []).find((t) => t.id === latest!.preview.teamId)
     : undefined;
 
-  $: stage = latest?.preview.careerStage
-    ? (STAGE_LABEL[latest.preview.careerStage] ?? latest.preview.careerStage)
-    : null;
+  $: stage = careerStageLabel(latest?.preview.careerStage);
 
   /** "2031년 29주차" — 주차가 없으면 연도만 */
   $: when = latest?.preview.seasonYear

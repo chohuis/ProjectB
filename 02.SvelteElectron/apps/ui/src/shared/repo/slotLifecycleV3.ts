@@ -62,6 +62,10 @@ export async function listSlotsV3(): Promise<SaveSlotMeta[]> {
         seasonYear: m.season_year ? Number(m.season_year) : null,
         currentWeek: m.current_week ? Number(m.current_week) : null,
         teamId: m.team_id ?? null,
+        careerW: m.career_w != null ? Number(m.career_w) : null,
+        careerL: m.career_l != null ? Number(m.career_l) : null,
+        careerEra: m.career_era || null,
+        careerSeasons: m.career_seasons != null ? Number(m.career_seasons) : null,
       },
     }));
 }
