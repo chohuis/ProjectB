@@ -1403,7 +1403,21 @@ export function rosterCompositionProbe(): Record<string, unknown> {
 
   const byTeam = new Map<string, typeof g.npcs>();
   for (const n of g.npcs) {
-    if (n.careerStatus !== "active" || !n.currentTeam) continue;
+    // ⚠ **`active`만 세면 안 된다.** `careerStatus`는 5종이고 그중 `injured`가
+    // 따로 있다 — 유일한 포수가 부상이면 이 프로브는 "포수 0명"으로 셌다.
+    // 실측 시점 분해가 그 모양이었다: 시즌 중 부상이 쌓여 `시즌종료`에 3팀,
+    // 롤오버에서 풀려 `오프시즌직후`에 0팀.
+    //
+    // **부상자는 로스터에서 빠진 게 아니라 돌아온다.** 이 검사의 취지도
+    // 구성이지 당일 가용 인원이 아니다("시뮬 결과엔 안 들어가지만 화면에서
+    // 명백히 잘못"). 보충 경로(`generateFreshmenV3`·`generateFarmDevelopmentV3`)도
+    // **은퇴만** 자리를 비우는 것으로 세므로, 여기서 기준이 갈리면
+    // 보충은 "있다"고 보고 검사는 "없다"고 보는 교착이 된다.
+    // ⚠ 그렇다고 은퇴만 빼면 반대로 과하다. **`free_agent`가 팀 ID를 단 채
+    // 남는다** — 독립리그 탈락 팀이 그렇고, 그러면 야수 0명짜리 팀이
+    // 집계에 새로 들어와 타순 미달로 잡힌다(실측). 들일 것은 부상자뿐이다.
+    if (n.careerStatus !== "active" && n.careerStatus !== "injured") continue;
+    if (!n.currentTeam) continue;
     const arr = byTeam.get(n.currentTeam) ?? [];
     arr.push(n);
     byTeam.set(n.currentTeam, arr);
