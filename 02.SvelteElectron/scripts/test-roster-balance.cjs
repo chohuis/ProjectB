@@ -100,7 +100,18 @@ const FLOOR = {
   UNIVERSITY:  floorOf("LEAGUE_UNIVERSITY"),
   INDEPENDENT: floorOf("LEAGUE_INDEPENDENT"),
   "KBL_1군":   floorOf("LEAGUE_KBL"),
-  "KBL_2군":   floorOf("LEAGUE_KBL_FARM"),
+  // ⚠ **2군만 파생식을 안 쓴다.** 위 식(`rosterMin × 비율 − 여유2`)은 독립
+  // 리그용이고, 2군은 리그이면서 동시에 **1군에 공급하는 풀**이라 잣대가 다르다.
+  // 파생하면 9/12가 나오는데, 그 값을 엔진 하한으로 넣었더니 공백 충원이
+  // 막혀 **KBL 1군 최소 야수가 12 → 7로 무너졌다.** 하한을 한쪽에 걸면
+  // 반대쪽이 밀리는 그 패턴이다.
+  //
+  // 2군 하한의 정본은 `promotionRules.farmMin*`이고 근거는 "2군도 경기를
+  // 치른다"다 — 선발 5 + 불펜 3 = 8, 타순 한 바퀴 = 9.
+  "KBL_2군":   {
+    bat: gr.promotionRules?.farmMinBatters  ?? 9,
+    pit: gr.promotionRules?.farmMinPitchers ?? 8,
+  },
 };
 
 (async () => {
@@ -188,8 +199,14 @@ const FLOOR = {
       const a1 = byPhase["오프시즌직후"][lg];
       const b1 = byPhase["시즌종료"][lg];
       if (!a1 || !b1) continue;
+      // ⚠ **포수 0명을 시점별로 갈라 본다.** `오프시즌직후`는 졸업 후 ·
+      // W1 신입생 생성 **전** 구간이라, 유일한 포수가 졸업한 팀은 그 순간
+      // 정상적으로 0명이고 W1에 채워진다 — 경기엔 영향이 없다.
+      // 시점을 안 찍으면 그걸 결함으로 읽고 생성 경로를 파게 된다.
       log(`      [시점] ${lg.padEnd(12)} 오프시즌직후 야수${a1.최소야수}/투수${a1.최소투수}` +
-          `  →  시즌종료 야수${b1.최소야수}/투수${b1.최소투수}`);
+          `(포수0 ${a1.포수없는팀}팀)` +
+          `  →  시즌종료 야수${b1.최소야수}/투수${b1.최소투수}` +
+          `(포수0 ${b1.포수없는팀}팀)`);
     }
     for (const [lg, w] of Object.entries(worst)) {
       if (verbose) log(`      ${lg} ${JSON.stringify(w)}`);

@@ -127,6 +127,14 @@ pub struct PromotionRules {
     pub form_span: f64,
     /// 이 점수 아래면 "장기 부진" — 상시 콜업의 트리거다
     pub slump_score: f64,
+    /// 2군 구성 하한. **정본은 `generation_rules.json`이다** —
+    /// `rosterMin × 보직비율 − 여유2`로 파생한 값을 호출측이 넣는다.
+    /// 예전엔 `tuning.rs`에만 8/9로 박혀 있었고 회귀 테스트는 규칙 파일에서
+    /// 9/12를 파생했다 — **정본이 둘이라 3팀이 계속 미달로 잡혔다.**
+    #[serde(default)]
+    pub farm_min_pitchers: Option<usize>,
+    #[serde(default)]
+    pub farm_min_batters: Option<usize>,
 }
 
 impl Default for PromotionRules {
@@ -135,6 +143,7 @@ impl Default for PromotionRules {
             form_weight: 8.0, pitcher_era_baseline: 4.50, pitcher_full_innings: 40.0,
             batter_ops_baseline: 0.700, batter_full_pa: 120.0,
             form_span: 1.0, slump_score: -0.5,
+            farm_min_pitchers: None, farm_min_batters: None,
         }
     }
 }
@@ -194,6 +203,19 @@ pub fn eval_callup_candidates(p: EvalCallupParams) -> EvalCallupResult {
         // 부류를 안 맞추면 야수 공백을 메우려고 투수를 내려 반대쪽이 깨진다.
         // 그 자리의 마지막 한 명은 안 내린다 — 메우려다 새 공백을 만든다.
         let gap_fill = active_at_pos.is_empty();
+
+        // ⚠ **2군도 경기를 한다.** 1군 쪽은 `count_at >= 2`로 그 자리의 마지막
+        // 한 명을 지키는데 2군 쪽엔 같은 보호가 없어서, 팀이 2군의 **마지막
+        // 포수를 올려버렸다.** 메워주는 `fix_position_gaps`는 오프시즌에만
+        // 도니 그대로 한 해가 간다 — 실측 KBL 2군 2팀이 포수 0명이었다.
+        //
+        // 다만 1군 그 자리가 비었으면(gap_fill) 올린다. **1군 포수 0명이
+        // 2군 포수 0명보다 나쁘다** — 주인공이 뛰는 경기라서다.
+        if !gap_fill && crate::tuning::is_specialist_position(&farm.position) {
+            let farm_at_pos = p.farm_players.iter()
+                .filter(|f| f.position == farm.position).count();
+            if farm_at_pos <= 1 { continue; }
+        }
         let pool: Vec<&RosterPlayerRef> = if gap_fill {
             // ⚠ **공백 충원은 2군 구성을 바꾼다.** 일반 콜업은 같은 포지션
             // 1:1이라 올라간 자리에 내려온 선수가 들어가지만, 여기선 부류가
@@ -202,8 +224,11 @@ pub fn eval_callup_candidates(p: EvalCallupParams) -> EvalCallupResult {
             let cls = is_pit(&farm.position);
             let farm_cls = p.farm_players.iter()
                 .filter(|f| is_pit(&f.position) == cls).count();
-            let floor = if cls { crate::tuning::FARM_MIN_PITCHERS }
-                        else   { crate::tuning::FARM_MIN_BATTERS };
+            let floor = if cls {
+                rules.farm_min_pitchers.unwrap_or(crate::tuning::FARM_MIN_PITCHERS)
+            } else {
+                rules.farm_min_batters.unwrap_or(crate::tuning::FARM_MIN_BATTERS)
+            };
             if farm_cls <= floor { continue; }
 
             p.active_players.iter()
@@ -1309,10 +1334,18 @@ mod tests {
         }
     }
     /// 하한 위에 있는 2군 로스터 — 포수 한 명과 여유 인원
-    fn farm() -> Vec<RosterPlayerRef> {
+    ///
+    /// ⚠ **크기를 `tuning.rs` 상수로 잡으면 안 된다.** 2군 하한의 정본은
+    /// `generation_rules.json`이고 tuning 값은 폴백일 뿐이다. 상수로 잡았더니
+    /// 규칙 파일이 9/12로 올라간 순간 이 2군이 하한 미달이 되어 아무것도
+    /// 안 올라갔고, **판정은 멀쩡한데 테스트 전제가 무너졌다.**
+    fn farm(r: &PromotionRules) -> Vec<RosterPlayerRef> {
+        let min_bat = r.farm_min_batters.unwrap_or(crate::tuning::FARM_MIN_BATTERS);
+        let min_pit = r.farm_min_pitchers.unwrap_or(crate::tuning::FARM_MIN_PITCHERS);
+        // 포수 1명 + 하한을 **넘기는** 야수/투수 (하한과 같으면 고갈 취급이다)
         let mut v = vec![ref_of("C_FARM", "C", 55.0)];
-        for i in 0..crate::tuning::FARM_MIN_BATTERS  { v.push(ref_of(&format!("FB{i}"), "1B", 50.0)); }
-        for i in 0..=crate::tuning::FARM_MIN_PITCHERS { v.push(ref_of(&format!("FP{i}"), "RP", 50.0)); }
+        for i in 0..min_bat  { v.push(ref_of(&format!("FB{i}"), "1B", 50.0)); }
+        for i in 0..=min_pit { v.push(ref_of(&format!("FP{i}"), "RP", 50.0)); }
         v
     }
 
@@ -1336,7 +1369,7 @@ mod tests {
             team_profile: ProTeamProfile::default(),
             // ⚠ **2군도 현실 크기로 넘긴다.** 공백 충원은 2군 하한을 보므로
             // 선수 한 명짜리 2군은 "고갈 상태"라 아무것도 안 올라간다
-            farm_players: farm(),
+            farm_players: farm(&r),
             active_players: active,
             injured_player_ids: vec![],
             current_month: 5,
@@ -1362,7 +1395,7 @@ mod tests {
         let active = vec![mk("1B_A", "1B", 62.0), mk("SS_A", "SS", 60.0), mk("SP_A", "SP", 72.0)];
         let res = eval_callup_candidates(EvalCallupParams {
             team_profile: ProTeamProfile::default(),
-            farm_players: farm(),
+            farm_players: farm(&r),
             active_players: active,
             injured_player_ids: vec![],
             current_month: 5,
@@ -1390,7 +1423,7 @@ mod tests {
         ];
         let res = eval_callup_candidates(EvalCallupParams {
             team_profile: ProTeamProfile::default(),
-            farm_players: farm(),
+            farm_players: farm(&r),
             active_players: active,
             injured_player_ids: vec![],
             current_month: 5,
@@ -1399,6 +1432,57 @@ mod tests {
         });
         assert!(res.candidates.is_empty(), "야수 공백을 투수로 메웠다: {:?}",
             res.candidates.iter().map(|c| &c.replaces_player_id).collect::<Vec<_>>());
+    }
+
+    #[test]
+    fn 마지막_2군_포수는_안_올린다() {
+        // ⚠ **2군도 경기를 한다.** 1군 쪽은 `count_at >= 2`로 그 자리 마지막
+        // 한 명을 지키는데 2군 쪽엔 같은 보호가 없어서, 콜업이 2군의 마지막
+        // 포수를 올려버렸다. `fix_position_gaps`는 오프시즌에만 도니 2군이
+        // 포수 0명으로 한 해를 났다 — 실측 KBL 2군 2팀.
+        let r = rules();
+        // 1군에 포수가 **있다** — 공백이 아니니 굳이 2군을 비울 이유가 없다
+        let mut active = vec![ref_of("C_A", "C", 58.0), ref_of("C_B", "C", 52.0)];
+        for i in 0..12 { active.push(ref_of(&format!("B{i}"), "1B", 60.0)); }
+        for i in 0..12 { active.push(ref_of(&format!("P{i}"), "RP", 60.0)); }
+        // 2군 포수는 C_FARM 하나뿐이고 능력치가 1군 백업보다 높다 —
+        // 보호가 없으면 성적/능력 점수로 반드시 올라온다
+        let mut fp = farm(&r);
+        fp[0] = ref_of("C_FARM", "C", 78.0);
+        let res = eval_callup_candidates(EvalCallupParams {
+            team_profile: ProTeamProfile::default(),
+            farm_players: fp,
+            active_players: active,
+            injured_player_ids: vec![],
+            current_month: 5,
+            promotion_rules: Some(r),
+            callup_mod: None,
+        });
+        assert!(res.candidates.iter().all(|c| c.player_id != "C_FARM"),
+            "2군의 마지막 포수를 올렸다");
+    }
+
+    #[test]
+    fn 포수_공백이면_마지막_2군_포수라도_올린다() {
+        // 위 보호의 예외다. **1군 포수 0명이 2군 포수 0명보다 나쁘다** —
+        // 주인공이 뛰는 경기라서다. 보호를 무조건 걸면 실측에서 고쳤던
+        // "1군 포수 0명이 한 해 안 고쳐진다"가 되돌아온다.
+        let r = rules();
+        let mut active = vec![];
+        for i in 0..13 { active.push(ref_of(&format!("B{i}"), "1B", 60.0)); }
+        for i in 0..12 { active.push(ref_of(&format!("P{i}"), "RP", 60.0)); }
+        let res = eval_callup_candidates(EvalCallupParams {
+            team_profile: ProTeamProfile::default(),
+            farm_players: farm(&r),   // 포수는 C_FARM 하나뿐이다
+            active_players: active,
+            injured_player_ids: vec![],
+            current_month: 5,
+            promotion_rules: Some(r),
+            callup_mod: None,
+        });
+        let c = res.candidates.iter().find(|c| c.player_id == "C_FARM")
+            .expect("1군 포수가 0명인데 2군 포수가 후보에 없다");
+        assert_eq!(c.reason, "position_gap");
     }
 
     #[test]

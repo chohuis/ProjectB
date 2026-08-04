@@ -144,7 +144,14 @@ export async function generateFreshmenV3(seasonYear: number): Promise<number> {
   const newOnes: NpcSaveState[] = [];
   for (const teamId of HS_ACTIVE_TEAMS_V3) {
     // 빈 자리만큼만 만든다. 정원을 넘기지 않고, 모자라면 반드시 채운다
-    const want = Math.min(perYear, rules.rosterSize - (sizeByTeam.get(teamId) ?? 0));
+    let want = Math.min(perYear, rules.rosterSize - (sizeByTeam.get(teamId) ?? 0));
+    // ⚠ **정원이 찼어도 포수가 0명이면 한 명은 만든다.** 졸업으로 그 학교의
+    // 유일한 포수가 빠졌는데 정원이 차 있으면 `want <= 0`으로 건너뛰어,
+    // 아마추어엔 승강도 육성선수도 없으니 **포수 없이 한 해를 났다**
+    // (실측 102팀 중 1팀). 30명 팀에 31번째를 만드는 쪽이 낫다 —
+    // 정원 초과분은 다음 해 졸업으로 저절로 풀린다.
+    const cur = rosterByTeam.get(teamId) ?? [];
+    if (!cur.some((p) => p.position === "C")) want = Math.max(want, 1);
     if (want <= 0) continue;
     const raw = JSON.parse(
       await window.projectB!.engine("generateFreshmenNative", JSON.stringify({
@@ -161,7 +168,7 @@ export async function generateFreshmenV3(seasonYear: number): Promise<number> {
         // ⚠ 이걸 안 넘기면 생성기가 포지션을 무작위로 뽑는다 — 평균으로는
         // 균등해도 팀 단위 편차가 해마다 누적돼 포수 0명인 팀이 생긴다
         neededPositions: neededPositions(
-          rosterByTeam.get(teamId) ?? [], want, HS_MIN_PITCHERS),
+          cur, want, HS_MIN_PITCHERS),
       })),
     ) as NpcSaveState[];
     if (Array.isArray(raw)) newOnes.push(...raw);
@@ -329,8 +336,14 @@ export async function generateFarmDevelopmentV3(seasonYear: number): Promise<num
       const bat = cur.length - pit;
       // ⚠ 총원이 아니라 **부류별로** 본다. 야수 25명·투수 4명인 팀은 총원으로는
       // 멀쩡해 보이지만 등판이 안 돈다 — 이 프로젝트에서 반복된 형태다.
-      const short = Math.max(0, (dev.minPitchers ?? 0) - pit)
-                  + Math.max(0, (dev.minBatters ?? 0) - bat);
+      let short = Math.max(0, (dev.minPitchers ?? 0) - pit)
+                + Math.max(0, (dev.minBatters ?? 0) - bat);
+      // ⚠ **부류별로 봐도 자리는 못 본다.** 야수 21·투수 21인데 포수가 0명인
+      // 팀은 `short === 0`이라 한 명도 안 만들어진다 — 이 프로젝트에서 반복된
+      // "몇 명은 맞고 어느 자리가 틀렸다"의 그 형태다. 콜업 쪽은 2군의
+      // 마지막 포수를 지키게 고쳤지만, 포수는 은퇴·입대·방출로도 빠진다.
+      // 실측 KBL 2군 1~2팀이 포수 0명으로 시즌을 났다.
+      if (!cur.some((p) => p.position === "C")) short = Math.max(short, 1);
       // ⚠ **정원으로 막으면 안 된다.** 처음엔 `rosterMax − 총원`을 여유로 뒀는데
       // W1의 2군은 총원이 꽉 차 있다(투수 6 / 야수 28처럼 **총원은 맞고 보직이
       // 틀린** 상태다). 그래서 한 명도 안 만들어졌고 실측이 그대로였다 —

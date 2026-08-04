@@ -404,8 +404,17 @@ pub const FIRST_TEAM_MIN_PITCHERS: usize = 12;
 /// 야수는 타순 한 바퀴(9)다. 1군 하한(14/12)보다 낮게 두는 건 의도다:
 /// 2군은 1군에 공급하는 곳이라 여유가 1군만큼 필요하지 않고, 하한을 높이면
 /// 공백 충원이 항상 막혀 **1군 포수 0명이 안 고쳐진다.**
+/// ⚠ 이 둘은 **폴백일 뿐이다.** 정본은 `generation_rules.json`에서 파생해
+/// `PromotionRules.farm_min_*`로 들어온다 — `rosterMin × 보직비율 − 여유2`.
+/// 예전엔 여기 값만 있었고 회귀 테스트는 규칙 파일에서 9/12를 파생했다.
+/// **정본이 둘이라** 2군 투수 미달 3팀이 계속 잡혔다.
 pub const FARM_MIN_PITCHERS: usize = 8;
 pub const FARM_MIN_BATTERS:  usize = 9;
+
+/// 대체가 안 되는 자리. 이 자리는 **2군에서도 마지막 한 명을 안 뺀다** —
+/// 콜업이 2군의 마지막 포수를 올려버려 2군이 포수 0명으로 한 해를 났다.
+/// 1루수·좌익수는 다른 야수가 대신 설 수 있지만 포수는 그렇지 않다.
+pub fn is_specialist_position(pos: &str) -> bool { pos == "C" }
 
 /// 세이브 요건 점수차 (KBO·MLB 공통 3점 이내).
 ///
