@@ -9,7 +9,7 @@
   export let onSelect: (slotId: string, isEmpty: boolean) => void;
   export let onBack: () => void;
 
-  let slots: (SaveSlotMeta | null)[] = [null, null, null, null];
+  let slots: (SaveSlotMeta | null)[] = [null, null, null];
   let loading = true;
   let renamingSlotId: string | null = null;
   let renameValue = "";
@@ -17,7 +17,12 @@
   let busy = false;
   let renameInputEl: HTMLInputElement | null = null;
 
-  const SLOT_IDS = ["slot_1", "slot_2", "slot_3", "slot_4"];
+  // 슬롯 3개 (사용자 확정). 한 커리어가 20시즌이라 여러 개를 동시에 미는 일이 드물다.
+  //
+  // ⚠ 줄이기 전에 `slot_4`를 쓰던 세이브가 있으면 **목록에서 사라진다.**
+  // 파일은 디스크에 남지만 화면에서 닿을 수 없다. 출시 전이라 그대로 두되,
+  // 나중에 늘릴 일이 생기면 이 배열만 고치면 된다.
+  const SLOT_IDS = ["slot_1", "slot_2", "slot_3"];
 
   // ⚠ 단계 라벨의 정본은 `utils/careerStageLabel`이다. 여기 표를 따로 두면
   // 리그가 늘 때 조용히 어긋난다 — 실제로 이 화면은 `kbl`·`abl`을 키로 썼는데
