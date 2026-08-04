@@ -139,9 +139,10 @@ const FLOOR = {
       const bucket = byPhase[phase];
       for (const [lg, v] of Object.entries(comp)) {
         if (v.로스터없음 === v.팀) continue;
-        const b = bucket[lg] ?? { 최소야수: 999, 최소투수: 999 };
+        const b = bucket[lg] ?? { 최소야수: 999, 최소투수: 999, 포수없는팀: 0 };
         b.최소야수 = Math.min(b.최소야수, v.최소야수);
         b.최소투수 = Math.min(b.최소투수, v.최소투수);
+        b.포수없는팀 = Math.max(b.포수없는팀, v.포수없는팀 ?? 0);
         bucket[lg] = b;
       }
       for (const [lg, v] of Object.entries(comp)) {
