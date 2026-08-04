@@ -10,6 +10,18 @@
   import { seasonStore } from "./shared/stores/season";
   import { npcLiveStatsStore } from "./shared/stores/npcLiveStats";
   import { listSlotsV3, loadGameV3 } from "./shared/repo/slotLifecycleV3";
+  import { teamTokens, applyTeamTokens } from "./shared/utils/teamTheme";
+
+  // ── 팀 색을 문서 루트에 바른다 ────────────────────────────────
+  //
+  // ⚠ **한 곳에서만 계산한다.** 컴포넌트가 각자 팀 색을 읽어 쓰면 이적 한 번에
+  // 52개 화면을 다 고쳐야 한다. 이 디자인의 가치가 "소속팀이 바뀌면 화면이
+  // 바뀐다"이고, 그건 CSS 변수가 최상위에 있을 때만 공짜로 얻어진다.
+  //
+  // 소속이 없는 화면(인트로·슬롯 선택·새 게임 1단계)은 폴백 색으로 돈다.
+  $: myTeamId = $gameStore.protagonist?.teamId ?? "";
+  $: myTeam = myTeamId ? ($masterStore.teams ?? []).find((t) => t.id === myTeamId) : undefined;
+  $: applyTeamTokens(teamTokens(myTeam?.colors));
 
   type GamePhase = "loading" | "intro" | "slotSelect" | "create" | "playing";
   let phase: GamePhase = "loading";

@@ -1,15 +1,58 @@
+/* ══════════════════════════════════════════════════════════════
+   유니폼 디자인 토큰
+   ══════════════════════════════════════════════════════════════
+
+   ⚠ **팀 색 셋(--t-*)은 여기 값이 폴백이다.** 실제 값은 소속팀에서 오고
+   `utils/teamTheme.ts`의 `applyTeamTokens`가 문서 루트에 발라준다.
+   컴포넌트마다 색을 들고 있으면 이적 한 번에 52개 화면을 다 고쳐야 한다 —
+   이 디자인의 가치가 "한 곳에서 바꾸면 전부 따라온다"이므로 최상위에 둔다.
+
+   ⚠ **지금 화면들은 아직 어두운 인라인 스타일이다.** 전역 배경을 밝게
+   바꾸면 52개가 한꺼번에 깨진다. 그래서 아래 `--surface` 계열은 변수로만
+   두고, 옮긴 화면이 `.u-page`로 골라 쓴다. 전부 옮긴 뒤에 전역으로 올린다.
+   ────────────────────────────────────────────────────────────── */
+
 :root {
-  font-family: "Malgun Gothic", "Noto Sans KR", sans-serif;
+  /* 팀 색 — 런타임에 덮인다 (폴백은 소속 없는 화면용) */
+  --t-dark:   #1E3050;
+  --t-accent: #B3311F;
+  --t-gold:   #8FAFFF;
+  --t-stripe: rgba(30, 48, 80, 0.055);
+
+  /* 지면 — 팀과 무관하게 고정 */
+  --surface:     #F6F8FB;   /* 바탕. 핀스트라이프가 얹힌다 */
+  --panel:       #FFFFFF;   /* 카드. 스트라이프를 덮어 본문 가독성을 지킨다 */
+  --panel-sunk:  #EEF2F8;   /* 표 머리·입력 배경 */
+  --line:        #DDE3EE;   /* 구분선 */
+  --line-strong: #C3CDDE;
+
+  /* 글자 */
+  --ink:      #0F1D3D;
+  --ink-mid:  #3B4863;
+  --ink-mute: #5A6478;
+  --ink-on-dark: #FFFFFF;
+
+  /* 의미색 — 팀 색과 섞이면 안 된다. 상태는 팀이 바뀌어도 같은 뜻이어야 한다 */
+  --ok:   #1F7A47;
+  --warn: #9A6510;
+  --bad:  #B3311F;
+
+  /* 치수 */
+  --gap:  12px;
+  --pad:  14px;
+  --radius: 3px;
+
+  font-family: "Pretendard", "Malgun Gothic", "Noto Sans KR", system-ui, sans-serif;
+  font-synthesis-weight: none;
+
+  /* ⚠ 아직 전역은 기존 어두운 톤을 유지한다 (위 주석 참고) */
   background: #0f1522;
   color: #f4f7ff;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
-html,
-body {
+html, body {
   width: 100%;
   height: 100%;
   margin: 0;
@@ -17,15 +60,84 @@ body {
   overflow: hidden;
 }
 
-#app {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
+#app { width: 100%; height: 100%; overflow: hidden; }
+
+button, input, select, textarea { font: inherit; }
+
+/* ── 옮긴 화면이 쓰는 지면 ────────────────────────────────
+   핀스트라이프는 팀 주색에서 온다. 세기(0.055)는 팀이 바뀌어도 고정이라
+   화면 전체의 밀도 인상이 유지된다. */
+.u-page {
+  background-color: var(--surface);
+  background-image: repeating-linear-gradient(
+    90deg, transparent 0 11px, var(--t-stripe) 11px 13px);
+  color: var(--ink);
 }
 
-button,
-input,
-select,
-textarea {
-  font: inherit;
+/* ── 공통 조각 ──────────────────────────────────────────── */
+.u-bar {
+  background: var(--t-dark);
+  color: var(--ink-on-dark);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.u-card {
+  background: var(--panel);
+  border-radius: var(--radius);
+  padding: var(--pad);
+  box-shadow: 0 1px 3px -1px rgba(15, 29, 61, 0.16);
+}
+.u-btn {
+  background: var(--t-accent);
+  color: var(--ink-on-dark);
+  border: 0;
+  border-radius: var(--radius);
+  padding: 9px 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.u-btn--ghost {
+  background: transparent;
+  border: 2px solid var(--t-dark);
+  color: var(--t-dark);
+}
+.u-btn:disabled { opacity: 0.45; cursor: default; }
+
+.u-label {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 700;
+}
+.u-num { font-variant-numeric: tabular-nums; }
+
+/* 표 — 머리선이 팀 색이고 내 행이 팀 색으로 반전된다 */
+.u-table { width: 100%; border-collapse: collapse; }
+.u-table th {
+  text-align: left;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 700;
+  padding: 6px 8px;
+  border-bottom: 2px solid var(--t-dark);
+  white-space: nowrap;
+}
+.u-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--line);
+  font-variant-numeric: tabular-nums;
+}
+.u-table td.num, .u-table th.num { text-align: right; }
+.u-table tr.is-me td { background: var(--t-dark); color: var(--t-gold); }
+
+/* 키보드 이동이 보이게 — 접근성 기본 */
+:focus-visible { outline: 2px solid var(--t-accent); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
