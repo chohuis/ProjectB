@@ -237,6 +237,46 @@ pub struct GenerateFreshmenParams {
     /// **상류가 마르면 하류에서 아무리 퍼도 안 찬다.**
     #[serde(default)]
     pub pitcher_ratio: f64,
+    /// 재능 분포. **정본은 `generation_rules.json`의 `talentRules`다.**
+    ///
+    /// ⚠ 예전엔 `potential_hidden`이 `ovr_max * 1.15` **고정값**이었다 —
+    /// 난수가 없어 고교 신입생 1,020명이 매년 전원 같은 천장(80.5)을 가졌다.
+    /// **파이프라인 전체에 재능 편차가 없으니 새 에이스가 안 나온다.**
+    /// 창단 KBL 세대(92~99)가 은퇴하면 그 자리를 아무도 못 채웠다 —
+    /// 실측 6시즌 OVR 상위25% 89.3 → 82.1, 분산 22.0 → 10.7.
+    #[serde(default)]
+    pub talent: Option<TalentRulesPayload>,
+}
+
+/// `tuning::TalentRules`의 직렬화 형태. 필드가 빠지면 그 항목만 폴백을 쓴다.
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TalentRulesPayload {
+    #[serde(default)] pub potential_mult_min: Option<f64>,
+    #[serde(default)] pub potential_mult_max: Option<f64>,
+    #[serde(default)] pub tail_rate: Option<f64>,
+    #[serde(default)] pub tail_potential_mult_min: Option<f64>,
+    #[serde(default)] pub tail_potential_mult_max: Option<f64>,
+    #[serde(default)] pub tail_dev_rate_min: Option<f64>,
+    #[serde(default)] pub tail_dev_rate_max: Option<f64>,
+}
+
+impl TalentRulesPayload {
+    pub fn resolve(this: Option<&Self>) -> crate::tuning::TalentRules {
+        let d = crate::tuning::TalentRules::default();
+        match this {
+            None => d,
+            Some(p) => crate::tuning::TalentRules {
+                pot_mult_min:      p.potential_mult_min.unwrap_or(d.pot_mult_min),
+                pot_mult_max:      p.potential_mult_max.unwrap_or(d.pot_mult_max),
+                tail_rate:         p.tail_rate.unwrap_or(d.tail_rate),
+                tail_pot_mult_min: p.tail_potential_mult_min.unwrap_or(d.tail_pot_mult_min),
+                tail_pot_mult_max: p.tail_potential_mult_max.unwrap_or(d.tail_pot_mult_max),
+                tail_dev_min:      p.tail_dev_rate_min.unwrap_or(d.tail_dev_min),
+                tail_dev_max:      p.tail_dev_rate_max.unwrap_or(d.tail_dev_max),
+            },
+        }
+    }
 }
 
 // ── 드래프트 관련 ─────────────────────────────────────────────────────────────

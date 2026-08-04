@@ -22,6 +22,13 @@ import { neededPositions } from "../utils/rosterEngine";
  * 이유로 팀 단위 편차가 누적됐다.
  */
 const HS_MIN_PITCHERS = 8;
+
+/**
+ * 재능 분포를 규칙 파일에서 꺼낸다. **세 생성 경로가 같은 값을 봐야 한다** —
+ * 초기 세계 생성만 분산이 있고 신입생이 고정값이면 창단 세대만 에이스가 되고
+ * 리그가 해마다 얇아진다(실측 6시즌 OVR 상위25% 89.3 → 82.1).
+ */
+const talentOf = (rf: { talentRules?: Record<string, unknown> }) => rf.talentRules;
 import type { SaveGame, ProtagonistSave, NpcSaveState } from "../types/save";
 import type { SaveSeason } from "../types/season";
 import type { SaveSlotMeta } from "../types/projectb.d";
@@ -119,7 +126,8 @@ export async function generateFreshmenV3(seasonYear: number): Promise<number> {
   const slotId = g.currentSlotId;
   if (!slotId) return 0;
 
-  const rules = (await loadRosterRules()).rosterRules["LEAGUE_HIGHSCHOOL"];
+  const rulesFile = await loadRosterRules();
+  const rules = rulesFile.rosterRules["LEAGUE_HIGHSCHOOL"];
   if (!rules) return 0;
   const perYear = Math.max(1, Math.round(rules.rosterSize / (rules.gradeMax ?? 3)));
 
@@ -165,6 +173,7 @@ export async function generateFreshmenV3(seasonYear: number): Promise<number> {
         // ⚠ **안 넘기면 무작위 폴백이 투수 30%가 된다**(생성은 45%).
         // 세대 교체마다 리그가 30%로 수렴해 파이프라인 전체가 마른다
         pitcherRatio: rules.pitcherRatio ?? 0.45,
+        talent: talentOf(rulesFile),
         // ⚠ 이걸 안 넘기면 생성기가 포지션을 무작위로 뽑는다 — 평균으로는
         // 균등해도 팀 단위 편차가 해마다 누적돼 포수 0명인 팀이 생긴다
         neededPositions: neededPositions(
@@ -249,6 +258,7 @@ export async function generateOverseasIntakeV3(seasonYear: number): Promise<numb
           devRateMin: rules.devRateMin, devRateMax: rules.devRateMax,
           namedNpcs: [], seasonYear, idOffset: 0,
           pitcherRatio: rules.pitcherRatio ?? 0.45,
+          talent: talentOf(rulesFile),
         // ⚠ **안 넘기면 무작위 폴백이 투수 30%가 된다**(생성은 45%).
         // 세대 교체마다 리그가 30%로 수렴해 파이프라인 전체가 마른다
         })),
@@ -364,6 +374,7 @@ export async function generateFarmDevelopmentV3(seasonYear: number): Promise<num
           devRateMin: rules.devRateMin, devRateMax: rules.devRateMax,
           namedNpcs: [], seasonYear, idOffset: 0,
           pitcherRatio: rules.pitcherRatio ?? 0.45,
+          talent: talentOf(rulesFile),
         // ⚠ **안 넘기면 무작위 폴백이 투수 30%가 된다**(생성은 45%).
         // 세대 교체마다 리그가 30%로 수렴해 파이프라인 전체가 마른다
           // 포수 0명인 팀이 여기서 메워진다 — 빈 야수 자리가 맨 앞이다

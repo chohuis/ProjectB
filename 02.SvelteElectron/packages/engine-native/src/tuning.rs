@@ -416,6 +416,79 @@ pub const FARM_MIN_BATTERS:  usize = 9;
 /// 1루수·좌익수는 다른 야수가 대신 설 수 있지만 포수는 그렇지 않다.
 pub fn is_specialist_position(pos: &str) -> bool { pos == "C" }
 
+// ── 재능 분포 ─────────────────────────────────────────────────────────
+//
+// ⚠ **파이프라인 전체에 재능 편차가 없었다.** `generate_freshmen`이
+// `potential_hidden`을 `ovr_max * 1.15` **고정값**으로 줬다 — 난수가 없어
+// 고교 신입생 1,020명이 매년 전원 80.5로 같은 천장을 가졌다.
+//
+// 그 결과가 "리그가 해마다 얇아진다"였다(실측 6시즌):
+//   OVR 상위25%  89.3 → 82.1   ·   분산 22.0 → 10.7   ·   리그 ERA 4.0 → 5.6
+// 창단 KBL 세대만 88 × 1.05~1.25 = 92~99를 갖고, 그들이 은퇴하면 그 자리를
+// **아무도 못 채운다.** 실측 천장 82가 고정값 80.5와 거의 같다.
+//
+// 고치는 방향은 "재능 상위 꼬리"다(사용자 확정) — 대부분의 성장 속도는
+// 그대로 두고 **소수만 에이스로 자란다.** 실제 야구와 OOTP/FM의 잠재력
+// 개념과 같고, 성장 곡선 전체를 올리는 것과 달리 주인공 체감을 안 건드린다.
+//
+// **정본은 `generation_rules.json`의 `talentRules`다.** 아래는 폴백이다.
+pub const TALENT_POT_MULT_MIN: f64 = 1.05;
+pub const TALENT_POT_MULT_MAX: f64 = 1.25;
+/// 꼬리에 드는 비율. 고교 신입생 1,020명이면 한 해 약 30명이고,
+/// 그중 프로까지 가는 건 진로 탈락을 거쳐 훨씬 적다.
+pub const TALENT_TAIL_RATE: f64 = 0.03;
+pub const TALENT_TAIL_POT_MULT_MIN: f64 = 1.28;
+pub const TALENT_TAIL_POT_MULT_MAX: f64 = 1.42;
+/// 꼬리는 **천장과 속도를 같이** 받아야 한다. 천장만 높고 속도가 평범하면
+/// 전성기가 끝날 때까지 못 닿는다(실측 25~27세 +1.45/시즌, 28~30세 +0.36).
+pub const TALENT_TAIL_DEV_MIN: f64 = 82.0;
+pub const TALENT_TAIL_DEV_MAX: f64 = 95.0;
+
+/// 재능 분포 파라미터. 없으면 위 폴백을 쓴다.
+#[derive(Clone, Copy, Debug)]
+pub struct TalentRules {
+    pub pot_mult_min: f64,
+    pub pot_mult_max: f64,
+    pub tail_rate: f64,
+    pub tail_pot_mult_min: f64,
+    pub tail_pot_mult_max: f64,
+    pub tail_dev_min: f64,
+    pub tail_dev_max: f64,
+}
+
+impl Default for TalentRules {
+    fn default() -> Self {
+        Self {
+            pot_mult_min: TALENT_POT_MULT_MIN,
+            pot_mult_max: TALENT_POT_MULT_MAX,
+            tail_rate: TALENT_TAIL_RATE,
+            tail_pot_mult_min: TALENT_TAIL_POT_MULT_MIN,
+            tail_pot_mult_max: TALENT_TAIL_POT_MULT_MAX,
+            tail_dev_min: TALENT_TAIL_DEV_MIN,
+            tail_dev_max: TALENT_TAIL_DEV_MAX,
+        }
+    }
+}
+
+/// 천장 배수와 성장 속도를 함께 뽑는다.
+///
+/// 난수는 호출측이 넘긴다 — 이 프로젝트엔 `LcgRand`(결정적 생성)와
+/// `thread_rng`(주간 진행) 두 종류가 있어 여기서 잡으면 한쪽이 못 쓴다.
+/// `r_tail`은 꼬리 판정, `r_pot`/`r_dev`는 대역 안의 위치다.
+pub fn sample_talent(
+    t: &TalentRules,
+    dev_min: f64, dev_max: f64,
+    r_tail: f64, r_pot: f64, r_dev: f64,
+) -> (f64, f64) {
+    if t.tail_rate > 0.0 && r_tail < t.tail_rate {
+        (t.tail_pot_mult_min + r_pot * (t.tail_pot_mult_max - t.tail_pot_mult_min),
+         t.tail_dev_min      + r_dev * (t.tail_dev_max      - t.tail_dev_min))
+    } else {
+        (t.pot_mult_min + r_pot * (t.pot_mult_max - t.pot_mult_min),
+         dev_min        + r_dev * (dev_max        - dev_min))
+    }
+}
+
 /// 세이브 요건 점수차 (KBO·MLB 공통 3점 이내).
 ///
 /// ⚠ **등판 조건과 판정 조건이 같아야 한다.** 이 값이 두 군데에 따로 적혀
@@ -445,3 +518,62 @@ pub const SP_SHARE_OF_PITCHERS: f64 = 0.45;
 ///
 /// 5인 로테이션 + 부상 여유 1. 이 아래로는 선발을 안 내린다.
 pub const FIRST_TEAM_MIN_STARTERS: usize = 6;
+
+#[cfg(test)]
+mod talent_tests {
+    use super::*;
+
+    /// ⚠ **규칙 파일 키가 어긋나면 조용히 폴백으로 돈다.** `#[serde(default)]`라
+    /// 파싱은 성공하고 값만 안 들어온다 — 이 프로젝트에서 "정본이 둘"이 계속
+    /// 문제였던 것과 같은 층이다. 실제 파일로 값이 들어오는지 확인한다.
+    #[test]
+    fn 규칙파일의_재능_분포가_실제로_들어온다() {
+        let src = std::fs::read_to_string(concat!(
+            env!("CARGO_MANIFEST_DIR"), "/../../resource/data/master/players/generation_rules.json"
+        )).expect("generation_rules.json 없음");
+        let v: serde_json::Value = serde_json::from_str(&src).unwrap();
+        let p: crate::sim_types::TalentRulesPayload =
+            serde_json::from_value(v["talentRules"].clone()).expect("talentRules 파싱 실패");
+        let t = crate::sim_types::TalentRulesPayload::resolve(Some(&p));
+
+        assert!(p.tail_rate.is_some(), "tailRate가 안 들어왔다 — 키 이름을 확인하라");
+        assert!(p.potential_mult_max.is_some(), "potentialMultMax가 안 들어왔다");
+        assert!(p.tail_dev_rate_max.is_some(), "tailDevRateMax가 안 들어왔다");
+        assert!(t.tail_rate > 0.0 && t.tail_rate < 0.5, "꼬리 비율이 이상하다: {}", t.tail_rate);
+        assert!(t.tail_pot_mult_min > t.pot_mult_max,
+            "꼬리가 일반 대역과 겹친다 — 꼬리 {} vs 일반 상한 {}",
+            t.tail_pot_mult_min, t.pot_mult_max);
+    }
+
+    /// 꼬리는 **천장과 속도를 같이** 받아야 한다
+    #[test]
+    fn 꼬리는_천장과_속도를_같이_받는다() {
+        let t = TalentRules::default();
+        // r_tail 0.0 → 반드시 꼬리
+        let (pot, dev) = sample_talent(&t, 45.0, 75.0, 0.0, 0.5, 0.5);
+        assert!(pot >= t.tail_pot_mult_min, "꼬리인데 천장이 일반값이다: {pot}");
+        assert!(dev >= t.tail_dev_min, "꼬리인데 성장 속도가 일반값이다: {dev}");
+        // r_tail 0.99 → 반드시 일반
+        let (pot2, dev2) = sample_talent(&t, 45.0, 75.0, 0.99, 0.5, 0.5);
+        assert!(pot2 <= t.pot_mult_max, "일반인데 천장이 꼬리값이다: {pot2}");
+        assert!(dev2 <= 75.0, "일반인데 성장 속도가 대역을 넘었다: {dev2}");
+    }
+
+    /// 고교 신입생 천장이 **한 값에 몰리지 않는다** — 이게 원래 결함이었다
+    #[test]
+    fn 신입생_천장이_한_값에_몰리지_않는다() {
+        let t = TalentRules::default();
+        let hs_cap = 70.0;   // LEAGUE_HIGHSCHOOL의 ovrMax
+        let mut vals = vec![];
+        for i in 0..1000 {
+            let r = |k: u32| ((i as u32 * 2654435761u32).wrapping_add(k * 40503)
+                              % 10007) as f64 / 10007.0;
+            let (pot, _) = sample_talent(&t, 45.0, 75.0, r(1), r(2), r(3));
+            vals.push((hs_cap * pot).round());
+        }
+        let top = vals.iter().cloned().fold(f64::MIN, f64::max);
+        let same = vals.iter().filter(|v| (**v - 80.0).abs() < 1.0).count();
+        assert!(top >= 90.0, "고교 출신 최고 천장이 {top} — 에이스가 나올 수 없다");
+        assert!(same < 300, "천장이 한 값(80 근처)에 {same}/1000명 몰렸다");
+    }
+}

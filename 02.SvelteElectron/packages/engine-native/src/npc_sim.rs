@@ -1704,6 +1704,7 @@ pub fn generate_freshmen(params: GenerateFreshmenParams) -> Vec<NpcSaveState> {
     let seed = name_hash.wrapping_mul(997)
         .wrapping_add((params.season_year as u32).wrapping_mul(31));
     let mut rng = LcgRand::new(seed);
+    let talent = crate::sim_types::TalentRulesPayload::resolve(params.talent.as_ref());
 
     for i in 0..bulk_count as usize {
         let npc_id = format!("GEN_{}_Y{}_{:03}", params.school_id, params.season_year, params.id_offset as usize + i + 1);
@@ -1737,7 +1738,12 @@ pub fn generate_freshmen(params: GenerateFreshmenParams) -> Vec<NpcSaveState> {
         let is_sp = matches!(position.as_str(), "SP" | "RP" | "CP" | "P");
         let ovr_p = params.pitching_ovr_min + rng.next() * (params.pitching_ovr_max - params.pitching_ovr_min);
         let ovr_b = params.batting_ovr_min  + rng.next() * (params.batting_ovr_max  - params.batting_ovr_min);
-        let dev_r = params.dev_rate_min     + rng.next() * (params.dev_rate_max      - params.dev_rate_min);
+        // ⚠ **천장과 속도를 같이 뽑는다.** 예전엔 속도만 균등 난수였고 천장은
+        // `ovr_max * 1.15` 고정이라 **신입생 전원이 같은 천장**을 가졌다.
+        // 소수(`tailRate`)에게만 높은 천장과 빠른 성장을 준다 — 나머지는 그대로다.
+        let (pot_mult, dev_r) = crate::tuning::sample_talent(
+            &talent, params.dev_rate_min, params.dev_rate_max,
+            rng.next(), rng.next(), rng.next());
 
         result.push(NpcSaveState {
             npc_id,
@@ -1757,7 +1763,8 @@ pub fn generate_freshmen(params: GenerateFreshmenParams) -> Vec<NpcSaveState> {
             pitching:       Some(make_pitching(ovr_p.round(), &mut rng)),
             batting:        Some(make_batting(ovr_b.round(),  &mut rng)),
             development_rate: dev_r.round() as i32,
-            potential_hidden: params.pitching_ovr_max.max(params.batting_ovr_max) * 1.15,
+            potential_hidden: (params.pitching_ovr_max.max(params.batting_ovr_max) * pot_mult)
+                .clamp(ovr_p.max(ovr_b), 99.0),
             career_history:  vec![],
             career_events:   vec![],
             achievements:    vec![],
@@ -3316,6 +3323,7 @@ mod freshmen_ratio_tests {
                 dev_rate_min: 45.0, dev_rate_max: 75.0,
                 named_npcs: vec![], season_year: 2026, id_offset: 0,
                 needed_positions: vec![],   // 전부 폴백으로 뽑힌다
+                talent: None,
                 pitcher_ratio: ratio,
             });
             pit += out.iter().filter(|n| n.player_type == "pitcher").count();
@@ -3349,6 +3357,7 @@ mod freshmen_ratio_tests {
             dev_rate_min: 45.0, dev_rate_max: 75.0,
             named_npcs: vec![], season_year: 2026, id_offset: 0,
             needed_positions: vec![], pitcher_ratio: 0.45,
+            talent: None,
         });
         let sp = out.iter().filter(|n| n.position == "SP").count();
         let rp = out.iter().filter(|n| n.position == "RP").count();

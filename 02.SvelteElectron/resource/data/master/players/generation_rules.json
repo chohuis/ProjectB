@@ -376,6 +376,20 @@
     "_farmFloorNote": "2군 구성 하한. 근거는 '2군도 경기를 치른다' - 선발 5인 로테이션 + 불펜 3 = 8, 야수는 타순 한 바퀴 = 9. 1군 하한(14/12)보다 낮은 것은 의도다: 2군은 1군에 공급하는 풀이라 여유가 1군만큼 필요없고, 높이면 공백 충원이 막혀 1군 포수 0명이 안 고쳐진다",
     "_farmFloorNote2": "rosterMin x 보직비율 - 여유2로 파생하면 9/12가 나오는데 그걸 쓰면 안 된다. 실측: 12로 올렸더니 공백 충원이 막혀 KBL 1군 최소 야수가 12 -> 7이 됐다. 그 파생식은 독립 리그용이고 2군은 공급 풀이라 잣대가 다르다"
   },
+  "talentRules": {
+    "_note": "재능 분포. 읽는 곳: roster_gen.rs(초기 세계) / npc_sim.rs generate_freshmen(매년 신입생) / generate_foreign_players. 세 곳이 tuning.rs sample_talent 하나를 공유한다",
+    "_why": "예전엔 신입생 potentialHidden이 ovrMax*1.15 고정값이었다 - 난수가 없어 고교 신입생 1020명이 매년 전원 같은 천장(80.5)을 가졌다. 파이프라인 전체에 재능 편차가 없으니 새 에이스가 안 나오고, 창단 KBL 세대(92~99)가 은퇴하면 그 자리를 아무도 못 채웠다. 실측 6시즌: OVR 상위25% 89.3->82.1, 분산 22.0->10.7, 리그 ERA 4.0->5.6",
+    "potentialMultMin": 1.05,
+    "potentialMultMax": 1.25,
+    "tailRate": 0.03,
+    "tailPotentialMultMin": 1.28,
+    "tailPotentialMultMax": 1.42,
+    "tailDevRateMin": 82,
+    "tailDevRateMax": 95,
+    "_tailNote": "상위 꼬리(사용자 확정). 대부분의 성장 속도는 그대로 두고 소수만 에이스로 자란다. 천장과 속도를 같이 줘야 한다 - 천장만 높고 속도가 평범하면 전성기가 끝날 때까지 못 닿는다(실측 25~27세 +1.45/시즌, 28~30세 +0.36)",
+    "_tailRateNote": "고교 신입생 1020명이면 한 해 약 30명이고 그중 프로까지 가는 건 진로 탈락을 거쳐 훨씬 적다. 이 값은 측정하며 맞춘다 - 목표는 KBL 1군 규정투수 상위25% OVR이 6시즌 뒤에도 88 근처를 지키는 것"
+  },
+
   "internationalRules": {
     "_note": "국가대표 · 국제대회 (Phase 7-3). 읽는 곳: engine-native/src/national_team.rs. 경기는 시뮬하지 않는다 - 대표팀 전력으로 순위를 확률 산출한다",
     "_scheduleNote": "cycleYears 4 · yearMod가 서로 달라 **한 해에 두 대회가 겹치지 않는다**. yearMod 3인 해는 대회가 없다",

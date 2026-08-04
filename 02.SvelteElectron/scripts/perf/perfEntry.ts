@@ -2633,3 +2633,43 @@ export function militaryLedgerProbe(): Record<string, unknown> {
     현재상무: g.npcs.filter((n) => n.careerStatus === "military" && n.militaryUnit === "sports").length,
   };
 }
+
+/**
+ * 재능(잠재력) 분포 — **꼬리가 실제 세계에 존재하는가.**
+ *
+ * ⚠ OVR 상관 측정으로는 이걸 못 본다. 2026년에 태어난 꼬리는 16~18세라
+ * 2032년에도 22~24세다 — **효과가 KBL 1군 상위권에 도착하려면 10~15년**이
+ * 걸린다. 6시즌 측정에서 "안 변했다"를 보고 되돌리면 안 된다.
+ *
+ * 여기선 나이대별로 나눠 본다: 어린 층에 높은 잠재력이 실제로 깔렸는가.
+ */
+export function potentialProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const rows: Array<{ pot: number; age: number; lg: string }> = [];
+  for (const n of g.npcs) {
+    if (n.careerStatus === "retired") continue;
+    const pot = (n as unknown as { potentialHidden?: number }).potentialHidden;
+    if (typeof pot !== "number" || !(pot > 0)) continue;
+    rows.push({ pot, age: n.age ?? 0, lg: n.currentLeague ?? "-" });
+  }
+  if (rows.length === 0) return { 표본: 0 };
+  const q = (v: number[], f: number) => {
+    const s = [...v].sort((a, b) => a - b);
+    return s[Math.min(s.length - 1, Math.floor(s.length * f))];
+  };
+  const band = (lo: number, hi: number) => {
+    const v = rows.filter((r) => r.age >= lo && r.age <= hi).map((r) => r.pot);
+    if (v.length === 0) return "-";
+    // 90 이상이 몇 %인가 — 에이스가 될 수 있는 층의 두께다
+    const elite = v.filter((x) => x >= 90).length;
+    return `n${v.length} 중앙${q(v, 0.5)} p90 ${q(v, 0.9)} 최대${Math.max(...v)}`
+         + ` · 90이상 ${(elite / v.length * 100).toFixed(1)}%`;
+  };
+  return {
+    표본: rows.length,
+    "16-18세": band(16, 18),
+    "19-22세": band(19, 22),
+    "23-27세": band(23, 27),
+    "28세이상": band(28, 99),
+  };
+}

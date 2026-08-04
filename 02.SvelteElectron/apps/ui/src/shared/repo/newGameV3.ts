@@ -47,6 +47,14 @@ export interface GenerationRulesFile {
    * `leagues`에 든 리그의 **1군 로스터에만** 적용된다.
    */
   foreignRules?: { leagues?: string[]; [key: string]: unknown };
+  /**
+   * 재능 분포 — 천장(`potentialMult*`)과 상위 꼬리. Rust로 그대로 넘긴다.
+   *
+   * ⚠ **세 생성 경로가 같은 값을 받아야 한다** (초기 세계·매년 신입생·용병).
+   * 예전엔 신입생만 `ovrMax * 1.15` 고정이라 재능 편차가 아예 없었고,
+   * 창단 세대가 은퇴하면 리그가 영구히 얇아졌다.
+   */
+  talentRules?: Record<string, unknown>;
   /** 11월 통합 드래프트 — 라운드 수·나이 게이트·얼리 신청 하한·신인 계약 (Phase 7-1) */
   draftRules?: {
     rounds?: number;
@@ -103,6 +111,9 @@ export function buildRosterParams(
   powerRules?: unknown,
   entryRules?: unknown,
   foreign?: unknown,
+  // ⚠ **재능 분포는 신입생 생성과 같은 정본을 써야 한다.** 여기만 분산이 있고
+  // 신입생이 고정값이면 창단 세대만 에이스가 되고 리그가 해마다 얇아진다.
+  talent?: unknown,
 ) {
   return {
     leagueId,
@@ -120,6 +131,7 @@ export function buildRosterParams(
     ...(powerRules ? { powerRules } : {}),
     ...(entryRules ? { entryRules } : {}),
     ...(foreign ? { foreign } : {}),
+    ...(talent ? { talent } : {}),
   };
 }
 
@@ -209,10 +221,11 @@ async function generateLeagueNpcs(
   powerRules?: unknown,
   entryRules?: unknown,
   foreign?: unknown,
+  talent?: unknown,
 ): Promise<Partial<RepoNpc>[]> {
   const params = buildRosterParams(
     leagueId, seasonYear, worldSeed, teams, rules, undefined,
-    salaryRules, powerRules, entryRules, foreign);
+    salaryRules, powerRules, entryRules, foreign, talent);
   const gen = JSON.parse(
     await window.projectB!.engine("generateLeagueRosterNative", JSON.stringify(params))
   ) as { npcs?: Partial<RepoNpc>[]; error?: string };
@@ -440,7 +453,7 @@ export async function activateLeagueV3(
     leagueId, seasonYear, worldSeed, teams, rules, namePool,
     rulesFile.salaryRules, rulesFile.powerRules,
     (rulesFile.careerHistoryRules as { entry?: unknown } | undefined)?.entry,
-    foreignSlotsFor(leagueId, rulesFile));
+    foreignSlotsFor(leagueId, rulesFile), rulesFile.talentRules);
   const gen = JSON.parse(
     await window.projectB!.engine("generateLeagueRosterNative", JSON.stringify(params))
   ) as { npcs?: Partial<RepoNpc>[]; error?: string };

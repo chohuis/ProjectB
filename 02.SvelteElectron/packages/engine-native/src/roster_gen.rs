@@ -99,6 +99,10 @@ pub struct GenerateLeagueRosterParams {
     /// 외국인 선수 슬롯 (generation_rules.json foreignRules). None이면 전원 내국인
     #[serde(default)]
     pub foreign: Option<ForeignSlots>,
+    /// 재능 분포 (generation_rules.json talentRules). 신입생 생성과 **같은 정본**을 쓴다 —
+    /// 여기만 분산이 있고 신입생은 고정값이면 창단 세대만 에이스가 된다
+    #[serde(default)]
+    pub talent: Option<crate::sim_types::TalentRulesPayload>,
 }
 
 /// 외국인 선수 규칙 — **KBL은 진행 중인 리그라 시작 시점에 이미 있어야 한다.**
@@ -390,6 +394,7 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
             ^ hash_str(&team.team_id)
             ^ (p.season_year as u32).wrapping_mul(2654435761);
         let mut rng = LcgRand::new(seed);
+        let talent = crate::sim_types::TalentRulesPayload::resolve(p.talent.as_ref());
 
         // 외국인 슬롯 — **자리를 늘리지 않고 내국인 자리를 대체한다.**
         // 투수는 선발 앞자리(0..), 야수는 야수 첫 자리(pitcher_n..)에 넣는다.
@@ -490,15 +495,18 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
             };
 
             let core_ovr = if is_pitcher { ovr_p } else { ovr_b };
-            let dev_rate = match fgn {
-                Some(f) => f.dev_rate_min + rng.next() * (f.dev_rate_max - f.dev_rate_min),
-                None => p.rules.dev_rate_min + rng.next() * (p.rules.dev_rate_max - p.rules.dev_rate_min),
+            // 재능은 **천장과 속도를 같이** 뽑는다 — 신입생 생성과 같은 정본이다
+            let (dv_min, dv_max) = match fgn {
+                Some(f) => (f.dev_rate_min, f.dev_rate_max),
+                None => (p.rules.dev_rate_min, p.rules.dev_rate_max),
             };
+            let (pot_mult, dev_rate) = crate::tuning::sample_talent(
+                &talent, dv_min, dv_max, rng.next(), rng.next(), rng.next());
             let pot_cap  = match fgn {
                 Some(f) => f.ovr_max,
                 None => p.rules.pitching_ovr_max.max(p.rules.batting_ovr_max),
             };
-            let potential = (pot_cap * (1.05 + rng.next() * 0.20)).round().clamp(core_ovr.round(), 99.0);
+            let potential = (pot_cap * pot_mult).round().clamp(core_ovr.round(), 99.0);
 
             let handedness = if rng.next() < (if is_pitcher { 0.30 } else { 0.35 }) { "L" } else { "R" };
 
@@ -611,6 +619,9 @@ pub struct GenerateForeignParams {
     /// 같은 해에 두 번 부를 때 ID가 겹치지 않게 하는 오프셋
     #[serde(default)]
     pub id_offset: i32,
+    /// 재능 분포 (generation_rules.json talentRules) — 세 생성 경로가 같은 정본을 쓴다
+    #[serde(default)]
+    pub talent: Option<crate::sim_types::TalentRulesPayload>,
 }
 
 pub fn generate_foreign_players(p: GenerateForeignParams) -> GenerateLeagueRosterResult {
@@ -628,6 +639,7 @@ pub fn generate_foreign_players(p: GenerateForeignParams) -> GenerateLeagueRoste
             ^ (p.season_year as u32).wrapping_mul(40503)
             ^ 0x464f_5247;   // "FORG" — 초기 로스터와 시드가 겹치지 않게
         let mut rng = LcgRand::new(seed);
+        let talent = crate::sim_types::TalentRulesPayload::resolve(p.talent.as_ref());
 
         for i in 0..total {
             let is_pitcher = i < req.pitchers;
@@ -661,8 +673,10 @@ pub fn generate_foreign_players(p: GenerateForeignParams) -> GenerateLeagueRoste
                 }
             };
 
-            let dev_rate = f.dev_rate_min + rng.next() * (f.dev_rate_max - f.dev_rate_min);
-            let potential = (f.ovr_max * (1.05 + rng.next() * 0.20)).round().clamp(ovr.round(), 99.0);
+            // 용병도 같은 정본을 쓴다 — 여기만 따로 두면 정본이 셋이 된다
+            let (pot_mult, dev_rate) = crate::tuning::sample_talent(
+                &talent, f.dev_rate_min, f.dev_rate_max, rng.next(), rng.next(), rng.next());
+            let potential = (f.ovr_max * pot_mult).round().clamp(ovr.round(), 99.0);
             let handedness = if rng.next() < (if is_pitcher { 0.30 } else { 0.35 }) { "L" } else { "R" };
 
             // 새로 온 용병은 이 리그 연차가 0이다
@@ -756,6 +770,7 @@ mod tests {
 
         generate_league_roster(GenerateLeagueRosterParams {
             league_id: league.to_string(),
+            talent: None,
             season_year: 2029,
             world_seed: 4242,
             teams: teams.iter().map(|(t, pw, si)| TeamSpec {
@@ -787,6 +802,7 @@ mod tests {
         let f = foreign_rules();
         let out = generate_foreign_players(GenerateForeignParams {
             league_id: "LEAGUE_KBL".into(),
+            talent: None,
             season_year: 2030,
             world_seed: 4242,
             requests: vec![
@@ -839,7 +855,7 @@ mod tests {
             league_id: "LEAGUE_KBL".into(), season_year: 2029, world_seed: 4242,
             teams, rules, name_pool: None, id_prefix: None,
             salary_rules: None, power_rules: None, entry_rules: None,
-            foreign: Some(f.clone()),
+            foreign: Some(f.clone()), talent: None,
         }).npcs;
 
         // 외국인이 자리를 **늘리지 않는다** — 정원은 그대로다
