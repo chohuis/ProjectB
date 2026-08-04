@@ -31,8 +31,8 @@ fn cond_start_mod(pitcher_id: &str, conditions: &HashMap<String, SimPlayerCondit
     clamp_f(0.60 + fatigue * 0.004, 0.60, 1.0)
 }
 
-struct PitAccum { outs: i32, er: i32, h: i32, k: i32, bb: i32, pc: i32 }
-struct BatAccum { ab: i32, h: i32, hr: i32, rbi: i32, bb: i32, k: i32, sb: i32 }
+struct PitAccum { outs: i32, er: i32, h: i32, k: i32, bb: i32, pc: i32, risp_ab: i32, risp_h: i32 }
+struct BatAccum { ab: i32, h: i32, hr: i32, rbi: i32, bb: i32, k: i32, sb: i32, risp_ab: i32, risp_h: i32 }
 
 fn sim_max_outs(pit: &SimPitcher, is_starter: bool, cond_mod: f64, rng: &mut impl Rng) -> i32 {
     let eff_stam = pit.stamina * cond_mod;
@@ -280,7 +280,7 @@ fn sim_half_inning_pitch(
     };
 
     let acc = pit_map.entry(pit.id.clone())
-        .or_insert(PitAccum { outs: 0, er: 0, h: 0, k: 0, bb: 0, pc: 0 });
+        .or_insert(PitAccum { outs: 0, er: 0, h: 0, k: 0, bb: 0, pc: 0, risp_ab: 0, risp_h: 0 });
     let acc_ptr = acc as *mut PitAccum;
 
     // 도루는 **투수 견제력**이 누른다. 이닝 내내 같은 투수이므로 한 번만 계산한다
@@ -313,7 +313,7 @@ fn sim_half_inning_pitch(
             if rng.gen::<f64>() < success {
                 bases[to] = bases[from].take();
                 bat_map.entry(r.id.clone())
-                    .or_insert(BatAccum { ab: 0, h: 0, hr: 0, rbi: 0, bb: 0, k: 0, sb: 0 })
+                    .or_insert(BatAccum { ab: 0, h: 0, hr: 0, rbi: 0, bb: 0, k: 0, sb: 0, risp_ab: 0, risp_h: 0 })
                     .sb += 1;
             } else {
                 bases[from] = None;
@@ -332,6 +332,9 @@ fn sim_half_inning_pitch(
         // 아니라 그 순간의 실효 능력을 조정하는 것이다
         let cm  = npc_clutch_mod(&occupied(&bases), outs, inning, score_diff,
                                  pit.clutch, pit.mentality, batter.batting_clutch);
+        // 득점권 = 2·3루 주자. **`npc_clutch_mod`의 판정과 같은 정의여야 한다** —
+        // 보정을 받은 타석과 기록에 남는 타석이 다르면 스플릿이 보정을 못 보여준다
+        let risp = bases[1].is_some() || bases[2].is_some();
         let q   = quality(stamina) * start_cond_mod * cm;
         let vel = pit.velocity * q;
         let cmd = pit.command  * q;
@@ -362,10 +365,25 @@ fn sim_half_inning_pitch(
         if is_hit { pa.h  += 1; }
         if is_k   { pa.k  += 1; }
         if is_bb  { pa.bb += 1; }
+        // ⚠ **득점권 기록을 따로 남긴다.** 위기 보정(`npc_clutch_mod`)이
+        // 실제로 성적을 만드는지 시즌 ERA로는 못 본다 — 득점권은 전체
+        // 타석의 25%뿐이라 희석되고, 기질 20↔90 차이(ERA 0.18)가 노이즈
+        // (±0.14)에 묻힌다. **스플릿으로 보여줘야 성격이 기록에 드러난다** —
+        // 실제 야구도 시즌 ERA가 아니라 상황별 성적으로 이걸 본다.
+        //
+        // 볼넷은 타수가 아니므로 제외한다(피안타율 분모를 맞춘다).
+        if !is_bb {
+            pa.risp_ab += risp as i32;
+            if is_hit { pa.risp_h += risp as i32; }
+        }
 
         let ba = bat_map.entry(batter.id.clone())
-            .or_insert(BatAccum { ab: 0, h: 0, hr: 0, rbi: 0, bb: 0, k: 0, sb: 0 });
-        if !is_bb { ba.ab += 1; }
+            .or_insert(BatAccum { ab: 0, h: 0, hr: 0, rbi: 0, bb: 0, k: 0, sb: 0, risp_ab: 0, risp_h: 0 });
+        if !is_bb {
+            ba.ab += 1;
+            ba.risp_ab += risp as i32;
+            if is_hit { ba.risp_h += risp as i32; }
+        }
         if is_hit  { ba.h  += 1; }
         if is_hr   { ba.hr += 1; }
         if is_bb   { ba.bb += 1; }
@@ -614,6 +632,7 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
         let ip        = (acc.outs / 3) as f64 + (acc.outs % 3) as f64 / 10.0;
         player_lines.push(PlayerGameLine::Pitcher {
             player_id: id.clone(), ip, er: acc.er, h: acc.h, k: acc.k, bb: acc.bb, pc: acc.pc, decision,
+            risp_ab: acc.risp_ab, risp_h: acc.risp_h,
         });
     }
 
@@ -635,6 +654,7 @@ pub fn sim_game(params: &SimGameParams) -> SimGameResult {
         player_lines.push(PlayerGameLine::Batter {
             player_id: id.clone(), ab: acc.ab, h: acc.h, hr: acc.hr,
             rbi: acc.rbi, bb: acc.bb, k: acc.k, sb: acc.sb,
+            risp_ab: acc.risp_ab, risp_h: acc.risp_h,
         });
     }
 
@@ -3156,6 +3176,103 @@ mod clutch_tests {
         let best = npc_clutch_mod(&NONE, 0, 9, 0, 99.0, 99.0, 1.0);
         assert!(best <= crate::tuning::NPC_CLUTCH_MAX + 1e-9, "상한 위반: {best}");
     }
+
+    // ── 계수가 **성적을 얼마나 바꾸는가** ────────────────────────────
+    //
+    // ⚠ 위 검사들은 전부 `npc_clutch_mod`의 **모양**만 본다 — 단조성·상한·폭.
+    // 그런데 ②에서 물어야 할 것은 "그래서 타율이 얼마나 움직이나"다.
+    // 배율 0.853이 능력치를 15% 깎는데, 그게 타율 .005를 움직이는지
+    // .050을 움직이는지는 모양 검사로 알 수 없다.
+    //
+    // **실제 야구 기준**: 득점권 타율은 전체와 거의 같다(MLB 통산 .248 vs
+    // .250, 차이 .002). 상황이 성적을 크게 흔들지 않는다. 우리 모델은
+    // 압박을 **투수 능력 감소**로 넣으므로 득점권 타율이 조금 **높아지는**
+    // 방향이 맞고, 폭이 실제와 비슷해야 한다.
+
+    /// 한 배율에서 타석을 대량 시행해 (타율, 출루율)을 낸다.
+    ///
+    /// `sim_at_bat`을 직접 부른다 — 리그 루프에 집계를 넣으면 720경기마다
+    /// 도는 자리라 Phase 8(성능)과 충돌한다.
+    fn 타석_시행(cm: f64, n: usize, seed: u64) -> (f64, f64) {
+        use rand::SeedableRng;
+        let mut rng = rand::rngs::StdRng::seed_from_u64(seed);
+        // 리그 평균 대역. 절대값보다 **배율 간 차이**를 보는 것이라
+        // 값 자체가 정확할 필요는 없다 — 다만 실측 리그 타율(.253~.260)
+        // 근처에서 재야 폭이 현실적이다
+        let (v, c, ct, m) = (70.0, 70.0, 70.0, 70.0);
+        let (contact, eye, disc, power) = (70.0, 70.0, 70.0, 70.0);
+        let bases = [false, false, false];
+
+        let (mut ab, mut hits, mut bb) = (0usize, 0usize, 0usize);
+        for _ in 0..n {
+            let (r, _) = sim_at_bat(v * cm, c * cm, ct * cm, m * cm,
+                                    contact, eye, disc, power, &bases, 0, &mut rng);
+            match r {
+                AbResult::BB => bb += 1,
+                AbResult::Single | AbResult::Double | AbResult::Triple | AbResult::HR => {
+                    ab += 1; hits += 1;
+                }
+                _ => ab += 1,
+            }
+        }
+        let pa = ab + bb;
+        (hits as f64 / ab as f64, (hits + bb) as f64 / pa as f64)
+    }
+
+    #[test]
+    fn 위기보정이_타율을_현실적인_폭으로만_움직인다() {
+        const N: usize = 200_000;
+        let 중립 = 타석_시행(1.0, N, 20260804);
+
+        // 가장 흔한 위기: 득점권 · 아웃카운트 무관 · 평균 기질
+        let cm_risp = npc_clutch_mod(&SECOND, 0, 3, 0, 50.0, 50.0, 50.0);
+        let 득점권 = 타석_시행(cm_risp, N, 20260805);
+
+        // 가장 극단: 만루 2아웃 9회 1점차 · 기질 평균
+        let cm_max = npc_clutch_mod(&LOADED, 2, 9, 1, 50.0, 50.0, 50.0);
+        let 최악 = 타석_시행(cm_max, N, 20260806);
+
+        println!("  중립   배율 1.000  타율 {:.3}  출루 {:.3}", 중립.0, 중립.1);
+        println!("  득점권 배율 {cm_risp:.3}  타율 {:.3}  출루 {:.3}  (차 {:+.3})",
+                 득점권.0, 득점권.1, 득점권.0 - 중립.0);
+        println!("  최악   배율 {cm_max:.3}  타율 {:.3}  출루 {:.3}  (차 {:+.3})",
+                 최악.0, 최악.1, 최악.0 - 중립.0);
+
+        // 방향: 압박은 투수를 깎으므로 타자가 유리해야 한다
+        assert!(득점권.0 > 중립.0, "득점권인데 타율이 안 올랐다");
+
+        // **폭**: 실제 야구의 득점권 차이는 .002 수준이다. 시뮬은 그보다
+        // 뚜렷해도 되지만(성격이 보이긴 해야 한다) 상황이 능력치를 압도하면
+        // OVR·성적 상관이 무너진다 — 이번 라운드에서 그걸 15시즌 걸려 고쳤다.
+        let d = 득점권.0 - 중립.0;
+        assert!(d <= 0.020, "득점권 타율 차이가 {d:+.3} — 상황이 능력치를 압도한다");
+
+        let dmax = 최악.0 - 중립.0;
+        assert!(dmax <= 0.045, "최악 상황 타율 차이가 {dmax:+.3} — 폭이 너무 크다");
+    }
+
+    #[test]
+    fn 기질_차이가_타율에서_보인다() {
+        const N: usize = 200_000;
+        // 같은 상황, 배짱만 다른 두 투수
+        let cm_weak   = npc_clutch_mod(&LOADED, 2, 9, 1, 20.0, 20.0, 50.0);
+        let cm_strong = npc_clutch_mod(&LOADED, 2, 9, 1, 90.0, 90.0, 50.0);
+        let 약 = 타석_시행(cm_weak,   N, 20260807);
+        let 강 = 타석_시행(cm_strong, N, 20260808);
+
+        println!("  기질 20 배율 {cm_weak:.3}  피안타율 {:.3}", 약.0);
+        println!("  기질 90 배율 {cm_strong:.3}  피안타율 {:.3}  (차 {:+.3})",
+                 강.0, 강.0 - 약.0);
+
+        // **보이긴 해야 한다.** 첫 계수(0.030)는 방향만 맞고 폭이 0에 가까워
+        // 시즌 성적에 전혀 안 나타났다 — 있으나 마나였다
+        let d = 약.0 - 강.0;
+        assert!(d >= 0.004,
+                "배짱 20↔90의 피안타율 차이가 {d:.3} — 성격이 성적에 안 보인다");
+        // 다만 능력치를 압도하면 안 된다
+        assert!(d <= 0.030, "배짱 차이가 {d:.3} — 능력치보다 기질이 성적을 정한다");
+    }
+
 }
 
 // ── 마무리·세이브 ────────────────────────────────────────────────────────────
@@ -3289,6 +3406,66 @@ mod closer_tests {
         let (_, saves) = run(60);
         assert!(saves > 0, "60경기 동안 세이브가 한 건도 없었다");
     }
+
+    /// 득점권 스플릿이 **실제로 쌓이는가.**
+    ///
+    /// ⚠ 이 검사가 없으면 필드만 늘고 값이 0인 채로 화면에 나간다 —
+    /// 이 프로젝트에서 반복된 형태다(세이브 0·도루 0이 그랬고, 둘 다
+    /// 집계로는 "접전이 적었나"로 읽혀 몇 달을 안 보였다).
+    ///
+    /// 판정은 **비율**로 한다. 절대값은 리그 타격 수준에 따라 움직이지만,
+    /// 득점권 타석이 전체의 몇 %인지는 야구 구조가 정한다(실제 20~28%).
+    #[test]
+    fn 득점권_기록이_쌓인다() {
+        let (mut ab, mut risp_ab, mut risp_h, mut h) = (0i32, 0i32, 0i32, 0i32);
+        let (mut p_ab, mut p_risp_ab) = (0i32, 0i32);
+        for w in 0..40 {
+            let params = SimGameParams {
+                home_rotation: vec![pit("HSP", 65.0)],
+                away_rotation: vec![pit("ASP", 65.0)],
+                home_bullpen: (0..4).map(|i| pit(&format!("HRP{i}"), 60.0)).collect(),
+                away_bullpen: (0..4).map(|i| pit(&format!("ARP{i}"), 60.0)).collect(),
+                home_closer: None, away_closer: None,
+                home_lineup: lineup("H", 65.0),
+                away_lineup: lineup("A", 65.0),
+                home_rot_idx: 0, away_rot_idx: 0,
+                conditions: HashMap::new(),
+                week: w as i32 + 1,
+                home_team_id: "TEAM_H".into(), away_team_id: "TEAM_A".into(),
+            };
+            let r = sim_game(&params);
+            for line in &r.result.player_lines {
+                match line {
+                    PlayerGameLine::Batter { ab: a, h: hh, risp_ab: ra, risp_h: rh, .. } => {
+                        ab += a; h += hh; risp_ab += ra; risp_h += rh;
+                    }
+                    PlayerGameLine::Pitcher { risp_ab: ra, .. } => {
+                        p_risp_ab += ra;
+                    }
+                }
+            }
+            for line in &r.result.player_lines {
+                if let PlayerGameLine::Pitcher { h: hh, .. } = line { p_ab += hh; }
+            }
+        }
+        let share = risp_ab as f64 / ab as f64;
+        println!("  타수 {ab} · 득점권 {risp_ab} ({:.1}%) · 득점권 안타 {risp_h}", share * 100.0);
+        println!("  전체 타율 {:.3} · 득점권 타율 {:.3}",
+                 h as f64 / ab as f64, risp_h as f64 / risp_ab.max(1) as f64);
+
+        assert!(risp_ab > 0, "득점권 타수가 0 — 배선이 안 돌았다");
+        assert!(risp_h > 0, "득점권 안타가 0 — 안타 쪽 배선이 빠졌다");
+        // 실제 야구의 득점권 타석 비중은 20~28%다
+        assert!((0.15..=0.35).contains(&share),
+                "득점권 타석 비중이 {:.1}% — 판정이 현실과 다르다", share * 100.0);
+
+        // **투타 대사가 맞아야 한다.** 같은 타석을 양쪽이 세므로 합계가 같다 —
+        // 어긋나면 한쪽 누적이 빠진 것이다(볼넷 누락이 그런 식으로 숨어 있었다)
+        assert_eq!(risp_ab, p_risp_ab,
+                   "타자 득점권 타수 {risp_ab} vs 투수 {p_risp_ab} — 대사가 어긋난다");
+        let _ = p_ab;
+    }
+
 }
 
 // ── 신입생 보직 비율 ─────────────────────────────────────────────────────────

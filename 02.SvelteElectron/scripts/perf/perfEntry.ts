@@ -2673,3 +2673,45 @@ export function potentialProbe(): Record<string, unknown> {
     "28세이상": band(28, 99),
   };
 }
+
+/**
+ * 득점권 스플릿이 **리그 기록에 실제로 쌓이는가.**
+ *
+ * ⚠ 엔진 검사(`득점권_기록이_쌓인다`)는 `sim_game`만 본다. 그 값이 TS
+ * 누적을 거쳐 시즌 기록에 남는지는 별개다 — 이 프로젝트에서 세이브·도루가
+ * 정확히 그 층에서 0이었다(엔진은 만드는데 아무도 안 받았다).
+ */
+export function rispSplitProbe(leagueId = "LEAGUE_KBL"): Record<string, unknown> {
+  const s = get(seasonStore);
+  const stats = s.leagueState?.[leagueId]?.stats ?? {};
+  let pAb = 0, pH = 0, pRAb = 0, pRH = 0, pN = 0;
+  let bAb = 0, bH = 0, bRAb = 0, bRH = 0, bN = 0;
+  for (const st of Object.values(stats)) {
+    const r = st as unknown as {
+      type: string; ab?: number; h?: number; ip?: number;
+      rispAb?: number; rispH?: number;
+    };
+    if (r.type === "pitcher") {
+      // ⚠ **ip·ab로 거르면 안 된다.** 아웃을 하나도 못 잡고 강판된 투수도,
+      // 볼넷만 얻고 타수가 없는 타자도 그 타석에 서 있었다. 표본을 자르면
+      // **투타 대사가 어긋난 것처럼 보인다**(실측 2026년 불일치가 이것이었다).
+      // 대사 검사는 "같은 타석을 양쪽이 세는가"를 보는 것이라 자르면 안 된다.
+      pN++; pH += r.h ?? 0; pRAb += r.rispAb ?? 0; pRH += r.rispH ?? 0;
+      // 투수 타수는 안 들고 있다 — 비중은 타자 쪽으로 본다
+    } else {
+      bN++; bAb += r.ab ?? 0; bH += r.h ?? 0; bRAb += r.rispAb ?? 0; bRH += r.rispH ?? 0;
+    }
+  }
+  const r3 = (v: number) => Math.round(v * 1000) / 1000;
+  return {
+    투수: pN, 타자: bN,
+    "득점권 타석비중": bAb > 0 ? r3(bRAb / bAb) : 0,
+    "전체 타율": bAb > 0 ? r3(bH / bAb) : 0,
+    "득점권 타율": bRAb > 0 ? r3(bRH / bRAb) : 0,
+    "투수 득점권 피안타": pRH,
+    "투수 득점권 타수": pRAb,
+    // 투타 대사 — 같은 타석을 양쪽이 세므로 합계가 같아야 한다
+    "대사 일치": bRAb === pRAb,
+    _피안타합: pH,
+  };
+}

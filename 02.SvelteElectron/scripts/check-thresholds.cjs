@@ -69,6 +69,7 @@ const r3 = (v) => Math.round(v * 1000) / 1000;
           spread: app.abilitySpreadProbe("LEAGUE_KBL"),
           awards: await app.awardThresholdProbe("LEAGUE_KBL"),
           steal: app.stealInputProbe("LEAGUE_KBL"),
+          risp: app.rispSplitProbe("LEAGUE_KBL"),
         });
         await app.seasonRollover();
         continue;
@@ -161,6 +162,24 @@ const r3 = (v) => Math.round(v * 1000) / 1000;
       log(`         구위(경기 4종) ERA ${s.spread["구위-ERA 상관"] ?? "-"}`
         + ` · K9 ${s.spread["구위-K9 상관"] ?? "-"}`
         + `   평균 OVR ${s.spread["평균 OVR"] ?? "-"} vs 구위 ${s.spread["평균 구위"] ?? "-"}`);
+    }
+
+    // ── ⑤ 득점권 스플릿 — 성격이 기록으로 보이는가 ─────────────
+    //
+    // 계수는 실측으로 실제 야구와 맞다(득점권 타율 +.003, 실제 +.002).
+    // 문제는 기질 20↔90 차이(ERA 0.18)가 시즌 노이즈(±0.14)에 묻힌다는
+    // 것이었다. 계수를 키우면 상황이 능력치를 압도하므로, 계수는 두고
+    // 스플릿으로 보여준다(사용자 확정). 실제 야구도 이렇게 본다.
+    //
+    // ⚠ **롤오버 전에 찍어야 한다.** 처음엔 루프 밖에서 한 번 불렀는데
+    // 그 시점엔 시즌 기록이 이미 비워져 전체 타율까지 0으로 나왔다.
+    log("");
+    log("⑤ 득점권 스플릿 — 계수가 기록에 남는가");
+    for (const s3 of seasons) {
+      const rs = s3.risp ?? {};
+      log(`   ${s3.year}  타석비중 ${((rs["득점권 타석비중"] ?? 0) * 100).toFixed(1)}%`
+        + `  ·  전체 타율 ${rs["전체 타율"] ?? "-"} → 득점권 ${rs["득점권 타율"] ?? "-"}`
+        + `  ·  투타 대사 ${rs["대사 일치"] ? "일치" : "⚠ 불일치"}`);
     }
 
     // ── ④ 재능 분포 — 꼬리가 실제 세계에 있는가 ───────────────

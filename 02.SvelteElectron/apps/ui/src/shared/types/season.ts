@@ -12,6 +12,13 @@ export interface PitcherGameLine {
   bb: number;
   decision: "W" | "L" | "SV" | "HD" | "ND";
   pitchCount?: number;
+  /** 득점권 타수 — 위기 상황 성적을 보여주는 스플릿.
+   *
+   * ⚠ **시즌 ERA로는 성격이 안 보인다.** 득점권은 전체 타석의 22~23%뿐이라
+   * 희석되고, 투수 기질 20↔90의 차이(ERA 0.18)가 시즌 노이즈(±0.14)에 묻힌다.
+   * 실제 야구도 이걸 시즌 ERA가 아니라 상황별 성적으로 본다. */
+  rispAb?: number;
+  rispH?: number;
 }
 
 export interface BatterGameLine {
@@ -24,6 +31,9 @@ export interface BatterGameLine {
   bb: number;
   k: number;
   sb: number;
+  /** 득점권 타수·안타 — 투수 쪽과 짝이다 */
+  rispAb?: number;
+  rispH?: number;
 }
 
 export type PlayerGameLine = PitcherGameLine | BatterGameLine;

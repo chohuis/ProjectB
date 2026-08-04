@@ -154,6 +154,9 @@ export function accumulateStats(
       next[line.playerId] = {
         type:"pitcher", g: prev.g+1, gs: prev.gs, w, l, sv, hd, ip, er, h, k, bb,
         era: calcEra(er, ip), whip: calcWhip(bb, h, ip),
+        // 득점권 스플릿 — 엔진이 안 넘기던 시절의 세이브도 살아 있어야 하므로 ?? 0
+        rispAb: safeNum(prev.rispAb) + safeNum(line.rispAb),
+        rispH:  safeNum(prev.rispH)  + safeNum(line.rispH),
       };
     } else {
       const prev = (next[line.playerId] as BatterSeasonStats | undefined) ?? {
@@ -189,6 +192,9 @@ export function accumulateStats(
       next[line.playerId] = {
         type:"batter", g: prev.g+1, pa, ab, h, hr, rbi, sb, bb, k,
         avg, obp, slg, ops: calcOps(obp, slg),
+        // 득점권 스플릿 — 엔진이 안 넘기던 시절의 세이브도 살아 있어야 하므로 ?? 0
+        rispAb: (prev.rispAb ?? 0) + (line.rispAb ?? 0),
+        rispH:  (prev.rispH  ?? 0) + (line.rispH  ?? 0),
       };
     }
   }
