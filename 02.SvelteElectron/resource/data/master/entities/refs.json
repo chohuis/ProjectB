@@ -1317,7 +1317,8 @@
       "city": "제주",
       "stadium": "STADIUM_HALLA",
       "colors": [
-        "#433371"
+        "#433371",
+        "#C1500F"
       ],
       "colorLabel": "보라",
       "capacity": 0,
@@ -1370,7 +1371,8 @@
       "city": "전주",
       "stadium": "STADIUM_YEONGSAN",
       "colors": [
-        "#9A5E1D"
+        "#9A5E1D",
+        "#123A6B"
       ],
       "colorLabel": "노랑",
       "capacity": 0,
@@ -1428,7 +1430,8 @@
       "city": "수원",
       "stadium": "STADIUM_MUJIGAE",
       "colors": [
-        "#2A6F56"
+        "#2A6F56",
+        "#7B1E2B"
       ],
       "colorLabel": "청록",
       "capacity": 0,
@@ -1486,7 +1489,8 @@
       "city": "천안",
       "stadium": "STADIUM_GYERYONG",
       "colors": [
-        "#2A4A6F"
+        "#2A4A6F",
+        "#8A6512"
       ],
       "colorLabel": "남색",
       "capacity": 0,
@@ -1539,7 +1543,8 @@
       "city": "광주",
       "stadium": "STADIUM_YEONGSAN",
       "colors": [
-        "#841F3D"
+        "#841F3D",
+        "#123A6B"
       ],
       "colorLabel": "빨강",
       "capacity": 0,
@@ -1598,7 +1603,8 @@
       "city": "춘천",
       "stadium": "STADIUM_SEORAK_HS",
       "colors": [
-        "#AA1E09"
+        "#AA1E09",
+        "#0E5A63"
       ],
       "colorLabel": "주황",
       "capacity": 0,
@@ -1651,7 +1657,8 @@
       "city": "서울",
       "stadium": "STADIUM_HANGANG",
       "colors": [
-        "#A33376"
+        "#A33376",
+        "#1A3C1F"
       ],
       "colorLabel": "분홍",
       "capacity": 0,
@@ -1704,7 +1711,8 @@
       "city": "창원",
       "stadium": "STADIUM_NAKDONG",
       "colors": [
-        "#6A2F64"
+        "#6A2F64",
+        "#0E5A63"
       ],
       "colorLabel": "자주",
       "capacity": 0,
@@ -1757,7 +1765,8 @@
       "city": "성남",
       "stadium": "STADIUM_MUJIGAE",
       "colors": [
-        "#CA7419"
+        "#CA7419",
+        "#6E1F4D"
       ],
       "colorLabel": "노랑",
       "capacity": 0,
@@ -1810,7 +1819,8 @@
       "city": "김해",
       "stadium": "STADIUM_NAKDONG",
       "colors": [
-        "#EC800C"
+        "#EC800C",
+        "#123A6B"
       ],
       "colorLabel": "노랑",
       "capacity": 0,
@@ -1863,7 +1873,8 @@
       "city": "인천",
       "stadium": "STADIUM_MUJIGAE",
       "colors": [
-        "#25AAB1"
+        "#25AAB1",
+        "#8A3B12"
       ],
       "colorLabel": "하늘",
       "capacity": 0,
@@ -1916,7 +1927,8 @@
       "city": "서울",
       "stadium": "STADIUM_HANGANG",
       "colors": [
-        "#D98A36"
+        "#D98A36",
+        "#0F6B3C"
       ],
       "colorLabel": "노랑",
       "capacity": 0,
@@ -1969,7 +1981,8 @@
       "city": "서울",
       "stadium": "STADIUM_HANGANG",
       "colors": [
-        "#D4260B"
+        "#D4260B",
+        "#33296E"
       ],
       "colorLabel": "주황",
       "capacity": 0,
@@ -2043,7 +2056,8 @@
       "city": "원주",
       "stadium": "STADIUM_SEORAK_HS",
       "colors": [
-        "#960D36"
+        "#960D36",
+        "#123A6B"
       ],
       "colorLabel": "빨강",
       "capacity": 0,
@@ -2096,7 +2110,8 @@
       "city": "진주",
       "stadium": "STADIUM_NAKDONG",
       "colors": [
-        "#CE3E27"
+        "#CE3E27",
+        "#123A6B"
       ],
       "colorLabel": "주황",
       "capacity": 0,
@@ -2149,7 +2164,8 @@
       "city": "서울",
       "stadium": "STADIUM_HANGANG",
       "colors": [
-        "#616F2A"
+        "#616F2A",
+        "#33296E"
       ],
       "colorLabel": "연두",
       "capacity": 0,
@@ -2202,7 +2218,8 @@
       "city": "대구",
       "stadium": "STADIUM_PALGONG",
       "colors": [
-        "#762B23"
+        "#762B23",
+        "#0E5A63"
       ],
       "colorLabel": "갈색",
       "capacity": 0,
@@ -2255,7 +2272,8 @@
       "city": "부산",
       "stadium": "STADIUM_NAKDONG",
       "colors": [
-        "#226C91"
+        "#226C91",
+        "#C8102E"
       ],
       "colorLabel": "파랑",
       "capacity": 0,
@@ -2308,7 +2326,8 @@
       "city": "서울",
       "stadium": "STADIUM_HANGANG",
       "colors": [
-        "#AB2850"
+        "#AB2850",
+        "#0E5A63"
       ],
       "colorLabel": "빨강",
       "capacity": 0,
@@ -2366,7 +2385,8 @@
       "city": "서울",
       "stadium": "STADIUM_HANGANG",
       "colors": [
-        "#1F5A9E"
+        "#1F5A9E",
+        "#C1500F"
       ],
       "colorLabel": "남색",
       "capacity": 0,
@@ -2419,7 +2439,8 @@
       "city": "서울",
       "stadium": "STADIUM_HANGANG",
       "colors": [
-        "#1BC7D0"
+        "#1BC7D0",
+        "#8A3B12"
       ],
       "colorLabel": "하늘",
       "capacity": 0,
@@ -2472,7 +2493,8 @@
       "city": "강진",
       "stadium": "STADIUM_YEONGSAN",
       "colors": [
-        "#873D80"
+        "#873D80",
+        "#0E5A63"
       ],
       "colorLabel": "자주",
       "capacity": 0,
@@ -2525,7 +2547,8 @@
       "city": "김해",
       "stadium": "STADIUM_NAKDONG",
       "colors": [
-        "#706629"
+        "#706629",
+        "#123A6B"
       ],
       "colorLabel": "카키",
       "capacity": 0,
@@ -2578,7 +2601,8 @@
       "city": "창원",
       "stadium": "STADIUM_NAKDONG",
       "colors": [
-        "#3B2183"
+        "#3B2183",
+        "#8A6512"
       ],
       "colorLabel": "보라",
       "capacity": 0,
@@ -2636,7 +2660,8 @@
       "city": "거제",
       "stadium": "STADIUM_NAKDONG",
       "colors": [
-        "#7D951D"
+        "#7D951D",
+        "#33296E"
       ],
       "colorLabel": "연두",
       "capacity": 0,
@@ -2689,7 +2714,8 @@
       "city": "대전",
       "stadium": "STADIUM_GYERYONG",
       "colors": [
-        "#9D2791"
+        "#9D2791",
+        "#0F6B3C"
       ],
       "colorLabel": "자주",
       "capacity": 0,
@@ -2753,7 +2779,8 @@
       "city": "부산",
       "stadium": "STADIUM_NAKDONG",
       "colors": [
-        "#396496"
+        "#396496",
+        "#8A6512"
       ],
       "colorLabel": "남색",
       "capacity": 0,
@@ -2806,7 +2833,8 @@
       "city": "구미",
       "stadium": "STADIUM_PALGONG",
       "colors": [
-        "#DF6B59"
+        "#DF6B59",
+        "#123A6B"
       ],
       "colorLabel": "주황",
       "capacity": 0,
@@ -2859,7 +2887,8 @@
       "city": "금산",
       "stadium": "STADIUM_GYERYONG",
       "colors": [
-        "#5E818E"
+        "#5E818E",
+        "#C8102E"
       ],
       "colorLabel": "회색",
       "capacity": 0,
@@ -2912,7 +2941,8 @@
       "city": "용인",
       "stadium": "STADIUM_MUJIGAE",
       "colors": [
-        "#3A4F5F"
+        "#3A4F5F",
+        "#8A6512"
       ],
       "colorLabel": "검정",
       "capacity": 0,
@@ -2965,7 +2995,8 @@
       "city": "김포",
       "stadium": "STADIUM_MUJIGAE",
       "colors": [
-        "#256BBB"
+        "#256BBB",
+        "#C8102E"
       ],
       "colorLabel": "남색",
       "capacity": 0,
@@ -3018,7 +3049,8 @@
       "city": "부산",
       "stadium": "STADIUM_NAKDONG",
       "colors": [
-        "#52379D"
+        "#52379D",
+        "#C1500F"
       ],
       "colorLabel": "보라",
       "capacity": 0,
@@ -3071,7 +3103,8 @@
       "city": "수원",
       "stadium": "STADIUM_MUJIGAE",
       "colors": [
-        "#879195"
+        "#879195",
+        "#C8102E"
       ],
       "colorLabel": "회색",
       "capacity": 0,
@@ -3124,7 +3157,8 @@
       "city": "서울",
       "stadium": "STADIUM_HANGANG",
       "colors": [
-        "#1B7FB1"
+        "#1B7FB1",
+        "#C8102E"
       ],
       "colorLabel": "파랑",
       "capacity": 0,
@@ -3177,7 +3211,8 @@
       "city": "부여",
       "stadium": "STADIUM_GYERYONG",
       "colors": [
-        "#857C42"
+        "#857C42",
+        "#123A6B"
       ],
       "colorLabel": "카키",
       "capacity": 0,
@@ -3230,7 +3265,8 @@
       "city": "강릉",
       "stadium": "STADIUM_SEORAK_HS",
       "colors": [
-        "#E09F5A"
+        "#E09F5A",
+        "#123A6B"
       ],
       "colorLabel": "노랑",
       "capacity": 0,
@@ -3283,7 +3319,8 @@
       "city": "경주",
       "stadium": "STADIUM_PALGONG",
       "colors": [
-        "#C31146"
+        "#C31146",
+        "#123A6B"
       ],
       "colorLabel": "빨강",
       "capacity": 0,
@@ -3336,7 +3373,8 @@
       "city": "대전",
       "stadium": "STADIUM_GYERYONG",
       "colors": [
-        "#69CED3"
+        "#69CED3",
+        "#7B1E2B"
       ],
       "colorLabel": "하늘",
       "capacity": 0,
@@ -3389,7 +3427,8 @@
       "city": "인천",
       "stadium": "STADIUM_MUJIGAE",
       "colors": [
-        "#3D96C2"
+        "#3D96C2",
+        "#8A3B12"
       ],
       "colorLabel": "파랑",
       "capacity": 0,
@@ -3442,7 +3481,8 @@
       "city": "부산",
       "stadium": "STADIUM_NAKDONG",
       "colors": [
-        "#6491C4"
+        "#6491C4",
+        "#8A6512"
       ],
       "colorLabel": "남색",
       "capacity": 0,
@@ -3506,7 +3546,8 @@
       "city": "안동",
       "stadium": "STADIUM_PALGONG",
       "colors": [
-        "#20A272"
+        "#20A272",
+        "#7B1E2B"
       ],
       "colorLabel": "청록",
       "capacity": 0,
@@ -3559,7 +3600,8 @@
       "city": "제주",
       "stadium": "STADIUM_HALLA",
       "colors": [
-        "#E26132"
+        "#E26132",
+        "#1A3C1F"
       ],
       "colorLabel": "감귤",
       "capacity": 0,
@@ -3617,7 +3659,8 @@
       "city": "서울",
       "stadium": "STADIUM_HANGANG",
       "colors": [
-        "#A54A9C"
+        "#A54A9C",
+        "#0E5A63"
       ],
       "colorLabel": "자주",
       "capacity": 0,
@@ -3670,7 +3713,8 @@
       "city": "제주",
       "stadium": "STADIUM_HALLA",
       "colors": [
-        "#3B9B78"
+        "#3B9B78",
+        "#C1500F"
       ],
       "colorLabel": "청록",
       "capacity": 0,
@@ -3723,7 +3767,8 @@
       "city": "서울",
       "stadium": "STADIUM_HANGANG",
       "colors": [
-        "#1C478F"
+        "#1C478F",
+        "#8A6512"
       ],
       "colorLabel": "남색",
       "capacity": 0,
@@ -3817,7 +3862,8 @@
       "city": "홍성",
       "stadium": "STADIUM_GYERYONG",
       "colors": [
-        "#6C53B2"
+        "#6C53B2",
+        "#C1500F"
       ],
       "colorLabel": "보라",
       "capacity": 0,
@@ -3870,7 +3916,8 @@
       "city": "화순",
       "stadium": "STADIUM_YEONGSAN",
       "colors": [
-        "#D9208F"
+        "#D9208F",
+        "#123A6B"
       ],
       "colorLabel": "분홍",
       "capacity": 0,
@@ -3923,7 +3970,8 @@
       "city": "포항",
       "stadium": "STADIUM_PALGONG",
       "colors": [
-        "#617E9E"
+        "#617E9E",
+        "#0F6B3C"
       ],
       "colorLabel": "검정",
       "capacity": 0,
@@ -3976,7 +4024,8 @@
       "city": "고양",
       "stadium": "STADIUM_MUJIGAE",
       "colors": [
-        "#46B98F"
+        "#46B98F",
+        "#C1500F"
       ],
       "colorLabel": "청록",
       "capacity": 0,
@@ -4029,7 +4078,8 @@
       "city": "담양",
       "stadium": "STADIUM_YEONGSAN",
       "colors": [
-        "#6646BE"
+        "#6646BE",
+        "#8A6512"
       ],
       "colorLabel": "보라",
       "capacity": 0,
@@ -4082,7 +4132,8 @@
       "city": "영주",
       "stadium": "STADIUM_PALGONG",
       "colors": [
-        "#41CFE6"
+        "#41CFE6",
+        "#7B1E2B"
       ],
       "colorLabel": "하늘",
       "capacity": 0,
@@ -4135,7 +4186,8 @@
       "city": "부천",
       "stadium": "STADIUM_MUJIGAE",
       "colors": [
-        "#238F1F"
+        "#238F1F",
+        "#7B1E2B"
       ],
       "colorLabel": "초록",
       "capacity": 0,
@@ -4188,7 +4240,8 @@
       "city": "인천",
       "stadium": "STADIUM_MUJIGAE",
       "colors": [
-        "#F55B43"
+        "#F55B43",
+        "#0E5A63"
       ],
       "colorLabel": "주황",
       "capacity": 0,
@@ -4241,7 +4294,8 @@
       "city": "창원",
       "stadium": "STADIUM_NAKDONG",
       "colors": [
-        "#5C6D96"
+        "#5C6D96",
+        "#8A6512"
       ],
       "colorLabel": "검정",
       "capacity": 0,
@@ -4294,7 +4348,8 @@
       "city": "하남",
       "stadium": "STADIUM_MUJIGAE",
       "colors": [
-        "#86A4AE"
+        "#86A4AE",
+        "#C8102E"
       ],
       "colorLabel": "회색",
       "capacity": 0,
@@ -4347,7 +4402,8 @@
       "city": "서울",
       "stadium": "STADIUM_HANGANG",
       "colors": [
-        "#B3A442"
+        "#B3A442",
+        "#123A6B"
       ],
       "colorLabel": "카키",
       "capacity": 0,
@@ -4400,7 +4456,8 @@
       "city": "광주",
       "stadium": "STADIUM_YEONGSAN",
       "colors": [
-        "#EB1958"
+        "#EB1958",
+        "#0E5A63"
       ],
       "colorLabel": "빨강",
       "capacity": 0,
@@ -4494,7 +4551,8 @@
       "city": "광주",
       "stadium": "STADIUM_YEONGSAN",
       "colors": [
-        "#E78C7E"
+        "#E78C7E",
+        "#123A6B"
       ],
       "colorLabel": "주황",
       "capacity": 0,
@@ -4547,7 +4605,8 @@
       "city": "울산",
       "stadium": "STADIUM_NAKDONG",
       "colors": [
-        "#D95C81"
+        "#D95C81",
+        "#123A6B"
       ],
       "colorLabel": "빨강",
       "capacity": 0,
@@ -4600,7 +4659,8 @@
       "city": "청주",
       "stadium": "STADIUM_GYERYONG",
       "colors": [
-        "#C030B1"
+        "#C030B1",
+        "#0E5A63"
       ],
       "colorLabel": "자주",
       "capacity": 0,
@@ -4653,7 +4713,8 @@
       "city": "서울",
       "stadium": "STADIUM_HANGANG",
       "colors": [
-        "#3C8B39"
+        "#3C8B39",
+        "#7B1E2B"
       ],
       "colorLabel": "초록",
       "capacity": 0,
@@ -4706,7 +4767,8 @@
       "city": "구미",
       "stadium": "STADIUM_PALGONG",
       "colors": [
-        "#28A123"
+        "#28A123",
+        "#7B1E2B"
       ],
       "colorLabel": "초록",
       "capacity": 0,
@@ -4759,7 +4821,8 @@
       "city": "무안",
       "stadium": "STADIUM_YEONGSAN",
       "colors": [
-        "#2256AC"
+        "#2256AC",
+        "#C1500F"
       ],
       "colorLabel": "남색",
       "capacity": 0,
@@ -4812,7 +4875,8 @@
       "city": "진주",
       "stadium": "STADIUM_NAKDONG",
       "colors": [
-        "#804842"
+        "#804842",
+        "#0E5A63"
       ],
       "colorLabel": "갈색",
       "capacity": 0,
@@ -4865,7 +4929,8 @@
       "city": "서울",
       "stadium": "STADIUM_HANGANG",
       "colors": [
-        "#4CDCA7"
+        "#4CDCA7",
+        "#C1500F"
       ],
       "colorLabel": "청록",
       "capacity": 0,
@@ -4918,7 +4983,8 @@
       "city": "여수",
       "stadium": "STADIUM_YEONGSAN",
       "colors": [
-        "#64ABCE"
+        "#64ABCE",
+        "#8A3B12"
       ],
       "colorLabel": "파랑",
       "capacity": 0,
@@ -4971,7 +5037,8 @@
       "city": "제주",
       "stadium": "STADIUM_HALLA",
       "colors": [
-        "#2C7E96"
+        "#2C7E96",
+        "#7B1E2B"
       ],
       "colorLabel": "하늘",
       "capacity": 0,
@@ -5024,7 +5091,8 @@
       "city": "오산",
       "stadium": "STADIUM_MUJIGAE",
       "colors": [
-        "#60626C"
+        "#60626C",
+        "#C8102E"
       ],
       "colorLabel": "검정",
       "capacity": 0,
@@ -5077,7 +5145,8 @@
       "city": "대구",
       "stadium": "STADIUM_PALGONG",
       "colors": [
-        "#A39B69"
+        "#A39B69",
+        "#6E1F4D"
       ],
       "colorLabel": "카키",
       "capacity": 0,
@@ -5130,7 +5199,8 @@
       "city": "대구",
       "stadium": "STADIUM_PALGONG",
       "colors": [
-        "#4EB2E4"
+        "#4EB2E4",
+        "#8A3B12"
       ],
       "colorLabel": "파랑",
       "capacity": 0,
@@ -5214,7 +5284,8 @@
       "city": "성남",
       "stadium": "STADIUM_MUJIGAE",
       "colors": [
-        "#B3D52A"
+        "#B3D52A",
+        "#33296E"
       ],
       "colorLabel": "연두",
       "capacity": 0,
@@ -5267,7 +5338,8 @@
       "city": "전주",
       "stadium": "STADIUM_YEONGSAN",
       "colors": [
-        "#A36B14"
+        "#A36B14",
+        "#6E1F4D"
       ],
       "colorLabel": "노랑",
       "capacity": 0,
@@ -5320,7 +5392,8 @@
       "city": "안양",
       "stadium": "STADIUM_MUJIGAE",
       "colors": [
-        "#E44BA7"
+        "#E44BA7",
+        "#1A3C1F"
       ],
       "colorLabel": "분홍",
       "capacity": 0,
@@ -5373,7 +5446,8 @@
       "city": "평택",
       "stadium": "STADIUM_MUJIGAE",
       "colors": [
-        "#8874C1"
+        "#8874C1",
+        "#C1500F"
       ],
       "colorLabel": "보라",
       "capacity": 0,
@@ -5426,7 +5500,8 @@
       "city": "서울",
       "stadium": "STADIUM_HANGANG",
       "colors": [
-        "#846ACB"
+        "#846ACB",
+        "#C1500F"
       ],
       "colorLabel": "보라",
       "capacity": 0,
@@ -5479,7 +5554,8 @@
       "city": "청주",
       "stadium": "STADIUM_GYERYONG",
       "colors": [
-        "#8BC0DA"
+        "#8BC0DA",
+        "#8A3B12"
       ],
       "colorLabel": "파랑",
       "capacity": 0,
@@ -5532,7 +5608,8 @@
       "city": "안산",
       "stadium": "STADIUM_MUJIGAE",
       "colors": [
-        "#B54336"
+        "#B54336",
+        "#0E5A63"
       ],
       "colorLabel": "갈색",
       "capacity": 0,
@@ -5585,7 +5662,8 @@
       "city": "서귀포",
       "stadium": "STADIUM_HALLA",
       "colors": [
-        "#64A4E8"
+        "#64A4E8",
+        "#8A6512"
       ],
       "colorLabel": "파랑",
       "capacity": 0,
@@ -5638,7 +5716,8 @@
       "city": "속초",
       "stadium": "STADIUM_SEORAK_HS",
       "colors": [
-        "#ABC059"
+        "#ABC059",
+        "#33296E"
       ],
       "colorLabel": "연두",
       "capacity": 0,
@@ -5691,7 +5770,8 @@
       "city": "천안",
       "stadium": "STADIUM_GYERYONG",
       "colors": [
-        "#D67DB2"
+        "#D67DB2",
+        "#0F6B3C"
       ],
       "colorLabel": "분홍",
       "capacity": 0,
@@ -5744,7 +5824,8 @@
       "city": "서귀포",
       "stadium": "STADIUM_HALLA",
       "colors": [
-        "#1F449E"
+        "#1F449E",
+        "#C1500F"
       ],
       "colorLabel": "남색",
       "capacity": 0,
@@ -5797,7 +5878,8 @@
       "city": "춘천",
       "stadium": "STADIUM_SEORAK_HS",
       "colors": [
-        "#2DACD2"
+        "#2DACD2",
+        "#8A3B12"
       ],
       "colorLabel": "하늘",
       "capacity": 0,
@@ -5855,7 +5937,8 @@
       "city": "순천",
       "stadium": "STADIUM_YEONGSAN",
       "colors": [
-        "#5FC0DD"
+        "#5FC0DD",
+        "#8A3B12"
       ],
       "colorLabel": "하늘",
       "capacity": 0,
@@ -5908,7 +5991,8 @@
       "city": "시흥",
       "stadium": "STADIUM_MUJIGAE",
       "colors": [
-        "#BEB57B"
+        "#BEB57B",
+        "#123A6B"
       ],
       "colorLabel": "카키",
       "capacity": 0,
@@ -5961,7 +6045,8 @@
       "city": "대구",
       "stadium": "STADIUM_PALGONG",
       "colors": [
-        "#AEB5B7"
+        "#AEB5B7",
+        "#C8102E"
       ],
       "colorLabel": "회색",
       "capacity": 0,
@@ -6014,7 +6099,8 @@
       "city": "서울",
       "stadium": "STADIUM_HANGANG",
       "colors": [
-        "#B5554A"
+        "#B5554A",
+        "#0F6B3C"
       ],
       "colorLabel": "갈색",
       "capacity": 0,
@@ -6067,7 +6153,8 @@
       "city": "인천",
       "stadium": "STADIUM_MUJIGAE",
       "colors": [
-        "#70C36D"
+        "#70C36D",
+        "#7B1E2B"
       ],
       "colorLabel": "초록",
       "capacity": 0,
@@ -6125,7 +6212,8 @@
       "city": "수원",
       "stadium": "STADIUM_MUJIGAE",
       "colors": [
-        "#D9133C"
+        "#D9133C",
+        "#0E5A63"
       ],
       "colorLabel": "빨강",
       "capacity": 0,
@@ -6178,7 +6266,8 @@
       "city": "태백",
       "stadium": "STADIUM_SEORAK_HS",
       "colors": [
-        "#67CE63"
+        "#67CE63",
+        "#33296E"
       ],
       "colorLabel": "초록",
       "capacity": 0,
@@ -6231,7 +6320,8 @@
       "city": "울산",
       "stadium": "STADIUM_NAKDONG",
       "colors": [
-        "#E96AB6"
+        "#E96AB6",
+        "#0F6B3C"
       ],
       "colorLabel": "분홍",
       "capacity": 0,
@@ -6284,7 +6374,8 @@
       "city": "부산",
       "stadium": "STADIUM_NAKDONG",
       "colors": [
-        "#A3AFC2"
+        "#A3AFC2",
+        "#C8102E"
       ],
       "colorLabel": "회색",
       "capacity": 0,
@@ -6337,7 +6428,8 @@
       "city": "충주",
       "stadium": "STADIUM_GYERYONG",
       "colors": [
-        "#B67872"
+        "#B67872",
+        "#123A6B"
       ],
       "colorLabel": "갈색",
       "capacity": 0,
@@ -6390,7 +6482,8 @@
       "city": "통영",
       "stadium": "STADIUM_NAKDONG",
       "colors": [
-        "#7DCA88"
+        "#7DCA88",
+        "#8A6512"
       ],
       "colorLabel": "초록",
       "capacity": 0,
@@ -6443,7 +6536,8 @@
       "city": "전주",
       "stadium": "STADIUM_YEONGSAN",
       "colors": [
-        "#B2CB4D"
+        "#B2CB4D",
+        "#33296E"
       ],
       "colorLabel": "연두",
       "capacity": 0,
@@ -6496,7 +6590,8 @@
       "city": "군산",
       "stadium": "STADIUM_YEONGSAN",
       "colors": [
-        "#72CAAA"
+        "#72CAAA",
+        "#7B1E2B"
       ],
       "colorLabel": "청록",
       "capacity": 0,
@@ -6549,7 +6644,8 @@
       "city": "서울",
       "stadium": "STADIUM_HANGANG",
       "colors": [
-        "#EC8263"
+        "#EC8263",
+        "#123A6B"
       ],
       "colorLabel": "주황",
       "capacity": 0,
@@ -6607,7 +6703,8 @@
       "city": "포항",
       "stadium": "STADIUM_PALGONG",
       "colors": [
-        "#BECE7E"
+        "#BECE7E",
+        "#33296E"
       ],
       "colorLabel": "연두",
       "capacity": 0,
@@ -6660,7 +6757,8 @@
       "city": "경산",
       "stadium": "STADIUM_PALGONG",
       "colors": [
-        "#BF8224"
+        "#BF8224",
+        "#123A6B"
       ],
       "colorLabel": "노랑",
       "capacity": 0,
@@ -6713,7 +6811,8 @@
       "city": "인천",
       "stadium": "STADIUM_MUJIGAE",
       "colors": [
-        "#CA67C0"
+        "#CA67C0",
+        "#0F6B3C"
       ],
       "colorLabel": "자주",
       "capacity": 0,
@@ -6766,7 +6865,8 @@
       "city": "예산",
       "stadium": "STADIUM_GYERYONG",
       "colors": [
-        "#5C5E96"
+        "#5C5E96",
+        "#C8102E"
       ],
       "colorLabel": "검정",
       "capacity": 0,
@@ -6819,7 +6919,8 @@
       "city": "목포",
       "stadium": "STADIUM_YEONGSAN",
       "colors": [
-        "#398B4C"
+        "#398B4C",
+        "#33296E"
       ],
       "colorLabel": "초록",
       "capacity": 0,
@@ -6872,7 +6973,8 @@
       "city": "대전",
       "stadium": "STADIUM_GYERYONG",
       "colors": [
-        "#5DDFBB"
+        "#5DDFBB",
+        "#7B1E2B"
       ],
       "colorLabel": "청록",
       "capacity": 0,
@@ -6925,7 +7027,8 @@
       "city": "부산",
       "stadium": "STADIUM_NAMNYEOK",
       "colors": [
-        "#255A74"
+        "#255A74",
+        "#8A3B12"
       ],
       "colorLabel": "파랑",
       "capacity": 0,
@@ -6978,7 +7081,8 @@
       "city": "대구",
       "stadium": "STADIUM_NAMNYEOK",
       "colors": [
-        "#4B6670"
+        "#4B6670",
+        "#C8102E"
       ],
       "colorLabel": "회색",
       "capacity": 0,
@@ -7031,7 +7135,8 @@
       "city": "대전",
       "stadium": "STADIUM_GYEBAEK",
       "colors": [
-        "#F33619"
+        "#F33619",
+        "#33296E"
       ],
       "colorLabel": "주황",
       "capacity": 0,
@@ -7090,7 +7195,8 @@
       "city": "광주",
       "stadium": "STADIUM_NAMNYEOK",
       "colors": [
-        "#92A63F"
+        "#92A63F",
+        "#33296E"
       ],
       "colorLabel": "연두",
       "capacity": 0,
@@ -7143,7 +7249,8 @@
       "city": "인천",
       "stadium": "STADIUM_GANGBYEON",
       "colors": [
-        "#1BB6D0"
+        "#1BB6D0",
+        "#7B1E2B"
       ],
       "colorLabel": "하늘",
       "capacity": 0,
@@ -7201,7 +7308,8 @@
       "city": "파주",
       "stadium": "STADIUM_GANGBYEON",
       "colors": [
-        "#5F37CD"
+        "#5F37CD",
+        "#8A6512"
       ],
       "colorLabel": "보라",
       "capacity": 0,
@@ -7260,7 +7368,8 @@
       "city": "무연고(군소재)",
       "stadium": "STADIUM_CHANGGONG",
       "colors": [
-        "#AFA45D"
+        "#AFA45D",
+        "#123A6B"
       ],
       "colorLabel": "카키",
       "capacity": 0,
@@ -7339,7 +7448,8 @@
       "city": "서울",
       "stadium": "STADIUM_GANGBYEON",
       "colors": [
-        "#46C342"
+        "#46C342",
+        "#8A6512"
       ],
       "colorLabel": "초록",
       "capacity": 0,
@@ -7397,7 +7507,8 @@
       "city": "서울",
       "stadium": "STADIUM_GANGBYEON",
       "colors": [
-        "#2550BB"
+        "#2550BB",
+        "#8A6512"
       ],
       "colorLabel": "남색",
       "capacity": 0,
@@ -7466,7 +7577,8 @@
       "city": "원주",
       "stadium": "STADIUM_GYEBAEK",
       "colors": [
-        "#6B6C88"
+        "#6B6C88",
+        "#0F6B3C"
       ],
       "colorLabel": "검정",
       "capacity": 0,
@@ -7519,7 +7631,8 @@
       "city": "부산",
       "stadium": "STADIUM_BUSAN_WAVES",
       "colors": [
-        "#194980"
+        "#194980",
+        "#C1500F"
       ],
       "colorLabel": "남색",
       "capacity": 0,
@@ -7577,7 +7690,8 @@
       "city": "부산",
       "stadium": "STADIUM_BUSAN_WAVES",
       "colors": [
-        "#223377"
+        "#223377",
+        "#8A6512"
       ],
       "colorLabel": "남색",
       "capacity": 0,
@@ -7609,7 +7723,8 @@
       "city": "창원",
       "stadium": "STADIUM_CHANGWON_STARS",
       "colors": [
-        "#2C9196"
+        "#2C9196",
+        "#7B1E2B"
       ],
       "colorLabel": "하늘",
       "capacity": 0,
@@ -7667,7 +7782,8 @@
       "city": "창원",
       "stadium": "STADIUM_CHANGWON_STARS",
       "colors": [
-        "#88D1DD"
+        "#88D1DD",
+        "#7B1E2B"
       ],
       "colorLabel": "하늘",
       "capacity": 0,
@@ -7699,7 +7815,8 @@
       "city": "대구",
       "stadium": "STADIUM_DAEGU_SABERS",
       "colors": [
-        "#6F797D"
+        "#6F797D",
+        "#C8102E"
       ],
       "colorLabel": "회색",
       "capacity": 0,
@@ -7757,7 +7874,8 @@
       "city": "대구",
       "stadium": "STADIUM_DAEGU_SABERS",
       "colors": [
-        "#555D7F"
+        "#555D7F",
+        "#C8102E"
       ],
       "colorLabel": "회색",
       "capacity": 0,
@@ -7789,7 +7907,8 @@
       "city": "대전",
       "stadium": "STADIUM_DAEJEON_PHANTOMS",
       "colors": [
-        "#DC5A46"
+        "#DC5A46",
+        "#0E5A63"
       ],
       "colorLabel": "주황",
       "capacity": 0,
@@ -7847,7 +7966,8 @@
       "city": "대전",
       "stadium": "STADIUM_DAEJEON_PHANTOMS",
       "colors": [
-        "#F57B43"
+        "#F57B43",
+        "#0E5A63"
       ],
       "colorLabel": "주황",
       "capacity": 0,
@@ -7879,7 +7999,8 @@
       "city": "광주",
       "stadium": "STADIUM_GWANGJU_PANTHERS",
       "colors": [
-        "#F49530"
+        "#F49530",
+        "#123A6B"
       ],
       "colorLabel": "노랑",
       "capacity": 0,
@@ -7943,7 +8064,8 @@
       "city": "광주",
       "stadium": "STADIUM_GWANGJU_PANTHERS",
       "colors": [
-        "#D8870B"
+        "#D8870B",
+        "#6E1F4D"
       ],
       "colorLabel": "노랑",
       "capacity": 0,
@@ -7975,7 +8097,8 @@
       "city": "인천",
       "stadium": "STADIUM_INCHEON_SHARKS",
       "colors": [
-        "#219FDE"
+        "#219FDE",
+        "#8A6512"
       ],
       "colorLabel": "파랑",
       "capacity": 0,
@@ -8033,7 +8156,8 @@
       "city": "인천",
       "stadium": "STADIUM_INCHEON_SHARKS",
       "colors": [
-        "#7794D4"
+        "#7794D4",
+        "#C8102E"
       ],
       "colorLabel": "파랑",
       "capacity": 0,
@@ -8065,7 +8189,8 @@
       "city": "서울",
       "stadium": "STADIUM_SEOUL_COBRAS",
       "colors": [
-        "#30C52B"
+        "#30C52B",
+        "#7B1E2B"
       ],
       "colorLabel": "초록",
       "capacity": 0,
@@ -8123,7 +8248,8 @@
       "city": "서울",
       "stadium": "STADIUM_SEOUL_COBRAS",
       "colors": [
-        "#45D667"
+        "#45D667",
+        "#8A6512"
       ],
       "colorLabel": "초록",
       "capacity": 0,
@@ -8155,7 +8281,8 @@
       "city": "서울",
       "stadium": "STADIUM_SEOUL_GUARDIANS",
       "colors": [
-        "#AC0F30"
+        "#AC0F30",
+        "#123A6B"
       ],
       "colorLabel": "빨강",
       "capacity": 0,
@@ -8229,7 +8356,8 @@
       "city": "서울",
       "stadium": "STADIUM_SEOUL_GUARDIANS",
       "colors": [
-        "#960D1E"
+        "#960D1E",
+        "#0E5A63"
       ],
       "colorLabel": "빨강",
       "capacity": 0,
@@ -8261,7 +8389,8 @@
       "city": "서울",
       "stadium": "STADIUM_SEOUL_ROYALS",
       "colors": [
-        "#2A386F"
+        "#2A386F",
+        "#8A6512"
       ],
       "colorLabel": "남색",
       "capacity": 0,
@@ -8340,7 +8469,8 @@
       "city": "서울",
       "stadium": "STADIUM_SEOUL_ROYALS",
       "colors": [
-        "#192E80"
+        "#192E80",
+        "#C1500F"
       ],
       "colorLabel": "남색",
       "capacity": 0,
@@ -8372,7 +8502,8 @@
       "city": "수원",
       "stadium": "STADIUM_SUWON_KNIGHTS",
       "colors": [
-        "#494E77"
+        "#494E77",
+        "#C8102E"
       ],
       "colorLabel": "검정",
       "capacity": 0,
@@ -8441,7 +8572,8 @@
       "city": "수원",
       "stadium": "STADIUM_SUWON_KNIGHTS",
       "colors": [
-        "#54576B"
+        "#54576B",
+        "#8A6512"
       ],
       "colorLabel": "검정",
       "capacity": 0,
@@ -8473,7 +8605,8 @@
       "city": "아산",
       "stadium": "STADIUM_GEUMGANG_UNIV",
       "colors": [
-        "#3F2A79"
+        "#3F2A79",
+        "#C1500F"
       ],
       "colorLabel": "보라",
       "capacity": 0,
@@ -8526,7 +8659,8 @@
       "city": "대전",
       "stadium": "STADIUM_GEUMGANG_UNIV",
       "colors": [
-        "#2F6D2C"
+        "#2F6D2C",
+        "#8A6512"
       ],
       "colorLabel": "초록",
       "capacity": 0,
@@ -8595,7 +8729,8 @@
       "city": "서울",
       "stadium": "STADIUM_MIREU",
       "colors": [
-        "#962D1D"
+        "#962D1D",
+        "#33296E"
       ],
       "colorLabel": "주황",
       "capacity": 0,
@@ -8664,7 +8799,8 @@
       "city": "안산",
       "stadium": "STADIUM_BYEOLBIT",
       "colors": [
-        "#AE5F09"
+        "#AE5F09",
+        "#6E1F4D"
       ],
       "colorLabel": "노랑",
       "capacity": 0,
@@ -8717,7 +8853,8 @@
       "city": "대구",
       "stadium": "STADIUM_NOEUL",
       "colors": [
-        "#1F7D1C"
+        "#1F7D1C",
+        "#33296E"
       ],
       "colorLabel": "초록",
       "capacity": 0,
@@ -8770,7 +8907,8 @@
       "city": "광주",
       "stadium": "STADIUM_NOEUL",
       "colors": [
-        "#5F5A3A"
+        "#5F5A3A",
+        "#123A6B"
       ],
       "colorLabel": "카키",
       "capacity": 0,
@@ -8828,7 +8966,8 @@
       "city": "서울",
       "stadium": "STADIUM_MIREU",
       "colors": [
-        "#19805A"
+        "#19805A",
+        "#7B1E2B"
       ],
       "colorLabel": "청록",
       "capacity": 0,
@@ -8881,7 +9020,8 @@
       "city": "김해",
       "stadium": "STADIUM_TAEJONG",
       "colors": [
-        "#653934"
+        "#653934",
+        "#0F6B3C"
       ],
       "colorLabel": "갈색",
       "capacity": 0,
@@ -8934,7 +9074,8 @@
       "city": "남양주",
       "stadium": "STADIUM_BYEOLBIT",
       "colors": [
-        "#7A1F71"
+        "#7A1F71",
+        "#8A6512"
       ],
       "colorLabel": "자주",
       "capacity": 0,
@@ -8987,7 +9128,8 @@
       "city": "원주",
       "stadium": "STADIUM_GEUMGANG_UNIV",
       "colors": [
-        "#484D51"
+        "#484D51",
+        "#8A6512"
       ],
       "colorLabel": "검정",
       "capacity": 0,
@@ -9045,7 +9187,8 @@
       "city": "대구",
       "stadium": "STADIUM_NOEUL",
       "colors": [
-        "#6B8019"
+        "#6B8019",
+        "#33296E"
       ],
       "colorLabel": "연두",
       "capacity": 0,
@@ -9114,7 +9257,8 @@
       "city": "거제",
       "stadium": "STADIUM_TAEJONG",
       "colors": [
-        "#7B754C"
+        "#7B754C",
+        "#6E1F4D"
       ],
       "colorLabel": "카키",
       "capacity": 0,
@@ -9167,7 +9311,8 @@
       "city": "부산",
       "stadium": "STADIUM_TAEJONG",
       "colors": [
-        "#574292"
+        "#574292",
+        "#8A6512"
       ],
       "colorLabel": "보라",
       "capacity": 0,
@@ -9220,7 +9365,8 @@
       "city": "서울",
       "stadium": "STADIUM_MIREU",
       "colors": [
-        "#8FAA22"
+        "#8FAA22",
+        "#7B1E2B"
       ],
       "colorLabel": "연두",
       "capacity": 0,
@@ -9273,7 +9419,8 @@
       "city": "수원",
       "stadium": "STADIUM_BYEOLBIT",
       "colors": [
-        "#4C2AA9"
+        "#4C2AA9",
+        "#8A6512"
       ],
       "colorLabel": "보라",
       "capacity": 0,
@@ -9326,7 +9473,8 @@
       "city": "안양",
       "stadium": "STADIUM_BYEOLBIT",
       "colors": [
-        "#4E657E"
+        "#4E657E",
+        "#C8102E"
       ],
       "colorLabel": "검정",
       "capacity": 0,
@@ -9379,7 +9527,8 @@
       "city": "인천",
       "stadium": "STADIUM_MIREU",
       "colors": [
-        "#4A7EBA"
+        "#4A7EBA",
+        "#C1500F"
       ],
       "colorLabel": "남색",
       "capacity": 0,
@@ -9437,7 +9586,8 @@
       "city": "대전",
       "stadium": "STADIUM_GEUMGANG_UNIV",
       "colors": [
-        "#53E1E9"
+        "#53E1E9",
+        "#8A3B12"
       ],
       "colorLabel": "하늘",
       "capacity": 0,
@@ -9490,7 +9640,8 @@
       "city": "부산",
       "stadium": "STADIUM_TAEJONG",
       "colors": [
-        "#3D86D9"
+        "#3D86D9",
+        "#C1500F"
       ],
       "colorLabel": "남색",
       "capacity": 0,
@@ -9554,7 +9705,8 @@
       "city": "안동",
       "stadium": "STADIUM_TAEJONG",
       "colors": [
-        "#1697AC"
+        "#1697AC",
+        "#7B1E2B"
       ],
       "colorLabel": "하늘",
       "capacity": 0,
@@ -9607,7 +9759,8 @@
       "city": "서울",
       "stadium": "STADIUM_MIREU",
       "colors": [
-        "#D03563"
+        "#D03563",
+        "#123A6B"
       ],
       "colorLabel": "빨강",
       "capacity": 0,
@@ -9696,7 +9849,8 @@
       "city": "하남",
       "stadium": "STADIUM_BYEOLBIT",
       "colors": [
-        "#BA1C7B"
+        "#BA1C7B",
+        "#0F6B3C"
       ],
       "colorLabel": "분홍",
       "capacity": 0,
@@ -9749,7 +9903,8 @@
       "city": "서울",
       "stadium": "STADIUM_MIREU",
       "colors": [
-        "#F6AA59"
+        "#F6AA59",
+        "#6E1F4D"
       ],
       "colorLabel": "노랑",
       "capacity": 0,
@@ -9802,7 +9957,8 @@
       "city": "수원",
       "stadium": "STADIUM_MIREU",
       "colors": [
-        "#918536"
+        "#918536",
+        "#123A6B"
       ],
       "colorLabel": "카키",
       "capacity": 0,
@@ -9855,7 +10011,8 @@
       "city": "포항",
       "stadium": "STADIUM_NOEUL",
       "colors": [
-        "#27C48A"
+        "#27C48A",
+        "#C1500F"
       ],
       "colorLabel": "청록",
       "capacity": 0,
@@ -9908,7 +10065,8 @@
       "city": "평택",
       "stadium": "STADIUM_BYEOLBIT",
       "colors": [
-        "#A1C026"
+        "#A1C026",
+        "#7B1E2B"
       ],
       "colorLabel": "연두",
       "capacity": 0,
@@ -9961,7 +10119,8 @@
       "city": "무안",
       "stadium": "STADIUM_NOEUL",
       "colors": [
-        "#E7B47E"
+        "#E7B47E",
+        "#0F6B3C"
       ],
       "colorLabel": "노랑",
       "capacity": 0,
@@ -10014,7 +10173,8 @@
       "city": "진주",
       "stadium": "STADIUM_TAEJONG",
       "colors": [
-        "#C54792"
+        "#C54792",
+        "#0F6B3C"
       ],
       "colorLabel": "분홍",
       "capacity": 0,
@@ -10067,7 +10227,8 @@
       "city": "서울",
       "stadium": "STADIUM_MIREU",
       "colors": [
-        "#49AA46"
+        "#49AA46",
+        "#7B1E2B"
       ],
       "colorLabel": "초록",
       "capacity": 0,
@@ -10120,7 +10281,8 @@
       "city": "여수",
       "stadium": "STADIUM_NOEUL",
       "colors": [
-        "#EF4678"
+        "#EF4678",
+        "#0E5A63"
       ],
       "colorLabel": "빨강",
       "capacity": 0,
@@ -10173,7 +10335,8 @@
       "city": "옥천",
       "stadium": "STADIUM_GEUMGANG_UNIV",
       "colors": [
-        "#CD62A2"
+        "#CD62A2",
+        "#123A6B"
       ],
       "colorLabel": "분홍",
       "capacity": 0,
@@ -10226,7 +10389,8 @@
       "city": "오산",
       "stadium": "STADIUM_BYEOLBIT",
       "colors": [
-        "#98473E"
+        "#98473E",
+        "#123A6B"
       ],
       "colorLabel": "갈색",
       "capacity": 0,
@@ -10279,7 +10443,8 @@
       "city": "청주",
       "stadium": "STADIUM_GEUMGANG_UNIV",
       "colors": [
-        "#217DDE"
+        "#217DDE",
+        "#8A6512"
       ],
       "colorLabel": "파랑",
       "capacity": 0,
@@ -10332,7 +10497,8 @@
       "city": "서귀포",
       "stadium": "STADIUM_TAEJONG",
       "colors": [
-        "#BB4624"
+        "#BB4624",
+        "#123A6B"
       ],
       "colorLabel": "주황",
       "capacity": 0,
@@ -10385,7 +10551,8 @@
       "city": "천안",
       "stadium": "STADIUM_GEUMGANG_UNIV",
       "colors": [
-        "#2865CA"
+        "#2865CA",
+        "#C1500F"
       ],
       "colorLabel": "남색",
       "capacity": 0,
@@ -10438,7 +10605,8 @@
       "city": "춘천",
       "stadium": "STADIUM_GEUMGANG_UNIV",
       "colors": [
-        "#E283A0"
+        "#E283A0",
+        "#123A6B"
       ],
       "colorLabel": "빨강",
       "capacity": 0,
@@ -10491,7 +10659,8 @@
       "city": "서산",
       "stadium": "STADIUM_GEUMGANG_UNIV",
       "colors": [
-        "#BE47B2"
+        "#BE47B2",
+        "#8A6512"
       ],
       "colorLabel": "자주",
       "capacity": 0,
@@ -10544,7 +10713,8 @@
       "city": "광주",
       "stadium": "STADIUM_NOEUL",
       "colors": [
-        "#A85F57"
+        "#A85F57",
+        "#123A6B"
       ],
       "colorLabel": "갈색",
       "capacity": 0,
@@ -10608,7 +10778,8 @@
       "city": "순천",
       "stadium": "STADIUM_NOEUL",
       "colors": [
-        "#DA461B"
+        "#DA461B",
+        "#0E5A63"
       ],
       "colorLabel": "주황",
       "capacity": 0,
@@ -10661,7 +10832,8 @@
       "city": "시흥",
       "stadium": "STADIUM_BYEOLBIT",
       "colors": [
-        "#E9724F"
+        "#E9724F",
+        "#33296E"
       ],
       "colorLabel": "주황",
       "capacity": 0,
@@ -10714,7 +10886,8 @@
       "city": "인천",
       "stadium": "STADIUM_MIREU",
       "colors": [
-        "#79A9D8"
+        "#79A9D8",
+        "#8A3B12"
       ],
       "colorLabel": "하늘",
       "capacity": 0,
@@ -10772,7 +10945,8 @@
       "city": "부천",
       "stadium": "STADIUM_BYEOLBIT",
       "colors": [
-        "#8695AE"
+        "#8695AE",
+        "#C8102E"
       ],
       "colorLabel": "회색",
       "capacity": 0,
@@ -10825,7 +10999,8 @@
       "city": "수원",
       "stadium": "STADIUM_MIREU",
       "colors": [
-        "#215CDE"
+        "#215CDE",
+        "#C8102E"
       ],
       "colorLabel": "파랑",
       "capacity": 0,
@@ -10889,7 +11064,8 @@
       "city": "울산",
       "stadium": "STADIUM_TAEJONG",
       "colors": [
-        "#BF71B8"
+        "#BF71B8",
+        "#0E5A63"
       ],
       "colorLabel": "자주",
       "capacity": 0,
@@ -10942,7 +11118,8 @@
       "city": "통영",
       "stadium": "STADIUM_TAEJONG",
       "colors": [
-        "#414862"
+        "#414862",
+        "#0F6B3C"
       ],
       "colorLabel": "회색",
       "capacity": 0,
@@ -10995,7 +11172,8 @@
       "city": "전주",
       "stadium": "STADIUM_NOEUL",
       "colors": [
-        "#787C8C"
+        "#787C8C",
+        "#0F6B3C"
       ],
       "colorLabel": "회색",
       "capacity": 0,
@@ -11053,7 +11231,8 @@
       "city": "인천",
       "stadium": "STADIUM_BYEOLBIT",
       "colors": [
-        "#E35270"
+        "#E35270",
+        "#0E5A63"
       ],
       "colorLabel": "빨강",
       "capacity": 0,
@@ -11106,7 +11285,8 @@
       "city": "영천",
       "stadium": "STADIUM_TAEJONG",
       "colors": [
-        "#376CE1"
+        "#376CE1",
+        "#C8102E"
       ],
       "colorLabel": "파랑",
       "capacity": 0,
@@ -11159,7 +11339,8 @@
       "city": "목포",
       "stadium": "STADIUM_NOEUL",
       "colors": [
-        "#3A3B5F"
+        "#3A3B5F",
+        "#0F6B3C"
       ],
       "colorLabel": "검정",
       "capacity": 0,
@@ -11212,7 +11393,8 @@
       "city": "대전",
       "stadium": "STADIUM_GEUMGANG_UNIV",
       "colors": [
-        "#278674"
+        "#278674",
+        "#C1500F"
       ],
       "colorLabel": "청록",
       "capacity": 0,
