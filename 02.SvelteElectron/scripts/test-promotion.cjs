@@ -167,10 +167,15 @@ console.log("\n콜다운");
   // 판정 자체는 멀쩡한데 **테스트 전제가 현실에 없는 로스터**였던 것이다.
   //
   // 채우는 선수는 능력치를 높게 준다 — 강등 점수가 낮아 후보를 안 뺏는다.
+  //
+  // ⚠ 투수 채움을 RP로만 두면 안 된다. 선발 하한(FIRST_TEAM_MIN_STARTERS 6)이
+  // 생긴 뒤로는 SLUMP·HOT 둘뿐인 선발진이 하한 이하라 **둘 다 후보에서 빠지고**
+  // 판정 대상이 야수(BAT0)로 넘어간다. 실제 1군은 선발을 10명 안팎 들고 있다.
   const filler = (id, pos) => ({ ...ref(id, 82), position: pos });
   const bench = [
     ...Array.from({ length: 16 }, (_, i) => filler(`BAT${i}`, "1B")),
-    ...Array.from({ length: 13 }, (_, i) => filler(`PIT${i}`, "RP")),
+    ...Array.from({ length: 7 }, (_, i) => filler(`SP${i}`, "SP")),
+    ...Array.from({ length: 6 }, (_, i) => filler(`PIT${i}`, "RP")),
   ];
   const active = [
     ref("SLUMP", 66, pitcherPerf(full, PROMO.pitcherEraBaseline * 2.5)),

@@ -150,6 +150,12 @@ const r3 = (v) => Math.round(v * 1000) / 1000;
         + `  (차 ${((s.spread["상위25% OVR"] ?? 0) - (s.spread["하위25% OVR"] ?? 0)).toFixed(1)})`);
       log(`         선발 ${s.spread.선발수 ?? 0}명 ${s.spread["선발 OVR-ERA"] ?? "-"}`
         + ` · 불펜 ${(s.spread.표본 ?? 0) - (s.spread.선발수 ?? 0)}명 ${s.spread["불펜 OVR-ERA"] ?? "-"}`);
+      // ⚠ **OVR은 경기에 안 쓰이는 능력치를 29% 포함한다.** 경기가 보는
+      // 4종(velocity·command·control·movement)만 따로 재서, OVR이 실제
+      // 실력을 나타내는지 가른다
+      log(`         구위(경기 4종) ERA ${s.spread["구위-ERA 상관"] ?? "-"}`
+        + ` · K9 ${s.spread["구위-K9 상관"] ?? "-"}`
+        + `   평균 OVR ${s.spread["평균 OVR"] ?? "-"} vs 구위 ${s.spread["평균 구위"] ?? "-"}`);
     }
 
     // ── 합산 상관 ────────────────────────────────────────────

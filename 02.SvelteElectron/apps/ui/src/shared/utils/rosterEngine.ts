@@ -144,14 +144,25 @@ export function getTeamRotation(
 
   const allSp = pitchers.filter((e) => playerDetails(e).position === "SP");
 
-  // 1순위: 휴식 완료된 SP → effectiveOvr 내림차순
-  const availableSp = allSp
-    .filter((e) => isSpAvailable(conditions?.[e.id], gameCount, restRequired))
-    .sort((a, b) => effOvr(b) - effOvr(a))
-    .slice(0, maxRotation)
-    .map((e) => e.id);
+  // ⚠ **로테이션은 고정이다.** 예전엔 매 경기 "휴식 완료된 SP를
+  // `effectiveOvr` 내림차순"으로 다시 뽑았다. `effectiveOvr`는 컨디션이 섞인
+  // 값이라 매주 흔들리고, 그러면 **상위 5명 집합이 계속 바뀐다** —
+  // 팀에 SP가 12명이면 12명이 돌아가며 던져 각자 7~12번뿐이었다.
+  //
+  // 실제 야구는 로테이션이 시즌 내내 고정이고 5명이 각자 28번 던진다.
+  // 표본이 4배 두꺼워야 ERA가 능력치를 반영한다 — 실측 OVR–ERA 상관이
+  // 선발 61명일 때 −0.63인데 96명일 때 **+0.12**(양수)까지 갔다.
+  //
+  // **기본 OVR로 뽑는다.** 컨디션이 안 섞이므로 같은 5명이 유지된다.
+  // 부상자는 `getTeamPlayers`가 이미 뺐고, 5인 로테이션이면 등판 간격이
+  // 자연히 4경기라 휴식 조건도 저절로 맞는다.
+  const baseOvr = (e: EntityRow) => playerDetails(e).pitching?.ovr ?? 0;
+  const core = [...allSp].sort((a, b) => baseOvr(b) - baseOvr(a)).slice(0, maxRotation);
+  const availableSp = core.map((e) => e.id);
 
-  // 2순위: 부족하면 휴식 중인 SP 중 lastStartGameCount 가장 작은 순 (가장 오래 쉰 순)
+  // 로테이션이 안 차면(부상·인원 부족) 남은 SP에서 **가장 오래 쉰 순**으로 메운다.
+  // 여기서도 `effectiveOvr`를 쓰면 그 순간 컨디션 좋은 선수가 끼어들어
+  // 로테이션이 다시 흔들린다
   if (availableSp.length < maxRotation) {
     const restingSp = allSp
       .filter((e) => !availableSp.includes(e.id))
@@ -164,6 +175,7 @@ export function getTeamRotation(
       .map((e) => e.id);
     availableSp.push(...restingSp);
   }
+  void isSpAvailable; void gameCount; void restRequired; void effOvr;
 
   // SP 부족 시 RP 중 effectiveOvr 높은 순으로 보충
   if (availableSp.length < maxRotation) {

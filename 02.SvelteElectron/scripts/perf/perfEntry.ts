@@ -1205,7 +1205,7 @@ export function abilitySpreadProbe(leagueId = "LEAGUE_KBL"): Record<string, unkn
   const live = get(npcLiveStatsStore);
   const stats = s.leagueState?.[leagueId]?.stats ?? {};
 
-  const rows: Array<{ ovr: number; era: number; ip: number; k9: number; sp: boolean }> = [];
+  const rows: Array<{ ovr: number; core: number; era: number; ip: number; k9: number; sp: boolean }> = [];
   for (const n of g.npcs) {
     if (n.currentLeague !== leagueId || n.playerType !== "pitcher") continue;
     const st = stats[n.npcId];
@@ -1218,13 +1218,25 @@ export function abilitySpreadProbe(leagueId = "LEAGUE_KBL"): Record<string, unkn
     // 설정인데 상관이 −0.51 ↔ −0.07로 갈렸고, 표본이 50~60명(사실상 선발)뿐이라
     // 그런 표본 몇 개가 지표를 통째로 흔든다.
     const lv = live[n.npcId];
-    const ovr = lv?.seasonStartPitching?.ovr ?? lv?.pitching?.ovr ?? n.pitching?.ovr ?? 0;
+    const snap = lv?.seasonStartPitching ?? lv?.pitching ?? n.pitching;
+    const ovr = snap?.ovr ?? 0;
     if (!(ovr > 0)) continue;
+    // ⚠ **OVR은 경기에 안 쓰이는 능력치를 29% 포함한다.**
+    //
+    // OVR = velocity 2.5 · command 2.5 · control 2.0 · movement 1.5
+    //     + stamina 1.5 · mentality 1.0 · recovery 0.5 · clutch 0.3 · holdRunners 0.2
+    // 그런데 `sim_at_bat`은 **앞의 넷만** 본다.
+    //
+    // 생성 시점엔 전부 같은 대역에서 나와 상관이 높지만(실측 OVR–K9 0.70),
+    // 성장이 진행되며 뒤쪽 29%가 따로 움직이면 **OVR은 오르는데 성적은
+    // 안 따라온다**(2032년 0.16). 경기가 보는 넷만 따로 재서 가른다.
+    const core = ((snap?.velocity ?? 0) * 2.5 + (snap?.command ?? 0) * 2.5
+                + (snap?.control ?? 0) * 2.0 + (snap?.movement ?? 0) * 1.5) / 8.5;
     // ⚠ **선발과 불펜을 나눠야 한다.** 투수 비율을 45%로 고친 뒤 표본이
     // 60 → 112로 늘었는데, 늘어난 건 40이닝을 넘긴 **불펜**이다.
     // 불펜은 이닝이 짧아 ERA가 운에 크게 흔들리고 OVR과의 상관이 약하다 —
     // 섞어 놓으면 "능력치가 성적을 안 만든다"로 잘못 읽힌다(실측 −0.19).
-    rows.push({ ovr, era: q.er * 9 / q.ip, ip: q.ip, k9: q.k * 9 / q.ip,
+    rows.push({ ovr, core, era: q.er * 9 / q.ip, ip: q.ip, k9: q.k * 9 / q.ip,
                 sp: n.position === "SP" });
   }
   if (rows.length < 10) return { 표본: rows.length, 비고: "표본 부족" };
@@ -1268,6 +1280,11 @@ export function abilitySpreadProbe(leagueId = "LEAGUE_KBL"): Record<string, unkn
     })(),
     "ERA_p10": q(0.10), "ERA_중앙": q(0.50), "ERA_p90": q(0.90),
     "OVR-ERA 상관": r2(corr(rows.map((r) => r.ovr), rows.map((r) => r.era))),
+    // 경기가 보는 4종만 — 이게 높은데 OVR이 낮으면 **OVR 공식이 문제**다
+    "구위-ERA 상관": r2(corr(rows.map((r) => r.core), rows.map((r) => r.era))),
+    "구위-K9 상관": r2(corr(rows.map((r) => r.core), rows.map((r) => r.k9))),
+    "평균 OVR": r2(rows.reduce((a, b) => a + b.ovr, 0) / rows.length),
+    "평균 구위": r2(rows.reduce((a, b) => a + b.core, 0) / rows.length),
     "OVR-K9 상관": r2(corr(rows.map((r) => r.ovr), rows.map((r) => r.k9))),
     "상위25% OVR": r2(mean(top.map((r) => r.ovr))),
     "상위25% ERA": r2(mean(top.map((r) => r.era))),

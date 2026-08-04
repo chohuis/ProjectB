@@ -318,6 +318,13 @@ pub fn eval_calldown_candidates(p: EvalCalldownParams) -> EvalCalldownResult {
         .fold((0usize, 0usize), |(pit, bat), pl| {
             if is_pitcher(pl.position.as_str()) { (pit + 1, bat) } else { (pit, bat + 1) }
         });
+    // ⚠ **부류만 보면 불펜만 빠진다.** 강등 점수는 능력치가 낮을수록 높은데
+    // 불펜이 대체로 약해서 RP부터 내려가고 **선발만 쌓인다** —
+    // 실측 팀당 선발 9~12명(로테이션은 5). 로테이션 밖 선발은 등판이 드물어
+    // 표본이 얇아지고 ERA가 능력치를 반영하지 못한다.
+    let starters_now = p.active_players.iter()
+        .filter(|pl| pl.position == "SP").count();
+    let starters_locked = starters_now <= crate::tuning::FIRST_TEAM_MIN_STARTERS;
     let batters_locked  = batters_now  <= crate::tuning::FIRST_TEAM_MIN_BATTERS;
     let pitchers_locked = pitchers_now <= crate::tuning::FIRST_TEAM_MIN_PITCHERS;
     if batters_locked && pitchers_locked {
@@ -329,6 +336,8 @@ pub fn eval_calldown_candidates(p: EvalCalldownParams) -> EvalCalldownResult {
         .filter(|pl| {
             let pit = is_pitcher(pl.position.as_str());
             (!batters_locked || pit) && (!pitchers_locked || !pit)
+                // 선발이 하한이면 선발은 안 내린다 — 불펜·야수에서 고른다
+                && !(starters_locked && pl.position == "SP")
         })
         .map(|pl| {
         // 성적을 반영한 값으로 본다 — 능력치만 보면 부진한 고연봉 베테랑이
@@ -1249,6 +1258,30 @@ mod tests {
         let got = calldown(crate::tuning::FIRST_TEAM_MIN_PITCHERS, 20, 3);
         assert_eq!(got.len(), 3, "{got:?}");
         assert!(got.iter().all(|id| !is_pit(id)), "투수가 섞였다: {got:?}");
+    }
+
+    #[test]
+    fn 선발이_하한이면_선발을_안_내린다() {
+        // ⚠ 콜다운은 부류(투/야)만 봤다. 강등 점수는 능력치가 낮을수록 높은데
+        // **불펜이 대체로 약해서 RP부터 내려가고 선발만 쌓인다** —
+        // 실측 팀당 선발 9~12명(로테이션은 5). 로테이션 밖 선발은 등판이
+        // 드물어 표본이 얇아지고 **OVR–ERA 상관이 −0.63 → +0.12**까지 갔다.
+        let mut roster: Vec<RosterPlayerRef> = Vec::new();
+        for i in 0..crate::tuning::FIRST_TEAM_MIN_STARTERS {
+            roster.push(ref_of(&format!("SP{i}"), "SP", 55.0));   // 선발이 제일 약해도
+        }
+        for i in 0..10 { roster.push(ref_of(&format!("RP{i}"), "RP", 80.0)); }
+        for i in 0..20 { roster.push(ref_of(&format!("B{i}"), "1B", 80.0)); }
+        let size = roster.len() as i32;
+        let res = eval_calldown_candidates(EvalCalldownParams {
+            team_profile: ProTeamProfile::default(),
+            active_players: roster,
+            current_roster_size: size, max_roster_size: size - 3,
+            promotion_rules: Some(rules()), callup_mod: None,
+        });
+        assert!(res.candidates.iter().all(|c| !c.player_id.starts_with("SP")),
+            "선발이 하한인데 내려갔다: {:?}",
+            res.candidates.iter().map(|c| &c.player_id).collect::<Vec<_>>());
     }
 
     #[test]
