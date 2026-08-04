@@ -32,6 +32,9 @@ export function repoNpcToSaveState(r: RepoNpc): NpcSaveState {
     militaryEnlistYear: r.military?.enlistYear,
     militaryDischargeYear: r.military?.dischargeYear,
     militaryUnit: r.military?.unit,
+    // ⚠ **왕복에 안 실으면 사라진다.** 계급(`militaryRank`)이 정확히 그렇게
+    // 없어진 전례가 있다 — 한 번 통과할 때마다 조용히 지워졌다
+    militaryServedUnit: r.military?.servedUnit,
     militaryRank: r.military?.rank,
     originalLeagueId: r.military?.originalLeagueId,
     originalTeamId: r.military?.originalTeamId,
@@ -99,9 +102,10 @@ export function saveStateToRepoNpc(n: NpcSaveState, live?: NpcLiveStat): RepoNpc
     ? { type: "", severity: n.injuryStatus.severity, weeksLeft: n.injuryStatus.recoveryWeeksLeft }
     : undefined;
   const military =
-    n.militaryUnit || n.militaryEnlistYear || n.originalTeamId
+    n.militaryUnit || n.militaryServedUnit || n.militaryEnlistYear || n.originalTeamId
       ? {
           unit: n.militaryUnit,
+          servedUnit: n.militaryServedUnit,
           rank: n.militaryRank,
           enlistYear: n.militaryEnlistYear,
           dischargeYear: n.militaryDischargeYear,

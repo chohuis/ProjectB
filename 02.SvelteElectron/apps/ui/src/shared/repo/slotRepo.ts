@@ -18,7 +18,10 @@ export interface RepoAbilities {
 }
 
 export interface RepoMilitary {
+  /** 복무 **중**인 부대. 전역하면 비워진다 */
   unit?: "sports" | "general";
+  /** 다녀온 부대 — **전역 뒤에도 남는다.** 없으면 상무/현역 구분이 사라진다 */
+  servedUnit?: "sports" | "general";
   /** 군 계급 — 생성 시 복무 개월로 정해진다 (military_roster.rs) */
   rank?: string;
   enlistYear?: number;

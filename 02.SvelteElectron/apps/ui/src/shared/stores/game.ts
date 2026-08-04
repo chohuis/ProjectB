@@ -1816,6 +1816,9 @@ function createGameStore() {
         const protagonist: ProtagonistSave = {
           ...p,
           careerStage: stage,
+          // ⚠ **다녀온 부대는 남긴다.** 지우면 전역 후 상무/현역 구분이 사라져
+          // 선수 상세·인생 기록에 표시할 수 없다 (NPC 쪽도 같이 고쳤다)
+          militaryServedUnit: p.militaryUnit ?? p.militaryServedUnit,
           militaryUnit: null,
           militaryServiceWeeks: 0,
           militaryRecoveryWeeks: p.militaryUnit === "sports" ? 2 : 6,

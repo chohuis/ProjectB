@@ -1318,7 +1318,9 @@ pub fn run_offseason(params: OffseasonParams) -> OffseasonOutput {
                     n.original_league_id = None;
                     n.original_team_id   = None;
                 }
-                n.military_unit         = None;
+                // ⚠ **어느 부대를 다녀왔는지는 남긴다.** 예전엔 그냥 지워서
+                // 전역 후 상무/현역 구분이 사라졌다 — 커리어에 표시할 수 없다
+                n.military_served_unit  = n.military_unit.take();
                 n.military_discharge_year = None;
                 summary.military_discharged_count += 1;
                 summary.military_discharged_names.push(n.name.clone());
@@ -1758,6 +1760,7 @@ pub fn generate_freshmen(params: GenerateFreshmenParams) -> Vec<NpcSaveState> {
             achievements:    vec![],
             military_enlist_year:    None,
             military_discharge_year: None,
+            military_served_unit: None,
             pro_service_years:       None,
             current_salary:          0,
             contract_years:          1,

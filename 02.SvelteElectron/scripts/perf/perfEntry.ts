@@ -2502,3 +2502,56 @@ export function cohortSnapshot(ids: string[]): Record<string, unknown> {
   }
   return out;
 }
+
+/**
+ * 병역 연도별 장부 — **누가 언제 어디로 갔는가.**
+ *
+ * ⚠ 집계 스냅샷으로는 "지금 몇 명이 복무 중"만 보인다. 연도별 유입을 보려면
+ * `militaryEnlistYear`(입대 연도)와 `military_exempt` 커리어 이벤트를 세야 한다 —
+ * 둘 다 저장돼 있으므로 한 번의 스냅샷으로 전 기간을 복원할 수 있다.
+ *
+ * 상무 정원은 `rosterSize / 복무연수`(26/2 = 13)가 상한이다. 그보다 많으면
+ * 정원 제어가 새는 것이고, 0이면 선발이 죽은 것이다.
+ */
+export function militaryLedgerProbe(): Record<string, unknown> {
+  const g = get(gameStore);
+  const byYear: Record<number, { 상무: number; 현역: number; 면제: number }> = {};
+  const bump = (y: number, k: "상무" | "현역" | "면제") => {
+    if (!Number.isFinite(y)) return;
+    byYear[y] = byYear[y] ?? { 상무: 0, 현역: 0, 면제: 0 };
+    byYear[y][k] += 1;
+  };
+
+  const scan = (
+    unit: string | null | undefined, enlistYear: number | null | undefined,
+    events: Array<{ year: number; eventType: string }> | undefined,
+  ) => {
+    if (enlistYear != null) bump(enlistYear, unit === "sports" ? "상무" : "현역");
+    for (const e of events ?? []) {
+      if (e.eventType === "military_exempt") bump(e.year, "면제");
+    }
+  };
+
+  for (const n of g.npcs) {
+    // ⚠ **복무 중이면 `militaryUnit`, 전역했으면 `militaryServedUnit`이다.**
+    // 예전엔 앞쪽만 봐서 전역자가 전부 현역으로 집계됐다
+    scan(n.militaryServedUnit ?? n.militaryUnit, n.militaryEnlistYear, n.careerEvents);
+  }
+  // 주인공도 센다 — 이 작업에서 면제·은퇴가 "NPC는 되는데 주인공은 안 되는"
+  // 결함이었다. 장부에 주인공이 빠지면 그걸 또 놓친다
+  const p = g.protagonist;
+  scan(p.militaryServedUnit ?? p.militaryUnit, p.militaryEnlistYear, p.careerEvents);
+
+  const years = Object.keys(byYear).map(Number).sort((a, b) => a - b);
+  return {
+    연도별: years.map((y) => ({ 연도: y, ...byYear[y] })),
+    합계: years.reduce((a, y) => ({
+      상무: a.상무 + byYear[y].상무,
+      현역: a.현역 + byYear[y].현역,
+      면제: a.면제 + byYear[y].면제,
+    }), { 상무: 0, 현역: 0, 면제: 0 }),
+    // 지금 복무 중인 인원 — 정상상태가 정원(26) 근처여야 한다
+    현재복무: g.npcs.filter((n) => n.careerStatus === "military").length,
+    현재상무: g.npcs.filter((n) => n.careerStatus === "military" && n.militaryUnit === "sports").length,
+  };
+}

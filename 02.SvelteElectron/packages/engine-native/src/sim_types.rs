@@ -112,7 +112,17 @@ pub struct NpcSaveState {
     #[serde(default)]
     pub sports_unit_selected: bool,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub military_unit: Option<String>,       // "sports" | "general"
+    pub military_unit: Option<String>,       // "sports" | "general" — **복무 중일 때만**
+    /// 다녀온 부대. **전역 뒤에도 남는다.**
+    ///
+    /// ⚠ 전역이 `military_unit`을 `None`으로 지워서 **상무 출신인지 현역
+    /// 출신인지가 사라졌다.** 20시즌 장부에서 상무 입대가 마지막 2년(복무 중인
+    /// 인원)만 잡히고 나머지 19년치가 전부 현역으로 집계됐다 — 실제로는
+    /// 매년 상무 13 + 현역 30이 정상 작동하고 있었는데 기록만 없었다.
+    ///
+    /// 선수 상세·인생 기록이 "상무 출신"을 보여주려면 이 값이 있어야 한다.
+    #[serde(default)]
+    pub military_served_unit: Option<String>,
     /// 군 계급. **Rust는 안 쓰지만 반드시 들고 있어야 한다** —
     /// 이 필드가 없으면 NPC가 Rust를 한 번 통과할 때마다 계급이 사라지고,
     /// `syncNpcs`가 INSERT OR REPLACE라 다음 저장에서 DB의 계급까지 지워진다.

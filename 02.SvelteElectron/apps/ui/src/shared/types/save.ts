@@ -297,6 +297,14 @@ export interface ProtagonistSave {
   scoutScore: number;
   proServiceYears: number;
   militaryUnit: "sports" | "general" | null;
+  /**
+   * 다녀온 부대 — **전역 뒤에도 남는다.**
+   *
+   * ⚠ 전역이 `militaryUnit`을 `null`로 지워서 상무 출신인지 현역 출신인지가
+   * 사라졌다. 20시즌 장부에서 상무 입대가 복무 중인 인원만 잡혔다 —
+   * 실제로는 매년 상무 13 + 현역 30이 정상 작동하는데 기록만 없었다.
+   */
+  militaryServedUnit?: "sports" | "general";
   militaryServiceWeeks: number;
   militaryRecoveryWeeks: number;
   militaryStatus: "미필" | "현역" | "군필" | "면제";
@@ -765,6 +773,8 @@ export interface NpcSaveState {
   militaryEnlistYear?: number;
   militaryDischargeYear?: number;
   militaryUnit?: "sports" | "general";
+  /** 다녀온 부대 — 전역 뒤에도 남는다 (`ProtagonistSave.militaryServedUnit` 참고) */
+  militaryServedUnit?: "sports" | "general";
   /**
    * 군 계급 (이병·일병·상병·병장). 생성 시 복무 **개월**로 정해져 저장된다.
    *

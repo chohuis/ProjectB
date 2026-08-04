@@ -275,6 +275,25 @@ const OK_MOVE = {
         + ` · 2군 ${String(n("LEAGUE_KBL_FARM")).padStart(3)}`);
     }
 
+    // ── 병역 장부 — 해마다 누가 어디로 갔나 ──────────────────
+    //
+    // 상무 정원은 `rosterSize / 복무연수` = 26/2 = **13명/년**이 상한이다.
+    // 그보다 많으면 정원 제어가 새는 것이고, 0이면 선발이 죽은 것이다.
+    // 면제는 4년 주기 국제대회(올림픽 3위·아시안게임 우승)에서만 나온다 —
+    // **매년 나오면 그게 결함이다.**
+    const led = app.militaryLedgerProbe();
+    log("");
+    log("      병역 — 연도별 (상무 정원 13/년 · 면제는 4년 주기 대회에서만)");
+    for (const r of led.연도별 ?? []) {
+      const flag = r.상무 > 13 ? "  ⚠ 상무 정원 초과" : "";
+      log(`         ${r.연도}  상무 ${String(r.상무).padStart(3)}`
+        + ` · 현역 ${String(r.현역).padStart(3)}`
+        + ` · 면제 ${String(r.면제).padStart(3)}${flag}`);
+    }
+    const sum = led.합계 ?? {};
+    log(`         합계   상무 ${sum.상무} · 현역 ${sum.현역} · 면제 ${sum.면제}`
+      + `   (현재 복무 ${led.현재복무} · 그중 상무 ${led.현재상무})`);
+
     for (const [label, buckets] of Object.entries(gone)) {
       const total = Object.values(buckets).reduce((a, b) => a + b, 0);
       const parts = Object.entries(buckets).sort().map(([k, v]) => `${k}:${v}`).join(" ");
