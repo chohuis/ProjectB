@@ -1205,13 +1205,25 @@ export function abilitySpreadProbe(leagueId = "LEAGUE_KBL"): Record<string, unkn
   const live = get(npcLiveStatsStore);
   const stats = s.leagueState?.[leagueId]?.stats ?? {};
 
-  const rows: Array<{ ovr: number; core: number; era: number; ip: number; k9: number; sp: boolean }> = [];
-  for (const n of g.npcs) {
-    if (n.currentLeague !== leagueId || n.playerType !== "pitcher") continue;
-    const st = stats[n.npcId];
+  const rows: Array<{ ovr: number; core: number; era: number; ip: number; k9: number;
+                      sprob: number; sp: boolean }> = [];
+  // ⚠ **소속 리그로 표본을 거르면 안 된다.** `currentLeague`는 **측정 시점**의
+  // 값이라, 그 시즌 1군에서 100이닝을 던지고 부진해서 2군으로 내려간 투수가
+  // 통째로 빠진다. 강등은 성적이 나빠서 당하는 것이니 **표본에서 나쁜 ERA만
+  // 골라 지우는 셈**이고, 승강이 활발해지는 후반 시즌일수록 더 많이 지워진다.
+  // "시즌이 갈수록 OVR–ERA 상관이 무너진다"는 관측이 정확히 이 모양이었다.
+  //
+  // 정본은 **그 리그의 기록 버킷**이다 — 기록이 있으면 그 리그에서 던진 것이다.
+  const byId = new Map(g.npcs.map((n) => [n.npcId, n]));
+  let demotedOut = 0;
+  for (const [npcId, stRaw] of Object.entries(stats)) {
+    const st = stRaw as { type?: string } | undefined;
     if (!st || st.type !== "pitcher") continue;
+    const n = byId.get(npcId);
+    if (!n) continue;
     const q = st as unknown as { ip: number; er: number; k: number };
     if (!(q.ip >= 40)) continue;   // 규정 표본
+    if (n.currentLeague !== leagueId) demotedOut++;   // 옛 필터가 지웠을 표본
     // ⚠ **시즌 시작 OVR로 잰다.** 현재 OVR은 성장·감퇴가 이미 반영된 값이라
     // "그 시즌에 어떤 능력으로 던졌나"와 어긋난다 — 시즌 중 크게 성장한 신인이
     // "높은 OVR인데 성적이 나쁜" 표본이 되어 상관을 흐린다. 실측에서 같은
@@ -1236,8 +1248,11 @@ export function abilitySpreadProbe(leagueId = "LEAGUE_KBL"): Record<string, unkn
     // 60 → 112로 늘었는데, 늘어난 건 40이닝을 넘긴 **불펜**이다.
     // 불펜은 이닝이 짧아 ERA가 운에 크게 흔들리고 OVR과의 상관이 약하다 —
     // 섞어 놓으면 "능력치가 성적을 안 만든다"로 잘못 읽힌다(실측 −0.19).
+    // 엔진과 같은 식으로 실효 제구를 낸다 (npc_sim_one_pitch의 strike_prob)
+    const sprob = Math.min(0.68, Math.max(0.38,
+      0.500 + ((snap?.control ?? 0) - 50) * 0.003 + ((snap?.command ?? 0) - 50) * 0.002));
     rows.push({ ovr, core, era: q.er * 9 / q.ip, ip: q.ip, k9: q.k * 9 / q.ip,
-                sp: n.position === "SP" });
+                sprob, sp: n.position === "SP" });
   }
   if (rows.length < 10) return { 표본: rows.length, 비고: "표본 부족" };
 
@@ -1278,6 +1293,13 @@ export function abilitySpreadProbe(leagueId = "LEAGUE_KBL"): Record<string, unkn
       return rp.length >= 10
         ? r2(corr(rp.map((r) => r.ovr), rp.map((r) => r.era))) : null;
     })(),
+    // ⚠ K9도 선발만 봐야 한다. 불펜은 짧은 이닝이라 탈삼진율이 크게 흔들리고,
+    // 섞으면 "OVR이 탈삼진을 못 만든다"로 잘못 읽힌다(실측 전체 −0.01).
+    "선발 OVR-K9": (() => {
+      const sp = rows.filter((r) => r.sp);
+      return sp.length >= 10
+        ? r2(corr(sp.map((r) => r.ovr), sp.map((r) => r.k9))) : null;
+    })(),
     "ERA_p10": q(0.10), "ERA_중앙": q(0.50), "ERA_p90": q(0.90),
     "OVR-ERA 상관": r2(corr(rows.map((r) => r.ovr), rows.map((r) => r.era))),
     // 경기가 보는 4종만 — 이게 높은데 OVR이 낮으면 **OVR 공식이 문제**다
@@ -1286,6 +1308,15 @@ export function abilitySpreadProbe(leagueId = "LEAGUE_KBL"): Record<string, unkn
     "평균 OVR": r2(rows.reduce((a, b) => a + b.ovr, 0) / rows.length),
     "평균 구위": r2(rows.reduce((a, b) => a + b.core, 0) / rows.length),
     "OVR-K9 상관": r2(corr(rows.map((r) => r.ovr), rows.map((r) => r.k9))),
+    // 옛 필터(소속 리그)가 지웠을 표본 수 — 클수록 그 편향이 컸다는 뜻이다
+    "강등제외됐을표본": demotedOut,
+    // ⚠ **천장에 붙은 투수는 서로 구별되지 않는다.**
+    // `npc_sim_one_pitch`의 strike_prob = 0.500 + (ctl-50)*0.003 + (cmd-50)*0.002,
+    // 상한 0.68. ctl=cmd=86에서 닿고 그 위는 전부 버려진다. 성장으로 상위권이
+    // 천장에 몰리면 **능력 차가 결과 차를 못 만든다** — 상관이 아니라
+    // 기울기가 눕는다(실측 OVR 1점당 ERA 0.075 → 0.015).
+    "제구천장비율": r2(rows.filter((r) => r.sprob >= 0.6799).length / rows.length),
+    "평균strike_prob": Math.round(mean(rows.map((r) => r.sprob)) * 1000) / 1000,
     "상위25% OVR": r2(mean(top.map((r) => r.ovr))),
     "상위25% ERA": r2(mean(top.map((r) => r.era))),
     "하위25% OVR": r2(mean(bot.map((r) => r.ovr))),

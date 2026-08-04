@@ -147,8 +147,13 @@ const r3 = (v) => Math.round(v * 1000) / 1000;
       // 상관만 보면 "능력치가 성적을 안 만든다"로 읽히지만, 실제 원인이
       // "모두 능력치가 비슷해졌다"일 수 있다 — 고칠 곳이 완전히 다르다.
       log(`         OVR 상위25% ${s.spread["상위25% OVR"] ?? "-"} vs 하위25% ${s.spread["하위25% OVR"] ?? "-"}`
-        + `  (차 ${((s.spread["상위25% OVR"] ?? 0) - (s.spread["하위25% OVR"] ?? 0)).toFixed(1)})`);
-      log(`         선발 ${s.spread.선발수 ?? 0}명 ${s.spread["선발 OVR-ERA"] ?? "-"}`
+        + `  (차 ${((s.spread["상위25% OVR"] ?? 0) - (s.spread["하위25% OVR"] ?? 0)).toFixed(1)})`
+        + `  · 옛 소속리그 필터였다면 빠질 표본 ${s.spread["강등제외됐을표본"] ?? "-"}명`);
+      // ⚠ 천장(0.68)에 붙은 투수끼리는 엔진이 구별하지 못한다 — 능력 차가
+      // 결과 차를 못 만드는 진짜 이유일 수 있다. 상관이 아니라 기울기 문제다.
+      log(`         제구 천장(0.68) 비율 ${((s.spread["제구천장비율"] ?? 0) * 100).toFixed(0)}%`
+        + ` · 평균 strike_prob ${s.spread["평균strike_prob"] ?? "-"}`);
+      log(`         선발 ${s.spread.선발수 ?? 0}명 ERA ${s.spread["선발 OVR-ERA"] ?? "-"} / K9 ${s.spread["선발 OVR-K9"] ?? "-"}`
         + ` · 불펜 ${(s.spread.표본 ?? 0) - (s.spread.선발수 ?? 0)}명 ${s.spread["불펜 OVR-ERA"] ?? "-"}`);
       // ⚠ **OVR은 경기에 안 쓰이는 능력치를 29% 포함한다.** 경기가 보는
       // 4종(velocity·command·control·movement)만 따로 재서, OVR이 실제
