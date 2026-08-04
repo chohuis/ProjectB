@@ -13,7 +13,7 @@ import { gameStore } from "../../apps/ui/src/shared/stores/game";
 import { seasonStore } from "../../apps/ui/src/shared/stores/season";
 import { npcLiveStatsStore } from "../../apps/ui/src/shared/stores/npcLiveStats";
 import { autoAdvanceStore, setAutoLogFile } from "../../apps/ui/src/shared/stores/autoAdvance";
-import { startNewGameV3 } from "../../apps/ui/src/shared/repo/slotLifecycleV3";
+import { startNewGameV3, getFarmDevLog } from "../../apps/ui/src/shared/repo/slotLifecycleV3";
 import { assignHighschoolPosition } from "../../apps/ui/src/shared/utils/pitcherRoleEngine";
 import { runAutoAdvance, lastAutoAdvanceError } from "../../apps/ui/src/shared/usecases/runAutoAdvance";
 import { advanceWeek } from "../../apps/ui/src/shared/usecases/advanceWeek";
@@ -2713,5 +2713,37 @@ export function rispSplitProbe(leagueId = "LEAGUE_KBL"): Record<string, unknown>
     // 투타 대사 — 같은 타석을 양쪽이 세므로 합계가 같아야 한다
     "대사 일치": bRAb === pRAb,
     _피안타합: pH,
+  };
+}
+
+/**
+ * 육성선수 병목 — **상한인가 유출인가.**
+ *
+ * 실패한 2군 팀이 야수 17·투수 6이면 short = 3이라 상한 4에 안 걸린다.
+ * 그러면 maxPerYear를 올려도 안 고쳐진다 — 유출이 더 빠른 것이다.
+ * 이번 세션에서 하한을 추측으로 올려 1군을 굶긴 적이 있어, 숫자를 만지기
+ * 전에 병목을 먼저 잰다.
+ */
+export function farmDevProbe(): Record<string, unknown> {
+  const log = getFarmDevLog();
+  if (log.length === 0) return { 판정건수: 0, 비고: "육성선수 판정이 한 번도 안 돌았다" };
+  const capped = log.filter((r) => r.capped).length;
+  const wantZero = log.filter((r) => r.want <= 0).length;
+  const noCat = log.filter((r) => r.noCatcher).length;
+  const shorts = log.map((r) => r.short).sort((a, b) => a - b);
+  const pits = log.map((r) => r.pit).sort((a, b) => a - b);
+  const q = (v: number[], f: number) => v[Math.min(v.length - 1, Math.floor(v.length * f))];
+  const sum = (v: number[]) => v.reduce((a, b) => a + b, 0);
+  return {
+    판정건수: log.length,
+    "상한에 걸린 비율": Math.round((capped / log.length) * 100) / 100,
+    "부족 0이라 건너뛴 비율": Math.round((wantZero / log.length) * 100) / 100,
+    "포수 0명이던 건수": noCat,
+    "부족 중앙": q(shorts, 0.5),
+    "부족 p90": q(shorts, 0.9),
+    "부족 최대": shorts[shorts.length - 1],
+    "2군 투수 중앙": q(pits, 0.5),
+    "2군 투수 최소": pits[0],
+    "총 생성 요청": sum(log.map((r) => r.want)),
   };
 }

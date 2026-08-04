@@ -209,6 +209,16 @@ const FLOOR = {
           `  →  시즌종료 야수${b1.최소야수}/투수${b1.최소투수}` +
           `(포수0 ${b1.포수없는팀}팀)`);
     }
+    // ── 육성선수 병목 — 상한인가 유출인가 ──────────────────────
+    //
+    // ⚠ maxPerYear를 추측으로 올리면 안 된다. 2군 팀이 야수 17·투수 6이면
+    // 부족분이 3이라 상한 4에 안 걸린다 — 올려도 안 고쳐진다.
+    {
+      const fd = app.farmDevProbe();
+      log("");
+      log("   [육성선수] " + JSON.stringify(fd));
+    }
+
     for (const [lg, w] of Object.entries(worst)) {
       if (verbose) log(`      ${lg} ${JSON.stringify(w)}`);
       const floor = FLOOR[lg];

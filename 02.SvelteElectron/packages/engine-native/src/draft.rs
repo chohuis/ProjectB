@@ -260,6 +260,14 @@ pub struct PlacementRules {
 pub struct Placer<'a> {
     /// 팀 → (투수, 야수)
     roster: std::collections::HashMap<String, (usize, usize)>,
+    /// 팀 → 전문 요원(포수) 수.
+    ///
+    /// ⚠ **투수/야수 비율만 보면 자리는 못 본다.** `find_slot`이 비율만
+    /// 맞추므로 야수 자리가 남으면 포수든 외야수든 그냥 넣었다 — 대학은
+    /// 승강도 육성선수도 없어서 한 번 생긴 포수 공백이 **안 메워진다**
+    /// (실측 대학 1팀이 포수 0명으로 시즌을 났다).
+    /// 이 프로젝트에서 반복된 "몇 명은 맞고 어느 자리가 틀렸다"의 그 형태다.
+    specialists: std::collections::HashMap<String, usize>,
     /// 팀 → 이번 배치에서 대학이 새로 받은 인원 (학년 균형용)
     univ_intake: std::collections::HashMap<String, usize>,
     university: &'a [String],
@@ -282,6 +290,7 @@ impl<'a> Placer<'a> {
         let ind: std::collections::HashSet<&str> = independent.iter().map(|s| s.as_str()).collect();
         let frm: std::collections::HashSet<&str> = farm.iter().map(|s| s.as_str()).collect();
         let mut roster = std::collections::HashMap::new();
+        let mut specialists: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
         for npc in npcs {
             // ⚠ **부상자도 로스터를 차지한다.** `active`만 세면 그만큼 빈자리로
             // 착각해 정원을 넘겨 배치한다 — 실측에서 독립리그가 정원 300인데
@@ -291,8 +300,12 @@ impl<'a> Placer<'a> {
             if !univ.contains(t) && !ind.contains(t) && !frm.contains(t) { continue; }
             let e = roster.entry(npc.current_team.clone()).or_insert((0usize, 0usize));
             if npc.player_type == "pitcher" { e.0 += 1; } else { e.1 += 1; }
+            if crate::tuning::is_specialist_position(&npc.position) {
+                *specialists.entry(npc.current_team.clone()).or_insert(0) += 1;
+            }
         }
-        Self { roster, univ_intake: std::collections::HashMap::new(), university, independent, farm, rules }
+        Self { roster, specialists, univ_intake: std::collections::HashMap::new(),
+               university, independent, farm, rules }
     }
 
     /// 이미 자리를 잡은 사람을 로스터 집계에서 빼둔다 (지명된 재학생 등)
@@ -301,16 +314,34 @@ impl<'a> Placer<'a> {
             if npc.player_type == "pitcher" { e.0 = e.0.saturating_sub(1); }
             else { e.1 = e.1.saturating_sub(1); }
         }
+        if crate::tuning::is_specialist_position(&npc.position) {
+            if let Some(c) = self.specialists.get_mut(&npc.current_team) {
+                *c = c.saturating_sub(1);
+            }
+        }
     }
 
     /// 팀별 빈 슬롯 탐색. 포지션 수요 우선(strict), 없으면 슬롯만 본다
     ///
     /// `annual_max`가 있으면 **이번 배치에서 그 팀이 받은 인원**도 함께 본다.
     /// 대학의 학년 균형이 이걸로 유지된다.
+    /// ⚠ **단계가 셋이다.** 예전엔 투수/야수 비율만 보는 두 단계였고,
+    /// 그래서 야수 자리가 남으면 포수든 외야수든 그냥 넣었다 — 대학은
+    /// 승강도 육성선수도 없어 **한 번 생긴 포수 공백이 안 메워진다.**
+    ///
+    ///   0단계  그 전문 요원이 **0명인 팀** (포수 지원자일 때만)
+    ///   1단계  보직 비율이 맞는 팀
+    ///   2단계  자리만 남으면
+    ///
+    /// 0단계를 비율보다 **앞**에 두는 게 핵심이다. 뒤에 두면 비율이 맞는
+    /// 팀이 먼저 채가서 정작 포수 없는 팀은 계속 비어 있다.
     fn find_slot(
-        &mut self, want_pitcher: bool, teams: &[String], max: usize, annual_max: Option<usize>,
+        &mut self, want_pitcher: bool, position: &str,
+        teams: &[String], max: usize, annual_max: Option<usize>,
     ) -> Option<String> {
-        for strict in [true, false] {
+        let specialist = crate::tuning::is_specialist_position(position);
+        for stage in 0u8..3 {
+            if stage == 0 && !specialist { continue; }
             let mut best: Option<(String, usize)> = None;
             for tid in teams {
                 let (p, b) = self.roster.get(tid).copied().unwrap_or((0, 0));
@@ -319,7 +350,10 @@ impl<'a> Placer<'a> {
                 if let Some(am) = annual_max {
                     if self.univ_intake.get(tid).copied().unwrap_or(0) >= am { continue; }
                 }
-                if strict {
+                if stage == 0 {
+                    // 그 자리가 이미 있는 팀은 건너뛴다
+                    if self.specialists.get(tid).copied().unwrap_or(0) > 0 { continue; }
+                } else if stage == 1 {
                     let ratio = if total > 0 { p as f64 / total as f64 } else { 0.5 };
                     // 투수 비율 >0.65면 투수 사양, <0.55면 야수 사양
                     if want_pitcher && ratio > 0.65 { continue; }
@@ -333,6 +367,7 @@ impl<'a> Placer<'a> {
             if let Some((tid, _)) = best {
                 let e = self.roster.entry(tid.clone()).or_insert((0, 0));
                 if want_pitcher { e.0 += 1; } else { e.1 += 1; }
+                if specialist { *self.specialists.entry(tid.clone()).or_insert(0) += 1; }
                 return Some(tid);
             }
         }
@@ -353,7 +388,7 @@ impl<'a> Placer<'a> {
 
         let placed = allow_university
             .then(|| self.find_slot(
-                is_pitcher, self.university, self.rules.university_max,
+                is_pitcher, &npc.position, self.university, self.rules.university_max,
                 self.rules.university_annual_max,
             ))
             .flatten()
@@ -370,7 +405,7 @@ impl<'a> Placer<'a> {
                 // 계약**하는 게 자연스럽다. `find_slot`이 포지션 수요를 보므로
                 // 모자란 보직으로 들어간다.
                 (self.rules.farm_max > 0)
-                    .then(|| self.find_slot(is_pitcher, self.farm, self.rules.farm_max, None))
+                    .then(|| self.find_slot(is_pitcher, &npc.position, self.farm, self.rules.farm_max, None))
                     .flatten()
                     .map(|t| (t, "LEAGUE_KBL_FARM"))
             })
@@ -379,7 +414,7 @@ impl<'a> Placer<'a> {
                 // 독립 로스터가 은퇴 직전 선수로만 채워진다
                 (npc.age <= self.rules.independent_age_max)
                     .then(|| self.find_slot(
-                        is_pitcher, self.independent, self.rules.independent_max, None,
+                        is_pitcher, &npc.position, self.independent, self.rules.independent_max, None,
                     ))
                     .flatten()
                     .map(|t| (t, "LEAGUE_INDEPENDENT"))
@@ -652,6 +687,81 @@ mod tests {
         p.place(&mut uv, 2026, "draft_undrafted", "미지명", false);
         assert_eq!(uv.current_league, "LEAGUE_INDEPENDENT", "대졸은 대학 재입학 불가");
         assert_eq!(uv.grade, None);
+    }
+
+
+    /// 포수 지원자를 **포수 없는 팀으로** 보낸다.
+    ///
+    /// ⚠ 예전엔 `find_slot`이 투수/야수 비율만 봤다. 야수 자리가 남으면
+    /// 포수든 외야수든 그냥 넣었고, **대학은 승강도 육성선수도 없어서**
+    /// 한 번 생긴 포수 공백이 안 메워진다(실측 대학 1팀이 포수 0명으로
+    /// 시즌을 났다). 이 프로젝트에서 반복된 "몇 명은 맞고 어느 자리가
+    /// 틀렸다"의 그 형태다.
+    #[test]
+    fn 포수는_포수_없는_팀으로_간다() {
+        let univ = vec!["TEAM_UNIV_HASC".to_string(), "TEAM_UNIV_NONE".to_string()];
+        // HASC엔 포수가 있고 NONE엔 없다. **자리는 HASC가 더 많이 남게** 둔다 —
+        // 자리 수만 보면 HASC로 가므로, 이 검사가 자리 공백 우선을 실제로 본다
+        let mut existing = vec![];
+        existing.push({ let mut n = npc("C1", "LEAGUE_UNIVERSITY", Some(2), 60.0, 20);
+                        n.player_type = "batter".into(); n.position = "C".into();
+                        n.current_team = "TEAM_UNIV_HASC".into(); n });
+        for i in 0..12 {
+            let mut n = npc(&format!("F{i}"), "LEAGUE_UNIVERSITY", Some(2), 60.0, 20);
+            n.player_type = "batter".into(); n.position = "1B".into();
+            n.current_team = "TEAM_UNIV_NONE".into();
+            existing.push(n);
+        }
+
+        let mut p = Placer::new(&existing, &univ, &[], &[], placement());
+        let mut c = npc("NEWC", DRAFT_POOL_LEAGUE, None, 60.0, 19);
+        c.player_type = "batter".into();
+        c.position = "C".into();
+        p.place(&mut c, 2026, "draft_undrafted", "미지명", true);
+
+        assert_eq!(c.current_team, "TEAM_UNIV_NONE",
+            "포수가 이미 포수 있는 팀으로 갔다: {}", c.current_team);
+    }
+
+    /// 자리 공백 우선이 **보직 균형을 깨지 않는다.**
+    ///
+    /// 0단계가 비율 검사를 건너뛰므로, 포수만 우대하다 투수/야수 비율이
+    /// 무너지면 이번엔 등판이 안 돈다 — 이 세션에서 한쪽 하한을 걸면
+    /// 반대쪽이 밀리는 걸 여섯 번 겪었다.
+    #[test]
+    fn 포수_우선이_보직_균형을_깨지_않는다() {
+        let univ = vec!["TEAM_UNIV_A".to_string()];
+        let mut p = Placer::new(&[], &univ, &[], &[], placement());
+        // 포수가 아닌 야수는 0단계를 안 탄다 — 비율 검사를 정상적으로 받는다
+        let mut b = npc("B1", DRAFT_POOL_LEAGUE, None, 60.0, 19);
+        b.player_type = "batter".into();
+        b.position = "1B".into();
+        p.place(&mut b, 2026, "draft_undrafted", "미지명", true);
+        assert_eq!(b.current_league, "LEAGUE_UNIVERSITY");
+
+        // 투수도 마찬가지다
+        let mut pi = npc("P1", DRAFT_POOL_LEAGUE, None, 60.0, 19);
+        p.place(&mut pi, 2026, "draft_undrafted", "미지명", true);
+        assert_eq!(pi.current_league, "LEAGUE_UNIVERSITY");
+    }
+
+    /// 포수가 **이미 다 있으면** 평소대로 배정한다 (0단계가 비어도 안 막힌다)
+    #[test]
+    fn 포수가_다_있으면_평소대로_배정한다() {
+        let univ = vec!["TEAM_UNIV_A".to_string()];
+        let mut existing = vec![];
+        let mut n = npc("C1", "LEAGUE_UNIVERSITY", Some(2), 60.0, 20);
+        n.player_type = "batter".into(); n.position = "C".into();
+        n.current_team = "TEAM_UNIV_A".into();
+        existing.push(n);
+
+        let mut p = Placer::new(&existing, &univ, &[], &[], placement());
+        let mut c = npc("NEWC", DRAFT_POOL_LEAGUE, None, 60.0, 19);
+        c.player_type = "batter".into();
+        c.position = "C".into();
+        p.place(&mut c, 2026, "draft_undrafted", "미지명", true);
+        assert_eq!(c.current_team, "TEAM_UNIV_A",
+            "0단계가 비었다고 배정 자체가 막히면 안 된다");
     }
 
     #[test]

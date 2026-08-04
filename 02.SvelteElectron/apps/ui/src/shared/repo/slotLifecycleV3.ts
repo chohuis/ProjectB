@@ -29,6 +29,21 @@ const HS_MIN_PITCHERS = 8;
  * 리그가 해마다 얇아진다(실측 6시즌 OVR 상위25% 89.3 → 82.1).
  */
 const talentOf = (rf: { talentRules?: Record<string, unknown> }) => rf.talentRules;
+
+/**
+ * 육성선수 생성 계측 — **상한이 병목인지 유출이 병목인지 가른다.**
+ *
+ * ⚠ `maxPerYear`를 추측으로 올리면 안 된다. 실패한 2군 팀이 야수 17·투수 6이면
+ * `short = 3`이라 상한 4에 **안 걸린다** — 올려도 안 고쳐진다. 이번 세션에서
+ * 하한을 잘못 올려 1군을 굶긴 적이 있다(2군 하한 9→12가 1군 야수를 12→7로
+ * 무너뜨렸다). **병목을 재고 나서 숫자를 만진다.**
+ */
+export interface FarmDevRecord {
+  year: number; teamId: string; pit: number; bat: number;
+  short: number; want: number; capped: boolean; noCatcher: boolean;
+}
+const farmDevLog: FarmDevRecord[] = [];
+export function getFarmDevLog(): FarmDevRecord[] { return farmDevLog; }
 import type { SaveGame, ProtagonistSave, NpcSaveState } from "../types/save";
 import type { SaveSeason } from "../types/season";
 import type { SaveSlotMeta } from "../types/projectb.d";
@@ -368,6 +383,14 @@ export async function generateFarmDevelopmentV3(seasonYear: number): Promise<num
       // 정원 초과분은 오프시즌 캡이 남아도는 부류부터 정리하면서 저절로 맞는다.
       // 폭주는 `maxPerYear`가 막는다.
       const want = Math.min(short, dev.maxPerYear ?? 4);
+      // 계측 — 판단의 입력과 결과를 그대로 남긴다
+      if (farmDevLog.length < 4000) {
+        farmDevLog.push({
+          year: seasonYear, teamId, pit, bat, short, want,
+          capped: short > (dev.maxPerYear ?? 4),
+          noCatcher: !cur.some((p) => p.position === "C"),
+        });
+      }
       if (want <= 0) continue;
 
       const raw = JSON.parse(
