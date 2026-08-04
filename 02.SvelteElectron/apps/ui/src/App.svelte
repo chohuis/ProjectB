@@ -26,6 +26,8 @@
   type GamePhase = "loading" | "intro" | "slotSelect" | "create" | "playing";
   let phase: GamePhase = "loading";
   let hasSave = false;
+  // 인트로의 "이어하기" 미리보기용 — 가장 최근에 저장한 슬롯
+  let latestSlot: import("./shared/types/projectb.d").SaveSlotMeta | null = null;
   let loadError = "";
 
   onMount(async () => {
@@ -42,6 +44,11 @@
       // v3 슬롯만 목록 (클린 브레이크 — 구 세이브는 새 구조에서 미지원)
       const slots = await listSlotsV3();
       hasSave = slots.length > 0;
+      // ⚠ `updatedAt`은 문자열이라 사전순 비교로 최신을 고른다 —
+      // ISO 형식이면 사전순 = 시간순이다
+      latestSlot = slots.length
+        ? [...slots].sort((a, b) => (b.updatedAt ?? "").localeCompare(a.updatedAt ?? ""))[0]
+        : null;
     } catch {}
 
     phase = "intro";
@@ -67,12 +74,13 @@
 </script>
 
 {#if phase === "loading"}
-  <div class="loading-screen">
-    <p>로딩 중...</p>
+  <div class="loading-screen u-page">
+    <p>불러오는 중</p>
   </div>
 {:else if phase === "intro"}
   <IntroScreen
     {hasSave}
+    latest={latestSlot}
     onNew={() => (phase = "slotSelect")}
     onContinue={() => (phase = "slotSelect")}
   />
@@ -100,11 +108,11 @@
   .loading-screen {
     width: 100vw;
     height: 100vh;
-    background: #080f1e;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #5a7aa8;
-    font-size: 16px;
+    color: var(--ink-mute);
+    font-size: 13px;
+    letter-spacing: 0.18em;
   }
 </style>

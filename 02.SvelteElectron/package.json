@@ -6,7 +6,7 @@
   "workspaces": [
     "packages/*"
   ],
-  "description": "ProjectB desktop app (Svelte + Electron)",
+  "description": "OnePitch — 투수 인생 시뮬레이션 (Svelte + Electron)",
   "main": "apps/desktop/main.cjs",
   "scripts": {
     "build:contracts": "npm run -w @projectb/contracts build",
@@ -88,7 +88,7 @@
   },
   "build": {
     "appId": "com.projectb.desktop",
-    "productName": "ProjectB",
+    "productName": "OnePitch",
     "directories": {
       "output": "release"
     },
