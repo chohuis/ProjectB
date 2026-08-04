@@ -223,7 +223,12 @@ export async function generateOverseasIntakeV3(seasonYear: number): Promise<numb
   const slotId = g.currentSlotId;
   if (!slotId) return 0;
 
-  const rulesFile = (await loadRosterRules()).rosterRules;
+  // ⚠ 여기서 `rulesFile`은 **`rosterRules` 하위 객체**다(아래에서 `rulesFile[leagueId]`로
+  // 쓴다). 다른 두 생성 경로의 `rulesFile`은 파일 전체라 이름이 같고 모양이 다르다 —
+  // `talentRules`처럼 최상위에 있는 값을 여기서 읽으면 조용히 `undefined`가 되고
+  // 폴백으로 돈다. 전체 파일을 따로 들고 있는다.
+  const rulesAll = await loadRosterRules();
+  const rulesFile = rulesAll.rosterRules;
   const teamsAll = get(masterStore).teams;
 
   // 리그별 현재 인원 — 전체를 한 번만 훑는다
@@ -258,7 +263,7 @@ export async function generateOverseasIntakeV3(seasonYear: number): Promise<numb
           devRateMin: rules.devRateMin, devRateMax: rules.devRateMax,
           namedNpcs: [], seasonYear, idOffset: 0,
           pitcherRatio: rules.pitcherRatio ?? 0.45,
-          talent: talentOf(rulesFile),
+          talent: talentOf(rulesAll),
         // ⚠ **안 넘기면 무작위 폴백이 투수 30%가 된다**(생성은 45%).
         // 세대 교체마다 리그가 30%로 수렴해 파이프라인 전체가 마른다
         })),
