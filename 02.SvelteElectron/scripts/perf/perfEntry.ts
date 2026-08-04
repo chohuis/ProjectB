@@ -1205,7 +1205,7 @@ export function abilitySpreadProbe(leagueId = "LEAGUE_KBL"): Record<string, unkn
   const live = get(npcLiveStatsStore);
   const stats = s.leagueState?.[leagueId]?.stats ?? {};
 
-  const rows: Array<{ ovr: number; era: number; ip: number; k9: number }> = [];
+  const rows: Array<{ ovr: number; era: number; ip: number; k9: number; sp: boolean }> = [];
   for (const n of g.npcs) {
     if (n.currentLeague !== leagueId || n.playerType !== "pitcher") continue;
     const st = stats[n.npcId];
@@ -1220,7 +1220,12 @@ export function abilitySpreadProbe(leagueId = "LEAGUE_KBL"): Record<string, unkn
     const lv = live[n.npcId];
     const ovr = lv?.seasonStartPitching?.ovr ?? lv?.pitching?.ovr ?? n.pitching?.ovr ?? 0;
     if (!(ovr > 0)) continue;
-    rows.push({ ovr, era: q.er * 9 / q.ip, ip: q.ip, k9: q.k * 9 / q.ip });
+    // ⚠ **선발과 불펜을 나눠야 한다.** 투수 비율을 45%로 고친 뒤 표본이
+    // 60 → 112로 늘었는데, 늘어난 건 40이닝을 넘긴 **불펜**이다.
+    // 불펜은 이닝이 짧아 ERA가 운에 크게 흔들리고 OVR과의 상관이 약하다 —
+    // 섞어 놓으면 "능력치가 성적을 안 만든다"로 잘못 읽힌다(실측 −0.19).
+    rows.push({ ovr, era: q.er * 9 / q.ip, ip: q.ip, k9: q.k * 9 / q.ip,
+                sp: n.position === "SP" });
   }
   if (rows.length < 10) return { 표본: rows.length, 비고: "표본 부족" };
 
@@ -1249,7 +1254,18 @@ export function abilitySpreadProbe(leagueId = "LEAGUE_KBL"): Record<string, unkn
     // 사실상 선발만 남기기 때문이다. 호출측이 **여러 시즌을 합산**할 수 있게
     // 원시 행을 같이 낸다 — 불펜을 넣어 표본을 늘리는 건 안 된다.
     // 마무리(고OVR·저ERA)가 섞여 상관을 인위적으로 강화한다.
-    행: rows.map((r) => [Math.round(r.ovr * 10) / 10, Math.round(r.era * 100) / 100]),
+    행: rows.map((r) => [Math.round(r.ovr * 10) / 10, Math.round(r.era * 100) / 100, r.sp ? 1 : 0]),
+    선발수: rows.filter((r) => r.sp).length,
+    "선발 OVR-ERA": (() => {
+      const sp = rows.filter((r) => r.sp);
+      return sp.length >= 10
+        ? r2(corr(sp.map((r) => r.ovr), sp.map((r) => r.era))) : null;
+    })(),
+    "불펜 OVR-ERA": (() => {
+      const rp = rows.filter((r) => !r.sp);
+      return rp.length >= 10
+        ? r2(corr(rp.map((r) => r.ovr), rp.map((r) => r.era))) : null;
+    })(),
     "ERA_p10": q(0.10), "ERA_중앙": q(0.50), "ERA_p90": q(0.90),
     "OVR-ERA 상관": r2(corr(rows.map((r) => r.ovr), rows.map((r) => r.era))),
     "OVR-K9 상관": r2(corr(rows.map((r) => r.ovr), rows.map((r) => r.k9))),

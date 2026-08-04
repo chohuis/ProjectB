@@ -148,6 +148,8 @@ const r3 = (v) => Math.round(v * 1000) / 1000;
       // "모두 능력치가 비슷해졌다"일 수 있다 — 고칠 곳이 완전히 다르다.
       log(`         OVR 상위25% ${s.spread["상위25% OVR"] ?? "-"} vs 하위25% ${s.spread["하위25% OVR"] ?? "-"}`
         + `  (차 ${((s.spread["상위25% OVR"] ?? 0) - (s.spread["하위25% OVR"] ?? 0)).toFixed(1)})`);
+      log(`         선발 ${s.spread.선발수 ?? 0}명 ${s.spread["선발 OVR-ERA"] ?? "-"}`
+        + ` · 불펜 ${(s.spread.표본 ?? 0) - (s.spread.선발수 ?? 0)}명 ${s.spread["불펜 OVR-ERA"] ?? "-"}`);
     }
 
     // ── 합산 상관 ────────────────────────────────────────────
@@ -159,9 +161,10 @@ const r3 = (v) => Math.round(v * 1000) / 1000;
     // 시즌을 합쳐 표본을 늘린다. **불펜을 넣는 건 안 된다** — 마무리는
     // OVR이 높고 짧은 이닝만 던져 ERA가 낮으니 상관이 인위적으로 강해진다.
     const pooled = seasons.flatMap((s2) => s2.spread.행 ?? []);
-    if (pooled.length >= 30) {
-      const xs = pooled.map((r) => r[0]);
-      const ys = pooled.map((r) => r[1]);
+    const corrOf = (rowsIn) => {
+      if (rowsIn.length < 30) return null;
+      const xs = rowsIn.map((r) => r[0]);
+      const ys = rowsIn.map((r) => r[1]);
       const mean = (v) => v.reduce((a, b) => a + b, 0) / v.length;
       const mx = mean(xs), my = mean(ys);
       let num = 0, dx = 0, dy = 0;
@@ -169,10 +172,20 @@ const r3 = (v) => Math.round(v * 1000) / 1000;
         num += (xs[i] - mx) * (ys[i] - my);
         dx += (xs[i] - mx) ** 2; dy += (ys[i] - my) ** 2;
       }
-      const r = dx > 0 && dy > 0 ? num / Math.sqrt(dx * dy) : 0;
+      return dx > 0 && dy > 0 ? r3(num / Math.sqrt(dx * dy)) : 0;
+    };
+    if (pooled.length >= 30) {
+      const sp = pooled.filter((r) => r[2] === 1);
+      const rp = pooled.filter((r) => r[2] !== 1);
       log("");
-      log(`   합산 ${seasons.length}시즌 · 표본 ${pooled.length}  →  OVR-ERA ${r3(r)}`);
-      log(`   (시즌별은 표본 60이라 못 쓴다 — 이 값으로 판단한다)`);
+      log(`   합산 ${seasons.length}시즌 · 표본 ${pooled.length}  →  OVR-ERA ${corrOf(pooled)}`);
+      // ⚠ **선발만 봐야 능력치가 성적을 만드는지 알 수 있다.** 불펜은
+      // 이닝이 짧아 ERA가 운에 흔들린다 — 섞으면 상관이 희석된다.
+      // 투수 비율을 45%로 고친 뒤 불펜이 표본에 들어와 −0.47 → −0.19가 됐는데,
+      // 그건 능력치가 무력해진 게 아니라 **표본 구성이 바뀐 것**일 수 있다.
+      log(`   선발만 ${sp.length}명 → ${corrOf(sp) ?? "표본부족"}`
+        + ` · 불펜만 ${rp.length}명 → ${corrOf(rp) ?? "표본부족"}`);
+      log(`   (성격 계수는 **선발 값** 위에서 판단한다)`);
     }
   } catch (e) {
     log("ERR " + String((e && e.stack) || e).split("\n").slice(0, 8).join("\n    "));

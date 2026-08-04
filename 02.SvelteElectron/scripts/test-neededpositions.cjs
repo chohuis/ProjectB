@@ -92,6 +92,21 @@ const HS_WANT = 10;
   const np = neededPositions(roster, HS_WANT, 8, 9, 0.45);
   check("요청 수를 넘지 않는다", np.length <= HS_WANT, `${np.length}`);
 }
+{
+  // ⚠ **선발 비중이 생성(45%)과 같아야 한다.** 예전엔 `% 3 === 2`라 67%가
+  // 선발이었고, 6시즌에 리그 선발이 57 → 112명(팀당 11명)이 됐다.
+  // 로테이션은 5~6인데 두 배라 각자 짧게 던지고 **OVR–ERA 상관이
+  // −0.61 → −0.19로 무너졌다.**
+  let sp = 0, pit = 0;
+  for (let t = 0; t < 50; t++) {
+    const roster = team({ SP: 6, RP: 4, C: 2, "1B": 2, "2B": 2, "3B": 2, SS: 2, LF: 2, CF: 2, RF: 2 });
+    const np = neededPositions(roster, HS_WANT, 8, 9, 0.45);
+    sp += np.filter((p) => p === "SP").length;
+    pit += np.filter(isPit).length;
+  }
+  const r = pit > 0 ? sp / pit : 0;
+  check("투수 중 선발 비중이 생성과 같다", r >= 0.35 && r <= 0.55, `${(r * 100).toFixed(1)}%`);
+}
 
 fs.rmSync(tmp, { recursive: true, force: true });
 console.log("");

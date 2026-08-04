@@ -292,6 +292,15 @@ export function neededPositions(
   minBatters = 9,
   /** 남은 칸의 투수 비율. **생성 규칙(`pitcherRatio` 0.45)과 같아야 한다** */
   pitcherRatio = 0.45,
+  /**
+   * 투수 중 **선발** 비중. 정본은 `tuning.rs`의 `SP_SHARE_OF_PITCHERS`(0.45)다.
+   *
+   * ⚠ 예전엔 `(pitchers + i) % 3 === 2 ? "RP" : "SP"`라 **67%가 선발**이었다.
+   * 생성은 45%인데 충원이 67%면 선발이 매년 불어난다 — 실측 6시즌에 리그
+   * 선발이 57 → 112명(팀당 11명)이 됐고, 로테이션은 5~6이라 명목상 선발이
+   * 각자 짧게 던지면서 **OVR–ERA 상관이 −0.61 → −0.19로 무너졌다.**
+   */
+  spShare = 0.45,
 ): string[] {
   const cnt: Record<string, number> = {};
   let pitchers = 0;
@@ -336,7 +345,9 @@ export function neededPositions(
   const thin = [...FIELD_POSITIONS].sort((a, b) => (cnt[a] ?? 0) - (cnt[b] ?? 0));
   for (let i = 0; i < batQuota; i++) push(thin[i % thin.length]);
   // 투수는 선발 우선 — 로테이션이 먼저 돌아야 경기가 성립한다
-  for (let i = 0; i < pitQuota; i++) push((pitchers + i) % 3 === 2 ? "RP" : "SP");
+  // 선발 비중대로 섞는다 — 앞에서부터 spShare만큼 선발
+  const spOf = (idx: number, n: number) => idx < Math.round(n * spShare) ? "SP" : "RP";
+  for (let i = 0; i < pitQuota; i++) push(spOf(i, pitQuota));
 
   // ── 남은 칸: 비율을 **여기서 직접 지킨다** ─────────────────────
   //
@@ -356,7 +367,7 @@ export function neededPositions(
   const restPit = Math.round(rest * pitcherRatio);
   let bi = 0;
   for (let i = 0; i < rest; i++) {
-    if (i < restPit) { push((pitchers + pitQuota + i) % 3 === 2 ? "RP" : "SP"); continue; }
+    if (i < restPit) { push(spOf(i, restPit)); continue; }
     // 백업 없는 자리 → 그것도 다 차면 제일 얇은 자리
     push(backup[bi] ?? thin[bi % thin.length]);
     bi++;

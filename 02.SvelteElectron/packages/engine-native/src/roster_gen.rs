@@ -374,7 +374,8 @@ pub fn generate_league_roster(p: GenerateLeagueRosterParams) -> GenerateLeagueRo
     let salary_rules = p.salary_rules.clone().unwrap_or_default();
     let roster = p.rules.roster_size.max(1);
     let pitcher_n = ((roster as f64) * p.rules.pitcher_ratio).round() as i32;
-    let sp_n = (pitcher_n as f64 * 0.45).round().max(3.0) as i32;
+    // 정본은 `tuning::SP_SHARE_OF_PITCHERS` — 충원 경로도 같은 값을 봐야 한다
+    let sp_n = (pitcher_n as f64 * crate::tuning::SP_SHARE_OF_PITCHERS).round().max(3.0) as i32;
     let batter_n = roster - pitcher_n;
 
     for team in &p.teams {

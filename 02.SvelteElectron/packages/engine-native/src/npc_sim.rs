@@ -1725,8 +1725,11 @@ pub fn generate_freshmen(params: GenerateFreshmenParams) -> Vec<NpcSaveState> {
                 // 하류에서 아무리 퍼도 안 찬다.**
                 let pit_ratio = if params.pitcher_ratio > 0.0 { params.pitcher_ratio } else { 0.45 };
                 if rng.next() < pit_ratio {
-                    // 선발 우선 — 로테이션이 먼저 돌아야 경기가 성립한다
-                    if rng.next() < 0.55 { "SP".to_string() } else { "RP".to_string() }
+                    // ⚠ **선발 비중은 생성과 같아야 한다.** 0.55로 뒀더니 선발이
+                    // 매년 불어나 6시즌에 리그 57 → 112명이 됐다(정본은 `tuning`)
+                    if rng.next() < crate::tuning::SP_SHARE_OF_PITCHERS {
+                        "SP".to_string()
+                    } else { "RP".to_string() }
                 }
                 else { POSITIONS[(rng.next() * POSITIONS.len() as f64) as usize % POSITIONS.len()].to_string() }
             }
@@ -3329,8 +3332,15 @@ mod freshmen_ratio_tests {
     }
 
     #[test]
-    fn 신입생_투수는_선발이_더_많다() {
-        // 로테이션이 먼저 돌아야 경기가 성립한다
+    fn 신입생_선발_비중이_생성과_같다() {
+        // ⚠ 처음엔 "선발이 더 많다"로 검사했다. 내가 폴백에 넣은 0.55를 그대로
+        // 전제로 삼은 것인데, **생성은 투수 14명 중 선발 6 · 불펜 8**이라
+        // 애초에 불펜이 더 많다(`SP_SHARE_OF_PITCHERS` 0.45).
+        //
+        // 충원이 생성보다 선발을 많이 뽑으면 매년 불어난다 — 실측 6시즌에
+        // 리그 선발이 57 → 112명(팀당 11명)이 됐고, 로테이션은 5~6이라
+        // 명목상 선발이 각자 짧게 던지면서 **OVR–ERA 상관이 −0.61 → −0.19**로
+        // 무너졌다. 검사는 **비중**을 봐야 한다.
         let out = generate_freshmen(GenerateFreshmenParams {
             school_id: "SCHOOL_T".into(), team_id: "TEAM_T".into(),
             annual_roster_size: 400,
@@ -3342,6 +3352,9 @@ mod freshmen_ratio_tests {
         });
         let sp = out.iter().filter(|n| n.position == "SP").count();
         let rp = out.iter().filter(|n| n.position == "RP").count();
-        assert!(sp > rp, "선발 {sp} vs 불펜 {rp} — 선발이 더 많아야 한다");
+        let share = sp as f64 / (sp + rp).max(1) as f64;
+        let want = crate::tuning::SP_SHARE_OF_PITCHERS;
+        assert!((share - want).abs() < 0.08,
+            "선발 비중 {share:.3} (선발 {sp} / 불펜 {rp}) — 생성은 {want}");
     }
 }
