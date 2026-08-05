@@ -216,7 +216,13 @@ export interface NpcContract {
 
 export interface EntityPlayerDetails {
   playerType: "pitcher" | "batter" | "twoWay";
-  handedness: "L" | "R";
+  /**
+   * ⚠ `"L" | "R"`로 좁혀 놨었는데 **주인공 타입은 `Handedness`(양손 `"S"` 포함)다.**
+   * 그래서 주인공을 로스터 행으로 만들 때마다 타입이 안 맞았다.
+   * 지금 Rust는 L·R만 만들지만 화면(`game.ts`)은 이미 "양투/양타"를 그린다 —
+   * 좁은 쪽이 사실과 달랐다.
+   */
+  handedness: import("../types/save").Handedness;
   position: string;
   jerseyNumber: number;
   pitching: import("../types/save").PitchingAttributes;

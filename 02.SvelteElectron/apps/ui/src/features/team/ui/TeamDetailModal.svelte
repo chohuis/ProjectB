@@ -3,9 +3,18 @@
   import { masterStore } from "../../../shared/stores/master";
   import { seasonStore } from "../../../shared/stores/season";
   import { gameStore } from "../../../shared/stores/game";
-  import type { EntityRow, EntityPlayerDetails, EntityManagerDetails } from "../../../shared/stores/master";
+  // `EntityDetails`는 파일 곳곳에서 캐스팅에 쓰는데 **import가 빠져 있었다** —
+  // 이름이 안 풀려 svelte-check 오류 7건이 조용히 나고 있었다
+  import type {
+    EntityRow, EntityDetails, EntityPlayerDetails, EntityManagerDetails,
+  } from "../../../shared/stores/master";
   import PlayerDetailModal from "../../player/ui/PlayerDetailModal.svelte";
+  import TeamMark from "./TeamMark.svelte";
   import { rotationSizeForLeague } from "../../../shared/utils/rosterEngine";
+  import {
+    growthRoom, growthGrade, gradeTone, scoutedGrade, foreignBadge,
+  } from "../../../shared/utils/playerTraits";
+  import { clubKeyOfTeam } from "../../../shared/utils/ids";
 
   export let teamId: string = "";
   export let open: boolean = false;
@@ -114,6 +123,33 @@
   }
   function playerType(row: EntityRow): "pitcher" | "batter" | "twoWay" {
     return (row.details as EntityDetails)?.player?.playerType ?? "pitcher";
+  }
+
+  // ── 성장 여지 · 국적 (U9-b) ───────────────────────────────────
+  //
+  // 판정 규칙은 전부 `playerTraits`가 정본이다 — 선수 상세와 같은 등급이
+  // 나와야 한다. 여기서 임계값을 다시 적으면 두 화면이 다른 말을 한다.
+
+  /** 내 구단(2군 포함)이면 정확한 등급을 본다 */
+  $: sameClub = clubKeyOfTeam(teamId) === clubKeyOfTeam($gameStore.protagonist.teamId);
+
+  $: npcById = new Map(($gameStore.npcs ?? []).map((n) => [n.npcId, n]));
+
+  function growthOf(row: EntityRow) {
+    if (row.role !== "player") return null;
+    const isMe = row.id === $gameStore.protagonist.id;
+    const d = (row.details as EntityDetails)?.player;
+    const pot = isMe
+      ? $gameStore.protagonist.potentialHidden
+      : npcById.get(row.id)?.potentialHidden ?? d?.potentialHidden;
+    const grade = growthGrade(growthRoom(pot, playerOvr(row) || undefined));
+    const s = scoutedGrade(grade, row.id, isMe || sameClub);
+    return s ? { ...s, tone: gradeTone(grade) } : null;
+  }
+
+  function natOf(row: EntityRow) {
+    if (row.role !== "player" || row.id === $gameStore.protagonist.id) return null;
+    return foreignBadge(team?.leagueId, npcById.get(row.id)?.nationality);
   }
 
   // ── 선발라인업 ────────────────────────────────────────────────
@@ -265,12 +301,8 @@
       <!-- 헤더 -->
       <header class="modal-header">
         <div class="title-row">
-          <div class="team-colors-swatch">
-            {#if team.colors}
-              <span class="swatch" style="background:{team.colors[0]};"></span>
-              <span class="swatch" style="background:{team.colors[1]};"></span>
-            {/if}
-          </div>
+          <!-- 마크가 팀 색을 이미 담는다 — 색 조각을 따로 두면 같은 말을 두 번 한다 -->
+          <TeamMark teamId={team.id} size={30} />
           <h2>{team.name}</h2>
           <span class="league-badge">{leagueLabel(team.leagueId)}</span>
           {#if team.tier}<span class="tier-badge">{team.tier}</span>{/if}
@@ -448,7 +480,11 @@
             <div class="roster-wrap">
               <table class="stbl roster-table">
                 <thead>
-                  <tr><th>#</th><th>이름</th><th>역할/포지션</th><th>나이</th><th>OVR</th></tr>
+                  <tr>
+                    <th>#</th><th>이름</th><th>역할/포지션</th><th>나이</th><th>OVR</th>
+                    <!-- 남의 팀은 관측이 흐리다 — 헤더에 그렇게 적어 둔다 -->
+                    <th class="gcol">성장{#if !sameClub}<span class="ghint">관측</span>{/if}</th>
+                  </tr>
                 </thead>
                 <tbody>
                   {#each allMembers.filter(e => e.role !== "owner") as row}
@@ -463,6 +499,7 @@
                       <td class="name-cell">
                         {row.name}
                         {#if row.id === $gameStore.protagonist.id}<span class="hero-tag">나</span>{/if}
+                        {#if natOf(row)}<span class="nat-tag">{natOf(row)?.label}</span>{/if}
                       </td>
                       <td>
                         {#if row.role === "player"}{playerPos(row)}
@@ -472,6 +509,14 @@
                       </td>
                       <td>{row.age}</td>
                       <td class="ovr-cell">{row.role === "player" ? playerOvr(row) : "-"}</td>
+                      <td class="gcol">
+                        {#if growthOf(row)}
+                          {@const g = growthOf(row)}
+                          <span class="gval {g?.tone}" class:fuzzy={!g?.exact}>{g?.label}</span>
+                        {:else}
+                          <span class="gnone">-</span>
+                        {/if}
+                      </td>
                     </tr>
                   {/each}
                 </tbody>
@@ -858,6 +903,27 @@
     color: #f0e060; border: 1px solid rgba(240,224,96,0.4);
     border-radius: 3px; padding: 0 4px; margin-left: 4px; vertical-align: middle;
   }
+
+  /* 국적 — 외국인 슬롯 보유자만 붙는다 */
+  .nat-tag {
+    font-size: 9px; background: #1a1230; color: #b49ae8;
+    border: 1px solid #2e2250; border-radius: 3px;
+    padding: 0 4px; margin-left: 4px; vertical-align: middle;
+  }
+
+  /* 성장 여지 — "잠재력"이 아니다. 천장까지 남은 거리다 */
+  .gcol { width: 62px; }
+  .ghint {
+    display: block; font-size: 8px; font-weight: 400;
+    color: #6a86ac; letter-spacing: 0;
+  }
+  .gval { font-weight: 800; font-size: 12px; }
+  .gval.good { color: #68de92; }
+  .gval.mid  { color: #90b8e8; }
+  .gval.low  { color: #7d8ba0; }
+  /* 범위(B~D)는 글자가 길다 */
+  .gval.fuzzy { font-size: 10.5px; font-weight: 700; letter-spacing: -0.02em; }
+  .gnone { color: #48607e; }
 
   /* 선발라인업 */
   .mgr-banner {

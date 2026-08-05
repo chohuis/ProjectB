@@ -12,6 +12,9 @@
     computeAwards, loadAwardRules, type AwardRules,
   } from "../../../shared/usecases/seasonAwards";
   import { leagueStatsOf } from "../../../shared/utils/season-helpers";
+  import TeamMark from "../../team/ui/TeamMark.svelte";
+  import { qualificationOf } from "../../../shared/utils/leaderboard";
+  import { rispSplit, rispTone } from "../../../shared/utils/playerTraits";
   import type { PitcherSeasonStats, BatterSeasonStats, CareerAward, CareerGameLogEntry } from "../../../shared/types/save";
   import type { PitcherGameLine } from "../../../shared/types/season";
 
@@ -173,6 +176,72 @@
   $: mySeasonStats = $seasonStore.stats[p.id] ?? null;
   $: myPitchingStats = mySeasonStats?.type === "pitcher" ? (mySeasonStats as PitcherSeasonStats) : null;
   $: myBattingStats  = mySeasonStats?.type === "batter"  ? (mySeasonStats as BatterSeasonStats)  : null;
+
+  // ── 리그 대비 · 득점권 (U9-c) ─────────────────────────────────
+  //
+  // **혼자만의 숫자로는 잘한 시즌인지 모른다.** ERA 4.20이 좋은 해인지는
+  // 그 리그가 어땠는지에 달렸다 — 고교와 KBL은 득점 환경이 다르다.
+  //
+  // 규정 미달 선수를 평균에 넣으면 리그가 나빠 보인다(한 경기 5실점 한 투수가
+  // ERA 45로 들어온다). `leaderboard`가 쓰는 것과 같은 기준으로 거른다.
+  $: leagueComparison = (() => {
+    const all = Object.values(leagueStatsOf($seasonStore, $seasonStore.leagueId));
+    const games = $seasonStore.schedule.filter((e) => !e.isFriendly && !!e.result).length;
+    const q = qualificationOf(Math.max(1, Math.round(games / 2)));
+
+    if (myPitchingStats) {
+      const peers = all.filter(
+        (s): s is PitcherSeasonStats => s.type === "pitcher" && (s.ip ?? 0) >= q.ip,
+      );
+      if (peers.length < 3) return null;
+      const er = peers.reduce((a, s) => a + (s.er ?? 0), 0);
+      const ip = peers.reduce((a, s) => a + (s.ip ?? 0), 0);
+      if (ip <= 0) return null;
+      const lgEra = (er * 9) / ip;
+      const rank = peers.filter((s) => (s.era ?? 99) < myPitchingStats!.era).length + 1;
+      return {
+        kind: "pitcher" as const, label: "ERA",
+        mine: myPitchingStats.era.toFixed(2),
+        league: lgEra.toFixed(2),
+        // 투수는 낮을수록 좋다
+        better: myPitchingStats.era < lgEra,
+        rank, of: peers.length,
+      };
+    }
+    if (myBattingStats) {
+      const peers = all.filter(
+        (s): s is BatterSeasonStats => s.type === "batter" && (s.pa ?? 0) >= q.pa,
+      );
+      if (peers.length < 3) return null;
+      const h = peers.reduce((a, s) => a + (s.h ?? 0), 0);
+      const ab = peers.reduce((a, s) => a + (s.ab ?? 0), 0);
+      if (ab <= 0) return null;
+      const lgAvg = h / ab;
+      const rank = peers.filter((s) => (s.avg ?? 0) > myBattingStats!.avg).length + 1;
+      return {
+        kind: "batter" as const, label: "타율",
+        mine: pct(myBattingStats.avg),
+        league: pct(lgAvg),
+        better: myBattingStats.avg > lgAvg,
+        rank, of: peers.length,
+      };
+    }
+    return null;
+  })();
+
+  /** 득점권 — 엔진이 재는데 시즌 결산에도 안 나오고 있었다 */
+  $: myRisp = (() => {
+    const st = mySeasonStats as (typeof mySeasonStats & { rispAb?: number; rispH?: number }) | null;
+    if (!st) return null;
+    const kind = st.type === "pitcher" ? "pitcher" as const : "batter" as const;
+    const base = kind === "batter"
+      ? (myBattingStats?.avg ?? null)
+      : (myPitchingStats && myPitchingStats.ip > 0
+          ? myPitchingStats.h / (myPitchingStats.ip * 3 + myPitchingStats.h)
+          : null);
+    const s = rispSplit(st, kind, base);
+    return s ? { ...s, kind, tone: rispTone(s.delta, kind) } : null;
+  })();
 
   // ── 개인 경기별 기록 (공식경기만) ────────────────────────────────
   $: protagonistGames = $seasonStore.schedule
@@ -354,7 +423,10 @@
                       <span class="badge badge-ps">PS</span>
                     {/if}
                   </td>
-                  <td class="team-name">{tName(s.teamId)}</td>
+                  <td class="team-name">
+                    <TeamMark teamId={s.teamId} size={16} />
+                    <span>{tName(s.teamId)}</span>
+                  </td>
                   <td>{s.wins}</td>
                   <td>{s.losses}</td>
                   <td>{s.draws ?? 0}</td>
@@ -507,6 +579,33 @@
                 <div class="stat-item"><span>홈런</span><strong>{myBattingStats.hr}</strong></div>
                 <div class="stat-item"><span>타점</span><strong>{myBattingStats.rbi}</strong></div>
                 <div class="stat-item"><span>OPS</span><strong>{myBattingStats.ops.toFixed(3)}</strong></div>
+              </div>
+            {/if}
+
+            <!--
+              혼자만의 숫자로는 잘한 시즌인지 모른다. ERA 4.20이 좋은 해인지는
+              그 리그 득점 환경에 달렸다 — 고교와 KBL이 다르다.
+            -->
+            {#if leagueComparison}
+              <div class="lg-compare">
+                <span class="lg-lbl">리그 대비 {leagueComparison.label}</span>
+                <b class="lg-mine" class:good={leagueComparison.better} class:bad={!leagueComparison.better}>
+                  {leagueComparison.mine}
+                </b>
+                <span class="lg-vs">vs 리그 {leagueComparison.league}</span>
+                <span class="lg-rank">규정 {leagueComparison.of}명 중 {leagueComparison.rank}위</span>
+              </div>
+            {/if}
+
+            {#if myRisp}
+              <div class="lg-compare">
+                <span class="lg-lbl">{myRisp.label}</span>
+                <b class="lg-mine {myRisp.tone}">{myRisp.text}</b>
+                {#if myRisp.delta != null && myRisp.tone !== "flat"}
+                  <span class="lg-vs">
+                    시즌 대비 {myRisp.delta > 0 ? "+" : ""}{myRisp.delta.toFixed(3).replace(/^(-?)0/, "$1")}
+                  </span>
+                {/if}
               </div>
             {/if}
           </section>
@@ -904,6 +1003,19 @@
   .stat-item span   { font-size: 10px; color: #6a8ab8; }
   .stat-item strong { font-size: 15px; color: #d8e8ff; }
 
+  /* 리그 대비 · 득점권 — 스탯 격자 아래 한 줄씩 */
+  .lg-compare {
+    display: flex; align-items: baseline; gap: 9px; flex-wrap: wrap;
+    margin-top: 9px; padding-top: 9px; border-top: 1px solid #1a2c4c;
+  }
+  .lg-lbl  { font-size: 11px; color: #6a8ab8; }
+  .lg-mine { font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; color: #d8e8ff; }
+  .lg-mine.good { color: #68de92; }
+  .lg-mine.bad  { color: #f08080; }
+  .lg-mine.flat { color: #d8e8ff; }
+  .lg-vs   { font-size: 11px; color: #7e9cc4; font-variant-numeric: tabular-nums; }
+  .lg-rank { font-size: 11px; color: #6a8ab8; margin-left: auto; }
+
   .era-good { color: #60e890 !important; }
   .era-bad  { color: #f07060 !important; }
 
@@ -987,7 +1099,10 @@
     border-bottom: 1px solid #111d34;
   }
 
-  .team-name { text-align: left; color: #b8ccec; }
+  .team-name {
+    text-align: left; color: #b8ccec;
+    display: flex; align-items: center; gap: 7px;
+  }
   .rank-cell { white-space: nowrap; }
 
   tr.my-row td { color: #f0e060; font-weight: 700; background: rgba(60, 80, 20, 0.25); }
