@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { t } from "../../shared/i18n";
   import { seasonStore } from "../../shared/stores/season";
   import { gameStore } from "../../shared/stores/game";
   import { masterStore } from "../../shared/stores/master";
@@ -316,18 +315,17 @@
   const WEEK_ITEM_LIMIT = 4;
 </script>
 
+<!-- 제목("일정")을 뺐다 — 사이드바가 이미 그 이름이다 -->
 <section class="page">
-  <h2>{$t("page.schedule")}</h2>
-
-  <article class="card board">
+  <div class="board">
 
     <!-- ── 상단: 뷰 탭 + 네비게이션 ── -->
     <header class="top-row">
-      <div class="tabs">
-        <button class:active={view === "season"} on:click={() => (view = "season")}>시즌</button>
-        <button class:active={view === "year"}   on:click={() => (view = "year")}>연간</button>
-        <button class:active={view === "month"}  on:click={() => (view = "month")}>월간</button>
-        <button class:active={view === "week"}   on:click={() => (view = "week")}>주간</button>
+      <div class="u-subtabs">
+        <button class:on={view === "season"} on:click={() => (view = "season")}>시즌</button>
+        <button class:on={view === "year"}   on:click={() => (view = "year")}>연간</button>
+        <button class:on={view === "month"}  on:click={() => (view = "month")}>월간</button>
+        <button class:on={view === "week"}   on:click={() => (view = "week")}>주간</button>
       </div>
       {#if view !== "season"}
         <div class="nav-tools">
@@ -569,90 +567,61 @@
       </ul>
     </aside>
 
-  </article>
+  </div>
 </section>
 
 <style>
-  .page {
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
-    gap: 12px;
-    height: 100%;
-    min-height: 0;
-    overflow: hidden;
-  }
-  h2, h3, p { margin: 0; }
-  h2 { font-size: 22px; }
+  .page { display: grid; grid-template-rows: minmax(0, 1fr); height: 100%; min-height: 0; overflow: hidden; }
+  h3, p { margin: 0; }
 
-  .card {
-    background: #161f33;
-    border: 1px solid #2d3956;
-    border-radius: 10px;
-    padding: 12px;
-    min-height: 0;
-    overflow: hidden;
-  }
-
-  /* ── 보드 레이아웃: 상단/필터/콘텐츠/상세 ── */
   .board {
     display: grid;
     grid-template-rows: auto auto minmax(0, 1fr) auto;
     gap: 8px;
+    min-height: 0;
+    overflow: hidden;
   }
 
-  /* ── 탭 + 네비 ── */
-  .top-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: nowrap;
-  }
-  .tabs, .filters, .nav-tools {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    flex-shrink: 0;
-  }
-  .tabs button, .filters button, .nav-tools button {
-    border: 1px solid #355182;
-    background: #1f2f4f;
-    color: #dbe8ff;
-    border-radius: 6px;
-    padding: 4px 8px;
-    font-size: 12px;
+  /* -- 상단 -- */
+  .top-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .filters, .nav-tools { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+
+  .filters button, .nav-tools button {
+    border: 1px solid var(--line);
+    background: none;
+    color: var(--ink-mid);
+    border-radius: var(--radius);
+    padding: 4px 10px;
+    font-size: 11.5px;
     cursor: pointer;
     white-space: nowrap;
   }
-  .tabs button.active, .filters button.active {
-    background: #3262b0;
-    border-color: #6da1f7;
+  .filters button:hover, .nav-tools button:hover { border-color: var(--t-dark); color: var(--t-dark); }
+  .filters button.active {
+    background: var(--t-dark); border-color: var(--t-dark);
+    color: var(--ink-on-dark); font-weight: 700;
   }
+  .nav-tools .today { border-color: var(--t-accent); color: var(--t-accent); font-weight: 700; }
   .nav-label {
-    color: #dbe8ff;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 0 2px;
-    white-space: nowrap;
+    color: var(--ink); font-size: 13px; font-weight: 800;
+    padding: 0 6px; white-space: nowrap;
+    font-variant-numeric: tabular-nums;
   }
-  .nav-tools .today {
-    background: #295f84;
-    border-color: #4da3df;
-  }
-  .filter-count {
-    font-size: 11px;
-    color: #5a7aaa;
-    margin-left: 4px;
-  }
+  .filter-count { font-size: 10.5px; color: var(--ink-mute); margin-left: 4px; }
 
-  /* ── 콘텐츠 공통 ── */
-  .content {
-    min-height: 0;
-    overflow: hidden;
-    position: relative;
-  }
+  .content { min-height: 0; overflow: hidden; position: relative; }
 
-  /* ── 연간 뷰 ── */
+  /* ══ 일정 종류의 색 ══
+     넷에 다 색을 주면 아무것도 안 도드라진다. **경기만 팀 색**이고
+     나머지는 중요도 순으로 명도가 내려간다.
+     친선은 공식 기록에 안 들어가므로 가장 약하다 */
+  .day-items .game,          .week-day li.game          { background: var(--t-dark);      color: var(--ink-on-dark); }
+  .day-items .game.friendly, .week-day li.game.friendly { background: var(--panel-sunk);  color: var(--ink-mid); }
+  .day-items .training,      .week-day li.training      { background: var(--ink-mid);     color: var(--ink-on-dark); }
+  .day-items .event,         .week-day li.event         { background: var(--warn);        color: var(--ink-on-dark); }
+  .day-items .rest,          .week-day li.rest          { background: var(--line-strong); color: var(--ink-mid); }
+
+  /* -- 연간 -- */
   .year-grid {
     height: 100%;
     display: grid;
@@ -662,389 +631,282 @@
     overflow: hidden;
   }
   .month-card {
-    border: 1px solid #2f4b78;
-    background: #162847;
-    border-radius: 8px;
-    padding: 8px 10px;
+    background: var(--panel);
+    border: 0;
+    border-left: 3px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px -1px rgba(15, 29, 61, 0.14);
+    padding: 9px 11px;
     text-align: left;
-    color: #e4eeff;
-    display: grid;
-    gap: 4px;
-    cursor: pointer;
-    overflow: hidden;
+    color: var(--ink);
+    display: grid; gap: 4px;
+    cursor: pointer; overflow: hidden;
+    align-content: start;
   }
-  .month-card:hover { background: #1d3357; }
-  .month-card strong { font-size: 13px; }
-  .month-card p { color: #9fb8df; font-size: 11px; }
+  .month-card:hover { border-left-color: var(--t-accent); }
+  .month-card strong { font-size: 13px; font-weight: 800; }
+  .month-card p { color: var(--ink-mute); font-size: 11px; }
+
   .chips { display: flex; gap: 3px; flex-wrap: wrap; }
   .chip {
-    font-size: 10px;
-    border: 1px solid #3d5f96;
-    border-radius: 999px;
-    padding: 1px 5px;
+    font-size: 9.5px; font-weight: 700;
+    border-radius: 999px; padding: 1px 7px;
+    color: var(--ink-on-dark);
   }
-  .chip.game     { background: #2b3f69; }
-  .chip.training { background: #264f57; }
-  .chip.event    { background: #5b4630; }
-  .chip.rest     { background: #3a4456; }
+  .chip.game     { background: var(--t-dark); }
+  .chip.training { background: var(--ink-mid); }
+  .chip.event    { background: var(--warn); }
+  .chip.rest     { background: var(--line-strong); color: var(--ink-mid); }
 
-  /* ── 월간 뷰 ── */
-  .month-view {
-    height: 100%;
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
-    gap: 4px;
-    user-select: none;
-  }
-  .week-head {
-    display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
-    gap: 4px;
-  }
+  /* -- 월간 -- */
+  .month-view { height: 100%; display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 4px; user-select: none; }
+  .week-head { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
   .week-head span {
-    text-align: center;
-    font-size: 11px;
-    color: #a8bcde;
+    text-align: center; font-size: 10px; font-weight: 800;
+    letter-spacing: 0.06em; color: var(--ink-mute);
+    padding-bottom: 4px; border-bottom: 2px solid var(--t-dark);
   }
   .month-grid {
     display: grid;
     grid-template-columns: repeat(7, minmax(0, 1fr));
     grid-template-rows: repeat(6, minmax(0, 1fr));
-    gap: 4px;
+    gap: 3px;
     overflow: hidden;
   }
   .day-cell {
-    border: 1px solid #2a4068;
-    border-radius: 6px;
-    background: #13233f;
-    color: #e2edff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--panel);
+    color: var(--ink);
     padding: 4px;
     text-align: left;
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
-    cursor: pointer;
-    overflow: hidden;
+    display: grid; grid-template-rows: auto minmax(0, 1fr);
+    cursor: pointer; overflow: hidden;
   }
-  .day-cell:hover { background: #182c4a; }
-  .day-cell.selected { border-color: #7db1ff; background: #1a3156; }
-  .day-cell.outside  { opacity: 0.35; }
-  .day-num { font-size: 11px; color: #a0b8d8; }
+  .day-cell:hover { background: var(--panel-sunk); }
+  .day-cell.selected { border-color: var(--t-dark); box-shadow: inset 0 0 0 1px var(--t-dark); }
+  .day-cell.outside  { opacity: 0.3; }
+  .day-num { font-size: 10.5px; color: var(--ink-mute); font-variant-numeric: tabular-nums; }
   .day-items { display: flex; flex-direction: column; gap: 1px; overflow: hidden; }
   .day-items p {
-    margin: 0;
-    font-size: 10px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    border-radius: 3px;
-    padding: 1px 3px;
-    line-height: 1.4;
+    margin: 0; font-size: 9.5px; font-weight: 600;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    border-radius: 2px; padding: 1px 4px; line-height: 1.45;
   }
-  .day-items .game          { background: #2f4d85; }
-  .day-items .game.friendly { background: #1e5560; }
-  .day-items .training      { background: #2b6672; }
-  .day-items .event         { background: #75603e; }
-  .day-items .rest          { background: #44506b; }
-  .day-items .more          { color: #8aa8cc; background: transparent; padding: 0; font-size: 9px; }
+  .day-items .more { color: var(--ink-mute); background: transparent; padding: 0; font-size: 9px; font-weight: 400; }
 
-  /* ── 주간 뷰 ── */
-  .week-list {
-    height: 100%;
-    display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
-    gap: 6px;
-    user-select: none;
-  }
+  /* -- 주간 -- */
+  .week-list { height: 100%; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; user-select: none; }
   .week-day {
-    border: 1px solid #2a4069;
-    border-radius: 8px;
-    background: #13243f;
-    padding: 6px;
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
-    gap: 4px;
-    min-height: 0;
-    overflow: hidden;
+    background: var(--panel);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px -1px rgba(15, 29, 61, 0.14);
+    padding: 8px;
+    display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 5px;
+    min-height: 0; overflow: hidden;
   }
-  .week-day.selected { border-color: #71a5f8; }
+  .week-day.selected { box-shadow: inset 0 0 0 2px var(--t-dark); }
   .day-title {
-    border: 0;
-    background: transparent;
-    color: #e8f0ff;
-    text-align: left;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0;
-    cursor: pointer;
-    font-size: 12px;
+    border: 0; background: transparent;
+    color: var(--ink); text-align: left;
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 0 0 5px; cursor: pointer; font-size: 12px;
+    border-bottom: 1px solid var(--line);
   }
-  .day-title strong { font-size: 13px; }
-  .day-title span   { font-size: 11px; color: #9fb6db; }
+  .day-title strong { font-size: 13px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .day-title span   { font-size: 10.5px; color: var(--ink-mute); }
   .week-day ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    min-height: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-direction: column; gap: 3px;
+    min-height: 0; overflow-y: auto; overflow-x: hidden;
   }
   .week-day li {
-    border-radius: 5px;
-    padding: 3px 5px;
-    border: 1px solid transparent;
-    font-size: 11px;
-    flex-shrink: 0;
+    border-radius: var(--radius); padding: 4px 6px;
+    font-size: 10.5px; font-weight: 600; flex-shrink: 0;
   }
-  .week-day li p { margin: 0; color: #e4edff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .week-day li.game          { border-color: #4f78be; background: #264277; }
-  .week-day li.game.friendly { border-color: #3d8890; background: #1a4e58; }
-  .week-day li.training      { border-color: #3e8b93; background: #1f525c; }
-  .week-day li.event         { border-color: #9b7a48; background: #5e4a30; }
-  .week-day li.rest          { border-color: #606d87; background: #3b4559; }
-  .week-day li.empty         { color: #5a7aa8; font-size: 11px; border: none; background: none; }
+  .week-day li p { margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .week-day li.empty { color: var(--ink-mute); font-size: 11px; background: none; font-weight: 400; }
   .overflow-badge {
-    color: #7a9cc8;
-    font-size: 10px;
-    padding: 2px 4px;
-    background: #1a2a40;
-    border-radius: 4px;
-    text-align: center;
-    flex-shrink: 0;
+    color: var(--ink-mute); font-size: 9.5px;
+    padding: 2px 4px; background: var(--panel-sunk);
+    border-radius: 2px; text-align: center; flex-shrink: 0;
   }
 
-  /* ── 시즌 뷰 ── */
-  .season-view {
-    height: 100%;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-  .no-season { color: #8aa2ca; font-size: 14px; padding: 16px 0; }
+  /* -- 시즌 -- */
+  .season-view { height: 100%; overflow: hidden; display: flex; flex-direction: column; }
+  .no-season { color: var(--ink-mute); font-size: 13px; padding: 16px 0; }
   .season-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 200px;
-    gap: 10px;
-    height: 100%;
-    min-height: 0;
+    display: grid; grid-template-columns: minmax(0, 1fr) 210px;
+    gap: 10px; height: 100%; min-height: 0;
   }
   .week-timeline {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    overflow-y: auto;
-    padding-right: 4px;
-    cursor: grab;
-    scroll-behavior: smooth;
+    display: flex; flex-direction: column; gap: 2px;
+    overflow-y: auto; padding-right: 4px;
+    cursor: grab; scroll-behavior: smooth;
   }
   .week-timeline:active { cursor: grabbing; }
-  .week-row {
-    display: grid;
-    grid-template-columns: 126px minmax(0, 1fr);
-    align-items: start;
-    gap: 6px;
-    border: 1px solid #2a4068;
-    border-radius: 6px;
-    background: #13243f;
-    padding: 5px 8px;
-    font-size: 11px;
-    cursor: pointer;
-    flex-shrink: 0;
-    transition: background 0.1s;
-  }
-  .week-row:hover    { background: #182c4a; }
-  .week-row.current  { border-color: #6da1f7; background: #1a3156; }
-  .week-row.past     { opacity: 0.5; }
-  .week-row.postseason-game { border-color: #c9960f; background: #2a1e08; }
-  .week-row.postseason-game.current { border-color: #f5d050; background: #3a2a0a; }
-  /* 시즌 뷰 - 좌측 (주차 + 페이즈) */
-  .week-left {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding-top: 2px;
-    flex-shrink: 0;
-  }
-  .week-num { color: #9fb6db; font-weight: 600; font-size: 10px; white-space: nowrap; }
-  .phase-tag {
-    font-size: 9px;
-    border-radius: 999px;
-    padding: 1px 6px;
-    text-align: center;
-    border: 1px solid;
-    white-space: nowrap;
-  }
-  .phase-tag.pre  { border-color: #5b7ac8; color: #b8d0f7; background: #1e3560; }
-  .phase-tag.reg  { border-color: #4c8c5e; color: #a8e8c0; background: #163828; }
-  .phase-tag.post { border-color: #8a6530; color: #ffd8a0; background: #3a2810; }
-  .phase-tag.off  { border-color: #5c6880; color: #c0ccdf; background: #2a3245; }
 
-  /* 시즌 뷰 - 우측 (경기 행들) */
-  .week-games {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    min-width: 0;
+  .week-row {
+    display: grid; grid-template-columns: 132px minmax(0, 1fr);
+    align-items: start; gap: 8px;
+    background: var(--panel);
+    border: 0;
+    border-left: 3px solid transparent;
+    border-bottom: 1px solid var(--line);
+    padding: 6px 9px;
+    font-size: 11px;
+    cursor: pointer; flex-shrink: 0;
   }
+  .week-row:hover   { background: var(--panel-sunk); }
+  .week-row.current { border-left-color: var(--t-accent); background: var(--panel-sunk); }
+  .week-row.past    { opacity: 0.45; }
+  /* 포스트시즌 주간은 다른 주와 무게가 다르다 */
+  .week-row.postseason-game { border-left-color: var(--warn); }
+
+  .week-left { display: flex; align-items: center; gap: 6px; padding-top: 2px; flex-shrink: 0; }
+  .week-num {
+    color: var(--ink-mute); font-weight: 800; font-size: 10px;
+    white-space: nowrap; font-variant-numeric: tabular-nums;
+  }
+  .phase-tag {
+    font-size: 9px; font-weight: 800;
+    border-radius: 999px; padding: 1px 7px;
+    text-align: center; white-space: nowrap;
+    color: var(--ink-on-dark);
+  }
+  .phase-tag.pre  { background: var(--line-strong); color: var(--ink-mid); }
+  .phase-tag.reg  { background: var(--t-dark); color: var(--t-gold); }
+  .phase-tag.post { background: var(--warn); }
+  .phase-tag.off  { background: var(--panel-sunk); color: var(--ink-mute); }
+
+  .week-games { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
   .game-row {
-    display: grid;
-    grid-template-columns: 40px minmax(0, 1fr) 64px;
-    align-items: center;
-    gap: 6px;
-    min-width: 0;
+    display: grid; grid-template-columns: 40px minmax(0, 1fr) 64px;
+    align-items: center; gap: 7px; min-width: 0;
   }
   .game-row.friendly {
-    grid-template-columns: 30px 40px minmax(0, 1fr) 64px;
-    padding: 2px 4px;
-    border-radius: 4px;
-    background: rgba(30, 80, 90, 0.35);
-    border: 1px solid #2a5860;
+    grid-template-columns: 34px 40px minmax(0, 1fr) 64px;
+    padding: 2px 5px;
+    border-radius: var(--radius);
+    background: var(--panel-sunk);
   }
   .game-loc {
-    font-size: 9px;
-    border: 1px solid #3d5f96;
-    border-radius: 999px;
-    padding: 1px 5px;
+    font-size: 9px; font-weight: 700;
+    border-radius: 999px; padding: 1px 6px;
     text-align: center;
-    color: #b8d0f7;
-  }
-  .game-row.friendly .game-loc {
-    border-color: #3d7880;
-    color: #a0d8d8;
+    background: var(--panel-sunk); color: var(--ink-mute);
   }
   .friendly-tag {
-    font-size: 9px;
-    border: 1px solid #3d8890;
-    border-radius: 999px;
-    padding: 1px 5px;
-    text-align: center;
-    color: #80d8d8;
-    background: #163840;
-    white-space: nowrap;
+    font-size: 9px; font-weight: 700;
+    border-radius: 999px; padding: 1px 6px;
+    text-align: center; white-space: nowrap;
+    background: var(--line-strong); color: var(--ink-mid);
   }
   .opponent {
-    color: #e4edff;
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    color: var(--ink); font-weight: 600;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  .game-row.friendly .opponent { color: #b0d8d8; font-weight: 400; }
-  .no-game { color: #607898; font-size: 10px; }
-  .status { text-align: right; font-size: 11px; color: #a8bfdf; white-space: nowrap; }
-  .status.win  { color: #68de92; font-weight: 700; }
-  .status.lose { color: #ff8a8a; font-weight: 700; }
+  /* 친선은 기록에 안 남는다 — 눈에서도 한 단계 내린다 */
+  .game-row.friendly .opponent { color: var(--ink-mute); font-weight: 500; }
+  .no-game { color: var(--ink-mute); font-size: 10px; }
 
-  /* 순위표 */
-  .standings-panel {
-    border: 1px solid #2d3a5a;
-    border-radius: 8px;
-    background: #111d34;
-    padding: 8px;
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
-    gap: 6px;
-    min-height: 0;
-    overflow: hidden;
+  .status {
+    text-align: right; font-size: 11px; color: var(--ink-mute);
+    white-space: nowrap; font-variant-numeric: tabular-nums;
   }
-  .standings-panel h4 { margin: 0; font-size: 12px; color: #c8d8f0; }
-  .no-standings { color: #607898; font-size: 11px; }
+  .status.win  { color: var(--ok);  font-weight: 800; }
+  .status.lose { color: var(--bad); font-weight: 800; }
+
+  /* -- 순위표 (옆단) -- */
+  .standings-panel {
+    background: var(--panel);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px -1px rgba(15, 29, 61, 0.14);
+    padding: 10px;
+    display: grid; grid-template-rows: auto minmax(0, 1fr);
+    gap: 6px; min-height: 0; overflow: hidden;
+  }
+  .standings-panel h4 {
+    margin: 0;
+    font-size: 10px; font-weight: 800; letter-spacing: 0.12em;
+    color: var(--ink-mute); text-transform: uppercase;
+  }
+  .no-standings { color: var(--ink-mute); font-size: 11px; }
   .standings-scroll { overflow-y: auto; height: 100%; }
-  .standings-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+  .standings-table {
+    width: 100%; border-collapse: collapse; font-size: 11px;
+    font-variant-numeric: tabular-nums;
+  }
   .standings-table thead th {
-    color: #8aa4cc;
-    padding: 3px;
-    text-align: center;
-    border-bottom: 1px solid #2a3f60;
-    position: sticky;
-    top: 0;
-    background: #111d34;
-    font-size: 10px;
+    color: var(--ink-mute); padding: 4px 3px; text-align: center;
+    border-bottom: 2px solid var(--t-dark);
+    position: sticky; top: 0; background: var(--panel);
+    font-size: 9.5px; font-weight: 800;
   }
   .standings-table tbody td {
-    padding: 4px 3px;
-    text-align: center;
-    color: #c0d4ef;
-    border-bottom: 1px solid #1e2e48;
+    padding: 5px 3px; text-align: center;
+    color: var(--ink-mid);
+    border-bottom: 1px solid var(--line);
   }
   .standings-table .team-name {
-    text-align: left;
-    max-width: 70px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    text-align: left; max-width: 78px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
-  .standings-table tr.my-team td { color: #f0e060; font-weight: 600; }
+  .standings-table tr.my-team td { background: var(--t-dark); color: var(--t-gold); font-weight: 700; }
 
-  /* ── 상세 박스 ── */
+  /* -- 상세 -- */
   .detail-box {
-    border: 1px solid #2d456f;
-    border-radius: 8px;
-    background: #13223d;
-    padding: 8px 10px;
+    background: var(--panel);
+    border-left: 3px solid var(--t-dark);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px -1px rgba(15, 29, 61, 0.14);
+    padding: 9px 12px;
     max-height: 140px;
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
-    gap: 4px;
-    min-height: 0;
+    display: grid; grid-template-rows: auto minmax(0, 1fr);
+    gap: 5px; min-height: 0;
   }
-  .detail-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .detail-header h3 { font-size: 12px; color: #c8d8f0; }
-  .detail-date { font-size: 11px; color: #6a8fc4; }
+  .detail-header { display: flex; align-items: baseline; gap: 9px; }
+  .detail-header h3 { font-size: 12px; font-weight: 800; color: var(--ink); }
+  .detail-date { font-size: 11px; color: var(--ink-mute); font-variant-numeric: tabular-nums; }
   .detail-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    overflow-y: auto;
-    min-height: 0;
+    list-style: none; margin: 0; padding: 0;
+    display: flex; flex-direction: column;
+    overflow-y: auto; min-height: 0;
   }
   .detail-item {
-    border: 1px solid #2f4a76;
-    border-radius: 6px;
-    padding: 5px 8px;
-    display: flex;
-    align-items: flex-start;
-    gap: 7px;
-    flex-shrink: 0;
+    border-bottom: 1px solid var(--line);
+    padding: 6px 2px;
+    display: flex; align-items: flex-start; gap: 8px; flex-shrink: 0;
   }
+  .detail-item:last-child { border-bottom: 0; }
   .detail-body { display: flex; flex-direction: column; gap: 1px; min-width: 0; flex: 1; }
-  .detail-body strong { font-size: 12px; color: #ebf3ff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .detail-sub  { font-size: 11px; color: #7abecc; margin: 0; }
-  .detail-meta { font-size: 10px; color: #8aa4c8; margin: 0; }
+  .detail-body strong {
+    font-size: 12px; color: var(--ink); font-weight: 700;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .detail-sub  { font-size: 11px; color: var(--ink-mid); margin: 0; }
+  .detail-meta { font-size: 10px; color: var(--ink-mute); margin: 0; }
+
   .tag {
     flex-shrink: 0;
-    border-radius: 999px;
-    padding: 1px 6px;
-    font-size: 10px;
-    border: 1px solid;
+    border-radius: 999px; padding: 1px 7px;
+    font-size: 9.5px; font-weight: 700;
+    color: var(--ink-on-dark);
   }
-  .tag.game          { border-color: #628dd8; color: #cfe1ff; }
-  .tag.game.friendly { border-color: #3d9090; color: #b0e8e8; }
-  .tag.training      { border-color: #5cb0ba; color: #d4f5fa; }
-  .tag.event         { border-color: #b9985f; color: #ffeccc; }
-  .tag.rest          { border-color: #8b98b4; color: #dde3f1; }
-  .result-badge {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 0 4px;
-    border-radius: 4px;
-  }
-  .result-badge.win  { color: #68de92; }
-  .result-badge.lose { color: #ff8a8a; }
-  li.empty { color: #607898; font-size: 11px; padding: 2px 0; list-style: none; }
+  .tag.game          { background: var(--t-dark); }
+  .tag.game.friendly { background: var(--line-strong); color: var(--ink-mid); }
+  .tag.training      { background: var(--ink-mid); }
+  .tag.event         { background: var(--warn); }
+  .tag.rest          { background: var(--line-strong); color: var(--ink-mid); }
 
-  /* ── 반응형 ── */
+  .result-badge {
+    display: inline-block; font-size: 11px; font-weight: 800;
+    padding: 0 4px; border-radius: 2px;
+  }
+  .result-badge.win  { color: var(--ok); }
+  .result-badge.lose { color: var(--bad); }
+  li.empty { color: var(--ink-mute); font-size: 11px; padding: 4px 0; list-style: none; }
+
   @media (max-width: 1280px) {
     .year-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(4, minmax(0, 1fr)); }
     .week-list { grid-template-columns: repeat(4, minmax(0, 1fr)); }

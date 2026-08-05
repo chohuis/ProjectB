@@ -92,18 +92,16 @@
     return r.value > 0 ? EFFECT_UP[r.kind] : EFFECT_DOWN[r.kind];
   }
 
+  // ⚠ 여기서 주인공 나이를 읽어 `void`로 버리고 있었다. "몇 년 전"을 쓰려다
+  // 만 흔적으로 보인다 — 연도만 쓰므로 지웠다.
   function agoOf(r: Relationship): string {
-    const now = $gameStore.protagonist.age;
-    void now;
     return r.metSeason > 0 ? `${r.metSeason}년에 만남` : "";
   }
 </script>
 
-<section class="people">
-  <header class="head">
-    <h2>인물</h2>
-    <p class="sub">관계는 경기 결과·훈련·이벤트로 조금씩 움직입니다.</p>
-  </header>
+<section class="people u-page">
+  <!-- 제목("인물")을 뺐다 — 사이드바가 이미 "사람"이다 -->
+  <p class="sub">관계는 경기 결과·훈련·이벤트로 조금씩 움직입니다.</p>
 
   {#if loading}
     <p class="msg">불러오는 중…</p>
@@ -188,49 +186,98 @@
 </section>
 
 <style>
-  .people { padding: 14px 16px; color: #dbe8ff; }
-  .head h2 { margin: 0 0 2px; font-size: 18px; }
-  .sub { margin: 0 0 14px; font-size: 12px; color: #8fa8ce; }
+  /* ⚠ 예전엔 높이 관리가 없어 `.tab-content`(overflow:hidden) 안에서 목록이
+     길어지면 **아래가 잘렸다.** 관계는 시즌이 갈수록 늘어난다 */
+  .people {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 10px;
+    height: 100%;
+    min-height: 0;
+    padding: 12px;
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
 
-  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+  .sub { margin: 0; font-size: 11.5px; color: var(--ink-mute); }
+
+  .cols {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    align-items: start; min-height: 0; overflow: hidden;
+  }
   @media (max-width: 900px) { .cols { grid-template-columns: 1fr; } }
 
-  .col h3 { margin: 0 0 8px; font-size: 13px; color: #a9c4ee; font-weight: 600; }
-  .count { color: #6d86ad; font-weight: 400; }
+  .col {
+    display: grid; grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: 7px; min-height: 0;
+    background: var(--panel);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px -1px rgba(15, 29, 61, 0.16);
+    padding: 12px;
+  }
+  .col h3 {
+    margin: 0;
+    font-size: 10px; font-weight: 800; letter-spacing: 0.12em;
+    color: var(--ink-mute); text-transform: uppercase;
+    padding-bottom: 5px; border-bottom: 2px solid var(--t-dark);
+    display: flex; justify-content: space-between;
+  }
+  .count { color: var(--ink-mute); font-weight: 800; font-variant-numeric: tabular-nums; }
 
-  .list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+  .list {
+    list-style: none; margin: 0; padding: 0;
+    display: flex; flex-direction: column;
+    min-height: 0; overflow-y: auto;
+  }
 
   .row {
-    width: 100%; display: grid; grid-template-columns: 1fr auto auto; gap: 8px;
+    width: 100%;
+    display: grid; grid-template-columns: 1fr auto auto; gap: 9px;
     align-items: center; text-align: left;
-    border: 1px solid #2c4066; background: #1a273f; color: #dbe8ff;
-    border-radius: 8px; padding: 7px 10px; font-size: 12px; cursor: pointer;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    background: none;
+    color: var(--ink-mid);
+    padding: 8px 2px;
+    font-size: 12.5px;
+    cursor: pointer;
   }
-  .row.sel { border-color: #6da1f7; background: #223258; }
-  .row.past { cursor: default; opacity: 0.85; }
-  .row.past.ended { opacity: 0.6; }
+  .row:hover { background: var(--panel-sunk); }
+  .row.sel { background: var(--panel-sunk); }
+  .row.past { cursor: default; }
+  .row.past.ended { opacity: 0.55; }
 
-  .nm { font-weight: 600; }
-  .kd { color: #8fa8ce; font-size: 11px; }
+  .nm { font-weight: 700; color: var(--ink); }
+  .kd { color: var(--ink-mute); font-size: 11px; }
 
-  .lb { border-radius: 999px; padding: 2px 8px; font-size: 11px; font-weight: 600; }
-  .tone-hostile  { background: #4a1b1b; color: #ff9a9a; }
-  .tone-distrust { background: #422022; color: #e79090; }
-  .tone-cold     { background: #33323d; color: #b7b3c4; }
-  .tone-neutral  { background: #2a3550; color: #9fb2d2; }
-  .tone-friendly { background: #23405c; color: #86c4f0; }
-  .tone-trusted  { background: #1e4a44; color: #7fdcc4; }
-  .tone-close    { background: #17513a; color: #7ff0b0; }
+  /* 관계 7단계 — **숫자를 안 보여주는 게 이 화면의 원칙**이라 색이 곧 수치다.
+     적대에서 신뢰까지 한 방향으로 흐르게 하고, 양 끝만 꽉 채운다 */
+  .lb {
+    border-radius: 999px; padding: 2px 9px;
+    font-size: 10.5px; font-weight: 800; white-space: nowrap;
+  }
+  .tone-hostile  { background: var(--bad);        color: var(--ink-on-dark); }
+  .tone-distrust { background: #F3DAD6;           color: #8A2617; }
+  .tone-cold     { background: var(--panel-sunk); color: var(--ink-mute); }
+  .tone-neutral  { background: var(--panel-sunk); color: var(--ink-mid); }
+  .tone-friendly { background: #DCE7F5;           color: #1F4E85; }
+  .tone-trusted  { background: #D5EADD;           color: #17603A; }
+  .tone-close    { background: var(--ok);         color: var(--ink-on-dark); }
 
-  .detail { padding: 6px 10px 10px; font-size: 11px; color: #b7c9e6; }
-  .eff { margin: 0 0 6px; }
-  .meta { margin: 0 0 4px; color: #7f95bb; }
-  .mem { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
-  .mem li { color: #93a9cc; }
-  .mem b { color: #c8d9f5; }
+  .detail {
+    padding: 8px 2px 10px 12px;
+    border-left: 2px solid var(--t-accent);
+    margin: 0 0 4px 2px;
+    font-size: 11.5px; color: var(--ink-mid);
+  }
+  .eff  { margin: 0 0 6px; }
+  .meta { margin: 0 0 4px; color: var(--ink-mute); }
+  .mem  { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 3px; }
+  .mem li { color: var(--ink-mute); font-size: 11px; }
+  .mem b  { color: var(--ink); font-weight: 700; }
 
-  .msg { font-size: 12px; color: #8fa8ce; }
+  .msg { font-size: 12px; color: var(--ink-mute); }
   .msg.small { font-size: 11px; }
-  .msg.err { color: #ff9a9a; }
-  .note { margin: 10px 0 0; font-size: 11px; color: #6d86ad; }
+  .msg.err { color: var(--bad); }
+  .note { margin: 8px 0 0; font-size: 10.5px; color: var(--ink-mute); line-height: 1.5; }
 </style>

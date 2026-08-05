@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { t } from "../../shared/i18n";
+  import { teamTokens } from "../../shared/utils/teamTheme";
   import { masterStore } from "../../shared/stores/master";
   import { inScope, isLeagueInScope } from "../../shared/config/releaseScope";
   import type { EntityDetails } from "../../shared/stores/master";
@@ -95,22 +94,25 @@
   $: coachCount = teamRows.filter((e) => e.role === "coach").length;
   $: managerCount = teamRows.filter((e) => e.role === "manager").length;
 
-  onMount(async () => {
-    const initialLeague = sortedTeams[0]?.leagueId ?? "LEAGUE_HIGHSCHOOL";
-  });
+  // ⚠ 여기 `onMount`가 있었는데 지역 변수 하나를 만들고 아무것도 안 했다.
+  // 초기 리그 선택은 위 반응형 블록이 이미 한다.
 
-
+  /** 팀 색 띠 — 182팀 목록에서 어느 팀인지 색으로 먼저 잡힌다 */
+  function stripeOf(colors?: readonly string[] | null): string {
+    return teamTokens(colors).dark;
+  }
 </script>
 
+<!-- 제목("팀")을 뺐다 — 사이드바가 이미 그 이름이다 -->
 <section class="page">
-  <h2>{$t("page.team")}</h2>
-  <article class="card board">
+  <div class="board">
     <header class="top-row">
-      <div class="league-tabs">
+      <div class="u-subtabs">
         {#each SCOPED_TABS as tab}
-          <button class:active={leagueTab === tab} on:click={() => (leagueTab = tab)}>{leagueLabel(tab)}</button>
+          <button class:on={leagueTab === tab} on:click={() => (leagueTab = tab)}>{leagueLabel(tab)}</button>
         {/each}
       </div>
+      <span class="count u-num">{sortedTeams.length}팀</span>
     </header>
 
     <div class="layout">
@@ -127,6 +129,7 @@
               <button
                 class:selected={selectedTeamId === team.id}
                 class:my-team={team.id === myTeamId}
+                style="--stripe:{stripeOf(team.colors)}"
                 on:click={() => (selectedTeamId = team.id)}
                 on:dblclick={() => { detailTeamId = team.id; detailOpen = true; }}
                 title="더블클릭: 팀 상세 정보"
@@ -137,7 +140,7 @@
                     <span class="my-team-tag">소속팀</span>
                   {/if}
                 </strong>
-                <span>{teamLeagueLabel(team.leagueId)}</span>
+                <span class="lg">{teamLeagueLabel(team.leagueId)}</span>
               </button>
             {/each}
           {/if}
@@ -146,6 +149,7 @@
 
       <aside class="panel detail">
         {#if selectedTeam}
+          <div class="detail-stripe" style="background:{stripeOf(selectedTeam.colors)}"></div>
           <h3>
             {selectedTeam.name}
             {#if selectedTeam.id === myTeamId}
@@ -186,7 +190,7 @@
       </aside>
     </div>
 
-  </article>
+  </div>
 </section>
 
 <TeamDetailModal
@@ -196,55 +200,99 @@
 />
 
 <style>
-  .page { display:grid; grid-template-rows:auto minmax(0,1fr); gap:12px; height:100%; min-height:0; overflow:hidden; }
-  .card { background:#161f33; border:1px solid #2d3956; border-radius:10px; padding:12px; min-height:0; overflow:hidden; }
-  .board { display:grid; grid-template-rows:auto minmax(0,1fr); gap:10px; }
-  .top-row { display:flex; align-items:center; }
-  .league-tabs { display:flex; gap:6px; flex-wrap:wrap; }
-  .league-tabs button { border:1px solid #355182; background:#1f2f4f; color:#dbe8ff; border-radius:8px; padding:5px 10px; font-size:12px; }
-  .league-tabs button.active { background:#3262b0; border-color:#6da1f7; }
-  .layout { display:grid; grid-template-columns:1fr 1fr; gap:10px; min-height:0; }
-  .panel { border:1px solid #2f486f; border-radius:10px; background:#13223d; padding:10px; min-height:0; overflow:hidden; }
-  .team-list { display:grid; grid-template-rows:auto minmax(0,1fr); gap:6px; }
-  .head, .rows button { display:grid; grid-template-columns:1fr 0.5fr; gap:6px; align-items:center; font-size:12px; }
-  .head { color:#9fb4d8; padding:0 6px; }
-  .rows { min-height:0; overflow:auto; display:grid; align-content:start; gap:4px; }
-  .rows button { border:1px solid #284269; background:#162a4a; border-radius:8px; padding:7px 6px; color:#e4edff; text-align:left; cursor:pointer; }
-  .rows button.selected { border-color:#79abf6; background:#1d3760; }
-  .rows button.my-team { border-color:rgba(240,224,96,0.5); background:rgba(240,224,96,0.06); }
-  .rows button.my-team.selected { border-color:#f0e060; background:rgba(240,224,96,0.12); }
-  .rows button strong { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .team-name-cell { display:flex; align-items:center; gap:5px; min-width:0; }
-  .my-team-tag {
-    flex-shrink:0;
-    font-size:9px; font-weight:700;
-    background:rgba(240,224,96,0.2); color:#f0e060;
-    border:1px solid rgba(240,224,96,0.4);
-    border-radius:3px; padding:0 4px;
-    white-space:nowrap;
+  .page { display: grid; grid-template-rows: minmax(0, 1fr); height: 100%; min-height: 0; overflow: hidden; }
+  .board { display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 10px; min-height: 0; overflow: hidden; }
+  .top-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+  .count { font-size: 10.5px; color: var(--ink-mute); }
+
+  .layout { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; min-height: 0; }
+
+  .panel {
+    background: var(--panel);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px -1px rgba(15, 29, 61, 0.16);
+    padding: 12px;
+    min-height: 0;
+    overflow: hidden;
   }
-  .tier-sep { color:#5a7aaa; font-size:11px; padding:4px 6px 2px; display:flex; align-items:center; gap:6px; }
-  .tier-sep::before, .tier-sep::after { content:""; flex:1; height:1px; background:#2a3f62; }
-  .tier-sep::before { flex:0 0 6px; }
-  .detail { display:grid; grid-template-rows:auto auto auto auto minmax(0,1fr); gap:8px; }
-  .detail h3 { margin:0; font-size:16px; color:#e8f0ff; display:flex; align-items:center; gap:6px; }
-  .meta { margin:0; color:#93add6; font-size:12px; }
-  .metrics { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; }
-  .metrics div { border:1px solid #2e486f; border-radius:8px; background:#152b4f; padding:7px; display:grid; gap:2px; }
-  .metrics span { color:#9eb6de; font-size:11px; }
-  .metrics strong { color:#eff5ff; font-size:14px; }
-  .roster-head { color:#cfe3ff; font-size:13px; font-weight:700; }
-  .roster-rows { min-height:0; overflow:auto; display:grid; gap:4px; }
-  .roster-row { border:1px solid #2b4268; background:#142743; border-radius:8px; padding:6px 8px; display:grid; grid-template-columns:1fr auto; gap:8px; align-items:center; font-size:12px; }
-  .roster-row strong { display:flex; align-items:center; gap:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .roster-row span { color:#a8bfdc; white-space:nowrap; }
-  .roster-row.hero-row { border-color:rgba(240,224,96,0.35); background:rgba(240,224,96,0.05); }
-  .me-tag {
-    font-size:9px; font-weight:700;
-    background:rgba(240,224,96,0.2); color:#f0e060;
-    border:1px solid rgba(240,224,96,0.4);
-    border-radius:3px; padding:0 4px; flex-shrink:0;
+
+  .team-list { display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 6px; }
+  .head, .rows button { display: grid; grid-template-columns: 1fr 0.5fr; gap: 8px; align-items: center; font-size: 12.5px; }
+  .head {
+    font-size: 10px; font-weight: 800; letter-spacing: 0.06em;
+    color: var(--ink-mute);
+    padding: 0 10px 6px;
+    border-bottom: 2px solid var(--t-dark);
   }
-  .empty { color:#9db2d8; font-size:13px; }
-  @media (max-width:1180px){ .layout { grid-template-columns:1fr; } }
+  .rows { min-height: 0; overflow: auto; display: grid; align-content: start; }
+
+  /* 왼쪽 3px가 그 팀의 색이다 — 182팀을 훑을 때 이름보다 색이 먼저 잡힌다 */
+  .rows button {
+    border: 0;
+    border-left: 3px solid var(--stripe);
+    border-bottom: 1px solid var(--line);
+    background: none;
+    padding: 8px 10px;
+    color: var(--ink-mid);
+    text-align: left;
+    cursor: pointer;
+  }
+  .rows button:hover { background: var(--panel-sunk); }
+  .rows button.selected { background: var(--panel-sunk); color: var(--ink); font-weight: 700; }
+  .rows button.my-team .team-name-cell { color: var(--t-dark); font-weight: 800; }
+  .rows button strong { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lg { color: var(--ink-mute); font-size: 11px; }
+
+  .team-name-cell { display: flex; align-items: center; gap: 5px; min-width: 0; }
+  .my-team-tag, .me-tag {
+    flex-shrink: 0;
+    font-size: 9px; font-weight: 800;
+    background: var(--t-dark); color: var(--t-gold);
+    border-radius: 2px; padding: 1px 5px;
+    white-space: nowrap;
+  }
+
+  .tier-sep {
+    color: var(--ink-mute); font-size: 10px; font-weight: 800; letter-spacing: 0.1em;
+    padding: 10px 10px 4px;
+    display: flex; align-items: center; gap: 7px;
+  }
+  .tier-sep::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+  /* -- 오른쪽 상세 -- */
+  .detail { display: grid; grid-template-rows: auto auto auto auto auto minmax(0, 1fr); gap: 8px; position: relative; }
+  .detail-stripe { height: 4px; border-radius: 2px; }
+  .detail h3 { margin: 0; font-size: 17px; font-weight: 800; color: var(--ink); display: flex; align-items: center; gap: 7px; }
+  .meta { margin: 0; color: var(--ink-mute); font-size: 12px; }
+
+  .metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+  .metrics div { background: var(--panel-sunk); border-radius: var(--radius); padding: 8px 9px; display: grid; gap: 1px; }
+  .metrics span   { color: var(--ink-mute); font-size: 10px; }
+  .metrics strong { color: var(--ink); font-size: 15px; font-weight: 800; font-variant-numeric: tabular-nums; }
+
+  .roster-head {
+    font-size: 10px; font-weight: 800; letter-spacing: 0.12em;
+    color: var(--ink-mute); text-transform: uppercase;
+    padding-bottom: 5px; border-bottom: 2px solid var(--t-dark);
+  }
+  .roster-rows { min-height: 0; overflow: auto; display: grid; }
+  .roster-row {
+    border-bottom: 1px solid var(--line);
+    padding: 7px 2px;
+    display: grid; grid-template-columns: 1fr auto; gap: 8px;
+    align-items: center; font-size: 12px;
+    color: var(--ink-mid);
+  }
+  .roster-row:last-child { border-bottom: 0; }
+  .roster-row strong {
+    display: flex; align-items: center; gap: 5px;
+    color: var(--ink); font-weight: 600;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .roster-row span { color: var(--ink-mute); white-space: nowrap; }
+  .roster-row.hero-row strong { color: var(--t-dark); font-weight: 800; }
+
+  .empty { color: var(--ink-mute); font-size: 12.5px; }
+
+  @media (max-width: 1180px) { .layout { grid-template-columns: 1fr; } }
 </style>
