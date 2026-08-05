@@ -6,6 +6,10 @@
   import { seasonStore } from "../../shared/stores/season";
   import { masterStore, teamMap } from "../../shared/stores/master";
   import { leagueUiState, type LeagueTab, type TxCategory } from "../../shared/stores/leagueUiStore";
+  import {
+    tournamentsOfLeague, tournamentPhase, bracketRounds, championOf,
+    teamRun, runSummary, PHASE_LABEL,
+  } from "../../shared/utils/tournamentView";
   import { splitByGroup } from "../../shared/utils/standingsGroups";
   import type { PitcherSeasonStats, BatterSeasonStats, PlayerSeasonStats } from "../../shared/types/save";
   import {
@@ -315,6 +319,31 @@
   let selectedGroupLabel: string | null = null;
   /** 리그를 바꾸면 권역 선택을 초기화한다 — 없는 권역이 남으면 표가 빈다 */
   $: selectedLeagueId, (selectedGroupLabel = null);
+  // ── 대회 (S4) ────────────────────────────────────────────────
+  //
+  // ⚠ **엔진은 매 시즌 대회를 돌리는데 화면이 한 곳도 없었다.** 고교 5개·
+  // 대학 3개가 열리고 우승팀까지 나오는데 볼 데가 없었다.
+  let selectedTourId = "";
+  $: tourLeagueId = selectedLeagueId || myLeagueId;
+  $: tourDefs = tournamentsOfLeague(tourLeagueId);
+  /** 리그를 바꾸면 대회 선택을 초기화한다 — 다른 리그 대회가 남으면 빈 화면이 된다 */
+  $: tourLeagueId, (selectedTourId = "");
+  $: tourRows = tourDefs.map((def) => {
+    const bracket = $seasonStore.tournaments?.[def.id] ?? null;
+    const group   = $seasonStore.groupStages?.[def.id] ?? null;
+    const phase   = tournamentPhase(def, $seasonStore.currentWeek, bracket, group);
+    const run     = teamRun(bracket, myTeamId);
+    return { def, bracket, group, phase, run, summary: runSummary(run, phase) };
+  });
+  /** 기본 선택 — 진행 중인 대회가 있으면 그것, 없으면 가장 최근에 끝난 것 */
+  $: activeTour = tourRows.find((r) => r.def.id === selectedTourId)
+    ?? tourRows.find((r) => r.phase === "live" || r.phase === "qualifying")
+    ?? [...tourRows].reverse().find((r) => r.phase === "done")
+    ?? tourRows[0]
+    ?? null;
+  $: tourRounds = bracketRounds(activeTour?.bracket);
+  $: tourChampion = championOf(activeTour?.bracket);
+
   /** 내 권역이 맨 앞 — 리그 목록과 같은 규칙이어야 한다 */
   $: groupLabels = (() => {
     const all = standingsGroupsView.map((g) => g.label).filter((l): l is string => !!l);
@@ -477,6 +506,7 @@
       <div class="tabs">
         <button class:active={tab === "standings"}    on:click={() => (tab = "standings")}>리그 순위</button>
         <button class:active={tab === "leaderboard"}  on:click={() => (tab = "leaderboard")}>스탯 순위</button>
+        <button class:active={tab === "tournaments"}  on:click={() => (tab = "tournaments")}>대회</button>
         <button class:active={tab === "postseason"}   on:click={() => (tab = "postseason")}>포스트시즌</button>
         <button class:active={tab === "transactions"} on:click={() => (tab = "transactions")}>리그 기록</button>
       </div>
@@ -713,6 +743,115 @@
     {/if}
 
     <!-- ── 포스트시즌 ── -->
+    <!-- ── 대회 (S4) ── -->
+    {#if tab === "tournaments"}
+      <section class="standings-layout tn-layout">
+        <!-- 왼쪽: 그 리그의 대회를 주차 순으로 -->
+        <nav class="league-nav" aria-label="대회">
+          {#each tourRows as row (row.def.id)}
+            <button
+              class:active={activeTour?.def.id === row.def.id}
+              on:click={() => (selectedTourId = row.def.id)}
+            >
+              <span class="tn-main">
+                <b>{row.def.name}</b>
+                <span class="tn-week">W{row.def.startWeek}–{row.def.endWeek}</span>
+              </span>
+              <span class="tn-state ph-{row.phase}">{PHASE_LABEL[row.phase]}</span>
+            </button>
+          {:else}
+            <span class="ps-none">이 리그에는 대회가 없습니다</span>
+          {/each}
+        </nav>
+
+        <div class="panel standings-panel">
+          {#if !activeTour}
+            <p class="empty">대회 정보가 없습니다.</p>
+          {:else}
+            <h3>
+              {activeTour.def.name}
+              <span class="th-sub">{activeTour.def.totalSlots}팀 · {PHASE_LABEL[activeTour.phase]}</span>
+            </h3>
+
+            <!-- 우리 팀이 어떻게 됐나 — 대진표보다 이게 먼저 궁금하다 -->
+            {#if activeTour.summary}
+              <p class="my-run" class:won={activeTour.run?.champion}>
+                {#if activeTour.run?.champion}🏆{/if}
+                {tName(myTeamId)} — {activeTour.summary}
+                {#if activeTour.run?.lostAt}
+                  {@const l = activeTour.run.lostAt}
+                  <span class="run-vs">
+                    vs {tName(l.homeTeamId === myTeamId ? (l.awayTeamId ?? "") : (l.homeTeamId ?? ""))}
+                  </span>
+                {/if}
+              </p>
+            {/if}
+
+            <div class="standings-body">
+              {#if activeTour.phase === "upcoming"}
+                <p class="empty">
+                  {activeTour.def.startWeek}주차에 열린다.
+                  {#if activeTour.def.groupCount}조별예선 {activeTour.def.groupCount}조 후 본선.{/if}
+                </p>
+
+              <!-- 조별예선이 있는 대회(은하기·여명기)는 조 표가 먼저다 -->
+              {:else if activeTour.phase === "qualifying" && activeTour.group}
+                <div class="grp-wrap">
+                  {#each activeTour.group.groups as g}
+                    <div class="grp-card">
+                      <!-- 조 이름은 엔진이 준다 — 인덱스로 A·B를 지어내지 않는다 -->
+                      <div class="grp-head">{g.label}</div>
+                      <ol class="grp-teams">
+                        {#each g.teams as tid}
+                          <li class:mine={tid === myTeamId}>
+                            <TeamMark teamId={tid} size={16} />{tName(tid)}
+                          </li>
+                        {/each}
+                      </ol>
+                    </div>
+                  {/each}
+                </div>
+                <p class="empty">조 {activeTour.def.advancePerGroup ?? 1}위가 본선에 오른다.</p>
+
+              {:else if tourRounds.length === 0}
+                <p class="empty">대진이 아직 없습니다.</p>
+
+              {:else}
+                {#if tourChampion}
+                  <p class="tour-champ">🏆 {tName(tourChampion)} 우승</p>
+                {/if}
+                <div class="bracket-wrap">
+                  {#each tourRounds as r (r.round)}
+                    <div class="tb-round">
+                      <div class="tb-label">{r.label}</div>
+                      {#each r.matches as m (m.id)}
+                        <div class="tb-match" class:mine={m.homeTeamId === myTeamId || m.awayTeamId === myTeamId}>
+                          {#if m.isBye}
+                            <!-- 부전승은 경기가 아니다 — 점수 칸을 만들지 않는다 -->
+                            <div class="tb-side won">
+                              {#if m.homeTeamId}<TeamMark teamId={m.homeTeamId} size={14} />{tName(m.homeTeamId)}{/if}
+                              <span class="tb-bye">부전승</span>
+                            </div>
+                          {:else}
+                            <div class="tb-side" class:won={m.winnerTeamId && m.winnerTeamId === m.homeTeamId}>
+                              {#if m.homeTeamId}<TeamMark teamId={m.homeTeamId} size={14} />{tName(m.homeTeamId)}{:else}<span class="tb-tbd">미정</span>{/if}
+                            </div>
+                            <div class="tb-side" class:won={m.winnerTeamId && m.winnerTeamId === m.awayTeamId}>
+                              {#if m.awayTeamId}<TeamMark teamId={m.awayTeamId} size={14} />{tName(m.awayTeamId)}{:else}<span class="tb-tbd">미정</span>{/if}
+                            </div>
+                          {/if}
+                        </div>
+                      {/each}
+                    </div>
+                  {/each}
+                </div>
+              {/if}
+            </div>
+          {/if}
+        </div>
+      </section>
+    {/if}
+
     {#if tab === "postseason"}
       <section class="ps-layout">
         <nav class="league-nav">
@@ -1027,7 +1166,10 @@
   .lock-hint { font-size: 10.5px; color: var(--ink-mute); padding: 6px 10px; line-height: 1.5; }
 
   /* -- 순위표 -- */
-  .standings-panel { display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 8px; }
+  /* ⚠ grid 2행 고정이었다. 대회 탭은 자식이 셋이라 세 번째가 암묵 행으로
+     밀려 우승 줄이 대진표를 덮었다 — 자식 수에 안 묶이게 flex로 */
+  .standings-panel { display: flex; flex-direction: column; gap: 8px; min-height: 0; }
+  .standings-panel > .standings-body { flex: 1 1 auto; min-height: 0; }
   .standings-body { min-height: 0; overflow-y: auto; display: grid; gap: 12px; align-content: start; }
   .tbl-wrap { overflow-x: auto; }
   .group-row { display: flex; align-items: baseline; gap: 7px; margin-bottom: 4px; }
@@ -1273,40 +1415,100 @@
   }
   .tx-empty { color: var(--ink-mute); font-size: 12.5px; padding: 16px 4px; }
 
+  /* ── 대회 (S4) ── */
+  /* 148px에선 "개나리 / 기"로 잘렸다 — 이 탭만 왼쪽 칸을 넓힌다 */
+  .standings-layout.tn-layout { grid-template-columns: 186px minmax(0, 1fr); }
+  .tn-main { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+  .tn-main b { font-weight: 700; white-space: nowrap; }
+  .tn-week { font-size: 10px; color: var(--ink-mute); font-variant-numeric: tabular-nums; }
+  .tn-state {
+    font-size: 9.5px; font-weight: 700;
+    border-radius: 10px; padding: 1px 7px;
+    flex: 0 0 auto;
+  }
+  /* 진행 중만 눈에 띈다 — 나머지는 상태를 알리기만 한다 */
+  .ph-live        { background: var(--t-accent); color: var(--ink-on-dark); }
+  .ph-qualifying  { background: var(--t-accent); color: var(--ink-on-dark); }
+  .ph-done        { background: var(--panel-sunk); color: var(--ink-mute); }
+  .ph-upcoming    { background: transparent; color: var(--ink-mute); border: 1px solid var(--line); }
+
+  .th-sub { font-size: 11.5px; font-weight: 400; color: var(--ink-mute); margin-left: 8px; }
+
+  .my-run {
+    margin: 8px 0 0;
+    font-size: 13px;
+    color: var(--ink);
+    background: var(--panel-sunk);
+    border-left: 3px solid var(--line-strong);
+    border-radius: var(--radius);
+    padding: 7px 11px;
+  }
+  .my-run.won { border-left-color: var(--warn); font-weight: 700; }
+  .run-vs { color: var(--ink-mute); font-size: 12px; margin-left: 4px; }
+
+  .tour-champ {
+    margin: 0 0 10px;
+    font-size: 15px; font-weight: 800;
+    color: var(--warn);
+  }
+
+  /* 조별예선 */
+  .grp-wrap {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .grp-card {
+    background: var(--panel-sunk);
+    border-radius: var(--radius);
+    padding: 8px 10px;
+  }
+  .grp-head { font-size: 11px; font-weight: 800; color: var(--ink-mute); margin-bottom: 5px; }
+  .grp-teams { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; }
+  .grp-teams li {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 12px; color: var(--ink-mid);
+  }
+  .grp-teams li.mine { color: var(--ink); font-weight: 700; }
+
+  /* 대진표 — 라운드를 가로로 세운다 */
+  .bracket-wrap {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    overflow-x: auto;
+    padding-bottom: 6px;
+  }
+  /* ⚠ 포스트시즌 대진표가 이미 `.br-*`를 쓴다. 같은 이름을 쓰면 나중에
+     선언한 이 규칙이 그쪽을 덮는다 — 대회는 `.tb-*`로 분리한다 */
+  .tb-round { display: grid; gap: 6px; min-width: 132px; }
+  .tb-label {
+    font-size: 10px; font-weight: 800; letter-spacing: 0.08em;
+    color: var(--ink-mute); text-transform: uppercase;
+    padding-bottom: 4px; border-bottom: 1px solid var(--line);
+  }
+  .tb-match {
+    background: var(--panel-sunk);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .tb-match.mine { box-shadow: inset 3px 0 0 var(--t-accent); }
+  .tb-side {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 12px; color: var(--ink-mute);
+    padding: 4px 8px;
+  }
+  .tb-side + .tb-side { border-top: 1px solid var(--line); }
+  /* 이긴 쪽만 진하게 — 진 쪽을 지우면 누구와 붙었는지가 사라진다 */
+  .tb-side.won { color: var(--ink); font-weight: 700; background: var(--panel); }
+  .tb-tbd { color: var(--ink-mute); opacity: 0.6; }
+  .tb-bye { margin-left: auto; font-size: 10px; color: var(--ink-mute); }
+
   .empty { color: var(--ink-mute); font-size: 12.5px; }
 
   @media (max-width: 1100px) {
     .standings-layout, .lb-layout, .ps-layout { grid-template-columns: 1fr; }
-    /* ── 권역 줄 (2단의 두 번째) ── */
-  .group-nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    margin: 8px 0 2px;
-  }
-  .group-nav button {
-    display: inline-flex; align-items: center; gap: 5px;
-    background: none;
-    border: 1px solid var(--line);
-    border-radius: 20px;
-    color: var(--ink-mid);
-    font-size: 12px;
-    padding: 4px 11px;
-    cursor: pointer;
-  }
-  .group-nav button:hover { border-color: var(--line-strong); color: var(--ink); }
-  .group-nav button.on {
-    background: var(--t-dark);
-    border-color: var(--t-dark);
-    color: var(--ink-on-dark);
-    font-weight: 700;
-  }
-  .gn-mine {
-    font-size: 9.5px;
-    font-weight: 700;
-    opacity: 0.72;
-  }
-
-  .league-nav { flex-direction: row; overflow-x: auto; }
+    .league-nav { flex-direction: row; overflow-x: auto; }
   }
 </style>

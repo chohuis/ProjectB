@@ -9,7 +9,7 @@ import { writable } from "svelte/store";
  * 스토어에 넣는 값의 타입이므로 스토어가 갖는 게 맞다.
  */
 export type TxCategory = "all" | "trade" | "fa" | "draft" | "military" | "retirement";
-export type LeagueTab  = "standings" | "leaderboard" | "postseason" | "transactions";
+export type LeagueTab  = "standings" | "leaderboard" | "tournaments" | "postseason" | "transactions";
 
 export const leagueUiState = writable<{
   selectedYear: number;

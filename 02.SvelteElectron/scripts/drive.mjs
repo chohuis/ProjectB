@@ -72,10 +72,11 @@ const COMMANDS = {
   async ss(name) {
     if (!page) return console.log("ERROR: launch first");
     const f = path.join(SHOT_DIR, (name || `ss-${Date.now()}`) + ".png");
-    // ⚠ 주자 스프라이트가 0.8초마다 깜박여서(`gbcBlink`) 기본 옵션으로는
-    // "waiting for fonts/animations"에서 30초를 다 쓰고 실패한다.
+    // ⚠ `animations: "disabled"`는 애니메이션을 **되감아 멈추길 기다린다.**
+    // 주자 스프라이트(`gbcBlink`)처럼 무한 반복이면 그 대기가 안 끝나 타임아웃이
+    // 난다. 깜박이는 한 컷이 못 찍는 것보다 낫다 — 기다리지 않는다.
     try {
-      await page.screenshot({ path: f, animations: "disabled", timeout: 15_000 });
+      await page.screenshot({ path: f, animations: "allow", timeout: 20_000 });
       console.log("screenshot:", f);
     } catch (e) {
       console.log("screenshot 실패:", e.message.split("\n")[0]);
@@ -144,17 +145,25 @@ const COMMANDS = {
   /** advance <n> [멈출 CSS 선택자] */
   async advance(nArg) {
     if (!page) return console.log("ERROR: launch first");
-    const [nStr, ...rest] = String(nArg).trim().split(/\s+/);
-    const n = Number(nStr) || 1;
-    const stopSel = rest.join(" ") || null;
+    const parts = String(nArg).trim().split(/\s+/);
+    const n = Number(parts[0]) || 1;
+    // `--auto` — 경기를 직접 플레이하지 않고 자동 시뮬로 넘긴다.
+    // 경기 밖 화면(리그·대회 등)을 보려면 경기에서 멈추면 안 된다.
+    const auto = parts.includes("--auto");
+    const stopSel = parts.slice(1).filter((x) => x !== "--auto").join(" ") || null;
     for (let i = 0; i < n; i++) {
       for (let guard = 0; guard < 12; guard++) {
-        const state = await page.evaluate((stopSel) => {
+        const state = await page.evaluate(({ stopSel, auto }) => {
           // 보러 온 화면에 닿으면 멈춘다
           if (stopSel && document.querySelector(stopSel)) return "MATCH";
-          if (document.querySelector(".retro-field, .scoreboard-wrap")) return "MATCH";
-          // 경기로 가는 길: 브리핑 → 경기 상태 → 직접 플레이
-          const play = document.querySelector("button.btn-play:not([disabled])");
+          if (!auto && document.querySelector(".retro-field, .scoreboard-wrap")) return "MATCH";
+          // 경기 화면에 들어와 있으면 나간다 (--auto)
+          const exit = document.querySelector(".exit-btn");
+          if (auto && exit) { exit.click(); return "EXIT"; }
+          // 경기로 가는 길: 브리핑 → 경기 상태 → 직접 플레이(또는 자동 시뮬)
+          const sim = document.querySelector("button.btn-auto:not([disabled])");
+          if (auto && sim) { sim.click(); return "SIM"; }
+          const play = auto ? null : document.querySelector("button.btn-play:not([disabled])");
           if (play) { play.click(); return "PLAY"; }
           const brief = document.querySelector("button.confirm-btn");
           if (brief) { brief.click(); return "BRIEF"; }
@@ -170,12 +179,14 @@ const COMMANDS = {
           if (confirm) { confirm.click(); return "CONFIRM"; }
           const go = document.querySelector(".go");
           if (go && !go.disabled) { go.click(); return "GO"; }
-          return "STUCK";
-        }, stopSel);
+          // 왜 막혔는지 말한다 — "STUCK"만 던지면 앱을 다시 띄워 손으로 뒤져야 한다
+          return "STUCK:" + (go ? (go.disabled ? "go가 disabled" : "?") : ".go 없음")
+            + " | " + (document.body.innerText.slice(0, 60).replace(/\s+/g, " "));
+        }, { stopSel, auto });
         if (state === "MATCH") { console.log(`week ${i}: 목표 화면 도달`); return; }
-        await new Promise((r) => setTimeout(r, state === "GO" ? 4500 : 1200));
+        await new Promise((r) => setTimeout(r, state === "GO" || state === "SIM" ? 5000 : 1200));
         if (state === "GO") break;
-        if (state === "STUCK") { console.log(`week ${i}: STUCK`); return; }
+        if (state.startsWith("STUCK")) { console.log(`week ${i}: ${state}`); return; }
       }
       const label = await page.evaluate(() => document.querySelector(".go")?.innerText ?? "(없음)");
       const wk = await page.evaluate(() => document.querySelector(".wk")?.innerText ?? "");

@@ -91,12 +91,23 @@ if (!PNG) {
       return [img.data[i], img.data[i + 1], img.data[i + 2]];
     };
   };
-  const isSoil = ([r, g, b]) => r > g + 8 && r > b + 8;
-  /** 주변 9칸 다수결 — 도트 한 점 튀는 걸로 판정하지 않는다 */
-  const soilFrac = (px, x, y) => {
-    let s = 0;
-    for (const dx of [-6, 0, 6]) for (const dy of [-6, 0, 6]) if (isSoil(px(x + dx, y + dy))) s++;
-    return s / 9;
+  const isSoil  = ([r, g, b]) => r > g + 8 && r > b + 8;
+  const isGrass = ([r, g, b]) => g > r + 8 && g > b + 8;
+  /**
+   * 주변 9칸을 **흙·잔디·그 외** 셋으로 나눈다. 도트 한 점으로 판정하지 않는다.
+   *
+   * ⚠ 처음엔 "흙 비율"만 재고 낮으면 잔디라고 했는데 **거짓 실패가 났다.**
+   * 별빛구장(야간)의 홈플레이트에서 9칸 중 잔디는 0칸이었다 — 플레이트 그림과
+   * 그림자가 "흙이 아님"으로 잡혔을 뿐이고 다이아몬드는 제자리였다.
+   * 지면이 틀렸다고 말하려면 **반대쪽 지면이 실제로 거기 있어야** 한다.
+   */
+  const groundAt = (px, x, y) => {
+    let soil = 0, grass = 0;
+    for (const dx of [-6, 0, 6]) for (const dy of [-6, 0, 6]) {
+      const c = px(x + dx, y + dy);
+      if (isSoil(c)) soil++; else if (isGrass(c)) grass++;
+    }
+    return { soil: soil / 9, grass: grass / 9 };
   };
   const anchorsOf = (tier) => {
     const t = A.tiers[tier];
@@ -107,10 +118,10 @@ if (!PNG) {
   };
 
   // 기준 그림에서 각 앵커의 지면을 먼저 재둔다
-  const refSoil = {};
+  const refGround = {};
   for (const [tier, f] of Object.entries(REF_FILE)) {
     const px = sampler(read(path.join(SPEC, f)));
-    refSoil[tier] = anchorsOf(tier).map(([, p]) => soilFrac(px, p[0], p[1]));
+    refGround[tier] = anchorsOf(tier).map(([, p]) => groundAt(px, p[0], p[1]));
   }
 
   const bad = [];
@@ -122,10 +133,11 @@ if (!PNG) {
     const list = anchorsOf(tier);
     const mism = [];
     list.forEach(([code, pt], i) => {
-      const want = refSoil[tier][i];
-      const got = soilFrac(px, pt[0], pt[1]);
-      if (want >= 0.7 && got <= 0.3) mism.push(`${code}:흙→잔디`);
-      else if (want <= 0.3 && got >= 0.7) mism.push(`${code}:잔디→흙`);
+      const want = refGround[tier][i];
+      const got = groundAt(px, pt[0], pt[1]);
+      // 기준이 흙이었는데 **잔디가 실제로 깔려 있으면** 밀린 것이다
+      if (want.soil >= 0.7 && got.grass >= 0.7) mism.push(`${code}:흙→잔디`);
+      else if (want.grass >= 0.7 && got.soil >= 0.7) mism.push(`${code}:잔디→흙`);
     });
     if (mism.length) {
       bad.push(s.id);
