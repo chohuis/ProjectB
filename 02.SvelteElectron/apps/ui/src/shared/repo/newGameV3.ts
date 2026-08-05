@@ -235,6 +235,65 @@ async function generateLeagueNpcs(
   return gen.npcs;
 }
 
+// ── 팀 미리보기 (새 게임 화면) ────────────────────────────────────
+//
+// 팀을 고를 때 "이 사람들과 뛴다"를 보여준다. 실측:
+//   선수  한 팀 30명 0.6ms (102팀 전체는 116ms)
+//   스태프 한 팀  4명 0ms  (182팀 전체는 12ms)
+// 그리고 **한 팀만 뽑은 결과가 전체를 뽑았을 때의 그 팀과 완전히 같다** —
+// 이름도 능력치도. 그래서 예고가 아니라 사실이다.
+//
+// ⚠ **파라미터를 하나라도 빠뜨리면 조용히 어긋난다.** 최소 파라미터로 뽑으면
+// 이름은 같은데 OVR이 65 → 69로 달라졌다. 그래서 화면이 조립하지 않고
+// 여기서 `createNewGameV3`와 **같은 조립을 쓴다.**
+
+export interface TeamPreview {
+  npcs: Partial<RepoNpc>[];
+  staff: import("./staffGen").StaffRow[];
+}
+
+/**
+ * 한 팀의 로스터·스태프를 실제 생성과 **같은 값으로** 미리 뽑는다.
+ *
+ * ⚠ `worldSeed`는 나중에 `createNewGameV3`에 넘길 것과 **같아야 한다.**
+ * 다르면 미리보기가 거짓말이 된다 — 화면이 시드를 먼저 정해 둘 다에 넘긴다.
+ */
+export async function previewTeamRoster(
+  teamId: string,
+  seasonYear: number,
+  worldSeed: number,
+  allTeams: import("../stores/master").TeamRef[],
+): Promise<TeamPreview> {
+  const rulesFile = await loadRosterRules();
+  const team = allTeams.find((t) => t.id === teamId);
+  if (!team) return { npcs: [], staff: [] };
+
+  const rules = rulesFile.rosterRules[team.leagueId];
+  if (!rules) return { npcs: [], staff: [] };
+
+  // createNewGameV3와 같은 입력을 만든다
+  const salaryIndex = buildSalaryIndex(allTeams);
+  const entryRules = (rulesFile.careerHistoryRules as { entry?: unknown } | undefined)?.entry;
+
+  const npcs = await generateLeagueNpcs(
+    team.leagueId, seasonYear, worldSeed,
+    [{
+      teamId,
+      schoolId: team.schoolId ?? "",
+      salaryIndex: salaryIndex.get(teamId),
+      power: team.power,
+    }],
+    rules,
+    rulesFile.salaryRules, rulesFile.powerRules, entryRules,
+    foreignSlotsFor(team.leagueId, rulesFile), rulesFile.talentRules,
+  );
+
+  const { generateStaffForTeams } = await import("./staffGen");
+  const staff = await generateStaffForTeams([team], worldSeed, seasonYear);
+
+  return { npcs, staff };
+}
+
 /**
  * 새 게임 슬롯 생성 (클린 브레이크 — v3 전용).
  * **국내 전 리그**를 활성화한다. 해외(ABL·JBL)만 진출 시점에 Lazy 생성.

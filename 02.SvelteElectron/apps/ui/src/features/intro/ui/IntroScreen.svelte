@@ -128,6 +128,13 @@
     border: 2px solid var(--t-dark);
     display: flex;
     flex-direction: column;
+    /*
+      ⚠ `align-items`를 안 정하면 기본값 `stretch`라 자식이 전폭이 되고,
+      그 안에서 글자가 왼쪽에 붙는다. **새 게임은 가운데인데 이어하기만
+      왼쪽**이던 이유다 — 버튼의 `text-align: center`는 늘어난 자식 안에서
+      다시 적용되지 않는다.
+    */
+    align-items: center;
     gap: 3px;
     padding: 11px 14px;
   }
@@ -140,7 +147,6 @@
     color: var(--ink-mute);
     display: flex;
     gap: 5px;
-    justify-content: center;
     align-items: baseline;
   }
   .cont-sub b { font-weight: 700; color: var(--ink-mid); }

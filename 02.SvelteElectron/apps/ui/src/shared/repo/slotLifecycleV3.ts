@@ -479,6 +479,14 @@ export interface StartNewGameV3Options {
   slotName?: string;
   seasonYear: number;
   protagonist: ProtagonistSave;
+  /**
+   * 세계 시드. **새 게임 화면이 정해 넘긴다.**
+   *
+   * 예전엔 `createNewGameV3`가 `Date.now()`로 만들었는데, 그러면 팀 고를 때
+   * 보여준 로스터와 실제로 만들어지는 로스터가 **다른 시드에서 나온다** —
+   * 미리보기가 거짓말이 된다. 안 넘기면 예전처럼 여기서 정해진다.
+   */
+  worldSeed?: number;
 }
 
 /** v3 새 게임: 스토어 초기화 → 시즌 생성 → 로스터 생성·슬롯 생성 → hydrate */
@@ -501,6 +509,8 @@ export async function startNewGameV3(opts: StartNewGameV3Options): Promise<{ npc
     season: slimSeason,
     // 스태프는 국내 전 팀을 한 번에 만든다 (Phase 6A) — power·resource가 생성 보정에 쓰인다
     allTeams: get(masterStore).teams,
+    // 미리보기와 같은 시드여야 "이 선수들과 뛴다"가 사실이 된다
+    worldSeed: opts.worldSeed,
   });
   await slotRepo.setMeta(opts.slotId, { team_id: opts.protagonist.teamId });
 

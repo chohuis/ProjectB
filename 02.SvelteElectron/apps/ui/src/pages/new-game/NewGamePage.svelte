@@ -79,13 +79,81 @@
     ];
   }
 
-  // 선택된 팀의 감독·코치·선수 필터
-  $: teamEntities = selectedTeamId
-    ? $masterStore.entities.filter((e) => e.teamId === selectedTeamId)
-    : [];
-  $: teamManager = teamEntities.find((e) => e.role === "manager") ?? null;
-  $: teamCoaches = teamEntities.filter((e) => e.role === "coach").slice(0, 2);
-  $: teamPlayers = teamEntities.filter((e) => e.role === "player").slice(0, 4);
+  /**
+   * ⚠ 예전엔 `$masterStore.entities`를 필터해 로스터를 그리려 했고, 비어 있으면
+   * "선수 정보 로드 중..."을 띄웠다. **그건 로딩 중이 아니라 영원히 안 채워지는
+   * 자리였다** — `npc_master`는 0행이고(Phase 6A), 스태프는 slot.db에서 오는데
+   * 아직 슬롯이 없고, `reloadEntities()`는 선수 로드를 의도적으로 건너뛴다.
+   *
+   * **대신 생성을 여기로 당겼다.** 실측으로 한 팀이 선수 0.6ms · 스태프 0ms이고,
+   * 한 팀만 뽑은 결과가 나중에 전체를 뽑을 때의 그 팀과 **완전히 같다**.
+   * 시드를 먼저 정해 미리보기와 실제 생성에 같은 값을 넘기므로 예고가 아니라 사실이다.
+   */
+
+  /**
+   * 세계 시드. **화면이 먼저 정한다.**
+   * 예전엔 `createNewGameV3`가 `Date.now()`로 만들었는데, 그러면 미리보기와
+   * 실제가 달라진다. 여기서 한 번 정해 둘 다에 넘긴다.
+   */
+  const worldSeed = Date.now() >>> 0;
+  const previewSeasonYear = 2026;
+
+  let previewTeamId = "";
+  let previewLoading = false;
+  let previewNpcs: { name?: string; position?: string; grade?: number; abilities?: { pitching?: { ovr?: number }; batting?: { ovr?: number } } }[] = [];
+  let previewStaff: { role?: string; name?: string; age?: number; stats?: Record<string, unknown> }[] = [];
+
+  /** 팀이 바뀌면 그 팀 로스터를 뽑는다. 1ms 안쪽이라 클릭마다 돌려도 된다 */
+  $: void loadPreview(selectedTeamId);
+
+  async function loadPreview(teamId: string): Promise<void> {
+    if (!teamId || teamId === previewTeamId) return;
+    previewTeamId = teamId;
+    previewLoading = true;
+    try {
+      const { previewTeamRoster } = await import("../../shared/repo/newGameV3");
+      const r = await previewTeamRoster(teamId, previewSeasonYear, worldSeed, $masterStore.teams);
+      // 늦게 온 응답이 최신 선택을 덮지 않게
+      if (previewTeamId !== teamId) return;
+      previewNpcs = r.npcs as typeof previewNpcs;
+      previewStaff = r.staff as typeof previewStaff;
+    } catch (e) {
+      console.warn("[NewGame] 로스터 미리보기 실패 — 팀 정보만 보여준다", e);
+      previewNpcs = [];
+      previewStaff = [];
+    } finally {
+      if (previewTeamId === teamId) previewLoading = false;
+    }
+  }
+
+  const STAFF_LABEL: Record<string, string> = {
+    manager: "감독", coach: "코치", owner: "구단주", scout: "스카우트", trainer: "트레이너",
+  };
+  $: previewManager = previewStaff.find((s) => s.role === "manager") ?? null;
+  $: previewCoaches = previewStaff.filter((s) => s.role === "coach");
+  /** OVR 높은 순 — "이 팀의 기둥이 누구인가"가 고르는 근거다 */
+  $: previewTop = [...previewNpcs]
+    .sort((a, b) => npcOvr(b) - npcOvr(a))
+    .slice(0, 6);
+
+  function npcOvr(n: (typeof previewNpcs)[number]): number {
+    return n.abilities?.pitching?.ovr ?? n.abilities?.batting?.ovr ?? 0;
+  }
+
+  /** 선택된 권역. 팀을 고르면 그 팀의 권역이 자동으로 열린다 */
+  let selectedRegionId = "";
+  $: if (!selectedRegionId && teamsByRegion.length > 0) selectedRegionId = teamsByRegion[0].id;
+  $: activeRegion = teamsByRegion.find((r) => r.id === selectedRegionId) ?? null;
+
+  /** 이 팀이 뛸 구장 — ID가 아니라 이름으로 (팀 상세에서 같은 결함을 이미 고쳤다) */
+  $: selectedStadium = selectedTeam?.stadium
+    ? ($masterStore.stadiums ?? []).find((s) => s.id === selectedTeam!.stadium) ?? null
+    : null;
+
+  /** 같은 권역 라이벌 — refs의 history.rivals에서 */
+  $: selectedRivals = (selectedTeam?.history?.rivals ?? [])
+    .map((r) => ($masterStore.teams ?? []).find((t) => t.id === r.with))
+    .filter((t): t is NonNullable<typeof t> => !!t);
 
   // ── Step 3 상태 ────────────────────────────────────────────────
   type PresetKey = "balanced" | "power" | "control" | "stamina";
@@ -211,8 +279,10 @@
     await startNewGameV3({
       slotId,
       slotName: playerName.trim(),
-      seasonYear: 2026,
+      seasonYear: previewSeasonYear,
       protagonist,
+      // ⚠ 미리보기에 쓴 시드를 그대로 넘긴다 — 다르면 보여준 로스터가 안 나온다
+      worldSeed,
     });
     await gameStore.save();
 
@@ -399,17 +469,35 @@
             <p class="sub">소속할 고등학교 팀을 선택하세요</p>
           </div>
           {#if $masterStore.loaded && hsTeams.length > 0}
-            <div class="team-list">
-              {#each teamsByRegion as region (region.id)}
-                <div class="region-head">
-                  <span class="region-name">{region.meta.label}</span>
-                  <span class="region-area">{region.meta.area}</span>
-                  <span class="region-count">{region.teams.length}</span>
-                </div>
-                {#each region.teams as team (team.id)}
+            <!--
+              2단으로 고른다 — 권역을 먼저, 그 안에서 학교를.
+              한 줄에 102개를 늘어놓으면 스크롤이 길어 어디까지 봤는지 잃고,
+              **고교는 권역이 라이벌·일정을 정하므로** 그게 첫 결정이 맞다.
+            -->
+            <div class="picker-2col">
+              <div class="region-list" role="listbox" aria-label="권역">
+                {#each teamsByRegion as region (region.id)}
+                  <button
+                    class="region-item"
+                    class:on={selectedRegionId === region.id}
+                    role="option"
+                    aria-selected={selectedRegionId === region.id}
+                    on:click={() => (selectedRegionId = region.id)}
+                  >
+                    <span class="ri-name">{region.meta.label}</span>
+                    <span class="ri-area">{region.meta.area}</span>
+                    <span class="ri-count">{region.teams.length}</span>
+                  </button>
+                {/each}
+              </div>
+
+              <div class="team-list" role="listbox" aria-label="학교">
+                {#each (activeRegion?.teams ?? []) as team (team.id)}
                   <button
                     class="team-list-item"
                     class:selected={selectedTeamId === team.id}
+                    role="option"
+                    aria-selected={selectedTeamId === team.id}
                     style={teamListStyle(team, selectedTeamId === team.id)}
                     on:click={() => (selectedTeamId = team.id)}
                   >
@@ -422,7 +510,7 @@
                     </div>
                   </button>
                 {/each}
-              {/each}
+              </div>
             </div>
           {:else}
             <p class="loading-msg">팀 데이터 로드 중...</p>
@@ -503,55 +591,95 @@
                 {/if}
               </div>
 
-              <!-- 로스터 -->
+              <!--
+                ⚠ 여기 로스터(감독·코치·주요 선수)가 있었는데 **채워질 수 없는
+                자리**였다. 선수·스태프는 게임을 시작해야 Rust가 만들고, 이
+                화면은 그 이전이다. 비어 있으면 "선수 정보 로드 중..."을 띄워
+                일시적 상태처럼 보이게 했지만 영원히 안 끝났다.
+                실제로 있는 것만 보여준다.
+              -->
               <div class="roster-col" style={detailPanelStyle(selectedTeam)}>
                 <div class="team-color-bar" style={colorBarStyle(selectedTeam)}></div>
-                {#if teamManager}
-                  <div class="section-label">감독</div>
-                  <div class="entity-card manager-card">
-                    <span class="entity-name">{teamManager.name}</span>
-                    <span class="entity-badge manager">감독</span>
-                    <span class="entity-sub">{teamManager.details.manager?.style ?? ""} · {teamManager.age}세</span>
-                  </div>
-                {/if}
 
-                {#if teamCoaches.length > 0}
-                  <div class="section-label">코치</div>
-                  <div class="entity-list">
-                    {#each teamCoaches as coach}
-                      <div class="entity-card">
-                        <span class="entity-name">{coach.name}</span>
-                        <span class="entity-badge coach">코치</span>
-                        <span class="entity-sub">{coach.details.coach?.specialty ?? "-"} 전문 · {coach.age}세</span>
-                      </div>
+                <div class="section-label">이 팀에서 뛴다면</div>
+                <dl class="fact-list">
+                  {#if selectedTeam.city}
+                    <div class="fact"><dt>연고</dt><dd>{selectedTeam.city}</dd></div>
+                  {/if}
+                  {#if selectedStadium}
+                    <div class="fact">
+                      <dt>구장</dt>
+                      <dd>{selectedStadium.name}{#if selectedStadium.parkFactor}<span class="fact-note"> · {selectedStadium.parkFactor}</span>{/if}</dd>
+                    </div>
+                  {/if}
+                  {#if activeRegion}
+                    <div class="fact">
+                      <dt>권역</dt>
+                      <dd>{activeRegion.meta.label}<span class="fact-note"> · {activeRegion.teams.length}팀</span></dd>
+                    </div>
+                  {/if}
+                  {#if selectedTeam.profile?.difficulty}
+                    <div class="fact"><dt>난이도</dt><dd>{selectedTeam.profile.difficulty}</dd></div>
+                  {/if}
+                </dl>
+
+                {#if selectedRivals.length > 0}
+                  <div class="section-label">라이벌</div>
+                  <div class="rival-row">
+                    {#each selectedRivals as r}
+                      <span class="rival-chip">
+                        <TeamMark teamId={r.id} size={16} />
+                        {r.name}
+                      </span>
                     {/each}
                   </div>
                 {/if}
 
-                {#if teamPlayers.length > 0}
-                  <div class="section-label">주요 선수</div>
-                  <div class="entity-list">
-                    {#each teamPlayers as player}
-                      {@const pd = player.details.player}
-                      <div class="entity-card player-card">
-                        <div class="player-main">
-                          <span class="entity-name">{player.name}</span>
-                          <span class="entity-badge player">{pd?.position ?? "?"}</span>
-                          <span class="player-grade">{player.grade}학년</span>
-                        </div>
-                        <div class="player-stats">
-                          <span class="stat-pill">OVR <strong>{pd?.pitching?.ovr ?? pd?.batting?.ovr ?? "-"}</strong></span>
-                          <span class="stat-pill">{pd?.handedness === "L" ? "좌투" : pd?.handedness === "S" ? "양투" : "우투"}</span>
-                          <span class="stat-pill">구위 <strong>{pd?.pitching?.velocity ?? "-"}</strong></span>
-                        </div>
-                      </div>
+                <div class="section-label">감독 · 코치</div>
+                {#if previewLoading}
+                  <p class="roster-note">불러오는 중…</p>
+                {:else if previewManager || previewCoaches.length}
+                  <div class="staff-row">
+                    {#if previewManager}
+                      <span class="staff-chip mgr">
+                        <b>{previewManager.name}</b>
+                        <span class="staff-role">감독</span>
+                      </span>
+                    {/if}
+                    {#each previewCoaches as c}
+                      <span class="staff-chip">
+                        <b>{c.name}</b><span class="staff-role">코치</span>
+                      </span>
                     {/each}
                   </div>
-                {:else if $masterStore.entities.length === 0}
-                  <p class="loading-msg">선수 정보 로드 중...</p>
+                {:else}
+                  <p class="roster-note">스태프 없음</p>
                 {/if}
-              </div>
-            </div>
+
+                <div class="section-label">
+                  주요 선수
+                  {#if previewNpcs.length}<span class="sl-count">{previewNpcs.length}명 중 상위 {previewTop.length}</span>{/if}
+                </div>
+                {#if previewLoading}
+                  <p class="roster-note">불러오는 중…</p>
+                {:else if previewTop.length}
+                  <ul class="pv-list">
+                    {#each previewTop as n}
+                      <li>
+                        <span class="pv-pos">{n.position ?? "?"}</span>
+                        <span class="pv-name">{n.name ?? "-"}</span>
+                        {#if n.grade}<span class="pv-grade">{n.grade}학년</span>{/if}
+                        <b class="pv-ovr">{npcOvr(n)}</b>
+                      </li>
+                    {/each}
+                  </ul>
+                  <!-- 이 문구가 중요하다 — 예고가 아니라 확정이라는 걸 밝힌다 -->
+                  <p class="roster-note">게임을 시작하면 이 선수단으로 뛴다.</p>
+                {:else}
+                  <p class="roster-note">선수 정보를 불러오지 못했다.</p>
+                {/if}
+              </div><!-- /.roster-col -->
+            </div><!-- /.detail-inner -->
           {:else}
             <div class="detail-placeholder">
               팀을 선택하면 상세 정보가 표시됩니다
@@ -926,7 +1054,8 @@
   /* ── Step 2 전용 레이아웃 ── */
   .step2-layout {
     display: grid;
-    grid-template-columns: 200px minmax(0, 1fr);
+    /* 왼쪽이 2단(권역 + 학교)이라 200px로는 학교 이름이 세로로 쪼개진다 */
+    grid-template-columns: 330px minmax(0, 1fr);
     gap: 16px;
     height: 100%;
     padding: 8px 0 16px;
@@ -957,27 +1086,59 @@
 
   .step2-top h2 { margin: 0 0 4px; font-size: 24px; color: var(--ink); }
 
-  /* ── 팀 목록 1열 ── */
+  /* ── 2단 고르기: 권역 → 학교 ──
+     102개를 한 줄로 늘어놓으면 스크롤이 길어 어디까지 봤는지 잃는다.
+     고교는 권역이 라이벌·일정을 정하므로 그게 첫 결정이 맞다. */
+  .picker-2col {
+    display: grid;
+    grid-template-columns: 132px minmax(0, 1fr);
+    gap: 8px;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .region-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow-y: auto;
+    padding-right: 2px;
+    border-right: 1px solid var(--line);
+  }
+  .region-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas: "name count" "area count";
+    align-items: center;
+    gap: 0 6px;
+    background: none;
+    border: 0;
+    border-left: 3px solid transparent;
+    border-radius: var(--radius);
+    padding: 7px 8px;
+    cursor: pointer;
+    text-align: left;
+  }
+  .region-item:hover { background: var(--panel-sunk); }
+  .region-item.on {
+    background: var(--panel-sunk);
+    border-left-color: var(--t-accent);
+  }
+  .ri-name  { grid-area: name; font-size: 12px; font-weight: 800; color: var(--ink); }
+  .ri-area  { grid-area: area; font-size: 10px; color: var(--ink-mute); }
+  .ri-count {
+    grid-area: count; font-size: 10px; color: var(--ink-mute);
+    font-variant-numeric: tabular-nums;
+  }
+
   .team-list {
     display: flex;
     flex-direction: column;
     gap: 5px;
+    overflow-y: auto;
   }
-
-  /* ── 권역 머리 ── */
-  .region-head {
-    display: flex; align-items: baseline; gap: 7px;
-    padding: 9px 10px 5px;
-    position: sticky; top: 0; z-index: 1;
-    background: var(--panel, var(--panel-sunk));
-  }
-  .region-name { font-size: 12px; font-weight: 800; color: var(--t-gold, var(--ink)); }
-  .region-area { font-size: 10.5px; color: var(--ink-mute, var(--ink-mid)); }
-  .region-count {
-    margin-left: auto; font-size: 10px; font-variant-numeric: tabular-nums;
-    color: var(--ink-mute, var(--ink-mid));
-  }
-  .tli-city { font-size: 10.5px; opacity: 0.6; margin-left: auto; }
+  .tli-city { font-size: 10.5px; opacity: 0.6; margin-left: auto; white-space: nowrap; }
+  .tli-main strong { white-space: nowrap; }
 
   .team-list-item {
     display: flex;
@@ -1230,101 +1391,55 @@
     overflow-y: auto;
   }
 
-  .entity-list {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+  /* ── 팀 사실 목록 ── */
+  .fact-list { margin: 0; display: grid; gap: 4px; }
+  .fact { display: flex; align-items: baseline; gap: 8px; }
+  .fact dt {
+    font-size: 11px; color: var(--ink-mute);
+    min-width: 42px; flex: 0 0 auto;
+  }
+  .fact dd { margin: 0; font-size: 13px; color: var(--ink); }
+  .fact-note { font-size: 11px; color: var(--ink-mute); }
+
+  .rival-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .rival-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; color: var(--ink);
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 20px; padding: 3px 10px 3px 6px;
   }
 
-  .entity-card {
-    background: var(--panel-sunk);
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    padding: 8px 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
+  /* ── 로스터 미리보기 (실제 생성분) ── */
+  .staff-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .staff-chip {
+    display: inline-flex; align-items: baseline; gap: 5px;
+    font-size: 12px; color: var(--ink);
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 20px; padding: 3px 10px;
+  }
+  .staff-chip.mgr { border-color: var(--line-strong); }
+  .staff-role { font-size: 10px; color: var(--ink-mute); }
+
+  .sl-count { font-size: 10px; font-weight: 400; color: var(--ink-mute); margin-left: 6px; }
+
+  .pv-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; }
+  .pv-list li {
+    display: flex; align-items: baseline; gap: 7px;
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 5px 9px;
+  }
+  .pv-pos {
+    font-size: 10px; font-weight: 800; color: var(--ink-mute);
+    min-width: 22px;
+  }
+  .pv-name { font-size: 13px; color: var(--ink); flex: 1; }
+  .pv-grade { font-size: 10.5px; color: var(--ink-mute); }
+  .pv-ovr {
+    font-size: 13px; color: var(--ok);
+    font-variant-numeric: tabular-nums; min-width: 22px; text-align: right;
   }
 
-  .manager-card {
-    border-color: var(--line);
-    background: var(--panel-sunk);
-  }
-
-  .entity-name {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--ink);
-    flex: 0 0 auto;
-  }
-
-  .entity-badge {
-    font-size: 10px;
-    padding: 2px 7px;
-    border-radius: 4px;
-    flex: 0 0 auto;
-  }
-
-  .entity-badge.manager {
-    background: var(--line);
-    border: 1px solid var(--ink-mute);
-    color: var(--ink);
-  }
-
-  .entity-badge.coach {
-    background: rgba(31, 122, 71, 0.10);
-    border: 1px solid var(--ok);
-    color: var(--ok);
-  }
-
-  .entity-badge.player {
-    background: rgba(154, 101, 16, 0.12);
-    border: 1px solid var(--warn);
-    color: var(--warn);
-  }
-
-  .entity-sub {
-    flex-basis: 100%;
-    font-size: 11px;
-    color: var(--ink-mute);
-  }
-
-  .player-card {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-  }
-
-  .player-main {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .player-grade {
-    font-size: 11px;
-    color: var(--ink-mute);
-  }
-
-  .player-stats {
-    display: flex;
-    gap: 6px;
-  }
-
-  .stat-pill {
-    background: var(--panel-sunk);
-    border: 1px solid var(--panel-sunk);
-    border-radius: 4px;
-    padding: 2px 7px;
-    font-size: 11px;
-    color: var(--ink-mid);
-  }
-
-  .stat-pill strong {
-    color: var(--ink);
-    font-weight: 700;
-  }
+  .roster-note { margin: 0; font-size: 11px; color: var(--ink-mute); }
 
   /* ── Step 3 전용 레이아웃 ── */
   .step3-layout {
