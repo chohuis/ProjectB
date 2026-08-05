@@ -164,18 +164,18 @@
 {/if}
 
 <style>
-  .overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8); display: flex; align-items: center; justify-content: center; z-index: 200; }
-  .modal { background: #0e1a30; border: 1px solid #3a5898; border-radius: 16px; padding: 24px; width: min(760px, 94vw); display: grid; gap: 14px; }
-  .chip { font-size: 11px; color: #7a9ad0; }
-  h2 { margin: 0; color: #e8f0ff; }
-  .body-text { margin: 0; color: #a8c0e0; }
+  .overlay { position: fixed; inset: 0; background: rgba(10, 18, 38, 0.52); display: flex; align-items: center; justify-content: center; z-index: 200; }
+  .modal { background: var(--panel); border: 1px solid var(--ink-mute); border-radius: 16px; padding: 24px; width: min(760px, 94vw); display: grid; gap: 14px; }
+  .chip { font-size: 11px; color: var(--ink-mid); }
+  h2 { margin: 0; color: var(--ink); }
+  .body-text { margin: 0; color: var(--ink); }
   .options { display: grid; gap: 8px; }
-  .opt-box { border: 1px solid #2a4068; border-radius: 10px; padding: 10px; background: #0f1a2c; }
-  .opt-btn { background: #111e38; border: 1px solid #2a4068; border-radius: 10px; padding: 10px 12px; text-align: left; cursor: pointer; display: block; width: 100%; }
-  .opt-btn.danger { background: #3a1f1f; border-color: #804040; }
-  .opt-label { color: #dceeff; font-weight: 600; }
+  .opt-box { border: 1px solid var(--line); border-radius: 10px; padding: 10px; background: var(--panel); }
+  .opt-btn { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; text-align: left; cursor: pointer; display: block; width: 100%; }
+  .opt-btn.danger { background: rgba(179, 49, 31, 0.09); border-color: var(--bad); }
+  .opt-label { color: var(--ink); font-weight: 600; }
   .list { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 8px; }
-  .picked { background: #0f1a2c; color: #bcd4f2; border: 1px solid #2a3d60; border-radius: 6px; padding: 6px; }
-  .submit { background: #1e5aaa; color: #fff; border: 0; border-radius: 10px; padding: 10px 14px; cursor: pointer; }
+  .picked { background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 6px; }
+  .submit { background: var(--ink-mute); color: #fff; border: 0; border-radius: 10px; padding: 10px 14px; cursor: pointer; }
   .submit:disabled { opacity: 0.5; cursor: default; }
 </style>

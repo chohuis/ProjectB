@@ -85,14 +85,14 @@
 {/if}
 
 <style>
-  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.75); display:flex; align-items:center; justify-content:center; z-index:245; }
-  .modal { width:min(440px,90vw); background:#10233c; border:1px solid #40659a; border-radius:12px; padding:24px; display:grid; gap:14px; }
-  .chip { margin:0; font-size:11px; color:#7aa8e0; }
-  h2 { margin:4px 0 0; color:#eef6ff; }
-  .body-text { margin:0; color:#a8c8e8; font-size:14px; white-space:pre-line; line-height:1.6; }
-  .warning-box { background:#2a1010; border:1px solid #804040; border-radius:8px; padding:10px 14px; color:#f08080; font-size:13px; }
+  .overlay { position: fixed; inset: 0; background: rgba(10, 18, 38, 0.52); display:flex; align-items:center; justify-content:center; z-index:245; }
+  .modal { width:min(440px,90vw); background:var(--panel); border:1px solid var(--ink-mute); border-radius:12px; padding:24px; display:grid; gap:14px; }
+  .chip { margin:0; font-size:11px; color:var(--ink); }
+  h2 { margin:4px 0 0; color:var(--ink); }
+  .body-text { margin:0; color:var(--ink); font-size:14px; white-space:pre-line; line-height:1.6; }
+  .warning-box { background:rgba(179, 49, 31, 0.09); border:1px solid var(--bad); border-radius:8px; padding:10px 14px; color:var(--bad); font-size:13px; }
   .actions { display:flex; gap:10px; justify-content:flex-end; }
-  .btn-keep { border:1px solid #2a4068; background:#0d1e38; color:#7aa8d8; border-radius:8px; padding:9px 16px; cursor:pointer; font-size:13px; }
-  .btn-retire { border:1px solid #5a4020; background:#2a1e08; color:#e0a040; border-radius:8px; padding:9px 20px; cursor:pointer; font-size:13px; font-weight:700; }
+  .btn-keep { border:1px solid var(--line); background:var(--panel); color:var(--ink); border-radius:8px; padding:9px 16px; cursor:pointer; font-size:13px; }
+  .btn-retire { border:1px solid rgba(154, 101, 16, 0.30); background:rgba(154, 101, 16, 0.12); color:var(--warn); border-radius:8px; padding:9px 20px; cursor:pointer; font-size:13px; font-weight:700; }
   button:disabled { opacity:.5; cursor:default; }
 </style>

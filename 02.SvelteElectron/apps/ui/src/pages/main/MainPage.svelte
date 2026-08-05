@@ -656,36 +656,36 @@
   /* ── 컨디션 경고 모달 ── */
   .cond-warn-overlay {
     position: fixed; inset: 0;
-    background: rgba(0,0,0,0.65);
+    background: rgba(10, 18, 38, 0.52);
     display: flex; align-items: center; justify-content: center;
     z-index: 110;
   }
   .cond-warn-modal {
-    background: #1a1508;
-    border: 1px solid #8a6010;
+    background: rgba(154, 101, 16, 0.12);
+    border: 1px solid var(--warn);
     border-radius: 12px;
     padding: 24px 28px;
     width: 320px;
     display: grid; gap: 16px;
   }
-  .cond-warn-title { margin: 0; font-size: 18px; color: #f0c060; }
-  .cond-warn-body  { margin: 0; font-size: 14px; color: #d8c090; line-height: 1.6; }
-  .cond-warn-body strong { color: #ff9b50; }
+  .cond-warn-title { margin: 0; font-size: 18px; color: var(--warn); }
+  .cond-warn-body  { margin: 0; font-size: 14px; color: var(--warn); line-height: 1.6; }
+  .cond-warn-body strong { color: var(--warn); }
   .cond-warn-btns  { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .cond-btn {
     padding: 10px; border-radius: 8px;
     font-size: 14px; font-weight: 600; cursor: pointer;
   }
-  .cond-btn.push { background: #3a2810; border: 1px solid #8a5020; color: #f0a060; }
-  .cond-btn.push:hover { background: #4a3418; }
-  .cond-btn.skip { background: #0d1928; border: 1px solid #2a4060; color: #7aaed8; }
-  .cond-btn.skip:hover { background: #162540; }
+  .cond-btn.push { background: rgba(154, 101, 16, 0.12); border: 1px solid var(--warn); color: var(--warn); }
+  .cond-btn.push:hover { background: rgba(154, 101, 16, 0.30); }
+  .cond-btn.skip { background: var(--panel); border: 1px solid var(--line); color: var(--ink); }
+  .cond-btn.skip:hover { background: var(--panel-sunk); }
 
   /* ── 경기 오버레이 ── */
   .game-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.65);
+    background: rgba(10, 18, 38, 0.52);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -693,8 +693,8 @@
   }
 
   .game-modal {
-    background: #111d34;
-    border: 1px solid #3a5a96;
+    background: var(--panel);
+    border: 1px solid var(--ink-mute);
     border-radius: 14px;
     padding: 32px 40px;
     display: flex;
@@ -708,8 +708,8 @@
     display: inline-block;
     margin-left: 8px;
     padding: 1px 7px;
-    background: #2a5c3a;
-    color: #7ecc99;
+    background: var(--ok);
+    color: var(--ok);
     border-radius: 4px;
     font-size: 11px;
     font-weight: 600;
@@ -720,7 +720,7 @@
   .week-badge {
     margin: 0;
     font-size: 13px;
-    color: #7a9ac8;
+    color: var(--ink-mid);
     letter-spacing: 1px;
     text-transform: uppercase;
   }
@@ -731,16 +731,16 @@
     gap: 16px;
     font-size: 18px;
     font-weight: 600;
-    color: #b8d0f7;
+    color: var(--ink);
   }
 
   .matchup .my-team {
-    color: #f0e060;
+    color: var(--warn);
   }
 
   .vs {
     font-size: 13px;
-    color: #4a6888;
+    color: var(--ink-mute);
     font-weight: 400;
   }
 
@@ -751,7 +751,7 @@
 
   .btn-auto {
     padding: 10px 28px;
-    background: #1a6640;
+    background: var(--ok);
     color: #fff;
     border: 0;
     border-radius: 8px;
@@ -761,7 +761,7 @@
   }
 
   .btn-auto:hover:not(:disabled) {
-    background: #22854f;
+    background: var(--ok);
   }
 
   .btn-auto:disabled,
@@ -773,13 +773,13 @@
   .sim-status {
     margin: 4px 0 0;
     font-size: 13px;
-    color: #8aafd6;
+    color: var(--ink);
     text-align: center;
   }
 
   .sim-error-msg {
     font-size: 11px;
-    color: #c07070;
+    color: var(--bad);
     text-align: center;
     margin: 4px 0;
     word-break: break-all;
@@ -789,7 +789,7 @@
 
   .sim-status.no-entry {
     font-size: 15px;
-    color: #c8a060;
+    color: var(--warn);
     font-weight: 600;
   }
 
@@ -798,7 +798,7 @@
     text-align: center;
     font-size: 22px;
     font-weight: 700;
-    color: #d8eaff;
+    color: var(--ink);
     letter-spacing: 4px;
   }
 
@@ -806,8 +806,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #0d1e36;
-    border: 1px solid #2c4870;
+    background: var(--panel);
+    border: 1px solid var(--line);
     border-radius: 8px;
     padding: 10px 16px;
   }
@@ -815,13 +815,13 @@
   .entry-label {
     font-size: 15px;
     font-weight: 600;
-    color: #7ec8f8;
+    color: var(--ink);
   }
 
   .entry-score {
     font-size: 20px;
     font-weight: 700;
-    color: #e8f4ff;
+    color: var(--ink);
     letter-spacing: 3px;
   }
 
@@ -831,15 +831,15 @@
 
   .btn-play {
     padding: 10px 20px;
-    background: #1d63d8;
-    color: #f2f8ff;
-    border: 1px solid #3e86ff;
+    background: var(--ink-mute);
+    color: var(--ink);
+    border: 1px solid var(--ink-mid);
     border-radius: 8px;
     font-size: 14px;
     cursor: pointer;
   }
 
   .btn-play:hover {
-    background: #2a72ea;
+    background: var(--ink-mute);
   }
 </style>

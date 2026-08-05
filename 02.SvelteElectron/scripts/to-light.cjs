@@ -66,12 +66,30 @@ const TINT_LINE = {
 };
 const SEMANTIC = { green: "var(--ok)", red: "var(--bad)", amber: "var(--warn)", purple: "#5B3AA8" };
 
+/**
+ * 카드로 볼 명도 상한. **파일마다 다르다.**
+ *
+ * ⚠ 절대 기준(L*13)으로 잘랐다가 틀렸다 — 어떤 모달은 카드가 L*11이고
+ * 어떤 모달은 L*14다. 파일 안에서 **가장 어두운 중성색이 그 화면의 카드**이고
+ * 그보다 한참 밝은 층이 가라앉은 면이다. 파일마다 다시 잰다.
+ */
+let _panelCeil = 13;
+function calibrate(css) {
+  const neutralDarks = [...new Set(css.match(/#[0-9a-fA-F]{6}/g) || [])]
+    .filter((h) => family(h) === "neutral")
+    .map(Lstar)
+    .filter((L) => L < 24)
+    .sort((a, b) => a - b);
+  if (neutralDarks.length === 0) return;
+  // 가장 어두운 값에서 +3.5 L* 안쪽이 같은 층(카드)이다
+  _panelCeil = neutralDarks[0] + 3.5;
+}
+
 function mapColor(h) {
   const L = Lstar(h), f = family(h);
   if (L < 22) {
     if (f !== "neutral") return TINT[f];
-    // 가장 어두운 층이 카드다. 그보다 조금 밝은 층은 가라앉은 면
-    return L < 13 ? "var(--panel)" : "var(--panel-sunk)";
+    return L <= _panelCeil ? "var(--panel)" : "var(--panel-sunk)";
   }
   if (L < 34) {
     if (f !== "neutral") return TINT_LINE[f];
@@ -90,9 +108,17 @@ const src = fs.readFileSync(file, "utf8");
 const i = src.indexOf("<style>");
 if (i < 0) { console.error("style 블록이 없다"); process.exit(1); }
 const head = src.slice(0, i), css = src.slice(i);
+calibrate(css);   // 카드 경계는 파일마다 다시 잰다
 
+// 오버레이·그림자는 hex가 아니라 rgba(0,0,0,…)로 적혀 있어 위 매핑이 못 잡는다.
+// **밝은 지면 위의 검정 막은 화면을 죽인다** — 어두운 화면에서 쓰던 0.75~0.84가
+// 라이트에서는 너무 무겁다.
 const seen = new Map();
-const out = css.replace(/#[0-9a-fA-F]{6}\b/g, (h) => {
+const out = css
+  .replace(/background:\s*rgba\(0,\s*0,\s*0,\s*\.?[\d.]*\)/g, "background: rgba(10, 18, 38, 0.52)")
+  .replace(/box-shadow:\s*[^;]*rgba\(0,\s*0,\s*0,\s*0?\.\d+\)/g,
+           "box-shadow: 0 24px 60px -28px rgba(8, 16, 36, 0.55)")
+  .replace(/#[0-9a-fA-F]{6}\b/g, (h) => {
   const to = mapColor(h);
   if (!seen.has(h)) seen.set(h, { to, n: 0, L: Lstar(h), f: family(h) });
   seen.get(h).n++;

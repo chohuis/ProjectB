@@ -729,21 +729,21 @@
 
 <style>
   /* ── 시즌말 투자 (§7-5 F-3) ───────────────────────────────────── */
-  .invest-lead { font-size: 12px; color: #aac0e4; margin: 0 0 8px; line-height: 1.6; }
-  .invest-lead strong { color: #eef4ff; }
-  .invest-warn { color: #ffb68a; }
+  .invest-lead { font-size: 12px; color: var(--ink); margin: 0 0 8px; line-height: 1.6; }
+  .invest-lead strong { color: var(--ink); }
+  .invest-warn { color: var(--warn); }
 
   .invest-amounts { display: flex; gap: 6px; margin-bottom: 8px; }
   .invest-amt {
-    border: 1px solid #355182;
-    background: #1f2f4f;
-    color: #dbe8ff;
+    border: 1px solid var(--ink-mute);
+    background: var(--panel-sunk);
+    color: var(--ink);
     border-radius: 8px;
     padding: 5px 12px;
     font-size: 12px;
     cursor: pointer;
   }
-  .invest-amt.active { background: #3262b0; border-color: #6da1f7; }
+  .invest-amt.active { background: var(--ink-mute); border-color: var(--ink); }
   .invest-amt:disabled { opacity: 0.5; cursor: default; }
 
   .invest-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
@@ -751,31 +751,31 @@
     display: grid;
     gap: 3px;
     text-align: left;
-    border: 1px solid #2f486f;
-    background: #152b4f;
-    color: #dce5f7;
+    border: 1px solid var(--line);
+    background: var(--panel-sunk);
+    color: var(--ink);
     border-radius: 10px;
     padding: 10px;
     cursor: pointer;
   }
-  .invest-opt:hover:not(:disabled) { border-color: #6da1f7; background: #1b3762; }
+  .invest-opt:hover:not(:disabled) { border-color: var(--ink); background: var(--line); }
   .invest-opt:disabled { opacity: 0.5; cursor: default; }
-  .invest-opt strong { color: #eef4ff; font-size: 13px; }
-  .invest-stat { color: #9eb6de; font-size: 11px; }
-  .invest-desc { color: #7f96bd; font-size: 11px; line-height: 1.4; }
+  .invest-opt strong { color: var(--ink); font-size: 13px; }
+  .invest-stat { color: var(--ink); font-size: 11px; }
+  .invest-desc { color: var(--ink-mid); font-size: 11px; line-height: 1.4; }
 
   .invest-result {
     display: grid;
     gap: 4px;
-    border: 1px solid #3a6b4c;
-    background: #16301f;
+    border: 1px solid var(--ok);
+    background: rgba(31, 122, 71, 0.10);
     border-radius: 10px;
     padding: 12px;
   }
-  .invest-result.invest-loss { border-color: #7a3b3b; background: #2a1620; }
-  .invest-result strong { color: #eef4ff; font-size: 14px; }
-  .invest-result span { color: #cfe0ff; font-size: 12px; }
-  .invest-note { color: #9eb6de; font-size: 11px; }
+  .invest-result.invest-loss { border-color: rgba(179, 49, 31, 0.26); background: var(--panel); }
+  .invest-result strong { color: var(--ink); font-size: 14px; }
+  .invest-result span { color: var(--ink); font-size: 12px; }
+  .invest-note { color: var(--ink); font-size: 11px; }
 
   @media (max-width: 900px) {
     .invest-options { grid-template-columns: 1fr; }
@@ -785,7 +785,7 @@
   .overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.82);
+    background: rgba(10, 18, 38, 0.52);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -794,8 +794,8 @@
 
   /* ── 모달 ────────────────────────────────────────────────────── */
   .modal {
-    background: #0e1a30;
-    border: 1px solid #3a5888;
+    background: var(--panel);
+    border: 1px solid var(--ink-mute);
     border-radius: 16px;
     width: min(680px, 92vw);
     max-height: 88vh;
@@ -805,7 +805,7 @@
   }
 
   .modal.is-champion {
-    border-color: #a08020;
+    border-color: var(--warn);
     box-shadow: 0 0 24px rgba(240, 180, 40, 0.25);
   }
 
@@ -813,7 +813,7 @@
   .modal-header {
     padding: 18px 24px 12px;
     text-align: center;
-    border-bottom: 1px solid #1e3058;
+    border-bottom: 1px solid var(--panel-sunk);
     display: grid;
     gap: 3px;
   }
@@ -821,20 +821,20 @@
   .season-label {
     margin: 0;
     font-size: 11px;
-    color: #6a8ab8;
+    color: var(--ink-mid);
     letter-spacing: 1px;
     text-transform: uppercase;
   }
 
-  h2 { margin: 0; font-size: 21px; color: #e8f0ff; }
+  h2 { margin: 0; font-size: 21px; color: var(--ink); }
 
-  .sub { margin: 0; font-size: 12px; color: #7a9ac8; }
+  .sub { margin: 0; font-size: 12px; color: var(--ink-mid); }
 
   /* ── 탭바 ────────────────────────────────────────────────────── */
   .tabbar {
     display: flex;
-    border-bottom: 1px solid #1e3058;
-    background: #0c1828;
+    border-bottom: 1px solid var(--panel-sunk);
+    background: var(--panel);
   }
 
   .tabbar button {
@@ -843,7 +843,7 @@
     background: none;
     border: none;
     border-bottom: 2px solid transparent;
-    color: #5a7aa8;
+    color: var(--ink-mute);
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
@@ -851,11 +851,11 @@
     margin-bottom: -1px;
   }
 
-  .tabbar button:hover { color: #a0c0e8; }
+  .tabbar button:hover { color: var(--ink); }
 
   .tabbar button.active {
-    color: #d0e8ff;
-    border-bottom-color: #4a90e0;
+    color: var(--ink);
+    border-bottom-color: var(--ink-mid);
   }
 
   /* ── 바디 ────────────────────────────────────────────────────── */
@@ -870,7 +870,7 @@
 
   .modal-body::-webkit-scrollbar { width: 6px; }
   .modal-body::-webkit-scrollbar-track { background: transparent; }
-  .modal-body::-webkit-scrollbar-thumb { background: #2a4068; border-radius: 3px; }
+  .modal-body::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
 
   /* ── 섹션 공통 ───────────────────────────────────────────────── */
   .section { display: grid; gap: 10px; }
@@ -879,24 +879,24 @@
     margin: 0;
     font-size: 11px;
     font-weight: 700;
-    color: #6a8ab8;
+    color: var(--ink-mid);
     letter-spacing: 0.8px;
     text-transform: uppercase;
     padding-bottom: 6px;
-    border-bottom: 1px solid #1a2e50;
+    border-bottom: 1px solid var(--panel-sunk);
   }
 
-  .sub-count { font-size: 10px; color: #506888; font-weight: 400; text-transform: none; letter-spacing: 0; }
+  .sub-count { font-size: 10px; color: var(--ink-mute); font-weight: 400; text-transform: none; letter-spacing: 0; }
 
-  .empty-state { color: #506888; font-size: 13px; text-align: center; padding: 24px 0; margin: 0; }
+  .empty-state { color: var(--ink-mute); font-size: 13px; text-align: center; padding: 24px 0; margin: 0; }
 
   /* ── 우승 배너 ───────────────────────────────────────────────── */
   .champion-banner {
-    background: linear-gradient(90deg, #2a1e04, #3a2a06, #2a1e04);
-    border: 1px solid #a08020;
+    background: linear-gradient(90deg, rgba(154, 101, 16, 0.12), rgba(154, 101, 16, 0.12), rgba(154, 101, 16, 0.12));
+    border: 1px solid var(--warn);
     border-radius: 8px;
     padding: 10px 16px;
-    color: #f5d050;
+    color: var(--warn);
     font-size: 15px;
     font-weight: 700;
     text-align: center;
@@ -911,8 +911,8 @@
   }
 
   .ps-card {
-    background: #111e38;
-    border: 1px solid #1e3458;
+    background: var(--panel-sunk);
+    border: 1px solid var(--panel-sunk);
     border-radius: 10px;
     padding: 10px 16px;
     display: grid;
@@ -920,15 +920,15 @@
     min-width: 100px;
   }
 
-  .ps-card-champ { border-color: #a08020; background: #1e1a04; }
+  .ps-card-champ { border-color: var(--warn); background: rgba(154, 101, 16, 0.12); }
 
-  .ps-card.ps-mine-runner { border-color: #608090; }
+  .ps-card.ps-mine-runner { border-color: var(--ink-mute); }
 
-  .ps-card-label { font-size: 10px; color: #6a8ab8; }
+  .ps-card-label { font-size: 10px; color: var(--ink-mid); }
 
-  .ps-card-team { font-size: 14px; color: #d8e8ff; }
+  .ps-card-team { font-size: 14px; color: var(--ink); }
 
-  .ps-card-champ .ps-card-team { color: #f5d050; }
+  .ps-card-champ .ps-card-team { color: var(--warn); }
 
   /* ── KPI ─────────────────────────────────────────────────────── */
   .kpi-row {
@@ -938,8 +938,8 @@
   }
 
   .kpi {
-    background: #111e38;
-    border: 1px solid #1e3458;
+    background: var(--panel-sunk);
+    border: 1px solid var(--panel-sunk);
     border-radius: 10px;
     padding: 10px 8px;
     display: grid;
@@ -947,11 +947,11 @@
     text-align: center;
   }
 
-  .kpi span   { font-size: 10px; color: #6a8ab8; }
-  .kpi strong { font-size: 15px; color: #d8e8ff; }
-  .kpi strong.gold   { color: #f5d050; }
-  .kpi strong.silver { color: #c8d8f0; }
-  .kpi strong.bronze { color: #e0a060; }
+  .kpi span   { font-size: 10px; color: var(--ink-mid); }
+  .kpi strong { font-size: 15px; color: var(--ink); }
+  .kpi strong.gold   { color: var(--warn); }
+  .kpi strong.silver { color: var(--ink); }
+  .kpi strong.bronze { color: var(--warn); }
 
   /* ── 팀 베스트 ───────────────────────────────────────────────── */
   .best-grid {
@@ -961,26 +961,26 @@
   }
 
   .best-card {
-    background: #111e38;
-    border: 1px solid #1e3458;
+    background: var(--panel-sunk);
+    border: 1px solid var(--panel-sunk);
     border-radius: 10px;
     padding: 12px 14px;
     display: grid;
     gap: 6px;
   }
 
-  .best-label { font-size: 10px; color: #5a7a9a; }
-  .best-name  { font-size: 15px; color: #d8e8ff; }
+  .best-label { font-size: 10px; color: var(--ink-mute); }
+  .best-name  { font-size: 15px; color: var(--ink); }
 
   .best-stats {
     display: flex;
     gap: 10px;
     font-size: 11px;
-    color: #7a9ab8;
+    color: var(--ink-mid);
     flex-wrap: wrap;
   }
 
-  .best-stats strong { color: #a0d0f8; }
+  .best-stats strong { color: var(--ink); }
 
   /* ── 개인 스탯 그리드 ────────────────────────────────────────── */
   .stat-grid {
@@ -990,8 +990,8 @@
   }
 
   .stat-item {
-    background: #111e38;
-    border: 1px solid #1e3458;
+    background: var(--panel-sunk);
+    border: 1px solid var(--panel-sunk);
     border-radius: 8px;
     padding: 7px 12px;
     display: grid;
@@ -1000,24 +1000,24 @@
     min-width: 52px;
   }
 
-  .stat-item span   { font-size: 10px; color: #6a8ab8; }
-  .stat-item strong { font-size: 15px; color: #d8e8ff; }
+  .stat-item span   { font-size: 10px; color: var(--ink-mid); }
+  .stat-item strong { font-size: 15px; color: var(--ink); }
 
   /* 리그 대비 · 득점권 — 스탯 격자 아래 한 줄씩 */
   .lg-compare {
     display: flex; align-items: baseline; gap: 9px; flex-wrap: wrap;
-    margin-top: 9px; padding-top: 9px; border-top: 1px solid #1a2c4c;
+    margin-top: 9px; padding-top: 9px; border-top: 1px solid var(--panel-sunk);
   }
-  .lg-lbl  { font-size: 11px; color: #6a8ab8; }
-  .lg-mine { font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; color: #d8e8ff; }
-  .lg-mine.good { color: #68de92; }
-  .lg-mine.bad  { color: #f08080; }
-  .lg-mine.flat { color: #d8e8ff; }
-  .lg-vs   { font-size: 11px; color: #7e9cc4; font-variant-numeric: tabular-nums; }
-  .lg-rank { font-size: 11px; color: #6a8ab8; margin-left: auto; }
+  .lg-lbl  { font-size: 11px; color: var(--ink-mid); }
+  .lg-mine { font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--ink); }
+  .lg-mine.good { color: var(--ok); }
+  .lg-mine.bad  { color: var(--bad); }
+  .lg-mine.flat { color: var(--ink); }
+  .lg-vs   { font-size: 11px; color: var(--ink-mid); font-variant-numeric: tabular-nums; }
+  .lg-rank { font-size: 11px; color: var(--ink-mid); margin-left: auto; }
 
-  .era-good { color: #60e890 !important; }
-  .era-bad  { color: #f07060 !important; }
+  .era-good { color: var(--ok) !important; }
+  .era-bad  { color: var(--bad) !important; }
 
   /* ── 경기 기록 테이블 공통 ───────────────────────────────────── */
   .game-log-wrap { overflow-x: auto; }
@@ -1030,31 +1030,31 @@
   }
 
   .game-log thead th {
-    color: #6a8ab8;
+    color: var(--ink-mid);
     padding: 5px 8px;
     text-align: center;
-    border-bottom: 1px solid #1e3458;
+    border-bottom: 1px solid var(--panel-sunk);
     font-weight: 600;
   }
 
   .game-log tbody td {
     padding: 5px 8px;
     text-align: center;
-    color: #9ab4d8;
-    border-bottom: 1px solid #141f38;
+    color: var(--ink);
+    border-bottom: 1px solid var(--panel-sunk);
   }
 
-  .opp-name   { text-align: left; color: #b8ccec; }
+  .opp-name   { text-align: left; color: var(--ink); }
   .score-cell { font-variant-numeric: tabular-nums; }
-  .loc-cell   { font-size: 10px; color: #6a8ab8; }
+  .loc-cell   { font-size: 10px; color: var(--ink-mid); }
 
   .row-won  td { background: rgba(40, 100, 50, 0.18); }
   .row-lost td { background: rgba(100, 30, 30, 0.15); }
 
   .dec-cell { font-weight: 700; }
-  .dec-w { color: #60e890; }
-  .dec-l { color: #f07060; }
-  .dec-d { color: #9ab4d8; }
+  .dec-w { color: var(--ok); }
+  .dec-l { color: var(--bad); }
+  .dec-d { color: var(--ink); }
 
   .no-entry { color: #456 !important; font-style: italic; }
 
@@ -1066,8 +1066,8 @@
   }
 
   .award {
-    background: #111e38;
-    border: 1px solid #1e3458;
+    background: var(--panel-sunk);
+    border: 1px solid var(--panel-sunk);
     border-radius: 10px;
     padding: 10px 8px;
     display: grid;
@@ -1075,37 +1075,37 @@
     text-align: center;
   }
 
-  .award.award-mine { border-color: #f0c040; background: #1e1a04; }
+  .award.award-mine { border-color: var(--warn); background: rgba(154, 101, 16, 0.12); }
 
-  .award-label { font-size: 10px; color: #f0c060; font-weight: 700; letter-spacing: 0.5px; }
-  .award-name  { font-size: 12px; color: #e8f0ff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .award-val   { font-size: 14px; color: #80d8ff; font-weight: 700; }
+  .award-label { font-size: 10px; color: var(--warn); font-weight: 700; letter-spacing: 0.5px; }
+  .award-name  { font-size: 12px; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .award-val   { font-size: 14px; color: var(--ink); font-weight: 700; }
 
   /* ── 순위표 공통 ─────────────────────────────────────────────── */
   table { width: 100%; border-collapse: collapse; font-size: 11px; }
 
   thead th {
-    color: #6a8ab8;
+    color: var(--ink-mid);
     padding: 5px 8px;
     text-align: center;
-    border-bottom: 1px solid #1e3458;
+    border-bottom: 1px solid var(--panel-sunk);
     font-weight: 600;
   }
 
   tbody td {
     padding: 5px 8px;
     text-align: center;
-    color: #9ab4d8;
-    border-bottom: 1px solid #111d34;
+    color: var(--ink);
+    border-bottom: 1px solid var(--panel);
   }
 
   .team-name {
-    text-align: left; color: #b8ccec;
+    text-align: left; color: var(--ink);
     display: flex; align-items: center; gap: 7px;
   }
   .rank-cell { white-space: nowrap; }
 
-  tr.my-row td { color: #f0e060; font-weight: 700; background: rgba(60, 80, 20, 0.25); }
+  tr.my-row td { color: var(--warn); font-weight: 700; background: rgba(60, 80, 20, 0.25); }
 
   /* ── 뱃지 ────────────────────────────────────────────────────── */
   .badge {
@@ -1118,23 +1118,23 @@
     vertical-align: middle;
   }
 
-  .badge-champ  { background: #3a2a04; color: #f5d050; border: 1px solid #a08020; }
-  .badge-runner { background: #1a2a40; color: #a0b8d8; border: 1px solid #607090; }
-  .badge-ps     { background: #1a2a40; color: #7090b8; border: 1px solid #304a68; }
+  .badge-champ  { background: rgba(154, 101, 16, 0.12); color: var(--warn); border: 1px solid var(--warn); }
+  .badge-runner { background: var(--panel-sunk); color: var(--ink); border: 1px solid var(--ink-mute); }
+  .badge-ps     { background: var(--panel-sunk); color: var(--ink-mid); border: 1px solid var(--line); }
 
   /* ── 푸터 ────────────────────────────────────────────────────── */
   .modal-footer {
     padding: 12px 24px 18px;
-    border-top: 1px solid #1e3058;
+    border-top: 1px solid var(--panel-sunk);
     display: flex;
     justify-content: center;
   }
 
   .btn-next {
     padding: 11px 48px;
-    background: #1a4a2a;
-    color: #60e890;
-    border: 1px solid #2e8050;
+    background: rgba(31, 122, 71, 0.28);
+    color: var(--ok);
+    border: 1px solid var(--ok);
     border-radius: 10px;
     font-size: 14px;
     font-weight: 700;
@@ -1142,6 +1142,6 @@
     transition: background 0.15s;
   }
 
-  .btn-next:hover:not(:disabled) { background: #235c34; }
+  .btn-next:hover:not(:disabled) { background: var(--ok); }
   .btn-next:disabled { opacity: 0.5; cursor: default; }
 </style>

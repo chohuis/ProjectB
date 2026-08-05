@@ -258,7 +258,7 @@
 
   function colorBarStyle(team: typeof selectedTeam): string {
     const c0 = team?.colors?.[0], c1 = team?.colors?.[1];
-    if (!c0) return "background:#2b5aaa;";
+    if (!c0) return "background:#1E3050;";
     return `background:linear-gradient(90deg,${c0} 0%,${c1 ?? c0} 100%);`;
   }
 
@@ -270,7 +270,7 @@
 
   // ── Step 3 레이더 헬퍼 ────────────────────────────────────────────
   const PRESET_COLORS: Record<PresetKey, string> = {
-    balanced: "#4a80f0", power: "#f05050", control: "#50c080", stamina: "#f0c040",
+    balanced: "#1F5FA8", power: "#B3311F", control: "#1F7A47", stamina: "#9A6510",
   };
 
   const RADAR_LABELS = ["구위", "커맨드", "제구", "무브먼트", "멘탈", "스태미나"];
@@ -597,13 +597,13 @@
               <div class="radar-wrap">
               <svg viewBox="0 0 140 140" class="radar-svg">
                 {#each [0.33, 0.66, 1] as ratio}
-                  <polygon points={gridPts(ratio)} fill="none" stroke="#253a5a" stroke-width="0.8"/>
+                  <polygon points={gridPts(ratio)} fill="none" stroke="var(--line)" stroke-width="0.8"/>
                 {/each}
                 {#each RADAR_AXES as ax, i}
-                  <line x1={RADAR_CX} y1={RADAR_CY} x2={ax.x} y2={ax.y} stroke="#253a5a" stroke-width="0.8"/>
+                  <line x1={RADAR_CX} y1={RADAR_CY} x2={ax.x} y2={ax.y} stroke="var(--line)" stroke-width="0.8"/>
                   <text x={RADAR_LPOS[i].x} y={RADAR_LPOS[i].y}
                         text-anchor="middle" dominant-baseline="middle"
-                        font-size="7" fill="#5a7898">{RADAR_LABELS[i]}</text>
+                        font-size="7" fill="var(--ink-mute)">{RADAR_LABELS[i]}</text>
                 {/each}
                 <polygon
                   points={radarPts(preset.pitching)}
@@ -699,10 +699,10 @@
   .page {
     width: 100vw;
     height: 100vh;
-    background: #080f1e;
+    background: var(--panel);
     display: grid;
     grid-template-rows: auto minmax(0, 1fr) auto;
-    color: #e4edff;
+    color: var(--ink);
     font-family: inherit;
   }
 
@@ -732,37 +732,37 @@
     width: 28px;
     height: 28px;
     border-radius: 50%;
-    border: 2px solid #3a5a96;
+    border: 2px solid var(--ink-mute);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 13px;
     font-weight: 700;
-    background: #0e1929;
+    background: var(--panel-sunk);
   }
 
   .step.active .num {
-    background: #2b5aaa;
-    border-color: #5a8fe8;
+    background: var(--ink-mute);
+    border-color: var(--ink-mid);
     color: #fff;
   }
 
   .step.done .num {
-    background: #1a4060;
-    border-color: #3a6aaa;
-    color: #88b8f0;
+    background: var(--line);
+    border-color: var(--ink-mute);
+    color: var(--ink);
   }
 
   .step .label {
     font-size: 13px;
-    color: #9bbce8;
+    color: var(--ink);
     white-space: nowrap;
   }
 
   .divider {
     flex: 1;
     height: 2px;
-    background: #1e2f4a;
+    background: var(--panel-sunk);
     margin: 0 12px;
     min-width: 40px;
     max-width: 100px;
@@ -770,7 +770,7 @@
   }
 
   .divider.done {
-    background: #2b5aaa;
+    background: var(--ink-mute);
   }
 
   /* ── 컨텐츠 ── */
@@ -790,12 +790,12 @@
   h2 {
     margin: 0 0 4px;
     font-size: 24px;
-    color: #ebf3ff;
+    color: var(--ink);
   }
 
   .sub {
     margin: 0 0 24px;
-    color: #7a9ac8;
+    color: var(--ink-mid);
     font-size: 14px;
   }
 
@@ -808,17 +808,17 @@
     display: block;
     margin-bottom: 8px;
     font-size: 14px;
-    color: #a8c4e8;
+    color: var(--ink);
     font-weight: 600;
   }
 
   input[type="text"] {
     width: 100%;
-    background: #111d34;
-    border: 1px solid #2d4470;
+    background: var(--panel-sunk);
+    border: 1px solid var(--line);
     border-radius: 8px;
     padding: 12px 14px;
-    color: #e8f2ff;
+    color: var(--ink);
     font-size: 16px;
     box-sizing: border-box;
     outline: none;
@@ -826,11 +826,11 @@
   }
 
   input[type="text"]:focus {
-    border-color: #5a8fe8;
+    border-color: var(--ink-mid);
   }
 
   input.error {
-    border-color: #804040;
+    border-color: var(--bad);
   }
 
   /* ── 생일 ── */
@@ -841,7 +841,7 @@
   }
 
   .birth-year {
-    color: #7a9ac8;
+    color: var(--ink-mid);
     font-size: 15px;
     font-weight: 600;
     padding: 10px 4px;
@@ -849,11 +849,11 @@
   }
 
   .birth-select {
-    background: #111d34;
-    border: 1px solid #2d4470;
+    background: var(--panel-sunk);
+    border: 1px solid var(--line);
     border-radius: 8px;
     padding: 10px 12px;
-    color: #e8f2ff;
+    color: var(--ink);
     font-size: 15px;
     cursor: pointer;
     outline: none;
@@ -861,7 +861,7 @@
   }
 
   .birth-select:focus {
-    border-color: #5a8fe8;
+    border-color: var(--ink-mid);
   }
 
   /* ── 라디오 버튼 ── */
@@ -872,18 +872,18 @@
 
   .radio-btn {
     padding: 10px 22px;
-    border: 1px solid #2d4470;
+    border: 1px solid var(--line);
     border-radius: 8px;
-    background: #111d34;
-    color: #b8d0f7;
+    background: var(--panel-sunk);
+    color: var(--ink);
     font-size: 14px;
     cursor: pointer;
     transition: all 0.15s;
   }
 
   .radio-btn.selected {
-    background: #1e3d7a;
-    border-color: #5a8fe8;
+    background: var(--line);
+    border-color: var(--ink-mid);
     color: #fff;
   }
 
@@ -897,17 +897,17 @@
   .form-card {
     text-align: left;
     padding: 14px;
-    border: 1px solid #2d4470;
+    border: 1px solid var(--line);
     border-radius: 10px;
-    background: #111d34;
-    color: #e4edff;
+    background: var(--panel-sunk);
+    color: var(--ink);
     cursor: pointer;
     transition: all 0.15s;
   }
 
   .form-card.selected {
-    border-color: #5a8fe8;
-    background: #1a3360;
+    border-color: var(--ink-mid);
+    background: var(--panel-sunk);
   }
 
   .form-card strong {
@@ -919,7 +919,7 @@
   .form-card p {
     margin: 0;
     font-size: 12px;
-    color: #8aabcf;
+    color: var(--ink);
     line-height: 1.5;
   }
 
@@ -955,7 +955,7 @@
     min-height: 0;
   }
 
-  .step2-top h2 { margin: 0 0 4px; font-size: 24px; color: #ebf3ff; }
+  .step2-top h2 { margin: 0 0 4px; font-size: 24px; color: var(--ink); }
 
   /* ── 팀 목록 1열 ── */
   .team-list {
@@ -969,13 +969,13 @@
     display: flex; align-items: baseline; gap: 7px;
     padding: 9px 10px 5px;
     position: sticky; top: 0; z-index: 1;
-    background: var(--panel, #101a2e);
+    background: var(--panel, var(--panel-sunk));
   }
-  .region-name { font-size: 12px; font-weight: 800; color: var(--t-gold, #8fafff); }
-  .region-area { font-size: 10.5px; color: var(--ink-mute, #7a9ac8); }
+  .region-name { font-size: 12px; font-weight: 800; color: var(--t-gold, var(--ink)); }
+  .region-area { font-size: 10.5px; color: var(--ink-mute, var(--ink-mid)); }
   .region-count {
     margin-left: auto; font-size: 10px; font-variant-numeric: tabular-nums;
-    color: var(--ink-mute, #7a9ac8);
+    color: var(--ink-mute, var(--ink-mid));
   }
   .tli-city { font-size: 10.5px; opacity: 0.6; margin-left: auto; }
 
@@ -984,23 +984,23 @@
     flex-direction: column;
     gap: 4px;
     padding: 10px 12px;
-    border: 1px solid #2d4470;
+    border: 1px solid var(--line);
     border-left-width: 3px;
     border-radius: 8px;
-    background: #111d34;
-    color: #e4edff;
+    background: var(--panel-sunk);
+    color: var(--ink);
     cursor: pointer;
     text-align: left;
     transition: background 0.15s, border-color 0.15s;
   }
 
   .team-list-item:hover:not(.selected) {
-    background: #162240;
+    background: var(--panel-sunk);
   }
 
   .team-list-item.selected {
-    border-color: #5a8fe8;
-    background: #1a3360;
+    border-color: var(--ink-mid);
+    background: var(--panel-sunk);
   }
 
   .tli-main {
@@ -1032,7 +1032,7 @@
   }
 
   .loading-msg {
-    color: #5a7aa8;
+    color: var(--ink-mute);
     font-size: 14px;
   }
 
@@ -1049,17 +1049,17 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    color: #3d5880;
+    color: var(--ink-mute);
     font-size: 14px;
-    border: 1px dashed #2a3f60;
+    border: 1px dashed var(--line);
     border-radius: 10px;
     box-sizing: border-box;
   }
 
   /* ── 팀 정보 열 ── */
   .team-info-col {
-    background: #0d1928;
-    border: 1px solid #1e3050;
+    background: var(--panel-sunk);
+    border: 1px solid var(--panel-sunk);
     border-radius: 10px;
     padding: 16px;
     display: flex;
@@ -1081,8 +1081,8 @@
   }
 
   .hs-item {
-    background: #0a1626;
-    border: 1px solid #1e3050;
+    background: var(--panel);
+    border: 1px solid var(--panel-sunk);
     border-radius: 8px;
     padding: 8px;
     display: flex;
@@ -1092,15 +1092,15 @@
     text-align: center;
   }
 
-  .hs-item span { font-size: 10px; color: #4a6888; }
-  .hs-item strong { font-size: 13px; color: #d8e8ff; font-weight: 700; }
+  .hs-item span { font-size: 10px; color: var(--ink-mute); }
+  .hs-item strong { font-size: 13px; color: var(--ink); font-weight: 700; }
 
   /* ── 최근 성적 테이블 ── */
   .record-section { display: flex; flex-direction: column; gap: 6px; }
 
   .record-title {
     font-size: 11px;
-    color: #4a6888;
+    color: var(--ink-mute);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -1117,32 +1117,32 @@
   }
 
   .record-head {
-    color: #3a5878;
+    color: var(--ink-mute);
     padding: 0 4px;
     margin-bottom: 2px;
   }
 
   .record-row {
-    background: #0a1626;
-    border: 1px solid #1a2e48;
+    background: var(--panel);
+    border: 1px solid var(--panel-sunk);
     border-radius: 6px;
     padding: 5px 8px;
   }
 
-  .rec-year { color: #6a8aaa; font-weight: 600; }
+  .rec-year { color: var(--ink-mid); font-weight: 600; }
   .rec-nat  { font-weight: 700; font-size: 12px; }
-  .rec-gold   { color: #f0c040; }
-  .rec-silver { color: #b8c8e0; }
-  .rec-bronze { color: #d08860; }
-  .rec-normal { color: #8aaace; }
-  .rec-dim    { color: #4a5868; }
-  .rec-reg { color: #6a8aaa; }
-  .rec-note { color: #4a6080; font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rec-gold   { color: var(--warn); }
+  .rec-silver { color: var(--ink); }
+  .rec-bronze { color: var(--warn); }
+  .rec-normal { color: var(--ink); }
+  .rec-dim    { color: var(--ink-mute); }
+  .rec-reg { color: var(--ink-mid); }
+  .rec-note { color: var(--ink-mute); font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
   /* ── 프로필 열 (삭제 안 하고 유지 - 다른 곳에서 사용 가능) ── */
   .profile-col {
-    background: #0d1928;
-    border: 1px solid #1e3050;
+    background: var(--panel-sunk);
+    border: 1px solid var(--panel-sunk);
     border-radius: 10px;
     padding: 16px;
     display: flex;
@@ -1154,20 +1154,20 @@
 
   .style-badge {
     display: inline-block;
-    background: #1a3060;
-    border: 1px solid #3a62a8;
+    background: var(--panel-sunk);
+    border: 1px solid var(--ink-mute);
     border-radius: 6px;
     padding: 4px 12px;
     font-size: 13px;
     font-weight: 700;
-    color: #88b8f8;
+    color: var(--ink);
     align-self: flex-start;
   }
 
   .team-desc {
     margin: 0;
     font-size: 13px;
-    color: #9bb4d8;
+    color: var(--ink);
     line-height: 1.65;
   }
 
@@ -1178,12 +1178,12 @@
   }
 
   .tag {
-    background: #152238;
-    border: 1px solid #2a4060;
+    background: var(--panel-sunk);
+    border: 1px solid var(--line);
     border-radius: 20px;
     padding: 3px 10px;
     font-size: 11px;
-    color: #7a9ac8;
+    color: var(--ink-mid);
   }
 
   .strength-section {
@@ -1194,7 +1194,7 @@
 
   .section-label {
     font-size: 11px;
-    color: #4a6888;
+    color: var(--ink-mute);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -1208,19 +1208,19 @@
   }
 
   .strength-chip {
-    background: #0e2438;
-    border: 1px solid #1e5080;
+    background: var(--panel-sunk);
+    border: 1px solid var(--line);
     border-radius: 4px;
     padding: 3px 8px;
     font-size: 12px;
-    color: #5a9ad8;
+    color: var(--ink-mid);
     font-weight: 600;
   }
 
   /* ── 로스터 열 ── */
   .roster-col {
-    background: #0d1928;
-    border: 1px solid #1e3050;
+    background: var(--panel-sunk);
+    border: 1px solid var(--panel-sunk);
     border-radius: 10px;
     padding: 14px;
     display: flex;
@@ -1237,8 +1237,8 @@
   }
 
   .entity-card {
-    background: #111e34;
-    border: 1px solid #253650;
+    background: var(--panel-sunk);
+    border: 1px solid var(--line);
     border-radius: 8px;
     padding: 8px 10px;
     display: flex;
@@ -1248,14 +1248,14 @@
   }
 
   .manager-card {
-    border-color: #2d4a80;
-    background: #0f1e38;
+    border-color: var(--line);
+    background: var(--panel-sunk);
   }
 
   .entity-name {
     font-size: 13px;
     font-weight: 600;
-    color: #d8e8ff;
+    color: var(--ink);
     flex: 0 0 auto;
   }
 
@@ -1267,27 +1267,27 @@
   }
 
   .entity-badge.manager {
-    background: #1e3d7a;
-    border: 1px solid #3a6ab0;
-    color: #88b8f8;
+    background: var(--line);
+    border: 1px solid var(--ink-mute);
+    color: var(--ink);
   }
 
   .entity-badge.coach {
-    background: #1a3a28;
-    border: 1px solid #2a6040;
-    color: #70c890;
+    background: rgba(31, 122, 71, 0.10);
+    border: 1px solid var(--ok);
+    color: var(--ok);
   }
 
   .entity-badge.player {
-    background: #3a2010;
-    border: 1px solid #805030;
-    color: #d0a060;
+    background: rgba(154, 101, 16, 0.12);
+    border: 1px solid var(--warn);
+    color: var(--warn);
   }
 
   .entity-sub {
     flex-basis: 100%;
     font-size: 11px;
-    color: #5a7a9a;
+    color: var(--ink-mute);
   }
 
   .player-card {
@@ -1304,7 +1304,7 @@
 
   .player-grade {
     font-size: 11px;
-    color: #4a6888;
+    color: var(--ink-mute);
   }
 
   .player-stats {
@@ -1313,16 +1313,16 @@
   }
 
   .stat-pill {
-    background: #0e1e34;
-    border: 1px solid #1e3050;
+    background: var(--panel-sunk);
+    border: 1px solid var(--panel-sunk);
     border-radius: 4px;
     padding: 2px 7px;
     font-size: 11px;
-    color: #7a9ac8;
+    color: var(--ink-mid);
   }
 
   .stat-pill strong {
-    color: #b8d8f8;
+    color: var(--ink);
     font-weight: 700;
   }
 
@@ -1336,7 +1336,7 @@
     gap: 10px;
   }
 
-  .step3-top h2  { margin: 0 0 2px; font-size: 24px; color: #ebf3ff; }
+  .step3-top h2  { margin: 0 0 2px; font-size: 24px; color: var(--ink); }
   .step3-top .sub { margin: 0; }
 
   /* ── 프리셋 그리드 ── */
@@ -1350,10 +1350,10 @@
   .preset-card {
     text-align: left;
     padding: 14px;
-    border: 1px solid #2d4470;
+    border: 1px solid var(--line);
     border-radius: 10px;
-    background: #111d34;
-    color: #e4edff;
+    background: var(--panel-sunk);
+    color: var(--ink);
     cursor: pointer;
     transition: all 0.15s;
     display: flex;
@@ -1363,8 +1363,8 @@
   }
 
   .preset-card.selected {
-    border-color: #5a8fe8;
-    background: #1a3360;
+    border-color: var(--ink-mid);
+    background: var(--panel-sunk);
   }
 
   .preset-card strong {
@@ -1376,7 +1376,7 @@
   .preset-card p {
     margin: 0 0 12px;
     font-size: 13px;
-    color: #8aabcf;
+    color: var(--ink);
     line-height: 1.6;
   }
 
@@ -1394,8 +1394,8 @@
     display: flex;
     justify-content: space-between;
     font-size: 12px;
-    color: #9db6d8;
-    border-bottom: 1px solid #1e3050;
+    color: var(--ink);
+    border-bottom: 1px solid var(--panel-sunk);
     padding: 7px 0;
   }
 
@@ -1436,8 +1436,8 @@
 
   /* ── 요약 카드 ── */
   .summary-card {
-    background: #111d34;
-    border: 1px solid #2d4470;
+    background: var(--panel-sunk);
+    border: 1px solid var(--line);
     border-radius: 12px;
     padding: 20px;
     display: grid;
@@ -1449,7 +1449,7 @@
     grid-template-columns: 100px minmax(0, 1fr);
     gap: 12px;
     padding: 12px 0;
-    border-bottom: 1px solid #1e3050;
+    border-bottom: 1px solid var(--panel-sunk);
     align-items: center;
   }
 
@@ -1459,12 +1459,12 @@
 
   .key {
     font-size: 13px;
-    color: #7a9ac8;
+    color: var(--ink-mid);
   }
 
   .val {
     font-size: 15px;
-    color: #ebf3ff;
+    color: var(--ink);
     font-weight: 600;
   }
 
@@ -1490,38 +1490,38 @@
   }
 
   .btn.back {
-    background: #1a2840;
-    color: #9bbce8;
-    border: 1px solid #2e4872;
+    background: var(--panel-sunk);
+    color: var(--ink);
+    border: 1px solid var(--line);
   }
 
   .btn.back:hover {
-    background: #243655;
+    background: var(--line);
   }
 
   .btn.next {
-    background: #2b5aaa;
+    background: var(--ink-mute);
     color: #fff;
   }
 
   .btn.next:hover:not(:disabled) {
-    background: #3a6ecf;
+    background: var(--ink-mute);
   }
 
   .btn.next:disabled {
-    background: #1a2a4a;
-    color: #4a6888;
+    background: var(--panel-sunk);
+    color: var(--ink-mute);
     cursor: default;
   }
 
   .btn.start {
-    background: #1a6640;
+    background: var(--ok);
     color: #fff;
     padding: 12px 48px;
   }
 
   .btn.start:hover {
-    background: #22854f;
+    background: var(--ok);
   }
 
   .pitch-summary {
@@ -1531,12 +1531,12 @@
   }
 
   .pitch-chip {
-    background: #0e2040;
-    border: 1px solid #2a4878;
+    background: var(--panel-sunk);
+    border: 1px solid var(--line);
     border-radius: 6px;
     padding: 3px 9px;
     font-size: 13px;
-    color: #88b8f8;
+    color: var(--ink);
     font-weight: 600;
   }
 
@@ -1580,18 +1580,18 @@
 
   .pc-stats { display: flex; flex-direction: column; gap: 7px; }
   .pc-stat { display: grid; grid-template-columns: 54px 1fr 26px; gap: 9px; align-items: center; }
-  .pc-stat-k { font-size: 11.5px; color: #5a6478; }
-  .pc-stat-v { font-size: 12px; font-weight: 750; text-align: right; font-variant-numeric: tabular-nums; color: #0f1d3d; }
-  .pc-bar { display: block; height: 6px; background: #dde3ee; }
+  .pc-stat-k { font-size: 11.5px; color: var(--ink-mute); }
+  .pc-stat-v { font-size: 12px; font-weight: 750; text-align: right; font-variant-numeric: tabular-nums; color: var(--panel-sunk); }
+  .pc-bar { display: block; height: 6px; background: var(--ink); }
   .pc-bar i { display: block; height: 100%; background: var(--c-dark); }
 
-  .pc-side { border-left: 1px solid #dde3ee; padding-left: 16px; }
+  .pc-side { border-left: 1px solid var(--ink); padding-left: 16px; }
   .pc-side-h {
     margin: 0 0 6px; font-size: 9.5px; letter-spacing: 0.14em;
-    text-transform: uppercase; color: #5a6478; font-weight: 700;
+    text-transform: uppercase; color: var(--ink-mute); font-weight: 700;
   }
   .pc-side-h:not(:first-child) { margin-top: 14px; }
-  .pc-side-v { margin: 0; font-size: 12px; color: #0f1d3d; }
+  .pc-side-v { margin: 0; font-size: 12px; color: var(--panel-sunk); }
   .pc-pitches { display: flex; flex-wrap: wrap; gap: 4px; }
   .pc-pitch {
     font-size: 10.5px; padding: 3px 7px;

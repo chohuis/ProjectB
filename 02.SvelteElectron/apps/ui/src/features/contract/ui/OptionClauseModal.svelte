@@ -34,11 +34,11 @@
 </div>
 
 <style>
-  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.7); display:flex; align-items:center; justify-content:center; z-index:230; }
-  .modal { width:min(520px,92vw); background:#10203a; border:1px solid #3b5f95; border-radius:12px; padding:20px; display:grid; gap:12px; }
-  h2 { margin:0; color:#eff6ff; }
-  p { margin:0; color:#c8dcf6; }
+  .overlay { position: fixed; inset: 0; background: rgba(10, 18, 38, 0.52); display:flex; align-items:center; justify-content:center; z-index:230; }
+  .modal { width:min(520px,92vw); background:var(--panel); border:1px solid var(--ink-mute); border-radius:12px; padding:20px; display:grid; gap:12px; }
+  h2 { margin:0; color:var(--ink); }
+  p { margin:0; color:var(--ink); }
   .actions { display:flex; gap:10px; }
-  button { border:1px solid #3f629a; background:#1a2f54; color:#e5f0ff; border-radius:8px; padding:8px 12px; cursor:pointer; }
+  button { border:1px solid var(--ink-mute); background:var(--panel-sunk); color:var(--ink); border-radius:8px; padding:8px 12px; cursor:pointer; }
   button:disabled { opacity:.6; cursor:default; }
 </style>

@@ -46,8 +46,8 @@
 
 <style>
   .panel {
-    background: #1a253c;
-    border: 1px solid #3c547f;
+    background: var(--panel-sunk);
+    border: 1px solid var(--ink-mute);
     border-radius: 10px;
     padding: 10px 12px;
     display: grid;
@@ -64,7 +64,7 @@
   h3 {
     margin: 0;
     font-size: 14px;
-    color: #eef5ff;
+    color: var(--ink);
   }
   .badges {
     display: flex;
@@ -73,27 +73,27 @@
   }
   .badge {
     font-size: 11px;
-    color: #ffe8a8;
-    border: 1px solid #8b6a2d;
-    background: #3a2f14;
+    color: var(--warn);
+    border: 1px solid var(--warn);
+    background: rgba(154, 101, 16, 0.12);
     border-radius: 999px;
     padding: 2px 8px;
   }
   .badge.badge-rank {
-    color: #a0c8ff;
-    border-color: #2a5a90;
-    background: #0e1e38;
+    color: var(--ink);
+    border-color: var(--ink-mute);
+    background: var(--panel);
     font-weight: 700;
   }
   .badge.badge-sports {
-    color: #80f0b0;
-    border-color: #2a7a50;
-    background: #0e2a1a;
+    color: var(--ok);
+    border-color: var(--ok);
+    background: rgba(31, 122, 71, 0.10);
   }
   .badge.badge-contract {
-    color: #ffd060;
-    border-color: #7a5a10;
-    background: #2a1e04;
+    color: var(--warn);
+    border-color: var(--warn);
+    background: rgba(154, 101, 16, 0.12);
   }
   .grid {
     display: grid;
@@ -102,22 +102,22 @@
   }
   p {
     margin: 0;
-    color: #cfe0fa;
+    color: var(--ink);
     font-size: 12px;
   }
   strong {
-    color: #f5fbff;
+    color: var(--ink);
   }
   .bar {
     height: 8px;
-    background: #0e1a30;
-    border: 1px solid #304666;
+    background: var(--panel);
+    border: 1px solid var(--line);
     border-radius: 999px;
     overflow: hidden;
   }
   .fill {
     height: 100%;
-    background: linear-gradient(90deg, #2f79d4, #4db58a);
+    background: linear-gradient(90deg, var(--ink-mute), var(--ok));
   }
   @media (max-width: 960px) {
     .grid {

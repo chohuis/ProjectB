@@ -77,7 +77,7 @@
   .overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(10, 18, 38, 0.52);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -85,13 +85,13 @@
   }
 
   .modal {
-    background: var(--bg-card, #1e1e2e);
+    background: var(--bg-card, var(--panel));
     border: 1px solid var(--border, #333);
     border-radius: 8px;
     padding: 24px 28px;
     min-width: 340px;
     max-width: 520px;
-    color: var(--text, #e0e0e0);
+    color: var(--text, var(--ink));
   }
 
   h2 {
@@ -106,7 +106,7 @@
 
   .error {
     margin: 0 0 16px;
-    color: #f08080;
+    color: var(--bad);
     font-size: 0.9rem;
   }
 
@@ -118,7 +118,7 @@
 
   .btn-primary {
     padding: 8px 20px;
-    background: var(--accent, #5865f2);
+    background: var(--accent, var(--ink-mute));
     color: #fff;
     border: none;
     border-radius: 4px;

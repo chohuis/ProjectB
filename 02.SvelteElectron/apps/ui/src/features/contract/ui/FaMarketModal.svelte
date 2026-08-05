@@ -89,17 +89,17 @@
 </div>
 
 <style>
-  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.74); display:flex; align-items:center; justify-content:center; z-index:240; }
-  .modal { width:min(760px,95vw); background:#101f39; border:1px solid #3f6498; border-radius:12px; padding:20px; display:grid; gap:12px; }
-  h2 { margin:0; color:#eef6ff; }
+  .overlay { position: fixed; inset: 0; background: rgba(10, 18, 38, 0.52); display:flex; align-items:center; justify-content:center; z-index:240; }
+  .modal { width:min(760px,95vw); background:var(--panel); border:1px solid var(--ink-mute); border-radius:12px; padding:20px; display:grid; gap:12px; }
+  h2 { margin:0; color:var(--ink); }
   .offers { display:grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap:8px; }
-  .offers button { text-align:left; border:1px solid #3d6196; background:#172b4c; color:#e7f1ff; border-radius:8px; padding:10px; display:grid; gap:4px; cursor:pointer; }
-  .offers button.selected { border-color:#6da1ee; background:#1f3a67; }
+  .offers button { text-align:left; border:1px solid var(--ink-mute); background:var(--panel-sunk); color:var(--ink); border-radius:8px; padding:10px; display:grid; gap:4px; cursor:pointer; }
+  .offers button.selected { border-color:var(--ink-mid); background:var(--line); }
   .offers strong { font-size:14px; }
-  .offers span { font-size:12px; color:#bed3f1; }
-  .detail p { margin:0; color:#d2e3fa; }
-  .warn { color:#f0cf97; font-size:12px; margin-top:6px; }
+  .offers span { font-size:12px; color:var(--ink); }
+  .detail p { margin:0; color:var(--ink); }
+  .warn { color:var(--warn); font-size:12px; margin-top:6px; }
   .actions { display:flex; gap:10px; justify-content:flex-end; }
-  .actions button { border:1px solid #3f6298; background:#1a3056; color:#e8f2ff; border-radius:8px; padding:8px 12px; cursor:pointer; }
+  .actions button { border:1px solid var(--ink-mute); background:var(--panel-sunk); color:var(--ink); border-radius:8px; padding:8px 12px; cursor:pointer; }
   .actions button:disabled { opacity:.55; cursor:default; }
 </style>

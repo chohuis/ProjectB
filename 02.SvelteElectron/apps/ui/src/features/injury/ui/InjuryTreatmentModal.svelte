@@ -76,24 +76,24 @@
 <style>
   .overlay {
     position: fixed; inset: 0;
-    background: rgba(0,0,0,0.75);
+    background: rgba(10, 18, 38, 0.52);
     display: flex; align-items: center; justify-content: center;
     z-index: 200;
   }
 
   .modal {
-    background: #111827;
+    background: var(--panel);
     /* U5 안전망: 아직 어두운 화면이다. 전역 글자색이 밝은색에서 어두운색으로
        뒤집혔으므로 여기서 명시하지 않으면 색 없는 자식들이 안 보인다 */
-    color: #E4EDFF;
-    border: 1px solid #2d3956;
+    color: var(--ink);
+    border: 1px solid var(--line);
     border-radius: 14px;
     padding: 28px 32px;
     width: min(520px, 92vw);
     display: flex; flex-direction: column; gap: 18px;
   }
 
-  .title { margin: 0; font-size: 20px; font-weight: 700; color: #f1f6ff; }
+  .title { margin: 0; font-size: 20px; font-weight: 700; color: var(--ink); }
 
   .injury-info { display: flex; align-items: center; gap: 10px; }
 
@@ -101,30 +101,30 @@
     font-size: 12px; font-weight: 700;
     border-radius: 6px; padding: 3px 10px;
   }
-  .severity-moderate { background: rgba(255,160,50,0.15); color: #ffa030; border: 1px solid #7a4010; }
-  .severity-severe   { background: rgba(220,60,60,0.15);  color: #e05050; border: 1px solid #7a2020; }
+  .severity-moderate { background: rgba(255,160,50,0.15); color: var(--warn); border: 1px solid rgba(154, 101, 16, 0.30); }
+  .severity-severe   { background: rgba(220,60,60,0.15);  color: var(--bad); border: 1px solid rgba(179, 49, 31, 0.26); }
 
-  .injury-name { font-size: 18px; font-weight: 600; color: #e8f0ff; }
+  .injury-name { font-size: 18px; font-weight: 600; color: var(--ink); }
 
-  .desc { margin: 0; font-size: 13px; color: #7a9ac8; }
+  .desc { margin: 0; font-size: 13px; color: var(--ink-mid); }
 
   .options { display: flex; flex-direction: column; gap: 10px; }
 
   .option-card {
-    background: #161f33; border: 1px solid #2d3956;
+    background: var(--panel-sunk); border: 1px solid var(--line);
     border-radius: 10px; padding: 14px 16px;
     text-align: left; cursor: pointer;
     display: flex; flex-direction: column; gap: 5px;
     transition: border-color 0.15s, background 0.15s;
   }
   .option-card:hover {
-    border-color: #4a72b8;
-    background: #1a2740;
+    border-color: var(--ink-mute);
+    background: var(--panel-sunk);
   }
 
   .opt-header { display: flex; justify-content: space-between; align-items: center; }
-  .opt-label  { font-size: 15px; font-weight: 700; color: #d5e2fd; }
-  .opt-cost   { font-size: 13px; color: #9eb6de; }
-  .opt-duration { font-size: 12px; color: #7a9ac8; }
-  .opt-note   { font-size: 12px; color: #6a8aae; line-height: 1.5; }
+  .opt-label  { font-size: 15px; font-weight: 700; color: var(--ink); }
+  .opt-cost   { font-size: 13px; color: var(--ink); }
+  .opt-duration { font-size: 12px; color: var(--ink-mid); }
+  .opt-note   { font-size: 12px; color: var(--ink-mid); line-height: 1.5; }
 </style>

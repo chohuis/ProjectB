@@ -112,16 +112,16 @@
 </div>
 
 <style>
-  .overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8); display: flex; align-items: center; justify-content: center; z-index: 200; }
+  .overlay { position: fixed; inset: 0; background: rgba(10, 18, 38, 0.52); display: flex; align-items: center; justify-content: center; z-index: 200; }
   /* U5 안전망 — 전역이 밝아져 색 없는 자식(.opt-btn 등)이 안 보인다 */
-  .modal { background: #0e1a30; border: 1px solid #3a5898; border-radius: 16px; padding: 24px; width: min(700px, 92vw); display: grid; color: #E4EDFF; gap: 14px; }
-  .chip { font-size: 11px; color: #7a9ad0; }
-  h2 { margin: 0; color: #e8f0ff; }
-  .body-text { margin: 0; color: #a8c0e0; }
+  .modal { background: var(--panel); border: 1px solid var(--ink-mute); border-radius: 16px; padding: 24px; width: min(700px, 92vw); display: grid; color: var(--ink); gap: 14px; }
+  .chip { font-size: 11px; color: var(--ink-mid); }
+  h2 { margin: 0; color: var(--ink); }
+  .body-text { margin: 0; color: var(--ink); }
   .options { display: grid; gap: 8px; }
-  .opt-btn { background: #111e38; border: 1px solid #2a4068; border-radius: 10px; padding: 10px 12px; text-align: left; cursor: pointer; display: grid; width: 100%; gap: 2px; }
-  .opt-btn.danger { background: #3a1f1f; border-color: #804040; }
-  .opt-btn.continue { background: #0e2818; border-color: #2a6040; }
-  .opt-label { color: #dceeff; font-weight: 600; }
-  .opt-sub { color: #6a9080; font-size: 11px; }
+  .opt-btn { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; text-align: left; cursor: pointer; display: grid; width: 100%; gap: 2px; }
+  .opt-btn.danger { background: rgba(179, 49, 31, 0.09); border-color: var(--bad); }
+  .opt-btn.continue { background: rgba(31, 122, 71, 0.10); border-color: var(--ok); }
+  .opt-label { color: var(--ink); font-weight: 600; }
+  .opt-sub { color: var(--ok); font-size: 11px; }
 </style>

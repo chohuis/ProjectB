@@ -85,27 +85,27 @@
 </div>
 
 <style>
-  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.78); display:flex; align-items:center; justify-content:center; z-index:225; }
-  .modal { width:min(500px,92vw); background:#0d1a30; border:1px solid #3a5a8a; border-radius:16px; padding:26px; display:grid; gap:16px; }
-  .badge { margin:0; font-size:11px; color:#7aace0; text-transform:uppercase; letter-spacing:.05em; }
-  h2 { margin:4px 0 0; color:#eef6ff; font-size:20px; }
-  .pick-info { margin:2px 0 0; color:#8aabda; font-size:13px; }
+  .overlay { position: fixed; inset: 0; background: rgba(10, 18, 38, 0.52); display:flex; align-items:center; justify-content:center; z-index:225; }
+  .modal { width:min(500px,92vw); background:var(--panel); border:1px solid var(--ink-mute); border-radius:16px; padding:26px; display:grid; gap:16px; }
+  .badge { margin:0; font-size:11px; color:var(--ink); text-transform:uppercase; letter-spacing:.05em; }
+  h2 { margin:4px 0 0; color:var(--ink); font-size:20px; }
+  .pick-info { margin:2px 0 0; color:var(--ink); font-size:13px; }
 
-  .contract-card { background:#0a1828; border:1px solid #2d4d7a; border-radius:12px; padding:16px; display:grid; gap:10px; }
+  .contract-card { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:16px; display:grid; gap:10px; }
   .ci { display:flex; justify-content:space-between; align-items:center; }
-  .ci span { color:#7a9ac8; font-size:13px; }
-  .ci strong { color:#d8eaff; font-size:14px; }
-  .ci.total { border-top:1px solid #2d4d7a; padding-top:10px; margin-top:2px; }
-  .ci.total strong { color:#5bb8ff; font-size:16px; }
+  .ci span { color:var(--ink-mid); font-size:13px; }
+  .ci strong { color:var(--ink); font-size:14px; }
+  .ci.total { border-top:1px solid var(--line); padding-top:10px; margin-top:2px; }
+  .ci.total strong { color:var(--ink); font-size:16px; }
 
-  .notice { margin:0; color:#8aabda; font-size:12px; }
-  .alt-notice { margin:0; font-size:12px; color:#a8c4e8; background:#112240; border-radius:8px; padding:8px 12px; }
-  .alt-notice.warn { color:#f0b070; background:#2a1a0a; }
+  .notice { margin:0; color:var(--ink); font-size:12px; }
+  .alt-notice { margin:0; font-size:12px; color:var(--ink); background:var(--panel-sunk); border-radius:8px; padding:8px 12px; }
+  .alt-notice.warn { color:var(--warn); background:rgba(154, 101, 16, 0.12); }
 
   .actions { display:flex; gap:10px; }
-  .btn-accept { flex:2; background:#1a4d99; color:#e6f1ff; border:1px solid #3868c0; border-radius:10px; padding:11px; cursor:pointer; font-size:14px; font-weight:600; }
-  .btn-accept:not(:disabled):hover { background:#2558b0; }
-  .btn-reject { flex:1; background:#1e1e1e; color:#a0a0a0; border:1px solid #3a3a3a; border-radius:10px; padding:11px; cursor:pointer; font-size:13px; }
-  .btn-reject:not(:disabled):hover { background:#2a2a2a; }
+  .btn-accept { flex:2; background:var(--line); color:var(--ink); border:1px solid var(--ink-mute); border-radius:10px; padding:11px; cursor:pointer; font-size:14px; font-weight:600; }
+  .btn-accept:not(:disabled):hover { background:var(--ink-mute); }
+  .btn-reject { flex:1; background:var(--panel); color:var(--ink-mid); border:1px solid var(--line); border-radius:10px; padding:11px; cursor:pointer; font-size:13px; }
+  .btn-reject:not(:disabled):hover { background:var(--panel-sunk); }
   button:disabled { opacity:.5; cursor:default; }
 </style>

@@ -107,7 +107,6 @@ for (const f of SCAN_FILES) {
   if (f.endsWith("utils/staffEffects.ts") || f.endsWith("repo/staffGen.ts")) continue;
   if (f.endsWith("stores/master.ts")) continue;              // 타입 정의
   if (f.endsWith("features/player/ui/PlayerDetailModal.svelte")) continue;  // 표시 전용
-  if (f.endsWith("pages/roster/RosterPage.svelte")) continue;              // 표시 전용(고아)
   if (f.endsWith("pages/match/MatchPage.svelte")) continue;                // stats 통째 전달
   const src = readCode(f);
   if (/\.(manager|coach|owner)\?\.stats\?\.\w+|\.(manager|coach|owner)\.stats\.\w+/.test(src)) {

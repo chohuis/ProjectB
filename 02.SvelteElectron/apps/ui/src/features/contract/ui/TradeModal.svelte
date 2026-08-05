@@ -127,14 +127,14 @@
 <style>
   .overlay {
     position: fixed; inset: 0;
-    background: rgba(0,0,0,.75);
+    background: rgba(10, 18, 38, 0.52);
     display: flex; align-items: center; justify-content: center;
     z-index: 235;
   }
   .modal {
     width: min(520px, 92vw);
-    background: #0e1d35;
-    border: 1px solid #3e6397;
+    background: var(--panel-sunk);
+    border: 1px solid var(--ink-mute);
     border-radius: 14px;
     padding: 22px 24px;
     display: flex; flex-direction: column; gap: 14px;
@@ -143,11 +143,11 @@
   header {
     display: flex; align-items: center; gap: 10px;
   }
-  h2 { margin: 0; color: #eef6ff; font-size: 18px; }
+  h2 { margin: 0; color: var(--ink); font-size: 18px; }
   .reason-chip {
     font-size: 11px; padding: 2px 8px;
-    background: #1a3560; color: #82aadd;
-    border-radius: 20px; border: 1px solid #2d5090;
+    background: var(--line); color: var(--ink);
+    border-radius: 20px; border: 1px solid var(--ink-mute);
   }
 
   .trade-grid {
@@ -155,17 +155,17 @@
     grid-template-columns: 1fr 32px 1fr;
     align-items: center;
     gap: 10px;
-    background: #0a1628;
+    background: var(--panel);
     border-radius: 10px;
     padding: 14px;
   }
   .side { display: flex; flex-direction: column; gap: 3px; }
-  .side-label { font-size: 10px; color: #5a7dab; text-transform: uppercase; margin: 0; }
-  .team-name  { font-size: 15px; color: #c8dcf6; font-weight: 600; margin: 0; }
-  .player-name { font-size: 15px; color: #c8dcf6; font-weight: 600; margin: 0; }
-  .player-detail { font-size: 12px; color: #8aabda; margin: 0; }
-  .sub-text { font-size: 11px; color: #5a7dab; margin: 0; }
-  .arrow { text-align: center; font-size: 20px; color: #3e6397; }
+  .side-label { font-size: 10px; color: var(--ink-mute); text-transform: uppercase; margin: 0; }
+  .team-name  { font-size: 15px; color: var(--ink); font-weight: 600; margin: 0; }
+  .player-name { font-size: 15px; color: var(--ink); font-weight: 600; margin: 0; }
+  .player-detail { font-size: 12px; color: var(--ink); margin: 0; }
+  .sub-text { font-size: 11px; color: var(--ink-mute); margin: 0; }
+  .arrow { text-align: center; font-size: 20px; color: var(--ink-mute); }
 
   .medical-warn {
     border-radius: 8px;
@@ -173,12 +173,12 @@
     font-size: 12px;
     line-height: 1.5;
   }
-  .medical-warn.high { background: #2a1010; color: #f28080; border: 1px solid #7a2020; }
-  .medical-warn.mid  { background: #1e1e0e; color: #d4b96a; border: 1px solid #5a4a10; }
+  .medical-warn.high { background: rgba(179, 49, 31, 0.09); color: var(--bad); border: 1px solid rgba(179, 49, 31, 0.26); }
+  .medical-warn.mid  { background: var(--panel-sunk); color: var(--warn); border: 1px solid rgba(154, 101, 16, 0.30); }
 
   .no-trade-note {
-    font-size: 12px; color: #a8c4e8;
-    background: #132040; border-radius: 6px;
+    font-size: 12px; color: var(--ink);
+    background: var(--panel-sunk); border-radius: 6px;
     padding: 7px 10px; margin: 0;
   }
 
@@ -189,8 +189,8 @@
     transition: opacity .15s;
   }
   button:disabled { opacity: .5; cursor: default; }
-  .btn-accept { background: #1e4d99; color: #e6f1ff; border: 1px solid #3868c0; }
-  .btn-accept:not(:disabled):hover { background: #2558b0; }
-  .btn-reject { background: #3d1010; color: #f0c0c0; border: 1px solid #7a2020; }
-  .btn-reject:not(:disabled):hover { background: #4d1818; }
+  .btn-accept { background: var(--line); color: var(--ink); border: 1px solid var(--ink-mute); }
+  .btn-accept:not(:disabled):hover { background: var(--ink-mute); }
+  .btn-reject { background: rgba(179, 49, 31, 0.09); color: var(--bad); border: 1px solid rgba(179, 49, 31, 0.26); }
+  .btn-reject:not(:disabled):hover { background: rgba(179, 49, 31, 0.09); }
 </style>
