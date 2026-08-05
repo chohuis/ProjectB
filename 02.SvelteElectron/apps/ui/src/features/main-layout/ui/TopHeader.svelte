@@ -1,28 +1,22 @@
 <script lang="ts">
   import { hasPendingAction, nextPendingAction } from "../../../shared/stores/season";
   import { advanceWeek } from "../../../shared/usecases/advanceWeek";
-  import { t } from "../../../shared/i18n";
 
   export let dayLabel: string;
+  /** 시즌 주차. 0이면 표시하지 않는다(비시즌·초기화 직후) */
+  export let weekLabel: string = "";
   export let teamName: string;
   export let playerName: string;
   export let playerYear: string = "";
   export let playerPosition: string = "";
-  export let playerRole: string = "";
   export let playerThrows: string = "";
   export let playerBats: string = "";
-  export let playerBirthday: string = "";
-  export let playerTags: string[] = [];
-  export let playerOverall: number = 0;
-  export let playerCondition: number = 0;
-  export let playerFatigue: number = 0;
-  export let playerMorale: number = 0;
+  export let jerseyNumber: number = 0;
   export let onOpenPending: () => void = () => {};
 
-  function formatBirthday(bd: string): string {
-    const [y, m, d] = bd.split("-");
-    return `${y}.${m.padStart(2, "0")}.${d.padStart(2, "0")}생`;
-  }
+  // ⚠ 등번호·컨디션·피로·사기·태그는 **우측 패널로 옮겼다.**
+  // 헤더는 모든 화면 위에 항상 떠 있으므로 "지금 누구이고 언제인가"만 남긴다.
+  // 변하는 수치를 여기 두면 화면을 볼 때마다 눈이 위로 끌려간다.
 
   let advancing = false;
 
@@ -30,10 +24,18 @@
 
   $: btnLabel =
     $nextPendingAction?.type === "game"            ? "경기 대기 중" :
-    $nextPendingAction?.type === "preGameBriefing" ? "경기 전 브리핑 확인" :
-    $nextPendingAction?.type === "message"         ? "메시지 확인 필요" :
-    $nextPendingAction?.type === "event"           ? "이벤트 처리 필요" :
+    $nextPendingAction?.type === "preGameBriefing" ? "경기 전 브리핑" :
+    $nextPendingAction?.type === "message"         ? "메시지 확인" :
+    $nextPendingAction?.type === "event"           ? "이벤트 처리" :
     advancing ? "진행 중..." : "다음 주 진행";
+
+  /** 메타 줄 — 빈 값이 있어도 가운뎃점이 겹치지 않게 조립한다 */
+  $: metaParts = [
+    teamName,
+    playerYear,
+    playerPosition,
+    playerThrows && playerBats ? `${playerThrows}/${playerBats}` : "",
+  ].filter(Boolean);
 
   async function handleAdvance() {
     if (btnDisabled) return;
@@ -59,155 +61,124 @@
 </script>
 
 <svelte:window on:keydown={handleKeydown} />
-<header class="header">
-  <div class="left">
-    <h1>{playerName}</h1>
-    <p class="meta-line">{teamName} · {playerYear} · {playerPosition} · {playerRole} · {playerThrows}/{playerBats}{playerBirthday ? ` · ${formatBirthday(playerBirthday)}` : ""}</p>
-    {#if playerTags.length > 0}
-      <div class="tag-row">
-        {#each playerTags as tag}
-          <span class="tag">{tag}</span>
-        {/each}
-      </div>
+
+<header class="hdr">
+  <div class="id">
+    {#if jerseyNumber > 0}
+      <span class="num u-num">{jerseyNumber}</span>
     {/if}
-    <div class="stat-chips">
-      <span class="chip"><em>OVR</em><strong>{playerOverall}</strong></span>
-      <span class="chip"><em>컨디션</em><strong>{playerCondition}</strong></span>
-      <span class="chip"><em>피로도</em><strong>{playerFatigue}</strong></span>
-      <span class="chip"><em>사기</em><strong>{playerMorale}</strong></span>
+    <div class="who">
+      <h1>{playerName}</h1>
+      <p class="meta">
+        {#each metaParts as part, i}
+          {#if i > 0}<span class="sep">·</span>{/if}{part}
+        {/each}
+      </p>
     </div>
   </div>
-  <div class="right">
-    <strong>{dayLabel}</strong>
-    <div class="controls">
-      <button
-        class="advance-button"
-        on:click={handleAdvance}
-        disabled={btnDisabled}
-        class:advancing
-        class:pending={$hasPendingAction}
-      >
-        {btnLabel}
-      </button>
+
+  <div class="when">
+    <div class="date">
+      <strong class="u-num">{dayLabel}</strong>
+      {#if weekLabel}<span class="wk u-num">{weekLabel}</span>{/if}
     </div>
+    <button
+      class="go"
+      on:click={handleAdvance}
+      disabled={btnDisabled}
+      class:advancing
+      class:pending={$hasPendingAction}
+    >
+      {btnLabel}
+    </button>
   </div>
 </header>
 
 <style>
-  .header {
+  /* 유니폼 상의 — 팀 주색을 어둡게 내린 바탕에 금색 트림 한 줄 */
+  .hdr {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    background: #121a2b;
-    border: 1px solid #2d3852;
-    border-radius: 10px;
-    padding: 12px 16px;
+    align-items: center;
+    gap: 16px;
+    background: var(--t-dark);
+    border-bottom: 3px solid var(--t-gold);
+    color: var(--ink-on-dark);
+    padding: 10px 18px;
   }
 
-  .left {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+  .id { display: flex; align-items: center; gap: 14px; min-width: 0; }
+
+  /* 등번호 — 데이터는 계속 있었는데 화면에 한 번도 안 나왔다 */
+  .num {
+    font-size: 34px;
+    font-weight: 800;
+    font-style: italic;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    color: var(--t-gold);
+    /* 유니폼 번호처럼 세로 가운데가 아니라 글자 바닥에 맞춘다 */
+    padding-right: 14px;
+    border-right: 1px solid rgba(255, 255, 255, 0.18);
   }
+
+  .who { min-width: 0; }
 
   h1 {
     margin: 0;
-    font-size: 20px;
+    font-size: 19px;
     font-weight: 700;
-    color: #f1f6ff;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  .meta-line {
-    margin: 0;
-    color: #aebad7;
-    font-size: 13px;
-  }
-
-  .tag-row {
-    display: flex;
-    gap: 5px;
-    flex-wrap: wrap;
-  }
-
-  .tag {
-    font-size: 11px;
-    color: #c8d8f8;
-    border: 1px solid #3a5074;
-    background: #1e3050;
-    border-radius: 999px;
-    padding: 2px 8px;
-  }
-
-  .stat-chips {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-
-  .chip {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: #0f1830;
-    border: 1px solid #2e4262;
-    border-radius: 7px;
-    padding: 4px 10px;
-    min-width: 52px;
-  }
-
-  .chip em {
-    font-style: normal;
-    font-size: 10px;
-    color: #7a9ac8;
-  }
-
-  .chip strong {
-    font-size: 16px;
-    color: #f1f6ff;
-    line-height: 1.2;
-  }
-
-  .right {
-    display: grid;
-    gap: 8px;
-    justify-items: end;
-    flex-shrink: 0;
-    padding-left: 16px;
-  }
-
-  .controls {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .advance-button {
-    background: #2b4b80;
-    color: #fff;
-    border: 0;
-    border-radius: 8px;
-    padding: 8px 14px;
-    cursor: pointer;
-    transition: background 0.12s;
+  .meta {
+    margin: 2px 0 0;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.72);
     white-space: nowrap;
   }
+  .sep { opacity: 0.45; margin: 0 5px; }
 
-  .advance-button:hover:not(:disabled) {
-    background: #3a5f9e;
+  .when {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
   }
 
-  .advance-button:disabled {
-    cursor: default;
+  .date { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
+  .date strong { font-size: 14px; font-weight: 700; }
+  .wk {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: rgba(255, 255, 255, 0.6);
   }
 
-  .advance-button.advancing {
-    background: #1e3356;
-    color: #6a8aaa;
+  .go {
+    background: var(--t-gold);
+    color: var(--t-dark);
+    border: 0;
+    border-radius: var(--radius);
+    padding: 9px 18px;
+    font-size: 13.5px;
+    font-weight: 800;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: filter 0.12s;
   }
+  .go:hover:not(:disabled) { filter: brightness(1.06); }
+  .go:disabled { cursor: default; }
 
-  .advance-button.pending {
-    background: #5c3a1a;
-    color: #f0b060;
-    border: 1px solid #8a5a28;
+  .go.advancing { background: rgba(255, 255, 255, 0.16); color: rgba(255, 255, 255, 0.55); }
+
+  /* 처리할 게 남았을 때. **팀 색이 아니라 고정 호박색** —
+     "할 일이 있다"는 뜻은 팀이 바뀌어도 같아야 한다 */
+  .go.pending {
+    background: var(--attn);
+    color: #3A2600;
+    box-shadow: 0 0 0 3px rgba(240, 182, 92, 0.22);
   }
 </style>

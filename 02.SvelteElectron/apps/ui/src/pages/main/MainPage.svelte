@@ -7,6 +7,7 @@
   import type { PendingAction } from "../../shared/types/season";
   import { t } from "../../shared/i18n";
   import { toDateKo } from "../../shared/utils/scheduleGen";
+  import { playerYearLabel } from "../../shared/utils/playerYearLabel";
 
   function tName(id: string): string {
     return $teamMap.get(id)?.name ?? id;
@@ -414,19 +415,14 @@
   <div class="layout">
     <TopHeader
       dayLabel={$seasonStore.currentDate ? toDateKo($seasonStore.currentDate) : $gameStore.dayLabel}
+      weekLabel={$seasonStore.currentWeek > 0 ? `${$seasonStore.currentWeek}주차` : ""}
       teamName={tName($gameStore.protagonist.teamId)}
       playerName={$gameStore.player.name}
-      playerYear={$gameStore.player.year}
+      playerYear={playerYearLabel($gameStore.protagonist)}
       playerPosition={$gameStore.player.position}
-      playerRole={$gameStore.player.role}
       playerThrows={$gameStore.player.throws}
       playerBats={$gameStore.player.bats}
-      playerBirthday={$gameStore.protagonist.birthday ?? ""}
-      playerTags={$gameStore.player.tags}
-      playerOverall={$gameStore.player.overall}
-      playerCondition={$gameStore.player.condition}
-      playerFatigue={$gameStore.player.fatigue}
-      playerMorale={$gameStore.player.morale}
+      jerseyNumber={$gameStore.protagonist.jerseyNumber ?? 0}
       onOpenPending={openPendingFromNext}
     />
 
@@ -479,7 +475,7 @@
         </div>
       </main>
 
-      <RightPanel logs={$gameStore.logs} />
+      <RightPanel />
     </div>
   </div>
 {/if}
@@ -646,11 +642,11 @@
 {/if}
 
 <style>
+  /* 헤더는 **가장자리까지 꽉 채운다.** 떠 있는 상자로 두면 유니폼의 가슴 띠가
+     아니라 카드 하나가 되고, 아래 지면과 관계가 안 읽힌다 */
   .layout {
     display: grid;
     grid-template-rows: auto minmax(0, 1fr);
-    gap: 10px;
-    padding: 10px;
     height: 100%;
     overflow: hidden;
   }
@@ -659,6 +655,7 @@
     display: grid;
     grid-template-columns: 170px minmax(0, 1fr) 220px;
     gap: 10px;
+    padding: 10px;
     align-items: stretch;
     min-height: 0;
     overflow: hidden;

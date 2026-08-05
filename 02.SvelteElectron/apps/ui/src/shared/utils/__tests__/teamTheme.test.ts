@@ -1,4 +1,6 @@
 import { describe, it, expect } from "vitest";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import {
   teamTokens, lightness, contrast, contrastOnWhiteText, DEFAULT_PRIMARY,
 } from "../teamTheme";
@@ -69,5 +71,49 @@ describe("팀 토큰 파생", () => {
   it("3자리 hex도 받는다", () => {
     const t = teamTokens(["#19F"]);
     expect(t.dark).toMatch(/^#[0-9A-F]{6}$/);
+  });
+});
+
+// ── 실제 데이터 전수 ──────────────────────────────────────────
+//
+// ⚠ 위 검사들은 **손으로 고른 5~6색 표본**이다. 이 구간에서만 "표본은 통과인데
+// 현실은 아님"이 여러 번 나왔다. 상단 헤더(U2)가 금색-헤더 짝에 **주 버튼과
+// 등번호**를 얹으면서 이 짝이 182팀 전부에서 성립해야 하는 조건이 됐다.
+describe("refs.json 국내 팀 전수", () => {
+  const DOMESTIC = new Set([
+    "LEAGUE_HIGHSCHOOL", "LEAGUE_UNIVERSITY", "LEAGUE_INDEPENDENT", "LEAGUE_KBL",
+  ]);
+
+  interface RefTeam { id: string; name: string; leagueId: string; colors?: string[] }
+
+  const raw = readFileSync(
+    join(process.cwd(), "resource/data/master/entities/refs.json"), "utf8");
+  const parsed = JSON.parse(raw) as { teams: RefTeam[] | Record<string, RefTeam> };
+  const all: RefTeam[] = Array.isArray(parsed.teams)
+    ? parsed.teams
+    : Object.values(parsed.teams);
+  const teams = all.filter((t) => DOMESTIC.has(t.leagueId));
+
+  it("국내 팀이 실제로 읽혔다 — 경로가 어긋나면 0팀으로 조용히 통과한다", () => {
+    expect(teams.length).toBeGreaterThan(150);
+  });
+
+  it("헤더 위 금색이 어느 팀에서도 4.5:1을 지킨다 (등번호 · 다음 주 진행 버튼)", () => {
+    const bad: string[] = [];
+    for (const t of teams) {
+      const tk = teamTokens(t.colors);
+      const cr = contrast(tk.gold, tk.dark);
+      if (cr < 4.5) bad.push(`${t.name} ${t.colors?.[0]} → ${cr.toFixed(2)}:1`);
+    }
+    expect(bad).toEqual([]);
+  });
+
+  it("헤더 위 흰 글씨(이름 · 날짜)도 어느 팀에서나 읽힌다", () => {
+    const bad: string[] = [];
+    for (const t of teams) {
+      const cr = contrastOnWhiteText(teamTokens(t.colors).dark);
+      if (cr < 4.5) bad.push(`${t.name} → ${cr.toFixed(2)}:1`);
+    }
+    expect(bad).toEqual([]);
   });
 });
