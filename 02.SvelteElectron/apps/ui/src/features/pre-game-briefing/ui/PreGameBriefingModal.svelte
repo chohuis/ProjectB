@@ -4,6 +4,7 @@
   import { seasonStore } from "../../../shared/stores/season";
   import { masterStore } from "../../../shared/stores/master";
   import type { EntityRow, EntityDetails, NpcLiveStats } from "../../../shared/stores/master";
+  import TeamMark from "../../team/ui/TeamMark.svelte";
   import { derivePreGameWeather, derivePreGamePark } from "../../../shared/utils/matchLineupBuilder";
   import type { PreGameWeather, PreGamePark } from "../../../shared/utils/matchLineupBuilder";
 
@@ -136,6 +137,7 @@
   }
 
   let oppTeamName = "";
+  let oppTeamIdShown = "";
   let isHome      = false;
   let weekNum     = 0;
   let weather: PreGameWeather = "sunny";
@@ -161,6 +163,7 @@
 
     const oppTeamId = isHome ? entry.awayTeamId : entry.homeTeamId;
     oppTeamName = m.teams.find((t: any) => t.id === oppTeamId)?.name ?? oppTeamId;
+    oppTeamIdShown = oppTeamId;
 
     const leagueId  = g.protagonist.leagueId;
     const statsMap  = s.leagueState[leagueId]?.stats ?? {};
@@ -236,6 +239,7 @@
       </div>
       <h2 class="title">경기 전 브리핑</h2>
       <div class="header-right">
+        {#if oppTeamIdShown}<TeamMark teamId={oppTeamIdShown} size={18} />{/if}
         <span class="opp-name">vs {oppTeamName}</span>
       </div>
     </header>
@@ -367,7 +371,7 @@
   .briefing-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(4, 10, 24, 0.88);
+    background: rgba(4, 8, 16, 0.88);
     z-index: 50;
     display: flex;
     align-items: center;
@@ -376,8 +380,12 @@
   }
 
   .briefing-panel {
-    background: #0d1b34;
-    border: 1px solid #2d4878;
+    /* ⚠ 뿌리가 글자색을 정한다. 안 정하면 색 규칙이 없는 자식이 전역
+       `--ink`(거의 검정)를 물려받아 어두운 바탕에서 사라진다 — 경기 화면에서
+       "경기 화면" 제목이 정확히 그렇게 안 보였다 (U7-a) */
+    color: #e4edff;
+    background: #0e1523;
+    border: 1px solid #2a3550;
     border-radius: 14px;
     width: 100%;
     max-width: 860px;
@@ -395,7 +403,7 @@
     gap: 10px;
     padding: 10px 16px;
     border-bottom: 1px solid #1e3050;
-    background: #0a1628;
+    background: #0a0f1a;
     flex: 0 0 auto;
   }
 
@@ -422,6 +430,7 @@
 
   .header-right { display: flex; justify-content: flex-end; min-width: 120px; }
 
+  .header-right { display: flex; align-items: center; gap: 7px; }
   .opp-name {
     font-size: 14px;
     font-weight: 700;
@@ -453,8 +462,8 @@
     gap: 2px;
   }
 
-  .weather-card { background: #0f1e38; border: 1px solid #1e3a5e; }
-  .park-card    { background: #0f1e2e; border: 1px solid #1e3a4e; }
+  .weather-card { background: #121c30; border: 1px solid #24304a; }
+  .park-card    { background: #121c30; border: 1px solid #24304a; }
 
   .info-card-label {
     margin: 0;

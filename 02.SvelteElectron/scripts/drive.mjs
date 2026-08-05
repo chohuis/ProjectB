@@ -141,13 +141,17 @@ const COMMANDS = {
    * 한 주씩 손으로 스크립트를 짜면 금방 수십 줄이 되므로 여기서 돌린다.
    * **경기 화면(MatchPage)이 뜨면 즉시 멈춘다** — 그게 보통 보러 온 것이다.
    */
+  /** advance <n> [멈출 CSS 선택자] */
   async advance(nArg) {
     if (!page) return console.log("ERROR: launch first");
-    const n = Number(nArg) || 1;
+    const [nStr, ...rest] = String(nArg).trim().split(/\s+/);
+    const n = Number(nStr) || 1;
+    const stopSel = rest.join(" ") || null;
     for (let i = 0; i < n; i++) {
       for (let guard = 0; guard < 12; guard++) {
-        const state = await page.evaluate(() => {
-          // 경기 화면이면 멈춘다
+        const state = await page.evaluate((stopSel) => {
+          // 보러 온 화면에 닿으면 멈춘다
+          if (stopSel && document.querySelector(stopSel)) return "MATCH";
           if (document.querySelector(".retro-field, .scoreboard-wrap")) return "MATCH";
           // 경기로 가는 길: 브리핑 → 경기 상태 → 직접 플레이
           const play = document.querySelector("button.btn-play:not([disabled])");
@@ -167,8 +171,8 @@ const COMMANDS = {
           const go = document.querySelector(".go");
           if (go && !go.disabled) { go.click(); return "GO"; }
           return "STUCK";
-        });
-        if (state === "MATCH") { console.log(`week ${i}: 경기 화면 도달`); return; }
+        }, stopSel);
+        if (state === "MATCH") { console.log(`week ${i}: 목표 화면 도달`); return; }
         await new Promise((r) => setTimeout(r, state === "GO" ? 4500 : 1200));
         if (state === "GO") break;
         if (state === "STUCK") { console.log(`week ${i}: STUCK`); return; }
