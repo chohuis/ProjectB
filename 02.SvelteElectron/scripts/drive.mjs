@@ -72,8 +72,14 @@ const COMMANDS = {
   async ss(name) {
     if (!page) return console.log("ERROR: launch first");
     const f = path.join(SHOT_DIR, (name || `ss-${Date.now()}`) + ".png");
-    await page.screenshot({ path: f });
-    console.log("screenshot:", f);
+    // ⚠ 주자 스프라이트가 0.8초마다 깜박여서(`gbcBlink`) 기본 옵션으로는
+    // "waiting for fonts/animations"에서 30초를 다 쓰고 실패한다.
+    try {
+      await page.screenshot({ path: f, animations: "disabled", timeout: 15_000 });
+      console.log("screenshot:", f);
+    } catch (e) {
+      console.log("screenshot 실패:", e.message.split("\n")[0]);
+    }
   },
 
   /** DOM 클릭 — 좌표 계산을 안 거치므로 겹친 레이어에 안 막힌다 */

@@ -7,6 +7,7 @@
   import type { EntityRow, EntityDetails } from "../../shared/stores/master";
   import type { InteractiveMatchContext, InteractiveMatchResult } from "../../shared/types/season";
   import { parkViewForHomeTeam } from "../../shared/utils/parkView";
+  import TeamMark from "../../features/team/ui/TeamMark.svelte";
 
 
   export let matchContext: InteractiveMatchContext | null = null;
@@ -513,6 +514,21 @@
   let postExitPopupVisible = false;
   let postExitReason = "";
 
+  // ── 등판 / 관전 (U7-a) ────────────────────────────────────────
+  //
+  // ⚠ `isProtagonistPitching`은 Rust가 계산해 스냅샷으로 보내는데
+  // **UI가 한 번도 안 읽었다.** 타입 선언 한 줄뿐이었다(match_engine.rs:242 →
+  // lib.rs:121 → projectb.d.ts:358 → 여기).
+  //
+  // 화면은 대신 `currentPhase !== "protagonist_pitch"`로 **버튼만 비활성화**
+  // 했다. 관전 중에도 구종 버튼 10개·존·실행 버튼이 그대로 떠 있고 눌리지만
+  // 않아서 "내가 뭘 해야 하는데 안 되는 건가"로 읽혔다.
+  let isProtagonistPitching = true;
+
+  /** 지금 내가 던지고 있나. 아니면 관전이다 */
+  $: onMound = isProtagonistPitching && currentPhase === "protagonist_pitch";
+  $: modeLabel = onMound ? "등판 중" : "관전";
+
   let inning = 1;
   let half: "top" | "bottom" = "top";
 
@@ -796,6 +812,8 @@
     if (snapshot.phase !== undefined) currentPhase = snapshot.phase;
     if (snapshot.protagonistHasEntered !== undefined) protagonistHasEntered = snapshot.protagonistHasEntered;
     if (snapshot.protagonistSide !== undefined) protagonistSide = snapshot.protagonistSide;
+    // 엔진이 계속 보내던 값 — U7-a에서 처음 읽는다
+    if (snapshot.isProtagonistPitching !== undefined) isProtagonistPitching = snapshot.isProtagonistPitching;
     snapshotPitchCount = snapshot.pitchCount;
     snapshotPitchCountSinceEntry = snapshot.pitchCountSinceEntry ?? 0;
 
@@ -1395,6 +1413,21 @@
 </script>
 
 <section class="match-engine-empty" aria-label="match engine workspace">
+  <!--
+    상단 줄 — 어느 경기이고, 내가 지금 뭘 하는 중이고, 어떻게 나가나.
+    ⚠ 예전엔 **나가는 길이 화면에 없었다.** `onCancel`이 Esc에만 걸려 있어서
+    경기 도중 나가려면 그 단축키를 알아야 했다.
+  -->
+  <div class="match-bar">
+    <span class="mode-chip" class:on-mound={onMound}>{modeLabel}</span>
+    <span class="bar-inning">{inningHalfLabel}</span>
+    <span class="bar-park">
+      <span class="chip-mini">{WEATHER_LABEL[matchWeather]}</span>
+      <span class="chip-mini">{PARK_LABEL[matchPark]}</span>
+    </span>
+    <button class="exit-btn" type="button" on:click={onCancel} title="Esc">나가기</button>
+  </div>
+
   <div class="scoreboard-wrap">
     <table class="scoreboard" aria-label="baseball scoreboard">
       <thead>
@@ -1412,15 +1445,25 @@
       <tbody>
         {#each scoreRows as row, i}
           {@const isMyTeam = (i === 0 && protagonistSide === "away") || (i === 1 && protagonistSide === "home")}
+          {@const rowTeamId = i === 0 ? (matchContext?.awayTeamId ?? "") : (matchContext?.homeTeamId ?? "")}
           <tr class:my-team-row={isMyTeam}>
-            <th class="team-col">{row.team}</th>
+            <th class="team-col">
+              <!--
+                ⚠ **두 팀을 색으로 가르지 않는다.** 헤더용 팀 색은 238팀이
+                전부 L*26으로 눌려서 30.8%의 대진이 구분되지 않는다(§3-6 실측).
+                형태로 가르는 마크가 그 일을 한다 — 같은 리그 안에서 안 겹치는
+                게 테스트로 보증된다.
+              -->
+              {#if rowTeamId}<TeamMark teamId={rowTeamId} size={16} />{/if}
+              <span class="team-name">{row.team}</span>
+            </th>
             {#each row.inningScores as inningScore, i}
               <td class:current-inning={i + 1 === inning}>{inningScore}</td>
             {/each}
-            <td>{row.r}</td>
-            <td>{row.h}</td>
-            <td>{row.e}</td>
-            <td>{row.b}</td>
+            <td class="rhe r-col">{row.r}</td>
+            <td class="rhe">{row.h}</td>
+            <td class="rhe">{row.e}</td>
+            <td class="rhe">{row.b}</td>
           </tr>
         {/each}
       </tbody>
@@ -1503,20 +1546,25 @@
     </div>
 
     <div class="right-column">
-      <div class="pair-row">
-        <section class="panel base-panel" aria-label="base state panel">
-          <h2>{baseStatusTitle}</h2>
-          <div class="diamond">
-            <div class="base b2" class:on={runners.second}></div>
-            <div class="base b3" class:on={runners.third}></div>
-            <div class="base b1" class:on={runners.first}></div>
-            <div class="base home"></div>
+      <!--
+        주자와 카운트를 한 패널로 합쳤다. 둘은 **한 상황의 두 축**이고
+        따로 보면 "2사 만루"를 읽는 데 눈이 두 번 움직인다.
+      -->
+      <section class="panel situation-panel" aria-label="base and count panel">
+        <h2>상황</h2>
+        <div class="situation-body">
+          <div class="base-panel">
+            <div class="diamond">
+              <div class="base b2" class:on={runners.second}></div>
+              <div class="base b3" class:on={runners.third}></div>
+              <div class="base b1" class:on={runners.first}></div>
+              <div class="base home"></div>
+            </div>
           </div>
-        </section>
 
-        <section class="panel count-panel" aria-label="count panel">
-          <h2>{countTitle}</h2>
-          <div class="sbo-board">
+          <div class="count-panel">
+            <h3 class="sr-only">{countTitle}</h3>
+            <div class="sbo-board">
             <div class="sbo-row">
               <span class="sbo-label strike">S</span>
               <div class="sbo-lamps">
@@ -1541,10 +1589,16 @@
                 {/each}
               </div>
             </div>
-          </div>
-        </section>
-      </div>
+          </div><!-- /.sbo-board -->
+          </div><!-- /.count-panel -->
+        </div><!-- /.situation-body -->
+      </section>
 
+      <!--
+        관전 중에는 접는다. **비활성화가 아니라 접는 것**이다 — 눌리지 않는
+        버튼 10개가 그대로 떠 있으면 "내가 뭘 해야 하는데 안 되는 건가"로 읽힌다.
+      -->
+      {#if onMound}
       <div class="pair-row">
         <section class="panel zone-panel" aria-label="pitch zone panel">
           <h2>{zoneTitle}</h2>
@@ -1634,6 +1688,16 @@
           {/if}
         </section>
       </div>
+      {:else}
+        <!-- 관전 — 조작할 게 없으니 지금 무슨 일이 벌어지는지만 크게 둔다 -->
+        <section class="panel watch-panel" aria-label="spectator panel">
+          <h2>관전 중</h2>
+          <p class="watch-note">
+            {protagonistHasEntered ? "교체돼 벤치에 있다." : "아직 등판하지 않았다."}
+          </p>
+          <p class="watch-sub">{inningHalfLabel} · {scoreRows[0].r} : {scoreRows[1].r}</p>
+        </section>
+      {/if}
 
       <div class="pair-row">
         <section class="panel info-panel" aria-label="batter info panel">
@@ -1643,10 +1707,6 @@
               <li><span>{info.label}</span><strong>{info.value}</strong></li>
             {/each}
           </ul>
-          <div class="match-env-badges">
-            <span class="env-badge">{WEATHER_LABEL[matchWeather]}</span>
-            <span class="env-badge">{PARK_LABEL[matchPark]}</span>
-          </div>
         </section>
 
         <section class="panel info-panel" aria-label="pitcher info panel">
@@ -1739,11 +1799,20 @@
     width: 100vw;
     height: 100vh;
     background: #0a0f1a;
+    /*
+      ⚠ **뿌리가 글자색을 정한다.** 이게 없어서 "경기 화면" 제목이 안 보였다 —
+      `.scene-panel h2`에 색 규칙이 없어 전역 `--ink`(거의 검정)를 물려받았고,
+      `#0a0f1a` 위의 검정이라 배경에 묻혔다. 실행해서야 보였다.
+
+      규칙마다 색을 적어 막는 건 새 요소가 생길 때마다 또 뚫린다.
+      **어두운 섬은 뿌리에서 한 번 정한다.**
+    */
+    color: #e4edff;
     padding: 12px;
     box-sizing: border-box;
     overflow: hidden;
     display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr);
     gap: 12px;
   }
 
@@ -1751,6 +1820,81 @@
     width: 100%;
     overflow-x: auto;
     margin-bottom: 0;
+  }
+
+  /* ── 상단 줄 (U7-a) ── */
+  .match-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 2px;
+  }
+  .mode-chip {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: #1a2438;
+    color: #8fa8c8;
+    border: 1px solid #2a3a56;
+  }
+  /* 등판 중일 때만 눈에 띈다 — 관전은 가만히 있는 상태다 */
+  .mode-chip.on-mound {
+    background: var(--t-accent, #2a5aa8);
+    color: #ffffff;
+    border-color: transparent;
+  }
+  .bar-inning { font-size: 13px; font-weight: 700; color: #d8e8ff; }
+  .bar-park { display: flex; gap: 6px; margin-left: auto; }
+  .chip-mini {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: #141d30;
+    color: #7e9cc4;
+    border: 1px solid #24304a;
+  }
+  .exit-btn {
+    background: none;
+    border: 1px solid #3a4d70;
+    border-radius: 6px;
+    color: #a8c0e0;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 12px;
+    cursor: pointer;
+  }
+  .exit-btn:hover { background: #1b2740; color: #e0ecff; }
+
+  /* 관전 패널 — 조작이 없을 때 이 자리를 뭘로 채우나 */
+  .watch-panel { display: grid; gap: 6px; align-content: start; }
+  .watch-note { margin: 0; font-size: 13px; color: #a8c0e0; }
+  .watch-sub {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 800;
+    color: #e8f0ff;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* 주자와 카운트는 한 상황의 두 축이다 — 상자 하나에 나란히 */
+  .situation-body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 14px;
+  }
+  .situation-panel .diamond { margin: 0 auto; }
+
+  /* 화면에는 안 보이고 스크린리더에만 남긴다 */
+  .sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
   }
 
   .settings-btn {
@@ -1798,13 +1942,30 @@
   }
 
   .team-col {
-    width: 64px;
+    width: 132px;
     text-align: left;
     padding-left: 8px;
     background: #121c2f;
     color: #ffffff;
     font-weight: 700;
   }
+  .scoreboard tbody th.team-col {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    /* 표 셀에 flex를 쓰면 높이가 무너진다 — 행 높이를 여기서 잡는다 */
+    height: 30px;
+    box-sizing: border-box;
+  }
+  .team-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 600;
+  }
+  /* R은 결과다. H·E·B보다 굵게 */
+  .scoreboard td.rhe { font-variant-numeric: tabular-nums; }
+  .scoreboard td.r-col { font-weight: 800; color: #e8f0ff; }
 
   .scoreboard tbody tr:nth-child(2n) td {
     background: #101a2c;
@@ -1874,7 +2035,8 @@
   }
 
   .panel {
-    min-height: 170px;
+    /* ⚠ `min-height: 170px`을 뺐다. 여섯 칸이 전부 같은 높이라 카운트(램프 7개)와
+       구종 선택(버튼 10개)이 같은 자리를 먹었다 (§3-3) */
     background: #0e1523;
     border: 1px solid #2a3550;
     border-radius: 8px;
@@ -2339,21 +2501,7 @@
     gap: 8px;
   }
 
-  .match-env-badges {
-    display: flex;
-    gap: 6px;
-    margin-top: 10px;
-    flex-wrap: wrap;
-  }
 
-  .env-badge {
-    font-size: 0.72rem;
-    padding: 2px 8px;
-    border-radius: 10px;
-    background: #1a2a3f;
-    color: #8ab4d8;
-    border: 1px solid #2a3f5c;
-  }
 
   .stat-list li {
     display: flex;
@@ -2476,9 +2624,15 @@
     color: #aad0ff;
   }
 
+  /* 내 팀 행. **상대는 표시하지 않는다** — "내 팀 하나만 구분"은 언제나
+     성립하지만 "두 팀을 서로 구분"은 238팀에서 성립하지 않는다 (§3-6) */
   .scoreboard tr.my-team-row th,
   .scoreboard tr.my-team-row td {
     color: #ffe27a;
+    background: rgba(255, 226, 122, 0.06);
+  }
+  .scoreboard tr.my-team-row th.team-col {
+    box-shadow: inset 3px 0 0 var(--t-accent, #ffe27a);
   }
 
   @media (max-width: 1280px) {
