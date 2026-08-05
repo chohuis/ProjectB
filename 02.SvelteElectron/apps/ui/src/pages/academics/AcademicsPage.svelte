@@ -254,103 +254,77 @@
     overflow: hidden;
   }
 
-  /* ── 대학 전공 선택 배너 ────────────────────────────────────── */
+  /* ── 전공 선택 배너 ───────────────────────────────────────
+     한 번뿐이고 되돌릴 수 없는 선택이라 다른 무엇보다 앞에 세운다 */
   .major-select-banner {
-    background: #101e38;
-    border: 1px solid #3a5a20;
-    border-radius: 10px;
+    background: var(--panel);
+    border-left: 3px solid var(--t-accent);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px -1px rgba(15, 29, 61, 0.16);
     padding: 14px 16px;
     display: grid;
     gap: 10px;
   }
 
-  .major-select-title {
-    margin: 0;
-    font-size: 14px;
-    font-weight: 700;
-    color: #a0d870;
-  }
+  .major-select-title { margin: 0; font-size: 14px; font-weight: 800; color: var(--ink); }
+  .major-select-hint  { margin: 0; font-size: 12px; color: var(--ink-mute); }
 
-  .major-select-hint {
-    margin: 0;
-    font-size: 12px;
-    color: #6a9050;
-  }
-
-  .major-list {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-  }
+  .major-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 
   .major-btn {
-    background: #0e1a2e;
-    border: 1px solid #2a4050;
-    border-radius: 8px;
+    background: var(--panel-sunk);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
     padding: 10px 12px;
     text-align: left;
     cursor: pointer;
     display: grid;
-    gap: 4px;
-    transition: background 0.1s, border-color 0.1s;
+    gap: 3px;
   }
+  .major-btn:hover { border-color: var(--t-dark); background: var(--panel); }
+  .major-btn strong { font-size: 13.5px; font-weight: 800; color: var(--ink); }
+  .major-btn span   { font-size: 11px; color: var(--ink-mute); }
 
-  .major-btn:hover {
-    background: #162838;
-    border-color: #4a7050;
-  }
-
-  .major-btn strong {
-    font-size: 14px;
-    color: #c8e8a8;
-  }
-
-  .major-btn span {
-    font-size: 11px;
-    color: #6a8860;
-  }
-
-  /* ── 요약 헤더 ─────────────────────────────────────────────── */
+  /* ── 요약 헤더 ───────────────────────────────────────────── */
   .summary-row {
     display: flex;
-    gap: 16px;
+    gap: 22px;
     align-items: center;
-    background: #0f1c34;
-    border: 1px solid #2a3e65;
-    border-radius: 10px;
-    padding: 10px 16px;
+    background: var(--panel);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px -1px rgba(15, 29, 61, 0.16);
+    padding: 11px 16px;
     flex-wrap: wrap;
   }
 
-  .summary-item {
-    display: grid;
-    gap: 2px;
-    min-width: 70px;
-  }
+  .summary-item { display: grid; gap: 1px; min-width: 70px; }
 
   .lbl {
     margin: 0;
-    font-size: 11px;
-    color: #6a86b8;
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    color: var(--ink-mute);
   }
 
   .summary-item strong {
-    font-size: 18px;
-    color: #e8f2ff;
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
   }
 
   .block-banner {
     margin-left: auto;
-    padding: 5px 12px;
-    background: #3a0c0c;
-    border: 1px solid #8a2020;
-    border-radius: 6px;
-    color: #ff9090;
-    font-size: 13px;
-    font-weight: 600;
+    padding: 6px 13px;
+    background: var(--bad);
+    border-radius: var(--radius);
+    color: var(--ink-on-dark);
+    font-size: 12.5px;
+    font-weight: 700;
   }
 
-  /* ── 메인 그리드 ────────────────────────────────────────────── */
+  /* ── 메인 그리드 ─────────────────────────────────────────── */
   .main-grid {
     display: grid;
     grid-template-columns: 1.6fr 1.3fr 1fr;
@@ -360,9 +334,9 @@
   }
 
   .panel {
-    background: #0f1c34;
-    border: 1px solid #2a3e65;
-    border-radius: 12px;
+    background: var(--panel);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px -1px rgba(15, 29, 61, 0.16);
     padding: 14px;
     display: grid;
     align-content: start;
@@ -371,172 +345,159 @@
     overflow: hidden;
   }
 
-  h3 { margin: 0; font-size: 16px; color: #e8f2ff; }
+  h3 { margin: 0; font-size: 13px; font-weight: 800; color: var(--ink); }
 
-  /* ── 과목 테이블 ────────────────────────────────────────────── */
+  /* ── 과목 표 ─────────────────────────────────────────────── */
   .subject-head,
   .subject-row {
     display: grid;
     grid-template-columns: 1fr 1.1fr 0.8fr 0.8fr 0.8fr;
     gap: 6px;
     align-items: center;
-    font-size: 13px;
+    font-size: 12.5px;
+    font-variant-numeric: tabular-nums;
   }
 
   .subject-head {
-    color: #6a86b8;
-    font-size: 11px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid #1e3050;
+    color: var(--ink-mute);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    padding: 0 8px 6px;
+    border-bottom: 2px solid var(--t-dark);
   }
 
-  .subject-rows { display: grid; gap: 6px; }
+  .subject-rows { display: grid; min-height: 0; overflow-y: auto; }
 
   .subject-row {
-    background: #122443;
-    border: 1px solid #1e3a62;
-    border-radius: 7px;
-    padding: 7px 8px;
-    color: #d8e8ff;
+    border-bottom: 1px solid var(--line);
+    padding: 8px;
+    color: var(--ink-mid);
   }
+  .subject-row:last-child { border-bottom: 0; }
+  .subject-row strong { color: var(--ink); font-weight: 700; }
 
-  .subject-row strong { color: #eef4ff; }
+  /* ── 주간 선택 ───────────────────────────────────────────── */
+  .mode-hint { margin: -4px 0 0; font-size: 11.5px; color: var(--ink-mute); }
 
-  /* ── 주간 선택 ──────────────────────────────────────────────── */
-  .mode-hint {
-    margin: -4px 0 0;
-    font-size: 12px;
-    color: #5a78a8;
-  }
-
-  .mode-list { display: grid; gap: 8px; }
+  .mode-list { display: grid; gap: 7px; }
 
   .mode-btn {
-    border: 1px solid #2a4168;
-    background: #0e1e38;
-    border-radius: 9px;
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--line);
+    background: var(--panel);
+    border-radius: var(--radius);
     padding: 10px 12px;
     text-align: left;
     cursor: pointer;
     display: grid;
-    gap: 4px;
-    transition: background 0.1s, border-color 0.1s;
+    gap: 3px;
   }
+  .mode-btn:hover  { background: var(--panel-sunk); }
+  .mode-btn.active { border-color: var(--t-dark); border-left-color: var(--t-dark); background: var(--panel-sunk); }
 
-  .mode-btn:hover   { background: #152640; border-color: #3a5a90; }
-  .mode-btn.active  { background: #1a3560; border-color: #5080d0; }
-  .mode-btn.risk    { border-color: #5c2a10; }
-  .mode-btn.risk:hover  { background: #1c1208; border-color: #804020; }
-  .mode-btn.risk.active { background: #2a1808; border-color: #a05020; }
+  /* 수면 모드는 성적을 깎는다 — 고르기 전에 보이게 한다 */
+  .mode-btn.risk        { border-left-color: var(--warn); }
+  .mode-btn.risk.active { border-color: var(--warn); border-left-color: var(--warn); }
 
-  .mode-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-  }
-
-  .mode-top strong { font-size: 14px; color: #e0ecff; }
+  .mode-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .mode-top strong { font-size: 13.5px; font-weight: 700; color: var(--ink); }
 
   .eff-badge {
-    font-size: 11px;
-    color: #8ab0e0;
-    background: #1a2e50;
-    border: 1px solid #2a4270;
-    border-radius: 4px;
-    padding: 1px 6px;
+    font-size: 10.5px;
+    color: var(--ink-mid);
+    background: var(--panel-sunk);
+    border-radius: 2px;
+    padding: 2px 7px;
+    font-variant-numeric: tabular-nums;
   }
+  .mode-btn.active .eff-badge { background: var(--t-dark); color: var(--t-gold); }
 
-  .mode-btn.active .eff-badge { background: #1e3a70; border-color: #4070c0; color: #c0d8ff; }
+  .mode-desc { margin: 0; font-size: 11.5px; color: var(--ink-mute); }
 
-  .mode-desc { margin: 0; font-size: 12px; color: #6a88b8; }
-  .mode-btn.active .mode-desc { color: #90b0e0; }
-
-  /* ── 시험 준비 ──────────────────────────────────────────────── */
-  .exam-next {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-
-  .exam-next strong { font-size: 16px; color: #e8f2ff; }
+  /* ── 시험 준비 ───────────────────────────────────────────── */
+  .exam-next { display: flex; align-items: baseline; gap: 9px; flex-wrap: wrap; }
+  .exam-next strong { font-size: 15px; font-weight: 800; color: var(--ink); }
 
   .weeks-left {
-    font-size: 13px;
-    color: #7090c8;
-    background: #152240;
-    border: 1px solid #2a3e65;
-    border-radius: 4px;
-    padding: 1px 7px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink-on-dark);
+    background: var(--t-dark);
+    border-radius: 2px;
+    padding: 2px 8px;
+    font-variant-numeric: tabular-nums;
   }
 
-  .accum-bar-wrap { display: grid; gap: 6px; }
+  .accum-bar-wrap { display: grid; gap: 5px; }
 
   .bar-label {
     display: flex;
     justify-content: space-between;
-    font-size: 12px;
-    color: #7090c8;
+    font-size: 11.5px;
+    color: var(--ink-mute);
+    font-variant-numeric: tabular-nums;
   }
 
   .bar-track {
-    height: 10px;
-    background: #0a1428;
+    height: 8px;
+    background: var(--panel-sunk);
     border-radius: 999px;
     overflow: hidden;
   }
 
-  .bar-fill {
-    height: 100%;
-    border-radius: 999px;
-    transition: width 0.3s;
-  }
+  .bar-fill { height: 100%; border-radius: 999px; transition: width 0.3s; }
+  .bar-good { background: var(--ok); }
+  .bar-mid  { background: var(--warn); }
+  .bar-low  { background: var(--bad); }
 
-  .bar-good  { background: linear-gradient(90deg, #2a7a50, #50c880); }
-  .bar-mid   { background: linear-gradient(90deg, #7a6020, #d0a030); }
-  .bar-low   { background: linear-gradient(90deg, #7a2020, #d04040); }
-
-  .bar-hint {
-    margin: 0;
-    font-size: 12px;
-    color: #6a86b8;
-  }
+  .bar-hint { margin: 0; font-size: 11.5px; color: var(--ink-mute); }
 
   .last-grade-row {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding-top: 8px;
-    border-top: 1px solid #1e3050;
+    padding-top: 9px;
+    border-top: 1px solid var(--line);
   }
 
   .grade-badge {
-    font-size: 15px;
-    font-weight: 700;
+    font-size: 14px;
+    font-weight: 800;
     padding: 2px 10px;
-    border-radius: 6px;
-    background: #122030;
+    border-radius: var(--radius);
+    background: var(--panel-sunk);
   }
 
   .risk-tag {
-    font-size: 12px;
-    padding: 2px 8px;
-    border-radius: 4px;
-    border: 1px solid;
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 2px 9px;
+    border-radius: var(--radius);
   }
 
-  /* ── 색상 클래스 ─────────────────────────────────────────────── */
-  .g-top    { color: #70e898; }
-  .g-mid    { color: #70b8ff; }
-  .g-low    { color: #ffd060; }
-  .g-risk   { color: #ff8080; }
-  .ok       { color: #70e898; }
-  .warn     { color: #ffd060; border-color: #806020; background: #201808; }
-  .danger   { color: #ff8080; border-color: #801010; background: #1e0808; }
+  /* ── 등급 색 ──────────────────────────────────────────────
+     성적은 좋고 나쁨이 전부다 — 의미색이고 팀 색과 섞지 않는다.
+     "보통"(g-mid)만 중성으로 둔다. 전부 색이 있으면 나쁜 게 안 보인다 */
+  .g-top  { color: var(--ok); }
+  .g-mid  { color: var(--ink); }
+  .g-low  { color: var(--warn); }
+  .g-risk { color: var(--bad); }
+  .ok     { color: var(--ok); }
+  .warn   { color: var(--warn); }
+  .danger { color: var(--bad); }
+
+  /* 배지로 쓰일 때는 배경까지 채운다 */
+  .risk-tag.ok     { background: var(--ok);   color: var(--ink-on-dark); }
+  .risk-tag.warn   { background: var(--warn); color: var(--ink-on-dark); }
+  .risk-tag.danger { background: var(--bad);  color: var(--ink-on-dark); }
 
   @media (max-width: 1280px) {
     .main-grid { grid-template-columns: 1.4fr 1.2fr; }
     .exam-panel { grid-column: 1 / -1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bar-fill { transition: none; }
   }
 </style>

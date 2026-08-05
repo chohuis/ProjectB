@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { t } from "../../shared/i18n";
   import { gameStore } from "../../shared/stores/game";
   import { masterStore, pitchUnlockRuleMap } from "../../shared/stores/master";
   import { staffStatsOf } from "../../shared/utils/staffEffects";
@@ -385,15 +384,14 @@
   }
 </script>
 
+<!-- 제목("훈련")을 뺐다 — "나"의 상위 탭이 이미 그 이름이다 -->
 <section class="page">
-  <h2>{$t("page.training")}</h2>
-
-  <article class="card board">
+  <article class="board">
     <header class="top-row">
-      <div class="tabs">
-        <button class:active={tab === "plan"}  on:click={() => (tab = "plan")}>훈련 계획</button>
-        <button class:active={tab === "pitch"} on:click={() => (tab = "pitch")}>구종 개발</button>
-        <button class:active={tab === "risk"}  on:click={() => (tab = "risk")}>리스크/로그</button>
+      <div class="u-subtabs">
+        <button class:on={tab === "plan"}  on:click={() => (tab = "plan")}>훈련 계획</button>
+        <button class:on={tab === "pitch"} on:click={() => (tab = "pitch")}>구종 개발</button>
+        <button class:on={tab === "risk"}  on:click={() => (tab = "risk")}>리스크/로그</button>
       </div>
 
       <div class="kpis">
@@ -811,29 +809,20 @@
 <style>
   .page {
     display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
-    gap: 12px;
+    grid-template-rows: minmax(0, 1fr);
     height: 100%;
     min-height: 0;
     overflow: hidden;
   }
 
-  h2, h3, h4, p { margin: 0; }
-  h2 { font-size: 22px; }
-
-  .card {
-    background: #161f33;
-    border: 1px solid #2d3956;
-    border-radius: 10px;
-    padding: 12px;
-    min-height: 0;
-    overflow: hidden;
-  }
+  h3, p { margin: 0; }
 
   .board {
     display: grid;
     grid-template-rows: auto minmax(0, 1fr);
     gap: 10px;
+    min-height: 0;
+    overflow: hidden;
   }
 
   .plan-wrapper {
@@ -849,130 +838,94 @@
     justify-content: space-between;
     align-items: center;
     gap: 10px;
-  }
-
-  .tabs, .kpis {
-    display: flex;
-    gap: 6px;
-    align-items: center;
     flex-wrap: wrap;
   }
 
-  .tabs button, select, .candidate-list button, .grade-up-btn {
-    border: 1px solid #355182;
-    background: #1f2f4f;
-    color: #dbe8ff;
-    border-radius: 8px;
-    padding: 5px 10px;
+  .kpis { display: flex; gap: 16px; align-items: baseline; flex-wrap: wrap; }
+  .kpis p {
+    color: var(--ink-mute);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+  }
+  .kpis strong {
+    margin-left: 6px;
+    color: var(--ink);
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+  }
+  .kpis strong.safe   { color: var(--ok); }
+  .kpis strong.warn   { color: var(--warn); }
+  .kpis strong.danger { color: var(--bad); }
+
+  select, .candidate-list button, .grade-up-btn {
+    border: 1px solid var(--line-strong);
+    background: var(--panel);
+    color: var(--ink);
+    border-radius: var(--radius);
+    padding: 5px 11px;
     font-size: 12px;
     cursor: pointer;
   }
+  select:hover, .candidate-list button:hover:not(:disabled),
+  .grade-up-btn:hover:not(:disabled) { border-color: var(--t-dark); }
 
-  .tabs button.active { background: #3262b0; border-color: #6da1f7; }
-
-  .kpis p {
-    border: 1px solid #2e486f;
-    border-radius: 999px;
-    background: #152b4f;
-    padding: 3px 8px;
-    color: #cfe0ff;
-    font-size: 12px;
-  }
-
-  .kpis strong { margin-left: 4px; color: #f3f7ff; }
-  .kpis strong.safe   { color: #7be4a6; }
-  .kpis strong.warn   { color: #ffd78a; }
-  .kpis strong.danger { color: #ff9b8a; }
-
-  /* ── 프리셋 관리 ─────────────────────────────────────── */
-  .preset-area {
-    display: grid;
-    gap: 6px;
-  }
-
-  .preset-header-row {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-
-  .preset-select {
-    flex: 1;
-    min-width: 120px;
-    max-width: 200px;
-  }
+  /* -- 프리셋 관리 -- */
+  .preset-area { display: grid; gap: 6px; }
+  .preset-header-row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  .preset-select { flex: 1; min-width: 120px; max-width: 200px; }
 
   .mgmt-btn {
-    border: 1px solid #2e486f;
-    background: #1a2f50;
-    color: #b0c8ef;
-    border-radius: 6px;
-    padding: 4px 10px;
+    border: 1px solid var(--line);
+    background: none;
+    color: var(--ink-mid);
+    border-radius: var(--radius);
+    padding: 4px 11px;
     font-size: 12px;
     cursor: pointer;
     white-space: nowrap;
-    transition: background 0.12s, border-color 0.12s;
   }
+  .mgmt-btn:hover  { border-color: var(--t-dark); color: var(--t-dark); }
+  .mgmt-btn.active { background: var(--t-dark); border-color: var(--t-dark); color: var(--ink-on-dark); }
+  .mgmt-btn.add:hover { border-color: var(--ok);  color: var(--ok); }
+  .mgmt-btn.del:hover { border-color: var(--bad); color: var(--bad); }
+  .mgmt-btn:disabled  { opacity: 0.35; cursor: not-allowed; }
 
-  .mgmt-btn:hover     { background: #1e3a6a; border-color: #4a78c0; }
-  .mgmt-btn.active    { background: #1e3f7a; border-color: #6da1f7; color: #e8f3ff; }
-  .mgmt-btn.add       { border-color: #3a6a3a; color: #8ee4a0; }
-  .mgmt-btn.add:hover { background: #1e3a2a; }
-  .mgmt-btn.del       { border-color: #6a3a3a; color: #e49090; }
-  .mgmt-btn.del:hover { background: #3a1e1e; }
-  .mgmt-btn:disabled  { opacity: 0.45; cursor: not-allowed; }
-
-  .add-preset-row {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-  }
+  .add-preset-row { display: flex; gap: 6px; align-items: center; }
 
   .preset-name-input {
     flex: 1;
-    border: 1px solid #355182;
-    background: #1a2f50;
-    color: #dbe8ff;
-    border-radius: 6px;
-    padding: 4px 8px;
+    border: 1px solid var(--line-strong);
+    background: var(--panel);
+    color: var(--ink);
+    border-radius: var(--radius);
+    padding: 5px 9px;
     font-size: 12px;
     outline: none;
     min-width: 80px;
   }
-
-  .preset-name-input:focus { border-color: #6da1f7; }
+  .preset-name-input:focus { border-color: var(--t-dark); }
 
   .preset-editor {
-    border: 1px solid #2a3f60;
-    border-radius: 8px;
-    background: #111c32;
+    background: var(--panel-sunk);
+    border-radius: var(--radius);
     padding: 8px;
     display: grid;
-    gap: 4px;
+    gap: 2px;
   }
 
   .preset-edit-row {
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 4px 6px;
-    border-radius: 6px;
-    border: 1px solid transparent;
+    padding: 5px 7px;
+    border-radius: var(--radius);
+    border-left: 3px solid transparent;
   }
+  .preset-edit-row.is-active { border-left-color: var(--t-accent); background: var(--panel); }
+  .preset-edit-name { flex: 1; color: var(--ink); font-size: 12px; }
 
-  .preset-edit-row.is-active {
-    border-color: #3a5a8f;
-    background: #162040;
-  }
-
-  .preset-edit-name {
-    flex: 1;
-    color: #c0d8ff;
-    font-size: 12px;
-  }
-
-  /* ── 훈련 계획 탭 ─────────────────── */
+  /* -- 훈련 계획 -- */
   .content-grid {
     min-height: 0;
     display: grid;
@@ -982,10 +935,10 @@
   }
 
   .panel {
-    border: 1px solid #2f486f;
-    border-radius: 10px;
-    background: #13223d;
-    padding: 10px;
+    background: var(--panel);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px -1px rgba(15, 29, 61, 0.16);
+    padding: 12px;
     min-height: 0;
     overflow-y: auto;
     display: grid;
@@ -993,242 +946,158 @@
     gap: 8px;
   }
 
-  .slot-label-wrap {
-    display: grid;
-    gap: 4px;
-  }
-
+  .slot-label-wrap { display: grid; gap: 4px; }
   .slot-label {
-    color: #aac0e4;
+    color: var(--ink-mid);
     font-size: 12px;
     display: flex;
     align-items: center;
     gap: 6px;
   }
-
   .slot-mult {
-    font-size: 11px;
-    color: #6a8fbf;
-    border: 1px solid #2e486f;
-    border-radius: 4px;
-    padding: 1px 5px;
+    font-size: 10.5px;
+    color: var(--ink-mute);
+    background: var(--panel-sunk);
+    border-radius: 2px;
+    padding: 1px 6px;
+    font-variant-numeric: tabular-nums;
   }
 
-  /* ── 구종 개발 위젯 ─────────────────── */
+  /* -- 구종 개발 위젯: 지금 크고 있는 것 하나. 팀 색 띠로 세운다 -- */
   .pitch-dev-widget {
-    border: 1px solid #2f6f58;
-    border-radius: 8px;
-    background: #0f2a22;
-    padding: 10px;
+    background: var(--panel-sunk);
+    border-left: 3px solid var(--t-dark);
+    border-radius: var(--radius);
+    padding: 10px 12px;
     display: grid;
     gap: 6px;
   }
-
-  .pdw-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-  }
-
+  .pdw-header { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
   .pdw-label {
-    font-size: 11px;
-    color: #7ecfb8;
+    font-size: 9.5px; font-weight: 800; letter-spacing: 0.12em;
+    color: var(--ink-mute);
   }
-
-  .pdw-name {
-    font-size: 13px;
-    color: #c0f0e0;
-    font-weight: 600;
-  }
-
-  .pdw-bar { background: #4abf98; }
-
-  .pdw-eta {
-    font-size: 11px;
-    color: #7ecfb8;
-  }
+  .pdw-name { font-size: 13px; color: var(--ink); font-weight: 800; }
+  .pdw-bar  { background: var(--t-dark); }
+  .pdw-eta  { font-size: 11px; color: var(--ink-mute); font-variant-numeric: tabular-nums; }
 
   .pitch-dev-notice {
-    border: 1px solid #6f6f2f;
-    border-radius: 8px;
-    background: #2a2a0f;
-    padding: 8px 10px;
+    border-left: 3px solid var(--warn);
+    border-radius: var(--radius);
+    background: var(--panel-sunk);
+    padding: 8px 11px;
   }
+  .notice-warn { color: var(--warn); font-size: 12px; font-weight: 600; }
 
-  .notice-warn {
-    color: #ffd78a;
-    font-size: 12px;
-  }
-
-  /* ── 코치 패널 ─────────────────────── */
+  /* -- 코치 -- */
   .coach-card {
-    border: 1px solid #2a4060;
-    border-radius: 8px;
-    background: #0e1e38;
+    background: var(--panel-sunk);
+    border-radius: var(--radius);
     padding: 10px 12px;
     display: grid;
-    gap: 6px;
+    gap: 5px;
   }
-
   .coach-name {
-    font-size: 12px;
-    color: #7a9fcc;
-    font-weight: 600;
+    font-size: 9.5px; font-weight: 800; letter-spacing: 0.12em;
+    color: var(--ink-mute); text-transform: uppercase;
   }
+  .coach-feedback { font-size: 13px; color: var(--ink); font-style: italic; line-height: 1.55; }
 
-  .coach-feedback {
-    font-size: 13px;
-    color: #c8deff;
-    font-style: italic;
-    line-height: 1.5;
-  }
-
+  /* 코치 조언은 누르면 계획이 바뀐다 — 읽을 거리가 아니라 행동이라 강조색을 준다 */
   .advice-card {
-    border: 1px solid #4a703a;
-    border-radius: 8px;
-    background: #152512;
+    background: var(--panel);
+    border-left: 3px solid var(--t-accent);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px -1px rgba(15, 29, 61, 0.16);
     padding: 10px 12px;
     display: grid;
     gap: 8px;
   }
-
-  .advice-text {
-    font-size: 12px;
-    color: #a8d890;
-    line-height: 1.5;
-  }
-
-  .advice-btns {
-    display: flex;
-    gap: 6px;
-  }
+  .advice-text { font-size: 12px; color: var(--ink-mid); line-height: 1.55; }
+  .advice-btns { display: flex; gap: 6px; }
 
   .advice-apply-btn {
-    border: 1px solid #4a703a;
-    background: #1e3a18;
-    color: #90e878;
-    border-radius: 6px;
-    padding: 4px 12px;
+    border: 0;
+    background: var(--t-accent);
+    color: var(--ink-on-dark);
+    border-radius: var(--radius);
+    padding: 5px 14px;
     font-size: 12px;
+    font-weight: 700;
     cursor: pointer;
-    transition: background 0.12s;
   }
-
-  .advice-apply-btn:hover { background: #284a20; }
+  .advice-apply-btn:hover { filter: brightness(1.08); }
 
   .advice-dismiss-btn {
-    border: 1px solid #3a3a4a;
-    background: #1a1a2a;
-    color: #8090b0;
-    border-radius: 6px;
-    padding: 4px 10px;
+    border: 1px solid var(--line);
+    background: none;
+    color: var(--ink-mute);
+    border-radius: var(--radius);
+    padding: 5px 11px;
     font-size: 12px;
     cursor: pointer;
-    transition: background 0.12s;
   }
+  .advice-dismiss-btn:hover { border-color: var(--line-strong); color: var(--ink-mid); }
 
-  .advice-dismiss-btn:hover { background: #22223a; }
-
-  /* ── 예상 결과 ─────────────────────── */
-  .result-section {
-    display: grid;
-    gap: 8px;
-  }
-
-  .gain-chips {
-    display: flex;
-    gap: 5px;
-    flex-wrap: wrap;
-  }
-
+  /* -- 예상 결과 -- */
+  .result-section { display: grid; gap: 8px; }
+  .gain-chips { display: flex; gap: 5px; flex-wrap: wrap; }
   .gain-chip {
     border-radius: 999px;
-    padding: 3px 9px;
+    padding: 3px 10px;
     font-size: 11px;
-    border: 1px solid;
+    font-weight: 700;
+    color: var(--ink-on-dark);
   }
+  .gain-chip.up   { background: var(--ok); }
+  .gain-chip.down { background: var(--warn); }
 
-  .gain-chip.up   { border-color: #3a6a5a; background: #0f2a22; color: #7adfc0; }
-  .gain-chip.down { border-color: #6a5a3a; background: #2a1e0f; color: #dfbc7a; }
-
-  .fatigue-gauge-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .gauge-label {
-    font-size: 12px;
-    color: #8090b0;
-    width: 28px;
-    flex-shrink: 0;
-  }
-
+  .fatigue-gauge-row { display: flex; align-items: center; gap: 8px; }
+  .gauge-label { font-size: 11px; color: var(--ink-mute); width: 28px; flex-shrink: 0; }
   .gauge-track {
     flex: 1;
-    height: 8px;
-    background: #1e3054;
+    height: 6px;
+    background: var(--panel-sunk);
     border-radius: 999px;
     overflow: hidden;
   }
+  .gauge-fill { height: 100%; border-radius: inherit; transition: width 0.3s; }
+  /* 피로는 오르는 게 나쁘다 — 방향이 반대인 유일한 수치다 */
+  .gauge-fill.fatigue-up   { background: var(--bad); }
+  .gauge-fill.fatigue-down { background: var(--ok); }
 
-  .gauge-fill {
-    height: 100%;
-    border-radius: inherit;
-    transition: width 0.3s;
-  }
+  .gauge-arrow { font-size: 13px; font-weight: 800; width: 16px; text-align: center; flex-shrink: 0; }
+  .gauge-arrow.up-text   { color: var(--bad); }
+  .gauge-arrow.down-text { color: var(--ok); }
 
-  .gauge-fill.fatigue-up   { background: #c05040; }
-  .gauge-fill.fatigue-down { background: #40a060; }
-
-  .gauge-arrow {
-    font-size: 14px;
-    font-weight: bold;
-    width: 16px;
-    text-align: center;
-    flex-shrink: 0;
-  }
-
-  .gauge-arrow.up-text   { color: #e07060; }
-  .gauge-arrow.down-text { color: #60c080; }
-
-  ul, ol {
-    margin: 0; padding: 0;
-    list-style: none;
-    display: grid;
-    gap: 6px;
-  }
-
+  ul, ol { margin: 0; padding: 0; list-style: none; display: grid; gap: 1px; }
   li {
-    border: 1px solid #2f486f;
-    border-radius: 8px;
-    background: #152b4f;
-    padding: 7px 8px;
+    border-bottom: 1px solid var(--line);
+    padding: 8px 2px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 8px;
-    color: #dce5f7;
-    font-size: 13px;
+    color: var(--ink-mid);
+    font-size: 12.5px;
   }
-
-  li strong { color: #eef4ff; font-size: 13px; }
+  li:last-child { border-bottom: 0; }
+  li strong { color: var(--ink); font-size: 12.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
 
   .risk-note {
-    border: 1px solid;
-    border-radius: 8px;
-    padding: 7px 8px;
+    border-left: 3px solid;
+    border-radius: var(--radius);
+    background: var(--panel-sunk);
+    padding: 8px 11px;
     font-size: 12px;
   }
-
-  .risk-note.safe   { border-color: #3c7a5a; color: #98e5bd; background: #1a3a2c; }
-  .risk-note.warn   { border-color: #8a6f3a; color: #ffe0a2; background: #3d311a; }
-  .risk-note.danger { border-color: #8d4a3f; color: #ffc0b6; background: #3b1f1b; }
+  .risk-note.safe   { border-color: var(--ok);   color: var(--ok); }
+  .risk-note.warn   { border-color: var(--warn); color: var(--warn); }
+  .risk-note.danger { border-color: var(--bad);  color: var(--bad); }
 
   ol li { justify-content: flex-start; }
 
-  /* ── 구종 개발 탭 ─────────────────── */
+  /* -- 구종 개발 탭 -- */
   .pitch-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1240,65 +1109,52 @@
   .count {
     display: inline-block;
     margin-left: 6px;
-    background: #253d65;
-    color: #aac6f5;
+    background: var(--panel-sunk);
+    color: var(--ink-mute);
     border-radius: 999px;
-    font-size: 11px;
+    font-size: 10.5px;
     padding: 1px 7px;
-    font-weight: 400;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
   }
 
-  .pitch-learned-list, .candidate-list, .locked-list {
-    display: grid;
-    gap: 6px;
-  }
+  .pitch-learned-list, .candidate-list, .locked-list { display: grid; gap: 6px; }
 
   .learned-card {
-    border: 1px solid #2e486f;
-    border-radius: 8px;
-    background: #152b4f;
-    padding: 8px 10px;
+    background: var(--panel-sunk);
+    border-left: 3px solid var(--line-strong);
+    border-radius: var(--radius);
+    padding: 9px 11px;
     display: grid;
     gap: 6px;
   }
+  /* 등급이 오를수록 띠가 진해진다. 마스터만 금색 */
+  .learned-card.grade-g5 { border-left-color: var(--warn); }
+  .learned-card.grade-g4 { border-left-color: var(--t-dark); }
+  .learned-card.grade-g3 { border-left-color: var(--ink-mid); }
 
-  .learned-card.grade-g5 { border-color: #c8a030; background: #2a1e06; }
-  .learned-card.grade-g4 { border-color: #3a7ad8; background: #0e2040; }
-  .learned-card.grade-g3 { border-color: #3a7a5a; background: #0e2a20; }
-
-  .learned-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .learned-head strong { color: #eef5ff; font-size: 13px; }
+  .learned-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .learned-head strong { color: var(--ink); font-size: 13px; font-weight: 800; }
 
   .grade-badge {
-    font-size: 11px;
+    font-size: 10.5px;
+    font-weight: 700;
     border-radius: 999px;
-    padding: 2px 8px;
-    border: 1px solid #2e486f;
-    background: #152b4f;
-    color: #9ab8e0;
+    padding: 2px 9px;
+    background: var(--panel);
+    color: var(--ink-mute);
   }
+  .grade-badge.grade-g5 { background: var(--warn);    color: var(--ink-on-dark); }
+  .grade-badge.grade-g4 { background: var(--t-dark);  color: var(--t-gold); }
+  .grade-badge.grade-g3 { background: var(--ink-mid); color: var(--ink-on-dark); }
 
-  .grade-badge.grade-g5 { border-color: #c8a030; background: #2a1e06; color: #f0c860; }
-  .grade-badge.grade-g4 { border-color: #3a7ad8; background: #0e2040; color: #88b8f8; }
-  .grade-badge.grade-g3 { border-color: #3a7a5a; background: #0e2a20; color: #7adfb8; }
-
-  .grade-up-btn {
-    width: 100%;
-    padding: 5px;
-    font-size: 12px;
-  }
-
-  .grade-up-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .grade-up-btn { width: 100%; padding: 6px; font-size: 12px; }
+  .grade-up-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
   .mastered {
-    font-size: 12px;
-    color: #f0c860;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--warn);
     text-align: center;
     padding: 4px 0;
   }
@@ -1306,112 +1162,88 @@
   .progress-row {
     display: flex;
     justify-content: space-between;
-    font-size: 12px;
+    font-size: 11.5px;
+    font-variant-numeric: tabular-nums;
   }
-
-  .progress-label { color: #9eb6de; }
-  .progress-val   { color: #c8e0ff; }
+  .progress-label { color: var(--ink-mute); }
+  .progress-val   { color: var(--ink); font-weight: 700; }
 
   .progress-wrap {
-    height: 6px;
+    height: 5px;
     border-radius: 999px;
-    background: #20375c;
+    background: var(--panel);
     overflow: hidden;
   }
-
   .progress-bar {
     height: 100%;
     border-radius: inherit;
-    background: #79aaff;
+    background: var(--t-dark);
     transition: width 0.3s;
   }
 
   .candidate-list article {
-    border: 1px solid #2d4a76;
-    border-radius: 8px;
-    background: #152b4f;
-    padding: 8px 10px;
+    background: var(--panel-sunk);
+    border-radius: var(--radius);
+    padding: 9px 11px;
     display: grid;
     gap: 4px;
   }
+  .row-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .candidate-list strong { color: var(--ink); font-size: 13px; font-weight: 800; }
+  .candidate-list button { padding: 4px 11px; }
+  .candidate-list button:disabled { opacity: 0.35; cursor: not-allowed; }
 
-  .row-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .candidate-list strong { color: #eef5ff; font-size: 13px; }
-  .candidate-list button { padding: 4px 10px; }
-  .candidate-list button:disabled { opacity: 0.45; cursor: not-allowed; }
-
+  /* 아직 못 배우는 것 — 흐리게 두되 조건은 읽혀야 한다 */
   .locked-card {
-    border: 1px solid #2d3a58;
-    border-radius: 8px;
-    background: #111c32;
-    padding: 8px 10px;
+    background: var(--panel-sunk);
+    border-radius: var(--radius);
+    padding: 9px 11px;
     display: grid;
     gap: 6px;
-    opacity: 0.85;
   }
+  .locked-card strong { color: var(--ink-mute); font-size: 13px; font-weight: 700; }
 
-  .locked-card strong { color: #8a9dbf; font-size: 13px; }
-
-  .req-text { color: #8299c0; font-size: 11px; }
-
+  .req-text { color: var(--ink-mute); font-size: 11px; }
   .req-bars { display: grid; gap: 4px; }
-
   .req-row {
     display: grid;
     grid-template-columns: 60px 1fr 56px;
     align-items: center;
     gap: 6px;
-    font-size: 11px;
-    color: #7a90b8;
+    font-size: 10.5px;
+    color: var(--ink-mute);
+    font-variant-numeric: tabular-nums;
   }
-
-  .req-bar-wrap {
-    height: 4px;
-    border-radius: 999px;
-    background: #1e3054;
-    overflow: hidden;
-  }
-
-  .req-bar {
-    height: 100%;
-    border-radius: inherit;
-    background: #4a78c0;
-  }
-
+  .req-bar-wrap { height: 4px; border-radius: 999px; background: var(--panel); overflow: hidden; }
+  .req-bar { height: 100%; border-radius: inherit; background: var(--line-strong); }
   .req-val { text-align: right; }
-  .req-val.ok { color: #7be4a6; }
-  .req-val.no { color: #ff9b8a; }
+  .req-val.ok { color: var(--ok); font-weight: 700; }
+  .req-val.no { color: var(--bad); font-weight: 700; }
 
   .training-card {
-    border: 1px solid #2d4a76;
-    border-radius: 8px;
-    background: #152b4f;
-    padding: 8px;
+    background: var(--panel-sunk);
+    border-left: 3px solid var(--t-dark);
+    border-radius: var(--radius);
+    padding: 9px 11px;
     display: grid;
     gap: 4px;
   }
+  .training-card strong { color: var(--ink); font-size: 13px; font-weight: 800; }
 
-  .training-card strong { color: #eef5ff; font-size: 13px; }
+  .empty-text { color: var(--ink-mute); font-size: 12px; }
+  .hint       { color: var(--ink-mute); font-size: 11.5px; }
 
-  .empty-text { color: #6a85b0; font-size: 12px; }
-  .hint       { color: #9fb5db; font-size: 12px; }
-
+  /* -- 부상 -- */
   .injury-banner {
-    border: 1px solid #8d4a3f;
-    border-radius: 8px;
-    background: #3b1f1b;
-    padding: 8px 10px;
+    background: var(--panel);
+    border-left: 3px solid var(--bad);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px -1px rgba(15, 29, 61, 0.16);
+    padding: 9px 12px;
     display: grid;
     gap: 6px;
-    color: #ffc0b6;
+    color: var(--ink-mid);
   }
-
   .inj-banner-top {
     display: flex;
     align-items: center;
@@ -1421,58 +1253,53 @@
   }
 
   .inj-sev-tag {
-    font-size: 11px;
-    font-weight: 700;
-    border-radius: 4px;
-    padding: 1px 7px;
+    font-size: 10px;
+    font-weight: 800;
+    border-radius: 2px;
+    padding: 2px 8px;
+    color: var(--ink-on-dark);
   }
-  .inj-sev-tag.inj-sev-light    { background: rgba(100,180,255,0.10); color: #80c8ff; border: 1px solid #2a4a6a; }
-  .inj-sev-tag.inj-sev-moderate { background: rgba(255,160,50,0.15);  color: #ffa030; border: 1px solid #7a4010; }
-  .inj-sev-tag.inj-sev-severe   { background: rgba(220,60,60,0.15);   color: #e05050; border: 1px solid #7a2020; }
-  .inj-sev-tag.inj-sev-surgery  { background: rgba(180,80,255,0.15);  color: #d080ff; border: 1px solid #5a2080; }
+  .inj-sev-tag.inj-sev-light    { background: var(--ink-mute); }
+  .inj-sev-tag.inj-sev-moderate { background: var(--warn); }
+  .inj-sev-tag.inj-sev-severe   { background: var(--bad); }
+  .inj-sev-tag.inj-sev-surgery  { background: #6B1E6B; }
 
-  .inj-type-name { font-size: 13px; color: #ffd8c8; }
-  .inj-treat-tag { font-size: 11px; color: #c0a898; border: 1px solid #604040; border-radius: 4px; padding: 1px 6px; }
-  .inj-rehab-tag { font-size: 11px; color: #d080ff; border: 1px solid #5a2080; border-radius: 4px; padding: 1px 6px; background: rgba(180,80,255,0.08); }
-  .inj-weeks-text { font-size: 12px; color: #c09898; margin-left: auto; }
+  .inj-type-name  { font-size: 13px; color: var(--ink); font-weight: 700; }
+  .inj-treat-tag, .inj-rehab-tag {
+    font-size: 10.5px; color: var(--ink-mid);
+    background: var(--panel-sunk); border-radius: 2px; padding: 2px 8px;
+  }
+  .inj-weeks-text {
+    font-size: 11.5px; color: var(--ink-mute); margin-left: auto;
+    font-variant-numeric: tabular-nums;
+  }
 
-  .inj-progress-wrap {
-    height: 4px;
-    background: #5a2a2a;
-    border-radius: 999px;
-    overflow: hidden;
-  }
-  .inj-progress-fill {
-    height: 100%;
-    border-radius: inherit;
-    background: #e08060;
-    transition: width 0.3s;
-  }
+  .inj-progress-wrap { height: 4px; background: var(--panel-sunk); border-radius: 999px; overflow: hidden; }
+  .inj-progress-fill { height: 100%; border-radius: inherit; background: var(--bad); transition: width 0.3s; }
 
   .injury-risk-banner {
-    border: 1px solid #8a6f3a;
-    border-radius: 8px;
-    background: #3d311a;
-    padding: 7px 10px;
+    border-left: 3px solid var(--warn);
+    border-radius: var(--radius);
+    background: var(--panel-sunk);
+    padding: 8px 11px;
     font-size: 12px;
-    color: #ffe0a2;
+    color: var(--warn);
+    font-weight: 600;
   }
 
-  .history-list {
-    display: grid;
-    gap: 5px;
-  }
-
+  .history-list { display: grid; gap: 1px; }
   .history-list li {
-    border-color: #2a4a6f;
-    background: #0f1e38;
-    font-size: 12px;
-    color: #b8d0f5;
+    font-size: 11.5px;
+    color: var(--ink-mid);
     justify-content: flex-start;
   }
 
   @media (max-width: 1180px) {
     .content-grid { grid-template-columns: 1fr; }
     .pitch-grid   { grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gauge-fill, .progress-bar, .inj-progress-fill { transition: none; }
   }
 </style>

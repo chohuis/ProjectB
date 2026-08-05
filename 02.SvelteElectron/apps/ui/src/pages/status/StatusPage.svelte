@@ -371,10 +371,10 @@
   {/if}
 
   <!-- ── 탭 바 ── -->
-  <nav class="tab-bar">
-    <button class:tab-active={activeTab === "stats"}  on:click={() => (activeTab = "stats")}>능력치</button>
-    <button class:tab-active={activeTab === "record"} on:click={() => (activeTab = "record")}>성적</button>
-    <button class:tab-active={activeTab === "career"} on:click={() => (activeTab = "career")}>기록</button>
+  <nav class="u-subtabs">
+    <button class:on={activeTab === "stats"}  on:click={() => (activeTab = "stats")}>능력치</button>
+    <button class:on={activeTab === "record"} on:click={() => (activeTab = "record")}>성적</button>
+    <button class:on={activeTab === "career"} on:click={() => (activeTab = "career")}>기록</button>
   </nav>
 
   <div class="tab-content">
@@ -388,18 +388,18 @@
           <div class="radar-wrap">
             <svg viewBox="0 0 160 160" class="radar-svg">
               {#each [0.33, 0.66, 1] as ratio}
-                <polygon points={gridPts(ratio)} fill="none" stroke="#1a2e4a" stroke-width="0.8"/>
+                <polygon points={gridPts(ratio)} fill="none" stroke="var(--line)" stroke-width="0.8"/>
               {/each}
               {#each radarAxes as ax, i}
-                <line x1={R_CX} y1={R_CY} x2={ax.x} y2={ax.y} stroke="#1a2e4a" stroke-width="0.8"/>
+                <line x1={R_CX} y1={R_CY} x2={ax.x} y2={ax.y} stroke="var(--line)" stroke-width="0.8"/>
                 <text x={radarLPos[i].x} y={radarLPos[i].y}
                       text-anchor="middle" dominant-baseline="middle"
-                      font-size="7.5" fill="#4a6a8a">{RADAR_LABELS[i]}</text>
+                      font-size="7.5" fill="var(--ink-mute)">{RADAR_LABELS[i]}</text>
               {/each}
               <polygon
                 points={radarPts(radarVals)}
-                fill="rgba(74,138,244,0.18)"
-                stroke="#4a8af4"
+                fill="var(--t-wash)"
+                stroke="var(--t-dark)"
                 stroke-width="1.6"
               />
             </svg>
@@ -647,20 +647,10 @@
 </section>
 
 <style>
-  .tl-event { margin: 3px 0 0; color: #a8c8e8; font-size: 12px; }
-  .tl-event-kind { color: #e0a040; margin-right: 6px; }
-
-  .retire-hint { color: #7f93b5; font-size: 12px; }
-  .retire-warn { color: #f08080; font-size: 12px; line-height: 1.6; }
-  .retire-actions { display: flex; gap: 8px; }
-  .retire-btn { border: 1px solid #5a4020; background: #2a1e08; color: #e0a040; border-radius: 8px; padding: 8px 16px; cursor: pointer; font-size: 12px; }
-  .retire-cancel { border: 1px solid #2a4068; background: #0d1e38; color: #7aa8d8; border-radius: 8px; padding: 8px 16px; cursor: pointer; font-size: 12px; }
-  .retire-btn:disabled, .retire-cancel:disabled { opacity: .5; cursor: default; }
-
   .page {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     height: 100%;
     min-height: 0;
     overflow: hidden;
@@ -669,27 +659,10 @@
   h3, p { margin: 0; }
 
   .card {
-    background: #161f33;
-    border: 1px solid #2d3956;
-    border-radius: 10px;
-    padding: 12px;
-  }
-
-  /* ── 탭 바 ── */
-  .tab-bar {
-    display: flex;
-    gap: 6px;
-    border-bottom: 1px solid #253451;
-    padding-bottom: 8px;
-  }
-  .tab-bar button {
-    background: none; border: 1px solid transparent;
-    border-radius: 7px; color: #7a9ac8;
-    font-size: 13px; padding: 5px 20px; cursor: pointer;
-  }
-  .tab-bar button.tab-active {
-    background: #1d3760; border-color: #3a5a96;
-    color: #d8e8ff; font-weight: 600;
+    background: var(--panel);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px -1px rgba(15, 29, 61, 0.16);
+    padding: 12px 14px;
   }
 
   .tab-content {
@@ -698,297 +671,320 @@
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
   }
 
-  /* ══ 능력치 탭 ══ */
+  /* == 능력치 == */
   .stats-layout {
     display: grid;
     grid-template-columns: 210px 1fr;
-    gap: 12px;
+    gap: 10px;
     align-items: start;
   }
 
-  /* 좌측 패널 */
-  .stats-left-panel {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
+  .stats-left-panel { display: flex; flex-direction: column; gap: 14px; }
 
-  /* 레이더 차트 */
   .radar-wrap { display: flex; justify-content: center; }
   .radar-svg  { width: 160px; height: 160px; }
 
-  /* 구종 */
   .pitches-panel { display: flex; flex-direction: column; gap: 7px; }
   .panel-title {
     margin: 0;
-    font-size: 11px; font-weight: 700; letter-spacing: 1px;
-    color: #4a6a8a; text-transform: uppercase;
-    padding-bottom: 5px; border-bottom: 1px solid #1e3050;
+    font-size: 10px; font-weight: 800; letter-spacing: 0.12em;
+    color: var(--ink-mute); text-transform: uppercase;
+    padding-bottom: 5px; border-bottom: 2px solid var(--t-dark);
   }
   .pitch-list { display: flex; flex-direction: column; gap: 5px; }
   .pitch-row  { display: flex; align-items: center; justify-content: space-between; padding: 0 2px; }
-  .pitch-name { font-size: 13px; color: #b8d4f8; font-weight: 500; }
+  .pitch-name { font-size: 12.5px; color: var(--ink); font-weight: 600; }
   .pitch-stars { font-size: 11px; letter-spacing: 1.5px; }
-  .ps-5 { color: #f0c830; }
-  .ps-4 { color: #4ed080; }
-  .ps-3 { color: #4a8af4; }
-  .ps-2 { color: #4a6888; }
-  .ps-1 { color: #2a3e56; }
 
-  /* 우측 스탯 카드 */
-  .stat-card h3 { font-size: 16px; margin-bottom: 10px; color: #ebf2ff; }
-  .stat-list {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 6px;
-  }
+  /* 구종 등급 5단계 — 색을 다 주면 아무것도 안 도드라진다.
+     마스터만 금색이고 나머지는 명도로 간다 */
+  .ps-5 { color: var(--warn); }
+  .ps-4 { color: var(--t-dark); }
+  .ps-3 { color: var(--ink-mid); }
+  .ps-2 { color: var(--ink-mute); }
+  .ps-1 { color: var(--line-strong); }
+
+  .stat-card h3 { font-size: 13px; font-weight: 800; margin-bottom: 10px; color: var(--ink); }
+  .stat-list { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
   .stat-item {
-    border: 1px solid #2e486f; border-radius: 8px;
-    background: #152b4f; padding: 8px 10px;
-    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    background: var(--panel-sunk);
+    border-radius: var(--radius);
+    padding: 9px 10px;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
   }
-  .label { color: #9eb6de; font-size: 11px; }
-  .value { font-size: 18px; font-weight: 700; }
-  .value.good { color: #68de92; }
-  .value.mid  { color: #d8e8ff; }
-  .value.low  { color: #ffb58a; }
-  .trend-arrow { font-size: 12px; font-weight: 700; margin-left: 2px; vertical-align: middle; }
-  .trend-arrow.up   { color: #ff6b6b; }
-  .trend-arrow.down { color: #74b9ff; }
+  .label { color: var(--ink-mute); font-size: 10.5px; }
+  .value { font-size: 18px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .value.good { color: var(--ok); }
+  .value.mid  { color: var(--ink); }
+  .value.low  { color: var(--bad); }
 
-  /* ══ 성적 탭 ══ */
+  /* 능력치는 오르는 게 좋다 — 위 초록 / 아래 빨강 */
+  .trend-arrow { font-size: 11px; font-weight: 800; margin-left: 2px; vertical-align: middle; }
+  .trend-arrow.up   { color: var(--ok); }
+  .trend-arrow.down { color: var(--bad); }
+
+  /* == 성적 == */
   .season-selector { display: flex; align-items: center; }
   .season-select {
-    background: #161f33; border: 1px solid #2d3956;
-    border-radius: 8px; color: #d8e8ff;
-    font-size: 13px; font-weight: 600;
+    background: var(--panel);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    color: var(--ink);
+    font-size: 12.5px; font-weight: 700;
     padding: 6px 12px; cursor: pointer;
     outline: none;
   }
-  .season-select:hover { border-color: #4a6a9a; }
+  .season-select:hover { border-color: var(--t-dark); }
 
-  .record-card h3 { font-size: 16px; margin-bottom: 12px; color: #ebf2ff; }
-  .record-grid {
-    display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: 8px;
-  }
+  .record-card h3 { font-size: 13px; font-weight: 800; margin-bottom: 12px; color: var(--ink); }
+  .record-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
   .record-item {
-    background: #0f1830; border: 1px solid #314362;
-    border-radius: 8px; padding: 10px 8px;
-    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    background: var(--panel-sunk);
+    border-radius: var(--radius);
+    padding: 10px 8px;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
   }
-  .rec-label { font-size: 11px; color: #92a8ce; }
-  .rec-value { font-size: 18px; font-weight: 700; color: #f1f6ff; }
+  .rec-label { font-size: 10.5px; color: var(--ink-mute); }
+  .rec-value {
+    font-size: 18px; font-weight: 800; color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
 
-  .stat-line-text { color: #d8e8ff; font-size: 14px; }
-  .pending { color: #9db2d8; font-size: 13px; }
+  .stat-line-text { color: var(--ink-mid); font-size: 13px; }
+  .pending { color: var(--ink-mute); font-size: 12.5px; }
 
   .recent-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 10px;
   }
-  .recent-header h3 { font-size: 16px; color: #ebf2ff; }
-  .page-nav {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
+  .recent-header h3 { font-size: 13px; font-weight: 800; color: var(--ink); }
+
+  .page-nav { display: flex; align-items: center; gap: 6px; }
   .page-btn {
-    background: #1a2d4a;
-    border: 1px solid #2e4a70;
-    color: #a0b8d8;
-    border-radius: 6px;
+    background: none;
+    border: 1px solid var(--line);
+    color: var(--ink-mute);
+    border-radius: var(--radius);
     padding: 3px 10px;
     font-size: 12px;
     cursor: pointer;
     line-height: 1.4;
   }
-  .page-btn:hover:not(:disabled) { background: #233a5e; color: #d0e4ff; }
-  .page-btn:disabled { opacity: 0.35; cursor: default; }
-  .page-label { font-size: 12px; color: #7a9ac8; min-width: 36px; text-align: center; }
-  .recent-table-wrap { overflow-x: auto; }
-  .recent-table {
+  .page-btn:hover:not(:disabled) { border-color: var(--t-dark); color: var(--t-dark); }
+  .page-btn:disabled { opacity: 0.3; cursor: default; }
+  .page-label {
+    font-size: 11.5px; color: var(--ink-mute);
+    min-width: 38px; text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .recent-table-wrap, .career-table-wrap { overflow-x: auto; }
+  .recent-table, .career-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 13px;
-    color: #c8d8f0;
+    font-size: 12.5px;
+    color: var(--ink-mid);
+    font-variant-numeric: tabular-nums;
   }
-  .recent-table th {
+  .recent-table th, .career-table th {
     padding: 6px 10px;
     text-align: center;
-    color: #7a9ac8; font-weight: 600; font-size: 11px;
-    border-bottom: 1px solid #253451;
+    color: var(--ink-mute); font-weight: 800; font-size: 10px;
+    letter-spacing: 0.06em;
+    border-bottom: 2px solid var(--t-dark);
     white-space: nowrap;
   }
-  .recent-table td {
+  .recent-table td, .career-table td {
     padding: 8px 10px;
     text-align: center;
-    border-bottom: 1px solid #1a2640;
+    border-bottom: 1px solid var(--line);
+    white-space: nowrap;
   }
-  .recent-table tbody tr:last-child td { border-bottom: none; }
-  .recent-table tbody tr:hover { background: #0f1d35; }
-  .opp-name { text-align: left; color: #d5e2fd; }
-  .score { font-weight: 700; color: #edf2ff; }
+  .recent-table tbody tr:last-child td,
+  .career-table tbody tr:last-child td { border-bottom: none; }
+  .recent-table tbody tr:hover,
+  .career-table tbody tr:hover { background: var(--panel-sunk); }
+
+  .opp-name { text-align: left; color: var(--ink); }
+  .score { font-weight: 800; color: var(--ink); }
+
+  /* 승·패·세이브·홀드는 야구에서 뜻이 고정이다 — 팀 색과 안 섞는다 */
   .decision {
     display: inline-block;
-    padding: 2px 8px; border-radius: 999px;
-    font-size: 12px; font-weight: 700;
+    padding: 2px 9px; border-radius: 999px;
+    font-size: 11px; font-weight: 800;
+    color: var(--ink-on-dark);
   }
-  .decision-W   { background: rgba(55,214,122,0.12);  color: #37d67a; border: 1px solid #2a5a3a; }
-  .decision-L   { background: rgba(255,74,74,0.10);   color: #ff6a6a; border: 1px solid #5a2a2a; }
-  .decision-SV  { background: rgba(80,180,255,0.12);  color: #60c8ff; border: 1px solid #1a4a6a; }
-  .decision-HD  { background: rgba(160,120,255,0.12); color: #b88fff; border: 1px solid #3a2a6a; }
-  .decision-ND  { background: rgba(160,180,210,0.10); color: #90a8c8; border: 1px solid #2a3a50; }
+  .decision-W  { background: var(--ok); }
+  .decision-L  { background: var(--bad); }
+  .decision-SV { background: var(--t-dark); }
+  .decision-HD { background: var(--ink-mid); }
+  .decision-ND { background: var(--line-strong); color: var(--ink-mid); }
 
-  /* ══ 기록 탭 ══ */
-  .career-card h3 { font-size: 16px; margin-bottom: 12px; color: #ebf2ff; }
-  .career-table-wrap { overflow-x: auto; }
-  .career-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12px;
-    color: #c8d8f0;
-  }
-  .career-table th {
-    padding: 6px 10px; text-align: center;
-    color: #7a9ac8; font-weight: 600; font-size: 11px;
-    border-bottom: 1px solid #253451; white-space: nowrap;
-  }
-  .career-table td {
-    padding: 7px 10px; text-align: center;
-    border-bottom: 1px solid #1a2640; white-space: nowrap;
-  }
-  .career-table tbody tr:hover { background: #0f1d35; }
-  .year-cell  { font-weight: 700; color: #a8c4f0; }
-  .team-cell  { text-align: left; color: #d5e2fd; }
-  .stat-cell  { text-align: left; color: #e0e8ff; font-size: 11px; }
-  .ovr-cell   { font-weight: 700; color: #68de92; }
-  .ps-cell    { color: #f0c860; font-weight: 700; }
+  /* == 기록 == */
+  .career-card h3 { font-size: 13px; font-weight: 800; margin-bottom: 12px; color: var(--ink); }
+  .career-table { font-size: 11.5px; }
+  .year-cell  { font-weight: 800; color: var(--ink); }
+  .team-cell  { text-align: left; color: var(--ink); }
+  .stat-cell  { text-align: left; color: var(--ink-mid); font-size: 11px; }
+  .ovr-cell   { font-weight: 800; color: var(--t-dark); }
+  .ps-cell    { color: var(--warn); font-weight: 800; }
 
-  .awards-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .awards-list { display: flex; flex-wrap: wrap; gap: 7px; }
   .award-chip {
     display: flex; align-items: center; gap: 6px;
-    background: #1e2c4a; border: 1px solid #4a6898;
-    border-radius: 20px; padding: 5px 12px;
+    background: var(--panel-sunk);
+    border-left: 3px solid var(--warn);
+    border-radius: var(--radius); padding: 5px 12px;
   }
-  .award-year  { font-size: 11px; color: #7a9ac8; }
-  .award-label { font-size: 12px; font-weight: 700; color: #f0c060; }
-  .award-val   { font-size: 12px; color: #80d8ff; }
+  .award-year  { font-size: 10.5px; color: var(--ink-mute); font-variant-numeric: tabular-nums; }
+  .award-label { font-size: 12px; font-weight: 800; color: var(--ink); }
+  .award-val   { font-size: 11.5px; color: var(--ink-mid); font-variant-numeric: tabular-nums; }
 
+  /* -- 연도별 타임라인 -- */
   .timeline {
     display: flex; flex-direction: column;
     padding-left: 8px;
-    border-left: 2px solid #2a3f62;
+    border-left: 2px solid var(--line);
   }
-  .tl-item {
-    display: flex; gap: 14px;
-    padding: 10px 0;
-    position: relative;
-  }
+  .tl-item { display: flex; gap: 14px; padding: 10px 0; position: relative; }
   .tl-dot {
     position: absolute;
     left: -9px; top: 16px;
     width: 10px; height: 10px;
     border-radius: 50%;
-    background: #2a4a80; border: 2px solid #5c8fd8;
+    background: var(--panel);
+    border: 2px solid var(--line-strong);
     flex-shrink: 0;
   }
-  .tl-item.tl-change .tl-dot { background: #805020; border-color: #f0a040; }
-  .tl-body  { flex: 1; padding-left: 6px; }
-  .tl-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-  .tl-year   { font-size: 13px; font-weight: 700; color: #a8c4f0; }
-  .tl-league { font-size: 11px; color: #6a8ab8; }
-  .tl-team   { font-size: 13px; color: #d5e2fd; font-weight: 600; }
-  .tl-badge  { font-size: 10px; font-weight: 700; border-radius: 4px; padding: 2px 6px; }
-  .tl-badge-league { background: rgba(240,160,64,0.15); color: #f0a040; border: 1px solid #805020; }
-  .tl-badge-team   { background: rgba(90,160,255,0.10); color: #70b0ff; border: 1px solid #2a4a80; }
-  .tl-stat   { margin: 4px 0 0; font-size: 12px; color: #9eb6de; }
-  .tl-awards { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 5px; }
-  .tl-award  {
-    font-size: 11px; color: #f0c060; font-weight: 700;
-    background: rgba(240,192,64,0.1);
-    border: 1px solid rgba(240,192,64,0.3);
-    border-radius: 4px; padding: 2px 7px;
-  }
+  /* 팀·리그가 바뀐 해만 채운다 — 인생이 꺾인 지점이다 */
+  .tl-item.tl-change .tl-dot { background: var(--t-accent); border-color: var(--t-accent); }
 
-  /* ── 신체 상태 카드 ── */
+  .tl-body   { flex: 1; padding-left: 6px; }
+  .tl-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .tl-year   { font-size: 13px; font-weight: 800; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .tl-league { font-size: 10.5px; color: var(--ink-mute); }
+  .tl-team   { font-size: 13px; color: var(--ink); font-weight: 700; }
+  .tl-badge  {
+    font-size: 9.5px; font-weight: 800; border-radius: 2px; padding: 2px 7px;
+    color: var(--ink-on-dark);
+  }
+  .tl-badge-league { background: var(--t-accent); }
+  .tl-badge-team   { background: var(--t-dark); }
+  .tl-stat   { margin: 4px 0 0; font-size: 11.5px; color: var(--ink-mid); font-variant-numeric: tabular-nums; }
+  .tl-awards { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 5px; }
+  .tl-award  {
+    font-size: 10.5px; color: var(--ink-on-dark); font-weight: 800;
+    background: var(--warn);
+    border-radius: 2px; padding: 2px 7px;
+  }
+  .tl-event { margin: 3px 0 0; color: var(--ink-mid); font-size: 11.5px; }
+  .tl-event-kind { color: var(--t-accent); font-weight: 700; margin-right: 6px; }
+
+  /* -- 은퇴 -- */
+  .retire-hint { color: var(--ink-mute); font-size: 12px; }
+  .retire-warn { color: var(--bad); font-size: 12px; line-height: 1.6; }
+  .retire-actions { display: flex; gap: 8px; }
+  .retire-btn {
+    border: 0; background: var(--bad); color: var(--ink-on-dark);
+    border-radius: var(--radius); padding: 8px 16px; cursor: pointer;
+    font-size: 12px; font-weight: 700;
+  }
+  .retire-cancel {
+    border: 1px solid var(--line-strong); background: none; color: var(--ink-mid);
+    border-radius: var(--radius); padding: 8px 16px; cursor: pointer; font-size: 12px;
+  }
+  .retire-btn:disabled, .retire-cancel:disabled { opacity: .4; cursor: default; }
+
+  /* -- 신체 상태 -- */
   .body-card   { display: grid; gap: 8px; }
   .body-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-  .body-title  { font-size: 13px; color: #7a9ac8; font-weight: 600; margin-right: 4px; }
-  .sev-badge   { font-size: 11px; font-weight: 700; border-radius: 6px; padding: 2px 8px; }
-  .sev-badge.sev-light    { background: rgba(100,180,255,0.10); color: #80c8ff; border: 1px solid #2a4a6a; }
-  .sev-badge.sev-moderate { background: rgba(255,160,50,0.15);  color: #ffa030; border: 1px solid #7a4010; }
-  .sev-badge.sev-severe   { background: rgba(220,60,60,0.15);   color: #e05050; border: 1px solid #7a2020; }
-  .sev-badge.sev-surgery  { background: rgba(180,80,255,0.15);  color: #d080ff; border: 1px solid #5a2080; }
-  .inj-name-text { font-size: 14px; font-weight: 600; color: #e8f0ff; }
-  .treat-tag {
-    font-size: 11px; color: #9eb6de;
-    border: 1px solid #2d3956; border-radius: 4px; padding: 2px 7px;
+  .body-title  {
+    font-size: 10px; font-weight: 800; letter-spacing: 0.12em;
+    color: var(--ink-mute); text-transform: uppercase; margin-right: 4px;
   }
-  .rehab-tag {
-    font-size: 11px; color: #d080ff;
-    border: 1px solid #5a2080; border-radius: 4px; padding: 2px 7px;
-    background: rgba(180,80,255,0.08);
+
+  /* 부상 등급 — 경상에서 수술로 갈수록 진해진다 */
+  .sev-badge {
+    font-size: 10px; font-weight: 800; border-radius: 2px; padding: 2px 8px;
+    color: var(--ink-on-dark);
   }
-  .no-injury { font-size: 13px; color: #68de92; }
-  .recovery-row { display: flex; align-items: center; gap: 8px; }
-  .rec-left-label { font-size: 12px; color: #7a9ac8; width: 24px; flex-shrink: 0; }
-  .rec-bar-wrap   { flex: 1; height: 6px; background: #1e3054; border-radius: 999px; overflow: hidden; }
-  .rec-bar-fill   { height: 100%; border-radius: inherit; background: #68de92; transition: width 0.3s; }
-  .rec-weeks      { font-size: 12px; color: #9eb6de; white-space: nowrap; }
-  .inj-history    { display: grid; gap: 6px; }
-  .hist-title     { font-size: 12px; color: #6a8ab8; font-weight: 600; }
-  .hist-list      { display: grid; gap: 4px; }
+  .sev-badge.sev-light    { background: var(--ink-mute); }
+  .sev-badge.sev-moderate { background: var(--warn); }
+  .sev-badge.sev-severe   { background: var(--bad); }
+  .sev-badge.sev-surgery  { background: #6B1E6B; }
+
+  .inj-name-text { font-size: 13.5px; font-weight: 700; color: var(--ink); }
+  .treat-tag, .rehab-tag {
+    font-size: 10.5px; color: var(--ink-mid);
+    background: var(--panel-sunk); border-radius: 2px; padding: 2px 8px;
+  }
+  .no-injury { font-size: 12.5px; color: var(--ok); font-weight: 700; }
+
+  .recovery-row { display: flex; align-items: center; gap: 9px; }
+  .rec-left-label { font-size: 11px; color: var(--ink-mute); width: 26px; flex-shrink: 0; }
+  .rec-bar-wrap   { flex: 1; height: 5px; background: var(--panel-sunk); border-radius: 999px; overflow: hidden; }
+  .rec-bar-fill   { height: 100%; border-radius: inherit; background: var(--ok); transition: width 0.3s; }
+  .rec-weeks      { font-size: 11.5px; color: var(--ink-mid); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+  .inj-history { display: grid; gap: 5px; }
+  .hist-title  {
+    font-size: 10px; font-weight: 800; letter-spacing: 0.12em;
+    color: var(--ink-mute); text-transform: uppercase;
+  }
+  .hist-list { display: grid; gap: 1px; }
   .hist-row {
     display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-    font-size: 12px; padding: 4px 8px;
-    background: #0f1830; border: 1px solid #1e3050; border-radius: 6px;
+    font-size: 11.5px; padding: 6px 2px;
+    border-bottom: 1px solid var(--line);
   }
-  .hist-when { color: #6a8ab8; }
-  .hist-sev  { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 4px; }
-  .hist-sev.sev-light    { color: #80c8ff; }
-  .hist-sev.sev-moderate { color: #ffa030; }
-  .hist-sev.sev-severe   { color: #e05050; }
-  .hist-sev.sev-surgery  { color: #d080ff; }
-  .hist-name { color: #c8d8f0; }
-  .hist-loss { color: #ff9b8a; font-size: 11px; margin-left: auto; }
+  .hist-row:last-child { border-bottom: 0; }
+  .hist-when { color: var(--ink-mute); font-variant-numeric: tabular-nums; }
+  .hist-sev  { font-size: 10px; font-weight: 800; }
+  .hist-sev.sev-light    { color: var(--ink-mute); }
+  .hist-sev.sev-moderate { color: var(--warn); }
+  .hist-sev.sev-severe   { color: var(--bad); }
+  .hist-sev.sev-surgery  { color: #6B1E6B; }
+  .hist-name { color: var(--ink); }
+  .hist-loss { color: var(--bad); font-size: 11px; margin-left: auto; }
 
-  /* ── 계약 / 병역 카드 ── */
+  /* -- 계약 / 병역 -- */
   .info-card    { display: flex; flex-direction: column; gap: 10px; }
-  .info-section { display: grid; gap: 6px; }
+  .info-section { display: grid; gap: 5px; }
   .info-title   {
-    font-size: 11px; font-weight: 700; color: #6a8ab8;
-    letter-spacing: 0.5px; text-transform: uppercase;
+    font-size: 10px; font-weight: 800; color: var(--ink-mute);
+    letter-spacing: 0.12em; text-transform: uppercase;
   }
-  .info-rows  { display: grid; gap: 4px; }
-  .info-row   { display: flex; align-items: center; gap: 8px; font-size: 13px; }
-  .info-row span:first-child { color: #7a9ac8; width: 64px; flex-shrink: 0; }
-  .info-row strong { color: #d8e8ff; }
-  .info-divider { height: 1px; background: #1e3058; }
-  .mil-done    { color: #68de92; }
-  .mil-exempt  { color: #9eb6de; }
-  .mil-active  { color: #60c0ff; }
-  .mil-warn    { color: #ff9060; }
-  .mil-pending { color: #9eb6de; }
+  .info-rows { display: grid; gap: 3px; }
+  .info-row  { display: flex; align-items: center; gap: 8px; font-size: 12.5px; }
+  .info-row span:first-child { color: var(--ink-mute); width: 64px; flex-shrink: 0; }
+  .info-row strong { color: var(--ink); font-variant-numeric: tabular-nums; }
+  .info-divider { height: 1px; background: var(--line); }
+
+  .mil-done    { color: var(--ok); font-weight: 700; }
+  .mil-exempt  { color: var(--ink-mid); }
+  .mil-active  { color: var(--t-dark); font-weight: 700; }
+  .mil-warn    { color: var(--bad); font-weight: 700; }
+  .mil-pending { color: var(--ink-mute); }
+
   .contract-extend-badge {
-    font-size: 11px; color: #ffd060;
-    background: rgba(255,200,60,0.10);
-    border: 1px solid rgba(255,200,60,0.3);
-    border-radius: 4px; padding: 2px 8px;
+    font-size: 10.5px; color: var(--ink-on-dark); font-weight: 700;
+    background: var(--warn);
+    border-radius: 2px; padding: 2px 8px;
   }
 
-  /* ── 반응형 ── */
   @media (max-width: 960px) {
     .profile-card  { grid-template-columns: 1fr; }
     .summary-grid  { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .stats-layout  { grid-template-columns: 1fr; }
     .stat-list     { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .record-grid   { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rec-bar-fill { transition: none; }
   }
 </style>

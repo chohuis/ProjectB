@@ -55,24 +55,23 @@
   $: claimable    = items.filter((x) => x.unlocked && !x.claimed).length;
 </script>
 
+<!-- ⚠ 제목("업적")을 뺐다 — "나"의 상위 탭이 이미 그 이름이다 -->
 <section class="page">
-  <header class="top-bar">
-    <h2>업적</h2>
-    <div class="summary-chips">
-      <span class="chip">달성 <strong>{doneCount}</strong> / {totalActive}</span>
+  <header class="head">
+    <div class="u-subtabs">
+      {#each (["all", "baseball", "growth", "social", "hidden"] as Category[]) as c}
+        <button class:on={category === c} on:click={() => (category = c)}>
+          {CAT_LABELS[c]}
+        </button>
+      {/each}
+    </div>
+    <div class="counts">
+      <span class="cnt"><i>달성</i><b class="u-num">{doneCount}</b><s>/ {totalActive}</s></span>
       {#if claimable > 0}
-        <span class="chip chip-gold">보상 미수령 <strong>{claimable}</strong></span>
+        <span class="cnt warn"><i>미수령</i><b class="u-num">{claimable}</b></span>
       {/if}
     </div>
   </header>
-
-  <nav class="filter-row">
-    {#each (["all", "baseball", "growth", "social", "hidden"] as Category[]) as c}
-      <button class:active={category === c} on:click={() => (category = c)}>
-        {CAT_LABELS[c]}
-      </button>
-    {/each}
-  </nav>
 
   <div class="list">
     {#each items as a (a.id)}
@@ -114,76 +113,33 @@
 <style>
   .page {
     height: 100%;
+    min-height: 0;
     display: grid;
-    grid-template-rows: auto auto minmax(0, 1fr);
-    gap: 8px;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 10px;
     overflow: hidden;
   }
 
-  h2 { margin: 0; font-size: 15px; color: #dce8ff; }
-
-  .top-bar {
+  .head {
     display: flex;
     align-items: center;
-    gap: 10px;
-    background: #111d34;
-    border: 1px solid #2e4568;
-    border-radius: 10px;
-    padding: 8px 12px;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
   }
 
-  .summary-chips {
-    display: flex;
-    gap: 8px;
-    flex: 1;
+  .counts { display: flex; gap: 14px; align-items: baseline; }
+  .cnt { display: flex; align-items: baseline; gap: 5px; }
+  .cnt i {
+    font-style: normal; font-size: 9.5px; font-weight: 800;
+    letter-spacing: 0.12em; color: var(--ink-mute);
   }
-
-  .chip {
-    background: #1c2f4e;
-    border: 1px solid #3a5886;
-    border-radius: 20px;
-    padding: 3px 10px;
-    font-size: 12px;
-    color: #9bb4d8;
-  }
-
-  .chip strong { color: #dce8ff; }
-
-  .chip-gold {
-    background: #2a1e06;
-    border-color: #b87800;
-    color: #e8b840;
-  }
-
-  .chip-gold strong { color: #ffd060; }
-
-
-  .filter-row {
-    display: flex;
-    gap: 6px;
-    background: #111d34;
-    border: 1px solid #2e4568;
-    border-radius: 10px;
-    padding: 8px 10px;
-  }
-
-  .filter-row button {
-    background: #1c2f4e;
-    border: 1px solid #3a5886;
-    color: #adc4e8;
-    border-radius: 20px;
-    padding: 4px 12px;
-    font-size: 12px;
-    cursor: pointer;
-  }
-
-  .filter-row button.active {
-    background: #3262b0;
-    border-color: #6da1f7;
-    color: #e8f0ff;
-  }
+  .cnt b { font-size: 15px; font-weight: 800; color: var(--ink); }
+  .cnt s { text-decoration: none; font-size: 11px; color: var(--ink-mute); }
+  .cnt.warn b { color: var(--warn); }
 
   .list {
+    min-height: 0;
     overflow-y: auto;
     display: grid;
     gap: 6px;
@@ -192,125 +148,89 @@
   }
 
   .item {
-    background: #0f1929;
-    border: 1px solid #253650;
-    border-radius: 10px;
-    padding: 10px 12px;
+    background: var(--panel);
+    border-left: 3px solid var(--line-strong);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px -1px rgba(15, 29, 61, 0.14);
+    padding: 10px 13px;
     display: grid;
     gap: 6px;
   }
+  /* 달성한 줄만 초록 띠 — 목록을 훑을 때 끝난 것과 남은 것이 즉시 갈린다 */
+  .item.unlocked { border-left-color: var(--ok); }
 
-  .item.unlocked {
-    border-color: #2d6640;
-    background: #0e1f14;
-  }
-
-
-  .row-title {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
+  .row-title { display: flex; align-items: center; gap: 8px; }
 
   .badge-status {
-    font-size: 10px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    border: 1px solid #3a5886;
-    background: #1c2f4e;
-    color: #7a94bc;
+    font-size: 9.5px; font-weight: 800; letter-spacing: 0.06em;
+    padding: 2px 7px;
+    border-radius: 2px;
+    background: var(--panel-sunk);
+    color: var(--ink-mute);
     white-space: nowrap;
   }
+  .badge-status.done    { background: var(--ok);      color: var(--ink-on-dark); }
+  .badge-status.claimed { background: var(--panel-sunk); color: var(--ink-mid); }
 
-  .badge-status.done {
-    background: #174429;
-    border-color: #2d8050;
-    color: #5ed38a;
-  }
-
-   .badge-status.claimed {
-    background: #1d2d4f;
-    border-color: #4a6ca6;
-    color: #9ec0ff;
-  }
-
-  .title {
-    font-size: 13px;
-    color: #dce8ff;
-    flex: 1;
-  }
+  .title { font-size: 13px; font-weight: 700; color: var(--ink); flex: 1; }
 
   .reward-tag {
-    font-size: 11px;
-    background: #1a2e50;
-    border: 1px solid #3a6ab0;
-    border-radius: 4px;
-    padding: 2px 6px;
-    color: #7ab0f0;
+    font-size: 10.5px;
+    background: var(--panel-sunk);
+    border-radius: 2px;
+    padding: 2px 7px;
+    color: var(--ink-mid);
     white-space: nowrap;
   }
 
-  .item-desc {
-    margin: 0;
-    font-size: 12px;
-    color: #7a94bc;
-  }
+  .item-desc { margin: 0; font-size: 12px; color: var(--ink-mute); }
 
-  .progress-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
+  .progress-row { display: flex; align-items: center; gap: 9px; }
 
   .bar-wrap {
     flex: 1;
-    height: 6px;
-    background: #1c2f4e;
+    height: 5px;
+    background: var(--panel-sunk);
     border-radius: 3px;
     overflow: hidden;
   }
 
   .bar-fill {
     height: 100%;
-    background: #3a7adc;
+    background: var(--t-dark);
     border-radius: 3px;
     transition: width 0.3s ease;
   }
-
-  .item.unlocked .bar-fill {
-    background: #2d9e58;
-  }
+  .item.unlocked .bar-fill { background: var(--ok); }
 
   .prog-text {
     font-size: 11px;
-    color: #6a88b8;
+    color: var(--ink-mute);
+    font-variant-numeric: tabular-nums;
     white-space: nowrap;
-    min-width: 48px;
+    min-width: 52px;
     text-align: right;
   }
 
+  /* 받을 게 남아 있다는 건 "챙길 것"이다 — 팀 색이 아니라 고정 의미색 */
   .btn-claim {
     align-self: start;
-    background: #b87800;
-    border: 1px solid #e8a820;
-    color: #fff8e0;
-    border-radius: 6px;
-    padding: 5px 12px;
+    background: var(--warn);
+    border: 0;
+    color: var(--ink-on-dark);
+    border-radius: var(--radius);
+    padding: 6px 14px;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
   }
+  .btn-claim:hover { filter: brightness(1.1); }
 
-  .btn-claim:hover { background: #d08c00; }
+  .claimed-label { font-size: 11px; color: var(--ok); font-weight: 700; }
 
-  .claimed-label {
-    font-size: 11px;
-    color: #5e7a58;
-  }
+  .empty { margin: 24px auto; color: var(--ink-mute); font-size: 13px; }
 
-  .empty {
-    margin: 20px auto;
-    color: #4a6480;
-    font-size: 13px;
+  @media (prefers-reduced-motion: reduce) {
+    .bar-fill { transition: none; }
   }
 </style>

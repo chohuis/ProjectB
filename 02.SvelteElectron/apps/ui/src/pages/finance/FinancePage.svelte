@@ -10,7 +10,6 @@
    * 지출은 이벤트 선택 또는 구독 토글로만 한다 — 그래서 여기 "예산 짜기"가 없다.
    */
   import { onMount } from "svelte";
-  import { t } from "../../shared/i18n";
   import { gameStore } from "../../shared/stores/game";
   import { seasonStore } from "../../shared/stores/season";
   import {
@@ -99,22 +98,23 @@
   }
 </script>
 
+<!-- ⚠ 화면 제목("재정")을 뺐다. "나"의 상위 탭이 이미 그 이름이라
+     같은 글자가 두 번 나온다 -->
 <section class="page">
-  <h2>{$t("page.finance")}</h2>
+  <header class="head">
+    <div class="stage">
+      <strong>{stageLabel}</strong>
+      <span class="u-num">보유 자산 {won(p.money)}원</span>
+    </div>
+    <div class="u-subtabs">
+      <button class:on={tab === "overview"} on:click={() => (tab = "overview")}>개요</button>
+      <button class:on={tab === "sponsor"}  on:click={() => (tab = "sponsor")}>스폰서</button>
+      <button class:on={tab === "training"} on:click={() => (tab = "training")}>개인 트레이닝</button>
+      <button class:on={tab === "invest"}   on:click={() => (tab = "invest")}>투자</button>
+    </div>
+  </header>
 
-  <article class="card board">
-    <header class="head">
-      <div class="stage-chip">
-        <strong>{stageLabel}</strong>
-        <span>보유 자산 {won(p.money)}원</span>
-      </div>
-      <div class="tabs">
-        <button class:active={tab === "overview"} on:click={() => (tab = "overview")}>개요</button>
-        <button class:active={tab === "sponsor"}  on:click={() => (tab = "sponsor")}>스폰서</button>
-        <button class:active={tab === "training"} on:click={() => (tab = "training")}>개인 트레이닝</button>
-        <button class:active={tab === "invest"}   on:click={() => (tab = "invest")}>투자</button>
-      </div>
-    </header>
+  <div class="board">
 
     {#if loadError}
       <section class="panel err">
@@ -295,7 +295,7 @@
         {/if}
       </section>
     {/if}
-  </article>
+  </div>
 </section>
 
 <style>
@@ -308,57 +308,30 @@
     overflow: hidden;
   }
 
-  h2, h3, p { margin: 0; }
-  h2 { font-size: 20px; }
-
-  .card {
-    background: linear-gradient(180deg, #161f33 0%, #121a2a 100%);
-    border: 1px solid #2d3956;
-    border-radius: 12px;
-    padding: 12px;
-    min-height: 0;
-    overflow: hidden;
-  }
-
-  .board {
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
-    gap: 10px;
-  }
+  h3, p { margin: 0; }
 
   .head {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     flex-wrap: wrap;
   }
 
-  .stage-chip {
+  /* 단계 + 잔액 — 이 화면에서 항상 참인 사실 하나 */
+  .stage {
     display: grid;
-    gap: 2px;
-    padding: 8px 10px;
-    border-radius: 10px;
-    border: 1px solid #3a4c73;
-    background: #172745;
+    gap: 1px;
+    border-left: 3px solid var(--t-dark);
+    padding-left: 10px;
   }
+  .stage strong { font-size: 13.5px; font-weight: 800; color: var(--ink); }
+  .stage span   { font-size: 11.5px; color: var(--ink-mute); }
 
-  .stage-chip strong { font-size: 13px; color: #eff5ff; }
-  .stage-chip span { font-size: 11px; color: #a8bcdd; }
-
-  .tabs { display: flex; gap: 6px; flex-wrap: wrap; }
-  .tabs button {
-    border: 1px solid #355182;
-    background: #1f2f4f;
-    color: #dbe8ff;
-    border-radius: 8px;
-    padding: 6px 11px;
-    font-size: 12px;
-    cursor: pointer;
-  }
-  .tabs button.active { background: #3262b0; border-color: #6da1f7; }
+  .board { min-height: 0; overflow: hidden; }
 
   .overview-grid {
+    height: 100%;
     min-height: 0;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -366,78 +339,94 @@
   }
 
   .panel {
-    border: 1px solid #2f486f;
-    border-radius: 10px;
-    background: #13223d;
-    padding: 10px;
+    background: var(--panel);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px -1px rgba(15, 29, 61, 0.16);
+    padding: 12px;
     min-height: 0;
     overflow: auto;
     display: grid;
     gap: 8px;
     align-content: start;
   }
+  .panel h3 { font-size: 13px; font-weight: 800; color: var(--ink); }
 
-  .err { border-color: #7a3b3b; background: #2a1620; }
+  .err { border-left: 3px solid var(--bad); }
 
   .kpi-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 7px;
+    gap: 8px;
     align-content: start;
   }
 
   .kpi-grid article {
-    border: 1px solid #2e486f;
-    border-radius: 8px;
-    background: #152b4f;
-    padding: 8px;
+    background: var(--panel-sunk);
+    border-radius: var(--radius);
+    padding: 8px 10px;
     display: grid;
-    gap: 2px;
+    gap: 1px;
+  }
+  .kpi-grid span   { color: var(--ink-mute); font-size: 10.5px; }
+  .kpi-grid strong {
+    color: var(--ink); font-size: 15px; font-weight: 800;
+    font-variant-numeric: tabular-nums;
   }
 
-  .kpi-grid span { color: #9eb6de; font-size: 11px; }
-  .kpi-grid strong { color: #eef4ff; font-size: 14px; }
-  .up { color: #79e0a2; }
-  .down { color: #ffb68a; }
+  /* 돈은 늘고 주는 게 전부다 — 의미색을 쓰고 팀 색과 섞지 않는다 */
+  .up   { color: var(--ok); }
+  .down { color: var(--bad); }
 
   .ledger-panel { grid-template-rows: auto auto minmax(0, 1fr); }
-  .ledger-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; min-height: 0; }
-  .ledger-title { font-size: 12px; margin-bottom: 6px; }
+  .ledger-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; min-height: 0; }
+  .ledger-title {
+    font-size: 10px; font-weight: 800; letter-spacing: 0.12em;
+    margin-bottom: 6px; padding-bottom: 4px;
+    border-bottom: 1px solid var(--line);
+  }
 
-  ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+  ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 1px; }
   li {
-    border: 1px solid #2f486f;
-    border-radius: 8px;
-    background: #152b4f;
-    padding: 7px 8px;
+    border-bottom: 1px solid var(--line);
+    padding: 7px 2px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 8px;
-    color: #dce5f7;
+    gap: 10px;
+    color: var(--ink-mid);
     font-size: 12px;
   }
+  li:last-child { border-bottom: 0; }
+  li strong {
+    color: var(--ink); font-size: 12px; font-weight: 700;
+    font-variant-numeric: tabular-nums; text-align: right;
+  }
 
-  li strong { color: #eef4ff; font-size: 12px; }
-
-  .sub { color: #aac0e4; font-size: 11px; line-height: 1.5; }
-  .sub code { color: #cfe0ff; }
+  .sub { color: var(--ink-mute); font-size: 11.5px; line-height: 1.55; }
+  .sub strong { color: var(--ink); }
+  .sub code {
+    background: var(--panel-sunk); border-radius: 2px;
+    padding: 1px 4px; color: var(--ink-mid);
+  }
 
   .offer { align-items: center; }
-  .offer-left { display: grid; gap: 2px; }
-  .offer-left span { color: #9eb6de; font-size: 11px; }
+  .offer-left { display: grid; gap: 1px; }
+  .offer-left strong { text-align: left; }
+  .offer-left span { color: var(--ink-mute); font-size: 11px; }
 
   .act {
-    border: 1px solid #4a7fd0;
-    background: #2b53a0;
-    color: #eaf2ff;
-    border-radius: 8px;
-    padding: 6px 12px;
+    border: 0;
+    background: var(--t-accent);
+    color: var(--ink-on-dark);
+    border-radius: var(--radius);
+    padding: 6px 14px;
     font-size: 12px;
+    font-weight: 700;
     cursor: pointer;
     white-space: nowrap;
+    flex-shrink: 0;
   }
-  .act:disabled { opacity: 0.5; cursor: default; }
+  .act:disabled { opacity: 0.4; cursor: default; }
 
   .training-panel { grid-template-rows: auto auto minmax(0, 1fr) auto; }
 

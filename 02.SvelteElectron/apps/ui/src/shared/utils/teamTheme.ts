@@ -21,6 +21,13 @@ export interface TeamTokens {
   gold: string;
   /** 핀스트라이프 — 주색의 옅은 투명도 */
   stripe: string;
+  /**
+   * 면을 옅게 칠할 때 — 레이더 차트 안쪽, 그래프 영역, 선택 구간.
+   *
+   * 스트라이프(0.055)는 **줄무늬로 쓰려고 만든 세기**라 면으로 칠하면
+   * 거의 안 보인다. 면은 형태가 읽혀야 하므로 따로 둔다.
+   */
+  wash: string;
 }
 
 /** 헤더로 쓸 수 있는 최대 명도. 이보다 밝으면 흰 글씨 대비가 4.5:1 아래로 떨어진다 */
@@ -28,6 +35,7 @@ const HEADER_MAX_L = 26;
 /** 어두운 바탕 위 강조가 확보해야 할 최소 명도 */
 const GOLD_MIN_L = 72;
 const STRIPE_ALPHA = 0.055;
+const WASH_ALPHA = 0.16;
 
 const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
 const toLin = (c: number) => (c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
@@ -136,6 +144,7 @@ export function teamTokens(colors?: readonly string[] | null): TeamTokens {
     accent,
     gold,
     stripe: `rgba(${r}, ${g}, ${b}, ${STRIPE_ALPHA})`,
+    wash: `rgba(${r}, ${g}, ${b}, ${WASH_ALPHA})`,
   };
 }
 
@@ -156,4 +165,5 @@ export function applyTeamTokens(t: TeamTokens, root?: HTMLElement): void {
   el.style.setProperty("--t-accent", t.accent);
   el.style.setProperty("--t-gold", t.gold);
   el.style.setProperty("--t-stripe", t.stripe);
+  el.style.setProperty("--t-wash", t.wash);
 }
