@@ -14,12 +14,19 @@
   import { gameStore } from "../../../shared/stores/game";
   import { seasonStore } from "../../../shared/stores/season";
   import { retireProtagonist } from "../../../shared/usecases/retirement";
+  import CareerEndScreen from "./CareerEndScreen.svelte";
 
   export let urgency = 0;
   export let reason: "decline" | "injury" = "decline";
   export let detail = "";
 
   let resolving = false;
+  /**
+   * 은퇴를 누르면 이 모달이 **커리어 결산으로 바뀐다.**
+   * "결산을 봤는가" 플래그를 세이브에 새로 넣지 않으려는 것이다 — 은퇴하는
+   * 그 순간이 곧 첫 관람이고, 다시 보는 건 나 > 상태에서 누를 때다.
+   */
+  let showSummary = false;
 
   $: p = $gameStore.protagonist;
   $: seasons = (p.careerRecords ?? []).length;
@@ -39,6 +46,9 @@
     seasonStore.resolvePendingAction("retirementAsk");
     await seasonStore.save();
     resolving = false;
+    // 저장이 끝난 뒤에 바꾼다 — 결산은 `careerRecords`를 읽으므로
+    // 기록이 확정되기 전에 띄우면 마지막 시즌이 빠진 채로 나온다
+    showSummary = true;
   }
 
   async function keepPlaying() {
@@ -51,6 +61,9 @@
   }
 </script>
 
+{#if showSummary}
+  <CareerEndScreen onClose={() => (showSummary = false)} />
+{:else}
 <div class="overlay">
   <section class="modal">
     <header>
@@ -69,6 +82,7 @@
     </div>
   </section>
 </div>
+{/if}
 
 <style>
   .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.75); display:flex; align-items:center; justify-content:center; z-index:245; }

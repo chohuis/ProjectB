@@ -8,6 +8,7 @@
   import { INJURY_LABEL } from "../../shared/types/save";
   import { getFaThreshold } from "../../shared/utils/faEngine";
   import { canRetireVoluntarily, isRetired, retireProtagonist } from "../../shared/usecases/retirement";
+  import CareerEndScreen from "../../features/retirement/ui/CareerEndScreen.svelte";
 
   type StatusTab = "stats" | "record" | "career";
   let activeTab: StatusTab = "stats";
@@ -22,6 +23,8 @@
   // 되돌릴 수 없으므로 **확인을 한 번 받는다.**
   let retireConfirm = false;
   let retiring = false;
+  /** 은퇴한 뒤 커리어 결산을 다시 여는 자리 */
+  let showCareerEnd = false;
   async function doVoluntaryRetire(): Promise<void> {
     if (retiring) return;
     retiring = true;
@@ -638,6 +641,13 @@
             <p class="retire-hint">
               {$gameStore.protagonist.retirement?.year}년 은퇴 — 통산 {($gameStore.protagonist.careerRecords ?? []).length}시즌
             </p>
+            <!--
+              예전엔 이 두 줄이 커리어의 전부였다. 19시즌치 기록이
+              `careerRecords`에 그대로 있는데 아무도 안 읽었다.
+            -->
+            <button class="retire-btn" type="button" on:click={() => (showCareerEnd = true)}>
+              커리어 결산 보기
+            </button>
           </article>
         {/if}
       {/if}
@@ -645,6 +655,10 @@
 
   </div>
 </section>
+
+{#if showCareerEnd}
+  <CareerEndScreen onClose={() => (showCareerEnd = false)} />
+{/if}
 
 <style>
   .page {
