@@ -99,7 +99,7 @@
   }
 </script>
 
-<section class="people u-page">
+<section class="people">
   <!-- 제목("인물")을 뺐다 — 사이드바가 이미 "사람"이다 -->
   <p class="sub">관계는 경기 결과·훈련·이벤트로 조금씩 움직입니다.</p>
 

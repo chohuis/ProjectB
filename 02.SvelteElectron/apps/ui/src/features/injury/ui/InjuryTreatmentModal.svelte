@@ -83,6 +83,9 @@
 
   .modal {
     background: #111827;
+    /* U5 안전망: 아직 어두운 화면이다. 전역 글자색이 밝은색에서 어두운색으로
+       뒤집혔으므로 여기서 명시하지 않으면 색 없는 자식들이 안 보인다 */
+    color: #E4EDFF;
     border: 1px solid #2d3956;
     border-radius: 14px;
     padding: 28px 32px;

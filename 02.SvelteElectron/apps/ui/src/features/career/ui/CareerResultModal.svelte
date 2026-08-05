@@ -113,7 +113,8 @@
 
 <style>
   .overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8); display: flex; align-items: center; justify-content: center; z-index: 200; }
-  .modal { background: #0e1a30; border: 1px solid #3a5898; border-radius: 16px; padding: 24px; width: min(700px, 92vw); display: grid; gap: 14px; }
+  /* U5 안전망 — 전역이 밝아져 색 없는 자식(.opt-btn 등)이 안 보인다 */
+  .modal { background: #0e1a30; border: 1px solid #3a5898; border-radius: 16px; padding: 24px; width: min(700px, 92vw); display: grid; color: #E4EDFF; gap: 14px; }
   .chip { font-size: 11px; color: #7a9ad0; }
   h2 { margin: 0; color: #e8f0ff; }
   .body-text { margin: 0; color: #a8c0e0; }

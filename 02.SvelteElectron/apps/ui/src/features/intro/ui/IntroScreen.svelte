@@ -23,7 +23,7 @@
     : null;
 </script>
 
-<div class="intro u-page">
+<div class="intro">
   <div class="center">
     <h1 class="title">OnePitch</h1>
     <p class="subtitle">투수 인생 시뮬레이션</p>

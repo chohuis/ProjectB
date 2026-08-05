@@ -137,7 +137,7 @@
 
 <svelte:window on:keydown={onEsc} />
 
-<section class="news u-page">
+<section class="news">
   <!-- ── 챙길 것 ── -->
   {#if alerts.length > 0}
     <section class="alerts">

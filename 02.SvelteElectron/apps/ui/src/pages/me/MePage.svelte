@@ -42,7 +42,7 @@
   }
 </script>
 
-<section class="me u-page">
+<section class="me">
   <nav class="tabs">
     {#each tabs as id (id)}
       <button class="tab" class:on={id === tab} type="button" on:click={() => select(id)}>

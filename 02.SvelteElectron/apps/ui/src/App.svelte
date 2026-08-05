@@ -74,7 +74,7 @@
 </script>
 
 {#if phase === "loading"}
-  <div class="loading-screen u-page">
+  <div class="loading-screen">
     <p>불러오는 중</p>
   </div>
 {:else if phase === "intro"}

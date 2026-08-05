@@ -54,7 +54,7 @@
     : null;
 </script>
 
-<aside class="rp u-page">
+<aside class="rp">
   <!-- ── 내 몸 상태 ── -->
   <section class="u-card">
     <div class="ovr-row">

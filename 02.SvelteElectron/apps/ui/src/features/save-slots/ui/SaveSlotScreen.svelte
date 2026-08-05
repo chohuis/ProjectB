@@ -88,7 +88,7 @@
   }
 </script>
 
-<div class="screen u-page">
+<div class="screen">
   <div class="panel">
     <div class="header">
       <button class="back-btn" type="button" on:click={onBack}>뒤로</button>

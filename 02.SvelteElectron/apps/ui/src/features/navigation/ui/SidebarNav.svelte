@@ -43,7 +43,7 @@
 
 <svelte:window on:click={closeSettings} on:keydown={(e) => e.key === "Escape" && closeSettings()} />
 
-<nav class="nav u-page">
+<nav class="nav">
   <div class="list">
     {#if militaryCountdownLabel}
       <div class="military">{militaryCountdownLabel}</div>
