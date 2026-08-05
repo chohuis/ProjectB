@@ -390,7 +390,6 @@
     "_tailNote": "상위 꼬리(사용자 확정). 대부분의 성장 속도는 그대로 두고 소수만 에이스로 자란다. 천장과 속도를 같이 줘야 한다 - 천장만 높고 속도가 평범하면 전성기가 끝날 때까지 못 닿는다(실측 25~27세 +1.45/시즌, 28~30세 +0.36)",
     "_tailRateNote": "고교 신입생 1020명이면 한 해 약 30명이고 그중 프로까지 가는 건 진로 탈락을 거쳐 훨씬 적다. 이 값은 측정하며 맞춘다 - 목표는 KBL 1군 규정투수 상위25% OVR이 6시즌 뒤에도 88 근처를 지키는 것"
   },
-
   "internationalRules": {
     "_note": "국가대표 · 국제대회 (Phase 7-3). 읽는 곳: engine-native/src/national_team.rs. 경기는 시뮬하지 않는다 - 대표팀 전력으로 순위를 확률 산출한다",
     "_scheduleNote": "cycleYears 4 · yearMod가 서로 달라 **한 해에 두 대회가 겹치지 않는다**. yearMod 3인 해는 대회가 없다",
@@ -928,7 +927,7 @@
       "chanceHigh": 0.65,
       "ageMid": 33,
       "chanceMid": 0.35,
-      "priorSurgeryChance": 0.40,
+      "priorSurgeryChance": 0.4,
       "baseChance": 0.05
     }
   },
@@ -971,26 +970,164 @@
     "namePool": {
       "western": true,
       "surnames": [
-        "Anderson", "Baker", "Brooks", "Carter", "Coleman", "Curtis", "Diaz",
-        "Ellis", "Foster", "Garcia", "Gibson", "Gomez", "Grant", "Hayes",
-        "Hernandez", "Hoffman", "Jenkins", "Kelly", "Lambert", "Lopez",
-        "Marshall", "Mendoza", "Miller", "Morales", "Nelson", "Ortiz",
-        "Palmer", "Perez", "Ramirez", "Reyes", "Rivera", "Robinson",
-        "Rodriguez", "Sanders", "Santana", "Shaw", "Simmons", "Stewart",
-        "Sullivan", "Torres", "Vargas", "Wallace", "Warren", "Webb",
-        "Wheeler", "Wilson", "Wright", "Young"
+        "Anderson",
+        "Baker",
+        "Brooks",
+        "Carter",
+        "Coleman",
+        "Curtis",
+        "Diaz",
+        "Ellis",
+        "Foster",
+        "Garcia",
+        "Gibson",
+        "Gomez",
+        "Grant",
+        "Hayes",
+        "Hernandez",
+        "Hoffman",
+        "Jenkins",
+        "Kelly",
+        "Lambert",
+        "Lopez",
+        "Marshall",
+        "Mendoza",
+        "Miller",
+        "Morales",
+        "Nelson",
+        "Ortiz",
+        "Palmer",
+        "Perez",
+        "Ramirez",
+        "Reyes",
+        "Rivera",
+        "Robinson",
+        "Rodriguez",
+        "Sanders",
+        "Santana",
+        "Shaw",
+        "Simmons",
+        "Stewart",
+        "Sullivan",
+        "Torres",
+        "Vargas",
+        "Wallace",
+        "Warren",
+        "Webb",
+        "Wheeler",
+        "Wilson",
+        "Wright",
+        "Young"
       ],
       "givenA": [
-        "Aaron", "Adrian", "Austin", "Brandon", "Brett", "Caleb", "Carlos",
-        "Chase", "Cody", "Cole", "Dallas", "Daniel", "Derek", "Dustin",
-        "Eddie", "Elvis", "Ethan", "Felix", "Gavin", "Hector", "Hunter",
-        "Isaac", "Jared", "Jason", "Javier", "Jesse", "Jordan", "Julio",
-        "Keith", "Kevin", "Kyle", "Logan", "Lucas", "Manny", "Marcus",
-        "Mason", "Miguel", "Nathan", "Nick", "Owen", "Pedro", "Preston",
-        "Rafael", "Ramon", "Ryan", "Shane", "Spencer", "Travis", "Trevor",
-        "Tyler", "Victor", "Wade", "Wesley", "Zach"
+        "Aaron",
+        "Adrian",
+        "Austin",
+        "Brandon",
+        "Brett",
+        "Caleb",
+        "Carlos",
+        "Chase",
+        "Cody",
+        "Cole",
+        "Dallas",
+        "Daniel",
+        "Derek",
+        "Dustin",
+        "Eddie",
+        "Elvis",
+        "Ethan",
+        "Felix",
+        "Gavin",
+        "Hector",
+        "Hunter",
+        "Isaac",
+        "Jared",
+        "Jason",
+        "Javier",
+        "Jesse",
+        "Jordan",
+        "Julio",
+        "Keith",
+        "Kevin",
+        "Kyle",
+        "Logan",
+        "Lucas",
+        "Manny",
+        "Marcus",
+        "Mason",
+        "Miguel",
+        "Nathan",
+        "Nick",
+        "Owen",
+        "Pedro",
+        "Preston",
+        "Rafael",
+        "Ramon",
+        "Ryan",
+        "Shane",
+        "Spencer",
+        "Travis",
+        "Trevor",
+        "Tyler",
+        "Victor",
+        "Wade",
+        "Wesley",
+        "Zach"
       ],
       "givenB": []
     }
+  },
+  "traitDisplay": {
+    "_note": "선수 상세 화면의 성장여지 등급·성격 태그 경계. 읽는 곳: apps/ui/src/shared/utils/playerTraits.ts. 게임 로직이 아니라 표시 전용이다 — 이 값을 바꿔도 시뮬레이션 결과는 안 변한다",
+    "_measured": "scripts/measure-traits.cjs 실측(표본 28,000명 = 시드 5개 x 국내 전 리그, 2026-08-05). 값을 고칠 땐 그 스크립트를 다시 돌려 근거를 남길 것",
+    "_growthRoomWhy": "등급 기준을 potentialHidden 원수치가 아니라 (potentialHidden - 현재 OVR)로 잡는다. 원수치는 Rust에서 clamp(ovr, 99)라 현재 실력이 바닥을 밀어올린다 — 실측 결과 고정 경계로는 KBL의 92%가 A, 그리고 D/E 등급은 전 리그에서 0%였다. 등급이 리그 이름을 다시 말할 뿐이었다",
+    "_growthRoomCheck": "성장여지로 재면 리그 편차가 사라진다. 실측 중앙값: 고교 24 / 대학 24 / 독립 23 / KBL 25 / KBL2군 25. 그래서 리그별 표가 필요 없고 절대 경계 하나로 충분하다",
+    "growthRoomCuts": {
+      "_target": "A 10% / B 20% / C 40% / D 20% / E 10% — A가 흔하면 등급이 뜻을 잃는다",
+      "A": 35,
+      "B": 28,
+      "C": 18,
+      "D": 12
+    },
+    "_scoutingWhy": "내 팀 선수만 정확한 등급을 보여주고 남의 팀은 3등급 범위로 흐린다(사용자 확정). 창의 위치는 npcId 해시로 정한다 — 항상 진짜 등급이 한가운데 오면 가운데만 읽으면 되니 흐린 의미가 없다",
+    "scoutingBlurWidth": 3,
+    "_personalityWhy": "축마다 생성 범위가 다르므로 고정 임계값(>=75 / <=25)을 쓰면 안 된다. 실측: 해외지향은 최대가 50이라 '높음' 태그가 영원히 안 나오고, 프로의식은 최소가 50이라 '낮음'이 영원히 안 나온다. 고정값으로는 태그 6종이 死문구였다",
+    "_personalityCuts": "각 축 실측 p94 이상이면 높음, p06 이하면 낮음. p85/p15로 열었더니 축이 8개라 P(태그 0개)=0.7^8=5.8%였다 — 95.8%가 태그를 받아 평균 2.6개, 상한 3개에 거의 다 닿았다. 특징이 흔하면 특징이 아니다. 6%씩으로 좁히면 0.88^8=36%가 무태그가 된다. 게이트가 이 비율을 지킨다(measure-traits.cjs)",
+    "personalityCuts": {
+      "loyalty": {
+        "hi": 78,
+        "lo": 42
+      },
+      "ambition": {
+        "hi": 91,
+        "lo": 34
+      },
+      "greed": {
+        "hi": 77,
+        "lo": 28
+      },
+      "competitiveDrive": {
+        "hi": 82,
+        "lo": 43
+      },
+      "stabilityPreference": {
+        "hi": 82,
+        "lo": 29
+      },
+      "professionalism": {
+        "hi": 78,
+        "lo": 52
+      },
+      "overseasAmbition": {
+        "hi": 47,
+        "lo": 8
+      },
+      "marketPreference": {
+        "hi": 77,
+        "lo": 38
+      }
+    },
+    "maxPersonalityTags": 3
   }
 }

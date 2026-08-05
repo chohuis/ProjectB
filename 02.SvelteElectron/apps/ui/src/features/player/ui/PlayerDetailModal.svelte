@@ -5,6 +5,12 @@
   import type { EntityDetails } from "../../../shared/stores/master";
   import { seasonStore } from "../../../shared/stores/season";
   import { getFaThreshold } from "../../../shared/utils/faEngine";
+  import {
+    growthRoom, growthGrade, gradeTone, scoutedGrade,
+    personalityTags, militaryHistory, foreignBadge,
+    rispSplit, rispTone,
+  } from "../../../shared/utils/playerTraits";
+  import { clubKeyOfTeam } from "../../../shared/utils/ids";
 
   export let entityId: string = "";
 
@@ -256,6 +262,77 @@
     if (snap - cur >= 1) return "down";
     return "none";
   }
+
+  // ── U9: 엔진이 만들어 놓고 화면이 안 받던 값들 ────────────────
+  //
+  // 조사에서 나온 것: 득점권은 시즌 합산까지 해 놓고 렌더 0곳, 국적은 .svelte
+  // 전체에서 0건, potentialHidden은 세 곳에서 전달만 되고 렌더 0곳이었다.
+
+  /** 같은 구단이면 정확한 등급을 본다. **내 팀 2군 선수는 남이 아니다** */
+  $: sameClubAsMe = (() => {
+    const mine = $gameStore.protagonist.teamId;
+    const tid = isProtagonistModal ? mine : (modalEntity?.teamId ?? "");
+    if (!tid || !mine) return false;
+    return clubKeyOfTeam(tid) === clubKeyOfTeam(mine);
+  })();
+
+  /**
+   * 성장 여지 = 천장 − 현재 실력. **원수치로 등급을 매기지 않는다** —
+   * Rust가 `clamp(ovr, 99)`로 만들어 현재 실력이 천장의 바닥을 밀어올린다.
+   * 실측 28,000명에서 원수치에 고정 경계를 씌우면 KBL의 92%가 A였고
+   * D·E는 전 리그에서 0%였다. 근거는 `scripts/measure-traits.cjs`.
+   */
+  $: traitOvr = (() => {
+    if (!modalEntity) return undefined;
+    const d = (modalEntity.details as EntityDetails)?.player;
+    const isP = d?.playerType === "pitcher" || d?.playerType === "twoWay";
+    return isP
+      ? (livePitching?.ovr ?? d?.pitching?.ovr)
+      : (liveBatting?.ovr ?? d?.batting?.ovr);
+  })();
+
+  $: growthView = (() => {
+    if (!modalEntity) return null;
+    const pot = isProtagonistModal
+      ? $gameStore.protagonist.potentialHidden
+      : modalNpcSave?.potentialHidden
+        ?? (modalEntity.details as EntityDetails)?.player?.potentialHidden;
+    const room = growthRoom(pot, traitOvr);
+    const grade = growthGrade(room);
+    // 주인공은 자기 몸이므로 언제나 정확하다
+    const known = isProtagonistModal || sameClubAsMe;
+    const s = scoutedGrade(grade, modalEntity.id, known);
+    return s ? { ...s, tone: gradeTone(grade), known } : null;
+  })();
+
+  /** 성격은 NPC만 가진다 — 주인공은 `diligence` + `tags` 축을 쓴다 */
+  $: traitTags = personalityTags(modalNpcSave?.personality);
+
+  $: milHistory = isProtagonistModal
+    ? militaryHistory($gameStore.protagonist.militaryStatus, $gameStore.protagonist.militaryServedUnit)
+    : militaryHistory(modalNpcSave?.militaryStatus, modalNpcSave?.militaryServedUnit);
+
+  $: natBadge = foreignBadge(
+    modalEntity?.leagueId ?? (modalEntity as unknown as { originLeagueId?: string })?.originLeagueId,
+    isProtagonistModal ? "KOR" : modalNpcSave?.nationality,
+  );
+
+  /** 득점권. 타자는 타율, 투수는 피안타율이라 좋고 나쁨이 반대다 */
+  $: rispView = (() => {
+    const st = modalStats as
+      | { type?: string; rispAb?: number; rispH?: number; avg?: number; h?: number; ip?: number }
+      | null;
+    if (!st) return null;
+    const kind = st.type === "pitcher" ? "pitcher" as const : "batter" as const;
+    // 기준선: 타자는 시즌 타율, 투수는 피안타율(피안타 / 추정 타수)
+    const base = kind === "batter"
+      ? (typeof st.avg === "number" && st.avg > 0 ? st.avg : null)
+      : (typeof st.h === "number" && typeof st.ip === "number" && st.ip > 0
+          ? st.h / (st.ip * 3 + st.h)   // 대략 (아웃 + 피안타) = 상대한 타수
+          : null);
+    const s = rispSplit(st, kind, base);
+    return s ? { ...s, kind, tone: rispTone(s.delta, kind) } : null;
+  })();
 
   // ── 계약/재학 요약 (팀명 + 연도 범위 + n년차/학년) ──────────────────
   $: contractSummary = (() => {
@@ -521,6 +598,13 @@
         </div>
         <div class="badge-row">
           {#if isPlayer}
+            <!-- 국적·병역 이력은 상태와 달리 **안 변하는 사실**이라 맨 앞에 둔다 -->
+            {#if natBadge}
+              <span class="badge badge-foreign">{natBadge.label}</span>
+            {/if}
+            {#if milHistory}
+              <span class="badge badge-mil-{milHistory.tone}">{milHistory.text}</span>
+            {/if}
             {#if isProtagonistModal}
               <span class="badge badge-{conditionClass(protagonist.condition)}">컨디션 {conditionLabel(protagonist.condition)}</span>
               <span class="badge badge-{fatigueClass(protagonist.fatigue)}">피로 {fatigueLabel(protagonist.fatigue)}</span>
@@ -541,11 +625,28 @@
         <aside class="left-panel">
           {#if isPlayer}
 
-            <!-- OVR -->
+            <!-- OVR + 성장 여지 -->
             <div class="ovr-block">
               <span class="ovr-label">OVR</span>
               <span class="ovr-val {ovrTone(ovrVal)}">{ovrVal}</span>
             </div>
+
+            <!--
+              **"잠재력"이 아니라 "성장 여지"라고 부른다.** 원수치(potentialHidden)는
+              Rust에서 현재 OVR로 바닥이 눌려 있어 리그 이름을 다시 말할 뿐이었다.
+              여기 등급은 천장까지 남은 거리이고, 그게 실제로 궁금한 값이다.
+            -->
+            {#if growthView}
+              <div class="growth-block">
+                <span class="growth-label">
+                  성장 여지
+                  {#if !growthView.known}<span class="growth-fuzzy">관측</span>{/if}
+                </span>
+                <span class="growth-val {growthView.tone}" class:fuzzy={!growthView.known}>
+                  {growthView.label}
+                </span>
+              </div>
+            {/if}
 
             <!-- 레이더 차트 -->
             {#if radarVals.length > 0}
@@ -638,6 +739,23 @@
               <div class="fa-pill {faInfo.eligible ? 'fa-ok' : 'fa-wait'}">
                 {#if faInfo.eligible}FA 자격 보유 · {faInfo.years}년
                 {:else}FA까지 {faInfo.yearsLeft}년 ({faInfo.years}/{faInfo.threshold}년){/if}
+              </div>
+            {/if}
+
+            <!--
+              성격 — **수치가 아니라 문구로만 준다**(사용자 확정).
+              사람을 능력치처럼 읽게 하면 "탐욕 88"이 좋은 값으로 오해된다.
+              태그가 없는 게 정상이다 — 실측 28.8%가 무태그, 평균 1.2개다.
+              주인공은 성격 축 자체가 없다(diligence + tags를 쓴다).
+            -->
+            {#if traitTags.length > 0}
+              <div class="lsec">
+                <h5 class="lsec-title">성격</h5>
+                <div class="trait-tags">
+                  {#each traitTags as t}
+                    <span class="trait-tag trait-{t.side}">{t.text}</span>
+                  {/each}
+                </div>
               </div>
             {/if}
 
@@ -845,6 +963,23 @@
                     </div>
                   {:else}
                     <p class="modal-pending">미집계</p>
+                  {/if}
+
+                  <!--
+                    득점권 — 엔진이 재고 season-helpers가 합산까지 하는데
+                    화면이 한 곳도 안 읽고 있었다. 시즌 ERA·타율로는 위기에
+                    강한지가 안 보인다(득점권은 전체 타석의 22~23%뿐이라 희석된다).
+                  -->
+                  {#if rispView}
+                    <div class="risp-row">
+                      <span class="risp-lbl">{rispView.label}</span>
+                      <span class="risp-val {rispView.tone}">{rispView.text}</span>
+                      {#if rispView.delta != null && rispView.tone !== "flat"}
+                        <span class="risp-delta {rispView.tone}">
+                          {rispView.delta > 0 ? "+" : ""}{rispView.delta.toFixed(3).replace(/^(-?)0/, "$1")}
+                        </span>
+                      {/if}
+                    </div>
                   {/if}
                 </section>
 
@@ -1192,6 +1327,10 @@
   .badge-mid    { background: #0c1c34; color: #90b8e8; border: 1px solid #1a3058; }
   .badge-low    { background: #271010; color: #f07070; border: 1px solid #482020; }
   .badge-injury { background: #271c06; color: #e8b030; border: 1px solid #483010; }
+  /* 국적·병역 이력 — 상태 배지와 달리 **안 변하는 사실**이라 채도를 낮춘다 */
+  .badge-foreign     { background: #1a1230; color: #b49ae8; border: 1px solid #2e2250; }
+  .badge-mil-sports  { background: #0f2118; color: #6cc490; border: 1px solid #1c3d2a; }
+  .badge-mil-general { background: #1a1a22; color: #9aa4b8; border: 1px solid #2a2c38; }
 
   /* ── 2컬럼 바디 ── */
   .modal-body {
@@ -1222,6 +1361,49 @@
   .ovr-a { color: #4ed080; text-shadow: 0 0 20px rgba(78,208,128,0.35); }
   .ovr-b { color: #4a8af4; text-shadow: 0 0 20px rgba(74,138,244,0.35); }
   .ovr-c { color: #7090b8; }
+
+  /* 성장 여지 — OVR 바로 아래. 지금 실력과 남은 여지를 나란히 읽는다 */
+  .growth-block {
+    display: flex; align-items: baseline; justify-content: center; gap: 8px;
+    padding: 0 0 10px;
+  }
+  .growth-label {
+    font-size: 10px; letter-spacing: 1px; color: #4a6a8a; text-transform: uppercase;
+  }
+  /* 흐린 관측이라는 표시 — 라벨 쪽에 붙여서 등급 글자를 안 흐린다 */
+  .growth-fuzzy {
+    margin-left: 4px; padding: 1px 4px; border-radius: 3px;
+    background: #16203a; color: #6a86ac; letter-spacing: 0;
+  }
+  .growth-val { font-size: 20px; font-weight: 800; line-height: 1; }
+  .growth-val.good { color: #4ed080; }
+  .growth-val.mid  { color: #90b8e8; }
+  .growth-val.low  { color: #7d8ba0; }
+  /* 범위(B~D)는 등급 하나보다 글자가 길어 크기를 낮춘다 */
+  .growth-val.fuzzy { font-size: 16px; letter-spacing: -0.02em; }
+
+  /* 성격 태그 — 수치를 안 보여주므로 톤도 강약만 둔다 */
+  .trait-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .trait-tag {
+    font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px;
+    background: #131c30; color: #9ab4d8; border: 1px solid #1d2a44;
+  }
+  .trait-tag.trait-hi { color: #b8cdec; border-color: #27395c; }
+  .trait-tag.trait-lo { color: #8496b0; }
+
+  /* 득점권 — 시즌 누적 표 아래 한 줄 */
+  .risp-row {
+    display: flex; align-items: baseline; gap: 8px;
+    margin-top: 9px; padding-top: 9px; border-top: 1px solid #162038;
+  }
+  .risp-lbl { font-size: 11px; color: #7090b8; }
+  .risp-val { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .risp-val.good { color: #4ed080; }
+  .risp-val.bad  { color: #f07070; }
+  .risp-val.flat { color: #b8cdec; }
+  .risp-delta { font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .risp-delta.good { color: #4ed080; }
+  .risp-delta.bad  { color: #f07070; }
 
   /* 레이더 */
   .radar-wrap { display: flex; justify-content: center; padding: 4px 0; }

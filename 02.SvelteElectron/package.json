@@ -84,7 +84,9 @@
     "check:thresholds": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-thresholds.cjs",
     "check:teamcolors": "node scripts/check-teamcolors.cjs",
     "test:neededpositions": "node scripts/test-neededpositions.cjs",
-    "test:npclifecycle": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-npclifecycle.cjs"
+    "test:npclifecycle": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-npclifecycle.cjs",
+    "measure:traits": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-traits.cjs",
+    "check:traits": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/measure-traits.cjs"
   },
   "build": {
     "appId": "com.projectb.desktop",

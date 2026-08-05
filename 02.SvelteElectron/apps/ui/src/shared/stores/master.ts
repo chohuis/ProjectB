@@ -9,6 +9,8 @@ import {
   UNIV_TEAMS, IND_TEAMS, HS_ALL_TEAMS,
 } from "../utils/leagueScheduler";
 import { buildMarkIndex } from "../utils/teamMark";
+import { primeForeignRules } from "../utils/foreignSlots";
+import { primeTraitDisplay } from "../utils/playerTraits";
 
 export type { CoachAttributes, CoachSpecialty };
 
@@ -794,6 +796,20 @@ function createMasterStore() {
       // 팀→리그 표를 채운다 — 선수 소속을 바꿀 때 `leagueOfTeam`이 이걸 쓴다.
       // 안 채우면 ID 접두사 폴백으로 돌지만, refs가 정본이므로 여기서 먼저 준다.
       primeTeamLeagueMap(mergedTeams);
+
+      // 생성 규칙 표 — **부팅 때 채운다.**
+      // 예전엔 `primeForeignRules`가 `advanceWeek`의 성장 단계에서만 불렸다.
+      // 그래서 새 게임을 켜고 한 주도 안 넘긴 상태에서 선수 상세를 열면
+      // 외국인 판정표가 비어 있었다. 성격·성장여지 표도 같은 파일이라 같이 준다.
+      {
+        const genRules = await fetchMaster<Record<string, unknown>>(
+          "players/generation_rules.json",
+        );
+        if (genRules) {
+          primeForeignRules(genRules as Parameters<typeof primeForeignRules>[0]);
+          primeTraitDisplay(genRules);
+        }
+      }
 
       // 부팅 무결성 검증 — 코드 팀 상수 ⊆ refs.json + _1→_2 팜 규칙 (DESIGN.md §8.2 원칙 6)
       validateTeamRefs(

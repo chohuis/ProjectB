@@ -1,0 +1,76 @@
+{
+  "sampleSize": 28000,
+  "seeds": [
+    4242,
+    777,
+    20260805,
+    31337,
+    99
+  ],
+  "potentialCuts": {
+    "LEAGUE_HIGHSCHOOL": [
+      86,
+      83,
+      79,
+      76
+    ],
+    "LEAGUE_UNIVERSITY": [
+      93,
+      90,
+      85,
+      82
+    ],
+    "LEAGUE_INDEPENDENT": [
+      91,
+      88,
+      83,
+      80
+    ],
+    "LEAGUE_KBL": [
+      99,
+      99,
+      95,
+      91
+    ],
+    "LEAGUE_KBL_FARM": [
+      93,
+      90,
+      85,
+      82
+    ]
+  },
+  "personalityCuts": {
+    "loyalty": {
+      "hi": null,
+      "lo": null
+    },
+    "ambition": {
+      "hi": null,
+      "lo": null
+    },
+    "greed": {
+      "hi": null,
+      "lo": null
+    },
+    "competitiveDrive": {
+      "hi": null,
+      "lo": null
+    },
+    "stabilityPreference": {
+      "hi": null,
+      "lo": null
+    },
+    "professionalism": {
+      "hi": null,
+      "lo": null
+    },
+    "overseasAmbition": {
+      "hi": null,
+      "lo": null
+    },
+    "marketPreference": {
+      "hi": null,
+      "lo": null
+    }
+  }
+}

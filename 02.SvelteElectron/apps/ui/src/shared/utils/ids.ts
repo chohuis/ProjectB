@@ -32,6 +32,16 @@ export function farmTeamId(teamId: string): string | null {
   return teamId.endsWith("_1") ? `${teamId.slice(0, -2)}_2` : null;
 }
 
+/**
+ * 1군·2군을 한 구단으로 묶는 키 (TEAM_X_1 · TEAM_X_2 → TEAM_X).
+ *
+ * "같은 구단 사람인가"를 묻는 자리에 쓴다 — 내 팀 2군 선수는 남이 아니다.
+ * 꼬리표가 없는 팀(고교·대학·독립)은 그대로 돌려준다.
+ */
+export function clubKeyOfTeam(teamId: string): string {
+  return teamId.replace(/_[12]$/, "");
+}
+
 // ── 팀 → 리그 파생 ───────────────────────────────────────────────
 //
 // ⚠ **이게 없어서 선수 소속이 어긋났다.** 팀을 바꾸는 자리마다 리그를 각자
