@@ -2,15 +2,11 @@
   import { onMount } from "svelte";
   import { get } from "svelte/store";
   import BaseballField from "../../features/match-view/ui/BaseballField.svelte";
-  import SettingsPanel from "../../features/settings/ui/SettingsPanel.svelte";
-  import { fieldStyleStore, type FieldStyle } from "../../shared/stores/settings";
   import { gameStore } from "../../shared/stores/game";
   import { masterStore } from "../../shared/stores/master";
   import type { EntityRow, EntityDetails } from "../../shared/stores/master";
   import type { InteractiveMatchContext, InteractiveMatchResult } from "../../shared/types/season";
 
-  let fieldStyle: FieldStyle = 'retro';
-  let settingsOpen = false;
 
   export let matchContext: InteractiveMatchContext | null = null;
   export let onComplete: (result: InteractiveMatchResult) => void = () => {};
@@ -106,15 +102,13 @@
   const awayLineup = ["1 RF", "2 CF", "3 1B", "4 DH", "5 LF", "6 3B", "7 C", "8 2B", "9 SS"];
   const homeLineup = ["1 2B", "2 SS", "3 RF", "4 1B", "5 3B", "6 DH", "7 LF", "8 C", "9 CF"];
 
-  const baseField = {
-    home:   { x: 500, y: 820 },
-    first:  { x: 650, y: 670 },
-    second: { x: 500, y: 520 },
-    third:  { x: 350, y: 670 },
-    mound:  { x: 500, y: 668 }
-  };
-
-  // 레트로 이미지 좌표 (probaseball.gif 기준)
+  /**
+   * 구장 좌표 — `probaseball.gif` 기준 1000×920 SVG 공간.
+   *
+   * ⚠ 예전엔 `baseField`(디지털·닷용)와 짝을 이뤄 화면마다 골라 썼는데,
+   * **고르는 코드가 없었다** — `fieldStyle`이 'retro' 하드코딩이라
+   * `baseField`는 한 번도 안 쓰였다. U7에서 레트로만 남기며 지웠다.
+   */
   const retroField = {
     home:   { x: 497, y: 790 },
     first:  { x: 715, y: 580 },
@@ -123,21 +117,17 @@
     mound:  { x: 497, y: 548 }
   };
 
-  $: activeMound = fieldStyle === 'retro' ? retroField.mound : baseField.mound;
+  $: activeMound = retroField.mound;
 
+  /** 주자는 베이스 위에 정확히 서지 않는다 — 살짝 비껴 서는 게 야구 관습이다 */
   function runnerOffset(base: 'first' | 'second' | 'third'): FieldPoint {
-    if (fieldStyle === 'retro') {
-      if (base === 'first') return { x: 14, y: -18 };
-      if (base === 'second') return { x: 0, y: -20 };
-      return { x: -14, y: -18 };
-    }
-    if (base === 'first') return { x: 18, y: -14 };
-    if (base === 'second') return { x: 0, y: -18 };
-    return { x: -18, y: -14 };
+    if (base === 'first') return { x: 14, y: -18 };
+    if (base === 'second') return { x: 0, y: -20 };
+    return { x: -14, y: -18 };
   }
 
   function runnerPoint(base: 'first' | 'second' | 'third'): FieldPoint {
-    const f = fieldStyle === 'retro' ? retroField : baseField;
+    const f = retroField;
     const b = f[base];
     const o = runnerOffset(base);
     return { x: b.x + o.x, y: b.y + o.y };
@@ -283,18 +273,6 @@
   }
 
   // 수비 기본 위치 (SVG 좌표 1000x920)
-  const DEFENSE_NORMAL_BASE = [
-    { pos: "P",  x: 500, y: 668 },
-    { pos: "C",  x: 500, y: 800 },
-    { pos: "1B", x: 650, y: 675 },
-    { pos: "2B", x: 590, y: 575 },
-    { pos: "SS", x: 410, y: 575 },
-    { pos: "3B", x: 350, y: 675 },
-    { pos: "LF", x: 330, y: 600 },
-    { pos: "CF", x: 500, y: 510 },
-    { pos: "RF", x: 670, y: 600 }
-  ] as { pos: string; x: number; y: number }[];
-
   const DEFENSE_RETRO_BASE = [
     { pos: "P",  x: 497, y: 548 },
     { pos: "C",  x: 497, y: 800 },
@@ -308,7 +286,6 @@
   ] as { pos: string; x: number; y: number }[];
 
   // 애니메이션 중 위치 변경을 반영하기 위한 상태
-  let defenseNormal = DEFENSE_NORMAL_BASE.map(d => ({ ...d }));
   let defenseRetro  = DEFENSE_RETRO_BASE.map(d => ({ ...d }));
 
   // 현재 이동 중인 수비수 포지션
@@ -348,7 +325,7 @@
 
   function enginePosToSvg(p: { x: number; y: number }): FieldPoint {
     // 가장 가까운 사전 정의 수비수 SVG 좌표로 매핑
-    const base = fieldStyle === 'retro' ? DEFENSE_RETRO_BASE : DEFENSE_NORMAL_BASE;
+    const base = DEFENSE_RETRO_BASE;
     let minDist = Infinity;
     let best = base[0];
     for (const ref of base) {
@@ -624,7 +601,7 @@
     mental: 74
   };
 
-  let ballPos: FieldPoint = { ...baseField.mound };
+  let ballPos: FieldPoint = { ...retroField.mound };
   let ballTrail: FieldPoint[] = [];
   const TRAIL_MAX = 6;
   let resultOverlay = { visible: false, text: '', color: '#ffffff' };
@@ -654,7 +631,6 @@
 
   function handleKeyDown(event: KeyboardEvent) {
     if (event.key === "Escape") {
-      if (settingsOpen) { settingsOpen = false; return; }
       onCancel();
     }
   }
@@ -846,34 +822,25 @@
     return { x: 500, y: 230 };
   }
 
+  /**
+   * 공 이동. **좌표를 정수로 끊는다** — 픽셀아트 위에서 소수 좌표로 움직이면
+   * 공이 반 픽셀에 걸쳐 흐릿해진다. 거리에 비례해 걸음 수를 잡아 속도감도 살린다.
+   *
+   * ⚠ 예전엔 여기 분기가 둘이었다. 정수 경로는 `dot` 모드 전용이고 레트로는
+   * 소수 보간 쪽으로 갔는데, **레트로야말로 픽셀아트다** — 방향이 뒤바뀌어 있었다.
+   */
   async function tweenBall(to: FieldPoint, duration: number) {
     const from = { ...ballPos };
-
-    if (fieldStyle === 'dot') {
-      const dx = to.x - from.x;
-      const dy = to.y - from.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      const steps = Math.max(1, Math.round(dist / 10));
-      const delay = Math.max(20, Math.round(duration / steps));
-      for (let i = 1; i <= steps; i++) {
-        const t = i / steps;
-        ballTrail = [...ballTrail, { ...ballPos }].slice(-TRAIL_MAX);
-        ballPos = { x: Math.round(from.x + dx * t), y: Math.round(from.y + dy * t) };
-        await sleep(delay);
-      }
-    } else {
-      const frame = 16;
-      const steps = Math.max(1, Math.round(duration / frame));
-      for (let i = 1; i <= steps; i += 1) {
-        const t = i / steps;
-        const eased = 1 - (1 - t) * (1 - t);
-        ballTrail = [...ballTrail, { ...ballPos }].slice(-TRAIL_MAX);
-        ballPos = {
-          x: Number((from.x + (to.x - from.x) * eased).toFixed(2)),
-          y: Number((from.y + (to.y - from.y) * eased).toFixed(2))
-        };
-        await sleep(frame);
-      }
+    const dx = to.x - from.x;
+    const dy = to.y - from.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    const steps = Math.max(1, Math.round(dist / 10));
+    const delay = Math.max(20, Math.round(duration / steps));
+    for (let i = 1; i <= steps; i++) {
+      const t = i / steps;
+      ballTrail = [...ballTrail, { ...ballPos }].slice(-TRAIL_MAX);
+      ballPos = { x: Math.round(from.x + dx * t), y: Math.round(from.y + dy * t) };
+      await sleep(delay);
     }
     ballTrail = [];
   }
@@ -1068,7 +1035,7 @@
   }
 
   async function animateFielderMove(pos: string, svgTo: FieldPoint, duration: number) {
-    const arr = fieldStyle === 'retro' ? defenseRetro : defenseNormal;
+    const arr = defenseRetro;
     const idx = arr.findIndex(d => d.pos === pos);
     if (idx < 0) return;
     const from = { x: arr[idx].x, y: arr[idx].y };
@@ -1078,18 +1045,16 @@
       const t = i / steps;
       const eased = 1 - (1 - t) * (1 - t);
       arr[idx] = { ...arr[idx], x: Math.round(from.x + (svgTo.x - from.x) * eased), y: Math.round(from.y + (svgTo.y - from.y) * eased) };
-      if (fieldStyle === 'retro') defenseRetro = [...arr];
-      else defenseNormal = [...arr];
+      defenseRetro = [...arr];
       await sleep(16);
     }
     await sleep(200);
     // 원위치 복귀
-    const base = fieldStyle === 'retro' ? DEFENSE_RETRO_BASE : DEFENSE_NORMAL_BASE;
+    const base = DEFENSE_RETRO_BASE;
     const orig = base.find(d => d.pos === pos);
     if (orig) {
       arr[idx] = { ...arr[idx], x: orig.x, y: orig.y };
-      if (fieldStyle === 'retro') defenseRetro = [...arr];
-      else defenseNormal = [...arr];
+      defenseRetro = [...arr];
     }
     activeFielderPos = null;
   }
@@ -1119,7 +1084,7 @@
           errorFlashPos = lastFielderMovePos;
           setTimeout(() => { errorFlashPos = null; }, 1200);
         }
-        if (fieldStyle === 'retro' && runnerCues.length > 0) {
+        if (runnerCues.length > 0) {
           await animateRetroRunners(code, prevRunners);
           syncRetroPositions();
         }
@@ -1196,7 +1161,7 @@
 
       if (response.outcome.animationCues?.length) {
         await playAnimationCues(response.outcome.animationCues, resultCode, prevRunners);
-        if (fieldStyle === 'retro') {
+        {
           const atBatEnded = resultCode !== 'STRIKE_SWING' && resultCode !== 'STRIKE_LOOK'
             && resultCode !== 'FOUL' && resultCode !== 'BALL';
           if (atBatEnded) batter = { handedness: Math.random() < 0.32 ? 'L' : 'R' };
@@ -1208,7 +1173,7 @@
         if (resultCode === "INPLAY_OUT" || resultCode === "HIT_SINGLE" || resultCode === "HIT_DOUBLE" || resultCode === "HIT_TRIPLE" || resultCode === "HOME_RUN") {
           await tweenBall(getBattedTarget(resultCode), 300);
         }
-        if (fieldStyle === 'retro') {
+        {
           await animateRetroRunners(resultCode, prevRunners);
           const atBatEnded = resultCode !== 'STRIKE_SWING' && resultCode !== 'STRIKE_LOOK'
             && resultCode !== 'FOUL' && resultCode !== 'BALL';
@@ -1277,7 +1242,7 @@
       if (resultCode === "INPLAY_OUT" || resultCode === "HIT_SINGLE" || resultCode === "HIT_DOUBLE" || resultCode === "HIT_TRIPLE" || resultCode === "HOME_RUN") {
         await tweenBall(getBattedTarget(resultCode), 300);
       }
-      if (fieldStyle === 'retro') {
+      {
         await animateRetroRunners(resultCode, prevRunners);
         const atBatEnded = resultCode !== 'STRIKE_SWING' && resultCode !== 'STRIKE_LOOK'
           && resultCode !== 'FOUL' && resultCode !== 'BALL';
@@ -1434,7 +1399,6 @@
   }
 </script>
 
-<SettingsPanel bind:open={settingsOpen} />
 <section class="match-engine-empty" aria-label="match engine workspace">
   <div class="scoreboard-wrap">
     <table class="scoreboard" aria-label="baseball scoreboard">
@@ -1491,39 +1455,29 @@
 
           <div class="field-stage-wrap">
             <BaseballField
-              baseField={fieldStyle === 'retro' ? retroField : baseField}
-              defenders={fieldStyle === 'retro' ? defenseRetro : defenseNormal}
-              {runners}
+              defenders={defenseRetro}
               {ballPos}
               {ballTrail}
               strikeZoneTarget={clickedFieldPos}
               {isPitching}
-              {fieldStyle}
               {fieldingTeam}
-              runnerTeam={half === 'top' ? 'away' : 'home'}
               {batter}
-              batterAnimPos={fieldStyle === 'retro' ? retroBatterPos : null}
-              runnerAnimPositions={fieldStyle === 'retro' ? retroRunnerPositions : [null, null, null]}
-              {activeFielderPos}
-              {errorFlashPos}
+              batterAnimPos={retroBatterPos}
+              runnerAnimPositions={retroRunnerPositions}
               on:selectPosition={(event) => (selectedDefPosition = event.detail.pos)}
             />
             {#if resultOverlay.visible}
-              {#if fieldStyle === 'dot'}
-                <div class="result-overlay dot-result-overlay">
-                  <div class="dot-result-box" style="border-color: {resultOverlay.color}; color: {resultOverlay.color};">
-                    <div class="dot-result-corner tl"></div>
-                    <div class="dot-result-corner tr"></div>
-                    <div class="dot-result-corner bl"></div>
-                    <div class="dot-result-corner br"></div>
-                    <span class="dot-result-text">{resultOverlay.text}</span>
-                  </div>
+              <!-- 픽셀아트 위엔 네 모서리를 찍은 상자가 맞는다.
+                   빛 번짐(text-shadow)은 도트를 뭉갠다 -->
+              <div class="result-overlay dot-result-overlay">
+                <div class="dot-result-box" style="border-color: {resultOverlay.color}; color: {resultOverlay.color};">
+                  <div class="dot-result-corner tl"></div>
+                  <div class="dot-result-corner tr"></div>
+                  <div class="dot-result-corner bl"></div>
+                  <div class="dot-result-corner br"></div>
+                  <span class="dot-result-text">{resultOverlay.text}</span>
                 </div>
-              {:else}
-                <div class="result-overlay">
-                  <span class="result-overlay-text" style="color: {resultOverlay.color}; text-shadow: 0 0 24px {resultOverlay.color};">{resultOverlay.text}</span>
-                </div>
-              {/if}
+              </div>
             {/if}
             {#if changeAlert.visible}
               <div class="change-overlay">
