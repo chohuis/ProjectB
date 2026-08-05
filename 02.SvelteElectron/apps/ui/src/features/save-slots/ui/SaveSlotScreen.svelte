@@ -5,6 +5,7 @@
   import { masterStore } from "../../../shared/stores/master";
   import { careerStageLabel } from "../../../shared/utils/careerStageLabel";
   import { teamTokens } from "../../../shared/utils/teamTheme";
+  import TeamMark from "../../team/ui/TeamMark.svelte";
 
   export let onSelect: (slotId: string, isEmpty: boolean) => void;
   export let onBack: () => void;
@@ -113,7 +114,7 @@
                   <span class="slot-date">{fmtDate(meta.updatedAt)}</span>
                 </div>
                 <div class="slot-detail">
-                  {#if tm}<b>{tm.name}</b>{/if}
+                  {#if tm}<TeamMark teamId={tm.id} size={22} /><b>{tm.name}</b>{/if}
                   {#if careerStageLabel(pv.careerStage)}<span class="sep">·</span>{careerStageLabel(pv.careerStage)}{/if}
                   {#if pv.seasonYear}<span class="sep">·</span>{pv.seasonYear}년{#if pv.currentWeek} {pv.currentWeek}주차{/if}{/if}
                 </div>
@@ -222,7 +223,7 @@
   .slot-name { font-size: 14px; font-weight: 700; }
   .slot-date { font-size: 11px; color: var(--ink-mute); font-variant-numeric: tabular-nums; }
 
-  .slot-detail { font-size: 12px; color: var(--ink-mid); display: flex; gap: 5px; align-items: baseline; }
+  .slot-detail { font-size: 12px; color: var(--ink-mid); display: flex; gap: 6px; align-items: center; }
   .slot-detail b { font-weight: 700; }
   .sep { opacity: 0.45; }
 

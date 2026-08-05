@@ -1,11 +1,13 @@
 <script lang="ts">
   import { hasPendingAction, nextPendingAction } from "../../../shared/stores/season";
   import { advanceWeek } from "../../../shared/usecases/advanceWeek";
+  import TeamMark from "../../team/ui/TeamMark.svelte";
 
   export let dayLabel: string;
   /** 시즌 주차. 0이면 표시하지 않는다(비시즌·초기화 직후) */
   export let weekLabel: string = "";
   export let teamName: string;
+  export let teamId: string = "";
   export let playerName: string;
   export let playerYear: string = "";
   export let playerPosition: string = "";
@@ -64,6 +66,9 @@
 
 <header class="hdr">
   <div class="id">
+    {#if teamId}
+      <TeamMark {teamId} size={34} />
+    {/if}
     {#if jerseyNumber > 0}
       <span class="num u-num">{jerseyNumber}</span>
     {/if}

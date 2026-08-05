@@ -9,6 +9,7 @@
   import { startNewGameV3 } from "../../shared/repo/slotLifecycleV3";
   import { assignHighschoolPosition } from "../../shared/utils/pitcherRoleEngine";
   import type { Handedness, PitchEntry, PitchingForm, ProtagonistSave } from "../../shared/types/save";
+  import TeamMark from "../../features/team/ui/TeamMark.svelte";
 
   export let onComplete: () => void;
 
@@ -413,12 +414,9 @@
                     on:click={() => (selectedTeamId = team.id)}
                   >
                     <div class="tli-main">
-                      {#if team.colors}
-                        <span class="color-dots">
-                          <span class="cdot" style="background:{team.colors[0]};"></span>
-                          <span class="cdot" style="background:{team.colors[1]};"></span>
-                        </span>
-                      {/if}
+                      <!-- 색 점 두 개를 마크로 교체했다 — 같은 색을 담으면서
+                           형태까지 갈라 준다. 두 번 말할 이유가 없다 -->
+                      <TeamMark teamId={team.id} size={22} />
                       <strong>{team.name}</strong>
                       <span class="tli-city">{team.city ?? ""}</span>
                     </div>
@@ -1015,19 +1013,7 @@
     font-size: 13px;
   }
 
-  .color-dots {
-    display: flex;
-    gap: 2px;
-    flex-shrink: 0;
-  }
 
-  .cdot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    border: 1px solid rgba(255,255,255,0.12);
-    display: inline-block;
-  }
 
   .team-color-bar {
     height: 4px;

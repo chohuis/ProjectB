@@ -14,6 +14,7 @@
   } from "../../shared/utils/leaderboard";
   import { toRounds, seriesState, bestOfLabel, winsNeeded } from "../../shared/utils/bracket";
   import PlayerDetailModal from "../../features/player/ui/PlayerDetailModal.svelte";
+  import TeamMark from "../../features/team/ui/TeamMark.svelte";
 
   import type { LeagueTransactionRow } from "../../shared/types/save";
 
@@ -490,7 +491,7 @@
                         {#each grp.rows as r, i}
                           <tr>
                             <td>{i + 1}</td>
-                            <td class="t-name">{tName(r.team_id)}</td>
+                            <td class="t-name"><TeamMark teamId={r.team_id} size={18} />{tName(r.team_id)}</td>
                             <td class="w">{r.wins}</td><td class="l">{r.losses}</td><td>{r.draws}</td>
                             <td>{r.win_pct.toFixed(2)}</td><td>{r.runs_for}</td><td>{r.runs_against}</td>
                             <td class:streak-w={r.streak.startsWith("W")} class:streak-l={r.streak.startsWith("L")}>{r.streak || "-"}</td>
@@ -542,7 +543,7 @@
                       {#each grp.rows as s, i}
                         <tr class:my-row={s.teamId === myTeamId}>
                           <td>{i + 1}</td>
-                          <td class="t-name">{tName(s.teamId)}</td>
+                          <td class="t-name"><TeamMark teamId={s.teamId} size={18} />{tName(s.teamId)}</td>
                           <td class="w">{s.wins}</td>
                           <td class="l">{s.losses}</td>
                           <td>{s.draws}</td>
@@ -968,6 +969,7 @@
   .stbl tbody tr:last-child td { border-bottom: 0; }
   .stbl tbody tr:hover { background: var(--panel-sunk); }
   .stbl .t-name { text-align: left; color: var(--ink); font-weight: 700; }
+  .stbl .t-name :global(.tm) { vertical-align: -4px; margin-right: 6px; }
 
   /* 내 팀·내 행은 팀 색으로 반전한다 — `.u-table tr.is-me`와 같은 규칙 */
   .stbl tr.my-row td, .u-table tr.is-me td {

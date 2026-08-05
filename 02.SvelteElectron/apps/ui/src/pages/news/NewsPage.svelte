@@ -8,6 +8,7 @@
   import { recentResults, gaugeTone } from "../../shared/utils/myStatus";
   import TrainingStatBars from "../../features/messages/ui/TrainingStatBars.svelte";
   import ProspectTop10Panel from "../../features/messages/ui/ProspectTop10Panel.svelte";
+  import TeamMark from "../../features/team/ui/TeamMark.svelte";
 
   /**
    * C1 소식 — 홈 대시보드와 수신함을 하나로 합친 화면.
@@ -235,6 +236,7 @@
               <li>
                 <span class="wl" data-r={r.drew ? "d" : r.won ? "w" : "l"}>{r.drew ? "무" : r.won ? "승" : "패"}</span>
                 <span class="score u-num">{r.my}-{r.opp}</span>
+                <TeamMark teamId={r.opponentId} size={16} />
                 <span class="opp">{tName(r.opponentId)}</span>
               </li>
             {/each}

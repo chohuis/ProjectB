@@ -8,6 +8,7 @@ import {
   KBL_FARM_TEAMS, ABL_FARM_TEAMS, JBL_FARM_TEAMS,
   UNIV_TEAMS, IND_TEAMS, HS_ALL_TEAMS,
 } from "../utils/leagueScheduler";
+import { buildMarkIndex } from "../utils/teamMark";
 
 export type { CoachAttributes, CoachSpecialty };
 
@@ -944,6 +945,13 @@ export const trainingProgramMap = derived(masterStore, ($m) =>
 export const teamMap = derived(masterStore, ($m) =>
   new Map($m.teams.map((t) => [t.id, t]))
 );
+
+/**
+ * 팀 마크 배정표. **한 번만 계산하고 캐시된다** — 238팀을 매 렌더 돌리면 안 된다.
+ *
+ * 배정 규칙(권역 내 문양 비충돌, 1군·2군 공용)은 `utils/teamMark`가 갖는다.
+ */
+export const teamMarkIndex = derived(masterStore, ($m) => buildMarkIndex($m.teams));
 
 export const leagueMap = derived(masterStore, ($m) =>
   new Map($m.leagues.map((l) => [l.id, l]))

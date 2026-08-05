@@ -398,6 +398,7 @@
       dayLabel={$seasonStore.currentDate ? toDateKo($seasonStore.currentDate) : $gameStore.dayLabel}
       weekLabel={$seasonStore.currentWeek > 0 ? `${$seasonStore.currentWeek}주차` : ""}
       teamName={tName($gameStore.protagonist.teamId)}
+      teamId={$gameStore.protagonist.teamId}
       playerName={$gameStore.player.name}
       playerYear={playerYearLabel($gameStore.protagonist)}
       playerPosition={$gameStore.player.position}

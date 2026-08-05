@@ -6,6 +6,7 @@
   import { gameStore } from "../../shared/stores/game";
   import { seasonStore } from "../../shared/stores/season";
   import TeamDetailModal from "../../features/team/ui/TeamDetailModal.svelte";
+  import TeamMark from "../../features/team/ui/TeamMark.svelte";
 
   type LeagueTab = "all" | "hs" | "univ" | "ind" | "kbl" | "abl" | "jbl";
   const LEAGUE_MAP: Record<Exclude<LeagueTab, "all">, string> = {
@@ -135,6 +136,7 @@
                 title="더블클릭: 팀 상세 정보"
               >
                 <strong class="team-name-cell">
+                  <TeamMark teamId={team.id} size={20} />
                   {team.name}
                   {#if team.id === myTeamId}
                     <span class="my-team-tag">소속팀</span>
@@ -149,7 +151,10 @@
 
       <aside class="panel detail">
         {#if selectedTeam}
-          <div class="detail-stripe" style="background:{stripeOf(selectedTeam.colors)}"></div>
+          <div class="detail-head">
+            <TeamMark teamId={selectedTeam.id} size={56} />
+            <div class="detail-stripe" style="background:{stripeOf(selectedTeam.colors)}"></div>
+          </div>
           <h3>
             {selectedTeam.name}
             {#if selectedTeam.id === myTeamId}
@@ -261,7 +266,8 @@
 
   /* -- 오른쪽 상세 -- */
   .detail { display: grid; grid-template-rows: auto auto auto auto auto minmax(0, 1fr); gap: 8px; position: relative; }
-  .detail-stripe { height: 4px; border-radius: 2px; }
+  .detail-head { display: flex; align-items: center; gap: 12px; }
+  .detail-stripe { height: 4px; border-radius: 2px; flex: 1; }
   .detail h3 { margin: 0; font-size: 17px; font-weight: 800; color: var(--ink); display: flex; align-items: center; gap: 7px; }
   .meta { margin: 0; color: var(--ink-mute); font-size: 12px; }
 

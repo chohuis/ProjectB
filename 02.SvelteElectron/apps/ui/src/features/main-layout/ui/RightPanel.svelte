@@ -3,6 +3,7 @@
   import { seasonStore } from "../../../shared/stores/season";
   import { teamMap } from "../../../shared/stores/master";
   import { nextProtagonistGame, teamRank, gaugeTone } from "../../../shared/utils/myStatus";
+  import TeamMark from "../../team/ui/TeamMark.svelte";
 
   /**
    * B3 우측 패널 — **"최근 로그"에서 "내 상태"로 바뀌었다.**
@@ -94,7 +95,7 @@
         <span class="nx-date u-num">{shortDate(next.entry.gameDate)}</span>
         <span class="nx-side" class:home={next.isHome}>{next.isHome ? "홈" : "원정"}</span>
       </div>
-      <p class="nx-opp">{oppName}</p>
+      <p class="nx-opp"><TeamMark teamId={next.opponentId} size={18} />{oppName}</p>
       {#if whenText(next.daysAway)}<p class="nx-when">{whenText(next.daysAway)}</p>{/if}
     {:else}
       <p class="none">예정된 경기 없음</p>
@@ -195,7 +196,8 @@
   }
   .nx-side.home { background: var(--t-dark); color: var(--t-gold); }
 
-  .nx-opp { margin: 4px 0 0; font-size: 13px; font-weight: 700; color: var(--ink); }
+  .nx-opp { margin: 5px 0 0; font-size: 13px; font-weight: 700; color: var(--ink);
+            display: flex; align-items: center; gap: 6px; }
   .nx-when { margin: 1px 0 0; font-size: 11px; color: var(--ink-mute); }
 
   /* ── 순위 ── */

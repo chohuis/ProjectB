@@ -2,6 +2,7 @@
   import type { SaveSlotMeta } from "../../../shared/types/projectb.d";
   import { masterStore } from "../../../shared/stores/master";
   import { careerStageLabel } from "../../../shared/utils/careerStageLabel";
+  import TeamMark from "../../team/ui/TeamMark.svelte";
 
   export let onNew: () => void;
   export let onContinue: () => void;
@@ -37,7 +38,7 @@
              값이 없으면 줄 자체를 안 그린다 — 빈 칸이 더 나쁘다 -->
         {#if hasSave && latest}
           <span class="cont-sub">
-            {#if team}<b>{team.name}</b>{/if}
+            {#if team}<TeamMark teamId={team.id} size={18} /><b>{team.name}</b>{/if}
             {#if stage}<span class="dot">·</span>{stage}{/if}
             {#if when}<span class="dot">·</span>{when}{/if}
           </span>
@@ -143,6 +144,7 @@
     align-items: baseline;
   }
   .cont-sub b { font-weight: 700; color: var(--ink-mid); }
+  .cont-sub :global(.tm) { margin-right: 1px; }
   .dot { opacity: 0.5; }
 
   .hint {
