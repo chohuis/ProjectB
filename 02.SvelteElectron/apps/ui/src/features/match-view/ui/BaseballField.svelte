@@ -25,51 +25,22 @@
   export let ballTrail: Point[] = [];
   export let strikeZoneTarget: Point = { x: 500, y: 755 };
   export let isPitching = false;
-  export let fieldingTeam: 'home' | 'away' = 'home';
   export let batter: { handedness: 'L' | 'R' } = { handedness: 'R' };
   export let batterAnimPos: Point | null = null;
   export let runnerAnimPositions: (Point | null)[] = [null, null, null];
+  /**
+   * 어느 구장 그림을 띄우나. **정본은 `parkView.ts`다.**
+   * 예전엔 여기 `probaseball.gif`가 하드코딩이라 고교·대학 경기도 전부
+   * 프로 구장에서 열렸다.
+   */
+  export let parkImage = '/park/probaseball.gif';
 
   const dispatch = createEventDispatcher<{ selectPosition: { pos: string } }>();
-
-  // PNG 스프라이트 16×18px → SVG 내 32×36 표시 (2x, pixelated)
-  // 오프셋: x-16 (중앙), y-28 (발이 y+8에 위치)
-
-
-  const retroWall =
-    "150,690 150,620 200,620 200,560 260,560 260,510 330,510 330,455 430,455 430,430 500,420 570,430 570,455 670,455 670,510 740,510 740,560 800,560 800,620 850,620 850,690";
-
-  const retroCrowdBoundary =
-    "120,440 200,360 290,300 380,260 500,240 620,260 710,300 800,360 880,440";
-
-  const retroDefenderFallback: Record<string, Point> = {
-    P:  { x: 500, y: 620 },
-    C:  { x: 500, y: 865 },
-    "1B": { x: 650, y: 690 },
-    "2B": { x: 585, y: 565 },
-    SS: { x: 415, y: 565 },
-    "3B": { x: 350, y: 690 },
-    LF: { x: 260, y: 520 },
-    CF: { x: 500, y: 445 },
-    RF: { x: 740, y: 520 }
-  };
-
-  function retroPlayerPoint(player: Defender): Point {
-    return retroDefenderFallback[player.pos] ?? { x: player.x, y: player.y };
-  }
 
   const posLabel: Record<string, string> = {
     P: '투수', C: '포수', '1B': '1루수', '2B': '2루수',
     SS: '유격수', '3B': '3루수', LF: '좌익수', CF: '중견수', RF: '우익수'
   };
-
-  // 포지션 → 도트 스프라이트 색상
-  function dotPlayerColor(_pos: string): string {
-    return fieldingTeam === 'home' ? '#4a78d8' : '#d84a4a';
-  }
-
-
-
 
   let selectedPos = "";
   let hoveredPos = "";
@@ -84,8 +55,8 @@
   <div class="viewport retro-viewport">
     <svg class="field retro-field" viewBox="0 0 1000 920" preserveAspectRatio="xMidYMid meet">
 
-      <!-- 픽셀아트 배경 이미지 (1000×920 고정) -->
-      <image href="/park/probaseball.gif" x="0" y="0" width="1000" height="920" preserveAspectRatio="xMidYMid meet"/>
+      <!-- 픽셀아트 배경 (구장마다 다르다). 좌표는 티어별로 `parkAnchors.ts`에 있다 -->
+      <image href={parkImage} x="0" y="0" width="1000" height="920" preserveAspectRatio="xMidYMid meet"/>
 
       <!-- 존 미리보기 -->
       <rect x={Math.round(strikeZoneTarget.x) - 6} y={Math.round(strikeZoneTarget.y) - 6} width="12" height="12"

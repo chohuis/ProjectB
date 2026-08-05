@@ -6,6 +6,7 @@
   import { masterStore } from "../../shared/stores/master";
   import type { EntityRow, EntityDetails } from "../../shared/stores/master";
   import type { InteractiveMatchContext, InteractiveMatchResult } from "../../shared/types/season";
+  import { parkViewForHomeTeam } from "../../shared/utils/parkView";
 
 
   export let matchContext: InteractiveMatchContext | null = null;
@@ -103,19 +104,23 @@
   const homeLineup = ["1 2B", "2 SS", "3 RF", "4 1B", "5 3B", "6 DH", "7 LF", "8 C", "9 CF"];
 
   /**
-   * 구장 좌표 — `probaseball.gif` 기준 1000×920 SVG 공간.
+   * 구장 좌표 — 1000×920 SVG 공간.
+   *
+   * **경기가 열리는 구장에 따라 달라진다.** 원본 구장 그림 세 장이 각각 따로
+   * 그려져 내야 위치가 다르기 때문이다(`parkAnchors.ts` 머리말 참고).
+   * 경기 도중 구장이 바뀌지 않으므로 **초기화 때 한 번 정한다** — 반응형으로
+   * 두면 아래 `let ballPos = {...retroField.mound}` 류의 초기값이 먼저 실행돼
+   * 첫 프레임이 엉뚱한 자리에 찍힌다.
    *
    * ⚠ 예전엔 `baseField`(디지털·닷용)와 짝을 이뤄 화면마다 골라 썼는데,
    * **고르는 코드가 없었다** — `fieldStyle`이 'retro' 하드코딩이라
    * `baseField`는 한 번도 안 쓰였다. U7에서 레트로만 남기며 지웠다.
    */
-  const retroField = {
-    home:   { x: 497, y: 790 },
-    first:  { x: 715, y: 580 },
-    second: { x: 497, y: 454 },
-    third:  { x: 280, y: 580 },
-    mound:  { x: 497, y: 548 }
-  };
+  const parkView = parkViewForHomeTeam(
+    matchContext?.homeTeamId,
+    get(masterStore).teams ?? [],
+  );
+  const retroField = parkView.coords.field;
 
   $: activeMound = retroField.mound;
 
@@ -272,18 +277,8 @@
     };
   }
 
-  // 수비 기본 위치 (SVG 좌표 1000x920)
-  const DEFENSE_RETRO_BASE = [
-    { pos: "P",  x: 497, y: 548 },
-    { pos: "C",  x: 497, y: 800 },
-    { pos: "1B", x: 710, y: 588 },
-    { pos: "2B", x: 600, y: 508 },
-    { pos: "SS", x: 387, y: 508 },
-    { pos: "3B", x: 272, y: 588 },
-    { pos: "LF", x: 242, y: 518 },
-    { pos: "CF", x: 497, y: 434 },
-    { pos: "RF", x: 752, y: 518 }
-  ] as { pos: string; x: number; y: number }[];
+  // 수비 기본 위치 (SVG 좌표 1000x920). 구장 티어에 따라 다르다
+  const DEFENSE_RETRO_BASE = parkView.coords.defense as { pos: string; x: number; y: number }[];
 
   // 애니메이션 중 위치 변경을 반영하기 위한 상태
   let defenseRetro  = DEFENSE_RETRO_BASE.map(d => ({ ...d }));
@@ -1460,7 +1455,7 @@
               {ballTrail}
               strikeZoneTarget={clickedFieldPos}
               {isPitching}
-              {fieldingTeam}
+              parkImage={parkView.imageUrl}
               {batter}
               batterAnimPos={retroBatterPos}
               runnerAnimPositions={retroRunnerPositions}
