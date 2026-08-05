@@ -33,6 +33,15 @@
 
   $: team = $masterStore.teams.find((t) => t.id === teamId) ?? null;
 
+  /**
+   * 구장 이름. **ID를 그대로 찍고 있었다** — 화면에 `🏟 STADIUM_HANGANG`이
+   * 나왔다. 앱을 띄워 보고서야 보인 종류의 결함이다.
+   * 해외 팀은 구장을 한글 이름 문자열로 참조하므로 그건 그대로 통과시킨다.
+   */
+  function stadiumName(id: string): string {
+    return ($masterStore.stadiums ?? []).find((s) => s.id === id)?.name ?? id;
+  }
+
   function leagueLabel(lid: string): string {
     const map: Record<string, string> = {
       LEAGUE_HIGHSCHOOL: "고교리그", LEAGUE_UNIVERSITY: "대학리그",
@@ -311,7 +320,7 @@
         <div class="header-meta">
           {#if team.nameEn}<span class="name-en">{team.nameEn}</span>{/if}
           {#if team.city}<span class="meta-chip">📍 {team.city}</span>{/if}
-          {#if team.stadium}<span class="meta-chip">🏟 {team.stadium}{#if team.capacity} · {capacityFmt(team.capacity)}석{/if}</span>{/if}
+          {#if team.stadium}<span class="meta-chip">🏟 {stadiumName(team.stadium)}{#if team.capacity} · {capacityFmt(team.capacity)}석{/if}</span>{/if}
         </div>
 
         <button class="close-btn" on:click={close} aria-label="닫기">✕</button>

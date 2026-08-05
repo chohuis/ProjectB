@@ -138,6 +138,7 @@
     "electron": "^33.2.0",
     "electron-builder": "^25.1.8",
     "omggif": "^1.0.10",
+    "playwright-core": "^1.62.1",
     "pngjs": "^7.0.0",
     "typescript": "^5.8.3",
     "vite": "^6.2.2",
