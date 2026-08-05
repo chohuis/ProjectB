@@ -25,3 +25,6 @@ userData/
 
 # 하네스 실행 결과 (생성물 — DATA_POLICY §1 ③파생)
 docs/reports/harness_last.json
+
+# 드라이버가 남기는 스크린샷 — 검증용이지 산출물이 아니다
+resource/logs/shots/
