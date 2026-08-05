@@ -5,6 +5,7 @@
   import { HS_SELECTABLE_TEAMS } from "../../shared/utils/leagueScheduler";
   import { HS_REGIONS } from "../../shared/utils/leagueTeams.generated";
   import { hsRegionMeta, sortRegions } from "../../shared/utils/hsRegionLabel";
+  import { teamTokens } from "../../shared/utils/teamTheme";
   import { startNewGameV3 } from "../../shared/repo/slotLifecycleV3";
   import { assignHighschoolPosition } from "../../shared/utils/pitcherRoleEngine";
   import type { Handedness, PitchEntry, PitchingForm, ProtagonistSave } from "../../shared/types/save";
@@ -61,6 +62,21 @@
     .filter((t) => HS_SELECTABLE_TEAMS.includes(t.id))
     .sort((a, b) => (DIFFICULTY_ORDER[b.profile?.difficulty ?? ""] ?? 0) - (DIFFICULTY_ORDER[a.profile?.difficulty ?? ""] ?? 0));
   $: selectedTeam = hsTeams.find((t) => t.id === selectedTeamId) ?? null;
+  // 확인 카드가 입을 팀 색. **전역 --t-*는 안 건드린다** — 아직 소속 확정 전이라
+  // 전역을 바꾸면 이전 단계로 돌아갔을 때 화면이 어긋난다
+  $: cardTokens = teamTokens(selectedTeam?.colors);
+
+  /** 카드에 그릴 능력치 — 경기에 쓰이는 순서대로 */
+  function statRows(p: ProtagonistSave["pitching"]) {
+    return [
+      { ko: "구위",     v: p.velocity },
+      { ko: "커맨드",   v: p.command },
+      { ko: "제구",     v: p.control },
+      { ko: "무브먼트", v: p.movement },
+      { ko: "멘탈",     v: p.mentality },
+      { ko: "스태미나", v: p.stamina },
+    ];
+  }
 
   // 선택된 팀의 감독·코치·선수 필터
   $: teamEntities = selectedTeamId
@@ -607,46 +623,50 @@
     <!-- Step 4 -->
 
     {:else if step === 4}
-      <section class="step-body">
-        <h2>확인</h2>
-        <p class="sub">아래 내용으로 게임을 시작합니다.</p>
+      <section class="step4-layout">
+        <div class="step4-top">
+          <h2>확인</h2>
+          <p class="sub">아래 선수로 2026년 고교 주말리그를 시작합니다.</p>
+        </div>
 
-        <div class="summary-card">
-          <div class="summary-row">
-            <span class="key">이름</span>
-            <span class="val">{playerName}</span>
+        <!-- 선수 카드 — 팀 색을 입는다. 이 순간부터 그 팀 소속이다 -->
+        <div class="pcard" style="--c-dark:{cardTokens.dark};--c-acc:{cardTokens.accent};--c-gold:{cardTokens.gold};--c-stripe:{cardTokens.stripe}">
+          <div class="pcard-head">
+            <div class="pc-id">
+              <span class="pc-team">{selectedTeamName}</span>
+              <strong class="pc-name">{playerName || "이름 없음"}</strong>
+              <span class="pc-meta">
+                투수 · 1학년 · {handednessLabel[handedness]} · {formLabel[pitchingForm]}
+              </span>
+            </div>
+            <div class="pc-preset">
+              <span class="pc-preset-label">{PRESETS[selectedPreset].label}</span>
+            </div>
           </div>
-          <div class="summary-row">
-            <span class="key">생년월일</span>
-            <span class="val">2010년 {birthMonth}월 {birthDay}일</span>
-          </div>
-          <div class="summary-row">
-            <span class="key">투구 방향</span>
-            <span class="val">{handednessLabel[handedness]}</span>
-          </div>
-          <div class="summary-row">
-            <span class="key">투구 폼</span>
-            <span class="val">{formLabel[pitchingForm]}</span>
-          </div>
-          <div class="summary-row">
-            <span class="key">팀</span>
-            <span class="val">{selectedTeamName}</span>
-          </div>
-          <div class="summary-row">
-            <span class="key">프리셋</span>
-            <span class="val">{PRESETS[selectedPreset].label}</span>
-          </div>
-          <div class="summary-row">
-            <span class="key">초기 구종</span>
-            <span class="val pitch-summary">
-              {#each PRESETS[selectedPreset].pitches as p}
-                <span class="pitch-chip">{PITCH_NAMES[p.id]} Lv.{p.grade}</span>
+
+          <div class="pcard-body">
+            <div class="pc-stats">
+              {#each statRows(PRESETS[selectedPreset].pitching) as row}
+                {@const ko = row.ko}
+                {@const v = row.v}
+                <div class="pc-stat">
+                  <span class="pc-stat-k">{ko}</span>
+                  <span class="pc-bar"><i style="width:{v}%"></i></span>
+                  <span class="pc-stat-v">{v}</span>
+                </div>
               {/each}
-            </span>
-          </div>
-          <div class="summary-row">
-            <span class="key">리그</span>
-            <span class="val">2026 고교 주말 리그</span>
+            </div>
+
+            <div class="pc-side">
+              <p class="pc-side-h">초기 구종</p>
+              <div class="pc-pitches">
+                {#each PRESETS[selectedPreset].pitches as pt}
+                  <span class="pc-pitch">{PITCH_NAMES[pt.id]} <b>Lv.{pt.grade}</b></span>
+                {/each}
+              </div>
+              <p class="pc-side-h">생년월일</p>
+              <p class="pc-side-v">2010년 {birthMonth}월 {birthDay}일</p>
+            </div>
           </div>
         </div>
       </section>
@@ -1533,4 +1553,64 @@
     color: #88b8f8;
     font-weight: 600;
   }
+
+  /* ══ 4단계 확인 — 선수 카드 ══ */
+  .step4-layout { display: flex; flex-direction: column; gap: 18px; align-items: center; }
+  .step4-top { text-align: center; }
+
+  /* 팀 색은 카드 안에서만 산다 — 여기 토큰이 전역 --t-*를 덮지 않는다.
+     아직 소속이 확정 전이라 전역을 바꾸면 이전 단계로 돌아갔을 때 어긋난다 */
+  .pcard {
+    width: 560px; max-width: 100%;
+    background: #fff;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 14px 34px -22px rgba(8, 16, 36, 0.6);
+  }
+
+  .pcard-head {
+    background: var(--c-dark);
+    padding: 16px 20px;
+    display: flex; justify-content: space-between; align-items: flex-start; gap: 14px;
+  }
+  .pc-team { display: block; font-size: 11px; letter-spacing: 0.14em; color: var(--c-gold); font-weight: 700; }
+  .pc-name {
+    display: block; margin: 5px 0 4px;
+    font-size: 27px; font-weight: 800; font-style: italic;
+    letter-spacing: -0.03em; color: #fff; line-height: 1.1;
+  }
+  .pc-meta { font-size: 11.5px; color: rgba(255, 255, 255, 0.72); }
+  .pc-preset { flex: none; }
+  .pc-preset-label {
+    display: inline-block; background: var(--c-acc); color: #fff;
+    font-size: 11.5px; font-weight: 750; padding: 5px 11px;
+  }
+
+  .pcard-body {
+    display: grid; grid-template-columns: 1fr 170px; gap: 20px;
+    padding: 18px 20px;
+    background-image: repeating-linear-gradient(90deg, transparent 0 11px, var(--c-stripe) 11px 13px);
+  }
+
+  .pc-stats { display: flex; flex-direction: column; gap: 7px; }
+  .pc-stat { display: grid; grid-template-columns: 54px 1fr 26px; gap: 9px; align-items: center; }
+  .pc-stat-k { font-size: 11.5px; color: #5a6478; }
+  .pc-stat-v { font-size: 12px; font-weight: 750; text-align: right; font-variant-numeric: tabular-nums; color: #0f1d3d; }
+  .pc-bar { display: block; height: 6px; background: #dde3ee; }
+  .pc-bar i { display: block; height: 100%; background: var(--c-dark); }
+
+  .pc-side { border-left: 1px solid #dde3ee; padding-left: 16px; }
+  .pc-side-h {
+    margin: 0 0 6px; font-size: 9.5px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: #5a6478; font-weight: 700;
+  }
+  .pc-side-h:not(:first-child) { margin-top: 14px; }
+  .pc-side-v { margin: 0; font-size: 12px; color: #0f1d3d; }
+  .pc-pitches { display: flex; flex-wrap: wrap; gap: 4px; }
+  .pc-pitch {
+    font-size: 10.5px; padding: 3px 7px;
+    border: 1px solid var(--c-dark); color: var(--c-dark);
+  }
+  .pc-pitch b { font-weight: 800; }
+
 </style>
