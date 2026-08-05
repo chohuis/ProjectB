@@ -8,6 +8,10 @@
   import type { InteractiveMatchContext, InteractiveMatchResult } from "../../shared/types/season";
   import { parkViewForHomeTeam } from "../../shared/utils/parkView";
   import TeamMark from "../../features/team/ui/TeamMark.svelte";
+  import {
+    staminaCostOf, deltaOf, pitchesLeft,
+    type CostStrategy, type CostPower,
+  } from "../../shared/utils/pitchCost";
 
 
   export let matchContext: InteractiveMatchContext | null = null;
@@ -68,6 +72,11 @@
     recentLogs: string[];
     batter?: { contact: number; power: number; eye: number };
     currentBatter?: { contact: number; power: number; eye: number };
+    // 엔진이 들고 있던 라인업 — U7-b에서 DTO에 실어 보내기 시작했다
+    awayLineup?: { id?: string; name?: string; contact: number; power: number; eye: number }[];
+    homeLineup?: { id?: string; name?: string; contact: number; power: number; eye: number }[];
+    awayLineupIndex?: number;
+    homeLineupIndex?: number;
     weather?: WeatherType;
     park?: ParkType;
     isFinished?: boolean;
@@ -101,8 +110,20 @@
   const batterInfoTitle = "타자 정보";
   const pitcherInfoTitle = "투수 컨디션 정보";
 
-  const awayLineup = ["1 RF", "2 CF", "3 1B", "4 DH", "5 LF", "6 3B", "7 C", "8 2B", "9 SS"];
-  const homeLineup = ["1 2B", "2 SS", "3 RF", "4 1B", "5 3B", "6 DH", "7 LF", "8 C", "9 CF"];
+  /**
+   * 라인업. **예전엔 하드코딩 상수였다** — `["1 RF", "2 CF", …]`가 박혀 있어서
+   * 어느 팀이 붙어도 같은 아홉 명이 나왔다. 엔진은 진짜 라인업을 들고 있었고
+   * DTO가 `currentBatter`를 뽑는 데 이미 쓰고 있었는데 목록만 안 보냈다.
+   */
+  interface LineupBatter { id?: string; name?: string; contact: number; power: number; eye: number }
+  let awayLineup: LineupBatter[] = [];
+  let homeLineup: LineupBatter[] = [];
+  let awayLineupIndex = 0;
+  let homeLineupIndex = 0;
+
+  /** 지금 타석에 선 순번. 공격 중인 쪽만 의미가 있다 */
+  $: awayAtBat = half === "top" ? awayLineupIndex % Math.max(1, awayLineup.length) : -1;
+  $: homeAtBat = half === "bottom" ? homeLineupIndex % Math.max(1, homeLineup.length) : -1;
 
   /**
    * 구장 좌표 — 1000×920 SVG 공간.
@@ -529,6 +550,15 @@
   $: onMound = isProtagonistPitching && currentPhase === "protagonist_pitch";
   $: modeLabel = onMound ? "등판 중" : "관전";
 
+  /** 지금 고른 조합의 스태미나 소모. 정본은 `balance/match_engine_tuning.json` */
+  $: currentCost = staminaCostOf(
+    selectedPitchType === "fastball",
+    selectedStrategy as CostStrategy,
+    selectedPower as CostPower,
+  );
+  $: fastballExtra = deltaOf("fastball");
+  $: remainingPitches = pitchesLeft(pitcherState.stamina, currentCost);
+
   let inning = 1;
   let half: "top" | "bottom" = "top";
 
@@ -814,6 +844,10 @@
     if (snapshot.protagonistSide !== undefined) protagonistSide = snapshot.protagonistSide;
     // 엔진이 계속 보내던 값 — U7-a에서 처음 읽는다
     if (snapshot.isProtagonistPitching !== undefined) isProtagonistPitching = snapshot.isProtagonistPitching;
+    if (snapshot.awayLineup) awayLineup = snapshot.awayLineup as LineupBatter[];
+    if (snapshot.homeLineup) homeLineup = snapshot.homeLineup as LineupBatter[];
+    if (snapshot.awayLineupIndex !== undefined) awayLineupIndex = snapshot.awayLineupIndex;
+    if (snapshot.homeLineupIndex !== undefined) homeLineupIndex = snapshot.homeLineupIndex;
     snapshotPitchCount = snapshot.pitchCount;
     snapshotPitchCountSinceEntry = snapshot.pitchCountSinceEntry ?? 0;
 
@@ -1484,10 +1518,14 @@
         <div class="scene-layout">
           <aside class="lineup-panel" aria-label="away lineup">
             <h3>{awayLineupTitle}</h3>
-            <ol>
-              {#each awayLineup as item}
-                <li>{item}</li>
+            <ol class="lineup-list">
+              {#each awayLineup as b, i}
+                <li class:at-bat={i === awayAtBat} class:on-deck={i === (awayAtBat + 1) % Math.max(1, awayLineup.length) && awayAtBat >= 0}>
+                  <span class="lu-no">{i + 1}</span>
+                  <span class="lu-name">{b.name ?? "-"}</span>
+                </li>
               {/each}
+              {#if awayLineup.length === 0}<li class="lu-empty">-</li>{/if}
             </ol>
           </aside>
 
@@ -1526,10 +1564,14 @@
 
           <aside class="lineup-panel" aria-label="home lineup">
             <h3>{homeLineupTitle}</h3>
-            <ol>
-              {#each homeLineup as item}
-                <li>{item}</li>
+            <ol class="lineup-list">
+              {#each homeLineup as b, i}
+                <li class:at-bat={i === homeAtBat} class:on-deck={i === (homeAtBat + 1) % Math.max(1, homeLineup.length) && homeAtBat >= 0}>
+                  <span class="lu-no">{i + 1}</span>
+                  <span class="lu-name">{b.name ?? "-"}</span>
+                </li>
               {/each}
+              {#if homeLineup.length === 0}<li class="lu-empty">-</li>{/if}
             </ol>
           </aside>
         </div>
@@ -1626,7 +1668,20 @@
         </section>
 
         <section class="panel pitch-select-panel" aria-label="pitch selection panel">
-          <h2>{pitchSelectTitle}</h2>
+          <div class="ps-head">
+            <h2>{pitchSelectTitle}</h2>
+            <!--
+              ⚠ **구종을 흐리게 만들지 않는다.** 엔진은 스태미나로 구종을 막지
+              않는다 — 낮은 스태미나는 모든 구질을 함께 깎을 뿐이다. 화면이
+              막으면 없는 규칙을 지어내는 것이고, 이 프로젝트는 이미 "부상위험 %"
+              에서 그 실수를 했다. 대신 **실제로 있는 것**(선택별 소모)을 보여준다.
+            -->
+            {#if currentCost !== null}
+              <span class="cost-chip" class:thin={remainingPitches !== null && remainingPitches <= 15}>
+                이 선택 {currentCost.toFixed(2)}/구{#if remainingPitches !== null} · 약 {remainingPitches}구{/if}
+              </span>
+            {/if}
+          </div>
           <div class="pitch-buttons">
             {#each pitchTypes as pitch}
               <button
@@ -1636,6 +1691,7 @@
                 on:click={() => (selectedPitchType = pitch.id)}
               >
                 {pitch.label}
+                {#if pitch.id === "fastball" && fastballExtra}<span class="cost-tag">+{fastballExtra.toFixed(2)}</span>{/if}
               </button>
             {/each}
           </div>
@@ -1649,6 +1705,7 @@
                 on:click={() => (selectedStrategy = strategy.id)}
               >
                 {strategy.label}
+                {#if deltaOf(strategy.id)}<span class="cost-tag">+{deltaOf(strategy.id)?.toFixed(2)}</span>{/if}
               </button>
             {/each}
           </div>
@@ -1662,6 +1719,7 @@
                 on:click={() => (selectedPower = power.id)}
               >
                 {power.label}
+                <span class="cost-tag">+{deltaOf(power.id)?.toFixed(2) ?? "-"}</span>
               </button>
             {/each}
           </div>
@@ -1877,6 +1935,53 @@
     color: #e8f0ff;
     font-variant-numeric: tabular-nums;
   }
+
+  /* ── 투구 선택의 대가 (U7-b) ── */
+  .ps-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .ps-head h2 { margin: 0; }
+  .cost-chip {
+    font-size: 11px;
+    color: #8fa8c8;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  /* 남은 구수가 얼마 안 되면 눈에 띈다. **선택을 막지는 않는다** */
+  .cost-chip.thin { color: #f0b070; font-weight: 700; }
+  .cost-tag {
+    font-size: 9.5px;
+    opacity: 0.62;
+    margin-left: 4px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ── 라인업 (U7-b) ── */
+  .lineup-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; }
+  .lineup-list li {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    font-size: 11px;
+    color: #9ab4d8;
+    padding: 2px 4px;
+    border-radius: 3px;
+  }
+  .lu-no { color: #5f7ba0; min-width: 11px; font-variant-numeric: tabular-nums; }
+  .lu-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .lu-empty { color: #4d5f7c; }
+  /* 지금 타석 — 공격 중인 쪽에만 붙는다 */
+  .lineup-list li.at-bat {
+    background: rgba(240, 226, 122, 0.14);
+    color: #ffe27a;
+    font-weight: 700;
+  }
+  .lineup-list li.at-bat .lu-no { color: #ffe27a; }
+  .lineup-list li.on-deck { color: #c2d4ee; }
 
   /* 주자와 카운트는 한 상황의 두 축이다 — 상자 하나에 나란히 */
   .situation-body {

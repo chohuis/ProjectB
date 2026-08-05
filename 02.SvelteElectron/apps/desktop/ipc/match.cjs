@@ -47,6 +47,14 @@ function toSnapshotDto(state, autoSimLogs, core) {
     isProtagonistPitching,
     phase,
     currentBatter,
+    // ⚠ **엔진은 진짜 라인업을 들고 있는데 UI로 안 넘기고 있었다.**
+    // 위 `currentBatter` 계산에 이미 쓰면서도 정작 목록은 안 보냈고, 화면은
+    // `["1 RF", "2 CF", …]` **하드코딩 상수**를 그려서 어느 경기든 같은
+    // 라인업이 나왔다. Rust 재빌드 없이 여기서 실어 보내면 된다.
+    awayLineup: state.awayLineup ?? [],
+    homeLineup: state.homeLineup ?? [],
+    awayLineupIndex: state.awayLineupIndex ?? 0,
+    homeLineupIndex: state.homeLineupIndex ?? 0,
     weather: state.weather,
     park: state.park,
     isFinished: state.isFinished,

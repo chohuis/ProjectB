@@ -11,6 +11,7 @@ import {
 import { buildMarkIndex } from "../utils/teamMark";
 import { primeForeignRules } from "../utils/foreignSlots";
 import { primeTraitDisplay } from "../utils/playerTraits";
+import { primePitchCost } from "../utils/pitchCost";
 
 export type { CoachAttributes, CoachSpecialty };
 
@@ -815,6 +816,12 @@ function createMasterStore() {
           primeForeignRules(genRules as Parameters<typeof primeForeignRules>[0]);
           primeTraitDisplay(genRules);
         }
+        // 경기 화면이 투구 선택의 스태미나 소모를 표시한다.
+        // **엔진과 같은 파일**을 읽는다 — 숫자를 두 벌로 두지 않는다.
+        const tuning = await fetchMaster<Record<string, unknown>>(
+          "balance/match_engine_tuning.json",
+        );
+        if (tuning) primePitchCost(tuning as Parameters<typeof primePitchCost>[0]);
       }
 
       // 부팅 무결성 검증 — 코드 팀 상수 ⊆ refs.json + _1→_2 팜 규칙 (DESIGN.md §8.2 원칙 6)
