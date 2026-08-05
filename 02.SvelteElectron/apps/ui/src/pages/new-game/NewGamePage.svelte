@@ -3,6 +3,8 @@
   import { masterStore } from "../../shared/stores/master";
   import { gameStore } from "../../shared/stores/game";
   import { HS_SELECTABLE_TEAMS } from "../../shared/utils/leagueScheduler";
+  import { HS_REGIONS } from "../../shared/utils/leagueTeams.generated";
+  import { hsRegionMeta, sortRegions } from "../../shared/utils/hsRegionLabel";
   import { startNewGameV3 } from "../../shared/repo/slotLifecycleV3";
   import { assignHighschoolPosition } from "../../shared/utils/pitcherRoleEngine";
   import type { Handedness, PitchEntry, PitchingForm, ProtagonistSave } from "../../shared/types/save";
@@ -42,8 +44,19 @@
 
   // 전체 고교팀 (16개) — 리그 구성용
   $: hsAllTeams = $masterStore.teams.filter((t) => t.leagueId === "LEAGUE_HIGHSCHOOL");
-  // 선택 가능한 팀 (8개) — 캐릭터 생성 UI 표시용 (어려운 순 정렬)
+  // ⚠ 주석이 "8개"라고 적혀 있었는데 `HS_SELECTABLE_TEAMS`는 **102개**다.
+  //    낡은 주석을 믿고 화면을 잘못 설계할 뻔했다.
   const DIFFICULTY_ORDER: Record<string, number> = { "최상": 5, "상": 4, "중": 3, "하": 2, "최하": 1 };
+
+  // 권역별로 묶는다 (사용자 확정). 고교는 8권역 주말리그라 **어느 지역에서
+  // 시작하느냐가 라이벌·일정을 정한다** — 102개를 한 줄로 늘어놓으면 그 구조가
+  // 안 보이고 고르기도 어렵다.
+  $: teamsByRegion = sortRegions(Object.keys(HS_REGIONS)).map((rid) => ({
+    id: rid,
+    meta: hsRegionMeta(rid),
+    teams: hsTeams.filter((t) =>
+      ((HS_REGIONS as Record<string, readonly string[]>)[rid] ?? []).includes(t.id)),
+  })).filter((r) => r.teams.length > 0);
   $: hsTeams = hsAllTeams
     .filter((t) => HS_SELECTABLE_TEAMS.includes(t.id))
     .sort((a, b) => (DIFFICULTY_ORDER[b.profile?.difficulty ?? ""] ?? 0) - (DIFFICULTY_ORDER[a.profile?.difficulty ?? ""] ?? 0));
@@ -370,23 +383,31 @@
           </div>
           {#if $masterStore.loaded && hsTeams.length > 0}
             <div class="team-list">
-              {#each hsTeams as team}
-                <button
-                  class="team-list-item"
-                  class:selected={selectedTeamId === team.id}
-                  style={teamListStyle(team, selectedTeamId === team.id)}
-                  on:click={() => (selectedTeamId = team.id)}
-                >
-                  <div class="tli-main">
-                    {#if team.colors}
-                      <span class="color-dots">
-                        <span class="cdot" style="background:{team.colors[0]};"></span>
-                        <span class="cdot" style="background:{team.colors[1]};"></span>
-                      </span>
-                    {/if}
-                    <strong>{team.name}</strong>
-                  </div>
-                </button>
+              {#each teamsByRegion as region (region.id)}
+                <div class="region-head">
+                  <span class="region-name">{region.meta.label}</span>
+                  <span class="region-area">{region.meta.area}</span>
+                  <span class="region-count">{region.teams.length}</span>
+                </div>
+                {#each region.teams as team (team.id)}
+                  <button
+                    class="team-list-item"
+                    class:selected={selectedTeamId === team.id}
+                    style={teamListStyle(team, selectedTeamId === team.id)}
+                    on:click={() => (selectedTeamId = team.id)}
+                  >
+                    <div class="tli-main">
+                      {#if team.colors}
+                        <span class="color-dots">
+                          <span class="cdot" style="background:{team.colors[0]};"></span>
+                          <span class="cdot" style="background:{team.colors[1]};"></span>
+                        </span>
+                      {/if}
+                      <strong>{team.name}</strong>
+                      <span class="tli-city">{team.city ?? ""}</span>
+                    </div>
+                  </button>
+                {/each}
               {/each}
             </div>
           {:else}
@@ -924,6 +945,21 @@
     flex-direction: column;
     gap: 5px;
   }
+
+  /* ── 권역 머리 ── */
+  .region-head {
+    display: flex; align-items: baseline; gap: 7px;
+    padding: 9px 10px 5px;
+    position: sticky; top: 0; z-index: 1;
+    background: var(--panel, #101a2e);
+  }
+  .region-name { font-size: 12px; font-weight: 800; color: var(--t-gold, #8fafff); }
+  .region-area { font-size: 10.5px; color: var(--ink-mute, #7a9ac8); }
+  .region-count {
+    margin-left: auto; font-size: 10px; font-variant-numeric: tabular-nums;
+    color: var(--ink-mute, #7a9ac8);
+  }
+  .tli-city { font-size: 10.5px; opacity: 0.6; margin-left: auto; }
 
   .team-list-item {
     display: flex;
