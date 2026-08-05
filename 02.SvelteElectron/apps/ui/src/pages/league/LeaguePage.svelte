@@ -1,21 +1,23 @@
 <script lang="ts">
   import { get } from "svelte/store";
-  import { t } from "../../shared/i18n";
   import { isLeagueInScope, scopedLeagueIds } from "../../shared/config/releaseScope";
   import { visibleLeagueIds, leaderboardLeagueIds } from "../../shared/utils/leagueVisibility";
   import { gameStore } from "../../shared/stores/game";
   import { seasonStore } from "../../shared/stores/season";
   import { masterStore, teamMap } from "../../shared/stores/master";
-  import { leagueUiState } from "../../shared/stores/leagueUiStore";
+  import { leagueUiState, type LeagueTab, type TxCategory } from "../../shared/stores/leagueUiStore";
   import { splitByGroup } from "../../shared/utils/standingsGroups";
   import type { PitcherSeasonStats, BatterSeasonStats, PlayerSeasonStats } from "../../shared/types/save";
+  import {
+    categoriesFor, cardCategoriesFor, categoryByKey,
+    qualificationOf, qualifies, rankBy, type LbRow, type StatCategory,
+  } from "../../shared/utils/leaderboard";
+  import { toRounds, seriesState, bestOfLabel, winsNeeded } from "../../shared/utils/bracket";
   import PlayerDetailModal from "../../features/player/ui/PlayerDetailModal.svelte";
 
   import type { LeagueTransactionRow } from "../../shared/types/save";
 
-  type LeagueTab  = "standings" | "leaderboard" | "transactions";
   type LbTab      = "pitcher" | "batter";
-  type TxCategory = "all" | "trade" | "fa" | "draft" | "military" | "retirement";
 
   // 탭 이동 후 돌아와도 선택 상태 유지 (leagueUiStore에서 복원)
   const _saved = get(leagueUiState);
@@ -135,19 +137,6 @@
   $: histPostseasonForLeague = (lid: string): HistPostseason | undefined =>
     historyPostseason.find(r => r.league_id === lid);
 
-  $: histPitcherRows = historyLbStats
-    .filter(r => r.league_id === lbLeagueId && r.stat_type === "pitcher" && (r.ip ?? 0) >= 10)
-    .map(r => ({ id: r.player_id, name: entityName(r.player_id), team: entityTeam(r.player_id),
-      w: r.w ?? 0, l: r.l ?? 0, era: r.era ?? 0, whip: r.whip ?? 0, ip: r.ip ?? 0, k: r.k_p ?? 0, bb: r.bb_p ?? 0 }))
-    .sort((a, b) => a.era - b.era)
-    .slice(0, 20) as PitcherRow[];
-
-  $: histBatterRows = historyLbStats
-    .filter(r => r.league_id === lbLeagueId && r.stat_type === "batter" && (r.ab ?? 0) >= 20)
-    .map(r => ({ id: r.player_id, name: entityName(r.player_id), team: entityTeam(r.player_id),
-      avg: r.avg_v ?? 0, hr: r.hr ?? 0, rbi: r.rbi ?? 0, ops: r.ops ?? 0, ab: r.ab ?? 0, h: r.h_b ?? 0, bb: r.bb_b ?? 0 }))
-    .sort((a, b) => b.avg - a.avg)
-    .slice(0, 20) as BatterRow[];
 
   // ── 리그 기록 탭 ─────────────────────────────────────────────
   let txLeagueId: string = _saved.txLeagueId;
@@ -339,15 +328,6 @@
   })();
 
 
-  interface PitcherRow {
-    id: string; name: string; team: string;
-    w: number; l: number; era: number; whip: number; ip: number; k: number; bb: number;
-  }
-  interface BatterRow {
-    id: string; name: string; team: string;
-    avg: number; hr: number; rbi: number; ops: number; ab: number; h: number; bb: number;
-  }
-
   function entityName(id: string): string {
     if (id === $gameStore.protagonist.id) return $gameStore.protagonist.name;
     const e = $masterStore.entities.find((en) => en.id === id);
@@ -359,33 +339,107 @@
     return e ? tName(e.teamId) : "-";
   }
 
-  $: pitcherRows = Object.entries(lbStats)
-    .filter(([, s]) => s.type === "pitcher" && (s as PitcherSeasonStats).ip >= 10)
-    .map(([id, s]) => {
-      const p = s as PitcherSeasonStats;
-      return { id, name: entityName(id), team: entityTeam(id), w: p.w, l: p.l, era: p.era, whip: p.whip, ip: p.ip, k: p.k, bb: p.bb };
-    })
-    .sort((a, b) => a.era - b.era)
-    .slice(0, 20) as PitcherRow[];
+  // ── 순위 부문 (U6) ───────────────────────────────────────────
+  //
+  // ⚠ 예전엔 정렬이 **하나뿐**이었다 — 투수 ERA 오름차순, 타자 AVG 내림차순 고정.
+  // 세이브 34개짜리 마무리는 ERA 20위 안에 못 들어 화면에 아예 없었다.
+  // 부문 정의·자격 판정의 정본은 `utils/leaderboard`다.
 
-  $: batterRows = Object.entries(lbStats)
-    .filter(([, s]) => s.type === "batter" && (s as BatterSeasonStats).ab >= 20)
-    .map(([id, s]) => {
-      const b = s as BatterSeasonStats;
-      return { id, name: entityName(id), team: entityTeam(id), avg: b.avg, hr: b.hr, rbi: b.rbi, ops: b.ops, ab: b.ab, h: b.h, bb: b.bb };
-    })
-    .sort((a, b) => b.avg - a.avg)
-    .slice(0, 20) as BatterRow[];
+  /** 규정이닝 산출용 — 팀이 소화한 경기 수. 팀마다 한두 경기 차이가 나 최대값을 쓴다 */
+  $: lbGamesPlayed = (() => {
+    const rows: Array<{ wins: number; losses: number; draws: number }> =
+      selectedYear > 0
+        ? historyStandings.filter((r) => r.league_id === lbLeagueId)
+        : ($seasonStore.leagueState[lbLeagueId]?.standings ?? []);
+    if (rows.length === 0) return 0;
+    return Math.max(...rows.map((r) => r.wins + r.losses + r.draws));
+  })();
+  $: lbQual = qualificationOf(lbGamesPlayed);
+
+  /** 과거 시즌 행(넓은 한 테이블)을 시즌 스탯 모양으로 되돌린다 */
+  function histToStats(r: HistLbStat): PlayerSeasonStats {
+    if (r.stat_type === "pitcher") {
+      return {
+        type: "pitcher", g: r.g, gs: r.gs ?? 0, w: r.w ?? 0, l: r.l ?? 0,
+        sv: r.sv ?? 0, hd: r.hd ?? 0, ip: r.ip ?? 0, er: r.er ?? 0,
+        h: r.h_p ?? 0, k: r.k_p ?? 0, bb: r.bb_p ?? 0,
+        era: r.era ?? 0, whip: r.whip ?? 0,
+      } satisfies PitcherSeasonStats;
+    }
+    return {
+      type: "batter", g: r.g, pa: r.pa ?? 0, ab: r.ab ?? 0, h: r.h_b ?? 0,
+      hr: r.hr ?? 0, rbi: r.rbi ?? 0, sb: r.sb ?? 0, bb: r.bb_b ?? 0, k: r.k_b ?? 0,
+      avg: r.avg_v ?? 0, obp: r.obp ?? 0, slg: r.slg ?? 0, ops: r.ops ?? 0,
+    } satisfies BatterSeasonStats;
+  }
+
+  $: lbRows = ((): LbRow[] => {
+    const mk = (id: string, st: PlayerSeasonStats): LbRow => ({
+      id, name: entityName(id), team: entityTeam(id),
+      stats: st, qualified: qualifies(st, lbQual),
+    });
+    if (selectedYear > 0) {
+      return historyLbStats
+        .filter((r) => r.league_id === lbLeagueId && r.stat_type === lbTab)
+        .map((r) => mk(r.player_id, histToStats(r)));
+    }
+    return Object.entries(lbStats)
+      .filter(([, st]) => st.type === lbTab)
+      .map(([id, st]) => mk(id, st));
+  })();
+
+  // 투타를 바꾸면 정렬 기준도 그쪽 부문으로 옮긴다 — 안 하면 빈 표가 나온다
+  let lbSortKey = "era";
+  $: if (categoryByKey(lbSortKey)?.side !== lbTab) {
+    lbSortKey = lbTab === "pitcher" ? "era" : "avg";
+  }
+  $: lbColumns = categoriesFor(lbTab);
+  $: lbCat = categoryByKey(lbSortKey) ?? lbColumns[0];
+  $: lbSorted = rankBy(lbRows, lbCat);
+  $: lbCards = cardCategoriesFor(lbTab).map((c) => ({ cat: c, rows: rankBy(lbRows, c, 5) }));
+
+  /** 비율 부문은 자격자만 센다 — "몇 명 중 몇 위"가 맞아야 한다 */
+  $: lbPool = lbCat.kind === "rate" ? lbRows.filter((r) => r.qualified).length : lbRows.length;
+
+  function sortByCat(c: StatCategory) { lbSortKey = c.key; }
+
+  // ── 포스트시즌 (U6) ──────────────────────────────────────────
+  //
+  // ⚠ `postseasonBrackets`에는 **완전한 대진**이 있었다 — 진출 경로·시리즈
+  // 형식·승수까지. 그런데 그리는 화면이 한 곳도 없었다.
+  let psLeagueId = "";
+  $: if (!psLeagueId && myLeagueId) psLeagueId = myLeagueId;
+
+  /** 대진을 가진 리그만 고르게 한다 — 고교엔 포스트시즌이 없다 */
+  $: psLeagueIds = allLeagueIds.filter(
+    (lid) => ($seasonStore.postseasonBrackets[lid]?.length ?? 0) > 0
+      || historyPostseason.some((r) => r.league_id === lid));
+  $: if (psLeagueIds.length > 0 && !psLeagueIds.includes(psLeagueId)) psLeagueId = psLeagueIds[0];
+
+  $: psRounds = selectedYear > 0
+    ? []
+    : toRounds($seasonStore.postseasonBrackets[psLeagueId] ?? []);
+
+  /** 과거 시즌은 대진이 아니라 결과만 남는다 — 저장하는 게 우승·준우승·진출팀뿐이다 */
+  $: psHistory = selectedYear > 0
+    ? historyPostseason.find((r) => r.league_id === psLeagueId) ?? null
+    : null;
+
+  /** 이름이 비면 "미정" — 앞 시리즈를 기다리는 자리다 */
+  function psTeam(id: string): string {
+    return id ? tName(id) : "미정";
+  }
 </script>
 
+<!-- 제목("리그")을 뺐다 — 사이드바가 이미 그 이름이다 -->
 <section class="page">
-  <h2>{$t("page.league")}</h2>
 
   <article class="card board">
     <header class="top-row">
       <div class="tabs">
         <button class:active={tab === "standings"}    on:click={() => (tab = "standings")}>리그 순위</button>
         <button class:active={tab === "leaderboard"}  on:click={() => (tab = "leaderboard")}>스탯 순위</button>
+        <button class:active={tab === "postseason"}   on:click={() => (tab = "postseason")}>포스트시즌</button>
         <button class:active={tab === "transactions"} on:click={() => (tab = "transactions")}>리그 기록</button>
       </div>
       <select class="yr-select" bind:value={selectedYear}>
@@ -524,79 +578,160 @@
 
         <div class="lb-content panel">
           <div class="lb-top-row">
-            <div class="lb-tabs">
-              <button class:active={lbTab === "pitcher"} on:click={() => (lbTab = "pitcher")}>투수</button>
-              <button class:active={lbTab === "batter"}  on:click={() => (lbTab = "batter")}>타자</button>
+            <div class="u-subtabs">
+              <button class:on={lbTab === "pitcher"} on:click={() => (lbTab = "pitcher")}>투수</button>
+              <button class:on={lbTab === "batter"}  on:click={() => (lbTab = "batter")}>타자</button>
             </div>
+            <!-- 규정을 숨기지 않는다 — "왜 저 선수가 없지"의 답이 여기 있다 -->
+            {#if lbGamesPlayed > 0}
+              <span class="qual-note u-num">
+                {lbGamesPlayed}경기 · 규정 {lbTab === "pitcher" ? `${lbQual.ip}이닝` : `${lbQual.pa}타석`}
+              </span>
+            {/if}
           </div>
 
-          {#if lbTab === "pitcher"}
-            {@const pRows = selectedYear > 0 ? histPitcherRows : pitcherRows}
-            {#if pRows.length === 0}
-              <p class="empty" style="padding:16px">스탯 데이터가 아직 없습니다. (최소 10이닝 필요)</p>
-            {:else}
-              <div class="lb-table-wrap">
-                <table class="stbl full">
-                  <thead>
-                    <tr>
-                      <th>#</th><th>선수</th><th>팀</th>
-                      <th>ERA</th><th>WHIP</th><th>이닝</th>
-                      <th>승</th><th>패</th><th>K</th><th>BB</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {#each pRows as row, i}
-                      <tr class:my-row={row.id === $gameStore.protagonist.id}>
-                        <td>{i + 1}</td>
-                        <td class="t-name">{row.name}</td>
-                        <td>{row.team}</td>
-                        <td class="era">{row.era.toFixed(2)}</td>
-                        <td>{row.whip.toFixed(2)}</td>
-                        <td>{row.ip.toFixed(1)}</td>
-                        <td class="w">{row.w}</td>
-                        <td class="l">{row.l}</td>
-                        <td>{row.k}</td>
-                        <td>{row.bb}</td>
-                      </tr>
+          {#if lbRows.length === 0}
+            <p class="empty" style="padding:16px">스탯 기록이 아직 없습니다.</p>
+          {:else}
+            <!-- ── 부문별 TOP5 ── -->
+            <div class="cards">
+              {#each lbCards as { cat, rows }}
+                <section class="lb-card">
+                  <button class="lb-card-head" type="button" on:click={() => sortByCat(cat)}>
+                    {cat.label}
+                  </button>
+                  {#if rows.length === 0}
+                    <p class="lb-card-empty">자격자 없음</p>
+                  {:else}
+                    <ol class="lb-card-list">
+                      {#each rows as r, i}
+                        <li class:is-me={r.id === $gameStore.protagonist.id}>
+                          <span class="rk u-num">{i + 1}</span>
+                          <button class="nm" type="button" on:click={() => (txModalEntityId = r.id)}>{r.name}</button>
+                          <span class="tm">{r.team}</span>
+                          <span class="vl u-num">{cat.format(cat.value(r.stats))}</span>
+                        </li>
+                      {/each}
+                    </ol>
+                  {/if}
+                </section>
+              {/each}
+            </div>
+
+            <!-- ── 전체표 (머리를 눌러 정렬) ── -->
+            <div class="lb-table-wrap">
+              <table class="u-table lb-full">
+                <thead>
+                  <tr>
+                    <th class="num">#</th>
+                    <th>선수</th>
+                    <th>팀</th>
+                    {#each lbColumns as c}
+                      <th class="num sortable" class:on={c.key === lbSortKey}>
+                        <button type="button" on:click={() => sortByCat(c)}>
+                          {c.label}{#if c.key === lbSortKey}<i>{c.dir === "asc" ? "▲" : "▼"}</i>{/if}
+                        </button>
+                      </th>
                     {/each}
-                  </tbody>
-                </table>
+                  </tr>
+                </thead>
+                <tbody>
+                  {#each lbSorted as r, i}
+                    <tr class:is-me={r.id === $gameStore.protagonist.id}>
+                      <td class="num">{i + 1}</td>
+                      <td>
+                        <button class="nm" type="button" on:click={() => (txModalEntityId = r.id)}>{r.name}</button>
+                        {#if !r.qualified}<span class="unq" title="규정 미달 — 비율 부문에서 빠진다">규정미달</span>{/if}
+                      </td>
+                      <td class="tm">{r.team}</td>
+                      {#each lbColumns as c}
+                        <td class="num" class:hi={c.key === lbSortKey}>{c.format(c.value(r.stats))}</td>
+                      {/each}
+                    </tr>
+                  {/each}
+                </tbody>
+              </table>
+            </div>
+          {/if}
+        </div>
+      </section>
+    {/if}
+
+    <!-- ── 포스트시즌 ── -->
+    {#if tab === "postseason"}
+      <section class="ps-layout">
+        <nav class="league-nav">
+          {#each psLeagueIds as lid}
+            <button class:active={psLeagueId === lid} on:click={() => (psLeagueId = lid)}>
+              {lbLeagueName(lid)}
+              {#if lid === myLeagueId}<span class="my-badge">내 리그</span>{/if}
+            </button>
+          {:else}
+            <span class="ps-none">포스트시즌이 있는 리그가 없습니다</span>
+          {/each}
+        </nav>
+
+        <div class="panel ps-panel">
+          {#if psHistory}
+            <!-- 과거 시즌 — 저장된 건 결과뿐이다 -->
+            <div class="ps-past">
+              <div class="ps-champ">
+                <span class="u-label">우승</span>
+                <strong>{psTeam(psHistory.champion_id)}</strong>
               </div>
-            {/if}
+              {#if psHistory.runner_up_id}
+                <div class="ps-runner">
+                  <span class="u-label">준우승</span>
+                  <strong>{psTeam(psHistory.runner_up_id)}</strong>
+                </div>
+              {/if}
+              {#if psHistory.playoff_teams.length > 0}
+                <p class="ps-teams">
+                  <span class="u-label">진출</span>
+                  {psHistory.playoff_teams.map((id) => psTeam(id)).join(" · ")}
+                </p>
+              {/if}
+              <p class="ps-note">지난 시즌은 대진 과정이 아니라 결과만 남는다.</p>
+            </div>
+
+          {:else if psRounds.length === 0}
+            <p class="empty" style="padding:16px">
+              {selectedYear > 0 ? "이 시즌 포스트시즌 기록이 없습니다." : "아직 포스트시즌이 시작되지 않았습니다."}
+            </p>
 
           {:else}
-            {@const bRows = selectedYear > 0 ? histBatterRows : batterRows}
-            {#if bRows.length === 0}
-              <p class="empty" style="padding:16px">스탯 데이터가 아직 없습니다. (최소 20타수 필요)</p>
-            {:else}
-              <div class="lb-table-wrap">
-                <table class="stbl full">
-                  <thead>
-                    <tr>
-                      <th>#</th><th>선수</th><th>팀</th>
-                      <th>AVG</th><th>OPS</th><th>HR</th>
-                      <th>RBI</th><th>타수</th><th>안타</th><th>BB</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {#each bRows as row, i}
-                      <tr class:my-row={row.id === $gameStore.protagonist.id}>
-                        <td>{i + 1}</td>
-                        <td class="t-name">{row.name}</td>
-                        <td>{row.team}</td>
-                        <td class="avg">{row.avg.toFixed(2).replace(/^0\./, ".")}</td>
-                        <td>{row.ops.toFixed(2).replace(/^0\./, ".")}</td>
-                        <td class="w">{row.hr}</td>
-                        <td>{row.rbi}</td>
-                        <td>{row.ab}</td>
-                        <td>{row.h}</td>
-                        <td>{row.bb}</td>
-                      </tr>
+            <div class="bracket">
+              {#each psRounds as r}
+                <div class="br-round">
+                  <p class="br-round-name">{r.label}</p>
+                  <div class="br-series-list">
+                    {#each r.series as sx}
+                      {@const st = seriesState(sx)}
+                      {@const need = winsNeeded(sx.bestOf)}
+                      <article class="br-series" data-state={st}>
+                        <div class="br-side"
+                             class:win={sx.winner === sx.homeTeamId && !!sx.winner}
+                             class:me={sx.homeTeamId === myTeamId}>
+                          <span class="br-team">{psTeam(sx.homeTeamId)}</span>
+                          <span class="br-wins u-num">{sx.homeWins}</span>
+                        </div>
+                        <div class="br-side"
+                             class:win={sx.winner === sx.awayTeamId && !!sx.winner}
+                             class:me={sx.awayTeamId === myTeamId}>
+                          <span class="br-team">{psTeam(sx.awayTeamId)}</span>
+                          <span class="br-wins u-num">{sx.awayWins}</span>
+                        </div>
+                        <p class="br-meta">
+                          {bestOfLabel(sx.bestOf)}
+                          {#if st === "live"}<span class="br-live">{need}승까지 {need - Math.max(sx.homeWins, sx.awayWins)}</span>
+                          {:else if st === "waiting"}<span class="br-wait">대기</span>{/if}
+                        </p>
+                      </article>
                     {/each}
-                  </tbody>
-                </table>
-              </div>
-            {/if}
+                  </div>
+                </div>
+              {/each}
+            </div>
           {/if}
         </div>
       </section>
@@ -724,382 +859,338 @@
   .page {
     display: grid;
     grid-template-rows: auto minmax(0, 1fr);
-    gap: 12px;
+    gap: 10px;
     height: 100%;
     min-height: 0;
     overflow: hidden;
   }
 
-  h2, h3, h4, p { margin: 0; }
-  h2 { font-size: 22px; }
-  h3 { font-size: 14px; color: #d8e8ff; }
-  h4 { font-size: 12px; color: #9eb6de; }
+  h3, p { margin: 0; }
 
-  .card {
-    background: #161f33;
-    border: 1px solid #2d3956;
-    border-radius: 10px;
+  .top-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+  .tabs { display: flex; gap: 5px; flex-wrap: wrap; }
+  .tabs button {
+    background: none;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    color: var(--ink-mute);
+    font-size: 13.5px; font-weight: 700;
+    padding: 8px 14px;
+    cursor: pointer; white-space: nowrap;
+  }
+  .tabs button:hover { color: var(--ink); }
+  .tabs button.active { color: var(--t-dark); border-bottom-color: var(--t-dark); }
+
+  .yr-select {
+    background: var(--panel);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    color: var(--ink);
+    font-size: 12.5px; font-weight: 700;
+    padding: 5px 11px; cursor: pointer; outline: none;
+  }
+  .yr-select:hover { border-color: var(--t-dark); }
+
+  .board { display: grid; min-height: 0; overflow: hidden; }
+  .card, .panel {
+    background: var(--panel);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 3px -1px rgba(15, 29, 61, 0.16);
     padding: 12px;
     min-height: 0;
     overflow: hidden;
+  }
+
+  /* -- 리그 고르기 (왼쪽 세로 줄) -- */
+  .standings-layout, .lb-layout, .ps-layout {
     display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
-    gap: 10px;
-  }
-
-  .top-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
-  .tabs { display: flex; gap: 6px; flex-wrap: wrap; }
-
-  .tabs button {
-    border: 1px solid #355182;
-    background: #1f2f4f;
-    color: #dbe8ff;
-    border-radius: 8px;
-    padding: 5px 12px;
-    font-size: 12px;
-    cursor: pointer;
-  }
-  .tabs button.active { background: #3262b0; border-color: #6da1f7; }
-
-  .yr-select {
-    border: 1px solid #2d4a7a;
-    background: #19263d;
-    color: #a0b8e0;
-    border-radius: 6px;
-    padding: 3px 9px;
-    font-size: 11px;
-    cursor: pointer;
-  }
-
-  .panel {
-    border: 1px solid #2f486f;
-    border-radius: 10px;
-    background: #13223d;
-    padding: 10px;
-    min-height: 0;
-    overflow: hidden;
-  }
-
-  .empty { color: #9db2d8; font-size: 12px; padding: 4px; }
-
-  /* 리그 순위 레이아웃 */
-  .standings-layout {
-    display: grid;
-    grid-template-columns: 100px minmax(0, 1fr);
+    grid-template-columns: 148px minmax(0, 1fr);
     gap: 10px;
     min-height: 0;
     overflow: hidden;
   }
 
   .league-nav {
-    display: grid;
-    align-content: start;
-    gap: 6px;
-    overflow-y: auto;
+    display: flex; flex-direction: column; gap: 2px;
+    min-height: 0; overflow-y: auto;
   }
-
   .league-nav button {
-    border: 1px solid #2d4870;
-    background: #172540;
-    color: #b0c8ee;
-    border-radius: 8px;
-    padding: 8px 6px;
-    font-size: 12px;
-    cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between; gap: 6px;
+    background: none;
+    border: 0;
+    border-left: 3px solid transparent;
+    color: var(--ink-mid);
+    font-size: 12.5px;
     text-align: left;
-    display: grid;
-    gap: 2px;
+    padding: 8px 10px;
+    cursor: pointer;
   }
-  .league-nav button.active { background: #2a4a80; border-color: #5c8fd8; color: #e8f0ff; }
-  .league-nav button.locked {
-    opacity: 0.38;
-    cursor: not-allowed;
-    border-color: #1e2e46;
-    color: #506882;
+  .league-nav button:hover { background: var(--panel); color: var(--ink); }
+  .league-nav button.active {
+    background: var(--panel);
+    border-left-color: var(--t-accent);
+    color: var(--t-dark);
+    font-weight: 800;
   }
-  .lock-icon { font-size: 10px; line-height: 1; }
-  .lock-hint {
-    font-size: 9px;
-    color: #4a6278;
-    letter-spacing: 0.3px;
-  }
-
+  .league-nav button.locked { opacity: 0.4; cursor: default; }
   .my-badge {
-    font-size: 10px;
-    color: #f0e060;
-    background: rgba(240,224,96,0.15);
-    border-radius: 4px;
-    padding: 1px 4px;
-    display: block;
+    font-size: 9px; font-weight: 800; letter-spacing: 0.06em;
+    background: var(--t-dark); color: var(--t-gold);
+    border-radius: 2px; padding: 1px 5px; white-space: nowrap;
   }
+  .lock-icon { font-size: 10px; color: var(--ink-mute); }
+  .lock-hint { font-size: 10.5px; color: var(--ink-mute); padding: 6px 10px; line-height: 1.5; }
 
-  .standings-panel {
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
-    gap: 8px;
-    overflow: hidden;
-  }
-
-  .standings-body {
-    overflow-y: auto;
-    min-height: 0;
-  }
-
+  /* -- 순위표 -- */
+  .standings-panel { display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 8px; }
+  .standings-body { min-height: 0; overflow-y: auto; display: grid; gap: 12px; align-content: start; }
   .tbl-wrap { overflow-x: auto; }
+  .group-row { display: flex; align-items: baseline; gap: 7px; margin-bottom: 4px; }
+  .grp-n { font-size: 10px; font-weight: 800; letter-spacing: 0.12em; color: var(--ink-mute); }
 
-  /* 스탯 순위 레이아웃 */
-  .lb-layout {
-    display: grid;
-    grid-template-columns: 100px minmax(0, 1fr);
-    gap: 10px;
-    min-height: 0;
-    overflow: hidden;
-  }
-
-  .lb-content {
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
-    gap: 8px;
-    overflow: hidden;
-  }
-
-  .stbl .group-row td {
-    background: #0e1d35;
-    color: #7a9ac8;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 4px 6px;
-    text-align: left;
-    letter-spacing: 0.5px;
-  }
-  /* 권역·조 머리행의 팀 수 — 권역마다 6~20팀으로 차이가 커서 같이 보여준다 */
-  .stbl .group-row .grp-n { color: #5b7aa8; font-weight: 400; margin-left: 6px; }
-
-  .lb-top-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-
-  .lb-tabs { display: flex; gap: 6px; }
-  .lb-tabs button {
-    border: 1px solid #2d4870;
-    background: #172540;
-    color: #b0c8ee;
-    border-radius: 8px;
-    padding: 5px 14px;
-    font-size: 12px;
-    cursor: pointer;
-  }
-  .lb-tabs button.active { background: #2a4a80; border-color: #5c8fd8; color: #e8f0ff; }
-
-
-  .lb-table-wrap {
-    min-height: 0;
-    overflow-y: auto;
-  }
-
-  /* 공통 테이블 */
   .stbl {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 11px;
+    width: 100%; border-collapse: collapse;
+    font-size: 12.5px; color: var(--ink-mid);
+    font-variant-numeric: tabular-nums;
   }
-  .stbl.full { min-width: 560px; }
-
-  .stbl thead th {
-    color: #7a9ac8;
-    padding: 5px 6px;
-    text-align: center;
-    border-bottom: 1px solid #2a3f62;
-    white-space: nowrap;
-    position: sticky;
-    top: 0;
-    background: #13223d;
-  }
-
-  .stbl tbody td {
-    padding: 5px 6px;
-    text-align: center;
-    color: #b8ccec;
-    border-bottom: 1px solid #1a2a44;
+  .stbl th {
+    padding: 6px 8px; text-align: center;
+    font-size: 10px; font-weight: 800; letter-spacing: 0.06em;
+    color: var(--ink-mute);
+    border-bottom: 2px solid var(--t-dark);
     white-space: nowrap;
   }
-
-  .stbl .t-name { text-align: left; max-width: 120px; overflow: hidden; text-overflow: ellipsis; }
-  .stbl .w { color: #79e0a2; font-weight: 700; }
-  .stbl .l { color: #ffb68a; }
-  .stbl .era { color: #79d8f0; font-weight: 700; }
-  .stbl .avg { color: #f0c860; font-weight: 700; }
-
-  .stbl tr.my-row td { color: #f0e060; font-weight: 700; background: rgba(240,224,96,0.06); }
-
-  .streak-w { color: #79e0a2; font-weight: 700; }
-  .streak-l { color: #ffb68a; font-weight: 700; }
-
-  /* 거래 내역 */
-  .tx-layout {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    min-height: 0;
-    overflow: hidden;
+  .stbl td {
+    padding: 7px 8px; text-align: center;
+    border-bottom: 1px solid var(--line);
+    white-space: nowrap;
   }
+  .stbl tbody tr:last-child td { border-bottom: 0; }
+  .stbl tbody tr:hover { background: var(--panel-sunk); }
+  .stbl .t-name { text-align: left; color: var(--ink); font-weight: 700; }
 
-  .tx-filters {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+  /* 내 팀·내 행은 팀 색으로 반전한다 — `.u-table tr.is-me`와 같은 규칙 */
+  .stbl tr.my-row td, .u-table tr.is-me td {
+    background: var(--t-dark); color: var(--t-gold);
   }
+  .stbl tr.my-row .t-name, .u-table tr.is-me .nm { color: var(--t-gold); }
 
-  .tx-filter-group {
-    display: flex;
+  .streak-w { color: var(--ok); font-weight: 700; }
+  .streak-l { color: var(--bad); font-weight: 700; }
+  .stbl tr.my-row .streak-w, .stbl tr.my-row .streak-l { color: var(--t-gold); }
+
+  /* -- 과거 시즌 포스트시즌 한 줄 (순위표 아래) -- */
+  .ps-history-card {
+    background: var(--panel-sunk);
+    border-left: 3px solid var(--warn);
+    border-radius: var(--radius);
+    padding: 9px 12px;
+    display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
+    font-size: 12.5px;
+  }
+  .ps-hist-label { font-size: 9.5px; font-weight: 800; letter-spacing: 0.12em; color: var(--ink-mute); }
+  .ps-hist-team  { font-weight: 800; color: var(--ink); }
+  .ps-hist-sep   { color: var(--line-strong); }
+  .ps-hist-playoff { font-size: 11.5px; color: var(--ink-mute); width: 100%; }
+
+  /* == 스탯 순위 == */
+  .lb-content { display: grid; grid-template-rows: auto auto minmax(0, 1fr); gap: 10px; }
+  .lb-top-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+  .qual-note { font-size: 10.5px; color: var(--ink-mute); }
+
+  /* 부문별 TOP5 — "누가 1위인가"가 표를 뒤지지 않고 보여야 한다 */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 8px;
+  }
+  .lb-card {
+    background: var(--panel-sunk);
+    border-radius: var(--radius);
+    padding: 8px 10px;
+    display: grid; gap: 5px; align-content: start;
+  }
+  .lb-card-head {
+    background: none; border: 0; padding: 0 0 5px;
+    border-bottom: 2px solid var(--t-dark);
+    color: var(--ink); font-size: 11px; font-weight: 800;
+    letter-spacing: 0.06em; text-align: left; cursor: pointer;
+  }
+  .lb-card-head:hover { color: var(--t-accent); }
+  .lb-card-empty { font-size: 11px; color: var(--ink-mute); }
+  .lb-card-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+  .lb-card-list li {
+    display: grid;
+    grid-template-columns: 14px minmax(0, 1fr) auto;
+    align-items: baseline;
     gap: 5px;
-    flex-wrap: wrap;
+    font-size: 11.5px;
   }
+  .lb-card-list .rk { color: var(--ink-mute); font-size: 10px; font-weight: 800; }
+  .lb-card-list .tm { display: none; }
+  .lb-card-list .vl { color: var(--ink); font-weight: 800; }
+  .lb-card-list li.is-me .vl, .lb-card-list li.is-me .nm { color: var(--t-accent); font-weight: 800; }
 
+  /* 이름은 눌러서 선수 상세로 간다 — 파고들기 경로 */
+  .nm {
+    background: none; border: 0; padding: 0;
+    color: var(--ink); font: inherit; font-weight: 600;
+    cursor: pointer; text-align: left;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .nm:hover { color: var(--t-accent); text-decoration: underline; }
+
+  .lb-table-wrap { min-height: 0; overflow: auto; }
+  .lb-full { font-size: 12px; }
+  .lb-full td { text-align: center; }
+  .lb-full td:nth-child(2), .lb-full th:nth-child(2) { text-align: left; }
+  .lb-full .tm { color: var(--ink-mute); font-size: 11px; }
+  .lb-full th.sortable { padding: 0; }
+  .lb-full th.sortable button {
+    width: 100%;
+    background: none; border: 0;
+    color: inherit; font: inherit; letter-spacing: inherit;
+    padding: 6px 8px; cursor: pointer; white-space: nowrap;
+  }
+  .lb-full th.sortable button:hover { color: var(--t-accent); }
+  .lb-full th.sortable.on button { color: var(--t-dark); }
+  .lb-full th.sortable i { font-style: normal; font-size: 8px; margin-left: 3px; }
+  /* 지금 정렬 기준인 칸만 진하게 — 어느 순위를 보고 있는지 안 헷갈리게 */
+  .lb-full td.hi { color: var(--ink); font-weight: 800; }
+  .lb-full tr.is-me td.hi { color: var(--t-gold); }
+
+  .unq {
+    font-size: 9px; font-weight: 700;
+    color: var(--ink-mute); background: var(--panel-sunk);
+    border-radius: 2px; padding: 1px 5px; margin-left: 5px;
+  }
+  .u-table tr.is-me .unq { background: rgba(255,255,255,0.18); color: var(--ink-on-dark); }
+
+  /* == 포스트시즌 == */
+  .ps-panel { min-height: 0; overflow: auto; }
+  .ps-none { font-size: 11.5px; color: var(--ink-mute); padding: 8px 10px; line-height: 1.5; }
+
+  .bracket { display: flex; gap: 14px; align-items: stretch; min-width: min-content; }
+  .br-round { display: flex; flex-direction: column; gap: 8px; min-width: 150px; }
+  .br-round-name {
+    font-size: 10px; font-weight: 800; letter-spacing: 0.12em;
+    color: var(--ink-mute); text-transform: uppercase;
+    padding-bottom: 5px; border-bottom: 2px solid var(--t-dark);
+  }
+  /* 라운드가 오른쪽으로 갈수록 세로 가운데로 모인다 — 대진표 관습 */
+  .br-series-list { display: flex; flex-direction: column; justify-content: space-around; gap: 8px; flex: 1; }
+
+  .br-series {
+    background: var(--panel-sunk);
+    border-left: 3px solid var(--line-strong);
+    border-radius: var(--radius);
+    padding: 7px 9px;
+    display: grid; gap: 1px;
+  }
+  .br-series[data-state="live"]    { border-left-color: var(--t-accent); background: var(--panel); box-shadow: 0 1px 3px -1px rgba(15,29,61,0.2); }
+  .br-series[data-state="done"]    { border-left-color: var(--ok); }
+  .br-series[data-state="waiting"] { opacity: 0.55; }
+
+  .br-side {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
+    font-size: 12px; color: var(--ink-mid);
+    padding: 2px 0;
+  }
+  .br-team { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .br-wins { font-weight: 800; color: var(--ink); }
+  /* 이긴 쪽만 진하게. 둘 다 진하면 누가 올라갔는지 안 보인다 */
+  .br-side.win .br-team, .br-side.win .br-wins { color: var(--ok); font-weight: 800; }
+  .br-side.me  .br-team { color: var(--t-dark); font-weight: 800; }
+  .br-side.me.win .br-team { color: var(--ok); }
+
+  .br-meta {
+    font-size: 9.5px; color: var(--ink-mute);
+    margin-top: 3px; padding-top: 4px;
+    border-top: 1px solid var(--line);
+    display: flex; justify-content: space-between; gap: 6px;
+  }
+  .br-live { color: var(--t-accent); font-weight: 800; }
+  .br-wait { color: var(--ink-mute); }
+
+  .ps-past { display: grid; gap: 10px; align-content: start; }
+  .ps-champ, .ps-runner { display: flex; align-items: baseline; gap: 9px; }
+  .ps-champ strong  { font-size: 20px; font-weight: 800; color: var(--ink); }
+  .ps-runner strong { font-size: 14px; font-weight: 700; color: var(--ink-mid); }
+  .ps-teams { font-size: 12.5px; color: var(--ink-mid); display: flex; gap: 9px; align-items: baseline; flex-wrap: wrap; }
+  .ps-note  { font-size: 11px; color: var(--ink-mute); }
+
+  /* == 리그 기록 == */
+  .tx-layout { display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 10px; min-height: 0; overflow: hidden; }
+  .tx-filters { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+  .tx-filter-group { display: flex; gap: 4px; flex-wrap: wrap; }
   .tx-filter-btn {
-    border: 1px solid #2a4070;
-    background: #132038;
-    color: #8ab0e0;
-    border-radius: 6px;
-    padding: 3px 10px;
-    font-size: 11px;
-    cursor: pointer;
+    background: none;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--ink-mid);
+    font-size: 11.5px;
+    padding: 4px 11px;
+    cursor: pointer; white-space: nowrap;
   }
+  .tx-filter-btn:hover { border-color: var(--line-strong); color: var(--ink); }
   .tx-filter-btn.tx-active {
-    background: #1e4080;
-    border-color: #5080c0;
-    color: #ddeeff;
+    background: var(--t-dark); border-color: var(--t-dark);
+    color: var(--ink-on-dark); font-weight: 700;
   }
 
-  .tx-feed {
-    flex: 1;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    min-height: 0;
-  }
-
-  .tx-empty {
-    color: #6a90c0;
-    font-size: 12px;
-    padding: 16px 0;
-    text-align: center;
-  }
-
-  .tx-year-group { display: flex; flex-direction: column; gap: 3px; margin-bottom: 8px; }
-
+  .tx-feed { min-height: 0; overflow-y: auto; display: grid; gap: 14px; align-content: start; }
+  .tx-year-group { display: grid; gap: 4px; }
   .tx-year-heading {
-    font-size: 11px;
-    color: #5a80b0;
-    margin: 0 0 4px 0;
-    padding-bottom: 4px;
-    border-bottom: 1px solid #1e3058;
-    font-weight: 600;
-    letter-spacing: 0.5px;
+    font-size: 11px; font-weight: 800; letter-spacing: 0.1em;
+    color: var(--ink-mute);
+    padding-bottom: 5px; border-bottom: 2px solid var(--t-dark);
+    font-variant-numeric: tabular-nums;
   }
 
   .tx-entry {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    background: #0d1c32;
-    border-radius: 7px;
-    padding: 7px 10px;
-    border-left: 3px solid #2a4070;
-    font-size: 12px;
+    display: flex; align-items: flex-start; gap: 9px;
+    padding: 8px 4px;
+    border-bottom: 1px solid var(--line);
+    font-size: 12.5px;
   }
-  .tx-cat-trade      { border-left-color: #4a80e8; }
-  .tx-cat-fa         { border-left-color: #50c878; }
-  .tx-cat-draft      { border-left-color: #f0c040; }
-  .tx-cat-military   { border-left-color: #a060e0; }
-  .tx-cat-retirement { border-left-color: #e06040; }
+  .tx-entry:last-child { border-bottom: 0; }
 
+  /* 종류 배지 — 팀 색과 안 섞는다. 트레이드/FA/드래프트는 뜻이 고정이다 */
   .tx-icon {
-    font-size: 9px;
-    font-weight: 700;
-    color: #7090b8;
     flex-shrink: 0;
-    width: 26px;
-    text-align: center;
-    letter-spacing: 0.3px;
-    padding-top: 2px;
+    min-width: 30px; text-align: center;
+    font-size: 9px; font-weight: 800; letter-spacing: 0.04em;
+    border-radius: 2px; padding: 3px 5px;
+    color: var(--ink-on-dark);
+    background: var(--ink-mute);
   }
+  .tag-trade          { background: #2A5D8F; }
+  .tag-fa             { background: #1F7A47; }
+  .tag-draft          { background: #7A3F9A; }
+  .tag-military,
+  .tag-mil-general    { background: #5A6478; }
+  .tag-mil-sports     { background: #9A6510; }
+  .tag-mil-discharge  { background: #1F7A47; }
+  .tag-retirement     { background: #B3311F; }
 
-  .tx-body {
-    flex: 1;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 5px;
-    min-width: 0;
-  }
-
-  .tx-tag {
-    font-size: 10px;
-    padding: 1px 6px;
-    border-radius: 4px;
-    font-weight: 600;
-    flex-shrink: 0;
-  }
-  .tag-trade      { background: #1a3878; color: #80b0ff; }
-  .tag-fa         { background: #0e3820; color: #60d890; }
-  .tag-draft      { background: #3a3010; color: #f0c840; }
-  .tag-military        { background: #2a1060; color: #c080ff; }
-  .tag-mil-sports      { background: #1a2860; color: #80b0ff; }
-  .tag-mil-general     { background: #282828; color: #909090; }
-  .tag-mil-discharge   { background: #0d2a18; color: #50c878; }
-  .tag-retirement { background: #3a1008; color: #ff9070; }
-
-  .tx-detail { color: #c8dcf6; }
-  .tx-detail strong { color: #eef6ff; }
+  .tx-body { flex: 1; min-width: 0; display: grid; gap: 2px; }
+  .tx-body strong { color: var(--ink); font-weight: 700; }
   .player-link { cursor: pointer; }
-  .player-link:hover { text-decoration: underline; color: #a8d4ff; }
-  .tx-arrow { color: #7090b8; font-size: 11px; }
-  .tx-reason {
-    font-size: 11px;
-    color: #6a90b8;
-    background: #0a1628;
-    border-radius: 4px;
-    padding: 1px 6px;
+  .player-link:hover { color: var(--t-accent); text-decoration: underline; }
+  .tx-arrow  { color: var(--ink-mute); margin: 0 4px; }
+  .tx-detail { font-size: 11.5px; color: var(--ink-mid); }
+  .tx-reason { font-size: 11px; color: var(--ink-mute); }
+  .tx-week   { font-size: 10.5px; color: var(--ink-mute); flex-shrink: 0; font-variant-numeric: tabular-nums; }
+  .tx-tag {
+    font-size: 9.5px; color: var(--ink-mid);
+    background: var(--panel-sunk); border-radius: 2px; padding: 1px 6px;
   }
-  .tx-week {
-    font-size: 10px;
-    color: #4a6a98;
-    flex-shrink: 0;
-    margin-left: auto;
-    align-self: center;
-  }
+  .tx-empty { color: var(--ink-mute); font-size: 12.5px; padding: 16px 4px; }
 
-  .ps-history-card {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 4px 8px;
-    margin-top: 10px;
-    padding: 8px 12px;
-    background: #0d1e38;
-    border: 1px solid #2a4060;
-    border-radius: 6px;
-    font-size: 13px;
-  }
-  .ps-hist-label { color: #8aabcc; font-size: 11px; }
-  .ps-hist-team  { color: #d4e8ff; font-weight: 600; }
-  .ps-hist-sep   { color: #3a5a80; }
-  .ps-hist-playoff {
-    width: 100%;
-    margin-top: 4px;
-    font-size: 11px;
-    color: #6a90b8;
-  }
+  .empty { color: var(--ink-mute); font-size: 12.5px; }
 
-  @media (max-width: 1180px) {
-    .standings-layout { grid-template-columns: 80px 1fr; }
-    .lb-layout { grid-template-columns: 80px 1fr; }
+  @media (max-width: 1100px) {
+    .standings-layout, .lb-layout, .ps-layout { grid-template-columns: 1fr; }
+    .league-nav { flex-direction: row; overflow-x: auto; }
   }
 </style>
