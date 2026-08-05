@@ -291,11 +291,48 @@
 
   // 어느 리그를 보일지는 `utils/leagueVisibility`가 정한다 — 화면 안에 두면
   // 전제가 낡아도 아무도 검사하지 못한다 (실제로 2군 리그가 그렇게 사라졌다)
-  $: allLeagueIds = visibleLeagueIds({
-    leagueState: $seasonStore.leagueState,
-    myLeagueId,
-    locked: lockedLeagueSet,
-  });
+  /**
+   * ⚠ **내 리그가 맨 위다.** 제일 자주 보는 곳인데 고정 순서라 중간에 묻혀 있었다.
+   * 나머지는 원래 순서를 지킨다 — 리그 나열 순서에도 뜻이 있다(고교→대학→프로).
+   */
+  $: allLeagueIds = (() => {
+    const ids = visibleLeagueIds({
+      leagueState: $seasonStore.leagueState,
+      myLeagueId,
+      locked: lockedLeagueSet,
+    });
+    const mine = ids.filter((id) => id === myLeagueId);
+    return [...mine, ...ids.filter((id) => id !== myLeagueId)];
+  })();
+
+  /**
+   * 권역 2단 — 리그를 고르면 그 리그의 권역 목록이 옆에 열린다.
+   *
+   * 고교(8권역)·대학(조)처럼 나뉜 리그는 순위표를 통째로 늘어놓으면 어느
+   * 권역인지 스크롤하며 세어야 한다. `splitByGroup`이 이미 나눠 주므로
+   * 그 결과를 **목록으로 세우고 하나만 펼친다.**
+   */
+  let selectedGroupLabel: string | null = null;
+  /** 리그를 바꾸면 권역 선택을 초기화한다 — 없는 권역이 남으면 표가 빈다 */
+  $: selectedLeagueId, (selectedGroupLabel = null);
+  /** 내 권역이 맨 앞 — 리그 목록과 같은 규칙이어야 한다 */
+  $: groupLabels = (() => {
+    const all = standingsGroupsView.map((g) => g.label).filter((l): l is string => !!l);
+    if (!myGroupLabel) return all;
+    return [myGroupLabel, ...all.filter((l) => l !== myGroupLabel)];
+  })();
+  $: activeGroup = groupLabels.length === 0
+    ? null
+    : (selectedGroupLabel && groupLabels.includes(selectedGroupLabel)
+        ? selectedGroupLabel
+        : myGroupLabel ?? groupLabels[0]);
+  /** 내 팀이 속한 권역 — 리그를 열면 여기가 먼저 보여야 한다 */
+  $: myGroupLabel = standingsGroupsView
+    .find((g) => g.rows.some((r) => (r as { teamId?: string }).teamId === $gameStore.protagonist.teamId))
+    ?.label ?? null;
+  $: shownGroups = activeGroup
+    ? standingsGroupsView.filter((g) => g.label === activeGroup)
+    : standingsGroupsView;
 
   function getLeagueStandings(lid: string) {
     if (lid === myLeagueId) {
@@ -473,6 +510,23 @@
 
         <div class="panel standings-panel">
           <h3>{leagueName(selectedLeagueId || myLeagueId)} 순위표{selectedYear > 0 ? ` (${selectedYear}시즌)` : ""}</h3>
+          <!--
+            2단의 두 번째 단 — 리그를 골랐으면 그 안의 권역을 고른다.
+            권역이 없는 리그(프로·독립)에서는 `groupLabels`가 비어 안 나온다.
+          -->
+          {#if groupLabels.length > 1 && selectedYear === 0}
+            <nav class="group-nav" aria-label="권역">
+              {#each groupLabels as label}
+                <button
+                  class:on={activeGroup === label}
+                  on:click={() => (selectedGroupLabel = label)}
+                >
+                  {label}
+                  {#if label === myGroupLabel}<span class="gn-mine">내 권역</span>{/if}
+                </button>
+              {/each}
+            </nav>
+          {/if}
           <div class="standings-body">
             {#if selectedYear > 0}
               {#if histStandings.length === 0}
@@ -536,8 +590,8 @@
                     </tr>
                   </thead>
                   <tbody>
-                    {#each standingsGroupsView as grp}
-                      {#if grp.label}
+                    {#each shownGroups as grp}
+                      {#if grp.label && groupLabels.length <= 1}
                         <tr class="group-row"><td colspan="10">{grp.label} <span class="grp-n">{grp.rows.length}팀</span></td></tr>
                       {/if}
                       {#each grp.rows as s, i}
@@ -911,6 +965,36 @@
     overflow: hidden;
   }
 
+  /* ── 권역 줄 (2단의 두 번째) ── */
+  .group-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 8px 0 2px;
+  }
+  .group-nav button {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: none;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    color: var(--ink-mid);
+    font-size: 12px;
+    padding: 4px 11px;
+    cursor: pointer;
+  }
+  .group-nav button:hover { border-color: var(--line-strong); color: var(--ink); }
+  .group-nav button.on {
+    background: var(--t-dark);
+    border-color: var(--t-dark);
+    color: var(--ink-on-dark);
+    font-weight: 700;
+  }
+  .gn-mine {
+    font-size: 9.5px;
+    font-weight: 700;
+    opacity: 0.72;
+  }
+
   .league-nav {
     display: flex; flex-direction: column; gap: 2px;
     min-height: 0; overflow-y: auto;
@@ -1193,6 +1277,36 @@
 
   @media (max-width: 1100px) {
     .standings-layout, .lb-layout, .ps-layout { grid-template-columns: 1fr; }
-    .league-nav { flex-direction: row; overflow-x: auto; }
+    /* ── 권역 줄 (2단의 두 번째) ── */
+  .group-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 8px 0 2px;
+  }
+  .group-nav button {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: none;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    color: var(--ink-mid);
+    font-size: 12px;
+    padding: 4px 11px;
+    cursor: pointer;
+  }
+  .group-nav button:hover { border-color: var(--line-strong); color: var(--ink); }
+  .group-nav button.on {
+    background: var(--t-dark);
+    border-color: var(--t-dark);
+    color: var(--ink-on-dark);
+    font-weight: 700;
+  }
+  .gn-mine {
+    font-size: 9.5px;
+    font-weight: 700;
+    opacity: 0.72;
+  }
+
+  .league-nav { flex-direction: row; overflow-x: auto; }
   }
 </style>

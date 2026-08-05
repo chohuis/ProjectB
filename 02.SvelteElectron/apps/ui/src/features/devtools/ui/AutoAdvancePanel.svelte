@@ -259,8 +259,6 @@
     overflow-y: auto;
   }
 
-  .log-list::-webkit-scrollbar { width: 4px; }
-  .log-list::-webkit-scrollbar-thumb { background: #1e3a5a; border-radius: 2px; }
 
   .log-line {
     font-size: 10px;

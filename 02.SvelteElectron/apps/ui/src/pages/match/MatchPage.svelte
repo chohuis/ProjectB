@@ -2679,23 +2679,9 @@
     scrollbar-color: rgba(196, 218, 255, 0.22) transparent;
   }
 
-  .play-text-panel ul::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-  }
 
-  .play-text-panel ul::-webkit-scrollbar-track {
-    background: transparent;
-  }
 
-  .play-text-panel ul::-webkit-scrollbar-thumb {
-    background: rgba(196, 218, 255, 0.22);
-    border-radius: 999px;
-  }
 
-  .play-text-panel ul::-webkit-scrollbar-thumb:hover {
-    background: rgba(196, 218, 255, 0.38);
-  }
 
   .play-text-panel li {
     margin-bottom: 8px;

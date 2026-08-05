@@ -1350,9 +1350,6 @@
     overflow-y: auto;
     display: flex; flex-direction: column; gap: 14px;
   }
-  .left-panel::-webkit-scrollbar { width: 4px; }
-  .left-panel::-webkit-scrollbar-track { background: transparent; }
-  .left-panel::-webkit-scrollbar-thumb { background: var(--panel-sunk); border-radius: 2px; }
 
   /* OVR */
   .ovr-block { display: flex; flex-direction: column; align-items: center; padding: 10px 0 6px; }
@@ -1494,9 +1491,6 @@
     padding: 18px 20px 28px;
     display: flex; flex-direction: column; gap: 20px;
   }
-  .tab-content::-webkit-scrollbar { width: 4px; }
-  .tab-content::-webkit-scrollbar-track { background: transparent; }
-  .tab-content::-webkit-scrollbar-thumb { background: var(--panel-sunk); border-radius: 2px; }
 
   /* ── 공통 섹션 ── */
   .msec { display: flex; flex-direction: column; gap: 10px; }

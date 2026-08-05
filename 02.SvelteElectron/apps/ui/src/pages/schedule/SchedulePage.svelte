@@ -1,6 +1,9 @@
 <script lang="ts">
   import { seasonStore } from "../../shared/stores/season";
   import { gameStore } from "../../shared/stores/game";
+  import { hsRegionOfTeam, hsRegionTeams } from "../../shared/utils/ids";
+  import { HS_REGIONS } from "../../shared/utils/leagueTeams.generated";
+  import { hsRegionMeta } from "../../shared/utils/hsRegionLabel";
   import { masterStore } from "../../shared/stores/master";
 
   type CalendarView = "year" | "month" | "week" | "season";
@@ -309,7 +312,23 @@
     }
     return m;
   })();
-  $: sortedStandings = [...$seasonStore.standings].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
+  /**
+   * 옆단 순위표. **내 권역만 보여준다.**
+   *
+   * 예전엔 리그 전체(고교 102팀)를 그렸다. 옆단이 좁아 스크롤이 한없이 길고,
+   * 고교는 **실제로 겨루는 상대가 권역 안 팀들**이라 전국 표는 여기서 쓸모가 적다.
+   * 권역이 없는 리그(대학·프로)에서는 `regionTeams`가 비어 리그 전체가 나온다.
+   */
+  $: myRegionTeams = hsRegionTeams(
+    $gameStore.protagonist.teamId,
+    HS_REGIONS as Record<string, readonly string[]>,
+  );
+  $: myRegionName = hsRegionOfTeam($gameStore.protagonist.teamId)
+    ? hsRegionMeta(hsRegionOfTeam($gameStore.protagonist.teamId)!).label
+    : "";
+  $: sortedStandings = [...$seasonStore.standings]
+    .filter((s) => myRegionTeams.length === 0 || myRegionTeams.includes(s.teamId))
+    .sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
 
   // 주간 뷰 표시 상한 (이 수 초과 시 "+N 더" 표시)
   const WEEK_ITEM_LIMIT = 4;
@@ -427,7 +446,10 @@
               </div>
 
               <div class="standings-panel">
-                <h4>팀 순위</h4>
+                <h4>
+                  팀 순위
+                  {#if myRegionName}<span class="scope-chip">{myRegionName} 권역</span>{/if}
+                </h4>
                 {#if sortedStandings.length === 0}
                   <p class="no-standings">순위 데이터 없음</p>
                 {:else}
@@ -816,6 +838,17 @@
   }
   .status.win  { color: var(--ok);  font-weight: 800; }
   .status.lose { color: var(--bad); font-weight: 800; }
+
+  .scope-chip {
+    margin-left: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--ink-mute);
+    background: var(--panel-sunk);
+    border-radius: 10px;
+    padding: 1px 7px;
+    vertical-align: middle;
+  }
 
   /* -- 순위표 (옆단) -- */
   .standings-panel {

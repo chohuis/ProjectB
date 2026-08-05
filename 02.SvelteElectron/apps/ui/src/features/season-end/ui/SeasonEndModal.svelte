@@ -868,9 +868,6 @@
     min-height: 0;
   }
 
-  .modal-body::-webkit-scrollbar { width: 6px; }
-  .modal-body::-webkit-scrollbar-track { background: transparent; }
-  .modal-body::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
 
   /* ── 섹션 공통 ───────────────────────────────────────────────── */
   .section { display: grid; gap: 10px; }
