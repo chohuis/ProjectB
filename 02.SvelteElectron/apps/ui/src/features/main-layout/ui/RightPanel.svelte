@@ -3,6 +3,9 @@
   import { seasonStore } from "../../../shared/stores/season";
   import { teamMap } from "../../../shared/stores/master";
   import { nextProtagonistGame, teamRank, gaugeTone } from "../../../shared/utils/myStatus";
+  import { hsRegionOfTeam, hsRegionTeams } from "../../../shared/utils/ids";
+  import { HS_REGIONS } from "../../../shared/utils/leagueTeams.generated";
+  import { hsRegionMeta } from "../../../shared/utils/hsRegionLabel";
   import TeamMark from "../../team/ui/TeamMark.svelte";
 
   /**
@@ -28,7 +31,17 @@
   $: standings = $seasonStore.leagueState[p.leagueId]?.standings?.length
     ? $seasonStore.leagueState[p.leagueId].standings
     : $seasonStore.standings;
+  /**
+   * 전국(리그 전체) 순위와 권역 순위를 따로 낸다.
+   *
+   * 고교는 8권역 주말리그라 **실제로 겨루는 상대가 권역 안 팀들**이다.
+   * "102팀 중 7위"만 보여주면 그 구조가 안 보인다. 권역이 없는 리그
+   * (대학·프로)에서는 `regionTeams`가 비어 전국 한 줄만 나온다.
+   */
   $: rank = teamRank(standings, p.teamId);
+  $: regionTeams = hsRegionTeams(p.teamId, HS_REGIONS as Record<string, readonly string[]>);
+  $: regionRank = regionTeams.length > 0 ? teamRank(standings, p.teamId, regionTeams) : null;
+  $: regionName = hsRegionOfTeam(p.teamId) ? hsRegionMeta(hsRegionOfTeam(p.teamId)!).label : "";
 
   /** "4/18" — 연도는 헤더에 이미 있다 */
   function shortDate(iso: string): string {
@@ -106,10 +119,22 @@
   <section class="u-card">
     <span class="u-label">팀 순위</span>
     {#if rank}
-      <div class="rk-top">
-        <b class="rk u-num">{rank.rank}</b><i>위</i>
-        <span class="rk-of u-num">/ {rank.of}팀</span>
-      </div>
+      <!-- 권역이 있으면 그게 먼저다 — 실제로 겨루는 상대가 거기 있다 -->
+      {#if regionRank}
+        <div class="rk-top">
+          <b class="rk u-num">{regionRank.rank}</b><i>위</i>
+          <span class="rk-of u-num">/ {regionRank.of}팀</span>
+          <span class="rk-scope">{regionName}</span>
+        </div>
+        <p class="rk-nat u-num">
+          전국 <b>{rank.rank}</b>위 <span class="rk-of">/ {rank.of}팀</span>
+        </p>
+      {:else}
+        <div class="rk-top">
+          <b class="rk u-num">{rank.rank}</b><i>위</i>
+          <span class="rk-of u-num">/ {rank.of}팀</span>
+        </div>
+      {/if}
       <p class="rk-rec u-num">{rank.wins}승 {rank.losses}패{#if rank.draws > 0} {rank.draws}무{/if} · {rank.winPctText}</p>
       {#if rank.streak}<p class="rk-streak">{rank.streak}</p>{/if}
     {:else}
@@ -205,6 +230,22 @@
   .rk { font-size: 26px; font-weight: 800; line-height: 1; color: var(--t-dark); }
   .rk-top i { font-style: normal; font-size: 12px; font-weight: 700; color: var(--ink-mid); }
   .rk-of { font-size: 11px; color: var(--ink-mute); margin-left: 4px; }
+  /* 어느 범위의 순위인지 — 안 적으면 권역인지 전국인지 모른다 */
+  .rk-scope {
+    margin-left: auto;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--ink-mute);
+    background: var(--panel-sunk);
+    border-radius: 10px;
+    padding: 1px 7px;
+  }
+  .rk-nat {
+    margin: 3px 0 0;
+    font-size: 11.5px;
+    color: var(--ink-mute);
+  }
+  .rk-nat b { color: var(--ink-mid); font-weight: 700; }
 
   .rk-rec { margin: 5px 0 0; font-size: 12px; color: var(--ink-mid); }
   .rk-streak { margin: 2px 0 0; font-size: 11px; color: var(--ink-mute); letter-spacing: 0.06em; }

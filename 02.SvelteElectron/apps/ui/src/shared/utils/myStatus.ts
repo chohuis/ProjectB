@@ -73,9 +73,21 @@ export interface TeamRank {
  * 순위표에서 내 팀 자리. `standings`는 **정렬돼 있지 않아도 된다** —
  * 여기서 승률 기준으로 세운다(`currentStandings`와 같은 기준).
  */
-export function teamRank(standings: readonly Standing[], teamId: string): TeamRank | null {
+export function teamRank(
+  standings: readonly Standing[],
+  teamId: string,
+  /**
+   * 이 목록 안에서만 순위를 센다. 고교 권역 순위를 낼 때 쓴다 —
+   * 안 주면 전국(리그 전체) 순위다.
+   */
+  within?: readonly string[] | null,
+): TeamRank | null {
   if (!teamId || standings.length === 0) return null;
-  const sorted = [...standings].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
+  const pool = within && within.length > 0
+    ? standings.filter((s) => within.includes(s.teamId))
+    : standings;
+  if (pool.length === 0) return null;
+  const sorted = [...pool].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
   const i = sorted.findIndex((s) => s.teamId === teamId);
   if (i < 0) return null;
   const s = sorted[i];

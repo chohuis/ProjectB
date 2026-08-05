@@ -2,12 +2,13 @@
 import type { EventRule, EventPool, MessageTemplate, DecisionTemplate, DecisionTemplateOption } from "../types/event";
 import type { CareerStage, CoachAttributes, CoachSpecialty } from "../types/save";
 import type { DecisionEffect } from "../types/main";
-import { validateTeamRefs, primeTeamLeagueMap } from "../utils/ids";
+import { validateTeamRefs, primeTeamLeagueMap, primeHsRegionMap } from "../utils/ids";
 import {
   KBL_TEAMS, ABL_TEAMS, JBL_TEAMS,
   KBL_FARM_TEAMS, ABL_FARM_TEAMS, JBL_FARM_TEAMS,
   UNIV_TEAMS, IND_TEAMS, HS_ALL_TEAMS,
 } from "../utils/leagueScheduler";
+import { HS_REGIONS } from "../utils/leagueTeams.generated";
 import { buildMarkIndex } from "../utils/teamMark";
 import { primeForeignRules } from "../utils/foreignSlots";
 import { primeTraitDisplay } from "../utils/playerTraits";
@@ -803,6 +804,8 @@ function createMasterStore() {
       // 팀→리그 표를 채운다 — 선수 소속을 바꿀 때 `leagueOfTeam`이 이걸 쓴다.
       // 안 채우면 ID 접두사 폴백으로 돌지만, refs가 정본이므로 여기서 먼저 준다.
       primeTeamLeagueMap(mergedTeams);
+      // 고교 권역 역방향 표 — "이 팀이 어느 권역인가"를 화면마다 뒤지지 않게
+      primeHsRegionMap(HS_REGIONS as Record<string, readonly string[]>);
 
       // 생성 규칙 표 — **부팅 때 채운다.**
       // 예전엔 `primeForeignRules`가 `advanceWeek`의 성장 단계에서만 불렸다.

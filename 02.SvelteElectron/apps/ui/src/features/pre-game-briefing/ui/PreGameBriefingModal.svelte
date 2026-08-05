@@ -383,9 +383,9 @@
     /* ⚠ 뿌리가 글자색을 정한다. 안 정하면 색 규칙이 없는 자식이 전역
        `--ink`(거의 검정)를 물려받아 어두운 바탕에서 사라진다 — 경기 화면에서
        "경기 화면" 제목이 정확히 그렇게 안 보였다 (U7-a) */
-    color: #e4edff;
-    background: #0e1523;
-    border: 1px solid #2a3550;
+    color: var(--ink);
+    background: var(--panel);
+    border: 1px solid var(--line);
     border-radius: 14px;
     width: 100%;
     max-width: 860px;
@@ -402,8 +402,8 @@
     align-items: center;
     gap: 10px;
     padding: 10px 16px;
-    border-bottom: 1px solid #1e3050;
-    background: #0a0f1a;
+    border-bottom: 1px solid var(--panel-sunk);
+    background: var(--panel);
     flex: 0 0 auto;
   }
 
@@ -416,15 +416,15 @@
     padding: 3px 8px;
   }
 
-  .week-chip     { background: #1a3a6a; color: #80b8f0; border: 1px solid #2d5a9a; }
-  .location-chip { background: #1a2a4a; color: #a0c0e0; border: 1px solid #2d4068; }
+  .week-chip     { background: var(--line); color: var(--ink); border: 1px solid var(--ink-mute); }
+  .location-chip { background: var(--panel-sunk); color: var(--ink); border: 1px solid var(--line); }
 
   .title {
     flex: 1;
     margin: 0;
     font-size: 18px;
     font-weight: 700;
-    color: #e8f2ff;
+    color: var(--ink);
     text-align: center;
   }
 
@@ -434,7 +434,7 @@
   .opp-name {
     font-size: 14px;
     font-weight: 700;
-    color: #f0c060;
+    color: var(--warn);
   }
 
   /* ── 본문 영역 (스크롤 없음) ── */
@@ -462,14 +462,14 @@
     gap: 2px;
   }
 
-  .weather-card { background: #121c30; border: 1px solid #24304a; }
-  .park-card    { background: #121c30; border: 1px solid #24304a; }
+  .weather-card { background: var(--panel-sunk); border: 1px solid var(--panel-sunk); }
+  .park-card    { background: var(--panel-sunk); border: 1px solid var(--panel-sunk); }
 
   .info-card-label {
     margin: 0;
     font-size: 10px;
     font-weight: 700;
-    color: #6888b4;
+    color: var(--ink-mid);
     text-transform: uppercase;
     letter-spacing: 0.8px;
   }
@@ -478,13 +478,13 @@
     margin: 0;
     font-size: 13px;
     font-weight: 700;
-    color: #d0e8ff;
+    color: var(--ink);
   }
 
   .info-card-desc {
     margin: 0;
     font-size: 11px;
-    color: #8aaccc;
+    color: var(--ink);
     line-height: 1.3;
   }
 
@@ -493,7 +493,7 @@
     margin: 0 0 4px;
     font-size: 11px;
     font-weight: 700;
-    color: #7a9acc;
+    color: var(--ink-mid);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     display: flex;
@@ -504,7 +504,7 @@
   .team-summary {
     font-size: 11px;
     font-weight: 400;
-    color: #5a7aa8;
+    color: var(--ink-mute);
     text-transform: none;
     letter-spacing: 0;
   }
@@ -513,8 +513,8 @@
   .starter-section { display: flex; flex-direction: column; }
 
   .starter-card {
-    background: #0f1e38;
-    border: 1px solid #1e3a5e;
+    background: var(--panel-sunk);
+    border: 1px solid var(--line);
     border-radius: 8px;
     padding: 7px 12px;
     display: flex;
@@ -531,22 +531,22 @@
   .starter-name {
     font-size: 14px;
     font-weight: 700;
-    color: #e8f2ff;
+    color: var(--ink);
   }
 
   .starter-meta {
     font-size: 11px;
-    color: #7a9acc;
+    color: var(--ink-mid);
   }
 
   .ovr-badge {
     margin-left: auto;
-    background: #1a3060;
-    border: 1px solid #2d5090;
+    background: var(--panel-sunk);
+    border: 1px solid var(--ink-mute);
     border-radius: 5px;
     font-size: 11px;
     font-weight: 700;
-    color: #80b8f0;
+    color: var(--ink);
     padding: 2px 6px;
   }
 
@@ -560,7 +560,7 @@
   .stat-sep {
     width: 1px;
     height: 16px;
-    background: #1e3050;
+    background: var(--panel-sunk);
   }
 
   .stat-item {
@@ -572,19 +572,19 @@
 
   .stat-label {
     font-size: 10px;
-    color: #5a7aa8;
+    color: var(--ink-mute);
     white-space: nowrap;
   }
 
   .stat-val {
     font-size: 13px;
     font-weight: 700;
-    color: #c0d8f8;
+    color: var(--ink);
   }
 
   .no-stat {
     font-size: 11px;
-    color: #4a6a90;
+    color: var(--ink-mute);
     font-style: italic;
   }
 
@@ -592,7 +592,7 @@
   .lineup-section { display: flex; flex-direction: column; flex: 1 1 0; min-height: 0; }
 
   .lineup-table-wrap {
-    border: 1px solid #1e3050;
+    border: 1px solid var(--panel-sunk);
     border-radius: 8px;
     overflow: hidden;
     flex: 1 1 0;
@@ -605,7 +605,7 @@
   }
 
   .lineup-table thead tr {
-    background: #0a1628;
+    background: var(--panel);
   }
 
   .lineup-table th {
@@ -613,11 +613,11 @@
     text-align: left;
     font-size: 10px;
     font-weight: 700;
-    color: #5a7aa8;
+    color: var(--ink-mute);
     text-transform: uppercase;
     letter-spacing: 0.4px;
     white-space: nowrap;
-    border-bottom: 1px solid #1e3050;
+    border-bottom: 1px solid var(--panel-sunk);
   }
 
   .th-num  { width: 24px; text-align: center; }
@@ -625,25 +625,25 @@
   .th-ovr  { width: 46px; text-align: center; }
 
   /* 타자 행 위협 레벨 */
-  .batter-row { border-bottom: 1px solid #122040; }
+  .batter-row { border-bottom: 1px solid var(--panel-sunk); }
   .batter-row:last-child { border-bottom: none; }
-  .batter-row.threat-0 { background: #0d1a30; }
-  .batter-row.threat-1 { background: #161408; }
-  .batter-row.threat-2 { background: #200a0a; }
+  .batter-row.threat-0 { background: var(--panel-sunk); }
+  .batter-row.threat-1 { background: var(--panel); }
+  .batter-row.threat-2 { background: rgba(179, 49, 31, 0.09); }
 
   .batter-row:hover { filter: brightness(1.12); }
 
   .lineup-table td {
     padding: 5px 8px;
-    color: #c0d0e8;
+    color: var(--ink);
     vertical-align: middle;
   }
 
-  .td-num  { text-align: center; color: #5a7aa8; font-size: 11px; }
-  .td-name { font-weight: 700; color: #e0ecff; }
-  .td-hand { text-align: center; font-size: 11px; color: #7a98b8; }
+  .td-num  { text-align: center; color: var(--ink-mute); font-size: 11px; }
+  .td-name { font-weight: 700; color: var(--ink); }
+  .td-hand { text-align: center; font-size: 11px; color: var(--ink-mid); }
   .td-ovr  { text-align: center; }
-  .td-stat { font-size: 11px; color: #8aaac8; font-feature-settings: "tnum"; }
+  .td-stat { font-size: 11px; color: var(--ink); font-feature-settings: "tnum"; }
 
   .ovr-dot {
     display: inline-block;
@@ -653,32 +653,32 @@
     font-weight: 700;
   }
 
-  .ovr-dot.threat-dot-0 { background: #142240; color: #80a8d8; }
-  .ovr-dot.threat-dot-1 { background: #28200a; color: #d4a040; }
-  .ovr-dot.threat-dot-2 { background: #2a0a0a; color: #f07070; }
+  .ovr-dot.threat-dot-0 { background: var(--panel-sunk); color: var(--ink); }
+  .ovr-dot.threat-dot-1 { background: rgba(154, 101, 16, 0.12); color: var(--warn); }
+  .ovr-dot.threat-dot-2 { background: rgba(179, 49, 31, 0.09); color: var(--bad); }
 
   .td-note { font-size: 11px; }
-  .threat-note-0 { color: #6a8ab0; }
-  .threat-note-1 { color: #c09030; }
-  .threat-note-2 { color: #d06060; font-weight: 600; }
+  .threat-note-0 { color: var(--ink-mid); }
+  .threat-note-1 { color: var(--warn); }
+  .threat-note-2 { color: var(--bad); font-weight: 600; }
 
-  .no-data { color: #3a5070; font-style: italic; font-size: 10px; }
+  .no-data { color: var(--line); font-style: italic; font-size: 10px; }
 
   /* ── 하단 버튼 ── */
   .briefing-footer {
     flex: 0 0 auto;
-    border-top: 1px solid #1e3050;
+    border-top: 1px solid var(--panel-sunk);
     padding: 10px 16px;
     display: flex;
     justify-content: flex-end;
-    background: #0a1628;
+    background: var(--panel);
   }
 
   .confirm-btn {
-    background: #1e4a80;
-    border: 1px solid #3a78c0;
+    background: var(--line);
+    border: 1px solid var(--ink-mute);
     border-radius: 8px;
-    color: #d0e8ff;
+    color: var(--ink);
     font-size: 14px;
     font-weight: 700;
     padding: 8px 24px;
@@ -688,8 +688,8 @@
   }
 
   .confirm-btn:hover {
-    background: #2a5c9a;
-    border-color: #5090d8;
+    background: var(--ink-mute);
+    border-color: var(--ink-mid);
     color: #fff;
   }
 </style>

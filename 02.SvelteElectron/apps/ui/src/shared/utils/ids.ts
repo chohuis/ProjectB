@@ -42,6 +42,42 @@ export function clubKeyOfTeam(teamId: string): string {
   return teamId.replace(/_[12]$/, "");
 }
 
+// ── 고교 권역 역방향 조회 ────────────────────────────────────────
+//
+// `HS_REGIONS`는 권역 → 팀 배열이라 "이 팀이 어느 권역인가"를 못 묻는다.
+// 화면마다 `Object.entries(HS_REGIONS).find(...)`를 적으면 정본이 흩어지므로
+// 여기 한 번만 만들어 캐시한다 (`primeTeamLeagueMap`과 같은 방식).
+
+let _teamRegion: Map<string, string> | null = null;
+
+/** `HS_REGIONS`(권역 → 팀 목록)에서 역방향 표를 만든다 */
+export function primeHsRegionMap(regions: Record<string, readonly string[]>): void {
+  const m = new Map<string, string>();
+  for (const [regionId, teamIds] of Object.entries(regions)) {
+    for (const id of teamIds) m.set(id, regionId);
+  }
+  _teamRegion = m;
+}
+
+/**
+ * 이 팀이 속한 고교 권역. 고교가 아니거나 표가 안 채워졌으면 null.
+ *
+ * ⚠ 권역은 **고교에만 있다.** 대학·프로는 전국 단일 순위이므로 이 함수가
+ * null을 주는 게 정상이고, 화면은 그때 전국만 보여준다.
+ */
+export function hsRegionOfTeam(teamId: string): string | null {
+  return _teamRegion?.get(teamId) ?? null;
+}
+
+/** 같은 권역의 팀들. 권역이 없으면 빈 배열 */
+export function hsRegionTeams(
+  teamId: string,
+  regions: Record<string, readonly string[]>,
+): readonly string[] {
+  const rid = hsRegionOfTeam(teamId);
+  return rid ? regions[rid] ?? [] : [];
+}
+
 // ── 팀 → 리그 파생 ───────────────────────────────────────────────
 //
 // ⚠ **이게 없어서 선수 소속이 어긋났다.** 팀을 바꾸는 자리마다 리그를 각자
