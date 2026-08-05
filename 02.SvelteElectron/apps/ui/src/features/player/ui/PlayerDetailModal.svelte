@@ -653,13 +653,13 @@
               <div class="radar-wrap">
                 <svg viewBox="0 0 160 160" class="radar-svg">
                   {#each [0.33, 0.66, 1] as ratio}
-                    <polygon points={gridPts(ratio)} fill="none" stroke="#1a2e4a" stroke-width="0.8"/>
+                    <polygon points={gridPts(ratio)} fill="none" stroke="var(--line)" stroke-width="0.8"/>
                   {/each}
                   {#each radarAxes as ax, i}
-                    <line x1={R_CX} y1={R_CY} x2={ax.x} y2={ax.y} stroke="#1a2e4a" stroke-width="0.8"/>
+                    <line x1={R_CX} y1={R_CY} x2={ax.x} y2={ax.y} stroke="var(--line)" stroke-width="0.8"/>
                     <text x={radarLPos[i].x} y={radarLPos[i].y}
                           text-anchor="middle" dominant-baseline="middle"
-                          font-size="7.5" fill="#4a6a8a">{radarLabels[i]}</text>
+                          font-size="7.5" fill="var(--ink-mute)">{radarLabels[i]}</text>
                   {/each}
                   {#if radarSnap.some((v) => v != null)}
                     <polygon
@@ -673,7 +673,7 @@
                   <polygon
                     points={radarPts(radarVals)}
                     fill="rgba(74,138,244,0.18)"
-                    stroke="#4a8af4"
+                    stroke="var(--t-accent)"
                     stroke-width="1.6"
                   />
                 </svg>
@@ -1285,52 +1285,53 @@
   /* ── 오버레이 ── */
   .modal-overlay {
     position: fixed; inset: 0;
-    background: rgba(0,0,0,0.84);
+    background: rgba(10, 18, 38, 0.52);
     display: flex; align-items: center; justify-content: center;
     z-index: 220;
   }
   .modal-box {
     position: relative;
-    background: #0c1625;
-    border: 1px solid #1c2e4a;
+    background: var(--panel);
+    border: 1px solid var(--panel-sunk);
     border-radius: 16px;
     width: 960px; max-width: 96vw;
     height: 90vh; max-height: 90vh;
     overflow: hidden;
     display: flex; flex-direction: column;
-    box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+    box-shadow: 0 24px 60px -28px rgba(8, 16, 36, 0.55);
   }
   .modal-close {
     position: absolute; top: 14px; right: 16px; z-index: 10;
-    background: none; border: none; color: #3a5a80; font-size: 16px; cursor: pointer;
+    background: none; border: none; color: var(--ink-mute); font-size: 16px; cursor: pointer;
     transition: color 0.15s;
   }
-  .modal-close:hover { color: #c0d8f8; }
+  .modal-close:hover { color: var(--ink); }
 
   /* ── 헤더 ── */
   .modal-header {
     display: flex; justify-content: space-between; align-items: flex-start;
-    padding: 22px 28px 18px;
-    border-bottom: 1px solid #172440;
+    /* 오른쪽 여백은 닫기 버튼 자리다. 안 비우면 배지와 겹친다 */
+    padding: 22px 56px 18px 28px;
+    border-bottom: 1px solid var(--line);
     flex-shrink: 0;
-    background: #0e1a2e;
+    background: var(--panel);
   }
   .title-block { min-width: 0; }
   .name-row    { display: flex; align-items: baseline; gap: 10px; margin-bottom: 2px; }
-  .jersey      { font-size: 14px; font-weight: 700; color: #4a8af4; letter-spacing: 0.5px; }
-  .modal-name  { margin: 0; font-size: 22px; font-weight: 700; color: #e6f0ff; }
-  .modal-birthday { margin: 2px 0 0; color: #3a5878; font-size: 11px; }
-  .modal-meta     { margin: 4px 0 0; color: #7090b8; font-size: 13px; }
+  .jersey      { font-size: 14px; font-weight: 700; color: var(--ink-mid); letter-spacing: 0.5px; }
+  .modal-name  { margin: 0; font-size: 22px; font-weight: 700; color: var(--ink); }
+  .modal-birthday { margin: 2px 0 0; color: var(--ink-mute); font-size: 11px; }
+  .modal-meta     { margin: 4px 0 0; color: var(--ink-mid); font-size: 13px; }
   .badge-row { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; flex-shrink: 0; }
   .badge { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; }
-  .badge-good   { background: #0b1f14; color: #4ed080; border: 1px solid #1a4a28; }
-  .badge-mid    { background: #0c1c34; color: #90b8e8; border: 1px solid #1a3058; }
-  .badge-low    { background: #271010; color: #f07070; border: 1px solid #482020; }
-  .badge-injury { background: #271c06; color: #e8b030; border: 1px solid #483010; }
+  .badge-good   { background: rgba(31, 122, 71, 0.10); color: var(--ok); border: 1px solid rgba(31, 122, 71, 0.28); }
+  .badge-mid    { background: var(--panel); color: var(--ink); border: 1px solid var(--panel-sunk); }
+  .badge-low    { background: rgba(179, 49, 31, 0.09); color: var(--bad); border: 1px solid rgba(179, 49, 31, 0.09); }
+  .badge-injury { background: rgba(154, 101, 16, 0.12); color: var(--warn); border: 1px solid rgba(154, 101, 16, 0.30); }
   /* 국적·병역 이력 — 상태 배지와 달리 **안 변하는 사실**이라 채도를 낮춘다 */
-  .badge-foreign     { background: #1a1230; color: #b49ae8; border: 1px solid #2e2250; }
-  .badge-mil-sports  { background: #0f2118; color: #6cc490; border: 1px solid #1c3d2a; }
-  .badge-mil-general { background: #1a1a22; color: #9aa4b8; border: 1px solid #2a2c38; }
+  .badge-foreign     { background: rgba(90, 58, 168, 0.10); color: #5B3AA8; border: 1px solid rgba(90, 58, 168, 0.26); }
+  .badge-mil-sports  { background: rgba(31, 122, 71, 0.10); color: var(--ok); border: 1px solid rgba(31, 122, 71, 0.28); }
+  .badge-mil-general { background: var(--panel); color: var(--ink); border: 1px solid var(--panel-sunk); }
 
   /* ── 2컬럼 바디 ── */
   .modal-body {
@@ -1343,24 +1344,24 @@
 
   /* ── 좌측 패널 ── */
   .left-panel {
-    background: #090f1c;
-    border-right: 1px solid #172440;
+    background: var(--panel);
+    border-right: 1px solid var(--panel-sunk);
     padding: 16px 14px 20px;
     overflow-y: auto;
     display: flex; flex-direction: column; gap: 14px;
   }
   .left-panel::-webkit-scrollbar { width: 4px; }
   .left-panel::-webkit-scrollbar-track { background: transparent; }
-  .left-panel::-webkit-scrollbar-thumb { background: #1c3050; border-radius: 2px; }
+  .left-panel::-webkit-scrollbar-thumb { background: var(--panel-sunk); border-radius: 2px; }
 
   /* OVR */
   .ovr-block { display: flex; flex-direction: column; align-items: center; padding: 10px 0 6px; }
-  .ovr-label { font-size: 11px; color: #4a6a8a; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 2px; }
+  .ovr-label { font-size: 11px; color: var(--ink-mute); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 2px; }
   .ovr-val   { font-size: 54px; font-weight: 800; line-height: 1; }
-  .ovr-s { color: #f0c830; text-shadow: 0 0 20px rgba(240,200,48,0.4); }
-  .ovr-a { color: #4ed080; text-shadow: 0 0 20px rgba(78,208,128,0.35); }
-  .ovr-b { color: #4a8af4; text-shadow: 0 0 20px rgba(74,138,244,0.35); }
-  .ovr-c { color: #7090b8; }
+  .ovr-s { color: var(--warn); text-shadow: 0 0 20px rgba(240,200,48,0.4); }
+  .ovr-a { color: var(--ok); text-shadow: 0 0 20px rgba(78,208,128,0.35); }
+  .ovr-b { color: var(--ink-mid); text-shadow: 0 0 20px rgba(74,138,244,0.35); }
+  .ovr-c { color: var(--ink-mid); }
 
   /* 성장 여지 — OVR 바로 아래. 지금 실력과 남은 여지를 나란히 읽는다 */
   .growth-block {
@@ -1368,17 +1369,17 @@
     padding: 0 0 10px;
   }
   .growth-label {
-    font-size: 10px; letter-spacing: 1px; color: #4a6a8a; text-transform: uppercase;
+    font-size: 10px; letter-spacing: 1px; color: var(--ink-mute); text-transform: uppercase;
   }
   /* 흐린 관측이라는 표시 — 라벨 쪽에 붙여서 등급 글자를 안 흐린다 */
   .growth-fuzzy {
     margin-left: 4px; padding: 1px 4px; border-radius: 3px;
-    background: #16203a; color: #6a86ac; letter-spacing: 0;
+    background: var(--panel); color: var(--ink-mid); letter-spacing: 0;
   }
   .growth-val { font-size: 20px; font-weight: 800; line-height: 1; }
-  .growth-val.good { color: #4ed080; }
-  .growth-val.mid  { color: #90b8e8; }
-  .growth-val.low  { color: #7d8ba0; }
+  .growth-val.good { color: var(--ok); }
+  .growth-val.mid  { color: var(--ink); }
+  .growth-val.low  { color: var(--ink-mid); }
   /* 범위(B~D)는 등급 하나보다 글자가 길어 크기를 낮춘다 */
   .growth-val.fuzzy { font-size: 16px; letter-spacing: -0.02em; }
 
@@ -1386,24 +1387,24 @@
   .trait-tags { display: flex; flex-wrap: wrap; gap: 5px; }
   .trait-tag {
     font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px;
-    background: #131c30; color: #9ab4d8; border: 1px solid #1d2a44;
+    background: var(--panel); color: var(--ink); border: 1px solid var(--panel-sunk);
   }
-  .trait-tag.trait-hi { color: #b8cdec; border-color: #27395c; }
-  .trait-tag.trait-lo { color: #8496b0; }
+  .trait-tag.trait-hi { color: var(--ink); border-color: var(--line); }
+  .trait-tag.trait-lo { color: var(--ink-mid); }
 
   /* 득점권 — 시즌 누적 표 아래 한 줄 */
   .risp-row {
     display: flex; align-items: baseline; gap: 8px;
-    margin-top: 9px; padding-top: 9px; border-top: 1px solid #162038;
+    margin-top: 9px; padding-top: 9px; border-top: 1px solid var(--panel);
   }
-  .risp-lbl { font-size: 11px; color: #7090b8; }
+  .risp-lbl { font-size: 11px; color: var(--ink-mid); }
   .risp-val { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
-  .risp-val.good { color: #4ed080; }
-  .risp-val.bad  { color: #f07070; }
-  .risp-val.flat { color: #b8cdec; }
+  .risp-val.good { color: var(--ok); }
+  .risp-val.bad  { color: var(--bad); }
+  .risp-val.flat { color: var(--ink); }
   .risp-delta { font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; }
-  .risp-delta.good { color: #4ed080; }
-  .risp-delta.bad  { color: #f07070; }
+  .risp-delta.good { color: var(--ok); }
+  .risp-delta.bad  { color: var(--bad); }
 
   /* 레이더 */
   .radar-wrap { display: flex; justify-content: center; padding: 4px 0; }
@@ -1414,52 +1415,52 @@
   .lsec-title {
     margin: 0;
     font-size: 11px; font-weight: 700; letter-spacing: 1px;
-    color: #4a6a8a; text-transform: uppercase;
-    padding-bottom: 5px; border-bottom: 1px solid #162038;
+    color: var(--ink-mute); text-transform: uppercase;
+    padding-bottom: 5px; border-bottom: 1px solid var(--panel);
   }
 
   /* 구종 */
   .pitch-list { display: flex; flex-direction: column; gap: 5px; }
   .pitch-row  { display: flex; align-items: center; justify-content: space-between; padding: 0 2px; }
-  .pitch-name { font-size: 13px; color: #b8d4f8; font-weight: 500; }
+  .pitch-name { font-size: 13px; color: var(--ink); font-weight: 500; }
   .pitch-stars { font-size: 11px; letter-spacing: 1.5px; }
-  .grade-5 { color: #f0c830; }
-  .grade-4 { color: #4ed080; }
-  .grade-3 { color: #4a8af4; }
-  .grade-2 { color: #4a6888; }
-  .grade-1 { color: #2a3e56; }
+  .grade-5 { color: var(--warn); }
+  .grade-4 { color: var(--ok); }
+  .grade-3 { color: var(--ink-mid); }
+  .grade-2 { color: var(--ink-mute); }
+  .grade-1 { color: var(--line); }
 
   /* 포지션 숙련도 */
   .pos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
   .pos-item {
     display: flex; justify-content: space-between; align-items: center;
-    background: #0e1e34; border-radius: 6px; padding: 5px 8px;
+    background: var(--panel); border-radius: 6px; padding: 5px 8px;
   }
-  .pos-name { font-size: 12px; color: #6a88a8; }
+  .pos-name { font-size: 12px; color: var(--ink-mid); }
   .pos-val  { font-size: 14px; font-weight: 700; }
 
   /* 계약 요약 */
   .contract-pill {
-    background: #0e1e34; border: 1px solid #182c48; border-radius: 8px;
+    background: var(--panel); border: 1px solid var(--panel-sunk); border-radius: 8px;
     padding: 9px 12px; display: flex; flex-direction: column; gap: 3px;
   }
-  .cp-team  { font-size: 14px; font-weight: 600; color: #c0deff; }
-  .cp-range { font-size: 12px; color: #5a78a0; margin-top: 2px; }
-  .cp-yrsin { font-size: 12px; color: #6a88b8; }
+  .cp-team  { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .cp-range { font-size: 12px; color: var(--ink-mute); margin-top: 2px; }
+  .cp-yrsin { font-size: 12px; color: var(--ink-mid); }
 
   /* FA */
   .fa-pill { font-size: 11px; font-weight: 600; padding: 7px 10px; border-radius: 8px; text-align: center; }
-  .fa-ok   { background: #0b1f14; color: #4ed080; border: 1px solid #1a4a28; }
-  .fa-wait { background: #0c1c30; color: #4a6888; border: 1px solid #162038; }
+  .fa-ok   { background: rgba(31, 122, 71, 0.10); color: var(--ok); border: 1px solid rgba(31, 122, 71, 0.28); }
+  .fa-wait { background: var(--panel); color: var(--ink-mute); border: 1px solid var(--panel); }
 
   /* 병역 */
   .mil-row   { display: flex; align-items: center; gap: 8px; }
   .mil-badge { font-size: 13px; font-weight: 700; padding: 4px 10px; border-radius: 6px; }
-  .mil-done    { background: #0b1f14; color: #4ed080; }
-  .mil-exempt  { background: #0c1c30; color: #7090b8; }
-  .mil-active  { background: #0a1c38; color: #58a8f8; }
-  .mil-pending { background: #1c1c08; color: #c8a030; }
-  .mil-note    { font-size: 11px; color: #4a6888; }
+  .mil-done    { background: rgba(31, 122, 71, 0.10); color: var(--ok); }
+  .mil-exempt  { background: var(--panel); color: var(--ink-mid); }
+  .mil-active  { background: var(--panel); color: var(--ink); }
+  .mil-pending { background: var(--panel); color: var(--warn); }
+  .mil-note    { font-size: 11px; color: var(--ink-mute); }
 
   /* ── 우측 패널 ── */
   .right-panel {
@@ -1471,20 +1472,20 @@
   .modal-tabs {
     display: flex; gap: 2px;
     padding: 14px 20px 0;
-    border-bottom: 1px solid #172440;
-    background: #0c1625;
+    border-bottom: 1px solid var(--panel-sunk);
+    background: var(--panel);
     flex-shrink: 0;
   }
   .modal-tabs button {
     background: none; border: 1px solid transparent; border-bottom: none;
     border-radius: 8px 8px 0 0;
-    color: #3a5878; font-size: 13px; padding: 7px 20px; cursor: pointer;
+    color: var(--ink-mute); font-size: 13px; padding: 7px 20px; cursor: pointer;
     transition: color 0.15s, background 0.15s;
   }
-  .modal-tabs button:hover { color: #8ab0d8; }
+  .modal-tabs button:hover { color: var(--ink); }
   .modal-tabs button.mtab-active {
-    background: #0c1625; border-color: #1c2e4a;
-    color: #c8e0ff; font-weight: 600;
+    background: var(--panel); border-color: var(--panel-sunk);
+    color: var(--ink); font-weight: 600;
   }
 
   /* 탭 컨텐츠 */
@@ -1495,90 +1496,90 @@
   }
   .tab-content::-webkit-scrollbar { width: 4px; }
   .tab-content::-webkit-scrollbar-track { background: transparent; }
-  .tab-content::-webkit-scrollbar-thumb { background: #1c3050; border-radius: 2px; }
+  .tab-content::-webkit-scrollbar-thumb { background: var(--panel-sunk); border-radius: 2px; }
 
   /* ── 공통 섹션 ── */
   .msec { display: flex; flex-direction: column; gap: 10px; }
   .msec h4 {
     margin: 0; font-size: 11.5px; font-weight: 700; letter-spacing: 0.8px;
-    color: #5a78a0; text-transform: uppercase;
-    padding-bottom: 7px; border-bottom: 1px solid #172440;
+    color: var(--ink-mute); text-transform: uppercase;
+    padding-bottom: 7px; border-bottom: 1px solid var(--panel-sunk);
   }
-  .modal-pending { margin: 0; color: #3a5878; font-size: 12px; }
-  .modal-notes   { margin: 0; color: #5a7898; font-size: 12px; font-style: italic; }
-  .modal-buff    { margin: 0; color: #4ed080; font-size: 12px; }
+  .modal-pending { margin: 0; color: var(--ink-mute); font-size: 12px; }
+  .modal-notes   { margin: 0; color: var(--ink-mute); font-size: 12px; font-style: italic; }
+  .modal-buff    { margin: 0; color: var(--ok); font-size: 12px; }
 
   .tag-row   { display: flex; gap: 5px; flex-wrap: wrap; }
-  .tag-badge { font-size: 11px; padding: 3px 9px; border-radius: 10px; background: #101e3a; color: #6080c0; border: 1px solid #1a2e5a; }
+  .tag-badge { font-size: 11px; padding: 3px 9px; border-radius: 10px; background: var(--panel); color: var(--ink-mid); border: 1px solid var(--panel-sunk); }
 
   /* ── 능력치 카드 그리드 ── */
   .stat-grid    { display: grid; gap: 6px; }
   .g4 { grid-template-columns: repeat(4, minmax(0,1fr)); }
   .g5 { grid-template-columns: repeat(5, minmax(0,1fr)); }
   .sc {
-    background: #0e1e34; border: 1px solid #172440; border-radius: 9px;
+    background: var(--panel); border: 1px solid var(--panel-sunk); border-radius: 9px;
     padding: 10px 6px; display: flex; flex-direction: column; align-items: center; gap: 4px;
     transition: border-color 0.15s;
   }
-  .sc:hover { border-color: #284870; }
-  .sc-lbl { color: #5a78a0; font-size: 11.5px; }
+  .sc:hover { border-color: var(--line); }
+  .sc-lbl { color: var(--ink-mute); font-size: 11.5px; }
   .sc-val { font-size: 22px; font-weight: 700; }
-  .sc-val.good { color: #4ed080; }
-  .sc-val.mid  { color: #b8d0f0; }
-  .sc-val.low  { color: #f07070; }
+  .sc-val.good { color: var(--ok); }
+  .sc-val.mid  { color: var(--ink); }
+  .sc-val.low  { color: var(--bad); }
   .tr-arr { font-size: 11px; font-weight: 700; margin-left: 2px; vertical-align: middle; }
-  .tr-arr.up { color: #f06060; }
-  .tr-arr.dn { color: #4a8af4; }
+  .tr-arr.up { color: var(--bad); }
+  .tr-arr.dn { color: var(--ink-mid); }
 
   /* ── 테이블 ── */
   .gtable { width: 100%; border-collapse: collapse; font-size: 12px; }
   .gtable th {
-    color: #5a78a0; padding: 6px 8px; text-align: left;
-    border-bottom: 1px solid #172440; font-weight: 600; font-size: 11px; letter-spacing: 0.5px;
+    color: var(--ink-mute); padding: 6px 8px; text-align: left;
+    border-bottom: 1px solid var(--panel-sunk); font-weight: 600; font-size: 11px; letter-spacing: 0.5px;
   }
   .gtable td {
-    color: #9ac0e8; padding: 8px 8px; border-bottom: 1px solid #0f1c30; font-size: 13px;
+    color: var(--ink); padding: 8px 8px; border-bottom: 1px solid var(--panel); font-size: 13px;
   }
   .gtable tr:last-child td { border-bottom: none; }
-  .gtable tbody tr:hover td { background: #0e1e34; }
+  .gtable tbody tr:hover td { background: var(--panel); }
 
-  .outcome-w { color: #4ed080; font-weight: 700; }
-  .outcome-l { color: #f07070; font-weight: 700; }
-  .outcome-d { color: #3a5878; }
-  .hl-cell   { color: #e8c030; font-size: 11px; }
+  .outcome-w { color: var(--ok); font-weight: 700; }
+  .outcome-l { color: var(--bad); font-weight: 700; }
+  .outcome-d { color: var(--ink-mute); }
+  .hl-cell   { color: var(--warn); font-size: 11px; }
 
   .hist-table th, .hist-table td { text-align: center; }
   .hist-table td:nth-child(3) { text-align: left; }
-  .era-cell  { color: #4ed080; font-weight: 600; }
-  .avg-cell  { color: #4a8af4; font-weight: 600; }
-  .rk-cell   { color: #3a5878; font-size: 11px; }
-  .lg-cell   { font-size: 11px; color: #284060; }
-  .stat-sum  { color: #4a6888; text-align: left; font-style: italic; }
+  .era-cell  { color: var(--ok); font-weight: 600; }
+  .avg-cell  { color: var(--ink-mid); font-weight: 600; }
+  .rk-cell   { color: var(--ink-mute); font-size: 11px; }
+  .lg-cell   { font-size: 11px; color: var(--line); }
+  .stat-sum  { color: var(--ink-mute); text-align: left; font-style: italic; }
 
   /* ── 리그 현황 ── */
   .rank-bar {
     display: flex; align-items: center; gap: 16px;
-    background: #0e1e34; border: 1px solid #182c48; border-radius: 10px;
+    background: var(--panel); border: 1px solid var(--panel-sunk); border-radius: 10px;
     padding: 12px 18px;
   }
-  .rank-num { font-size: 28px; font-weight: 800; color: #4a8af4; line-height: 1; }
-  .rank-rec { font-size: 13px; color: #90b0d8; }
-  .rank-pct { font-size: 12px; color: #4a6888; margin-left: auto; }
+  .rank-num { font-size: 28px; font-weight: 800; color: var(--ink-mid); line-height: 1; }
+  .rank-rec { font-size: 13px; color: var(--ink); }
+  .rank-pct { font-size: 12px; color: var(--ink-mute); margin-left: auto; }
 
   /* ── 계약 ── */
   .ci-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
   .ci {
-    background: #0e1e34; border: 1px solid #182c48; border-radius: 8px;
+    background: var(--panel); border: 1px solid var(--panel-sunk); border-radius: 8px;
     padding: 9px 12px; display: flex; flex-direction: column; gap: 3px;
   }
-  .ci span   { font-size: 11px; color: #5a78a0; }
-  .ci strong { font-size: 14px; color: #a0c8f0; font-weight: 600; }
+  .ci span   { font-size: 11px; color: var(--ink-mute); }
+  .ci strong { font-size: 14px; color: var(--ink); font-weight: 600; }
   .ci-full   { grid-column: 1 / -1; }
 
   /* ── 수상 ── */
   .ach-list  { display: flex; flex-wrap: wrap; gap: 6px; }
   .ach-badge {
     font-size: 12px; padding: 4px 11px; border-radius: 8px;
-    background: #1c1808; color: #e8c030; border: 1px solid #3a2e08;
+    background: rgba(154, 101, 16, 0.12); color: var(--warn); border: 1px solid rgba(154, 101, 16, 0.12);
   }
 </style>
