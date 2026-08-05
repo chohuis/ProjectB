@@ -1,34 +1,35 @@
 <script lang="ts">
   import type { MainTabId } from "../../../shared/types/main";
   import { language, languageOptions, t, type Language } from "../../../shared/i18n";
+  import { NAV_GROUP_BREAK_AFTER } from "../../../shared/utils/navVisibility";
 
   export let currentTab: MainTabId;
+  /** 보이는 탭 — 노출 판정의 정본은 `utils/navVisibility`다 */
+  export let tabs: MainTabId[] = [];
   export let unreadMessageCount = 0;
   export let pendingAchievementCount = 0;
   export let pendingByTab: Partial<Record<MainTabId, number>> = {};
-  export let showAcademicsTab = false;
   export let militaryCountdownLabel = "";
   export let onSelectTab: (tab: MainTabId) => void;
+
   let settingsOpen = false;
 
-  const tabs: { id: MainTabId; labelKey: string }[] = [
-    { id: "home", labelKey: "nav.home" },
-    { id: "messages", labelKey: "nav.messages" },
-    { id: "status", labelKey: "nav.status" },
-    { id: "team", labelKey: "nav.team" },
-    { id: "people", labelKey: "nav.people" },
-    { id: "schedule", labelKey: "nav.schedule" },
-    { id: "training", labelKey: "nav.training" },
-    { id: "finance", labelKey: "nav.finance" },
-    { id: "league", labelKey: "nav.league" },
-    { id: "achievements", labelKey: "nav.achievements" },
-    { id: "academics", labelKey: "nav.academics" }
-  ];
+  const LABEL_KEY: Record<MainTabId, string> = {
+    news:     "nav.news",
+    me:       "nav.me",
+    team:     "nav.team",
+    league:   "nav.league",
+    people:   "nav.people",
+    schedule: "nav.schedule",
+  };
 
-  // 학업 단계가 아닐 때는 학업 탭을 숨긴다.
-  $: visibleTabs = showAcademicsTab ? tabs : tabs.filter((tab) => tab.id !== "academics");
+  /** 배지 — 안 읽은 소식은 소식에, 미확인 업적은 "나"에 붙는다(업적이 그 안에 있으므로) */
+  function badgeOf(id: MainTabId): { n: number; kind: "info" | "gold" } | null {
+    if (id === "news" && unreadMessageCount > 0) return { n: unreadMessageCount, kind: "info" };
+    if (id === "me"   && pendingAchievementCount > 0) return { n: pendingAchievementCount, kind: "gold" };
+    return null;
+  }
 
-  // 언어 변경 시 즉시 반영하고 팝업을 닫는다.
   function setLanguage(next: Language) {
     if (next === "ko" || next === "en") {
       language.set(next);
@@ -36,42 +37,36 @@
     }
   }
 
-  // 설정 버튼 토글 (이벤트 버블링 차단)
-  function toggleSettings() {
-    settingsOpen = !settingsOpen;
-  }
-
-  // 외부 클릭/ESC 입력 시 설정 팝업 닫기
-  function closeSettings() {
-    settingsOpen = false;
-  }
+  function toggleSettings() { settingsOpen = !settingsOpen; }
+  function closeSettings()  { settingsOpen = false; }
 </script>
 
 <svelte:window on:click={closeSettings} on:keydown={(e) => e.key === "Escape" && closeSettings()} />
 
-<nav class="nav">
-  {#if militaryCountdownLabel}
-    <div class="military-chip">{militaryCountdownLabel}</div>
-  {/if}
-  <div class="tab-list">
-    {#each visibleTabs as tab}
-      <button class:active={tab.id === currentTab} on:click={() => onSelectTab(tab.id)}>
-        <span>{$t(tab.labelKey)}</span>
-        {#if tab.id === "messages" && unreadMessageCount > 0}
-          <strong class="badge">{unreadMessageCount > 99 ? "99+" : unreadMessageCount}</strong>
-        {/if}
-        {#if tab.id === "achievements" && pendingAchievementCount > 0}
-          <strong class="badge badge-gold">{pendingAchievementCount > 99 ? "99+" : pendingAchievementCount}</strong>
-        {/if}
-        {#if (pendingByTab[tab.id] ?? 0) > 0}
-          <strong class="badge badge-red">{(pendingByTab[tab.id] ?? 0) > 99 ? "99+" : (pendingByTab[tab.id] ?? 0)}</strong>
+<nav class="nav u-page">
+  <div class="list">
+    {#if militaryCountdownLabel}
+      <div class="military">{militaryCountdownLabel}</div>
+    {/if}
+
+    {#each tabs as id (id)}
+      {@const badge = badgeOf(id)}
+      {@const pending = pendingByTab[id] ?? 0}
+      <button class="tab" class:on={id === currentTab} type="button" on:click={() => onSelectTab(id)}>
+        <span class="label">{$t(LABEL_KEY[id])}</span>
+        {#if pending > 0}
+          <strong class="badge red">{pending > 99 ? "99+" : pending}</strong>
+        {:else if badge}
+          <strong class="badge" class:gold={badge.kind === "gold"}>{badge.n > 99 ? "99+" : badge.n}</strong>
         {/if}
       </button>
+      <!-- "나"와 "세계"를 가르는 선. 글자를 안 늘리면서 성격이 갈리는 걸 보여준다 -->
+      {#if id === NAV_GROUP_BREAK_AFTER}<div class="split"></div>{/if}
     {/each}
   </div>
 
-  <div class="settings-wrap">
-    <button class="icon-button" type="button" on:click|stopPropagation={toggleSettings} aria-label={$t("header.language")}>
+  <div class="settings">
+    <button class="gear" type="button" on:click|stopPropagation={toggleSettings} aria-label={$t("header.language")}>
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path
           d="M19.43 12.98c.04-.32.07-.65.07-.98s-.03-.66-.08-.98l2.11-1.65a.5.5 0 0 0 .12-.63l-2-3.46a.5.5 0 0 0-.61-.22l-2.49 1a7.07 7.07 0 0 0-1.69-.98l-.38-2.65A.5.5 0 0 0 14 2h-4a.5.5 0 0 0-.49.42l-.38 2.65c-.61.24-1.17.56-1.69.98l-2.49-1a.5.5 0 0 0-.61.22l-2 3.46a.5.5 0 0 0 .12.63L4.57 11c-.05.32-.07.65-.07 1s.03.68.08 1l-2.11 1.65a.5.5 0 0 0-.12.63l2 3.46a.5.5 0 0 0 .61.22l2.49-1c.52.42 1.08.75 1.69.99l.38 2.64a.5.5 0 0 0 .49.42h4a.5.5 0 0 0 .49-.42l.38-2.64c.61-.24 1.17-.57 1.69-.99l2.49 1a.5.5 0 0 0 .61-.22l2-3.46a.5.5 0 0 0-.12-.63L19.43 13zM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5z"
@@ -79,11 +74,11 @@
       </svg>
     </button>
     {#if settingsOpen}
-      <div class="settings-popup" role="presentation" on:mousedown|stopPropagation>
-        <p>{$t("header.language")}</p>
-        <div class="language-options">
+      <div class="popup" role="presentation" on:mousedown|stopPropagation>
+        <span class="u-label">{$t("header.language")}</span>
+        <div class="langs">
           {#each languageOptions as option}
-            <button type="button" class:active={$language === option.id} on:click={() => setLanguage(option.id)}>
+            <button type="button" class:on={$language === option.id} on:click={() => setLanguage(option.id)}>
               {option.label}
             </button>
           {/each}
@@ -97,143 +92,114 @@
   .nav {
     display: grid;
     grid-template-rows: minmax(0, 1fr) auto;
-    gap: 8px;
     height: 100%;
     min-height: 0;
     overflow: hidden;
+    border-radius: var(--radius);
+    padding: 12px 10px;
   }
 
-  .tab-list {
-    display: grid;
-    gap: 6px;
-    align-content: start;
-    min-height: 0;
-    overflow: hidden;
+  .list { display: flex; flex-direction: column; gap: 2px; align-content: start; min-height: 0; }
+
+  .military {
+    background: var(--panel);
+    border-left: 3px solid var(--warn);
+    border-radius: var(--radius);
+    color: var(--ink-mid);
+    padding: 7px 9px;
+    font-size: 11.5px;
+    line-height: 1.4;
+    margin-bottom: 8px;
   }
 
-  .military-chip {
-    background: #3a2f14;
-    border: 1px solid #8d6f2d;
-    color: #ffe8aa;
-    border-radius: 8px;
-    padding: 8px 9px;
-    font-size: 12px;
-    line-height: 1.35;
-  }
-
-  button {
-    background: #1c2438;
-    color: #e8eefc;
-    border: 1px solid #2e3b58;
-    border-radius: 8px;
-    padding: 8px 9px;
-    font-size: 13px;
-    line-height: 1.25;
-    text-align: left;
-    cursor: pointer;
+  .tab {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 8px;
+    background: none;
+    border: 0;
+    border-left: 3px solid transparent;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    color: var(--ink-mid);
+    font-size: 13.5px;
+    text-align: left;
+    padding: 9px 10px;
+    cursor: pointer;
+  }
+  .tab:hover { background: var(--panel); color: var(--ink); }
+
+  /* 선택은 **왼쪽 띠**로 표시한다. 칸 전체를 팀 색으로 채우면 여섯 칸 중
+     하나가 늘 어둡게 떠서 지면의 밝은 인상을 깨뜨린다 */
+  .tab.on {
+    background: var(--panel);
+    border-left-color: var(--t-accent);
+    color: var(--t-dark);
+    font-weight: 800;
   }
 
-  button.active {
-    background: #2d3f68;
-    border-color: #6fa2ff;
+  .label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .split {
+    height: 1px;
+    background: var(--line);
+    margin: 8px 4px 8px 13px;
   }
 
   .badge {
-    min-width: 20px;
-    height: 20px;
+    min-width: 19px; height: 19px;
     border-radius: 999px;
     padding: 0 6px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: #4f86e8;
-    color: #f3f8ff;
-    font-size: 11px;
-    font-weight: 700;
-    line-height: 1;
-    border: 1px solid #7aa8f6;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--t-dark);
+    color: var(--ink-on-dark);
+    font-size: 10.5px; font-weight: 800; line-height: 1;
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
   }
+  .badge.gold { background: var(--warn); }
+  /* 빨강은 **막혀 있다**는 뜻이다 — 처리하기 전엔 주가 안 넘어간다 */
+  .badge.red  { background: var(--bad); }
 
-  .badge-gold {
-    background: #b87800;
-    border-color: #e8a820;
-    color: #fff8e0;
+  .settings { position: relative; display: flex; }
+
+  .gear {
+    width: 32px; height: 32px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: none;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    cursor: pointer; padding: 0;
   }
+  .gear:hover { border-color: var(--t-dark); }
+  .gear svg { width: 16px; height: 16px; fill: var(--ink-mute); }
+  .gear:hover svg { fill: var(--t-dark); }
 
-  .badge-red {
-    background: #b7242e;
-    border-color: #f26a74;
-    color: #fff4f5;
-  }
-
-  .settings-wrap {
-    position: relative;
-    display: flex;
-    justify-content: flex-start;
-  }
-
-  .icon-button {
-    width: 36px;
-    height: 36px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: #1d2840;
-    color: #e8eefc;
-    border: 1px solid #395074;
-    border-radius: 8px;
-    cursor: pointer;
-    padding: 0;
-  }
-
-  .icon-button svg {
-    width: 18px;
-    height: 18px;
-    fill: #d5e3fd;
-  }
-
-  .settings-popup {
+  .popup {
     position: absolute;
     bottom: calc(100% + 6px);
     left: 0;
     width: 150px;
-    border: 1px solid #355182;
-    background: #142540;
-    border-radius: 10px;
-    padding: 8px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 10px 26px -14px rgba(8, 16, 36, 0.5);
+    padding: 9px;
     z-index: 20;
     display: grid;
-    gap: 8px;
+    gap: 7px;
   }
 
-  .settings-popup p {
-    margin: 0;
-    color: #9eb4d8;
-    font-size: 12px;
-  }
-
-  .language-options {
-    display: grid;
-    gap: 6px;
-  }
-
-  .language-options button {
-    border: 1px solid #355182;
-    background: #1f2f4f;
-    color: #dbe8ff;
-    border-radius: 8px;
-    padding: 6px 8px;
+  .langs { display: grid; gap: 4px; }
+  .langs button {
+    border: 1px solid var(--line);
+    background: none;
+    color: var(--ink-mid);
+    border-radius: var(--radius);
+    padding: 6px 9px;
     font-size: 12px;
     cursor: pointer;
     text-align: left;
   }
-
-  .language-options button.active {
-    background: #3262b0;
-    border-color: #6da1f7;
-  }
+  .langs button.on { background: var(--t-dark); border-color: var(--t-dark); color: var(--ink-on-dark); }
 </style>

@@ -7,6 +7,8 @@ const STORAGE_KEY = "ui_language";
 // 언어별 UI 문자열 사전
 const dictionaries: Record<Language, Record<string, string>> = {
   ko: {
+    "nav.news": "\uc18c\uc2dd",
+    "nav.me": "\ub098",
     "nav.home": "\ud648",
     "nav.messages": "\uba54\uc2dc\uc9c0",
     "nav.status": "\uc0c1\ud0dc",
@@ -24,6 +26,8 @@ const dictionaries: Record<Language, Record<string, string>> = {
     "header.progressRunning": "\uc9c4\ud589 \uc911...",
     "header.language": "\uc5b8\uc5b4",
     "header.playerLine": "{team} \u00b7 {player}",
+    "page.news": "\uc18c\uc2dd",
+    "page.me": "\ub098",
     "page.home": "\ud648",
     "page.messages": "\uba54\uc2dc\uc9c0",
     "page.status": "\uc0c1\ud0dc",
@@ -37,7 +41,6 @@ const dictionaries: Record<Language, Record<string, string>> = {
     "page.league": "\ub9ac\uadf8",
     "page.achievements": "\uc5c5\uc801",
     "page.academics": "\ud559\uc5c5",
-    "main.placeholderPreparing": "{tab} \ud654\uba74 \uc900\ube44 \uc911",
     "entity.role.player": "\uc120\uc218",
     "entity.role.coach": "\ucf54\uce58",
     "entity.role.manager": "\uac10\ub3c5",
@@ -75,6 +78,8 @@ const dictionaries: Record<Language, Record<string, string>> = {
     "entity.handedness.S": "\uc591"
   },
   en: {
+    "nav.news": "News",
+    "nav.me": "Me",
     "nav.home": "Home",
     "nav.messages": "Messages",
     "nav.status": "Status",
@@ -92,6 +97,8 @@ const dictionaries: Record<Language, Record<string, string>> = {
     "header.progressRunning": "Advancing...",
     "header.language": "Language",
     "header.playerLine": "{team} \u00b7 {player}",
+    "page.news": "News",
+    "page.me": "Me",
     "page.home": "Home",
     "page.messages": "Messages",
     "page.status": "Status",
@@ -105,7 +112,6 @@ const dictionaries: Record<Language, Record<string, string>> = {
     "page.league": "League",
     "page.achievements": "Achievements",
     "page.academics": "Academics",
-    "main.placeholderPreparing": "{tab} page is under construction",
     "entity.role.player": "Player",
     "entity.role.coach": "Coach",
     "entity.role.manager": "Manager",

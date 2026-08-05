@@ -1,13 +1,13 @@
 <script lang="ts">
   import type { MainTabId } from "../../shared/types/main";
-  import { gameStore, unreadCount, showAcademicsTab } from "../../shared/stores/game";
+  import { gameStore, unreadCount } from "../../shared/stores/game";
   import { seasonStore, nextPendingAction, seasonEnded } from "../../shared/stores/season";
   import { teamMap } from "../../shared/stores/master";
   import { applyGameOutcome } from "../../shared/usecases/applyGameOutcome";
   import type { PendingAction } from "../../shared/types/season";
-  import { t } from "../../shared/i18n";
   import { toDateKo } from "../../shared/utils/scheduleGen";
   import { playerYearLabel } from "../../shared/utils/playerYearLabel";
+  import { visibleNavTabs } from "../../shared/utils/navVisibility";
 
   function tName(id: string): string {
     return $teamMap.get(id)?.name ?? id;
@@ -15,14 +15,10 @@
   import SidebarNav from "../../features/navigation/ui/SidebarNav.svelte";
   import TopHeader from "../../features/main-layout/ui/TopHeader.svelte";
   import NewsPage from "../news/NewsPage.svelte";
+  import MePage from "../me/MePage.svelte";
   import RightPanel from "../../features/main-layout/ui/RightPanel.svelte";
-  import StatusPage from "../status/StatusPage.svelte";
-  import AcademicsPage from "../academics/AcademicsPage.svelte";
   import SchedulePage from "../schedule/SchedulePage.svelte";
-  import TrainingPage from "../training/TrainingPage.svelte";
-  import FinancePage from "../finance/FinancePage.svelte";
   import LeaguePage from "../league/LeaguePage.svelte";
-  import AchievementsPage from "../achievements/AchievementsPage.svelte";
   import TeamPage from "../team/TeamPage.svelte";
   import PeoplePage from "../people/PeoplePage.svelte";
   import EventManagerModal from "../../features/events/ui/EventManagerModal.svelte";
@@ -57,27 +53,13 @@
 
   export let onSeasonEnd: () => void = () => {};
 
-  let currentTab: MainTabId = "home";
+  let currentTab: MainTabId = "news";
   let devToolsHubOpen = false;
   let eventManagerOpen = false;
   let achievementManagerOpen = false;
   let matchLabOpen = false;
   let scenarioOpen = false;
   let activeMatchContext: InteractiveMatchContext | null = null;
-  const tabPageKey: Record<MainTabId, string> = {
-    home: "page.home",
-    messages: "page.messages",
-    status: "page.status",
-    team: "page.team",
-    people: "page.people",
-    schedule: "page.schedule",
-    training: "page.training",
-    finance: "page.finance",
-    test: "page.matchEngine",
-    league: "page.league",
-    achievements: "page.achievements",
-    academics: "page.academics"
-  };
 
 
   let committedMatchScheduleIds = new Set<string>();
@@ -100,25 +82,25 @@
       case "salaryNegotiation":
       case "optionClause":
       case "faMarket":
-        return "messages";
+        return "news";
       case "preGameBriefing":
-        return "messages";
+        return "news";
     }
   }
 
 
 
-  $: if (!$showAcademicsTab && currentTab === "academics") {
-    currentTab = "home";
-  }
+  // 보이는 내비 — 판정의 정본은 `utils/navVisibility`다
+  $: navTabs = visibleNavTabs($gameStore.protagonist);
+  $: if (!navTabs.includes(currentTab)) currentTab = navTabs[0] ?? "news";
 
-  // 메시지 결정 pendingAction 시 메시지 탭 자동 전환 (최대 1회)
+  // 소식 결정 pendingAction 시 소식 탭 자동 전환 (최대 1회)
   let handledMessageId: string | null = null;
   $: {
     const pa = $nextPendingAction;
     if (pa?.type === "message" && pa.messageId !== handledMessageId) {
       handledMessageId = pa.messageId;
-      currentTab = "messages";
+      currentTab = "news";
     }
     if (!pa || pa.type !== "message") handledMessageId = null;
   }
@@ -155,11 +137,11 @@
   let autoSimRunning = false;
 
   // entry 시뮬 트리거 (공식·친선 모두 동일)
-  $: if (pendingGameEntry && currentTab === "messages" && gameSimState === "idle") {
+  $: if (pendingGameEntry && currentTab === "news" && gameSimState === "idle") {
     startEntrySimulation();
   }
 
-  $: if (!pendingGameEntry || currentTab !== "messages") {
+  $: if (!pendingGameEntry || currentTab !== "news") {
     gameSimState    = "idle";
     gameEntryInfo   = null;
     gameNoEntryInfo = null;
@@ -428,15 +410,12 @@
     <div class="body">
       <SidebarNav
         {currentTab}
+        tabs={navTabs}
         unreadMessageCount={$unreadCount}
         pendingAchievementCount={pendingAchievementCount}
         pendingByTab={pendingByTab}
-        showAcademicsTab={$showAcademicsTab}
         militaryCountdownLabel={militaryCountdownLabel}
-        onSelectTab={(tab) => {
-          currentTab = tab;
-          if (tab === "achievements") gameStore.clearAchievementNotifications();
-        }}
+        onSelectTab={(tab) => (currentTab = tab)}
       />
 
       <main>
@@ -444,33 +423,20 @@
           {#if $gameStore.protagonist.careerStage === "military"}
             <MilitaryStatusPanel />
           {/if}
-          <!-- U3: 홈 대시보드와 수신함이 소식 하나로 합쳐졌다. 내비가 아직
-               둘로 갈려 있어(11개) 두 탭이 같은 화면을 연다 — U4에서 6개로
-               줄이면서 `home`이 사라진다. -->
-          {#if currentTab === "home" || currentTab === "messages"}
+          <!-- 여섯 갈래가 전부 구현돼 있다. "준비중" 안내와 그 문구를 조립하던
+               `tabPageKey`는 갈 곳이 없어져 같이 지웠다 -->
+          {#if currentTab === "news"}
             <NewsPage />
-          {:else if currentTab === "status"}
-            <StatusPage />
-          {:else if currentTab === "academics"}
-            <AcademicsPage />
-          {:else if currentTab === "schedule"}
-            <SchedulePage />
-          {:else if currentTab === "training"}
-            <TrainingPage />
-          {:else if currentTab === "finance"}
-            <FinancePage />
-          {:else if currentTab === "league"}
-            <LeaguePage />
-          {:else if currentTab === "achievements"}
-            <AchievementsPage />
+          {:else if currentTab === "me"}
+            <MePage />
           {:else if currentTab === "team"}
             <TeamPage />
+          {:else if currentTab === "league"}
+            <LeaguePage />
           {:else if currentTab === "people"}
             <PeoplePage />
-          {:else}
-            <section class="placeholder">
-              {$t("main.placeholderPreparing", { tab: $t(tabPageKey[currentTab]) })}
-            </section>
+          {:else if currentTab === "schedule"}
+            <SchedulePage />
           {/if}
         </div>
       </main>
@@ -517,51 +483,51 @@
   <SeasonEndModal onExit={onSeasonEnd} />
 {/if}
 
-{#if pendingCareerChoiceHub && currentTab === "messages"}
+{#if pendingCareerChoiceHub && currentTab === "news"}
   <CareerChoiceHubModal />
 {/if}
 
-{#if pendingCareerResults && currentTab === "messages"}
+{#if pendingCareerResults && currentTab === "news"}
   <CareerResultsModal />
 {/if}
 
-{#if pendingCareerChoice && currentTab === "messages"}
+{#if pendingCareerChoice && currentTab === "news"}
   <CareerResultModal />
 {/if}
 
-{#if pendingDraftObserve && currentTab === "messages"}
+{#if pendingDraftObserve && currentTab === "news"}
   <DraftObserveModal on:close={() => seasonStore.resolvePendingAction("draftObserve")} />
 {/if}
 
-{#if pendingDraftNotification && currentTab === "messages"}
+{#if pendingDraftNotification && currentTab === "news"}
   <DraftNotificationModal action={pendingDraftNotification} />
 {/if}
 
-{#if pendingSalaryNegotiation && currentTab === "messages"}
+{#if pendingSalaryNegotiation && currentTab === "news"}
   <ContractNegotiationModal action={pendingSalaryNegotiation} />
 {/if}
 
-{#if pendingOptionClause && currentTab === "messages"}
+{#if pendingOptionClause && currentTab === "news"}
   <OptionClauseModal action={pendingOptionClause} />
 {/if}
 
-{#if pendingTrade && currentTab === "messages"}
+{#if pendingTrade && currentTab === "news"}
   <TradeModal action={pendingTrade} />
 {/if}
 
-{#if pendingFaMarket && currentTab === "messages"}
+{#if pendingFaMarket && currentTab === "news"}
   <FaMarketModal />
 {/if}
 
-{#if pendingSportsUnitApp && currentTab === "messages"}
+{#if pendingSportsUnitApp && currentTab === "news"}
   <SportsUnitApplicationModal />
 {/if}
 
-{#if pendingMilitaryEnlistAsk && currentTab === "messages"}
+{#if pendingMilitaryEnlistAsk && currentTab === "news"}
   <MilitaryEnlistAskModal reason={pendingMilitaryEnlistAsk.reason} />
 {/if}
 
-{#if pendingRetirementAsk && currentTab === "messages"}
+{#if pendingRetirementAsk && currentTab === "news"}
   <RetirementAskModal
     urgency={pendingRetirementAsk.urgency}
     reason={pendingRetirementAsk.reason ?? "decline"}
@@ -569,18 +535,18 @@
   />
 {/if}
 
-{#if pendingInjuryTreatment && currentTab === "messages"}
+{#if pendingInjuryTreatment && currentTab === "news"}
   <InjuryTreatmentModal action={pendingInjuryTreatment} />
 {/if}
 
-{#if pendingPreGameBriefing && currentTab === "messages"}
+{#if pendingPreGameBriefing && currentTab === "news"}
   <PreGameBriefingModal
     scheduleId={pendingPreGameBriefing.scheduleId}
-    onConfirm={() => { currentTab = "messages"; }}
+    onConfirm={() => { currentTab = "news"; }}
   />
 {/if}
 
-{#if pendingConditionWarning && currentTab === "messages"}
+{#if pendingConditionWarning && currentTab === "news"}
   <div class="modal-overlay cond-warn-overlay" role="dialog" aria-modal="true">
     <div class="cond-warn-modal">
       <h3 class="cond-warn-title">⚠ 컨디션 저조</h3>
@@ -621,7 +587,7 @@
   </div>
 {/if}
 
-{#if !activeMatchContext && pendingGameEntry && currentTab === "messages"}
+{#if !activeMatchContext && pendingGameEntry && currentTab === "news"}
   <GameStatusModal
     homeTeamName={tName(pendingGameEntry.homeTeamId)}
     awayTeamName={tName(pendingGameEntry.awayTeamId)}
@@ -679,13 +645,6 @@
 
 
 
-  .placeholder {
-    background: #161f33;
-    border: 1px solid #2d3956;
-    border-radius: 10px;
-    padding: 14px;
-    height: 100%;
-  }
 
   @media (max-width: 1280px) {
     .body {

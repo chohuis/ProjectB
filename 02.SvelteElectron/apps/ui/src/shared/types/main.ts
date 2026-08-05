@@ -1,16 +1,26 @@
+/**
+ * 사이드바 6칸. (U4 — 11개에서 줄였다)
+ *
+ * 없어진 것은 사라진 게 아니라 **아래로 한 단 들어갔다**:
+ *   home·messages  → `news`  (U3에서 소식 하나로 합쳐짐)
+ *   status·training·academics·finance·achievements → `me`의 하위 탭
+ *   test           → 개발 도구(Ctrl+Q)라 내비에 없었고 도달 경로도 없었다
+ */
 export type MainTabId =
-  | "home"
-  | "messages"
-  | "status"
+  | "news"
+  | "me"
   | "team"
-  | "people"
-  | "schedule"
-  | "training"
-  | "finance"
-  | "test"
   | "league"
-  | "achievements"
-  | "academics";
+  | "people"
+  | "schedule";
+
+/** "나" 안의 상위 탭. 각 탭은 자기 하위 탭을 또 갖는다(2단) */
+export type MeTabId =
+  | "status"
+  | "training"
+  | "academics"
+  | "finance"
+  | "achievements";
 
 export interface MainSnapshot {
   dayLabel: string;

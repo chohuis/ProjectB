@@ -108,6 +108,28 @@ button, input, select, textarea { font: inherit; }
 }
 .u-btn:disabled { opacity: 0.45; cursor: default; }
 
+/* 하위 탭(2단의 아래 줄) — 상위는 밑줄, 하위는 알약이다.
+   같은 화면에 탭 줄이 둘 있어도 어느 쪽이 위인지 형태로 읽히게 한다.
+   "나"의 하위 페이지 셋(상태·훈련·재정)이 각자 갖고 있던 막대를 여기로 모았다. */
+.u-subtabs { display: flex; gap: 5px; flex-wrap: wrap; }
+.u-subtabs button {
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--ink-mid);
+  font-size: 12px;
+  padding: 4px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.u-subtabs button:hover { border-color: var(--line-strong); color: var(--ink); }
+.u-subtabs button.on {
+  background: var(--t-dark);
+  border-color: var(--t-dark);
+  color: var(--ink-on-dark);
+  font-weight: 700;
+}
+
 .u-label {
   font-size: 10px;
   letter-spacing: 0.15em;

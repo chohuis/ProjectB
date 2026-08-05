@@ -3196,10 +3196,5 @@ export const unreadCount = derived(
   ($s) => $s.mailbox.filter((m) => m.readAt === null).length,
 );
 
-export const showAcademicsTab = derived(
-  gameStore,
-  ($s) => {
-    const stage = $s.protagonist.careerStage;
-    return stage === "highschool" || stage === "university";
-  },
-);
+// ⚠ `showAcademicsTab`은 U4에서 지웠다. 같은 판정이 `utils/navVisibility`의
+// 노출 표에 있고, 두 곳에 두면 탭이 늘 때 한쪽만 고치게 된다.
