@@ -1,0 +1,272 @@
+[
+  {
+    "id": "STADIUM_SEOUL_GUARDIANS",
+    "name": "가디언스필드",
+    "tier": "프로",
+    "pf": "투수친화",
+    "dist": "122",
+    "teams": 2,
+    "city": "서울",
+    "color": "#AC0F30"
+  },
+  {
+    "id": "STADIUM_SUWON_KNIGHTS",
+    "name": "나이츠아레나",
+    "tier": "프로",
+    "pf": "타자친화",
+    "dist": "100",
+    "teams": 2,
+    "city": "수원",
+    "color": "#494E77"
+  },
+  {
+    "id": "STADIUM_SEOUL_ROYALS",
+    "name": "로열파크",
+    "tier": "프로",
+    "pf": "중립",
+    "dist": "110",
+    "teams": 2,
+    "city": "서울",
+    "color": "#2A386F"
+  },
+  {
+    "id": "STADIUM_INCHEON_SHARKS",
+    "name": "샤크스파크",
+    "tier": "프로",
+    "pf": "중립",
+    "dist": "110",
+    "teams": 2,
+    "city": "인천",
+    "color": "#219FDE"
+  },
+  {
+    "id": "STADIUM_DAEGU_SABERS",
+    "name": "세이버스필드",
+    "tier": "프로",
+    "pf": "투수친화",
+    "dist": "122",
+    "teams": 2,
+    "city": "대구",
+    "color": "#6F797D"
+  },
+  {
+    "id": "STADIUM_CHANGWON_STARS",
+    "name": "스타스파크",
+    "tier": "프로",
+    "pf": "투수친화",
+    "dist": "122",
+    "teams": 2,
+    "city": "창원",
+    "color": "#2C9196"
+  },
+  {
+    "id": "STADIUM_BUSAN_WAVES",
+    "name": "웨이브스타디움",
+    "tier": "프로",
+    "pf": "타자친화",
+    "dist": "100",
+    "teams": 2,
+    "city": "부산",
+    "color": "#194980"
+  },
+  {
+    "id": "STADIUM_SEOUL_COBRAS",
+    "name": "코브라돔",
+    "tier": "프로",
+    "pf": "타자친화",
+    "dist": "100",
+    "teams": 2,
+    "city": "서울",
+    "color": "#30C52B"
+  },
+  {
+    "id": "STADIUM_GWANGJU_PANTHERS",
+    "name": "팬서스파크",
+    "tier": "프로",
+    "pf": "타자친화",
+    "dist": "100",
+    "teams": 2,
+    "city": "광주",
+    "color": "#F49530"
+  },
+  {
+    "id": "STADIUM_DAEJEON_PHANTOMS",
+    "name": "팬텀스타디움",
+    "tier": "프로",
+    "pf": "중립",
+    "dist": "110",
+    "teams": 2,
+    "city": "대전",
+    "color": "#DC5A46"
+  },
+  {
+    "id": "STADIUM_GEUMGANG_UNIV",
+    "name": "금강구장",
+    "tier": "대학",
+    "pf": "투수친화",
+    "dist": "122",
+    "teams": 10,
+    "city": "대전",
+    "color": ""
+  },
+  {
+    "id": "STADIUM_NOEUL",
+    "name": "노을구장",
+    "tier": "대학",
+    "pf": "타자친화",
+    "dist": "100",
+    "teams": 10,
+    "city": "대구",
+    "color": ""
+  },
+  {
+    "id": "STADIUM_MIREU",
+    "name": "미르구장",
+    "tier": "대학",
+    "pf": "중립",
+    "dist": "110",
+    "teams": 10,
+    "city": "서울",
+    "color": ""
+  },
+  {
+    "id": "STADIUM_BYEOLBIT",
+    "name": "별빛구장",
+    "tier": "대학",
+    "pf": "타자친화",
+    "dist": "100",
+    "teams": 10,
+    "city": "안산",
+    "color": ""
+  },
+  {
+    "id": "STADIUM_TAEJONG",
+    "name": "태종구장",
+    "tier": "대학",
+    "pf": "중립",
+    "dist": "110",
+    "teams": 10,
+    "city": "부산",
+    "color": ""
+  },
+  {
+    "id": "STADIUM_GANGBYEON",
+    "name": "강변구장",
+    "tier": "독립",
+    "pf": "타자친화",
+    "dist": "100",
+    "teams": 4,
+    "city": "서울",
+    "color": ""
+  },
+  {
+    "id": "STADIUM_GYEBAEK",
+    "name": "계백구장",
+    "tier": "독립",
+    "pf": "중립",
+    "dist": "110",
+    "teams": 2,
+    "city": "대전",
+    "color": ""
+  },
+  {
+    "id": "STADIUM_NAMNYEOK",
+    "name": "남녘구장",
+    "tier": "독립",
+    "pf": "투수친화",
+    "dist": "122",
+    "teams": 3,
+    "city": "부산",
+    "color": ""
+  },
+  {
+    "id": "STADIUM_CHANGGONG",
+    "name": "창공구장",
+    "tier": "독립",
+    "pf": "중립",
+    "dist": "110",
+    "teams": 1,
+    "city": "무연고(군소재)",
+    "color": ""
+  },
+  {
+    "id": "STADIUM_GYERYONG",
+    "name": "계룡구장",
+    "tier": "고교",
+    "pf": "중립",
+    "dist": "110",
+    "teams": 12,
+    "city": "대전",
+    "color": ""
+  },
+  {
+    "id": "STADIUM_NAKDONG",
+    "name": "낙동구장",
+    "tier": "고교",
+    "pf": "타자친화",
+    "dist": "100",
+    "teams": 16,
+    "city": "부산",
+    "color": ""
+  },
+  {
+    "id": "STADIUM_MUJIGAE",
+    "name": "무지개구장",
+    "tier": "고교",
+    "pf": "타자친화",
+    "dist": "100",
+    "teams": 20,
+    "city": "인천",
+    "color": ""
+  },
+  {
+    "id": "STADIUM_SEORAK_HS",
+    "name": "설악구장",
+    "tier": "고교",
+    "pf": "투수친화",
+    "dist": "122",
+    "teams": 6,
+    "city": "춘천",
+    "color": ""
+  },
+  {
+    "id": "STADIUM_YEONGSAN",
+    "name": "영산구장",
+    "tier": "고교",
+    "pf": "타자친화",
+    "dist": "100",
+    "teams": 14,
+    "city": "전주",
+    "color": ""
+  },
+  {
+    "id": "STADIUM_PALGONG",
+    "name": "팔공구장",
+    "tier": "고교",
+    "pf": "투수친화",
+    "dist": "122",
+    "teams": 12,
+    "city": "대구",
+    "color": ""
+  },
+  {
+    "id": "STADIUM_HANGANG",
+    "name": "한강구장",
+    "tier": "고교",
+    "pf": "중립",
+    "dist": "110",
+    "teams": 16,
+    "city": "서울",
+    "color": ""
+  },
+  {
+    "id": "STADIUM_HALLA",
+    "name": "한라구장",
+    "tier": "고교",
+    "pf": "투수친화",
+    "dist": "122",
+    "teams": 6,
+    "city": "제주",
+    "color": ""
+  }
+]
