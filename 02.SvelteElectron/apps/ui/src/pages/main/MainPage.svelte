@@ -14,7 +14,7 @@
   }
   import SidebarNav from "../../features/navigation/ui/SidebarNav.svelte";
   import TopHeader from "../../features/main-layout/ui/TopHeader.svelte";
-  import HomeDashboard from "../../features/dashboard/ui/HomeDashboard.svelte";
+  import NewsPage from "../news/NewsPage.svelte";
   import RightPanel from "../../features/main-layout/ui/RightPanel.svelte";
   import StatusPage from "../status/StatusPage.svelte";
   import AcademicsPage from "../academics/AcademicsPage.svelte";
@@ -23,7 +23,6 @@
   import FinancePage from "../finance/FinancePage.svelte";
   import LeaguePage from "../league/LeaguePage.svelte";
   import AchievementsPage from "../achievements/AchievementsPage.svelte";
-  import MessagesPage from "../messages/MessagesPage.svelte";
   import TeamPage from "../team/TeamPage.svelte";
   import PeoplePage from "../people/PeoplePage.svelte";
   import EventManagerModal from "../../features/events/ui/EventManagerModal.svelte";
@@ -445,8 +444,11 @@
           {#if $gameStore.protagonist.careerStage === "military"}
             <MilitaryStatusPanel />
           {/if}
-          {#if currentTab === "home"}
-            <HomeDashboard />
+          <!-- U3: 홈 대시보드와 수신함이 소식 하나로 합쳐졌다. 내비가 아직
+               둘로 갈려 있어(11개) 두 탭이 같은 화면을 연다 — U4에서 6개로
+               줄이면서 `home`이 사라진다. -->
+          {#if currentTab === "home" || currentTab === "messages"}
+            <NewsPage />
           {:else if currentTab === "status"}
             <StatusPage />
           {:else if currentTab === "academics"}
@@ -461,8 +463,6 @@
             <LeaguePage />
           {:else if currentTab === "achievements"}
             <AchievementsPage />
-          {:else if currentTab === "messages"}
-            <MessagesPage />
           {:else if currentTab === "team"}
             <TeamPage />
           {:else if currentTab === "people"}

@@ -66,46 +66,45 @@
 
   .stat-label {
     font-size: 12px;
-    color: #8aabda;
+    color: var(--ink-mute);
     text-align: right;
     white-space: nowrap;
   }
 
   .bar-track {
     height: 6px;
-    background: #1a2d4a;
+    background: var(--panel-sunk);
     border-radius: 3px;
     overflow: hidden;
-    border: 1px solid #243a58;
   }
 
+  /* 진행 막대는 팀 색을 쓴다 — 내 훈련이고, 강조 요소다 */
   .bar-fill {
     height: 100%;
-    background: linear-gradient(90deg, #2a6cb8, #4d9ef5);
+    background: var(--t-dark);
     border-radius: 3px;
     min-width: 2px;
   }
 
-  .leveled .bar-fill {
-    background: linear-gradient(90deg, #c47c00, #f0b030);
-  }
+  /* 레벨업만 의미색으로 튄다 */
+  .leveled .bar-fill { background: var(--warn); }
 
   .stat-pct {
     font-size: 11px;
-    color: #6a8ab0;
+    color: var(--ink-mute);
     text-align: right;
     font-variant-numeric: tabular-nums;
   }
 
   .stat-cur {
     font-size: 11px;
-    color: #7a9ac8;
+    color: var(--ink-mid);
     white-space: nowrap;
   }
 
   .leveled-up {
-    color: #f0b030;
-    font-weight: 700;
+    color: var(--warn);
+    font-weight: 800;
   }
 
   .status-row {
@@ -113,26 +112,26 @@
     align-items: center;
     gap: 8px;
     padding: 8px 12px;
-    background: #111e30;
-    border-radius: 6px;
-    border: 1px solid #1e3050;
+    background: var(--panel-sunk);
+    border-radius: var(--radius);
   }
 
   .status-item {
     font-size: 12px;
-    color: #c8dcf8;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
     display: flex;
     gap: 4px;
     align-items: center;
   }
 
   .status-key {
-    color: #5a7aa8;
+    color: var(--ink-mute);
     font-size: 11px;
   }
 
   .sep {
-    color: #2a3e58;
+    color: var(--line-strong);
     font-size: 11px;
   }
 
@@ -140,13 +139,13 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
-    padding-top: 4px;
-    border-top: 1px solid #1a2d4a;
+    padding-top: 8px;
+    border-top: 1px solid var(--line);
   }
 
   .extra-log {
     font-size: 12px;
-    color: #7a96c0;
+    color: var(--ink-mid);
     margin: 0;
     line-height: 1.5;
   }

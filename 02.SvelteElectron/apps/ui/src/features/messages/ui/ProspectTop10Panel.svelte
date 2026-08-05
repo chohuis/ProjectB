@@ -68,7 +68,7 @@
   .top10-subtitle {
     margin: 0;
     font-size: 12px;
-    color: #6a86b8;
+    color: var(--ink-mute);
   }
 
   .top10-grid {
@@ -81,18 +81,17 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
-    background: #0f1c31;
-    border: 1px solid #2a3f68;
-    border-radius: 10px;
+    background: var(--panel-sunk);
+    border-radius: var(--radius);
     padding: 10px 10px 8px;
   }
 
   .col-title {
     margin: 0 0 4px;
-    font-size: 13px;
-    font-weight: 700;
-    color: #c8daff;
-    border-bottom: 1px solid #253451;
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--ink);
+    border-bottom: 2px solid var(--t-dark);
     padding-bottom: 6px;
     text-align: center;
   }
@@ -122,42 +121,39 @@
     cursor: pointer;
   }
   .rank-row.clickable:hover {
-    background: #172540;
-    border-color: #304d80;
+    background: var(--panel);
+    border-color: var(--line-strong);
   }
 
+  /* 내 행은 팀 색으로 반전한다 — `.u-table tr.is-me`와 같은 규칙이다 */
   .rank-row.hero {
-    background: #1c2e10;
-    border-color: #4a7a28;
-    color: #90e870;
-    font-weight: 700;
+    background: var(--t-dark);
+    color: var(--t-gold);
+    font-weight: 800;
   }
 
   .rank-num {
-    color: #6a86b8;
+    color: var(--ink-mute);
     font-size: 11px;
     font-weight: 700;
     text-align: right;
+    font-variant-numeric: tabular-nums;
   }
 
-  .rank-row.hero .rank-num {
-    color: #6acf40;
-  }
+  .rank-row.hero .rank-num { color: var(--t-gold); }
 
   .rank-name {
-    color: #d8e8ff;
+    color: var(--ink);
     font-size: 12px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
-  .rank-row.hero .rank-name {
-    color: #a0f870;
-  }
+  .rank-row.hero .rank-name { color: var(--t-gold); }
 
   .rank-team {
-    color: #5a76a8;
+    color: var(--ink-mute);
     font-size: 10px;
     white-space: nowrap;
     overflow: hidden;
@@ -165,8 +161,10 @@
     text-align: right;
   }
 
+  .rank-row.hero .rank-team { color: rgba(255, 255, 255, 0.7); }
+
   .rank-empty {
-    color: #4a5e88;
+    color: var(--ink-mute);
     font-size: 11px;
     padding: 6px;
     text-align: center;
@@ -175,9 +173,9 @@
   .hero-outside {
     margin: 4px 0 0;
     font-size: 11px;
-    color: #7090c0;
+    color: var(--ink-mid);
     text-align: center;
-    border-top: 1px solid #1e3050;
+    border-top: 1px solid var(--line);
     padding-top: 5px;
   }
 </style>

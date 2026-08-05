@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { nextProtagonistGame, teamRank, gaugeTone } from "../myStatus";
+import { nextProtagonistGame, teamRank, gaugeTone, recentResults } from "../myStatus";
 import { playerYearLabel } from "../playerYearLabel";
 import type { ScheduleEntry, Standing } from "../../types/season";
 
@@ -63,6 +63,55 @@ describe("nextProtagonistGame", () => {
 
   it("소속팀이 없으면(상무 등) null", () => {
     expect(nextProtagonistGame([game("g", "2031-05-02", 6, "TEAM_A", "TEAM_B")], "", "2031-05-01")).toBeNull();
+  });
+});
+
+describe("recentResults", () => {
+  const ME = "TEAM_A";
+
+  function played(id: string, date: string, week: number, home: string, away: string,
+                  hs: number, as: number): ScheduleEntry {
+    return {
+      id, week, gameDate: date, homeTeamId: home, awayTeamId: away,
+      isProtagonistGame: true, phase: "season",
+      result: { homeScore: hs, awayScore: as } as ScheduleEntry["result"],
+    };
+  }
+
+  it("최신순이다 — 배열 순서가 아니라 날짜로 센다", () => {
+    // ⚠ 예전 대시보드는 `.slice(-3)`으로 배열 끝을 집었다. 친선·전국대회가
+    // 뒤에 붙으면 끝이 최신이 아니다
+    const s = [
+      played("g3", "2031-05-20", 8, ME, "B", 5, 3),
+      played("g1", "2031-04-01", 1, ME, "C", 1, 2),
+      played("g2", "2031-05-01", 5, "D", ME, 0, 4),
+    ];
+    expect(recentResults(s, ME).map((r) => r.scheduleId)).toEqual(["g3", "g2", "g1"]);
+  });
+
+  it("원정 경기의 내 점수는 away다", () => {
+    const r = recentResults([played("g", "2031-05-01", 5, "D", ME, 0, 4)], ME)[0];
+    expect(r.my).toBe(4);
+    expect(r.opp).toBe(0);
+    expect(r.won).toBe(true);
+    expect(r.opponentId).toBe("D");
+  });
+
+  it("무승부는 승도 패도 아니다", () => {
+    const r = recentResults([played("g", "2031-05-01", 5, ME, "D", 2, 2)], ME)[0];
+    expect(r.drew).toBe(true);
+    expect(r.won).toBe(false);
+  });
+
+  it("안 치른 경기는 안 센다", () => {
+    const s = [game("g", "2031-05-01", 5, ME, "B"), played("h", "2031-04-01", 1, ME, "C", 3, 1)];
+    expect(recentResults(s, ME).map((r) => r.scheduleId)).toEqual(["h"]);
+  });
+
+  it("limit만큼만 준다", () => {
+    const s = Array.from({ length: 9 }, (_, i) =>
+      played(`g${i}`, `2031-05-0${i + 1}`, i + 1, ME, "B", i, 0));
+    expect(recentResults(s, ME, 5)).toHaveLength(5);
   });
 });
 
