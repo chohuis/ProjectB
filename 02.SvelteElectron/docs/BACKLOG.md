@@ -187,7 +187,7 @@ NPC FA 시장(`resolveFaMarketNative`)도 엔진만 준비됐고 오프시즌 �
 | B8 | `weekPhases/events.ts`(3줄)·`academics.ts`(16)·`games.ts`(21) 빈 껍데기 | **부분 해결** — 이벤트 선택지 적용은 `usecases/decisions.ts`가 갖는다(7-6c). 나머지 둘은 여전히 위임만 한다 |
 | B9 | 고아 스크립트 23개 | ✅ 해결 |
 | B10 | `seeds/v1/` · `runtime/` 고아 | ✅ 해결 |
-| B11 | vitest 미설치 | **미해결** — tsc 15건 중 2건이 이것 |
+| B11 | vitest 미설치 | ✅ 해결 (2026-08-05) — 70건 통과. UI 개편 구간에서 붙였다 |
 
 ---
 

@@ -782,7 +782,7 @@ OVR 하위25%   67.3 → 71.4     ← 밑은 올라온다
 | 항목 | 상태 |
 |---|---|
 | **성능 미측정** | 주당 약 56경기. Phase 8이 이 숫자 위에서 시작 |
-| **vitest 미설치** | `npm test` 실행 불가. tsc 15개 중 2개가 이것 |
+| ~~vitest 미설치~~ | ✅ 해결. `npm test` 70건 통과 (2026-08-05) |
 | `RosterPage.svelte` 316줄 | **어디서도 import 안 되는 고아 페이지** (`nav.roster` i18n 키만 남음). 6C-6에서 발견 |
 | 구단주·팀동료 관계 효과 | 소비처가 Phase 7에 생긴다 (방출 2단계 7-4 / `events.ts` 3줄 빈 껍데기 B8) |
 | `salaryNegotiation` 타입 결함 | `CareerResultModal.svelte:79` — 필수 필드 3개 누락 |
@@ -796,8 +796,8 @@ npm run test:v3          # 27개 스위트 (전부 ALL PASS여야 한다)
 npm run test:foreign     # 외국인 보유 한도 8시즌 회귀 (test:v3 밖 — 전체 경로라 느리다)
 cd packages/engine-native && cargo test --release   # Rust 유닛 133개
 npm run harness -- --seasons 5 --trials 2           # 불변식 위반 0
-npx tsc --noEmit         # 11개가 베이스라인. 늘면 내가 만든 것
-npx svelte-check --threshold error                  # 65 errors가 베이스라인 — main과 대조할 것
+npx tsc --noEmit         # 7개가 베이스라인. 늘면 내가 만든 것
+npx svelte-check --threshold error                  # 60 errors가 베이스라인 — main과 대조할 것
 
 npm run measure:draft     # 드래프트·진로·방출 5시즌 실측 (테스트 아님, 숫자 확인용)
 npm run measure:finance   # 재정 20시즌 실측 — 자산 곡선·세율·스폰서·투자 분포
