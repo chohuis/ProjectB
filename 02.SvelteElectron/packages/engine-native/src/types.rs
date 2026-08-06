@@ -83,7 +83,14 @@ pub enum PitchResultCode {
     #[serde(rename = "STRIKE_LOOK")]    StrikeLook,
     #[serde(rename = "BALL")]           Ball,
     #[serde(rename = "FOUL")]           Foul,
+    /// 인플레이 아웃 — **중간값이다.** 타구 종류와 병살 여부가 정해지기 전
+    /// 단계에서만 쓰고, 최종 결과로는 아래 넷 중 하나로 좁힌다
+    /// (`narrow_inplay_out`). 화면이 "아웃!" 하나로만 받던 시절의 코드다.
     #[serde(rename = "INPLAY_OUT")]     InplayOut,
+    #[serde(rename = "GROUND_OUT")]     GroundOut,
+    #[serde(rename = "FLY_OUT")]        FlyOut,
+    #[serde(rename = "LINE_OUT")]       LineOut,
+    #[serde(rename = "DOUBLE_PLAY")]    DoublePlay,
     #[serde(rename = "FIELDING_ERROR")] FieldingError,
     #[serde(rename = "HIT_SINGLE")]     HitSingle,
     #[serde(rename = "HIT_DOUBLE")]     HitDouble,
@@ -443,6 +450,9 @@ pub struct MatchStepResult {
     pub next_state: MatchState,
     pub outcome: PitchOutcome,
     pub mid_game_injury: Option<MidGameInjury>,
+    /// 사람이 읽는 문장만. 도루·주루·실책 같은 **한 투구 안에서 벌어진 부수 사건**이다.
+    /// 개발자용 한 줄(`build_pitch_log`)은 여기 안 섞는다 — 화면이 그대로 찍는다.
+    pub narrative_logs: Vec<String>,
 }
 
 // ── 반이닝 시뮬 결과 ──────────────────────────────────────────────────────────

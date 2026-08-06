@@ -14,6 +14,10 @@
   } from "../../shared/utils/pitchCost";
   import { pitchSlotsOf, slotCountLabel, gradeFraction } from "../../shared/utils/pitchSlots";
   import { batterBars, seasonLines, seasonStatsOf } from "../../shared/utils/statCard";
+  import {
+    isOutInPlay, isHit, isStrike, flashLabel, logLabel, logClass, flashColor,
+    type PitchResultCode, type BallInPlay,
+  } from "../../shared/utils/matchResult";
   import { seasonStore } from "../../shared/stores/season";
 
 
@@ -42,19 +46,6 @@
   type PitchType = "fastball" | "sinker" | "cutter" | "slider" | "curve" | "changeup" | "splitter" | "forkball" | "screwball" | "knuckleball";
   type PitchStrategy = "aggressive" | "balanced" | "safe";
   type PitchPower = "low" | "normal" | "high";
-  type PitchResultCode =
-    | "STRIKE_SWING"
-    | "STRIKE_LOOK"
-    | "BALL"
-    | "FOUL"
-    | "INPLAY_OUT"
-    | "FIELDING_ERROR"
-    | "HIT_SINGLE"
-    | "HIT_DOUBLE"
-    | "HIT_TRIPLE"
-    | "HOME_RUN"
-    | "WALK"
-    | "GAME_OVER";
 
   interface FieldPoint {
     x: number;
@@ -241,7 +232,7 @@
         movements.push({ from: runnerPoint('second'), to: runnerPoint('third') });
       if (prevRunners.first && prevRunners.second && prevRunners.third)
         movements.push({ from: { ...f.third }, to: { ...f.home } });
-    } else if (resultCode === 'INPLAY_OUT') {
+    } else if (isOutInPlay(resultCode)) {
       retroBatterPos = null;
       return;
     } else {
@@ -793,16 +784,8 @@
     }
   }
 
-  function resultToCls(code: PitchResultCode): string {
-    if (code === 'HOME_RUN') return 'log-homerun';
-    if (code === 'HIT_SINGLE' || code === 'HIT_DOUBLE' || code === 'HIT_TRIPLE') return 'log-hit';
-    if (code === 'WALK') return 'log-walk';
-    if (code === 'STRIKE_SWING' || code === 'STRIKE_LOOK') return 'log-strike';
-    if (code === 'FOUL') return 'log-foul';
-    if (code === 'BALL') return 'log-ball';
-    if (code === 'INPLAY_OUT' || code === 'FIELDING_ERROR') return 'log-out';
-    return '';
-  }
+  // 색·문구의 정본은 `matchResult.ts` 하나다 (예전엔 네 군데였다)
+  const resultToCls = logClass;
 
   function pushLog(line: string, cls = '') {
     playByPlayLines = [{ text: line, cls }, ...playByPlayLines].slice(0, 20);
@@ -816,7 +799,7 @@
   ) {
     // top이닝 = away팀 타격, bottom이닝 = home팀 타격
     const battingTeamIsAway = snapshot.half === "top";
-    const isHit = resultCode === "HIT_SINGLE" || resultCode === "HIT_DOUBLE" || resultCode === "HIT_TRIPLE" || resultCode === "HOME_RUN";
+    const hitThisPitch = isHit(resultCode);
     const isError = resultCode === "FIELDING_ERROR";
 
     if (snapshot.inningScores) {
@@ -832,7 +815,7 @@
           ...row,
           inningScores: padded,
           r: isAway ? awayScore : homeScore,
-          h: row.h + (isBattingTeam && isHit ? 1 : 0),
+          h: row.h + (isBattingTeam && hitThisPitch ? 1 : 0),
           b: row.b + (isBattingTeam && resultCode === "WALK" ? 1 : 0),
           e: row.e + (isError && isProtSide ? 1 : 0),
         };
@@ -853,7 +836,7 @@
         ...row,
         inningScores: nextInningScores,
         r: idx === 0 ? awayScore : homeScore,
-        h: row.h + (isBattingTeam && isHit ? 1 : 0),
+        h: row.h + (isBattingTeam && hitThisPitch ? 1 : 0),
         b: row.b + (isBattingTeam && resultCode === "WALK" ? 1 : 0),
         e: row.e + (isError && isProtSide ? 1 : 0),
       };
@@ -899,7 +882,7 @@
   }
 
   function getBattedTarget(resultCode: PitchResultCode): FieldPoint {
-    if (resultCode === "INPLAY_OUT") return { x: 560, y: 560 };
+    if (isOutInPlay(resultCode)) return { x: 560, y: 560 };
     if (resultCode === "HIT_SINGLE") return { x: 710, y: 640 };
     if (resultCode === "HIT_DOUBLE") return { x: 680, y: 430 };
     if (resultCode === "HIT_TRIPLE") return { x: 330, y: 360 };
@@ -930,20 +913,7 @@
   }
 
   function showResultOverlay(code: PitchResultCode) {
-    const map: Partial<Record<PitchResultCode, { text: string; color: string }>> = {
-      STRIKE_SWING: { text: "헛스윙!", color: "#37d67a" },
-      STRIKE_LOOK: { text: "스트라이크!", color: "#37d67a" },
-      BALL: { text: "볼", color: "#7a8fa8" },
-      FOUL: { text: "파울", color: "#ffd54f" },
-      INPLAY_OUT: { text: "아웃!", color: "#ff8c42" },
-      FIELDING_ERROR: { text: "실책!", color: "#ff4a4a" },
-      HIT_SINGLE: { text: "안타!", color: "#ffd54f" },
-      HIT_DOUBLE: { text: "2루타!", color: "#ffd54f" },
-      HIT_TRIPLE: { text: "3루타!", color: "#ff9800" },
-      HOME_RUN: { text: "홈런!!", color: "#ff4a4a" },
-      WALK: { text: "볼넷", color: "#7a8fa8" },
-    };
-    const entry = map[code] ?? { text: code, color: '#ffffff' };
+    const entry = { text: flashLabel(code), color: flashColor(code) };
     if (overlayTimer) clearTimeout(overlayTimer);
     resultOverlay = { visible: true, ...entry };
     overlayTimer = setTimeout(() => {
@@ -962,7 +932,7 @@
     if (roll < 0.34) return "STRIKE_LOOK";
     if (roll < 0.47) return "FOUL";
     if (roll < 0.62) return "BALL";
-    if (roll < 0.73) return "INPLAY_OUT";
+    if (roll < 0.73) return roll < 0.45 ? "GROUND_OUT" : roll < 0.64 ? "FLY_OUT" : "LINE_OUT";
     if (roll < 0.86) return "HIT_SINGLE";
     if (roll < 0.93) return "HIT_DOUBLE";
     if (roll < 0.97) return "HIT_TRIPLE";
@@ -1000,7 +970,7 @@
       if (localEngineState.count.strikes < 2) {
         localEngineState.count.strikes += 1;
       }
-    } else if (resultCode === "INPLAY_OUT") {
+    } else if (isOutInPlay(resultCode)) {
       localEngineState.outs += 1;
       localEngineState.count.balls = 0;
       localEngineState.count.strikes = 0;
@@ -1225,15 +1195,22 @@
       }
 
       resultCode = response.outcome.resultCode as PitchResultCode;
-      line = `${inningHalfLabel} ${pitchTypes.find((p) => p.id === selectedPitchType)?.label} ${response.outcome.comment}`;
+      // 타구 정보가 있으면 "유격수 땅볼 아웃"까지 쓴다. 없으면 기본 문구다
+      const ball = (response.outcome.ballInPlay ?? null) as BallInPlay | null;
+      const pitchLabel = pitchTypes.find((p) => p.id === selectedPitchType)?.label ?? "";
+      line = `${inningHalfLabel} · ${pitchLabel} → ${logLabel(resultCode, ball)}`;
       pitcherState = { ...pitcherState, speed: `${statToKmh(get(gameStore).player.pitcherStats.velocity, selectedPower)} km/h` };
       const prevOuts = count.out;
       applySnapshot(response.snapshot, line, resultCode);
+
+      // ⚠ 엔진이 만들던 주루·실책 문장이 **직접 투구에서는 화면에 안 왔다.**
+      // 자동 시뮬만 `response.logs`를 읽고 있었다.
+      for (const nl of response.narrativeLogs ?? []) pushLog(nl, "log-auto");
       const outsGained = count.out >= prevOuts ? count.out - prevOuts : (3 - prevOuts) + count.out;
       if (outsGained > 0) totalOutsRecorded += outsGained;
 
       // 개인 기록 집계
-      if ((resultCode === 'STRIKE_SWING' || resultCode === 'STRIKE_LOOK') && count.out > prevOuts) {
+      if (isStrike(resultCode) && count.out > prevOuts) {
         totalStrikeouts++;
       }
       if (resultCode === "HIT_SINGLE" || resultCode === "HIT_DOUBLE" || resultCode === "HIT_TRIPLE" || resultCode === "HOME_RUN") {
@@ -1254,7 +1231,7 @@
       } else {
         await tweenBall(clickedFieldPos, 220);
         showResultOverlay(resultCode);
-        if (resultCode === "INPLAY_OUT" || resultCode === "HIT_SINGLE" || resultCode === "HIT_DOUBLE" || resultCode === "HIT_TRIPLE" || resultCode === "HOME_RUN") {
+        if (isOutInPlay(resultCode) || isHit(resultCode)) {
           await tweenBall(getBattedTarget(resultCode), 300);
         }
         {
@@ -1301,7 +1278,7 @@
       applySnapshot(local.snapshot, line, resultCode);
       const outsGained = count.out >= prevOuts ? count.out - prevOuts : (3 - prevOuts) + count.out;
       if (outsGained > 0) totalOutsRecorded += outsGained;
-      if ((resultCode === 'STRIKE_SWING' || resultCode === 'STRIKE_LOOK') && count.out > prevOuts) {
+      if (isStrike(resultCode) && count.out > prevOuts) {
         totalStrikeouts++;
       }
       if (resultCode === "HIT_SINGLE" || resultCode === "HIT_DOUBLE" || resultCode === "HIT_TRIPLE" || resultCode === "HOME_RUN") {
@@ -1323,7 +1300,7 @@
       }
 
       showResultOverlay(resultCode);
-      if (resultCode === "INPLAY_OUT" || resultCode === "HIT_SINGLE" || resultCode === "HIT_DOUBLE" || resultCode === "HIT_TRIPLE" || resultCode === "HOME_RUN") {
+      if (isOutInPlay(resultCode) || isHit(resultCode)) {
         await tweenBall(getBattedTarget(resultCode), 300);
       }
       {
@@ -1453,34 +1430,8 @@
     onCancel();
   }
 
-  function localComment(code: PitchResultCode): string {
-    switch (code) {
-      case "STRIKE_SWING":
-        return "헛스윙 스트라이크";
-      case "STRIKE_LOOK":
-        return "루킹 스트라이크";
-      case "BALL":
-        return "볼";
-      case "FOUL":
-        return "파울";
-      case "INPLAY_OUT":
-        return "인플레이 아웃";
-      case "HIT_SINGLE":
-        return "안타";
-      case "HIT_DOUBLE":
-        return "2루타";
-      case "HIT_TRIPLE":
-        return "3루타";
-      case "HOME_RUN":
-        return "홈런";
-      case "WALK":
-        return "볼넷";
-      case "FIELDING_ERROR":
-        return "실책";
-      default:
-        return "플레이";
-    }
-  }
+  // 엔진이 없을 때 쓰는 문구도 같은 표에서 온다
+  const localComment = (code: PitchResultCode) => logLabel(code);
 </script>
 
 <section class="match-engine-empty" aria-label="match engine workspace">
@@ -1580,15 +1531,15 @@
               on:selectPosition={(event) => (selectedDefPosition = event.detail.pos)}
             />
             {#if resultOverlay.visible}
-              <!-- 픽셀아트 위엔 네 모서리를 찍은 상자가 맞는다.
-                   빛 번짐(text-shadow)은 도트를 뭉갠다 -->
-              <div class="result-overlay dot-result-overlay">
-                <div class="dot-result-box" style="border-color: {resultOverlay.color}; color: {resultOverlay.color};">
-                  <div class="dot-result-corner tl"></div>
-                  <div class="dot-result-corner tr"></div>
-                  <div class="dot-result-corner bl"></div>
-                  <div class="dot-result-corner br"></div>
-                  <span class="dot-result-text">{resultOverlay.text}</span>
+              <!--
+                트래킹 인 — 넓게 흩어진 글자가 제자리로 모인다.
+                판(상자)이 없어 다이아몬드를 덜 가리고, 움직임 자체가 장식이라
+                글자에 테두리를 두르지 않아도 된다. 색은 아래 막대가 맡는다.
+              -->
+              <div class="result-overlay" style="--rc: {resultOverlay.color};">
+                <div class="track-grp">
+                  <span class="track-text">{resultOverlay.text}</span>
+                  <div class="track-rule"></div>
                 </div>
               </div>
             {/if}
@@ -2369,43 +2320,50 @@
   }
 
   /* 도트 결과 오버레이 */
-  .dot-result-overlay { background: none; }
+  /* ── 결과 오버레이 — 트래킹 인 ─────────────────────────────
+     자간이 넓게 벌어진 채로 나타나 제자리로 모인다. 상자가 없다. */
+  .track-grp { text-align: center; }
 
-  .dot-result-box {
-    position: relative;
-    border: 3px solid;
-    padding: 10px 24px;
-    image-rendering: pixelated;
-    background: rgba(4, 8, 16, 0.88);
-    animation: dotResultAnim 1.4s steps(1) forwards;
-  }
-
-  .dot-result-corner {
-    position: absolute;
-    width: 6px;
-    height: 6px;
-    background: currentColor;
-  }
-  .dot-result-corner.tl { top: -3px; left: -3px; }
-  .dot-result-corner.tr { top: -3px; right: -3px; }
-  .dot-result-corner.bl { bottom: -3px; left: -3px; }
-  .dot-result-corner.br { bottom: -3px; right: -3px; }
-
-  .dot-result-text {
+  .track-text {
+    display: block;
     font-size: 40px;
     font-weight: 900;
-    font-family: 'Courier New', monospace;
-    letter-spacing: 0.06em;
-    animation: dotResultAnim 1.4s steps(1) forwards;
+    color: #ffffff;
+    /* 흰 글자 + 딱 떨어지는 오프셋 — 번짐은 도트를 뭉갠다 */
+    text-shadow: 3px 3px 0 rgba(4, 8, 16, 0.9);
+    letter-spacing: 0.6em;
+    text-indent: 0.6em;
+    white-space: nowrap;
+    animation: trackIn 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
-  @keyframes dotResultAnim {
-    0%   { opacity: 0; }
-    8%   { opacity: 1; }
-    70%  { opacity: 1; }
-    80%  { opacity: 0; }
-    90%  { opacity: 1; }
-    100% { opacity: 0; }
+  /* 색은 글자가 아니라 막대가 말한다 — 어느 바탕에서도 글자가 읽힌다 */
+  .track-rule {
+    height: 6px;
+    margin-top: 6px;
+    background: var(--rc, #ffffff);
+    transform: scaleX(0);
+    animation: trackRule 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes trackIn {
+    0%   { letter-spacing: 0.6em;  text-indent: 0.6em;  opacity: 0; }
+    26%  { letter-spacing: -0.02em; text-indent: 0;     opacity: 1; }
+    82%  { letter-spacing: -0.02em; text-indent: 0;     opacity: 1; }
+    100% { letter-spacing: 0.14em;  text-indent: 0.14em; opacity: 0; }
+  }
+  @keyframes trackRule {
+    0%   { transform: scaleX(0); opacity: 0; }
+    30%  { transform: scaleX(1); opacity: 1; }
+    82%  { transform: scaleX(1); opacity: 1; }
+    100% { transform: scaleX(1); opacity: 0; }
+  }
+
+  /* 움직임이 불편한 사람에겐 그냥 떴다 사라지게 */
+  @media (prefers-reduced-motion: reduce) {
+    .track-text, .track-rule { animation: none; }
+    .track-text { letter-spacing: -0.02em; text-indent: 0; }
+    .track-rule { transform: scaleX(1); }
   }
 
   .base-panel {
@@ -2934,6 +2892,8 @@
   .play-text-panel li.log-foul    { color: #a0b8d8; }
   .play-text-panel li.log-ball    { color: #7a8fa8; }
   .play-text-panel li.log-out     { color: #ff8c42; }
+  /* 병살은 삼진보다 좋은 일이다 — 아웃 주황이 아니라 제 색을 준다 */
+  .play-text-panel li.log-dp      { color: #6ee7a8; font-weight: 700; }
   .play-text-panel li.log-walk    { color: #8ecfff; }
   .play-text-panel li.log-auto    { color: #6a7a9a; font-style: italic; }
 

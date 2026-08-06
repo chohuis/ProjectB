@@ -3,11 +3,22 @@
 let activeMatchState = null;
 let matchReadyState = null;
 
+/**
+ * 타석 결과 라벨 — **이 파일에서 유일한 정본**이다.
+ *
+ * ⚠ 예전엔 같은 표가 이 파일 안에만 두 벌 있었고(`AUTO_SIM_AB_LABEL` +
+ * `AB_RESULT_LABEL`) 화면·엔진까지 합치면 네 군데였다. 그래서 자동 시뮬은
+ * "삼진"이라 하고 직접 던지면 "헛스윙 스트라이크"가 나오는 식으로 어긋났다.
+ */
 const AUTO_SIM_AB_LABEL = {
   STRIKE_SWING: "삼진", STRIKE_LOOK: "삼진(루킹)",
-  WALK: "볼넷", INPLAY_OUT: "아웃", FIELDING_ERROR: "실책",
+  WALK: "볼넷", FIELDING_ERROR: "실책",
+  // 인플레이 아웃이 넷으로 쪼개졌다 (엔진 `narrow_inplay_out`)
+  INPLAY_OUT: "아웃", GROUND_OUT: "땅볼 아웃", FLY_OUT: "뜬공 아웃",
+  LINE_OUT: "직선타 아웃", DOUBLE_PLAY: "병살타",
   HIT_SINGLE: "안타", HIT_DOUBLE: "2루타",
   HIT_TRIPLE: "3루타", HOME_RUN: "홈런",
+  FOUL: "파울", BALL: "볼",
 };
 
 function toSnapshotDto(state, autoSimLogs, core) {
@@ -144,7 +155,14 @@ function register(ipcMain, { loadCoreModule, engineNative }) {
         }
       }
 
-      return { snapshot: toSnapshotDto(activeMatchState, [], core), outcome: result.outcome, midGameInjury };
+      // ⚠ 엔진이 만들던 주루·실책 문장을 **화면이 받을 방법이 없었다.**
+      // `state.logs`에는 개발자용 한 줄이 섞여 있어 그대로 못 쓴다.
+      return {
+        snapshot: toSnapshotDto(activeMatchState, [], core),
+        outcome: result.outcome,
+        midGameInjury,
+        narrativeLogs: result.narrativeLogs ?? [],
+      };
     } catch (e) {
       return { error: String(e?.message ?? e) };
     }
@@ -164,13 +182,7 @@ function register(ipcMain, { loadCoreModule, engineNative }) {
     let protagonistJustExited = false;
     let exitReason = null;
 
-    const AB_RESULT_LABEL = {
-      STRIKE_SWING: "삼진", STRIKE_LOOK: "삼진(루킹)",
-      WALK: "볼넷", INPLAY_OUT: "아웃", FIELDING_ERROR: "실책",
-      HIT_SINGLE: "안타", HIT_DOUBLE: "2루타",
-      HIT_TRIPLE: "3루타", HOME_RUN: "홈런",
-      FOUL: "파울", BALL: "볼",
-    };
+    const AB_RESULT_LABEL = AUTO_SIM_AB_LABEL;
 
     function pushHalfInningLogs(halfResult, inning, half) {
       const halfLabel = half === "top" ? "초" : "말";

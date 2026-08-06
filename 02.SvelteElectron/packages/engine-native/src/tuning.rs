@@ -80,7 +80,15 @@ pub fn park_quality_modifier(p: ParkType) -> f64 {
     }
 }
 
+/// 병살 확률 — **땅볼 기준**이다 (주자 1루 · 2아웃 전).
+///
+/// ⚠ 예전엔 타구 종류를 안 보고 인플레이 아웃 전부에 이 확률을 걸었다.
+/// 그래서 **중견수 뜬공에도 22%로 병살이 붙었다.** 결과 코드가
+/// `INPLAY_OUT` 하나뿐이라 화면에 "아웃"으로만 나와 안 보였을 뿐이다.
 pub const DOUBLE_PLAY_BASE_PROB: f64 = 0.22;
+
+/// 직선타 병살 배수. 잡아서 주자를 묶는 경우라 땅볼보다 훨씬 드물다
+pub const DOUBLE_PLAY_LINEDRIVE_MOD: f64 = 0.25;
 
 // 감독 교체 임계값
 pub const NPC_STARTER_STAMINA_LIMIT: f64       = 35.0;

@@ -42,16 +42,43 @@ fn fielder_default_pos(pos: FieldPosition) -> XY {
     }
 }
 
+/// 인플레이 아웃 계열 — `InplayOut`(중간값)과 좁혀진 넷.
+///
+/// ⚠ 이 셋을 각각 나열하는 `matches!`를 새로 쓰지 말 것. 코드가 하나 늘 때마다
+/// 빠뜨린 자리가 조용히 생긴다 — 여기 한 곳만 고치면 되게 둔다.
+fn is_out_in_play(code: PitchResultCode) -> bool {
+    matches!(code,
+        PitchResultCode::InplayOut | PitchResultCode::GroundOut |
+        PitchResultCode::FlyOut    | PitchResultCode::LineOut   |
+        PitchResultCode::DoublePlay)
+}
+
 fn is_inplay(code: PitchResultCode) -> bool {
-    matches!(code, PitchResultCode::InplayOut | PitchResultCode::FieldingError |
+    is_out_in_play(code) || matches!(code, PitchResultCode::FieldingError |
         PitchResultCode::HitSingle | PitchResultCode::HitDouble |
         PitchResultCode::HitTriple | PitchResultCode::HomeRun)
 }
 
 fn is_ab_terminal(code: PitchResultCode) -> bool {
-    matches!(code, PitchResultCode::Walk | PitchResultCode::InplayOut |
+    is_out_in_play(code) || matches!(code, PitchResultCode::Walk |
         PitchResultCode::FieldingError | PitchResultCode::HitSingle |
         PitchResultCode::HitDouble | PitchResultCode::HitTriple | PitchResultCode::HomeRun)
+}
+
+/// 중간값 `InplayOut`을 실제 타구로 좁힌다.
+///
+/// 타구 종류는 엔진이 이미 `BallInPlay.hitType`으로 정해 놓았는데
+/// **결과 코드가 하나뿐이라 화면까지 못 갔다.** 병살은 아웃이 둘이라
+/// 따로 둔다 — 색도 연출도 집계도 달라야 한다.
+fn narrow_inplay_out(ball: Option<&BallInPlay>, is_dp: bool) -> PitchResultCode {
+    if is_dp { return PitchResultCode::DoublePlay; }
+    match ball.map(|b| b.hit_type) {
+        Some(BallHitType::GroundBall) | Some(BallHitType::Bunt) => PitchResultCode::GroundOut,
+        Some(BallHitType::LineDrive)  => PitchResultCode::LineOut,
+        Some(BallHitType::FlyBall) | Some(BallHitType::Popup) => PitchResultCode::FlyOut,
+        // 타구 정보 없이 아웃이 될 수는 없다. 그래도 오면 땅볼로 둔다
+        None => PitchResultCode::GroundOut,
+    }
 }
 
 // ── 초기 상태 생성 ────────────────────────────────────────────────────────────
@@ -731,11 +758,23 @@ fn attempt_steals(state: &MatchState, pitcher: &PitcherStats, rng: &mut impl Rng
     (MatchRunners { first, second, third }, outs, steal_logs)
 }
 
-fn try_double_play(runners: &MatchRunners, outs_before: u8, rng: &mut impl Rng) -> (bool, MatchRunners) {
+/// ⚠ **타구 종류를 본다.** 예전엔 안 봐서 주자 1루면 뜬공에도 22%로 병살이
+/// 붙었다 — 결과 코드가 `INPLAY_OUT` 하나뿐이라 화면엔 "아웃"으로만 나와
+/// 안 보였다. 코드를 쪼개자마자 "중견수 병살타"가 로그에 찍혔다.
+fn try_double_play(
+    ball: Option<&BallInPlay>, runners: &MatchRunners, outs_before: u8, rng: &mut impl Rng,
+) -> (bool, MatchRunners) {
     if outs_before >= 2 || runners.first.is_none() { return (false, runners.clone()); }
-    let base_prob = T::DOUBLE_PLAY_BASE_PROB
+    let type_mod = match ball.map(|b| b.hit_type) {
+        Some(BallHitType::GroundBall) | Some(BallHitType::Bunt) => 1.0,
+        Some(BallHitType::LineDrive) => T::DOUBLE_PLAY_LINEDRIVE_MOD,
+        // 뜬공·팝업으로는 병살이 안 된다
+        _ => 0.0,
+    };
+    if type_mod <= 0.0 { return (false, runners.clone()); }
+    let base_prob = (T::DOUBLE_PLAY_BASE_PROB
         + if runners.second.is_some() { 0.05 } else { 0.0 }
-        + if runners.third.is_some()  { 0.03 } else { 0.0 };
+        + if runners.third.is_some()  { 0.03 } else { 0.0 }) * type_mod;
     if rng.gen::<f64>() >= base_prob { return (false, runners.clone()); }
     (true, MatchRunners { first: None, second: runners.second.clone(), third: runners.third.clone() })
 }
@@ -745,7 +784,10 @@ fn try_double_play(runners: &MatchRunners, outs_before: u8, rng: &mut impl Rng) 
 fn resolve_mental_delta(code: PitchResultCode) -> f64 {
     match code {
         PitchResultCode::StrikeLook | PitchResultCode::StrikeSwing => 0.5,
-        PitchResultCode::InplayOut   =>  0.8,
+        PitchResultCode::InplayOut | PitchResultCode::GroundOut
+        | PitchResultCode::FlyOut | PitchResultCode::LineOut => 0.8,
+        // 아웃 두 개를 한 번에 잡았다. 0.8을 두 번 준 셈으로 둔다
+        PitchResultCode::DoublePlay  =>  1.6,
         PitchResultCode::FieldingError => -1.2,
         PitchResultCode::Ball        => -0.4,
         PitchResultCode::Foul        => -0.1,
@@ -856,6 +898,10 @@ fn get_result_comment(code: PitchResultCode) -> &'static str {
         PitchResultCode::Ball         => "볼",
         PitchResultCode::Foul         => "파울",
         PitchResultCode::InplayOut    => "타구 아웃",
+        PitchResultCode::GroundOut    => "땅볼 아웃",
+        PitchResultCode::FlyOut       => "뜬공 아웃",
+        PitchResultCode::LineOut      => "직선타 아웃",
+        PitchResultCode::DoublePlay   => "병살타",
         PitchResultCode::FieldingError=> "실책",
         PitchResultCode::Walk         => "볼넷",
         PitchResultCode::HitSingle    => "안타",
@@ -868,7 +914,8 @@ fn get_result_comment(code: PitchResultCode) -> &'static str {
 
 fn get_result_tone(code: PitchResultCode) -> &'static str {
     match code {
-        PitchResultCode::StrikeSwing | PitchResultCode::StrikeLook | PitchResultCode::InplayOut => "good",
+        PitchResultCode::StrikeSwing | PitchResultCode::StrikeLook => "good",
+        c if is_out_in_play(c) => "good",
         PitchResultCode::HitSingle | PitchResultCode::HitDouble | PitchResultCode::HitTriple
         | PitchResultCode::HomeRun | PitchResultCode::Walk | PitchResultCode::FieldingError => "bad",
         _ => "neutral",
@@ -889,7 +936,9 @@ fn build_pitch_log(state: &MatchState, decision: &PitchDecision, landing: XY, co
     let code_str = match code {
         PitchResultCode::StrikeSwing => "STRIKE_SWING", PitchResultCode::StrikeLook => "STRIKE_LOOK",
         PitchResultCode::Ball => "BALL", PitchResultCode::Foul => "FOUL",
-        PitchResultCode::InplayOut => "INPLAY_OUT", PitchResultCode::FieldingError => "FIELDING_ERROR",
+        PitchResultCode::InplayOut => "INPLAY_OUT", PitchResultCode::GroundOut => "GROUND_OUT",
+        PitchResultCode::FlyOut => "FLY_OUT", PitchResultCode::LineOut => "LINE_OUT",
+        PitchResultCode::DoublePlay => "DOUBLE_PLAY", PitchResultCode::FieldingError => "FIELDING_ERROR",
         PitchResultCode::Walk => "WALK", PitchResultCode::HitSingle => "HIT_SINGLE",
         PitchResultCode::HitDouble => "HIT_DOUBLE", PitchResultCode::HitTriple => "HIT_TRIPLE",
         PitchResultCode::HomeRun => "HOME_RUN", PitchResultCode::GameOver => "GAME_OVER",
@@ -1248,6 +1297,7 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
                 landing_target: XY { x: 0.0, y: 0.0 },
             },
             mid_game_injury: None,
+            narrative_logs: vec![],
         };
     }
 
@@ -1345,8 +1395,10 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
         PitchResultCode::InplayOut => {
             next_outs += 1;
             next_count = MatchCount { balls: 0, strikes: 0 };
-            let (is_dp, dp_runners) = try_double_play(&next_runners, pre_state.outs, rng);
-            if is_dp { next_outs += 1; next_runners = dp_runners; running_logs.push("병살타!".to_string()); }
+            let (is_dp, dp_runners) = try_double_play(ball_in_play.as_ref(), &next_runners, pre_state.outs, rng);
+            if is_dp { next_outs += 1; next_runners = dp_runners; }
+            // 여기서야 타구 종류와 병살 여부가 다 정해진다 — 이제 코드를 좁힌다
+            result_code = narrow_inplay_out(ball_in_play.as_ref(), is_dp);
         }
         PitchResultCode::FieldingError => {
             next_count = MatchCount { balls: 0, strikes: 0 };
@@ -1499,11 +1551,19 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
     }
 
     // ── 7. 로그 조합 ─────────────────────────────────────────────────────────
+    //
+    // ⚠ **두 종류를 섞지 않는다.** `build_pitch_log`은
+    // `[6회초] fastball (0.50,0.50) balanced/normal -> GROUND_OUT (Q:45.2)` 같은
+    // 개발자용 한 줄이고, 나머지(도루·주루·실책)는 사람이 읽는 문장이다.
+    // 예전엔 둘이 한 배열에 섞여 `state.logs`로만 나갔고, 그래서 화면이
+    // **주루·실책을 받을 방법이 없었다** — 받으면 디버그 줄까지 같이 왔다.
     let pitch_log = build_pitch_log(&pre_state, decision, lr.landing, result_code, quality);
-    let all_new_logs: Vec<String> = steal_logs.into_iter()
+    let narrative_logs: Vec<String> = steal_logs.into_iter()
         .chain(lr.miss_log.into_iter())
-        .chain(std::iter::once(pitch_log))
         .chain(running_logs.into_iter())
+        .collect();
+    let all_new_logs: Vec<String> = std::iter::once(pitch_log)
+        .chain(narrative_logs.iter().cloned())
         .collect();
 
     // ── 8. 애니메이션 큐 ─────────────────────────────────────────────────────
@@ -1560,7 +1620,7 @@ pub fn step_pitch_core(state: &MatchState, decision: &PitchDecision, is_protagon
         None
     };
 
-    MatchStepResult { next_state, outcome, mid_game_injury }
+    MatchStepResult { next_state, outcome, mid_game_injury, narrative_logs }
 }
 
 fn check_mid_game_injury(pitch_count: u32, stamina: f64, rng: &mut impl Rng) -> Option<crate::types::MidGameInjury> {

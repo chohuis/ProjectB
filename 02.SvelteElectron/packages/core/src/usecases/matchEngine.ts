@@ -35,6 +35,13 @@ export interface PitchOutcome {
 export interface MatchStepResult {
   nextState: MatchState;
   outcome: PitchOutcome;
+  /**
+   * 도루·주루·실책 — **사람이 읽는 문장만.** 개발자용 한 줄
+   * (`[6회초] fastball (0.50,0.50) ... -> GROUND_OUT (Q:45.2)`)은 안 섞인다.
+   * 예전엔 둘이 `state.logs`에 함께 들어가 화면이 받을 방법이 없었다.
+   */
+  narrativeLogs: string[];
+  midGameInjury?: { injuryType: string; severity: string } | null;
 }
 
 export interface AtBatLog {

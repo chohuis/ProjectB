@@ -90,8 +90,28 @@ declare global {
           comment: string;
           animationCues: MatchAnimationCue[];
           landingTarget: { x: number; y: number };
+          /**
+           * 어떤 타구였나. **엔진은 처음부터 보내고 있었는데 여기 선언이 없어
+           * 화면이 못 봤다** — 값이 없던 게 아니라 타입이 좁았다.
+           */
+          ballInPlay?: {
+            hitType: "groundBall" | "flyBall" | "lineDrive" | "popup" | "bunt";
+            zone: string;
+            /** 타구 강도 1~5 */
+            hardness: number;
+          } | null;
+          /** 누가 잡아 어디로 던졌나 */
+          fieldingResult?: {
+            fielder: { position: string; name?: string };
+            isError: boolean;
+            threwTo?: string | null;
+            throwResult?: string | null;
+            runnerExtraAdvance: number;
+          } | null;
         } | null;
         midGameInjury?: { injuryType: string; severity: string } | null;
+        /** 도루·주루·실책 — 사람이 읽는 문장만. 개발자용 한 줄은 안 섞인다 */
+        narrativeLogs?: string[];
         error?: string;
       }>;
       matchFinish: () => Promise<{ snapshot: MatchSnapshot; summary: string; batterLines?: unknown[]; playerLines?: unknown[] }>;

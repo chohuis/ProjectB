@@ -86,9 +86,18 @@ export interface BatterStats {
   arm: number;
 }
 
+/**
+ * ⚠ Rust `PitchResultCode`(`types.rs`)와 **같은 집합이어야 한다.**
+ * 여기가 좁으면 엔진이 보낸 코드가 타입상 없는 값이 되고, 화면은
+ * 조용히 기본값으로 떨어진다.
+ *
+ * `INPLAY_OUT`은 엔진 내부의 중간값이다 — 타구 종류와 병살 여부가 정해지면
+ * 아래 넷 중 하나로 좁혀져 나온다.
+ */
 export type PitchResultCode =
   | "STRIKE_SWING" | "STRIKE_LOOK" | "BALL" | "FOUL"
-  | "INPLAY_OUT" | "FIELDING_ERROR"
+  | "INPLAY_OUT" | "GROUND_OUT" | "FLY_OUT" | "LINE_OUT" | "DOUBLE_PLAY"
+  | "FIELDING_ERROR"
   | "HIT_SINGLE" | "HIT_DOUBLE" | "HIT_TRIPLE" | "HOME_RUN"
   | "WALK" | "GAME_OVER";
 
