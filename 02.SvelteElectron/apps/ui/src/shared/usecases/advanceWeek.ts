@@ -72,6 +72,7 @@ import {
 } from "./weekPhases/tournamentNews";
 import { progressSurvival } from "./survivalLeague";
 import { runBackgroundPostseasons } from "./backgroundPostseason";
+import { winnerById, scheduledIdSet } from "../utils/scheduleView";
 import { buildInjuryNews, isInjuryNewsWeek } from "./weekPhases/injuryNews";
 import { IND_LEAGUE_ID, emptySurvivalState } from "../utils/survivalLeague";
 import { snapshotDueAt } from "../utils/standingsSnapshot";
@@ -1541,10 +1542,9 @@ async function progressTournaments(week: number): Promise<boolean> {
 
   // ③ 결과가 다 나온 라운드 → 다음 라운드 대진 확정 + 주입
   const s = get(seasonStore);
-  const resultOf = new Map(
-    s.schedule.filter((e) => e.result).map((e) => [e.id, e.result!.winnerId]),
-  );
-  const scheduledIds = new Set(s.schedule.map((e) => e.id));
+  // 두 군데(주인공 리그 / 그 밖)를 합치는 규칙은 `scheduleView` 하나다
+  const resultOf = winnerById(s);
+  const scheduledIds = scheduledIdSet(s);
 
   for (const bracket of Object.values(s.tournaments ?? {})) {
     for (let r = 1; r <= bracket.totalRounds; r++) {

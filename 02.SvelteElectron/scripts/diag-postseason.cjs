@@ -48,6 +48,7 @@ const short = (lid) => lid.replace("LEAGUE_", "");
   await app.boot({ slotId: "DIAG", worldSeed: SEED, seasonYear: 2026 });
 
   const rows = [];
+  let tourSnap = { state: [], sched: {} };
   let guard = 0;
   const startSeason = app.currentSeason();
 
@@ -62,7 +63,12 @@ const short = (lid) => lid.replace("LEAGUE_", "");
     if (after - before <= 0) {
       if (app.pendingKind() === "draftObserve") { await app.skipDraftObserve(); continue; }
       if (await app.pushCareerForward()) continue;
-      if (app.isSeasonEnded()) { await app.seasonRollover(); continue; }
+      if (app.isSeasonEnded()) {
+        // ⚠ **롤오버 전에 담는다.** 롤오버가 `tournaments`를 비우므로 뒤에서
+        // 읽으면 전부 빈 것으로 보인다 — 처음에 그렇게 재서 아무것도 안 나왔다
+        tourSnap = { state: app.tournamentState(), sched: app.tourScheduleState() };
+        await app.seasonRollover(); continue;
+      }
       break;
     }
   }
@@ -131,12 +137,12 @@ const short = (lid) => lid.replace("LEAGUE_", "");
   // 왕중왕전은 대진이 있는데 우승이 없고, 은하기·여명기는 대진조차 없다.
   log(`
 ── 대회 진행 ──`);
-  for (const t of app.tournamentState()) {
+  for (const t of tourSnap.state) {
     log(`  ${t.id.padEnd(22)} 라운드 ${t.rounds} · 완료 ${t.done} · 우승 ${t.champ ?? "—"}`);
   }
   log(`
 ── 대회 일정 소화 ──`);
-  for (const [id, v] of Object.entries(app.tourScheduleState())) {
+  for (const [id, v] of Object.entries(tourSnap.sched)) {
     log(`  ${id.padEnd(22)} 일정 ${v.entries} · 치름 ${v.played}`);
   }
 

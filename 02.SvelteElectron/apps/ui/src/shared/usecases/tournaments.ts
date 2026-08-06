@@ -12,6 +12,7 @@ import {
   type GroupStage, type TournamentBracket, type TournamentDef,
 } from "../utils/tournament";
 import { standingsForSeed, syntheticStandings } from "../utils/standingsSnapshot";
+import { allScheduleEntries } from "../utils/scheduleView";
 
 /**
  * 시드 산출에 쓸 순위표를 고른다 (Phase 5-5a).
@@ -115,7 +116,9 @@ export async function promoteFinishedGroupStages(
   protagonistTeamId: string,
 ): Promise<{ def: TournamentDef; bracket: TournamentBracket; entries: ScheduleEntry[] }[]> {
   const out: { def: TournamentDef; bracket: TournamentBracket; entries: ScheduleEntry[] }[] = [];
-  const resultOf = new Map(season.schedule.filter((e) => e.result).map((e) => [e.id, e]));
+  // 규칙은 `scheduleView` 하나다 — 여기서 다시 합치면 한 곳만 고쳐진다
+  const resultOf = new Map(allScheduleEntries(season)
+    .filter((e) => e.result).map((e) => [e.id, e]));
 
   for (const stage of Object.values(season.groupStages ?? {})) {
     if (season.tournaments?.[stage.tournamentId]) continue;  // 이미 본선 진행 중
