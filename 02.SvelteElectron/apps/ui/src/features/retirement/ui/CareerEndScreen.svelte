@@ -12,7 +12,7 @@
 -->
 <script lang="ts">
   import { gameStore } from "../../../shared/stores/game";
-  import { masterStore } from "../../../shared/stores/master";
+  import { masterStore, teamsL10n } from "../../../shared/stores/master";
   import {
     careerTotalsOf, careerHighsOf, teamStintsOf, awardTallyOf, titleCountOf,
   } from "../../../shared/utils/careerSummary";
@@ -32,7 +32,7 @@
   $: mil = militaryHistory(p.militaryStatus, p.militaryServedUnit);
 
   $: teamName = (id: string) =>
-    ($masterStore.teams ?? []).find((t) => t.id === id)?.name ?? id;
+    ($teamsL10n ?? []).find((t) => t.id === id)?.name ?? id;
 
   const REASON: Record<string, string> = {
     voluntary: "자발적 은퇴",

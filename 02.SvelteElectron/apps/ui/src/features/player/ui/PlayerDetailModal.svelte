@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
   import { gameStore } from "../../../shared/stores/game";
-  import { masterStore } from "../../../shared/stores/master";
+  import { masterStore, entitiesL10n, teamsL10n } from "../../../shared/stores/master";
   import type { EntityDetails } from "../../../shared/stores/master";
   import { seasonStore } from "../../../shared/stores/season";
   import { getFaThreshold } from "../../../shared/utils/faEngine";
@@ -189,7 +189,7 @@
   $: modalEntity = entityId
     ? (isProtagonistModal
         ? protagonistRow
-        : $masterStore.entities.find((e) => e.id === entityId) ?? null)
+        : $entitiesL10n.find((e) => e.id === entityId) ?? null)
     : null;
 
   $: modalStats = modalEntity
@@ -200,7 +200,7 @@
         ?? null)
     : null;
 
-  $: teamById = new Map(($masterStore.teams ?? []).map((t) => [t.id, t.name]));
+  $: teamById = new Map(($teamsL10n ?? []).map((t) => [t.id, t.name]));
   $: clubById = new Map(($masterStore.clubs ?? []).map((c) => [c.id, c.name]));
 
   $: modalRecentGames = (() => {

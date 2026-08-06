@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher, tick } from "svelte";
   import { gameStore } from "../../../shared/stores/game";
-  import { masterStore } from "../../../shared/stores/master";
+  import { masterStore, teamsL10n } from "../../../shared/stores/master";
   import { seasonStore } from "../../../shared/stores/season";
   import type { NpcSaveState } from "../../../shared/types/save";
   import {
@@ -72,7 +72,7 @@
       : candidates.filter((c) => c.originType === listFilter);
 
   function getTeamName(teamId: string): string {
-    return $masterStore.teams.find((t) => t.id === teamId)?.name ?? teamId;
+    return $teamsL10n.find((t) => t.id === teamId)?.name ?? teamId;
   }
 
   function toOriginType(leagueId: string): OriginType {
@@ -148,7 +148,7 @@
 
       // 아직 안 돌았으면 여기서 돌린다. 이미 돌았으면 `lastDraftYear` 가드가 막고
       // 그때 남긴 로그를 그대로 읽는다 (관전 → 스킵, 스킵 → 관전 어느 순서든 같다)
-      const { univIds, indIds } = draftDestinationTeams($masterStore.teams);
+      const { univIds, indIds } = draftDestinationTeams($teamsL10n);
       await gameStore.processNpcDraft($seasonStore.seasonYear, univIds, indIds);
 
       const log = $gameStore.schoolState.careerDraftPickLog;

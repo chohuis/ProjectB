@@ -1310,7 +1310,7 @@
     {
       "id": "TEAM_HS_AEWOL",
       "name": "애월고",
-      "nameEn": "",
+      "nameEn": "Aewol High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_AEWOL",
       "schoolId": "SCHOOL_HS_AEWOL",
@@ -1364,7 +1364,7 @@
     {
       "id": "TEAM_HS_BAEGYANG",
       "name": "백양고",
-      "nameEn": "",
+      "nameEn": "Baegyang High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_BAEGYANG",
       "schoolId": "SCHOOL_HS_BAEGYANG",
@@ -1423,7 +1423,7 @@
     {
       "id": "TEAM_HS_BAEKHO",
       "name": "백호고",
-      "nameEn": "",
+      "nameEn": "Baekho High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_BAEKHO",
       "schoolId": "SCHOOL_HS_BAEKHO",
@@ -1482,7 +1482,7 @@
     {
       "id": "TEAM_HS_BAEKSEOK",
       "name": "백석고",
-      "nameEn": "",
+      "nameEn": "Baekseok High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_BAEKSEOK",
       "schoolId": "SCHOOL_HS_BAEKSEOK",
@@ -1536,7 +1536,7 @@
     {
       "id": "TEAM_HS_BITGOEUL",
       "name": "빛고을고",
-      "nameEn": "",
+      "nameEn": "Bitgoeul High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_BITGOEUL",
       "schoolId": "SCHOOL_HS_BITGOEUL",
@@ -1596,7 +1596,7 @@
     {
       "id": "TEAM_HS_BONGUII",
       "name": "봉의고",
-      "nameEn": "",
+      "nameEn": "Bonguii High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_BONGUII",
       "schoolId": "SCHOOL_HS_BONGUII",
@@ -1650,7 +1650,7 @@
     {
       "id": "TEAM_HS_BUGAK",
       "name": "북악고",
-      "nameEn": "",
+      "nameEn": "Bugak High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_BUGAK",
       "schoolId": "SCHOOL_HS_BUGAK",
@@ -1704,7 +1704,7 @@
     {
       "id": "TEAM_HS_BULMO",
       "name": "불모고",
-      "nameEn": "",
+      "nameEn": "Bulmo High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_BULMO",
       "schoolId": "SCHOOL_HS_BULMO",
@@ -1758,7 +1758,7 @@
     {
       "id": "TEAM_HS_BUNDANG",
       "name": "분당고",
-      "nameEn": "",
+      "nameEn": "Bundang High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_BUNDANG",
       "schoolId": "SCHOOL_HS_BUNDANG",
@@ -1812,7 +1812,7 @@
     {
       "id": "TEAM_HS_BUNSEONG",
       "name": "분성고",
-      "nameEn": "",
+      "nameEn": "Bunseong High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_BUNSEONG",
       "schoolId": "SCHOOL_HS_BUNSEONG_HS",
@@ -1866,7 +1866,7 @@
     {
       "id": "TEAM_HS_CHEONGNA",
       "name": "청라고",
-      "nameEn": "",
+      "nameEn": "Cheongna High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_CHEONGNA",
       "schoolId": "SCHOOL_HS_CHEONGNA",
@@ -1920,7 +1920,7 @@
     {
       "id": "TEAM_HS_CHEONGRAM",
       "name": "청람고",
-      "nameEn": "",
+      "nameEn": "Cheongram High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_CHEONGRAM",
       "schoolId": "SCHOOL_HS_CHEONGRAM",
@@ -1974,7 +1974,7 @@
     {
       "id": "TEAM_HS_CHEONGUN",
       "name": "청운고",
-      "nameEn": "",
+      "nameEn": "Cheongun High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_CHEONGUN",
       "schoolId": "SCHOOL_HS_CHEONGUN",
@@ -2049,7 +2049,7 @@
     {
       "id": "TEAM_HS_CHIAK",
       "name": "치악고",
-      "nameEn": "",
+      "nameEn": "Chiak High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_CHIAK",
       "schoolId": "SCHOOL_HS_CHIAK",
@@ -2103,7 +2103,7 @@
     {
       "id": "TEAM_HS_CHOKSEOK",
       "name": "촉석고",
-      "nameEn": "",
+      "nameEn": "Chokseok High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_CHOKSEOK",
       "schoolId": "SCHOOL_HS_CHOKSEOK",
@@ -2157,7 +2157,7 @@
     {
       "id": "TEAM_HS_DAEYANG",
       "name": "대양고",
-      "nameEn": "",
+      "nameEn": "Daeyang High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_DAEYANG",
       "schoolId": "SCHOOL_HS_DAEYANG",
@@ -2211,7 +2211,7 @@
     {
       "id": "TEAM_HS_DALSEONG",
       "name": "달성고",
-      "nameEn": "",
+      "nameEn": "Dalseong High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_DALSEONG",
       "schoolId": "SCHOOL_HS_DALSEONG",
@@ -2265,7 +2265,7 @@
     {
       "id": "TEAM_HS_DONGNAE",
       "name": "동래고",
-      "nameEn": "",
+      "nameEn": "Dongnae High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_DONGNAE",
       "schoolId": "SCHOOL_HS_DONGNAE",
@@ -2319,7 +2319,7 @@
     {
       "id": "TEAM_HS_DOSEONG",
       "name": "도성고",
-      "nameEn": "",
+      "nameEn": "Doseong High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_DOSEONG",
       "schoolId": "SCHOOL_HS_DOSEONG",
@@ -2378,7 +2378,7 @@
     {
       "id": "TEAM_HS_EUNPYEONG",
       "name": "은평고",
-      "nameEn": "",
+      "nameEn": "Eunpyeong High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_EUNPYEONG",
       "schoolId": "SCHOOL_HS_EUNPYEONG",
@@ -2432,7 +2432,7 @@
     {
       "id": "TEAM_HS_GANGBYEON",
       "name": "강변고",
-      "nameEn": "",
+      "nameEn": "Gangbyeon High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_GANGBYEON",
       "schoolId": "SCHOOL_HS_GANGBYEON",
@@ -2486,7 +2486,7 @@
     {
       "id": "TEAM_HS_GANGJIN",
       "name": "강진고",
-      "nameEn": "",
+      "nameEn": "Gangjin High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_GANGJIN",
       "schoolId": "SCHOOL_HS_GANGJIN_HS",
@@ -2540,7 +2540,7 @@
     {
       "id": "TEAM_HS_GARAK",
       "name": "가락고",
-      "nameEn": "",
+      "nameEn": "Garak High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_GARAK",
       "schoolId": "SCHOOL_HS_GARAK_HS",
@@ -2594,7 +2594,7 @@
     {
       "id": "TEAM_HS_GAYA",
       "name": "가야고",
-      "nameEn": "",
+      "nameEn": "Gaya High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_GAYA",
       "schoolId": "SCHOOL_HS_GAYA_HS",
@@ -2653,7 +2653,7 @@
     {
       "id": "TEAM_HS_GEOJE",
       "name": "거제고",
-      "nameEn": "",
+      "nameEn": "Geoje High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_GEOJE",
       "schoolId": "SCHOOL_HS_GEOJE_HS",
@@ -2707,7 +2707,7 @@
     {
       "id": "TEAM_HS_GEUMGANG",
       "name": "금강고",
-      "nameEn": "",
+      "nameEn": "Geumgang High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_GEUMGANG",
       "schoolId": "SCHOOL_HS_GEUMGANG",
@@ -2772,7 +2772,7 @@
     {
       "id": "TEAM_HS_GEUMJEONG",
       "name": "금정고",
-      "nameEn": "",
+      "nameEn": "Geumjeong High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_GEUMJEONG",
       "schoolId": "SCHOOL_HS_GEUMJEONG_HS",
@@ -2826,7 +2826,7 @@
     {
       "id": "TEAM_HS_GEUMO",
       "name": "금오고",
-      "nameEn": "",
+      "nameEn": "Geumo High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_GEUMO",
       "schoolId": "SCHOOL_HS_GEUMO",
@@ -2880,7 +2880,7 @@
     {
       "id": "TEAM_HS_GEUMSAN",
       "name": "금산고",
-      "nameEn": "",
+      "nameEn": "Geumsan High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_GEUMSAN",
       "schoolId": "SCHOOL_HS_GEUMSAN",
@@ -2934,7 +2934,7 @@
     {
       "id": "TEAM_HS_GIHEUNG",
       "name": "기흥고",
-      "nameEn": "",
+      "nameEn": "Giheung High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_GIHEUNG",
       "schoolId": "SCHOOL_HS_GIHEUNG",
@@ -2988,7 +2988,7 @@
     {
       "id": "TEAM_HS_GIMPO",
       "name": "김포고",
-      "nameEn": "",
+      "nameEn": "Gimpo High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_GIMPO",
       "schoolId": "SCHOOL_HS_GIMPO",
@@ -3042,7 +3042,7 @@
     {
       "id": "TEAM_HS_GWANGAN",
       "name": "광안고",
-      "nameEn": "",
+      "nameEn": "Gwangan High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_GWANGAN",
       "schoolId": "SCHOOL_HS_GWANGAN_HS",
@@ -3096,7 +3096,7 @@
     {
       "id": "TEAM_HS_GWANGGYO",
       "name": "광교고",
-      "nameEn": "",
+      "nameEn": "Gwanggyo High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_GWANGGYO",
       "schoolId": "SCHOOL_HS_GWANGGYO",
@@ -3150,7 +3150,7 @@
     {
       "id": "TEAM_HS_GWANGUN",
       "name": "광운고",
-      "nameEn": "",
+      "nameEn": "Gwangun High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_GWANGUN",
       "schoolId": "SCHOOL_HS_GWANGUN",
@@ -3204,7 +3204,7 @@
     {
       "id": "TEAM_HS_GYEBAEK",
       "name": "계백고",
-      "nameEn": "",
+      "nameEn": "Gyebaek High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_GYEBAEK",
       "schoolId": "SCHOOL_HS_GYEBAEK_HS",
@@ -3258,7 +3258,7 @@
     {
       "id": "TEAM_HS_GYEONGPO",
       "name": "경포고",
-      "nameEn": "",
+      "nameEn": "Gyeongpo High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_GYEONGPO",
       "schoolId": "SCHOOL_HS_GYEONGPO",
@@ -3312,7 +3312,7 @@
     {
       "id": "TEAM_HS_GYERIM",
       "name": "계림고",
-      "nameEn": "",
+      "nameEn": "Gyerim High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_GYERIM",
       "schoolId": "SCHOOL_HS_GYERIM",
@@ -3366,7 +3366,7 @@
     {
       "id": "TEAM_HS_GYERYONG",
       "name": "계룡고",
-      "nameEn": "",
+      "nameEn": "Gyeryong High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_GYERYONG",
       "schoolId": "SCHOOL_HS_GYERYONG",
@@ -3420,7 +3420,7 @@
     {
       "id": "TEAM_HS_GYEYANG",
       "name": "계양고",
-      "nameEn": "",
+      "nameEn": "Gyeyang High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_GYEYANG",
       "schoolId": "SCHOOL_HS_GYEYANG",
@@ -3474,7 +3474,7 @@
     {
       "id": "TEAM_HS_HAEUN",
       "name": "해운고",
-      "nameEn": "",
+      "nameEn": "Haeun High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_HAEUN",
       "schoolId": "SCHOOL_HS_HAEUN",
@@ -3539,7 +3539,7 @@
     {
       "id": "TEAM_HS_HAHOE",
       "name": "하회고",
-      "nameEn": "",
+      "nameEn": "Hahoe High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_HAHOE",
       "schoolId": "SCHOOL_HS_HAHOE_HS",
@@ -3593,7 +3593,7 @@
     {
       "id": "TEAM_HS_HALLA",
       "name": "한라고",
-      "nameEn": "",
+      "nameEn": "Halla High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_HALLA",
       "schoolId": "SCHOOL_HS_HALLA_HS",
@@ -3652,7 +3652,7 @@
     {
       "id": "TEAM_HS_HANBIT",
       "name": "한빛고",
-      "nameEn": "",
+      "nameEn": "Hanbit High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_HANBIT",
       "schoolId": "SCHOOL_HS_HANBIT",
@@ -3706,7 +3706,7 @@
     {
       "id": "TEAM_HS_HANNAE",
       "name": "한내고",
-      "nameEn": "",
+      "nameEn": "Hannae High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_HANNAE",
       "schoolId": "SCHOOL_HS_HANNAE",
@@ -3760,7 +3760,7 @@
     {
       "id": "TEAM_HS_HANSEONG",
       "name": "한성고",
-      "nameEn": "",
+      "nameEn": "Hanseong High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_HANSEONG",
       "schoolId": "SCHOOL_HS_HANSEONG",
@@ -3855,7 +3855,7 @@
     {
       "id": "TEAM_HS_HONGJU",
       "name": "홍주고",
-      "nameEn": "",
+      "nameEn": "Hongju High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_HONGJU",
       "schoolId": "SCHOOL_HS_HONGJU",
@@ -3909,7 +3909,7 @@
     {
       "id": "TEAM_HS_HWASUN",
       "name": "화순고",
-      "nameEn": "",
+      "nameEn": "Hwasun High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_HWASUN",
       "schoolId": "SCHOOL_HS_HWASUN",
@@ -3963,7 +3963,7 @@
     {
       "id": "TEAM_HS_HYEONGSAN",
       "name": "형산고",
-      "nameEn": "",
+      "nameEn": "Hyeongsan High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_HYEONGSAN",
       "schoolId": "SCHOOL_HS_HYEONGSAN",
@@ -4017,7 +4017,7 @@
     {
       "id": "TEAM_HS_ILSAN",
       "name": "일산고",
-      "nameEn": "",
+      "nameEn": "Ilsan High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_ILSAN",
       "schoolId": "SCHOOL_HS_ILSAN",
@@ -4071,7 +4071,7 @@
     {
       "id": "TEAM_HS_JUNGNIM",
       "name": "죽림고",
-      "nameEn": "",
+      "nameEn": "Jungnim High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_JUNGNIM",
       "schoolId": "SCHOOL_HS_JUNGNIM",
@@ -4125,7 +4125,7 @@
     {
       "id": "TEAM_HS_JUNGNYEONG",
       "name": "죽령고",
-      "nameEn": "",
+      "nameEn": "Jungnyeong High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_JUNGNYEONG",
       "schoolId": "SCHOOL_HS_JUNGNYEONG",
@@ -4179,7 +4179,7 @@
     {
       "id": "TEAM_HS_JUNGWON",
       "name": "중원고",
-      "nameEn": "",
+      "nameEn": "Jungwon High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_JUNGWON",
       "schoolId": "SCHOOL_HS_JUNGWON",
@@ -4233,7 +4233,7 @@
     {
       "id": "TEAM_HS_MANWOL",
       "name": "만월고",
-      "nameEn": "",
+      "nameEn": "Manwol High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_MANWOL",
       "schoolId": "SCHOOL_HS_MANWOL",
@@ -4287,7 +4287,7 @@
     {
       "id": "TEAM_HS_MASANMAN",
       "name": "마산만고",
-      "nameEn": "",
+      "nameEn": "Masanman High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_MASANMAN",
       "schoolId": "SCHOOL_HS_MASANMAN",
@@ -4341,7 +4341,7 @@
     {
       "id": "TEAM_HS_MISA",
       "name": "미사고",
-      "nameEn": "",
+      "nameEn": "Misa High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_MISA",
       "schoolId": "SCHOOL_HS_MISA",
@@ -4395,7 +4395,7 @@
     {
       "id": "TEAM_HS_MONGNYEON",
       "name": "목련고",
-      "nameEn": "",
+      "nameEn": "Mongnyeon High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_MONGNYEON",
       "schoolId": "SCHOOL_HS_MONGNYEON",
@@ -4449,7 +4449,7 @@
     {
       "id": "TEAM_HS_MUDEUNG",
       "name": "무등고",
-      "nameEn": "",
+      "nameEn": "Mudeung High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_MUDEUNG",
       "schoolId": "SCHOOL_HS_MUDEUNG",
@@ -4544,7 +4544,7 @@
     {
       "id": "TEAM_HS_MUJIN",
       "name": "무진고",
-      "nameEn": "",
+      "nameEn": "Mujin High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_MUJIN",
       "schoolId": "SCHOOL_HS_MUJIN",
@@ -4598,7 +4598,7 @@
     {
       "id": "TEAM_HS_MUNSU",
       "name": "문수고",
-      "nameEn": "",
+      "nameEn": "Munsu High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_MUNSU",
       "schoolId": "SCHOOL_HS_MUNSU",
@@ -4652,7 +4652,7 @@
     {
       "id": "TEAM_HS_MUSIM",
       "name": "무심고",
-      "nameEn": "",
+      "nameEn": "Musim High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_MUSIM",
       "schoolId": "SCHOOL_HS_MUSIM",
@@ -4706,7 +4706,7 @@
     {
       "id": "TEAM_HS_MYEONGIL",
       "name": "명일고",
-      "nameEn": "",
+      "nameEn": "Myeongil High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_MYEONGIL",
       "schoolId": "SCHOOL_HS_MYEONGIL",
@@ -4760,7 +4760,7 @@
     {
       "id": "TEAM_HS_NAKDONG",
       "name": "낙동고",
-      "nameEn": "",
+      "nameEn": "Nakdong High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_NAKDONG",
       "schoolId": "SCHOOL_HS_NAKDONG_HS",
@@ -4814,7 +4814,7 @@
     {
       "id": "TEAM_HS_NAMAK",
       "name": "남악고",
-      "nameEn": "",
+      "nameEn": "Namak High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_NAMAK",
       "schoolId": "SCHOOL_HS_NAMAK",
@@ -4868,7 +4868,7 @@
     {
       "id": "TEAM_HS_NAMGANG",
       "name": "남강고",
-      "nameEn": "",
+      "nameEn": "Namgang High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_NAMGANG",
       "schoolId": "SCHOOL_HS_NAMGANG_HS",
@@ -4922,7 +4922,7 @@
     {
       "id": "TEAM_HS_NAMSAN",
       "name": "남산고",
-      "nameEn": "",
+      "nameEn": "Namsan High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_NAMSAN",
       "schoolId": "SCHOOL_HS_NAMSAN",
@@ -4976,7 +4976,7 @@
     {
       "id": "TEAM_HS_ODONG",
       "name": "오동고",
-      "nameEn": "",
+      "nameEn": "Odong High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_ODONG",
       "schoolId": "SCHOOL_HS_ODONG_HS",
@@ -5030,7 +5030,7 @@
     {
       "id": "TEAM_HS_OREUM",
       "name": "오름고",
-      "nameEn": "",
+      "nameEn": "Oreum High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_OREUM",
       "schoolId": "SCHOOL_HS_OREUM",
@@ -5084,7 +5084,7 @@
     {
       "id": "TEAM_HS_OSAN",
       "name": "오산고",
-      "nameEn": "",
+      "nameEn": "Osan High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_OSAN",
       "schoolId": "SCHOOL_HS_OSAN",
@@ -5138,7 +5138,7 @@
     {
       "id": "TEAM_HS_PALDAL",
       "name": "팔달고",
-      "nameEn": "",
+      "nameEn": "Paldal High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_PALDAL",
       "schoolId": "SCHOOL_HS_PALDAL",
@@ -5192,7 +5192,7 @@
     {
       "id": "TEAM_HS_PALGONG",
       "name": "팔공고",
-      "nameEn": "",
+      "nameEn": "Palgong High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_PALGONG",
       "schoolId": "SCHOOL_HS_PALGONG",
@@ -5277,7 +5277,7 @@
     {
       "id": "TEAM_HS_PANGYO",
       "name": "판교고",
-      "nameEn": "",
+      "nameEn": "Pangyo High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_PANGYO",
       "schoolId": "SCHOOL_HS_PANGYO",
@@ -5331,7 +5331,7 @@
     {
       "id": "TEAM_HS_PUNGNAM",
       "name": "풍남고",
-      "nameEn": "",
+      "nameEn": "Pungnam High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_PUNGNAM",
       "schoolId": "SCHOOL_HS_PUNGNAM",
@@ -5385,7 +5385,7 @@
     {
       "id": "TEAM_HS_PYEONGCHON",
       "name": "평촌고",
-      "nameEn": "",
+      "nameEn": "Pyeongchon High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_PYEONGCHON",
       "schoolId": "SCHOOL_HS_PYEONGCHON",
@@ -5439,7 +5439,7 @@
     {
       "id": "TEAM_HS_PYEONGTAEK",
       "name": "평택고",
-      "nameEn": "",
+      "nameEn": "Pyeongtaek High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_PYEONGTAEK",
       "schoolId": "SCHOOL_HS_PYEONGTAEK",
@@ -5493,7 +5493,7 @@
     {
       "id": "TEAM_HS_SAMJEON",
       "name": "삼전고",
-      "nameEn": "",
+      "nameEn": "Samjeon High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_SAMJEON",
       "schoolId": "SCHOOL_HS_SAMJEON",
@@ -5547,7 +5547,7 @@
     {
       "id": "TEAM_HS_SANGDANG",
       "name": "상당고",
-      "nameEn": "",
+      "nameEn": "Sangdang High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_SANGDANG",
       "schoolId": "SCHOOL_HS_SANGDANG",
@@ -5601,7 +5601,7 @@
     {
       "id": "TEAM_HS_SANGNOK",
       "name": "상록고",
-      "nameEn": "",
+      "nameEn": "Sangnok High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_SANGNOK",
       "schoolId": "SCHOOL_HS_SANGNOK",
@@ -5655,7 +5655,7 @@
     {
       "id": "TEAM_HS_SEOGWI",
       "name": "서귀고",
-      "nameEn": "",
+      "nameEn": "Seogwi High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_SEOGWI",
       "schoolId": "SCHOOL_HS_SEOGWI_HS",
@@ -5709,7 +5709,7 @@
     {
       "id": "TEAM_HS_SEOLBONG",
       "name": "설봉고",
-      "nameEn": "",
+      "nameEn": "Seolbong High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_SEOLBONG",
       "schoolId": "SCHOOL_HS_SEOLBONG",
@@ -5763,7 +5763,7 @@
     {
       "id": "TEAM_HS_SEONGGEO",
       "name": "성거고",
-      "nameEn": "",
+      "nameEn": "Seonggeo High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_SEONGGEO",
       "schoolId": "SCHOOL_HS_SEONGGEO",
@@ -5817,7 +5817,7 @@
     {
       "id": "TEAM_HS_SEONGSAN",
       "name": "성산고",
-      "nameEn": "",
+      "nameEn": "Seongsan High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_SEONGSAN",
       "schoolId": "SCHOOL_HS_SEONGSAN_HS",
@@ -5871,7 +5871,7 @@
     {
       "id": "TEAM_HS_SEORAK",
       "name": "설악고",
-      "nameEn": "",
+      "nameEn": "Seorak High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_SEORAK",
       "schoolId": "SCHOOL_HS_SEORAK",
@@ -5930,7 +5930,7 @@
     {
       "id": "TEAM_HS_SEUNGJU",
       "name": "승주고",
-      "nameEn": "",
+      "nameEn": "Seungju High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_SEUNGJU",
       "schoolId": "SCHOOL_HS_SEUNGJU_HS",
@@ -5984,7 +5984,7 @@
     {
       "id": "TEAM_HS_SIHWA",
       "name": "시화고",
-      "nameEn": "",
+      "nameEn": "Sihwa High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_SIHWA",
       "schoolId": "SCHOOL_HS_SIHWA",
@@ -6038,7 +6038,7 @@
     {
       "id": "TEAM_HS_SINCHEON",
       "name": "신천고",
-      "nameEn": "",
+      "nameEn": "Sincheon High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_SINCHEON",
       "schoolId": "SCHOOL_HS_SINCHEON",
@@ -6092,7 +6092,7 @@
     {
       "id": "TEAM_HS_SINJEONG",
       "name": "신정고",
-      "nameEn": "",
+      "nameEn": "Sinjeong High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_SINJEONG",
       "schoolId": "SCHOOL_HS_SINJEONG",
@@ -6146,7 +6146,7 @@
     {
       "id": "TEAM_HS_SONGRIM",
       "name": "송림고",
-      "nameEn": "",
+      "nameEn": "Songrim High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_SONGRIM",
       "schoolId": "SCHOOL_HS_SONGRIM",
@@ -6205,7 +6205,7 @@
     {
       "id": "TEAM_HS_SUSEONG",
       "name": "수성고",
-      "nameEn": "",
+      "nameEn": "Suseong High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_SUSEONG",
       "schoolId": "SCHOOL_HS_SUSEONG",
@@ -6259,7 +6259,7 @@
     {
       "id": "TEAM_HS_TAEBAEK",
       "name": "태백고",
-      "nameEn": "",
+      "nameEn": "Taebaek High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_TAEBAEK",
       "schoolId": "SCHOOL_HS_TAEBAEK",
@@ -6313,7 +6313,7 @@
     {
       "id": "TEAM_HS_TAEHWA",
       "name": "태화고",
-      "nameEn": "",
+      "nameEn": "Taehwa High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_TAEHWA",
       "schoolId": "SCHOOL_HS_TAEHWA_HS",
@@ -6367,7 +6367,7 @@
     {
       "id": "TEAM_HS_TAEJONG",
       "name": "태종고",
-      "nameEn": "",
+      "nameEn": "Taejong High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_TAEJONG",
       "schoolId": "SCHOOL_HS_TAEJONG_HS",
@@ -6421,7 +6421,7 @@
     {
       "id": "TEAM_HS_TANGEUM",
       "name": "탄금고",
-      "nameEn": "",
+      "nameEn": "Tangeum High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_TANGEUM",
       "schoolId": "SCHOOL_HS_TANGEUM",
@@ -6475,7 +6475,7 @@
     {
       "id": "TEAM_HS_TONGYEONG",
       "name": "통영고",
-      "nameEn": "",
+      "nameEn": "Tongyeong High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_TONGYEONG",
       "schoolId": "SCHOOL_HS_TONGYEONG_HS",
@@ -6529,7 +6529,7 @@
     {
       "id": "TEAM_HS_WANSAN",
       "name": "완산고",
-      "nameEn": "",
+      "nameEn": "Wansan High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_WANSAN",
       "schoolId": "SCHOOL_HS_WANSAN_HS",
@@ -6583,7 +6583,7 @@
     {
       "id": "TEAM_HS_WOLMYEONG",
       "name": "월명고",
-      "nameEn": "",
+      "nameEn": "Wolmyeong High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_WOLMYEONG",
       "schoolId": "SCHOOL_HS_WOLMYEONG",
@@ -6637,7 +6637,7 @@
     {
       "id": "TEAM_HS_YANGCHEON",
       "name": "양천고",
-      "nameEn": "",
+      "nameEn": "Yangcheon High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_YANGCHEON",
       "schoolId": "SCHOOL_HS_YANGCHEON",
@@ -6696,7 +6696,7 @@
     {
       "id": "TEAM_HS_YEONGIL",
       "name": "영일고",
-      "nameEn": "",
+      "nameEn": "Yeongil High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_YEONGIL",
       "schoolId": "SCHOOL_HS_YEONGIL",
@@ -6750,7 +6750,7 @@
     {
       "id": "TEAM_HS_YEONGNAM",
       "name": "영남고",
-      "nameEn": "",
+      "nameEn": "Yeongnam High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_YEONGNAM",
       "schoolId": "SCHOOL_HS_YEONGNAM_HS",
@@ -6804,7 +6804,7 @@
     {
       "id": "TEAM_HS_YEONSU",
       "name": "연수고",
-      "nameEn": "",
+      "nameEn": "Yeonsu High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_YEONSU",
       "schoolId": "SCHOOL_HS_YEONSU",
@@ -6858,7 +6858,7 @@
     {
       "id": "TEAM_HS_YESAN",
       "name": "예산고",
-      "nameEn": "",
+      "nameEn": "Yesan High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_YESAN",
       "schoolId": "SCHOOL_HS_YESAN",
@@ -6912,7 +6912,7 @@
     {
       "id": "TEAM_HS_YUDAL",
       "name": "유달고",
-      "nameEn": "",
+      "nameEn": "Yudal High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_YUDAL",
       "schoolId": "SCHOOL_HS_YUDAL_HS",
@@ -6966,7 +6966,7 @@
     {
       "id": "TEAM_HS_YUSEONG",
       "name": "유성고",
-      "nameEn": "",
+      "nameEn": "Yuseong High",
       "leagueId": "LEAGUE_HIGHSCHOOL",
       "clubId": "TEAM_HS_YUSEONG",
       "schoolId": "SCHOOL_HS_YUSEONG",
@@ -7020,7 +7020,7 @@
     {
       "id": "TEAM_IND_BUSAN_SEALIONS",
       "name": "부산 씨라이온스",
-      "nameEn": "",
+      "nameEn": "Busan Sea Lions",
       "leagueId": "LEAGUE_INDEPENDENT",
       "clubId": "TEAM_IND_BUSAN_SEALIONS",
       "schoolId": "",
@@ -7074,7 +7074,7 @@
     {
       "id": "TEAM_IND_DAEGU_HAWKS",
       "name": "대구 호크스",
-      "nameEn": "",
+      "nameEn": "Daegu Hawks",
       "leagueId": "LEAGUE_INDEPENDENT",
       "clubId": "TEAM_IND_DAEGU_HAWKS",
       "schoolId": "",
@@ -7128,7 +7128,7 @@
     {
       "id": "TEAM_IND_DAEJEON_BLAZE",
       "name": "대전 블레이즈",
-      "nameEn": "",
+      "nameEn": "Daejeon Blaze",
       "leagueId": "LEAGUE_INDEPENDENT",
       "clubId": "TEAM_IND_DAEJEON_BLAZE",
       "schoolId": "",
@@ -7188,7 +7188,7 @@
     {
       "id": "TEAM_IND_GWANGJU_RHINOS",
       "name": "광주 라이노스",
-      "nameEn": "",
+      "nameEn": "Gwangju Rhinos",
       "leagueId": "LEAGUE_INDEPENDENT",
       "clubId": "TEAM_IND_GWANGJU_RHINOS",
       "schoolId": "",
@@ -7242,7 +7242,7 @@
     {
       "id": "TEAM_IND_INCHEON_GRIFFONS",
       "name": "인천 그리폰스",
-      "nameEn": "",
+      "nameEn": "Incheon Griffons",
       "leagueId": "LEAGUE_INDEPENDENT",
       "clubId": "TEAM_IND_INCHEON_GRIFFONS",
       "schoolId": "",
@@ -7301,7 +7301,7 @@
     {
       "id": "TEAM_IND_PAJU_UNICORNS",
       "name": "파주 유니콘스",
-      "nameEn": "",
+      "nameEn": "Paju Unicorns",
       "leagueId": "LEAGUE_INDEPENDENT",
       "clubId": "TEAM_IND_PAJU_UNICORNS",
       "schoolId": "",
@@ -7361,7 +7361,7 @@
     {
       "id": "TEAM_IND_SANGMU_PHOENIX",
       "name": "상무 피닉스",
-      "nameEn": "",
+      "nameEn": "Sangmu Phoenix",
       "leagueId": "LEAGUE_INDEPENDENT",
       "clubId": "TEAM_IND_SANGMU_PHOENIX",
       "schoolId": "",
@@ -7441,7 +7441,7 @@
     {
       "id": "TEAM_IND_SEOUL_COMETS",
       "name": "서울 코메츠",
-      "nameEn": "",
+      "nameEn": "Seoul Comets",
       "leagueId": "LEAGUE_INDEPENDENT",
       "clubId": "TEAM_IND_SEOUL_COMETS",
       "schoolId": "",
@@ -7500,7 +7500,7 @@
     {
       "id": "TEAM_IND_SEOUL_RAVENS",
       "name": "서울 레이븐스",
-      "nameEn": "",
+      "nameEn": "Seoul Ravens",
       "leagueId": "LEAGUE_INDEPENDENT",
       "clubId": "TEAM_IND_SEOUL_RAVENS",
       "schoolId": "",
@@ -7570,7 +7570,7 @@
     {
       "id": "TEAM_IND_WONJU_WINNERS",
       "name": "원주 위너스",
-      "nameEn": "",
+      "nameEn": "Wonju Winners",
       "leagueId": "LEAGUE_INDEPENDENT",
       "clubId": "TEAM_IND_WONJU_WINNERS",
       "schoolId": "",
@@ -7624,7 +7624,7 @@
     {
       "id": "TEAM_KBL_BUSAN_WAVES_1",
       "name": "부산 웨이브스",
-      "nameEn": "",
+      "nameEn": "Busan Waves",
       "leagueId": "LEAGUE_KBL",
       "clubId": "TEAM_KBL_BUSAN_WAVES_1",
       "schoolId": "",
@@ -7683,7 +7683,7 @@
     {
       "id": "TEAM_KBL_BUSAN_WAVES_2",
       "name": "부산 웨이브스 (2군)",
-      "nameEn": "",
+      "nameEn": "Busan Waves (Farm)",
       "leagueId": "LEAGUE_KBL",
       "clubId": "TEAM_KBL_BUSAN_WAVES_2",
       "schoolId": "",
@@ -7716,7 +7716,7 @@
     {
       "id": "TEAM_KBL_CHANGWON_STARS_1",
       "name": "창원 스타스",
-      "nameEn": "",
+      "nameEn": "Changwon Stars",
       "leagueId": "LEAGUE_KBL",
       "clubId": "TEAM_KBL_CHANGWON_STARS_1",
       "schoolId": "",
@@ -7775,7 +7775,7 @@
     {
       "id": "TEAM_KBL_CHANGWON_STARS_2",
       "name": "창원 스타스 (2군)",
-      "nameEn": "",
+      "nameEn": "Changwon Stars (Farm)",
       "leagueId": "LEAGUE_KBL",
       "clubId": "TEAM_KBL_CHANGWON_STARS_2",
       "schoolId": "",
@@ -7808,7 +7808,7 @@
     {
       "id": "TEAM_KBL_DAEGU_SABERS_1",
       "name": "대구 세이버스",
-      "nameEn": "",
+      "nameEn": "Daegu Sabers",
       "leagueId": "LEAGUE_KBL",
       "clubId": "TEAM_KBL_DAEGU_SABERS_1",
       "schoolId": "",
@@ -7867,7 +7867,7 @@
     {
       "id": "TEAM_KBL_DAEGU_SABERS_2",
       "name": "대구 세이버스 (2군)",
-      "nameEn": "",
+      "nameEn": "Daegu Sabers (Farm)",
       "leagueId": "LEAGUE_KBL",
       "clubId": "TEAM_KBL_DAEGU_SABERS_2",
       "schoolId": "",
@@ -7900,7 +7900,7 @@
     {
       "id": "TEAM_KBL_DAEJEON_PHANTOMS_1",
       "name": "대전 팬텀스",
-      "nameEn": "",
+      "nameEn": "Daejeon Phantoms",
       "leagueId": "LEAGUE_KBL",
       "clubId": "TEAM_KBL_DAEJEON_PHANTOMS_1",
       "schoolId": "",
@@ -7959,7 +7959,7 @@
     {
       "id": "TEAM_KBL_DAEJEON_PHANTOMS_2",
       "name": "대전 팬텀스 (2군)",
-      "nameEn": "",
+      "nameEn": "Daejeon Phantoms (Farm)",
       "leagueId": "LEAGUE_KBL",
       "clubId": "TEAM_KBL_DAEJEON_PHANTOMS_2",
       "schoolId": "",
@@ -7992,7 +7992,7 @@
     {
       "id": "TEAM_KBL_GWANGJU_PANTHERS_1",
       "name": "광주 팬서스",
-      "nameEn": "",
+      "nameEn": "Gwangju Panthers",
       "leagueId": "LEAGUE_KBL",
       "clubId": "TEAM_KBL_GWANGJU_PANTHERS_1",
       "schoolId": "",
@@ -8057,7 +8057,7 @@
     {
       "id": "TEAM_KBL_GWANGJU_PANTHERS_2",
       "name": "광주 팬서스 (2군)",
-      "nameEn": "",
+      "nameEn": "Gwangju Panthers (Farm)",
       "leagueId": "LEAGUE_KBL",
       "clubId": "TEAM_KBL_GWANGJU_PANTHERS_2",
       "schoolId": "",
@@ -8090,7 +8090,7 @@
     {
       "id": "TEAM_KBL_INCHEON_SHARKS_1",
       "name": "인천 샤크스",
-      "nameEn": "",
+      "nameEn": "Incheon Sharks",
       "leagueId": "LEAGUE_KBL",
       "clubId": "TEAM_KBL_INCHEON_SHARKS_1",
       "schoolId": "",
@@ -8149,7 +8149,7 @@
     {
       "id": "TEAM_KBL_INCHEON_SHARKS_2",
       "name": "인천 샤크스 (2군)",
-      "nameEn": "",
+      "nameEn": "Incheon Sharks (Farm)",
       "leagueId": "LEAGUE_KBL",
       "clubId": "TEAM_KBL_INCHEON_SHARKS_2",
       "schoolId": "",
@@ -8182,7 +8182,7 @@
     {
       "id": "TEAM_KBL_SEOUL_COBRAS_1",
       "name": "서울 코브라스",
-      "nameEn": "",
+      "nameEn": "Seoul Cobras",
       "leagueId": "LEAGUE_KBL",
       "clubId": "TEAM_KBL_SEOUL_COBRAS_1",
       "schoolId": "",
@@ -8241,7 +8241,7 @@
     {
       "id": "TEAM_KBL_SEOUL_COBRAS_2",
       "name": "서울 코브라스 (2군)",
-      "nameEn": "",
+      "nameEn": "Seoul Cobras (Farm)",
       "leagueId": "LEAGUE_KBL",
       "clubId": "TEAM_KBL_SEOUL_COBRAS_2",
       "schoolId": "",
@@ -8274,7 +8274,7 @@
     {
       "id": "TEAM_KBL_SEOUL_GUARDIANS_1",
       "name": "서울 가디언스",
-      "nameEn": "",
+      "nameEn": "Seoul Guardians",
       "leagueId": "LEAGUE_KBL",
       "clubId": "TEAM_KBL_SEOUL_GUARDIANS_1",
       "schoolId": "",
@@ -8349,7 +8349,7 @@
     {
       "id": "TEAM_KBL_SEOUL_GUARDIANS_2",
       "name": "서울 가디언스 (2군)",
-      "nameEn": "",
+      "nameEn": "Seoul Guardians (Farm)",
       "leagueId": "LEAGUE_KBL",
       "clubId": "TEAM_KBL_SEOUL_GUARDIANS_2",
       "schoolId": "",
@@ -8382,7 +8382,7 @@
     {
       "id": "TEAM_KBL_SEOUL_ROYALS_1",
       "name": "서울 로열스",
-      "nameEn": "",
+      "nameEn": "Seoul Royals",
       "leagueId": "LEAGUE_KBL",
       "clubId": "TEAM_KBL_SEOUL_ROYALS_1",
       "schoolId": "",
@@ -8462,7 +8462,7 @@
     {
       "id": "TEAM_KBL_SEOUL_ROYALS_2",
       "name": "서울 로열스 (2군)",
-      "nameEn": "",
+      "nameEn": "Seoul Royals (Farm)",
       "leagueId": "LEAGUE_KBL",
       "clubId": "TEAM_KBL_SEOUL_ROYALS_2",
       "schoolId": "",
@@ -8495,7 +8495,7 @@
     {
       "id": "TEAM_KBL_SUWON_KNIGHTS_1",
       "name": "수원 나이츠",
-      "nameEn": "",
+      "nameEn": "Suwon Knights",
       "leagueId": "LEAGUE_KBL",
       "clubId": "TEAM_KBL_SUWON_KNIGHTS_1",
       "schoolId": "",
@@ -8565,7 +8565,7 @@
     {
       "id": "TEAM_KBL_SUWON_KNIGHTS_2",
       "name": "수원 나이츠 (2군)",
-      "nameEn": "",
+      "nameEn": "Suwon Knights (Farm)",
       "leagueId": "LEAGUE_KBL",
       "clubId": "TEAM_KBL_SUWON_KNIGHTS_2",
       "schoolId": "",
@@ -8598,7 +8598,7 @@
     {
       "id": "TEAM_UNIV_ASAN",
       "name": "아산대",
-      "nameEn": "",
+      "nameEn": "Asan Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_ASAN",
       "schoolId": "SCHOOL_UNIV_ASAN",
@@ -8652,7 +8652,7 @@
     {
       "id": "TEAM_UNIV_BAEKJE",
       "name": "백제대",
-      "nameEn": "",
+      "nameEn": "Baekje Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_BAEKJE",
       "schoolId": "SCHOOL_UNIV_BAEKJE",
@@ -8722,7 +8722,7 @@
     {
       "id": "TEAM_UNIV_BAEKSAN",
       "name": "백산대",
-      "nameEn": "",
+      "nameEn": "Baeksan Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_BAEKSAN",
       "schoolId": "SCHOOL_UNIV_BAEKSAN",
@@ -8792,7 +8792,7 @@
     {
       "id": "TEAM_UNIV_BANWOL",
       "name": "반월대",
-      "nameEn": "",
+      "nameEn": "Banwol Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_BANWOL",
       "schoolId": "SCHOOL_UNIV_BANWOL",
@@ -8846,7 +8846,7 @@
     {
       "id": "TEAM_UNIV_BISEUL",
       "name": "비슬대",
-      "nameEn": "",
+      "nameEn": "Biseul Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_BISEUL",
       "schoolId": "SCHOOL_UNIV_BISEUL",
@@ -8900,7 +8900,7 @@
     {
       "id": "TEAM_UNIV_BITGOEUL",
       "name": "빛고을대",
-      "nameEn": "",
+      "nameEn": "Bitgoeul Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_BITGOEUL",
       "schoolId": "SCHOOL_UNIV_BITGOEUL",
@@ -8959,7 +8959,7 @@
     {
       "id": "TEAM_UNIV_BUKHANSAN",
       "name": "북한산대",
-      "nameEn": "",
+      "nameEn": "Bukhansan Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_BUKHANSAN",
       "schoolId": "SCHOOL_UNIV_BUKHANSAN",
@@ -9013,7 +9013,7 @@
     {
       "id": "TEAM_UNIV_BUNSEONG",
       "name": "분성대",
-      "nameEn": "",
+      "nameEn": "Bunseong Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_BUNSEONG",
       "schoolId": "SCHOOL_UNIV_BUNSEONG",
@@ -9067,7 +9067,7 @@
     {
       "id": "TEAM_UNIV_BYEOLLAE",
       "name": "별내대",
-      "nameEn": "",
+      "nameEn": "Byeollae Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_BYEOLLAE",
       "schoolId": "SCHOOL_UNIV_BYEOLLAE",
@@ -9121,7 +9121,7 @@
     {
       "id": "TEAM_UNIV_CHIAK",
       "name": "치악대",
-      "nameEn": "",
+      "nameEn": "Chiak Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_CHIAK",
       "schoolId": "SCHOOL_UNIV_CHIAK",
@@ -9180,7 +9180,7 @@
     {
       "id": "TEAM_UNIV_DALGUBEOL",
       "name": "달구벌대",
-      "nameEn": "",
+      "nameEn": "Dalgubeol Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_DALGUBEOL",
       "schoolId": "SCHOOL_UNIV_DALGUBEOL",
@@ -9250,7 +9250,7 @@
     {
       "id": "TEAM_UNIV_GEOJE",
       "name": "거제대",
-      "nameEn": "",
+      "nameEn": "Geoje Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_GEOJE",
       "schoolId": "SCHOOL_UNIV_GEOJE",
@@ -9304,7 +9304,7 @@
     {
       "id": "TEAM_UNIV_GEUMJEONG",
       "name": "금정대",
-      "nameEn": "",
+      "nameEn": "Geumjeong Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_GEUMJEONG",
       "schoolId": "SCHOOL_UNIV_GEUMJEONG",
@@ -9358,7 +9358,7 @@
     {
       "id": "TEAM_UNIV_GWANAK",
       "name": "관악대",
-      "nameEn": "",
+      "nameEn": "Gwanak Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_GWANAK",
       "schoolId": "SCHOOL_UNIV_GWANAK",
@@ -9412,7 +9412,7 @@
     {
       "id": "TEAM_UNIV_GWANGGYO",
       "name": "광교대",
-      "nameEn": "",
+      "nameEn": "Gwanggyo Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_GWANGGYO",
       "schoolId": "SCHOOL_UNIV_GWANGGYO",
@@ -9466,7 +9466,7 @@
     {
       "id": "TEAM_UNIV_GWANYANG",
       "name": "관양대",
-      "nameEn": "",
+      "nameEn": "Gwanyang Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_GWANYANG",
       "schoolId": "SCHOOL_UNIV_GWANYANG",
@@ -9520,7 +9520,7 @@
     {
       "id": "TEAM_UNIV_GYEONGIN",
       "name": "경인대",
-      "nameEn": "",
+      "nameEn": "Gyeongin Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_GYEONGIN",
       "schoolId": "SCHOOL_UNIV_GYEONGIN",
@@ -9579,7 +9579,7 @@
     {
       "id": "TEAM_UNIV_GYERYONG",
       "name": "계룡대",
-      "nameEn": "",
+      "nameEn": "Gyeryong Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_GYERYONG",
       "schoolId": "SCHOOL_UNIV_GYERYONG",
@@ -9633,7 +9633,7 @@
     {
       "id": "TEAM_UNIV_HAEDONG",
       "name": "해동대",
-      "nameEn": "",
+      "nameEn": "Haedong Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_HAEDONG",
       "schoolId": "SCHOOL_UNIV_HAEDONG",
@@ -9698,7 +9698,7 @@
     {
       "id": "TEAM_UNIV_HAHOE",
       "name": "하회대",
-      "nameEn": "",
+      "nameEn": "Hahoe Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_HAHOE",
       "schoolId": "SCHOOL_UNIV_HAHOE",
@@ -9752,7 +9752,7 @@
     {
       "id": "TEAM_UNIV_HALLYU",
       "name": "한류대",
-      "nameEn": "",
+      "nameEn": "Hallyu Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_HALLYU",
       "schoolId": "SCHOOL_UNIV_HALLYU",
@@ -9842,7 +9842,7 @@
     {
       "id": "TEAM_UNIV_HANAM",
       "name": "하남대",
-      "nameEn": "",
+      "nameEn": "Hanam Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_HANAM",
       "schoolId": "SCHOOL_UNIV_HANAM",
@@ -9896,7 +9896,7 @@
     {
       "id": "TEAM_UNIV_HANGANG",
       "name": "한강대",
-      "nameEn": "",
+      "nameEn": "Hangang Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_HANGANG",
       "schoolId": "SCHOOL_UNIV_HANGANG",
@@ -9950,7 +9950,7 @@
     {
       "id": "TEAM_UNIV_HWAHONG",
       "name": "화홍대",
-      "nameEn": "",
+      "nameEn": "Hwahong Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_HWAHONG",
       "schoolId": "SCHOOL_UNIV_HWAHONG",
@@ -10004,7 +10004,7 @@
     {
       "id": "TEAM_UNIV_HYEONGSAN",
       "name": "형산대",
-      "nameEn": "",
+      "nameEn": "Hyeongsan Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_HYEONGSAN",
       "schoolId": "SCHOOL_UNIV_HYEONGSAN",
@@ -10058,7 +10058,7 @@
     {
       "id": "TEAM_UNIV_JINWI",
       "name": "진위대",
-      "nameEn": "",
+      "nameEn": "Jinwi Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_JINWI",
       "schoolId": "SCHOOL_UNIV_JINWI",
@@ -10112,7 +10112,7 @@
     {
       "id": "TEAM_UNIV_NAMAK",
       "name": "남악대",
-      "nameEn": "",
+      "nameEn": "Namak Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_NAMAK",
       "schoolId": "SCHOOL_UNIV_NAMAK",
@@ -10166,7 +10166,7 @@
     {
       "id": "TEAM_UNIV_NAMGANG",
       "name": "남강대",
-      "nameEn": "",
+      "nameEn": "Namgang Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_NAMGANG",
       "schoolId": "SCHOOL_UNIV_NAMGANG",
@@ -10220,7 +10220,7 @@
     {
       "id": "TEAM_UNIV_NAMSAN",
       "name": "남산대",
-      "nameEn": "",
+      "nameEn": "Namsan Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_NAMSAN",
       "schoolId": "SCHOOL_UNIV_NAMSAN",
@@ -10274,7 +10274,7 @@
     {
       "id": "TEAM_UNIV_ODONG",
       "name": "오동대",
-      "nameEn": "",
+      "nameEn": "Odong Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_ODONG",
       "schoolId": "SCHOOL_UNIV_ODONG",
@@ -10328,7 +10328,7 @@
     {
       "id": "TEAM_UNIV_OKCHEON",
       "name": "옥천대",
-      "nameEn": "",
+      "nameEn": "Okcheon Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_OKCHEON",
       "schoolId": "SCHOOL_UNIV_OKCHEON",
@@ -10382,7 +10382,7 @@
     {
       "id": "TEAM_UNIV_OSAN",
       "name": "오산대",
-      "nameEn": "",
+      "nameEn": "Osan Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_OSAN",
       "schoolId": "SCHOOL_UNIV_OSAN",
@@ -10436,7 +10436,7 @@
     {
       "id": "TEAM_UNIV_SANGDANG",
       "name": "상당대",
-      "nameEn": "",
+      "nameEn": "Sangdang Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_SANGDANG",
       "schoolId": "SCHOOL_UNIV_SANGDANG",
@@ -10490,7 +10490,7 @@
     {
       "id": "TEAM_UNIV_SEOGWI",
       "name": "서귀대",
-      "nameEn": "",
+      "nameEn": "Seogwi Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_SEOGWI",
       "schoolId": "SCHOOL_UNIV_SEOGWI",
@@ -10544,7 +10544,7 @@
     {
       "id": "TEAM_UNIV_SEONGHWAN",
       "name": "성환대",
-      "nameEn": "",
+      "nameEn": "Seonghwan Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_SEONGHWAN",
       "schoolId": "SCHOOL_UNIV_SEONGHWAN",
@@ -10598,7 +10598,7 @@
     {
       "id": "TEAM_UNIV_SEORAK",
       "name": "설악대",
-      "nameEn": "",
+      "nameEn": "Seorak Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_SEORAK",
       "schoolId": "SCHOOL_UNIV_SEORAK",
@@ -10652,7 +10652,7 @@
     {
       "id": "TEAM_UNIV_SEOSAN",
       "name": "서산대",
-      "nameEn": "",
+      "nameEn": "Seosan Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_SEOSAN",
       "schoolId": "SCHOOL_UNIV_SEOSAN",
@@ -10706,7 +10706,7 @@
     {
       "id": "TEAM_UNIV_SEOSEOK",
       "name": "서석대",
-      "nameEn": "",
+      "nameEn": "Seoseok Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_SEOSEOK",
       "schoolId": "SCHOOL_UNIV_SEOSEOK",
@@ -10771,7 +10771,7 @@
     {
       "id": "TEAM_UNIV_SEUNGJU",
       "name": "승주대",
-      "nameEn": "",
+      "nameEn": "Seungju Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_SEUNGJU",
       "schoolId": "SCHOOL_UNIV_SEUNGJU",
@@ -10825,7 +10825,7 @@
     {
       "id": "TEAM_UNIV_SIHWA",
       "name": "시화대",
-      "nameEn": "",
+      "nameEn": "Sihwa Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_SIHWA",
       "schoolId": "SCHOOL_UNIV_SIHWA",
@@ -10879,7 +10879,7 @@
     {
       "id": "TEAM_UNIV_SONGDO",
       "name": "송도대",
-      "nameEn": "",
+      "nameEn": "Songdo Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_SONGDO",
       "schoolId": "SCHOOL_UNIV_SONGDO",
@@ -10938,7 +10938,7 @@
     {
       "id": "TEAM_UNIV_SOSA",
       "name": "소사대",
-      "nameEn": "",
+      "nameEn": "Sosa Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_SOSA",
       "schoolId": "SCHOOL_UNIV_SOSA",
@@ -10992,7 +10992,7 @@
     {
       "id": "TEAM_UNIV_SURI",
       "name": "수리대",
-      "nameEn": "",
+      "nameEn": "Suri Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_SURI",
       "schoolId": "SCHOOL_UNIV_SURI",
@@ -11057,7 +11057,7 @@
     {
       "id": "TEAM_UNIV_TAEHWA",
       "name": "태화대",
-      "nameEn": "",
+      "nameEn": "Taehwa Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_TAEHWA",
       "schoolId": "SCHOOL_UNIV_TAEHWA",
@@ -11111,7 +11111,7 @@
     {
       "id": "TEAM_UNIV_TONGYEONG",
       "name": "통영대",
-      "nameEn": "",
+      "nameEn": "Tongyeong Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_TONGYEONG",
       "schoolId": "SCHOOL_UNIV_TONGYEONG",
@@ -11165,7 +11165,7 @@
     {
       "id": "TEAM_UNIV_WANSAN",
       "name": "완산대",
-      "nameEn": "",
+      "nameEn": "Wansan Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_WANSAN",
       "schoolId": "SCHOOL_UNIV_WANSAN",
@@ -11224,7 +11224,7 @@
     {
       "id": "TEAM_UNIV_WOLMI",
       "name": "월미대",
-      "nameEn": "",
+      "nameEn": "Wolmi Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_WOLMI",
       "schoolId": "SCHOOL_UNIV_WOLMI",
@@ -11278,7 +11278,7 @@
     {
       "id": "TEAM_UNIV_YEONGCHEON",
       "name": "영천대",
-      "nameEn": "",
+      "nameEn": "Yeongcheon Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_YEONGCHEON",
       "schoolId": "SCHOOL_UNIV_YEONGCHEON",
@@ -11332,7 +11332,7 @@
     {
       "id": "TEAM_UNIV_YUDAL",
       "name": "유달대",
-      "nameEn": "",
+      "nameEn": "Yudal Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_YUDAL",
       "schoolId": "SCHOOL_UNIV_YUDAL",
@@ -11386,7 +11386,7 @@
     {
       "id": "TEAM_UNIV_YUSEONG",
       "name": "유성대",
-      "nameEn": "",
+      "nameEn": "Yuseong Univ",
       "leagueId": "LEAGUE_UNIVERSITY",
       "clubId": "TEAM_UNIV_YUSEONG",
       "schoolId": "SCHOOL_UNIV_YUSEONG",

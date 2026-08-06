@@ -5,7 +5,7 @@
   import IntroScreen from "./features/intro/ui/IntroScreen.svelte";
   import SaveSlotScreen from "./features/save-slots/ui/SaveSlotScreen.svelte";
   import { get } from "svelte/store";
-  import { masterStore } from "./shared/stores/master";
+  import { masterStore, teamsL10n } from "./shared/stores/master";
   import { gameStore } from "./shared/stores/game";
   import { seasonStore } from "./shared/stores/season";
   import { npcLiveStatsStore } from "./shared/stores/npcLiveStats";
@@ -23,7 +23,7 @@
   //
   // 소속이 없는 화면(인트로·슬롯 선택·새 게임 1단계)은 폴백 색으로 돈다.
   $: myTeamId = $gameStore.protagonist?.teamId ?? "";
-  $: myTeam = myTeamId ? ($masterStore.teams ?? []).find((t) => t.id === myTeamId) : undefined;
+  $: myTeam = myTeamId ? ($teamsL10n ?? []).find((t) => t.id === myTeamId) : undefined;
 
   // ── 테마 ──────────────────────────────────────────────────────
   //

@@ -1,13 +1,13 @@
 <script lang="ts">
   import { acceptDraftOffer, rejectDraftOffer } from "../../../shared/usecases/careerDecision";
-  import { masterStore } from "../../../shared/stores/master";
+  import { masterStore, teamsL10n } from "../../../shared/stores/master";
   import type { PendingAction } from "../../../shared/types/season";
 
   export let action: Extract<PendingAction, { type: "draftNotification" }>;
 
   let resolving = false;
 
-  $: teamName = $masterStore.teams.find((t) => t.id === action.teamId)?.name ?? action.teamId;
+  $: teamName = $teamsL10n.find((t) => t.id === action.teamId)?.name ?? action.teamId;
   $: totalValue = action.salary * action.durationYears + action.signingBonus;
 
   function formatSalary(v: number): string {

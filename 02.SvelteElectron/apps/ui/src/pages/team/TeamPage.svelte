@@ -1,6 +1,6 @@
 <script lang="ts">
   import { teamTokens } from "../../shared/utils/teamTheme";
-  import { masterStore } from "../../shared/stores/master";
+  import { masterStore, entitiesL10n, teamsL10n } from "../../shared/stores/master";
   import { inScope, isLeagueInScope } from "../../shared/config/releaseScope";
   import type { EntityDetails } from "../../shared/stores/master";
   import { gameStore } from "../../shared/stores/game";
@@ -47,7 +47,7 @@
   }
 
   // 1차 출시 범위 밖(해외) 팀은 목록에 넣지 않는다 — releaseScope.ts
-  $: filteredTeams = inScope($masterStore.teams).filter((team) => {
+  $: filteredTeams = inScope($teamsL10n).filter((team) => {
     if (leagueTab === "all") return true;
     return team.leagueId === LEAGUE_MAP[leagueTab as Exclude<LeagueTab, "all">];
   });
@@ -82,7 +82,7 @@
   $: teamRows = selectedTeamId
     ? [
         ...(protagonistTeamRow?.teamId === selectedTeamId ? [protagonistTeamRow] : []),
-        ...$masterStore.entities.filter((e) => e.teamId === selectedTeamId),
+        ...$entitiesL10n.filter((e) => e.teamId === selectedTeamId),
       ].sort((a, b) => {
         const roleOrder: Record<string, number> = { owner: 0, manager: 1, coach: 2, player: 3 };
         const diff = (roleOrder[a.role] ?? 9) - (roleOrder[b.role] ?? 9);

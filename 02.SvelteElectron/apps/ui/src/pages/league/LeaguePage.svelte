@@ -4,7 +4,7 @@
   import { visibleLeagueIds, leaderboardLeagueIds } from "../../shared/utils/leagueVisibility";
   import { gameStore } from "../../shared/stores/game";
   import { seasonStore } from "../../shared/stores/season";
-  import { masterStore, teamMap } from "../../shared/stores/master";
+  import { masterStore, teamMap, entitiesL10n } from "../../shared/stores/master";
   import { leagueUiState, type LeagueTab, type TxCategory } from "../../shared/stores/leagueUiStore";
   import {
     tournamentsOfLeague, tournamentPhase, bracketRounds, championOf,
@@ -435,12 +435,12 @@
 
   function entityName(id: string): string {
     if (id === $gameStore.protagonist.id) return $gameStore.protagonist.name;
-    const e = $masterStore.entities.find((en) => en.id === id);
+    const e = $entitiesL10n.find((en) => en.id === id);
     return e?.name ?? id;
   }
   function entityTeam(id: string): string {
     if (id === $gameStore.protagonist.id) return tName($gameStore.protagonist.teamId);
-    const e = $masterStore.entities.find((en) => en.id === id);
+    const e = $entitiesL10n.find((en) => en.id === id);
     return e ? tName(e.teamId) : "-";
   }
 
@@ -575,7 +575,7 @@
   function histPersonName(saved: string | undefined, id: string): string {
     if (saved) return saved;
     if (id === $gameStore.protagonist.id) return $gameStore.protagonist.name;
-    const e = $masterStore.entities.find((en) => en.id === id);
+    const e = $entitiesL10n.find((en) => en.id === id);
     return e?.name ?? GONE;
   }
 </script>

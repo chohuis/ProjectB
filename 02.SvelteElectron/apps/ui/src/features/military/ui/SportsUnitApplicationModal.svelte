@@ -1,12 +1,12 @@
 <script lang="ts">
   import { gameStore } from "../../../shared/stores/game";
   import { seasonStore } from "../../../shared/stores/season";
-  import { masterStore } from "../../../shared/stores/master";
+  import { masterStore, teamsL10n } from "../../../shared/stores/master";
 
   let resolving = false;
 
   $: p = $gameStore.protagonist;
-  $: teamById = new Map(($masterStore.teams ?? []).map((t) => [t.id, t.name]));
+  $: teamById = new Map(($teamsL10n ?? []).map((t) => [t.id, t.name]));
 
   // W50 메시지에서 후보 목록 파싱
   $: candidateMsg = $gameStore.mailbox.find((m) =>

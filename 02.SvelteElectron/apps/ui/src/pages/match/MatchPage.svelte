@@ -3,7 +3,7 @@
   import { get } from "svelte/store";
   import BaseballField from "../../features/match-view/ui/BaseballField.svelte";
   import { gameStore } from "../../shared/stores/game";
-  import { masterStore } from "../../shared/stores/master";
+  import { masterStore, teamsL10n } from "../../shared/stores/master";
   import type { EntityRow, EntityDetails } from "../../shared/stores/master";
   import type { InteractiveMatchContext, InteractiveMatchResult } from "../../shared/types/season";
   import { parkViewForHomeTeam } from "../../shared/utils/parkView";
@@ -637,7 +637,7 @@
   $: slotLabel  = slotCountLabel(pitchTypes.length, $masterStore.pitchMaxLearned);
 
   $: if (matchContext) {
-    const teamById = new Map($masterStore.teams.map((t) => [t.id, t.name]));
+    const teamById = new Map($teamsL10n.map((t) => [t.id, t.name]));
     scoreRows = [
       { ...scoreRows[0], team: teamById.get(matchContext.awayTeamId) ?? matchContext.awayTeamId },
       { ...scoreRows[1], team: teamById.get(matchContext.homeTeamId) ?? matchContext.homeTeamId },

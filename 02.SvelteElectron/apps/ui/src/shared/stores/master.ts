@@ -3,6 +3,7 @@ import type { EventRule, EventPool, MessageTemplate, DecisionTemplate, DecisionT
 import type { CareerStage, CoachAttributes, CoachSpecialty } from "../types/save";
 import type { DecisionEffect } from "../types/main";
 import { validateTeamRefs, primeTeamLeagueMap, primeHsRegionMap } from "../utils/ids";
+import { language } from "../i18n";
 import {
   KBL_TEAMS, ABL_TEAMS, JBL_TEAMS,
   KBL_FARM_TEAMS, ABL_FARM_TEAMS, JBL_FARM_TEAMS,
@@ -938,8 +939,20 @@ export const trainingProgramMap = derived(masterStore, ($m) =>
   new Map($m.trainingPrograms.map((p) => [p.id, p]))
 );
 
-export const teamMap = derived(masterStore, ($m) =>
-  new Map($m.teams.map((t) => [t.id, t]))
+/**
+ * 팀 조회표 — **언어 설정을 반영한 `name`을 담는다.**
+ *
+ * ⚠ 화면 19곳이 `$teamMap.get(id)?.name`으로 팀 이름을 찍는다. 여기서 한 번
+ * 고르면 그 19곳을 한 줄도 안 고쳐도 된다.
+ *
+ * ⚠ **원본(`masterStore.teams`)은 안 건드린다.** 거기 값을 갈아끼우면
+ * 저장·비교·ID 파생이 전부 표시 언어에 끌려다닌다.
+ */
+export const teamMap = derived([masterStore, language], ([$m, $lang]) =>
+  new Map($m.teams.map((t) => [
+    t.id,
+    $lang === "en" && t.nameEn ? { ...t, name: t.nameEn } : t,
+  ]))
 );
 
 /**
@@ -967,4 +980,36 @@ export const messageTmplMap = derived(masterStore, ($m) =>
 
 export const decisionTmplMap = derived(masterStore, ($m) =>
   new Map($m.decisionTmpls.map((d) => [d.id, d]))
+);
+
+/**
+ * 인물 목록 — **언어 설정을 반영한 `name`을 담는다.**
+ *
+ * ⚠ 화면이 `$masterStore.entities`를 직접 읽으면 언어가 안 따라온다.
+ * 이름을 찍는 화면은 **이 스토어를 읽어야** 한다.
+ *
+ * ⚠ **원본은 안 건드린다.** `masterStore.entities`의 `name`을 갈아끼우면
+ * 다음 저장에서 slot.db의 `name` 열이 표시 언어로 덮인다 — 한글 원본이 사라진다.
+ */
+export const entitiesL10n = derived([masterStore, language], ([$m, $lang]) =>
+  $lang === "en"
+    ? $m.entities.map((e) => (e.nameEn ? { ...e, name: e.nameEn } : e))
+    : $m.entities,
+);
+
+/** 인물 조회표 (언어 반영). id로 한 명 찾을 때 */
+export const entityMap = derived(entitiesL10n, ($list) =>
+  new Map($list.map((e) => [e.id, e])),
+);
+
+/**
+ * 팀 목록 — **언어 설정을 반영한 `name`을 담는다.**
+ *
+ * `teamMap`이 조회용이라면 이건 목록용이다. 화면 22곳이 `$masterStore.teams`를
+ * 직접 읽고 있었고, 그러면 영어로 바꿔도 **그 화면만 한글로 남는다.**
+ */
+export const teamsL10n = derived([masterStore, language], ([$m, $lang]) =>
+  $lang === "en"
+    ? $m.teams.map((t) => (t.nameEn ? { ...t, name: t.nameEn } : t))
+    : $m.teams,
 );

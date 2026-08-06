@@ -1,6 +1,6 @@
 <script lang="ts">
   import { gameStore } from "../../../shared/stores/game";
-  import { masterStore } from "../../../shared/stores/master";
+  import { masterStore, teamsL10n } from "../../../shared/stores/master";
   import { signFaOffer, waitFaMarket } from "../../../shared/usecases/contractDecision";
   import { generateFaOffers, isFaEligible, getFaThreshold, type FaOffer } from "../../../shared/utils/faEngine";
 
@@ -10,8 +10,8 @@
   let offers: FaOffer[] = [];
   let lastCounterMessage = "";
 
-  $: if (offers.length === 0 && $masterStore.teams.length > 0) {
-    generateFaOffers($gameStore.protagonist, $masterStore.teams).then((o) => (offers = o));
+  $: if (offers.length === 0 && $teamsL10n.length > 0) {
+    generateFaOffers($gameStore.protagonist, $teamsL10n).then((o) => (offers = o));
   }
   $: selectedOffer = offers.find((o) => o.teamId === selectedTeamId) ?? offers[0] ?? null;
   $: requestedSalary = selectedOffer ? Math.round(selectedOffer.salary * (1 + raiseRatio)) : 0;
@@ -61,7 +61,7 @@
     <div class="offers">
       {#each offers as offer}
         <button class:selected={selectedOffer?.teamId === offer.teamId} on:click={() => { selectedTeamId = offer.teamId; raiseRatio = 0; }}>
-          <strong>{$masterStore.teams.find((t) => t.id === offer.teamId)?.name ?? offer.teamId}</strong>
+          <strong>{$teamsL10n.find((t) => t.id === offer.teamId)?.name ?? offer.teamId}</strong>
           <span>{offer.salary.toLocaleString()}만원 / {offer.durationYears}년</span>
         </button>
       {/each}

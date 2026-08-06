@@ -4,7 +4,7 @@
   import { hsRegionOfTeam, hsRegionTeams } from "../../shared/utils/ids";
   import { HS_REGIONS } from "../../shared/utils/leagueTeams.generated";
   import { hsRegionMeta } from "../../shared/utils/hsRegionLabel";
-  import { masterStore } from "../../shared/stores/master";
+  import { masterStore, teamsL10n } from "../../shared/stores/master";
 
   type CalendarView = "year" | "month" | "week" | "season";
   type ScheduleType = "game" | "training" | "event" | "rest";
@@ -146,7 +146,7 @@
   $: currentWeek = $seasonStore.currentWeek ?? 1;
 
   function teamLabel(teamId: string): string {
-    return $masterStore.teams.find((t) => t.id === teamId)?.name ?? teamId;
+    return $teamsL10n.find((t) => t.id === teamId)?.name ?? teamId;
   }
   function gameStatusLabel(entry: (typeof seasonEntries)[0]): string {
     if (!entry.result) return entry.week > currentWeek ? "예정" : "진행 중";

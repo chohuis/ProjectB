@@ -1,7 +1,7 @@
 <script lang="ts">
   import { gameStore } from "../../../shared/stores/game";
   import { seasonStore } from "../../../shared/stores/season";
-  import { masterStore } from "../../../shared/stores/master";
+  import { masterStore, teamsL10n } from "../../../shared/stores/master";
   import { chooseDraft, chooseSchoolOrIndependent, continueCurrentStage } from "../../../shared/usecases/careerDecision";
   import { enlistProtagonist } from "../../../shared/usecases/militaryDecision";
   import { canApplyToUniversity, canApplyToIndependent, universityGradeOf, isUniversityFinalYear } from "../../../shared/utils/careerTransition";
@@ -29,7 +29,7 @@
   $: canContinueIndie = isIndependent && !draftPassed;
 
   function teamName(teamId: string): string {
-    return $masterStore.teams.find((t) => t.id === teamId)?.name ?? teamId;
+    return $teamsL10n.find((t) => t.id === teamId)?.name ?? teamId;
   }
 
   // 이름은 "University"지만 독립리그 "계속"도 같은 버튼을 쓴다

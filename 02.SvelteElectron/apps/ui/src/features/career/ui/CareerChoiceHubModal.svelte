@@ -4,7 +4,7 @@
   import { submitCareerApplications } from "../../../shared/usecases/careerDecision";
   import { enlistProtagonist } from "../../../shared/usecases/militaryDecision";
   import { seasonStore } from "../../../shared/stores/season";
-  import { masterStore } from "../../../shared/stores/master";
+  import { masterStore, teamsL10n } from "../../../shared/stores/master";
   import UniversityApplyModal from "./UniversityApplyModal.svelte";
   import IndependentApplyModal from "./IndependentApplyModal.svelte";
   import { canApplyToUniversity, canApplyToIndependent } from "../../../shared/utils/careerTransition";
@@ -26,7 +26,7 @@
   let independentModalOpen = false;
 
   function teamName(teamId: string): string {
-    return $masterStore.teams.find((t) => t.id === teamId)?.name ?? teamId;
+    return $teamsL10n.find((t) => t.id === teamId)?.name ?? teamId;
   }
 
   function setupDefaults() {

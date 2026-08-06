@@ -2,7 +2,7 @@
   import { createEventDispatcher } from "svelte";
   import { gameStore } from "../../../shared/stores/game";
   import { confirmCareerResults } from "../../../shared/usecases/careerDecision";
-  import { masterStore } from "../../../shared/stores/master";
+  import { masterStore, teamsL10n } from "../../../shared/stores/master";
   import { seasonStore } from "../../../shared/stores/season";
   import DraftBoardModal from "./DraftBoardModal.svelte";
 
@@ -32,7 +32,7 @@
 
   function teamName(teamId: string | null): string {
     if (!teamId) return "-";
-    return $masterStore.teams.find((t) => t.id === teamId)?.name ?? teamId;
+    return $teamsL10n.find((t) => t.id === teamId)?.name ?? teamId;
   }
 
   function revealDraft() {

@@ -6,7 +6,7 @@
     type FinanceRulesFile, type InvestmentResult,
   } from "../../../shared/usecases/finance";
   import { seasonStore, currentStandings } from "../../../shared/stores/season";
-  import { masterStore, teamMap } from "../../../shared/stores/master";
+  import { masterStore, teamMap, entitiesL10n } from "../../../shared/stores/master";
   import { runSeasonRollover } from "../../../shared/usecases/seasonRollover";
   import {
     computeAwards, loadAwardRules, type AwardRules,
@@ -150,7 +150,7 @@
 
   // ── 시즌 시상 (리그 전체) ───────────────────────────────────────
   function entityName(id: string): string {
-    return $masterStore.entities.find((e) => e.id === id)?.name ?? id;
+    return $entitiesL10n.find((e) => e.id === id)?.name ?? id;
   }
 
   // ⚠ **여기서 직접 계산하지 않는다.** 예전엔 이 자리에 자체 집계가 있었고
@@ -181,7 +181,7 @@
 
   // ── 팀 내 베스트 선수 ───────────────────────────────────────────
   $: teamMemberIds = new Set(
-    $masterStore.entities.filter((e) => e.teamId === myTeamId && e.id !== p.id).map((e) => e.id),
+    $entitiesL10n.filter((e) => e.teamId === myTeamId && e.id !== p.id).map((e) => e.id),
   );
 
   $: teamBestPitcher = (() => {

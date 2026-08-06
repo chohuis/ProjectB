@@ -90,6 +90,8 @@
     "diag:roster": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/diag-roster.cjs",
     "check:foreignorigin": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-foreign-origin.cjs",
     "check:foreignseed": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-foreign-seed.cjs",
+    "check:namepair": "node scripts/check-namepair.cjs",
+    "check:namelocale": "node scripts/check-namelocale.cjs",
     "check:teamcolors": "node scripts/check-teamcolors.cjs",
     "test:neededpositions": "node scripts/test-neededpositions.cjs",
     "test:npclifecycle": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-npclifecycle.cjs",

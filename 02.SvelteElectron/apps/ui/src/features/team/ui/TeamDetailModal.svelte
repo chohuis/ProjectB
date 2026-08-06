@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import { masterStore } from "../../../shared/stores/master";
+  import { masterStore, entitiesL10n, teamsL10n } from "../../../shared/stores/master";
   import { seasonStore } from "../../../shared/stores/season";
   import { gameStore } from "../../../shared/stores/game";
   // `EntityDetails`는 파일 곳곳에서 캐스팅에 쓰는데 **import가 빠져 있었다** —
@@ -31,7 +31,7 @@
   function handleOverlayClick(e: MouseEvent) { if (e.target === e.currentTarget) close(); }
   function handleKeydown(e: KeyboardEvent) { if (e.key === "Escape") close(); }
 
-  $: team = $masterStore.teams.find((t) => t.id === teamId) ?? null;
+  $: team = $teamsL10n.find((t) => t.id === teamId) ?? null;
 
   /**
    * 구장 이름. **ID를 그대로 찍고 있었다** — 화면에 `🏟 STADIUM_HANGANG`이
@@ -70,7 +70,7 @@
   // **전부 빈 값을 보여주고 있었다.** v2 필드에서 파생한다.
   $: rivals = (team?.history?.rivals ?? [])
     .map((r) => ({
-      team: $masterStore.teams.find((t) => t.id === r.with) ?? null,
+      team: $teamsL10n.find((t) => t.id === r.with) ?? null,
       desc: r.desc ?? "",
     }))
     .filter((r) => r.team !== null);
@@ -110,7 +110,7 @@
         clubId: "", schoolId: p.schoolId ?? "", grade: p.grade, notes: "",
         details: { player: { position: p.position, playerType: p.playerType, pitching: p.pitching, batting: p.batting, developmentRate: p.developmentRate, potentialHidden: p.potentialHidden, handedness: p.handedness, jerseyNumber: p.jerseyNumber }, coach: null, manager: null, owner: null },
       }] : []),
-      ...$masterStore.entities.filter((e) => e.teamId === teamId),
+      ...$entitiesL10n.filter((e) => e.teamId === teamId),
     ];
     const roleOrder: Record<string, number> = { owner: 0, manager: 1, coach: 2, player: 3 };
     return rows.sort((a, b) => {

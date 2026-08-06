@@ -2,7 +2,7 @@
   import { onMount, tick } from "svelte";
   import type { SaveSlotMeta } from "../../../shared/types/projectb.d";
   import { listSlotsV3, deleteSlotV3, renameSlotV3 } from "../../../shared/repo/slotLifecycleV3";
-  import { masterStore } from "../../../shared/stores/master";
+  import { masterStore, teamsL10n } from "../../../shared/stores/master";
   import { careerStageLabel } from "../../../shared/utils/careerStageLabel";
   import { teamTokens } from "../../../shared/utils/teamTheme";
   import TeamMark from "../../team/ui/TeamMark.svelte";
@@ -52,7 +52,7 @@
   /** 슬롯의 팀 — 카드 색과 이름에 쓴다 */
   function teamOf(meta: SaveSlotMeta | null) {
     const id = meta?.preview.teamId;
-    return id ? ($masterStore.teams ?? []).find((t) => t.id === id) : undefined;
+    return id ? ($teamsL10n ?? []).find((t) => t.id === id) : undefined;
   }
 
   function fmtDate(iso: string) {

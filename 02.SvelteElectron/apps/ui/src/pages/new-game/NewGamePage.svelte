@@ -1,6 +1,6 @@
 <script lang="ts">
   import { get } from "svelte/store";
-  import { masterStore } from "../../shared/stores/master";
+  import { masterStore, entitiesL10n, teamsL10n } from "../../shared/stores/master";
   import { gameStore } from "../../shared/stores/game";
   import { HS_SELECTABLE_TEAMS } from "../../shared/utils/leagueScheduler";
   import { HS_REGIONS } from "../../shared/utils/leagueTeams.generated";
@@ -45,7 +45,7 @@
 
 
   // 전체 고교팀 (16개) — 리그 구성용
-  $: hsAllTeams = $masterStore.teams.filter((t) => t.leagueId === "LEAGUE_HIGHSCHOOL");
+  $: hsAllTeams = $teamsL10n.filter((t) => t.leagueId === "LEAGUE_HIGHSCHOOL");
   // ⚠ 주석이 "8개"라고 적혀 있었는데 `HS_SELECTABLE_TEAMS`는 **102개**다.
   //    낡은 주석을 믿고 화면을 잘못 설계할 뻔했다.
   const DIFFICULTY_ORDER: Record<string, number> = { "최상": 5, "상": 4, "중": 3, "하": 2, "최하": 1 };
@@ -80,7 +80,7 @@
   }
 
   /**
-   * ⚠ 예전엔 `$masterStore.entities`를 필터해 로스터를 그리려 했고, 비어 있으면
+   * ⚠ 예전엔 `$entitiesL10n`를 필터해 로스터를 그리려 했고, 비어 있으면
    * "선수 정보 로드 중..."을 띄웠다. **그건 로딩 중이 아니라 영원히 안 채워지는
    * 자리였다** — `npc_master`는 0행이고(Phase 6A), 스태프는 slot.db에서 오는데
    * 아직 슬롯이 없고, `reloadEntities()`는 선수 로드를 의도적으로 건너뛴다.
@@ -112,7 +112,7 @@
     previewLoading = true;
     try {
       const { previewTeamRoster } = await import("../../shared/repo/newGameV3");
-      const r = await previewTeamRoster(teamId, previewSeasonYear, worldSeed, $masterStore.teams);
+      const r = await previewTeamRoster(teamId, previewSeasonYear, worldSeed, $teamsL10n);
       // 늦게 온 응답이 최신 선택을 덮지 않게
       if (previewTeamId !== teamId) return;
       previewNpcs = r.npcs as typeof previewNpcs;
@@ -152,7 +152,7 @@
 
   /** 같은 권역 라이벌 — refs의 history.rivals에서 */
   $: selectedRivals = (selectedTeam?.history?.rivals ?? [])
-    .map((r) => ($masterStore.teams ?? []).find((t) => t.id === r.with))
+    .map((r) => ($teamsL10n ?? []).find((t) => t.id === r.with))
     .filter((t): t is NonNullable<typeof t> => !!t);
 
   // ── Step 3 상태 ────────────────────────────────────────────────

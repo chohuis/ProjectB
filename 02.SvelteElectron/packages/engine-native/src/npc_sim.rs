@@ -1680,11 +1680,37 @@ pub(crate) const SYLLABLES_A: &[&str] = &["민","준","현","재","우","지","�
 pub(crate) const SYLLABLES_B: &[&str] = &["준","혁","원","환","빈","욱","식","윤","완","호","진","우","기","수","민","찬","훈","성","재","현"];
 pub(crate) const POSITIONS:   &[&str] = &["C","1B","2B","3B","SS","LF","CF","RF"];
 
+/// 로마자 표기. **인덱스가 위 배열과 1:1이어야 한다** — 어긋나면 김씨가
+/// Lee로 나온다. 배열을 늘릴 때 짝을 같이 늘려야 하고, 그걸 `check-namepair`가
+/// 본다.
+///
+/// ⚠ 조합은 8,000가지지만 **음절 60개만 매핑하면 전부 커버된다.** 이게 이
+/// 작업이 감당 가능한 이유다.
+pub(crate) const SURNAMES_EN: &[&str] = &[
+    "Kim","Lee","Park","Choi","Jung","Kang","Cho","Yoon","Jang","Lim",
+    "Han","Oh","Seo","Shin","Kwon","Hwang","Ahn","Song","Ryu","Jeon",
+];
+pub(crate) const SYLLABLES_A_EN: &[&str] = &[
+    "Min","Jun","Hyun","Jae","Woo","Ji","Do","Sung","Jin","Dong",
+    "Tae","Soo","Young","Hyuk","Hoon","Ki","Sang","Jung","Se","Chan",
+];
+pub(crate) const SYLLABLES_B_EN: &[&str] = &[
+    "jun","hyuk","won","hwan","bin","wook","sik","yoon","wan","ho",
+    "jin","woo","ki","soo","min","chan","hoon","sung","jae","hyun",
+];
+
+/// (한글, 로마자). 로마자는 **이름-성** 순이다 — `Woo-chan Kim`.
+///
+/// ⚠ 두 번째 값이 예전엔 `"김 우찬"`(띄어쓴 한글)이었다. 이름이 `nameEn`
+/// 필드에 들어가는데 **영문이 아니었다** — 영어 표기를 켜면 그대로 한글이 떴다.
 pub(crate) fn gen_name(rng: &mut LcgRand) -> (String, String) {
-    let sur = SURNAMES[(rng.next() * SURNAMES.len() as f64) as usize % SURNAMES.len()];
-    let a   = SYLLABLES_A[(rng.next() * SYLLABLES_A.len() as f64) as usize % SYLLABLES_A.len()];
-    let b   = SYLLABLES_B[(rng.next() * SYLLABLES_B.len() as f64) as usize % SYLLABLES_B.len()];
-    (format!("{}{}{}", sur, a, b), format!("{} {}{}", sur, a, b))
+    let i = (rng.next() * SURNAMES.len() as f64) as usize % SURNAMES.len();
+    let j = (rng.next() * SYLLABLES_A.len() as f64) as usize % SYLLABLES_A.len();
+    let k = (rng.next() * SYLLABLES_B.len() as f64) as usize % SYLLABLES_B.len();
+    (
+        format!("{}{}{}", SURNAMES[i], SYLLABLES_A[j], SYLLABLES_B[k]),
+        format!("{}-{} {}", SYLLABLES_A_EN[j], SYLLABLES_B_EN[k], SURNAMES_EN[i]),
+    )
 }
 
 /// 생성한 스탯이 목표 OVR을 내도록 **전 스탯을 평행이동**한다.
@@ -3628,5 +3654,47 @@ mod freshmen_ratio_tests {
         let want = crate::tuning::SP_SHARE_OF_PITCHERS;
         assert!((share - want).abs() < 0.08,
             "선발 비중 {share:.3} (선발 {sp} / 불펜 {rp}) — 생성은 {want}");
+    }
+}
+
+#[cfg(test)]
+mod name_pair_tests {
+    use super::*;
+
+    /// ⚠ **인덱스가 어긋나면 김씨가 Lee로 나온다.** 배열을 늘릴 때 짝을 같이
+    /// 늘려야 하는데, 길이가 다르면 조용히 다른 사람 이름이 붙는다.
+    #[test]
+    fn 한글_로마자_배열_길이가_같다() {
+        assert_eq!(SURNAMES.len(), SURNAMES_EN.len(), "성");
+        assert_eq!(SYLLABLES_A.len(), SYLLABLES_A_EN.len(), "이름 첫 음절");
+        assert_eq!(SYLLABLES_B.len(), SYLLABLES_B_EN.len(), "이름 끝 음절");
+    }
+
+    #[test]
+    fn 로마자에_한글이_안_섞인다() {
+        for s in SURNAMES_EN.iter().chain(SYLLABLES_A_EN).chain(SYLLABLES_B_EN) {
+            assert!(s.is_ascii(), "한글이 남았다: {s}");
+            assert!(!s.is_empty(), "빈 칸이 있다");
+        }
+    }
+
+    #[test]
+    fn 로마자는_이름_성_순이다() {
+        let mut rng = LcgRand::new(7);
+        let (ko, en) = gen_name(&mut rng);
+        // 한글은 붙여 쓰고(김우찬), 로마자는 "이름-끝 성"이다(Woo-chan Kim)
+        assert_eq!(ko.chars().count(), 3, "한글 이름은 세 글자다: {ko}");
+        assert!(en.contains('-'), "이름 두 음절이 하이픈으로 붙어야 한다: {en}");
+        let parts: Vec<&str> = en.split(' ').collect();
+        assert_eq!(parts.len(), 2, "\"이름-끝 성\" 두 덩어리여야 한다: {en}");
+        assert!(SURNAMES_EN.contains(&parts[1]), "성이 뒤에 와야 한다: {en}");
+    }
+
+    #[test]
+    fn 같은_시드면_한글과_로마자가_같은_사람이다() {
+        // ⚠ 두 표기가 **다른 난수**를 쓰면 영어로 바꿨을 때 다른 사람이 된다
+        let (ko, en) = gen_name(&mut LcgRand::new(42));
+        let i = SURNAMES.iter().position(|s| ko.starts_with(s)).expect("성 없음");
+        assert!(en.ends_with(SURNAMES_EN[i]), "{ko} ↔ {en} 성이 다르다");
     }
 }

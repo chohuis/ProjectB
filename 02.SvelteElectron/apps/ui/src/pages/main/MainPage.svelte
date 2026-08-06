@@ -2,7 +2,7 @@
   import type { MainTabId } from "../../shared/types/main";
   import { gameStore, unreadCount } from "../../shared/stores/game";
   import { seasonStore, nextPendingAction, seasonEnded } from "../../shared/stores/season";
-  import { teamMap } from "../../shared/stores/master";
+  import { teamMap, entitiesL10n } from "../../shared/stores/master";
   import { applyGameOutcome } from "../../shared/usecases/applyGameOutcome";
   import type { PendingAction } from "../../shared/types/season";
   import { toDateKo } from "../../shared/utils/scheduleGen";
@@ -172,7 +172,7 @@
       const p      = $gameStore.protagonist;
       const isHome = pendingGameEntry.homeTeamId === p.teamId;
 
-      const entities        = $masterStore.entities;
+      const entities        = $entitiesL10n;
       const opponentTeamId  = isHome ? pendingGameEntry.awayTeamId : pendingGameEntry.homeTeamId;
       const opponentLineup  = buildBatterLineup(opponentTeamId, entities);
       const myLineup        = buildBatterLineup(p.teamId, entities);

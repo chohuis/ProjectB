@@ -78,6 +78,16 @@ pub struct NamePool {
     /// 이름-성 순이라 순서가 뒤집히고, `false`는 "사토하루토"가 된다.
     #[serde(default)]
     pub sep: String,
+    /// 짝 표기 — **인덱스가 위 배열과 1:1이어야 한다.**
+    ///
+    /// 원본이 한글인 풀(일본)은 `*_en`을, 원본이 영문인 풀(서양)은 `*_ko`를
+    /// 채운다. 비어 있으면 그 방향 표기가 없다는 뜻이고, 그때는 원본을 그대로
+    /// 쓴다 — **영어 화면에 한글이 남는 것보다 낫다고 보지 않지만, 없는 값을
+    /// 지어내는 것보다는 낫다.** 검사가 빈 짝을 잡는다.
+    #[serde(default)] pub surnames_en: Vec<String>,
+    #[serde(default)] pub given_a_en: Vec<String>,
+    #[serde(default)] pub surnames_ko: Vec<String>,
+    #[serde(default)] pub given_a_ko: Vec<String>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -349,17 +359,40 @@ pub fn gen_name_from_pool(pool: &NamePool, rng: &mut LcgRand) -> (String, String
     gen_name_pooled(pool, rng)
 }
 
+/// (한글, 로마자). **인덱스로 뽑아 두 표기가 같은 사람을 가리키게 한다** —
+/// 값을 따로 뽑으면 영어로 바꿨을 때 다른 사람이 된다.
+///
+/// 로마자는 **이름-성** 순으로 통일한다(`Takumi Yamaguchi` · `Shane Grant`).
+/// 한글은 리그마다 다르다 — 한국은 붙여 쓰고(김우찬) 일본은 띄어 쓴다
+/// (야마구치 다쿠미 · `sep`).
 fn gen_name_pooled(pool: &NamePool, rng: &mut LcgRand) -> (String, String) {
-    let sur = pick(&pool.surnames, rng);
-    let a   = pick(&pool.given_a, rng);
-    let b   = if pool.given_b.is_empty() { "" } else { pick(&pool.given_b, rng) };
+    let i = idx(pool.surnames.len(), rng);
+    let j = idx(pool.given_a.len(), rng);
+    let k = if pool.given_b.is_empty() { 0 } else { idx(pool.given_b.len(), rng) };
+
+    let at = |v: &Vec<String>, n: usize| v.get(n).cloned().unwrap_or_default();
+    let sur = at(&pool.surnames, i);
+    let a   = at(&pool.given_a, j);
+    let b   = if pool.given_b.is_empty() { String::new() } else { at(&pool.given_b, k) };
+
     if pool.western {
-        let name = format!("{} {}", a, sur);
-        (name.clone(), name)
+        // 원본이 영문이다. 한글 짝이 없으면 영문을 그대로 쓴다
+        let en = format!("{} {}", a, sur);
+        let ko_sur = pool.surnames_ko.get(i).cloned().unwrap_or_else(|| sur.clone());
+        let ko_a   = pool.given_a_ko.get(j).cloned().unwrap_or_else(|| a.clone());
+        (format!("{} {}", ko_a, ko_sur), en)
     } else {
-        // 구분자는 성 뒤에만 — 한국식 이름 두 음절(`given_b`)은 계속 붙여 쓴다
-        (format!("{}{}{}{}", sur, pool.sep, a, b), format!("{} {}{}", sur, a, b))
+        // 원본이 한글이다. 구분자는 성 뒤에만 — 한국식 두 음절은 붙여 쓴다
+        let ko = format!("{}{}{}{}", sur, pool.sep, a, b);
+        let en_sur = pool.surnames_en.get(i).cloned().unwrap_or_else(|| sur.clone());
+        let en_a   = pool.given_a_en.get(j).cloned().unwrap_or_else(|| a.clone());
+        (ko, format!("{} {}", en_a, en_sur))
     }
+}
+
+fn idx(len: usize, rng: &mut LcgRand) -> usize {
+    if len == 0 { return 0 }
+    (rng.next() * len as f64) as usize % len
 }
 
 fn gen_name_builtin(rng: &mut LcgRand) -> (String, String) {

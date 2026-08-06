@@ -1,6 +1,6 @@
 <script lang="ts">
   import { gameStore } from "../../../shared/stores/game";
-  import { masterStore } from "../../../shared/stores/master";
+  import { masterStore, teamsL10n } from "../../../shared/stores/master";
   import { seasonStore } from "../../../shared/stores/season";
   import type { PendingAction } from "../../../shared/types/season";
   import { acceptTrade, rejectTrade } from "../../../shared/usecases/contractDecision";
@@ -24,8 +24,8 @@
     SS: "유격수", LF: "좌익수", CF: "중견수", RF: "우익수", DH: "지명타자",
   };
 
-  $: fromTeamName = $masterStore.teams.find((t) => t.id === action.fromTeamId)?.name ?? action.fromTeamId;
-  $: toTeamName   = $masterStore.teams.find((t) => t.id === action.toTeamId)?.name   ?? action.toTeamId;
+  $: fromTeamName = $teamsL10n.find((t) => t.id === action.fromTeamId)?.name ?? action.fromTeamId;
+  $: toTeamName   = $teamsL10n.find((t) => t.id === action.toTeamId)?.name   ?? action.toTeamId;
   $: hasNoTrade   = $gameStore.protagonist.contract?.noTrade ?? false;
   $: reasonLabel  = TRADE_REASON_LABEL[action.tradeReason] ?? action.tradeReason;
   $: posLabel     = POSITION_LABEL[action.receivedPosition] ?? action.receivedPosition;

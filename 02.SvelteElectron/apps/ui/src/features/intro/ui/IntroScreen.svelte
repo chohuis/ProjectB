@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { SaveSlotMeta } from "../../../shared/types/projectb.d";
-  import { masterStore } from "../../../shared/stores/master";
+  import { masterStore, teamsL10n } from "../../../shared/stores/master";
   import { careerStageLabel } from "../../../shared/utils/careerStageLabel";
   import TeamMark from "../../team/ui/TeamMark.svelte";
 
@@ -13,7 +13,7 @@
 
   // ⚠ 팀 이름은 refs에서 찾는다. 슬롯 메타에는 teamId만 있다
   $: team = latest?.preview.teamId
-    ? ($masterStore.teams ?? []).find((t) => t.id === latest!.preview.teamId)
+    ? ($teamsL10n ?? []).find((t) => t.id === latest!.preview.teamId)
     : undefined;
 
   $: stage = careerStageLabel(latest?.preview.careerStage);

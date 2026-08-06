@@ -3,7 +3,7 @@
   import {
     isImmediateContract, signNegotiatedContract, rejectNegotiatedContract,
   } from "../../../shared/usecases/contractDecision";
-  import { masterStore } from "../../../shared/stores/master";
+  import { masterStore, entitiesL10n, teamsL10n } from "../../../shared/stores/master";
   import { seasonStore } from "../../../shared/stores/season";
   import type { PendingAction } from "../../../shared/types/season";
   import type { PitcherSeasonStats, BatterSeasonStats, ProContract } from "../../../shared/types/save";
@@ -41,7 +41,7 @@
   // 관계가 좋아도 궁핍한 구단은 못 준다.
   let ownerLabel = "중립";
   let ownerBonus = 0;
-  $: budgetMod = staffModsOf($gameStore.protagonist.teamId ?? "", $masterStore.entities).budget;
+  $: budgetMod = staffModsOf($gameStore.protagonist.teamId ?? "", $entitiesL10n).budget;
 
   onMount(async () => {
     const slotId = $gameStore.currentSlotId;
@@ -60,7 +60,7 @@
   $: effectiveOffer = Math.round((action.offeredSalary * ownerMult) / 100) * 100;
 
   $: requestedSalary = Math.round(effectiveOffer * (1 + salaryRatio) / 100) * 100;
-  $: teamName = $masterStore.teams.find((t) => t.id === action.teamId)?.name ?? action.teamId;
+  $: teamName = $teamsL10n.find((t) => t.id === action.teamId)?.name ?? action.teamId;
   $: totalValue = requestedSalary * selectedDuration + action.signingBonus;
 
   // 허용 임계값: 옵션 조합에 따라 조정

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { createEventDispatcher } from "svelte";
-  import { masterStore } from "../../../shared/stores/master";
+  import { masterStore, entitiesL10n, teamsL10n } from "../../../shared/stores/master";
   import { isApplicableIndependent, indieCutOfPower } from "../../../shared/utils/universityUtils";
   import type { EntityDetails } from "../../../shared/stores/master";
 
@@ -22,7 +22,7 @@
   });
 
   // 상무는 병역 경로(`SportsUnitApplicationModal`)가 정본이라 여기서 뺀다 — 9팀이다
-  $: teams = $masterStore.teams.filter(
+  $: teams = $teamsL10n.filter(
     (t) => t.leagueId === "LEAGUE_INDEPENDENT" && isApplicableIndependent(t.id),
   );
   $: sortedTeams = [...teams].sort((a, b) => a.name.localeCompare(b.name, "ko"));
@@ -31,7 +31,7 @@
   }
   $: selectedTeam = sortedTeams.find((t) => t.id === selectedTeamId) ?? null;
   $: rosterRows = selectedTeamId
-    ? $masterStore.entities.filter((e) => e.teamId === selectedTeamId)
+    ? $entitiesL10n.filter((e) => e.teamId === selectedTeamId)
     : [];
   $: playerRows = rosterRows.filter((e) => e.role === "player");
 
