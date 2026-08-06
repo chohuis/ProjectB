@@ -2918,3 +2918,62 @@ export function foreignDiag(): {
     ablTotal: overseas.length, ablNationality: natCount, ablKoreanName: koreanName,
   };
 }
+
+/**
+ * 새 게임 시점 용병 출신 시드 (E-③ 확인용).
+ *
+ * ⚠ 예전엔 `seedCareerHistory`가 외국인을 안 가려 Rust `entry_route`가
+ * 입단 나이 23~34를 전부 **"독립"**으로 매겼다 — 세계 시작 시점의 KBL 용병이
+ * **한국 독립리그 출신**으로 기록돼 있었다. 출신이 없는 것보다 나쁘다.
+ */
+export async function foreignSeedDiag(slotId: string): Promise<{
+  rows: number; byCategory: Record<string, number>;
+  years: number[]; signYears: number[]; sample: string[];
+  domesticRouteOnForeigner: number;
+}> {
+  const api = (window as unknown as {
+    projectB: Record<string, (p: string) => Promise<string>>;
+  }).projectB;
+  const raw = await api.leagueGetTransactions(JSON.stringify({ slotId }));
+  const all = JSON.parse(raw) as Array<Record<string, string | number | null>>;
+
+  const g = get(gameStore);
+  const fgnIds = new Set(g.npcs
+    .filter((n) => (n.nationality ?? "KOR") !== "KOR")
+    .map((n) => n.npcId));
+
+  const mine = (Array.isArray(all) ? all : [])
+    .filter((r) => fgnIds.has(String(r.player_id ?? r.playerId ?? ""))
+      || String(r.player_id ?? r.playerId ?? "").startsWith("PLY_FGN_GONE_"));
+
+  const byCategory: Record<string, number> = {};
+  const years = new Set<number>();
+  const sample: string[] = [];
+  let domesticRouteOnForeigner = 0;
+
+  for (const r of mine) {
+    const cat = String(r.category ?? "");
+    byCategory[cat] = (byCategory[cat] ?? 0) + 1;
+    years.add(Number(r.season_year ?? r.seasonYear ?? 0));
+    // ⚠ 이게 남아 있으면 국내 경력 생성이 아직 용병을 잡고 있다
+    const detail = String(r.detail ?? "");
+    if (/고졸|대졸|독립/.test(detail)) domesticRouteOnForeigner++;
+    if (sample.length < 6) {
+      sample.push(`${r.season_year ?? r.seasonYear} ${cat.padEnd(16)}`
+        + ` ${String(r.player_name ?? r.playerName ?? "").padEnd(20)} ${detail}`);
+    }
+  }
+  // ⚠ **영입 연도만 센다.** 떠난 기록(작년 고정)이 섞이면 영입이 전부 올해여도
+  // "두 해"가 되어 검사가 통과한다 — 모의 결함으로 실제로 그랬다.
+  const signYears = new Set<number>();
+  for (const r of mine) {
+    if (String(r.category ?? "") !== "foreign_signing") continue;
+    signYears.add(Number(r.season_year ?? r.seasonYear ?? 0));
+  }
+
+  return {
+    rows: mine.length, byCategory,
+    years: [...years].sort(), signYears: [...signYears].sort(),
+    sample, domesticRouteOnForeigner,
+  };
+}

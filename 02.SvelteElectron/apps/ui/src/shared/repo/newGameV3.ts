@@ -6,6 +6,9 @@ import { slotRepo, type RepoNpc } from "./slotRepo";
 import { generateDomesticStaff } from "./staffGen";
 import { ALL_TEAMS_BY_LEAGUE, HS_ACTIVE_TEAMS_V3 } from "../utils/leagueScheduler";
 import { SANGMU_TEAM_IDS } from "../utils/ids";
+import { isForeignInQuotaLeague } from "../utils/foreignSlots";
+import { originRulesOf } from "../utils/foreignOrigin";
+import { buildForeignSeed } from "../utils/foreignSeed";
 
 // Rust RosterRules와 1:1 (generation_rules.json rosterRules[leagueId])
 export interface RosterRulesData {
@@ -441,10 +444,21 @@ async function seedCareerHistory(
 ): Promise<void> {
   if (!rules) return;
 
+  // ⚠ **외국인을 국내 경력 생성에 넣으면 안 된다.** Rust `entry_route`는 입단
+  // 나이로 고졸/대졸/독립을 매기는데, 용병은 이 리그 연차가 0~2년이라 입단
+  // 나이가 23~34로 잡혀 **전원 "독립" 출신**으로 기록됐다. 세계 시작 시점의
+  // KBL 용병 30명이 한국 독립리그 출신이었다:
+  //
+  //     2024  Martinez  육성선수 입단 (독립)
+  //
+  // 출신이 없는 것보다 나쁘다 — 틀린 값이 적혀 있는 것이다.
+  // 용병은 `buildForeignSeed`가 따로 심는다.
+  const foreigners: Partial<RepoNpc>[] = [];
   const byLeague = new Map<string, Partial<RepoNpc>[]>();
   for (const n of npcs) {
     const lid = n.currentLeague ?? "";
     if (!CONTRACT_LEAGUES.has(lid)) continue;
+    if (isForeignInQuotaLeague(n.nationality)) { foreigners.push(n); continue; }
     if (!byLeague.has(lid)) byLeague.set(lid, []);
     byLeague.get(lid)!.push(n);
   }
@@ -486,6 +500,37 @@ async function seedCareerHistory(
       });
     }
   }
+  // ── 용병 출신 시드 ──────────────────────────────────────────
+  //
+  // 세계는 진행 중이다 — 재작년·작년·올해 영입이 섞여 있고, 작년에 성적이
+  // 안 돼 돌아간 사람의 기록도 남아 있어야 한다(사용자 확정).
+  if (foreigners.length > 0) {
+    const rulesFile = await loadRosterRules();
+    const origin = originRulesOf(rulesFile.foreignRules);
+    // 시드 난수 — 같은 세계를 다시 열면 같은 기록이어야 한다
+    let x = (worldSeed ^ 0x5EEDF09D) >>> 0;
+    const rand = () => { x = (x * 1664525 + 1013904223) >>> 0; return x / 4294967296; };
+
+    // 떠난 용병은 **작년에 나간 사람들**이라 이름이 세계에 없다. 남아 있는
+    // 용병 이름 풀에서 빌려 오면 같은 이름이 둘이 되므로, 팀당 한 명씩
+    // 실제 로스터에서 **빠진 자리**만큼만 만든다 — 여기선 팀 수의 3분의 1
+    const teamsWithForeign = [...new Set(foreigners.map((n) => n.currentTeam ?? ""))]
+      .filter(Boolean);
+    const departedNames = teamsWithForeign
+      .slice(0, Math.max(1, Math.round(teamsWithForeign.length / 3)))
+      .map((teamId, i) => ({ name: `Foreign Departed ${i + 1}`, teamId }));
+
+    const seedRows = buildForeignSeed({
+      players: foreigners.map((n) => ({
+        npcId: n.npcId ?? "", name: n.name ?? "",
+        teamId: n.currentTeam ?? "", proServiceYears: n.proServiceYears ?? 0,
+      })),
+      rules: origin, seasonYear, rand,
+      departed: departedNames.length, departedNames,
+    });
+    rows.push(...(seedRows as unknown as Record<string, unknown>[]));
+  }
+
   if (rows.length > 0) await slotRepo.addTransactions(slotId, rows);
 }
 
