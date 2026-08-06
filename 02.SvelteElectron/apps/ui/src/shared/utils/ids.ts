@@ -236,3 +236,39 @@ export async function loadGrowthXpRules(): Promise<GrowthXpRules> {
 export function growthXpRules(): GrowthXpRules | undefined {
   return _xpRules ?? undefined;
 }
+
+// ── 프로 리그 목록 ───────────────────────────────────────────────
+//
+// ⚠ **`["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"]`이 여섯 군데에 적혀 있었다**
+// (`market.ts` 셋 · `game.ts` 셋). 그러면서 정작 **운영은 KBL 전용**이었다 —
+// 승강·FA 시장·트레이드가 전부 `leagueId === "LEAGUE_KBL"`로 걸러졌다.
+//
+// 그래서 확장팩을 열면 ABL·JBL은 **채우는 경로(Rust 오프시즌)는 있는데
+// 정리하는 경로(TS 승강)가 없는 리그**가 된다. 실측에서 1군이 팀당 41·46명
+// (상한 34·32)까지 부풀었고, `releaseScope.ts`는 그걸 "캡이 안 걸린다"고
+// 적어 뒀었다. Rust 캡은 정상이다 — 떼어 재보면 14 → 26으로 정확히 자른다.
+
+import { isLeagueInScope } from "../config/releaseScope";
+
+/** 프로 1군 리그 — 승강·FA·트레이드가 도는 무대 */
+export const PRO_LEAGUES = ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"] as const;
+
+/**
+ * **지금 실제로 도는** 프로 1군 리그.
+ *
+ * 확장팩이 닫혀 있으면 KBL 하나다 — 그때는 예전과 완전히 같게 돈다.
+ * 게이트 하나가 유일한 스위치가 되도록 여기서 거른다.
+ */
+export function activeProLeagues(): string[] {
+  return PRO_LEAGUES.filter(isLeagueInScope);
+}
+
+/** 프로 1군 + 그 팜. 승강은 짝으로 돈다 */
+export function activeProLeaguesWithFarm(): string[] {
+  return activeProLeagues().flatMap((l) => [l, `${l}_FARM`]);
+}
+
+/** 프로 리그인가 (팜 제외) */
+export function isProLeague(leagueId: string): boolean {
+  return (PRO_LEAGUES as readonly string[]).includes(leagueId);
+}

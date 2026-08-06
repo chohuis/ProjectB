@@ -2812,22 +2812,36 @@ export async function historyDiag(slotId: string, year: number): Promise<{
  * 아직 모른다"**고 적혀 있었고, 그게 ABL·JBL을 못 여는 마지막 이유였다.
  * JBL 팀당 최대 47명(상한 32), ABL 39명(상한 34). 추측 말고 센다.
  */
-export function rosterDiag(): Record<string, { teams: number; min: number; max: number; total: number }> {
+export function rosterDiag(): Record<string, {
+  teams: number; min: number; max: number; total: number;
+  batMin: number; pitMin: number;
+}> {
   const g = get(gameStore);
-  const byTeam = new Map<string, { league: string; n: number }>();
+  // ⚠ **총원만 세면 안 된다.** 이 프로젝트에서 반복해 나온 결함이 "집계는
+  // 정상인데 구성이 무너진 것"이다 — 야수가 9명 미만이면 타순이 짧아져
+  // 성적이 능력치가 아니라 출전량으로 결정된다. 보직별로 같이 센다.
+  const byTeam = new Map<string, { league: string; n: number; bat: number; pit: number }>();
   for (const n of g.npcs) {
     if (n.careerStatus === "retired" || !n.currentTeam) continue;
-    const cur = byTeam.get(n.currentTeam);
-    if (cur) cur.n++;
-    else byTeam.set(n.currentTeam, { league: n.currentLeague ?? "", n: 1 });
+    const cur = byTeam.get(n.currentTeam)
+      ?? { league: n.currentLeague ?? "", n: 0, bat: 0, pit: 0 };
+    cur.n++;
+    if (n.playerType === "pitcher") cur.pit++; else cur.bat++;
+    byTeam.set(n.currentTeam, cur);
   }
-  const out: Record<string, { teams: number; min: number; max: number; total: number }> = {};
-  for (const { league, n } of byTeam.values()) {
-    const e = (out[league] ??= { teams: 0, min: 1e9, max: 0, total: 0 });
+  const out: Record<string, { teams: number; min: number; max: number; total: number; batMin: number; pitMin: number }> = {};
+  for (const { league, n, bat, pit } of byTeam.values()) {
+    const e = (out[league] ??= { teams: 0, min: 1e9, max: 0, total: 0, batMin: 1e9, pitMin: 1e9 });
     e.teams++; e.total += n;
     e.min = Math.min(e.min, n);
     e.max = Math.max(e.max, n);
+    e.batMin = Math.min(e.batMin, bat);
+    e.pitMin = Math.min(e.pitMin, pit);
   }
-  for (const e of Object.values(out)) if (e.min === 1e9) e.min = 0;
+  for (const e of Object.values(out)) {
+    if (e.min === 1e9) e.min = 0;
+    if (e.batMin === 1e9) e.batMin = 0;
+    if (e.pitMin === 1e9) e.pitMin = 0;
+  }
   return out;
 }

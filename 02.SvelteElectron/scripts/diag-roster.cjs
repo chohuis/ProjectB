@@ -35,14 +35,18 @@ const rules = require(path.join(process.cwd(),
 
 function dump(label, app) {
   log(`\n── ${label} ──`);
-  log(`  ${"리그".padEnd(20)} 팀   최소  최대  총원   상한  넘김`);
+  log(`  ${"리그".padEnd(20)} 팀   최소  최대  총원   상한  야수↓ 투수↓`);
   const d = app.rosterDiag();
   for (const [lid, v] of Object.entries(d).sort()) {
     const cap = rules[lid]?.rosterMax;
     const over = cap != null && v.max > cap;
+    // ⚠ 야수 하한이 핵심이다 — 9명 미만이면 타순이 짧아져 성적이 능력치가
+    // 아니라 출전량으로 결정된다. 총원이 맞아도 여기가 무너질 수 있다
     log(`  ${lid.padEnd(20)} ${String(v.teams).padStart(3)} ${String(v.min).padStart(5)}`
       + ` ${String(v.max).padStart(5)} ${String(v.total).padStart(6)}`
-      + ` ${String(cap ?? "-").padStart(6)}  ${over ? "← 넘김" : ""}`);
+      + ` ${String(cap ?? "-").padStart(6)}`
+      + ` ${String(v.batMin).padStart(5)} ${String(v.pitMin).padStart(5)}`
+      + `${over ? "  ← 정원넘김" : ""}${v.batMin < 12 ? "  ← 야수부족" : ""}`);
   }
 }
 

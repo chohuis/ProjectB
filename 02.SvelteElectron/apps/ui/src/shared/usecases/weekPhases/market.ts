@@ -6,7 +6,9 @@ import { autoLog, logEvent, logVerify, type PlayerEventEntry } from "../../store
 import { getFaThreshold } from "../../utils/faEngine";
 import { loadRosterRules } from "../../repo/newGameV3";
 import { staffModsOf } from "../../utils/staffEffects";
-import { SANGMU_TEAM_IDS, leagueOfTeam } from "../../utils/ids";
+import {
+  SANGMU_TEAM_IDS, leagueOfTeam, activeProLeagues, activeProLeaguesWithFarm,
+} from "../../utils/ids";
 import { isForeignPlayer } from "../../utils/foreignSlots";
 import type { PlayerSeasonStats } from "../../types/save";
 import { MONTH_STARTS_1 } from "./growth";
@@ -37,7 +39,8 @@ function seasonPerfOf(
   npcId: string,
   stats: Record<string, Record<string, PlayerSeasonStats>>,
 ): object | undefined {
-  for (const lid of ["LEAGUE_KBL", "LEAGUE_KBL_FARM"]) {
+  // 확장팩이 닫혀 있으면 KBL 짝 하나다 — 예전과 완전히 같게 돈다
+  for (const lid of activeProLeaguesWithFarm()) {
     const st = stats[lid]?.[npcId];
     if (!st) continue;
     // ⚠ **값을 그대로 넘기면 안 된다.** 엔진 `RosterPerf`는 전부 i32/f64인데
@@ -692,19 +695,27 @@ export async function processProTeamCallupCalldown(
   // 로스터 상한은 규칙 파일이 정본이다 — 예전엔 여기 35가 박혀 있었고
   // 규칙 파일(34)과 달랐다 (드리프트)
   const rulesFile = await loadRosterRules();
-  const maxRosterSize = rulesFile.rosterRules["LEAGUE_KBL"]?.rosterMax ?? 34;
-  const minRosterSize = rulesFile.rosterRules["LEAGUE_KBL"]?.rosterMin ?? 26;
+  // ⚠ **모든 리그에 KBL 상한을 쓰고 있었다.** JBL은 32인데 34로 재면 두 명이
+  // 영영 안 잘린다. 팀의 리그에서 읽는다 — 규칙 파일이 정본이다.
+  const rosterMaxOf = (leagueId: string) =>
+    rulesFile.rosterRules[leagueId]?.rosterMax ?? 34;
+  const rosterMinOf = (leagueId: string) =>
+    rulesFile.rosterRules[leagueId]?.rosterMin ?? 26;
   // 승강 판정은 성적을 주로 본다 (사용자 확정) — 규칙은 규칙 파일이 정본
   const promotionRules = rulesFile.promotionRules;
 
   // 1군·2군 시즌 기록. 없으면 판정이 능력치만 보게 된다
   const leagueStats: Record<string, Record<string, PlayerSeasonStats>> = {};
-  for (const lid of ["LEAGUE_KBL", "LEAGUE_KBL_FARM"]) {
+  for (const lid of activeProLeaguesWithFarm()) {
     const ls = s.leagueState?.[lid];
     if (ls?.stats) leagueStats[lid] = ls.stats;
   }
 
-  const proTeams1 = m.teams.filter(t => t.leagueId === "LEAGUE_KBL" && t.id.endsWith("_1"));
+  // ⚠ **승강이 KBL 전용이었다.** 확장팩을 열면 ABL·JBL은 채우는 경로(Rust
+  // 오프시즌)는 있는데 **정리하는 경로가 없는 리그**가 된다 — 실측에서 1군이
+  // 팀당 41·46명(상한 34·32)까지 부풀었다. Rust 캡은 정상이다(14 → 26).
+  const proLeagueIds = activeProLeagues();
+  const proTeams1 = m.teams.filter(t => proLeagueIds.includes(t.leagueId) && t.id.endsWith("_1"));
 
   // 국가대표 차출자는 **부상자와 같은 목록으로** 넘긴다 (사용자 확정) —
   // 따로 처리하면 대회 기간에 1군이 빈 채로 돈다
@@ -725,6 +736,9 @@ export async function processProTeamCallupCalldown(
 
   for (const team of proTeams1) {
     const teamId1 = team.id;
+    // 상한·하한은 **그 팀의 리그**에서. JBL은 32, KBL·ABL은 34다
+    const maxRosterSize = rosterMaxOf(team.leagueId);
+    const minRosterSize = rosterMinOf(team.leagueId);
     const teamId2 = teamId1.replace(/_1$/, "_2");
     const profile  = getTeamProfile(teamId1, g, m) ?? DEFAULT_TEAM_PROFILE;
 
@@ -860,7 +874,7 @@ export async function processWinNowPressureUpdate(weekNum: number): Promise<void
   const s = get(seasonStore);
   const m = get(masterStore);
 
-  const proLeagues = ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"];
+  const proLeagues = activeProLeagues();
   const proTeams = m.teams.filter(t => proLeagues.includes(t.leagueId) && t.id.endsWith("_1"));
 
   for (const team of proTeams) {
@@ -904,7 +918,7 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
   const logs: string[] = [];
   const slotId = g.currentSlotId;
 
-  const proLeagues = new Set(["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"]);
+  const proLeagues = new Set(activeProLeagues());
   const proNpcCount = g.npcs.filter(n => n.careerStatus === "active" && n.currentLeague && proLeagues.has(n.currentLeague)).length;
   const _t0Offseason = Date.now();
   autoLog(`[W43오프시즌] 은퇴/FA 결정 시작 (프로NPC ${proNpcCount}명, careerStage=${g.protagonist.careerStage})`);
@@ -1166,7 +1180,9 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
       const rulesFile = await loadRosterRules();
       const faRules = (rulesFile as unknown as { faRules?: unknown }).faRules;
       // 로스터 상한은 규칙 파일이 정본이다 — 코드에 두 번 적으면 그게 드리프트다
-      const faMaxRoster = rulesFile.rosterRules["LEAGUE_KBL"]?.rosterMax ?? 34;
+      // 리그마다 다르다 — 팀에서 파생한다 (JBL 32, KBL·ABL 34)
+      const faMaxRosterOf = (leagueId: string) =>
+        rulesFile.rosterRules[leagueId]?.rosterMax ?? 34;
       const liveStats2 = get(npcLiveStatsStore);
       const ovrOf = (npcId: string): number => {
         const e = m.entities.find((x) => x.id === npcId);
@@ -1174,8 +1190,13 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
       };
 
       // 영입 가능한 1군 팀 — 상무는 제외한다 (군 복무팀이 FA를 영입하지 않는다)
+      //
+      // ⚠ **KBL 팀만 넘기고 있었다.** Rust FA 오퍼에는 ABL(OVR 70·명성 30)·
+      // JBL(62·15) 경로가 있는데 목적지 팀을 안 주니 **NPC가 해외로 갈 방법이
+      // 없었다.** 확장팩을 열어도 32팀이 관전 대상일 뿐이었다.
+      const faLeagueIds = activeProLeagues();
       const proFirstTeams = m.teams.filter(
-        (t) => t.leagueId === "LEAGUE_KBL" && t.id.endsWith("_1") && !SANGMU_TEAM_IDS.has(t.id),
+        (t) => faLeagueIds.includes(t.leagueId) && t.id.endsWith("_1") && !SANGMU_TEAM_IDS.has(t.id),
       );
       const activeOf = (teamId: string) =>
         updatedNpcs.filter((n) => n.currentTeam === teamId && n.careerStatus === "active");
@@ -1200,13 +1221,14 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
           budgetIndex: avgBudget > 0 ? (t.history?.budget ?? avgBudget) / avgBudget : 1,
           winNowPressure: profile.winNowPressure,
           // 정원까지 남은 자리 — **외국인도 자리를 차지한다.** 보상선수 후보에서만 뺀다
-          openSlots: Math.max(0, faMaxRoster - activeOf(t.id).length),
+          openSlots: Math.max(0, faMaxRosterOf(t.leagueId) - activeOf(t.id).length),
           roster: compensationPoolOf(t.id),
         };
       });
 
+      // 연봉 기준선도 프로 전체에서 — 리그 하나만 보면 해외 시세가 안 잡힌다
       const leagueSalaries = updatedNpcs
-        .filter((n) => n.currentLeague === "LEAGUE_KBL" && n.careerStatus === "active")
+        .filter((n) => faLeagueIds.includes(n.currentLeague ?? "") && n.careerStatus === "active")
         .map((n) => n.currentSalary ?? 0)
         .filter((v) => v > 0);
 
@@ -1261,9 +1283,9 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
                 year: s.seasonYear,
                 eventType: "fa_signed" as const,
                 fromTeamId: sg.fromTeamId,
-                fromLeagueId: "LEAGUE_KBL",
+                fromLeagueId: leagueOfTeam(sg.fromTeamId) ?? cur.currentLeague,
                 toTeamId: sg.toTeamId,
-                toLeagueId: "LEAGUE_KBL",
+                toLeagueId: toLeague,
               },
             ],
           };
@@ -1282,7 +1304,7 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
                   {
                     year: s.seasonYear, eventType: "trade" as const,
                     fromTeamId: comp.currentTeam, fromLeagueId: comp.currentLeague,
-                    toTeamId: sg.fromTeamId, toLeagueId: "LEAGUE_KBL",
+                    toTeamId: sg.fromTeamId, toLeagueId: leagueOfTeam(sg.fromTeamId) ?? comp.currentLeague,
                   },
                 ],
               };
@@ -1290,7 +1312,7 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
                 seasonYear: s.seasonYear, week: weekNum, category: "trade",
                 playerId: comp.npcId, playerName: comp.name,
                 fromTeamId: comp.currentTeam, fromLeagueId: comp.currentLeague,
-                toTeamId: sg.fromTeamId, toLeagueId: "LEAGUE_KBL",
+                toTeamId: sg.fromTeamId, toLeagueId: leagueOfTeam(sg.fromTeamId) ?? comp.currentLeague,
                 detail: `${sg.grade}등급 FA ${sg.name} 보상선수`,
               });
             }
@@ -1304,15 +1326,15 @@ export async function processOffseasonNpcDecisions(weekNum: number): Promise<str
           autoLog(`[FA계약] ${sg.name} | ${stayed ? "잔류" : "이적"} → ${sg.toTeamId.replace(/^TEAM_[A-Z]+_/, "").replace(/_1$/, "")} | ${detail}`);
           _faSignEntries.push({
             npcId: sg.npcId, name: sg.name,
-            fromTeamId: sg.fromTeamId, fromLeagueId: "LEAGUE_KBL",
-            toTeamId: sg.toTeamId, toLeagueId: "LEAGUE_KBL",
+            fromTeamId: sg.fromTeamId, fromLeagueId: leagueOfTeam(sg.fromTeamId) ?? cur.currentLeague,
+            toTeamId: sg.toTeamId, toLeagueId: toLeague,
             detail,
           });
           faMarketRows.push({
             seasonYear: s.seasonYear, week: weekNum, category: "fa",
             playerId: sg.npcId, playerName: sg.name,
-            fromTeamId: sg.fromTeamId, fromLeagueId: "LEAGUE_KBL",
-            toTeamId: sg.toTeamId, toLeagueId: "LEAGUE_KBL",
+            fromTeamId: sg.fromTeamId, fromLeagueId: leagueOfTeam(sg.fromTeamId) ?? cur.currentLeague,
+            toTeamId: sg.toTeamId, toLeagueId: toLeague,
             detail,
           });
         }
@@ -1410,7 +1432,7 @@ export async function processScoutingImprovement(): Promise<void> {
   const g = get(gameStore);
   const m = get(masterStore);
 
-  const proLeagues = ["LEAGUE_KBL", "LEAGUE_ABL", "LEAGUE_JBL"];
+  const proLeagues = activeProLeagues();
   const proTeams = m.teams.filter(t => proLeagues.includes(t.leagueId) && t.id.endsWith("_1"));
 
   for (const team of proTeams) {

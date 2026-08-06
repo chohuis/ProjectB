@@ -1078,6 +1078,17 @@
         "Zach"
       ],
       "givenB": []
+    },
+    "origin": {
+      "_note": "용병이 어디서 오는가. **마이너(팜) 출신이 대부분이다** — 메이저 주전급은 연봉·조건 때문에 KBO에 잘 안 온다(사용자 확정 2026-08-06).",
+      "_note2": "예전엔 무에서 생성했다(careerHistory: []). 어디서 왔다는 기록이 없어 화면이 국내 신인과 구분을 못 했다. ABL·JBL이 열렸으므로 실제 선수를 데려온다.",
+      "weights": {
+        "LEAGUE_ABL_FARM": 85,
+        "LEAGUE_ABL": 10,
+        "LEAGUE_JBL": 5
+      },
+      "_note3": "재계약 불가 시 돌아가는 곳. 예전엔 은퇴로 기록해 세계에서 지웠다 — 갈 곳이 없어서였다",
+      "returnLeague": "LEAGUE_ABL_FARM"
     }
   },
   "traitDisplay": {
