@@ -1,9 +1,39 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import fieldDefenderPng from '../../../shared/assets/sprites/field_defender.png';
+  /*
+   * ⚠ 여기 쓰던 스프라이트 4장은 **1254x1254에 투명 픽셀이 0.0%**였다.
+   * 알파 채널이 아예 없어서 48px로 줄여 그리면 선수마다 흰 상자가 따라다녔다.
+   * 4장 합쳐 4.0MB인데 화면에는 48px로 나온다.
+   *
+   * 그런데 `resource/sprites/field-overview/`에 **누끼가 된 24x32 세트가
+   * 포지션별로 이미 있었다**(투명 39%). 아무도 안 쓰고 있었을 뿐이다.
+   * 그걸 가져오면서 수비 위치별로도 나눴다 — 파일이 원래 그렇게 나뉘어 있다.
+   */
+  import fieldPitcherPng  from '../../../shared/assets/sprites/field_pitcher.png';
+  import fieldCatcherPng  from '../../../shared/assets/sprites/field_catcher.png';
+  import field1bPng       from '../../../shared/assets/sprites/field_1b.png';
+  import field2bPng       from '../../../shared/assets/sprites/field_2b.png';
+  import field3bPng       from '../../../shared/assets/sprites/field_3b.png';
+  import fieldSsPng       from '../../../shared/assets/sprites/field_ss.png';
+  import fieldLfPng       from '../../../shared/assets/sprites/field_lf.png';
+  import fieldCfPng       from '../../../shared/assets/sprites/field_cf.png';
+  import fieldRfPng       from '../../../shared/assets/sprites/field_rf.png';
   import fieldBatterRPng  from '../../../shared/assets/sprites/field_batter_r.png';
   import fieldBatterLPng  from '../../../shared/assets/sprites/field_batter_l.png';
   import fieldRunnerPng   from '../../../shared/assets/sprites/field_runner.png';
+
+  const DEFENDER_SPRITE: Record<string, string> = {
+    P: fieldPitcherPng, C: fieldCatcherPng,
+    '1B': field1bPng, '2B': field2bPng, '3B': field3bPng, SS: fieldSsPng,
+    LF: fieldLfPng, CF: fieldCfPng, RF: fieldRfPng,
+  };
+
+  /**
+   * 원본이 24x32다. 예전 값(48x52)은 정사각 원본을 억지로 눌러 넣은 것이라
+   * 그대로 쓰면 이번엔 가로로 늘어난다 — **원본 비율(3:4)을 지킨다.**
+   */
+  const SPR_W = 39;
+  const SPR_H = 52;
 
 
   interface Point {
@@ -80,9 +110,9 @@
           {/if}
           <!-- 그림자 -->
           <ellipse cx={player.x} cy={player.y + 8} rx="18" ry="5" fill="rgba(0,0,0,0.35)"/>
-          <image href={fieldDefenderPng}
-            x={player.x - 24} y={player.y - 44}
-            width="48" height="52"/>
+          <image href={DEFENDER_SPRITE[player.pos] ?? fieldPitcherPng}
+            x={player.x - SPR_W / 2} y={player.y - 44}
+            width={SPR_W} height={SPR_H} class="spr"/>
           <text x={player.x} y={player.y + 20} text-anchor="middle"
             font-size="10" font-weight="700" font-family="'Courier New',monospace"
             fill="#f0ecc8" stroke="#0a1018" stroke-width="3" paint-order="stroke">{player.pos}</text>
@@ -101,8 +131,8 @@
           <ellipse cx={batterAnimPos.x} cy={batterAnimPos.y + 8} rx="18" ry="5" fill="rgba(0,0,0,0.35)"/>
           <image
             href={batter.handedness === 'L' ? fieldBatterLPng : fieldBatterRPng}
-            x={batterAnimPos.x - 24} y={batterAnimPos.y - 44}
-            width="48" height="52"/>
+            x={batterAnimPos.x - SPR_W / 2} y={batterAnimPos.y - 44}
+            width={SPR_W} height={SPR_H} class="spr"/>
         </g>
       {/if}
 
@@ -112,8 +142,8 @@
           <g class="retro-runner-blink">
             <ellipse cx={rp.x} cy={rp.y + 8} rx="18" ry="5" fill="rgba(0,0,0,0.35)"/>
             <image href={fieldRunnerPng}
-              x={rp.x - 24} y={rp.y - 44}
-              width="48" height="52"/>
+              x={rp.x - SPR_W / 2} y={rp.y - 44}
+              width={SPR_W} height={SPR_H} class="spr"/>
           </g>
         {/if}
       {/each}
@@ -131,6 +161,9 @@
 </div>
 
 <style>
+  /* 24x32 원본을 키워 그린다. 보간이 들어가면 도트가 뭉개진다 */
+  .spr { image-rendering: pixelated; }
+
   .wrapper {
     width: 100%;
     height: 100%;

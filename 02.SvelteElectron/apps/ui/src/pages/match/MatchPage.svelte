@@ -9,9 +9,12 @@
   import { parkViewForHomeTeam } from "../../shared/utils/parkView";
   import TeamMark from "../../features/team/ui/TeamMark.svelte";
   import {
-    staminaCostOf, deltaOf, pitchesLeft,
+    staminaCostOf, pitchesLeft,
     type CostStrategy, type CostPower,
   } from "../../shared/utils/pitchCost";
+  import { pitchSlotsOf, slotCountLabel, gradeFraction } from "../../shared/utils/pitchSlots";
+  import { batterBars, seasonLines, seasonStatsOf } from "../../shared/utils/statCard";
+  import { seasonStore } from "../../shared/stores/season";
 
 
   export let matchContext: InteractiveMatchContext | null = null;
@@ -19,6 +22,22 @@
   export let onCancel: () => void = () => {};
   // 실전 MatchPage는 기본적으로 로컬 데모 백업 모드를 사용하지 않음
   export let allowLocalFallback = false;
+
+  /** 엔진이 실제로 보내는 타자 능력치. 셋만 적어 두면 나머지를 화면이 못 읽는다 */
+  interface SnapshotBatter {
+    id?: string;
+    name?: string;
+    contact: number;
+    power: number;
+    eye: number;
+    discipline?: number;
+    battingClutch?: number;
+    platoon?: number;
+    speed?: number;
+    baseInstinct?: number;
+    fielding?: number;
+    arm?: number;
+  }
 
   type PitchType = "fastball" | "sinker" | "cutter" | "slider" | "curve" | "changeup" | "splitter" | "forkball" | "screwball" | "knuckleball";
   type PitchStrategy = "aggressive" | "balanced" | "safe";
@@ -70,11 +89,16 @@
     phase?: "protagonist_pitch" | "auto_inning" | "game_over";
     autoSimLogs?: string[];
     recentLogs: string[];
-    batter?: { contact: number; power: number; eye: number };
-    currentBatter?: { contact: number; power: number; eye: number };
+    /**
+     * ⚠ 엔진은 처음부터 **열 개**를 보낸다(`discipline`·`battingClutch`·
+     * `speed`·`baseInstinct`·`fielding`·`arm`·`platoon`). 여기 셋만 적혀 있어
+     * 화면이 나머지를 못 봤다 — 값이 없던 게 아니라 타입이 좁았다.
+     */
+    batter?: SnapshotBatter;
+    currentBatter?: SnapshotBatter;
     // 엔진이 들고 있던 라인업 — U7-b에서 DTO에 실어 보내기 시작했다
-    awayLineup?: { id?: string; name?: string; contact: number; power: number; eye: number }[];
-    homeLineup?: { id?: string; name?: string; contact: number; power: number; eye: number }[];
+    awayLineup?: SnapshotBatter[];
+    homeLineup?: SnapshotBatter[];
     awayLineupIndex?: number;
     homeLineupIndex?: number;
     weather?: WeatherType;
@@ -517,7 +541,9 @@
     { id: "high", label: "강" }
   ];
 
-  let pitchTypes: { id: PitchType; label: string }[] = [...fallbackPitchTypes];
+  interface PitchOption { id: PitchType; label: string; grade: number | null }
+
+  let pitchTypes: PitchOption[] = fallbackPitchTypes.map((p) => ({ ...p, grade: null }));
   let selectedPitchType: PitchType = "fastball";
   let selectedStrategy: PitchStrategy = "balanced";
   let selectedPower: PitchPower = "normal";
@@ -556,7 +582,6 @@
     selectedStrategy as CostStrategy,
     selectedPower as CostPower,
   );
-  $: fastballExtra = deltaOf("fastball");
   $: remainingPitches = pitchesLeft(pitcherState.stamina, currentCost);
 
   let inning = 1;
@@ -587,25 +612,34 @@
     const catalogNameById = new Map($masterStore.pitchCatalog.map((p) => [p.id, p.nameKo ?? p.name]));
     const rawPitches = $gameStore.protagonist.pitches ?? [{ id: "PITCH_FASTBALL", grade: 3 as const }];
     const mapped = rawPitches
-      .map((entry) => {
+      .map((entry): PitchOption | null => {
         const id = PITCH_ID_TO_ENGINE[entry.id];
         if (!id) return null;
         return {
           id,
           label: catalogNameById.get(entry.id) ?? entry.id.replace("PITCH_", ""),
+          // 숙련도는 이미 세이브에 있었는데 경기 화면이 안 읽고 있었다
+          grade: entry.grade ?? null,
         };
       })
-      .filter((entry): entry is { id: PitchType; label: string } => Boolean(entry));
-    const deduped: { id: PitchType; label: string }[] = [];
+      .filter((entry): entry is PitchOption => Boolean(entry));
+    const deduped: PitchOption[] = [];
     for (const pitch of mapped) {
       if (deduped.some((d) => d.id === pitch.id)) continue;
       deduped.push(pitch);
     }
-    pitchTypes = deduped.length > 0 ? deduped : [...fallbackPitchTypes];
+    pitchTypes = deduped.length > 0 ? deduped : fallbackPitchTypes.map((p) => ({ ...p, grade: null }));
     if (!pitchTypes.some((p) => p.id === selectedPitchType)) {
       selectedPitchType = pitchTypes[0].id;
     }
   }
+
+  /**
+   * 5칸 슬롯. 빈칸은 **어떤 구종의 자리도 아니므로 이름을 붙이지 않는다** —
+   * 자세한 건 `pitchSlots.ts` 머리말.
+   */
+  $: pitchSlots = pitchSlotsOf(pitchTypes, $masterStore.pitchMaxLearned);
+  $: slotLabel  = slotCountLabel(pitchTypes.length, $masterStore.pitchMaxLearned);
 
   $: if (matchContext) {
     const teamById = new Map($masterStore.teams.map((t) => [t.id, t.name]));
@@ -619,11 +653,20 @@
     { text: "매치 엔진 초기화 중...", cls: "" }
   ];
 
-  let batterInfo = [
-    { label: "컨택", value: "50" },
-    { label: "파워", value: "50" },
-    { label: "선구", value: "50" }
-  ];
+  /** 지금 타석에 선 타자. 엔진이 준 값을 그대로 들고 있는다 */
+  let currentBatter: SnapshotBatter | null = null;
+
+  /** 카드 뒤집기 — 앞면 능력치 / 뒷면 시즌 성적 */
+  let batterFlipped = false;
+  let pitcherFlipped = false;
+
+  $: batterAttrBars = batterBars(currentBatter);
+  $: batterSeason = seasonLines(
+    seasonStatsOf(currentBatter?.id, $seasonStore.stats, $seasonStore.leagueState),
+  );
+  $: pitcherSeason = seasonLines(
+    seasonStatsOf($gameStore.protagonist.id, $seasonStore.stats, $seasonStore.leagueState),
+  );
 
   let matchWeather: WeatherType = "sunny";
   let matchPark: ParkType = "neutral";
@@ -828,13 +871,7 @@
     pitcherState = { ...pitcherState, stamina, mental };
 
     const batter = snapshot.currentBatter ?? snapshot.batter;
-    if (batter) {
-      batterInfo = [
-        { label: "컨택", value: String(batter.contact) },
-        { label: "파워", value: String(batter.power) },
-        { label: "선구", value: String(batter.eye) }
-      ];
-    }
+    if (batter) currentBatter = batter;
     if (snapshot.weather) matchWeather = snapshot.weather;
     if (snapshot.park) matchPark = snapshot.park;
     if (snapshot.defenseStat) matchDefenseStat = { ...snapshot.defenseStat };
@@ -1682,46 +1719,75 @@
               </span>
             {/if}
           </div>
-          <div class="pitch-buttons">
-            {#each pitchTypes as pitch}
-              <button
-                type="button"
-                class="pitch-btn"
-                class:active={selectedPitchType === pitch.id}
-                on:click={() => (selectedPitchType = pitch.id)}
-              >
-                {pitch.label}
-                {#if pitch.id === "fastball" && fastballExtra}<span class="cost-tag">+{fastballExtra.toFixed(2)}</span>{/if}
-              </button>
-            {/each}
-          </div>
 
-          <div class="choice-row">
-            {#each strategies as strategy}
-              <button
-                type="button"
-                class="mini-btn"
-                class:active={selectedStrategy === strategy.id}
-                on:click={() => (selectedStrategy = strategy.id)}
-              >
-                {strategy.label}
-                {#if deltaOf(strategy.id)}<span class="cost-tag">+{deltaOf(strategy.id)?.toFixed(2)}</span>{/if}
-              </button>
-            {/each}
-          </div>
+          <!--
+            좌우 분할 — 왼쪽은 구종 슬롯, 오른쪽은 전략·세기.
+            전략·세기를 세로로 쌓으면 패널이 393px까지 늘어 오른쪽 열이
+            153px 넘친다(실측). 세그먼트로 묶으면 두 줄이면 된다.
+          -->
+          <div class="ps-split">
+            <div class="slot-col" role="radiogroup" aria-label="구종">
+              {#each pitchSlots as slot (slot.no)}
+                {#if slot.kind === "learned"}
+                  <button
+                    type="button"
+                    class="slot"
+                    class:active={selectedPitchType === slot.id}
+                    role="radio"
+                    aria-checked={selectedPitchType === slot.id}
+                    on:click={() => (selectedPitchType = slot.id as PitchType)}
+                  >
+                    <span class="slot-no">{slot.no}</span>
+                    <span class="slot-name">{slot.label}</span>
+                    {#if gradeFraction(slot.grade) !== null}
+                      <span class="slot-grade" title="숙련도 {slot.grade}/5">
+                        <i style="width:{(gradeFraction(slot.grade) ?? 0) * 100}%"></i>
+                      </span>
+                    {/if}
+                  </button>
+                {:else}
+                  <!--
+                    ⚠ 빈칸에 구종 이름을 적지 않는다. 슬롯은 특정 구종의 자리가
+                    아니라 조건을 채운 것 중 아무거나 들어갈 칸이다 — 이름을 적으면
+                    화면이 없는 규칙을 지어내는 것이 된다.
+                  -->
+                  <div class="slot empty" aria-label="빈 구종 칸">
+                    <span class="slot-no">{slot.no}</span>
+                    <span class="slot-lock" aria-hidden="true">🔒</span>
+                  </div>
+                {/if}
+              {/each}
+            </div>
 
-          <div class="choice-row">
-            {#each powers as power}
-              <button
-                type="button"
-                class="mini-btn"
-                class:active={selectedPower === power.id}
-                on:click={() => (selectedPower = power.id)}
-              >
-                {power.label}
-                <span class="cost-tag">+{deltaOf(power.id)?.toFixed(2) ?? "-"}</span>
-              </button>
-            {/each}
+            <div class="opt-col">
+              <p class="opt-label" id="lbl-strategy">전략</p>
+              <div class="seg" role="radiogroup" aria-labelledby="lbl-strategy">
+                {#each strategies as strategy}
+                  <button
+                    type="button"
+                    class:active={selectedStrategy === strategy.id}
+                    role="radio"
+                    aria-checked={selectedStrategy === strategy.id}
+                    on:click={() => (selectedStrategy = strategy.id)}
+                  >{strategy.label}</button>
+                {/each}
+              </div>
+
+              <p class="opt-label" id="lbl-power">세기</p>
+              <div class="seg" role="radiogroup" aria-labelledby="lbl-power">
+                {#each powers as power}
+                  <button
+                    type="button"
+                    class:active={selectedPower === power.id}
+                    role="radio"
+                    aria-checked={selectedPower === power.id}
+                    on:click={() => (selectedPower = power.id)}
+                  >{power.label}</button>
+                {/each}
+              </div>
+
+              <p class="slot-count">구종 {slotLabel}</p>
+            </div>
           </div>
 
           <button
@@ -1758,32 +1824,79 @@
       {/if}
 
       <div class="pair-row">
+        <!--
+          앞면 능력치 / 뒷면 시즌 성적. 뒷면은 **실제 기록만** 그린다 —
+          없으면 0이 아니라 "기록 없음"이다 (`statCard.ts` 머리말).
+        -->
         <section class="panel info-panel" aria-label="batter info panel">
-          <h2>{batterInfoTitle}</h2>
-          <ul class="stat-list">
-            {#each batterInfo as info}
-              <li><span>{info.label}</span><strong>{info.value}</strong></li>
-            {/each}
-          </ul>
+          <div class="card-head">
+            <h2>{currentBatter?.name ?? batterInfoTitle}</h2>
+            <button
+              type="button"
+              class="flip-btn"
+              aria-pressed={batterFlipped}
+              on:click={() => (batterFlipped = !batterFlipped)}
+            >{batterFlipped ? "능력치" : "성적"}</button>
+          </div>
+
+          {#if !batterFlipped}
+            <ul class="bar-list">
+              {#each batterAttrBars as b (b.label)}
+                <li>
+                  <span class="bl">{b.label}</span>
+                  <span class="bt"><i style="width:{Math.max(0, Math.min(100, b.value))}%"></i></span>
+                  <strong class="bv">{Math.round(b.value)}</strong>
+                </li>
+              {:else}
+                <li class="card-empty">타자 정보를 기다리는 중</li>
+              {/each}
+            </ul>
+          {:else}
+            <ul class="line-list">
+              {#each batterSeason as l (l.label)}
+                <li><span>{l.label}</span><strong>{l.value}</strong></li>
+              {:else}
+                <li class="card-empty">이번 시즌 기록 없음</li>
+              {/each}
+            </ul>
+          {/if}
         </section>
 
         <section class="panel info-panel" aria-label="pitcher info panel">
-          <h2>{pitcherInfoTitle}</h2>
-          <ul class="stat-list">
-            <li><span>이름</span><strong>{pitcherState.name}</strong></li>
-            <li><span>구속</span><strong>{pitcherState.speed}</strong></li>
-            <li class="gauge-row">
-              <span>체력</span>
-              <div class="gauge-wrap"><div class="gauge-bar" style="width:{pitcherState.stamina}%;background:{staminaColor};"></div></div>
-              <strong>{pitcherState.stamina.toFixed(1)}</strong>
-            </li>
-            <li class="gauge-row">
-              <span>멘탈</span>
-              <div class="gauge-wrap"><div class="gauge-bar" style="width:{pitcherState.mental}%;background:{mentalColor};"></div></div>
-              <strong>{pitcherState.mental.toFixed(1)}</strong>
-            </li>
-            <li><span>투구수</span><strong>{engineAvailable ? snapshotPitchCountSinceEntry : localEngineState.pitchCount}</strong></li>
-          </ul>
+          <div class="card-head">
+            <h2>{pitcherState.name}</h2>
+            <button
+              type="button"
+              class="flip-btn"
+              aria-pressed={pitcherFlipped}
+              on:click={() => (pitcherFlipped = !pitcherFlipped)}
+            >{pitcherFlipped ? "컨디션" : "성적"}</button>
+          </div>
+
+          {#if !pitcherFlipped}
+            <ul class="bar-list">
+              <li>
+                <span class="bl">체력</span>
+                <span class="bt"><i style="width:{pitcherState.stamina}%;background:{staminaColor};"></i></span>
+                <strong class="bv">{pitcherState.stamina.toFixed(0)}</strong>
+              </li>
+              <li>
+                <span class="bl">멘탈</span>
+                <span class="bt"><i style="width:{pitcherState.mental}%;background:{mentalColor};"></i></span>
+                <strong class="bv">{pitcherState.mental.toFixed(0)}</strong>
+              </li>
+              <li class="plain"><span class="bl">구속</span><strong class="bv">{pitcherState.speed}</strong></li>
+              <li class="plain"><span class="bl">투구수</span><strong class="bv">{engineAvailable ? snapshotPitchCountSinceEntry : localEngineState.pitchCount}</strong></li>
+            </ul>
+          {:else}
+            <ul class="line-list">
+              {#each pitcherSeason as l (l.label)}
+                <li><span>{l.label}</span><strong>{l.value}</strong></li>
+              {:else}
+                <li class="card-empty">이번 시즌 기록 없음</li>
+              {/each}
+            </ul>
+          {/if}
         </section>
       </div>
     </div>
@@ -1953,12 +2066,6 @@
   }
   /* 남은 구수가 얼마 안 되면 눈에 띈다. **선택을 막지는 않는다** */
   .cost-chip.thin { color: #f0b070; font-weight: 700; }
-  .cost-tag {
-    font-size: 9.5px;
-    opacity: 0.62;
-    margin-left: 4px;
-    font-variant-numeric: tabular-nums;
-  }
 
   /* ── 라인업 (U7-b) ── */
   .lineup-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1px; }
@@ -2128,10 +2235,15 @@
   .right-column {
     grid-column: 8 / 13;
     display: grid;
+    /* ⚠ `align-content: start`에 행 크기가 없었다. 패널 셋이 자연 높이로 쌓여
+       696px 칸에 773px를 넣었고, 부모가 `overflow: hidden`이라 **아래 77px이
+       그냥 잘렸다**(투수 컨디션의 멘탈·투구수가 안 보였다).
+       마지막 행이 남는 만큼 갖게 해 넘치는 대신 그 안에서 해결하도록 한다. */
+    grid-template-rows: auto auto minmax(0, 1fr);
     gap: 12px;
-    align-content: start;
     min-height: 0;
   }
+  .right-column > .pair-row { min-height: 0; }
 
   .pair-row {
     display: grid;
@@ -2146,6 +2258,14 @@
     border: 1px solid #2a3550;
     border-radius: 8px;
     padding: 12px;
+    min-height: 0;
+  }
+
+  /* 존은 남는 높이에 맞춰 줄어야 한다 — 캔버스가 `flex: 1`을 쓰려면 부모가 flex여야 한다 */
+  .zone-panel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
   }
 
   .panel h2 {
@@ -2295,8 +2415,8 @@
 
   .diamond {
     position: relative;
-    width: 120px;
-    height: 120px;
+    width: 104px;
+    height: 104px;
     background: #0a111f;
     border: 1px solid #324362;
     border-radius: 10px;
@@ -2358,8 +2478,8 @@
   }
 
   .sbo-lamp {
-    width: 34px;
-    height: 34px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     border: 1px solid #3a3d46;
     background: #595d67;
@@ -2411,9 +2531,14 @@
   }
 
   .zone-canvas {
-    width: 80%;
+    /* ⚠ `min-height: 260px`이 투구 행 높이를 혼자 정했다 — 옆 칸(투구 선택)이
+       241px인데도 행이 317px이 됐다. 남는 높이에 맞춰 줄되 **실제 스트라이크
+       존 비율**(17in x 22in)은 지킨다. */
+    flex: 1 1 auto;
+    min-height: 120px;
+    aspect-ratio: 17 / 22;
+    width: auto;
     max-width: 180px;
-    min-height: 260px;
     margin: 0 auto;
     background: #21314c;
     border: 5px solid #3a4f73;
@@ -2505,34 +2630,96 @@
     z-index: 1;
   }
 
-  .pitch-buttons {
+  /* ── 투구 선택 배치 (M3) ─────────────────────────────────────
+     왼쪽 구종 슬롯 · 오른쪽 전략/세기. 전략·세기를 세로 버튼 6개로 쌓았더니
+     패널이 393px이 돼 오른쪽 열이 153px 넘쳤다(실측) — 세그먼트로 묶었다. */
+  .ps-split {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr) 118px;
     gap: 8px;
     margin-bottom: 8px;
   }
 
-  .pitch-btn,
-  .mini-btn {
+  .slot-col { display: grid; gap: 5px; align-content: start; }
+
+  .slot {
+    display: grid;
+    grid-template-columns: 12px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 7px;
     border: 1px solid #304868;
-    border-radius: 8px;
+    border-radius: 7px;
     background: #101a2d;
     color: #e9f1ff;
-    padding: 9px 8px;
+    padding: 6px 8px;
+    text-align: left;
     cursor: pointer;
+    font: inherit;
+    font-size: 12px;
   }
-
-  .pitch-btn.active,
-  .mini-btn.active {
-    background: #2f4f85;
-    border-color: #7ba4f0;
+  .slot.active { background: #2f4f85; border-color: #7ba4f0; }
+  /* 빈칸은 누를 게 없다 — 테두리를 점선으로 두어 "아직 안 찬 자리"로 읽힌다 */
+  .slot.empty {
+    border-style: dashed;
+    border-color: #253148;
+    background: #0b1220;
+    cursor: default;
+    justify-items: center;
+    grid-template-columns: 12px minmax(0, 1fr);
   }
+  .slot-no { font-size: 9.5px; color: #4d648a; font-variant-numeric: tabular-nums; }
+  .slot.active .slot-no { color: #a8c4ef; }
+  .slot-name { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  /* 글자 막대(▮▮▮▯▯)는 이름을 밀어내 "패스..."로 잘렸다 — CSS 막대가 훨씬 좁다 */
+  .slot-grade {
+    display: block;
+    width: 22px;
+    height: 3px;
+    border-radius: 2px;
+    background: #23334e;
+    overflow: hidden;
+  }
+  .slot-grade i { display: block; height: 100%; background: #7ba4f0; }
+  .slot.active .slot-grade { background: #1d3559; }
+  .slot.active .slot-grade i { background: #cfe0ff; }
+  .slot-lock { font-size: 11px; opacity: 0.5; }
 
-  .choice-row {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
-    margin-bottom: 8px;
+  .opt-col { display: grid; align-content: start; gap: 3px; }
+  .opt-label {
+    font-size: 9.5px;
+    letter-spacing: 0.08em;
+    color: #6d84a8;
+    margin: 0;
+  }
+  .opt-label + .seg { margin-bottom: 6px; }
+
+  /* 셋 중 하나임을 모양으로 말한다 — 테두리를 나눠 쓴다 */
+  .seg {
+    display: flex;
+    border: 1px solid #304868;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .seg button {
+    flex: 1;
+    border: none;
+    background: #101a2d;
+    color: #9ab4d8;
+    font: inherit;
+    font-size: 11.5px;
+    padding: 8px 2px;
+    cursor: pointer;
+    min-width: 0;
+  }
+  .seg button + button { border-left: 1px solid #263a58; }
+  .seg button.active { background: #2f4f85; color: #ffffff; font-weight: 700; }
+
+  /* 상한을 글로 남긴다 — 자물쇠만으로는 "몇 개까지"가 안 전달된다 */
+  .slot-count {
+    font-size: 10px;
+    color: #6d84a8;
+    margin: 4px 0 0;
+    font-variant-numeric: tabular-nums;
   }
 
   .execute-btn {
@@ -2598,43 +2785,97 @@
     color: #74d8a2;
   }
 
-  .stat-list {
+  /* ── 타자·투수 카드 (M4) ─────────────────────────────────────
+     앞뒤 두 면. 뒷면은 실제 기록이 있을 때만 그린다 — 없으면 "기록 없음"이다. */
+  .info-panel { display: flex; flex-direction: column; overflow: hidden; }
+
+  .card-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .card-head h2 {
+    margin: 0;
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .flip-btn {
+    flex: 0 0 auto;
+    border: 1px solid #304868;
+    border-radius: 20px;
+    background: #101a2d;
+    color: #9ab4d8;
+    font: inherit;
+    font-size: 10.5px;
+    padding: 2px 9px;
+    cursor: pointer;
+  }
+  .flip-btn:hover { border-color: #7ba4f0; color: #e9f1ff; }
+  .flip-btn[aria-pressed="true"] { background: #2f4f85; border-color: #7ba4f0; color: #fff; }
+
+  .bar-list, .line-list {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 8px;
+    gap: 6px;
+    align-content: start;
+    min-height: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
   }
 
-
-
-  .stat-list li {
-    display: flex;
-    justify-content: space-between;
+  /* 라벨 · 막대 · 숫자 — 세 열을 고정해 두 카드의 눈금이 서로 맞는다 */
+  .bar-list li {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr) 30px;
     align-items: center;
     gap: 8px;
-    border-bottom: 1px solid #24334d;
-    padding-bottom: 6px;
     color: #d7e4fb;
+    font-size: 12px;
   }
-
-  .gauge-row {
-    flex-direction: row;
-  }
-
-  .gauge-wrap {
-    flex: 1;
-    height: 8px;
+  .bar-list li.plain { grid-template-columns: 42px minmax(0, 1fr); }
+  .bar-list li.plain .bv { text-align: left; }
+  .bl { color: #93aacb; }
+  .bt {
+    display: block;
+    height: 7px;
     background: #1a2a3f;
+    border: 1px solid #2a3d5a;
     border-radius: 4px;
     overflow: hidden;
-    border: 1px solid #2a3d5a;
   }
-
-  .gauge-bar {
+  .bt i {
+    display: block;
     height: 100%;
-    border-radius: 4px;
-    transition: width 0.4s ease, background 0.4s ease;
+    background: #5f8fe0;
+    transition: width 0.35s ease, background 0.35s ease;
+  }
+  .bv { text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; }
+
+  .line-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+    border-bottom: 1px solid #24334d;
+    padding-bottom: 5px;
+    color: #d7e4fb;
+    font-size: 12px;
+  }
+  .line-list li span { color: #93aacb; }
+  .line-list li strong { font-variant-numeric: tabular-nums; }
+
+  /* 값이 없을 때 0을 그리지 않는다 — 왜 비었는지를 쓴다 */
+  .card-empty {
+    color: #6d84a8;
+    font-size: 11.5px;
+    border: none;
+    padding: 10px 0;
   }
 
   .change-overlay {

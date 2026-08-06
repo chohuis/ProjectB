@@ -155,7 +155,7 @@ if (!PNG) {
     const p = path.join(PARK, `${s.id}.png`);
     if (!fs.existsSync(p)) continue;
     const px = sampler(read(p));
-    const frac = OUT.reduce((a, [x, y]) => a + soilFrac(px, x, y), 0) / OUT.length;
+    const frac = OUT.reduce((a, [x, y]) => a + groundAt(px, x, y).soil, 0) / OUT.length;
     if (s.tier === "고교" && frac < 0.5) {
       hsBad++; fail(`${s.id} 외야에 잔디가 있다 (흙 ${(frac * 100).toFixed(0)}%)`);
     } else if (s.tier !== "고교" && frac > 0.7) {

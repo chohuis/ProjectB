@@ -308,7 +308,12 @@
     return unmet.map((req) => `${req.label} ${req.required} 필요 (현재 ${req.current})`).join(" · ");
   }
 
-  const MAX_PITCHES = 5;
+  /**
+   * 구종 상한 — **코드에 적지 않는다.** 경기 화면에도 같은 숫자가 필요해져
+   * 여기 `const MAX_PITCHES = 5`를 두면 정본이 둘이 된다.
+   * 정본은 `training/pitch_catalog.json`의 `maxLearned`.
+   */
+  $: MAX_PITCHES = $masterStore.pitchMaxLearned;
 
   function canStart(pitch: PitchCandidate): boolean {
     const baseOk = !trainingPitch && !isInjured && projectedFatigue < 80;
@@ -690,7 +695,7 @@
           <h3 style="margin-top:12px">해금 가능 <span class="count">{eligiblePitches.length}</span></h3>
           {#if learnedPitches.length >= MAX_PITCHES}
             <div class="pitch-limit-notice">
-              보유 구종이 최대 5개에 도달했습니다. 새 구종을 더 이상 습득할 수 없습니다.
+              보유 구종이 최대 {MAX_PITCHES}개에 도달했습니다. 새 구종을 더 이상 습득할 수 없습니다.
             </div>
           {/if}
           {#if eligiblePitches.length === 0}
@@ -709,7 +714,7 @@
                   {#if trainingPitch}
                     <p class="hint">다른 구종 훈련이 진행중입니다.</p>
                   {:else if learnedPitches.length >= MAX_PITCHES}
-                    <p class="hint">보유 구종 5개 한도 초과</p>
+                    <p class="hint">보유 구종 {MAX_PITCHES}개 한도 초과</p>
                   {/if}
                 </article>
               {/each}

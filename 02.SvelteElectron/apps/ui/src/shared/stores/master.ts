@@ -321,6 +321,15 @@ export interface MasterState {
   loaded: boolean;
   trainingPrograms: TrainingProgram[];
   pitchCatalog: PitchEntry[];
+  /**
+   * 한 투수가 보유할 수 있는 구종 수 상한.
+   *
+   * ⚠ 예전엔 `TrainingPage.svelte`에 `const MAX_PITCHES = 5`로 박혀 있었다.
+   * 경기 화면에도 같은 숫자가 필요해지면서 **정본이 둘이 될 뻔했다** — 이
+   * 프로젝트에서 반복해 나온 결함이라 데이터 파일 하나로 옮겼다
+   * (`training/pitch_catalog.json`의 `maxLearned`).
+   */
+  pitchMaxLearned: number;
   pitchUnlockRules: PitchUnlockRule[];
   leagues: LeagueRef[];
   schools: SchoolRef[];
@@ -658,6 +667,7 @@ function createMasterStore() {
     loaded: false,
     trainingPrograms: [],
     pitchCatalog: [],
+    pitchMaxLearned: 5,
     pitchUnlockRules: [],
     leagues: [],
     schools: [],
@@ -716,7 +726,7 @@ function createMasterStore() {
         manifest,
       ] = await Promise.all([
         fetchMaster<{ programs: TrainingProgram[] }>("training/programs_pitcher.json"),
-        fetchMaster<{ pitches: PitchEntry[] }>("training/pitch_catalog.json"),
+        fetchMaster<{ pitches: PitchEntry[]; maxLearned?: number }>("training/pitch_catalog.json"),
         fetchMaster<{ rules: PitchUnlockRule[] }>("training/pitch_unlock_rules.json"),
         fetchMaster<{ leagues: LeagueRef[]; schools: SchoolRef[]; stadiums: StadiumRef[]; clubs: ClubRef[]; teams: TeamRef[] }>(
           "entities/refs.json"
@@ -785,6 +795,7 @@ function createMasterStore() {
         loaded:          true,
         trainingPrograms: trainingData?.programs  ?? [],
         pitchCatalog:     pitchData?.pitches      ?? [],
+        pitchMaxLearned:  pitchData?.maxLearned   ?? 5,
         pitchUnlockRules: unlockData?.rules       ?? [],
         leagues:          refsData?.leagues ?? [],
         schools:          refsData?.schools ?? [],
