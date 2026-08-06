@@ -1,7 +1,8 @@
 <script lang="ts">
   import type { MainTabId } from "../../../shared/types/main";
-  import { language, languageOptions, t, type Language } from "../../../shared/i18n";
+  import { t } from "../../../shared/i18n";
   import { NAV_GROUP_BREAK_AFTER } from "../../../shared/utils/navVisibility";
+  import SettingsModal from "../../settings/ui/SettingsModal.svelte";
 
   export let currentTab: MainTabId;
   /** 보이는 탭 — 노출 판정의 정본은 `utils/navVisibility`다 */
@@ -30,18 +31,7 @@
     return null;
   }
 
-  function setLanguage(next: Language) {
-    if (next === "ko" || next === "en") {
-      language.set(next);
-      settingsOpen = false;
-    }
-  }
-
-  function toggleSettings() { settingsOpen = !settingsOpen; }
-  function closeSettings()  { settingsOpen = false; }
 </script>
-
-<svelte:window on:click={closeSettings} on:keydown={(e) => e.key === "Escape" && closeSettings()} />
 
 <nav class="nav">
   <div class="list">
@@ -66,27 +56,17 @@
   </div>
 
   <div class="settings">
-    <button class="gear" type="button" on:click|stopPropagation={toggleSettings} aria-label={$t("header.language")}>
+    <button class="gear" type="button" on:click={() => (settingsOpen = true)} aria-label={$t("settings.title")}>
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path
           d="M19.43 12.98c.04-.32.07-.65.07-.98s-.03-.66-.08-.98l2.11-1.65a.5.5 0 0 0 .12-.63l-2-3.46a.5.5 0 0 0-.61-.22l-2.49 1a7.07 7.07 0 0 0-1.69-.98l-.38-2.65A.5.5 0 0 0 14 2h-4a.5.5 0 0 0-.49.42l-.38 2.65c-.61.24-1.17.56-1.69.98l-2.49-1a.5.5 0 0 0-.61.22l-2 3.46a.5.5 0 0 0 .12.63L4.57 11c-.05.32-.07.65-.07 1s.03.68.08 1l-2.11 1.65a.5.5 0 0 0-.12.63l2 3.46a.5.5 0 0 0 .61.22l2.49-1c.52.42 1.08.75 1.69.99l.38 2.64a.5.5 0 0 0 .49.42h4a.5.5 0 0 0 .49-.42l.38-2.64c.61-.24 1.17-.57 1.69-.99l2.49 1a.5.5 0 0 0 .61-.22l2-3.46a.5.5 0 0 0-.12-.63L19.43 13zM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5z"
         ></path>
       </svg>
     </button>
-    {#if settingsOpen}
-      <div class="popup" role="presentation" on:mousedown|stopPropagation>
-        <span class="u-label">{$t("header.language")}</span>
-        <div class="langs">
-          {#each languageOptions as option}
-            <button type="button" class:on={$language === option.id} on:click={() => setLanguage(option.id)}>
-              {option.label}
-            </button>
-          {/each}
-        </div>
-      </div>
-    {/if}
   </div>
 </nav>
+
+<SettingsModal open={settingsOpen} on:close={() => (settingsOpen = false)} />
 
 <style>
   .nav {
@@ -175,31 +155,4 @@
   .gear svg { width: 16px; height: 16px; fill: var(--ink-mute); }
   .gear:hover svg { fill: var(--t-dark); }
 
-  .popup {
-    position: absolute;
-    bottom: calc(100% + 6px);
-    left: 0;
-    width: 150px;
-    background: var(--panel);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    box-shadow: 0 10px 26px -14px rgba(8, 16, 36, 0.5);
-    padding: 9px;
-    z-index: 20;
-    display: grid;
-    gap: 7px;
-  }
-
-  .langs { display: grid; gap: 4px; }
-  .langs button {
-    border: 1px solid var(--line);
-    background: none;
-    color: var(--ink-mid);
-    border-radius: var(--radius);
-    padding: 6px 9px;
-    font-size: 12px;
-    cursor: pointer;
-    text-align: left;
-  }
-  .langs button.on { background: var(--t-dark); border-color: var(--t-dark); color: var(--ink-on-dark); }
 </style>

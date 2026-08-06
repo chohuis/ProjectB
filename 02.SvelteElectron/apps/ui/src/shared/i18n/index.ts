@@ -24,6 +24,31 @@ const dictionaries: Record<Language, Record<string, string>> = {
     "header.progress": "\uc9c4\ud589",
     "header.progressRunning": "\uc9c4\ud589 \uc911...",
     "header.language": "\uc5b8\uc5b4",
+    "settings.title": "환경설정",
+    "settings.close": "닫기",
+    "settings.reset": "기본값으로",
+    "settings.language": "언어",
+    "settings.theme": "테마",
+    "settings.theme.light": "밝음",
+    "settings.theme.dark": "어둠",
+    "settings.theme.system": "시스템 따름",
+    "settings.effectSpeed": "경기 연출 속도",
+    "settings.effectSpeed.fast": "빠르게",
+    "settings.effectSpeed.normal": "보통",
+    "settings.effectSpeed.off": "끄기",
+    "settings.effectSpeed.hint": "결과가 뜨는 시간입니다. 한 경기 투구가 100구 안팎입니다",
+    "settings.reduceMotion": "애니메이션 줄이기",
+    "settings.reduceMotion.hint": "운영체제 설정이 켜져 있으면 이 값과 무관하게 줄어듭니다",
+    "settings.windowSize": "창 크기",
+    "settings.windowSize.fullscreen": "전체화면",
+    "settings.sound": "사운드",
+    "settings.sound.master": "전체",
+    "settings.sound.sfx": "효과음",
+    "settings.sound.bgm": "배경음",
+    "settings.sound.pending": "아직 소리가 없습니다 — 값만 저장됩니다",
+    "settings.section.display": "화면",
+    "settings.section.game": "게임",
+    "settings.section.sound": "소리",
     "header.playerLine": "{team} \u00b7 {player}",
     "page.news": "\uc18c\uc2dd",
     "page.me": "\ub098",
@@ -94,6 +119,31 @@ const dictionaries: Record<Language, Record<string, string>> = {
     "header.progress": "Advance",
     "header.progressRunning": "Advancing...",
     "header.language": "Language",
+    "settings.title": "Settings",
+    "settings.close": "Close",
+    "settings.reset": "Reset to defaults",
+    "settings.language": "Language",
+    "settings.theme": "Theme",
+    "settings.theme.light": "Light",
+    "settings.theme.dark": "Dark",
+    "settings.theme.system": "Follow system",
+    "settings.effectSpeed": "Result effect speed",
+    "settings.effectSpeed.fast": "Fast",
+    "settings.effectSpeed.normal": "Normal",
+    "settings.effectSpeed.off": "Off",
+    "settings.effectSpeed.hint": "How long results stay on screen. A game runs about 100 pitches",
+    "settings.reduceMotion": "Reduce motion",
+    "settings.reduceMotion.hint": "If your OS setting is on, motion is reduced regardless",
+    "settings.windowSize": "Window size",
+    "settings.windowSize.fullscreen": "Fullscreen",
+    "settings.sound": "Sound",
+    "settings.sound.master": "Master",
+    "settings.sound.sfx": "Effects",
+    "settings.sound.bgm": "Music",
+    "settings.sound.pending": "No audio yet — the value is stored only",
+    "settings.section.display": "Display",
+    "settings.section.game": "Game",
+    "settings.section.sound": "Sound",
     "header.playerLine": "{team} \u00b7 {player}",
     "page.news": "News",
     "page.me": "Me",
@@ -185,8 +235,19 @@ export const t = derived(language, ($language) => {
   };
 });
 
-// 설정 팝업에서 사용하는 언어 선택 목록
+// 환경설정에서 쓰는 언어 선택 목록
 export const languageOptions: Array<{ id: Language; label: string }> = [
   { id: "ko", label: "\ud55c\uad6d\uc5b4" },
   { id: "en", label: "English" }
 ];
+
+/**
+ * 언어 바꾸기. **모르는 값은 무시한다** — 저장소나 외부에서 온 값이
+ * 그대로 들어오면 사전 조회가 전부 빗나가 화면이 키로 채워진다.
+ *
+ * 예전엔 `SidebarNav.svelte` 안의 지역 함수였다. 환경설정에서도 같은 일이
+ * 필요해지면서 정본을 여기로 올렸다.
+ */
+export function setLanguage(next: Language): void {
+  if (next === "ko" || next === "en") language.set(next);
+}
