@@ -82,6 +82,7 @@
     "test:events": "node scripts/test-events.cjs",
     "test:growth": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-growth.cjs",
     "check:thresholds": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/check-thresholds.cjs",
+    "check:teamrefs": "node scripts/check-teamrefs.cjs",
     "check:teamcolors": "node scripts/check-teamcolors.cjs",
     "test:neededpositions": "node scripts/test-neededpositions.cjs",
     "test:npclifecycle": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-npclifecycle.cjs",

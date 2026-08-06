@@ -492,7 +492,18 @@ pub struct HsAdmissionsPayload {
     pub avg_pct: f64,
     pub hs_baseball_score: f64,
     pub univ_choices: Vec<UnivChoiceReq>,
-    pub indie_choices: Vec<String>,
+    /// 독립 리그 지망. **팀별 난이도(`min_ovr`)를 받는다** — 예전엔 팀 ID
+    /// 문자열만 받아 지망 순서로만 난이도를 정했다. 1지망에 약팀을 써도
+    /// 컷이 52여서 **어느 팀을 고르든 같았다.**
+    pub indie_choices: Vec<IndieChoiceReq>,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct IndieChoiceReq {
+    pub team_id: String,
+    /// 그 팀의 컷(OVR). 전력★에서 화면이 낸다
+    pub min_ovr: f64,
 }
 
 #[derive(Serialize)]
@@ -538,14 +549,16 @@ pub fn calc_hs_admissions(p: HsAdmissionsPayload) -> HsAdmissionsResult {
         .map(|c| c.team_id.clone())
         .collect();
 
+    // 팀의 컷이 주가 되고 지망 순서는 작게 보탠다 — 위로 지원할수록 조금 어렵다
     let indie_passed: Vec<String> = p.indie_choices.iter().enumerate()
-        .filter(|(i, _)| {
-            let cut = [52.0f64, 48.0, 44.0].get(*i).copied().unwrap_or(44.0);
+        .filter(|(i, c)| {
+            let order_penalty = [0.0f64, -2.0, -4.0].get(*i).copied().unwrap_or(-4.0);
+            let cut = c.min_ovr - order_penalty;
             if ovr < cut - 10.0 { return false; }
             let base = 36.0 + (ovr - cut) * 3.2;
             rng.gen::<f64>() * 100.0 < base.clamp(12.0, 96.0)
         })
-        .map(|(_, id)| id.clone())
+        .map(|(_, c)| c.team_id.clone())
         .collect();
 
     HsAdmissionsResult { univ_passed, indie_passed }

@@ -4,7 +4,7 @@
   import { masterStore } from "../../../shared/stores/master";
   import type { EntityDetails } from "../../../shared/stores/master";
   import { gameStore } from "../../../shared/stores/game";
-  import { checkUniversityEligibility, calcHsBaseballScore, pctToGrade, UNIVERSITY_REQUIREMENTS } from "../../../shared/utils/universityUtils";
+  import { checkUniversityEligibility, calcHsBaseballScore, pctToGrade, requirementOfPower } from "../../../shared/utils/universityUtils";
 
   export let initialSelected: string[] = [];
 
@@ -30,12 +30,11 @@
   $: avgGrade = pctToGrade(avgPct);
 
   $: teams = $masterStore.teams.filter((t) => t.leagueId === "LEAGUE_UNIVERSITY" && t.id !== "TEAM_SPORTS_UNIT");
-  $: sortedTeams = [...teams].sort((a, b) => {
-    const ra = UNIVERSITY_REQUIREMENTS[a.id];
-    const rb = UNIVERSITY_REQUIREMENTS[b.id];
-    const tierOrder = { S: 0, A: 1, B: 2, C: 3, D: 4 };
-    return (tierOrder[ra?.tier ?? "D"] ?? 4) - (tierOrder[rb?.tier ?? "D"] ?? 4);
-  });
+  // 등급은 팀의 전력★에서 나온다 — 예전엔 하드코딩 표를 뒤졌고 50팀 중 1팀만 맞았다
+  const TIER_ORDER: Record<string, number> = { S: 0, A: 1, B: 2, C: 3, D: 4 };
+  $: sortedTeams = [...teams].sort(
+    (a, b) => TIER_ORDER[requirementOfPower(a.power).tier] - TIER_ORDER[requirementOfPower(b.power).tier],
+  );
   $: if (!selectedTeamId || !sortedTeams.some((t) => t.id === selectedTeamId)) {
     selectedTeamId = sortedTeams[0]?.id ?? "";
   }
@@ -78,8 +77,8 @@
           </div>
           <div class="rows">
             {#each sortedTeams as team}
-              {@const req = UNIVERSITY_REQUIREMENTS[team.id]}
-              {@const elig = checkUniversityEligibility(team.id, avgPct, hsBaseballScore)}
+              {@const req = requirementOfPower(team.power)}
+              {@const elig = checkUniversityEligibility(team.power, avgPct, hsBaseballScore)}
               <button class:selected={selectedTeamId === team.id} on:click={() => (selectedTeamId = team.id)}>
                 <span class="tier-badge tier-{req?.tier ?? 'D'}">{req?.tier ?? '?'}</span>
                 <strong class:dim={!elig.eligible}>{team.name}</strong>
@@ -93,8 +92,8 @@
 
         <section class="panel detail">
           {#if selectedTeam}
-            {@const req = UNIVERSITY_REQUIREMENTS[selectedTeam.id]}
-            {@const elig = checkUniversityEligibility(selectedTeam.id, avgPct, hsBaseballScore)}
+            {@const req = requirementOfPower(selectedTeam.power)}
+            {@const elig = checkUniversityEligibility(selectedTeam.power, avgPct, hsBaseballScore)}
             <div class="detail-head">
               <h4>{selectedTeam.name}</h4>
               {#if req}<span class="tier-badge tier-{req.tier}">{req.tier}등급</span>{/if}

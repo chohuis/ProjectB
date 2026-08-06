@@ -111,10 +111,10 @@ const EVENT_LABEL: Record<PlayerEventType, string> = {
   retire:         "은퇴",
 };
 
-// 팀ID 축약 (TEAM_KBL_TWINWOLVES_1 → TW1)
+// 팀ID 축약 (TEAM_KBL_BUSAN_WAVES_1 → TW1)
 function shortTeam(teamId?: string): string {
   if (!teamId) return "-";
-  // TEAM_KBL_TWINWOLVES_1 → TW_1, LEAGUE_MILITARY → MIL
+  // TEAM_KBL_BUSAN_WAVES_1 → TW_1, LEAGUE_MILITARY → MIL
   const league = teamId.replace(/^TEAM_[A-Z]+_/, "").replace(/_(\d)$/, "·$1");
   return league.length > 16 ? league.slice(0, 14) + "…" : league;
 }

@@ -523,58 +523,11 @@ interface EntityIndex {
   byLeague: Record<string, string[]>;
 }
 
-const TEAM_NAME_MAP: Record<string, string> = {
-  TEAM_UNIV_HANBBIT:              "한빛체육대학교",
-  TEAM_UNIV_DONGMYUNG:            "동명과학대학교",
-  TEAM_UNIV_SEOHAE:               "서해국제대학교",
-  TEAM_UNIV_NAMGANG:              "남강대학교",
-  TEAM_UNIV_CHEONGUN:             "청운공과대학교",
-  TEAM_UNIV_MIRAE:                "미래창성대학교",
-  TEAM_UNIV_GAON:                 "가온문화대학교",
-  TEAM_IND_SEOUL_PIONEERS:        "서울 파이오니어스",
-  TEAM_IND_BUSAN_TEMPEST:         "부산 템페스트",
-  TEAM_IND_DAEGU_FALCONS:         "대구 팰컨스",
-  TEAM_IND_GWANGJU_STORM:         "광주 스톰",
-  TEAM_IND_DAEJEON_HUNTERS:       "대전 헌터스",
-  TEAM_IND_INCHEON_ORCAS:         "인천 오르카스",
-  TEAM_IND_SUWON_BLAZE:           "수원 블레이즈",
-  TEAM_IND_ULSAN_PHOENIX:         "울산 피닉스",
-  TEAM_HS_YEOSU_SHORE:            "여수 쇼어",
-  TEAM_HS_CHUNCHEON_HIGHLAND:     "춘천 하이랜드",
-  TEAM_HS_JEJU_WIND:              "제주 윈드",
-  TEAM_HS_GANGWON_PEAK:           "강원 피크",
-  TEAM_HS_MASAN_HARBOR:           "마산 하버",
-  TEAM_HS_JECHEON_RIDGE:          "제천 릿지",
-  TEAM_HS_GOYANG_ARROW:           "고양 애로우",
-  TEAM_HS_SUNCHEON_BAY:           "순천 베이",
-};
+// ⚠ 여기 `TEAM_NAME_MAP`(옛 고교·대학·독립 24팀 이름)과 `TEAM_PROFILE_MAP`,
+// 그리고 둘을 쓰던 `teamNameFromId`가 있었다. **부르는 곳이 하나도 없었고**,
+// `refs.json`에 238팀 전부 `name`과 `profile`이 들어 있어 이미 대체된 상태였다.
+// 남겨 두면 다음 사람이 "여기도 고쳐야 하나" 하고 시간을 쓴다.
 
-const TEAM_PROFILE_MAP: Record<string, TeamProfile> = {
-  TEAM_UNIV_HANBBIT:         { style: "스피드형",  desc: "체육 특화 대학의 압도적인 신체 능력. 최상급 훈련 시설과 스포츠 과학 접목으로 선수 육성률이 전국 최고 수준이다. 체력과 스피드를 앞세운 야구가 특기.",  strengths: ["체력", "주루", "수비"],           funding: "상",  difficulty: "상"  },
-  TEAM_UNIV_DONGMYUNG:       { style: "투지형",    desc: "영남권 대학야구를 대표하는 팀. 지역 고교 유망주를 흡수하며 탄탄한 팀을 구성하고, 수도권 명문들에 도전장을 내미는 지방의 자존심이다.",               strengths: ["투지", "수비"],                  funding: "중",  difficulty: "중"  },
-  TEAM_UNIV_SEOHAE:          { style: "공격형",    desc: "고려대의 영원한 라이벌. 매 시즌 강력한 타선을 구축하며 연고전에서 리그 판도를 뒤흔든다. 공격적인 스카우팅과 적극적인 선수 육성이 장점이다.",              strengths: ["타격", "주루", "공격"],          funding: "상",  difficulty: "최상" },
-  TEAM_UNIV_NAMGANG:         { style: "균형형",    desc: "한국 대학야구의 절대 명가. 풍부한 역사와 최고 수준의 코칭 스태프가 매 시즌 KBL 드래프트 다수 배출을 가능케 한다. 스카우터들이 가장 먼저 찾는 학교다.", strengths: ["투수력", "수비", "코칭"],        funding: "상",  difficulty: "최상" },
-  TEAM_UNIV_CHEONGUN:        { style: "투수형",    desc: "에이스 한 명이 팀을 이끄는 투수 중심 야구의 명가. 공학 마인드의 철저한 분석 야구로 매 시즌 상위권을 유지하며, 완성형 투수 배출로 유명하다.",             strengths: ["투수력", "제구", "분석"],        funding: "상",  difficulty: "상"  },
-  TEAM_UNIV_MIRAE:           { style: "균형형",    desc: "중부권의 조용한 야구부. 풍부한 지원은 없지만 선수들의 자발적인 열정으로 매 시즌 출전권을 유지한다. 저비용 고효율의 팀 운영이 특기.",                    strengths: ["투지", "작전"],                  funding: "하",  difficulty: "하"  },
-  TEAM_UNIV_GAON:            { style: "균형형",    desc: "화려함보다 균형을 추구하는 팀. 매 시즌 꾸준히 중상위권을 유지하며 조용히 프로 선수를 배출해왔다. 팀 케미스트리가 강점이다.",                            strengths: ["수비", "팀워크"],                funding: "중",  difficulty: "중"  },
-  TEAM_IND_SEOUL_PIONEERS:   { style: "균형형",    desc: "독립리그 최고 명문. 체계적인 운영과 풍부한 네트워크로 KBL 복귀를 꿈꾸는 선수들이 가장 선호하는 팀이다. 매 시즌 가장 많은 KBL 입단 성사를 이뤄낸다.",    strengths: ["코칭", "데이터 분석", "기회 창출"], funding: "중", difficulty: "상" },
-  TEAM_IND_BUSAN_TEMPEST:    { style: "공격형",    desc: "부산 특유의 거친 기질과 뜨거운 열정이 그대로 담긴 팀. 독립리그 최고의 공격력을 자랑하며 서울 파이오니어스의 최대 라이벌로 자리매김했다.",              strengths: ["타격", "파워", "투지"],          funding: "중",  difficulty: "상"  },
-  TEAM_IND_DAEGU_FALCONS:    { style: "투수형",    desc: "영남권 독립리그 대표팀. 우수한 투수 자원을 발굴하는 데 특화되어 있으며, 대구·경북 지역 고교 출신 선수들이 KBL 문을 두드리는 등용문 역할을 한다.",        strengths: ["투수력", "제구"],               funding: "하",  difficulty: "중"  },
-  TEAM_IND_GWANGJU_STORM:    { style: "투지형",    desc: "호남의 투지를 담은 팀. 재정 여건은 빠듯하지만 선수들의 열정만큼은 독립리그 최고다. 약자가 강자를 꺾는 이변이 잦은, 상대 팀이 가장 경계하는 복병이다.",   strengths: ["투지", "집중력"],               funding: "하",  difficulty: "하"  },
-  TEAM_IND_DAEJEON_HUNTERS:  { style: "균형형",    desc: "충청권 독립리그 유일 팀. 중부권 선수들의 활동 무대이며 꾸준히 리그 중위권을 유지한다. 재정적으로 빠듯하지만 지역 팬들의 응원이 원동력이다.",             strengths: ["수비", "작전"],                  funding: "하",  difficulty: "하"  },
-  TEAM_IND_INCHEON_ORCAS:    { style: "수비형",    desc: "끈질긴 수비와 침착한 경기 운영이 특기. 항만 도시 인천의 끈기를 닮은 팀으로, 독립리그에서 가장 실점이 적은 팀으로 꾸준히 상위권을 유지한다.",             strengths: ["수비", "투수력", "집중력"],      funding: "중",  difficulty: "중"  },
-  TEAM_IND_SUWON_BLAZE:      { style: "공격형",    desc: "수도권 외곽 수원의 공격적인 야구팀. 드래프트 미지명 강타자들이 모여 파워야구를 구현하며, 홈런과 장거리 타격으로 관중을 열광시키는 스타일이다.",          strengths: ["타격", "파워"],                  funding: "중",  difficulty: "중"  },
-  TEAM_IND_ULSAN_PHOENIX:    { style: "균형형",    desc: "부상에서 돌아온 선수들의 재기 무대로 알려진 팀. 피닉스라는 이름처럼 다시 날아오르길 꿈꾸는 선수들로 구성되며, 강한 정신력이 팀의 상징이다.",            strengths: ["투지", "정신력", "집중력"],      funding: "하",  difficulty: "하"  },
-};
-
-function teamNameFromId(teamId: string): string {
-  if (TEAM_NAME_MAP[teamId]) return TEAM_NAME_MAP[teamId];
-  const base = teamId.replace(/^TEAM_(UNIV|IND|HS)_/, "").toLowerCase();
-  return base
-    .split("_")
-    .map((part) => (part ? part[0].toUpperCase() + part.slice(1) : part))
-    .join(" ");
-}
 
 /**
  * ⚠ 여기 있던 `mergeSupplementTeams`를 제거했다 (2026-07-30).

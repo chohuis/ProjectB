@@ -139,8 +139,11 @@ const DEFAULT_PROTAGONIST: ProtagonistSave = {
   name: "주인공 투수",
   careerStage: "highschool",
   leagueId: "LEAGUE_HIGHSCHOOL",
-  teamId: "TEAM_HS_SEOUL_INNOVATION",
-  schoolId: "SCHOOL_HS_SEOUL_INNOVATION",
+  // ⚠ **소속을 비워 둔다.** 예전엔 특정 고교가 박혀 있었는데 Phase 5에서 팀 ID를
+  // 갈아엎으면서 **없는 팀**이 됐다. 새 게임이 곧 진짜 팀으로 덮으므로 기본값이
+  // 특정 팀을 가리킬 이유가 없다 — 가리키면 그게 언젠가 또 썩는다.
+  teamId: "",
+  schoolId: "",
   grade: 2,
   age: 17,
   playerType: "pitcher",

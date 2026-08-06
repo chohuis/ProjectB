@@ -596,6 +596,9 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     const heroStats = s.stats[afterP.id] ?? null;
     const last = afterP.playerType === "pitcher" ? g.lastTop10Pitcher : g.lastTop10Batter;
 
+    // 팀 이름은 `refs.json`이 정본이다 — 예전엔 top10Engine 안에 옛 16팀 표가
+    // 박혀 있어 나머지 팀은 ID가 그대로 문구에 찍혔다
+    const teamNameOf = (id: string) => m.teams.find((t) => t.id === id)?.name ?? id;
     top10Snap = generateTop10(
       afterP,
       heroStats as import("../types/save").PitcherSeasonStats | import("../types/save").BatterSeasonStats | null,
@@ -603,6 +606,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       weekNum,
       afterP.grade ?? 1,
       s.seasonYear,
+      teamNameOf,
     );
     top10Msg = buildTop10Message(
       afterP,
@@ -612,6 +616,7 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
       last,
       weekNum,
       s.seasonYear,
+      teamNameOf,
     );
     const heroEntry = top10Snap.entries.find((e) => e.id === "PLY_HERO");
     if (heroEntry) {
@@ -817,14 +822,23 @@ async function processWeekBoundary(weekNum: number): Promise<string[]> {
     const subjects = Object.values(gDraft.schoolState.subjectScores);
     const avgPct = subjects.length ? subjects.reduce((a, s2) => a + s2.percentile, 0) / subjects.length : 50;
 
-    const { UNIVERSITY_REQUIREMENTS, calcHsBaseballScore } = await import("../utils/universityUtils");
+    const { requirementOfPower, calcHsBaseballScore, indieCutOfPower, isApplicableIndependent } =
+      await import("../utils/universityUtils");
     const hsBaseballScore = calcHsBaseballScore(gDraft.protagonist.careerRecords ?? []);
+    // 요건은 팀의 전력★에서 나온다 — 예전엔 하드코딩 표를 뒤졌고, 거기 없는
+    // 49개 대학이 `?? 9` / `?? 0`으로 떨어져 **전부 무조건 합격**이었다
+    const teamsNow = get(masterStore).teams;
     const univChoiceReqs = univChoices.map((teamId) => {
-      const req = UNIVERSITY_REQUIREMENTS[teamId];
-      return { teamId, minAcademicGrade: req?.minAcademicGrade ?? 9, minBaseballScore: req?.minBaseballScore ?? 0 };
+      const req = requirementOfPower(teamsNow.find((t) => t.id === teamId)?.power);
+      return { teamId, minAcademicGrade: req.minAcademicGrade, minBaseballScore: req.minBaseballScore };
     });
+    // 독립도 팀별 난이도를 넘긴다. 상무는 병역 경로가 따로 있어 제외한다
+    const indieChoiceReqs = indieChoices
+      .filter(isApplicableIndependent)
+      .map((teamId) => ({ teamId, minOvr: indieCutOfPower(teamsNow.find((t) => t.id === teamId)?.power) }));
     const admissionsCalc = JSON.parse(await window.projectB!.weekCalcHsAdmissions(JSON.stringify({
-      ovr: p.pitching.ovr, avgPct, hsBaseballScore, univChoices: univChoiceReqs, indieChoices,
+      ovr: p.pitching.ovr, avgPct, hsBaseballScore,
+      univChoices: univChoiceReqs, indieChoices: indieChoiceReqs,
     }))) as { univPassed: string[]; indiePassed: string[]; sportsPassed: boolean };
 
     // ── 주인공 드래프트 결과 ──────────────────────────────────

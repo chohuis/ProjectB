@@ -130,27 +130,14 @@ export function planMonthlyFriendlies(
 }
 
 // ── 월간 편성표 메시지 ────────────────────────────────────────
-const HS_TEAM_SHORT: Record<string, string> = {
-  TEAM_HS_SEOUL_INNOVATION:  "서울 이노베이션",
-  TEAM_HS_BUSAN_WAVE:        "부산 웨이브",
-  TEAM_HS_DAEGU_HEAT:        "대구 히트",
-  TEAM_HS_GWANGJU_VISION:    "광주 비전",
-  TEAM_HS_DAEJEON_RISE:      "대전 라이즈",
-  TEAM_HS_INCHEON_HARBOR:    "인천 하버",
-  TEAM_HS_ULSAN_CHARGE:      "울산 차지",
-  TEAM_HS_SUWON_EDGE:        "수원 에지",
-  TEAM_HS_YEOSU_SHORE:       "여수 쇼어",
-  TEAM_HS_CHUNCHEON_HIGHLAND:"춘천 하이랜드",
-  TEAM_HS_JEJU_WIND:         "제주 윈드",
-  TEAM_HS_GANGWON_PEAK:      "강원 피크",
-  TEAM_HS_MASAN_HARBOR:      "마산 하버",
-  TEAM_HS_JECHEON_RIDGE:     "제천 릿지",
-  TEAM_HS_GOYANG_ARROW:      "고양 애로우",
-  TEAM_HS_SUNCHEON_BAY:      "순천 베이",
-};
 
+/**
+ * ⚠ 여기 **옛 고교 16팀 이름표**가 폴백으로 박혀 있었다. 지금은 `teamMap`이
+ * 있어 안 닿지만, 거짓인 폴백을 두면 `teamMap`을 안 넘기는 호출부가 생겼을 때
+ * **조용히 옛 이름이 샌다.** 이름의 정본은 `refs.json` 하나다.
+ */
 function teamShort(teamId: string, teamMap?: Map<string, string>): string {
-  return teamMap?.get(teamId) ?? HS_TEAM_SHORT[teamId] ?? teamId;
+  return teamMap?.get(teamId) ?? teamId;
 }
 
 export function buildMonthlyNoticeMessage(

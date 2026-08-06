@@ -58,29 +58,15 @@ function calcNpcScore(npc: EntityRow, week: number, grade: number): number {
   return ovr * 0.80 + simNpcScout(npc.id, week, grade) * 0.20;
 }
 
-// ── 팀명 추출 (EntityRow.teamId → 한국어) ────────────────────
-const HS_TEAM_NAMES: Record<string, string> = {
-  TEAM_HS_SEOUL_INNOVATION: "서울 이노베이션",
-  TEAM_HS_BUSAN_WAVE:       "부산 웨이브",
-  TEAM_HS_DAEGU_HEAT:       "대구 히트",
-  TEAM_HS_GWANGJU_VISION:   "광주 비전",
-  TEAM_HS_DAEJEON_RISE:     "대전 라이즈",
-  TEAM_HS_INCHEON_HARBOR:   "인천 하버",
-  TEAM_HS_ULSAN_CHARGE:     "울산 차지",
-  TEAM_HS_SUWON_EDGE:       "수원 에지",
-  TEAM_HS_YEOSU_SHORE:      "여수 쇼어",
-  TEAM_HS_CHUNCHEON_HIGHLAND:"춘천 하이랜드",
-  TEAM_HS_JEJU_WIND:        "제주 윈드",
-  TEAM_HS_GANGWON_PEAK:     "강원 피크",
-  TEAM_HS_MASAN_HARBOR:     "마산 하버",
-  TEAM_HS_JECHEON_RIDGE:    "제천 릿지",
-  TEAM_HS_GOYANG_ARROW:     "고양 애로우",
-  TEAM_HS_SUNCHEON_BAY:     "순천 베이",
-};
+// ── 팀명 ─────────────────────────────────────────────────────
+//
+// ⚠ 여기 **옛 고교 16팀 이름표**가 박혀 있었다. 팀이 102개로 늘어난 뒤로는
+// 표에 없는 팀이 `?? npc.teamId`로 떨어져 **주간 TOP10 문구에 `TEAM_HS_AEWOL`
+// 같은 ID가 그대로 찍혔다.**
+//
+// 이름의 정본은 `refs.json` → `masterStore.teams`다. 부르는 쪽이 넘긴다.
+type TeamNameLookup = (teamId: string) => string;
 
-function npcTeamName(npc: EntityRow): string {
-  return HS_TEAM_NAMES[npc.teamId] ?? npc.teamId;
-}
 
 // ── TOP 10 생성 ───────────────────────────────────────────────
 export function generateTop10(
@@ -89,10 +75,12 @@ export function generateTop10(
   allEntities: EntityRow[],
   seasonWeek: number,
   grade: number,
-  seasonYear?: number,
+  seasonYear: number | undefined,
+  teamNameOf: TeamNameLookup,
 ): Top10Snapshot {
+  const npcTeamName = (npc: EntityRow) => teamNameOf(npc.teamId);
   const type = protagonist.playerType === "pitcher" ? "pitcher" : "batter";
-  const teamName = HS_TEAM_NAMES[protagonist.teamId] ?? protagonist.teamId;
+  const teamName = teamNameOf(protagonist.teamId);
 
   const heroScore = calcProspectScore(protagonist, stats);
   const heroEntry: Top10Entry & { score: number } = {
@@ -136,7 +124,10 @@ function generateTop10ForGrade(
   grade: number,
   seasonYear: number,
   gradeFilter: 1 | 2 | 3 | null,
+  teamNameOf: TeamNameLookup,
 ): { entries: Top10Entry[]; heroRank: number | null } {
+  const npcTeamName = (npc: EntityRow) => teamNameOf(npc.teamId);
+  const teamName = teamNameOf(protagonist.teamId);
   const type = protagonist.playerType === "pitcher" ? "pitcher" : "batter";
   const heroScore = calcProspectScore(protagonist, stats);
   const heroGrade = protagonist.grade ?? 1;
@@ -160,7 +151,7 @@ function generateTop10ForGrade(
 
   const heroIncluded = gradeFilter === null || heroGrade === gradeFilter;
   const heroEntry = heroIncluded
-    ? { id: "PLY_HERO", name: protagonist.name, teamName: HS_TEAM_NAMES[protagonist.teamId] ?? protagonist.teamId, score: heroScore, rank: 0 }
+    ? { id: "PLY_HERO", name: protagonist.name, teamName, score: heroScore, rank: 0 }
     : null;
 
   const pool = heroEntry ? [...npcPool, heroEntry] : npcPool;
@@ -185,6 +176,7 @@ export function buildTop10Metadata(
   allEntities: EntityRow[],
   weekNum: number,
   seasonYear: number,
+  teamNameOf: TeamNameLookup,
 ): Top10Metadata {
   const makeCol = (
     label: Top10Column["label"],
@@ -193,7 +185,7 @@ export function buildTop10Metadata(
   ): Top10Column => {
     const { entries, heroRank } = generateTop10ForGrade(
       protagonist, stats, allEntities, weekNum,
-      protagonist.grade ?? 1, seasonYear, gradeFilter,
+      protagonist.grade ?? 1, seasonYear, gradeFilter, teamNameOf,
     );
     return { label, entries, heroRank: includeHeroRank ? heroRank : null };
   };
@@ -266,7 +258,8 @@ export function buildTop10Message(
   curr: Top10Snapshot,
   last: Top10Snapshot | null,
   weekNum: number,
-  seasonYear?: number,
+  seasonYear: number | undefined,
+  teamNameOf: TeamNameLookup,
 ): MessageItem {
   const typeKr  = curr.type === "pitcher" ? "투수" : "타자";
   const monthKr = weekToMonthLabel(weekNum);
@@ -280,7 +273,7 @@ export function buildTop10Message(
     ? `[${gradeKr} ${monthKr}] 고교 ${typeKr} 유망주 ${overallHeroRank}위`
     : `[${gradeKr} ${monthKr}] 고교 ${typeKr} 유망주 월간 랭킹`;
 
-  const metadata = buildTop10Metadata(protagonist, stats, allEntities, weekNum, seasonYear ?? 0);
+  const metadata = buildTop10Metadata(protagonist, stats, allEntities, weekNum, seasonYear ?? 0, teamNameOf);
 
   return {
     id:        `msg-top10-${curr.type}-w${weekNum}-${Date.now()}`,
