@@ -201,9 +201,16 @@
 
   .sub { margin: 0; font-size: 11.5px; color: var(--ink-mute); }
 
+  /* ⚠ 여기 `align-items: start`가 있었다. 그러면 `.col`이 **행 높이로 늘어나지
+     않고 내용 높이로 줄어들어** 안쪽 `minmax(0, 1fr)`이 잡을 높이가 없어진다.
+     그래서 `.list`의 `overflow-y: auto`가 넘칠 일이 없었고 — 스크롤바가 안
+     생긴 게 아니라 **넘치는 일이 없었다** — 대신 여기 `overflow: hidden`이
+     삐져나온 부분을 잘라냈다.
+
+     위 `.people` 주석의 높이 관리는 이 줄 때문에 반만 듣고 있었다. */
   .cols {
     display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
-    align-items: start; min-height: 0; overflow: hidden;
+    min-height: 0; overflow: hidden;
   }
   @media (max-width: 900px) { .cols { grid-template-columns: 1fr; } }
 
