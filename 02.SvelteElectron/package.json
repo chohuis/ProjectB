@@ -87,6 +87,7 @@
     "check:injurynews": "node scripts/check-injurynews.cjs",
     "diag:postseason": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/diag-postseason.cjs",
     "diag:univtour": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/diag-univtour.cjs",
+    "diag:roster": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/diag-roster.cjs",
     "check:teamcolors": "node scripts/check-teamcolors.cjs",
     "test:neededpositions": "node scripts/test-neededpositions.cjs",
     "test:npclifecycle": "cross-env ELECTRON_RUN_AS_NODE=1 electron scripts/test-npclifecycle.cjs",

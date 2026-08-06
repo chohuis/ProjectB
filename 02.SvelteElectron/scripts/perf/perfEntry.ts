@@ -2804,3 +2804,30 @@ export async function historyDiag(slotId: string, year: number): Promise<{
     })),
   };
 }
+
+/**
+ * 리그별 1군 로스터 분포 (D-1).
+ *
+ * ⚠ `releaseScope.ts`에 **"1군 로스터 캡이 해외에 안 걸린다 — 왜 안 잘리는지
+ * 아직 모른다"**고 적혀 있었고, 그게 ABL·JBL을 못 여는 마지막 이유였다.
+ * JBL 팀당 최대 47명(상한 32), ABL 39명(상한 34). 추측 말고 센다.
+ */
+export function rosterDiag(): Record<string, { teams: number; min: number; max: number; total: number }> {
+  const g = get(gameStore);
+  const byTeam = new Map<string, { league: string; n: number }>();
+  for (const n of g.npcs) {
+    if (n.careerStatus === "retired" || !n.currentTeam) continue;
+    const cur = byTeam.get(n.currentTeam);
+    if (cur) cur.n++;
+    else byTeam.set(n.currentTeam, { league: n.currentLeague ?? "", n: 1 });
+  }
+  const out: Record<string, { teams: number; min: number; max: number; total: number }> = {};
+  for (const { league, n } of byTeam.values()) {
+    const e = (out[league] ??= { teams: 0, min: 1e9, max: 0, total: 0 });
+    e.teams++; e.total += n;
+    e.min = Math.min(e.min, n);
+    e.max = Math.max(e.max, n);
+  }
+  for (const e of Object.values(out)) if (e.min === 1e9) e.min = 0;
+  return out;
+}
