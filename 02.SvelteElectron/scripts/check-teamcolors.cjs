@@ -107,6 +107,41 @@ const DOMESTIC = new Set([
 
 const WRITE = process.argv.includes("--write");
 
+// ── 지면 톤별 헤더 검사 ────────────────────────────────────
+//
+// ⚠ **두 톤을 다 본다.** 밝은 쪽만 보증하면 다크 모드가 조용히 깨진다.
+// 명도 목표는 `apps/ui/src/shared/utils/teamTheme.ts`의 `HEADER_L`과
+// 같아야 한다 — 여기 숫자가 그쪽과 어긋나면 검사가 거짓말이 된다.
+const HEADER_L = { light: 26, dark: 32 };
+/** 그 톤에서 헤더가 얹히는 면 */
+const GROUND = { light: "#FFFFFF", dark: "#161B24" };
+/** 헤더 면이 지면과 떨어져 보여야 하는 최소 대비 */
+const MIN_SEPARATION = 1.35;
+
+const toHexArr = (arr) =>
+  "#" + arr.map((c) => Math.round(Math.max(0, Math.min(1, c)) * 255).toString(16).padStart(2, "0")).join("");
+
+function toLightness(hex, targetL) {
+  const base = rgb(hex);
+  const cur = Lstar(hex);
+  if (cur <= 0) return toHexArr([0, 0, 0].map(() => targetL / 100));
+  const k = Math.min(3, targetL / Math.max(cur, 1));
+  const scaled = base.map((c) => Math.min(1, c * k));
+  if (Lstar(toHexArr(scaled)) >= targetL - 1) return toHexArr(scaled);
+  const at = (m) => scaled.map((c) => c * (1 - m) + m);
+  let lo = 0, hi = 1;
+  for (let i = 0; i < 12; i++) {
+    const mid = (lo + hi) / 2;
+    if (Lstar(toHexArr(at(mid))) < targetL) lo = mid; else hi = mid;
+  }
+  return toHexArr(at(hi));
+}
+
+function contrastPair(a, b) {
+  const [x, y] = [lum(a) + 0.05, lum(b) + 0.05];
+  return x > y ? x / y : y / x;
+}
+
 // ── 검증 모드 (기본) ──────────────────────────────────────
 //
 // ⚠ **파일에 있는 값을 그대로 본다.** 예전엔 미리보기가 메모리에서 다시
@@ -123,10 +158,24 @@ if (!WRITE) {
     if (cr < 4.5) bad.push(`${t.id} ${t.name} — 보조색 ${c[1]} 흰글씨 대비 ${cr.toFixed(2)}:1 (4.5 미만)`);
     const g = hueGap(c[0], c[1]);
     if (g < 60) bad.push(`${t.id} ${t.name} — 주색·보조색 색상차 ${g.toFixed(0)}° (60 미만)`);
+
+    // 두 지면 톤에서 헤더가 성립하는가
+    for (const tone of ["light", "dark"]) {
+      const head = toLightness(c[0], HEADER_L[tone]);
+      const cw = contrastWhite(head);
+      const sep = contrastPair(head, GROUND[tone]);
+      if (cw < 4.5) {
+        bad.push(`${t.id} ${t.name} — ${tone} 헤더 ${head} 흰글씨 ${cw.toFixed(2)}:1 (4.5 미만)`);
+      }
+      if (sep < MIN_SEPARATION) {
+        bad.push(`${t.id} ${t.name} — ${tone} 헤더가 지면과 안 떨어진다 ${sep.toFixed(2)}:1 (${MIN_SEPARATION} 미만)`);
+      }
+    }
   }
   console.log(`팀 색 검사 — 국내 ${dom}팀`);
   if (bad.length === 0) {
     console.log("  ok  전부 통과 (보조색 존재 · 흰글씨 대비 4.5:1 · 색상차 60°)");
+    console.log("  ok  밝은 지면(L*26)·어두운 지면(L*32) 헤더 둘 다 흰글씨 4.5:1 · 지면 분리 1.35:1");
     process.exit(0);
   }
   console.log(`FAIL  위반 ${bad.length}건`);

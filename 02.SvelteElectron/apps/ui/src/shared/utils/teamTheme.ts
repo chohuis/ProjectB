@@ -30,8 +30,25 @@ export interface TeamTokens {
   wash: string;
 }
 
-/** 헤더로 쓸 수 있는 최대 명도. 이보다 밝으면 흰 글씨 대비가 4.5:1 아래로 떨어진다 */
-const HEADER_MAX_L = 26;
+/**
+ * 헤더 면의 명도. 지면 톤에 따라 다르다.
+ *
+ * - **밝은 지면**: 26. 이보다 밝으면 흰 글씨 대비가 4.5:1 아래로 떨어진다…가
+ *   아니라, 실제로는 46까지도 4.73:1로 버틴다. 26은 밝은 지면(L*97)과의
+ *   **분리**를 크게 잡으려고 고른 값이다.
+ * - **어두운 지면**: 32. 26을 그대로 쓰면 어두운 패널(L*10)과 분리가
+ *   1.55:1까지 떨어져 헤더의 존재감이 사라진다. 32면 1.95:1이고
+ *   흰 글씨도 7.10:1로 남는다.
+ *
+ *   ⚠ 처음엔 40으로 잡았다 — 분리 수치(2.66:1)만 보고 고른 값이라
+ *   **채도가 주는 인상을 놓쳤다.** 실제로 띄워 보니 헤더가 화면을 잡아먹었다.
+ *   대비는 통과해도 눈에 세면 안 되고, 그건 숫자만으로는 안 보인다.
+ *
+ * ⚠ 두 값 다 **238팀 전수 실측**으로 정했다 (`npm run check:teamcolors`).
+ * 표본으로 고르면 몇 팀이 조용히 미달로 남는다 — 이 프로젝트에서 반복된 결함이다.
+ */
+const HEADER_L = { light: 26, dark: 32 } as const;
+export type ThemeTone = keyof typeof HEADER_L;
 /** 어두운 바탕 위 강조가 확보해야 할 최소 명도 */
 const GOLD_MIN_L = 72;
 const STRIPE_ALPHA = 0.055;
@@ -125,11 +142,11 @@ function toLightness(hex: string, targetL: number): string {
  * (해외 확장팩 등 데이터가 덜 찬 경우) 주색을 어둡게 해서 대신 쓴다 —
  * 화면이 깨지느니 단조로운 편이 낫다.
  */
-export function teamTokens(colors?: readonly string[] | null): TeamTokens {
+export function teamTokens(colors?: readonly string[] | null, tone: ThemeTone = "light"): TeamTokens {
   const primary = colors?.[0] ?? DEFAULT_PRIMARY;
   const secondary = colors?.[1];
 
-  const dark = toLightness(primary, HEADER_MAX_L);
+  const dark = toLightness(primary, HEADER_L[tone]);
   const gold = toLightness(primary, GOLD_MIN_L);
 
   let accent = secondary ?? "";

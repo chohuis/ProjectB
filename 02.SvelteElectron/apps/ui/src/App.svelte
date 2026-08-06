@@ -11,6 +11,8 @@
   import { npcLiveStatsStore } from "./shared/stores/npcLiveStats";
   import { listSlotsV3, loadGameV3 } from "./shared/repo/slotLifecycleV3";
   import { teamTokens, applyTeamTokens } from "./shared/utils/teamTheme";
+  import { settingsStore } from "./shared/stores/settings";
+  import { resolveTone, applyTone, systemPrefersDark } from "./shared/utils/theme";
 
   // ── 팀 색을 문서 루트에 바른다 ────────────────────────────────
   //
@@ -21,7 +23,24 @@
   // 소속이 없는 화면(인트로·슬롯 선택·새 게임 1단계)은 폴백 색으로 돈다.
   $: myTeamId = $gameStore.protagonist?.teamId ?? "";
   $: myTeam = myTeamId ? ($masterStore.teams ?? []).find((t) => t.id === myTeamId) : undefined;
-  $: applyTeamTokens(teamTokens(myTeam?.colors));
+
+  // ── 테마 ──────────────────────────────────────────────────────
+  //
+  // ⚠ **팀 색이 톤에 딸려 있다.** 헤더 명도가 밝은 지면 L*26 / 어두운 지면
+  // L*40이라(`teamTheme.ts`) 톤이 바뀌면 팀 토큰을 다시 발라야 한다.
+  // 둘을 따로 두면 다크로 바꿨을 때 헤더만 옛 명도로 남는다.
+  let systemDark = systemPrefersDark();
+  onMount(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const onChange = () => (systemDark = mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  });
+
+  $: tone = resolveTone($settingsStore.theme, systemDark);
+  $: applyTone(tone);
+  $: applyTeamTokens(teamTokens(myTeam?.colors, tone));
 
   type GamePhase = "loading" | "intro" | "slotSelect" | "create" | "playing";
   let phase: GamePhase = "loading";

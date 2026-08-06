@@ -2,13 +2,15 @@
   /**
    * 환경설정.
    *
-   * ⚠ **아직 동작하지 않는 항목은 안 넣는다.** 지금 넣은 것은 언어뿐이고,
-   * 테마·연출 속도·창 크기·사운드는 각각 S3~S6에서 그 기능이 생길 때 붙인다.
-   * 눌러도 아무 일 없는 컨트롤은 이 프로젝트에서 반복해 나온 결함이다
-   * (부상위험 %, 구종 슬롯에 이름 적기).
+   * ⚠ **아직 동작하지 않는 항목은 안 넣는다.** 연출 속도·창 크기·사운드는
+   * 각각 S4~S6에서 그 기능이 생길 때 붙인다. 눌러도 아무 일 없는 컨트롤은
+   * 이 프로젝트에서 반복해 나온 결함이다 (부상위험 %, 구종 슬롯에 이름 적기).
    */
   import { createEventDispatcher } from "svelte";
   import { t, language, setLanguage, languageOptions } from "../../../shared/i18n";
+  import { settingsStore, type ThemeSetting } from "../../../shared/stores/settings";
+
+  const THEMES: ThemeSetting[] = ["light", "dark", "system"];
 
   export let open = false;
 
@@ -45,6 +47,23 @@
 
           <div class="row">
             <div class="row-head">
+              <span class="row-name">{$t("settings.theme")}</span>
+            </div>
+            <div class="seg" role="radiogroup" aria-label={$t("settings.theme")}>
+              {#each THEMES as th}
+                <button
+                  type="button"
+                  role="radio"
+                  aria-checked={$settingsStore.theme === th}
+                  class:on={$settingsStore.theme === th}
+                  on:click={() => settingsStore.patch("theme", th)}
+                >{$t(`settings.theme.${th}`)}</button>
+              {/each}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="row-head">
               <span class="row-name">{$t("settings.language")}</span>
             </div>
             <div class="seg" role="radiogroup" aria-label={$t("settings.language")}>
@@ -75,6 +94,7 @@
     gap: 12px;
     padding: 10px 0;
   }
+  .row + .row { border-top: 1px solid var(--line); }
   .row-head { min-width: 0; }
   .row-name { font-size: 13.5px; color: var(--ink); font-weight: 600; }
 
