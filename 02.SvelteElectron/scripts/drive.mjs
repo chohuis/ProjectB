@@ -80,6 +80,13 @@ const COMMANDS = {
       console.log("screenshot:", f);
     } catch (e) {
       console.log("screenshot 실패:", e.message.split("\n")[0]);
+    } finally {
+      // 원래 꺼져 있었으면 되돌린다 — 찍느라 앱 상태를 바꿔 두면 안 된다
+      if (!hadReduce) {
+        try {
+          await page.evaluate(() => document.documentElement.removeAttribute("data-reduce-motion"));
+        } catch { /* 창이 닫혔을 수 있다 */ }
+      }
     }
   },
 

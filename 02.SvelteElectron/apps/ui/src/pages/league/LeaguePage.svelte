@@ -463,7 +463,9 @@
   $: lbColumns = categoriesFor(lbTab);
   $: lbCat = categoryByKey(lbSortKey) ?? lbColumns[0];
   $: lbSorted = rankBy(lbRows, lbCat);
-  $: lbCards = cardCategoriesFor(lbTab).map((c) => ({ cat: c, rows: rankBy(lbRows, c, 5) }));
+  /** 부문 카드에 몇 명까지. 투수·타자 모두 카드 부문이 **정확히 5개**다 */
+  const CARD_TOP_N = 10;
+  $: lbCards = cardCategoriesFor(lbTab).map((c) => ({ cat: c, rows: rankBy(lbRows, c, CARD_TOP_N) }));
 
   /** 비율 부문은 자격자만 센다 — "몇 명 중 몇 위"가 맞아야 한다 */
   $: lbPool = lbCat.kind === "rate" ? lbRows.filter((r) => r.qualified).length : lbRows.length;
@@ -678,7 +680,7 @@
           {#if lbRows.length === 0}
             <p class="empty" style="padding:16px">스탯 기록이 아직 없습니다.</p>
           {:else}
-            <!-- ── 부문별 TOP5 ── -->
+            <!-- ── 부문별 TOP10 ── -->
             <div class="cards">
               {#each lbCards as { cat, rows }}
                 <section class="lb-card">
@@ -1226,17 +1228,22 @@
   .lb-top-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
   .qual-note { font-size: 10.5px; color: var(--ink-mute); }
 
-  /* 부문별 TOP5 — "누가 1위인가"가 표를 뒤지지 않고 보여야 한다 */
+  /* 부문별 TOP10 — "누가 1위인가"가 표를 뒤지지 않고 보여야 한다.
+     ⚠ `auto-fit`에 `minmax(160px, ...)`이라 폭이 모자라면 **다섯 중 넷만 한 줄에
+     들어가고 하나가 다음 줄로 떨어졌다.** 부문은 투수·타자 모두 정확히 다섯이라
+     칸 수를 고정한다 — 남는 칸도, 흘러넘치는 칸도 생기지 않는다. */
   .cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 8px;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 6px;
+    min-height: 0;
   }
   .lb-card {
     background: var(--panel-sunk);
     border-radius: var(--radius);
-    padding: 8px 10px;
-    display: grid; gap: 5px; align-content: start;
+    padding: 7px 8px;
+    display: grid; gap: 4px; align-content: start;
+    min-width: 0;
   }
   .lb-card-head {
     background: none; border: 0; padding: 0 0 5px;
@@ -1247,12 +1254,15 @@
   .lb-card-head:hover { color: var(--t-accent); }
   .lb-card-empty { font-size: 11px; color: var(--ink-mute); }
   .lb-card-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+  /* 다섯 칸이 되면서 카드 하나가 150px 남짓이다. 팀은 원래부터 카드에서
+     숨겨져 있고(`.lb-card-list .tm`) 아래 전체표가 보여준다 — 좁은 칸에서는
+     이름이 잘리는 쪽이 더 나쁘다 */
   .lb-card-list li {
     display: grid;
-    grid-template-columns: 14px minmax(0, 1fr) auto;
+    grid-template-columns: 13px minmax(0, 1fr) auto;
     align-items: baseline;
-    gap: 5px;
-    font-size: 11.5px;
+    gap: 4px;
+    font-size: 11px;
   }
   .lb-card-list .rk { color: var(--ink-mute); font-size: 10px; font-weight: 800; }
   .lb-card-list .tm { display: none; }
