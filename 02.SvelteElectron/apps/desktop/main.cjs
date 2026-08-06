@@ -178,7 +178,8 @@ app.whenReady().then(() => {
   // **새 게임이 옛 세계의 순위표를 자기 것으로 읽는다** — 실제로 지금 없는 팀
   // 47종이 순위표에 떠 있었다.
   const purgeSlotHistory = (slotId) => {
-    for (const t of ["history_standings", "history_lb_stats", "history_postseason"]) {
+    for (const t of ["history_standings", "history_lb_stats", "history_postseason",
+                     "history_tournaments"]) {
       try { db.prepare(`DELETE FROM ${t} WHERE slot_id = ?`).run(slotId); } catch { /* 테이블이 아직 없을 수 있다 */ }
     }
   };
@@ -596,6 +597,45 @@ app.whenReady().then(() => {
         `SELECT * FROM history_postseason WHERE slot_id = ? AND season_year = ?`
       ).all(slotId, seasonYear);
       return JSON.stringify(rows.map(r => ({ ...r, playoff_teams: JSON.parse(r.playoff_teams ?? "[]") })));
+    } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
+  // ── 대회 기록 ─────────────────────────────────────────────────────────────────
+  //
+  // ⚠ **대회만 과거 기록이 없었다.** 순위·개인기록·포스트시즌은 남기는데
+  // 대회는 `$seasonStore.tournaments`(현재 시즌)뿐이라 시즌이 넘어가면
+  // 지난해 우승팀이 통째로 사라졌다.
+
+  ipcMain.handle("season:saveHistoryTournaments", (_event, p) => {
+    try {
+      const { slotId, seasonYear, rows } = JSON.parse(p);
+      const stmt = db.prepare(`
+        INSERT OR REPLACE INTO history_tournaments
+          (slot_id, season_year, tour_id, league_id, tour_name,
+           champion_id, champion_name, runner_up_id, runner_up_name,
+           bracket_json, group_json)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `);
+      db.transaction(() => {
+        for (const r of rows) {
+          stmt.run(slotId, seasonYear, r.tourId, r.leagueId ?? '', r.tourName ?? '',
+            r.championId ?? '', r.championName ?? '',
+            r.runnerUpId ?? '', r.runnerUpName ?? '',
+            // 안 열린 대회는 빈 문자열. '[]'로 두면 화면이 빈 대진표를 그린다
+            r.bracket ? JSON.stringify(r.bracket) : '',
+            r.group   ? JSON.stringify(r.group)   : '');
+        }
+      })();
+      return JSON.stringify({ ok: true });
+    } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
+  });
+
+  ipcMain.handle("season:getHistoryTournaments", (_event, p) => {
+    try {
+      const { slotId, seasonYear } = JSON.parse(p);
+      return JSON.stringify(db.prepare(
+        `SELECT * FROM history_tournaments WHERE slot_id = ? AND season_year = ?`
+      ).all(slotId, seasonYear));
     } catch (e) { return JSON.stringify({ error: String(e?.message ?? e) }); }
   });
 

@@ -18,6 +18,9 @@ import { runSeasonEndBgProcessing } from "./runAutoAdvance";
 import { autoLog } from "../stores/autoAdvance";
 import { DEFAULT_TEAM_PROFILE } from "./weekPhases/market";
 import { applySeasonAwards } from "./seasonAwards";
+import { bracketFinalists } from "../utils/bracket";
+import { finalistsOf } from "../utils/tournamentView";
+import { TOURNAMENTS } from "../utils/leagueTeams.generated";
 import { leagueStandingsOf } from "../utils/season-helpers";
 import { draftDestinationTeams } from "../utils/draftSystem";
 import { proSchedule } from "./proSeason";
@@ -236,15 +239,49 @@ export async function saveSeasonHistory(seasonYear: number) {
   }
   for (const [lid, ls] of Object.entries(get(seasonStore).leagueState)) {
     if (lid === get(seasonStore).leagueId) continue;
+    const bracket = brackets[lid] ?? null;
+    // ⚠ **우승은 대진이 정한다.** 예전엔 `standings[0]`(정규시즌 1위)을 우승으로
+    // 적고 준우승은 빈칸으로 뒀다 — 브래킷이 바로 옆에 있는데. 그래서 과거 기록의
+    // "우승"과 그 아래 대진표의 승자가 서로 다를 수 있었다.
+    const fin = bracket ? bracketFinalists(bracket) : null;
     const sorted = [...(ls.standings ?? [])].sort((a, b) => b.winPct - a.winPct || b.wins - a.wins);
-    if (sorted.length > 0) {
-      psRows.push({ leagueId: lid, championId: sorted[0].teamId, runnerUpId: "",
-        championName: teamNameOf(sorted[0].teamId), runnerUpName: "",
-        playoffTeams: [], bracket: brackets[lid] ?? null });
-    }
+    // 포스트시즌이 없는 리그(대학·고교)는 정규시즌 1위가 그 시즌의 1위다
+    const championId = fin?.champion ?? sorted[0]?.teamId ?? "";
+    if (!championId) continue;
+    psRows.push({ leagueId: lid, championId, runnerUpId: fin?.runnerUp ?? "",
+      championName: teamNameOf(championId), runnerUpName: teamNameOf(fin?.runnerUp ?? ""),
+      playoffTeams: [], bracket });
   }
   if (psRows.length > 0) {
     window.projectB!.seasonSaveHistoryPostseason(JSON.stringify({ slotId, seasonYear, rows: psRows })).catch(() => {});
+  }
+
+  // ── 대회 결과 저장 ──────────────────────────────────────────
+  //
+  // ⚠ **대회만 과거 기록이 없었다.** 화면은 `$seasonStore.tournaments`
+  // (현재 시즌)만 보므로 **시즌이 넘어가면 지난해 대회가 통째로 사라졌다** —
+  // 연도를 골라도 올해 것이 보였다. 고교 5개·대학 3개가 매 시즌 열리고
+  // 우승팀까지 나오는데 볼 데가 없었다.
+  //
+  // ⚠ **안 열린 대회도 한 줄 남긴다.** 없으면 화면이 "미참가"와 "안 열림"을
+  // 구분 못 한다 — 결산 화면이 바로 그 구분을 필요로 한다.
+  {
+    const sT = get(seasonStore);
+    const tourRows = TOURNAMENTS.map((def) => {
+      const bracket = sT.tournaments?.[def.id] ?? null;
+      const group   = sT.groupStages?.[def.id] ?? null;
+      const fin     = finalistsOf(bracket);
+      return {
+        tourId: def.id, leagueId: def.leagueId, tourName: def.name,
+        championId: fin?.champion ?? "", championName: teamNameOf(fin?.champion ?? ""),
+        runnerUpId: fin?.runnerUp ?? "", runnerUpName: teamNameOf(fin?.runnerUp ?? ""),
+        bracket, group,
+      };
+    });
+    if (tourRows.length > 0) {
+      window.projectB!.seasonSaveHistoryTournaments(
+        JSON.stringify({ slotId, seasonYear, rows: tourRows })).catch(() => {});
+    }
   }
 }
 

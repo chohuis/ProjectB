@@ -14,6 +14,9 @@
   import { leagueStatsOf } from "../../../shared/utils/season-helpers";
   import TeamMark from "../../team/ui/TeamMark.svelte";
   import { qualificationOf } from "../../../shared/utils/leaderboard";
+  import { splitByGroup } from "../../../shared/utils/standingsGroups";
+  import { TOURNAMENTS } from "../../../shared/utils/leagueTeams.generated";
+  import { teamRun, runSummary, tournamentPhase } from "../../../shared/utils/tournamentView";
   import { rispSplit, rispTone } from "../../../shared/utils/playerTraits";
   import type { PitcherSeasonStats, BatterSeasonStats, CareerAward, CareerGameLogEntry } from "../../../shared/types/save";
   import type { PitcherGameLine } from "../../../shared/types/season";
@@ -87,6 +90,37 @@
   $: myStanding = $seasonStore.standings.find((s) => s.teamId === myTeamId);
   $: myRank = $currentStandings.findIndex((s) => s.teamId === myTeamId) + 1;
   $: totalTeams = $seasonStore.standings.length;
+
+  // ── 순위: 권역 / 전체 ───────────────────────────────────────
+  //
+  // ⚠ **평면 순위표 하나뿐이었다.** 고교는 8권역으로 나뉘어 도는데 결산은
+  // 102교를 한 줄로 세워서, 내 팀이 3위인지 47위인지가 실제 경쟁 상대와
+  // 무관한 숫자였다. 리그 화면은 이미 권역별로 나눠 본다(`splitByGroup`) —
+  // 같은 유틸을 쓴다. 여기서 다시 나누면 둘이 어긋난다.
+  let rankScope: "group" | "all" = "group";
+  $: stadiumName = (id: string) =>
+    $masterStore.stadiums.find((x) => x.id === id)?.name ?? id.replace(/^STADIUM_/, "");
+  $: groupsView = splitByGroup($seasonStore.leagueId, $currentStandings, stadiumName);
+  $: myGroup = groupsView.find((g) => g.rows.some((r) => r.teamId === myTeamId)) ?? null;
+  // 권역이 없는 리그(프로 등)는 토글 자체를 안 그린다
+  $: hasGroups = groupsView.length > 1 && myGroup !== null;
+  $: shownStandings = hasGroups && rankScope === "group"
+    ? (myGroup?.rows ?? []) : $currentStandings;
+  $: shownRank = shownStandings.findIndex((r) => r.teamId === myTeamId) + 1;
+
+  // ── 대회 ────────────────────────────────────────────────────
+  //
+  // ⚠ **결산에 대회가 통째로 없었다.** 그래서 안 나간 건지 져서 떨어진
+  // 건지 화면에서 구분이 안 됐다. 미참가도 한 줄로 적는다.
+  $: myTours = TOURNAMENTS
+    .filter((def) => def.leagueId === $seasonStore.leagueId)
+    .map((def) => {
+      const bracket = $seasonStore.tournaments?.[def.id] ?? null;
+      const group   = $seasonStore.groupStages?.[def.id] ?? null;
+      const phase   = tournamentPhase(def, $seasonStore.currentWeek, bracket, group);
+      const run     = teamRun(bracket, myTeamId);
+      return { def, phase, run, summary: runSummary(run, phase) };
+    });
 
   // ── 포스트시즌 결과 ─────────────────────────────────────────────
   $: postseasonResult = (() => {
@@ -408,12 +442,29 @@
 
         <!-- 리그 순위표 -->
         <section class="section">
-          <h4>리그 순위표</h4>
+          <div class="sec-head">
+            <h4>리그 순위표</h4>
+            {#if hasGroups}
+              <div class="scope">
+                <button class:on={rankScope === "group"} type="button"
+                        on:click={() => (rankScope = "group")}>{myGroup?.label ?? "권역"}</button>
+                <button class:on={rankScope === "all"} type="button"
+                        on:click={() => (rankScope = "all")}>전체</button>
+              </div>
+            {/if}
+          </div>
+          {#if hasGroups}
+            <p class="scope-note">
+              {rankScope === "group"
+                ? `${myGroup?.label} ${shownStandings.length}팀 중 ${shownRank}위`
+                : `전체 ${$currentStandings.length}팀 중 ${myRank}위`}
+            </p>
+          {/if}
 
           <table>
             <thead><tr><th>#</th><th>팀</th><th>승</th><th>패</th><th>무</th><th>승률</th><th>득실</th></tr></thead>
             <tbody>
-              {#each $currentStandings as s, i}
+              {#each shownStandings as s, i}
                 <tr class:my-row={s.teamId === myTeamId}>
                   <td class="rank-cell">
                     {i + 1}
@@ -437,6 +488,24 @@
             </tbody>
           </table>
         </section>
+
+        <!-- 대회 — 미참가도 적는다 -->
+        {#if myTours.length > 0}
+          <section class="section">
+            <h4>대회</h4>
+            <ul class="tours">
+              {#each myTours as t}
+                <li class:champ={t.run?.champion === true}>
+                  <span class="t-name">{t.def.name}</span>
+                  <span class="t-res" data-none={!t.run?.reached}>
+                    {t.phase === "upcoming" ? "안 열림" : (t.summary || "미참가")}
+                  </span>
+                  {#if t.run?.champion}<span class="t-star">우승</span>{/if}
+                </li>
+              {/each}
+            </ul>
+          </section>
+        {/if}
 
         <!-- 시즌 시상 -->
         {#if seasonAwards.length > 0}
@@ -1101,6 +1170,27 @@
     display: flex; align-items: center; gap: 7px;
   }
   .rank-cell { white-space: nowrap; }
+
+  .sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+  .scope { display: flex; gap: 4px; }
+  .scope button {
+    border: 1px solid var(--line); background: var(--panel); color: var(--ink-mid);
+    border-radius: 999px; font-size: 11px; padding: 2px 10px; cursor: pointer;
+  }
+  .scope button.on { background: var(--t-dark); border-color: var(--t-dark); color: var(--ink-on-dark); }
+  .scope-note { margin: 4px 0 0; font-size: 11.5px; color: var(--ink-mute); }
+
+  .tours { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+  .tours li { display: flex; align-items: baseline; gap: 9px; font-size: 12.5px; }
+  .t-name { color: var(--ink); min-width: 88px; }
+  .t-res { color: var(--ink-mid); }
+  /* 미참가·안 열림은 성적이 아니다 — 같은 굵기로 두면 8강처럼 읽힌다 */
+  .t-res[data-none="true"] { color: var(--ink-mute); }
+  .t-star {
+    font-size: 10px; font-weight: 800; color: #6B4200;
+    background: var(--t-gold); border-radius: 2px; padding: 1px 6px;
+  }
+  .tours li.champ .t-res { color: var(--ink); font-weight: 700; }
 
   tr.my-row td { color: var(--warn); font-weight: 700; background: rgba(60, 80, 20, 0.25); }
 

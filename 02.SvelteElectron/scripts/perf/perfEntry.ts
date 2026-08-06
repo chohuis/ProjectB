@@ -2747,3 +2747,60 @@ export function farmDevProbe(): Record<string, unknown> {
     "총 생성 요청": sum(log.map((r) => r.want)),
   };
 }
+
+/**
+ * 포스트시즌 진단 (B-0).
+ *
+ * ⚠ **화면에 독립리그 브래킷 하나만 뜬다.** `backgroundPostseason.ts`가
+ * KBL·KBL_FARM은 "일정 전부 소화"로, 독립은 "단계 종료"로 판정한다 —
+ * 판정 근거가 리그마다 다르다. 여기서 그 둘을 나란히 찍어 어디서 어긋나는지
+ * 본다. 추측으로 고치면 다른 리그에서 같은 게 또 난다.
+ */
+export function postseasonDiag(): {
+  week: number;
+  brackets: string[];
+  leagues: Record<string, { sched: number; unplayed: number; lastWeek: number; done: boolean }>;
+  survival: { stage: number; ranked: number } | null;
+} {
+  const s = get(seasonStore);
+  const leagues: Record<string, { sched: number; unplayed: number; lastWeek: number; done: boolean }> = {};
+  for (const lid of ["LEAGUE_KBL", "LEAGUE_KBL_FARM", "LEAGUE_UNIVERSITY", "LEAGUE_HIGHSCHOOL"]) {
+    const sch = (s.leagueSchedules?.[lid] ?? []) as { result?: unknown; week: number }[];
+    const unplayed = sch.filter((e) => !e.result).length;
+    leagues[lid] = {
+      sched: sch.length,
+      unplayed,
+      lastWeek: sch.reduce((mx, e) => Math.max(mx, e.week), 0),
+      done: sch.length > 0 && unplayed === 0,
+    };
+  }
+  return {
+    week: s.currentWeek,
+    brackets: Object.entries(s.postseasonBrackets ?? {})
+      .filter(([, v]) => Array.isArray(v) && v.length > 0).map(([k]) => k),
+    leagues,
+    survival: s.survival
+      ? { stage: s.survival.stage, ranked: s.survival.finalRanking?.length ?? 0 }
+      : null,
+  };
+}
+
+/** 저장된 과거 대회·포스트시즌 (B-1 확인용) */
+export async function historyDiag(slotId: string, year: number): Promise<{
+  tournaments: { id: string; league: string; champ: string; runnerUp: string; hasBracket: boolean }[];
+  postseason: { league: string; champ: string; runnerUp: string; hasBracket: boolean }[];
+}> {
+  const api = (window as unknown as { projectB: Record<string, (p: string) => Promise<string>> }).projectB;
+  const t = JSON.parse(await api.seasonGetHistoryTournaments(JSON.stringify({ slotId, seasonYear: year })));
+  const p = JSON.parse(await api.seasonGetHistoryPostseason(JSON.stringify({ slotId, seasonYear: year })));
+  return {
+    tournaments: (Array.isArray(t) ? t : []).map((r: Record<string, string>) => ({
+      id: r.tour_id, league: r.league_id, champ: r.champion_name,
+      runnerUp: r.runner_up_name, hasBracket: !!r.bracket_json,
+    })),
+    postseason: (Array.isArray(p) ? p : []).map((r: Record<string, string>) => ({
+      league: r.league_id, champ: r.champion_name,
+      runnerUp: r.runner_up_name, hasBracket: !!r.bracket_json,
+    })),
+  };
+}

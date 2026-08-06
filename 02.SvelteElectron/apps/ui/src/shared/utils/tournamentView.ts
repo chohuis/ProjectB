@@ -157,3 +157,22 @@ export function runSummary(run: TeamRun | null, phase: TournamentPhase): string 
   if (run.lostAt) return `${run.reached} 탈락`;
   return `${run.reached} 진행 중`;
 }
+
+/**
+ * 결승 두 팀 — 우승·준우승.
+ *
+ * ⚠ **우승만 남기면 안 된다.** 과거 기록에서 "누가 몇 대 몇으로 이겼는지"를
+ * 쓰려면 진 쪽도 있어야 한다. 포스트시즌이 우승만 남겨 두고 준우승을 빈칸으로
+ * 뒀다가 화면이 "결과만 남는다"고 쓸 수밖에 없었던 것과 같은 자리다.
+ */
+export function finalistsOf(
+  bracket: TournamentBracket | null | undefined,
+): { champion: string; runnerUp: string } | null {
+  if (!bracket || bracket.matches.length === 0) return null;
+  const fin = finalMatches(bracket);
+  if (fin.length !== 1) return null;
+  const m = fin[0];
+  if (!m.winnerTeamId) return null;
+  const loser = m.winnerTeamId === m.homeTeamId ? m.awayTeamId : m.homeTeamId;
+  return { champion: m.winnerTeamId, runnerUp: loser ?? "" };
+}

@@ -726,6 +726,39 @@ function applySchemaPatches(db) {
       console.log("[db-patch] v9: history_* 이름 컬럼 + 포스트시즌 대진 추가");
     })();
   }
+
+  if (currentVersion < 10) {
+    db.transaction(() => {
+      // ⚠ **대회 기록이 아무 데도 안 남고 있었다.** 화면은
+      // `$seasonStore.tournaments`(현재 시즌)만 보므로 **시즌이 넘어가면 지난해
+      // 대회가 통째로 사라진다** — 연도를 골라도 올해 것이 보인다.
+      //
+      // 순위·기록·포스트시즌은 v6~v9에서 남기게 됐는데 대회만 빠져 있었다.
+      // 고교 5개·대학 3개가 매 시즌 열리고 우승팀까지 나오는데 볼 데가 없다.
+      db.exec(`
+        CREATE TABLE IF NOT EXISTS history_tournaments (
+          slot_id        TEXT    NOT NULL,
+          season_year    INTEGER NOT NULL,
+          tour_id        TEXT    NOT NULL,
+          league_id      TEXT    NOT NULL,
+          tour_name      TEXT    NOT NULL DEFAULT '',
+          champion_id    TEXT    NOT NULL DEFAULT '',
+          champion_name  TEXT    NOT NULL DEFAULT '',
+          runner_up_id   TEXT    NOT NULL DEFAULT '',
+          runner_up_name TEXT    NOT NULL DEFAULT '',
+          -- 대진 전체. 포스트시즌(v9)과 같은 방식이다 — 결과만 남기면
+          -- 화면이 "누가 몇 대 몇으로 이겼는지"를 못 쓴다
+          bracket_json   TEXT    NOT NULL DEFAULT '',
+          -- 조별예선이 있는 대회(은하기·여명기)는 이것도 있어야 앞이 잘린다
+          group_json     TEXT    NOT NULL DEFAULT '',
+          PRIMARY KEY (slot_id, season_year, tour_id)
+        );
+        CREATE INDEX IF NOT EXISTS idx_htr_lookup ON history_tournaments(slot_id, season_year DESC);
+      `);
+      db.pragma("user_version = 10");
+      console.log("[db-patch] v10: history_tournaments 추가");
+    })();
+  }
 }
 
 // R3a-4d: dbListSlots/dbSaveSlot/dbLoadSlot(v2 game/season 블롭 세이브) 폐기

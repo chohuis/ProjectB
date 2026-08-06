@@ -90,3 +90,21 @@ export function bracketChampion(series: readonly PostseasonSeries[]): string | n
   const final = series.find((s) => depthOf(s, byId) === 0);
   return final?.winner ?? null;
 }
+
+/**
+ * 결승 두 팀 — 우승·준우승.
+ *
+ * ⚠ **정본은 대진이다.** 시즌 롤오버가 배경 리그의 우승팀을 `standings[0]`,
+ * 즉 **정규시즌 1위**로 적고 있었다. 브래킷이 바로 옆에 있는데 안 썼고
+ * 준우승은 빈칸이었다 — 그래서 과거 기록의 "우승"과 그 아래 대진표의 승자가
+ * 서로 다를 수 있었다. 우승팀을 두 군데서 각자 정하면 반드시 어긋난다.
+ */
+export function bracketFinalists(
+  series: readonly PostseasonSeries[],
+): { champion: string; runnerUp: string } | null {
+  const byId = new Map(series.map((s) => [s.id, s]));
+  const final = series.find((s) => depthOf(s, byId) === 0);
+  if (!final?.winner) return null;
+  const loser = final.winner === final.homeTeamId ? final.awayTeamId : final.homeTeamId;
+  return { champion: final.winner, runnerUp: loser ?? "" };
+}

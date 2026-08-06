@@ -98,6 +98,14 @@
   let historyStandings:  HistStanding[]  = [];
   let historyLbStats:    HistLbStat[]    = [];
   let historyPostseason: HistPostseason[] = [];
+  /** 지난 시즌 대회 — **안 열린 대회도 한 줄 온다**(우승 빈칸) */
+  type HistTournament = {
+    tour_id: string; league_id: string; tour_name: string;
+    champion_id: string; champion_name: string;
+    runner_up_id: string; runner_up_name: string;
+    bracket_json: string; group_json: string;
+  };
+  let historyTournaments: HistTournament[] = [];
 
   async function loadHistoryYears() {
     const slotId = $gameStore.currentSlotId;
@@ -115,21 +123,26 @@
   async function loadHistoryData() {
     const slotId = $gameStore.currentSlotId;
     if (!slotId || selectedYear === 0) {
-      historyStandings  = [];
-      historyLbStats    = [];
-      historyPostseason = [];
+      historyStandings   = [];
+      historyLbStats     = [];
+      historyPostseason  = [];
+      historyTournaments = [];
       return;
     }
     try {
-      const [sr, lr, pr] = await Promise.all([
+      const [sr, lr, pr, tr] = await Promise.all([
         window.projectB!.seasonGetHistoryStandings(JSON.stringify({ slotId, seasonYear: selectedYear })),
         window.projectB!.seasonGetHistoryLbStats(JSON.stringify({ slotId, seasonYear: selectedYear })),
         window.projectB!.seasonGetHistoryPostseason(JSON.stringify({ slotId, seasonYear: selectedYear })),
+        window.projectB!.seasonGetHistoryTournaments(JSON.stringify({ slotId, seasonYear: selectedYear })),
       ]);
       historyStandings  = JSON.parse(sr) ?? [];
       historyLbStats    = JSON.parse(lr) ?? [];
-      historyPostseason = JSON.parse(pr) ?? [];
-    } catch { historyStandings = []; historyLbStats = []; historyPostseason = []; }
+      historyPostseason  = JSON.parse(pr) ?? [];
+      historyTournaments = JSON.parse(tr) ?? [];
+    } catch {
+      historyStandings = []; historyLbStats = []; historyPostseason = []; historyTournaments = [];
+    }
   }
 
   // 변경된 상태를 스토어에 동기화 (탭 이동 후 복원용)
@@ -334,10 +347,29 @@
   $: tourDefs = tournamentsOfLeague(tourLeagueId);
   /** 리그를 바꾸면 대회 선택을 초기화한다 — 다른 리그 대회가 남으면 빈 화면이 된다 */
   $: tourLeagueId, (selectedTourId = "");
+  /** 저장된 대회 대진 — 문자열이라 못 파싱하면 없는 것으로 본다 */
+  function savedTour(row: HistTournament | undefined, key: "bracket_json" | "group_json") {
+    const raw = row?.[key];
+    if (!raw) return null;
+    try { return JSON.parse(raw); } catch { return null; }
+  }
+
+  // ⚠ **예전엔 연도를 골라도 현재 시즌 대회를 봤다.** 대회만 과거 기록이
+  // 저장되지 않아서(순위·개인기록·포스트시즌은 남는데) 시즌이 넘어가면
+  // 지난해 우승팀이 통째로 사라졌다.
   $: tourRows = tourDefs.map((def) => {
-    const bracket = $seasonStore.tournaments?.[def.id] ?? null;
-    const group   = $seasonStore.groupStages?.[def.id] ?? null;
-    const phase   = tournamentPhase(def, $seasonStore.currentWeek, bracket, group);
+    const hist    = selectedYear > 0
+      ? historyTournaments.find((r) => r.tour_id === def.id) : undefined;
+    const bracket = selectedYear > 0
+      ? savedTour(hist, "bracket_json")
+      : ($seasonStore.tournaments?.[def.id] ?? null);
+    const group   = selectedYear > 0
+      ? savedTour(hist, "group_json")
+      : ($seasonStore.groupStages?.[def.id] ?? null);
+    // 과거 시즌엔 "진행 중"이 없다. 현재 주차로 재면 지난해 대회가 예정으로 뜬다
+    const phase   = selectedYear > 0
+      ? (bracket || group ? "done" as const : "upcoming" as const)
+      : tournamentPhase(def, $seasonStore.currentWeek, bracket, group);
     const run     = teamRun(bracket, myTeamId);
     return { def, bracket, group, phase, run, summary: runSummary(run, phase) };
   });
@@ -492,9 +524,12 @@
   $: if (!psLeagueId && myLeagueId) psLeagueId = myLeagueId;
 
   /** 대진을 가진 리그만 고르게 한다 — 고교엔 포스트시즌이 없다 */
+  // ⚠ **대진이 있는 리그만.** 롤오버는 순위가 있는 리그마다 한 줄씩 남기므로
+  // 고교·대학도 `history_postseason`에 들어온다 — 그것까지 목록에 넣으면
+  // 골라도 "기록이 없습니다"만 나오는 칸이 생긴다
   $: psLeagueIds = allLeagueIds.filter(
     (lid) => ($seasonStore.postseasonBrackets[lid]?.length ?? 0) > 0
-      || historyPostseason.some((r) => r.league_id === lid));
+      || historyPostseason.some((r) => r.league_id === lid && !!r.bracket_json));
   $: if (psLeagueIds.length > 0 && !psLeagueIds.includes(psLeagueId)) psLeagueId = psLeagueIds[0];
 
   /**
